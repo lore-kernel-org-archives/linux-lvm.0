@@ -1,11 +1,10 @@
-Return-Path: <jay@lazy.accessus.net>
-Date: Fri, 15 Dec 2000 17:13:11 -0600 (CST)
-From: Jay Weber <jay@lazy.accessus.net>
-Subject: Re: [linux-lvm] Debian packaging
-In-Reply-To: <20001215231042.D25445@vestdata.no>
-Message-ID: <Pine.OSF.4.21.0012151712370.23438-100000@lazy.accessus.net>
+Return-Path: <michael_e_brown@dell.com>
+Date: Fri, 15 Dec 2000 17:29:26 -0600 (CST)
+From: Michael E Brown <michael_e_brown@dell.com>
+Subject: Re: [linux-lvm] RawIO patch for 2.2.18
+In-Reply-To: <20001215155529.H22904@jadzia.josv.com>
+Message-ID: <Pine.LNX.4.30.0012151728360.877-100000@blap.linuxdev.us.dell.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: QUOTED-PRINTABLE
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,40 +16,22 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="iso-8859-1"
+Content-Type: TEXT/PLAIN; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
-Cc: HIBINO Kei <ex8k-hbn@asahi-net.or.jp>
 
-Does /proc/lvm exist if you turn off the LVM proc reporting flag?
+http://boudicca.tux.org/hypermail/linux-kernel/latest/1051.html
 
-On Fri, 15 Dec 2000, [iso-8859-1] Ragnar Kj=F8rstad wrote:
+On Fri, 15
+Dec 2000, Jos Visser wrote:
 
-> On Fri, Dec 15, 2000 at 06:58:20PM +0100, Gergely Tamas wrote:
-> > > 'http://www.asahi-net.or.jp/~ex8k-hbn/deb/lvm/'.
-> >=20
-> > Good work.
-> >=20
-> > But here are some remarks to your /etc/init.d/lvm script ...
-> >=20
-> > 1]----
-> > if [ ! -f /proc/lvm ]; then
-> > =09if [ ! -f /lib/modules/`uname -r`/block/lvm.o -a ! -f /lib/modules/`=
-uname -r`/block/lvm-mod.o ]; then
-> > =09=09exit 0
-> > =09fi
-> > fi
-> > ------
-> >=20
-> > What if somebody compiled lvm into the kernel, not as a module? This
-> > script doesn't work. :(
->=20
-> If lvm was compiled into the kernel /proc/lvm will exist, right?
->=20
->=20
-> --=20
-> Ragnar Kj=F8rstad
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
->=20
+> Hi,
+>
+> I have been looking for the RawIO patch for Linux 2.2.18, but I have not
+> been able to find it (my current web connection sucks, so I can not
+> glide through the net with my usual agility and speed). Does anyone have
+> a current pointer for me? Would be much appreciated.
+>
+> ++Jos
+>
+>
