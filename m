@@ -1,8 +1,10 @@
-From: Nathan Hunsperger <linux-lvm@hunsperger.com>
-Message-ID: <20030716230227.GB23833@munchnet.com>
+From: Melinda Taylor <melinda@phys.unsw.edu.au>
+In-Reply-To: <BDEMIPDEGABMNEFIHCPDMEHAFCAA.bill--f.juq41dsj@tao-group.com>
+References: <BDEMIPDEGABMNEFIHCPDMEHAFCAA.bill--f.juq41dsj@tao-group.com>
+Content-Transfer-Encoding: 7bit
+Message-Id: <1058402110.1257.21.camel@neko>
 Mime-Version: 1.0
-Content-Disposition: inline
-Subject: [linux-lvm] System lockups when snapshoting
+Subject: [linux-lvm] LVM recovery
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -13,43 +15,61 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Jul 16 18:03:01 2003
+Date: Wed Jul 16 19:39:02 2003
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-I'm experiencing severe issues when creating snapshots, and would
-appreciate some advice.  These problems are occuring on 2.4.21 with LVM
-1.0.7.  Without snapshots, I am not experiencing any problems.
+Hi All,
 
-After creating a snapshot of a live filesystem, my system starts to
-hang.  This hanging takes two forms, temporary lockups, and permanent
-lockups.  Sometimes, commands take 5+ minutes to execute after they are
-typed, but more usually, they still fail to execute after 12 hours.
+I haven't yet recieved any advice on how to recover any of the data on
+my remaining 2 of 4 disks but i think I know what to do.....think.....
 
-However, it seems that only commands which hit up the filesystem layer
-are affected.  The system is always pingable, characters on console
-always echo, and ssh connections stay responsive, until a request for
-the fs is made.  Shell built-ins like "echo hello" succeed, however,
-"echo /*" hangs.  / (which is not on lvm) should always be cached, so
-nothing below the fs layer should need to be touched to list echo /*.
-Lastly, I will receive a "raid 5 sync complete" message on console for
-the md lvm is ontop of, an hour after I cannot issue any more fs-using
-commands, so the block device the lvm volume group is on should be fine.
+I originally setup the system with the following steps:
 
-Based on this, it looks to me like there may be a race / deadlock in the
-filesystem layer when a snapshot is active.  Or I am doing something
-considerably wrong.
+- vgscan
+vgscan -- reading all physical volumes (this may take a while...)
+vgscan -- "/etc/lvmtab" and "/etc/lvmtab.d" successfully created
+vgscan -- WARNING: This program does not do a VGDA backup of your volume
+group
+- pvcreate /dev/sda2 ; pvcreate /dev/sdb1; pvcreate /dev/sdc2; pvcreate
+/dev/sdd2
+- vgcreate vg01 /dev/sda2 /dev/sdb1 /dev/sdc2 /dev/sdd2
+- check no of LE pvdata -E /dev/sdc2 (5710 LE)
+ lvcreate -l 5711 -n lv03 vg01 /dev/sdc2
+- Make ext3 fs on each LV
+ mkfs.ext3 /dev/vg01/lv01
 
-I experience these issues when using ext3 or ext2, SMP or uni-processor,
-GCC 2.95.4 or GCC 3.3.  I've tried ext2 with and without the VFS patches
-(always applied when testing ext3).  In applying the VFS and lvm patches, I
-always apply the lvm patch, and then the VFS patch.
+/dev/sda2 and /dev/sdb1 are kaput (both drives died within days of
+eachother).
 
-Also, when these temporary lockups occur, all my shells waiting to use the
-fs execute at about the same time, and then lockup together.  If I am able
-to issue a lvremove for the snapshot, the entire system comes back alive.
+I believe I had 4 logical volumes.
 
-Thanks,
-Nathan
+/dev/vg01/lv01
+/dev/vg01/lv02
+/dev/vg01/lv03
+/dev/vg01/lv04
+
+in my volume group.
+
+So I presume this means each LV resided on a separate drive and probably
+lv01 and lv02 were the 2 on the 2 dead disk drives.
+
+    * PVs on four SCSI devices
+    * A VG called "vg01" comprised of said PVs
+
+If I reinstall lvm on my newly installed system can I recover lv03 and
+lv04?
+
+I have had a search and see something called importvg which I think may
+be what I need.
+
+Had anyone ever had any experience recovering a volume group with
+missing disks?
+
+I have backups of my lvm config but it seems like lvmtab etc are all
+binary files, are they of any use to me?
+
+Many Thanks,
+
+melinda
