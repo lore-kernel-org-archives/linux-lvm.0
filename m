@@ -1,18 +1,12 @@
-Received: from agk.surrey.redhat.com (agk.surrey.redhat.com [172.16.10.74])
-	by pobox.surrey.redhat.com (8.12.8/8.12.8) with ESMTP id j33JJepH010133
-	for <linux-lvm@redhat.com>; Sun, 3 Apr 2005 20:19:40 +0100
-Received: from agk by agk.surrey.redhat.com with local (Exim 4.34)
-	id 1DIAdI-0000gP-N3
-	for linux-lvm@redhat.com; Sun, 03 Apr 2005 20:19:40 +0100
-Date: Sun, 3 Apr 2005 20:19:40 +0100
-From: Alasdair G Kergon <agk@redhat.com>
-Subject: Re: [linux-lvm] LVM Error
-Message-ID: <20050403191940.GO14307@agk.surrey.redhat.com>
-References: <200504031040.05910.t-rigby@shaw.ca>
-	<200504031046.00394.t-rigby@shaw.ca>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <200504031046.00394.t-rigby@shaw.ca>
+Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j31I4oO20839
+	for <linux-lvm@redhat.com>; Fri, 1 Apr 2005 13:04:50 -0500
+Message-Id: <200504011804.j31I4bbt074009@tron.kn.vutbr.cz>
+From: "Jiri Bartosik" <bartosik@kn.vutbr.cz>
+Date: Fri, 1 Apr 2005 20:04:46 +0200
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] Problem with UUID on PVs
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -24,25 +18,62 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: LVM general discussion and development <linux-lvm@redhat.com>
+To: linux-lvm@sistina.com
 
-On Sun, Apr 03, 2005 at 09:46:00AM -0800, Terry Rigby wrote:
-> > http://ultimate.kicks-ass.net/files/lvm.txt
+Hi,
+I have really big problem with 2 VGs / 2 PVs on my linux box. After
+reinstalling my gentoo linux, vgscan fails on this error message:
 
-  PV /dev/hda2        VG 4474   lvm2 [18.18 GB / 0    free]
-  PV /dev/hdc         VG 4474   lvm2 [74.53 GB / 0    free]
-  PV /dev/hdb         VG 4474   lvm2 [74.53 GB / 0    free]
-  PV unknown device   VG 4474   lvm2 [74.53 GB / 0    free]
+vgscan
+  Reading all physical volumes.  This may take a while...
+  Couldn't find device with uuid 'ZpitfR-Kwsh-8YJH-6RLS-tDZL-Tlhg-xcM99S'.
+  Couldn't find all physical volumes for volume group vg_XXX2.
+  Couldn't find device with uuid 'ZpitfR-Kwsh-8YJH-6RLS-tDZL-Tlhg-xcM99S'.
+  Couldn't find all physical volumes for volume group vg_XXX2.
+  Volume group "vg_XXX2" not found
+  Found volume group "vg_XXX3" using metadata type lvm2
+  Couldn't find device with uuid 'bMo1Vl-PZyi-E41g-q22v-n2hF-Jzdr-LsAfmw'.
+  Couldn't find all physical volumes for volume group vg_XXX.
+  Couldn't find device with uuid 'bMo1Vl-PZyi-E41g-q22v-n2hF-Jzdr-LsAfmw'.
+  Couldn't find all physical volumes for volume group vg_XXX.
+  Volume group "vg_XXX" not found
 
-Which version of LVM2?
-Try upgrading it to at least 2.00.33.
+But, before reinstalling everything was working fine from setup of
+PVs/VGs/LVs. I didn't move disks on controllers during instalation of new
+OS. And I also have backup of lvm.conf and backup directory from lvm dir in
+/etc, so I'm really sure which hdd should have which UUID. But it seems some
+HDDs don't have UUIDs or have them corrupted... From backup dir:
 
-Does hdd have a partition table on it (even an empty one)?
-Is the PV meant to be hdd or hdd1?
-If the PV is genuinely hdd not hdd1 and there's a partition 
-table, try removing it.
+vg_XXX2:
+	pv2 {
+                        id = "ZpitfR-Kwsh-8YJH-6RLS-tDZL-Tlhg-xcM99S"
+                        device = "/dev/hdk"     # Hint only
 
-Alasdair
--- 
-agk@redhat.com
+                        status = ["ALLOCATABLE"]
+                        pe_start = 384
+                        pe_count = 5961 # 186.281 Gigabytes
+                }
+
+
+vg_XXX:
+           pv2 {
+                        id = "bMo1Vl-PZyi-E41g-q22v-n2hF-Jzdr-LsAfmw"
+                        device = "/dev/hde"     # Hint only
+
+                        status = ["ALLOCATABLE"]
+                        pe_start = 384
+                        pe_count = 3663 # 114.469 Gigabytes
+                }
+
+Is there any way to fix UUID on PV with maintaining data od that PVs? I
+tried uuid_fixer, I looked for some guide, but both didn't work.
+
+I'm running:
+Gentoo linux
+kernel - 2.6.11-gentoo-r4
+lvm/raid/dm included in kernel
+lvm2-2.00.33-r1 installed
+reiserfsprogs-3.6.19
+
+Sincerely
+Jiri Bartosik
