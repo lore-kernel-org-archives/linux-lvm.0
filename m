@@ -1,11 +1,9 @@
-Return-Path: <187af5f55d873a942f63a4b03d540827@interlinx.bc.ca>
-Date: Mon, 4 Jun 2001 19:01:23 -0700
-Subject: Re: [linux-lvm] LILO configuration for LVM "boot" filesystem
-Message-ID: <20010604190123.C2560@pc.ilinx>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20010604092142.A734@minime.sistina.com>
-From: "Brian J. Murrell" <lvm@interlinx.bc.ca>
+Return-Path: <david.mathews@sungard.com>
+From: david.mathews@sungard.com
+Message-ID: <OF5F127281.21C39D1E-ON85256A62.001B86FD@scs.sungard.com>
+Date: Tue, 5 Jun 2001 01:00:40 -0400
+MIME-Version: 1.0
+Subject: [linux-lvm] David Mathews/SCS/SunGard is out of the office.
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -21,16 +19,9 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Mon, Jun 04, 2001 at 09:21:42AM -0500, Ben Lutgens wrote:
-> 
-> Just curious, /boot only needs to be like 100 megs tops why would you want
-> that to be an LV. Isn't it more trouble than it's worth?
+I will be out of the office starting  06/04/2001 and will not return until
+06/07/2001.
 
-If nothing else, how about "on principle"?  :-)  Seriously though, I
-want to abandon screwing around with MS-DOS partitions and use LVs
-instead.  They just make so much better sense than partitions.
-
-b.
-
--- 
-Brian J. Murrell
+I will be out of the office attending a training class.  I will have
+limited access to voice/e-mail.  In my absence please contact Scott Barret
+or Andy Wasson.
