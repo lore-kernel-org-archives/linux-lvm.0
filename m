@@ -1,19 +1,19 @@
 Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with SMTP id i241lC802459
-	for <linux-lvm@redhat.com>; Wed, 3 Mar 2004 20:47:12 -0500
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with SMTP id i243gH830276
+	for <linux-lvm@redhat.com>; Wed, 3 Mar 2004 22:42:17 -0500
 Received: from mail.goldenhope.com.cn ([220.249.10.10])
-	by mx1.redhat.com (8.11.6/8.11.6) with SMTP id i241lAb07790
-	for <linux-lvm@redhat.com>; Wed, 3 Mar 2004 20:47:11 -0500
+	by mx1.redhat.com (8.11.6/8.11.6) with SMTP id i243gFb08183
+	for <linux-lvm@redhat.com>; Wed, 3 Mar 2004 22:42:16 -0500
 Received: from lepton.goldenhope.com.cn (lepton.goldenhope.com.cn [192.168.1.138])
-	by mail.goldenhope.com.cn (Postfix) with ESMTP id E66BBDCAB
-	for <linux-lvm@redhat.com>; Thu,  4 Mar 2004 09:46:54 +0800 (HKT)
+	by mail.goldenhope.com.cn (Postfix) with ESMTP id 83CEE37A66
+	for <linux-lvm@redhat.com>; Thu,  4 Mar 2004 11:41:55 +0800 (HKT)
 From: lepton <lepton@mail.goldenhope.com.cn>
 Subject: Re: [linux-lvm] Why can't I extend a LV after many times extends?
-Message-ID: <20040304014657.GA19419@lepton.goldenhope.com.cn>
-References: <20040303174600.18834.10882.Mailman@listman.back-rdu.redhat.com>
+Message-ID: <20040304034157.GA19917@lepton.goldenhope.com.cn>
+References: <20040303174600.18834.10882.Mailman@listman.back-rdu.redhat.com> <20040304014657.GA19419@lepton.goldenhope.com.cn>
 Mime-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20040303174600.18834.10882.Mailman@listman.back-rdu.redhat.com>
+In-Reply-To: <20040304014657.GA19419@lepton.goldenhope.com.cn>
 Sender: linux-lvm-admin@redhat.com
 Errors-To: linux-lvm-admin@redhat.com
 Reply-To: linux-lvm@redhat.com
@@ -25,46 +25,27 @@ List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
 List-Archive: <https://www.redhat.com/archives/linux-lvm/>
-Date: Wed Mar  3 20:45:03 2004
+Date: Wed Mar  3 22:40:12 2004
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@redhat.com
 
-Thanks for your help.
+There are two ways to do things:
 
-I have seen someone mentioned there is some limits when using strip.
+one is:
+ 
+  lvcreate -n test testvg -l100000   /dev/sda1:0-31 /dev/sdb1:0-31
+  /dev/sdc1:0-31 /dev/sda1:32-63 /dev/sdb1:32-63 /dev/sdc1:32-63 ....
 
-like this:
-http://linux.msede.com/lvm_mlist/archive/2002/11/0235.htm
+another is:
+  
+  lvcreate -n test testvg -l32 /dev/sda1
+  lvextend /dev/testvg/test -l+32 /dev/sdb1
+  lvextend .....
 
-It saids: 
-"Once you create a striped lv, you cannot extend it by adding
-more disks. Current lvm version anyway."
+I found the second way can't work when the size of lv is big enough
+(about 26G) it complains about metadata size is too big.
 
-Is there any limits in current lvm2 code about strip ?
-
-
-> From: Alasdair G Kergon <agk@redhat.com>
-> To: linux-lvm@redhat.com
-> Subject: Re: [linux-lvm] Why can't I extend a LV after many times extends?
-> Reply-To: linux-lvm@redhat.com
-> 
-> On Tue, Mar 02, 2004 at 11:34:51PM +0800, lepton wrote:
-> > For making my data can balance on all of my three scsi disk, I use such
-> > methods to create my LV:
-> >   lvcreate -l 32 -n test vg /dev/sda1
-> >   lvextend -l +32 /dev/vg/test /dev/sdb1
-> >   lvextend -l +32 /dev/vg/test /dev/sdc1
-> >   lvextend -l +32 /dev/vg/test /dev/sda1
-> >   ......
->  
-> Why not use LVM striping directly?
-> (lvcreate -i 3)
-> 
-> Alasdair
-> -- 
-> agk@redhat.com
-> 
-> 
-> --__--__--
+But I thinks the disk usage should be the same. why is metadata size
+diffrent?
