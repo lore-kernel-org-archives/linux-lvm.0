@@ -1,9 +1,9 @@
 From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] newbie question
-Message-ID: <20020626123400.C18125@sistina.com>
-References: <20020625192848.60087.qmail@web13802.mail.yahoo.com>
+Subject: Re: [linux-lvm] RAID & LVM
+Message-ID: <20020626123739.D18125@sistina.com>
+References: <2411209499ABD41180270090274DD8BC0337F1EA@zafnt2> <BDEMIPDEGABMNEFIHCPDAEFLDJAA.bill+f.9sfuw6uo@tao-group.com>
 Mime-Version: 1.0
-In-Reply-To: <20020625192848.60087.qmail@web13802.mail.yahoo.com>; from shri_krishnan@yahoo.com on Tue, Jun 25, 2002 at 12:28:48PM -0700
+In-Reply-To: <BDEMIPDEGABMNEFIHCPDAEFLDJAA.bill+f.9sfuw6uo@tao-group.com>; from bill+f.9sfuw6uo@tao-group.com on Tue, Jun 25, 2002 at 05:19:41PM +0100
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,43 +14,60 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Jun 26 05:41:02 2002
+Date: Wed Jun 26 05:45:02 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Tue, Jun 25, 2002 at 12:28:48PM -0700, shri krishnan wrote:
-> Hi,
+On Tue, Jun 25, 2002 at 05:19:41PM +0100, William Blunn wrote:
+> > I know it seems to be a very old question, but I can't find in 
+> > the previous messages, the answer for that..
+> > 
+> > Is it possible to use RAID and LVM together? If positive, is 
+> > there a HOW-TO telling something about it?
 > 
-> I was wondering if linux-lvm ever requires unpartitioned space at the end
-> of a disk for storing volume metadata, similar to Windows dynamic disk.
-> I've skimmed the source code a bit, and from what I can tell, it seems
-> that metadata is always stored at the start of each disk partition, but
-> I wasn't sure if this is always the case. 
+> Yes it works well.
+> 
+> Use the standard RAID stuff to make a raid device, say /dev/md0, then create a PV (LVM Physical Volume) on that, then make a VG (LVM volume group) out of that PV, then create LVs (LVM Logical Volumes) in the VG.
+> 
+> Then (unless you have some other use for them), create filesystems in the LVs.
+> 
+> I use LVM over RAID1 on ATA disks using Ultra-ATA mode 4 (66 MB/s) or higher.
+> 
+> > LVM will support mirroring someday?
 
-The ondisk metadata in LVM1 is *always* stored at the very start
-of each block device used as a physical volume. Depending on the extent size
-(see "vgchange -s") and the size of the physical volume the metadata uses
-aproximatly between some 100KB and a couple of MB. You can check this
-with "pvdata -PP /dev/PVDev" which will display the various parts of the
-LVM1 metadata or so called VGDA (Volume Group Descriptor Area) with their
-offsets and sizes.
+We've got a mirroring target already in device-mapper, which is the generic
+volume mapping driver used by our LVM2 tools (please check it out
+at www.sistina.com).
+Final (L)GPLed release planned for July.
 
-LVM2 enhances this by supporting multiple ondisk formats and therefore
-this could eventually change things in the future ie. putting metadata
-redundantly at the beginning and the end of a physical volume.
+We will support mirroring directly further down the LVM2 road later this year.
 
 > 
-> Thanks, 
+> Not AFAIK.
 > 
-> --shri
+> Bill
+> -- 
+> William H. Blunn - <bill+s.9sfuw6uo@tao-group.com> - Developer Support
+> Tao
+> 62/63 Suttons Business Park, Earley, READING, RG6 1AZ, United Kingdom
+> Tel: +44 118 901 2999 - Fax: +44 118 901 2963 - http://tao-group.com/
 > 
+> The contents of this e-mail and any attachments are confidential and may
+> be legally privileged. If you have received this e-mail and you are not
+> a named addressee, please inform us as soon as possible on
+> +44 118 901 2999 and then delete the e-mail from your system. If you are
+> not a named addressee you must not copy, use, disclose, distribute,
+> print or rely on this e-mail. Any views expressed in this e-mail or any
+> attachments may not necessarily reflect those of Tao's management.
+> Although we routinely screen for viruses, addressees should scan this
+> e-mail and any attachments for viruses. Tao makes no representation or
+> warranty as to the absence of viruses in this e-mail or any attachments.
+> Please note that for the protection of our business, we may monitor and
+> read e-mails sent to and from our server(s).
 > 
-> __________________________________________________
-> Do You Yahoo!?
-> Yahoo! - Official partner of 2002 FIFA World Cup
-> http://fifaworldcup.yahoo.com
+> Visit our website at http://tao-group.com/
 > 
 > _______________________________________________
 > linux-lvm mailing list
