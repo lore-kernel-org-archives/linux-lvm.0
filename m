@@ -1,8 +1,10 @@
-From: Greg Freemyer <freemyer@NorcrossGroup.com>
-Subject: re: [linux-lvm] question about LVM kernel module - mirroring
+From: Andres Salomon <dilinger@mp3revolution.net>
+Subject: Re: [linux-lvm] Re: device-mapper transition
+Message-ID: <20021011220839.GA8694@chunk.voxel.net>
+References: <1034276879.2396.11.camel@mars.goatskin.org> <20021011075220.GA1153@fib011235813.fsnet.co.uk> <20021011090446.GA5506@sparcbox.net>
 Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <20021011171128.WJD12965.imf08bis.bellsouth.net@Mother2>
+Content-Disposition: inline
+In-Reply-To: <20021011090446.GA5506@sparcbox.net>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -13,29 +15,69 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Fri Oct 11 12:10:02 2002
+Date: Fri Oct 11 17:09:53 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Type: Text/plain; charset="us-ascii"
-To: LVM Mailing list <linux-lvm@sistina.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: linux-lvm@sistina.com
 
- >>  2) How can I perform mirroring using LVM? I know the kernel can do that=20
- >>  on local disks. Is it possible for the kernel of  two clustered machines=20
- >>  to mirror two disks on an external storage?
- >>  I am working on a HA cluster.
+We should probably have lvm2 tools check the driver (and libdevmapper)
+version after processing arguments.  So, after making sure the user
+doesn't just want to run vgchange --help, vgchange should check to make
+sure that
+a) there _is_ a version of dm in the kernel
+b) the version in the kernel is compatible w/ it
 
- >>  Thanks for your attention
+This would lead to some better error messages, and hopefully less
+questions.  Instead of:
+[dilinger@wax tools]$ sudo vgchange -a y
+  No volume groups found
 
- >>  Luca Lavorante
-Luca,
+Perhaps:
+[dilinger@wax tools]$ sudo vgchange -a y
+  Error: device-mapper driver not found; support must be compiled into
+  the kernel!
+[dilinger@wax tools]$ sudo vgchange -a y
+  Error: the version of device-mapper in the kernel is incompatible with
+  this lvm package; please upgrade device-mapper.
 
-If you want to have only one node at a time have access to the data, then the =
-heartbeat mailing list may be a better place to ask.  www.linux-ha.org  In =
-particular look thru their archives.  The subject comes up often.
+Support is already in the kernel and libdevmapper for driver version
+querying; should be just an issue of adding the check to the lvm2 tools.
 
-If you want both to be able to have simultaneous access, then there are 3 or 4 =
-choices I think.  The only 3 I can think of offhand are Sistina's GFS, OpenGFS, =
-and Oracles OCFS.  The latter 2 are open source and not quite production ready =
-in my opinion.  Sistina has been selling their GFS as production ready for over =
-a year..
 
-Greg Freemyer
+On Fri, Oct 11, 2002 at 02:04:46AM -0700, Steven Stillaway wrote:
+[...]
+> 
+> The only really tricky bit has been the fact that the
+> lvm tools (in particular vgscan) are completely
+> different between the two version.  Actually LVM 2 just
+> seems to have one tool with a lot of symlinks.
+> 
+> So when I switch from 2.4.19 w/ LVM 1 to 2.5.41 w/
+> LVM2 I have to make sure to switch from one vgscan to
+> the other.
+> 
+> The obviously solution is to upgrade my 2.4.19 to 
+> LVM2, but not tonight -- it is late.
+> 
+> If I notice anything I will let you know.  If you
+> have any questions or want some data from my test
+> box please let me know.
+> 
+> Off to bed now -- later
+> 
+> --
+> 
+> Steven Stillaway
+> steve@stillaway.net
+> 
+> 
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@sistina.com
+> http://lists.sistina.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+
+-- 
+It's not denial.  I'm just selective about the reality I accept.
+	-- Bill Watterson
