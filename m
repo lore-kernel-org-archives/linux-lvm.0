@@ -1,47 +1,43 @@
-Date: Wed, 29 Dec 1999 16:47:40 -0500 (EST)
-From: Terry Hardie <terryh@orcas.net>
-Subject: Re: [linux-lvm] vgcreate core dumps
-In-Reply-To: <19991229141146.A15001@deja.com>
-Message-ID: <Pine.LNX.4.21.9912291647171.492-100000@orcas.net>
+Date: Thu, 30 Dec 1999 14:06:37 +0100 (CET)
+From: Holger Rauch <hrauch@datech.heitec.de>
+Reply-To: Holger.Rauch@datech.heitec.de
+Subject: [linux-lvm] Preserving LVs
+Message-ID: <Pine.LNX.4.10.9912301401320.5932-100000@prag.datech2.er.heitec.net>
 MIME-Version: 1.0
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: Robert Haig <rhaig@deja.com>
-Cc: linux-lvm@msede.com
+To: linux-lvm@msede.com
 
-On Wed, 29 Dec 1999, Robert Haig wrote:
+Hi!
 
-> I'm perplexed.
-> 
-> here's what happened
-> ==========================
-> # fdisk /dev/sdb
-> 
-> Command (m for help): p
-> 
-> Disk /dev/sdb: 255 heads, 63 sectors, 553 cylinders
-> Units = cylinders of 16065 * 512 bytes
-> 
->    Device Boot    Start       End    Blocks   Id  System
-> /dev/sdb1             1       553   4441941   8e  Unknown
-> 
-> Command (m for help): q
-> 
-> # pvcreate /dev/sdb1
-> pvcreate -- reinitializing physical volume
-> pvcreate -- physical volume "/dev/sdb1" successfully created
-> 
-> # vgcreate test_vg /dev/sdb1
-> Segmentation fault (core dumped)
+How can I preserve existing LVs (such as the ones used for the
+"/usr/local" and "/home" fs) over new installations? Sure, the kernel
+resides in "/boot", so I can keep that as well, but all the user mode
+tools are gone.
+From time to time it's just necessary to do a complete installation from
+scratch to keep track with the latest Linux distributions (the "update"
+function doesn't always work), and I don't want to run into problems
+later. That's why I'm asking this question here.
 
-See the message I posted about the missing "data = NULL;" - That's the
-problem it fixes.
+Any help is greatly appreciated!
 
----
-Terry Hardie					terry@gxc.com
-Founder and Chief Technology officer		ICQ#: 977679
-Convergence Equipment Co, Manassas, VA, USA	V: +1-703-361-5566
-"Home of the BOB Class 4 convergence switch"
+Happy New Year!
+
+Greetings,
+
+	Holger
+
+=========================================
+Holger Rauch
+HEITEC GmbH
+Schuhstrasse 30
+91052 Erlangen
+Germany
+
+Tel.: 09131 / 877 - 273
+Fax: 09131 / 877 - 222
+Email: Holger.Rauch@datech.heitec.de
+=========================================
