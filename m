@@ -1,14 +1,13 @@
-Return-Path: <lewis@sistina.com>
-Date: Tue, 21 Aug 2001 11:22:52 -0500
+Date: Tue, 21 Aug 2001 12:12:29 -0500
 From: AJ Lewis <lewis@sistina.com>
-Subject: Re: [linux-lvm] vgscan && vgchange -ay at startup
-Message-ID: <20010821112252.A21206@sistina.com>
-References: <20010821130033.D402@sky.net> <20010821070403.A16248@sistina.com> <3B8267F5.D3174CAB@tls.msk.ru> <20010821160012.E25747@dragon.blacknet.de>
+Subject: Re: [linux-lvm] Building outside source tree
+Message-ID: <20010821121229.A4661@sistina.com>
+References: <20010820205802.29906.qmail@dumain.com>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-md5;
-	protocol="application/pgp-signature"; boundary="opJtzjQTFsWo+cga"
+	protocol="application/pgp-signature"; boundary="ZGiS0Q5IWpPtfppv"
 Content-Disposition: inline
-In-Reply-To: <20010821160012.E25747@dragon.blacknet.de>; from bock@blacknet.de on Tue, Aug 21, 2001 at 04:00:12PM +0200
+In-Reply-To: <20010820205802.29906.qmail@dumain.com>; from wish@dumain.com on Mon, Aug 20, 2001 at 09:58:02PM +0100
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -21,39 +20,67 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 To: linux-lvm@sistina.com
+Cc: lvm-devel@sistina.com
 
---opJtzjQTFsWo+cga
-Content-Type: text/plain; charset=iso-8859-1
+--ZGiS0Q5IWpPtfppv
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Aug 21, 2001 at 04:00:12PM +0200, Goetz Bock wrote:
->=20
-> On Tue, Aug 21 '01 at 17:53, Michael Tokarev wrote:
-> > But how to have root mounted read-only?
-> > I resolved problem with only one file that needs to be read-write --
-> > it is /etc/mtab that I moved out to /var/run (modified glibc and
-> this should be fixable with making /etc/mtab a link to /proc/mounts
+On Mon, Aug 20, 2001 at 09:58:02PM +0100, Bill Hay wrote:
+> The following patch allows building the lvm utilities in a=20
+> seperate directory from the source.  It is a patch agains 1.0.1rc1
+> and has been tested with linux 2.2.18.
 
-I've done this on my system for about a month it seems to work fine.
+Committed, with the following changes to make everything work:
 
-> > mount itself).  So my root is now read-only at all times.  But how
-> > to deal with lvm?  Should I move /etc/lvm* to /var also?
-> The ideal solution would be to have LVM not write any files at all and
-> do everything in memory. If I want to make a backup (e.g. when changing
-> anything) either make the meta data journaling or save the backup to
-> some where in /var
->=20
-> just my =DB0.02 (soon equal to $0.02, btw on my mac this is an euro sign)
-
-Yeah, that's in the works for the development version of LVM, but the 1.0x
-series will likely always have the files in /etc.  I agree that it is better
-not to have it write files by default, or at least not rely on them being
-written out.
-
-> But, I won't complain. LVM rocks as it is and I'm happy with it.=20
-
-:)
+diff -Nura --exclude CVS LVM-diff/PATCHES/Makefile.in LVM/PATCHES/Makefile.=
+in
+--- LVM-diff/PATCHES/Makefile.in	Tue Aug 21 11:47:00 2001
++++ LVM/PATCHES/Makefile.in	Tue Aug 21 11:48:50 2001
+@@ -30,7 +30,7 @@
+ CLEANED_DIR=3Dcleaned
+ CLEANER=3D@top_srcdir@/scripts/select_version
+ PATCHER=3D@top_srcdir@/scripts/patch_fragment
+-FRAGGER=3D@top_srcdir@/scripts/select_fragments
++FRAGGER=3D../scripts/select_fragments
+ LVM_PATCH=3D./lvm-$(LVM_VERSION)-$(KERNEL_VERSION).patch
+=20
+ ifneq (,$(findstring 2.2,$(KERNEL_VERSION)))
+diff -Nura --exclude CVS LVM-diff/configure LVM/configure
+--- LVM-diff/configure	Tue Aug 21 11:47:00 2001
++++ LVM/configure	Tue Aug 21 11:42:24 2001
+@@ -2172,5 +2172,5 @@
+ test "$no_create" =3D yes || ${CONFIG_SHELL-/bin/sh} $CONFIG_STATUS || exi=
+t 1
+=20
+=20
+-ln -sf $srcdir/kernel/lvm.h tools/lib/lvm.h
++ln -sf $topobjdir/$srcdir/kernel/lvm.h tools/lib/lvm.h
+=20
+diff -Nura --exclude CVS LVM-diff/configure.in LVM/configure.in
+--- LVM-diff/configure.in	Tue Aug 21 11:47:00 2001
++++ LVM/configure.in	Tue Aug 21 11:42:20 2001
+@@ -118,4 +118,4 @@
+ tools/lib/Makefile							\
+ tools/man8/Makefile							\
+ )
+-AC_OUTPUT_COMMANDS([ln -sf $srcdir/kernel/lvm.h tools/lib/lvm.h])
++AC_OUTPUT_COMMANDS([ln -sf $topobjdir/$srcdir/kernel/lvm.h tools/lib/lvm.h=
+])
+diff -Nura --exclude CVS LVM-diff/tools/man8/Makefile.in LVM/tools/man8/Mak=
+efile.in
+--- LVM-diff/tools/man8/Makefile.in	Tue Aug 21 11:47:00 2001
++++ LVM/tools/man8/Makefile.in	Tue Aug 21 11:29:44 2001
+@@ -39,6 +39,7 @@
+=20
+ install-man8: remove-man8
+ 	@echo "*** Installing $(MAN_PAGES) in $(DESTDIR)$(MAN8DIR) ***"
++	@INSTALL@ -d $(DESTDIR)$(MAN8DIR)/
+ 	@INSTALL@  -o $(OWNER) -g $(GROUP) -m 444 $(ALL_MANUALS) $(DESTDIR)$(MAN8=
+DIR)/ =20
+=20
+ remove-man8:
 
 --=20
 AJ Lewis
@@ -68,11 +95,11 @@ Get my key at: http://www.sistina.com/~lewis/gpgkey
  (Unfortunately, the PKS-type keyservers do not work with multiple sub-keys)
 
 -----Begin Obligatory Humorous Quote----------------------------------------
-A computer without a Microsoft operating system is like a dog without bricks
-tied to its head.
+Quitters never win, and winners never quit,
+but those who never quit AND never win are idiots.
 -----End Obligatory Humorous Quote------------------------------------------
 
---opJtzjQTFsWo+cga
+--ZGiS0Q5IWpPtfppv
 Content-Type: application/pgp-signature
 Content-Disposition: inline
 
@@ -80,9 +107,9 @@ Content-Disposition: inline
 Version: GnuPG v1.0.6 (GNU/Linux)
 Comment: For info see http://www.gnupg.org
 
-iD8DBQE7gorcpE6/iGtdjLERAoEOAJ9H4elkT1FbmU55FzlNpDv1SPt+RQCfVQSt
-77+/XRRFc7fude14tX0QB1c=
-=iRAA
+iD8DBQE7gpZ9pE6/iGtdjLERAtGgAJ9HlZu97pVCwvh8+NVEHLK7kPxmPQCghopa
+zDk+dnjOcgHvqtdPXXZNspM=
+=+VvT
 -----END PGP SIGNATURE-----
 
---opJtzjQTFsWo+cga--
+--ZGiS0Q5IWpPtfppv--
