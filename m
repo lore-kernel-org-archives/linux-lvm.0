@@ -1,11 +1,11 @@
-From: =?iso-8859-1?Q?Jos=E9_Luis_Domingo_L=F3pez?= <jdomingo@internautas.org>
-Subject: Re: [linux-lvm] anyone tried 2.4.17 yet ??
-Message-Id: <20011228192237.GA2558@localhost>
-References: <3C2C6DE9.9020306@ti.com>
+From: Andreas Dilger <adilger@turbolabs.com>
+Subject: Re: [linux-lvm] kernel: invalidate: busy buffer
+Message-Id: <20011228130411.V12868@lynx.no>
+References: <3C2C88AF.9010206@ti.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <3C2C6DE9.9020306@ti.com>
+In-Reply-To: <3C2C88AF.9010206@ti.com>; from cej@ti.com on Fri,
+    Dec 28, 2001 at 03:58:55PM +0100
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,27 +16,23 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Fri Dec 28 13:20:02 2001
+Date: Fri Dec 28 14:02:01 2001
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="utf-8"
-To: linux lvm <linux-lvm@sistina.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: christian e <cej@ti.com>
+Cc: linux lvm <linux-lvm@sistina.com>
 
-On Friday, 28 December 2001, at 14:04:41 +0100,
-christian e wrote:
+On Dec 28, 2001  15:58 +0100, christian e wrote:
+> Just tried 2.4.17 and this was the first non-ac kernel that was able to 
+> boot on this machine :-)  anyways things seem to be running ok,but 
+> there's lots of these errors:  kernel: invalidate: busy buffer
 
-> Just wondering..Did anyone give 2.4.17 a try ? And what needs to be done 
-> with regards to LVM ? Up until now I've only run ac kernels,but I'd like 
-> to give 2.4.17 a try.Any pacthes necessary ??
-> 
-2.4.17 comes with some sort of LVM 1.0.1-rc4 (not exactly 1.0.1, but it
-seems near). Still, you can download 1.0.1 from Sistina's FTP, make a
-patch for 2.4.17 and compiled user space tools if needed.
+It is not a problem.  Please ignore for now, it disappears in a future
+kernel.
 
-No patching necessary if you can live with something very close to 1.0.1
-but not exactly 1.0.1 :)
-
--- 
-Jos� Luis Domingo L�pez
-Linux Registered User #189436     Debian Linux Woody (P166 64 MB RAM)
- 
-jdomingo AT internautas DOT   org  => Spam at your own risk
+Cheers, Andreas
+--
+Andreas Dilger
+http://sourceforge.net/projects/ext2resize/
+http://www-mddsp.enel.ucalgary.ca/People/adilger/
