@@ -1,8 +1,8 @@
-Message-Id: <200306260753.h5Q7rm4J014403@ruby.ridersoft.net>
+Message-Id: <200306261012.h5QACOlx015041@ruby.ridersoft.net>
 From: lvm@ruby.ridersoft.net
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="bound1056614028"
-Subject: [linux-lvm] vgscan and initrd
+Content-Type: multipart/mixed; boundary="bound1056622344"
+Subject: [linux-lvm] can't find volumes
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -13,13 +13,13 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Thu Jun 26 09:30:02 2003
+Date: Thu Jun 26 09:30:05 2003
 List-Id: <linux-lvm.redhat.com>
 To: linux-lvm@sistina.com
 
 This is a multi-part message in MIME format.
 
---bound1056614028
+--bound1056622344
 Content-Type: text/plain
 Content-Transfer-Encoding: 7bit
 
@@ -55,4 +55,4 @@ Mark
 
 When I boot from a livecd image, such as 
 
---bound1056614028--
+--bound1056622344--
