@@ -1,6 +1,11 @@
-From: lvmlist@spltd.f9.co.uk
-Message-ID: <20021110213716.spltd+lvmlist@force9>
-Subject: [linux-lvm] Adding to vg broke it :-(
+From: Steven Lembark <lembark@wrkhors.com>
+Subject: Re: [linux-lvm] Adding to vg broke it :-(
+Message-ID: <69060000.1036972268@[192.168.200.4]>
+In-Reply-To: <20021110213716.spltd+lvmlist@force9>
+References: <20021110213716.spltd+lvmlist@force9>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -11,45 +16,22 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Sun Nov 10 15:38:01 2002
+Date: Sun Nov 10 17:47:02 2002
 List-Id: <linux-lvm.redhat.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: linux-lvm@sistina.com
 
-Hi all,
 
-It seems I'm up to my neck in it again :-(
+-- lvmlist@spltd.f9.co.uk
 
-Briefly, I ran out of space on my LVM mounted /home partition but as I
-have 1.5GB space free on another disk I thought I'd add that to my
-volume group and increase the size of /home. All seemed to go OK until
-reboot upon which my system can only mount / (which is independent of
-LVM). It appears that /etc/lvmtab /etc/lvmtab.d have all been deleted
-hence why it can't find LVG "system".
-/etc/lvmtab exists but is empty.
-/etc/lvmtab.d/ exists but is empty.
-/etc/lvmconf/ exists & contains system.conf.1.old and system.conf
-(newest).
+> Any guidance as to where to go from here would
+> be appreciated pls.
 
-System is SuSE 8.0 Pro. on i386
-Harddisks: 2 scsi mounted as
+vgcfgrecover them or vgimport the pv's.
 
-/dev/sdb1        swap
-/dev/sdb2        /
-/dev/sdb3        LVM
 
-/dev/system/home /home
-/dev/system/usr  /usr
-/dev/system/var  /var
 
-sda had an old installation of SuSE on it is
- presently unused (and half the size of sdb).
-
-Any guidance as to where to go from here would
-be appreciated pls.
-
-Thanks,
-
-Mark Pearson.  
+--
+Steven Lembark                               2930 W. Palmer
+Workhorse Computing                       Chicago, IL 60647
+                                            +1 800 762 1582
