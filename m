@@ -1,20 +1,18 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j0ELdwr22457
-	for <linux-lvm@redhat.com>; Fri, 14 Jan 2005 16:39:58 -0500
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j0EMFfr31498
+	for <linux-lvm@redhat.com>; Fri, 14 Jan 2005 17:15:41 -0500
 Received: from postfix3-1.free.fr (postfix3-1.free.fr [213.228.0.44])
-	by mx3.redhat.com (8.12.11/8.12.11) with ESMTP id j0ELdqrW015772
-	for <linux-lvm@redhat.com>; Fri, 14 Jan 2005 16:39:52 -0500
+	by mx3.redhat.com (8.12.11/8.12.11) with ESMTP id j0EMFZWE021408
+	for <linux-lvm@redhat.com>; Fri, 14 Jan 2005 17:15:35 -0500
 Received: from scorpion (unknown [82.227.230.101])
-	by postfix3-1.free.fr (Postfix) with ESMTP id 09B5D173501
-	for <linux-lvm@redhat.com>; Fri, 14 Jan 2005 22:39:52 +0100 (CET)
-Date: Fri, 14 Jan 2005 22:40:06 +0100
+	by postfix3-1.free.fr (Postfix) with ESMTP id 148AC1734C6
+	for <linux-lvm@redhat.com>; Fri, 14 Jan 2005 23:15:34 +0100 (CET)
+Date: Fri, 14 Jan 2005 23:15:50 +0100
 From: Stephane Dupuis <hoper@free.fr>
-Message-ID: <1266458715.20050114224006@free.fr>
-Subject: Re: [linux-lvm] understanding large LVM volumes
-In-Reply-To: <41E80382.1000403@svs.gsfc.nasa.gov>
-References: <41E80382.1000403@svs.gsfc.nasa.gov>
+Message-ID: <1042776283.20050114231550@free.fr>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] Re: RAID, LVM and dm_crypt, please confirm setup
 Reply-To: hoper@free.fr,
 	LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
@@ -32,63 +30,75 @@ To: LVM general discussion and development <linux-lvm@redhat.com>
 
 Hi,
 
->Does anyone have experience with very large LVM VGs?
+> I have (at home) the following setup for my data discs:
+> 
+2x 40  GB RAID1 -->> /dev/md0
+2x 80  GB RAID1 -->> /dev/md1
+2x160 GB RAID1 -->> /dev/md2
+> 
+> These are part of volume group vg00, consisting of 9 logical volumes 
+> lv00...lv09
+> 
+> Now i set up crypt devices with cryptsetup and named these crypt devices 
+> clv00...clv09.
 
-Not me :o) And in fact I'm just a new user of lvm.
+Well I found this post really interesting :)
 
-> What is the maximum size of a single VG?
+First, I'm sorry cause I can't help you here and say for sure "you are
+doing the right thing" or "take care, what you are doing is dangerous".
 
-What I guess is that there is no limit for a Volume group,
-because in fact, a volume group is only a "logical group" of many
-logical volume. You can group logicals volumes by applications,
-or by criticity (dev, prod...) or whatever you want.
-But theses "volume group" information doesn't require lot's of space anyway.
+But I want to make something like this at home and so have the same
+concern about the good way to resize the files systems.
 
-> How does the Physical Extent size affect the maximum VG size?
-> How does one go about chosing a PE size for a VG?
+I don't know if it will help but I thought about another way of
+mixing raid, lvm and dmcrypt.
+Instead of crypting the logical volume, why not crypt the raid device?
+So you can have :
 
-The PE Size does not affect VG size, but it's affect the maximum
-size of a logical volume.
+Physical drives -->> /dev/mdX
+using dmcrypt on it -->> /dev/mapper/mdX_crypt
+And after make your LVM physical volume :
+pvcreate /dev/mapper/mdX_crypt   ******* NOTE, SEE UNDER
+vgcreate testvg /dev/mapper/mdX_crypt
+and so on...
 
-extract of the vgcreate man page :
+In this way, you will never have to resize the crypted device.
+You will just have to resize the logical volume and the filesystem
+as usual.
 
---
-To limit kernel memory usage, there is a limit of 65536 physical extents (PE) per logical volume,  so
-       the  PE  size determines the maximum logical volume size.  The default PE size of 4MB limits a single
-       logical volume to 256GB (see the -s option to raise that limit).  There is also (as of Linux  2.4)  a
-       kernel limitation of 2TB per block device.
---
+****** To be abble to do this, you need to edit the /etc/lvm/lvm.conf
+file and change the "type" line to :
+types = [ "device-mapper", 16 ]
 
-So, to limit the size of the mapping between the physical extend (PE)
-and the real physical location of the data, gods say that you can't
-use more than 65536 PE for a logical volume.
+Another advantage of this "crypted md" architecture (compare to
+crypt the logical volume) is that the whole volume group are crypted,
+included all the lvm metadata.
 
-So if you want to make logicals volumes as big a 1TB each, you need to
-change the size of the PE to, at least : 1024*1024 MB /65536 = 16 MB
-Of course, stick to the limit so much seems not really secure, so
-I advive you to choose at least 32 MB for the PE size in this case
-(or even more). I read that the maximum size for the physical extend
-is 16 GB, so choosing a big value here (128 MB ?) is not a problem.
+With your implementation, anybody can have access to the volume group
+metadata, the logicals volumes names and so on...
+(naming a logical volume "mpeg3_and_warez_fuck_riaa_lv" may not be a
+good idea here ;o)
 
-Also note that with a 32 bit kernel, you have a limit of 2TB per
-logical volume, I don't know if this limit disappear with a 64 bit
-kernel.
+With all lvm metadata crypted, nobody can even know that you are
+using lvm...
 
-So, with 10 logical volume of 1B each for exemple, you will have
-your 10TB of data in only one volume group.
+Of course, there are some drawback :(
+First, It's mean that the same key will be use for a whole /dev/dm.
+So, if you make a volme group on it, and.. let's say 10 logical
+volume, it's mean than theses 10 lvs will be crypted with the same
+key and that you can't choose to mount only 9 and think the last
+one is "secure"
 
-But think hard about it....
-Are you sure you can't "logicaly" split it ? and that the 10 TB of
-data will concern the same software or pool of user and so on ?
-Are you sure you will not have to move only a part of the data one day ?
-(add a new server and need to export some of the data to import it
-to the new server ?)
-Also think about how you will (if you need) backup the whole thing...
+I did'nt decide wich way I will choose yet... but I need to have
+a logical volume that don't have the same key as the other.
+So I can't choose my way. I will surely make as you did... or mix the two ways.
+(crypt the /dev/dm, make a vg, make lvs and for one particular lv,
+crypt it again :o) Of course, I guess I will need cpu power here ;o)
 
-Well, again, all this post is just guessing and a quick look
-at the man page, so you should wait for a answer from someone
-who really know it anyway :o)
+So, I can't answer to your questions, I just also wonder about the
+better way of putting all theses tools together...
 
+Any comments are welcome...
 
 Stephane Dupuis
 -- 
