@@ -1,7 +1,7 @@
-Message-Id: <10FE17AD5F7ED31188CE002048406DE8462D19@lsv-msg06a.stortek.com>
-From: "Nemecek, Lad" <NemecL@LOUISVILLE.STORTEK.COM>
 MIME-Version: 1.0
-Subject: [linux-lvm] How to get lvm partition size from kernel space?
+From: Pierrick PONS <ppons@cvf.fr>
+Message-Id: <E16Sist-000136-00@arwen.dev33.cvf>
+Subject: [linux-lvm] extending a logical volume
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -12,17 +12,26 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Jan 21 12:04:02 2002
+Date: Mon Jan 21 12:10:01 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: "'linux-lvm@sistina.com'" <linux-lvm@sistina.com>
+To: linux-lvm@sistina.com
 
-Greetings,
+I've read the extending logical volume section and I can't believe this.
+According to the doc, it would be impossible to extend a logical volume 
+without unmounting it first.
+I'm using a ext3 (with a 2.4.17 kernel) filesystem and I'd like to extend my 
+logical volume without unmounting it first. This would be used on a production 
+server, so I can't unmount any logical volume.
 
-Does anyone know how to obtain lvm partition size when we are in 
-a kernel module? 
+I've seen that a ext2online patch does exist, maybe this fonctionnality is 
+still implemented in a newer kernel ?
 
-Thanks,
+Could you give me, if it exists, a method to extend the size without unmount 
+the logical volume ?
 
-Lad Nemecek
+Thank's a lot.
+
+
+Pierrick
