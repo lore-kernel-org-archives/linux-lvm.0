@@ -1,10 +1,8 @@
-Subject: Re: [linux-lvm] Re: [PATCH] 2.5 version of device mapper submission
-Message-ID: <20021014175608.GA14963@fib011235813.fsnet.co.uk>
-References: <1034453946.15067.22.camel@irongate.swansea.linux.org.uk> <1034614756.29775.5.camel@UberGeek.coremetrics.com>
+From: Josh Duncan <linux-lvm@msmd.net>
+Message-ID: <20021014200329.GA4885@msmd.net>
 Mime-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <1034614756.29775.5.camel@UberGeek.coremetrics.com>
-From: Joe Thornber <joe@fib011235813.fsnet.co.uk>
+Subject: [linux-lvm] lvm with gpt partitioning?
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,33 +13,51 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Oct 14 13:03:27 2002
+Date: Mon Oct 14 15:07:51 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: Austin Gonyou <austin@coremetrics.com>
-Cc: linux-lvm@sistina.com, Alan Cox <alan@lxorguk.ukuu.org.uk>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+To: linux-lvm@sistina.com
 
-On Mon, Oct 14, 2002 at 11:59:17AM -0500, Austin Gonyou wrote:
-> Just curious, but device-mapper and 2.5.42 do not seem to jive very
-> well. Please advise.
+Hi all,
 
-Try the patches at:
+I hope this isn't a redundant question, I've tried looking through the mailing
+lists with no luck:
 
-http://people.sistina.com/~thornber/patches/2.5-unstable/
+I'm having a problem setting up physical volumes on an ia64 machine running a
+2.4.18+lvm1.0.5 kernel.
 
-There are three minor changes:
+the disk is labelled using an "EFI GPT" disk label/partitioning arrangement.  I
+currently have two partitions defined, the first is 2gb and the second is 16gb.
+I can do a pvcreate on the second, but not on the first.  I've attached output
+from parted, fdisk, and pvcreate below...
 
-09.patch
-  [Device-mapper]
-  Remove linux/iobuf.h include.
+any ideas?
+--Josh
 
-10.patch
-  [Device-mapper]
-  Add call to blk_queue_bounce() at the beginning of the request function.
+------
+fdisk:
+------
+[root@one sbin]# fdisk -l /dev/sdb
 
-11.patch
-  [Device-mapper]
-  Pass md into dm_suspend/dm_resume instead of a kdev_t.
+Disk /dev/sdb: 255 heads, 63 sectors, 4427 cylinders
+Units = cylinders of 16065 * 512 bytes
 
-- Joe
+   Device Boot    Start       End    Blocks   Id  System
+/dev/sdb1             1      4428  35566479+  ee  EFI GPT
+
+-------
+parted:
+-------
+[root@one sbin]# parted /dev/sdb print
+Disk geometry for /dev/sdb: 0.000-34732.890 megabytes
+Disk label type: GPT
+Minor    Start       End     Filesystem  Name                  Flags
+1          0.017   2047.000                                    lba
+2       2047.000  18733.000                                    lba
+
+---------
+pvcreate:
+---------
+[root@one sbin]# pvcreate /dev/sdb1
+pvcreate -- invalid partition type 0xee for "/dev/sdb1" (must be 0x8e)
