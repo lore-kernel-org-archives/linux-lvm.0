@@ -1,24 +1,19 @@
 Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id i5OA2V013252
-	for <linux-lvm@redhat.com>; Thu, 24 Jun 2004 06:02:31 -0400
-Received: from bluebottle-fe1.bluebottle.com (bluebottle-fe1.bluebottle.com
-	[209.223.237.195])
-	by mx1.redhat.com (8.12.10/8.12.10) with ESMTP id i5OA2Te1011854
-	for <linux-lvm@redhat.com>; Thu, 24 Jun 2004 06:02:29 -0400
-Received: from localhost.localdomain (modem-3733.cheetah.dialup.pol.co.uk
-	[217.134.110.149]) (authenticated bits=0)
-	by bluebottle-fe1.bluebottle.com (8.12.11/8.12.11) with ESMTP id
-	i5O9sMGS005189
-	for <linux-lvm@redhat.com>; Thu, 24 Jun 2004 04:54:24 -0500
-Date: Thu, 24 Jun 2004 11:02:19 +0100
-From: Robin Green <greenrd@greenrd.org>
-Message-ID: <20040624100039.GE2900@localhost.localdomain>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="73fGQZLCrFzENemP"
-Content-Disposition: inline
-Subject: [linux-lvm] Boot failure remounting rootfs on kernel 2.6.6 - kernel
-	2.6.3 worked
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id i5OCSq015004
+	for <linux-lvm@redhat.com>; Thu, 24 Jun 2004 08:28:52 -0400
+Received: from mta07-svc.ntlworld.com (mta07-svc.ntlworld.com [62.253.162.47])
+	by mx1.redhat.com (8.12.10/8.12.10) with ESMTP id i5OCSoe1013598
+	for <linux-lvm@redhat.com>; Thu, 24 Jun 2004 08:28:50 -0400
+Received: from [192.168.1.13] ([80.4.1.184]) by mta07-svc.ntlworld.com
+	(InterMail vM.4.01.03.37 201-229-121-137-20020806) with ESMTP
+	id <20040624122900.ILGK5696.mta07-svc.ntlworld.com@[192.168.1.13]>
+	for <linux-lvm@redhat.com>; Thu, 24 Jun 2004 13:29:00 +0100
+Message-ID: <40DAC904.5050801@ntlworld.com>
+Date: Thu, 24 Jun 2004 13:28:52 +0100
+From: Rupert Hair <rupert.hair@ntlworld.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] Disk problems half way through a pvmove! HELP!
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -29,47 +24,39 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: linux-lvm@redhat.com
 
+Pvmove was doing its work, happily moving data from one of my old disks 
+(hdh a 160GB Maxtor) but when it got to 46.5% all disk access stopped. 
+I had a look at the console and sure enough there were hundreds of "hdh: 
+lost interrupt" errors.  Some googleing has turned up the following 
+explanation:
 
---73fGQZLCrFzENemP
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+"Looking at the kernel source revealed only that this message appears 
+when the kernel gets bored waiting for an interrupt from IDE controller 
+(which takes some time, hence the long delays)."
 
-I'm using lvm2 on Fedora Core, and when I upgraded to kernel 2.6.6 from 2.6=
-.3
-the boot process failed on remounting the / filesystem ("bread failed" was
-mentioned).
+Could anyone tell me if this is correct and any ideas what might cause 
+this?  I'm running:
+	Kernel: 2.6.5-mm1 (for the DM mirror target support)
+	LVM version:     2.00.08 (2003-11-14)
+	Library version: 1.00.17-ioctl (2004-04-19)
+	Driver version:  4.1.0
+with a LVM2 VG (vgconverted from LVM1) spread across various Maxtor IDE 
+disks.  I tried a pvscan -v to post here but it hung just after "Walking 
+through all physical volumes".
 
-/ is: /dev/mapper/Volume00-LogVol02 on / type reiserfs (rw)
+Does anyone have any advice on what to do in this situation?  My box is 
+still up but I guess pvmove isn't going to finish on its own (but you 
+can hopefully give me more details on this) so what would happen if I 
+had to kill it?  Would I be left with a dead VG or just some data on 
+either disk?
 
-I tried remounting manually at the rescue prompt, but that also didn't work
-("bread failed" again).
+Finally: As pvmove doesn't seem to have any options for moving a 
+specific portion of the data from a drive how can I recover from this if 
+I am left with some data on this potentially bad drive?
 
-What's changed:
-- Working kernel: 2.6.3 + skas patch + kdb patch
-- Failed kernel: 2.6.6 + skas patch
+Thanks in advance for any info or advice,
 
-What's not changed:
-- Same initrd (built for 2.6.0)
-
-I tried passing selinux=3D0 in case it was selinux but this made no differe=
-nce.
-
---=20
-Robin
-
---73fGQZLCrFzENemP
-Content-Type: application/pgp-signature
-Content-Disposition: inline
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.2.3 (GNU/Linux)
-
-iD8DBQFA2qaqtPCt67UksSYRAmQfAJ0S7u4DjFpuGTgmQ+93kOHEvEv7KwCfTWc+
-vsDNxTFULUrACR3agFzB5Vs=
-=mCl/
------END PGP SIGNATURE-----
-
---73fGQZLCrFzENemP--
+Rupert
