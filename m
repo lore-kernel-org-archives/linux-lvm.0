@@ -1,11 +1,11 @@
-From: Andreas Dilger <adilger@turbolabs.com>
-Date: Fri, 5 Oct 2001 11:54:32 -0600
-Subject: Re: [linux-lvm] Clarification
-Message-ID: <20011005115432.C315@turbolinux.com>
-References: <00ba01c14d93$70ec7340$836788cf@industry>
+Date: Fri, 5 Oct 2001 21:31:21 +0200
+From: Luca Berra <bluca@comedia.it>
+Subject: Re: [linux-lvm] pvcreate fails on a software RAID metadisk
+Message-ID: <20011005213121.A4811@colombina.comedia.it>
+References: <3BBC8B5B.1A484028@legis.state.ak.us> <NEBBLHFAEINCLDICDLOAIENJCHAA.yves.alloyer@slpinfoware.com>
 Mime-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <00ba01c14d93$70ec7340$836788cf@industry>
+In-Reply-To: <NEBBLHFAEINCLDICDLOAIENJCHAA.yves.alloyer@slpinfoware.com>; from Yves.ALLOYER@slpinfoware.com on Fri, Oct 05, 2001 at 11:13:35AM +0200
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -19,23 +19,38 @@ List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: "Jason A. Lixfeld" <jlixfeld@andromedas.com>
-Cc: linux-lvm@sistina.com
+To: linux-lvm@sistina.com
 
-On Oct 05, 2001  07:46 -0400, Jason A. Lixfeld wrote:
-> I'm just looking for clarification:
-> 
-> ext2resize will actually resize ext3 aswell?  With no extra flags?  It
-> will just know that the LVM is ext3 and not ext2?
+On Fri, Oct 05, 2001 at 11:13:35AM +0200, yves.alloyer wrote:
+> I did a quick and dirty patch which fixed it for me.
+> Please be aware: I am new to this list, new to linux LVM...
+> I know the patch will prevent you from using any partitioned MD device in
+> LVM. I have no idea of further implications.
+Yves, thanks this seems to have fixed this, i still agree with Andreas that lvm_check_partitioned_dev should be
+checked.
+i wuld use LVM_DEVICE_TYPE_MD instead of 2 in the patch
+as for partitioned md device i believe the major is different from 9, but i would not suggest using them
+with lvm anyway.
 
-If it is unmounted, it will work fine.  There is no difference between
-ext2 and ext3 for a (cleanly) unmounted filesystem (the journal is just
-a regular file).  If you try to resize a filesystem that has a dirty
-journal (e.g. after a crash) it will refuse to do so and you need to
-run e2fsck.
+patch with my mod follows for the lazy,
+pleas check it in cvs for the time being.
 
-Cheers, Andreas
---
-Andreas Dilger  \ "If a man ate a pound of pasta and a pound of antipasto,
-                 \  would they cancel out, leaving him still hungry?"
-http://www-mddsp.enel.ucalgary.ca/People/adilger/               -- Dogbert
+--- tools/lib/lvm_check_partitioned_dev.c.bluca	Thu Aug 23 07:51:53 2001
++++ tools/lib/lvm_check_partitioned_dev.c	Fri Oct  5 21:18:51 2001
+@@ -55,6 +55,8 @@
+ 	switch (lvm_get_device_type(st_rdev)) {
+ 	case LVM_DEVICE_TYPE_INVALID:
+ 	    break;
++	case LVM_DEVICE_TYPE_MD:
++	    break;
+ 	default:
+ 	    ret = TRUE;
+ 	}
+
+-- 
+Luca Berra -- bluca@comedia.it
+        Communication Media & Services S.r.l.
+ /"\
+ \ /     ASCII RIBBON CAMPAIGN
+  X        AGAINST HTML MAIL
+ / \
