@@ -1,11 +1,8 @@
-Date: Tue, 2 Oct 2001 22:00:53 +0200
-From: Wichert Akkerman <wichert@cistron.nl>
-Message-ID: <20011002220053.H14582@wiggy.net>
-References: <20011002202934.G14582@wiggy.net> <E15oUUf-0005Xw-00@the-village.bc.nu>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <E15oUUf-0005Xw-00@the-village.bc.nu>
-Subject: [linux-lvm] Re: partition table read incorrectly
+Message-ID: <20011002200722.18323.qmail@web14404.mail.yahoo.com>
+Date: Tue, 2 Oct 2001 13:07:22 -0700 (PDT)
+From: Aman Shahi <shahi_aman@yahoo.com>
+MIME-Version: 1.0
+Subject: [linux-lvm] Re: linux2.4.10/lvm1.0.1rc3 does not compile
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -19,26 +16,32 @@ List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: Alan Cox <alan@lxorguk.ukuu.org.uk>
-Cc: linux-kernel@vger.kernel.org, linux-lvm@sistina.com
+To: linux-lvm@sistina.com
 
-Previously Alan Cox wrote:
-> Does it complain about wrong block sizes ?
+If I am not mistaken. the function 
+static void __upadte_hardsectsize(lv_t *lv) 
+has been declared and called as it is in lvm.c. But in
+the definition it has been written as 
+static void __update_hardblocksize(lv_t *lv)
 
-No
- 
-> The partition code will look for tables. That bit is fine
+so changing __update_hardblocksize(lv_t *lv)
+in ~/LVM/1.0.1-rc3/kernel/lvm.c and
+~linux-2.4.10/drivers/md/lvm.c 
+to  __update_hardsectsize(lv_t *lv)
+should resolve this compilation problem.
 
-If that bit is fine then how can it differ in opinion from fdisk?
+regards,
+Aman Shahi.
 
-> The exact error would be good too
+>LVM 1.0.1rc3 does not compile (link) with Linux
+2.4.10 >on my system.
 
- I/O error: dev 08:11, sector 0
+>Does anyone know what went wrong?
+>Regards, Markus
 
-Wichert.
 
--- 
-  _________________________________________________________________
- /       Nothing is fool-proof to a sufficiently talented fool     \
-| wichert@wiggy.net                   http://www.liacs.nl/~wichert/ |
-| 1024D/2FA3BC2D 576E 100B 518D 2F16 36B0  2805 3CB8 9250 2FA3 BC2D |
+
+__________________________________________________
+Do You Yahoo!?
+Listen to your Yahoo! Mail messages from any phone.
+http://phone.yahoo.com
