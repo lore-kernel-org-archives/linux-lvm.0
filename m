@@ -1,11 +1,9 @@
-Return-Path: <root@srv.sistina.com>
-Date: Tue, 24 Apr 2001 15:00:20 +0000
-From: "Heinz J. Mauelshagen" <Mauelshagen@sistina.com>
-Message-ID: <20010424150020.H31988@sistina.com>
-References: <20010419132927.D10345@sistina.com> <E14qJhd-0007oR-00@the-village.bc.nu> <20010419142400.E10345@sistina.com> <20010419213335.E30135@suse.de> <yq1vgo0lljm.fsf@jaguar.mkp.net>
-Mime-Version: 1.0
-In-Reply-To: <yq1vgo0lljm.fsf@jaguar.mkp.net>; from mkp@mkp.net on Thu, Apr 19, 2001 at 03:46:53PM -0400
-Subject: [linux-lvm] Re: [repost] Announce: Linux-OpenLVM mailing list
+Return-Path: <chip.christian@storageapps.com>
+Message-ID: <23D04BDBA646D411BDDD00D0B774B539029638FD@SA-BWMAIL1>
+From: "Christian, Chip" <chip.christian@storageapps.com>
+Subject: RE: [linux-lvm] Does LVM support alternate links?
+Date: Tue, 24 Apr 2001 11:14:58 -0400
+MIME-Version: 1.0
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -19,89 +17,35 @@ List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: "Martin K. Petersen" <mkp@mkp.net>
-Cc: Jens Axboe <axboe@suse.de>, AJ Lewis <lewis@sistina.com>, Alan Cox <alan@lxorguk.ukuu.org.uk>, Jes Sorensen <jes@linuxcare.com>, linux-kernel@vger.kernel.org, linux-openlvm@nl.linux.org, Arjan van de Ven <arjanv@redhat.com>, riel@conectiva.com.br, linux-lvm@sistina.com
+To: linux-lvm@sistina.com
 
-Sorry, sorry.
+I haven't looked closely enough at what's in the stock kernel right now, but last week I noticed that the patched 2.4.2 in RedHat 7.1 contains a multipathing driver, using raid1.c as a starting point.
 
-The lists are open.
-Please tell us if mailman still bothers.
+-----Original Message-----
+From: Heinz J. Mauelshagen [mailto:Mauelshagen@sistina.com]
+Sent: Tuesday, April 24, 2001 10:00
+To: linux-lvm@sistina.com
+Subject: Re: [linux-lvm] Does LVM support alternate links?
 
-On Thu, Apr 19, 2001 at 03:46:53PM -0400, Martin K. Petersen wrote:
-> >>>>> "Jens" == Jens Axboe <axboe@suse.de> writes:
-> 
-> Jens> First one gets a mail saying that the mail sent is queued for
-> Jens> moderator approval, since I'm not on the list. Then later a
-> Jens> second mail arrives, saying the mail has been rejected by the
-> Jens> moderator.
-> 
-> Yep.  Same here.  Latest and greatest...
-> 
-> ---8<---
-> From: linux-lvm-admin@sistina.com
-> Subject: Your message to linux-lvm awaits moderator approval
-> To: mkp@mkp.net
-> Date: Tue, 10 Apr 2001 22:02:40 +0200
-> 
-> Your mail to 'linux-lvm' with the subject
-> 
->     Re: [linux-lvm] *** ANNOUNCEMENT *** LVM 0.9.1 Beta 7 available at
-> www.sistina.com
-> 
-> Is being held until the list moderator can review it for approval.
-> ---8<---
-> 
-> Now, I held my breath until the following day...
-> 
-> ---8<---
-> From: linux-lvm-admin@sistina.com
-> Subject: Request to mailing list linux-lvm rejected
-> To: mkp@mkp.net
-> Date: Wed, 11 Apr 2001 17:32:36 +0200
-> 
-> Your request to the linux-lvm mailing list
-> 
->     Posting of your message titled "Re: [linux-lvm] *** ANNOUNCEMENT
-> *** LVM 0.9.1 Beta 7 available at www.sistina.com"
-> 
-> has been rejected by the list moderator.  The moderator gave the
-> following reason for rejecting your request:
-> 
-> "Non-members are not allowed to post messages to this list."
-> ---8<---
-> 
-> Since there is such a long delay between the two mails, it's obvious
-> that there is human intervention involved.  And when an on-topic mail
-> is rejected by the moderator, well... go figure.
-> 
-> And this isn't the first time this has happened to me and several
-> others.  By far...
-> 
-> -- 
-> Martin K. Petersen, Principal Linux Consultant, Linuxcare, Inc.
-> mkp@linuxcare.com, http://www.linuxcare.com/
-> SGI XFS for Linux Developer, http://oss.sgi.com/projects/xfs/
-> 
-> -
-> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> Please read the FAQ at  http://www.tux.org/lkml/
 
--- 
+On Fri, Apr 20, 2001 at 07:00:10PM +0200, Jens Bruckmann wrote:
+> Hallo everybody,
+> 
+> I would like to know if the LVM supports alternate-links to the same
+> physical device over two fiber-channel links, so if one link fails, LVM
+> automatically uses the second link as it does under its "original" HP-UX.
 
-Regards,
-Heinz    -- The LVM Guy --
+No, as someone else already answered.
 
-*** Software bugs are stupid.
-    Nevertheless it needs not so stupid people to solve them ***
+There's work queued though to enhance LVM to support multi-pathing.
 
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+A brief description of our ideas includes that a path to a device has
+properties related to it like for eg. bandwidth or reliability of that
+particular path.
+These properties will be fed into the automatic decision taking process
+in the LVM driver to which path (if there's multiple available) a switch-over
+is going to take place.
+There'l be CLI and config file support to configure pathes/properties,
+keep that state and allow the user to witch over to different pathes manually.
 
-Heinz Mauelshagen                                 Sistina Software Inc.
-Senior Consultant/Developer                       Am Sonnenhang 11
-                                                  56242 Marienrachdorf
-                                                  Germany
-Mauelshagen@Sistina.com                           +49 2626 141200
-                                                       FAX 924446
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+Time line for this is summer.
