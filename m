@@ -1,10 +1,10 @@
 From: Jose Luis Domingo Lopez <linux-lvm@24x7linux.com>
-Subject: Re: [linux-lvm] Insufficient allocatable extents suitable for striping for logical volume
-Message-ID: <20031201194911.GA4846@localhost>
-References: <34504.192.168.0.2.1069892769.squirrel@meuh.dyndns.org> <20031128095658.GA2263@tykepenguin.com> <35752.192.168.0.2.1070237300.squirrel@meuh.dyndns.org> <20031201010902.L16901@uk.sistina.com>
+Subject: Re: [linux-lvm] vgscan messages regarding read-only cdrom
+Message-ID: <20031201195526.GB4846@localhost>
+References: <20031130185807.GF7634@glorybox.de> <20031130212501.GO19217@percy.comedia.it> <20031201100842.GA3038@glorybox.de>
 Mime-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20031201010902.L16901@uk.sistina.com>
+In-Reply-To: <20031201100842.GA3038@glorybox.de>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,21 +15,37 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Dec  1 13:50:02 2003
+Date: Mon Dec  1 13:56:02 2003
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Monday, 01 December 2003, at 01:09:02 +0000,
-Alasdair G Kergon wrote:
+On Monday, 01 December 2003, at 11:08:42 +0100,
+Kai Weber wrote:
 
-> Otherwise forget the striping, and create or extend LVs on the other
-> disk - LVM2 will let you specify a different number of stripes
-> when you extend an LV (e.g. lvextend -i1).
->  
-Any idea about when "pvmove" for linux kernels 2.6.x could be ready for
-wider testing ?
+> devices {
+>     dir = "/dev"
+>     scan = [ "/dev" ]
+>     filter = [ "r|cdrom|" ]
+>     cache = "/etc/lvm/.cache"
+>     write_cache_state = 1
+> }
+>                                                                                 
+It seems you can have just one instance of the "filter" directive, where
+you must put every filter you want to apply for devices. For example,
+this is what I have in my configuration file:
+filter = [ "r|hdd|", "r|cdrom|", "r|md|", "a|.*|" ]
+
+I accept every block device under /dev, but previously exclude /dev/hdd
+(my CD-ROM device), /dev/cdrom al MD metadevices from the list. It works.
+
+Greetings.
+
+PS: the man page for lvm.conf doesn't explicitily says you can have just
+one "filter" directive, neither the opposite, although the sample
+"lvm.conf" bundled with sources and packages seemd to give a hint about
+the correct syntax. Would it be necessary to be more specific about that ?
 
 Greetings.
 
