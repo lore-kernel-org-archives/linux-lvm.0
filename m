@@ -1,10 +1,10 @@
-Message-ID: <3EBBFF45.4050006@inode.at>
-From: Manfred Gschweidl <m.gschweidl@inode.at>
-MIME-Version: 1.0
-Subject: Re: [linux-lvm] mount root filesystem on lvm
-References: <3EBBF411.6060405@inode.at>
-In-Reply-To: <3EBBF411.6060405@inode.at>
-Content-Transfer-Encoding: 7bit
+From: Jose Luis Domingo Lopez <linux-lvm@24x7linux.com>
+Subject: Re: [linux-lvm] [Q] patch to overcome 2TB block device limit?
+Message-ID: <20030509194249.GB6189@localhost>
+References: <b9fsao$k3s$1@main.gmane.org>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <b9fsao$k3s$1@main.gmane.org>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,69 +15,32 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Fri May  9 14:19:03 2003
+Date: Fri May  9 14:42:01 2003
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-hello once again,
+On Friday, 09 May 2003, at 18:29:46 +0900,
+A. S. wrote:
 
-i used the ls command within the "linuxrc" script of the initial ramdisk.
-"ls /dev/mapper/control" results only with "/dev/mapper/control"
+> Is there any kernel patches to exceed the 2TB kernel block device limit ?
+> I want to be able to create about single 5TB LV.
+> 
+Yes, and it has been in mainline 2.5.x kernels for a while now. Do a
+"make menuconfig" and under "Block devices" the last option is 
+"[ ] Support for Large Block Devices". From the help:
 
-"ls /dev/mapper results in following output:
-control
-...
-progs-root
-...
+  x CONFIG_LBD:                                                             x   
+  x                                                                         x   
+  x Say Y here if you want to attach large (bigger than 2TB) discs to       x   
+  x your machine, or if you want to have a raid or loopback device          x   
+  x bigger than 2TB.  Otherwise say N.                                      x
 
-so i used "root=/dev/mapper/progs-root" as boot option, but i can still 
-not mount the root filesystem.
+I don't know if it has been backported to 2.4.x, but seems reasonable.
 
-was anyone successfull with booting the root-filesystem on am lvm-volume 
-with lvm2 and device-mapper interface, using an initial ramdisk??
+Regards,
 
-can anyone point me in the right direction??
-
-
-thanks for any help in advance.
-
-greetings from austria,
-
-manfred
-
-
-
-
-Manfred Gschweidl wrote:
-> 
-> hello again,
-> 
-> now i solved the problems with "/dev/mapper/control".
-> 
-> it seems, that the kernel now finds all volumegroups, but now i get a 
-> kernel panic, that the kernel cannot mount my root filesystem within the 
-> lvm volumes. the message says, that i should append the correct "root=" 
-> boot option on startup??
-> 
-> with kernel 2.4.12 and lvm 1.x it was "/dev/progs/root".
-> now i use kernel 2.4.20 with device-mapper and lvm2.
-> as with kernel 2.4.12 i use a inital ramdisk.
-> 
-> how can i find out, what now is the correct option for "root="??
-> 
-> 
-> thanks for any help again.
-> 
-> 
-> manfred
-> 
-> 
-> 
-> 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
-> 
+-- 
+Jose Luis Domingo Lopez
+Linux Registered User #189436     Debian Linux Sid (Linux 2.5.69)
