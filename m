@@ -1,12 +1,12 @@
-Return-Path: <thornber@btconnect.com>
-Date: Wed, 18 Jul 2001 11:59:43 +0100
-Subject: Re: [linux-lvm] what happens when hdX get hdY in a VG
-Message-ID: <20010718115943.A712@btconnect.com>
-References: <5.0.2.1.2.20010718114553.00a30b40@193.0.0.208> <Pine.LNX.4.30.0107181226430.17377-100000@diablo.unixag-zw.fh-kl.de>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <Pine.LNX.4.30.0107181226430.17377-100000@diablo.unixag-zw.fh-kl.de>; from jovi@unixag-zw.fh-kl.de on Wed, Jul 18, 2001 at 12:48:09PM +0200
-From: Joe Thornber <thornber@btconnect.com>
+Return-Path: <iain@sandon.ca>
+From: Iain Campbell <iain@sandon.ca>
+Subject: Re: [linux-lvm] HUGE LVM log file...
+Date: Wed, 18 Jul 2001 09:29:37 -0400
+References: <5.0.2.1.2.20010718104547.00a40ec0@193.0.0.208> <5.0.2.1.2.20010718114553.00a30b40@193.0.0.208>
+In-Reply-To: <5.0.2.1.2.20010718114553.00a30b40@193.0.0.208>
+MIME-Version: 1.0
+Message-Id: <01071809293700.00921@exodus>
+Content-Transfer-Encoding: 8bit
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -19,24 +19,49 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Wed, Jul 18, 2001 at 12:48:09PM +0200, Oliver Jovic wrote:
-> Hi, :-)
-> 
-> well what happens when i have a VG build out of /dev/hd[e-h]1 (4
-> harddrives) and build in now a additional IDE controller and 4
-> additional harddrives and this new IDE controller wants these
-> driverletters now, so /dev/hde gets /dev/hdi and so on? Will a vgscan
-> in the startupscripts detect the right drives anyways due to the headers
-> of each harddisk and build the VG/LV as it was before just with different
-> driveletters?
-> 
-> If not, what do i need to do? Havent found much info about it, but well
-> must be also be honest, hadnt much time to look for it. ;-/ Sorry if
-> somebody asked this already.
+On Wednesday 18 July 2001 05:47, you wrote:
+> At 18/07/01, you wrote:
+> >actually on AIX you can choose where the LV starts using PPs from
+> >
+> >         edge
+> >         middle
+> >         center
+> >         inner-middle
+> >         inner-edge
+> >
+> >middle is the default but I think this is more so the average performance
+> >of the LVs are better, but maybe not...
+>
+> I think that middle is the default because IBM drives are more performants
+> in the middle.
+>
+> I never use another brand of disks in a RS/6000 box so I can't tell you
+> more....
+>
 
-vgscan should do the right thing.
+Actually, it's not as elegant as that. AIX simply divides the total number of 
+PEs (or to use the AIX terminology, PPs) on the PV by five, thus allocating 
+one fifth of the total drive capacity into each of the five disk "areas" 
+mentioned in the earlier post. The problem is that there are more blocks on 
+the outer edge of the platter than the inner (geometry 101 ;), so what AIX 
+calls the "middle" of the platter really is more like one third or so from 
+the outer edge. 
 
-- Joe
+The theory is that data placed exactly in the middle of the platter has the 
+lowest average seek time, and AIX simplistically calls this the "fastest" 
+area of the disk. In fact the outer edge has the greatest peripheral speed 
+and gives the fastest data transfer rate. So, is "speed" to you seek time or 
+data throughput?
+
+Furthermore, if you have alook at the thread elsewhere in this group on disk 
+write ordering (64 bit scsi read/write) you begin to get a feel for the weird 
+and wonderful things drives do with data in hardware, which may mask alot of 
+the physical factors of where the data is  actually laid out on disk.
+
+Finally, of course, for files that arre read/written repeatedly, the o/s 
+buffer cache has a significant blurring effect on where the data may actually 
+be written on disk.
+
+iain 
