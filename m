@@ -1,72 +1,151 @@
-Date: Mon, 16 Oct 2000 08:09:24 -0500
-From: "Eric M. Hopper" <hopper@omnifarious.mn.org>
-Subject: [linux-lvm] LVM success story + suggestion
-Message-ID: <20001016080924.B8930@omnifarious.mn.org>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="z6Eq5LdranGa6ru8"
-Content-Disposition: inline
+Date: Mon, 16 Oct 2000 11:24:09 -0400 (EDT)
+From: Myles Uyema <myles@puck.nether.net>
+Subject: Re: [linux-lvm] LVM recovery suggestions?
+In-Reply-To: <Pine.LNX.4.10.10010160413440.24443-100000@puck.nether.net>
+Message-ID: <Pine.LNX.4.10.10010161122270.3775-101000@puck.nether.net>
+MIME-Version: 1.0
+Content-Type: MULTIPART/MIXED; BOUNDARY="718013950-1429244161-971709849=:3775"
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
 To: linux-lvm@msede.com
 
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
+  Send mail to mime@docserver.cac.washington.edu for more info.
 
---z6Eq5LdranGa6ru8
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+--718013950-1429244161-971709849=:3775
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 
-	I wipe out my / partition and re-installed my entire OS over
-this weekend without losing any user data.  This would not have been
-even remotely feasible without the fine grained partitioning that LVM
-permits.
+Additional debug info trying to recover VG "uyema" after kernel panic and
+unclean shutdown is attached as a gzipped text file.
 
-	I also converted filesystems over to reiserfs.  I think that
-doing this has caused my LVM partitions to become rather fragmented.  It
-would be nice to have a vgdefragment tool that would move around logical
-extents in an attempt to make them all contiguous again.  I doubt that
-fragmentation on a 4Mb block basis has that huge of an effect, but I
-still think it would be nice.  :-)
+--718013950-1429244161-971709849=:3775
+Content-Type: APPLICATION/octet-stream; name="lvm_woe.txt.gz"
+Content-Transfer-Encoding: BASE64
+Content-ID: <Pine.LNX.4.10.10010161124090.3775@puck.nether.net>
+Content-Description: capture session of futile lvm recovery
+Content-Disposition: attachment; filename="lvm_woe.txt.gz"
 
-	The defragment tool is probably something you'd want to do on a
-live system, so it should be done in a transactional sort of way with
-data structures being updated on stable storage in such a way that if
-things crash in the middle the LVM structures are recoverable.  I think
-this could be done though.
-
-	In fact, here's a sketch of how it could be done...
-
-	Allocate new PEs to move a bunch of LEs to, but don't update the
-data structures to say they're allocated.  Copy the LEs to the new PEs,
-flush the blocks to disk.  Update the data structures to say the LEs are
-now at the new location.  Flush those blocks to disk.  Repeat as
-necessary.
-
-	This requires that the update of an individual disk block be an
-atomic operation and that there be no interblock dependencies in the LVM
-data structures being updated.
-
-	This could also make pvmove operations safe.
-
-Have fun (if at all possible),
---=20
-The best we can hope for concerning the people at large is that they
-be properly armed.  -- Alexander Hamilton
--- Eric Hopper (hopper@omnifarious.mn.org http://www.omnifarious.org/~hoppe=
-r) --
-
---z6Eq5LdranGa6ru8
-Content-Type: application/pgp-signature
-Content-Disposition: inline
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.0.2 (GNU/Linux)
-Comment: For info see http://www.gnupg.org
-
-iD8DBQE56v4EG4QeWBeRdS8RAoRTAKDAIkn7Op1yvPtceB338lE71qvK3wCdHpKp
-+peVIBGpI+sx7lTr4y9myoY=
-=zDvP
------END PGP SIGNATURE-----
-
---z6Eq5LdranGa6ru8--
+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
+PiKaph39P8/kqIKwtwEA
+--718013950-1429244161-971709849=:3775--
