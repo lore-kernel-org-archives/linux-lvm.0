@@ -1,14 +1,11 @@
-From: "Chad C. Walstrom" <chewie@wookimus.net>
-Subject: Re: [linux-lvm] Directory becomes sticky socket?
-Message-Id: <20020205183643.GE9198@wookimus.net>
-References: <20020204154410.GA14373@wookimus.net>
-    <20020205110759.C30823@sistina.com>
+From: Andreas Dilger <adilger@turbolabs.com>
+Subject: Re: [linux-lvm] File Corruption on LVM LV's in same VG
+Message-Id: <20020205114111.F2928@lynx.turbolabs.com>
+References: <1012932686.4859.2.camel@cider.execulink.net>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-    protocol="application/pgp-signature";
-    boundary="mSxgbZZZvrAyzONB"
 Content-Disposition: inline
-In-Reply-To: <20020205110759.C30823@sistina.com>
+In-Reply-To: <1012932686.4859.2.camel@cider.execulink.net>; from
+    zweers@execulink.com on Tue, Feb 05, 2002 at 01:11:26PM -0500
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -19,43 +16,72 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Tue Feb  5 12:38:01 2002
+Date: Tue Feb  5 12:41:02 2002
 List-Id: <linux-lvm.redhat.com>
-To: linux-lvm@sistina.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: Erik Zweers <zweers@execulink.com>
+Cc: linux-lvm@sistina.com
 
---mSxgbZZZvrAyzONB
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Feb 05, 2002  13:11 -0500, Erik Zweers wrote:
+> The system was repaired and believed to be running properly, until
+> yesterday where we discovered that some of our ISO's were wrong,
+> consistently wrong in inconsistent locations.  I've pasted in a record
+> of the symptoms.  If anyone has any advice on what else to diagnose (if
+> your intrested in what is wrong) or how to repair It would be greatly
+> appreciated.
 
-On Tue, Feb 05, 2002 at 11:07:59AM +0100, Heinz J . Mauelshagen wrote:
-> Chad, check for processes having the socket open, stop them and retry.
-> An optional "chmod o-t /usr/share/doc/libldap2" may be necessary.
+I would suspect RAM or IDE problems.  If LVM is broken, it will stay
+broken, and if it is working it will stay working in the absence of
+other problems.  The failure symptoms would not look like this.
 
-I should have done that first, I suppose.  I did end up shutting down to
-single user mode, unmounting the logical volume, and using debugfs to
-clear the inode (which still reported the file as being a socket).  This
-actually happend to one other file, and a third was a corrupted symbolic
-link of some kind.  Regardless, with these three files cleared,
-fsck.ext3 happily cleared dtime's and reset inode sizes until I had a
-working system again.  Thanks to all who sent me suggestions.
+> I have not rebooted the machine yet, wanting to be sure that any
+> diagnoses that can be done is done.
 
---=20
-Chad Walstrom <chewie@wookimus.net>                 | a.k.a. ^chewie
-http://www.wookimus.net/                            | s.k.a. gunnarr
-Get my public key, ICQ#, etc. $(mailx -s 'get info' chewie@wookimus.net)
+Any output in dmesg?
 
---mSxgbZZZvrAyzONB
-Content-Type: application/pgp-signature
-Content-Disposition: inline
+> [root@ike iso]# cmp -l enigma-i386-disc1.iso ~carl/enigma-i386-disc1.iso
+> 2549832  77  67
+> 13431928 177 167
+> 14489440 376 366
+> 27451404 177 173
+> 33149724 376 336
+> 86298228 177 167
+> 116907524 372 332
+> 119130964  77  67
+> 121124171 376 356
+> 
+> 
+> [root@ike iso]# cmp -l enigma-i386-disc1.iso ~carl/enigma-i386-disc1.iso
+> 2549832  77  67
+> 11455071 177 167
+> 13431928 177 167
+> 18043044 277 273
+> 24780964 277 273
+> 86298228 177 167
+> 94133044 370 330
+> 106966431 177 167
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.0.6 (GNU/Linux)
-Comment: For info see http://www.gnupg.org
+Looks exclusively like single-bit errors.  Either RAM or IDE cable/driver.
+If it was RAM you would also have oopses or errors elsewhere.  Try turning
+off UDMA on the drive, update the IDE driver, new cable, etc.
 
-iD8DBQE8YCY7DMcLGCBsWv0RAvgRAJ9vl9mwtBfR+3NYIAwuTmgUn4O1hACZAc2p
-6NT1tu5t9Hqo0HP5nuTW2eI=
-=f/Su
------END PGP SIGNATURE-----
+> | wc -l     62
+> [root@ike iso]# ls -l enigma-i386-disc1.iso
+> -rw-r--r--    1 root     root     677961728 Feb  4 20:31
+> enigma-i386-disc1.iso
+> 
+> [root@ike iso]# fsck -n /dev/ide/iso
+> Parallelizing fsck version 1.23 (15-Aug-2001)
+> e2fsck 1.23, 15-Aug-2001 for EXT2 FS 0.5b, 95/08/09
+> Warning!  /dev/ide/iso is mounted.
+> /dev/ide/iso: clean, 24/1281696 files, 1351397/2560000 blocks
 
---mSxgbZZZvrAyzONB--
+Given that you only have single-bit error rates in the order of 1/10^7,
+the chance of such an error happening in the ext2 metadata is unlikely.
+
+Cheers, Andreas
+--
+Andreas Dilger
+http://sourceforge.net/projects/ext2resize/
+http://www-mddsp.enel.ucalgary.ca/People/adilger/
