@@ -1,10 +1,10 @@
-Return-Path: <darwin@gazeta.pl>
-Message-ID: <3ACAD385.9FE9BF6C@gazeta.pl>
-Date: Wed, 04 Apr 2001 09:55:49 +0200
-From: Artur Wiak <darwin@agora.pl>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] problem with vgcreate ...
+Return-Path: <adilger@turbolinux.com>
+From: Andreas Dilger <adilger@turbolinux.com>
+Message-Id: <200104040744.f347inj02400@webber.adilger.int>
+Subject: Re: [linux-lvm] problem with vgcreate ...
+In-Reply-To: <3ACAD385.9FE9BF6C@gazeta.pl> from Artur Wiak at "Apr 4, 2001 09:55:49
+ am"
+Date: Wed, 4 Apr 2001 01:44:48 -0600 (MDT)
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,27 +16,29 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm <linux-lvm@sistina.com>
+Content-Transfer-Encoding: 7bit
+To: linux-lvm@sistina.com
 
-Hi !
+Artur, you write:
+> I have problem with LVM beta6.
+> but when i started module and i want create lvm group
+> (vgcreate lvmgrp /dev/sd?? /dev/sd??) I obtain:
+> lvm -- lvm_chr_ioctl: unknown command 4004fe0a
+> vgcreate -- ERROR "Invalid argument" creating VGDA for volume group
+> "lvmgrp" in kernel.
 
-I have problem with LVM beta6.
-I have RedHat 7.0 with 2.4.2 kernel (compilation with
-util-linux 2.10o, modutlis 2.4.2 & e2fsprogs 1.19).
-After compilation all is OK.
-I'm installing LVM (first- .configure - OK,
-second- compilation with LVM as module - OK,
-third- make - OK, fourth- make install - OK).
-but when i started module and i want create lvm group
-(vgcreate lvmgrp /dev/sd?? /dev/sd??) I obtain:
-lvm -- lvm_chr_ioctl: unknown command 4004fe0a
-vgcreate -- ERROR "Invalid argument" creating VGDA for volume group
-"lvmgrp" in kernel.
-I don't known what i do bad (maybe any patch)?
-(With beta4 end beta5 this error recurs too.)
-Help me please.
+The problem is that the kernel is running LVM beta2, and the user tools are
+beta6.  I posted a patch to this list for vg_create_remove() which will fix
+the problem.  You will still get the ioctl message, but vgcreate will work.
+Let's hope it makes it into CVS soon.
 
-Thanks for Your help.
+The other option is to update your kernel code to beta6 with a patch.  See
+PATCHES/* for more info.
 
-Artur
+Cheers, Andreas
+-- 
+Andreas Dilger  \ "If a man ate a pound of pasta and a pound of antipasto,
+                 \  would they cancel out, leaving him still hungry?"
+http://www-mddsp.enel.ucalgary.ca/People/adilger/               -- Dogbert
