@@ -1,21 +1,19 @@
-Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id i3JKJ1j15218
-	for <linux-lvm@redhat.com>; Mon, 19 Apr 2004 16:19:01 -0400
-Received: from vanessa.wronline.net (vanessa.wronline.net [80.65.41.2])
-	by mx1.redhat.com (8.12.10/8.12.10) with SMTP id i3JKJ0JW012384
-	for <linux-lvm@redhat.com>; Mon, 19 Apr 2004 16:19:00 -0400
-Date: Mon, 19 Apr 2004 22:22:22 +0200
-Subject: [PATCH] fix list_devices() (was: Re: [linux-lvm] limit of 9 active
-	LVs w/ LVM2?)
-Message-ID: <20040419202222.GA2618@delusion.wronline.net>
-References: <20031222003854.GA30300@delusion.wronline.net>
+Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id i3KE4aj01431
+	for <linux-lvm@redhat.com>; Tue, 20 Apr 2004 10:04:36 -0400
+Received: from satellite.planete-terre.net ([81.80.96.66])
+	by mx3.redhat.com (8.12.10/8.12.10) with ESMTP id i3KE4Z87012725
+	for <linux-lvm@redhat.com>; Tue, 20 Apr 2004 10:04:35 -0400
+Received: from [127.0.0.1] (localhost.localdomain [127.0.0.1])
+	by satellite.planete-terre.net (Postfix) with ESMTP id B484A401E
+	for <linux-lvm@redhat.com>; Tue, 20 Apr 2004 16:04:26 +0200 (CEST)
+From: Vincent Schultz <vincent.schultz@wanadoo.fr>
+Message-Id: <1082469853.4653.6.camel@localhost.localdomain>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="wRRV7LY7NUeQGEoC"
-Content-Disposition: inline
-In-Reply-To: <20031222003854.GA30300@delusion.wronline.net>
-From: Stefan Paletta <stefanp@cabal1.com>
-Reply-To: Stefan Paletta <stefanp-exp-1083010943.647821@cabal1.com>,
-	LVM general discussion and development <linux-lvm@redhat.com>
+Date: Tue, 20 Apr 2004 16:04:26 +0200
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] LVM, loop device and Fedora 1 : Bad magic number
+Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -25,107 +23,57 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
+Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@redhat.com
 
+Hello all,
 
---wRRV7LY7NUeQGEoC
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+I wanted to test LVM with loopdevice, but I experience some problems.
+Here there are :
 
-In December I reported a problem with seemingly being unable to
-activate more than nine LVs. There were no answers. Yesterday I
-tracked this down. It's real, but it's different. 
+# vgscan
+vgscan -- reading all physical volumes (this may take a while...)
+vgscan -- "/etc/lvmtab" and "/etc/lvmtab.d" successfully created
+vgscan -- WARNING: This program does not do a VGDA backup of your volume
+group
+# dd if=/dev/zero of=/tmp/vdisk0 bs=50M count=1
+# losetup /dev/loop0 /tmp/vdisk0
 
-list_devices() in dm-ioctl.c forgets to take into account the
-terminating null for nl->name when calculating needed (although it
-does later in line 400 when actually filling the structs).
-Usually there would be one from the padding overhead, but ctl_ioctl()
-chops off the last byte when copying the ioctl argument back to user
-then.
+# pvcreate /dev/loop0
+pvcreate -- physical volume "/dev/loop0" successfully created
 
-The effect is (after creating 10 LVs, lvtest0 to lvtest9, in vg00):
+# vgcreate VG_home /dev/loop0
+vgcreate -- INFO: using default physical extent size 4 MB
+vgcreate -- INFO: maximum logical volume size is 255.99 Gigabyte
+vgcreate -- doing automatic backup of volume group "VG_home"
+vgcreate -- volume group "VG_home" successfully created and activated
 
-# lvm vgchange -ay
-  9 logical volume(s) in volume group "vg00" now active
-# lvm lvs
-LV      VG   Attr   LSize   Origin Snap%  Move Move%
-lvtest0 vg00 -wn--- 200.00M
-lvtest1 vg00 -wn-a- 200.00M
-lvtest2 vg00 -wn-a- 200.00M
-lvtest3 vg00 -wn-a- 200.00M
-lvtest4 vg00 -wn-a- 200.00M
-lvtest5 vg00 -wn-a- 200.00M
-lvtest6 vg00 -wn-a- 200.00M
-lvtest7 vg00 -wn-a- 200.00M
-lvtest8 vg00 -wn-a- 200.00M
-lvtest9 vg00 -wn-a- 200.00M
-# dmsetup ls
-vg00-lvtest9    (254, 9)
-vg00-lvtest8    (254, 8)
-vg00-lvtest7    (254, 7)
-vg00-lvtest6    (254, 6)
-vg00-lvtest5    (254, 5)
-vg00-lvtest4    (254, 4)
-vg00-lvtest3    (254, 3)
-vg00-lvtest2    (254, 2)
-vg00-lvtest     (254, 1)
+[root@satellite root]# lvcreate -L40M -n LV_admins VG_home
+lvcreate -- doing automatic backup of "VG_home"
+lvcreate -- logical volume "/dev/VG_home/LV_admins" successfully created
 
-As you can see the last character of the name of the last active LV is
-missing. This confuses lvm, which deactivates the LV it does not know
-anything about.
+[root@satellite root]# mke2fs -j /dev/VG_home/LV_admins
+mke2fs 1.34 (25-Jul-2003)
+Filesystem label=
+[...]
+Writing inode tables: done
+Creating journal (4096 blocks): done
 
-Things work fine with my modification:
+[root@satellite root]# dumpe2fs /dev/VG_home/LV_admins
+dumpe2fs 1.34 (25-Jul-2003)
+dumpe2fs: Bad magic number in super-block while trying to open
+/dev/VG_home/LV_admins
+Couldn't find valid filesystem superblock.
 
-# lvm vgchange -ay
-  10 logical volume(s) in volume group "vg00" now active
-# lvm lvs
-LV      VG   Attr   LSize   Origin Snap%  Move Move%
-lvtest0 vg00 -wn-a- 200.00M
-lvtest1 vg00 -wn-a- 200.00M
-lvtest2 vg00 -wn-a- 200.00M
-lvtest3 vg00 -wn-a- 200.00M
-lvtest4 vg00 -wn-a- 200.00M
-lvtest5 vg00 -wn-a- 200.00M
-lvtest6 vg00 -wn-a- 200.00M
-lvtest7 vg00 -wn-a- 200.00M
-lvtest8 vg00 -wn-a- 200.00M
-lvtest9 vg00 -wn-a- 200.00M
-# dmsetup ls
-vg00-lvtest9    (254, 9)
-vg00-lvtest8    (254, 8)
-vg00-lvtest7    (254, 7)
-vg00-lvtest6    (254, 6)
-vg00-lvtest5    (254, 5)
-vg00-lvtest4    (254, 4)
-vg00-lvtest3    (254, 3)
-vg00-lvtest2    (254, 2)
-vg00-lvtest1    (254, 1)
-vg00-lvtest0    (254, 0)
+Impossible to mount the FS too!
 
-Patch attached.
-Not sure if there are other such cases in the code, but a quick look
-did not turn up anything.
+I am using a 2.4.22-1.2174.nptl on a Fedora Core 1.& lvm-1.0.3-13
 
-Comments?
+I read that it should be a good idea to upgrade lvm, so I installed 
+lvm-1.0.5-1.i386.rpm for Red Hat Contrib, but it still the same.
 
--Stefan
--- 
- junior guru   SP666-RIPE     JID:stefanp@jabber.de.cw.net    SMP@IRC
+Do you have an idea ? Where did I go wrong ?
 
---wRRV7LY7NUeQGEoC
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: attachment; filename="dm-ioctl.patch"
+Thanks for your help,
 
---- drivers/md/dm-ioctl.c.orig	2004-04-18 10:57:26.829987376 +0200
-+++ drivers/md/dm-ioctl.c	2004-04-18 20:51:10.418378768 +0200
-@@ -366,7 +366,7 @@
- 	for (i = 0; i < NUM_BUCKETS; i++) {
- 		list_for_each_entry (hc, _name_buckets + i, name_list) {
- 			needed += sizeof(struct dm_name_list);
--			needed += strlen(hc->name);
-+			needed += strlen(hc->name) + 1;
- 			needed += ALIGN_MASK;
- 		}
- 	}
-
---wRRV7LY7NUeQGEoC--
+Vincent
