@@ -1,12 +1,12 @@
-Return-Path: <patrick@tykepenguin.cix.co.uk>
-Date: Thu, 2 Aug 2001 15:28:23 +0100
-From: Patrick Caulfield <caulfield@sistina.com>
-Subject: Re: [linux-lvm] Problem with vgimport/export
-Message-ID: <20010802152823.C575@tykepenguin.com>
-References: <3B680D93.53F3122B@searchengine.com>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <3B680D93.53F3122B@searchengine.com>; from dave@searchengine.com on Wed, Aug 01, 2001 at 02:09:23PM +0000
+Return-Path: <frodet@nvg.org>
+From: Frode =?iso-8859-1?q?Tenneb=F8?= <frodet@nvg.org>
+Date: Thu, 2 Aug 2001 23:42:34 +0200
+References: <01080123240507.01440@leia>
+In-Reply-To: <01080123240507.01440@leia>
+MIME-Version: 1.0
+Message-Id: <01080223423400.05532@leia>
+Content-Transfer-Encoding: quoted-printable
+Subject: [linux-lvm] Re: Kernel Oops
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -18,46 +18,50 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="iso-8859-1"
 To: linux-lvm@sistina.com
 
-On Wed, Aug 01, 2001 at 02:09:23PM +0000, Dave wrote:
-> Hi,
-> 
-> I have a machine with one boot disk and an LVM (0.9.1_beta2) array of 3
-> hardware RAID boxes. The boot disk, a non-LVM IDE drive recently started
-> locking up. I guessed it was about to fail (the clicking noises sort of gave
-> that away), so I figured I'd install a new disk. I checked out the LVM HOWTOs
-> with regards to moving the LVM array to a different machine (which I assume
-> also applies to replacing a broken boot disk in a machine, effectively moving
-> the array to a new system). I deactivated and exported the array successfully.
-> As a test, I tried re-importing it right after exporting it. No luck!
-> "vgimport comms /dev/sd[abc]1" gave error 14 and told me "vgimport -- ERROR
-> "vg_read(): PV" reading data of volume group "comms".
-> I didn't have much chance to try anything else as the hard-drive crashed
-> unrecoverably a few minutes later.
-> 
-> So, I installed SuSE 7.1 (and upgraded the kernel from 2.4.0 to 2.4.7) on a
-> new IDE drive and booted the machine. I still cannot get the vg to be
-> recognized. According to the FAQ, the vgimport command should have done
-> everything for me. Why could it not even import an array it had *just*
-> exported, never mind doing it on another machine?...
-> 
-> I've looked through the mailing list for solutions to my problem, but nothing
-> I've tried has been successful. The import/export FAQ said nothing of
-> /etc/lvmtab or /etc/lvmtab.d/* files, and these are unavailable now as the
-> previous hard-drive cannot be mounted or even read from. I've tried the
-> contrib tool "uuid_fixer", and it seemed to run OK, but didn't fix the
-> problem.
-> 
-> I upgraded LVM to 0.9.1_beta8 (kernel patches and user tools), but then pvscan
-> wouldn't even work, so I downgraded back to the SuSE-supplied version
-> (0.9.1_beta2). At least I can see the PVs now!
+On Wednesday 01 August 2001 23:24, Frode Tenneb=F8 wrote:
+> I have tested SGI's linux-2.4-xfs in it's 2.4.7 incarnation.
+> Compilled with gcc-2.96-81 on a Dell Latitude CPt400 with an Adaptec
+> 1460A PCMCIA SCSI adapter.
+>
+> I can do whatever I want until I mount an LVM volume. After some time
+> or immediately it will panic with a dump like this:
 
-I don't know what vgimport should fail like that. vgscan and pvscan are behaving
-normally though. Can you do a "vgimport -d  comms /dev/sd[abc]1" and send me the
-output please.
+It appeard that a filesystem error caused the panic when mounting one=20
+of the LVs. A fsck on a newly booted system cured that problem.
 
+> Aug  1 18:57:26 localhost kernel: Unable to handle kernel paging
+> request at virtual address c489c4f0
+> Aug  1 18:57:26 localhost kernel:  printing eip:
+> Aug  1 18:57:26 localhost kernel: c489c4f0
+> Aug  1 18:57:26 localhost kernel: *pde =3D 03bd1067
+> Aug  1 18:57:26 localhost kernel: *pte =3D 00000000
+> Aug  1 18:57:26 localhost kernel: Oops: 0000
+> Aug  1 18:57:26 localhost kernel: CPU:    0
+> Aug  1 18:57:26 localhost kernel: EIP:
+> 0010:[fat:__insmod_fat_S.bss_L2264+450160/60315488]
 
-patrick
+[snap]
+
+> This also happens with 2.4.8-pre3-xfs. I'm not sure if this is a LVM
+> issue, a general kernel issue or an SGi/XFS issue, but I thought I'd
+> bring it up here before I talked to the XFS guys as this is directly
+> related to LVM (#define LVM_RELEASE_NAME "0.9.1_beta6" - perhaps a
+> known problem?)
+
+Furhtermore the oops happening after doing some work (eg. compiling)=20
+while the LV in question was mounted, but working on a different=20
+filesystem, also seems to have dissappeard. However, doing some work on=20
+the filesystem of the LV in question (from simple ls, to compilations)=20
+brings back the oops. I'm unable to umount the filesystem and=20
+eventually everything hangs.
+
+What could be wrong?
+
+Regards,
+ -Frode
+--=20
+^ Frode Tenneb=F8 | email: frodet@nvg.org | Frode@IRC  ^
+| with Standard.Disclaimer; use Standard.Disclaimer; |
