@@ -1,10 +1,10 @@
-From: Luca Berra <bluca@comedia.it>
-Subject: Re: [linux-lvm] Mandrake 8.1 and LVM
-Message-ID: <20011129181708.B16013@colombina.comedia.it>
-References: <Pine.LNX.4.21.0111290858230.435-100000@sol.rune.org>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <Pine.LNX.4.21.0111290858230.435-100000@sol.rune.org>; from sarwer.zafiruddin@rune.org on Thu, Nov 29, 2001 at 09:00:02AM -0500
+Subject: Re: [linux-lvm] Automatic snapshot system?
+References: <ufasnayrr4e.fsf@epithumia.math.uh.edu>
+	<20011129004736.A14092@auctionwatch.com>
+From: Jason L Tibbitts III <tibbs@math.uh.edu>
+In-Reply-To: Petro's message of "Thu, 29 Nov 2001 00:47:36 -0800"
+Message-ID: <ufa667ts3zh.fsf@epithumia.math.uh.edu>
+MIME-Version: 1.0
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,27 +15,27 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Thu Nov 29 11:15:02 2001
+Date: Thu Nov 29 14:41:01 2001
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Thu, Nov 29, 2001 at 09:00:02AM -0500, Sarwer Zafiruddin wrote:
-> For those Mandrake 8.1 users out there.  Does anyone know if you can setup
-> the Linux Logical Volume Manager (LVM) during the install?  Ideally, I
-> would like to put my /,/var,/usr,/tmp filesystems under LVM control, so I
-> have the ability to expand the filesystems if it every gets full.
+>>>>> "p" == petro  <petro@auctionwatch.com> writes:
 
-you can setup lvm during install, but you cannot put root over lvm
-sorry.
+p> We have a home-brewed perl script called from cron that does a
+p> snap, rsync's out the data, then releases the snapshot.
 
-L.
+Interesting, but not quite what I'm trying to do.  Essentially I'd
+like to use snapshots as a sort of quick online backup to guard
+against users nuking their files.  Of course we do backups nightly,
+but restoring from a snapshot is much quicker than messing with tapes.
 
--- 
-Luca Berra -- bluca@comedia.it
-        Communication Media & Services S.r.l.
- /"\
- \ /     ASCII RIBBON CAMPAIGN
-  X        AGAINST HTML MAIL
- / \
+So, depending on how snapshots actually work and the performance
+penalty they incur and various other bits, I was thinking of doing a
+daily or twice-daily snapshot, keeping them around for a few days,
+then deleting them.  But that entails having around 100 snapshots
+sitting around, and I don't know if there are performance problems
+with doing that.
+
+ - J<
