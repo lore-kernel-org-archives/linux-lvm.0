@@ -1,9 +1,9 @@
-From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
+From: "William Blunn" <bill+f.9sfuw6uo@tao-group.com>
 Subject: Re: [linux-lvm] Urgent, Moving disk from hdc to hdf in existing lvm
-Message-ID: <20020829131347.B32269@sistina.com>
-References: <E17kNKO-0003CV-00@hermes.sistina.com>
-Mime-Version: 1.0
-In-Reply-To: <E17kNKO-0003CV-00@hermes.sistina.com>; from kalle@idlar.nu on Thu, Aug 29, 2002 at 06:19:27AM -0500
+Message-ID: <BDEMIPDEGABMNEFIHCPDIEGODOAA.bill+f.9sfuw6uo@tao-group.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <E17kNKO-0003CV-00@hermes.sistina.com>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,58 +14,44 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Thu Aug 29 06:29:02 2002
+Date: Thu Aug 29 06:51:02 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Kalle,
+> Is it possible to "reconfigure" the vg so that the disk that once=20
+> was hdc will be hdf? Prefably without loosing data.
 
-any configuration change schould be happily covered by "vgscan ; vgchange -ay".
+The position of a PV within the LVM is controlled by the metadata stored wi=
+thin the PV, not the device identifier.
 
-vgscan figures out all PVs by UUID and groupd them together no matter to
-which changed path they are attached.
+There is no reconfiguration per se necessary.
 
-Regards,
-Heinz    -- The LVM Guy --
+If your startup scripts don't do vgscan, then you will need to do one of th=
+ese manually.
 
+I think it is something like:
 
-On Thu, Aug 29, 2002 at 06:19:27AM -0500, kalle@idlar.nu wrote:
-> Hello!
-> 
-> We have a problem with one of our servers thats running lvm on linux-2.4.19.
-> We have 4 discs in the vg, hdb, hdc, hdg and hdh.
-> When we booted the server this morning hdc did not get online. 
-> We've tried diffrent cables but there seems to be some problem with the secondary controller.
-> The disc gets online if we put it on the promise controller thats handeling hdg and hdh.
-> 
-> Is it possible to "reconfigure" the vg so that the disk that once was hdc will be hdf? Prefably without loosing data.
-> 
-> Unfortunately we dont have any spare box to move the disks to, so the reconfiguring has to be done with 
-> the old hdc disk already beeing installed as hdf.
-> 
-> Any comments appreciated!
-> 
-> 
-> /Regards Kalle
-> 
-> 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
+vgchange -an
+vgscan
+vgchange -ay
 
-*** Software bugs are stupid.
-    Nevertheless it needs not so stupid people to solve them ***
+Of course if you have put your root filesystem in LVM then you are stuffed =
+(and I have no sympathy for anyone in this situation).
 
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+Bill
 
-Heinz Mauelshagen                                 Sistina Software Inc.
-Senior Consultant/Developer                       Am Sonnenhang 11
-                                                  56242 Marienrachdorf
-                                                  Germany
-Mauelshagen@Sistina.com                           +49 2626 141200
-                                                       FAX 924446
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+The contents of this e-mail and any attachments are confidential and may
+be legally privileged. If you have received this e-mail and you are not
+a named addressee, please inform us as soon as possible on
++44 118 901 2999 and then delete the e-mail from your system. If you are
+not a named addressee you must not copy, use, disclose, distribute,
+print or rely on this e-mail. Any views expressed in this e-mail or any
+attachments may not necessarily reflect those of Tao's management.
+Although we routinely screen for viruses, addressees should scan this
+e-mail and any attachments for viruses. Tao makes no representation or
+warranty as to the absence of viruses in this e-mail or any attachments.
+Please note that for the protection of our business, we may monitor and
+read e-mails sent to and from our server(s).
+
+Visit our website at http://tao-group.com/
