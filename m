@@ -1,11 +1,8 @@
-From: Andrew Rechenberg <arechenberg@shermfin.com>
-In-Reply-To: <8075D5C3061B9441944E137377645118010CD7@cinshrexc03.shermfin.com>
-References: 
-	 <8075D5C3061B9441944E137377645118010CD7@cinshrexc03.shermfin.com>
+Subject: Re: [linux-lvm] Swap on LVM - swapoff problem
+From: George Karaolides <george.karaolides@planitis.net>
 Content-Transfer-Encoding: 7bit
-Message-Id: <1049723236.12883.72.camel@cinshrlnxws01.shermfin.com>
+Message-Id: <1049724626.3743.30.camel@ariel>
 Mime-Version: 1.0
-Subject: [linux-lvm] LVM 1.0.7/vmalloc.c BUG with snapshots
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,133 +13,54 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Apr  7 08:48:01 2003
+Date: Mon Apr  7 09:10:03 2003
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: gkade@bigbrother.net
-Cc: linux-lvm@sistina.com
+To: linux-lvm@sistina.com
 
-Gregory,
+Hi Patrick,
 
-Did you ever get a patch or fix the snapshot seg fault problem with
-LVM/kernel VM?  I also have a Dell 6600 with 8GB RAM and I'm having the
-exact same problem (full specs and ksymoops below).
+> Actually, I'm more interested in the kernel LVM version. The tools 
+> have no impact on how swappping works. Sorry I should have said. The 
+> first line of /proc/lvm/global should tell you that.
 
-The workaround I used was to limit the system memory to ~6GB (used
-mem=6000M on the kernel command line in grub.conf).  The lvcreate
-command did not fail with mem=6000M.  I would like to use the entire 8GB
-(and actually more as I would like to make a 1 or 2GB ramdisk for some
-temp space).  Turning off hyperThreading and/or SMP did not prevent the
-seg fault for me when creating the snapshot
+2.4.18 machines:
 
-If you have any suggestions, please let me know.
+# cat /proc/lvm/global
+LVM module LVM version 1.0.1-rc4(ish)(03/10/2001)
 
-Thanks,
-Andy.
+2.4.20 machines:
 
-------------------------------------------
+# cat /proc/lvm/global
+LVM module LVM version 1.0.5+(22/07/2002)
 
-Dell PowerEdge 6600
-Quad Xeon 1.4GHz with HT enabled
-8GB RAM (currently limited to 6GB with mem=6000M)
-RH 7.3
-Kernel 2.4.18-27.SHRbigmem
-  - custom RPM based on RH kernel 2.4.18-27.7.x source
-  - LVM 1.0.7 patch
-  - MegaRAID 2.00.2 patch
-  - md-seq_file patch
-52 disk software RAID10 with 4 hotspares - ~440GB
-1 440GB Volume Group on top of above SW RAID array
-360GB LV for data
-Remaining 80GB for snapshots
+> You should check that that when you do swapoff that the
+> device actually exists: and that the major/minor matches that of the 
+> device when it was swapped on. I think /proc/swaps should tell you
+> this.
 
-Command used when getting segmentation fault:
+I can't see anything about device major/minor nos. in /proc/swaps:
 
-lvcreate -L75G -c 128 -s -nlvsnap /dev/cubsvg00/cubslv00
+# cat /proc/swaps
+Filename                        Type            Size    Used    Priority
+/dev/vg1/swap                   partition       1048568 0       -1
 
+Of course I can see the major/minor nos. if I list the device:
 
-Apr  6 16:05:46 cinshrcub01 kernel: kernel BUG at vmalloc.c:253!
-Apr  6 16:05:46 cinshrcub01 kernel: invalid operand: 0000
-Apr  6 16:05:46 cinshrcub01 kernel: CPU:    1
-Apr  6 16:05:46 cinshrcub01 kernel: EIP:    0010:[<c0136a67>]    Not
-tainted
-Using defaults from ksymoops -t elf32-i386 -a i386
-Apr  6 16:05:46 cinshrcub01 kernel: EFLAGS: 00010246
-Apr  6 16:05:46 cinshrcub01 kernel: eax: 00000fff   ebx: 00000000   ecx:
-51eb851f   edx: 00000000
-Apr  6 16:05:46 cinshrcub01 kernel: esi: 00000000   edi: f5e68400   ebp:
-fffffff4   esp: c9879ce4
-Apr  6 16:05:46 cinshrcub01 kernel: ds: 0018   es: 0018   ss: 0018
-Apr  6 16:05:46 cinshrcub01 kernel: Process lvcreate (pid: 1778,
-stackpage=c9879000)
-Apr  6 16:05:46 cinshrcub01 kernel: Stack: c0303a64 00000000 c0302a24
-00000000 c0304bf0 00000000 00000500 c013bfeb
-Apr  6 16:05:46 cinshrcub01 kernel:        00000001 00000000 00000000
-f5e68400 fffffff4 f8872735 00000000 000001f2
-Apr  6 16:05:46 cinshrcub01 kernel:        00000163 00000000 f5e68400
-f5e6856c f5e68400 f88727ec f5e68400 4013f008
-Apr  6 16:05:46 cinshrcub01 kernel: Call Trace: [<c013bfeb>]
-__alloc_pages [kernel] 0x6b (0xc9879d00))
-Apr  6 16:05:46 cinshrcub01 kernel: [<f8872735>]
-lvm_snapshot_alloc_hash_table [lvm-mod] 0x45 (0xc9879d18))
-Apr  6 16:05:46 cinshrcub01 kernel: [<f88727ec>] lvm_snapshot_alloc
-[lvm-mod] 0x6c (0xc9879d38))
-Apr  6 16:05:46 cinshrcub01 kernel: [<f88701c7>] lvm_do_lv_create
-[lvm-mod] 0x507 (0xc9879d4c))
-Apr  6 16:05:46 cinshrcub01 kernel: [<f886d9d5>] lvm_chr_ioctl [lvm-mod]
-0x6d5 (0xc9879d80))
-Apr  6 16:05:46 cinshrcub01 kernel: [<f8877220>] lv_req [lvm-mod] 0x0
-(0xc9879d88))
-Apr  6 16:05:46 cinshrcub01 kernel: [<c014124a>] page_add_rmap [kernel]
-0x3a (0xc9879dc0))
-Apr  6 16:05:46 cinshrcub01 kernel: [<c012eb56>] do_no_page [kernel]
-0x226 (0xc9879dd0))
-Apr  6 16:05:46 cinshrcub01 kernel: [<c01537d7>] sys_ioctl [kernel]
-0x257 (0xc9879f94))
-Apr  6 16:05:46 cinshrcub01 kernel: [<c0143af7>] sys_open [kernel] 0x57
-(0xc9879fac))
-Apr  6 16:05:46 cinshrcub01 kernel: [<c0108c93>] system_call [kernel]
-0x33 (0xc9879fc0))
-Apr  6 16:05:46 cinshrcub01 kernel: Code: 0f 0b fd 00 44 e8 24 c0 31 c0
-e9 1e 02 00 00 6a 02 53 e8 e2
+# ls -l /dev/vg1/swap
+brw-rw----    1 root     disk      58,   1 Apr  5 22:28 /dev/vg1/swap
 
->>EIP; c0136a67 <__vmalloc+27/260>   <=====
-Trace; c013bfeb <__alloc_pages+6b/2f0>
-Trace; f8872735 <[lvm-mod]lvm_snapshot_alloc_hash_table+45/90>
-Trace; f88727ec <[lvm-mod]lvm_snapshot_alloc+6c/e0>
-Trace; f88701c7 <[lvm-mod]lvm_do_lv_create+507/830>
-Trace; f886d9d5 <[lvm-mod]lvm_chr_ioctl+6d5/7d0>
-Trace; f8877220 <[lvm-mod]lv_req+0/a0>
-Trace; c014124a <page_add_rmap+3a/90>
-Trace; c012eb56 <do_no_page+226/260>
-Trace; c01537d7 <sys_ioctl+257/291>
-Trace; c0143af7 <sys_open+57/a0>
-Trace; c0108c93 <system_call+33/38>
-Code;  c0136a67 <__vmalloc+27/260>
-00000000 <_EIP>:
-Code;  c0136a67 <__vmalloc+27/260>   <=====
-   0:   0f 0b                     ud2a      <=====
-Code;  c0136a69 <__vmalloc+29/260>
-   2:   fd                        std
-Code;  c0136a6a <__vmalloc+2a/260>
-   3:   00 44 e8 24               add    %al,0x24(%eax,%ebp,8)
-Code;  c0136a6e <__vmalloc+2e/260>
-   7:   c0                        (bad)
-Code;  c0136a6f <__vmalloc+2f/260>
-   8:   31 c0                     xor    %eax,%eax
-Code;  c0136a71 <__vmalloc+31/260>
-   a:   e9 1e 02 00 00            jmp    22d <_EIP+0x22d> c0136c94
-<__vmalloc+254/260>
-Code;  c0136a76 <__vmalloc+36/260>
-   f:   6a 02                     push   $0x2
-Code;  c0136a78 <__vmalloc+38/260>
-  11:   53                        push   %ebx
-Code;  c0136a79 <__vmalloc+39/260>
-  12:   e8 e2 00 00 00            call   f9 <_EIP+0xf9> c0136b60
-<__vmalloc+120/260>
-
-
+So now I need to check if these are the same as when the device was
+swapped on.  But no info in /proc/swaps...
 
 -- 
-Andrew Rechenberg <arechenberg@shermfin.com>
-Infrastrucutre Team, Sherman Financial Group
+Best regards,
+
+|   George Karaolides                      Planitis Communications Ltd.,
+|
+|   tel:   +357 22 45 65 00              Office 102, 11 Florinis Street,
+|
+|   web:   www.planitis.net                             Nicosia CY 1065,
+|
+|   email: george.karaolides@planitis.net           Republic  of Cyprus.
+|
