@@ -1,7 +1,7 @@
-Message-ID: <F888C30C3021D411B9DA00B0D0209BE804C59CC2@cvo-exchange.cvo.roguewave.com>
-From: John Celoria <celoria@roguewave.com>
+Message-ID: <20040110000045.98531.qmail@web80403.mail.yahoo.com>
+From: Chris Conn <cmcgoat@swbell.net>
 MIME-Version: 1.0
-Subject: [linux-lvm] /dev/mapper/control: open failed: No such device
+Subject: [linux-lvm] which filesystem to use on slackware
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -12,34 +12,32 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Fri Jan  9 15:58:02 2004
+Date: Fri Jan  9 19:02:01 2004
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: "'linux-lvm@sistina.com'" <linux-lvm@sistina.com>
+To: linux-lvm <linux-lvm@sistina.com>
 
-Hello, 
+Hi, I'm running slackware 9.1, have a dual-boot Win98/Slack
+machine and I've just added a 60GB HD. I'm using 50GB of that
+for Windows (kid games :-)) and 10GB for Linux, have formatted
+it as EXT2 but now I'm thinking of trying one of the journaled
+file systems, reiserfs or IBM's JFS or EXT3. I haven't used
+that new partition yet.
 
-I am upgrading from 2.4.23/LVM1 to 2.6.0 and have run into a bit of an
-issue.
-I built the device-mapper support into the kernel statically... 
+My Slackware system is EXT2 on the original HD.
 
-I converted the volumes:	vgconvert <vol>
-I ran vgscan and got the following:
-  Reading all physical volumes.  This may take a while...
-  Found volume group "vol1" using metadata type lvm2
-  Found volume group "vol0" using metadata type lvm2
+I work in AIX support at IBM (systems performance, mainly) and
+I'm thinking this will be a good opportunity to learn more 
+about the LVM at home. Is there one of these journaled file
+systems that you all would recommend over the other? I'm not
+sure how I'm going to convert to the new filesystem, although
+I should be able to make the filesystem on the new HD whatever
+I want, so I'm halfway there.
 
-I am not using devfs of course so I ran ./devmap_mknod.sh
-device-mapper kernel module not loaded: can't create /dev/mapper/control.
+Thanks for any advice,
 
-I compiled device-mapper support in statically but the entries in /proc do
-not exist?
-
-What did I do wrong? more importantly... is it recoverable?
-
-I thank anyone who can possibly shed some light on this for me.
-
-______________________________________
-John Celoria <celoria@roguewave.com>  
-Unix Administrator; Rogue Wave/Quovadx 
+=====
+Chris Conn   
+cmcgoat@swbell.net   http://storm.cadcam.iupui.edu/~cmcgoat
+Austin, TX
