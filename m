@@ -1,6 +1,6 @@
 From: Steve_J_Brueggeman@notes.seagate.com
-Message-ID: <88256731.0053226C.00@sv-gw1.stsv.seagate.com>
-Date: Thu, 11 Mar 1999 09:09:02 -0600
+Message-ID: <88256731.00531D96.00@sv-gw1.stsv.seagate.com>
+Date: Thu, 11 Mar 1999 09:08:49 -0600
 Subject: RE: [linux-lvm] Bonehead problem
 Mime-Version: 1.0
 Content-Disposition: inline
