@@ -1,41 +1,36 @@
-Date: Tue, 09 May 2000 19:30:55 -0700 (PDT)
-From: Cristina Bulfon <bulfon@SLAC.Stanford.EDU>
-Subject: [linux-lvm] 0.8 for 2.2.12-20 ?
-Message-id: 
- <Pine.GSO.4.10.10005091910290.12327-100000@flora02.SLAC.Stanford.EDU>
-MIME-version: 1.0
-Content-transfer-encoding: 7BIT
+Message-ID: <3919F2D5.50FBDADE@mobilestor.com>
+Date: Wed, 10 May 2000 17:37:57 -0600
+From: "Jeffrey E. Mast" <jmast@mobilestor.com>
+MIME-Version: 1.0
+Subject: [linux-lvm] raid & LVM
+Content-Transfer-Encoding: 7bit
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"
-To: linux-lvm@msede.com
+Content-Type: text/plain; charset="us-ascii"
+To: LVM Mailing List <linux-lvm@msede.com>
 
 
-Hello,
+I have been playing around with the kernel linux-2.3.99-pre7-8
+(0.8final) and attempting to try out
+using software raid0 with LVM. The problem I am having is that
+apparently /proc/partitions
+reports /dev/mda instead of /dev/md0 and pvcreate cannot find /dev/md0.
 
-I have a Linux machine with kernel version 2.2.12-20 and 2 disks with 30
-GB plus 30 - O.S. GB = about 27 GB and I'd like to have only one logical
-volume of 87 GB (more or less).  
+This may be due to raid not really being incorporated into the kernel
+yet or if something else
+changed in the kernel. Anyone know why?
 
-My question is :
+Anyway, I made a link from /dev/md0 to /dev/mda and pvcreate works.
+However, doing
+a vgscan segfaults. The segfault occurs in pv_read_all_pv.c during the
+check for MD and
+clear out doubles.
 
-- is the last LVM version supported by my kernel version ?  
+Maybe I am being too bold trying this out before the full raid is
+incorporated into the kernel, but
+I wanted to see what the current status was.
 
-if not what do I have to do ? 
+Thanks,
 
-I think, can do an upgrade kernel version ( I guess) since that version is
-supported by AFS.
-
-
-Thanks for the help
-
-Cristina
-
-_____________________________________________________________________________
-
-       Cristina Bulfon              E-mail Cristina.Bulfon@slac.stanford.edu
-Stanford Linear Accelerator Center  Phone +1-650-926-5028
-PO Box 4349, M/S 88		    Fax   +1-650-926-3329
-Stanford, CA 94309, USA
-_____________________________________________________________________________
+Jeff
