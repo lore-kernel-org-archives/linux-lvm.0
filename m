@@ -1,15 +1,9 @@
-From: Andreas Dilger <adilger@turbolabs.com>
+From: Anselm Kruis <A.Kruis@science-computing.de>
 Subject: Re: [linux-lvm] snapshots of busy ext2 file system corrupt
-Message-Id: <20020226162123.D12832@lynx.adilger.int>
-References: <m28z9guz53.fsf@isnogud.escape.de>
-    <20020226095919.F12832@lynx.adilger.int> <2412370000.1014745130@tiny>
-    <m2bsecdouv.fsf@isnogud.escape.de> <2621690000.1014757084@tiny>
-    <20020226142731.X12832@lynx.adilger.int>
-    <20020226223230.GE5066@merlins.org>
+In-Reply-To: <m28z9guz53.fsf@isnogud.escape.de>
+Message-Id: <Pine.LNX.4.02.10202270943080.8818-100000@murnau.science-computing.de>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20020226223230.GE5066@merlins.org>; from
-    marc_lvm@merlins.org on Tue, Feb 26, 2002 at 02:32:30PM -0800
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -20,34 +14,58 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Tue Feb 26 17:21:01 2002
+Date: Wed Feb 27 03:01:01 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: TEXT/PLAIN; charset="iso-8859-1"
 To: linux-lvm@sistina.com
 
-On Feb 26, 2002  14:32 -0800, Marc MERLIN wrote:
-> On Tue, Feb 26, 2002 at 02:27:31PM -0700, Andreas Dilger wrote:
-> > Well, in many cases, data=ordered is actually faster than data=writeback
-> > because you get all of your journal I/O finished before you start writing
-> > to the FS.  In some cases (e.g. mail spool, NFS) it is faster to have
-> > data=journal for the same reason (because sync I/O is very fast when it
-> > is written to the journal).
-> 
-> I had heard about data=journal on mail spools, but does anyone have a
-> pointer with more performance comparisons between all 3?
+On 26 Feb 2002, Urs Thuermann wrote:
 
-There was some discussion about it on one of (linux-kernel, ext3-users,
-ext2-devel), but since I read all of them, I don't know which one for
-sure.
+> I tried creating a snapshot of a ext2 file system on a LV.  I expected
+> a fsck on the snapshot device to give no errors, i.e. a consistent
+> file system.  This is ok, as long as there is no (or little) load on
+> the file system when creating the snapshot.
+>=20
+> However, on a busy file system, the created snapshot has lots of
+> errors found by fsck.
+>=20
+> Is it this what the VFS lock patch is for?  If so, why hasn't it been
+> integrated into the standard kernel?  Has it flaws in it?  Maybe
+> performance wise?
 
-I found:
+It deadlocks for XFS on smp under heavy writeload. I use a writeable
+snapshot patch and replay the log afterwards.
 
-http://bruce-guenter.dyndns.org/benchmarking/
-http://www-106.ibm.com/developerworks/linux/library/l-fs8.html?dwzone=linux
+I think, the VFS patch has some principal problems. Creating a snapshot
+with the VFS-lock patch applied is more or less equivalent to unmounting=20
+the file system, creating the snapshot of the device and remounting the
+file system. That means that all ongoing write operations must be
+suspended until the filesystem is in a "clean" state. This can take
+some time. Up to 15 minutes from my observations and that is way too long.
+I think the right way is: use a jornaling file system, take a snapshot,
+make the snapshot writeable, replay the log, make the snapshot readonly
+and dump it to tape or whatever you want. No races, no deadlocks, no
+problems.
 
-Cheers, Andreas
---
-Andreas Dilger
-http://sourceforge.net/projects/ext2resize/
-http://www-mddsp.enel.ucalgary.ca/People/adilger/
+Anselm
+
+
+---
+ Anselm Kruis                                 Tel. +49 (0)89-356386-74
+ science + computing ag=09=09              FAX  +49 (0)89-356386-37
+ Ingolst=E4dter Str. 22             mailto: A.Kruis@science-computing.de
+ D-80807 M=FCnchen                 WWW: http://www.science-computing.de/
+
+**********************************************************************
+***     Wir freuen uns auf Ihren Besuch                            ***
+***                                                                ***
+***     CeBIT 2002                                                 ***
+***     13.-20.03.2002, Messegel=E4nde Hannover, Halle 11, F 64      ***
+***                                                                ***
+***     Automotive Circle International                            ***
+***     18.-19.04.2002, Bad Nauheim                                ***
+***                                                                ***
+***     VDI-Tagung: Berechnung und Simulation im Fahrzeugbau       ***
+***     01.-02.10.2002, Congress-Centrum W=FCrzburg                  ***
+***                                                                ***
+**********************************************************************=20
