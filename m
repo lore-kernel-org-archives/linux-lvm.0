@@ -1,51 +1,89 @@
-Message-ID: <39E28E89.133996EE@attglobal.net>
-Date: Mon, 09 Oct 2000 23:35:37 -0400
-From: Les Hazelton <seawolf@attglobal.net>
+Date: Tue, 10 Oct 2000 09:35:22 +0100 (IST)
+From: Paul Jakma <paulj@itg.ie>
+Subject: Re: [linux-lvm] lv inactive after reboot
+In-Reply-To: <Pine.LNX.4.21.0010051925000.1212-100000@rossi.itg.ie>
+Message-ID: <Pine.LNX.4.21.0010100923370.31996-100000@rossi.itg.ie>
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] Unable to boot using LVM for "/"
-References: <39E21C56.B57AC5D4@attglobal.net> <20001009142342.H6371@mvista.com>
-Content-Transfer-Encoding: 7bit
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: Charles Duffy <cduffy@mvista.com>
-Cc: linux-lvm@msede.com
+Content-Type: TEXT/PLAIN; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: linux-lvm@msede.com
 
-Charles Duffy wrote:
----------snip ----------------
+i still can not get this LV to come up as active after a vgscan -ay. I
+have to activate it manually with lvchange.
+
+is this a known problem? is there a fix?
+
+details left out of original mail: LVM v0.8final with 2.3.99-pre9,
+thru 2.4.0-test8. so problem would seem to be in the userland tools.
+
+Also: there are a *lot* of patches floating around to fix various
+problems. (eg my tools have a fix from michael marxmeier). It'd be
+nice if there was a nice release with all the fixes blessed by
+Heinz. would make life a bit easier.
+
+anyway...
+
+thanks,
+
+Paul Jakma.
+
+On Thu, 5 Oct 2000, Paul Jakma wrote:
+
+> hi,
 > 
-> "root=/dev/vg01/main" fails because the kernel, when booting, just
-> determines the major/minor numbers for the root partition based on
-> looking up the root device in a fixed table. What you need to do to
-> get the "test" entry running is change the root to the major/minor
-> number combo in hex; in my case, where /dev/vg01/root has major/minor
-> number 58,3 in decimal, I pass "root=3a03" to grub and that works
-> correctly.
+> I have an LV which i have made active with lvchange -ay, however after
+> a reboot it is inactive again (even though the rest of the LV's in
+> the VG start up fine with vgchange -ay).
 > 
-> Note that the above presumes that the initrd runs correctly. Does it?
-> (Be aware that I had to add /dev/console and /dev/tty0 entries to the
-> initrd to see output from the programs run from it... this may have
-> been fixed by now, or maybe not).
+> the only difference between this LV and the rest that comes to mind is
+> that i had renamed it, and to do so i had to make the LV inactive.
 > 
-> Hope this has been of some use.
-
-Actually, it was a great help.  I have it working now - sort of.  The
-problem was in two parts. I changed the grub menu.lst to pass
-"root=3a06" as you suggested and that changed some of the symptoms. When
-it still didn't work as expected I reread the lvmcreate_initrd script.
-It finally sunk in. The initrd creates the ram disk file system as ext2
-and I had created my root LV using reiserfs.
-
-This creates a conflict between the initrd root file system and the one
-on the logical volume and the mount won't work.  I re-formatted my LV
-with mke2fs and made some changes to /etc/fstab. Now it works as
-expected. It looks to me like you can't use reiserfs for the root file
-system unless the initrd ram disk can be created using reiserfs. I don't
-think that will work.
-
--- 
-
-Good Journey, longevity and prosperity to all
-
-Les Hazelton
+> what am i doing wrong?
+> 
+> [root@rossi /root]# lvdisplay /dev/Main_VG/games_xmame_lv 
+> lvdisplay -- logical volume "/dev/Main_VG/games_xmame_lv" is not
+> active; try -D
+> 
+> 
+> [root@rossi /root]# lvdisplay -D /dev/Main_VG/games_xmame_lv 
+> --- Logical volume ---
+> LV Name               /dev/Main_VG/games_xmame_lv
+> VG Name               Main_VG
+> LV Write Access       read/write
+> LV Status             NOT available
+> LV #                  7
+> # open                0
+> LV Size               400 MB
+> Current LE            100
+> Allocated LE          100
+> Allocation            next free
+> Read ahead sectors    120
+> Block device          58:6
+> 
+> 
+> [root@rossi /root]# fsck /dev/Main_VG/games_xmame_lv 
+> Parallelizing fsck version 1.18 (11-Nov-1999)
+> e2fsck 1.18, 11-Nov-1999 for EXT2 FS 0.5b, 95/08/09
+> fsck.ext2: Operation not permitted while trying to open
+> /dev/Main_VG/games_xmame_lv
+> You must have r/w access to the filesystem or be root
+> [root@rossi /root]# mount /usr/lib/games/xmame
+> mount: permission denied
+> [root@rossi /root]# lvchange -ay /dev/Main_VG/games_xmame_lv 
+> lvchange -- logical volume "/dev/Main_VG/games_xmame_lv" changed
+> lvchange -- doing automatic backup of volume group "Main_VG"
+> 
+> [root@rossi /root]# mount /usr/lib/games/xmame
+> <no error>
+> 
+> however on reboot, i will get the fsck "Op.. not permitted" error
+> because the LV isn't active. How do i make it permanently active
+> again???
+> 
+> regards,
+> 
+> paul jakma.
+> 
