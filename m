@@ -1,8 +1,10 @@
-From: Sarwer Zafiruddin <sarwer.zafiruddin@rune.org>
-Subject: RE: [linux-lvm] Mandrake 8.1 and LVM 
-In-Reply-To: <Pine.LNX.4.21.0111291810070.435-100000@sol.rune.org>
-Message-ID: <Pine.LNX.4.21.0111291810520.435-100000@sol.rune.org>
-MIME-Version: 1.0
+From: Theo Van Dinter <felicity@kluge.net>
+Subject: Re: [linux-lvm] Mandrake 8.1 and LVM
+Message-ID: <20011129190920.B23998@kluge.net>
+References: <Pine.LNX.4.21.0111291649440.435-100000@sol.rune.org> <Pine.LNX.4.33.0111291608480.4437-100000@lx1.daboard.com>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <Pine.LNX.4.33.0111291608480.4437-100000@lx1.daboard.com>; from mitch@mdmiller.com on Thu, Nov 29, 2001 at 04:10:04PM -0600
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -13,138 +15,62 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Thu Nov 29 17:12:02 2001
+Date: Thu Nov 29 18:07:01 2001
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-I've never had to boot HP-UX in a "rescue" mode, but with AIX, it's mainly
-there to mount the root volume group.  I would imagine that HP would be
-similar.  I don't think I've ever to to modify the LVM config in rescue
-mode.
+On Thu, Nov 29, 2001 at 04:10:04PM -0600, mitch@mdmiller.com wrote:
+> Sure ... but doesn't /var typically live on a partition of it's own,
+> anyway?  Say, is there a HOWTO or other document which describes
+> partitioning considerations and/or the standard directory structure?
+> Sorry for all the questions, but I've been brain numbed by a WinTel
+> world!!
 
-Sarwer
+There probably is, but partitioning has always been more art than science so
+you'll get a different answer depending on who you talk to and what you're
+trying to do.
 
-On Thu, 29 Nov 2001, Steve Wray wrote:
+If you're interested, here's my take on it:
 
-> Sounds to me like Linux is a sort of in-betweeny here!
-> 
-> I assume that its possible to boot HP-UX and AIX machines
-> from their 'rescue' media and have full and easy access
-> Sounds to me like Linux is a sort of in-betweeny here!
-> 
-> I assume that its possible to boot HP-UX and AIX machines
-> from their 'rescue' media and have full and easy access
-> to the LVM structure?
-> 
-> 
-> 
-> > From: linux-lvm-admin@sistina.com [mailto:linux-lvm-admin@sistina.com]On
-> > Behalf Of Sarwer Zafiruddin
-> >
-> > IMHO (which shouldn't mean much to anyone), a few Unix platforms out
-> there
-> > do use LVM for their root/OS filesystems, like HP HP-UX and IBM AIX.  My
-> > experience with both are that they are very useful for OS filesystem
-> > issues (especially for failing disks).  The reason LVM works so well in
-> > these platforms is that the kernel, bootup sequences, and installation
-> > media all have tight LVM intergration.  On the other hand I have also
-> seen
-> > piss poor implimentation of LVM with the OS filesystems, like
-> > Solaris/Veritas root encapsulation (when it works...it's good, when it's
-> > broke...prepare for a major headache). I am hopefull as Linux LVM
-> matures,
-> > major distributions will intergrate it as a critical feature of
-> > the OS.  That
-> > will also be a major step in making the Linux a more viable OS solution
-> in
-> > the Enterprise.
-> >
-> > Sarwer
-> >
-> > On Thu, 29 Nov 2001, Steve Wray wrote:
-> >
-> > > > From: linux-lvm-admin@sistina.com
-> > [mailto:linux-lvm-admin@sistina.com]On
-> > > > Behalf Of mitch@mdmiller.com
-> > > > > (b) dynamically expand the amount of space available to the
-> > > > root partition.
-> > > >
-> > > > Pardon me for being a neophyte here, but what else goes on the root
-> > > > partition which takes any significant or dynamic amount of
-> > space?  Isn't
-> > > > the root just a place to put all the top level directories,
-> > the contents
-> > > > of which are typically all on another partition anyway?
-> > >
-> > > Exactly; virtually all the content of the root partition should
-> > > be describable as "static/unshareable" which means that it doesn't
-> > > need snapshotting in case you accidentally delete something,
-> > > or dynamically resizable.
-> > >
-> > > Another of the purposes of the root filesystem is to provide
-> > > an island of sanity in a sea of madness when things go wrong;
-> > > typically the ideal is to have a system that can easily be
-> > > booted into a rescue mode from the root partition only.
-> > > In this setup one has "ghost" /usr/*bin et al directories
-> > > that are on the root filesystem but get mounted over
-> > > when you boot the system for real. These can provide the
-> > > tools you need to rescue the system.
-> > >
-> > > Having root LVM just means that if anything goes wrong
-> > > with the LVM subsystem then you *need* the system to
-> > > be bootable from floppy or CDROM, and that is sometimes
-> > > less practical than having root *not* be LVM in the
-> > > first place!
-> > > :)
-> > > anyhow this is getting away from the topic (which I'm really
-> > > interested in); LVM on mandrake 8.1 with devfs...
-> > >
-> > > >
-> > > > -- Mitch
-> > > >
-> > > >
-> > > >
-> > > > _______________________________________________
-> > > > linux-lvm mailing list
-> > > > linux-lvm@sistina.com
-> > > > http://lists.sistina.com/mailman/listinfo/linux-lvm
-> > > > read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
-> > > >
-> > > >
-> > >
-> > > _______________________________________________
-> > > linux-lvm mailing list
-> > > linux-lvm@sistina.com
-> > > http://lists.sistina.com/mailman/listinfo/linux-lvm
-> > > read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
-> > >
-> > >
-> >
-> > --
-> > --------------------------
-> > System Administrator
-> > Rune Information Services
-> > http://www.rune.org
-> > e-mail:  sarwer@rune.org
-> > --------------------------
-> >
-> >
-> > _______________________________________________
-> > linux-lvm mailing list
-> > linux-lvm@sistina.com
-> > http://lists.sistina.com/mailman/listinfo/linux-lvm
-> > read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
-> >
-> >
-> 
-> 
+My rule of thumb for disk layout on a server is:
+	/boot	- Small, usually 32-128MB, don't run out of space here.
+	/	- I put /usr in here since there's no reason not to any
+		  longer.  So this will be any size you think is
+		  appropriate.	I will usually put anywhere from 4-8GB
+		  here, depending on disk size.  These files should be
+		  static-ish, no major changed here.  Don't let it hit 100%.
+	/var	- As someone's already stated, filling up /var can be a DoS.
+		  Also, at least RedHat keeps other things down here, like
+		  MySQL/PostgreSQL/etc ...  If you're not going to move this
+		  stuff to another area, make /var as big as necessary.  I
+		  usually limit /var to log files, give it 1G or so, and move
+		  my databases and such to a better partition.
+	/tmp	- Yet another possible DoS, don't allow user-writable areas
+		  to live on /.  128-512M should be sufficient, it's
+		  temporary space after all.
+
+The rest of the disk is split up for any data.  Of that, I would leave
+/boot and / as straight partitions and let everything else be LVM-based.
+/boot and / are required for booting and if the LVM blows up for some
+reason (disk failure, vg won't start, corruption, etc,) you can at least
+boot into single user mode and you don't have to worry about non-standard
+drivers/rescue disks and the like.
+
+You also get the benefit of LVM for the areas that are more dynamic and may
+require shifting over time.
+
+For other non-critical machines (home, personal workstations, etc,) I
+tend to just make one big root partition and call it good since I don't
+really care about DoS there.  If the box runs out of space, there should be
+nothing stored there (it's on the server being backed up, right?,) so I
+usually swap hard drives and blow a new OS image on there via
+kickstart/jumpstart/your os' favorite automated install system ...
+
+I hope this has been useful to some degree. :)
 
 -- 
---------------------------
-System Administrator
-Rune Information Services
-http://www.rune.org
-e-mail:  sarwer@rune.org
---------------------------
+Randomly Generated Tagline:
+"I am NOT a computer geek! ... I just spend too much time in front of the 
+ computer."                  - Theo
