@@ -1,10 +1,9 @@
-Date: Mon, 10 Sep 2001 13:35:33 +0200
-From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] ftp.sistina.com down?
-Message-ID: <20010910133533.J31313@sistina.com>
-References: <Pine.LNX.4.33.0109061806460.28151-100000@dunlop.dub.ie.alphyra.com> <001101c136f8$38bbb6e0$0300000a@pacbell.net>
-Mime-Version: 1.0
-In-Reply-To: <001101c136f8$38bbb6e0$0300000a@pacbell.net>; from e@arix.com on Thu, Sep 06, 2001 at 10:20:26AM -0700
+From: "IT3 Stuart B. Tener, USNR-R" <stuart@bh90210.net>
+Date: Mon, 10 Sep 2001 04:37:07 -0700
+Message-ID: <NBBBJHKIOKPKOGOEPEDPEEDBDNAA.stuart@bh90210.net>
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Subject: [linux-lvm] LVM
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,85 +16,36 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Thu, Sep 06, 2001 at 10:20:26AM -0700, Erick Calder wrote:
-> Paul,
-> 
-> I'm putting an RPM together... struggling with the changes between the 2.4.9
-> configuration file and the 10+ configuration files that come with RH's 2.4.7
-> .src... if you've built RPMs before help is welcome (we can take this
-> off-list), otherwise I'll let you know when I've managed to put it
-> together... I too have production boxes I don't want to build the tarball
-> on.
-
-Erick,
-
-if you have put it together, we'ld be happy to put it onto our ftp server
-for everybodies convenience.
-Thanks.
-
-Regards,
-Heinz    -- The LVM Guy --
-
-> 
-> - erick
-> 
-> -----Original Message-----
-> From:	linux-lvm-admin@sistina.com [mailto:linux-lvm-admin@sistina.com] On
-> Behalf Of Paul Jakma
-> Sent:	Thursday, September 06, 2001 10:08 AM
-> To:	linux-lvm@sistina.com
-> Subject:	Re: [linux-lvm] ftp.sistina.com down?
-> 
-> On Wed, 5 Sep 2001, AJ Lewis wrote:
-> 
-> > It should be up again.  Thanks for letting us know.
-> 
-> excellent...
-> 
-> > > also, are there any RPMS for 1.0.1?
-> >
-> > Nope.  Either grabbing the source tarball or talking to your distro is the
-> > best option at this point.  The source is not difficult to build and
-> install
-> > IMHO, so that's probably your best bet for now.
-> 
-> ok.. i've no technical problems with source, but from experience i
-> don't like installing from source onto production systems that use
-> package management - bad idea for long term maintainability of the
-> machine.
-> 
-> anyway.. thanks AJ!
-> 
-> > Regards,
-> 
-> --paulj
-> 
-> 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
-> 
-> 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
-
-*** Software bugs are stupid.
-    Nevertheless it needs not so stupid people to solve them ***
-
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-
-Heinz Mauelshagen                                 Sistina Software Inc.
-Senior Consultant/Developer                       Am Sonnenhang 11
-                                                  56242 Marienrachdorf
-                                                  Germany
-Mauelshagen@Sistina.com                           +49 2626 141200
-                                                       FAX 924446
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+TGlzdCBtZW1iZXJzOg0KDQoJSGVsbG8gdG8gYWxsLCBhcyBJIGFtIHNvbWV3aGF0IG5ldyB0byB0
+aGUgbGlzdC4gUGVyaGFwcyBvbmUgb2YgeW91IHdpbGwgcmVjb21tZW5kIHNvbWUgYmFzaWMgcmVh
+ZGluZyB0byBnZXQgbWUgc3RhcnRlZCwgYnV0IEkgZG8gaGF2ZSBhIGZldyBxdWVzdGlvbnMgcmVn
+YXJkaW5nIExWTSBhbmQgbXkgcHJvcG9zZWQgZGVwbG95bWVudCBvZiBpdCBvbiBteSBsYXB0b3Au
+DQoNCglJIGhhdmUgYSBEZWxsIExhcHRvcCB3aXRoIHR3byAzMkdCIEhEcywgYW5kIGEgMTM5NCA0
+MEdCIEhELiBJIGFtIHRoaW5raW5nIHRvIHVzZSBMVk0uDQoNCihhKSBJIGFtIHJ1bm5pbmcgKDIu
+NC44IG9yIDIuNC45LCBJIGZvcmdldCBvZmZoYW5kKSBpcyBMVk0gaW5jbHVzaXZlIHRvIHRoZSBr
+ZXJuZWwgaW4gZWl0aGVyIG9mIHRob3NlIHJlbGVhc2VzPw0KKGIpIEhvdyBkb2VzIExWTSBqdXh0
+YXBvc2UgYWdhaW5zdCBhIGJhY2tkcm9wIG9mIGEgZHVhbCBib290IHN5c3RlbSwgd2hlbiBXMksv
+UFJPIGlzIG9uZSBvZiB0aGUgT1NlcyBpbnN0YWxsZWQuDQooYykgU2FtZSBxdWVzdGlvbiwgYWRk
+IEZyZWVCU0QgKHdoaWNoIEkgaGF2ZSBub3QgeWV0IGluc3RhbGxlZCBhcyBvZiB5ZXQsIGJ1dCBk
+byBwbGFuIHRvKT8NCihkKSBXaGF0IGFib3V0IFNvbGFyaXM/DQooZSkgUnVubmluZyBXMksvUFJP
+IG9uIGEgbGFwdG9wIGRvZXMgbm90IGFsbG93IGZvciBkaXNrIG1pcnJvcmluZyB1bmRlciB3aW5k
+b3dzLCBjYW4gTFZNIG1pcnJvciBteSBOVEZTIHBhcnRpdGlvbj8NCg0KQ2FuIEkgcnVuIGFueSBm
+aWxlc3lzdGVtIHdpdGggaXQ/IFdpbGwgdGhlIG5ldyBqb3VybmFsaW5nIGZpbGVzeXN0ZW1zIHdv
+cmsgd2l0aCBpdCAoSSB1c2UgUmVpc2VyRlMgYXQgdGhlIG1vbWVudCwgYnV0IEkgYW0gbm90IHN1
+cmUgaWYgaXQgaXMgdGhlIGJlc3QgZm9yIHRoZSBtb25leSAuLi4gc28gdG8gc3BlYWspPw0KDQoJ
+SXMgTFZNIHN0aWxsIGluIGEgYmV0YSBzdGF0ZSwgb3IgaXMgaXQgdHJ1c3RhYmxlIHdpdGggbXkg
+ZGF0YSB0byB0aGUgZXh0ZW50IHlvdSBjYW4gbm90ZT8gSSBhbSBub3QgbG9va2luZyBmb3IgYW4g
+aXJvbmNsYWQgZ3VhcmFudGVlLCBidXQgSSBhbSBjdXJpb3VzIGlmIG1vc3Qgb2YgdGhlIGtub3du
+IGJ1Z3MgYXJlIGdvbmUuDQoNCglBbnkgcmVjb21tZW5kZWQgcmVhZGluZyAoUERGIGZvcm1hdCBs
+aW5rcyBpZiBwb3NzaWJsZSk/DQoNCg0KVmVyeSBSZXNwZWN0ZnVsbHksIA0KDQpTdHVhcnQgQmxh
+a2UgVGVuZXIsIElUMywgVVNOUi1SLCBOM0dXRyANCkJldmVybHkgSGlsbHMsIENhbGlmb3JuaWEN
+ClZUVSAxOTA0RyAoVm9sdW50ZWVyIFRyYWluaW5nIFVuaXQpIA0Kc3R1YXJ0QGJoOTAyMTAubmV0
+IA0Kd2VzdCBjb2FzdDogKDMxMCktMzU4LTAyMDIgUC5PLiBCb3ggMTYwNDMsIEJldmVybHkgSGls
+bHMsIENBIDkwMjA5LTIwNDMgDQplYXN0IGNvYXN0OiAoMjE1KS0zMzgtNjAwNSBQLk8uIEJveCA0
+NTg1OSwgUGhpbGFkZWxwaGlhLCBQQSAxOTE0OS01ODU5IA0KDQpUZWxlY29waWVyOiAoNDE5KS03
+MTUtNjA3MyBmYXggdG8gZW1haWwgZ2F0ZXdheSB2aWEgd3d3LmVmYXguY29tIChpdCdzIGZyZWUh
+KSANCg0KSk9JTiBUSEUgVVMgTkFWWSBSRVNFUlZFLCBTRVJWRSBZT1VSIENPVU5UUlksIEFORCBC
+RU5FRklUIEZST00gSVQgQUxMLiANCg0KTW9uZGF5LCBTZXB0ZW1iZXIgMTAsIDIwMDEgNDoyOSBB
+TQ0KDQo=
