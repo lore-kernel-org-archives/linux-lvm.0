@@ -1,30 +1,18 @@
-Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id i5EBoe030345
-	for <linux-lvm@redhat.com>; Mon, 14 Jun 2004 07:50:40 -0400
-Received: from ciistr2.ist.utl.pt (ciistr2.ist.utl.pt [193.136.128.2])
-	by mx1.redhat.com (8.12.10/8.12.10) with ESMTP id i5EBoci5030337
-	for <linux-lvm@redhat.com>; Mon, 14 Jun 2004 07:50:39 -0400
-Received: from ciistr3.ist.utl.pt (ciistr3.ist.utl.pt [193.136.128.3])
-	by ciistr2.ist.utl.pt (Postfix) with ESMTP id E31E27E315
-	for <linux-lvm@redhat.com>; Mon, 14 Jun 2004 12:50:37 +0100 (WEST)
-Received: from localhost (localhost [127.0.0.1])
-	by ciistr3.ist.utl.pt (Postfix) with ESMTP id BA39E3308CD
-	for <linux-lvm@redhat.com>; Mon, 14 Jun 2004 12:50:37 +0100 (WEST)
-Received: from ciistr3.ist.utl.pt ([127.0.0.1])
-	by localhost (ciistr3 [127.0.0.1]) (amavisd-new, port 10024) with ESMTP
-	id 12099-07 for <linux-lvm@redhat.com>;
-	Mon, 14 Jun 2004 12:50:37 +0100 (WEST)
-Received: from mail.ist.utl.pt (mail.ist.utl.pt [193.136.128.8])
-	by ciistr3.ist.utl.pt (Postfix) with ESMTP id 752B4330626
-	for <linux-lvm@redhat.com>; Mon, 14 Jun 2004 12:50:37 +0100 (WEST)
-Message-ID: <40CD910A.9040605@ist.utl.pt>
-Date: Mon, 14 Jun 2004 12:50:34 +0100
-From: "=?ISO-8859-1?Q?Miguel_Cabe=E7a?=" <cabeca@ist.utl.pt>
-MIME-Version: 1.0
-Subject: Re: [linux-lvm] LVM2 seems to chop performance by 33%
-References: <40C86F52.4090500@dgreaves.com>
-In-Reply-To: <40C86F52.4090500@dgreaves.com>
-Content-Transfer-Encoding: quoted-printable
+Received: from fentible.pjc.net (vpnuser1.surrey.redhat.com [172.16.9.1])
+	by pobox.surrey.redhat.com (8.12.8/8.12.8) with ESMTP id i5ECnTj2011517
+	for <linux-lvm@redhat.com>; Mon, 14 Jun 2004 13:49:30 +0100
+Received: from patrick by fentible.pjc.net with local (Exim 4.34)
+	id 1BZqu2-0001Lt-Rg
+	for linux-lvm@redhat.com; Mon, 14 Jun 2004 13:49:30 +0100
+Date: Mon, 14 Jun 2004 13:49:30 +0100
+From: Patrick Caulfield <pcaulfie@redhat.com>
+Subject: Re: [linux-lvm] cluster questions
+Message-ID: <20040614124930.GF30294@tykepenguin.com>
+References: <Pine.LNX.4.55.0406111220100.24071@mallet-l.d2.com>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <Pine.LNX.4.55.0406111220100.24071@mallet-l.d2.com>
+Sender: Patrick <patrick@tykepenguin.com>
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -35,23 +23,55 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="iso-8859-1"; format="flowed"
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-Hi,
+On Fri, Jun 11, 2004 at 12:35:43PM -0700, Sebastien Boving wrote:
+> 
+> 
+> I know LVM does not support clusters.  The HOWTO makes a good job in
+> explaining how it is not, and how you could use it at your own risk, at:
+> 
+> http://tldp.org/HOWTO/LVM-HOWTO/sharinglvm1.html
+> 
+> I realize nothing protects an in-use LV to be mounted by another host,
+> which can severely corrupt non-clustered filesystems.
+> 
+> i still have a few questions in this regard though:
+> 
+> 
+> 1) What are my advantages of running LVM2 instead of LVM?
+> 
+> LVM does all i need, i think, part from being cluster-enabled.  LVM2 is
+> also not clustered enabled, though it is the basis of CLVM (which is on
+> its way?).  Any advantages in this regard to already go to LVM2 now, even
+> if only cause the upgrade to CLVM will go smoother?  The only reason i
+> wouldn't go to LVM2 is cause my RHES3.0 supports LVM out of the box, not
+> LVM2, and i rather stick to included software / kernel modules / ...
+> unless i have a valid reason not to.
 
-> I didn't think lvm2 had such a big performance hit?
->
-> 65Mb/s on the raid5 device
-> 44Mb/s on the lv
->
-Did you try to ajust the read ahead with blockdev on the LV itself?
+When clustered LVM does become available you will need LVM2. 
+Even if you don't use that, lvm2 offers better metadata integrity features than
+LVM1 which might make it easier to recover if you do make a mistake in your
+"manual" clustering! Plus all the other normal benefits of LVM2...
+ 
+> 
+> 
+> 2) Can snapshots safely be used by other nodes on the cluster?
+> 
+> Say a 'master node' owns the LVM config of a particular node.  It mounts
+> all (non-snapshot) LV's in there.  Can i have it create a snapshot on one
+> of its LV's, mount this on another node to perform a backup (sparing the
+> first node's cpu and network resources), then delete the snapshot on the
+> master mode, all this while observing the 'Other Nodes' procedure on the
+> above mentionned FAQ page?  Is this a 100% safe & supported way of doing
+> things?
 
-# blockdev --setra XXXX /dev/sda  (raid5 device, just for comparisson)
-# blockdev --setra XXXX /dev/vg/lv (lv)
+No. the current snapshot implementation behviour is single-node only. If you try
+to back up a snapshot on another node you won't get a valid backup because the
+snapshot exceptions are written on the node that has the original LV mounted. 
 
-Try some values for the readahead. On my system I use 2048.
+-- 
 
-Best regards
-
-Miguel Cabe=EF=BF=BDa
+patrick
