@@ -1,12 +1,11 @@
-Return-Path: <thornber@btconnect.com>
-Date: Thu, 3 May 2001 23:15:23 +0100
-Subject: Re: [linux-lvm] Patching 2.2.18 with lvm + sw raid
-Message-ID: <20010503231523.B2057@66bassett.freeserve.co.uk>
-References: <200105031535.QAA04020@queeg.britain.agilent.com>
+Return-Path: <markv@wave.co.nz>
+Date: Fri, 4 May 2001 13:59:49 +1200
+From: Mark van Walraven <markv@wave.co.nz>
+Subject: Re: [linux-lvm] LVM Questions
+Message-ID: <20010504135949.C20108@mail.wave.co.nz>
+References: <20010503004851.897.qmail@web10803.mail.yahoo.com> <Pine.LNX.4.33.0105030540170.21066-100000@chasqui.LaRed.net.pe>
 Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <200105031535.QAA04020@queeg.britain.agilent.com>; from dick@britain.agilent.com on Thu, May 03, 2001 at 04:35:06PM +0100
-From: Joe Thornber <thornber@btconnect.com>
+In-Reply-To: <Pine.LNX.4.33.0105030540170.21066-100000@chasqui.LaRed.net.pe>; from Carlo Marcelo Arenas Belon on Thu, May 03, 2001 at 06:41:39AM -0500
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -22,24 +21,11 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Please follow the instructions re. software raid in LVM/PATCHES/README.
+On Thu, May 03, 2001 at 06:41:39AM -0500, Carlo Marcelo Arenas Belon wrote:
+> what is recommended is this patch on /etc/rc.d/init.d/halt to add the
+> vgscan -n call, but is not really needed AFAIK
 
-If you wish to use 'new raid' you will have to edit the fragments
-file.  The patch will only apply to a specific version of new raid
-(the latest last time I looked).
+How important is "/sbin/vgchange" -a n at shutdown?  It seems a bad idea
+if / is on an LV ...
 
-If you're still having trouble mail me direct and I'll talk you through it.
-
-- Joe
-
-On Thu, May 03, 2001 at 04:35:06PM +0100, Dick Middleton wrote:
-> Hi,
-> 
->         I'm a bit new to all this and I'm struggling to patch my 2.2.18
-> kernel with both software raid and lvm.  I can patch the kernel OK with
-> either of them separately but I can't patch lvm over sw raid or raid over
-> lvm.
-> 
-> Somebody else must have had this problem - how do I workaround it?
-> 
-> Dick
+Mark.
