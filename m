@@ -1,38 +1,90 @@
-Date: Sun, 22 Oct 2000 16:09:40 +0200
+Date: Sun, 22 Oct 2000 16:22:53 +0200
 From: Luca Berra <bluca@comedia.it>
-Subject: Re: [linux-lvm] using previously created lvm
-Message-ID: <20001022160940.B24630@colombina.comedia.it>
+Subject: [linux-lvm] more LVM 0.8 patches
+Message-ID: <20001022162253.C24630@colombina.comedia.it>
 Reply-To: bluca@comedia.it
-References: <000401c03a8e$4861a620$a200a8c0@babbage.siliconinfusion.com> <20001020154123.A10018@colombina.comedia.it> <yq1puku53kx.fsf@jaguar.mkp.net>
 Mime-Version: 1.0
+Content-Type: multipart/mixed; boundary="y0ulUmNC+osPPQO6"
 Content-Disposition: inline
-In-Reply-To: <yq1puku53kx.fsf@jaguar.mkp.net>; from mkp@linuxcare.com on Sat, Oct 21, 2000 at 04:42:06PM -0400
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: "Martin K. Petersen" <mkp@linuxcare.com>
+To: Andreas Dilger <adilger@turbolinux.com>
 Cc: linux-lvm@msede.com
 
-On Sat, Oct 21, 2000 at 04:42:06PM -0400, Martin K. Petersen wrote:
-> >>>>> "Luca" == Luca Berra <bluca@comedia.it> writes:
-> 
-> [HP/UX -> Linux]
-> 
-> Luca> besides Linux does not support HFS Filesystems. 
-> 
-> Actually, I implemented HFS support in Linux ufs when we started the
-> PA-RISC port.  It's been included in the 2.[34] kernels for quite a
-> while now...
-Another well hidden secret :(
-it is not documented anywhere except in /usr/src/linux/fs/ufs/super.c,
-besides as of 2.4.0-test8 it seems read-only.
 
-Anyway this is good news!!
+--y0ulUmNC+osPPQO6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
+hello here are more lvm patches.
+they apply over patches in lvm-0.8final-3.3.src.rpm
+1st chunk is needed to compile on my system (mine only?? K6-2, kernel 2.4.0-test8, glibc 2.1.3, pgcc-2.95.3)
+2nd chunk is nice for devfs
+3rd chunk is NEEDED for lvm over raid
+
+I am still missing something on the vgchange front, the binary version i saved
+before trashing my whole system this summer works, the one built from
+these sources doesn't.
+
+Regards
 L.
-
 -- 
 Luca Berra -- bluca@comedia.it
     Communication Media & Services S.r.l.
+
+--y0ulUmNC+osPPQO6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: attachment; filename="LVM.DIFF"
+
+--- 0.8final/tools/lib/liblvm.h.bluca	Fri Oct 20 00:22:27 2000
++++ 0.8final/tools/lib/liblvm.h	Fri Oct 20 00:22:08 2000
+@@ -70,7 +70,10 @@
+ #include <linux/major.h>
+ #include <linux/genhd.h>
+ 
++#include <stdint.h>
++#define __KERNEL__
+ #include <linux/lvm.h>
++#undef __KERNEL__
+ 
+ #ifndef uint8_t
+ #  define uint8_t	u_int8_t
+--- 0.8final/tools/lib/lvm_dir_cache.c.bluca	Fri Oct 20 00:22:27 2000
++++ 0.8final/tools/lib/lvm_dir_cache.c	Fri Oct 20 00:22:08 2000
+@@ -59,8 +59,8 @@
+    char major[20] = { 0, };
+    char minor[20] = { 0, };
+    char blocks[20] = { 0, };
+-   char devname[30] = { 0, };
+-   char procline[127] ;
++   char devname[127] = { 0, };
++   char procline[256] ;
+    static char *devdir[] = {
+       "/dev/ida",
+       "/dev/ide/hd",
+--- 0.8final/tools/lib/pv_get_size.c.bluca	Fri Oct 20 00:22:27 2000
++++ 0.8final/tools/lib/pv_get_size.c	Fri Oct 20 00:22:08 2000
+@@ -96,14 +96,18 @@
+             if ( dir_cache[i].st_rdev == st_rdev)
+                break;
+          }
++         memset ( disk_dev_name, 0, sizeof ( disk_dev_name));
++         strncpy ( disk_dev_name, dir_cache[i].dev_name, sizeof ( disk_dev_name) - 1);
++      } else {
++         memset ( disk_dev_name, 0, sizeof ( disk_dev_name));
++         strncpy ( disk_dev_name, dev_name, sizeof ( disk_dev_name) - 1);
++
+       }
+    } else {
+       ret = -LVM_EPV_GET_SIZE_LVM_DIR_CACHE;
+       goto pv_get_size_end;
+    }
+ 
+-   memset ( disk_dev_name, 0, sizeof ( disk_dev_name));
+-   strncpy ( disk_dev_name, dir_cache[i].dev_name, sizeof ( disk_dev_name) - 1);
+ 
+    first = 1;
+    if ( ( pv_handle = open ( disk_dev_name, O_RDONLY)) == -1) {
+
+--y0ulUmNC+osPPQO6--
