@@ -1,12 +1,8 @@
-From: Jan-Benedict Glaw <jbglaw@lug-owl.de>
-Subject: Re: [linux-lvm] Re: LVM ext3 support
-Message-ID: <20031017194633.GM20846@lug-owl.de>
-References: <3F903230.9070608@siue.edu> <yw1xptgvk92l.fsf@users.sourceforge.net> <3F903945.6090109@backtobasicsmgmt.com>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="y3ecpypBRByfLhcx"
-Content-Disposition: inline
-In-Reply-To: <3F903945.6090109@backtobasicsmgmt.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Message-ID: <16272.19483.577313.115811@gargle.gargle.HOWL>
+From: "John Stoffel" <stoffel@lucent.com>
+Subject: [linux-lvm] RAID 1 on Device Mapper - best practices?
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,45 +13,45 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Fri Oct 17 15:02:19 2003
+Date: Fri Oct 17 15:10:02 2003
 List-Id: <linux-lvm.redhat.com>
+Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
 
---y3ecpypBRByfLhcx
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Hi All,
 
-On Fri, 2003-10-17 11:47:33 -0700, Kevin P. Fleming <kpfleming@backtobasics=
-mgmt.com>
-wrote in message <3F903945.6090109@backtobasicsmgmt.com>:
-> What is the recommended procedure for doing snapshots of journalling=20
-> filesystems? Do the filesystems have to support snapshots directly and=20
-> "quiesce" themselves while the snapshot is being created?
+I've just recently upgrade my home system to a fresh install of Debian
+3.0/Unstable, and moved my data to a pair of 120gb disks.  My goal is
+to mirror the disks so I don't have to worry as much about device
+failures losing all my data (files and MPs, and junk).  Of course I'll
+be doing backups, but this is more the first step.
 
-Either mount the filesystem read-only (or unmounted at all) or patch
-your kernel to tell the fs driver when a snapshot is taken...
+Anyway, what I'd like to do is setup the disks using Device Mapper so
+that I can grow and shrink volumes at need, along with the filesystems
+mounted on top of those volumes.  So I now have it working, except
+that reboots don't detect the RAID volumes on top of the Device Mapper
+LVs properly on reboot.  
 
-MfG, JBG
+But first some background:
 
---=20
-   Jan-Benedict Glaw       jbglaw@lug-owl.de    . +49-172-7608481
-   "Eine Freie Meinung in  einem Freien Kopf    | Gegen Zensur | Gegen Krieg
-    fuer einen Freien Staat voll Freier B=FCrger" | im Internet! |   im Ira=
-k!
-   ret =3D do_actions((curr | FREE_SPEECH) & ~(NEW_COPYRIGHT_LAW | DRM | TC=
-PA));
+    Kernel:		2.4.22 (or .21)
+    Device Mapper:      2.4.22-dm-1
+    lvdisplay --version
+	LVM version:     2.00.06 (2003-08-20)
+	Library version: 1.00.05-ioctl-cvs (2003-09-01)
+	Driver version:  4.0.1
 
---y3ecpypBRByfLhcx
-Content-Type: application/pgp-signature
-Content-Disposition: inline
+Nor do I think I'm really doing this in the proper way.  Currently I
+have one volume group per disk, left_vg and right_vg.  Each has a pair
+of LVs on then, [left,right]_lv_[home,local] for a total of four LVs.  
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.2.3 (GNU/Linux)
+Then I assemble these into MD volumes using mdadm, with each volume
+having an LV from each of the VGs.  
 
-iD8DBQE/kEcZHb1edYOZ4bsRAnFIAKCDrFSYeJRinLC7dsJFNtRjL3OhsACdFjvC
-wFbFX8J73zkkjs/NblRkBBc=
-=utzD
------END PGP SIGNATURE-----
+Do I really need to use MD here, or can I build a mirrored LV to do
+what I want?
 
---y3ecpypBRByfLhcx--
+Thanks,
+John
+   John Stoffel - Senior Unix Systems Administrator - Lucent Technologies
+	 stoffel@lucent.com - http://www.lucent.com - 978-952-7548
