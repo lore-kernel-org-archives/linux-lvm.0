@@ -1,19 +1,22 @@
 Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j2AFtdn18216
-	for <linux-lvm@redhat.com>; Thu, 10 Mar 2005 10:55:39 -0500
-Received: from mail02.malor.com (host.malor.com [69.93.140.74] (may be forged))
-	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id j2AFtbVf013874
-	for <linux-lvm@redhat.com>; Thu, 10 Mar 2005 10:55:37 -0500
-Received: from vanish (mail02.malor.com [127.0.0.1])
-	by mail02.malor.com (Postfix) with SMTP id 41AA44A044
-	for <linux-lvm@redhat.com>; Thu, 10 Mar 2005 09:55:44 -0600 (CST)
-Message-ID: <001301c52589$978d1500$32dcdc0a@vanish>
-From: "Ron Watkins" <linux-lvm@malor.com>
-References: <422F679C.8010003@boyko.net> <422F73E8.4070707@vilain.net>
-Subject: Re: [linux-lvm] Building up a RAID5 LVM home server (long)[0x05B52F13]
-Date: Thu, 10 Mar 2005 10:55:33 -0500
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j2AFvAn18640
+	for <linux-lvm@redhat.com>; Thu, 10 Mar 2005 10:57:10 -0500
+Received: from greebo.hisser.org (hermes.hisser.org [62.49.72.126])
+	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id j2AFv8nM014365
+	for <linux-lvm@redhat.com>; Thu, 10 Mar 2005 10:57:08 -0500
+Received: from localhost (localhost [127.0.0.1])
+	by greebo.hisser.org (Postfix) with ESMTP id 4852B7115
+	for <linux-lvm@redhat.com>; Thu, 10 Mar 2005 15:56:40 +0000 (GMT)
+Received: from greebo.hisser.org ([127.0.0.1])
+	by localhost (greebo [127.0.0.1]) (amavisd-new, port 10024) with ESMTP
+	id 22238-12 for <linux-lvm@redhat.com>;
+	Thu, 10 Mar 2005 15:56:39 +0000 (GMT)
+Message-ID: <1110470199.42306e373e09e@web.hisser.org>
+Date: Thu, 10 Mar 2005 15:56:39 +0000
+From: jamesp@hisser.org
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Subject: [linux-lvm] Filesystem Encapsulation
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -24,34 +27,35 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; format="flowed"; charset="us-ascii"; reply-type="response"
+Content-Type: text/plain; charset="us-ascii"
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-Remember, this is for a HOME SERVER, not a corporate database.  Assuming he 
-doesn't have Gigabit Ethernet, and assuming the CPU in his server is 
-reasonably beefy (at least a gigahertz), the extra speed in RAID 1 or 10 
-will be entirely wasted.   For almost any home application, RAID5 is going 
-to be exactly what folks want.... cheap, reliable, and more than fast enough 
-to saturate the wire.
+Hi All
 
-Doing RAID 10 properly would cost a great deal for disks, a lot for 
-motherboards with proper, non-PCI choked Gigabit ports (need them on both 
-server and client, mind you), and would take a significant amount of 
-learning on the part of the home admin to get really running properly.... 
-how many people want to learn about jumbo frames and cat5e wiring to set up 
-a video server that will only be serving one or two videos at a time?
+I am running LVM on RHEL AS 3.0 (2.4.21 based kernel).
 
-Yes, your solution would run faster in some circumstances, but it would be a 
-LOT more expensive.   After investing all that money, he'd see it run 
-somewhat faster on writes, and the server wouldn't be speed-impaired during 
-a rebuild.   But he's a HOME USER.  It doesn't MATTER if the server is slow 
-for a night or two.  Everything will be sluggish for a couple nights, once a 
-year or so.  So what?  Since when is this is worth spending a couple grand 
-to avoid?
+We have two filesystems like this:
 
-It would often make sense for a business to do that, but from a home user 
-perspective, it seems like following this specific advice would be a 
-gigantic waste of money.
+Device     Size  Used  Avail
+/dev/sda1  985G  604G  332G  65% /fs1
+/dev/sdb1  591G   87G  474G  16% /fs2
 
-For nearly all home users with reasonably modern hardware, RAID5 is the 
-right way to go for servers, at least for now.
+They contain a number of ~2gig files that don't change once they are written -
+they only get deleted after a certain amount of time.
+
+I would like to use LVM to create a new VG containing /dev/sda1 and /dev/sdb1 as
+PVs, to be able to present a single larger filesystem to the O/S. Now I realise
+this is trivial if you don't mind data loss,or are able to copy the data off
+the filesystems temporarily.
+
+What I would "like" to do is copy everything from /fs2 to /fs1 so that /fs2 is
+empty. I could then pvcreate /dev/sda1 and place it into a  brand new VG while
+PRESERVING the data, then extend the VG by adding a new PV (/dev/sdb1). Then of
+course the LV and FS could be extended.
+
+The sort of thing I am talking about it like disk encapsulation on Veritas VM.
+Is this possible at all with linux-lvm ? If not - any plans for the future?
+
+Thanks!
+
+James
