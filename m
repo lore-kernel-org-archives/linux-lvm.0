@@ -1,29 +1,64 @@
-Date: Wed, 11 Oct 2000 13:26:41 -0500 (EST)
-From: Brian Poole <raj@cerias.purdue.edu>
-Subject: Re: [linux-lvm] lvdisplay disagrees with df for resized LV
-In-Reply-To: <m23di3l4ux.fsf@puma.redeye>
-Message-ID: <Pine.SOL.4.10.10010111323250.2606-100000@basm.cerias.purdue.edu>
-MIME-Version: 1.0
+Date: Thu, 12 Oct 2000 16:01:36 +0930
+From: Mark Phillips <mark@ist.flinders.edu.au>
+Subject: [linux-lvm] Very tricky new install of Linux (using LVM and Kernel 2.4)
+Message-ID: <20001012160136.E413@destiny.ist.flinders.edu.au>
+Mime-Version: 1.0
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: Andy Cowling <andy@redeye.com>
-Cc: linux-lvm@msede.com
+To: linux-lvm@msede.com
 
-> I have resized the file system to 90G successfully but, there always a
-> but isn't there :-), df now reports a total of 88Gb.
->
-> Out of interest is this due to rounding or reisfer/LVM housekeeping ?
+I have recently bought an IBM 15 Gig drive and want to do a new
+install of Debian Linux on it.  Fairly straightforward _except_...
 
-Neither, this is actually a misperception of what a Gb really is. A Gb is
-_not_ 1000Mb, despite what harddrive manufacturers will gladly tell you,
-it is 1024Mb, and a Mb is really 1024Kb, and so on.
+I want to install it on logical partitions using LVM.  This introduces
+a number of problems.  Firstly I need kernel 2.4 to use LVM.  I've
+compiled my own 2.4-test9 kernel and it runs fine on my old disk
+(using debian).  But the debian installation disk uses an older
+kernel, nor will it probably know how to cope with LVM.
 
-Taking a look at your particular case, 90,000 Mb divided by 1024 (not
-1000, so it isn't 90) to get Gbs is 87.89G, which is indeed exactly what
-you have, no?
+I am currently toying with a number of strategies for how to do the
+install.  Here are my ideas so far:
 
 
--b
+Plan 1.  Boot under my old disk, and from here, create and format all
+the required partitions on top of LVM on my new disk.  Then see if I
+can somehow put my own 2.4 kernel on the debian rescue disk (the one
+used for installing).  I'm not sure how this is done, but I think it
+can be.  Then boot using this disk, mount the partitions of the new
+disk manually, and then hope the rest of the install goes okay.
+
+Plan 2.  Create a normal partition on my new drive, using a single
+partition covering roughly half my new disk.  Install debian on this
+partition in the usual way.  Get it set up with the 2.4 kernel and
+have everything working more or less.  Then create a second partition
+covering roughly the other half of the disk.  Create a LVM volume
+group consisting of just this partition.  Create several logical
+partitions on this volume group.  Then copy across all the stuff from
+the newly installed debian onto the logical partitions.  That way I
+have two identical installs of debian, one on a single physical
+partition, the other on several logical ones.  Make sure the LVM
+installation works fine, then delete the physical installation
+partition.  Then add the physical partition it was on, to the volume
+group of the LVM installation.
+
+
+I'm interested in feedback on these two plans.  Which is best?
+Problems?  Alternative plans etc?  Oh, and with plan 2, what is the
+safest way to do large scale copying from one partition to another?
+
+Cheers,
+
+Mark.
+
+
+-- 
+_/~~~~~~~~\___/~~~~~~\____________________________________________________
+____/~~\_____/~~\__/~~\__________________________Mark_Phillips____________
+____/~~\_____/~~\________________________________mark@ist.flinders.edu.au_
+____/~~\HE___/~~\__/~~\APTAIN_____________________________________________
+____/~~\______/~~~~~~\____________________________________________________
+__________________________________________________________________________
+        "They told me I was gullible ... and I believed them!" 
