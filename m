@@ -1,35 +1,46 @@
-Date: Thu, 31 Aug 2000 23:51:00 +0200
-From: Nils Juergens <nils@muon.de>
-Subject: Re: [linux-lvm] ExChange of Harddisks
-Message-ID: <20000831235100.A320@guldukat.muon>
-References: <30657.967667781@www17.gmx.net>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <30657.967667781@www17.gmx.net>; from a.kloecker@gmx.net on Wed, Aug 30, 2000 at 10:36:21PM +0200
+Message-ID: <39D6A94C.3C40B982@attglobal.net>
+Date: Sat, 30 Sep 2000 23:02:36 -0400
+From: Les Hazelton <seawolf@attglobal.net>
+MIME-Version: 1.0
+Subject: [linux-lvm] need help to recover my system
+Content-Transfer-Encoding: 7bit
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="iso-8859-1"
+Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@msede.com
 
-On Wed, 30.08.00, Arne Kl=EF=BF=BDcker <a.kloecker@gmx.net> wrote:
-> > If i understand your setup right you can just move the physical
-> > extents from your IDE-Drive to the SCSI-Drives. You do this with
-> > "pvmove <device>", <device> being the physical volume you want to
-> > remove.
-> I did this, but it stopped with an Error 208 leaving 1 PE on the IDE
-> Disk...
+I had a Mandrake 7.1 system running the 2.2.17 kernel with LVM and
+reiserfs patches applied.  I have a 15Gb partition on /dev/hdc5 which
+was one large PV. It supports one VG which has the logical volumes for
+/usr, /home, /var, etc... Everything except /boot and / which were on
+the hda drive as plain ext2 file systems.
 
-Well, i had similar problems with pvmove before, but was to lazy to work
-it out. But if you post some strace/debug output we might be able to
-track this down. Might be some work but being able to clean PVs to
-remove them is quite important, IMHO.
+I decided to move the root partition "/" to a logical volume on hdc5 and
+all was going well until I deleted it from the ext2 system on hda6. So
+now I have a perfectly good Linux system contained on the hdc5 PV which
+I can't access.
 
-'later,
+I have test system (Mandrake 7.2-b) on the hda drive.  It has the
+2.4.0-0.22 kernel distributed my Mandrake and I have been attempting to
+recover using that system.  The problem is I keep getting these errors:
 
-Nils
+------------------------------------------------------------------------------
+pvscan -- reading all physical volumes (this may take a while...)
+pvscan -- ERROR "pv_read_all_pv(): lvm_dir_cache" reading physical
+volumes
+ 
+[root@farpt1 /root]# vgscan -v
+vgscan -- removing "/etc/lvmtab" and "/etc/lvmtab.d"
+vgscan -- reading all physical volumes (this may take a while...)
+vgscan -- no volume groups found
+-------------------------------------------------------------------------------
 
---=20
- >   Nils Juergens  | nils@muon.de | icq 7090774   <
- >  If we all work hard, we can turn this company  <
- >      around 360 degrees -- gruntbert(LOTD)      <
+I was going to try a pvcreate for /dev/hdc5  but thought it would wipe
+the partition clean and I don't want to start over if there is *any*
+hope of recovering it.
+
+Please, if anyone knows a way to recover this volume,  I would be
+extremely grateful for the help.
+
+Les Hazelton
