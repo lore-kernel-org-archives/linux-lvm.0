@@ -1,10 +1,9 @@
-Subject: Re: [linux-lvm] VA7100 LUN's not visible as disks
-From: Andrew Patterson <andrew@fc.hp.com>
-In-Reply-To: <615A249B783CD41192F400D0B747AC860B108E8C@hesse.bbn.hp.com>
-References: <615A249B783CD41192F400D0B747AC860B108E8C@hesse.bbn.hp.com>
+Subject: Re: [linux-lvm] snapshots+highmem+'md raid5'
+Mime-Version: 1.0 (Apple Message framework v552)
+From: "Dale J. Stephenson" <dalestephenson@mac.com>
 Content-Transfer-Encoding: 7bit
-Message-Id: <1055523285.25769.14.camel@lvadplx>
-Mime-Version: 1.0
+In-Reply-To: <20030612134151.C26917@sistina.com>
+Message-Id: <C4AA99FA-9DE1-11D7-B4BB-0003937830E4@mac.com>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,35 +14,26 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Fri Jun 13 11:55:02 2003
+Date: Fri Jun 13 15:59:01 2003
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: linux-lvm@sistina.com
-Cc: holgar.zecha@hp.com
 
-On Thu, 2003-06-12 at 08:02, ZECHA,HOLGER (HP-Germany,ex1) wrote:
-> Hello,
->  
-> we want to connect a VA71000 to a DL380.
->  
-> We se the current info in dmesg:
->  
-> Attached scsi generic sg6 at scsi0, channel 0, id 0, lun 6,  type 31
-> sg_attach: dev7=(21:7)
-> 
-> Any idea why this is sg and not sd ?
->  
-Make sure the controllers are in Linux mode, you have the correct
-connection type (direct/fabric), and you have the correct speed settings
-(1GB/2GB).  You probably have the controllers in HP-UX mode which is the
-default.
+On Thursday, June 12, 2003, at 07:41  AM, Heinz J . Mauelshagen wrote:
 
-Andrew
+>
+> Anyone out there using MD RAID5 as physical volumes, high memory 
+> enabled
+> (> 960m of physical memory) and snapshots under load successfully ?
+>
+It depends on your definition of successful.  I'm using 2.4.18 with 
+HIGHMEM and RAID 5 physical volumes, (and my chaining snapshot patch).  
+Existing snapshots seem to work OK under load, but I have trouble 
+creating the snapshots under load consistently.  My problems are with 
+xfs_fs_freeze(), xfs's fsync_dev_lockfs implementation.
 
-> Thanks
->  
-> Holger
--- 
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
-   Andrew Patterson                          Voice:  (970) 898-3261
-   Hewlett-Packard Company                   Email:  andrew@fc.hp.com
+I have similar problems with 2.4.19.  I've run with 2.4.20, but not 
+under load.  Haven't tried 2.4.21 yet.
+
+Dale J. Stephenson
+dalestephenson@mac.com
