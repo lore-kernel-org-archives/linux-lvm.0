@@ -1,8 +1,10 @@
-MIME-Version: 1.0
-Message-id: <200309261446.hIxs@karlsruher.de>
-From: THORSTEN TOVACOVSKY <THORSTEN.D.TOVACOVSKY@KARLSRUHER.DE>
-Content-Transfer-Encoding: quoted-printable
-Subject: [linux-lvm] KLV: LVM-Probleme mit 31Bit-Linux auf s390x
+From: Goetz Bock <bock@blacknet.de>
+Subject: Re: [linux-lvm] RFC: DM encryption target?
+Message-ID: <20030926214616.GG12384@shell.blacknet.de>
+References: <1064332301.5845.8.camel@david.internal.NorcrossGroup.com> <1064343664.10276.3.camel@chtephan.cs.pocnet.net> <3F717F13.1050407@silicide.dk> <1064404776.5915.9.camel@chtephan.cs.pocnet.net> <20030924142145.GV12384@shell.blacknet.de> <1064506078.31091.15.camel@chtephan.cs.pocnet.net> <20030926124805.GA2462@gw.silicide.dk> <1064581467.4175.3.camel@chtephan.cs.pocnet.net>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <1064581467.4175.3.camel@chtephan.cs.pocnet.net>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -13,61 +15,41 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Sep 29 08:07:01 2003
+Date: Mon Sep 29 08:07:05 2003
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="iso-8859-1"
-To: LINUX-LVM@SISTINA.COM
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: linux-lvm@sistina.com
 
---- Erhalten von  A12.TOVACO 0721/353-4569                   26.09.03 15.=
-46
+On Fri, Sep 26 '03 at 15:04, Christophe Saout wrote:
+> Am Fr, den 26.09.2003 schrieb jon+lvm@silicide.dk um 14:48:
+> 
+> > > I don't know, but couldn't the use of a one-sector block slow things
+> > > down because of alignment issues? Perhaps using a 4k block would be more
+> > > useful or storing the sector at the end of the device (like the linux
+> > > raid info sector).
+> > 
+> > maybe, but does it matter? 
+> 
+> No, I meant the following: Let's assume you are using crypto on a raid
+> 0/5 device or something. Usually the filesystem uses 4k blocks. 
+> [ ... ] A lot of harddisks these days use internal blocks that are
+> larger than 512 bytes so there are also alignment issues.
+While I don't have any idea how harddisks work internaly thise days,
+I've no problem to loose 4k or even 16k if it improves anything. 
+But I would still like to get it to the beginning of the
+partition/drive/device.
 
-=20 -> LINUX-LVM(A)SISTINA.COM
+Mainly to be able to do
 
-Hallo Herr Mauelshagen,
+less -f $DEVICE
 
-wir nutzen Suse SLS8 31Bit auf einer z900 (2C1) unter z/VM (64Bit).
+to figure out what it's all about. I do this more often than not and
+hate it if all i get back is just binary garbage. 
 
-Wir versuchen den LVM mit Raid0 - Devices arbeiten zu lassen.
-
-Des =F6fteren kommt bei diversen Commands der LVM scheinbar durcheinander=
-=20und
-zeigt pl=F6tzlich das 1.Devices unterm Raid0-Device an.
-
-Beispiel:
-VG mit 6 PVs
-per pvmove eines dieser PVs freigeschaufelt,
-dann per vgreduce dieses aus der VG versucht zu entfernen.
-
-ein pvscan bringt dann pl=F6tzlich sowohl das md-dev als auch die 1.devic=
-e im md
-als inaktiv.
-
-Da ist also sowieso schon was schiefgegangen. Leider sind diese beiden da=
-nn per
-pvchange -xn /dev/xxx nicht als PVs entfernbar. Siehe Meldung:
-
-=20> pvchange -- unable to find volume group of "/dev/dasdk1" (VG not act=
-ive?) <
-
-Scheints mu=DF die VG doch noch aktiv sein, doch dann bekomm ich die PVs =
-ja auch
-nicht raus, dann dann folgende Meldung kommt:
-
-=20> pvchange -- physical volume "/dev/md0" is unallocatable <
-
-
-Und nun ?
-Haben Sie=B4nen Tipp f=FCr uns ?
-K=F6nnen Wir sie bei einer eventuellen Fehlersuche unterst=FCtzen ?
-
-Gr=FC=DFe
-Thorsten
-(Karlsruher Lebensversicherung AG)
-###########################################################
-
-This e-mail message has been scanned for Viruses=20
-by a Content Security Software.=20
-
-KARLSRUHER Lebensversicherung AG, 2003
-
-###########################################################
+Everyfile should tell me what is is for/from in plain text. 
+-- 
+/"\ Goetz Bock at blacknet dot de  --  secure mobile Linux everNETting
+\ /                     (c) 2003 as GNU FDL 1.1
+ X   [ 1. Use descriptive subjects - 2. Edit a reply for brevity -  ]
+/ \  [ 3. Reply to the list - 4. Read the archive *before* you post ]
