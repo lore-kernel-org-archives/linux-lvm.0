@@ -1,11 +1,10 @@
-Date: Wed, 3 Oct 2001 12:29:00 +0200
-From: Christoph Hellwig <hch@caldera.de>
-Message-ID: <20011003122900.A20144@caldera.de>
-References: <20011003095211.A19822@sistina.com>
+Message-ID: <20011003132225.A4197@win.tue.nl>
+Date: Wed, 3 Oct 2001 13:22:25 +0200
+From: Guest section DW <dwguest@win.tue.nl>
+References: <20011002202934.G14582@wiggy.net> <E15oUUf-0005Xw-00@the-village.bc.nu> <20011002220053.H14582@wiggy.net> <20011002150820.N8954@turbolinux.com>
 Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20011003095211.A19822@sistina.com>; from mauelshagen@sistina.com on Wed, Oct 03, 2001 at 09:52:11AM +0200
-Subject: [linux-lvm] Re: [lvm-devel] *** ANNOUNCEMENT *** LVM 1.0.1-rc3 available at www.sistina.com
+In-Reply-To: <20011002150820.N8954@turbolinux.com>; from Andreas Dilger on Tue, Oct 02, 2001 at 03:08:20PM -0600
+Subject: [linux-lvm] Re: partition table read incorrectly
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -19,18 +18,12 @@ List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: lvm-devel@sistina.com
-Cc: linux-lvm@sistina.com
+To: Alan Cox <alan@lxorguk.ukuu.org.uk>, linux-kernel@vger.kernel.org, linux-lvm@sistina.com
 
-Hi Heinz,
+On Tue, Oct 02, 2001 at 03:08:20PM -0600, Andreas Dilger wrote:
 
-On Wed, Oct 03, 2001 at 09:52:11AM +0200, Heinz J . Mauelshagen wrote:
-> See the CHANGELOG file contained in the tarball for further information.
+> >  I/O error: dev 08:11, sector 0
+> 
+> Hmm, this is sda11
 
-is there a chance you could inline the relevant parts of the changelog
-in the next (-rc4/final) announcment?
-
-	Christoph
-
--- 
-Whip me.  Beat me.  Make me maintain AIX.
+No. These messages give hex values.
