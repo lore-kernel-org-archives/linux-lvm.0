@@ -1,9 +1,10 @@
-From: Dieter =?iso-8859-15?q?N=FCtzel?= <Dieter.Nuetzel@hamburg.de>
-MIME-Version: 1.0
+From: Luca Berra <bluca@comedia.it>
+Subject: Re: [linux-lvm] Is is possible to have "boot" and "/" in LVM on top of SW RAID5?
+Message-ID: <20021121072209.GA20206@percy.comedia.it>
+References: <200211210441.48883.Dieter.Nuetzel@hamburg.de>
+Mime-Version: 1.0
 Content-Disposition: inline
-Message-Id: <200211210441.48883.Dieter.Nuetzel@hamburg.de>
-Content-Transfer-Encoding: quoted-printable
-Subject: [linux-lvm] Is is possible to have "boot" and "/" in LVM on top of SW RAID5?
+In-Reply-To: <200211210441.48883.Dieter.Nuetzel@hamburg.de>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,32 +15,25 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Nov 20 22:03:01 2002
+Date: Thu Nov 21 01:22:02 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="iso-8859-1"
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-I have 5 ATA disks (4 RAID5 + spare) all as master on three controllers (2 =
-at=20
-a time on two PCI cards and the spare on first channel of the onbaord=20
-controller.
+you cannot have /boot on top of sw raid 5. fullstop.
+create a 4-way mirror + spare at the beginning of each device
+and use the rest for raid5+spare use the first raid1 for /boot and the
+rest for lvm.
+i have been using this setup without any problem for about 2 years.
 
-Some problems with device mapping in lilo-2.22x (SuSE 8.1).
-Sometimes hda, hde, hdg, hdi, hdk
-the hda, hdc, hde, hdg, hdj
+L.
 
-Any hints/thought?
 
-It would be very nice if this works because than I can pull a whole disk if=
-=20
-one fails and the "spare" jumps in.
-
-Thanks,
-	Dieter
-=2D-=20
-Dieter N=FCtzel
-Graduate Student, Computer Science
-
-University of Hamburg
-Department of Computer Science
-@home: Dieter.Nuetzel at hamburg.de (replace at with @)
+-- 
+Luca Berra -- bluca@comedia.it
+        Communication Media & Services S.r.l.
+ /"\
+ \ /     ASCII RIBBON CAMPAIGN
+  X        AGAINST HTML MAIL
+ / \
