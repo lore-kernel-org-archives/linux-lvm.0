@@ -1,8 +1,8 @@
-Message-Id: <m10v3y9-0000YbC@duffy1.franken.de>
+Message-Id: <m10v3rL-0000YbC@duffy1.franken.de>
 From: Rolf Jakob <rjakob@duffy1.franken.de>
-Subject: Re: [linux-lvm] lvm-0.6, Linux 2.2.9
-In-Reply-To: <199906180613.AAA27434@webber.adilger.net> from Andreas Dilger at "Jun 18, 1999  0:13:36 am"
-Date: Fri, 18 Jun 1999 21:06:29 +0200 (MET DST)
+Subject: Re: [linux-lvm] lvm-0.6, Linux 2.2.9 and devfs-patch-v99.2
+In-Reply-To: <199906180656.AA25684@mailgate1b.telekom.de> from Heinz Mauelshagen at "Jun 18, 1999  8:56:16 am"
+Date: Fri, 18 Jun 1999 20:59:26 +0200 (MET DST)
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
 Sender: owner-linux-lvm
@@ -11,22 +11,47 @@ List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@msede.com
 
-> I had also found an old utility (extend2fs v0.1) at tsx-11.mit.edu
-> (I think) which claimed to allow resizing of ext2 filesystems
-> dynamically by concatenating disks.  Since you could consider this
-> conceptually the same as adding LEs to the end of a LV, it may be
-> possible to modify the code to work with LVM.  The code was originally
-> written by Miguel de Icaza, but when I contacted him, he was too
-> busy working on other projects (GNOME I think) to work on this anymore.
-> If anyone is interested in this code, I can send it to them or put
-> it on my web site, as it appears that tsx-11 is not currently
-> available.
+> 
+> For today you are only able to have an Intel binary copy
+> as a Quarterdesk Partition Magic customer.
+> 
 
-Yes, that is very interesting. Ext2fs has been there for quite a long time,
-so chances are good that it still works. I would like to take a look at it.
+And that is the problem. I hoped that dtfs will support resizing on the fly,
+but at least currently there is no such feature.
+Don't get me wrong, it is nice to have the support for resize2fs, but
+to be able to resize an unmounted (?) file system with a commercial tool
+is not a big plus for Linux in a server environment.
+That's why I'm searching for a file system that can handle that while
+being mounted and which can be delivered with all the Linux distributions.
 
-Could you please send it to me or mail the URL where you put it ?
+Today I've read that SGI and Veritas are planning to bring a journaled
+file system to Linux, but I couldn't found any details on how this
+file system will be.
 
+So I think we have to advertise LVM, because it makes resizable file
+systems reasonable. I understand that there was no need or better
+no application for such a file system before.
+
+You may ask why I'm so in favour of that flexibility. Of course you
+can put two partitions on your disk, one swap and one Linux native.
+That works fine for your small workstation but in a server things are
+different : you will surely have more than one disk and you don't want
+to have one file system for all. Things can be messed up badly when
+a file system is full, so I want to keep at least the root seperatly.
+(To be able to boot, I have seen systems hanging because they could
+not create /etc/mtab.)
+You may want to share the /usr between machines. You may want to
+seperate user's home from the /var file system for more control over
+the used disk space. You may want to have different file systems for
+performance reasons (to be able to control on which disks they are).
+
+So, let everybody know that there is LVM ! ;-)
+I'll write to SGI, maybe they consider it for their upcoming
+journaling file system. And I mailed the developper of dtfs.
+There is also reiserfs, but I haven't checked it yet.
+Any others, I might have overlooked ?
+
+Have a nice day,
 Rolf
 -- 
 Rolf Jakob at home (rjakob@duffy1.franken.de)
