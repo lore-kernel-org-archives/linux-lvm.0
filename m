@@ -1,11 +1,8 @@
-From: Wim Bakker <wim@unetix.nl>
-Subject: Re: [linux-lvm] filter problem
-References: <200208281556.58230.wim@unetix.nl> <20020829133550.GA3244@fib011235813.fsnet.co.uk>
-In-Reply-To: <20020829133550.GA3244@fib011235813.fsnet.co.uk>
+From: Alexander Lazarevich <alazarev@hera.itg.uiuc.edu>
+Subject: Re: [linux-lvm] raid 1 destroyed!
+In-Reply-To: <3D6E7E80.6040609@mvista.com>
+Message-ID: <Pine.A41.4.43.0208301001510.66960-100000@hera.itg.uiuc.edu>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Disposition: inline
-Message-Id: <200208301233.12859.wim@unetix.nl>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,49 +13,72 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Fri Aug 30 05:36:01 2002
+Date: Fri Aug 30 10:03:02 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: TEXT/PLAIN; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Thursday 29 August 2002 15:35, Joe Thornber wrote:
+ah, yes, that is probably what i did wrong. so software raid mirrors
+partitions, not drives? this is fine and all, but what about some
+documentation for radihotadd? any ideas?
 
-> I think there's some confusion about what vgscan will be doing and
-> where the filters fit in.  Certainly I just had to look at the code to
-> remind myself:
->
-> vgscan will stat *every* device under the /dev tree (or elsewhere if
-> you've specified a different dev dir).
->
-> If the device is a block device it will then pass it through the
-> predicate functions/filters in the following order:
->
-> i.  Regex - is the device accepted by the regexs specified in lvm.conf?
->
-> ii.  LVM check - is this device a 'recognised' device type. eg, IDE,
-> md, loop etc.
->
-> iii. Is it a valid partition number.
->
-> iv.  Can I successfully open the device
->      *** This is the expensive operation for non existent devs ***
->
-> Personally I see no need for checks ii. and iii. they will probably
-> disappear.
->
-> So with your filter which accepts every device containing 'sda' you
-> will find that /dev/ide0 is 'stat'd but no more than this.  However
-> with /dev/sda8 (non existent) you will get as far as the open test
-> before being rejected.
->
-> Once vgscan has been run the tools will not even stat failed devices.
->
-> NOTE: You don't always need to run vgscan on startup with LVM2,
-> only if you know some devices have moved - I just run 'vgchange -ay' in
-> my init script.
->
-> - Joe
+thanks,
 
-Thanks for the explanation, it's clear now what's happening.
+alex
+---                                                        ---
+   Alex Lazarevich | Systems | Imaging Technology Group
+   alazarev@itg.uiuc.edu | (217)244-1565 | www.itg.uiuc.edu
+---                                                        ---
 
-Wim Bakker
+
+On Thu, 29 Aug 2002, Steven Dake wrote:
+
+> One place you may have gone wrong is hotadding /dev/sdb.  You would want
+> to add a partition such as /dev/sdb1 not /dev/sdb
+>
+> Thanks
+> -steve
+>
+> Alexander Lazarevich wrote:
+>
+> >i was testing out software raid on linux 7.3 with sistina LVM installed. i
+> >had a raid 1 mirror with two drives, and one of the drives failed (i
+> >pulled the power on it), then i pluged it back in, rebooted, ran fdisk -l
+> >to make sure linux could see the drive (it did), then tried running fdisk
+> >again to create the partitions on the drive, then rebooted, then ran
+> >'raidhotadd /dev/md0 /dev/sdb', rebooted, then my entire system was gone,
+> >both drives had corrupted filesystem.
+> >
+> >my question is this: since there is no man pages for raidhotadd (stupid),
+> >how the heck do i read about how this software raid works so i dont blow
+> >away a "real" system!
+> >
+> >also, if i add my system drives to the LVM, can it still be in a raid 1?
+> >
+> >thanks in adavance,
+> >
+> >alex
+> >---                                                        ---
+> >   Alex Lazarevich | Systems | Imaging Technology Group
+> >   alazarev@itg.uiuc.edu | (217)244-1565 | www.itg.uiuc.edu
+> >---                                                        ---
+> >
+> >
+> >
+> >_______________________________________________
+> >linux-lvm mailing list
+> >linux-lvm@sistina.com
+> >http://lists.sistina.com/mailman/listinfo/linux-lvm
+> >read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
+> >
+> >
+> >
+>
+>
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@sistina.com
+> http://lists.sistina.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
+>
