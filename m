@@ -1,9 +1,9 @@
 From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] lvm-problems. vgda inconsistency
-Message-ID: <20021216164845.A19655@sistina.com>
-References: <200212160923.58295.lists@franzke-online.de>
+Subject: Re: [linux-lvm] vgcreate on md: vgcreate -- ERROR "pv_read(): read" reading physical volumes
+Message-ID: <20021216165342.B19655@sistina.com>
+References: <200212120801.48777.defranco@cup.hp.com> <20021212162759.36500.qmail@web40710.mail.yahoo.com>
 Mime-Version: 1.0
-In-Reply-To: <200212160923.58295.lists@franzke-online.de>; from lists@franzke-online.de on Mon, Dec 16, 2002 at 09:23:58AM +0100
+In-Reply-To: <20021212162759.36500.qmail@web40710.mail.yahoo.com>; from udovdh@yahoo.com on Thu, Dec 12, 2002 at 08:27:59AM -0800
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,47 +14,39 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Dec 16 09:58:01 2002
+Date: Mon Dec 16 10:03:02 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Mon, Dec 16, 2002 at 09:23:58AM +0100, Dieter Franzke wrote:
-> Hi,
+On Thu, Dec 12, 2002 at 08:27:59AM -0800, udo wrote:
+> Hello,
 > 
-> I've created a pv, vg and lv
-> via pvcreate, vgcreate and lvcreate.
-> Everything went well.
-> But when I tried to  initialize a filesystem via mkfs.xfs I get following 
-> error:
+> --- John DeFranco <defranco@cup.hp.com> wrote:
+> > Did you pvcreate the /dev/md2 first? Didn't indicate
+> > that below.
 > 
-> VGDA in Kernel and lvmtab are NOT consistent; please run vgscan
-> 
-> When I run vgscan nothing is changed.
-> How can I fix this without rebooting?
+> I didn't write that but I did, following the howto
+> from http://tldp.org/HOWTO/LVM-HOWTO.
+> I couldn't solve the problem so I started a wipe of
+> /dev/md2 to be sure the disk was clear. (this took
+> quite some time on this slow machine)
+> I had to wait for that to finish so I could reboot to
+> single user (init=/bin/sh) again.
+> Then things worked!
+> Pfew...... ;-)
 
-Rebooting won't help this. vgscan _reads_ the LVM metadata on the PVs
-and tries to update the working copies of the metadata in /etc/lvmtab*.
-No change to the metadata on the PVs happens during a vgscan run.
-
-Does vgscan display any error?
-What does vgck display?
-
-vgck should check the ondisk metadata fine or we need to restore it
-from archive copies in /etc/lvmconf/ (please save those!)
+A "dd if=/dev/zero of=/dev/md2 bs=1k count=1" could have done it as well :)
 
 > 
-> any hints?
+> Thanks,
+> Udo
 > 
-> ciao
-> 
-> dieter
-> 
-> -- 
-> registered linuxuser 199810
-> it's time to close windows....
-> 
+> __________________________________________________
+> Do you Yahoo!?
+> Yahoo! Mail Plus - Powerful. Affordable. Sign up now.
+> http://mailplus.yahoo.com
 > 
 > _______________________________________________
 > linux-lvm mailing list
