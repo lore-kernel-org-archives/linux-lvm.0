@@ -1,8 +1,9 @@
-Message-ID: <3DCA84BB.9050404@jumpline.com>
-From: Ben Snyder <ben@jumpline.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] cant mount LV via partition/filesystem labels
+From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
+Subject: Re: [linux-lvm] cache buffer size
+Message-ID: <20021107175801.A8382@sistina.com>
+References: <OF442EBFE4.3A4EDB03-ON85256C69.005AF60C@pok.ibm.com>
+Mime-Version: 1.0
+In-Reply-To: <OF442EBFE4.3A4EDB03-ON85256C69.005AF60C@pok.ibm.com>; from sbest@us.ibm.com on Wed, Nov 06, 2002 at 11:17:05AM -0600
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -13,36 +14,108 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Thu Nov  7 09:21:02 2002
+Date: Thu Nov  7 11:03:01 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Here's what I've got:
+On Wed, Nov 06, 2002 at 11:17:05AM -0600, Steve Best wrote:
+> 
+> Miwako Nakai wrote:
+> >Thank you, Mr.Mauelshagen
+> >
+> >JFS can not have fixed block size. But I heard from JFS group in IBM
+> >that on 2.5 or later it will be improved. I do not know JFS will have
+> >fixed block size or not. They said 'improved'.
+> 
+> This isn't right, JFS block size is fixed at 4k. Do you only have this
+> problem if you snapshot? Could you explain some more about your setup.
+> Are all of your LVs JFS?
+> 
+> Heinz is it possible that the 1k is coming from the snapshot?
 
-RH7.2, kernel  2.4.9-34enterprise
+You pointed to the right spot, Steve :)
 
-1 physical volume each on /dev/sda9 and /dev/sdb1
-one logical volume over these two PV's
+Indeed snapshot exception table ios go by blocks of 1k.
 
-I've labeled the filesystem via 'tune2fs' and want to use the label for 
-mounting purposes, as is the default with the other (non-LVM) filesystems
+Puting the snapshot store on the same device as the original is not
+recommended in general for performance reasons.
 
-'vgscan' and 'vgchange -a y' have been performed
-'vgdisplay' and 'lvdisplay' tell me all is well - everthing is 
-read/write and available
-'fsck' on the physical path reports clean...
+In case 1k blocks are possible with JFS:
 
-If I attempt to mount via the physical path to the LV, providing the 
-mount point, everything works fine
+if snapshots are used regularly and there's no seperate PV to put the
+snapshot onto, you might want to create a 1k blocked jfs and try if
+that performs better than the RAID 5 stripe cache flush penalty with the 4k
+blocked filesystem.
 
-However, mount refuses to mount via filesystem/partition label, 
-regardless if I use '-L' and provide the label or use the mountpoint and 
-let mount figure it out on its own from /etc/fstab.  I get 'mount: no 
-such partition found' (it is in /etc/fstab correctly, already checked that).
+Regards,
+Heinz    -- The LVM Guy --
 
-Am I missing something about labels?  Maybe some other remedial 
-filesystem characteristics/operations that I've missed because of 
-cranius-up-rectus (head up a$$).
 
-Thanks in advance for feedback/suggestions.
+> 
+> >
+> >I think LVM(2?) will be able to handle non-consitant block size on
+> >2.5 well.
+> 
+> >"Heinz J . Mauelshagen" wrote:
+> >>
+> >> On Fri, Nov 01, 2002 at 12:07:40PM +0900, Miwako Nakai wrote:
+> >> > I'm using jfs on lvm/raid5 with snapshot.
+> >> >
+> >> > When I copy file, it happens frequently
+> >> > 'raid5: switching cache buffer size XXX -> XXX'.
+> >> > This message appears to syslog. It caused speed down to access disks.
+> >> > So, I cut this message. It's seemed ok.
+> >>
+> >> Could be filesystems with different blocksizes accessing the underlying
+> >> raid5 md through LVM constantly forcing the raid5 stripe cache to be
+> flushed.
+> >> If that's the case, you want to put filesystems of the _same_ blocksize
+> >> onto all of the logical volumes allocated to the raid5 device.
+> >>
+> >> Regards,
+> >> Heinz    -- The LVM Guy --
+> >>
+> >> >
+> >> > But it's still going to switch cache buffer size. I think it cost
+> >> > some cpu time. When switching buffer cache size, it always happen
+> >> > reflushing memories.
+> >> >
+> >> > I want to fix buffer size. What shall I do?
+> >> > I asked JFS group. But they do nothing about cache buffer.
+> >> >
+> >> > kernel 2.4.20-pre10-ac2
+> >> > lvm    1.0.5
+> >> > jfs    1.0.23
+> >> >
+> >> > --
+> >> > nakai@ezinc.com
+> >>
+> 
+> Steve
+> JFS for Linux http://oss.software.ibm.com/jfs
+> 
+> 
+> 
+> 
+> 
+> 
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@sistina.com
+> http://lists.sistina.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+
+*** Software bugs are stupid.
+    Nevertheless it needs not so stupid people to solve them ***
+
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+Heinz Mauelshagen                                 Sistina Software Inc.
+Senior Consultant/Developer                       Am Sonnenhang 11
+                                                  56242 Marienrachdorf
+                                                  Germany
+Mauelshagen@Sistina.com                           +49 2626 141200
+                                                       FAX 924446
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
