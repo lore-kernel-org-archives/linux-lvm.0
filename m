@@ -1,9 +1,6 @@
-Content-Class: urn:content-classes:message
-Subject: RE: [linux-lvm] read-only media in a LVM?
-MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Message-ID: <C42D120999B1CC4C886B6BB2832F356019BF95@hermes.genomatica.com>
-From: "Sean P. Kane" <spkane@genomatica.com>
+Message-Id: <200306250215.h5P2ExF8008008@socrates.catalyst.net.nz>
+From: Steve Wray <stevew@catalyst.net.nz>
+Subject: [linux-lvm] shuffling drives along the chain?
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,64 +11,31 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Tue Jun 24 18:49:02 2003
+Date: Tue Jun 24 21:16:02 2003
 List-Id: <linux-lvm.redhat.com>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Wolfgang, can I get your email address so that I can ask you a few
-questions about this off-line?
+I have an existing LVM setup over 3 hard drives,
+hda, hdc, hde, with PV's and VG's set up just so.
 
-Thanks,
-Sean
+I wish to add a new drive as the new hda, shifting
+the other drives down the chain such that the old hda
+becomes the new hdb and so forth.
 
+The new drive will have new VG's on its PV's with
+no overlap; no PV on the new drive will be part
+of any VG on the old drives.
 
-------------------------------------------------------------------------
-Sean P. Kane
-spkane@genomatica.com
-Lead Infrastructure Architect
-Genomatica, Inc.
-------------------------------------------------------------------------
-"When we destroy something man has created we call it vandalism......
- When we destroy something that Gaia has created we call it progress."
+Is it just a simple matter of doing the 
+vgchange -an <volume group>, vgexport <volume group>, 
+shutdown & move the drives, reboot, 
+install Linux onto the new drive and then
+pvscan, vgimport <volume group> <physical volumes>
+dance?
 
+Or are there any gotchas to be aware of?
 
------Original Message-----
-From: Wolfgang Weisselberg [mailto:uzx87lvfmukwc001@sneakemail.com]=20
-Sent: Monday, June 23, 2003 17:35
-To: linux-lvm@sistina.com
-Subject: Re: [linux-lvm] read-only media in a LVM?
-
-
-Sean P. Kane wrote 78 lines:
-
-> I'd love to have a unionfs, but my understanding is that no such beast
-
-> exists for Linux 2.4 currently
-
-Try looking at=20
-    http://plasticfs.sourceforge.net/plasticfs.html
-
-Plasticfs-viewpath is basically a unionof all filesystems in the
-viewpath, changes happen on the first one and a .whiteout remembers what
-you deleted.  It does *not* work for root (security!!!  You do not want
-root to see /tmp/login instead of /bin/login!).  Remember to set the
-environment variables, e.g.
-
-    LD_PRELOAD=3D/usr/local/lib/libplasticfs.so
-    PLASTICFS=3D"viewpath /ramdisk /cdrom1 /cdrom2"
-    /bin/bash   # or whatever program you want.
-
-Since Plasticfs works on file-level, you should be able to mix and match
-filesystems as you like.  Note however that --- since we just overload
-common FS access methods --- some things might not work.
-
-I have it in production use (for Aegis, not for cdroms).
-
--Wolfgang
-
-_______________________________________________
-linux-lvm mailing list
-linux-lvm@sistina.com
-http://lists.sistina.com/mailman/listinfo/linux-lvm
-read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+Thanks!
