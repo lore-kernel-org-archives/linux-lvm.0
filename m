@@ -1,9 +1,10 @@
-From: "Karol Pietrzak" <noodlez84@earthlink.net>
-Date: Sun, 30 Sep 2001 22:10:10 -0400
+Message-ID: <3B90A33B.8050807@st-peter.stw.uni-erlangen.de>
+Date: Sat, 01 Sep 2001 10:58:35 +0200
+From: svetljo <galia@st-peter.stw.uni-erlangen.de>
 MIME-Version: 1.0
-Content-transfer-encoding: 7BIT
-Message-ID: <3BB79842.19367.155911@localhost>
-Subject: [linux-lvm] rc2-patched linux 2.4.10
+References: <3B8E3F0E.8050609@st-peter.stw.uni-erlangen.de> <20010830083546.A20989@sistina.com> <3B8EC633.40202@st-peter.stw.uni-erlangen.de> <3B8F8C5E.7030603@st-peter.stw.uni-erlangen.de> <20010831110512.V541@turbolinux.com> <3B8FD95C.60702@st-peter.stw.uni-erlangen.de> <20010831130718.C541@turbolinux.com> <3B900E92.7060607@st-peter.stw.uni-erlangen.de> <20010831165656.K541@turbolinux.com> <3B901C9D.5090608@st-peter.stw.uni-erlangen.de>
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] PBs with -ac kernels and LVM 1.0.1 rc1 and rc2
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,33 +16,14 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: linux-lvm@sistina.com
 
-Hello.
-I downloaded, compiled, and installed lvm 1.0.1rc2 (an FHS-
-complaint RPM of which is available @ 
-http://home.earthlink.net/~noodlez84/rpm_packages.html ).  I 
-also created a patch to linux 2.4.10 by going into PATCHES/ and 
-doing 'make'.  I applied the patch; it went flawlessly.  
-However, once  I started compiling the kernel, I got this:
+hi i've tried to compile linux-2.4.9-ac5 with LVM-1.0.1rc1 and rc2 ,but 
+i couldn't do it, but it work with LVM-1.0
 
-make -C md modules
-make[2]: Entering directory `/tmp/linux/drivers/md'
-make[2]: *** No rule to make target `lvm-snap.h', needed by 
-`lvm.o'.  Stop.
-make[2]: Leaving directory `/tmp/linux/drivers/md'
-make[1]: *** [_modsubdir_md] Error 2
-make[1]: Leaving directory `/tmp/linux/drivers'
-make: *** [_mod_drivers] Error 2
+i think it's the 'min - max ' problem and that Alan doesn't like it
 
-I checked the September archives to check whether the problem 
-was solved, but it didn't seem like it was.  I guess one more 
-report that rc2 and patched-2.4.10 don't work together doesn't 
-hurt. :)
+have anyone compiled succesfully  2.4.9-acX with LVM-1.0.1rc1 or rc2
 
-I'm using SuSE 7.2, meaning I'm using glibc 2.2.2 and gcc 
-2.95.3.
---
-noodlez:   Karol Pietrzak
-PGP KeyID: 0x3A1446A0
+i'll post later the error
