@@ -1,10 +1,12 @@
-From: Toon van der Pas <toon@hout.vanvergehaald.nl>
-Subject: Re: [linux-lvm] LVM2/Device-Mapper update
-Message-ID: <20031123102014.GA13148@hout.vanvergehaald.nl>
-References: <20031121233558.E16901@uk.sistina.com>
+Subject: Re: [linux-lvm] reiserfs_resize and lvreduce
+From: qv6 <sundiatah1@comcast.net>
+In-Reply-To: <20031122215140.GA7757@localhost>
+References: <20031122160606.A1247@wagener.nu>
+	 <20031122161458.GA19543@localhost>
+	 <19162796968.20031122174903@tnonline.net> <20031122215140.GA7757@localhost>
+Message-Id: <1069580511.3707.7.camel@localhost>
 Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20031121233558.E16901@uk.sistina.com>
+Content-Transfer-Encoding: 7bit
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,30 +17,22 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Sun Nov 23 04:21:02 2003
+Date: Sun Nov 23 04:42:01 2003
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Fri, Nov 21, 2003 at 11:35:58PM +0000, Alasdair G Kergon wrote:
-> I've updated the LVM 2.0 and Device-Mapper 1.0 tarballs at
-> ftp.sistina.com again to incorporate some minor bug fixes
-> and enhancements.
+On Sat, 2003-11-22 at 16:51, Jose Luis Domingo Lopez wrote:
+> On Saturday, 22 November 2003, at 17:49:03 +0100,
+> Spam wrote:
 > 
-> [...yadda yadda yadda...]
-> 
-> If your root filesystem is on a LV, you should run 'vgmknodes' or
-> 'vgscan --mknodes' to fix up the special files in /dev in your real
-> root filesystem after finishing with your initrd.
+> >   And  then  you can run reiserfs_resize again to use up the last MB's
+> >   that you lost. Quite simple and efficient.
+ 
+I have used resize_reiserfs and lvreduce command combo but
+reiserfs_resize is new to me. BTW, I just checked the man pages for
+reiserfs_resize and it does not exist.
 
-Is this advice targeted at non devfs users only?
-(I'm running linux-2.6-test9 in a Gentoo distribution, with devfs.)
+Is this a brand new command or is there something I'm missing here?
 
-Thanks,
-Toon.
-
-> Also, you can use 'vgchange --ignorelockingfailure' on your initrd
-> if the tool fails because it can't write a lock file to a read-only
-> filesystem. [A patch for mounting read-only volumes from read-only
-> PVs went into CVS today - it's not in this particular release.]
+Qv6
