@@ -1,19 +1,15 @@
 Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j01EL2r20574
-	for <linux-lvm@redhat.com>; Sat, 1 Jan 2005 09:21:02 -0500
-Received: from sv0.iquer.net (sv0.iquer.net [195.234.230.70])
-	by mx1.redhat.com (8.12.11/8.12.11) with SMTP id j01EL1KO013142
-	for <linux-lvm@redhat.com>; Sat, 1 Jan 2005 09:21:01 -0500
-From: Erik Wasser <erik.wasser@iquer.net>
-Subject: Re: [linux-lvm] Very long startup times of the lv*-tools
-Date: Sat, 1 Jan 2005 15:20:52 +0100
-References: <200412291742.04569.erik.wasser@iquer.net>
-	<20041230191239.GW26670@agk.surrey.redhat.com>
-In-Reply-To: <20041230191239.GW26670@agk.surrey.redhat.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j02CI7r05827
+	for <linux-lvm@redhat.com>; Sun, 2 Jan 2005 07:18:07 -0500
+Received: from ratbert.donck.com (ratbert.donck.com [212.204.192.81])
+	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id j02CI6bO029950
+	for <linux-lvm@redhat.com>; Sun, 2 Jan 2005 07:18:07 -0500
+Date: Sun, 2 Jan 2005 13:18:05 +0100
+From: Fred Donck <fred@donck.com>
+Message-ID: <20050102121805.GT326@dogbert>
+Mime-Version: 1.0
 Content-Disposition: inline
-Message-Id: <200501011520.53713.erik.wasser@iquer.net>
+Subject: [linux-lvm] LVM2 strange behaviour
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -25,27 +21,38 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Transfer-Encoding: 7bit
+To: linux-lvm@redhat.com
 
-On Thursday 30 December 2004 20:12, Alasdair G Kergon wrote:
 
-> On Wed, Dec 29, 2004 at 05:42:04PM +0100, Erik Wasser wrote:
-> > I'm using lvm2 2.00.08 on a 'Linux fuzz 2.6.9-gentoo-r13 #1 Wed Dec
-> > 29 10:41:06 CET 2004 i686 AMD Athlon(tm) XP 2800+ AuthenticAMD
-> > GNU/Linux'
-> >
-> > Is there is something known about this issue? What else can I
-> > check?
->
-> Upgrade LVM2!
+Happy new year all,
 
-Thanks for your help. lvm 2.00.25 is now working here fine.
+I am new to the mailing list and a new user of Linux LVM although i have
+been using similar technologies for years on Solaris and AIX.
 
-> Anyone know why so many gentoo users find themselves using old
-> versions like that and don't upgrade?
-> I don't see this with Debian or Fedora users.
+I have some strange behaviour i am encountering on a newly installed
+machine.
 
-Well I think we have to blame the distributation politics for this. B-) 
+$> lvm version  
+  LVM version:     2.00.08 (2003-11-14)
+  Library version: 1.00.17-ioctl (2004-04-19)
+  Driver version:  4.3.0
+$> 
 
--- 
-So long... Fuzz
+The machine is newly installed with Gentoo linux 2004.3, latest version.
+I installed according to
+http://gentoo-wiki.com/index.php?title=HOWTO_Gentoo_Install_on_Software_RAID_mirror_and_LVM2_on_top_of_RAID
+
+and seems to work fine. The RAID-1 partitions work perfectly but the LVM
+volumes behave weird.
+
+When i reboot the machine using `shutdown -r' the volumes do not come
+online because during boot the vgscan fails with a segfault. I have to
+manually do a vgscan and reboot again, then things work ok. Same things
+happen when i reboot now: vgscan segfaults, manual vgscan, reboot --> all
+ok.
+
+What could be the problem?
+
+Thanks,
+Fred
