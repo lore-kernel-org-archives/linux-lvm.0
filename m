@@ -1,10 +1,10 @@
-From: Patrick Caulfield <caulfield@sistina.com>
-Subject: Re: [linux-lvm] Howto create a Compressed ROM File initrd with lvmcreate_initrd
-Message-ID: <20030127082655.GB1698@tykepenguin.com>
-References: <001001c2c581$d7d579a0$240b892c@pe1mhp.ampr.org>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <001001c2c581$d7d579a0$240b892c@pe1mhp.ampr.org>
+Subject: Re: [linux-lvm] LVM2 for kernels 2.4.20(another problem raid-0)
+Message-ID: <1043665631.3e3512dfb8b34@secure.st-peter.stw.uni-erlangen.de>
+From: Svetoslav Slavtchev <galia@st-peter.stw.uni-erlangen.de>
+References: <1043622448.3e346a3057b43@secure.st-peter.stw.uni-erlangen.de>
+In-Reply-To: <1043622448.3e346a3057b43@secure.st-peter.stw.uni-erlangen.de>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,57 +15,69 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Jan 27 02:27:01 2003
+Date: Mon Jan 27 05:08:01 2003
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Sun, Jan 26, 2003 at 10:28:17PM +0100, Jan H. van Gils wrote:
-> 
-> 	Hi,
-> 
-> Thanks for reading,
-> 
-> I am using Debian as a distro and it usses a cramfs initrd file when it
-> boots.
-> Here is the output from the original initrd file and the one created by
-> lvmcreate_initrd.
-> 
-> 1. Orginal
-> initrd.img-2.4.20-686:      Linux Compressed ROM File System data,
-> little endian size 2920448 version #2 sorted_dirs CRC 0x2e79d9f7,
-> edition 0, 1565 blocks, 200 files
-> 
-> 2. lvmcreate_initrd
-> initrd-lvm-2.4.20-686.gz:   gzip compressed data, from Unix, max
-> compression
-> 
-> 
-> Has some of you myth have seen in earlier posting my system wil not boot
-> When I use the initrd I have created with lvmcreate_initrd.
-> 
-> Here is the message:
-> Kernel panic: VFS: Unable to mount root fs on 3a:00
-> 
-> So I think the problem has to do with the fact that my kernel expects a
-> cramfs initrd
-> File and not a gzip compressed.
 
-Yes, the Debian kernels don't have ext2 compiled in TTBOMK, only cramfs.
-Unfortunately, LVM likes to write to the root filesystem during vgscan and so
-you can't use a RO filesystem like cramfs - which is why lvmcreate_initrd
-creates an ext2 filesystem. Someone (I forget who) did some work on getting LVM
-to work with the Debian mkinitrd stuff but it was quite complicated and wasn't
-integrated by the mkinitrd maintainer.
+> Hi just an intermidiate report,
+> cause it's with 2.4.20-dm-2
+> (i'm rebuilding now with dm-7)
 
-The simplest wasy to acheive this is to build your own kernel with ext2 built in
-and use that for the initrd.
+it's just the same with dm-7 :(
+####################################################
+XFS mounting filesystem device-mapper(254,8)
+raid0_make_request bug: can't convert block across chunks or bigger than 16k
+25181119 4
+raid0_make_request bug: can't convert block across chunks or bigger than 16k
+25181151 4
+raid0_make_request bug: can't convert block across chunks or bigger than 16k
+25181183 4
+raid0_make_request bug: can't convert block across chunks or bigger than 16k
+25181215 4
+raid0_make_request bug: can't convert block across chunks or bigger than 16k
+25181247 4
+raid0_make_request bug: can't convert block across chunks or bigger than 16k
+25181279 4
+raid0_make_request bug: can't convert block across chunks or bigger than 16k
+25181311 4
+raid0_make_request bug: can't convert block across chunks or bigger than 16k
+25181343 4
+I/O error in filesystem ("device-mapper(254,8)") meta-data dev 0xfe08 block
+0x801a37       ("xlog_bread") error 5 buf count 131072
+XFS: failed to find log head
+XFS: log mount/recovery failed
+XFS: log mount failed
+#################################################################
 
-Root on LVM is complicated anyway so if youre not prepared to do this then you
-really shouldn't be trying root on LVM either....
- 
 
--- 
+any hints for testing, debuging?
 
-patrick
+is it the same with the ac kernels?
+( or may be does smbd have a ac kernel with xfs , i want to test it 
+but ac doesn't have xfs support :( )
+
+Regards,
+
+svetljo
+
+> when i try to mount a xfs filesystem wich is on 
+> lv over soft raid-0, i'm getting just like in
+> 2.5.2x - 2.5.4x (i didn't try later kernels) :
+> 
+> ############################
+> raid0_make_request bug: can't convert block across chunks or bigger than
+> 16k
+> 25181311 4
+> raid0_make_request bug: can't convert block across chunks or bigger than
+> 16k
+> 25181343 4
+> ############################
+> 
+> is this know problem, is it fixed ?
+> i thought that the problem exist only in 2.5 kernel
+> 
+> Regards,
+> 
+> svetljo
