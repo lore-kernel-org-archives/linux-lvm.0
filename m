@@ -1,10 +1,11 @@
-Message-ID: <3B8B78AC.164BDA67@sap.com>
-Date: Tue, 28 Aug 2001 12:55:40 +0200
-From: Jan Schreckenbach <Jan.Schreckenbach@sap.com>
-MIME-Version: 1.0
-Subject: Re: [linux-lvm] extending striped lv
-References: <20010823232349.9882.qmail@web20306.mail.yahoo.com> <20010824112859.A10992@dragon.blacknet.de> <20010827124212.C1308@sistina.com>
-Content-Transfer-Encoding: 7bit
+Date: Tue, 28 Aug 2001 12:00:08 +0100
+From: Patrick Caulfield <caulfield@sistina.com>
+Subject: Re: [linux-lvm] segfault running vgscan
+Message-ID: <20010828120008.F609@tykepenguin.com>
+References: <20010823145432.A20622@sistina.com> <20010823225107.2238.qmail@web20301.mail.yahoo.com> <20010823195402.A23333@sistina.com>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20010823195402.A23333@sistina.com>; from lewis@sistina.com on Thu, Aug 23, 2001 at 07:54:02PM -0500
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,36 +18,21 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-AJ Lewis wrote:
-> Nope, you can only extend a striped LV on the PV's it is currently on.
-> After that you either have to pvmove it to larger PVs or rebuild with more
-> disks.
+On Thu, Aug 23, 2001 at 07:54:02PM -0500, AJ Lewis wrote:
+> On Thu, Aug 23, 2001 at 03:51:07PM -0700, Brad Langhorst wrote:
+> > the static vs dynamic link bit gave me the idea to try
+> > compiling lvm statically - seems to work now.
+> > 
+> > i can't upgrade glibc since its already at 2.2.4 which
+> > is the most recent (as far as I can tell)
 > 
-> If you want to be able to extend LVs and need software striping, you might
-> want to consider using MD striping underneath LVM.
-> 
-AJ,
+> Interesting that i have the exact opposite problem with version 2.2.3 of
+> glibc...I think more research is required.  Has anyone else seen a problem
+> like this?
 
-does this mean I can initially build a striped LV from two smaller
-disks, let me say sda and sdb and later move the LE from sda to sdc
-and from sdb to sdd (where sdc and sdb a bigger than sda/sdb)? 
-It is to be said that the performance of md RAID0 is somewhat better
-than from striped LV's but I would prefer LVM if I could extend
-a striped LV without rebuilding RAID/restoring data.
+Just tried it with libc 2.2.4 and GCC 3.0 and GCC 2.95 and it seems OK for me.
 
-cu,
-Jan
-
---
-_______________________________________________________________________
-
-THE BEST RUN E-BUSINESSES RUN SAP
-_______________________________________________________________________
-
-Jan Schreckenbach                      email: Jan.Schreckenbach@sap.com
-SAP AG Walldorf/Baden, Germany         Phone: +49 6227  7-47474
-LinuxLab                               Fax  : +49 6227 78-31414
-
-SAP LinuxLab support address: linux@sap.com
+patrick
