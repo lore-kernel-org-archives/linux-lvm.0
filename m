@@ -1,21 +1,14 @@
-Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j2H7hmY01548
-	for <linux-lvm@redhat.com>; Thu, 17 Mar 2005 02:43:48 -0500
-Received: from wavehammer.waldi.eu.org (postfix@wavehammer.waldi.eu.org
-	[82.139.196.55])
-	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id j2H7hmBi012734
-	for <linux-lvm@redhat.com>; Thu, 17 Mar 2005 02:43:48 -0500
-Date: Thu, 17 Mar 2005 08:43:45 +0100
-From: Bastian Blank <bastian@waldi.eu.org>
-Subject: Re: [linux-lvm] snapshot reset
-Message-ID: <20050317074345.GA27947@wavehammer.waldi.eu.org>
-References: <20050316230040.GA6604@wavehammer.waldi.eu.org>
-	<20050316231000.GC19749@agk.surrey.redhat.com>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="qDbXVdCdHGoSgWSk"
-Content-Disposition: inline
-In-Reply-To: <20050316231000.GC19749@agk.surrey.redhat.com>
+Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j2I1KuY08633
+	for <linux-lvm@redhat.com>; Thu, 17 Mar 2005 20:20:56 -0500
+Received: from twinlark.arctic.org (twinlark.arctic.org [207.7.145.18])
+	by mx3.redhat.com (8.12.11/8.12.11) with ESMTP id j2I1KoH7028344
+	for <linux-lvm@redhat.com>; Thu, 17 Mar 2005 20:20:50 -0500
+Date: Thu, 17 Mar 2005 17:20:50 -0800 (PST)
+From: dean gaudet <dean-list-linux-lvm@arctic.org>
+Message-ID: <Pine.LNX.4.62.0503171716050.20670@twinlark.arctic.org>
+MIME-Version: 1.0
+Subject: [linux-lvm] oops with snapshot / 2.4.29
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -26,54 +19,43 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
+Content-Type: TEXT/PLAIN; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@redhat.com
 
+i seem to have run into an oops described in the archives -- in particular 
+this thread from last year:
 
---qDbXVdCdHGoSgWSk
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+https://www.redhat.com/archives/linux-lvm/2004-January/msg00110.html
 
-On Wed, Mar 16, 2005 at 11:10:00PM +0000, Alasdair G Kergon wrote:
-> On Thu, Mar 17, 2005 at 12:00:40AM +0100, Bastian Blank wrote:
-> > Is it possible to reset a snapshot without a delete, create cycle?
-> Not sure if I'm answering the right question, but with
-> LVM2/device-mapper:
+has there been any further work on this?  any success stories for the #2 
+patch mentioned in the above thread?
 
-Yes, you were answering the right questions.
+my system is running 2.4.29 + linux-2.4.22-VFS-lock.patch ... it's a dual 
+xeon w/hyperthreading.  i've been using snapshots for over a year for 
+nightly backups and this is the first time i've run into the oops.
 
-> You have to suspend & resume it in the kernel [with existing device-mapper
-> implementation; this may change].
->=20
-> With LVM2, between those commands, you can just zero out the
-> start of the cow device (say first 64k).  And then it'll treat
-> it as if it were a new snapshot (based on current state of filesystem.)
+thanks
+-dean
 
-Something like this?
-| name=3D${vg}-${lv}
-| dmsetup suspend $name
-| dd if=3D/dev/zero of=3D/dev/mapper/${name}-cow bs=3D64k count=3D1
-| dmsetup resume $name
-
-Is it possible to implement that somewhere in the lvm commands?
-
-Bastian
-
---=20
-Power is danger.
-		-- The Centurion, "Balance of Terror", stardate 1709.2
-
---qDbXVdCdHGoSgWSk
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-Content-Disposition: inline
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.0 (GNU/Linux)
-
-iEYEARECAAYFAkI5NTEACgkQnw66O/MvCNGBbgCfVXf2hFQ5AnV9dr0FEL+0SRoU
-NKkAn1VKppqqiBSHq+g9YgyE5DTaQDVl
-=IBmK
------END PGP SIGNATURE-----
-
---qDbXVdCdHGoSgWSk--
+Mar 16 03:31:19 twinlark kernel: Unable to handle kernel NULL pointer dereference at virtual address 00000004
+Mar 16 03:31:19 twinlark kernel:  printing eip:
+Mar 16 03:31:19 twinlark kernel: c021f30c
+Mar 16 03:31:19 twinlark kernel: *pde = 00000000
+Mar 16 03:31:19 twinlark kernel: Oops: 0002
+Mar 16 03:31:19 twinlark kernel: CPU:    3
+Mar 16 03:31:19 twinlark kernel: EIP:    0010:[lvm_snapshot_remap_block+220/256]    Not tainted
+Mar 16 03:31:19 twinlark kernel: EFLAGS: 00010202
+Mar 16 03:31:19 twinlark kernel: eax: f8a3dde0   ebx: f8d36800   ecx: f8a31000   edx: 00000000
+Mar 16 03:31:19 twinlark kernel: esi: 00010180   edi: 00000001   ebp: 00000903   esp: e1483ce0
+Mar 16 03:31:19 twinlark kernel: ds: 0018   es: 0018   ss: 0018
+Mar 16 03:31:19 twinlark kernel: Process qmail-smtpd (pid: 18415, stackpage=e1483000)
+Mar 16 03:31:19 twinlark kernel: Stack: 00000038 00000903 00000000 f7ba9600 e94e5c00 e94e5d70 00010000 c021bb28 
+Mar 16 03:31:19 twinlark kernel:        e1483d34 e1483d2c 00010180 e94e5c00 00000001 c01c7662 00000001 f7ba9770 
+Mar 16 03:31:19 twinlark kernel:        f750c000 00010180 00000000 000101b8 000101b8 09030903 00003a00 f7535980 
+Mar 16 03:31:19 twinlark kernel: Call Trace:    [lvm_map+408/1136] [submit_bh+82/256] [lvm_make_request_fn+23/48] [generic_make_request+228/320] [submit_bh+82/256]
+Mar 16 03:31:19 twinlark kernel:   [__refile_buffer+86/112] [sync_page_buffers+168/176] [try_to_free_buffers+331/368] [shrink_cache+827/1040] [shrink_caches+74/96] [try_to_free_pages_zone+98/240]
+Mar 16 03:31:19 twinlark kernel:   [balance_classzone+77/496] [__alloc_pages+376/640] [filemap_nopage+494/560] [filemap_nopage+0/560] [do_no_page+330/640] [handle_mm_fault+117/256]
+Mar 16 03:31:19 twinlark kernel:   [do_page_fault+968/1397] [do_mmap_pgoff+874/1488] [old_mmap+272/304] [filp_close+143/208] [do_page_fault+0/1397] [error_code+52/60]
+Mar 16 03:31:19 twinlark kernel: 
+Mar 16 03:31:19 twinlark kernel: Code: 89 42 04 8b 03 89 48 04 89 01 89 59 04 89 0b 89 ca eb 9f b8 
