@@ -1,47 +1,34 @@
-Message-ID: <389240C3.C11F5303@msede.com>
-Date: Sat, 29 Jan 2000 02:22:11 +0100
+Message-ID: <3892478F.A9F5D3CC@msede.com>
+Date: Sat, 29 Jan 2000 02:51:11 +0100
 From: Michael Marxmeier <mike@msede.com>
-Reply-To: abamrah@idirect.com
 MIME-Version: 1.0
-Subject: [linux-lvm] Subject: LVM and Debian (fwd)
+Subject: Re: [linux-lvm] Subject: LVM and Debian (fwd)
+References: <389240C3.C11F5303@msede.com>
 Content-Transfer-Encoding: 7bit
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@msede.com
+To: abamrah@idirect.com
+Cc: linux-lvm@msede.com
+
+> From: Amrit Pal Singh <abamrah@idirect.com>
+> Subject: LVM and Debian
+> 
+> I am trying to install LVM v0.7 on my debian box. I have tried with
+> Kernel 2.2.13, 2.2.14, and 2.3.40 but nowhere I could find a
+> configuration option that I can select to enable support for LVM.
+
+You _did_ apply the kernel patch? The config new options are part 
+of the kernel patch.
+Otherwise you may have made a mistake in patching the kernel.
 
 
+Hope this helps
+Michael
 
--------- Original Message --------
-Date: Fri, 28 Jan 2000 14:13:51 -0500
-Resent-Date: Sat, 29 Jan 2000 2:19:12 MEZ
-From: Amrit Pal Singh <abamrah@idirect.com>
-Subject: LVM and Debian
-
-I am trying to install LVM v0.7 on my debian box. I have tried with
-Kernel 2.2.13, 2.2.14, and 2.3.40 but nowhere I could find a
-configuration option that I can select to enable support for LVM.
-Though
-in the Install instructions for LVM, it says get a kernel >=2.2.10-ac2
-and also in step 8
-
-"Omit this step if you choosed yes for LVM instead of module in "make
-config".
-
-   Put an "insmod lvm" into your startup script OR extend
-/etc/conf.modules by
-
-      alias block-major-58      lvm 
-      alias char-major-109      lvm
-
-   to enable modprobe to load the LVM module (enable kerneld/kmod)."
-
-
-But when I do "make /config/menuconfig/xconfig", I do not see any
-option
-for LVM. Am I missing something?
-
-Regards.
-
-Amrit
+-- 
+Michael Marxmeier           Marxmeier Software AG
+E-Mail: mike@msede.com      Besenbruchstrasse 9
+Phone : +49 202 2431440     42285 Wuppertal, Germany
+Fax   : +49 202 2431420     http://www.msede.com/
