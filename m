@@ -1,10 +1,10 @@
-Return-Path: <adilger@turbolinux.com>
-From: Andreas Dilger <adilger@turbolinux.com>
-Message-Id: <200102122040.f1CKe6w08894@webber.adilger.net>
-Subject: Re: [linux-lvm] (no subject)
-In-Reply-To: <20010211191615.6223.qmail@web216.mail.yahoo.com> from Pete lamb
- at "Feb 11, 2001 11:16:15 am"
-Date: Mon, 12 Feb 2001 13:40:06 -0700 (MST)
+Return-Path: <josv@osp.nl>
+Date: Mon, 12 Feb 2001 13:43:00 -0800
+From: Jos Visser <josv@osp.nl>
+Message-ID: <20010212134300.E28557@jadzia.josv.com>
+Mime-Version: 1.0
+Content-Disposition: inline
+Subject: [linux-lvm] Using symlink as PV name fails
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,26 +16,27 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Pierre writes:
-> Is there a utility to convert an existing ext2fs to a
-> lvm or do I have to due a complete new install???
+Hi there,
 
-It may be possible to use parted to do this.  I don't think it is 100%
-finished, but I _think_ it can do "move start of filesystem" kind of
-work.  It will NOT do the LVM creation, and you will need to manually
-figure out  how much space to put at the beggining of the PV for LVM
-metadata.  After that, you will also need to create an LV which is
-using exactly the correct PEs to hold the filesystem.
+If I pvcreate a symlink, the pvcreate fails:
 
-I would make a backup first.
+  # pvcreate /dev/sdb1
+  pvcreate -- device "/dev/sdb1" doesn't exist
 
-Cheers, Andreas
+  # ls -l /dev/sdb1
+  lr-xr-xr-x   1 root     root           34 Feb 12 13:24 /dev/sdb1 -> scsi/host0/bus0/target4/lun0/part1
+
+This actually happens a lot in devfs systems. I think it might have to
+do something with the fact that the code that checks the PV name in
+/proc/partitions, does not take the fact that the PV name is a symlink
+into account...
+
+++Jos
+
+
 -- 
-Andreas Dilger  \ "If a man ate a pound of pasta and a pound of antipasto,
-                 \  would they cancel out, leaving him still hungry?"
-http://www-mddsp.enel.ucalgary.ca/People/adilger/               -- Dogbert
+I have no need for a spirituality which can not encompass my humanness.
