@@ -1,20 +1,27 @@
-Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id i7CDaja24879
-	for <linux-lvm@redhat.com>; Thu, 12 Aug 2004 09:36:45 -0400
-Received: from dvmwest.gt.owl.de (dvmwest.gt.owl.de [62.52.24.140])
-	by mx3.redhat.com (8.12.10/8.12.10) with ESMTP id i7CDadXn032207
-	for <linux-lvm@redhat.com>; Thu, 12 Aug 2004 09:36:40 -0400
-Date: Thu, 12 Aug 2004 15:36:39 +0200
-From: Jan-Benedict Glaw <jbglaw@lug-owl.de>
-Subject: Re: [linux-lvm] fix lost vgda
-Message-ID: <20040812133638.GW16935@lug-owl.de>
-References: <30BB5E9998236744913B2C0E04D24D39061510CE@zonda.eu.tieto.com>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="JsZT+zyIIjunjBOn"
-Content-Disposition: inline
-In-Reply-To: <30BB5E9998236744913B2C0E04D24D39061510CE@zonda.eu.tieto.com>
-Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
+Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id i7CEAHa03334
+	for <linux-lvm@redhat.com>; Thu, 12 Aug 2004 10:10:17 -0400
+Received: from sbbmail1.sbb.ch (sbbmail1.sbb.ch [193.192.251.19])
+	by mx1.redhat.com (8.12.10/8.12.10) with ESMTP id i7CE9te1018097
+	for <linux-lvm@redhat.com>; Thu, 12 Aug 2004 10:09:55 -0400
+Received: from intmail1.sbb.ch (intmail1.sbb.ch [10.104.27.189])
+	by sbbmail1.sbb.ch (Switch-3.1.6/Switch-3.1.0) with ESMTP id
+	i7CE9agK012796
+	(version=TLSv1/SSLv3 cipher=EDH-RSA-DES-CBC3-SHA bits=168 verify=FAIL)
+	for <linux-lvm@redhat.com>; Thu, 12 Aug 2004 16:09:36 +0200
+Received: from gmx.net (i34390.sbb.ch [147.78.17.245])
+	by intmail1.sbb.ch (Switch-3.1.6/Switch-3.1.6) with ESMTP id
+	i7CE9S6U002816
+	for <linux-lvm@redhat.com>; Thu, 12 Aug 2004 16:09:36 +0200
+Message-ID: <411B79CF.905E0C25@gmx.net>
+Date: Thu, 12 Aug 2004 16:08:15 +0200
+From: Thomas Meller <thomas.meller@gmx.net>
+MIME-Version: 1.0
+Subject: Re: [linux-lvm] SAN Storage/mirror/lvm
+References: <1092071992.3369.48.camel@localhost>
+Content-Transfer-Encoding: 7bit
+Reply-To: thomas.meller@gmx.net,
+	LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -24,47 +31,50 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: linux-lvm@redhat.com
+Content-Type: text/plain; charset="us-ascii"
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
+Cott Lang wrote:
 
---JsZT+zyIIjunjBOn
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> On the host, I see 4 SCSI devices, two valid, two invalid - I'm
+> guessing this is caused because only one storage processor exports
+> a particular LUN, so half the paths are invalid until a storage
+> processor fails over.
+> 
+> sdd - SP A Path 1
+> sde - SP B Path 1
+> sdf - SP A Path 2
+> sdg - SP B Path 2
+> 
+> I have a LUN currently on SP B, so I can use md multipath configured
+> with /dev/sde and /dev/sdg, and that seems to work.
+> 
+> However, two things:
+> 
+> 1) How do I set this up to handle a failover to SP A?
+> 2) Multipath only seems to work in failover mode, is there a way to
+> load balance across the two paths?
+> 
+> Anyone have any hints?  :)
 
-On Thu, 2004-08-12 09:51:14 +0300, Onni.Rautanen@tietoenator.com <Onni.Raut=
-anen@tietoenator.com>
-wrote in message <30BB5E9998236744913B2C0E04D24D39061510CE@zonda.eu.tieto.c=
-om>:
-> Accidentally when creating the partitions for the raid5 array I did it on=
- the wrong machine =3D) and now I've lost the partition table/vgda for thos=
-e 160gb disks in the lvm.
+Hello Cott,
 
-For the partition table, try gpart.
+your questions and the phenomena you see are likely to be specific to your hardware. I tried
+Emulex and QLogic HBA and found very different behaviour.
 
-MfG, JBG
+Multipathing is handled by the storage systems differently from dumb disks. Load balancing
+over several physical paths is therefore a complicated task. Most vendors do not really
+support it. Some systems suffer from a Host switching paths. Unless you do not use a
+supported (read: expensive) Software you should keep your hands off.
 
---=20
-Jan-Benedict Glaw       jbglaw@lug-owl.de    . +49-172-7608481             =
-_ O _
-"Eine Freie Meinung in  einem Freien Kopf    | Gegen Zensur | Gegen Krieg  =
-_ _ O
- fuer einen Freien Staat voll Freier B=FCrger" | im Internet! |   im Irak! =
-  O O O
-ret =3D do_actions((curr | FREE_SPEECH) & ~(NEW_COPYRIGHT_LAW | DRM | TCPA)=
-);
+Even failover has a 'mechanical' quality: you can hear the door's angles squiek when it
+happens.
+I found my clusters diving after teardown of a storage's HBA.
 
---JsZT+zyIIjunjBOn
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-Content-Disposition: inline
+Failover while switching the physical path, i.e. switching the HBA takes at least 45 second
+on a (tuned) qlogic. Meanwhile the whole computer freezes. The driver seems to switch off
+interrupts or something.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.2.4 (GNU/Linux)
+Have fun finding your solution.
 
-iD8DBQFBG3JmHb1edYOZ4bsRAv61AJ4/qTyNSFCq/pH+Q+y/XHufrXbg1gCbBOBT
-rWEfNjXw6s9P5+6mV9PR8kU=
-=h45l
------END PGP SIGNATURE-----
-
---JsZT+zyIIjunjBOn--
+Thomas
