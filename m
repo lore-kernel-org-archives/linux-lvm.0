@@ -1,11 +1,12 @@
 Subject: Re: [linux-lvm] raid and lvm
-From: SI Reasoning <si@mindspring.com>
-In-Reply-To: <20030128145317.G11767@zealot.blacknet.de>
+From: Christophe Saout <christophe@saout.de>
+In-Reply-To: <1043775290.23550.4.camel@sidereal.home.network>
 References: <1043751787.3989.20.camel@sidell.home.network>
 	 <20030128145317.G11767@zealot.blacknet.de>
-Content-Type: multipart/signed; micalg=pgp-sha1; protocol="application/pgp-signature"; boundary="=-fgn/Xnk4iqkS48w4EM+t"
-Message-Id: <1043775290.23550.4.camel@sidereal.home.network>
+	 <1043775290.23550.4.camel@sidereal.home.network>
+Message-Id: <1043778786.2448.17.camel@chtephan.cs.pocnet.net>
 Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,50 +17,37 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Tue Jan 28 11:34:01 2003
+Date: Tue Jan 28 12:34:02 2003
 List-Id: <linux-lvm.redhat.com>
-To: "linux-lvm@sistina.com" <linux-lvm@sistina.com>
+Content-Type: text/plain; charset="us-ascii"
+To: linux-lvm@sistina.com
 
---=-fgn/Xnk4iqkS48w4EM+t
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
+Am Die, 2003-01-28 um 18.34 schrieb SI Reasoning:
 
-On Tue, 2003-01-28 at 07:53, Goetz Bock wrote:
-> On Tue, Jan 28 '03 at 05:03, SI Reasoning wrote:
-> > I was reading back in 1999 mailing list about trying to merge in some
-> > raid functions into lvm. Did this ever happen?
-> except for striping (some call it RAID0) it did not happen
->=20
-> > Is it possible to use lvm to safeguard data (like raid 5) so that if a
-> > hard drive fails, the data is picked up by another volume group/or
-> > parts of the volume group not on the failed drive?
-> Why do people always want to bloat everything? LVM is one funcunality
-> and RAID a different one, you can layer tham as you please and get the
-> benefit of both with out any efford. So why should anyone integrate
-> them.
->=20
-I was following an old list and at that time they felt that it would be
-more efficient to merge either lvm into raid or vice-versa.
+> I was following an old list and at that time they felt that it would be
+> more efficient to merge either lvm into raid or vice-versa.
 
-> I know that the device mapper allows to add RAID5 functionality, but in
-> a different way (not as part of LVM, but as a plugin into DM)
-what is DM? Is this part of lvm2 or is it in 1.0.6 (or earlier)? Is
-there a how-to for creating raid5 through this plugin?
+Yes. I've looked into the DM code in the kernel and I have to say it's a
+very clean architecture. Since LVM2 needs some kind of Raid 0 (a
+transparent mirror in the background) to implement pvmove it would be a
+code duplication.
 
+Also since DM has a nice plugin architecture and already has generic bio
+splitting code, it would even save some memory when the raid drivers
+would be reimplemented as DM plugins. (so the bloat argument doesn't
+count)
 
---=20
-SI Reasoning <si@mindspring.com>
+Also you don't need the extra meta data the raid code actually has (ok,
+raid autodetection won't work anymore but as far I understand the kernel
+developers, that's depracted anyway). I've had problems with the raid
+metadata code that could have been solved with things like vgexport and
+vgimport.
 
---=-fgn/Xnk4iqkS48w4EM+t
-Content-Type: application/pgp-signature; name=signature.asc
-Content-Description: This is a digitally signed message part
+But I think that's going to be adressed via the new in-kernel
+initramdisk anyway.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.0.7 (GNU/Linux)
+And I think that the performance is better when raid is implemented in
+DM than to run one device mapper over another one.
 
-iD8DBQA+Nr86Q3BM1ElJCVIRAo+IAKC0uF/FcPGvZgtwSXF6ZkQ2lLzTlACdGMFo
-YcFxWL1SH0XJflSRCp4qXuE=
-=Dr5Y
------END PGP SIGNATURE-----
-
---=-fgn/Xnk4iqkS48w4EM+t--
+-- 
+Christophe Saout <christophe@saout.de>
