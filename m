@@ -1,12 +1,12 @@
 From: Stephan Austermuehle <au@hcsd.de>
 Subject: Re: [linux-lvm] Max storage size per system
-Message-ID: <20030307142049.GB21686@hcsd.de>
-References: <20030305195052.GC11043@hcsd.de> <20030307013431.GB6942@auctionwatch.com>
+Message-ID: <20030307170006.GA22401@hcsd.de>
+References: <20030304114851.GA22965@hcsd.de> <3E64B885.1AF49EDA@silicide.dk> <20030304144121.GB23975@hcsd.de> <4857903125.20030305160532@tnonline.net> <20030305194551.GA11043@hcsd.de> <20030306162150.GA11451@gw.silicide.dk> <20030306171539.GA16219@hcsd.de> <3E68BC6E.21AB9F6F@silicide.dk>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="ZoaI/ZTpAVc4A5k6"
+	protocol="application/pgp-signature"; boundary="/9DWx/yDrRhgMJTb"
 Content-Disposition: inline
-In-Reply-To: <20030307013431.GB6942@auctionwatch.com>
+In-Reply-To: <3E68BC6E.21AB9F6F@silicide.dk>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,40 +17,40 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Sun Mar  9 16:59:03 2003
+Date: Sun Mar  9 16:59:05 2003
 List-Id: <linux-lvm.redhat.com>
 To: linux-lvm@sistina.com
 
---ZoaI/ZTpAVc4A5k6
+--/9DWx/yDrRhgMJTb
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Thu, Mar 06, 2003 at 05:34:31PM -0800, Petro wrote:
+On Fri, Mar 07, 2003 at 04:36:14PM +0100, Jon Bendtsen wrote:
 
-> Hey man, don't pull any punches, tell us how you *Really* feel.=20
+> 2 rotating parity disks ? Can you elaborate on how that works ?
 
-Well, iSCSI was developed and pushed by some networking guys with
-Ethernet in mind to get into the storage market without developing know
-how for a really efficient data link. So iSCSI has to handle lots of
-overhead: SCSI commands are encapsulated in IP, IP is encapuslated in
-Ethernet. This leads to bad performance (latency, throughput) compared
-to a Fibre Channel connection with the same link speed. Maybe the
-performance impact will become negligible with 10G or 100G Ethernet but
-at the moment we don't have these technologies available.
+"The Mathematics behind the RAID 5DP":
+
+	http://www.hp.com/products1/storage/products/disk_arrays/infolibrary/mathematics_behind_RAID_5DP.pdf
+
+"Analysis of RAID 5DP":
+
+	http://www.hp.com/products1/storage/products/disk_arrays/infolibrary/analysis_0f_RAID_5DP.pdf
+
+Kind regards,
 
 Stephan
 
---ZoaI/ZTpAVc4A5k6
+--/9DWx/yDrRhgMJTb
 Content-Type: application/pgp-signature
 Content-Disposition: inline
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v1.2.1 (GNU/Linux)
 
-iD8DBQE+aKrB+QMu5be4tHkRAhdSAKDVGvz/UmBTFUAuwwzpIdCRUNyqPwCgukXC
-FzGjb2w1J9HVI84z+siCZow=
-=BJbZ
+iD8DBQE+aNAW+QMu5be4tHkRAqZZAKC9+tMmv7hfplSARKo8+cJ0ejY0sQCfVo9V
+MlmQkniVQFQjw5CLRxDxpns=
+=f/vM
 -----END PGP SIGNATURE-----
 
---ZoaI/ZTpAVc4A5k6--
+--/9DWx/yDrRhgMJTb--
