@@ -1,10 +1,10 @@
-From: "IT3 Stuart B. Tener, USNR-R" <stuart@bh90210.net>
-Subject: RE: [linux-lvm] RAWIO Patch with 2.4?
-Date: Tue, 18 Sep 2001 01:29:26 -0700
-Message-ID: <NBBBJHKIOKPKOGOEPEDPOEGKDNAA.stuart@bh90210.net>
+Message-ID: <3BA70838.8060902@st-peter.stw.uni-erlangen.de>
+Date: Tue, 18 Sep 2001 10:39:20 +0200
+From: svetljo <galia@st-peter.stw.uni-erlangen.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-In-Reply-To: <20010918085251.C736@tykepenguin.com>
+Subject: Re: [linux-lvm] RAWIO Patch with 2.4?
+References: <NBBBJHKIOKPKOGOEPEDPOEGKDNAA.stuart@bh90210.net>
+Content-Transfer-Encoding: 7bit
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,42 +16,77 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: linux-lvm@sistina.com
 
-TGlzdCBtZW1iZXJzOg0KDQoJSG93IGRvIEkgbGVhdmUgdGhlIG1haWxpbmcgbGlzdCBhbmQgdW5z
-dWJzY3JpYmU/DQoNCg0KVmVyeSBSZXNwZWN0ZnVsbHksIA0KDQpTdHVhcnQgQmxha2UgVGVuZXIs
-IElUMywgVVNOUi1SLCBOM0dXRyANCkJldmVybHkgSGlsbHMsIENhbGlmb3JuaWENClZUVSAxOTA0
-RyAoVm9sdW50ZWVyIFRyYWluaW5nIFVuaXQpIA0Kc3R1YXJ0QGJoOTAyMTAubmV0IA0Kd2VzdCBj
-b2FzdDogKDMxMCktMzU4LTAyMDIgUC5PLiBCb3ggMTYwNDMsIEJldmVybHkgSGlsbHMsIENBIDkw
-MjA5LTIwNDMgDQplYXN0IGNvYXN0OiAoMjE1KS0zMzgtNjAwNSBQLk8uIEJveCA0NTg1OSwgUGhp
-bGFkZWxwaGlhLCBQQSAxOTE0OS01ODU5IA0KDQpUZWxlY29waWVyOiAoNDE5KS03MTUtNjA3MyBm
-YXggdG8gZW1haWwgZ2F0ZXdheSB2aWEgd3d3LmVmYXguY29tIChpdCdzIGZyZWUhKSANCg0KSk9J
-TiBUSEUgVVMgTkFWWSBSRVNFUlZFLCBTRVJWRSBZT1VSIENPVU5UUlksIEFORCBCRU5FRklUIEZS
-T00gSVQgQUxMLiANCg0KVHVlc2RheSwgU2VwdGVtYmVyIDE4LCAyMDAxIDE6MjggQU0NCg0KLS0t
-LS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCkZyb206IGxpbnV4LWx2bS1hZG1pbkBzaXN0aW5hLmNv
-bSBbbWFpbHRvOmxpbnV4LWx2bS1hZG1pbkBzaXN0aW5hLmNvbV1PbiBCZWhhbGYgT2YgUGF0cmlj
-ayBDYXVsZmllbGQNClNlbnQ6IFR1ZXNkYXksIFNlcHRlbWJlciAxOCwgMjAwMSAxMjo1MyBBTQ0K
-VG86IGxpbnV4LWx2bUBzaXN0aW5hLmNvbQ0KU3ViamVjdDogUmU6IFtsaW51eC1sdm1dIFJBV0lP
-IFBhdGNoIHdpdGggMi40Pw0KDQpPbiBNb24sIFNlcCAxNywgMjAwMSBhdCAwNDo1MToxMVBNIC0w
-NTAwLCBCcmlhbiBCYWlsZXkgd3JvdGU6DQo+IFdoZW4gYXR0ZW1wdGluZyB0byBydW4gbWFrZSB0
-byBjcmVhdGUgdGhlIDEuMCBwYXRjaCBmb3IgbXkgc2VydmVyLCBJDQo+IGNvbnRpbnVhbGx5IHJl
-Y2VpdmUgdGhlIG1lc3NhZ2UgdGhhdCBJIGhhdmVuJ3QgYXBwbGllZCB0aGUgcmF3aW8gcGF0Y2gu
-DQo+IEhvd2V2ZXIsIHRoaXMgaXMgYSAyLjQuMy02IGtlcm5lbCB2aWEgUmVkaGF0IDcuMS4gIE15
-IHVuZGVyc3RhbmRpbmcgaXMNCj4gcmF3aW8gaXMgYnVpbHQtaW4gdG8gdGhlIGtlcm5lbCBwb3N0
-LTIuNC4NCj4NCj4gSW4gYSBmYWlsZWQgYXR0ZW1wdCwgSSBhY3R1YWxseSBhcHBsaWVkIHRoZSBw
-YXRjaCBhbmQgd2FzIHN0aWxsDQo+IHVuc3VjY2Vzc2Z1bC4gIEFueSBzdWdnZXN0aW9ucz8NCj4N
-Cg0KSSB3b3VsZCBndWVzcyB0aGF0IHRoZSBjb25maWd1cmUgc2NyaXB0IGRpZG4ndCBmaW5kIHlv
-dXIga2VybmVsIGNvcnJlY3RseSBhbmQNCnRoaW5rcyB5b3Ugc3RpbGwgaGF2ZSAyLjIuIE1ha2Ug
-c3VyZSB5b3UgcG9pbnQgaXQgYXQgdGhlIHJpZ2h0IHNvdXJjZXMgdXNpbmcNCmVnOg0KDQouL2Nv
-bmZpZ3VyZSAtLXdpdGgta2VybmVsX2Rpcj0vdXNyL3NyYy9teWtlcm5lbA0KDQood2F0Y2ggZm9y
-IHRoZSBoeXBoZW4gYW5kIHVuZGVyc2NvcmUhKQ0KDQpUaGVuIHJlLXJ1biBtYWtlIGluIHRoZSBQ
-QVRDSEVTIGRpcmVjdG9yeS4NCg0KWW91IGNhbiBjaGVjayB0aGF0IGNvbmZpZ3VyZSBoYXMgZm91
-bmQgdGhlIHJpZ2h0IGtlcm5lbCBieSBleGFtaW5pbmcgdGhlDQpNYWtlZmlsZSBpbiB0aGUgUEFU
-Q0hFUyBkaXJlY3RvcnkgLSBpdCBzaG91bGQgaGF2ZSB0aGUgZm9sbG93aW5nIHRocmVlIHZhcmlh
-Ymxlcw0Kc2V0Og0KDQpLRVJORUxfRElSPQ0KTFZNX1ZFUlNJT049DQpLRVJORUxfVkVSU0lPTj0N
-Cg0KcGF0cmljaw0KDQoNCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fDQpsaW51eC1sdm0gbWFpbGluZyBsaXN0DQpsaW51eC1sdm1Ac2lzdGluYS5jb20NCmh0
-dHA6Ly9saXN0cy5zaXN0aW5hLmNvbS9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWx2bQ0KcmVhZCB0
-aGUgTFZNIEhPVy1UTyBhdCBodHRwOi8vd3d3LnNpc3RpbmEuY29tL2x2bS9QYWdlcy9ob3d0by5o
-dG1sDQo=
+http://lists.sistina.com/mailman/listinfo/linux-lvm
+on the bottom there is a part for subscribers
+
+go edit your profile
+
+IT3 Stuart B. Tener, USNR-R wrote:
+
+>List members:
+>
+>	How do I leave the mailing list and unsubscribe?
+>
+>
+>Very Respectfully, 
+>
+>Stuart Blake Tener, IT3, USNR-R, N3GWG 
+>Beverly Hills, California
+>VTU 1904G (Volunteer Training Unit) 
+>stuart@bh90210.net 
+>west coast: (310)-358-0202 P.O. Box 16043, Beverly Hills, CA 90209-2043 
+>east coast: (215)-338-6005 P.O. Box 45859, Philadelphia, PA 19149-5859 
+>
+>Telecopier: (419)-715-6073 fax to email gateway via www.efax.com (it's free!) 
+>
+>JOIN THE US NAVY RESERVE, SERVE YOUR COUNTRY, AND BENEFIT FROM IT ALL. 
+>
+>Tuesday, September 18, 2001 1:28 AM
+>
+>-----Original Message-----
+>From: linux-lvm-admin@sistina.com [mailto:linux-lvm-admin@sistina.com]On Behalf Of Patrick Caulfield
+>Sent: Tuesday, September 18, 2001 12:53 AM
+>To: linux-lvm@sistina.com
+>Subject: Re: [linux-lvm] RAWIO Patch with 2.4?
+>
+>On Mon, Sep 17, 2001 at 04:51:11PM -0500, Brian Bailey wrote:
+>
+>>When attempting to run make to create the 1.0 patch for my server, I
+>>continually receive the message that I haven't applied the rawio patch.
+>>However, this is a 2.4.3-6 kernel via Redhat 7.1.  My understanding is
+>>rawio is built-in to the kernel post-2.4.
+>>
+>>In a failed attempt, I actually applied the patch and was still
+>>unsuccessful.  Any suggestions?
+>>
+>
+>I would guess that the configure script didn't find your kernel correctly and
+>thinks you still have 2.2. Make sure you point it at the right sources using
+>eg:
+>
+>./configure --with-kernel_dir=/usr/src/mykernel
+>
+>(watch for the hyphen and underscore!)
+>
+>Then re-run make in the PATCHES directory.
+>
+>You can check that configure has found the right kernel by examining the
+>Makefile in the PATCHES directory - it should have the following three variables
+>set:
+>
+>KERNEL_DIR=
+>LVM_VERSION=
+>KERNEL_VERSION=
+>
+>patrick
+>
+>
+>_______________________________________________
+>linux-lvm mailing list
+>linux-lvm@sistina.com
+>http://lists.sistina.com/mailman/listinfo/linux-lvm
+>read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
+>
