@@ -1,8 +1,11 @@
-Message-ID: <20011002200722.18323.qmail@web14404.mail.yahoo.com>
-Date: Tue, 2 Oct 2001 13:07:22 -0700 (PDT)
-From: Aman Shahi <shahi_aman@yahoo.com>
-MIME-Version: 1.0
-Subject: [linux-lvm] Re: linux2.4.10/lvm1.0.1rc3 does not compile
+From: Andreas Dilger <adilger@turbolabs.com>
+Date: Tue, 2 Oct 2001 15:08:20 -0600
+Message-ID: <20011002150820.N8954@turbolinux.com>
+References: <20011002202934.G14582@wiggy.net> <E15oUUf-0005Xw-00@the-village.bc.nu> <20011002220053.H14582@wiggy.net>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20011002220053.H14582@wiggy.net>
+Subject: [linux-lvm] Re: partition table read incorrectly
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,32 +19,31 @@ List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: linux-lvm@sistina.com
+To: Alan Cox <alan@lxorguk.ukuu.org.uk>, linux-kernel@vger.kernel.org, linux-lvm@sistina.com
 
-If I am not mistaken. the function 
-static void __upadte_hardsectsize(lv_t *lv) 
-has been declared and called as it is in lvm.c. But in
-the definition it has been written as 
-static void __update_hardblocksize(lv_t *lv)
+On Oct 02, 2001  22:00 +0200, Wichert Akkerman wrote:
+> Previously Alan Cox wrote:
+> > Does it complain about wrong block sizes ?
+> 
+> No
+>  
+> > The partition code will look for tables. That bit is fine
+> 
+> If that bit is fine then how can it differ in opinion from fdisk?
 
-so changing __update_hardblocksize(lv_t *lv)
-in ~/LVM/1.0.1-rc3/kernel/lvm.c and
-~linux-2.4.10/drivers/md/lvm.c 
-to  __update_hardsectsize(lv_t *lv)
-should resolve this compilation problem.
+What does the first 512 bytes of the disk show (od -Ax -tx1 /dev/)?
+Maybe there is still "0xaa55" on the disk at 0x1fe and the kernel
+thinks it is a DOS partition?
 
-regards,
-Aman Shahi.
+> > The exact error would be good too
+> 
+>  I/O error: dev 08:11, sector 0
 
->LVM 1.0.1rc3 does not compile (link) with Linux
-2.4.10 >on my system.
+Hmm, this is sda11, so you would need both a primary and extended
+partition table to get that.  What does /proc/partitions show?
 
->Does anyone know what went wrong?
->Regards, Markus
-
-
-
-__________________________________________________
-Do You Yahoo!?
-Listen to your Yahoo! Mail messages from any phone.
-http://phone.yahoo.com
+Cheers, Andreas
+--
+Andreas Dilger  \ "If a man ate a pound of pasta and a pound of antipasto,
+                 \  would they cancel out, leaving him still hungry?"
+http://www-mddsp.enel.ucalgary.ca/People/adilger/               -- Dogbert
