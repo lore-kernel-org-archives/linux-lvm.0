@@ -1,8 +1,10 @@
-From: Greg Freemyer <freemyer@NorcrossGroup.com>
-Subject: re[2]: [linux-lvm] Core questions from a LVM neophyte...
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <20030311165457.CLW7741.imf25bis.bellsouth.net@tiger2>
+From: Jesse Keating <jkeating@pogolinux.com>
+Subject: Re: re[2]: [linux-lvm] Core questions from a LVM neophyte...
+References: <20030311165457.CLW7741.imf25bis.bellsouth.net@tiger2>
+In-Reply-To: <20030311165457.CLW7741.imf25bis.bellsouth.net@tiger2>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Message-Id: <200303111037.28169.jkeating@pogolinux.com>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -13,39 +15,21 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Tue Mar 11 10:53:01 2003
+Date: Tue Mar 11 12:36:02 2003
 List-Id: <linux-lvm.redhat.com>
-Content-Type: Text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"
 To: LVM Mailing list <linux-lvm@sistina.com>
 
- >>  Question 1:  Is it possible today to:
+On Tuesday 11 March 2003 08:56, Greg Freemyer wrote:
+> I tried them also.  No luck yet.  Let us know if you get it working.
 
- >>  Have a large IDE RAID5 array that is virtualized through LVM and then
- >>  exported to a Dynamic Disk on Win2K over a LAN (not necessarily WAN)?
+I've been able to use LVM across HyperSCSI exported disk subsystems.  2 
+systems exporting thier unpartitioned disks, a third client takes these 2 
+disks and creates an LVM group and LV that spans both disks.  Worked good, 
+but I didn't have time to stress test it.  I was able to get a second client 
+to access the LVM group and write to it.
 
- >>  I believe iSCSI and HyperSCSI would both work... However I have not
- >>  found the approporiate interoperable software drivers.
-
-I tried them also.  No luck yet.  Let us know if you get it working.
-
- >>  Question 2: The system that is described above is a linux system with
- >>  direct attached storage.  It is a SPOF.  Any inexpensive solutions that
- >>  would allow the Linux portion to be clustered for active/pasive
- >>  failover?  Is FC the only alternative here?
-
-Several choices.  Ask on Linux-HA (heartbeat).  (Or search their archives.)
-
-This still does not get you a "local" Win2k drive.  Exchange and ms-SQL only =
-install onto local drives.
-
- >>  TIA,
-
- >>  - Steve
-
-
-
-
-
-
- >>  -- NextPart --
- >>  Attached File: c:\program files\goldmine\MailBox\Attach\gaf\smime(2).p7s
+-- 
+Jesse Keating RHCE MCSE
+Pogo Linux -- Linux Systems Engineer
+tel: (888) 828-7646 ex: 436
