@@ -1,10 +1,11 @@
-Return-Path: <riel@conectiva.com.br>
-Date: Fri, 5 Jan 2001 09:57:34 -0200 (BRDT)
-From: Rik van Riel <riel@conectiva.com.br>
-Subject: Re: [lvm-devel] Re: [linux-lvm] LVM 0.9 vgscan problem
-In-Reply-To: <20010105123820.A1886@gondor.com>
-Message-ID: <Pine.LNX.4.21.0101050956050.1295-100000@duckman.distro.conectiva>
+Return-Path: <bs@infologic.fr>
+Message-ID: <3A55C216.D16CF05C@infologic.fr>
+Date: Fri, 05 Jan 2001 13:46:14 +0100
+From: Benoit SERRA <bs@infologic.fr>
 MIME-Version: 1.0
+References: <20010104173400.A2606@minime.sistina.com>
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] Linux LVM Newbie
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,41 +17,23 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: Jan Niehusmann <jan@gondor.com>
-Cc: linux-lvm@sistina.com, lvm-devel@sistina.com
+Content-Type: text/plain; charset="us-ascii"
+To: linux-lvm@sistina.com
 
-On Fri, 5 Jan 2001, Jan Niehusmann wrote:
-> On Thu, Jan 04, 2001 at 08:01:10PM -0200, Rik van Riel wrote:
-> > But when I type (with the IOP10 tools) the following
-> > all hell breaks loose:
-> > 
-> > # vgextend vg0 /dev/hda5    (the previously removed PV)
-> > 
-> > The oops is below.
-> 
-> This is already known, a fix is in cvs. (But I didn't try it, I
-> just remembered that somebody mentioned it on the mailinglist).
+Sorry to distrub you, but i've currently implementing a test server with
+LVM and i've got a question
 
-Then the all-important question:
+My LVM version is 0.9. My kernel is 2.2.16, patched for LVM and online
+ext2 resizing.
 
-Why the hell wasn't this bugfix given to Linus for
-inclusion in the 2.4.0 kernel ?
+All this stuff work fine.
 
-IMHO it is nothing but unresponsible to sit on bugfixes
-and not give them back to the maintainers of the main
-source repository (in this case, the kernel tarball).
+I'm an AIX user for about 2 years. In AIX, we have an option to spread
+PE accros several disks, to boost performances. I explain :
 
-LVM folks: please send this patch to Linus, Alan and the
-list asap so we have a chance of a working LVM in 2.4.
+	I create a (very small) LV with 6 PE.
+	My VG containt 2 disks.
+	I want the PE number 1, 3 and 5 on the disk 1, and the others on the
+disk 2.
 
-regards,
-
-Rik
---
-Virtual memory is like a game you can't win;
-However, without VM there's truly nothing to loose...
-
-		http://www.surriel.com/
-http://www.conectiva.com/	http://distro.conectiva.com.br/
+Is there any way to make this with Linux LVM ?
