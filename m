@@ -1,17 +1,19 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j34M61O03604
-	for <linux-lvm@redhat.com>; Mon, 4 Apr 2005 18:06:01 -0400
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j356v0O29335
+	for <linux-lvm@redhat.com>; Tue, 5 Apr 2005 02:57:00 -0400
 Received: from percy.comedia.it (percy.comedia.it [212.97.59.71])
-	by mx3.redhat.com (8.12.11/8.12.11) with ESMTP id j34M5stL017907
-	for <linux-lvm@redhat.com>; Mon, 4 Apr 2005 18:05:55 -0400
-Date: Tue, 5 Apr 2005 00:05:51 +0200
+	by mx3.redhat.com (8.12.11/8.12.11) with ESMTP id j356uruf025851
+	for <linux-lvm@redhat.com>; Tue, 5 Apr 2005 02:56:53 -0400
+Date: Tue, 5 Apr 2005 08:56:52 +0200
 From: Luca Berra <bluca@comedia.it>
-Subject: Re: [linux-lvm] Re: putting lvm autodetect into the kernel ala md
-Message-ID: <20050404220550.GA23505@percy.comedia.it>
-References: <424CA0D1.5060905@nospam.com> <424DA811.4040508@nospam.com>
+Subject: Re: [linux-lvm] [PATCH] --ignorelockingfailure for `lvm mkvgnodes`
+Message-ID: <20050405065651.GE908@percy.comedia.it>
+References: <20050403104158.GA6712@irc.pl>
+	<20050403194207.GQ14307@agk.surrey.redhat.com>
 Mime-Version: 1.0
+Content-Type: multipart/mixed; boundary="dDRMvlgZJXvWKvBx"
 Content-Disposition: inline
-In-Reply-To: <424DA811.4040508@nospam.com>
+In-Reply-To: <20050403194207.GQ14307@agk.surrey.redhat.com>
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -22,20 +24,32 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-Content-Transfer-Encoding: 7bit
-To: linux-lvm@redhat.com
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-On Sat, Apr 02, 2005 at 03:59:13AM +0800, Andy Sy wrote:
+
+--dDRMvlgZJXvWKvBx
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+
+On Sun, Apr 03, 2005 at 08:42:07PM +0100, Alasdair G Kergon wrote:
+>On Sun, Apr 03, 2005 at 12:41:58PM +0200, Tomasz Torcz wrote:
+>>  `lvm vgmknodes` needs --ignorevglocking
 >
->Dispensing with the need for an initrd is but a secondary concern,
->and fact is, I would also say that it brings a lot of flexiblity to
->the table.  So no, having lvm autodetect in the kernel is not
->what I'm looking for.  What we're looking for is good lvm support
->in LILO.
+>Agreed - though for different reasons (I won't go into here).
+>
+>'vgscan --mknodes --ignorelockingfailure' is normally adequate, and looks 
+>to be so in your case?
+>
+so you mean
+vgscan
+vgchange -a y
+vgscan --mknodes
+???
 
-Christophe patches to lilo help a bit, but there still are limitations.
-http://www.saout.de/misc/
+Btw, i added man page to Tomasz patch
+
+L.
+
 
 -- 
 Luca Berra -- bluca@comedia.it
@@ -44,3 +58,23 @@ Luca Berra -- bluca@comedia.it
  \ /     ASCII RIBBON CAMPAIGN
   X        AGAINST HTML MAIL
  / \
+
+--dDRMvlgZJXvWKvBx
+Content-Type: application/octet-stream
+Content-Disposition: attachment; filename="lvm2-ignorelock.patch.bz2"
+Content-Transfer-Encoding: base64
+
+QlpoOTFBWSZTWWWOo7MAAGffgEIwWG//8P7n3a6/799kQAJ03Od3XY7QlEEmKeaEaj1Gg9QA
+AAZA09E00eoJRAmp4mqD0mIaAAAADIBoAJFImnpR6I0NGmjR6gYQ00A0NDBBgkijU9KenpE2
+hojQA0AAaAADIOQr5GXFSQY7OTrzcbn81+N6/UkkVfDA2b4CoXZHjRBqElijQlVHMr2tvFvm
+EwJdaltsj+mqilVvHfPZ0JrrZpW9TVdq0jKNyJtUb/t1Str/oyEj9YYw2RKVJznBRVvyQqha
+BpQFzT08rdTcMzIHGZm6VSo00E5FNIni4O7uwMPhvlRlDGFTBLKDkSVaGIhMb3ItYzGuQI2w
+yEhGCpSCZnCFQT3KxOsNKzE1I3FBXM7bLHNLMtoKFCSdQWPpbSFYhOJEHzFRg7uGiSa+FWkZ
+zcTvRSclahnDjAk5sGSOUNAxnR8KE3i8ze794HjPpWRIlyF2jvDy9Zs0Tpi7RSES54ntI53n
+R2h5ktj2RKMk4WNpvOKVjJBjTGYuxryYZKVbeDlg/N1E8zTwHl5rOZwyBoIJhimJYeygohqg
+akOyOP/Cw23ZRCEyJppCWpjorUO0zbYGFyihkTSLGjXSbNzEHosg1XF6E3Pa8I4UqXK+5Mqw
+oRBDQxFZINlwvlsNFonI6hiT4dCavBVJDoaIrpfRpDK8kTLGRMBEGSjeREoo9AIk7K6xGYgF
+1FCNK1YixDG0UGI4BNeLcisuUof+TGhioQgmwQrSp6QJ4YcCDWZwjcqJWoWEwxySzQkTtwIi
+g0rhFpoJagPogxLq4iig+BI2f5qPzMz5WE9uP/F3JFOFCQZY6jsw
+
+--dDRMvlgZJXvWKvBx--
