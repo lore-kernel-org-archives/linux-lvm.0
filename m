@@ -1,9 +1,11 @@
-Message-ID: <3D9D9C1D.42B8E4C7@silicide.dk>
-From: Jon Bendtsen <jon+lvm@silicide.dk>
-MIME-Version: 1.0
 Subject: Re: [linux-lvm] Re: mounting reiserfs snaphost fails
-References: <009b01c26ba9$380f3140$5c02a8c0@yckim>
+From: Chris Abernethy <chris@studentadvantage.com>
+In-Reply-To: <3D9D9C1D.42B8E4C7@silicide.dk>
+References: <009b01c26ba9$380f3140$5c02a8c0@yckim> 
+	<3D9D9C1D.42B8E4C7@silicide.dk>
 Content-Transfer-Encoding: 7bit
+Message-Id: <1033743530.3126.132.camel@saprdlx68>
+Mime-Version: 1.0
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,13 +16,25 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Fri Oct  4 08:57:48 2002
+Date: Fri Oct  4 10:07:01 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
 
-I use ext3, not reiserfs, so i cant help you.
+Anyone have any pointers to good documentation on the difference between
+the two with regards to LVM?
 
+--Chris
 
-
-JonB
+On Fri, 2002-10-04 at 09:48, Jon Bendtsen wrote:
+> I use ext3, not reiserfs, so i cant help you.
+> 
+> 
+> 
+> JonB
+> 
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@sistina.com
+> http://lists.sistina.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
