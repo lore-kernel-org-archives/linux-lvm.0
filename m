@@ -1,32 +1,42 @@
-Message-Id: <199906132233.AA06526@mailgate1b.telekom.de>
+Message-Id: <199906132236.AA06430@mailgate1b.telekom.de>
 From: Heinz Mauelshagen <mauelsha@ez-darmstadt.telekom.de>
-Subject: Re: [linux-lvm] lvm-0.6, Linux 2.2.9 and devfs-patch-v99.2
-Date: Mon, 14 Jun 1999 0:30:30 METDST
-In-Reply-To: <m10srwW-0000YZC@duffy1.franken.de>; from "Rolf Jakob" at Jun 12, 99 7:51 pm
+Subject: Re: [linux-lvm] Inclusion in 2.3.x kernel
+Date: Mon, 14 Jun 1999 0:34:15 METDST
+In-Reply-To: <3760064A.AE91DAD4@mail.isis.de>; from "Marcus Ruehmann" at Jun 10, 99 8:39 pm
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: Rolf Jakob <rjakob@duffy1.franken.de>
+To: Marcus Ruehmann <m.ruehmann@mail.isis.de>
 Cc: linux-lvm@msede.com, mge@ts1.ez-darmstadt.telekom.de
 
 > 
-> Hi,
+> Hi there,
 > 
-> Is lvm-0.6 (patched with lvm_0.6-patch-15031999a.gz) supposed to
-> work with Linux 2.2.9 and devfs-patch-v99-2 ?
+> can anybody shade my lights when we can expect lvm to be included in
+> stock/devel kernel?
 > 
 
-No, not yet 8*(
+I've already sent it twice to Linus asking him for inclusion.
 
-Anybody to dig into it?
+> Please, please do it as soon as possible. The more people are playing
+> with it, the better it=B4ll get.
+
+Yep.
+Everybody, please push Linus to include it.
+
+> 
+> When will be a new version available. Since end of feb there is no new
+> version (except patches) ?
+
+
+It will take some time...
+I think in about 3-4 weeks.
 
 Regards,
 Heinz
-
-<BIGSNIP> 
 
 --
 
