@@ -1,10 +1,10 @@
 Return-Path: <adilger@turbolinux.com>
 From: Andreas Dilger <adilger@turbolinux.com>
-Message-Id: <200104140023.f3E0NSIm014650@webber.adilger.int>
-Subject: Re: [linux-lvm] mounting reiserfs snapshot fails
-In-Reply-To: <01041313295800.02991@oscar> "from Ed Tomlinson at Apr 13, 2001
- 01:29:58 pm"
-Date: Fri, 13 Apr 2001 18:23:28 -0600 (MDT)
+Message-Id: <200104140028.f3E0SNqE014656@webber.adilger.int>
+Subject: Re: [linux-lvm] What is the the maximum logical volume size?
+In-Reply-To: <200104131745.f3DHjGa17509@lvadp.fc.hp.com> "from Andrew Patterson
+ at Apr 11, 2001 03:58:09 pm"
+Date: Fri, 13 Apr 2001 18:28:23 -0600 (MDT)
 MIME-Version: 1.0
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
@@ -20,25 +20,25 @@ List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
-Cc: reiserfs-list@namesys.com
 
-Ed Tomlinson writes:
-> Using debian sid, 2.4.3-ac5, lvm 0.91 beta7, with the vfs locking
-> patch applied I get:
-> 
-> oscar# mount /dev/lv/snap /snap -t reiserfs -oro
-> mount: wrong fs type, bad option, bad superblock on /dev/lv/snap,
->        or too many mounted file systems
-> 
-> When trying to mount the snap shot.  It was created with: 
-> lvcreate -L 1G -s -n snap /dev/lv/root /dev/hdg1
-> without problems
+Andrew PAtterson writes:
+> I am tring to figure out what the maximum logical volume size is.
 
-Are you sure that the VFS patch is applied, and that the LVM and
-reiserfs code was compiled with "enable VFS patch" (whatever it is
-called) enabled?  That has been a source of problems in the past.
-The patch was applied, but you also need to enable it for both the
-reiserfs and LVM code.
+It may be 1 TB or it may be 2TB.  Depends on whether all of the code
+in use use uses unsigned longs for block numbers, or if some use signed
+longs.  2TB is the outer limit for now (unless you start playing games
+inside LVM, to have 4kB hard sector size, and remap to the disk 512 byte
+sector size).
+
+Does it really matter?  This is PER LV, so if you really need to have an
+LV that large, give it a try and let us know what works.  I've seen a
+report of someone with a 1 TB device (some kind of HW RAID, not LVM)
+under Linux, so I know that works, but I haven't seen larger yet.
+
+I wouldn't want to be keeping all of my eggs in such a large basket.  I'd
+much rather have several smaller filesystems, especially since you STILL
+need to fsck on occasion (don't let reiserfs journaling fool you, you can
+still have SW/HW problems that will corrupt the filesystem).
 
 Cheers, Andreas
 -- 
