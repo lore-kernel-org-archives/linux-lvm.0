@@ -1,62 +1,58 @@
-Date: Wed, 30 Aug 2000 20:19:38 -0500 (EST)
-From: John Marquart <jomarqua@indiana.edu>
-Subject: [linux-lvm] ERROR -241 getting size of physical volume "/dev/hdd2"
-Message-ID: <Pine.A41.4.21.0008302002520.33560-100000@gigue.dlib.indiana.edu>
+Message-ID: <81BB5D677B55D311BF4700508B0901582948EA@NTSERVER1>
+From: Sarath Chandra M <sarath@uaeexcent.co.ae>
+Date: Thu, 31 Aug 2000 11:27:05 +0400
 MIME-Version: 1.0
+Content-Type: multipart/alternative;
+	boundary="----_=_NextPart_001_01C0131C.DE278C80"
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@msede.com
 
-Evening LVMers!
+This message is in MIME format. Since your mail reader does not understand
+this format, some or all of this message may not be legible.
 
-I have been having a wonderful time with LVM - many thanks.  
+------_=_NextPart_001_01C0131C.DE278C80
+Content-Type: text/plain;
+	charset="iso-8859-1"
 
-However, I was attempting to add an extra physical device to my machine,
-and add it to an existing VG.  When I ran "pvcreate /dev/hdd2" it gave me
-the following error:
+Hi,
+    Is there anyway to configure LVM on redhat 2.2.14-12smp on an i686 ?
+ 
+TIA
+Sarath Chandra M
+UAE Exchange Centre
+PO Box 170, SH. Hamdan Street
+Abu Dhabi, UAE
+Tel : +971-2-6322166, 6394342
+Fax : +971-2-6211447, 6340713
+GSM : +971-50-4450417
 
-pvcreate -- ERROR -241 getting size of physical volume "/dev/hdd2"  
+ 
 
-and when I run lvmscandisk it does only pics up 1 disk (not /dev/hdd).
+------_=_NextPart_001_01C0131C.DE278C80
+Content-Type: text/html;
+	charset="iso-8859-1"
 
-I was trying to figure out why, and I took a brief look at the strace for
-the command.  I noted that it read hdd info from
-/proc/partitions.  However, when it stat() s the various HDDs, it examines
-the /dev/hda ones by name.  However, when it tries to stat() the /dev/hdd
-ones - it instead uses /dev/64 /dev/66 (the minor # of the drive/partition
-respectively).
-
-(note - the partition ID is set to 8e.)
-
-Here is the section of the "strace pvcreate /dev/hdd2":
-
-ioctl(3, 0xff00, 0xbffff43c)  = 0 stat("/dev/hdd2", {st_mode=S_IFBLK|0660,
-st_rdev=makedev(22, 66), ...}) = 0 stat("/dev/hdd2",
-{st_mode=S_IFBLK|0660, st_rdev=makedev(22, 66), ...}) = 0
-stat("/dev/hdd2", {st_mode=S_IFBLK|0660, st_rdev=makedev(22, 66), ...}) =
-0 stat("/dev/hdd2", {st_mode=S_IFBLK|0660, st_rdev=makedev(22, 66), ...})
-= 0 open("/proc/partitions", O_RDONLY)  = 4 fstat(4,
-{st_mode=S_IFREG|0444, st_size=0, ...}) = 0 mmap(NULL, 4096,
-PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0x4011f000
-read(4, "major minor #blocks name\n\n 3"..., 1024) = 287 stat("/dev/hda",
-{st_mode=S_IFBLK|0660, st_rdev=makedev(3, 0), ...}) = 0 stat("/dev/hda1",
-{st_mode=S_IFBLK|0660, st_rdev=makedev(3, 1), ...}) = 0 stat("/dev/hda2",
-{st_mode=S_IFBLK|0660, st_rdev=makedev(3, 2), ...}) = 0 stat("/dev/hda3",
-{st_mode=S_IFBLK|0660, st_rdev=makedev(3, 3), ...}) = 0 stat("/dev/hda4",
-{st_mode=S_IFBLK|0660, st_rdev=makedev(3, 4), ...}) = 0 stat("/dev/0",
-0xbffff0fc)  = -1 ENOENT (No such file or directory) stat("/dev/64",
-0xbffff0fc)  = -1 ENOENT (No such file or directory) stat("/dev/66",
-0xbffff0fc)  = -1 ENOENT (No such file or directory) read(4, "", 1024)  =
-0 stat("/dev/66", 0xbffff0fc)  = -1 ENOENT (No such file or directory)
-close(4)  = 0 munmap(0x4011f000, 4096)  = 0 write(2, "pvcreate -- ERROR
--241 getting s"..., 67pvcreate -- ERROR -241 getting size of physical
-volume "/dev/hdd2" ) = 67 close(3)  = 0
-_exit(7)                                = ?                 
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML><HEAD>
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
 
 
+<META content="MSHTML 5.50.4134.600" name=GENERATOR></HEAD>
+<BODY bgColor=#b8b8b8>
+<DIV><SPAN class=890532607-31082000><FONT face=Tahoma color=#0000ff 
+size=2>Hi,</FONT></SPAN></DIV>
+<DIV><SPAN class=890532607-31082000>&nbsp;&nbsp;&nbsp; <FONT face=Tahoma 
+color=#0000ff size=2>Is there anyway to configure LVM on redhat 2.2.14-12smp on 
+an i686 ?</FONT></SPAN></DIV>
+<DIV><SPAN class=890532607-31082000></SPAN>&nbsp;</DIV>
+<DIV><SPAN class=890532607-31082000><FONT face=Tahoma color=#0000ff 
+size=2>TIA</FONT></SPAN></DIV>
+<DIV><FONT color=#ff0000 size=2><EM>Sarath Chandra M</EM></FONT><BR><FONT 
+color=#0000ff size=2>UAE Exchange Centre<BR>PO Box 170, SH. Hamdan Street<BR>Abu 
+Dhabi, UAE<BR>Tel : +971-2-6322166, 6394342<BR>Fax : +971-2-6211447, 
+6340713<BR>GSM : +971-50-4450417</FONT><BR></DIV>
+<DIV><FONT face=Tahoma color=#0000ff size=2></FONT>&nbsp;</DIV></BODY></HTML>
 
-many thanks,
--jamie
+------_=_NextPart_001_01C0131C.DE278C80--
