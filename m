@@ -1,9 +1,9 @@
-Return-Path: <jamesp@foobarhouse.com>
-Date: Wed, 9 May 2001 16:43:41 +0100 (BST)
-From: James Pattinson <jamesp@foobarhouse.com>
-Subject: Re: [linux-lvm] 2.4.4 compile
-In-Reply-To: <Pine.LNX.4.30.0105091611570.32661-100000@greebo.foobarhouse.com>
-Message-ID: <Pine.LNX.4.30.0105091643120.423-100000@greebo.foobarhouse.com>
+Return-Path: <jomarqua@indiana.edu>
+Date: Wed, 9 May 2001 11:01:44 -0500 (EST)
+From: John Marquart <jomarqua@indiana.edu>
+Subject: Re: [linux-lvm] Graphical tool for LVM?
+In-Reply-To: <Pine.LNX.4.21.0105091408080.28295-100000@tolppa.kotisivupalvelu.fi>
+Message-ID: <Pine.A41.4.21.0105091054110.7398-100000@gigue.dlib.indiana.edu>
 MIME-Version: 1.0
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
@@ -20,58 +20,64 @@ Content-Type: TEXT/PLAIN; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Hi
+There are also the java one by jorge de jong.  It looks like the only one
+under any sort of active development.  (latest release = May 3)
 
-Ooops - just been looking through the list and found the solution...
-thanks
+It looks lovely - but unfortunately - is in java. (please - i don't want
+to start that thread again)
 
-James
 
-On Wed, 9 May 2001, James Pattinson wrote:
+if one of these suit your needs try them - else they may be the base for
+your own project.
 
-> Hi
->
-> I'm trying to compile vanilla 2.4.4 + LVM beta7 patch.
->
-> If I use the standard config (make config - hold down enter for defaults)
-> then I can build a kernel. However if I enable LVM then the final kernel
-> linking fails:
->
-> ld -m elf_i386 -T /usr/src/v2.4.4/linux/arch/i386/vmlinux.lds -e stext
-> arch/i386/kernel/head.o arch/i386/kernel/init_task.o init/main.o
-> init/version.o \
->         --start-group \
->         arch/i386/kernel/kernel.o arch/i386/mm/mm.o kernel/kernel.o
-> mm/mm.o fs/fs.o ipc/ipc.o \
->         drivers/block/block.o drivers/char/char.o drivers/misc/misc.o
-> drivers/net/net.o drivers/media/media.o  drivers/char/agp/agp.o
-> drivers/char/drm/drm.o drivers/ide/idedriver.o drivers/scsi/scsidrv.o
-> drivers/cdrom/driver.o drivers/sound/sounddrivers.o drivers/pci/driver.o
-> drivers/pcmcia/pcmcia.o drivers/net/pcmcia/pcmcia_net.o drivers/pnp/pnp.o
-> drivers/video/video.o drivers/usb/usbdrv.o drivers/md/mddev.o \
->         net/network.o \
->         /usr/src/v2.4.4/linux/arch/i386/lib/lib.a
-> /usr/src/v2.4.4/linux/lib/lib.a /usr/src/v2.4.4/linux/arch/i386/lib/lib.a
-> \
->         --end-group \
->         -o vmlinux
-> drivers/md/mddev.o: In function `__update_hardblocksize':
-> drivers/md/mddev.o(.text+0x24c1): undefined reference to
-> `get_hardblocksize'
-> drivers/md/mddev.o(.text+0x24fd): undefined reference to
-> `get_hardblocksize'
-> make: *** [vmlinux] Error 1
->
-> Has anyone had success with LVM + 2.4.4 ?
->
-> Cheers!
->
-> James
->
->
->
+
+I think there are some other projects to create LVM GUIs - you might want
+to check the mailing list archives.  The problem is, none of them have
+ever (AFAIK) gained much user / developer support - and have sort of been
+flashes in the dark / mostly useful to the creaters.   This may be in part
+to the easy and powerful CL utils.
+
+-j
+
+
+
+On Wed, 9 May 2001, Harri Haataja wrote:
+
+> On Wed, 9 May 2001, David Vidal Rodriguez wrote:
+> 
+> > > There is at least one perl/Tk project, can be found on freshmeat, URL
+> > > escapes my lazy head now =)
+> > 
+> > I've looked at freshmeat right now, and there is a project, indeed. Tell
+> > your "lazy head" about the address :) :
+> > http://www.widd.de/bernd/lva/
+> 
+> I'm sure I have that somewhere. I have a computer for that kind of things
+> =) Anyway, that's the Tk one? No others?
+> 
+> Personally I didn't find it to be very useful, I rather get along with the
+> (excellent) command-line utils.
+> 
+> > > Pleasepleasepleaseplease, don't do it like that POS ;)
+> > 
+> > Why not? Something I like of Windows 2000 is its Disk Administrator.
+> > Thanks for pointing me to freshmeat, I wouldn't think about it...
+> 
+> I haven't looked at the win2k one more than a glance, only the NT4
+> one. It's like fdisk but more useless ;)
+> 
+> -- 
+> Integrating Cyberspace into our Moral Universe:
+> 	http://securityportal.com/kfiles/files/totemtaboo.html
+> 
+> 
 > _______________________________________________
 > linux-lvm mailing list
 > linux-lvm@sistina.com
 > http://lists.sistina.com/mailman/listinfo/linux-lvm
->
+> 
+
+
+John "Jamie" Marquart		|     This message posted 100% MS free.
+Digital Library SysAdmin	|  Work: 812-856-5174   Pager: 812-334-6018
+Indiana University Libraries	|  ICQ: 1131494	 	D'net Team:  6265
