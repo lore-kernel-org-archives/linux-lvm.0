@@ -1,29 +1,27 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id i83F5d308189
-	for <linux-lvm@redhat.com>; Fri, 3 Sep 2004 11:05:39 -0400
-Received: from mail2.m-cam.com ([63.124.102.77])
-	by mx3.redhat.com (8.12.11/8.12.10) with ESMTP id i83F5Xf8013977
-	for <linux-lvm@redhat.com>; Fri, 3 Sep 2004 11:05:33 -0400
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail2.m-cam.com (Postfix) with ESMTP id DE7213E8EE
-	for <linux-lvm@redhat.com>; Fri,  3 Sep 2004 11:00:51 -0400 (EDT)
-Received: from mail2.m-cam.com ([127.0.0.1])
-	by localhost (mail2.m-cam.com [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id 12400-10 for <linux-lvm@redhat.com>;
-	Fri,  3 Sep 2004 11:00:48 -0400 (EDT)
-Received: from [192.168.1.21] (unknown [192.168.1.21])
-	by mail2.m-cam.com (Postfix) with ESMTP id 9C9513E8B9
-	for <linux-lvm@redhat.com>; Fri,  3 Sep 2004 11:00:48 -0400 (EDT)
-Message-ID: <4138882E.40400@m-cam.com>
-Date: Fri, 03 Sep 2004 11:05:18 -0400
-From: Arshavir Grigorian <ag@m-cam.com>
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id i83IM8306978
+	for <linux-lvm@redhat.com>; Fri, 3 Sep 2004 14:22:08 -0400
+Received: from m4s07.vlinux.de (m4s07.vlinux.de [83.151.27.105])
+	by mx3.redhat.com (8.12.11/8.12.10) with ESMTP id i83IM1Xa021528
+	for <linux-lvm@redhat.com>; Fri, 3 Sep 2004 14:22:01 -0400
+Received: from pd9529ec3.dip.t-dialin.net ([217.82.158.195]
+	helo=lothlorien.homelinux.net)
+	by m4s07.vlinux.de with asmtp (Exim 3.35 #1 (Debian))
+	id 1C3Ihh-00052Z-00
+	for <linux-lvm@redhat.com>; Fri, 03 Sep 2004 20:22:30 +0200
+Received: from helge (helo=localhost)
+	by lothlorien.homelinux.net with local-esmtp (Exim 3.35 #1 (Debian))
+	id 1C3IhD-0007vj-00
+	for <linux-lvm@redhat.com>; Fri, 03 Sep 2004 20:21:59 +0200
+Date: Fri, 3 Sep 2004 20:21:59 +0200 (CEST)
+From: Helge Bahmann <hcb@chaoticmind.net>
+Message-ID: <Pine.LNX.4.44.0409032009040.30366-200000@lothlorien.homelinux.net>
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] Re: partition strategy
-References: <412CE781.9000409@m-cam.com>
-	<41363AA0.5030107@m-cam.com>	<20040902174230.GG6264@agk.surrey.redhat.com>	<4137A15E.30208@m-cam.com>
-	<20040903124909.GN6264@agk.surrey.redhat.com>
-In-Reply-To: <20040903124909.GN6264@agk.surrey.redhat.com>
-Content-Transfer-Encoding: 7bit
+Content-Type: MULTIPART/MIXED;
+	BOUNDARY="-1463747071-144106186-1094235037=:30366"
+Content-ID: <Pine.LNX.4.44.0409032012200.30366@lothlorien.homelinux.net>
+Sender: Helge Bahmann <hcb@chaoticmind.net>
+Subject: [linux-lvm] "broken" snapshot volume -- how to remove?
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -34,51 +32,122 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: LVM general discussion and development <linux-lvm@redhat.com>
+To: linux-lvm@redhat.com
 
-Alasdair G Kergon wrote:
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
+  Send mail to mime@docserver.cac.washington.edu for more info.
 
->>>>>Is it better to create 3 partitions 2 x230G + 1G 
->>>>>Is it better to create 2 paritions 230G and 231G, put both in a vg, 
->>>>>          
->>>>>
->
->  
->
->>>ie the first option.  
->>>      
->>>
->I meant the second option:-)
->
->  
->
->>Could you, please tell me what I am doing wrong? TIA.
->>    
->>
-> 
->  
->
->>casals:~# lvextend -l +134 /dev/vg00/lvol0 /dev/hdc3
->> Using stripesize of last segment 8KB
->> Insufficient allocatable extents suitable for parallel use for logical 
->>volume lvol0: 118816 required
->>    
->>
->
->If you don't specify the stripe settings, lvextend uses whatever
->the last segment of the LV you're extending uses i.e. 2 stripes in 
->this case.  So you need to specify -i1 to add a new segment with
->just one stripe.
->
->Alasdair
->  
->
-Many thanks. It all makes sense now.
-The way I got it working is just creating 2 partititions, getting the 
-number of extends from the smaller partition, creating a striped lv with 
-that paritition count, then extending it to the remaining the extents as 
-with a single stripe.
+---1463747071-144106186-1094235037=:30366
+Content-Type: TEXT/PLAIN; CHARSET=US-ASCII
+Content-ID: <Pine.LNX.4.44.0409032012201.30366@lothlorien.homelinux.net>
+
+Once more -- running "lvremove" on a snapshot volume causes a kernel BUG
+(see attached file).
+
+- vgck reports no corruption of lvm meta-data
+- vgscan (without -D option) crashes as well (though not in the kernel)
+
+What other information can I provide for someone to make sense of this?
+
+I *have* to bring the vg into a consistent state and I urgently need to
+drop the snapshot volume -- is there any tool to manipulate lvm purely in
+userspace that can simply delete the snapshot volume?
+
+Regards
+-- 
+Helge Bahmann <hcb@chaoticmind.net>                     /| \__
+The past: Smart users in front of dumb terminals       /_|____\
+                                                     _/\ |   __)
+$ ./configure                                        \\ \|__/__|
+checking whether build environment is sane... yes     \\/___/ |
+checking for AIX... no (we already did this)            |
 
 
-Arshavir
+---1463747071-144106186-1094235037=:30366
+Content-Type: TEXT/PLAIN; NAME="oops.txt"
+Content-Transfer-Encoding: BASE64
+Content-ID: <Pine.LNX.4.44.0409032010370.30366@lothlorien.homelinux.net>
+Content-Description: 
+Content-Disposition: ATTACHMENT; FILENAME="oops.txt"
+
+a3N5bW9vcHMgMi40LjUgb24gaTY4NiAyLjQuMjEtMjQxLXNtcC4gIE9wdGlv
+bnMgdXNlZA0KICAgICAtViAoZGVmYXVsdCkNCiAgICAgLWsgL3Byb2Mva3N5
+bXMgKGRlZmF1bHQpDQogICAgIC1sIC9wcm9jL21vZHVsZXMgKGRlZmF1bHQp
+DQogICAgIC1vIC9saWIvbW9kdWxlcy8yLjQuMjEtMjQxLXNtcC8gKGRlZmF1
+bHQpDQogICAgIC1tIC9ib290L1N5c3RlbS5tYXAtMi40LjIxLTI0MS1zbXAg
+KGRlZmF1bHQpDQoNCldhcm5pbmc6IFlvdSBkaWQgbm90IHRlbGwgbWUgd2hl
+cmUgdG8gZmluZCBzeW1ib2wgaW5mb3JtYXRpb24uICBJIHdpbGwNCmFzc3Vt
+ZSB0aGF0IHRoZSBsb2cgbWF0Y2hlcyB0aGUga2VybmVsIGFuZCBtb2R1bGVz
+IHRoYXQgYXJlIHJ1bm5pbmcNCnJpZ2h0IG5vdyBhbmQgSSdsbCB1c2UgdGhl
+IGRlZmF1bHQgb3B0aW9ucyBhYm92ZSBmb3Igc3ltYm9sIHJlc29sdXRpb24u
+DQpJZiB0aGUgY3VycmVudCBrZXJuZWwgYW5kL29yIG1vZHVsZXMgZG8gbm90
+IG1hdGNoIHRoZSBsb2csIHlvdSBjYW4gZ2V0DQptb3JlIGFjY3VyYXRlIG91
+dHB1dCBieSB0ZWxsaW5nIG1lIHRoZSBrZXJuZWwgdmVyc2lvbiBhbmQgd2hl
+cmUgdG8gZmluZA0KbWFwLCBtb2R1bGVzLCBrc3ltcyBldGMuICBrc3ltb29w
+cyAtaCBleHBsYWlucyB0aGUgb3B0aW9ucy4NCg0Ka2VybmVsIEJVRyBhdCBt
+ZW1vcnkuYzo1MzEhDQppbnZhbGlkIG9wZXJhbmQ6IDAwMDAgMi40LjIxLTI0
+MS1zbXAgIzEgU01QIFR1ZSBBdWcgMTAgMTU6NTU6MzQgVVRDIDIwMDQNCkNQ
+VTogICAgMA0KRUlQOiAgICAwMDEwOls8YzAxMzllYmI+XSAgICBOb3QgdGFp
+bnRlZA0KVXNpbmcgZGVmYXVsdHMgZnJvbSBrc3ltb29wcyAtdCBlbGYzMi1p
+Mzg2IC1hIGkzODYNCkVGTEFHUzogMDAwMTAyNDYNCmVheDogMDAwMDAwMDAg
+ICBlYng6IGMxMGJmYTUwICAgZWN4OiAwMDAwMDAwYiAgIGVkeDogYzI3ZmU4
+NDANCmVzaTogYzI3ZmZkMTAgICBlZGk6IDAwMDAwMDAwICAgZWJwOiAwMDAw
+MDAxMiAgIGVzcDogY2RkMDNkNjgNCmRzOiAwMDE4ICAgZXM6IDAwMTggICBz
+czogMDAxOA0KUHJvY2VzcyBsdnJlbW92ZSAocGlkOiAxODA0LCBzdGFja3Bh
+Z2U9Y2RkMDMwMDApDQpTdGFjazogYzEwYmZhNTAgZjU0MWZlYTAgYzAxM2Ez
+NTggYzEwYmZhNTAgZjU0ODAwMDAgZjU0ODAwMDAgZjU0ODRhMDAgZjU0YTVm
+NzYgDQogICAgICAgZjU0MWZlYTAgZjU0ODAwMDAgZjU0ZjgwMDAgZjU0YTNi
+N2YgZjU0ODAwMDAgZjU5NWFkYzAgZjU0ODRiNzAgMDAwMDAwMDAgDQogICAg
+ICAgNDAwNGZlMjEgZjU0ZjgwMDAgYmZmZmVkMDAgZjU0YTA4NGIgMDAwMDAw
+MDAgZjU0YWFmZTAgZmZmZmZmZmYgY2NiMTkxOTAgDQpDYWxsIFRyYWNlOiAg
+ICAgICAgIFs8YzAxM2EzNTg+XSAoMjApIFs8ZjU0YTVmNzY+XSAoMTYpIFs8
+ZjU0YTNiN2Y+XSAoMzIpDQogIFs8ZjU0YTA4NGI+XSAoMDgpIFs8ZjU0YWFm
+ZTA+XSAoMTIpIFs8YzAyOGJjNDQ+XSAoNjgpIFs8YzAyNWQyNmQ+XSAoMjAp
+DQogIFs8YzAyOGVhOTY+XSAoMDgpIFs8YzAxNDIxZDU+XSAoNDgpIFs8YzAx
+M2I5Y2M+XSAoMTAwKSBbPGMwMTNjMDc4Pl0gKDUyKQ0KICBbPGMwMTcwZjIw
+Pl0gKDE2KSBbPGMwMTU2YjA1Pl0gKDU2KSBbPGMwMTU2ZDAxPl0gKDI4KSBb
+PGMwMTU1MGVhPl0gKDI4KQ0KICBbPGMwMTU0ZjY4Pl0gKDI4KSBbPGMwMTZi
+Nzc2Pl0gKDI4KSBbPGMwMTU1MzgyPl0gKDI0KSBbPGMwMTA5NzE3Pl0gKDYw
+KQ0KQ29kZTogMGYgMGIgMTMgMDIgODYgZWIgMmUgYzAgZWIgYzIgOGQgNzQg
+MjYgMDAgOGQgYmMgMjcgMDAgMDAgMDAgDQoNCg0KPj5FSVA7IGMwMTM5ZWJi
+IDx1bnBpbl9wdGVfcGFnZSs1Yi83MD4gICA8PT09PT0NCg0KPj5lYng7IGMx
+MGJmYTUwIDxfZW5kK2MxYmQ3OC8yZDljMzg4Pg0KPj5lZHg7IGMyN2ZlODQw
+IDxfZW5kKzIzNWFiNjgvMmQ5YzM4OD4NCj4+ZXNpOyBjMjdmZmQxMCA8X2Vu
+ZCsyMzVjMDM4LzJkOWMzODg+DQo+PmVzcDsgY2RkMDNkNjggPFtpZGUtY2Rd
+LmRhdGEuZW5kKzQyNDAwOS8xYjIwMzAxPg0KDQpUcmFjZTsgYzAxM2EzNTgg
+PHVubWFwX2tpb2J1ZiszOC82MD4NClRyYWNlOyBmNTRhNWY3NiA8W2x2bS1t
+b2RdbHZtX3NuYXBzaG90X3JlbGVhc2UrOTYvMTAwPg0KVHJhY2U7IGY1NGEz
+YjdmIDxbbHZtLW1vZF1sdm1fZG9fbHZfcmVtb3ZlKzEzZi8zMDA+DQpUcmFj
+ZTsgZjU0YTA4NGIgPFtsdm0tbW9kXWx2bV9jaHJfaW9jdGwrMzliLzZkMD4N
+ClRyYWNlOyBmNTRhYWZlMCA8W2x2bS1tb2RdbHZfcmVxKzAvYTA+DQpUcmFj
+ZTsgYzAyOGJjNDQgPHRjcF9jbGVhbl9ydHhfcXVldWUrMzM0LzM0MD4NClRy
+YWNlOyBjMDI1ZDI2ZCA8X19rZnJlZV9za2IrMTBkLzE3MD4NClRyYWNlOyBj
+MDI4ZWE5NiA8dGNwX3Jjdl9lc3RhYmxpc2hlZCs0YTYvODgwPg0KVHJhY2U7
+IGMwMTQyMWQ1IDxmaWxlbWFwX25vcGFnZSsxYzUvMjQwPg0KVHJhY2U7IGMw
+MTNiOWNjIDxkb19ub19wYWdlK2RjLzRjMD4NClRyYWNlOyBjMDEzYzA3OCA8
+aGFuZGxlX21tX2ZhdWx0K2M4LzIwMD4NClRyYWNlOyBjMDE3MGYyMCA8ZHB1
+dCszMC8xNTA+DQpUcmFjZTsgYzAxNTZiMDUgPGdldF9jaHJmb3BzKzE1NS8x
+NzA+DQpUcmFjZTsgYzAxNTZkMDEgPGNocmRldl9vcGVuKzcxL2IwPg0KVHJh
+Y2U7IGMwMTU1MGVhIDxkZW50cnlfb3BlbisxN2EvMWQwPg0KVHJhY2U7IGMw
+MTU0ZjY4IDxmaWxwX29wZW4rNjgvNzA+DQpUcmFjZTsgYzAxNmI3NzYgPHN5
+c19pb2N0bCtmNi8yZDI+DQpUcmFjZTsgYzAxNTUzODIgPHN5c19vcGVuK2Ey
+L2MwPg0KVHJhY2U7IGMwMTA5NzE3IDxzeXN0ZW1fY2FsbCszMy8zOD4NCg0K
+Q29kZTsgIGMwMTM5ZWJiIDx1bnBpbl9wdGVfcGFnZSs1Yi83MD4NCjAwMDAw
+MDAwIDxfRUlQPjoNCkNvZGU7ICBjMDEzOWViYiA8dW5waW5fcHRlX3BhZ2Ur
+NWIvNzA+ICAgPD09PT09DQogICAwOiAgIDBmIDBiICAgICAgICAgICAgICAg
+ICAgICAgdWQyYSAgICAgIDw9PT09PQ0KQ29kZTsgIGMwMTM5ZWJkIDx1bnBp
+bl9wdGVfcGFnZSs1ZC83MD4NCiAgIDI6ICAgMTMgMDIgICAgICAgICAgICAg
+ICAgICAgICBhZGMgICAgKCVlZHgpLCVlYXgNCkNvZGU7ICBjMDEzOWViZiA8
+dW5waW5fcHRlX3BhZ2UrNWYvNzA+DQogICA0OiAgIDg2IGViICAgICAgICAg
+ICAgICAgICAgICAgeGNoZyAgICVjaCwlYmwNCkNvZGU7ICBjMDEzOWVjMSA8
+dW5waW5fcHRlX3BhZ2UrNjEvNzA+DQogICA2OiAgIDJlICAgICAgICAgICAg
+ICAgICAgICAgICAgY3MNCkNvZGU7ICBjMDEzOWVjMiA8dW5waW5fcHRlX3Bh
+Z2UrNjIvNzA+DQogICA3OiAgIGMwIGViIGMyICAgICAgICAgICAgICAgICAg
+c2hyICAgICQweGMyLCVibA0KQ29kZTsgIGMwMTM5ZWM1IDx1bnBpbl9wdGVf
+cGFnZSs2NS83MD4NCiAgIGE6ICAgOGQgNzQgMjYgMDAgICAgICAgICAgICAg
+ICBsZWEgICAgMHgwKCVlc2ksMSksJWVzaQ0KQ29kZTsgIGMwMTM5ZWM5IDx1
+bnBpbl9wdGVfcGFnZSs2OS83MD4NCiAgIGU6ICAgOGQgYmMgMjcgMDAgMDAg
+MDAgMDAgICAgICBsZWEgICAgMHgwKCVlZGksMSksJWVkaQ0KDQoNCjEgd2Fy
+bmluZyBpc3N1ZWQuICBSZXN1bHRzIG1heSBub3QgYmUgcmVsaWFibGUuDQo=
+---1463747071-144106186-1094235037=:30366--
