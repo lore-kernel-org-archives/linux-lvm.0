@@ -1,10 +1,10 @@
 From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] pvextend?
-Message-Id: <20020224110804.A4183@sistina.com>
-References: <Pine.LNX.4.33.0202240226470.26350-100000@tweedle.cabbey.net>
+Subject: Re: [linux-lvm] vgcreate looks at devices it shouldn't
+Message-Id: <20020224113252.B4183@sistina.com>
+References: <200202231207.NAA34732@numa1.igpm.rwth-aachen.de>
 MIME-Version: 1.0
-In-Reply-To: <Pine.LNX.4.33.0202240226470.26350-100000@tweedle.cabbey.net>;
-    from linux@cabbey.net on Sun, Feb 24, 2002 at 02:56:40AM -0600
+In-Reply-To: <200202231207.NAA34732@numa1.igpm.rwth-aachen.de>;
+    from jarausch@igpm.rwth-aachen.de on Sat, Feb 23, 2002 at 01:07:35PM +0100
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,90 +15,92 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Sun Feb 24 04:08:02 2002
+Date: Sun Feb 24 04:32:02 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Sun, Feb 24, 2002 at 02:56:40AM -0600, Chris Abbey wrote:
-> Howdy all,
-> 	I've searched through the archives and how-to's but I see
-> no mention of this concept anywhere. I'm hoping someone can point
-> me twoard a tool to accomplish it.
+On Sat, Feb 23, 2002 at 01:07:35PM +0100, jarausch@igpm.rwth-aachen.de wrote:
+> Hi,
 > 
-> 	What I have today is one VG with the following PVs:
+> on the second machine where I would like to create LVM volumes
+> I have the following problem
 > 
-> PV Name (#)           /dev/sda3 (1)
-> PV Status             available / allocatable
-> Total PE / Free PE    1666 / 172
+> The ZIP drive and the CDROM drive are mapped to
+> hdd (hdc resp.)  BUT due to a kernel parameter
+> hdc=ide-scsi hdd=ide-scsi
+> these are no more accessible as  /dev/hdd /dev/hdc
 > 
-> PV Name (#)           /dev/sdb2 (2)
-> PV Status             available / allocatable
-> Total PE / Free PE    1666 / 322
+> Now pvcreate /dev/sdb1 works fine but
+> vgcreate home /dev/sdb1
+> produces error messages like
+> ide-scsi: hdd unsupported command in request queue (0)
+>   ....
+> and after some such messages
+> vgcreate -- ERROR "pv_read(): read" reading physical volumes.
 > 
-> The drives that these PVs come from are allocated as such:
+> AND the desired volume group on my  scsi drive /dev/sdb1
+> is NOT created.
 > 
->    Device Boot    Start       End    Blocks   Id  System
-> /dev/sda1   *         1       131   1052226   83  Linux
-> /dev/sda2           132       163    257040   82  Linux swap
-> /dev/sda3           164       588   3413812+  8e  Linux LVM
-> /dev/sda4           589      1105   4152802+   c  Win95 FAT32 (LBA)
-> /dev/sdb1             1       163   1309266    b  Win95 FAT32
-> /dev/sdb2           164       588   3413812+  8e  Linux LVM
-> /dev/sdb4           589      1106   4160835   83  Linux
-> 
-> 	I want to nuke sda4 and sdb4 and add the space they
-> occupy to the PVs on sda3 and sdb2.
+> What can one do about this. How to tell the utilities
+> to never look at /dev/hd?
 
+The supported devices in LVM1 are hard coded :-(
 
-Well, we don't have a pvextend (so far ;-)
+Easy way would be to have a wrapper "myvgcreate" like:
 
-> If these were ext2 fs'
-> or were striped together with md this would be trivial: open
-> fdisk, delete the last two partitions create a new, unified,
-> partition in their place, write the table, repeat on the other
-> drive, then use e2resize to push the filesystems into the new
-> space. But how do I do this with PVs? I assume the fdisk
-> adjustment will still be needed, but what is the corresponding
-> e2resize command for a PV? Or will they just see the added
-> space and grow to fit?
+#!/bin/sh
+DEVDIR=/dev
+SAVDIR=/dev/.SAV
+DEVS="hdc hdd"
+cmd=$(basename $0)
 
-No pvextend :( Should start to code it...
+errcheck () {
+   if [ $2 -ne 0 ]; then
+      echo -en "$cmd -- $1\n\n" >&2
+      exit $2
+   fi
+}
 
-But rather than the way below, why don't you "pvcreate /dev/sd[ab]4"
-after setting their partition type to Linux LVM and vgextend them to
-your VG? The metadata overhead given is very small compared to the device
-sizes of sd[ab]4.
-The only thing you need to take care of is, that you don't create striped
-LVs on one physical disk.
-
-If you want to create some of those, you need to use
-
-lvcreate -L YourSize -i 2 -n YourLVName YourVG /dev/sda3 /dev/sdb2
-
-- or -
-
-lvcreate -L YourSize -i 2 -n YourLVName YourVG /dev/sda4 /dev/sdb4
-
-to avoid striping over to partitions of the same physical disk.
+[ ! -d $SAVDIR ] && mkdir $SAVDIR
+cd $SAVDIR >/dev/null 2>&1
+errcheck "Can't chdir to $SAVDIR" $?
+cd $DEVDIR >/dev/null 2>&1
+errcheck "Can't chdir to $DEVDIR" $?
+mv $DEVS $SAVDIR
+errcheck "Can't move $DEVS form $DEVDIR to $SAVDIR" $?
+vgcreate $*
+cd $SAVDIR >/dev/null 2>&1
+errcheck "Can't chdir to $SAVDIR" $?
+mv $DEVS $DEVDIR
+errcheck "Can't move $DEVS from $SAVDIR to $DEVDIR" $?
+rmdir $SAVDIR >/dev/null 2>&1
+errcheck "Can't remove $SAVDIR" $?
+exit 0
 
 > 
-> 	I have dreamed up a rather ugly way to accomplish
-> this, kinda-sorta.... I could create a second PV on one
-> of the drives, say as sdb4... then pvmove the PV from the
-> other drive into that, then create a new PV on the first
-> drive of the full size, then add that to the VG, then pvmove
-> the data from both of the small PVs into the large one, then
-> pvremove them and create a replacement large PV in their place
-> and add it to the VG. The end result of that though would be
-> that all my data was on one drive... the advantage of striping
-> over two drives would be shot to hell. I measured a healthy
-> performance boost when I moved to striping two drives, I'm not
-> keen to loose that, and as far as I can tell, there is no tool
-> to rebalance the PEs over several PVs. Or did I miss something?
+> I am using lvm-1.0.2
 > 
-> 	Any suggestions appreciated.
+> Does this problem vanish with 2.0 ?
+
+Yes.
+LVM 2 Beta 1 provides a configurable device filter which enables
+you to exclude device nodes using regular exporessions.
+
+THIS IS BETA SOFTWARE NOT MEANT TO BE USED ON PRODUCTION MACHINES!
+
+Unless you try it on test or otherwise not critical systems,
+stay with the above work around.
+
+> 
+> Many thanks for a hint,
+> 
+> Helmut Jarausch
+> 
+> Lehrstuhl fuer Numerische Mathematik
+> Institute of Technology, RWTH Aachen
+> D 52056 Aachen, Germany
 > 
 > 
 > _______________________________________________
