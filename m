@@ -1,11 +1,10 @@
-Subject: Re: [linux-lvm] Can someone _please_ tell me whats going on?
-From: Bradley Alexander <storm@tux.org>
-In-Reply-To: <1008560587.831.6.camel@defiant>
-References: <Pine.LNX.4.33.0112170410450.12782-100000@www.scotty.co.at> 
-	<1008560587.831.6.camel@defiant>
-Content-Transfer-Encoding: 7bit
-Message-Id: <1008573872.790.10.camel@defiant>
+From: Andreas Dilger <adilger@turbolabs.com>
+Subject: Re: [linux-lvm] invalidate: busy buffer
+Message-ID: <20011217003242.K855@lynx.no>
+References: <20011214191634.GB24486@auctionwatch.com> <20011216205044.F26924@tiger.bigcats.invalid>
 Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20011216205044.F26924@tiger.bigcats.invalid>; from weissel@netcologne.de on Sun, Dec 16, 2001 at 08:50:44PM +0100
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,41 +15,30 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Dec 17 01:22:01 2001
+Date: Mon Dec 17 01:30:02 2001
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Sun, 2001-12-16 at 22:43, Bradley Alexander wrote:
-> 
-> Its a standard IDE cable. I have a 40-pin/40-wire cable and a
-> 40-pin/80-wire (I'm assuming this is an ATA66/100 cable). Originally, i
-> had both drives on the ATA cable, but since I split them to different
-> channels, I had to use a standard IDE cable on the second channel.
-> However, I was getting the same errors when both were on the ATA cable
-> as well.
+On Dec 16, 2001  20:50 +0100, Wolfgang Weisselberg wrote:
+> BTW, is there a good reason to run vgscan on boot time every
+> time?  I have had more sorrow than joy with that.  If my
+> vg's really changed, I can always run it from the (non-LVM)
+> / which will come up, even if only as an emergency system.
 
-I have noticed a couple more symptoms I thought I would forward.
+It is only really useful if your drive mappings are likely to change
+(i.e. adding SCSI drives, or re-arranging your IDE drives).  Otherwise,
+it is not necessary to run vgscan at boot.
 
-1. The drive light stays illuminated when the machine is up, whether the
-lv is mounted or not. Could this also be an indication of what killed
-the first drive?
+IMHO, the concept of running "vgscan" at boot is flawed, because it
+re-builds the entire _VG_ setup each time it is run.  I would much
+rather only rebuild the _PV_ setup on each boot (which is the only
+likely thing to change between reboots), and leave the VG setup alone.
+It should be up to the sysadmin to change the VG config.
 
-2. Doing normal actions on the volume group, in this case, vg01, causes
-a segmentation fault. This includes vgchange, doing an fdisk on the
-drive or anything else.
-
-Anyone have any pointers?
-
-thanks,
--- 
---Brad
-============================================================================
-Bradley M. Alexander, CISSP              |   Co-Chairman,
-Beowulf System Admin/Security Specialist |    NoVALUG/DCLUG Security SIG
-Debian/GNU Linux Developer		 |   storm [at] debian.org
-                                         |   storm [at] tux.org
-============================================================================
-Ever notice when you blow in a dog's face he gets mad at you, but
-when you take him in a car he sticks his head out the window?
-						--George Carlin
+Cheers, Andreas
+--
+Andreas Dilger
+http://sourceforge.net/projects/ext2resize/
+http://www-mddsp.enel.ucalgary.ca/People/adilger/
