@@ -1,25 +1,17 @@
-Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id i5JBjc009666
-	for <linux-lvm@redhat.com>; Sat, 19 Jun 2004 07:45:38 -0400
-Received: from moutng.kundenserver.de (moutng.kundenserver.de
-	[212.227.126.185])
-	by mx1.redhat.com (8.12.10/8.12.10) with ESMTP id i5JBjbe1002003
-	for <linux-lvm@redhat.com>; Sat, 19 Jun 2004 07:45:38 -0400
-Received: from [212.227.126.208] (helo=mrelayng.kundenserver.de)
-	by moutng.kundenserver.de with esmtp (Exim 3.35 #1)
-	id 1BbeHu-00079B-00
-	for linux-lvm@redhat.com; Sat, 19 Jun 2004 13:45:34 +0200
-Received: from [217.230.161.203] (helo=pd9e6a1cb.dip0.t-ipconnect.de)
-	by mrelayng.kundenserver.de with asmtp (TLSv1:RC4-MD5:128)
-	(Exim 3.35 #1) id 1BbeHu-0002Os-00
-	for linux-lvm@redhat.com; Sat, 19 Jun 2004 13:45:34 +0200
-From: Hauke Laging <mailinglisten@hauke-laging.de>
-Date: Sat, 19 Jun 2004 13:45:32 +0200
-MIME-Version: 1.0
+Received: from agk.surrey.redhat.com (agk.surrey.redhat.com [172.16.10.74])
+	by pobox.surrey.redhat.com (8.12.8/8.12.8) with ESMTP id i5JG3Rj2019440
+	for <linux-lvm@redhat.com>; Sat, 19 Jun 2004 17:03:27 +0100
+Received: from agk by agk.surrey.redhat.com with local (Exim 4.34)
+	id 1BbiJT-0005RV-EM
+	for linux-lvm@redhat.com; Sat, 19 Jun 2004 17:03:27 +0100
+Date: Sat, 19 Jun 2004 17:03:27 +0100
+From: Alasdair G Kergon <agk@redhat.com>
+Subject: Re: [linux-lvm] vgcfgbackup: backup of several VGs into one file fails
+Message-ID: <20040619160327.GC6302@agk.surrey.redhat.com>
+References: <200406191345.32913.mailinglisten@hauke-laging.de>
+Mime-Version: 1.0
 Content-Disposition: inline
-Content-Transfer-Encoding: 7bit
-Message-Id: <200406191345.32913.mailinglisten@hauke-laging.de>
-Subject: [linux-lvm] vgcfgbackup: backup of several VGs into one file fails
+In-Reply-To: <200406191345.32913.mailinglisten@hauke-laging.de>
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -31,52 +23,23 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@redhat.com
+Content-Transfer-Encoding: 7bit
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-Hello,
+On Sat, Jun 19, 2004 at 01:45:32PM +0200, Hauke Laging wrote:
+> I just tried to make a backup of all my VGs into one file using the 
+> following command:
 
-I just tried to make a backup of all my VGs into one file using the 
-following command:
+LVM2 text metadata files can only only hold a single VG at the moment.
+vgcfgbackup should enforce that, but doesn't - I'll fix it.
 
-vgcfgbackup -d -f lvm--2004-06-19
-  : open failed: No such file or directory
-  Volume group "storage" successfully backed up.
-  : open failed: No such file or directory
-  Volume group "linux" successfully backed up.
+The long-term plan is to allow them to hold multiple VGs but the
+library certainly doesn't support that yet.
 
-Unfortunately after that the file lvm--2004-06-19 contains information 
-about the VG "linux" only.
-
-strace shows this:
-[...]
-rename("./.lvm_server_12035_1954474236", "lvm--2004-06-19.tmp") = 0
-rename("lvm--2004-06-19.tmp", "lvm--2004-06-19") = 0
-[...]
-rename("./.lvm_server_12035_348633387", "lvm--2004-06-19.tmp") = 0
-rename("lvm--2004-06-19.tmp", "lvm--2004-06-19") = 0
-[...]
-
-It seems to me that both VG backups are written to the same file by writing 
-them to a temporary file and then renaming this. Of course, by this all 
-former backups are overwritten as the file is overwritten every time.
-
-The ": open failed: No such file or directory" message is probably caused 
-by this:
-stat64("lvm--2004-06-19.tmp", 0xbfffc9a0) = -1 ENOENT (No such file or 
-directory)
-open("", O_RDONLY|O_LARGEFILE)          = -1 ENOENT (No such file or 
-directory)
-These two lines immediately follow the "rename" lines.
-
-Do I misunderstand anything? The man page does not look too complicated...
-
-
-vgcfgbackup --version
-  LVM version:     2.00.15 (2004-04-19)
-  Library version: 1.00.09-ioctl (2004-03-31)
-  Driver version:  4.1.0
-
-
-Best regards,
-
-Hauke Laging
+I'll think about it a bit and add a different extension to vgcfgbackup 
+to make it easy to back up everything at once (maybe filename prefix or 
+template option).
+ 
+Alasdair
+-- 
+agk@redhat.com
