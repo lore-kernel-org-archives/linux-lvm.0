@@ -1,8 +1,9 @@
 From: Steven Lembark <lembark@wrkhors.com>
-Subject: Re: [linux-lvm] vgimport
-Message-ID: <12270000.1043010311@[192.168.200.4]>
-In-Reply-To: <200301191715.33238.lists@franzke-online.de>
-References: <200301191715.33238.lists@franzke-online.de>
+Subject: Re: [linux-lvm] cannot extend lv
+Message-ID: <13040000.1043010460@[192.168.200.4]>
+In-Reply-To: <20030119180753.GA15083@mitethe.eudyptes>
+References: <3E2A7AE4.8080801@informatik.uni-erlangen.de>
+ <20030119180753.GA15083@mitethe.eudyptes>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
 Content-Disposition: inline
@@ -16,15 +17,24 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Sun Jan 19 14:57:02 2003
+Date: Sun Jan 19 15:00:02 2003
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: linux-lvm@sistina.com
 
-> lvm 1.0.5
+> I understand, I went through the same exercise two months ago.  I
+> borrowed a disk from a friend, moved all of the data to it, and rebuilt
+> my whole VG setup.  It was a major pain in the neck.
 
-One thing is to try 1.0.6
+But it's the only way. This is not unique to Sistina's
+implementation. Once the filesystem has been striped at
+a low level (vs. lvextending it to alternate disks at
+the extent level) there isn't any good way to move the
+sripes around.
 
+I'd suggest picking up a backup device, though, instead
+of a diskdrive. The last thing you need is for a borrowed
+drive to croak while you're re-arranging the PV's.
 
 --
 Steven Lembark                               2930 W. Palmer
