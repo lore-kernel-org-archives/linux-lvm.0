@@ -1,11 +1,14 @@
-Return-Path: <root@srv.sistina.com>
-Date: Fri, 4 May 2001 13:39:11 +0000
-From: "Heinz J. Mauelshagen" <Mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] LVM Questions
-Message-ID: <20010504133911.A11517@sistina.com>
-References: <20010503004851.897.qmail@web10803.mail.yahoo.com> <3AF0B857.74F16371@home.com> <wv4rv26hvj.fsf@freeze.oslo.dnmi.no> <20010504093350.D4700@sistina.com> <wvlmod7e23.fsf@freeze.oslo.dnmi.no> <20010504103827.A10758@sistina.com> <wvhez178t8.fsf@freeze.oslo.dnmi.no>
+Return-Path: <lewis@sistina.com>
+Date: Fri, 4 May 2001 09:14:40 -0500
+From: AJ Lewis <lewis@sistina.com>
+Subject: Re: [linux-lvm] CVS checkout unavailable ?
+Message-ID: <20010504091440.A10568@sistina.com>
+References: <Pine.LNX.4.32.0105041145080.651-100000@falka.mfa.kfki.hu>
 Mime-Version: 1.0
-In-Reply-To: <wvhez178t8.fsf@freeze.oslo.dnmi.no>; from a.phillips@dnmi.no on Fri, May 04, 2001 at 11:38:43AM +0200
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="4Ckj6UjgE2iN1+kY"
+Content-Disposition: inline
+In-Reply-To: <Pine.LNX.4.32.0105041145080.651-100000@falka.mfa.kfki.hu>; from dice@mfa.kfki.hu on Fri, May 04, 2001 at 11:47:47AM +0200
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,88 +20,57 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Fri, May 04, 2001 at 11:38:43AM +0200, Adrian Phillips wrote:
-> >>>>> "Heinz" == Heinz J Mauelshagen <Mauelshagen@sistina.com> writes:
-> 
-> <snip>
-> 
->     >>  HP/UX, how unfortunate :-) Thanks for the info. though.
-> 
->     Heinz> ;-)
-> 
->     Heinz> Actually the HP/UX LVM and its CLI has some major
->     Heinz> advantages over others:
-> 
->     Heinz>  - it has a very simple layering (the PV, VG, LV thingies)
->     Heinz> and therefore is very easy to understand
-> 
->     Heinz>  - the CLI follows the layers transparently
-> 
->     Heinz>  - CLI is "self explaining" in regard of having native
->     Heinz> language postfixes in the command names like create,
->     Heinz> extend, reduce, change etc.
-> 
->     Heinz> In production this boils down to shorter learning cycles
->     Heinz> for admin newbies and easier handling in regular production
->     Heinz> -> less money spend!
-> 
-> Actually I thought that LVM had been modelled upon AIX's LVM when I
-> first started using it; the commands are very similar.
+--4Ckj6UjgE2iN1+kY
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-That's possible easy because both have common roots :-)
+On Fri, May 04, 2001 at 11:47:47AM +0200, Gergely Tamas wrote:
+> I'm not able to check-out current LVM from CVS.
 
-> 
-> Actually, it gives me an idea for AIX compatiblity wrappers (possibly
-> something else for the TODO list if it hasn't filled up the LV
-> already, then again you can always lvextend it:-)
-> 
->     Heinz> BTW: what's unfortunate IYO with the HP/UX LVM? :-)
-> 
-> Sorry, I meant HP/UX OS itself (not from personal experience but the
-> years of reading of non-standard HP/UX command, libraries, etc., then
-> again AIX has had it share of those).
+D'oh!  We're working getting CVS setup so major contributors have write
+access to it, and in the process it looks like permissions may have been
+moved around.  I'll talk to our sys admin as soon as he gets in and get
+it straightened out.  Sorry for the inconvenience.
 
-No problem.
-Thanks for the clarification.
+> (Logging in to cvs@cvs.globalfilesystem.org)
+> CVS password:
+> cvs server: Updating LVM
+> cvs server: failed to create lock directory in repository `/data/cvs/LVM':
+> Permission denied
+> cvs server: failed to obtain dir lock in repository `/data/cvs/LVM'
+> cvs [server aborted]: read lock failed - giving up
+> (Logging out of cvs@cvs.globalfilesystem.org)
 
-> 
-> <snip>
-> 
-> Anyway, thats to you and others who had a hand in LVM. It makes
-> using Linux as easy (on the FS side) as its been to use AIX for the
-> years I've admining it (almost 10 now).
-> 
-> Regards,
-> 
-> Adrian
-> 
-> -- 
-> Your mouse has moved.
-> Windows NT must be restarted for the change to take effect.
-> Reboot now?  [OK]
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
+--=20
+AJ Lewis
+Sistina Software Inc.                  Voice:  612-379-3951
+1313 5th St SE, Suite 111              Fax:    612-379-3952
+Minneapolis, MN 55414                  E-Mail: lewis@sistina.com
+http://www.sistina.com
 
--- 
+Current GPG fingerprint =3D 3B5F 6011 5216 76A5 2F6B  52A0 941E 1261 0029 2=
+648
+Get my key at: http://www.sistina.com/~lewis/gpgkey
+ (Unfortunately, the PKS-type keyservers do not work with multiple sub-keys)
 
-Regards,
-Heinz    -- The LVM Guy --
+-----Begin Obligatory Humorous Quote----------------------------------------
+A morning without coffee is like something without something else.
+-----End Obligatory Humorous Quote------------------------------------------
 
-*** Software bugs are stupid.
-    Nevertheless it needs not so stupid people to solve them ***
+--4Ckj6UjgE2iN1+kY
+Content-Type: application/pgp-signature
+Content-Disposition: inline
 
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.0.4 (GNU/Linux)
+Comment: For info see http://www.gnupg.org
 
-Heinz Mauelshagen                                 Sistina Software Inc.
-Senior Consultant/Developer                       Am Sonnenhang 11
-                                                  56242 Marienrachdorf
-                                                  Germany
-Mauelshagen@Sistina.com                           +49 2626 141200
-                                                       FAX 924446
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+iD8DBQE68rlQpE6/iGtdjLERAqF0AJ99SylEOvQhZ130DZfnfKQe9+4JYQCfTb2c
+SBczEMrSwnfrq3aznXStX3E=
+=mopU
+-----END PGP SIGNATURE-----
+
+--4Ckj6UjgE2iN1+kY--
