@@ -1,8 +1,11 @@
-Message-Id: <se12cfa5.015@thpmail.tyndale.com>
-From: "Cameron Thorne" <CLT@tyndale.com>
-Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="=_742B5415.0F6E1747"
-Subject: [linux-lvm] lvmcreate_initrd failing...not sure why
+From: Steven Lembark <lembark@wrkhors.com>
+Subject: Re: [linux-lvm] lvmcreate_initrd failing...not sure why
+Message-ID: <617990000.1041459011@[192.168.200.4]>
+In-Reply-To: <se12cfa5.015@thpmail.tyndale.com>
+References: <se12cfa5.015@thpmail.tyndale.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -13,104 +16,26 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Jan  1 11:23:02 2003
+Date: Wed Jan  1 16:02:01 2003
 List-Id: <linux-lvm.redhat.com>
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: linux-lvm@sistina.com
 
-This is a MIME message. If you are reading this text, you may want to 
-consider changing to a mail reader or gateway that understands how to 
-properly handle MIME multipart messages.
 
---=_742B5415.0F6E1747
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-Content-Disposition: inline
+-- Cameron Thorne <CLT@tyndale.com>
 
-I am trying to convert my root file system over to LVM (1.0.6 running on li=
-nux 2.4.20).  I have read the LVM-HOWTO cover to cover several times, but I=
- seem to be having trouble with lvmcreate_initrd.  Attached is the output w=
-hen I run lvmcreate_initrd -v.
+> I am trying to convert my root file system over to LVM
 
-Does anyone have any idea what is happening?
-
-- Cameron
+Don't. All you do is make it difficult to recover from LVM
+problems. If you mount the major filesystems (including
+/usr and /var) as LV's / only needs to be around 80MB
+for /bin, /lib, /etc, and /boot. For the minimal amount
+of space you use, why bother with it?
 
 
---=_742B5415.0F6E1747
-Content-Type: application/octet-stream; name="lvmcreate_initrd.log"
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="lvmcreate_initrd.log"
 
-TG9naWNhbCBWb2x1bWUgTWFuYWdlciAxLjAuNiBieSBIZWlueiBNYXVlbHNoYWdlbiAgMjUvMTAv
-MjAwMgpsdm1jcmVhdGVfaW5pdHJkIC0tIG1ha2UgTFZNIGluaXRpYWwgcmFtIGRpc2sgL2Jvb3Qv
-aW5pdHJkLWx2bS0yLjQuMjAuZ3oKCiAgICAgICAgICAgICAgICAgLS0gZGV2ZnNkIHJ1bm5pbmcs
-IGFzc3VtaW5nIC1ELgpsdm1jcmVhdGVfaW5pdHJkIC0tIGZpbmRpbmcgcmVxdWlyZWQgc2hhcmVk
-IGxpYnJhcmllcwogICAgICAgICAgICAgICAgIC0tIElOSVRSREZJTEVTOiAvc2Jpbi92Z2NoYW5n
-ZSAvc2Jpbi92Z3NjYW4gL2Jpbi9iYXNoIC9iaW4vbW91bnQgL2Jpbi91bW91bnQgL2Jpbi9zaCAv
-YmluL3JtIC9zYmluL21vZHByb2JlIC9zYmluL2luc21vZCAvbGliL21vZHVsZXMvMi40LjIwL21v
-ZHVsZXMuZGVwCiAgICAgICAgICAgICAgICAgLS0gbmVlZDogL2xpYi9sZC1saW51eC5zby4yIC9s
-aWIvbGliYy5zby42IC9saWIvbGliZGwuc28uMiAvbGliL2xpYmx2bS0xMC5zby4xIC9saWIvbGli
-bmN1cnNlcy5zby41Cmx2bWNyZWF0ZV9pbml0cmQgLS0gc3RyaXBwaW5nIHNoYXJlZCBsaWJyYXJp
-ZXMKICAgICAgICAgICAgICAgICAtLSBjb3B5IC9saWIvbGQtbGludXguc28uMiB0byAvdG1wL2xp
-Yi44MTEvbGliL2xkLWxpbnV4LnNvLjIKICAgICAgICAgICAgICAgICAtLSBzdHJpcCAvdG1wL2xp
-Yi44MTEvbGliL2xkLWxpbnV4LnNvLjIKICAgICAgICAgICAgICAgICAtLSBjb3B5IC9saWIvbGli
-Yy5zby42IHRvIC90bXAvbGliLjgxMS9saWIvbGliYy5zby42CiAgICAgICAgICAgICAgICAgLS0g
-c3RyaXAgL3RtcC9saWIuODExL2xpYi9saWJjLnNvLjYKICAgICAgICAgICAgICAgICAtLSBjb3B5
-IC9saWIvbGliZGwuc28uMiB0byAvdG1wL2xpYi44MTEvbGliL2xpYmRsLnNvLjIKICAgICAgICAg
-ICAgICAgICAtLSBzdHJpcCAvdG1wL2xpYi44MTEvbGliL2xpYmRsLnNvLjIKICAgICAgICAgICAg
-ICAgICAtLSBjb3B5IC9saWIvbGlibHZtLTEwLnNvLjEgdG8gL3RtcC9saWIuODExL2xpYi9saWJs
-dm0tMTAuc28uMQogICAgICAgICAgICAgICAgIC0tIHN0cmlwIC90bXAvbGliLjgxMS9saWIvbGli
-bHZtLTEwLnNvLjEKICAgICAgICAgICAgICAgICAtLSBjb3B5IC9saWIvbGlibmN1cnNlcy5zby41
-IHRvIC90bXAvbGliLjgxMS9saWIvbGlibmN1cnNlcy5zby41CiAgICAgICAgICAgICAgICAgLS0g
-c3RyaXAgL3RtcC9saWIuODExL2xpYi9saWJuY3Vyc2VzLnNvLjUKbHZtY3JlYXRlX2luaXRyZCAt
-LSBjYWxjdWxhdGluZyBpbml0cmQgZmlsZXN5c3RlbSBwYXJhbWV0ZXJzCiAgICAgICAgICAgICAg
-ICAgLS0gY291bnRpbmcgZmlsZXMgaW46ICAvdG1wL2xpYi44MTEgJElOSVRSREZJTEVTCiAgICAg
-ICAgICAgICAgICAgLS0gbWluaW11bTogICAgICAxNyBpbm9kZXMgKyBmaWxlc3lzdGVtIHJlc2Vy
-dmVkIGlub2Rlcwpsdm1jcmVhdGVfaW5pdHJkIC0tIGNhbGN1bGF0aW5nIGxvb3BiYWNrIGZpbGUg
-c2l6ZQogICAgICAgICAgICAgICAgIC0tIGZpbmRpbmcgc2l6ZSBvZjogIC90bXAvbGliLjgxMSAk
-SU5JVFJERklMRVMKICAgICAgICAgICAgICAgICAtLSBtaW5pbXVtOiAyODA5IGtCIGZvciBmaWxl
-cyArIGlub2RlcyArIGZpbGVzeXN0ZW0gbWV0YWRhdGEKbHZtY3JlYXRlX2luaXRyZCAtLSBtYWtp
-bmcgbG9vcGJhY2sgZmlsZSAoMzMzMSBrQikKICAgICAgICAgICAgICAgICAtLSB1c2luZyAvdG1w
-L2luaXRyZC44MTEgYXMgYSB0ZW1wb3JhcnkgbG9vcGJhY2sgZmlsZQpsdm1jcmVhdGVfaW5pdHJk
-IC0tIG1ha2luZyByYW0gZGlzayBmaWxlc3lzdGVtICg4MSBpbm9kZXMpCiAgICAgICAgICAgICAg
-ICAgLS0gbWtlMmZzIC1GIC1tMCAtTCBMVk0tMi40LjIwIC1pIDQyMTEwIC90bXAvaW5pdHJkLjgx
-MSAzMzMxCm1rZTJmcyAxLjMyICgwOS1Ob3YtMjAwMikKRmlsZXN5c3RlbSBsYWJlbD1MVk0tMi40
-LjIwCk9TIHR5cGU6IExpbnV4CkJsb2NrIHNpemU9MTAyNCAobG9nPTApCkZyYWdtZW50IHNpemU9
-MTAyNCAobG9nPTApCjg4IGlub2RlcywgMzMzMSBibG9ja3MKMCBibG9ja3MgKDAuMDAlKSByZXNl
-cnZlZCBmb3IgdGhlIHN1cGVyIHVzZXIKRmlyc3QgZGF0YSBibG9jaz0xCjEgYmxvY2sgZ3JvdXAK
-ODE5MiBibG9ja3MgcGVyIGdyb3VwLCA4MTkyIGZyYWdtZW50cyBwZXIgZ3JvdXAKODggaW5vZGVz
-IHBlciBncm91cAoKV3JpdGluZyBpbm9kZSB0YWJsZXM6IDAvMQgICGRvbmUgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgCldyaXRpbmcgc3VwZXJibG9ja3MgYW5kIGZpbGVzeXN0ZW0gYWNjb3Vu
-dGluZyBpbmZvcm1hdGlvbjogZG9uZQoKVGhpcyBmaWxlc3lzdGVtIHdpbGwgYmUgYXV0b21hdGlj
-YWxseSBjaGVja2VkIGV2ZXJ5IDI5IG1vdW50cyBvcgoxODAgZGF5cywgd2hpY2hldmVyIGNvbWVz
-IGZpcnN0LiAgVXNlIHR1bmUyZnMgLWMgb3IgLWkgdG8gb3ZlcnJpZGUuCiAgICAgICAgICAgICAg
-ICAgLS0gY3JlYXRpbmcgbW91bnRwb2ludCAvdG1wL21udC44MTEKbHZtY3JlYXRlX2luaXRyZCAt
-LSBtb3VudGluZyByYW0gZGlzayBmaWxlc3lzdGVtCiAgICAgICAgICAgICAgICAgLS0gbW91bnQg
-LW8gbG9vcCAvdG1wL2luaXRyZC44MTEgL3RtcC9tbnQuODExCiAgICAgICAgICAgICAgICAgLS0g
-Y3JlYXRpbmcgL2V0YyAvcHJvYyAvbGliIGluIC90bXAvbW50LjgxMQogICAgICAgICAgICAgICAg
-IC0tIHJlbW92aW5nIC90bXAvbW50LjgxMS9sb3N0K2ZvdW5kCmx2bWNyZWF0ZV9pbml0cmQgLS0g
-Y3JlYXRpbmcgbmV3IC9ldGMvbW9kdWxlcy5jb25mCiAgICAgICAgICAgICAgICAgLS0gYWxsIGJs
-b2NrIGFuZCBjaGFyIG1vZHVsZXMgd2lsbCBiZSB0dXJuZWQgb2ZmCmx2bWNyZWF0ZV9pbml0cmQg
-LS0gY3JlYXRpbmcgbmV3IG1vZHVsZXMuZGVwCmx2bWNyZWF0ZV9pbml0cmQgLS0gY29weWluZyBp
-bml0cmQgZmlsZXMgdG8gcmFtIGRpc2sKICAgICAgICAgICAgICAgICAtLSBmaW5kICRJTklUUkRG
-SUxFUyB8IGNwaW8gLXBkbSAtdiAvdG1wL21udC44MTEKL3RtcC9tbnQuODExL3NiaW4vdmdjaGFu
-Z2UKL3RtcC9tbnQuODExL3NiaW4vdmdzY2FuCi90bXAvbW50LjgxMS9iaW4vYmFzaAovdG1wL21u
-dC44MTEvYmluL21vdW50Ci90bXAvbW50LjgxMS9iaW4vdW1vdW50Ci90bXAvbW50LjgxMS9iaW4v
-c2gKL3RtcC9tbnQuODExL2Jpbi9ybQovdG1wL21udC44MTEvc2Jpbi9tb2Rwcm9iZQovdG1wL21u
-dC44MTEvc2Jpbi9pbnNtb2QKL3RtcC9tbnQuODExL2xpYi9tb2R1bGVzLzIuNC4yMC9tb2R1bGVz
-LmRlcAoxOTU2IGJsb2Nrcwpsdm1jcmVhdGVfaW5pdHJkIC0tIGNvcHlpbmcgc2hhcmVkIGxpYnJh
-cmllcyB0byByYW0gZGlzawogICAgICAgICAgICAgICAgIC0tIGZpbmQgL3RtcC9saWIuODExIHwg
-Y3BpbyAtcGRtIC12IC90bXAvbW50LjgxMQovdG1wL21udC44MTEvbGliCi90bXAvbW50LjgxMS9s
-aWIvbGlibmN1cnNlcy5zby41Ci90bXAvbW50LjgxMS9saWIvbGlibHZtLTEwLnNvLjEKL3RtcC9t
-bnQuODExL2xpYi9sZC1saW51eC5zby4yCi90bXAvbW50LjgxMS9saWIvbGliZGwuc28uMgovdG1w
-L21udC44MTEvbGliL2xpYmMuc28uNgozNjA3IGJsb2Nrcwpsdm1jcmVhdGVfaW5pdHJkIC0tIGNy
-ZWF0aW5nIG5ldyAvbGludXhyYwpsdm1jcmVhdGVfaW5pdHJkIC0tIGNyZWF0aW5nIG5ldyAvZXRj
-L2ZzdGFiCmx2bWNyZWF0ZV9pbml0cmQgLS0gdW1tb3VudGluZyByYW0gZGlzawp1bW91bnQ6IC90
-bXAvaW5pdHJkLjgxMTogbm90IG1vdW50ZWQKbHZtY3JlYXRlX2luaXRyZCAtLSBFUlJPUiB1bW91
-bnRpbmcgL3RtcC9pbml0cmQuODExCiAgICAgICAgICAgICAgICAgLS0gcmVtb3ZpbmcgL3RtcC9p
-bml0cmQuODExCiAgICAgICAgICAgICAgICAgLS0gcmVtb3ZpbmcgL3RtcC9tbnQuODExCnJtZGly
-OiBgL3RtcC9tbnQuODExJzogRGV2aWNlIG9yIHJlc291cmNlIGJ1c3kKICAgICAgICAgICAgICAg
-ICAtLSByZW1vdmluZyAvdG1wL2xpYi44MTEKICAgICAgICAgICAgICAgICAtLSBleGl0IHdpdGgg
-Y29kZSAxCg==
 
---=_742B5415.0F6E1747--
+--
+Steven Lembark                               2930 W. Palmer
+Workhorse Computing                       Chicago, IL 60647
+                                            +1 8773 252 1080
