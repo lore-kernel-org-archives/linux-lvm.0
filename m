@@ -1,9 +1,9 @@
-From: "MrNatcho" <mrnatcho@gmx.net>
+Message-ID: <000801c2c279$092dc0e0$8d03a8c0@leejiwon>
+From: =?ks_c_5601-1987?B?wMzB9r/4?= <aj1lee@linuxsecurity.co.kr>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Message-Id: <E18bT4s-00050k-00@hermes.sistina.com>
-Subject: [linux-lvm] vgscan fails after more or less successful pvmove
+Content-Type: multipart/alternative;
+	boundary="----=_NextPart_000_0005_01C2C2C4.69809C10"
+Subject: [linux-lvm] want to be registered
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,45 +14,39 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Jan 22 16:11:01 2003
+Date: Wed Jan 22 18:40:02 2003
 List-Id: <linux-lvm.redhat.com>
-To: "linux-lvm@sistina.com" <linux-lvm@sistina.com>
+To: linux-lvm@sistina.com
 
-Hi all,
+This is a multi-part message in MIME format.
 
-I am having problems to access my LV after trying to move data off two PV's. Here's what I did before the 
-error occured:
+------=_NextPart_000_0005_01C2C2C4.69809C10
+Content-Type: text/plain;
+	charset="ks_c_5601-1987"
+Content-Transfer-Encoding: base64
 
-1. I freed up enough space and resize'd the ReiserFS partition
-2. I reduced the LV using lvreduce, leaving approx. 100GB free space in the VG
-3. I tried to free up a 80GB Disk in the VG using "pvmove /dev/hdc1" - this one failed after a dozen or so 
-PE's giving an error message I unfortunately didn't put down
-4. I tried to free up a 60GB Disk using the same command...to no avail - error after 20 or 30 PE's
-5. I tried different parameters for pvmove: -i didn't help, addressing the PE's to be moved directly fails 
-every few PE's. Putting in a destination device with enough free space didn't do any good, too. Finally, I 
-managed to free up a whole device by addressing the LE's to be moved away from the device.
-6. The PV then showed 0 allocated PE's, so I tried to remove the PV using vgreduce. That one failed 
-saying that the device wasn't empty. At that point, I was totally confused and tried to find the cause using 
-the display commands to see if I missed any vital information. At one point, I started vgscan to see that 
-brings any more information. the output is as follows:
+SEksIEknbSBvbmUgb2YgdGhlIExWTSB1c2VyIGluIEtvcmVhDQpPbiB1c2luZyBMVk0gdGhlcmUn
+cyBzZXZlcmFsIHByb2JsZW1zIHRoYXQgSSBjb3VsZG47dCBmaWd1cmUgb3V0Lg0KaSB3YW5uYSB2
+aXNpdCB0byBzdWJzY3JpYmVycyBsaXN0IGJ1dCBJIGRvbid0IGtub3cgaG93IHRvIHJlZ2lzdGVy
+IHBsZWFzZSBsZXQgdXMga25vdw0KDQpyZWdhcmRzIA0Kaml3b24NCiANCg==
 
-vgscan -- reading all physical volumes (this may take a while...)
-vgscan -- found active volume group "ftpdata_vg"
-vgscan -- only found 30458 of 29947 LEs for LV /dev/evil_vg/lvol1 (0)
-vgscan -- ERROR "vg_read_with_pv_and_lv(): allocated LE of LV" can't get data of volume group 
-"evil_vg" from physical volume(s)
-vgscan -- "/etc/lvmtab" and "/etc/lvmtab.d" successfully created
-vgscan -- WARNING: This program does not do a VGDA backup of your volume groups
+------=_NextPart_000_0005_01C2C2C4.69809C10
+Content-Type: text/html;
+	charset="ks_c_5601-1987"
+Content-Transfer-Encoding: base64
 
-From searching the list archives I have seen that other people have had this problem before, but I have 
-been unable to find a solution in the list archives.
+PCFET0NUWVBFIEhUTUwgUFVCTElDICItLy9XM0MvL0RURCBIVE1MIDQuMCBUcmFuc2l0aW9uYWwv
+L0VOIj4NCjxIVE1MPjxIRUFEPg0KPE1FVEEgaHR0cC1lcXVpdj1Db250ZW50LVR5cGUgY29udGVu
+dD0idGV4dC9odG1sOyBjaGFyc2V0PWtzX2NfNTYwMS0xOTg3Ij4NCjxNRVRBIGNvbnRlbnQ9Ik1T
+SFRNTCA2LjAwLjI3MjIuOTAwIiBuYW1lPUdFTkVSQVRPUj4NCjxTVFlMRT48L1NUWUxFPg0KPC9I
+RUFEPg0KPEJPRFkgYmdDb2xvcj0jZmZmZmZmPg0KPERJVj48Rk9OVCBzaXplPTI+SEksIEknbSBv
+bmUgb2YgdGhlIExWTSB1c2VyIGluIEtvcmVhPC9GT05UPjwvRElWPg0KPERJVj48Rk9OVCBzaXpl
+PTI+T24gdXNpbmcgTFZNIHRoZXJlJ3Mgc2V2ZXJhbCBwcm9ibGVtcyB0aGF0IEkgY291bGRuO3Qg
+ZmlndXJlIA0Kb3V0LjwvRk9OVD48L0RJVj4NCjxESVY+PEZPTlQgc2l6ZT0yPmkgd2FubmEgdmlz
+aXQgdG8gc3Vic2NyaWJlcnMgbGlzdCBidXQgSSBkb24ndCBrbm93IGhvdyB0byANCnJlZ2lzdGVy
+IHBsZWFzZSBsZXQgdXMga25vdzwvRk9OVD48L0RJVj4NCjxESVY+PEZPTlQgc2l6ZT0yPjwvRk9O
+VD4mbmJzcDs8L0RJVj4NCjxESVY+PEZPTlQgc2l6ZT0yPnJlZ2FyZHMgPC9GT05UPjwvRElWPg0K
+PERJVj48Rk9OVCBzaXplPTI+aml3b248L0ZPTlQ+PC9ESVY+DQo8RElWPiZuYnNwOzwvRElWPjwv
+Qk9EWT48L0hUTUw+DQo=
 
-Can anyone give me a hint what to try? Restoring the configuration didn't help, probably because the 
-several pvmove's did fill the 9 .old config's with messed up data...
-
-The box is a SuSE 8.0 with a vanilla 2.4.18 kernel and the LVM tools are version 1.0.3.
-
-Any help is greatly appreciated.
-
-Regards
-Stefan
+------=_NextPart_000_0005_01C2C2C4.69809C10--
