@@ -1,9 +1,11 @@
 Return-Path: <raheesom@navpoint.com>
+Subject: Re: [linux-lvm] Converting my Root file system to LVM
 From: Rupert Heesom <raheesom@navpoint.com>
-Date: 22 May 2001 12:02:03 -0400
-Message-Id: <990547328.1133.1.camel@localhost>
+In-Reply-To: <990547328.1133.1.camel@localhost>
+References: <990547328.1133.1.camel@localhost>
+Date: 22 May 2001 12:22:05 -0400
+Message-Id: <990548531.1134.2.camel@localhost>
 Mime-Version: 1.0
-Subject: [linux-lvm] Converting my Root file system to LVM
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -19,87 +21,37 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-I've been practicing LVM techniques on a spare 2nd disk which I'm adding
-to my root file system using LVM.  I think I've got the hang of how LVs,
-PVs, and VGs work.
+Having looked at another thread also with Root boot problems, I've had a
+look at my kernel (2.4.3) .config file options for the initrd.  Since my
+lilo.conf file has the RAM disk size set to 8192, would the kernel
+setting (4096) get in the way of this?
 
-I've followed the lvm-howto on how to create a root filesystem.
-
-I've created a partition on the 2nd disk (/dev/sdb1), converted it to a
-PV.
-
-I've created a VG (/dev/vg) & LV (/dev/vg/root) on that disk.
-
-I've copied the contents of my non-LVM root partition over to the LV -
-(find / -xdev | cpio -pvmd /mnt/tmp)
-
-I've moved /etc/lilo.conf to my /boot partition, and created a symlink
-to /boot/lilo.conf in /etc.
-
-I've created an initial RAMdisk on /boot -  (/boot/initrd-lvm-2.4.3.gz).
-I created one RAM disk initially to see how it worked, then ran the
-"lvmcreate_initrd" again once my LVol was created (and the files copied
-across).
-
-I've altered my lilo.conf to look like - .....
-
-[rupert@localhost rupert]$cat /etc/lilo.conf
-boot=/dev/sda
-map=/boot/map
-install=/boot/boot.b
-prompt
-timeout=50
-linear
-default=linux-2_4
-message=/boot/message
-
-image=/boot/vmlinuz-2.2.16-22
-	label=linux-2_2
-	initrd=/boot/initrd-2.2.16-22.img
-	read-only
-	root=/dev/sda5
-	append="mem=384M"
-
-image=/boot/vmlinuz-2.4.3
-	label=linux-2_4
-	read-only
-	root=/dev/sda5
-	append="mem=384M"
-
-image=/boot/vmlinuz-2.4.3
-	initrd=/boot/initrd-lvm-2.4.3.gz
-	root=/dev/vg/root
-	label=lvm
-	append="mem=384M ramdisk_size=8192"
-
-#image=/usr/src/linux/arch/i386/boot/bzImage
-#	label=linux_test
-#	read-only
-#	root=/dev/sda5
-#	append="mem=384M"
+CONFIG_BLK_DEV_LOOP=y
+CONFIG_BLK_DEV_NBD=m
+CONFIG_BLK_DEV_RAM=y
+CONFIG_BLK_DEV_RAM_SIZE=4096
+CONFIG_BLK_DEV_INITRD=y
 
 
-...... And I've run lilo of course.
+On 22 May 2001 12:02:03 -0400, Rupert Heesom wrote:
+> I've been practicing LVM techniques on a spare 2nd disk which I'm adding
+> to my root file system using LVM.  I think I've got the hang of how LVs,
+> PVs, and VGs work.
 
-
-
-Now, when I boot up into the LVM partition, I get the following error
-msgs -
-
-lvm - Module successfully initialised.
-/sbin/vgscan: sed: command not found.
-/sbin/vgscan: /lib/lvm-iop10/: is a directory
-/sbin/vgscan: exec: /lib/lvm-iop10/: cannot execute:  permission denied.
-
-/sbin/vgchange:  <same msgs>
-
-Obviously the kernel can't find the LVM tools.  Would these not be
-included in the lvm initrd?  If they are, and the kernel still can't
-find them, what do I change so that the kernel CAN find the LVM tools?
-
-Tnx for any help.
-
-I'M NEARLY THERE!!
+> 
+> Now, when I boot up into the LVM partition, I get the following error
+> msgs -
+> 
+> lvm - Module successfully initialised.
+> /sbin/vgscan: sed: command not found.
+> /sbin/vgscan: /lib/lvm-iop10/: is a directory
+> /sbin/vgscan: exec: /lib/lvm-iop10/: cannot execute:  permission denied.
+> 
+> /sbin/vgchange:  <same msgs>
+> 
+> Obviously the kernel can't find the LVM tools.  Would these not be
+> included in the lvm initrd?  If they are, and the kernel still can't
+> find them, what do I change so that the kernel CAN find the LVM tools?
 
 -- 
 regs
