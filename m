@@ -1,10 +1,8 @@
-From: jon@kollegiegaarden.dk
-Subject: Re: [linux-lvm] Raid or backups
-Message-ID: <20031121210831.GA664@kollegiegaarden.dk>
-References: <20031121172915.GN10912@riseup.net>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20031121172915.GN10912@riseup.net>
+Message-ID: <3FBE18CE.1020508@icaro.com.br>
+From: Hugo Kawamorita de Souza <hugo@icaro.com.br>
+MIME-Version: 1.0
+Subject: [linux-lvm] Rezising root ("/") partition
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,88 +13,133 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Fri Nov 21 15:13:01 2003
+Date: Fri Nov 21 15:45:02 2003
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="iso-8859-1"; format="flowed"
 To: linux-lvm@sistina.com
 
-On Fri, Nov 21, 2003 at 11:29:15AM -0600, Micah Anderson wrote:
-> I am trying to decide what the best way to deal with backups on a LVM
-> system is.
-
-backup like any other system.
-
-
-[cut]
-
-> I don't like a machine that is dependant on one disk any more than the
-> next guy, so I put another 120gig disk in the machine, thinking I
-> would raid the two together. After reading months of list archives, I
-> am seeing that building a raid array on the system at this point is
-> not going to be straightforward, especially since the machine is in
-> production. It seems the best method for doing this would be to build
-> up md raid devices, layer LVM on top of the md's and then create
-> filesystems, this isn't easy if you already have things up and running
-> (although I am interested to hear if people have done this, and if so,
-> how).
-
-it is very easy, i do it all the time because the debian woody
-installer doesnt support a raided install.
-Read the software raid howto.
-Then read the LVM howto.
-Particular:
-http://www.tldp.org/HOWTO/Software-RAID-HOWTO-4.html#ss4.4
-http://www.tldp.org/HOWTO/Software-RAID-HOWTO-4.html#ss4.10
-http://www.tldp.org/HOWTO/Software-RAID-HOWTO-4.html#ss4.11
-http://www.tldp.org/HOWTO/Software-RAID-HOWTO-4.html#ss4.12
-use method 2
-Mark it failed
-After this, you either spend time doing this 
-	find . -xdev | cpio -pm /mnt/newroot
-which is a waste of time, since this is a LVM system
-
-http://tldp.org/HOWTO/LVM-HOWTO/x546.html
-http://tldp.org/HOWTO/LVM-HOWTO/x662.html
-http://tldp.org/HOWTO/LVM-HOWTO/removeadisk.html
+Keywords to this subject: Linux LVM , root ( / ) partition / directory /=20
+filesystem rezize , vgreduce problem , filesystem / superblock info size =
+greater=20
+than VG size , fsck ,  etc.
 
 
-So really, it is not a problem. If you want to, you can catch me
-at irc.oftc.net at #vserver, and i'll walk you through it.
+Hello guys,
+
+I just would like write down the expirience I had yesterday, actually it =
+spent=20
+the whole night, trying to resize a main file server root partition.
+
+Our server runs a RedHat Linux 9.
+My main difficulty was to umount the / partition in order to resize its=20
+filesystem. So I used the shell from the installation CD. I did the whole=
+ steps=20
+using that CD shell: create a new partition PV (I did not rebooted after =
+this!=20
+Maybe it was the great fault), extended the VG, exnteded the LV and resiz=
+ed the=20
+filesystem. Then, I mounted the / partiton, executed a "df" which showed =
+the new=20
+size of the / filesystem. So I rebooted the system, without the CD. And t=
+he nthe=20
+terrifying error: "the superblock says that the / filesystem has NEW_BIG_=
+SIZE=20
+blocks, but the it only has OLD_SMALL_SIZE physical blocks. The partition=
+ table=20
+or the superblock information is wrong. run fsck to correct the error...".
+So I gave the root password and tried to see what's happened. After all I=
+ found=20
+out that the new PV was contained in the root VG, the root VG had the new=
+ big=20
+size, the filesystem also had the new size, but if I remembered it right,=
+ the=20
+root LV was with the old small size and also the "allocable(?, or somethi=
+ng=20
+like)" size of the root VG was the old small one. I could not resize the =
+root=20
+filesystem and the root LV again and I could not remove the new PV from t=
+he root=20
+VG either. I tried to do "pvmove", etc, I just could do anything, and eve=
+ry scan=20
+and display said the thaere was no inconsistency. I knew about vgcfgresto=
+re, but=20
+I was not able to make it work correctly.
+
+Any way, let me try to try explain my solution too. 2 threads that helped=
+ me to=20
+figured out:
+
+Fixing a VG with an empty borked PV
+  http://lists.sistina.com/pipermail/lvm-devel/2003-March/001195.html
+
+Help! unable to mount lv's - can't see why!
+  http://lists.sistina.com/pipermail/linux-lvm/2002-September/012263.html
+
+Using the rescue from the installtion CD, I had the thought to rollback w=
+hat I=20
+have done, but I just could not remove the dammed new PV from the root VG=
+. After=20
+a long time (I started all this at 7:00h PM of 2003-11-20, it was already=
+ 2:00 AM=20
+of 2003-11-21 and just finished all this at 4:15 AM of 2003-11-21) and af=
+ter I=20
+did a backup of all our changed data on thsi server, I could try to do so=
+me=20
+operations not being so afraid. The root VG had already 2 partition PVs a=
+nd I was=20
+trying to add another one. At some time, I was able to go vgcfgrestore of=
+ the=20
+root VG from /etc/lvmconf to the first 2 PVs. This backup was done automa=
+tically=20
+at some time before where the new PV was not contained the root VG. After=
+ the=20
+restore the root VG information show that the new PV was not in the root =
+VG and=20
+the pvscan was saying that the new PV was in the root VG but it was INACT=
+IVE:=20
+that was a good news for me. At this time I decided to delete that PV par=
+tition=20
+with fdisk,  after thsi the root VG has gone in inconsistency, so I did t=
+he=20
+vgcfgrestore again to the first 2 PVs and the VG became consistent again,=
+ GREAT!=20
+After thsi I was able to do all the process again:
+
+_ using the Rescue CD
+_ create the new partition again using fdisk
+_ pvcreate
+_ vgextend
+_ resize the LV and the filesystem with e2fsadm (without, ignoring fsck, =
+which=20
+reports some inconsistencies due the superblock stuff...)
+
+After this I did a vgcfgbackup and copied it to my real /etc/lvmconf. I a=
+lso=20
+copied the file /etc/lvmtab.d/<ROOT_VG> to my rela /etc/lvmtab.d .
+
+Here I leave a question: is this really necessary? It worked for me after=
+ this,=20
+but I do not know if the LVM information goes to the correct place, so th=
+at after=20
+booting without the Rescue CD it will be effective.
+
+So, my last night and my sleeping hours were spent with this...
+
+I hope this could help someone else.
 
 
-> In addtion, I feel as if backup up the system is a higher priority
-> than having disk redundancy (mirrored corrupt data is worse for my
-> situation than a disk failure and recovery time).
-
-do both, both mirror and backup.
+Bye.
 
 
-> It is simple for me to take a disk backup of the non LVM partitions (I
-> use StoreBackup), but I am somewhat puzzled about the best direction
-> to go with the LVM volumes. Should I back them up just like any other
-> partition and not let the LVM bother me? What about the LVM metadata
-> and if I needed to restore from this backup?
+Hugo K.S.
+LPI ID: LPI000032731
 
-I would either take filesystem backup, or the partition containing the LVM
-system. But... setting up a LVM system does not take long, so just do the
-filesystem on file level, not blocklevel.
-
-
-> Would taking snapshots be more advisable? The data in these partitions
-> changes fairly raipidly. If I were to do snapshots, does it make sense
-> to make the snapshot onto my backup disk (hdc) and then back up that
-> snapshot onto the backup disk (hdc again), and then destroy the
-> snapshot? Or is it a waste to snapshot to a different disk entirely,
-> should I instead keep the snapshot to the same volume it is on? Or
-> does it not matter at all because snapshots don't actually do much
-> disk work until you start accessing the data?
-
-Snapshots MIGHT degrade your performance, but they are good if
-you run a database, then you can shut it down, take a snapshot
-and start it up again.
-
-
-
-
-JonB
+--=20
+-------------------------------------------------------------------------=
+----
+Hugo K. de Souza                =CDcaro Technologies
+Software Consultant             http://www.icaro.com.br
+mailto:hugo@icaro.com.br        Av. Bar=E3o de Itapura, 950, 8o andar, Bo=
+tafogo
+Work: +55 19 3237-7878 Ext: 248 Campinas, SP, Brazil
+Fax: +55 19 3237-7008           CEP: 13020-431
