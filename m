@@ -1,11 +1,12 @@
 Return-Path: <root@srv.sistina.com>
-Date: Wed, 30 May 2001 11:24:23 +0200
+Date: Wed, 30 May 2001 11:28:09 +0200
 From: "Heinz J. Mauelshagen" <Mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] Problem extending a LV
-Message-ID: <20010530112423.B30938@sistina.com>
-References: <20010529120104.C29771@sistina.com> <Pine.LNX.4.33.0105291333520.8330-100000@UberGeek.coremetrics.com>
+Subject: Re: [linux-lvm] Re: Help! Upgrade 2.2.18 -> 2.4.4 killed a PV
+Message-ID: <20010530112809.C30938@sistina.com>
+References: <20010529010628.E1971@jensbenecke.de> <20010529093436.A792@jensbenecke.de> <20010529211128.B27030@sistina.com> <20010529214021.A1594@jensbenecke.de>
 Mime-Version: 1.0
-In-Reply-To: <Pine.LNX.4.33.0105291333520.8330-100000@UberGeek.coremetrics.com>; from austin@coremetrics.com on Tue, May 29, 2001 at 01:35:07PM -0500
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20010529214021.A1594@jensbenecke.de>; from lvm@jensbenecke.de on Tue, May 29, 2001 at 09:40:21PM +0200
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,72 +18,68 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="iso-8859-1"
 To: linux-lvm@sistina.com
 
-On Tue, May 29, 2001 at 01:35:07PM -0500, Austin Gonyou wrote:
-> Are there plans to have this functionality?
+On Tue, May 29, 2001 at 09:40:21PM +0200, Jens Benecke wrote:
+> On Tue, May 29, 2001 at 09:11:28PM +0000, Heinz J. Mauelshagen wrote:
+> >=20
+> > Jens,
+> > you need to run pvcreate on the invalid PV before running vgcfgrestore.
+>=20
+> I did so.=20
+>=20
+> Now I have a PV that is associated to an unknown VG, and vgcfgrestore says
+>=20
+> 	vgcfgrestore -- size of physical volume /dev/hdc1 differs from backup
+> =20
+> although 'vgcfgrestore -n data -ll' and 'pvdata -PP /dev/hdc1' show EXACT=
+LY
+> the same amount of extents (used/free/..), and GB. And hdc1 certainly
+> didn't change in size.
+>=20
+> Strange: BOTH vgcfgrestore and pvdata -PP know that the PVs belong to the
+> VG "data", but vgscan doesn't find it, and pvscan says both belong to an
+> unknown VG and I should run vgscan.
 
-Yes, as mentioned in my other related mail.
+If pvdata still tells you, that the PV belongs to some VG it hasn't created
+a new one, likely because your didn't use "pvcreate -ff".
 
-> As in, I have a 2 disk striped
-> set, and now I'm running out of space, so I add a third pv, and now I want
-> to restripe and extend onto the third disk? I ask because Veritas has this
-> ability, and it could be a deal breaker for some choosing which to use.
+Does "pvcreate -ff"/vgcfgrestore help it?
 
-All right, that's one reason why we want to have it.
-A post 1.0 feature though :-(
+BTW: WRT to your hex dump; see my other answer.
 
-Regards,
-Heinz    -- The LVM Guy --
-
-> 
-> -- 
-> Austin Gonyou
-> Systems Architect, CCNA
-> Coremetrics, Inc.
-> Phone: 512-796-9023
-> email: austin@coremetrics.com
-> 
-> On Tue, 29 May 2001, AJ Lewis wrote:
-> 
-> > On Tue, May 29, 2001 at 11:33:54AM +0200, Carsten Balzer wrote:
-> > > If I try to extend the LV with:
-> > > lvextend -L+78164M /dev/NVolGroup/nVol
-> > > then I get:
-> > > lvextend -- rounding size 240119808 KB to stripe boundary size
-> > 240123904
-> > > KB
-> > > lvextend -- only 19541 free physical extents in volume group
-> > "NVolGroup"
-> > >
-> > > Next try with: lvextend -l+19541 /dev/NVolGroup/nVol
-> > > lvextend -- rounding size 240119808 KB to stripe boundary size
-> > 240123904
-> > > KB
-> > > lvextend -- only 19541 free physical extents in volume group
-> > "NVolGroup"
-> >
-> > You cannot currently extend a striped LV onto a new disk.  It would
-> > involve
-> > completely rearranging the data to account for the new striping
-> > configuration.  The reason you get the error is because the tools know
-> > this
-> > and are trying to extend on the two original PVs.  If you want to have
-> > the
-> > ability to extend the LV onto new disks, you must use linear LVs.
-> >
-> > Regards,
-> >
-> 
+>=20
+>=20
+> So, I am a little further but not yet there =3D;)
+>=20
+>=20
+> Thanks for the help!
+>=20
+> --=20
+> Jens Benecke             /* Nobody will ever see this error message :-) */
+>                             panic("Cannot initialize video hardware\n");
+>                                   -- Linux 2.0.38,  arch/m68k/atari/atafb=
+.c
+> http://www.hitchhikers.de/ - Die kostenlose Mitfahrzentrale f=EF=BF=BDr g=
+anz Europa
 > _______________________________________________
 > linux-lvm mailing list
 > linux-lvm@sistina.com
 > http://lists.sistina.com/mailman/listinfo/linux-lvm
 > read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
 
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+--=20
+
+Regards,
+Heinz    -- The LVM Guy --
+
+*** Software bugs are stupid.
+    Nevertheless it needs not so stupid people to solve them ***
+
+=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D=
+-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=
+=3D-=3D-
 
 Heinz Mauelshagen                                 Sistina Software Inc.
 Senior Consultant/Developer                       Am Sonnenhang 11
@@ -90,4 +87,6 @@ Senior Consultant/Developer                       Am Sonnenhang 11
                                                   Germany
 Mauelshagen@Sistina.com                           +49 2626 141200
                                                        FAX 924446
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D=
+-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=
+=3D-=3D-
