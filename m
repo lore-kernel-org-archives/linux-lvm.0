@@ -1,10 +1,14 @@
-Return-Path: <adilger@turbolinux.com>
-From: Andreas Dilger <adilger@turbolinux.com>
-Message-Id: <200103201925.f2KJPVm02621@webber.adilger.int>
+Return-Path: <lewis@sistina.com>
+Date: Tue, 20 Mar 2001 13:31:11 -0600
+From: AJ Lewis <lewis@sistina.com>
 Subject: Re: [linux-lvm] vgscan won't recognize my VG
-In-Reply-To: <3AB7A6F4.4EFA644D@in.tum.de> from David Vidal Rodriguez at "Mar
- 20, 2001 07:52:37 pm"
-Date: Tue, 20 Mar 2001 12:25:30 -0700 (MST)
+Message-ID: <20010320133111.C14965@sistina.com>
+References: <200103192037.f2JKbQn17560@webber.adilger.int> <3AB7A6F4.4EFA644D@in.tum.de> <20010320202353.A1300@dardhal.mired.net>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="4ZLFUWh1odzi/v6L"
+Content-Disposition: inline
+In-Reply-To: <20010320202353.A1300@dardhal.mired.net>; from jdomingo@internautas.org on Tue, Mar 20, 2001 at 08:23:53PM +0000
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,141 +20,52 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-David Vidal R. (vidalrod@in.tum.de) writes:
-> OK, I have compiled the beta6 tools.
-> 
-> 1) How do I know if the clean linus-2.4.0 kernel has a beta2 lvm module?
+--4ZLFUWh1odzi/v6L
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-cat /proc/lvm/global will tell you.
+On Tue, Mar 20, 2001 at 08:23:53PM +0000, Jos? Luis Domingo L?pez wrote:
+> On Tuesday, 20 March 2001, at 19:52:37 +0100,
+> David Vidal Rodriguez wrote:
+>=20
+> > OK, I have compiled the beta6 tools.
+> >=20
+> > 1) How do I know if the clean linus-2.4.0 kernel has a beta2 lvm module?
+> >=20
+> Do a "dmesg" once the LVM code is in memory. LVM version should be there.
 
-> 2) And how do I repair the UUIDs of my PVs?
+Or 'head -1 /proc/lvm/global' - I always forget that's there.
 
-You should be able to do "vgcfgrestore" and it will write the UUIDs to
-disk correctly (creating new ones if needed).
+--=20
+AJ Lewis
+Sistina Software Inc.                  Voice:  612-379-3951
+1313 5th St SE, Suite 111              Fax:    612-379-3952
+Minneapolis, MN 55414                  E-Mail: lewis@sistina.com
+http://www.sistina.com
 
-> 3) Could you tell me where can I download the patch you mentioned?
+Current GPG fingerprint =3D 3B5F 6011 5216 76A5 2F6B  52A0 941E 1261 0029 2=
+648
+Get my key at: http://www.sistina.com/~lewis/gpgkey
+ (Unfortunately, the PKS-type keyservers do not work with multiple sub-keys)
 
-Patch below.  Only needed if you have < beta6 kernel code.  It probably
-should be put into the standard tools, however, because a lot of people
-are still using beta2 kernel code.
+-----Begin Obligatory Humorous Quote----------------------------------------
+Carpe Aptenodytes! (Seize the Penguins!)
+-----End Obligatory Humorous Quote------------------------------------------
 
-Cheers, Andreas
-=========================================================================
-diff -u -u -r1.2.2.8 vg_create_remove.c
---- tools/lib/vg_create_remove.c	2001/02/20 11:52:44	1.2.2.8
-+++ tools/lib/vg_create_remove.c	2001/03/16 16:54:54
-@@ -36,57 +36,63 @@
- 
- #include <liblvm.h>
- 
--/* internal function */
--int vg_create_remove ( char *, vg_t *, int);
-+static int vg_create_remove ( const char *lvm_dev_name, vg_t *vg, int ioc)
-+{
-+   int lvm_dev;
-+   int ret = 0;
- 
-+   if ( ( lvm_dev = open ( lvm_dev_name, O_RDWR)) == -1)
-+      ret = -LVM_EVG_CREATE_REMOVE_OPEN;
-+   else {
-+      debug ( "vg_create_remove -- IOCTL %x on %s with VG ptr %p\n",
-+	      ioc, lvm_dev_name, vg);
-+      if ( ( ret = ioctl ( lvm_dev, ioc, vg)) == -1)
-+         ret = -errno;
-+      debug ( "vg_create_remove -- IOCTL returned: %d\n", ret);
-+      close ( lvm_dev);
-+   }
- 
--int vg_create ( char *vg_name, vg_t *vg) {
--   return vg_create_remove ( vg_name, vg, VG_CREATE);
-+   return ret;
- }
- 
- 
--int vg_remove ( char *vg_name) {
--   return vg_create_remove ( vg_name, NULL, VG_REMOVE);
--}
-+int vg_create ( vg_t *vg)
-+{
-+   int ret;
-+
-+   debug_enter ( "vg_create -- CALLED with VG %s\n", vg ? vg->vg_name: "NULL");
-+
-+   ret = vg_check_consistency ( vg);
-+   if (ret == 0) {
-+      ret = vg_create_remove ( LVM_DEV, (void *)vg, VG_CREATE);
-+#ifdef VG_CREATE_OLD
-+      if (ret == -EINVAL) {
-+         char lvm_dev_name[NAME_LEN];
- 
--
--int vg_create_remove ( char *vg_name, vg_t *vg, int cr) {
--   int lvm_dev = -1;
--   int ret = 0;
--	char lvm_dev_name[NAME_LEN];
--
--   debug_enter ( "vg_create_remove -- CALLED\n");
-+         sprintf ( lvm_dev_name, LVM_DIR_PREFIX "%s/group", vg->vg_name);
-+         ret = vg_create_remove ( lvm_dev_name, (void *)vg, VG_CREATE_OLD);
-+      }
-+#endif
-+   }
- 
--   switch ( cr) {
--      case VG_CREATE:
--	 strcpy(lvm_dev_name, LVM_DEV);
--	 if ( vg_name == NULL ||
--              vg == NULL ||
--              vg_check_name ( vg_name) < 0 ||
--              vg_check_consistency ( vg) < 0) ret = -LVM_EPARAM;
--         break;
--
--      case VG_REMOVE:
--         sprintf(lvm_dev_name, LVM_DIR_PREFIX "%s/group", vg_name);
--         if ( vg_name == NULL ||
--              vg_check_name ( vg_name) < 0) ret = -LVM_EPARAM;
--         break;
-+   debug_leave ( "vg_create -- LEAVING with ret: %d\n", ret);
-+   return ret;
-+}
- 
--      default:
--         ret = -LVM_EPARAM;
--   }
-+int vg_remove ( char *vg_name)
-+{
-+   int ret;
-+
-+   debug_enter ( "vg_remove -- CALLED with VG %s\n", vg_name);
-+
-+   ret = vg_check_name ( vg_name);
-+   if (ret == 0) {
-+      char lvm_dev_name[NAME_LEN];
- 
--   if ( ret == 0) {
--      if ( ( lvm_dev = open ( lvm_dev_name, O_RDWR)) == -1)
--         ret = -LVM_EVG_CREATE_REMOVE_OPEN;
--      else {
--         debug ( "vg_create_remove -- IOCTL\n");
--         if ( ( ret = ioctl ( lvm_dev, cr, vg)) == -1) ret = -errno;
--         debug ( "vg_create_remove -- IOCTL returned: %d\n", ret);
--      }
--      if ( lvm_dev != -1) close ( lvm_dev);
-+      sprintf ( lvm_dev_name, LVM_DIR_PREFIX "%s/group", vg_name);
-+      ret = vg_create_remove ( lvm_dev_name, NULL, VG_REMOVE);
-    }
- 
--   debug_leave ( "vg_create_remove -- LEAVING with ret: %d\n", ret);
-+   debug_leave ( "vg_remove -- LEAVING with ret: %d\n", ret);
-    return ret;
- }
+--4ZLFUWh1odzi/v6L
+Content-Type: application/pgp-signature
+Content-Disposition: inline
 
--- 
-Andreas Dilger  \ "If a man ate a pound of pasta and a pound of antipasto,
-                 \  would they cancel out, leaving him still hungry?"
-http://www-mddsp.enel.ucalgary.ca/People/adilger/               -- Dogbert
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.0.4 (GNU/Linux)
+Comment: For info see http://www.gnupg.org
+
+iD8DBQE6t6//pE6/iGtdjLERAjNwAJ4ij/IMI3bOmV49sWHmVfuN6dIKzQCeLS5m
+XrVzY6UpPfRZ/guJSUdcHyk=
+=3/aG
+-----END PGP SIGNATURE-----
+
+--4ZLFUWh1odzi/v6L--
