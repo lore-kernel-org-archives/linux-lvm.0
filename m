@@ -1,46 +1,53 @@
-Date: Sun, 25 Apr 1999 19:55:04 +0100 (GMT)
-From: Tony Rogers <tony@racsys.demon.co.uk>
-Subject: [linux-lvm] Solved(?) System locks solid
-Message-ID: <Pine.LNX.4.04.9904251512570.2939-100000@racsys.demon.co.uk>
-MIME-Version: 1.0
+Message-Id: <199904251902.AA03482@mailgate1b.telekom.de>
+From: Heinz Mauelshagen <mauelsha@ez-darmstadt.telekom.de>
+Subject: Re: [linux-lvm] vgscan & vgchange -a y location in startup scripts
+Date: Sun, 25 Apr 1999 21:02:10 METDST
+In-Reply-To: <37234DCA.C4B73BC7@geotec.net>; from "Eric Smith" at Apr 25, 99 12:15 (noon)
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: LVM Mailing List <linux-lvm@msede.com>
+To: Eric Smith <seric@geotec.net>
+Cc: mge@ts1.ez-darmstadt.telekom.de, linux-lvm@msede.com
 
-Hello All,
 
-As promised, here are the findings of my experiments into trying to solve
-my lock-up problems, which have been plaguing me over the last few weeks.
+<SNIP>
 
-Basically, under LVM the system was locking solid, but not without it!
+> 
+> Thank you SO much.  I appreciate your prompt reply AND your hard work on this
+> product!
 
-The main suggestions from the list were that there was either a
-hardware/configuration problem, or perhaps a compiler problem.
+Thank you!
 
-There were no obvious conflicts IRQs etc, and even removing all but the
-most essential cards from the system did not help!
+> One more question:
+> 
+> To use lvreduce do I still need that Partition Magic file?  I don't believe that
+> is going to work
+> for me on the Alpha...
 
-The instructions which came with a PCI Ethernet card which I bought
-recently said that "Any PCI video card should be installed in the LAST PCI
-slot, and the Ethernet card in the FIRST slot".
+No, im' afraid you're right:
+it doesn't work on the Alpha because there only is an Intel binary available.
 
-To cut a long story short, I experimented by moving my PCI SCSI card
-around, from slot to slot, and timing how long it took to lock.
+But you don't need it, if you don't run the e2fsadm LVM command.
 
-That in conjunction with resetting all my motherboard settings to the
-factory defaults (as a precaution - I haven`t deliberately changed them)
-seems to have had a beneficial effect.
+lvreduce and lvextend work without an installed resize2fs but they _don't_
+extend or reduce a contained ext2 fs 8*(
 
-I am currently typing this on a home networked PC attached to my machine
-running LVM. It`s been up for nearly 7 hours now - a record!
+Regards,
+Heinz
 
-I`m not totally happy about the situation - maybe it`s time to change my
-old VX motherboard!
+--
 
-Many thanks for your support - I may be back!
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
-Tony Rogers
-===========
+Systemmanagement C/S                             Deutsche Telekom AG
+                                                 Entwicklungszentrum Darmstadt
+Heinz Mauelshagen                                Otto-Roehm-Strasse 71c
+Senior Systems Engineer                          Postfach 10 05 41
+                                                 64205 Darmstadt
+mge@ez-darmstadt.telekom.de                      Germany
+                                                 +49 6151 886-425
+                                                          FAX-386
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
