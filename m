@@ -1,9 +1,9 @@
 Return-Path: <root@srv.sistina.com>
-Date: Tue, 1 May 2001 10:36:30 +0000
+Date: Tue, 1 May 2001 10:38:05 +0000
 From: "Heinz J. Mauelshagen" <Mauelshagen@sistina.com>
-Message-ID: <20010501103630.D24694@sistina.com>
+Message-ID: <20010501103805.E24694@sistina.com>
 Mime-Version: 1.0
-Subject: [linux-lvm] (no subject)
+Subject: [linux-lvm] Patch status update
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -21,12 +21,12 @@ To: linux-lvm@sistina.com, lvm-devel@sistina.com
 
 Hi all,
 
-in order to keep everybody tuned:
+in order to keep everybody tuned about the kernel patch status:
 
-Alan Cox is kindly checking the Linux LVM patch bits now.
+Alan Cox is kindly checking our LVM kernel patch bits now.
 
-We hope to get a status from him this week and will forward them
-to Linus afer any necessary cleanups ASAP.
+We hope to get a status from him this week and will send them
+to Linus after any necessary cleanup ASAP.
 
 -- 
 
