@@ -1,8 +1,12 @@
-From: Benjamin Scott <bscott@ntisys.com>
+From: Steven Lembark <lembark@wrkhors.com>
 Subject: Re: [linux-lvm] offtopic but ...
-In-Reply-To: <1266960000.1021300755@[192.168.200.4]>
-Message-ID: <Pine.LNX.4.44.0205131123370.6095-100000@dragon.inside.ntisys.com>
+Message-ID: <1288440000.1021303821@[192.168.200.4]>
+In-Reply-To: <Pine.LNX.4.44.0205131053020.6095-100000@dragon.inside.ntisys.com>
+References: <Pine.LNX.4.44.0205131053020.6095-100000@dragon.inside.ntisys.co
+ m>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -13,25 +17,42 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon May 13 10:21:02 2002
+Date: Mon May 13 10:30:02 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: linux-lvm@sistina.com
 
-On Mon, 13 May 2002, at 9:39am, Steven Lembark wrote:
-> The good news is that today's near-term storage hardware (from fiber scsi
-> cards down to the disks) will handle anything short of a nuclear blast
-> without failing miserably. This leaves "full availability" systems as a
-> viable alternative in many cases.
 
-  Hardware failure is not the leading cause of data loss.  User error is.
+-- Benjamin Scott <bscott@ntisys.com>
 
-  All the RAID in the world will not help you if an operator deletes the
-wrong file.
+>   Offline backups are for disaster recovery, not availability.  I think
+> you're trying to say that, but the point is getting confused.  The
+> difference between a small office's and a large bank's disaster recovery
+> plans is the difference between their definitions of "disaster".  A small
+> office probably considers a hard drive failure or OS corruption a
+> "disaster".  A bank thinks more along the lines of "multiple terrorist
+> attacks".
 
--- 
-Ben Scott <bscott@ntisys.com>
-| The opinions expressed in this message are those of the author and do not |
-| necessarily represent the views or policy of any other person, entity or  |
-| organization.  All information is provided without warranty of any kind.  |
+Actually they are more concerned about data corruption
+and audits. The hardend offline facilities are about
+being able to compare known data to what's online or
+meet gov't requirements for audit background. Their rule
+for designing systems is that any one box can get nuked
+without bringing the whole thing down.
+
+This is why I've gotten into the habit of differentiating
+archival storage from backup systems. In most warehousing
+systems people mean "redundant" when they say "backup" (e.g.,
+"a backup power system") and "archival" or "offline" for
+slow storage used to recover from data failures.
+
+Aside: most places have plenty of ways to deal with hardware
+failure. Unless they hire consultants, most never even think
+about how they'll handle data corruption. Hmmm... how about
+"You're not paranoid, the boxes ARE out to get you" as a
+slogan?
+
+--
+Steven Lembark                               2930 W. Palmer
+Workhorse Computing                       Chicago, IL 60647
+                                            +1 800 762 1582
