@@ -1,9 +1,10 @@
-Message-ID: <3DAF1DE5.3060203@comedia.it>
-From: Luca Berra <bluca@comedia.it>
-MIME-Version: 1.0
-Subject: Re: [linux-lvm] Re: problem with lvm on root-fs
-References: <200210170859.03682.sw@global-linxs.de> <20021017071524.GD20994@percy.comedia.it> <200210170935.12777.sw@global-linxs.de>
-Content-Transfer-Encoding: 7bit
+From: =?iso-8859-1?Q?Jos=E9_Luis_Domingo_L=F3pez?= <linux-lvm@24x7linux.com>
+Subject: Re: [linux-lvm] creating a LVM ontop of a cryptated (ppdd) loop back device
+Message-ID: <20021017211217.GB4861@localhost>
+References: <3DAEDEE5.4540B954@silicide.dk>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <3DAEDEE5.4540B954@silicide.dk>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,22 +15,31 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Thu Oct 17 15:31:01 2002
+Date: Thu Oct 17 16:13:01 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Stefan Weigel wrote:
->>>kernel panic: no init found. Try passing init= to...
->>
->>this usually means it couldn't mount your root fs, or got it wrong
->>
->>L.
-> 
-> 
-> Hi,
-> that's right, but where's my problem ? I've used the howto from sistina.com to 
+On Thursday, 17 October 2002, at 18:01:41 +0200,
+Jon Bendtsen wrote:
 
-do you have any hint printed above this?
+> I'm trying to cryptate my filesystems, and be able to take snapshots of
+> them.
+> I cannot get a snapshot of a cryptated LV to work (maybe because it is
+> readonly)
+>
+I haven't tried, but wouldn't it be possible to just take a snapshots
+from a LV containing an encrypted filesystem, and then loop-mount it
+(assuming encrypted via the loop device), give the password, and then
+backup ?
 
-L.
+I think from the loop-aes type of filesystem encryption point of view.
+But as I have said previously, I haven't tried if this works, although
+if my understanding of all these things is OK, should work.
+
+I will try to test this setup tomorrow when I get to work :-)
+
+-- 
+Jose Luis Domingo Lopez
+Linux Registered User #189436     Debian Linux Woody (Linux 2.4.19-pre6aa1)
