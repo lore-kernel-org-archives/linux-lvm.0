@@ -1,11 +1,8 @@
-From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] lvm 0.8 to 1.0 transition?
-Message-Id: <20020227231151.A23040@sistina.com>
-References: <20020227184310.B21636@sistina.com>
-    <Pine.LNX.4.44.0202272123440.21046-100000@www.scotty.co.at>
+From: Anders Widman <andewid@tnonline.net>
+Message-Id: <224974437.20020227233630@tnonline.net>
 MIME-Version: 1.0
-In-Reply-To: <Pine.LNX.4.44.0202272123440.21046-100000@www.scotty.co.at>;
-    from fl@fl.priv.at on Wed, Feb 27, 2002 at 09:25:29PM +0100
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] filesystem corruption...
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,49 +13,26 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Feb 27 16:12:02 2002
+Date: Wed Feb 27 16:36:02 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Wed, Feb 27, 2002 at 09:25:29PM +0100, Friedrich Lobenstock wrote:
-> On Wed, 27 Feb 2002 18:43, Heinz J . Mauelshagen wrote:
-> 
-> > If you want to move the devices over to another system,
-> > vgexport+vgimport is the recommended way to go.
-> 
-> So you mean that there are no known problems with
-> vgexport (lvm 0.8) and vgimport (lvm 1.0)
+Hello everyone...
 
-Yes.
+One of my disks in a LVM volume with ReiserFS has some bad blocks
+(maybe a few MB). I noticed this as all programs (Samba, mc,
+mount/umount etc) trying to access files on those bad blocks
+hang/freeze, an can't be killed. So I had to reboot in order to force
+a unmount of my volume so I could correct my bad blocks (replacing the
+drive).
 
-> 
-> -- 
-> MfG / Regards
-> Friedrich Lobenstock
-> 
-> 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
+Unfortunatley, something went seriously wrong. I can't mount the disk
+any more, or use reiserfsck. They (mount/reiserfsck) say there isn't
+a valid filesystem on the device. Vgscan does however find all devices
+and can activate the volume group, but reiserfsck doesn't work.
 
--- 
+What should I do to be able to save a s much data as possible?
 
-Regards,
-Heinz    -- The LVM Guy --
 
-*** Software bugs are stupid.
-    Nevertheless it needs not so stupid people to solve them ***
-
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-
-Heinz Mauelshagen                                 Sistina Software Inc.
-Senior Consultant/Developer                       Am Sonnenhang 11
-                                                  56242 Marienrachdorf
-                                                  Germany
-Mauelshagen@Sistina.com                           +49 2626 141200
-                                                       FAX 924446
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+//Anders
