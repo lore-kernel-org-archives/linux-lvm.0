@@ -1,8 +1,9 @@
-From: Greg Freemyer <freemyer@NorcrossGroup.com>
-Subject: re[2]: [linux-lvm] e2fsadm and snapshots?
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <20021105210510.EBYF5277.imf17bis.bellsouth.net@TAZ2>
+Message-ID: <3DC85406.C03B0AA0@be.mbn.or.jp>
+From: Miwako Nakai <nickey@be.mbn.or.jp>
+MIME-Version: 1.0
+Subject: Re: [linux-lvm] cache buffer size
+References: <3DC1EFFC.A0EEBAFD@be.mbn.or.jp> <20021105151020.D27825@sistina.com>
+Content-Transfer-Encoding: 7bit
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -13,59 +14,65 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Tue Nov  5 15:04:01 2002
+Date: Tue Nov  5 17:29:02 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Type: Text/plain; charset="us-ascii"
-To: LVM Mailing list <linux-lvm@sistina.com>linux-lvm@sistina.com
+Content-Type: text/plain; charset="us-ascii"
+To: linux-lvm@sistina.com
 
- >>  On Nov 05, 2002  12:24 -0500, Greg Freemyer wrote:
- >>  > Andreas Dilger wrote:
- >>  > >  I would suggest putting your snapshot LV onto a separate disk and see
- >>  how
- >>  > >  that does.
- >>  >
- >>  > Can that be done?
- >>  >=20
- >>  > I thought the snapshot LV had to share the same VG/PV as the base LV.
+Thank you, Mr.Mauelshagen
 
- >>  Same VG, but it can be on any PV therein.
+JFS can not have fixed block size. But I heard from JFS group in IBM
+that on 2.5 or later it will be improved. I do not know JFS will have
+fixed block size or not. They said 'improved'.
 
- >>  > Is there some way to force the snapshot on to separate physical drives.
+I think LVM(2?) will be able to handle non-consitant block size on
+2.5 well.
 
- >>  You just specify the PV on which to create the snapshot LV.  This is no
- >>  different than any other LV creation, for which you can optionally specify
- >>  the PV(s) on which it is created.
+"Heinz J . Mauelshagen" wrote:
+> 
+> On Fri, Nov 01, 2002 at 12:07:40PM +0900, Miwako Nakai wrote:
+> > I'm using jfs on lvm/raid5 with snapshot.
+> >
+> > When I copy file, it happens frequently
+> > 'raid5: switching cache buffer size XXX -> XXX'.
+> > This message appears to syslog. It caused speed down to access disks.
+> > So, I cut this message. It's seemed ok.
+> 
+> Could be filesystems with different blocksizes accessing the underlying
+> raid5 md through LVM constantly forcing the raid5 stripe cache to be flushed.
+> If that's the case, you want to put filesystems of the _same_ blocksize
+> onto all of the logical volumes allocated to the raid5 device.
+> 
+> Regards,
+> Heinz    -- The LVM Guy --
+> 
+> >
+> > But it's still going to switch cache buffer size. I think it cost
+> > some cpu time. When switching buffer cache size, it always happen
+> > reflushing memories.
+> >
+> > I want to fix buffer size. What shall I do?
+> > I asked JFS group. But they do nothing about cache buffer.
+> >
+> > kernel 2.4.20-pre10-ac2
+> > lvm    1.0.5
+> > jfs    1.0.23
+> >
+> > --
+> > nakai@ezinc.com
+> 
+> *** Software bugs are stupid.
+>     Nevertheless it needs not so stupid people to solve them ***
+> 
+> =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+> 
+> Heinz Mauelshagen                                 Sistina Software Inc.
+> Senior Consultant/Developer                       Am Sonnenhang 11
+>                                                   56242 Marienrachdorf
+>                                                   Germany
+> Mauelshagen@Sistina.com                           +49 2626 141200
+>                                                        FAX 924446
+> =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
- >>  Cheers, Andreas
- >>  --
- >>  Andreas Dilger
- >>  http://www-mddsp.enel.ucalgary.ca/People/adilger/
- >>  http://sourceforge.net/projects/ext2resize/
-
-Andreas,
-
-I'm running lvm 1.0.3.  Assuming this has the feature you describe, I assume =
-the PV goes in the "PhysicalVolumePath" argument.
-
-This is not described in my man entry.
-
-Would the below be correct?
-
-pvcreate /dev/sd1  /dev/sd2        #  sd1 =3D 3ware raid,   sd2 =3D physical =
-drive.
-
-vgcreate MYvg /dev/sd1 /dev/sd2
-
-lvcreate -L 2G -n data MYvg /dev/sd1
-
-lvcreate --snapshot --size 1G --name data_snap "/dev/MYvg/scratch"  /dev/sd2
-
-Thanks for bringing this "new to me" capability to my attention.
-
-Greg Freemyer
-Internet Engineer
-Deployment and Integration Specialist
-Compaq ASE - Tru64 v4, v5
-Compaq Master ASE - SAN Architect
-The Norcross Group
-www.NorcrossGroup.com
+--
+nakai@ezinc.com
