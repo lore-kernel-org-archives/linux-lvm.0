@@ -1,8 +1,10 @@
-Return-Path: <urs@isnogud.escape.de>
-From: Urs Thuermann <urs@isnogud.escape.de>
-Date: 26 Feb 2001 17:04:41 +0100
-Message-ID: <m2pug5ph0m.fsf@isnogud.escape.de>
-Subject: [linux-lvm] LVM and striping, defragmentation
+Return-Path: <adilger@turbolinux.com>
+From: Andreas Dilger <adilger@turbolinux.com>
+Message-Id: <200102261729.f1QHTAZ10614@webber.adilger.net>
+Subject: Re: [linux-lvm] Slackware init
+In-Reply-To: <20010226082718.B1481@sistina.com> from AJ Lewis at "Feb 26, 2001
+ 08:27:18 am"
+Date: Mon, 26 Feb 2001 10:29:09 -0700 (MST)
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -19,31 +21,39 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-I'd like to experiment with LVM and striping.  The HOWTO at
-www.linuxdoc.org says in section 8.3 LVM native striping
+AJ Lewis writes:
+> On Mon, Feb 26, 2001 at 07:08:55AM -0500, ardy@rdb.linux-help.org wrote:
+> > On Sun, 25 Feb 2001, AJ Lewis wrote:
+> > 
+> > > Are you by chance using a 2.4.x kernel with devfs support compiled in, but
+> > > not being mounted?  I am seeing the same thing with that setup.
+> > 
+> > Yes, 2.4.2, no devfs.
+> 
+> I think the issue is that /proc is not yet mounted when you call vgscan.
+> If you look at the tools/lib/lvm_dir_cache.c file at line 90, you will
+> see that it checks for /proc/partitions.  If it finds that, it only scans
+> the files in /proc/partitions.  Otherwise, it goes through all the possible
+> devices LVM recognizes. 
+> 
+> So if you can get /proc mounted before you call vgscan, it should not take
+> so long, nor should it scan for all those devices you do not have on your
+> system.
 
-    Performance notices
+It is also worth mentioning that until beta5, the lvm_dir_cache() function
+did not cache any of the device entries.  This means that any time you wanted
+to get a list of PVs (which happens quite often if you have multiple VGs),
+it would do the full scan of /dev again.
 
-    The performance 'gain' may well be very negative if you stripe over 2
-    partitions of the same disk - take care to prevent that.
+Even with the proper lvm_dir_cache() operation in beta5, it still takes me
+55 seconds on my laptop with a full /dev/ide (COMPAQ_SMART2) and /dev/rd
+(DAC960), and only 4.5 seconds without these devices.  If you don't have
+these devices, feel free to delete the directories.  For the next version
+of the LVM tools, there will likely be a reorganization of this area so that
+the whole thing will be speeded up.
 
-
-How can I take care of it?  I've seen no option in lvcreate to specify
-where the PE should be taken from.  If I have a VG with only two PVs on
-two different disks, will LVM automatically choose PEs from the two
-PVs instead of one PV?  And what if I have a VG with several PVs on
-disk A and several PVs on disk B.  How can I "take care to prevent"
-that LVM does not choose two PEs from the same disk for striping?
-
-
-When I resize my LVs in a VG multiple times, I can get some
-fragmentation, i.e. LVs in the VG are not contiguous.  Is there a tool
-to defragment LVs, i.e. to swap PEs so that all LVs in the VG are
-contiguous again.  I read in the man page that the allocation policy
-can be set to "contiguous", but how can I make LVs contiguous after
-some creating, removing, and resizing of LVs?
-
-How much performance loss is to be expected in case of non-contiguous LVs?
-
-
-urs
+Cheers, Andreas
+-- 
+Andreas Dilger  \ "If a man ate a pound of pasta and a pound of antipasto,
+                 \  would they cancel out, leaving him still hungry?"
+http://www-mddsp.enel.ucalgary.ca/People/adilger/               -- Dogbert
