@@ -1,10 +1,10 @@
-From: Stefan Weigel <sw@global-linxs.de>
-Subject: Re: [linux-lvm] Re: problem with lvm on root-fs
-References: <200210170859.03682.sw@global-linxs.de> <20021018095829.GA687@percy.comedia.it> <200210181241.28210.sw@global-linxs.de>
-In-Reply-To: <200210181241.28210.sw@global-linxs.de>
+Subject: Re: [linux-lvm] Fwd: LVM on ATA-Raid Working - but Poorly
+References: <1034915787.3daf8fcb66a42@mail.dornquast.com>
+	<3DAFB7D4.B88B6737@silicide.dk>
+From: Jason L Tibbitts III <tibbs@math.uh.edu>
+In-Reply-To: Jon Bendtsen's message of "Fri, 18 Oct 2002 09:27:16 +0200"
+Message-ID: <ufaelanvnav.fsf@epithumia.math.uh.edu>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <200210181505.11782.sw@global-linxs.de>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,65 +15,35 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Fri Oct 18 08:03:01 2002
+Date: Fri Oct 18 09:23:02 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Hi Luca!
-I should be happy now but there's still a problem left. First: now I can =
-boot=20
-from my lvm-root-fs (yeeehhaaa). My problem: one line in /etc/lilo.conf=20
-(ramdisk=3D16384 instead of ramdisk=3D8192).
-But if I now want to run lilo I get this message:
+>>>>> "JB" == Jon Bendtsen <jon+lvm@silicide.dk> writes:
 
-Fatal: Sorry, dont know how to handle device 0x3a05
+JB> Unfortunately i forgot to test it with lvm ontop :/
 
-My lilo.conf:
+It works fine:
 
-=2E..
-boot=3D/dev/rd/c0d0
+Total:  1 VG  1 PV  18 LVs (18 LVs open 18 times)
+ 
+Global: 1088155 bytes malloced   IOP version: 10   178 days 23:22:40 active
+ 
+VG:  nas  [1 PV, 18 LV/18 open]  PE Size: 16384 KB
+  Usage [KB/PE]: 1101643776 /67239 total  1101643776 /67239 used  0 /0 free
+  PV:  [AA] sda9                  1101643776 /67239   1101643776 /67239          0 /0
 
-image =3D /boot/vmlinuz
-  root =3D /dev/sysvg/rootlv
-  label =3D lvm
-  initrd =3D /boot/initrd-lvm-2.4.7-4GB.gz
-  ramdisk =3D 16384
-=2E..
+This is a 1TB array on a 3w7850 (now called a 7500-8) card with 8
+Maxtor 160GB disks.  I've made volumes up over 500GB on these, have
+resized volumes and filesystems, deleted volumes, etc. all with the
+machines live and have experienced absolutely no problems.  This
+machine is running (approximately) one of the Red Hat 7.3 beta
+releases.
 
-Best regards
+I also have LVM on top of software RAID5 on top of an old 3w6800 card
+running in JBOD mode with 8 75GB IBM deathstars.  It works fine when
+the disks are actually working (which is rarely).
 
-Stefan Weigel
-
-
-
-Am Freitag, 18. Oktober 2002 12:41 schrieb Stefan Weigel:
-> Am Freitag, 18. Oktober 2002 11:58 schrieb Luca Berra:
-> > On Fri, Oct 18, 2002 at 10:13:56AM +0200, Stefan Weigel wrote:
-> > >Am Donnerstag, 17. Oktober 2002 22:30 schrieb Luca Berra:
-> > >> do you have any hint printed above this?
-> > >
-> > >Hi!
-> > >I don't know exactly what you guess. I've used this one:
-> > >http://tldp.org/HOWTO/LVM-HOWTO/upgraderoottolvm.html
-> >
-> > I meant, could you maybe connect a serial cable and provide the boot
-> > messages up to the kernel panic, or something like that
-> >
-> > i am especially interested whether you have devfs or not,
-> > messages from vgchange and the 'Mounted root' message
-> >
-> > L.
->
-> Oh..ok. This should be no problem. I sent you the output soon.
->
-> Greetings
->
-> Stefan
->
->
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+ - J<
