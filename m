@@ -1,7 +1,12 @@
-From: Robert Macaulay <robert_macaulay@dell.com>
-Message-ID: <Pine.LNX.4.33.0110260000350.23688-100000@ping.us.dell.com>
-MIME-Version: 1.0
-Subject: [linux-lvm] More information on my LV with bad read performance..
+From: Goetz Bock <bock@blacknet.de>
+Subject: Re: [linux-lvm] lvm und promise fasttrack
+Message-ID: <20011026081326.A18287@dragon.blacknet.de>
+References: <3BD849C6.7060308@gmx.de>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-md5;
+	protocol="application/pgp-signature"; boundary="1yeeQ81UyVL57Vl7"
+Content-Disposition: inline
+In-Reply-To: <3BD849C6.7060308@gmx.de>; from jens.tkotz@gmx.de on Thu, Oct 25, 2001 at 07:20:06PM +0200
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -12,63 +17,65 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Fri Oct 26 00:02:02 2001
+Date: Fri Oct 26 01:12:02 2001
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: linux-lvm@sistina.com
+To: Linux-LVM@Sistina.com
 
-I realized I didn't include a lvdisplay -v of my volume. Here it is.
-The disks are spread out over 4 scsi busses. 
-Thanks again.
-
---- Logical volume ---
-LV Name                /dev/vgOracle/foo
-VG Name                vgOracle
-LV Write Access        read/write
-LV Status              available
-LV #                   52
-# open                 0
-LV Size                9.04 GB
-Current LE             2314
-Allocated LE           2314
-Stripes                26
-Stripe size (KByte)    64
-Allocation             next free
-Read ahead sectors     120
-Block device           58:51
-
-   --- Distribution of logical volume on 26 physical volumes  ---
-   PV Name                  PE on PV     reads      writes
-   /dev/sdh1                89           13629      173625
-   /dev/sdi1                89           13616      173386
-   /dev/sdj1                89           13630      173372
-   /dev/sdl1                89           13619      173354
-   /dev/sdm1                89           13625      173369
-   /dev/sdn1                89           13619      173384
-   /dev/sdo1                89           13635      173391
-   /dev/sdp1                89           13632      173387
-   /dev/sdq1                89           13641      173401
-   /dev/sdr1                89           13633      173386
-   /dev/sds1                89           13639      173398
-   /dev/sdt1                89           13633      173388
-   /dev/sdu1                89           13625      173367
-   /dev/sdv1                89           13617      173357
-   /dev/sdw1                89           13625      173367
-   /dev/sdx1                89           13617      173358
-   /dev/sdy1                89           13624      173366
-   /dev/sdz1                89           13618      173354
-   /dev/sdaa1               89           13606      173366
-   /dev/sdab1               89           13600      173388
-   /dev/sdac1               89           13609      173366
-   /dev/sdad1               89           13603      173356
-   /dev/sdae1               89           13609      173364
-   /dev/sdaf1               89           13600      173361
-   /dev/sdag1               89           13607      173366
-   /dev/sdah1               89           13602      173354
-
-   --- logical volume i/o statistic ---
-   354113 reads  4507931 writes
+--1yeeQ81UyVL57Vl7
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
 
---cut--
+Hallo Jens,
+> > ich hab schon wieder ein "Problem".
+Well, it might be a good idea to write your requests to an international
+mailing list in english ...
+so let's translate your questions (not a strict translation)
+
+> > Auf meinem Mainboard ist ein Promise Fasttrack 100 Controller.
+> > Die Festplatten kann ich ueber /dev/hd[e-h] ansprechen.
+> My mainboard features a Promise Fasttrack 100 Controller, and I can
+> access my harddrives as /dev/hd[e-h]
+>=20
+> > Es gibt aber auch die Moeglichkeit das Hardware Raid anzuspechen ueber
+> > /dev/ataraid/d[0-2]px , mit x als Partitionsnummer.
+> But there is also the option to use the hardware raid as
+> /dev/ataraid/d[0-2]px, with x beeing the partition number
+>=20
+> > Beim Aufruf von vgcreate passiert folgendes :
+> when calling vgcreate like this:
+> vgcreate gl_lvm /dev/ataraid/d0p1
+> vgcreate -- physical volume name "/dev/ataraid/d0p1" is invalid
+For this to work, you must first use pvcreate to add the LVM's PV
+information to your device:
+pvcreate /dev/ataraid/d0p1
+
+But this will not help you, as pvcreate checls the device name against a
+list of valid devices, and /dev/ataraid is not port of this (at last not
+in the way outdated 0.9.1beta5 src I've on this system)
+
+OOTH you should not trust the bios based softraid of any of the consumer
+raid devices, it is no hardware raid (not just MHO). If you want to do raid
+with IDE devices, I'd suggest using the kernel based MD drivers, and puttin=
+g=20
+every IDE disk on it's own channel.  =20
+
+--=20
+Goetz Bock                                              IT Consultant
+Dipl.-Inf. Univ.
+
+--1yeeQ81UyVL57Vl7
+Content-Type: application/pgp-signature
+Content-Disposition: inline
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.0.6 (GNU/Linux)
+Comment: For info see http://www.gnupg.org
+
+iD8DBQE72P8Ef5srOMkjkQoRAuNsAJ48AJxbtpoX4v5FSAFySztcjhcIPgCdGi5t
+baszVZH0Q1iN7YKjlOd4KnY=
+=MSUN
+-----END PGP SIGNATURE-----
+
+--1yeeQ81UyVL57Vl7--
