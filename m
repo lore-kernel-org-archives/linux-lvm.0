@@ -1,27 +1,44 @@
-Date: Wed, 5 Jan 2000 23:03:15 +0000 (GMT)
+Date: Wed, 5 Jan 2000 23:30:28 +0000 (GMT)
 From: James Pattinson <jamesp@aethos.co.uk>
 Subject: Re: [linux-lvm] devfs...
 In-Reply-To: <200001052234.XAA14354@u9etz.ez-darmstadt.telekom.de>
-Message-ID: <Pine.LNX.4.10.10001052300530.1224-100000@fuse.aethos.co.uk>
+Message-ID: <Pine.LNX.4.10.10001052326530.1271-100000@fuse.aethos.co.uk>
 MIME-Version: 1.0
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
 Content-Type: TEXT/PLAIN; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: Heinz Mauelshagen <mauelsha@ez-darmstadt.telekom.de>
-Cc: mge@ez-darmstadt.telekom.de, linux-lvm@msede.com
+To: linux-lvm@msede.com
 
-Well I have things working now - my linuxrc actually creates (mknod)
-/dev/sd[a-d] with the correct device numbers. Then the vgscan works and
-real root is mounted. This is all working fine. So I'm now not sure why it
-wasn't working before, if LVM really does know about the devfs naming
-conventions. I did an strace on vgscan and it didn't look at /dev/scsi or
-/dev/discs or anything like that.
+OK I've been looking around - and it seems that the latest devfs doesn't
+have /dev/sd/*  - instead we have lots of weird things, like
+/dev/discs/disc0/* /dev/discs/disc1/* etc ... I've fixed my vgscan but
+adding
 
-Cheers
+   static char *devdir[] = {
+      "/dev/ida",
+      "/dev/ide/hd",
+      "/dev/loop",
+      "/dev/md",
+      "/dev/rd",
+      "/dev/sd",
++     "/dev/discs/disc0",
++     "/dev/discs/disc1",
++     "/dev/discs/disc2",
++     "/dev/discs/disc3",
++     "/dev/discs/disc4",
+      "/dev",
+      NULL
 
-James
+to lvm_dir_cache.c and similar to pv_check_name.c.
+
+It works for me but hopefully devfs will settle down and not keep changing
+soon...
+
+Thanks,
+
+james
 
 On Wed, 5 Jan 2000, Heinz Mauelshagen wrote:
 
