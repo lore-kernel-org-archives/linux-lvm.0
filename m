@@ -1,10 +1,8 @@
-Return-Path: <fl@fl.priv.at>
-Date: Fri, 15 Jun 2001 22:54:17 +0200 (CEST)
-From: Friedrich Lobenstock <fl@fl.priv.at>
-Subject: Re: [linux-lvm] $(DESTDIR) inclusion into Makefile.in files
-In-Reply-To: <20010615091805.A8645@sistina.com>
-Message-ID: <Pine.LNX.4.33.0106152246350.23466-100000@www.scotty.co.at>
-MIME-Version: 1.0
+Return-Path: <urs@isnogud.escape.de>
+From: Urs Thuermann <urs@isnogud.escape.de>
+Date: 16 Jun 2001 15:29:16 +0200
+Message-ID: <m23d90imdv.fsf@isnogud.escape.de>
+Subject: [linux-lvm] What is a good stripe size?
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,32 +14,28 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Fri, 15 Jun 2001, AJ Lewis wrote:
+I have two SCSI disks in my systems with PVs on /dev/sda2 and /dev/sdb2
+(/dev/sd{a,b}1 are very small partitions for /boot and swap).
 
-> On Fri, Jun 15, 2001 at 12:12:09PM +0200, Gergely Tamas wrote:
-> > It would be probably a good idea to insert a $(DESTDIR) in front of all
-> > installation targets. This would make packagers life easyer.
->
-> Thanks Gergely,
-> I've been intending to do that but hadn't yet.  Instead of putting it in the
-> Makefiles themselves though, I put it where the install directories are
-> defined, make.tmpl.in.  The head of the current CVS has these changes.
+Using the PVs on sda2 and sdb2 I created a single VG and I want to
+create striped LVs on it now.  My questions is, how large should I
+choose the stripe size to achive optimal performance.  If I choose it
+too large, I will probably loose the win of striping.
 
-When modifying makefiles for packaging I'd do it the same way as
-Gregely because what if the "make install" creates a symlink to let's
-say /usr/bin/some-file which now would link it to
-$(DESTDIR)/usr/bin/some-file and so we'd break the whole thing. Also
-some other stuff like config files end up wrongly referenced in the
-compiled files. So I'd say, never do it where the install directories
-get defined, use $(DESTDIR) only in the install section of the
-makefile.
+What happens if I choose very small stripe size, say 1K?  When I then
+need say 100K of contigous blocks of the LV LVM will read 50K
+contigously from sda2 and 50K from sdb2.  But will the 50K from each
+of thes partitions be read in 50 reads of 1K?  Will that degrade
+performance?
 
-Just my 2 euro cents.
+Does the optimal value of the stripe size depend on how the LV will be
+used and the average file size on it?  My LVs will be /, /var,
+/var/spool/news, /usr, /usr/local, /home and /tftpboot/galois.
 
--- 
-MfG / Regards
-Friedrich Lobenstock
+
+urs
