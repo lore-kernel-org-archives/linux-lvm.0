@@ -1,11 +1,11 @@
 Return-Path: <Heinz.Mauelshagen@t-online.de>
-Date: Thu, 11 Jan 2001 16:45:04 +0000
+Date: Thu, 11 Jan 2001 17:13:30 +0000
 From: Heinz J. Mauelshagen <Heinz.Mauelshagen@t-online.de>
-Subject: Re: [linux-lvm] Oops in 2.4.0 (@ LVM)
-Message-ID: <20010111164504.C15726@srv.t-online.de>
-References: <200101110418.f0B4Ija09191@webber.adilger.net> <Pine.LNX.4.31.0101110437310.27729-100000@fogarty.jakma.org>
+Subject: Re: [linux-lvm] nagging about the LVM usage survey
+Message-ID: <20010111171330.A15903@srv.t-online.de>
+References: <hch@ns.caldera.de> <20010111151415.210ABE0B7@wraith>
 Mime-Version: 1.0
-In-Reply-To: <Pine.LNX.4.31.0101110437310.27729-100000@fogarty.jakma.org>; from paul@clubi.ie on Thu, Jan 11, 2001 at 04:40:39AM +0000
+In-Reply-To: <20010111151415.210ABE0B7@wraith>; from declerck@sistina.com on Thu, Jan 11, 2001 at 07:14:15AM -0800
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -21,35 +21,19 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Thu, Jan 11, 2001 at 04:40:39AM +0000, Paul Jakma wrote:
-> On Wed, 10 Jan 2001, Andreas Dilger wrote:
-> 
-> > I've heard "soon" on the LVM list, but I'm just one of the chickens.  If
-> > it were up to me, the fixes would go to Linus as soon as they are found.
-> 
-> indeed. it looks bad when code is updated irregularly, and it's a
-> pain for users.
+On Thu, Jan 11, 2001 at 07:14:15AM -0800, Michael J. Declerck wrote:
+> I believe that Matt meant LVM 1.0 and GFS 5.0
 
-It is updated continously.
-
-Feel free to get the actual code from our CVS archive with:
-
-"cvs -d :pserver:cvs@cvs.globalfilesystem.org:/data/cvs checkout -r LVM_0-9-patches LVM"
+Yes, I am sure.
 
 > 
+> hch@ns.caldera.de said:
+> > Why 5.0? 
 > 
 > 
-> > Cheers, Andreas
-> >
+> ---
+> Michael Declerck, declerck@sistina.com   +1.510.823.7991
 > 
-> regards,
-> -- 
-> Paul Jakma	paul@clubi.ie	paul@jakma.org
-> PGP5 key: http://www.clubi.ie/jakma/publickey.txt
-> -------------------------------------------
-> Fortune:
-> Blessed are the young, for they shall inherit the national debt.
-> 		-- Herbert Hoover
 > 
 > _______________________________________________
 > linux-lvm mailing list
