@@ -1,17 +1,19 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id iBKH4Dr09626
-	for <linux-lvm@redhat.com>; Mon, 20 Dec 2004 12:04:13 -0500
-Received: from mr2.schneider.com (mr2.schneider.com [161.222.161.9])
-	by mx3.redhat.com (8.12.11/8.12.11) with ESMTP id iBKH47M2018705
-	for <linux-lvm@redhat.com>; Mon, 20 Dec 2004 12:04:07 -0500
-Received: from mm1.schneider.com (mm1.schneider.com [161.222.1.24])
-	by mr2.schneider.com (8.12.10+Sun/8.12.10) with ESMTP id iBKH3kn1017462
-	for <linux-lvm@redhat.com>; Mon, 20 Dec 2004 11:04:01 -0600 (CST)
-Subject: RE: [linux-lvm] How to increase/decrease space
-Message-ID: <OFD7F31933.61147BBC-ON86256F70.005CAFA3-86256F70.005DA21C@schneider.com>
-From: AdabalaP@schneider.com
-Date: Mon, 20 Dec 2004 11:02:43 -0600
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id iBLFMMr32408
+	for <linux-lvm@redhat.com>; Tue, 21 Dec 2004 10:22:22 -0500
+Received: from ln-bas08.csfb.com (mx-2.csfb.com [198.240.128.81])
+	by mx3.redhat.com (8.12.11/8.12.11) with ESMTP id iBLFMGaJ022929
+	for <linux-lvm@redhat.com>; Tue, 21 Dec 2004 10:22:16 -0500
+Received: from SLON11P30741.csfb.cs-group.com (slon11p30741.csfb.mail
+	[166.12.48.145])
+	by ln-bas08.csfb.com (Postfix) with ESMTP id 25801356D
+	for <linux-lvm@redhat.com>; Tue, 21 Dec 2004 15:20:41 +0000 (GMT)
+Message-ID: <0B834CEE3453504B82AB821DFB7047C1FF01AC@enyc11p32003.corpny.csfb.com>
+From: "Rosenstrauch, David" <david.rosenstrauch@csfb.com>
+Date: Tue, 21 Dec 2004 15:19:49 -0000
 MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] lvm/fs issue
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -23,79 +25,73 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: LVM general discussion and development <linux-lvm@redhat.com>
+To: "'linux-lvm@redhat.com'" <linux-lvm@redhat.com>
 
-Thanks Nicoya, It worked.
+Hi.  Having an odd problem with lvm and/or my file system.  Can anyone offer
+any ideas what might be wrong?
 
-I was able to reduce my root "/" file system size, following the
-instructions in
-http://www.balug.org/pipermail/balug-talk/2002-April/000310.html .
+Drive is set up as follows:
 
-but had to perform three additional steps;
-(a) disable "/" fs mount in "fstab"
- (b)    reboot using rescue CD, and perfrom (i) resize2fs, (ii) lvreduce
- (c)    mount the "/" fs and change the "fstab" to enable "/" fs mount and
-reboot.
-
-thanks for everyone help.
-
-
-
-
-                                                                                                                                       
-                      "Nicoya Helm"                                                                                                    
-                      <NHELM2@kumc.edu>        To:       <linux-lvm@redhat.com>                                                        
-                      Sent by:                 cc:                                                                                     
-                      linux-lvm-bounces        Subject:  RE: [linux-lvm] How to increase/decrease space                                
-                      @redhat.com                                                                                                      
-                                                                                                                                       
-                                                                                                                                       
-                      12/16/2004 03:20                                                                                                 
-                      PM                                                                                                               
-                      Please respond to                                                                                                
-                      LVM general                                                                                                      
-                      discussion and                                                                                                   
-                      development                                                                                                      
-                                                                                                                                       
-                                                                                                                                       
+(parted) print
+Disk geometry for /dev/sda: 0.000-38154.375 megabytes
+Disk label type: msdos
+Minor    Start       End     Type      Filesystem  Flags
+1          0.016    244.000  primary   reiserfs    boot
+2        244.000   2197.000  primary   linux-swap
+3       2197.000  38154.000  extended
+5       2197.016  16845.000  logical   reiserfs
+6      16845.016  21728.000  logical
+7      21728.016  26611.000  logical
+8      26611.016  31494.000  logical
+9      31494.016  38154.000  logical
 
 
+/dev/sda3 is an extended partition, with /dev/sda5 through 9 under it.
+/dev/sda5 is a standard reiser partition (mounted at /), and /dev/sda6 through
+9 make up a logical volume /dev/lvgroup1/lvshare (also using reiserfs) which
+gets mounted at /usr/local/share.
+
+All is basically going well, but recently I started to see some odd messages
+popping up during various lvm calls:
+  /dev/sda3: read failed after 0 of 2048 at 0: Input/output error
+
+This happens at boot time, when my distro does some LVM initialization, as
+well as when I issue lvm commands from the command line:
+
+[root@wnyc190562661 ~]# lvm pvs
+  /dev/sda3: read failed after 0 of 2048 at 0: Input/output error
+  PV         VG       Fmt  Attr PSize PFree
+  /dev/sda6  lvgroup1 lvm2 a-   4.77G    0
+  /dev/sda7  lvgroup1 lvm2 a-   4.77G    0
+  /dev/sda8  lvgroup1 lvm2 a-   4.77G 2.30G
+  /dev/sda9  lvgroup1 lvm2 a-   6.50G 6.50G
 
 
->>> AdabalaP@schneider.com 12/16/04 2:05 PM >>>
->Thanks Nicoya. I was successfully able to increase the size of the
-"/usr"
->file system, By using "resize2fs" command.
-
->Now, that i am able to increase the FS size, how do i go about
-reducing the
->FS size with out the data loss, especially with "/" file system ?
-
-That part I don't have experience with, but obviously the first step is
-to reduce the amount of actual data on the FS so that it is less than
-the size you want to shrink it to. If you are using LVM 1, you can use
-e2fsadm to shrink the LV and the FS in one step, but there is no e2fsadm
-for LVM2 .  For LVM 2 you have to do the 2-step resize2fs and lvreduce
-as described in this post to another list:
-
-http://www.balug.org/pipermail/balug-talk/2002-April/000310.html
-
->While increasing the space on a LV, Do i need to do lvresize,
-lvextend,
->resize2fs or just lvextend and resize2fs ?
-
-You should only need to do lvresize _or_ lvextend, then resize2fs.
+I'm a bit stumped on what the problem could be or how to go about fixing it.
+Since the message occurs during LVM commands (and since I don't see a similar
+error when the non-LVM /dev/sda5 gets mounted), I have to assume that the
+problem is something wrong on one of my PV partitions /dev/sda6 through 9.
+(Doesn't seem like there could be something wrong with /dev/sda3, since
+there's no real data held there.)  However, when I umounted /usr/local/share
+and did a fsck on the logical volume, nothing showed up.
 
 
+I'm obviously very concerned, since input/output errors make me wonder whether
+my disk is in danger of dying.  On the other hand, though, other than this odd
+error message, everything seems to be working fine.  Anyone ever seen anything
+like this before?  Is this even an LVM problem?  Any ideas on how to go about
+addressing it?  I'm really not sure what else to try at this point.
 
-Nicoya Helm
-Project Manager, Network Services
-University of Kansas Medical Center
-nhelm2@kumc.edu
+TIA,
 
-_______________________________________________
-linux-lvm mailing list
-linux-lvm@redhat.com
-https://www.redhat.com/mailman/listinfo/linux-lvm
-read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+DR
+
+
+==============================================================================
+This message is for the sole use of the intended recipient. If you received
+this message in error please delete it and notify us. If this message was
+misdirected, CSFB does not waive any confidentiality or privilege. CSFB
+retains and monitors electronic communications sent through its network.
+Instructions transmitted over this system are not binding on CSFB until they
+are confirmed by us. Message transmission is not guaranteed to be secure.
+==============================================================================
