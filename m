@@ -1,10 +1,8 @@
-From: Joe Thornber <thornber@sistina.com>
-Subject: Re: [linux-lvm] How long does PVmove take
-Message-ID: <20030806085253.GC375@fib011235813.fsnet.co.uk>
-References: <200308051754.13652.bjzolp@wisc.edu>
+From: Joel Acclassato <jacclassato@ingecom.net>
+Message-Id: <1060174116.2426.13.camel@cupidon>
 Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <200308051754.13652.bjzolp@wisc.edu>
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] pvcreate , partition format ?
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,17 +13,23 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Aug  6 03:56:02 2003
+Date: Wed Aug  6 07:49:01 2003
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Tue, Aug 05, 2003 at 05:54:13PM -0500, B. J. Zolp wrote:
-> I have to remove 4 120GB IDE drives from a LVM on a P2 450Mhz machine.  I have 
-> been pvmoving one of them for about the last 5 days.  Is this a normal time 
-> frame?  How much longer can I expect?
+Hi,
+I have an existing partition 
+/dev/sda1 mounted on /oracle
+This partition is using 100% of its space. I added a new partition from
+a new disk  /dev/sdc1
 
-I moved 30G in about 40 minutes yesterday. (LVM2)
+I know it is possible to resize partition using LVM. I have it installed
+by default on my redhat 8.0 system. I can't re-format the partition
+since i can't lose data? Is LVM the right tool for the job. Will
+pvcreate erase some data ? Can't I keep the same name for mount
+point(/oracle) once some extra space has been added ?
 
-- Joe
+Joel Acclassato
+
+ThanX   
