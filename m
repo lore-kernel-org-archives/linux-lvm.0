@@ -1,62 +1,30 @@
-Message-Id: <199904131625.AA06433@mailgate1b.telekom.de>
-From: Heinz Mauelshagen <mauelsha@ez-darmstadt.telekom.de>
-Subject: Re: [linux-lvm] LVM Front end?
-Date: Tue, 13 Apr 1999 18:25:21 METDST
-In-Reply-To: <3.0.5.32.19990413120146.007c7bc0@helios.uqtr.uquebec.ca>; from "Mathieu Legare" at Apr 13, 99 12:01 (noon)
+From: Martyn.AYSHFORD@orange.co.uk
+Message-Id: <199904150815.AA02380@future-is.orange.co.uk>
+Date: Thu, 15 Apr 1999 09:18:49 +0100
+Subject: [linux-lvm] Swap/DB devices
+Mime-Version: 1.0
+Content-Disposition: inline
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
-MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: Mathieu_Legare@uqtr.uquebec.ca
-Cc: mge@u9ete.ez-darmstadt.telekom.de, linux-lvm@msede.com
+To: linux-lvm@msede.com
 
-> 
-> Hi everybody,
+I'm in the process of re-jigging all the file systems to sit in volume
+groups.
 
-Hi.
+Two questions :-
 
-Did you send your mail to linux-lvm@msede.com?
-I have to ask, because i got it direct from your mail address.
+a) Can I setup swap to run from a volume group is it a good idea?
 
-> 
-> I have subscribed to the mailing list few days ago. 
-> I know lvm is still in alpha stage, but I'd like to
-> know how reliable it has been so far ? 
+b) I have  database devices running in cooked file systems for Oracle,
+Sybase and Informix.
 
-Actually it's very reliable in version 0.6 (no alpha any longer).
-But you have to patch in a bug fix which is contained in the
-same directory at ftp://linux.msede.com/lvm/v0.6.
+Vendor recommendations for sybase and Informix are normally raw, here we
+carve our database devices from HP volume groups is this a good idea for
+linux?
 
-> 
-> At work, we are using AIX, which has the Volume Group, 
-> Logical Volume and Physical Volume manager and I am
-> quite interested in this project.
+Anybody done this?
 
-Great.
-
-You will be able to work with Linux LVM quite easy because
-the commands are similar to HP's which are in turn quite similar to AIX's.
-
-> Is lvm working well
-> when its filesystem are exported via NFS ?
-
-Yes, go ahead and try it.
-
-
-Regards,
-Heinz
---
-
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-
-Systemmanagement C/S                             Deutsche Telekom AG
-                                                 Entwicklungszentrum Darmstadt
-Heinz Mauelshagen                                Otto-Roehm-Strasse 71c
-Senior Systems Engineer                          Postfach 10 05 41
-                                                 64205 Darmstadt
-mge@ez-darmstadt.telekom.de                      Germany
-                                                 +49 6151 886-425
-                                                          FAX-386
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+mja
