@@ -1,38 +1,44 @@
-Return-Path: <adilger@turbolinux.com>
-From: Andreas Dilger <adilger@turbolinux.com>
-Message-Id: <200011280045.eAS0jVu12766@webber.adilger.net>
-Subject: Re: [linux-lvm] vgscan question
-In-Reply-To: <Pine.LNX.4.21.0011271803590.7077-100000@zeke.goatskin.org>
- "from Shane Shrybman at Nov 27, 2000 06:14:01 pm"
-Date: Mon, 27 Nov 2000 17:45:31 -0700 (MST)
+Return-Path: <markj@sgi.com>
+Message-ID: <BD39367DB2A5D311BB8C009027D0E37B17256A@nt-reading1.reading.sgi.com>
+From: Mark Jeffery <markj@sgi.com>
+Date: Tue, 28 Nov 2000 09:19:14 -0000
 MIME-Version: 1.0
+Subject: [linux-lvm] RE: pvcreate fails with invalid partition type.
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: linux-lvm@sistina.com
-Cc: linux-lvm mailing list <linux-lvm@msede.com>
+To: "'linux-lvm@sistina.com'" <linux-lvm@sistina.com>
 
-Shane writes:
-> I have three ide disks on my machine, hda, hdb, hdd. I
-> am using LVM 0.8 on hdb and hdd, (actually on partitions on
-> those disks).
-> If I remove hda and hdc(cdrom) from the machine will vgscan
-> still find all my volume groups on the remaining disks
-> that are now hda and hdc?
+Thanks to Steve Brueggeman for the answer.
+ 
+I was doing my fdisk on the part1 device. so instead of
+ 
+fdisk -l /dev/scsi/host1/bus0/target10/lun0/part1
+ 
+I should have used
+ 
+fdisk -l /dev/scsi/host1/bus0/target10/lun0/disc
+ 
+Just the same as using fx on irix really!
+ 
+Anyway, it all worked really well, and with the XFS filesystem too!
+ 
+Mark.
+ 
 
-It _should_ work, but why not simply unplug the drives, reboot, and
-see what happens when you run vgscan again...
-
-> If not what is the correct procedure for this type of thing?
-
-Failing that, you should be able to vgexport the volume group, and vgimport
-it again, unless it is your root partition.
-
-Cheers, Andreas
 -- 
-Andreas Dilger  \ "If a man ate a pound of pasta and a pound of antipasto,
-                 \  would they cancel out, leaving him still hungry?"
-http://www-mddsp.enel.ucalgary.ca/People/adilger/               -- Dogbert
+Mark Jeffery                Tel: +44 118 925 7666 
+Presales Analyst            Mob: +44 410 579828 
+SGI                         Fax: +44 118 925 7699 
+Email: markj@sgi.com        http://www.sgi.com <http://www.sgi.com/>  
+
+NB: INFORMATION IN THIS MESSAGE IS SGI CONFIDENTIAL. IT IS INTENDED SOLELY
+FOR THE PERSON(S) TO WHOM IT IS ADDRESSED AND MAY NOT BE COPIED, USED,
+DISCLOSED OR DISTRIBUTED TO OTHERS WITHOUT SGI CONSENT. IF YOU ARE NOT THE
+INTENDED RECIPIENT PLEASE WILL YOU NOTIFY ME BY EMAIL OR TELEPHONE, DELETE
+THE MESSAGE FROM YOUR SYSTEM IMMEDIATELY AND DESTROY ANY PRINTED COPIES.
+
+ 
