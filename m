@@ -1,10 +1,8 @@
-From: "Erick Calder" <e@arix.com>
-Date: Thu, 30 Aug 2001 14:10:04 -0700
-Message-ID: <001f01c13198$24bdc0d0$0300000a@pacbell.net>
+Subject: Re: [linux-lvm] core dumps with rc1
+Message-ID: <OF3B538C3F.FFBCD136-ON85256AB8.0077BD7D@raleigh.ibm.com>
+From: "Kevin M Corry" <corryk@us.ibm.com>
+Date: Thu, 30 Aug 2001 16:51:26 -0500
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-In-Reply-To: <3B897552.8090400@lvcm.com>
-Subject: [linux-lvm] core dumps with rc1
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,7 +15,19 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
+
+From your fdisk output, it looks like you tried to modify the partition
+table of the drive with your root filesystem (or any other filesystem that
+happened to be mounted). I'd first take the advise from fdisk and reboot
+your machine just to be sure the new partition tables are updated in
+memory. Then try the pvcreate again and see if it is still core dumping.
+
+-Kevin
+
+-----------------------
+
 
 Whoa!  I just went to sistina.com (looking for the mailing-list archives)
 and thought I had it wrong, I tried sistina.org but no dice, then realised
@@ -34,12 +44,14 @@ I've followed the instructions in the INSTALL file except for:
 >     (/sbin/init.d/boot with SuSE for eg.) so that the actual volume
 >     group configuration is online after each reboot.
 >
->     Put a "vgchange -a n" into your shutdown script (/sbin/init.d/halt for
+>     Put a "vgchange -a n" into your shutdown script (/sbin/init.d/halt
+for
 eg.)
 >     after dismounting all filesystems.
 
 since I'm not certain of how this is done in RedHat.  I don't know whether
-the right thing is to put these commands in /etc/rc.d/rc.sysinit (probably),
+the right thing is to put these commands in /etc/rc.d/rc.sysinit
+(probably),
 /etc/rc.d/rc.local (less likely) or to create an lvm file in
 /etc/rc.d/inet.d with links in the /etc/rc?.d (which runlevel to put it in?
 I'm so clueless!!).
@@ -109,3 +121,10 @@ http://lists.sistina.com/pipermail/linux-lvm/2001-August/008469.html
 what next?
 
 1k thx - e
+
+
+_______________________________________________
+linux-lvm mailing list
+linux-lvm@sistina.com
+http://lists.sistina.com/mailman/listinfo/linux-lvm
+read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
