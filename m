@@ -1,7 +1,8 @@
-From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
-Message-ID: <20021028171550.A18238@sistina.com>
-Mime-Version: 1.0
-Subject: [linux-lvm] *** ANNOUNCEMENT *** LVM 1.0.6 available at www.sistina.com
+From: John DeFranco <defranco@cup.hp.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Message-Id: <200210280943.40808.defranco@cup.hp.com>
+Subject: [linux-lvm] Support for RedHat AS2.1?
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -12,35 +13,25 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Oct 28 10:19:27 2002
+Date: Mon Oct 28 11:44:02 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-*** ANNOUNCEMENT *** LVM 1.0.6 available at www.sistina.com
+Hi,
 
-Hi all,
+I see on the Sistina web page that LVM is supported on RedHat Advanced Server 
+2.1. So I have a couple of questions:
 
-A tarball is available at
+1. Which version of lvm (1.0.6)?
+2. Which redhat kernel errata (2.4.9-e.3 and/or 2.4.9-e.8)?
+3. I did try to apply the 1.0.6 version on the 2.4.9-e.3 kernel I got a couple 
+of patch installation errors (Makefile and lvm-snap.c was missing). Are these 
+expected? I cannot find any other directions that are specific to AS2.1. Are 
+there any others?
 
-   <http://www.sistina.com/>
-
-for download.
-
-Follow the "products" link on top of the Sistina web page
-and then the "Logical Volume Manager" link.
-
-
-LVM 1.0.6 contains lvrename and vgimport bug fixes beside others.
-
-We changed the default physical extent size to 32Mb to support up
-to 2Tb logical volume size.
-
-See the CHANGELOG and WHATSNEW files contained in the tarball
-for further information.
-
-
-Feed back LVM related information to <linux-lvm@sistina.com>.
-
-Thanks a lot for your support of LVM.
+Thanks!
+-- 
+==========
+Cheers
+   -jdf
