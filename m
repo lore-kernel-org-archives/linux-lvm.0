@@ -1,12 +1,12 @@
-Return-Path: <root@lewis.abi.tconline.net>
-From: Lewis Bergman <lbergman@abi.tconline.net>
-Subject: Re: [linux-lvm] lvm-mod PLEASE HELP!!!
-Date: Thu, 16 Aug 2001 14:58:16 -0500
-References: <3B7C24BD.9DDAE700@xapnet.com>
-In-Reply-To: <3B7C24BD.9DDAE700@xapnet.com>
-MIME-Version: 1.0
-Message-Id: <0108161458160H.01966@lewis.abi.tconline.net>
-Content-Transfer-Encoding: 8bit
+Return-Path: <fauxpas@trellisinc.com>
+Date: Thu, 16 Aug 2001 16:19:19 -0400
+From: Faux Pas III <fauxpas@trellisinc.com>
+Subject: Re: [linux-lvm] Problem using lvreduce
+Message-ID: <20010816161919.A12817@trellisinc.com>
+References: <051DFF3BBA73D3119A5800A0C95BD021C03C32@barracuda.alpha-processor.com>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <051DFF3BBA73D3119A5800A0C95BD021C03C32@barracuda.alpha-processor.com>; from soohoon.lee@api-networks.com on Thu, Aug 16, 2001 at 01:06:39PM -0400
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -19,27 +19,21 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Thursday 16 August 2001 02:53 pm, you wrote:
-> Hello !!!
->            I really need help with this install concerning the module
-> lvm-mod. I am running redaht 7.1 with kernel 2.4.2-2. I have know
-> installed lvm-1.0 and applied the patch. I have basically read and
-> followed the directions over and over and still when I insmod lvm-mod It
-> tells me no module to be found and I cannot figure it out. 1) I ran the
-> configure script 2) ran make to create the patch and applied it 3)  ran
-> make and make install.  Thanks, Chris.
->
-After you applied the patch to the kernel did you then
-make dep clean bzlilo modules modules_install   ?
-You can substitute bzlilo for bzimage and then do the copying by hand to be 
-safe. If you haven't done the last two then there would be no modules 
-installed. Did you check under /lib/modules/kernelversion/ for the lvm 
-modules?
+On Thu, Aug 16, 2001 at 01:06:39PM -0400, Soohoon Lee wrote:
+
+> I posted fix and waiting verification but 
+> mail traffic saying they are busy with 1.0 release and PE start point
+> Anyway, quick and no warranty fix is
+
+<snip patch>
+
+Looks like that did it, I'm going to test it more aggressively but 
+everything worked the first time through.  Thanks !
+
 -- 
-Lewis Bergman
-Texas Communications
-4309 Maple St.
-Abilene, TX 79602-8044
-915-695-6962
+Josh Litherland (fauxpas@trellisinc.com)
+ It is by caffeine alone that I set my mind in motion.
+  It is by the juice of Mtn Dew that thoughts acquire speed.
