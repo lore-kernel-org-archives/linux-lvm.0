@@ -1,12 +1,8 @@
-Subject: Re: [evms-devel] [linux-lvm] [ANNOUNCE] LVM reimplementation
-    ready for beta testing
-In-Reply-To: <20020203003937.B874@gnu.org> from
-    "Andrew Clausen"
-    at Feb 03, 2002 12:39:37 AM
+Message-Id: <001201c1ac41$f5767f40$6402000a@slartibartfast>
+From: "Henric Andersson" <ha@dvdtrade.net>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
-Message-Id: <E16X63T-0000KH-00@the-village.bc.nu>
-From: Alan Cox <alan@lxorguk.ukuu.org.uk>
+Subject: [linux-lvm] Changing the PE on an existing VG
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,23 +13,14 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Sat Feb  2 13:30:02 2002
+Date: Sat Feb  2 17:31:02 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: Andrew Clausen <clausen@gnu.org>
-Cc: Kevin Corry <corryk@us.ibm.com>, thornber@fib011235813.fsnet.co.uk, linux-lvm@sistina.com, evms-devel@lists.sourceforge.net, Jim McDonald <Jim@mcdee.net>, Andreas Dilger <adilger@turbolabs.com>, linux-kernel@vger.kernel.org
+To: linux-lvm@sistina.com
 
-> > this graph (except the volume group). But in reality, we don't want someone 
-> > coming along and mucking with md0 or with LV2 or with any of the disk 
-> > partitions, because they are all in use by the two volumes at the top.
-> 
-> It's the user's fault if they choose to write on such a device.
+Just wondering if and when LVM will support changing the PE of an existing
+VG? I just realized that I had painted myself into a corner by not setting
+my PE bigger than 4MB :-(  (And shuffling 212 gig of data between drives &
+tapes is no happy thought)
 
-You want access to the raw devices as well as the virtual volumes. You
-try doing SMART diagnostics online on an md volume if you can't get
-at /dev/hd* and /dev/sd*.
-
-You don't want to mount both layers at once I suspect, but even that
-may be questionable for a read only mirror.
-
-Alan
+/Henric
