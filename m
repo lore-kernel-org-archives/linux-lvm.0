@@ -1,10 +1,10 @@
-Date: Mon, 24 Sep 2001 13:18:40 +0200
-From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] Volume group not found????
-Message-ID: <20010924131840.B30558@sistina.com>
-References: <200109202358.AA1744437478@netcentricnj.com>
-Mime-Version: 1.0
-In-Reply-To: <200109202358.AA1744437478@netcentricnj.com>; from tdwebste@netcentricnj.com on Thu, Sep 20, 2001 at 11:58:01PM -0400
+Date: Mon, 24 Sep 2001 13:23:48 +0200 (MET DST)
+From: Thomas Svedberg <thsv@math.chalmers.se>
+Subject: Re: [linux-lvm] Lost VG after failed pvmove
+In-Reply-To: <20010924122705.A30375@sistina.com>
+Message-ID: <Pine.SOL.4.30.0109241320540.27866-100000@napier.math.chalmers.se>
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,61 +16,38 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: TEXT/PLAIN; charset="iso-8859-1"
 To: linux-lvm@sistina.com
 
-Tim,
+On Mon, 24 Sep 2001, Heinz J . Mauelshagen wrote:
 
-does vgscan find your volume group?
-Which LVM version do you use?
+> you need to vgcfgrestore the metadata backaup to *all* of the PVs which=
+ belonged
+> to the VG at the time the backup was created.
 
-On Thu, Sep 20, 2001 at 11:58:01PM -0400, tim wrote:
-> It seems I have a similar problem to poor Alexander Bruns.
-> This whole this is giving me big head heack.
-> 
-> Luckily I only have /usr and /var as logical volumes. So I am still able to boot.
-> 
-> I created logical volume partitions /dev/sda4 /dev/sdb5
-> Then created stripped lvm's lv_usr and lv_var
-> 
-> Reboot several times and everything worked well.
-> 
-> I see /dev/system/lv_usr, /dev/system/lv_var, /etc/lvmconf/sytem.conf
-> 
-> However vgchange fails
-> vgchange -a y
-> vgchange -- no volume groups found
-> 
-> 
-> /proc/lvm/VGs/
-> no logical volumes
-> 
-> How can I recover?
-> 
-> 
-> -tim. 
-> 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
+OK, this was my error, I only used it on the pv I found damaged.
 
--- 
+This + using the uuid_fixer made it work again.
+Thank you very much for this!
 
-Regards,
-Heinz    -- The LVM Guy --
+> In regard to the pvmove error: do you have the particular error output =
+it gave?
 
-*** Software bugs are stupid.
-    Nevertheless it needs not so stupid people to solve them ***
+No, all I remember it was a very short or even noninformative message :-<
 
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+I will do a backup tonight and then try pvmove again. If I get an error I
+will surely let you know!
 
-Heinz Mauelshagen                                 Sistina Software Inc.
-Senior Consultant/Developer                       Am Sonnenhang 11
-                                                  56242 Marienrachdorf
-                                                  Germany
-Mauelshagen@Sistina.com                           +49 2626 141200
-                                                       FAX 924446
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+Thank you again!
+
+/ Thomas
+.......................................................................
+ Thomas Svedberg
+ Department of Mathematics
+ Chalmers University of Technology
+
+ Address: SE-412 96 G=F6teborg, SWEDEN
+ E-mail : thsv@bigfoot.com, thsv@math.chalmers.se
+ Phone  : +46 31 772 5368
+ Fax    : +46 31 772 3595
+.......................................................................
