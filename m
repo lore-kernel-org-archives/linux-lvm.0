@@ -1,11 +1,11 @@
 Return-Path: <root@srv.sistina.com>
-Date: Fri, 13 Jul 2001 13:07:33 +0200
+Date: Fri, 13 Jul 2001 13:12:00 +0200
 From: "Heinz J. Mauelshagen" <Mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] Oops ...
-Message-ID: <20010713130733.B32198@sistina.com>
-References: <003601c10af5$102a56c0$0f01a8c0@ws1> <20010713093946.C1563@btconnect.com>
+Subject: Re: [linux-lvm] Newbie question
+Message-ID: <20010713131200.C32198@sistina.com>
+References: <FDEJIMPDHJAAPNLFKBMGAECACEAA.tgs@iafrica.com> <20010712094638.B418@btconnect.com> <200107121612.MAA13656@burns.luca.2y.net>
 Mime-Version: 1.0
-In-Reply-To: <20010713093946.C1563@btconnect.com>; from thornber@btconnect.com on Fri, Jul 13, 2001 at 09:39:46AM +0100
+In-Reply-To: <200107121612.MAA13656@burns.luca.2y.net>; from luca@lucarella.com.ar on Thu, Jul 12, 2001 at 11:53:58AM -0300
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -21,62 +21,45 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Fri, Jul 13, 2001 at 09:39:46AM +0100, Joe Thornber wrote:
-> All,
+On Thu, Jul 12, 2001 at 11:53:58AM -0300, Leandro Lucarella wrote:
+> Hi, I'm new in LVM (I'm so new that I'm not even using it :) and I have a
+> question:
 > 
-> Do not use the current CVS code on existing VG's, and certainly not on
-> production systems.  I thought this had been mentioned on the list
-> before.
+> I want to know if the stiper mode, the performance gain is somparable to Software
+> RAID 0.
 
-Yes it has!
+In theory they should be pretty similar :-)
 
-Please be aware, that actual CVS represent the project under construction
-and that you are on your own if you retrieve LVM from there.
+But people reported differences which are probably caused by their particular
+hardware setup.
 
-There's rare cases in which we'll recommend to use it in order to address
-paricular problems you face.
+In order to answer the question for your particular configuration, you should
+test both ;-)
 
-Rule is: get CVS on your own risk unless told by us.
+> Another question is the boot stuff, what is better? compile LVM as a module
+> and use inird or compile the kernel with built-in LVM support?
 
-Thanks for your understanding :-)
+It doesn't make a difference if you go for the module or the build in driver,
+you need to have an initrd today anyway to activate your VGs at boot time.
+
+We are working on boot time recognition of VGs in the driver which will vanish
+the initrd. That will be in a post 1.0 version of the Linux LVM.
 
 Regards,
 Heinz    -- The LVM Guy --
 
 
-
+> Thanks for your help...
 > 
-> Changes have been made to the PE locations !
+> --
+> LUCA - Leandro Lucarella
+> ------------------------
+> luca@lucarella.com.ar
+> http://www.luca.2y.net
+> LICQ UIN: 2847576
+> ------------------------
+> Usando Debian GNU/Linux
 > 
-> Bas: you need to roll back your tools to beta7, the CVS kernel driver
-> should be ok.
-> 
-> - Joe
-> 
-> On Thu, Jul 12, 2001 at 07:06:59PM +0200, Bas wrote:
-> > Hi,
-> > 
-> > I'm afraid I'm not able to get more details right now, if necessary I'll get
-> > 'm later on, but I don't like playing with my filesystems ...
-> > 
-> > Kernel 2.4.6
-> > CVS LVM of 11 July 2001
-> > an XFS enabled kernel
-> > devfs 1.82.
-> > 
-> > Boots fine, loads the LVM driver, but after it oopses after running
-> > vgchange -a y (line 4, linuxrc).
-> > 
-> > What can I do ?
-> > 
-> > Thanks,
-> > Bas.
-> > 
-> > _______________________________________________
-> > linux-lvm mailing list
-> > linux-lvm@sistina.com
-> > http://lists.sistina.com/mailman/listinfo/linux-lvm
-> > read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
 > _______________________________________________
 > linux-lvm mailing list
 > linux-lvm@sistina.com
