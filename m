@@ -1,10 +1,9 @@
-Subject: Re: Antwort: Re: [linux-lvm] MultiPath
-From: Ryan Frank <Ryan.Frank@twcable.com>
-In-Reply-To: <OF3FA18EC2.6DB9EC24-ONC1256D2F.00199A52@phoenixcontact.com>
-References: <OF3FA18EC2.6DB9EC24-ONC1256D2F.00199A52@phoenixcontact.com>
+Message-ID: <001401c3214b$89789230$6c7745cb@codevel>
+From: "armani" <armani@codevel.com>
+References: <OF3FA18EC2.6DB9EC24-ONC1256D2F.00199A52@phoenixcontact.com> <1053696372.1216.92.camel@prvpcompq249.css.twable.com>
+MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
-Message-Id: <1053696372.1216.92.camel@prvpcompq249.css.twable.com>
-Mime-Version: 1.0
+Subject: [linux-lvm] Can't make an on-line snapshot with LVM !
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,33 +14,37 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Fri May 23 08:22:02 2003
+Date: Fri May 23 11:50:02 2003
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: LVM List <linux-lvm@sistina.com>
+To: linux-lvm@sistina.com
 
-On Fri, 2003-05-23 at 00:41, Dietmar Stein wrote:
-> Hi
-> 
-> Follow documentation / sample raidtab for multipathing, which comes with
-> raidtools. If you've done that, both paths should be used (we have tested
-> this once and it was working, also the failover of the active path).
-> 
-> Otherwise I would say there's a misconfiguration.
-> 
-> Dietmar
+Dear Sir
 
-Thats where I am now, I followed the docs, and even tried a couple
-things I found using google... However, it doesn't seem to like the
-second path.  If I cat /proc/mdstat it shows two paths... But If I write
-to the volume's I only see one path of activity... If I pull that line,
-the write stops... Weird... I will keep working it..
- 
--- 
-+----------------------------------------------------+
-|Ryan Frank               Unix System Administrator  |
-|Time Warner Cable        7910 Crescent Executive Dr.|
-|(704) 731-3324 - phone   3rd Floor                  |
-|(704) 731-1180 - fax     Charlotte, NC 28217        |
-|150*143328*1 - nextel    ryan.frank@twcable.com     |
-+----------------------------------------------------+
+I don't know that if this is a FAQ.
+But when I create a snapshot for my LV2
+
+# lvcreate -L1M -s -nsnapshot1 /dev/VG1/LV2
+lvcreate -- rounding size up to physical extent boundary
+lvcreate -- WARNING: the snapshot will be automatically disabled once it
+gets full
+lvcreate -- INFO: using default snapshot chunk size of 64 KB for
+"/dev/VG1/snapshot1"
+lvcreate -- doing automatic backup of "VG1"
+lvcreate -- logical volume "/dev/VG1/snapshot1" successfully created
+
+This will create a /dev/VG1/snapshot1 for me.
+
+But I can't mount it with the following command:
+# mount /dev/VG1/snapshot1 /mnt
+when I still mount  /dev/VG1/LV2 on my /var1 mount point.
+
+After umount /var1
+# umount /var1
+
+Then redo the command
+# lvcreate -L1M -s -nsnapshot2 /dev/VG1/LV2
+
+This will be ok ..
+
+What's wrong with the snapshot ?
