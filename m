@@ -1,9 +1,10 @@
-Message-ID: <003601c28c70$d97d79a0$5200020a@scb.co.th>
-From: "Somsak Pattanaprateep" <somsakpat@scb.co.th>
-MIME-Version: 1.0
-Content-Type: multipart/alternative;
-	boundary="----=_NextPart_000_0033_01C28CAB.85CD0F60"
-Subject: [linux-lvm] unsubscription
+From: jon+lvm@silicide.dk
+Subject: Re: [linux-lvm] unsubscription
+Message-ID: <20021115091842.GA3722@gw.silicide.dk>
+References: <003601c28c70$d97d79a0$5200020a@scb.co.th>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <003601c28c70$d97d79a0$5200020a@scb.co.th>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,32 +15,19 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Fri Nov 15 00:34:01 2002
+Date: Fri Nov 15 03:19:01 2002
 List-Id: <linux-lvm.redhat.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-This is a multi-part message in MIME format.
+Please do it yourself using the information included in the header of each and every email.
+ 
 
-------=_NextPart_000_0033_01C28CAB.85CD0F60
-Content-Type: text/plain;
-	charset="windows-874"
-Content-Transfer-Encoding: quoted-printable
-
+List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>, 
+        <mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 
 
-------=_NextPart_000_0033_01C28CAB.85CD0F60
-Content-Type: text/html;
-	charset="windows-874"
-Content-Transfer-Encoding: quoted-printable
 
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
-<HTML><HEAD>
-<META content=3D"text/html; charset=3Dwindows-874" =
-http-equiv=3DContent-Type>
-<META content=3D"MSHTML 5.00.3315.2870" name=3DGENERATOR>
-<STYLE></STYLE>
-</HEAD>
-<BODY bgColor=3D#ffffff>
-<DIV>&nbsp;</DIV></BODY></HTML>
 
-------=_NextPart_000_0033_01C28CAB.85CD0F60--
+JonB
