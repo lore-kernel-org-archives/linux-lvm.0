@@ -1,11 +1,9 @@
-Return-Path: <ulf@twc.de>
-Message-ID: <3A40711F.A084D472@twc.de>
-Date: Wed, 20 Dec 2000 09:43:11 +0100
-From: Ulf Bartelt <ulf@twc.de>
+Return-Path: <dice@mfa.kfki.hu>
+Date: Wed, 20 Dec 2000 10:29:23 +0100 (CET)
+From: Gergely Tamas <dice@mfa.kfki.hu>
+Message-ID: <Pine.LNX.4.30.0012201012130.4495-100000@falka.mfa.kfki.hu>
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] Debian packaging
-References: <200012192251.eBJMpG601644@webber.adilger.net>
-Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] '/etc/init.d/lvm' script in debian package
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,30 +15,38 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: TEXT/PLAIN; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
 Hi!
 
-> No, because you can have multiple kernels installed, and the LVM IOP may
-> change depending on the LVM version, even within a single kernel release
-> (i.e. 2.2 or 2.4).  It would be nice (but more complex) if the LVM user
-> tools could handle multiple IOP versions, but they don't.  Also, the
-> update-alternatives functionality is only available on Debian, so we
-> would still need another mechanism on RPM-based systems, and it may
-> as well be uniform across all systems.
+Some notes to the /etc/init.d/lvm script in the debian packages ...
 
-If I had to solve this I'd try to
+1] --- it would be better to add '-a ! -d /proc/lvm' as shown bellow,
+       becouse in in the newer versions '/proc/lvm' is a directory
+       (but what if compiled without /proc/lvm info...)
 
-* give the lvm lib a name like liblvm-IOPNUMBER.so
+if [ ! -f /proc/lvm -a ! -d /proc/lvm ]; then
+   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ was: '[ ! -f /proc/lvm ]; then'
 
-* put all the lvm tools in a library liblvmtools-IOPNUMBER.so
+	if [ ! -f /lib/modules/`uname -r`/block/lvm.o -a ! -f /lib/modules/`uname -r`/block/lvm-mod.o ]; then
+		exit 0
+	fi
+fi
+---
 
-* and the "real" tool binaries would only be a short program asking for
-the IOPNUMBER, dynloading the the libtools-IOPNUMBER.so and passing all
-args to the real tool inside that lib...
+2] --- I still think that an init.d script should display a usage help as
+       default
 
-Strange idea?
+case "$1" in
+	start)
+        ^^^^^^ was: 'start|"")'
 
-Bye!
-	Ulf.
+		echo "Setting up LVM Volume Groups..."
+		#/sbin/vgscan
+		/sbin/vgchange -a y
+		;;
+
+Thanks,
+Gergely
