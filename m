@@ -1,45 +1,40 @@
-From: Stephan Mueller <smueller@suse.de>
-Subject: [linux-lvm] Re: Large LVM-Partitions Update
-Date: Fri, 8 Oct 1999 11:10:21 +0200
-References: <99100810084701.03116@edamer>
+Date: Fri, 8 Oct 1999 12:06:40 +0200 (South Africa Standard Time)
+From: Bruce Hewitson <hewitson@egs.uct.ac.za>
+Subject: [linux-lvm] Can't see /dev/hdk1
+Message-ID: <Pine.WNT.4.05.9910081201470.-171375@socks.egs.uct.ac.za>
 MIME-Version: 1.0
-Message-Id: <99100811122305.03116@edamer>
-Content-Transfer-Encoding: 8bit
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="utf-8"
+Content-Type: TEXT/PLAIN; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@msede.com
-Cc: muc-tech@suse.de
 
-Am Fre, 08 Okt 1999 schrieben Sie:
-> Hi folks,
-> 
-> I have the following problem: my VG is 32 GB in size and there is 26 GB left.
-> Now I want to create a LV with 26 GB, but LVM tells me that there is only 6,8
-> GB left. OK, I created a LV with 6,8 GB. Now I wanted to extend it to 26 GB.
-> Again it tells me there is only 12 GB left (Now I have nearly 19 GB). Again I
-> wanted to extend but again there  is only 3 GB left and so forth. After several
-> extends (with decreasing space) I could finally use all 26 GB.
-> 
-> Could somebody tell me, what is the problem?
-> 
-> Technical Data:
-> Netfinity 5500 (2 CPUs, 512 MB RAM)
-> 36 GB SCSI RAID 5 (/dev/sda)
-> 
-Some additional info:
-SuSE Linux 6.2
-Kernel 2.2.12
-LVM 0.7
-(Sorry I forgot)
-> 
-> Cheers
-> Stephan
---
-Stephan M�ller			smueller@suse.de
-SuSE M�nchen GmbH		phone 	+49 (0) 89 42769-0
-Stahlgruberring 28		fax 	+49 (0) 89 42017701
-D-81829 M�nchen			mobile 	+49 (0) 179 6978712
-http://www.suse.de		http://www.suse.com
->>> Wer Rechtschreibfehler findet, darf sie behalten. <<<
+
+I'm new to LVM -- but have compiled, installed etc under linux 2.2.10, on
+a system that was running md raid with 6 ide chains and 6 20Gig ATA
+drives.
+
+With LVM I can access /dev/hdi1, but not and identical /dev/hdk1.
+pvcreate works fine, but when I do a vgcreate I get the following:
+
+bud:~# vgcreate -v tst /dev/hdk1
+vgcreate -- checking volume group name
+vgcreate -- locking logical volume manager
+vgcreate -- checking volume group "tst" existence
+vgcreate -- counting all existing volume groups
+vgcreate -- reading all physical volume data from disks
+vgcreate -- checking if all given physical volumes in command line are new
+vgcreate -- checking physical volumes name "/dev/hdk1"
+vgcreate -- no valid physical volumes in command line
+
+Any pointers as to what I've done wrong much appreciated.
+
+- bruce
+
+ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ | Dr. Bruce C. Hewitson                          Ph:  +27 21 650 2878 |
+ | Dept. Environmental & Geographical Sc.         Fax: +27 21 650 3791 |
+ | University of Cape Town, Private Bag, Rondebosch, South Africa 7701 |
+ |      hewitson@egs.uct.ac.za          http://www.egs.uct.ac.za       |
+ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 
