@@ -1,12 +1,11 @@
 Return-Path: <root@srv.sistina.com>
-Date: Wed, 18 Jul 2001 16:55:28 +0200
+Date: Wed, 18 Jul 2001 17:01:16 +0200
 From: "Heinz J. Mauelshagen" <Mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] HUGE LVM log file...
-Message-ID: <20010718165528.B24438@sistina.com>
-References: <20010717131430.A17345@sistina.com> <Pine.LNX.4.31.0107171225320.12608-100000@erdos.shef.ac.uk> <20010717232842.A6067@tiger.bigcats.invalid>
+Subject: Re: [linux-lvm] FW: LVM on Linux
+Message-ID: <20010718170116.C24438@sistina.com>
+References: <85063BBE668FD411944400D0B744267A643418@AUSMAIL> <20010717174008.A1000@btconnect.com> <20010717122318.A20564@d3.front> <20010718091639.B382@btconnect.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20010717232842.A6067@tiger.bigcats.invalid>; from weissel@netcologne.de on Tue, Jul 17, 2001 at 11:28:42PM +0200
+In-Reply-To: <20010718091639.B382@btconnect.com>; from thornber@btconnect.com on Wed, Jul 18, 2001 at 09:16:39AM +0100
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -18,47 +17,70 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="iso-8859-1"
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Tue, Jul 17, 2001 at 11:28:42PM +0200, Wolfgang Weisselberg wrote:
-> Guennadi Liakhovetski (g.liakhovetski@ragingbull.com) wrote 23 lines:
->=20
-> > > > My /var/log/lvm has grown up to 800MB+... and has filled up the dis=
-k...
->=20
-> > > lvmsadc is probably filling it run by cron.
->=20
-> > Thanks! But why / what for is it needed and why is it created by default
->=20
-> man lvmsadc:=20
->        lvmsadc collects the read/write statistics of the  logical
->        volume  manager  to the file "LogFilePath" or to stdout if
->        no LogFilePath is given.  You should create a  cron  entry
->        for lvmsadc which runs it at regular intervals eg. 10 min=EF=BF=BD
->        utes.
+On Wed, Jul 18, 2001 at 09:16:39AM +0100, Joe Thornber wrote:
+> On Tue, Jul 17, 2001 at 12:23:18PM -0700, Ralph Jennings wrote:
+> > On Tue, Jul 17, 2001 at 05:40:08PM +0100, Joe Thornber wrote:
+> > [snip]
+> > >    Here there's one % that we can't get rid of (we could also do chunk = 
+> > >    sector - (pe_size * index)), for the simple fact that the number of
+> > >    stripes is not a power of 2, so we can't replace with shifts and masks.
+> > > 
+> > >    I just had a chat with one of the EVMS guys, EVMS *does* have this
+> > >    exact same problem.
+> > > 
+> > >    Should we restrict stripes sets to powers of 2 ?
+> > [snip]
+> > 
+> > Why not just make a mod function?
+> > 
+> > Preceeding code not tested, but should work?
+> > It's been a while since I wrote C code.
+> > 
+> > BTW, what is a u64 (unsigned 64bit integer) in C called?
+> > Is there any uniform cross platform way to say it (like
+> > u64 perhaps)?
+> 
+> long long ?
 
-Well, it should rather say: "If you want to have I/O statistics at hand
-for performance tuning, you could create a cron entry..."
+u64 = unsigned long long :)
 
-Will change that.
+> 
+> > 
+> > u64 mod_64(u64 number, u64 modNum) {
+> >     while (number > modNum) {
+> >         number -= modNum;
+> >     }
+> >     return number;
+> > }
+> 
+> I'd like to see the flames if I put this into the driver :) The map
+> function is called on every io block to an LVM device, it needs to be
+> quick !  Since we know modNum is smallish, certainly less than 2^32,
+> and 'number' is 64 bit we could be running around your loop a few
+> times :)
 
->=20
-> That statistical info can be later used to e.g. decide which
-> LEs shoud have PEs at the faster 'begin' (outer edge) of the
-> HD.  An automatic LE mover program has not been written yet.
+Yep.
 
-Well, it depends on the brand/model, if the outer edge is the fast area :-)
+> 
+> On a more serious note this function should be provided by the
+> compiler, since it supports the 64 bit type.  I guess it is normally
+> implemented in a function that gets linked automatically - it would still
+> be good to get rid of it.
 
->=20
-> -Wolfgang
+True.
+> 
+> - Joe
 > _______________________________________________
 > linux-lvm mailing list
 > linux-lvm@sistina.com
 > http://lists.sistina.com/mailman/listinfo/linux-lvm
 > read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
 
---=20
+-- 
 
 Regards,
 Heinz    -- The LVM Guy --
@@ -66,9 +88,7 @@ Heinz    -- The LVM Guy --
 *** Software bugs are stupid.
     Nevertheless it needs not so stupid people to solve them ***
 
-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D=
--=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=
-=3D-=3D-
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
 Heinz Mauelshagen                                 Sistina Software Inc.
 Senior Consultant/Developer                       Am Sonnenhang 11
@@ -76,6 +96,4 @@ Senior Consultant/Developer                       Am Sonnenhang 11
                                                   Germany
 Mauelshagen@Sistina.com                           +49 2626 141200
                                                        FAX 924446
-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D=
--=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=
-=3D-=3D-
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
