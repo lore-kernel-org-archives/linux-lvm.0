@@ -1,11 +1,9 @@
-Date: Thu, 4 Oct 2001 01:39:50 +0200
-From: Wichert Akkerman <wichert@cistron.nl>
-Subject: Re: [linux-lvm] Re: partition table read incorrectly
-Message-ID: <20011004013950.A16757@cistron.nl>
-References: <200110031901.TAA04080@vlet.cwi.nl>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <200110031901.TAA04080@vlet.cwi.nl>; from Andries.Brouwer@cwi.nl on Wed, Oct 03, 2001 at 07:01:10PM +0000
+Date: Thu, 4 Oct 2001 01:45:56 +0100 (IST)
+From: Paul Jakma <paul@clubi.ie>
+Subject: Re: [linux-lvm] lvcreate segfault in vg_setup_pointers_for_snapshots
+In-Reply-To: <20011003133021.K8954@turbolinux.com>
+Message-ID: <Pine.LNX.4.33.0110040141320.21655-100000@fogarty.jakma.org>
+MIME-Version: 1.0
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,21 +15,28 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: TEXT/PLAIN; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
-Cc: alan@lxorguk.ukuu.org.uk, linux-kernel@vger.kernel.org
 
-Previously Andries.Brouwer@cwi.nl wrote:
-> But why do you call it wrong?
+On Wed, 3 Oct 2001, Andreas Dilger wrote:
 
-I deleted all partitions with fdisk so I expect none to be there.
-fdisk shows none, but the kernel does.
+> would be helpful.  Also, there is a known issue about the "inline"
+> functions, which may not have been fixed yet (it is a compiler bug).
 
-Wichert.
+oh yes..
 
+i read through the archives before posting, and found reference to
+this.  however, it happens when compiled with egcs too.
+
+also, the other bug was in was in lv_create(), my one is in
+a different place (see subject line).
+
+> Cheers, Andreas
+
+regards,
 -- 
-  _________________________________________________________________
- /       Nothing is fool-proof to a sufficiently talented fool     \
-| wichert@wiggy.net                   http://www.liacs.nl/~wichert/ |
-| 1024D/2FA3BC2D 576E 100B 518D 2F16 36B0  2805 3CB8 9250 2FA3 BC2D |
+Paul Jakma	paul@clubi.ie	paul@jakma.org	Key ID: 64A2FF6A
+Fortune:
+Liberty is always dangerous, but it is the safest thing we have.
+		-- Harry Emerson Fosdick
