@@ -1,24 +1,23 @@
 Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j16L1VO26605
-	for <linux-lvm@redhat.com>; Sun, 6 Feb 2005 16:01:31 -0500
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j16ICXO19283
+	for <linux-lvm@redhat.com>; Sun, 6 Feb 2005 13:12:33 -0500
 Received: from out1.smtp.messagingengine.com (out1.smtp.messagingengine.com
 	[66.111.4.25])
-	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id j16L1VNP002191
-	for <linux-lvm@redhat.com>; Sun, 6 Feb 2005 16:01:31 -0500
+	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id j16ICWwq029208
+	for <linux-lvm@redhat.com>; Sun, 6 Feb 2005 13:12:32 -0500
 Received: from web3.messagingengine.com (web3.internal [10.202.2.212])
-	by frontend1.messagingengine.com (Postfix) with ESMTP id CEA07C539FA
-	for <linux-lvm@redhat.com>; Sun,  6 Feb 2005 16:01:29 -0500 (EST)
-Message-Id: <1107723690.9660.214451087@webmail.messagingengine.com>
-From: "Ajeet Nankani" <fromkth+lvm@fastmail.fm>
+	by frontend1.messagingengine.com (Postfix) with ESMTP id 7B56DC54F87
+	for <linux-lvm@redhat.com>; Sun,  6 Feb 2005 13:12:31 -0500 (EST)
+Message-Id: <1107713552.30652.214443428@webmail.messagingengine.com>
+From: "Ajeet Nankani" <fromkth@fastmail.fm>
 Content-Disposition: inline
 Content-Transfer-Encoding: 7bit
 MIME-Version: 1.0
-References: <1107720948.6351.214448095@webmail.messagingengine.com>
-	<20050206202440.GI14093@agk.surrey.redhat.com>
-Subject: Re: [linux-lvm] Reducing PV/ Reclaiming free PEs from a PV to be
-	usedfor another partition/purpose outside of LVM
-In-Reply-To: <20050206202440.GI14093@agk.surrey.redhat.com>
-Date: Sun, 06 Feb 2005 13:01:30 -0800
+Subject: Re: [linux-lvm] Mapping between PEs and Logical Volumes - Remapping of
+	PEs in a Volume Group whic is on one PV
+In-Reply-To: <1107704665.20387.214438621@webmail.messagingengine.com>
+Date: Sun, 06 Feb 2005 10:12:32 -0800
+References: <1107704665.20387.214438621@webmail.messagingengine.com>
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -32,53 +31,68 @@ List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-On Sun, 6 Feb 2005 20:24:40 +0000, "Alasdair G Kergon" <agk@redhat.com>
-said:
-> On Sun, Feb 06, 2005 at 12:15:48PM -0800, Ajeet Nankani wrote:
-> > vgcfgbackup which would give me meta file data as below 
->  
-> >         extent_size = 65536             # 32 Megabytes
-> 
-> >                         device = "/dev/hda6"    # Hint only
->  
-> >                         pe_start = 384
-> >                         pe_count = 266  # 8.3125 Gigabytes
-> 
-> >                                 extent_count = 192      # 6 Gigabytes
-> >                                         "pv0", 0
-> 
-> 0-191
-> 
-> >                                 extent_count = 32       # 1024 Megabytes
-> >                                         "pv0", 192
-> 
-> 192-223
-> 
-> > Now here if i edit it and in physical volume section where it says that
-> > pe_count = 266, i change it to pe_count = 224 which is the last PE used
-> > by the Logical Volume.
->  
-> Yes.
-> 
-> > after saving it if i run vgcfgrestore with this file, will my PV be
-> > reduced?? 
-> 
-> That's what pvresize would do.
+Ok i have figured it out that 
+lvdisplay -m
+command shows the mapping of PEs and Logical Volumes.
+and in my case it shows that total PEs are 266 that means from 0 to 265,
+allocated are 224 and 42 are free PEs
 
-but pvresize says command not implemented yet. 
+Logical Volume 0 is from 0 to 191 PEs = 192 PEs
+and Logical Volume 1 is from 233 to 264 = 32 PEs 
+so total is 224 PEs
 
-also what this "pe_start = 384" in meta data means.
+and in between these 2 logical volumes 41 PEs(PE# 191 to 232) are free
+and 1 PE (PE#265) is free at the end after 2nd logical Volume.
+Now i want to be LogVols in VolGroup to be contiguous physically, such
+that logical Volume 0 remains on 0 to 191 PEs and logical volume 1
+should start from PE 192 and finishes at PE 223.
 
-Thanks
+I figured it out that for this shuffling of PEs the command should be,
+
+# pvmove -v /dev/hda6:233-264 /dev/hda6:192-223
+
+which gives following error
+
+Finding volume group "VolGroup00"
+  No extents available for allocation
+
+or 
+
+# pvmove -v -n /dev/Volgroup00/logVol01 /dev/hda6 /dev/hda6:192-223
+
+which gives following error
+
+  Named LV and old PV must be in the same VG
+  pvmove: Move extents from one physical volume to another
+
+in both cases i cant figure out what is the problem as there are PEs
+available and also LV and the "old PV" infact are in same VG.
+
+I have also tried the simple command
+# pvmove -v -n /dev/Volgroup00/logVol01
+which does not give any error, but do nothing as the mapping remains
+same.
+
+anybody here to help me out?
 
 -ajeet.
 
+
+
+
+
+On Sun, 06 Feb 2005 07:44:25 -0800, fromkth+lvm@fastmail.fm said:
+> Hi,
 > 
-> > after that i can reduce hda6 with parted or similar utility.
->  
-> and the new size is 384 sectors plus 224 extents of 65536 sectors each.
+> I have one Volume Group and it contains two Logical Volumes.
+> There are many free PEs in Volume Group.
+> I want to know which PEs inside a Physical Volume(Volume Group) are
+> assigned to which Logical Volume.
 > 
-> Alasdair
-> -- 
-> agk@redhat.com
+> So which command shows this.
+> 
+> 
+> Thanks.
+> 
+> -ajeet.
 > 
