@@ -1,8 +1,8 @@
-Message-ID: <20030821073958.15125.qmail@ispower.org>
-From: "Joao Rechena" <security@rechena.com>
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] Inode problems
+Message-Id: <200308211432.XAA19014@ezfep1.ez-i.co.kr>
+From: WEBMASTER@ez-i.co.kr
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Subject: [linux-lvm] RE:Re: That movie
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -13,31 +13,18 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Thu Aug 21 09:09:02 2003
+Date: Thu Aug 21 09:33:01 2003
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; format="flowed"; charset="us-ascii"
+Content-Type: text/plain; charset="iso-2022-kr"
 To: linux-lvm@sistina.com
 
-Greetings, I'm using LVM for almost 6 months without any problem..
-2 days ago on of my filesystems filled up to 100%, then with the fs full 
-I've enlarged it, and everithing looked to be ok, except that when I then 
-tried to mkdir anything It returned to me the msg "Device is full", wierd. 
+안녕하세요. ez-i 입니다.
 
-I cleaned the fs a little and then reducit again, with the e2fsadm command, 
-everithing looked to started working fine again, until I've made a dmesg and 
-discovred this: 
+2003년 8월 5일부터 FAQ 및 Q&A 서비스가 변경되어 webmaster메일로 문의사항을 접수하지 않게 되었습니다.
 
-EXT2-fs error (device lvm(58,1)): ext2_check_page: bad entry in directory 
-#344422: directory entry across blocks - offset=12440, inode=411202, 
-rec_len=16420, name_len=28 
+고객센터 -> 사이버도우미의 자동답변시스템을 이용해주시고요.
 
-Can anyone tell-me how to solve this ? 
+자동답변시스템으로 이용이 되지 않는 사항에 대해서는 "이메일상담" 버튼을 통하여 문의해주셔야 답변을 받으실 수 있습니다.
 
-I've enlarged the fs again, deleted the dir with that inode, but the problem 
-presists. 
-
-Best Regards 
-
-rech 
-
-Joao Rechena 
+감사합니다.
+좋은하루 되세요.
