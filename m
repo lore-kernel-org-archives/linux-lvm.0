@@ -1,14 +1,12 @@
-Return-Path: <lewis@sistina.com>
-From: lewis@sistina.com
-Date: Tue, 12 Dec 2000 17:07:20 -0600
+Return-Path: <bluca@comedia.it>
+Date: Wed, 13 Dec 2000 08:36:53 +0100
+From: Luca Berra <bluca@comedia.it>
 Subject: Re: [linux-lvm] Linux 2.4.0-test12-pre7 LVM .9 vs .8final
-Message-ID: <20001212170719.A5990@sistina.com>
-References: <Pine.OSF.4.21.0012081042590.14388-100000@mail.mnsu.edu> <3A3477D0.94BC1D88@twc.de> <20001212084807.A27177@colombina.comedia.it>
+Message-ID: <20001213083653.A30015@colombina.comedia.it>
+References: <Pine.OSF.4.21.0012081042590.14388-100000@mail.mnsu.edu> <3A3477D0.94BC1D88@twc.de> <20001212084807.A27177@colombina.comedia.it> <20001212170719.A5990@sistina.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="PNTmBPCT7hxwcZjr"
 Content-Disposition: inline
-In-Reply-To: <20001212084807.A27177@colombina.comedia.it>; from bluca@comedia.it on Tue, Dec 12, 2000 at 08:48:07AM +0100
+In-Reply-To: <20001212170719.A5990@sistina.com>; from lewis@sistina.com on Tue, Dec 12, 2000 at 05:07:20PM -0600
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -20,51 +18,52 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
---PNTmBPCT7hxwcZjr
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Tue, Dec 12, 2000 at 05:07:20PM -0600, lewis@sistina.com wrote:
+> On Tue, Dec 12, 2000 at 08:48:07AM +0100, Luca Berra wrote:
+> > On Mon, Dec 11, 2000 at 07:44:32AM +0100, Ulf Bartelt wrote:
+> > > A set of lvm tools for multiple versions of the io protocol could help a
+> > > lot...
+> > > 
+> > > Sure this can be faked using links, wrappers etc...
+> > 
+> > i am using this piece of junk for testing and switching back btw 0.8 and 0.9
+> 
+> As far as I can tell though, this won't help people who are booting off of LVM
+> to transition to 0.9  We need some sort of boot disk image or something to
+> activate the volume group under the 0.9 code.
 
-On Tue, Dec 12, 2000 at 08:48:07AM +0100, Luca Berra wrote:
-> On Mon, Dec 11, 2000 at 07:44:32AM +0100, Ulf Bartelt wrote:
-> > A set of lvm tools for multiple versions of the io protocol could help a
-> > lot...
-> >=20
-> > Sure this can be faked using links, wrappers etc...
->=20
-> i am using this piece of junk for testing and switching back btw 0.8 and =
-0.9
+I don't grok the problem, (i have root lvm on my main system)
+/dev/vg01/lvol1         253871     49152    191612  20% /
 
-As far as I can tell though, this won't help people who are booting off of =
-LVM
-to transition to 0.9  We need some sort of boot disk image or something to
-activate the volume group under the 0.9 code.
+since the only known way to boot this is by having an initrd
+i just put lvm 0.9 tools in the initrd an rebooted
 
---=20
-AJ Lewis
-Sistina Software Inc.                  Voice:  612-379-3951
-1313 5th St SE, Suite 111              Fax:    612-379-3952
-Minneapolis, MN 55414                  E-Mail: lewis@sistina.com
-Current GPG fingerprint =3D 3B5F 6011 5216 76A5 2F6B  52A0 941E 1261 0029 2=
-648
+my linuxrc looks like:
+#!/bin/sh -x
+mount -t proc /proc /proc
+echo "" > /proc/sys/kernel/modprobe
+insmod -k /lib/modules/*/kernel/drivers/md/lvm-mod.o
+insmod -k /lib/modules/*/kernel/drivers/md/md.o
+insmod -k /lib/modules/*/kernel/drivers/md/raid1.o
+insmod -k /lib/modules/*/kernel/drivers/md/xor.o
+insmod -k /lib/modules/*/kernel/drivers/md/raid5.o
+insmod -k /lib/modules/*/kernel/drivers/scsi/scsi_mod.o
+insmod -k /lib/modules/*/kernel/drivers/scsi/aic7xxx.o aic7xxx='verbose'
+insmod -k /lib/modules/*/kernel/drivers/scsi/sd_mod.o
+insmod -k /lib/modules/*/kernel/drivers/block/floppy.o
+insmod -k /lib/modules/*/kernel/fs/reiserfs/reiserfs.o
+raidstart -a
+ln -s md/0 /dev/md0
+ln -s md/1 /dev/md1
+vgscan -v
+vgchange -a y
+umount /proc
 
-Programming today is a race between software engineers striving to build
-bigger and better idiot-proof programs, and the Universe trying to produce
-bigger and better idiots. So far, the Universe is winning. - Rich Cook
 
---PNTmBPCT7hxwcZjr
-Content-Type: application/pgp-signature
-Content-Disposition: inline
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.0.4 (GNU/Linux)
-Comment: For info see http://www.gnupg.org
-
-iD4DBQE6Nq+npE6/iGtdjLERAmPBAJ4zFhm/o8cFZI7O1WcSj+VN5EkouQCYteNo
-dlZmqg4uqj91NCGFXRrFRg==
-=lH3D
------END PGP SIGNATURE-----
-
---PNTmBPCT7hxwcZjr--
+-- 
+Luca Berra -- bluca@comedia.it
+    Communication Media & Services S.r.l.
