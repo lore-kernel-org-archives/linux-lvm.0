@@ -1,9 +1,8 @@
-From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] vgcfgrestore error !
-Message-ID: <20011123143532.C4829@sistina.com>
-References: <3BF8E5DE.ABAEB618@LTUtech.com> <20011119125632.A12388@sistina.com> <3BF8F8BF.3FE1491C@LTUtech.com> <20011119151746.A13040@sistina.com> <3BF923C3.A2060FDD@LTUtech.com> <20011120121947.B18529@sistina.com> <3BFA4184.43FC7D35@LTUtech.com>
-Mime-Version: 1.0
-In-Reply-To: <3BFA4184.43FC7D35@LTUtech.com>; from Igor.Dumaire@LTUtech.com on Tue, Nov 20, 2001 at 12:41:56PM +0100
+From: Benjamin Scott <bscott@ntisys.com>
+Subject: Re: [linux-lvm] LVM performance
+In-Reply-To: <20011123002611.N5393@sonsofthunder.yi.org>
+Message-ID: <Pine.LNX.4.33.0111230911340.6061-100000@dragon.inside.ntisys.com>
+MIME-Version: 1.0
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,207 +13,25 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Fri Nov 23 07:41:02 2001
+Date: Fri Nov 23 08:08:02 2001
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: TEXT/PLAIN; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
-Cc: mge@sistina.com
 
-Igor,
+On Fri, 23 Nov 2001, Bradley M Alexander wrote:
+> the CD write actually happens from hdc -> hdd.
 
-pvdata output looks fine.
+  This might be *a* problem.  As others have said, IDE handles bus
+contention either very poorly or not at all.  Since you have all your I/O on
+one bus, you may be seeing a problem there.
 
-Could you send me the metadata for further investigation in private
-email, please?
+  For IDE, I generally favor putting HDs on one bus, and CDs/tapes on the
+other.  Actually, I favor putting a single device on each bus.  Actually, I
+favor SCSI.  :-)
 
-You can retrieve 3 files with the metadata of your PVs by "
-for d in /dev/hd[cef]1
-do
-   dd if=$d of=`basename $d`.lvm bs=1k count=512
-done
-
-Regards,
-Heinz    -- The LVM Guy --
-
-
-On Tue, Nov 20, 2001 at 12:41:56PM +0100, Igor Dumaire wrote:
-> 
-> > Strange.
-> > Please provide "vgdisplay -v;pvscan;lvmdiskscan" and "pvdata -PP" for all
-> > PVs belonging to the missing VG.
-> > 
-> # vgdisplay -v
-> --- Volume group ---
-> VG Name               lvm2
-> VG Access             read/write
-> VG Status             available/resizable
-> VG #                  0
-> MAX LV                255
-> Cur LV                1
-> Open LV               1
-> MAX LV Size           255.99 GB
-> Max PV                255
-> Cur PV                3
-> Act PV                3
-> VG Size               171.79 GB
-> PE Size               4.00 MB
-> Total PE              43977
-> Alloc PE / Size       43776 / 171.00 GB
-> Free  PE / Size       201 / 804.00 MB
-> VG UUID               Jp3gDv-ib7D-p5te-FFLZ-lNjI-5brK-fzjEM6
-> 
-> --- Logical volume ---
-> LV Name                /dev/lvm2/Backup
-> VG Name                lvm2
-> LV Write Access        read/write
-> LV Status              available
-> LV #                   1
-> # open                 1
-> LV Size                171.00 GB
-> Current LE             43776
-> Allocated LE           43776
-> Allocation             next free
-> Read ahead sectors     120
-> Block device           58:0
-> 
-> 
-> --- Physical volumes ---
-> PV Name (#)           /dev/hdd1 (3)
-> PV Status             available / allocatable
-> Total PE / Free PE    14659 / 201
-> 
-> PV Name (#)           /dev/hdg1 (1)
-> PV Status             available / allocatable
-> Total PE / Free PE    14659 / 0
-> 
-> PV Name (#)           /dev/hdh1 (2)
-> PV Status             available / allocatable
-> Total PE / Free PE    14659 / 0
-> 
-> 
-> 
-> # pvscan
-> pvscan -- reading all physical volumes (this may take a while...)
-> pvscan -- inactive PV "/dev/hdc1"  is associated to an unknown VG (run vgscan)
-> pvscan -- ACTIVE   PV "/dev/hdd1" of VG "lvm2" [57.26 GB / 804.00 MB free]
-> pvscan -- inactive PV "/dev/hde1"  is associated to an unknown VG (run vgscan)
-> pvscan -- inactive PV "/dev/hdf1"  is associated to an unknown VG (run vgscan)
-> pvscan -- ACTIVE   PV "/dev/hdg1" of VG "lvm2" [57.26 GB / 0 free]
-> pvscan -- ACTIVE   PV "/dev/hdh1" of VG "lvm2" [57.26 GB / 0 free]
-> pvscan -- total: 6 [343.62 GB] / in use: 6 [343.62 GB] / in no VG: 0 [0]
-> 
-> # man pvdata
-> # pvdata -PP /dev/hde1
-> --- Physical volume ---
-> PV Name               /dev/hde1
-> VG Name               lvm1
-> PV Size               57.27 GB / NOT usable 8.11 MB [LVM: 181.00 KB]
-> PV#                   1
-> PV Status             NOT available
-> Allocatable           yes (but full)
-> Cur LV                1
-> PE Size (KByte)       4096
-> Total PE              14659
-> Free PE               0
-> Allocated PE          14659
-> PV UUID               kbvz5r-hJlN-WU9Q-7xwj-alJ6-8UfO-jopMFc
-> pv_dev                   0:33
-> system_id                courcelles.ltutech.com1004974292
-> pv_on_disk.base          0
-> pv_on_disk.size          1024
-> vg_on_disk.base          4096
-> vg_on_disk.size          4096
-> pv_uuidlist_on_disk.base 8192
-> pv_uuidlist_on_disk.size 32768
-> lv_on_disk.base          40960
-> lv_on_disk.size          83968
-> pe_on_disk.base          126976
-> pe_on_disk.size          4259840
-> 
-> 
-> 
-> # pvdata -PP /dev/hdf1
-> --- Physical volume ---
-> PV Name               /dev/hdf1
-> VG Name               lvm1
-> PV Size               57.27 GB / NOT usable 8.11 MB [LVM: 181.00 KB]
-> PV#                   2
-> PV Status             NOT available
-> Allocatable           yes (but full)
-> Cur LV                1
-> PE Size (KByte)       4096
-> Total PE              14659
-> Free PE               0
-> Allocated PE          14659
-> PV UUID               weQY7t-7II0-7t74-hVI5-Dj8Y-CV0O-8CyGqh
-> pv_dev                   0:33
-> system_id                courcelles.ltutech.com1004974293
-> pv_on_disk.base          0
-> pv_on_disk.size          1024
-> vg_on_disk.base          4096
-> vg_on_disk.size          4096
-> pv_uuidlist_on_disk.base 8192
-> pv_uuidlist_on_disk.size 32768
-> lv_on_disk.base          40960
-> lv_on_disk.size          83968
-> pe_on_disk.base          126976
-> pe_on_disk.size          4259840
->  
->  
->  
-> # pvdata -PP /dev/hdc1
-> --- Physical volume ---
-> PV Name               /dev/hdc1
-> VG Name               lvm1
-> PV Size               57.27 GB / NOT usable 8.11 MB [LVM: 181.00 KB]
-> PV#                   3
-> PV Status             available
-> Allocatable           yes
-> Cur LV                1
-> PE Size (KByte)       4096
-> Total PE              14659
-> Free PE               201
-> Allocated PE          14458
-> PV UUID               BFvA7F-ccvF-e5r1-3QH7-02JG-dH4r-AOYF64
-> pv_dev                   0:22
-> system_id                courcelles.ltutech.com1004974291
-> pv_on_disk.base          0
-> pv_on_disk.size          1024
-> vg_on_disk.base          4096
-> vg_on_disk.size          4096
-> pv_uuidlist_on_disk.base 8192
-> pv_uuidlist_on_disk.size 32768
-> lv_on_disk.base          40960
-> lv_on_disk.size          83968
-> pe_on_disk.base          126976
-> pe_on_disk.size          4259840
-> 
-> 
-> Thanks a lot for your help. I have lost (can't acces) a lot of data !
-> Best regards.
-> 
-> -- 
-> Igor Dumaire
-> 
-> www.LTUtech.com - Making Sense of Visual Content
-> ------------------------------------------------
-> 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
-
-*** Software bugs are stupid.
-    Nevertheless it needs not so stupid people to solve them ***
-
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-
-Heinz Mauelshagen                                 Sistina Software Inc.
-Senior Consultant/Developer                       Am Sonnenhang 11
-                                                  56242 Marienrachdorf
-                                                  Germany
-Mauelshagen@Sistina.com                           +49 2626 141200
-                                                       FAX 924446
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+-- 
+Ben Scott <bscott@ntisys.com>
+| The opinions expressed in this message are those of the author and do not |
+| necessarily represent the views or policy of any other person, entity or  |
+| organization.  All information is provided without warranty of any kind.  |
