@@ -1,11 +1,10 @@
-Return-Path: <juergens@muon.de>
-Date: Wed, 31 Jan 2001 18:48:52 +0100
-From: Nils Juergens <nils@muon.de>
-Subject: Re: [linux-lvm] Maximum # of PEs Per PV
-Message-ID: <20010131184852.A1268@guldukat.muon>
-References: <Pine.LNX.4.21.0101311816020.13129-100000@miami.datech2.er.heitec.net>
-Mime-Version: 1.0
-In-Reply-To: <Pine.LNX.4.21.0101311816020.13129-100000@miami.datech2.er.heitec.net>; from Holger.Rauch@heitec.de on Wed, Jan 31, 2001 at 06:30:37PM +0100
+Return-Path: <wigren@home.se>
+Message-ID: <3A76F94A.711D56ED@home.se>
+Date: Tue, 30 Jan 2001 18:26:34 +0100
+From: Per Wigren <wigren@home.se>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] lvextend segfault
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -18,30 +17,111 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: linux-lvm@sistina.com
+To: linux-lvm@sistina.com, lvm-bugs@sistina.com
 
-On Wed, 31.01.01, Holger Rauch <Holger.Rauch@heitec.de> wrote:
+Linux-LVM-Bug@sistina.com, as told in the README, doesn't work so I send
+it here instead.
+I'm not on the list so please CC wigren@home.se!
 
-[snip]
+I created a VG with only /dev/hdd1. Then I try to extend that VG with
+/dev/hdc1, but lvextend segfaults.
+Still, vgdisplay says it's there, but "VG Size: 42.95 GB", which is the
+size of /dev/hdd1 ONLY.... /dev/hdc1 is 29 GB so it should say "72
+GB"...
+They trying to remove /dev/hdc1 from the VG it says it doesn't belong to
 
-> Now, I've got a few questions:
-> 1. Why do I only have 229GB available on this volume group instead of
-> 240G?
+VG??!!!
 
-Well, the problem here is that harddisk vendors sell disks that have a
-capacity of 80 * 1000 * 1000 kB but name this 80GB, which is 80 * 1024
-* 1024 kB.
+Please help!
 
-So your three disks have 3 * 80 * 1000^2 / (1024^2) = 228.88 
+I think this is best explained with an example:
 
-So your only have 229 GB total capacity and LVM is quite correct :)
+stormie:/usr/src/temp/LVM/0.9.1_beta3# vgextend -v vg02 /dev/hdc1
+vgextend -- locking logical volume manager
+vgextend -- checking volume group name "vg02"
+vgextend -- checking volume group "vg02" existence
+vgextend -- checking for inactivity of volume group
+vgextend -- reading data of volume group "vg02" from lvmtab
+vgextend -- INFO: maximum logical volume size is 255.99 Gigabyte
+vgextend -- reading data for all physical volumes from disk(s)
+vgextend -- extending VGDA structures of volume group "vg02"
+vgextend -- volume group "vg02" will be extended by 1 new physical
+volumes
+vgextend -- extending volume group "vg02" by physical volume "/dev/hdc1"
 
-greetings,
+in kernel
+Segmentation fault
+stormie:/usr/src/temp/LVM/0.9.1_beta3# vgdisplay -v vg02
+--- Volume group ---
+VG Name               vg02
+VG Access             read/write
+VG Status             available/resizable
+VG #                  0
+MAX LV                256
+Cur LV                2
+Open LV               1
+MAX LV Size           255.99 GB
+Max PV                256
+Cur PV                4
+Act PV                4
+VG Size               42.95 GB
+PE Size               4 MB
+Total PE              10994
+Alloc PE / Size       6681 / 26.1 GB
+Free  PE / Size       4313 / 16.85 GB
+VG UUID               z2W4tI-xK3w-dE2Q-DUYl-CrHN-3KzM-zyBXA5
 
-Nils
+--- Logical volume ---
+LV Name                /dev/vg02/music
+VG Name                vg02
+LV Write Access        read/write
+LV Status              available
+LV #                   1
+# open                 0
+LV Size                1.1 GB
+Current LE             281
+Allocated LE           281
+Allocation             next free
+Read ahead sectors     120
+Block device           58:0
 
--- 
- >   Nils Juergens  | nils@muon.de | icq 7090774   <
- >  If we all work hard, we can turn this company  <
- >      around 360 degrees -- gruntbert(LOTD)      <
+--- Logical volume ---
+LV Name                /dev/vg02/temp
+VG Name                vg02
+LV Write Access        read/write
+LV Status              available
+LV #                   2
+# open                 1
+LV Size                25 GB
+Current LE             6400
+Allocated LE           6400
+Allocation             next free
+Read ahead sectors     120
+Block device           58:1
+
+
+--- Physical volumes ---
+PV Name (#)           /dev/hdc1 (2)
+PV Status             available / allocatable
+Total PE / Free PE    7328 / 7328
+
+PV Name (#)           /dev/hdd1 (1)
+PV Status             available / allocatable
+Total PE / Free PE    10994 / 4313
+
+stormie:/usr/src/temp/LVM/0.9.1_beta3# vgreduce -v vg02 /dev/hdc1
+vgreduce -- locking logical volume manager
+vgreduce -- checking volume group name "vg02"
+vgreduce -- checking volume group "vg02" existence
+vgreduce -- checking volume group "vg02" activity
+vgreduce -- reading data of volume group "vg02" from disk(s)
+vgreduce -- reducing VGDA structures of volume group "vg02"
+vgreduce -- physical volume "/dev/hdc1" doesn't belong to volume group
+"vg02"
+stormie:/usr/src/temp/LVM/0.9.1_beta3#
+
+
+I use kernel 2.4.0ac12 and 0.9.1beta3 of the lvm-tools.
+
+Best regards
+Per Wigren
