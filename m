@@ -1,12 +1,12 @@
-From: Chris Danis <screechco@home.com>
+From: Wichert Akkerman <wichert@cistron.nl>
 Subject: Re: [linux-lvm] lvm and Debian
-In-Reply-To: Your message of
-    "Fri, 18 Jan 2002 12:24:06 +0100."
-    <E16RX7u-0000Su-00@arwen.dev33.cvf>
+Message-Id: <20020118114639.GE11018@wiggy.net>
 References: <E16RWI7-00083Z-00@arwen.dev33.cvf>
-    <wvpu47hqdr.fsf@freeze.oslo.dnmi.no>  <E16RX7u-0000Su-00@arwen.dev33.cvf>
+    <wvpu47hqdr.fsf@freeze.oslo.dnmi.no> <E16RX7u-0000Su-00@arwen.dev33.cvf>
+    <E16RXPP-0006iF-00@brooks.homenet>
 MIME-Version: 1.0
-Message-Id: <E16RXPP-0006iF-00@brooks.homenet>
+Content-Disposition: inline
+In-Reply-To: <E16RXPP-0006iF-00@brooks.homenet>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,30 +17,30 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Fri Jan 18 05:42:04 2002
+Date: Fri Jan 18 05:47:01 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
->>>>> On Fri, 18 Jan 2002, "Pierrick" == Pierrick PONS wrote:
+Previously Chris Danis wrote:
+> These packages are present only in the 'unstable' distribution of Debian, 
+> or sid. They are not in stable nor are they in testing.
 
-  +> > >>>> "Pierrick" == Pierrick PONS <ppons@cvf.fr> writes:
+Hmm, indeed:
 
-  Pierrick> Oh I'm really interested in getting these packages, but could
-  Pierrick> you give us the source to add in the source.list which permits
-  Pierrick> obtaining these packages ?
+lvm-common |        1.3 |      unstable | mips, mipsel, powerpc, sh, sparc
+lvm-common |        1.4 |      unstable | source, alpha, arm, hppa, i386, ia64, m68k, s390
+     lvm10 |      1.0-1 |      unstable | sh
+     lvm10 | 1.0.1release-1 |      unstable | source, alpha, arm, hppa, i386, ia64, m68k, mips, mipsel, powerpc, s390, sparc
 
-These packages are present only in the 'unstable' distribution of Debian, 
-or sid. They are not in stable nor are they in testing.
+However you can manually grab the package for unstable and install it
+on a testing system without any problems.
 
-thanks,
+Wichert.
 
--chris
 -- 
-
-(I subscribe to all lists that I post to;
-please do not Cc me on list reply)
-Chris Danis
-screechco@home.com / danish@debian.org
-Debian GNU/Linux - www.debian.org
+  _________________________________________________________________
+ /wichert@wiggy.net         This space intentionally left occupied \
+| wichert@deephackmode.org            http://www.liacs.nl/~wichert/ |
+| 1024D/2FA3BC2D 576E 100B 518D 2F16 36B0  2805 3CB8 9250 2FA3 BC2D |
