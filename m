@@ -1,22 +1,20 @@
-Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id i8QKS4r02068
-	for <linux-lvm@redhat.com>; Sun, 26 Sep 2004 16:28:04 -0400
-Received: from clown.omnifarious.org (dsl231-056-102.sea1.dsl.speakeasy.net
-	[216.231.56.102])
-	by mx1.redhat.com (8.12.11/8.12.10) with ESMTP id i8QKS3bm007804
-	for <linux-lvm@redhat.com>; Sun, 26 Sep 2004 16:28:03 -0400
-Date: Sun, 26 Sep 2004 13:27:57 -0700
-From: Eric Hopper <hopper@omnifarious.org>
+Received: from agk.surrey.redhat.com (agk.surrey.redhat.com [172.16.10.74])
+	by pobox.surrey.redhat.com (8.12.8/8.12.8) with ESMTP id i8R0Ugin023444
+	for <linux-lvm@redhat.com>; Mon, 27 Sep 2004 01:30:42 +0100
+Received: from agk by agk.surrey.redhat.com with local (Exim 4.34)
+	id 1CBjPe-000427-8T
+	for linux-lvm@redhat.com; Mon, 27 Sep 2004 01:30:42 +0100
+Date: Mon, 27 Sep 2004 01:30:42 +0100
+From: Alasdair G Kergon <agk@redhat.com>
 Subject: Re: [linux-lvm] which files, which physical volumes?
-Message-ID: <20040926202757.GG32455@omnifarious.org>
+Message-ID: <20040927003042.GO11810@agk.surrey.redhat.com>
 References: <41538691.2040807@myself.gen.nz>
 	<20040924061754.GD13943@percy.comedia.it>
 	<4153BF33.6030008@myself.gen.nz>
+	<20040926202757.GG32455@omnifarious.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="p7qwJlK53pWzbayA"
 Content-Disposition: inline
-In-Reply-To: <4153BF33.6030008@myself.gen.nz>
+In-Reply-To: <20040926202757.GG32455@omnifarious.org>
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -27,54 +25,41 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: linux-lvm@redhat.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
+On Sun, Sep 26, 2004 at 01:27:57PM -0700, Eric Hopper wrote:
+> But, since pvmove doesn't seem to work yet, I
 
---p7qwJlK53pWzbayA
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+pvmove does work, but I am aware of the following restrictions 
+if you want to avoid the risk of freezing:
 
-On Fri, Sep 24, 2004 at 06:31:15PM +1200, Steve Wray wrote:
-> So is there any other way to decomission that physical volume that
-> doesn't involve pvmove?
+  You must not disable o_direct when configuring;
+    [I've heard some distributions/architectures may do this]
+  You must not set log activation to 1 in the config file;
+    [That settings's only needed for a particular sort of debugging]
+  You must not pvmove a filesystem that lvm itself uses directly;
+    [For 2.6.8 kernels, version 2.00.24 (if compiled against up-to-date 
+    headers that define O_NOATIME correctly) is reported to improve 
+    things substantially in this case; for 2.4 a kernel patch
+    doing something similar gets applied by default.]
+  Don't try to mix snapshots with pvmove [untested].
+  I have also not tested with udev, nor with md underneath PVs.
 
-I end up using lvcreate (with some options) to create a new logical
-volume that has no extents on the physical volume you want to move off
-of, and has the exact same number of extents as the logical volume you
-want to move.  Then use dd to copy the blocks from the filesystem you
-want to move (which has to be unmounted, or mounted read-only) onto the
-new one.  Then unmount the old one, lvremove it, and change fstab and
-things so the new one is mounted in its place.
+Also:
+  The allocation algorithm is as yet unable to break up contiguous 
+  space: you still have to break it up yourself if it doesn't find 
+  enough contiguous space. [e.g. pvmove /dev/hda:100-199]
 
-It's ugly and stupid.  But, since pvmove doesn't seem to work yet, I
-think that's the best that can be done.  I'm sorely disappointed that
-LVM2 was even put into the production kernel without pvmove working.
-:-(
+  Test mode works a different way in LVM2 - it's designed for testing
+  and simply disables all writes at the lowest level of the code 
+  (to guarantee safety) - but reports success to the calling function.  
+  Many code paths don't yet say 'stop here if this is test mode' so
+  they stop instead with an error when they find an inconsistency
+  because they thought they changed something, but it got read back
+  unchanged.
 
-I know LVM2 and the device mapper concept are much better than LVM1.
-But, pvmove is a core piece of functionality.  It's like releasing a
-filesystem for which the lstat call doesn't work or something similar.
-
-*sigh*,
---=20
-"It does me no injury for my neighbor to say there are twenty gods or no Go=
-d.
-It neither picks my pocket nor breaks my leg."  --- Thomas Jefferson
-"Go to Heaven for the climate, Hell for the company."  -- Mark Twain
--- Eric Hopper (hopper@omnifarious.org  http://www.omnifarious.org/~hopper)=
- --
-
---p7qwJlK53pWzbayA
-Content-Type: application/pgp-signature
-Content-Disposition: inline
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.2.4 (GNU/Linux)
-
-iD4DBQFBVyZMjtsvlOwvazYRAlEUAJianZ7ZVnz8YgP1DbvH/SkLosDTAKCYsVIG
-hpQLO7rSiRhVXiaLCobokQ==
-=shRi
------END PGP SIGNATURE-----
-
---p7qwJlK53pWzbayA--
+Alasdair
+-- 
+agk@redhat.com
