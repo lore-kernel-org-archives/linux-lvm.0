@@ -1,10 +1,10 @@
-From: Goetz Bock <bock@blacknet.de>
+From: Martin Mosny <mmosny@postel.sk>
+Message-ID: <15814003484.20031104150732@postel.sk>
 Subject: Re: [linux-lvm] LVM and RAID
-Message-ID: <20031104120154.GB11472@shell.blacknet.de>
-References: <21E8E34076807C41A646FDC666B15BDF08769D@minna.combox.de>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <21E8E34076807C41A646FDC666B15BDF08769D@minna.combox.de>
+In-Reply-To: <21E8E34076807C41A646FDC666B15BDF087699@minna.combox.de>
+References: <21E8E34076807C41A646FDC666B15BDF087699@minna.combox.de>
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,23 +15,32 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Tue Nov  4 07:56:04 2003
+Date: Tue Nov  4 08:06:08 2003
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: "'linux-lvm@sistina.com'" <linux-lvm@sistina.com>
+To: Tobias Gablunsky <linux-lvm@sistina.com>
 
-On Tue, Nov 04 '03 at 12:49, Tobias Gablunsky wrote:
-> I didn't find clear information about how to use LVM on an (Software)
-> RAID-Mirror (or RAID-5). All I found, were problems: LVM uses Partition Type
-> 0x8E but Linux Soft-RAID uses 0xFD - this dosn't look very compatible...
-Well, it just works. You make an autodetection softRAID (e.g. partition
-type 0xFD) and make that a PV.
-
-No need to have partition type 0x8e. LVM does not care about the
-partition type, and you don't even have a partition type on softRAID.
--- 
-/"\ Goetz Bock at blacknet dot de  --  secure mobile Linux everNETting
-\ /                     (c) 2003 as GNU FDL 1.1
- X   [ 1. Use descriptive subjects - 2. Edit a reply for brevity -  ]
-/ \  [ 3. Reply to the list - 4. Read the archive *before* you post ]
+LS0tLS1CRUdJTiBQR1AgU0lHTkVEIE1FU1NBR0UtLS0tLQ0KSGFzaDogU0hBMQ0KDQpoaSBh
+bGwsDQoNCj4gSSBkaWRuJ3QgZmluZCBjbGVhciBpbmZvcm1hdGlvbiBhYm91dCBob3cgdG8g
+dXNlIExWTSBvbiBhbiAoU29mdHdhcmUpDQo+IFJBSUQtTWlycm9yIChvciBSQUlELTUpLiBB
+bGwgSSBmb3VuZCwgd2VyZSBwcm9ibGVtczogTFZNIHVzZXMgUGFydGl0aW9uIFR5cGUNCj4g
+MHg4RSBidXQgTGludXggU29mdC1SQUlEIHVzZXMgMHhGRCAtIHRoaXMgZG9zbid0IGxvb2sg
+dmVyeSBjb21wYXRpYmxlLi4uIEENCj4gc29sdXRpb24gd291bGQgYmUgdG8gdXNlIEhhcmR3
+YXJlLVJBSUQgb2YgY291cnNlLiBCdXQgSSdtIHdvbmRlcmluZyBpZiB0aGVyZQ0KPiBpcyBh
+IHdheSB0byB1c2UgU29mdHdhcmUtUkFJRCBhbmQgTFZNIHRvZ2V0aGVyIC0gSSBjYW5ub3Qg
+YmVsaWV2ZSB0aGF0IEkgYW0NCj4gdGhlIGZpcnN0IG9uZSB3aXRoIHRoaXMgcXVlc3Rpb24h
+IEFtIEk/DQoNCkFzIEdvZXR6IEJvY2sgc2F5IC0ganVzdCB1c2UgMHhGRCBmb3IgcmFpZA0K
+DQogICBEZXZpY2UgQm9vdCAgICBTdGFydCAgICAgICBFbmQgICAgQmxvY2tzICAgSWQgIFN5
+c3RlbQ0KL2Rldi9oZGEzICAgICAgICAgICAxMzggICAgICA5NzI5ICA3NzA0Nzc0MCAgIGZk
+ICBMaW51eCByYWlkIGF1dG9kZXRlY3QNCg0KbWFrZSBhbGwgdGhlIHJhaWQgc3R1ZmY6DQoN
+CnJhaWRkZXYgICAgICAgICAgICAgL2Rldi9tZDENCnJhaWQtbGV2ZWwgICAgICAgICAgICAg
+ICAgICAxDQpuci1yYWlkLWRpc2tzICAgICAgICAgICAgICAgMg0KY2h1bmstc2l6ZSAgICAg
+ICAgICAgICAgICAgIDY0aw0KcGVyc2lzdGVudC1zdXBlcmJsb2NrICAgICAgIDENCm5yLXNw
+YXJlLWRpc2tzICAgICAgICAgICAgICAwDQogICAgZGV2aWNlICAgICAgICAgIC9kZXYvaGRh
+Mw0KICAgIHJhaWQtZGlzayAgICAgMA0KICAgIGRldmljZSAgICAgICAgICAvZGV2L2hkYjMN
+CiAgICByYWlkLWRpc2sgICAgIDENCg0KYWZ0ZXIgdGhlbSBtYWtlIGFsbCB0aGUgbHZtIHN0
+dWZmDQoNCi0gLS0NCkJlc3QgcmVnYXJkcw0KICAgICBNYXJ0aW4gTW9zbnkNCg0KLS0tLS1C
+RUdJTiBQR1AgU0lHTkFUVVJFLS0tLS0NClZlcnNpb246IFBHUCA2LjVpDQoNCmlRQS9Bd1VC
+UDZla21KZGd1QnlHOVE0YUVRSWpUZ0Nnc2cvSnR2QXBaOW4vK1VMMGFNeGF3OUVXbFA4QW9Q
+TkgNCllackNOMlVGTVFIaXlFT2ZuTDVmRW0zUA0KPWJOUGYNCi0tLS0tRU5EIFBHUCBTSUdO
+QVRVUkUtLS0tLQ0K
