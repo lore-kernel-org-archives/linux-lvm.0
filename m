@@ -1,20 +1,27 @@
 Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j23LltK22095
-	for <linux-lvm@redhat.com>; Thu, 3 Mar 2005 16:47:55 -0500
-Received: from anchor-post-32.mail.demon.net (anchor-post-32.mail.demon.net
-	[194.217.242.90])
-	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id j23LlrKx002972
-	for <linux-lvm@redhat.com>; Thu, 3 Mar 2005 16:47:54 -0500
-Date: Thu, 3 Mar 2005 21:47:32 +0000
-From: Robin Green <greenrd@greenrd.org>
-Subject: Re: [linux-lvm] df doesn't display increased available disk space
-Message-ID: <20050303214732.GD4141@pob>
-References: <1109885756.6400.16.camel@localhost.localdomain>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="oj4kGyHlBMXGt3Le"
-Content-Disposition: inline
-In-Reply-To: <1109885756.6400.16.camel@localhost.localdomain>
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j23MSrK02199
+	for <linux-lvm@redhat.com>; Thu, 3 Mar 2005 17:28:54 -0500
+Received: from kweetal.tue.nl (kweetal.tue.nl [131.155.3.6])
+	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id j23MSqX7013534
+	for <linux-lvm@redhat.com>; Thu, 3 Mar 2005 17:28:53 -0500
+Received: from iris.tue.nl (iris.tue.nl [131.155.2.34])
+	by kweetal.tue.nl (Postfix) with ESMTP id 8350C13B618
+	for <linux-lvm@redhat.com>; Thu,  3 Mar 2005 23:28:48 +0100 (CET)
+Received: from [131.155.224.79] (t-26-79.athome.tue.nl [131.155.224.79])
+	by iris.tue.nl (Postfix) with ESMTP id 7E2E310C12C
+	for <linux-lvm@redhat.com>; Thu,  3 Mar 2005 23:28:48 +0100 (CET)
+Message-ID: <42278F9F.4090009@are-b.org>
+Date: Thu, 03 Mar 2005 23:28:47 +0100
+From: oliver <oliver@are-b.org>
+MIME-Version: 1.0
+Subject: Re: [linux-lvm] Partition table gone? Any way to restore?
+References: <4225FBC8.9020904@are-b.org>
+	<20050302174819.GN17589@lug-owl.de>	<4225FEBC.2060505@are-b.org>
+	<20050302180537.GO17589@lug-owl.de>	<42260F1B.2030803@are-b.org>
+	<1109791034l.28794l.3l@tangerine>
+	<1109796276.31821.263.camel@seki.nac.uci.edu>
+In-Reply-To: <1109796276.31821.263.camel@seki.nac.uci.edu>
+Content-Transfer-Encoding: 7bit
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -25,47 +32,49 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: robert.buick@btconnect.com, LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
+Small update. Using a hex editor i was able to more closley examine my 
+disk(s). Since I have 2 LVM setups I was somewhat able to compare what I 
+have to what I should have. I do still need some insite however.
 
---oj4kGyHlBMXGt3Le
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+ From what I can tell, pvcreate only modifies the first few k's of the 
+disk, followed by information stored from the vgcreate.
+Then the lvcreate adds some more information after this. (vg00/lv basicly).
 
-On Thu, Mar 03, 2005 at 09:35:55PM +0000, Robert Buick wrote:
-> I'm running Fedora Core 3 with LVM2, and have added /dev/hda4 (13.09GB)
-> to the VG, however this increase is not reflected if I do a df -h. Have
-> I missed something?
+I hope i got it right so far : )
 
-Yes - you need to resize the filesystem as well.
+Now, the vgcreate information is identical on the two surviving parts 
+except for a 'hostname<someserialnumber>' part around address 0x00012c.
 
-If you are using an ext2 or ext3 filesystem you could use resize2fs. If you
-are using reiserfs, you could use resize_reiserfs. I don't know about resize
-tools for other filesystems.
+Then at 0x0001000 we see the UUID of the VG passing by followed by some 
+data (which is identical on all three vgs.
 
-Please note that resize2fs in Fedora Core 3 is buggy, and may corrupt the
-resize inode. To get a version that works better, I recommend you download =
-and build
-from source e2fsprogs 1.36 from http://prdownloads.sourceforge.net/e2fsprog=
-s/e2fsprogs-1.36.tar.gz
+I don't think i have to look beyond this point in space/address.
 
-(If you wanted to avoid using resize2fs altogether, you could of course
-backup all your data in /, mke2fs the root filesystem, and copy all the data
-back again. But that would be much slower.)
---=20
-Robin
+Assuming that none of the tools (besides pvcreate) write anything before 
+0x0001000, I should be able to pvcreate /dev/hde edit the UUID of that 
+specific PV (to the same stored in the other two PV's so the three match 
+up again) and have a fully workable LVM set again.
 
---oj4kGyHlBMXGt3Le
-Content-Type: application/pgp-signature
-Content-Disposition: inline
+The only thing that might worry me is crc information stored somewhere 
+after 0x0001000 (However it appears to me that there isn't a whole bunch 
+of data stored before 0x0001000 and the data created by pvcreate is 
+identical on all 3 drives with the exception of the UUID so the crc 
+value should match again) and the string 'vg00'at 0x0000ac i see on all 
+disks (the name of the vg.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.2.6 (GNU/Linux)
+What my question is (without spending days reading the sourcecode : ) is 
+am I correct? Assuming that all the 'important' metadata and such is 
+stored 'after' 0x0001000 hex, is there a good chance of it working?
 
-iD8DBQFCJ4X0tPCt67UksSYRAlllAKDbsuXbqYwWeW9FAcuGQG5gHO7qrwCfXNa0
-2nbdjIeyWYNGF+lVMz2I8bA=
-=2eWM
------END PGP SIGNATURE-----
+I'm thinking of running a pvcreate, change the UUID of the PV to what I 
+expect it to be, add 'vg00' at 0x000ac and be happy?
 
---oj4kGyHlBMXGt3Le--
+I could simply try, I know, but some feedback first would be appreciated 
+; ) I really don't want to loose my data.
+
+Thanks a lot.
+
+Oliver
