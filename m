@@ -1,12 +1,11 @@
-Return-Path: <thornber@btconnect.com>
-Date: Wed, 16 May 2001 09:39:29 +0100
-Subject: Re: [linux-lvm] lvm deadlock with 2.4.x kernel?
-Message-ID: <20010516093929.B482@66bassett.freeserve.co.uk>
-References: <200105160032.f4G0WPIP022333@webber.adilger.int> <28230000.989975826@tiny>
+Return-Path: <root@srv.sistina.com>
+Date: Wed, 16 May 2001 10:45:13 +0000
+From: "Heinz J. Mauelshagen" <Mauelshagen@sistina.com>
+Subject: Re: [linux-lvm] segfaults and "VGDATA .. inconsistent" beta7 tools
+Message-ID: <20010516104513.C11984@sistina.com>
+References: <Pine.LNX.4.33.0105150857180.24660-100000@rossi.itg.ie>
 Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <28230000.989975826@tiny>; from mason@suse.com on Tue, May 15, 2001 at 09:17:06PM -0400
-From: Joe Thornber <thornber@btconnect.com>
+In-Reply-To: <Pine.LNX.4.33.0105150857180.24660-100000@rossi.itg.ie>; from paulj@itg.ie on Tue, May 15, 2001 at 09:04:54AM +0100
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -22,12 +21,128 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Tue, May 15, 2001 at 09:17:06PM -0400, Chris Mason wrote:
-> You're right though, pv_flush certainly doesn't look like it could cause
-> any deadlocks.
+On Tue, May 15, 2001 at 09:04:54AM +0100, Paul Jakma wrote:
+> I have the same problem with 2 machines.
+> 
+> They are both running 2.4.5-pre1 with LVM 0.9.1beta7 patch applied and
+> the beta7 RPMs. On boot they run vgscan then vgchange -ay. (and
+> i've tried running pvscan too)
+> 
+> problem is thus:
+> 
+> [root@ns /root]# vgdisplay
+> vgdisplay
+> --- Volume group ---
+> VG Name               VG01
+> VG Access             read/write
+> VG Status             available/resizable
+> VG #                  0
+> MAX LV                256
+> Cur LV                7
+> Open LV               6
+> MAX LV Size           1023.97 GB
+> Max PV                256
+> Cur PV                1
+> Act PV                1
+> VG Size               13.61 GB
+> PE Size               16 MB
+> Total PE              871
+> Alloc PE / Size       297 / 4.64 GB
+> Free  PE / Size       574 / 8.97 GB
+> VG UUID               8HMZzp-xzeK-13Fu-D4vx-a3hM-GhED-gUsh1x
+> 
+> 
+> [root@ns /root]# vgdisplay -v
+> vgdisplay
+> Segmentation fault (core dumped)
+> 
+> [root@ns /root]# pvdisplay /dev/ida/c0d0p6
+> pvdisplay
+> pvdisplay -- ERROR "pv_read(): pv_create_name_from_kdev_t" no VALID
+> physical volume "/dev/ida/c0d0p6"
 
-I must admit I'm struggling to understand why PV_FLUSH even exists.
-It does *exactly* the same thing as a BLKFLSBUF ioctl to the pv device
-itself.  As such I agree that it's unlikely to be the culprit.
+The lvm library sets up a device name/number cache in order to map
+between those. If pv_create_name_from_kdev_t() returns (char*)NULL, an
+entry for /dev/ida/c0d0p6 couldn't be found in the cache :-(
+Even though /dev/ida/ is a supported namespace, the entry couldn't have made
+it into the cache, because the stat() on the device returned an error.
 
-- Joe
+In order to check this, you could for eg. add a "printf ("found %s\n", devpath)"
+after the sprintf() in lvm_add_dir_cache() in lvm_dir_cache.c and
+and a "printf ("ADDED %s\n", devpath)" after the cache_size++ in the
+same function.
+
+BTW: long time ago, we were faced with problems related to messy /dev/ entries.
+     In case you don't run devfs you need to make sure that /dev/ entries are
+     all right.
+
+> 
+> [root@ns /root]# vgextend VG01 /dev/ida/c0d0p6
+> vgextend
+> vgextend -- INFO: maximum logical volume size is 1023.97 Gigabyte
+> vgextend -- ERROR "pv_read_all_pv(): lvm_dir_cache" can't extend;
+> couldn't read physical volume data
+> 
+> [root@ns /root]# vgcfgbackup
+> vgcfgbackup
+> vgcfgbackup -- volume groups found: VG01
+> vgcfgbackup -- ERROR -262 checking existence of colume group "VG01"
+> vgcfgbackup -- ERROR "vg_cfgbackup(): vg_check_exist" backing up
+> volume group VG01
+> 
+> so i do a vgscan:
+> 
+> [root@ns /root]# vgscan
+> vgscan
+> vgscan -- reading all physical volumes (this may take a while...)
+> vgscan -- "/etc/lvmtab" and "/etc/lvmtab.d" successfully created
+> vgscan -- WARNING: This program does not do a VGDA backup of your
+> volume group
+> 
+> and from now on, no more segfaults instead:
+> 
+> [root@ns /root]# vgdisplay -v
+> vgdisplay
+> vgdisplay -- ERROR: VGDA in kernel and lvmtab are NOT consistent;
+> please run vgscan
+> 
+> [root@ns /root]# vgextend VG01 /dev/ida/c0d0p6
+> vgextend
+> vgextend -- ERROR: VGDA in kernel and lvmtab are NOT consistent;
+> please run vgscan
+> 
+> etc.. etc...
+> 
+> is this a known problem? And what other debug output would be helpful?
+
+No.
+See above.
+
+> 
+> thanks,
+> 
+> Paul Jakma
+> 
+> 
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@sistina.com
+> http://lists.sistina.com/mailman/listinfo/linux-lvm
+
+-- 
+
+Regards,
+Heinz    -- The LVM Guy --
+
+*** Software bugs are stupid.
+    Nevertheless it needs not so stupid people to solve them ***
+
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+Heinz Mauelshagen                                 Sistina Software Inc.
+Senior Consultant/Developer                       Am Sonnenhang 11
+                                                  56242 Marienrachdorf
+                                                  Germany
+Mauelshagen@Sistina.com                           +49 2626 141200
+                                                       FAX 924446
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
