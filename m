@@ -1,10 +1,10 @@
 From: Patrick Caulfield <caulfield@sistina.com>
-Subject: Re: [linux-lvm] LVM2 compatible with LVM1?
-Message-ID: <20020717070718.GC11802@tykepenguin.com>
-References: <200207170700.26815.marek@bmlv.gv.at>
+Subject: Re: [linux-lvm] recovering a bad physical volume
+Message-ID: <20020717072144.GD11802@tykepenguin.com>
+References: <20020716071417.GB957@tykepenguin.com> <Pine.SOL.4.44.0207162219080.19234-100000@green.csi.cam.ac.uk>
 Mime-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <200207170700.26815.marek@bmlv.gv.at>
+In-Reply-To: <Pine.SOL.4.44.0207162219080.19234-100000@green.csi.cam.ac.uk>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,31 +15,32 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Jul 17 02:07:02 2002
+Date: Wed Jul 17 02:21:01 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Wed, Jul 17, 2002 at 07:00:26AM +0200, Ph. Marek wrote:
-> Hello everybody,
+On Tue, Jul 16, 2002 at 10:22:43PM +0100, Matthew Johnson wrote:
 > 
-> I've got a question I couldn't find an answer yet.
-> Is LVM2 compatible with LVM1? That is, are the on-disk-storage and the 
-> command-line-parameters the same, do they present themselfes via devfs in the 
-> same manner? (The last point I take as given, as it's only a logical sight 
-> via my given names)
+> OK, from that I get the error "size of volume differs from backup",
+> although the volume group mounts fine. However, mount can't find a
+> filesystem. Bit more info - I checked the partition sizes (I was playing
+> around with some) - but they cylinder numbers are the same as the list I
+> have before I started. Second - its a 3gb partition, and the missing
+> logical volume is a 10Gb one. Hence, the last 7Gb are on the OK physical volumes. Can I
+> get back at least those, if not the whole lot.
 > 
-> If it's possible I'd like to change the kernel, substitute the userspace-tools 
-> (at startup, depending on whether LVM1 or LVM2 is used currently) and reboot 
-> AND use the existing data.
-> 
-> Is that possible?
+> Alternatively, at this point the question might better be asked to the
+> reiserfs lists.
 
-Yes, I do this all the time. In fact most of my kernels have both LVM1 and
-device-mapper in them and I switch between the two without rebooting - remember
-to vgchange -an first though !
 
-If you do find any incompatibilites then please let us know.
+Hmm, that message is a bit odd. Check that the partition sizes really do match
+what LVM thinks they ought to be. vgcfgrestore -ll -n <vg> will show you this.
+
+If the sizes match up and the disk is OK there's no reason why the filesystem
+shouldn't mount.
+
+-- 
 
 patrick
