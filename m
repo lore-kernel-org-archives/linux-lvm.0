@@ -1,14 +1,22 @@
-Received: from o.ww.redhat.com (vpnuser1.stuttgart.redhat.com [172.16.4.1])
-	by pobox.stuttgart.redhat.com (8.12.8/8.12.8) with ESMTP id i1PEWva5005239
-	for <linux-lvm@redhat.com>; Wed, 25 Feb 2004 15:32:57 +0100
-From: Heinz Mauelshagen <Mauelshagen@redhat.com>
-Subject: Re: [linux-lvm] Kernel Patch for LVm-1.0.8
-Message-ID: <20040225143257.GC11757@redhat.com>
-References: <E1AtfOX-0007TZ-00@jade.ima.umn.edu>
+Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with SMTP id i1PEfpi24253
+	for <linux-lvm@redhat.com>; Wed, 25 Feb 2004 09:41:51 -0500
+Received: from host1.appws.com ([216.136.72.3])
+	by mx1.redhat.com (8.11.6/8.11.6) with SMTP id i1PEfob26058
+	for <linux-lvm@redhat.com>; Wed, 25 Feb 2004 09:41:50 -0500
+Received: from grandmother.littlebald.com (localhost.localdomain [127.0.0.1])
+	by grandmother.littlebald.com (8.12.8/8.12.8) with ESMTP id i1PEfgPD007183
+	for <linux-lvm@redhat.com>; Wed, 25 Feb 2004 09:41:42 -0500
+Received: (from david@localhost)
+	by grandmother.littlebald.com (8.12.8/8.12.8/Submit) id i1PEfgXT007181
+	for linux-lvm@redhat.com; Wed, 25 Feb 2004 09:41:42 -0500
+Subject: Re: [linux-lvm] lvm size mismatch?
+From: David Johnston <david@littlebald.com>
+In-Reply-To: <20040224005603.GA17483@kldp.net>
+References: <20040224005603.GA17483@kldp.net>
+Content-Transfer-Encoding: 7bit
+Message-Id: <1077720101.6906.6.camel@grandmother.littlebald.com>
 Mime-Version: 1.0
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <E1AtfOX-0007TZ-00@jade.ima.umn.edu>
 Sender: linux-lvm-admin@redhat.com
 Errors-To: linux-lvm-admin@redhat.com
 Reply-To: linux-lvm@redhat.com
@@ -20,69 +28,30 @@ List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
 List-Archive: <https://www.redhat.com/archives/linux-lvm/>
-Date: Wed Feb 25 09:31:03 2004
+Date: Wed Feb 25 09:40:04 2004
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@redhat.com
 
-Kumsup,
+On Mon, 2004-02-23 at 19:56, Soon-Son Kwon wrote:
+> Hi I am using lvm on debian woody.
+> The version would be about 1.0.x.
+> 
+> foo:/var# df -h
+> Filesystem            Size  Used Avail Use% Mounted on
+> /dev/vol/var           18G   16G  2.7G  85% /var
+> 
+> foo:/var# du . -sh
+> 5.4G    .
+> 
+> where does this size mismatch come from?
 
-you can use actual 2.4 kernels fine with the LVM 1.0.8 tools.
-Your problem seems to be related to on-disk metadata.
-
-Can you see all Physical Volumes fine with pvscan ?
-What does vgck display ?
-
-On Wed, Feb 18, 2004 at 10:02:37PM -0600, Kumsup Lee wrote:
-> Hi There,
-> 
->   I used to have kernel 2.8.18 with LVM-1.0.4 on my machine.  After I
-> upgraded kernel to 2.4.22 because of security problem, I couldn't 
-> make any snapshot.  So, I tried to use LVM-1.0.8 on kernel 2.4.22.  Then 
-> it complains about inconsistency.  Is there any LVM patch for 2.4.22+ ?
-> 
-> sys:/# vgscan
-> vgscan -- reading all physical volumes (this may take a while...)
-> vgscan -- found active volume group "mailspool"
-> vgscan -- ERROR "vg_read_with_pv_and_lv(): current PV" can't get data of
-> volume group "mailspool" from physical volume(s)
-> vgscan -- "/etc/lvmtab" and "/etc/lvmtab.d" successfully created
-> vgscan -- WARNING: This program does not do a VGDA backup of your volume
-> group
-> 
-> sys:/#
-> 
-> Thanks,
-> 
-> -- 
-> 
-> =============================================================================
->  Kumsup Lee (ÀÌ±ÝŒ·) 				 System/Network Manager 
->  Institute for Mathematics and its Applications, University of Minnesota 
->  400 Lind Hall,   207 Church Street S.E.,   Minneapolis, MN 55455   USA
->  Tel : 612-624-4353	FAX : 612-626-7370	PAGE : 952-608-0112
->  klee@ima.umn.edu	www.ima.umn.edu/~klee
-> 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+iirc, df looks at the filesystem's free space maps, while du sums the
+file sizes as listed in the directories.  I'd guess that you've got
+10.6G marked as "in use" in the free space maps that isn't referenced by
+any inode. 'fsck -f /var' should fix it; remember that you'll have to
+unmount /var first.
 
 -- 
-
-Regards,
-Heinz    -- The LVM Guy --
-
-*** Software bugs are stupid.
-    Nevertheless it needs not so stupid people to solve them ***
-
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-
-Heinz Mauelshagen                                 Red Hat GmbH
-Consulting Development Engineer                   Am Sonnenhang 11
-                                                  56242 Marienrachdorf
-                                                  Germany
-Mauelshagen@RedHat.com                            +49 2626 141200
-                                                       FAX 924446
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+David Johnston <david@littlebald.com>
+Little Bald Consulting, LLC
