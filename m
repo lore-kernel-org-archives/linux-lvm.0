@@ -1,14 +1,9 @@
-Return-Path: <shuric@crimson.namesys.com>
-From: Alexander Zarochentcev <zam@namesys.com>
+Return-Path: <tv@rz-zw.fh-kl.de>
+Date: Wed, 30 May 2001 14:33:40 +0200 (MET DST)
+From: Timo Veith <tv@rz-zw.fh-kl.de>
+Message-ID: <Pine.GSO.4.33.0105301150450.9306-100000@zuse>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Message-ID: <15124.56124.422024.340431@crimson.namesys.com>
-Date: Wed, 30 May 2001 15:36:28 +0400
-Subject: Re: [linux-lvm] Re: [reiserfs-list] lvm-list pointed to reiserfs: fs/lvm-problems?
-In-Reply-To: <20010529222304.A4888@mind.bartosch.net>
-References: <20010528183105.C924@mind.bartosch.net>
-	<15123.55304.751997.122954@crimson.namesys.com>
-	<20010529222304.A4888@mind.bartosch.net>
+Subject: [linux-lvm] ERROR pv_move_pe()
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -20,49 +15,44 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: Peter Bartosch <peter@bartosch.net>
-Cc: reiserfs-list@namesys.com, linux-lvm@sistina.com
+Content-Type: TEXT/PLAIN; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: linux-lvm@sistina.com
 
- PB> Hi!
- PB> extend an existing (0.8i) LV)
- >> 
- PB> so i created a new kernel (2.4.2) with lvm 0.9.1_beta7
- >> 
- >> Linux-2.4.4 has serious reiserfs bugs fixed.
+Hi all!
 
- PB> hmm, i tried to make a LVM patch for it but this fails - yesterday i saw a
- PB> message, that there's somewhere a patch for the 2.4.4 that LVM-sources
- PB> will make a patch
+We have a Red Hat Linux system with kernel 2.4.3 using LVM 0.9.1 beta7.
+There is one VG defined with 6 PVs. We added another hard disk to the
+VG, trying to replace a smaller PV by using pvmove. The pvmove command
+failed after a long run with the following error message:
 
- PB> i created the reiserfs on it, but when i tried to mount it, the mount
- PB> failed
- PB> an reiserfsck --rebuild-sb and after that reiserfsck --rebuild-tree
- PB> clears it and i could mount my LV -- UNTIL the next reboot
- >> 
- >> What kernel messages were ?
- >> 
- >> Sorry, but it looks for me like a lvm problem.  Can you test you LV by
- >> coping some random data (~ 64 MB) to a file in reliable location and
- >> to LV, and compare them (or md5 hashes) after reboot ?
+root@host[~] pvmove /dev/hdd1
+pvmove -- moving physical extents in active volume group "vg00"
+pvmove -- WARNING: if you lose power during the move you may need to
+restore your LVM metadata from backup!
+pvmove -- do you want to continue? [y/n] y
+pvmove -- ERROR reading input physical volume "/dev/hdd1" (still 65536 bytes to read)
 
- PB> hmm, i haven't really tried another filesystem, maybe i should try ext2?
+pvmove -- ERROR "pv_move_pe(): read input PV" pv_move_pe
 
-Yes, try to run this script over ext2:
-http://namesys.com/stress.sh
+pvmove -- ERROR "pv_move_pe(): read input PV" moving physical extents
 
- >> Reiserfs error handling not an ideal one.  Kernel oops below is a
- >> normal :( reaction on damaged data coming from disk.
- >> 
- >> Same reason (damaged data), I think, prevented reiserfs volume from
- >> mounting. 
+TH output of pvdisplay /dev/hdd1 shows that there is only one PE left
+to move away from /dev/hdd1. We've tried to change the state of the
+VG from active to inactive and from the LV also. Even with the
+filesystem (reiserfs) mounted or unmounted the same error message
+appears.
 
- PB> yes you're right - but why does it oops when i _only_ want to do an "ls
- PB> -l"?
+Where is this error message coming from, how can we solve this
+problem?
 
-I agree with you, such behaviour is not good, but I do not think
-that you want to run reiserfs on an unstable block device.
+What happens if we just reduce the VG by /dev/hdd1 although there is
+still one PE of the VG on it?
 
--- 
-Thanks,
-Alex.
+
+Thanks in advance for any help.
+
+Regards,
+
+
+     Timo
