@@ -1,37 +1,66 @@
-Message-Id: <200002151827.TAA08471@e35.marxmeier.com>
-Subject: Re: [linux-lvm] Mirroring
-Date: Tue, 15 Feb 2000 19:27:52 MEZ
-In-Reply-To: <3.0.6.32.20000215121913.007eeac0@laplaza.org>; from "Mats Wichmann" at Feb 15, 100 12:19 (noon)
-From: Michael Marxmeier <mike@msede.com>
+Message-ID: <38AA49DF.A7F19810@tenure.com>
+Date: Wed, 16 Feb 2000 00:55:27 -0600
+From: Byron Pearce <bpearce@tenure.com>
+Reply-To: bpearce@tenure.com
+MIME-Version: 1.0
+Subject: [linux-lvm] Installation on Debian (LVM Newbie)
+Content-Transfer-Encoding: 7bit
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
-MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: mats@laplaza.org
-Cc: linux-lvm
+To: linux-lvm@msede.com
 
-> perhaps...but it makes it impossible, if I've understood this
-> architecture, to use a floating mirror for live backups.
-> 
-> i.e., set up 3 10 gb partitions "a" "b" and "c", and one 10 gb spare "d"
-> 
-> attach "d" as a mirror of "a", wait for sync, detach, backup "d"
-> attach "d" as a mirror of "b", wait for sync, detach, backup "d"
-> etc.
+Pardon the interruption with what I am certain will be considered a
+trivial question, but I just getting on the Linux LVM bandwagon (taking
+the leap from the world of Sun and HP). . .
 
-AFAICS you can do the same with LVM snapshots (not fully working yet).
-Either create an LVM snapshot and backup the snapshot directly or copy
-the snapshot to an extra lvol.
-IMHO you get the same result by using a different machanism.
+I am running a home system with Debian v2.1 and I am trying to determine
+the best way to get things setup.  I have installed the source code into
+the 2.2.13 kernel (yes, I upgraded it) and compiled all support for LVM
+into the kernel, as well as installing the LVM software onto the
+system.  So far, so good.
 
+When I attempt to run pvcreate as per the LVM-HOWTO, however, it
+complains as follows:
 
-Just a thought
-Michael
+    # pvcreate /dev/sda1
+    pvcreate -- invalid partition type 0x83 for "/dev/sda1" (must be
+0x8e)
+
+If I am understanding this message correctly, it is instructing me to
+make certain the the partition type is set to 8E through cfdisk.
+However, I note that this partition type is not defined (or at least
+isn't in my version of Linux).  Am I observing things correctly or
+missing something obvious?  I am assuming that the only way to correct
+this is to change that partition type and to reload Linux.  If so,
+that's fine as this is a new system that I am playing with to get
+working.  I assume that I would simply set the partition type on the
+disk to 8E and then move on.  Will Linux boot like this?  Or does it
+require at least a small Linux native partition first?
+
+This is a lead into my second question (assuming worst case scenario
+from above) is more general.  I am wondering how the majority of you are
+setting up LVM on your systems.  In a traditional LVM environment (at
+least on the systems I have worked with), the entire physical disk is
+given to the LVM and then the file systems are mounted from the logical
+volumes created in the individual volume groups.  So, assuming an 18GB
+physical SCSI disk, which I have, I would simply create a 18GB "/"
+partition and give this over to LVM as /dev/sda1, from where I would
+create swap, /tmp, /opt, /usr, etc. and mount them from within Linux.
+
+Is there a gotcha involved that I may be missing?  On some systems, you
+have to leave a small partition out of the LVM to mount the bootstrap
+O/S from (say, a 20MB partition or so) and then everything else can be
+under the LVM.  I am just trying to make certain that if I have to
+reload, that I only have to do it once and that I setup the disks
+correclty.
+
+TIA for any insight.
 
 --
-Michael Marxmeier           Marxmeier Software AG
-E-Mail: mike@msede.com      Besenbruchstrasse 9
-Phone : +49 202 2431440     42285 Wuppertal, Germany
-Fax   : +49 202 2431420     http://www.msede.com/
+====================================================================
+Byron Pearce                         mailto:bpearce@tenure.com
+Tenure Systems, Inc.                 Arlington, Texas
+
+"It's hard to be a ninja when you wear a beeper."
