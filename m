@@ -1,12 +1,12 @@
-Date: Wed, 19 Sep 2001 14:43:04 -0500
-From: lembark@wrkhors.com
-Subject: Re: [linux-lvm] Root on LV
-Message-ID: <4740000.1000928584@duke.wrkhors.com>
-In-Reply-To: <OFB98B66D9.BF1F5CB9-ON85256ACC.0066E63E@raleigh.ibm.com>
-References: <OFB98B66D9.BF1F5CB9-ON85256ACC.0066E63E@raleigh.ibm.com>
+Subject: Re: [linux-lvm] LVM
+References: <NBBBJHKIOKPKOGOEPEDPAEEJDNAA.stuart@bh90210.net>
+	<3BA0AE16.1A4F69F@carolina.rr.com>
+From: Arkadiusz Miskiewicz <misiek@pld.ORG.PL>
+Date: 19 Sep 2001 13:12:57 +0200
+In-Reply-To: <3BA0AE16.1A4F69F@carolina.rr.com>
+Message-ID: <87u1xzv3gm.fsf@arm.t19.ds.pwr.wroc.pl>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -18,37 +18,18 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="iso-8859-1"
 To: linux-lvm@sistina.com
 
+Jason Edgecombe <jedgecombe@carolina.rr.com> writes:
 
--- Steve Pratt <slpratt@us.ibm.com> on 09/19/01 13:54:23 -0500
+> you MUST run lvmcreate_initrd and use the initrd it creates if you run
+> an LVM root fs.
+btw. lvmcreate_initrd is broken. It copies /bin/bash and /bin/sh while
+on some systems /bin/sh is link to /bin/othershell (like /bin/ksh on
+my systems), so initrd created by lvmcreate_initrd is not usable on
+these machines.
 
->> .Q:  Why bother to put 64MB on an LVM?
-> 
->> The root volume doesn't grow much (make it 128MB and it'll never need to
->> grow).
-> 
-> Sure, you could always do this.
-> 
->> If you ever have a problem with LVM you'll end up with an unbootable
->> system...
-> 
-> Right, which is why volume managers need to be really stable and robust.
-> Bottom line is that if this is the confidence level you have in your
-> volume manager (whether it is LVM or EVMS), I would question putting any
-> data on it.
-
-That's like saying you don't need ABS brakes because tire makers
-should make ones with really, really good traction.  If you look
-at the commercial LVM systems (e.g., HP's) they get around LVM
-failures by having a non-trivial boot system that allows side-
-stepping LVM at boot time via the command line.  This is done on
-HP by requring /dev/vg00/lvol[123] to be contiguous and starting
-at offset 0 on the VG.  You can boot vmunix -lm if LVM gets toasted
-and at least get the boot, swap and root volumes on line to fix
-the problem.  Lacking that much intelligence in the hardware level 
-of Intel boot rom's you are one helluvalot sa[fn]er to put the
-root and primary swap on /dev/[hs]da[12] and go from there.  
-
-sl
+--=20
+Arkadiusz Mi=EF=BF=BDkiewicz   IPv6 ready PLD Linux at http://www.pld.org.pl
+misiek at pld.org.pl    AM2-6BONE, 1024/3DB19BBD, arekm@IrcNet, PWr
