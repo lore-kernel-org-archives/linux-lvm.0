@@ -1,19 +1,8 @@
-Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with SMTP id i2JHirj26847
-	for <linux-lvm@redhat.com>; Fri, 19 Mar 2004 12:44:53 -0500
-Received: from eclectic.kluge.net (eclectic.kluge.net [66.92.69.221])
-	by mx1.redhat.com (8.12.10/8.12.10) with SMTP id i2JHipWA011709
-	for <linux-lvm@redhat.com>; Fri, 19 Mar 2004 12:44:51 -0500
-Date: Fri, 19 Mar 2004 12:44:45 -0500
-From: Theo Van Dinter <felicity@kluge.net>
 Subject: Re: [linux-lvm] How to associate two paths for each EMC device?
-Message-ID: <20040319174445.GA7265@kluge.net>
-References: <OFD5F31608.F9CF6213-ON85256E5C.005E60DA@db.com>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="wb7/gK2L7nBZNzVm"
-Content-Disposition: inline
-In-Reply-To: <OFD5F31608.F9CF6213-ON85256E5C.005E60DA@db.com>
+Message-ID: <OFF04F4868.CD1C4968-ON85256E5C.006702F1@db.com>
+From: "Shan Jing" <shan.jing@db.com>
+Date: Fri, 19 Mar 2004 13:50:55 -0500
+MIME-Version: 1.0
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -24,48 +13,149 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: LVM general discussion and development <linux-lvm@redhat.com>
+Cc: linux-lvm-bounces@redhat.com
 
 
---wb7/gK2L7nBZNzVm
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+I remove the driver,reloaded manaully like this:
+
+insmod qla2300 ql2xfailover=1 ql2xmaxqdepth=64
+
+I still have 44 luns (each disk presents twice on the system).
+
+this is my qla driver
+-------------------------------------
+QLogic PCI to Fibre Channel Host Adapter for QLA2340:
+        Firmware version:  3.02.13, Driver version 6.06.00-fo
+Entry address = a000000000793770
+HBA: QLA2312 , Serial# L08747
+Request Queue = 0x1af3c000, Response Queue = 0x1ac50000
+Request Queue count= 128, Response Queue count= 512
+Total number of active commands = 0
+Total number of interrupts = 257
+Total number of IOCBs (used/max) = (0/600)
+Total number of queued commands = 0
+    Device queue depth = 0x40
+Number of free request entries = 121
+Number of mailbox timeouts = 0
+Number of ISP aborts = 0
+Number of loop resyncs = 0
+Number of retries for empty slots = 0
+Number of reqs in pending_q= 0, retry_q= 0, done_q= 0, scsi_retry_q= 0
+Number of reqs in failover_q= 0
+Host adapter:loop state= <READY>, flags= 0xc008e0833
+Dpc flags = 0x40
+MBX flags = 0x0
+SRB Free Count = 4096
+Link down Timeout = 000
+Port down retry = 045
+Login retry count = 045
+Commands retried with dropped frame(s) = 0
+
+
+SCSI Device Information:
+scsi-qla0-adapter-node=200000e08b100beb;
+scsi-qla0-adapter-port=210000e08b100beb;
+scsi-qla0-port-0=50060482c4648c2c:50060482c4648c2c;
+
+SCSI LUN Information:
+(Id:Lun)  * - indicates lun is not registered with the OS.
+( 0: 0): Total reqs 13, Pending reqs 0, flags 0x0, 0:0:81,
+( 0: 1): Total reqs 12, Pending reqs 0, flags 0x0, 0:0:81,
+( 0: 2): Total reqs 11, Pending reqs 0, flags 0x0, 0:0:81,
+( 0: 3): Total reqs 11, Pending reqs 0, flags 0x0, 0:0:81,
+( 0: 4): Total reqs 11, Pending reqs 0, flags 0x0, 0:0:81,
+( 0: 5): Total reqs 11, Pending reqs 0, flags 0x0, 0:0:81,
+( 0: 6): Total reqs 11, Pending reqs 0, flags 0x0, 0:0:81,
+( 0: 7): Total reqs 11, Pending reqs 0, flags 0x0, 0:0:81,
+( 0: 8): Total reqs 11, Pending reqs 0, flags 0x0, 0:0:81,
+( 0: 9): Total reqs 11, Pending reqs 0, flags 0x0, 0:0:81,
+( 0:10): Total reqs 11, Pending reqs 0, flags 0x0, 0:0:81,
+( 0:11): Total reqs 11, Pending reqs 0, flags 0x0, 0:0:81,
+( 0:12): Total reqs 11, Pending reqs 0, flags 0x0, 0:0:81,
+( 0:13): Total reqs 11, Pending reqs 0, flags 0x0, 0:0:81,
+( 0:14): Total reqs 11, Pending reqs 0, flags 0x0, 0:0:81,
+( 0:15): Total reqs 11, Pending reqs 0, flags 0x0, 0:0:81,
+( 0:16): Total reqs 11, Pending reqs 0, flags 0x0, 0:0:81,
+( 0:17): Total reqs 11, Pending reqs 0, flags 0x0, 0:0:81,
+( 0:18): Total reqs 11, Pending reqs 0, flags 0x0, 0:0:81,
+( 0:19): Total reqs 11, Pending reqs 0, flags 0x0, 0:0:81,
+( 0:20): Total reqs 11, Pending reqs 0, flags 0x0, 0:0:81,
+( 0:21): Total reqs 11, Pending reqs 0, flags 0x0, 0:0:81,
+( 0:22): Total reqs 11, Pending reqs 0, flags 0x0, 0:0:81,
+
+
+Regards,
+Shan Jing
+
+Unix Group - Americas
+Deutsche Bank
+2 Gatehall Drive, 3rd Floor
+Parsippany, New Jersey, USA
+shan.jing@db.com
+973.682.3463
+
+
+
+
+                                                                                                                                       
+                      Theo Van Dinter                                                                                                  
+                      <felicity@kluge.n        To:       LVM general discussion and development <linux-lvm@redhat.com>                 
+                      et>                      cc:                                                                                     
+                      Sent by:                 Subject:  Re: [linux-lvm] How to associate two paths for each EMC device?               
+                      linux-lvm-bounces                                                                                                
+                      @redhat.com                                                                                                      
+                                                                                                                                       
+                                                                                                                                       
+                      03/19/2004 12:44                                                                                                 
+                      PM                                                                                                               
+                      Please respond to                                                                                                
+                      LVM general                                                                                                      
+                      discussion and                                                                                                   
+                      development                                                                                                      
+                                                                                                                                       
+                                                                                                                                       
+
+
+
 
 On Fri, Mar 19, 2004 at 12:21:51PM -0500, Shan Jing wrote:
-> I have 22  EMC symmetrix disks on two HBA links.  At this moment, there i=
-s no working copy of EMC powerpath or HP Securepath available for my kernel=
- (2.4.21-112-itanium2-smp); therefore, I have to use the luns directly with=
- lvm without any DMP software in the middle.
->=20
-> Without DMP software, there are two set of 22 luns, each representing one=
- HBA path.  See blow.
+> I have 22  EMC symmetrix disks on two HBA links.  At this moment, there is no working copy of EMC powerpath or HP Securepath available for my kernel (2.4.21-112-itanium2-smp); therefore, I have to use the luns directly with lvm without any DMP software in the middle.
+>
+> Without DMP software, there are two set of 22 luns, each representing one HBA path.  See blow.
 
 Can you set your HBA driver to do failover?   ie: something like this
 in modules.conf:
 
-options qla2300 ql2xfailover=3D1 ql2xmaxqdepth=3D64
+options qla2300 ql2xfailover=1 ql2xmaxqdepth=64
 
 
 This works well for my servers connected to a CX-series array. :)   The
 driver handles failing between HBAs (active-passive), and only has the
 LUN presented once to the system.
 
---=20
+--
 Randomly Generated Tagline:
 "I didn't know Allman was a stand-up comedian ..."
          - Theo about laughter from sendmail tutorial
 
---wb7/gK2L7nBZNzVm
-Content-Type: application/pgp-signature
-Content-Disposition: inline
+_______________________________________________
+linux-lvm mailing list
+linux-lvm@redhat.com
+https://www.redhat.com/mailman/listinfo/linux-lvm
+read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.2.1 (GNU/Linux)
+The following file(s) have been deleted by: Shan Jing on 3/19/2004 1:45:07 PM
 
-iD8DBQFAWzGN7tgKAJaXVyoRAvmvAJ0TqmnABOLlzS2NxT77TgiXOEBoLgCfWJlx
-ycpoBECkVcVNh6fpZud56rg=
-=9nbn
------END PGP SIGNATURE-----
+C.DTF
+atthx9wo.dat
 
---wb7/gK2L7nBZNzVm--
+
+
+
+
+--
+
+This e-mail may contain confidential and/or privileged information. If you are not the intended recipient (or have received this e-mail in error) please notify the sender immediately and destroy this e-mail. Any unauthorized copying, disclosure or distribution of the material in this e-mail is strictly forbidden.
