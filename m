@@ -1,11 +1,13 @@
-From: Patrick Caulfield <caulfield@sistina.com>
-Subject: Re: [linux-lvm] error mounting snapshot of ext3 filesystem
-Message-Id: <20020123150757.GE1002@tykepenguin.com>
-References: <1011729567.6638.40.camel@benway.cv.telegroup.com>
-    <E16TOej-0001qC-00@arwen.dev33.cvf>
+Subject: Re: [linux-lvm] extending a logical volume
+In-Reply-To: Your message of
+    "Tue, 22 Jan 2002 12:03:18 MST."
+    <20020122120317.Z4014@lynx.turbolabs.com>
+References: <E16Syml-0004V1-00@arwen.dev33.cvf>
+    <Pine.LNX.4.10.10201221211580.24040-100000@pzat.meep.org>
+    <20020122120317.Z4014@lynx.turbolabs.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <E16TOej-0001qC-00@arwen.dev33.cvf>
+From: Pierrick PONS <ppons@cvf.fr>
+Message-Id: <E16TP0T-0001zV-00@arwen.dev33.cvf>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,28 +18,38 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Jan 23 09:08:01 2002
+Date: Wed Jan 23 09:09:02 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Wed, Jan 23, 2002 at 03:45:41PM +0100, Pierrick PONS wrote:
-> 
-> I do have the same problem :
-> 
-> mount /dev/testlvm/snap /mnt/snap 
-> mount: block device /dev/testlvm/snap is write-protected, mounting read-only
-> mount: wrong fs type, bad option, bad superblock on /dev/testlvm/snap,
->        or too many mounted file systems
-> 
-> I tried with -text2 or -text3 option and it's the same. 
-> What is the type wanted  ?
-> 
-> Is there a more documentated snapshot section where to found some more 
-> explanation ?
+To conclude on this subject, here is what I've done.
+I've extended my ext3 partition offline and not online.
+These commands are easy but maybe they will help some persons. They would have 
+helped me ...
 
-You do need the VFS lock patch if you want to mount snapshots of reiserfs or
-ext3 filesystems. The 2.4.11 patch inthe LVM distribution works with 2.4.17.
 
-patrick
+lvextend -L+200 /dev/testlvm/testlv
+lvscan
+umount /dev/testlvm/testlv 
+
+e2fsck -f /dev/testlvm/testlv 
+resize2fs -d -p /dev/testlvm/testlv
+mount /dev/testlvm/testlv /mnt/lvm  
+df -k
+
+
+Hope this will help some user, if it's not the case sorry to put a so newbie 
+post.
+
+
+Regards.
+
+
+
+
+-- 
+Pierrick PONS
+CVF Bordeaux
+mail: ppons@cvf.fr
