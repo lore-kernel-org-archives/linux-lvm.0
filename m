@@ -1,9 +1,9 @@
-Message-ID: <007201c2c815$08d488d0$c70aa8c0@RD.proware.com.tw>
-From: "Rocky Lee" <gozila@ms20.url.com.tw>
-MIME-Version: 1.0
-Content-Type: multipart/alternative;
-	boundary="----=_NextPart_000_006F_01C2C858.161C5CF0"
-Subject: [linux-lvm] Does LVM2 support RAID?
+From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
+Subject: Re: [linux-lvm] Does LVM2 support RAID?
+Message-ID: <20030130102535.A26745@sistina.com>
+References: <007201c2c815$08d488d0$c70aa8c0@RD.proware.com.tw>
+Mime-Version: 1.0
+In-Reply-To: <007201c2c815$08d488d0$c70aa8c0@RD.proware.com.tw>; from gozila@ms20.url.com.tw on Thu, Jan 30, 2003 at 12:06:57PM +0800
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,78 +14,56 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Jan 29 22:08:01 2003
+Date: Thu Jan 30 03:28:01 2003
 List-Id: <linux-lvm.redhat.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-This is a multi-part message in MIME format.
+On Thu, Jan 30, 2003 at 12:06:57PM +0800, Rocky Lee wrote:
+> Hello all 
+> 
+> Happy Chinese New Year to you!
+> and thanks for reading my issues.
+> 
+> Here's my question about LVM1 and LVM2
+> 
+> LVM1+ MD is good methd to support backup and data recovery of data.
+> I found some documents said that LVM2 already can support disk protection and data recovery.
+> does it mean that LVM2 including various raid algorithms ? or other features?
 
-------=_NextPart_000_006F_01C2C858.161C5CF0
-Content-Type: text/plain;
-	charset="big5"
-Content-Transfer-Encoding: quoted-printable
+Not today.
+Maybe later ;)
 
-Hello all=20
+> 
+> How they work?
+> 
+> If I use LVM2 will be better than use LVM1 + MD?
 
-Happy Chinese New Year to you!
-and thanks for reading my issues.
+You still need to combine LVM2 with MD in order to have RAID > 0 (RAID0 is
+supported natively as it is in LVM1).
+Because LVM2 offers various enhancements you migth still want to give it
+a try :-)
 
-Here's my question about LVM1 and LVM2
+> 
+> Thank you
+> Have a nice day
+>                             Rocky Lee
 
-LVM1+ MD is good methd to support backup and data recovery of data.
-I found some documents said that LVM2 already can support disk =
-protection and data recovery.
-does it mean that LVM2 including various raid algorithms ? or other =
-features?
+-- 
 
-How they work?
+Regards,
+Heinz    -- The LVM Guy --
 
-If I use LVM2 will be better than use LVM1 + MD?
+*** Software bugs are stupid.
+    Nevertheless it needs not so stupid people to solve them ***
 
-Thank you
-Have a nice day
-                            Rocky Lee
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
-------=_NextPart_000_006F_01C2C858.161C5CF0
-Content-Type: text/html;
-	charset="big5"
-Content-Transfer-Encoding: quoted-printable
-
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
-<HTML><HEAD>
-<META http-equiv=3DContent-Type content=3D"text/html; charset=3Dbig5">
-<META content=3D"MSHTML 6.00.2800.1106" name=3DGENERATOR>
-<STYLE></STYLE>
-</HEAD>
-<BODY bgColor=3D#ffffff>
-<DIV><FONT size=3D2>Hello all </FONT></DIV>
-<DIV><FONT size=3D2></FONT>&nbsp;</DIV>
-<DIV><FONT size=3D2>Happy Chinese New Year to you!</FONT></DIV>
-<DIV><FONT size=3D2>and thanks for reading my issues.</FONT></DIV>
-<DIV><FONT size=3D2></FONT>&nbsp;</DIV>
-<DIV><FONT size=3D2>Here's my question about LVM1 and LVM2</FONT></DIV>
-<DIV><FONT size=3D2></FONT>&nbsp;</DIV>
-<DIV><FONT size=3D2>LVM1+ MD is good methd to support backup and data =
-recovery of=20
-data.</FONT></DIV>
-<DIV><FONT size=3D2>I found some documents said that LVM2 already can =
-support disk=20
-protection and data recovery.</FONT></DIV>
-<DIV><FONT size=3D2>does it mean&nbsp;that LVM2&nbsp;including various=20
-raid&nbsp;algorithms ? or other features?</FONT></DIV>
-<DIV><FONT size=3D2></FONT>&nbsp;</DIV>
-<DIV><FONT size=3D2>How they work?</FONT></DIV>
-<DIV><FONT size=3D2></FONT>&nbsp;</DIV>
-<DIV><FONT size=3D2>If I use LVM2 will be better than use LVM1 + =
-MD?</FONT></DIV>
-<DIV><FONT size=3D2></FONT>&nbsp;</DIV>
-<DIV><FONT size=3D2>Thank you</FONT></DIV>
-<DIV><FONT size=3D2>Have a nice day</FONT></DIV>
-<DIV><FONT size=3D2>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; =
-&nbsp;&nbsp;&nbsp;=20
-&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; =
-&nbsp;&nbsp;&nbsp;=20
-Rocky Lee</FONT></DIV>
-<DIV><FONT size=3D2></FONT>&nbsp;</DIV></BODY></HTML>
-
-------=_NextPart_000_006F_01C2C858.161C5CF0--
+Heinz Mauelshagen                                 Sistina Software Inc.
+Senior Consultant/Developer                       Am Sonnenhang 11
+                                                  56242 Marienrachdorf
+                                                  Germany
+Mauelshagen@Sistina.com                           +49 2626 141200
+                                                       FAX 924446
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
