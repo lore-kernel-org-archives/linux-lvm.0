@@ -1,30 +1,36 @@
-Date: Wed, 27 Sep 2000 20:33:44 +0200
-From: Christoph Hellwig <hch@caldera.de>
-Subject: Re: [linux-lvm] lv not persistent across reboot?
-Message-ID: <20000927203344.A4797@ns.lst.de>
-References: <Pine.LNX.4.21.0009251623060.25906-100000@tp.sf.opensales.com> <20000926113521.C17132@srv.t-online.de> <avo3tsssjd645dc7l0m7cdav900gm3i9ge@4ax.com> <20000927144714.A21932@srv.t-online.de>
-Mime-Version: 1.0
-In-Reply-To: <20000927144714.A21932@srv.t-online.de>; from Heinz.Mauelshagen@t-online.de on Wed, Sep 27, 2000 at 02:47:14PM +0000
+From: Andreas Dilger <adilger@turbolinux.com>
+Message-Id: <200009271905.e8RJ5KS00572@webber.adilger.net>
+Subject: Re: [linux-lvm] lvm and fibre channel
+In-Reply-To: <14801.35603.881485.66498@loki.1012internet.at> "from Michael Lausch
+ at Sep 27, 2000 07:52:19 am"
+Date: Wed, 27 Sep 2000 13:05:20 -0600 (MDT)
+MIME-Version: 1.0
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: Mauelshagen@Sistina.com
-Cc: Steve Brueggeman <brewgyman@yahoo.com>, linux-lvm@msede.com
+To: Michael Lausch <mla@1012surf.net>
+Cc: Andreas Dilger <adilger@turbolinux.com>, linux-lvm@msede.com
 
-On Wed, Sep 27, 2000 at 02:47:14PM +0000, Heinz J. Mauelshagen wrote:
-> > I have not been following the high availability mailing list, and a solution may
-> > already exist  there.  If so, and you know how, I'd be interested in a quick
-> > description.
+Michael Lausch writes:
+> Andreas Dilger writes:
+>  > LVM will not help you here either, because it currently limits you to
+>  > 255 LVs, regardless of how many VGs you have, because there is only 1
+>  > block major for LVM.
 > 
-> Not that i am aware of.
+> is using devfs an option? We are planing to attach a PC to a storage
+> array (HP XP256) using LVM and devfs over fibre channel next week and
+> doing some tests (performance, ease of use, etc....)
 
-One of the goals of my in-kernel scanning is that it should handle simple
-multi-pathing correctly. The Kernel will try to sort out dublicated pv's.
-But I doubt it will be ready soon enough for your project :(
+The problem is that the LVM code is written to only look at 1 major number.
+The SCSI code has been written to check multiple major numbers.  Maybe it
+is worthwhile to change the LVM code to check a whole block of major
+numbers, or alternately get dynamic majors via devfs.  This is not there
+yet, so you are stuck with a maximum of 255 LVs and 99 VGs.
 
-	Christoph
-
+Cheers, Andreas
 -- 
-Always remember that you are unique.  Just like everyone else.
+Andreas Dilger  \ "If a man ate a pound of pasta and a pound of antipasto,
+                 \  would they cancel out, leaving him still hungry?"
+http://www-mddsp.enel.ucalgary.ca/People/adilger/               -- Dogbert
