@@ -1,10 +1,9 @@
-From: GCS <gcs@lsc.hu>
-Subject: Re: [linux-lvm] lvm-1.0.1-rc4 and 2.4.13
-Message-ID: <20011029120618.A13910@lsc.hu>
-References: <20011026005405.A21775@sky.net> <20011026095641.C587@tykepenguin.com> <20011026213005.C928@sky.net> <20011029084424.D4182@tykepenguin.com> <20011029110520.D13685@sky.net>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20011029110520.D13685@sky.net>; from U.Wiederhold@gmx.net on Mon, Oct 29, 2001 at 11:05:20AM +0100
+From: "Mitch Miller" <mitch@mdmiller.com>
+Message-ID: <000201c16088$c16c6610$0101a8c0@mdmiller.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+In-Reply-To: <20011029084748.E4182@tykepenguin.com>
+Subject: [linux-lvm] What is VFS
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,15 +14,20 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Oct 29 04:52:02 2001
+Date: Mon Oct 29 08:45:02 2001
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Mon, Oct 29, 2001 at 11:05:20AM +0100, Ulrich Wiederhold <U.Wiederhold@gmx.net> wrote:
-> I will do this.
- I can answer it too: the CVS version is upgraded to 2.4.14pre3, and LVM
-reverted to Linus' one. They said the patch from Sistina can be applied to
-it.
-GCS
+Can somebody help me out?  On a Linux box (Redhat 7.1, Kernel 2.4.12) I've
+started seeing VFS: Disk change detected on device sr(11,?) where ? is
+either 0 or 1 (they're usually in pairs, once with a 0 and once with a 1).
+
+I guess I'm not _for_sure_ what VFS is, and why it'd be detecting so many
+(literally hundreds per hour) disk changes.  I do have a standard floppy,
+and a SCSI attached (Adaptec 2940) Iomega Jazz drive.  The drive has a
+single LVM partition on it, but it's not currently mounted (I've not fully
+implemented LVM on this box yet).
+
+THanks,
+Mitch
