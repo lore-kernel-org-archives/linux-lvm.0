@@ -1,10 +1,11 @@
-Subject: Re: [linux-lvm] system crash caused by lvm's fault?
-Message-ID: <20021019150738.GA1434@fib011235813.fsnet.co.uk>
-References: <Pine.LNX.4.44.0210190006040.21759-100000@server.piarista-kkt.sulinet.hu>
-Mime-Version: 1.0
+From: Steven Lembark <lembark@wrkhors.com>
+Subject: Re: [linux-lvm] lvm on linux RAID5?
+Message-ID: <59060000.1035046604@[192.168.100.3]>
+In-Reply-To: <1034773372.1658.8.camel@frodo.xelin.se>
+References: <1034773372.1658.8.camel@frodo.xelin.se>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Content-Disposition: inline
-In-Reply-To: <Pine.LNX.4.44.0210190006040.21759-100000@server.piarista-kkt.sulinet.hu>
-From: Joe Thornber <joe@fib011235813.fsnet.co.uk>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,26 +16,40 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Sat Oct 19 10:08:02 2002
+Date: Sat Oct 19 12:01:02 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: linux-lvm@sistina.com
 
-On Sat, Oct 19, 2002 at 12:08:44AM +0200, NagyZ wrote:
-> hi!
-> 
-> i have 1 VG with 5-6 LV.
-> when one of my disks dont get enough power and 'fell out', then my ftp 
-> processes get to state 'detach', and even kill -9 cant kill them..
-> load is starting to get higher, and higher, and then VM says not enought 
-> memory.. and kernel crashes.
-> it is on p4, with 512MB ram, with 906G VG..
-> 
-> can i avoid this crash?
-> i mean, when one disk fell off, then how can i kill this processes, and 
-> unmount the lvs? any idea?
 
-What version of LVM are you running and whay kernel ?
+-- Anders Henriksson <anders.henriksson@xelin.se>
 
-- Joe
+> Hej,
+>
+> I have tried scanning the list archive and re-read the documentation but
+> still....
+>
+> I want to run lvm over four linux raid5 devices, can I just treat the
+> raid devices as discs? i.e. run pvcreate on them directly and go on from
+> there.
+>
+> I am running a linux 7.3 server almost out of the box.
+>
+> /Anders
+>
+>
+>
+>
+>
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@sistina.com
+> http://lists.sistina.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+
+
+
+--
+Steven Lembark                               2930 W. Palmer
+Workhorse Computing                       Chicago, IL 60647
+                                            +1 800 762 1582
