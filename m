@@ -1,11 +1,11 @@
-Return-Path: <emadrazo@it.uc3m.es>
-Message-ID: <3B000479.8DE639BF@it.uc3m.es>
-Date: Mon, 14 May 2001 18:14:49 +0200
-From: Eva Madrazo <emadrazo@it.uc3m.es>
+Return-Path: <Steph@Connex.com>
+Message-ID: <B14BF8753E65D211ABCA00104B301EF501C02B76@cairn-gorm.cragtech.com>
+From: Dale Stephenson <Steph@Connex.com>
+Date: Mon, 14 May 2001 10:43:16 -0700
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] /proc/ha/.control ?? SORRY
-References: <3B0002F6.6FF5B547@it.uc3m.es>
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/mixed;
+	boundary="----_=_NextPart_000_01C0DC9D.5B6166A0"
+Subject: [linux-lvm] RE: [PATCH] [CFT] - LVM snapshotting support for XFS
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,43 +17,115 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@sistina.com
+To: 'Steve Lord' <lord@sgi.com>, linux-xfs@oss.sgi.com
+Cc: "'linux-lvm@sistina.com'" <linux-lvm@sistina.com>
 
+This message is in MIME format. Since your mail reader does not understand
+this format, some or all of this message may not be legible.
 
-Sorry, its not here!!
+------_=_NextPart_000_01C0DC9D.5B6166A0
+Content-Type: text/plain;
+	charset="iso-8859-1"
 
+I'll be glad to give this a try.  I've been using the attached patches (in a
+tgz) to use snapshots with xfs in the past.  Basically they are some short
+LVM patches to allow writable snapshots.  Using this I was able to take a
+snapshot and mount the snapshot read-write, allowing XFS to straighten
+things out (without the benefit of an xfs_freeze-like command, it was like
+turning the power off on the original of the system).  Then I would unmount
+the snapshot, change it back to read-only, and remount it for normal
+snapshot use.
 
+I did have one other problem using XFS snapshots.  As long as the original
+was mounted, I couldn't mount the snapshot as well because it had the same
+uuid.  So before I could mount the snapshot read-write I had to change the
+UUID using xfs_db (which also required writeable snapshots).  Actually, I
+had to change it twice.  My usual sequence would be something like this:
 
-Eva Madrazo wrote:
+# sync
+# lvcreate --size 100 --chunksize 64  --snapshot --name snap0
+/dev/volgr1/lvol0
+# lvchange -p rw /dev/volgr1/snap0
+# xfs_db -x -p xfs_admin -c 'uuid generate'
+# xfs_db -x -p xfs_admin -c 'uuid generate'
+# mount /dev/volgr1/snap0 /hd/vol_mnt1
+# umount /dev/volgr1/snap0
+# lvchange -p r /dev/volgr1/snap0
+# mount /dev/volgr1/snap0 /hd/vol_mnt1
+
+With a way to freeze the filesystem, I should be safer than just calling
+sync and I don't think I'll need to do the read-write mount to replay.  Is
+there a way around changing the UUID?
+
+CCed to linux-lvm, since somebody over there may be interested in testing
+XFS snapshots.
+
+Dale Stephenson
+steph@connex.com
+
+> -----Original Message-----
+> From: Steve Lord [mailto:lord@sgi.com]
+> Sent: Monday, May 14, 2001 9:50 AM
+> To: linux-xfs@oss.sgi.com
+> Subject: [PATCH] [CFT] - LVM snapshotting support for XFS
 > 
-> Anybody knows something about this error while starting heartbeat??
-S
- 
-> heartbeat: 2001/05/14_17:56:00 info: ***********************
-> heartbeat: 2001/05/14_17:56:00 info: Configuration validated. Starting
-> heartbeat.
-> heartbeat: 2001/05/14_17:56:00 notice: UDP heartbeat started on port 694
-> interface eth0
-> heartbeat: 2001/05/14_17:56:00 error: Cannot open /proc/ha/.control: No
-> such file or directory
 > 
-> I cannot find who needs the .control file. I had to exist??
-> Thank you!
 > 
-> --------
-> Eva Madrazo Rodriguez
->     emadrazo@it.uc3m.es   (preferida)
->     100012130@alumnos.uc3m.es
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
+> Here is some experimental code for XFS which should allow use 
+> of the LVM
+> snapshotting capability. There are two attachments to this message, a
+> kernel patch which will apply to the current development tree 
+> (2.4.4 base)
+> and a tar file which adds a new command to the xfs commands. 
+> You will also
+> need to apply the VFS-lock.patch from the lvm sources to 
+> enable snapshotting.
+> 
+> The new command added is xfs_freeze which can be used to stop 
+> and flush
+> an xfs filesystem and then restart it. If you apply the VFS-lock patch
+> from the lvm sources then you will not need this.
+> 
+> I am looking for people to test this code, previous 
+> experience with lvm 
+> and its snapshotting facility would probably be a pre-requisit.
+> 
+> Steve
+> 
+> 
+> 
 
--- 
-Un banquero es alguien que te deja su paraguas cuando hace buen tiempo,
-pero en cuanto empieza a llover te exige que se lo devuelvas. Mark Twain
---------
-Eva Madrazo Rodriguez 
-    emadrazo@it.uc3m.es   (preferida)
-    100012130@alumnos.uc3m.es
+
+------_=_NextPart_000_01C0DC9D.5B6166A0
+Content-Type: application/octet-stream;
+	name="writesnap.tgz"
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment;
+	filename="writesnap.tgz"
+
+H4sIAAEsADsAA+1YbU/bSBDmK/yKKdLlkjpObCexSXIgUMvpqqNwAtp+KMgy9iZx8ZtsxyAd+e+3
+L363EziOUl3lR2qzLzOzM7PjfXaxIpu/880QaTcW4gNH83qeFuqLrReEIAqCLA+3BAxFHhV+MSSJ
+tJUBaY4UScDyQ3k02gLhJZ1Yh2UQaj7AVhAib1PUj83/T8HzPFims7zvG74ZIT/o20bfiuye3nN9
+c759uVjCe6SDOARBmQz3JoMRSHindjiOW6OY1xHFyWg8GQ6YzuEh8KI8HnZFETjaGChweLgD2xgr
++kP/XwGyAgR/73Db2wCGe+dAu2VF/IEVqaREg4UbqgGyO1MmYc6g7d/B/j58Of9weQwPD5DrHnUS
+SwD9t0CrHUIXEkuAUxAPLnx3OV8Qez6yNc9DBrztJ7pkldiJG8vVb1V0ryMvNF2HLHX66eQktxCA
+55tOeNv+8/j8VH2H/SAzbGr3lwBw1iNbxWtM4ORz5gqemS0t68rZ7WbyRNLRbNSFeHnSSWInWHqb
+80Pgo3DpOzj/6dgqafgGwnpaBPusGdpeKuQHSA9dP5mOe3kJkpY3xMV0ZZo7lqN2K7HI4qEhtXJm
+csMeUsm3GOaGrKhTyCnePt1HGt4qDRx0B2SPTGee26TYnzYOF/tbcOvd2Zd2jTdQ702dO/ls5IeJ
+mx3az5alFUXWVENytMbpiOZquDCDLtYo70P8E1c++RZwtDSVWXlY7tzUNQsi11raiITNYznygazb
+f2JnQ+G+iQuXfYJP2MXi5mVJAhoR8WbpbazFOMwNJQvsFCD/bhb8wY1KFi/U5o8+NH8ikC0XeuOe
+8S3oWZG+0Jw5eukbAOF/RRmt5X9hqGT8L4iU/5WG/18FhP9PPn9UBXXcD13XCvppFVRvAJjNpfFk
+IGQ3gHWqJa2BPBHl7A4wkMZdBbjBQOjuUf5PobtOiC8VaJqMrWhjh8/O9oQENV1HQQAt7IN6cXr0
+18UfZ5eULHKijwi3Wok0BZZ3PcwTHXKBoE0ta/odSkWZ9IwSPFklCA3k+13G6zywHAA+XSvn9m5O
+v4rd+Fi/woaudsHBippluXfIIPcB0G2DHLMJ+9cljSZXEWhyFakrSkl2c9I0MYZrhnAAQjEkADqh
+Bkub46ZJ0hmKiSQcF7enhRwSijZc59cQdAvhDyuWn1naPADGOzBzfbIP7K6mOQbpnB8fvac0nreV
+I678BlLFTlG04iG/n4pOn2SVePA0o0SyZLMo9lBIT8EezT6pp4ilPy2ifPGQK01sykO+bQYB5urg
+kerJsOvOyjcFVlL0Wvk0G6Vi+9HHVIPvhDz/R/NA1xx87r8u/2PiF8v8P1KUhv9fA1X+T6uAsv+F
+FlIehzGI0mQoTYS9deyfKBZ0hpPBeCLt5d7/0qgr49e/JHeVhJ3wEQg65hRhmnbNYtdiXS7pWsVp
+G+8ifoi4PsLjvx+dXBxnc+ywLYizV5rA+FKSh/gWwkmy3JXk4m0E48a6VdnzQyid5ITF2rFj+Oc3
+iOaUA2ztHvc5rkKtyenP5L5a1+nrC0vyZdGyMLVNPMFKsVPqzEfoa9y5rnLXM2zU+MxQyPDl+acy
+qZbTkuSlkpg4M/XKZY+LOVqrU1VLI93fEOkmexh11orG2kl1cCB2rtdlhGG1cZa++utiSN/Gtung
+zOJw2N8dqNbHD6dn51inPsJ/H2J5sWSt2nWKwXf+S/TPDrxS2d876DS5zw533VTt+Krua6x+zvU1
+znHX04p+yeKqudk1aNCgQYMGDRo0aNCgQYMGPz/+AWeG5d0AKAAA
+
+------_=_NextPart_000_01C0DC9D.5B6166A0--
