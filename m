@@ -1,17 +1,6 @@
-From: Sander <sander@sanderscorner.com>
-Message-ID: <1971029247.20020622113307@wanadoo.nl>
-Subject: Re[2]: [linux-lvm] ext2online and 2.4.18
-In-Reply-To: <20020621215903.GQ24903@lug-owl.de>
-References: <1024512969.1862.6.camel@hiro.prowell.org.bogus>
- <20020619195508.GA22427@clusterfs.com>
- <1024521044.1861.6.camel@hiro.prowell.org.bogus>
- <20020619214731.GB22427@clusterfs.com>
- <1024525638.1861.54.camel@hiro.prowell.org.bogus>
- <1024572480.3d11bc400c205@webmail3.wanadoo.nl>
- <20020620163420.GN22427@clusterfs.com> <482222938.20020621234918@wanadoo.nl>
- <20020621215903.GQ24903@lug-owl.de>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+From: Lightweight patch manager <patch@hawkeye.luckynet.adm>
+Message-Id: <200206221217.g5MCHwFO000992@hawkeye.luckynet.adm>
+Subject: [linux-lvm] [PATCH][2.5] List macros update for md (10/19)
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -22,28 +11,45 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Sat Jun 22 04:32:02 2002
+Date: Sat Jun 22 07:18:02 2002
 List-Id: <linux-lvm.redhat.com>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@sistina.com
+Content-Transfer-Encoding: 7bit
+To: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Cc: mingo@elte.hu, linux-raid@vger.kernel.org, linux-lvm@sistina.com
 
-(Response to message from Jan-Benedict Glaw, jbglaw@lug-owl.de on Friday, June 21, 2002 11:59:03 PM)
+Multiple devices aren't on new list macros either...
 
-Hallo Jan-Benedict,
+Two times list_move, and it's done
 
-Yes, definately non-zero. This message never shows in an un-patched kernel and
-fsck'ing happens automatically. On a previous occasion I checked the mount counts too.
-They were perfectly ok.
-
--- 
-
-Regards,
-Sander
-
-Friday, June 21, 2002, 11:59:03 PM, you wrote:
-
-> Are you sure that this/those filesystem(s) have a non-zero value in
-> /etc/fstab's "fs_passno" field (it's the 6th and last value in each
-> row)?
-
-> MfG, JBG
+diff -Nur thunder-2.5/drivers/md/lvm-snap.c thunder-2.5/drivers/md/lvm-snap.c
+--- thunder-2.5/drivers/md/lvm-snap.c 22 Jun 2002 10:56:13 -0000 +0000
++++ thunder-2.5/drivers/md/lvm-snap.c 22 Jun 2002 10:56:13 -0000 +0000 thunder (thunder-2.5/drivers/md/lvm-snap.c 1.1 0644)
+@@ -109,11 +109,9 @@ lvm_find_exception_table(kdev_t org_dev,
+ 		    kdev_same(exception->rdev_org, org_dev))
+ 		{
+ 			if (i)
+-			{
+ 				/* fun, isn't it? :) */
+-				list_del(next);
+-				list_add(next, hash_table);
+-			}
++				list_move(next, hash_table);
++
+ 			ret = exception;
+ 			break;
+ 		}
+diff -Nur thunder-2.5/drivers/md/md.c thunder-2.5/drivers/md/md.c
+--- thunder-2.5/drivers/md/md.c 22 Jun 2002 10:56:14 -0000 +0000
++++ thunder-2.5/drivers/md/md.c 22 Jun 2002 10:56:14 -0000 +0000 thunder (thunder-2.5/drivers/md/md.c 1.1 0644)
+@@ -1872,8 +1872,7 @@ static void autorun_devices(void)
+ 					continue;
+ 				}
+ 				printk(KERN_INFO "md:  adding %s ...\n", partition_name(rdev->dev));
+-				list_del(&rdev->pending);
+-				list_add(&rdev->pending, &candidates);
++				list_move(&rdev->pending, &candidates);
+ 			}
+ 		}
+ 		/*
