@@ -1,9 +1,7 @@
-Message-ID: <006101c221c3$2266d8a0$8606a8c0@julio>
-From: "Julio" <julio@centershop.com.br>
-MIME-Version: 1.0
-Content-Type: multipart/alternative;
-	boundary="----=_NextPart_000_005E_01C221A9.FBDED6B0"
-Subject: [linux-lvm] Fw: Logical volume is smaller than physical drive.
+From: "Tom Walcott" <tom_walcott@hotmail.com>
+Mime-Version: 1.0
+Message-ID: <F19741gcljD2E2044cY00004523@hotmail.com>
+Subject: [linux-lvm] LVM2 modifies the buffer_head struct?
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,62 +12,31 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Tue Jul  2 07:15:02 2002
+Date: Tue Jul  2 08:41:01 2002
 List-Id: <linux-lvm.redhat.com>
-To: linux-lvm@sistina.com
+Content-Type: text/plain; format=flowed; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: linux-lvm@sistina.com, linux-kernel@vger.kernel.org
 
-This is a multi-part message in MIME format.
+Hello,
 
-------=_NextPart_000_005E_01C221A9.FBDED6B0
-Content-Type: text/plain;
-	charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Browsing the patch submitted for 2.4 inclusion, I noticed that LVM2 modifies 
+the buffer_head struct. Why does LVM2 require the addition of it's own 
+private field in the buffer_head? It seems that it should be able to use the 
+existing b_private field.
 
-I have a  16G Raid 1 ( 2 scsi drives ) .=20
-I added it to a vg called vg ( vgcreate vg /dev/md1 ) and then tried to =
-create a logical volume of 16G. ( lvcreate -L16G -nmy_volume vg).
-It failed and said that there was no space avaliable.
-'vgdisplay vg'  showed that i had only 10G avaliable. where are my other =
-6G ;) ??
-Have any of you been thru something similer ?
+How does that extra field affect performance relative to the cache? Won't 
+any negative effects be seen by everything that uses buffer_heads? Also, as 
+I understand the slab code and hardware cache alignment, won't the addition 
+of the new field cause the each buffer_head to consume 128 bytes instead of 
+96?
 
-Thanx !
+Just curious to know why this field was added, when the buffer_head already 
+had a field for this purpose.
 
-Julio Faerman
-------=_NextPart_000_005E_01C221A9.FBDED6B0
-Content-Type: text/html;
-	charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+-Tom
 
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
-<HTML><HEAD>
-<META http-equiv=3DContent-Type content=3D"text/html; =
-charset=3Diso-8859-1">
-<META content=3D"MSHTML 5.50.4915.500" name=3DGENERATOR>
-<STYLE></STYLE>
-</HEAD>
-<BODY bgColor=3D#ffffff>
-<DIV><FONT face=3DArial size=3D2>I have a&nbsp;&nbsp;16G Raid 1&nbsp;( 2 =
-scsi drives=20
-)&nbsp;. </FONT></DIV>
-<DIV><FONT face=3DArial size=3D2>I added it to a vg called vg ( vgcreate =
-vg /dev/md1=20
-) and then tried to create a logical volume of 16G. ( lvcreate -L16G =
--nmy_volume=20
-vg).</FONT></DIV>
-<DIV><FONT face=3DArial size=3D2>It failed and said that there was no =
-space=20
-avaliable.</FONT></DIV>
-<DIV><FONT face=3DArial size=3D2>'vgdisplay vg'&nbsp; showed that i had =
-only 10G=20
-avaliable. where are my other 6G ;) ??</FONT></DIV>
-<DIV><FONT face=3DArial size=3D2>Have any of you been thru something =
-similer=20
-?</FONT></DIV>
-<DIV><FONT face=3DArial size=3D2></FONT>&nbsp;</DIV>
-<DIV><FONT face=3DArial size=3D2>Thanx !</FONT></DIV>
-<DIV><FONT face=3DArial size=3D2></FONT>&nbsp;</DIV>
-<DIV><FONT face=3DArial size=3D2>Julio =
-Faerman</FONT></DIV></BODY></HTML>
 
-------=_NextPart_000_005E_01C221A9.FBDED6B0--
+
+_________________________________________________________________
+Chat with friends online, try MSN Messenger: http://messenger.msn.com
