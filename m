@@ -1,9 +1,9 @@
-Message-ID: <3D905218.90403@mindmatics.de>
-From: Andreas Baier <andreas.baier@mindmatics.de>
+Message-ID: <001201c263e0$584c1340$db64a8c0@marien>
+From: "Marien Tielemans - Van Boxtel Software BV" <mtielemans@van-boxtel-software.nl>
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] raid1+lvm
-References: <20020923152349.GA22130@kluge.net> <30810.1032845190@www7.gmx.net> <20020924112350.GA21473@weissel.dyndns.org>
-Content-Transfer-Encoding: quoted-printable
+Content-Type: multipart/alternative;
+	boundary="----=_NextPart_000_000F_01C263F1.1AD91E20"
+Subject: [linux-lvm] cannot mount snapshot volumes
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,46 +14,93 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Tue Sep 24 06:55:01 2002
+Date: Tue Sep 24 10:40:01 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="iso-8859-1"; format="flowed"
 To: linux-lvm@sistina.com
 
-Hi,
+This is a multi-part message in MIME format.
 
-right now, I am not yet sure, if this all is ok, I=B4ve learned quiet a=20
-bit about the LVM, and I remember, that it was not suggested to use=20
-swap on a lvm in former times, and it doesn=B4t matter if it is a swap=20
-file or a partition, since there could be bad things when memory is=20
-tight. Perhaps this is problem is removed - I never used swap on a=20
-lvm, but I did on a software raid1.
+------=_NextPart_000_000F_01C263F1.1AD91E20
+Content-Type: text/plain;
+	charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 
-It would be perfect if that all would work, you built a system with=20
-two cheap IDE-disks or scsi if you=B4re rich - than one can build a=20
-small boot partition on both disks and with the rest of the disk one=20
-can make a soft-raid1 with the lvm on top.
+Hello ,
 
-I know I can do it, so I have root and swap and data on the raid,=20
-accessible via the lvm.  But would it work if mem is tight and the=20
-system load is high or could I run into a deadlock ?
+I am using a stock RedHat 7.3 server (ext 3 fs) with lvm 1.0.3 installed =
+, i upgraded lvm to 1.0.5 ( kernel patch etc.).
+LVM works fine however i cannot mount the created snapshot volume.
 
-Best regards
+When doing a mount the server tells me : Wrong fs type , bad option, bas =
+superblock on /dev/lvmgroup1/snapshot , or too many mounted file =
+systems.
 
-Andreas
+In the mailing list i read that the solution for this problem : patch =
+the kernel with  linux-2.4.18-VFS-lock.patch.( applied in the 1.0.5 tar =
+file)
 
-Wolfgang Weisselberg wrote:
+However when i apply the patch i get messages about Reverse patches and =
+several chunks and files not being patched .So compiling the kernel =
+again also gives problems.
 
-> Gerwin Lienert (gerwin.lienert@gmx.de) wrote 37 lines:
->=20
->=20
->>But what do you do, when your swap becomes to small.
->>
->=20
-> - use a swapfile (can be on LVM) with a low priority
-> - use a swap partition on LVM with a low priority
->=20
->=20
+I like to know, is there another patch file i have to use , or a better =
+solution for this problem ?
+
+Thanks ,
+
+Marien Tielemans
 
 
---=20
-Andreas Baier
+
+------=_NextPart_000_000F_01C263F1.1AD91E20
+Content-Type: text/html;
+	charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML><HEAD>
+<META http-equiv=3DContent-Type content=3D"text/html; =
+charset=3Diso-8859-1">
+<META content=3D"MSHTML 5.50.4807.2300" name=3DGENERATOR>
+<STYLE></STYLE>
+</HEAD>
+<BODY bgColor=3D#ffffff>
+<DIV><FONT face=3DArial size=3D2>Hello ,</FONT></DIV>
+<DIV><FONT face=3DArial size=3D2></FONT>&nbsp;</DIV>
+<DIV><FONT face=3DArial size=3D2>I am using a stock RedHat 7.3 server =
+(ext 3 fs)=20
+with lvm 1.0.3 installed , i upgraded lvm to 1.0.5 ( kernel patch=20
+etc.).</FONT></DIV>
+<DIV><FONT face=3DArial size=3D2>LVM works fine however i cannot mount =
+the created=20
+snapshot volume.</FONT></DIV>
+<DIV><FONT face=3DArial size=3D2></FONT>&nbsp;</DIV>
+<DIV><FONT face=3DArial size=3D2>When doing a mount the server tells me =
+: Wrong fs=20
+type , bad option, bas superblock on /dev/lvmgroup1/snapshot , or too =
+many=20
+mounted file systems.</FONT></DIV>
+<DIV><FONT face=3DArial size=3D2></FONT>&nbsp;</DIV>
+<DIV><FONT face=3DArial size=3D2>In the mailing list i read that the =
+solution for=20
+this problem : patch the kernel with &nbsp;linux-2.4.18-VFS-lock.patch.( =
+applied=20
+in the 1.0.5 tar file)</FONT></DIV>
+<DIV><FONT face=3DArial size=3D2></FONT>&nbsp;</DIV>
+<DIV><FONT face=3DArial size=3D2>However when i apply the patch i get =
+messages about=20
+Reverse patches and several chunks and files not being patched .So =
+compiling the=20
+kernel again also gives problems.</FONT></DIV>
+<DIV><FONT face=3DArial size=3D2></FONT>&nbsp;</DIV>
+<DIV><FONT face=3DArial size=3D2>I like to know, is there another patch =
+file i have=20
+to use , or a better solution for this problem ?</FONT></DIV>
+<DIV><FONT face=3DArial size=3D2></FONT>&nbsp;</DIV>
+<DIV><FONT face=3DArial size=3D2>Thanks ,</FONT></DIV>
+<DIV><FONT face=3DArial size=3D2></FONT>&nbsp;</DIV>
+<DIV><FONT face=3DArial size=3D2>Marien Tielemans</FONT></DIV>
+<DIV><FONT face=3DArial size=3D2></FONT>&nbsp;</DIV>
+<DIV><FONT face=3DArial size=3D2></FONT>&nbsp;</DIV></BODY></HTML>
+
+------=_NextPart_000_000F_01C263F1.1AD91E20--
