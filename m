@@ -1,8 +1,8 @@
-From: Bradley Alexander <storm@tux.org>
-Content-Transfer-Encoding: 7bit
-Message-Id: <1008557869.831.2.camel@defiant>
-Mime-Version: 1.0
-Subject: [linux-lvm] Can someone _please_ tell me whats going on?
+From: Friedrich Lobenstock <fl@fl.priv.at>
+Subject: Re: [linux-lvm] Can someone _please_ tell me whats going on?
+In-Reply-To: <1008557869.831.2.camel@defiant>
+Message-ID: <Pine.LNX.4.33.0112170410450.12782-100000@www.scotty.co.at>
+MIME-Version: 1.0
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -13,67 +13,24 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Sun Dec 16 20:56:02 2001
+Date: Sun Dec 16 21:11:02 2001
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: TEXT/PLAIN; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Hi all,
+On 16 Dec 2001 21:57, Bradley Alexander wrote:
 
-I posted last month (Please see message
-<20011111194145.A715@sonsofthunder.yi.org>,
-<20011112141948.P715@sonsofthunder.yi.org> regarding problems i was
-having with lvm. I am working with a 1GHz Athlon machine, with 2 30GB
-hard drives. One of the problems that I was seeing seek errors on the
-hard drive. Everyone who responded mentioned that it was hardware
-problems. 
+> hdc: dma_intr: status=0x51 { DriveReady SeekComplete Error }
+> hdc: dma_intr: error=0x10 { SectorIdNotFound }, LBAsect=211681280,
+> sector=0
+> hdc: DMA disabled
+> hdd: DMA disabled
+> ide1: reset: success
 
-Well, I took that Quantum drive out and put an almost brand new Maxtor
-(I took great pleasure in whacking windows on it) identical to my first
-drive (Maxtor Maxtor 53073U6). I did the pvcreate, vgcreate and
-lvcreate, followed by mkreiserfs. When I rebooted, again, I saw 
-
-hdc: dma_intr: status=0x51 { DriveReady SeekComplete Error }
-hdc: dma_intr: error=0x10 { SectorIdNotFound }, LBAsect=211681280,
-sector=0
-hdc: dma_intr: status=0x51 { DriveReady SeekComplete Error }
-hdc: dma_intr: error=0x10 { SectorIdNotFound }, LBAsect=211681280,
-sector=0
-hdc: dma_intr: status=0x51 { DriveReady SeekComplete Error }
-hdc: dma_intr: error=0x10 { SectorIdNotFound }, LBAsect=211681280,
-sector=0
-hdc: dma_intr: status=0x51 { DriveReady SeekComplete Error }
-hdc: dma_intr: error=0x10 { SectorIdNotFound }, LBAsect=211681280,
-sector=0
-hdc: DMA disabled
-hdd: DMA disabled
-ide1: reset: success
-hdc: read_intr: status=0x59 { DriveReady SeekComplete DataRequest Error
-}
-hdc: read_intr: error=0x10 { SectorIdNotFound }, LBAsect=211681280,
-sector=0
-hdc: read_intr: status=0x59 { DriveReady SeekComplete DataRequest Error
-}
-hdc: read_intr: error=0x10 { SectorIdNotFound }, LBAsect=211681280,
-sector=0
-hdc: read_intr: status=0x59 { DriveReady SeekComplete DataRequest Error
-}
-
-I know for a fact that this drive is good, as was the Quantum. However,
-the Quantum has since stopped working. Obviously it is not a hardware
-issue. Can someone please tell me why whenever I try to turn a second
-drive into a logical volume, I get drive errors?
-
-I would appreciate any suggestions on why this is happening and how to
-fix it.
-
+This looks like a IDE-cable problem to me. Checked the length?
+Is it really a ATA66/100 cable? Do you use a drive cage?
 
 -- 
---Brad
-============================================================================
-Bradley M. Alexander, CISSP              |   Co-Chairman,
-Beowulf System Admin/Security Specialist |    NoVALUG/DCLUG Security SIG
-Debian/GNU Linux Developer		 |   storm [at] debian.org
-                                         |   storm [at] tux.org
-============================================================================
-If Guns cause Crime, then Matches cause Arson.
+MfG / Regards
+Friedrich Lobenstock
