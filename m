@@ -1,10 +1,10 @@
-From: Luca Berra <bluca@comedia.it>
-Subject: Re: [linux-lvm] question on lvm
-Message-Id: <20020418110244.GD12253@colombina.comedia.it>
-References: <50A2E0979498D4119B9F00A0C9DD8925650989@chzrhm0601.hds.co.uk>
+Message-Id: <3CBEB032.F1A6123A@mc-lindinger.de>
+From: Markus Bartl <m.bartl@mc-lindinger.de>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <50A2E0979498D4119B9F00A0C9DD8925650989@chzrhm0601.hds.co.uk>
+Subject: Re: [linux-lvm] mount reiserfs snapshot failed
+References: <3CBE92EB.89FB2B07@mc-lindinger.de>
+    <20020418094402.GA1233@fib011235813.fsnet.co.uk>
+Content-Transfer-Encoding: 7bit
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,30 +15,53 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Thu Apr 18 06:01:01 2002
+Date: Thu Apr 18 06:39:01 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: "'linux-lvm@sistina.com'" <linux-lvm@sistina.com>
+To: linux-lvm@sistina.com
 
-On Thu, Apr 18, 2002 at 03:17:15AM -0700, Pascal Hubacher wrote:
-> i would like to know if lvm can handle multiple paths to one disk (like dmp
-> in veritas volume manager) and if yes if it does a loadbalancing on the
-> paths? 
+Joe Thornber wrote:
 > 
-not atm, but Stefan Bader <Stefan.Bader@de.ibm.com>
-posted a patch on this list to enable this functionality
-as an alternative you can use md multipath under lvm
-i posted a patch to the linux-raid mailing-list to
-enable loadbalancing on md multipath *this patch is
-still untested*
+> On Thu, Apr 18, 2002 at 11:33:31AM +0200, Markus Bartl wrote:
+> > Hi there.
+> >
+> > Im using the original kernel 2.4.18 with the locking patch and the
+> > lvm-patch applied. I use the lvm in Version 1.1rc1.
+> > I got one harddisk with 4 partitions on it, 1 partition is Linux LVM.
+> > The volume to backup is mounted on /home and has reiserfs.
+> >
+> > I made a shell-script to perform a test using snapshots.
+> > Here is what it does (looped):
+> > 1) create snapshot
+> > 2) mount snapshot --> fails sometimes (35 loops, 6 fails)
+> > 3) backup snapshot
+> > 4) create file on original volume while backup is still running
+> > 5) unmount snapshot
+> > 6) remove snapshot
+> >
+> > In some cases mounting the snapshot volume fails with error 32 (wrong fs
+> > type or bad superblock).
+> > Anybody got any idea???
+> 
+> Do version 1.0.3 tools fail in the same way ?
+> 
+> - Joe
+> 
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@sistina.com
+> http://lists.sistina.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
+Hi there.
 
-L.
+I rebuilt the kernel with lvm 1.0.3 and used the 1.0.3 tools. The
+problem is still there.
+Anyone got any other idea???
+Thanks!!!
 
+Markus
 -- 
-Luca Berra -- bluca@comedia.it
-        Communication Media & Services S.r.l.
- /"\
- \ /     ASCII RIBBON CAMPAIGN
-  X        AGAINST HTML MAIL
- / \
+MC-Lindinger GmbH
+Markus Bartl
+Wiesenweg 1
+D-94099 Ruhstorf
