@@ -1,25 +1,25 @@
-From: Holger Grothe <grothe@mathematik.tu-darmstadt.de>
-Message-Id: <199906101648.AA008993324@fb0442.mathematik.tu-darmstadt.de>
-Subject: Re: [linux-lvm] LVM Not attainable from posted URL
-Date: Thu, 10 Jun 1999 18:48:44 MESZ
-In-Reply-To: <A7E1C26945C8D211ADBF0008C709661A4B3F14@nsc-msg02.network.com>; from "Vanciu, Chris J." at Jun 10, 99 10:51 am
+Message-ID: <3760064A.AE91DAD4@mail.isis.de>
+Date: Thu, 10 Jun 1999 20:39:06 +0200
+From: Marcus Ruehmann <m.ruehmann@mail.isis.de>
+MIME-Version: 1.0
+Subject: [linux-lvm] Inclusion in 2.3.x kernel
+Content-Transfer-Encoding: quoted-printable
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="iso-8859-1"
 To: linux-lvm@msede.com
 
-> 
-> ftp://linux.msede.com/lvm/v0.6
-> 
-> Are there any other locations?
->
-Yes. ftp://linux.mathematik.tu-darmstadt.de/pub/linux/mirrors/misc/lvm/v0.6 
-is a daily mirror.
+Hi there,
 
-Holger
---
-Holger Grothe  (Email: grothe@mathematik.tu-darmstadt.de)
-Fachbereich Mathematik, TU Darmstadt
+can anybody shade my lights when we can expect lvm to be included in
+stock/devel kernel?
+
+Please, please do it as soon as possible. The more people are playing
+with it, the better it=B4ll get.
+
+When will be a new version available. Since end of feb there is no new
+version (except patches) ?
+
+Greetings
+Marcus
