@@ -1,13 +1,9 @@
-Return-Path: <tandem@dnmi.no>
-Subject: Re: [linux-lvm] LVM Questions
-References: <20010503004851.897.qmail@web10803.mail.yahoo.com>
-	<3AF0B857.74F16371@home.com> <wv4rv26hvj.fsf@freeze.oslo.dnmi.no>
-	<20010504093350.D4700@sistina.com>
-From: Adrian Phillips <a.phillips@dnmi.no>
-Date: 04 May 2001 09:45:24 +0200
-In-Reply-To: "Heinz J. Mauelshagen"'s message of "Fri, 4 May 2001 09:33:50 +0000"
-Message-ID: <wvlmod7e23.fsf@freeze.oslo.dnmi.no>
-MIME-Version: 1.0
+Return-Path: <dick@britain.agilent.com>
+Date: Fri, 4 May 2001 09:06:24 +0100 (BST)
+From: Dick Middleton <dick@britain.agilent.com>
+Message-Id: <200105040806.JAA04384@queeg.britain.agilent.com>
+In-reply-to: Joe Thornber's message of Thu, 3 May 2001 23:15:23 +0100 <20010503231523.B2057@66bassett.freeserve.co.uk>
+Subject: [linux-lvm] Patching 2.2.18 with lvm + sw raid
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -19,41 +15,19 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
->>>>> "Heinz" == Heinz J Mauelshagen <Mauelshagen@sistina.com> writes:
+>  Please follow the instructions re. software raid in LVM/PATCHES/README.
 
-<snip>
-    >>  I believe it is officially supported, ie. if it breaks then
-    >> its a bug, and have done it now several times, at least on
-    >> lightly loaded filesystems. Its not quite as convienient as
-    >> AIX's LVM, in that one resizes the filesystem and the logical
-    >> volume is automatically resized, but if I'm bothered I'll write
-    >> a wrapper script around lvextend/lvreduce for that.
-    >> 
-    >> A question for the developers if they notice. Why lvextend and
-    >> lvreduce, as they do the same things. Is it just for clarity ?
-    >> A lvresize with + or - or a fixed size to could the same ?
+>  If you wish to use 'new raid' you will have to edit the fragments
+>  file.  The patch will only apply to a specific version of new raid
 
-    Heinz> The Linux LVM CLI is as close as possible to the HP/UX one
-    Heinz> which has those commands (and vgextend/vgreduce as well)
-    Heinz> seperate.  This makes at least me as a long term HP/UX LVM
-    Heinz> user happy ;-)
+DONG!! RTFM.  Sorry, I thought I had.  I see what it means now.  I'll try
+again.
 
-HP/UX, how unfortunate :-) Thanks for the info. though.
+Many thanks.
 
-    Heinz> lvresize can easily be made as a convenence wrapper
-    Heinz> though...
-
-Patches accepted I presume :-)
-
-Sincerely,
-
-Adrian Phillips
-
--- 
-Your mouse has moved.
-Windows NT must be restarted for the change to take effect.
-Reboot now?  [OK]
+Dick
