@@ -1,9 +1,9 @@
 Return-Path: <plamb_98@yahoo.com>
-Message-ID: <20010726154218.2155.qmail@web13402.mail.yahoo.com>
-Date: Thu, 26 Jul 2001 08:42:18 -0700 (PDT)
+Message-ID: <20010726185522.52160.qmail@web13407.mail.yahoo.com>
+Date: Thu, 26 Jul 2001 11:55:22 -0700 (PDT)
 From: Pierre Lamb <plamb_98@yahoo.com>
 MIME-Version: 1.0
-Subject: [linux-lvm] help
+Subject: [linux-lvm] lvm help
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -19,6 +19,7 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
+help 
 I placed the 2 required commands in rc.sysinit (rh71)
 before hte section "Mounting other file"
 gave vgscan the -d option and left vgchange -ay.
@@ -29,8 +30,6 @@ the vgscan the correct entries are made. Ant help
 would be appreciated.
 
 Pierre
-
-
 
 __________________________________________________
 Do You Yahoo!?
