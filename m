@@ -1,11 +1,14 @@
-Return-Path: <lembark@wrkhors.com>
-Message-ID: <3B1F9E1C.1984FAF8@wrkhors.com>
-Date: Thu, 07 Jun 2001 10:30:36 -0500
-From: Steven Lembark <lembark@wrkhors.com>
-MIME-Version: 1.0
+Return-Path: <jackmc-linux-lvm@lorentz.com>
+From: "Jack McKinney" <jackmc-linux-lvm@lorentz.com>
+Date: Thu, 7 Jun 2001 10:43:02 -0500
 Subject: Re: [linux-lvm] LILO configuration for LVM "boot" filesystem
-References: <20010605210727.C1870@pc.ilinx>
-Content-Transfer-Encoding: 7bit
+Message-ID: <20010607104301.A29848@stocks.pillory.com>
+References: <20010605210727.C1870@pc.ilinx> <3B1F9E1C.1984FAF8@wrkhors.com>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="MGYHOYXEY6WxJCY8"
+Content-Disposition: inline
+In-Reply-To: <3B1F9E1C.1984FAF8@wrkhors.com>; from lembark@wrkhors.com on Thu, Jun 07, 2001 at 10:30:36AM -0500
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,25 +20,48 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
 
-> Not only cool but sometimes necessary.  Sometimes root rides so close
-> to full that you cannot upgrade.  Then you start doing the "diskspace
-> shuffle" to get something you can upgrade.
-> 
-> Without wasting a ton of space when you initially install a system,
-> every system's root partition will hit the wall sooner or later.  That
-> is the unfortunate side effect of software evolution.
+--MGYHOYXEY6WxJCY8
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Use separate mount points for /var, /usr & /home.  This keeps
-root down to mainly /etc, /dev, /bin, /sbin and /lib -- none of 
-which is all that enormous.  Short of writing the File From Hell
-to /tmp a 128MB root file system works well enough for me.  I do
-put /usr & /opt on LVM but only because all the tools needed to
-revive the system are in /bin, /sbin & /lvm on the root.
+Big Brother tells me that Steven Lembark wrote:
+>=20
+> Use separate mount points for /var, /usr & /home.  This keeps
+> root down to mainly /etc, /dev, /bin, /sbin and /lib -- none of=20
+> which is all that enormous.  Short of writing the File From Hell
+> to /tmp a 128MB root file system works well enough for me.  I do
+> put /usr & /opt on LVM but only because all the tools needed to
+> revive the system are in /bin, /sbin & /lvm on the root.
 
--- 
- Steven Lembark                                   2930 W. Palmer St.
-                                                 Chicago, IL  60647
- lembark@wrkhors.com                                   800-762-1582
+    After installation, do:
+
+cd / ; mv tmp tmp.old ; ln -s /var/tmp .
+reboot
+rm -rf /tmp.old
+
+    Now you don't have to worry about root filling up at all...
+
+--
+"Aluminum foil makes a wonderful hat and blocks     Jack McKinney
+ out the government's mind-control rays."           http://www.lorentz.com
+    Lt. Munch, The X-Files                          jackmc@lorentz.com
+                                                    1024D/D68F2C07 4096g/38=
+AEF076
+
+--MGYHOYXEY6WxJCY8
+Content-Type: application/pgp-signature
+Content-Disposition: inline
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.0.4 (GNU/Linux)
+Comment: For info see http://www.gnupg.org
+
+iEYEARECAAYFAjsfoQUACgkQimeon9aPLAfH2ACfZGvPc3f4NpJpg194a2FNTeCP
+ndIAn3IUxkj4molY3zNQ1Ag++NauQ667
+=OjBk
+-----END PGP SIGNATURE-----
+
+--MGYHOYXEY6WxJCY8--
