@@ -1,10 +1,8 @@
-From: Eric Sandeen <sandeen@sgi.com>
-In-Reply-To: <3DB97752.EBA18F0F@splentec.com>
-References: <3DB97752.EBA18F0F@splentec.com>
-Content-Transfer-Encoding: 7bit
-Message-Id: <1035573423.25939.6.camel@stout.americas.sgi.com>
+From: Bradley M Alexander <storm@tux.org>
+Message-ID: <20021026045558.GA7158@sonsofthunder.yi.org>
 Mime-Version: 1.0
-Subject: [linux-lvm] Re: Recent dissections
+Content-Disposition: inline
+Subject: [linux-lvm] Repairing LVM installations
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,84 +13,81 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Fri Oct 25 14:22:02 2002
+Date: Fri Oct 25 23:56:02 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: Luben Tuikov <luben@splentec.com>
-Cc: linux-xfs <linux-xfs@oss.sgi.com>, linux-lvm <linux-lvm@sistina.com>
+Content-Transfer-Encoding: 7bit
+To: linux-lvm@sistina.com
 
-We do special handling of LVM and md in xfs_super.c:xfs_alloc_buftarg(),
-(and page_buf.c:_pagebuf_page_io()) using only sector-sized buffer heads
-for pagebufs in the LVM case, and only aligned I/O in the md case.
+I have a machine which is running lvm, though not on the root filesystem:
 
-If you had xfs -> md -> lvm -> scsi, then I think this might explain
-your problem, since XFS thinks it's talking to md, when in fact there is
-LVM (more restrictive I/O) underneath it.
+Filesystem           1K-blocks      Used Available Use% Mounted on
+/dev/hda2              2626536   1590228   1036308  61% /
+/dev/vg00/lv_tmp        204788     33008    171780  17% /tmp
+/dev/vg00/lv_var       1572812    834604    738208  54% /var
+/dev/vg00/lv_home      2621356   1335196   1286160  51% /home
+/dev/vg00/lv_usrlocal
+                       1572812   1216152    356660  78% /usr/local
+/dev/vg00/lv_opt        524268    272348    251920  52% /opt
+/dev/vg00/lv_backup   10485436   8017728   2467708  77% /backup
+/dev/vg00/lv_video    11533980   5271576   6262404  46% /usr/local/video
+/dev/vg00/lv_archive  18873788  17288044   1585744  92% /archive
 
-However, you say that you have xfs -> lvm -> md -> scsi, so I am still
-confused...  Just for fun, you could try always setting 
+This machine has three 30GB drives on it. Drives 2 and 3 (/dev/hdc and
+/dev/hde)
 
-btp->pbr_flags = PBR_SECTOR_ONLY;
+I have a separate drive with Win98. Two nights ago, I booted into Windows
+to defrag the drive on my Archos mp3 player using Norton. When I fired up
+Norton, I misread the message and ended up letting Norton try to find the
+partition table, thinking it was the Archos. After about a minute without
+seeing the Archos' drive light flicker, I found that something was amiss.
+It was cabbaging the LVM drives. /dev/hdc shows the following information
+in a pvscan:
 
-in xfs_alloc_buftarg, and see if it makes a difference?
+pvscan -- physical volume "/dev/ide/host0/bus1/target0/lun0/disc" is not
+active
+--- Physical volume ---
+PV Name               /dev/ide/host0/bus1/target0/lun0/disc
+VG Name               
+PV Size               8.03 GB / NOT usable 1.99 TB [LVM: 3.85 GB]
+PV#                   0
+PV Status             NOT available
+Allocatable           yes
+Cur LV                260964353
+PE Size (KByte)       2097151
+Total PE              4255186944
+Free PE               4255186029
+Allocated PE          915
+PV UUID               JXhNLv-TtpF-62Lg-CoIs-TMLT-Xg9L-GFfndV
+System Id             defiant1008649744
 
--Eric
+Since it was on a Promise controller, which locked up due to the filesystem
+damage, I moved the drive on hde to hdd to get it to boot. LVM sees the
+data on the PVs. I want to move the extents off of the damaged drives,
+starting with hdc. However, when I attempt to do so, I get a message about
+the PV being in an inconsistent state:
 
-On Fri, 2002-10-25 at 11:54, Luben Tuikov wrote:
-> As the folks on linux-xfs know, I've recently tried to
-> get xfs on top of lvm on top of raid5 on top of some
-> scsi disks to work.
-> 
-> Here are some recent curiosities which for now seem
-> to reconcile mount-s in D and BUG() in unlock_page():
-> 
-> Here is the basic framework:
-> 
->  FS --> LVM --> md(raid5) --> scsi disks           (1)
-> 
-> when FS = ext2, the above set up works alright,
-> when FS = xfs, then as you know either mount
-> would sleep indefinitely on down(), or BUG() in unlock_page().
-> 
-> I've written a tiny SCSI simulator driver for
-> block devices (non-SCSI; unrelated to all this),
-> lets call it ``sbs''.
-> 
-> Strangely when the above set up is like so:
-> 
->  xfs --> LVM --> sbs --> md(raid5) --> scsi disks  (2)
-> 
-> then everything works all right.
-> 
-> The only way I can explain this, is that the transformation
-> that bh's get along the way down and up somehow confuse
-> xfs in setup (1), (remember ext2 works all right in (1)),
-> but when sbs is in between LVM and md then things are ok
-> for xfs.
-> 
-> This ``solution'', was prompted by other curiosities we found
-> out here, like when either md or LVM was missing from (1)
-> with xfs, then things worked ok.
-> 
-> So, to make everyone happy, we put sbs in the middle of
-> LVM and md (see (2)), so that from xfs's point of view
-> it looks like LVM is talking to a scsi block device, and
-> from md's point of view it looks like it (md) is getting
-> its bh's from the linux block layer.
-> 
-> I hope those curiosities help ppl get some/any clue(s)
-> as to what could be happening and resolve this -- especially
-> those who know what fs/xfs/pagebuf/*.c is all about...
-> 
-> Bh's transformation, collecting them back into a page in
-> xfs from xx_end_io(), etc... where could it be?
-> 
-> -- 
-> Luben
-> 
-> P.S. No sensible performance penalties for putting sbs in
-> the middle. But that's irrelevant.
-> 
+[defiant /home/storm]# pvmove /dev/hdc                             
+pvmove -- ERROR "pv_check_consistency(): current LV" physical volume
+"/dev/hdc" is inconsistent
+
+The same occurs when I try to pvmove /dev/ide/host0/bus1/target0/lun0/disc.
+I would like to move the PEs off of the damaged drive and rebuild it, then
+move the data back. Is there a way to fix the PV on that particular drive
+so I can move the data off (there should be enough free PEs on the other
+two drives) and rebuild the drive?
+
+Thanks,
 -- 
-Eric Sandeen      XFS for Linux     http://oss.sgi.com/projects/xfs
-sandeen@sgi.com   SGI, Inc.         651-683-3102
+--Brad
+============================================================================
+Bradley M. Alexander                |   storm [at] debian.org
+Debian Developer, Security Engineer |   storm [at] tux.org
+Debian/GNU Linux Developer          | Visit the 99th VFS website at:
+99th VFS 'Tuskegee Airmen'          |   http://99thvfs-ta.org
+============================================================================
+Key fingerprints:
+DSA 0x54434E65: 37F6 BCA6 621D 920C E02E  E3C8 73B2 C019 5443 4E65
+RSA 0xC3BCBA91: 3F 0E 26 C1 90 14 AD 0A  C8 9C F0 93 75 A0 01 34
+============================================================================
+The American Revolution would never have happened with Gun Control.
