@@ -1,9 +1,9 @@
-Message-ID: <3BB14C43.B62B32AB@bellatlantic.net>
-Date: Tue, 25 Sep 2001 23:32:19 -0400
+Message-ID: <3BB14C7D.CDCD9F14@bellatlantic.net>
+Date: Tue, 25 Sep 2001 23:33:17 -0400
 From: Uday Bhaskar Sarma Seetamraju <sarma@bellatlantic.net>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] RAID1 on TOP of LVM
+Subject: [linux-lvm] LVM help re:
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -20,65 +20,25 @@ To: linux-lvm@sistina.com
 
 Hi,
 
-I have had LVM for a little while now.
-I have even successfully extended an LV.  Moved PVs.
-And better yet.  Destroyed and recreated an LV containing Data :-)
-The final step, RAID1.  But I stumbled.
-Can someone help?
+pvscan tells me which PV belongs to which VG.
+But I am wondering if the information as to
+"which PVwas added to the VG in which order"
+can also be determined.
+In case of a disaster, the first added PV would most likely contain
+all the information that's has been around longer (and so more
+important!)
 
-========= /etc/raidtab file =========
-raiddev /dev/md0
-        raid-level      1
-        nr-raid-disks   2
-        nr-spare-disks  0
-        chunk-size      4
-        persistent-superblock 0
-        device          /dev/MKP/1
-        failed-disk     0
-        device          /dev/MKP.1/1
-        raid-disk       1
+Sarma
 
-========= output of mkraid in single user mode =========
+P.S: An 'ls' will not tell you in which order files/subfolders were
+    created, but du or tar does.
 
-    # mkraid /dev/md0
-    Hadling MD device /dev/md0
-    analyzing super-block
-    disk 0: /dev/MKP/1, failed
-
-returned a status of 0.
-
-    # mkraid --version
-    mkraid version 0.90.0
-    # uname -a
-    Linux linux1.localdomain 2.4.3-20mdk #1 Sun Apr 15 23:03:10 CEST 2001 i686 unknown
-            (Mandrake 8.0 distribution downloaded from web site).
-
-========= the LVM info =========
-
-Logical Volume Manager 0.9
-Heinz Mauelshagen, Sistina Software  13/11/2000  (IOP 10)
-
-vgscan -- reading all physical volumes (this may take a while...)
-vgscan -- found active volume group "MKP"
-vgscan -- found active volume group "MKP.1"
-vgscan -- found active volume group "MGA"
-vgscan -- "/etc/lvmtab" and "/etc/lvmtab.d" successfully created
-vgscan -- WARNING: you may not have an actual VGDA backup of your volume groups
-
-
-lvscan -- ACTIVE           "/dev/MKP/1" [3.99 GB]
-lvscan -- ACTIVE           "/dev/MGA/1" [2 GB]
-lvscan -- ACTIVE           "/dev/MKP.1/1" [4 GB]
-lvscan -- 3 logical volumes with 9.99 GB total in 3 volume groups
-lvscan -- 3 active logical volumes
-
-
-pvscan -- reading all physical volumes (this may take a while...)
-pvscan -- ACTIVE   PV "/dev/hda6"  of VG "MKP"   [2 GB / 0 free]
-pvscan -- ACTIVE   PV "/dev/hda10" of VG "MKP"   [2 GB / 0 free]
-pvscan -- ACTIVE   PV "/dev/hdc6"  of VG "MKP.1" [2.04 GB / 0 free]
-pvscan -- ACTIVE   PV "/dev/hdc10" of VG "MKP.1" [2.04 GB / 88 MB free]
-pvscan -- ACTIVE   PV "/dev/hda7"  of VG "MGA"    [2 GB / 0 free]
-pvscan -- total: 5 [10.09 GB] / in use: 5 [10.09 GB] / in no VG: 0 [0]
-
-[EoInfo]
+P.S: Getting used to LVM reminds me of the days of early
+        minivax/ultrix days (my first unix impressions), where each
+        'rm' and 'mv' and 'cp' command was "entered" after 10
+        deep breaths and 2 minutes of deep thought about what
+        "that" command WILL do (when "entered" ofcourse!!).
+        Not a criticism of LVM, just that the flexibility and new-ness
+        of this concept lets one kill oneself so easily.
+        Can't speak for the world, but I can't handle this
+        kind of flexibilty and power.
