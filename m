@@ -1,10 +1,8 @@
-From: Luca Berra <bluca@comedia.it>
-Subject: Re: [linux-lvm] Moving to a new system.
-Message-ID: <20040109083417.GD18337@percy.comedia.it>
-References: <20040108203554.2d609d0f@hollowbox>
+From: Chris Rouch <crouch@pobox.com>
+Message-Id: <20040109100327.1e62b416.crouch@pobox.com>
 Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20040108203554.2d609d0f@hollowbox>
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] recover from a disk crash with lvm/lvm2
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,32 +13,62 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Fri Jan  9 03:35:02 2004
+Date: Fri Jan  9 04:04:02 2004
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
 
-On Thu, Jan 08, 2004 at 08:35:54PM +0100, neuron wrote:
->I'm moving my data from the old server, kernel 2.4 and lvm1.  To a new server, kernel 2.6 and lvm2.
->I thought I'd start by removing hdd1. It's 80gb and I have about 111gb free.
->
->pvmove --test /dev/hdd1
->pvmove -- couldn't find source physical volume "/dev/hdd1" in volume group "vg_main"
-??devfs??
+[I posted this to the fedora list, but had no response, so I'm trying
+again here.]
 
->pvdisplay /dev/hdd1 works, total pe's 3575
->would the best way of doing this be:
->lvreduce -l-3575 /dev/vg_main/storagelv
->resize_reiserfs /dev/vg_main/storagelv (I think reiserfs can do online resizing?)
-i'd reduce the fs _BEFORE_ shrinking the underlying device.
+I had 2 disks together in one volume group with 4 logical volumes split
+between them. On Sunday night one of the disks failed. I have backups so
+this isn't a serious problem, but I'm curious to see if it's possible to
+recover any data from the disk that is still working. So far I've had no
+luck.
 
-L.
+From googling around it seemed that lvm2 might be able to do this for
+me. So I installed the 2.6 kernel from rawhide on a test box and updated
+lvm2-2.00.08-2.i386.rpm
+mkinitrd-3.5.17-1.i386.rpm
+device-mapper-1.00.07-2.i386.rpm
+initscripts-7.43-1.i386.rpm 
 
--- 
-Luca Berra -- bluca@comedia.it
-        Communication Media & Services S.r.l.
- /"\
- \ /     ASCII RIBBON CAMPAIGN
-  X        AGAINST HTML MAIL
- / \
+Then I ran 
+
+lvm vgscan -P --mknodes
+lvm vgchange -P -a y
+lvm lvchange -P -a y /dev/scsivg/disk2 (also for other LVs)
+
+lvm lvdisplay -P scsivg then shows, in part,
+
+  Partial mode. Incomplete volume groups will be activated read-only.
+  1 PV(s) found for VG scsivg: expected 2
+  Logical volume (swap) contains an incomplete mapping table.
+  --- Logical volume ---
+  LV Name                /dev/scsivg/disk2
+  VG Name                scsivg
+  LV UUID                000000-0000-0000-0000-0000-0000-000000
+  LV Write Access        read/write
+  LV Status              available
+  # open                 0
+  LV Size                4.50 GB
+  Current LE             1152
+  Segments               257
+  Allocation             next free
+  Read ahead sectors     10000
+  Block device           254:0
+
+Which implies that I should be able to do something with this LV. But
+
+dd if=/dev/scsivg/disk2 of=/dev/null bs=1k count=1024
+0+0 records in
+0+0 records out
+
+Does anyone have any suggestions of things I could try? 
+
+Regards,
+
+Chris
+(who's just worked out the hard way that having a VG span two disks is
+not always a good idea)
