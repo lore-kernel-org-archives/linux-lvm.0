@@ -1,10 +1,8 @@
-Subject: Re: [linux-lvm] Changing Controller and also device names
-Message-ID: <20021106133937.GB22411@reti>
-References: <20021106142554.N30327@gathering.org>
+From: Sven Heinicke <sven@research.nj.nec.com>
+Content-Transfer-Encoding: 7bit
+Message-Id: <1036600955.30249.58.camel@chef>
 Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20021106142554.N30327@gathering.org>
-From: Joe Thornber <joe@fib011235813.fsnet.co.uk>
+Subject: [linux-lvm] dma_intr: during mkfs -c
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,17 +13,30 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Nov  6 07:40:01 2002
+Date: Wed Nov  6 10:43:01 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Wed, Nov 06, 2002 at 02:25:54PM +0100, Per Kristiansen wrote:
-> Do I need to take SPECIAL care to get the same device names  when I move the disks to the new controller
-> or can it find the data it needs using vgscan/pvscan ?
+I lvm'd a bunch of disks with Debian stable lmv10 package (1.0.4-4) and
+when I do a:
 
-vgscan looks at the UUID on each disk rather than relying on the
-device names.  So, no, you don't have to do anything special.
+   mkfs -t ext3 -c /dev/stripes/large
 
-- Joe
+first I get:
+
+  lvm -- lvm_blk_ioctl: unknown command 0x24b
+
+which doesn't seem to hurt anything.  But after a few hours into
+badblocks the kernel reported:
+
+hdr: dma_intr: status=0x51 { DriveReady SeekComplete Error }
+hdr: dma_intr: error=0x10 { SectorIdNotFound }, LBAsect=6306866,
+sector=6306848
+
+and hdr is in my lvm.  Is this drived hosed of did lvm and badblocks
+make in unusabel?
+
+  Sven
+
+P.S. Please CC me
