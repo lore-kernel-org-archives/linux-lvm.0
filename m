@@ -1,9 +1,11 @@
-Message-ID: <B51F0C636E578A4E832D3958690CD73E0130BFF0@es04snlnt>
-From: "Diehl, Jeffrey" <jdiehl@sandia.gov>
-Subject: RE: [linux-lvm] Newly extended VG reporting errors.
-Date: Tue, 28 Aug 2001 11:59:52 -0600
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Date: Tue, 28 Aug 2001 19:36:53 +0100
+From: Patrick Caulfield <caulfield@sistina.com>
+Subject: Re: [linux-lvm] Strange message with 2.4.8+1.0.1rc1
+Message-ID: <20010828193652.A4986@tykepenguin.com>
+References: <B45465FD9C23D21193E90000F8D0F3DF0178FD26@mailsrv.linkvest.com>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <B45465FD9C23D21193E90000F8D0F3DF0178FD26@mailsrv.linkvest.com>; from Jean-Eric.Cuendet@linkvest.com on Tue, Aug 28, 2001 at 09:10:12AM +0200
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,31 +18,24 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: "'linux-lvm@sistina.com'" <linux-lvm@sistina.com>
+Content-Transfer-Encoding: 7bit
+To: linux-lvm@sistina.com
 
-Well, I went ahead and rebooted the machine...
+On Tue, Aug 28, 2001 at 09:10:12AM +0200, Jean-Eric Cuendet wrote:
+> 
+> > Logical volume. All is fine. Then, I reboot. After that, it's 
+> > no more visible. 
+> > If I run vgscan, nothing is found. vgchange -ay doesn't help 
+> 
+> I found that if my VG name is : NORAID_HDX (10 characters), it's no more
+> visible after a reboot (no way to get it back, data loss) but if it's
+> named : NORAID then it's found after a reboot!
+> 
+> Is there a limit to 8 characters in LVM VGs names?
 
-Now I have don't have any VolumeGroups.  When I run pvscan, it shows all of
-my PV's as being associated with an unknown VG and that I should run vgscan.
+No. The limit is 128 characters and I've had plenty that were longer than 10. I
+suspect that the action of renaming has made the difference. I suspect (and if
+you're brave you could try this!) that if you rename the VG back to NORAID_HDX
+will still work.
 
-When I run vgscan, I get:
-
-[root@filmore jdiehl]# vgscan
-vgscan -- reading all physical volumes (this may take a while...)
-vgscan -- found active volume group "Database2"
-vgscan -- ERROR "vg_read_with_pv_and_lv(): allocated LE of LV" can't get
-data of
- volume group "Database2" from physical volume(s)
-vgscan -- ERROR "vg_read_with_pv_and_lv(): allocated LE of LV" creating
-"/etc/lv
-mtab" and "/etc/lvmtab.d"    
-
-But this doesn't seem to rebuild the VG.
-
-How do I recover from this?  Or is my data gone?
-
-Mike Diehl,
-Network Monitoring Tool Devl.
-Sandia National Laboratories.
-(505) 284-3137
-jdiehl@sandia.gov
+patrick
