@@ -1,9 +1,10 @@
-Subject: Re: [linux-lvm] LVM+Webmin
-References: <F222AutqfTLbUxnoHre0000d8e2@hotmail.com>
-From: Terje Kvernes <terjekv@math.uio.no>
-In-Reply-To: "Rado S"'s message of "Sat, 01 Dec 2001 11:24:02 -0700"
-Message-ID: <wxx667qdb3o.fsf@nommo.uio.no>
-MIME-Version: 1.0
+From: Luca Berra <bluca@comedia.it>
+Subject: Re: [linux-lvm] Mandrake 8.1 and LVM
+Message-ID: <20011202152556.D27109@colombina.comedia.it>
+References: <Pine.LNX.4.21.0111291649440.435-100000@sol.rune.org> <Pine.LNX.4.33.0111291608480.4437-100000@lx1.daboard.com> <20011129190920.B23998@kluge.net> <20011130020118.C17482@wookimus.net> <20011130114912.K26718@kluge.net> <20011130183933.A20547@colombina.comedia.it> <3C07C9D4.6020904@st-peter.stw.uni-erlangen.de>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <3C07C9D4.6020904@st-peter.stw.uni-erlangen.de>; from galia@st-peter.stw.uni-erlangen.de on Fri, Nov 30, 2001 at 07:03:00PM +0100
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,43 +15,59 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Sat Dec  1 12:53:01 2001
+Date: Sun Dec  2 08:24:01 2001
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-"Rado S" <radigyy@hotmail.com> writes:
+On Fri, Nov 30, 2001 at 07:03:00PM +0100, svetljo wrote:
+> >>With / on LVM, you're definately unable to boot if LVM has problems.
+> >>
+> >with / on ext2 you're definately unable to boot if ext2 has problems.
+> >
+> sorry , but you can not compare the PB's
+> it's not about the FS , but the device access
 
-> I am trying to make the LVM configuration and management easier.
+why not? see below
 
-  hm, that's a hard task. it's already rather easy. :)
+> >>This is a problem I've seen a number of times on HPUX.  The OS disk is
+> >>
+> >you cannot extend / under HP-UX (they don't have initrd)
+> >
+> initrd ?
+> isn't that smth special for linux ?
+yes, i was *joking*, what i meant was that lvm information for
+booting is fed statically to the kernel.
 
-> I've checked the mail list, and there were some discussion of
-> LVM+webmin, but I didn't see any links.
+> the next version of LVM should work without initrd and EVMS works 
+> without initrd
+> the kernel should be able to activate the devices without additional 
+> binaries
+linux also has _initfunc, which should free the kernel from bloat of
+driver initialization code (eg kernelspace implementations of
+vgscan/vgchange)
+> >besides i don't see the difference with someone having / un one disk
+> >and /usr on another without LVM.
+> >
+> isn't it common for all *nix OSes that they have a small / with only the 
+> very essential libraries , binaries and conf's
+> and everything other goes to /usr 
+please I'd be thankful if ppl did read emails in the thread before replying
+I was responding to Theo's claims, who said that if a luser extends /
+over two disks he duubles the chance of failure. I was saying that lusers
+has many ways of of shooting themselves in the feet.
 
-  I don't think there has been done too much towards this. although
-  I've only been reading the mailinglists with half an eye the last
-  few months.
- 
-> I could start working on webmin module from scratch, if there are no
-> any other people doing the same thing.
+my point is that there is no reason saying that root lvm is dangerous
+and should be avoided. i have been using it for almost an year, and
+i consider it as stable as root on an extended pc partition.
 
-  that wouldn't be too productive now, would it? :)
- 
-> It would be great if I can get a copy of your perl code.
-
-  I've made the last checked CVS-version available here:
-  <url: http://www.math.uio.no/~terjekv/LVM.tar.gz >
-
-  there is still a lot of work to be done, but it has at least done
-  the basics of building up a datastructure and such things. if there
-  is any interest in the code I'll put time into it. :)
-
-  oh, and it is going to be GPL, I just haven't bothered with editing
-  in license-information into stuff I've only been using on my own.
-  documentation doesn't exist except for the source (yet another
-  thing I'll do something about if there is interest).
+L.
 
 -- 
-Terje
+Luca Berra -- bluca@comedia.it
+        Communication Media & Services S.r.l.
+ /"\
+ \ /     ASCII RIBBON CAMPAIGN
+  X        AGAINST HTML MAIL
+ / \
