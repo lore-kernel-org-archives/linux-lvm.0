@@ -1,11 +1,13 @@
-Date: Sat, 25 Aug 2001 12:34:53 -0600
-From: Andreas Dilger <adilger@turbolabs.com>
-Subject: Re: [linux-lvm] LVM, rawio, ext2?
-Message-ID: <20010825123453.A20447@lynx.no>
-References: <20010823014012.A32700@greenhydrant.com> <46CEA578.B03DDD14@qis-systemhaus.de> <20010824194456.A25251@greenhydrant.com> <20010825131329.B337103@wobbly.melbourne.sgi.com> <20010824214131.A26364@greenhydrant.com>
+Date: Mon, 27 Aug 2001 12:27:47 -0500
+From: AJ Lewis <lewis@sistina.com>
+Subject: Re: [linux-lvm] Re: Problem mounting snapshot with reiserfs
+Message-ID: <20010827122747.A1308@sistina.com>
+References: <20010827161137.97280.qmail@web14406.mail.yahoo.com>
 Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-md5;
+	protocol="application/pgp-signature"; boundary="6TrnltStXW4iwmi0"
 Content-Disposition: inline
-In-Reply-To: <20010824214131.A26364@greenhydrant.com>; from dbr@greenhydrant.com on Fri, Aug 24, 2001 at 09:41:31PM -0700
+In-Reply-To: <20010827161137.97280.qmail@web14406.mail.yahoo.com>; from shahi_aman@yahoo.com on Mon, Aug 27, 2001 at 09:11:37AM -0700
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,19 +19,53 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: David Rees <dbr@greenhydrant.com>, linux-lvm@sistina.com
+To: linux-lvm@sistina.com
 
-On Aug 24, 2001  21:41 -0700, David Rees wrote:
-> Getting off-topic now, but as far as I know, no.  Is it possible to use
-> chattr or some other tool to force it to open in O_DIRECT mode?
+--6TrnltStXW4iwmi0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-You can get per-file synchronous I/O behaviour by using 'chattr +s <file>'.
-This is not quite the same as O_DIRECT, because it still buffers the data.
+On Mon, Aug 27, 2001 at 09:11:37AM -0700, Aman Shahi wrote:
+> >> You need to use the linux-2.4.x-VFS-lock.patch=20
+> >> against the kernel to enable snapshotting to work=20
+> >> with LVM and reiserfs.
+>=20
+> Thanx AJ.
+> Sorry my fault, I assumed without checking whether I
+> need to apply the VFS Lock patch for 2.4.8 or not. I=20
+> applied the patch, and it works fine.
 
-Cheers, Andreas
--- 
-Andreas Dilger
-http://sourceforge.net/projects/ext2resize/
-http://www-mddsp.enel.ucalgary.ca/People/adilger/
+Cool!  Glad it's working for you now.
+
+--=20
+AJ Lewis
+Sistina Software Inc.                  Voice:  612-638-0500
+1313 5th St SE, Suite 111              Fax:    612-638-0500
+Minneapolis, MN 55414                  E-Mail: lewis@sistina.com
+http://www.sistina.com
+
+Current GPG fingerprint =3D 3B5F 6011 5216 76A5 2F6B  52A0 941E 1261 0029 2=
+648
+Get my key at: http://www.sistina.com/~lewis/gpgkey
+ (Unfortunately, the PKS-type keyservers do not work with multiple sub-keys)
+
+-----Begin Obligatory Humorous Quote----------------------------------------
+I have yet to meet a C compiler that is more friendly and easier to use
+than eating soup with a knife.
+-----End Obligatory Humorous Quote------------------------------------------
+
+--6TrnltStXW4iwmi0
+Content-Type: application/pgp-signature
+Content-Disposition: inline
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.0.6 (GNU/Linux)
+Comment: For info see http://www.gnupg.org
+
+iD8DBQE7ioMTpE6/iGtdjLERAucvAJ4jhJco2MPjOmdLfbY6ghcy5TXDyACeMBYL
+6GVClY6Lq2d/IV9r2nraWF0=
+=5+ym
+-----END PGP SIGNATURE-----
+
+--6TrnltStXW4iwmi0--
