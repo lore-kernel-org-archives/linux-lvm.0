@@ -1,10 +1,9 @@
-Subject: Re: [linux-lvm] One cannot read from an lv?
-Message-ID: <20021027122212.GA25355@fib011235813.fsnet.co.uk>
-References: <20021027112425.GA2723@vader.boskant.nl>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20021027112425.GA2723@vader.boskant.nl>
-From: Joe Thornber <joe@fib011235813.fsnet.co.uk>
+Message-ID: <001001c27dde$52f736a0$0200a8c0@daim>
+From: "kenny constable" <kenny.constable@telia.com>
+MIME-Version: 1.0
+Content-Type: multipart/alternative;
+	boundary="----=_NextPart_000_000D_01C27DE6.B4AFB7C0"
+Subject: [linux-lvm] vgscan and cgchange help
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,22 +14,51 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Sun Oct 27 06:22:01 2002
+Date: Sun Oct 27 11:31:01 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Sun, Oct 27, 2002 at 12:24:25PM +0100, Geert Jansen wrote:
-> Hello,
-> 
-> I did some further investigations on the problem of reiserfsck and LVM2 that
-> I posted to this list a few days ago. The problem is caused by the fact that
-> seek() and read() on the logical volume in /dev/mapper/ fail! For example,
-> the command "dd if=/dev/mapper/vg0-tmp" fails to read anything.
-> 
-> What does this mean? How can an fsck ever check a volume in this case?
+This is a multi-part message in MIME format.
 
-We've not been able to reproduce your bug as yet.
+------=_NextPart_000_000D_01C27DE6.B4AFB7C0
+Content-Type: text/plain;
+	charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 
-- Joe
+Hey
+
+getting this errors while trying to activate a LVM partition
+
+vgscan -- ERROR pv_read_pe(): PV size invalid checking existence of =
+volume group "site"
+
+vgchange -- ERROR "pv_read_pe(): PV size invalid" reading lvmtab data of =
+volume group "site"
+------=_NextPart_000_000D_01C27DE6.B4AFB7C0
+Content-Type: text/html;
+	charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML><HEAD>
+<META http-equiv=3DContent-Type content=3D"text/html; =
+charset=3Diso-8859-1">
+<META content=3D"MSHTML 6.00.2800.1106" name=3DGENERATOR>
+<STYLE></STYLE>
+</HEAD>
+<BODY bgColor=3D#ffffff>
+<DIV><FONT face=3DArial size=3D2>Hey</FONT></DIV>
+<DIV><FONT face=3DArial size=3D2></FONT>&nbsp;</DIV>
+<DIV><FONT face=3DArial size=3D2>getting this errors while trying to =
+activate a LVM=20
+partition</FONT></DIV>
+<DIV><FONT face=3DArial size=3D2></FONT>&nbsp;</DIV>
+<DIV><FONT face=3DArial size=3D2>vgscan -- ERROR pv_read_pe(): PV size =
+invalid=20
+checking existence of volume group "site"</FONT></DIV>
+<DIV><FONT face=3DArial size=3D2></FONT>&nbsp;</DIV>
+<DIV><FONT face=3DArial size=3D2>vgchange -- ERROR "pv_read_pe(): PV =
+size invalid"=20
+reading lvmtab data of volume group "site"</FONT></DIV></BODY></HTML>
+
+------=_NextPart_000_000D_01C27DE6.B4AFB7C0--
