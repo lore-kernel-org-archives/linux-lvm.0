@@ -1,9 +1,10 @@
-Message-ID: <000001c3cae0$0dfceb30$43b36fa6@wangzheping>
-From: "Chairman" <chairman@catkitty.com>
-MIME-Version: 1.0
-Content-Type: multipart/alternative;
-	boundary="----=_NextPart_000_0077_01C3CB03.BE70A6A0"
-Subject: [linux-lvm] Can I read data from lvm without all PV?
+From: Alasdair G Kergon <agk@uk.sistina.com>
+Subject: Re: [linux-lvm] Endless loop running vgscan
+Message-ID: <20031229144051.P21022@uk.sistina.com>
+References: <3FE4DE2E.2030705@hasw.net> <20031221233848.M21022@uk.sistina.com> <3FE7483D.90107@hasw.net>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <3FE7483D.90107@hasw.net>; from se.witt@gmx.net on Mon, Dec 22, 2003 at 08:38:37PM +0100
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,75 +15,19 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Dec 29 08:00:11 2003
+Date: Mon Dec 29 08:42:02 2003
 List-Id: <linux-lvm.redhat.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-This is a multi-part message in MIME format.
+> > Set up a filter in lvm.conf so that LVM2 only sees the RAID devices
+> > and ignores the constituent devices that make up the RAID devices.
 
-------=_NextPart_000_0077_01C3CB03.BE70A6A0
-Content-Type: text/plain;
-	charset="gb2312"
-Content-Transfer-Encoding: base64
+> I've also this problem if I use this filter:
+> filter = [ "a/hd[e-h]1$/", "r/.*/" ]
 
-SGk6DQogICAgVGhlcmUgaXMgYSBzZXJpb3VzIHByb2JsZW0gZm9yIG1lIGZvciAyIHdlZWtzLCBJ
-IGhvcGUgc29tZW9uZSBjb3VsZCBnaXZlIHNvbWUgYWR2aWNlLi4uLg0KICAgIEkgaGF2ZSBhIExW
-KExWTSAxKSBmb3JtZWQgYnkgNCBQViBvbiA0IEhEIERyaXZlcywgZm9ybWF0dGVkIHVzaW5nIHJl
-aXNlcmZzLg0KICAgIE5vdyAxIGRyaXZlIGJyb2tlbiwgYnV0IEkgY2FuJ3QgZ2V0IGEgcmVwbGFj
-ZSBkcml2ZS4NCiAgICBUaGVuIEkgdHJ5IGZpeCBkaXNrIHdpdGggcmVpc2VyZnNjaywgbm8gdXNl
-Li4uDQogICAgVGhlbiBJIHRyeSBmaXggZGlzayB3aXRoOiByZWlzZXJmc2NrIC0tcmVidWlsZC10
-cmVlLCBidXQgZ290IGEgZmFpbCBpbmZvLg0KICAgIEkgdHJ5IG1hbnkgdGltZXMsIHdpdGggTFZN
-IDIncyIgdmdjaGFuZ2UgLVAgLWF5ICIgY29tbWFuZCwgYnV0IGFsc28gY2FuJ3QgcmVidWlsZHRy
-ZWUuDQogICAgU28gSSBjYW4ndCBhY2Nlc3MgdGhlc2UgZGF0YSBub3cuDQogICAgU29tZSBkYXRh
-IG9uIGl0IGlzIGltcG9ydGFudCwgc28gSSB3YW50IHRvIGNvcHkgdGhlIGRhdGEgb24gMyByZW1h
-aW5lZCBkcml2ZSBvdXQuDQoNCiAgICBXaG8gY2FuIGdpdmUgbWUgc29tZSBhZHZpY2Ugb24gaG93
-IHRvIGdldCB0aGUgcmVtYWluZWQgZGF0YSBvdXQ/IA0KICAgIFdoZXRoZXIgbXkgZGF0YSBpcyBh
-bHJlYWR5IGxvc3QgYXQgYWxsPw0KDQogICAgVGhhbmtzIGZvciByZWFkIHRoaXMgbXNnIQ0KDQog
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgV2FuZw0KICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgIENoYWlybWFuQGNhdGtpdHR5LmNvbQ==
+Is that the wrong way round?  Accept the md devices instead of the
+hd ones if your mds are formed from hds.
 
-------=_NextPart_000_0077_01C3CB03.BE70A6A0
-Content-Type: text/html;
-	charset="gb2312"
-Content-Transfer-Encoding: base64
-
-PCFET0NUWVBFIEhUTUwgUFVCTElDICItLy9XM0MvL0RURCBIVE1MIDQuMCBUcmFuc2l0aW9uYWwv
-L0VOIj4NCjxIVE1MPjxIRUFEPg0KPE1FVEEgaHR0cC1lcXVpdj1Db250ZW50LVR5cGUgY29udGVu
-dD0idGV4dC9odG1sOyBjaGFyc2V0PWdiMjMxMiI+DQo8TUVUQSBjb250ZW50PSJNU0hUTUwgNS41
-MC40OTM0LjE2MDAiIG5hbWU9R0VORVJBVE9SPg0KPFNUWUxFPjwvU1RZTEU+DQo8L0hFQUQ+DQo8
-Qk9EWSBiZ0NvbG9yPSNmZmZmZmY+SGk6PEJSPiZuYnNwOyZuYnNwOyZuYnNwOyBUaGVyZSBpcyBh
-IHNlcmlvdXMgcHJvYmxlbSBmb3IgDQptZSBmb3IgMiB3ZWVrcywgSSBob3BlIHNvbWVvbmUgY291
-bGQgZ2l2ZSBzb21lIGFkdmljZS4uLi48QlI+Jm5ic3A7Jm5ic3A7Jm5ic3A7IA0KSSBoYXZlIGEg
-TFYoTFZNIDEpIGZvcm1lZCBieSA0IFBWIG9uIDQgSEQgRHJpdmVzLCBmb3JtYXR0ZWQgdXNpbmcg
-DQpyZWlzZXJmcy48QlI+Jm5ic3A7Jm5ic3A7Jm5ic3A7IE5vdyAxIGRyaXZlIGJyb2tlbiwgYnV0
-IEkgY2FuJ3QgZ2V0IGEgcmVwbGFjZSANCmRyaXZlLjxCUj4mbmJzcDsmbmJzcDsmbmJzcDsgVGhl
-biBJIHRyeSBmaXggZGlzayB3aXRoIHJlaXNlcmZzY2ssIG5vIA0KdXNlLi4uPEJSPiZuYnNwOyZu
-YnNwOyZuYnNwOyBUaGVuIEkgdHJ5IGZpeCBkaXNrIHdpdGg6IHJlaXNlcmZzY2sgDQotLXJlYnVp
-bGQtdHJlZSwgYnV0IGdvdCBhIGZhaWwgaW5mby48QlI+Jm5ic3A7Jm5ic3A7Jm5ic3A7IEkgdHJ5
-IG1hbnkgdGltZXMsIA0Kd2l0aCBMVk0gMidzIiB2Z2NoYW5nZSAtUCAtYXkgIiBjb21tYW5kLCBi
-dXQgYWxzbyBjYW4ndCANCnJlYnVpbGR0cmVlLjxCUj4mbmJzcDsmbmJzcDsmbmJzcDsgU28gSSBj
-YW4ndCBhY2Nlc3MgdGhlc2UgZGF0YSANCm5vdy48QlI+Jm5ic3A7Jm5ic3A7Jm5ic3A7IFNvbWUg
-ZGF0YSBvbiBpdCBpcyBpbXBvcnRhbnQsIHNvIEkgd2FudCB0byBjb3B5IHRoZSANCmRhdGEgb24g
-MyByZW1haW5lZCBkcml2ZSBvdXQuPEJSPjxCUj4mbmJzcDsmbmJzcDsmbmJzcDsgV2hvIGNhbiBn
-aXZlIG1lIHNvbWUgDQphZHZpY2Ugb24gaG93IHRvIGdldCB0aGUgcmVtYWluZWQgZGF0YSBvdXQ/
-IDxCUj4mbmJzcDsmbmJzcDsmbmJzcDsgV2hldGhlciBteSANCmRhdGEgaXMgYWxyZWFkeSBsb3N0
-IGF0IGFsbD88QlI+PEJSPiZuYnNwOyZuYnNwOyZuYnNwOyBUaGFua3MgZm9yIHJlYWQgdGhpcyAN
-Cm1zZyE8QlI+PEJSPiZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZu
-YnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNw
-OyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZu
-YnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNw
-OyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZu
-YnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNw
-OyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyANCldhbmc8
-QlI+Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7
-Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5i
-c3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7
-Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5i
-c3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7
-Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5i
-c3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7IA0KPEEgaHJlZj0ibWFpbHRv
-OkNoYWlybWFuQGNhdGtpdHR5LmNvbSI+Q2hhaXJtYW5AY2F0a2l0dHkuY29tPC9BPjwvQk9EWT48
-L0hUTUw+DQo=
-
-------=_NextPart_000_0077_01C3CB03.BE70A6A0--
+Alasdair
