@@ -1,37 +1,28 @@
-Message-Id: <199902160014.AA26951@mailgate1b.telekom.de>
-From: Heinz Mauelshagen <mauelsha@ez-darmstadt.telekom.de>
-Subject: [linux-lvm] *** Hello everybody ***
-Date: Tue, 16 Feb 1999 1:12:31 MET
+Date: Mon, 15 Feb 1999 20:49:15 -0600 (CST)
+From: Shawn Leas <sleas@ixion.honeywell.com>
+Subject: [linux-lvm] User count, general question for all y'all
+Message-Id: <Pine.GHP.4.05.9902152043030.24842-100000@ixion.honeywell.com>
+Mime-Version: 1.0
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: TEXT/PLAIN; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@msede.com
-Cc: mge@ts1.ez-darmstadt.telekom.de
 
+Are we all (on this list) actively using lvm, and in what
+configuration? How many of us are there?
 
-Seing about 50 subscriptions in a couple of days i like to say
-welcome to everybody on this brand new list.
+Also, has anyone encountered deadlocks during heavy IO? I'm
+only using LVM at this point as a method of easy partitioning.
+No mirroring, etc. I suspect reiserfs is to blaim on my system,
+but I just thought I'd ask.
 
-I'm looking forward to every hint, enhancement request etc. etc.
-coming up on the list to get a better Logical Volume Manager for Linux.
+LVM is soooo kewl!
 
-Please go ahead ;*)
-
-Best regards,
-Heinz
---
-
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-
-Systemmanagement C/S                             Deutsche Telekom AG
-                                                 Entwicklungszentrum Darmstadt
-Heinz Mauelshagen                                Otto-Roehm-Strasse 71c
-Senior Systems Engineer                          Postfach 10 05 41
-                                                 64205 Darmstadt
-mge@ez-darmstadt.telekom.de                      Germany
-                                                 +49 6151 886-425
-                                                          FAX-386
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+-Shawn
+<=========== America Held Hostage ===========>
+   Day 2217 for the poor and the middle class. 
+   Day 2236 for the rich and the dead.
+   705 days remaining in the Raw Deal.
+<============================================> 
