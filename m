@@ -1,11 +1,11 @@
 Return-Path: <mauelshagen@sistina.com>
-Date: Fri, 17 Aug 2001 11:03:37 +0200
+Date: Fri, 17 Aug 2001 11:16:36 +0200
 From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] LVM Quick License Question
-Message-ID: <20010817110337.B10370@sistina.com>
-References: <6AE5C1ECED455C47B6B5D01AA6C41CA4D99293@EXCHANGE01.plaza.ds.adp.com>
+Message-ID: <20010817111636.C10370@sistina.com>
+References: <20010815175659.A29749@sistina.com> <20010815182548.U3941@gum01m.etpnet.phys.tue.nl> <20010815185005.A32239@sistina.com> <20010815191912.V3941@gum01m.etpnet.phys.tue.nl>
 Mime-Version: 1.0
-In-Reply-To: <6AE5C1ECED455C47B6B5D01AA6C41CA4D99293@EXCHANGE01.plaza.ds.adp.com>; from bmock@plaza.ds.adp.com on Thu, Aug 16, 2001 at 01:38:57PM -0700
+In-Reply-To: <20010815191912.V3941@gum01m.etpnet.phys.tue.nl>; from garloff@suse.de on Wed, Aug 15, 2001 at 07:19:12PM +0200
+Subject: [linux-lvm] Re: *** ANNOUNCEMENT *** LVM 1.0 available at www.sistina.com
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -19,62 +19,112 @@ List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: linux-lvm@sistina.com
+To: Kurt Garloff <garloff@suse.de>
+Cc: linux-lvm@sistina.com, lvm-devel@sistina.com
 
-On Thu, Aug 16, 2001 at 01:38:57PM -0700, Brad Mock wrote:
-> Hello Heinz,
-> 
-> I apologize for contacting you but you are the author of LVM.
+Kurt,
 
-Brad,
+I just picked your e-mail standing for a couple to summarize:
 
-you don't need too; it is my pleasure to answer :-)
+- some people report, that the bi-directional upgrade path from
+  <= LVM 0.9.1 Beta 7 to LVM 0.9.1 Beta 8 and beyond is fine
+- some people complain that there could be an easier solution
+  and that there are just 2 cases to distinguish which could easily be covered
+  by a better upgrade tool which is *not* true
 
-> 
-> I am the licensing representative for my company.
-> 
-> My developer's are using LVM (I'm not sure which release), so:
-> 
-> 1.  The LVM product is licensed to us under the GNU GPL, Version 2.
+As Joe stated easily and I tried to explain briefly a while ago:
+there's multiple cases and the solution we have right now seemed to be the
+cleanest approach to cover them all *without* hitting the trape of missing some!
 
-Yes.
+Because we take your complaints seriously we are investigating, if there's a
+well defined finite amount of cases that we actually can cover with a simple
+tool. 
 
-> 
-> 2.  Does the GNU GPL apply to all releases including 1.0 and all previous
-> releases (example V0.9.1)?
+If so, you are going get it ;-)
 
-Yes.
+Please stay tuned and give as some time...
 
-> 
-> I thank you in advance for your reply.
+We'll keep you posted.
 
-You're welcome.
+Thanks for your understanding!
 
-FYI: the existing LVM software and the core single host functionality we'll
-     add in the future will stay GPLed. Nevertheless we'll put future cluster
-     enhancencements and particular modules under other licensing schemes in
-     order to make our living ;-)
-
-Kind regards,
+Regards,
 Heinz    -- The LVM Guy --
 
->  
+
+ 
+On Wed, Aug 15, 2001@07:19:12PM +0200, Kurt Garloff wrote:
+> Hi Heinz,
 > 
+> thanks for your reply!
 > 
-> Brad Mock, Contract Negotiator
-> ADP, Dealer Services Group
-> 2525 SW First Avenue, Suite 450
-> Portland  OR 97201
-> (503) 294-5217 office
-> (503) 294-5292 fax
-> bmock@plaza.ds.adp.com
+> On Wed, Aug 15, 2001 at 06:50:05PM +0200, Heinz J . Mauelshagen wrote:
+> > On Wed, Aug 15, 2001 at 06:25:48PM +0200, Kurt Garloff wrote:
+> > > Is there finally a decent way to upgrade from 0.9.1b7?
+> > > Or is it still required to have multiple versions of the utils installed
+> > > just in order to be able to update from 0.9.1b7 to b8 (or 1.0)?
+> > 
+> > Well, as explained before on the lists we had an algorithm calculating
+> > the offset to the first PE in place till 0.9.1 Beta 7.
+> > 
+> > Therefore, we *need* to run the installed version < LVM 0.9.1 Beta 8 to
+> > retrieve that sector offset for all PVs and change the metadata to hold the
+> > offset. No known way around this.
 > 
+> What about adding migration code to newer LVM tools?
+> Make them able to get the offset to the first PE and write them to the new
+> place in the PV on vgscan, so the upgrade procedure is painless, because
+> it works automatically and tranparently. The only thing a user has to watch
+> is to keep kernel and userspace LVM in sync then.
 > 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
+> I can't imagine this to be too difficult, honestly. The code is there.
+> You wanted to get rid of it, apparently, but why can't that be postponed?
+> 
+> Installing different versions of lvm tools in parallel in order to do
+> the upgrade inside some ramdisk of your installation system with 100% 
+> success sounds much more painful to me.
+> Left alone those people who follow a different upgrade path than the
+> standard one envisioned by us.
+> 
+> > > If yes, then I'd vote for not updating the kernel until this is fixed!
+> > 
+> > Well, we need to migrate the metadata in the future anyway once we want
+> > to offer support for enhanced metadata reliability and redundancy.
+> > We'll provide bidirectional migration tools for that then which will enable
+> > the user to swicth back and forth between 2 installed LVM versions.
+> 
+> Now, that sounds better.
+> 
+> > Let's keep the ball flat WRT to the migration path here.
+> > We've got mails with positive LVM 0.9.1 Beta 8 upgrade reports and
+> > no complaints TTBOMK.
+> 
+> Because most people just refused to upgrade given the difficulties.
+> Nobody wants to put his data at risk.
+> As it stands, I guess, SuSE will also need to refuse :-(
+> 
+> This is a pain, because decoupling would be bad for both sides: 
+> People (our customers) can't profit from your improvements and bugfixes any
+> longer and you'll get bug reports for old versions instead of testing of
+> your recent version. 
+> 
+> To be honest, I'd personally be disappointed if this happens:
+> SuSE has supported the usage of LVM and offers support for it in the
+> installation tool; I seriously suspect that the majority of LVM-users
+> is using SuSE Linux. 
+> Now, leaving them alone WRT upgrade is not very nice. 
+> You'll get decoupled from your user base.
+> 
+> Let's try to avoid that, please!
+> 
+> Regards,
+> -- 
+> Kurt Garloff  <garloff@suse.de>                          Eindhoven, NL
+> GPG key: See mail header, key servers         Linux kernel development
+> SuSE GmbH, Nuernberg, DE                                SCSI, Security
+
+*** Software bugs are stupid.
+    Nevertheless it needs not so stupid people to solve them ***
 
 =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
