@@ -1,13 +1,10 @@
-Return-Path: <mason@suse.com>
-Date: Fri, 13 Apr 2001 19:53:58 -0500
-From: Chris Mason <mason@suse.com>
-Subject: Re: [reiserfs-list] Re: [linux-lvm] mounting reiserfs snapshot
- fails
-Message-ID: <398930000.987209638@tiny>
-In-Reply-To: <200104140023.f3E0NSIm014650@webber.adilger.int>
+Return-Path: <jorg.de.jong@ida.xs4all.nl>
+Message-ID: <3AD8AC12.8BC26F0E@ida.xs4all.nl>
+Date: Sat, 14 Apr 2001 21:59:14 +0200
+From: Jorg de Jong <jorg.de.jong@ida.xs4all.nl>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
+Subject: [linux-lvm] Strange message in /var/log/messages
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -20,36 +17,21 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: Andreas Dilger <adilger@turbolinux.com>, linux-lvm@sistina.com
-Cc: reiserfs-list@namesys.com
+To: "linux-lvm@sistina.com" <linux-lvm@sistina.com>
 
+Hi,
 
-On Friday, April 13, 2001 06:23:28 PM -0600 Andreas Dilger
-<adilger@turbolinux.com> wrote:
+I am seeing the following message in /var/log/messages:
 
-> Ed Tomlinson writes:
->> Using debian sid, 2.4.3-ac5, lvm 0.91 beta7, with the vfs locking
->> patch applied I get:
->> 
->> oscar# mount /dev/lv/snap /snap -t reiserfs -oro
->> mount: wrong fs type, bad option, bad superblock on /dev/lv/snap,
->>        or too many mounted file systems
->> 
->> When trying to mount the snap shot.  It was created with: 
->> lvcreate -L 1G -s -n snap /dev/lv/root /dev/hdg1
->> without problems
-> 
-> Are you sure that the VFS patch is applied, and that the LVM and
-> reiserfs code was compiled with "enable VFS patch" (whatever it is
-> called) enabled?  That has been a source of problems in the past.
-> The patch was applied, but you also need to enable it for both the
-> reiserfs and LVM code.
+Apr 14 21:46:38 ida kernel: lvm - lvm_map: ll_rw_blk for inactive LV /dev/dd/678
+Apr 14 21:49:37 ida last message repeated 32 times
+Apr 14 21:49:37 ida last message repeated 31 times
 
-That would be a different error, reiserfs would complain that it found a
-filesystem, but was unable to mount it because it needed replay and the
-device was readonly.  In this case, the snapshot is not a valid FS at all,
-even though the source looks fine.
+should I be worried or can I ignore them ?
 
-I'll upgrade to the latest LVM and try to reproduce...
+I am running kernel 2.4.3 with lvm_0.9.1_beta7 kernel patches applied. 
 
--chris
+-- 
+Jorg de Jong
+Work : jorg.de.jong@ict.nl 
+Play : jorg.de.jong@ida.xs4all.nl
