@@ -1,120 +1,42 @@
-From: Steve_J_Brueggeman@notes.seagate.com
-Message-ID: <8825672B.0077D985.00@sv-gw1.stsv.seagate.com>
-Date: Fri, 5 Mar 1999 15:50:03 -0600
-Subject: [linux-lvm] More problems with LVM 0.6
-Mime-Version: 1.0
-Content-Disposition: inline
+From: Andreas Dilger <adilger@enel.ucalgary.ca>
+Message-Id: <199903102259.PAA01316@munet-d.enel.ucalgary.ca>
+Subject: [linux-lvm] Patches to 0.5
+Date: Wed, 10 Mar 1999 15:59:57 -0700 (MST)
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: linux-lvm@msede.com
+To: LVM on Linux <linux-lvm@msede.com>
 
-I haven't looked into the source of this yet, but I suspect that some LVM
-tables are messed up, or some bounds calculations are incorrect.
+I've uploaded a couple of small patches to the incoming directory at
+msede.
 
-I am getting the following errors
-Mar  5 15:34:40 kilroy kernel: attempt to access beyond end of device
-Mar  5 15:34:40 kilroy kernel: 08:14: rw=1, want=3918612, limit=3004155
-Mar  5 15:34:40 kilroy kernel: attempt to access beyond end of device
-Mar  5 15:34:40 kilroy kernel: 08:14: rw=1, want=3926804, limit=3004155
-Mar  5 15:34:40 kilroy kernel: attempt to access beyond end of device
-Mar  5 15:34:40 kilroy kernel: 08:14: rw=1, want=3934996, limit=3004155
-Mar  5 15:34:40 kilroy kernel: attempt to access beyond end of device
-Mar  5 15:34:40 kilroy kernel: 08:14: rw=1, want=3943188, limit=3004155
-Mar  5 15:34:40 kilroy kernel: attempt to access beyond end of device
-Mar  5 15:34:40 kilroy kernel: 08:14: rw=1, want=3951380, limit=3004155
-Mar  5 15:34:40 kilroy kernel: attempt to access beyond end of device
-Mar  5 15:34:40 kilroy kernel: 08:14: rw=1, want=3959572, limit=3004155
-Mar  5 15:34:40 kilroy kernel: attempt to access beyond end of device
-Mar  5 15:34:40 kilroy kernel: 08:14: rw=1, want=3967764, limit=3004155
-Mar  5 15:34:40 kilroy kernel: attempt to access beyond end of device
-Mar  5 15:34:40 kilroy kernel: 08:14: rw=1, want=3975956, limit=3004155
+The file lvm-0.5aed.diff has a couple of cosmetic fixes plus
+a major fix to tools/lib/pv_move.c to change the LE sorting because
+it was pretty inefficient, so I benchmarked an improved bubble sort,
+insertion sort, and libc5 quicksort.  The insertion sort won most
+of the time (using data from 6 AIX disks on a real system), but as
+expected qsort won on disks with many LVs.  I looked at the glibc
+qsort code, and it should beat everything, but the insertion sort code
+is still there (#ifdefed out)...  I also changed the way
+pe_src was allocated to avoid hundreds of small malloc() calls.  In
+addition, some minor changes to the LVM_TO_* macros to reduce the
+number of multiplies done.
 
-When I have configured a volume group as follows
+The file lvm.c.diff changes the internal lvm_strcmp() type functions
+to be lvm_strncmp(), to avoid the chance of buffer overflow when
+doing a copy.  Not that I had any such problems, but with kernel code,
+it is best to be sure.
 
---- Volume group ---
-VG Name               vg00
-VG Access             read/write
-VG Status             available/resizable
-VG #                  0
-MAX LV                256
-Cur LV                2
-Open LV               0
-MAX LV Size           255.99 GB
-Max PV                256
-Cur PV                3
-Act PV                3
-VG Size               8.34 GB
-PE Size               4 MB
-Total PE              2134
-Alloc PE / Size       2048 / 8 GB
-Free  PE / Size       86 / 344 MB
+I also have some patches in the works to allow reading both v1 and v2
+structs from disk, but until 0.6 was released there was not much need
+for this, but I will try to get them out.
 
---- Logical volume ---
-LV Name               /dev/vg00/lv00
-VG Name               vg00
-LV Write Access       read/write
-LV Status             available
-LV #                  1
-# open                0
-LV Size               2 GB
-Current LE            512
-Allocated LE          512
-Allocation            next free
-Read ahead sectors    120
-Block device          58:0
-
---- Logical volume ---
-LV Name               /dev/vg00/lv01
-VG Name               vg00
-LV Write Access       read/write
-LV Status             available
-LV #                  2
-# open                0
-LV Size               6 GB
-Current LE            1536
-Allocated LE          1536
-Allocation            next free
-Read ahead sectors    120
-Block device          58:1
-
-
---- Physical volumes ---
-PV Name (#)           /dev/sdb2 (1)
-PV Status             available / allocatable
-Total PE / Free PE    360 / 0
-
-PV Name (#)           /dev/sdb3 (3)
-PV Status             available / allocatable
-Total PE / Free PE    802 / 86
-
-PV Name (#)           /dev/sdb4 (2)
-PV Status             available / allocatable
-Total PE / Free PE    972 / 0
-
-My disk partitons are
-Disk /dev/sdb: 255 heads, 63 sectors, 1106 cylinders
-Units = cylinders of 16065 * 512 bytes
-
-   Device Boot    Start      End   Blocks   Id  System
-/dev/sdb1             1       17   136521   82  Linux swap
-/dev/sdb2            18      201  1477980   fe  Unknown
-/dev/sdb3           202      610  3285292+  fe  Unknown
-/dev/sdb4           611     1106  3984120   fe  Unknown
-
-Note the order of creation above.  First I did a vgcreate vg00
-/dev/sdb[24], then a vgextend vg00 /dev/sdb3, then created a 2G LV and a 6G
- LV that crosses past the end of /dev/sdb4.
-
-
-Anybody got any clues? or pointers where to start debugging?
-I'd find it hard to believe that this would be related to the changes I
-just posted here that I made to tools/lib/lvm_tab_get_free_blk_dev.c, but
-little supprises me any more.
-
-
-Have a good weekend!
-
-Steve Brueggeman
+Cheers, Andreas
+-- 
+Andreas Dilger   University of Calgary  \"If a man ate a pound of pasta and
+                 Micronet Research Group \ a pound of antipasto, would they
+Dept of Electrical & Computer Engineering \   cancel out, leaving him still
+http://www-mddsp.enel.ucalgary.ca/People/adilger/       hungry?" -- Dogbert
