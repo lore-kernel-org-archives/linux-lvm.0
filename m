@@ -1,9 +1,12 @@
-Return-Path: <mike@marxmeier.com>
-Date: Thu, 04 Jan 2001 10:57:27 -0500
-Message-Id: <01vr1bgvxf7c5p3qv.0f5lnmrr3o1d5@dns.hungrytiger.co.jp>
-From: Erection@edhaus.co.kr
-Content-Transfer-Encoding: 8BIT
-Subject: [linux-lvm] Do You Come Too Quickly in Bed??
+Return-Path: <blutgens@sistina.com>
+Date: Thu, 4 Jan 2001 17:34:00 -0600
+From: Ben Lutgens <blutgens@sistina.com>
+Message-ID: <20010104173400.A2606@minime.sistina.com>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-md5;
+	protocol="application/pgp-signature"; boundary="qMm9M+Fa2AknHoGS"
+Content-Disposition: inline
+Subject: [linux-lvm] Sorry for the spam.
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,32 +18,34 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-To: Cook@cybersonic.com.hk
+To: linux-lvm@sistina.com
 
-Get your Sex Life Roaring with IMPULSE
-http://216.144.198.242
+--qMm9M+Fa2AknHoGS
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-IMPULSE for MEN:
-Intensifies Pleasure and Satisfaction
-Increases Energy and Endurance
-Longer Lasting and Firmer Erections
+I wasn't paying close attention when I was going through the list of spam on
+mailman's web interface and inadvertantly checked allow on a spam as opposed
+to discard.
 
+I apologize for this. I'll try not make this mistake again.
+--=20
+Ben Lutgens		cell: 612.670.4789
+Sistina Software Inc.	work: 612.379.5941
+Code Monkey Support (A.K.A. System Administrator)
 
-IMPULSE for WOMEN:
-Formula Designed Especially for Women by Women
-Intensifies Pleasure, Enhances Orgasms
-Revitalizes Sex Drive
-Enhances Vaginal Lubrication
+--qMm9M+Fa2AknHoGS
+Content-Type: application/pgp-signature
+Content-Disposition: inline
 
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.0.4 (FreeBSD)
+Comment: For info see http://www.gnupg.org
 
+iD8DBQE6VQhnLxkxGgLdGQgRAjNOAKCauX+NPwU2+eY4t8wIdfjdN0RFwACfRLD6
+u4zVEBvRsK5jTmliGvastq8=
+=a6zR
+-----END PGP SIGNATURE-----
 
-It's Fun, Safe, and Effective.
-and you don't even need a perscription.
-
-Get more information NOW
-Go to:  http://216.144.198.242
-
-
-To be removed send email to rogetmoe@yahoo.com
+--qMm9M+Fa2AknHoGS--
