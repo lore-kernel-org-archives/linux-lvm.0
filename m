@@ -1,54 +1,38 @@
-Date: Fri, 8 Sep 2000 00:14:08 +0200
-From: "Andi Kleen" <ak@suse.de>
-Subject: Re: [linux-lvm] LVM support for LILO
-Message-ID: <20000908001408.A23522@gruyere.muc.suse.de>
-References: <200009071825.MAA08578@lynx.turbolabs.com> <20000907234301.B21294@gruyere.muc.suse.de> <20000908001109.A23577@srv.t-online.de>
-Mime-Version: 1.0
-In-Reply-To: <20000908001109.A23577@srv.t-online.de>; from Heinz.Mauelshagen@t-online.de on Fri, Sep 08, 2000 at 12:11:09AM +0000
+Date: Thu, 7 Sep 2000 16:21:52 -0300 (BRT)
+From: Marcelo Tosatti <marcelo@conectiva.com.br>
+Subject: Re: [linux-lvm] LVM patch for kernel 2.2.17?
+In-Reply-To: <200009052050.OAA19872@lynx.turbolabs.com>
+Message-ID: <Pine.LNX.4.21.0009071613560.21842-100000@freak.distro.conectiva>
+MIME-Version: 1.0
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: TEXT/PLAIN; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: Mauelshagen@sistina.com
-Cc: Andi Kleen <ak@suse.de>, mge@sistina.com, linux-lvm@msede.com
+To: Andreas Dilger <adilger@turbolinux.com>
+Cc: linux-lvm@msede.com
 
-On Fri, Sep 08, 2000 at 12:11:09AM +0000, Heinz J. Mauelshagen wrote:
-> On Thu, Sep 07, 2000 at 11:43:01PM +0200, Andi Kleen wrote:
-> > On Thu, Sep 07, 2000 at 12:25:07PM -0600, Andreas Dilger wrote:
-> > > Heinz,
-> > > Michael Kellen and I have been working to add LILO support for booting
-> > > from a LV (i.e. have /boot be an LV, and then not have ANY DOS partitions).
+
+On Tue, 5 Sep 2000, Andreas Dilger wrote:
+
+> Franken Klaus, you write:
+> > > Any plans for a lvm-patch for kernel 2.2.17 ??
+> > > 
+> > > My lvm patch for 2.2.16 works at 2.2.17 too but it's version 0.8i.
+> > >  
+> > > Should we use a newer version ? For example 0.8 final ?
+> > > Should i do that ?
 > > 
-> > [...]
-> > 
-> > I did some similar work. I implemented an LVM_BMAP ioctl for LVM that
-> > simply translates a given block to a (dev_t, blocknr in dev). lilo 
-> > simply does a normal FIOBMAP and then calls LVM_BMAP for every block
-> > it gets. When the dev_t ever changes it complains loudly. Then it does
-> > its normal work with the resulting blocks.
-> > 
-> > It works ok. The only problem is that a standard PV cannot be used for
-> > booting, because it does leave any space for a MBR (it probably needs 
-                        ^^^^
-                        doesn't of course
-> > a PV format revision that simply leaves 4K free) 
+> > Yes, you should.  Thanks!!
 > 
-> This would be a major change forcing us to move structures around in
-> existing installations..
-
-Yes. It may be at least possible to do it compatible though
-(let it check for the new PV on the new position or fall back to the old) 
-
-It is probably reasonable to require a backup/restore to boot from LVM
-(people who don't want it probably already have other means to boot the
-system and can continue to use the old format)
-
+> I have already made a version of LVM 0.8final available for Linux 2.2.16 +
+> 2.2.17-pre patches, which _should_ work for 2.2.17 as well, although the
+> snapshot feature depends on some 2.4 code which is only available for 2.2
+> as a patch.
 > 
-> There should be no problem with a partition based PV though.
+> It is available online at ftp://ftp.stelias.com/pub/adilger/
 
-With a partition based PV you can as well create /boot in a DOS
-partition.
+Andreas, 
 
-
--Andi
+Dont forget to fix the return typo in lvm_snapshot_COW in your backport. 
+ 
