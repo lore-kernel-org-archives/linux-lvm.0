@@ -1,23 +1,12 @@
-Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with SMTP id i2IEKvj10698
-	for <linux-lvm@redhat.com>; Thu, 18 Mar 2004 09:20:57 -0500
-Received: from mtagate1.uk.ibm.com (mtagate1.uk.ibm.com [195.212.29.134])
-	by mx1.redhat.com (8.12.10/8.12.10) with SMTP id i2IEKu4b015517
-	for <linux-lvm@redhat.com>; Thu, 18 Mar 2004 09:20:57 -0500
-Received: from d06nrmr1307.portsmouth.uk.ibm.com
-	(d06nrmr1307.portsmouth.uk.ibm.com [9.149.38.129])
-	by mtagate1.uk.ibm.com (8.12.10/8.12.10) with ESMTP id i2IEKp4I152740
-	for <linux-lvm@redhat.com>; Thu, 18 Mar 2004 14:20:51 GMT
-Received: from d06ml501.portsmouth.uk.ibm.com (d06av02.portsmouth.uk.ibm.com
-	[9.149.37.228])
-	by d06nrmr1307.portsmouth.uk.ibm.com (8.12.10/NCO/VER6.6) with ESMTP id
-	i2IEIKZS180652
-	for <linux-lvm@redhat.com>; Thu, 18 Mar 2004 14:18:21 GMT
-Subject: Re: [linux-lvm] lvm on software raid 5
-Message-ID: <OF974FD75A.F94D719C-ONC1256E5B.004D008F-C1256E5B.004E504E@nl.ibm.com>
-From: Rick van der Linde <h.r.vanderlinde@nl.ibm.com>
-Date: Thu, 18 Mar 2004 15:15:23 +0100
+Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with SMTP id i2IETXj14072
+	for <linux-lvm@redhat.com>; Thu, 18 Mar 2004 09:29:33 -0500
+Message-ID: <34310.62.200.65.42.1079620164.squirrel@linux.mfservis.cz>
+Date: Thu, 18 Mar 2004 15:29:24 +0100 (CET)
+From: psindelar@mfservis.cz
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Subject: [linux-lvm] LV crossover problem
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -29,174 +18,140 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: linux-lvm@redhat.com
+To: linux-lvm@sistina.com
+
+Hi,
+I have problem with LVM 1.0.3 (shipped with Rh 7.3).
+I have 2 VGs, one is at FC FASTt200 shared with 2nd node (it's cluster
+configuration 2nodes, LifeKeeper on top of it).
+On this VG I have 14 LV....it all worked like a charm until yesterday. 3
+lv isn't active (info from /proc/lvm/global) but mount and df
+reports,that all fs are mounted. Those three lv's are mixed together with
+another 3 lv's in this way: in both mount points are all files form
+originating lv and from the crosse one. df reports whole size for the
+activated fs but used size is cumulated from both fs.
+
+All filesystems is ext3.
+
+It happend once but after reboot all was back (so fs "splitted") without
+any error message. I can't fin any error message which could enlighten me
+whats wrong and what I should repair (reboots and takeover to 2nd node
+doesn't help).
+
+Is this known bug? Should I try leave RH's lvm and try LVM 1.0.8 from
+sistina? Am I risking something?
 
 
+Thanks
+Petr Sindelar
+
+***
+
+IBM xSeries (Xeon with HT)
+Node configuration: rh7.3, lk 4.3.0 (lkDb2,lkLVM)
+Kernel: 2.4.18-5custom (custom ips driver and imbasm)
+---
+cat /proc/lvm/global (only 2nd VG pasted here)
+
+VG:  db2vg  [2 PV, 14 LV/11 open]  PE Size: 4096 KB
+  Usage [KB/PE]: 143269888 /34978 total  73756672 /18007 used  69513216
+/16971 free
+  PVs: [AA] sdc1                  71634944 /17489   45404160 /11085
+26230784 /6404
+       [AA] sdd1                  71634944 /17489   28352512 /6922
+43282432 /10567
+    LVs: [AWDL  ] db2dump_lv                 2097152 /512      close
+         [AWDL  ] log_archive_lv            11534336 /2816     close [AWDL
+ ] log_dir_lv                 6082560 /1485     close [AWDL  ]
+db2_lv                      524288 /128      1x open
+(mixed with db2dump_lv)
+         [AWDL  ] pdata1_lv                  8388608 /2048     1x open
+(mixed with log_archive_lv)
+         [AWDL  ] pindex1_lv                 4194304 /1024     1x open
+(mixed with log_dir_lv)
+         [AWDL  ] sdata1_lv                  8388608 /2048     1x open
+[AWDL  ] sindex1_lv                 4194304 /1024     1x open
+[AWDL  ] ocs_log_dir_lv             6291456 /1536     1x open
+[AWDL  ] ocs_pdata1_lv              5242880 /1280     1x open
+[AWDL  ] ocs_pindex1_lv             2662400 /650      1x open
+[AWDL  ] sid_log_dir_lv             6291456 /1536     1x open
+[AWDL  ] sid_pdata1_lv              5242880 /1280     1x open
+[AWDL  ] sid_pindex1_lv             2621440 /640      1x open
+---
+lvscan:
+
+lvscan -- ACTIVE            "/dev/db2vg/db2dump_lv" [2 GB]
+lvscan -- ACTIVE            "/dev/db2vg/log_archive_lv" [11 GB]
+lvscan -- ACTIVE            "/dev/db2vg/log_dir_lv" [5.80 GB]
+lvscan -- ACTIVE            "/dev/db2vg/db2_lv" [512 MB]
+lvscan -- ACTIVE            "/dev/db2vg/pdata1_lv" [8 GB]
+lvscan -- ACTIVE            "/dev/db2vg/pindex1_lv" [4 GB]
+lvscan -- ACTIVE            "/dev/db2vg/sdata1_lv" [8 GB]
+lvscan -- ACTIVE            "/dev/db2vg/sindex1_lv" [4 GB]
+lvscan -- ACTIVE            "/dev/db2vg/ocs_log_dir_lv" [6 GB]
+lvscan -- ACTIVE            "/dev/db2vg/ocs_pdata1_lv" [5 GB]
+lvscan -- ACTIVE            "/dev/db2vg/ocs_pindex1_lv" [2.54 GB]
+lvscan -- ACTIVE            "/dev/db2vg/sid_log_dir_lv" [6 GB]
+lvscan -- ACTIVE            "/dev/db2vg/sid_pdata1_lv" [5 GB]
+lvscan -- ACTIVE            "/dev/db2vg/sid_pindex1_lv" [2.50 GB]
+lvscan -- 17 logical volumes with 101.94 GB total in 2 volume groups
+lvscan -- 17 active logical volumes
+---
+df -k
+/dev/db2vg/db2_lv       507748     26655    454879   6% /db2
+/dev/db2vg/db2dump_lv
+                        507748     26655    454879   6%
+/db2/db2inst1/etatm/db2dump
+/dev/db2vg/log_archive_lv
+                       8256952   5288880   2548644  68%
+/db2/db2inst1/etatm/log_archive
+/dev/db2vg/log_dir_lv
+                       4128448   3629416    289320  93%
+/db2/db2inst1/etatm/log_dir
+/dev/db2vg/pdata1_lv   8256952   5288880   2548644  68%
+/db2/db2inst1/etatm/pdata1
+/dev/db2vg/pindex1_lv
+                       4128448   3629416    289320  93%
+/db2/db2inst1/etatm/pindex1
+/dev/db2vg/sdata1_lv   8256952   5280840   2556684  68%
+/db2/db2inst1/etatm/sdata1
+/dev/db2vg/sindex1_lv
+                       4128448   3181632    737104  82%
+/db2/db2inst1/etatm/sindex1
+/dev/db2vg/ocs_log_dir_lv
+                       6192704    298640   5579492   6%
+/db2/db2inst1/ocs/log_dir
+/dev/db2vg/ocs_pdata1_lv
+                       5160576   2132032   2766400  44%
+/db2/db2inst1/ocs/pdata1
+/dev/db2vg/ocs_pindex1_lv
+                       2620520   2132032    355368  86%
+/db2/db2inst1/ocs/pindex1
+/dev/db2vg/sid_log_dir_lv
+                       6192704    594256   5283876  11%
+/db2/db2inst1/sid/log_dir
+/dev/db2vg/sid_pdata1_lv
+                       5160576   2132032   2766400  44%
+/db2/db2inst1/sid/pdata1
+/dev/db2vg/sid_pindex1_lv
+                       2580272   2132032    317168  88%
+/db2/db2inst1/sid/pindex1
 
 
+---
+mount: (pasted only interesting part)
 
-Hi there,
-
-As I read your comments I would suggest you not to create an VG straight
-onto the /dev/md0 device but first to create one huge partition on device
-/dev/md0 with label 8e (Linux LVM) and create a VG on top of that
-partition.
-
-As I did something like this before I would like to know your experiences.
-I've (succesfully) tried to install LVM on top of a RAID 5 volume
-consisting 4 disks of 80GB. However I switched back to simple ext3 volumes
-on RAID 5 duie to performance problems. I've tried this on LVM 1.0.3 and
-the md-driver delivered with the 2.4.20 kernel. In this situation I
-experience a (LVM on RAID5) perfomance loss of approx 40-60% in comparison
-to the RAID5 perfomance. The performance advantages were more important to
-me then the LVM flexibility was. I would like to know from you if the new
-IO scheduler which comes with Kernel 2.6.X doesn't give a performance loss
-anymore. (comparison true RAID5 perfomance to LVM on RAID5 performance) If
-the performance hit is a few percent which is usual to expec from LVM this
-will give me the optimal solution having a great performance AND maximum
-flexibility. Thanks in advance....
-
-Vriendelijke groeten/ Kindly regards,
-
-
-Rick van der Linde
-
-
-F u cn rd ths, u cn gt a gd jb n cmptr prgrmmng.
-
-
------BEGIN PGP SIGNED MESSAGE-----
-Hash: SHA1
-
-hi,
-
-I have a software raid 5 in linud 2.6.3 and I created a lvm on. Actually
-it works, but there some strange things. Perhaps someone can point me
-out why.
-
-Basic:
-
-lvm vesion:
-ii  lvm2              2.00.08-4         The Linux Logical Volume Manager
-ii  lvm-common        1.5.12            The Logical Volume Manager for
-Linux (common files
-
-raid version:
-ii  raidtools2        1.00.3-5          Utilities to support 'new-style'
-RAID disks
-
-md admin version
-ii  mdadm             1.4.0-3           Manage MD devices aka Linux
-Software Raid
-
-my raidtab:
-
-# 4 x 160GB Raid 5, no spare
-raiddev                 /dev/md0
-raid-level              5
-nr-raid-disks           4
-nr-spare-disks          0
-persistent-superblock           1
-chunk-size              64
-parity-algorithm                left-symmetric
-# Spare disks for hot reconstruction
-# no the raid devices
-# Alpha
-device                  /dev/sda1
-raid-disk               0
-# Beta
-device                  /dev/sdb1
-raid-disk               1
-# Gamma
-device                  /dev/sdc1
-raid-disk               2
-# Delta
-device                  /dev/sdd1
-raid-disk               3
-
-[the partitions are 'fd' type: Linux auto raid]
-
-After I created the physical volume with 'pvcreate /dev/md0' I got this
-output with pvdisplay:
-
-ludivinus:~# pvdisplay
-~  Incorrect metadata area header checksum
-~  Incorrect metadata area header checksum
-~  Incorrect metadata area header checksum
-~  Incorrect metadata area header checksum
-~  Incorrect metadata area header checksum
-~  --- Physical volume ---
-~  PV Name               /dev/cciss/c1d0p4
-~  VG Name               TequilaData
-~  PV Size               60.15 GB / not usable 0
-~  Allocatable           yes
-~  PE Size (KByte)       4096
-~  Total PE              15398
-~  Free PE               38
-~  Allocated PE          15360
-~  PV UUID               eqEPJ1-YbVY-qhFQ-Fm63-9cC1-0UwZ-PAssTp
-
-~  --- NEW Physical volume ---
-~  PV Name               /dev/md0
-~  VG Name
-~  PV Size               457.99 GB
-~  Allocatable           NO
-~  PE Size (KByte)       0
-~  Total PE              0
-~  Free PE               0
-~  Allocated PE          0
-~  PV UUID               jlq1y1-YpjZ-AU3Z-Iibp-0EkG-DzZj-5IHGhq
-
-~  --- NEW Physical volume ---
-~  PV Name               /dev/sdd1
-~  VG Name
-~  PV Size               457.99 GB
-~  Allocatable           NO
-~  PE Size (KByte)       0
-~  Total PE              0
-~  Free PE               0
-~  Allocated PE          0
-~  PV UUID               *U|-?c-?6??I-?n??j-5IHGhq
-
-its kinda strange, so I removed /dev/sdd1.
-
-ludivinus:~# pvremove /dev/sdd1
-~  Incorrect metadata area header checksum
-~  Incorrect metadata area header checksum
-~  Incorrect metadata area header checksum
-~  Labels on physical volume "/dev/sdd1" successfully wiped
-
-and after that I pvdisplay showed the correct output. But after I
-created the volume group and the logical volume I had this "ghost
-volume" back again. So I removed it again. my initial tests look good.
-there is no problem.
-
-With my first test on this box, I created a raid just with the bare
-disks without partitions, I had other problems, that he suddenly had a
-partition in sda and sdd with the size of the right which screwed lvm
-totaly up.
-
-Anyway my question is, did I do something wrong? Missed I something out?
-I couldn't find any good description for lvm on raid5. The only one I
-could find, didn't sepcify anything else.
-- --
-Clemens Schwaighofer - IT Engineer & System Administration
-==========================================================
-Tequila Japan, 6-17-2 Ginza Chuo-ku, Tokyo 104-8167, JAPAN
-Tel: +81-(0)3-3545-7703            Fax: +81-(0)3-3545-7343
-http://www.tequila.jp
-==========================================================
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.2.4 (GNU/Linux)
-
-iD8DBQFAQrY9jBz/yQjBxz8RAvSFAKCKy9Vgzr3ZMSHkcY35d5MS9f8YGACfRQYu
-rqZlE7SnIYii2w9QukfQLrk=
-=xtAZ
------END PGP SIGNATURE-----
-
-_______________________________________________
-linux-lvm mailing list
-linux-lvm@redhat.com
-https://www.redhat.com/mailman/listinfo/linux-lvm
-read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+/dev/db2vg/db2_lv on /db2 type ext3 (rw)
+/dev/db2vg/db2dump_lv on /db2/db2inst1/etatm/db2dump type ext3 (rw)
+/dev/db2vg/log_archive_lv on /db2/db2inst1/etatm/log_archive type ext3 (rw)
+/dev/db2vg/log_dir_lv on /db2/db2inst1/etatm/log_dir type ext3 (rw)
+/dev/db2vg/pdata1_lv on /db2/db2inst1/etatm/pdata1 type ext3 (rw)
+/dev/db2vg/pindex1_lv on /db2/db2inst1/etatm/pindex1 type ext3 (rw)
+/dev/db2vg/sdata1_lv on /db2/db2inst1/etatm/sdata1 type ext3 (rw)
+/dev/db2vg/sindex1_lv on /db2/db2inst1/etatm/sindex1 type ext3 (rw)
+/dev/db2vg/ocs_log_dir_lv on /db2/db2inst1/ocs/log_dir type ext3 (rw)
+/dev/db2vg/ocs_pdata1_lv on /db2/db2inst1/ocs/pdata1 type ext3 (rw)
+/dev/db2vg/ocs_pindex1_lv on /db2/db2inst1/ocs/pindex1 type ext3 (rw)
+/dev/db2vg/sid_log_dir_lv on /db2/db2inst1/sid/log_dir type ext3 (rw)
+/dev/db2vg/sid_pdata1_lv on /db2/db2inst1/sid/pdata1 type ext3 (rw)
+/dev/db2vg/sid_pindex1_lv on /db2/db2inst1/sid/pindex1 type ext3 (rw)
