@@ -1,27 +1,19 @@
-Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with SMTP id i2TJ2qj20581
-	for <linux-lvm@redhat.com>; Mon, 29 Mar 2004 14:02:52 -0500
-Received: from salusa.poochiereds.net (rdu26-93-067.nc.rr.com [66.26.93.67])
-	by mx1.redhat.com (8.12.10/8.12.10) with SMTP id i2TJ2q1X022787
-	for <linux-lvm@redhat.com>; Mon, 29 Mar 2004 14:02:52 -0500
-Received: from localhost (localhost [127.0.0.1])
-	by salusa.poochiereds.net (Postfix) with ESMTP id D90FA7993
-	for <linux-lvm@redhat.com>; Mon, 29 Mar 2004 14:02:50 -0500 (EST)
-Received: from salusa.poochiereds.net ([127.0.0.1])
-	by localhost (salusa [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id 27513-07 for <linux-lvm@redhat.com>;
-	Mon, 29 Mar 2004 14:02:50 -0500 (EST)
-Received: from localhost (salusa.ix.dyndns.org [192.168.1.2])
-	by salusa.poochiereds.net (Postfix) with ESMTP id 4DED9796D
-	for <linux-lvm@redhat.com>; Mon, 29 Mar 2004 14:02:50 -0500 (EST)
-Subject: Re: [linux-lvm] LVM2 over RAID-5 (AMD64)
-From: Jeffrey Layton <jtlayton@poochiereds.net>
-In-Reply-To: <20040329152509.GA27@fi.muni.cz>
-References: <20040329152509.GA27@fi.muni.cz>
-Message-Id: <1080586970.1133.32.camel@tesla.mmt.bellhowell.com>
-Mime-Version: 1.0
-Date: Mon, 29 Mar 2004 14:02:50 -0500
+Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with SMTP id i2QKoEj05271
+	for <linux-lvm@redhat.com>; Fri, 26 Mar 2004 15:50:14 -0500
+From: Rainer Krienke <rainer@krienke.org>
+Subject: Re: [linux-lvm] Somewhat offtopic: Strange umount problem ....
+Date: Fri, 26 Mar 2004 21:50:06 +0100
+References: <200403251534.47502.krienke@uni-koblenz.de>
+	<200403260800.21301.krienke@uni-koblenz.de>
+	<1080319473.16404.3.camel@grandmother.littlebald.com>
+In-Reply-To: <1080319473.16404.3.camel@grandmother.littlebald.com>
+MIME-Version: 1.0
+Content-Type: multipart/signed; protocol="application/pgp-signature";
+	micalg=pgp-sha1; boundary="Boundary-02=_DeJZACsFo3Cun7C";
+	charset="iso-8859-15"
 Content-Transfer-Encoding: 7bit
+Message-Id: <200403262150.12149.rainer@krienke.org>
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -32,31 +24,58 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: LVM general discussion and development <linux-lvm@redhat.com>
+To: linux-lvm@sistina.com
 
 
-On Mon, 2004-03-29 at 10:25, Jan Kasprzak wrote:
-> 	Hello,
-> 
-> 	I have problems creating a LV on top of SW RAID-5 volume.
-> I have Fedora Core 1/AMD64, and LVM2 utils 2.00.08-5 RPM from the latest
-> Fedora Core beta (1.90, I think). My kernel is 2.6.4. The problem is that
-> 1) Metadata version 2 does not work at all, and
+--Boundary-02=_DeJZACsFo3Cun7C
+Content-Type: text/plain;
+  charset="iso-8859-15"
+Content-Transfer-Encoding: quoted-printable
+Content-Disposition: inline
 
-This is a little sparse on details, but you may have the problem I hit,
-which was not having set up lvm.conf to exclude the underlying devices.
-LVM2 (at least its current iteration) doesn't automagically exclude
-devices that underly an MD set. 
+Am Freitag, 26. M=E4rz 2004 17:44 schrieb David Johnston:
+=2E..
+> > > Rainer,
+> > > nfsd will do this.  Make sure all of your NFS servers are stopped
+> > > before you try to umount your filesystems.
+> > >
+> > > Does that help?
+> >
+> > Thanks for the hint, but nfsd has already been stopped
+> > Here is a list of all processes still running in single user
+>
+> Rainer,
+> could it be your multipath daemon?  In single-user mode, I would expect
+> multipathd and the migration_CPUx daemons to shut down.
 
-You might try setting a filter in lvm.conf that excludes everything but
-MD devices, e.g.:
+No, this is allright since multipath and software Mirror are sitting "below=
+"=20
+the filesystem and have to be active at least as long as the filesystem is=
+=20
+active..=20
 
-filter = [ "a|^/dev/md|", "r|.*|" ]
+@Klaus
+nfsd does not run any longer. If you want to take a look, the processes sti=
+ll=20
+running are here:
 
-Not sure if this works at all with LVM1, though.
+http://www.uni-koblenz.de/~krienke/tmp/processes.txt
 
-Of course, I could be completely wrong here, and your problem is
-something else entirely...
+Nothing suspicious to me....
 
--- Jeff
+Thanks
+Rainer
+
+--Boundary-02=_DeJZACsFo3Cun7C
+Content-Type: application/pgp-signature
+Content-Description: signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.2.2 (GNU/Linux)
+
+iD8DBQBAZJeDaldtjc/KDEoRAjt2AJ9sztUBDXtsrOW718zPB7Mt8usryACgu1uQ
+1pxuTbB5VCb3c9NVo8XFdZw=
+=sqh1
+-----END PGP SIGNATURE-----
+
+--Boundary-02=_DeJZACsFo3Cun7C--
