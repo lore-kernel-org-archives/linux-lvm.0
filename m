@@ -1,11 +1,12 @@
-Return-Path: <root@srv.sistina.com>
-Date: Tue, 3 Jul 2001 12:01:38 +0200
-From: "Heinz J. Mauelshagen" <Mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] Request for misalignment tests
-Message-ID: <20010703120138.C22955@sistina.com>
-References: <20010626161947.A11918@sistina.com> <3B3A0F47.37860696@ida.xs4all.nl> <20010702130832.D18512@sistina.com> <15168.33453.645650.476763@rigel.oswf.de>
+Return-Path: <patrick@tykepenguin.cix.co.uk>
+Date: Tue, 3 Jul 2001 11:11:47 +0100
+From: Patrick Caulfield <caulfield@sistina.com>
+Subject: Re: [linux-lvm] vgcreate
+Message-ID: <20010703111147.C1128@tykepenguin.com>
+References: <01070218330601.01439@alb-66-66-254-86>
 Mime-Version: 1.0
-In-Reply-To: <15168.33453.645650.476763@rigel.oswf.de>; from john@oswf.de on Mon, Jul 02, 2001 at 04:18:21PM +0200
+Content-Disposition: inline
+In-Reply-To: <01070218330601.01439@alb-66-66-254-86>; from heartboy@nycap.rr.com on Mon, Jul 02, 2001 at 06:33:06PM -0400
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -21,67 +22,22 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Mon, Jul 02, 2001 at 04:18:21PM +0200, Werner John wrote:
-> Dear Heinz
+On Mon, Jul 02, 2001 at 06:33:06PM -0400, Joe Morris wrote:
+> Hey everyone, I'm new to this list adn have a question regarding LVM.  I 
+> wanted to experiment with LVM, so I went into fdisk and changed /dev/hde11's 
+> type to 8e.  I then ran
+> pvcreate /dev/hde11
 > 
-> Heinz J. Mauelshagen writes:
-> > 
-> > Jorg,
-> > 
-> > please avoid recent CVS and if possible don't create PVs with
-> > LVM versions > 0.9.1 Beta 5.
+> To make sure everything went okay, I ran pvscan:
+> pvscan -- inactive PV "/dev/ide/host2/bus0/target0/lun0/part11" is in no VG  
+> [9.76 GB]
 > 
-> What if we have already done this some month ago?
+> Things were looking up until I ran vgcreate:
+> vgcreate experiment /dev/hde11
+> vgcreate -- no valid physical volumes in command line  
 
-It can only have hapend after 0.9.1 Beta 6 came out in March.
-My provided one liner test shows you if it is the case then.
+You will have to either refer to the PV by its full devfs name, 
+ie: /dev/ide/host2/bus0/target0/lun0/part11 or make sure devfs is not compiled
+into the kernel (just not mounting it doesn't help).
 
-> pvmove until everything is fixed?
-
-After it is fixed and your installation is update to the next LVM release
-yuu should be able to pvmove PEs to other (temporary) PVs which are created
-with new tools and correct alignment.
-
-> Will there be a tool to fix bad PVs in
-> use?
-
-Unlikely :-(
-
-> 
-> > Sorry for the incenvenience.
-> 
-> Sorry for the questions ;-)
-
-;-))
-
-> 
-> > Regards,
-> > Heinz    -- The LVM Guy --
-> > [...]
-> 
-> Best regards
-> 
-> Werner
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
-
--- 
-
-Regards,
-Heinz    -- The LVM Guy --
-
-*** Software bugs are stupid.
-    Nevertheless it needs not so stupid people to solve them ***
-
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-
-Heinz Mauelshagen                                 Sistina Software Inc.
-Senior Consultant/Developer                       Am Sonnenhang 11
-                                                  56242 Marienrachdorf
-                                                  Germany
-Mauelshagen@Sistina.com                           +49 2626 141200
-                                                       FAX 924446
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+patrick
