@@ -1,10 +1,8 @@
-From: Herbert Poetzl <herbert@13thfloor.at>
-Subject: Re: [linux-lvm] dump/restore on a regular file?
-Message-ID: <20040117182051.GC3264@MAIL.13thfloor.at>
-References: <BAY9-F4CSDAmwtyL81300031cec@hotmail.com>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <BAY9-F4CSDAmwtyL81300031cec@hotmail.com>
+From: "Dale Gallagher" <foobar@mighty.co.za>
+Message-ID: <web-210716707@mail01.infosat.net>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Subject: [linux-lvm] Compile problem - Linux 2.6.1 + LVM2.2.00.08
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,95 +13,84 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Sat Jan 17 13:22:02 2004
+Date: Mon Jan 19 06:20:02 2004
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: kanika nema <kanikanema@hotmail.com>
-Cc: linux-lvm@sistina.com
+To: linux-lvm@sistina.com
 
-On Sat, Jan 17, 2004 at 03:52:21PM +0530, kanika nema wrote:
-> hi,
-> 
-> thanx the dump did work. But now, my restore isnt working, it keeps telling 
-> me
-> "no tapes read yet"
-> or
-> ".foo was not found on the tape"
-> 
-> When i gave restore with option 'C', it tell me that some files were 
-> modified.
-> 
-> Please help me with the restore too.
-> Thank u so much,
-> Kanika
-> 
-> 
-> 
-> >dump 0f /backup/file.dump /mnt/path
-> >  (normal dump of fs in /etc/fstab)
+Hi there
 
-I assume the fs is mounted (and clean) at /mnt/newfs
+I Cannot compile LVM2.2.00.08 on a system with the
+following info.  Compilation error output included too.
+ Help would be appreciated - this is my first attempt to
+run a system with LVM and thought it best to get going with
+the latest stable kernel and LVM to prevent migration
+headaches at a later stage.  Thanks.
 
-  (cd /mnt/newfs; restore rf /backup/file.dump)
+Slackware 9.1
 
-will restore the entire dump ...
+/ and /boot on ext3 paritions and swap separate
+would like to use remaining disk space with LVM
 
-if you just want to copy files from A to B
-you can use the sequence
+kernel-headers-2.4.22-i386-1
+gcc-3.2.3-i486-2
+gcc-g++-3.2.3-i486-1
 
- cd /mnt/B ; dump 0f - /mnt/A | restore rf -
+Successfully built and running Linux 2.6.1 with:
 
-if your dumps are pretty large, specifying a size
-will help you -s  100000 (this is neither MB nor
-kB or bytes, this is in feet ;)
+#
+# Multi-device support (RAID and LVM)
+#
+CONFIG_MD=y
+# CONFIG_BLK_DEV_MD is not set
+CONFIG_BLK_DEV_DM=y
+CONFIG_DM_IOCTL_V4=y
 
-make sure that restore has enough space on /var/tmp
+cd /usr/src/build/LVM2.2.00.08
+./configure --enable-readline --with-lvm1=none
 
-HTH,
-Herbert
+resulted in compilation failure... see below:
 
-> >or
-> >
-> >dump 0zf /backup/file.dump /other/mnt/path
-> >  (does compressed dumps, smaller)
-> >
-> >or
-> >
-> >dump 0zf /backup/file.dump /dev/unknown
-> >  (dump of device not in /etc/fstab)
-> >
-> >HTH,
-> >Herbert
-> >
-> >> thanx for ur help,
-> >> Kanika
-> >>
-> >> _________________________________________________________________
-> >> Free drafts to 700 locations.
-> >> http://server1.msn.co.in/msnleads/suvidha/dec03.asp?type=hottag Click 
-> >here.
-> >>
-> >>
-> >> _______________________________________________
-> >> linux-lvm mailing list
-> >> linux-lvm@sistina.com
-> >> http://lists.sistina.com/mailman/listinfo/linux-lvm
-> >> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
-> >
-> >_______________________________________________
-> >linux-lvm mailing list
-> >linux-lvm@sistina.com
-> >http://lists.sistina.com/mailman/listinfo/linux-lvm
-> >read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
-> 
-> _________________________________________________________________
-> Gujarat Kite Fest at http://go.msnserver.com/IN/40247.asp 
-> www.gujaratkitefest.com
-> 
-> 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+----- <snip> -----
+In file included from activate/activate.c:9:
+activate/activate.h:13:28: libdevmapper.h: No such file or
+directory
+activate/activate.c: In function `library_version':
+activate/activate.c:119: warning: implicit declaration of
+function `dm_get_library_version'
+activate/activate.c: In function `driver_version':
+activate/activate.c:133: warning: implicit declaration of
+function `dm_task_create'
+activate/activate.c:133: `DM_DEVICE_VERSION' undeclared
+(first use in this function)
+activate/activate.c:133: (Each undeclared identifier is
+reported only once
+activate/activate.c:133: for each function it appears in.)
+activate/activate.c:133: warning: assignment makes pointer
+from integer without a cast
+activate/activate.c:138: warning: implicit declaration of
+function `dm_task_run'
+activate/activate.c:141: warning: implicit declaration of
+function `dm_task_get_driver_version'
+activate/activate.c:147: warning: implicit declaration of
+function `dm_task_destroy'
+activate/activate.c: In function `_lv_info':
+activate/activate.c:160: storage size of `dminfo' isn't
+known
+activate/activate.c:160: warning: unused variable `dminfo'
+make[1]: *** [activate/activate.o] Error 1
+make[1]: *** Waiting for unfinished jobs....
+commands/toolcontext.c: In function `_process_config':
+commands/toolcontext.c:151: warning: implicit declaration
+of function `dm_set_dev_dir'
+make[1]: *** [commands/toolcontext.o] Error 1
+make[1]: Leaving directory
+`/mnt/stage/build/LVM2.2.00.08/lib'
+make: *** [lib] Error 2
+----- </snip> -----
+
+Let me know if more details are required to track my issues
+down.
+
+Thanks
+Dale
