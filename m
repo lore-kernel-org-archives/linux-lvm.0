@@ -1,10 +1,8 @@
-Subject: Re: [linux-lvm] Limits
-References: <695771C76AEED411A19800902771A5040158B633@NC10S106>
-	<2160656500.20020927230655@tnonline.net>
-From: Jason L Tibbitts III <tibbs@math.uh.edu>
-In-Reply-To: Anders Widman's message of "Fri, 27 Sep 2002 23:06:55 +0200"
-Message-ID: <ufad6qzaybx.fsf@epithumia.math.uh.edu>
+From: RoMaNSoFt <r0man@phreaker.net>
+Message-ID: <3l1hpu8qulpm0f5phatapq8mhgs43psi07@4ax.com>
 MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Subject: [linux-lvm] Performance measures with LVM. Idem with LVM & RAID (linux)
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,20 +13,41 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Fri Sep 27 17:03:51 2002
+Date: Mon Sep 30 12:16:38 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
->>>>> "AW" == Anders Widman <andewid@tnonline.net> writes:
+ Hi,
 
-AW> I thought this limitation (2TB) would be removed in newer kernels,
-AW> or am I mistaken?
+ I guess this question should be a faq but I haven't found any recent
+document/paper explaining the performance penalties implied by a
+typical small-scenario LVM installation.
 
-There are patches (by Peter Chubb) for eliminating the 2TB block
-device limit on 32-bit x86 systems.  I do not believe that they have
-made it in yet.  They carry a performance penalty and thus are
-controllable at compile time by a configuration option.
+ In particular I have a SuSE 8 linux in a 1 GHz processor box, with a
+13 gb "normal" ide disk. I have another hd that, if necessary, I will
+use in a future to expand partitions. So I had thought of using LVM
+(scalability purposes). But before installing it, I'd like to have a
+look to any recent paper/doc/article talking about the performance of
+LVM. Beside this, I'd also like to know about the performance of a LVM
+over (software-) RAID system. Is there any kind of comparative or
+benchmarking about typical IDE systems with LVM (recent version) (and
+with/without RAID)?
 
- - J<
+ Ups, I forgot it: I'm always refering to LVM in linear mode
+(non-stripped mode), with each disk containing one PV.
+
+ Summarizing:
+ Which % of penalty will I suffer if I install LVM? Which kind of
+operations would be more affected? I read about 1% penalty and "dd"
+operations being the worst cases. Could you confirm it?
+
+ Thanks in advance and sorry if this is a faq...
+
+ Salu2,
+ --Roman
+
+--
+PGP Fingerprint:
+09BB EFCD 21ED 4E79 25FB  29E1 E47F 8A7D EAD5 6742
+[Key ID: 0xEAD56742. Available at KeyServ]
