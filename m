@@ -1,13 +1,9 @@
-Date: Thu, 4 Oct 2001 22:12:45 +0200
-From: Goetz Bock <bock@blacknet.de>
-Subject: Re: [linux-lvm] lvcreate segfault in vg_setup_pointers_for_snapshots
-Message-ID: <20011004221245.C13789@dragon.blacknet.de>
-References: <009801c14ce0$2a667eb0$836788cf@industry> <009b01c14ced$343df3c0$836788cf@industry>
+Date: Thu, 4 Oct 2001 22:33:43 +0200
+From: Markus Dobel <mdobel@kawo2.rwth-aachen.de>
+Message-ID: <20011004223343.A868@balu.kawo2.rwth-aachen.de>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-md5;
-	protocol="application/pgp-signature"; boundary="Clx92ZfkiYIKRjnr"
 Content-Disposition: inline
-In-Reply-To: <009b01c14ced$343df3c0$836788cf@industry>; from jlixfeld@andromedas.com on Thu, Oct 04, 2001 at 11:57:00AM -0400
+Subject: [linux-lvm] More Segfaults with LVM 1.0.1rc3
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -19,34 +15,44 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
---Clx92ZfkiYIKRjnr
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Hi,
+
+vgextend, vgreduce and lvextend segfaulted for me today, too. I'm using 
+
+  gcc version 2.96 20000731 (Red Hat Linux 7.1 2.96-95)
+
+which I guess is the reason for those problems.
+
+For vgextend/vgreduce gdb told me, that in vg_extend_reduce "vg_name"
+pointed to 0x1. So i did a little debugging and therefore also
+inserting the line:
+
+int vg_extend ( char *vg_name, pv_t *pv, vg_t *vg) {
+   printf("VG Name is %s\n",vg_name ); // this one
+   return vg_extend_reduce ( vg_name, pv, vg, VG_EXTEND);
+}
+
+in vg_extend_reduce.c, the same in vg_reduce(). Without changing
+anything else, vgextend and vgreduce work for me now.
 
 
-On Thu, Oct 04 '01 at 11:57, Jason A. Lixfeld wrote:
-> I managed to get the tools to compile and work with kgcc 2.91.66.
-I did not read this thread at all, but just wanted to mention, that you
-should NEVER try to compile any kernel stuff with a gcc newer than
-2.95.2
---=20
-Goetz Bock                                              IT Consultant
-Dipl.-Inf. Univ.
+Similar in lv_extend_reduce.c:
 
---Clx92ZfkiYIKRjnr
-Content-Type: application/pgp-signature
-Content-Disposition: inline
+int lv_extend ( vg_t *vg, lv_t *lv, char *lv_name) {
+   printf("Extending %s\n", lv_name); // added this line.
+   return lv_extend_reduce ( vg, lv, lv_name, LV_EXTEND);
+}
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.0.6 (GNU/Linux)
-Comment: For info see http://www.gnupg.org
+I don't speak C too fluently, and I don't know if printf() does some
+implicit casting or something or if it's gcc 2.96, but maybe this
+information helps a bit in finding the mistake.
 
-iD8DBQE7vMK8f5srOMkjkQoRAtHmAJ9UuMs9xHZlnTom1b82DgaaLf5cmQCeKEQ+
-JMneoLOTdisa2O201XoAwFU=
-=8dMr
------END PGP SIGNATURE-----
+Regards, Markus
 
---Clx92ZfkiYIKRjnr--
+-- 
+Spiegel-Leser wissen mehr. Fuer ein Semester-Abo!
+http://www.kawo2.rwth-aachen.de/~mdobel/semesterabo.html
