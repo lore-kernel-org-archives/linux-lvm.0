@@ -1,13 +1,8 @@
-Date: Tue, 28 Aug 2001 14:53:02 -0500
-From: AJ Lewis <lewis@sistina.com>
-Subject: Re: [linux-lvm] lvm-1.0.1-rc1 doesn't generate proper patch for linux-2.4.10-pre1
-Message-ID: <20010828145302.A25358@sistina.com>
-References: <20010828135726.A22794@beaver.iucha.org>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-md5;
-	protocol="application/pgp-signature"; boundary="dDRMvlgZJXvWKvBx"
-Content-Disposition: inline
-In-Reply-To: <20010828135726.A22794@beaver.iucha.org>; from florin@iucha.net on Tue, Aug 28, 2001 at 01:57:26PM -0500
+Date: Tue, 28 Aug 2001 23:01:15 +0200 (CEST)
+From: DaP <dap@mail.index.hu>
+Message-ID: <Pine.LNX.4.33.0108282222590.496-100000@dap.index>
+MIME-Version: 1.0
+Subject: [linux-lvm] LVM vs NBD
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -19,60 +14,34 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
+Content-Type: TEXT/PLAIN; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
---dDRMvlgZJXvWKvBx
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+ When I try to display a PV that lays on an NBD (/dev/nda1), pvdisplay
+returns with strange error..  This error also shows when I try to add this
+PV to a volume group..  NBD isn't supprted by LVM or what's the problem?
 
-On Tue, Aug 28, 2001 at 01:57:26PM -0500, Florin Iucha wrote:
-> There is a problem with generating the lvm-1.0.1-rc1 patch for kernel
-> 2.4.10-pre1.=20
->=20
-> The patched kernel will not compile because of the
->    get_hardsect_size/get_hardblocksize problem that occured in the transi=
-tion
-> from 2.4.2 to 2.4.3.
->=20
-> Thinking about it a little, it looks like the patching mechanism got conf=
-used
-> about the kernel version and generated a patch for 2.4.1 . I am not sure =
-about
-> this and I have not investigated it, but it smells like it.
->=20
-> Please look into it.
 
-Yep, the comparison in select_fragements is wrong.  We're workign on it.
+  # pvcreate -vv /dev/nda1
+	pvcreate -- locking logical volume manager
+	pvcreate -- checking physical volume name "/dev/nda1"
+	pvcreate -- getting physical volume size
+	pvcreate -- checking partition type
+	pvcreate -- creating new physical volume
+	pvcreate -- setting up physical volume for /dev/nda1 with 6144000 sectors
+	pvcreate -- writing physical volume data to disk "/dev/nda1"
+	pvcreate -- physical volume "/dev/nda1" successfully created
+	pvcreate -- unlocking logical volume manager
 
-Thanks.
---=20
-AJ Lewis
-Sistina Software Inc.                  Voice:  612-638-0500
-1313 5th St SE, Suite 111              Fax:    612-638-0500
-Minneapolis, MN 55414                  E-Mail: lewis@sistina.com
-http://www.sistina.com
+  # pvdisplay -vv /dev/nda1
+	pvdisplay -- checking physical volume name "/dev/nda1"
+	pvdisplay -- getting physical volume size
+	pvdisplay -- creating physical volume device number from name "/dev/nda1"
+	pvdisplay -- reading data of physical volume "/dev/nda1" from disk
+	pvdisplay -- ERROR "pv_read(): pv_create_name_from_kdev_t" no VALID
+			physical volume "/dev/nda1"
 
-Current GPG fingerprint =3D 3B5F 6011 5216 76A5 2F6B  52A0 941E 1261 0029 2=
-648
-Get my key at: http://www.sistina.com/~lewis/gpgkey
- (Unfortunately, the PKS-type keyservers do not work with multiple sub-keys)
 
------Begin Obligatory Humorous Quote----------------------------------------
-Computer Science: solving today's problems tomorrow.
------End Obligatory Humorous Quote------------------------------------------
-
---dDRMvlgZJXvWKvBx
-Content-Type: application/pgp-signature
-Content-Disposition: inline
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.0.6 (GNU/Linux)
-Comment: For info see http://www.gnupg.org
-
-iD8DBQE7i/aepE6/iGtdjLERApPxAJ9rHVebJ5essK9FHClZu6rzJ58rFQCfdtY8
-mh6n1tiiTPggj3i41VqxYRY=
-=EaCi
------END PGP SIGNATURE-----
-
---dDRMvlgZJXvWKvBx--
+--
+  DaP
