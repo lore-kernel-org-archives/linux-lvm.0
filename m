@@ -1,11 +1,13 @@
-Return-Path: <boutilpj@ednet.ns.ca>
-Message-ID: <3B1D12D1.1C292229@ednet.ns.ca>
-Date: Tue, 05 Jun 2001 14:11:45 -0300
-From: Patrick Boutilier <boutilpj@ednet.ns.ca>
-MIME-Version: 1.0
-Subject: Re: [linux-lvm] How can I change my disk type to 0x8e?
-References: <991759810.3b1d0dc2b24c1@www.etfal.g12.br>
-Content-Transfer-Encoding: 7bit
+Return-Path: <wichert@cistron.nl>
+Date: Tue, 5 Jun 2001 19:25:46 +0200
+From: Wichert Akkerman <wichert@cistron.nl>
+Subject: Re: [linux-lvm] How can I change my disk type to 0x8e? -> OK! But How Can I change
+Message-ID: <20010605192546.B29302@cistron.nl>
+References: <991759810.3b1d0dc2b24c1@www.etfal.g12.br> <3B1D12D1.1C292229@ednet.ns.ca> <991761092.3b1d12c44e338@www.etfal.g12.br>
+Mime-Version: 1.0
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <991761092.3b1d12c44e338@www.etfal.g12.br>; from leandrosales@cefet-al.br on Tue, Jun 05, 2001 at 02:11:32PM -0300
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,30 +19,18 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="iso-8859-1"
 To: linux-lvm@sistina.com
 
-I changed from partition type 0 (empty) to 8e about 6 months ago and didn't lose
-any data. I had type 0 because when I first installed LVM I tried to toggle my
-partions to 0x8e and it changed it to type 0. LVM worked with type 0 but fdisk -l
-showed no partitons. :-)
+Previously Leandro Sales - Estagi=EF=BF=BDrio GTI wrote:
+> Ok Patrick, thank you! But, How Can I change to type 0? or to 0x8e?
 
+Run fdisk.
 
+Wichert.
 
-
-Leandro Sales - EstagiXrio GTI wrote:
-
-> Hi...
->     I'm a new user and I compiled LVM recently. I'd like to know I can I change
-> my disk type to 0x8e... What does 0x8e type mean?
->     If I change to 0x8e, will I have lost data? Please, help me ok?
->
-> Leandro.
->
-> ------------------------------------------------
-> Mensagem enviada pelo servidor de Webmail www.etfal.g12.br
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
+--=20
+  _________________________________________________________________
+ /       Nothing is fool-proof to a sufficiently talented fool     \
+| wichert@cistron.nl                  http://www.liacs.nl/~wichert/ |
+| 1024D/2FA3BC2D 576E 100B 518D 2F16 36B0  2805 3CB8 9250 2FA3 BC2D |
