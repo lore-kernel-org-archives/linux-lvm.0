@@ -1,10 +1,9 @@
-From: "Stephen C. Tweedie" <sct@redhat.com>
-Message-ID: <20011023113614.B2334@redhat.com>
-References: <20011022153819.A2744@thunk.org> <001101c15b68$5adbb880$836788cf@industry>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <001101c15b68$5adbb880$836788cf@industry>; from jlixfeld@fastvibe.com on Mon, Oct 22, 2001 at 10:13:48PM -0400
-Subject: [linux-lvm] Re: What really works?
+Message-ID: <8BFE9B4949BB4346A146F5231AEF1B87F3D8@CX975884-A.mdmiller.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+content-class: urn:content-classes:message
+From: "Mitchell D. Miller" <mitch@mdmiller.com>
+Subject: [linux-lvm] How to mount volumes during boot
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,29 +14,20 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Tue Oct 23 05:35:02 2001
+Date: Tue Oct 23 08:09:02 2001
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: "Jason A. Lixfeld" <jlixfeld@fastvibe.com>
-Cc: 'Theodore Tso' <tytso@mit.edu>, ext3-users@redhat.com, linux-lvm@sistina.com
+To: linux-lvm@sistina.com
 
-Hi,
+I am running Red Hat 7.1 (with 2.4.12 kernel) and LVM 1.0.1-rc4.  I read
+the documentation on Sistina's website about boot time scripts, but the
+info there seems to deal only with getting LVM loaded at boot time. =20
 
-On Mon, Oct 22, 2001 at 10:13:48PM -0400, Jason A. Lixfeld wrote:
+I'm still uncertain how I should configure my system so the volumes I
+have created (three of them so far) get mounted during boot.  I tried
+modifying my fstab file, but the system didn't boot right after.  It
+stopped, complaining that one of the devices couldn't be mounted.  Is
+this even the right place to configure LVM volumes to be mounted?
 
-> This is still a very annoying problem.  chattr -i <-- I corrected it
-> this time :)  Doesn't make the files or directories deletable.  Any
-> other ideas?
-
-Use "chattr -ia".  The "-a" (append-only) attribute will also pin the
-files against deletion.
-
-Failing that, "debugfs" lets you forcibly delete files: "clri
-<filename>" will clear the inode by force, and a subsequent e2fsck
-will fix up the fs summary information to be consistent with the
-destroyed file (including deleting the directory entry pointing to the
-nuked inode).
-
-Cheers,
- Stephen
+Thanks,
+Mitch
