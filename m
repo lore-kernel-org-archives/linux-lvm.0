@@ -1,68 +1,35 @@
-Message-ID: <37660D93.7A252A04@mail.isis.de>
-Date: Tue, 15 Jun 1999 10:23:47 +0200
-From: Marcus Ruehmann <m.ruehmann@mail.isis.de>
+Message-Id: <m10tenl-0000YbC@duffy1.franken.de>
+From: Rolf Jakob <rjakob@duffy1.franken.de>
+Subject: Re: [linux-lvm] lvm-0.6, Linux 2.2.9 and devfs-patch-v99.2
+In-Reply-To: <199906132233.AA06526@mailgate1b.telekom.de> from Heinz Mauelshagen at "Jun 14, 1999  0:30:30 am"
+Date: Tue, 15 Jun 1999 00:01:56 +0200 (MET DST)
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] INFO: bringing LVM into mainstream kernel
-References: <199906150756.AA22833@mailgate1b.telekom.de>
 Content-Transfer-Encoding: 7bit
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: alan@redhat.com
-Cc: Heinz Mauelshagen <mauelsha@ez-darmstadt.telekom.de>, linux-lvm@msede.com, mge@u9ete.ez-darmstadt.telekom.de
+To: linux-lvm@msede.com
 
-Hi Alan,
+> > 
+> > Hi,
+> > 
+> > Is lvm-0.6 (patched with lvm_0.6-patch-15031999a.gz) supposed to
+> > work with Linux 2.2.9 and devfs-patch-v99-2 ?
+> > 
+> 
+> No, not yet 8*(
+> 
 
-Heinz send you his _very nice_ lvm code to prepare for inclusion in
-2.3.x.
+Just found out : devfs-patch-v99 (mind the missing -2) is working,
+hmm, well, at least the compiling didn't stop. No time yet to check
+it out, but I don't suspect any difficulties from that.
+I used a patch-v92 (IIRC) and didn't encounter problems (beside
+non-devfs-aware applications of course :-).
 
-I know that currently heavy modifications are done by Linus et al. but
-anyway I guess _many_ people would appreciate to have this feature into
-the kernel.
+The next step is building dtfs, but I couldn't compile it.
 
-LVM helps a lot (and the _also nice_ raw dev from Stephen) to get Linux
-into corporate world since those features strengthen the Linux database
-position.
-
-So, please please please convince Linus ;-)
-
-Cheers
-Marcus
-
-Heinz Mauelshagen wrote:
-> 
-> Hi all.
-> 
-> Because Marcus Ruehmann brought it up on this list i've send the LVM kernel
-> patch for 2.3.x to Alan Cox asking him to help us to bring it into
-> the mainstream 2.3.x kernel.
-> 
-> A couple of weeks ago i've already send it to Linus, didn't get an answer,
-> resent it again 2 weeks ago, didn't get an answer so far 8*(
-> 
-> We all know he's busy, busy, busy...
-> 
-> To hit our target as fast as possible i hereby ask everybody to
-> share his/her ideas to help getting LVM into the mainstream kernel.
-> 
-> Maybe somebody has the right budy to achieve it...
-> 
-> So, please go ahead.
-> 
-> Thank you very much!
-> 
-> Heinz
-> --
-> 
-> =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-> 
-> Systemmanagement C/S                             Deutsche Telekom AG
->                                                  Entwicklungszentrum Darmstadt
-> Heinz Mauelshagen                                Otto-Roehm-Strasse 71c
-> Senior Systems Engineer                          Postfach 10 05 41
->                                                  64205 Darmstadt
-> mge@ez-darmstadt.telekom.de                      Germany
->                                                  +49 6151 886-425
->                                                           FAX-386
-> =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+Rolf
+-- 
+Rolf Jakob at home (rjakob@duffy1.franken.de)
+WWW : http://www.franken.de/users/duffy1/rjakob (KDE-Utils and CCS)
