@@ -1,28 +1,20 @@
-Message-ID: <31A612FE6020D2119F6400A0C9B67EBB116F1D@fthw901e.as.fth.sbs.de>
-From: Franken Klaus <Klaus.Franken@fth2.siemens.de>
-Subject: RE: [linux-lvm] valid_majors
-Date: Tue, 29 Feb 2000 11:09:42 +0100
+From: guruju@erols.com
+Message-ID: <38E56446.170A@erols.com>
+Date: Fri, 31 Mar 2000 18:51:50 -0800
 MIME-Version: 1.0
+Subject: [linux-lvm] Linux hardware
+Content-Transfer-Encoding: 7bit
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@msede.com
 
-> > > is there a way to give the list of valid majors at runtime 
-> 
-> > 
-> > The actual 0.8final code uses /proc/partitions fastening the process
-> > of scanning, if it exists and falls back to scan /dev if it doesn't.
-> 
-> This sounds good! I will try it next week.
+Hello..
+
+	Does any one has machine with hardware and Linux OS every thing I 
+can test volume manager to buy with cheap rate? Let me know if any one 
+has this equipment..
 
 
-It seems that I cant test it: 0.8final is only for 2.3.x in the moment, right?
-
-Can I help/test something.... I need the 2.2 kernel.
-
-
-Klaus.Franken@fth2.siemens.de    +49 911 978 3707
-Siemens Business Services IP 21F
+Thanks
