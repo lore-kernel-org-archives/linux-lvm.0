@@ -1,10 +1,8 @@
-From: Patrick Caulfield <caulfield@sistina.com>
-Subject: Re: [linux-lvm] Does LVM compile on Sparc64?
-Message-ID: <20011214191520.GA19114@tykepenguin.com>
-References: <20011214185558.A11845@trash.net>
+From: Petro <petro@auctionwatch.com>
+Message-ID: <20011214191634.GB24486@auctionwatch.com>
 Mime-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20011214185558.A11845@trash.net>
+Subject: [linux-lvm] invalidate: busy buffer
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,28 +13,39 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Fri Dec 14 13:13:02 2001
+Date: Fri Dec 14 13:14:01 2001
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Fri, Dec 14, 2001 at 06:55:58PM +0100, Thomas Bader wrote:
-> Hi Everybody
-> 
-> I got the source of Linux 2.2.20 and applied the patches of
-> LVM 1.0.1 (including Stephen Tweedie's rawio patch and
-> linux-2.2.18-sparc64.diff).
-> 
-> The patches do apply well, but it seems like there are some
-> missing definitions in include/linux/lvm.h:
-> 
-> duke:/usr/src/linux# make vmlinux
+Setup: 4 IBM drives attached to a 3ware raid card (64xx), in a raid 0
+configuration, as /dev/sdb. 
 
-See http://lists.sistina.com/pipermail/linux-lvm/2001-December/009950.html
+Trying to set up LVM on it, run vgscan and get: 
 
-for a patch that should work.
+vgscan -- reading all physical volumes (this may take a while...)
+invalidate: busy buffer
+invalidate: busy buffer
+invalidate: busy buffer
+invalidate: busy buffer
+invalidate: busy buffer
+invalidate: busy buffer
+invalidate: busy buffer
+invalidate: busy buffer
+invalidate: busy buffer
+invalidate: busy buffer
+invalidate: busy buffer
+vgscan -- "/etc/lvmtab" and "/etc/lvmtab.d" successfully created
+vgscan -- WARNING: This program does not do a VGDA backup of your volume
+group
 
-I'll make a proper 2.2 one next week.
 
-patrick
+Is this a warning from LVM? If so, what does it mean (and if not, if
+anyone does know what it means, I'd be really glad to find out). 
+
+thanks.
+
+
+-- 
+Share and Enjoy. 
