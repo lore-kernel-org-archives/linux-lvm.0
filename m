@@ -1,25 +1,16 @@
 Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with SMTP id i2UBnLj26127
-	for <linux-lvm@redhat.com>; Tue, 30 Mar 2004 06:49:21 -0500
-Received: from pegasus.siol.net (pegasus.siol.net [193.189.160.25])
-	by mx1.redhat.com (8.12.10/8.12.10) with SMTP id i2UBnK1X021715
-	for <linux-lvm@redhat.com>; Tue, 30 Mar 2004 06:49:20 -0500
-Received: from kudu.siol.net ([10.10.10.22]) by pegasus.siol.net
-	(InterMail vK.4.03.05.03 201-232-132-103 license
-	1cbf71897a39210db31154c99f0b4628)
-	with ESMTP id <20040330114918.YRWC15612.pegasus@kudu.siol.net>
-	for <linux-lvm@redhat.com>; Tue, 30 Mar 2004 13:49:18 +0200
-Received: from vector ([193.77.156.30]) by kudu.siol.net
-	(InterMail vK.4.03.05.03 201-232-132-103 license
-	1cbf71897a39210db31154c99f0b4628)
-	with SMTP id <20040330114918.JYZF5652.kudu@vector>
-	for <linux-lvm@redhat.com>; Tue, 30 Mar 2004 13:49:18 +0200
-Message-ID: <001301c4164d$14b733a0$0400a8c0@vector>
-From: "Perplexer" <perplexer@thz.net>
-Date: Tue, 30 Mar 2004 13:49:37 +0200
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with SMTP id i2UC7Cj29787
+	for <linux-lvm@redhat.com>; Tue, 30 Mar 2004 07:07:12 -0500
+Received: from net-m.de (h-213.61.219.37.host.de.colt.net [213.61.219.37])
+	by mx1.redhat.com (8.12.10/8.12.10) with SMTP id i2UC7A1X026402
+	for <linux-lvm@redhat.com>; Tue, 30 Mar 2004 07:07:11 -0500
+From: Wiktor Wodecki <wiktor.wodecki@net-m.de>
+Date: Tue, 30 Mar 2004 14:06:41 +0200
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] Removing an Old disk (LVM HOW-TO)
+Content-Disposition: inline
+Message-Id: <200403301406.41500.wiktor.wodecki@net-m.de>
+Subject: [linux-lvm] does a snapshot change vg metadata?
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -32,13 +23,23 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@redhat.com
+Cc: Iulian Topliceanu <iulian.topliceanu@net-m.de>
 
-There is a section describing how to remove and old disk
-from LVM at http://tldp.org/HOWTO/LVM-HOWTO/removeadisk.html
-but nothing is said about reducing LV before this is done.
+Hello,
 
-Must a LV be reduced using e2fsadm before any attempt to remove a PV
-is made in order to prevent data loss ?
+we have a shared scsi system here with one vg and multiple lv's in it. Some 
+lv's are mounted on machine A, others on machine B. I know that I must not 
+make vg changes (like shrinking, deleteing, expanding, etc. an lv) while the 
+vg is active on both machines. My question is whether this "limitation" also 
+applies to snapshots - Can I take them while the vg is active on two machines 
+or do I risk data corruption?
 
----------
-Perplexer
+I use latest lvm1 kernel patches on a 2.4.24 redhat 9.0 system.
+
+-- 
+Regards,
+ 
+ Wiktor Wodecki
+    
+ net mobile AG - 40470 Duesseldorf - Germany
+ 923B DCF8 070C 9FDD 5E05  9AE3 E923 5A35 182C 9783
