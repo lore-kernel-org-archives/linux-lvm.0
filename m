@@ -1,43 +1,99 @@
-Date: Thu, 30 Dec 1999 14:06:37 +0100 (CET)
-From: Holger Rauch <hrauch@datech.heitec.de>
-Reply-To: Holger.Rauch@datech.heitec.de
-Subject: [linux-lvm] Preserving LVs
-Message-ID: <Pine.LNX.4.10.9912301401320.5932-100000@prag.datech2.er.heitec.net>
+Date: Thu, 30 Dec 1999 11:14:07 -0500 (EST)
+From: Shane Shrybman <shane@zeke.yi.org>
+Subject: [linux-lvm] LVM 0.8i non-SMP compile fails 2.3.3[345]
+Message-ID: <Pine.LNX.3.96.991230110031.12779A-200000@zeke.goatskin.org>
 MIME-Version: 1.0
+Content-Type: MULTIPART/MIXED; BOUNDARY="572655140-1257282997-946570447=:12779"
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: linux-lvm@msede.com
+To: linux-lvm mailing list <linux-lvm@msede.com>
 
-Hi!
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
+  Send mail to mime@docserver.cac.washington.edu for more info.
 
-How can I preserve existing LVs (such as the ones used for the
-"/usr/local" and "/home" fs) over new installations? Sure, the kernel
-resides in "/boot", so I can keep that as well, but all the user mode
-tools are gone.
-From time to time it's just necessary to do a complete installation from
-scratch to keep track with the latest Linux distributions (the "update"
-function doesn't always work), and I don't want to run into problems
-later. That's why I'm asking this question here.
+--572655140-1257282997-946570447=:12779
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 
-Any help is greatly appreciated!
 
-Happy New Year!
+Compiling the latest dev kernels with LVM 0.8i fails when compiled for UP.
+The same SMP kernels compile and run ok, ( using 2.3.35 smp now).
+Unfortunately I don't have an smp box. But, I agree that the _obvious_ fix
+would be for some generous soul to send a nice smp setup! :))
 
-Greetings,
+I have attached the output from make -s bzImage, if anyone is curious.
 
-	Holger
+Season's Greetings and a HAPPY NEW YEAR!
 
-=========================================
-Holger Rauch
-HEITEC GmbH
-Schuhstrasse 30
-91052 Erlangen
-Germany
+Shane
 
-Tel.: 09131 / 877 - 273
-Fax: 09131 / 877 - 222
-Email: Holger.Rauch@datech.heitec.de
-=========================================
+
+--572655140-1257282997-946570447=:12779
+Content-Type: TEXT/PLAIN; charset=US-ASCII; name="2.3.35.UP.out"
+Content-Transfer-Encoding: BASE64
+Content-ID: <Pine.LNX.3.96.991230111407.12779B@zeke.goatskin.org>
+Content-Description: 2.3.35 UP output
+
+SW4gZmlsZSBpbmNsdWRlZCBmcm9tIC91c3Ivc3JjL2xpbnV4LTIuMy4zNS9p
+bmNsdWRlL2xpbnV4L2x2bS5oOjkyLA0KICAgICAgICAgICAgICAgICBmcm9t
+IGxsX3J3X2Jsay5jOjMyOg0KL3Vzci9zcmMvbGludXgtMi4zLjM1L2luY2x1
+ZGUvYXNtL3NwaW5sb2NrLmg6MzY6IHdhcm5pbmc6IGBTUElOX0xPQ0tfVU5M
+T0NLRUQnIHJlZGVmaW5lZA0KL3Vzci9zcmMvbGludXgtMi4zLjM1L2luY2x1
+ZGUvbGludXgvc3BpbmxvY2suaDo0ODogd2FybmluZzogdGhpcyBpcyB0aGUg
+bG9jYXRpb24gb2YgdGhlIHByZXZpb3VzIGRlZmluaXRpb24NCi91c3Ivc3Jj
+L2xpbnV4LTIuMy4zNS9pbmNsdWRlL2FzbS9zcGlubG9jay5oOjM4OiB3YXJu
+aW5nOiBgc3Bpbl9sb2NrX2luaXQnIHJlZGVmaW5lZA0KL3Vzci9zcmMvbGlu
+dXgtMi4zLjM1L2luY2x1ZGUvbGludXgvc3BpbmxvY2suaDo1NDogd2Fybmlu
+ZzogdGhpcyBpcyB0aGUgbG9jYXRpb24gb2YgdGhlIHByZXZpb3VzIGRlZmlu
+aXRpb24NCi91c3Ivc3JjL2xpbnV4LTIuMy4zNS9pbmNsdWRlL2FzbS9zcGlu
+bG9jay5oOjQ2OiB3YXJuaW5nOiBgc3Bpbl91bmxvY2tfd2FpdCcgcmVkZWZp
+bmVkDQovdXNyL3NyYy9saW51eC0yLjMuMzUvaW5jbHVkZS9saW51eC9zcGlu
+bG9jay5oOjU3OiB3YXJuaW5nOiB0aGlzIGlzIHRoZSBsb2NhdGlvbiBvZiB0
+aGUgcHJldmlvdXMgZGVmaW5pdGlvbg0KL3Vzci9zcmMvbGludXgtMi4zLjM1
+L2luY2x1ZGUvYXNtL3NwaW5sb2NrLmg6OTk6IHdhcm5pbmc6IGBzcGluX3Ry
+eWxvY2snIHJlZGVmaW5lZA0KL3Vzci9zcmMvbGludXgtMi4zLjM1L2luY2x1
+ZGUvbGludXgvc3BpbmxvY2suaDo1Njogd2FybmluZzogdGhpcyBpcyB0aGUg
+bG9jYXRpb24gb2YgdGhlIHByZXZpb3VzIGRlZmluaXRpb24NCi91c3Ivc3Jj
+L2xpbnV4LTIuMy4zNS9pbmNsdWRlL2FzbS9zcGlubG9jay5oOjEyNjogd2Fy
+bmluZzogYFJXX0xPQ0tfVU5MT0NLRUQnIHJlZGVmaW5lZA0KL3Vzci9zcmMv
+bGludXgtMi4zLjM1L2luY2x1ZGUvbGludXgvc3BpbmxvY2suaDoxMDg6IHdh
+cm5pbmc6IHRoaXMgaXMgdGhlIGxvY2F0aW9uIG9mIHRoZSBwcmV2aW91cyBk
+ZWZpbml0aW9uDQovdXNyL3NyYy9saW51eC0yLjMuMzUvaW5jbHVkZS9hc20v
+c3BpbmxvY2suaDoxNTc6IHdhcm5pbmc6IGByZWFkX3VubG9jaycgcmVkZWZp
+bmVkDQovdXNyL3NyYy9saW51eC0yLjMuMzUvaW5jbHVkZS9saW51eC9zcGlu
+bG9jay5oOjExNTogd2FybmluZzogdGhpcyBpcyB0aGUgbG9jYXRpb24gb2Yg
+dGhlIHByZXZpb3VzIGRlZmluaXRpb24NCi91c3Ivc3JjL2xpbnV4LTIuMy4z
+NS9pbmNsdWRlL2FzbS9zcGlubG9jay5oOjE1ODogd2FybmluZzogYHdyaXRl
+X3VubG9jaycgcmVkZWZpbmVkDQovdXNyL3NyYy9saW51eC0yLjMuMzUvaW5j
+bHVkZS9saW51eC9zcGlubG9jay5oOjExNzogd2FybmluZzogdGhpcyBpcyB0
+aGUgbG9jYXRpb24gb2YgdGhlIHByZXZpb3VzIGRlZmluaXRpb24NCkluIGZp
+bGUgaW5jbHVkZWQgZnJvbSAvdXNyL3NyYy9saW51eC0yLjMuMzUvaW5jbHVk
+ZS9saW51eC9sdm0uaDo5MiwNCiAgICAgICAgICAgICAgICAgZnJvbSBsbF9y
+d19ibGsuYzozMjoNCi91c3Ivc3JjL2xpbnV4LTIuMy4zNS9pbmNsdWRlL2Fz
+bS9zcGlubG9jay5oOjI2OiBjb25mbGljdGluZyB0eXBlcyBmb3IgYHNwaW5s
+b2NrX3QnDQovdXNyL3NyYy9saW51eC0yLjMuMzUvaW5jbHVkZS9saW51eC9z
+cGlubG9jay5oOjQ3OiBwcmV2aW91cyBkZWNsYXJhdGlvbiBvZiBgc3Bpbmxv
+Y2tfdCcNCi91c3Ivc3JjL2xpbnV4LTIuMy4zNS9pbmNsdWRlL2FzbS9zcGlu
+bG9jay5oOjcxOiBwYXJzZSBlcnJvciBiZWZvcmUgYHZvaWQnDQovdXNyL3Ny
+Yy9saW51eC0yLjMuMzUvaW5jbHVkZS9hc20vc3BpbmxvY2suaDo4NjogcGFy
+c2UgZXJyb3IgYmVmb3JlIGBkbycNCi91c3Ivc3JjL2xpbnV4LTIuMy4zNS9p
+bmNsdWRlL2FzbS9zcGlubG9jay5oOjExNjogY29uZmxpY3RpbmcgdHlwZXMg
+Zm9yIGByd2xvY2tfdCcNCi91c3Ivc3JjL2xpbnV4LTIuMy4zNS9pbmNsdWRl
+L2xpbnV4L3NwaW5sb2NrLmg6MTA3OiBwcmV2aW91cyBkZWNsYXJhdGlvbiBv
+ZiBgcndsb2NrX3QnDQovdXNyL3NyYy9saW51eC0yLjMuMzUvaW5jbHVkZS9h
+c20vc3BpbmxvY2suaDoxMzk6IHBhcnNlIGVycm9yIGJlZm9yZSBgdm9pZCcN
+Ci91c3Ivc3JjL2xpbnV4LTIuMy4zNS9pbmNsdWRlL2FzbS9zcGlubG9jay5o
+OjE0ODogcGFyc2UgZXJyb3IgYmVmb3JlIGB2b2lkJw0KbGxfcndfYmxrLmM6
+NzI6IGNvbmZsaWN0aW5nIHR5cGVzIGZvciBgaW9fcmVxdWVzdF9sb2NrJw0K
+L3Vzci9zcmMvbGludXgtMi4zLjM1L2luY2x1ZGUvbGludXgvYmxrLmg6MTQ6
+IHByZXZpb3VzIGRlY2xhcmF0aW9uIG9mIGBpb19yZXF1ZXN0X2xvY2snDQps
+bF9yd19ibGsuYzo3Nzogd2FybmluZzogbWlzc2luZyBicmFjZXMgYXJvdW5k
+IGluaXRpYWxpemVyIGZvciBgd2FpdF9mb3JfcmVxdWVzdC5sb2NrJw0KbGxf
+cndfYmxrLmM6Nzc6IHdhcm5pbmc6IGV4Y2VzcyBlbGVtZW50cyBpbiBzdHJ1
+Y3QgaW5pdGlhbGl6ZXIgYWZ0ZXIgYHdhaXRfZm9yX3JlcXVlc3QubG9jaycN
+Cm1ha2VbM106ICoqKiBbbGxfcndfYmxrLm9dIEVycm9yIDENCm1ha2VbMl06
+ICoqKiBbZmlyc3RfcnVsZV0gRXJyb3IgMg0KbWFrZVsxXTogKioqIFtfc3Vi
+ZGlyX2Jsb2NrXSBFcnJvciAyDQptYWtlOiAqKiogW19kaXJfZHJpdmVyc10g
+RXJyb3IgMg0K
+--572655140-1257282997-946570447=:12779--
