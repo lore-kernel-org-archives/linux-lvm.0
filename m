@@ -1,11 +1,11 @@
-Return-Path: <cworley@liberate.com>
-Message-ID: <3A5355EF.2060207@liberate.com>
-Date: Wed, 03 Jan 2001 09:40:15 -0700
-From: Chris Worley <cworley@liberate.com>
+Return-Path: <riel@conectiva.com.br>
+Date: Thu, 4 Jan 2001 20:01:10 -0200 (BRDT)
+From: Rik van Riel <riel@conectiva.com.br>
+Subject: Re: [lvm-devel] Re: [linux-lvm] LVM 0.9 vgscan problem
+In-Reply-To: <Pine.LNX.4.21.0101041545590.1281-300000@duckman.distro.conectiva>
+Message-ID: <Pine.LNX.4.21.0101041959040.1295-100000@duckman.distro.conectiva>
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] Sanity check: newbie wants strange LVM configuration
-References: <3A52B71A.6944E0C5@symbionsys.com> <20010103093327.A619@66bassett.freeserve.co.uk>
-Content-Transfer-Encoding: 7bit
+Content-ID: <Pine.LNX.4.21.0101041959042.1295@duckman.distro.conectiva>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,110 +17,59 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: linux-lvm@sistina.com
-Cc: joe@66bassett.freeserve.co.uk
+Content-Type: TEXT/PLAIN; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: lvm-devel@sistina.com
+Cc: linux-lvm@sistina.com
 
-Joe,
-
-Good plan, but I have some questions...
-
-Joe Thornber wrote:
-
-> 6) turn the 12G drive into a PV
-> 7) extend the volume group with the new PV
-> 8) create a striped logical volume big enough to hold the 12G
-
-And LVM knows automagically to grab 12GB from the 40GB drive to stripe 
-together into a 24GB drive?
-
-
-> OK so you should now have (40 - 6)G free on the big disk, and (12 -6)G 
-> free on the smallest disk.
-
-Why don't I have 40-12 and 12-12 (nothing free on the smaller disk) 
-resulting in a 24G raid0?
-
-Also, I think it would be better to do the 16G first, then the 12G. 
-Is there any reason why you did the 12G first, or is this interchangeable?
-
-
-> 16) create a 16G striped LV
-
-Shouldn't this be a 32G striped LV (16G from the 16G drive, another 
-16G from the 40G drive)?
-
-
-> You now have a striped LV 12G, a striped LV 16G + lots of left over
-> extents that can be added when needed.
-
-Wouldn't that be a 24G striped LV and a 32G striped LV that I can 
-append together into a 56G LV (and lots of non-striped extents that I 
-can add to the end of that)?
-
-Thanks for your help,
-
-Chris
-
-> On Tue, Jan 02, 2001 at 10:22:34PM -0700, Chris Worley wrote:
+On Thu, 4 Jan 2001, Rik van Riel wrote:
+> On Wed, 3 Jan 2001, Rik van Riel wrote:
 > 
->> I've got two disk drives, 12 & 16 GB IDE.  I'm adding a third 40GB
->> drive.  Time to start using LVM...
->> 
->> I want to get better performance, so, I'll put the 40GB drive on one
->> IDE controller, the other two drives on the second controller.  I'll
->> make two partitions on the 40GB drive that match the disk sizes of the
->> existing drives, and stripe each with it's match on the 40GB drive,
->> creating two raid0 arrays (one 12+12, and the other 16+16).  By
->> placing the dual-partitioned 40GB drive stand-alone on one IDE
->> controller, each striped with a partition/drive on the other
->> controller, any given file will only be striped across one partition
->> on each controller, so I should see the performance benefit of
->> striping (on IDE).
->> 
->> Should I use LVM or MD to do the striping (they both can do it, I was
->> just wondering which would be a better choice)?
->> 
->> Even if I use MD to stripe, I'd use LVM to append the two drives
->> together.
->> 
->> Before appending the drives, I'd make a temporary partition on the
->> 40GB drive, and copy the current contents of the 16GB (/home) drive to
->> the temporary partition.  Then, I'd make the 16+16 raid0 a logical
->> volume, create a reiserfs on it, and copy the information back from
->> the temporary partition, to the new reiserfs.
->> 
->> Since the 12GB drive is the current root partition, it's a bit
->> trickier to copy.  I'd copy it's contents to a temporary partition on
->> the 40GB drive, boot from that temporary partition, then create the
->> second 12+12 raid0, and add it to the first logical volume, then
->> expand the reiserfs to cover both, copy the root file system from the
->> temporary partition to the new logical volume, and setup a reiserfs
->> root and boot.
->> 
->> Is this the correct approach for upgrading?
->> 
->> Finally, I'll have ~10GB unallocated on the 40GB drive.  I was
->> thinking of adding this to the end of the current logical volume (and,
->> again, expand the reiserfs to cover the additional space).
->> 
->> Since any file system looses performance when more than 90% full, this
->> final non-striped partition would be in a position where performance
->> would degrade anyway, and keep the raid0's in a position for full
->> performance.
->> 
->> Is that correct?
->> 
->> Sort of off-topic (not LVM related)...
->> 
->> I've got an IDE CDROM drive that I want to put on the same controller
->> as the 40GB drive.  I've been told that new UDMA drives do not have
->> the PIO performance hit associated with CDROM drives, so I should be
->> able to get full performance from my 40GB drive, even with a CDROM on
->> the same IDE controller.
->> 
->> Is that correct (or should I junk the IDE CDROM)?
->> 
->> Thanks,
->> 
->> Chris
+> > The latest LVM utils + the latest kernel works just fine on my
+> > test machine, but breaks horribly on my workstation.
+> 
+> OK, here's some more debugging output...
+
+OK, so it gets worse ...
+
+A simple (from an older kernel) vgreduce -a vg0
+removed the unused hda5 PV from the VG and now
+2.4.0-prerelease boots fine and vgscan no longer
+segfaults...
+
+But when I type (with the IOP10 tools) the following
+all hell breaks loose:
+
+# vgextend vg0 /dev/hda5    (the previously removed PV)
+
+The oops is below.
+
+regards,
+
+Rik
+--
+Hollywood goes for world dumbination,
+	Trailer at 11.
+
+		http://www.surriel.com/
+http://www.conectiva.com/	http://distro.conectiva.com.br/
+
+
+Jan  4 19:54:29 duckman kernel: Unable to handle kernel NULL pointer dereference at virtual address 0000002c
+Jan  4 19:54:29 duckman kernel:  printing eip:
+Jan  4 19:54:29 duckman kernel: c01bf477
+Jan  4 19:54:29 duckman kernel: *pde = 00000000
+Jan  4 19:54:29 duckman kernel: Oops: 0000
+Jan  4 19:54:29 duckman kernel: CPU:    0
+Jan  4 19:54:29 duckman kernel: EIP:    0010:[lvm_do_create_proc_entry_of_pv+27/104]
+Jan  4 19:54:29 duckman kernel: EFLAGS: 00010246
+Jan  4 19:54:29 duckman kernel: eax: 00002f2f   ebx: 00000000   ecx: 00000000   edx: 0000002f
+Jan  4 19:54:29 duckman kernel: esi: 0000002c   edi: 0000002c   ebp: 00000000   esp: c7bd1d88
+Jan  4 19:54:29 duckman kernel: ds: 0018   es: 0018   ss: 0018
+Jan  4 19:54:29 duckman kernel: Process vgextend (pid: 1092, stackpage=c7bd1000)
+Jan  4 19:54:29 duckman kernel: Stack: 00000000 cbc71000 0806a520 cbc71000 cbc71000 c01bd382 cbc71000 00000000 
+Jan  4 19:54:29 duckman kernel:        0806a520 cbc71000 00000002 4004fe03 c02b8620 c01bae7b cbc71000 0806a520 
+Jan  4 19:54:29 duckman kernel:        c8b23a80 0806a520 4004fe03 00000004 cbe3af40 00006a45 00000282 0806a520 
+Jan  4 19:54:29 duckman kernel: Call Trace: [lvm_do_vg_extend+86/168] [lvm_chr_ioctl+691/1660] [timer_bug_msg+31680/32576] [handle_mm_fault+269/392] [inactive_shortage+44/64] [__find_get_page+58/132] [filemap_nopage+171/1444] 
+Jan  4 19:54:29 duckman kernel:        [do_no_page+77/192] [dput+25/356] [permission+151/160] [chrdev_open+103/172] [dentry_open+192/344] [filp_open+74/84] [sys_ioctl+464/548] [system_call+55/64] 
+Jan  4 19:54:29 duckman kernel: Code: ac 38 e0 75 03 8d 6e ff 84 c0 75 f4 89 ea 85 d2 75 07 89 fa 
