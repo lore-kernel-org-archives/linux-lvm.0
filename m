@@ -1,10 +1,10 @@
-Return-Path: <prj@multivac.cwru.edu>
-Subject: Re: [linux-lvm] expanding physical disks
-References: <200106130710.f5D7AhaX005430@webber.adilger.int>
-From: Paul Jarc <prj@po.cwru.edu>
-Date: 13 Jun 2001 13:22:26 -0400
-In-Reply-To: <200106130710.f5D7AhaX005430@webber.adilger.int> (Andreas Dilger's message of "Wed, 13 Jun 2001 01:10:42 -0600 (MDT)")
-Message-ID: <m3ofrsguqf.fsf@multivac.cwru.edu>
+Return-Path: <tandem@dnmi.no>
+Subject: Re: [linux-lvm] logical volumes extending beyond 1 machine
+References: <B51F0C636E578A4E832D3958690CD73E0130BF3B@es04snlnt>
+From: Adrian Phillips <a.phillips@dnmi.no>
+Date: 14 Jun 2001 07:25:49 +0200
+In-Reply-To: "Diehl, Jeffrey"'s message of "Thu, 7 Jun 2001 15:40:52 -0600"
+Message-ID: <wvelsnd44i.fsf@freeze.oslo.dnmi.no>
 MIME-Version: 1.0
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
@@ -21,26 +21,22 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Andreas Dilger <adilger@turbolinux.com> writes:
-> Brian Murrell writes:
->> How does LVM deal with physical disks that can get bigger or smaller,
->> such as a hardware RAID device?
-> 
-> Doesn't work at this time.  LVM will only see what was originally there
-> at the time pvcreate was run (or possibly vgcreate/vgextend).
+>>>>> "Mike" == Diehl, Jeffrey <jdiehl@sandia.gov> writes:
 
-But it won't do any harm either, right?
+    Mike> Actually, I think hew as refering to MFS (mosix fs).
+    Mike> Unfortunately, this probably won't work since it's not
+    Mike> really a block device, it's much more like an nfs mount.
+    Mike> I've been watching this thread and have yet to see anyone
+    Mike> answere if a network block device would work.  I think it
+    Mike> would be neat...
 
-> If the new PEs don't all fit into the padding space (it may happen if
-> your starting PV size is just a couple hundred kB over n * PE size),
-> then you will need to pvmove PE0 from its current location to somewhere
-> else in the VG, and then renumber all of the PEs on that PV as (PE# - 1).
-> That couble be ugly because I believe the PE number is stored in the
-> snapshot tables and such.
+You mean running LVM through ENBD, for example ?
 
-Since this is a case of making the PV bigger, all the PEs could simply
-be shifted by one; there is, after all, more room at the end now.
-That would still be ugly, though.
+Sincerely,
 
+Adrian Phillips
 
-paul
+-- 
+Your mouse has moved.
+Windows NT must be restarted for the change to take effect.
+Reboot now?  [OK]
