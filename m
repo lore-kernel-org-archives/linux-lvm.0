@@ -1,10 +1,10 @@
 Return-Path: <thornber@btconnect.com>
-Date: Sun, 22 Apr 2001 12:52:26 +0100
-Message-ID: <20010422125226.A10274@66bassett.freeserve.co.uk>
+Date: Sun, 22 Apr 2001 13:09:24 +0100
+Message-ID: <20010422130924.A10390@66bassett.freeserve.co.uk>
 Mime-Version: 1.0
 Content-Disposition: inline
 From: Joe Thornber <thornber@btconnect.com>
-Subject: [linux-lvm] Split patch sets for beta[345]
+Subject: [linux-lvm] What have snapshots got to do with LVM ?
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -20,31 +20,17 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com, linux-openlvm@nl.linux.org
 
-Hi,
+Just a random Sunday morning thought:
 
-If you look at the URL below you will find the small patch sets that
-I've been working on over the weekend.
+Why don't we split snapshots off into their own driver so we can
+snapshot any block device, putting the COW tables on any other block
+device ?  
 
-The 2.4.3 patches were generated automatically by repeatedly patching
-the LVM tarball, building a 2.4.3 patch, applying said patch and then
-diffing.  The results look correct but I haven't tested them - yell
-if you see something wrong.
+We would need to add a per device hook like 'make_request' to the kernel
+(rather than per driver).
 
-Could people please mail one of the LVM lists (I don't care which you
-use) if they see anything they don't like.  I will add links to any
-specific patch discussions so Alan and Linus can quickly come up to
-speed on what the LVM community thinks of them (the patches).
+I think it would simplify both LVM and the snapshot code (which at the
+moment knows too much about physical extents etc.).
 
-The remaining patch sets should appear over the next day or so.
 
-A similar page containing all patches submitted to the mailing lists
-will also appear shortly.
-
-I hope this makes a good start in correcting Sistina's errors in the
-management of LVM.
-
-http://www.thornber1.co.uk/kernel_patches/kernel_patches.html
-
-No doubt this page will move to www.sistina.com at some point.
-
-- Joe Thornber
+- Joe
