@@ -1,10 +1,11 @@
-Return-Path: <adilger@turbolinux.com>
-From: Andreas Dilger <adilger@turbolinux.com>
-Message-Id: <200104050018.f350Iu910698@webber.adilger.int>
-Subject: Re: [linux-lvm] alpha 2.4.2 + 0.9.1_beta6
-In-Reply-To: <3ACB0FED.C7F0668F@lmt.lv> from Andrejs Dubovskis at "Apr 4, 2001
- 03:13:33 pm"
-Date: Wed, 4 Apr 2001 18:18:56 -0600 (MDT)
+Return-Path: <uther@centershop.com.br>
+Message-ID: <008001c0bec4$0ee0b9d0$0500a8c0@centerjuli0>
+From: "Uther" <uther@centershop.com.br>
+Date: Fri, 6 Apr 2001 11:04:43 -0700
+MIME-Version: 1.0
+Content-Type: multipart/alternative;
+	boundary="----=_NextPart_000_007D_01C0BE89.620AB600"
+Subject: [linux-lvm] ERROR on LVM
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,50 +17,44 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Andrejs Dubovskis writes:
-> unfortunately, for my environment LVM subsystem does not look stable.
-> AlphaServer AS400
-> Redhat 7.0
-> 2.4.2 + LVM 0.9.1_beta6
-> 2 SCSI disk
-> 
-> pvcreate /dev/sda1
-> pvcreate /dev/sdb2
-> vgcreate vg01 /dev/sda1 /dev/sdb2
-> lvcreate -i 2 -I 8 -l 2040 -n sms vg01
-> mke2fs -m 0 /dev/vg01/sms
-> 
-> All test was done in single mode (no network, users, daemons, etc).
-> 
-> boot system in single mode 
-> 
-> vgchange -a y
-> mount /dev/vg01/sms /opt
-> dd if=/dev/zero of=/opt/1 count=10000
-> dd if=/dev/zero of=/opt/2 count=100000
-> dd if=/dev/zero of=/opt/3 count=1000000
-> (dd commands' count every next boot may be different)
-> Got kernel panic in interrupt handle.
+This is a multi-part message in MIME format.
 
-Sorry, can't help you if you don't include ksymoops output (or at least
-some more specific problem description).
+------=_NextPart_000_007D_01C0BE89.620AB600
+Content-Type: text/plain;
+	charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 
-> vgchange -a y 
-> Got kernel panic in interrupt handle (not reproducible at next boot).
+Hi ...
+I am using LVM on linus 2.4.3-ac3
+I get the following err when trying  vgcreate test /dev/hda3
+vgcreate -- ERROR "Invalid Argument" creating VGDA for volume group =
+"test" in kernel
+Can u help ?
 
-Need ksymoops info as well.  I don't have any non-ix86 systems to test on,
-but at least we should be able to narrow down the problem a bit.  Note
-that Andrea Arcangeli does test LVM on Alpha, so I'm surprised there are
-major problems.  However, it may be that he has Alpha-specific patches
-in his LVM code that are not in the standard LVM sources.
+------=_NextPart_000_007D_01C0BE89.620AB600
+Content-Type: text/html;
+	charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 
-Cheers, Andreas
--- 
-Andreas Dilger  \ "If a man ate a pound of pasta and a pound of antipasto,
-                 \  would they cancel out, leaving him still hungry?"
-http://www-mddsp.enel.ucalgary.ca/People/adilger/               -- Dogbert
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML><HEAD>
+<META http-equiv=3DContent-Type content=3D"text/html; =
+charset=3Diso-8859-1">
+<META content=3D"MSHTML 6.00.2462.0" name=3DGENERATOR>
+<STYLE></STYLE>
+</HEAD>
+<BODY bgColor=3D#ffffff>
+<DIV><FONT face=3DArial size=3D2>Hi ...</FONT></DIV>
+<DIV><FONT face=3DArial size=3D2>I am using LVM on linus =
+2.4.3-ac3</FONT></DIV>
+<DIV><FONT face=3DArial size=3D2>I get the following err when =
+trying&nbsp; vgcreate=20
+test /dev/hda3</FONT></DIV>
+<DIV><FONT face=3DArial size=3D2>vgcreate -- ERROR "Invalid Argument" =
+creating VGDA=20
+for volume group "test" in kernel</FONT></DIV>
+<DIV><FONT face=3DArial size=3D2>Can u help ?</FONT></DIV></BODY></HTML>
+
+------=_NextPart_000_007D_01C0BE89.620AB600--
