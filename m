@@ -1,12 +1,11 @@
-Return-Path: <patrick@tykepenguin.cix.co.uk>
-Date: Wed, 7 Feb 2001 13:45:49 +0000
-From: Patrick Caulfield <caulfield@sistina.com>
-Subject: Re: [linux-lvm] lvm buglet in 0.9.1_beta
-Message-ID: <20010207134549.E525@tykepenguin.com>
-References: <20010206093700.A528@tykepenguin.com> <200102070845.f178jXs23806@webber.adilger.net>
+Return-Path: <root@srv.sistina.com>
+Date: Wed, 7 Feb 2001 15:23:43 +0000
+From: "Heinz J. Mauelshagen" <Mauelshagen@sistina.com>
+Subject: Re: [linux-lvm] I can't add other disk in lvm system
+Message-ID: <20010207152343.O8914@srv.sistina.com>
+References: <NDBBIPFGCOKBKKOFONLLEEMMCCAA.jcarles@dtic.ua.es>
 Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <200102070845.f178jXs23806@webber.adilger.net>; from adilger@turbolinux.com on Wed, Feb 07, 2001 at 01:45:32AM -0700
+In-Reply-To: <NDBBIPFGCOKBKKOFONLLEEMMCCAA.jcarles@dtic.ua.es>; from jcarles@dtic.ua.es on Wed, Feb 07, 2001 at 01:49:27PM +0100
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -22,31 +21,73 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Wed, Feb 07, 2001 at 01:45:32AM -0700, Andreas Dilger wrote:
-> Patrick Caulfield writes:
-> > It probably just needs COMPAQ_SMART2_MAJOR (& COMPAQ_SMART_MAJOR[1-7])
-> > adding into the list in lvm_check_partitioned_dev.c. It's already in
-> > lvm_check_dev.c so I suspect it's just an oversight.
+Hi Joan,
+
+you seem to have an older LVM version which unfortunatly had that bug.
+
+Please get the recent LVM software from www.sistina.com and follow the
+steps in the INSTALL file in order to get it up and running.
+
+Then you should be able to do "vgextend -v vm0 /dev/hdc1" successfully.
+
+
+On Wed, Feb 07, 2001 at 01:49:27PM +0100, Joan Carles Monllor wrote:
 > 
-> It may not be exactly this.  AFAIK, when we call lvm_check_partitioned_dev()
-> when we are scanning disks, I think this determines if LVM will start doing
-> the gross DOS partition stuff.  Is it the case with these COMPAQ devices
-> that they use DOS partitions?
+> 	Hello, I am new in this mailing list. And, I am new in lvm system too.
+> 
+> 	My problem is:
+> 
+> 	I have create a logical volume, correctly. And, I want to add other disk to
+> logical volum.
+> 
+> 	I already have create a volumen group named "vm0".
+> 
+> 	I think that I have run "vgextend -v vm0 /dev/hdc1", for exemple.
+> 
+> 	Then display this:
+> 
+> vgextend -- INFO: maximum logical volume size is 255.99 Gigabyte
+> Unable to handle kernel NULL pointer dereference at virtual address 0000002c
+>  printing eip:
+> c01ecd4f
+> *pde = 00000000
+> Oops: 0000
+> CPU:    0
+> EIP:    0010:[<c01ecd4f>]
+> EFLAGS: 00010282
+> ....
+> ....
+> .
+> .
+> .
+> Segment violation
+> 
+> 	The problem is in mine or in the kernel or the lvm tools ?
+> 
+> 		thanks for your help in avanced.
+> 
+> Joan Carles Monllor
+> Universitat d'ALacant
+> jcarles@dtic.ua.es        Tel. 965903681
+> Spain                     Fax 965903902
+> 
 
-I'm not sure - that's why I asked the user to test it for me! Anyway you can
-partition any block device you like - or even a file :-)
- 
-> IMHO, it should be possible (CONFIG_ flag or so) to simply turn off LVM
-> partition grubbing, and stick with what we get from /proc/partitions and
-> /dev scanning.  The only reason we do this, AFAIK, is to check the LVM
-> partition type in DOS partition table, but it causes bug reports too.
 
-We have some half-formed plans here.
- 
-> In any case, while you are in there, can you add COMPAQ_CISS_MAJOR + [1-7]
-> also.  This is basically the same thing as COMPAQ_SMART_MAJOR.  It will
-> avoid yet another similar bug report on this in the future.
 
-OK.
+-- 
 
-patrick
+Regards,
+Heinz    -- The LVM Guy --
+
+*** Software bugs are stupid.
+    Nevertheless it needs not so stupid people to solve them ***
+
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+Heinz Mauelshagen                                 Sistina Software Inc.
+Senior Consultant/Developer                       Am Sonnenhang 11
+                                                  56242 Marienrachdorf
+                                                  Germany
+Mauelshagen@Sistina.com                           +49 2626 141200
+                                                       FAX 924446
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
