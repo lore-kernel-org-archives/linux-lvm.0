@@ -1,18 +1,15 @@
-Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id i8G0asr32644
-	for <linux-lvm@redhat.com>; Wed, 15 Sep 2004 20:36:54 -0400
-Received: from homer.hilling.de (homer.hilling.de [62.8.210.228])
-	by mx1.redhat.com (8.12.11/8.12.10) with ESMTP id i8G0arbC009100
-	for <linux-lvm@redhat.com>; Wed, 15 Sep 2004 20:36:53 -0400
-Received: from [62.8.210.226] (nelson.hilling.de [62.8.210.226])
-	by homer.hilling.de (Postfix) with ESMTP id EC6FDA74C3
-	for <linux-lvm@redhat.com>; Thu, 16 Sep 2004 02:38:41 +0200 (CEST)
-From: Gunnar Hilling <fedora.gunnar@hilling.de>
-Date: Thu, 16 Sep 2004 02:36:47 +0200
-Message-Id: <1095295007.4750.8.camel@nelson.hilling.de>
+Received: from agk.surrey.redhat.com (agk.surrey.redhat.com [172.16.10.74])
+	by pobox.surrey.redhat.com (8.12.8/8.12.8) with ESMTP id i8GDFrrI027720
+	for <linux-lvm@redhat.com>; Thu, 16 Sep 2004 14:15:53 +0100
+Received: from agk by agk.surrey.redhat.com with local (Exim 4.34)
+	id 1C7w77-0005KO-V3
+	for linux-lvm@redhat.com; Thu, 16 Sep 2004 14:15:53 +0100
+Date: Thu, 16 Sep 2004 14:15:53 +0100
+From: Alasdair G Kergon <agk@redhat.com>
+Message-ID: <20040916131553.GM21624@agk.surrey.redhat.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] snapshot on 6.8.5/FC development
+Content-Disposition: inline
+Subject: [linux-lvm] LVM2 Release 2.00.23
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -24,39 +21,42 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@redhat.com
 
-Hello,
+      ftp://sources.redhat.com/pub/lvm2/LVM2.2.00.23.tgz
+      http://sources.redhat.com/lvm2/
 
-I just tried the lvm2/dm-snapshot feature and failed miserably...
-After reading some older postings in this and the dm-devel mailing lists
-I'm not sure what to do:
+Version 2.00.23 - 15th September 2004
+=====================================
+  Export dm name build & split functions.
+  Use O_NOATIME on devices if available.
+  Write log message when each segtype/format gets initialised.
+  New commands 'segtypes' and 'formats'.
+  Suppress pvmove abort message in test mode.
+  Improve pvcreate/remove device not found error message.
+  Allow pvmove to move data within the same PV.
+  Describe how pvmove works on man page.
+  Test for incompatible format/segtype combinations in lv_extend.
+  Fix lvchange example on man page.
+                                                                                
+Version 2.00.22 - 3rd September 2004
+====================================
+  Fix /dev/vgname perms.
+  Restructure xlate.h.
+  Add clvmd man page.
 
-setup:
-lvm2-2.0.21
-kernel-2.6.8
-xfs
-
-VG-Size: 4G on Raid-Mirror (/dev/md1)
-LV-Size: 1G
-
-Calling:
-
-lvcreate --snapshot --size 100m --name snap /dev/TestMirrorGroup/OnlineVol
-
-will block forever. I have to reboot the computer. After
-that /dev/TestMirrorGroup/snap is there...
-
-I froze xfs before (xfs_freeze -f)
-
-Any Clue? Is this related to xfs-FS only or do there exist general
-problems (I read somewhere about problems snapshotting raids...)
-
-BTW: Why isn't it possible to create the snapshot on another VG than the
-original. This would be quite nice becauce in a typical setup it could
-be an advantate to have the snapshot on a small extra disk, keeping the
-original data separated from the writes to the snapshot.
-
-Any help appreciated,
-
--Gunnar
+Version 2.00.21 - 19th August 2004
+==================================
+  Update cnxman-socket.h from cman.
+  Recognise iseries/vd devices.
+  Use 'make install_cluster' to install cluster extensions only.
+  Cope with DT_UNKNOWN in sysfs.
+  Fix extents_moved metadata size comment.
+  Remove duplicate line in pvremove help text.
+  Support variable mirror region size.
+  Support PE ranges in pvmove source PV.
+  Fixes to as-yet-unused LV segment splitting code.
+  Change alloc_areas to pe_ranges and allow suppression of availability checks.
+  Add dev_size column to pvs.
+  Add report columns for in-kernel device number.
