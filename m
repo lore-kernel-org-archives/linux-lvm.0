@@ -1,10 +1,10 @@
-Date: Mon, 10 Sep 2001 13:29:44 +0200
+Date: Mon, 10 Sep 2001 13:31:17 +0200
 From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
 Subject: Re: [linux-lvm] Root on LV
-Message-ID: <20010910132944.H31313@sistina.com>
-References: <OF44ABFE07.4419EBD8-ONC1256ABF.004C8662@ibcnet.hu> <3B978B57.8000208@st-peter.stw.uni-erlangen.de> <20010906093729.R32553@turbolinux.com>
+Message-ID: <20010910133117.I31313@sistina.com>
+References: <OF44ABFE07.4419EBD8-ONC1256ABF.004C8662@ibcnet.hu> <20010906161011.B10735@gatekeeper.osp.nl>
 Mime-Version: 1.0
-In-Reply-To: <20010906093729.R32553@turbolinux.com>; from adilger@turbolabs.com on Thu, Sep 06, 2001 at 09:37:29AM -0600
+In-Reply-To: <20010906161011.B10735@gatekeeper.osp.nl>; from josv@osp.nl on Thu, Sep 06, 2001 at 04:10:11PM +0200
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -20,54 +20,63 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Thu, Sep 06, 2001 at 09:37:29AM -0600, Andreas Dilger wrote:
-> On Sep 06, 2001  16:42 +0200, svetljo wrote:
-> > it probably will hold the kernel also
-> > and as far i know there is no bootloader which can access logical volume
-> > am i wrong
+On Thu, Sep 06, 2001 at 04:10:11PM +0200, josv@osp.nl wrote:
+> vgscan and vgchange -a y *ARE* quite essential.
+> It is currently *not* possible to perform these two essential
+> commands in the kernel.
 > 
-> Yes, you are wrong.  LILO+patch can get a kernel from a logical volume.
-> Now that Linus has accepted my patch to fix LV_USER_BMAP from causing
-> an oops I will submit the patch to the LILO maintainer.  It can also be
-> found in the archives for this mailing list (have posted several times).
+> AFAIK that is...
 
-Congratulations that the patch is in :-)
+That's true. We will have in kernel LVM metadata read support in a
+post 1.0 version of LVM which will avoid to run userspace tools to activate
+choosen VGs at all.
 
-> 
-> > dobos_s@IBCnet.hu wrote:
-> > >My kernel has no modules.
-> > >Why should I create an ext2 partition for holding an initrd which is not
-> > >doing any essential things except vgscan and vgchange -ay ?
-> 
-> You don't need vgscan at boot time unless the disks have moved around.
-> You DO need "vgchange -a y" in order to load the LVM data into the kernel.
-> If you are running EVMS you don't need that.
-
-But you need EVMS tools which are not available fo far :-(
-
-> I think this is also on the
-> TODO list for the next LVM version.
-
-Yes, for one of the next versions ;-)
+Regards,
+Heinz    -- The LVM Guy --
 
 > 
-> Cheers, Andreas
+> ++Jos
+> 
+> And thus it came to pass that dobos_s@IBCnet.hu wrote:
+> (on Thu, Sep 06, 2001 at 04:03:49PM +0200 to be exact)
+> 
+> > Hi!
+> > 
+> > I cannot understand something.
+> > My kernel has no modules.
+> > Why should I create an ext2 partition for holding an initrd which is not
+> > doing any essential things except vgscan and vgchange -ay ?
+> > Why cant these things built into the kernel?
+> > 
+> > Maybe I didnt understand something...
+> > 
+> > 
+> > Please CC to me, because I am not member on list...
+> > 
+> > Thanks
+> > 
+> > 
+> > Dobos Sandor
+> > IBCnet Hungary Ltd.
+> > 
+> > 
+> > 
+> > 
+> > 
+> > _______________________________________________
+> > linux-lvm mailing list
+> > linux-lvm@sistina.com
+> > http://lists.sistina.com/mailman/listinfo/linux-lvm
+> > read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
+> 
 > -- 
-> Andreas Dilger  \ "If a man ate a pound of pasta and a pound of antipasto,
->                  \  would they cancel out, leaving him still hungry?"
-> http://www-mddsp.enel.ucalgary.ca/People/adilger/               -- Dogbert
-> 
+> Klingon coding rule #12: "Specifications are for the weak and timid!"
 > 
 > _______________________________________________
 > linux-lvm mailing list
 > linux-lvm@sistina.com
 > http://lists.sistina.com/mailman/listinfo/linux-lvm
 > read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
-
--- 
-
-Regards,
-Heinz    -- The LVM Guy --
 
 *** Software bugs are stupid.
     Nevertheless it needs not so stupid people to solve them ***
