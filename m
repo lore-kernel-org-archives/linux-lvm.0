@@ -1,10 +1,11 @@
 From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] Patch for /proc (NOT a bug fix)
-Message-Id: <20020506123345.C26606@sistina.com>
-References: <2D0AFEFEE711D611923E009027D39F2B02F141@cdserv.meridian-data.com>
+Subject: Re: [linux-lvm] Extend/Reduce snapshot not updating VG's used PE
+    count.
+Message-Id: <20020506153334.D26606@sistina.com>
+References: <2D0AFEFEE711D611923E009027D39F2B02F13F@cdserv.meridian-data.com>
 MIME-Version: 1.0
-In-Reply-To: <2D0AFEFEE711D611923E009027D39F2B02F141@cdserv.meridian-data.com>;
-    from dstephenson@snapserver.com on Wed, May 01, 2002 at 12:34:34PM -0700
+In-Reply-To: <2D0AFEFEE711D611923E009027D39F2B02F13F@cdserv.meridian-data.com>;
+    from dstephenson@snapserver.com on Wed, May 01, 2002 at 07:55:04AM -0700
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,7 +16,7 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon May  6 05:33:02 2002
+Date: Mon May  6 08:33:02 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
@@ -23,60 +24,58 @@ To: linux-lvm@sistina.com
 
 Dale,
 
-thanks for offering your patches.
+have integrated this one and probably found the bug for the wrong PE count
+after reboot (VG reactivation) as well.
 
-Was away second half of last week and will have a look at them today.
+Testing now. Soon to be in CVS.
 
 Regards,
 Heinz    -- The LVM Guy --
 
 
-On Wed, May 01, 2002 at 12:34:34PM -0700, Stephenson, Dale wrote:
-> This patch doesn't attempt to solve any bugs.  I just wanted to get more
-> useful information about snapshots from /proc -- little things like the
-> snapshots' actual size, what volume is its source, and how much of its space
-> it has used.  Yes, all this information is available from /sbin/lvdisplay
-> (except for the *real* allocated LE, which you have to figure by hand).  But
-> I like using /proc.
+On Wed, May 01, 2002 at 07:55:04AM -0700, Stephenson, Dale wrote:
+> I've noticed that extending or reducing a snapshot doesn't seem to affect
+> the used PE count of its volume group (as shown in places like
+> /proc/lvm/global).  I haven't noticed any particular ill effects, but it is
+> disconcerting.
 > 
-> I put the extra (conditional) lines before the "device:" line because the
-> optional stripesize line was already there.
+> The PE count for the PV *is* updated.  Strangely, after reboot (at least
+> with lvm 1.0.3) the PE count for the PV does not include PEs used by
+> snapshots.  As soon as a single snapshot is created, removed, extended, or
+> reduced, it becomes correct again.  Again, I haven't noticed any particular
+> ill effects.
 > 
-> I'd like to fit the snapshot/snapshot-source bit into the status bits in
-> /proc/lvm/global too, but I haven't done it yet.
+> Following is a patch that solves the first problem (but not the second) for
+> lvm 1.0.3.  Looking at current CVS, I believe the problem still exists.  The
+> first portion of the patch adjusts vg's pe_allocated field in
+> __extend_reduce_snapshot().  The second portion of the patch updates the
+> snapshot's lv_allocated_snapshot_le field to be correct after a resize in
+> lvm_do_lv_extend_reduce().  No user space changes are required.
 > 
 > Dale J. Stephenson
 > steph@snapserver.com
 > 
-> --- linux/drivers/md/lvm-fs.c.orig	Mon Apr 22 12:14:59 2002
-> +++ linux/drivers/md/lvm-fs.c	Mon Apr 22 13:44:03 2002
-> @@ -285,6 +285,26 @@
->  		sz += sprintf(page + sz, "stripesize:   %u\n",
->  			      lv->lv_stripesize);
+> --- linux/drivers/md/lvm.c.orig	Mon Apr 29 08:50:41 2002
+> +++ linux/drivers/md/lvm.c	Mon Apr 29 12:41:29 2002
+> @@ -2280,6 +2280,9 @@
+>  		return -ENOMEM;
 >  	}
-> +	if (lv->lv_access & LV_SNAPSHOT) {
-> +		sz += sprintf(page + sz, "remap total:  %u\n",
-> +			      lv->lv_remap_end * lv->lv_chunk_size / 2);
-> +		sz += sprintf(page + sz, "remap used:   %u\n",
-> +			      lv->lv_remap_ptr * lv->lv_chunk_size / 2);
-> +		sz += sprintf(page + sz, "snapshot LE:  %u\n",
-> +			      lv->lv_allocated_snapshot_le);
-> +		if (lv->lv_snapshot_org != NULL) {
-> +			sz += sprintf(page + sz, "source:       %s\n",
-> +				      lv->lv_snapshot_org->lv_name);
-> +		}
-> +	}
-> +	if (lv->lv_access & LV_SNAPSHOT_ORG) {
-> +		lv_t *lvp = lv->lv_snapshot_next;
-> +		while (lvp != NULL) {
-> +			sz += sprintf(page + sz, "source of:    %s\n",
-> +				      lvp->lv_name);
-> +			lvp = lvp->lv_snapshot_next;
-> +		}
-> +	}
->  	sz += sprintf(page + sz, "device:       %02u:%02u\n",
->  		      MAJOR(lv->lv_dev), MINOR(lv->lv_dev));
 >  
+> +	vg_ptr->pe_allocated -= old_lv->lv_allocated_snapshot_le;
+> +	vg_ptr->pe_allocated += new_lv->lv_allocated_le;
+> +
+>  	return 0;
+>  }
+>  
+> @@ -2409,6 +2412,8 @@
+>  
+>  		vfree(old_lv->lv_block_exception);
+>  		vfree(old_lv->lv_snapshot_hash_table);
+> +		old_lv->lv_allocated_snapshot_le = 
+> +			new_lv->lv_allocated_le;
+>  		old_lv->lv_remap_end = new_lv->lv_remap_end;
+>  		old_lv->lv_block_exception = new_lv->lv_block_exception;
+>  		old_lv->lv_snapshot_hash_table =
 > 
 > _______________________________________________
 > linux-lvm mailing list
