@@ -1,7 +1,8 @@
-Message-ID: <8F120FA493CAD743B30EEB8F356985B501A78136@AUSXMBT102VS1.amer.dell.com>
-From: Robert_Macaulay@Dell.com
-Subject: RE: [linux-lvm] lvcreate segfaults
-Date: Fri, 7 Sep 2001 10:59:44 -0500 
+Date: Fri, 7 Sep 2001 11:05:34 -0500 (EST)
+From: John Marquart <jomarqua@indiana.edu>
+Subject: Re: [linux-lvm] lvcreate segfaults
+In-Reply-To: <20010906073254.A10735@sistina.com>
+Message-ID: <Pine.A41.4.21.0109071104190.38880-100000@gigue.dlib.indiana.edu>
 MIME-Version: 1.0
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
@@ -14,63 +15,61 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: TEXT/PLAIN; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-I'm having the same problem as well. gdb on the core file shows
+Thanks AJ,
+	Me and my trusty ddd had figured out the same thing - that an
+extra printf inserted into the function fixed it.  It is a darn weird bug
+though.
+	Thanks for the link - made a much nicer cleaner patch then my
+own. :)
 
- lv_create (vg=0xb, lv=0xbffffab4,
-    lv_name=0xbffffae4
-"uuy?\003uy?(uy?Guy?iuy?suy?6?y?U?y?o?y?\204?y?\233?y?|?y?E?y?O?y???y?i?y?u?
-y?\nyy?\eyy?)yy?4yy??yy?Eyy?Uyy?") at lv_create_remove.c:42
-42      inline int lv_create ( vg_t *vg, lv_t *lv, char *lv_name) {
+-john
 
-I haven't changed the inlines yet since it's a production system, and it
-didn't seem to help for John
 
-> -----Original Message-----
-> From: John Marquart [mailto:jomarqua@indiana.edu]
-> Sent: Wednesday, September 05, 2001 5:42 PM
-> To: linux-lvm@sistina.com
-> Subject: Re: [linux-lvm] lvcreate segfaults
+On Thu, 6 Sep 2001, AJ Lewis wrote:
+
+> On Thu, Sep 06, 2001 at 09:00:25AM +0100, Joe Thornber wrote:
+> > On Wed, Sep 05, 2001 at 03:37:03PM -0500, AJ Lewis wrote:
+> > > On Wed, Sep 05, 2001 at 01:32:34PM -0500, John Marquart wrote:
+> > > > 	I am running LVM 1.0.1rc2 on  2.4.8 kernel ontop of a IBM
+> > > > Serverraid 4Mx RAID5 filesystem.  I am trying to create a new lv using
+> > > > "lvcreate -n foo -L 4M rootvg" - however that command insists on giving me
+> > > > a segfault.  
+> > > 
+> > > Here is a patch that should fix this problem.  It has already been applied
+> > > to the CVS.  just save this to a file and apply it to the 1.0.1-rc2 source
+> > > with the -p0 flag after cd'ing to the 1.0.1-rc2 directory.
+> > 
+> > I don't think this patch fixes it, it's just a tidy up.
 > 
+> Hmm...was looking at this:
+> http://lists.sistina.com/pipermail/lvm-devel/2001-September/000637.html
 > 
-> Alas alas,
->         This patch seemed to have changed the problem mroe 
-> then anything
-> else.
->  
-> I am still getting segfaults - however this time in a different place.
->  
-> (from gdb ./lvcreate w/ set args = rootvg -L4M -nfoo):
-> -----
-> Starting program: /usr/src/LVM/1.0.1-rc2/./tools/lvcreate rootvg -L4M
-> -nfoo
->  
-> Program received signal SIGSEGV, Segmentation fault. 
-> lv_create (vg=0x4,
-> lv=0xbffffae4,
->     lv_name=0xbffffaf8 "\023.Rt~A`z\217\003\021\034'") at
-> lv_create_remove.c:42
-> 42      int lv_create ( vg_t *vg, lv_t *lv, char *lv_name) {     
+> Sounded like changing the inlines fixed the seg-fault for this guy.  
 > 
-> -----
+> John,
+> you could also try the patch referred to from that e-mail, but it doesn't
+> sound like it's the same problem i guess...
 > 
-> As far as I can tell - the only significant difference 
-> between this putput
-> and the pre-patched output - is that it is now int lv_create 
-> instead of
-> inline int lv_create.
+> Regards,
+> -- 
+> AJ Lewis
+> Sistina Software Inc.                  Voice:  612-638-0500
+> 1313 5th St SE, Suite 111              Fax:    612-638-0500
+> Minneapolis, MN 55414                  E-Mail: lewis@sistina.com
+> http://www.sistina.com
 > 
-> If there is any other info I can provide - as always - please ask.
+> Current GPG fingerprint = 60F3 160D C0D5 2C4B 751B  4FF9 6F67 E9BC 44CD DE95
 > 
-> -j
+> -----Begin Obligatory Humorous Quote----------------------------------------
+> Programming graphics in X is like finding sqrt(pi) using Roman numerals.
+> -----End Obligatory Humorous Quote------------------------------------------
 > 
-> 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
-> 
+
+
+John "Jamie" Marquart		|     This message posted 100% MS free.
+Digital Library SysAdmin	|  Work: 812-856-5174   Pager: 812-334-6018
+Indiana University Libraries	|  ICQ: 1131494	 	D'net Team:  6265
