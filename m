@@ -1,10 +1,7 @@
-From: Gaziz Nugmanov <lvm@betta.gaziz.ca>
-Message-ID: <1872187134.20011030104808@betta.gaziz.ca>
-Subject: Re: [linux-lvm] Segmentation Fault with vgextend and LVM 1.0.1rc4
-In-Reply-To: <3BDE0947.7090203@gadreau.net>
-References: <3BDE0947.7090203@gadreau.net>
+Message-ID: <C9B993D4214AD511BC010002A537DFE30A8B96@acsexchweb.corp.acsalaska.com>
+From: "Nay, Shawn" <snay@acsalaska.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] vgscan / vgimport problems
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,150 +12,52 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Tue Oct 30 09:46:02 2001
+Date: Tue Oct 30 12:37:02 2001
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: Jean-Noel GADREAU <linux-lvm@sistina.com>
+Content-Transfer-Encoding: 7bit
+To: "'linux-lvm@sistina.com'" <linux-lvm@sistina.com>
 
-Hello Jean-Noel,
+I am an LVM newbie but did manage to get it up and running on a non-system
+disk.
+I rebuild my system with the same version of Linux (Redhat 7.2), the same
+kernel (2.4.9-7, which I recompiled for LVM), and the same version of LVM
+(0.9.1_beta7).  By the way...I am using an old release of LVM due to my
+inability to patch this kernel with 1.0.1-rc4.  The problem is that I am
+unable to import my old vg.  This disk has remained untouched since my
+previous install.
 
-I had similar problem so I cvs'ed latest lvm code and installed it.
+pvscan output:
+pvscan -- reading all physical volumes (this may take a while...)
+pvscan -- inactive PV "/dev/hdd"  is associated to an unknown VG (run
+vgscan)
+pvscan -- total: 1 [31.08 MB] / in use: 1 [31.08 MB] / in no VG: 0 [0]
 
-It works much smoother for me now...
+vgscan output:
+vgscan -- reading all physical volumes (this may take a while...)
+vgscan -- found inactive volume group "sundogvg"
+vgscan -- only found 0 of 5120 LEs for LV /dev/sundogvg/datalv (0)
+vgscan -- ERROR "vg_read_with_pv_and_lv(): allocated LE of LV" can't get
+data of volume group "sundogvg" from physical volume(s)
+vgscan -- ERROR "vg_read_with_pv_and_lv(): allocated LE of LV" creating
+"/etc/lvmtab" and "/etc/lvmtab.d"
 
-Hope that help.
+vgimport output:
+vgimport -- ERROR: physical volume "/dev/hdd" doesn't belong to an exported
+volume group
 
+Any help would be greatly appreciated.
 
-
-
-Monday, October 29, 2001, 8:58:31 PM, you wrote:
-
-JNG> Hi.
-
-JNG> I have a problem to extend my current volume group "vg01". I did:
-
-JNG> # pvcreate /dev/hde1 /dev/hde2
-JNG> pvcreate -- physical volume "/dev/hde1" successfully created
-JNG> pvcreate -- physical volume "/dev/hde2" successfully created
-
-JNG> # vgextend -v vg01 /dev/hde1
-JNG> vgextend -- locking logical volume manager
-JNG> vgextend -- checking volume group name "vg01"
-JNG> vgextend -- checking volume group "vg01" existence
-JNG> vgextend -- checking for inactivity of volume group
-JNG> vgextend -- reading data of volume group "vg01" from lvmtab
-JNG> vgextend -- INFO: maximum logical volume size is 255.99 Gigabyte
-JNG> vgextend -- reading data for all physical volumes from disk(s)
-JNG> vgextend -- extending VGDA structures of volume group "vg01"
-JNG> vgextend -- volume group "vg01" will be extended by 1 new physical volumes
-JNG> vgextend -- extending volume group "vg01" by physical volume "/dev/hde1" 
-JNG> in kernel
-JNG> Segmentation fault (core dumped)
-
-JNG> I am using RedHat 7.1 with a custom kernel to have LVM (2.4.9-6). I have 
-JNG> 2 drives on this IDE controller (a Promise UltraDMA100DX2) and both work 
-JNG> fine with linux. My secondary drive (/dev/hdf is already part of vg01).
-
-JNG> I don't know if this is a bug or if I am not using this correctly. I 
-JNG> could not find anything on the internet about this particular problem.
-
-JNG> For more information, I am including the results of several commands. 
-JNG> Let me know if you need more information.
-
-JNG> Thanks in advance for your help.
-JNG> Regards,
-JNG> Jean-Noel GADREAU
-
-JNG> ============================================
-
-JNG> # vgdisplay -v vg01
-JNG> --- Volume group ---
-JNG> VG Name               vg01
-JNG> VG Access             read/write
-JNG> VG Status             available/resizable
-JNG> VG #                  0
-JNG> MAX LV                256
-JNG> Cur LV                1
-JNG> Open LV               1
-JNG> MAX LV Size           255.99 GB
-JNG> Max PV                256
-JNG> Cur PV                1
-JNG> Act PV                1
-JNG> VG Size               37.27 GB
-JNG> PE Size               4.00 MB
-JNG> Total PE              9541
-JNG> Alloc PE / Size       9500 / 37.11 GB
-JNG> Free  PE / Size       41 / 164.00 MB
-JNG> VG UUID               SCcP8o-73vj-4rCl-GbTx-A0up-5GAu-BEEgVL
-
-JNG> --- Logical volume ---
-JNG> LV Name                /dev/vg01/data
-JNG> VG Name                vg01
-JNG> LV Write Access        read/write
-JNG> LV Status              available
-JNG> LV #                   1
-JNG> # open                 1
-JNG> LV Size                37.11 GB
-JNG> Current LE             9500
-JNG> Allocated LE           9500
-JNG> Allocation             next free
-JNG> Read ahead sectors     120
-JNG> Block device           58:0
-
-
-JNG> --- Physical volumes ---
-JNG> PV Name (#)           /dev/hdf1 (1)
-JNG> PV Status             available / allocatable
-JNG> Total PE / Free PE    9541 / 41
-
-JNG> =============================================
-JNG> # vgscan -v
-JNG> vgscan -- removing "/etc/lvmtab" and "/etc/lvmtab.d"
-JNG> vgscan -- creating empty "/etc/lvmtab" and "/etc/lvmtab.d"
-JNG> vgscan -- reading all physical volumes (this may take a while...)
-JNG> vgscan -- scanning for all active volume group(s) first
-JNG> vgscan -- found active volume group "vg01"
-JNG> vgscan -- reading data of volume group "vg01" from physical volume(s)
-JNG> vgscan -- inserting "vg01" into lvmtab
-JNG> vgscan -- backing up volume group "vg01"
-JNG> vgscan -- checking volume group name "vg01"
-JNG> vgscan -- checking volume group consistency of "vg01"
-JNG> vgscan -- checking existence of "/etc/lvmtab.d"
-JNG> vgscan -- storing volume group data of "vg01" in "/etc/lvmtab.d/vg01.tmp"
-JNG> vgscan -- storing physical volume data of "vg01" in "/etc/lvmtab.d/vg01.tmp"
-JNG> vgscan -- storing logical volume data of volume group "vg01" in 
-JNG> "/etc/lvmtab.d/v
-JNG> g01.tmp"
-JNG> vgscan -- renaming "/etc/lvmtab.d/vg01.tmp" to "/etc/lvmtab.d/vg01"
-JNG> vgscan -- removing special files and directory for volume group "vg01"
-JNG> vgscan -- creating directory and group character special file for "vg01"
-JNG> vgscan -- creating block device special files for vg01
-JNG> vgscan -- "/etc/lvmtab" and "/etc/lvmtab.d" successfully created
-JNG> vgscan -- WARNING: This program does not do a VGDA backup of your volume 
-JNG> group
-
-JNG> =============================================
-JNG> # pvscan -v
-JNG> pvscan -- reading all physical volumes (this may take a while...)
-JNG> pvscan -- walking through all physical volumes found
-JNG> pvscan -- inactive PV "/dev/hde1" is in no VG  [18.64 GB]
-JNG> pvscan -- inactive PV "/dev/hde2" is in no VG  [18.64 GB]
-JNG> pvscan -- ACTIVE   PV "/dev/hdf1" of VG "vg01" [37.27 GB / 164.00 MB free]
-JNG> pvscan -- total: 3 [74.56 GB] / in use: 1 [37.27 GB] / in no VG: 2 
-JNG> [37.29 GB]
+Shawn
 
 
 
 
-
-JNG> _______________________________________________
-JNG> linux-lvm mailing list
-JNG> linux-lvm@sistina.com
-JNG> http://lists.sistina.com/mailman/listinfo/linux-lvm
-JNG> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
-
-
-
--- 
-Best regards,
- Gaziz                            mailto:lvm@betta.gaziz.ca
+This transmittal may contain confidential information intended solely for
+the addressee. If you are not the intended recipient, you are hereby
+notified that you have received this transmittal in error; any review,
+dissemination, distribution or copying of this transmittal is strictly
+prohibited. If you have received this communication in error, please notify
+us immediately by reply or by telephone (collect at 907-564-1000) and ask to
+speak with the message sender. In addition, please immediately delete this
+message and all attachments. Thank you.
