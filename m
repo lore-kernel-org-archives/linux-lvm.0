@@ -1,10 +1,7 @@
-From: Christian Hammers <ch@westend.com>
-Message-Id: <20020209161547.GA16631@westend.com>
-References: <20020209150809.GC28694@westend.com>
+From: "Sean C. McCord" <lvm@lifelabs.net>
+Message-Id: <Pine.LNX.4.33L0.0202091613040.16109-100000@fcofer2>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20020209150809.GC28694@westend.com>
-Subject: [linux-lvm] SOLUTION: error moving last PE away
+Subject: [linux-lvm] VG has wrong num of PV's; won't vgscan
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,45 +12,37 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Sat Feb  9 10:16:02 2002
+Date: Sat Feb  9 15:28:03 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: TEXT/PLAIN; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: Linux-LVM@sistina.com
+To: linux-lvm@sistina.com
 
-On Sat, Feb 09, 2002 at 04:08:09PM +0100, Christian Hammers wrote:
-> # pvmove   -v   /dev/hda10  /dev/hda8
-> ...
-> pvmove -- /dev/hda10 [PE 999 [lvol5 [LE 1365]] -> /dev/hda8 [PE 560] [1/1]
-> pvmove -- ERROR reading input physical volume "/dev/hda10" (still 65536
-> bytes to read)
-> pvmove -- ERROR "pv_move_pe(): read input PV" pv_move_pe
-> pvmove -- ERROR "pv_move_pe(): read input PV" moving physical extents
+I was attempting to add another PV to my VG 'mccord', and vgextend
+segfaulted in the middle.  After I rebooted (the kernel dumped its LVM
+core), there was no volume group found by vgscan.
 
-A friend gave me the hint to enlarge the partition by one block. It helped,
-after rebooting to let the kernel reload the partition table, pvmove ran
-successfully.
+I have seen similar posts in the archives, but most of them reference a
+bug that was supposedly fixed before LVM 1.0, so this must not be it.
 
-The partition in question looked like:
-$ LC_ALL=C fdisk -l
+Anyway, pvdisplay on /dev/ide/host0/bus1/target0/lun0/part1 says
+everythings's great, and that it is PV #1 of VG mccord.
 
-Disk /dev/hda: 255 heads, 63 sectors, 4867 cylinders
-Units = cylinders of 16065 * 512 bytes
+pvdata says VG mccord has two PVs and that both are active.  The other PV,
+though, is completely trashed.  pvdata also says that the LV seems to be
+fine.
 
-   Device Boot    Start       End    Blocks   Id  System
-/dev/hda1             1         8     64228+  83  Linux
-/dev/hda2   *         9       518   4096575    b  Win95 FAT32
-/dev/hda3           519      4867  34933342+   5  Extended
-/dev/hda5           519       773   2048256   83  Linux
-/dev/hda6           774      1283   4096543+  8e  Linux LVM
-/dev/hda7          1284      1793   4096543+  8e  Linux LVM
-/dev/hda8          1794      2303   4096543+  8e  Linux LVM
-/dev/hda9          2304      2813   4096543+  8e  Linux LVM
+I have no backup of the vgdata that I can find (they are stored on the
+first PV...), so I can't do what many of the other people did to get their
+VGs back.
 
-/dev/hda10         2814      3323   4096543+  8e  Linux LVM    NOT WORKING
-/dev/hda10         2814      3324   4096543+  8e  Linux LVM        WORKING
-[the rest of the drive was already empty]
+Is there any way to change the VG info back to having only one PV, and if
+so, will that get vgscan to find the VG again?  If you need the debug
+info, I can provide it.
 
-bye,
+My system is using LVM 1.0.1-rc4, devfs, Reiserfs, and I have my root file
+system on that VG.
 
--christian-
+Thanks for any assistance anyone can offer,
+
+Sean C. McCord
