@@ -1,10 +1,11 @@
-Subject: Re: [linux-lvm] LVM and SPL 
-In-Reply-To: Message from Jeff Layton <laytonjb@bellsouth.net> 
-   of "Fri, 31 Aug 2001 14:29:28 EDT." <3B8FD788.798E82AF@bellsouth.net> 
+From: Andreas Dilger <adilger@turbolabs.com>
+Date: Fri, 31 Aug 2001 13:07:18 -0600
+Subject: Re: [linux-lvm] PBs with LVM over software RAID
+Message-ID: <20010831130718.C541@turbolinux.com>
+References: <3B8E3F0E.8050609@st-peter.stw.uni-erlangen.de> <20010830083546.A20989@sistina.com> <3B8EC633.40202@st-peter.stw.uni-erlangen.de> <3B8F8C5E.7030603@st-peter.stw.uni-erlangen.de> <20010831110512.V541@turbolinux.com> <3B8FD95C.60702@st-peter.stw.uni-erlangen.de>
 Mime-Version: 1.0
-Date: Fri, 31 Aug 2001 12:02:46 -0700
-From: "Michael J. Declerck" <declerck@sistina.com>
-Message-Id: <20010831190246.BB94332608@spook>
+Content-Disposition: inline
+In-Reply-To: <3B8FD95C.60702@st-peter.stw.uni-erlangen.de>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -18,19 +19,25 @@ List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: linux-lvm@sistina.com
+To: svetljo <galia@st-peter.stw.uni-erlangen.de>
+Cc: linux-lvm@sistina.com
 
-All,
+On Aug 31, 2001  20:37 +0200, svetljo wrote:
+> 
+> >>EIP; e29c0266 <[linear]linear_make_request+36/f0>   <=====
+> Trace; c023fa12 <__make_request+412/6d0>
+> Trace; c0278dcd <md_make_request+4d/80>
+> Trace; c027fa0f <lvm_make_request_fn+f/20>
+> Trace; c023fd89 <generic_make_request+b9/120>
 
-Sorry about the slow response to these issues.  A lot of us were at Linux
-World Expo without very good connectivity.  Coming back to all this email
-was interesting to say the least :)
+OK, so the oops is inside the RAID layer, but it may be that it is
+being fed bogus data from a higher layer.  Even so, it should not
+oops in this case.  Since XFS changes a lot of the kernel code, I
+would either suggest asking the XFS folks to look at this oops,
+or maybe on the MD RAID mailing list, as they will know more about it.
 
-laytonjb@bellsouth.net said:
-> Yes. But until the email from Michael Declerck we heard nothing from
-> Sistina to reassure us. Sometimes pre-emptive strikes are needed :) 
-
-
-
----
-Michael Declerck, declerck@sistina.com   +1.510.823.7991
+Cheers, Andreas
+-- 
+Andreas Dilger  \ "If a man ate a pound of pasta and a pound of antipasto,
+                 \  would they cancel out, leaving him still hungry?"
+http://www-mddsp.enel.ucalgary.ca/People/adilger/               -- Dogbert
