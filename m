@@ -1,73 +1,55 @@
-Date: Mon, 11 Sep 2000 13:10:50 -0700 (PDT)
-From: Cristina Bulfon <bulfon@SLAC.Stanford.EDU>
-Subject: Re:[linux-lvm] LVM & NFS
-In-reply-to: <39BCB409.69EEFE48@med.uni-tuebingen.de>
-Message-id: <Pine.SOL.4.21.0009111310310.14336-100000@flora04.SLAC.Stanford.EDU>
-MIME-version: 1.0
-Content-transfer-encoding: 7BIT
+From: Andreas Dilger <adilger@turbolinux.com>
+Message-Id: <200009112113.e8BLDSj27926@webber.adilger.net>
+Subject: Re: [linux-lvm] LVM, partitions, RAID, and the Grand Scheme of Things
+ TM
+In-Reply-To: <39BA3D62.E21B13E1@gnu.org> "from Andrew Clausen at Sep 10, 2000
+ 00:38:42 am"
+Date: Mon, 11 Sep 2000 15:13:27 -0600 (MDT)
+MIME-Version: 1.0
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"
-To: linux-lvm@msede.com
-Cc: Rupert Kolb <rupert.kolb@med.uni-tuebingen.de>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: parted@gnu.org
+Cc: Linux LVM mailing list <linux-lvm@msede.com>
 
-On Mon, 11 Sep 2000, Rupert Kolb wrote:
+Andrew Clausen writes:
+> One thing: there is non-trivial interaction between the file system
+> and partition table handling (not with LVM), when resizing the start
+> of a partition.  Some resizers (including ext2resize, and reiserfs's
+> resizer) can't resize the start, and use the partition as the
+> address space.
 
-> Content-Type: text/plain; charset=us-ascii
-> Content-Transfer-Encoding: 7bit
-> 
-> > Hello,
-> > 
-> > I have a PC with RH 6.1 kernel 2.2.13, lvm kernel patch for 2.2.13, and
-> > lvm 0.8-pre02,10.1999.
-> > 
-> > lvm works fine but when I tried to export a logical volume of 82GB, to
-> > another Linux machine I got:
-> > 
-> > mount: my_server:/my_logica_volume failed, reason given by
-> > server: Permission denied
-> > 
-> > I did the same NFS configuration with a small partition (not LVM) and it
-> > worked.
-> > 
-> > Any idea ? Is there any special configuration/setting to export LVM
-> > volumes via NFS?
-> > 
-> > Thanks in advance
-> >         Cristina   
-> 
-> Hello Christina, 
-> 
-> I have the same problems (and I use reiserfs!).
-> The error messages are varying depending on the client OS.
-> I found, that I do not have the problems, if I use ext2 instead of
-> reiserfs.
-> 
-> I found some interessting articles about the problem at:
-> http://marc.theaimsgroup.com/?l=reiserfs&r=1&w=2
-> Search there for 'lvm'.
-> 
-> I'm not on the lvm mailinglist. So please inform the list members 
-> (especialy Paul Jakma ;-) about the reiserfs problems. 
-> 
-> -- 
-> Rupert Kolb 
-> 
-> ======================================================================
-> University Hospital, Department of Neuroradiology
-> Hoppe-Seyler-Str. 3 
-> D-72076 Tuebingen (Germany)
-> Phone/Fax: ...-(0)7071-29-8-5396, ...-(0)7071-29-5638
-> mailto:rupert.kolb@med.uni-tuebingen.de 
-> http://www.medizin.uni-tuebingen.de/~rtkolb/
-> ======================================================================
-> 
+When using LVM its not important to be able to move the beginning of
+the filesystem, since you can always change the physical LE locations
+without changing the filesystem itself.
 
-_____________________________________________________________________________
+What _is_ interesting, if you live in an LVM-centric world, is being
+able to move the start of the filesystem a small amount into the
+partition (after shrinking the end) so that you can turn the partition
+into an PV/LV.  After such a conversion, you could do any normal LVM
+handling of the LV/filesystem (e.g. shrink, grow, migrate).
 
-       Cristina Bulfon              E-mail Cristina.Bulfon@slac.stanford.edu
-Stanford Linear Accelerator Center  Phone +1-650-926-5028
-PO Box 4349, M/S 88		    Fax   +1-650-926-3329
-Stanford, CA 94309, USA
-_____________________________________________________________________________
+It may just be easy enough to write a generic tool to shift the partition
+contents X blocks via copying (after using an fs-specific tool to shrink
+the end of the fs), and then handle the creation of the PV header,
+and adding an LV of the appropriate size that covers the whole partition.
+This is only really useful if you don't have enough space to duplicate
+the whole partition.  Otherwise, you are just as well off creating a new
+LV of the appropriate size, doing a raw copy of the filesystem to the new
+LV, and deleting the old partition and/or turning it into a PV.
+
+> So, having /sbin/resize.* isn't as elegant as it looks.  Were
+> you suggesting have resize.* deal with partition table stuff?
+
+Not at all.  The resize.* programs are filesystem specific, and only
+resize from the end of the partition.  I suppose that they could be
+generalized to accept an additional parameter (at the end) to give
+the new start of the partition, e.g. "resize.ext2 /dev/hda1 [size] [start]"
+
+Cheers, Andreas
+-- 
+Andreas Dilger  \ "If a man ate a pound of pasta and a pound of antipasto,
+                 \  would they cancel out, leaving him still hungry?"
+http://www-mddsp.enel.ucalgary.ca/People/adilger/               -- Dogbert
