@@ -1,10 +1,9 @@
-Return-Path: <hne@inetnow.net>
-Message-ID: <3AB49365.2020606@inetnow.net>
-Date: Sun, 18 Mar 2001 19:52:21 +0900
-From: HopNet <hne@inetnow.net>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] Recovering PV's VG metadata
+Return-Path: <dave@galilean.d2g.com>
+Date: Sun, 18 Mar 2001 12:56:00 +0100
+From: Dave Wapstra <dave@xs4all.nl>
+Message-ID: <20010318125600.A24084@mercury.mercury.multiweb.nl>
+Mime-Version: 1.0
+Subject: [linux-lvm] Kernel 2.4.x with LVM beta 6 on Sun E450?
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,79 +15,33 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="iso-2022-jp"
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Hello all.  I would appreciate any help or pointers to recovering the VG
-data on a "blown" PV.
+Hello all,
 
-My setup:
-  Logical Volume Manager 0.8 by Heinz Mauelshagen  04/11/1999  (IOP 6)
-  x86/OS SuSE 6.4 on system disk (scsi, non-LVM)
-  data on VG00 on hda & hdc (whole disk, no partitions)
-  only one LVol exists, and takes up whole VG.
-  hda & hdc are identical models of hard drives.
-  VG01 in examples is a NEW VG on scsi array and can be ignored.
+I am trying to setup a Sun E450 with Linux kernel 2.4.x and LVM beta 6,
+but there are a number of difficulties.
 
-Problem:
-  OS disk got trashed & system wasn't bootable.
-  Reinstalled OS.  I think at this point, LILO, thinking hda was the
-boot drive, overwrote some of the VG data.
-  no LVMtab or conf files to vgcfgrestore from. :-(
+With kernel 2.4.2 "make menuconfig" doesn't work.  No problem,
+now I'm using v2.4.3-pre3 and this is running fine.
 
-Now:
-  pvdata sees partial data on hda, and everything on hdc
+LVM 0.9.1 beta 6 patches cleanly agains -pre3.  So far so good.
 
-What I'm looking for:
-  Is there anyway to take common data from hdc and write it back to
-hda.  What tools are available for sector editing (LVM or general)?
+The problem is that I'm trying to apply Patrick Caulfield's ioctl32.c
+patch, which doesn't apply cleanly to -pre3 (at least on my box).
+Applying the patch by hand results in a failed compile.
 
-zeus:~ # pvdata -a /dev/hda
---- Physical volume ---
-PV Name
-VG Name
-ΦR
-PV Size               12.14 GB / NOT usable 3.21 MB [LVM: 16.09 MB]
-PV#                   0
-PV Status             NOT available
-Allocatable           yes (but full)
-Cur LV                1
-PE Size (KByte)       4096
-Total PE              3106
-Free PE               0
-Allocated PE          3106
+This might be caused by the fact that I pulled the patch of the web,
+since I wasn't subscribed to linux-lvm at the time.
 
-Segmentation fault
-zeus:~ # pvdata -N -P /dev/hdc
---- Physical volume ---
-PV Name               /dev/hdc
-VG Name               vg00
-PV Size               12.14 GB / NOT usable 3.24 MB [LVM: 242 KB]
-PV#                   2
-PV Status             available
-Allocatable           yes (but full)
-Cur LV                1
-PE Size (KByte)       4096
-Total PE              3106
-Free PE               0
-Allocated PE          3106
 
---- List of physical volumes ---
+Any success stories on Ultrasparc with 2.4.x and LVM are welcome...
 
-000: /dev/hda
-001: /dev/hdc
 
-zeus:~ # pvscan
-pvscan -- reading all physical volumes (this may take a while...)
-pvscan -- ACTIVE   PV "/dev/sdb1" of VG "vg01" [21.26 GB / 11.26 GB
-free]
-pvscan -- inactive PV "/dev/hdc"  is associated to an unknown VG (run
-vgscan)
-pvscan -- total: 2 [33.4 GB] / in use: 2 [33.4 GB] / in no VG: 0 [0]
+-Dave
 
-zeus:~ #
-
-  If there is any other info that might be helpful, please ask.
-
-Thanks again,
-  Keith@HopNet
+-- 
+Dave Wapstra
+dave@xs4all.nl
