@@ -1,10 +1,8 @@
-From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] physical volume timeout
-Message-ID: <20030825152315.A2618@sistina.com>
-References: <sf4a1cca.017@lvnbb.brandenburg.de>
-Mime-Version: 1.0
-In-Reply-To: <sf4a1cca.017@lvnbb.brandenburg.de>; from Stephan.Hendl@lds.brandenburg.de on Mon, Aug 25, 2003 at 02:27:02PM +0200
-Content-Transfer-Encoding: quoted-printable
+Message-ID: <000e01c36bf9$e5f82720$6402000a@gasaraki>
+From: "Henric Andersson" <ha@thedudes.nu>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] Poor performance with LVM 1.0.7
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,68 +13,38 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Aug 25 08:31:01 2003
+Date: Tue Aug 26 12:47:01 2003
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="iso-8859-1"
+Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
 
-On Mon, Aug 25, 2003 at 02:27:02PM +0200, Stephan Hendl wrote:
-> Hi all,
->=20
-> I'd like to know the default physical volume timeout parameter. In HPUX=
- the value is about 60 seconds - in Linux too?
+Hi all!
 
-No, there's no PV timeout parameter.
+I've recently upgraded my poor little fileserver from an old P120 Classic to
+a brandspanking new Celeron 2Ghz with 512MB DDR memory. By doing this, I
+expected the performance of my fileserver to increase, giving me a total of
+9,5MB/s when using samba.
 
-It is handled in lower components of the IO chain within the Linux kernel
-(e.g. low-level device drivers), which do internal timeout processing.
-One 2.7 develoment work item is to enhance this.
+And it did. But not when LVM is concerned :(
 
->=20
-> Thanks in advance
->=20
-> Stephan
->=20
-> Dr. Stephan Hendl
-> Systemmanagement
-> -----------------------------------
-> Landesbetrieb f=FCr
-> Datenverarbeitung und Statistik
-> Land Brandenburg
->=20
-> Adresse: 14467 Potsdam, Dortustr. 46
-> Telefon: +49-(0)331 39-471
-> Fax:: +49-(0)331 27548-1187
-> Mobil: +49-(0)160 90 645 893
-> EMail: Stephan.Hendl@lds.brandenburg.de
-> Internet: http://www.lds-bb.de
->=20
->=20
->=20
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+I have a VG setup with 3 drives (120GB each, not striped) which contains one
+LV running an ext3 filesystem.
+At first, I blamed my promise controllers (PDC 20269, ATA/133) but after
+some serious testing, I found that whenever I didn't access files that was
+stored on the LV, my speed was about 9.5MB/s, but when I transfered the same
+file from the LV, I only got about half of it (4.2MB/s). The file I
+transfered was roughly about 700-800MB big (same file used in all tests).
 
---=20
+After scouring the net for suggestions on how to improve the speed, I came
+up empty, and thus, I'm writing this email :)
 
-Regards,
-Heinz    -- The LVM Guy --
+Some more facts (more available if needed ;)) about the server:
 
-*** Software bugs are stupid.
-    Nevertheless it needs not so stupid people to solve them ***
+All drives are tuned with 32bit transfers and DMA enabled. I'm running
+kernel 2.4.22pre2 (gentoo).
+CPU usage is low (around 10-25%) when transfering files, so it does not seem
+to be the bottleneck.
 
-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D=
--=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=
-=3D-=3D-
+Any suggestions and/or ideas are welcomed...
 
-Heinz Mauelshagen                                 Sistina Software Inc.
-Senior Consultant/Developer                       Am Sonnenhang 11
-                                                  56242 Marienrachdorf
-                                                  Germany
-Mauelshagen@Sistina.com                           +49 2626 141200
-                                                       FAX 924446
-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D=
--=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=
-=3D-=3D-
+/Henric
