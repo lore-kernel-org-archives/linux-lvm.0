@@ -1,32 +1,15 @@
-Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with SMTP id i2PE97j23663
-	for <linux-lvm@redhat.com>; Thu, 25 Mar 2004 09:09:07 -0500
-Received: from gw-nl5.philips.com (postfix@gw-nl5.philips.com [161.85.127.51])
-	by mx1.redhat.com (8.12.10/8.12.10) with SMTP id i2PE96WA000765
-	for <linux-lvm@redhat.com>; Thu, 25 Mar 2004 09:09:06 -0500
-Received: from smtpscan-nl1.philips.com (smtpscan-nl1.philips.com
-	[130.139.36.21])
-	by gw-nl5.philips.com (Postfix) with ESMTP id A1E7F6B3DE
-	for <linux-lvm@redhat.com>; Thu, 25 Mar 2004 15:09:05 +0100 (MET)
-Received: from smtpscan-nl1.philips.com (localhost [127.0.0.1])
-	by localhost.philips.com (Postfix) with ESMTP id 3A01719C49
-	for <linux-lvm@redhat.com>; Thu, 25 Mar 2004 15:09:05 +0100 (MET)
-Received: from smtprelay-nl2.philips.com (smtprelay-eur2.philips.com
-	[130.139.36.35])
-	by smtpscan-nl1.philips.com (Postfix) with ESMTP id C271D19C48
-	for <linux-lvm@redhat.com>; Thu, 25 Mar 2004 15:09:04 +0100 (MET)
-Received: from ehvrmh02.diamond.philips.com (ehvrmh02-srv.diamond.philips.com
-	[130.139.27.125]) 
-	by smtprelay-nl2.philips.com (8.9.3p3/8.8.5-1.2.2m-19990317) with ESMTP
-	id PAA02022
-	for <linux-lvm@redhat.com>; Thu, 25 Mar 2004 15:09:04 +0100 (MET)
-From: darren.miller@philips.com
-Subject: Re: [linux-lvm] snapshots and 2.6 kernel
+Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with SMTP id i2PEYpj31381
+	for <linux-lvm@redhat.com>; Thu, 25 Mar 2004 09:34:51 -0500
+From: Rainer Krienke <krienke@uni-koblenz.de>
+Date: Thu, 25 Mar 2004 15:34:47 +0100
 MIME-Version: 1.0
-Message-ID: <OFDA4623E8.BF7156E4-ON80256E62.004D4E4D-80256E62.004DBAD7@philips.com>
-Date: Thu, 25 Mar 2004 14:07:05 +0000
-Content-Type: multipart/alternative;
-	boundary="=_alternative 004DBAD480256E62_="
+Content-Type: multipart/signed; protocol="application/pgp-signature";
+	micalg=pgp-sha1; boundary="Boundary-02=_H4uYAmJ448JgZe6";
+	charset="iso-8859-15"
+Content-Transfer-Encoding: 7bit
+Message-Id: <200403251534.47502.krienke@uni-koblenz.de>
+Subject: [linux-lvm] Somewhat offtopic: Strange umount problem ....
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -37,142 +20,90 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: LVM general discussion and development <linux-lvm@redhat.com>
-
-This is a multipart message in MIME format.
---=_alternative 004DBAD480256E62_=
-Content-Type: text/plain; charset="us-ascii"
-
-Getting the volume active is a pain I found that you have to reboot the 
-system and when it comes back you need to create a link your volume group 
-directory for the snapshot you create, atleast after the reboot the 
-snapshot device showup in /dev/mapper which is a start right.
-
-link it into your VG device home directory and then you can remove the 
-snapshot, once you got the snapshot out of the way you can run lvchange -a 
-y <lvname> to bring your original LV back online.
-
-Hope this makes sense.
-
-Daz
-==============================================================================
-Darren Miller 
-Senior Systems Support Engineer
-Microsoft Certified Professional
-SCO Advanced Certified Engineer 
-Infomation Systems Department (Core Server Support)
-Philips Semiconductors,Milbrook Industrial Estate,Southampton,SO15 
-0DJ,England
-Direct Dial In: +44 (0) 2380 312681
+To: linux-lvm@sistina.com
 
 
+--Boundary-02=_H4uYAmJ448JgZe6
+Content-Type: text/plain;
+  charset="iso-8859-15"
+Content-Transfer-Encoding: quoted-printable
+Content-Disposition: inline
 
+Hello,
 
+I have a problem with 3 server machines and I would as far as possible try =
+to=20
+isolate the bug which might be related to lvm or might not be. Perhaps=20
+someone can help me where and how to look for the problem:
 
+I am running 3 NFS and SMB servers (suse8.2; SuSE kernel 2.4.21-199, LVM=20
+2.2.00.05) which run perfectly stable but show a strange behaviour
+when rebooting the machines: The filesystems which contain user directories
+cannot be umounted since the kernel claims that they are still busy. When I
+switch to single user mode and run fuser -v or lsof on the mountpoints I
+see no output. There are no more smb or other processes in the processlist
+that might access the filesystems but nevertheless I cannot umount them.
+The output of fuser -v shows only=A0=A0this:
 
+=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0USER=A0=A0=
+=A0=A0=A0=A0=A0=A0PID=A0ACCESS=A0COMMAND
+/export/user1=A0=A0=A0=A0=A0=A0=A0=A0root=A0=A0=A0=A0=A0kernel=A0mount=A0=
+=A0/export/user1
 
+fuser -vm /export/user1 and lsof /export/user1=A0=A0do=A0not=A0output=A0any=
+thing.
 
+The filesystems are xfs on top of LVM2 logical volumes which again run on
+top of a md raid1 softmirror (the one and only physical vol)  which is buil=
+t=20
+upon a md multipath device:
 
-Rich Turner <rich@storix.com>
-Sent by: 
-linux-lvm-bounces@redhat.com
-23/03/2004 23:33
-Please respond to LVM general discussion and development
+xfs_fs: LVM2: md_soft_raid1: md_multipath: Fibrechannel_hardware_raid_5
 
- 
-        To:     LVM general discussion and development <linux-lvm@redhat.com>
-        cc:     (bcc: Darren Miller/SOU/SC/PHILIPS)
-        Subject:        [linux-lvm] snapshots and 2.6 kernel
-        Classification: 
+Basically all of the software except for LVM2 is a "original" suse 8.2=20
+installation.=20
+=20
+The problem when I cannot umount the filesystems is, that the software
+mirror cannot be shut down cleanly so it is resynced when restarting the
+machine (eg for a kernel security upgrade). Since the mirror has a size of
+about 1TB this takes quite a long time.  After all if one fine day during s=
+uch=20
+a unneeded resync the data source, one of two  hardware raid5 arrays should=
+=20
+decide to fail then all the data on the mirror would be lost. At the moment=
+=20
+usually one IDE disk in one hardware raid dies duing the sync.  If two disk=
+s=20
+would die all the data could vanish in a big black hole.
 
+Actually I do not know at the moment how to go on searching and I cannot=20
+determine if eg LVM might be involved in this problem. So I would be very=20
+greatful if someone could give me a hint or perhaps even say that this cann=
+ot=20
+be a LVM problem.=20
 
+Thanks for any help
+Rainer
+=2D-=20
+=2D------------------------------------------------------------------------=
+=2D-
+Rainer Krienke, Universitaet Koblenz, Rechenzentrum, Raum A022
+Universitaetsstrasse 1, 56070 Koblenz, Tel: +49 261287 -1312, Fax: -1001312
+Mail: krienke@uni-koblenz.de, Web: http://www.uni-koblenz.de/~krienke
+Get my public PGP key: http://www.uni-koblenz.de/~krienke/mypgp.html
+=2D------------------------------------------------------------------------=
+=2D-
 
-i understand from numerous posts on this list and many others that
-snapshots in the 2.6 kernel is not yet supported.
+--Boundary-02=_H4uYAmJ448JgZe6
+Content-Type: application/pgp-signature
+Content-Description: signature
 
-the lvm commands allow you to create the snapshot but do nothing with
-it. even worse, i am unable to remove the snapshot or get the original
-logical volume active.
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.2.2 (GNU/Linux)
 
-is there any progress in the 2.6 kernel supporting snapshots?
+iD8DBQBAYu4Haldtjc/KDEoRAo6AAJ937fO8qBm5Sh5dtd6aqU7dw8yrugCg9CGz
+h9vHFPJJqPagqeD1Un/20aA=
+=Z6ny
+-----END PGP SIGNATURE-----
 
-is there any way to know if the snapshot will be valid before creating
-the snapshot (other than 'uname -r')?
-
-which is the culprit: device-mapper, lvm?
-
-_______________________________________________
-linux-lvm mailing list
-linux-lvm@redhat.com
-https://www.redhat.com/mailman/listinfo/linux-lvm
-read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
-
-
-
---=_alternative 004DBAD480256E62_=
-Content-Type: text/html; charset="us-ascii"
-
-
-<br><font size=2 face="sans-serif">Getting the volume active is a pain I found that you have to reboot the system and when it comes back you need to create a link your volume group directory for the snapshot you create, atleast after the reboot the snapshot device showup in /dev/mapper which is a start right.</font>
-<br>
-<br><font size=2 face="sans-serif">link it into your VG device home directory and then you can remove the snapshot, once you got the snapshot out of the way you can run lvchange -a y &lt;lvname&gt; to bring your original LV back online.</font>
-<br>
-<br><font size=2 face="sans-serif">Hope this makes sense.</font>
-<br>
-<br><font size=2 face="sans-serif">Daz<br>
-==============================================================================<br>
-Darren Miller &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<br>
-Senior Systems Support Engineer<br>
-Microsoft Certified Professional<br>
-SCO Advanced Certified Engineer &nbsp; &nbsp; &nbsp; &nbsp;<br>
-Infomation Systems Department (Core Server Support)<br>
-Philips Semiconductors,Milbrook Industrial Estate,Southampton,SO15 0DJ,England<br>
-Direct Dial In: +44 (0) 2380 312681</font>
-<br>
-<br>
-<br>
-<table width=100%>
-<tr valign=top>
-<td>
-<td>
-<br>
-<br>
-<br>
-<br>
-<br><font size=1 face="sans-serif"><b>Rich Turner &lt;rich@storix.com&gt;</b></font>
-<p><font size=1 face="sans-serif">Sent by: </font>
-<br><font size=1 face="sans-serif">linux-lvm-bounces@redhat.com</font>
-<p><font size=1 face="sans-serif">23/03/2004 23:33</font>
-<br><font size=1 face="sans-serif">Please respond to LVM general discussion and development</font>
-<br>
-<td><font size=1 face="Arial">&nbsp; &nbsp; &nbsp; &nbsp; </font>
-<br><font size=1 face="sans-serif">&nbsp; &nbsp; &nbsp; &nbsp; To: &nbsp; &nbsp; &nbsp; &nbsp;LVM general discussion and development &lt;linux-lvm@redhat.com&gt;</font>
-<br><font size=1 face="sans-serif">&nbsp; &nbsp; &nbsp; &nbsp; cc: &nbsp; &nbsp; &nbsp; &nbsp;(bcc: Darren Miller/SOU/SC/PHILIPS)</font>
-<br><font size=1 face="sans-serif">&nbsp; &nbsp; &nbsp; &nbsp; Subject: &nbsp; &nbsp; &nbsp; &nbsp;[linux-lvm] snapshots and 2.6 kernel</font>
-<p><font size=1 face="sans-serif">&nbsp; &nbsp; &nbsp; &nbsp; Classification: &nbsp; &nbsp; &nbsp; &nbsp;</font>
-<br></table>
-<br>
-<br>
-<br><font size=2 face="Courier New">i understand from numerous posts on this list and many others that<br>
-snapshots in the 2.6 kernel is not yet supported.<br>
-<br>
-the lvm commands allow you to create the snapshot but do nothing with<br>
-it. even worse, i am unable to remove the snapshot or get the original<br>
-logical volume active.<br>
-<br>
-is there any progress in the 2.6 kernel supporting snapshots?<br>
-<br>
-is there any way to know if the snapshot will be valid before creating<br>
-the snapshot (other than 'uname -r')?<br>
-<br>
-which is the culprit: device-mapper, lvm?<br>
-<br>
-_______________________________________________<br>
-linux-lvm mailing list<br>
-linux-lvm@redhat.com<br>
-https://www.redhat.com/mailman/listinfo/linux-lvm<br>
-read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/<br>
-</font>
-<br>
-<br>
---=_alternative 004DBAD480256E62_=--
+--Boundary-02=_H4uYAmJ448JgZe6--
