@@ -1,13 +1,13 @@
-Date: Thu, 23 Aug 2001 07:06:31 -0500
+Date: Thu, 23 Aug 2001 07:09:22 -0500
 From: AJ Lewis <lewis@sistina.com>
-Subject: Re: [linux-lvm] segfault running vgscan
-Message-ID: <20010823070631.A2885@sistina.com>
-References: <20010823011053.45493.qmail@web20310.mail.yahoo.com>
+Subject: Re: [linux-lvm] Building outside source tree
+Message-ID: <20010823070922.C2885@sistina.com>
+References: <20010821121229.A4661@sistina.com> <20010821192307.2864.qmail@dumain.com>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-md5;
-	protocol="application/pgp-signature"; boundary="AhhlLboLdkugWU4S"
+	protocol="application/pgp-signature"; boundary="OBd5C1Lgu00Gd/Tn"
 Content-Disposition: inline
-In-Reply-To: <20010823011053.45493.qmail@web20310.mail.yahoo.com>; from bwlang@yahoo.com on Wed, Aug 22, 2001 at 06:10:53PM -0700
+In-Reply-To: <20010821192307.2864.qmail@dumain.com>; from wish-lvm@dumain.com on Tue, Aug 21, 2001 at 08:23:07PM +0100
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -21,31 +21,20 @@ List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 To: linux-lvm@sistina.com
 
---AhhlLboLdkugWU4S
+--OBd5C1Lgu00Gd/Tn
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Aug 22, 2001 at 06:10:53PM -0700, Brad Langhorst wrote:
-> I've carefully followed the instructions in INSTALL
-> and the build seems to go fine.
-> This is the first install of lvm so there are no vgs
-> or pvs or anything yet.
->=20
-> I patched the kernel  (2.4.9)
-> installed the kernel
-> make in LVM
-> make install
-> reboot
-> run vgscan -d =20
->=20
-> this just generates a segfault and dumps core
+On Tue, Aug 21, 2001 at 08:23:07PM +0100, wish-lvm@dumain.com wrote:
+> My original patch works only if given an absolute path to the source.
+> Your patch works only if the path to source is precisely ..
+> Incidentally it would appear that relative paths to the kernel
+> source don't work either. =20
+> I'll fix the patch and resubmit it.
 
-Are you linking the tools statically or dynamically?  I have seen a
-seg-fault with the tools that call at_exit() and static linking with glibc -
-apparently the bug is in glibc, not LVM, and is fixed in newer versions.  I
-have yet to verify this.
-=20
+Fixed in the CVS now.  Looking into relative kernel source paths...
+
 --=20
 AJ Lewis
 Sistina Software Inc.                  Voice:  612-638-0500
@@ -59,10 +48,10 @@ Get my key at: http://www.sistina.com/~lewis/gpgkey
  (Unfortunately, the PKS-type keyservers do not work with multiple sub-keys)
 
 -----Begin Obligatory Humorous Quote----------------------------------------
-All wiyht. Rho sritched mg kegtops awound?
+A bad random number generator: 1, 1, 1, 1, 1, 4.33e+67, 1, 1, 1...
 -----End Obligatory Humorous Quote------------------------------------------
 
---AhhlLboLdkugWU4S
+--OBd5C1Lgu00Gd/Tn
 Content-Type: application/pgp-signature
 Content-Disposition: inline
 
@@ -70,9 +59,9 @@ Content-Disposition: inline
 Version: GnuPG v1.0.6 (GNU/Linux)
 Comment: For info see http://www.gnupg.org
 
-iD8DBQE7hPHHpE6/iGtdjLERAhzQAJ9byZRONTkP5qd8x/xaQemr+ExVkwCfaL9R
-9jgZQcfMGUz6U9PU2ZOpGkE=
-=usCO
+iD8DBQE7hPJypE6/iGtdjLERAsxyAJ0YSqknaoXm+gxcXCL83SpO0mC8UQCglpWy
+h8iy6/aN5hMCZzE61ijEHvE=
+=+N+X
 -----END PGP SIGNATURE-----
 
---AhhlLboLdkugWU4S--
+--OBd5C1Lgu00Gd/Tn--
