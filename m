@@ -1,21 +1,15 @@
 Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with SMTP id i32Mgvj14505
-	for <linux-lvm@redhat.com>; Fri, 2 Apr 2004 17:42:57 -0500
-Received: from mwinf0403.wanadoo.fr (smtp4.wanadoo.fr [193.252.22.27])
-	by mx1.redhat.com (8.12.10/8.12.10) with SMTP id i32Mgujj015902
-	for <linux-lvm@redhat.com>; Fri, 2 Apr 2004 17:42:56 -0500
-Subject: Re: [linux-lvm] root on lvm
-From: Garcia Pascal <dld.pascal.garcia@wanadoo.fr>
-In-Reply-To: <1080073262.2189.16.camel@pascal>
-References: <1079478024.2432.9.camel@rich>
-	<1079705946.29353.6.camel@tesla.mmt.bellhowell.com>
-	<1079729272.2126.12.camel@pascal> <1079922026.2361.7.camel@localhost>
-	<20040323192451.GE24728@percy.comedia.it>
-	<1080073262.2189.16.camel@pascal>
-Message-Id: <1080945751.2422.9.camel@pascal>
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with SMTP id i333Dcj09275
+	for <linux-lvm@redhat.com>; Fri, 2 Apr 2004 22:13:38 -0500
+Received: from rwcrmhc13.comcast.net (rwcrmhc13.comcast.net [204.127.198.39])
+	by mx1.redhat.com (8.12.10/8.12.10) with SMTP id i333Dbjj010386
+	for <linux-lvm@redhat.com>; Fri, 2 Apr 2004 22:13:37 -0500
+From: atark <atark@eastdeering.com>
+Message-Id: <1080962045.26849.6.camel@jango.tatooine>
 Mime-Version: 1.0
-Date: Sat, 03 Apr 2004 00:42:32 +0200
-Content-Transfer-Encoding: 8bit
+Date: Fri, 02 Apr 2004 22:14:05 -0500
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] vgscan failure after changing SCSI controller
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -26,92 +20,47 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="utf-8"
-To: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="us-ascii"
+To: linux-lvm@redhat.com
 
-Here is the test I have been doing. Sory but I have to translate the
-french message then they will bot be exact.
-Installing Mandrake,
-When partitionning I ask for personal, then for expert.
-- hda1 : LVM for linuw.
-- Add to vg rootvg
-In root vg
-- 1rst partition / 3000 mb reiserfs
-- 2nd partition swap 1500 mb
-- 3rd partition 15000 mb
+Hello,
 
-rest of the vg unaffected.
+I moved SCSI controllers around im my server and have lost contact with
+my VG.  The VG is on an extrenal array with 6 disks, 4 or which are used
+for the VG. Also I've changed back to the original controller
+cofiguration. How can I verify if the VG is truly hosed? Tried
+vgcfgrestore to no avail.....
 
-All installation went well until stage : installation of boot manager.
-Then a window came saying 
-=================================
-L'installation du programme d'amor�age a �chou�
-pour la raison suivante
-: Fatal: Sorry, don't know how to handle device 0xfe00
-=================================
+Any help is appreciated!
 
-That means : The installation of the boot loader failed because of the
-following reason : Fatal ...
+--Andy
 
-And of corse the system is not able to boot!
 
-Regards
+vgscan is failing with:
 
-Pascal Garcia
+vader root # vgscan -v
+vgscan -- removing "/etc/lvmtab" and "/etc/lvmtab.d"
+vgscan -- creating empty "/etc/lvmtab" and "/etc/lvmtab.d"
+vgscan -- reading all physical volumes (this may take a while...)
+vgscan -- scanning for all active volume group(s) first
+vgscan -- reading data of volume group "spacevg" from physical volume(s)
+vgscan -- ERROR "lv_read_all_lv(): number of LV" can't get data of
+volume group "spacevg" from physical volume(s)
+vgscan -- "/etc/lvmtab" and "/etc/lvmtab.d" successfully created
+vgscan -- WARNING: This program does not do a VGDA backup of your volume
+group
 
-Le mar 23/03/2004 � 21:21, Garcia Pascal a �crit :
-> Hello
-> I do not know what the problem is.
-> May be the problem has nothing to see with lvm!
-> I reinstalled0 the system two times with the same problem. In fact there
-> is a warning when configuration lilo at installation time.
-> 
-> As I did not have that much time to analyse and solve the problem (if I
-> would have been able to), I just made a / reisefs partition, and the
-> problem went away.
-> 
-> I have a remark on that, / partition in a logical volume without
-> reiserfs (or a fs that can be resized without unmounting) is non sense
-> for me, because one can not unmount / partition, and one of the interest
-> of the lvm is to adapt the size of a partition when needed.
-> 
-> I have a spare disk and when I have some time and my General let me do
-> it, I reinstall the system and write all the problems. May be this
-> week-end.
-> 
-> regards
-> Pascal garcia
-> 
-> 
-> Le mar 23/03/2004 � 20:24, Luca Berra a �crit :
-> > On Sun, Mar 21, 2004 at 09:20:26PM -0500, Jeff Layton wrote:
-> > >My solution for this (so far) is to make a non-LVM2 /boot partition and
-> > >store a kernel and initrd in that. You can then build everything else as
-> > >a LVM partition. Perhaps when the available bootloaders become LVM2
-> > >aware we'll be able to do away with a seperate /boot, but for now it
-> > >seems to be the best way to deal with it.
-> > >Cheers,
-> > >-- Jeff
-> > >
-> > >
-> > >On Fri, 2004-03-19 at 15:47, Garcia Pascal wrote:
-> > >> Hello,
-> > >> I experienced also difficulties with / and lvm2.
-> > >> configuration: 
-> > >>    MANDRAKE 10.0, 
-> > >>    kernel 2.6.3, 
-> > >>    lilo 22.5.8, 
-> > >>    reiserfs 3.6.11 ?
-> > >>    lvm 2.00.08
-> > 
-> > lilo on mandrake 10.0 is lvm2 aware.
-> > i don't know if there are reiserfs related problems that affect Pascal
-> > configuration.
-> > 
-> > L.
-> 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+Here is pvscan:
+
+vader root # pvscan -v
+pvscan -- reading all physical volumes (this may take a while...)
+pvscan -- walking through all physical volumes found
+pvscan -- inactive PV "/dev/scsi/host2/bus0/target1/lun0/disc"  is
+associated to unknown VG "spacevg" (run vgscan)
+pvscan -- inactive PV "/dev/scsi/host2/bus0/target2/lun0/disc"  is
+associated to unknown VG "spacevg" (run vgscan)
+pvscan -- inactive PV "/dev/scsi/host2/bus0/target3/lun0/disc"  is
+associated to unknown VG "spacevg" (run vgscan)
+pvscan -- inactive PV "/dev/scsi/host2/bus0/target4/lun0/disc"  is
+associated to unknown VG "spacevg" (run vgscan)
+pvscan -- total: 4 [50.79 GB] / in use: 4 [50.79 GB] / in no VG: 0 [0]
