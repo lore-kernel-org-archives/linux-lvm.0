@@ -1,10 +1,9 @@
-Return-Path: <emanuel.quass@temic.com>
-Date: Wed, 2 May 2001 18:28:05 +0200
-From: Emanuel Quass <emanuel.quass@temic.com>
-Message-ID: <20010502182804.A6768@in-cadcae4.ing.temic.de>
-Mime-Version: 1.0
-Content-Disposition: inline
-Subject: [linux-lvm] Problems compiling 2.4.4
+Return-Path: <jweber@valinux.com>
+Date: Wed, 2 May 2001 09:58:41 -0700 (PDT)
+From: Jay Weber <jweber@valinux.com>
+Message-ID: <Pine.LNX.4.30.0105020957190.11191-100000@beefcake.hdqt.valinux.com>
+MIME-Version: 1.0
+Subject: [linux-lvm] lvcreate segfault
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,49 +15,19 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: TEXT/PLAIN; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
 Hi,
 
-I compiled a kernel(2.4.4) with your lvm patch (0.9.1_beta7).
-At the end of make bzImage an error occours:
+Just noticed this one.
 
-ld -m elf_i386 -T /mnt/kernel/linux/arch/i386/vmlinux.lds -e \
- stext arch/i386/kernel/head.o arch/i386/kernel/init_task.o \
- init/main.o init/version.o \
-        --start-group \
-        arch/i386/kernel/kernel.o arch/i386/mm/mm.o \
-kernel/kernel.o mm/mm.o fs/fs.o ipc/ipc.o \
-        drivers/block/block.o drivers/char/char.o \
-drivers/misc/misc.o drivers/net/net.o drivers/media/media.o \
-drivers/ide/idedriver.o drivers/scsi/scsidrv.o \
-drivers/cdrom/driver.o drivers/pci/driver.o drivers/video/video.o \
-drivers/md/mddev.o \
-        net/network.o \
-        /mnt/kernel/linux/arch/i386/lib/lib.a \
-/mnt/kernel/linux/lib/lib.a /mnt/kernel/linux/arch/i386/lib/lib.a \
-        --end-group \
-        -o vmlinux \
-drivers/md/mddev.o: In function `__update_hardblocksize': 
-drivers/md/mddev.o(.text+0x2316): undefined reference to `get_hardblocksize'
-drivers/md/mddev.o(.text+0x2352): undefined reference to `get_hardblocksize'
-make: *** [vmlinux] Error 1                                                                                           
-Does anybody knwo where this comes from!
+[root@slippey /root]# lvcreate -l5 -s snap /dev/vol/foo
+Segmentation fault (core dumped)
 
-Thanks in advance
+Haven't looked at it much, off to a meeting now (sigh), but it appears to
+be a simple option parsing problem when using -s.
 
-        Emanuel
-
-P.S. Please CC me because I am not in the list.
-
--- 
-
-++++++++++++++++++++++++++++++++
-Emanuel Quass
-email :  emanuel.quass@temic.com
-
-In a world without fences and walls, 
-who needs Windows and Gates?
-++++++++++++++++++++++++++++++++
+A proper command for that to work would be:
+lvcreate -l5 -s -n snap /dev/vol/foo
