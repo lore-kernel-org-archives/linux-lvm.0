@@ -1,12 +1,10 @@
-Return-Path: <mason@suse.com>
-Date: Thu, 22 Feb 2001 12:12:03 -0500
-From: Chris Mason <mason@suse.com>
-Subject: Re: [linux-lvm] snapshot of Reiserfs
-Message-ID: <2725910000.982861923@tiny>
-In-Reply-To: <200102212323.f1LNNqH14620@webber.adilger.net>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
+Return-Path: <adilger@turbolinux.com>
+From: Andreas Dilger <adilger@turbolinux.com>
+Message-Id: <200102221716.f1MHGN204028@webber.adilger.net>
+Subject: Re: [linux-lvm] online resize of ext2
+In-Reply-To: <Pine.LNX.4.21.0102221422190.3832-100000@munster.noc.fr.clara.net>
+ from James at "Feb 22, 2001 02:23:12 pm"
+Date: Thu, 22 Feb 2001 10:16:23 -0700 (MST)
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -18,57 +16,33 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-
-On Wednesday, February 21, 2001 04:23:51 PM -0700 Andreas Dilger
-<adilger@turbolinux.com> wrote:
+James Tapping writes [re online resizing]:
+> What are the version necessary for this?
 > 
-> Some overhead in calling sync_supers() and sync_supers_lockfs() because
-> they do both do the same list traversal.  Granted, on most systems the
-> total number of superblocks is small...  Last time I had a look at this,
-> I suggested that the sync_supers_lockfs() call be changed, namely that
-> it is illegal to call it with a zero "dev" parameter, otherwise you
-> will lock all filesystems and that may be a bad thing.  This simplifies
-> the code a bit.  If we also have it call write_super() if
-> write_super_lockfs() is missing, it is better yet.
+> kernel = ??
+> package version = ??
 > 
-It might be a stupid thing for the caller to do, but it should still work.
-If I tried really hard, I might be able to think of some kind of clustering
-deal where we wanted to checkpoint the current system and move it onto
-another machine.  It would be a stretch though ;-)
+> command used = ??
 
->> It is amost exactly a cut n' paste of fsync_dev, with an extra call to
->> sync_supers_lockfs.  It should do what fsync_dev does, even when there
->> are no sync_super_lockfs methods are provided.  The only reason I didn't
->> just call fsync_dev from fsync_dev_lockfs is because I wanted the
->> sync_buffers call to happen after the lockfs call ;-)
-> 
-> And the reason for this is?  The first call to sync_buffers doesn't wait
-> on completion (unlike the second sync_buffers call), so there is no
-> guarantee that they are all written out.
+Go to
 
-The reason was to avoid a second call to sync_buffers that does wait on
-completion....
+http://sourceforge.net/projects/ext2resize/
 
-You make some very good points.  The goal behind the existing call was to
-do this:
+and download ext2resize-1.1.16.  It has the appropriate kernel patch
+for 2.2.18 and 2.4.0, along with the user tools.  Once you have patched,
+recompiled, and installed your kernel, you can resize mounted filesystems
+either via lvextend + ext2online, or preferrably e2fsadm (from beta5).
 
-1) flush as much as you can (inodes, supers, quotas, trigger buffer flushes)
-2) ask the FS to lock itself.
-3) make sure all dirty buffers are on disk
+Note that there are some limits to online resizing, so read the ext2online
+and ext2prepare man pages.
 
-#2 might involve another set of flushes for anything that was modified
-between #1 and the lock.  The FS is resonsible for this, since it might
-have odd/complicated ways to figure out what is dirty (inodes under
-reiserfs).
-
-#3 is not allowed to deadlock against the FS lock, and it must go after the
-lock to prevent new buffers from being dirtied after the sync.
-
-Yes, this means scanning the list of supers twice, but I think it provides
-a good mix of responsibilities between fsync_dev_lockfs call and the FS.
-Any ideas on cleaning this up further are more than welcome.
-
--chris
+Cheers, Andreas
+-- 
+Andreas Dilger  \ "If a man ate a pound of pasta and a pound of antipasto,
+                 \  would they cancel out, leaving him still hungry?"
+http://www-mddsp.enel.ucalgary.ca/People/adilger/               -- Dogbert
