@@ -1,10 +1,9 @@
-Subject: Re: [linux-lvm] How to best use LVM?
-Message-ID: <20020814174547.GB898@fib011235813.fsnet.co.uk>
-References: <20020814165938.152D1F90D@tater>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20020814165938.152D1F90D@tater>
-From: Joe Thornber <joe@fib011235813.fsnet.co.uk>
+From: pll+lvm@lanminds.com
+Subject: Re: [linux-lvm] How to best use LVM? 
+References: <20020814165938.152D1F90D@tater> <20020814174547.GB898@fib011235813.fsnet.co.uk>
+In-reply-to: Your message of "Wed, 14 Aug 2002 18:45:47 BST."
+             <20020814174547.GB898@fib011235813.fsnet.co.uk> 
+Message-Id: <20020814184728.61BCEF90D@tater>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,32 +14,36 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Aug 14 12:46:02 2002
+Date: Wed Aug 14 13:48:01 2002
 List-Id: <linux-lvm.redhat.com>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Wed, Aug 14, 2002 at 12:59:38PM -0400, pll+lvm@lanminds.com wrote:
-> Is lvm10 the 1.x series and lvm2 the 2.x?
+In a message dated: Wed, 14 Aug 2002 18:45:47 BST
+Joe Thornber said:
 
-Yes, lvm2 is a totally new kernel driver and userland tools.
+>device-mapper is the kernel driver used by LVM2, there should be a
+>debian package for this too.
 
-> If the former, is 2.x stable enough to use
+I've tried that, and even installing the device-mapper from sources.
 
-Yes.
+For some reason the devmap_mknod.sh script is unable to create the
+/dev/device_mapper/control file.  It appears that the problem is an 
+inability to find the minor number from /proc/misc, which happens to 
+be empty.
 
-> and is it better to
-> compile lvm from source or use the pre-compiled debian packages?
+Did I forget to configure something in my kernel which should be 
+appearing in my /proc/misc file?
 
-The debian packages should be ok.
+Thanks,
+-- 
 
-> I've tried both the lvm10 and lvm2 packages, but continually recieve 
-> errors when I do things like run lvdisplay (it complains about not 
-> being able to flush the device several times), and also something 
-> about not being able to open the device-mapper.
+Seeya,
+Paul
+--
+	It may look like I'm just sitting here doing nothing,
+   but I'm really actively waiting for all my problems to go away.
 
-device-mapper is the kernel driver used by LVM2, there should be a
-debian package for this too.
-
-- Joe
+	 If you're not having fun, you're not doing it right!
