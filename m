@@ -1,13 +1,18 @@
-Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with SMTP id i1K0Gki32288
-	for <linux-lvm@redhat.com>; Thu, 19 Feb 2004 19:16:46 -0500
-Message-ID: <403551BD.2050901@cyberone.com.au>
-From: Nick Piggin <piggin@cyberone.com.au>
+Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with SMTP id i1K0Uii04284
+	for <linux-lvm@redhat.com>; Thu, 19 Feb 2004 19:30:44 -0500
+Received: from mailgate1.mailhost2.kornet.net (mailgate1.kornet.net [211.48.62.217])
+	by mx1.redhat.com (8.11.6/8.11.6) with SMTP id i1K0Ugb16745
+	for <linux-lvm@redhat.com>; Thu, 19 Feb 2004 19:30:43 -0500
+Received: from iris ([218.153.76.250]) by mailgate1.mailhost2.kornet.net
+          with ESMTP id <20040220002427.KXVX1018.mailgate1@iris>
+          for <linux-lvm@redhat.com>; Fri, 20 Feb 2004 09:24:27 +0900
+Message-ID: <006e01c3f748$dfd91e00$9700a8c0@iris>
+From: =?ks_c_5601-1987?B?v8DAzLbz?= <ohyira@gluesys.com>
 MIME-Version: 1.0
-References: <20040216133047.GA9330@suse.de> <20040217145716.GE30438@traveler.cistron.net> <20040218235243.GA30621@drinkel.cistron.nl> <20040218172622.52914567.akpm@osdl.org> <20040219021159.GE30621@drinkel.cistron.nl> <20040218182628.7eb63d57.akpm@osdl.org> <20040219101519.GG30621@drinkel.cistron.nl> <20040219101915.GJ27190@suse.de> <20040219205907.GE32263@drinkel.cistron.nl> <40353E30.6000105@cyberone.com.au> <20040219235303.GI32263@drinkel.cistron.nl>
-In-Reply-To: <20040219235303.GI32263@drinkel.cistron.nl>
-Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] Re: IO scheduler, queue depth, nr_requests
+Content-Type: multipart/alternative;
+	boundary="----=_NextPart_000_006B_01C3F794.49FB1CC0"
+Subject: [linux-lvm] vgcreate -- ERROR 2 writing volume group backup file /etc/lvmtab.d/new.tmp in vg_cfgbackup.c [line 257]
 Sender: linux-lvm-admin@redhat.com
 Errors-To: linux-lvm-admin@redhat.com
 Reply-To: linux-lvm@redhat.com
@@ -19,76 +24,90 @@ List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
 List-Archive: <https://www.redhat.com/archives/linux-lvm/>
-Date: Thu Feb 19 19:15:07 2004
+Date: Thu Feb 19 19:29:02 2004
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: Miquel van Smoorenburg <miquels@cistron.nl>
-Cc: Jens Axboe <axboe@suse.de>, Andrew Morton <akpm@osdl.org>, linux-lvm@sistina.com, linux-kernel@vger.kernel.org, thornber@redhat.com
+To: linux-lvm@redhat.com
 
+This is a multi-part message in MIME format.
 
-Miquel van Smoorenburg wrote:
+------=_NextPart_000_006B_01C3F794.49FB1CC0
+Content-Type: text/plain;
+	charset="ks_c_5601-1987"
+Content-Transfer-Encoding: base64
 
->On Thu, 19 Feb 2004 23:52:32, Nick Piggin wrote:
->
->>
->>Miquel van Smoorenburg wrote:
->>
->
-...
+SSdtIGx2bSBiZWdpbm5lciBeXg0KTm93IEkgbWFkZSBhIHBoeXNpY2FsIHZvbHVtZS4oI3B2Y3Jl
+YXRlIC1mZiAvZGV2L3NkYzEpDQpidXQgZm9sbG93aW5nIHByb2JsZW0gb2NjdXJlZC4uDQoNCkkg
+ZG9uJ3Qga25vdyB3aHkNCkhlbHAgbWUsIHBsZWFzZS4uDQoNCg0KI3ZnY3JlYXRlIG5ldyAvZGV2
+L3NkYzEgDQp2Z2NyZWF0ZSAtLSBJTkZPOiB1c2luZyBkZWZhdWx0IHBoeXNpY2FsIGV4dGVudCBz
+aXplIDQgTUINCnZnY3JlYXRlIC0tIElORk86IG1heGltdW0gbG9naWNhbCB2b2x1bWUgc2l6ZSBp
+cyAyNTUuOTkgR2lnYWJ5dGUNCnZnY3JlYXRlIC0tIEVSUk9SIDIgd3JpdGluZyB2b2x1bWUgZ3Jv
+dXAgYmFja3VwIGZpbGUgL2V0Yy9sdm10YWIuZC9uZXcudG1wIGluIHZnX2NmZ2JhY2t1cC5jIFts
+aW5lIDI1N10NCnZnY3JlYXRlIC0tIEVSUk9SICJ2Z19jZmdiYWNrdXAoKTogd3JpdGUiIHdyaXRp
+bmcgIi9ldGMvbHZtdGFiIg0KDQojdmdjaGFuZ2UgLWEgbiBuZXcNCnZnY2hhbmdlIC0tIEVSUk9S
+OiBWR0RBIGluIGtlcm5lbCBhbmQgbHZtdGFiIGFyZSBOT1QgY29uc2lzdGVudDsgcGxlYXNlIHJ1
+biB2Z3NjYW4NCg0KI3Znc2Nhbg0KdmdzY2FuIC0tIHJlYWRpbmcgYWxsIHBoeXNpY2FsIHZvbHVt
+ZXMgKHRoaXMgbWF5IHRha2UgYSB3aGlsZS4uLikNCnZnc2NhbiAtLSBmb3VuZCBhY3RpdmUgdm9s
+dW1lIGdyb3VwICJuZXciDQp2Z3NjYW4gLS0gRVJST1IgMiB3cml0aW5nIHZvbHVtZSBncm91cCBi
+YWNrdXAgZmlsZSAvZXRjL2x2bXRhYi5kL25ldy50bXAgaW4gdmdfY2ZnYmFja3VwLmMgW2xpbmUg
+MjU3XQ0KdmdzY2FuIC0tIEVSUk9SOiB1bmFibGUgdG8gZG8gYSBiYWNrdXAgb2Ygdm9sdW1lIGdy
+b3VwICJuZXciDQp2Z3NjYW4gLS0gRVJST1IgImx2bV90YWJfdmdfcmVtb3ZlKCk6IHVubGluayIg
+cmVtb3Zpbmcgdm9sdW1lIGdyb3VwICJuZXciIGZyb20gIi9ldGMvbHZtdGFiIg0KdmdzY2FuIC0t
+ICIvZXRjL2x2bXRhYiIgYW5kICIvZXRjL2x2bXRhYi5kIiBzdWNjZXNzZnVsbHkgY3JlYXRlZA0K
+dmdzY2FuIC0tIFdBUk5JTkc6IFRoaXMgcHJvZ3JhbSBkb2VzIG5vdCBkbyBhIFZHREEgYmFja3Vw
+IG9mIHlvdXIgdm9sdW1lIGdyb3VwDQoNCg0KZmRpc2sgLWwNCg0KRGlzayAvZGV2L3NkYzogNjQg
+aGVhZHMsIDMyIHNlY3RvcnMsIDE0MzYyMDggY3lsaW5kZXJzDQpVbml0cyA9IGN5bGluZGVycyBv
+ZiAyMDQ4ICogNTEyIGJ5dGVzDQoNCiAgIERldmljZSBCb290ICAgIFN0YXJ0ICAgICAgIEVuZCAg
+ICBCbG9ja3MgICBJZCAgU3lzdGVtDQovZGV2L3NkYzEgICAgICAgICAgICAgMSAgIDE0MzYyMDgg
+MTQ3MDY3Njk3NiAgIDhlICBMaW51eCBMVk0=
 
->>>Note that this is not an issue of '2 processes writing to 1 file', really.
->>>It's one process and pdflush writing the same dirty pages of the same file.
->>>
->>pdflush is a process though, that's all that matters.
->>
->
->I understand that when the two processes are unrelated, the patch as I
->sent it will do the wrong thing.
->
->But the thing is, you get this:
->
->- "dd" process writes requests
->- pdflush triggers to write dirty pages
->- too many pages are dirty so "dd" blocks as well to write synchronously
->- "dd" process triggers "queue full" but gets marked as "batching" so
->  can continue (get_request)
->- pdflush tries to submit one bio and gets blocked (get_request_wait)
->- "dd" continues, but that one bio from pdflush remains stuck for a while
->
->
+------=_NextPart_000_006B_01C3F794.49FB1CC0
+Content-Type: text/html;
+	charset="ks_c_5601-1987"
+Content-Transfer-Encoding: base64
 
-The batching logic can probably all be ripped out with per
-process limits. It's too complex anyway really.
+PCFET0NUWVBFIEhUTUwgUFVCTElDICItLy9XM0MvL0RURCBIVE1MIDQuMCBUcmFuc2l0aW9uYWwv
+L0VOIj4NCjxIVE1MPjxIRUFEPg0KPE1FVEEgaHR0cC1lcXVpdj1Db250ZW50LVR5cGUgY29udGVu
+dD0idGV4dC9odG1sOyBjaGFyc2V0PWtzX2NfNTYwMS0xOTg3Ij4NCjxNRVRBIGNvbnRlbnQ9Ik1T
+SFRNTCA2LjAwLjI4MDAuMTQwMCIgbmFtZT1HRU5FUkFUT1I+DQo8U1RZTEU+PC9TVFlMRT4NCjwv
+SEVBRD4NCjxCT0RZIGJnQ29sb3I9I2ZmZmZmZj4NCjxESVY+PEZPTlQgc2l6ZT0yPkknbSBsdm0g
+YmVnaW5uZXImbmJzcDteXjwvRk9OVD48L0RJVj4NCjxESVY+PEZPTlQgc2l6ZT0yPk5vdyBJIG1h
+ZGUgYSBwaHlzaWNhbCB2b2x1bWUuKCNwdmNyZWF0ZSAtZmYgDQovZGV2L3NkYzEpPC9GT05UPjwv
+RElWPg0KPERJVj48Rk9OVCBzaXplPTI+YnV0IGZvbGxvd2luZyBwcm9ibGVtIG9jY3VyZWQuLjwv
+Rk9OVD48L0RJVj4NCjxESVY+PEZPTlQgc2l6ZT0yPjwvRk9OVD4mbmJzcDs8L0RJVj4NCjxESVY+
+PEZPTlQgc2l6ZT0yPkkgZG9uJ3Qga25vdyB3aHk8L0ZPTlQ+PC9ESVY+DQo8RElWPjxGT05UIHNp
+emU9Mj5IZWxwIG1lLCBwbGVhc2UuLjwvRk9OVD48L0RJVj4NCjxESVY+PEZPTlQgc2l6ZT0yPjwv
+Rk9OVD4mbmJzcDs8L0RJVj4NCjxESVY+PEZPTlQgc2l6ZT0yPjwvRk9OVD4mbmJzcDs8L0RJVj4N
+CjxESVY+PEZPTlQgc2l6ZT0yPiN2Z2NyZWF0ZSBuZXcgL2Rldi9zZGMxIDxCUj52Z2NyZWF0ZSAt
+LSBJTkZPOiB1c2luZyBkZWZhdWx0IA0KcGh5c2ljYWwgZXh0ZW50IHNpemUgNCBNQjxCUj52Z2Ny
+ZWF0ZSAtLSBJTkZPOiBtYXhpbXVtIGxvZ2ljYWwgdm9sdW1lIHNpemUgaXMgDQoyNTUuOTkgR2ln
+YWJ5dGU8QlI+dmdjcmVhdGUgLS0gRVJST1IgMiB3cml0aW5nIHZvbHVtZSBncm91cCBiYWNrdXAg
+ZmlsZSANCi9ldGMvbHZtdGFiLmQvbmV3LnRtcCBpbiB2Z19jZmdiYWNrdXAuYyBbbGluZSAyNTdd
+PEJSPnZnY3JlYXRlIC0tIEVSUk9SIA0KInZnX2NmZ2JhY2t1cCgpOiB3cml0ZSIgd3JpdGluZyAi
+L2V0Yy9sdm10YWIiPC9GT05UPjwvRElWPg0KPERJVj48Rk9OVCBzaXplPTI+PC9GT05UPiZuYnNw
+OzwvRElWPg0KPERJVj48Rk9OVCBzaXplPTI+I3ZnY2hhbmdlIC1hIG4gbmV3PEJSPnZnY2hhbmdl
+IC0tIEVSUk9SOiBWR0RBIGluIGtlcm5lbCBhbmQgDQpsdm10YWIgYXJlIE5PVCBjb25zaXN0ZW50
+OyBwbGVhc2UgcnVuIHZnc2NhbjxCUj48L0ZPTlQ+PC9ESVY+DQo8RElWPjxGT05UIHNpemU9Mj4j
+dmdzY2FuPEJSPnZnc2NhbiAtLSByZWFkaW5nIGFsbCBwaHlzaWNhbCB2b2x1bWVzICh0aGlzIG1h
+eSANCnRha2UgYSB3aGlsZS4uLik8QlI+dmdzY2FuIC0tIGZvdW5kIGFjdGl2ZSB2b2x1bWUgZ3Jv
+dXAgIm5ldyI8QlI+dmdzY2FuIC0tIEVSUk9SIA0KMiB3cml0aW5nIHZvbHVtZSBncm91cCBiYWNr
+dXAgZmlsZSAvZXRjL2x2bXRhYi5kL25ldy50bXAgaW4gdmdfY2ZnYmFja3VwLmMgW2xpbmUgDQoy
+NTddPEJSPnZnc2NhbiAtLSBFUlJPUjogdW5hYmxlIHRvIGRvIGEgYmFja3VwIG9mIHZvbHVtZSBn
+cm91cCAibmV3IjxCUj52Z3NjYW4gDQotLSBFUlJPUiAibHZtX3RhYl92Z19yZW1vdmUoKTogdW5s
+aW5rIiByZW1vdmluZyB2b2x1bWUgZ3JvdXAgIm5ldyIgZnJvbSANCiIvZXRjL2x2bXRhYiI8QlI+
+dmdzY2FuIC0tICIvZXRjL2x2bXRhYiIgYW5kICIvZXRjL2x2bXRhYi5kIiBzdWNjZXNzZnVsbHkg
+DQpjcmVhdGVkPEJSPnZnc2NhbiAtLSBXQVJOSU5HOiBUaGlzIHByb2dyYW0gZG9lcyBub3QgZG8g
+YSBWR0RBIGJhY2t1cCBvZiB5b3VyIA0Kdm9sdW1lIGdyb3VwPC9GT05UPjwvRElWPg0KPERJVj48
+Rk9OVCBzaXplPTI+PC9GT05UPiZuYnNwOzwvRElWPg0KPERJVj48Rk9OVCBzaXplPTI+PC9GT05U
+PiZuYnNwOzwvRElWPg0KPERJVj48Rk9OVCBzaXplPTI+ZmRpc2sgLWw8L0ZPTlQ+PC9ESVY+DQo8
+RElWPjxGT05UIHNpemU9Mj48L0ZPTlQ+Jm5ic3A7PC9ESVY+DQo8RElWPjxGT05UIHNpemU9Mj5E
+aXNrIC9kZXYvc2RjOiA2NCBoZWFkcywgMzIgc2VjdG9ycywgMTQzNjIwOCANCmN5bGluZGVyczxC
+Uj5Vbml0cyA9IGN5bGluZGVycyBvZiAyMDQ4ICogNTEyIGJ5dGVzPC9GT05UPjwvRElWPg0KPERJ
+Vj4mbmJzcDs8L0RJVj4NCjxESVY+PEZPTlQgc2l6ZT0yPiZuYnNwOyZuYnNwOyBEZXZpY2UgQm9v
+dCZuYnNwOyZuYnNwOyZuYnNwOyANClN0YXJ0Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7
+Jm5ic3A7IEVuZCZuYnNwOyZuYnNwOyZuYnNwOyANCkJsb2NrcyZuYnNwOyZuYnNwOyBJZCZuYnNw
+OyANClN5c3RlbTxCUj4vZGV2L3NkYzEmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJz
+cDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsgDQoxJm5ic3A7Jm5ic3A7IDE0
+MzYyMDggMTQ3MDY3Njk3NiZuYnNwOyZuYnNwOyA4ZSZuYnNwOyBMaW51eCANCkxWTTwvRk9OVD48
+L0RJVj48L0JPRFk+PC9IVE1MPg0K
 
->That's stupid, that one bio from pdflush should really be allowed on
->the queue, since "dd" is adding requests from the same source to it
->anyway.
->
->
-
-But the whole reason it is getting blocked in the first place
-is because your controller is sucking up all your requests.
-The whole problem is not a problem if you use properly sized
-queues.
-
-I'm a bit surprised that it wasn't working well with a controller
-queue depth of 64 and 128 nr_requests. I'll give you a per process
-request limit patch to try in a minute.
-
->Perhaps writes from pdflush should be handled differently to prevent
->this specific case ?
->
->Say, if pdflush adds request #128, don't mark it as batching, but
->let it block. The next process will be the one marked as batching
->and can continue. If pdflush tries to add a request > 128, allow it,
->but _then_ block it.
->
->Would something like that work ? Would it be a good idea to never mark
->a pdflush process as batching, or would that have a negative impact
->for some things ?
->
->
-
-It's hard to know. Maybe a better solution would be to allow pdflush
-to be exempt from the limits entirely as long as it tries not to write
-to congested queues (which is what it does)...
+------=_NextPart_000_006B_01C3F794.49FB1CC0--
