@@ -1,10 +1,10 @@
-Return-Path: <michael_e_brown@dell.com>
-Date: Wed, 24 Jan 2001 16:36:22 -0600 (CST)
-From: Michael E Brown <michael_e_brown@dell.com>
-Subject: Re: [linux-lvm] Newbie questions
-In-Reply-To: <OGEIIBECLDEKAJGFBOGCKEDBCAAA.mvasa@confluencenetworks.com>
-Message-ID: <Pine.LNX.4.30.0101241630290.18981-100000@carthage.michaels-house.net>
+Return-Path: <wim@comned.com>
+From: "wim bakker" <wim@comned.com>
+Date: Thu, 25 Jan 2001 01:37:58 +0100
+Message-ID: <web-8140650@comned.com>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Subject: [linux-lvm] vgextend segfaults reprise
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,44 +16,22 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: Linux-Lvm <linux-lvm@sistina.com>
+Content-Type: text/plain; charset="us-ascii"
+To: linux-lvm@sistina.com
 
-Hi Mayank!
-
-On Wed, 24 Jan 2001, Mayank Vasa wrote:
-
-> Hi,
->
-> I am new to LVM and have some basic questions:
->
-> 1) From the documentation I have read, I think once you extend/reduce a LV
-> or VG you don't need to reboot the system. Correct?
-
-You are correct. No need to reboot the system.
-
->
-> 2) Assuming 1 is correct, how is the filesystem made aware of the changes?
-> I'd like to understand the flow of this too.
-
-You need to run a separate utility to resize the filesystem.
-
-http://ext2resize.sourceforge.net/
-
-There are kernel patches that allow you to do this while the filesystem is
-online. Without the patches, you must un-mount the filesystem first.
-
-No reboot necessary
-
->
-> 3) What are LVM snapshots?
-
-Very cool.
-Copy-on-write. You create a snapshot of an LV. The original
-volume is still read-write and acts normal. The snapshot acts like a
-frozen-in-time picture of the original LV. It does this by creating
-'before' copies of any blocks that are changed in the original LV.
-
---
-Michael Brown
+Thanks for the answers, yes I didn't apply patches to the
+2.4.0
+and 2.4.1-pre10 kernel, I hadn't read the README in the
+PATCHES directory because I thought lvm support in the
+kernel meant I didn't had to apply patches, but that was a
+mistake on my side
+All works very fine now, I have now a 174G gv consisting of
+4 pv's , all assigned to one lv (sounds cool) I made
+reiserfs on it when I had created the lv for the first time
+(only one pv in the vg) , made filesystem with reiserfs and
+one by one I added the other pv's using vgextend and
+lvextend and resize_reiserfs and it worked out great, no
+problems, great!!!
+wim bakker
+ComNed Netwerken BV
+31 20 4350025
