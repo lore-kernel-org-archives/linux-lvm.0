@@ -1,25 +1,43 @@
-Date: Thu, 16 Dec 1999 22:53:07 -0500 (EST)
-From: Terry Hardie <terryh@orcas.net>
-Subject: [linux-lvm] 0.7 Conflict with MD in 2.3.31
-Message-ID: <Pine.LNX.4.21.9912162250390.24493-100000@orcas.net>
-MIME-Version: 1.0
+From: Heinz Mauelshagen <mauelsha@ez-darmstadt.telekom.de>
+Message-Id: <199912171310.OAA18804@u9etz.ez-darmstadt.telekom.de>
+Subject: Re: [linux-lvm] 0.7 Conflict with MD in 2.3.31
+In-Reply-To: <Pine.LNX.4.21.9912162250390.24493-100000@orcas.net> from Terry Hardie at "Dec 16, 1999 10:53: 7 pm"
+Date: Fri, 17 Dec 1999 14:10:39 +0100 (MET)
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: Linux LVM <linux-lvm@msede.com>
+Content-Type: text/plain; charset="us-ascii"
+To: Terry Hardie <terryh@orcas.net>
+Cc: linux-lvm@msede.com, mge@ez-darmstadt.telekom.de
 
-I applied the 0.7 LVM patch to a 2.3.31 kernel. I'm moving from a number 
-raid0 md devices to LVM, but if I have LVM in the kernel, and try to
-activate any of the MD devices, I get a kernel oops (Doesn't die, just
-kills the md program attempting to change the md array)
+> I applied the 0.7 LVM patch to a 2.3.31 kernel. I'm moving from a number 
+> raid0 md devices to LVM, but if I have LVM in the kernel, and try to
+> activate any of the MD devices, I get a kernel oops (Doesn't die, just
+> kills the md program attempting to change the md array)
+> 
+> Is this a known incompatibility, and if not, should I post the oops with
+> symbols?
+> 
 
-Is this a known incompatibility, and if not, should I post the oops with
-symbols?
+Yes, it is a known problem.
+I'm working on it right now to send it to Linus.
+It's caused by changes in the i/o request handling of the kernel.
 
----
-Terry Hardie					terry@gxc.com
-Founder and Chief Technology officer		ICQ#: 977679
-Convergence Equipment Co, Manassas, VA, USA	V: +1-703-361-5566
-"Home of the BOB Class 4 convergence switch"
+Cheers,
+Heinz
+
+-- 
+
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+Systemmanagement CS-TS                           T-Nova
+                                                 Entwicklungszentrum Darmstadt
+Heinz Mauelshagen                                Otto-Roehm-Strasse 71c
+Senior Systems Engineer                          Postfach 10 05 41
+                                                 64205 Darmstadt
+mge@EZ-Darmstadt.Telekom.de                      Germany
+                                                 +49 6151 886-425
+                                                          FAX-386
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
