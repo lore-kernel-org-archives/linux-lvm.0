@@ -1,21 +1,18 @@
-Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id i9EIIwr08028
-	for <linux-lvm@redhat.com>; Thu, 14 Oct 2004 14:18:58 -0400
-Received: from mail2.swivel.net (mail2.swivel.net [216.187.102.8])
-	by mx3.redhat.com (8.12.11/8.12.10) with ESMTP id i9EIIlkL019048
-	for <linux-lvm@redhat.com>; Thu, 14 Oct 2004 14:18:48 -0400
-Received: from [172.17.17.17] (S010600c0261186f5.vc.shawcable.net
-	[24.81.141.89])
-	by mail2.swivel.net (Postfix) with ESMTP id 088522BA78
-	for <linux-lvm@redhat.com>; Thu, 14 Oct 2004 18:08:09 +0000 (GMT)
-From: Liam Helmer <lists@strongboxlinux.com>
-In-Reply-To: <416E3889.3090207@cru.fr>
-References: <416E3889.3090207@cru.fr>
-Date: Thu, 14 Oct 2004 11:18:41 -0700
-Message-Id: <1097777922.15920.77.camel@vdesktop.fast1.strongboxlinux.com>
+Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id i9EIJPr08108
+	for <linux-lvm@redhat.com>; Thu, 14 Oct 2004 14:19:25 -0400
+Received: from email.careercast.com (email.careercast.com [216.39.101.233])
+	by mx1.redhat.com (8.12.11/8.12.10) with SMTP id i9EIJOxK005031
+	for <linux-lvm@redhat.com>; Thu, 14 Oct 2004 14:19:25 -0400
+Subject: Re: [linux-lvm] Creating snapshot on / hangs machine
+From: Clint Byrum <cbyrum@spamaps.org>
+In-Reply-To: <26B6D679-1E0D-11D9-806D-000A9566A350@DDG.com>
+References: <BAY17-F41JPv00J6gX2000169b9@hotmail.com>
+	<26B6D679-1E0D-11D9-806D-000A9566A350@DDG.com>
+Date: Thu, 14 Oct 2004 11:19:23 -0700
+Message-Id: <1097777963.15099.31.camel@localhost>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] Snapshot Support
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -29,30 +26,36 @@ List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-I'm seeing a lot of messages about snapshots sort of working... I should
-relay my experience here.
+On Thu, 2004-10-14 at 13:16 -0500, Andrew W. Donoho wrote:
+> 
+> 
+> ______________________________________________________________________
+> 
+> 
+> On Oct 14, 2004, at 11:31, Kai Leibrandt wrote:
+>         As soon as I create a snapshot on / however, the machine
+>         hangs, although X still works (well, the mouse still moves),
+>         it is no longer possible to open a new shell, switch consoles,
+>         or even <CTRL>C the lvcreate.
+>         
+>         I have tried this with ext2 as well as with xfs, including
+>         doing xfs_freeze before taking the snapshot, so I don't think
+>         it's a filesys related matter.
+>         
+>         Is there anything I am missing here? Is it even supported to
+>         do / snapshots?
+> 
+> 
+> Kai,
+> 
+> I reported a similar problem starting with my root partition when I
+> added a second drive. After a bit of skullduggery, I believe that LVM
+> activities on the root partition particularly stress the memory
+> system. Or, at least, when I slowed the memory system down on my
+> x86-64 machine, I no longer get crashes like you describe above. 
+> 
 
-I did some testing with Snapshots in 2.6.8.1, and came up with variable
-results. Here's some stuff I found:
 
-reiserfs works badly with read/write snapshots: writing to both the main
-filesystem and the snapshot hangs the filesystems permanently (even
-after writing stops), and stops LVM from being able to assign more
-snapshots/space/etc until a full reboot.
-
-ext3 works OK, albeheit with a definite CPU hit. I tried low-level loads
-and it didn't crash, which was certainly better than with reiserfs.
-
-I didn't try a whole lot of other filesystems though. Generally, it
-didn't seem quite stable enough, so I decided to wait a few iterations
-before working with it seriously. Does anyone know the status of work in
-this area? Or if there's some more patches waiting in -mm?
-
-Cheers,
-Liam
-
--- 
-
-StrongBox Linux
-http://www.strongboxlinux.com
-"Making Security Friendly"
+Weird.. I thought the problem was that LVM was causing the atime on
+the /dev entries to be updated, which required write access, but there
+was a lock on the filesystem while the snapshot was created.
