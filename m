@@ -1,11 +1,14 @@
-Return-Path: <leowong@i-stt.com.hk>
-Message-ID: <000601c0f4bd$f1bbb1e0$3533a8c0@leo2000>
-From: "Leo Wong" <leowong@i-stt.com.hk>
-Date: Thu, 14 Jun 2001 18:36:54 +0800
-MIME-Version: 1.0
-Content-Type: multipart/alternative;
-	boundary="----=_NextPart_000_0003_01C0F500.FBF311B0"
-Subject: [linux-lvm] LVM kernel patch request
+Return-Path: <lewis@sistina.com>
+Date: Thu, 14 Jun 2001 09:36:38 -0500
+From: AJ Lewis <lewis@sistina.com>
+Subject: Re: [linux-lvm] LVM kernel patch request
+Message-ID: <20010614093637.A22499@sistina.com>
+References: <000601c0f4bd$f1bbb1e0$3533a8c0@leo2000>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-md5;
+	protocol="application/pgp-signature"; boundary="mP3DRpeJDSE+ciuQ"
+Content-Disposition: inline
+In-Reply-To: <000601c0f4bd$f1bbb1e0$3533a8c0@leo2000>; from leowong@i-stt.com.hk on Thu, Jun 14, 2001 at 06:36:54PM +0800
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -19,83 +22,71 @@ List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 To: linux-lvm@sistina.com
 
-This is a multi-part message in MIME format.
-
-------=_NextPart_000_0003_01C0F500.FBF311B0
+--mP3DRpeJDSE+ciuQ
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain;
-	charset="big5"
 
-Dear Sir/Madam,
+On Thu, Jun 14, 2001 at 06:36:54PM +0800, Leo Wong wrote:
+> I am using RedHat7.1 with Kernel version 2.4.2-2. I downloaded the binari=
+es patch-generator0.91beta7 rpm. i follow the instructions(i.e. ./configure=
+ and then make in PATCHES, then a patch -p1 < /xx/xxx/PATCHES/xxxxx.patch) =
+ to patch the kernel and everything wents well when i do a make config in t=
+he /usr/src/linux, configuring the LVM as a modules.=20
 
-I am using RedHat7.1 with Kernel version 2.4.2-2. I downloaded the =
-binaries patch-generator0.91beta7 rpm. i follow the instructions(i.e. =
-./configure and then make in PATCHES, then a patch -p1 < =
-/xx/xxx/PATCHES/xxxxx.patch)  to patch the kernel and everything wents =
-well when i do a make config in the /usr/src/linux, configuring the LVM =
-as a modules.=20
+Where is your kernel source located?  Did you specify this location when you
+ran ./configure?  (ie, './configure --with-kernel_dir=3D/usr/src/linux-2.4.=
+2-2')
 
-But i cannot do a make modules, after i make dep;make clean;make bzlilo, =
+> But i cannot do a make modules, after i make dep;make clean;make bzlilo, =
 lots of compilation errors jump out.
-I then try compile the LVM in the kernel by running make config again. =
-after i build everything, when i run the vgscan, it says "lvmiopversion =
--- LVM driver/module not loaded?"
 
-Seemingly the LVM module/compilation doesn't work for this kernel.
+A log of the exact errors would be nice.  I really don't have any idea what
+is going wrong unless I can see those.
 
-Could u please help me on it?
+> I then try compile the LVM in the kernel by running make config again. af=
+ter i build everything, when i run the vgscan, it says "lvmiopversion -- LV=
+M driver/module not loaded?"
 
-Thanks very much in advance.
+Did you install the new kernel and reboot?  It may be possible to get along
+without rebooting if you are building the kernel modules, but you will
+definitely need to reboot if LVM is built into the kernel.
 
-Best regards
-Leo Wong
+> Seemingly the LVM module/compilation doesn't work for this kernel.
 
-------=_NextPart_000_0003_01C0F500.FBF311B0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/html;
-	charset="big5"
+It should work, but RedHat puts a lot of additional patches into their
+kernels, and it is possible there is a conflict somewhere.  Did the patch
+apply cleanly?
 
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
-<HTML><HEAD>
-<META content=3D"text/html; charset=3Dbig5" http-equiv=3DContent-Type>
-<META content=3D"MSHTML 5.00.3211.1700" name=3DGENERATOR>
-<STYLE></STYLE>
-</HEAD>
-<BODY bgColor=3D#ffffff>
-<DIV><FONT face=3DArial size=3D2>Dear Sir/Madam,</FONT></DIV>
-<DIV>&nbsp;</DIV>
-<DIV><FONT face=3DArial size=3D2>I am using RedHat7.1 with Kernel =
-version 2.4.2-2. I=20
-downloaded the binaries patch-generator0.91beta7 rpm. i follow the=20
-instructions(i.e. ./configure and then make in&nbsp;PATCHES, then a =
-patch -p1=20
-&lt; /xx/xxx/PATCHES/xxxxx.patch)  to patch the kernel </FONT><FONT =
-face=3DArial=20
-size=3D2>and everything wents well when i do a make config in the =
-/usr/src/linux,=20
-configuring the LVM as a modules. </FONT></DIV>
-<DIV>&nbsp;</DIV>
-<DIV><FONT face=3DArial size=3D2>But i cannot do a make modules, after i =
-make=20
-dep;make clean;make bzlilo, lots of compilation errors jump =
-out.</FONT></DIV>
-<DIV><FONT face=3DArial size=3D2>I then try compile the LVM in the =
-kernel by running=20
-make config again. after i build everything, when i run the vgscan, it =
-says=20
-"lvmiopversion -- LVM driver/module not loaded?"</FONT></DIV>
-<DIV>&nbsp;</DIV>
-<DIV><FONT face=3DArial size=3D2>Seemingly the LVM module/compilation =
-doesn't work=20
-for this kernel.</FONT></DIV>
-<DIV>&nbsp;</DIV>
-<DIV><FONT face=3DArial size=3D2>Could u please help me on =
-it?</FONT></DIV>
-<DIV>&nbsp;</DIV>
-<DIV><FONT face=3DArial size=3D2>Thanks very much in =
-advance.</FONT></DIV>
-<DIV>&nbsp;</DIV>
-<DIV><FONT face=3DArial size=3D2>Best regards</FONT></DIV>
-<DIV><FONT face=3DArial size=3D2>Leo Wong</FONT></DIV></BODY></HTML>
+Regards,
+--=20
+AJ Lewis
+Sistina Software Inc.                  Voice:  612-638-0500
+1313 5th St SE, Suite 111              Fax:    612-638-0500
+Minneapolis, MN 55414                  E-Mail: lewis@sistina.com
+http://www.sistina.com
 
-------=_NextPart_000_0003_01C0F500.FBF311B0--
+Current GPG fingerprint =3D 3B5F 6011 5216 76A5 2F6B  52A0 941E 1261 0029 2=
+648
+Get my key at: http://www.sistina.com/~lewis/gpgkey
+ (Unfortunately, the PKS-type keyservers do not work with multiple sub-keys)
+
+-----Begin Obligatory Humorous Quote----------------------------------------
+Hope is NOT a thing with feathers, the thing with feathers is my nephew,
+and I have to take him to a specialist in Zurich. - Woody Allen
+-----End Obligatory Humorous Quote------------------------------------------
+
+--mP3DRpeJDSE+ciuQ
+Content-Type: application/pgp-signature
+Content-Disposition: inline
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.0.6 (GNU/Linux)
+Comment: For info see http://www.gnupg.org
+
+iD8DBQE7KMv1pE6/iGtdjLERAvBXAKCbJvfKWheXXo7m1yX5jd7mMnY5JQCfTmfm
+KyGgYQxRamnfk6eEodqfBmc=
+=nJ3q
+-----END PGP SIGNATURE-----
+
+--mP3DRpeJDSE+ciuQ--
