@@ -1,8 +1,10 @@
-From: Micah Anderson <micah@riseup.net>
-Message-ID: <20031121172915.GN10912@riseup.net>
+From: Luca Berra <bluca@comedia.it>
+Subject: Re: [linux-lvm] LVM2 on 2.4.22. (Fedora core 1 with nptl)
+Message-ID: <20031121185911.GF16523@percy.comedia.it>
+References: <1069370480.3fbd4c706cd12@netmail.pipex.net>
 Mime-Version: 1.0
 Content-Disposition: inline
-Subject: [linux-lvm] Raid or backups
+In-Reply-To: <1069370480.3fbd4c706cd12@netmail.pipex.net>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -13,55 +15,73 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Fri Nov 21 11:31:01 2003
+Date: Fri Nov 21 13:00:01 2003
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-I am trying to decide what the best way to deal with backups on a LVM
-system is.
+On Thu, Nov 20, 2003 at 11:21:20PM +0000, tugg wrote:
+>Trying to install LVM2 on 2.4.22. (Fedora core 1 with nptl)
+>
+>For device mapper: did configure followed by make install. There is no patch 
+>for 2.4.22 so I assumed that the kernel was already patched (mistake?). LVM and 
+Mistake
 
-I've got one 120gig disk that the system is riding on, 110gigs of that
-is setup on a LVM partition as such:
+>device mapper are already loadable modules, so no need to recompile kernel 
+>(correct?). Added script to /etc/modules.conf and reboot. DMESG shows LVM 
+Incorrect
 
-Filesystem	  	  		1k-blocks	Used	Available Use% Mounted on
-/dev/sympavg01/spool    511980    101640    410340    20% /home/sympa/spool
-/dev/sympavg01/archives 27503796  15009052  12494744  55% /home/sympa/archives
-/dev/sympavg01/expl    6291260   3758112   2533148    60% /home/sympa/expl
+>version 1.0.5+(22/07/2002) module loaded.
+>
+>pvscan -h gives me the following:
+>
+>Logical Volume Manager 1.0.3
+>Heinz Mauelshagen, Sistina Software  19/02/2002 (IOP 10)
+>
+>	
+>Why is it telling me 1.0.3 when DMESG says 1.0.5+?
 
-The rest is partitioned up into separate /, /boot, /tmp, /usr, /var,
-and home (and swap).
+1.0.5+ is the kernel driver version
+1.0.3 is the version of the pvscan proram
 
-I don't like a machine that is dependant on one disk any more than the
-next guy, so I put another 120gig disk in the machine, thinking I
-would raid the two together. After reading months of list archives, I
-am seeing that building a raid array on the system at this point is
-not going to be straightforward, especially since the machine is in
-production. It seems the best method for doing this would be to build
-up md raid devices, layer LVM on top of the md's and then create
-filesystems, this isn't easy if you already have things up and running
-(although I am interested to hear if people have done this, and if so,
-how).
+>After trying all of the above, found patches for 2.4.22 via mailing list 
+>archives (2.4.22-dm-1.tar.bz2) and upacked to get directory 2.4.22-dm-1 
+>containing patch files 00001 through 00016 and INDEX. Used cat to create one 
+>large patch file (file patches-2.4.22.patch attached) with all the patches 
+>(mistake?) and did patch --dry-run -p1 
+i would try appliyng them one by one.
 
-In addtion, I feel as if backup up the system is a higher priority
-than having disk redundancy (mirrored corrupt data is worse for my
-situation than a disk failure and recovery time).
+>with this file (only dry run, so nothing applied yet). This indicates some 
+>patches will apply, some are already applied, and quite a few will fail (see 
+>attached patches-2.4.22.log file). Is this because I installed device mapper 
+>before the patches, or do these patches just not fit my system? 
+2.4.22-dm-1.tar.bz2appliest to vanilla 2.4.22 kernel
+redhat/fedora kernel has been modified from vanilla
+either you are able to massage those patches or you use vanilla or you
+bug fedora developers to patch their kernel for dm.
 
-It is simple for me to take a disk backup of the non LVM partitions (I
-use StoreBackup), but I am somewhat puzzled about the best direction
-to go with the LVM volumes. Should I back them up just like any other
-partition and not let the LVM bother me? What about the LVM metadata
-and if I needed to restore from this backup?
+>Also, HOWTO says I need 1.0.6 or later (I assume this is the driver version, 
+>not the library version?) - do I need another kernel patch to do that, is it 
+>included in the patches I am trying to apply, or will that install as part of 
+>LVM2?
+1.0.6 is for lvm 1, redhat lvm1 is heavily modified as well
+if you devide for a vanilla kernel and want both lvm1 and lvm2 i;d
+suggest using recent lvm tolls as well.
+If you have not the skill to o all this, stay with fedora and wait for
+them to upgrade
 
-Would taking snapshots be more advisable? The data in these partitions
-changes fairly raipidly. If I were to do snapshots, does it make sense
-to make the snapshot onto my backup disk (hdc) and then back up that
-snapshot onto the backup disk (hdc again), and then destroy the
-snapshot? Or is it a waste to snapshot to a different disk entirely,
-should I instead keep the snapshot to the same volume it is on? Or
-does it not matter at all because snapshots don't actually do much
-disk work until you start accessing the data?
 
-Thanks for any insights!
-micah
+>cvs dm 1.0
+>--- diff/Documentation/Configure.help	2003-08-26 13:49:59.000000000 +0100
+>+++ source/Documentation/Configure.help	2003-08-26 13:59:04.000000000 +0100
+NEVER EVER ATTACH A 350K FILE AGAIN!
+
+L>
+-- 
+Luca Berra -- bluca@comedia.it
+        Communication Media & Services S.r.l.
+ /"\
+ \ /     ASCII RIBBON CAMPAIGN
+  X        AGAINST HTML MAIL
+ / \
