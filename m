@@ -1,8 +1,8 @@
-Message-ID: <003b01c2dc43$f93d7830$0900a8c0@pcbas>
-From: "Bas" <weblists@gmx.net>
+Message-ID: <3E5B382B.2090908@conterra.de>
+From: Dieter Stueken <stueken@conterra.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] Problems with LVM 1.0.6
+Content-Transfer-Encoding: 8bit
+Subject: [linux-lvm] pv_move failed
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -13,48 +13,37 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Feb 24 14:32:02 2003
+Date: Tue Feb 25 03:33:01 2003
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="utf-8"; format="flowed"
 To: linux-lvm@sistina.com
 
-Hi there,
+I just got my new 240GB disk and want to move my VG to it.
+Unfortunately I get an unexpected error:
 
-I'm using LVM 1.0.6 on 2.4.20 with devfs 1.99.17. I used LVM on 2 disks,
-with two different VG's.
+lv: /dev/backup/mirror[2]  old_dev: 22:00  new_dev: 03:02
+old_pe_sector: 117703032  new_pe_sector: 357564792
+pvmove -- opening output physical volume "/dev/hda2"
+pvmove -- llseeking input physical volume "/dev/hdc"
+pvmove -- llseeking output physical volume "/dev/hda2"
+pvmove -- /dev/hdc [PE 897 [mirror [LE 2727]] -> /dev/hda2 [PE 2727] [1/247]
+pvmove -- locking physical extent 897 of "/dev/hdc" in kernel
+pvmove -- about to read input physical volume "/dev/hdc" and to write
+output physical volume "/dev/hda2"
+pvmove -- ERROR writing output physical volume "/dev/hda2" (still
+12648448 bytes to write)
+pvmove -- ERROR "pv_move_pe(): writing output PE" moving physical extents
 
-It wasn't possible for me to create an LV as soon as it reached minor number
-16. I seem to have deleted the output of this command, but it was "No such
-device or address". I deleted the other VG and it's LV's and recreated the
-LV and it worked.
+this time I can not identify any reason an no messages on syslog.
+Any idea? What informations should I dump/post in addition?
 
-My setup is this:
-1 on-board SCSI (Adaptec 7880) controller with one disk - sda.
-1 PCI Adaptec 2940UW controller with one disk - sdb.
+I'm using SuSE8.1 with kernel 2.4.20, the LVM-version is 1.0.5.
 
-sda, Like sdb has 2 partitions. PV's were created on the second partitions.
-sda2 was rootvg, sdb2 was vg00. A couple of logical volumes with minor
-numbers 0-3 where on vg00, the rest was on rootvg.
+... and, sorry for my ill formed subject line from last week.
 
-pvdisplay -v /dev/sda2
---- Physical volume ---
-PV Name               /dev/scsi/host0/bus0/target0/lun0/part2
-VG Name               rootvg
-PV Size               8.45 GB [17719695 secs] / NOT usable 16.19 MB [LVM:
-130 KB]
-PV#                   1
-PV Status             available
-Allocatable           yes
-Cur LV                12
-PE Size (KByte)       16384
-Total PE              539
-Free PE               275
-Allocated PE          264
-PV UUID               l7p6er-GiqY-mYAW-Awsi-zB0h-CFUp-o9fga6
-
-I wonder why 16.19MB would not be usable, since system/kernel/* logging
-doesn't report anything about failing disks.
-PE size is 16MB.
-
-Thanks,
-Bas.
+Dieter
+-- 
+Dieter St�ken, con terra GmbH, M�nster
+     stueken@conterra.de
+     http://www.conterra.de/
+     (0)251-7474-501
