@@ -1,11 +1,11 @@
-From: Gashaw Teshome <gasht@neopets.com>
-Subject: Re: [linux-lvm] Snapshot sizes
-Date: Wed, 29 Aug 2001 17:19:10 -0700
-References: <20010829173123.A10331@sistina.com>
-In-Reply-To: <20010829173123.A10331@sistina.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Message-Id: <E15cFXf-0005aa-00@hermes.sistina.com>
+Date: Thu, 30 Aug 2001 09:08:48 +0200
+From: Christoph Hellwig <hch@caldera.de>
+Subject: Re: [linux-lvm] A Caldera related bug?
+Message-ID: <20010830090848.A27345@caldera.de>
+References: <OF8D6ACD21.34A36C6E-ON87256AB7.007C475A@sc.blm.gov>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <OF8D6ACD21.34A36C6E-ON87256AB7.007C475A@sc.blm.gov>; from dan_mcmanus@co.blm.gov on Wed, Aug 29, 2001 at 05:04:01PM -0600
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -18,37 +18,55 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-> Make sense?
+On Wed, Aug 29, 2001 at 05:04:01PM -0600, dan_mcmanus@co.blm.gov wrote:
+> Hello,
+> 
+> First off, if I'm not supposed to send this to you, I apologize. I am
+> running Caldera Openlinux workstation 3.1 with a kernel of 2.4.8 that has
+> LVM support enabled. My computer is a gateway 4200 Pentium II, if you care
+> about that. I tried this with lvm 1.0.1-rc1, 1.0, and 0.9, following the
+> instructions faithfully. What happens is I type "make" (after having typed
+> "./configure", of course) and this same error happens in each case:
 
-I  think so.  So, if I create a LV of (let's say) 100M, take a snapshot and 
-then do my backup, as long as no changes have occured in excess of that 100M
-I'll be fine.  The total size of the files on the original LV doesn't matter 
-as long as I allocate enough space for the snapshot LV.
+This is because LVM is _completly_ broken by including kernel headers all
+over theplace, and - even worse - sometimes even defining __KERNEL__ and
+using kernel-only datatypes.
 
-Do I have it right?
+In fact any system using 2.4.2-ac and newer headers in /usr/include/linux
+makes LVM fail this way.
 
-On Wednesday 29 August 2001 03:31 pm, AJ Lewis wrote:
-> You need enough room in the snapshot to store all the changes written to
-> the
-> disk from the time you take the snapshot to the time you finish backing
-> it
-> up.  What happens is that when there is a write pending to the original
-> LV,
-> we first copy the original data to the snapshot LV, then write the new
-> data
-> to the original LV.  The snapshot only stores the changed data.  It
-> redirects any queries of data that hasn't changed back to the data
-> stored on the original LV.  Make sense?
->
-> There is more detailed information at:
-> http://tech.sistina.com/lvm/doc/lvm_howto/Taking_a_backup_using_sna.html
-> #sec:Snapshots_Backup
->
-> Regards,
+I've attached the workaround I have in my RPM.
+
+	Christoph
 
 -- 
-Gashaw Teshome
-System Administrator
-Neopets.com
+Of course it doesn't work. We've performed a software upgrade.
+
+--- LVM/1.0.1-rc1/kernel/lvm.h~	Thu Aug 30 09:00:30 2001
++++ LVM/1.0.1-rc1/kernel/lvm.h	Thu Aug 30 09:02:47 2001
+@@ -110,10 +110,7 @@
+ #include <linux/kdev_t.h>
+ #include <linux/list.h>
+ #else
+-#define __KERNEL__
+ #include <linux/kdev_t.h>
+-#include <linux/list.h>
+-#undef __KERNEL__
+ #endif				/* #ifndef __KERNEL__ */
+ 
+ #include <asm/types.h>
+@@ -420,7 +417,11 @@
+ 
+ /* remap physical sector/rdev pairs including hash */
+ typedef struct lv_block_exception_v1 {
++#ifdef __KERNEL__
+ 	struct list_head hash;
++#else
++	uint64_t hash;			/* XXX b0rken on 64bit plattforms */
++#endif
+ 	uint32_t rsector_org;
+ 	kdev_t   rdev_org;
+ 	uint32_t rsector_new;
