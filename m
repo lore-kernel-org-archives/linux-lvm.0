@@ -1,13 +1,20 @@
-Date: Wed, 14 Apr 2004 10:44:04 +0200
-From: Heinz Mauelshagen <mauelshagen@redhat.com>
-Subject: Re: [linux-lvm] Meaning of strict allocation
-Message-ID: <20040414084404.GB22343@redhat.com>
-References: <BAY16-DAV32wB0jTj7z000022e2@hotmail.com>
+Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with SMTP id i3EBqwj10871
+	for <linux-lvm@redhat.com>; Wed, 14 Apr 2004 07:52:58 -0400
+Received: from mail.werbeagentur-aufwind.de (websrv.werbeagentur-aufwind.de
+	[213.239.197.241])
+	by mx3.redhat.com (8.12.10/8.12.10) with SMTP id i3EBqv87017486
+	for <linux-lvm@redhat.com>; Wed, 14 Apr 2004 07:52:58 -0400
+Subject: Re: [linux-lvm] quota command does not work
+From: Christophe Saout <christophe@saout.de>
+In-Reply-To: <20040414083919.GA22343@redhat.com>
+References: <20040413151723.GB19598@oddprocess.org>
+	<20040414083919.GA22343@redhat.com>
+Message-Id: <1081943571.8758.1.camel@leto.cs.pocnet.net>
 Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <BAY16-DAV32wB0jTj7z000022e2@hotmail.com>
-Reply-To: mauelshagen@redhat.com,
-	LVM general discussion and development <linux-lvm@redhat.com>
+Date: Wed, 14 Apr 2004 13:52:52 +0200
+Content-Transfer-Encoding: 7bit
+Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -18,82 +25,24 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: LVM general discussion and development <linux-lvm@redhat.com>
-Cc: hjm@redhat.com
+To: mauelshagen@redhat.com, LVM general discussion and development <linux-lvm@redhat.com>
 
-On Thu, Apr 08, 2004 at 07:57:07PM -0700, sachin wrote:
-> Hi
+Am Mi, den 14.04.2004 schrieb Heinz Mauelshagen um 10:39 Uhr +0200:
+
+> > I am trying to get quota's working on the system. The quotas themselves
+> > are working, however, standard users cannot issue the quota command to
+> > inspect their own specific information:
+> > 
+> > $ quota
+> > quota: Can't stat() mounted device /dev/nwlsd_vg/nwlsd_lv: Permission
+> > denied
+> > Disk quotas for user mellofone (uid 1000): none
+>
+> chgrp disk /dev/mapper/*
+> chmod g=rw /dev/mapper/*
 > 
-> when I  executed the lvdisplay command  i get the following output
-> 
-> --- Logical volume ---
-> LV Name                /dev/vg/lv1
-> VG Name                vg
-> LV Write Access        read/write
-> LV Status              available
-> LV #                   1
-> # open                 0
-> LV Size                4 GB
-> Current LE             1024
-> Allocated LE           1024
-> Stripes                4
-> Stripe size (KByte)    16
-> Allocation             next free
-> Read ahead sectors     1024
-> Block device           58:0
-> 
-> Can any one tell  me what that ALLOCATION next free means
-> and also what strict allocation means.
+> We need to fix that in dmlib (if not already done ;)
 
-'Next free' allocates the next free physical extents it finds in
-the VG while extending any logical volume.
-
-There's no 'strict' allocation in LVM.
-Your other option is 'contiguous' which means allocation of subsequent areas
-of PEs.
-
-> 
-> I also tried lvdisplay  with -v option
-> 
-> it gives me read and writes
-> What that exactly means 
->       1. No of read and write operation
->       2  No of blocks transferd 
->       3. No of sectors read or written 
-
-1
-
-> 
-> One more thing  this io statics is from which time 
->      1. bootup time
->      2. lv creation time
-
-3. VG activation time (vgchange -ay)
-
-> 
-> Thanks
-> Sachin. 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
-
--- 
-
-Regards,
-Heinz    -- The LVM Guy --
-
-*** Software bugs are stupid.
-    Nevertheless it needs not so stupid people to solve them ***
-
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-
-Heinz Mauelshagen                                 Red Hat GmbH
-Consulting Development Engineer                   Am Sonnenhang 11
-                                                  56242 Marienrachdorf
-                                                  Germany
-Mauelshagen@RedHat.com                            +49 2626 141200
-                                                       FAX 924446
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+The problem seems to be the volume group directory which is set 700
+here. Changing it to 755 fixes the problem for me, even if the device
+nodes in /dev/mapper themselves are still 600.
