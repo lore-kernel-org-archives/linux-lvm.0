@@ -1,12 +1,10 @@
-Return-Path: <adilger@turbolinux.com>
-From: Andreas Dilger <adilger@turbolinux.com>
-Message-Id: <200012210034.eBL0Yih02808@webber.adilger.net>
-Subject: Re: [linux-lvm] IOP selection scripts (was: '/etc/init.d/lvm' script
- in debian package)
-In-Reply-To: <Pine.LNX.4.21.0012202112590.3255-100000@scuzzlebutt.helllabs>
- "from Claudio Matsuoka at Dec 20, 2000 09:29:38 pm"
-Date: Wed, 20 Dec 2000 17:34:43 -0700 (MST)
+Return-Path: <boutilpj@ednet.ns.ca>
+Message-ID: <3A415068.24DFAE35@ednet.ns.ca>
+Date: Wed, 20 Dec 2000 20:35:52 -0400
+From: Patrick Boutilier <boutilpj@ednet.ns.ca>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] LVM 0.9 patch for 2.2.18
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -19,49 +17,35 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
-Cc: Gergely Tamas <dice@mfa.kfki.hu>
 
-Claudio writes:
-> if [ "$util" = "lvm-wrapper" ]; then
->     echo "$util: you don't want to call the wrapper directly" 1>&2
->     exit -2
-           ^^ I don't think this is legal...
-> fi
+I found the following in the mail archive but I can't figure out what
+Joe's e-mail address is. Can you send me a copy Joe? Thanks.
 
-Is there ever a reason why you would want to install this program as
-"lvm-wrapper" anywhere?
+Joe Thornber linux-lvm@sistina.com
+Fri, 15 Dec 2000 11:24:55 +0000
 
-> if [ -f $proclvm ]; then
->     IOP=`grep "$ver_str" $proclvm|sed "s/.*$ver_str\([0-9]*\).*/\1/"`
-> elif [ -d $proclvm ]; then
->     IOP=`grep "$ver_str" $proclvm/global|sed "s/.*$ver_str\([0-9]*\).*/\1/"`
-> else
->     echo "$util: $proclvm not found (can't determine IOP version)" 1>&2
->     exit -1
-> fi
-> 
-> exec /lib/lvm-iop${IOP}/$util $*
-
-Probably some simple checks for the existence of /lib/lvm-iop$iop and
-/lib/lvm-iop$iop/$util and printing a nice message would be helpful, like:
-
-LIBLVM=/lib/lvm-iop${IOP}
-LVMPKG=lvm-iop${IOP}
-
-if [ ! -d $LIBLVM ]; then
-	echo "$util: $LIBLVM not found.  Is $LVMPKG installed?" 1>&2
-	exit 3
-fi
-exec $LIBLVM/$util "$@"	# this will print out a localized error message for us
+     Previous message: [linux-lvm] [russell@coker.com.au: Re: lvm - I'll
+maintain it. - ITP lvm24]
+     Next message: [linux-lvm] LVM 0.9 patch for 2.2.18
+     Messages sorted by: [ date ] [ thread ] [ subject ] [ author ]
 
 
-I think I will go with an approach like this as well, since it still keeps
-/sbin/<lvmcommand> in place (for scripts that have this hard-coded).
 
-Cheers, Andreas
--- 
-Andreas Dilger  \ "If a man ate a pound of pasta and a pound of antipasto,
-                 \  would they cancel out, leaving him still hungry?"
-http://www-mddsp.enel.ucalgary.ca/People/adilger/               -- Dogbert
+Hi,
+
+I've made a new kernel patch to get LVM 0.9 working with 2.2.18 and am
+looking for a couple of people to give it a try before I check it into
+CVS.
+
+The patch is similar to the 2.2.17 patch except it should allow you to
+use a software raid device as a PV.  This also has the pleasant side
+effect of removing a lot of the conditional compiles from
+drivers/block/ll_rw_block.c
+
+The patch is too big to post on the list (it still contains the
+lvm.[hc] files) so mail me if you want to try it.
+
+Your help would be appreciated.
+
+- Joe Thornber
