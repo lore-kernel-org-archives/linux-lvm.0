@@ -1,11 +1,9 @@
-Return-Path: <heinrichs@qis-systemhaus.de>
-Message-Id: <3B382731.6448A091@qis-systemhaus.de>
-Date: Tue, 26 Jun 2001 08:09:53 +0200
-From: Dirk Heinrichs <heinrichs@qis-systemhaus.de>
-Mime-Version: 1.0
-Subject: Re: [linux-lvm] Why vgscan not in kernel?
-References: <3B372D6D.88998D3F@qis-systemhaus.de> <m3bsncozhk.fsf@multivac.cwru.edu>
-Content-Transfer-Encoding: quoted-printable
+Return-Path: <Jean-Eric.Cuendet@linkvest.com>
+Message-ID: <B45465FD9C23D21193E90000F8D0F3DF0178FAD1@mailsrv.linkvest.com>
+From: Jean-Eric Cuendet <Jean-Eric.Cuendet@linkvest.com>
+Subject: RE: [linux-lvm] LVM 1.0 release status
+Date: Tue, 26 Jun 2001 09:05:36 +0200
+MIME-Version: 1.0
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,25 +15,62 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="iso-8859-1"
-To: linux-lvm@sistina.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: "'linux-lvm@sistina.com'" <linux-lvm@sistina.com>
 
-Paul Jarc wrote:
->=20
-> Dirk Heinrichs <heinrichs@qis-systemhaus.de> writes:
-> > Wouldn't it be better to have similar functionality (scanning for
-> > VG's) for LVM in the kernel, instead of using a userland command?
->=20
-> It would also be nice if VGs were initially active - then we wouldn't
-> need an initrd to have LVM on root... right?
-This was my intention :-)
+I've a problem with the development of LVM.
+It seems that you (Sistina guys) are sorry that LVM 1.0 is delayed. You
+SHOULD'NT!
+By definition Open-Source/free software don't have deadlines! They are
+released when they are GOOD, not when marketing wants to! That's why it's
+better than M$ software.
+See Linux 2.4, delayed ten of times. No problem Linus, make Linux good and
+it's enough for me!
 
-Bye...
+So, continue your good work until LVM 1.0 is READY, not until people are
+happy that you release it.
 
-	Dirk
---=20
-Dirk Heinrichs		| Tel:	+49 (0)241 413 260
-Configuration Manager	| Fax:	+49 (0)241 413 2640
-QIS Systemhaus GmbH	| Mail:	dheinrichs@qis-systemhaus.de
-J=EF=BF=BDlicher Str. 338b	| Web:	http://www.qis-systemhaus.de
-D-52070 Aachen		| ICQ#:	110037733
+Thanks a lot for your work on LVM and bye
+-jec
+
+> -----Original Message-----
+> From: Heinz J. Mauelshagen [mailto:Mauelshagen@sistina.com]
+> Sent: mardi, 26. juin 2001 00:56
+> To: linux-lvm@sistina.com
+> Subject: [linux-lvm] LVM 1.0 release status
+> 
+> 
+> 
+> We have found the bug which caused the 1.0 release delay this 
+> afternoon
+> and need to run piles of QA tests tomorrow.
+> 
+> Plan is to release 1.0 tomorrow afternoon CST.
+> 
+> We appreciate your patience.
+> 
+> Regards,
+> Heinz    -- The LVM Guy --
+> 
+> *** Software bugs are stupid.
+>     Nevertheless it needs not so stupid people to solve them ***
+> 
+> =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+> =-=-=-=-=-=-=-=-
+> 
+> Heinz Mauelshagen                                 Sistina 
+> Software Inc.
+> Senior Consultant/Developer                       Am Sonnenhang 11
+>                                                   56242 Marienrachdorf
+>                                                   Germany
+> Mauelshagen@Sistina.com                           +49 2626 141200
+>                                                        FAX 924446
+> =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+> =-=-=-=-=-=-=-=-
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@sistina.com
+> http://lists.sistina.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
+> 
