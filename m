@@ -1,10 +1,12 @@
-Return-Path: <list@showme.wox.org>
-Message-ID: <005a01c10b2a$148cd370$0f01a8c0@ws1>
-From: "Bas" <list@showme.wox.org>
-Date: Fri, 13 Jul 2001 01:26:30 +0200
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] LVM 0.9.1 beta 7 & CVS differences ?
+Return-Path: <patrick@tykepenguin.cix.co.uk>
+Date: Fri, 13 Jul 2001 08:44:49 +0100
+From: Patrick Caulfield <caulfield@sistina.com>
+Subject: Re: [linux-lvm] Mounting LVM volume with set UID and GID? (REPOST )
+Message-ID: <20010713084449.B522@tykepenguin.com>
+References: <85063BBE668FD411944400D0B744267A6433B5@AUSMAIL>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <85063BBE668FD411944400D0B744267A6433B5@AUSMAIL>; from austin@coremetrics.com on Thu, Jul 12, 2001 at 02:20:37PM -0500
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,35 +19,16 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Hi,
+On Thu, Jul 12, 2001 at 02:20:37PM -0500, Gonyou, Austin wrote:
+> To clarify this, When I try mounting with the options uid=xxx,gid=xxx,rw
+> I cannot mount the volume. I get a mount error. Nothing out of the ordinary,
+> just that it can't "read supberblock", but if I mount it without those
+> options, it's just fine. 
 
-I'm using an XFS enabled 2.4.6 kernel. It used to run with 0.9.1 beta 6, and
-could be upgraded to 0.9.1 beta 7. LVM is not compiled as a module, it's in
-the kernel.
+You might get a useful reply if you posted that question to an XFS list rather
+than an LVM one.
 
-I applied the CVS patch today (after the Oops ... message), and tried to
-boot using a newly generated initrd. Now it can't seem to find my volume
-group. Whenever I start using my old LVM kernel, it can read my VG and all
-assiocated LV's. When I run the new tools on my old kernel, it says
-
-lsvg -- ERROR: VGDA in kernel and lvmtab are NOT consistent; please run
-vgscan. Whenever I run vgscan, I end up with an empty /etc/lvmtab.d and an
-empty  /etc/lvmtab, but it doesn't change anything.
-
-pvscan returns:
-[bigdude]#pvscan -u
-pvscan -- reading all physical volumes (this may take a while...)
-pvscan -- ERROR "pv_read(): LVM structure version" reading physical volumes
-
-I recompiled the 0.9.1 beta 7 tools, and it returns:
-pvscan -- reading all physical volumes (this may take a while...)
-pvscan -- ACTIVE   PV "/dev/scsi/host0/bus0/target0/lun0/part2" of VG
-"rootvg" [8.45 GB / 3.89 GB free]
-pvscan -- total: 1 [8.45 GB] / in use: 1 [8.45 GB] / in no VG: 0 [0]
-
-Is there some kind of migration tool ?
-
-Thanks,
-Bas.
+patrick
