@@ -1,33 +1,39 @@
-Message-Id: <200003150122.CAA15305@e35.marxmeier.com>
-Subject: Re: [linux-lvm] LVM 0.8final and 2.3.51
-Date: Wed, 15 Mar 2000 2:22:14 MEZ
-In-Reply-To: <Pine.OSF.4.21.0003141454010.2523-100000@lazy.accessus.net>; from "Jay Weber" at Mar 14, 100 2:55 pm
-From: Michael Marxmeier <mike@msede.com>
+Message-ID: <38CF5F4F.C529B392@ordix.de>
+Date: Wed, 15 Mar 2000 11:00:47 +0100
+From: Markus Schreier <ms@ordix.de>
+MIME-Version: 1.0
+Subject: [linux-lvm] LVM - Grundlagen
+Content-Transfer-Encoding: 7bit
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
-MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: jay@lazy.accessus.net
-Cc: linux-lvm@msede.com
+To: linux-lvm@msede.com
 
-> 
-> Has anybody successfully gotten LVM 0.8final working with 2.3.51 yet.
-> Using Mylex DAC960 raid controller in this case here.  Also, Reiserfs is
-> now available for 2.3.51, maybe we can get an LVM patch for 2.3.51? :)
+Hello LVM-Gurus,
+i'm new to lvm and to this list. I looked through the faq but couldent
+find the answer there.
 
-I tried the patch-2.3.49-LVM-0.8final.gz against the 2.3.51 kernel.
-Applied cleanly with only minor warnings (so i did not care to make
-a separate patch against 2.3.51). The patched kernel compiled without
-a problem. Due to lack of time i did not test it yet.
+I'd like to use lvm in a productive enviroment. (so i would need a 2.2.x
+- Kernel)
+I could not find the combination of lvm-version and kernel which works
+satisfying, so  i would need your help.
+
+Following some questions: 
+Which is the preferd lvm-version to use?
+Which kernel should be used along with that?
+
+are there any patches recomended?
+
+Is there any draw-backs in this combination or anything to know about?
+
+I tried arround with kernel 2.2.13. and lvm0.8pre. Using the
+lvm-commands produced coredumps in a great number.
+
+Thanks for your suggestions
+
+Markus 
 
 
-Hope this helps
-Michael
-
---
-Michael Marxmeier           Marxmeier Software AG
-E-Mail: mike@msede.com      Besenbruchstrasse 9
-Phone : +49 202 2431440     42285 Wuppertal, Germany
-Fax   : +49 202 2431420     http://www.msede.com/
+Markus Schreier
+ORDIX AG
