@@ -1,9 +1,10 @@
+From: Tobias Wagener <tobias-lvm@tobias.wagener.nu>
+Subject: Re: [linux-lvm] Can I dd one disc of a lv
+Message-ID: <20031106134246.A16570@wagener.nu>
+References: <20031106130748.A15981@wagener.nu> <3FAA3C95.8010708@webhackande.se>
+Mime-Version: 1.0
 Content-Disposition: inline
-Content-Transfer-Encoding: 7bit
-MIME-Version: 1.0
-From: "marduk" <marduk@python.net>
-Message-Id: <20031106124145.168CA6C4E2@server2.messagingengine.com>
-Subject: [linux-lvm] Re: Help, /usr will not mount!
+In-Reply-To: <3FAA3C95.8010708@webhackande.se>; from richie@webhackande.se on Thu, Nov 06, 2003 at 01:20:37PM +0100
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,16 +15,46 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Thu Nov  6 06:42:01 2003
+Date: Thu Nov  6 06:43:02 2003
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Oh, forgot to mention:
+Hi,
 
-Running Linux 2.6-test9-mm1 kernel with LVM version 2.00.07,
-Library version 1.0.05-ioctl-cvs, and Driver version 4.0.0.
+OK, currently dd (or better dd_rescue) is at work. What have I to do after 
+the dd?
 
--- 
-  
-  marduk@letterboxes.org
+vgexport the VG, and then vgimport with the new device? Or do I use
+a "vgcfgrestore" and "vgcfgbackup" also?
+
+Greetings Tobias
+
+
+On 06/11/03 13:20, Rickard Olsson wrote:
+> Tobias Wagener wrote:
+> 
+> > Now the question: Can I "dd" the faulty 200 GB drive to the new 200 GB
+> > drive? And if, how? Does "dd if=/dev/hde1 of=/dev/hdf1" the job, or what
+> > have I to do?
+> 
+> Heinz told me:
+> "You need to dd starting from the first physical extent (use pvdata -PP 
+> on the old one and look for pe_on_disk.base) to the same offset on the 
+> new disk (skip and seek dd option) and you want dd to continue after 
+> read errors (noerror option)."
+> 
+> Also, I was recently told about the dd_rescue utility, but I haven't had 
+> the misfortune/opportunity to try that one yet.
+> 
+>     / Rickard Olsson,IT-Konsult/
+>    / Telefon: +46 70 635 01 42/
+>   / http://www.webhackande.se/
+> 
+> 
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@sistina.com
+> http://lists.sistina.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
