@@ -1,25 +1,42 @@
-From: Andreas Dilger <adilger@turbolinux.com>
-Message-Id: <200009010825.CAA05149@lynx.turbolabs.com>
-Subject: Re: [linux-lvm] Strange...
-Date: Fri, 1 Sep 2000 02:25:52 -0600 (MDT)
-In-Reply-To: <39ACB2F6.58A01FDA@twc.de> from "Ulf Bartelt" at Aug 30, 2000 09:08:38 AM
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Date: 1 Sep 2000 10:37:30 +0000
+From: "Mervyn THOMAS" <Mervyn.THOMAS@mmsuk.co.uk>
+Subject: [linux-lvm] Baffled by errors
+Message-Id: <"C730ZYPXGM4B6*/PN=Mervyn.THOMAS/CN=Mervyn
+ THOMAS/OU=Portsmouth/O=Matra Marconi
+ Space/PRMD=MMSP400/ADMD=ATLAS/C=GB/"@MHS>
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-To: Ulf Bartelt <ulf@twc.de>
-Cc: linux-lvm@msede.com
+Content-Transfer-Encoding: 7bit
+To: linux-lvm <linux-lvm@msede.com>
 
-Ulf Bartelt, you write:
-> I had no time to look in the sources but I for now I guess e2fsadm fails
-> if used on a LV with a name that is the beginning of a LV name that
-> still is in use...
-> 
-> This was the case having LV names ftp and ftp2...
+Here are a few questions from a linux newbie, I hope this is the right forum to 
+raise them, forgive me if it ain't.
 
-Correct - it was doing strncmp() using the length of the LV name, so it
-was broken in a case like yours.  I fixed this and a few other issues.
+I'm trying [without success] to build lvm (0.8-pre02.10.1999) on my Sparc 10 
+(RH6.2, kernel 2.2.14-5). Linux itself is running without problems.
 
-Cheers, Andreas
+I get lots of parse errors during compile that I don't understand:
+    /usr/include/XXX/XXX.h parse error before XXX
+    
+Is my compiler screwed? Have I missed something blindingly obvious? Should this 
+code work on Sparc? Is this version of lvm the right one for my kernel?
+
+Is anyone able to offer advice on these problems. Will summarise.
+
+
+TIA
+
+
+Merv Thomas.
+- - -
+This email is for the intended addressee only. If you have received it in error, you must not use, copy, retain, disseminate or otherwise deal with it. Please notify the sender by return email.
+
+The views of the author may not necessarily constitute the views of Astrium Limited.
+
+Nothing in this email shall bind Astrium Limited in any contract or obligation.
+
+Astrium Limited, Registered in London No. 2449259
+Registered Office: The Grove, Warren Lane, Stanmore, Middlesex, HA7 4LY
