@@ -1,10 +1,9 @@
 From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
 Subject: Re: [linux-lvm] file system larger than lv
-Message-ID: <20021118162339.B25728@sistina.com>
-References: <OF1EE49BDF.AE37C6D0-ON86256C71.005578CE@TEXASMUTUAL.COM> <20021115115831.B11618@sistina.com> <20021115122708.GK8377@pc.ilinx> <20021115135424.A12164@sistina.com> <20021115134816.GL8377@pc.ilinx> <20021116025942.U17827@vestdata.no>
+Message-ID: <20021118162556.C25728@sistina.com>
+References: <OF1EE49BDF.AE37C6D0-ON86256C71.005578CE@TEXASMUTUAL.COM> <20021115115831.B11618@sistina.com> <20021115122708.GK8377@pc.ilinx> <20021115135424.A12164@sistina.com> <20021115134816.GL8377@pc.ilinx>
 Mime-Version: 1.0
-In-Reply-To: <20021116025942.U17827@vestdata.no>; from lvm@ragnark.vestdata.no on Sat, Nov 16, 2002 at 02:59:42AM +0100
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20021115134816.GL8377@pc.ilinx>; from lvm@interlinx.bc.ca on Fri, Nov 15, 2002 at 08:48:20AM -0500
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,48 +14,70 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Nov 18 09:30:02 2002
+Date: Mon Nov 18 09:32:02 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="iso-8859-1"
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Sat, Nov 16, 2002 at 02:59:42AM +0100, Ragnar Kj=F8rstad wrote:
-> > > Putting additional overloading block/filesystem layer services not =
-necessarily
-> > > needed there into the kernel is unlikely to be accepted either IMO.
-> >=20
-> > No.  No.  Not in the kernel.  I mean the user space tools can simply
-> > check what data is on the block device (i.e. look for a known
-> > signature of given filesystems) and see if it can determine if it is
-> > indeed a filesystem.
->=20
-> First of all it's not possible to detect if the device includes a valid
-> filesystem. You can only check for know filesystems and I don't think i=
-t
-> would be a good idea for lvm to include a list of filesystem-signatures.
->=20
-> Second, reducing the size of a device is just as dangerous if there is
-> something else (say a datbase) on that device.
->=20
-> So, if anything, I think lvreduce should always warn the user that this
-> is a dangerous operation.
->=20
+On Fri, Nov 15, 2002 at 08:48:20AM -0500, lvm@interlinx.bc.ca wrote:
+> On Fri, Nov 15, 2002 at 01:54:24PM +0100, Heinz J . Mauelshagen wrote:
+> > 
+> > Brian,
+> 
+> Hi Heinz.
+> 
+> > yes, at the end of the day you can't prevent people with the necessary
+> > credentials from shooting themselves in the foot anyways.
+> > That occasionally includes me.
+> > At least at ~4pm in the morning ;)
+> 
+> I hear ya.  Me too.  :-)
 
-And it does that since used by dinoaurs ;)
+:)
 
->=20
->=20
-> --=20
-> Ragnar Kj=F8rstad
-> Big Storage
->=20
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+> 
+> > Because LVM is a block layer service transparent to filesystems or any other
+> > arbitrary block device user, it should just cover the necessary block device
+> > functionality.
+> 
+> I don't disagree with that.
+> 
+> > Putting additional overloading block/filesystem layer services not necessarily
+> > needed there into the kernel is unlikely to be accepted either IMO.
+> 
+> No.  No.  Not in the kernel.  I mean the user space tools can simply
+> check what data is on the block device (i.e. look for a known
+> signature of given filesystems) and see if it can determine if it is
+> indeed a filesystem.
 
---=20
+Yep. We share the same opinion I guess.
+The user space tool shall be pattern configurable in order to "learn" about
+new filesystem types (config file ala /etc/magic).
+
+> 
+> > Controlling LVM block device and filesystem changes in userspace with an
+> > (e2)fsadm tool is a "helping hand" for the unexperienced, not limiting
+> > the experienced user.
+> > This is our prefered way to go.
+> 
+> That is fair enough.  And I don't care that strongly about this issue,
+> but just thought of how many tools (in their "interactive mode"
+> anyway) stop and ask a user before they are about to do something
+> potentially disasterous.
+
+lvreduce warns.
+As mkfs does ;)
+
+> 
+> b.
+> 
+> -- 
+> Brian J. Murrell
+
+
+
+-- 
 
 Regards,
 Heinz    -- The LVM Guy --
@@ -64,9 +85,7 @@ Heinz    -- The LVM Guy --
 *** Software bugs are stupid.
     Nevertheless it needs not so stupid people to solve them ***
 
-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D=
--=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=
-=3D-=3D-
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
 Heinz Mauelshagen                                 Sistina Software Inc.
 Senior Consultant/Developer                       Am Sonnenhang 11
@@ -74,6 +93,4 @@ Senior Consultant/Developer                       Am Sonnenhang 11
                                                   Germany
 Mauelshagen@Sistina.com                           +49 2626 141200
                                                        FAX 924446
-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D=
--=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=
-=3D-=3D-
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
