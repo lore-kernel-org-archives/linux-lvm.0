@@ -1,12 +1,8 @@
-Return-Path: <patrick@tykepenguin.cix.co.uk>
-Date: Fri, 25 May 2001 08:43:45 +0100
-From: Patrick Caulfield <caulfield@sistina.com>
-Subject: Re: [linux-lvm] Problem deleteing PV's
-Message-ID: <20010525084345.D826@tykepenguin.com>
-References: <OFD6F650E6.4F2A1D36-ON85256A56.004C77FE@raleigh.ibm.com> <004901c0e478$a3c85ec0$5300000a@cavecreek.net>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <004901c0e478$a3c85ec0$5300000a@cavecreek.net>; from jbooth@ccbill.com on Thu, May 24, 2001 at 10:40:35AM -0700
+Return-Path: <dick@britain.agilent.com>
+Date: Fri, 25 May 2001 09:28:34 +0100 (BST)
+From: Dick Middleton <dick@britain.agilent.com>
+Message-Id: <200105250828.JAA11414@queeg.britain.agilent.com>
+Subject: [linux-lvm] Root on LVM and vgscan
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -18,23 +14,36 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Thu, May 24, 2001 at 10:40:35AM -0700, Justin Booth wrote:
-> Tried doing the "dd if of bs count" stuff and now I'm recieving a
-> pvscan -- ERROR "pv_reaad(): PV identifier invalid" reading physical volumes
-> 
-> any ideas ???
-> 
+I have root running on lvm on sw raid partitions on linux 2.2.18.  It all
+works fine.  However I have had difficulty during booting after adding new
+LVs.  The symptom is that the initial mounts of LVs fails or the wrong
+partition is mounted.
 
-Stop worrying about it?
+What happens is that vgscan is run during the initrd phase and so the lvmtab
+is updated on the ram disk.  Once the root file system on the hard disk has
+been mounted the lvmtab on that comes into use.  That has not been updated by
+vgscan and so does not reflect the changes. 
 
-Those disk are no longer PVs so what's the problem? In fact when a PV is no
-longer in a VG (ie shows up in pvscan but not allocated to a VG) then you are
-free to reuse the disk/partition for something else.
+Obviously it's possible to run vgscan again (between remounting root rw and
+checking the other discs) to update the lvmtab but it does beg a few
+questions.
 
-It's OK, your PVs are deleted. Honest :-)
+1) why does mount use the data in lvmtab and not in /proc to find out about
+   active VGs?
 
-patrick
+2) if lvmtab is so essetial why is it not updated by vgcreate/lvcreate and
+   other utilities when changes are made?
+
+3) would it not be possible/better to update lvmtab from /proc without doing
+   a rescan.
+
+I don't know the issues involved and reasoning behind the design of this
+aspect of LVM but it does seem to me that there is something less than ideal
+in the current scheme.
+
+Dick
