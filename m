@@ -1,21 +1,31 @@
 Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with SMTP id i3107lj24270
-	for <linux-lvm@redhat.com>; Wed, 31 Mar 2004 19:07:47 -0500
-Received: from maja.beep.pl (exim@smtp.sys.beep.pl [195.245.198.13])
-	by mx1.redhat.com (8.12.10/8.12.10) with SMTP id i3107jjj026291
-	for <linux-lvm@redhat.com>; Wed, 31 Mar 2004 19:07:45 -0500
-Received: from [156.17.236.105] (helo=[192.168.2.2])
-	by maja.beep.pl with asmtp (TLSv1:RC4-MD5:128) (Exim 4.30)
-	id 1B8pj8-00019l-PG
-	for linux-lvm@redhat.com; Thu, 01 Apr 2004 02:06:35 +0200
-From: Arkadiusz Miskiewicz <arekm@pld-linux.org>
-Date: Thu, 1 Apr 2004 02:07:38 +0200
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with SMTP id i314mUj22938
+	for <linux-lvm@redhat.com>; Wed, 31 Mar 2004 23:48:30 -0500
+Received: from office.labsysgrp.com (wsip-68-14-253-125.ph.ph.cox.net
+	[68.14.253.125])
+	by mx1.redhat.com (8.12.10/8.12.10) with SMTP id i314mSjj010926
+	for <linux-lvm@redhat.com>; Wed, 31 Mar 2004 23:48:29 -0500
+Received: from [127.0.0.1] (helo=localhost)
+	by office.labsysgrp.com with esmtp (Exim 4.24) id 1B8u7r-0007q5-BH
+	for linux-lvm@redhat.com; Wed, 31 Mar 2004 21:48:23 -0700
+Received: from office.labsysgrp.com ([127.0.0.1])
+	by localhost (office.lsg.internal [127.0.0.1]) (amavisd-new, port 10024)
+	with ESMTP id 29685-10 for <linux-lvm@redhat.com>;
+	Wed, 31 Mar 2004 21:48:22 -0700 (MST)
+Received: from jeeves.kpf.internal ([192.168.170.1])
+	by office.labsysgrp.com with esmtp (Exim 4.24) id 1B8u7q-0007pz-Mt
+	for linux-lvm@redhat.com; Wed, 31 Mar 2004 21:48:22 -0700
+Received: from [192.168.172.107] (helo=backtobasicsmgmt.com)
+	by jeeves.kpf.internal with esmtp (Exim 4.05) id 1B8u7p-0002mU-00
+	for linux-lvm@redhat.com; Wed, 31 Mar 2004 21:48:21 -0700
+Message-ID: <406B9F1A.50902@backtobasicsmgmt.com>
+Date: Wed, 31 Mar 2004 21:48:26 -0700
+From: "Kevin P. Fleming" <kpfleming@backtobasicsmgmt.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-Content-Type: Multipart/Mixed;
-  boundary="Boundary-00=_K11aAOoFBLktdwd"
-Message-Id: <200404010207.38892.arekm@pld-linux.org>
-Subject: [linux-lvm] DESTDIR is broken in 1.00.09
+Subject: Re: [linux-lvm] DESTDIR is broken in 1.00.09
+References: <200404010207.38892.arekm@pld-linux.org>
+In-Reply-To: <200404010207.38892.arekm@pld-linux.org>
+Content-Transfer-Encoding: 7bit
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -26,129 +36,13 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
+Arkadiusz Miskiewicz wrote:
 
---Boundary-00=_K11aAOoFBLktdwd
-Content-Type: text/plain;
-  charset="iso-8859-2"
-Content-Transfer-Encoding: quoted-printable
-Content-Disposition: inline
+> bindir, libdir and friends are substituted to ${prefix}/bin only when --bindir 
+> is not specified.
 
-Hi,
-
-Current testdir support is broken: try
-=2E/configure --bindir=3D/usr/bin --mandir=3D/usr/share/man etc
-and you will end up with make.tmpl like
-
-# Setup directory variables
-prefix =3D $(DESTDIR)/usr
-exec_prefix =3D $(DESTDIR)/usr
-bindir =3D /usr/bin
-includedir =3D /usr/include
-libdir =3D /usr/lib
-sbindir =3D /sbin
-infodir =3D /usr/share/info
-mandir =3D /usr/share/man
-kerneldir =3D
-interface =3D ioctl
-interfacedir =3D $(top_srcdir)/lib/$(interface)
-
-bindir, libdir and friends are substituted to ${prefix}/bin only when --bin=
-dir=20
-is not specified.
-
-Attached patch fixes that properly.
-
-=2D-=20
-Arkadiusz Mi=B6kiewicz     CS at FoE, Wroclaw University of Technology
-arekm.pld-linux.org, 1024/3DB19BBD, JID: arekm.jabber.org, PLD/Linux
-
---Boundary-00=_K11aAOoFBLktdwd
-Content-Type: text/x-diff; charset="iso-8859-2";
-	name="device-mapper-install.patch"
-Content-Transfer-Encoding: 7bit
-Content-Disposition: attachment;
-	filename="device-mapper-install.patch"
-
-diff -urN device-mapper.1.00.09.org/dmsetup/Makefile.in device-mapper.1.00.09/dmsetup/Makefile.in
---- device-mapper.1.00.09.org/dmsetup/Makefile.in	2004-04-01 01:58:07.096597280 +0200
-+++ device-mapper.1.00.09/dmsetup/Makefile.in	2004-04-01 02:01:38.120516768 +0200
-@@ -28,7 +28,7 @@
- 	      -ldevmapper
- 
- install: dmsetup
--	$(INSTALL) -D -o $(OWNER) -g $(GROUP) -m 555 $(STRIP) $< $(sbindir)/$<
-+	$(INSTALL) -D -o $(OWNER) -g $(GROUP) -m 555 $(STRIP) $< $(DESTDIR)$(sbindir)/$<
- 
- .PHONY: install 
- 
-diff -urN device-mapper.1.00.09.org/lib/Makefile.in device-mapper.1.00.09/lib/Makefile.in
---- device-mapper.1.00.09.org/lib/Makefile.in	2004-04-01 01:58:07.179584664 +0200
-+++ device-mapper.1.00.09/lib/Makefile.in	2004-04-01 02:02:30.597539048 +0200
-@@ -30,29 +30,29 @@
- 
- 
- install: install_@interface@
--	$(LN_S) -f libdevmapper.so.$(LIB_VERSION) $(libdir)/libdevmapper.so
-+	$(LN_S) -f libdevmapper.so.$(LIB_VERSION) $(DESTDIR)$(libdir)/libdevmapper.so
- 	$(INSTALL) -D -o $(OWNER) -g $(GROUP) -m 444 libdevmapper.h \
--		$(includedir)/libdevmapper.h
-+		$(DESTDIR)$(includedir)/libdevmapper.h
- 
- install_static: install_@interface@_static
--	$(LN_S) -f libdevmapper.a.$(LIB_VERSION) $(libdir)/libdevmapper.a
-+	$(LN_S) -f libdevmapper.a.$(LIB_VERSION) $(DESTDIR)$(libdir)/libdevmapper.a
- 	$(INSTALL) -D -o $(OWNER) -g $(GROUP) -m 444 libdevmapper.h \
--		$(includedir)/libdevmapper.h
-+		$(DESTDIR)$(includedir)/libdevmapper.h
- 
- 
- .PHONY: install install_@interface@ install_static install_@interface@_static
- 
- install_fs: fs/libdevmapper.so
- 	$(INSTALL) -D -o $(OWNER) -g $(GROUP) -m 555 $(STRIP) $< \
--		$(libdir)/libdevmapper.so.$(LIB_VERSION)
-+		$(DESTDIR)$(libdir)/libdevmapper.so.$(LIB_VERSION)
- 
- install_ioctl: ioctl/libdevmapper.so
- 	$(INSTALL) -D -o $(OWNER) -g $(GROUP) -m 555 $(STRIP) $< \
--		$(libdir)/libdevmapper.so.$(LIB_VERSION)
-+		$(DESTDIR)$(libdir)/libdevmapper.so.$(LIB_VERSION)
- 
- install_ioctl_static: ioctl/libdevmapper.a
- 	$(INSTALL) -D -o $(OWNER) -g $(GROUP) -m 555 $(STRIP) $< \
--		$(libdir)/libdevmapper.a.$(LIB_VERSION)
-+		$(DESTDIR)$(libdir)/libdevmapper.a.$(LIB_VERSION)
- 
- distclean_lib: 
- 	$(RM) libdm-common.h
-diff -urN device-mapper.1.00.09.org/make.tmpl.in device-mapper.1.00.09/make.tmpl.in
---- device-mapper.1.00.09.org/make.tmpl.in	2004-04-01 01:58:07.094597584 +0200
-+++ device-mapper.1.00.09/make.tmpl.in	2004-04-01 02:03:19.789060800 +0200
-@@ -27,8 +27,8 @@
- LD_DEPS += @LD_DEPS@
- 
- # Setup directory variables
--prefix = $(DESTDIR)@prefix@
--exec_prefix = $(DESTDIR)@exec_prefix@
-+prefix = @prefix@
-+exec_prefix = @exec_prefix@
- bindir = @bindir@
- includedir = @includedir@
- libdir = @libdir@
-diff -urN device-mapper.1.00.09.org/man/Makefile.in device-mapper.1.00.09/man/Makefile.in
---- device-mapper.1.00.09.org/man/Makefile.in	2004-04-01 01:58:07.195582232 +0200
-+++ device-mapper.1.00.09/man/Makefile.in	2004-04-01 02:02:45.565263608 +0200
-@@ -25,7 +25,7 @@
- 	@echo "*** Installing $(ALL_MANUALS) in $(MAN8DIR) ***"
- 	@for f in $(MANUALS); \
- 	do \
--	   $(RM) $(MAN8DIR)/$$f; \
--	   @INSTALL@ -D -o $(OWNER) -g $(GROUP) -m 444 $$f $(MAN8DIR)/$$f; \
-+	   $(RM) $(DESTDIR)$(MAN8DIR)/$$f; \
-+	   @INSTALL@ -D -o $(OWNER) -g $(GROUP) -m 444 $$f $(DESTDIR)$(MAN8DIR)/$$f; \
- 	done
- 
-
---Boundary-00=_K11aAOoFBLktdwd--
+Hmmm, I submitted a patch to fix this problem before this last release, 
+and it was accepted (with modifications) but didn't appear in the release.
