@@ -1,11 +1,8 @@
-From: Harri Haataja <harri.haataja@smilehouse.com>
-Subject: Re: [linux-lvm] Is LVM supported in the REDHAT 2.1 cluster?
-Message-ID: <20021202224809.F55142@azrael.smilehouse.com>
-References: <615A249B783CD41192F400D0B747AC8608982B3B@hesse.bbn.hp.com> <Pine.LNX.4.21.0212021619050.9196-100000@miami.datech2.er.heitec.net>
+From: jheiss-linuxlvm@ofb.net
+Message-ID: <20021202223223.GC21924@ofb.net>
 Mime-Version: 1.0
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <Pine.LNX.4.21.0212021619050.9196-100000@miami.datech2.er.heitec.net>; from Holger.Rauch@heitec.de on Mon, Dec 02, 2002 at 04:20:18PM +0100
+Subject: [linux-lvm] Error creating snapshot, "Cannot allocate memory"
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,25 +13,35 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Dec  2 14:48:02 2002
+Date: Mon Dec  2 16:32:01 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Mon, Dec 02, 2002 at 04:20:18PM +0100, Holger Rauch wrote:
-> On Mon, 2 Dec 2002, ZECHA,HOLGER (HP-Germany,ex1) wrote:
+I have a volume group that is 1.4 TB, with a volume that is 400 GB.
+I currently have three 50 GB snapshots of that volume.  When I try
+to create a fourth, I get the following error:
 
-> > Therfore use SuSE Linux Enterprise Server 7 or 8, theis LVM is
-> > completly supported.
-> Or just spare the money and use Debian 3.0 (Woody) which provides a
-> smooth upgrade mechanism and completely supports LVM as well :-)
+bash-2.05a# lvcreate -L 50G -s -n snap_home1_20021202 /dev/home/home1
+lvcreate -- WARNING: the snapshot will be automatically disabled once it
+gets full
+lvcreate -- INFO: using default snapshot chunk size of 64 KB for
+"/dev/home/snap_home1_20021202"
+lvcreate -- ERROR "Cannot allocate memory" creating VGDA for
+"/dev/home/snap_home1_20021202" in kernel
 
-What, debian doesn't force you to use fdisk and lilo and ext2 anymore.
-(And once you've fudged a miniroot together, you set up the working
-one..:   :)
+After some experimenting, I found that I could create a snapshot that
+is 36 GB or smaller, but anything larger than 36 GB fails with the above
+error.  The volume group has 386 GB free.
 
--- 
-Minua �rsytt�� lausunnot 'teoriassa kyll�, mutta ei k�yt�nn�ss�' silloin
-kun verrataan mallia banaanista ja ihan oikeaa, puussa kasvavaa
-appelsiinia toisiiinsa ja valitetaan, ett� se teoreettinen banaanimalli ei
-muistuta sitten p�tk��k��n appelsiinia. -- Edvard Majakari, sfnet.atk.linux
+Any thoughts?  I looked through the changelog and mailing list archives
+and couldn't find anything similar.
+
+Other possibly useful bits of info:
+
+OS:  Red Hat 7.3
+kernel:  2.4.18-18.7.xsmp
+LVM:  1.0.3-4  (Red Hat RPM)
+
+Jason
