@@ -1,10 +1,12 @@
-From: Jesse Keating <jkeating@pogolinux.com>
+From: Wiktor Wodecki <wodecki@gmx.de>
 Subject: Re: [linux-lvm] Max storage size per system
-References: <20030304114851.GA22965@hcsd.de> <20030304144121.GB23975@hcsd.de> <4857903125.20030305160532@tnonline.net>
-In-Reply-To: <4857903125.20030305160532@tnonline.net>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Message-Id: <200303050854.10805.jkeating@pogolinux.com>
+Message-ID: <20030305143938.GI1513@gmx.de>
+References: <20030304114851.GA22965@hcsd.de> <3E64B885.1AF49EDA@silicide.dk> <20030304144121.GB23975@hcsd.de>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="VSVNCtZB1QZ8vhj+"
+Content-Disposition: inline
+In-Reply-To: <20030304144121.GB23975@hcsd.de>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,19 +17,44 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Mar  5 11:12:01 2003
+Date: Wed Mar  5 11:40:01 2003
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
 
-On Wednesday 05 March 2003 07:05, Anders Widman wrote:
-> Hm,  sounds  like  lots.  :)  What kind of devices will you be running
-> with.  Even  with  300GB  drives  you will need 300-400 of them to get
-> 100TB.
+--VSVNCtZB1QZ8vhj+
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Easily achieved w/ such technologies as iscsi and hyperscsi (;
+Hello,
 
--- 
-Jesse Keating RHCE MCSE
-Pogo Linux -- Support Tech
-tel: (888) 828-7646 ex: 436
+On Tue, Mar 04, 2003 at 03:41:21PM +0100, Stephan Austermuehle wrote:
+> Okay, so the LVM can manage really large disk storage. Does anybody know
+> whether the number of mounted filesystem per Linux system is limited?
+
+yes, it is limited through the kernel. There are two ways out of it:
+
+a) increase the number (fiddle through the source, recompile, reboot)
+b) use the automounter
+
+If you don't need all filesystems mounted at once I'd suggest the second
+approach. (e.g. for samba or backup store, whatever)
+
+--=20
+Regards,
+
+Wiktor Wodecki
+
+--VSVNCtZB1QZ8vhj+
+Content-Type: application/pgp-signature
+Content-Disposition: inline
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.2.0 (GNU/Linux)
+
+iD8DBQE+Zgwq6SNaNRgsl4MRAnRnAKC3fcuMu6oeZ8Ghlw6lGHfEc0x5yQCgo8Mb
+MpZW4btNecwD+uGMlbQrZKI=
+=NhkE
+-----END PGP SIGNATURE-----
+
+--VSVNCtZB1QZ8vhj+--
