@@ -1,10 +1,9 @@
-Subject: Re: [linux-lvm] pvmove root filesystem?
-Message-ID: <20011102112226.A466@btconnect.com>
-References: <20011101233119.P21136@pc.ilinx> <20011101221529.W16554@lynx.no> <20011102003346.Q21136@pc.ilinx> <20011101235041.B746@lynx.no>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20011101235041.B746@lynx.no>; from adilger@turbolabs.com on Thu, Nov 01, 2001 at 11:50:43PM -0700
-From: Joe Thornber <thornber@btconnect.com>
+Subject: Re: [linux-lvm] OK...interesting dilemma... 
+In-Reply-To: Your message of "Thu, 01 Nov 2001 21:21:19 MST."
+             <20011101212119.S16554@lynx.no> 
+References: <20011102022256.536AC182DE@skuld.wookimus.net>  <20011101212119.S16554@lynx.no> 
+From: "Chad C. Walstrom" <chewie@wookimus.net>
+Message-Id: <20011102131633.965D8180A6@skuld.wookimus.net>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,40 +14,28 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Fri Nov  2 05:20:02 2001
+Date: Fri Nov  2 07:19:02 2001
 List-Id: <linux-lvm.redhat.com>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: linux-lvm@sistina.com
+To: Andreas Dilger <adilger@turbolabs.com>
+Cc: linux-lvm@sistina.com
 
-On Thu, Nov 01, 2001 at 11:50:43PM -0700, Andreas Dilger wrote:
-> On Nov 02, 2001  00:33 -0500, Brian J. Murrell wrote:
-> > > Brian, the "pvmove" mechanism is not yet 100% safe for mounted filesystems.
-> > 
-> > Ugh.  I was hoping to not hear something like this.  Has it gotten any
-> > better recently?  What I mean is my LVM identifies itself as:
-> > 
-> > LVM version LVM 0.9.1_beta7(ish)  by Heinz Mauelshagen  (20 June 2001)
-> > lvm -- Module successfully initialized
+In message <20011101212119.S16554@lynx.no>, Andreas Dilger writes:
+> Did you vgexport that VG?  If so, when you vgimport it you can give it
+> a new name.
+
+DOH!  I don't know what I was thinking.  Thanks for the help.  I'll have
+to do some interesting re-swaping of hardware, then. ;-)
+
+> > Will it correctly choose the inactive volume?
 > 
-> Well, there have been a lot of changes to the pvmove locking code and
-> such since then.  Whether it actually makes a difference is hard to
-> tell.
-> 
-> > Am I going to run into even more problems with this verion of LVM vs.
-> > the latest or has the "live" pvmove stuff not changed much between the
-> > version I am running and current.
-> 
-> Nobody has really done any good testing on it.
+> Probably not if you use vgrename.
 
-I've done a bit of testing, and have never seen any problems due to
-the holes in the locking; as such I am happy to use pvmove on *my*
-development system (I don't use raw devices).  I certainly couldn't
-recommend it for production systems.
+Thanks for the heads-up!
 
-As well as the locking problems there is a potential kernel deadlock,
-which I can easily induce under memory pressure (too much deferred io
-that cannot complete and no free memory to enable the userland copy to
-finish).
-
-- Joe
+--
+Chad Walstrom <chewie@wookimus.net>                 | a.k.a. ^chewie
+http://www.wookimus.net/                            | s.k.a. gunnarr
+Key fingerprint = B4AB D627 9CBD 687E 7A31  1950 0CC7 0B18 206C 5AFD
