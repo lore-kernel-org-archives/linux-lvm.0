@@ -1,12 +1,10 @@
-Subject: Re: [linux-lvm] kernel 2.2.19 support
-References: <3BBC4146.51CD437D@promofinarsa.es>
-	<wv669v3b96.fsf@freeze.oslo.dnmi.no> <3BBC4E6E.BCA3EE70@promofinarsa.es>
-	<wvzo771uju.fsf@freeze.oslo.dnmi.no> <3BBC535B.59D6A5CB@promofinarsa.es>
-From: Adrian Phillips <a.phillips@dnmi.no>
-Date: 04 Oct 2001 17:18:51 +0200
-In-Reply-To: <3BBC535B.59D6A5CB@promofinarsa.es>
-Message-ID: <wv3d4zh1r8.fsf@freeze.oslo.dnmi.no>
+From: "Jason A. Lixfeld" <jlixfeld@andromedas.com>
+Subject: RE: [linux-lvm] lvcreate segfault in vg_setup_pointers_for_snapshots
+Date: Thu, 4 Oct 2001 11:57:00 -0400
+Message-ID: <009b01c14ced$343df3c0$836788cf@industry>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+In-Reply-To: <009801c14ce0$2a667eb0$836788cf@industry>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -19,71 +17,159 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
->>>>> "Jesus" == Jesus Manuel NAVARRO LOPEZ <jesus_navarro@promofinarsa.es> writes:
+I managed to get the tools to compile and work with kgcc 2.91.66.
 
-    Jesus> I'm trying now lvm-1.0.1rc4 onto kernel 2.2.19 Raw-io patch
-    Jesus> applied is that for 2.2.18 (I tested both with that from
-    Jesus> kernel.org, and the one provided within the lvm tar).  I
-    Jesus> don't know if the problem comes from raw-io or lvm itself
-    Jesus> (I don't even know why or when raw-io patch is needed on
-    Jesus> 2.2 kernel series).  What I can say is that the problem
-    Jesus> shows up in the making modules phase at the lvm.c file.  It
-    Jesus> is used there an struct member that doesn't seem to be
-    Jesus> defined anywhere else.
-
-Okay, calling LVM developers (or anyone else with more clue than me
-:-). I've tried this myself :-
-
-- linux 2.2.19
-- reiserfs
-- linux-2.2.18-rawio.patch
-- lvm-1.0.1-rc4-2.2.19.patch
-
-cc -D__KERNEL__ -I/mirrors/linux/linux-2.2.19/include -Wall -Wstrict-prototypes -O2 -fomit-frame-pointer -fno-strict-aliasing -pipe -fno-strength-reduce -m486 -malign-loops=2 -malign-jumps=2 -malign-functions=2 -DCPU=586 -DMODULE -DMODVERSIONS -include /mirrors/linux/linux-2.2.19/include/linux/modversions.h   -c -o lvm.o lvm.c
-lvm.c: In function `lvm_do_lv_create':
-lvm.c:2192: structure has no member named `de'
-{standard input}: Assembler messages:
-{standard input}:9: Warning: Ignoring changed section attributes for .modinfo
-lvm.c: In function `lvm_do_lv_remove':
-lvm.c:2277: structure has no member named `de'
-make[3]: *** [lvm.o] Error 1
-
-Note the change in hd_struct in include/linux/genhd.c between 2.2.19
-and 2.4.xxx :-
-
-# 2.2.19
-struct hd_struct {
-	long start_sect;
-	long nr_sects;
-	int type;		/* RAID or normal */
-};
-
-# 2.4.0-test12
-struct hd_struct {
-	long start_sect;
-	long nr_sects;
-	devfs_handle_t de;              /* primary (master) devfs entry  */
-};
-
-So de is being set to the devfs_handle_t returned by lvm_fs_create_lv
-and this doesn't exist in 2.2.19. So what needs to be set in 2.2 ?
-
-What has been changed between 0.9.1beta7 (or later) and 1.0.1rc4 ?
-
-I'll send this now and have a look (in CVS as well) to see if I can
-anything obvious but not being a kernel hacker I am unsure of what is
-required.
-
-Thanks for any help,
-
-Sincerely,
-
-Adrian Phillips
-
--- 
-Your mouse has moved.
-Windows NT must be restarted for the change to take effect.
-Reboot now?  [OK]
+> -----Original Message-----
+> From: linux-lvm-admin@sistina.com 
+> [mailto:linux-lvm-admin@sistina.com] On Behalf Of Jason A. Lixfeld
+> Sent: October 4, 2001 10:24 AM
+> To: linux-lvm@sistina.com
+> Subject: RE: [linux-lvm] lvcreate segfault in 
+> vg_setup_pointers_for_snapshots
+> 
+> 
+> 
+> 
+> Hmm, 1.0.1-rc2 segfaults aswell :/  Perhaps it's something 
+> else.  I'm using the stock compiler from 7.1.  Not too sure 
+> what it is or how to find it.
+> 
+> > -----Original Message-----
+> > From: linux-lvm-admin@sistina.com
+> > [mailto:linux-lvm-admin@sistina.com] On Behalf Of Jason A. Lixfeld
+> > Sent: October 4, 2001 10:01 AM
+> > To: linux-lvm@sistina.com
+> > Subject: RE: [linux-lvm] lvcreate segfault in 
+> > vg_setup_pointers_for_snapshots
+> > 
+> > 
+> > 
+> > 
+> > Since I'm having trouble with rc-4 can I use another version
+> > that is still compatible with everything and won't segfault!? :)
+> > 
+> > > -----Original Message-----
+> > > From: linux-lvm-admin@sistina.com 
+> > > [mailto:linux-lvm-admin@sistina.com] On Behalf Of Jason A. Lixfeld
+> > > Sent: October 4, 2001 7:39 AM
+> > > To: linux-lvm@sistina.com
+> > > Subject: RE: [linux-lvm] lvcreate segfault in
+> > > vg_setup_pointers_for_snapshots
+> > > 
+> > > 
+> > > 
+> > > 
+> > > Ok, done...
+> > > 
+> > > http://www.andromedas.com/lvm/session.log
+> > > 
+> > > It's 35MB and I'm only on a 3MB DSL connection so it's 
+> gonna take a 
+> > > while to load! :)
+> > > 
+> > > > -----Original Message-----
+> > > > From: linux-lvm-admin@sistina.com
+> > > > [mailto:linux-lvm-admin@sistina.com] On Behalf Of Andreas Dilger
+> > > > Sent: October 4, 2001 2:05 AM
+> > > > To: linux-lvm@sistina.com
+> > > > Subject: Re: [linux-lvm] lvcreate segfault in
+> > > > vg_setup_pointers_for_snapshots
+> > > > 
+> > > > 
+> > > > 
+> > > > On Oct 03, 2001  23:46 -0400, Jason A. Lixfeld wrote:
+> > > > > Wow!  Lots and LOTS of stuff!!  Didn't think it was
+> > ever going to
+> > > > > end!!
+> > > > 
+> > > > Some of it is even useful.  Maybe you can include some of
+> > the stuff
+> > > > at the end, or put it on a web page somewhere.
+> > > > 
+> > > > > Here's what yer looking for:
+> > > > > 
+> > > > > #0  lv_create (vg=0x8, lv=0xbffffb74, 
+> > > > >     lv_name=0xbffffb98
+> > > > > 
+> > > > 
+> > > 
+> > 
+> "????????????????????????????????\002???!???,???<???D???T???b???s???\2
+> > > > > 01
+> > > > > ???\214???\227???????")
+> > > > >     at lv_create_remove.c:42
+> > > > > #1  0x0804b03d in strcpy () at ../sysdeps/generic/strcpy.c:31
+> > > > 
+> > > > So it is dereferencing an uninitialized string (or so it
+> > appears).
+> > > > It may be that the string is corrupted elsewhere, however.  I'm
+> > > > surprised that
+> > > > lv_check_name() in lv_create_remove() didn't catch this.
+> > > > However, this may also be a red herring, since sometimes GDB 
+> > > > shows junk.
+> > > > 
+> > > > It is also suspicious because the lv and lv_name pointers
+> > are 0x24
+> > > > apart, which shouldn't be the case since lv_name is the
+> > first item
+> > > > in lv_t.
+> > > > 
+> > > > > #2  0x4006c177 in __libc_start_main (main=0x8049390
+> > <strcpy+384>,
+> > > > > argc=8, ubp_av=0xbffffb74, init=0x8048e88 <_init>,
+> > > > >     fini=0x804b4d0 <_fini>, rtld_fini=0x4000e184 <_dl_fini>,
+> > > > > stack_end=0xbffffb6c) at ../sysdeps/generic/libc-start.c:129
+> > > > 
+> > > > If you try running with "export MALLOC_CHECK_=2 gdb
+> > > > <path>/lvcreate", it may give more indication as to where 
+> > the actual
+> > > > corruption is happening.
+> > > > 
+> > > > I just recompiled the tools, and did not have any problems with
+> > > > lvcreate, so it must be something strange.
+> > > > 
+> > > > Cheers, Andreas
+> > > > --
+> > > > Andreas Dilger  \ "If a man ate a pound of pasta and a pound of
+> > > > antipasto,
+> > > >                  \  would they cancel out, leaving him
+> > > still hungry?"
+> > > > http://www-mddsp.enel.ucalgary.ca/People/adilger/             
+> > > >   -- Dogbert
+> > > > 
+> > > > 
+> > > > _______________________________________________
+> > > > linux-lvm mailing list
+> > > > linux-lvm@sistina.com
+> > > > http://lists.sistina.com/mailman/listinfo/linu> x-lvm read the
+> > > > LVM HOW-TO at 
+> > > > http://www.sistina.com/lvm/Pages/howto.html
+> > > > 
+> > > 
+> > > 
+> > > _______________________________________________
+> > > linux-lvm mailing list
+> > > linux-lvm@sistina.com
+> > > http://lists.sistina.com/mailman/listinfo/linux-lvm
+> > > read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
+> > > 
+> > 
+> > 
+> > _______________________________________________
+> > linux-lvm mailing list
+> > linux-lvm@sistina.com
+> > http://lists.sistina.com/mailman/listinfo/linu> x-lvm
+> > read the 
+> > LVM HOW-TO at 
+> > http://www.sistina.com/lvm/Pages/howto.html
+> > 
+> 
+> 
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@sistina.com
+> http://lists.sistina.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
+> 
