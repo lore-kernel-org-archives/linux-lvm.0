@@ -1,10 +1,8 @@
-content-class: urn:content-classes:message
+Message-ID: <1034915787.3daf8fcb66a42@mail.dornquast.com>
+From: Nathan Dornquast <Nathan@Aberon.Net>
 MIME-Version: 1.0
-Content-Type: multipart/mixed;
-	boundary="----_=_NextPart_001_01C27627.DE9FC42D"
-Message-ID: <2EF585A95405554FA6453B3AD37D6D7F0200431D@esmexc01.emea.cpqcorp.net>
-From: "Rodriguez, Julian" <Julian.Rodriguez@hp.com>
-Subject: [linux-lvm] LVM version needed for Red Hat Advanced Server ?
+Content-Transfer-Encoding: 8bit
+Subject: [linux-lvm] Fwd: LVM on ATA-Raid Working - but Poorly
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,47 +13,49 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Thu Oct 17 16:56:02 2002
+Date: Thu Oct 17 23:36:01 2002
 List-Id: <linux-lvm.redhat.com>
+Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
 
-This is a multi-part message in MIME format.
+Thx, Goetz.
 
-------_=_NextPart_001_01C27627.DE9FC42D
-Content-Type: text/plain;
-	charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Very good suggestions.  They mostly point out what I suspected, that I will not 
+have much luck getting the built in Promise RAID chips to work with LVM.
 
-May any of you clarify me what the right version is for LVM in order to =
-run it on top of RH Linux Advanced Server v2.1 ?
+I am actually running without the PROMISE PDC202{46|62|65|67|68|69|70} 
+support.  Some of the How-to's I've come accross say to include it, but when I 
+do, I can not boot off the ATA-Raid.
 
-Best regards,
-Juli=E1n Rodr=EDguez
-Presales Technical Consultant and UNIX Ambassador
-Compaq Spain, now part of HP Iberia
-Phone: +34-91-634.82.72=20
-Mobile: +34-639.12.63.11
-Fax: +34-91-634.89.00=20
-E-mail: julian.rodriguez@hp.com
+I spent some time with the Promise drivers... they are released for RH 7.2/3, I 
+haven't been successful at getting them to install on my Debian 3.0 box.  
 
- <<Rodriguez, Julian.vcf>>=20
+I have tried other Promise Controllers (Fasttrak 100 & TX200) - but cannot get 
+them to post - disabling built in Promise PDC202675 RAID or switching it to 
+UDMA doesn't help.
 
-------_=_NextPart_001_01C27627.DE9FC42D
-Content-Type: text/x-vcard;
-	name="Rodriguez, Julian.vcf"
-Content-Transfer-Encoding: base64
-Content-Description: Rodriguez, Julian.vcf
-Content-Disposition: attachment;
-	filename="Rodriguez, Julian.vcf"
+Tried the Highpoint 404 raid card - not impressed.  Plus, they do not have 
+RAID1 support in the kernel - 2.4.19 - only 0.
 
-QkVHSU46VkNBUkQNClZFUlNJT046Mi4xDQpOOlJvZHJpZ3VlejtKdWxpYW4NCkZOOlJvZHJpZ3Vl
-eiwgSnVsaWFuDQpPUkc6O1NCVQ0KVEVMO1dPUks7Vk9JQ0U6MzQuOTEuNjM0LjgyNzINCkFEUjtX
-T1JLO0VOQ09ESU5HPVFVT1RFRC1QUklOVEFCTEU6O0VTTTAxOjtWaWNlbnRlIEFsZWl4YW5kcmUs
-IDE9MEQ9MEFQYXJxdWUgRW1wcmVzYXJpYWwgTWFkcmlkLWxhcz0wRD0wQVJvemFzLD0NCiBMYXMg
-Um96YXM9MEQ9MEE7TWFkcmlkOzsyODIzMDtFU1ANCkxBQkVMO1dPUks7RU5DT0RJTkc9UVVPVEVE
-LVBSSU5UQUJMRTpFU00wMTo9MEQ9MEFWaWNlbnRlIEFsZWl4YW5kcmUsIDE9MEQ9MEFQYXJxdWUg
-RW1wcmVzYXJpYWwgTWFkcmlkLWxhcz0wRD0wQVJvPQ0KemFzLCBMYXMgUm96YXM9MEQ9MEE9MEQ9
-MEFNYWRyaWQgMjgyMzA9MEQ9MEFFU1ANCkVNQUlMO1BSRUY7SU5URVJORVQ6SnVsaWFuLlJvZHJp
-Z3VlekBjb21wYXEuY29tDQpSRVY6MjAwMjAzMTZUMTAzNDMyWg0KRU5EOlZDQVJEDQo=
+3ware 7500-4 is on order. ;)  Sadly it adds $260 to box.  
 
-------_=_NextPart_001_01C27627.DE9FC42D--
+Goetz, I am interested to hear your MD RAID 1/5 - particularly how it handles 
+powering off a drive while operating.  Does your box spit, sputter and puke, or 
+can you hotswap?  How about with the 3ware card?  Which 3ware card are you 
+working with?
+
+I know this RAID info is off-topic.  Feel free to email me directly @ 
+nathan@aberon.net.  
+
+Many thanks,
+
+-Nate
+
+..........
+Nathan Dornquast
+Aberon Technologies, Inc.
+2205 California St NE - Suite 003
+Minneapolis, MN 55418
+w.612.789.9446
+c.612.386.6519
+..........
