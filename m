@@ -1,10 +1,8 @@
-From: Goetz Bock <bock@blacknet.de>
-Subject: Re: [linux-lvm] failed a disk of LVM
-Message-ID: <20040110111719.GD11076@shell.blacknet.de>
-References: <1073644416.2536.14.camel@heppc23>
+From: Alasdair G Kergon <agk@uk.sistina.com>
+Message-ID: <20040111190746.F18942@uk.sistina.com>
 Mime-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <1073644416.2536.14.camel@heppc23>
+Subject: [linux-lvm] Re: Getting duplicate posts from linux-lvm, dm-devel and maybe lvm-devel
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,30 +13,35 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Sun Jan 11 05:59:04 2004
+Date: Sun Jan 11 14:09:01 2004
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Fri, Jan 09 '04 at 11:33, Juan Jos? Pardo Navarro wrote:
-> I have a logical volume (LV) with four physical volumnes (PV):
-> hda1, hdb1, hdc1, hdd1.
-> Yesterday a PV failed. (hdc1).
-> 
-> could I recover the information?
-Plane A: Take it from an up to date backup. (If you don't have one, try
-         to get one next time)
-Plane B: get a disk the same size (or better 4 disks the same size as
-         hda, hdb, hdc and hdd) and ddrescue hdc to the new disks.
-         Than try to reactivate your backup version.
-Plane C: force LVM to work without the broken drive (might work if you
-         had no data on hdc1)
+On Sun, Jan 11, 2004 at 12:10:27PM -0600, Ken Fuchs wrote:
+> In the last few days, I've been getting duplicate posts from linux-lvm
+> and dm-devel mailing lists sent to my address
 
-Than make a full backup (plane B and C only), replace hdc, make a RAID5
-and restore the backup.
+Sistina's mail routing was changed a few days back and a side-effect is
+that many posts to Sistina lists now get duplicated.
+
+I have identified the cause of the problem, and I anticipate that it
+can be fixed tomorrow.
+
+Sorry for the inconvenience.
+
+
+A reminder about spam filtering.
+
+Hundreds of messages a day now have to be filtered from the list addresses.
+Please try always to post from a subscribed email address, and to use a
+relevant and detailed subject line.
+
+Messages without subject lines, or ones saying "help" or "urgent",
+or messages containing HTML or attachments are easily mistaken for spam
+and might get delayed or disappear to /dev/null.
+
+Alasdair
 -- 
-/"\ Goetz Bock at blacknet dot de  --  secure mobile Linux everNETting
-\ /                     (c) 2003 as GNU FDL 1.1
- X   [ 1. Use descriptive subjects - 2. Edit a reply for brevity -  ]
-/ \  [ 3. Reply to the list - 4. Read the archive *before* you post ]
+agk@uk.sistina.com
