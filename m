@@ -1,17 +1,19 @@
-Received: from agk.surrey.redhat.com (agk.surrey.redhat.com [172.16.10.74])
-	by pobox.surrey.redhat.com (8.12.8/8.12.8) with ESMTP id iB7EH7H6030307
-	for <linux-lvm@redhat.com>; Tue, 7 Dec 2004 14:17:07 GMT
-Received: from agk by agk.surrey.redhat.com with local (Exim 4.34)
-	id 1Cbg9L-00055P-EH
-	for linux-lvm@redhat.com; Tue, 07 Dec 2004 14:17:07 +0000
-Date: Tue, 7 Dec 2004 14:17:07 +0000
-From: Alasdair G Kergon <agk@redhat.com>
-Subject: Re: [linux-lvm] pvmove on the same PV
-Message-ID: <20041207141707.GZ24229@agk.surrey.redhat.com>
-References: <1102387034.5390.13.camel@cain>
+Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id iB7Gx2r08703
+	for <linux-lvm@redhat.com>; Tue, 7 Dec 2004 11:59:02 -0500
+Received: from ms-smtp-05-eri0.texas.rr.com (ms-smtp-05.texas.rr.com
+	[24.93.47.44])
+	by mx3.redhat.com (8.12.11/8.12.11) with ESMTP id iB7GwuWK014292
+	for <linux-lvm@redhat.com>; Tue, 7 Dec 2004 11:58:56 -0500
+Subject: Re: [linux-lvm] Can't access LVM volume group after changing a
+	non-LVM partition
+From: David Mohr <damailings@mcbf.net>
+In-Reply-To: <b9a453c204120705542e927fac@mail.gmail.com>
+References: <b9a453c204120705542e927fac@mail.gmail.com>
+Date: Tue, 07 Dec 2004 10:58:45 -0600
+Message-Id: <1102438725.2526.8.camel@adler>
 Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <1102387034.5390.13.camel@cain>
+Content-Transfer-Encoding: 8bit
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -22,18 +24,18 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="utf-8"
+To: =?ISO-8859-1?Q?=D2scar_=C1lvarez?= Vilaplana <grimborg@gmail.com>, LVM general discussion and development <linux-lvm@redhat.com>
 
-On Mon, Dec 06, 2004 at 08:37:13PM -0600, Aran Cox wrote:
-> Is it possible to move an extent from one position to another on the
-> same PV?  It used to be possible under LVM1.  
- 
-pvmove --alloc anywhere
 
-tells overrides normal common-sense restrictions.
+On Tue, 2004-12-07 at 14:54 +0100, �scar �lvarez Vilaplana wrote:
+--- skip ---
+> I thought maybe changing the uuid for /dev/hda7 in the /etc/lvm files,
+> but I couldn't find how to get the correct uuid for /dev/hda7.
 
-Alasdair
--- 
-agk@redhat.com
+Use:
+pvdisplay /dev/hda7
+
+I don't know either how this could have happened though...
+
+~David
