@@ -1,10 +1,10 @@
 Return-Path: <terjekv@ifi.uio.no>
-Subject: Re: [linux-lvm] lowest spec LVM run on ?
-References: <5.0.2.1.0.20010429184602.00ac9e88@mail.hole.org>
+Subject: Re: [linux-lvm] LVM on root, Kernel panic: "I have no root and I must scream"
+References: <DC5B1A21E9E7D211B0020090273AD628242BBD@summit15.corvallis.summit> <20010428014015.D10716@dragon.blacknet.de>
 From: Terje Kvernes <terjekv@math.uio.no>
-Date: 29 Apr 2001 21:10:23 +0200
-In-Reply-To: Kirth's message of "Sun, 29 Apr 2001 18:47:48 +0100"
-Message-ID: <wxxd79vldy8.fsf@thrir.ifi.uio.no>
+Date: 29 Apr 2001 21:18:34 +0200
+In-Reply-To: Goetz Bock's message of "Sat, 28 Apr 2001 01:40:15 +0200"
+Message-ID: <wxx8zkjldkl.fsf@thrir.ifi.uio.no>
 MIME-Version: 1.0
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
@@ -21,18 +21,16 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Kirth <kirth@hole.org> writes:
+Goetz Bock <bock@blacknet.de> writes:
 
-> I'm just wondering whats the lowest spec machine that anyone has an
-> LVM running (stable) on ? The reason is, I have just built another
-> one, but it's on a p100 with 16megs of ram, I tried to reiserfs the
-> drive but that crashed the kernel (still no idea why, same kernel as
-> my p133 with 128megs... which works fine). I have made the fs just
-> ext2 for now (this is all testing NOT live).
+> Whilt I don't know if this I true, I once read that the letters of
+> LILO tells you what exactly is broken with your setup.
 
-  I'm running LVM + reiserfs on a P90 (with the bug :) that has
-  32MB worth of RAM. it works flawlessly. well, as flawlessly as stuff
-  cna work with 2.4, updatedb and lack of RAM, but still. :)
+  they do.
+
+  <url: http://www.fan.nb.ca/~aa126/troubleshoot-LILO.html >
+
+  why this isn't in the LILO-howto, I don't know.
 
 -- 
 Terje
