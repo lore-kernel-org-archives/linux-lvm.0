@@ -1,18 +1,17 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j259Gen04386
-	for <linux-lvm@redhat.com>; Sat, 5 Mar 2005 04:16:40 -0500
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j259Nwn05191
+	for <linux-lvm@redhat.com>; Sat, 5 Mar 2005 04:23:58 -0500
 Received: from percy.comedia.it (percy.comedia.it [212.97.59.71])
-	by mx3.redhat.com (8.12.11/8.12.11) with ESMTP id j259GXXw008214
-	for <linux-lvm@redhat.com>; Sat, 5 Mar 2005 04:16:33 -0500
-Date: Sat, 5 Mar 2005 10:16:31 +0100
+	by mx3.redhat.com (8.12.11/8.12.11) with ESMTP id j259Nqoa009337
+	for <linux-lvm@redhat.com>; Sat, 5 Mar 2005 04:23:52 -0500
+Date: Sat, 5 Mar 2005 10:23:51 +0100
 From: Luca Berra <bluca@comedia.it>
-Subject: Re: [linux-lvm] Some general questions ..
-Message-ID: <20050305091631.GH3192@percy.comedia.it>
-References: <49849.129.33.49.251.1076733336.squirrel@www.fusion-hosting.net>
-	<42283E6D.9060208@bgc-jena.mpg.de>
+Subject: Re: [linux-lvm] LVM Question
+Message-ID: <20050305092351.GI3192@percy.comedia.it>
+References: <CEEE90D87043AA4487634844B31B03631141B17B@ukspkem01.corp.hds.com>
 Mime-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <42283E6D.9060208@bgc-jena.mpg.de>
+In-Reply-To: <CEEE90D87043AA4487634844B31B03631141B17B@ukspkem01.corp.hds.com>
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -25,24 +24,18 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"; format="flowed"
 Content-Transfer-Encoding: 7bit
-To: linux-lvm@redhat.com
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-On Fri, Mar 04, 2005 at 11:54:37AM +0100, Dr.Peer-Joachim Koch wrote:
->So would it be possible to import some dedicated devices
->(all luns from the vg), while other luns are localy active
->and others are active on the third node ?
+On Fri, Mar 04, 2005 at 12:49:00PM -0000, Matthias Rudolph wrote:
+>Hello all,
+> 
+>how can I force to activate a VG on a special device file?
+>One FC Storage Disk is visible over two pathes (sda and sdb). We use our
+>Path Management Software. It creates sddlmaa. After creating the VG the
+>sddlmaa is ACTIVE - OK. But after deactivating and activating sdb is ACTIVE.
+>This means: no pathfailover.
 
-yes, but there is no locking, so be careful
-
->If just a pvscan is execute what is happening to "normaly"
->working vg's  ?
-nothing
-
->Is it planed to mirroring of lv onto other devices within
->th vg ?
-it will be available in the future, but doesn't the clariion provide
-data redundancy.
-
+switch to lvm2 and use filters in /etc/lvm/lvm.conf
 
 -- 
 Luca Berra -- bluca@comedia.it
