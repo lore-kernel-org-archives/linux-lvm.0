@@ -1,11 +1,8 @@
-From: Andreas Dilger <adilger@turbolabs.com>
-Date: Fri, 7 Sep 2001 10:59:29 -0600
-Subject: Re: [linux-lvm] Re: Problem with vgscan "only found 626 of 625 LEs for LV"
-Message-ID: <20010907105929.C32553@turbolinux.com>
-References: <20010906123245.B28532@hp.is> <20010907103515.B32257@hp.is>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20010907103515.B32257@hp.is>
+Message-ID: <20010908074256.72205.qmail@web13008.mail.yahoo.com>
+Date: Sat, 8 Sep 2001 00:42:56 -0700 (PDT)
+From: "Taher H. Haveliwala" <taherh24@yahoo.com>
+MIME-Version: 1.0
+Subject: [linux-lvm] installing lvm 1.0 on stock RedHat 7.1
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -21,33 +18,62 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Sep 07, 2001  10:35 +0000, Tomas Edwardsson wrote:
-> Hmm, anyone able to help with this? All my data is currently offline and
-> I really need it back so if anyone could help please!
-> 
-> - Tommi
-> 
-> On Thu, Sep 06, 2001 at 12:32:45PM +0000, Tomas Edwardsson wrote:
-> > Here is what vgscan shows:
-> > 
-> > vgscan -- reading all physical volumes (this may take a while...)
-> > vgscan -- found inactive volume group "vg00"
-> > vgscan -- only found 626 of 625 LEs for LV /dev/vg00/lvol1 (0)
-> > vgscan -- ERROR "vg_read_with_pv_and_lv(): allocated LE of LV" can't get data of volume group "vg00" from physical volume(s)
-> > vgscan -- ERROR "vg_read_with_pv_and_lv(): allocated LE of LV" creating "/etc/lvmtab" and "/etc/lvmtab.d"
+I installed lvm on a stock RedHat 7.1 installation
+without rebuilding the kernel (and without rebooting)
+as follows:
 
-It looks like the PE table does not match what is in the LV table for
-that LV (i.e. the PE table has 626 PEs that claim to be part of the LV,
-but the LV says it has only 625 LEs allocated).
+(If this is common knowledge, I apologize in advance,
+but I didn't see it in the docs, howto, or mailing
+list archives.)
 
-Two possibilities: you recently added an LE to the LV and you had a crash
-(or an LVM bug), or somehow you had an error writing to disk.  You can try
-restoring a copy of the metadata with vgcfgrestore to see if it helps.
+(as root)
 
-Failing that, check pvdata -avP <disk> to see what is wrong.
+1) install the kernel sources rpm
+(kernel-source-2.4.2-2.rpm)
+2) follow the instruction in the lvm tarball for
+creating a patch for the kernel.  Apply the patch. 
+Note that since only the lvm module files are modified
+by the patch (at least for stock redhat 7.1), you
+won't need to rebuild the whole kernel.
+3) cd /usr/src/linux-2.4
+   gmake mrproper
+   gmake xconfig
+4) "Load Configuration from File"
+   Load up the file in /usr/src/linux-2.4/configs/
+that matches the kernel you are currently running.  If
+you don't pick the right one, step 9/10 will fail. 
+'uname -a' might help you pick.
+5) Go to "Multi-Device Support" and check off module
+support for lvm.
+6) Save and quit
+7) gmake dep
+   gmake modules
+8) cp drivers/md/lvm-mod.o
+/lib/modules/2.4.2-2/kernel/drivers/md/
+9) /sbin/depmod -a
+10) /sbin/modprobe lvm-mod
 
-Cheers, Andreas
--- 
-Andreas Dilger  \ "If a man ate a pound of pasta and a pound of antipasto,
-                 \  would they cancel out, leaving him still hungry?"
-http://www-mddsp.enel.ucalgary.ca/People/adilger/               -- Dogbert
+and to check:
+
+11) ls /proc/lvm
+
+Voila, it's there, an no reboot necessary.  Continue
+following the rest of the steps in the lvm tarball.
+
+Most of the above was probably obvious, except for the
+part about loading the right file from configs/, so
+that you don't get module versioning problems.
+
+I imagine the above should work with minor changes
+regardless of which redhat kernel rpm you're currently
+using.
+
+Taher
+
+
+
+
+__________________________________________________
+Do You Yahoo!?
+Get email alerts & NEW webcam video instant messaging with Yahoo! Messenger
+http://im.yahoo.com
