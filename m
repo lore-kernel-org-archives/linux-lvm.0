@@ -1,11 +1,8 @@
-Date: Tue, 4 Apr 2000 21:25:05 +0200
-From: Luca Berra <bluca@comedia.it>
+From: Andreas Dilger <adilger@home.com>
+Message-Id: <200004042010.e34KAMZ01651@webber.adilger.net>
 Subject: Re: [linux-lvm] Re: LVM 256 logical volume limit
-Message-ID: <20000404212505.B4140@colombina.comedia.it>
-Reply-To: bluca@comedia.it
-References: <000801bf9deb$f7f3f920$2bcb1b3f@dell01> <200004041551.e34Fpju06920@webber.adilger.net>
-Mime-Version: 1.0
-In-Reply-To: <200004041551.e34Fpju06920@webber.adilger.net>
+Date: Tue, 4 Apr 2000 14:10:21 -0600 (MDT)
+MIME-Version: 1.0
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
@@ -13,24 +10,16 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: Linux LVM mailing list <linux-lvm@msede.com>
 
-On Tue, Apr 04, 2000 at 09:51:45AM -0600, Andreas Dilger wrote:
-> Michael Roever writes:
-> I think the 255 LV limit is imposed by having only 16-bit device node numbers.
-> LVM has 1 major device assigned, which has 255 minor devices possible.  In
-> order to have more LVs, you would need to have one or more additional major
-> block numbers assigned to LVM, or you can wait until 2.6 when there will
-> probably be 32-bit device numbers.
+Luca Berra writes:
+> sorry, nbd sucks.
+> it is far too unstable to use outside of a test environment.
 
-or ignore the whole issue with devfs
+I recall reading that someone fixed up NBD for another project - I think
+it was GFS.  If anyone is seriously considering VSD implementation,
+they could at least start somewhere...
 
-> Linux already has such a thing - it's called "network block device",
-> and it is available in 2.2 and 2.3 kernels already.
-
-sorry, nbd sucks.
-it is far too unstable to use outside of a test environment.
-
-L.
-
+Cheers, Andreas
 -- 
-Luca Berra -- bluca@comedia.it
-    Communication Media & Services S.r.l.
+Andreas Dilger  \ "If a man ate a pound of pasta and a pound of antipasto,
+                 \  would they cancel out, leaving him still hungry?"
+http://www-mddsp.enel.ucalgary.ca/People/adilger/               -- Dogbert
