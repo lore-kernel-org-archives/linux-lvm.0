@@ -1,39 +1,43 @@
-Message-ID: <38C5B910.8F32EF32@msede.com>
-Date: Wed, 08 Mar 2000 03:21:04 +0100
+Message-ID: <38C5C23F.10C2F1AF@msede.com>
+Date: Wed, 08 Mar 2000 04:00:15 +0100
 From: Michael Marxmeier <mike@msede.com>
 MIME-Version: 1.0
-Subject: [linux-lvm] Re: LVM+e2label
-References: <Pine.LNX.4.21.0003071349060.17755-100000@p64p17bia59.aigf.sncf.fr>
+Subject: Re: [linux-lvm] Snapshot documentation
+References: <Pine.OSF.4.21.0003071740130.28917-100000@lazy.accessus.net>
 Content-Transfer-Encoding: 7bit
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: EXT / DEVOTEAM VAROQUI Christophe <ext.devoteam.varoqui@sncf.fr>, linux-lvm@msede.com
+To: Jay Weber <jay@lazy.accessus.net>
+Cc: linux-lvm@msede.com
 
-EXT / DEVOTEAM VAROQUI Christophe (ext.devoteam.varoqui@sncf.fr)
-wrote:
-> The mount command is able to mount filesystems naming them by their
-> label instead of their device-name :
-> Thus, you're free to move your disks over different targets, hosts,
-> even free to insert a new host in your pci chain (feature that
-> devfs doesn't provide)
+Jay Weber wrote:
+> Been playing with snapshots and am noticing I can create a snapshot with
+> less PE's than my source LV that I'm snapshotting, with the small side
+> effect of:
 > 
-> Question is :
-> Are the lvm-tools able to create PV and VG naming partitions by
-> label instead of device-names
-> If not, is it planed to do so ?
+> lvcreate -- WARNING: all snapshots will be disabled if more than 12 MB are
+> changed
 
-You do not need it because LVM already should do this on its own.
+For now snapshots use a COW model at the block level. Each modified 
+block gets saved (once) to the snapshot area. If the space dedicated 
+to the snapshot area is exhausted the snapshot is discarded (and the
+the saved blocks are simply discarded). Otherwise the fs would become
+inconsistent.
 
-vgscan scans all physical devices and creates its own map in
-/etc/lvmtab. With LVM block devices have symbolic names 
-(/dev/vg00/lvol1) and the physical devices are discovered/associated 
-by their VGDA during vgscan. The physical address should not really 
-matter.
+When/if LVM once has persistent snapshots this might need to change.
 
-I did not actually try this but it should work.
+> Is the above message implying that if I change more than 12MB of data on
+> my source LV that the snapshot is then defunct/useless?  Does that include
+> deletes, etc?
 
+Yes. Though deletes should only affect the inode and lists of indirect
+blocks (if any) so deleting a 12MB files does not necessarily result 
+in 12MB of changes.
+
+
+Hope this helps
 Michael
 
 -- 
