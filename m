@@ -1,8 +1,9 @@
-From: Nick Jennings <nick.jennings@mountainviewdata.com>
-Message-Id: <1037820827.79579.13.camel@grenzik.us.mvd>
-Mime-Version: 1.0
+Message-ID: <3DDBEDA1.8020602@comedia.it>
+From: Luca Berra <bluca@comedia.it>
+MIME-Version: 1.0
+Subject: Re: [linux-lvm] LMV install on RH 7.1
+References: <003f01c290a8$032ecf20$7327dbd1@policeforum.org>
 Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] LVM: logical -> physical mapping info (per file)
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -13,25 +14,23 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Nov 20 13:33:02 2002
+Date: Wed Nov 20 14:17:02 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: linux-lvm@sistina.com
 
- Hello I would like to determine which, of 3 RAIDs, a certain piece of 
-data is stored. I am trying to determine if the reason I am having 
-trouble with certain pieces of data on an 'lv' partition is because
-of a RAID enclosure having trouble. I'd like to find out if it is the
-one containing the file(s) I need.
+TED MORRIS wrote:
+> I am a linux newbie. I desperately need to install LVM 1.0.6 on Redhat 
+> 7.1 but can't seem to make it work.The file is a tar file. Any tips.
+>  
+> Thanks
+>  
+> Ted
+If you are a newbie your best choice would be upgrading to a recent 
+redhat distro 7.3 or 8.0 which already include LVM.
 
- Perhaps there is a way to get an inode mapping of every bit of data on 
-a device (lvm partition)? vgdisplay or lvdisplay seems to only show
-which devices are used, but provides no info on the physical location of
-each file.
-
- Please let me know if there is a way to do this, or another way to go 
-about this problem. Thanks.
+regards,
+L.
 
 -- 
-Nick Jennings <nick.jennings@mountainviewdata.com>
-Mountain View Data, Inc.
+Luca Berra -- bluca@comedia.it
