@@ -1,9 +1,10 @@
-From: Nova FIre <novafire@novafett.com>
-Message-id: <200305100535.32856.novafire@novafett.com>
-MIME-version: 1.0
-Content-transfer-encoding: 7BIT
-Content-disposition: inline
-Subject: [linux-lvm] Help with restoring missing VG
+content-class: urn:content-classes:message
+MIME-Version: 1.0
+Content-Type: multipart/alternative;
+	boundary="----_=_NextPart_001_01C30FE5.7F0F82DA"
+Message-ID: <389954B725462C48A5DD935C8E3526CA416F49@is-server.bondera.com>
+From: "Yaniv Valik" <Yanivv@savantis.com>
+Subject: [linux-lvm] ERROR: kernel and lvmtab are not consistent
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,62 +15,218 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Sat May 10 05:35:02 2003
+Date: Sat May 10 08:37:09 2003
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
 
-Today my file server was acting up and I had to reboot it.  Apon reboot the 
-system would lock up while mounting local file systems.  I took the line that 
-mounted my logical volume out of fstab and the machine booted fine, but 
-manually mounting the volume also caused lockups.  
+This is a multi-part message in MIME format.
 
-I had a hunch that the most recent drive I added to the volume group was 
-dying, so I ran  vgreduce vg0 /dev/hdf to remove that disk and hopeed to  
-still be able to access what was on the remainder of the volume.  (I can live 
-with loosing what might be on the newer drive, but I absolutely need what is 
-on the other drives).
+------_=_NextPart_001_01C30FE5.7F0F82DA
+Content-Type: text/plain;
+	charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 
-In any case the vgreduce command did not seem to be removing the pv, I cannot 
-remember the exact error however.  I then ran a pvscan, which locked up, so I 
-rebooted again and now my vg0 volume group is not there.  I can run pvscan 
-and get this:
+Hi guys,
+=20
+From time to time, when I perform LVM operations, the response is:
+"ERROR: VGDA in kernel and lvmtab are NOT consistent: please run vgscan"
+=20
+Is there a solution for this problem? (beside rebooting)
+=20
+Are there any known causes for such problem that would help me avoid it?
+I belive importing twice will cause it but I also think it is not the
+only cause.
+=20
+Any help would be appreciated.
+=20
+Thanks,
+--Yaniv
+=20
+=20
 
-pvscan -- reading all physical volumes (this may take a while...)
-pvscan -- inactive PV "/dev/ide/host2/bus1/target0/lun0/disc"   is associated 
-to an unknown VG (run vgscan)
-pvscan -- inactive PV "/dev/ide/host2/bus0/target0/lun0/disc"   is associated 
-to an unknown VG (run vgscan)
-pvscan -- inactive PV "/dev/ide/host0/bus1/target0/lun0/part4"  is associated 
-to an unknown VG (run vgscan)
-pvscan -- inactive PV "/dev/ide/host0/bus1/target1/lun0/disc"   is associated 
-to an unknown VG (run vgscan)
-pvscan -- inactive PV "/dev/ide/host0/bus0/target0/lun0/part7"  is associated 
-to an unknown VG (run vgscan)
-pvscan -- inactive PV "/dev/ide/host0/bus0/target1/lun0/disc"   is associated 
-to an unknown VG (run vgscan)
-pvscan -- total: 6 [565.71 GB] / in use: 6 [565.71 GB] / in no VG: 0 [0]
+------_=_NextPart_001_01C30FE5.7F0F82DA
+Content-Type: text/html;
+	charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 
-***^^^^ NOTE: the failing drive is no longer listed as a pv, so apparently 
-that drive has atleast been removed
+<html xmlns:o=3D"urn:schemas-microsoft-com:office:office" =
+xmlns:w=3D"urn:schemas-microsoft-com:office:word" =
+xmlns=3D"http://www.w3.org/TR/REC-html40">
 
-but vgscan gives me:
-
-vgscan -- reading all physical volumes (this may take a while...)
-vgscan -- "/etc/lvmtab" and "/etc/lvmtab.d" successfully created
-vgscan -- WARNING: This program does not do a VGDA backup of your volume group
+<head>
+<META HTTP-EQUIV=3D"Content-Type" CONTENT=3D"text/html; =
+charset=3Dus-ascii">
 
 
-I was going to try to recreate the VG, but wanted to do somemore research and 
-check this list before doing so, I do not want to loose any data.  
+<meta name=3DProgId content=3DWord.Document>
+<meta name=3DGenerator content=3D"Microsoft Word 10">
+<meta name=3DOriginator content=3D"Microsoft Word 10">
+<link rel=3DFile-List href=3D"cid:filelist.xml@01C30FFE.A4546510">
+<!--[if gte mso 9]><xml>
+ <o:OfficeDocumentSettings>
+  <o:DoNotRelyOnCSS/>
+ </o:OfficeDocumentSettings>
+</xml><![endif]--><!--[if gte mso 9]><xml>
+ <w:WordDocument>
+  <w:SpellingState>Clean</w:SpellingState>
+  <w:GrammarState>Clean</w:GrammarState>
+  <w:DocumentKind>DocumentEmail</w:DocumentKind>
+  <w:EnvelopeVis/>
+  <w:Compatibility>
+   <w:BreakWrappedTables/>
+   <w:SnapToGridInCell/>
+   <w:ApplyBreakingRules/>
+   <w:WrapTextWithPunct/>
+   <w:UseAsianBreakRules/>
+  </w:Compatibility>
+  <w:BrowserLevel>MicrosoftInternetExplorer4</w:BrowserLevel>
+ </w:WordDocument>
+</xml><![endif]-->
+<style>
+<!--
+ /* Font Definitions */
+ @font-face
+	{font-family:Tahoma;
+	panose-1:2 11 6 4 3 5 4 4 2 4;
+	mso-font-charset:0;
+	mso-generic-font-family:swiss;
+	mso-font-pitch:variable;
+	mso-font-signature:1627421319 -2147483648 8 0 66047 0;}
+ /* Style Definitions */
+ p.MsoNormal, li.MsoNormal, div.MsoNormal
+	{mso-style-parent:"";
+	margin:0in;
+	margin-bottom:.0001pt;
+	mso-pagination:widow-orphan;
+	font-size:12.0pt;
+	font-family:"Times New Roman";
+	mso-fareast-font-family:"Times New Roman";}
+a:link, span.MsoHyperlink
+	{color:blue;
+	text-decoration:underline;
+	text-underline:single;}
+a:visited, span.MsoHyperlinkFollowed
+	{color:purple;
+	text-decoration:underline;
+	text-underline:single;}
+pre
+	{margin:0in;
+	margin-bottom:.0001pt;
+	mso-pagination:widow-orphan;
+	font-size:10.0pt;
+	font-family:"Courier New";
+	mso-fareast-font-family:"Times New Roman";}
+span.EmailStyle17
+	{mso-style-type:personal-compose;
+	mso-style-noshow:yes;
+	mso-ansi-font-size:10.0pt;
+	mso-bidi-font-size:10.0pt;
+	font-family:Tahoma;
+	mso-ascii-font-family:Tahoma;
+	mso-hansi-font-family:Tahoma;
+	color:windowtext;
+	font-weight:normal;
+	font-style:normal;
+	text-decoration:none;
+	text-underline:none;
+	text-decoration:none;
+	text-line-through:none;}
+span.SpellE
+	{mso-style-name:"";
+	mso-spl-e:yes;}
+span.GramE
+	{mso-style-name:"";
+	mso-gram-e:yes;}
+@page Section1
+	{size:8.5in 11.0in;
+	margin:1.0in 1.25in 1.0in 1.25in;
+	mso-header-margin:.5in;
+	mso-footer-margin:.5in;
+	mso-paper-source:0;}
+div.Section1
+	{page:Section1;}
+-->
+</style>
+<!--[if gte mso 10]>
+<style>
+ /* Style Definitions */=20
+ table.MsoNormalTable
+	{mso-style-name:"Table Normal";
+	mso-tstyle-rowband-size:0;
+	mso-tstyle-colband-size:0;
+	mso-style-noshow:yes;
+	mso-style-parent:"";
+	mso-padding-alt:0in 5.4pt 0in 5.4pt;
+	mso-para-margin:0in;
+	mso-para-margin-bottom:.0001pt;
+	mso-pagination:widow-orphan;
+	font-size:10.0pt;
+	font-family:"Times New Roman";}
+</style>
+<![endif]-->
+</head>
 
-My layout is pretty simple  one logical volume using 100% of the volume group 
-spanned over 6-7 drives.
+<body lang=3DEN-US link=3Dblue vlink=3Dpurple =
+style=3D'tab-interval:.5in'>
 
-So basically I would atleast like to get the drives listed in pvscan above 
-added back to a VG that I can mount and access the data from.
+<div class=3DSection1><pre><font size=3D2 face=3D"Courier New"><span
+style=3D'font-size:10.0pt'>Hi =
+guys,<o:p></o:p></span></font></pre><pre><font
+size=3D2 face=3D"Courier New"><span =
+style=3D'font-size:10.0pt'><o:p>&nbsp;</o:p></span></font></pre><pre><fon=
+t
+size=3D2 face=3D"Courier New"><span style=3D'font-size:10.0pt'>From time =
+to time, when I perform LVM operations, the response =
+is:<o:p></o:p></span></font></pre><pre><b><font
+size=3D2 face=3D"Courier New"><span =
+style=3D'font-size:10.0pt;font-weight:bold'>&quot;ERROR: VGDA in kernel =
+and <span
+class=3DSpellE>lvmtab</span> are NOT consistent: please run <span =
+class=3DSpellE>vgscan</span>&quot;<o:p></o:p></span></font></b></pre><pre=
+><font
+size=3D2 face=3D"Courier New"><span =
+style=3D'font-size:10.0pt'><o:p>&nbsp;</o:p></span></font></pre><pre><fon=
+t
+size=3D2 face=3D"Courier New"><span style=3D'font-size:10.0pt'>Is there =
+a solution for this problem? (<span
+class=3DGramE>beside</span> =
+rebooting)<o:p></o:p></span></font></pre><pre><font
+size=3D2 face=3D"Courier New"><span =
+style=3D'font-size:10.0pt'><o:p>&nbsp;</o:p></span></font></pre><pre><fon=
+t
+size=3D2 face=3D"Courier New"><span style=3D'font-size:10.0pt'>Are there =
+any known causes for such problem that would help me avoid it? I <span
+class=3DSpellE>belive</span> importing twice will cause it but I also =
+think it <span
+class=3DGramE>is</span> not the only =
+cause.<o:p></o:p></span></font></pre><pre><font
+size=3D2 face=3D"Courier New"><span =
+style=3D'font-size:10.0pt'><o:p>&nbsp;</o:p></span></font></pre><pre><fon=
+t
+size=3D2 face=3D"Courier New"><span style=3D'font-size:10.0pt'>Any help =
+would be appreciated.<o:p></o:p></span></font></pre><pre><font
+size=3D2 face=3D"Courier New"><span =
+style=3D'font-size:10.0pt'><o:p>&nbsp;</o:p></span></font></pre><pre><fon=
+t
+size=3D2 face=3D"Courier New"><span =
+style=3D'font-size:10.0pt'>Thanks,<o:p></o:p></span></font></pre><pre><fo=
+nt
+size=3D2 face=3D"Courier New"><span =
+style=3D'font-size:10.0pt'>--Yaniv<o:p></o:p></span></font></pre>
 
+<p class=3DMsoNormal><font size=3D2 face=3DTahoma><span =
+style=3D'font-size:10.0pt;
+font-family:Tahoma;mso-bidi-font-family:"Times New =
+Roman"'><o:p>&nbsp;</o:p></span></font></p>
 
-thanks for any help you can spare,
+<p class=3DMsoNormal><font size=3D3 face=3D"Times New Roman"><span =
+style=3D'font-size:
+12.0pt'><o:p>&nbsp;</o:p></span></font></p>
 
-bjz
+</div>
+
+</body>
+
+</html>
+=00
+------_=_NextPart_001_01C30FE5.7F0F82DA--
