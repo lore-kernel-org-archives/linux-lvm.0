@@ -1,24 +1,39 @@
-Date: Mon, 10 May 1999 21:51:59 -0400 (EDT)
-From: XxEDGExX <jeremy@xxedgexx.com>
-Subject: [linux-lvm] Easy way to expend to the maximum length???
-Message-ID: <Pine.LNX.4.02.9905102149410.13161-100000@www.xxedgexx.com>
+Message-ID: <3737F4B7.6E582E4F@ep-ag.com>
+Date: Tue, 11 May 1999 09:13:27 +0000
+From: Klaus Strebel <stb@ep-ag.com>
 MIME-Version: 1.0
+Subject: Re: [linux-lvm] Local GFS on lvm
+References: <37371CFE.F8B329D4@ep-ag.com> <873e14kaw7.fsf@loom.sax.de>
+Content-Transfer-Encoding: 8bit
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: linux-lvm@msede.com
+Content-Type: text/plain; charset="utf-8"
+To: Sven Rudolph <sr1@loom.sax.de>
+Cc: linux-lvm@msede.com, teigland@lcse.umn.edu
 
+Hi Sven,
 
-Is there an easy way to expand to the maximum length of a lv?
-I used lvexpand until it wouldn't allow me to continue, but I figure there
-has to be an easy way to simple expand to maximum.
+Sven Rudolph wrote:
 
-Thanks
--jeremy
+> Sorry: What�s gfs?
 
+GFS (Global File System) is a filesystem for shared disks (ex. Disk-Pool
+on a Fire-Channel or a shared SCSI-Bus -> one step to storage area
+networking on linux !).
+See <http://gfs.lcse.umn.edu> for details.
 
-http://www.xxedgexx.com | jeremy@xxedgexx.com
----------------------------------------------
-Y2K.  We're all gonna die.
+Ciao
+Klaus
+
+P.S.: Thanks Dave for your quick response. I�ve some trubble with the
+locking module,  it doesn�t find register_lock_proto,
+unregister_lock_proto, though gfs.o is loaded ? But i think  i can work
+it out ;-).
+-- 
+Klaus Strebel
+stb@ep-ag.com
+EIGNER + PARTNER AG   - The Engineering Warehouse Company -
+<http://www.ep-ag.com>
+-----------------------------------------------------------------------
+In Heaven there will be no DOS, no Intel, and above all, no Bill Gates.
