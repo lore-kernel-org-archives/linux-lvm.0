@@ -1,11 +1,10 @@
-Return-Path: <adilger@turbolinux.com>
-From: Andreas Dilger <adilger@turbolinux.com>
-Message-Id: <200012202315.eBKNFR402237@webber.adilger.net>
-Subject: Re: [linux-lvm] Debian packaging
-In-Reply-To: <20001220163022.A5042@sistina.com> "from lewis@sistina.com at Dec
- 20, 2000 04:30:22 pm"
-Date: Wed, 20 Dec 2000 16:15:27 -0700 (MST)
+Return-Path: <russell@coker.com.au>
+From: Russell Coker <russell@coker.com.au>
+Date: Wed, 20 Dec 2000 07:56:47 +1100
 MIME-Version: 1.0
+Message-Id: <0012200756470J.08762@lyta>
+Content-Transfer-Encoding: quoted-printable
+Subject: [linux-lvm] Finnish web mirror
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -18,33 +17,35 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-AJ writes:
-> > Update-alternatives doesn't work when the file-system in question is
-> > mounted  read-only.  Also it's not really designed to be run at every boot.
-> > 
-> > PATH is a bad idea IMHO.  It is set in too many places and has too many 
-> > possibilities to be stuffed up.
-> 
-> Doesn't the liblvm.so versioning in the cvs code take care of this problem?
+Name:    cache-utu-a-rtr.utu.fi
+Address:  130.232.202.238
 
-Only if the LVM user tools are dynamically linked (old ones won't be),
-and assuming that the "tools" part of the commands don't change, only
-the "lib" part.  I'm not sure that the latter will be true.  Looking at
-the user commands, for example the LVM_CHECK_IOP macro hard-codes the
-LVM_LIB_IOP_VERSION into the "tool" part of the binary, rather than
-doing the checking inside the library (which is really what should do
-all the interfacing with the kernel).
+The above machine has been mindlessly mirroring my web server including t=
+he=20
+LVM stuff.  The LVM data has no links from anywhere else and has only bee=
+n=20
+mentioned here and on debian-devel.  As announcing other things in=20
+debian-devel hasn't got this result I presume that the person running tha=
+t=20
+annoying Finnish machine is on this list.
 
-Until this is fixed (it may be harder than it seems, and may make for lots
-of restrictions on what can be changed in the user commands), the only
-thing that the liblvm.so versioning allows is for multiple dynamically
-linked user tools to be installed (iff they are in different directories).
+I have put in a null-route for the machine to stop them downloading from =
+my=20
+site.  Downloading lots of files from a web server comprising multiple=20
+versions of programs (including obsolete versions) and multiple versions =
+of=20
+binaries is annoying if the web server is on a slow link.
 
-Cheers, Andreas
--- 
-Andreas Dilger  \ "If a man ate a pound of pasta and a pound of antipasto,
-                 \  would they cancel out, leaving him still hungry?"
-http://www-mddsp.enel.ucalgary.ca/People/adilger/               -- Dogbert
+If someone feels that they have a genuine need for mirroring my site then=
+=20
+they should inform me and I will tell them how to do so without wasting t=
+heir=20
+hard drive space and my bandwidth.
+
+--=20
+http://www.coker.com.au/bonnie++/     Bonnie++ hard drive benchmark
+http://www.coker.com.au/postal/       Postal SMTP/POP benchmark
+http://www.coker.com.au/projects.html Projects I am working on
+http://www.coker.com.au/~russell/     My home page
