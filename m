@@ -1,11 +1,10 @@
-Return-Path: <mauelshagen@sistina.com>
-Date: Wed, 25 Jul 2001 09:49:26 +0200
-From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] RE: [linux-lvm] *** ANNOUNCEMENT *** LVM 0.9.1 Beta 8 available at www.sistina.com
-Message-ID: <20010725094926.A24413@sistina.com>
-References: <8F120FA493CAD743B30EEB8F356985B5BB5822@AUSXMBT102VS1.amer.dell.com>
-Mime-Version: 1.0
-In-Reply-To: <8F120FA493CAD743B30EEB8F356985B5BB5822@AUSXMBT102VS1.amer.dell.com>; from Robert_Macaulay@Dell.com on Tue, Jul 24, 2001 at 10:26:03PM -0500
+Return-Path: <julien@atix.de>
+Message-ID: <3B5E7271.887177CC@atix.de>
+Date: Wed, 25 Jul 2001 09:17:05 +0200
+From: Julien Baboud <julien@atix.de>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] different outputs in LVM tools (bug?)
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -18,93 +17,43 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Tue, Jul 24, 2001 at 10:26:03PM -0500, Robert_Macaulay@Dell.com wrote:
-> If Im upgrading from beta 7 to beta 8 with lvm compiled as a module, do I
-> have to re-patch the kernel source tree? I had the kernel tree from beta7,
-> generated the patch from the beta8 tree, and when I went to apply it, it
-> failed all over the place. Do I have to go back to a lvm-less copy of the
-> kernel tree to get the upgrade accomplished? The README.1st didn't really
-> say. Thanks
+hi,
 
-Robert,
+ I'm using the 0.9.1 beta 7 version, and I have encountered a problem
+(but perhaps it is not) with the LVM tools :
+ when I use the 'vgdisplay' command I obtain this :
 
-that stays the same as it was before until vanilla is fully uptodate (sigh ;-)
+--- Volume group ---
+VG Name               vg1
+VG Access             read/write
+VG Status             available/resizable
+VG #                  0
+MAX LV                256
+Cur LV                4
+Open LV               0
+MAX LV Size           255.99 GB
+Max PV                256
+Cur PV                2
+Act PV                2
+VG Size               1000 MB
+PE Size               4 MB
+Total PE              250
+Alloc PE / Size       100 / 400 MB
+Free  PE / Size       150 / 600 MB
+VG UUID               qnJMzM-yuCq-N59y-cTey-kayU-9Wo3-hGILhU
 
-You want to start with a fresh vanilla kernel and generate+apply the LVM patch
-as discribed in PATCHES/README.
 
-Regards,
-Heinz    -- The LVM Guy --
+and with the 'vgdisplay -c' command, the output is :
+
+vg1:3:5:0:256:4:0:268427264:256:2:2:1024000:8192:250:100:150:qnJMzM-yuCq-N59y-cTey-kayU-9Wo3-hGILhU
+                                            ----
+
+The difference is in the 'PE Size' field : in the first we have 4 MB and
+in the second 8192 (ie : 8 MB)
+Is this a known bug or is there any explanation ?
 
 
-> 
-> -----Original Message----- 
-> From: Heinz J . Mauelshagen 
-> Sent: Tue 7/24/2001 4:57 PM 
-> To: linux-lvm@sistina.com; lvm-devel@sistina.com;
-> linux-kernel@vger.kernel.org; linux-fsdevel@vger.kernel.org 
-> Cc: mge@sistina.com 
-> Subject: [linux-lvm] *** ANNOUNCEMENT *** LVM 0.9.1 Beta 8 available at
-> www.sistina.com
-> 
-> 
-> 
-> 
-> Hi all, 
-> 
-> a tarball of the Linux Logical Volume Manager 0.9.1 Beta 8 is available now
-> at 
-> 
->    < http://www.sistina.com/ <http://www.sistina.com/> > 
-> 
-> for download (Follow the "LVM 0.9.1-Beta8" link). 
-> 
-> This release fixes several bugs including a PE alignment bug which 
-> was introduced with LVM 0.9.1 Beta 6. 
-> 
-> In order to support all existing PEs, this release forces a minor 
-> metadata format change. 
-> 
-> We strictly recommend that you read the metadata upgrade instructions 
-> in README.1st contained in the tarball *before* you try to upgrade 
-> your existing installations! 
-> Support to downgrade the metadata format is included too. 
-> 
-> See the CHANGELOG file contained in the tarball for further information. 
-> 
-> Please help us to stabilize for LVM 1.0 ASAP and provide your test results, 
-> bug fixes and advice. 
-> 
-> Feed back related information to <linux-lvm@sistina.com>. 
-> 
-> Thanks a lot for your support of LVM. 
-> 
-> -- 
-> 
-> Regards, 
-> Heinz    -- The LVM Guy -- 
-> 
-> _______________________________________________ 
-> linux-lvm mailing list 
-> linux-lvm@sistina.com 
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-> <http://lists.sistina.com/mailman/listinfo/linux-lvm>  
-> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
-> <http://www.sistina.com/lvm/Pages/howto.html>  
-> 
-
-*** Software bugs are stupid.
-    Nevertheless it needs not so stupid people to solve them ***
-
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-
-Heinz Mauelshagen                                 Sistina Software Inc.
-Senior Consultant/Developer                       Am Sonnenhang 11
-                                                  56242 Marienrachdorf
-                                                  Germany
-Mauelshagen@Sistina.com                           +49 2626 141200
-                                                       FAX 924446
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+Julien,
+4 Atix
