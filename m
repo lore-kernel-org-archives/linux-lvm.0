@@ -1,11 +1,12 @@
-Return-Path: <joe@66bassett.freeserve.co.uk>
-Date: Sat, 20 Jan 2001 17:51:18 +0000
-From: Joe Thornber <joe@66bassett.freeserve.co.uk>
-Subject: Re: [linux-lvm] Patch for Kernel 2.2.16
-Message-ID: <20010120175118.A461@66bassett.freeserve.co.uk>
-References: <615A249B783CD41192F400D0B747AC8601A001EB@hesse.bbn.hp.com> <20010119101757.K23203@sistina.com> <20010119104932.L23203@sistina.com> <20010119172240.B2093@66bassett.freeserve.co.uk> <20010119135115.C9398@sistina.com>
+Return-Path: <sct@devserv.devel.redhat.com>
+Date: Sat, 20 Jan 2001 15:42:43 +0000
+From: Stephen Tweedie <sct@redhat.com>
+Subject: Re: [linux-lvm] Kernel panic while snapshotting.
+Message-ID: <20010120154243.F2656@redhat.com>
+References: <20010119163758.B1874@66bassett.freeserve.co.uk> <Pine.LNX.4.30.0101190915110.28951-100000@beefcake.hdqt.valinux.com>
 Mime-Version: 1.0
-In-Reply-To: <20010119135115.C9398@sistina.com>; from lewis@sistina.com on Fri, Jan 19, 2001 at 01:51:15PM -0600
+Content-Disposition: inline
+In-Reply-To: <Pine.LNX.4.30.0101190915110.28951-100000@beefcake.hdqt.valinux.com>; from jweber@valinux.com on Fri, Jan 19, 2001 at 09:22:55AM -0800
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -21,12 +22,15 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Fri, Jan 19, 2001 at 01:51:15PM -0600, AJ Lewis wrote:
-> I reversed that patch and it fixed the panic.  I 'spose we should pull that
-> out of the CVS.  Does it need to be in there for 2.4.x?
+Hi,
 
-I'll look into it.  As you know this was one area that I was unsure
-about my original fix.  I need to read raw_io for and convince myself
-we have the right solution.  This is top of my list.
+On Fri, Jan 19, 2001 at 09:22:55AM -0800, Jay Weber wrote:
+> Are the LockPage() calls necessary? 
 
-- Joe
+They are if you are doing kiobuf IO on user virtual addresses, because
+the 2.2 VM has no other way to synchronise the IO with the dirty flags
+on the page.  For non-user-VA pages, it shouldn't matter.
+
+2.4 does not lock pages in kiobufs at all.
+
+--Stephen
