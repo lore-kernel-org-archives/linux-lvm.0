@@ -1,6 +1,6 @@
 From: Herbert Poetzl <herbert@13thfloor.at>
 Subject: Re: [linux-lvm] How to create a device mapper patch?
-Message-ID: <20031023190424.GB1497@DUK2.13thfloor.at>
+Message-ID: <20031023210927.GA2428@DUK2.13thfloor.at>
 References: <200310231626.53632.wim@unetix.nl>
 Mime-Version: 1.0
 Content-Disposition: inline
@@ -15,7 +15,7 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Thu Oct 23 14:05:01 2003
+Date: Thu Oct 23 16:10:02 2003
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
@@ -38,7 +38,20 @@ On Thu, Oct 23, 2003 at 04:26:53PM +0200, wim@unetix.nl wrote:
 > for 2.4.20 en 21 so, how do I generate a patch for 2.4.22?
 > Device mapper is version 1.00.05
 
-http://evms.sourceforge.net/install/kernel.html#dm-patches
+http://vserver.13thfloor.at/Stuff/patch-2.4.22-dm-1.00.05.diff.bz2
+
+this is a rediffed version of the 2.4.21 patches:
+	-mempool.patch
+	-vcalloc.patch
+	-o_direct.patch
+	-b_private.patch
+	-config.patch
+	-devmapper.patch
+	-makefile.patch
+	-arch64.patch
+
+released with the dm-1.00.05 tarball, nevertheless,
+the version major/minor/pl is 4.0.4 whatever this means ...
 
 HTH,
 Herbert
@@ -46,3 +59,11 @@ Herbert
 > TIA
 > 
 > WB
+> 
+> 
+> 
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@sistina.com
+> http://lists.sistina.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
