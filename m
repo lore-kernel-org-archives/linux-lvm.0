@@ -1,39 +1,43 @@
-Date: Sun, 30 Jan 2000 19:11:04 -0500 (EST)
-From: Jim Cain <jec+list.lvm@mgmt-inc.com>
-Subject: [linux-lvm] Patch 0.8i to 2.3.40: error during make
-Message-ID: <Pine.LNX.4.20.0001301910280.5714-100000@claudius.mgmt-inc.com>
-MIME-Version: 1.0
+Date: Sun, 30 Jan 2000 21:28:56 -0500
+From: Scott Walker <scott@zeroknowledge.com>
+Subject: [linux-lvm] Couple of question/confusion
+Message-ID: <20000130212856.A10006@paranoid.zks.net>
+Mime-Version: 1.0
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@msede.com
 
-All,
+I started playing with LVM tonight and I am impressed... LVM + resierfs
+is nice! But I have a couple problems.
 
-After applying the patch and running make config and make dep, make shows
-the following:
+Let me explain (Please offer advice if you want) I have the following
+setup..
+/dev/hdc1 = 1.2G
+/dev/hdd2 = 7.9G
+/dev/hda3 = 1.2G
+/dev/sda1 = 9.11
 
-gcc -D__KERNEL__ -I/usr/src/linux-2.3.40-lvm/include -D__SMP__ -Wall -Wstrict-prototypes -O2 -fomit-frame-pointer -fno-strict-aliasing -pipe -fno-strength-reduce  -DCPU=686 -march=i686  -c -o init/main.o init/main.c
-gcc -D__KERNEL__ -I/usr/src/linux-2.3.40-lvm/include -D__SMP__ -Wall -Wstrict-prototypes -O2 -fomit-frame-pointer -fno-strict-aliasing -pipe -fno-strength-reduce  -DCPU=686 -march=i686 -DUTS_MACHINE='"i386"' -c -o init/version.o init/version.c
-make -C  kernel
-make[1]: Entering directory `/usr/src/linux-2.3.40-lvm/kernel'
-make all_targets
-make[2]: Entering directory `/usr/src/linux-2.3.40-lvm/kernel'
-gcc -D__KERNEL__ -I/usr/src/linux-2.3.40-lvm/include -D__SMP__ -Wall -Wstrict-prototypes -O2 -fomit-frame-pointer -fno-strict-aliasing -pipe -fno-strength-reduce  -DCPU=686 -march=i686   -DEXPORT_SYMTAB -c signal.c
-gcc -D__KERNEL__ -I/usr/src/linux-2.3.40-lvm/include -D__SMP__ -Wall -Wstrict-prototypes -O2 -fomit-frame-pointer -fno-strict-aliasing -pipe -fno-strength-reduce  -DCPU=686 -march=i686   -DEXPORT_SYMTAB -c ksyms.c
-ksyms.c:258: `block_fsync' undeclared here (not in a function)
-ksyms.c:258: initializer element for `__ksymtab_block_fsync.value' is not constant
-ksyms.c:269: `blkdev_close' undeclared here (not in a function)
-ksyms.c:269: initializer element for `__ksymtab_blkdev_close.value' is not constant
-make[2]: *** [ksyms.o] Error 1
-make[2]: Leaving directory `/usr/src/linux-2.3.40-lvm/kernel'
-make[1]: *** [first_rule] Error 2
-make[1]: Leaving directory `/usr/src/linux-2.3.40-lvm/kernel'
-make: *** [_dir_kernel] Error 2
+I wanted to combine all of the above into 1 *partition* for /home. now
+is LVM something I should be looking into or should I just go to linear
+raid? or raid 0?
 
-Has anyone else had a similar problem with this patch?
+Now I create my physical volume, but when I want to create my logical I
+keep recieving this error:
 
-Cheers,
-Jim
+freedom /# lvcreate -L100G freedom
+lvcreate -- only 499 free physical extents in volume group "freedom"
+
+What am I doing wrong?
+
+Please offer some advice, wether LVM is just overkill for me and I
+should just use raid0 or linear.
+
+
+-- 
+Scott Walker			                Zero Knowledge Systems Inc.
+scott@zeroknowledge.com			       http://www.zeroknowledge.com
+
+There are three kinds of people: Those who can count & those who can't.
