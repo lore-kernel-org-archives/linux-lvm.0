@@ -1,10 +1,7 @@
-From: Alasdair G Kergon <agk@uk.sistina.com>
-Subject: Re: [linux-lvm] LVM recovery
-Message-ID: <20030721182359.Q31325@uk.sistina.com>
-References: <BDEMIPDEGABMNEFIHCPDMEHAFCAA.bill--f.juq41dsj@tao-group.com> <1058402110.1257.21.camel@neko> <3F164A80.6060301@free.fr> <1058752778.3f1b490ab9e47@webmail.phys.unsw.edu.au>
+From: "kiran dalvi" <kiran_bd@hotmail.com>
 Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <1058752778.3f1b490ab9e47@webmail.phys.unsw.edu.au>; from melinda@phys.unsw.edu.au on Mon, Jul 21, 2003 at 11:59:38AM +1000
+Message-ID: <BAY1-F141ddbQYaBzkg00020a7c@hotmail.com>
+Subject: [linux-lvm] Help : pvmove -- not enough free/allocatable physical extents
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,30 +12,120 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Jul 21 12:25:02 2003
+Date: Tue Jul 22 05:41:01 2003
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; format=flowed; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: Melinda Taylor <melinda@phys.unsw.edu.au>
-Cc: linux-lvm@sistina.com
+To: linux-lvm@sistina.com
 
-On Mon, Jul 21, 2003 at 11:59:38AM +1000, Melinda Taylor wrote:
-> lvm> vgchange --partial -a y
+Hii All,
+I am trying to use LVM on my Red-Hat Linux 8.0.
+I haved created volume group using 3 partitions on my machine
+(/dev/hda7,/dev/hda8,/dev/hda9).All the partions are of same size 200 
+MB.Then
+I have created stripped logical volume on 3 partitions using following 
+command.
 
-First off, you should take complete disk-level backups of your remaining disks
-in the VG.
+#lvcreate -i3 -I4 -l24 -nmy_stripped_lv1 my_volume_group
 
-If the messages are accurate, there's likely to be only a problem with lv02, 
-not lv03 which you're trying to mount, so try a normal (rw) mount of
-lv03 and see if the ext3 recovery copes, or else try fsck.  If you took
-the disk-level backups first you can restore the disks from the backups
-if fsck makes things worse and you need to try other restoration
-methods.
+I have also tried extending logical volume and shrinking logical volume. All
+this worked fine for me.
 
-*AFTER* you've completed extracting your data, you can use LVM2's vgreduce
-to tidy up the LVM configuration, removing the lost PVs and
-partially-missing LV completely. But read the vgreduce man page first
-and use --test before running it for real to check it's going to do
-something sensible in your circumstances.
+Now I tried pvmove command.
 
-Alasdair
+        #pvmove /dev/hda9
+
+But it will be giving following error message
+
+***********************
+pvmove /dev/hda9
+pvmove -- moving physical extents in active volume group "my_volume_group"
+pvmove -- WARNING: if you lose power during the move you may need
+        to restore your LVM metadata from backup!
+pvmove -- do you want to continue? [y/n] y
+pvmove -- not enough free/allocatable physical extents
+
+**************************
+
+When I get above error message the output of vgdisplay is as follows
+
+*************
+        --- Volume group ---
+VG Name               my_volume_group
+VG Access             read/write
+VG Status             available/resizable
+VG #                  0
+MAX LV                256
+Cur LV                1
+Open LV               0
+MAX LV Size           255.99 GB
+Max PV                256
+Cur PV                3
+Act PV                3
+VG Size               564 MB
+PE Size               4 MB
+Total PE              141
+Alloc PE / Size       24 / 96 MB
+Free  PE / Size       117 / 468 MB
+VG UUID               ywZQkl-Exfm-KQma-0s14-yi4V-kAz7-iw8Bhl
+
+
+************
+
+When I get above error message the output of lvdisplay is as follows
+
+******************
+
+        --- Logical volume ---
+LV Name                /dev/my_volume_group/my_stripped_lv1
+VG Name                my_volume_group
+LV Write Access        read/write
+LV Status              available
+LV #                   1
+# open                 0
+LV Size                96 MB
+Current LE             24
+Allocated LE           24
+Stripes                3
+Stripe size (KByte)    4
+Allocation             next free
+Read ahead sectors     1024
+Block device           58:0
+
+
+****************
+
+When I get above error message the output of pvdisplay for
+/dev/hda7,/dev/hda8, /dev/hda9 is as follows (same for all)
+
+************************
+
+--- Physical volume ---
+PV Name               /dev/hda9
+VG Name               my_volume_group
+PV Size               196.08 MB [401562 secs] / NOT usable 4.19 MB [LVM: 128
+KB]
+PV#                   3
+PV Status             available
+Allocatable           yes
+Cur LV                1
+PE Size (KByte)       4096
+Total PE              47
+Free PE               39
+Allocated PE          8
+PV UUID               cLI0Fw-Ezcz-dZ01-oEmE-LDat-K1Ep-q5k5Bl
+
+
+**********************
+
+
+So please guide me what should I need to do so that I will be able to get 
+pvmove working
+
+Thanks and Regards
+Kiran
+
+_________________________________________________________________
+They are beautiful. They are in danger. 
+http://server1.msn.co.in/Slideshow/BeautyoftheBeast/index.asp Our 
+four-legged friends.
