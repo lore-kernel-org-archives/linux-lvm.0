@@ -1,61 +1,76 @@
-Date: Wed, 28 Jul 1999 21:44:14 -0500
-From: Brian Wolfe <ahzz@yamato.terrabox.com>
-Subject: Re: [linux-lvm] Compile Problems (Thanks!)
-Message-ID: <19990728214414.C25298@yamato.terrabox.com>
-Reply-To: ahzz@yamato.terrabox.com
-References: <379B99D3.67007D3@thephaedo.com>
+Date: Sat, 31 Jul 1999 13:58:59 -0700
+From: Ryan Murray <rmurray@cyberhqz.com>
+Subject: [linux-lvm] bug in liblvm 0.7 [added on 11/15/1998]
+Message-ID: <19990731135859.C30729@cyberhqz.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="vEao7xgI/oilGqZ+"; micalg=pgp-md5;
-	protocol="application/pgp-signature"
-In-Reply-To: <379B99D3.67007D3@thephaedo.com>; from S. Ryan Quick on Sun, Jul 25, 1999 at 11:12:20PM +0000
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
-To: "S. Ryan Quick" <ryan@thephaedo.com>
-Cc: linux-lvm@msede.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: linux-lvm@msede.com
 
+The following bit of code tries to "skip" partitions if the main drive
+doesn't exist:
 
---vEao7xgI/oilGqZ+
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: quoted-printable
+pv_read_all_pv.c:102
 
-	Actualy i'd be interested in the fixes and wht you think is rwong with the=
- "debian way" of doing things. I'm interested in making a deb outa this all=
-....
+      for ( n = 0; n < cache_size; n++) {
+         dev_name = dir_cache[n].dev_name;
+#ifdef DEBUG
+         debug ( "pv_read_all_pv -- calling pv_read with \"%s\"\n",
+                  dev_name);
 
-	ahzz
+         if ( ( tst = open ( dev_name, O_RDONLY)) == -1) {
+            if ( MAJOR ( dir_cache[n].st_rdev) != MD_MAJOR &&
+                 MINOR ( dir_cache[n].st_rdev) % 16 == 0) {
+               n += 15;
+               continue;
+            }
+         } else close ( tst);
 
+this will work for SCSI disks (assuming all partition devices exist),
+but fails for IDE disks.  IDE disks can have up to 63 partitions, and a
+quick survey shows debian potato creating devices for the first 20, and
+slackware 4.0 creating devices for the first 16.
 
-On Sun, Jul 25, 1999 at 11:12:20PM +0000, S. Ryan Quick wrote:
-> Thanks everyone, I got it.
->=20
-> Turns out the Debian convention of using the debian.rules moniker and
-> relinking the header files for the kernel was
-> the problem.  I forced a rebuild of the include files (make_kpkg
-> kernel_source) as well as the installed kernel and
-> everything went like clockwork.   Already working with 2 vgs and now
-> playing with the resize functions.
->=20
-> Thanks . . .
->=20
-> Ryan
->=20
-> PS.  If anyone wants detailed information on the fix (it's all Debian's
-> slightly-odd control of header files) I can post it.
->=20
->=20
+The only way I can see around it is to build a second directory cache as
+you move through the dir_cache, listing strings that should be skipped.
 
---vEao7xgI/oilGqZ+
-Content-Type: application/pgp-signature
+ie (semi-pseudo code):
 
------BEGIN PGP SIGNATURE-----
-Version: 2.6.3ia
+	 for ( i = 0 ; i < skip_cache_size ; i++ ) {
+	    if ( !strcmp( dir_cache_skip[i].dev_name, dev_name ) ) {
+	       skip = YES;
+	       break;
+	    }
+	 }
+	 if ( skip )
+	    continue;
+         if ( ( tst = open ( dev_name, O_RDONLY)) == -1) {
+            if ( MAJOR ( dir_cache[n].st_rdev) != MD_MAJOR &&
+                 (MAJOR_IS_SCSI && MINOR ( dir_cache[n].st_rdev) % 16 == 0)
+               || (MAJOR_IS_IDE && MINOR ( dir_cache[n].st_rdev) % 64 == 0)) {
+               // realloc memory for "dir_skip_cache"
+               // allocate memory in dir_skip_cache[skip_cache_size]
+               //    for strlen(dev_name)+1
+               strcpy( dir_cache_skip[skip_cache_size].dev_name, dev_name );
+               skip_cache_size++;
+               continue;
+            }
+         } else close ( tst);
 
-iQCVAwUBN5+//VoyucRTDyulAQFIhwP/TtY0TUW+CYfG2KF+7fE/bekjLZ7GCT8X
-L/dQDH/7PJIvRaeD+xjCKq9WTsQpm6VIR3gLcbfy+pjsExRYTHXF2lziMjmvOWOz
-izog5RkoIz6oTS760c06K6WPuS+f7vyPbAxLfS4Aab3E40ZAv6jK34aAek04Hf/K
-sNuKa0r/gMc=
-=hilh
------END PGP SIGNATURE-----
+This gets rather ugly -- I wonder if the building of the dir_cache and
+the check for the partition existing shouldn't be combined instead,
+leaving the dir_cache with entries that exist on this system only?
 
---vEao7xgI/oilGqZ+--
+I put it up here for discussion on what the "best" way to do this is.
+
+The reason I bring this up is that pvscan isn't finding /dev/sda,
+because of the skipping.  The % 16 check also isn't valid for IDE, it
+needs to be % 64.
+
+-- 
+Ryan Murray (rmurray@cyberhqz.com, rmurray@glenayre.com)
+Software Designer, Glenayre Technologies Inc.
+The opinions expressed here are my own.
