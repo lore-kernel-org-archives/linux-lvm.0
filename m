@@ -1,11 +1,11 @@
 From: Andreas Dilger <adilger@turbolabs.com>
-Date: Thu, 4 Oct 2001 11:33:09 -0600
-Subject: Re: [linux-lvm] What have I done!?
-Message-ID: <20011004113309.E31061@turbolinux.com>
-References: <009401c14cc3$c63106c0$836788cf@industry> <009501c14cc7$2f5cd360$836788cf@industry>
+Date: Thu, 4 Oct 2001 11:49:03 -0600
+Subject: Re: [linux-lvm] kernel 2.2.19 support
+Message-ID: <20011004114903.G31061@turbolinux.com>
+References: <3BBC4146.51CD437D@promofinarsa.es> <wv669v3b96.fsf@freeze.oslo.dnmi.no> <3BBC4E6E.BCA3EE70@promofinarsa.es> <wvzo771uju.fsf@freeze.oslo.dnmi.no> <3BBC535B.59D6A5CB@promofinarsa.es> <wv3d4zh1r8.fsf@freeze.oslo.dnmi.no> <20011004111023.C31061@turbolinux.com> <wvy9mrfhmy.fsf@freeze.oslo.dnmi.no>
 Mime-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <009501c14cc7$2f5cd360$836788cf@industry>
+In-Reply-To: <wvy9mrfhmy.fsf@freeze.oslo.dnmi.no>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -21,16 +21,21 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Oct 04, 2001  07:24 -0400, Jason A. Lixfeld wrote:
-> Is there a way that I can blow the whole thing away and start over?  I
-> think I've screwed things up too badly to try to resurrect them.  I'd
-> really like to blow it all away and start over and see if this stuff
-> happens again, but again I can't use the lv* tools to remove the
-> configurations because of the errors I mention in my initial post so I
-> need a manual way to blow away the entire LVM configuration and start
-> from scratch again.
+On Oct 04, 2001  19:18 +0200, Adrian Phillips wrote:
+> Yes, but what concerned me was if there was some equivalent for 2.2
+> (foo.dev22 = bar). I was going to check the LVM CVS to see what
+> changes had been done but was unable to login :-
 
-"pvcreate -ff" I think
+It was just added recently (probably a devfs thing).  Before that, it
+just ran the "lvm_fs_setup()" (or whatever) function, and didn't do
+anything with the output.  Hmm, that means my suggestion may be broken.
+
+Need something like:
+
+#if LINUX_KERNEL_VERSION > KERNEL_VERSION (2, 3, 38)
+	foo.de =
+#endif
+		lvm_fs_setup();
 
 Cheers, Andreas
 --
