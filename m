@@ -1,11 +1,9 @@
-Return-Path: <totake66@home.com>
-Message-ID: <3B0336BC.B8BC97D4@home.com>
-Date: Wed, 16 May 2001 21:26:04 -0500
-From: Tom Otake <totake66@home.com>
-MIME-Version: 1.0
-Subject: Re: [linux-lvm] lvm deadlock with 2.4.x kernel?
-References: <3B005823.33AEE05D@home.com> <20010515094004.B468@66bassett.freeserve.co.uk> <3B01AF42.C171FE86@home.com>
-Content-Transfer-Encoding: 7bit
+Return-Path: <hmilz@linux-magazin.de>
+From: Harald Milz <hmilz@linux-magazin.de>
+Subject: Re: [linux-lvm] LVM 1.0 release decision
+References: <20010511155311.A17689@sistina.com> <wxxoft055j0.fsf@fjorir.ifi.uio.no>
+Date: Thu, 17 May 2001 10:08:58 +0200 (CEST)
+Message-Id: <20010517080900.5240B15CB6@mail.linux-new-media.de>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,31 +15,25 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-I've recreated the system hang exactly as I've described below with a pvscan
-during a copy.  I used a new kernel with hacking enabled, redirected 1 into
-/proc/sys/kernel/sysrq.  None of the sysrq commands seemed to have worked.  The
-system hung about 20 to 30 seconds into the copy process.
+In article <wxxoft055j0.fsf@fjorir.ifi.uio.no>, Terje Kvernes <terjekv@math.uio.no> wrote:
+>   this reminds me of XFS to be honest -- and that annoys me a great
+>   deal. I want to test XFS, but currently I can't. because after LVM
+>   and ReiserFS are patched (they pull rank :), the XFS-patches botch
+>   badly. and they're far from in sync with current kernels.
 
-Tom Otake wrote:
+That seems to depend. I recently patched 2.4.2-SuSE (not famous for being a
+vanilla kernel, and containing LVM and Reiserfs) with the 2.4.2 XFS patch,
+and just got 1 reject in a Makefile which I could safely ignore because the
+SuSE kernel already contained that patch. And guess what: XFS and Reiserfs
+work nicely together with LVM on the same machine!
 
-> Yes, I've been able to recreate the second hang scenario, though I have to
-> admit it wasn't exactly the same.  I started the copy of the data, created a
-> new LV, which worked.  I ran mkreiserfs on the new LV, it worked.  I removed
-> the new LV, also worked, then ran pvscan.  That's when the system hung.  All
-> the while, the copy from CD to disk was going on.
->
-> Joe Thornber wrote:
->
-> >
-> > > The second occurance:
-> > > I was copying a large amount of data from a CDROM to my home dir (on
-> > > lvm).  While the copy was in progress, I created a new LV.  This
-> > > worked.  The system hung when I ran mkreiserfs on the new LV.
-> >
-> > This sounds more serious.  Can you reproduce it ?  If you can the
-> > quickest way for us to find the problem is for you to build the kernel
-> > with kdb and get stack traces for the relevent threads.
-> >
+-- 
+Harald Milz           |     hm@linux-magazin.de     | All generalizations
+Linux Magazin         | phone  +49 (0) 89 993411-20 | are shit!
+Stefan-George-Ring 24 | fax    +49 (0) 89 993411-99 | 
+D-81929 Muenchen      | http://www.linux-magazin.de | 
