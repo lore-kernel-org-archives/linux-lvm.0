@@ -1,12 +1,9 @@
-Return-Path: <heartboy@nycap.rr.com>
-From: Joe Morris <heartboy@nycap.rr.com>
-Subject: Re: [linux-lvm] unresolved SYMBOL get_hardblocksize during modules generation
-Date: Tue, 24 Jul 2001 11:57:40 -0400
-References: <OF40000665.5AD9BBC9-ONC1256A93.0052DCBF@coface.com>
-In-Reply-To: <OF40000665.5AD9BBC9-ONC1256A93.0052DCBF@coface.com>
+Return-Path: <austin@coremetrics.com>
+Message-ID: <85063BBE668FD411944400D0B744267A6434E4@AUSMAIL>
+From: "Gonyou, Austin" <austin@coremetrics.com>
+Subject: RE: [linux-lvm] pb with pvcreate and partition tables
+Date: Tue, 24 Jul 2001 11:27:10 -0500
 MIME-Version: 1.0
-Message-Id: <01072411574000.04697@alb-66-66-255-20>
-Content-Transfer-Encoding: 8bit
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -19,30 +16,96 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@sistina.com
+Content-Transfer-Encoding: 7bit
+To: "'linux-lvm@sistina.com'" <linux-lvm@sistina.com>
 
-On Tuesday 24 July 2001 11:09 am, you wrote:
-> Good afternoon,
->
-> I am trying to build 2.4.7 kernel with lvm-0.9.1_beta7-2.4.7.patch and I
-> have this error during modules build :
->
-> gcc -D__KERNEL__ -I/usr/src/linux-2.4.7/include -Wall -Wstrict-prototypes
-> -Wno-trigraphs -O2 -fomit-frame-pointer -fno-strict-aliasing -fno-common
-> -pipe -mpreferred-stack-boundary=2 -march=i686 -DMODULE -DMODVERSIONS
-> -include /usr/src/linux-2.4.7/include/linux/modversions.h   -c -o lvm.o
-> lvm.c
-> lvm.c: In function `__update_hardblocksize':
-> lvm.c:1794: warning: implicit declaration of function `get_hardblocksize'
->
-> I don't find in the kernel tree directory this function, is it a problem
-> with the LVM patch or the level of the kernel.
->
-> Thanks by advance to help to achieve the build of this kernel.
->
-> Regards.
->
-> T. DANJEAN
+Where is 0.9.1_beta8 pre? I can't find it on the FTP. 
 
-Did you try replacing all the get_hardblocksize with get_hardsect_size?
-Joe
+-- 
+Austin Gonyou
+Systems Architect, CCNA
+Coremetrics, Inc.
+Phone: 512-796-9023
+email: austin@coremetrics.com 
+
+> -----Original Message-----
+> From: Heinz J . Mauelshagen [mailto:mge@Sistina.com]
+> Sent: Tuesday, July 24, 2001 9:38 AM
+> To: linux-lvm@Sistina.com
+> Subject: Re: [linux-lvm] pb with pvcreate and partition tables
+> 
+> 
+> 
+> Julien,
+> 
+> hda16 == hdb?
+> 
+> Something with your /dev setup looks strange.
+> 
+> 
+> On Tue, Jul 24, 2001 at 08:15:25AM +0200, Julien Baboud wrote:
+> > hi,
+> > 
+> >  I use LVM with the 0.9 beta 7 on a SuSE 7.1 distrib and
+> >  i've encoutered a pb with pvcreate on a partition that is 
+> set to the
+> > LVM type (and was another type before, which is the source 
+> of the pb).
+> > Here is
+> > the output of the command i used :
+> > 
+> >  %pvcreate /dev/hda16 
+> > 
+> >  pvcreate -- device "/dev/hda16" has a partition table 
+> >  pvcreate [-d|--debug] [-f[f]|--force [--force]] 
+> [-h|--help] [-y|--yes]
+> >          [-v|--verbose] [-V|--version] PhysicalVolume
+> > [PhysicalVolume...]
+> > 
+> > 
+> > and the -f option show me the same output.
+> > 
+> >  I don't know if it's a pb with LVM or with fdisk wich i 
+> use to set the
+> > type of the partitions, but i would appreciate if any could 
+> tell me a 
+> > solution to correct this.
+> > 
+> > 
+> >  tanx.
+> >  julien, for ATIX
+> > 
+> >  join the LVM Republic
+> > ------------------------
+> > _______________________________________________
+> > linux-lvm mailing list
+> > linux-lvm@sistina.com
+> > http://lists.sistina.com/mailman/listinfo/linux-lvm
+> > read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
+> 
+> -- 
+> 
+> Regards,
+> Heinz    -- The LVM Guy --
+> 
+> *** Software bugs are stupid.
+>     Nevertheless it needs not so stupid people to solve them ***
+> 
+> =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+> =-=-=-=-=-=-=-=-
+> 
+> Heinz Mauelshagen                                 Sistina 
+> Software Inc.
+> Senior Consultant/Developer                       Am Sonnenhang 11
+>                                                   56242 Marienrachdorf
+>                                                   Germany
+> Mauelshagen@Sistina.com                           +49 2626 141200
+>                                                        FAX 924446
+> =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+> =-=-=-=-=-=-=-=-
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@sistina.com
+> http://lists.sistina.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
+> 
