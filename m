@@ -1,50 +1,27 @@
-Message-Id: <199904271600.AA07879@mailgate1b.telekom.de>
-From: Heinz Mauelshagen <mauelsha@ez-darmstadt.telekom.de>
-Subject: Re: [linux-lvm] Raw/Cahr devices
-Date: Tue, 27 Apr 1999 18:00:36 METDST
-In-Reply-To: <99Apr27.101317cdt.28406@firewall.sigg.com>; from "Chris Anderson" at Apr 27, 99 10:22 am
+Date: Thu, 29 Apr 1999 08:13:42 +0200 (MET DST)
+From: Sven Wirth <wirth@decwww.rz.uni-leipzig.de@decwww.rz.uni-leipzig.de>
+Subject: [linux-lvm] kann LVM 0.6 nicht initialisieren 
+Message-ID: <Pine.OSF.3.96.990429081251.16192A-100000@www.uni-leipzig.de>
+MIME-Version: 1.0
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: TEXT/PLAIN; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: chris@alwan.com
-Cc: mge@u9ete.ez-darmstadt.telekom.de, linux-lvm@msede.com
+To: linux-lvm@msede.com
 
-> 
-> Can lvm create a Raw/Char devices?
-> 
-> Not a blocked device.  Much like a tape device. See below the
-> two(listing A).  The first position shows what type of device it is.
-> 
-> Informix and other database like to have char devices for database
-> space.
-> 
-> 
-> Listing A:
-> 
-> crw-r-----   1 root     disk       9,   1 Jul 18  1994 /dev/st1
-> 
-> brw-r-----   1 root     disk      34,  73 Aug 18  1995 /dev/hdh9
-> 
-> 
-> Thanks,
->     Chris Anderson
-> 
-> 
+Hallo ...
 
 
---
+Hab bei mir versucht LVM 0.6 zu installieren. Das kompilieren
+der Kerneles (statisch), und der Tools ging problemlos. Im 
+Proc-Verzeichnis ist auch das File LVM da. Wenn ich vgsacan auf-
+rufe bekomme ich im debug-Modus folge Fehlermeldung.
+lvm_iop_version -- CALLED
+lv_status_internal -- AFTER ioctl ret: -105
+lvm_iop_version -- LEAVING with ret: -105
+Ich finde auch kein Special-file im dev-verzeichnis lvm. Muss ich
+das noch erzeugen ? wenn ja wie ? welche major und minor hat das 
+file ?
 
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-
-Systemmanagement C/S                             Deutsche Telekom AG
-                                                 Entwicklungszentrum Darmstadt
-Heinz Mauelshagen                                Otto-Roehm-Strasse 71c
-Senior Systems Engineer                          Postfach 10 05 41
-                                                 64205 Darmstadt
-mge@ez-darmstadt.telekom.de                      Germany
-                                                 +49 6151 886-425
-                                                          FAX-386
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+msg s. wirth
