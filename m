@@ -1,15 +1,15 @@
 Received: from o.ww.redhat.com (vpnuser1.stuttgart.redhat.com [172.16.4.1])
 	by pobox.stuttgart.redhat.com (8.12.8/8.12.8) with ESMTP id
-	i7NDcMRE003557
-	for <linux-lvm@redhat.com>; Mon, 23 Aug 2004 15:38:22 +0200
-Date: Mon, 23 Aug 2004 15:38:22 +0200
+	i7NDgrRE003827
+	for <linux-lvm@redhat.com>; Mon, 23 Aug 2004 15:42:53 +0200
+Date: Mon, 23 Aug 2004 15:42:53 +0200
 From: Heinz Mauelshagen <mauelshagen@redhat.com>
-Subject: Re: [linux-lvm] restore question
-Message-ID: <20040823133822.GA9740@redhat.com>
-References: <20040822133158.GB6714@localhost>
+Subject: Re: [linux-lvm] vgscan vs vgcfgrestore
+Message-ID: <20040823134253.GB9740@redhat.com>
+References: <025001c484ce$95942560$5208580a@b034547>
 Mime-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20040822133158.GB6714@localhost>
+In-Reply-To: <025001c484ce$95942560$5208580a@b034547>
 Reply-To: mauelshagen@redhat.com,
 	LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
@@ -25,47 +25,29 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-On Sun, Aug 22, 2004 at 03:31:58PM +0200, Fraser Pringle wrote:
-> Hi,
+On Tue, Aug 17, 2004 at 10:53:48PM -0400, Rob Schwartz wrote:
+> Hello Heinz,
 > 
-> I have a problem with using lvm and I'd be grateful for some advice.
-> 
-> I have a data volume group "datavg" on a mirrored raid partion that was running
-> fine until I experienced a system crash.  After the crash the /dev/md0
-> raid device was not recognised by the lvm system and neither was the
-> datavg.  After finding some advice on this list I ran the commands:
-> 
-> pvcreate /dev/md0
-> vgcfgrestore -n datavg /dev/md0
-> vgscan
-> 
-> to restore the datavg.  This seemed to work, however, the volume group
-> seems to have been restored to a point some time in the past, i.e. there
-> are many files missing.  I'm not too sure how this could have happend as
-> all the reading I've done seems to suggest that the vgcfgrestore command
-> should just have restored the configuration and not any data.
+> Forgive me for writing in English.   As I come from the United States I am embarassingly uni-lingual.   I have been working with LVM for several months now and finally have had the opportunity to get into the guts of the lvm configuration.   I am preparing myself for the situation where my LVM environment gets corrupted in some manner.  Actually, last week I encountered a problem with LVM and was unable to quickly recover so I ended up simply rebuilding the LVM PV's, VG's and LV's and restoring data.  Fortunately, it was an easy restore.   I have been comparing the vgscan utility with vgcfgrestore.   In a test environment I have deleted the /etc/lvm* stuff and even deleted the /dev/lvm* stuff and successfully recovered the VG and LV by simply doing a vgscan.
 
-Right, the vgcfgrestore restored the most recent LVM metadata to the device.
+Yes, vgscan's task is to discover any PVs, retrieve the LVM metadata, store
+it in /etc/lvmtab* and created devnodes for access to the VGs/LVs.
 
-This doesn't change any data content withing Logical Volumes.
+>   Whew... nice... I understand vgcfgbackup and vgcfgrestore but am not sure when I would need to use the configuration backup.   The VGDA as I understand it is stored on the PV's.   If I have the PV's intact I therefore have the VGDA and hence am able to recover using vgscan.    When would I need to use vgcfgrestore?
 
-> Have I
-> somehow restored a snapshot of the volume group?  Does anyone have any
-> suggestions as to how I might retrieve my data?
+You indirectly answered your onw question ;)
 
-Hard to tell waht happened without more information.
+You need vgcfgrestor, when the metadata on the PVs is *not* intact (eg,
+accidential overwrite or starnge crash). and vgscan fails to discover
+your VG(s).
 
-What does lvscan show ?
-What does lvdisplay show on the LVs ?
+> I have found much information on LVM on the web but nothing that really pinpoints my question.  If there is something out there that I can refer to, please tell me.
 
-> 
-> Any advice would be very welcome.
+Have you referenced the LVM-HOWTO yet (URL below) ?
+
 > 
 > Regards,
-> Fraser
-> 
-> lvm version: 1.0.8-4
-> 
+> Rob
 > _______________________________________________
 > linux-lvm mailing list
 > linux-lvm@redhat.com
