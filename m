@@ -1,8 +1,8 @@
-Message-ID: <004d01c35115$97c2e080$bbf6c150@world>
+Message-ID: <008b01c35116$caf09280$bbf6c150@world>
 From: "Blueyonder" <abs1@blueyonder.co.uk>
 MIME-Version: 1.0
 Content-Type: multipart/alternative;
-	boundary="----=_NextPart_000_004A_01C3511D.F965B6C0"
+	boundary="----=_NextPart_000_0088_01C3511F.2C8BC7A0"
 Subject: [linux-lvm] redhat 8 booting problem: Message=dropping to shell command
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
@@ -14,18 +14,18 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Jul 23 08:31:07 2003
+Date: Wed Jul 23 08:31:12 2003
 List-Id: <linux-lvm.redhat.com>
 To: linux-lvm@sistina.com
 
 This is a multi-part message in MIME format.
 
-------=_NextPart_000_004A_01C3511D.F965B6C0
+------=_NextPart_000_0088_01C3511F.2C8BC7A0
 Content-Type: text/plain;
 	charset="iso-8859-1"
 Content-Transfer-Encoding: quoted-printable
 
-Hi all,
+Hi all
 
 Having problems booting RH8, after creating a logical volume.
 Bootup goes normally till it gets to displaying message =3D dropping you
@@ -65,7 +65,7 @@ Help much appreciated
 
 thanks
 abs.
-------=_NextPart_000_004A_01C3511D.F965B6C0
+------=_NextPart_000_0088_01C3511F.2C8BC7A0
 Content-Type: text/html;
 	charset="iso-8859-1"
 Content-Transfer-Encoding: quoted-printable
@@ -78,8 +78,9 @@ charset=3Diso-8859-1">
 <STYLE></STYLE>
 </HEAD>
 <BODY bgColor=3D#ffffff>
-<DIV>Hi all,<BR><BR>Having problems booting RH8, after creating a =
-logical=20
+<DIV>
+<DIV>Hi all<BR><BR>Having problems booting RH8, after creating a logical =
+
 volume.<BR>Bootup goes normally till it gets to displaying message =3D =
 dropping=20
 you<BR>to a&nbsp; shell command.<BR><BR>The system already had working =
@@ -107,6 +108,6 @@ you to=20
 a&nbsp; shell command appears in<BR>rc.sysinit. I understand that ext3 =
 is=20
 handled by initrd ram disk.<BR><BR>Help much=20
-appreciated<BR><BR>thanks<BR>abs.</DIV></BODY></HTML>
+appreciated<BR><BR>thanks<BR>abs.</DIV></DIV></BODY></HTML>
 
-------=_NextPart_000_004A_01C3511D.F965B6C0--
+------=_NextPart_000_0088_01C3511F.2C8BC7A0--
