@@ -1,9 +1,8 @@
-Message-Id: <sf9016d7.065@greyhound.com>
-From: "Charles Lacour" <Clacour@greyhound.com>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Disposition: inline
-Subject: [linux-lvm] Reducing the size of a physical volume
+Message-ID: <3F937B53.5080603@quanticom.net>
+From: Miguel Angel <miguel@quanticom.net>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] help me please from Barcelona (Spain)
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,41 +13,55 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Oct 20 08:04:01 2003
+Date: Mon Oct 20 08:04:04 2003
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@sistina.com
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+To: support@sistina.com, linux-lvm@sistina.com, mge@sistina.com
 
-Is it possible to reduce the size of a physical volume?
+I recently create another vg in my lvm there are two VG01 is the first 
+and  VG00 is the new , I migrate some non more critical filesystems 
+including 4 of oracle, /usr/local /opt etc , the VG00 is in a new  disk 
+of 124Mb, the root filesystem /usr /lib /etc /var are in the VG01 but in 
+the boot process take and error and the server don't boot, the fstab is 
+ok and the initrd image ok, to can boot I need to take out the new disk 
+whith the VG00, please help me there are a lot of information and 
+databases that i don't wanna lose.
+Sorry for my english and a lot of thank's from Barcelona (Spain)
 
-I have a 20-GB partition set up as LVM, and an instance of
-Gentoo inside it, all of which works fine.
+ERROR 2 writing volume group backup file /etc/lvmtab.d/VG01.tmp in 
+vg_cfgbackup.c [line 271]
+ERROR: unable to do  a backup of volume group "VG01"
+ERROR "lvm_tab_vg_remote(): unlink" removing volume group "VG01" from 
+/etc/lvmtab
 
-I wanted to check out Mandrake 9.2, so I set up a "mandrake"
-logical volume, but Mandrake doesn't seem to support LVM
-(at least not installing to it - it did recognize what the partition
-was, and even how full it was, but didn't give me any way to
-select an individual logical volume within it.)
 
-I rebooted back into Gentoo, figuring to reduce the size of the
-LVM partition by several gigabytes, and I can't find a way to do
-it. (I suppose if I got really, really brave I could delete the
-partition with fdisk and add it back starting at the same point,
-but ending sooner, but I'm _not_ that brave (or foolish, depending).
+redhat 9 kernel 2.4.23-pre7
 
-If the answer is "No, you can't", any recommendations on how to
-allocate things so that I don't get burned by this again?
+--------------------------------------------------df -h
+/dev/VG01/root        992M  549M  403M  58% /
+/dev/hda2             201M   58M  133M  31% /boot
+/dev/VG01/usr         6.0G  5.0G  728M  88% /usr
+/dev/VG01/home        4.0G  2.9G  980M  75% /home
+/dev/VG01/local      1008M  599M  359M  63% /usr/local
+/dev/VG01/var         1.5G  724M  701M  51% /var
+/dev/VG01/tmp         485M   11M  450M   3% /tmp
 
-Only thought I've had is several smaller partitions, each of which is
-a PV to LVM. You couldn't let go of a precise amount of space
-(especially since number-of-partition limits mean your partitions may
-have to be a few GB each), but it would be better than the position
-I _think_ I'm in now, which is "screwed to the wall".
 
-I'm not subscribed to the list, so please CC any replies to:
-
-clacour (at-sign) greyhound.com
-
-Thanks in advance,
-
-Charles Lacour
+---------------------------------------------------- portion fstab
+##/dev/VG00/src         /usr/src        ext3            defaults 
+1       2
+##/dev/VG00/rpm         /home/miguel/rpm ext3           defaults 
+1       2
+##/dev/VG00/Linux               /Linux          ext3            defaults 
+        1       2
+##/dev/VG00/oracle      /usr/oracle     reiserfs        defaults 
+1       2
+##/dev/VG00/oradata     /usr/oracle/oradata reiserfs    defaults 
+1       2
+##/dev/VG00/admin               /usr/oracle/admin reiserfs      defaults 
+        1       2
+##/dev/VG00/arch                /usr/oracle/arch reiserfs       defaults 
+        1       2
+##/dev/VG00/notes               /opt/notes      ext3 
+defaults,noatime        1       2
+##/dev/VG00/notesdata
