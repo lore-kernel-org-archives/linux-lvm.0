@@ -1,47 +1,40 @@
-Message-Id: <199906021129.HAA17118@tequila.cs.yale.edu>
-From: "Stefan Monnier" <news+lists.linux.lvm@tequila.cs.yale.edu>
-Subject: [linux-lvm] Re: root filesystem in lvm
-Date: 02 Jun 1999 06:43:23 -0400
+Date: Wed, 2 Jun 1999 14:22:11 +0200
+From: Luca Berra <bluca@comedia.it>
+Subject: Re: [linux-lvm] Re: root filesystem in lvm
+Message-ID: <19990602142211.D16040@colombina.comedia.it>
+Reply-To: bluca@comedia.it
+References: <5l3e0adgs4.fsf@tequila.cs.yale.edu>
+Mime-Version: 1.0
+In-Reply-To: <5l3e0adgs4.fsf@tequila.cs.yale.edu>; from Stefan Monnier on Wed, Jun 02, 1999 at 06:43:23AM -0400
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
-MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@msede.com
 
-[ I apologize if you receive multiple copies, but it seems that
-  my earlier attempts didn't make it through.  Is this a closed
-  mailing-list ?   - sm ]
+On Wed, Jun 02, 1999 at 06:43:23AM -0400, Stefan Monnier wrote:
+> How would LILO deal with a kernel image spread over several physical
+> partitions (or even disks) (in case you not only want a root fs on LVM but
+> a striped/mirrored/trucmuched one) ?
+Hard, real hard, lilo uses only bios calls, and in 512bytes
+you just cannot fit anithing better, all other os that use lvm
+have a /stand partition at the beginning of the disk,
+it can be mirrored but it must necessarily be contiguous
 
-A while ago, Michael Marxmeier (mike@msede.com) mentioned:
-> However it should be possible to use LILO. As far as i understand
-> LILO uses partition relative block numbers to load the kernel image.
-> We just need to make sure that they are relative to the dos style
-> partition.
+> > If included statically in the kernel the lvm driver could
+> > execute the equivalent of a vgchange -ay and we should be able to
+> > mount the root file system.
+> 
+> That would be really neat.  The initrd workaround is just that: a workaround.
 
-How would LILO deal with a kernel image spread over several physical
-partitions (or even disks) (in case you not only want a root fs on LVM but
-a striped/mirrored/trucmuched one) ?
+i personally love modular kernels, so i'd use initrd anyway, but
+i agree vgchange -a y could be handled by the kernel.
 
-> If included statically in the kernel the lvm driver could
-> execute the equivalent of a vgchange -ay and we should be able to
-> mount the root file system.
+but i also believe that this would be easier to debug/mantain in
+user space.
+L.
 
-That would be really neat.  The initrd workaround is just that: a workaround.
-
-> However this will lead to some kernel bloat as some of the code which
-> currently resides un user space in lvmlib and vgchange must also be
-> present in the kernel.
-
-- how hard would it be ?
-- source code bloat:  hopefully, the exact same source code can be shared
-  between the kernel and the liblvm/vgchange (I deeply hate code duplication)
-- kernel bloat:  how bad would it be ?
-  how much of that extra code could be put in __INITFUNC (so that the bloat
-  only impacts the on-disk kernel image, but not the in-memory one) ?
-  Let's also not forget that the kernel bloat should be measured between
-  'linux+lvm+initrd' and 'linux+lvm+lvmroot'.
-
-
-	Stefan
+-- 
+Luca Berra -- bluca@comedia.it
+    Communications Media & Services S.r.l.
