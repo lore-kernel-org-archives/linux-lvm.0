@@ -1,9 +1,8 @@
-From: "William Blunn" <bill@tao-group.com>
-Subject: Re: [linux-lvm] Directory becomes sticky socket?
-Message-Id: <006b01c1ad9a$914595b0$216410ac@tao.co.uk>
+From: George Karaolides <george@karaolides.com>
+Subject: Re: [linux-lvm] Root fs on LV on software RAID - SUCCESS
+In-Reply-To: <3C5D5140.8070505@wanadoo.fr>
+Message-Id: <Pine.LNX.4.40.0202041908360.6980-100000@phobos.internal.parmastocks.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20020204154410.GA14373@wookimus.net>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,37 +13,51 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Feb  4 10:41:02 2002
+Date: Mon Feb  4 11:25:02 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: debian-user@lists.debian.org
-Cc: linux-lvm@sistina.com, "Chad C. Walstrom" <chewie@wookimus.net>
+Content-Type: TEXT/PLAIN; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: linux-lvm@sistina.com
 
-> I'm not sure how this came about, but I cannot remove the directory
-> /usr/share/doc/libldap2.  =20
->=20
->     [09:36:47] chewie@skuld (505)$ ls -lad libldap2=20
->     s-w--w---T  16806 236536206 1076048101 1084824775 Oct  1  2004 =
-libldap2=3D
->     [09:36:52] chewie@skuld (506)$ file libldap2
->     libldap2: sticky socket
->     [09:36:58] chewie@skuld (507)$ sudo rm -rf /usr/share/doc/libldap2
->     rm: cannot unlink `/usr/share/doc/libldap2': Operation not =
-permitted
->=20
-> System: Debian unstable (Sid)
-> Kernel: 2.4.17-k7
-> Filesystem: ext3 on an LVM logical volume (no extra patches to the
-> kernel, vanilla 2.4.17).
->=20
-> I've tried removing it while root as well with no success.  I've tried
-> using fsck.{ext2,ext3} with no avail.  I relize that I'm going to have
-> to do something fairly low-level to the FS to recover this problem.  =
-Any
-> pointers or suggestions you may have would be quite welcome.
+Hello Francis,
 
-I think: Use "ls -li" to find the object's inode. Then use debugfs to
-clear the object's inode. Then fsck it to clear up any hanging bits in
-the FS.
+Thanks for your reply.  You are, however, referring to hardware RAID; I
+was referring to Linux software RAID.
 
-Bill
+I did check the archives of this mailing list for the past four or five
+months.
+
+There are a lot of threads about LVM on RAID (and vice-versa, though I
+don't understand why anyone would want to do that...)  But I didn't find a
+discussion about how to have the root fs on LVM on software RAID.
+
+Anyway, I have eventually succeeded in building a system (Debian woody,
+kernel 2.4.17) with root fs on LVM on software RAID-1.  Just to make
+things interesting, I used reiserfs throughout; this is a proof-of-concept
+system.
+
+A root-on-LVM-on-software-RAID-HOWTO is not written up anywhere I could
+find it.  Even for just root-on-RAID, the current HOWTO's are out of date
+and don't work with kernel 2.4.  So I'll write up my setup in an informal
+HOWTO which I'll put up on my website.  Watch this space, as they say.
+
+Best regards,
+
+|      George Karaolides       8, Costakis Pantelides St.,         |
+|      tel:   +357 99 68 08 86                  Strovolos,         |
+|      email: george@karaolides.com       Nicosia CY 2057,         |
+|      web:   www.karaolides.com      Republic  of Cyprus          |
+
+
+On Sun, 3 Feb 2002, Francis SOUYRI wrote:
+
+> Hello Georges,
+>
+>     Yes it is possible. I have a hardware raid 5 system and two systems
+> without raid where all the filesystem are on lv's (also /boot, I used a
+> patched lilo). You can find some informations in the LVM mail archive.
+>
+> Best regards.
+>
+> Francis
+>
