@@ -1,58 +1,69 @@
-From: Andreas Dilger <adilger@turbolinux.com>
-Message-Id: <200008011704.e71H4Rv15918@webber.adilger.net>
-Subject: Re: [linux-lvm] repair "lvextend-instead-of-e2fsadm" usage
-Date: Tue, 1 Aug 2000 11:04:27 -0600 (MDT)
-MIME-Version: 1.0
+Date: Tue, 1 Aug 2000 19:09:10 +0200
+From: Luca Berra <bluca@comedia.it>
+Subject: [linux-lvm] [bluca@comedia.it: help!]
+Message-ID: <20000801190910.A4095@colombina.comedia.it>
+Reply-To: bluca@comedia.it
+Mime-Version: 1.0
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: Linux LVM mailing list <linux-lvm@msede.com>
+To: linux-lvm@msede.com
 
-Jens, writes:
-> thanks to all for the last hints ... it works (sort of). Now I've done
-> something stupid - I've installed a new HDD and
-> 
-> 	pvcreate /dev/hdb1
-> 	vgextend /dev/vg01 /dev/hdb1
-> 	vgdisplay /dev/vg01           -> 3737 free 4MB extents
-> 	lvextend +l 3737 /dev/vg01/home
-> 
-> instead of using "e2fsadm" to resize the file system as well.
-> 
-> Is there a way to use resize2fs to get the same result, or would I have to
-> (can I?) "lvreduce -l -3737 ..." the volume group first? How does the
-> "reducing" work, does it just cut off the end?
-> 
-> The Trouble Is(tm), umounting the /home partition would include explaining
-> to 200 scientists why and how long they cannot access their precious data,
-> and I *really* don't want to go into details here. =;()
+i'll repost since i did not see it on the list
 
-In either case, you will still have to unmount the filesystem in order to
-do the resize, unless you have my online resize patch in your kernel
-already.
+ah. it is on 2.4.0-test5 :(
 
-If you _unmount_ your filesystem, you can simply use:
+----- Forwarded message from Luca Berra <bluca@comedia.it> -----
 
-resize2fs /dev/vg01/home
+Date: Mon, 31 Jul 2000 18:25:45 +0200
+From: Luca Berra <bluca@comedia.it>
+To: linux-lvm@msede.com
+Subject: help!
+X-Mailer: Mutt 1.0pre3i
 
-(i.e. don't specify the size) and it will extend the filesystem to the
-full size of the partition.  Note that using resize2fs will be much
-faster than doing e2fsadm, because you don't really need an fsck before
-doing the resize, but e2fsadm does it anyways.
+lvmdiskscan gets it wrong, pvcreate as well
 
-If you have the online resize patch in your kernel already, but didn't do
-a "prepare" on the filesystem for resizing, you will still be able to do
-a resize to the next 16GB boundary, which may or may not be enough to use
-up all of the newly allocated PEs.
+/dev/md1 (at bottom) should be a 36Gb MD device,
+lvmdiskscan takes stats from the first partition on the first disk
 
-I have updated e2fsadm to call either ext2online or (resize2fs or ext2resize)
-depending on what is available and if the filesystem is mounted or not.
-I will send a patch to linux-lvm shortly.
+# lvmdiskscan
+lvmdiskscan -- reading all disks / partitions (this may take a while...)
+lvmdiskscan -- /dev/scsi/host1/bus0/target0/lun0/part1  [       7.98 MB] Primary
+  LINUX native partition [0x83]
+lvmdiskscan -- /dev/scsi/host1/bus0/target0/lun0/part2  [       4.03 GB] DOS ext
+ended partition [0x5]
+lvmdiskscan -- /dev/scsi/host1/bus0/target0/lun0/part5  [     255.98 MB] Extende
+d LINUX native partition [0x83]
+lvmdiskscan -- /dev/scsi/host1/bus0/target0/lun0/part6  [        576 MB] Extende
+d LINUX native partition [0x83]
+lvmdiskscan -- /dev/scsi/host1/bus0/target0/lun0/part7  [     957.98 MB] Extende
+d LINUX native partition [0x83]
+lvmdiskscan -- /dev/scsi/host1/bus0/target0/lun0/part8  [         64 MB] Extende
+d LINUX native partition [0x83]
+lvmdiskscan -- /dev/scsi/host1/bus0/target4/lun0/part1  [      29.98 MB] Primary   [0xFD]
+lvmdiskscan -- /dev/scsi/host1/bus0/target4/lun0/part2  [      17.07 GB] Primary  LVM partition [0x8E]
+lvmdiskscan -- /dev/scsi/host1/bus0/target5/lun0/part1  [      29.98 MB] Primary   [0xFD]
+lvmdiskscan -- /dev/scsi/host1/bus0/target5/lun0/part2  [      17.07 GB] Primary   [0xFD]
+lvmdiskscan -- /dev/scsi/host1/bus0/target6/lun0/part1  [      29.98 MB] Primary   [0xFD]
+lvmdiskscan -- /dev/scsi/host1/bus0/target6/lun0/part2  [      17.07 GB] Primary   [0xFD]
+lvmdiskscan -- /dev/md1                                 [       7.98 MB] Primary  LINUX native partition [0x83]
+lvmdiskscan -- 4 disks
+lvmdiskscan -- 0 whole disks
+lvmdiskscan -- 0 loop devices
+lvmdiskscan -- 0 multiple devices
+lvmdiskscan -- 0 network block devices
+lvmdiskscan -- 15 partitions
+lvmdiskscan -- 1 LVM physical volume partition
 
-Cheers, Andreas
+
 -- 
-Andreas Dilger  \ "If a man ate a pound of pasta and a pound of antipasto,
-                 \  would they cancel out, leaving him still hungry?"
-http://www-mddsp.enel.ucalgary.ca/People/adilger/               -- Dogbert
+Luca Berra -- bluca@comedia.it
+    Communication Media & Services S.r.l.
+
+----- End forwarded message -----
+
+-- 
+Luca Berra -- bluca@comedia.it
+    Communication Media & Services S.r.l.
