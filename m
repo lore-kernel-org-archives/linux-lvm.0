@@ -1,9 +1,9 @@
-Message-ID: <3B956D56.67E5F650@carolina.rr.com>
-Date: Tue, 04 Sep 2001 20:09:58 -0400
+Message-ID: <3B9586AD.D38A9524@carolina.rr.com>
+Date: Tue, 04 Sep 2001 21:58:05 -0400
 From: Jason Edgecombe <jedgecombe@carolina.rr.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] physically swapping hdd with hda
+Subject: [linux-lvm] defragging logical volumes
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,18 +16,11 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@sistina.com
+To: "linux-lvm@sistina.com" <linux-lvm@sistina.com>
 
-hi all,
+hi,
 
-  I have RH 7.1 and I snagged kernel 2.4.9 from kernel.org with LVM-1.0
-and the reiserfs patches.
+  how can I rearrange logical volumes so that they are contiguous? does
+it matter if the root LV isn't contiguous?
 
-I have my system running which hdd as the root drive with /boot as ext2
-and an LVM / & /home reiserfs filesystems.
-
-what do I need to do before/during/after I physically swap hda with hdd
-in the same PC?
-
-Sincerely,
-Jason Edgecombe
+Jason
