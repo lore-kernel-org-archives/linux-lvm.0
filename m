@@ -1,11 +1,10 @@
-Return-Path: <root@srv.sistina.com>
-Date: Wed, 16 May 2001 11:23:52 +0000
-From: "Heinz J. Mauelshagen" <Mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] LVM 1.0 release decision
-Message-ID: <20010516112352.G11984@sistina.com>
-References: <20010511155311.A17689@sistina.com> <20010511161329.E21433@pclab.ifg.uni-kiel.de>
-Mime-Version: 1.0
-In-Reply-To: <20010511161329.E21433@pclab.ifg.uni-kiel.de>; from torsten@pclab.ifg.uni-kiel.de on Fri, May 11, 2001 at 04:13:29PM +0200
+Return-Path: <jweber@valinux.com>
+Date: Wed, 16 May 2001 03:50:33 -0700 (PDT)
+From: Jay Weber <jweber@valinux.com>
+Subject: Re: [linux-lvm] lvm deadlock with 2.4.x kernel?
+In-Reply-To: <20010516093929.B482@66bassett.freeserve.co.uk>
+Message-ID: <Pine.LNX.4.30.0105160340450.6579-100000@shells.valinux.com>
+MIME-Version: 1.0
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,60 +16,46 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: TEXT/PLAIN; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Fri, May 11, 2001 at 04:13:29PM +0200, Torsten Landschoff wrote:
-> On Fri, May 11, 2001 at 03:53:11PM +0000, Heinz J. Mauelshagen wrote:
-> > In regard to this situation we'ld like to know about your oppinion on the
-> > following request:
-> > is it acceptable to release 1.0 soon *before* all patches to reach the 1.0
-> > code status are in vanilla (presumed that we provide them with our release as
-> > we always did before)?
-> 
-> My stance would be to do a pre-release of the to-be-1.0 code. Reasons:
-> 
-> - as you said, it would be good for the user base
+On Wed, 16 May 2001, Joe Thornber wrote:
 
-Yep.
+> On Tue, May 15, 2001 at 09:17:06PM -0400, Chris Mason wrote:
+> > You're right though, pv_flush certainly doesn't look like it could cause
+> > any deadlocks.
+>
+> I must admit I'm struggling to understand why PV_FLUSH even exists.
+> It does *exactly* the same thing as a BLKFLSBUF ioctl to the pv device
+> itself.  As such I agree that it's unlikely to be the culprit.
 
-> - OTOH I would expect the lvm code in the kernel to become a bit 
->   different from what you have now as a matter of the code review.
+I don't think it is, I think it just appears as such.  I've actually
+hacked up my LVM here so that lvm_do_pv_flush() just returns 0.  I don't
+get the problem there anymore. :)
 
-We are very much interested in your specific requirements here.
-Do you have particular recommendations/patches?
+I'm digging in the userland code now.  It looks to me as though somewhere
+around the vg_copy_to_disk or lseek and write to pv_handle in vg_write.c
+is where I see the first instance of a BUF_LOCKED buffer being set to
+B_FREE.  I added a printk to my put_last_free() function in buffer.c to
+denote when such odd symptoms occur.  Again, only LVM userland tool usage
+seems to generate output from that printk, nothing else that I do on the
+machine.
 
-> 
-> > Thanks for your support!
-> 
-> Thanks for LVM :-)
+And it looks as though vg_write.c in tools/lib is just dropping the VG
+offset data and such onto the physical PV itself.  I've noted that
+following this I get alot more printk messages regarding BUF_LOCKED being
+set to B_FREE, the next massive hunk of write is in regards to
+lv_write_all_lv, so I gather it's during the writeout of LV information to
+a PV?
 
-You're welcome :-)
+Not sure why writing data to the raw device would generate these printk's.
+Thats the best I've been able to come up with overnight though.
 
-> 
-> Greetings
-> 
-> 	Torsten
+>
+> - Joe
 > _______________________________________________
 > linux-lvm mailing list
 > linux-lvm@sistina.com
 > http://lists.sistina.com/mailman/listinfo/linux-lvm
-
--- 
-
-Regards,
-Heinz    -- The LVM Guy --
-
-*** Software bugs are stupid.
-    Nevertheless it needs not so stupid people to solve them ***
-
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-
-Heinz Mauelshagen                                 Sistina Software Inc.
-Senior Consultant/Developer                       Am Sonnenhang 11
-                                                  56242 Marienrachdorf
-                                                  Germany
-Mauelshagen@Sistina.com                           +49 2626 141200
-                                                       FAX 924446
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+>
