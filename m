@@ -1,49 +1,36 @@
-Date: Tue, 19 Sep 2000 17:15:43 -0400 (EDT)
-From: Jeremy Hansen <jeremy@xxedgexx.com>
-Subject: Re: [linux-lvm] what lvm shoudl I be using for 2.2.x?
-In-Reply-To: <200009192022.e8JKMch15948@webber.adilger.net>
-Message-ID: <Pine.LNX.4.21.0009191713060.27705-100000@srv2.ecropolis.com>
+Message-ID: <01C02275.614677A0.smdenton@bellsouth.net>
+From: "S. Michael Denton" <smdenton@bellsouth.net>
+Reply-To: "smdenton@bellsouth.net" <smdenton@bellsouth.net>
+Subject: [linux-lvm] LVM + online resizing e2fs patches
+Date: Tue, 19 Sep 2000 20:08:29 -0400
 MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: Andreas Dilger <adilger@turbolinux.com>
-Cc: linux-lvm@msede.com
+To: "'linux-lvm@msede.com'" <linux-lvm@msede.com>
 
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA1
 
-Ahh, only one thing I noticed is that lvm doesn't merge with Steven
-Tweedie's sard patches which are available from:
+Has anyone used the kernel patches for LVM 0.8i with the online
+resizing patch for e2fs successfully?  I cannot seem to get them to
+reconcile properly, complains about bad hunks (usually where LVM has
+changed block IO code).
 
-ftp://ftp.uk.linux.org/pub/linux/sct/fs/profiling/
+Thanks,
 
-Has anyone gotten these patches to merge?
+Scott Denton
+smdenton@bellsouth.net
+EFnet Handle: SteelWyng
+ICQ UIN: 24149258
+AIM Screen Name: SteelWyng
 
-Thanks
--jeremy
+-----BEGIN PGP SIGNATURE-----
+Version: PGPfreeware 6.5.3 for non-commercial use <http://www.pgp.com>
 
-> Jeremy writes:
-> > It seems 0.8final has no patches for 2.2.x kernels.  Should I be using
-> > 0.7 for 2.2.x?
-> 
-> There is an "official" 0.8i version for 2.2, and I have also made a
-> 2.2.x patch for 0.8 final.  Note that my patch is on top of rawio patch
-> (for LVM snapshots) and also RAID 0.9.  It is easy to fix if you don't
-> have the RAID 0.9 patches, but you need to #ifdef out a bunch of snapshot
-> stuff if you don't have rawio.
-> 
-> Patch is at:
-> 
-> 	ftp://ftp.stelias.com/pub/adilger/
-> 
-> Cheers, Andreas
-> -- 
-> Andreas Dilger  \ "If a man ate a pound of pasta and a pound of antipasto,
->                  \  would they cancel out, leaving him still hungry?"
-> http://www-mddsp.enel.ucalgary.ca/People/adilger/               -- Dogbert
-> 
-
-eholes.org * jeremy@eholes.org
------------------------------------------
-eholes have feelings too...
+iQA/AwUBOcf//XC+DNfF0nVpEQLqlgCfbltQcdoGIlZ1PGks0N6GtcRR+Q0AoP6x
+acGqkxN/9NseB23oEBXddrqu
+=lWv8
+-----END PGP SIGNATURE-----
