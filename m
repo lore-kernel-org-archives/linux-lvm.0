@@ -1,6 +1,8 @@
-From: webtraffic@bigmir.net
-Message-Id: <E18I4N9-0003j0-00@hermes.sistina.com>
-Subject: [linux-lvm] FREE traffic to YOUR website !
+From: James Hawtin <oolon@pzat.meep.org>
+Subject: Re: [linux-lvm] lvcreate distributed extent option
+In-Reply-To: <615A249B783CD41192F400D0B747AC8608982643@hesse.bbn.hp.com>
+Message-ID: <Pine.LNX.4.44.0211301337180.4178-100000@pzat.meep.org>
+MIME-Version: 1.0
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -11,27 +13,52 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Sat Nov 30 03:58:02 2002
+Date: Sat Nov 30 07:41:03 2002
 List-Id: <linux-lvm.redhat.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: TEXT/PLAIN; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
+Cc: lvm-devel@sistina.com
 
-Hi, 
 
-My name is Mike and I have visited your web site.
+On Sat, 30 Nov 2002, ZECHA,HOLGER (HP-Germany,ex1) wrote:
 
-I love it. 
+>
+> Hello,
+>
+> I want to create a logical volume of 40GB Size using a physical 9GB disks,is
+> there a way to create a logical volume in the way, that the first logical
+> extend is on disk one, the second on disk two, ... the 7th on disk one and
+> so on ?
+>
+> Meaning all logical extends are distributed accross all disks.
+>
+> In HP-UX lvdisplay wwill look like this:
+>    --- Logical extents ---
+>    LE    PV1                PE1   Status 1
+>    00000 /dev/dsk/c16t0d0   00012 current
+>    00001 /dev/dsk/c16t0d1   00012 current
+>    00002 /dev/dsk/c17t0d2   00000 current
+>    00003 /dev/dsk/c17t0d3   00000 current
+>    00004 /dev/dsk/c16t0d4   00000 current
+>    00005 /dev/dsk/c16t0d5   00000 current
+>    00006 /dev/dsk/c17t0d6   00000 current
+>    00007 /dev/dsk/c17t0d7   00000 current
+>    00008 /dev/dsk/c16t1d0   00000 current
+>    00009 /dev/dsk/c16t1d1   00000 current
+>    00010 /dev/dsk/c17t1d2   00000 current
+>    00011 /dev/dsk/c17t1d3   00000 current
+>    00012 /dev/dsk/c16t1d4   00000 current
+>
+> Holger
+>
 
-So I have decided to write to you. 
+How about striping with the strip size equal to that of a logical extent?
 
-I thought that because generating traffic is so critical for 
-any website, you could be interested in some information 
-I have about FREE web traffic. If you want to read it, simply 
-reply to this email with a blank message and I will email it 
-to you. 
+otherwise if you have quite alot of disk space on another drive you could
+create your lv on that one then move the extents one at a time to the
+destinations drives using pvmove.....
 
-Have a great day, 
+One does wonder why you want to do this!
 
-Mike. 
+James
