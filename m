@@ -1,16 +1,18 @@
 Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j35746O30748
-	for <linux-lvm@redhat.com>; Tue, 5 Apr 2005 03:04:06 -0400
-Received: from percy.comedia.it (percy.comedia.it [212.97.59.71])
-	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id j35745jW011327
-	for <linux-lvm@redhat.com>; Tue, 5 Apr 2005 03:04:06 -0400
-Date: Tue, 5 Apr 2005 09:04:04 +0200
-From: Luca Berra <bluca@comedia.it>
-Message-ID: <20050405070404.GF908@percy.comedia.it>
-Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="yEPQxsgoJgBvi8ip"
-Content-Disposition: inline
-Subject: [linux-lvm] File descriptor .. left open
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j35F2dO16059
+	for <linux-lvm@redhat.com>; Tue, 5 Apr 2005 11:02:39 -0400
+Received: from conterra.de (vvv.conterra.de [212.124.44.162])
+	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id j35F2bKr032222
+	for <linux-lvm@redhat.com>; Tue, 5 Apr 2005 11:02:38 -0400
+Received: from localhost (unknown [127.0.0.1])
+	by conterra.de (-) with ESMTP id 7C2CD1C88D4
+	for <linux-lvm@redhat.com>; Tue,  5 Apr 2005 17:02:31 +0200 (CEST)
+Message-ID: <4252A885.6050305@conterra.de>
+Date: Tue, 05 Apr 2005 17:02:29 +0200
+From: =?ISO-8859-1?Q?Dieter_St=FCken?= <stueken@conterra.de>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Subject: [linux-lvm] lvm report tool
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -21,39 +23,30 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: linux-lvm@redhat.com
+Content-Type: text/plain; charset="utf-8"; format="flowed"
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
+I want to write a tool to give a quick overview
+on how my LVs scatter over the different PVs.
+"vgdisplay -m" lists the mapping, I need to now.
+Unfortunately it is not easy to parse, and with
+"-c", no mapping is listed. The -m option for
+pvdisplay seems not to work. The /proc interface
+also disappeared. Any clue, on how to extract the
+mapping?
 
---yEPQxsgoJgBvi8ip
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
+Anyway: using the lvm tools, I have to be root, as
+they have to open/read the PVs. Any idea on how to
+extract the informations as an unprivileged user?
 
-why printf?
-i changed it to log_XXX
+Could sysfs (/sys) help here? Would it make sense,
+to output any hierarchical information via XML?
+It could be processed much saver/easier than any
+colon separated lists...
 
-L.
-
+Dieter.
 -- 
-Luca Berra -- bluca@comedia.it
-        Communication Media & Services S.r.l.
- /"\
- \ /     ASCII RIBBON CAMPAIGN
-  X        AGAINST HTML MAIL
- / \
-
---yEPQxsgoJgBvi8ip
-Content-Type: application/octet-stream
-Content-Disposition: attachment; filename="lvm2-fdlog.patch.bz2"
-Content-Transfer-Encoding: base64
-
-QlpoOTFBWSZTWctVgTsAAHTfgEIwc2///n8nlQS/p98qQAG1caAMqZTanqAekADIZGgA0DTJ
-oAGmio0DI0AaA0AAAAAGhzAATJgATCYJhDAEYAEkUYiGDSp+lPap6T1Gho0bIjRoAPEih8hH
-ZqESAwZVDKvHcrEAgoCH7X4sLqiIkhiqaLIWqcwkTRhZ8gQAIkCWrT77M0AhckCk3r9YBQtz
-gSPkQjywGDvsOCSKde8R9cQlWBhCqiCrCZiMqNY2xfLVx7zLdjuTRTTCCd9C6SxVuECsiGwb
-abyvsPQxJTOrDM3kFVwHKGqOwdnMS4KTqqNxI8CB7zDSqpyK5FlLg8IN2lsF3DytufWFkcjz
-HqaDF+1w7NIRgieeEXQq5xlsZS2Xj1PYrEoSZjKdpSViG613XX2rgGZv6zbEqC2R9yQ4mdme
-juUzWVEOIVhcdNAuHI0lKyDBOE0/JXK5ERhYsaAmd/NliShFpnnOQTAptSyVwFRQLBQXE8LS
-/iVrxIDqBzixoekcGDMLQiWGsYYJyUFAoUgdFIyZZRRdmrA56dkVKpK0F0Fow4aihtirLGL7
-y9dCoXkJhQjSHjjhaZmosG/4u5IpwoSGWqwJ2A==
-
---yEPQxsgoJgBvi8ip--
+Dieter St�ken, con terra GmbH, M�nster
+     stueken@conterra.de
+     http://www.conterra.de/
+     (0)251-7474-501
