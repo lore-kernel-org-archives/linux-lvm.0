@@ -1,31 +1,28 @@
-Message-ID: <38BBE421.6C441018@teil.soft.net>
-Date: Tue, 29 Feb 2000 15:22:09 +0000
-From: Bits <bits2@teil.soft.net>
+Message-ID: <31A612FE6020D2119F6400A0C9B67EBB116F1D@fthw901e.as.fth.sbs.de>
+From: Franken Klaus <Klaus.Franken@fth2.siemens.de>
+Subject: RE: [linux-lvm] valid_majors
+Date: Tue, 29 Feb 2000 11:09:42 +0100
 MIME-Version: 1.0
-Subject: [linux-lvm] Recompilation of Kernel..
-Content-Transfer-Encoding: 7bit
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@msede.com
 
+> > > is there a way to give the list of valid majors at runtime 
+> 
+> > 
+> > The actual 0.8final code uses /proc/partitions fastening the process
+> > of scanning, if it exists and falls back to scan /dev if it doesn't.
+> 
+> This sounds good! I will try it next week.
 
-I tried recompiling the kernel n booting using the recompiled version..
-I have a strange problem that the /proc/ksyms file gets mounted but
-still loading the modules gives errors like unresolved symbol...
 
-for eg::
-the symbol found in ksyms table when the properly installd kernel is
-run..
-001169b0 register_symtab_from_R9872f07b
+It seems that I cant test it: 0.8final is only for 2.3.x in the moment, right?
 
-looks like this in the recompiled version..
-00116750 register_symtab_from
+Can I help/test something.... I need the 2.2 kernel.
 
-Plz let me know what exactly the problem is...
-This is necessary coz i wud like to make some changes in the kernel
-code...
 
-Regards
-Gansu.
+Klaus.Franken@fth2.siemens.de    +49 911 978 3707
+Siemens Business Services IP 21F
