@@ -1,11 +1,11 @@
-Return-Path: <declerck@sistina.com>
-Subject: Re: [linux-lvm] Oops in 2.4.0 (@ LVM) 
-In-Reply-To: Message from Paul Jakma <paul@clubi.ie> 
-   of "Fri, 12 Jan 2001 00:49:33 GMT." <Pine.LNX.4.31.0101112141150.27729-100000@fogarty.jakma.org> 
-Mime-Version: 1.0
-Date: Thu, 11 Jan 2001 18:48:24 -0800
-From: "Michael J. Declerck" <declerck@sistina.com>
-Message-Id: <20010112024824.7BED7E0B7@wraith>
+Return-Path: <bs@infologic.fr>
+Message-ID: <3A5EAF1F.EF020978@infologic.fr>
+Date: Fri, 12 Jan 2001 08:15:43 +0100
+From: Benoit SERRA <bs@infologic.fr>
+MIME-Version: 1.0
+Subject: Re: [linux-lvm] nagging about the LVM usage survey
+References: <20010111083114.A381363@brule.borg> <3A5DC9B5.15B3C7DA@infologic.fr> <20010111172015.C15903@srv.t-online.de>
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,64 +17,37 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="iso-8859-1"
 To: linux-lvm@sistina.com
 
-paul@clubi.ie said:
-> aye, i know it is.. but not in Linus' tree, and that's the problem.
-> Linus was given 0.9 by Andrea a good while ago. It has problems. CVS
-> has had many updates.. but these are not fed to Linus. Not good.
-> Either keep Linus LVM relatively closely in-sync by feeding to him
-> frequently, or else feed him /stable/ updates less frequently.
 
-I believe that is what we are doing.  We are building stable, tested patches
-that can be submitted to Linus for inclusion in his tree.  The submission by
-a party outside of the LVM commit team disrupted the stability of LVM.  The
-LVM team is working to build a new patch that can be applied against 2.4.0
-that will not need to be updated on a daily basis.
+"Heinz J. Mauelshagen" a =EF=BF=BDcrit :
+>=20
+> As pointed out on the list everybody is invited to get the actual
+> code from our CVS repository with:
+>=20
+> "cvs -d :pserver:cvs@cvs.globalfilesystem.org:/data/cvs checkout -r LVM_0=
+-9-patches LVM"
+>=20
+> It contains the fix you are requesting.
+>=20
+> Our 0.9.1 beta release will take place on friday or monday for people
+> who are able to wait.
+>=20
+> Thanks for your understanding.
 
-> In the former case, users can rely on stock LVM being up to date. In
-> the latter case users can choose to stick with stock or use CVS. The
-> current half-way house case means you never really know where you
-> stand.
+Sorry for the messages, I corrected the bug by myself. I just add a
+single line on the file lvm.c
 
-Once again, the LVM team did not put the community in this situation, but they
-are working to rectify it.
+I'm using the 2.4.0 kernel.
+In file lvm.c
+At line 2026, in function lvm_do_vg_extend
+Just after the line :
+if ( ret !=3D 0 ) return ret;=09
 
-> I'm sorry for complaining, and please read all my 'complain' emails
-> with an implicit #include "thanks-for-lvm.txt", but....
+add :
 
-Well reasoned criticism is not a compliant.  It is a rationale way of helping
-to keep things on track.  The LVM developers appreciate this type of input.
+pv_ptr =3D vg_ptr->pv[p];
 
-> The release practices of the LVM developers has, to date, /sucked/
-> (witness pre 0.8.1). I guess you guys (understandably) prefer spending
-> time on the code over spending time on organising releases/updates,
-> but the current situation makes life difficult for users.
-
-This issue is being addressed.  Hopefully, after the submission of what I will
-label for lack of a better term, the 0.91 patch, things will stabilize.  At
-that point a more sane update sequence should prevail.
-
-> Perhaps a solution could be that you (Heinz et al) could delegate to
-> someone with the technical competance to understand the fixes who
-> could undertake 'watching' the developers and feeding the fixes on to
-> Linus? Eg, Andreas did a really good job of maintaining 0.8 fixes (to
-> tools) until 0.8.1 came out. *cough* 
-
-I believe the current LVM team is attempting to do that.  Help from within the
-LVM is greatly appreciated and encouraged.  Having said that, there sometimes
-needs to be a final authority (ala Linus for the kernel) on changes and Heinz
-is it currently.
-
-I really believe that both the LVM team and the LVM community as a whole are
-working diligently to provide the best tool possible.  The process of 
-accomplishing this hit a snag recently and actions have been taken to rectify
-it.  I expect that within the next couple of days all of this will be smoothed
-out and we can all get back to advancing Linux and its use throughout the
-computing community.
-
-
----
-Michael Declerck, declerck@sistina.com   +1.510.823.7991
+Recompile the kernel and reboot.
+Ok It work
