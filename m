@@ -1,10 +1,9 @@
-From: Alasdair G Kergon <agk@uk.sistina.com>
-Subject: Re: [linux-lvm] Testing LVM2
-Message-ID: <20030715172406.R19265@uk.sistina.com>
-References: <20030714002149.GA1041@trip.muon.local> <20030715012858.Q19265@uk.sistina.com> <20030715174134.GA657@trip.muon.local>
-Mime-Version: 1.0
+From: Marc Cousin <cousinmarc@free.fr>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Content-Disposition: inline
-In-Reply-To: <20030715174134.GA657@trip.muon.local>; from nils@muon.de on Tue, Jul 15, 2003 at 05:41:34PM +0000
+Message-Id: <200307151853.56054.cousinmarc@free.fr>
+Subject: [linux-lvm] libgcc_s.so.1 dependancy
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,23 +14,51 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Tue Jul 15 11:25:02 2003
+Date: Tue Jul 15 11:50:02 2003
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: Nils Juergens <nils@muon.de>
-Cc: linux-lvm@sistina.com
+To: linux-lvm@sistina.com
 
-On Tue, Jul 15, 2003 at 05:41:34PM +0000, Nils Juergens wrote:
-> In fact, it does. But using lvm2 does not.
- 
-> I created a vg with on pv and one lv named "test". Then i create ext3
-> filesystem on it and mount it. Then i try to create a snapshot of this lv:
+Hi,
+I'm having trouble using LVM2 : lvm is linked with libgcc_c.so, which, of 
+course, is in a logical volume ...
 
-Snapshots are not ported to 2.5 yet.
+ldd tools/lvm
+        libdevmapper.so.1.00 => /lib/libdevmapper.so.1.00 (0x40029000)
+        libdl.so.2 => /lib/libdl.so.2 (0x40030000)
+        libc.so.6 => /lib/libc.so.6 (0x40033000)
+        libgcc_s.so.1 => 
+/usr/lib/gcc-lib/i686-pc-linux-gnu/3.2.3/libgcc_s.so.1 (0x40160000)
+        /lib/ld-linux.so.2 => /lib/ld-linux.so.2 (0x40000000)
 
-We'll see if we can make this more obvious from the error messages!
+That's weird, I'm having the problem on one of my gentoos, and not the other 
+one. gcc is the same on both :
 
-Alasdair
+bash-2.05b$ gcc -v
+Reading specs from /usr/lib/gcc-lib/i686-pc-linux-gnu/3.2.3/specs
+Configured with: /var/tmp/portage/gcc-3.2.3-r1/work/gcc-3.2.3/configure 
+--prefix=/usr --bindir=/usr/i686-pc-linux-gnu/gcc-bin/3.2 
+--includedir=/usr/lib/gcc-lib/i686-pc-linux-gnu/3.2.3/include 
+--datadir=/usr/share/gcc-data/i686-pc-linux-gnu/3.2 
+--mandir=/usr/share/gcc-data/i686-pc-linux-gnu/3.2/man 
+--infodir=/usr/share/gcc-data/i686-pc-linux-gnu/3.2/info --enable-shared 
+--host=i686-pc-linux-gnu --target=i686-pc-linux-gnu --with-system-zlib 
+--enable-languages=c,c++,ada,f77,objc,java --enable-threads=posix 
+--enable-long-long --disable-checking --enable-cstdio=stdio 
+--enable-clocale=generic --enable-__cxa_atexit 
+--enable-version-specific-runtime-libs 
+--with-gxx-include-dir=/usr/lib/gcc-lib/i686-pc-linux-gnu/3.2.3/include/g++-v3 
+--with-local-prefix=/usr/local --enable-shared --enable-nls 
+--without-included-gettext
+Thread model: posix
+gcc version 3.2.3 20030422 (Gentoo Linux 1.4 3.2.3-r1, propolice)
+
+On one of them, I've got the libgcc_c dependancy, and not on the other one ...
+I've md5sum'd both my gcc, and they're not the same file (probably not 
+compiled from the same previous gcc, that's the gentoo touch :) )
+
+How can I get rid of this dependancy (I allready tried gcc -static-libgcc, no 
+success)
 -- 
-agk@uk.sistina.com
+   If we don't all watch the same TV, what will keep our culture homogeneous?
+		  -- Calvin
