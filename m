@@ -1,21 +1,20 @@
 Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id iA5Jcfr29006
-	for <linux-lvm@redhat.com>; Fri, 5 Nov 2004 14:38:41 -0500
-Received: from storix.com ([206.71.178.18])
-	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id iA5JcOPc032612
-	for <linux-lvm@redhat.com>; Fri, 5 Nov 2004 14:38:34 -0500
-Received: from [192.168.1.126] (65.106.88.139.ptr.us.xo.net [65.106.88.139])
-	by storix.com (Postfix) with ESMTP id C5AC01590C
-	for <linux-lvm@redhat.com>; Fri,  5 Nov 2004 11:23:20 -0800 (PST)
-Subject: Re: [linux-lvm] unable to create physical volume
-From: rich turner <rich@storix.com>
-In-Reply-To: <20041105191932.GB2036@agk.surrey.redhat.com>
-References: <1099678572.3681.88.camel@rich>
-	<20041105191932.GB2036@agk.surrey.redhat.com>
-Message-Id: <1099683509.3578.0.camel@rich>
-Mime-Version: 1.0
-Date: Fri, 05 Nov 2004 11:38:29 -0800
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id iA5NGor25931
+	for <linux-lvm@redhat.com>; Fri, 5 Nov 2004 18:16:50 -0500
+Received: from imf21aec.mail.bellsouth.net (imf21aec.mail.bellsouth.net
+	[205.152.59.69])
+	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id iA5NGmOf023936
+	for <linux-lvm@redhat.com>; Fri, 5 Nov 2004 18:16:48 -0500
+Received: from zira ([65.1.73.179]) by imf21aec.mail.bellsouth.net
+	(InterMail vM.5.01.06.11 201-253-122-130-111-20040605) with ESMTP
+	id <20041105231643.SJGE2451.imf21aec.mail.bellsouth.net@zira>
+	for <linux-lvm@redhat.com>; Fri, 5 Nov 2004 18:16:43 -0500
+Message-ID: <001d01c4c38d$71834590$6408a8c0@zira>
+From: "Kevin Richard" <Kevin_Richard@bellsouth.net>
+Date: Fri, 5 Nov 2004 17:16:13 -0600
+MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] How exactly does LVM's get written?
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -27,20 +26,39 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: LVM general discussion and development <linux-lvm@redhat.com>
+To: linux-lvm@redhat.com
 
-it does have a special entry in /proc/devices -> aoe
-(ata-over-ethernet). added this type in lvm.conf and BINGO. thanks for
-the help.
+I have searched many topics in archive and even randomly scanned for any
+info related to this but have only come away with a "I think it works this
+way" feeling.
 
-On Fri, 2004-11-05 at 11:19, Alasdair G Kergon wrote:
-> On Fri, Nov 05, 2004 at 10:16:13AM -0800, rich turner wrote:
-> > [root@redhat proc]# pvcreate /dev/etherd/e0.1
-> >   /dev/etherd/e0.1: Couldn't find device.
->  
-> Does 'cat /proc/devices' have a special entry for them?
-> 
-> If so, then you'll need to update the 'types' line in the
-> config file to include them.
-> 
-> Alasdair
+I set up two 80gig drives as one 160gig VG  /dev/VG1/LV1  I then proceeded
+to copy about 93 gigs of data from a 100gig drive that I will hopefully add
+to the LV to make it 260gigs.
+
+My questions are:
+
+1. Is this a "spill over" type of write method where it will fill up hde1
+(first 80gig) and then move to hdf1 (other 80gig) and then of coarse on to
+hdg1 (100gig)?  Which would allow me the convenience of having one HUGE
+mount and thus not having to constantly monitor and move data to 3 different
+drives as space is needed.  Yet it keeps the data somewhat separated (except
+for the "spill over" that might get wrote to two drives at some point) so if
+I lose a hard drive I only lose what is on that drive and can just replace
+the drive and recreate the VG and salvage all the data on the other two
+drives.  Is this a correct assumption?  I am trying to avoid the disaster of
+a Raid 0 type of system where if you lose one drive you have lost all 3
+drives!
+
+2. Is there any way to tell what PE's contain what data?  or to see how the
+volumes are filling up?  This would essentially allow me to answer my own
+first question and also verify that it is doing as I want it to do.  To
+clarify, I would be able to tell that Datafile.X which is a 1gig file is
+written to PE's stored on hde1 or hde1 AND hdf1.
+
+Thanks for taking the time to read this and help out a Noob!  If this all
+works out I will definitely be spreading the gospel about LVMs for not many
+folks are really aware of them too much it seems.
+
+Look forward to hearing your responses,
+Kevin
