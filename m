@@ -1,26 +1,43 @@
-Date: Mon, 26 Jul 1999 00:18:36 +0200
+Date: Mon, 26 Jul 1999 00:29:23 +0200
 From: Luca Berra <bluca@comedia.it>
-Subject: Re: [linux-lvm] Compile Problems
-Message-ID: <19990726001835.B6315@colombina.comedia.it>
+Subject: Re: [linux-lvm] RAID and LVM?
+Message-ID: <19990726002923.C6315@colombina.comedia.it>
 Reply-To: bluca@comedia.it
-References: <379B82D9.6845F39@thephaedo.com>
+References: <19990721224923.C29742@colombina.comedia.it> <Pine.LNX.4.10.9907212218320.2202-100000@hibernia.spin.ie> <19990722094845.A529@colombina.comedia.it>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary=oyUTqETQ0mS9luUI
-In-Reply-To: <379B82D9.6845F39@thephaedo.com>; from S. Ryan Quick on Sun, Jul 25, 1999 at 09:34:17PM +0000
+In-Reply-To: <19990722094845.A529@colombina.comedia.it>; from Luca Berra on Thu, Jul 22, 1999 at 09:48:45AM +0200
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
-To: "S. Ryan Quick" <ryan@thephaedo.com>
-Cc: linux-lvm@msede.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: linux-lvm@msede.com
 
+On Thu, Jul 22, 1999 at 09:48:45AM +0200, Luca Berra wrote:
+> On Wed, Jul 21, 1999 at 10:22:57PM +0100, Paul Jakma wrote:
+> > Anyway, back to the RAID+LVM saga.
+...
+> > So this has to be fixed soon anyway, and i'd love to be the guinea
+> > pig. :)
+> me too, i'll try something this weekend.
+i love replying to myself :)))
 
---oyUTqETQ0mS9luUI
-Content-Type: text/plain; charset=us-ascii
+i checked alan cox's linux-2.2.10-ac12 pacth wich includes
+a heavily modified raid and lvm0.6 patch.
+i added my devfs patch 
+http://www.comedia.it/bluca/lvm/devfs-patch-v99.4-2.2.10-ac12.gz
+and i was able to create and use a vg on a raid 1 device
 
-ok try this,
-it is the modified version of the patch i posted for 0.6
+todo: adding the diffs to the latest raid and lvm patches,
+		incremental diff for those can be found at
+		http://www.comedia.it/bluca/lvm/
+	checking autodetect, especially with both raid and
+		lvm loaded as modules. raid autorun happens before
+		and after initrd, now i need it during initrd.
 
-it is also available from http://www.comedia.it/bluca/lvm/lvm-0.7.glibc.patch 
+but appling those is time consuming and i have to take a plane to
+Amsterdam in six hours time, so i'll better get some sleep :))))
+I'll try that next week when i am back in Italy.
 
 Regards,
 Luca
@@ -28,69 +45,3 @@ Luca
 -- 
 Luca Berra -- bluca@comedia.it
     Communications Media & Services S.r.l.
-
---oyUTqETQ0mS9luUI
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: attachment; filename="lvm-0.7.glibc.patch"
-
---- 0.7/tools/lib/liblvm.h.glibc.orig	Mon Jul 12 23:21:26 1999
-+++ 0.7/tools/lib/liblvm.h	Sun Jul 25 21:15:11 1999
-@@ -80,6 +80,25 @@
- #  include <time.h>
- int llseek ( unsigned int, unsigned long long, unsigned int);
- 
-+/* from genhd.h */
-+#define DOS_EXTENDED_PARTITION 5
-+#define LINUX_EXTENDED_PARTITION 0x85
-+#define WIN98_EXTENDED_PARTITION 0x0f
-+#define LINUX_SWAP_PARTITION	0x82
-+
-+struct partition {
-+	unsigned char boot_ind;		/* 0x80 - active */
-+	unsigned char head;		/* starting head */
-+	unsigned char sector;		/* starting sector */
-+	unsigned char cyl;		/* starting cylinder */
-+	unsigned char sys_ind;		/* What partition type */
-+	unsigned char end_head;		/* end head */
-+	unsigned char end_sector;	/* end sector */
-+	unsigned char end_cyl;		/* end cylinder */
-+	unsigned int start_sect;	/* starting sector counting from 0 */
-+	unsigned int nr_sects;		/* nr of sectors in partition */
-+} __attribute__((packed));
-+
- #else /* __GLIBC__ < 2 */
- 
- #if LINUX_VERSION_CODE >= KERNEL_VERSION ( 2, 1, 0)
-@@ -96,11 +115,11 @@
- #  include <linux/msdos_fs.h>
- #  include <malloc.h>
- #  include <stdio.h>
-+#  include <linux/genhd.h>
- #endif /* __GLIBC__ > 1 */
- 
- #include <linux/lvm.h>
- #include <sys/ioctl.h>
--#include <linux/genhd.h>
- #include <linux/major.h>
- 
- #define	LVM_LIB_IOP_VERSION	4
---- 0.7/tools/lvm_user.h.glibc.orig	Mon Jul 12 23:21:27 1999
-+++ 0.7/tools/lvm_user.h	Sun Jul 25 21:17:54 1999
-@@ -42,7 +42,6 @@
- #include <features.h>
- #include <liblvm.h>
- 
--#include <linux/genhd.h>
- #include <linux/major.h>
- 
- #if ( __GLIBC__ > 1)
-@@ -57,6 +56,7 @@
- 
- #else
- 
-+#include <linux/genhd.h>
- #include <ctype.h>
- #include <fcntl.h>
- #include <malloc.h>
-
---oyUTqETQ0mS9luUI--
