@@ -1,8 +1,8 @@
-Message-Id: <3C434EB9.8060504@liberate.com>
-From: Chris Worley <cworley@liberate.com>
+Message-Id: <3C43DA17.473295EE@eds.com>
+From: Stefan Huber <stefan.huber@eds.com>
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] reiserfs oops at init
-References: <3C431A01.1000606@liberate.com> <451550000.1011030447@tiny>
+Subject: Re: [linux-lvm] (no subject)
+References: <3C42F494.1010F1F2@eds.com> <wvheppkkzg.fsf@freeze.oslo.dnmi.no>
 Content-Transfer-Encoding: 7bit
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
@@ -14,46 +14,58 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Jan 14 15:11:01 2002
+Date: Tue Jan 15 01:31:02 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
+Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
 
-Chris Mason wrote:
+Hello Adrian
 
->>>If you want to send the errors from reiserfsck --check, I can confirm
->>>things a little better.
->>>
->>
->>It's going to be a big file... do you just want the tail?
->>
->>
-> 
-> Lets start with the tail, my internet connection isn't that hot right now.
+i`m using LVM Version 0.8e
 
+greetzz
 
-Every error I could see was of the form:
+steve
 
-bad_directory_item: block 141874: item 698385 744805 0x1 DIR (3), len 
-350, location 2576 entry count 14, fsck need 0, format old has entry 
-".." with wrong deh_state 140744 - expected 4 - fixed
+Adrian Phillips wrote:
 
-This goes on for ~11MB.
+> >>>>> "Stefan" == Stefan Huber <stefan.huber@eds.com> writes:
+>
+>     Stefan> hello lvm-list i tried to change my kernel from 2.2.14 to
+>     Stefan> 2.2.19 now most of them are running very
+>     Stefan> fine...... but.....
+>
+>     Stefan> if i will start the new kernel there is a error message
+>     Stefan> like this:
+>
+>     Stefan> vgscan -- wrong i/o protocol version....
+>
+>     Stefan> it seems to be, that there is something wrong with my
+>     Stefan> lvm-version ? or, isn`t it?
+>
+> Um, perhaps you need newer version of the lvm progs ? What version do
+> you have ?
+>
+> Sincerely,
+>
+> Adrian Phillips
+>
+> --
+> Your mouse has moved.
+> Windows NT must be restarted for the change to take effect.
+> Reboot now?  [OK]
+>
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@sistina.com
+> http://lists.sistina.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
 
-The tail is:
-
-free block count 3306944 mismatches with a correct one 4783644.
-on-disk bitmap does not match to the correct one. 1476700 bits differ
-
-With the new reiserfs version, it actually says "fixed", the older 
-version didn't say that (except at the beginning), and I don't think 
-they really fixed anything.
-
-Although those "free block count mismatch/correct" numbers look like 
-they did for all previous runs, this run with the new software said 
-nothing of (something like) "10 ... must be fixed with 
---rebuild-tree".  It still doesn't boot.
-
-On to the "--rebuild-tree" pass.  Wish me luck.
-
-Chris
+--
+____________________________________________________________________
+ Stefan Huber
+ EDS Information Business GmbH
+ Storage Management
+ Telefon   +41(0)52 674 86 56
+ Fax       +41(0)52 674 86 94
+ e-mail  stefan.huber@eds.com
