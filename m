@@ -1,13 +1,13 @@
-Return-Path: <jdomingo@crosswinds.net>
-Date: Sun, 12 Aug 2001 18:39:21 +0000
-From: =?iso-8859-1?Q?Jos=E9_Luis_Domingo_L=F3pez?= <jdomingo@internautas.org>
+Return-Path: <lembark@jeeves.wrkhors.com>
+Date: Sun, 12 Aug 2001 11:39:52 -0500
+From: Steven Lembark <lembark@jeeves.wrkhors.com>
 Subject: Re: [linux-lvm] Writing forward compatible applications using /proc
-Message-ID: <20010812183921.A13267@dardhal.mired.net>
-References: <20010811235718.A20414@linux.com> <20010812135402.A452@dardhal.mired.net> <20010812113846.B20414@linux.com>
-Mime-Version: 1.0
+Message-ID: <193560000.997634392@dizzy>
+In-Reply-To: <20010812135402.A452@dardhal.mired.net>
+References: <20010812135402.A452@dardhal.mired.net>
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20010812113846.B20414@linux.com>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -19,31 +19,30 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset="iso-8859-1"; format="flowed"
 To: linux-lvm@sistina.com
 
-On Sunday, 12 August 2001, at 11:38:46 -0400,
-Jason Tackaberry wrote:
 
-> * Jos� Luis Domingo L�pez (jdomingo@internautas.org) [010812 07:57]:
-> > Kernel parameters, system information, kernel variables and kernel
-> > tunables will probably disappear and will be replaced by some sort of
-> > user-space application that will allow query and modfication of kernel
-> > values and tunables. Something similar to Solaris' ndd, AFAIK.
-> 
-> Any ideas when this will be implemented?  I suppose I could build it
-> around /proc, but just make it modular enough that I can switch to some
-> ndd-alike in the future.
-> 
-Don't know about exact timeframes, but it seems one of the things on the
-linux kernel 2.5.x TODO list. Maybe its time to ask about it on the linux
-kernel mailing list :)
+-- Jos=E9 Luis Domingo L=F3pez <jdomingo@internautas.org>
 
-Greetings.
+> As far as I know, there are plans to remove much of the thingss that
+> currently appear under /proc. It seems that only information about
+> processes currently running will remain under /proc.
+>
+> Kernel parameters, system information, kernel variables and kernel
+> tunables will probably disappear and will be replaced by some sort of
+> user-space application that will allow query and modfication of kernel
+> values and tunables. Something similar to Solaris' ndd, AFAIK.
 
--- 
-Jos� Luis Domingo L�pez
-Linux Registered User #189436     Debian GNU/Linux Potato (P166 64 MB RAM)
- 
-jdomingo EN internautas PUNTO org  => � Spam ? Atente a las consecuencias
-jdomingo AT internautas DOT   org  => Spam at your own risk
+Too bad.  Having a consistent interface for examining the values (vs
+relying on a -- possibly out of date -- command line tool) is a nice
+feature for system management.  Being able to 'cat blah' is uniform
+across versions.  This is especially nice for checking scsi params,
+etc, that effect LVM and friends.
+
+Any ides why they the /proc information is being dropped?
+
+--
+Steven Lembark                                               2930 W. Palmer
+Workhorse Computing                                       Chicago, IL 60647
+                                                            +1 800 762 1582
