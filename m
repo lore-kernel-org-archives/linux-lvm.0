@@ -1,9 +1,10 @@
-Return-Path: <austin@coremetrics.com>
-Date: Wed, 23 May 2001 17:38:25 -0500 (CDT)
-From: Austin Gonyou <austin@coremetrics.com>
-Subject: Re: [linux-lvm] ORACLE OPS and Fibre channel
-In-Reply-To: <85256A55.0061ED1B.00@IBJS06DS.ibjs.com>
-Message-ID: <Pine.LNX.4.33.0105231738160.26113-100000@UberGeek.coremetrics.com>
+Return-Path: <adilger@turbolinux.com>
+From: Andreas Dilger <adilger@turbolinux.com>
+Message-Id: <200105232256.f4NMuZgf030596@webber.adilger.int>
+Subject: Re: [linux-lvm] Converting my Root file system to LVM
+In-Reply-To: <990627110.1179.0.camel@localhost> "from Rupert Heesom at May 23,
+ 2001 10:11:45 am"
+Date: Wed, 23 May 2001 16:56:35 -0600 (MDT)
 MIME-Version: 1.0
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
@@ -16,51 +17,32 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-I think you need the raw_io patch.
+Rupert writes:
+> The expanding the LV & file system using e2fsadm is what I'm dithering
+> about now.   I think it's necessary to umount the LV to change it's size
+> (my e2fsadm is using the resize2fs util).  Since my current new root is
+> already an LVM partition, I need some way of unmounting it, doing the
+> LVM work on it, then remounting it.
+> 
+> I think the miniroot ramdisk which Steve Wray pointed out is probably my
+> answer. However I do wonder whether it's possible to do this another
+> way?   The miniroot ramdisk is still a great idea that I will implement.
 
+If you patch your kernel with the online ext2 patches, you can resize
+your root partition while it is still mounted.  You will still need a
+reboot to install the new kernel, however, but only the one time.  See
+http://sourceforge.net/projects/ext2resize/
+
+It still isn't a bad idea to have a small non-LVM partition on one of
+your disks which has a kernel you can boot from, along with useful
+tools in /lib and /sbin.  I guess miniroot is such a thing.
+
+Cheers, Andreas
 -- 
-Austin Gonyou
-Systems Architect, CCNA
-Coremetrics, Inc.
-Phone: 512-796-9023
-email: austin@coremetrics.com
-
-On Wed, 23 May 2001, Slava Tulchinsky wrote:
-
->
->
-> After successfully installing Oracle 8.1.7.0.1 OPS on Redhat 6.2 with
-> 2.2.19-6.2.1 using Compaq fibre channel card RA4000 to connect to Compaq
-> external drive enclosure RA4100 (kernel driver cpqfc), We decided see if OPS
-> will work with lvm 0.9.1-Beta7. After following all the instructions in INSTALL
-> and README files was able to compile patch file. when running the patch against
-> kernel sorce genhd.c.rej was created, I was still able to compile the kernel and
-> install lvm. LVM part seems to work fine, but when booting with the newly
-> compiled
-> kernel no longer able to use raw partitions with OPS with or without LVM.
->
-> Corrupt block relative dba: 0x00000001 (file 0, block 1)
-> Fractured block found during control file header read
-> Data in bad block -
-> type: 21 format: 2 rdba: 0x00000001
-> last change scn: 0xffff.00000002 seq: 0x1 flg: 0x04
-> consistency value in tail: 0x00000000
-> check value in block header: 0x3574, computed block checksum: 0x9a9
-> spare1: 0x0, spare2: 0x0, spare3: 0x
->
-> Corrupt block relative dba: 0x00000001 (file 0, block 1)
-> Fractured block found during control file header read
-> Data in bad block -
-> type: 21 format: 2 rdba: 0x00000001
-> last change scn: 0xffff.00000002 seq: 0x1 flg: 0x04
-> consistency value in tail: 0x00000000
-> check value in block header: 0x3574, computed block checksum: 0x9a9
-> spare1: 0x0, spare2: 0x0, spare3: 0x
->
-> When booting with the original kernal everything is OK
->
->
+Andreas Dilger  \ "If a man ate a pound of pasta and a pound of antipasto,
+                 \  would they cancel out, leaving him still hungry?"
+http://www-mddsp.enel.ucalgary.ca/People/adilger/               -- Dogbert
