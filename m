@@ -1,11 +1,9 @@
-Date: Mon, 3 Sep 2001 01:39:54 -0400
-Subject: Re: [linux-lvm] LVM, defvs and initrd (for lvm rootfs)
-Message-ID: <20010903013954.V3385@pc.ilinx>
-References: <20010903000930.T3385@pc.ilinx> <002701c13436$3f5b2220$0b01a8c0@myplace.net>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <002701c13436$3f5b2220$0b01a8c0@myplace.net>
-From: "Brian J. Murrell" <lvm@interlinx.bc.ca>
+Message-ID: <006b01c13448$755ea0b0$0df1d981@piefke>
+From: "Alexander Bruns" <a.bruns@sauerland.de>
+Date: Mon, 3 Sep 2001 09:17:14 +0200
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] Foreign HD with LVM-Partition, how to read Data?
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -18,20 +16,42 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Mon, Sep 03, 2001 at 07:06:53AM +0200, Bas wrote:
-> Hi,
-> 
-> Run vgscan (without parameters) at the end of rc.sysinit.
+Hi,
 
-Should have mentioned... I have tried this.  vgscan tries to create
-the /dev/<volume group/* nodes (with mknod(2)) but it fails,
-presumably because devfs[d] does not allow it (the node creation with
-mknod(2))?  I have not looked much into devfs[d] yet.
+I hot a HardDrive from a crashed System. The System-Harddrive is 
+not recoverable, but the Harddrive with the LVM-Partition on it, 
+is still "alive".
 
-b.
+There was only one Partition in the VolumeGroup, so all the Data 
+in the Logical Volume is on this single Partition.
 
--- 
-Brian J. Murrell
+Is there a way in to get the data read out of the Partition? It 
+was formated with reiserfs on a RedHat Linux 7.1.
+
+I activated the Hardware in my System and have now the same Running:
+
+- RedHat 7.1 with all updates.
+- self-compiled Kernel 2.4.6 with patched lvm 0.9.1_beta7
+
+[root@holodeck lvmconf]# pvdisplay /dev/hda7
+pvdisplay
+--- Physical volume ---
+PV Name               /dev/hda7
+VG Name               lvm_volume_01
+PV Size               48.54 GB / NOT usable 1.06 MB [LVM: 169 KB]
+PV#                   1
+PV Status             available
+Allocatable           yes (but full)
+Cur LV                1
+PE Size (KByte)       4096
+Total PE              12425
+Free PE               0
+Allocated PE          12425
+PV UUID               cFFBJX-aqxr-P7kU-71OY-pgpX-rvtA-XxVpoc
+
+
+So is there a way to get the data read out of this partition?
+
+Greetings from Alex
