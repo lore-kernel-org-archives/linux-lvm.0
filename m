@@ -1,87 +1,49 @@
 From: Heinz Mauelshagen <mauelsha@ez-darmstadt.telekom.de>
-Message-Id: <200001011744.SAA26924@u9etz.ez-darmstadt.telekom.de>
-Subject: [linux-lvm] Re: vgcreate 0.8-pre02.10.1999 segfault
-In-Reply-To: <Pine.LNX.3.96.991227224159.11416C-100000@thelma.ing.umu.se> from Niklas Edmundsson at "Dec 27, 1999 11:10:55 pm"
-Date: Sat, 1 Jan 2000 18:44:41 +0100 (MET)
+Message-Id: <200001011813.TAA27045@u9etz.ez-darmstadt.telekom.de>
+Subject: Re: [linux-lvm] Preserving LVs
+In-Reply-To: <Pine.LNX.4.10.9912301401320.5932-100000@prag.datech2.er.heitec.net> from Holger Rauch at "Dec 30, 1999  2: 6:37 pm"
+Date: Sat, 1 Jan 2000 19:13:12 +0100 (MET)
 Mime-Version: 1.0
 Content-Transfer-Encoding: 7bit
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: Niklas Edmundsson <nikke@ing.umu.se>
-Cc: linux-lvm@msede.com
+To: Holger.Rauch@datech.heitec.de
+Cc: linux-lvm@msede.com, mge@ez-darmstadt.telekom.de
 
 
-Hi Nikke and a happy new year.
+Hapy new year Holger.
 
-Please try replacing the end of tools/lib/lvm_tab_vg_check_exist_all_vg.c
-starting from line 94 by:
+> Hi!
+> 
+> How can I preserve existing LVs (such as the ones used for the
+> "/usr/local" and "/home" fs) over new installations?
 
-   if ( ret < 0 || size < 2) {
-      if ( data != NULL) {
-         free ( data);
-         data = NULL;
-      }
-      if ( vg_name_ptr     != NULL)      free ( vg_name_ptr);
-      else if ( vg_name_ptr_sav != NULL) free ( vg_name_ptr_sav);
-   }
 
-   return vg_name_ptr;
-}
+If you don't touch the disks/partitions where the physical volumes forming
+the volume group containing your logical volumes reside, just do
+a vgscan after upgrading/reinstalling Linux (including LVM).
 
-and retry.
+It just searches the disks to find all physical volumes, rebuilds the working
+VGDA (Volume Group Descriptor Area) file in /etc/lvmtab.d/ and reinserts
+the voulume grouo name in /etc/lvmtab.
+"vgchange -ay" afterwards activates the VG(s) to
+access the "/usr/local" etc. LVs.
+
+> Sure, the kernel
+> resides in "/boot", so I can keep that as well, but all the user mode
+> tools are gone.
+> >From time to time it's just necessary to do a complete installation from
+> scratch to keep track with the latest Linux distributions (the "update"
+> function doesn't always work), and I don't want to run into problems
+> later. That's why I'm asking this question here.
+> 
+
+Hope the above information covers what you are searching for 8*)
 
 Regards,
 Heinz
-
-
-> 
-> Tools: LVM-0.8-pre02.10.1999
-> Kernel: patch-2.2.13-LVM-0.8i.gz (running on 2.2.13).
-> 
-> Compiled as a module (I couldn't get it to compile directly into the
-> kernel, some silly linker-error pertaining to lvm_init).
-> 
-> The machine had existing PV/VG/LV:s from the 0.7-version, but since it
-> is a test-machine I decided to try 0.8 on it.
-> 
-> It detected the existing config and all was nice. Then i removed all
-> existing LV/VG:s and tried to create a new VG, giving me:
-> 
-> # vgcreate -d disk_lv /dev/hda5
-> vg_check_name -- CALLED
-> vg_check_name -- vg_name: "disk_lv"
-> lvm_check_chars -- CALLED
-> lvm_check_chars -- LEAVING
-> vg_check_name -- LEAVING with ret: 0
-> lvm_get_iop_version -- CALLED
-> lvm_get_iop_version -- AFTER ioctl ret: 0
-> lvm_get_iop_version -- LEAVING with ret: 0
-> lvm_tab_vg_check_exist -- CALLED with vg_name: "disk_lv"
-> vg_check_name -- CALLED
-> vg_check_name -- vg_name: "disk_lv"
-> lvm_check_chars -- CALLED
-> lvm_check_chars -- LEAVING
-> vg_check_name -- LEAVING with ret: 0
-> lvm_tab_read -- CALLED
-> lvm_tab_read -- LEAVING with ret: 0  data: 804CC28  size: 1
-> lvm_tab_vg_check_exist -- LEAVING with ret: 0
-> lvm_tab_vg_check_exist_all_vg -- CALLED
-> Segmentation fault (core dumped)
-> 
-> I then remade the PV (pvcreate forced me to change the ID of hda5 to
-> 0x8e in the process). Results are the same...
-> 
-> Have I stumbled into some stupid bug that makes it impossible to
-> create a vg if you don't have one or ... ??
-> 
-> 
-> Please get in touch if you need more information than I have given
-> here, I guess you'll be needing that if you can't reproduce it
-> easily...
-> 
-> 
 
 -- 
 
