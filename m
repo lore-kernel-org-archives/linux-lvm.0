@@ -1,10 +1,10 @@
-From: "IT3 Stuart B. Tener, USNR-R" <stuart@bh90210.net>
-Subject: RE: [linux-lvm] LVM
-Date: Thu, 13 Sep 2001 09:50:06 -0700
-Message-ID: <NBBBJHKIOKPKOGOEPEDPEEELDNAA.stuart@bh90210.net>
+Message-ID: <3BA0E6E9.6070108@st-peter.stw.uni-erlangen.de>
+Date: Thu, 13 Sep 2001 19:03:37 +0200
+From: svetljo <galia@st-peter.stw.uni-erlangen.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-In-reply-to: <3BA0AE16.1A4F69F@carolina.rr.com>
+Subject: Re: [linux-lvm] LVM
+References: <NBBBJHKIOKPKOGOEPEDPEEELDNAA.stuart@bh90210.net>
+Content-Transfer-Encoding: 7bit
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,34 +16,63 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: linux-lvm@sistina.com
 
-TXIuIEVkZ2Vjb21iZToNCg0KCUFoLCBJIHVuZGVyc3RhbmQuIFllcywgSSBhbSB0cnlpbmcgdG8g
-TFZNaXplIG15IHJvb3QgcGFydGl0aW9uLg0KDQoNClZlcnkgUmVzcGVjdGZ1bGx5LCANCg0KU3R1
-YXJ0IEJsYWtlIFRlbmVyLCBJVDMsIFVTTlItUiwgTjNHV0cgDQpCZXZlcmx5IEhpbGxzLCBDYWxp
-Zm9ybmlhDQpWVFUgMTkwNEcgKFZvbHVudGVlciBUcmFpbmluZyBVbml0KSANCnN0dWFydEBiaDkw
-MjEwLm5ldCANCndlc3QgY29hc3Q6ICgzMTApLTM1OC0wMjAyIFAuTy4gQm94IDE2MDQzLCBCZXZl
-cmx5IEhpbGxzLCBDQSA5MDIwOS0yMDQzIA0KZWFzdCBjb2FzdDogKDIxNSktMzM4LTYwMDUgUC5P
-LiBCb3ggNDU4NTksIFBoaWxhZGVscGhpYSwgUEEgMTkxNDktNTg1OSANCg0KVGVsZWNvcGllcjog
-KDQxOSktNzE1LTYwNzMgZmF4IHRvIGVtYWlsIGdhdGV3YXkgdmlhIHd3dy5lZmF4LmNvbSAoaXQn
-cyBmcmVlISkgDQoNCkpPSU4gVEhFIFVTIE5BVlkgUkVTRVJWRSwgU0VSVkUgWU9VUiBDT1VOVFJZ
-LCBBTkQgQkVORUZJVCBGUk9NIElUIEFMTC4gDQoNClRodXJzZGF5LCBTZXB0ZW1iZXIgMTMsIDIw
-MDEgOTo0OSBBTQ0KDQotLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KRnJvbTogbGludXgtbHZt
-LWFkbWluQHNpc3RpbmEuY29tIFttYWlsdG86bGludXgtbHZtLWFkbWluQHNpc3RpbmEuY29tXU9u
-IEJlaGFsZiBPZiBKYXNvbiBFZGdlY29tYmUNClNlbnQ6IFRodXJzZGF5LCBTZXB0ZW1iZXIgMTMs
-IDIwMDEgNjowMSBBTQ0KVG86IGxpbnV4LWx2bUBzaXN0aW5hLmNvbQ0KU3ViamVjdDogUmU6IFts
-aW51eC1sdm1dIExWTQ0KDQp5b3UgTVVTVCBydW4gbHZtY3JlYXRlX2luaXRyZCBhbmQgdXNlIHRo
-ZSBpbml0cmQgaXQgY3JlYXRlcyBpZiB5b3UgcnVuDQphbiBMVk0gcm9vdCBmcy4NCg0KSXQgZG9l
-c24ndCBtYXR0ZXIgaWYgTFZNIGlzIGluIHRoZSBrZXJuZWwgb3IgYXMgYSBtb2R1bGUuIElmIHlv
-dXIgcm9vdA0KaXMgbm90IGluIExWTSwgdGhlbiBJIGRvbid0IHRoaW5rIHRoYXQgeW91IGhhdmUg
-dG8gdXNlIGluaXRyZC4NCg0KU2luY2VyZWx5LA0KSmFzb24gRWRnZWNvbWJlDQoNCg0KIklUMyBT
-dHVhcnQgQi4gVGVuZXIsIFVTTlItUiIgd3JvdGU6DQo+ICAgICAgICAgU28gZm9yIExWTSwgeW91
-IGRvIG5lZWQgdG8gdXNlIHRoZSBsdm1jcmVhdGVfaW5pdHJkIHByb2dyYW0gb3Igbm90PyBJIGFt
-IHN0aWxsIG5vdCBjbGVhciBvbiB0aGF0Lg0KPg0KPiAgICAgICAgIElmIEkgbmVlZCB0byBtYWtl
-IGFuIGx2bWNyZWF0ZV9pbml0cmQsIGRvZXMgbm90IHRoYXQgbWVhbiBpdCBjYW5ub3QgYmUgaW4g
-dGhlIGtlcm5lbD8NCg0KX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX18NCmxpbnV4LWx2bSBtYWlsaW5nIGxpc3QNCmxpbnV4LWx2bUBzaXN0aW5hLmNvbQ0KaHR0
-cDovL2xpc3RzLnNpc3RpbmEuY29tL21haWxtYW4vbGlzdGluZm8vbGludXgtbHZtDQpyZWFkIHRo
-ZSBMVk0gSE9XLVRPIGF0IGh0dHA6Ly93d3cuc2lzdGluYS5jb20vbHZtL1BhZ2VzL2hvd3RvLmh0
-bWwNCg==
+Hi
+it should be
+
+lvmcreate_initrd --nomod 2.4.8-12mdk
+and it should create /boot/initrd-lvm-2.4.8-12mdk.gz -- the lvm-initrd
+
+IT3 Stuart B. Tener, USNR-R wrote:
+
+>Mr. Edgecombe:
+>
+>	Ah, I understand. Yes, I am trying to LVMize my root partition.
+>
+>
+>Very Respectfully, 
+>
+>Stuart Blake Tener, IT3, USNR-R, N3GWG 
+>Beverly Hills, California
+>VTU 1904G (Volunteer Training Unit) 
+>stuart@bh90210.net 
+>west coast: (310)-358-0202 P.O. Box 16043, Beverly Hills, CA 90209-2043 
+>east coast: (215)-338-6005 P.O. Box 45859, Philadelphia, PA 19149-5859 
+>
+>Telecopier: (419)-715-6073 fax to email gateway via www.efax.com (it's free!) 
+>
+>JOIN THE US NAVY RESERVE, SERVE YOUR COUNTRY, AND BENEFIT FROM IT ALL. 
+>
+>Thursday, September 13, 2001 9:49 AM
+>
+>-----Original Message-----
+>From: linux-lvm-admin@sistina.com [mailto:linux-lvm-admin@sistina.com]On Behalf Of Jason Edgecombe
+>Sent: Thursday, September 13, 2001 6:01 AM
+>To: linux-lvm@sistina.com
+>Subject: Re: [linux-lvm] LVM
+>
+>you MUST run lvmcreate_initrd and use the initrd it creates if you run
+>an LVM root fs.
+>
+>It doesn't matter if LVM is in the kernel or as a module. If your root
+>is not in LVM, then I don't think that you have to use initrd.
+>
+>Sincerely,
+>Jason Edgecombe
+>
+>
+>"IT3 Stuart B. Tener, USNR-R" wrote:
+>
+>>        So for LVM, you do need to use the lvmcreate_initrd program or not? I am still not clear on that.
+>>
+>>        If I need to make an lvmcreate_initrd, does not that mean it cannot be in the kernel?
+>>
+>
+>_______________________________________________
+>linux-lvm mailing list
+>linux-lvm@sistina.com
+>http://lists.sistina.com/mailman/listinfo/linux-lvm
+>read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
+>
