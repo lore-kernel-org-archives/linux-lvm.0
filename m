@@ -1,7 +1,7 @@
-Message-ID: <00ca01c31347$4e16d1f0$ec36ca51@desi>
+Message-ID: <00d201c31347$b6616db0$ec36ca51@desi>
 From: "fnt" <FNT@mail.ono.es>
 References: <20030304114851.GA22965@hcsd.de> <3E64B885.1AF49EDA@silicide.dk> <20030304144121.GB23975@hcsd.de> <20030305143938.GI1513@gmx.de> <009601c3133d$fcdd24f0$ec36ca51@desi> <3EB6CC41.7020601@legato.com>
-Subject: Re: [linux-lvm] can i extend a volumen bigger 256 gigas ?thx-thanks for ur time
+Subject: Re: [linux-lvm] can i extend a volumen bigger 256 gigas ?thx
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
 Sender: linux-lvm-admin@sistina.com
@@ -14,13 +14,19 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon May  5 15:45:02 2003
+Date: Mon May  5 15:48:01 2003
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
 
-thx for ur time.
------ Original Message -----
+Hi,
+
+Recreating the VG , i will keep the data?
+thx
+
+Joaquin Ign.
+Best Regads-
+---- Original Message -----
 From: "Daniel Barbar" <dbarbar@legato.com>
 To: <linux-lvm@sistina.com>
 Sent: Monday, May 05, 2003 10:40 PM
