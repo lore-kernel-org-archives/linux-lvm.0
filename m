@@ -1,10 +1,11 @@
-Message-ID: <3B96B853.8090307@st-peter.stw.uni-erlangen.de>
-Date: Thu, 06 Sep 2001 01:42:11 +0200
-From: svetljo <galia@st-peter.stw.uni-erlangen.de>
-MIME-Version: 1.0
-Subject: Re: [linux-lvm] "anchoring" the logical volumes to physical volumes
-References: <20010905182615.A31878@beaver.iucha.org>
-Content-Transfer-Encoding: 7bit
+Date: Thu, 6 Sep 2001 08:44:18 +0200
+From: Luca Berra <bluca@comedia.it>
+Subject: Re: [linux-lvm] PBs with LVM over software RAID ( and XFS ? ext2 reiserfs?)
+Message-ID: <20010906084418.B18176@colombina.comedia.it>
+References: <B45465FD9C23D21193E90000F8D0F3DF404FF5@mailsrv.linkvest.com> <3B95E36E.6070703@st-peter.stw.uni-erlangen.de> <20010905120549.H32553@turbolinux.com> <3B966C63.7080309@st-peter.stw.uni-erlangen.de> <20010905123211.J32553@turbolinux.com> <3B96757E.9010201@st-peter.stw.uni-erlangen.de>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <3B96757E.9010201@st-peter.stw.uni-erlangen.de>; from galia@st-peter.stw.uni-erlangen.de on Wed, Sep 05, 2001 at 08:57:02PM +0200
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,39 +17,30 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
+On Wed, Sep 05, 2001 at 08:57:02PM +0200, svetljo wrote:
+> Andreas Dilger wrote:
+> >If you had one that previously worked, then start with that one and
+> >work forwards until it stops working (maybe dividing the kernel version
+> >numbers in half for each try to narrow it down quicker).
+...
+> i tried with 2.4.9-ac5 lvm-1.0 and vanila 2.4.9 lvm-1.0.1rc1
+> with all these kernels it seemd that the LVM is working but i couldn't 
+> format the LV with reiserfs and ext2
 
-Florin Iucha wrote:
+i have an older kernel 2.4.4-ac11 and it works beautifully.
+i will try to upgrade this weekend and will let you know.
+besides 2.4.9-ac does not even boot on my hardware.
 
->Hello!
->
->I have two SCSI harddisks of 4.5 GB each and I want to install Linux on them
->on top of LVM.
->
->I want to put / /boot /var /home /usr/local on the first disk and /usr on the
->second one.At the same time I want to have all partitions (except /boot) on 
->LVM so I can extend/snapshot them.
->
->I can take the obvious route of creating a PV on each of the harddisks and 
->putting them in the same VG and then splitting the VG into LV. But I want
->to make sure /usr gets on the second disk and all /usr and / get allocated
->at the beginning of the PV.
->
->I can simulate this by creating the first LVs than a LV that will fill up the
->first PV then the LV for /usr... But this is ugly and I am not sure is
->guaranteed to work.
->
->Any "smart" solution to this problem? Any plans to implement such a feature
->in lvcreate?
->
-i think it's already implemented, there should be an option which tells 
-lvcreate which PV's
-to use for the LV you are creating . see the man page to lvcreate or 
-lvcreate --help
+L.
 
->
->Thank you,
->florin
->
+-- 
+Luca Berra -- bluca@comedia.it
+        Communication Media & Services S.r.l.
+ /"\
+ \ /     ASCII RIBBON CAMPAIGN
+  X        AGAINST HTML MAIL
+ / \
