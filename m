@@ -1,9 +1,7 @@
-From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] Volume group not found on restart [resent]
-Message-ID: <20020522192048.A10578@sistina.com>
-References: <E631530D51ABD411B823009027855C5B0278B1@THOR> <20020522104412.C9107@sistina.com>
-Mime-Version: 1.0
-In-Reply-To: <20020522104412.C9107@sistina.com>; from mauelshagen@sistina.com on Wed, May 22, 2002 at 10:44:12AM +0200
+Message-ID: <E631530D51ABD411B823009027855C5B0278BE@THOR>
+From: Murthy Kambhampaty <Murthy.Kambhampaty@goeci.com>
+Subject: RE: [linux-lvm] Volume group not found on restart [resent]
+MIME-Version: 1.0
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,302 +12,80 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed May 22 12:24:02 2002
+Date: Wed May 22 12:59:02 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: linux-lvm@sistina.com
+To: "'linux-lvm@sistina.com'" <linux-lvm@sistina.com>
 
-Murthy,
+Heinz, the "gone one" has been gone for a long while. It was a single SCSI
+disk (/dev/sda) which I added to the VG to use for snapshotting db_dir (for
+backup) and would immediately lvremove (see the SnapBach.sh script below;
+not too sophisticated, just faithfully replicates the necessary keytrokes). 
 
-the metadata you sent to me directly shows, that 2 physical volumes belong
-to your volume group db_vol but only one can be found on /dev/rd/c0d0p6.
+However, the snapshot strategy did not work out for me (it was for backing
+up my production databases; I decided to get MySQL to hotcopy the databases,
+and then do a [xfs]dump of the filesystem containing the hotcopy). So, I did
+a vgreduce /dev/sda, but pvscan kept telling me it was still in VG "db_vol",
+so I did an lvmchange -R to see if I could "reset" the information, but that
+didn't work, so I rebooted and then pvscan only gave /dev/rd/c0d0p6 in
+"db_vol". NOTE: I was/am still learning to deal with LVM; I think I figured
+out that all I needed to do was a vgscan, which is what the reboot did; too
+much exposure to MS Windows, I guess ;(.
 
-Could you run "pvscan -u | grep 'Ziocgj-p7w3-9V5u-jEJX-rAgk-SMVu-VZd42S'"
-in order to see, if the other one is still there? In ase it is, please send
-its LVM metadata to me directly as you did with the one before.
+So, the preferred course here is to "to change the metadata in order to get
+rid of the gone physical volume", and all will be well. 
 
-What happened to the gone one?
-Has the underlying RAID device been removed accidentially?
-If it was a partition has the partition type been changed to something else
-but LVM? In this case and if the data in that partition hasn't been overwritten,
-you could change the type back.
+Thanks for your continuing assistance. Its really great that you got on top
+of this issue so quickly.
 
-If you can't get the physical volume back, there's hope to change the
-metadata in order to get rid of the gone physical volume.
-That could be possible, because logical volume "db_dir" seems to be allocated
-on /dev/rd/c0d0p6 only and "snap_db" on the gone physical volume.
+I look forward to your advice on the steps necessary for changing the
+metadata,
+	Murthy
 
-Another preferable option is to use LVM 1.1-rc2 (unstable; you can find that at
-www.sistina.com) and try access your volume group by activating
-it without quorum (that means that not all of its physical volumes are
-accessable) with "vgscan ; vgchange -qn -ay db_vol".
-This should enable you to retrieve all the data from "db_dir" in order to
-drop that volume group afterwards.
 
-Regards,
-Heinz    -- The LVM Guy --
+Begin script SnapBack.sh:
+#!/bin/bash
+# FN: SnapBack.sh
+# AB: Archives /home/db to a daily backup file on compa5
+# DT: 20020321
+# AU: Murthy Kambhampaty
 
-On Wed, May 22, 2002 at 10:44:12AM +0200, Heinz J . Mauelshagen wrote:
+SnapDir=/dev/db_vol/db_dir
+SnapLVName=snap_db
+SnapLVPath=/dev/db_vol/snap_db
+SnapMount=/mnt/dbsnap
+
+/sbin/lvcreate -s -l 4999 -n $SnapLVName $SnapDir ; \
+        mount -v -t xfs -o ro,nouuid,norecovery $SnapLVPath $SnapMount  ; \
+        cd $SnapMount ; \
+        /opt/schily/bin/star -czl \
+                f=/mnt/dbback/$(date +%A)_snap.tar . ; \
+        cd / ; \
+        umount -v $SnapMount ; \
+        /sbin/lvremove -f $SnapLVPath
+End SnapBack.sh script.
+
+> -----Original Message-----
+> From: Heinz J . Mauelshagen [mailto:mauelshagen@sistina.com]
+> Sent: Wednesday, May 22, 2002 13:21
+> To: linux-lvm@sistina.com
+> Subject: Re: [linux-lvm] Volume group not found on restart [resent]
+> 
+> 
 > 
 > Murthy,
 > 
-> in order to help you further, please send me (mge@sistina.com)
-> the follwing output (file db_vol.vgda) bzip2 compressed:
+> the metadata you sent to me directly shows, that 2 physical 
+> volumes belong
+> to your volume group db_vol but only one can be found on 
+> /dev/rd/c0d0p6.
 > 
-> dd if=/dev/dev/rd/c0d0p6 of=db_vol.vgda bs=1k count=4k
+...
 > 
-> Thanks,
-> Heinz
+> If you can't get the physical volume back, there's hope to change the
+> metadata in order to get rid of the gone physical volume.
+> That could be possible, because logical volume "db_dir" seems 
+> to be allocated
+> on /dev/rd/c0d0p6 only and "snap_db" on the gone physical volume.
 > 
-> On Thu, May 16, 2002 at 12:46:48PM -0400, Murthy Kambhampaty wrote:
-> > Heinz, yes, the init scripts run vgscan and vgchange, and report the error.
-> > Also, finding that the vg was not recognized and the lv was not mounted, I
-> > tried to do it manually, and got the same error. For your info, the messages
-> > generated by vgscan in debug mode (#/sbin/vgscan -d &> help.txt) are
-> > attached. Note that the LV is "data_dir" on the vg "db_vol" on the pv
-> > /dev/rd/c0d0p6.
-> > 
-> > Thanks for the help,
-> > 	Murthy
-> > 
-> > > -----Original Message-----
-> > > From: Heinz J . Mauelshagen [mailto:mauelshagen@sistina.com]
-> > > Sent: Thursday, May 16, 2002 10:25
-> > > To: linux-lvm@sistina.com
-> > > Subject: Re: [linux-lvm] Volume group not found on restart
-> > > 
-> > > 
-> > > 
-> > > Murthy,
-> > > 
-> > > did you try 'vgscan' before 'vgchange -ay' before 'mount'?
-> > > 
-> > > Regards,
-> > > Heinz    -- The LVM Guy --
-> > > 
-> > > On Tue, May 14, 2002 at 02:14:33PM -0400, Murthy Kambhampaty wrote:
-> > > > Indeed, yes. Output with -d option attached:
-> > > > 
-> > > > # /sbin/vgchange -a y -d
-> > > > <1> lvm_get_iop_version -- CALLED
-> > > > <22> lvm_check_special -- CALLED
-> > > > <22> lvm_check_special -- LEAVING
-> > > > <1> lvm_get_iop_version -- AFTER ioctl ret: 0
-> > > > <1> lvm_get_iop_version -- LEAVING with ret: 10
-> > > > <1> lvm_lock -- CALLED
-> > > > <22> lvm_check_special -- CALLED
-> > > > <22> lvm_check_special -- LEAVING
-> > > > <1> lvm_lock -- LEAVING with ret: 0
-> > > > <1> lvm_tab_vg_check_exist_all_vg -- CALLED
-> > > > <22> lvm_tab_read -- CALLED
-> > > > <22> lvm_tab_read -- LEAVING with ret: 0  data: 804D460  size: 1
-> > > > <1> lvm_tab_vg_check_exist_all_vg -- LEAVING with ret: 0
-> > > > vgchange -- no volume groups found
-> > > > 
-> > > > <1> lvm_unlock -- CALLED
-> > > > <1> lvm_unlock -- LEAVING with ret: 0
-> > > > 
-> > > > This is what let me to check the VGDA backups in 
-> > > /etc/lvmconf, and the
-> > > > output from "/sbin/vgcfgrestore -t -d -n db_vol  -ll" is 
-> > > reported in my
-> > > > original message (see copy below).
-> > > > 
-> > > > Thanks for the help,
-> > > > 	Murthy
-> > > > 
-> > > > > -----Original Message-----
-> > > > > From: John Moser [mailto:jmoser@erc.wisc.edu]
-> > > > > Sent: Tuesday, May 14, 2002 14:10
-> > > > > To: Murthy Kambhampaty
-> > > > > Cc: 'linux-lvm@sistina.com'
-> > > > > Subject: Re: [linux-lvm] Volume group not found on restart
-> > > > > 
-> > > > > 
-> > > > > Just a quick glance over your problem (I'm not too familiar 
-> > > > > with the rest
-> > > > > of your problem).  But the most common reason for that 
-> > > > > particular error
-> > > > > (not a valid block device), is because the volume group 
-> > > isn't active.
-> > > > > Have you tried:
-> > > > > 
-> > > > > vgchange -a y
-> > > > > 
-> > > > > first, and then try to mount your filesystem?
-> > > > > 
-> > > > > -John
-> > > > > 
-> > > > > 
-> > > > > On Tue, 14 May 2002, Murthy Kambhampaty wrote:
-> > > > > 
-> > > > > > I have an unexpected error reading an LV:
-> > > > > >
-> > > > > > # mount -a
-> > > > > > mount: /dev/db_vol/db_dir is not a valid block device
-> > > > > >
-> > > > > > I'd like help recovering the data on the partition. 
-> > > > > Information about the
-> > > > > > circumstance under which I first got the error, and some 
-> > > > > addtional info are
-> > > > > > attached below. The system is a RH7.2 system installed with 
-> > > > > the XFS1.0.2a
-> > > > > > installer and updated to the XFS CVS kernel from April 4. 
-> > > > > (LVM version in
-> > > > > > kernel with LVM tools from lvm-tools-1.0.1rc4-2 rpm).
-> > > > > >
-> > > > > > Thanks for the help,
-> > > > > > 	Murthy
-> > > > > >
-> > > > > > Addtional information follows:
-> > > > > >
-> > > > > > I have a VG called "db_vol" and an LV within called 
-> > > > > "db_dir" on a hardware
-> > > > > > RAID-5 volume hanging off a Mylex Acceleraid 352 raid 
-> > > > > controller (linux
-> > > > > > DAC960 driver). This volume has been up and functional, 
-> > > with an XFS
-> > > > > > filesystem for a while (the last VGDA backup is from March 
-> > > > > 21). Yesterday, I
-> > > > > > added a new RAID set and did a test on the new volume 
-> > > > > (defined a single
-> > > > > > (linux native) primaly partition and XFS filesystem on the 
-> > > > > partition then
-> > > > > > mounted the partition to /mnt/tempmnt) with "time dd=/dev/zero
-> > > > > > of=/mnt/tempmnt/mungie.txt bs=512k count=10000". This led 
-> > > > > to my system
-> > > > > > slowing down and at logout I got an error message saying 
-> > > > > init was spawning
-> > > > > > ttys too fast. I power-cycled my machine after a short 
-> > > > > wait, with gritted
-> > > > > > teeth, and on the XFS check message, I chose "yes" to 
-> > > > > recheck the integrity
-> > > > > > of the XFS filesystems. The unexpected error message has 
-> > > > > been produced since
-> > > > > > then.
-> > > > > >
-> > > > > > vgdisplay output for the volume is:
-> > > > > >
-> > > > > > # /sbin/vgdisplay -d db_vol
-> > > > > > <1> lvm_check_kernel_lvmtab_consistency -- CALLED
-> > > > > > <22> vg_check_active_all_vg -- CALLED
-> > > > > > <333> vg_status_get_count -- CALLED
-> > > > > > <333> vg_status_get_count -- LEAVING with ret: 0
-> > > > > > <22> vg_check_active_all_vg -- LEAVING with ret: -331  
-> > > ptr: (null)
-> > > > > > <22> lvm_tab_vg_check_exist_all_vg -- CALLED
-> > > > > > <333> lvm_tab_read -- CALLED
-> > > > > > <333> lvm_tab_read -- LEAVING with ret: 0  data: 
-> > > 804B4A0  size: 1
-> > > > > > <22> lvm_tab_vg_check_exist_all_vg -- LEAVING with ret: 0
-> > > > > > <1> lvm_check_kernel_lvmtab_consistency -- LEAVING with ret: 1
-> > > > > > <1> lvm_get_iop_version -- CALLED
-> > > > > > <22> lvm_check_special -- CALLED
-> > > > > > <22> lvm_check_special -- LEAVING
-> > > > > > <1> lvm_get_iop_version -- AFTER ioctl ret: 0
-> > > > > > <1> lvm_get_iop_version -- LEAVING with ret: 10
-> > > > > > <1> vg_check_name -- CALLED with VG: db_vol
-> > > > > > <22> lvm_check_chars -- CALLED with name: "db_vol"
-> > > > > > <22> lvm_check_chars -- LEAVING with ret: 0
-> > > > > > <1> vg_check_name -- LEAVING with ret: 0
-> > > > > > <1> lvm_tab_vg_check_exist -- CALLED with vg_name: "db_vol"
-> > > > > > <22> vg_check_name -- CALLED with VG: db_vol
-> > > > > > <333> lvm_check_chars -- CALLED with name: "db_vol"
-> > > > > > <333> lvm_check_chars -- LEAVING with ret: 0
-> > > > > > <22> vg_check_name -- LEAVING with ret: 0
-> > > > > > <22> lvm_tab_read -- CALLED
-> > > > > > <22> lvm_tab_read -- LEAVING with ret: 0  data: 804B4A0  size: 1
-> > > > > > <1> lvm_tab_vg_check_exist -- LEAVING with ret: 0
-> > > > > > vgdisplay -- volume group "db_vol" not found
-> > > > > >
-> > > > > >
-> > > > > > When I check the db_vol.conf file in /etc/lvmconf, I get  
-> > > > > "vgcfgrestore --
-> > > > > > ERROR: different structure size stored in 
-> > > > > "/etc/lvmconf/db_vol.conf" than
-> > > > > > expected in file vg_cfgrestore.c [line 120]" (full command 
-> > > > > output below).
-> > > > > >
-> > > > > > /sbin/vgcfgrestore -t -d -n db_vol  -ll
-> > > > > > <1> vg_check_name -- CALLED with VG: db_vol
-> > > > > > <22> lvm_check_chars -- CALLED with name: "db_vol"
-> > > > > > <22> lvm_check_chars -- LEAVING with ret: 0
-> > > > > > <1> vg_check_name -- LEAVING with ret: 0
-> > > > > > <1> lvm_get_iop_version -- CALLED
-> > > > > > <22> lvm_check_special -- CALLED
-> > > > > > <22> lvm_check_special -- LEAVING
-> > > > > > <1> lvm_get_iop_version -- AFTER ioctl ret: 0
-> > > > > > <1> lvm_get_iop_version -- LEAVING with ret: 10
-> > > > > > <1> lvm_lock -- CALLED
-> > > > > > <22> lvm_check_special -- CALLED
-> > > > > > <22> lvm_check_special -- LEAVING
-> > > > > > <1> lvm_lock -- LEAVING with ret: 0
-> > > > > > <1> lvm_dont_interrupt -- CALLED
-> > > > > > <1> lvm_dont_interrupt -- LEAVING
-> > > > > > <1> vg_cfgrestore -- CALLED
-> > > > > > <22> vg_check_name -- CALLED with VG: db_vol
-> > > > > > <333> lvm_check_chars -- CALLED with name: "db_vol"
-> > > > > > <333> lvm_check_chars -- LEAVING with ret: 0
-> > > > > > <22> vg_check_name -- LEAVING with ret: 0
-> > > > > > vgcfgrestore -- ERROR: different structure size stored in
-> > > > > > "/etc/lvmconf/db_vol.conf" than expected in file 
-> > > > > vg_cfgrestore.c [line 120]
-> > > > > > <1> vg_cfgrestore -- LEAVING with ret: -328
-> > > > > > <1> lvm_error -- CALLED with: -328
-> > > > > > <1> lvm_error -- LEAVING with: "vg_cfgrestore(): read"
-> > > > > > vgcfgrestore -- ERROR "vg_cfgrestore(): read" restoring 
-> > > volume group
-> > > > > > "db_vol"
-> > > > > >
-> > > > > > <1> lvm_unlock -- CALLED
-> > > > > > <1> lvm_unlock -- LEAVING with ret: 0
-> > > > > >
-> > > > > >
-> > > > > >
-> > > > > > _______________________________________________
-> > > > > > linux-lvm mailing list
-> > > > > > linux-lvm@sistina.com
-> > > > > > http://lists.sistina.com/mailman/listinfo/linux-lvm
-> > > > > > read the LVM HOW-TO at 
-> > http://www.sistina.com/lvm/Pages/howto.html
-> > > > >
-> > > > 
-> > > 
-> > > _______________________________________________
-> > > linux-lvm mailing list
-> > > linux-lvm@sistina.com
-> > > http://lists.sistina.com/mailman/listinfo/linux-lvm
-> > > read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
-> 
-> *** Software bugs are stupid.
->     Nevertheless it needs not so stupid people to solve them ***
-> 
-> =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-> 
-> Heinz Mauelshagen                                 Sistina Software Inc.
-> Senior Consultant/Developer                       Am Sonnenhang 11
->                                                   56242 Marienrachdorf
->                                                   Germany
-> Mauelshagen@Sistina.com                           +49 2626 141200
->                                                        FAX 924446
-> =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-> 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
-
-*** Software bugs are stupid.
-    Nevertheless it needs not so stupid people to solve them ***
-
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-
-Heinz Mauelshagen                                 Sistina Software Inc.
-Senior Consultant/Developer                       Am Sonnenhang 11
-                                                  56242 Marienrachdorf
-                                                  Germany
-Mauelshagen@Sistina.com                           +49 2626 141200
-                                                       FAX 924446
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
