@@ -1,10 +1,11 @@
-Return-Path: <darren_young@yahoo.com>
-Message-ID: <20010508032320.75000.qmail@web10802.mail.yahoo.com>
-Date: Mon, 7 May 2001 20:23:20 -0700 (PDT)
-From: Darren Young <darren_young@yahoo.com>
-Subject: RE: [linux-lvm] Can't pvcreate second partition...
-In-Reply-To: <B51F0C636E578A4E832D3958690CD73E0130BEE3@es04snlnt>
+Return-Path: <sibomana@topo.ucl.ac.be>
+Message-ID: <3AF7A27E.F2A10E4F@topo.ucl.ac.be>
+Date: Tue, 08 May 2001 09:38:38 +0200
+From: Merence Sibomana <sibomana@topo.ucl.ac.be>
 MIME-Version: 1.0
+References: <20010503004851.897.qmail@web10803.mail.yahoo.com> <3AF0B857.74F16371@home.com> <wv4rv26hvj.fsf@freeze.oslo.dnmi.no> <20010504093350.D4700@sistina.com> <wvlmod7e23.fsf@freeze.oslo.dnmi.no> <20010504103827.A10758@sistina.com> <wvhez178t8.fsf@freeze.oslo.dnmi.no> <20010504133911.A11517@sistina.com>
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] (no subject)
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,35 +18,6 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-If it helps. Fdisk to a disk that had no other
-partitions on it. Create an extended, then a logical
-inside it of 12G. Mark it as type 8e. Run pvcreate on
-/dev/hdb5 (the logical) and had the doesn't exist
-message. Reboot, create the physical, group and
-logical then an ext2 fs on it and all is well.
-
-Kernel 2.4.2
-fdisk 2.10s
-LVM 0.9.1_beta6
-
-Hop over to a machine with:
-Kernel 2.4.2
-fdisk 2.10s
-_NO LVM_
-
-Same steps, except no change of type to 8e on the
-logical partition. Create ext2 on it and mount away.
-
-Maybe this helps...
-
-Darren Young
-
-
-
-__________________________________________________
-Do You Yahoo!?
-Yahoo! Auctions - buy the things you want at great prices
-http://auctions.yahoo.com/
+unsuscribe
