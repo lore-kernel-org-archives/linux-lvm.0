@@ -1,34 +1,50 @@
-Message-ID: <31A612FE6020D2119F6400A0C9B67EBB116E59@fthw901e.as.fth.sbs.de>
-From: Franken Klaus <Klaus.Franken@fth2.siemens.de>
-Subject: RE: [linux-lvm] vgscan in /sbin/init.d/boot ?
-Date: Wed, 10 Nov 1999 15:44:59 +0100
-MIME-Version: 1.0
+Message-Id: <199911111249.AA26995@mailgate1b.telekom.de>
+From: Heinz Mauelshagen <mauelsha@ez-darmstadt.telekom.de>
+Subject: Re: [linux-lvm] modular MD and LVM
+Date: Thu, 11 Nov 1999 13:46:47 MET
+In-Reply-To: <5lr9hzf1lc.fsf@tequila.cs.yale.edu>; from "Stefan Monnier" at Nov 09, 99 10:49 pm
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: 'Stephan Hendl' <Stephan.Hendl@lds.brandenburg.de>, linux-lvm@msede.com
+To: monnier+lists/linux/lvm/news/@tequila.cs.yale.edu
+Cc: mge@ts1.ez-darmstadt.telekom.de, linux-lvm@msede.com
 
-> -----Original Message-----
-> From: Stephan Hendl [mailto:Stephan.Hendl@lds.brandenburg.de]
-> Sent: Wednesday, November 10, 1999 10:05 AM
-> To: linux-lvm@msede.com
-> Subject: [linux-lvm] vgscan in /sbin/init.d/boot ?
-> 
-> 
-> Hi all,
-> 
-> does anybody know where I have to put the lines
-> 
-> vgscan
-> vgchange -ya
-> 
-> in the boot script? The docs don't tell something about the 
-> place. I use SuSE-Linux.
 
-The best place should be '/etc/rc.d/boot.local' (if / and /usr isn't in LVM)
-But not tested with SuSE-Linux.
+Hi Stefan,
 
-Klaus.Franken@fth2.siemens.de    +49 911 978 3707
-Siemens Business Services IP 23F
+basically the generic functions in the blk_dev_struct structure 
+will be reduced to one because this is sufficient for MD, GFS and LVM.
+
+But due to the fact that you can't push a lot of things to Linux
+at this point in time it will take us a while...
+
+Heinz
+
+> 
+> 
+> What happened to the patch that provided `map_fn' and `makerq_fn'
+> to allow MD, LVM (and GFS' Pool) to be made more modular ?
+> 
+> 
+> 	Stefan
+> 
+> PS: see http://linux.msede.com/lvm/mlist/archive/0269.html
+> 
+
+
+--
+
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+Systemmanagement CS-TS                           T-Nova
+                                                 Entwicklungszentrum Darmstadt
+Heinz Mauelshagen                                Otto-Roehm-Strasse 71c
+Senior Systems Engineer                          Postfach 10 05 41
+                                                 64205 Darmstadt
+mge@ez-darmstadt.telekom.de                      Germany
+                                                 +49 6151 886-425
+                                                          FAX-386
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
