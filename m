@@ -1,11 +1,11 @@
-Return-Path: <glenn@gecpalau.com>
-Message-ID: <3B090879.5020906@gecpalau.com>
-Date: Mon, 21 May 2001 21:22:17 +0900
-From: Glenn Shannon <glenn@gecpalau.com>
+Return-Path: <steve.wray@the.net.nz>
+From: "Steve Wray" <steve.wray@the.net.nz>
+Subject: RE: [linux-lvm] XFS and LVM
+Date: Tue, 22 May 2001 00:28:58 +1200
+Message-ID: <NBBBKLKHMJHIJLHOGAOJMELMIOAA.steve.wray@the.net.nz>
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] XFS and LVM
-References: <200105211217.OAA01245@fagot.it.uc3m.es>
 Content-Transfer-Encoding: 7bit
+In-Reply-To: <3B090879.5020906@gecpalau.com>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,22 +17,42 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
+Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
 
-Alvaro Garcia Barcena wrote:
+Oh yeah heres one to do with xfs;
+you can't shrink them so watch out.
 
-> 	I was wondering if anyone else out there is using XFS with LVM?
+Mind you, reiserfs is supposed to be shrinkable but,
+ahem, it didn't work...
+
+> -----Original Message-----
+> From: linux-lvm-admin@sistina.com [mailto:linux-lvm-admin@sistina.com]On
+> Behalf Of Glenn Shannon
+> Sent: Tuesday, May 22, 2001 12:22 AM
+> To: linux-lvm@sistina.com
+> Subject: Re: [linux-lvm] XFS and LVM
 > 
-> Yup. Now what? ;)
 > 
-> Regards, Alvaro
+> Alvaro Garcia Barcena wrote:
+> 
+> > 	I was wondering if anyone else out there is using XFS with LVM?
+> > 
+> > Yup. Now what? ;)
+> > 
+> > Regards, Alvaro
+> > _______________________________________________
+> > linux-lvm mailing list
+> > linux-lvm@sistina.com
+> > http://lists.sistina.com/mailman/listinfo/linux-lvm
+> > 
+> > 
+> Just looking mainly for tips/tricks/possible headaches.... got any? :)
+> 
+> Glenn
+> 
 > _______________________________________________
 > linux-lvm mailing list
 > linux-lvm@sistina.com
 > http://lists.sistina.com/mailman/listinfo/linux-lvm
 > 
-> 
-Just looking mainly for tips/tricks/possible headaches.... got any? :)
-
-Glenn
