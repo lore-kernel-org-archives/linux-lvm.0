@@ -1,11 +1,11 @@
 Return-Path: <root@srv.sistina.com>
-Date: Wed, 16 May 2001 10:10:43 +0000
+Date: Wed, 16 May 2001 10:25:06 +0000
 From: "Heinz J. Mauelshagen" <Mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] successes & resizing
-Message-ID: <20010516101043.A11984@sistina.com>
-References: <Pine.LNX.4.10.10105141942530.5506-100000@staff>
+Subject: Re: [linux-lvm] How to read internal physical volume number.
+Message-ID: <20010516102506.B11984@sistina.com>
+References: <3B01D28F.6FBB5BDD@earthlink.net>
 Mime-Version: 1.0
-In-Reply-To: <Pine.LNX.4.10.10105141942530.5506-100000@staff>; from todd@osogrande.com on Tue, May 15, 2001 at 09:21:29PM -0600
+In-Reply-To: <3B01D28F.6FBB5BDD@earthlink.net>; from stevecranage@earthlink.net on Tue, May 15, 2001 at 07:06:23PM -0600
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -21,83 +21,61 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Tue, May 15, 2001 at 09:21:29PM -0600, Todd Underwood wrote:
-> folx, 
-> 
-> i resolved the problem i posted about last week:  unable to mount root
-> device in trying to set up lvmroot using a bootable real ext2 partition
-> and initrd. they key (and this maybe a FAQ but i didn't see it) was
-> getting my scsi driver loaded into the initrd.  this was as simple as
-> unzipping the initrd-lvm-2.4.3.gz file, mouting on the loopback.  copying
-> the scsi module into place in /lib/modules and adding a modprobe to
-> linuxrc.  after that, all was good.  this may be worth documenting
-> somewhere (i was considering taking the existing info about lvm root and
-> doing a HOWTO given that i've set it up 5 or 8 times in the last two
-> weeks).
+On Tue, May 15, 2001 at 07:06:23PM -0600, Steve Cranage wrote:
+> I have a configuration with multiple paths to each pv, and need to sort
+> them out so I know which device names are alternate paths to the same
+> physical device. I had planned on using the internal serial number
+> written to the pv's  when a pvcreate is done.
 
-I'ld appreciate if you'ld enhance the HOWTO and send it to me in order
-to put it up on the web.
+I assume you mean the PV number here which actually sits in the 4th filed
+of the pvdisplay output.
 
-> 
-> i have a separate question about ext2 resizing on a separate system:  when
-> i try to resize the root (using the ext2online resize patch to 2.4.3) i
-> get:
-> 
-> Filesystem           1k-blocks      Used Available Use% Mounted on
-> /dev/rootvg/root        495844    250577    219667  54% /
-> /dev/rootvg/usr        2590504   1444748   1014072  59% /usr
-> /dev/rootvg/home       1032088        20    979640   1% /home
-> /dev/rootvg/var         495844    105794    364450  23% /var
-> /dev/hda1               101089      6029     89841   7% /boot
-> bash-2.04# e2fsadm -L +200M / 
-> e2fsadm -- invalid logical volume name "/dev/root"
-> 
-> 
-> e2fsadm [-d|--debug] [-h|--help] [-n|--nofsck]
-> 	{[-l|--extents] [+|-]LogicalExtentsNumber |
-> 	 [-L|--size] [+|-]LogicalVolumeSize[kKmMgGtT]}
-> 	[-t|--test] [-v|--verbose] [--version] LogicalVolumePath
-> 
-> bash-2.04# e2fsadm -L +200M /dev/rootvg/root 
-> lvextend -- extending logical volume "/dev/rootvg/root" to 700 MB
-> lvextend -- doing automatic backup of volume group "rootvg"
-> lvextend -- logical volume "/dev/rootvg/root" successfully extended
-> 
-> ext2online v1.1.17 - 2001/03/18 for EXT2FS 0.5b
-> new filesystem size 716800
-> ext2online: group 0, block 4 not reserved
-> 
-> ext2online: unable to resize /dev/rootvg/root past 524288 blocks
+For eg.
+/dev/sdb1:vg00:8883882:1:1:2:1:4096:1084:0:1084:VYJ317-t4in-pYv9-eHnu-*                   ^^^^         ^
 
-You only can extent ext2 filesystems within constraints given when you
-create them. In particular the block group descriptors are limited.
+-or-
 
-You could resize that filesystem offline using Ted Tso's resize2fs though.
+/dev/sdc1:vg00:8803557:2:1:2:1:4096:1074:633:441:12x4ti-BN3r-Oshu-MazC-*
+          ^^^^         ^
 
-BTW: your root LV now has 700M which makes me assume that you extended it to
-     500M before without extending the fs. You should reduce it to 500M
-     after you extended the fs to that size.
+Because the second field tells you, that both PVs belong to the same VG (named
+"vg00" in this example) you can figure out that /dev/sdb1 points to the PV
+with internal number 1 and /dev/sdc1 points to PV #2.
 
-Regards,
-Heinz    -- The LVM Guy --
+You can even use the last field of the " pvdisplay -c" output to
+base your search on PV UUIDs.
 
-> 
-> 
-> ------------------------
-> 
-> any suggestions?
-> 
-> todd underwood
-> vice president & 
->    chief technology officer
-> oso grande technologies, inc.
-> todd@osogrande.com
-> 
+BTW: the library function pv_read_all_pv_of_vg() which is used to read in
+     the PV metadata for the VG sorts out multiple access pathes today.
+     This will change in a future LVM version which will support multi pathing.
+
+>
+> The man pages for pvdisplay seem to indicate this is in the 4th field of
+> the output with the -c option, but alas, the -c option appears to not be
+> coded as it doesn't affect the output of the pvdisplay command.
+
+It should be (see my above example output).
+But you pointed me to a lack in the manual page. The 12th field (the PV UUID)
+wasn't discribed. Fixed it. Thanks.
+
+> How else
+> can I get the internal serial number?
+
+pvscan -u
+
+plus some shell/perl magic .
+
+> TIA
 > 
 > _______________________________________________
 > linux-lvm mailing list
 > linux-lvm@sistina.com
 > http://lists.sistina.com/mailman/listinfo/linux-lvm
+
+-- 
+
+Regards,
+Heinz    -- The LVM Guy --
 
 *** Software bugs are stupid.
     Nevertheless it needs not so stupid people to solve them ***
