@@ -1,8 +1,8 @@
-From: "Tom Parker" <tom@carrott.org>
-Message-ID: <1293.435T2650T11474321tom@carrott.org>
-MIME-Version: 1.0
-Content-transfer-encoding: 7bit
-Subject: [linux-lvm] Overlapping logical volumes
+From: Sebastian Beneke <sebastian@beneke-it.de>
+Message-Id: <20031101142538.34423cb0.sebastian@beneke-it.de>
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] One PV destroyed - now the whole VG isn't working anymore
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -13,42 +13,39 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Sat Nov  1 00:10:02 2003
+Date: Sat Nov  1 07:27:02 2003
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
 
-Hi,
+Hi there,
 
-I have just experianced a rather nasty bug in lvextend. I grew a logical
-volume and it used extents that were already in use for another logical
-volume.
+i've got a really big problem. My VG "storage" consists of two PVs:
+/dev/hdc (120GB full) and /dev/hde (160GB, 40 GB free). Now /dev/hde
+was destroyed by"dd if=/dev/zero of=/dev/diskname bs=1k count=1"
 
-I'm using Debian Woody and Linux 2.4.22 (unpatched Linus kernel.org sources)
+I did these steps until now:
 
-amislave:/# lvextend --help
+1.) copy back my old files: /etc/lvmconf/ /etc/lvmtab
+/etc/lvmtab.d/
 
-Logical Volume Manager 1.0.4
-Heinz Mauelshagen, Sistina Software  02/05/2002 (IOP 10)
+2.) take a new hdd (same type and size as my old /dev/hde)
 
-Luckily I noticed the corrupting filesystems fairly quickly and was able to
-mostly recover the situation with minimal losses. Currently I still have the
-two overlapping logical volumes and a lot less trust in the LVM than I had
-before.
+3.) pvcreate /dev/hde
 
-Is there a program that can validate the logical volume configuration and
-ensure that no physical extent is allocated to more the one logical volume?
+4.) vgcfgrestore -f /etc/lvmconf/storage.conf -n storage /dev/hde
 
-When extending a logical volume, or creating a new one, is anything written to
-the newly allocated extents? If this were to happen again, and I discovered
-the problem before I made use of the extra space or a new logical volume,
-would I have any corruption of the first logical volume to use the extents in
-question?
+===> This gave me following error: vgcfgrestore -- ERROR
+"vg_cfgrestore(): pv_check_consistency" restoring volume group
+"storage"
 
-To finish my data recovery, I would like to allocate another large logical
-volume, I'm somewhat wary of doing this without a tool to ensure that the
-group is valid.
+So just replacing the old disk doesn't work for me. I gave it up. But
+there are still 120GB of data on /dev/hdc, is there any way I can
+rescue this data? It hurts enough to lose 100GB, but I couldn't take
+it to lose another 120GB!
 
---
-Tom Parker - tom@carrott.org
-           - http://www.carrott.org
+I hope anybody can help me out here!
+
+
+Best Regards
+Sebastian
