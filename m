@@ -1,12 +1,12 @@
-Return-Path: <agk@uk.sistina.com>
-Date: Wed, 23 May 2001 14:18:35 +0100
-From: Alasdair G Kergon <agk@uk.sistina.com>
-Subject: Re: [linux-lvm] unsubscribe
-Message-ID: <20010523141835.C1478@uk.sistina.com>
-References: <006801c0e3eb$5c7efde0$2100000a@intranet.zeropiu.it>
+Return-Path: <blutgens@sistina.com>
+Date: Wed, 23 May 2001 09:39:16 -0500
+From: Ben Lutgens <blutgens@sistina.com>
+Message-ID: <20010523093916.A2585@minime.sistina.com>
 Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-md5;
+	protocol="application/pgp-signature"; boundary="zhXaljGHf11kAtnf"
 Content-Disposition: inline
-In-Reply-To: <006801c0e3eb$5c7efde0$2100000a@intranet.zeropiu.it>; from christianv@zeropiu.it on Thu, May 24, 2001 at 02:49:17AM +0200
+Subject: [linux-lvm] test
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -18,18 +18,33 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Thu, May 24, 2001 at 02:49:17AM +0200, Christian Verdelli wrote:
-> I don't see any link to unsunscribe from this list!!
-Mailman lists put this information into the message *headers* !
+--zhXaljGHf11kAtnf
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>
+Added some anti spam stuff. Making sure the posts still make it.
+--=20
+Ben Lutgens	=09
+Sistina Software Inc.=09
+MIS Geek
+http://www.sistina.com/	<--- great software=20
+http://www.gentoo.org/  <--- great distro
+Kernel panic: I have no root and I want to scream <--- perfect error message
 
-(The looping messages will stop very shortly. BTW)
+--zhXaljGHf11kAtnf
+Content-Type: application/pgp-signature
+Content-Disposition: inline
 
-Alasdair
--- 
-agk@uk.sistina.com
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.0.4 (GNU/Linux)
+Comment: For info see http://www.gnupg.org
+
+iD8DBQE7C8uULxkxGgLdGQgRAiioAKDODVb/2xfNcFvvWyAM4IErYvkr9gCgihEl
++Pbl9zgLztX4BNeljSuKhgI=
+=Dm2a
+-----END PGP SIGNATURE-----
+
+--zhXaljGHf11kAtnf--
