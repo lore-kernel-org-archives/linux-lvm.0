@@ -1,10 +1,11 @@
-Return-Path: <iafilius@xs4all.nl>
-Date: Sun, 15 Apr 2001 20:14:30 +0200 (CEST)
-From: Arjan Filius <iafilius@xs4all.nl>
-In-Reply-To: <20010415162451.F1982@suse.de>
-Message-ID: <Pine.LNX.4.31.0104152010320.1047-100000@sjoerd.sjoerdnet>
-MIME-Version: 1.0
-Subject: [linux-lvm] Re: 2.4.4-pre3: lvm.c patch results in "hanging" mount or swapon
+Return-Path: <andrew@lvadp.fc.hp.com>
+Message-Id: <200104161649.f3GGnOu02530@lvadp.fc.hp.com>
+Subject: Re: [linux-lvm] What is the the maximum logical volume size? 
+In-Reply-To: Message from Andreas Dilger <adilger@turbolinux.com> 
+   of "Fri, 13 Apr 2001 18:28:23 MDT." <200104140028.f3E0SNqE014656@webber.adilger.int> 
+Mime-Version: 1.0
+Date: Mon, 16 Apr 2001 10:49:24 -0600
+From: Andrew Patterson <andrew@lvadp.fc.hp.com>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,40 +17,41 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: Jens Axboe <axboe@suse.de>
-Cc: linux-kernel@vger.kernel.org, linux-lvm@sistina.com
+To: linux-lvm@sistina.com
+Cc: andrew@lvadp.fc.hp.com
 
-Hello,
+In your message on you write:
+> Andrew PAtterson writes:
+> > I am tring to figure out what the maximum logical volume size is.
+> 
+> It may be 1 TB or it may be 2TB.  Depends on whether all of the code
+> in use use uses unsigned longs for block numbers, or if some use signed
+> longs.  2TB is the outer limit for now (unless you start playing games
+> inside LVM, to have 4kB hard sector size, and remap to the disk 512 byte
+> sector size).
+> 
+> Does it really matter?  This is PER LV, 
 
-On Sun, 15 Apr 2001, Jens Axboe wrote:
+What does "PER" mean?
 
-> On Sun, Apr 15 2001, Arjan Filius wrote:
-> > Hello,
-> >
-> > While trying kernel 2.4.4-pre3 i found a "hanging" swapon (my swap is on
-> > LVM), same effect for "mount -a". 2.4.3 works properly.
-> >
-> > I found ./drivers/md/lvm.c is patched, and restoring the lvm.c from 2.4.3
-> > resulted in normal operation.
-> >
-> > I Found LVM/0.9.1_beta7 makes some notes about the patch, so i tried that
-> > (beta7), but no luck, only 2.4.3:lvm.c worked ok.
->
-> Small buglet in the buffer_IO_error out path, I maybe that's it...
+so if you really need to have an
+> LV that large, give it a try and let us know what works.  I've seen a
+> report of someone with a 1 TB device (some kind of HW RAID, not LVM)
+> under Linux, so I know that works, but I haven't seen larger yet.
 
-Dunno, i did som 'strace'ing and found it is waiting in read():
-open("/dev/vg_4/lv_images", O_RDONLY)   = 4
-lseek(4, 1024, SEEK_SET)                = 1024
-read(4,
-      (killed with SAK)
+Okay, I'll give it a try.  
 
+> 
+> I wouldn't want to be keeping all of my eggs in such a large basket.  I'd
+> much rather have several smaller filesystems, especially since you STILL
+> need to fsck on occasion (don't let reiserfs journaling fool you, you can
+> still have SW/HW problems that will corrupt the filesystem).
 
-Greatings,
+I agree with you, but I am not the sys-admin for the person who wants
+this capability.
 
+Thanks,
 
-
--- 
-Arjan Filius
-mailto:iafilius@xs4all.nl
+Andrew
