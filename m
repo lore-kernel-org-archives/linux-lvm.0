@@ -1,12 +1,10 @@
-Return-Path: <blutgens@sistina.com>
-Date: Thu, 4 Jan 2001 17:34:00 -0600
-From: Ben Lutgens <blutgens@sistina.com>
-Message-ID: <20010104173400.A2606@minime.sistina.com>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-md5;
-	protocol="application/pgp-signature"; boundary="qMm9M+Fa2AknHoGS"
-Content-Disposition: inline
-Subject: [linux-lvm] Sorry for the spam.
+Return-Path: <paul@clubi.ie>
+Date: Fri, 5 Jan 2001 03:56:46 +0000 (GMT)
+From: Paul Jakma <paul@clubi.ie>
+Subject: Re: [linux-lvm] LVM 0.9 vgscan problem
+In-Reply-To: <Pine.LNX.4.21.0101041545590.1281-300000@duckman.distro.conectiva>
+Message-ID: <Pine.LNX.4.30.0101050353430.31107-100000@fogarty.jakma.org>
+MIME-Version: 1.0
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -18,34 +16,30 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-To: linux-lvm@sistina.com
+Content-Type: TEXT/PLAIN; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: Rik van Riel <riel@conectiva.com.br>
+Cc: linux-lvm@sistina.com
 
---qMm9M+Fa2AknHoGS
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Thu, 4 Jan 2001, Rik van Riel wrote:
 
-I wasn't paying close attention when I was going through the list of spam on
-mailman's web interface and inadvertantly checked allow on a spam as opposed
-to discard.
+> Any chance this stuff gets fixed so I can go on testing
+> (fixing?) the 2.4 VM?  ;)
 
-I apologize for this. I'll try not make this mistake again.
---=20
-Ben Lutgens		cell: 612.670.4789
-Sistina Software Inc.	work: 612.379.5941
-Code Monkey Support (A.K.A. System Administrator)
+easy matter to strip the LVM update out of the 2.4.0-pre patch as it
+only touches LVM files:
 
---qMm9M+Fa2AknHoGS
-Content-Type: application/pgp-signature
-Content-Disposition: inline
+[root@hibernia /root]# uname -r ;  cat /proc/lvm | grep LVM
+2.4.0-prerelease
+LVM driver version 0.8final  (15/02/2000)
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.0.4 (FreeBSD)
-Comment: For info see http://www.gnupg.org
+Don't think it was a good idea to update to 0.9 in Linus kernel.
 
-iD8DBQE6VQhnLxkxGgLdGQgRAjNOAKCauX+NPwU2+eY4t8wIdfjdN0RFwACfRLD6
-u4zVEBvRsK5jTmliGvastq8=
-=a6zR
------END PGP SIGNATURE-----
-
---qMm9M+Fa2AknHoGS--
+regards,
+-- 
+Paul Jakma	paul@clubi.ie	paul@jakma.org
+PGP5 key: http://www.clubi.ie/jakma/publickey.txt
+-------------------------------------------
+Fortune:
+"Protozoa are small, and bacteria are small, but viruses are smaller
+than the both put together."
