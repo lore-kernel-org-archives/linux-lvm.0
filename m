@@ -1,56 +1,82 @@
-Message-ID: <00fe01bf403e$0524a1a0$0ebcfea9@brd>
-From: "Nicolas Brouard" <brouard@ined.fr>
-References: <Pine.LNX.4.10.9912051403290.22457-100000@aragorn.fra.suse.de>
-Subject: [linux-lvm] Re: Why would I want to have an LVM under Linux?
-Date: Tue, 7 Dec 1999 00:02:48 +0100
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Message-Id: <s84cb516.065@pgkvfax>
+Date: Tue, 07 Dec 1999 07:19:42 +0100
+From: "Stephan Hendl" <Stephan.Hendl@lds.brandenburg.de>
+Subject: Re: [linux-lvm] LVM and Compaq Smart Array - oncemore
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Disposition: inline
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: Volker Wiegand <wiegand@suse.de>
-Cc: Linux-LVM Mailing List <linux-lvm@msede.com>, Linus Torvalds <torvalds@transmeta.com>
+To: linux-lvm@msede.com
 
-> Having an LVM at your home PC is not the first priority, but it is really
-> desirable for business, especially for data center operations.  And Linux
-> is actually entering such environments, which I find is just great.
+Hi Dirk,
 
-The big advantage of LVM is when you have different physical disks and want
-to expand or even change a partition from one physical disk to another
-without rebooting. I did  it on AIX and it was great.
-But on small systems (and my original question concerned a laptop with only
-one physical IDE disk) the advantage of LVM is not so important if a tool
-like parted works well (Parted is similar on linux to Partition Magic on DOS
-or Windows).
+thanks for your response - here is the output. Hopefully it helps :-))
 
-I really think that a FAQ on a product like LVM should at least discuss
-other solutions like Parted and focus on the actual advantages or
-disadvantages of putting LVM on your hard disk: for example can an LVM
-partition be viewed from NT or Windows 9x? So long as Linux software won't
-be as good as Windows the market for linux will still be for people looking
-at both systems simultaneously (I hope that the Gnome project will be
-successful).
+Stephan
 
-Let us now talk on huge systems will plenty of people connected
-simultaneously so that it is not possible to 'reboot' while changing a disk.
-That kind of configuration hold when software and hard disk were expansive.
-If the success of Linux comes from the Free sources, it means that people
-can copy the softwares on their desktop on laptop for free. In statistic,
-for example, S-plus (R on linux) and SPSS (PSPP on linux) are now free,
-there is no more need for Linux mainframe with these costly softwares and
-plenty of students connected.
+root@sgate:/home/hendl > pvcreate -vd /dev/ida/c0d0p4
+lvm_get_iop_version -- CALLED
+lvm_get_iop_version -- AFTER ioctl ret: 0
+lvm_get_iop_version -- LEAVING with ret: 0
+pvcreate -- locking logical volume manager
+pvcreate -- checking physical volume name "/dev/ida/c0d0p4"
+pv_check_name -- CALLED
+lvm_check_chars -- CALLED
+lvm_check_chars -- LEAVING
+pv_check_name -- CALLED  pv_name: "/dev/ida/c0d0p4"
+pv_check_name -- LEAVING with ret: 0
+pvcreate -- getting physical volume size
+pv_get_size -- CALLED with /dev/ida/c0d0p4 and BFFFF72C
+pv_check_name -- CALLED
+lvm_check_chars -- CALLED
+lvm_check_chars -- LEAVING
+pv_check_name -- CALLED  pv_name: "/dev/ida/c0d0p4"
+pv_check_name -- LEAVING with ret: 0
+pv_check_part -- CALLED with /dev/ida/c0d0p4
+pv_check_name -- CALLED
+lvm_check_chars -- CALLED
+lvm_check_chars -- LEAVING
+pv_check_name -- CALLED  pv_name: "/dev/ida/c0d0p4"
+pv_check_name -- LEAVING with ret: 0
+pv_check_part -- LEAVING with 4
+lvm_dir_cache -- CALLED
+lvm_dir_cache -- calling scandir() with /dev/ida
+lvm_dir_cache -- AFTER calling scandir() with /dev/ida
+lvm_dir_cache -- calling scandir() with /dev/ide/hd
+lvm_dir_cache -- AFTER calling scandir() with /dev/ide/hd
+lvm_dir_cache -- calling scandir() with /dev/loop
+lvm_dir_cache -- AFTER calling scandir() with /dev/loop
+lvm_dir_cache -- calling scandir() with /dev/md
+lvm_dir_cache -- AFTER calling scandir() with /dev/md
+lvm_dir_cache -- calling scandir() with /dev/rd
+lvm_dir_cache -- AFTER calling scandir() with /dev/rd
+lvm_dir_cache -- calling scandir() with /dev/sd
+lvm_dir_cache -- AFTER calling scandir() with /dev/sd
+lvm_dir_cache -- calling scandir() with /dev
+lvm_dir_cache -- AFTER calling scandir() with /dev
+lvm_dir_cache -- LEAVING with cache_size: 692
+pv_get_size -- BEFORE llseek 0:0
+pv_get_size -- part[0].sys_ind: FE  part[0].nr_sects: 6005728
+pv_get_size -- first =3D=3D 1
+pv_get_size -- part[1].sys_ind: 0  part[1].nr_sects: 0
+pv_get_size -- first =3D=3D 1
+pv_get_size -- part[2].sys_ind: 0  part[2].nr_sects: 0
+pv_get_size -- first =3D=3D 1
+pv_get_size -- part[3].sys_ind: 0  part[3].nr_sects: 0
+pv_get_size -- first =3D=3D 1
+pv_get_size -- part_i =3D=3D part_i_tmp
+pv_get_size -- LEAVING with ret: -244
+pvcreate -- partition "/dev/ida/c0d0p4" doesn't exist
+pvcreate -- unlocking logical volume manager
 
-So the real advantages is a real world are not obvious if the tendency is a
-laptop with 10Gb which are now more powerful than any AIX station where LVM
-was first implemented.
 
-I don't want to be too polemic but I was a little desperate not to find
-answers to my questions in the FAQ. I think that I got these answers on this
-list. While thanking all the people having taken time to answer me, I know
-that many people have used LVM on AIX at least but were like me hesitating
-to implement it on laptop. So Wiegand's comments for example could be
-inserted in the FAQ. Also a comparaison with Parted too.
 
-Nicolas Brouard
-http://sauvy.ined.fr/brouard/english
+--
+LDS Brandenburg
+Dr. Stephan Hendl
+fon: +49-(0)331-39 471
+fax: +49-(0)331-27548 1187
+EMail: stephan.hendl@lds.brandenburg.de
