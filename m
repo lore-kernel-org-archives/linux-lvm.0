@@ -1,5 +1,5 @@
-Message-ID: <3EBA9EAC.3070006@free.fr>
-From: Emmanuel Varagnat <emmanuel.varagnat@free.fr>
+Message-ID: <3EBAA220.9070404@stella.at>
+From: Kai Iskratsch <kai@stella.at>
 MIME-Version: 1.0
 Subject: Re: [linux-lvm] hard drive crash info please
 References: <1052416232.17357.32.camel@randy.randyperkins.com>
@@ -15,28 +15,71 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Thu May  8 13:14:05 2003
+Date: Thu May  8 13:29:01 2003
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: linux-lvm@sistina.com
 
+hi
+
+you need lvm2 to  activate a partial volume group. if you have a backup 
+of your vgcfg  then you may restore your config to a new harddisk with 
+the lvm1 tools.
+i had no actual vgcfgbackup so i needed to upgrade to lvm2 to activate 
+the partial vg and make a backup of all partitions that were not 
+affected by the crashed harddisk. then i used the vgcfgbackup on the 
+partial vg and edited the meadata from the backup (lvm2 saves the backup 
+data in human readable form) that all missing segments are put on the 
+replacement disc. after i restored the backup everything worked again 
+and i lost only the data which was on the bad disk.
+
+kai
+
+
+
+.
+
 Randy Perkins wrote:
-> hello,
-> 	I have a lvm setup of 5 PV (disks), 1 VG,  and 1 LV.  one of the drives
-> just started clicking, and is not recognizable by the bios. Now when i
-> boot up my volume group is not recognized.
 
-I did have the same problem a long time ago. So I started to write a 
-tool that would try to recover some the data from the remaining data 
-available. I lost the first disk of set of 3 disk...
-This is quite finished.
-It uses the capability of LVM2 to deal with 'partial' VG.
-It only works with ext2/ext3 filesystems and require another (temporary) 
-disk where recovered data will be written.
-
-The URL is at : http://coredump.free.fr/linux/e2retrieve.php
-
-I also did a floppy disk with the essential (kernel 2.4.19 with LVM2 
-patch, LVM2 tools, Busybox and e2retrieve).
-
--=( manu )=-
+>hello,
+>	I have a lvm setup of 5 PV (disks), 1 VG,  and 1 LV.  one of the drives
+>just started clicking, and is not recognizable by the bios. Now when i
+>boot up my volume group is not recognized.
+>some info:
+>
+>redhat 8.0
+>lvm 1.0.3
+>readable copy of /etc/lvmconf/my_vg.conf ( about 5 months old )
+>
+>
+>	How can i retrieve some of the data that is contained soley
+>on the other 4 drives. ?? Any help is appreciated.
+>
+>
+>	i have been looking over the list,
+>and it appears this thread talks about extracting data from LV
+>that didnt span the bad disk, but i only have one LV.
+>http://lists.sistina.com/pipermail/linux-lvm/2003-April/013911.html
+>it looks like he is using lvm2
+>.
+>	does lvm2 have additional tools that can be used to bring back some of
+>my data. ??
+>
+>i was just keeping mp3 on this LV, but when i upgraded redhat i moved
+>all my data to it for awhile, and never moved it back.  my wife is
+>pissed cause i lost all my digital pictures, and i lost all my personal
+>files.  i knew better but didnt listen to myself.  the hard drive gave
+>no errors in the logs, which i monitor, it just up and started beating
+>its head against the wall.  thanks for any help
+>
+>randy
+>
+>
+>_______________________________________________
+>linux-lvm mailing list
+>linux-lvm@sistina.com
+>http://lists.sistina.com/mailman/listinfo/linux-lvm
+>read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+>
+>  
+>
