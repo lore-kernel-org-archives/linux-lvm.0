@@ -1,9 +1,9 @@
 From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] how to increase the size of allocated PE
-Message-ID: <20020603115209.A14161@sistina.com>
-References: <3CFBD09D.542EAE62@skyinet.net>
+Subject: Re: [linux-lvm] Spinning down/up drives.
+Message-ID: <20020603115506.B14161@sistina.com>
+References: <12639997890.20020602023603@tnonline.net>
 Mime-Version: 1.0
-In-Reply-To: <3CFBD09D.542EAE62@skyinet.net>; from jaws@skyinet.net on Mon, Jun 03, 2002 at 12:25:02PM -0800
+In-Reply-To: <12639997890.20020602023603@tnonline.net>; from andewid@tnonline.net on Sun, Jun 02, 2002 at 02:36:03AM +0200
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,24 +14,28 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Jun  3 04:58:02 2002
+Date: Mon Jun  3 05:00:02 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-If you want to extende the size of a logical volume, see lvextend(8).
+Anders,
 
-Growing the size of physical/logical extents is not supported.
-Set this property when you create a volume group (see vgcreate(8), option -s).
+LVM is not supposed to do anything special ITR because that's the disk
+drivers job which needs to spin the drive up again once it receives new
+requests after spindown.
+You probably already tested if it does handle it or not ;-)
 
-On Mon, Jun 03, 2002 at 12:25:02PM -0800, root wrote:
-> hi all,
+On Sun, Jun 02, 2002 at 02:36:03AM +0200, Anders Widman wrote:
 > 
-> i'm new to this list and with linux LVM. I would like to know how to
-> increase the size of allocated PE for a given logical volume.
+>    Can   LVM   handle drives that are set to spin down after some idle
+>    time? I remember in the past at I had problems with this (not using
+>    LVM back then) when trying to access files on a sleeping drive. The
+>    filesystem  timeout  seemed  to be shorter than the time to spin up
+>    the drive.
 > 
-> thanks.
+>    //Anders
 > 
 > 
 > _______________________________________________
