@@ -1,27 +1,21 @@
-Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j22KA6K09996
-	for <linux-lvm@redhat.com>; Wed, 2 Mar 2005 15:10:06 -0500
-Received: from kweetal.tue.nl (kweetal.tue.nl [131.155.3.6])
-	by mx3.redhat.com (8.12.11/8.12.11) with ESMTP id j22KA0Gq026869
-	for <linux-lvm@redhat.com>; Wed, 2 Mar 2005 15:10:00 -0500
-Received: from iris.tue.nl (iris.tue.nl [131.155.2.34])
-	by kweetal.tue.nl (Postfix) with ESMTP id A382F13B7EB
-	for <linux-lvm@redhat.com>; Wed,  2 Mar 2005 21:09:54 +0100 (CET)
-Received: from [131.155.224.41] (t-26-41.athome.tue.nl [131.155.224.41])
-	by iris.tue.nl (Postfix) with ESMTP id 8483310C111
-	for <linux-lvm@redhat.com>; Wed,  2 Mar 2005 21:09:54 +0100 (CET)
-Message-ID: <42261D92.2050205@are-b.org>
-Date: Wed, 02 Mar 2005 21:09:54 +0100
-From: oliver <oliver@are-b.org>
-MIME-Version: 1.0
+Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j22KieK21803
+	for <linux-lvm@redhat.com>; Wed, 2 Mar 2005 15:44:40 -0500
+Received: from dcs.nac.uci.edu (root@dcs.nac.uci.edu [128.200.34.32])
+	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id j22KiclX022247
+	for <linux-lvm@redhat.com>; Wed, 2 Mar 2005 15:44:38 -0500
 Subject: Re: [linux-lvm] Partition table gone? Any way to restore?
-References: <4225FBC8.9020904@are-b.org>
-	<20050302174819.GN17589@lug-owl.de>	<4225FEBC.2060505@are-b.org>
-	<20050302180537.GO17589@lug-owl.de>	<42260F1B.2030803@are-b.org>
-	<1109791034l.28794l.3l@tangerine>	<4226135E.9060303@are-b.org>
-	<1109792034l.28794l.4l@tangerine>
-In-Reply-To: <1109792034l.28794l.4l@tangerine>
-Content-Transfer-Encoding: quoted-printable
+From: Dan Stromberg <strombrg@dcs.nac.uci.edu>
+In-Reply-To: <1109791034l.28794l.3l@tangerine>
+References: <4225FBC8.9020904@are-b.org> <20050302174819.GN17589@lug-owl.de>
+	<4225FEBC.2060505@are-b.org> <20050302180537.GO17589@lug-owl.de>
+	<42260F1B.2030803@are-b.org>  <1109791034l.28794l.3l@tangerine>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature";
+	boundary="=-EOdqKWlW3FvG8aHpt1jG"
+Date: Wed, 02 Mar 2005 12:44:36 -0800
+Message-Id: <1109796276.31821.263.camel@seki.nac.uci.edu>
+Mime-Version: 1.0
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -32,91 +26,40 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="iso-8859-1"; format="flowed"
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-Well that's one of the things I need to know. How do I recover the=20
-partition. Only the first few bytes are missing from what I can tell.
 
-'normally' an LVM disk would say that it didn't contain a valid=20
-partition.  That part is missing from the disk and needs to be recoverd.
+--=-EOdqKWlW3FvG8aHpt1jG
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: quoted-printable
 
-I've read that one could try pvcreate; vgcfgrestore.
+On Wed, 2005-03-02 at 19:17 +0000, Jean-Luc Coulon (f5ibh) wrote:
+> Le 02.03.2005 20:08:11, oliver a =E9crit :
+> > I do have an empty 120GB hdd available to dump the entire contence =20
+> > on. I guess dd will do the trick?
+>=20
+> ddrescue the weapon of the last chance ...
 
-I'm firstly making a backup of the disk with dd if=3D/dev/hde=20
-of=3D/mnt/hd/hde_raw_dump to ensure i can always 'go back' when I mess up.
+I wouldn't even call it the last chance.
 
-gpart found my reiserfs partition (from the VG) so I suspect that all=20
-the data is still AOK. I'm just a little 'scared' to run pvcreate;=20
-vgcgrestore because when I want to 'list' my vgcgrestore I get the=20
-following error:
+If you're doing anything you suspect might toast your drive even
+further, it's a very good idea to run dd_rescue on it first, so you have
+a 2nd copy of the data to fall back on if something goes kerflooey.
 
-root@enterprise:/mnt/hd# vgcfgrestore -n vg00 -l
-vgcfgrestore -- INFO: using backup file "/etc/lvmconf/vg00.conf"
-vgcfgrestore -- ERROR: different structure size stored in=20
-"/etc/lvmconf/vg00.conf" than expected in file vg_cfgrestore.c [line 120]
-vgcfgrestore -- ERROR "vg_cfgrestore(): read" restoring volume group "vg00"
+Anyway, dd_rescue does appear to have advantages for data recovery,
+relative to the more traditional "dd conv=3Dnoerror,sync".
 
-I suppose this could be because of the missing PV and it won't work=20
-untill I have all three PV's up again. However 'listing' should be fine?
 
-Jean-Luc Coulon (f5ibh) wrote:
+--=-EOdqKWlW3FvG8aHpt1jG
+Content-Type: application/pgp-signature; name=signature.asc
+Content-Description: This is a digitally signed message part
 
-> Le 02.03.2005 20:26:22, oliver a =EF=BF=BDcrit :
->
->> Thanks! However the partition is fine and fit so I should be able to =20
->> dd everything off of it.
->>
->> The output of gpart was the following:
->> root@enterprise:~# gpart -w hmlvm,1.5 /dev/hde
->>
->> Begin scan...
->> Possible partition(ReiserFS filesystem), size(50431mb), offset(14mb)
->>
->> * Warning: short read near sector(120103011), 64512 bytes instead of =20
->> 66048. Skipp
->> ing...
->> End scan.
->>
->> Checking partitions...
->> Partition(Linux ext2 filesystem): primary
->> Ok.
->>
->> Guessed primary partition table:
->> Primary partition(1)
->>   type: 131(0x83)(Linux ext2 filesystem)
->>   size: 50431mb #s(103284656) s(29799-103314454)
->>   chs:  (29/9/1)-(1023/15/63)d (29/9/1)-(102494/7/62)r
->>
->> Primary partition(2)
->>   type: 000(0x00)(unused)
->>   size: 0mb #s(0) s(0-0)
->>   chs:  (0/0/0)-(0/0/0)d (0/0/0)-(0/0/0)r
->> <snip> part 3 and 4 where 'unused'.
->>
->> Now gpart found something, however not the missing LVM PV i was =20
->> hoping. Or atleast, I don't think so. I will google around to see=20
->> how  to make a 1 on 1 copy of this disk, and then try to write it.=20
->> I'll  report back. In the mean time, keep those ideas comming : )
->>
->
-> Just an idea, be careful, it is not the *truth* as I have not tested=20
-> it  yet.
->
-> Here is what I *think* :
-> The partition type is no matter for lvm.
-> Recover the partition as you like then do a fdisk to change the =20
-> partition type to 8E ... and see (or pray)
->
-> J-L
->
-> ( ... ]
->
->------------------------------------------------------------------------
->
->_______________________________________________
->linux-lvm mailing list
->linux-lvm@redhat.com
->https://www.redhat.com/mailman/listinfo/linux-lvm
->read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
->
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.2.6 (GNU/Linux)
+
+iD8DBQBCJiW0o0feVm00f/8RAgH5AJsF+qeb2llfR4AzOlqMLmjezB1WRgCfTg/q
+m8wdGSe36kYZBupPiL+yFZU=
+=pThW
+-----END PGP SIGNATURE-----
+
+--=-EOdqKWlW3FvG8aHpt1jG--
