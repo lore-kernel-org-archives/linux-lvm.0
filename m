@@ -1,34 +1,54 @@
-Date: Mon, 05 Jun 2000 21:00:02 -0700 (PDT)
-From: Cristina Bulfon <bulfon@SLAC.Stanford.EDU>
-Subject: [linux-lvm] Problem with kernel 2.2.13
-Message-id: <Pine.GSO.4.10.10006052054560.952-100000@flora04.SLAC.Stanford.EDU>
-MIME-version: 1.0
-Content-transfer-encoding: 7BIT
+Message-ID: <393C8A1D.30BD26E4@msede.com>
+Date: Tue, 06 Jun 2000 07:20:29 +0200
+From: Michael Marxmeier <mike@msede.com>
+MIME-Version: 1.0
+Subject: Re: [linux-lvm] Problem with kernel 2.2.13
+References: <Pine.GSO.4.10.10006052054560.952-100000@flora04.SLAC.Stanford.EDU>
+Content-Transfer-Encoding: 7bit
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"
-To: linux-lvm@msede.com
+Content-Type: text/plain; charset="us-ascii"
+To: Cristina Bulfon <bulfon@SLAC.Stanford.EDU>
+Cc: linux-lvm@msede.com
+
+Cristina Bulfon wrote:
+> I'm trying to rebuild the kernel 2.2.13 with lvm patch
+> "patch-2.2.13-LVM-0.8i.gz" and during the _make_bzImage_ I got the
+> following error:
+> ...
+
+Please refer to
+http://linux/lvm/doc/BUGS
+
+for a list of kown problems and solutions.
+
+--- snip ---
+
+3. Compile with kernel 2.2.13 or 2.2.14 fails:
+
+> drivers/block/block.a(ll_rw_blk.o): In function `blk_dev_init':
+> ll_rw_blk.o(.text.init+0xb0): undefined reference to `lvm_init'
+
+Terry Hardie (terryh@orcas.net) notes:
+> Actually, on line 362 of lvm.c in your kernel source, block/drivers,
+> change the word "static" to "extern". The problem doesn't show up if
+> you're compiling LVM as a module.
+
+The line in question is:
+__initfunc(static int lvm_init(void))
+
+This should be changed to:
+__initfunc(extern int lvm_init(void))
+
+--- snip ---
 
 
-Hello,
+Hope this helps
+Michael
 
-I'm trying to rebuild the kernel 2.2.13 with lvm patch
-"patch-2.2.13-LVM-0.8i.gz" and during the _make_bzImage_ I got the
-following error:
-
-drivers/block/block.a(ll_rw_blk.o): In function `blk_dev_init':
-ll_rw_blk.o(.text.init+0xb0): undefined reference to `lvm_init'
-make: *** [vmlinux] Error 1
-
-Any suggestion ? 
-
-Thanks Cristina
-
-_____________________________________________________________________________
-
-       Cristina Bulfon              E-mail Cristina.Bulfon@slac.stanford.edu
-Stanford Linear Accelerator Center  Phone +1-650-926-5028
-PO Box 4349, M/S 88		    Fax   +1-650-926-3329
-Stanford, CA 94309, USA
-_____________________________________________________________________________
+-- 
+Michael Marxmeier           Marxmeier Software AG
+E-Mail: mike@msede.com      Besenbruchstrasse 9
+Phone : +49 202 2431440     42285 Wuppertal, Germany
+Fax   : +49 202 2431420     http://www.msede.com/
