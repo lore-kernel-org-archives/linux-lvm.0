@@ -1,10 +1,9 @@
-From: Patrick Caulfield <caulfield@sistina.com>
-Subject: Re: [linux-lvm] lvm2 support in kernel - regular lvm on disks
-Message-ID: <20021014072352.GA1394@tykepenguin.com>
-References: <F13FRaqbC8wSA1XvpFV00000005@hotmail.com>
+From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
+Subject: Re: [linux-lvm] Re: device-mapper transition
+Message-ID: <20021014095249.A6547@sistina.com>
+References: <1034276879.2396.11.camel@mars.goatskin.org> <20021011075220.GA1153@fib011235813.fsnet.co.uk> <20021011090446.GA5506@sparcbox.net> <20021011220839.GA8694@chunk.voxel.net> <20021012000702.C3808@uk.sistina.com>
 Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <F13FRaqbC8wSA1XvpFV00000005@hotmail.com>
+In-Reply-To: <20021012000702.C3808@uk.sistina.com>; from agk@uk.sistina.com on Sat, Oct 12, 2002 at 12:07:03AM +0100
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,29 +14,53 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Oct 14 02:31:03 2002
+Date: Mon Oct 14 02:59:22 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Mon, Oct 14, 2002 at 01:39:26PM +0800, Peter Hoeg wrote:
-> hi,
+On Sat, Oct 12, 2002 at 12:07:03AM +0100, Alasdair G Kergon wrote:
+> On Fri, Oct 11, 2002 at 06:08:39PM -0400, Andres Salomon wrote:
+> > Support is already in the kernel and libdevmapper for driver version
+> > querying; should be just an issue of adding the check to the lvm2 tools.
 > 
-> have searched through the archives at sistina.com as well as google, but 
-> yet to no avail.
+> The checks are already there - it's just *all* the error messages that need 
+> reviewing:-)  I'll deal with these particular ones next week.
 > 
-> does anybody know if it is possible to boot a LVM2 enabled kernel (say the 
-> latest 2.5.42-ac1) and use that with a machine with regular LVM (1.0.5) 
-> created volumes? also, if i install the lvm2 tool for debian, they are 
-> conflicting with my lvm1 tools, so are the new tools backwards compatible?
+> I'd like us to move towards the position where, like many other Unix 
+> command line utilities, if no messages are displayed it generally
+> means you can assume the command ran successfully.
 
-The reason the two packages conflict is because they have binaries with the
-same names. Apart from snapshots LVM2 will read LVM1 volumes.
- 
-> thank you very much in advace - please do cc me on any answers,
-> peter
+That's fine as a default which can be configured to fall back to the LVM1
+given standard for the success case in order to stay compatible with all
+exec output parsers.
 
+> 
+> Alasdair
+> -- 
+> agk@uk.sistina.com
+> 
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@sistina.com
+> http://lists.sistina.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
 
+-- 
 
-patrick
+Regards,
+Heinz    -- The LVM Guy --
+
+*** Software bugs are stupid.
+    Nevertheless it needs not so stupid people to solve them ***
+
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+Heinz Mauelshagen                                 Sistina Software Inc.
+Senior Consultant/Developer                       Am Sonnenhang 11
+                                                  56242 Marienrachdorf
+                                                  Germany
+Mauelshagen@Sistina.com                           +49 2626 141200
+                                                       FAX 924446
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
