@@ -1,9 +1,7 @@
-From: "Mitch Miller" <mitch@mdmiller.com>
-Subject: RE: [linux-lvm] LVM and 2.4.13
-Message-ID: <000601c1617b$96dfde10$0101a8c0@mdmiller.com>
+From: Tren Blackburn <tren@EOTnetworks.com>
+Message-ID: <Pine.LNX.4.33.0110301259320.5641-100000@EOTnetworks.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-In-Reply-To: <JLEILPHBKFODIOEDIAKMGEKLCHAA.jamesk@ashlandagency.com>
+Subject: [linux-lvm] (no subject)
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,30 +12,60 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Tue Oct 30 13:43:02 2001
+Date: Tue Oct 30 14:01:02 2001
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: TEXT/PLAIN; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-James,
+Thanks Patric,
 
-> When I try to create the logical volume,
-> I get a Seg Fault and core dump.
+I actually just decided to not use Alan Cox's patch and just reverted back
+to a vanilla Linus kernel.  I'll wait for the dust to settle before
+worrying about it.  Only reason this was a question was because I added
+more memory to this server and needed HIGHMEM support in order to address
+it (thank god for cheap memory!) so I wanted to upgrade the kernel in the
+process.
 
-Take a look at Sistina's web page, and search Bugzilla for core dump.  There
-is a documented issue with the version of GCC you are using, which is
-happening because of broken compiler optimizations.  As I recall, there are
-two workarounds.  First, you can edit your make file, and change -O2 to -O
-or you can edit the source and add a printf() statement inside the function
-which the compiler is to optimize by making it an inline function.
+Thanks for the information.
 
-I chose the 2nd fix so I didn't have to get rid of all optimizations, but
-that fix has to be applied in a number of places to make sure that all
-command line tools get fixed appropriately.  The first fix has the benefit
-of being changed in one place, and the entire works after recompilation, at
-the cost of compiler optimization.
+Regards,
 
--- Mitch
+Tren.
 
-P.S.  Seems like there is also another version of GCC which you can use, but
-I don't know which one.
+
+>Date: Tue, 30 Oct 2001 08:32:49 +0000
+>From: Patrick Caulfield <caulfield@sistina.com>
+>To: linux-lvm@sistina.com
+>Subject: Re: [linux-lvm] Problems compiling LVM 1.0.1rc4 and kernel
+>2.4.13-ac4
+>Reply-To: linux-lvm@sistina.com
+
+>On Mon, Oct 29, 2001 at 11:03:47AM -0700, Tren Blackburn wrote:
+> Hi list;
+>
+> Not sure if this has been asked/solved yet.  I searched through the
+lists
+> and found
+> http://lists.sistina.com/pipermail/linux-lvm/2001-October/009353.html
+> however, what was stated in this message thread didn't seem to solve
+this
+> problem.  I'm getting these errors when linking the kernel:
+>
+>See http://lists.sistina.com/pipermail/linux-lvm/2001-October/009252.html
+>
+>For a patch.
+>
+>The gendisk fix is in CVS but the kiovec API change isn't because it's
+>different
+>between Alan and Linus kernels.
+>
+>patrick
+
+
+-- 
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+- Tren Blackburn - Owner                mailto:tren@eotnetworks.com  =
+= EOT Networks                           http://www.eotnetworks.com  -
+- Infinite Solutions for a Finite World              (403) 818-7658  =
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
