@@ -1,9 +1,11 @@
-Message-ID: <3BBC4146.51CD437D@promofinarsa.es>
-Date: Thu, 04 Oct 2001 13:00:22 +0200
-From: Jesus Manuel NAVARRO LOPEZ <jesus_navarro@promofinarsa.es>
-MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Subject: [linux-lvm] kernel 2.2.19 support
+Date: Thu, 4 Oct 2001 12:05:03 +0100
+Subject: Re: [linux-lvm] lvcreate segfault in vg_setup_pointers_for_snapshots
+Message-ID: <20011004120503.A3373@btconnect.com>
+References: <20011004000451.T8954@turbolinux.com> <Pine.LNX.4.33.0110041120590.14465-100000@dunlop.dub.ie.alphyra.com>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <Pine.LNX.4.33.0110041120590.14465-100000@dunlop.dub.ie.alphyra.com>; from paulj@alphyra.ie on Thu, Oct 04, 2001 at 11:31:15AM +0100
+From: Joe Thornber <thornber@btconnect.com>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,18 +17,24 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="iso-8859-1"
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Hi list:
+On Thu, Oct 04, 2001 at 11:31:15AM +0100, Paul Jakma wrote:
+> ok... looking at tools/lib/vg_setup_pointers_for_snapshots():
+> 
+>  if ( vg == NULL) goto vg_setup_pointers_for_snapshots_end;
+>    for ( l = 0; l < vg->lv_max; l++) {
+>       lv_t *lv_chain_ptr = vg->lv[l];
+>       if ( lv_chain_ptr == NULL) continue;
+>       if ( lv_chain_ptr->lv_access & LV_SNAPSHOT_ORG) {
+> 
+> isn't this a wee bit suspect? we test for NULL /after/ the assignment, 
+> and continue anyway? next line deferences that pointer, irregardless 
+> of the test for previously..
 
-Anyone knows if there's the intention to properly support kernel 2.2.19?
-There're neither explicit raw-io patches nor lvm ones.
+No, this snippet looks right to me.  How can we test before the assignment ?
+If lv_chain_ptr is NULL the code then jumps back to the top of the 'for' loop.
 
-Other question.  Why raw-io patch is needed within kernel 2.2 series?
---=20
-SALUD,
-Jes=EF=BF=BDs
-***
-jesus_navarro@promofinarsa.es
-***
+- Joe
