@@ -1,13 +1,13 @@
-Received: from o.ww.redhat.com (vpn50-1.rdu.redhat.com [172.16.50.1])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id i1G9Tui13729
-	for <linux-lvm@redhat.com>; Mon, 16 Feb 2004 04:29:56 -0500
-From: Heinz Mauelshagen <mauelshagen@redhat.com>
-Subject: Re: [linux-lvm] LVM 1: Snapshot causes seg fault of lvdisplay and crashes system
-Message-ID: <20040216092955.GC13581@redhat.com>
-References: <200402140615.i1E6Fbr03401@ecstasy.winternet.com>
+Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with SMTP id i1GDVSi05572
+	for <linux-lvm@redhat.com>; Mon, 16 Feb 2004 08:31:28 -0500
+From: Jens Axboe <axboe@suse.de>
+Message-ID: <20040216133047.GA9330@suse.de>
+References: <20040216131609.GA21974@cistron.nl>
 Mime-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <200402140615.i1E6Fbr03401@ecstasy.winternet.com>
+In-Reply-To: <20040216131609.GA21974@cistron.nl>
+Subject: [linux-lvm] Re: IO scheduler, queue depth, nr_requests
 Sender: linux-lvm-admin@redhat.com
 Errors-To: linux-lvm-admin@redhat.com
 Reply-To: linux-lvm@redhat.com
@@ -19,77 +19,117 @@ List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
 List-Archive: <https://www.redhat.com/archives/linux-lvm/>
-Date: Mon Feb 16 04:29:01 2004
+Date: Mon Feb 16 08:30:08 2004
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: linux-lvm@redhat.com
+To: Miquel van Smoorenburg <miquels@cistron.nl>
+Cc: linux-lvm@sistina.com
 
-On Sat, Feb 14, 2004 at 12:15:37AM -0600, Ken Fuchs wrote:
-> I did the following to create a snapshot of an active filesystem to try
-> to make a consistent copy of it:
+On Mon, Feb 16 2004, Miquel van Smoorenburg wrote:
+> Hello,
 > 
-> # lvcreate --extents 30 --snapshot --name home2snap /dev/sys/home2gb
-> ...
-> lvcreate -- INFO: using default snapshot chunk size of 64 KB for "/dev/sys/home\
-> 2snap"
-> lvcreate -- doing automatic backup of "sys"
-> lvcreate -- logical volume "/dev/sys/home2snap" successfully created
+> 	as you might have seen from the linux-kernel mailinglist
+> I have been testing for months now with a fileserver set up to
+> use XFS over LVM2 on a 3ware RAID5 controller.
 > 
-> # lvdisplay /dev/sys/home2gb
-> --- Logical volume ---
-> LV Name                /dev/sys/home2gb
-> VG Name                sys
-> LV Write Access        read/write
-> LV snapshot status     source of
->                        /dev/sys/home2snap [active]
-> Segmentation fault
-> # lvdisplay /dev/sys/home2gb
-> --- Logical volume ---
-> LV Name                /dev/sys/home2gb
-> VG Name                sys
-> LV Write Access        read/write
-> LV snapshot status     source of
->                        /dev/sys/home2snap [active]
-> Segmentation fault
-> ecstasy:/#
+> I asked for help several times on the list, but nobody really
+> replied, so now I'm taking a shot at mailing you directly, since
+> you appear to be the I/O request queueing guru of the kernel ;)
+> Cc: sent to linux-lvm@sistina.com. Any hint appreciated.
 > 
-> <At this point I lost my remote connection to the machine and presume it
-> crashed; it probably didn't reboot, since subsequent attempts to
-> reconnect via ssh failed and ping failed as well.>
+> For some reason, when using LVM, write requests get queued out
+> of order to the 3ware controller, which results in quite a bit
+> of seeking and thus performance loss.
 > 
-> The kernel is probably 1.0.3 (Debian SPARC sun4u 2.4.21 up) and the lvm
-> tools are 1.0.8.
+> The default queue depth of the 3ware controller is 254. I found
+> out that lowering it to 64 in the driver fixed my problems, and
+> I advised 3ware support about this. They weren't really convinced..
 > 
-> Any suggestions for avoiding these seg faults and the system crash?
+> By fiddling about today I just found that changing
+> /sys/block/sda/queue/nr_requests from 128 to something above
+> the queue depth of the 3ware controller (256 doesn't work,
+> 384 and up do) also fixes the problem.
+> 
+> Does that actually make sense ?
 
-Upgrade to an actual driver LVM version. You hit a list bug IRT snapshots.
+Yes, it makes perfect sense, I've been aware of this problem for quite
+some time. If you look init_tag_map() in ll_rw_blk.c:
 
+	if (depth > q->nr_requests / 2) {
+		q->nr_requests = depth * 2;
+		printk(KERN_INFO "%s: large TCQ depth: adjusted nr_requests "
+                         "to %lu\n", __FUNCTION__, q->nr_requests);
+	}
+
+it pretty much matches the problem you outlined. Unfortunately, the
+tagging depth of SCSI drivers cannot be controlled unless they use the
+generic block tagging helpers, and to my knowledge only a single driver
+does...
+
+> Ah yes, I'm currently using 2.6.2 with a 3ware 8506-8 in
+> hardware raid5 mode, deadline scheduler, PIV 3.0 Ghz, 2 GB RAM.
 > 
-> Sincerely,
+> Debug output ("mydd" works just like "dd", but has an fsync option):
 > 
-> Ken Fuchs <kfuchs@winternet.com>
+> - /mnt is an XFS filesystem on a LVM2 volume on the 3ware
+> - /mnt2 is an XFS filesystem directly on /dev/sda1 of the 3ware
 > 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+> - First on /mnt, the LVM partition. Note that a small "dd" runs
+>   fast, a larger one runs slower:
+> 
+> # cd /mnt
+> # cat /sys/block/sda/device/queue_depth
+> 254
+> # cat /sys/block/sda/queue/nr_requests
+> 128
+> # ~/mydd --if /dev/zero --of file --bs 4096 --count 50000 --fsync
+> 204800000 bytes transferred in 2.679812 seconds (76423271 bytes/sec)
+> # ~/mydd --if /dev/zero --of file --bs 4096 --count 100000 --fsync
+> 409600000 bytes transferred in 9.501549 seconds (43108760 bytes/sec)
+> 
+> - Now I set the nr_requests to 512:
+> # echo 512 > /sys/block/sda/queue/nr_requests
+> # ~/mydd --if /dev/zero --of file --bs 4096 --count 100000 --fsync
+> 409600000 bytes transferred in 5.374437 seconds (76212634 bytes/sec)
+> 
+> See that ? Weird thing is, it's only on LVM, directly on /dev/sda1
+> no problem at all:
+> 
+> # cat /sys/block/sda/device/queue_depth
+> 254
+> # cat /sys/block/sda/queue/nr_requests
+> 128
+> # ~/mydd --if /dev/zero --of file --bs 4096 --count 100000 --fsync
+> 409600000 bytes transferred in 5.135642 seconds (79756338 bytes/sec)
+> 
+> Somehow, LVM is causing the requests to the underlying 3ware
+> device to get out of order, and increasing nr_requests to be
+> larger than the queue_depth of the device fixes this.
+> 
+> I tried the latest dm-patches in -mm (applied those to vanilla
+> 2.6.2), which include a patch called dm-04-maintain-bio-ordering.patch
+> but that doesn't really help (at first I though otherwise, but the
+> tests scripts I used lowered the queue_depth of the 3ware to 64
+> by accident) - if anything, it makes things worse.
+> 
+> # ~/mydd --if /dev/zero --of file --bs 4096 --count 100000 --fsync
+> 409600000 bytes transferred in 13.138224 seconds (31176208 bytes/sec)
+> 
+> Setting nr_requests to 512 fixes things up again.
+
+Seems there's an extra problem here, the nr_requests vs depth problem
+should not be too problematic unless you have heavy random io. Doesn't
+look like dm is reordering (bio_list_add() adds to tail,
+flush_deferred_io() processes from head. direct queueing doesn't look
+like it's reordering). Can the dm folks verify this?
+
+Or, you are just being hit by the problem first listed - requests get no
+hold time in the io scheduler for merging, because the driver drains
+them too quickly because of this artificially huge queue depth. If you
+did some stats on average request size and io/sec rate that should tell
+you for sure. I don't know what you have behind the 3ware, but it's
+generally not advised to use more than 4 tags per spindle.
 
 -- 
-
-Regards,
-Heinz    -- The LVM Guy --
-
-*** Software bugs are stupid.
-    Nevertheless it needs not so stupid people to solve them ***
-
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-
-Heinz Mauelshagen                                 Red Hat, Inc.
-Consulting Development Engineer                   Am Sonnenhang 11
-                                                  56242 Marienrachdorf
-                                                  Germany
-Mauelshagen@RedHat.com                            +49 2626 141200
-                                                       FAX 924446
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+Jens Axboe
