@@ -1,22 +1,17 @@
-Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j224RUK30530
-	for <linux-lvm@redhat.com>; Tue, 1 Mar 2005 23:27:30 -0500
-Received: from server.echohome.org (s233-64-29-217.try.wideopenwest.com
-	[64.233.217.29])
-	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id j224RTHQ001858
-	for <linux-lvm@redhat.com>; Tue, 1 Mar 2005 23:27:29 -0500
-Received: from echo (echo.echohome.org [192.168.2.254])
-	by server.echohome.org (8.12.8/8.12.8) with ESMTP id j224RHeh010169
-	for <linux-lvm@redhat.com>; Tue, 1 Mar 2005 23:27:22 -0500
-From: "Erik Ohrnberger" <erik@echohome.org>
-Subject: RE: [linux-lvm] Building up a RAID5 LVM home server (long)
-Date: Tue, 1 Mar 2005 23:27:49 -0500
-Message-ID: <!~!UENERkVCMDkAAQACAAAAAAAAAAAAAAAAABgAAAAAAAAAiKro/zVEU02Xw5blW4RJy8KAAAAQAAAAjSM60k4xEkucgZ6Kc849MwEAAAAA@echohome.org>
+Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j22FNhK04349
+	for <linux-lvm@redhat.com>; Wed, 2 Mar 2005 10:23:43 -0500
+Received: from mail02.nemours.org (mail02.nemours.org [192.234.253.30])
+	by mx3.redhat.com (8.12.11/8.12.11) with ESMTP id j22FNcSL001944
+	for <linux-lvm@redhat.com>; Wed, 2 Mar 2005 10:23:38 -0500
+Message-ID: <FBBA14180DBE83499AC81277324251B0113174@jaxmsx01.nemours.org>
+From: Amir Mistric <amistric@nemours.org>
+Date: Wed, 2 Mar 2005 10:25:25 -0500 
 MIME-Version: 1.0
-In-Reply-To: <000301c51edd$bc175aa0$32dcdc0a@vanish>
-Content-Transfer-Encoding: 8bit
-Reply-To: Erik@echohome.org,
-	LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: multipart/alternative;
+	boundary="----_=_NextPart_001_01C51F3C.0E871600"
+Subject: [linux-lvm] Recipe for hardware RAID
+Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -26,167 +21,293 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: 'LVM general discussion and development' <linux-lvm@redhat.com>
+To: linux-lvm@redhat.com
 
-Ron,
-    Well, there is no mistaking this feedback  ;-)
+This message is in MIME format. Since your mail reader does not understand
+this format, some or all of this message may not be legible.
 
-    Thanks for the direct, succinct feedback.  I think you are right in your
-points.
+------_=_NextPart_001_01C51F3C.0E871600
+Content-Type: text/plain
 
-    The search goes on to balance flexibility, cost, and benefits, as
-always.
+Hi
 
-    Erik.
+ 
 
-> -----Original Message-----
-> From: linux-lvm-bounces@redhat.com 
-> [mailto:linux-lvm-bounces@redhat.com] On Behalf Of Ron Watkins
-> Sent: Tuesday, March 01, 2005 11:10 PM
-> To: Erik@echohome.org; LVM general discussion and development
-> Subject: Re: [linux-lvm] Building up a RAID5 LVM home server (long)
-> 
-> 
-> This is absolutely insane.   It is among the dumbest designs 
-> I've ever seen. 
-> You are using HDA as a component in MD0 and MD1, and then 
-> using HDA AGAIN as 
-> part of MD2 directly, while using it indirectly via MD0 and 
-> MD1.   You're 
-> going to A) bottleneck on HDA, B) you're going to beat that 
-> drive to death, 
-> and C) if that drive goes, you are HOSED.  Plus, you are just 
-> begging for 
-> problems with potential bugs in the RAID driver code.  This 
-> whole setup is 
-> an INCREDIBLY bad idea.  You're trying to 'be clever' to save 
-> yourself some 
-> money, and all you're doing is buying trouble.
-> 
-> The way RAID5 is meant to work is with disks of approximately 
-> the same size. 
-> RAID5 is not expandable, unless you have a very expensive hardware 
-> controller.  There are algorithms that will let you expand 
-> the size of a 
-> RAID5 volume, but they have not, to my knowledge, been 
-> implemented in open 
-> source.   You CANNOT do what you want to do, cheaply.  You 
-> can spend a great 
-> deal of money to satisfy most of your design parameters, but 
-> NOT cheaply. 
-> If you want it cheap, use fixed drives of about the same 
-> size, and don't 
-> think about expansion.  When you're ready to expand, hook up 
-> another, bigger 
-> RAID and copy your data.   In NO case can you use that 
-> hodgepodge of junk 
-> drives you've collected.
-> 
-> Most of your drives are obsolete.  Keep the biggest one, buy 
-> at least two 
-> more of the same size, and set up a RAID5 using that.  All 
-> this monkeying 
-> around to try to extract some last value from drives totally 
-> ill-suited for 
-> the purpose is going to cost you far, far more than new 
-> drives ever could.
-> 
-> Hell, keep the smaller ones around, put them into a concatenated LVM2 
-> volume, and use them as a backup.  It's not the best backup 
-> in the world, 
-> but it's better than nothing.
-> 
-> Do it right.  This is your data you're trying to save.  You 
-> can get very 
-> nice 250-gig PATA Western Digital drives for $165 from 
-> www.newegg.com.  They 
-> are specifically designed for RAID.  Buy 4 and save yourself 
-> this massive 
-> headache.  If you don't need that much space, buy smaller drives.
-> 
-> Or, you can persist in trying to be clever, but it's a 
-> virtual *certainty* 
-> you're going to lose data if you go this route.  Pay now, or 
-> pay later. 
-> What's your data worth?
-> 
-> <<RON>>
-> 
-> ----- Original Message ----- 
-> From: "Erik Ohrnberger" <erik@echohome.org>
-> To: "'LVM general discussion and development'" <linux-lvm@redhat.com>
-> Sent: Tuesday, March 01, 2005 10:27 PM
-> Subject: RE: [linux-lvm] Building up a RAID5 LVM home server (long)
-> 
-> 
-> >
-> > ... SNIP ...
-> >> >What if the I broke everything into 10 GB pieces, and
-> >> created multiple
-> >> >raid5 sets?  Then I could LVM2 them together and have a large 
-> >> >filesystem that way.
-> >> >
-> >> >a=20GB, b=30GB, c=40GB
-> >> >
-> >> >a-1 + b-1 + c-1 = md0 (approx 30 GB storage)
-> >> >a-2 + b-2 + c-2 = md1 (approx 30 GB storage)
-> >> >      b-3 + c-3 = md2 (waiting for one more drive)
-> >> >            c-4 = md3 (waiting for two more drives)
-> >> >
-> >> >
-> >> This is sorta what I do.  But in my opinion the gain of 
-> having RAID5 
-> >> (over RAID1) is when you get over 3 disks...  at 3 disks you are 
-> >> burning 33% for redudnacy... 25% or 20% or  17% sounds 
-> better to me.
-> >> I guess if
-> >> you go too far it costs in calculating the parity.
-> >
-> > Overhead: Yea, OK. Nothing is without a price.
-> > I fooled around with various ideas, and came up with this for my
-> > particulars:
-> > (Note, rounded to nearest GB)
-> >
-> > 80 GB /dev/hda 60 GB /dev/hdb 40 GB /dev/hdc 45 GB
-> > /dev/hdd
-> >
-> > GB /dev/md0 (RAID0)
-> > 40 /dev/hdc
-> > 15 /dev/hda1
-> > 55
-> >
-> > /dev/md1 (RAID0)
-> > 45 /dev/hdd
-> > 10 /dev/hda2
-> > 55
-> >
-> > /dev/md2 (RAID5)
-> > 55 /dev/md0
-> > 55 /dev/md1
-> > 55 /dev/hda3
-> > 55 /dev/hdb
-> > 220
-> >
-> > Yea, OK, so like the 220 is a bit optimistic, but should get pretty 
-> > close
-> > to
-> > that.
-> >
-> > What do you think?
-> >
-> >
-> > _______________________________________________
-> > linux-lvm mailing list
-> > linux-lvm@redhat.com 
-> https://www.redhat.com/mailman/listinfo/linux-> lvm
-> > read the 
-> LVM HOW-TO at 
-> http://tldp.org/HOWTO/LVM-HOWTO/
-> > 
-> 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
-> 
+We are contemplating to start using RHEL v4 in our enterprise.
+
+Most of our servers have a hardware RAID.
+
+ 
+
+The server we are using for a RHEL 4 trial install has 4x36GB SCSI drives
+configured using RAID 5.
+
+Of course, we also want to use LVM.
+
+ 
+
+ 
+
+Can someone please suggest what would be the best "layout"/"recipe"
+considering the configuration I described?
+
+Using "automatically" partitioning during install RHEL suggests: 
+
+/boot and swap outside LVM and the rest of space in LVM mounted under / file
+system.
+
+ 
+
+Is this sufficient layout for maximum flexibility? Should I create other
+logical volumes and file systems?
+
+ 
+
+ 
+
+Any tips are appreciated
+
+ 
+
+ 
+
+Amir Mistric ( <mailto:amistric@nemours.org> amistric@nemours.org)
+Web Developer
+Nemours Foundation
+Office: (904) 232-4223
+
+Mobile: (904) 588-6691
+
+ 
+
+NOTICE...This electronic transmission is intended only for the person(s)
+named.  It may contain information that is (i) proprietary to the sender,
+and/or (ii) privileged, confidential and/or otherwise exempt from disclosure
+under applicable State and Federal law, including, but not limited to,
+privacy standards imposed pursuant to the federal Health Insurance
+Portability and Accountability Act of 1996 (HIPAA).  Receipt by anyone other
+than the named recipient(s) is not a waiver of any applicable privilege.  If
+you received this confidential communication in error, please notify the
+sender immediately by reply e-mail message and permanently delete the
+original message from your system.
+
+ 
+
+
+------_=_NextPart_001_01C51F3C.0E871600
+Content-Type: text/html
+Content-Transfer-Encoding: quoted-printable
+
+<html xmlns:o=3D"urn:schemas-microsoft-com:office:office" =
+xmlns:w=3D"urn:schemas-microsoft-com:office:word" =
+xmlns:st1=3D"urn:schemas-microsoft-com:office:smarttags" =
+xmlns=3D"http://www.w3.org/TR/REC-html40">
+
+<head>
+<META HTTP-EQUIV=3D"Content-Type" CONTENT=3D"text/html; =
+charset=3Dus-ascii">
+
+
+<meta name=3DGenerator content=3D"Microsoft Word 11 (filtered medium)">
+<o:SmartTagType =
+namespaceuri=3D"urn:schemas-microsoft-com:office:smarttags"
+ name=3D"City"/>
+<o:SmartTagType =
+namespaceuri=3D"urn:schemas-microsoft-com:office:smarttags"
+ name=3D"place"/>
+<!--[if !mso]>
+<style>
+st1\:*{behavior:url(#default#ieooui) }
+</style>
+<![endif]-->
+<style>
+<!--
+ /* Font Definitions */
+ @font-face
+	{font-family:"Lucida Console";
+	panose-1:2 11 6 9 4 5 4 2 2 4;}
+ /* Style Definitions */
+ p.MsoNormal, li.MsoNormal, div.MsoNormal
+	{margin:0in;
+	margin-bottom:.0001pt;
+	font-size:12.0pt;
+	font-family:"Times New Roman";}
+a:link, span.MsoHyperlink
+	{color:blue;
+	text-decoration:underline;}
+a:visited, span.MsoHyperlinkFollowed
+	{color:purple;
+	text-decoration:underline;}
+span.EmailStyle17
+	{mso-style-type:personal-compose;
+	font-family:Arial;
+	color:windowtext;}
+@page Section1
+	{size:8.5in 11.0in;
+	margin:1.0in 1.25in 1.0in 1.25in;}
+div.Section1
+	{page:Section1;}
+-->
+</style>
+
+</head>
+
+<body lang=3DEN-US link=3Dblue vlink=3Dpurple>
+
+<div class=3DSection1>
+
+<p class=3DMsoNormal><font size=3D2 face=3DArial><span =
+style=3D'font-size:10.0pt;
+font-family:Arial'>Hi<o:p></o:p></span></font></p>
+
+<p class=3DMsoNormal><font size=3D2 face=3DArial><span =
+style=3D'font-size:10.0pt;
+font-family:Arial'><o:p>&nbsp;</o:p></span></font></p>
+
+<p class=3DMsoNormal><font size=3D2 face=3DArial><span =
+style=3D'font-size:10.0pt;
+font-family:Arial'>We are contemplating to start using RHEL v4 in our
+enterprise.<o:p></o:p></span></font></p>
+
+<p class=3DMsoNormal><font size=3D2 face=3DArial><span =
+style=3D'font-size:10.0pt;
+font-family:Arial'>Most of our servers have a hardware =
+RAID.<o:p></o:p></span></font></p>
+
+<p class=3DMsoNormal><font size=3D2 face=3DArial><span =
+style=3D'font-size:10.0pt;
+font-family:Arial'><o:p>&nbsp;</o:p></span></font></p>
+
+<p class=3DMsoNormal><font size=3D2 face=3DArial><span =
+style=3D'font-size:10.0pt;
+font-family:Arial'>The server we are using for a RHEL 4 trial install =
+has
+4x36GB SCSI drives configured using RAID =
+5.<o:p></o:p></span></font></p>
+
+<p class=3DMsoNormal><font size=3D2 face=3DArial><span =
+style=3D'font-size:10.0pt;
+font-family:Arial'>Of course, we also want to use =
+LVM.<o:p></o:p></span></font></p>
+
+<p class=3DMsoNormal><font size=3D2 face=3DArial><span =
+style=3D'font-size:10.0pt;
+font-family:Arial'><o:p>&nbsp;</o:p></span></font></p>
+
+<p class=3DMsoNormal><font size=3D2 face=3DArial><span =
+style=3D'font-size:10.0pt;
+font-family:Arial'><o:p>&nbsp;</o:p></span></font></p>
+
+<p class=3DMsoNormal><font size=3D2 face=3DArial><span =
+style=3D'font-size:10.0pt;
+font-family:Arial'>Can someone please suggest what would be the best =
+&#8220;layout&#8221;/&#8221;recipe&#8221;
+considering the configuration I described?<o:p></o:p></span></font></p>
+
+<p class=3DMsoNormal><font size=3D2 face=3DArial><span =
+style=3D'font-size:10.0pt;
+font-family:Arial'>Using &#8220;automatically&#8221; partitioning =
+during install
+RHEL suggests: <o:p></o:p></span></font></p>
+
+<p class=3DMsoNormal><font size=3D2 face=3DArial><span =
+style=3D'font-size:10.0pt;
+font-family:Arial'>/boot and swap outside LVM and the rest of space in =
+LVM mounted
+under / file system.<o:p></o:p></span></font></p>
+
+<p class=3DMsoNormal><font size=3D2 face=3DArial><span =
+style=3D'font-size:10.0pt;
+font-family:Arial'><o:p>&nbsp;</o:p></span></font></p>
+
+<p class=3DMsoNormal><font size=3D2 face=3DArial><span =
+style=3D'font-size:10.0pt;
+font-family:Arial'>Is this sufficient layout for maximum flexibility? =
+Should I
+create other logical volumes and file =
+systems?<o:p></o:p></span></font></p>
+
+<p class=3DMsoNormal><font size=3D2 face=3DArial><span =
+style=3D'font-size:10.0pt;
+font-family:Arial'><o:p>&nbsp;</o:p></span></font></p>
+
+<p class=3DMsoNormal><font size=3D2 face=3DArial><span =
+style=3D'font-size:10.0pt;
+font-family:Arial'><o:p>&nbsp;</o:p></span></font></p>
+
+<p class=3DMsoNormal><font size=3D2 face=3DArial><span =
+style=3D'font-size:10.0pt;
+font-family:Arial'>Any tips are =
+appreciated<o:p></o:p></span></font></p>
+
+<p class=3DMsoNormal><font size=3D2 face=3DArial><span =
+style=3D'font-size:10.0pt;
+font-family:Arial'><o:p>&nbsp;</o:p></span></font></p>
+
+<p class=3DMsoNormal><font size=3D2 face=3DArial><span =
+style=3D'font-size:10.0pt;
+font-family:Arial'><o:p>&nbsp;</o:p></span></font></p>
+
+<p class=3DMsoNormal><font size=3D2 face=3D"Lucida Console"><span =
+style=3D'font-size:
+10.0pt;font-family:"Lucida Console"'>Amir Mistric (</span></font><a
+href=3D"mailto:amistric@nemours.org"><font size=3D2 face=3D"Lucida =
+Console"><span
+style=3D'font-size:10.0pt;font-family:"Lucida =
+Console"'>amistric@nemours.org</span></font></a><font
+size=3D2 face=3D"Lucida Console"><span =
+style=3D'font-size:10.0pt;font-family:"Lucida Console"'>)<br>
+Web Developer<br>
+Nemours Foundation<br>
+Office:&nbsp;(904) 232-4223</span></font><o:p></o:p></p>
+
+<p class=3DMsoNormal><st1:City w:st=3D"on"><st1:place w:st=3D"on"><font =
+size=3D2
+  face=3D"Lucida Console"><span =
+style=3D'font-size:10.0pt;font-family:"Lucida =
+Console"'>Mobile</span></font></st1:place></st1:City><font
+size=3D2 face=3D"Lucida Console"><span =
+style=3D'font-size:10.0pt;font-family:"Lucida Console"'>:
+(904) 588-6691</span></font><o:p></o:p></p>
+
+<div>
+
+<p class=3DMsoNormal><font size=3D3 face=3D"Times New Roman"><span =
+style=3D'font-size:
+12.0pt'>&nbsp;<o:p></o:p></span></font></p>
+
+</div>
+
+<p class=3DMsoNormal><font size=3D1 color=3Dsilver face=3D"Lucida =
+Console"><span
+style=3D'font-size:7.5pt;font-family:"Lucida =
+Console";color:silver'>NOTICE&#8230;This
+electronic transmission is intended only for the person(s) named.&nbsp; =
+It may
+contain information that is (i) proprietary to the sender, and/or (ii)
+privileged, confidential and/or otherwise exempt from disclosure under
+applicable State and Federal law, including, but not limited to, =
+privacy
+standards imposed pursuant to the federal Health Insurance Portability =
+and
+Accountability Act of 1996 (HIPAA).&nbsp; Receipt by anyone other than =
+the
+named recipient(s) is not a waiver of any applicable privilege.&nbsp; =
+If you
+received this confidential communication in error, please notify the =
+sender
+immediately by reply e-mail message and permanently delete the original =
+message
+from your system.</span></font><o:p></o:p></p>
+
+<p class=3DMsoNormal><font size=3D3 face=3D"Times New Roman"><span =
+style=3D'font-size:
+12.0pt'><o:p>&nbsp;</o:p></span></font></p>
+
+</div>
+
+</body>
+
+</html>
+
+------_=_NextPart_001_01C51F3C.0E871600--
