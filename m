@@ -1,11 +1,11 @@
-From: Steven Lembark <lembark@wrkhors.com>
-Subject: Re: [linux-lvm] PostgreSQL and file system level backup
-Message-ID: <58090000.1037406183@[192.168.200.4]>
-In-Reply-To: <2D92FEBFD3BE1346A6C397223A8DD3FC09208C@THOR.goeci.com>
-References: <2D92FEBFD3BE1346A6C397223A8DD3FC09208C@THOR.goeci.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+From: =?iso-8859-1?Q?Ragnar_Kj=F8rstad?= <lvm@ragnark.vestdata.no>
+Subject: Re: [linux-lvm] file system larger than lv
+Message-ID: <20021116025942.U17827@vestdata.no>
+References: <OF1EE49BDF.AE37C6D0-ON86256C71.005578CE@TEXASMUTUAL.COM> <20021115115831.B11618@sistina.com> <20021115122708.GK8377@pc.ilinx> <20021115135424.A12164@sistina.com> <20021115134816.GL8377@pc.ilinx>
+Mime-Version: 1.0
 Content-Disposition: inline
+In-Reply-To: <20021115134816.GL8377@pc.ilinx>; from lvm@interlinx.bc.ca on Fri, Nov 15, 2002 at 08:48:20AM -0500
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,43 +16,32 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Fri Nov 15 18:18:02 2002
+Date: Fri Nov 15 20:00:02 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
+Content-Type: text/plain; charset="iso-8859-1"
 To: linux-lvm@sistina.com
 
-> Which gives rise to my present question: given that LVM DOES give an
-> instantaneous snapshot of the filesystem, would an xfsdump of an LVM
-> snapshot of an XFS filesystem give usable backups?
+> > Putting additional overloading block/filesystem layer services not ne=
+cessarily
+> > needed there into the kernel is unlikely to be accepted either IMO.
+>=20
+> No.  No.  Not in the kernel.  I mean the user space tools can simply
+> check what data is on the block device (i.e. look for a known
+> signature of given filesystems) and see if it can determine if it is
+> indeed a filesystem.
 
-> PS: Our databases have crossed the 100 GB size, with some tables reaching
-> 25 GB, so pg_dump is taking more than 5 hours to complete (changing the
-> level of compression in custom format dump files from 6 to 1 did not
-> significantly reduce the dump duration). Otherwise, pg_dump-ing the
-> database (and copying the .conf files) was just dandy.
+First of all it's not possible to detect if the device includes a valid
+filesystem. You can only check for know filesystems and I don't think it
+would be a good idea for lvm to include a list of filesystem-signatures.
 
-LVM won't give you any more stable of a pictire over 5
-hours than anything else will unless you shut dwon the
-database first. Even if you try it once and the process
-works you are just as likely to be bit my Murphy on the
-next trial.
+Second, reducing the size of a device is just as dangerous if there is
+something else (say a datbase) on that device.
 
-Alternatives:
+So, if anything, I think lvreduce should always warn the user that this
+is a dangerous operation.
 
-	Use a mirror for the database, split it, and use that
-	copy for a backup. This is a common procedure in data
-	warehousing.
 
-	Make incremental backups of the daily loads and only
-	perform a full backup on, say, weekends at 0300; use
-	RAID5 or mirroring to minimimize the odds of having to
-	restore anything.
-	
-	You may be able to dump portions of the
-	database in parallel to decrease the time (this
-	requires careful partitioning of the space).
 
---
-Steven Lembark                               2930 W. Palmer
-Workhorse Computing                       Chicago, IL 60647
-                                            +1 800 762 1582
+--=20
+Ragnar Kj=F8rstad
+Big Storage
