@@ -1,9 +1,9 @@
 Return-Path: <riel@conectiva.com.br>
-Date: Mon, 26 Feb 2001 18:38:46 -0300 (BRST)
+Date: Mon, 26 Feb 2001 18:41:37 -0300 (BRST)
 From: Rik van Riel <riel@conectiva.com.br>
 Subject: Re: [linux-lvm] LVM and *bad* performance (no striping)
-In-Reply-To: <3A9AC4B7.FFA4C0B4@ida.xs4all.nl>
-Message-ID: <Pine.LNX.4.33.0102261837430.5502-100000@duckman.distro.conectiva>
+In-Reply-To: <m2snl1phy5.fsf@isnogud.escape.de>
+Message-ID: <Pine.LNX.4.33.0102261839460.5502-100000@duckman.distro.conectiva>
 MIME-Version: 1.0
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
@@ -20,25 +20,28 @@ Content-Type: TEXT/PLAIN; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Mon, 26 Feb 2001, Jorg de Jong wrote:
+On 26 Feb 2001, Urs Thuermann wrote:
 
-> here are my stats... (be your owen judge....)
+>     isnogud:/root# time dd if=/dev/sda5 of=/dev/null count=100000
+>     100000+0 records in
+>     real    0m6.720s
 
-> [root] /root > time dd if=/dev/hde of=/dev/null count=100000
-> 100000+0 records in
-> 100000+0 records out
-> 0.200u 1.050s 0:03.95 31.6%	0+0k 0+0io 116pf+0w
->
-> [root] /root > time dd if=/dev/vg00/vm of=/dev/null count=100000
-> 100000+0 records in
-> 100000+0 records out
-> 0.160u 0.860s 0:02.92 34.9%	0+0k 0+0io 116pf+0w
+>     isnogud:/root# time dd if=/dev/vg0/test of=/dev/null count=100000
+>     100000+0 records in
+>     real    0m41.851s
 
-Interesting, so LVM actually takes a full second LESS to
-read in the same data ...
+> When making an ext2 filesystem on /dev/sda5 or /dev/vg0/test
+> respectivley, the performance of cp'ing, grep'ing all files and rm'ing
+> all files, seems to be comparable.  But why is the performance of
+> reading the block device with dd so bad?
 
-Maybe LVM does some device-level readahead to speed things
-up ?
+Maybe dd is reading in 512 byte blocks on /dev/sda5 and
+4096 bytes on /dev/vg0/test ?
+
+(I'm not sure if it is, but these blocksizes are the
+default blocksize on each device and you only told dd
+to "read 100000 blocks" ... this ratio also explains
+the time difference of 8 times)
 
 regards,
 
