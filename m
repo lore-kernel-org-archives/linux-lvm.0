@@ -1,42 +1,39 @@
-Date: Mon, 16 Oct 2000 00:29:28 +0100 (IST)
+Date: Mon, 16 Oct 2000 00:34:13 +0100 (IST)
 From: Paul Jakma <paul@clubi.ie>
 Subject: Re: [linux-lvm] lv inactive after reboot
-In-Reply-To: <20001012224338.A17900@muon.de>
-Message-ID: <Pine.LNX.4.21.0010160028130.1693-100000@fogarty.jakma.org>
+In-Reply-To: <200010112231.QAA01053@lynx.turbolabs.com>
+Message-ID: <Pine.LNX.4.21.0010160030200.1693-100000@fogarty.jakma.org>
 MIME-Version: 1.0
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
 Content-Type: TEXT/PLAIN; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: Nils Juergens <nils@muon.de>
-Cc: linux-lvm@msede.com
+To: Andreas Dilger <adilger@turbolinux.com>
+Cc: Linux LVM mailing list <linux-lvm@msede.com>
 
-On Thu, 12 Oct 2000, Nils Juergens wrote:
+On Wed, 11 Oct 2000, Andreas Dilger wrote:
 
-> Isn't this default behavior? My vgscan showns no sign of -a or -y, these
-> are vgchange options.
-> 
-> This is what i do in my startup-scripts:
-> 
-> /sbin/vgscan
-> /sbin/vgchange -a y
+> I will see Heinz this week, so maybe I can convince him to make a new
+> release.  It may well be that he will debut 0.9 at the Miami Storage
+> Workshop, so the point may be moot.  If not, I'll do my best.
 > 
 
-i do this too of course (everything but /boot and / is on LVM),
-however it fails to bring this one LV up. And the only difference
-with this one is that it was once renamed.
+yes please. i've been advocating LVM at work for quite a while now,
+and it's getting to the stage where i will be allowed to move a live
+server over to it to test it out in production use.
 
-> cu,
-> 
-> Nils
-> 
-> 
+But now i have the problem that when i'm asked to document what i
+intend to do and if the boss sees: "get lvm tools from here, this
+patch from there, other patch from here, search list for this
+patch" he's going to change his mind very quickly. :(
 
+> Cheers, Andreas
+
+regards,
 -- 
 Paul Jakma	paul@clubi.ie
 PGP5 key: http://www.clubi.ie/jakma/publickey.txt
 -------------------------------------------
 Fortune:
-According to all the latest reports, there was no truth in any of the
-earlier reports.
+Washington, D.C: Fifty square miles almost completely surrounded by reality.
