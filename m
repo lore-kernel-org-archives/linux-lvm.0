@@ -1,10 +1,10 @@
 From: Herbert Poetzl <herbert@13thfloor.at>
-Subject: Re: [linux-lvm] Drive failure
-Message-ID: <20030515214959.GB22215@www.13thfloor.at>
-References: <200305141041.37355.bjzolp@wisc.edu> <20030515055917.GB19045@www.13thfloor.at> <200305150909.17331.bjzolp@wisc.edu>
+Subject: Re: [linux-lvm] Question when installing LVM
+Message-ID: <20030515215522.GC22215@www.13thfloor.at>
+References: <269ACE34F7A8744688CC03618BF3B67D0645DA13@c092ex03.na.cintas.com>
 Mime-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <200305150909.17331.bjzolp@wisc.edu>
+In-Reply-To: <269ACE34F7A8744688CC03618BF3B67D0645DA13@c092ex03.na.cintas.com>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,63 +15,62 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Thu May 15 16:49:03 2003
+Date: Thu May 15 16:55:02 2003
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Thu, May 15, 2003 at 09:09:17AM -0500, B. J. Zolp wrote:
-> On Thursday 15 May 2003 00:59, Herbert Poetzl wrote:
-> > On Wed, May 14, 2003 at 10:41:37AM -0500, B. J. Zolp wrote:
-> > > One of the drives in my volume group is developing bad sectors on it. 
-> > > When I mount the logical volume spanning that drive my entire machine
-> > > locks up. Should I be able to dd (without reading the bad sectors) the
-> > > failing drive (assuming it spins up and reads all the good sectors) to
-> > > the replacement drive, then run fsck on the unmounted volume and then
-> > > mount the volume with minimal data loss?
-> >
-> > I guess, this should work ... but make sure, that
-> > you do the copy operation on another system, otherwise
-> > the LVM stuff could/will be irritated by two diffent
-> > disks with the same signature (after copying over)
-> >
+On Thu, May 15, 2003 at 02:49:59PM -0400, Murray, Bobby wrote:
+> John,
+> Thanks for the information. I think my problem is I do not have the kernel- source rpm installed. Any idea where I can get it from?
+> thanks
+
+any redhat mirror? 
+
+search the appropriate rpm with rpmfind
+(http://www.rpmfind.net/) it should be something
+like kernel-2.4.18-3.src.rpm for the actual SRPM
+which produces (if rebuilt) kernel-2.4.18-3.i386.rpm
+(the kernel rpm) and kernel-source-2.4.18-3.i386.rpm
+(the kernel sources, already patched)
+
+best,
+Herbert
+
+> -----Original Message-----
+> From: John DeFranco [mailto:defranco@cup.hp.com]
+> Sent: Thursday, May 15, 2003 12:14 PM
+> To: linux-lvm@sistina.com; Murray, Bobby
+> Subject: Re: [linux-lvm] Question when installing LVM
 > 
-> What if the LVM is down?  Then when the copy is complete I replace the bad 
-> drive with the replacement and bring the LVM back up.  That seems like it 
-> should work.
-
-just make sure that the kernel or any start script
-scans for vgs or recreates lvmtab or makes any updates
-and/or changes to the pvs ...
-
-given that, it should work ...
-
-> > > The other option I can think of is remove that drive from the volume and
-> > > then remount it, but that would mean a loss of everything that is one the
-> > > failing drive, plus I am not sure how reiserfs works with large chunks of
-> > > its file system removed like that.
+> 
+> Hi,
+> 
+> If you are building a newer version of lvm from source for redhat 7.3 
+> (there is one already compiled and provided as a module), you  need 
+> to be sure you have the kernel-source rpm installed. Since redhat 
+> uses /usr/src/linux-2.4 instead of /usr/src/linux as the kernel 
+> source base you either need to create the /usr/src/linux link 
+> yourself or when you run the LVM configure command use the option 
+> --with-kernel_dir=/usr/src/linux-2.4, this is what I do.
+> 
+> I have had no problems with lvm on rh7.3.
+> 
+> On Thursday 15 May 2003 08:57, Murray, Bobby wrote:
+> > I installed the LVM on Redhat Linux 7.3. I am not able to display
+> > anything when I do a vgdisplay or lvdisplay. Nothing seems to work.
+> > I was trying to compile the source but the configure is failing on
+> > a /usr/src/src/linux not found. Redhat does not have such a file
+> > thats why I turned to the RPM's but they do not seem to be working
+> > correctly. Has anyone else experienced any problems compiling or
+> > using LVM? thanks in advance
 > >
-> > I wouldn't do that, neither with reiserfs nor with
-> > any other unix filesystem ... only as last escape
-> > if you disk is completely unreadable ...
+> > Bobby Murray
+> > Unix Administrator / AIX Certified Specialist
 > >
-> > anyway, if possible make a copy of ALL disks involved
-> > before you do any fscking so you can go back and
-> > try any other approach ...
 > >
-> > best,
-> > Herbert
 > >
-> > > thanks
-> > >
-> > > bjz
-> > >
-> > > _______________________________________________
-> > > linux-lvm mailing list
-> > > linux-lvm@sistina.com
-> > > http://lists.sistina.com/mailman/listinfo/linux-lvm
-> > > read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
 > >
 > > _______________________________________________
 > > linux-lvm mailing list
@@ -79,6 +78,17 @@ given that, it should work ...
 > > http://lists.sistina.com/mailman/listinfo/linux-lvm
 > > read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
 > 
+> John DeFranco			Hewlett-Packard Company
+> john.defranco@hp.com		Availability Clusters Solution Division
+> phone: 408-447-7543		19111 Pruneridge Ave, M/S 4101
+> fax: 408-447-0056		Cupertino, CA 95014 
+> 
+> 
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@sistina.com
+> http://lists.sistina.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
 > 
 > _______________________________________________
 > linux-lvm mailing list
