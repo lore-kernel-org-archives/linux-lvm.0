@@ -1,26 +1,28 @@
-From: "Stefan Monnier" <monnier+lists/linux/lvm/news/@tequila.cs.yale.edu>
-Subject: Re: [linux-lvm] Actual status of LVM in stock kernel
-References: <Pine.LNX.3.96.991113121751.20649A-100000@zeke.goatskin.org> <199911151119.AA19603@mailgate1b.telekom.de> <4.2.2.19991115093542.00a81bd0@mail.msy.bellsouth.net>
-Date: 16 Nov 1999 14:23:25 -0500
-Message-ID: <5lso266y1e.fsf@tequila.cs.yale.edu>
+Message-ID: <3833AE1B.CF554A02@msede.com>
+Date: Thu, 18 Nov 1999 08:43:23 +0100
+From: Michael Marxmeier <mike@msede.com>
+MIME-Version: 1.0
+Subject: [linux-lvm] Announce: Patch against kernel 2.3.28
+Content-Transfer-Encoding: 7bit
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
-MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@msede.com
 
->>>>> "Daniel" == Daniel Whicker <heimdall@mail.org> writes:
-> I don't know about *good*, but perhaps bringing it up in the kernel mailing 
-> lists might spurn some interest.  I know that Linus & Alan both frequent 
-> it, as well as other major players.  We may be able to light a spark into 
-> someone Linus talks with daily.
+Hi all.
 
-I'd recommend to be very visible:
-try to follow kernel releases and for each new release send a post
-to linux-kernel, linux-fsdevel and to linus pointing to the updated
-patch.
+A patch for LVM 0.7 against kernel version 2.3.28 is available
+for download.
+
+ftp://linux.msede.com/lvm/v0.7/patch-2.3.28-LVM.gz
 
 
-	Stefan
+Enjoy
+Michael
+
+-- 
+Michael Marxmeier           Marxmeier Software AG
+E-Mail: mike@msede.com      Besenbruchstrasse 9
+Phone : +49 202 2431440     42285 Wuppertal, Germany
+Fax   : +49 202 2431420     http://www.msede.com/
