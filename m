@@ -1,9 +1,7 @@
-From: "Steffen Koch" <Steffen.Koch@koch-enterprises.de>
-In-Reply-To: <E19lB1t-0006B1-00@hermes.sistina.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Message-Id: <E19lNiN-0006lS-00@mrelayng.kundenserver.de>
-Subject: [linux-lvm] shit on the ml [was: fwd: hey its me again]
+From: brumia@erols.com
+Mime-Version: 1.0
+Message-Id: <E19lPKk-0006BK-00@hermes.sistina.com>
+Subject: [linux-lvm] did you see this
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,14 +12,26 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Sat Aug  9 02:01:02 2003
+Date: Sat Aug  9 03:45:02 2003
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: "linux-lvm@sistina.com" <linux-lvm@sistina.com>
+Content-Transfer-Encoding: 7bit
+To: linux-lvm@sistina.com
 
-On Sat, 9 Aug 2003 02:29:51 +0900, bpac-proj@erols.com wrote:
+Hi friend, you should see this! i saved a bomb..
 
->holy pork bun! - you have to see this crazy site, I saved $3000...
+it's very special.only the banks know about it..
 
-can we now please close the ml for public posts???
-PLEASE!!!
+I hope your ready for lower mortgage repayments!
+
+>-----------
+
+http://r.aol.com/cgi/redir-complex?url=http://total@onlinesaleew.com/index.asp?RefID=198478
+
+>-----------
+
+
+
+
+
+stop more of these http://r.aol.com/cgi/redir-complex?url=http://lo@onlinesaleew.com/auto/index.htm
