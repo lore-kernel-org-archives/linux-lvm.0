@@ -1,11 +1,10 @@
-Message-ID: <3BA1DF55.1030103@st-peter.stw.uni-erlangen.de>
-Date: Fri, 14 Sep 2001 12:43:33 +0200
-From: svetljo <galia@st-peter.stw.uni-erlangen.de>
+From: "IT3 Stuart B. Tener, USNR-R" <stuart@bh90210.net>
+Subject: RE: [linux-lvm] Lock Patch
+Date: Fri, 14 Sep 2001 04:10:08 -0700
+Message-ID: <NBBBJHKIOKPKOGOEPEDPGEFEDNAA.stuart@bh90210.net>
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] Re: [linux-lvm] =?ISO-8859-1?Q?Verst=E4ndnis?= von 
-	Stripes bei LVM
-References: <4C45858D148AD411A8B800A024B36E5009F4C994@granada.fhm.de> <20010914121333.A11814@dragon.blacknet.de>
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: base64
+In-Reply-To: <20010914095500.A813@tykepenguin.com>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,57 +16,33 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="utf-8"; format="flowed"
+Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
 
-it's probably a silly question, but what about
-
-Re: [linux-lvm] diff. in striping between HP-UX and Linux LVM from Heinz 
-Mauelshagen
-
-probably it's better to have a linear LV over software RAID-0
-
-Goetz Bock wrote:
-
->On Fri, Sep 14 '01 at 11:32, Pawlowski Julian wrote:
->
->>ich habe eine Frage zur Funktion von Stripes beim LVM. Wof�r genau
->>ben�tigt man diese Funktion? Wird damit das LV auf mehrere der reellen
->>Partitionen zwecks Performancegewinn verteilt?
->>
->Yes, that's exactly the intended bahaviour. if you have n (e.g. 2 or
->more) PV than a striped LV is splitted between this n PV. This can
->increase performance (like RIAD0 does) but it may backfire, if your PV
->are on the same reald device.
->If you want to use striped LVs, only use one PV per real device.
->
->e.g.: 4 HDDs of 40GB each (sda, sdb, sdc, sdd)
->
->you boot from sda and decide to have a 512MB root/boot partition for
->this. Than make 3 swap partitiones on sdb, sdc and sdd.
->
->on each device make a seccond partition with the rest of the space.
->create a PV out of each of this 4 partitions.
->
->you now have:
->
->sda: sda1    512MB  root/boot
->     sda2   39.5GB  PV1
->sdb: sdb1    512MB  swap
->     sdb2   39.5GB  PV2
->sdc: sdc1    512MB  swap
->     sdc2   39.5GB  PV3
->sdd: sdd1    512MB  swap
->     sdd2   39.5GB  PV4
->
->VG1:       118.0GB  PV1 PV2 PV3 PV4
->
->if you now make a striped LV of 20GB it will use 5GB on each PV and the
->stripes will be read from PV1 PV2 PV3 PV4 PV1 PV2 PV3 PV4 ...
->
->BTW: if you write your question in english a lot more people will be
->     able to send you a reply.
->
->PS: und wenn Du willst kann ich Dir das ganze gerne nochmal auf Deutsch
->    schicken.
->
+TXIuIENhdWxmaWVsZDoNCg0KCVdlbGwgdGhhbmsgeW91IGZvciB0aGF0IG1vc3QgaGVscGZ1bCBz
+dWdnZXN0aW9uLCBidXQgc2lsbHkgbWUsIEkgY29uc2lkZXIgbXkgdGltZSBtb3JlIHZhbHVhYmxl
+LiBJIHNoYWxsIHdhaXQgZm9yIHNvbWVvbmUgdG8gcG9zdCBhIHByb3BlciBhbnN3ZXIsIHJhdGhl
+ciB0aGFuIG9uZSwgd2hpY2ggaXMgYm90aCBvYnZpb3VzIGFuZCBpbmVmZmljaWVudC4NCg0KDQpW
+ZXJ5IFJlc3BlY3RmdWxseSwgDQoNClN0dWFydCBCbGFrZSBUZW5lciwgSVQzLCBVU05SLVIsIE4z
+R1dHIA0KQmV2ZXJseSBIaWxscywgQ2FsaWZvcm5pYQ0KVlRVIDE5MDRHIChWb2x1bnRlZXIgVHJh
+aW5pbmcgVW5pdCkgDQpzdHVhcnRAYmg5MDIxMC5uZXQgDQp3ZXN0IGNvYXN0OiAoMzEwKS0zNTgt
+MDIwMiBQLk8uIEJveCAxNjA0MywgQmV2ZXJseSBIaWxscywgQ0EgOTAyMDktMjA0MyANCmVhc3Qg
+Y29hc3Q6ICgyMTUpLTMzOC02MDA1IFAuTy4gQm94IDQ1ODU5LCBQaGlsYWRlbHBoaWEsIFBBIDE5
+MTQ5LTU4NTkgDQoNClRlbGVjb3BpZXI6ICg0MTkpLTcxNS02MDczIGZheCB0byBlbWFpbCBnYXRl
+d2F5IHZpYSB3d3cuZWZheC5jb20gKGl0J3MgZnJlZSEpIA0KDQpKT0lOIFRIRSBVUyBOQVZZIFJF
+U0VSVkUsIFNFUlZFIFlPVVIgQ09VTlRSWSwgQU5EIEJFTkVGSVQgRlJPTSBJVCBBTEwuIA0KDQpG
+cmlkYXksIFNlcHRlbWJlciAxNCwgMjAwMSA0OjA1IEFNDQoNCi0tLS0tT3JpZ2luYWwgTWVzc2Fn
+ZS0tLS0tDQpGcm9tOiBsaW51eC1sdm0tYWRtaW5Ac2lzdGluYS5jb20gW21haWx0bzpsaW51eC1s
+dm0tYWRtaW5Ac2lzdGluYS5jb21dT24gQmVoYWxmIE9mIFBhdHJpY2sgQ2F1bGZpZWxkDQpTZW50
+OiBGcmlkYXksIFNlcHRlbWJlciAxNCwgMjAwMSAxOjU1IEFNDQpUbzogbGludXgtbHZtQHNpc3Rp
+bmEuY29tDQpTdWJqZWN0OiBSZTogW2xpbnV4LWx2bV0gTG9jayBQYXRjaA0KDQpPbiBUaHUsIFNl
+cCAxMywgMjAwMSBhdCAxMTowMDo0N1BNIC0wNzAwLCBJVDMgU3R1YXJ0IEIuIFRlbmVyLCBVU05S
+LVIgd3JvdGU6DQo+IExpc3QgbWVtYmVyczoNCj4NCj4gICAgICAgSSBhbSBjdXJpb3VzOyBpZiBJ
+IGFtIHJ1bm5pbmcgMi40LjgtMTJtZGsgKE1hbmRyYWtlIDgsMCksIHdoaWNoIGxvY2sgcGF0Y2gg
+ZG8gSSB1c2UgdGhlIDIuNC40IHZlcnNpb24gb3IgdGhlIDIuNC45IHZlcnNpb24/DQo+DQo+DQoN
+Ckkgd291bGQgdHJ5IHRoZSAyLjQuNCBvbmUuIElmIHRoYXQgZG9lc24ndCBhcHBseSB0aGVuIHRy
+eSB0aGUgMi40LjkuDQoNCnBhdHJpY2sNCg0KDQpfX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fXw0KbGludXgtbHZtIG1haWxpbmcgbGlzdA0KbGludXgtbHZtQHNp
+c3RpbmEuY29tDQpodHRwOi8vbGlzdHMuc2lzdGluYS5jb20vbWFpbG1hbi9saXN0aW5mby9saW51
+eC1sdm0NCnJlYWQgdGhlIExWTSBIT1ctVE8gYXQgaHR0cDovL3d3dy5zaXN0aW5hLmNvbS9sdm0v
+UGFnZXMvaG93dG8uaHRtbA0K
