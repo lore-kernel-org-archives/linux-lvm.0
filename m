@@ -1,6 +1,6 @@
 From: neuron <neuron@hollowtube.mine.nu>
 Subject: Re: [linux-lvm] Performance problem.
-Message-Id: <20031117175823.2b7bb2b0.neuron@hollowtube.mine.nu>
+Message-Id: <20031117181007.00e15a29.neuron@hollowtube.mine.nu>
 In-Reply-To: <1069087854.2408.0.camel@localhost.localdomain>
 References: <3FB8F8A1.1060004@clin.ucl.ac.be>
 	<1069087854.2408.0.camel@localhost.localdomain>
@@ -16,12 +16,12 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Nov 17 11:00:01 2003
+Date: Mon Nov 17 11:12:02 2003
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
 
-That's actually a very good idea, /me 's gonna test that before 2.6.
+seems I was a bit quick on that reply, I remember hearing about TCQ a while ago.  Is it considered stable atm?  Noticed it wasn't even in my make menuconfig, which makes me very sceptical (it is unset in .config though, so the patches are there), running mm-sources, well, considering to run it.
 
 > Thought about trying TCQ for the IDE disks?
 > 
