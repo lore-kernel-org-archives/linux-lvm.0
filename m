@@ -1,19 +1,18 @@
-Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j0I9BAO22180
-	for <linux-lvm@redhat.com>; Tue, 18 Jan 2005 04:11:10 -0500
-Received: from mailgate3.cinetic.de (mailgate3.cinetic.de [217.72.192.164])
-	by mx3.redhat.com (8.12.11/8.12.11) with ESMTP id j0I9B4Xv003722
-	for <linux-lvm@redhat.com>; Tue, 18 Jan 2005 04:11:05 -0500
-Received: from pcnocjb.int.cinetic.de (pcnocjb.int.cinetic.de [10.1.0.163])
-	by mailgate3.cinetic.de (8.11.6p2/8.11.2/SuSE Linux 8.11.0-0.4) with
-	ESMTP id j0I9AwK20310
-	for <linux-lvm@redhat.com>; Tue, 18 Jan 2005 10:10:58 +0100
-Date: Tue, 18 Jan 2005 10:10:59 +0100
-From: Jens Beyer <jbe@webde-ag.de>
-Message-ID: <20050118091059.GC27553@pcnocjb.dlan.cinetic.de>
-Mime-Version: 1.0
-Content-Disposition: inline
-Subject: [linux-lvm] Data corruption on large, multi-device filesystem
+Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j0I3dbO31703
+	for <linux-lvm@redhat.com>; Mon, 17 Jan 2005 22:39:37 -0500
+Received: from mail17.ca.com (mail17.ca.com [155.35.248.106])
+	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id j0I3dZiX011673
+	for <linux-lvm@redhat.com>; Mon, 17 Jan 2005 22:39:36 -0500
+content-class: urn:content-classes:message
+MIME-Version: 1.0
+Content-Type: multipart/alternative;
+	boundary="----_=_NextPart_001_01C4FD0F.50E68FEA"
+Date: Tue, 18 Jan 2005 14:39:29 +1100
+Message-ID: <7C5D17C4190B2A4BBD47C71727973DA7016159B5@ausyms22.ca.com>
+From: "Bao, Liping" <Liping.Bao@ca.com>
+Subject: [linux-lvm] (root is lvm) Kernel panic: No init found. Try passing
+	init= option to kernel
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -24,54 +23,114 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@redhat.com
 
+This is a multi-part message in MIME format.
 
-Hi,
+------_=_NextPart_001_01C4FD0F.50E68FEA
+Content-Type: text/plain;
+	charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 
-I get severe data corruption using an logical volume larger 
-then 2 TB. Finally I was able to track down device mappper or 
-lvm as last suspects.
+Hi, all
+I am dealing with a Disaster Recovery Software. After recoveried system
+layout with lvm tools and recoveried data I bootup the machine,but
+"kernel panic" happened.=20
+Really appreaciate your help.
+=20
+My system is Suse Linux Enterprise Server 9(kernel 2.6.5-7.97-default).
+The / partition is installed in a lvm vg.
+The /boot partion is a regular partition.
+=20
+My trace:
+Before reboot, I can activate all my logic volume with command "vgchange
+-ay", and all of them can be mounted successfully.=20
+Then I installed lilo.
+And during bootup, I add "initrd=3Dtrace" to trace the initrd procedure, =
+I
+don't find anything abnormal(dm-mod loaded,volume activated, chroot to
+real root succesfully...) except the kernel panic.
+In my opnion, the "kernel panic" always happened during upgrading
+kernel.  Which problem it should be?
+How can I trace the problem?
+=20
+Thanks in advance.
+=20
+=20
+=20
+=20
 
-My first guess where problems with filesystems but recently 
-I tried using md / RAID0 - and didnt have any errors of any 
-kind. I would prefer using LVM since we want to use snapshots 
-to simplify backup, but I have no clue how to further debug.
+------_=_NextPart_001_01C4FD0F.50E68FEA
+Content-Type: text/html;
+	charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 
-On a system with 3 devices each larger then 1 TB and a logical 
-volume striped over all devices some data gets corrupted while 
-written (or read ?) from disk. This shows up as md5 or crc sums 
-changes on sequenced reads of files if filecache is not involved 
-(by reading a lot data). 
-On ext2fs there are error while writing data (kernel: EXT2-fs error 
-(device dm-0): ext2_new_block: Allocating block in system zone -
- block = 722239884), on other filesystems successive fsck/repairs 
-shows corrupted metadata.  
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML><HEAD>
+<META http-equiv=3DContent-Type content=3D"text/html; =
+charset=3Dus-ascii">
+<META content=3D"MSHTML 6.00.2900.2523" name=3DGENERATOR></HEAD>
+<BODY>
+<DIV><SPAN class=3D906080403-18012005><FONT size=3D2>Hi, =
+all</FONT></SPAN></DIV>
+<DIV><SPAN class=3D906080403-18012005><FONT size=3D2>I am dealing with a =
+Disaster=20
+Recovery Software. After recoveried system layout with lvm tools and =
+recoveried=20
+data&nbsp;I bootup the machine,but&nbsp;"kernel panic" happened.=20
+</FONT></SPAN></DIV>
+<DIV><SPAN class=3D906080403-18012005><FONT size=3D2>Really appreaciate =
+your=20
+help.</FONT></SPAN></DIV>
+<DIV><SPAN class=3D906080403-18012005><FONT =
+size=3D2></FONT></SPAN>&nbsp;</DIV>
+<DIV><SPAN class=3D906080403-18012005><FONT size=3D2>My system is Suse =
+Linux=20
+Enterprise Server 9(kernel 2.6.5-7.97-default).</FONT></SPAN></DIV>
+<DIV><SPAN class=3D906080403-18012005><FONT size=3D2>The / partition is =
+installed in=20
+a lvm vg.</FONT></SPAN></DIV>
+<DIV><SPAN class=3D906080403-18012005><FONT size=3D2>The /boot partion =
+is a regular=20
+partition.</FONT></SPAN></DIV>
+<DIV><SPAN class=3D906080403-18012005><FONT =
+size=3D2></FONT></SPAN>&nbsp;</DIV>
+<DIV><SPAN class=3D906080403-18012005><FONT size=3D2>My =
+trace:</FONT></SPAN></DIV>
+<DIV><SPAN class=3D906080403-18012005><FONT size=3D2>Before reboot, I =
+can activate=20
+all my logic volume with command "vgchange -ay", and all of them can be =
+mounted=20
+successfully. </FONT></SPAN></DIV>
+<DIV><SPAN class=3D906080403-18012005><FONT size=3D2>Then I installed=20
+lilo.</FONT></SPAN></DIV>
+<DIV><SPAN class=3D906080403-18012005><FONT size=3D2>And during bootup, =
+I add=20
+"initrd=3Dtrace" to trace the initrd procedure, I don't find anything=20
+abnormal(dm-mod loaded,volume activated, chroot&nbsp;to real root=20
+succesfully...)&nbsp;except the kernel panic.</FONT></SPAN></DIV>
+<DIV><SPAN class=3D906080403-18012005><FONT size=3D2>
+<DIV><SPAN class=3D906080403-18012005><FONT size=3D2>In my opnion, the =
+"kernel=20
+panic" always happened during upgrading kernel.&nbsp; =
+</FONT></SPAN>Which=20
+problem it should be?</FONT></SPAN></DIV></DIV>
+<DIV><SPAN class=3D906080403-18012005><FONT size=3D2>How can I trace the =
 
-The system setup is 
-- Three 29160B Adaptec scsi-controller each with one 
-  ATA-Disk Raid sized 1240 GB, (dual PIII, HP DL360 G2, 2 GB Ram)
-- Volume group over all three devices, logical volume stripped 
-  full size (3.7 TB)
-- Filesystem either ext2fs/ext3fs (1.34), reiserfs (3.6.13) or 
-  xfs (2.6.25)  
+problem?</FONT></SPAN></DIV>
+<DIV><SPAN class=3D906080403-18012005><FONT =
+size=3D2></FONT></SPAN>&nbsp;</DIV>
+<DIV><SPAN class=3D906080403-18012005><FONT size=3D2>Thanks in=20
+advance.</FONT></SPAN></DIV>
+<DIV><SPAN class=3D906080403-18012005></SPAN><SPAN=20
+class=3D906080403-18012005></SPAN><SPAN class=3D906080403-18012005><FONT =
 
-- host:~ # lvm version
-  LVM version:     2.00.33 (2005-01-07)
-  Library version: 1.00.21-ioctl (2005-01-07)
-  Driver version:  4.3.0
-- 2.6.10 vanilla + 2.6.10-udm1 patches
+size=3D2></FONT></SPAN>&nbsp;</DIV>
+<DIV><SPAN class=3D906080403-18012005><FONT =
+size=3D2></FONT></SPAN>&nbsp;</DIV>
+<DIV><SPAN class=3D906080403-18012005><FONT =
+size=3D2></FONT></SPAN>&nbsp;</DIV>
+<DIV><FONT face=3D&#23435;&#20307; =
+size=3D2></FONT>&nbsp;</DIV></BODY></HTML>
 
-The problems where initially discovered on 2.6.8, tracked on 2.6.9-udm 
-and also occurs if only 2 devices (sum 2.4 TB) are used.
-
-For a limited time I will be able to further debug the system though 
-it takes some time to generate more then 2 TB of data 
-(max seq read/write rate is ~80 MB/s).
-
-Jens
-
--- 
-Nur tote Fische schwimmen mit dem Strom
+------_=_NextPart_001_01C4FD0F.50E68FEA--
