@@ -1,64 +1,71 @@
-Date: Fri, 16 Jun 2000 05:38:36 -0500
-From: "Eric M. Hopper" <hopper@omnifarious.mn.org>
-Subject: Re: [linux-lvm] LVM for Redhat 6.1 (2.2.12 kernel)
-Message-ID: <20000616053836.A18384@omnifarious.mn.org>
-References: <DCBFB8E1BD8BD311A94D00A0C9CA44EA0CCCEB@storeage_nt>
+Date: Fri, 16 Jun 2000 14:38:13 +0200
+From: "Heinz J. Mauelshagen" <Mauelshagen@Sistina.com>
+Subject: Re: [linux-lvm] Problems activating VG (2.4.0-test1 / raid 0.9)]
+Message-ID: <20000616143813.B2560@hmsysv.t-online.de>
+Reply-To: Mauelshagen@Sistina.com
+References: <20000616002606.A9103@hmsysv.t-online.de> <200006160531.HAA26810@musashi.stan.de>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="HlL+5n6rz5pIUxbD"
-Content-Disposition: inline
-In-Reply-To: <DCBFB8E1BD8BD311A94D00A0C9CA44EA0CCCEB@storeage_nt>; from SVichik@store-age.com on Fri, Jun 16, 2000 at 10:37:05AM +0200
+In-Reply-To: <200006160531.HAA26810@musashi.stan.de>; from stk@rmi.de on Fri, Jun 16, 2000 at 07:31:34AM +0200
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
-To: Sergey Vichik <SVichik@store-age.com>
-Cc: "LVM list (E-mail)" <linux-lvm@msede.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: stk@rmi.de
+Cc: linux-lvm@msede.com
 
 
---HlL+5n6rz5pIUxbD
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Hi Stefan,
 
-On Fri, Jun 16, 2000 at 10:37:05AM +0200, Sergey Vichik wrote:
->=20
-> Hello,
->=20
-> 	I want to install LVM on  Redhat 6.1 (2.2.12-20 kernel), without
-> replacing the kernel to another version.
-> All LVM patches fails to do it because of RAID additions in ll_rw_blk.c .
->=20
-> 	Is there some other patch that works for this kernel version ?
-> Or if isn't, a patch to upgrade to another version, where LVM patches will
-> work ?
+please change vgchange.c line 346 to line 354 that they looks like:
 
-	In order for me to make this work, I backed out the RAID changes
-in ll_rw_blk.c.  There should be a message in the archives where I
-detail exactly which patches I had to back out to make things work.
+            if ( ( ret = vg_check_online_all_pv ( vg, &pv_offl, &pv_incons)) < 0
+                 &&  ret != -LVM_EPV_READ_MD_DEVICE) {
+               if ( ret == -LVM_EPV_READ_PV_CREATE_NAME_FROM_KDEV_T) {
+                     fprintf ( stderr, "%s -- ERROR: can't get name(s) of "
+                                       "physical volumes\n"
+                                       "%s -- Please check, if /proc "
+                                       "is mounted\n",
+                                       cmd, cmd);
+               } else {
 
-	Looking back on it, I wish that I had been able to leave the
-RAID changes in, because I think I would rather have the RAID code
-handle RAID0 striping instead of LVM.  Seems cleaner somehow.
+and test again.
 
-Have fun (if at all possible),
---=20
-Its name is Public Opinion.  It is held in reverence. It settles everything.
-Some think it is the voice of God.  Loyalty to petrified opinion never yet
-broke a chain or freed a human soul.     ---Mark Twain
--- Eric Hopper (hopper@omnifarious.mn.org http://www.omnifarious.org/~hoppe=
-r) --
+Regards,
+Heinz
 
---HlL+5n6rz5pIUxbD
-Content-Type: application/pgp-signature
-Content-Disposition: inline
+On Fri, Jun 16, 2000@07:31:34AM +0200, stk@rmi.de wrote:
+> On 16 Jun, Heinz J. Mauelshagen wrote:
+> > 
+> > Please provide the stdout/stderr of "vgscan -d" and "vgchange -day" to the list.
+> > 
+> > Regards,
+> > Heinz
+> > 
+> > On Thu, Jun 15, 2000 at 09:23:49PM +0200, stk@rmi.de wrote:
+> >> Hello everyone,
+> >> 
+> >> at the moment im experimenting with lvm on top of raid1 (v0.9)
+> >> but ran into a problem with the pv and vg activation. That is
+> 
+> attached are first the output vgscan -d and after that vgchange -day
+> 
+> regards
+> Stefan
+> 
+> 
+<SNIP output>
+-- 
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.0.1 (GNU/Linux)
-Comment: For info see http://www.gnupg.org
+Regards,
+Heinz      -- The LVM guy --
 
-iD8DBQE5SgOsG4QeWBeRdS8RAk0/AJ9H8CtvRiXvjwmI9SK+rvGRYjM1TQCeI/S4
-U2jVnQ8Mi1TDfwBB+mhAJ4s=
-=D2Xm
------END PGP SIGNATURE-----
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
---HlL+5n6rz5pIUxbD--
+Heinz Mauelshagen                                 Sistina Software Inc.
+Senior Consultant/Developer                       Bartningstr. 12
+                                                  64289 Darmstadt
+                                                  Germany
+Mauelshagen@Sistina.com                           +49 6151 7103 86
+                                                       FAX 7103 96
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
