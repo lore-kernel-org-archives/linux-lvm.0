@@ -1,11 +1,9 @@
-Return-Path: <hch@ns.caldera.de>
-Date: Tue, 6 Feb 2001 19:21:15 +0100
-From: Christoph Hellwig <hch@caldera.de>
-Subject: Re: [linux-lvm] startup stuff an dnew question :-)
-Message-ID: <20010206192115.A24668@caldera.de>
-References: <Pine.LNX.4.21.0102021438490.380-100000@munster.noc.fr.clara.net> <3A7E61D7.D417A879@twc.de> <20010205213917.C29990@bar.nowhere> <3A7FAB7A.29CFB419@twc.de>
+Return-Path: <gobo@gimle.nu>
+Message-ID: <20010206183505.7773.qmail@fraggle.cs.uit.no>
+From: gobo@gimle.nu
 Mime-Version: 1.0
-In-Reply-To: <3A7FAB7A.29CFB419@twc.de>; from ulf@twc.de on Tue, Feb 06, 2001 at 08:44:58AM +0100
+Date: Tue, 06 Feb 2001 19:35:05 +0100
+Subject: [linux-lvm] Help! Problems finding VG after reboot.
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -21,19 +19,60 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Tue, Feb 06, 2001 at 08:44:58AM +0100, Ulf Bartelt wrote:
-> ...but for now I never needed to resize /boot or /, only the other
-> LVs...
+Hi all.
 
-With my grub patch (ftp.openlinux.org:/pub/people/hch/lvm) you should
-be able to boot a kernel on a LV.
+I'm running beta3 on a 2.4.0 kernel. I recently had to reboot my computer 
+due to an error with the network device. When the computer came back up I 
+couldn't get to the LVM partition any more.
 
-I havn't looked at it for about half a year, so it might not apply against
-grub-current anymore.
+Running vgscan I got the following message:
 
-For / there is initrd, my autoscan code is pretty dead now, sorry.
+# vgscan
+vgscan -- reading all physical volumes (this may take a while...)
+vgscan -- found inactive volume group "widow"
+vgscan -- ERROR "vg_read_with_pv_and_lv(): allocated LE of LV" can't get 
+data of volume group "widow" from physical volume(s)
+vgscan -- ERROR "vg_read_with_pv_and_lv(): allocated LE of LV" creating 
+"/etc/lvmtab" and "/etc/lvmtab.d"
 
-	Christoph
+Running PVscan yielded:
 
+# pvscan
+pvscan -- reading all physical volumes (this may take a while...)
+pvscan -- inactive PV "/dev/hda3"  is associated to an unknown VG (run 
+vgscan)
+pvscan -- inactive PV "/dev/hdb1"  is associated to an unknown VG (run 
+vgscan)
+pvscan -- inactive PV "/dev/hdc1"  is associated to an unknown VG (run 
+vgscan)
+pvscan -- inactive PV "/dev/hdd1"  is associated to an unknown VG (run 
+vgscan)
+pvscan -- inactive PV "/dev/hde1"  is associated to an unknown VG (run 
+vgscan)
+pvscan -- inactive PV "/dev/hdf1"  is associated to an unknown VG (run 
+vgscan)
+pvscan -- total: 6 [100.96 GB] / in use: 6 [100.96 GB] / in no VG: 0 [0]
+
+After reading through the mailing list I got the impression that the 
+thing to do to solve my problems would be to run vgcfgrestore on each 
+partition. So I ran the following command on all 6 partitions:
+# vgcfgrestore -n widow /dev/hdf1
+vgcfgrestore -- VGDA for "widow" successfully restored to physical volume 
+"/dev/hdf1"
+
+Now when I run vgscan I get:
+# vgscan
+vgscan -- reading all physical volumes (this may take a while...)
+vgscan -- no volume groups found
+
+and pvscan yields the exact same result as above.
+
+If anyone have an idea on how I can get my filesystem back I'd very much 
+appreciate it.
+
+Frank Ronny Larsen
 -- 
-Of course it doesn't work. We've performed a software upgrade.
+"I'll carry your books, I'll carry a tune, I'll carry on, carry over,
+carry forward, Cary Grant, cash & carry, Carry Me Back To Old
+Virginia, I'll even Hara Kari if you show me how, but I will *not*
+carry a gun."                                      -- Hawkeye, M*A*S*H
