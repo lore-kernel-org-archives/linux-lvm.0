@@ -1,14 +1,20 @@
 Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with SMTP id i1K7R4i17722
-	for <linux-lvm@redhat.com>; Fri, 20 Feb 2004 02:27:04 -0500
-Received: from p15107633.pureserver.info (daemon@perlnuke.info [217.160.141.122])
-	by mx1.redhat.com (8.11.6/8.11.6) with SMTP id i1K7R3b08132
-	for <linux-lvm@redhat.com>; Fri, 20 Feb 2004 02:27:03 -0500
-From: Matthias Albert <matthias@ma-c.de>
-Message-Id: <1077262021.885.3.camel@fragger>
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: [linux-lvm] ext3 lvm Problem
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with SMTP id i1K4E3i02540
+	for <linux-lvm@redhat.com>; Thu, 19 Feb 2004 23:14:03 -0500
+Received: from MTVMIME02.enterprise.veritas.com (bay-bridge.veritas.com [143.127.3.10])
+	by mx1.redhat.com (8.11.6/8.11.6) with SMTP id i1K4E2b20221
+	for <linux-lvm@redhat.com>; Thu, 19 Feb 2004 23:14:02 -0500
+Received: from vxindia.veritas.com (unverified) by MTVMIME02.enterprise.veritas.com
+ (Content Technologies SMTPRS 4.3.12) with ESMTP id <T67dbd27e500a89115484c@MTVMIME02.enterprise.veritas.com> for <linux-lvm@redhat.com>;
+ Thu, 19 Feb 2004 20:13:56 -0800
+Received: from sachin (rekha.vxindia.veritas.com [10.212.92.46] (may be forged))
+	by vxindia.veritas.com (8.11.6+Sun/8.9.3) with SMTP id i1K49AW15282
+	for <linux-lvm@redhat.com>; Fri, 20 Feb 2004 09:39:12 +0530 (IST)
+Message-ID: <000d01c3f7d9$eb1f5950$2e5cd40a@sachin>
+From: "sachin" <sdurge@vxindia.veritas.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] Reading Cow table
 Sender: linux-lvm-admin@redhat.com
 Errors-To: linux-lvm-admin@redhat.com
 Reply-To: linux-lvm@redhat.com
@@ -20,38 +26,18 @@ List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
 List-Archive: <https://www.redhat.com/archives/linux-lvm/>
-Date: Mon Feb 23 08:41:13 2004
+Date: Mon Feb 23 08:41:17 2004
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@redhat.com
 
-Hallo zusammen,
+Hi Everyone
+Can any one tell  me is it possible to read the cow table & find out the =
+exact location of the data on the disk or partition . If yes give me any =
+clue to read the COW table and other data.
 
-ich hab hier ein Raid 5 mit ext3 in einem lvm am laufen. Leider hab ich
-damit nur Probleme. (Produktionsserver nat�rlich noch)
+I am using a lvm 1.0.3  . Copy of the cow table should be consistant with
+the data on disk
 
-EXT3-fs error (device lvm(58,6)): ext3_readdir: directory #7569548
-contains a
-hole at offset 0
-ttempt to access beyond end of device
-Feb 19 06:26:45 bart kernel: 3a:06: rw=0, want=150290744,
-limit=115343360
-Feb 19 06:26:45 bart kernel: EXT3-fs error (device lvm(58,6)):
-ext3_readdir: directory #7569548 contains a
-hole at offset 4096
-
-usw. Von diesen Fehlern hagelt es dann die Mbyte Weise in der syslog.
-
-Das ganze wirkt sich so aus dass in manchen Verzeichnisse Files sind die
-�ber 50 Terrabyte gross und von 1932 z.b. sind.
-
-Ich hab mein Problem in die debian-user-german Mailingliste gepackt ->
-dort wurde ich darauf hingewiesen dass es wohl ein Problem mit ext3 und
-lvm ist und ich das ganze hier mal posten soll.
-
-Gibt es daf�r mittlerweile einen Patch? Wenn ja wo find ich den, wenn
-nein wann wird einer kommen. Ist das Problem �berhaupt schon bekannt?
-
-Viele Gr�sse aus Karlsruhe,
-
-Matthias
+Thanks in advance.
+SachiN_
