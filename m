@@ -1,7 +1,10 @@
-From: George Karaolides <george@karaolides.com>
-Message-Id: <Pine.LNX.4.40.0202020226580.695-100000@phobos.internal.parmastocks.com>
+From: Luca Berra <bluca@comedia.it>
+Subject: Re: [linux-lvm] hmmm, curious... (OFFTOPIC)
+Message-Id: <20020202113651.GB2380@colombina.comedia.it>
+References: <25E4CA13D679FF48BC307694202209710164DEC1@nd1-clusa.local.bunnings.com.au>
 MIME-Version: 1.0
-Subject: [linux-lvm] Root fs on LV on software RAID
+Content-Disposition: inline
+In-Reply-To: <25E4CA13D679FF48BC307694202209710164DEC1@nd1-clusa.local.bunnings.com.au>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -12,29 +15,30 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Fri Feb  1 19:00:02 2002
+Date: Sat Feb  2 05:37:02 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Hi all,
+On Thu, Jan 31, 2002 at 09:11:13AM +0800, Colin Coe wrote:
+> 
+> Hi all, I have come accross a strange problem while doing some scripting
+> with lvdisplay.  When I use lvdisplay piped to awk in the first example
+> (noting that I have 'hard-wired' one field in awk), a second line is printed
+> containing all hard-wired strings, including tabs.  But if I encase the
+> lvdisplay in backticks and use echo then piped to awk the problem does not
+> exist.
+> 
+command substitution (backticks if you whish) replaces all newlines with blanks
+compresses sequences of blanks and trims trailing blanks
+if you want only the first line in awk do:
+lvdisplay -c /dev/rootvg/bbs | awk -F: 'NR==1 {print $1 "\t\t" $9 "\t" $9 "\t" "2" "\t" $4 }'
 
-I'm a new subscriber to this list, learning how to use LVM on Debian
-woody with kernel version 2.4.17.
-
-So far, I've managed to build filesystems (ext2) in logical volumes on
-top of software RAID-1, mount them and copy data into them.
-
-I'd like to know if it is possible to have the root filesystem on an LV on
-top of software RAID (provided, of course, that /boot is on a separate
-partition readable by lilo).  I've searched the past few months' worth of
-list archives and have found no reference to whether this is actually
-possible or not.  Has anyone done this?
-
-Thanks in advance and best regards,
-
-|      George Karaolides       8, Costakis Pantelides St.,         |
-|      tel:   +357 99 68 08 86                  Strovolos,         |
-|      email: george@karaolides.com       Nicosia CY 2057,         |
-|      web:   www.karaolides.com      Republic  of Cyprus          |
+-- 
+Luca Berra -- bluca@comedia.it
+        Communication Media & Services S.r.l.
+ /"\
+ \ /     ASCII RIBBON CAMPAIGN
+  X        AGAINST HTML MAIL
+ / \
