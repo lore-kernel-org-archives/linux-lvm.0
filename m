@@ -1,10 +1,10 @@
-Return-Path: <glenn@gecpalau.com>
-Message-ID: <3B0338E9.8425E93B@gecpalau.com>
-Date: Thu, 17 May 2001 11:35:21 +0900
-From: Glenn Shannon <glenn@gecpalau.com>
+Return-Path: <totake66@home.com>
+Message-ID: <3B0336BC.B8BC97D4@home.com>
+Date: Wed, 16 May 2001 21:26:04 -0500
+From: Tom Otake <totake66@home.com>
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] segfaults and "VGDATA .. inconsistent" beta7 tools
-References: <Pine.LNX.4.33.0105170137020.9932-100000@fogarty.jakma.org>
+Subject: Re: [linux-lvm] lvm deadlock with 2.4.x kernel?
+References: <3B005823.33AEE05D@home.com> <20010515094004.B468@66bassett.freeserve.co.uk> <3B01AF42.C171FE86@home.com>
 Content-Transfer-Encoding: 7bit
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
@@ -20,68 +20,28 @@ List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
 
-Paul Jakma wrote:
+I've recreated the system hang exactly as I've described below with a pvscan
+during a copy.  I used a new kernel with hacking enabled, redirected 1 into
+/proc/sys/kernel/sysrq.  None of the sysrq commands seemed to have worked.  The
+system hung about 20 to 30 seconds into the copy process.
 
-> On Wed, 16 May 2001, Heinz J. Mauelshagen wrote:
+Tom Otake wrote:
+
+> Yes, I've been able to recreate the second hang scenario, though I have to
+> admit it wasn't exactly the same.  I started the copy of the data, created a
+> new LV, which worked.  I ran mkreiserfs on the new LV, it worked.  I removed
+> the new LV, also worked, then ran pvscan.  That's when the system hung.  All
+> the while, the copy from CD to disk was going on.
 >
-> > The lvm library sets up a device name/number cache in order to
-> > map between those. If pv_create_name_from_kdev_t() returns
-> > (char*)NULL, an entry for /dev/ida/c0d0p6 couldn't be found in
-> > the cache :-( Even though /dev/ida/ is a supported namespace, the
-> > entry couldn't have made it into the cache, because the stat() on
-> > the device returned an error.
+> Joe Thornber wrote:
+>
 > >
-> > In order to check this, you could for eg. add a "printf ("found
-> > %s\n", devpath)" after the sprintf() in lvm_add_dir_cache() in
-> > lvm_dir_cache.c and and a "printf ("ADDED %s\n", devpath)" after
-> > the cache_size++ in the same function.
+> > > The second occurance:
+> > > I was copying a large amount of data from a CDROM to my home dir (on
+> > > lvm).  While the copy was in progress, I created a new LV.  This
+> > > worked.  The system hung when I ran mkreiserfs on the new LV.
 > >
-> > BTW: long time ago, we were faced with problems related to messy /dev/ entries.
-> >      In case you don't run devfs you need to make sure that /dev/ entries are
-> >      all right.
->
-> hmm... devfs.... that got me thinking. i run devfs, but mounted on
-> /devfs instead of /dev for informational purposes. search through the
-> archive shows that having devfs compiled in but not mounted on /dev
-> is a known problem as devfs changes /proc/partitions.
->
-> compile without devfs and hey presto both machines work fine...
->
-> > No.
-> > See above.
->
-> i think i've answered it myself.
->
-> thing is, i still want to run devfs, but not on /dev. if i convert
-> all the file names in /dev to be the same as in devfs then LVM would
-> work, wouldn't it?
->
-> regards,
-> --
-> Paul Jakma      paul@clubi.ie   paul@jakma.org
-> PGP5 key: http://www.clubi.ie/jakma/publickey.txt
-> -------------------------------------------
-> Fortune:
-> Committees have become so important nowadays that subcommittees have to
-> be appointed to do the work.
->
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-
-Actually, I run LVM and DevFS.
-
-From my experience, LVM handles the change between using DevFS and non-DevFS /dev
-entries flawlessly.
-
-The problem is updating your fstab *before* you mount devfsd on /dev.
-
-You must figure out where everything is going to be so that you can create the
-proper entries under your fstab. LVM entries need not change as they stay the same.
-(/dev/vg1/lv1 will still be /dev/vg1/lg1). But /dev/hda1 will be
-/dev/discs/disc0/part1 etc. and so forth.
-
-Good luck!
-
-Glenn
+> > This sounds more serious.  Can you reproduce it ?  If you can the
+> > quickest way for us to find the problem is for you to build the kernel
+> > with kdb and get stack traces for the relevent threads.
+> >
