@@ -1,12 +1,12 @@
-Return-Path: <root@srv.sistina.com>
-Date: Thu, 12 Jul 2001 10:01:48 +0200
-From: "Heinz J. Mauelshagen" <Mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] Just installed LVM on deb - got module errors - retry
-Message-ID: <20010712100148.A26928@sistina.com>
-References: <MPEELPOMDADEHPNEDEPBCELPCAAA.ka@filanet.dk>
+Return-Path: <thornber@btconnect.com>
+Date: Thu, 12 Jul 2001 09:46:38 +0100
+Subject: Re: [linux-lvm] syslogd reports:  kernel: lvm -- lvm_chr_ioctl: unknown command 4004fe0a
+Message-ID: <20010712094638.B418@btconnect.com>
+References: <FDEJIMPDHJAAPNLFKBMGAECACEAA.tgs@iafrica.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <MPEELPOMDADEHPNEDEPBCELPCAAA.ka@filanet.dk>; from ka@filanet.dk on Wed, Jul 11, 2001 at 10:03:47PM +0200
+Content-Disposition: inline
+In-Reply-To: <FDEJIMPDHJAAPNLFKBMGAECACEAA.tgs@iafrica.com>; from tgs@iafrica.com on Wed, Jul 11, 2001 at 08:33:14PM +0200
+From: Joe Thornber <thornber@btconnect.com>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -18,103 +18,48 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="iso-8859-1"
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Klaus,
+we added a new ioctl between beta2 and beta7, it sounds like you are
+using newer tools which are expecting the new ioctl to be there.  When
+they don't find it they just fall back on the old command so no harm
+done, other than a spurious kernel message.
 
-we have mostly updated -ac series in order to make it into vanilla to avoid
-recompiling the kernel. For now if you want to use an actual LVM version,
-you need to follow the instructions in the INSTALL and PATCHES/README files
-in order to patch and compile/install a new kernel, sorry.
+- Joe
 
-Regards,
-Heinz    -- The LVM Guy --
-
-
-On Wed, Jul 11, 2001 at 10:03:47PM +0200, Klaus Agnoletti wrote:
-> Hi there
->=20
-> I tried reading both the How-to and the README.debian file - and everythi=
-ng
-> else I could find, and found nothing that could help me.
-> I must be missing some block device - how do I get that ?
-> Can I do it the easy way at all ? - without compiling a new kernel ? (I am
-> just being lazy on this - I know that :-)
-> Later on when I tried LVM out and know how great it is, I will make it all
-> the hard way =3D)
->=20
-> Thanks in advance
->=20
-> /Klaus
-> -----Oprindelig meddelelse-----
-> Fra: linux-lvm-admin@sistina.com [mailto:linux-lvm-admin@sistina.com]P=EF=
-=BF=BD
-> vegne af Klaus Agnoletti
-> Sendt: 10. juli 2001 22:08
-> Til: linux-lvm@sistina.com
-> Emne: [linux-lvm] Just installed LVM on deb - got module errors
->=20
->=20
-> Hi,
->=20
-> I just installed lvm 0.9.1 beta 7 from .deb archives via apt-get
-> For some reason I get the following error when trying to prepare a LVM
-> partition :
->=20
-> vault:/etc/modutils# pvcreate /dev/hdb1
-> pvcreate -- LVM driver/module not loaded?
->=20
-> Clearly it is missing a kernel module.
->=20
-> trying to modprobe lvm-mod gives the following error :
->=20
-> vault:/etc/modutils# modprobe lvm-mod
-> modprobe: Can't locate module lvm-mod
->=20
-> I assume the following messages in /var/log/syslog is related :
->=20
-> Jul 10 22:00:02 vault modprobe: modprobe: Can't locate module char-major-=
-109
-> Jul 10 22:00:02 vault modprobe: modprobe: Can't locate module char-major-=
-109
->=20
-> So I guess that this really is what it needs. Am I right ? - how do I get
-> this then ?
->=20
-> If I am totally off the track, please help me back =3D)
->=20
->=20
-> Thanks in advance
->=20
->=20
-> Klaus Agnoletti
->=20
+On Wed, Jul 11, 2001 at 08:33:14PM +0200, Theo wrote:
+> Hello guys.
+> 
+> This is my first time using lvm.
+> 
+> After using pvcreate and vgcreate I rebooted and tried to activate the
+> volume group.
+> 
+> After the reboot I found the following in the kernel log:
+> Jul 11 19:40:52 alderaan kernel: LVM version 0.9.1_beta2  by Heinz
+> Mauelshagen (18/01/2001)
+> Jul 11 19:40:52 alderaan kernel: lvm -- Driver successfully initialized
+> 
+> Okay the driver is then in the kernel. No problem... later.... in the kernel
+> log:
+> Jul 11 19:40:53 alderaan kernel: lvm -- lvm_chr_ioctl: unknown command
+> 4004fe0a
+> 
+> Same same error appears I run "vgchange"
+> 
+> I am a bit confused about this ?
+> 
+> I'm  using slackware 8.0 and I'm using the 2.4.5 kernel that comes with the
+> bare245.i image file.
+> 
+> Any ideas ?
+> 
+> 
+> 
 > _______________________________________________
 > linux-lvm mailing list
 > linux-lvm@sistina.com
 > http://lists.sistina.com/mailman/listinfo/linux-lvm
 > read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
->=20
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
-
-*** Software bugs are stupid.
-    Nevertheless it needs not so stupid people to solve them ***
-
-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D=
--=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=
-=3D-=3D-
-
-Heinz Mauelshagen                                 Sistina Software Inc.
-Senior Consultant/Developer                       Am Sonnenhang 11
-                                                  56242 Marienrachdorf
-                                                  Germany
-Mauelshagen@Sistina.com                           +49 2626 141200
-                                                       FAX 924446
-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D=
--=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=
-=3D-=3D-
