@@ -1,9 +1,10 @@
-Return-Path: <david.mathews@sungard.com>
-From: david.mathews@sungard.com
-Message-ID: <OF5F127281.21C39D1E-ON85256A62.001B86FD@scs.sungard.com>
-Date: Tue, 5 Jun 2001 01:00:40 -0400
-MIME-Version: 1.0
-Subject: [linux-lvm] David Mathews/SCS/SunGard is out of the office.
+Return-Path: <rasmus@jaquet.dk>
+Date: Tue, 5 Jun 2001 09:24:36 +0200
+From: Rasmus Andersen <rasmus@jaquet.dk>
+Message-ID: <20010605092436.B856@jaquet.dk>
+Mime-Version: 1.0
+Content-Disposition: inline
+Subject: [linux-lvm] Problems with 0.9.1b7 and 2.2.20-2
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -19,9 +20,34 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-I will be out of the office starting  06/04/2001 and will not return until
-06/07/2001.
+Hi.
 
-I will be out of the office attending a training class.  I will have
-limited access to voice/e-mail.  In my absence please contact Scott Barret
-or Andy Wasson.
+I have built a 2.2.20-2 kernel with kiobuf-2.2.18pre24-B.tar.gz
+applied and patched with the patch lvm_0.9.1_beta7 created.
+
+I have begun to get the following in my /var/log/messages in
+conjunction with various programs (tar, cp) failing:
+
+Jun  4 21:55:05 firewall kernel: attempt to access beyond end of device 
+Jun  4 21:55:05 firewall kernel: 08:01: rw=0, want=530424, limit=410608 
+Jun  4 21:55:05 firewall kernel: dev 3a:03 blksize=1024 blocknr=622593 sector=1060840 size=4096 count=1 
+Jun  4 21:55:05 firewall kernel: EXT2-fs error (device lvm(58,3)): read_inode_bitmap: Cannot read inode bitmap - block_group = 19, inode_bitmap = 622593 
+Jun  4 21:55:05 firewall kernel: EXT2-fs error (device lvm(58,3)): ext2_check_inodes_bitmap: Wrong free inodes count in super block, stored = 307461, counted = 291461 
+
+
+I can do a 'dd if=/dev/<diskX> of=/dev/null' for the disks that are
+part of the volume group without problems but if I do it for /dev/vg1/
+lvol4, I get the error above (without the EXT2-part).
+
+I am now trying to get whatever data I can off the FS and would like
+1) helpful suggestions, and 2) to provide whatever feedback I can
+before I have to reclaim the disk space. Probably for something
+non-LVM for the moment.
+
+Please mail me for additional information. I am rather new to LVM
+and have little clue as to what information you might find useful.
+-- 
+        Rasmus(rasmus@jaquet.dk)
+
+Gates' Law: Every 18 months, the speed of software halves
+  -- Anonymous
