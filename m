@@ -1,7 +1,9 @@
-Message-ID: <OFD5B2E37D.868A777F-ONC1256D2C.003E9C8D@phoenixcontact.com>
-From: "Dietmar Stein" <DStein@phoenixcontact.com>
+Message-ID: <005501c31ea7$b52505e0$e0bba5cc@patni.com>
+From: "Sameer Halgatti" <sameer.halgatti@patni.com>
 MIME-Version: 1.0
-Subject: [linux-lvm] Snapshot of ReiserFS
+Content-Type: multipart/alternative;
+	boundary="----=_NextPart_000_0052_01C31ED5.BCE8DA30"
+Subject: [linux-lvm] Query For MULTIPATH & LVM
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -12,43 +14,74 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Tue May 20 06:31:01 2003
+Date: Tue May 20 08:28:02 2003
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Hi
+This is a multi-part message in MIME format.
 
-I am new to the list, but I went through the archives and find some ideas
-but not an approbiate answer ... I want to make a snapshot of a mounted
-logical volume, which is formated with ReiserFS v3.6.
+------=_NextPart_000_0052_01C31ED5.BCE8DA30
+Content-Type: text/plain;
+	charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 
-My configuration:
-Compaq DL580 with SmartArray 5300 controller with Storage Enclosure 4312R
-attached, 12 disks + 2 disks for system
-SuSE Enterprise Server 8 (United Linux 1.0) with kernel 2.4.19-4GB, lvm
-1.0.7
+Hi All,
+I am a new user to LVM.
+I have a system with Linux RH 7.2 (Kernel version 2.4.7-10)
+The version of LVM, I am using is lvm-1.0.3-4.
+I have connected a Storage Machine (SAN) to my host. So I could have =
+multiple paths to any LUN. (e.g sda & sdb are pointing to the same LUN).
+So whenever I do "pvcreate" on /dev/sda, PV gets created on /dev/sdb =
+also since they (sda & sdb) are pointing to same disk/LUN.
+In such a scenario can I use lvm-1.0.3.4 ??
+If not then please give me reasons as well as solution.
 
-I have created six volume groups, consisting of two physical disks each;
-each volume group (36 GB large) contains two logical volumes, each 10 GB.
-The groups and volumes are labeled as
+Pls REPLY to my QUERY!!!
 
-volgrp01, lv01vg01, lv02vg01 (volume group 01, logical volume 01 on volume
-group 01 ...)
-volgrp02, lv01vg02, lv02vg02
-volgrp03, lv01vg03, lv02vg03
+Thanks & Regards,
+Sameer Halgatti
 
-I have mounted lv01vg01 to /data_1 and I have created an empty file with dd
-if=/dev/zero of=/data_1/testfile.raw bs=1M count=4000, then I followed
-documentation and did a lvcreate -L 11000M -s -n snaplv01vg01
-/dev/volgrp01/lv01vg01.
 
-All I can see is harddisk activity, but the command prompt did not return
-(I have been waiting for 2 hours), so I turned on verbose mode and last
-message is "locking lvm" (something like that) and then I have been waiting
-again.
+------=_NextPart_000_0052_01C31ED5.BCE8DA30
+Content-Type: text/html;
+	charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 
-What's the problem, mistake?
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML><HEAD>
+<META content=3D"text/html; charset=3Diso-8859-1" =
+http-equiv=3DContent-Type>
+<META content=3D"MSHTML 5.00.2314.1000" name=3DGENERATOR>
+<STYLE></STYLE>
+</HEAD>
+<BODY bgColor=3D#ffffff>
+<DIV><FONT face=3DArial size=3D2>Hi All,</FONT></DIV>
+<DIV><FONT face=3DArial size=3D2>I am a new user to LVM.</FONT></DIV>
+<DIV><FONT face=3DArial size=3D2>I have a system with Linux RH 7.2 =
+(Kernel version=20
+2.4.7-10)</FONT></DIV>
+<DIV><FONT face=3DArial size=3D2>The version of LVM, I am using is=20
+lvm-1.0.3-4.</FONT></DIV>
+<DIV><FONT face=3DArial size=3D2>I have connected a Storage Machine =
+(SAN) to my=20
+host. So I could have multiple paths to any LUN. (e.g sda &amp; sdb are =
+pointing=20
+to the same LUN).</FONT></DIV>
+<DIV><FONT face=3DArial size=3D2>So whenever I do "pvcreate" on =
+/dev/sda, PV gets=20
+created on /dev/sdb also since they (sda &amp; sdb) are pointing to same =
 
-Thanks, Dietmar
+disk/LUN.</FONT></DIV>
+<DIV><FONT face=3DArial size=3D2>In such a scenario can I use =
+lvm-1.0.3.4=20
+??</FONT></DIV>
+<DIV><FONT face=3DArial size=3D2>If not then please give me reasons as =
+well as=20
+solution.</FONT></DIV>
+<DIV>&nbsp;</DIV>
+<DIV><FONT face=3DArial size=3D2>Pls REPLY to my QUERY!!!</FONT></DIV>
+<DIV>&nbsp;</DIV>
+<DIV><FONT face=3DArial size=3D2>Thanks &amp; Regards,<BR>Sameer=20
+Halgatti<BR></FONT></DIV></BODY></HTML>
+
+------=_NextPart_000_0052_01C31ED5.BCE8DA30--
