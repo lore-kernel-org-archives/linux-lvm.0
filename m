@@ -1,11 +1,12 @@
-Return-Path: <jfrank@lxco.com>
-Message-ID: <3A63F53F.BA790549@lxco.com>
-Date: Tue, 16 Jan 2001 08:16:15 +0100
-From: =?iso-8859-1?Q?J=FCrgen?= Frank <jfrank@lxco.com>
-MIME-Version: 1.0
-Subject: Re: [linux-lvm] how can I init LVM on software RAID  ?
-References: <3A5EE491.5E4FB886@lxco.com> <3A5F1C1A.5D9C8CE4@symbionsys.com> <3A5F1E6C.CD1D1A3E@lxco.com> <3A5F27F0.1090002@liberate.com>
-Content-Transfer-Encoding: quoted-printable
+Return-Path: <patrick@tykepenguin.cix.co.uk>
+Date: Tue, 16 Jan 2001 08:51:18 +0000
+From: Patrick Caulfield <caulfield@sistina.com>
+Subject: Re: [linux-lvm] Re: *** ANNOUNCEMENT *** LVM 0.9.1 beta1 available at www.sistina.com
+Message-ID: <20010116085117.A696@tykepenguin.com>
+References: <20010113114507.D15915@linuxcare.com> <200101130143.f0D1hNF19829@webber.adilger.net> <20010113170616.B22699@caldera.de>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20010113170616.B22699@caldera.de>; from hch@ns.caldera.de on Sat, Jan 13, 2001 at 05:06:16PM +0100
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,141 +18,33 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="iso-8859-1"
-To: Chris Worley <cworley@liberate.com>, LVM <linux-lvm@sistina.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: linux-lvm@sistina.com, Anton Blanchard <anton@linuxcare.com.au>, Mauelshagen@sistina.com, linux-kernel@vger.kernel.orglvm@sistina.com
 
-Hi everyone, Hi Chris =
+On Sat, Jan 13, 2001 at 05:06:16PM +0100, Christoph Hellwig wrote:
+> On Fri, Jan 12, 2001 at 06:43:23PM -0700, Andreas Dilger wrote:
+> > Anton, you write:
+> > > Have a look at 2.4, arch/sparc64/kernel/ioctl32.c
+> > 
+> > Yuk.
+> > 
+> > > Would it be possible to clean up the ioctl interface so we dont need
+> > > such large hacks for LVM support? I can do the work but I want to be
+> > > sure you guys will agree to it.
 
+If you're prepared to do the work we'd be glad to accept the patch - please send
+it to me or the list so I can check over it before committing it. As we don't
+have an UltraSPARC available for testing it's probably better done by someone
+who does !
+ 
+> > What is the reason for all this?  Alignment/wordsize/other?  If you look
+> > at the IOP10 code, much of the in-core data structs were changed to int
+> > or long, so this sparc code may not be necessary.
+> 
+> The longs are the biggest problem AFAICS.
+> long is 64bit on sparc64 and 32bit on sparc32...
 
-ok, I think I have a little solution for my problem with the LVM over
-SoftwareRaid. It's seems to =
+There are still a few ulong members in lvm.h, they should be uint32_t 
 
-work with the new beta version (sorry I don't try the patch for the
-0.9). =
-
-So we have only one little problem, if we boot our system the raid1
-(mirror)-system don't start correctly.
-(on off the mirror disk isn't running). In that case the lvm don't start
-too !?
-
-But I think that's more a problem of the SoftwareRaid , possible it's a
-hardware failure of the disk or the disk have a very high startup time.
-But I don't understand why lvm don't startup, normally this is a =
-
-transparenc fault , or ?
-
-byebye Juergen
-
-
->Chris Worley wrote:
-> =
-
-> J=FCrgen,
-> =
-
-> You are correct.  That is a very good question (and valid for this
-> newsgroup).  I don't have an answer.  I've seen the documentation that
-> says you can make raid 10 & 50 (etc...) by mixing MD's under PV's, as
-> well as making VG's out of LVM's (but why?).  I've also seen errors if
-> I haven't set my PV's partition to 8e... and there's no way to fdisk
-> an MD (to set the partition type).  I would worry about the
-> performance of two layers of software overhead below the file system.
-> =
-
-> I had barely crawled out of bed when I saw your post and thought "I
-> can help a newbie".  This is not a trivial question, I was wrong ;)
-> =
-
-> Chris
-> =
-
-> J=FCrgen Frank wrote:
-> =
-
-> > Chris Worley wrote:
-> >
-> >> J=FCrgen,
-> >>
-> >> "md" and "lvm" are two different ways of making a software raid.
-> >>
-> >> lvm only does raid0.  The main purpose of LVM is to allow you to man=
-age
-> >> disks underneath the file system... adding and removing disks
-> >> dynamically.
-> >>
-> >
-> >
-> > Jep, that's the point why I want to use this two systems. So I want t=
-o
-> > create a RAID 1 / 5 system and on the top I put the LVM. With this
-> > method I have a good system with snapshot and enlargment feature !!!
-> > And if I read all the docu (the howto, the pdf from sistina) lvm work=
-s
-> > fine with the md - drives. But, that is the point which I can't follo=
-w
-> > in the moment. Because I can't make partitions on a md drive and LVM
-> > need this partitions ...
-> >
-> >
-> >
-> >
-> >> There should be HOWTO's for md in your /usr/doc area.  The LVM newsg=
-roup
-> >> is not a good place to ask MD related questions.  There are a few
-> >> "howto's" for LVM:
-> >>
-> >> http://www.sistina.com/lvm/Pages/howto.html
-> >>
-> >> I like:
-> >>
-> >> http://www.ds9a.nl/lvm-howto/HOWTO//cvs/lvm-howto/lvm-howto.html
-> >>
-> >> Chris
-> >>
-> >
-> >
-> > I read all this docu, but I can't find any help for a system LVM over=
-
-> > MD-Drives (Software RAID) !!!
-> >
-> >
-> > Juergen
-> >
-> >
-> >> J=FCrgen Frank wrote:
-> >>
-> >>> Hi !!
-> >>>
-> >>> I want to create the following system :
-> >>>
-> >>> I use the new kernel (2.4) and I want to use the software raid and =
-the
-> >>> lvm,
-> >>> but my problem is... how ?
-> >>>
-> >>> I can't find a step by step documentation and all what I try don't =
-work.
-> >>>
-> >>> So what did I done :
-> >>>
-> >>> * create a mirror system with software raid (last version), after t=
-his
-> >>>   step I have a good raid system with the drive /dev/md0
-> >>>
-> >>> * normally now I need to create a partition on the drive , but I re=
-ad in
-> >>> the raid docu that the md-drives don't support partitions !!!
-> >>>
-> >>> But, without a partiton of the type 0x8e I can't run vgscan and
-> >>> pvcreate...
-> >>>
-> >>> So, can anyone help me ?!
-> >>>
-> >>> Juergen
-> >>>
-> >>> (sorry for the bad english)
-> >>> _______________________________________________
-> >>> linux-lvm mailing list
-> >>> linux-lvm@sistina.com
-> >>> http://lists.sistina.com/mailman/listinfo/linux-lvm
-> >>
+patrick
