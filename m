@@ -1,11 +1,11 @@
 Return-Path: <root@srv.sistina.com>
-Date: Mon, 18 Jun 2001 11:52:58 +0200
+Date: Mon, 18 Jun 2001 12:04:33 +0200
 From: "Heinz J. Mauelshagen" <Mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] multiple vg using the same name
-Message-ID: <20010618115258.B14110@sistina.com>
-References: <20010617141127.E10287@schlund.de>
+Subject: Re: [linux-lvm] What is a good stripe size?
+Message-ID: <20010618120433.C14110@sistina.com>
+References: <134933704.992803570667.JavaMail.root@boots> <20010617233627.B18539@tiger.bigcats.invalid> <1418190000.992819631@dizzy>
 Mime-Version: 1.0
-In-Reply-To: <20010617141127.E10287@schlund.de>; from anders@schlund.de on Sun, Jun 17, 2001 at 02:11:27PM +0200
+In-Reply-To: <1418190000.992819631@dizzy>; from lembark@wrkhors.com on Sun, Jun 17, 2001 at 06:13:51PM -0500
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -21,95 +21,93 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Sun, Jun 17, 2001 at 02:11:27PM +0200, Anders Henke wrote:
-> Hi,
+On Sun, Jun 17, 2001 at 06:13:51PM -0500, Steven Lembark wrote:
 > 
-> I'm currently thinking about clustering our storage arrays into a san structure
-> and how to organize usually identical systems with lvm. I'd like to avoid 
-> giving each host a different name for its VG in order to have an identical
-> /etc/fstab on every machine (you don't want to alter a mount-option for a
-> single mountpoint on hundreds of machines by hand or by sed).
-
-Changing /etc/fstab by sed is actually quite simple IMHO.
-Put something along the lines of this into your startup script chain before
-the local mounts after running vgscan.
-
-#!/bin/sh
-F=/etc/fstab T=/tmp/fstab.$$
-sed "s?\(dev/vg_\)[^/]*/?\1${HOSTNAME}/?" $F > $T
-cp $T $F; rm -f $T; unset F T
-
+> >> On Sat, Jun 16, 2001 at 03:29:16PM +0200, Urs Thuermann wrote:
+> >> > Using the PVs on sda2 and sdb2 I created a single VG and I want to
+> >> > create striped LVs on it now.  My questions is, how large should I
+> >> > choose the stripe size to achive optimal performance.  If I choose it
+> >> > too large, I will probably loose the win of striping.
+> >
+> >> You lose the advantage of striping if the stripe size is on the order
+> >> of the file size.  You want stripes which will be narrower than most
+> >> of the files you will be using.
+> >
+> > I wonder if you are looking at a single file or general
+> > throughput here.
+> >
+> > For a single file you may gain reading speed (writing is less
+> > critical as it is buffered); however with a stripe size below
+> > file size you will need to move the heads of both (or even
+> > more) disks, increasing latency[1], effectively slowing down
+> > reads unless you have fairly large files.
 > 
-> I've x machines with x local LVM installations. Each machine uses e.g. 
-> /dev/vg/spool as a LV. These local LVs have been installed the usual way
-> (pvcreate, vgcreate, lvcreate), so each VG has its own UUID and the LVM
-> should use the suitable UUIDs to gather the PVs to the suitable VG.
+> Assumes that the stripe blocks are not adjacent on their
+> respective disk drives.  The smaller stripe may have no
+> penalty if the logical blocks are adjacent on the disk.
 > 
-> Our idea is to take these PVs via a FC-SAN into one structure, the individual
-> hosts can only see 'their' storage, but failover-nodes can see every PV in 
-> the SAN so they can completely take a failed node offline (kick the big, red
-> power button), remount its LV and perform a full take-over.
+> One of the main resons for using LVM at all is to avoid
+> having to worry about any of this.  If raw speed is a major
+> consideration then use hardware RAID5 w/ strip size ==
+> I/O block size (e.g., 4 disks w/ 1K chunk and 4K filesystem
+> block on linux).  This avoids the "extra read" penalty and
+> gives nice, distributed reads.
 > 
-> What happens if the physical volumes of one machine becomes additionaly
-> available to a second machine, so that the second machine has to see
-> e.g. 2, 4 or 8 logical volumes with originally the same name (/dev/vg/spool)? 
+> > [1] Your seek time rises -- on the average -- the more heads
+> >     are in use.  With one head you get 1/3 full-seek time for
+> >     a random head and file locations.  With two heads you need
+> >     to move both heads, chances are that one of them has a
+> >     longer way than the other.
 > 
-> -lvm completely crashes 
+> One advantage of striping is that the seek latency of one
+> drive can be used for data I/O on another drive.  If the LVM
+> system does any sort of double-buffering then the striped
+> system can negate/reduce the seek time.
 
-No (hopefully not ;-)
+No double-buffering today :-(
+LVM just redirects I/Os to the underlying devices (aka physical volumes).
 
-> -only one vg shows up
-
-That's how pv_read_all_pv_of_vg(), the library function which reads the metadata
-in from the physical volumes behaves today. The PV uuid list is read from
-the first physical volume found, which has the requested VG name in its
-metadata. The second VG with the same name will be ignored :-(
-
-BTW: future versions of the LVM will probably have uuid support on the
-command line like for eg. "vgchange -ay -u VolumeGroupUUID VolumeGroupName".
-
-> -the VGs or LVs are temporarily being renamed when doing 'vgscan -a'
-
-No
-
-> -the VGs or LVs are permanently being renamed when doing 'vgscan -a'
-
-No. I think renaming the LVs is not needed anyway in case we had support
-to rename the VG which would give us unique path names again.
+Regards,
+Heinz    -- The LVM Guy --
 
 > 
-> What happens if one machine failes, doesn't perform a umount/'vgchange -a n'?
-> Does the failover-node have a chance to use this VG/LV?
-
-With the existing code only in case the VG names differ.
-
-> 
-> I now that somehow I have to figure a way out which VG belongs to which machine,
-> but this may be solved via a map of each machines VG UUID, although just
-> offering a /dev/vg_${hostname}/spool and 'seeing' the VG might be also cool :-)
-
-That could be configurable with the existing LVM software and would cover
-the take over quite happily, because the volume group names would be unique.
-
-See above mentioned script.
-
+> This also leaves out the issue of journaled file systems, which
+> may have data (or just meta-data) spread out all over the
+> place -- leaveing you with fragmented reads even in the case
+> of a small file.
 > 
 > 
-> Anders
-> -- 
-> Schlund + Partner AG              Systemadministration and Security
-> Erbprinzenstrasse 4-12            v://49.721.91374.50
-> D-76133 Karlsruhe                 f://49.721.91374.212
+> Net result is that depending on CPU, bus, controller and
+> disk hardware and their interactins with the file systems
+> and particular type of I/O being performned the answer
+> becomes "It Depends" :-)
+> 
+> In 15 years the only method I've found that works consistently
+> is to try however many of the recommendations you can before
+> comitting to any one of them.  Benchmark them under realistic
+> condidtions and one will usually be a bit better.  At that point you
+> can 'reverse engineer' why your particular conditions match
+> that particular theory -- and probably learn a bit about how to
+> improve your system as a result.
+> 
+> 
+> 
+> 
+> > [4] all disks are 'single point of failure'.  Most file systems
+> >     do not like loosing spots all over the place.  But then you
+> >     do backup religiously, test your backups and have recovery
+> >     plans in place, yes?
+> 
+> Ah, but it's so much more fun to fiture out how it all works at
+> 3 in the morning with 20 users breathing fire down your back!
+> 
+> 
+> 
 > _______________________________________________
 > linux-lvm mailing list
 > linux-lvm@sistina.com
 > http://lists.sistina.com/mailman/listinfo/linux-lvm
 > read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
-
--- 
-
-Regards,
-Heinz    -- The LVM Guy --
 
 =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
