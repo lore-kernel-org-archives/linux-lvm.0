@@ -1,9 +1,9 @@
-From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
+Message-ID: <3D9ADFF2.4080606@lingbrae.com>
+From: Dick Middleton <dick@lingbrae.com>
+MIME-Version: 1.0
 Subject: Re: [linux-lvm] Upgrade Linux 2.2 to 2.4 problems
-Message-ID: <20021002122716.B1955@sistina.com>
-References: <3D9A201E.8070108@lingbrae.com>
-Mime-Version: 1.0
-In-Reply-To: <3D9A201E.8070108@lingbrae.com>; from dick@lingbrae.com on Tue, Oct 01, 2002 at 11:22:22PM +0100
+References: <3D9A201E.8070108@lingbrae.com> <20021002122716.B1955@sistina.com>
+Content-Transfer-Encoding: 7bit
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,67 +14,51 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Oct  2 05:28:01 2002
+Date: Wed Oct  2 07:01:01 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: linux-lvm@sistina.com
 
-On Tue, Oct 01, 2002 at 11:22:22PM +0100, Dick Middleton wrote:
-> I'm still having difficulty getting LVM to behave itself on a 2.4 kernel 
-> when it
-> works fine on a 2.2 kernel.  I'm using beta7 on both kernels - the 2.4 
-> kernel
-> is 2.4.10.ac4 which seems to have version beta7(ish) in it.  I'm booting 
-> through
-> initrd as /root is on LVM.
-> 
-> vgscan appears to work ok but vgchange fails with:
-> 
-> Error- can't get names of physical volumes - please check if /proc is 
-> mounted.
-> 
-> Well, /proc is mounted - in fact if it isn't mounted I don't this error.
-> 
-> What does this error message mean and what's likely to be wrong to cause it?
+  Heinz,
 
-Dick,
+>this can't be the exact LVM 0.9-Beta7 error message.
+>
+It sure is (except error is written ERROR and the message is on 2 lines 
+:-) )
 
-this can't be the exact LVM 0.9-Beta7 error message.
-Is /proc really mounted, *before* vgchange runs in /linuxrc?
+>Is /proc really mounted, *before* vgchange runs in /linuxrc?
+>
+Hmm - I'm not sure how I can tell.  The mount command certainly comes first
+and there are no visible error messages.  I'm just using 
+lvmcreate_initrd. If the
+mount command fails then it gives an error message and vgchange gives me
+different error messages so I assume it's working.
 
-BTW: why do you use such an old kernel and LVM version?
-     Please give a recent one and LVM 1.0.5 a try.
+>BTW: why do you use such an old kernel and LVM version?
+>     Please give a recent one and LVM 1.0.5 a try.
+>
+That's what I was trying to do (for a while)  until I discovered this 
+kernel only has beta7 in it.
 
-> 
-> Many thanks
-> 
-> Dick
-> 
-> 
-> 
-> 
-> 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+Curiously I had more success with 1.0.5 tools on this kernel.   
 
--- 
+I think I'll take your advice and start again.
 
-Regards,
-Heinz    -- The LVM Guy --
+Many thanks for your support.
 
-*** Software bugs are stupid.
-    Nevertheless it needs not so stupid people to solve them ***
+Dick
 
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-
-Heinz Mauelshagen                                 Sistina Software Inc.
-Senior Consultant/Developer                       Am Sonnenhang 11
-                                                  56242 Marienrachdorf
-                                                  Germany
-Mauelshagen@Sistina.com                           +49 2626 141200
-                                                       FAX 924446
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+>>
+>>vgscan appears to work ok but vgchange fails with:
+>>
+>>Error- can't get names of physical volumes - please check if /proc is 
+>>mounted.
+>>
+>>Well, /proc is mounted - in fact if it isn't mounted I don't this error.
+>>
+>>What does this error message mean and what's likely to be wrong to cause it?
+>>    
+>>
+>
+>  
+>
