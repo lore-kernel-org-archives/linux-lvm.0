@@ -1,16 +1,11 @@
-Subject: Re: [linux-lvm] kernel 2.2.19 support
-References: <3BBC4146.51CD437D@promofinarsa.es>
-	<wv669v3b96.fsf@freeze.oslo.dnmi.no> <3BBC4E6E.BCA3EE70@promofinarsa.es>
-	<wvzo771uju.fsf@freeze.oslo.dnmi.no> <3BBC535B.59D6A5CB@promofinarsa.es>
-	<wv3d4zh1r8.fsf@freeze.oslo.dnmi.no>
-	<20011004111023.C31061@turbolinux.com>
-	<wvy9mrfhmy.fsf@freeze.oslo.dnmi.no>
-	<20011004114903.G31061@turbolinux.com>
-From: Adrian Phillips <a.phillips@dnmi.no>
-Date: 04 Oct 2001 20:05:42 +0200
-In-Reply-To: <20011004114903.G31061@turbolinux.com>
-Message-ID: <wvpu83ffgp.fsf@freeze.oslo.dnmi.no>
-MIME-Version: 1.0
+From: Andreas Dilger <adilger@turbolabs.com>
+Date: Thu, 4 Oct 2001 12:06:44 -0600
+Subject: Re: [linux-lvm] Root + Software RAID 1 in partition + LVM + Reiserfs
+Message-ID: <20011004120644.J31061@turbolinux.com>
+References: <NEBBLHFAEINCLDICDLOAEENBCHAA.yves.alloyer@slpinfoware.com>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <NEBBLHFAEINCLDICDLOAEENBCHAA.yves.alloyer@slpinfoware.com>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -26,31 +21,37 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
->>>>> "Andreas" == Andreas Dilger <adilger@turbolabs.com> writes:
+On Oct 04, 2001  16:51 +0200, yves.alloyer wrote:
+> I wanted that, because I wanted to mirror my most precious filesystems. Then
+> again I did not want to waste that space for swap /tmp and other not so
+> vital stuff.
 
-    Andreas> On Oct 04, 2001 19:18 +0200, Adrian Phillips wrote:
-    >> Yes, but what concerned me was if there was some equivalent for
-    >> 2.2 (foo.dev22 = bar). I was going to check the LVM CVS to see
-    >> what changes had been done but was unable to login :-
+Are you looking for system uptime or data protection?  If you want uptime,
+you still need to mirror swap and /tmp.  If you want data protection, you
+should do backups, because there is nothing preventing you from deleting
+your files accidentally (or kernel/fs corruption) and the RAID making a
+perfect copy of the missing/bad files.
 
-    Andreas> It was just added recently (probably a devfs thing).
-    Andreas> Before that, it just ran the "lvm_fs_setup()" (or
-    Andreas> whatever) function, and didn't do anything with the
-    Andreas> output.  Hmm, that means my suggestion may be broken.
+> pvcreate /dev/md1 complained about using a Linux SWAP partition
 
-    Andreas> Need something like:
+Did you change the partition type with fdisk to be the LVM partition type?
+Hmm, I suppose that if you are using MD RAID autostart, you need to have
+that partition type instead.
 
-    Andreas> #if LINUX_KERNEL_VERSION > KERNEL_VERSION (2, 3, 38)
-    Andreas> foo.de = #endif lvm_fs_setup();
+> I tweaked lvm_check_partitioned_device to have it return FALSE for MD
+> devices. This would probably prevent me from partitioning any MD device. But
+> I won't anyway... that's what I use LVM for.
 
-Great thanks for the help. I'll have a look at the weekend. It anyone
-else with troubles wants to beat me to it, be my guest :-)
+I don't think you CAN partition an MD device and use it (what would the minor
+numbers be?).  Please submit the patch.
 
-Sincerely,
+> Has anyone experience with that kind of layout? Is it just plain insane?
 
-Adrian Phillips
+No, sounds sensible to me.  Make sure you have a rescue disk/partition which
+has MD, LVM, and reiserfs tools on it.
 
--- 
-Your mouse has moved.
-Windows NT must be restarted for the change to take effect.
-Reboot now?  [OK]
+Cheers, Andreas
+--
+Andreas Dilger  \ "If a man ate a pound of pasta and a pound of antipasto,
+                 \  would they cancel out, leaving him still hungry?"
+http://www-mddsp.enel.ucalgary.ca/People/adilger/               -- Dogbert
