@@ -1,11 +1,12 @@
-Return-Path: <mjt@tls.msk.ru>
-Message-ID: <3B1C16AA.AD983576@tls.msk.ru>
-Date: Tue, 05 Jun 2001 03:15:54 +0400
-From: Michael Tokarev <mjt@tls.msk.ru>
-MIME-Version: 1.0
+Return-Path: <bluca@comedia.it>
+Date: Tue, 5 Jun 2001 01:28:45 +0200
+From: Luca Berra <bluca@comedia.it>
 Subject: Re: [linux-lvm] Migrating to an LVM system (boot/root) disk
-References: <3B1AC411.D6E307CD@tls.msk.ru> <200106041734.f54HYLbh020302@webber.adilger.int> <20010604171512.A348@sistina.com>
-Content-Transfer-Encoding: 7bit
+Message-ID: <20010605012845.B26506@colombina.comedia.it>
+References: <3B1AC411.D6E307CD@tls.msk.ru> <200106041734.f54HYLbh020302@webber.adilger.int> <20010604171512.A348@sistina.com> <3B1C16AA.AD983576@tls.msk.ru>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <3B1C16AA.AD983576@tls.msk.ru>; from mjt@tls.msk.ru on Tue, Jun 05, 2001 at 03:15:54AM +0400
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -18,24 +19,26 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-AJ Lewis wrote:
-[]
-> Hmm...I put 'sed' in the debian package wrapper scripts since Debian put's
-> basename in /usr/bin and if you don't use an initrd script and you have your
-> /usr partition on LVM, you can't use the wrapper...
-> 
-> Is there an easy way we can work around this?  Maybe hack up the
-> create_initrd script a bit more?  I can just adjust it in the debian
-> packages too i guess.
+On Tue, Jun 05, 2001 at 03:15:54AM +0400, Michael Tokarev wrote:
+> So basename also should be placed to initrd? ;)  I think that
+> problem should be resolved at a first place (in mkinitrd), not
+> by putting numerous workarounds all other the place.
+> BTW, bash have nice construct ${var##*/} to be used instead of
+> basename, and it works *much* faster (also ${var%/*} for dirname
+> etc).
+naw it ain't bash, luckily thass a posix construct
+please use parameter expansion instead of basename/dirname
+in any script.
 
-So basename also should be placed to initrd? ;)  I think that
-problem should be resolved at a first place (in mkinitrd), not
-by putting numerous workarounds all other the place.
-BTW, bash have nice construct ${var##*/} to be used instead of
-basename, and it works *much* faster (also ${var%/*} for dirname
-etc).
+L.
 
-Regards,
- Michael.
+-- 
+Luca Berra -- bluca@comedia.it
+        Communication Media & Services S.r.l.
+ /"\
+ \ /     ASCII RIBBON CAMPAIGN
+  X        AGAINST HTML MAIL
+ / \
