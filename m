@@ -1,11 +1,11 @@
 Return-Path: <thornber@btconnect.com>
-Date: Mon, 30 Jul 2001 10:47:12 +0100
-Subject: Re: [linux-lvm] Some ideas regarding snapshots (was: Reiserfs, 2. 4.7, snapshots w/ 0.9)
-Message-ID: <20010730104712.C562@btconnect.com>
-References: <B14BF8753E65D211ABCA00104B301EF501C02C87@cairn-gorm.cragtech.com>
+Date: Mon, 30 Jul 2001 10:54:36 +0100
+Subject: Re: [linux-lvm] more snapshot probs
+Message-ID: <20010730105436.D562@btconnect.com>
+References: <Pine.LNX.4.33.0107281511250.5058-100000@greebo.foobarhouse.com>
 Mime-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <B14BF8753E65D211ABCA00104B301EF501C02C87@cairn-gorm.cragtech.com>; from Steph@Connex.com on Fri, Jul 27, 2001 at 10:22:06AM -0700
+In-Reply-To: <Pine.LNX.4.33.0107281511250.5058-100000@greebo.foobarhouse.com>; from jamesp@foobarhouse.com on Sat, Jul 28, 2001 at 03:14:23PM +0100
 From: Joe Thornber <thornber@btconnect.com>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
@@ -22,22 +22,64 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Fri, Jul 27, 2001 at 10:22:06AM -0700, Dale Stephenson wrote:
-> Joe Thornber wrote:
-> > Writeable snapshot's are easy to implement, I believe someone has
-> > already made a patch for the current LVM series (search the list).  I
-> > certainly intend putting it into the experimental LVM branch soon.
-> > 
-> > - Joe
-> 
-> I haven't tried to apply it with beta8, but this is the writeable snapshot
-> patch I used for beta7:
-> (All I've used it for is replays and UUID changes, so YMMV.) 
+All,
 
-Thanks for posting this Dale, a short patch that adds a lot of
-functionality!  The reason I'm holding off applying this patch is that
-I have a new asnyc. snapshot driver that is waiting to drop into
-experimental soon.  For the moment I've removed snapshots and pvmove
-from the experimental branch.
+Some of you are using PV's that have badly aligned PE's.  The upshot
+of this is that you will not be able take snapshots to or from one of
+these PV's :(
+
+The thing to watch for, which indicates this problem, is a message of
+this form:
+
+> /dev/vg00/lvol6 on /dev/vg00/snap: couldn't prepare kiovec blocks (start
+> probably isn't block aligned)
+
+Beta8 creates correctly aligned PV's.  At the moment to fix this you
+will have to pvmove your data onto a correctly aligned PV - I think
+this is the safest way.
+
+We're very sorry about this problem.  It looks like some of you are
+going to have to temporarily borrow another disk to do some shuffling.
 
 - Joe
+
+On Sat, Jul 28, 2001 at 03:14:23PM +0100, James Pattinson wrote:
+> Hi
+> 
+> I've applied the recommended patches to 2.4.7 - beta8, VFS lock, and patch
+> in previous emails.
+> 
+> Now, when I create a snapshot LV:
+> 
+> lvcreate -s -L500 -nsnap /dev/vg00/lvol6
+> (where /dev/vg00/lvol6 is 3GB striped across 2 PVs)
+> 
+> I get these 2 messages in my logs a few seconds later:
+> 
+> Jul 28 15:10:05 greebo kernel: lvm -- _pv_get_number failed for rdev = 0
+> Jul 28 15:10:05 greebo kernel: lvm -- giving up to snapshot
+> /dev/vg00/lvol6 on /dev/vg00/snap: couldn't prepare kiovec blocks (start
+> probably isn't block aligned)
+> 
+> THen when I try to mount:
+> 
+> [root@greebo /root]# mount /dev/vg00/snap /mnt/homesnap/
+> /dev/vg00/snap: Input/output error
+> mount: permission denied
+> 
+> And in the log:
+> 
+> Jul 28 15:13:28 greebo kernel: lvm - lvm_map: ll_rw_blk for inactive LV
+> /dev/vg00/snap
+> 
+> Any ideas?
+> 
+> Cheers!
+> 
+> James
+> 
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@sistina.com
+> http://lists.sistina.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
