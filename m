@@ -1,9 +1,13 @@
-From: ratler@lunar-linux.org
-Message-ID: <Pine.LNX.4.56.0307221242540.30328@gumpie.wea.se>
+From: Rainer Krienke <krienke@uni-koblenz.de>
 MIME-Version: 1.0
-Content-Type: MULTIPART/MIXED; BOUNDARY="8323328-1332444705-1058870714=:30328"
-Content-ID: <Pine.LNX.4.56.0307221245240.30328@gumpie.wea.se>
-Subject: [linux-lvm] LVM1 problem, exported volumegroup with one dead drive (fwd)
+Content-Type: multipart/signed;
+  protocol="application/pgp-signature";
+  micalg=pgp-sha1;
+  boundary="Boundary-02=_6mRH/E+a1FR9EBo";
+  charset="iso-8859-15"
+Content-Transfer-Encoding: 7bit
+Message-Id: <200307221302.18609.krienke@uni-koblenz.de>
+Subject: [linux-lvm] Which  meta-data format to use with lvm2?
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,189 +18,53 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Tue Jul 22 08:44:02 2003
+Date: Tue Jul 22 08:44:05 2003
 List-Id: <linux-lvm.redhat.com>
 To: linux-lvm@sistina.com
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
-  Send mail to mime@docserver.cac.washington.edu for more info.
+--Boundary-02=_6mRH/E+a1FR9EBo
+Content-Type: text/plain;
+  charset="iso-8859-15"
+Content-Transfer-Encoding: quoted-printable
+Content-Description: signed data
+Content-Disposition: inline
 
---8323328-1332444705-1058870714=:30328
-Content-Type: TEXT/PLAIN; CHARSET=US-ASCII
-Content-ID: <Pine.LNX.4.56.0307221245241.30328@gumpie.wea.se>
+Hello,
 
-Hi,
+I just set up a lvm2 configuration running on a suse-System with a 2.4er=20
+Kernel. Everythings works fine now.  I Use lvm 2.2.00.05.
 
-I think I have tried all solutions google could give me without any luck
-restoring any data.
+I have one simple decision problem: What metadata format should I use? lvm1=
+ or=20
+lvm2. I did not find much info about the advantages and stability of format=
+=20
+lvm2. The lvm man pages says that lvm2 is better and more resilient, so=20
+should I use it or better stay with lvm1.=20
 
-The problem is the following:
+Any experiences?
 
-1. I had to reinstall a server to where this volumegroup belonged
-2. I umounted all LVs. And deactivated the VG. And then I did a vgexport
-of the VG
-3. After the reinstall of the linux server it was time to import the VG
-that had 2 harddrives. I ran a pvscan and it only detected one drive! I
-started some investigation and i noticed the second drive was totaly dead!
+Thanks a lot
+Rainer
+=2D-=20
+=2D------------------------------------------------------------------------=
+=2D-
+Rainer Krienke, Universitaet Koblenz, Rechenzentrum
+Universitaetsstrasse 1, 56070 Koblenz, Tel: +49 261287 -1312, Fax: -1001312
+Mail: krienke@uni-koblenz.de, Web: http://www.uni-koblenz.de/~krienke
+Get my public PGP key: http://www.uni-koblenz.de/~krienke/mypgp.html
+=2D------------------------------------------------------------------------=
+=2D-
 
+--Boundary-02=_6mRH/E+a1FR9EBo
+Content-Type: application/pgp-signature
+Content-Description: signature
 
-And of course since this was a server at my home I didnt have any backups
-of this VG. And since one drive is missing it's impossible to import the
-part of the VG I have left. I know that most of all PEs for my /home
-are on the drive that is still working.
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.2.2-rc1-SuSE (GNU/Linux)
 
-Now I wonder how on earth can I restore any of the data that is still on
-my working drive? I had 4 years of mail and some source code I would die
-for to get back. Since I only have metadata from the only drive working I
-think I have a little problem ;)
-All I want is to get as much of the data out from datavg/homelv.
+iD8DBQA/HRm6aldtjc/KDEoRAldkAJ44zg2VAdyv46Gm74/7LkErzpNwpQCg8xcX
+8V8uu1+tzE3Mi2t4t628NEw=
+=HixP
+-----END PGP SIGNATURE-----
 
-I attached a log file with the output from pvscan and pvdata.
-
-Sincerely
-Stefan Wold
---8323328-1332444705-1058870714=:30328
-Content-Type: APPLICATION/OCTET-STREAM; NAME="lvm.log.bz2"
-Content-Transfer-Encoding: BASE64
-Content-ID: <Pine.LNX.4.56.0307221245140.30328@gumpie.wea.se>
-Content-Description: 
-Content-Disposition: ATTACHMENT; FILENAME="lvm.log.bz2"
-
-QlpoOTFBWSZTWQXwLMYAJrpfgG2/yGP/8D////q/7//wYD3nAAAAAAEewAAA
-AABvo7hZYA4AFAAKY0aWstIA2lt27gaArsAZVCroAAUKFAAChQqgCqFCgNAN
-ChQAClCgAFClCgChSqLkAAAAAAAAAAAAgAAAeESkaRoymIaaTaEyCejKeSPU
-bVA/Sj0anqNqfqmxJ+lDjRkyMIxAMJoMAmg0DJk0ZMhhAY40ZMjCMQDCaDAJ
-oNAyZNGTIYQGKp/6pQN/6pRRKYkeoAAADQGTQAAAAGNVKUP9/qlKEmmE0YTQ
-GgAAANAANABKfqlKlD3/qUkkZNDTQAAAAAAAAAN8HWQTQiM/n48dwcE9miws
-5Nufk5L8oP57hkyfpfo5qVLIUpLMB5c56VrlHQOUaD8BoVwHJTDDRpz3bnn/
-S5+vMzMzMzAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA+oAYAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAX33333336fyrZ7t0cdNOXLm/g
-b645WzZnttt3uFBV0WZrtOXduv1qqp9BxOGg0euJAkIsGh4DKEGwp30fZJBp
-CEhCT4wbh6dcX6ijngkks2lm0s81lsstvz/W9j2PW9f0/f9j3/aVVVVVAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAB+aA
-MAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAAAAH1fwfd1239v92u2lWNF+ebNz8R+PaqACps2UGIU
-gkgkmWstWTzbLVkWRZFkWRZEkgkgkgxb4siKSAWxSg46zVr3pv27RzDeiiK7
-fr8JLEURXzobxfw4atHDIMHd3P3N7D5aNXjpwMMOCiylAJmrYPqMRvEVepvx
-y+9LLbfkeVr7fy/g+V7Xt+97vwe4qqqqqqqoAAAAAAAAAAAAAAAAAAAAAAAA
-AAAAAAAAAqqqqqvryy23+/nsttv0ZSef15fVlltd7UoAHG8ED1jCyucUELEQ
-AtU+X6b319xh9Df8x/HafD6Fm01+o5NvLa86ffE4diavb+A94911pbUut9Et
-nm8/qb9Mv6uvpel6vw+t37vPh+YqqqqqqqAAAAAAAAAAAAAAAAAAAAAAAAAA
-APr/m+9mZmZmddAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAfy+9e/fv3795mAA
-B+HXrXbtrz58+czM4wAAAAPHGuGu3bW93az7NZWNeeWRZFlFZFZFZFZFZFZF
-ZfnefJ8vlWRWRWRWRWRWRWRWRWRWXy8+T5fKsisisisisisisisisist8eeV
-kVkVkVkVkVkVkVkVkVlvjzysisisisisisisisisist83LMsszN82sisisis
-isisisisisist8eeVkVkVkVkVkVkVkVkVkVlvjzysisisisisisisisisist
-8eeVkVkVkVkVkVkVkVkVkVl58fH2Pj4+Pjve7gAAAHHFN2a121WtdtVrXbUr
-IrIrIrIrIrIrLfPNeVkVkVkVkVkVkVkVkVkVlvnmvKyKySskrJKySskrJKyS
-skrLfPNXlZJWSVklZJWSVklZJWSVklZb55q8rJKySskrJKySskrJKySskrLf
-PNXlZJWSVklZJWSVklZJWSVklZb55q8rJKySskrJKySskrJKySskrLfPNXlZ
-JWSVklZJWSVklZJWSVklZb55q8rJKySskrJKySskrJKySskrLfPNXlZJWSVk
-lZJWSVkmZiWSWSWTz3333333jAAAAA44pu1mu2rVrtq0skskskskskskzFvm
-6rJu6rJu6rJrSsm7qsm7qsm7ukswGkswGssOc5znOdqqqqqqqqqr33smkswG
-kswGkswGkswGkswGkswGkswGkswGkswGmu2tgOAAAAAccU3a1ZgNJZgNJZgN
-JZgNJZgNJZgNJZgNJZgNJZgNJYKqvaqqqqqqqqq997JpLMBpLMBpLG7qsm7q
-sm7qsm/Y88Vk83VZLdNJZgNJYL6Sr2qqqy2yy2qqqqqqvfeyaSzs66OiSw6D
-SWYDSybuqybuqybuqybuqybuqybvdrXbW3gHAAAAAOOKarJu6rJrSsm7qsm7
-qsm7qrMBpLMBpLMBpLMBpLBVV7VVVVVVVVVXvvZNJZgNJZgFZN3VZN3VZN3V
-ZbulZbbpWaqta7aqta7a2A4AAAA7u7vn83FZBWQVkFZBWQVk+ebqsgrIKyCs
-v6f8vy/wvrXy+PvfZ758fPz8/GfIAAAAAAAAAAAAAAcccccccccAAAAAAAAA
-AAAAAB9n4ADnkAAAAAAAAAAAAAAAAOOOOOOOOOAAAAAAAAAAAAA158+fPnyA
-AA79+/cAAaAAFV9Zdzefy6ml/LKSyeW3RJYbBZPa1s6zzay03ay03ar8ZXh5
-tZabuX2WZnW3RJYbBJYTvy9Ho9Ho9Hoe++++++++4qqq99999999847m6JLC
-Y0lhsElhsEnqaSTw82stN2stN2stN2stN2stN3Wu2uNeczv7zM4wAaAAAYWb
-oksNgssNgssNgssNgks+L4jy28qIlJKURKSUoiUk02VrVErJbQEuxxxxx+Pj
-jABoAABhm6777a7a3W9vvlleB5uWWm7llpu5ZabblloFlhsFlhsFlhsElnl4
-8ePHjx474qqrFVVVVVXi8Nuiyw2Cyw2Cyw2Cyw2Cyw2Cyw2Cyw2Cyw2Cyw2C
-SzrnOc5znfFVVYqqqqqq/t8c4e55vLbossNgssNgssNgssNgssNgssNgssNg
-ssNgssNgk7a8dddddddcYANAAAMM3XfdlhsEnx6yTrbossNgssNgssNgssNg
-ssNgssNgssNgks8vHjx48ePHfFVVYqqqqqq8Xht0WWGwWWGwWWGwWWGwWWGw
-WWGwWWGwWWGwWWGwSWdc5znOc74qqrFVVVVVXi8Nuiyw2Cyw2Cyw2Cyw2Cyw
-2Cyw2Cyw2Cyw2Cyw2N61213zMzMzjABoAAB8c5nO9uiyw2Cyw9MOiyw2Cyw2
-Cyw2PFiJZJZQTimiJbJbRSklKKUkpRTZvZKkvvp9Pp9Pj6cgAAAAAAAAAAAA
-AAAAAAAAAAAAAAAAAAHPPfn7ft666666dZ8AAAAAAAAAAAAAAAAAAAAAAAAA
-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
-Q30C7kinChIAvgWYwA==
-
---8323328-1332444705-1058870714=:30328--
+--Boundary-02=_6mRH/E+a1FR9EBo--
