@@ -1,11 +1,9 @@
-From: Stefan Nilsen <stefan.nilsen@wale.dyndns.dk>
-References: <200302041927.44619.stefan.nilsen@wale.dyndns.dk> <200302041953.23662.stefan.nilsen@wale.dyndns.dk> <3E40245C.8030808@ednet.ns.ca>
-In-Reply-To: <3E40245C.8030808@ednet.ns.ca>
+Message-ID: <038601c2ccf3$780d1e00$5a07a8c0@yckim>
+From: "YongChul Kim" <yckim@linuxsecurity.co.kr>
+References: <Pine.LNX.4.44.0301290929500.25534-100000@zeus.itg.uiuc.edu>
+Subject: Re: [linux-lvm] resize an ext3 on an LV
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-Message-Id: <200302042246.39398.stefan.nilsen@wale.dyndns.dk>
-Subject: [linux-lvm] Re: [SOLVED] New lv cannot span pv's
+Content-Transfer-Encoding: base64
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,48 +14,45 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Tue Feb  4 16:14:01 2003
+Date: Wed Feb  5 02:47:01 2003
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
 
-On Tuesday 04 February 2003 21.36, Patrick Boutilier wrote:
-> Does
->
-> lvcreate -ntest -l1383 vgdata
->
->
-> work ?
->
-
-It did not.
-
-wale:~ # lvcreate -ntest -l1383 vgdata
-lvcreate -- not enough allocatable/free physical volume space in 
-"vgdata"
-lvcreate -- please check, if physical volumes are allocatable
-
-I looked around little more and found this:
-
-wale:~ # pvdisplay /dev/hda5
---- Physical volume ---
-PV Name               /dev/hda5
-VG Name               vgdata
-PV Size               11.61 GB [24338412 secs] / NOT usable 3.99 MB 
-[LVM: 134 KB]
-PV#                   1
-PV Status             available
-Allocatable           NO
-Cur LV                5
-PE Size (KByte)       4096
-Total PE              2970
-Free PE               553
-Allocated PE          2417
-PV UUID               eQxblH-x1uS-bb9G-reYu-ocZo-QSOW-5j6QB0
-
-I seem to have managed to turn off the allocatable status of one of the 
-pv's. :-)
-
-I changed it with "pvchange -xy /dev/hda5" and now it works.
-
-Thanks for help.
+WW91IGNhbiBkbyBleHQzIGV4cGFuZCB3aXRoICJlMmZzYWRtIC1MICt4eHhHIC1uIC9kZXYvaG9t
+ZXZnL3VzZXJzbHYiLg0KQnV0IGJlZm9yZSB1c2luZyB0aGlzIGNvbW1hbmQsIG11c3QgcmVkdWNl
+IExWIHZvbHVtZSB0byBvcmlnaW5hbCBzaXplLg0KZTJmc2FkbSAgbWF5IHJlc2l6ZSBmaWxlc3lz
+dGVtIGFuZCBsb2dpY2FsIHZvbHVtZSBCT1RILg0KLW4gIGlzIG5vZnNjay4NCllvdSBtdXN0IGNo
+ZWNrIGZpbGVzeXN0ZW0gIGJlZm9yZSAiZTJmc2FkbSIgIGJ5IGUyZnNjay4NCg0Kd2lzaCB5b3Vy
+IGdvb2QgTHVjayAhISENCllvbmdjaHVsIEtpbS4NCg0KDQotLS0tLSBPcmlnaW5hbCBNZXNzYWdl
+IC0tLS0tIA0KRnJvbTogIkFsZXhhbmRlciBMYXphcmV2aWNoIiA8YWxhemFyZXZAaXRnLnVpdWMu
+ZWR1Pg0KVG86ICJMaW51eCBMVk0gU2lzdGluYSIgPGxpbnV4LWx2bUBzaXN0aW5hLmNvbT4NClNl
+bnQ6IFRodXJzZGF5LCBKYW51YXJ5IDMwLCAyMDAzIDEyOjMyIEFNDQpTdWJqZWN0OiBSZTogW2xp
+bnV4LWx2bV0gcmVzaXplIGFuIGV4dDMgb24gYW4gTFYNCg0KDQo+IFRoZSBMViBpcyBhbHJlYWR5
+IGV4cGFuZGVkLiBBbGwgSSB3YW50IHRvIGRvIGlzIHJlc2l6ZSB0aGUgZXh0MyBmaWxlc3lzdGVt
+IA0KPiB0byB0aGUgbmV3IHNpemUgb2YgdGhlIExWLCB3aGljaCBpcyBub3cgMjc1R0IuDQo+IA0K
+PiBCdXQgSSBuZWVkIHRvIGtub3cgdGhlIGNvbW1hbmRzLiBPciBzb21lIGhpbnQgb2Ygd2hhdCB0
+aGUgY29tbWFuZCBpcy4gSXMgDQo+IGl0IGp1c3QgInJlc2l6ZTJmcyAvZGV2L2hvbWV2Zy91c2Vy
+c2x2Ij8gSSd2ZSBzZWVuIHNvbWUgcG9zdHMgc2F5aW5nIHRoYXQgDQo+IHVzaW5nIHJlc2l6ZTJm
+cyB3aWxsIGRlc3Ryb3kgYW4gZXh0MyBmaWxlc3lzdGVtLCBpcyB0aGF0IG5vdCB0cnVlPyBXaWxs
+IA0KPiB0aGUgam91cm5hbCBzdGF5IGludGFjdD8gV2hhdCdzIHRoZSBjb21tYW5kIHRoYXQgeW91
+IHVzZT8NCj4gDQo+IFRoYW5rcyBmb3IgdGhlIGhlbHAhDQo+IA0KPiBBbGV4DQo+IA0KPiBPbiBX
+ZWQsIDI5IEphbiAyMDAzLCBKYW4tQmVuZWRpY3QgR2xhdyB3cm90ZToNCj4gDQo+ID4gT24gV2Vk
+LCAyMDAzLTAxLTI5IDA5OjE2OjE1IC0wNjAwLCBBbGV4YW5kZXIgTGF6YXJldmljaCA8YWxhemFy
+ZXZAaXRnLnVpdWMuZWR1Pg0KPiA+IHdyb3RlIGluIG1lc3NhZ2UgPFBpbmUuTE5YLjQuNDQuMDMw
+MTI5MDkwMDM1MC4yMjQ2My0xMDAwMDBAemV1cy5pdGcudWl1Yy5lZHU+Og0KPiA+ID4gQSByZWhh
+c2ggb2Ygc29tZSBxdWVzdGlvbnMgSSBhc2tlZCBlYXJsaWVyLCBidXQgSSB3YW50IHRvIGNsYXJp
+Znk6DQo+ID4gPiANCj4gPiA+IFJlZGhhdCA3LjMsIDIuNC4xOC0xOS43LnhzbXAga2VybmVsLCB1
+c2luZyBMVk0gMS4wMy4NCj4gPiA+IA0KPiA+ID4gSSd2ZSBnb3QgYSAxODBHQiBMViAoL2Rldi9o
+b21ldmcvdXNlcnNsdikgd2hpY2ggY29udGFpbnMgYW4gZXh0MyANCj4gPiA+IGZpbGVzeXN0ZW0g
+KG1vdW50IHBvaW50IC9ob21lL3VzZXJzKS4NCj4gPiA+IA0KPiA+ID4gT25jZSBJIHVtb3VudCB0
+aGUgL2Rldi9ob21ldmcvdXNlcnNsdiwgY2FuIEkgdXNlIHJlc2l6ZTJmcyB0byBleHRlbmQgdGhl
+IA0KPiA+ID4gZXh0MyBmaWxlc3lzdGVtPyBPciBtdXN0IEkgZmlyc3QgcmVtb3ZlIHRoZSBqb3Vy
+bmFsIGZyb20gZXh0MywgdGhlbiANCj4gPiA+IHJlc2l6ZSwgdGhlbiBhZGQgdGhlIGpvdXJuYWwg
+YmFjayB0byBpdCwgdGhlbiByZW1vdW50Pw0KPiA+IA0KPiA+IFlvdSBjYW4gZGlyZWN0bHkgZW5s
+YXJnZSB0aGUgZmlsZXN5c3RlbSwgYnV0LCBvZiBjb3Vyc2UsIHlvdSd2ZSBnb3QgdG8NCj4gPiBl
+eHRlbmQgdGhlIGxvZ2ljYWwgdm9sdW1lIGJlZm9yZSB0aGF0Li4uIFlvdSBkb24ndCBuZWVkIHRv
+IHJlbW92ZSB0aGUNCj4gPiBqb3VybmFsLCBhdCBsZWFzdCwgdGhpcyB3b3JrZWQgbnVtZXJvdXMg
+dGltZXMgZm9yIG1lOi0pDQo+ID4gDQo+ID4gSG93ZXZlciwgYmFja3VwIGlzIGFsd2F5cyBhIGdv
+b2QgaWRlYSwgdGhvdWdoLg0KPiA+IA0KPiA+IE1mRywgSkJHDQo+ID4gDQo+ID4gDQo+IA0KPiAN
+Cj4g
