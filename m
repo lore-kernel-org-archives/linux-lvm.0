@@ -1,10 +1,9 @@
-From: Luca Berra <bluca@comedia.it>
+Message-ID: <3D7DE10F.733BFCE6@silicide.dk>
+From: Jon Bendtsen <jon+lvm@silicide.dk>
+MIME-Version: 1.0
 Subject: Re: [linux-lvm] software mirroring
-Message-ID: <20020910103245.GB9619@percy.comedia.it>
-References: <2005.24.46.54.254.1031578510.squirrel@mail.scottsavarese.com> <3D7CC062.2040108@comedia.it> <3338.24.46.54.254.1031594005.squirrel@mail.scottsavarese.com>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <3338.24.46.54.254.1031594005.squirrel@mail.scottsavarese.com>
+References: <4808.24.46.54.254.1031320260.squirrel@mail.scottsavarese.com> <20020906201136.GB5094@localhost> <3256.24.46.54.254.1031409280.squirrel@mail.scottsavarese.com> <20020907204200.GA3481@localhost>
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,69 +14,40 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Tue Sep 10 05:33:22 2002
+Date: Tue Sep 10 07:10:02 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-Content-Transfer-Encoding: 7bit
-To: Scott Savarese <scott@scottsavarese.com>
-Cc: linux-lvm@sistina.com
+Content-Type: text/plain; charset="iso-8859-1"
+To: linux-lvm@sistina.com
 
-On Mon, Sep 09, 2002 at 01:53:25PM -0400, Scott Savarese wrote:
->OK... My lilo version is 22.2.
-good
->/dev/hdc is:
->Disk /dev/hdc: 255 heads, 63 sectors, 12161 cylinders
->Units = cylinders of 16065 * 512 bytes
->
->   Device Boot    Start       End    Blocks   Id  System
->/dev/hdc1   *         1       131   1052226   fd  Linux raid autodetect
->/dev/hdc2           132     12161  96630975   8e  Linux LVM
->
-(irrelevant to your issue atm)
-is hdc2 part of md1? if so it should be type fd
-(irrelevant to your issue atm)
->This is the harddrive I am doing all the work on.
->
->/dev/hda is the same harddrive configured with one partition the entire
->length of the disk of type 83 (linux). Right now that disk works. I'll add
->it to my mirrors after I am sure this works with one disk. I would like to
->get this to work on /dev/hdc first. Once that works, I'll mirror the disks
->to /dev/hda and then reset lilo and my bios to boot off /dev/hda.
-ok, let's start hoping that your bios handles booting from secondary
-master mapping it to drive 0x80, and does not screw things more than
-needed.
+Jos=E9 Luis Domingo L=F3pez wrote:
+> =
 
->My lilo.conf looks like the following:
--------------------
->disk = /dev/md1
->sectors = 63
->heads = 255
->cylinders = 12161
->partition = /dev/md0
->start = 63
--------------------
-the above should not be needed with lilo 22.2, it should be able to
-detect geometry for raid arrays correctly
+> On Saturday, 07 September 2002, at 10:34:40 -0400,
+> Scott Savarese wrote:
 
->boot = /dev/hdc
-ok here is the main problem you are telling it to boot from
-drive 0x82, then you change the bios and it becomes 0x80
-so it tries to load from an inexistent disk
+> There shouldn't be any problems at all, except for bootup: it can be
+> tricky (complex, prone to error or simply impossible, I don't know ;)
+> to get a box boot off a LV on top of a software RAID1. But technically,=
 
-now is time for black magic
-correct thing to do is putting a valid *STANDARD* mbr on disk hdc
-hdc1 is already active and that is good
-then use in lilo:
+> it should be as simple as creating a partition on each disk, creating
+> the RAID1 from them, initialize /dev/md0 as a PV for use with LVM,
+> create a VG consisting of just this PV, and finally create as many LV a=
+s
+> you need (size permitting).
 
-boot = /dev/md0
+Thats the way to do it.
 
-which would tell lilo to put its boot sector at the beginning of hdc1
-and its mirrored copy.
+ =
 
--- 
-Luca Berra -- bluca@comedia.it
-        Communication Media & Services S.r.l.
- /"\
- \ /     ASCII RIBBON CAMPAIGN
-  X        AGAINST HTML MAIL
- / \
+> I have not had the chance to try it by myself, due to lack of hardware,=
+
+> but should work. Maybe the hard part is to do it at install time and ge=
+t
+> the system to boot from a LV created this way.
+
+I have tried it, and it works fine.
+
+
+
+
+JonB
