@@ -1,15 +1,8 @@
-From: Steven Lembark <lembark@wrkhors.com>
+From: Benjamin Scott <bscott@ntisys.com>
 Subject: Re: [linux-lvm] offtopic but ...
-Message-ID: <1266960000.1021300755@[192.168.200.4]>
-In-Reply-To: <20020513073733.B31182@connectlive.com>
-References: <064b01c1f69a$71b9c100$070414ac@Home.PIN.LU>
- <94260000.1020868034@[192.168.200.4]>
- <20020513123901.D12633@azrael.smilehouse.com>
- <20020513094350.GB864@tykepenguin.com>
- <20020513073733.B31182@connectlive.com>
+In-Reply-To: <1263110000.1021300134@[192.168.200.4]>
+Message-ID: <Pine.LNX.4.44.0205131053020.6095-100000@dragon.inside.ntisys.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -20,50 +13,56 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon May 13 09:39:02 2002
+Date: Mon May 13 10:19:01 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
+Content-Type: TEXT/PLAIN; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
+On Mon, 13 May 2002, at 9:28am, Steven Lembark wrote:
+> Depends on the size of a system.  If you have too much ... of data there
+> is no effective way to back it up and restore it.
 
--- Tim <tim@connectlive.com>
+  In my experience, large systems are even more likely to require multiple
+levels of data redundancy.  When you get into that space, though, you're not
+talking about running "tar" on the filesystem at 2 AM.  :)  Instead, you're
+talking application-level backups, storage-level snapshots, that sort of
+thing.  Maybe the snapshots are dumped to tape, and the tapes kept offsite.  
+Maybe they ship the whole storage array offsite.  I've heard of or seen
+both.  There are plenty of even more sophisticated solutions.
 
-> Incremental backups are orthogonal to true high availability, but you're
-> guaranteed to have low availability if you have no disaster recovery
-> plans.  I wish there were a more succinct way to express that!
+> For a few tens of millions you can avoid tapes too :-)
 
-How about:
+  "Backup" does not have to mean "magnetic tape".  The essential element is
+that the backup is offline, so that if the "live" system gets destroyed
+somehow, all is not lost.  Yes, the downtime from such a disaster is
+extremely painful -- but not having the data at all is orders of magnitude
+more painful.
 
-    "Don't tempt Murphy."
+> Banks ... use multiple centers with multiple computers with multiple EMC
+> systems with multiple volumes RAID-ed across multiple sets of duplicated
+> drives connected by multiple controllers across multiple lans and
+> heartbeat systems monitoring each of them.
 
-    "Lack of planning is a disaster in itself."
+  And offline backups kept in physically hardened offsite facilities on top
+of that.  Banks sincerely believe they cannot have too many copies of their
+data.  I've seen pictures of the offline and near-line facilities they use
+for this sort of thing -- warehouses full of shelves and shelves of data
+cartridges.
 
-    "0 to the 10th equals nothing at all"
+> Archiving data to tape is a wonderful thing but won't help you if hardware
+> fails and you need quick access to the system.
 
-(the last from Jethro Tull if you handn't seen it before).
+  Offline backups are for disaster recovery, not availability.  I think
+you're trying to say that, but the point is getting confused.  The
+difference between a small office's and a large bank's disaster recovery
+plans is the difference between their definitions of "disaster".  A small
+office probably considers a hard drive failure or OS corruption a
+"disaster".  A bank thinks more along the lines of "multiple terrorist
+attacks".
 
-
-But this depends on the environment. In a number of the
-data warehouses I've worked on there simply would not be
-time to restore the data from archival media. The best
-they can do is make the "high" approach 100% and live with
-it. There will be a relatively small set of archival storage
-that can be brought on line, but there is no way that
-restoring data from archival media is an acceptable recovery
-plan in these cases ("Sorry, General, we can't respond to
-that nuclear bomb comming in: it'll take us at least 3 more
-hours to recover from these tapes." Think banker, heavy
-industrial plant and you have the same situation).
-
-The good news is that today's near-term storage hardware
-(from fiber scsi cards down to the disks) will handle
-anything short of a nuclear blast without failing miserably.
-This leaves "full availability" systems as a viable alternative
-in many cases.
-
-
-
---
-Steven Lembark                               2930 W. Palmer
-Workhorse Computing                       Chicago, IL 60647
-                                            +1 800 762 1582
+-- 
+Ben Scott <bscott@ntisys.com>
+| The opinions expressed in this message are those of the author and do not |
+| necessarily represent the views or policy of any other person, entity or  |
+| organization.  All information is provided without warranty of any kind.  |
