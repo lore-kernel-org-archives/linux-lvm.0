@@ -1,9 +1,9 @@
 From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] Snapshot resizing bug (LVM1)
-Message-ID: <20030206112752.B22450@sistina.com>
-References: <A00B669E-3934-11D7-A9B9-0003937830E4@mac.com>
+Subject: Re: [linux-lvm] Help configuring LVM
+Message-ID: <20030206114907.C22450@sistina.com>
+References: <5F2C72E5CC01D511BE3D0008C75B9AD8039A2D91@RDGEXH03>
 Mime-Version: 1.0
-In-Reply-To: <A00B669E-3934-11D7-A9B9-0003937830E4@mac.com>; from dalestephenson@mac.com on Wed, Feb 05, 2003 at 01:07:01PM -0500
+In-Reply-To: <5F2C72E5CC01D511BE3D0008C75B9AD8039A2D91@RDGEXH03>; from Jon.Lacey@exprogroup.com on Tue, Feb 04, 2003 at 09:00:26AM -0000
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,63 +14,131 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Thu Feb  6 04:31:02 2003
+Date: Thu Feb  6 04:52:01 2003
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Dale,
+Jon,
 
-thanks for finding this bug.
-Obviously people don't resize populated snapshots very often or we'ld
-seen this one much earlier ;)
-Your fix is in LVM_BRANCH_1-0 for everybody to test.
+having root on a logical volume needs an initrd which causes hassle in
+case soemthing goes wrong at boot and you don't have an emergency boot media
+with all necessary sw (i.e. LVM etc.) on it.
+It is doable but there's traps.
 
-We plan to revert CVS and will announce the change seperately.
+Having a relatively large root filesystem doesn't make that much sense IRT
+backups and system resilience (one smaller filesystem fails and you
+just repair that one rather than everything).
+Split filesystems and have /, /home, /usr, /opt, /tmp, /var, ... seperately
+to achive this. Having a 100MB root is sufficient and there's no need to
+have it on an logical volume then.
+
+
+That said and assuming you still want to go for it, you need to roughly
+do the followoing (say your VG is named "system" and your rot LV "root"):
+
+- set the partition type of /dev/hd[b-d]1 to Linux LVM (0x8E)
+
+- pvcreate /dev/hd[b-d]1
+
+- vgcreate system /dev/hd[b-d]1
+
+- use vgdisplay to find out the total number of free PEs in the VG "system"
+  and replace $Free_PE by that amount below
+
+- lvcreate -n root -l $Free_PE system
+
+- make a filesystem of your choice on /dev/system/root
+
+- mount it somewhere
+
+- copy all files from / over to your /dev/system/root filesystem
+
+- create an inital ram disk using mkinitrd (not familiar if that comes
+  with slackware) or lvmcreate_initrd (which comes with LVM)
+
+- setup your lilo/grub configuration to be able to boot you system with
+  the new initrd you created in the previous step
+
+- change /etc/fstab in the /dev/system/root filesystem to reflect that
+  filesystem as root
+
+- try to boot with root on /dev/system/root
+
+- _IF_ that works
+
+  - change the partiton type of /dev/hda3 tp Linux LVM
+
+  - pvcreate /dev/hda3
+
+  - vgextend system /dev/hda3
+
+
+Now you should have /dev/hda3 and /dev/hd[b-d]1 in volume group "system"
+with the capacity of /dev/hda3 still free for new LVs or extension
+of /dev/system/root.
+
+Don't forget to take backups (in particular of /etc/lvmconf/*) !
 
 Regards,
 Heinz    -- The LVM Guy --
 
 
-On Wed, Feb 05, 2003 at 01:07:01PM -0500, Dale J. Stephenson wrote:
-> I've discovered a problem with using lvreduce/lvextend on LVM.  The 
-> resized snapshot will have a new exception table and hash table 
-> allocated for it.  But lvm_hash_link will be called for these in a loop 
-> that depends on the lv_remap_ptr counter passed down from userspace -- 
-> which will always be zero.  The result is that existing COW on the 
-> snapshot are ignored, and the contents of the snapshot can magically 
-> change to reflect the current state of the source volume.  Reboot (or 
-> deactivating and reactivating the volume group) should solve the 
-> problem, although it may be possible in the meantime to store a new COW 
-> exception for a chunk that already has one.
+On Tue, Feb 04, 2003 at 09:00:26AM -0000, Jon Lacey wrote:
+> Hi, I have looked at the HOWTO's and FAQ's and cannot seem to solve my
+> problem, maybe it's me.
 > 
-> The fix is simple:
+>  
 > 
-> --- lvm.c.orig  Tue Feb  4 18:36:58 2003
-> +++ lvm.c       Tue Feb  4 18:43:26 2003
-> @@ -2792,7 +2792,7 @@
->                  old_lv->lv_snapshot_hash_mask =
->                      new_lv->lv_snapshot_hash_mask;
+> I do not seem, while installing Slackware 8, to be able to build LVM into
+> the install, so I was hoping to be able to do a minimal install and then add
+> a logical volume and move me data.
 > 
-> -               for (e = 0; e < new_lv->lv_remap_ptr; e++)
-> +               for (e = 0; e < old_lv->lv_remap_ptr; e++)
->                          lvm_hash_link(new_lv->lv_block_exception + e,
->                                        new_lv->lv_block_exception[e].
->                                        rdev_org,
+>  
 > 
-> As a side note, why not revert the main LVM cvs tree back to LVM 1.0.6? 
->   1.1 is dead.
+> I have installed Slackware (a very basic setup) as:
 > 
-> Dale J. Stephenson
-> dalestephenson@mac.com
+> /dev/hda1 100 MB mounted as /boot
+> 
+> /dev/hda2 200 MB as Swap
+> 
+> /dev/hda3 800MB mounted as /
+> 
+>  
+> 
+> I have three more drives, all 1 GIG drives. /dev/hdb1 /dev/hdc1 /dev/hdd1 
+> 
+> What I would like to do is to amalgamate them all into one large volume,
+> include /dev/hda3 as part of the volume and have it all mounted as /
+> 
+>  
+> 
+> So I hope to end up with a volume group, say vg1, consisting of a single
+> volume, say vol1, copy data over from /dev/hda3 and then mount vol1 as /
+> 
+>  
+> 
+> Is there anywhere I can go to see an example of doing this/ or can someone
+> help.
+> 
+>  
+> 
+>  
+> 
+> Thanks
+> 
+> Jon L.
 > 
 > 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+> ----------------------------------------------------------------------
+> Important Notice: 
+> The information in this email is confidential and may be legally-privileged.  
+> If you have reason to believe you are not the intended recipient, any disclosure, 
+> copying, distribution or any action taken or omitted to be taken in reliance on 
+> it is prohibited and may be unlawful and you are requested to contact the sender 
+> urgently and dispose of this email 
+> -----------------------------------------------------------exp.
 
 *** Software bugs are stupid.
     Nevertheless it needs not so stupid people to solve them ***
