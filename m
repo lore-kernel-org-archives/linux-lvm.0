@@ -1,12 +1,10 @@
 From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] Can no longer mount lvm striped volume
-Message-Id: <20020506123032.B26606@sistina.com>
-References: <20020502121825.B3956@hpti.com>
-    <Pine.SGI.4.33.0205021333290.5694922-100000@erc2000.erc.wisc.edu>
-    <20020502124850.B4053@hpti.com>
+Subject: Re: [linux-lvm] Patch for /proc (NOT a bug fix)
+Message-Id: <20020506123345.C26606@sistina.com>
+References: <2D0AFEFEE711D611923E009027D39F2B02F141@cdserv.meridian-data.com>
 MIME-Version: 1.0
-In-Reply-To: <20020502124850.B4053@hpti.com>; from ctierney@hpti.com on
-    Thu, May 02, 2002 at 12:48:50PM -0600
+In-Reply-To: <2D0AFEFEE711D611923E009027D39F2B02F141@cdserv.meridian-data.com>;
+    from dstephenson@snapserver.com on Wed, May 01, 2002 at 12:34:34PM -0700
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,72 +15,68 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon May  6 05:30:02 2002
+Date: Mon May  6 05:33:02 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Craig,
+Dale,
 
-you said, "vgscan -f" didn't enable you to "vgchange -ay" the VG in question
-but the explicit "vgchange -ay VGName" helped?
+thanks for offering your patches.
 
-Very strange indeed.
+Was away second half of last week and will have a look at them today.
 
-Could you send the output of "dd if=$PV of=$(basename $PV).vgda bs=1k count=4k"
-(replace the PV variable by your PV device pathes in turn) plus /etc/lvmtab*
-contained in a bzip2ed tar archive to me directly <mge@sistina.com> for
-further analisys.
-
-Thanks,
+Regards,
 Heinz    -- The LVM Guy --
 
-On Thu, May 02, 2002 at 12:48:50PM -0600, Craig Tierney wrote:
-> As Homer would say 'Doh!'.
+
+On Wed, May 01, 2002 at 12:34:34PM -0700, Stephenson, Dale wrote:
+> This patch doesn't attempt to solve any bugs.  I just wanted to get more
+> useful information about snapshots from /proc -- little things like the
+> snapshots' actual size, what volume is its source, and how much of its space
+> it has used.  Yes, all this information is available from /sbin/lvdisplay
+> (except for the *real* allocated LE, which you have to figure by hand).  But
+> I like using /proc.
 > 
-> I am still having some other problems, but this error
-> was fixed by mounting the logical volume and not the
-> volume group.
+> I put the extra (conditional) lines before the "device:" line because the
+> optional stripesize line was already there.
 > 
-> Wrong:  mount -t ext3 /dev/sdd_vol2 /export/sdd_vol2
-> Correct: mount -t ext3 /dev/sdd_vol2/lv1 /export/sdd_vol2
+> I'd like to fit the snapshot/snapshot-source bit into the status bits in
+> /proc/lvm/global too, but I haven't done it yet.
 > 
-> I was still having problems with the scan message, but
-> after I fixed that I didn't run the mounting scripts I
-> mounted by hand and messed up.
+> Dale J. Stephenson
+> steph@snapserver.com
 > 
-> Craig
-> 
-> 
-> On Thu, May 02, 2002 at 01:34:40PM -0500, John Moser wrote:
-> > 
-> > > [root@x06 /root]# mount -t ext3 /dev/sdd_vol2/ /export/sdd_vol2
-> > > mount: /dev/sdd_vol2/ is not a block device
-> > >
-> > > IO nodes have gone down in the past due to
-> > > power interruptions, but I have never had
-> > > this catastrophic of a problem.  I have 16 volume
-> > > groups, and 3 or 4 appear to be affected.
-> > 
-> > Have you tried a simple:
-> > 
-> > vgchange -a y
-> > 
-> > ?  Similar situation happened to me before, and I just needed to activate
-> > the volume group.
-> > 
-> > -John
-> > 
-> > 
-> > _______________________________________________
-> > linux-lvm mailing list
-> > linux-lvm@sistina.com
-> > http://lists.sistina.com/mailman/listinfo/linux-lvm
-> > read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
-> 
-> -- 
-> Craig Tierney (ctierney@hpti.com)
+> --- linux/drivers/md/lvm-fs.c.orig	Mon Apr 22 12:14:59 2002
+> +++ linux/drivers/md/lvm-fs.c	Mon Apr 22 13:44:03 2002
+> @@ -285,6 +285,26 @@
+>  		sz += sprintf(page + sz, "stripesize:   %u\n",
+>  			      lv->lv_stripesize);
+>  	}
+> +	if (lv->lv_access & LV_SNAPSHOT) {
+> +		sz += sprintf(page + sz, "remap total:  %u\n",
+> +			      lv->lv_remap_end * lv->lv_chunk_size / 2);
+> +		sz += sprintf(page + sz, "remap used:   %u\n",
+> +			      lv->lv_remap_ptr * lv->lv_chunk_size / 2);
+> +		sz += sprintf(page + sz, "snapshot LE:  %u\n",
+> +			      lv->lv_allocated_snapshot_le);
+> +		if (lv->lv_snapshot_org != NULL) {
+> +			sz += sprintf(page + sz, "source:       %s\n",
+> +				      lv->lv_snapshot_org->lv_name);
+> +		}
+> +	}
+> +	if (lv->lv_access & LV_SNAPSHOT_ORG) {
+> +		lv_t *lvp = lv->lv_snapshot_next;
+> +		while (lvp != NULL) {
+> +			sz += sprintf(page + sz, "source of:    %s\n",
+> +				      lvp->lv_name);
+> +			lvp = lvp->lv_snapshot_next;
+> +		}
+> +	}
+>  	sz += sprintf(page + sz, "device:       %02u:%02u\n",
+>  		      MAJOR(lv->lv_dev), MINOR(lv->lv_dev));
+>  
 > 
 > _______________________________________________
 > linux-lvm mailing list
