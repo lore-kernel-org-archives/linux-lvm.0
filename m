@@ -1,11 +1,13 @@
-From: Andreas Dilger <adilger@turbolabs.com>
-Subject: Re: [linux-lvm] Fixing corrupted LVM PV headers?
-Message-Id: <20020103142740.A12868@lynx.no>
-References: <3C352FFF.1946.1910201@localhost>
+Content-Type: text/plain; charset="us-ascii"
+From: Adrian Head <ahead@bigpond.net.au>
+References: <6u4rm4r53e.fsf@zork.zork.net>
+    <200201031638.g03GcJg20734@oss.sgi.com>
+    <1010072497.12080.42.camel@jen.americas.sgi.com>
+In-Reply-To: <1010072497.12080.42.camel@jen.americas.sgi.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <3C352FFF.1946.1910201@localhost>; from timshel@pobox.com on
-    Fri, Jan 04, 2002 at 04:30:55AM +1100
+Content-Transfer-Encoding: 8bit
+Message-Id: <E16MHyQ-00052r-00@hermes.sistina.com>
+Subject: [linux-lvm] Re: Unable to get XFS, ext3, reiserfs & LVM to coexist happily
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,100 +18,185 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Thu Jan  3 15:25:01 2002
+Date: Thu Jan  3 18:13:02 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: timshel@pobox.com
-Cc: linux-lvm@sistina.com
+To: Steve Lord <lord@sgi.com>, Andreas Dilger <adilger@turbolabs.com>
+Cc: Linux XFS <linux-xfs@oss.sgi.com>, linux-lvm@sistina.com
 
-On Jan 04, 2002  04:30 +1100, timshel@pobox.com wrote:
-> I've been using LVM on my home system for quite some time now, and I 
-> have just recently install Windows XP, which totally stuffed up my 
-> partitioning for some reason. Anyway, in the process of fixing the 
-> stuff up I've managed to corrupt the first 3 sectors or so (at least, I 
-> hope it's only 3 sectors) of one of the physical volumes that make up 
-> my main volume group. So I've effectively lost my entire Linux system.
-> 
-> I'd rather not have to reinstall from scratch, as there was quite a bit 
-> of stuff on some of the filesystems that would take me some time to 
-> replace, so I'm wondering if there is any way of resurrecting the PV. 
-> I've got the UUID of the PV (from running pvdisplay on the other PV's 
-> in the group and working out which one was missing) ... If it's not 
-> possible to recover the filesystem(s) that were on that particular PV, 
-> would it be at all possible to recover filesystems that are entirely on 
-> the other PV's?
-> 
-> My setup is the following:
-> 
-> hda6:	8Gb PV (This is the stuffed one)
-> hda7:   8Gb PV
-> hda8:   8Gb PV
-> hdb6:   8Gb PV
-> hdc:     3Gb PV
-> 
-> There were 5 different LV's on the VG, all with XFS filesystems except 
-> for a swap volume.
-> 
-> /usr		~4Gb LV
-> /home		~2Gb LV
-> /var:		~1.3Gb LV
-> /var/share	~7Gb LV
-> /var/chroot	~1Gb LV
-> 
-> If anyone has any suggestions on possibilites for fixing this, please 
-> let me know ...
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA1
 
-Well, this seems to become my specialty:
+On Fri, 4 Jan 2002 01:41, Steve Lord wrote:
+> > There are however, may subtle (unhappy) interactions between XFS, LVM and
+> > other kernel areas when you try to do snapshots for example.
+>
+> Yes, I have seen the thread, I have just not had the time to look into
+> it yet. Your last message said that the xfs snapshot creation was
+> failing, but with an ext3 stack trace.....
+>
+> You also mention out of space problems in the snapshot.
+>
+> Can you summarize where your kernel came from - I see you have lots of
+> stuff in there. Do you still need special lvm patches to turn on
+> snapshotting support - it has been a while.
+>
+> Also, send me a quick rundown of the commands you need to use to setup
+> a volume for snapshotting - it will save me the research.
 
-- Look in include/linux/lvm.h for descriptions of the LVM metadata (see
-  pv_disk_t, lv_disk_t, vg_disk_t, etc)
-- You need to re-create the pv_disk_t struct at the start of the disk,
-  and also maybe the vg_disk_t (it starts at 1kB or 4kB offset normally).
-- You need to have all of the data for the pv_disk_t.  Some of it can be
-  found from the other PVs, some of it you will have to calculate.
-- The majority of fields _should_ be the same as that on another PV of
-  _exactly_ the same size, assuming you added them with the same version
-  of LVM user tools.  To start with, I would just do something like the
-  following to give you the basics, and allow you to just change specific
-  fields.  You _need_ to have the exact same partition sizes for this to
-  work correctly, if you don't you need to do more work:
+Thats fine Steve, all I was doing at the time was just saying that running 
+XFS on a straight LVM seems to be very happy as far as I can tell.  However, 
+since you have asked the questions I will answer now before I forget about 
+it.  ;-)
 
-  dd if=/dev/hda7 bs=1k count=1 of=/dev/hda6
+The problem I have encountered is just as strange (ext3 stack trace) as the 
+file corruption during compile problem that you are dealing with now.
 
-- The vg_disk_t starts with the VG UUID, so if you find it at 4kB offset,
-  you are OK with that part.  If not, you should be able copy the vg_disk_t
-  directly from another PV in the same VG.  The offset will depend on what
-  version of tools you used to create your PV/VG, so it needs to be at the
-  value of vg_on_disk.base (either 1kB or 4kB offset into the PV):
+What I was going to do was fall back to ext2 and remove ext3 from the kernel 
+and rerun the tests.  Hopefully by doing this it will shed more light onto 
+the problem.
 
-  dd if=/dev/hda7 bs=1k count=1 seek=<1k/4k> skip=<1k/4k> of=/dev/hda6
+Not sure what you mean by have lots of stuff in the kernel but to summarise 
+where it came from.
+The recent kernel - the one I did the last series of tests with was from the 
+SGI CVS and was:
+2.4.17-xfs      20011226
+Previous kernels also from SGI CVS that I have tried were:
+2.4.16-xfs      20011218
+2.4.16-xfs      20011223
 
-- Note that pv_uuidlist_on_disk.base and .size were changed (6kB or 8kB), so
-  you _should_ be able to determine the start of the UUID list by looking at
-  the disk with "od -Ax -tx4 /dev/hda6" and comparing the output to the UUIDs
-  on another PV.
-- At this stage, running "pvdata -avP /dev/hda6" should give you reasonable
-  values back for the VG, LV, PE, and UUID data.
-- You need to fix the fields pv_uuid, pv_number and pe_allocated, assuming
-  the original PV is exactly the same size.  Normally I do this by either
+The system is a minimal install of RH7.2 and all compiles have used the 
+default compile flags using the default RH7.2 compiler.
+gcc version 2.96 20000731 (Re Hat Linux 7.1 2.96-89)
 
-  echo -en "<value(s)>" | dd of=/dev/hda6 bs=1 count=M seek=N
+A more indepth of the make-up of my system can be found here:  from the 
+thread "XFS dying when many processes copy many files/directories" 
+http://marc.theaimsgroup.com/?l=linux-xfs&m=100942550316126&w=2
 
-  where I echo things like "\0\0\0\001" (the latter being an octal number),
-  and M and N are appropriate byte offsets into the struct (per lvm.h).  You
-  need to specify M (normally 4) because echo may append a trailing newline.
-   
-- If the PV sizes do not match, you also need to fix pe_on_disk.size, pv_size,
-  pe_total, and pe_start (maybe).  I can tell you how to do this also, but
-  it is complicated so I'd rather not unless needed.
-- At this point, vgscan should be able to detect the whole VG.  If the
-  pe_on_disk.size value (and/or pe_start) is wrong, then you will get
-  misaligned data for your filesystems that have data on that PV, and you
-  have to work out the correct value.
+The only other things added to the kernel are the LVM patches of which there 
+are two that the LVM people recommend.
+* The LVM-1.0.1 upgrade patch and
+* The VFS-lock patch
+(in that order)
 
-Cheers, Andreas
---
-Andreas Dilger
-http://sourceforge.net/projects/ext2resize/
-http://www-mddsp.enel.ucalgary.ca/People/adilger/
+- From my understanding the LVM-1.0.1 patch is recommended as it has many 
+bugfixes from the LVM-1.0.1rc4(ish) that is currently in the linus & SGI 
+2.4.17 kernel.  Unfortunately I don't have handy a URL to the changlog - 
+sorry.
+
+The VFS-lock patch from my understanding is required for creating snapshots 
+on journaling filesystems like ext3, resierfs and maybe XFS.  (AFAIK XFS is a 
+special case as you can also use xfs_freeze).  The VFS-lock patch locks the 
+VFS layer and forces all filesystems to sync to disk dumping all dirty 
+buffers/pages etc...  If this doesn't happen; although you can create a 
+snapshot you will never be able to mount it as the journals of at least ext3 
+& resierfs will need to be replayed - which cannot happen as the snapshot is 
+read-only.  Maybe some of the LVM developers may be able to give you more 
+information than that.
+
+There are 3rd party patches to make the snapshot writable but I don't see the 
+advantage for my situation as yet and I'm having enough trouble getting the 
+basics running.  Therefore, I have not applied these patches.  ;-)
+
+Now with regards to the out of space problems I have been referring to:
+What I was wanting was to not only use LVM snapshots for backups but to also 
+hold a known disk state for a while ie. 24hrs.  This has the advantage that I 
+as a sysadmin can snapshot a volume before I start volume maintance and have 
+a backout strategy if I accidently do something I should not have.  And I was 
+wanting to have the same concept for staff - if they accidently delete a file 
+off the server they can go to the mounted snapshot and get it back without 
+running to me for the backup.  Under normal office operations I can guess how 
+much space the snapshot needs; however, there will always be a time/situation 
+where someone will dump data way in excess of what the snapshot size can 
+handle.  Under this situation the snapshot should just be taken offline 
+automatically without killing the system.  This is what I was reffering to 
+with overflowing the snapshot.  It was the Oops generated when an XFS 
+snapshot overflowed during one of my many pre-production tests that started 
+me on this quest ;-)
+
+This was how the HDD was divided up on my test system:
+=======================================================================
+- - - hda1 -               /boot                      20M ext3
+- - - hda2 -               /                         512M ext3
+- - - hda3 -               /usr                      512M ext3
+- - - hda4 -               {extended}
+- - - hda5 -               /var                      512M ext3
+- - - hda6 -               swap                      768M
+- - - hda7 -      {LVM volume group HDA}  36941M - Remaining Space (36G)
+ - /dev/HDA/TMP /tmp               128M reiserfs
+ - /dev/HDA/CACHE       /cache             512M reiserfs
+ - /dev/HDA/CHROOT      /chroot            512M ext3
+ - /dev/HDA/SRC /usr/src                  4096M reiserfs
+ - /dev/HDA/SRC_SNAP     /usr/src/snapshot/admin  1024M
+                                                (30G Unallocated)
+=======================================================================
+
+The test procedure was:
+1)	Unpack a clean SGI CVS kernel and patch LVM as required.
+2)	Compile, install and reboot.
+3)	For a mounted ext3 logical volume
+	a)	create a snapshot
+		lvcreate -L50M -s -n SNAP /dev/HDA/CHROOT
+	b)	mount the snapshot
+		mount /dev/HDA/SNAP /mnt/snapshot
+	c)	copy more than the snapshot size onto the original logical volume to see 
+what happens.
+		cp -fr /usr/src/<dir1> /chroot
+4)	Repeat for resierfs
+5)	Repeat for XFS
+Note: becareful when mounting an XFS snaphot without using "mount -t xfs" 
+otherwise i have found it will mount the snapshot as resierfs.
+See http://marc.theaimsgroup.com/?l=linux-xfs&m=100994490716530&w=2 for more 
+info on this.
+
+If there was a Kernel Oops there would be a reboot and recovery inbetween 3, 
+4 &/or 5.
+
+The exact results from the tests can be found here:
+http://marc.theaimsgroup.com/?l=linux-xfs&m=100994356415003&w=2
+
+A quick summary of commands:
+
+To initialise a partition for LVM usage:
+pvcreate /dev/hda7
+
+To create a volume group (the container for the logical volumes)
+vgcreate -s32M HDA /dev/hda7
+Note: -s32M is optional; default is 4M.
+
+To create a logical volume (the volume that will contain the filesystem)
+lvcreate -L4G -n CHROOT /dev/HDA
+
+Then put the filesystem on top:
+eg:
+mkfs -t ext2 -j /dev/HDA/CHROOT
+or 
+mkfs -t xfs /dev/HDA/TEST
+or
+mkfs -t resierfs /dev/HDA/SRC
+
+Then mount logical volume:
+eg:
+mount /dev/HDA/SRC /usr/src
+
+A good quick tutorial on LVM can be found here:
+http://www.sistina.com/lvm_howtos/lvm_howto/
+and the basic lvm commands here:
+http://www.sistina.com/lvm_howtos/lvm_howto/Common_tasks.html
+
+I hope this has answered your questions.  My next move is to remove ext3 from 
+the kernel and rerun the tests to see what happens.
+
+If I have left out anything please contact me.
+
+- -- 
+Adrian Head
+
+(Public Key available on request.)
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.0.6 (GNU/Linux)
+Comment: For info see http://www.gnupg.org
+
+iD8DBQE8NPQs8ZJI8OvSkAcRApMRAJ9qkytpP8RXUHuD2dgFp9CV/sQSJACfeo6F
+SM6pTcPryGjyHAMn3QIdQ2o=
+=f+ak
+-----END PGP SIGNATURE-----
