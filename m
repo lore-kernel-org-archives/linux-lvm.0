@@ -1,10 +1,7 @@
-From: Luca Berra <bluca@comedia.it>
-Subject: Re: [linux-lvm] lvm 1.03 on redhat 7.3
-Message-ID: <20020529061538.GB25290@colombina.comedia.it>
-References: <3CF3DA1A.1612.6FD9111@localhost>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <3CF3DA1A.1612.6FD9111@localhost>
+From: me@vger.org
+Message-ID: <Pine.LNX.4.21.0205291016260.6798-100000@kenny.worldonline.se>
+MIME-Version: 1.0
+Subject: [linux-lvm] LVM and extending/reducing striped LV's
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,37 +12,20 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed May 29 01:16:02 2002
+Date: Wed May 29 02:44:01 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: TEXT/PLAIN; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Tue, May 28, 2002 at 07:27:22PM -0400, James B. Byrne  wrote:
-> I am trying to mount a root fs using lvm on redhat 7.3 using the 
-> howto guide provided by sistina.com.  I am getting this message:
+After scaning thru the mailing list archive and reading some FAQs i can
+find information that <subject> are not available... atleast with older
+versions of lvm. My question is, can this be done now? Im using lvm
+1.1-rc2 right now on 2.4.18. If anyone know how to do this with just lvm
+id be thankfull if you could drop me a mail with some pointers.
 
-isn't this covered in the redhat manual?
-well redhat provided lvm and mkinitrd tool do support it
+If this can not be done I have to go with the md RAID0/LVM layout to boost
+preformence from a linar lvm only layout.
 
-i suppose you are running from a root on a partitioned disc
-and you copied everything to your lvm root which is at
-the moment mounted under /mnt/lvm
-and that you have fixed the /etc/fstab under the new lvm root
-to reflect the new setup: ie you have sth like
-/dev/vg00/lvol3 / ext3 defaults 0 1
-
-now run:
-mkinitrd -v --fstab=/mnt/lvm/etc/fstab /boot/initrd_lvm `uname -r`
-and use the newly created initrd to boot your system.
-
-
-L.
-
--- 
-Luca Berra -- bluca@comedia.it
-        Communication Media & Services S.r.l.
- /"\
- \ /     ASCII RIBBON CAMPAIGN
-  X        AGAINST HTML MAIL
- / \
+Thanks to anyone that replys =)
+ps. include me in the reply because im not on the list.
