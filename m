@@ -1,53 +1,33 @@
-Message-Id: <199904162148.AA09281@mailgate1b.telekom.de>
-From: Heinz Mauelshagen <mauelsha@ez-darmstadt.telekom.de>
+From: "Stephen C. Tweedie" <sct@redhat.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Message-ID: <14103.53832.827914.231586@dukat.scot.redhat.com>
+Date: Sat, 17 Apr 1999 01:14:00 +0100 (BST)
 Subject: Re: [linux-lvm] Swap/DB devices
-Date: Fri, 16 Apr 1999 23:47:06 METDST
-In-Reply-To: <14103.41220.857159.602916@dukat.scot.redhat.com>; from "Stephen C. Tweedie" at Apr 16, 99 9:43 pm
+In-Reply-To: <199904162148.AA09281@mailgate1b.telekom.de>
+References: <14103.41220.857159.602916@dukat.scot.redhat.com>
+	<199904162148.AA09281@mailgate1b.telekom.de>
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
-MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: sct@redhat.com
-Cc: mge@ts1.ez-darmstadt.telekom.de, linux-lvm@msede.com
+To: Heinz Mauelshagen <mauelsha@ez-darmstadt.telekom.de>
+Cc: sct@redhat.com, mge@ts1.ez-darmstadt.telekom.de, linux-lvm@msede.com
 
-> 
-> On Thu, 15 Apr 1999 16:24:10 METDST, Heinz Mauelshagen
-> <mauelsha@ez-darmstadt.telekom.de> said:
-> 
-> > There is a raw device patch available by Stephen Tweedie.
-> > IIRC it will make it into the 2.3 kernel (what do you say Stephen?).
-> 
+Hi,
 
-On Fri, 16 Apr 1999 21:43:48 +0100 (BST), Stephen Tweedie
-<sct@redhat.com> said:
->
-> That's the plan; Linus has approved it in principle.
-> 
-> > LVM has to be enhanced a little bit to support that patch.
-> 
-> I'm curious: why?  I would have thought that LVM should support any
-> requests coming in through ll_rw_block already.
-> 
+On Fri, 16 Apr 1999 23:47:06 METDST, Heinz Mauelshagen
+<mauelsha@ez-darmstadt.telekom.de> said:
 
-It's simply a matter of userland (lv_create_node() and friends in lvmlib)
-to create the LVM 'raw' device specials.
-Only regular buffer cached device specials are created up to 0.6.
+>> I'm curious: why?  I would have thought that LVM should support any
+>> requests coming in through ll_rw_block already.
 
-Regards,
-Heinz
+> It's simply a matter of userland (lv_create_node() and friends in lvmlib)
+> to create the LVM 'raw' device specials.
+> Only regular buffer cached device specials are created up to 0.6.
 
---
+You won't need to.  The raw device patches create one single new major
+number, and let you bind the minor numbers to any block devices you
+want.  You can access _any_ block device driver without modification.
 
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-
-Systemmanagement C/S                             Deutsche Telekom AG
-                                                 Entwicklungszentrum Darmstadt
-Heinz Mauelshagen                                Otto-Roehm-Strasse 71c
-Senior Systems Engineer                          Postfach 10 05 41
-                                                 64205 Darmstadt
-mge@ez-darmstadt.telekom.de                      Germany
-                                                 +49 6151 886-425
-                                                          FAX-386
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+--Stephen
