@@ -1,11 +1,11 @@
 Return-Path: <root@srv.sistina.com>
-Date: Thu, 3 May 2001 11:15:44 +0000
+Date: Thu, 3 May 2001 11:20:54 +0000
 From: "Heinz J. Mauelshagen" <Mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] LVM Questions
-Message-ID: <20010503111544.A4700@sistina.com>
-References: <20010503004851.897.qmail@web10803.mail.yahoo.com> <3AF0B857.74F16371@home.com>
+Subject: Re: [linux-lvm] lvcreate segfault
+Message-ID: <20010503112054.B4700@sistina.com>
+References: <Pine.LNX.4.30.0105020957190.11191-100000@beefcake.hdqt.valinux.com> <Pine.LNX.4.30.0105021155070.16582-100000@beefcake.hdqt.valinux.com>
 Mime-Version: 1.0
-In-Reply-To: <3AF0B857.74F16371@home.com>; from banal@home.com on Wed, May 02, 2001 at 06:45:59PM -0700
+In-Reply-To: <Pine.LNX.4.30.0105021155070.16582-100000@beefcake.hdqt.valinux.com>; from jweber@valinux.com on Wed, May 02, 2001 at 11:55:29AM -0700
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -21,102 +21,63 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Wed, May 02, 2001 at 06:45:59PM -0700, Evan Day wrote:
-> Darren Young wrote:
-> > First, does LVM do RAID or do I need to employ the md
-> > driver to accomplish this? It seems to me (as a
-> > sysadmin) that LVM is great for adding space when
-> > needed, but having RAID capabilities in conjunction
-> > with this would be required to produce a highly
-> > available system.
+Thanks Jay,
+
+I integrated it.
+
+Regards,
+Heinz    -- The LVM Guy --
+
+On Wed, May 02, 2001 at 11:55:29AM -0700, Jay Weber wrote:
+> And here's a fix.
 > 
-> LVM doesn't do RAID right now - you can use either a hardware
-> RAID or the kernel's built-in RAID support (raid 0, 1, and 5).
-
-Evan is right for RAID > 0.
-
-RAID 0 is supported in Linux LVM natively.
-
-You could for eg. address your availability needs with MD or hardware RAID
-*and* your performance needs at the same time by setting up RAID 0 logical
-volumes striped over a bunch of RAID subsystem based physical volumes.
-
+> --- lvcreate.c.orig	Wed May  2 12:08:43 2001
+> +++ lvcreate.c	Wed May  2 12:23:50 2001
+> @@ -448,6 +448,10 @@
+>        strncpy ( lv_snapshot_name, lv_name, sizeof ( lv_name) - 1);
+>        dummy = argv[optind];
+>        LVM_CHECK_DEFAULT_VG_NAME ( dummy, buffer, NAME_LEN);
+> +      if (dummy == NULL) {
+> +	fprintf(stderr, "%s -- snapshot name not present, supply -n
+> option!\n\n", cmd);
+> +	return LVM_EINVALID_CMD_LINE;
+> +      }
+>        strncpy ( lv_name, dummy, sizeof ( lv_name) - 1);
+>        dummy = NULL;
+>        lv_name[sizeof ( lv_name) - 1] = 0;
 > 
-> > What ext2 resize utility is the ideal choice for LVM
-> > to use. parted seems to be quite functional, but
-> > having to down the machine to single is a but
-> > annoying. Has anyone successfully used the ext2online
-> > utility on RedHat? It seems as though the version of
-> > e2fsprogs that includes this code is part of RH 7.1
-> > anyways. At least from what I can tell. The online
-> > resizing would definitely be required for a highly
-> > available system as well.
 > 
-> I don't have much experience with ext2 resizing, but the
-> reiserfs can easily be extended.  I'm not sure if it is
-> supported or not, but I've actually extended filesystems
-> while mounted with no ill effects.
+> On Wed, 2 May 2001, Jay Weber wrote:
 > 
-> Reiserfs support is built in to kernel 2.4.X.
-
-WRT ext2 you could give Andreas Dilger's ext2resize GNU software a try.
-
-Please look for it at http://ext2resize.sourceforge.net/.
-
+> > Date: Wed, 2 May 2001 09:58:41 -0700 (PDT)
+> > From: Jay Weber <jweber@valinux.com>
+> > Reply-To: linux-lvm@sistina.com
+> > To: linux-lvm@sistina.com
+> > Subject: [linux-lvm] lvcreate segfault
+> >
+> > Hi,
+> >
+> > Just noticed this one.
+> >
+> > [root@slippey /root]# lvcreate -l5 -s snap /dev/vol/foo
+> > Segmentation fault (core dumped)
+> >
+> > Haven't looked at it much, off to a meeting now (sigh), but it appears to
+> > be a simple option parsing problem when using -s.
+> >
+> > A proper command for that to work would be:
+> > lvcreate -l5 -s -n snap /dev/vol/foo
+> >
+> > _______________________________________________
+> > linux-lvm mailing list
+> > linux-lvm@sistina.com
+> > http://lists.sistina.com/mailman/listinfo/linux-lvm
+> >
 > 
-> > I started with RedHat 7.1 with the 2.4.2 kernel and
-> > patched it. What kernel is ideal to use with LVM? This
-> > one seems to work, but I read a reference in the list
-> > archive that certain components are in 2.4. Is this
-> > the case?
-> 
-> The 2.4.X kernel contains base LVM support, but you'll need
-> to supplement that with patches at the same level as the
-> LVM user-level tools.  Current release is 0.9.1b7.
-
-FYI: You can get the actual GNU LVM code at www.sistina.com/lvm.
-
-> 
-> > I also read an older thread on an X11 GUI as well as
-> > some replies to it. The GUI that comes with Veritas is
-> > completely useless and the command line tools are
-> > completely over-engineered. While it would be nice for
-> > a small company trying to save money not to call in a
-> > specialist to create VG's, it certainly wouldn't be a
-> > requirement. Get everything stable, reliable and
-> > consistent than someone will probably have the time to
-> > create the GUI. I'd dedicate time to that type of
-> > project, but why bother when the code isn't quite
-> > there yet. There's no reason.
-> 
-> LVM is so simple that, IMHO, a GUI shouldn't be an overriding
-> concern.  Then again, I've been working with LVM on HP-UX
-> for many years, and I find the CLI utilities to be much
-> more efficient than waiting for SAM (the HP-UX sysadmin
-> GUI) to poll everything, build displays, etc.  The current
-> CLI tools are lean and aligned with the LVM model in a
-> way that is both logical and easy to understand.
-
-Thanks for the flowers :-)
-
-Actually there are GUI contributions out there.
-For eg. http://www.xs4all.nl/~mmj/lvm/ is worth trying in order to have
-the day by day LVM work items covered.
-
-BTW: Evan is touching another major point here, which people tend to forget
-easily IMHO; in critical operating situations where you are limited to
-the command line (single user) you *need* to be familiar with the CLI in order
-to get back to regular operation as fast as possible!
-
 > _______________________________________________
 > linux-lvm mailing list
 > linux-lvm@sistina.com
 > http://lists.sistina.com/mailman/listinfo/linux-lvm
-
--- 
-
-Regards,
-Heinz    -- The LVM Guy --
 
 *** Software bugs are stupid.
     Nevertheless it needs not so stupid people to solve them ***
