@@ -1,17 +1,19 @@
 Received: from agk.surrey.redhat.com (agk.surrey.redhat.com [172.16.10.74])
-	by pobox.surrey.redhat.com (8.12.8/8.12.8) with ESMTP id iBLKmqge001678
-	for <linux-lvm@redhat.com>; Tue, 21 Dec 2004 20:48:52 GMT
+	by pobox.surrey.redhat.com (8.12.8/8.12.8) with ESMTP id iBLLAFge002929
+	for <linux-lvm@redhat.com>; Tue, 21 Dec 2004 21:10:15 GMT
 Received: from agk by agk.surrey.redhat.com with local (Exim 4.34)
-	id 1Cgqw8-0007qL-Eb
-	for linux-lvm@redhat.com; Tue, 21 Dec 2004 20:48:52 +0000
-Date: Tue, 21 Dec 2004 20:48:52 +0000
+	id 1CgrGp-0007r7-HE
+	for linux-lvm@redhat.com; Tue, 21 Dec 2004 21:10:15 +0000
+Date: Tue, 21 Dec 2004 21:10:15 +0000
 From: Alasdair G Kergon <agk@redhat.com>
-Message-ID: <20041221204852.GR26670@agk.surrey.redhat.com>
-References: <41BB808E.60108@danielroth.se>
+Subject: Re: [linux-lvm] Can't mount after crash
+Message-ID: <20041221211015.GS26670@agk.surrey.redhat.com>
+References: <41BB808E.60108@danielroth.se> <41BFC24F.6060207@danielroth.se>
+	<41C1D30A.6030201@danielroth.se>
+	<1103222964.31909.224.camel@tesuji.nac.uci.edu>
 Mime-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <41BB808E.60108@danielroth.se>
-Subject: [linux-lvm] Re: Can't mount after crash
+In-Reply-To: <1103222964.31909.224.camel@tesuji.nac.uci.edu>
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -26,22 +28,23 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-On Sun, Dec 12, 2004 at 12:19:42AM +0100, Daniel Roth wrote:
-> My lvm-system crashed a day ago and I was really lost in how to do. 
+On Thu, Dec 16, 2004 at 10:49:24AM -0800, Dan Stromberg wrote:
+> ext3 users list, 
 
-You don't say how you actually first discovered something had gone wrong,
-or give any clues about what might have led up to the problem causing it.
+But you tried to mount it as ext2?
 
-Your message doesn't show any LVM problems.
+Is it meant to be ext2 or ext3?
 
-Did something scribble over your disks?
-Have you tried mounting with alternative superblocks?
+> and don't seem to be getting satisfaction.
 
-> I found the metadatafile and could with
-> pvcreate --uuid ... --restorefile ... .... /hdg5,
+Probably because you're not giving people all the information they need
+to help you; and maybe even some of the things you've tried have made
+the problem worse - I don't understand yet why you did the pvcreates,
+for example, and are you certain the lvm2 backup file you used was 
+completely up-to-date?  
 
-You should only use those if you've lost a disk or accidentally overwritten
-the start of one and vgcfgrestore isn't working.
+Have you a kept a complete log (i.e. shell history) of every command 
+you ran on the system while trying to recover things?
 
 Alasdair
 -- 
