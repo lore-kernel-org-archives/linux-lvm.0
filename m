@@ -1,8 +1,8 @@
-Message-ID: <6772150.1058271107806.JavaMail.nobody@Computer6>
-From: snodx@hotmail.com
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] Difference between a volume and a cluster
+Message-ID: <20030714022301.24234.qmail@web10001.mail.yahoo.com>
+From: Tazkoh <tazkoh@yahoo.com>
+MIME-Version: 1.0
+Content-Type: multipart/alternative; boundary="0-157053849-1058149381=:23972"
+Subject: [linux-lvm] How to extend logical vol beyong 256GB
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -13,29 +13,38 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Tue Jul 15 07:24:01 2003
+Date: Tue Jul 15 08:11:01 2003
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
 
-Dear list,
+--0-157053849-1058149381=:23972
+Content-Type: text/plain; charset=us-ascii
 
-This question has been bugging me for quiet a while.
+Hi
+ 
+I tried to extend the logical volume to 512GB (or more) but keeping getting this error message after executing this command lvextend -L512G /dev/vg01/lvol1
+ 
+lvextend -- size 571473920 KB is larger than maximum VGDA kernel size of 268427264 KB
 
-What are the exact definitions of "clusters" and "volumes", and what- if any- are the
-difference between the 2?
+It seems like the logical volume is fixed at 256GB. How can I increase it?
+ 
+Thanks
 
-Google search is not yielding any results:
 
-Difference between a cluster and a volume : 0 results
-Difference between a volume and a cluster : 0 results
-Difference between clusters and volumes   : 0 results
-Difference between volumes and clusters   : 0 results
+---------------------------------
+Do you Yahoo!?
+SBC Yahoo! DSL - Now only $29.95 per month!
+--0-157053849-1058149381=:23972
+Content-Type: text/html; charset=us-ascii
 
-The search is continuing however.
-
-Eagerly awaiting responses.
-
-Thanx in advance
-
-SNODX
+<DIV>Hi</DIV>
+<DIV>&nbsp;</DIV>
+<DIV>I tried to extend the logical volume to 512GB (or more) but keeping getting this error message after executing this command lvextend -L512G /dev/vg01/lvol1</DIV>
+<DIV>&nbsp;</DIV>
+<DIV>lvextend -- size 571473920 KB is larger than maximum VGDA kernel size of 268427264 KB<BR></DIV>
+<DIV>It seems like the logical volume is fixed at 256GB. How can I increase it?</DIV>
+<DIV>&nbsp;</DIV>
+<DIV>Thanks</DIV><p><hr SIZE=1>
+Do you Yahoo!?<br>
+<a href="http://pa.yahoo.com/*http://rd.yahoo.com/evt=1207/*http://promo.yahoo.com/sbc/">SBC Yahoo! DSL</a> - Now only $29.95 per month!
+--0-157053849-1058149381=:23972--
