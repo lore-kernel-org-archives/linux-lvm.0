@@ -1,11 +1,16 @@
-Return-Path: <dave@galilean.d2g.com>
-Date: Thu, 10 May 2001 22:30:37 +0200
-From: Dave Wapstra <dave@xs4all.nl>
-Subject: Re: [linux-lvm] SCSI/LVM problems after power outage
-Message-ID: <20010510223037.A32588@mercury.mercury.multiweb.nl>
-References: <DC5B1A21E9E7D211B0020090273AD628242BE0@summit15.corvallis.summit> <20010509093510.B4918@sistina.com> <20010509201416.A20867@mercury.mercury.multiweb.nl> <20010509212629.A8512@sistina.com>
+Return-Path: <raheesom@navpoint.com>
+Subject: Re: [linux-lvm] Patching my kernel.
+From: Rupert Heesom <raheesom@navpoint.com>
+In-Reply-To: <20010509195843.A1351@66bassett.freeserve.co.uk>
+References: <989363474.1329.2.camel@localhost>
+	<20010509085110.G23157@colombina.comedia.it>
+	<989404772.3725.0.camel@localhost>
+	<20010509160319.C898@66bassett.freeserve.co.uk>
+	<989408594.3725.3.camel@localhost> 
+	<20010509195843.A1351@66bassett.freeserve.co.uk>
+Date: 10 May 2001 18:48:44 -0400
+Message-Id: <989534925.7891.0.camel@localhost>
 Mime-Version: 1.0
-In-Reply-To: <20010509212629.A8512@sistina.com>; from Mauelshagen@sistina.com on Wed, May 09, 2001 at 09:26:29PM +0000
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -21,82 +26,58 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On 09 May, 2001 at 21:26:29 +0000, Heinz J. Mauelshagen <Mauelshagen@sistina.com> wrote:
-> On Wed, May 09, 2001 at 08:14:16PM +0200, Dave Wapstra wrote:
-> > On 09 May, 2001 at 09:35:10 +0000, Heinz J. Mauelshagen <Mauelshagen@sistina.com> wrote:
-> > > 
-> > > Steps needed (crossing your fingers that the flaky drive can still stand this):
-> > > 
-> > > - install or use an additional drive of at least the size of the flaky one
-> > > - pvcreate that drive
-> > > - vgextend the VG by it
-> > > - pvmove /dev/FlakyDrive
-> > > - wait until pvmove is done
-> > > - vgreduce VG /dev/FlakyDrive
-> > 
-> > I'm trying to backup the data that is still available (backup was a
-> > thing that was still in progress... :) ) 
-> > 
-> > pvmove is not really happy with the current situation.
+Well, Joe:
+
+It worked this time.  As I write this, the kernel is compiling itself
+after the patch install.  
+
+I think I know what went wrong last time......I'd just finished
+discussing with someone how to retain the kernel config settings from
+the previously used source tree.  What I did last time was to copy the
+old .config file into /usr/src/linux.  Do the "make oldconfig" command,
+THEN do the patch install.
+
+Obviously from what I've seen now, I need to to the patch install before
+the "make oldconfig".   I should have mentioned it in my post to you,
+but I probably didn't think of it!
+
+
+On 09 May 2001 19:58:43 +0100, Joe Thornber wrote:
+> On Wed, May 09, 2001 at 07:43:14AM -0400, Rupert Heesom wrote:
 > 
-> I don't understand you here.
-> Did you try the above steps and something failed?
-
-Yes, the pvmove command didn't finish succesfully.  Unfortunately, I
-haven't saved the output, so I cannot show you what the exact messages were.
-
-> > Can I just do "vgreduce ftp /dev/sdc" after I finished rescueing most of the data?
-> > 
+> hmmmm... not sure what you've done here.  It looks like the patch
+> generation has gone astray.  My advice is to start with a fresh LVM dir:
 > 
-> Sure.
-> In case you've got a backup, you could remove or reduce LVs so that *no*
-> PEs are allocated on /dev/sdc.
-> You can check with "pvdisplay -v /dev/sdc" which LV(s) have PEs allocated
-> on that PV and run lvremove/lvreduce in order to free that PV.
+> untar clean kernel
+> untar LVM_beta7
+> cd LVM
+> ./configure
+> cd PATCHES
+> make 
+> cd /usr/src/linux
+> patch -p1 < <where ever>/LVM/PATCHES/lvm-0.9.1_beta7-2.4.3.patch
 > 
-> Once pvdisplay tells you that no PEs are allocated (Allocated PE 0) you
-> can run "vgreduce VGName /dev/sdc".
+> If this doesn't work please send me (off list) the LVM patch so I can
+> see what has gone wrong.
+> 
+> Also please be aware that beta7 needs an extra little patch to fix the
+> get_hardblocksize -> hardsectsize name change.  Search this mailing
+> list for it, or grab code from CVS.
 
-Actually, my colleage already removed the complete volume configuration
-and started from scratch.
+I forgot about this....  but looking at the msgs regarding what you
+mentioned here, looks like it's s/390 code, so not something that will
+affect my intel processor.
 
-The thing is, I've had this problem before.  It seemed that a power
-failure caused us some troubles. However, after re-initialising the
-disks (pv/vg/lv), creating a new filesystem and restoring the backup,
-everything is fine again.
+> 
+> > What a learning curve!!  What next?
+> 
+> Please persevere, it gets easy once you've done it a couple of times.
 
-Even /dev/sdc is not complaining at all.
-
-# pvdisplay /dev/sdc
---- Physical volume ---
-PV Name               /dev/sdc
-VG Name               ftp
-PV Size               8.43 GB / NOT usable 1.34 MB [LVM: 129 KB]
-PV#                   2
-PV Status             available
-Allocatable           yes (but full)
-Cur LV                1
-PE Size (KByte)       4096
-Total PE              2159
-Free PE               0
-Allocated PE          2159
-PV UUID               none
-
-Seems the disk is full, and no SCSI messages in the log files (?)
-
-After the new filesystem has been created, the system was powered down
-(switched off) twice to check if this is trigerring anything. In both
-cases fsck successfully restored any errors.
-
-I'm not sure if this is a hardware problem or not. The disk seems to
-work fine, however in some situations SCSI errors occur.
-
-Any suggestions on testing the disk for hardware problems are appreciated.
-(dd if=/dev/sdc of=/dev/null ?)
-
-
--Dave
+Yes, I didn't mean that to come across sharply. I *ALWAYS* persevere!
+When I first started with Linux, it took me 2 WEEKS to get diald working
+on my PC so that I could use the internet the way I wanted (2 days
+because of a pw typed into the config file wrong!).
 
 -- 
-Dave Wapstra
-dave@xs4all.nl
+regs
+rupert
