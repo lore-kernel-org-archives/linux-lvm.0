@@ -1,14 +1,21 @@
-Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id i8TLAar23941
-	for <linux-lvm@redhat.com>; Wed, 29 Sep 2004 17:10:36 -0400
-Received: from dermis.amis.com (dermis.amis.com [207.141.5.253])
-	by mx3.redhat.com (8.12.11/8.12.10) with SMTP id i8TLAOhx028763
-	for <linux-lvm@redhat.com>; Wed, 29 Sep 2004 17:10:30 -0400
-Received: from [172.16.17.173] (bighorn.design.amis.com [172.16.17.173])
-	by mxrelayus.pc.amis.com (Postfix) with ESMTP id 2EF6758699
-	for <linux-lvm@redhat.com>; Wed, 29 Sep 2004 15:10:18 -0600 (MDT)
-Message-ID: <415B2480.6020106@theserrs.net>
-Date: Wed, 29 Sep 2004 15:09:20 -0600
+Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id i8U3KQr08962
+	for <linux-lvm@redhat.com>; Wed, 29 Sep 2004 23:20:26 -0400
+Received: from geeksite.geeksite.org (ibz.geeksite.org [63.227.242.54])
+	by mx1.redhat.com (8.12.11/8.12.10) with ESMTP id i8U3KPxD001067
+	for <linux-lvm@redhat.com>; Wed, 29 Sep 2004 23:20:25 -0400
+Received: from localhost (unknown [127.0.0.1])
+	by geeksite.geeksite.org (Postfix) with ESMTP id 7CAE320D220
+	for <linux-lvm@redhat.com>; Wed, 29 Sep 2004 21:24:13 -0600 (MDT)
+Received: from geeksite.geeksite.org ([127.0.0.1])
+	by localhost (geeksite [127.0.0.1]) (amavisd-new, port 10024) with ESMTP
+	id 20335-05 for <linux-lvm@redhat.com>;
+	Wed, 29 Sep 2004 21:24:07 -0600 (MDT)
+Received: from [192.168.0.4] (xscott.theserrs.net [63.227.243.149])
+	by geeksite.geeksite.org (Postfix) with ESMTP id 5011220D4A9
+	for <linux-lvm@redhat.com>; Wed, 29 Sep 2004 21:24:07 -0600 (MDT)
+Message-ID: <415B7B88.8060402@theserrs.net>
+Date: Wed, 29 Sep 2004 21:20:40 -0600
 From: Scott Serr <serrs@theserrs.net>
 MIME-Version: 1.0
 Subject: Re: [linux-lvm] pvmove unable to move extents to multiple smaller pvs
@@ -29,10 +36,10 @@ List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-Oh man, thanks.  I did many many searches, but not on the list specifically.
-
-Thanks, I'll read and try it!
-Scott
+For anyone out there with this problem...  if pvmove doesn't seem to 
+understand specified PE ranges on the source PV, then upgrade to a newer 
+LVM2.  Gentoo's current stable .08 does not have this, but the source 
+2.00.25 sure does.
 
 Clint Byrum wrote:
 
