@@ -1,8 +1,10 @@
-Message-ID: <3DAF2D33.3030800@homemedianetworks.com>
-From: Berrie Bloem <berrie@homemedianetworks.com>
+content-class: urn:content-classes:message
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] LVM 1.0.5 MDK 2.4.19 ReiserFS or Ext3 Lockup
+Content-Type: multipart/mixed;
+	boundary="----_=_NextPart_001_01C27627.DE9FC42D"
+Message-ID: <2EF585A95405554FA6453B3AD37D6D7F0200431D@esmexc01.emea.cpqcorp.net>
+From: "Rodriguez, Julian" <Julian.Rodriguez@hp.com>
+Subject: [linux-lvm] LVM version needed for Red Hat Advanced Server ?
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -13,21 +15,47 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Thu Oct 17 16:43:01 2002
+Date: Thu Oct 17 16:56:02 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: linux-lvm@sistina.com
 
-Hello,
+This is a multi-part message in MIME format.
 
-I've installed Mandrake 9.0 on an older machine (P200) with several 
-smaller IDE HD's to make a volume group. var and home are mounted on the 
-vg and whether I use ReiserFS or Ext3, under heavy IO (copying the 
-Mandrake ISO's onto home) after a little while the whole system locks up.
+------_=_NextPart_001_01C27627.DE9FC42D
+Content-Type: text/plain;
+	charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 
-I've patched the original 2.4.19 kernel with LVM 1.0.5, done a full 
-rebuild of kernel, modules and LVM programs, but still the lockup remains.
+May any of you clarify me what the right version is for LVM in order to =
+run it on top of RH Linux Advanced Server v2.1 ?
 
-Where have I gone wrong?
+Best regards,
+Juli=E1n Rodr=EDguez
+Presales Technical Consultant and UNIX Ambassador
+Compaq Spain, now part of HP Iberia
+Phone: +34-91-634.82.72=20
+Mobile: +34-639.12.63.11
+Fax: +34-91-634.89.00=20
+E-mail: julian.rodriguez@hp.com
 
-BB
+ <<Rodriguez, Julian.vcf>>=20
+
+------_=_NextPart_001_01C27627.DE9FC42D
+Content-Type: text/x-vcard;
+	name="Rodriguez, Julian.vcf"
+Content-Transfer-Encoding: base64
+Content-Description: Rodriguez, Julian.vcf
+Content-Disposition: attachment;
+	filename="Rodriguez, Julian.vcf"
+
+QkVHSU46VkNBUkQNClZFUlNJT046Mi4xDQpOOlJvZHJpZ3VlejtKdWxpYW4NCkZOOlJvZHJpZ3Vl
+eiwgSnVsaWFuDQpPUkc6O1NCVQ0KVEVMO1dPUks7Vk9JQ0U6MzQuOTEuNjM0LjgyNzINCkFEUjtX
+T1JLO0VOQ09ESU5HPVFVT1RFRC1QUklOVEFCTEU6O0VTTTAxOjtWaWNlbnRlIEFsZWl4YW5kcmUs
+IDE9MEQ9MEFQYXJxdWUgRW1wcmVzYXJpYWwgTWFkcmlkLWxhcz0wRD0wQVJvemFzLD0NCiBMYXMg
+Um96YXM9MEQ9MEE7TWFkcmlkOzsyODIzMDtFU1ANCkxBQkVMO1dPUks7RU5DT0RJTkc9UVVPVEVE
+LVBSSU5UQUJMRTpFU00wMTo9MEQ9MEFWaWNlbnRlIEFsZWl4YW5kcmUsIDE9MEQ9MEFQYXJxdWUg
+RW1wcmVzYXJpYWwgTWFkcmlkLWxhcz0wRD0wQVJvPQ0KemFzLCBMYXMgUm96YXM9MEQ9MEE9MEQ9
+MEFNYWRyaWQgMjgyMzA9MEQ9MEFFU1ANCkVNQUlMO1BSRUY7SU5URVJORVQ6SnVsaWFuLlJvZHJp
+Z3VlekBjb21wYXEuY29tDQpSRVY6MjAwMjAzMTZUMTAzNDMyWg0KRU5EOlZDQVJEDQo=
+
+------_=_NextPart_001_01C27627.DE9FC42D--
