@@ -1,13 +1,10 @@
-Date: Thu, 23 Aug 2001 07:09:22 -0500
-From: AJ Lewis <lewis@sistina.com>
-Subject: Re: [linux-lvm] Building outside source tree
-Message-ID: <20010823070922.C2885@sistina.com>
-References: <20010821121229.A4661@sistina.com> <20010821192307.2864.qmail@dumain.com>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-md5;
-	protocol="application/pgp-signature"; boundary="OBd5C1Lgu00Gd/Tn"
-Content-Disposition: inline
-In-Reply-To: <20010821192307.2864.qmail@dumain.com>; from wish-lvm@dumain.com on Tue, Aug 21, 2001 at 08:23:07PM +0100
+Message-ID: <3B84F850.6030908@inetnow.net>
+Date: Thu, 23 Aug 2001 21:34:24 +0900
+From: Keith Hopkins <hne@inetnow.net>
+MIME-Version: 1.0
+Subject: Re: [linux-lvm] how to determine if /dev/... is an LV?
+References: <20010822034425.F8742@pc.ilinx> <20010822164325.A1216@dardhal.mired.net> <20010822110154.O8742@pc.ilinx>
+Content-Transfer-Encoding: 7bit
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -19,49 +16,82 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: linux-lvm@sistina.com
+Cc: dd92f55e6b3d2ae402d737983f92a268@interlinx.bc.ca
 
---OBd5C1Lgu00Gd/Tn
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+>>>Also, is there any relationship between the output from the lvdisplay
+>>>and the minor number for the device?
+>>>
 
-On Tue, Aug 21, 2001 at 08:23:07PM +0100, wish-lvm@dumain.com wrote:
-> My original patch works only if given an absolute path to the source.
-> Your patch works only if the path to source is precisely ..
-> Incidentally it would appear that relative paths to the kernel
-> source don't work either. =20
-> I'll fix the patch and resubmit it.
+Yes.
 
-Fixed in the CVS now.  Looking into relative kernel source paths...
+example from lvdisplay for lvol1:
+Block device           58:0
 
---=20
-AJ Lewis
-Sistina Software Inc.                  Voice:  612-638-0500
-1313 5th St SE, Suite 111              Fax:    612-638-0500
-Minneapolis, MN 55414                  E-Mail: lewis@sistina.com
-http://www.sistina.com
+   major 58: minor:0
 
-Current GPG fingerprint =3D 3B5F 6011 5216 76A5 2F6B  52A0 941E 1261 0029 2=
-648
-Get my key at: http://www.sistina.com/~lewis/gpgkey
- (Unfortunately, the PKS-type keyservers do not work with multiple sub-keys)
+If you look at the devices for, you may notice, hey, they match!
 
------Begin Obligatory Humorous Quote----------------------------------------
-A bad random number generator: 1, 1, 1, 1, 1, 4.33e+67, 1, 1, 1...
------End Obligatory Humorous Quote------------------------------------------
+crw-r-----    1 root     disk     109,   0 Aug 23 21:00 group
+brw-rw----    1 root     disk      58,   0 Aug 23 21:04 lvol1
+brw-rw----    1 root     disk      58,   1 Aug 23 21:03 lvol2
 
---OBd5C1Lgu00Gd/Tn
-Content-Type: application/pgp-signature
-Content-Disposition: inline
+other correlation:
+   all minor numbers for char 109 (group files) are unique across the system.
+   all minor numbers for block 58 (lvols) are unique across the system.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.0.6 (GNU/Linux)
-Comment: For info see http://www.gnupg.org
+without looking at the source, when it comes to recovering/rebuilding vg info in the file system, I am assuming that lvm doesn't really care about device files when it is recording info into the vg headers (vgda & such), and since the advent of UUIDs, I doubt if it really cares about minor numbers either.
 
-iD8DBQE7hPJypE6/iGtdjLERAsxyAJ0YSqknaoXm+gxcXCL83SpO0mC8UQCglpWy
-h8iy6/aN5hMCZzE61ijEHvE=
-=+N+X
------END PGP SIGNATURE-----
+here is an test layout I created just for the heck of it.
 
---OBd5C1Lgu00Gd/Tn--
+I created vga across /dev/sda1 & sda4, vgb on sda2, vgc on sda3.
+I then lvcreated 3 times on vga,vgb,vgc in turn. [lvcreate -l 1 vg(a-c)]
+I then lvremoved vga/lvol1.
+I then lvcreated 3 times on vga,vgb,vgc in turn. (again)
+   the lvcreate makes default names for the lvols.
+
+/dev/vga:
+total 46
+dr-xr-xr-x    2 root     root          161 Aug 23 21:04 .
+drwxr-xr-x   17 root     root        46444 Aug 23 21:01 ..
+crw-r-----    1 root     disk     109,   0 Aug 23 21:00 group
+brw-rw----    1 root     disk      58,   0 Aug 23 21:04 lvol1
+brw-rw----    1 root     disk      58,   1 Aug 23 21:03 lvol2
+brw-rw----    1 root     disk      58,   2 Aug 23 21:03 lvol3
+brw-rw----    1 root     disk      58,   9 Aug 23 21:04 lvol4
+brw-rw----    1 root     disk      58,  10 Aug 23 21:04 lvol5
+
+   interestingly enough, it recreated lvol1 here on the fourth lvcreate and started with the lowest minor number available (0), even though higher numbers had already been used.
+
+/dev/vgb:
+total 46
+dr-xr-xr-x    2 root     root          182 Aug 23 21:04 .
+drwxr-xr-x   17 root     root        46444 Aug 23 21:01 ..
+crw-r-----    1 root     disk     109,   1 Aug 23 21:00 group
+brw-rw----    1 root     disk      58,   3 Aug 23 21:03 lvol1
+brw-rw----    1 root     disk      58,   4 Aug 23 21:03 lvol2
+brw-rw----    1 root     disk      58,   5 Aug 23 21:03 lvol3
+brw-rw----    1 root     disk      58,  11 Aug 23 21:04 lvol4
+brw-rw----    1 root     disk      58,  12 Aug 23 21:04 lvol5
+brw-rw----    1 root     disk      58,  13 Aug 23 21:04 lvol6
+
+/dev/vgc:
+total 46
+dr-xr-xr-x    2 root     root          182 Aug 23 21:04 .
+drwxr-xr-x   17 root     root        46444 Aug 23 21:01 ..
+crw-r-----    1 root     disk     109,   2 Aug 23 21:00 group
+brw-rw----    1 root     disk      58,   6 Aug 23 21:03 lvol1
+brw-rw----    1 root     disk      58,   7 Aug 23 21:03 lvol2
+brw-rw----    1 root     disk      58,   8 Aug 23 21:03 lvol3
+brw-rw----    1 root     disk      58,  14 Aug 23 21:04 lvol4
+brw-rw----    1 root     disk      58,  15 Aug 23 21:04 lvol5
+brw-rw----    1 root     disk      58,  16 Aug 23 21:04 lvol6
+
+This was all gone on a SuSE 7.1 system with the stock 2.2.18 kernel.
+LVM 0.9  13/11/2000 (IOP 10)
+
+Lost in Tokyo,
+   Keith
+
+P.S. My, what a big e-mail address you have Grandma!
