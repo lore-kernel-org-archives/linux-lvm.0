@@ -1,17 +1,18 @@
-Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id iA41SSr03971
-	for <linux-lvm@redhat.com>; Wed, 3 Nov 2004 20:28:28 -0500
-Received: from mail2.m-cam.com ([63.124.102.77])
-	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id iA41SQPw011198
-	for <linux-lvm@redhat.com>; Wed, 3 Nov 2004 20:28:26 -0500
-Message-ID: <41897E47.40202@m-cam.com>
-Date: Wed, 03 Nov 2004 19:56:39 -0500
-From: Arshavir Grigorian <ag@m-cam.com>
-MIME-Version: 1.0
-Subject: Re: [linux-lvm] Datarecovery on LVM volumes
-References: <2E9DA7DCA1129B4DA2DCA703100F387D7C7CCF@deexch.ontrack.com>
-In-Reply-To: <2E9DA7DCA1129B4DA2DCA703100F387D7C7CCF@deexch.ontrack.com>
+Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id iA5JFir21331
+	for <linux-lvm@redhat.com>; Fri, 5 Nov 2004 14:15:44 -0500
+Received: from storix.com ([206.71.178.18])
+	by mx3.redhat.com (8.12.11/8.12.11) with ESMTP id iA5JFPZ2027451
+	for <linux-lvm@redhat.com>; Fri, 5 Nov 2004 14:15:26 -0500
+Received: from [192.168.1.126] (65.106.88.139.ptr.us.xo.net [65.106.88.139])
+	by storix.com (Postfix) with ESMTP id 16D04158F2
+	for <linux-lvm@redhat.com>; Fri,  5 Nov 2004 10:01:01 -0800 (PST)
+From: rich turner <rich@storix.com>
+Message-Id: <1099678572.3681.88.camel@rich>
+Mime-Version: 1.0
+Date: Fri, 05 Nov 2004 10:16:13 -0800
 Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] unable to create physical volume
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -22,27 +23,34 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
+Content-Type: text/plain; charset="us-ascii"
 To: LVM general discussion and development <linux-lvm@redhat.com>
-Cc: hengelland@krollontrack.de
 
-hengelland@krollontrack.de wrote:
+i am using 4 etherdrives that are block devices and present in the /dev
+directory as:
+brw-rw----  1 root root 152,  0 Nov  5 16:34 /dev/etherd/e0.0
+brw-rw----  1 root root 152, 16 Nov  5 16:34 /dev/etherd/e0.1
+brw-rw----  1 root root 152, 32 Nov  5 16:34 /dev/etherd/e0.2
+brw-rw----  1 root root 152, 48 Nov  5 16:34 /dev/etherd/e0.3
 
-> We got a couple of drives with the partiton identifier "0x8E". They 
-> are all part of an LVM with kind of EXT2 structures.
-> The EXT2 structures do not look like they usually do ... superblocks 
-> are way different.
-> I would like to ask if somebody could provide me with some Offset 
-> information how
-> physical volumes, volume groups and logical volumes work together on a 
-> sector table basis ...
->  
-> Many thanks
+when i try to create a physical volume out of one of them:
+[root@redhat proc]# pvcreate /dev/etherd/e0.1
+  /dev/etherd/e0.1: Couldn't find device.
 
-Take a look at /etc/lvm/backup directory for files describing your 
-volume group layout.
-Also, look into vgcfgbackup and vgcfgrestore.
-Good luck!
+when i scan for available disks with "lvmdiskscan" these disks do not
+display.
 
+it looks like a filter problem within lvm.conf but i have made some
+changes and it doesnt seem to work. these are the lines in my lvm.conf
+file that i believe are responsible for finding block devices:
+scan = [ "/dev" ]
+filter = [ "a/.*/" ] (all other filters are commented out)
 
-Arshavir
+not sure if it helps but in /sys/block i can see entries like this:
+[root@redhat block]# ls -l /sys/block/etherd\!e0.0/
+total 0
+-r--r--r--  1 root root 4096 Nov  5 16:35 dev
+drwxr-xr-x  3 root root    0 Nov  5 16:35 queue
+-r--r--r--  1 root root 4096 Nov  5 16:35 range
+-r--r--r--  1 root root 4096 Nov  5 16:35 size
+-r--r--r--  1 root root 4096 Nov  5 16:35 stat
