@@ -1,9 +1,9 @@
 From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] Can't start LVM root fs
-Message-ID: <20020916130548.B17122@sistina.com>
-References: <002701c25d0a$c10ac5c0$28bf18ac@abant.com>
+Subject: Re: [linux-lvm] Quorums / VGDAs
+Message-ID: <20020916133748.C17122@sistina.com>
+References: <3D7E4050.B3BEEE@storix.com> <20020911123312.D26854@sistina.com> <3D80D4CB.C244DFA6@storix.com>
 Mime-Version: 1.0
-In-Reply-To: <002701c25d0a$c10ac5c0$28bf18ac@abant.com>; from abant@mail.com on Sun, Sep 15, 2002 at 11:53:47PM +0100
+In-Reply-To: <3D80D4CB.C244DFA6@storix.com>; from anthony@storix.com on Thu, Sep 12, 2002 at 10:54:19AM -0700
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,115 +14,109 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Sep 16 06:06:01 2002
+Date: Mon Sep 16 06:38:01 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Sun, Sep 15, 2002 at 11:53:47PM +0100, Arie Bant@mail.com wrote:
-> Hello Heinz,
-> 
-> Thanks for LVM.  I have been using it on HP-UX and AIX and provided one can
-> control the placing of the LV's over the disk so as to avoid excessive head
-> movement it saves a few problems here and there.
-> 
-> Hint: On AIX and HP-UX one can, but does not have to, control in which area
-> of the disk an LV is placed, or even which PV's will be part of it.  This
-> allows leaving spaces between LV's which later can be used to grow them.
-> The advantage over just making the LV bigger in the first place is that the
-> intermediate space can be used for growing either LV at a time when one does
-> not know which LV is going to need more space.
-> 
-> But now my problem:
-> 
-> I have installed LVM 1.0.1 on my Mandrake 8.0 Linux box (PIII 550Mhz, 512
-> MB) from the Mandrake 8.2 DVDROM.  No problems.
+On Thu, Sep 12, 2002 at 10:54:19AM -0700, Anthony Johnson wrote:
+> Heinz, 
+> I'm having some trouble understanding these answers. Perhaps I am
+> misunderstanding the purpose of a "quorum" on Linux.
 
-Arie,
+Well,
 
-first of all: why are you using an older version of LVM1?
-You should upgrade to 1.0.5.
+I used the term "quorum" as we use it with LVM1. There's piles of different
+"quorum" definitions for various things out there, I am afraid ;-)
 
-> After creating boot partition, PV, VG and root/usr/var LV's on an extra disk
-> (/dev/sdb) added to the system,
-> I have copied the content of the boot directory to the bootpart on the new
-> disk,
-> root/usr/var to the new LV's,
-> used lvmcreate _initrd to create a new boot image,
-> copied that to the new bootpart,
-> modified lilo.conf as suggested in the man page for lvmcreate _initrd and
-> ran lilo and
-> rebooted from the new FS.
-> First time vgscan complained that LVM was not installed and suggested
-> checking the module stuff.
+> On AIX, quorums
+> ensure that at least one copy of the latest VGDA is alsays avaialble by
+> ensuring there are always a quorum (over half) of the VGDA copies
+> available. The VGDA is stored on each PV (and sometimes 2 copies are
+> stored on each PV). If you lose quorum, you lose the VG (to ensure we
+> don't varyon with an old copy).
 > 
-> Indeed I could not find where in the new boot image the lvm module got
-> loaded.  I then modified modules.conf to load the LVM module on the
-> appropriate devices ( 54 & 109 ), added the module in the appropriate place
-> in the "lib"directory tree and tried again.
+> You imply that a "quorum" requires ALL of the PVs be avialable in Linux.
+> The dictionary definition of a "quorum", however, is more than half.
 
-Should not be needed, because a modprobe is inserted into /linuxrc by
-lvmcreate_initrd. Strange.
+Well, this is the problem with definitions ;-)
 
-> The system now boots a little further, vgscan has created /etc/lvmtab and
-> /etc/lvmtab.d, until vgchange says it can not find any volume groups.
+In the LVM1 format case the VGDA is assembled using the metadata of *all*
+PVs and thats why quorum for *LVM1* means that 100% of the PVs are needed.
 
-This could be caused by missing /dev entries for the disks failing vgscan
-to find some/any PVs.
-Did lvmcreate_initrd show any errors?
+With LVM2 you will have the choice to put VGDA metadata on as many PVs as you
+like (for eg.: just on 3 out of 50). This is to avoid metadata update delays
+as much as possible.
+
+In this example you don't need access to all PVs in order to achive quorum.
+But if you manage to kill those 3 at once, you need a valid VGDA backup.
+
+OTOH this goes beyond the AIX approach giving you VG quorum even with much
+less than 50% of the PVs available!
+
+
+> If a VG in Linux can be varied on with only one good copy of a VGDA (in
+> perhaps a 3-PV VG), then how do you ensure that you are always looking
+> at and updating the most recent copy? If, for instance, I have a 4-disk
+> VG, and I lose 2 disks, then shutdown and varon the VG with the
+> alternate 2 disks (the previously missing ones), I will be seeing only
+> the older VGDA. Is the VGDA also stored in the /etc/lvmtab.d?
+
+Yes, with LVM1 there is a working copy of the VGDA of each VG.
+
+> If so, can
+> you varyon if this VGDA was removed?
+
+That working copy is recreated every time you run vgscan.
+
+In general an activated VG *without* quorum is read-only in case of the LVM1
+ondisk format so your example describes a don't care scenario.
+With the LVM2 metadata format (which we call format2) there are sequence
+numbers kept with each copy which define the recent one.
+
+Hope this makes things a little cleare :)
+
+Regards,
+Heinz    -- The LVM Guy --
 
 > 
-> When I reboot from the existing system it is fine and all the logical
-> volumes are accessible.
+> I guess the big question is: How does LVM for Linux ensure that we are
+> always using the most recent VGDA data (in case we're looking at active
+> PVs that were previously missing). I have to do a lecture to an AIX
+> group on the differences between LVM on AIX and Linux, and quorums were
+> always a big issue for AIX.
 > 
-> Any suggestions how to proceed?
+> Thanks,
+> Anthony
 > 
-> Note: There is a third disk in the system (/dev/sdc/, containing the swap
-> file system.  This used to be /dev/sdb before I added  the new disk.  I have
-> changed all references to the "old" /dev/sdb into /dev/sdc in /etc/fstab of
-> the current root FS.
-> I have also taken care that the /etc/fstab in the new root LV  resembles the
-> current situation seen from the point of view when that becomes the current
-> root FS and that lilo.conf in the new boot/root FS is correct for the
-> situation when in all works and the new disk becomes /dev/sda (I am taking
-> the old drive out)
-> 
-> Best Regards,
-> 
-> Arie Bant.
-> *******************************
-> Maes,  Llandrillo
-> Corwen,  LL21 0TE
-> United Kingdom
-> tel.: +44 (0)1490 440 487/370
-> e-mail: abant@mail.com
-> 
-> 
-> 
-> 
-> 
-> *******************************
-> Maes,  Llandrillo
-> Corwen,  LL21 0TE
-> United Kingdom
-> tel.: +44 (0)1490 440 487/370
-> fax.: +44 (0)870 284 1575 (via e-mail)
-> e-mail: abant@mail.com
-> 
-> 
-> 
+> > > 1) What defines a quorum - over 50% of the PVs in the VG, or over 50%
+> > >    of the VGDAs?
+> > 
+> > VG quorum is given in case all of its PVs are available.
+> > 
+> > > 2) How many VGDAs are stored on each physical volume. From AIX
+> > >    experience, this varied depending on the number of PVs in the VG.
+> > 
+> > In the LVM1 metadata there's allways 1 VGDA on each PV which has internal
+> > redundancy.
+> > With the new LVM2 formats you can have as many VGDA copies as you like.
+> > 
+> > > 3) If quorum is lost on an active VG, is the entire VG automatically
+> > >    varied off?
+> > 
+> > No, it will stay accessable with the exception of the dead PV(s).
+> > 
+> > > 4) Can a VG without quorum be forcefully varied on?
+> > 
+> > With LVM1.1 (see CVS; WARNING: his is interim development code!) and with final
+> > LVM2 later this year, you can activate a VG which has lost quorum.
 > 
 > _______________________________________________
 > linux-lvm mailing list
 > linux-lvm@sistina.com
 > http://lists.sistina.com/mailman/listinfo/linux-lvm
 > read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
-
--- 
-
-Regards,
-Heinz    -- The LVM Guy --
 
 *** Software bugs are stupid.
     Nevertheless it needs not so stupid people to solve them ***
