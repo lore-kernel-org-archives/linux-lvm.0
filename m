@@ -1,10 +1,11 @@
-Return-Path: <jorg.de.jong@ida.xs4all.nl>
-Message-ID: <3ABDD38D.A841FFD3@ida.xs4all.nl>
-Date: Sun, 25 Mar 2001 13:16:29 +0200
-From: Jorg de Jong <jorg.de.jong@ida.xs4all.nl>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] lvmgui 0.2 release
+Return-Path: <michael.burschik@postbank.de>
+Message-Id: <sabefed6.028@MS106BN>
+Date: Mon, 26 Mar 2001 08:29:11 +0200
+From: "Michael Burschik" <michael.burschik@postbank.de>
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Disposition: inline
+Subject: [linux-lvm] LVM on top of Software Raid
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -19,31 +20,18 @@ List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
 
-Hi,
+I have frequently read that it is possible to use lvm on top of software =
+raid multiple devices. However, the descriptions of the process were =
+either somewhat vague or clearly related to the old software raid =
+subsystem without persistent superblocks. I have already sent mails to the =
+authors of the various howtos I found, but to no avail. Maybe some kind =
+soul on this mailing list can answer my questions.
 
-I just released LVM Gui version 0.2. 
-You can download it at the projects website:
+Is it possible to use multiple devices as physical volumes? The problem =
+here seems to be related to the "partition ID" of the multiple devices. If =
+it is possible, how do I do it? If it is not, are there any plans to fix =
+it?
 
-        http://www.xs4all.nl/~mmj/lvm
+Regards
 
-In this release I have also include the source code,
-for those who are interested. 
-
-Although I did not get that match feedback on my 
-first release, I still hope people find the LVM Gui
-useful, despite the fact that it is written in java.
-
-Summary of the changes:
-* Version 0.2 first source release
-
-+ New Features / Enhancements / Bug Fixes
-
-- added images for LV and PV. 
-- extend/reduce a VG
-- extend/reduce a LV
-- added vgscan in menu
-- changed File->Rescan to File->Refresh
-
-regards,
-
-Jorg de Jong
+Michael Burschik
