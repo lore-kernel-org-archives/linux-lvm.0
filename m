@@ -1,10 +1,7 @@
-From: Alasdair G Kergon <agk@uk.sistina.com>
-Subject: Re: [linux-lvm] LVM problems after 2.6.0-test1
-Message-ID: <20030811173328.B22513@uk.sistina.com>
-References: <wxxptjd83jl.fsf@nommo.uio.no>
+From: ipcznaoxxqxf@msn.com
 Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <wxxptjd83jl.fsf@nommo.uio.no>; from terjekv@math.uio.no on Mon, Aug 11, 2003 at 02:02:22AM +0200
+Message-Id: <E19mTXM-0001Wv-00@hermes.sistina.com>
+Subject: [linux-lvm] The debt shortcut company! Read This!
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,35 +12,41 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Aug 11 11:34:01 2003
+Date: Tue Aug 12 02:26:02 2003
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Mon, Aug 11, 2003 at 02:02:22AM +0200, Terje Kvernes wrote:
->   any suggestions are welcome, below is the output from "vgchange -ay
->   -vvv" showing the problem.
+Hey There!
 
-1) Check kernel message log for any device-mapper errors.
+Want to say see you later to your debt? ..
+We tear up your debt and give you and your family a fresh start ..
 
-2) Confirm you are using userspace libdevmapper & LVM2 from the 
-last tarballs we released.
- 
-3) If there are no kernel errors and you are using the latest userspace
-code, then please log to file (see below, as mentioned in WHATS_NEW) and
-send me the log file.  [Clear the log file, then run a 'vgscan' followed
-by the troublesome 'vgchange -ay'.]
+- Save you a lot of money by eliminating late fees
+- Settle your accounts for a substantially reduced amount
+- Stop creditors calling you on the phone
+- Avoid bankruptcy
 
-e.g. config file section:
-  log {
-          file="/tmp/lvm2.log"
-          level=7
-          activation=1
-  }
+... and more!
 
-Please also send the output of 'lvm version', 'ls -la /dev/mapper' and a 
-copy of the current volume group backup. (e.g. generate with
-'vgcfgbackup').
+Why keep dealing with the stress, and headaches?
 
-Alasdair
+Combine your debt into a low interest repayment and
+get on with your life today!!
+
+Come here and take a look at how we can help.
+
+http://r.aol.com/cgi/redir-complex?url=http://homeloans@www.slashmonthlypayments.com/index.php?N=g
+
+
+
+
+
+
+
+
+
+
+not interested?
+http://r.aol.com/cgi/redir-complex?url=http://ho@www.slashmonthlypayments.com/r.php
