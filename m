@@ -1,9 +1,8 @@
-From: "William Blunn" <bill@tao-group.com>
-Subject: Re: [linux-lvm] Partition resizing and whatnot
-Message-Id: <000d01c1bab5$b27789f0$216410ac@tao.co.uk>
+From: Andres Salomon <dilinger@mp3revolution.net>
+Message-Id: <20020221091438.GB13013@mp3revolution.net>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <CBEHLLOPCKAOIAOINGKAMEHOCAAA.jmoser@erc.wisc.edu>
+Content-Disposition: inline
+Subject: [linux-lvm] lvm2 debian packages
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,71 +13,34 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Thu Feb 21 02:57:01 2002
+Date: Thu Feb 21 03:14:02 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
-Cc: John Moser <jmoser@erc.wisc.edu>
 
-John Moser <jmoser@erc.wisc.edu> wrote:
-> So, after installation the ATA update patches that people recommended,
-> I now have a linux system that recognizes the full 160 gigabytes of
-> disk space on my disks.  However, I'm not entirely sure as to how I
-> should go about resizing my filesystem.  I'm already well aquanted
-> with adding disks to existing filesystems and growing them.
+I've built experimental lvm2 debian packages.  There are a few kinks to
+work out, but they work for the most part (I'm using them now on a
+server).
 
-??? You can't add a disk to a filesystem.
+Add the following to your /etc/apt/sources.list:
+deb http://incandescent.mp3revolution.net/lvm2 ./
+deb-src http://incandescent.mp3revolution.net/lvm2 ./
 
-You can put a PV on a disk and add that to a VG.
+Run the following:
+apt-get update && apt-get install lvm2 kernel-patch-device-mapper;
 
-(Or, possibly, you could add a disk to the end of a linear MD group,
-although this would be pointless with LVM.)
+Patch your linux-2.4.1[67] kernel w/
+/usr/src/kernel-patches/all/device-mapper/linux-2.4.1[67]-devmapper-ioctl.patch.gz,
+make config, enabled device mapper, compile and install.  If built as a
+module, /etc/init.d/lvm2 start will modprobe it in.
 
-> However, what are the recommended steps for taking existing disk
-> partitions, resizing them to fill the disks they reside on,
+Comments welcome.  I've also committed these to cvs HEAD, so feel free
+to check out device-mapper/LVM2 and build yourself.
 
-I wouldn't recommend trying to go down this path:
-  Resizing the partitions would be no problem, just use fdisk to delete
-  the existing partition and create a new one with the same start point,
-  but with a higher end point. The problem would be resizing the PVs,
-  which I don't think is supported. So I don't think it would be a good
-  idea to go down this path.
+Additional packages include libdevmapper, libdevmapper-dev, and dmsetup.
 
-Surely the obvious way to do it is:
-
-(a) Using fdisk, create new partition(s) in the newly-usable tail end(s)
-    of your disk(s)
-
-(b) *** Re-boot. The kernel cannot re-interpret a partition table if any
-    of the partitions are in use. In all probability you will have
-    partitions in use on that/those disk(s) so you will need to re-boot
-    to make the kernel re-interpret the partition table(s).
-
-(b) create PVs in the new partitions (pvcreate)
-
-(c) add the PVs to your VG(s) (vgextend)
-
-Your VG will then be larger by the amount of PEs which could be fitted
-into the new PVs in the new partitions. You can then extend your LVs at
-your leisure.
-
-You will probably lose a tiny bit at the end of the existing partitions,
-and you may be able to fit one less PE in your new partition(s), because
-the size of your existing partitions will probably not be exact
-multiples of the PE size, but it's not worth worrying about.
-
-> and then resizing the LVM/e2fs filesystems that use those disks?
-
-??? Unrelated ? This is all basic stuff to do with LV side. Just follow
-the documentation: umount ... / e2fsadm ... / mount ... . (Just make
-sure you have a suitably up-to-date version of ext2resize; I use version
-1.1.17.)
-
-Regards,
-
-Bill
---=20
-William H. Blunn - bill+linuxlvm@tao-group.com
-Tao
-62/63 Suttons Business Park, Earley, READING, RG6 1AZ, United Kingdom
-Tel: +44 118 901 2999 - Fax: +44 118 901 2963 - http://tao-group.com/
+-- 
+"I think a lot of the basis of the open source movement comes from
+  procrastinating students..."
+	-- Andrew Tridgell <http://www.linux-mag.com/2001-07/tridgell_04.html>
