@@ -1,9 +1,10 @@
-Message-Id: <3.0.6.32.20011116225445.00a827a0@mail.doorpi.net>
-From: Brent Harding <bharding@doorpi.net>
+From: Daniel Savard <dsavard@videotron.ca>
 Subject: Re: [linux-lvm] root fs on a LVM cause kernel panic
-In-Reply-To: <01111617512007.02805@dirac.cids.ca>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+References: <01111617512007.02805@dirac.cids.ca> <20011116171922.M1308@lynx.no>
+In-Reply-To: <20011116171922.M1308@lynx.no>
+MIME-Version: 1.0
+Message-Id: <01111700053800.01209@dirac.cids.ca>
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,110 +15,84 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Fri Nov 16 22:50:02 2001
+Date: Fri Nov 16 23:11:02 2001
 List-Id: <linux-lvm.redhat.com>
-Content-Transfer-Encoding: 7bit
-To: linux-lvm@sistina.com
+Content-Type: text/plain; charset="iso-8859-1"
+To: Andreas Dilger <adilger@turbolabs.com>
+Cc: linux-lvm@sistina.com
 
-I used the size before the initrd line, before, had the same issue.
-Regarding lfs, what's the difference of 3.0, and the 1027 CVS version, plus
-the 11-6 new one, can't get the book for 1027 CVS which I've completed
-downloading from ftp last night. Is there any easy way to boot this thing
-up if I have no separate partition?
-At 05:19 PM 11/16/01 -0500, you wrote:
->I did further testing. Still not working. However, to make things clear I
-will
->detail my environment.
->
->Hardware:
-> IBM Netfinity 5000 with RAID
-> 3 hot-swap disks 9 GB each
-> 1 Iomega SCSI external 2GB JAZ drive
-> 1 SCSI tape drive
->
->OS:
->  Started from RedHat 7.0
->  Kernel at 2.4.13
->  Many upgrades to rpms
->  gcc at 3.0.2
->  glibc 2.2.4
->  LVM support built-in
->  JFS support built-in
->  SCSI support built-in
->
->LVM:
->  1.0.1-rc4
->
->JFS:
->  1.0.8
->
->I am building a Linux From Scratch (LFS) system. For this purpose, I have
->created a VG (datavg). And a 1GB LV (lv_lfs). The LFS system has been built
->sucessfully. The old system is RedHat 7.0, with root fs on a non LVM ext2
->filesystem. I was able to create the LVM, the JFS filesystem and compile
->everything in this file system accordingly to instructions for LFS 3.0. No
->major modifications where required from LFS 3.0, except the latest
-versions of
->packages were used.
->
->So, I have a fully functionnal RedHat system on plain ext2 filesystems
-with LVM
->and JFS. The root fs is non-LVM ext2.
->
->I also have a LV which contains a new root fs which is a JFS filesystem. I
-also
->tried with ext2 filesystem and it doesn't fix the problem.
->
->Now, the problem is:
->
->I want to boot with my LV JFS filesystem as root fs. I followed man page
->instructions for lvmcreate_initrd and created the initrd file. I checked the
->initrd and everything seems to be there.
->
->After a chat discussion with roadrunner on the openprojects lvm channel. We
->checked everything in the initrd, as well as the linuxrc file in it and it
->seems ok.
->
->While booting I am ending with a kernel panic message. The few last lines of
->the boot message are as follow:
->
->VFS: Cannot open root device "3a01" or 3a:01
->Please append a correct "root=" boot option
->Kernel panic: VFS: Unable to mount root fs on 3a:01
->
->I was suggested to try the following in the linuxrc file:
->
->I added the following line just before the /sbin/umount /proc line:
->
->/bin/echo "3A:01" > /proc/sys/kernel/real-root-dev
->
->The /bin/echo executable was added to the initrd. It didn't fix the problem.
->
->My lilo.conf file is as follow:
->
->image=/boot/lfskernel-2.4.13
->        initrd = /boot/initrd-lvm-2.4.13.gz
->        root = /dev/datavg/lv_lfs
->        label = lvmjfs
->        append = "ramdisk_size=8192"
->        read-only
->
->I also tested with ramdisk_size=X, where X is the size returned by the
->lvmcreate_initrd script for the ramdisk.
->
->Any help would be greatly appreciated.
->-- 
->
->================================
->Daniel Savard
->Internet: dsavard@videotron.ca
->================================
->
->
->_______________________________________________
->linux-lvm mailing list
->linux-lvm@sistina.com
->http://lists.sistina.com/mailman/listinfo/linux-lvm
->read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
->
->
+Number 2 can be dropped. I re-ran lilo after changing the configuration.
+
+I just tested number 1, this time I am getting an error while trying to acc=
+ess
+/dev/ram0 which doesn't exist at this time in the execution sequence.=20
+
+The error message was as follow:
+
+NET4: Unix domain sockets 1.0/SMP for Linux NET4.0
+ds: no socket drivers loaded!
+request_module [block-major-1]: Root fs not mounted
+VFS: Cannot open root device "100" or 01:00
+Please append a correct "root=3D" boot option
+Kernel panic: VFS: Unable to mount root fs on 01:00
+
+From this, I decided to check my kernel setup and discovered (silly me) I =
+made
+a newbie error. The initrd support at boot time was not enabled in my kerne=
+l.
+
+So, thanks for help to everyone and particularily to roadrunner on the IRC
+channel who give much time on-line to help me and Andreas Dilger.
+
+My system is not fully functionnal yet, however, the LVM problem is solved.
+
+My target configuration is a Linux From Scratch system, mostly based on V 3=
+.0
+instructions. But, instead of gcc 2.95.3 it is based on gcc 3.0.2 and glibc
+2.2.4 with kernel 2.4.13. My remaining errors are with the initialization
+scripts for the LFS, this is off topic on this dist list.
+
+So, if I can help in the future with testing. Let me know.
+
+ --=20
+
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D
+Daniel Savard
+Internet: dsavard@videotron.ca
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D
+
+Le ven, 16 nov 2001, Andreas Dilger a =EF=BF=BDcrit :
+> On Nov 16, 2001  17:19 -0500, Daniel Savard wrote:
+> > While booting I am ending with a kernel panic message. The few last lin=
+es of
+> > the boot message are as follow:
+> >=20
+> > VFS: Cannot open root device "3a01" or 3a:01
+> > Please append a correct "root=3D" boot option
+> > Kernel panic: VFS: Unable to mount root fs on 3a:01
+>=20
+> Hmm, you only get that message when the initial boot is done, so two=20
+> possibilities (I'm not an initrd guru, mind you):
+>=20
+> 1) you need to change the root=3D line in your lilo.conf to say "root=3D/=
+dev/ram0"
+>    so that it will boot into the initrd.  Then do the real-root-dev trick
+>    (or try pivot_root if running a 2.4 kernel) after configuring the LVM
+>    stuff via vgscan; vgchange -a y.
+>=20
+> 2) You didn't re-run lilo after changing lilo.conf (yes, you probably did,
+>    but you can never tell from here, and always safe to ask).
+>=20
+> > I also tested with ramdisk_size=3DX, where X is the size returned by the
+> > lvmcreate_initrd script for the ramdisk.
+>=20
+> As long as this is larger than the size of the uncompressed ramdisk, you
+> should be OK.
+>=20
+> Cheers, Andreas
+> --
+> Andreas Dilger
+> http://sourceforge.net/projects/ext2resize/
+> http://www-mddsp.enel.ucalgary.ca/People/adilger/
