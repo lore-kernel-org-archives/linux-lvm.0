@@ -1,10 +1,10 @@
-Message-ID: <3E6BEB8B.4040802@exavio.com.cn>
-From: Peter Yao <peter@exavio.com.cn>
+From: Jesse Keating <jkeating@pogolinux.com>
+Subject: Re: [linux-lvm] Max storage size per system
+References: <20030305195052.GC11043@hcsd.de> <20030307013431.GB6942@auctionwatch.com> <20030307142049.GB21686@hcsd.de>
+In-Reply-To: <20030307142049.GB21686@hcsd.de>
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] lvm and md
-References: <3E6803F3.5060507@exavio.com.cn> <3E68BDA5.175E6C6C@silicide.dk>
-In-Reply-To: <3E68BDA5.175E6C6C@silicide.dk>
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Message-Id: <200303091813.36010.jkeating@pogolinux.com>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,48 +15,26 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Sun Mar  9 19:35:01 2003
+Date: Sun Mar  9 20:09:01 2003
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
+Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
 
-Jon Bendtsen wrote:
-> Peter Yao wrote:
-> 
->>Should we build lvm volumns on top of soft raid(md) or build md on top
->>of lvm volumns?
->>I prefer to build md on top of lvm volumns because lvm can hide the
->>hardware details from md. Just want to know how do you think about this.
->>Or any URLs? Thanks.
-> 
-> 
-> why would you need to hide the hardware details from md ?
-I am using some hot-plugging disks and their device number may change 
-after reboot. For example, if i build md with /dev/sda and /dev/sdb, 
-after reboot md may cannot start because the two disks' device name 
-change to /dev/sdc and /dev/sdd. If i build md on top of lvm this 
-problem is avoided. Can you give me some advice for this issue?
+On Friday 07 March 2003 06:20, Stephan Austermuehle uttered:
+> Well, iSCSI was developed and pushed by some networking guys with
+> Ethernet in mind to get into the storage market without developing know
+> how for a really efficient data link. So iSCSI has to handle lots of
+> overhead: SCSI commands are encapsulated in IP, IP is encapuslated in
+> Ethernet. This leads to bad performance (latency, throughput) compared
+> to a Fibre Channel connection with the same link speed. Maybe the
+> performance impact will become negligible with 10G or 100G Ethernet but
+> at the moment we don't have these technologies available.
 
-> The way i do it is to md 2 disks together into a pair, and
-> then pvcreate it and add it to my VG. That way i can get 
-> more and more disks into the system. I have thought about
-> creating 2 VG's, and then run md ontop of that, but it's more
-> work, as you would have to resize 2 LV's, and besides, a harddisk
-> failure might trash one of your VG's. Meaning more repair work.
-> 
-> 
-> 
-> JonB
-> 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
-> 
-> 
-> 
-
+This speaks nothing of HyperSCSI which is indepenant of TCP/IP and all of it's 
+ugly overhead.  Hyperscsi runs in raw ethernet, no TCP/IP even need be on the 
+wire.  Data writing w/ HyperSCSI is far faster than with NFS or iSCSI.
 
 -- 
-Peter Yao
+Jesse Keating RHCE MCSE
+Pogo Linux -- Support Tech
+tel: 888.828.7646
