@@ -1,12 +1,10 @@
-Return-Path: <ak@suse.de>
-Date: Thu, 7 Dec 2000 02:47:16 +0100
-From: Andi Kleen <ak@suse.de>
-Subject: Re: [linux-lvm] list announcements
-Message-ID: <20001207024716.A14640@gruyere.muc.suse.de>
-References: <20001206171503.A3929@socrates.sistina.com>
+Return-Path: <treed@ultraviolet.org>
+Date: Thu, 7 Dec 2000 03:39:11 -0800
+From: Tracy R Reed <treed@ultraviolet.org>
+Message-ID: <20001207033911.E7573@ultraviolet.org>
 Mime-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20001206171503.A3929@socrates.sistina.com>; from blutgens@sistina.com on Wed, Dec 06, 2000 at 05:15:03PM -0600
+Subject: [linux-lvm] How do you mount a snapshot?
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -21,28 +19,31 @@ List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
-Cc: blutgens@sistina.com
 
-On Wed, Dec 06, 2000 at 05:15:03PM -0600, Ben Lutgens wrote:
-> Hi all, it's your friendly neighborhood list admin again we have a new list
-> for you posting pleasure. Please subscribe to lvm-devel for general
-> development related discussion. linux-lvm@sistina.com will remain but will be
-> for user questions and support.
-> 
-> Also I get alot of posts that require my intervention from non-subscribers.
-> This is an anti spam measure. Please send me a mail if you would like to post
-> from addresses that are not subscribed and encourage people who post to
-> subscribe as I do not wish to open the list to posts from non-subscribers
-> (unless you guys like spam :-)
+From what I've read it looks like the oopses on mounting snapshots have
+been fixed since I last tried playing with them so I am at it again. I
+have a freshly installed RH7.0 system with the 2.4.0-test10 kernel patched
+for LVM 0.9 and reiserfs 3.6.22. I can successfully create a snapshot
+with:
 
-... it just makes it impossible to have technical discussions with people
-not subscribed cc'ed to the list. Also users cannot send bug reports
-without subscribing, which I would consider unfortunate.
+lvcreate -s -L16 -nsnapshot /dev/vg-sdb1/lv-sdb1
 
-Wouldn't it be better to consider using one of the spam blackhole services
-and opening the list up, and tolerate the small rest that slips through
-in the name of user friendlyness and developer efficiency? 
+but when I try to mount it:
 
+[root@computer /usr2]# mount -t reiserfs /dev/vg-sdb1/snapshot /snap/
+mount: block device /dev/vg-sdb1/snapshot is write-protected, mounting read-only
+mount: wrong fs type, bad option, bad superblock on /dev/vg-sdb1/snapshot,
+       or too many mounted file systems
 
--Andi (who is always very annoyed when a list administrator expects him to
-subscribe to a list first just to send bug reports) 
+Without specifying the filesystem type I get:
+
+[root@computer /usr2]# mount /dev/vg-sdb1/snapshot /snap/
+mount: /dev/vg-sdb1/snapshot has wrong major or minor number
+
+I was using mount mount-2.10m but I downloaded the fileutils and compiled
+and tried mount-2.10r and I get the same results.
+
+What else do I need to do in order to get a snapshot mounted?
+
+-- 
+Tracy Reed      http://www.ultraviolet.org
