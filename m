@@ -1,11 +1,12 @@
-Return-Path: <terjekv@ifi.uio.no>
-Subject: Re: [linux-lvm] VG does not activate at boot
-References: <3AECAFD9.6727396A@home.com>
-From: Terje Kvernes <terjekv@math.uio.no>
-Date: 30 Apr 2001 02:48:46 +0200
-In-Reply-To: Tom Otake's message of "Sun, 29 Apr 2001 19:20:41 -0500"
-Message-ID: <wxxn18zjjpt.fsf@thrir.ifi.uio.no>
+Return-Path: <mason@suse.com>
+Date: Sun, 29 Apr 2001 21:48:03 -0400
+From: Chris Mason <mason@suse.com>
+Message-ID: <688980000.988595283@tiny>
+In-Reply-To: <01041313295800.02991@oscar>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+Subject: [linux-lvm] Re: [reiserfs-list] mounting reiserfs snapshot fails
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -18,32 +19,51 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: linux-lvm@sistina.com
+To: Ed Tomlinson <tomlins@cam.org>, reiserfs-list@namesys.com
+Cc: linux-lvm@sistina.com
 
-Tom Otake <totake66@home.com> writes:
 
-> I 'm having a slight problem/inconvenience with LVM and need some
-> assistance. Everytime I boot the system, the VG's do not come up
-> active and subsequently, some fs don't mount. The error I get
-> indicates the underlying device for the fs is not a valid device.
-> 'vgdisplay' says the the VG is not active, which running 'vgdisplay
-> -D' confirms. Running 'vgchange -a y swvg' resolves the problem,
-> activates the VG and I can mount the fs. 
+On Friday, April 13, 2001 01:29:58 PM -0400 Ed Tomlinson <tomlins@cam.org>
+wrote:
 
-  you should add the vgchange command into your initscripts. I'm
-  running RedHat and I added this into rc.sysinit, right below the
-  init of raid devices:
+> Hi,
+> 
+> Using debian sid, 2.4.3-ac5, lvm 0.91 beta7, with the vfs locking
+> patch applied I get:
+> 
+> oscar# mount /dev/lv/snap /snap -t reiserfs -oro
+> mount: wrong fs type, bad option, bad superblock on /dev/lv/snap,
+>        or too many mounted file systems
+> 
+> When trying to mount the snap shot.  It was created with: 
+> lvcreate -L 1G -s -n snap /dev/lv/root /dev/hdg1
+> without problems
 
-,----
-| action "LVM: Scanning for Volume Groups" vgscan
-| action "LVM: Activating Volume groups" vgchange -ay
-`----
+I'm not sure what you're doing that I wasn't, but I've tried a bunch of
+times to reproduce this over the last few weeks.  Tonight I finally did ;-)
 
-  I probably should just tell you to RTFM a little as well:
+The bug is that reiserfs needs to try harder to wait for the current
+transaction to end.  A slight change in the semantics there didn't get
+carried into the reiserfs write_super_lockfs call (reiserfs_block_writes
+used to be enough on its own).  
 
-  <url: http://www.sistina.com/lvm/doc/lvm_howto/node8.html
-  #SECTION00084000000000000000 >
+But, it only hits when LVM can create the snapshot faster than the next
+reiserfs writer can commit the transaction, which doesn't happen often for
+me.
 
--- 
-Terje
+Anyway, here's a patch (VFS locking patch for 2.4.4 will follow in a sec).
+
+-chris
+
+diff -Nru a/fs/reiserfs/super.c b/fs/reiserfs/super.c
+--- a/fs/reiserfs/super.c	Sun Apr 29 20:44:38 2001
++++ b/fs/reiserfs/super.c	Sun Apr 29 20:44:38 2001
+@@ -80,7 +80,7 @@
+     reiserfs_prepare_for_journal(s, SB_BUFFER_WITH_SB(s), 1);
+     journal_mark_dirty(&th, s, SB_BUFFER_WITH_SB (s));
+     reiserfs_block_writes(&th) ;
+-    journal_end(&th, s, 1) ;
++    journal_end_sync(&th, s, 1) ;
+   }
+   s->s_dirt = dirty;
+   unlock_kernel() ;
