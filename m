@@ -1,9 +1,8 @@
-Message-Id: <01c001c1c45d$54028b20$a6a5f88f@oboe>
-From: "???" <shlim@core.kaist.ac.kr>
-References: <CD9D15AC7693D211A871000629849F73032A1A64@GIGEX01>
-Subject: Re: [linux-lvm] LVM kernel patch request
+From: Marc Neitzner <Marc.Neitzner@t-online.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Message-Id: <16iI7N-0CNkY4C@fwd06.sul.t-online.com>
+Subject: [linux-lvm] lvmcreate_initrd
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,52 +13,63 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Tue Mar  5 09:52:01 2002
+Date: Tue Mar  5 10:48:02 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@sistina.com
+To: Linux-LVM@Sistina.com
 
-Hi, I have succeed to patch LVM for Kernel 2.2.12 with LVM 1.0.2
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA1
 
-LVM 1.0.2 is available to Kernel version 2.2.18,
- but I tried to patch for Kernel 2.2.12 and succeed, although some
-modification was required.
-Just Some modification, not critical part.
+Hallo,
 
-Just try to patch LVM for Kernel 2.2.20. following sequence.
-It is required to modify patch file's line numbers.
+ich nutze LVM seit kurzem mit grosser Begeisterung. Da es bei der Migration
+auf einen neuen Kernel zu Problemen bei den Modulabh"angigkeiten kommen
+kann, sollte man lvmcreate_initrd meiner Meinung nach die System.map 
+dediziert "ubergeben k"onnen:
 
-Good luck.
+47a48
+> #   03/0572002 - Added support for using a given System.map
+50d50
+<
+63a64
+>       echo "      -F|--smap     specify the System.map to use"
+128a130
+>    -F|--smap) SMAP=$2; shift;;
+342c344,349
+<    depmod -a $VERSION
+- ---
+>    if [ -n "$SMAP" ]; then
+>       depmod -a $VERSION -F $SMAP
+>    else
+>       depmod -a $VERSION
+>    fi
+>
 
------ Original Message -----
-From: "Konkol, Josh" <JKonkol@guidemail.com>
-To: <linux-lvm@sistina.com>
-Sent: Wednesday, March 06, 2002 12:14 AM
-Subject: [linux-lvm] LVM kernel patch request
+mfg
+
+	Marc Neitzner
+
+- -- 
+_______________________________________________________
+
+Marc Neitzner
+
+Phone: +49 (0)5101/586540
+Fax: +49 (0)5101/586542
+
+mailto:Marc.Neitzner@highwire.de
+
+PGP: http://www.highwire.de/pgp/marc_neitzner_pub.asc
+_______________________________________________________
 
 
-> I am looking for the LVM patch for Kernel 2.2.20 to run on a s/390.
->
-> Any help is appreciated !!
->
-> Thanks,
->
-> Josh Konkol, CNE MCSE
-> Senior Network Analyst
-> GuideOne Insurance
-> Mail Stop AB-1
-> 515-267-2427
-> jkonkol@guidemail.com
->
->  .~.
->  /V\
-> /( )\
-> ^^-^^
->
->
->
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.0.6 (GNU/Linux)
+Comment: For info see http://www.gnupg.org
+
+iD8DBQE8hPXXUMYdbdfKeLoRAnoBAJ9NrA8W9nabc6Kz79xfRbzrD3++eACeNk/M
+Rgwa5sYcUfKPxz1Jp3rYvz8=
+=cS9R
+-----END PGP SIGNATURE-----
