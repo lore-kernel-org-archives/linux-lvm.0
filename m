@@ -1,13 +1,8 @@
-From: Marc MERLIN <marc_lvm@merlins.org>
-Subject: Re: [linux-lvm] vgchange -a y /dev/System fails
-Message-Id: <20020211190120.GQ21505@merlins.org>
-References: <20020125233533.GK26045@merlins.org>
-    <20020128104258.A24830@sistina.com> <20020129215738.GA8651@merlins.org>
-    <20020130131205.A3769@sistina.com> <20020131030417.GN8651@merlins.org>
-    <20020131121417.A9764@sistina.com> <20020201210928.GO8651@merlins.org>
+From: " MISS NOMBI NOKRIRI" <nom_nar@eudoramail.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20020201210928.GO8651@merlins.org>
+Content-Transfer-Encoding: 7bit
+Message-Id: <E16aLsk-0003XG-00@hermes.sistina.com>
+Subject: [linux-lvm] urgent help
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -18,57 +13,47 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Feb 11 13:01:01 2002
+Date: Mon Feb 11 13:13:01 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Fri, Feb 01, 2002 at 01:09:28PM -0800, Marc MERLIN wrote:
+ EMAIL:nom_nar@eudoramail.com
+ MISS NOMBI NOKRIRI
 
-I wanted to thank Heinz publically for going beyond the call of duty, and
-helping until the problem was fixed.
-I thought I'd give a few lines to explain the resolution for the benefit of
-other list members and the archives.
+ I KNOW THIS LETTER WIL BE SUPRISING TO YOU,IAM MISS NOMBI NOKRIRI,22YEARS
+WITH MY YOUNG BROTHER NARIN NOKRIRI WHO IS 16 YEARS OF AGE .WE ARE SIERRA
+LOENIANS WE ARE THE CHILDREN OF MR.JANKON NOKRIRI WHOSE WIFE WAS MAILA
+NOKRIRI. MY FATHER WAS THE FORMER MANAGING DIRECTOR OF SIERRA. LOENE MINING
+CO-OPERATION {S.L.M.C} MY FATHER DEPOSITED THE SUMOF {$23,000,000}23
+MILLION UNITED STATES DOLLARS WITH A SECURITYCOMPANY IN HOLLAND,ACCORDING TO MY FATHER,THIS MONEY WAS THE INCOME ACCURED FROM MINING CO-OPERATION OVER
+DRAFT AND MINOR SALES,BEFORE THE PEAK OF THE CIVIL WAR BETWEEN THE REBEL
+FORCES OF MAJOR PAUL KOROMAH AND THE COMBINED FORCES OF ECOMOG PEACE KEEPING
+OPERATION THAT ALMOST DESTROYED MY COUNTRY FOLLOWING THE FORCEFUL REMOVAL
+FROM POWER OF THE CIVILIAN ELECTED PRESIDENT AHMED TEJAN KABBAH BY REBELS.
+MY FATHER DURING THE CRISIS HAS ALREADY MADE AN ARRANGEMENT TO MOVE HIS
+FAMILY ,MY MOTHER,MYSELFAND MY BROTHER TO COTONUO ALONG WITH SOME OF OUR
+VALUABLE PERSONAL EFFECTS.THIS CRISIS RESULTED TO WAR.
+DURING THE WAR IN MY COUNTRY AND FOLLOWING THE INDISCRIMINATE LOOTING
+OF PUBLIC AND GOVERNMENT PROPERTIES BY REBEL FORCES THE SIERRA LEONE MINING
+RPORATION WAS ONE OF THE TARGETS LOOTED DESTROYED.MY FATHER INCLUDING
+OTHER TOP GOVERNMENT FUNTIONARIES WERE ATTACKED AND KILLED BY THE REBELS IN
+NOVEMBER 1999 BECAUSE OF HIS RELATIONSHIP WITH THE CIVILIAN PRESIDENT AHMED
+TEJAN KABBA.  AS A RESULT OF MY FATHER'S DEATH WE MOVED TO COTONUO
+WITH MY MOTHER FEW DAYS  AFTER OUR ARRIVAL TO COTONUO MY MOTHER DEVELOPED
+HEART ATTACK AND LATER DIED  FEW MONTHS AFTER,BEFORE THE DEATH OF MY MOTHER,THE
+LAST WORD SHE SAID TO ME  WAS NOMBI TAKE CARE OF YOUR BROTHER MAKE SURE HE GOES TO SCHOOL, THIS IS THE CERTIFICATE OF THE MONEY YOUR FATHER DEPOSITED WITH THE
+SECURITY  COMPANY IN HOLLAND TAKE IT,AND LOOK FOR SOMEONE
+TO CLAIM AND MANAGE IT  FOR YOU AND YOUR BROTHER.SINCE YOUR FATHER DEPOSITED
+IT IN FAVOUR OF HIS  FOREIGN FRIEND AND ASK THE PERSON TO INVEST IT FOR
+YOU.THEN SHE HANDED THE  CERTIFICATE TO ME AND DIED.SO MY CONCERN NOW IS FOR
+MY BROTHER TO GO TO  SCHOOL AND TO CLAIM AND TO INVEST THIS MONEY FOR US.
+IAM APPEALING TO YOU,TO GO HOLLAND AND ASSIST US IN CLAIMING THIS
+MONEY FROM THE SECURITY COMPANY AND ALSO TO TAKE US OUT OF COTONUO, OR IF
+YOU WOULD'NT MIND LET MY BROTHER STAY WITH YOU WHILE YOU INVEST THE MONEY
+FOR US AS WE ARE HRER IN COTONUO AS REFUGEES OR ASSYLUM.
+DO NOT HESITATE TO COMMUNICATE WITH ME THROUGH MY EMAIL ADDRESS AS IDO NOT
+HAVE A TELEPHONE BUT ICAN CALL YOU FROM TELEPHONE BOOTH.
+AWAITING YOUR RESPONSE AND GOD BLESS YOU.
 
-> On Thu, Jan 31, 2002 at 12:14:17PM +0100, Heinz J . Mauelshagen wrote:
-> > > -> My BigAssLVMRaid VG is gone :-(
-> > > 
-> > > Did I just lose my data?
-> > 
-> > If you really tried all your  metadata backups unsuccessfully, I am afraid
-> > so  :-(  
-> 
-> I tried other ones, but every time, I'm getting:
-> vgcfgrestore -- VGDA for "BigAssLVMRaid" successfully restored to physical
-> volume "/dev/rd/disc0/part7"
-> vgcfgrestore -- you may not have an actual backup of restored volume group
-> "BigAssLVMRaid"
-
-The reason why vgchange -a -y didn't pick up  my VG is due to a small bug in
-vgcfgrestore, which  only restored the  UUIDs of 8 out  of my 9  PVs (quoted
-from memory, sorry if I got this slightly wrong).
-Either way, the fix it to upgrade to  a newer version of the lvm tools (from
-CVS or the next snapshot)
-
-> This VG was working fine before I restored the other one (active and all)
-
-The reason why I tried to restore it in the first place is that any kind of
-partition access on that VG would hang the machine.
-The problem turned out to be the crappy VM in 2.4.17, and not LVM.
-
-Actually 2.4.14 also had a few  issues fscking the 800G partition, and froze
-when  fsck was  going to  write  the changes  to  the partition  (and its  4
-snapshots)
-It probably would have completed had I deleted the snapshots, but I ended up
-going  back to  2.4.7, and  after an  8H fsck,  the partition  was mountable
-again.
-
-Again, thanks to Heinz for his invaluable help.
-
-Marc
--- 
-Microsoft is to operating systems & security ....
-                                      .... what McDonalds is to gourmet cooking
-  
-Home page: http://marc.merlins.org/   |   Finger marc_f@merlins.org for PGP key
+ MISS NOMBI NOKRIRI
