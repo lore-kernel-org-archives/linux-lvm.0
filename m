@@ -1,10 +1,8 @@
-Subject: Re: [linux-lvm] LVM2 for kernels 2.4.20
-Message-ID: <20030202175153.GA11372@fib011235813.fsnet.co.uk>
-References: <20030126120322.GA405@4allsystems.com> <20030126133312.GB15603@percy.comedia.it>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20030126133312.GB15603@percy.comedia.it>
-From: Joe Thornber <joe@fib011235813.fsnet.co.uk>
+Message-ID: <000901c2cb68$908b49c0$3500000a@fichte>
+From: "Hartwig zur Nieden" <hartwig@xenet.de>
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Subject: [linux-lvm] Ulf Bartelt
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,37 +13,26 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Sun Feb  2 11:53:02 2003
+Date: Mon Feb  3 03:43:01 2003
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="iso-8859-1"
 To: linux-lvm@sistina.com
 
-On Sun, Jan 26, 2003 at 02:33:13PM +0100, Luca Berra wrote:
-> for the hassle of patching i use this
-> #!/bin/sh
-> set -e
-> pname=`basename $1`
-> for i in $1/*.patch
-> do
->        pnum=`basename $i`
->        pnum=${pnum%.patch}
->        patch -p1 -s -N -E -b -z .$pname.$pnum.orig < $i
->        for j in `find . -name \*.$pname.$pnum.orig`
->        do
->                if [ -f ${j%.$pnum.orig}.orig ]
->                then
->                        rm -f $j
->                else
->                        mv $j ${j%.$pnum.orig}.orig
->                fi
->        done
-> done
-> 
-> to use cd into kernel source dir and run it vs /path/to/2.4.20-dm-7
+Moin Ulf :-) (wenn Du es denn bist...)
 
-I just
+soeben kam mir die Idee, einmal bei Google nach Deinem Aufenthaltsort
+zu fahnden. Wie gehts Dir? Lebst Du noch, und wenn ja, dann wie?
 
-cat /tmp/2.4.20-dm-7/*.patch | patch -p1
+4D ist ja nun pleite, ich sitze schon seit September 2000 hier bei
+Matthias Meyser's XeNET GmbH und erfreue mich meines Berufes als
+Webdesigner und Programmierer. W=FCrd' mich freuen, mal wieder was von
+Dir zu h=F6ren! Auch ein einfaches "Ich bin's" w=E4re schon nett, wenn DU
+sonst zu viel zu tun hast...
 
-- Joe
+Bis denn,
+    HzN :-)
+--
+Hartwig zur Nieden      | XeNET Gesellschaft fuer Informations- und
+Telefon: +49-5323-94018 | Kommunikationssysteme mbH
+Fax:     +49-5323-94014 | Burgstaetter Strasse 6
+Email: Hartwig@xenet.de | 38678 Clausthal-Zellerfeld
