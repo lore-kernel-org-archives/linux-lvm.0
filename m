@@ -1,23 +1,20 @@
-Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id i9CBpgr13275
-	for <linux-lvm@redhat.com>; Tue, 12 Oct 2004 07:51:42 -0400
-Received: from mail.charite.de (mail.charite.de [160.45.207.131])
-	by mx1.redhat.com (8.12.11/8.12.10) with ESMTP id i9CBpeuI026167
-	for <linux-lvm@redhat.com>; Tue, 12 Oct 2004 07:51:40 -0400
-Received: from localhost (localhost [127.0.0.1])
-	by mail.charite.de (Postfix) with ESMTP id 401A62208C0
-	for <linux-lvm@redhat.com>; Tue, 12 Oct 2004 13:51:39 +0200 (CEST)
-Received: from exchcon.charite.de (exchcon.charite.de [141.42.111.221])
-	by mail.charite.de (Postfix) with ESMTP id 61A9C2208B2
-	for <linux-lvm@redhat.com>; Tue, 12 Oct 2004 13:51:38 +0200 (CEST)
-content-class: urn:content-classes:message
-MIME-Version: 1.0
-Date: Tue, 12 Oct 2004 13:51:37 +0200
-Message-ID: <4F9AFAF72B246745B6847C7EECD8FF69033D1D12@EXCHANGE1.charite.de>
-From: "Haxter, Gerd" <Gerd.Haxter@charite.de>
+Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id i9E4mar04488
+	for <linux-lvm@redhat.com>; Thu, 14 Oct 2004 00:48:36 -0400
+Received: from ms.usish.com (ms.usish.com [61.152.132.204])
+	by mx3.redhat.com (8.12.11/8.12.10) with ESMTP id i9E4mNc1007676
+	for <linux-lvm@redhat.com>; Thu, 14 Oct 2004 00:48:25 -0400
+Received: from usish000045 (usish000045.usish.com.cn [192.168.56.150])
+	by ms.usish.com (8.12.8/8.12.8) with SMTP id i9E4EEEW010335
+	for <linux-lvm@redhat.com>; Thu, 14 Oct 2004 12:14:16 +0800
+Message-Id: <200410140414.i9E4EEEW010335@ms.usish.com>
+From: "=?GB2312?Q?=B2=CC=E4=DE?=" <yearn_cai@usish.com>
+Subject: Re: Re: [linux-lvm] pvcreate is successful but can't vgcreate
+Mime-Version: 1.0
+Date: Thu, 14 Oct 2004 12:13:36 +0800
 Content-Transfer-Encoding: 8bit
-Subject: [linux-lvm] LVM-Volume zeigt keine Daten mehr an
-Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
+Reply-To: yearn_cai@usish.com,
+	LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -28,10 +25,59 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="utf-8"
-To: linux-lvm@redhat.com
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-Hilfe!!!!
-Wer kann mir Helfen, ein LVM-Volume unter Debian-Linux wieder zu retten. Das Volume zeigt mittels Befehl "vgsdisplay lvmgrpname" die gleiche Gr�sse f�r das Volume und den freien Bereich an. (sprich jungfreulicher Zustand) Ein Zugriff auf das Volume ist nicht m�glich. Der Benutzer hatte eine Parallelinstallation von einem SuSE-Linux vorgenommen und danach trat das Problem auf.
-Kann mir jemand dringend helfen?
-mfg
-ghaxter@charite.de
+no,it's not a symlink and i can use the disk normally by mounting /dev/sda1....
+
+>Just a guess, if /dev/sda is a symlink have you tried passing the full device name to vgcreate? 
+>I.E. vgcreate group1 /dev/scsi/host1... 
+> 
+>----- Original Message ----- 
+>From: "����" <yearn_cai@usish.com> 
+>To: "linux-lvm@redhat.com" <linux-lvm@redhat.com> 
+>Subject: [linux-lvm] pvcreate is successful but can't vgcreate 
+>Date: Thu, 14 Oct 2004 11:10:19 +0800 
+> 
+>>  
+>> i want to use LVM to manage my SATA disks attached on arm system and: 
+>>  
+>> pvcreate /dev/sda 
+>> Physical volume "/dev/sda" successfully created 
+>>  
+>> vgcreate group1 /dev/sda 
+>> No physical volume label read from /dev/sda 
+>> /dev/sda not identified as an existing physical volume 
+>> Unable to add physical volume '/dev/sda' to volume group 'group1'. 
+>>  
+>> what's wrong and why? 
+>>  
+>>  
+>> _______________________________________________ 
+>> linux-lvm mailing list 
+>> linux-lvm@redhat.com 
+>> https://www.redhat.com/mailman/listinfo/linux-lvm 
+>> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/ 
+>>  
+> 
+>-- 
+>___________________________________________________________
+>Sign-up for Ads Free at Mail.com
+>http://promo.mail.com/adsfreejump.htm
+>
+>
+>_______________________________________________
+>linux-lvm mailing list
+>linux-lvm@redhat.com
+>https://www.redhat.com/mailman/listinfo/linux-lvm
+>read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+
+= = = = = = = = = = = = = = = = = = = =
+			
+
+������������������
+��
+ 
+				 
+��������������������
+����������������yearn_cai@usish.com
+��������������������2004-10-14
