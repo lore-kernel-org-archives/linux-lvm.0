@@ -1,10 +1,11 @@
-Return-Path: <bperson@penguincomputing.com>
-Date: Tue, 23 Jan 2001 17:13:40 -0800 (PST)
-From: "Brett G. Person" <bperson@penguincomputing.com>
-Subject: Re: [linux-lvm] fdisk and the LVM partition.
-In-Reply-To: <20010119115201.B11381@srv.sistina.com>
-Message-ID: <Pine.LNX.4.10.10101231712080.13911-100000@mailserver.penguincomputing.com>
+Return-Path: <bs@infologic.fr>
+Message-ID: <3A6E807F.311B89A5@infologic.fr>
+Date: Wed, 24 Jan 2001 08:13:03 +0100
+From: Benoit SERRA <bs@infologic.fr>
 MIME-Version: 1.0
+Subject: Re: [linux-lvm] fdisk and the LVM partition.
+References: <200101190934.JAA05616@lindbergh.avbrief.com>
+Content-Transfer-Encoding: 7bit
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,25 +17,16 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
 
-I've been playing with LVM recently and I'm pretty sure that my RH 7.0
-fdisk sees the partitions as Linux LVM.  Just checked and , in fact, it
-does. 
+I'm not sure but I think that Mandrake 7.2 reconize 0x8E partitions as
+Linux LVM
 
-
-Brett G. Person
-415-358-2656
-bperson@penguincomputing.com
-
-Penguin Computing - The World's Most Reliable Linux Systems
-
-On Fri, 19 Jan 2001, Heinz J. Mauelshagen wrote:
-
+Tom Dawes-Gamble wrote:
 > 
-> I registered 0x8E a long time ago.
-> Obviously nobody (including me ;-) took care of extending fdisk.
-> Could you go for it, please?
+> Hi,
 > 
+>         Is anyone actively pursuing getting the LVM partition ID
+> "Registered"?
+>
