@@ -1,10 +1,10 @@
 Return-Path: <adilger@turbolinux.com>
 From: Andreas Dilger <adilger@turbolinux.com>
-Message-Id: <200103132302.f2DN2u305720@webber.adilger.int>
-Subject: Re: [linux-lvm] Problem with vgscan/ vgcfgrestore
-In-Reply-To: <20010313232626.A31056@cistron.nl> from Wichert Akkerman at "Mar
- 13, 2001 11:26:26 pm"
-Date: Tue, 13 Mar 2001 16:02:56 -0700 (MST)
+Message-Id: <200103140016.f2E0GpJ05943@webber.adilger.int>
+Subject: Re: [linux-lvm] vgcfgbackup problems
+In-Reply-To: <20010313215629.A23749@prodding> from Kirth at "Mar 13, 2001 09:56:29
+ pm"
+Date: Tue, 13 Mar 2001 17:16:51 -0700 (MST)
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -21,26 +21,30 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Wichert, you write:
-> Previously Andreas Dilger wrote:
-> > Wichert writes:
-> > > I think I'll add the LVM10 ioctls to strace 4.4 actually :)
-> > 
-> > That would be nice.
+Richard writes:
+>         Hans Engren helped me fix my previous problem, so now I can at least
+> mount the LVM (vgscan still ends up disableing it and I have to re-use
+> vgcfgrestore to fix the problem). Once I got the LVM backup i thought i'd
+> use vgcfgbackup, however here I hit a problem:
 > 
-> Turns out this is impossible: LVM made the same mistake some of the OSS
-> sound drivers did and used ioctl numbers that the kernel already uses
-> for other purposes. This is not a problem for the kernel itself, but
-> means a tool like strace can't decode syscalls.
+> milita:~# vgcfgbackup
+> vgcfgbackup -- ERROR: volume group "media" has an invalid number of physical
+> volumes
+> vgcfgbackup -- ERROR "vg_cfgbackup(): vg_check_exist" backing up volume
+> group "media"
+> 
+>         Any ideas ? the software is:
+> Logical Volume Manager 0.9
+> Heinz Mauelshagen, Sistina Software  13/11/2000  (IOP 10)
+> 
+>         installed from lvm-0.9-2 via debian apt-get from sistina.com
+> 
+>         Also is it possible to fix the lvm so that vgscan does not destroy
+> the volume group config ? (I think thats what it's doing).
 
-What are they duplicated with?  I was recently checking the 2.4.x version
-of Documentation/ioctl-number.txt, and there was nothing for 0xFE at all.
-In fact, just to avoid this problem, I submitted a patch to the list here
-(and to MEC) to "register" the LVM ioctl numbers.
-
-Hard to avoid duplicating ioctl numbers, if it is not documented anywhere.
-Does strace know about other ioctl numbers not listed in ioctl-number.txt?
-Interested in making a patch which lists them and submitting it to Linus?
+You need newer tools - they fix a problem with vgcfgrestore (and the
+rest of the tools) missing UUIDs from the disk.  Once you have the
+new tools, vgcfgrestore should do the right thing.
 
 Cheers, Andreas
 -- 
