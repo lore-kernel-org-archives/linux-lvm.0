@@ -1,8 +1,11 @@
-Message-Id: <3C686693.2060007@miracleas.dk>
-From: Peter Gram <peter.gram@miracleas.dk>
+From: Theo Van Dinter <felicity@kluge.net>
+Subject: Re: [linux-lvm] LVM Redhat 7.2 : Volume Group not activated on boot
+Message-Id: <20020211210448.B26850@kluge.net>
+References: <3C686693.2060007@miracleas.dk>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Subject: [linux-lvm] LVM Redhat 7.2 : Volume Group not activated on boot
+Content-Disposition: inline
+In-Reply-To: <3C686693.2060007@miracleas.dk>; from peter.gram@miracleas.dk
+    on Tue, Feb 12, 2002 at 01:49:23AM +0100
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -13,61 +16,28 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Feb 11 18:48:01 2002
+Date: Mon Feb 11 19:59:02 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="iso-8859-1"; format="flowed"
-To: Linux LVM <linux-lvm@sistina.com>
-Cc: Peter Gram - Miracle A/S <peter.gram@miracleas.dk>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: linux-lvm@sistina.com
 
-Hi
+On Tue, Feb 12, 2002 at 01:49:23AM +0100, Peter Gram wrote:
+> # LVM initialization
+> if [ -e /proc/lvm -a -x /sbin/vgchange -a -f /etc/lvmtab ]; then
+>         action $"Setting up Logical Volume Management:" /sbin/vgscan && 
+> /sbin/vgchange -a y
+> fi
 
-I have this problem that I hope some of you out there might be able to=20
-help with ?
+The problem is the first part of the if statement.  /proc/lvm doesn't exist
+unless the lvm-mod module is loaded, and that doesn't happen by default.
 
-My problem is on boot of the machine I get a  error from the mount=20
-process that it can not mount and check my file system
-"/dev/vg01/vg01lv01" and a option to go into singe user mode where I can=20
-se that the "vgchange -a y" is not run to activate
-the volume group. I have looked at the rc.sysinit and there is this=20
-entry that should activate all defined volume groups.
-Have any of you out in cyberspace seen the same problem with Redhat 7.2 ?
+On my RH7.2 box, I make initrd's with the "--with=lvm-mod" option so that
+initrd forcably loads lvm-mod at bootup.  /proc/lvm then exists, and the
+vgchange command is executed.  :)
 
-cut from the /etc/rc.d/rc.sysinit :
-
-# LVM initialization
-if [ -e /proc/lvm -a -x /sbin/vgchange -a -f /etc/lvmtab ]; then
-        action $"Setting up Logical Volume Management:" /sbin/vgscan &&=20
-/sbin/vgchange -a y
-fi
-
-My setup :
-
-HP Omnibook 6000 laptop
-Redhat 7.2
-I have installed the "new" 2.4.17 Linux kernel
-VLM support works (That is I can create lv's and I use ext3 file system=20
-on them)
-I have added my lvm to fstab and are able to mount/umount the file=20
-system without problems
-
-cut from fstab :
-
-/dev/vg01/vg01lv01      /home5/pgram/dev        ext3    defaults        1 2
-
-
-
-
-
---=20
-
-/regards
-
-Peter Gram
-
-Phone : +45 2527 7107
-Fax   : +45 4466 8856
-
-Miracle A/S
-Kratvej 2
-2760 M=EF=BF=BDlev
-http://miracleas.dk
+-- 
+Randomly Generated Tagline:
+"We all know engineers are way better than doctors because doctors can
+ only kill people one at a time while engineers can send 600 to a 1000
+ people screaming into Mt. Rushmore at 300 to 400 knots." - Unknown
