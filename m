@@ -1,9 +1,11 @@
-Message-ID: <003f01c290a8$032ecf20$7327dbd1@policeforum.org>
-From: "TED MORRIS" <Ted@panafsat.com>
+From: Steven Lembark <lembark@wrkhors.com>
+Subject: Re: [linux-lvm] LMV install on RH 7.1
+Message-ID: <220890000.1037820129@[192.168.200.4]>
+In-Reply-To: <003f01c290a8$032ecf20$7327dbd1@policeforum.org>
+References: <003f01c290a8$032ecf20$7327dbd1@policeforum.org>
 MIME-Version: 1.0
-Content-Type: multipart/alternative;
-	boundary="----=_NextPart_000_003C_01C2907E.1A0046E0"
-Subject: [linux-lvm] LMV install on RH 7.1
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,44 +16,33 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Nov 20 09:15:02 2002
+Date: Wed Nov 20 13:17:02 2002
 List-Id: <linux-lvm.redhat.com>
-To: LVM-LINUX <linux-lvm@sistina.com>
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+To: linux-lvm@sistina.com
 
-This is a multi-part message in MIME format.
 
-------=_NextPart_000_003C_01C2907E.1A0046E0
-Content-Type: text/plain;
-	charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+-- TED MORRIS <Ted@panafsat.com>
 
-I am a linux newbie. I desperately need to install LVM 1.0.6 on Redhat =
-7.1 but can't seem to make it work.The file is a tar file. Any tips.
+>
+> I am a linux newbie. I desperately need to install LVM 1.0.6 on Redhat
+> 7.1 but can't seem to make it work.The file is a tar file. Any tips.
+> Thanks
 
-Thanks
+What are you having trouble with (e.g., extracting the
+tarball contents, configure)?
 
-Ted
-------=_NextPart_000_003C_01C2907E.1A0046E0
-Content-Type: text/html;
-	charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Simplest fix is either:
 
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
-<HTML><HEAD>
-<META http-equiv=3DContent-Type content=3D"text/html; =
-charset=3Diso-8859-1">
-<META content=3D"MSHTML 5.50.4915.500" name=3DGENERATOR>
-<STYLE></STYLE>
-</HEAD>
-<BODY bgColor=3D#ffffff>
-<DIV><FONT face=3DArial size=3D2>I am a linux newbie. I&nbsp;desperately =
-need to=20
-install LVM 1.0.6 on Redhat 7.1 but can't seem to make it work.The file =
-is a tar=20
-file. Any tips.</FONT></DIV>
-<DIV><FONT face=3DArial size=3D2></FONT>&nbsp;</DIV>
-<DIV><FONT face=3DArial size=3D2>Thanks</FONT></DIV>
-<DIV><FONT face=3DArial size=3D2></FONT>&nbsp;</DIV>
-<DIV><FONT face=3DArial size=3D2>Ted</FONT></DIV></BODY></HTML>
+	gzip -dc blah.tar.gz | cpio -idv;
 
-------=_NextPart_000_003C_01C2907E.1A0046E0--
+or
+
+	bzip2 -dc blah.tar.bz2 | cpio -idv;
+
+depending on the squish format.
+
+--
+Steven Lembark                               2930 W. Palmer
+Workhorse Computing                       Chicago, IL 60647
+                                            +1 800 762 1582
