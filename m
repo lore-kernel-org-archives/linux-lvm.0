@@ -1,104 +1,69 @@
-Message-ID: <39E21C56.B57AC5D4@attglobal.net>
-Date: Mon, 09 Oct 2000 15:28:22 -0400
-From: Les Hazelton <seawolf@attglobal.net>
-MIME-Version: 1.0
-Subject: [linux-lvm] Unable to boot using LVM for "/"
-Content-Transfer-Encoding: 7bit
+Date: Mon, 9 Oct 2000 14:23:42 -0700
+From: Charles Duffy <cduffy@mvista.com>
+Subject: Re: [linux-lvm] Unable to boot using LVM for "/"
+Message-ID: <20001009142342.H6371@mvista.com>
+References: <39E21C56.B57AC5D4@attglobal.net>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-md5;
+	protocol="application/pgp-signature"; boundary="7SrMUQONj8Rl9QNG"
+Content-Disposition: inline
+In-Reply-To: <39E21C56.B57AC5D4@attglobal.net>; from seawolf@attglobal.net on Mon, Oct 09, 2000 at 03:28:22PM -0400
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@msede.com
+To: Les Hazelton <seawolf@attglobal.net>
+Cc: linux-lvm@msede.com
 
-I have been attempting to move my root partition to a logical volume and
-eliminate the current normal partition.  No luck.  I have read the
-lvmcreate_initrd man page found at 
 
-http://linux.msede.com/lvm/man/man2html.cgi?lvmcreate_initrd:8
+--7SrMUQONj8Rl9QNG
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-and followed those instructions but it doesn't work for me. I have tried
-two different versions of lilo (lilo-0.21.5.1-4mdk and the 0.21.6
-binaries from the lilo site) and get the same result from both.
+On Mon, Oct 09, 2000 at 03:28:22PM -0400, Les Hazelton wrote:
+> I have been attempting to move my root partition to a logical volume and
+> eliminate the current normal partition.  No luck.  I have read the
+> lvmcreate_initrd man page found at=20
+>=20
+> http://linux.msede.com/lvm/man/man2html.cgi?lvmcreate_initrd:8
+>=20
+> and followed those instructions but it doesn't work for me. I have tried
+> two different versions of lilo (lilo-0.21.5.1-4mdk and the 0.21.6
+> binaries from the lilo site) and get the same result from both.
+>=20
+> If I use grub with the menu.lst shown below I can boot the entry for
+> linux-2 and the system runs correctly. Neither of the other two entries
+> will boot correctly. The /dev/hda9 is the real partition I am attempting
+> to eliminate.  If I try to boot the first, linux, entry it gets a kernel
+> panic because it can't locate init. The third entry produces a kernel
+> panic because it can't mound device 0:0
 
-If I use grub with the menu.lst shown below I can boot the entry for
-linux-2 and the system runs correctly. Neither of the other two entries
-will boot correctly. The /dev/hda9 is the real partition I am attempting
-to eliminate.  If I try to boot the first, linux, entry it gets a kernel
-panic because it can't locate init. The third entry produces a kernel
-panic because it can't mound device 0:0
----------------------------------------------------------
-[root@farpt1 /root]# cat /boot/grub/menu.lst
-timeout 5
-color black/cyan yellow/cyan
-i18n (hd0,4)/grub/messages
-keytable (hd0,4)/us.klt
-default 0
+"root=3D/dev/vg01/main" fails because the kernel, when booting, just
+determines the major/minor numbers for the root partition based on
+looking up the root device in a fixed table. What you need to do to
+get the "test" entry running is change the root to the major/minor
+number combo in hex; in my case, where /dev/vg01/root has major/minor
+number 58,3 in decimal, I pass "root=3D3a03" to grub and that works
+correctly.
 
-title linux
-kernel (hd0,4)/bzImage-2.2.17-0.16mdk-02 init=/boot/init  vga=0x318
-initrd (hd0,4)/initrd.lrh.gz
+Note that the above presumes that the initrd runs correctly. Does it?
+(Be aware that I had to add /dev/console and /dev/tty0 entries to the
+initrd to see output from the programs run from it... this may have
+been fixed by now, or maybe not).
 
-title linux-2
-kernel (hd0,4)/bzImage-2.2.17-0.16mdk-02  root=/dev/hda9 vga=0x318
-initrd (hd0,4)/initrd.gz
+Hope this has been of some use.
 
-title test
-kernel (hd0,4)/bzImage-2.2.17-0.16mdk-02 root=/dev/vg01/main vga=0x318
-initrd (hd0,4)/initrd.lrh.gz
-----------------------------------------------------------
+--7SrMUQONj8Rl9QNG
+Content-Type: application/pgp-signature
+Content-Disposition: inline
 
-When the system is booted from the linux-2 entry it produces the
-following.  Notice the rdev and "df -h" show clearly different views of
-where the root partition is sourced.
-----------------------------------------------------------
-[root@farpt1 /root]# df -h
-Filesystem            Size  Used Avail Use% Mounted on
-/dev/vg01/main        501M  353M  122M  74% /
-/dev/hda5             235M  2.9M  220M   1% /boot
-/dev/vg01/usr         2.5G  2.0G  553M  78% /usr
-/dev/vg01/src         600M  380M  220M  63% /usr/src
-/dev/vg01/local       800M  600M  200M  75% /usr/local
-/dev/vg01/home       1020M  434M  586M  43% /home
-/dev/vg01/mp3         1.5G  1.4G   98M  94% /mp3
-/dev/vg01/var         252M  122M  129M  49% /var
-/dev/hda8             2.9G  1.3G  1.5G  47% /Archives
-[root@farpt1 /root]# rdev
-/dev/hda9 /
-------------------------------------------------------------
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.0.3 (GNU/Linux)
+Comment: For info see http://www.gnupg.org
 
-My lilo.conf resides in the /boot partition which is an ext2fs on
-/dev/hda5. It is listed below.  When I install lilo and try to boot the
-system It comes up but it is using /dev/hda6 for the root partition and
-that belongs to my test copy of LM v7.2 and should have nothing to do
-with this system. 
+iD8DBQE54jder/O29KUQmJURAjSDAKCDIvsunmzU2fyQ1tYwSDmDTJFEsACgu7mj
+MTN7aoddnQvOpeyvPV8NChU=
+=i8HZ
+-----END PGP SIGNATURE-----
 
-The one thing that is clearly different is that the lvmcreate_initrd man
-page references ext2fe file systems and I am using reiserfs for all
-except the /boot on /dev/hda5. Can anyone see what I am doing wrong and
-get me turned around?  I would sure appreciate the help.
-
----------------------------------------------
-[root@farpt1 /root]# cat /boot/lilo.conf
-boot=/dev/hda5
-map=/boot/map
-install=/boot/boot.b
-vga=ext
-default=rootonly
-keytable=/boot/us.klt
-lba32
-delay=100
-backup=/boot/boot.grub
-message=/boot/message
-image=/boot/bzImage-2.2.17-0.16mdk-02 vga=0x318
-    initrd=/boot/initrd.gz
-	root=/dev/vg01/main
-	label=rootonly
-	append="ramdisk_size=8192"
-	read-only
---------------------------------------------------------------
-
--- 
-
-Good Journey, longevity and prosperity to all
-
-Les Hazelton
+--7SrMUQONj8Rl9QNG--
