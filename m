@@ -1,51 +1,55 @@
-Date: Wed, 3 May 2000 23:21:32 -0600 (MDT)
-From: Michael Loftis <zop12@mindless.com>
-Subject: Re: [linux-lvm] SuSE/LVM boot problem
-In-Reply-To: <20000503192826.E4439@archimedes.suse.com>
-Message-ID: <Pine.LNX.4.04.10005032319330.5172-100000@disks.tcnet.eu.org>
-MIME-Version: 1.0
+From: Heinz Mauelshagen <mauelsha@ez-darmstadt.telekom.de>
+Message-Id: <200005040656.IAA11231@u9etz.ez-darmstadt.telekom.de>
+Subject: Re: [linux-lvm] bug in lvm tools 0.8i, 0.8final
+In-Reply-To: <20000503220359.A27090@cyberhqz.com> from Ryan Murray at "May 3, 2000 10: 3:59 pm"
+Date: Thu, 4 May 2000 08:56:28 +0200 (MEST)
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: Linux LVM mailing list <linux-lvm@msede.com>
+Content-Type: text/plain; charset="us-ascii"
+To: Ryan Murray <rmurray@cyberhqz.com>
+Cc: mge@ez-darmstadt.telekom.de, linux-lvm@msede.com
 
-
-
-On Wed, 3 May 2000 dgould@suse.com wrote:
-
-> I agree with the statment "I don't think many sysadmins will have a
-> problem", however this does not address the typical desktop or home user.
+> I've just come across a bug in lvm tools when not using /proc/partitions.
 > 
-> They basically do not have a sysadmin, so mechanisms that rely on a savy
-> sysadmin avoiding disaster (ie, won't boot) are not suitable for a large
-> population of potential users. These are the same people who don't know
-> how to use fdisk safely, and who have no idea of how to lay out
-> filesystems. That is, the people who could really appreciate being able
-> to turn over all the storage to lvm so they can just add a disk and
-> extend their filesystems onto it when they need more space without
-> worrying about the details.
+> lvm_add_dir_cache adds an entry, but checks for duplicates with
+> lvm_dir_cache_hit.  The problem is simple:
+> 
+> lrwxrwxrwx    1 root     root            9 May  8  1999 /dev/cdrom -> /dev/hdd
+> 
+> If you have that symbolic link around, it will show up in the cache as
+> /dev/cdrom, so if you try to pvcreate /dev/hdd, /dev/hdd never makes it
+> into the cache.
 
-Which is something that eats me.  Why?  Because there is no reason for
-people who have no idea what they are doing, or have no WANT to know what
-they are doing, to be mucking around in Unix.  If we keep adding
-"features" to make it "easier to use" eventually we'll have bloat and be
-just like Windows.  It makes the software over-complicated and isn't
-necessary.
-
-Just my $.0001 worth
+Thanks for pointing this out.
 
 > 
-> > Why do you say that?  You can resize it while it is mounted:
-> > http://ext2resize.sourceforge.net/
+> Either the duplicate mechanism should be taken out, or ignore symlinks
+> and have things that check the cache dereference the symlinks...
 > 
-> Cool.
-> 
-> -dg
->  
+
+Will check that...
+
 > -- 
-> David Gould                                   dgould@suse.com
-> If simplicity worked, the world would be overrun with insects.
-> 
-> 
+> Ryan Murray, (rmurray@cyberhqz.com, rmurray@stormix.com)
+> Programmer, Stormix Technologies Inc.
+> The opinions expressed here are my own.
+
+Regards,
+Heinz
+
+-- 
+
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+Systemmanagement TS                              T-Nova
+                                                 Entwicklungszentrum Darmstadt
+Heinz Mauelshagen                                Otto-Roehm-Strasse 71c
+Senior Systems Engineer                          Postfach 10 05 41
+                                                 64205 Darmstadt
+mge@EZ-Darmstadt.Telekom.de                      Germany
+                                                 +49 6151 886-425
+                                                          FAX-386
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
