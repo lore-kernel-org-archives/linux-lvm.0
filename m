@@ -1,9 +1,9 @@
-From: Roman Glebov <bleon@gmx.net>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Message-Id: <sf4a1cca.017@lvnbb.brandenburg.de>
+From: "Stephan Hendl" <Stephan.Hendl@lds.brandenburg.de>
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
 Content-Disposition: inline
-Message-Id: <200308242226.22599.bleon@gmx.net>
-Subject: [linux-lvm] Can't convert lvm2 to lvm1 and error in pvmmove
+Subject: [linux-lvm] physical volume timeout
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,17 +14,30 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Sun Aug 24 15:24:02 2003
+Date: Mon Aug 25 07:28:02 2003
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="iso-8859-1"
 To: linux-lvm@sistina.com
 
-When i convert ftom lvm2 -> lvm1 there is an error.
-Also when i try to move data from my two small lvm2 partitions to one big one
-i become an error.
+Hi all,
 
-You can read deatails here:
-http://sleon.dyndns.org/lvm2.vvv <-- log from all programms with -vvv flag +
-information about programversion and partitions
+I'd like to know the default physical volume timeout parameter. In HPUX =
+the value is about 60 seconds - in Linux too?
 
-http://sleon.dyndns.org/speicher1.vvv <-- metadata backup.
+Thanks in advance
+
+Stephan
+
+Dr. Stephan Hendl
+Systemmanagement
+-----------------------------------
+Landesbetrieb f=FCr
+Datenverarbeitung und Statistik
+Land Brandenburg
+
+Adresse: 14467 Potsdam, Dortustr. 46
+Telefon: +49-(0)331 39-471
+Fax:: +49-(0)331 27548-1187
+Mobil: +49-(0)160 90 645 893
+EMail: Stephan.Hendl@lds.brandenburg.de
+Internet: http://www.lds-bb.de
