@@ -1,56 +1,41 @@
-Message-ID: <39184001.EE90C818@msede.com>
-Date: Tue, 09 May 2000 18:42:41 +0200
-From: Michael Marxmeier <mike@msede.com>
-Reply-To: okeefe@borg.umn.edu
-MIME-Version: 1.0
-Subject: Re: [linux-lvm] balance functionality
-Content-Transfer-Encoding: 7bit
+Date: Tue, 09 May 2000 19:30:55 -0700 (PDT)
+From: Cristina Bulfon <bulfon@SLAC.Stanford.EDU>
+Subject: [linux-lvm] 0.8 for 2.2.12-20 ?
+Message-id: 
+ <Pine.GSO.4.10.10005091910290.12327-100000@flora02.SLAC.Stanford.EDU>
+MIME-version: 1.0
+Content-transfer-encoding: 7BIT
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: TEXT/PLAIN; charset="us-ascii"
 To: linux-lvm@msede.com
 
-Forwarded message from Matthew O'Keefe (okeefe@borg.umn.edu) ...
 
--------- Original Message --------
-From: "Matthew O'Keefe" <okeefe@borg.umn.edu>
-Date: Tue, 9 May 2000 07:37:09 -0500
-Subject: Re: [linux-lvm] balance functionality
-Message-ID: <20000509073709.A96956@styx.>
-References: <20000505230812.A449@HAL.HAL>
-In-Reply-To: <20000505230812.A449@HAL.HAL>
+Hello,
 
-On Fri, May 05, 2000 at 11:08:12PM -0400, Jean-Francois Landry wrote:
-> Greetings,
-> 
-> I was wondering if the current LVM implementation supports functionality similar
-> to the Digi^H^H^H^HCompaq Tru64 Unix "balance" utility. This utility rearranges
-> data across volumes ( I think this maps to PV's in the Linux LVM) so that files
-> are scattered evenly in a concatenated volume. Anyone willing to comment on
-> that? Sorry if this has been covered but I was unable to find anything in the
-> mailing lists archives.
+I have a Linux machine with kernel version 2.2.12-20 and 2 disks with 30
+GB plus 30 - O.S. GB = about 27 GB and I'd like to have only one logical
+volume of 87 GB (more or less).  
 
-Hi,
+My question is :
 
-I don't think so.  Since the volume manager only knows about blocks,
-not files, it cannot make decisions about how blocks for a particular
-file should be distributed.  RAID-0 striping can help in general with
-this
-problem.  Our Linux cluster file system (GFS -- see
-www.globalfilesystem.org)
-has a balancer, but it is out-of-date, as the balancer has not kept up
-with our latest code updates.  We plan to include this functionality
-in the
-future.
+- is the last LVM version supported by my kernel version ?  
 
-Matt O'Keefe
- 
+if not what do I have to do ? 
 
-> 
-> Cheers,
-> 	Jean-Francois Landry
-> -- 
-> I'm famous. Ain't taht a bitch!
-> 	Thelonious Sphere Monk
-> --
+I think, can do an upgrade kernel version ( I guess) since that version is
+supported by AFS.
+
+
+Thanks for the help
+
+Cristina
+
+_____________________________________________________________________________
+
+       Cristina Bulfon              E-mail Cristina.Bulfon@slac.stanford.edu
+Stanford Linear Accelerator Center  Phone +1-650-926-5028
+PO Box 4349, M/S 88		    Fax   +1-650-926-3329
+Stanford, CA 94309, USA
+_____________________________________________________________________________
