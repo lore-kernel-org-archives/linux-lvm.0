@@ -1,10 +1,10 @@
 Return-Path: <adilger@turbolinux.com>
 From: Andreas Dilger <adilger@turbolinux.com>
-Message-Id: <200102272007.f1RK7aM27545@webber.adilger.net>
-Subject: Re: [linux-lvm] Problem mounting ext2 fs on LVM
-In-Reply-To: <m27l2ct3p7.fsf@isnogud.escape.de> from Urs Thuermann at "Feb 27,
- 2001 06:51:00 pm"
-Date: Tue, 27 Feb 2001 13:07:36 -0700 (MST)
+Message-Id: <200102272022.f1RKMIk27598@webber.adilger.net>
+Subject: Re: [linux-lvm] Possible to raise Max LV?
+In-Reply-To: <20010227132358.A24164@math.ohio-state.edu> from Dave Alden at "Feb
+ 27, 2001 01:23:58 pm"
+Date: Tue, 27 Feb 2001 13:22:18 -0700 (MST)
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -21,36 +21,24 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Urs writes:
-> Andreas Dilger <adilger@turbolinux.com> writes:
-> > What does it say in the syslog?  This will tell you why ext2 thinks it
-> > can't mount, and will give us a clue on how to fix LVM.  I'm guessing
-> > that when ext2 tries to set the blocksize to 1k it fails.
-> 
-> Yes, I have a couple of messages in my syslog, like
-> 
-> Feb 27 17:04:39 isnogud kernel: VFS: Unsupported blocksize on dev lvm(58,0).
+Dave Alden writes:
+> I'm completely new to LVM, so can someone explain to me the purpose of
+> the PE's and why they default to 4M?  Is there some kind of performance
+> or space hit if I raise that to 16M (remember my setup: hardware RAID
+> array that is currently at ~250G, soon to be ~325G)?
 
-This is an ext2 message when sb->s_blocksize != bh->b_size, even though
-ext2 _should_ set the block size correctly if we get to this point (it
-will call set_blocksize(sb->s_blocksize)).
+Basically, the PE size is the minimum allocation unit of LVM.  If you
+make PE size very large, then you are generally wasting PE/2 disk space
+for each PV.  If (as in your case) the HW raid appears as a single large
+disk, then a large PE size may be appropriate, since you will only waste
+PE/2 once and it will still let you grow the LV to the current 2TB block
+device limit (kernel limit).
 
-Now I see what the problem might be, it is in ext2.  Give it a try and
-let me know how it goes.
+However, LVM DOES NOT handle PVs that change size!!!  In this case you
+need to make the new disk space appear as a new PV (via a new LUN number
+or something) and add that PV to the VG.  Sorry.
 
 Cheers, Andreas
-==========================================================================
---- fs/ext2/super.c.orig	Fri Feb  2 17:12:09 2001
-+++ fs/ext2/super.c	Tue Feb 27 12:53:41 2001
-@@ -787,7 +791,7 @@
- 	
- 	sb->s_maxbytes = ext2_max_size(sb->s_blocksize_bits);
- 	
--	if (sb->s_blocksize != BLOCK_SIZE &&
-+	if (sb->s_blocksize != blocksize &&
- 	    (sb->s_blocksize == 1024 || sb->s_blocksize == 2048 ||
- 	     sb->s_blocksize == 4096)) {
- 		/*
 -- 
 Andreas Dilger  \ "If a man ate a pound of pasta and a pound of antipasto,
                  \  would they cancel out, leaving him still hungry?"
