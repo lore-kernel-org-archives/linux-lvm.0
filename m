@@ -1,9 +1,17 @@
-content-class: urn:content-classes:message
-MIME-Version: 1.0
-Subject: RE: [linux-lvm] How to associate two paths for each EMC device?
-Date: Fri, 19 Mar 2004 14:43:54 -0600
-Message-ID: <2C6A063A33DEEE4FBC20FBBEA3DD9ED204E445@ausx2kmpc115.aus.amer.dell.com>
-From: <Dan_Caulfield@Dell.com>
+Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with SMTP id i2JKlrj26151
+	for <linux-lvm@redhat.com>; Fri, 19 Mar 2004 15:47:53 -0500
+Received: from mwinf0801.wanadoo.fr (smtp8.wanadoo.fr [193.252.22.23])
+	by mx1.redhat.com (8.12.10/8.12.10) with SMTP id i2JKlpWA009561
+	for <linux-lvm@redhat.com>; Fri, 19 Mar 2004 15:47:52 -0500
+Subject: Re: [linux-lvm] root on lvm
+From: Garcia Pascal <dld.pascal.garcia@wanadoo.fr>
+In-Reply-To: <1079705946.29353.6.camel@tesla.mmt.bellhowell.com>
+References: <1079478024.2432.9.camel@rich>
+	<1079705946.29353.6.camel@tesla.mmt.bellhowell.com>
+Message-Id: <1079729272.2126.12.camel@pascal>
+Mime-Version: 1.0
+Date: Fri, 19 Mar 2004 21:47:52 +0100
 Content-Transfer-Encoding: 8bit
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
@@ -15,145 +23,66 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@redhat.com
-Cc: linux-lvm-bounces@redhat.com
+Content-Type: text/plain; charset="utf-8"
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-This is normal behavior for multipath devices.  The OS will "see" the 22
-luns on all available paths.  The is the way EMC PowerPath, Veritas DMP
-and LVM work.  Each of these products rely on the OS detecting all
-available paths to the luns.  EMC PowerPath uses the device the
-Symmetrix pdev id of each lun to identify multiple paths to a device.
-LVM will use the PV UUIDs to identify the multipath devices.  
-
-For EMC arrays, there is a version of inq that will run on Linux.  You
-will just need to make enough sg devices for it to recognize all 44
-devices.  The inq utility will help you to determine which pdev is
-associated to which sd device. See EMC Powerlink Doc emc59180 for all of
-the details.
-
-
-Regards,
-Dan
-
------Original Message-----
-From: linux-lvm-bounces@redhat.com [mailto:linux-lvm-bounces@redhat.com]
-On Behalf Of Shan Jing
-Sent: Friday, March 19, 2004 1:01 PM
-To: LVM general discussion and development
-Cc: LVM general discussion and development; linux-lvm-bounces@redhat.com
-Subject: Re: [linux-lvm] How to associate two paths for each EMC device?
-
-
-The very basic way to identify the pair is to lvm each of the first 22
-luns in a sequence and see which lun in the other 22 set is also lvm'ed.
-
-However, there must be a more technical way to resolve this and
-eventually make the disk represent only once.  Any guru out there can
-help?
-
-Regards,
-Shan Jing
-
-Unix Group - Americas
-Deutsche Bank
-2 Gatehall Drive, 3rd Floor
-Parsippany, New Jersey, USA
-shan.jing@db.com
-973.682.3463
-
-
-
-
+Hello,
+I experienced also difficulties with / and lvm2.
+configuration: 
+   MANDRAKE 10.0, 
+   kernel 2.6.3, 
+   lilo 22.5.8, 
+   reiserfs 3.6.11 ?
+   lvm 2.00.08
  
+The message I have got is something like lilo does not handle device
+type 0x1f00 
 
-                      Theo Van Dinter
+Can not ensure that it is the exact message and type.
 
-                      <felicity@kluge.n        To:       LVM general
-discussion and development <linux-lvm@redhat.com>                 
-                      et>                      cc:
+I understood that the version of lilo I use can not handle lvm2 and
+reiserfs partition for / during boot ! And especially can not get boot
+image in /boot.
 
-                      Sent by:                 Subject:  Re: [linux-lvm]
-How to associate two paths for each EMC device?               
-                      linux-lvm-bounces
+Shame :(
 
-                      @redhat.com
+regards
 
- 
+Pascal Garcia
 
- 
-
-                      03/19/2004 12:44
-
-                      PM
-
-                      Please respond to
-
-                      LVM general
-
-                      discussion and
-
-                      development
-
- 
-
- 
-
-
-
-
-
-On Fri, Mar 19, 2004 at 12:21:51PM -0500, Shan Jing wrote:
-> I have 22  EMC symmetrix disks on two HBA links.  At this moment,
-there is no working copy of EMC powerpath or HP Securepath available for
-my kernel (2.4.21-112-itanium2-smp); therefore, I have to use the luns
-directly with lvm without any DMP software in the middle.
->
-> Without DMP software, there are two set of 22 luns, each representing
-one HBA path.  See blow.
-
-Can you set your HBA driver to do failover?   ie: something like this
-in modules.conf:
-
-options qla2300 ql2xfailover=1 ql2xmaxqdepth=64
-
-
-This works well for my servers connected to a CX-series array. :)   The
-driver handles failing between HBAs (active-passive), and only has the
-LUN presented once to the system.
-
---
-Randomly Generated Tagline:
-"I didn't know Allman was a stand-up comedian ..."
-         - Theo about laughter from sendmail tutorial
-
-_______________________________________________
-linux-lvm mailing list
-linux-lvm@redhat.com
-https://www.redhat.com/mailman/listinfo/linux-lvm
-read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
-
-The following file(s) have been deleted by: Shan Jing on 3/19/2004
-1:58:20 PM
-
-C.DTF
-attq5vht.dat
-
-
-
-
-
---
-
-This e-mail may contain confidential and/or privileged information. If
-you are not the intended recipient (or have received this e-mail in
-error) please notify the sender immediately and destroy this e-mail. Any
-unauthorized copying, disclosure or distribution of the material in this
-e-mail is strictly forbidden.
-
-
-_______________________________________________
-linux-lvm mailing list
-linux-lvm@redhat.com
-https://www.redhat.com/mailman/listinfo/linux-lvm
-read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+Le ven 19/03/2004 � 15:19, Jeffrey Layton a �crit :
+> On Tue, 2004-03-16 at 18:00, Rich Turner wrote:
+> > i am trying to mount / on a logical volume with reiserfs. my initrd
+> > appears to be loading all of the appropriate modules (lvm-mod, dm-mod,
+> > reiserfs) but i get the following error when the initrd exits and tries
+> > to mount /.
+> > 
+> > device-mapper: unknown block ioctl 0x5310
+> > sh-2021: reiserfs_read_super: can not find reiserfs on device mapper
+> > (254,1)
+> > 
+> > is this related to reiserfs or lvm? or my initrd?
+> > using:
+> > lvm-2.00.07
+> > reiserfs-3.6.9-37
+> > suse-9.0
+> > kernel-2.4.21-144-athlon
+> > 
+> 
+> You likely are hitting a problem with the device numbering for DM
+> devices. The kernel dynamically allocates major and minor numbers for
+> the DM, so booting to a different kernel can renumber your DM devices.
+> Have a look at the lvm2create_initrd script that's been posted on this
+> list several times to see how I (and others) have handled this
+> situation. It's also available here:
+> 
+> http://poochiereds.net/svn/lvm2create_initrd
+> 
+> -- Jeff
+> 
+> 
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@redhat.com
+> https://www.redhat.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
