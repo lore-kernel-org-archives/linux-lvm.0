@@ -1,42 +1,75 @@
-From: harrie@descent.penguinpowered.com
-Date: Sun, 30 Apr 2000 19:45:06 +0200 (CEST)
-Subject: [linux-lvm] invalid i/o protocol version
-Message-ID: <Pine.LNX.4.10.10004301928550.13661-100000@tiger.private>
-MIME-Version: 1.0
+Date: Mon, 1 May 2000 19:43:13 -0500
+From: "Eric M. Hopper" <hopper@omnifarious.mn.org>
+Subject: [linux-lvm] RH 6.2 kernel problem with 0.8i
+Message-ID: <20000501194313.A25404@omnifarious.mn.org>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="6c2NcOVqGQ03X4Wi"
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@msede.com
 
-Hi there,
 
-I get this error while running vgscan:
+--6c2NcOVqGQ03X4Wi
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: quoted-printable
 
-# vgscan -vd
-lvm_get_iop_version -- CALLED
-lvm_get_iop_version -- AFTER ioctl ret: 0
-lvm_get_iop_version -- LEAVING with ret: 0
-vgscan -- invalid i/o protocol version
+	I figured out my problem.  It's the RAID patches that RH adds.
 
-As a saw in the mail archives, it could be a missing /dev/lvm, but it is there:
+	RH adds a LOT of patches to the stock kernel.  Someone suggested
+grabbing a stock kernel and using that, but a lot of the RH patches are
+ones I really want, and I don't want to sift through them carefully
+figuring out which ones.
 
-# ls -l /dev/lvm
-crw-r-----   1 root     root     109,   0 Apr 29 03:35 /dev/lvm
+	So, I grabbed the kernel source RPM, used rpm2cpio on it,
+unpacked the cpio, and then used patch -R (what a wonderful tool) to
+reverse the patches I didn't want out of the kernel source tree RH
+ships.
 
-I tried a few kernels to see if that was the problem, but still haven't found what is wrong.
+	After that, the LVM patches applied just fine.  I only wanted
+RAID0 anyway, and LVM does that just fine by itself.  :-)
 
-Is it the lvm-0.8-11.rpm that I use? For some reason I can't compile the tools in tar files (tried different version, all the same errors on "function basename").
+	It works beautifully!
 
-# dmesg | grep -i lvm
-LVM version 0.8final  by Heinz Mauelshagen  (15/02/2000)
-lvm -- Driver successfully initialized
+	The only thing I could ask for (and it is something that would
+be complicated to dp) is to allow the root filesystem to be a logical
+volume.
 
-Is the rpm file compatible with this version (it installed without problems)?
+	A graphical (say tk or Python based) manager might be nice to,
+but there are already several people working on that.
 
-At the moment I use Redhat 6.0 with upgraded kernel 2.3.99-pre6.
+	Thanks a LOT for providing such a neat, useful tool.  Virtual
+memory for hard drives.  It's great!
 
-Hope somebody can help me.
+	One question...
 
-Harrie
+	Is the warning about moving the physical extents of a mounted
+logical volume based on hard evidence, or uneasiness?
+
+	As I recall from Hans's talk, there shouldn't be any problem.  I
+think I remember that the blocks are locked from being read or written
+to while they're being moved.  And besides, the buffer cache entries
+point at the logical volume anyway.
+
+Have fun (if at all possible),
+--=20
+Its name is Public Opinion.  It is held in reverence. It settles everything.
+Some think it is the voice of God.  Loyalty to petrified opinion never yet
+broke a chain or freed a human soul.     ---Mark Twain
+-- Eric Hopper (hopper@omnifarious.mn.org  http://omnifarious.mn.org/~hoppe=
+r) --
+
+--6c2NcOVqGQ03X4Wi
+Content-Type: application/pgp-signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.0.1 (GNU/Linux)
+Comment: For info see http://www.gnupg.org
+
+iD8DBQE5DiShG4QeWBeRdS8RApjIAKC87iUqqKSHun9VZ2q5JNvMSjlqYQCfS31W
+D0il6ow+YHXNnRGXmjin6tw=
+=oGAz
+-----END PGP SIGNATURE-----
+
+--6c2NcOVqGQ03X4Wi--
