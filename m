@@ -1,17 +1,24 @@
-Received: from fentible.pjc.net (vpnuser2.surrey.redhat.com [172.16.9.2])
-	by pobox.surrey.redhat.com (8.12.8/8.12.8) with ESMTP id j1S8aaJp019270
-	for <linux-lvm@redhat.com>; Mon, 28 Feb 2005 08:36:37 GMT
-Received: from patrick by fentible.pjc.net with local (Exim 4.44)
-	id 1D5gOK-0004nn-K5
-	for linux-lvm@redhat.com; Mon, 28 Feb 2005 08:36:36 +0000
-Date: Mon, 28 Feb 2005 08:36:36 +0000
-From: Patrick Caulfield <pcaulfie@redhat.com>
-Subject: Re: [linux-lvm] LVM1 Bad harddisk. How do I het data off the Volume?
-Message-ID: <20050228083636.GA18006@tykepenguin.com>
-References: <421E3614.5010107@gozar.dynu.com>
-Mime-Version: 1.0
+Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j1SAcDK28719
+	for <linux-lvm@redhat.com>; Mon, 28 Feb 2005 05:38:13 -0500
+Received: from kokytos.rz.informatik.uni-muenchen.de
+	(kokytos.rz.informatik.uni-muenchen.de [141.84.214.13])
+	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id j1SAcBNT012868
+	for <linux-lvm@redhat.com>; Mon, 28 Feb 2005 05:38:12 -0500
+Received: from iod.cip.informatik.uni-muenchen.de
+	(iod.cip.informatik.uni-muenchen.de [141.84.214.220])
+	(using TLSv1 with cipher RC4-MD5 (128/128 bits))
+	(No client certificate requested)
+	by kokytos.rz.informatik.uni-muenchen.de (Postfix) with ESMTP id
+	1B5C543564
+	for <linux-lvm@redhat.com>; Mon, 28 Feb 2005 11:38:01 +0100 (CET)
+From: Michael =?iso-8859-15?q?St=FCbiger?= <stuebiger-lvm@cip.ifi.lmu.de>
+Date: Mon, 28 Feb 2005 11:38:00 +0100
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Content-Disposition: inline
-In-Reply-To: <421E3614.5010107@gozar.dynu.com>
+Message-Id: <200502281138.00112.stuebiger-lvm@cip.ifi.lmu.de>
+Subject: [linux-lvm] Raid1 only with LVM
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -22,16 +29,24 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="utf-8"
+To: linux-lvm@redhat.com
 
-On Thu, Feb 24, 2005 at 09:16:20PM +0100, Heine Laursen wrote:
-> 
-> How can I rescue as mutch data as possebill?
+Hello.
 
-Restore from your backups ?
+I'm rather new to LVM2 and DM.
+After having read what I could find about it I got the impression that
+one should be able to get LVM to Mirror a Volume Group to 2 Physical Volumes with
+the mirror target just like it can do striping.
+
+Alas I was unable to find any documentation on how to accomplish this.
+
+Can anybody please help me with this?
+
+Regards
+Michael St�biger
 
 -- 
-
-patrick
+| Dipl. Inf. Michael St�biger                   Michael.Stuebiger at rz.ifi.lmu.de |
+| Ludwig-Maximilians-Universitaet Muenchen                                         	|
+| Institut fuer Informatik                Zimmer Z 9      Tel: 2180-9137           	|
