@@ -1,11 +1,11 @@
 Return-Path: <steve.wray@the.net.nz>
 From: "Steve Wray" <steve.wray@the.net.nz>
-Subject: RE: [linux-lvm] XFS and LVM
-Date: Wed, 23 May 2001 10:50:27 +1200
-Message-ID: <NBBBKLKHMJHIJLHOGAOJOEMGIOAA.steve.wray@the.net.nz>
+Subject: RE: [linux-lvm] Problems: reiserfs lvm as /
+Date: Wed, 23 May 2001 10:52:44 +1200
+Message-ID: <NBBBKLKHMJHIJLHOGAOJCEMHIOAA.steve.wray@the.net.nz>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
-In-Reply-To: <wxxu22dtsgq.fsf@gjallarhorn.ifi.uio.no>
+In-Reply-To: <3B0A7045.6393BC58@in.tum.de>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -22,12 +22,20 @@ To: linux-lvm@sistina.com
 
 > From: linux-lvm-admin@sistina.com [mailto:linux-lvm-admin@sistina.com]On
 > 
-> "Steve Wray" <steve.wray@the.net.nz> writes:
+> > Could anybody tell me which Options are Required
+> > for Initial Ram Disk (initrd) support ??
+> >
 > 
-> > Mind you, reiserfs is supposed to be shrinkable but, ahem, it didn't
-> > work...
->   
->   ouch. what happened?
+> well,
+> RAM disk support = y
+> Initrd = y
+> ramdisk_size = ....
+> <filesystem_of_initrd>-support = y
+> 
+> That would be enough....
 
-It wouldn't mount afterward... It was only on /usr/local
-whuch was backed up.
+Not quite. The initial ramdisk has to be either
+ext2 or minix filesystem so one of these needs to be
+compiled in.
+
+Also I don't think that ramdisk_size has to be compiled in.
