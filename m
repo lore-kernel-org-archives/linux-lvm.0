@@ -1,62 +1,109 @@
-Message-ID: <39E3E19E.A25E6970@attglobal.net>
-Date: Tue, 10 Oct 2000 23:42:22 -0400
-From: Les Hazelton <seawolf@attglobal.net>
+Subject: [linux-lvm] lvdisplay disagrees with df for resized LV
+From: Andy Cowling <andy@redeye.com>
+Date: 11 Oct 2000 13:25:50 +0100
+Message-ID: <m2u2ajmunl.fsf@puma.redeye>
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] Unable to boot using LVM for "/"
-References: <39E21C56.B57AC5D4@attglobal.net> <20001009142342.H6371@mvista.com> <39E28E89.133996EE@attglobal.net> <20001010124051.B24659@mvista.com>
-Content-Transfer-Encoding: 7bit
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: Charles Duffy <cduffy@mvista.com>, "linux-lvm@msede.com" <linux-lvm@msede.com>
+Content-Transfer-Encoding: 7bit
+To: linux-lvm@msede.com
+Cc: Dan Garcia <dan@redeye.com>
 
-Charles Duffy wrote:
-> 
-> On Mon, Oct 09, 2000 at 11:35:37PM -0400, Les Hazelton wrote:
-> > Actually, it was a great help.  I have it working now - sort of.  The
-> > problem was in two parts. I changed the grub menu.lst to pass
-> > "root=3a06" as you suggested and that changed some of the symptoms. When
-> > it still didn't work as expected I reread the lvmcreate_initrd script.
-> > It finally sunk in. The initrd creates the ram disk file system as ext2
-> > and I had created my root LV using reiserfs.
-> >
-> > This creates a conflict between the initrd root file system and the one
-> > on the logical volume and the mount won't work.  I re-formatted my LV
-> > with mke2fs and made some changes to /etc/fstab. Now it works as
-> > expected. It looks to me like you can't use reiserfs for the root file
-> > system unless the initrd ram disk can be created using reiserfs. I don't
-> > think that will work.
-> 
-> That's interesting, as I'm using reiserfs for my root filesystem
-> without issues (though getting it up was a bit of a challenge, and I
-> modified lvmcreate_initrd quite heavily). I'm also quite certain that
-> one can switch from a minix-based initrd to an ext2-based root.
-> 
-> If you wouldn't mind recounting your symptoms, I'd be curious to hear
-> what happened.
+I'm just starting out using LVM under SuSE 7.0. I created a logical
+volume which was initially 30Gb but I then resized it to 90Gb (using
+lvresize) spanning 3 physical volumes each of 30Gb.
 
-At this point I am a bit confused.  I saw your note indicating you used
-reiserfs for the root file system so I figured I better double check
-what I had done. 
+Now, lvdisplay/vgdisplay shows the LV/VG size as 90Gb, but df still
+lists the file system as 30Gb.
 
-Having made the change you previously suggested, I now had one working
-setup with the root on a logical volume. That filesystem was ext2. I
-made another LV with a reiserfs filesystem, copied all the root
-components into it and updated its etc/fstab entries. I set the
-/boot/grub/menu.lst to reflect these new conditions and re-booted the
-system.
+How can I get df to recognise the addtional space ?
 
-Now the root filesystem on a reiserfs LV is working just fine. In fact,
-I can reboot between the two different root configurations using the
-exact same initrd.gz file and everything appears to be correct. The
-initrd.gz file was made with an unmodified lvmcreate_initrd script. 
-
-I can only assume I was working too late when I did the other tests. 
-Sorry for any confusion I may have caused.
-
+Thanks in advance
 -- 
+Andy Cowling
+Red Eye International
+http://www.redeye.com/
 
-Good Journey, longevity and prosperity to all
+root@lynx:/opt/oracle > df -h /lv01
+Filesystem            Size  Used Avail Use% Mounted on
+/dev/vg01/lv01         30G   17G   13G  58% /lv01
 
-Les Hazelton
+root@lynx:/opt/oracle > lvdisplay  /dev/vg01/lv01
+--- Logical volume ---
+LV Name               /dev/vg01/lv01
+VG Name               vg01
+LV Write Access       read/write
+LV Status             available
+LV #                  1
+# open                1
+LV Size               90 GB
+Current LE            23040
+Allocated LE          23040
+Allocation            next free
+Read ahead sectors    128
+Block device          58:0
+
+root@lynx:/opt/oracle > vgdisplay  vg01          
+--- Volume group ---
+VG Name               vg01
+VG Access             read/write
+VG Status             available/resizable
+VG #                  0
+MAX LV                256
+Cur LV                1
+Open LV               1
+MAX LV Size           255.99 GB
+Max PV                256
+Cur PV                3
+Act PV                3
+VG Size               90.01 GB
+PE Size               4 MB
+Total PE              23043
+Alloc PE / Size       23040 / 90 GB
+Free  PE / Size       3 / 12 MB
+
+root@lynx:/opt/oracle > pvdisplay /dev/sdc5
+--- Physical volume ---
+PV Name               /dev/sdc5
+VG Name               vg01
+PV Size               30.01 GB / NOT usable 1.85 MB [LVM: 260 KB]
+PV#                   3
+PV Status             available
+Allocatable           yes
+Cur LV                1
+PE Size (KByte)       4096
+Total PE              7681
+Free PE               3
+Allocated PE          7678
+
+
+root@lynx:/opt/oracle > pvdisplay /dev/sdd5
+--- Physical volume ---
+PV Name               /dev/sdd5
+VG Name               vg01
+PV Size               30.01 GB / NOT usable 1.85 MB [LVM: 260 KB]
+PV#                   2
+PV Status             available
+Allocatable           yes (but full)
+Cur LV                1
+PE Size (KByte)       4096
+Total PE              7681
+Free PE               0
+Allocated PE          7681
+
+
+root@lynx:/opt/oracle > pvdisplay /dev/sde5
+--- Physical volume ---
+PV Name               /dev/sde5
+VG Name               vg01
+PV Size               30.01 GB / NOT usable 1.85 MB [LVM: 260 KB]
+PV#                   1
+PV Status             available
+Allocatable           yes (but full)
+Cur LV                1
+PE Size (KByte)       4096
+Total PE              7681
+Free PE               0
+Allocated PE          7681
