@@ -1,113 +1,52 @@
-Return-Path: <falcon_lvm@yahoo.com>
-Message-ID: <005c01c05a4d$ee072080$a56cfea9@miguel>
-From: "Falcon" <falcon_lvm@yahoo.com>
-References: <OLEAJMNOEMOMMNEIMMINMENJCBAA.pswartz@digitalrom.com> <20001129211909.C26635@srv.t-online.de>
+Return-Path: <chewie@wookimus.net>
+Date: Thu, 30 Nov 2000 02:44:49 -0600
+From: Chewie <chewie@wookimus.net>
 Subject: Re: [linux-lvm] lvm 0.9 kernel build problems
-Date: Wed, 29 Nov 2000 22:47:09 +0100
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Message-ID: <20001130024449.J1381@wookimus.net>
+References: <OLEAJMNOEMOMMNEIMMINMENJCBAA.pswartz@digitalrom.com> <20001129211909.C26635@srv.t-online.de> <005c01c05a4d$ee072080$a56cfea9@miguel>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="5me2qT3T17SWzdxI"
+Content-Disposition: inline
+In-Reply-To: <005c01c05a4d$ee072080$a56cfea9@miguel>; from falcon_lvm@yahoo.com on Wed, Nov 29, 2000 at 10:47:09PM +0100
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
-Cc: mge@sistina.com
 
-You must to change gcc by kgcc in the Makefile
------ Original Message -----
-From: "Heinz J. Mauelshagen" <Heinz.Mauelshagen@t-online.de>
-To: <linux-lvm@sistina.com>
-Cc: <mge@sistina.com>
-Sent: Wednesday, November 29, 2000 10:19 PM
-Subject: Re: [linux-lvm] lvm 0.9 kernel build problems
+--5me2qT3T17SWzdxI
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
+On Wed, Nov 29, 2000 at 10:47:09PM +0100, Falcon wrote:
+> You must to change gcc by kgcc in the Makefile
 
->
-> I guess that this could be a nasty gcc flaw showing up here.
->
-> Anybody else who tried to patch/compile LVM 0.9 with linux-2.4.0-test10
-> on RH 7.0 who is able to help?
->
->
-> On Wed, Nov 29, 2000 at 09:05:32AM -0600, Patrick Swartz wrote:
-> > Hello,
-> >
-> > Could someone give me some hints to why I get the following error when
-> > trying to build my kernel with the lvm 0.9patches.  This box started out
-as
-> > a RH7.0 with all current RH updates, then installed the stock
-2.4.0-test10
-> > kernel with lvm built into the kernel.  This build worked.  I then
-applied
-> > the two patches for 2.4.0-test10 and they applied cleanly.  I normally
-build
-> > kernels using the following approach -- make dep clean bzImage modules
-> > modules_install, then take care of lilo.  This error happens during the
-> > bzImage stage.
-> >
-> >
-> > lvm.c: In function `lvm_do_vg_extend':
-> > lvm.c:2020: warning: implicit declaration of function
-> > `lvm_do_create_proc_entry_
-> > of_pv'
-> > lvm.c: In function `lvm_do_create_proc_entry_of_lv':
-> > lvm.c:3012: `pde' undeclared (first use in this function)
-> > lvm.c:3012: (Each undeclared identifier is reported only once
-> > lvm.c:3012: for each function it appears in.)
-> > lvm.c: At top level:
-> > lvm.c:3040: warning: type mismatch with previous implicit declaration
-> > lvm.c:2020: warning: previous implicit declaration of
-> > `lvm_do_create_proc_entry_
-> > of_pv'
-> > lvm.c:3040: warning: `lvm_do_create_proc_entry_of_pv' was previously
-> > implicitly
-> > declared to return `int'
-> > lvm.c: In function `lvm_do_create_proc_entry_of_pv':
-> > lvm.c:3046: `pde' undeclared (first use in this function)
-> > lvm.c: At top level:
-> > lvm.c:146: warning: `lvm_short_version' defined but not used
-> > make[3]: *** [lvm.o] Error 1
-> > make[3]: Leaving directory `/usr/src/linux-2.4.0-test10/drivers/md'
-> > make[2]: *** [first_rule] Error 2
-> > make[2]: Leaving directory `/usr/src/linux-2.4.0-test10/drivers/md'
-> > make[1]: *** [_subdir_md] Error 2
-> > make[1]: Leaving directory `/usr/src/linux-2.4.0-test10/drivers'
-> > make: *** [_dir_drivers] Error 2
-> >
-> > Thanks for your help,
-> >
-> > Patrick Swartz
-> >
-> > _______________________________________________
-> > linux-lvm mailing list
-> > linux-lvm@sistina.com
-> > http://lists.sistina.com/mailman/listinfo/linux-lvm
->
-> --
->
-> Regards,
-> Heinz      -- The LVM guy --
->
->
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-=-
->
-> Heinz Mauelshagen                                 Sistina Software Inc.
-> Senior Consultant/Developer                       Bartningstr. 12
->                                                   64289 Darmstadt
->                                                   Germany
-> Mauelshagen@Sistina.com                           +49 6151 7103 86
->                                                        FAX 7103 96
->
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-=-
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
+<rant>
+Is it just me, or does this sound like a Red Hat-like solution?  Gee.
+Let's package an old version of gcc just so we can compile the kernel
+correctly.  We can't simply use a stable gcc as our standard compiler.
+We have to reach back into the bag of the ancients to keep our
+machines running and make it LOOK like we're using the bleeding edge
+with gcc 2.96!
+</rant>
 
+--=20
+Chad "^chewie, gunnarr" Walstrom <chewie@wookimus.net>
+             http://www.wookimus.net/
 
-_________________________________________________________
-Do You Yahoo!?
-Get your free @yahoo.com address at http://mail.yahoo.com
+--5me2qT3T17SWzdxI
+Content-Type: application/pgp-signature
+Content-Disposition: inline
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.0.4 (GNU/Linux)
+Comment: For info see http://www.gnupg.org
+
+iD8DBQE6JhOBDMcLGCBsWv0RApw7AJ9QLozXap1gIirg5Xeb1y7N6PcxMwCfXoel
++V8p7NxBPZd+eX9yUEvv7Yk=
+=qttq
+-----END PGP SIGNATURE-----
+
+--5me2qT3T17SWzdxI--
