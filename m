@@ -1,11 +1,12 @@
-From: Petro <petro@auctionwatch.com>
+From: Andreas Dilger <adilger@turbolabs.com>
 Subject: Re: [linux-lvm] using 160GB IDE drives under linux with LVM.
-Message-Id: <20020207225006.GA16526@auctionwatch.com>
+Message-Id: <20020207160224.Y15496@lynx.turbolabs.com>
 References: <20020207151811.X15496@lynx.turbolabs.com>
     <CBEHLLOPCKAOIAOINGKAAEHFCAAA.jmoser@erc.wisc.edu>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <CBEHLLOPCKAOIAOINGKAAEHFCAAA.jmoser@erc.wisc.edu>
+In-Reply-To: <CBEHLLOPCKAOIAOINGKAAEHFCAAA.jmoser@erc.wisc.edu>;
+    from jmoser@erc.wisc.edu on Thu, Feb 07, 2002 at 04:45:03PM -0600
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,65 +17,28 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Thu Feb  7 16:50:02 2002
+Date: Thu Feb  7 17:03:02 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: linux-lvm@sistina.com
+To: John Moser <jmoser@erc.wisc.edu>
+Cc: linux-lvm@sistina.com
 
-On Thu, Feb 07, 2002 at 04:45:03PM -0600, John Moser wrote:
+On Feb 07, 2002  16:45 -0600, John Moser wrote:
 > Is this specific to 2.4.X kernels?  I'm running 2.5.0, and I just noticed
 > that the 160 gig drives I was using are also partitioned at only 128Gigs.
- 
-    No, it's at the IDE driver level. There are patches to get around
-    this that are being considered for the mainstream kernel (Andrei H.
-    I believe). 
 
-    Brave man running 2.5.0, the dot-zero release of a development
-    kernel. 
- 
-> -----Original Message-----
-> From: linux-lvm-admin@sistina.com [mailto:linux-lvm-admin@sistina.com]On
-> Behalf Of Andreas Dilger
-> Sent: Thursday, February 07, 2002 4:18 PM
-> To: linux-lvm@sistina.com
-> Subject: Re: [linux-lvm] using 160GB IDE drives under linux with LVM.
-> 
-> 
+The IDE stuff didn't go into the 2.5 tree until 2.5.2-something.
+
+> Andreas Dilger wrote:
 > On Feb 07, 2002  22:33 +0100, Terje Kvernes wrote:
 > >   [ Re: IDE 128GB disk limits ]
-> >
-> >   now, I've added SCSI-devices that where > 500GiB with ease into LVM,
-> >   but here I stumble.  is there some easy solution out there that I've
-> >   missed?
-> >
-> >   the box currently runs vanilla 2.4.16, only patched with LVM-1.0.1
-> >   from 26/11.  patches or anything people want to toss at this will be
-> >   highly appreciated.  we have two of these beasts from Maxtor, and
-> >   stand to loose about 60GiB of space, which isn't all that neat.
 > 
 > This is a kernel IDE driver limit.  You need to patch with Andre Hedrik's
 > IDE patches to support IDE devices over this size.
-> 
-> Cheers, Andreas
-> --
-> Andreas Dilger
-> http://sourceforge.net/projects/ext2resize/
-> http://www-mddsp.enel.ucalgary.ca/People/adilger/
-> 
-> 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
-> 
-> 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
 
--- 
-Share and Enjoy. 
+Cheers, Andreas
+--
+Andreas Dilger
+http://sourceforge.net/projects/ext2resize/
+http://www-mddsp.enel.ucalgary.ca/People/adilger/
