@@ -1,19 +1,15 @@
-Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id iB1MKNr27279
-	for <linux-lvm@redhat.com>; Wed, 1 Dec 2004 17:20:23 -0500
-Received: from mxfep01.bredband.com (mxfep01.bredband.com [195.54.107.70])
-	by mx3.redhat.com (8.12.11/8.12.11) with ESMTP id iB1MKC6W026629
-	for <linux-lvm@redhat.com>; Wed, 1 Dec 2004 17:20:14 -0500
-Received: from [192.168.0.3] ([83.226.112.26] [83.226.112.26])
-	by mxfep01.bredband.com with ESMTP
-	id <20041201221959.RCYB18879.mxfep01.bredband.com@[192.168.0.3]>
-	for <linux-lvm@redhat.com>; Wed, 1 Dec 2004 23:19:59 +0100
-Message-ID: <41AE438F.1060201@home.se>
-Date: Wed, 01 Dec 2004 23:19:59 +0100
-From: Andreas Dahlgren <andreas.dahlgren@home.se>
+Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id iB23dnr05768
+	for <linux-lvm@redhat.com>; Wed, 1 Dec 2004 22:39:49 -0500
+Received: from elm2a.cns.ohiou.edu (tornado.cns.ohiou.edu [132.235.51.185])
+	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id iB23dmME016515
+	for <linux-lvm@redhat.com>; Wed, 1 Dec 2004 22:39:48 -0500
+Date: Wed, 01 Dec 2004 22:39:36 -0500
+From: Tim Hibbard <hibbard@ohio.edu>
+Message-ID: <1101958776.41ae8e789ded6@elm2a.cns.ohiou.edu>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] pvcreate uuid
+Subject: [linux-lvm] LVM and umount strangeness
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -24,11 +20,21 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
+Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@redhat.com
 
-Hi
+I am having a weird problem and do not know if it is an LVM or umount problem. 
+I have an lvm volume on /dev/lvm/disks which mount to /home.  When I try to
+umount the /dev/lvm/disks I get an error.  However umount /home works fine.
 
-I want to create a pv with a pv that I want to use but cant find 
-anythink in 1.0.8 that i got on that computer. I know that I can do that 
-in lvm2 is there anything i can do in 1.0.8 or must i upgrade to lvm2?
+I try to do a umount /dev/lvm/disks I get a message "umount: /dev/lvm/disks: not
+mounted" (even though it is).  I would normally have no problem with "umount
+/home" except this is the redhat cluster software which always tries to do
+umount /dev/lvm/disks resulting in a failure.
+
+Kernel linux-2.4.27
+mount-2.11z
+
+Thanks in advance
+
+Tim Hibbard
