@@ -1,10 +1,11 @@
-From: Alasdair G Kergon <agk@uk.sistina.com>
-Subject: Re: [linux-lvm] LVM2: Bad LV-UUID?
-Message-ID: <20021128131714.A22434@uk.sistina.com>
-References: <20021128075428.GX951@lug-owl.de>
-Mime-Version: 1.0
+From: Steven Lembark <lembark@wrkhors.com>
+Subject: Re: [linux-lvm] LVM  &  S/390 Question
+Message-ID: <204850000.1038519434@[192.168.100.3]>
+In-Reply-To: <OF2D2C72C3.FF752A0C-ON85256C7E.006C3E7E@wk.dcx.com>
+References: <OF2D2C72C3.FF752A0C-ON85256C7E.006C3E7E@wk.dcx.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Content-Disposition: inline
-In-Reply-To: <20021128075428.GX951@lug-owl.de>; from jbglaw@lug-owl.de on Thu, Nov 28, 2002 at 08:54:28AM +0100
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,25 +16,32 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Thu Nov 28 07:17:02 2002
+Date: Thu Nov 28 15:42:02 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: linux-lvm@sistina.com
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+To: linux-lvm@sistina.com, lg34@dcx.com
 
-On Thu, Nov 28, 2002 at 08:54:28AM +0100, Jan-Benedict Glaw wrote:
-> I've gone to LVM2 yesterday, which included creating LVM2-style PVs, VGs
-> and one LV. The strange thing for me is that the LV's UUID is
-> "000000-0000-0000-0000-0000-0000-000000", which doesn't really look like
-> it was intended... Just a hint for a possible bug somewhere:-)
 
-This behaviour is correct - the values are like this so as to provide 
-backwards compatibility with LVM1.  The field is an LVM2 extension of
-LVM1's LV number, which is 0 in this particular case.
+-- lg34@daimlerchrysler.com
 
-To see the random UUID values you expected in this field, you'd need
-to update your software use the new metadata format.  
+> We are in the process of installing LVM 1.0.6  on Linux S/390.
+>
+> We installed the patches and are in the process of rebuilding the Kernel.
+> We were on our last step (make modules_install) and we came across the
+> following error condition.
+>
+> Please see below. Any assistance would be greatly appreciate.
+> Respond to lg34@dcx.com.
+> _____________________________________
+>
+> cp ctc.o netiucv.o lcs.o
+> /lib/modules/2.4.9-38custom/kernel/drivers/s390/net/
+               ~~~~~
+The current release is 2.4.19; the version you are running
+is badly out of date. Any reason you have stuck with the
+older kernel version (e.g., custom modules)?
 
-Alasdair
--- 
-agk@uk.sistina.com
+--
+Steven Lembark                               2930 W. Palmer
+Workhorse Computing                       Chicago, IL 60647
+                                            +1 800 762 1582
