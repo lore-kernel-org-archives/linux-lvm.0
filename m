@@ -1,12 +1,10 @@
-Subject: Re: [linux-lvm] Device-mapper status for 2.4.23?
-From: Jord Tanner <jord@indygecko.com>
-In-Reply-To: <20031203093920.GA1833@tykepenguin.com>
-References: 
-	 <Pine.LNX.4.58.0312012240330.17935@h200n1fls22o1048.bredband.comhem.se>
-	 <20031203093920.GA1833@tykepenguin.com>
-Message-Id: <1070460349.5586.2.camel@gecko.indygecko.com>
+From: Patrick Caulfield <caulfield@sistina.com>
+Subject: Re: [linux-lvm] LVM backup server
+Message-ID: <20031203142008.GF1833@tykepenguin.com>
+References: <5EDC40261519564AB9A8760651C77A1D58581F@btiburmail01.bustech.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+In-Reply-To: <5EDC40261519564AB9A8760651C77A1D58581F@btiburmail01.bustech.com>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,25 +15,36 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Dec  3 08:07:01 2003
+Date: Wed Dec  3 08:21:02 2003
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-I'm running standard device-mapper_1.00.07 with stock 2.4.23 from
-kernel.org, and it patched with no trouble at all.
-
-On Wed, 2003-12-03 at 01:39, Patrick Caulfield wrote:
-> On Mon, Dec 01, 2003 at 10:43:07PM +0100, Stefan Wold wrote:
-> > Hi.
-> > 
-> > Any eta of a working device-mapper patch for kernel 2.4.23? Would be great
-> > to be able to upgrade ASAP because of the userland local root exploit in
-> > all kernels < 2.4.23. Either that or patching 2.4.22 for the bug.
-> > 
-> > But I prefer to bump versions instead of messing old ones =)
-> > 
+On Wed, Dec 03, 2003 at 08:36:44AM -0500, George Campbell wrote:
+>    Link: File-List
 > 
-> I'm running lvm2 on 2.4.23 using Joe's patches at people.sistina.com/~thornber
+>    I followed the LVM HOW-TO to install and configure LVM on a Linux server.
+>    I defined a single volume group, a single logical volume, and about 14
+>    separate physical extents on a SAN. It works fine.
+> 
+>    My question is, what steps need to be done beyond the initial rpm install
+>    and activation to configure LVM on a second server that will only be used
+>    for backup if the first server goes down. I don't want to do anything that
+>    would wipe out any data on the logical volume, but I want the volume group
+>    and logical volume to be defined exactly as the original server has them
+>    defined.
+> 
+>    It seems I should NOT do any pvcreates. Can I just do the vgcreate,
+>    followed by the lvcreate, skip doing the mk2fs, and do the mount of the
+>    logical volume?
+
+You don't need to do anything apart from vgscan/vgchange -ay when you need to
+use the volumes, the mount them.
+
+Don't redo vgcreate/lvcreate as that will mangle the metadata for the other
+node.
+
 -- 
-Jord Tanner <jord@indygecko.com>
+
+patrick
