@@ -1,13 +1,13 @@
-Return-Path: <jdomingo@internautas.org>
-Date: Sat, 10 Mar 2001 14:27:47 +0000
-From: =?iso-8859-1?Q?Jos=E9_Luis_Domingo_L=F3pez?= <jdomingo@internautas.org>
+Return-Path: <lda@winux.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Message-ID: <15018.14466.195540.783117@nv.192.168.71.6>
+Date: Sat, 10 Mar 2001 09:21:54 -0500
+From: lvm@winux.com
 Subject: Re: [linux-lvm] LVM X front end
-Message-ID: <20010310142747.A1365@dardhal.mired.net>
+In-Reply-To: <20010310142747.A1365@dardhal.mired.net>
 References: <Pine.LNX.4.20.0103091926210.27453-100000@rdb.linux-help.org>
-Mime-Version: 1.0
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <Pine.LNX.4.20.0103091926210.27453-100000@rdb.linux-help.org>; from ardy@rdb.linux-help.org on Fri, Mar 09, 2001 at 07:30:48PM -0500
+	<20010310142747.A1365@dardhal.mired.net>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -19,48 +19,66 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset="iso-8859-1"
 To: linux-lvm@sistina.com
 
-On Friday, 09 March 2001, at 19:30:48 -0500,
-ardy@rdb.linux-help.org wrote:
+Jos=E9 Luis Domingo L=F3pez writes:
+>> Is there any other X front ends for LVM maintenance other than the o=
+ne on
+>> freshmeat.net?
+>
+> This is a recurring idea that comes to my mind very often: having a
+> reasonably good user interface on top on lvm tools would be nice.
+> ...
+> Moreover, last Friday I saw the graphical user interface that Veritas=
 
-> Is there any other X front ends for LVM maintenance other than the one on
-> freshmeat.net?
-> 
-> As an aside, I emailed the maintainer of lvm-viewer, he hasn't updated the
-> code since last year, and told me he had no time for further development.
-> It'd be a shame to have that code go stale, I don't code so I couldn't
-> offer to take it over.
-> 
-This is a recurring idea that comes to my mind very often: having a
-reasonably good user interface on top on lvm tools would be nice. But this
-should be a must, of course.
+> Volume Managar ships on Enterprise and higher-priced SCO Unixware
+> licences. The UI seemed (IMHO) hardly useful,...
 
-Moreover, last Friday I saw the graphical user interface that Veritas
-Volume Managar ships on Enterprise and higher-priced SCO Unixware
-licences. The UI seemed (IMHO) hardly useful, and taking into account that
-volume mangement is not precisely that kind of thing newbies tend to do,
-command line utilities are the best choice for now.
+I used the Veritas software for a couple of years.  It was horrible.
+The manuals were about 5 inches (13 cm) thick and were a morass of
+self-referential jargon.  To understand anything, you had to understand=
 
-I also considered making a GUI frontend, but programming is not my best
-skill, and available time is not on excess. Maybe this kind of frontends
-is what distro-makers should do, ease the learning curve for newbies. The
-community provides the functionality, and distro-makers provide the GUI.
-There have plenty of GTK/Qt programmers, project management skills and
-money, and a product to sell, which could gain market share if they
-focused on this kind of things (apart from services, this is what RedHat,
-SuSe, Mandrake and so on should do, IMHO).
+something else first.  This was recursive.  I would frequently suffer
+from brain-stack overflow and I'd have to reboot my head.
 
-Maybe what would be most interesting is a frontend and/or script to allow
-simultaneous resizing of the filesystem and the underlying LV. Or there is
-already such a program ?
+Their command line interface was complex to the point of absurdity but
+their X interface was worse.  It made remote administration dreadfully
+slow on my remote installations since I had to use PPP over a dialed
+line to get into the remote facilities.  Any operation could take
+several minutes.=20
 
-Greetings, and thank you all for this great piece of software called LVM.
+> and taking into account that volume mangement is not precisely that
+> kind of thing newbies tend to do, command line utilities are the
+> best choice for now.
 
--- 
-Jos� Luis Domingo L�pez
-Linux Registered User #189436     Debian GNU/Linux Potato (P166 64 MB RAM)
- 
-jdomingo EN internautas PUNTO org  => � Spam ? Atente a las consecuencias
-jdomingo AT internautas DOT   org  => Spam at your own risk
+In some shops, everybody is a newbie.  I was a newbie in my first shop
+(20+ years ago) but with the help of friends and e-mail (carried by UUC=
+P,
+no Internet) I could get the answers I needed to climb the learning cur=
+ve.
+
+In my opinion, the Linux LVM administrative interface is pretty well
+done.  I was delighted to find the command line LVM interface to be
+relatively clean, simple, and overlaid with a minimum of jargon.
+At first glance, the command line arguments are a bit inconsistent
+(e.g., when to use 'lv0' vs '/dev/vg0/lv0') but this is not such a
+big problem given that most commands respond well to '--help' or 'man'.=
+
+
+With faster remote access becoming more common, it's feasible to
+consider using a graphical interface to the LVM of a remote system.
+However, in that vein, I wouldn't divert from development and
+enhancement of the core system for even one day.  As with most
+"infrastructure" components, stability, reliability, and consistency
+are of prime importance and have to come first.  The "pretty wrappers"
+around that core can come later.
+
+It's not yet a mature system but it's being pursued by a group of smart=
+,
+dedicated people who are genuinely interested in finding and fixing pro=
+blems.
+This is the most important ingredient and Linux LVM has it in abundance=
+
+
+Larry
