@@ -1,10 +1,6 @@
-From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] Segmentation fault in vgscan
-Message-ID: <20030822130145.I8426@sistina.com>
-References: <20030822122658.H8426@sistina.com> <E19q9VM-0002wU-GF@server2.hostpoint.ch>
-Mime-Version: 1.0
-In-Reply-To: <E19q9VM-0002wU-GF@server2.hostpoint.ch>; from markus@markus.org on Fri, Aug 22, 2003 at 12:50:36PM +0200
-Content-Transfer-Encoding: quoted-printable
+From: MAILER-DAEMON@mail.lineo.com
+Message-Id: <E19qAEm-0007uo-00@hermes.sistina.com>
+Subject: [linux-lvm] failure notice
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,205 +11,49 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Fri Aug 22 06:09:01 2003
+Date: Fri Aug 22 06:39:01 2003
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="iso-8859-1"
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Fri, Aug 22, 2003 at 12:50:36PM +0200, Markus Baertschi wrote:
->=20
-> Heinz,
->=20
-> I'm pretty sure I've tested with 1.0.7. Look at the lines
+Hi. This is the qmail-send program at mail.lineo.com.
+I'm afraid I wasn't able to deliver your message to the following addresses.
+This is a permanent error; I've given up. Sorry it didn't work out.
 
-Well, I derived the line numbers from the respective sources.
+<andersen@lineo.com>:
+Sorry, no mailbox here by that name. (#5.1.1)
 
->=20
-> >> lblsapq00:~ # gdb ./LVM/1.0.7/tools/vgscan
->   ...
-> >> (gdb) run
-> >> Starting program: /root/./LVM/1.0.7/tools/vgscan
->=20
-> The other problem is that this is at a customer site on
-> production machines. I can test the next time I'm there
-> and got machine time to do some testing. This will happen
-> as soon as the SAN support guys come back to me to solve
-> the undelying problem (disks visible twice).
+--- Below this line is a copy of the message.
 
-Ok.
+Return-Path: <linux-lvm@sistina.com>
+Received: (qmail 931 invoked by uid 129); 22 Aug 2003 11:37:43 -0000
+Received: from linux-lvm@sistina.com by apollo.lineo.com by uid 126 with qmail-scanner-1.11 (uvscan: v4.2.40/v4270. spamassassin: 2.52. . Clear:SA:1(5.6/5.0):. Processed in 21.232446 secs); 22 Aug 2003 11:37:43 -0000
+X-Spam-Status: Yes, hits=5.6 required=5.0
+Received: from unknown (HELO JJHWANG) ([221.149.53.4])
+          (envelope-sender <linux-lvm@sistina.com>)
+          by mail.lineo.com (qmail-ldap-1.03) with SMTP
+          for <andersen@lineo.com>; 22 Aug 2003 11:37:22 -0000
+From: <linux-lvm@sistina.com>
+To: <andersen@lineo.com>
+Subject: Re: Your application
+Date: Fri, 22 Aug 2003 20:37:18 +0900
+X-MailScanner: Found to be clean
+Importance: Normal
+X-Mailer: Microsoft Outlook Express 6.00.2600.0000
+X-MSMail-Priority: Normal
+X-Priority: 3 (Normal)
+MIME-Version: 1.0
+Content-Type: multipart/mixed;
+	boundary="_NextPart_000_022A3EDF"
 
-Regards,
-Heinz    -- The LVM Guy --
+This is a multipart message in MIME format
 
+--_NextPart_000_022A3EDF
+Content-Type: text/plain;
+	charset="iso-8859-1"
+Content-Transfer-Encoding: 7bit
 
->=20
-> Markus
->=20
->=20
-> On Fri, 22 Aug 2003 12:26:58 +0200, Heinz J . Mauelshagen wrote:
->=20
-> >Markus,
->=20
-> >LVM 0.9 had the strncmp() call in line 148, 1.0.7 has it in line 155
-> >which makes me believe that the output below belongs to a 0.9 run.
->=20
-> >Please retest with 1.0.7 which avoids hitting the NULL pointer bug.
->=20
-> >Regards,
-> >Heinz    -- The LVM Guy --
->=20
->=20
-> >On Thu, Aug 21, 2003 at 10:07:57PM +0200, Markus Baertschi wrote:
-> >>=20
-> >> I've got a strange problem with LVM. My environment is four
-> >> IBM x440 servers (2 CPU, 2G memory) interconnected with two
-> >> fcs adapters and two switches to a FastT700 SAN storage array.
-> >>=20
-> >> Due to circumstances we are trying to understand the FCS drivers
-> >> did show our disk devices twice (once per adapter). This is a proble=
-m
-> >> on our part, but vgscan should terminate with an error message
-> >> instead of a segfault.
-> >>=20
-> >> We've started out with 0.98beta2 (what came with out SuSE 7). The
-> >> problem is the same with the latest tarball (1.0.7) from sistina.
-> >>=20
-> >> Markus
-> >>=20
-> >> Some output from vgscan:
-> >> <1> vg_check_exist_all_vg -- before vg_check_exist ( sapqvg)
-> >> <22> vg_check_exist -- CALLED with VG: sapqvg
-> >> <333> vg_check_name -- CALLED with VG: sapqvg
-> >> <4444> lvm_check_chars -- CALLED with name: "sapqvg"
-> >> <4444> lvm_check_chars -- LEAVING with ret: 0
-> >> <333> vg_check_name -- LEAVING with ret: 0
-> >> <22> vg_check_exist -- before pv_read_all_pv_of_vg
-> >> <333> pv_read_all_pv_of_vg -- CALLED with vg_name: "sapqvg"
-> >> <4444> vg_check_name -- CALLED with VG: sapqvg
-> >> <55555> lvm_check_chars -- CALLED with name: "sapqvg"
-> >> <55555> lvm_check_chars -- LEAVING with ret: 0
-> >> <4444> vg_check_name -- LEAVING with ret: 0
-> >> <4444> pv_read_all_pv -- CALLED
-> >> <4444> pv_read_all_pv -- avoiding multiple entries in case of MD; np=
-: 0
-> >> <4444> pv_read_all_pv -- LEAVING with ret: 0
-> >> <4444> pv_check_consistency -- CALLED
-> >> <55555> pv_check_name -- CALLED with "/dev/sdb1"
-> >> <666666> lvm_check_chars -- CALLED with name: "/dev/sdb1"
-> >> <666666> lvm_check_chars -- LEAVING with ret: 0
-> >> <666666> lvm_check_dev -- CALLED
-> >> <7777777> lvm_check_partitioned_dev -- CALLED
-> >> <88888888> lvm_get_device_type called
-> >> <88888888> lvm_get_device_type leaving with 1
-> >> <7777777> lvm_check_partitioned_dev -- LEAVING with ret: TRUE
-> >> <666666> lvm_check_dev -- LEAVING with ret: 1
-> >> <55555> pv_check_name -- LEAVING with ret: 0
-> >> <55555> vg_check_name -- CALLED with VG: sapqvg
-> >> <666666> lvm_check_chars -- CALLED with name: "sapqvg"
-> >> <666666> lvm_check_chars -- LEAVING with ret: 0
-> >> <55555> vg_check_name -- LEAVING with ret: 0
-> >> <55555> lvm_check_dev -- CALLED
-> >> <666666> lvm_check_partitioned_dev -- CALLED
-> >> <7777777> lvm_get_device_type called
-> >> <7777777> lvm_get_device_type leaving with 1
-> >> <666666> lvm_check_partitioned_dev -- LEAVING with ret: TRUE
-> >> <55555> lvm_check_dev -- LEAVING with ret: 1
-> >> <55555> pv_check_new -- CALLED
-> >> <55555> pv_check_new -- LEAVING with ret: 0
-> >> <4444> pv_check_consistency -- LEAVING with ret: 0
-> >> <4444> pv_read_uuidlist -- CALLED with /dev/sdb1
-> >> <4444> lvm_check_uuid -- LEAVING with ret: 0
-> >> <333> lvm_check_uuid -- LEAVING with ret: 0
-> >> <22> lvm_check_uuid -- LEAVING with ret: -1
-> >> <1> lvm_check_uuid -- LEAVING with ret: -1
-> >> <> lvm_check_uuid -- LEAVING with ret: -1
-> >>  ... (repeats 250 times) ...
-> >> <> lvm_check_uuid -- LEAVING with ret: -1
-> >> <> pv_read_uuidlist -- LEAVING with ret: 2
-> >> Segmentation fault
-> >>=20
-> >> lblsapq00:~ # gdb ./LVM/1.0.7/tools/vgscan
-> >> GNU gdb 5.0
-> >> Copyright 2000 Free Software Foundation, Inc.
-> >> GDB is free software, covered by the GNU General Public License, and=
- you are
-> >> welcome to change it and/or distribute copies of it under certain co=
-nditions.
-> >> Type "show copying" to see the conditions.
-> >> There is absolutely no warranty for GDB.  Type "show warranty" for d=
-etails.
-> >> This GDB was configured as "i386-suse-linux"...
-> >> (gdb) run
-> >> Starting program: /root/./LVM/1.0.7/tools/vgscan
-> >> vgscan -- reading all physical volumes (this may take a while...)
-> >>=20
-> >> Program received signal SIGSEGV, Segmentation fault.
-> >> 0x400c97a3 in strncmp () from /lib/libc.so.6
-> >> (gdb) bt
-> >> #0  0x400c97a3 in strncmp () from /lib/libc.so.6
-> >> #1  0x400337f0 in pv_read_all_pv_of_vg (vg_name=3D0x804dc34 "sapqvg"=
-, pv=3D
-> >> 0xbfffe948, reread=3D1)
-> >>     at pv_read_all_pv_of_vg.c:148
-> >> #2  0x40038ac1 in vg_check_exist (vg_name=3D0x804dc34 "sapqvg") at=20
-> >> vg_check_exist.c:59
-> >> #3  0x40038da2 in vg_check_exist_all_vg () at vg_check_exist.c:128
-> >> #4  0x8049351 in main (argc=3D1, argv=3D0xbfffeb64) at vgscan.c:188
-> >> #5  0x4006cc5f in __libc_start_main () from /lib/libc.so.6
-> >> (gdb) quit
-> >>=20
-> >>=20
-> >>=20
-> >>=20
-> >>=20
-> >>=20
-> >> --
-> >>   Markus Baertschi             Phone: ++41 (21) 807 1677
-> >>   Bas du Ross=E9 14b             Fax  : ++41 (21) 807 1678
-> >>   CH-1163, Etoy                Email: markus@markus.org
-> >>   Switzerland                  Homepage: www.markus.org
-> >>=20
-> >>=20
-> >>=20
-> >> _______________________________________________
-> >> linux-lvm mailing list
-> >> linux-lvm@sistina.com
-> >> http://lists.sistina.com/mailman/listinfo/linux-lvm
-> >> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
->=20
-> >linux-lvm mailing list
-> >linux-lvm@sistina.com
-> >http://lists.sistina.com/mailman/listinfo/linux-lvm
-> >read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
->=20
->=20
-> --
->   Markus Baertschi             Phone: ++41 (21) 807 1677
->   Bas du Ross=E9 14b             Fax  : ++41 (21) 807 1678
->   CH-1163, Etoy                Email: markus@markus.org
->   Switzerland                  Homepage: www.markus.org
->=20
->=20
->=20
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
-
-*** Software bugs are stupid.
-    Nevertheless it needs not so stupid people to solve them ***
-
-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D=
--=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=
-=3D-=3D-
-
-Heinz Mauelshagen                                 Sistina Software Inc.
-Senior Consultant/Developer                       Am Sonnenhang 11
-                                                  56242 Marienrachdorf
-                                                  Germany
-Mauelshagen@Sistina.com                           +49 2626 141200
-                                                       FAX 924446
-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D=
--=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=
-=3D-=3D-
+See the attached file for details
+--_NextPart_000_022A3EDF--
