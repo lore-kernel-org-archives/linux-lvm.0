@@ -1,9 +1,11 @@
-Message-ID: <63026.212.105.217.4.1000304636.squirrel@hactar.dnsalias.net>
-Date: Wed, 12 Sep 2001 16:23:56 +0200 (CEST)
-From: "Julian Glashoff" <helldog@gmx.net>
+From: Ed Tomlinson <tomlins@cam.org>
+Subject: Re: [linux-lvm] LVM
+Date: Wed, 12 Sep 2001 12:07:41 -0400
+References: <NBBBJHKIOKPKOGOEPEDPKEDNDNAA.stuart@bh90210.net> <3B9F4B72.9050801@st-peter.stw.uni-erlangen.de> <3B9F66BE.DFE69112@carolina.rr.com>
+In-Reply-To: <3B9F66BE.DFE69112@carolina.rr.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: [linux-lvm] Re: Problem: "only found 768 of 769 LEs for LV /dev/vg00/lvol1"
+Message-Id: <20010912160743.5D20E4326@oscar.casa.dyndns.org>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,71 +18,21 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@sistina.com
+To: linux-lvm@sistina.com, Jason Edgecombe <jedgecombe@carolina.rr.com>
 
-I created the volume group with version 1.0.1-rc1 and a patched kernel.
-
->Could you tell me which release of LVM you used to create the volume
->group in the first place please ?
+On September 12, 2001 09:44 am, Jason Edgecombe wrote:
+> hi,
 >
->- Joe
+>   I must ask what filesystem /boot is using. If you're using reiserfs,
+> then you MUST mount with the "notail" option for /boot. If you're using
+> ext2 of reiserfs with "notail" then I would recommend the you move /boot
+> to before the 1024th cylinder. (I like to always put /boot at the
+> beginning of the drive.)
 >
->On Wed, Sep 12, 2001 at 11:43:10AM +0200, Julian Glashoff wrote:
->> Hello,
->>
->> I have a problem with my volume group:
->> I was using kernel 2.4.7 with LVM 1.0.1-rc1.
->> I tried to extend a logical volume (/dev/vg00/lvol2) by 4Gig and got the
->> error message "No such device or address in kernel".
->> Then I tried to extend /dev/vg00/lvol1 by 1 extent just to test if I was
->> able to change volumes at all whereupon the system completely crashed.
->> On the next reboot I got the following message from vgscan:
->> -------------------------------------------------------------------
->> # vgscan
->> vgscan -- reading all physical volumes (this may take a while...)
->> vgscan -- found inactive volume group "vg00"
->> vgscan -- only found 768 of 769 LEs for LV /dev/vg00/lvol1 (1)
->> vgscan -- ERROR "vg_read_with_pv_and_lv(): allocated LE of LV" can't get
->> data of volume group "vg00" from physical volume(s)
->> vgscan -- ERROR "vg_read_with_pv_and_lv(): allocated LE of LV" creating
->> "/etc/lvmtab" and "/etc/lvmtab.d"
->> -------------------------------------------------------------------
->> And now I am unable to access the volume group.
->> Then I tried to restore the backups with the following result:
->> -------------------------------------------------------------------
->> # vgcfgrestore -n vg00 -l
->> vgcfgrestore -- ERROR: different structure size stored in
->> "/etc/lvmconf/vg00.conf" than expected in file vg_cfgrestore.c [line 120]
->> vgcfgrestore -- ERROR "vg_cfgrestore(): read" restoring volume group
->"vg00"
->> -------------------------------------------------------------------
->> The documentation says this would be caused by an incorrect LVM version.
->> I was using 1.0.1-rc1 and have tried to restore the backups with every
->> version from 0.9.1-beta1 up to 1.0.1-rc2 and all versions give me the
->same
->> error.
->>
->> Is there anything I can do to restore my volume group?
->>
->>
->> http://hactar.dnsalias.net/lvm/pvdata.hda5
->> http://hactar.dnsalias.net/lvm/pvdata.hda7
->> http://hactar.dnsalias.net/lvm/pvdata.hdc2
->>
->> --
->> Julian Glashoff
->> <helldog@gmx.net>
->>
->>
->>
->> _______________________________________________
->> linux-lvm mailing list
->> linux-lvm@sistina.com
->> http://lists.sistina.com/mailman/listinfo/linux-lvm
->> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
+> Sincerely,
+> Jason Edgecombe
 
+This used to be true.  Recient versions of lilo understand reiserfs tails, so you 
+can mount with tails IF you have an up to date LILO.
 
-
---
-Julian Glashoff
-<helldog@gmx.net>
+Ed Tomlinson
