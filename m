@@ -1,12 +1,11 @@
 Return-Path: <root@srv.sistina.com>
-Date: Tue, 8 May 2001 09:36:06 +0000
+Date: Tue, 8 May 2001 09:45:49 +0000
 From: "Heinz J. Mauelshagen" <Mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] Question about LVM
-Message-ID: <20010508093606.A31443@sistina.com>
-References: <200105080129.f481TB104985@mail5.dreamwiz.com>
+Subject: Re: [linux-lvm] LVM questions & problems.
+Message-ID: <20010508094549.B31443@sistina.com>
+References: <989197513.8109.6.camel@localhost> <20010507102844.B25752@sistina.com> <989251023.1153.5.camel@localhost>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <200105080129.f481TB104985@mail5.dreamwiz.com>; from juspeace@dreamwiz.com on Tue, May 08, 2001 at 10:29:06AM +0900
+In-Reply-To: <989251023.1153.5.camel@localhost>; from raheesom@navpoint.com on Mon, May 07, 2001 at 11:57:03AM -0400
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -18,120 +17,91 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Tue, May 08, 2001 at 10:29:06AM +0900, ��ȫ�� wrote:
-> HI! Heinz Manelshagen
+On Mon, May 07, 2001 at 11:57:03AM -0400, Rupert Heesom wrote:
+> On 07 May 2001 10:28:44 +0000, Heinz J. Mauelshagen wrote:
+> > On Sun, May 06, 2001 at 09:05:13PM -0400, Rupert Heesom wrote:
+> > > I'm practicing doing some LVM commands, and am coming up with some
+> > > problems -
+> > > 
+> > > Most disconcerting is that when I try to create a directory in the LV, I
+> > > get the following error - (this does not happen all the time, but almost
+> > > all the time 99%) -
+> > > 
+> > > [root@localhost Tmp]# mkdir test1
+> > > mkdir: cannot create directory `test1': Input/output error
+> > 
+> > You didn't metion, if the filesystem is still in a sane state.
+> > 
+> > Did you check your syslog for "accessess beyond the end of the device"
+> > which indicate fs related problems?
 > 
-> I am hongseok Lee.
-> I am a student working on sungkyunkwan Univ. in korea.
-> I tried to construct Logical Volume Management (LVM) in my PC,
->  but I don't know how I can't do anymore.
+> Well, looking at my syslog after mounting my lvol, I saw the following
+> msg -
 > 
+> "May  7 11:51:26 localhost kernel: EXT2-fs warning: mounting fs with
+> errors, running e2fsck is recommended"
+> 
+> I also saw previous errors which you asked about (lots of them) -
+> 
+> "itmap: Cannot read inode bitmap - block_group = 3, inode_bitmap = 98307
+> May  6 14:44:13 localhost kernel: attempt to access beyond end of
+> device...."
+> 
+> I have realised what my base problem is.... I have reduced the LV size,
+> but not reduced the Ext2 filesystem.  For some reason I thought that
+> resizing the LV was sufficient.
 
-Hi,
+It likely will be at some point in time in the future.
+Triggering the fs resize when a LN gets resized is a TODO item :-)
 
-the output shows that you were able to create a volume group.
+> Looking further at the HOWTO, and other
+> web docs has enlightened me further.
+> 
+> It seems I will try to learn how to use teh e2fsadm util.  BTW one of
+> the utils seems to be commercial from Powerquest.  I have the v4 of
+> Partition Magic already.  I know it resizes ext2 filesystems, but as far
+> as I know needs to be run from within windows (it's been a long time
+> since I've used it last).  Are the utils such as e2fsadm sufficient /
+> good enough without the commercial PM util?
 
-It looks like you don't have the LVM driver set up properly though
-which is necessary to activate your volume group in order to proceed
-and make logical volumes.
+You need to get the resize2fs tool (by Ted Ts'o and Powerquest) in order
+to run e2fsadm.
+
+e2fsadm basically is a wrapper which runs either
+
+   e2fsck;lvextend;resize2fs
+
+or
+
+   e2fsck;resize2fs;lvreduce
 
 
-Did you follow the instructions in PATCHES/README contained in the LVM
-tarball to patch your kernel and build the driver?
+resize2fs might already be contained in your distribution.
 
-Did you activate the LVM driver in the kernel configuration?
+If not so, use for eg. ftpsearch.lycos.com to figure piles of spaces
+where to get it.
 
-It doesn't matter in principle if you choose driver or module during
-kernel configuration.
+> 
+> -- 
+> regs
+> rupert
+> 
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@sistina.com
+> http://lists.sistina.com/mailman/listinfo/linux-lvm
 
-If you choosed module: did you load the module or configured the module
-                       loader to do it?
-
-
-BTW: I recommend that you get the actual LVM software 0.9.1 Beta 7 from
-     www.sistina.com/lvm before you retry, because it fixes some bugs
-     you otherwise would still have with 0.9.1 Beta 5.
+-- 
 
 Regards,
 Heinz    -- The LVM Guy --
 
-
-> First I pactched Linux-version 2.4.0 and uploaded LVM 0.9.1-Beta5.
-> It is successfully.
-> So I maked 3 Physical volume. (/dev/hdb1, /dev/hdb2, /dev/hdb3)
-> And I tried to make VG, But it is not available.
-> I think PV's state are inactive is primary problem.
-> Therfore I can't do any progress.
-> How can I change this PV state is active and VG state is available?
-> Plz, check next text result and give me some advice.
-> I red LVM HOWTO. But there is no describe this problem.
-> 
-> - RESULT
-> 
-> pvscan.txt
-> pvscan -- reading all physical volumes (this may take a while...)
-> pvscan -- inactive PV "/dev/hdb1" of VG "group1" [3.84 GB / 3.84 GB free]
-> pvscan -- inactive PV "/dev/hdb2" of VG "group1" [3.84 GB / 3.84 GB free]
-> pvscan -- inactive PV "/dev/hdb3" of VG "group1" [5.03 GB / 5.03 GB free]
-> pvscan -- total: 3 [12.72 GB] / in use: 3 [12.72 GB] / in no VG: 0 [0]
-> 
-> 
-> pvdisplay_hdb1.txt
-> --- Physical volume ---
-> PV Name               /dev/hdb1
-> VG Name               group1
-> PV Size               3.85 GB / NOT usable 1.47 MB [LVM: 124 KB]
-> PV#                   1
-> PV Status             NOT available
-> Allocatable           yes
-> Cur LV                0
-> PE Size (KByte)       4096
-> Total PE              984
-> Free PE               984
-> Allocated PE          0
-> PV UUID               FSebAC-CooV-3wl2-bAcm-k17y-vUFD-zbByTu
-> 
-> 
-> vgscan.txt
-> vgscan -- reading all physical volumes (this may take a while...)
-> vgscan -- found inactive volume group "group1"
-> vgscan -- "/etc/lvmtab" and "/etc/lvmtab.d" successfully created
-> vgscan -- WARNING: This program does not do a VGDA backup of your volume group
-> 
-> 
-> vgdisplay.txt
-> --- Volume group ---
-> VG Name               group1
-> VG Access             read/write
-> VG Status             NOT available/resizable
-> VG #                  0
-> MAX LV                256
-> Cur LV                0
-> Open LV               0
-> MAX LV Size           255.99 GB
-> Max PV                256
-> Cur PV                3
-> Act PV                3
-> VG Size               12.72 GB
-> PE Size               4 MB
-> Total PE              3256
-> Alloc PE / Size       0 / 0
-> Free  PE / Size       3256 / 12.72 GB
-> VG UUID               3i0sjU-p0iT-azB5-FKeI-lNss-AB6G-uDmolp
-> 
-> 
-> 
-> 
-> 
-> 
-> -------------------------------------------------
-> DreamWiz Free Mail @ http://www.dreamwiz.com/
-> DreamSearch Click the world!!! http://search.dreamwiz.com/
-> 
-
+*** Software bugs are stupid.
+    Nevertheless it needs not so stupid people to solve them ***
 
 =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
