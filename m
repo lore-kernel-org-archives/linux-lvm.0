@@ -1,11 +1,14 @@
-Return-Path: <root@srv.sistina.com>
-Date: Wed, 21 Feb 2001 11:19:44 +0000
-From: "Heinz J. Mauelshagen" <Mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] Stripe size of 2K allowed?
-Message-ID: <20010221111944.E24951@srv.sistina.com>
-References: <20010220130303.A505@jadzia> <20010221085013.A368@66bassett.freeserve.co.uk>
-Mime-Version: 1.0
-In-Reply-To: <20010221085013.A368@66bassett.freeserve.co.uk>; from joe@66bassett.freeserve.co.uk on Wed, Feb 21, 2001 at 08:50:13AM +0000
+Return-Path: <lda@winux.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Message-ID: <14995.51952.832793.443201@nv.winux.com>
+Date: Wed, 21 Feb 2001 09:04:32 -0500
+From: lvm@winux.com
+Subject: Re: [linux-lvm] snapshot of Reiserfs
+In-Reply-To: <20010221085959.C568@tykepenguin.com>
+References: <20010220224907.D21281@srv.sistina.com>
+	<14995.16871.694699.166774@nv.winux.com>
+	<20010221085959.C568@tykepenguin.com>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -18,26 +21,40 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Wed, Feb 21, 2001 at 08:50:13AM +0000, Joe Thornber wrote:
-> On Tue, Feb 20, 2001 at 01:03:03PM -0800, Jos Visser wrote:
-> > Hi,
-> > 
-> > I was trying to create a striped lvol with a stripe size of 2K. This
-> > failed due to an illegal parameter:
-> > 
-> > # lvcreate -i 2 -I 2 -L 100 vg01
-> > lvcreate -- invalid stripe size 2
-> > 
-> > It seems that stripe sizes of 1K and 2K are not allowed, although the
-> > lvcreate manual page says that the stripe size is 2^n with 0<=n<=7.
-> > 
+Patrick Caulfield writes:
+> From: Patrick Caulfield <caulfield@sistina.com>
+> Sender: linux-lvm-admin@sistina.com
+> To: linux-lvm@sistina.com
+> Subject: Re: [linux-lvm] snapshot of Reiserfs
+> Date: Wed, 21 Feb 2001 08:59:59 +0000
 > 
-> This has been changed so the minimum size is the page size of your
-> system.  I'll update the man page.
+> On Tue, Feb 20, 2001 at 11:19:51PM -0500, lvm@winux.com wrote:
+> > Heinz J. Mauelshagen writes:
+> > > ... Linux Logical Volume Manager 0.9.1 Beta 5 is available now ...
+> > > ...
+> > > Please help us to stabilize for 0.9.1 ASAP and test is as much as possible!
+> > 
+> > I am using LVM 0.9.1 beta 5 on Linux 2.4.1 with Reiserfs.
+> > I have applied both of the following patches:
+> > 
+> > 0.9.1_beta5/PATCHES/lvm-0.9.1_beta5-2.4.1.patch
+> > 0.9.1_beta5/PATCHES/linux-2.4.1-VFS-lock.patch
+> > 
+> > Snapshots created when the filesystem is active cannot be mounted.
+> > If I `umount' the filesystem before creating the snapshot, all is well.
+> 
+> Did you remember to uncomment LVM_VFS_ENHANCEMENT in lvm.c ?
+> 
+> patrick
 
-I already did that, Joe.
+Bingo!  That was the problem!  Many thanks!
 
-Heinz
+Shouldn't that change be included in the VFS-lock patch?
+
+In fact, why are these separate patches?  Shouldn't they
+eventually be "the standard" and find their way into the
+stock kernel?  It's arguably the correct behavior.
+
+Larry
