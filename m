@@ -1,7 +1,7 @@
-From: Tamara_Helenius@SonyMusic.com
-Message-ID: <OF8703FA93.42228EDC-ON85256C52.001BCF31-85256C52.001BCF31@sonymusic.com>
-MIME-Version: 1.0
-Subject: [linux-lvm] Tamara Helenius is on vacation.
+From: "Peter Hoeg" <peterhoeg@hotmail.com>
+Mime-Version: 1.0
+Message-ID: <F13FRaqbC8wSA1XvpFV00000005@hotmail.com>
+Subject: [linux-lvm] lvm2 support in kernel - regular lvm on disks
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -12,20 +12,27 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Oct 14 00:12:13 2002
+Date: Mon Oct 14 00:44:58 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; format=flowed; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-I will be out of the office starting  10/12/2002 and will not return until
-10/28/2002.
+hi,
+
+have searched through the archives at sistina.com as well as google, but yet 
+to no avail.
+
+does anybody know if it is possible to boot a LVM2 enabled kernel (say the 
+latest 2.5.42-ac1) and use that with a machine with regular LVM (1.0.5) 
+created volumes? also, if i install the lvm2 tool for debian, they are 
+conflicting with my lvm1 tools, so are the new tools backwards compatible?
+
+thank you very much in advace - please do cc me on any answers,
+peter
 
 
-I am on vacation. I will be back in the office on Tuesday, October 29th.
 
-If this is an emergency, please contact Hugh Joseph at 212 833 5824 or
-Hugh_Joseph@sonymusic.com
-
-Thank You.
-Tamara
+_________________________________________________________________
+MSN Photos is the easiest way to share and print your photos: 
+http://photos.msn.com/support/worldwide.aspx
