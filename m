@@ -1,8 +1,8 @@
-Return-Path: <noc@industrysuppliers.com>
-Message-ID: <25B9BEF7071AD511ADF000D0B74753B0018DAE@MAIL>
-From: Lionel COTTIN <noc@industrysuppliers.com>
+Return-Path: <Evan.Day@SUMMITSITE.COM>
+Message-ID: <DC5B1A21E9E7D211B0020090273AD628242BCF@summit15.corvallis.summit>
+From: "Day, Evan" <Evan.Day@SUMMITSITE.COM>
 Subject: RE: [linux-lvm] Problems compiling 2.4.4
-Date: Thu, 3 May 2001 01:19:23 +0200 
+Date: Wed, 2 May 2001 16:20:39 -0700 
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 Sender: linux-lvm-admin@sistina.com
@@ -18,6 +18,19 @@ List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="iso-8859-1"
 To: "'linux-lvm@sistina.com'" <linux-lvm@sistina.com>
+
+Actually, the LVM code is part of the "md" subsystem and the LVM =
+options in
+the kernel are under the MD section; you can't have LVM without having =
+base
+md (independent of the RAID code).
+
+-----Original Message-----
+From: Lionel COTTIN [mailto:noc@industrysuppliers.com]
+Sent: Wednesday, May 02, 2001 4:19 PM
+To: 'linux-lvm@sistina.com'
+Subject: RE: [linux-lvm] Problems compiling 2.4.4
+
 
 Hi,
 
@@ -86,6 +99,10 @@ email :  emanuel.quass@temic.com
 In a world without fences and walls,=20
 who needs Windows and Gates?
 ++++++++++++++++++++++++++++++++
+_______________________________________________
+linux-lvm mailing list
+linux-lvm@sistina.com
+http://lists.sistina.com/mailman/listinfo/linux-lvm
 _______________________________________________
 linux-lvm mailing list
 linux-lvm@sistina.com
