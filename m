@@ -1,18 +1,24 @@
-Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j27KVIn03602
-	for <linux-lvm@redhat.com>; Mon, 7 Mar 2005 15:31:18 -0500
-Received: from marketview.co.nz (210-54-92-188.ipnets.xtra.co.nz
-	[210.54.92.188])
-	by mx3.redhat.com (8.12.11/8.12.11) with ESMTP id j27KVCMW007201
-	for <linux-lvm@redhat.com>; Mon, 7 Mar 2005 15:31:13 -0500
-Message-ID: <422CBA04.3000002@vilain.net>
-Date: Tue, 08 Mar 2005 09:31:00 +1300
-From: Sam Vilain <sam@vilain.net>
+Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j27MoWn12146
+	for <linux-lvm@redhat.com>; Mon, 7 Mar 2005 17:50:32 -0500
+Received: from pastinakel.tue.nl (pastinakel.tue.nl [131.155.2.7])
+	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id j27MoVT1019501
+	for <linux-lvm@redhat.com>; Mon, 7 Mar 2005 17:50:32 -0500
+Received: from iris.tue.nl (iris.tue.nl [131.155.2.34])
+	by pastinakel.tue.nl (Postfix) with ESMTP id E40C814BE1D
+	for <linux-lvm@redhat.com>; Mon,  7 Mar 2005 23:50:09 +0100 (CET)
+Received: from [131.155.224.41] (t-26-41.athome.tue.nl [131.155.224.41])
+	by iris.tue.nl (Postfix) with ESMTP id DC83710C0FC
+	for <linux-lvm@redhat.com>; Mon,  7 Mar 2005 23:50:09 +0100 (CET)
+Message-ID: <422CDA9F.6030500@are-b.org>
+Date: Mon, 07 Mar 2005 23:50:07 +0100
+From: oliver <oliver@are-b.org>
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] hardware raid5 and lvm "recipe"
 References: <FBBA14180DBE83499AC81277324251B0113181@jaxmsx01.nemours.org>
-In-Reply-To: <FBBA14180DBE83499AC81277324251B0113181@jaxmsx01.nemours.org>
-Content-Transfer-Encoding: 8bit
+	<422CBA04.3000002@vilain.net>
+In-Reply-To: <422CBA04.3000002@vilain.net>
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] Fixed. But what are PV# and Cur LV in pvdata?
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -23,33 +29,30 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="utf-8"; format="flowed"
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-Amir Mistric wrote:
-> We are contemplating to start using RHEL v4 in our enterprise.
-> Most of our servers have a hardware RAID.
-> The server we are using for a RHEL 4 trial install has 4x36GB SCSI 
-> drives configured using RAID 5.
-> Of course, we also want to use LVM.
-> Can someone please suggest what would be the best �layout�/�recipe� 
-> considering the configuration I described?
-> Using �automatically� partitioning during install RHEL suggests:
-> /boot and swap outside LVM and the rest of space in LVM mounted under / 
-> file system.
-> Is this sufficient layout for maximum flexibility? Should I create other 
-> logical volumes and file systems?
+After spending hours trying to figure out what values to put where, all 
+the data seems to be reconstructed. I ran a reiserfsck on all partitions 
+and everything was Okay.
 
-Seems like a good enough policy.  An alternative is to have a larger
-root, so that you can do LVM diagnostics without using a boot CD.  But
-using a standard vendor configuration means that you're going to surprise
-fewer admins that come along.
+I'm stuck however with the PV# and Cur LV reported by pvdata. I kinda 
+'guessed' them. The PV# was easyer to guess I think, as PV#'s apear to 
+be unique. (comparing between my two LVM setups they both where, with 
+the exception of the missing PV# of course). However the Cur LV i wans't 
+sure what to put there. I now used a Unique identifier for it. E.g. On 
+the other two it said 1 resp. 3 so I took 2 for my missing one. The rest 
+I just copied the values from the other two PV structures. The PV Size I 
+did some math on, Total - 2others, converted to hex, swapped bytes and 
+put in same location as the other two had them. The other 'size' looking 
+element was coincidently PV Size+1, so i did that also.
 
-> Any tips are appreciated
+Also it appears to me that in lvm2 that doesn't even matter anyhow.
 
-Here's a tip... simulate a failure and make sure that you can detect it.
-If you've got pluggable disks, then quiesce the system and unplug one.
-Never unplug an active disk, of course.
--- 
-Sam Vilain, sam /\T vilain |><>T net, PGP key ID: 0x05B52F13
-(include my PGP key ID in personal replies to avoid spam filtering)
+Anyway, If any of you have any clue what the PV# and Cur LV are, please, 
+let me know.
+
+I hope this post will help someone out there reading some archives some 
+time : )
+
+oliver
