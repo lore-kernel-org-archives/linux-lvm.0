@@ -1,10 +1,7 @@
-From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] Anyone brave tried lvm-1.0.3 & 2.4.18/2.4.19pre1 yet?
-Message-Id: <20020226114828.C13520@sistina.com>
-References: <20020224203344.78e8ec8b.milanuk@yahoo.com>
+From: Thorsten Sauter <sar@viastore.de>
+Message-Id: <Pine.A32.4.33.0202261151050.20290-100000@as1.viastore.de>
 MIME-Version: 1.0
-In-Reply-To: <20020224203344.78e8ec8b.milanuk@yahoo.com>; from
-    milanuk@yahoo.com on Sun, Feb 24, 2002 at 08:33:44PM -0800
+Subject: [linux-lvm] Rescue cd for lvm 1.0.3
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,49 +12,35 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Tue Feb 26 04:48:01 2002
+Date: Tue Feb 26 04:55:02 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: TEXT/PLAIN; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Trying it right now ;-)
+Hi list,
 
-On Sun, Feb 24, 2002 at 08:33:44PM -0800, Monte Milanuk wrote:
-> Well? Inquiring minds want to know!
-> 
-> Thanks,
-> 
-> Monte
-> 
-> -- 
-> All right, breaks over.  Back on your heads!!
-> 
-> _________________________________________________________
-> Do You Yahoo!?
-> Get your free @yahoo.com address at http://mail.yahoo.com
-> 
-> 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
+not really a lvm problem, but after moving my system to boot from an
+root-lvm, my lilo stops with the LI error. I think, rewriting the lilo
+could help, but how can I access my system datas?
 
--- 
+Maybe anyone knows a good rescue disk/cd that support 2.4.17 kernel with
+lvm-1.0.3 and reiserfs??
 
-Regards,
-Heinz    -- The LVM Guy --
+Can an older lvm version eg. 0.9.1 read the current lvm's?
+I have found an rescue cd for this version, but the cd can't find a valid
+reiserfs partition on top of the lvm. Maybe a to old reiserfs-version...
 
-*** Software bugs are stupid.
-    Nevertheless it needs not so stupid people to solve them ***
 
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+Any ideas or links?
 
-Heinz Mauelshagen                                 Sistina Software Inc.
-Senior Consultant/Developer                       Am Sonnenhang 11
-                                                  56242 Marienrachdorf
-                                                  Germany
-Mauelshagen@Sistina.com                           +49 2626 141200
-                                                       FAX 924446
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+Thanks a lot
+
+Thorsten Sauter
+viastore systems GmbH
+
+
+--
+Your mouse has moved.
+Windows NT must be restarted for the change to take effect.
+Reboot now?  [OK]
