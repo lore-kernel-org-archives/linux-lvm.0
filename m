@@ -1,11 +1,8 @@
-From: Benoit <benoit.peccatte@enst-bretagne.fr>
-Subject: Re: [linux-lvm] lvm metadata
-References: <200311111144.36636.benoit.peccatte@enst-bretagne.fr> <20031111160213.F28265@sistina.com>
-In-Reply-To: <20031111160213.F28265@sistina.com>
+From: Jan Rhebergen <jan@rhebergen.net>
+In-Reply-To: <20031111212622.753c2f18.jan@rhebergen.net>
+Message-ID: <Pine.LNX.4.44.0311121431100.7174-100000@rhebergen.net>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-Message-Id: <200311111710.28930.benoit.peccatte@enst-bretagne.fr>
+Subject: [linux-lvm] how to do a LVM partition backup?
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,26 +13,20 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Nov 12 07:01:02 2003
+Date: Wed Nov 12 07:35:02 2003
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: TEXT/PLAIN; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Tuesday 11 November 2003 16:02, you wrote:
-> On Tue, Nov 11, 2003 at 11:44:36AM +0100, Benoit wrote:
-> > Hello,
-> >
-> > You may ask why. Then is my second question, why aren't vgscan and
-> > vgchange implemented in kernel and called at boot time ? This would make
-> > us be able to consider logical volumes as standard partitions and mount
-> > them easily, even as /
->
-> That's what an initrd/initramfs is for ;)
+Hello all,
 
-I think initrd is more a trick than the real place to do it. I mean, making a 
-ramdisk needs of space, time to create it, and unnecessary initialisation 
-things. This, only to do a vgscan, vgchange -a at boottime. Aren't those 
-tools simple calls to system functions ?
+While I figure out how to recover form a LVM problem I want to backup the
+complete partiton that has the LVM stuff on as well as the MBR. The firts
+two partitions on the drive are "regular" partition and the 3rd one is a
+LVM partition. I have a second hard drive with a spare partition with
+enough space. Could I use something like partimage or will a simple dd do?
 
+regards,
 
-> > PS: Please cc-me with the anser as I'm not subscribed to the list.
+Jan
