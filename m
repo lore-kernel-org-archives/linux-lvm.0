@@ -1,27 +1,17 @@
 Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j0JMCGO01152
-	for <linux-lvm@redhat.com>; Wed, 19 Jan 2005 17:12:16 -0500
-Received: from main.gmane.org (main.gmane.org [80.91.229.2])
-	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id j0JMCESe014296
-	for <linux-lvm@redhat.com>; Wed, 19 Jan 2005 17:12:15 -0500
-Received: from root by main.gmane.org with local (Exim 3.35 #1 (Debian))
-	id 1CrO3d-0002RO-00
-	for <linux-lvm@redhat.com>; Wed, 19 Jan 2005 23:12:09 +0100
-Received: from c163195.adsl.hansenet.de ([213.39.163.195])
-	by main.gmane.org with esmtp (Gmexim 0.1 (Debian))
-	id 1AlnuQ-0007hv-00
-	for <linux-lvm@redhat.com>; Wed, 19 Jan 2005 23:12:08 +0100
-Received: from jens-lvm by c163195.adsl.hansenet.de with local (Gmexim 0.1
-	(Debian)) id 1AlnuQ-0007hv-00
-	for <linux-lvm@redhat.com>; Wed, 19 Jan 2005 23:12:08 +0100
-From: Jens Benecke <jens-lvm@spamfreemail.de>
-Date: Wed, 19 Jan 2005 19:49:34 +0100
-Message-ID: <csm9ti$j5g$1@sea.gmane.org>
-Mime-Version: 1.0
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j0JMEpO02000
+	for <linux-lvm@redhat.com>; Wed, 19 Jan 2005 17:14:51 -0500
+Received: from host01.ipowerweb.com (host01.ipowerweb.com [66.235.217.101])
+	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id j0JMEoB6015054
+	for <linux-lvm@redhat.com>; Wed, 19 Jan 2005 17:14:51 -0500
+Message-ID: <1106172883.41eedbd386498@www.eiler.net>
+Date: Wed, 19 Jan 2005 14:14:43 -0800
+From: joe@eiler.net
+Subject: Re: [linux-lvm] Data corruption on large, multi-device filesystem
+References: <20050118091059.GC27553@pcnocjb.dlan.cinetic.de>
+In-Reply-To: <20050118091059.GC27553@pcnocjb.dlan.cinetic.de>
+MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Sender: news <news@sea.gmane.org>
-Subject: [linux-lvm] LVM2 (SuSE 9.2): I/O errors on disk,
-	use dd_rescue or pvmove?
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -32,27 +22,81 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="utf-8"
-To: linux-lvm@redhat.com
+Content-Type: text/plain; charset="us-ascii"
+To: LVM general discussion and development <linux-lvm@redhat.com>, Jens Beyer <jbe@webde-ag.de>
 
-Hello,
+I have recently run into this problem also.  I have seen it happen on SuSe 9.2,
+Fedora Core 2 and 3, and vanilla kernels 2.6.8.1, 2.6.9, and 2.6.10.
+All of my tests were using xfs.
 
-I have a VG for /home across three harddisks. Now one of them is
-experiencing problems (I/O errors). I'll get a replacement soon but
-obviously I'd like to rescue as much data as possible.
+It happens whenever 2 or more devices are striped together with a total volume
+size greater than 2TB.  I have played with a single 4TB raid (12x 400GB RAID5)
+and did not see any corruption (but I did not fill the disk either).
 
-What would be my best bet? Free 250G off /home, then try pvmove to move the
-data off that harddisk, or wait for the replacement disk, and then boot
-some mini-Linux without LVM support, and using dd_rescue to clone the whole
-disk?
+I initially saw the problem running video files over samba. But have recreated
+the problem by simply copying some large (5GB+) files and then checking
+md5sums.
 
-Thank you!
+I don't see any corruption on the files unless I specify the -i option to
+lvcreate.  I usually see data corruption within an hour using my current tests.
+
+Let me know if I can be of any assistance.
+Joe
 
 
--- 
-Jens Benecke (jens at spamfreemail.de)
-http://www.hitchhikers.de - Europaweite kostenlose Mitfahrzentrale
-http://www.spamfreemail.de - 100% saubere Postf�cher - garantiert!
-http://www.rb-hosting.de - PHP ab 9? - SSH ab 19? - g�nstiger Traffic
-.
-Please DO NOT CC: me, I read the lists and newsgroups I post in!
+Quoting Jens Beyer <jbe@webde-ag.de>:
+
+>
+> Hi,
+>
+> I get severe data corruption using an logical volume larger
+> then 2 TB. Finally I was able to track down device mappper or
+> lvm as last suspects.
+>
+> My first guess where problems with filesystems but recently
+> I tried using md / RAID0 - and didnt have any errors of any
+> kind. I would prefer using LVM since we want to use snapshots
+> to simplify backup, but I have no clue how to further debug.
+>
+> On a system with 3 devices each larger then 1 TB and a logical
+> volume striped over all devices some data gets corrupted while
+> written (or read ?) from disk. This shows up as md5 or crc sums
+> changes on sequenced reads of files if filecache is not involved
+> (by reading a lot data).
+> On ext2fs there are error while writing data (kernel: EXT2-fs error
+> (device dm-0): ext2_new_block: Allocating block in system zone -
+>  block = 722239884), on other filesystems successive fsck/repairs
+> shows corrupted metadata.
+>
+> The system setup is
+> - Three 29160B Adaptec scsi-controller each with one
+>   ATA-Disk Raid sized 1240 GB, (dual PIII, HP DL360 G2, 2 GB Ram)
+> - Volume group over all three devices, logical volume stripped
+>   full size (3.7 TB)
+> - Filesystem either ext2fs/ext3fs (1.34), reiserfs (3.6.13) or
+>   xfs (2.6.25)
+>
+> - host:~ # lvm version
+>   LVM version:     2.00.33 (2005-01-07)
+>   Library version: 1.00.21-ioctl (2005-01-07)
+>   Driver version:  4.3.0
+> - 2.6.10 vanilla + 2.6.10-udm1 patches
+>
+> The problems where initially discovered on 2.6.8, tracked on 2.6.9-udm
+> and also occurs if only 2 devices (sum 2.4 TB) are used.
+>
+> For a limited time I will be able to further debug the system though
+> it takes some time to generate more then 2 TB of data
+> (max seq read/write rate is ~80 MB/s).
+>
+> Jens
+>
+> --
+> Nur tote Fische schwimmen mit dem Strom
+>
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@redhat.com
+> https://www.redhat.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+>
