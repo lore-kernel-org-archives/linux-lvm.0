@@ -1,12 +1,9 @@
-Subject: Re: [linux-lvm] Best way to create a 540GB LVM Volume?
-From: Austin Gonyou <austin@coremetrics.com>
-In-Reply-To: <Pine.LNX.4.44.0206241536360.2708-100000@dragon.inside.ntisys.com>
-References: 
-	 <Pine.LNX.4.44.0206241536360.2708-100000@dragon.inside.ntisys.com>
-Content-Type: multipart/signed; micalg=pgp-sha1; protocol="application/pgp-signature";
-	boundary="=-GhIttou3CbdXtAreotUN"
-Message-Id: <1024948498.7706.1.camel@UberGeek>
-Mime-Version: 1.0
+Message-ID: <000a01c21c09$b8991a00$020aa8c0@bart>
+From: "geeksrus" <flo@geeksrus.de>
+MIME-Version: 1.0
+Content-Type: multipart/alternative;
+	boundary="----=_NextPart_000_0007_01C21BCF.0B93A1C0"
+Subject: [linux-lvm] boot problems with lvm
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,51 +14,82 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Jun 24 14:55:01 2002
+Date: Mon Jun 24 15:32:02 2002
 List-Id: <linux-lvm.redhat.com>
 To: linux-lvm@sistina.com
 
---=-GhIttou3CbdXtAreotUN
-Content-Type: text/plain
+This is a multi-part message in MIME format.
+
+------=_NextPart_000_0007_01C21BCF.0B93A1C0
+Content-Type: text/plain;
+	charset="iso-8859-1"
 Content-Transfer-Encoding: quoted-printable
 
-No..this is not my issue. As stated, I set -s 8m(16m even) and when I
-try to create a volume > 450GB, I'm not allowed. lvcreate that there are
-no more allocatable PEs but vgdisplay shows there are.=20
+Hi all,
 
+first I want to congratulate the whole lvm developing team - it's a =
+great tool. lvm is runinng on my power pc with an ide controller nearly =
+perfectly. I've just a little problem after reboot:
 
+Scanning for LVM volume groups ....
+=20
+comes back with
 
-I'm using LVM 1.0.3 from 2.4.19-pre10, soon RC1.=20
+modprobe: modprobe: Can't locate module char-major-109
 
+vscan -- LVM driver/module not load?
 
-On Mon, 2002-06-24 at 14:38, bscott@ntisys.com wrote:
-> On 24 Jun 2002, at 2:07pm, Austin Gonyou wrote:
-> > I've got 14 FC1 disks in a PV660F. I want to take 7 of them and make
-> a
-> > large volume. I can't seem to make a > 450 GB volume though, even
-> though
-> > lvdisplay is showing xxMB PE free.
->=20
->   http://tech.sistina.com/Pages/faq.php?action=3Dview&ID=3D39
->=20
->   Is that your issue?
->=20
+and so on. I've the kernel 2.4.18 with the lvm 0.9_beta08 version.
 
---=20
-Austin Gonyou <austin@coremetrics.com>
-Coremetrics, Inc.
+Could anyone give me an idea, what's wrong?
 
---=-GhIttou3CbdXtAreotUN
-Content-Type: application/pgp-signature; name=signature.asc
-Content-Description: This is a digitally signed message part
+Servas
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.0.6 (GNU/Linux)
-Comment: For info see http://www.gnupg.org
+flo
 
-iD8DBQA9F3kS94g6ZVmFMoIRAnEzAKDKBKmBuwG2wcwdkZHF884GWst4vwCdHK1H
-EVwpACKxnxIiK/eRAz6Mkqo=
-=GYuu
------END PGP SIGNATURE-----
+------=_NextPart_000_0007_01C21BCF.0B93A1C0
+Content-Type: text/html;
+	charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 
---=-GhIttou3CbdXtAreotUN--
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML><HEAD>
+<META content=3D"text/html; charset=3Diso-8859-1" =
+http-equiv=3DContent-Type>
+<META content=3D"MSHTML 5.00.2920.0" name=3DGENERATOR>
+<STYLE></STYLE>
+</HEAD>
+<BODY bgColor=3D#ffffff>
+<DIV><FONT face=3DArial size=3D2>Hi all,</FONT></DIV>
+<DIV>&nbsp;</DIV>
+<DIV><FONT face=3DArial size=3D2>first I want to congratulate the whole =
+lvm=20
+developing team - it's a great tool. lvm is runinng on my power pc with =
+an ide=20
+controller nearly perfectly. I've just a little problem after=20
+reboot:</FONT></DIV>
+<DIV>&nbsp;</DIV>
+<DIV><FONT face=3DArial size=3D2>Scanning for LVM volume groups =
+....</FONT></DIV>
+<DIV><FONT face=3DArial size=3D2>&nbsp;</FONT></DIV>
+<DIV><FONT face=3DArial size=3D2>comes back with</FONT></DIV>
+<DIV>&nbsp;</DIV>
+<DIV><FONT face=3DArial size=3D2>modprobe: modprobe: Can't locate module =
+
+char-major-109</FONT></DIV>
+<DIV>&nbsp;</DIV>
+<DIV><FONT face=3DArial size=3D2>vscan -- LVM driver/module not =
+load?</FONT></DIV>
+<DIV>&nbsp;</DIV>
+<DIV><FONT face=3DArial size=3D2>and so on. I've the kernel 2.4.18 with =
+the lvm=20
+0.9_beta08 version.</FONT></DIV>
+<DIV>&nbsp;</DIV>
+<DIV><FONT face=3DArial size=3D2>Could anyone give me an idea, what's=20
+wrong?</FONT></DIV>
+<DIV>&nbsp;</DIV>
+<DIV><FONT face=3DArial size=3D2>Servas</FONT></DIV>
+<DIV>&nbsp;</DIV>
+<DIV><FONT face=3DArial size=3D2>flo</FONT></DIV></BODY></HTML>
+
+------=_NextPart_000_0007_01C21BCF.0B93A1C0--
