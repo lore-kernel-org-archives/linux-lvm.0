@@ -1,9 +1,16 @@
-Message-ID: <3DB2F462.6090309@gmx.net>
-From: Stefan Planert <s.planert@gmx.net>
+Subject: Re: [linux-lvm] Fwd: LVM on ATA-Raid Working - but Poorly
+References: <1034915787.3daf8fcb66a42@mail.dornquast.com>
+	<3DAFB7D4.B88B6737@silicide.dk>
+	<ufaelanvnav.fsf@epithumia.math.uh.edu>
+	<3DB02DD6.B8B4B48E@silicide.dk>
+	<ufa65vzviuo.fsf@epithumia.math.uh.edu>
+	<3DB0348D.42FFC0A4@silicide.dk>
+	<ufawuoftw8h.fsf@epithumia.math.uh.edu>
+	<3DB264D3.A994B237@silicide.dk>
+From: Jason L Tibbitts III <tibbs@math.uh.edu>
+In-Reply-To: Jon Bendtsen's message of "Sun, 20 Oct 2002 10:09:55 +0200"
+Message-ID: <ufabs5oord6.fsf@epithumia.math.uh.edu>
 MIME-Version: 1.0
-References: <17510721596.20021020133305@gmx.net>
-Content-Transfer-Encoding: 8bit
-Subject: [linux-lvm] Re: =?ISO-8859-1?Q?gr=F6nemeyer-cd_und_filme?=
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,30 +21,17 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Sun Oct 20 13:23:02 2002
+Date: Sun Oct 20 14:14:01 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="utf-8"; format="flowed"
-To: Andreas Piesk <linux-lvm@sistina.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: linux-lvm@sistina.com
 
-Andreas Piesk wrote:
-> hiho,
-> 
-> hat jemand die neue gr�nemeyer-cd da?
-mensch? ja.
+>>>>> "JB" == Jon Bendtsen <jon+lvm@silicide.dk> writes:
 
-> ich w�rd die ja kaufen, nur leider ist da ein kopierschutz drauf und
-> ich weiss nicht, ob ich da meine kopie f�rs auto erstellen kann.
-> ausserdem boykottiere ich kopierschutz.
-> 
-> ciao -ap
-> 
-> --
-> Andreas Piesk a.piesk@gmx.net
-> PGP-Fingerprint: 23CB A7E2 2E53 373C  DBCD 8EFC 7777 61C1
+JB> How did you get lilo to write it to all 8 bootblocks ?
 
-bis denne,
-stefan
+I didn't do anything special; lilo handled the situation
+automatically.
 
--- 
-If you defeat a great wyrm, it's not because you're smarter than
-the dragon, it's because your DM is stupider than the great wyrm.
+ - J<
