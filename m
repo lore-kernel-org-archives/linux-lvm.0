@@ -1,11 +1,10 @@
-Return-Path: <holger_zecha@hp.com>
-Message-ID: <615A249B783CD41192F400D0B747AC8601F06B9B@hesse.bbn.hp.com>
-From: "ZECHA,HOLGER (HP-Germany,ex1)" <holger_zecha@hp.com>
-Date: Mon, 26 Feb 2001 10:28:16 +0100
+Return-Path: <ardy@rdb.linux-help.org>
+Date: Mon, 26 Feb 2001 07:08:55 -0500 (EST)
+From: <ardy@rdb.linux-help.org>
+Subject: Re: [linux-lvm] Slackware init
+In-Reply-To: <20010225175246.A31937@sistina.com>
+Message-ID: <Pine.LNX.4.20.0102260707190.27918-100000@rdb.linux-help.org>
 MIME-Version: 1.0
-Content-Type: multipart/alternative;
-	boundary="----_=_NextPart_001_01C09FD6.72E9DA40"
-Subject: [linux-lvm] vgchange during shutdown on vg00
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,61 +16,13 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
+Content-Type: TEXT/PLAIN; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-This message is in MIME format. Since your mail reader does not understand
-this format, some or all of this message may not be legible.
+On Sun, 25 Feb 2001, AJ Lewis wrote:
 
-------_=_NextPart_001_01C09FD6.72E9DA40
-Content-Type: text/plain;
-	charset="iso-8859-1"
+> Are you by chance using a 2.4.x kernel with devfs support compiled in, but
+> not being mounted?  I am seeing the same thing with that setup.
 
-Hello,
- 
-I installed LVM on RedHat 6.1 with Reiuserfs.
-Everything works fine, all filesystem except /boot are located on LVM. The
-vgchange -a y vg00 during startup with initrd works but what about vgchange
--a n vg00 during the shutdown ?
-Is there a possibility to do this vgchange, because / is still mounted or is
-there no need to to this ?
- 
-Regards
- 
-Holger Zecha
- 
-
-------_=_NextPart_001_01C09FD6.72E9DA40
-Content-Type: text/html;
-	charset="iso-8859-1"
-
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
-<HTML><HEAD>
-<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
-
-
-<META content="MSHTML 5.50.4522.1800" name=GENERATOR></HEAD>
-<BODY>
-<DIV><SPAN class=980192509-26022001><FONT face="Courier New" 
-size=2>Hello,</FONT></SPAN></DIV>
-<DIV><SPAN class=980192509-26022001><FONT face="Courier New" 
-size=2></FONT></SPAN>&nbsp;</DIV>
-<DIV><SPAN class=980192509-26022001><FONT face="Courier New" size=2>I installed 
-LVM on RedHat 6.1 with Reiuserfs.</FONT></SPAN></DIV>
-<DIV><SPAN class=980192509-26022001><FONT face="Courier New" size=2>Everything 
-works fine, all filesystem except /boot are located on LVM. The vgchange -a y 
-vg00 during startup with initrd works but what about vgchange -a n vg00 during 
-the shutdown ?</FONT></SPAN></DIV>
-<DIV><SPAN class=980192509-26022001><FONT face="Courier New" size=2>Is there a 
-possibility to do this vgchange, because / is still mounted or is there no need 
-to to this ?</FONT></SPAN></DIV>
-<DIV><SPAN class=980192509-26022001><FONT face="Courier New" 
-size=2></FONT></SPAN>&nbsp;</DIV>
-<DIV><SPAN class=980192509-26022001><FONT face="Courier New" 
-size=2>Regards</FONT></SPAN></DIV>
-<DIV><SPAN class=980192509-26022001><FONT face="Courier New" 
-size=2></FONT></SPAN>&nbsp;</DIV>
-<DIV><SPAN class=980192509-26022001><FONT face="Courier New" size=2>Holger 
-Zecha</FONT></SPAN></DIV>
-<DIV>&nbsp;</DIV></BODY></HTML>
-
-------_=_NextPart_001_01C09FD6.72E9DA40--
+Yes, 2.4.2, no devfs.
