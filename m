@@ -1,9 +1,10 @@
-From: "Mrs m mobutu  Sese-seko" <msekko@spinfinder.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
+Subject: Re: [linux-lvm] disk failure
+Message-ID: <20020903124137.A21136@sistina.com>
+References: <5.1.1.6.2.20020901044548.01d61470@pop.tvnet.hu> <5.1.1.6.2.20020901044548.01d61470@pop.tvnet.hu> <20020902155415.A17591@sistina.com> <5.1.1.6.2.20020902213332.038cd008@pop.tvnet.hu>
+Mime-Version: 1.0
+In-Reply-To: <5.1.1.6.2.20020902213332.038cd008@pop.tvnet.hu>; from newsmail@satimex.tvnet.hu on Mon, Sep 02, 2002 at 09:36:15PM +0100
 Content-Transfer-Encoding: quoted-printable
-Message-Id: <E17m5zk-0007Ky-00@hermes.sistina.com>
-Subject: [linux-lvm] URGENT ATTENTION  NEEDED
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,75 +15,120 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Tue Sep  3 00:15:02 2002
+Date: Tue Sep  3 05:58:01 2002
 List-Id: <linux-lvm.redhat.com>
-To: linux-LVM@sistina.com
+Content-Type: text/plain; charset="iso-8859-1"
+To: linux-lvm@sistina.com
 
-FROM=3AMRS=2E M SESE-SEKO 
+On Mon, Sep 02, 2002 at 09:36:15PM +0100, Newsmail wrote:
+> thx for your answer. actually I had this 3 drive linear array, with 170=
+=20
+> gigs. 60+80+30. the 30 gig one died. Only 20gigs of data were on the ar=
+ray.=20
+> My big problem is, that I dont even have an idea in which order I added=
+=20
+> them. is there a way to determine the order of the drives in the array?
 
-DEAR FRIEND=2C 
+If you added them one after the other without ever removing/adding other
+disks to the VG in the meantime, "vgdisplay -v" gives you the internal
+numbers of the PVs. Higher numbers were added later.
 
-I AM MRS=2E  SESE-SEKO WIDOW OF LATE PRESIDENT MOBUTU 
-SESE-SEKO OF ZAIRE=3F NOW KNOWN AS DEMOCRATIC REPUBLIC 
-OF CONGO =28DRC=29=2E  I AM MOVED TO WRITE YOU THIS LETTER=2C 
-THIS WAS IN CONFIDENCE  CONSIDERING MY PRESENT 
-CIRCUMSTANCE AND SITUATION=2E 
+Looks like:
 
-I ESCAPED ALONG WITH MY HUSBAND AND TWO OF OUR SONS 
-KONGOLO  AND BASHER  OUT OF DEMOCRATIC REPUBLIC OF 
-CONGO =28DRC=29 TO ABIDJAN=2C COTE D'IVOIRE WHERE MY FAMILY 
-AND I SETTLED=2C WHILE WE LATER MOVED  TO SETTLED IN 
-MORROCO WHERE MY HUSBAND LATER DIED OF CANCER 
-DISEASE=2E HOWEVER DUE TO THIS SITUATION WE DECIDED TO 
-CHANGED  MOST OF MY HUSBAND'S BILLIONS OF DOLLARS 
-DEPOSITED IN SWISS BANK AND OTHER COUNTRIES INTO OTHER 
+<SNIP>
+--- Physical volumes ---
+PV Name (#)           /dev/sdc1 (1)
+PV Status             available / allocatable
+Total PE / Free PE    8808 / 2934
+<SNIP>
 
-FORMS OF MONEY CODED FOR  SAFE PURPOSE BECAUSE THE NEW 
+where the (1) above is the internal number.
 
-HEAD OF STATE OF =28DR=29 MR LAURENT  KABILA HAS MADE 
-ARRANGEMENT WITH THE SWISS GOVERNMENT AND OTHER 
-EUROPEAN COUNTRIES TO FREEZE ALL MY LATE HUSBAND'S 
-TREASURES  DEPOSITED IN SOME EUROPEAN COUNTRIES=2E HENCE 
+BTW: "lvdisplay -v" on any LV shows the allocation table (IOW: the mappin=
+g of
+     the logical extents to the physical extents on the PVs.
 
-MY CHILDREN AND I DECIDED LAYING LOW IN AFRICA TO 
-STUDY THE SITUATION TILL  WHEN THINGS GETS BETTER=2C 
-LIKE NOW THAT PRESIDENT KABILA IS DEAD AND THE SON 
-TAKING OVER =28JOSEPH KABILA=29=2E ONE OF MY LATE HUSBAND'S 
-CHATEAUX IN SOUTHERN FRANCE WAS CONFISCATED  BY THE 
-FRENCH GOVERNMENT=2C AND AS SUCH I HAD TO CHANGE MY 
-IDENTITY  SO THAT MY INVESTMENT WILL NOT BE TRACED AND 
+Regards,
+Heinz    -- The LVM Guy --
 
-CONFISCATED=2E I HAVE DEPOSITED THE SUM OF EIHGTEEN 
-MLLION UNITED STATE DOLLARS=28US$18=2C000=2C000=2C00=2E=29  WITH A 
+> greg
+> At 14:54 2002. 09. 02.=AD, you wrote:
+> >On Sun, Sep 01, 2002 at 04:50:27AM +0100, Newsmail wrote:
+> > > Hello everybody,
+> > > maybe its an already answered problem, I dont know,
+> > > I just have an lvm array of 3 disks. and the last disk of the array=
+ just
+> > > died, as is. I cannot to anything with it, it died, it doesnt even =
+spin=20
+> > up.
+> > > what should I do with my array to make it work, or at least save th=
+e=20
+> > data I
+> > > have on it?
+> > > I tried vgchange -an -qn to make it active without a quorum, but af=
+ter I
+> > > didnt have an idea what to do. how can I remove the faultive, non-e=
+xisting
+> > > drive from it? what should I do?
+> >
+> >Well, you should backup any data you can still access this way or copy
+> >it to new LVs in a newly created VG.
+> >Either way you need to reinitialize the 2 remaining PVs after that to =
+use them
+> >in some other VG.
+> >
+> >Your only other option to regain quorum (with all data of the failed P=
+V lost!)
+> >is to vgcfgrestore the metadata of the failed drive to a replacement o=
+ne,
+> >and "vgscan ; vgchange -ay".
+> >
+> > > thanx in advance,
+> > > regards,
+> > > greg
+> > >
+> > > ps: I'm using reiserfs.
+> > >
+> > >
+> > >
+> > > _______________________________________________
+> > > linux-lvm mailing list
+> > > linux-lvm@sistina.com
+> > > http://lists.sistina.com/mailman/listinfo/linux-lvm
+> > > read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
+> >
+> >--
+> >
+> >Regards,
+> >Heinz    -- The LVM Guy --
+> >
+> >_______________________________________________
+> >linux-lvm mailing list
+> >linux-lvm@sistina.com
+> >http://lists.sistina.com/mailman/listinfo/linux-lvm
+> >read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
+>=20
+>=20
+>=20
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@sistina.com
+> http://lists.sistina.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
 
+*** Software bugs are stupid.
+    Nevertheless it needs not so stupid people to solve them ***
 
-SECURITY COMPANY =2C FOR SAFEKEEPING=2E THE  FUNDS ARE 
-SECURITY CODED TO PREVENT THEM FROM KNOWING THE 
-CONTENT=2E WHAT I WANT YOU TO DO IS TO INDICATE YOUR 
-INTEREST THAT YOU WILL ASSIST US BY RECEIVING THE 
-MONEY ON OUR BEHALF=2EACKNOWLEDGE THIS MESSAGE=2C SO THAT 
-I CAN INTRODUCE YOU TO MY SON =28KONGOLO=29 WHO HAS THE 
-OUT MODALITIES FOR THE CLAIM OF THE SAID FUNDS=2E I WANT 
+=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D=
+-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=
+=3D-=3D-
 
-YOU TO ASSIST IN INVESTING THIS MONEY=2C BUT I WILL NOT 
-WANT MY IDENTITY REVEALED=2E I WILL ALSO WANT TO BUY 
-PROPERTIES AND STOCK IN MULTI-NATIONAL COMPANIES AND 
-TO ENGAGE IN OTHER SAFE AND NON-SPECULATIVE 
-INVESTMENTS=2E MAY I AT THIS POINT EMPHASISE THE HIGH 
-LEVEL OF CONFIDENTIALITY=2C  WHICH THIS BUSINESS 
-DEMANDS=2C AND HOPE YOU WILL NOT BETRAY THE TRUST AND 
-CONFIDENCE=2C WHICH I REPOSE IN YOU=2E IN CONCLUSION=2C  IF 
-YOU WANT TO ASSIST US =2C MY SON SHALL PUT YOU IN THE 
-PICTURE  OF THE BUSINESS=2C TELL YOU WHERE THE FUNDS ARE 
-
-CURRENTLY BEING  MAINTAINED AND ALSO DISCUSS OTHER 
-MODALITIES INCLUDING REMUNERATION FOR YOUR SERVICES=2E 
-
-FOR THIS REASON KINDLY FURNISH US YOUR CONTACT 
-INFORMATION=2C THAT IS YOUR PERSONAL TELEPHONE AND FAX 
-NUMBER FOR CONFIDENTIAL PURPOSE AND ACKNOWLEDGE 
-RECEIPT OF THIS MAIL USING THE ABOVE EMAIL ADDRESS=2E 
-
-BEST REGARDS=2C 
-
-MRS M=2E SESE SEKO 
+Heinz Mauelshagen                                 Sistina Software Inc.
+Senior Consultant/Developer                       Am Sonnenhang 11
+                                                  56242 Marienrachdorf
+                                                  Germany
+Mauelshagen@Sistina.com                           +49 2626 141200
+                                                       FAX 924446
+=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D=
+-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=
+=3D-=3D-
