@@ -1,10 +1,10 @@
-From: Luca Berra <bluca@comedia.it>
-Subject: Re: [linux-lvm] lilo wrote to an lvm disk
-Message-ID: <20030402072605.GC27228@percy.comedia.it>
-References: <1049253225.1486.7.camel@jb>
+From: Alasdair G Kergon <agk@uk.sistina.com>
+Subject: Re: [linux-lvm] Logical Volume Limit Size
+Message-ID: <20030402130118.A26952@uk.sistina.com>
+References: <000801c2f772$a7e8cee0$0201a8c0@assiexp>
 Mime-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <1049253225.1486.7.camel@jb>
+In-Reply-To: <000801c2f772$a7e8cee0$0201a8c0@assiexp>; from lvm@thehideout.nl on Mon, Mar 31, 2003 at 12:44:55PM +0200
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,44 +15,35 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Apr  2 01:26:01 2003
+Date: Wed Apr  2 06:01:01 2003
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Tue, Apr 01, 2003 at 09:13:45PM -0600, Justin Bauer wrote:
->Hi,
->
->I was having trouble earlier with lilo, and while configuring it, I
->wrote it to the mbr on a disk I had lvm on.  The only place I found that
->mentioned this problem was in an email to this list in march 2001, over
->two years ago.  It basically said that the lvm disk would be hosed.  Is
->there anyway to get the data off the disk? or repair it?
+On Mon, Mar 31, 2003 at 12:44:55PM +0200, Tony Scheffer wrote:
+> I simply could not find this info, I hope its not written somewhere obvious and I am just being blind. BUT:
+> If I upgrade from LVM1 to LVM2 will the 255G limit be exceeded? I cannot create a LV bigger then that.
 
-if you have a recent metadata backup you can try using vgcfgrestore to
-put the metadata back on the disk.
+LVM1 on-disk format:
+  This limit is fixed by the Physical Extent size chosen when
+  you create the Volume Group - see the vgcreate man page.
+  It can't be changed later.
 
-other options depend on what was the disk layout:
-was it the only disk you had in the volume group?
-are there lv sharing more than one pv?
-do you recall the LV layout?
+LVM2 on-disk format:
+  You should only be limited by the kernel's 2TB limit.
 
->Also, in the future, could I use the mbr if the pv was a partition
->rather than the whole disk?
+So you would need to upgrade to LVM2 and use vgconvert to 
+convert your metadata into the new format.
 
-that would be a good idea.
-as much as i hate partition tables i found that just too much code in
-linux applications depend on having a partition table, so wasting
-512bytes for a partition table entry is easier than fixing everything
-that breaks.
+[Note:  (a) I've not tested this yet;  (b) Certain LVM2 tool 
+operations may appear slow as they are still (unnecessarily) 
+proportional to the total number of physical extents in the VG 
+and need optimising.]
 
-L.
+At some point we should have an LVM2 tool that changes the 
+Physical Extent size.
 
+Alasdair
 -- 
-Luca Berra -- bluca@comedia.it
-        Communication Media & Services S.r.l.
- /"\
- \ /     ASCII RIBBON CAMPAIGN
-  X        AGAINST HTML MAIL
- / \
+agk@uk.sistina.com
