@@ -1,60 +1,49 @@
-Return-Path: <blutgens@sistina.com>
-Date: Wed, 22 Nov 2000 18:52:16 -0600
-From: Ben Lutgens <blutgens@sistina.com>
-Message-ID: <20001122185216.C773@titanium.sistina.com>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-md5;
-	protocol="application/pgp-signature"; boundary="S1BNGpv0yoYahz37"
-Content-Disposition: inline
-Subject: [linux-lvm] list changes
+Return-Path: <boutilpj@ednet.ns.ca>
+Message-ID: <3A1FF052.F2B546DB@ednet.ns.ca>
+Date: Sat, 25 Nov 2000 13:01:06 -0400
+From: Patrick Boutilier <boutilpj@ednet.ns.ca>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] Change in startup script
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
+Reply-To: linux-lvm@sistina.com
 List-Id: <linux-lvm.redhat.com>
-To: linux-lvm@mlists.sistina.com
+Content-Type: text/plain; charset="us-ascii"
+To: LVM Mailing List <linux-lvm@mlists.sistina.com>
+Cc: James MacLean <macleajb@ednet.ns.ca>
 
---S1BNGpv0yoYahz37
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Hi,
 
-Greetings all, the linux-lvm list now being hosted by Sistina Software as w=
-ell
-as the website. All list user-admin stuff can be handled online as we use=
-=20
-mailman. The URL's of interest are:
-http://lists.sistina.com/mailman/listinfo/lvm
+If anybody is upgrading from LVM 0.8i (and probably other 0.8 versions)
+to 0.9 you will need to modifying the following startup script which I
+got from somebody on this list. The -f needs to be changed to -d to
+reflect the new /proc/lvm which is now a directory instead of a file.
 
-You will also notice that linux.msede.com/lvm redirects you to
-http://www.sistina.com/lvm/ however the DNS records have not been updated y=
-et,
-you will be able to get to it from our site at http://www.sistina.com/
+Old script:
 
-Please make all your postings to this list to=20
-linux-lvm@sistina.com
+## LVM
+#scan for VGs and create /dev entries.
+if [ -x /sbin/vgscan -a -f /proc/lvm ]; then
+       action "LVM: Scanning for Volume Groups" /sbin/vgscan
+fi
+#activate all VGs
+if [ -x /sbin/vgchange -a -f /proc/lvm ]; then
+       action "LVM: Activating Volume Groups" /sbin/vgchange -ay
+fi
+## End LVM
 
-And a HUGE thanks to Michael Marxmeier for his tremendous help to Sistina
-Software and All the LVM crew on his hosting of the LVM stuff as well as his
-help making the assimilation of LVM into Sistina.
+________________________________
 
-Please refer all administrative questions to me. And thank you for your
-patience during our changes.
+New script:
 
---=20
-Ben Lutgens		cell: 612.670.4789
-Sistina Software Inc.	worl: 612.379.3951
-Code Monkey Support (A.K.A. System Administrator)
-
---S1BNGpv0yoYahz37
-Content-Type: application/pgp-signature
-Content-Disposition: inline
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.0.4 (GNU/Linux)
-Comment: For info see http://www.gnupg.org
-
-iD8DBQE6HGpALxkxGgLdGQgRAqQGAJ9+GBAlh0UJqERO5j4zTb1ZWZ0ytQCfRekt
-DLtQQC5n9nhV7nrWE0JcZJU=
-=C51r
------END PGP SIGNATURE-----
-
---S1BNGpv0yoYahz37--
+## LVM
+#scan for VGs and create /dev entries.
+if [ -x /sbin/vgscan -a -d /proc/lvm ]; then
+       action "LVM: Scanning for Volume Groups" /sbin/vgscan
+fi
+#activate all VGs
+if [ -x /sbin/vgchange -a -d /proc/lvm ]; then
+       action "LVM: Activating Volume Groups" /sbin/vgchange -ay
+fi
+## End LVM
