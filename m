@@ -1,23 +1,34 @@
-From: "David Mallette" <malletted@transcontinental.ca>
-Subject: [linux-lvm] lvm with kernel 2.2.14
-Date: Tue, 29 Aug 2000 10:41:02 -0400
-Message-ID: <000001c011c7$28bb46e0$9d2e19ac@lam_malletted.transcontinental.ca>
+From: Andreas Dilger <adilger@turbolinux.com>
+Message-Id: <200008291622.KAA02929@lynx.turbolabs.com>
+Subject: Re: [linux-lvm] Dazed & Confused
+Date: Tue, 29 Aug 2000 10:22:06 -0600 (MDT)
+In-Reply-To: <39AB63C5.C58D15F8@twc.de> from "Ulf Bartelt" at Aug 29, 2000 09:18:29 AM
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@msede.com
+To: Ulf Bartelt <ulf@twc.de>
+Cc: linux-lvm@msede.com, "Paul Jakma"@lynx.turbolabs.com, paul@clubi.ie, "Brian Poole"@lynx.turbolabs.com, raj@cerias.purdue.edu, "David Mallette"@lynx.turbolabs.com, malletted@transcontinental.ca
 
-I have RedHat 6.2 with kernel 2.2.14 and I'd like to use lvm. I have
-installed the package lvm-0.8-0.i386.rpm from RedHat but I think, if I
-understand well, that I need a patch for my kernel but I didn't find any lvm
-patch for kernel 2.2.14. What is the best way to install lvm for me, do I
-rather upgrade my kernell to a newer version or I just need the 2.2.14 patch
-for lvm and where I can find it?
+Ulf Bartelt writes:
+> /dev/vgkira/ftp on /home/ftp type ext2 (ro,errors=remount-ro)
+> /dev/vgkira/ftp2 on /home/ftp2 type ext2 (rw,errors=remount-ro)
+> 
+> (root@kira:/0)~# e2fsadm -L+1G /dev/vgkira/ftp
+> e2fsadm -- ERROR: "/dev/vgkira/ftp" is mounted on "/home/ftp2"
+> e2fsadm -- please umount it to resize
 
-Thank you very much.
+This is a bug in how e2fsadm checks to see if a filesystem is mounted.
+I have fixed this in my version of e2fsadm, as well as adding support
+for ext2resize and ext2online, so you don't even need to unmount the
+filesystem to resize it (if you have the ext2online kernel patch).
 
-David Mallette
-malletted@transcontinental.ca
+See ftp.lustre.org:/pub/adilger for an SRPM which has a patch to fix
+all known LVM user-tools bugs, as well as a kernel patch for 0.8final
+on 2.2.16.  I was told by Les Hazelton that my LVM kernel patch will
+apply cleanly to kernel-source-2.2.17-0.16mdk.i586.rpm, from the
+mandrake cooker section on rpmfind.net.
+
+Cheers, Andreas
