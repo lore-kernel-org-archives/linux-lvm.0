@@ -1,10 +1,9 @@
-From: Fabian Herschel <fabian.herschel@suse.de>
-Subject: Re: [linux-lvm] Two drives with the same UUID
-References: <20030110213858.GI3393@pc.ilinx>
-In-Reply-To: <20030110213858.GI3393@pc.ilinx>
+From: Holger Steinhaus <hsteinhaus@gmx.de>
+Message-ID: <4966875.1042481300@[192.168.1.11]>
 MIME-Version: 1.0
-Message-Id: <03011311575101.01471@grimsel>
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+Subject: [linux-lvm] Help: unused PV overwritten, recovery of vg possible?
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,44 +14,47 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Jan 13 05:05:02 2003
+Date: Mon Jan 13 11:07:02 2003
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@sistina.com, lvm@interlinx.bc.ca
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+To: linux-lvm@sistina.com
 
-On Friday 10 January 2003 22:38, lvm@interlinx.bc.ca wrote:
-> If I had a system with a functional LVM configuration (1.0.6ish) and I
-> were to "duplicate" the drive in it (i.e. dd if=3D/dev/sda of=3D/dev/sd=
-b)
-> and then try to boot that system (with both drives installed and
-> functional), what would happen?
->
-> Of course, because I am asking, I have tried it.  :-)  During boot LVM
-> failed to find any logical volumes.  Is this expected?  It's not
-> surprising mind you, but I wonder how it was designed to deal with
-> this situation.
+Dear List,
 
-Sorry, but this is a normal reaction of the logical volume manager. Why?
-Each "normal" volume manager uses a special part of the disk device (or a
-special part of a partition) to identify the physical media. If you copy =
-the
-complete disk, you also copy this unique identifier. So LVM get confused
-to find a media twice.
+I am in big trouble. I've added a PV to an existing volume group and then 
+accidently overwritten the entire disk containing that newly added physical 
+volume (not containing any lvs/data). Now vgscan refuses to accept the 
+volume group anymore. Unfortunatly there are no cfg backups not containing 
+this new and overwritten PV. Are there any chances to recover the data on 
+the old (and physically intact) logical volumes?
 
-Best regards
-Fabian Herschel
->
-> b.
+My configuration before crash: one vg (vgmain) on one pv (hda5),
+three lvs on volume group vgmain. Then added another pv (hdc5) to vgmain 
+and overwritten whole harddisk hdc. The result:
 
-----------------------------------------
-Content-Type: application/pgp-signature; charset=3D"us-ascii";=20
-name=3D"Attachment: 1"
-Content-Transfer-Encoding: 7bit
-Content-Description:=20
-----------------------------------------
+vgscan outputs:
+vgscan -- reading all physical volumes (this may take a while...)
+vgscan -- ERROR "vg_read_with_pv_and_lv(): current PV" can't get data of 
+volume group "vgmain" from physical volume(s)
+vgscan -- "/etc/lvmtab" and "/etc/lvmtab.d" successfully created
+vgscan -- WARNING: This program does not do a VGDA backup of your volume 
+group
 
---=20
-<Fabian.Herschel@suse.de>
-SuSE Linux AG * Mergenthalerallee 45-47 * D-65760 Eschborn
-Tel: +49-6196-50951-23 * Fax: +49-6196-409-607
-http://www.suse.de * Alice Homepage: http://www.suse.de/~fabian
+and pvscan:
+pvscan -- reading all physical volumes (this may take a while...)
+pvscan -- inactive PV "/dev/hda5"  is associated to unknown VG "vgmain" 
+(run vgscan)
+pvscan -- total: 1 [44.13 GB] / in use: 1 [44.13 GB] / in no VG: 0 [0]
+
+I tried to vcfgrestore my best cfg backup and got:
+$ vgcfgrestore -f /etc/old/lvmconf/vgmain.conf.3.old  /dev/hdc5
+vgcfgrestore -- this is a backup of volume group "vgmain"
+vgcfgrestore -- ERROR "pv_read(): PV identifier invalid" reading physical 
+volume "/dev/hdc5"
+
+Are there any ideas to get the volumes mountable again?
+
+Thanks!
+
+Holger Steinhaus
+hsteinhaus@gmx.de
