@@ -1,9 +1,9 @@
-Message-ID: <000a01c16ae4$5b2f5180$e8b0ae3e@o9s2g7>
-From: "paco" <al-guacil@retemail.es>
+Message-ID: <000e01c16aea$1954bd80$0a5c010a@ultra>
+From: "Klaus Pedersen" <ultra@mailme.dk>
+References: <002e01c161d6$7fa8a960$0a5c010a@ultra> <20011030235208.F800@lynx.no> <005801c161dc$1bbd6160$0a5c010a@ultra> <001501c16305$0e2ab230$0a5c010a@ultra>
+Subject: Re: [linux-lvm] Re: After power outtage my vg is gone
 MIME-Version: 1.0
-Content-Type: multipart/alternative;
-	boundary="----=_NextPart_000_0007_01C16AEC.B83CC120"
-Subject: [linux-lvm] (no subject)
+Content-Transfer-Encoding: 7bit
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,33 +14,26 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Sun Nov 11 13:08:02 2001
+Date: Sun Nov 11 13:47:02 2001
 List-Id: <linux-lvm.redhat.com>
+Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
 
-This is a multi-part message in MIME format.
+>
+> vgscan -a y (to activate the vg)
 
-------=_NextPart_000_0007_01C16AEC.B83CC120
-Content-Type: text/plain;
-	charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Duh - this is an error (I know cause the same problems occured - again :P)
+.. the command _should_ have said :
 
-que rollo os traeis capullos
+vgchange -a y
 
-------=_NextPart_000_0007_01C16AEC.B83CC120
-Content-Type: text/html;
-	charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+so the sequence of commands is :
 
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
-<HTML><HEAD>
-<META http-equiv=3DContent-Type content=3D"text/html; =
-charset=3Diso-8859-1">
-<META content=3D"MSHTML 5.50.4522.1800" name=3DGENERATOR>
-<STYLE></STYLE>
-</HEAD>
-<BODY bgColor=3D#ffffff>
-<DIV><FONT size=3D2><FONT face=3DArial>que rollo os traeis <FONT=20
-size=3D7>capullos</FONT></FONT></FONT></DIV></BODY></HTML>
+vgcfgrestore -n site_vg /dev/hdb1
+vgcfgrestore -n site_vg /dev/hda8
+vgchange -a y
+mount /glftpd/site
 
-------=_NextPart_000_0007_01C16AEC.B83CC120--
+That's it - I hope others can benefit from this too.
+
+/Klaus
