@@ -1,10 +1,7 @@
-From: Andreas Dilger <adilger@turbolabs.com>
-Subject: Re: [linux-lvm] Help!  VG corrupted?
-Message-ID: <20011126231649.U730@lynx.no>
-References: <1006197162.28796.26.camel@outback.key> <20011120113607.A18529@sistina.com> <1006830613.2791.27.camel@outback.key>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <1006830613.2791.27.camel@outback.key>; from kf4wbx@hamsnet.net on Mon, Nov 26, 2001 at 10:10:03PM -0500
+From: Adrian Phillips <a.phillips@dnmi.no>
+Message-ID: <wvbshoy54w.fsf@freeze.oslo.dnmi.no>
+MIME-Version: 1.0
+Subject: [linux-lvm] lvm-1.0.1 not working with DAC960/2.2.20
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,28 +12,36 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Tue Nov 27 00:15:01 2001
+Date: Tue Nov 27 02:43:01 2001
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: Ben <kf4wbx@hamsnet.net>
-Cc: linux-lvm@sistina.com
+To: linux-lvm@sistina.com
 
-On Nov 26, 2001  22:10 -0500, Ben wrote:
-> I will try to get a newer version of LVM installed this week and give
-> you the response from vgck.
-> 
-> BTW, is it safe for me to just use the 1.0.1rc4 utils and kernel on a VG
-> created with the 0.9 release?
+The problem seems to be (and I believe GRUB had the same problem) that
+the device name for DAC960 changed from rd to dac960 in 2.4.
 
-Well, it's broken already, isn't it?  In any case, it _should_ be OK to
-run a newer kernel and/or newer tools (separately or together, although
-obviously newer everything is preferred).  Whether that actually fixes
-your problems depends on whether the on-disk data is totally fsck'd up,
-and whether you can restore it and get it working or not.
+This patch fixes the partition checking code :-
 
-Cheers, Andreas
---
-Andreas Dilger
-http://sourceforge.net/projects/ext2resize/
-http://www-mddsp.enel.ucalgary.ca/People/adilger/
+--- tools/lib/lvm_check_partitioned_dev.c.orig  Tue Nov 27 09:16:03 2001
++++ tools/lib/lvm_check_partitioned_dev.c       Tue Nov 27 09:42:38 2001
+@@ -140,7 +140,8 @@
+        "md",                   /* Multiple Disk driver (SoftRAID)   */
+        "loop",                 /* Loop device              */
+        "dasd",                 /* DASD disk (IBM S/390, zSeries)      */
+-       "dac960",               /* DAC960              */
++       "rd",                   /* DAC960 2.2          */
++       "dac960",               /* DAC960 2.4          */
+        "nbd",                  /* Network Block Device              */
+        "ida",                  /* Compaq SMART2              */
+        "cciss",                /* Compaq CCISS array              */
+
+
+Sincerely,
+
+Adrian Phillips
+
+-- 
+Your mouse has moved.
+Windows NT must be restarted for the change to take effect.
+Reboot now?  [OK]
