@@ -1,10 +1,8 @@
-From: Bradley M Alexander <storm@tux.org>
-Subject: Re: [linux-lvm] More research on lvm problems
-Message-ID: <20011119135126.A1789@sonsofthunder.yi.org>
-References: <20011119010011.A891@sonsofthunder.yi.org> <20011119093701.A21796@balu.kawo2.rwth-aachen.de>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20011119093701.A21796@balu.kawo2.rwth-aachen.de>
+From: Benjamin Scott <bscott@ntisys.com>
+In-Reply-To: <20011119152703.A28540@golem.blacknet.de>
+Message-ID: <Pine.LNX.4.33.0111191335570.1679-100000@dragon.inside.ntisys.com>
+MIME-Version: 1.0
+Subject: [linux-lvm] 3Ware [OT] (was: Logical Volume max-size?)
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,38 +13,28 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Nov 19 12:50:01 2001
+Date: Mon Nov 19 12:54:01 2001
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: TEXT/PLAIN; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Mon, Nov 19, 2001 at 09:37:01AM +0100, Markus Dobel wrote:
-> On Mon, Nov 19, 2001 at 01:00:11AM -0500, Bradley M Alexander wrote:
-> > 
-> > [defiant /home/storm]# mount -a
-> > mount: special device /dev/vg01/lvm_tmp does not exist
->                                     ^here
-> [...]
-> 
-> > But looking in /dev:
-> > 
-> > [defiant /home/storm]# ls -l /dev/vg01
-> > total 0
-> > crw-r-----    1 root     root     109,   0 Dec 31  1969 group
-> > brw-r-----    1 root     root      58,   0 Dec 31  1969 lv_archive
->                                                             ^here
-> Maybe just take a look at the letter "m". :)
+On Mon, 19 Nov 2001, Goetz Bock wrote:
+> I figured this out the hard way. I asked some 3ware person whether I
+> could use a 6800 as a RAID5 controller and was told, that it would work
+> fine.
 
-Thanks Markus. Looking at this stuff at 1am can apparently cause one to
-miss the obvious. :)
+  Did you try going back and complaining that it did not work as advertised?
+
+  I ask because we have had success with their 6200 series as a mirrored
+drive controller, and have found 3Ware to be reasonably responsive.  We have
+not had the opportunity to try their RAID5 offerings yet, and your comments
+certainly do not inspire confidence.  I am wondering if it is an issue that
+can be corrected by, e.g., a firmware update, or if it is just a design flaw
+in the cards.
 
 -- 
---Brad
-============================================================================
-Bradley M. Alexander, CISSP              |   Co-Chairman,
-Beowulf System Admin/Security Specialist |    NoVALUG/DCLUG Security SIG
-Debian/GNU Linux Developer		 |   storm@debian.org
-                                         |   storm@tux.org
-============================================================================
-Do vegetarians eat animal crackers?
+Ben Scott <bscott@ntisys.com>
+| The opinions expressed in this message are those of the author and do not |
+| necessarily represent the views or policy of any other person, entity or  |
+| organization.  All information is provided without warranty of any kind.  |
