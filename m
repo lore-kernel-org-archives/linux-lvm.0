@@ -1,35 +1,25 @@
-Message-Id: <37FE57E3.642A5766@mainland.ab.ca>
-Date: Fri, 08 Oct 1999 14:45:23 -0600
-From: Drew Smith <drew@winterland.mainland.ab.ca>
+Date: Sat, 9 Oct 1999 14:24:24 +0200
+From: Adrien Farkas <freddy@redneck.sk.oracle.com>
+Subject: [linux-lvm] VG/LV and raid question
+Message-ID: <19991009142423.B25809@redneck.sk.oracle.com>
+Reply-To: freddy@sk.oracle.com
 Mime-Version: 1.0
-Subject: [linux-lvm] Warm Fuzzies.
-Content-Transfer-Encoding: 7bit
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@msede.com
 
+Hi,
 
-	Hey all,
+jsut a quick question, if I want to create a raid0/1/2/5 volume on top of LVM devices, what gives better throughput, using different LVs in a single VG to create RAID array or using one LV in more VGs?
 
-	Quick scary story:
+Thanks in advance,
+-- 
+                                             freddy
 
-	Had a power spike the other night - the power supply tripped on the
-cube of SCSI disks, and they all spun down.  My server room at home has
-FAR too many machines to notice that eight 9G scsi drives were no longer
-spinning by noise alone, so this went unnoticed for about an hour, when
-I suddenly discovered that the machine was unresponsive.
-
-	Regardless, after rebooting, reloading the module and running vgscan,
-nothing came up.  Scared the piss out of me.
-
-	But - powering the drives up and reloading all involved, everything
-came up happily, no errors whatsoever.
-
-	Just a happy note to say that LVM survived this without a hitch,
-showing that it truly is worthy of being in the stock kernel - anyone
-still taking notice? :)
-
-	Cheers,
-	- Drew.
+----==-- _                      Adrien "freddy" Farkas
+---==---(_)__  __ ____  __       freddy@sk.oracle.com
+--==---/ / _ \/ // /\ \/ /  We all know Linux is great... It
+-=====/_/_//_/\___/ /_/\_\  does infinite loops in 5 seconds
