@@ -1,8 +1,8 @@
-Message-Id: <200306261012.h5QACOlx015041@ruby.ridersoft.net>
-From: lvm@ruby.ridersoft.net
-MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="bound1056622344"
-Subject: [linux-lvm] can't find volumes
+From: Bradley M Alexander <storm@tux.org>
+Message-ID: <20030626163644.GA25171@defiant.sonsofthunder.yi.org>
+Mime-Version: 1.0
+Content-Disposition: inline
+Subject: [linux-lvm] lvreduce
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -13,46 +13,46 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Thu Jun 26 09:30:05 2003
+Date: Thu Jun 26 11:37:01 2003
 List-Id: <linux-lvm.redhat.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-This is a multi-part message in MIME format.
+I ran across this today, and wanted some clarification if I could. I am
+running kernel 2.4.21 and lvm 1.0.7.
 
---bound1056622344
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
+I needed to resize a partition, reducing it by 1GB. As I have done in the
+past, went into single user mode, umounted the partition did a
+resize_reiserfs -s-1GB /dev/vg00/var
 
-Hi, I come seeking sage advice :)
+This went fine, then I tried to reduce the size of the lv, using 
+lvreduce -L-1G /dev/vg00/var
 
-Anyways, I've been busy installing a new Linux system using Gentoo. I am running this on a spare box, Duron 800 w 300mb, with the harddisk connected to the Promise ATA 100 onboard controller as /dev/hde8.
+lvreduce -- WARNING: Reducing active logical volume to 1 GB
+lvreduce -- THIS MAY DESTROY YOUR DATA (filesystem etc.)
+lvreduce -- do you really want to reduce "/dev/vg00/var"? [y/n]:
 
-Al goes well, and I create the following partitions
+Isn't the -L-1G option for lvreduce supposed to reduce the lv _by_ the
+requested amount rather than _to_ that size? If specify -L1G, that should
+be an absolute value rather than a relative value.
 
-/dev/hde6      swap
-/dev/hde7      ext3 fs     /boot
-/dev/hde8      lvm
+Am I missing something here? Would this be better addressed to the Debian
+maintainer for the lvm tools?
 
-I also create the pv on /dev/hde8 and a logical volume at /dev/lv/ide
-
-/dev/lv/ide is my /
-
-From my running livecd I then chroot'ed into /dev/lv/ide, and then the troubles began. When I run vgscan when chroot'ed it doesn't find any volume groups. When I run vgchange, i claims that the VDGA record doesn't match the kernel, and urges me to run vgscan, running vgscan doesn't solve this problem since it doesn't find the volume groups.
-
-ls -l /dev/lv/ide shows me that my volume group indeed doesn't excist. However, the mount command shows me that /dev/lv/ide is mounted at root. So in summary, I can't find the volumegroup, even tough I am working on/in it.
-
-I decided to go ahead anyways, and created a initrd using lvmcreate_initrd (based on the kernel i made, 2.4.21 ) it does this, and when I boot it loads this initrd as it is supposed to. It neatly finds my /dev/hda and /dev/hdb cdroms, and once insmod'ed it also find /dev/hde, but the it runs vgscan and finds no volumegroups, that causes vgchange to not find anything either. That causes the kernel to panic, since it cannot find root.
-
-Weird thing is, if I boot with any other rescue/livecd, such as SuSE rescue, knoppix or gentoo live cd, I can vgscan and vgchange -ay to find my volume group and logical volume. But once chroot'ed or booting to my new system, I cannot and will not find it.
-
-Does anyone have any suggestions on why vgscan doesn't find anything and how to solve this ?
-
-Many thanx in advance, I have been strugling with this one for almost a week now, and I am out of options. I have been able to install lvm as root on quite a few systems before, including a LFS system, but right now, I am stumped.
-
-best regards
-Mark
-
-
-When I boot from a livecd image, such as 
-
---bound1056622344--
+Thanks,
+-- 
+--Brad
+============================================================================
+Bradley M. Alexander                |
+gTLD SysAdmin, Security Engineer    |   storm [at] tux.org
+Debian/GNU Linux Developer          |   storm [at] debian.org
+============================================================================
+Key fingerprints:
+DSA 0x54434E65: 37F6 BCA6 621D 920C E02E  E3C8 73B2 C019 5443 4E65
+RSA 0xC3BCBA91: 3F 0E 26 C1 90 14 AD 0A  C8 9C F0 93 75 A0 01 34
+============================================================================
+If all you can see out of the window is ground that's going
+round and round and all you can hear is commotion coming from the
+passenger compartment, things are not at all as they should be.
+					--Rules of the Air, #18
