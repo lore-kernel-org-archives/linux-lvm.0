@@ -1,12 +1,11 @@
-Return-Path: <torsten@pclab.ifg.uni-kiel.de>
-From: Torsten Landschoff <torsten@pclab.ifg.uni-kiel.de>
-Date: Fri, 11 May 2001 16:13:29 +0200
+Return-Path: <terjekv@ifi.uio.no>
 Subject: Re: [linux-lvm] LVM 1.0 release decision
-Message-ID: <20010511161329.E21433@pclab.ifg.uni-kiel.de>
 References: <20010511155311.A17689@sistina.com>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20010511155311.A17689@sistina.com>; from Mauelshagen@sistina.com on Fri, May 11, 2001 at 03:53:11PM +0000
+From: Terje Kvernes <terjekv@math.uio.no>
+Date: 11 May 2001 16:22:59 +0200
+In-Reply-To: "Heinz J. Mauelshagen"'s message of "Fri, 11 May 2001 15:53:11 +0000"
+Message-ID: <wxxoft055j0.fsf@fjorir.ifi.uio.no>
+MIME-Version: 1.0
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -21,24 +20,45 @@ List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
+Cc: linux-kernel@sistina.com, mge@sistina.com
 
-On Fri, May 11, 2001 at 03:53:11PM +0000, Heinz J. Mauelshagen wrote:
-> In regard to this situation we'ld like to know about your oppinion on the
-> following request:
-> is it acceptable to release 1.0 soon *before* all patches to reach the 1.0
-> code status are in vanilla (presumed that we provide them with our release as
-> we always did before)?
+"Heinz J. Mauelshagen" <Mauelshagen@sistina.com> writes:
 
-My stance would be to do a pre-release of the to-be-1.0 code. Reasons:
+> This leads to the dilemma, that trying to avoid further differences
+> between our LVM releases and the stock kernel code would force us
+> into postponing the pending LVM 1.0 release accordingly which OTOH
+> is incovenient for the LVM user base.
 
-- as you said, it would be good for the user base
-- OTOH I would expect the lvm code in the kernel to become a bit 
-  different from what you have now as a matter of the code review.
+  why is postponing LVM 1.0 inconvenient for the LVM user base? the
+  people using it now won't feel the difference, and people not using
+  it will be delayed some time. as much as I love LVM, I don't see the
+  problem. release 1.0 when things fall into place.
 
-> Thanks for your support!
+> In regard to this situation we'ld like to know about your oppinion
+> on the following request: is it acceptable to release 1.0 soon
+> *before* all patches to reach the 1.0 code status are in vanilla
+> (presumed that we provide them with our release as we always did
+> before)?
 
-Thanks for LVM :-)
+  I'm not sure there's a point to it. what will happen is just that
+  people will yet again have to come get apparently external patches
+  for something already in the kernel. I think marking the end of that
+  with 1.0 would be nice.
 
-Greetings
+  this reminds me of XFS to be honest -- and that annoys me a great
+  deal. I want to test XFS, but currently I can't. because after LVM
+  and ReiserFS are patched (they pull rank :), the XFS-patches botch
+  badly. and they're far from in sync with current kernels.
 
-	Torsten
+  IMHO: getting all the patches into the kernel, makes it a _lot_
+  easier for the LVM user base. because they can _then_ apply other
+  patches for other projects of they want to. it's also easier on
+  other developers of the same reason.
+
+> We'll gather your answers for some days and will send the conclusion
+> to the lists.
+
+  okies :)
+
+-- 
+Terje - a very happy LVM user.
