@@ -1,10 +1,8 @@
-Subject: Re: [linux-lvm] [Patch] Latest device-mapper snapshot
-Message-ID: <20021024083552.GA1435@fib011235813.fsnet.co.uk>
-References: <20021023165627.CZKM23449.imf01bis.bellsouth.net@TAZ2>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20021023165627.CZKM23449.imf01bis.bellsouth.net@TAZ2>
-From: Joe Thornber <joe@fib011235813.fsnet.co.uk>
+Message-ID: <3DB7C2FD.9C70E084@silicide.dk>
+From: Jon Bendtsen <jon+lvm@silicide.dk>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] still problems with removing "non existant" dead snapshots :/
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,27 +13,67 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Thu Oct 24 03:36:01 2002
+Date: Thu Oct 24 04:53:01 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: linux-lvm@sistina.com
+To: lvm mailinglist <linux-lvm@sistina.com>
 
-On Wed, Oct 23, 2002 at 12:54:37PM -0400, Greg Freemyer wrote:
-> Joe,
-> 
-> I haven't kept up.
-> 
-> What is LVM's status relative to the 2.5 feature freeze that is coming up?
+I take a snapshot every hour, every 8 hour, eveyr day, and every week.
+I've got 4 "equal" scripts to do the work, the only difference is the
+snapshot name and the mountpoint.
 
-We have posted the code a couple of times, the latest time the only
-point that came up was that people don't like ioctl interfaces.  So we
-are currently planning on submitting again at the end of the week with
-a choice of own filesystem based interface (not driverfs) or the
-current ioctl one.
+However, when i try to remove the old and unmounted snapshot, i
+sometimes
+get an error message. Like one in every 10 times.
 
-dm has its supporters, as does EVMS (I don't agree that only one of
-these drivers can go in), it's hard to second guess Linus as to which
-he'll merge.
+I get messages like:
+--------------------
+lvremove -- can't remove open snapshot logical volume
+"/dev/optVG/1hour_snapshot_opt_1035237601"
 
-- Joe
+And:
+----
+lvremove -- ERROR "lv_release(): LV number" releasing logical volume
+"/dev/optVG/1hour_snapshot_opt_1035324001"
+
+
+If i use lvdisplay on them, i get a message like
+------------------------------------------------
+ve:/dev/optVG# lvdisplay /dev/optVG/1hour_snapshot_opt_1035*
+lvdisplay -- logical volume "/dev/optVG/1hour_snapshot_opt_1035324001"
+doesn't exist
+
+lvdisplay -- logical volume "/dev/optVG/1hour_snapshot_opt_1035345601"
+doesn't exist
+
+lvdisplay -- logical volume "/dev/optVG/1hour_snapshot_opt_1035352801"
+doesn't exist
+
+lvdisplay -- logical volume "/dev/optVG/1hour_snapshot_opt_1035381601"
+doesn't exist
+
+lvdisplay -- logical volume "/dev/optVG/1hour_snapshot_opt_1035410401"
+doesn't exist
+
+lvdisplay -- logical volume "/dev/optVG/1hour_snapshot_opt_1035432001"
+doesn't exist
+
+lvdisplay -- logical volume "/dev/optVG/1hour_snapshot_opt_1035439201"
+doesn't exist
+
+
+
+The problem is that these snapshots take up space. Most take 1GB, since
+thats what they
+are created with, but some take more, since i run some scripts to ensure
+that they dont
+reach 100% so they are always readable.
+I can remove the "files" from /dev/optVG/, but the space is not released
+until i
+restart the VG. Even restarting the VG doesnt remove the "dead"
+snapshots (the files
+in /dev/optVG/)
+
+
+
+JonB
