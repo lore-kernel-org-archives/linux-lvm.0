@@ -1,9 +1,11 @@
-Return-Path: <jamesp@foobarhouse.com>
-Date: Tue, 31 Jul 2001 12:20:02 +0100 (BST)
-From: James Pattinson <jamesp@foobarhouse.com>
-Message-ID: <Pine.LNX.4.33.0107311215030.6499-100000@greebo.foobarhouse.com>
+Return-Path: <johan@karlb.org>
+Message-ID: <000e01c119e5$3ada8850$70a870d5@hidden>
+From: "Johan Karlborg" <johan@karlb.org>
+Date: Tue, 31 Jul 2001 19:21:26 +0200
 MIME-Version: 1.0
-Subject: [linux-lvm] Snapshot Info
+Content-Type: multipart/alternative;
+	boundary="----=_NextPart_000_000B_01C119F5.FE58A9F0"
+Subject: [linux-lvm] removing old disk
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,31 +17,49 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Hi
+This is a multi-part message in MIME format.
 
-OK, I've got snapshots working now that I've re-created my PVs with beta8
-tools.
+------=_NextPart_000_000B_01C119F5.FE58A9F0
+Content-Type: text/plain;
+	charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 
-Where can I find some more info about how snapshots work? I'm a bit
-confused as to how space is allocated. Here's an example of what I'm
-seeing:
+I am not sure what the problem is, I have an 80 gig disk which I try to =
+pvmove the files to, from three 4-gig SCSI-disks that need to be removed =
+for stability-test (something hangs the server randomly, I suspect too =
+little W) but I cannot, even though the LVM-system has over 34 gig free, =
+it says there's no room on the receiving disk, no matter which one in =
+the same group I choose, any clues?
 
-I have a 3GB LV called /dev/vg00/lvol6 that is about half full.
+/Johan
 
-1.	Created a 512MB snapshot LV for this LV
-2.	Copied 9MB worth of data to /dev/vg00/lvol6
-3.	Looked at lvdisplay /dev/vg00/snap_lvol6 and 18MB is used in the
-snapshot.
+------=_NextPart_000_000B_01C119F5.FE58A9F0
+Content-Type: text/html;
+	charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 
-Where does the figure 18MB come from? is the fact that it is 2 x 9MB
-significant?
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML><HEAD>
+<META http-equiv=3DContent-Type content=3D"text/html; =
+charset=3Diso-8859-1">
+<META content=3D"MSHTML 6.00.2479.6" name=3DGENERATOR>
+<STYLE></STYLE>
+</HEAD>
+<BODY bgColor=3D#ffffff>
+<DIV><FONT face=3DArial size=3D2>I am not sure what the problem is, I =
+have an 80 gig=20
+disk which I try to pvmove the files to, from three 4-gig SCSI-disks =
+that need=20
+to be removed for stability-test (something hangs the server randomly, I =
+suspect=20
+too little W) but I cannot, even though the LVM-system has over 34 gig =
+free, it=20
+says there's no room on the receiving disk, no matter which one in the =
+same=20
+group I choose, any clues?</FONT></DIV>
+<DIV><FONT face=3DArial size=3D2></FONT>&nbsp;</DIV>
+<DIV><FONT face=3DArial size=3D2>/Johan</FONT></DIV></BODY></HTML>
 
-I'd quite like to know how big I should be making my snapshots.
-
-Cheers!!
-
-James
+------=_NextPart_000_000B_01C119F5.FE58A9F0--
