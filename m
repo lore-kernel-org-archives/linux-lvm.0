@@ -1,7 +1,10 @@
-From: Jason Parker-Burlingham <jasonp@panix.com>
-Message-ID: <871xpynzwy.fsf@freezer.burling>
+From: "Jean-Luc Coulon (f5ibh)" <jean-luc.coulon@wanadoo.fr>
+Message-ID: <20040119134934.GP3669@tangerine.coulon.evette>
 Mime-Version: 1.0
-Subject: [linux-lvm] unknown ioctl problems
+Content-Type: multipart/signed; micalg=PGP-SHA1;
+	protocol="application/pgp-signature"; boundary="w2JjAQZceEVGylhD"
+Content-Disposition: inline
+Subject: [linux-lvm] Mivration from lvm1 to lvm2
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -12,32 +15,45 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Jan 19 12:11:11 2004
+Date: Mon Jan 19 12:12:01 2004
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-I'm running LVM (version 1 with 1.0.7 tools) on a 2.4 system
-(2.4.24-pre1, recently upgraded to 2.4.25-pre4).  When the initrd
-boots (/ is an LVM filesystem, /boot is a standard block device) I see 
+--w2JjAQZceEVGylhD
+Content-Type: text/plain; Format=Flowed; DelSp=Yes; charset=ISO-8859-15
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-   lvm -- lvm_blk_ioctl: unknown cmd 0x5310
+Hi,
 
-which I guess is something to do with mounting the ramdisk.
+I plan to migrate from lvm1 to lvm2 to be compliant with 2.6.x.
+I've Debian sid with linux 2.4.24 with the device mapper compiled as a =20
+module.
 
-But at other times I have noticed that the machine will lock up; I'm
-not sure if it's a hardware problem but lately it seems to be related
-to disk activity.  I turned off screen blanking before the most recent
-crash and saw no kernel oops, but a couple of repetitions of
+I've installed both the packages lvm10 and lvm2.
 
-   lvm -- lvm_blk_ioctl: unknown cmd 0x801c6d02
+The device mapper module is loaded but the system seems to be using =20
+lvm1.
 
-Is it possible that this is some sort of reasonable ioctl?  Is it
-possible that this is what's crashing the machine?  How can I find out
-what the system is trying do (and maybe even why)?  I don't see any
-reports of exactly this problem through google, so I'm pretty lost.
+I have a couple of questions:
+ - What is to be done to switch to lvm2 ?
+ - I use lvm for / and I build and initrd with the lvmcreate-initrd =20
+tool. Such a tool is not part of lvm2. How can I create the initrd ? =20
+With the tools from initrd-tools package ?
 
-jason
--- 
-http://panix.com/~jasonp?BabyPictures
+--
+Regards
+			- Jean-Luc
+--w2JjAQZceEVGylhD
+Content-Type: application/pgp-signature
+Content-Disposition: inline
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.2.4 (GNU/Linux)
+
+iD8DBQBAC+BuUdGGXzzGnNARAuqyAJ9V09ga9XcSzDT+mHhUbNyJvm2/iQCeMe4T
+yyKReJB3VaKrT6MYKtdqk/k=
+=Bq9e
+-----END PGP SIGNATURE-----
+
+--w2JjAQZceEVGylhD--
