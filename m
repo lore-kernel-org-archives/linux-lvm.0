@@ -1,11 +1,12 @@
-Return-Path: <bcorsello@usa.net>
-Date: Sat, 06 Jan 2001 23:08:03 -0500
-From: Brad Corsello <bcorsello@usa.net>
+Return-Path: <russell@coker.com.au>
+From: Russell Coker <bofh@coker.com.au>
+Subject: Re: [linux-lvm] any way to locate vg's on, say, /etc?
+Date: Sun, 7 Jan 2001 18:27:23 +1100
+References: <3A57B052.FA0DFBB2@wrkhors.com>
+In-Reply-To: <3A57B052.FA0DFBB2@wrkhors.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Return-Path: bcorsello@usa.net
-Message-ID: <04b311608040711NYCSMTP1@nyc.rr.com>
-Subject: [linux-lvm] LVM 0.9 vgscan problem
+Message-Id: <0101071827230Q.05036@lyta>
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -18,34 +19,39 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@sistina.com
+To: linux-lvm@sistina.com, Steven Lembark <lembark@wrkhors.com>
 
-OK, Jan's patch fixed the vgextend problem on my machine, at least.  I
-manually made the changes to the lvm.c that ships with 2.4.0 and recompiled
-the module, and I succesfully did a few vgextend operations.  We're just
-commenting out one line and adding two lines in a different place.  Jan's
-patch does not appear to be against the version of lvm.c that ships with
-2.4.0, so I didn't try to apply it.  A patch against the version of lvm.c that
-ships with 2.4.0 follows (sorry if the format is wrong, I don't usually do
-this sort of thing):
+On Sunday 07 January 2001 10:54, Steven Lembark wrote:
+> currently have a choice:  LVM or devfs.  since devfs essentially
+> wipes out any /dev/blah dir's created after boot when it is
+> remounted using /dev/ w/ vgcreate causes pain.  short of hacking
+> soft links or archiving the devices w/ cpio every boot, putting
+> the vol group dir's outside dev seems like the easiest fix.
+>
+> personal guess would be /etc or /LVM as likely places.
+>
+> just wondering if "/dev" is hard-coded or configurable
+> in the kernel headers somewhere...
 
----------------
+You can mount devfs on another location...
 
---- lvmbackup/lvm.c     Fri Jan  5 19:10:25 2001
-+++ /usr/src/linux/drivers/md/lvm.c     Sat Jan  6 22:41:22 2001
-@@ -2021,9 +2021,10 @@ static int lvm_do_vg_extend(vg_t *vg_ptr
-                for (p = 0; p < vg_ptr->pv_max; p++) {
-                        if ( ( pv_ptr = vg_ptr->pv[p]) == NULL) {
-                                ret = lvm_do_pv_create(arg, vg_ptr, p);
--                               lvm_do_create_proc_entry_of_pv ( vg_ptr,
-pv_ptr);
-+/*                             lvm_do_create_proc_entry_of_pv ( vg_ptr,
-pv_ptr); */
-                                if ( ret != 0) return ret;
--       
-+                               pv_ptr = vg_ptr->pv[p];
-+                               lvm_do_create_proc_entry_of_pv ( vg_ptr,
-pv_ptr);
-                                /* We don't need the PE list
-                                   in kernel space like LVs pe_t list */
-                                pv_ptr->pe = NULL;
+But that's not the solution either.  Every kernel driver should have
+#ifdef CONFIG_DEVFS_FS
+and then some code to create device nodes at the time it registers it's u=
+se=20
+of the device numbers.
+Device drivers that aren't devfs aware are buggy.
+/etc is totally wrong, it's only supposed to have config files.  Doing=20
+otherwise would make Linux as crappy as Solaris.
+
+The best solution to these types of problems would be to make devfs manda=
+tory=20
+for LVM and then only use the devfs functionality.  Then device numbers s=
+top=20
+being a problem.
+
+--=20
+http://www.coker.com.au/bonnie++/     Bonnie++ hard drive benchmark
+http://www.coker.com.au/postal/       Postal SMTP/POP benchmark
+http://www.coker.com.au/projects.html Projects I am working on
+http://www.coker.com.au/~russell/     My home page
