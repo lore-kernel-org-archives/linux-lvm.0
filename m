@@ -1,9 +1,8 @@
-From: "Kai-Min Sung" <k@kaisung.com>
-Subject: RE: [linux-lvm] re: iSCSI and LVM
-Message-ID: <000201c31be3$9eb516e0$3200a8c0@nimiak>
+From: "Herman Kuster" <ha.ka@chello.nl>
+Message-ID: <000701c31c3f$a42c2620$c600a8c0@hermanslaptop>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-In-Reply-To: <0vcacvsnbiq3kpgokrl5co8iuhe78f1ud7@4ax.com>
+Content-Transfer-Encoding: quoted-printable
+Subject: [linux-lvm] lvm on a firewire harddisk
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,87 +13,41 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Fri May 16 14:44:02 2003
+Date: Sat May 17 01:43:02 2003
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
-Cc: 'Steve Brueggeman' <xioborg@yahoo.com>
 
-Hi Steve,
-	Yes, if you could find any patches that might help I'd greatly
-appreciate it! I think you're right about the read_capacity being
-hard-coded. I remember the disk size being reported as something like
-1900MB. I'll try taking a closer look at the code later this weekend.
+Hi,
 
-Thanks!
--Kai
+I've got the following problem:
+I've a firewire harddisk (maxtor 5000xt), this disk works fine and is
+available as /dev/sda in my system.
+On this disk i have created one single pv (on /dev/sda, no partitioning)
+I have put this pv into a vg, and in this volume group i have created =
+one
+lv.
+All seems to be working fine until the time comes when my computer =
+restarts.
+On a boot somehow the lvm system forgets the pv on de firewire harddisk =
+and
+only shows (on a pvscan for example) the pv/vg/lv's on my normal =
+harddisks
+(/dev/hda and /dev/hdb). By the time the lvm system starts up i'm sure =
+the
+ieee1394 system is up and running (i modified my rc.sysinit file so the
+ieee1394 system is startup before lvm).
+Even when i am logged in as a user the lvm system still doesn't know the =
+pv
+on my firewire harddisk. But after I do a 'pvdisplay /dev/sda' the pv is
+shown correctly and now the lvm system knows about the pv (it shows up =
+in
+pvscan and the vg/lv become available etc.). Does anyone know why my =
+system
+behaves as it does (btw i'm using a redhat 9.0 clean install), is this =
+some
+kind of bug in the lvm system, am i doing something wrong, please help.
 
------Original Message-----
-From: linux-lvm-admin@sistina.com [mailto:linux-lvm-admin@sistina.com]
-On Behalf Of Steve Brueggeman
-Sent: Friday, May 16, 2003 12:01 PM
-To: linux-lvm@sistina.com
-Subject: Re: [linux-lvm] re: iSCSI and LVM
+Thanks,
 
-About a year ago, I had worked with the UNH iSCSI driver backend.  I
-ended up writing another backend that did reads/writes directly to the
-block layer.
-
-The backend that is (was? I haven't looked at it for a while) was
-extremely simple minded, and will need a bit of work for proper
-operation.  For example, when you used "file' as the backend, with the
-file being the LV, you reported the capacity as being incorrect.  This
-is because, (if  I recall correctly) the read_capacity SCSI command
-was hard-coded to the file size of the file that would have been
-created, had you not renamed it to the LV block dev.  You'll need to
-check the actual size of the device  when a read_capacity command is
-received.
-
-Also, I don't recall any mode page support being there, and their
-implementation of buffering is quite simplistic.
-
-I'll see if I can find my old back-end patches.  Would you be
-interested???
-
-Steve Brueggeman
-
-
-On Wed, 14 May 2003 23:43:09 -0700, you wrote:
-
->Hi Greg,
->	Thanks for responding. I'm currently trying out the iSCSI
->implementation provided by the UNH IOL iSCSI Consortium:
->
->http://www.iol.unh.edu/consortiums/iscsi/
->
->They provide modules for both target and initiator. Unfortunately, the
->implementation is based on the v18 draft and doesn't include support
-for
->ErrorRecoveryLevel 2. I'd like level 2 recovery so that I can failover
->the node running the iSCSI target, and have the initiator automatically
->reconnect to the new iSCSI target node. Also, their implementation
->doesn't have support for setting up a logical volume as an iSCSI
-target.
->You can specify a file as an iSCSI target, so I tried specifying the
->logical volume's block device file, but when I imported it on the
->initiator node, the capacity of the device was all screwed up. Anyways,
->I'll try your pointer to the Intel implementation and see if it works
->better. Alternatively, I may try looking into using ENBD to export the
->logical volumes.
->
->Thanks,
->-Kai 
->
->
->_______________________________________________
->linux-lvm mailing list
->linux-lvm@sistina.com
->http://lists.sistina.com/mailman/listinfo/linux-lvm
->read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
-
-
-_______________________________________________
-linux-lvm mailing list
-linux-lvm@sistina.com
-http://lists.sistina.com/mailman/listinfo/linux-lvm
-read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+Herman
