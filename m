@@ -1,11 +1,10 @@
-Return-Path: <dave@galilean.d2g.com>
-Date: Sun, 18 Mar 2001 23:28:31 +0100
-From: Dave Wapstra <dave@xs4all.nl>
-Subject: Re: [linux-lvm] Kernel 2.4.x with LVM beta 6 on Sun E450?
-Message-ID: <20010318232831.A30928@mercury.mercury.multiweb.nl>
-References: <20010318125600.A24084@mercury.mercury.multiweb.nl> <3AB51A73.8D931205@wrkhors.com> <20010318222501.A30232@mercury.mercury.multiweb.nl> <3AB528E0.D6BA04C8@wrkhors.com>
-Mime-Version: 1.0
-In-Reply-To: <3AB528E0.D6BA04C8@wrkhors.com>; from lembark@wrkhors.com on Sun, Mar 18, 2001 at 03:30:08PM -0600
+Return-Path: <dlt@dataventures.com>
+Message-ID: <3AB59501.FF6ED9F3@dataventures.com>
+Date: Sun, 18 Mar 2001 22:11:29 -0700
+From: Donald Thompson <dlt@dataventures.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] Apparent performance degradation for each PV with striping
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -18,35 +17,63 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On 18 March, 2001 at 15:30:08 -0600, Steven Lembark <lembark@wrkhors.com> wrote:
-> 
-> > Thanks, but this is a non-X box. It is probably worth trying to use the
-> > .config of -pre3 with 2.4.2 and use the beta6 plus ioctl patches to try
-> > and get this thing to compile correctly.
-> > 
-> > I'll just give that a try...
-> 
-> or just "make config".  takes a while but doesn't depend on any
-> fancy display system.
+I started playing with iostat tonight and saw a few things I didn't
+really expect to see.
 
-Did that indeed. I copied the .config from -pre3 and used the good old
-"make config" and the enter key ;)
+I've got a volume group consisting of 4 82 gig drives. All 4 are IDE
+drives.
+Reading directly from the raw device, a PV in this case, with something
+like
 
-I got the ioctl32 patch once again via the web mail-archive and did a
-"s/       /^V<tab>/g" to get a correct format.
+dd if=/dev/ide/host0/bus0/target0/lun0/disc of=/dev/null
 
-Now I've got a running system with 2.4.2 and LVM-0.9.1-beta 6 including
-the ioctl32 patch!
+gave me around 5500 blocks read per second.
+Reading from a unstriped LV on a single PV gives me around
+4500 blocks read per second, which I felt was reasonable. When I create
+a LV striped across all four, my blocks read per second drops to around
+1100
+per hard drive, giving me a total of about 4400 reads per second for
+that LV.
+2200 reads per second if I striped it across 2 PV's. Timing how long it
+took
+to finish a dd for the different types of LV's I made pretty much
+confirmed what
+iostat was saying. It always took me 45 seconds, give or take a second,
+to
+read a 100 megabyte LV. So it appears striping is useless for me,
+atleast with this
+hardware setup.
 
-I just created a 16 Gig (2x8) VG/LV and it looks fine.
+I notice during the dd operation that my system CPU state is 90% or
+more.
+So I think I just answered my own question, I'm CPU bound. Moving on,
+is there any known ways to improve my performance off each PV with this
+type of
+hardware setup? I usually create an LV with...
 
-Now I can start playing around to see how stable the system really is.
+lvcreate -i4 -I4 -L somesize vgname -n lvname
 
--Dave
+Should I expect that I won't see the performance drop on individual PV's
+with striping
+on SCSI drives? I originally setup this system with no intentions of it
+being a high performance
+file server, until a few people I work with decided they wanted to use
+it for a database machine.
+So I'm not afraid to spend a couple grand to get some faster disks in it
+if thats the only thing
+thats gonna help me.
 
--- 
-Dave Wapstra
-dave@xs4all.nl
+My system:
+
+Linux 2.4.2
+Libc 2.1.3
+Debian Potato
+LVM 0.9.1_beta6 utilities and patch.
+ATA 100 IDE interfaces on MB
+idebus set to 66 in /etc/lilo.conf
+CPU is Athlon 1000mhz thunderbird
+256 megs of RAM
+
+-Don
