@@ -1,12 +1,10 @@
-Date: Mon, 10 Sep 2001 10:39:52 +0200
-From: =?iso-8859-1?Q?Ragnar_Kj=F8rstad?= <lvm@ragnark.vestdata.no>
-Subject: Re: [linux-lvm] pv_move_pe() error again :/
-Message-ID: <20010910103952.B31660@vestdata.no>
-References: <E15f13v-0003bs-00@hermes.sistina.com> <E15fJux-0005Kk-00@hermes.sistina.com> <20010910001643.A19424@vestdata.no> <E15gELn-0004OG-00@hermes.sistina.com>
+Date: Mon, 10 Sep 2001 13:12:03 +0200
+From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
+Subject: Re: [linux-lvm] missing vg after reboot
+Message-ID: <20010910131203.C31313@sistina.com>
+References: <20010909221342.48255.qmail@web13905.mail.yahoo.com>
 Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <E15gELn-0004OG-00@hermes.sistina.com>; from fejf@gmx.de on Mon, Sep 10, 2001 at 01:51:37AM +0200
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20010909221342.48255.qmail@web13905.mail.yahoo.com>; from m_holschbach@yahoo.com on Sun, Sep 09, 2001 at 03:13:42PM -0700
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -18,68 +16,236 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="iso-8859-1"
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Mon, Sep 10, 2001 at 01:51:37AM +0200, FEJF wrote:
-> Ragnar Kj=F8rstad, on Montag, 12. September 2001 00:16 wrote:
-> > OK, this is the patch.
->=20
-> thx, for your help, but meanwhile i got one from Holger Grothe.
-> sorry, but i haven't had time to post it earlier. i do it now because i=
-t has=20
-> some advantages...
->=20
-> tools/lib/pv_move.c:
->=20
-> replace:
->             fprintf ( stderr, "%s -- ERROR reading input "
->                      "physical volume \"%s\" (still %d bytes to read)\n=
-      =20
->                       cmd, vg->pv[src_pv_index]->pv_name, size);
->             pe_unlock ( vg->vg_name);
->             ret =3D -LVM_EPV_MOVE_PE_READ_IN;
->             goto pv_move_pe_end;
-> with:
->            fprintf ( stderr, "read: %ld, to_read %ld\n", red, to_read);
->            memset(buffer,170,to_read);
->            red=3Dto_read;
->=20
-> with 170 u can chosse with which chars the bad block should be replaced=
- with.=20
-> (you can search filez for them later if u want - and have enough time ;=
-)
+Michael,
 
-It's better than my patch, but still not "correct":
-* In my case pe_lock() failed, so it had to be "removed" as well. Was
-  that not the case for you?
-* ret=3D=3D-1 and ret<to_read should probably be handled differently.
-  * For ret>0 && ret<to_read the regular execution path could be followed.
-  * When red=3D=3D-1 there should be a seek on pv[src_pv_index], so the
-    possition of the filehandle is set correctly. (now it's undefined)
-* maybe red=3DSECTOR_SIZE; would be better? see next comment.
+the pvdata output below exposes a completely messy PV structure,
+which makes me think of 2 possible reasons:
 
-> tools/pvmove.c:
->=20
-> replace:
-> 	int buffer_size =3D 64*1024;
-> with:  =20
-> 	int buffer_size =3D 512;
->=20
-> this is an advantage to your patch, because pvmove then copys only 512=20
-> byte-blocks and if there's only one block damaged u don't loose 64kb da=
-ta.=20
-> this has one disadvantage: it's SLOW... and slower than that ;)
+a. /dev/hda2 is not the device you used to create a physical volume
 
-This is not needed if the read loop is allowed to continue.
+b. something accidentially overwrote /dev/hda2 after the PV creation
 
 
-It would be great if someone took this patch, made the proposed changes,
-and integrated it into the standard tools with an "ingore-read-errors"
-flag... hint hint.
+If b is true you might still have an actual VGDA backup in /etc/lvmconf/ which
+you can use to vgcfgrestore(8) it to /dev/hda2 presumed that /dev/hda2 is
+the right device.
 
 
+Regards,
+Heinz    -- The LVM Guy --
 
---=20
-Ragnar Kj=F8rstad
-Big Storage
+
+On Sun, Sep 09, 2001 at 03:13:42PM -0700, Michael wrote:
+> Hi!
+> 
+> I'm using LVM 0.9.1_beta7 on SuSE Linux 7.2.
+> 
+> I created a second VG (the other VG is detected by
+> vgscan on bootup) with only one PV and added some LV
+> to it. Later I added a second PV to the second VG and
+> i copied the old LV to new LV with stripes=2. All this
+> configuration was made with the lvm tool included in
+> yast from SuSE.
+> During reboot the system finds the first VG, but not
+> the second one, which was detected before, when only
+> one PV was assigned to it. I was using the second VG
+> before reboot with two assigned PV. 
+> 
+> 
+> *** output, which might be of interest:
+> 
+> server1:/etc/lvmconf # pvdata /dev/hda2
+> --- Physical volume ---
+> PV Name               /dev/hda2
+> VG Name              
+> ???????????????????????????????????????????????????????????????????????
+> ????????????????????????npuspupupupupupupupupspupspspspspssp??????????????????????ppppupupupu
+> pupupuspupupupupspspupupupspupspupupunP2?PPPPPnrpppp?}???????????????????????????????????????
+> PV Size               923.51 GB / NOT usable 720.86 GB
+> [LVM: 586.02 MB]
+> PV#                   4057395697
+> PV Status             available
+> Allocatable           NO
+> Cur LV                1886614896
+> PE Size (KByte)       985249850
+> Total PE              1936748912
+> Free PE               50003456
+> Allocated PE          1886745456
+> PV UUID              
+> ,1HVA7-GV??-H?G>-H,HA-GH71-?H??-OIKOKO
+> 
+> pvdata -- can't seek to volume group struct physical
+> volume "/dev/hda2"
+> 
+> *** hda2 is the partition, i added later to the second
+> vg
+> 
+> server1:~ # pvscan /dev/hda2
+> pvscan -- reading all physical volumes (this may take
+> a while...)
+> pvscan -- ACTIVE   PV "/dev/sda2" of VG "system" [3.84
+> GB / 0 free]
+> pvscan -- ACTIVE   PV "/dev/sdb2" of VG "system" [3.91
+> GB / 2.49 GB free]
+> pvscan -- inactive PV "/dev/hdc2"  is associated to an
+> unknown VG (run vgscan)
+> pvscan -- total: 3 [36.25 GB] / in use: 3 [36.25 GB] /
+> in no VG: 0 [0]
+> 
+> server1:/etc/lvmconf # vgscan
+> vgscan -- reading all physical volumes (this may take
+> a while...)
+> vgscan -- found active volume group "system"
+> vgscan -- "/etc/lvmtab" and "/etc/lvmtab.d"
+> successfully created
+> vgscan -- WARNING: This program does not do a VGDA
+> backup of your volume group
+> 
+> *** "system" is the first VG, the missing VG was
+> called "data"
+> 
+> server1:~ # pvdisplay /dev/hda2
+> pvdisplay -- no physical volume identifier on
+> "/dev/hda2"
+> 
+> server1:~ # vgcfgrestore -v -n data /dev/hda2
+> vgcfgrestore -- locking logical volume manager
+> vgcfgrestore -- restoring volume group "data" from
+> "/etc/lvmconf/data.conf"
+> vgcfgrestore -- checking existence of
+> "/etc/lvmconf/data.conf"
+> vgcfgrestore -- reading volume group data for "data"
+> from "/etc/lvmconf/data.con
+> f"
+> vgcfgrestore -- reading physical volume data for
+> "data" from "/etc/lvmconf/data.
+> conf"
+> vgcfgrestore -- reading logical volume data for "data"
+> from "/etc/lvmconf/data.c
+> onf"
+> vgcfgrestore -- checking volume group consistency of
+> "data"
+> vgcfgrestore -- checking volume group consistency of
+> "data"
+> vgcfgrestore -- reading physical volume "/dev/hda2"
+> vgcfgrestore -- ERROR "pv_read(): PV identifier
+> invalid" reading physical volume
+>  "/dev/hda2"
+> 
+> 
+> server1:~ # vgcfgrestore -v -ll -n data /dev/hda2
+> |more
+> vgcfgrestore -- locking logical volume manager
+> vgcfgrestore -- restoring volume group "data" from
+> "/etc/lvmconf/data.conf"
+> vgcfgrestore -- checking existence of
+> "/etc/lvmconf/data.conf"
+> vgcfgrestore -- reading volume group data for "data"
+> from "/etc/lvmconf/data.con
+> f"
+> vgcfgrestore -- reading physical volume data for
+> "data" from "/etc/lvmconf/data.
+> conf"
+> vgcfgrestore -- reading logical volume data for "data"
+> from "/etc/lvmconf/data.c
+> onf"
+> vgcfgrestore -- checking volume group consistency of
+> "data"
+> vgcfgrestore -- checking volume group consistency of
+> "data"
+> --- Volume group ---
+> VG Name               data
+> VG Access             read/write
+> VG Status             NOT available/resizable
+> VG #                  1
+> MAX LV                256
+> Cur LV                6
+> Open LV               0
+> MAX LV Size           255.99 GB
+> Max PV                256
+> Cur PV                2
+> Act PV                2
+> VG Size               56.11 GB
+> PE Size               4 MB
+> Total PE              14364
+> Alloc PE / Size       12800 / 50 GB
+> Free  PE / Size       1564 / 6.11 GB
+> VG UUID              
+> k6Out8-Mlm6-2vwt-KgX5-uwKl-3M3V-v732Os
+> 
+> --- Logical volume ---
+> 
+> *** [...]
+> 
+> --- Physical volume ---
+> PV Name               /dev/hdc2
+> VG Name               data
+> PV Size               28.5 GB / NOT usable 580 KB
+> [LVM: 149 KB]
+> PV#                   1
+> PV Status             available
+> Allocatable           yes
+> Cur LV                6
+> PE Size (KByte)       4096
+> Total PE              7295
+> Free PE               895
+> Allocated PE          6400
+> PV UUID              
+> QC9SlR-9er7-zW6p-MryA-9T2F-MAJN-2g6ClJ
+> 
+> --- Physical volume ---
+> PV Name               /dev/hda2
+> VG Name               data
+> PV Size               27.62 GB / NOT usable 2.48 MB
+> [LVM: 148 KB]
+> PV#                   2
+> PV Status             available
+> Allocatable           yes
+> Cur LV                6
+> PE Size (KByte)       4096
+> Total PE              7069
+> Free PE               669
+> Allocated PE          6400
+> PV UUID              
+> e7sX5R-XnTm-keX6-jShf-tTlw-DUP3-mzp4zW
+> 
+> 
+> 
+> vgcfgrestore -- unlocking logical volume manager
+> 
+> 
+> ***
+> 
+> Is there any way to fix the PV on hda2? I tried a tool
+> called uuid_fixer, but i only got the output "Illegal
+> instruction" back. 
+> 
+> MfG Michael
+> 
+> __________________________________________________
+> Do You Yahoo!?
+> Get email alerts & NEW webcam video instant messaging with Yahoo! Messenger
+> http://im.yahoo.com
+> 
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@sistina.com
+> http://lists.sistina.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
+
+*** Software bugs are stupid.
+    Nevertheless it needs not so stupid people to solve them ***
+
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+Heinz Mauelshagen                                 Sistina Software Inc.
+Senior Consultant/Developer                       Am Sonnenhang 11
+                                                  56242 Marienrachdorf
+                                                  Germany
+Mauelshagen@Sistina.com                           +49 2626 141200
+                                                       FAX 924446
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
