@@ -1,12 +1,9 @@
-From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] Howto Make LVM Work With NBD/ENBD?
-Message-Id: <20020430155338.D4879@sistina.com>
-References: <00e301c1e7b2$4f501d90$f42cb69d@cerc.wvu.edu>
-    <1020086556.3ccd491c5efd7@mail.holanyi.hu>
-MIME-Version: 1.0
-In-Reply-To: <1020086556.3ccd491c5efd7@mail.holanyi.hu>; from
-    csani@lme.linux.hu on Mon, Apr 29, 2002 at 03:22:36PM +0200
+Subject: Re: [linux-lvm] Addiing new hdd to pv group
+MIME-Version: 1.0 (Apple Message framework v481)
+From: Stephan Budach <stephan.budach@jvm.de>
 Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20020430154018.B4879@sistina.com>
+Message-Id: <EA604318-5C51-11D6-AAFE-000393452E7E@jvm.de>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,117 +14,104 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Tue Apr 30 08:56:02 2002
+Date: Tue Apr 30 10:48:01 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="iso-8859-1"
+Content-Type: text/plain; charset="iso-8859-1"; format="flowed"
 To: linux-lvm@sistina.com
 
-On Mon, Apr 29, 2002 at 03:22:36PM +0200, Csan (Ja'nos Hola'nyi) wrote:
-> Hi Ning,
->=20
-> I had similar problems with exactly the same ERROR message.
-> I figure this is lvm10...?
-> In that case, please check if _noprocdir[] and _devdir[] sections in
-> LVM/1.0.3/tools/lib/lvm_dir_cache.c contain the line:
->=20
->         LVM_DIR_PREFIX "nb",
+Heinz,
 
-FYI: have replaced that nasty hard-coded device spec in LVM1 CVS by
-     an environment variable configurable approach.
+well yes, after doing a makewhatis i found the vgextend command and that=20=
 
-export LVM_DEVICES=3D"sdb;sdc;nb:0"
+was absolutely what I was looking for.
 
-will just use /dev/sd[bc]* (16 partitions by default)
-and /dev/nb* (0 partitions).
+I also followed som eadvice from this list and excluded autoconfig.h=20
+from liblvm.h and compiling went smoothly on my RH 7.2.93 box. Just if=20=
 
-Without that environment variable, defaults like in earlier versions
-are used.
+anybody wanted to know...
 
-Regards,
-Heinz    -- The LVM Guy --
+Thanks,
+Stephan
 
->=20
-> If not, insert, make (in LVM/1.0.3/), make install and it should work.
->=20
-> If you're on Debian, you could also check out the APT archives at
->=20
-> deb http://people.debian.org/~patrick unstable main
->=20
-> and install lvm10 from there (they're OK also for Debian 3.0 woody). Th=
-at
-> package already contains these fixes.
->=20
-> (BTW, I am actually building a HA cluster with DRBD+LVM. DRBD uses nbd.
-> Currently there are some issues on the standby node - LV detection not =
-working
-> yet -, but we're slowly getting there. The active node has ext3fs on th=
-e LV, and
-> the replication works great... so far.)
->=20
-> Best regards,
->=20
-> Csan
->=20
-> PS: thanks for the above fixes go to "ejt" and "pjc" guys on #lvm
-> (irc.openprojects.net)
-> Please CC: me if you're replying as I am not subscribed to the list.
->=20
-> Quoting Ning Ye <nye@csee.wvu.edu>:
->=20
-> > Hi!,
-> >=20
-> >     I want to make them work together, which makes me crazy these day=
-s.=20
-> >=20
-> >=20
-> >     I can initialize the disks and partitions exported by ENBD, but w=
-hen
-> > trying to create a volume group on it, vgcreate fails.
-> > # vgcreate my_volume /dev/ndb
-> > vgcreate -- ERROR "pv_read(): read" reading physical volumes
-> >     After examine the debug output, it looks to me lvm trying to
-> > enumerate all physical disks present to the system.  These disks incl=
-ude
-> > SCSI disks(sda...), IDE disks(hda...) and loops(loop0...).  However, =
-the
-> > LVM will not recognize the exported disk as a physical one.
-> >=20
-> >     Did any one ever make it work before?  I would like to know befor=
-e I
-> > am trying to look into the code.  Combining these two great packages
-> > would be wonderful.  But how?  Help needed.  Thanks.
-> >=20
-> >                 Ning
-> >=20
-> >=20
->=20
->=20
->=20
-> Csan
->=20
-> J=E1nos Hol=E1nyi
-> Association of Hungarian Linux Users
-> Email: csani@lme.linux.hu
->=20
+Am Dienstag den, 30. April 2002, um 15:40, schrieb Heinz J . =
+Mauelshagen:
+
+>
+> Stephan,
+>
+> recent LVM versions have a pvresize command, which can add the space =
+of
+> a grown partition/device to a physical volume stored in that =
+partition.
+>
+> You can't combine seperate devices (like 2 different disks) this way.
+>
+> If hdd is a free disk, just run pvcreate on it and use vgextend to add=20=
+
+> it
+> to one of your existing volume groups.
+>
+> On Mon, Apr 29, 2002 at 04:30:59PM +0200, Stephan Budach wrote:
+>> Hi,
+>>
+>> is it possible to expand an existing pv with an additional hdd, =
+without
+>> loosing data, of course?
+>>
+>> Thanks,
+>> Stephan
+>> --
+>> Stephan Budach
+>>
+>> Jung von Matt/Services
+>>
+>> Glash=FCttenstrasse 38   			20357 Hamburg
+>> Telefon: +49-40-4321-1353    		Fax: +49-40-4321-1114
+>> eMail: stephan.budach@jvm.de	Internet: http://www.jvm.de
+>>
+>>
+>> _______________________________________________
+>> linux-lvm mailing list
+>> linux-lvm@sistina.com
+>> http://lists.sistina.com/mailman/listinfo/linux-lvm
+>> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
+>
+> --
+>
+> Regards,
+> Heinz    -- The LVM Guy --
+>
+> *** Software bugs are stupid.
+>     Nevertheless it needs not so stupid people to solve them ***
+>
+> =
+=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D=
+-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D
+> -=3D-=3D-
+>
+> Heinz Mauelshagen                                 Sistina Software =
+Inc.
+> Senior Consultant/Developer                       Am Sonnenhang 11
+>                                                   56242 Marienrachdorf
+>                                                   Germany
+> Mauelshagen@Sistina.com                           +49 2626 141200
+>                                                        FAX 924446
+> =
+=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D=
+-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D
+> -=3D-=3D-
+>
 > _______________________________________________
 > linux-lvm mailing list
 > linux-lvm@sistina.com
 > http://lists.sistina.com/mailman/listinfo/linux-lvm
 > read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
+>
+--
+Stephan Budach
 
-*** Software bugs are stupid.
-    Nevertheless it needs not so stupid people to solve them ***
+Jung von Matt/Services
 
-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D=
--=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=
-=3D-=3D-
-
-Heinz Mauelshagen                                 Sistina Software Inc.
-Senior Consultant/Developer                       Am Sonnenhang 11
-                                                  56242 Marienrachdorf
-                                                  Germany
-Mauelshagen@Sistina.com                           +49 2626 141200
-                                                       FAX 924446
-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D=
--=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=
-=3D-=3D-
+Glash=FCttenstrasse 38   			20357 Hamburg
+Telefon: +49-40-4321-1353    		Fax: +49-40-4321-1114
+eMail: stephan.budach@jvm.de	Internet: http://www.jvm.de
