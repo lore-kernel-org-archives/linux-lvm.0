@@ -1,10 +1,10 @@
-Content-Class: urn:content-classes:message
+From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
+Subject: Re: [linux-lvm] Error in LVM Installation
+Message-Id: <20020306105555.B21935@sistina.com>
+References: <20020306051331.7466.qmail@web13603.mail.yahoo.com>
 MIME-Version: 1.0
-Content-Type: multipart/mixed;
-    boundary="------------InterScan_NT_MIME_Boundary"
-Message-Id: <1BD922A62552D411B48A00D0B74723751120A8A9@kecmsg04.ad.infosys.com>
-From: "ASHISH GUPTA" <ashish_gupta@infy.com>
-Subject: [linux-lvm] LVM Documentation
+In-Reply-To: <20020306051331.7466.qmail@web13603.mail.yahoo.com>;
+    from ashishgupta01@yahoo.com on Tue, Mar 05, 2002 at 09:13:31PM -0800
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,83 +15,70 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Mar  6 03:57:02 2002
+Date: Wed Mar  6 03:58:02 2002
 List-Id: <linux-lvm.redhat.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-This is a multi-part message in MIME format.
+Ashish,
 
---------------InterScan_NT_MIME_Boundary
-Content-Type: multipart/alternative;
-	boundary="----_=_NextPart_001_01C1C4F5.487DA04E"
+I guess you didn't start with a clean vanilla kernel patching
+the LVM driver in, as described in the LVM distro in files INSTALL and
+PATCHES/README.
 
-------_=_NextPart_001_01C1C4F5.487DA04E
-Content-Type: text/plain;
-	charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-
-Hi ,
-=20
-Where can I find the Linux Volume Manager source code documentation ?  =
-It will be very helpful for me to go through the code. Right Now ,I am =
-using the LVM version 1.0.2 on red Hat Linux 7.2.
-=20
-Thanx,
-Ashish
-=20
-=20
-=20
-=20
-=20
-=20
-=20
-=20
-
-------_=_NextPart_001_01C1C4F5.487DA04E
-Content-Type: text/html;
-	charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
-<HTML><HEAD>
-<META HTTP-EQUIV=3D"Content-Type" CONTENT=3D"text/html; =
-charset=3Diso-8859-1">
+If so, use a clean vanilla kernel and retry.
 
 
-<META content=3D"MSHTML 5.00.3103.1000" name=3DGENERATOR></HEAD>
-<BODY>
-<DIV><FONT color=3D#0000ff face=3D"Trebuchet MS" size=3D2><SPAN=20
-class=3D108165009-06032002>Hi ,</SPAN></FONT></DIV>
-<DIV><FONT color=3D#0000ff face=3D"Trebuchet MS" size=3D2><SPAN=20
-class=3D108165009-06032002></SPAN></FONT>&nbsp;</DIV>
-<DIV><FONT color=3D#0000ff face=3D"Trebuchet MS" size=3D2><SPAN=20
-class=3D108165009-06032002>Where can I find the Linux Volume Manager =
-source code=20
-documentation ?&nbsp;&nbsp;It will be very helpful for me to go through =
-the=20
-code. </SPAN></FONT><FONT color=3D#0000ff face=3D"Trebuchet MS" =
-size=3D2><SPAN=20
-class=3D108165009-06032002>Right Now ,I am using the LVM version 1.0.2 =
-on red Hat=20
-Linux 7.2.</SPAN></FONT></DIV>
-<DIV><FONT color=3D#0000ff face=3D"Trebuchet MS" size=3D2><SPAN=20
-class=3D108165009-06032002></SPAN></FONT>&nbsp;</DIV>
-<DIV><FONT color=3D#0000ff face=3D"Trebuchet MS" size=3D2><SPAN=20
-class=3D108165009-06032002>Thanx,</SPAN></FONT></DIV>
-<DIV><FONT color=3D#0000ff face=3D"Trebuchet MS" size=3D2><SPAN=20
-class=3D108165009-06032002>Ashish</SPAN></FONT></DIV>
-<DIV><FONT color=3D#0000ff face=3D"Trebuchet MS" size=3D2><SPAN=20
-class=3D108165009-06032002></SPAN></FONT>&nbsp;</DIV>
-<DIV><FONT color=3D#0000ff face=3D"Trebuchet MS" size=3D2><SPAN=20
-class=3D108165009-06032002></SPAN></FONT>&nbsp;</DIV>
-<DIV>&nbsp;</DIV>
-<DIV>&nbsp;</DIV>
-<DIV>&nbsp;</DIV>
-<DIV>&nbsp;</DIV>
-<DIV>&nbsp;</DIV>
-<DIV><FONT color=3D#0000ff face=3D"Trebuchet MS" size=3D2><SPAN=20
-class=3D108165009-06032002>&nbsp;</SPAN></FONT></DIV></BODY></HTML>
+On Tue, Mar 05, 2002 at 09:13:31PM -0800, Ashish Gupta wrote:
+> Hi,
+> 
+> I'm facing lots of problem during installation of LVM
+> in Linux Red Hat version 7.2.
+> 
+> I tried installing both the version of LVM 1.0.2 and
+> 1.0.3 with Red Hat Linux 7.2(kernel version 2.4.7-10)
+> and with Red Hat Linux 7.1(kernel version 2.4.2).
+> 
+> Once LVM is installed on the system.And when I reboot
+> the system it shows some file system error and kernel
+> panic occurs.I do not whats the reason for that.
+> 
+> Pls guide me to install LVM on my system.Pls guide
+> which LVM version is most suitable against which Linux
+> Kernel Version.
+> 
+> Thanx,
+> Ashish
+> 
+> =====
+> -Ashish Gupta
+> 
+> __________________________________________________
+> Do You Yahoo!?
+> Try FREE Yahoo! Mail - the world's greatest free email!
+> http://mail.yahoo.com/
+> 
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@sistina.com
+> http://lists.sistina.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
 
-------_=_NextPart_001_01C1C4F5.487DA04E--
+-- 
 
---------------InterScan_NT_MIME_Boundary--
+Regards,
+Heinz    -- The LVM Guy --
+
+*** Software bugs are stupid.
+    Nevertheless it needs not so stupid people to solve them ***
+
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+Heinz Mauelshagen                                 Sistina Software Inc.
+Senior Consultant/Developer                       Am Sonnenhang 11
+                                                  56242 Marienrachdorf
+                                                  Germany
+Mauelshagen@Sistina.com                           +49 2626 141200
+                                                       FAX 924446
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
