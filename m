@@ -1,7 +1,10 @@
-Message-ID: <23233866A70C32479532C8D0B8AE7B96025D72DC@i2km07-ukbr.domain1.systemhost.net>
-From: narsimha.kulkarni@bt.com
+From: Les Hazelton <seawolf@attglobal.net>
 MIME-Version: 1.0
-Subject: [linux-lvm] VG and PV
+Content-Transfer-Encoding: quoted-printable
+Content-Description: clearsigned data
+Content-Disposition: inline
+Message-Id: <200305281327.15326.seawolf@attglobal.net>
+Subject: [linux-lvm] Where can I get liblvm?
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -12,34 +15,37 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed May 28 10:18:02 2003
+Date: Wed May 28 12:26:02 2003
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: Text/Plain; charset="us-ascii"
 To: linux-lvm@sistina.com
 
-i had created a volume group and physical volume some time back.
-I want to delete it and recreate it. the conf file is also not there.
+=2D----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA1
 
-when I do a pvscan, i get
+I just installed a fresh copy of Mandrake 9.1 on a formatted drive.  I used=
+=20
+the included LVM and reisersfs for most of the directory tree.
 
-pvscan -- inactive PV "/dev/hda3"  is associated to an unknown VG (run
-vgscan)
+I also installed the mondo/mindi backup packages. The problem is, when I tr=
+y=20
+to use them they are calling for a file called liblvm which I can't locate =
+in=20
+any of the packages included with the MDK 9.1 distro.  Searches on google=20
+indicate that such a file used to be part of the LVM package.
 
-and when i do a vgscan, i get
+Can anyone help me locate liblvm or tell me what happened to it?
 
-vgscan -- reading all physical volumes (this may take a while...)
-vgscan -- found active volume group "helena_vg"
-vgscan -- ERROR "lv_read_all_lv(): number of LV" can't get data of volume
-group)
-vgscan -- found active volume group "volg"
-vgscan -- "/etc/lvmtab" and "/etc/lvmtab.d" successfully created
-vgscan -- WARNING: This program does not do a VGDA backup of your volume
-groups
+Any help would be greatly appreciated.
 
+=2D --=20
+Les Hazelton
+=2D --- Registered Linux user # 272996 ---
+Experience varies directly with equipment ruined.
+=2D----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.2.2 (GNU/Linux)
 
-i want to delete the vg helena_vg and /dev/hda3 (pv).
-can anyone help me please
-
-thanks in advance 
-narsimha
+iD8DBQE+1PFvlFHS90xAwgwRApiVAJ9PXMZKer4kZd0LvH0IjJCc1tRNiQCfatyK
+M1QWf4+ZHFPuZu/yskrpnFs=3D
+=3DLSQD
+=2D----END PGP SIGNATURE-----
