@@ -1,9 +1,9 @@
-From: "Jan H. van Gils" <JanVG@Knoware.NL>
-Subject: RE: [linux-lvm] Unable to mount root fs after kernel upgrade
-Message-ID: <004a01c2be1e$2f73cdd0$240b892c@pe1mhp.ampr.org>
+Message-ID: <3E27EFD4.9060002@inrialpes.fr>
+From: Frederic Tronel <Frederic.Tronel@inrialpes.fr>
 MIME-Version: 1.0
+Subject: Re: [linux-lvm] Unable to mount root fs after kernel upgrade
+References: <004a01c2be1e$2f73cdd0$240b892c@pe1mhp.ampr.org>
 Content-Transfer-Encoding: 7bit
-In-Reply-To: <3E26CFBC.2020108@inrialpes.fr>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,46 +14,38 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Fri Jan 17 05:46:01 2003
+Date: Fri Jan 17 05:57:02 2003
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@sistina.com
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+To: linux-lvm@sistina.com, JanVG@Knoware.NL
 
-Fred,
+>>I'm not really sure of why this problem occurs but I've been able to 
+>>solve it in the past doing a rdev on the linux kernel image to 
+>>indicate that the root fs is /dev/vg00/root. man rdev should 
+>>help you finding the 
+>>accurate syntax. By the way I thought the problem was due to 
+>>grub (since I'm using grub instead of lilo), but it seems 
+>>that's not the reason.
+>>
+>>Fred.
+> 
+> 
+> Fred do I understand you correct that this is a lilo issue ?
+> Lilo is not using the option "root=/dev/vg00/root" when booting ?
 
-> image=/boot/vmlinuz-2.4.20-686
->         label=Linux-2.4.20
->         read-only
->         root=/dev/vg00/root
->         initrd=/boot/initrd-lvm-2.4.20-686.gz
->         append="ramdisk_size=8192"
->
->> 
->> Now when I reboot the system and try to boot the new kernel 
->I get the 
->> following message : Kernel panic: VFS: Unable to mount root fs on 
->> 3a:00
->> 
+To be honest I'm not really sure of the real source of this problem.
+I would rather say that it's related to the way the parameter 
+/dev/vg00/root is passed to the kernel. Indeed /dev/vg00/root must be 
+translated into a (major,minor) number before be usable by the kernel.
+This should be done at the time you ran lilo. With grub the problem is a 
+little bit different since you can change all the parameters at boot 
+time. But I'm pretty sure it is not due to lilo, since I had the same 
+problem using grub instead.
 
->
->I'm not really sure of why this problem occurs but I've been able to 
->solve it in the past doing a rdev on the linux kernel image to 
->indicate that the root fs is /dev/vg00/root. man rdev should 
->help you finding the 
->accurate syntax. By the way I thought the problem was due to 
->grub (since I'm using grub instead of lilo), but it seems 
->that's not the reason.
->
->Fred.
+However, each time I've been able to solve the problem by rebooting on a 
+previous working kernel (lvm enabled), and writing the root fs inside 
+the new kernel image using rdev.
 
-Fred do I understand you correct that this is a lilo issue ?
-Lilo is not using the option "root=/dev/vg00/root" when booting ?
+BTW, have you been able to boot your new kernel ?
 
-
-Jan
-
-----
-With regards Jan H. van Gils
-Internet web-page http://www.Knoware.NL/users/janvg/
-Internet e-mail address JanVG@Knoware.NL
-RIPE Whois JHG5-RIPE, 6BONE Whois JHG1-6BONE
+Frederic
