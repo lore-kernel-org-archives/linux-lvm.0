@@ -1,9 +1,9 @@
 From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] How do I do RAID 4/5 *and* LVM?
-Message-ID: <20020522103014.A9107@sistina.com>
-References: <3CEA6695.4000100@uci.edu> <Pine.LNX.4.44.0205210827230.29039-100000@koa.knief.net>
+Subject: Re: [linux-lvm] writable snapshots ? (a la timefinder BCV)
+Message-ID: <20020522104026.B9107@sistina.com>
+References: <20020519112259.A23704@newt.stes.be>
 Mime-Version: 1.0
-In-Reply-To: <Pine.LNX.4.44.0205210827230.29039-100000@koa.knief.net>; from herman@knief.net on Tue, May 21, 2002 at 08:29:41AM -0700
+In-Reply-To: <20020519112259.A23704@newt.stes.be>; from stes@pandora.be on Sun, May 19, 2002 at 11:22:59AM +0200
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,55 +14,38 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed May 22 03:34:01 2002
+Date: Wed May 22 03:44:02 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Tue, May 21, 2002 at 08:29:41AM -0700, Herman L. Knief wrote:
-> Yes, create the RAID (MD) device, then layer LVM on top... Now, depeneding
-> on your requirements, you may not need LVM (do you want/need snapshots,
-> etc?)
+On Sun, May 19, 2002 at 11:22:59AM +0200, David Stes wrote:
+> 
+> Hello,
+> 
+> There is an option --snap to the lvcreate utility to create a read-only snapshot(frozen image) of a volume.
+> 
+> Is there a possibility to quickly create a rw (read/write) snapshot of a logical volume ?
 
-Well, LVM makes a lot of sense in case he changes his mind to go with a single
-partition later. In that case LVM plus fs shrinkers give him much more
-flexible options he doesn't have with MD alone.
+Beside other enhancements this is in 1.1-rcX which you can find
+in CVS at www.sistina.com.
+
+*** This is still in stabilization! Don't use it on production systems! ***
 
 > 
-> Also, how are you connecting these disks?  How many IDE ports are you
-> using?  I would recommend against any sort of master/slave setup, as
-> you'll have difficulties with failure detection and won't get the best
-> throughput.
+> I'm thinking here of applications in the style of EMC Timefinder BCV's (bcv = business continuance volumes).
 > 
->  - Herman
+> For example, I want to create a snapshot of a mounted volume running Informix.
 > 
-> On Tue, 21 May 2002, Dave Newman wrote:
+> The snapshot of the mounted logical volume will be inconsistent, but it appears then to contain a 'crashed' instance of Informix, and when mounting the snapshot, I'd like to replay logfiles (do a recovery on the crashed instance) for which I need read/write access to the snapshot ...
+
+You can do this and other things (for eg.: full fsck on the writable snapshot
+to check a filesystems integrity).
+
 > 
-> ->Hi --
-> ->
-> ->I have four 160 GB IDE disks, and wanted to install software RAID 4/5
-> ->*and* LVM, and wanted to ask a couple of brief questions:
-> ->
-> ->a) Do I need LVM if I want to see a single partition (or can RAID do
-> ->this for me)?
-> ->
-> ->b) Do I first install RAID, then LVM?  Are there any difficulties with
-> ->these installs?  (I have already successfully done LVM on its own)
-> ->
-> ->c) Are there any reasons why I shouldn't use both RAID and LVM?
-> ->
-> ->Thanks in advance,
-> ->Dave
-> ->
-> ->
-> ->
-> ->_______________________________________________
-> ->linux-lvm mailing list
-> ->linux-lvm@sistina.com
-> ->http://lists.sistina.com/mailman/listinfo/linux-lvm
-> ->read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
-> ->
+> Thank you,
+> David Stes.
 > 
 > 
 > _______________________________________________
