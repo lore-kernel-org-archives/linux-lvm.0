@@ -1,45 +1,62 @@
-Message-ID: <00cd01bec78d$629e24c0$0102010a@adminstation.sgymsdam.nl>
-From: "Lennert Buytenhek" <buytenh@dsv.nl>
-Subject: Re: [linux-lvm] Re: ext2resize
-Date: Tue, 6 Jul 1999 10:56:06 +0200
+Message-ID: <3782E55A.5549A280@moeraki.com>
+Date: Tue, 06 Jul 1999 22:27:54 -0700
+From: John Finlay <finlay@moeraki.com>
 MIME-Version: 1.0
+Subject: Re: [linux-lvm] Re: ext2resize
+References: <199907051947.NAA23523@munet-d.enel.ucalgary.ca>
 Content-Transfer-Encoding: 7bit
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@msede.com, linux-fsdevel@vger.rutgers.edu
+To: Andreas Dilger <adilger@enel.ucalgary.ca>
+Cc: LVM on Linux <linux-lvm@msede.com>
 
-Stephen Tweedie said:
->Hi,
+Andreas Dilger wrote:
+
+> John Finlay <finlay@moeraki.com> writes:
+> > It seems that ext2 is not really suited for large filesystems: seems like
+> > there is too much redundancy in the block groups that causes slow downs in
+> > operations like mount, etc.; e2fsck takes hours on a 52GB filesystem.
 >
->On Fri, 2 Jul 1999 10:58:27 -0600 (MDT), Andreas Dilger
-><adilger@enel.ucalgary.ca> said:
+> Actually, the new "sparse superblock" version of ext2 available for Linux 2.2
+> kernels removes much of the redundancy issues for superblocks/group blocks.
+> Copies are only stored in group 0, and groups which are a power of 3, 5, and
+> 7.  The real issue with large filesystems isn't the redundancy, which is
+> mostly wasted space and slowdown when unmounting, but rather that the fsck
+> has to verify the entire FS structure at mount time.  The preferred method
+
+It's been my observation that there is an awful lot of disk activity at mount
+time on a clean large file system (no fsck). It appears that every superblock is
+being written in turn - maybe to set the dirty flag? It's particularly noticeable
+if the filesystem uses 1k blocksize. The mounts are much faster for  when the
+filesystem uses 4k blocksize.
+
 >
->> I agree that reserving GDT blocks would be a small hack for v0 of ext2,
-but
->> we could add a "COMPATIBLE" extension to v1 of ext2 that gave the number
-of
->> GDT blocks reserved.  Also, since the v1 sparse superblock filesystems
->> leave a gap between the structures, there should not be a real problem.
->> We just have to make sure that we agree (for example) that all the blocks
->> from the start of the group to the block bitmap are reserved for the GDT.
->> This is not a big strech, since this is already how v0 ext2 filesystems
-are.
+> is to have a transaction log/journal which keeps track of outstanding metadata
+> changes in progress.  When you get a failure, then you only need to replay
+> the log to see what parts of the FS were being modified at the time, and
+> then only those areas need to be verified at fsck time.
 >
->If you're going to be moving user data around anyway (and you have to be
->able to do this for the shrink case anyway), then relocating the
->inode/bitmap blocks is really not that much harder.
 
-There's quite a difference between moving a non-metadata block and
-a metadata block. Non-metadata blocks are easily moved; they have
-only (max.) 1 reference somewhere. Moving metadata blocks is a bit
-harder, especially when the fs is mounted.
+Logging metadata does speed up lots of operations including filesystem recovery
+after an unclean shutdown by avoiding fsck. This does seem like the only way to
+meet the needs of large filesystem users.
 
-Moving the inode/block bitmap blocks is not that difficult when
-unmounted, but moving the inode table is tricky to get right (w.r.t
-atomicity). One ext2resize user got a segfault while the inode table
-was being moved (yes, that bug is fixed now) a while ago and
-we're still cleaning up the mess.
+>
+> > Are there any projects underway to develop a new filesystem that is more
+> > suitable for large filesystems?
+>
+> There are several log FS/JFS projects underway right now for Linux.
 
-Lennert
+Are any of them nearing first release? Where's the best place to find pointers?
+
+>
+> Even SGI will release the source (or so I've read) to their IRIX
+> filesystem, which is journalled, so this may be added to the mix soon.
+>
+
+I'm not hopeful that XFS source will be released soon - seems more like a PR
+gesture.
+
+John
