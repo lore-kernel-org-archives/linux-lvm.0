@@ -1,10 +1,12 @@
-Date: Wed, 22 Aug 2001 16:09:16 +0200
-From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] Snapshot on xfs filesystem
-Message-ID: <20010822160916.A9036@sistina.com>
-References: <3B83AB36.10AA7C1D@tronicplanet.de>
+Date: Wed, 22 Aug 2001 16:43:26 +0000
+From: =?iso-8859-1?Q?Jos=E9_Luis_Domingo_L=F3pez?= <jdomingo@internautas.org>
+Subject: Re: [linux-lvm] how to determine if /dev/... is an LV?
+Message-ID: <20010822164325.A1216@dardhal.mired.net>
+References: <20010822034425.F8742@pc.ilinx>
 Mime-Version: 1.0
-In-Reply-To: <3B83AB36.10AA7C1D@tronicplanet.de>; from stefan.knollmueller@tronicplanet.de on Wed, Aug 22, 2001 at 02:53:10PM +0200
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20010822034425.F8742@pc.ilinx>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,41 +18,43 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
 To: linux-lvm@sistina.com
 
-On Wed, Aug 22, 2001 at 02:53:10PM +0200, Knollmueller Stefan wrote:
-> the kdb does not work - so backtrace is not possible...
-> anything else that could be done?
+On Wednesday, 22 August 2001, at 03:44:25 -0400,
+Brian J. Murrell wrote:
 
-Well, we could try to sort out, that it is a LVM or XFS problem, in case
-you could try a test configuration with EXT2 on LVM accessed via NFS
-rather than XFS or XFS on a partition.
+> Hi all,
+> [...]
+> Also, is there any relationship between the output from the lvdisplay
+> and the minor number for the device?
+> 
+As /usr/src/linux/Documentation/devices.txt says:
 
-> 
-> stefan
-> 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
+ 58 char        Hayes ESP serial card - alternate devices
+                  0 = /dev/cup0         Callout device for ttyP0
+                  1 = /dev/cup1         Callout device for ttyP1
+                    ...
+    block       Reserved for logical volume manager
+
+109 char        Reserved for logical volume manager
+
+
+That is, LVM has block major number 58 reserved for its own use, as well
+as char major number 109. One of my machines has LVM installed, with a VG
+called Grupo00 and two LV, "mp3" and "usr" (ls -l /dev/Grupo00):
+
+total 0
+crw-r-----    1 root     disk     109,   0 jun  4 12:33 group
+brw-rw----    1 root     disk      58,   0 jun  5 04:48 mp3
+brw-rw----    1 root     disk      58,   1 jun  4 17:50 usr
+
+
+Hope it helps. Regards,
 
 -- 
-
-Regards,
-Heinz    -- The LVM Guy --
-
-*** Software bugs are stupid.
-    Nevertheless it needs not so stupid people to solve them ***
-
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-
-Heinz Mauelshagen                                 Sistina Software Inc.
-Senior Consultant/Developer                       Am Sonnenhang 11
-                                                  56242 Marienrachdorf
-                                                  Germany
-Mauelshagen@Sistina.com                           +49 2626 141200
-                                                       FAX 924446
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+Jos� Luis Domingo L�pez
+Linux Registered User #189436     Debian GNU/Linux Potato (P166 64 MB RAM)
+ 
+jdomingo EN internautas PUNTO org  => � Spam ? Atente a las consecuencias
+jdomingo AT internautas DOT   org  => Spam at your own risk
