@@ -1,70 +1,70 @@
 From: Andreas Dilger <adilger@turbolinux.com>
-Message-Id: <200010142339.TAA10100@lynx.turbolabs.com>
-Subject: Re: [linux-lvm] Re: vgcreate -- ERROR "lvm_tab_read(): size" inserting...
-Date: Sat, 14 Oct 2000 19:39:47 -0400 (EDT)
-In-Reply-To: <Pine.GSO.4.10.10010141624510.12772-100000@kurango> from "Mark Phillips" at Oct 14, 2000 04:29:19 PM
+Message-Id: <200010162107.RAA14242@lynx.turbolabs.com>
+Subject: Re: [linux-lvm] lv inactive after reboot
+Date: Mon, 16 Oct 2000 17:07:36 -0400 (EDT)
+In-Reply-To: <01C036EB.4AA7CFA0.smdenton@bellsouth.net> from "S. Michael Denton" at Oct 15, 2000 09:02:55 PM
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: Mark Phillips <mark@ist.flinders.edu.au>
-Cc: linux-lvm@msede.com
+To: smdenton@bellsouth.net
+Cc: Linux LVM mailing list <linux-lvm@msede.com>
 
+S. Michael Denton, you write:
+> The ability to do raid, specifically raid1, with LVM should be
+> included if linux LVM is to mimic the LVM used on HPUX; perhaps
+> merging linux md tools/drivers with lvm tools/drivers?
 
-Mark Phillips writes:
-> I'm using LVM for the first time and I got this error:
-> 
-> # vgcreate main_vg /dev/hda2
-> vgcreate -- INFO: using default physical extent size 4 MB
-> vgcreate -- INFO: maximum logical volume size is 255.99 Gigabyte
-> vgcreate -- ERROR "lvm_tab_read(): size" inserting volume group "main_vg"
-> into "/etc/lvmtab"
-> 
-> Can anyone tell me what's wrong?
-> 
-> All I've did before the above command was make /dev/hda2 into a 8e
-> partition and then run:
-> 
-> # pvcreate /dev/hda2
-> pvcreate -- physical volume "/dev/hda2" successfully created
-> 
-> 
-> I thought I'd add a bit of extra information:
-> 
-> I run Debian Linux.  I am running linux kernel version 2.4.0-test9 and
-> have installed LVM tools provided by the Debian package
-> lvm_0.8.final-1_i386.deb which corresponds to version 0.8.final of the LVM
-> tools.
+It's been discussed before, and it will not go into the Linux LVM itself.
+You can currently stack LVM on MD or vice versa.  The proposed IBM ELVM
+incorporates RAID into the LVM framework.
 
-Try running the patched 0.8final tools on my web site:
+> The ability to create > 256 items (lv's, vg's, etc), perhaps by using
+> multiple majors?
 
-ftp://ftp.stelias.com/pub/adilger/lvm*.src.rpm
+Not an LVM issue.  Heinz just said today that he will not do it this way.
+Maybe through devfs...
 
-You will probably need to install the "rpm" package to install and build
-the new tools, and then you can use "alien" to convert the .rpm to .deb.
-(I have a .deb package at home, but I'm out of town now).
+> Storing lvm information for each group in entirety on each group's
+> pv's headers as such:
+> 	vgtest members: /dev/hda /dev/hdb /dev/hdc
+> 	vgtest lv's: testlv thislv thatlv
+> 	vgtest lv pe boundaries: testlv ...
+> 				thislv ...
+> 				thatlv ...
+> 	ad nauseum so that the kernel and the /etc files are not the only
+> authoritative sources of lvm structures (3 sources allows for a
+> quorum)
 
-> The other thing I thought of doing is sending the output of
->
->  vgcreate -vd main_vg /dev/hda2
-> 
-> but first I would need to delete the main_vg that is already there, but I
-> can't because of the error:
-> 
-> # vgremove main_vg
-> vgremove -- ERROR: can't remove active volume group "main_vg"
-> 
-> I can't even display info:
-> 
-> # vgdisplay
-> vgdisplay -- "/etc/lvmtab.d/main_vg" doesn't exist
-> vgdisplay -- volume group "main_vg" not found
+Yes, this is proposed for LVM already.  I think there are ways that this
+can be done reasonably easily.
 
-If you don't have any other LVs, you can safely "rm -r /etc/lvm* /dev/main_vg"
-and everything should be working again.  There were a couple of bugs with
-the older LVM tools, so it is probably a lot easier on everyone if you start
-over with the newer tools.
+> Storing lvm native host information so that vgs could be
+> exported/imported from host to host in MI scsi configs
+> Deeper integration into the kernel such that / can be an lv without
+> an initrd (this may already exist?)
+
+Yes, there is already work underway to do kernel configuration.
+
+> [Deeper] integration into bootloaders such as lilo, grub, etc so one
+> can boot from a secondary (ie mirror) boot device, potentially
+> automatically.
+> 	(ie primary boot device: /dev/vg00/root which is raid1 consisting of
+> /dev/hda and /dev/hdb... if /dev/hda becomes inaccessible, boot from
+> /dev/hdb half of /dev/vg00/root automatically)
+
+This would need to be done in LILO/GRUB and not LVM.  Since LVM itself
+doesn't do mirroring, it is an MD and LILO problem.  I think it shouldn't
+be _too_ hard, but I'm not an expert in this area.
+
+> Again, these things may already be in the TODO list, wish lists,
+> whatever... but in case someone hasn't thought of them, these are a
+> few ideas my colleagues and I have had regarding linux LVM.
+
+Thanks for the input.  I think a lot of people want a lot of these
+features, so they will go in sooner or later.  The more people that
+want them, the more likely they are to make it in.
 
 Cheers, Andreas
