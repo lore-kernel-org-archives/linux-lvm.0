@@ -1,11 +1,15 @@
-Date: Mon, 15 Mar 2004 13:34:45 +0100
+Received: from o.ww.redhat.com (vpn50-9.rdu.redhat.com [172.16.50.9])
+	by pobox.stuttgart.redhat.com (8.12.8/8.12.8) with ESMTP id
+	i2FClMIE030508
+	for <linux-lvm@redhat.com>; Mon, 15 Mar 2004 13:47:23 +0100
+Date: Mon, 15 Mar 2004 13:47:21 +0100
 From: Heinz Mauelshagen <hjm@redhat.com>
-Subject: Re: [linux-lvm] LVM Problems when moving data off a PV
-Message-ID: <20040315123445.GA17078@redhat.com>
-References: <1079271129.2414.7.camel@rockley.barbados>
+Subject: Re: [linux-lvm] Hard disk failure, restore problem
+Message-ID: <20040315124721.GB17078@redhat.com>
+References: <40520E04.5090505@howest.be>
 Mime-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <1079271129.2414.7.camel@rockley.barbados>
+In-Reply-To: <40520E04.5090505@howest.be>
 Reply-To: hjm@redhat.com,
 	LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
@@ -19,80 +23,90 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: nick@gushlow.com, LVM general discussion and development <linux-lvm@redhat.com>
+To: linux-lvm@redhat.com
 
-On Sun, Mar 14, 2004 at 01:32:09PM +0000, Nick Gushlow wrote:
-> I've got a volume group (vg2) that spans 3 partitions on two disks;
-> hdb1, hdb5, hdc.  hdb1 and hdb5 are the only partitions on disk hdb.
+On Fri, Mar 12, 2004 at 11:22:44AM -0800, Thomas Berton wrote:
+> Hi,
+> I've recently encountered some problems with my LVM.
 > 
-> Disk hdb is failing and I've got an identical replacement from Maxtor,
-> so I stuck the new disk in and tried to follow the instructions on the
-> LVM howto for removing a disk. 
+> I had (and still have) a bad hd /dev/hda (used part. /dev/hda1)
 > 
-> I've successfully transfered hdb5 to the new disk (hdd) but I got an
-> error when trying to move hdb1; I can't remember that error now but I am
-> assuming that there may be damage to that part of the disk as the disk
-> is failing.
+> I started:
+>    pvmove /dev/hda1 /dev/hdf1
+> yet the hd gave an error and I had to reboot.
 > 
-> After trying a few things I found on the lvm lists and other places and
-> I'm now at a stage where a vgscan reports
-
-Nick,
-
-what exactly were those 'things' ?
-
+> I have a metadata backup made before I've started the move.
 > 
-> ------------------------------------------------------------------------
-> vgscan -- only found 4253 of 4267 LEs for LV /dev/vg2/storage (0) 
-> vgscan -- ERROR "vg_read_with_pv_and_lv(): allocated LE of LV" can't get
-> data of volume group "vg2" from physical volume(s)
-> ------------------------------------------------------------------------
+> The volume group name is bigspace, yet the 'dir' /dev/bigspace/bigspace1 
+> is also gone...
+> 
+> now I got
+> pvscan -- reading all physical volumes (this may take a while...)
+> pvscan -- inactive PV "/dev/hdg1" is in no VG  [74.53 GB]
+> pvscan -- inactive PV "/dev/hde1" is in no VG  [149.05 GB]
+> pvscan -- inactive PV "/dev/hdf1" is in no VG  [149.05 GB]
+> pvscan -- inactive PV "/dev/hdc1" is in no VG  [111.79 GB]
+> pvscan -- inactive PV "/dev/hdd1" is in no VG  [74.53 GB]
+> pvscan -- inactive PV "/dev/hda1" is in no VG  [74.53 GB]
+> pvscan -- inactive PV "/dev/hdb1" is in no VG  [74.53 GB]
+> pvscan -- total: 7 [708 GB] / in use: 0 [0] / in no VG: 7 [708 GB]
 
-You need to select the last valid metadata backup of vg2 from /etc/lvmconf
-(check it with vgcfgrestore -ll -f /etc/lvmconf/vg2.conf[.#.old]; see
-'man vgcfgrestore for metadata archive file names) and restore it.
+Thomas,
 
-Say vg.conf.1.old is the valid one:
-
-for dev in AllPVsOfVG2 # list all PVs reported by vgcfgrestore -ll above
-do
-	pvcreate -ff $dev
-	vgcfgrestore -f /etc/lvmconf/vg.conf.1.old $dev
-done
-vgscan
-vgchange -ay vg2
+you ran 'pvcreate -ff' *and* vgcfgrestore ... on all PVs ok ?
+pvscan output looks like the vgcfgrestore went wrong.
 
 > 
-> I tried a couple of things from very old posts I found on the lvm
-> mailing list including compiling LVM2 from cvs so I could do a vgreduce
-> --removemissing but that didn't work (I assume because they are lvm1) 
+> yet if I do the restore I get
+> 
+> I also did a pvcreate -ff /dev/hdx1 for every disk... I've read 
+> somewhere that should fix it. yet id did not.
 
-The LVM2 tools support LVM1 metadata format.
-What went wrong running vgreduce --removemissing ?
-
-In order to activate LVM1 VGs with LVM2, you need a kernel with device-mapper.
+Yes, you need "pvcreate -ff ..." before you vgcfgrestore to the devices.
 
 > 
-> Can anyone tell me what might be wrong, and more importantly how I can
-> get the volume group back up. 
+> pvscan -- inactive PV "/dev/hda1"  is associated to unknown VG 
+> "bigspace" (run vgscan)
+> 
+> vgscan gives
+> vgscan -- reading all physical volumes (this may take a while...)
+> vgscan -- ERROR "vg_read_with_pv_and_lv(): current PV" can't get data of 
+> volume group "bigspace" from physical volume(s)
+> vgscan -- "/etc/lvmtab" and "/etc/lvmtab.d" successfully created
+> vgscan -- WARNING: This program does not do a VGDA backup of your volume 
+> group
+> 
+> there is a LOT of data on this array of disk (as you can imagine)
+> 
+> sometimes, hda is working good, so i hope it want to work long enough to 
+> restore the data.
 
-See vgcfgrestore above.
+If you want to activate "bigspace" just in order to backup date *and*
+remove/recreate it afterwards, you might want to use the following workaround:
+
+o identify your actual metadata backup (say, bigspace.conf)
+
+o mkdir /etc/lvmtab.d
+
+o cp bigspace.conf /etc/lvmtab.d/bigspace
+
+o echo -ne "bigspace\0" > /etc/lvmtab
+
+o vgchange -ay
 
 > 
-> I am assuming that as the data is spread across 3 disks if I can't
-> recover from this error then I will have lost everything on them. 
-> 
-> Unfortunately I don't have a backup because I have nothing large enough
-> to backup the data in the volume group. 
+> My guess now is to make a new vg and add those disks... but I want to be 
+> sure, so I don't lose the data.
 
-<preach>
-You need backups in order to be able to survive user/sw/hw failure.
-</preach>
+That won't work, because the PVs are falgged *new* after pvcreate -ff
+and you will just have empty PVs that way.
 
 > 
-> TIA,
+> Any suggestions to recover the data or to replace the broken harddisk 
+> with a new one with as little data loss as possible.
 > 
-> Nick Gushlow.
+> Regards,
+> Thomas.
 > 
 > _______________________________________________
 > linux-lvm mailing list
