@@ -1,8 +1,8 @@
-Message-ID: <1058748940.3f1b3a0c7b145@webmail.phys.unsw.edu.au>
+Message-ID: <1058752778.3f1b490ab9e47@webmail.phys.unsw.edu.au>
 From: Melinda Taylor <melinda@phys.unsw.edu.au>
-Subject: Re: [linux-lvm] problem building LVM2 for 2.6 kernel
-References: <Pine.LNX.4.53.0307181659170.6115@localhost.localdomain> <20030719004618.J31325@uk.sistina.com>
-In-Reply-To: <20030719004618.J31325@uk.sistina.com>
+Subject: Re: [linux-lvm] LVM recovery
+References: <BDEMIPDEGABMNEFIHCPDMEHAFCAA.bill--f.juq41dsj@tao-group.com> <1058402110.1257.21.camel@neko> <3F164A80.6060301@free.fr>
+In-Reply-To: <3F164A80.6060301@free.fr>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 Sender: linux-lvm-admin@sistina.com
@@ -15,32 +15,116 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Sun Jul 20 19:56:02 2003
+Date: Sun Jul 20 21:00:02 2003
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@sistina.com, Alasdair G Kergon <agk@uk.sistina.com>
+To: linux-lvm@sistina.com, Emmanuel Varagnat <emmanuel.varagnat@free.fr>
 
-Quoting Alasdair G Kergon <agk@uk.sistina.com>:
+Ok I have installed LVM2 with readline support and I tried:
 
-> On Fri, Jul 18, 2003 at 05:02:29PM -0400, Robert P. J. Day wrote:
-> > 2.6.0-test1-ac2 version and selected device mapper and v4 ioctl
+lvm> vgchange --partial -a y
+  Partial mode. Incomplete volume groups will be activated read-only.
+  2 PV(s) found for VG vg01: expected 4
+  Logical volume (lv02) contains an incomplete mapping table.
+  2 PV(s) found for VG vg01: expected 4
+  Logical volume (lv02) contains an incomplete mapping table.
+  2 PV(s) found for VG vg01: expected 4
+  Logical volume (lv02) contains an incomplete mapping table.
+  2 PV(s) found for VG vg01: expected 4
+  Logical volume (lv02) contains an incomplete mapping table.
+  2 PV(s) found for VG vg01: expected 4
+  Logical volume (lv02) contains an incomplete mapping table.
+  2 PV(s) found for VG vg01: expected 4
+  Logical volume (lv02) contains an incomplete mapping table.
+  2 PV(s) found for VG vg01: expected 4
+  Logical volume (lv02) contains an incomplete mapping table.
+  2 PV(s) found for VG vg01: expected 4
+  Logical volume (lv02) contains an incomplete mapping table.
+  2 PV(s) found for VG vg01: expected 4
+  Logical volume (lv02) contains an incomplete mapping table.
+  4 logical volume(s) in volume group "vg01" now active
+  2 logical volume(s) in volume group "vg02" now active
+
+I then tried to mount my VG with the missing PV's (VG01) with the line=20
+
+[root@astro root]# mount -o ro /dev/vg01/lv03 /home2
+mount: wrong fs type, bad option, bad superblock on /dev/vg01/lv03,
+       or too many mounted file systems
+
+
+and I see the following in /var/log/messages:
+
+Jul 21 11:53:48 astro kernel: EXT3-fs: INFO: recovery required on readonl=
+y
+filesystem.
+Jul 21 11:53:48 astro kernel: EXT3-fs: write access unavailable, cannot p=
+roceed.
+Jul 21 11:53:48 astro kernel: EXT2-fs: device-mapper(254,4): couldn't mou=
+nt
+because of unsupported optional features (4).
+
+Anyone have any ideas on this one? I am getting closer I guess. I just wa=
+nt to
+grab the data off the remaining 2 LV if possible.
+
+Many Thanks,
+
+melinda
+
+
+
+
+
+
+
+Quoting Emmanuel Varagnat <emmanuel.varagnat@free.fr>:
+
+> Melinda Taylor wrote:
 >=20
-> I've not tried this kernel, but assuming it contains BLKGETSIZE64
-> you'll need to compile LVM2 against newer glibc kernel headers
-> (e.g. update the package for your linux distribution or symlink=20
-> /usr/include/linux to include/linux in your -ac tree)
-
-
-Yes excellent - this worked for me with the 2.4.20 kernel
-
-ln -sf /usr/src/linux/include/linux /usr/include/linux
-
-and lvm2 tools will now compile without the "device/dev-io.c:215: `BLKGET=
-SIZE64'"
-error.
-
-Thanks very much, now back to seeing if LVM2 will help me recover my 2 re=
-maining
-LV from a a 4xLV VG.
-
-Melinda :)
+> > - vgscan
+> > vgscan -- reading all physical volumes (this may take a while...)
+> > vgscan -- "/etc/lvmtab" and "/etc/lvmtab.d" successfully created
+> > vgscan -- WARNING: This program does not do a VGDA backup of your vol=
+ume
+> > group
+> > - pvcreate /dev/sda2 ; pvcreate /dev/sdb1; pvcreate /dev/sdc2; pvcrea=
+te
+> > /dev/sdd2
+> > - vgcreate vg01 /dev/sda2 /dev/sdb1 /dev/sdc2 /dev/sdd2
+> > - check no of LE pvdata -E /dev/sdc2 (5710 LE)
+> >  lvcreate -l 5711 -n lv03 vg01 /dev/sdc2
+> > - Make ext3 fs on each LV
+> >  mkfs.ext3 /dev/vg01/lv01
+> >=20
+> > /dev/sda2 and /dev/sdb1 are kaput (both drives died within days of
+> > eachother).
+> >=20
+> > I believe I had 4 logical volumes.
+>=20
+> I would say that it can depend on what is the block allocation policy o=
+f=20
+> the LVM system...
+>=20
+> > So I presume this means each LV resided on a separate drive and proba=
+bly
+> > lv01 and lv02 were the 2 on the 2 dead disk drives.
+> >=20
+> >     * PVs on four SCSI devices
+> >     * A VG called "vg01" comprised of said PVs
+> >=20
+> > If I reinstall lvm on my newly installed system can I recover lv03 an=
+d
+> > lv04?
+>=20
+> You should try LVM2 that can deal with partial/truncated volumes.
+>=20
+> -=3D( manu )=3D-
+>=20
+>=20
+>=20
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@sistina.com
+> http://lists.sistina.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+>=20
