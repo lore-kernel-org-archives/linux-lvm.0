@@ -1,10 +1,10 @@
 Return-Path: <adilger@turbolinux.com>
 From: Andreas Dilger <adilger@turbolinux.com>
-Message-Id: <200102081838.f18Icgf11614@webber.adilger.net>
-Subject: Re: [linux-lvm] lvm buglet in 0.9.1_beta
-In-Reply-To: <20010208091418.A529@tykepenguin.com> from Patrick Caulfield at
- "Feb 8, 2001 09:14:18 am"
-Date: Thu, 8 Feb 2001 11:38:42 -0700 (MST)
+Message-Id: <200102081915.f18JFdc17650@webber.adilger.net>
+Subject: Re: [linux-lvm] Setup for RAID1 with LVM
+In-Reply-To: <3A827F18.4B387240@suse.de> from Jens Bruckmann at "Feb 8, 2001
+ 12:12:25 pm"
+Date: Thu, 8 Feb 2001 12:15:39 -0700 (MST)
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -21,27 +21,37 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Patrick, you write:
-> On Wed, Feb 07, 2001 at 11:15:55AM -0700, Andreas Dilger wrote:
-> > Sure you can run fdisk on just about anything, but you can't access the
-> > partitions unless it is a partitioned device (i.e. the minor numbers
-> > mean "look at a partition").
+Jens, you write:
+> I would like to setup a configuration with LVM and RAID1. Poorly you
+> can't just do a lvextend -m 1 like on HP-UX :-))
 > 
-> I wasn't being entirely serious here, but the original bug report had 
-> a /proc/partitions file showing several minors attached to major 72 so
-> it seemed reasonable to me that it was partitioned.
+> I have two SCSI-Disks of nearly the same size, on Disk 1 I already have
+> a working installation of Linux.
 
-There is a problem, IMHO, that LVM assumes a partitioned device is the
-same thing as a DOS partitioned device.  I'm sure that anyone using
-BSD/Sun/SGI/etc disklabels can not use LVM for this reason.  The only
-reason LVM does this is to check the partition type (not very important
-IMO), otherwise we could just check /proc/partitions and be done, like
-the #ifdef __alpha__ code.
+You need to use MD to do mirroring on Linux, not LVM (as in HP-UX and AIX).
 
-> It would be nice to know if adding the entries into lvm_check_partitioned_dev
-> did actually fix the problem.
+> /usr, /opt and /var reside on LVs. I want these three LVs to be mirrored
+> online to the second disk as it is possible on HP-UX.
 
-I would like to know as well.
+You _may_ be able to create an MD RAID-0 mirror of your existing disk,
+and then run vgscan again to detect the new configuration.  However, this
+has probably never been done - normally, you would create the MD mirror
+first and then create VG/LV on top of it.  It may NOT work, because I
+recall something about MD storing a backup superblock at the end of the
+MD device, and this would break LVM I think (LVM aligns the PEs at the
+end of the partition as well).
+
+> Can someone shortly describe, how to setup such a configuration?
+
+The safest would be to backup your system, and start with creating an
+MD device, and then adding LVM on top of it.  If you have a backup,
+you could test to see if mirroring an existing LVM disk works, because
+this may be something people want to do in the future.
+
+It is also be possible (if you have extra disk space) to create a mirrored
+MD device, make a PV of it, add it into the VG, and pvmove all of your
+existing LVs to the mirrored device.  You can then vgreduce the old
+(unmirrored) PV out of the VG.
 
 Cheers, Andreas
 -- 
