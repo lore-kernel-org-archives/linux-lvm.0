@@ -1,15 +1,10 @@
-Message-Id: <20020131133552.A9076@fib011235813.fsnet.co.uk>
-References: <OFBCE93B66.F7B9C14E-ON85256B52.006B8AB3@raleigh.ibm.com>
-    <20020131125211.A8934@fib011235813.fsnet.co.uk>
-    <20020201045518.A10893@devserv.devel.redhat.com>
-    <20020131130913.A8997@fib011235813.fsnet.co.uk>
-    <20020201051251.B10893@devserv.devel.redhat.com>
+Subject: Re: [linux-lvm] one PV crashed
+References: <878zad8qrx.fsf@papadoc.bayour.com>
+    <20020201111151.B15491@sistina.com>
+From: Turbo Fredriksson <turbo@bayour.com>
+In-Reply-To: <20020201111151.B15491@sistina.com>
+Message-Id: <87bsf9mq3r.fsf@papadoc.bayour.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20020201051251.B10893@devserv.devel.redhat.com>;
-    from arjanv@redhat.com on Fri, Feb 01, 2002 at 05:12:51AM -0500
-From: Joe Thornber <thornber@fib011235813.fsnet.co.uk>
-Subject: [linux-lvm] Re: [ANNOUNCE] LVM reimplementation ready for beta testing
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -20,46 +15,63 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Fri Feb  1 04:31:03 2002
+Date: Fri Feb  1 04:52:01 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: Arjan van de Ven <arjanv@redhat.com>
-Cc: Joe Thornber <thornber@fib011235813.fsnet.co.uk>, lvm-devel@sistina.com, Jim McDonald <Jim@mcdee.net>, Andreas Dilger <adilger@turbolabs.com>, linux-lvm@sistina.com, linux-kernel@vger.kernel.org, evms-devel@lists.sourceforge.net
+To: linux-lvm@sistina.com
 
-On Fri, Feb 01, 2002 at 05:12:51AM -0500, Arjan van de Ven wrote:
-> On Thu, Jan 31, 2002 at 01:09:13PM +0000, Joe Thornber wrote:
-> > 
-> > Now our hero decides to PV move PV2 to PV4:
-> > 
-> > 1. Suspend our LV (254:3), this starts queueing all io, and flushes
-> >    all pending io. 
-> 
-> But "flushes all pending io" is *far* from trivial. there's no current
-> kernel functionality for this, so you'll have to do "weird shit" that will
-> break easy and often.
+>>>>> "Heinz" == Heinz J Mauelshagen <mauelshagen@sistina.com> writes:
 
-Here's the weird shit.  If you can see how to break it, I'd like to
-know.
+    Heinz> On Fri, Feb 01, 2002 at 11:01:22AM +0100, Turbo Fredriksson
+    Heinz> wrote:
+    >> I have (had) 6 PV's in my VG. The last one crashed (the whole
+    >> disk seems to have broken totaly).
+    >> 
+    >> It don't seem possible to restore the information (not without
+    >> spending $$$ to a data recovery company), so how do I get the
+    >> data stored on the OTHER disks?
 
-Whenever the dm driver maps a buffer_head, I increment a 'pending'
-counter for that device, and hook the bh->b_end_io, bh->b_private
-function so that this counter is decremented when the io completes.
-This doesn't work with ext3 on 2.4 kernels since ext3 believes the
-b_private pointer is for general filesystem use rather than just
-b_end_io, however Stephen Tweedie and I have been discussing ways to
-get round this.  On 2.5 this works fine since the bio->bi_private
-isn't abused in this way.
+    Heinz> You don't spend a single dollar :-)
 
-> Also "suspending" is rather dangerous because it can deadlock the machine
-> (think about the VM needing to write back dirty data on this LV in order to
->  make memory available for your move)...
+I was referring to restore the lost data on the failed disk ..
 
-You are correct, this is the main flaw IMO with the LVM1 version of
-pvmove (which was userland with locking on a per extent basis).
+    Heinz> There's 2 solutions:
 
-However for LVM2 the device will only be suspended while a table
-is loaded, *not* while the move takes place.  I will however allocate
-the struct deferred_io objects from a mempool in 2.5.
+    Heinz> A: --
+    Heinz> Buy a replacemeent drive (say /dev/sdg1 ;-) and run
 
-- Joe
+    Heinz> fdisk # to partition it the same way the broken one was
+    Heinz> pvcreate /dev/sdg1 vgcfgrestore -f /etc/lvmconf/vg1.conf -n
+    Heinz> vg1 /dev/sdg1 vgscan
+
+I'll get a replacement from IBM (the disk is still on warranty), so I'd
+go for this...
+
+Since I have data on the vg, will this still let me keep this, or will
+it be destroyed when doing the pvcreate/vgcfgrestore?
+
+    Heinz> B: --
+    Heinz> If you don't have a replacement drive at hand you can even
+    Heinz> be faster by faking one (you must have loop configured in
+    Heinz> the kernel and use LVM 1.0.2):
+
+    Heinz> dd if=/dev/zero of=/tmp/my_sdg1.vgda bs=1k count=512
+    Heinz> losetup /dev/loop0 /tmp/my_sdg1.vgda pvcreate /dev/loop0
+    Heinz> vgcfgrestore -f /etc/lvmconf/vg1.conf -n vg1 /devloop0
+    Heinz> vgscan
+
+I'll do this as a temporary solution, while waiting for the replacement.
+Knowing IBM, it can take a while :)
+
+
+Same question here, will the content on the VG be destroyed?
+
+    Heinz> Hope that helps :-)
+
+It does (at least in the sense that I'll won't loose MORE data :) Thanx.
+
+spy NORAD Peking domestic disruption Kennedy subway Ortega president
+quiche class struggle [Hello to all my fans in domestic surveillance]
+AK-47 CIA Ft. Bragg attack
+[See http://www.aclu.org/echelonwatch/index.html for more about this]
