@@ -1,9 +1,9 @@
-Subject: Re: [linux-lvm] cluster - lvm
-Content-Type: multipart/alternative; boundary=Apple-Mail-1-262279890
-MIME-Version: 1.0 (Apple Message framework v481)
-From: Michael Clark <michael@metaparadigm.com>
-In-Reply-To: <02b801c1d499$1ab21dd0$a6a5f88f@oboe>
-Message-Id: <B1DCEC4B-416B-11D6-B381-000393843900@metaparadigm.com>
+From: Marco Krohn <marco.krohn@gmx.de>
+MIME-Version: 1.0
+Message-Id: <19654.1017261644@www26.gmx.net>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] VG lost, VG restorable without lvmconf? Need help!
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,119 +14,168 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Mar 27 04:16:01 2002
+Date: Wed Mar 27 14:40:01 2002
 List-Id: <linux-lvm.redhat.com>
 To: linux-lvm@sistina.com
 
---Apple-Mail-1-262279890
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain;
-	charset=ISO-8859-1;
-	format=flowed
+ Hi, 
+ 
+for my previous system I used LVM and was very satisfied with it. 
+Therefore I wanted to use LVM again for my new system (after a 
+reiserfs crash on the root partition). 
+ 
+There was one volume group "system2" consisting of 6 PVs and one 
+LV (dev/system2/common) (dev/system2/common survived the 
+crash unharmed). I was on the way to install a new system (SuSE 7.3) 
+and gave with Yast2 commands to add and format another PV 
+(/dev/hdb4) and add two more LV. I do not know exactly what 
+happened, but YaST  showed me an error that one of the LVM 
+commands did not succeed (IIRC the problem was that creating 
+another LV was not possible beause of missing disk space which 
+sounded absurd to me since there were >30GB free) but anyway... I 
+canceled the action and when I was back in the LVM screen my VG 
+"system2" did not exist anymore :-( 
+ 
+I have no lvmconf etc. :-( 
+Is it possible to recover the VG from the data of the PVs? 
+ 
+My system: 
+Linux kernel 2.4.10-4 
+Logical Volume Manager 1.0.1-rc2 
+two EIDE harddisks: hda 30 GB / hdb 60 GB 
+ 
+Some more information: 
+ 
+ 
+//------------------  pvscan 
+# pvscan 
+pvscan -- reading all physical volumes (this may take a while...) 
+pvscan -- inactive PV "/dev/hda6"  is associated to an unknown VG 
+(run vgscan) 
+pvscan -- inactive PV "/dev/hda7"  is associated to an unknown VG 
+(run vgscan) 
+pvscan -- inactive PV "/dev/hdb2"  is associated to an unknown VG 
+(run vgscan) 
+pvscan -- inactive PV "/dev/hdb5"  is associated to an unknown VG 
+(run vgscan) 
+pvscan -- inactive PV "/dev/hdb6"  is associated to an unknown VG 
+(run vgscan) 
+pvscan -- inactive PV "/dev/hdb7"  is associated to an unknown VG 
+(run vgscan) 
+pvscan -- total: 6 [64.69 GB] / in use: 6 [64.69 GB] / in no VG: 0 [0] 
+ 
+ 
+//------------------ lvmdiskscan 
+# lvmdiskscan 
+lvmdiskscan -- reading all disks / partitions (this may take a while...) 
+lvmdiskscan -- /dev/hda1 [       5.86 GB] Primary   [0x0B] 
+lvmdiskscan -- /dev/hda4 [      22.77 GB] DOS extended partition 
+[0x05] 
+lvmdiskscan -- /dev/hda5 [     305.89 MB] Extended LINUX swap 
+partition [0x82] 
+lvmdiskscan -- /dev/hda6 [       9.77 GB] Extended LVM partition 
+[0x8E] 
+lvmdiskscan -- /dev/hda7 [      12.70 GB] Extended LVM partition 
+[0x8E] 
+lvmdiskscan -- /dev/hdb1 [       2.01 GB] Primary  LINUX native 
+partition [0x83] 
+lvmdiskscan -- /dev/hdb2 [      15.01 GB] Primary  LVM partition 
+[0x8E] 
+lvmdiskscan -- /dev/hdb3 [      27.22 GB] Primary  Windows98 
+extended partition [0x0F] 
+lvmdiskscan -- /dev/hdb4 [      13.00 GB] Primary  LVM partition 
+[0x8E] 
+lvmdiskscan -- /dev/hdb5 [      10.00 GB] Extended LVM partition 
+[0x8E] 
+lvmdiskscan -- /dev/hdb6 [      10.00 GB] Extended LVM partition 
+[0x8E] 
+lvmdiskscan -- /dev/hdb7 [       7.21 GB] Extended LVM partition 
+[0x8E] 
+lvmdiskscan -- 2 disks 
+lvmdiskscan -- 0 whole disks 
+lvmdiskscan -- 0 loop devices 
+lvmdiskscan -- 0 multiple devices 
+lvmdiskscan -- 0 network block devices 
+lvmdiskscan -- 12 partitions 
+lvmdiskscan -- 7 LVM physical volume partitions 
+ 
+ 
+//------------------  vgscan 
+# vgscan 
+vgscan -- reading all physical volumes (this may take a while...) 
+vgscan -- "/etc/lvmtab" and "/etc/lvmtab.d" successfully created 
+vgscan -- WARNING: This program does not do a VGDA backup of 
+your volume group 
+ 
+ 
+//------------------  vgdisplay 
+linux:/home/krohn # vgdisplay 
+vgdisplay -- no volume groups found 
+ 
+ 
+//------------------  pvdata 
+# pvdata -v -V -L /dev/hdb2 | grep -v empty 
+--- Volume group --- 
+VG Name 
+VG Access             read/write 
+VG Status             NOT available/resizable 
+VG #                  0 
+MAX LV                255 
+Cur LV                1 
+Open LV               0 
+MAX LV Size           255.99 GB 
+Max PV                255 
+Cur PV                7 
+Act PV                7 
+VG Size               78.66 GB 
+PE Size               4.00 MB 
+Total PE              20136 
+Alloc PE / Size       7680 / 30.00 GB 
+Free  PE / Size       12456 / 48.66 GB 
+VG UUID               avIX6o-E3LV-VSOO-30XL-tjxx-6aDb-Kr2BzB 
+ 
+--- List of logical volumes --- 
+ 
+--- Logical volume --- 
+LV Name                /dev/system2/common 
+VG Name                system2 
+LV Write Access        read/write 
+LV Status              NOT available 
+LV #                   6 
+# open                 0 
+LV Size                30.00 GB 
+Current LE             7680 
+Allocated LE           7680 
+Allocation             next free 
+Read ahead sectors     120 
+Block device           58:5 
+read_ahead: 120 
+ 
+for hda6, hda7, hdb5, hdb6, hdb7 the information are exactly the same 
+ 
+hdb4 of course is not accessible 
+ 
+# pvdata -v -V -L /dev/hdb4 
+--- Volume group --- 
+VG Name 
+VG Access             error 
+VG Status             NOT available/NOT resizable 
+... 
+ 
+ 
+I read parts of the German and English HowTo's and also searched 
+google and the archive of this mailing list for help. I found the thread 
+"VG lost, no lvmconf => Help !" but I am not sure if this helps me 
+since I checked all PV UUID seem to be o.k. Probably I need UUID 
+fixer to get my system back, but I am not sure if  20.1 of the HowTo 
+is what I am looking for. 
+ 
+Thanks, 
+ 
+  Marco 
+ 
+ 
 
-I'm using LVM in a cluster.
-
-There are a few caveats. It does not support distributed updates
-and locking on metadata so you must be extra careful when making
-changes to logical volumes.
-
-If you need to make any changes to logical volumes, you must do
-it with only one host online. I have successfully done LVM metadata
-updates in a cluster without rebooting nodes by unmounting all LVM
-partitions on all nodes but one and also removing the SCSI module
-(just to make sure nothing is cached). After performing the
-LVM modifications on the remaining node, I then re-probe the SCSI
-module on the other nodes and rerun vgscan. All seems okay and
-the new volumes are detected.
-
-What appears to be needed for better cluster support is at least some
-simple locking on the metadata to enforce the single node exclusive
-access to cluster metadata when performing changes, because at the
-moment there are no checks on operations which could potentially
-corrupt data.
-
-~mc
-
-
-On Tuesday, March 26, 2002, at 03:37 PM, shlim wrote:
-
-> Hello.
-> =A0
-> Does the current LVM version support cluster system??
-> =A0
-> If LVM does not support cluster system. what is required to support=20
-> that??
-> =A0
-> =A0
-> =A0
-
---Apple-Mail-1-262279890
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/enriched;
-	charset=ISO-8859-1
-
-I'm using LVM in a cluster.
-
-
-There are a few caveats. It does not support distributed updates
-
-and locking on metadata so you must be extra careful when making
-
-changes to logical volumes.
-
-
-If you need to make any changes to logical volumes, you must do
-
-it with only one host online. I have successfully done LVM metadata
-
-updates in a cluster without rebooting nodes by unmounting all LVM
-
-partitions on all nodes but one and also removing the SCSI module
-
-(just to make sure nothing is cached). After performing the
-
-LVM modifications on the remaining node, I then re-probe the SCSI
-
-module on the other nodes and rerun vgscan. All seems okay and
-
-the new volumes are detected.
-
-
-What appears to be needed for better cluster support is at least some
-
-simple locking on the metadata to enforce the single node exclusive
-
-access to cluster metadata when performing changes, because at the
-
-moment there are no checks on operations which could potentially
-
-corrupt data.
-
-
-~mc
-
-
-
-On Tuesday, March 26, 2002, at 03:37 PM, shlim wrote:
-
-
-<excerpt><smaller>Hello.</smaller>
-
-=A0
-
-<smaller>Does the current LVM version support cluster system??</smaller>
-
-=A0
-
-<smaller>If LVM does not support cluster system. what is required to
-support that??</smaller>
-
-=A0
-
-=A0
-
-=A0
-
-</excerpt>=
-
---Apple-Mail-1-262279890--
+-- 
+GMX - Die Kommunikationsplattform im Internet.
+http://www.gmx.net
