@@ -1,19 +1,17 @@
-Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id iBLFn4r08871
-	for <linux-lvm@redhat.com>; Tue, 21 Dec 2004 10:49:04 -0500
-Received: from ln-bas08.csfb.com (mx-2.csfb.com [198.240.128.81])
-	by mx3.redhat.com (8.12.11/8.12.11) with ESMTP id iBLFmw1U028278
-	for <linux-lvm@redhat.com>; Tue, 21 Dec 2004 10:48:58 -0500
-Received: from slon11p30740.csfb.cs-group.com (slon11p30740.csfb.mail
-	[166.12.210.47])
-	by ln-bas08.csfb.com (Postfix) with ESMTP id C1A811A9B
-	for <linux-lvm@redhat.com>; Tue, 21 Dec 2004 15:48:52 +0000 (GMT)
-Message-ID: <0B834CEE3453504B82AB821DFB7047C1FF01B3@enyc11p32003.corpny.csfb.com>
-From: "Rosenstrauch, David" <david.rosenstrauch@csfb.com>
-Subject: RE: [linux-lvm] lvm/fs issue
-Date: Tue, 21 Dec 2004 15:48:41 -0000
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Received: from agk.surrey.redhat.com (agk.surrey.redhat.com [172.16.10.74])
+	by pobox.surrey.redhat.com (8.12.8/8.12.8) with ESMTP id iBLGZ6sF017516
+	for <linux-lvm@redhat.com>; Tue, 21 Dec 2004 16:35:06 GMT
+Received: from agk by agk.surrey.redhat.com with local (Exim 4.34)
+	id 1CgmyX-0007ZM-Un
+	for linux-lvm@redhat.com; Tue, 21 Dec 2004 16:35:05 +0000
+Date: Tue, 21 Dec 2004 16:35:05 +0000
+From: Alasdair G Kergon <agk@redhat.com>
+Message-ID: <20041221163505.GE26670@agk.surrey.redhat.com>
+References: <20041221162420.12853.qmail@sourceware.org>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20041221162420.12853.qmail@sourceware.org>
+Subject: [linux-lvm] Re: LVM2 WHATS_NEW CONTRIBUTORS
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -25,36 +23,21 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: 'LVM general discussion and development' <linux-lvm@redhat.com>
+Content-Transfer-Encoding: 7bit
+To: linux-lvm@redhat.com
 
+On Tue, Dec 21, 2004 at 04:24:20PM -0000, agk@sourceware.org wrote:
+> Added files:
+> 	.              : CONTRIBUTORS 
+ 
+I've added a CONTRIBUTORS file, empty so far.
 
+Please send me an email if you've made some contribution to LVM which 
+we should record in the file.
 
-> On Tue, Dec 21, 2004 at 03:19:49PM -0000, Rosenstrauch, David wrote:
-> >   /dev/sda3: read failed after 0 of 2048 at 0: Input/output error
-> 
-> It's harmless - safe to ignore.
-> 
-> Which version of LVM2 and what architecture?  
-> 
-> 2.00.30 started displaying detailed errors like this so we 
-> can find out 
-> about them and fix them; older versions silently ignored them.
-> 
-> Alasdair
+I envisage something like name, (optional) email address or affiliation,
+one-line summary of contribution e.g. "Numerous fixes", "Man page corrections".
 
-
-v2.00.31 (as of a week ago).  I'm using kernel 2.6.9 on an Intel Pentium 4
-(with Hyperthreading).
-
-Thanks!
-
-DR
-
-==============================================================================
-This message is for the sole use of the intended recipient. If you received
-this message in error please delete it and notify us. If this message was
-misdirected, CSFB does not waive any confidentiality or privilege. CSFB
-retains and monitors electronic communications sent through its network.
-Instructions transmitted over this system are not binding on CSFB until they
-are confirmed by us. Message transmission is not guaranteed to be secure.
-==============================================================================
+Alasdair
+-- 
+agk@redhat.com
