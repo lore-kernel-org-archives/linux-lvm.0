@@ -1,10 +1,12 @@
-Return-Path: <harri@smilehouse.com>
-Date: Wed, 23 May 2001 16:22:38 +0300 (EEST)
-From: Harri Haataja <harri@smilehouse.com>
-Subject: Re: [linux-lvm] Returned mail: Service unavailable
-In-Reply-To: <20010523141109.A967@pclab.ifg.uni-kiel.de>
-Message-ID: <Pine.LNX.4.21.0105231622120.5897-100000@tolppa.kotisivupalvelu.fi>
-MIME-Version: 1.0
+Return-Path: <blutgens@sistina.com>
+Date: Wed, 23 May 2001 09:42:44 -0500
+From: Ben Lutgens <blutgens@sistina.com>
+Message-ID: <20010523094244.B2585@minime.sistina.com>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-md5;
+	protocol="application/pgp-signature"; boundary="IiVenqGWf+H9Y6IX"
+Content-Disposition: inline
+Subject: [linux-lvm] your headers
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,27 +18,41 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Wed, 23 May 2001, Torsten Landschoff wrote:
+--IiVenqGWf+H9Y6IX
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> On Wed, May 23, 2001 at 01:51:18PM +0200, Mail Delivery Subsystem wrote:
-> > The original message was received at Wed, 23 May 2001 13:50:47 +0200
-> > from bin@localhost
-> > 
-> >    ----- The following addresses had permanent fatal errors -----
-> > jldomingo@softhome.net
-> > 
-> >    ----- Transcript of session follows -----
-> > ... while talking to mx0a.softhome.net.:
-> > >>> MAIL From:<linux-lvm@sistina.com>
-> > <<< 554 does not resolve - check your DNS (#4.3.0)
-> > 554 jldomingo@softhome.net... Service unavailable
-> 
-> I can't believe it. Softhome.net should really check their own name 
-> server since sistina.com resolves here just fine. And now - could
-> somebody be so kind and take this subscriber off the list?
+As it seems the stuff is working, mails with the phrase "Returned Mail" in =
+the
+subject are already getting held for approval. Also I found some stuff in
+list.org mailman-users archive that hopefully will let me filter out those
+damnable toner adds.=20
 
-Shouldn't a list drop all postmaster messages in the first place?
+Mail me offline for my SpamDetect.py file if you run mailman and would like=
+ to
+discard some garbage mails.
+--=20
+Ben Lutgens	=09
+Sistina Software Inc.=09
+MIS Geek
+http://www.sistina.com/	<--- great software=20
+http://www.gentoo.org/  <--- great distro
+Kernel panic: I have no root and I want to scream <--- perfect error message
+
+--IiVenqGWf+H9Y6IX
+Content-Type: application/pgp-signature
+Content-Disposition: inline
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.0.4 (GNU/Linux)
+Comment: For info see http://www.gnupg.org
+
+iD8DBQE7C8xkLxkxGgLdGQgRAsjBAJ4gqRuO+Y8SGjN6CSZQ05i5SJB6MgCdEMLC
+pac6tplCgfvGt8vfMZFRshg=
+=YC2r
+-----END PGP SIGNATURE-----
+
+--IiVenqGWf+H9Y6IX--
