@@ -1,44 +1,49 @@
-From: Andreas Dilger <adilger@turbolinux.com>
-Message-Id: <200011042047.eA4KlPv22945@webber.adilger.net>
-Subject: Re: [linux-lvm] New 2.2 patches/sources released
-In-Reply-To: <Pine.LNX.4.21.0011040849350.25705-100000@freak.distro.conectiva>
- "from Marcelo Tosatti at Nov 4, 2000 08:49:52 am"
-Date: Sat, 4 Nov 2000 13:47:25 -0700 (MST)
+Message-ID: <3A0694E7.52D2AF89@fl.priv.at>
+Date: Mon, 06 Nov 2000 12:24:23 +0100
+From: Friedrich Lobenstock <fl@fl.priv.at>
 MIME-Version: 1.0
+Subject: [linux-lvm] / on LVM - what to do on shutdown?
+Content-Transfer-Encoding: 7bit
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: Marcelo Tosatti <marcelo@conectiva.com.br>
-Cc: Andreas Dilger <adilger@turbolinux.com>, Linux LVM mailing list <linux-lvm@msede.com>
+To: linux-lvm@msede.com
 
-Marcelo Tosatti writes:
-> > I've updated my 2.2 patch set.  It is now available as an i386 binary, SRPM,
-> > patched .tgz, and standalone patch.  I have also made a 2.4 kernel patch
-> > available to allow include/linux/lvm.h be used from user and kernel sources.
-> > 
-> > Changes include
-> > - fix for lvmcreate_initrd to allow passing modules/kernel version
-> > - add unpartitioned devices to the disk cache (from SuSE LVM)
-> > - unlink /etc/lvmtab before re-creating it (from SuSE LVM)
-> > 
-> > Attached is the patch for the 2.4 kernel lvm.h, which also fixes a long
-> > known bug with using lv_t instead of lv_disk_t.  It is also required
-> > for compiling my LVM user tools, since I include <linux/lvm.h> and not
-> > <lib/lvm.h> in order to ensure the kernel and tools have same structs.
-> 
-> URL? :)
+Hi!
+
+I have a problem because I don't know what to do when / is on lvm.
+
+Currently /sbin/init.d/halt does the following (/ is not on lvm):
+
+  [..]
+  echo "Unmounting file systems"
+  umount -avt noproc,nonfs 
+  [..]
+  umount -anvt proc
+  
+  if test -d /etc/lvmtab.d -a -x /sbin/vgchange ; then
+      /sbin/vgchange -a n
+  fi
+  
+  [..]
+  mount -no remount,ro / 2> /dev/null
+  sync                
+  [..]
+  halt -d -f
 
 
-Sorry.  It's the same as my previous postings, and I forgot to add it:
+Now what if / is on lvm? Should I really call "/sbin/vgchange -a n" ?
+What are with the commands afterwards will they fail or might
+the lvm device get mixed up because of not correctly closing it?
+Or should I load a ramdisk to do the work, if at all possible?
 
-ftp://ftp.stelias.com/pub/adilger/
+I think the md-Device does a clean shutdown by itself, because
+I use md to create a raid1 with lvm on top?
 
-There is a README which describes the various files in that directory.
+PS: You might gess that I'm using SuSE Linux, 7.0 to precise.
+The kernel ist 2.4.0-test10.
 
-Cheers, Andreas
--- 
-Andreas Dilger  \ "If a man ate a pound of pasta and a pound of antipasto,
-                 \  would they cancel out, leaving him still hungry?"
-http://www-mddsp.enel.ucalgary.ca/People/adilger/               -- Dogbert
+
+MfG / Regards
+Friedrich Lobenstock
