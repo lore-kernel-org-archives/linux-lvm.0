@@ -1,9 +1,9 @@
-Message-ID: <002701c2babd$89af5670$0f00a8c0@COMPAQ>
+Message-ID: <003501c2babd$ef507d10$0f00a8c0@COMPAQ>
 From: "Sean Oh" <oh@storageone.co.kr>
-References: <010901c2ba33$d3e5daf0$0f00a8c0@COMPAQ> <20030112130943.GA12078@gw.silicide.dk> <01be01c2ba3e$b188b3a0$0f00a8c0@COMPAQ> <20030112171634.GA12162@gw.silicide.dk>
-Subject: Re: [linux-lvm] [Q] LVM snapshot volume extendable?
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/alternative;
+	boundary="----=_NextPart_000_0032_01C2BB09.5F166C40"
+Subject: [linux-lvm] [Q] Possible lvmdiskscan bug?
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,21 +14,74 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Sun Jan 12 22:37:02 2003
+Date: Sun Jan 12 22:40:02 2003
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: jon+lvm@silicide.dk
-Cc: linux-lvm@sistina.com
+To: linux-lvm@sistina.com
 
-Sorry about the long text.
+This is a multi-part message in MIME format.
 
-Could you please tell me what kind of LVM version, kernel version, File
-System you are using for the extendabe snapshot?
+------=_NextPart_000_0032_01C2BB09.5F166C40
+Content-Type: text/plain;
+	charset="ks_c_5601-1987"
+Content-Transfer-Encoding: base64
 
-Do I need to apply writeable snapshot patch to have snapshot extendable? If
-so, Where can I get the patch for kernel 2.4.20?
+bHZtZGlza3NjYW4gaW4gdGhlIHZlcnNpb24gMS4wLjYgZ2l2ZXMgbWUgYSBzdHJhbmdlIGVycm9y
+LCBzYXlpbmcgInNpemUgb2YgImx2bWRpc2tzY2FuIiBpcyBsYXJnZXIgdGhhbiAyVEIiLCBidXQg
+dGhlIGRpc2sgYXJyYXkgaXMgYWJvdXQgMS4yVEINCmlzIGl0IGEga25vd24gYnVnPw0KDQpUaGFu
+a3MgaW4gYWR2YW5jZS4NCg0KW3Jvb3RAc3RvcmFnZW9uZSBQQVRDSEVTXSMgbHZtZGlza3NjYW4N
+Cmx2bWRpc2tzY2FuIC0tIHJlYWRpbmcgYWxsIGRpc2tzIC8gcGFydGl0aW9ucyAodGhpcyBtYXkg
+dGFrZSBhIHdoaWxlLi4uKQ0KL2Rldi9zZGEgLS0gc2l6ZSBvZiAibHZtZGlza3NjYW4iIGlzIGxh
+cmdlciB0aGFuIDJUQg0KDQpsdm1kaXNrc2NhbiAtLSAvZGV2L3NkYTEgIFsgICAgICAgNS42MyBH
+Ql0gUHJpbWFyeSAgTElOVVggbmF0aXZlIHBhcnRpdGlvbiBbMHg4M10NCmx2bWRpc2tzY2FuIC0t
+IC9kZXYvc2RhMiAgWyAgICAgNTA5Ljg4IE1CXSBQcmltYXJ5ICAgWzB4ODJdDQovZGV2L3NkYTMg
+LS0gc2l6ZSBvZiAibHZtZGlza3NjYW4iIGlzIGxhcmdlciB0aGFuIDJUQg0KDQoNCkRpc2sgL2Rl
+di9zZGE6IDI1NSBoZWFkcywgNjMgc2VjdG9ycywgMTM1MTU1IGN5bGluZGVycw0KVW5pdHMgPSBj
+eWxpbmRlcnMgb2YgMTYwNjUgKiA1MTIgYnl0ZXMNCg0KICAgRGV2aWNlIEJvb3QgICAgU3RhcnQg
+ICAgICAgRW5kICAgIEJsb2NrcyAgIElkICBTeXN0ZW0NCi9kZXYvc2RhMSAgICogICAgICAgICAx
+ICAgICAgIDczNSAgIDU5MDM4NTYgICA4MyAgTGludXgNCi9kZXYvc2RhMiAgICAgICAgICAgNzM2
+ICAgICAgIDgwMCAgICA1MjIxMTIrICA4MiAgTGludXggc3dhcA0KL2Rldi9zZGEzICAgICAgICAg
+ICA4MDEgICAgMTM1MTU1IDEwNzkyMDY1MzcrICA4ZSAgTGludXggTFZNDQo=
 
-I have applied VFS-lock patch, lvm-0.8final-2.4.0.patch that comes with
-1.0.6 distribution.
+------=_NextPart_000_0032_01C2BB09.5F166C40
+Content-Type: text/html;
+	charset="ks_c_5601-1987"
+Content-Transfer-Encoding: base64
 
-Thanks in advance
+PCFET0NUWVBFIEhUTUwgUFVCTElDICItLy9XM0MvL0RURCBIVE1MIDQuMCBUcmFuc2l0aW9uYWwv
+L0VOIj4NCjxIVE1MPjxIRUFEPg0KPE1FVEEgaHR0cC1lcXVpdj1Db250ZW50LVR5cGUgY29udGVu
+dD0idGV4dC9odG1sOyBjaGFyc2V0PWtzX2NfNTYwMS0xOTg3Ij4NCjxNRVRBIGNvbnRlbnQ9Ik1T
+SFRNTCA2LjAwLjI4MDAuMTEwNiIgbmFtZT1HRU5FUkFUT1I+DQo8U1RZTEU+PC9TVFlMRT4NCjwv
+SEVBRD4NCjxCT0RZIGJnQ29sb3I9I2ZmZmZmZj4NCjxESVY+PEZPTlQgc2l6ZT0yPmx2bWRpc2tz
+Y2FuIGluIHRoZSB2ZXJzaW9uIDEuMC42IGdpdmVzIG1lIGEgc3RyYW5nZSBlcnJvciwgDQpzYXlp
+bmcgInNpemUgb2YgImx2bWRpc2tzY2FuIiBpcyBsYXJnZXIgdGhhbiAyVEIiLCBidXQgdGhlIGRp
+c2sgYXJyYXkgaXMgYWJvdXQgDQoxLjJUQjwvRk9OVD48L0RJVj4NCjxESVY+PEZPTlQgc2l6ZT0y
+PmlzIGl0IGEga25vd24gYnVnPzwvRk9OVD48L0RJVj4NCjxESVY+PEZPTlQgc2l6ZT0yPjwvRk9O
+VD4mbmJzcDs8L0RJVj4NCjxESVY+PEZPTlQgc2l6ZT0yPlRoYW5rcyBpbiBhZHZhbmNlLjwvRk9O
+VD48L0RJVj4NCjxESVY+PEZPTlQgc2l6ZT0yPjwvRk9OVD4mbmJzcDs8L0RJVj4NCjxESVY+PEZP
+TlQgc2l6ZT0yPltyb290QHN0b3JhZ2VvbmUgUEFUQ0hFU10jIGx2bWRpc2tzY2FuPEJSPmx2bWRp
+c2tzY2FuIC0tIA0KcmVhZGluZyBhbGwgZGlza3MgLyBwYXJ0aXRpb25zICh0aGlzIG1heSB0YWtl
+IGEgd2hpbGUuLi4pPEJSPi9kZXYvc2RhIC0tIHNpemUgb2YgDQoibHZtZGlza3NjYW4iIGlzIGxh
+cmdlciB0aGFuIDJUQjwvRk9OVD48L0RJVj4NCjxESVY+PEZPTlQgc2l6ZT0yPjwvRk9OVD4mbmJz
+cDs8L0RJVj4NCjxESVY+PEZPTlQgc2l6ZT0yPmx2bWRpc2tzY2FuIC0tIC9kZXYvc2RhMSZuYnNw
+OyANClsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsgNS42MyBHQl0gUHJpbWFy
+eSZuYnNwOyBMSU5VWCBuYXRpdmUgDQpwYXJ0aXRpb24gWzB4ODNdPEJSPmx2bWRpc2tzY2FuIC0t
+IC9kZXYvc2RhMiZuYnNwOyBbJm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7IA0KNTA5Ljg4IE1CXSBQ
+cmltYXJ5Jm5ic3A7Jm5ic3A7IFsweDgyXTxCUj4vZGV2L3NkYTMgLS0gc2l6ZSBvZiAibHZtZGlz
+a3NjYW4iIGlzIA0KbGFyZ2VyIHRoYW4gMlRCPEJSPjwvRk9OVD48L0RJVj4NCjxESVY+PEZPTlQg
+c2l6ZT0yPjxCUj5EaXNrIC9kZXYvc2RhOiAyNTUgaGVhZHMsIDYzIHNlY3RvcnMsIDEzNTE1NSAN
+CmN5bGluZGVyczxCUj5Vbml0cyA9IGN5bGluZGVycyBvZiAxNjA2NSAqIDUxMiBieXRlczwvRk9O
+VD48L0RJVj4NCjxESVY+PEZPTlQgc2l6ZT0yPjwvRk9OVD4mbmJzcDs8L0RJVj4NCjxESVY+PEZP
+TlQgc2l6ZT0yPiZuYnNwOyZuYnNwOyBEZXZpY2UgQm9vdCZuYnNwOyZuYnNwOyZuYnNwOyANClN0
+YXJ0Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7IEVuZCZuYnNwOyZuYnNwOyZu
+YnNwOyANCkJsb2NrcyZuYnNwOyZuYnNwOyBJZCZuYnNwOyBTeXN0ZW08QlI+L2Rldi9zZGExJm5i
+c3A7Jm5ic3A7IA0KKiZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZu
+YnNwOyANCjEmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsgNzM1Jm5ic3A7Jm5i
+c3A7IDU5MDM4NTYmbmJzcDsmbmJzcDsgDQo4MyZuYnNwOyANCkxpbnV4PEJSPi9kZXYvc2RhMiZu
+YnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNw
+OyANCjczNiZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyA4MDAmbmJzcDsmbmJz
+cDsmbmJzcDsgNTIyMTEyKyZuYnNwOyANCjgyJm5ic3A7IExpbnV4IA0Kc3dhcDxCUj4vZGV2L3Nk
+YTMmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsmbmJzcDsm
+bmJzcDsgDQo4MDEmbmJzcDsmbmJzcDsmbmJzcDsgMTM1MTU1IDEwNzkyMDY1MzcrJm5ic3A7IDhl
+Jm5ic3A7IExpbnV4IA0KTFZNPEJSPjwvRElWPjwvRk9OVD48L0JPRFk+PC9IVE1MPg0K
+
+------=_NextPart_000_0032_01C2BB09.5F166C40--
