@@ -1,8 +1,12 @@
-From: Benjamin Scott <bscott@ntisys.com>
-In-Reply-To: <Pine.LNX.4.10.10202051326310.19683-100000@pzat.meep.org>
-Message-Id: <Pine.LNX.4.44.0202061338480.13203-100000@dragon.inside.ntisys.com>
+Subject: Re: [linux-lvm] Backup costs (was: LVM reimplementationre)
+From: Daniel Whicker <daniel.whicker@solidsystems.com>
+In-Reply-To: <Pine.LNX.4.44.0202061338480.13203-100000@dragon.inside.ntisys.com>
+References: <Pine.LNX.4.44.0202061338480.13203-100000@dragon.inside.ntisys.com>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+    protocol="application/pgp-signature";
+    boundary="=-zlRZX8vmlIBrbwPMlQI9"
+Message-Id: <1013024531.21447.19.camel@Daniel>
 MIME-Version: 1.0
-Subject: [linux-lvm] Backup costs (was: LVM reimplementationre)
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -13,63 +17,71 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Feb  6 13:13:01 2002
+Date: Wed Feb  6 13:39:01 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Tue, 5 Feb 2002, James Hawtin wrote:
-> I think the reason most people don't do backups is because, hard disk
-> drives are really big and really cheap. Tape drives are really expensive,
-> media is also expensive and frankly tapes are very small for the cost.
+--=-zlRZX8vmlIBrbwPMlQI9
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 
-  Here are some prices from a recent Datacomm Warehouse catalog:
+Ben,
+	I think you missed a very important aspect.  The actual investment of
+the tape drives.  A SDLT or LTO drive is going to run from about $4000
+on up.  According to datacomm warehouse, a HP 230 external LTO drives
+runs $3700.  An SDLT drive runs $4300.  You can't compare just the media
+costs with that of the drive.  Let's consider a 1TB of data.
 
-  Item            GB   Cost  $/GB
-  --------------  ---  ----  ----
-  IDE HDD         100   270  2.70
-  AIT2             50    90  1.80
-  SuperDLT        110   150  1.36
-  LTO Ultrium     100   130  1.30
-  DDS-4            20    24  1.20
+SDLT:
+$4300 + (10 tapes * $50) =3D $4800
 
-  As you can see, hard disk is actually the most expensive media, not the
-least.  This whole "hard disks are cheaper" thing is a myth propagated by
-people who have never actually looked at the numbers.
+LTO:
+$3700 + (10 tapes * $130) =3D $5000
 
-> Effective backup can double the cost of a system and requires time to
-> manage it.
+AIT2:
+$2800 + (20 tapes * $90) =3D $4600
 
-  Sure it can.  Losing your data will generally cost even more.
+IDE:
+10  Drives * 270 =3D $2700
 
-> For the "home" market its just to much.
+DDS4:
+$900 + (50 tapes * $24) =3D $2100
 
-  The home user has maybe, what, 100 MB of data to protect, tops?  You can
-fit that on a $2 CD-RW, for crying out loud.
+From these numbers (using DataComm Warehouse pricing), you can see that
+to backup 1TB, the IDE drives are actually the second cheapest.  And
+from a raw performance point of view, they far exceed all the other
+alternatives from a random access standpoint, and they are comparable to
+even LTO from a transfer rate point of view.
 
-> This why people don't have backups in my book.
+Sorry... had to address this point.
 
-  "Most people" don't have backups because they don't know any better, and
-likely don't care.  They bought their Pee Cee at Wal-Mart, and the most
-valuable thing on there is their collection of illegal music they downloaded
-before Napster went bust.  For those who have legitimately valuable data
-(e.g., financial data), they likely don't realize just how much it is going
-to cost them when (note -- *WHEN*, not *IF*) they lose it.
+On Wed, 2002-02-06 at 13:14, Benjamin Scott wrote:
+>   Here are some prices from a recent Datacomm Warehouse catalog:
+>=20
+>   Item            GB   Cost  $/GB
+>   --------------  ---  ----  ----
+>   IDE HDD         100   270  2.70
+>   AIT2             50    90  1.80
+>   SuperDLT        110   150  1.36
+>   LTO Ultrium     100   130  1.30
+>   DDS-4            20    24  1.20
+>=20
+>   As you can see, hard disk is actually the most expensive media, not the
+> least.  This whole "hard disks are cheaper" thing is a myth propagated by
+> people who have never actually looked at the numbers.
 
-  Sure, backups cost money.  You might spend $1500 on a data protection
-scheme for a small office server.  Of course, consider how much it would
-cost if they did not do that.  I know business that have *gone out of
-business* when they lost their only copy of mission-critical data.
 
-  $1500 vs bankruptcy.  Gee, tough call.
+--=-zlRZX8vmlIBrbwPMlQI9
+Content-Type: application/pgp-signature; name=signature.asc
+Content-Description: This is a digitally signed message part
 
-  Anyone who has ever bothered to work out the numbers knows that backups
-are a bargain.  People who think otherwise are either ignorant or just plain
-don't want to know the truth.
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.0.6 (GNU/Linux)
+Comment: For info see http://www.gnupg.org
 
--- 
-Ben Scott <bscott@ntisys.com>
-| The opinions expressed in this message are those of the author and do not |
-| necessarily represent the views or policy of any other person, entity or  |
-| organization.  All information is provided without warranty of any kind.  |
+iD8DBQA8YYcS/kvcHM2+TjwRAiioAJ9EkkRbIU7DxTIToiKOJQHDXWXgtgCghv3j
+bTUKN8DCXYOBp47yt/MRAuY=
+=stlE
+-----END PGP SIGNATURE-----
+
+--=-zlRZX8vmlIBrbwPMlQI9--
