@@ -1,12 +1,9 @@
-Return-Path: <ragnark@stine.vestdata.no>
-Date: Thu, 26 Apr 2001 16:36:12 +0200
-From: =?iso-8859-1?Q?Ragnar_Kj=F8rstad?= <lvm@ragnark.vestdata.no>
-Subject: Re: [linux-lvm] badblocks handling with LVM
-Message-ID: <20010426163612.D26041@vestdata.no>
-References: <200104231008.f3NA8Gkx001134@webber.adilger.int> <01042519594802.31687@lyta> <20010426100603.A9820@sistina.com> <20010426152651.B26041@vestdata.no> <20010426162742.A8220@dragon.blacknet.de>
+Return-Path: <root@srv.sistina.com>
+Date: Thu, 26 Apr 2001 17:03:29 +0000
+From: "Heinz J. Mauelshagen" <Mauelshagen@sistina.com>
+Message-ID: <20010426170329.C11733@sistina.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20010426162742.A8220@dragon.blacknet.de>; from Goetz Bock on Thu, Apr 26, 2001 at 04:27:42PM +0200
+Subject: [linux-lvm] External CVS Access Status
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -18,22 +15,30 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
+Cc: lvm-devel@sistina.com
 
-On Thu, Apr 26, 2001 at 04:27:42PM +0200, Goetz Bock wrote:
-> On Thu, Apr 26 '01 at 15:26, Ragnar Kj�rstad wrote:
-> > And if anyone insist on using LVM to mark the blocks anyway, it can be
-> > done with out special code. Just create a volume named "broken", and put
-> > the PVs in question in this.
-> That would be a waste of space, my PVs are all 10+GB in size, I'd like
-> bad block handling on PE level not on PV level.
-> But I can live with out badblock handling in LVM.
+FYI: we are setting up the external write accessable LVM CVS repository in
+     order to set up accounts for major contributors *now*
 
-Sorry, I meant "put the PEs in question in this".
-(it doesn't actually do anything, just mark that space as used, so you
-won't accidently put something else there)
+Policies and information to access it follow in the next days.
 
 -- 
-Ragnar Kj�rstad
-Big Storage
+
+Regards,
+Heinz    -- The LVM Guy --
+
+*** Software bugs are stupid.
+    Nevertheless it needs not so stupid people to solve them ***
+
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+Heinz Mauelshagen                                 Sistina Software Inc.
+Senior Consultant/Developer                       Am Sonnenhang 11
+                                                  56242 Marienrachdorf
+                                                  Germany
+Mauelshagen@Sistina.com                           +49 2626 141200
+                                                       FAX 924446
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
