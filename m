@@ -1,65 +1,26 @@
-From: mortgage2000@cs.ait.ac.th
-Message-Id: <199910040737.AAA18601@sieco.com.cn>
-Subject: [linux-lvm] Purchase a home with NO MONEY DOWN!
-Date: Sun, 03 Oct 1999 09:18:42 -0700
-Reply-To: hcheldon@iobox.com
+Date: Sun, 3 Oct 1999 18:58:11 +0200
+From: Harald Milz <hm@suse.de>
+Subject: [linux-lvm] =?iso-8859-1?Q?Spam=2C_was_Re:_=5Blinux-lvm=5D_L=28=A9=BF=A9=29K_Here_An?=
+ =?iso-8859-1?Q?d_Get_A_Completely_=22FREE=22_Digital_Cell_Phone=2E=2E=2E?=
+Message-ID: <19991003185811.A1497@suse.de>
+References: <199910030828.EAA01197@atlas.faytech.cc.nc.us>
+Mime-Version: 1.0
+In-Reply-To: <199910030828.EAA01197@atlas.faytech.cc.nc.us>
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
-MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: linux-lvm@redhat.com
+To: linux-lvm@msede.com
 
-Home loans are available for EVERY credit and equity situation!
-Whether your credit rating is A+ or you are "credit challenged" 
-we have thousands of loan programs through hundreds of 
-lenders. If you are in the market for a new home, want to
-save money by refinancing, or get a second mortgage, fill in
-our quick pre-qualification form and we will forward your 
-information to the lender most able to make a loan on YOUR terms.
+On Sun, Oct 03, 1999 at 04:03:00PM +0000, eserver@ia.inf.shizuoka.ac.jp wrote:
+> [You Definitely DO NOT Want To Lose This Email Message!!!]
 
--Save Time
--Save Money
--Save Aggravation
+This list seems to be Mr. Spammer's favourite now... Shouldn't we disallow
+messages from non-subscribers silently?
 
-There is NEVER any fee to consumers for using this service.
-
-Second Mortgages - Up to 125% of your homes value!
-Refinancing - Reduce your monthly payments and get cash back!
-Home Improvement Loans - Add that deck or pool!
-Debt Consolidation - Get rid of those high interest cards!
-New Purchases - Buy a home with NO MONEY DOWN! and get cash back too.
-
-http://www.TheHomeLoanSource.net
-
-Click on the link above for your FREE Mortgage Evaluation.
-If the link is dead please send 
-mailto:wegoturmoney@iobox.com?subject=Free_Loan_Eval
-
-
--------------------------------------------------
-This email complies with ALL Federal and State laws.
-
-To be removed from the mailing list send 
-mailto:HCheldon@iobox.com?subject=remove_tc3
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-Home loans are available for EVERY credit and equity situation!
-Whether your credit rating is A+ or you are "credit challenged" 
-we have thousands of loan programs through hundreds of 
-lenders. If you are in the market for a new home, want to
+-- 
+Harald Milz                            phone       +49 (0) 89 42769-0
+SuSE Muenchen GmbH                     fax       +49 (0) 89 4201-7701
+Stahlgruberring 28, D-81829 Muenchen   email               hm@suse.de
+http://www.suse.de/  (Deutsch)         http://www.suse.com/ (English)
