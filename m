@@ -1,21 +1,19 @@
 Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id iAQI7Fr16815
-	for <linux-lvm@redhat.com>; Fri, 26 Nov 2004 13:07:15 -0500
-Received: from languor.static.net (lethargy.static.net [66.92.70.19])
-	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id iAQI6w0l027578
-	for <linux-lvm@redhat.com>; Fri, 26 Nov 2004 13:07:14 -0500
-Received: from syndrome.static.net ([66.92.109.119] helo=[192.168.1.103])
-	by languor.static.net with asmtp (Exim 3.35 #1) id 1CXkXm-0002dp-00
-	for linux-lvm@redhat.com; Fri, 26 Nov 2004 13:10:06 -0500
-Mime-Version: 1.0 (Apple Message framework v619)
-In-Reply-To: <41A76E48.3060308@backtobasicsmgmt.com>
-References: <6E9EA468-3F7D-11D9-8E13-003065F94C4C@static.net>
-	<41A76E48.3060308@backtobasicsmgmt.com>
-Message-Id: <144246D1-3FD6-11D9-8E13-003065F94C4C@static.net>
-Content-Transfer-Encoding: 7bit
-From: Armen Babikyan <armenb@static.net>
-Subject: Re: [linux-lvm] problem with LVM and fstab...bug?
-Date: Fri, 26 Nov 2004 13:07:47 -0500
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id iATF9Ir05721
+	for <linux-lvm@redhat.com>; Mon, 29 Nov 2004 10:09:18 -0500
+Received: from cheviot2.ncl.ac.uk (root@cheviot2.ncl.ac.uk [128.240.234.82])
+	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id iATF9Apd024664
+	for <linux-lvm@redhat.com>; Mon, 29 Nov 2004 10:09:16 -0500
+Received: from largo.campus.ncl.ac.uk (largo.ncl.ac.uk [128.240.238.3])
+	by cheviot2.ncl.ac.uk (8.12.10/8.12.10) with ESMTP id iATF7ptF020194
+	for <linux-lvm@redhat.com>; Mon, 29 Nov 2004 15:08:56 GMT
+Content-class: urn:content-classes:message
+MIME-Version: 1.0
+Date: Mon, 29 Nov 2004 15:08:50 -0000
+Message-ID: <37E80E80B681A24B8F768D607373CA80010A5454@largo.campus.ncl.ac.uk>
+From: "C R Ritson" <C.R.Ritson@newcastle.ac.uk>
+Content-Transfer-Encoding: 8bit
+Subject: [linux-lvm] Snapshots (overheads and 2.6 kernel status)
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -26,35 +24,31 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="us-ascii"
+To: linux-lvm@redhat.com
 
-Kevin,
+Does anybody know how much overhead is involved in keeping a snapshot of
+an active volume (for 24 hours)? I am currently running LVM1 (waiting
+for snapshots in LVM2/device mapper) and am making a snapshot of my user
+volumes overnight. These are left available for 24 hours in the hope
+that users who damage a file will be able to get "yesterday's copy" from
+the snapshot without us needing to restore from tape. There is obviously
+some overhead involved, but does anyone know how much?
 
-Absolutely right.  I accidently made /dev/vg0/www an ext2 drive.  
-Thanks!
+I guess that the worst case situation is when a file is updated for the
+first time that day (an example might be a recompilation, particularly
+if the underlying disk is nearly full, so that the blocks released by
+removing the object files are quickly reused). In this case, the
+original data blocks must be placed into the snapshot cache and the new
+data blocks written to disk. Two writes for the price of one.
 
-   - Armen
+Perennial question - having had a look at the dm-devel and the lvm2
+archives, I cannot find any comments about the status of snapshots in
+the 2.6 kernel. Can anyone enlighten me?
 
-On Nov 26, 2004, at 12:56 PM, Kevin P. Fleming wrote:
+Chris Ritson (Computing Officer and School Safety Officer)
 
-> Armen Babikyan wrote:
->
->> After this, both drives are mounted:
->> # df
->> Filesystem           1K-blocks      Used Available Use% Mounted on
->> [my other partitions]
->> /dev/mapper/vg0-www   30237648  10572760  18128888  37% /www
->> /dev/mapper/vg0-uml   10079084    945240   8621844  10% /uml
->
-> Please show us the contents of your /proc/mounts after successfully 
-> mounting them... I suspect your vg0-www does not contain an ext3 
-> filesystem (but is instead ext2 or some other type), even though you 
-> think it does.
->
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
->
+Rm 618, Claremont Bridge,       EMAIL: C.R.Ritson@ncl.ac.uk
+School of Computing Science,    PHONE: +44 191 222 8175
+University of Newcastle,        FAX  : +44 191 222 8232
+Newcastle on Tyne, UK NE1 7RU.  http://www.cs.ncl.ac.uk/
