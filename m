@@ -1,6 +1,6 @@
 From: benr@us.ibm.com
-Message-ID: <8525690A.00734B32.00@d54mta02.raleigh.ibm.com>
-Date: Mon, 26 Jun 2000 16:59:17 -0400
+Message-ID: <8525690A.0077720E.00@d54mta02.raleigh.ibm.com>
+Date: Mon, 26 Jun 2000 17:44:38 -0400
 Subject: Re: [linux-lvm] Re: IBM to release LVM Technology to the Linux
 Mime-Version: 1.0
 Content-Disposition: inline
@@ -9,42 +9,29 @@ Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: "Martin K. Petersen" <mkp@linuxcare.com>
+To: Paul Jakma <paul@clubi.ie>
 Cc: linux-lvm@msede.com
 
 
 
-Martin,
+Paul,
 
->I am advocating:
->
->1. Using existing partitioning schemes to encapsulate logical disks.
->
->   This is only relevant in the migration case and if people want to
->   test LVMS on a few disks that are already partitioned.  If your
->   system has hundreds of disks connected, you'll use a 1:1 physical
->   to logical disk mapping anyway.
+Welcome to the discussion!
 
-What you wish to do here can be done within the LVMS Architecture.
-Basically, it would require the creation of a Device Manager plug-in which
-would report each partition on a device as a logical disk.  Once this is
-done, all of the other LVMS Partition Management and Feature plug-ins could
-be applied to the logical disk.
+>would it not perhaps be more efficient and more purposeful if rather
+>than releasing IBM specific code which will not 'drop-in' to linux,
+>IBM were instead to use their knowledge gained from IBM LVM to assist
+>with improving the current Linux LVM?
 
-
->2. Avoid using existing partitioning schemes to encapsulate logical
->   partitions/extents.
-
-This could be accomplished in the LVMS Architecture by creating a Partition
-Manager plug-in which implements whatever scheme you desire.  Furthermore,
-it could co-exist with other Partition Manager plug-ins.  The only
-constraint is that a logical disk can not be shared between multiple
-Partition Manager plug-ins.
-
-I believe that what you advocate could be implemented within the LVMS
-Architecture.   Since it is not an exact match for the model underlying the
-architecture, it would not be a perfect fit, but it wouldn't be a bad fit
-either.  Thoughts?
+If the existing LVM could accommodate what our customers have asked for,
+then, yes, it would have been more efficient to improve the current Linux
+LVM.  However, in order for the current LVM to be able to do what our
+customers have asked for, it would have to be based upon a different
+architecture.  This would require major changes to the code, the equivalent
+of a re-write.  This does not mean, however, that the current LVM is in any
+way bad.  It just means that our customers have needs that are not being
+met by the current LVM, and something different is required to meet those
+needs.
 
 Regards,
 
