@@ -1,21 +1,25 @@
-Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id i5IGX8000682
-	for <linux-lvm@redhat.com>; Fri, 18 Jun 2004 12:33:08 -0400
-Received: from artemis.le.ac.uk (artemis.le.ac.uk [143.210.16.126])
-	by mx3.redhat.com (8.12.10/8.12.10) with ESMTP id i5IGX2Xn018194
-	for <linux-lvm@redhat.com>; Fri, 18 Jun 2004 12:33:02 -0400
-Received: from [143.210.12.168] (helo=pc167.cc.le.ac.uk)
-	by artemis.le.ac.uk with esmtp (Exim 4.30) id 1BbMIW-00016T-TZ
-	for linux-lvm@redhat.com; Fri, 18 Jun 2004 17:33:00 +0100
-Received: from rao3 (helo=localhost)
-	by pc167.cc.le.ac.uk with local-esmtp (Exim 4.32) id 1BbMIW-0001Pg-SC
-	for linux-lvm@redhat.com; Fri, 18 Jun 2004 17:33:00 +0100
-Date: Fri, 18 Jun 2004 17:33:00 +0100 (BST)
-From: Alex Owen <rao3@leicester.ac.uk>
-Message-ID: <Pine.LNX.4.58.0406181723320.4709@pc167.cc.le.ac.uk>
+Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id i5JBjc009666
+	for <linux-lvm@redhat.com>; Sat, 19 Jun 2004 07:45:38 -0400
+Received: from moutng.kundenserver.de (moutng.kundenserver.de
+	[212.227.126.185])
+	by mx1.redhat.com (8.12.10/8.12.10) with ESMTP id i5JBjbe1002003
+	for <linux-lvm@redhat.com>; Sat, 19 Jun 2004 07:45:38 -0400
+Received: from [212.227.126.208] (helo=mrelayng.kundenserver.de)
+	by moutng.kundenserver.de with esmtp (Exim 3.35 #1)
+	id 1BbeHu-00079B-00
+	for linux-lvm@redhat.com; Sat, 19 Jun 2004 13:45:34 +0200
+Received: from [217.230.161.203] (helo=pd9e6a1cb.dip0.t-ipconnect.de)
+	by mrelayng.kundenserver.de with asmtp (TLSv1:RC4-MD5:128)
+	(Exim 3.35 #1) id 1BbeHu-0002Os-00
+	for linux-lvm@redhat.com; Sat, 19 Jun 2004 13:45:34 +0200
+From: Hauke Laging <mailinglisten@hauke-laging.de>
+Date: Sat, 19 Jun 2004 13:45:32 +0200
 MIME-Version: 1.0
-Sender: Alex Owen <rao3@leicester.ac.uk>
-Subject: [linux-lvm] (no subject)
+Content-Disposition: inline
+Content-Transfer-Encoding: 7bit
+Message-Id: <200406191345.32913.mailinglisten@hauke-laging.de>
+Subject: [linux-lvm] vgcfgbackup: backup of several VGs into one file fails
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -26,104 +30,53 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@redhat.com
 
 Hello,
-This morning I had an oops which I think is due to extending a
-LVM1 LVsnapshot.
 
-I'm running a custom compiled 2.4.26 kernel. Debian source + LVM1.0.8 +
-VFS-Lock from dm tarball.
+I just tried to make a backup of all my VGs into one file using the 
+following command:
 
-If anyone can give me any pointers to informantion of debuging such
-problems that would be great!
+vgcfgbackup -d -f lvm--2004-06-19
+  : open failed: No such file or directory
+  Volume group "storage" successfully backed up.
+  : open failed: No such file or directory
+  Volume group "linux" successfully backed up.
 
-Thanks in advance for any advice on debugging.
+Unfortunately after that the file lvm--2004-06-19 contains information 
+about the VG "linux" only.
 
+strace shows this:
+[...]
+rename("./.lvm_server_12035_1954474236", "lvm--2004-06-19.tmp") = 0
+rename("lvm--2004-06-19.tmp", "lvm--2004-06-19") = 0
+[...]
+rename("./.lvm_server_12035_348633387", "lvm--2004-06-19.tmp") = 0
+rename("lvm--2004-06-19.tmp", "lvm--2004-06-19") = 0
+[...]
 
-Here is the syslog output:
-Jun 18 07:39:02 falcon /USR/SBIN/CRON[3094]: (root) CMD ([ -x /usr/local/sbin/cron.snapshotextend ] && /usr/local/sbin/cron.snapshotextend)
-Jun 18 07:39:03 falcon kernel: Unable to handle kernel NULL pointer dereference at virtual address 00000000
-Jun 18 07:39:03 falcon kernel:  printing eip:
-Jun 18 07:39:03 falcon kernel: f8855b17
-Jun 18 07:39:03 falcon kernel: *pde = 1236b001
-Jun 18 07:39:03 falcon kernel: *pte = 00000000
-Jun 18 07:39:03 falcon kernel: Oops: 0000
-Jun 18 07:39:03 falcon kernel: CPU:    3
-Jun 18 07:39:03 falcon kernel: EIP:    0010:[ide-cd:__insmod_ide-cd_O/lib/modules/2.4.26-686-smp-lvm-vfslock/ke+-2135273/96]    Tainted: P
-Jun 18 07:39:03 falcon kernel: EFLAGS: 00010202
-Jun 18 07:39:03 falcon kernel: eax: 00000000   ebx: f8ac3260   ecx: 00000000   edx: 00000000
-Jun 18 07:39:03 falcon kernel: esi: 00402400   edi: f724aa00   ebp: 00006804   esp: c43d7dd0
-Jun 18 07:39:03 falcon kernel: ds: 0018   es: 0018   ss: 0018
-Jun 18 07:39:03 falcon kernel: Process kupdated (pid: 9, stackpage=c43d7000)
-Jun 18 07:39:03 falcon kernel: Stack: f724aa00 f724ab70 f7c92970 00200000 00000080 00000002 00000000 00000000
-Jun 18 07:39:03 falcon kernel:        f88526d1 c43d7e2e c43d7e30 00402380 f724aa00 00003a02 eda084a0 00000080
-Jun 18 07:39:03 falcon kernel:        00200000 c7d80f80 000c00b0 f7c92800 f7c89000 00402380 00000000 68040000
-Jun 18 07:39:03 falcon kernel: Call Trace:    [ide-cd:__insmod_ide-cd_O/lib/modules/2.4.26-686-smp-lvm-vfslock/ke+-2148655/96]
-[ide-cd:__insmod_ide-cd_O/lib/modules/2.4.26-686-smp-lvm-vfslock/ke+-2148425/96] [generic_make_request+288/304] [submit_bh+86/224]
-[write_locked_buffers+32/44]
-Jun 18 07:39:03 falcon kernel:   [write_some_buffers+278/364] [sync_old_buffers+101/168] [kupdate+329/384] [ret_from_fork+6/32] [kupdate+0/384]
-[arch_kernel_thread+40/56]
-Jun 18 07:39:03 falcon kernel:
-Jun 18 07:39:03 falcon kernel: Code: 8b 01 39 d9 74 37 39 71 08 75 ef 66 39 69 0c 75 e9 83 7c 24
+It seems to me that both VG backups are written to the same file by writing 
+them to a temporary file and then renaming this. Of course, by this all 
+former backups are overwritten as the file is overwritten every time.
 
-The cron job I suspect of trigering the kernel bug is
-/usr/local/sbin/cron.snapshotextend :
+The ": open failed: No such file or directory" message is probably caused 
+by this:
+stat64("lvm--2004-06-19.tmp", 0xbfffc9a0) = -1 ENOENT (No such file or 
+directory)
+open("", O_RDONLY|O_LARGEFILE)          = -1 ENOENT (No such file or 
+directory)
+These two lines immediately follow the "rename" lines.
 
----8<---
-#!/bin/bash
-#################################################
-# script to extend snapshots before they fill up!
-#################################################
+Do I misunderstand anything? The man page does not look too complicated...
 
 
-#for lv in /dev/vg00/SNAP* ; do
-for lv in $( ls /dev/vg00/SNAP* 2>/dev/null )  ; do
-    /sbin/lvdisplay $lv | grep "Allocated to snapshot" | \
-	( read junk junk junk LVpercent LVvalues
-	  #make integer percentage
-	  LVpercent=${LVpercent%\%}
-	  LVpercent=${LVpercent%.*}
-	  #get usage and size from values
-	  LVusage=${LVvalues%%/*]}
-	  LVusage=${LVusage#[}
-	  LVsize=${LVvalues##[*/}
-	  LVsize=${LVsize%]}
-
-	  #echo lv $lv
-	  #echo percent $LVpercent
-	  #echo used $LVusage
-	  #echo size $LVsize
-
-	  if /usr/bin/expr $LVpercent '>=' 80  >/dev/null ; then
-
-		LVsizeunit=${LVsize##* }
-		LVsizeunit=${LVsizeunit%B}
-		#calc 20% of existing snapshot size
-		LVextension=${LVsize%% *}
-		LVextension=${LVextension%.*}
-		LVextension=$(( $LVextension * 20 / 100 ))
-
-		echo /sbin/lvextend -L+$LVextension$LVsizeunit $lv
-		/sbin/lvextend -L+${LVextension}${LVsizeunit} $lv
-		echo DONE
-	  fi
-
-	)
-
-done
----8<---
+vgcfgbackup --version
+  LVM version:     2.00.15 (2004-04-19)
+  Library version: 1.00.09-ioctl (2004-03-31)
+  Driver version:  4.1.0
 
 
+Best regards,
 
-
-----------------------------------------------------------------
- Dr Richard Alexander Owen      Unix System Administrator
-
- The Computer Centre            E-mail: rao3@le.ac.uk
- University of Leicester           Tel: (0116) 2525133
- University Road                   Fax: (0116) 2525027
- Leicester LE1 7RH
-----------------------------------------------------------------
+Hauke Laging
