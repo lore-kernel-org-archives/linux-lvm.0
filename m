@@ -1,11 +1,11 @@
-From: Wolfgang Weisselberg <weissel@netcologne.de>
-Date: Thu, 18 Oct 2001 02:09:32 +0200
+Date: Thu, 18 Oct 2001 08:42:19 +0100
+From: Patrick Caulfield <caulfield@sistina.com>
 Subject: Re: [linux-lvm] read_intr errors
-Message-ID: <20011018020932.A18634@tiger.bigcats.invalid>
-References: <134783342.1003350775542.JavaMail.root@boots> <000901c15751$8839ee70$0300000a@pacbell.net>
+Message-ID: <20011018084219.A564@tykepenguin.com>
+References: <20011017152957.E644@tykepenguin.com> <000801c15747$7d86df10$0300000a@pacbell.net>
 Mime-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <000901c15751$8839ee70$0300000a@pacbell.net>; from e@arix.com on Wed, Oct 17, 2001 at 02:20:23PM -0700
+In-Reply-To: <000801c15747$7d86df10$0300000a@pacbell.net>; from e@arix.com on Wed, Oct 17, 2001 at 01:08:30PM -0700
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -21,27 +21,28 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Hi, Erick!
+On Wed, Oct 17, 2001 at 01:08:30PM -0700, Erick Calder wrote:
+> Patrick,
+> 
+> > I'm afraid they look a lot like hardware errors to me. It might just be
+> that it
+> > doesn't like MULTI_MODE though. I'm not an IDE expert.
+> 
+> I turned MULTI_MODE on at a suggestion aimed to fix these very problems...
+> they certainly are hardware errors but as we know anecdotally from other
+> postings, the hardware can be perfectly ok and the errors still persist.  as
+> my drive is brand new and I had no such errors before installing a PV on it,
+> it seems reasonable to think it's not the drive.
+> 
+> is my data at risk of corruption?  I've slowly been checking the integrity
+> of files but I'm concerned about backing up bad data!
 
-Erick Calder (e@arix.com) wrote:
-> From Karl
+Just because the drive is new doesn't mean it's not bust(!). 
 
-> > Have you tried mke2fs with the -c option in LVM and on the drive without
+I would do as someone suggested and run badblocks on the disk and if it gives
+errors then take it back. If not then it may be related to some reports we saw
+a while ago about LVM reading past the end of a SCSI disk - you can easily
+verify this by making a filesystem on the PV rather that using LVM (If you're
+happy with your backups that is...).
 
-> I haven't tried that but if I unmount the filesystem and check it:
-
-> # umount /dev/LVM/mp3z
-> # fsck /dev/LVM/mp3z
-
-> it comes up clean....  is that not an equivalent test?
-
-No.  Definitively not.  mke2fs -c also runs badblocks(8),
-which tries to read every single byte in the partition.
-(Optionally you can even have it do a write test.  There is
-even a non-destructive write test in newer badblocks.  Use with
-care and do have current backups.)
-
-fsck just checks that the metadata (directories, space used
-by files, etc) looks OK.
-
--Wolfgang
+patrick
