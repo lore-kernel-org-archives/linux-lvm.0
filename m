@@ -1,12 +1,12 @@
 Return-Path: <root@srv.sistina.com>
-Date: Wed, 30 May 2001 11:28:09 +0200
+Date: Wed, 30 May 2001 11:33:50 +0200
 From: "Heinz J. Mauelshagen" <Mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] Re: Help! Upgrade 2.2.18 -> 2.4.4 killed a PV
-Message-ID: <20010530112809.C30938@sistina.com>
-References: <20010529010628.E1971@jensbenecke.de> <20010529093436.A792@jensbenecke.de> <20010529211128.B27030@sistina.com> <20010529214021.A1594@jensbenecke.de>
+Subject: Re: [linux-lvm] Solution? found backup hexdump of partition's first MB
+Message-ID: <20010530113350.D30938@sistina.com>
+References: <20010529010628.E1971@jensbenecke.de> <20010529093436.A792@jensbenecke.de> <20010529202030.A700@jensbenecke.de>
 Mime-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20010529214021.A1594@jensbenecke.de>; from lvm@jensbenecke.de on Tue, May 29, 2001 at 09:40:21PM +0200
+In-Reply-To: <20010529202030.A700@jensbenecke.de>; from lvm@jensbenecke.de on Tue, May 29, 2001 at 08:20:30PM +0200
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -21,40 +21,54 @@ List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="iso-8859-1"
 To: linux-lvm@sistina.com
 
-On Tue, May 29, 2001 at 09:40:21PM +0200, Jens Benecke wrote:
-> On Tue, May 29, 2001 at 09:11:28PM +0000, Heinz J. Mauelshagen wrote:
-> >=20
-> > Jens,
-> > you need to run pvcreate on the invalid PV before running vgcfgrestore.
+On Tue, May 29, 2001 at 08:20:30PM +0200, Jens Benecke wrote:
+> On Tue, May 29, 2001 at 09:34:36AM +0200, Jens Benecke wrote:
+> > On Tue, May 29, 2001 at 01:06:28AM +0200, Jens Benecke wrote:
+> > > Hello,
+> > > I upgraded to 2.2.4 (0.9.1-beta2) from 2.2.18 (LVM 0.9) and this seem=
+s to
+> > > have killed one of my PVs. I tried the 0.9 utilities and updated to
+> > > 0.9.1-beta7 when I noticed the problems. No change. Booting back to 2=
+.2.18
+> > > didn't help, the PV was gone there as well.
+> > follow-up:
+> > vgcfgrestore doesn't work, because LVM thinks my hdc1 is no PV. Here's =
+the
+> > output: (...)
 >=20
-> I did so.=20
+> I think I found a way: I have found a hex-dump backup of the first megaby=
+te
+> of the disk in - apparently - working order.
 >=20
-> Now I have a PV that is associated to an unknown VG, and vgcfgrestore says
+> So: hdc1 was the broken PV, it's the only partition on hdc, and I have a
+> file called hdc-first-MB-hexdump.
 >=20
-> 	vgcfgrestore -- size of physical volume /dev/hdc1 differs from backup
-> =20
-> although 'vgcfgrestore -n data -ll' and 'pvdata -PP /dev/hdc1' show EXACT=
-LY
-> the same amount of extents (used/free/..), and GB. And hdc1 certainly
-> didn't change in size.
->=20
-> Strange: BOTH vgcfgrestore and pvdata -PP know that the PVs belong to the
-> VG "data", but vgscan doesn't find it, and pvscan says both belong to an
-> unknown VG and I should run vgscan.
+> Does this help? ;)
 
-If pvdata still tells you, that the PV belongs to some VG it hasn't created
-a new one, likely because your didn't use "pvcreate -ff".
+Yes, in case it really contains the needed actual copy.
 
-Does "pvcreate -ff"/vgcfgrestore help it?
-
-BTW: WRT to your hex dump; see my other answer.
 
 >=20
+> The question is, does this already contain file system data or is this
+> still all LVM structure data?
+
+If it is just a MB -> unlikely, because LVM typically reserves more
+than that for the VGDA.
+
+*But* to be really sure, run "pvdata -PP" on the hex dump and look
+for pe_on_disk.base + pe_on_disk.size. This will give you the
+actual end (in 512 byte units) of the metadata in the file and should
+be used to dd it back to disk.
+
+
+> I'm quite sure that the LVM structure didn't
+> change since this file was created, only (of course) the data changed on
+> the filesystem contained in the one (single) LV on data=3D(hdc1,hda1).
+
+See above: you *need* to be sure. Hopefully the pvcreate/vgcfgrestore pair
+           works for you.
+
 >=20
-> So, I am a little further but not yet there =3D;)
->=20
->=20
-> Thanks for the help!
 >=20
 > --=20
 > Jens Benecke             /* Nobody will ever see this error message :-) */
