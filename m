@@ -1,9 +1,10 @@
-Date: Thu, 6 Sep 2001 18:08:13 +0100 (IST)
-From: Paul Jakma <paulj@alphyra.ie>
-Subject: Re: [linux-lvm] ftp.sistina.com down?
-In-Reply-To: <20010905123417.A3252@sistina.com>
-Message-ID: <Pine.LNX.4.33.0109061806460.28151-100000@dunlop.dub.ie.alphyra.com>
+Message-ID: <3B97B21D.10309@st-peter.stw.uni-erlangen.de>
+Date: Thu, 06 Sep 2001 19:27:57 +0200
+From: svetljo <galia@st-peter.stw.uni-erlangen.de>
 MIME-Version: 1.0
+Subject: Re: [linux-lvm] PBs with LVM over software RAID ( and XFS ? ext2 reiserfs?)-2.4.7
+References: <B45465FD9C23D21193E90000F8D0F3DF404FF5@mailsrv.linkvest.com> <3B95E36E.6070703@st-peter.stw.uni-erlangen.de> <20010905120549.H32553@turbolinux.com> <3B966C63.7080309@st-peter.stw.uni-erlangen.de> <20010905123211.J32553@turbolinux.com> <3B96757E.9010201@st-peter.stw.uni-erlangen.de> <20010905164626.M32553@turbolinux.com> <3B96AFC0.5010608@st-peter.stw.uni-erlangen.de>
+Content-Transfer-Encoding: 7bit
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,29 +16,12 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: linux-lvm@sistina.com
 
-On Wed, 5 Sep 2001, AJ Lewis wrote:
+Hi again
+it took me some time but it's the same with 2.4.7
+mke2fs and mkreiserfs segfaults and there are no OOPSes
+and jfs has no problems
 
-> It should be up again.  Thanks for letting us know.
-
-excellent...
-
-> > also, are there any RPMS for 1.0.1?
->
-> Nope.  Either grabbing the source tarball or talking to your distro is the
-> best option at this point.  The source is not difficult to build and install
-> IMHO, so that's probably your best bet for now.
-
-ok.. i've no technical problems with source, but from experience i
-don't like installing from source onto production systems that use
-package management - bad idea for long term maintainability of the
-machine.
-
-anyway.. thanks AJ!
-
-> Regards,
-
---paulj
+vanila 2.4.7 with jfs-1.0.4 and LVM-cvs from about an hour ago 
