@@ -1,10 +1,11 @@
 Return-Path: <jorg.de.jong@ida.xs4all.nl>
-Message-ID: <3AD358DD.E3ABEC3D@ida.xs4all.nl>
-Date: Tue, 10 Apr 2001 21:02:53 +0200
+Message-ID: <3AD35A79.BFF2A785@ida.xs4all.nl>
+Date: Tue, 10 Apr 2001 21:09:45 +0200
 From: Jorg de Jong <jorg.de.jong@ida.xs4all.nl>
 MIME-Version: 1.0
+Subject: Re: [linux-lvm] LVM GUI
+References: <Pine.LNX.4.21.0104101450100.7875-100000@rdb.linux-help.org>
 Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] vcreate and manpage are not consistent.
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -19,15 +20,24 @@ List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
 
--- Hi,
+ardy@rdb.linux-help.org wrote:
+> 
+> I did a search on freshmeat.net for LVM GUIs. Found one called
+> Logical Volume Administrator, apparently written in perl/TK.
+> Anyone tried this, and if so, with success?
+> Thoughts?
 
-the manpage of the lvcreate command states 'StripeSize must be 2^n (n = 0 to 7)'
-or in other words: 1 2 4 8 16 32 64 128. 
-But when I try to create a striped lv with stripe size of 1 or 2 I get error messages.
+Hi,
 
-regards
+Yes I tried it but without success.
 
-ps I am using a patched 2.4.3 kernel and 0.9.1.beta7 user tools.
+You could also give my LVM Gui a go. ( if your not
+affraid of java, that is) I hope you also found it on freshmeat.
+If not, you can find it on 
+        http://www.xs4all.nl/~mmj/lvm
+
+let me know what you think of it !
+
 -- 
 Jorg de Jong
 Work : jorg.de.jong@ict.nl 
