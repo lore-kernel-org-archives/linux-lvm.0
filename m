@@ -1,14 +1,15 @@
 Return-Path: <lewis@sistina.com>
-Date: Mon, 30 Jul 2001 09:22:42 -0500
+Date: Mon, 30 Jul 2001 08:35:50 -0500
 From: AJ Lewis <lewis@sistina.com>
-Subject: Re: [linux-lvm] Changing partition names?
-Message-ID: <20010730092242.A28850@sistina.com>
-References: <20010730070457.A10441@sistina.com> <Pine.LNX.4.21.0107310046190.12641-100000@server.gordon.co.nz>
+Subject: Re: [linux-lvm] [BUG] segmentation fault on snapshot with beta8
+Message-ID: <20010730083550.A20819@sistina.com>
+References: <20010726122738.E052917573@oscar.casa.dyndns.org> <20010727102132.A4314@sistina.com> <20010727162747.9542515354@oscar.casa.dyndns.org>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-md5;
-	protocol="application/pgp-signature"; boundary="AhhlLboLdkugWU4S"
+	protocol="application/pgp-signature"; boundary="J/dobhs11T7y2rNN"
 Content-Disposition: inline
-In-Reply-To: <Pine.LNX.4.21.0107310046190.12641-100000@server.gordon.co.nz>; from donald@gordon.co.nz on Tue, Jul 31, 2001 at 12:48:35AM +1200
+In-Reply-To: <20010727162747.9542515354@oscar.casa.dyndns.org>; from tomlins@cam.org on Fri, Jul 27, 2001 at 12:27:47PM -0400
+Resent-To: linux-lvm@sistina.com
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -20,43 +21,22 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-To: linux-lvm@sistina.com
+To: Ed Tomlinson <tomlins@cam.org>
 
---AhhlLboLdkugWU4S
+--J/dobhs11T7y2rNN
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Jul 31, 2001 at 12:48:35AM +1200, Donald Gordon wrote:
-> On Mon, 30 Jul 2001, AJ Lewis wrote:
->=20
-> > On Mon, Jul 30, 2001 at 11:48:56PM +1200, Donald Gordon wrote:
-> > > I can't seem to see any way to tell lvm that the name of one of the
-> > > partitions it is using has changed (from /dev/sda10 to /dev/sda8; I'm
-> > > transitioning a system to LVM).  Should it pick this up on reboot or =
-is
-> > > there some config file I need to prod?
-> >=20
-> > vgscan will do this for you automatically.
-> >=20
->=20
-> When I (ahem) remove a partition by mistake and re-create it in the same
-> location with fdisk vgscan no longer recognises it.
->=20
-> Also, is there any way to point vgscan in the general direction of the
-> block devices where PVs are to be found?  It takes quite some time to scan
-> *everything* on my p75 :(
+On Fri, Jul 27, 2001 at 12:27:47PM -0400, Ed Tomlinson wrote:
+> My impression with the above bug is that the snapshot is filling much too=
+ quickly
+> and getting disabled.  At this point seg faults start happening.
 
-Are you using devfs?  If so, which version of LVM are you using?  If not, do
-you have /proc mounted?  And are the values in /proc/partitions valid?  LVM
-should use /proc/partitions on a non-devfs system to determine which devices
-to scan.  On a devfs system, LVM should use the dynamically created device
-nodes to determine the same.
+I saw some Oopses and segfaults on 2.4.6 on Friday, but after I put the kdb
+into the kernel I can't reproduce it.  I never see this with 2.4.7. =20
 
-Of course, this is all assuming you're using the current LVM 0.9.1 beta8
-version of LVM.  I'm not positive where this functionality was intruduced.
-
-Regards,
+This was with LVM 0.9.1 Beta8 and the patches you previously mentioned.
 --=20
 AJ Lewis
 Sistina Software Inc.                  Voice:  612-638-0500
@@ -70,11 +50,10 @@ Get my key at: http://www.sistina.com/~lewis/gpgkey
  (Unfortunately, the PKS-type keyservers do not work with multiple sub-keys)
 
 -----Begin Obligatory Humorous Quote----------------------------------------
-Over and over I find being redundant is key to success
-in the art of redundancy - Jay Armstrong
+File not found. Should I fake it? (Y/N)
 -----End Obligatory Humorous Quote------------------------------------------
 
---AhhlLboLdkugWU4S
+--J/dobhs11T7y2rNN
 Content-Type: application/pgp-signature
 Content-Disposition: inline
 
@@ -82,9 +61,9 @@ Content-Disposition: inline
 Version: GnuPG v1.0.6 (GNU/Linux)
 Comment: For info see http://www.gnupg.org
 
-iD8DBQE7ZW2ypE6/iGtdjLERAqD5AJ4im+AT7PGg37JuRoOWGj+ARKrXfgCgk6BX
-JhWDwjI7Y/j5G/PSBkh+HRI=
-=KCE7
+iD8DBQE7ZWK2pE6/iGtdjLERAl19AJ41yqlb597HVuEFHoGXYBHoPD8+mACdGT8j
+RtZcG1dOANNWarVIkjQKGxs=
+=+8xI
 -----END PGP SIGNATURE-----
 
---AhhlLboLdkugWU4S--
+--J/dobhs11T7y2rNN--
