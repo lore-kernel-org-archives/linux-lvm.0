@@ -1,10 +1,10 @@
 Return-Path: <adilger@turbolinux.com>
 From: Andreas Dilger <adilger@turbolinux.com>
-Message-Id: <200103130056.f2D0uTi01167@webber.adilger.int>
+Message-Id: <200103130059.f2D0xsJ01176@webber.adilger.int>
 Subject: Re: [linux-lvm] Problem with vgscan/ vgcfgrestore
-In-Reply-To: <20010313012313.A3042@cistron.nl> from Wichert Akkerman at "Mar
- 13, 2001 01:23:14 am"
-Date: Mon, 12 Mar 2001 17:56:29 -0700 (MST)
+In-Reply-To: <GIEGKMCLIJBKBNBCCHEACEJACAAA.heimdall@mail.org> from Daniel E Whicker
+ at "Mar 12, 2001 06:16:49 pm"
+Date: Mon, 12 Mar 2001 17:59:54 -0700 (MST)
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -21,25 +21,26 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Wichert Akkerman writes:
-> It seems 0.9.1b6 is out there as well, although it's not mentioned on
-> all the webpages and not on any mirrors..
+Daniel Whiker writes:
+> Thanks for helping.  I did in fact have devfs compiled in and mounted to an
+> alternative path.
 
-Just released this minute...
+Currently devfs and LVM don't work well together, especially if it is not
+mounted on /dev.  My patch fixes a small part of this, but it is still
+safer to simply configure devfs out of the kernel when using LVM, until
+your system is working properly.
 
-> Wichert (browsing the patch to figure out why IOP reverted to 10).
+> Beyond that, everything is pretty vanilla.  I'm rebuilding the OS on that
+> system at the moment, but as soon as I'm done, I'll get 2.4.2 with LVM
+> .9.1b5 and your patch installed and see how it goes from there.  In the
+> meantime, is there any way of restoring the "HM" magic to the PVs
+> nondestructively?
 
-IOP was reverted to 10 because the 1 reason it was changed to 11 was
-removed (*).  Having IOP 11 tools, when stock 2.4.x has IOP 10 is just
-asking for lots of bug reports, not to mention headaches for users.
+I think this may have been caused by the devfs strangeness.  Start out
+with devfs out of the kernel entirely, and go from there.  I don't think
+2.4.2 will help you.  You need to apply an LVM kernel patch anyways.
 
 Cheers, Andreas
-
-(*) The VG_CREATE ioctl data was modified in an incompatible way in beta4
-    to accomodate devfs users.  This caused a bug for older kernel code,
-    and in beta5 the IOP was changed to 11.  After protests, the VG_CREATE
-    ioctl was reverted to the original behaviour (as VG_CREATE_OLD with
-    the old number), and a new ioctl with the new behaviour became VG_CREATE.
 -- 
 Andreas Dilger  \ "If a man ate a pound of pasta and a pound of antipasto,
                  \  would they cancel out, leaving him still hungry?"
