@@ -1,11 +1,10 @@
-Date: Tue, 11 Sep 2001 13:53:36 +0200
-From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] LVM kernel patch request
-Message-ID: <20010911135336.A20767@sistina.com>
-References: <20010910154853.B15329@sistina.com> <NBBBJHKIOKPKOGOEPEDPCEDEDNAA.stuart@bh90210.net>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <NBBBJHKIOKPKOGOEPEDPCEDEDNAA.stuart@bh90210.net>; from stuart@bh90210.net on Mon, Sep 10, 2001 at 07:26:00PM -0700
+Message-ID: <3B9DFDC5.1020306@st-peter.stw.uni-erlangen.de>
+Date: Tue, 11 Sep 2001 14:04:21 +0200
+From: svetljo <galia@st-peter.stw.uni-erlangen.de>
+MIME-Version: 1.0
+Subject: Re: [linux-lvm] LVM
+References: <NBBBJHKIOKPKOGOEPEDPOEDKDNAA.stuart@bh90210.net>
+Content-Transfer-Encoding: 8bit
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,130 +16,83 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="windows-1252"
+Content-Type: text/plain; charset="utf-8"; format="flowed"
 To: linux-lvm@sistina.com
 
-On Mon, Sep 10, 2001 at 07:26:00PM -0700, IT3 Stuart B. Tener, USNR-R wrote:
-> Dear Sir:
->=20
-> 	Silly me, I followed the instructions in the How-To (30 AUG 2001) which =
-notes there is a patch directory on the ftp site which obviously does not e=
-xist. Perhaps the maintainer of the How-To can correct this anomaly so I am=
- able to follow correct instructions.
+Hi
 
-Silly us ;-)
+> I am using version 2.4.8-12mdk (mandrake) of the kernel. Mandrake 8.1 is going to be coming soon, and when it does come forth, I plan to upgrade. Having LVM running will make the upgrade much less painful!
+>
+I think you can have troubles with upgrading to MDK-8.1 if you use 
+ lvm-1.0.1 or anything after lvm-0.91beta8
+as far i know they are still using  the integrated in the kernel 
+lvm-0.91beta2 and they don't wont to upgrade to lvm-1.0 or 1.0.1  so 
+when you boot from the CD the kernel will not  see the exiting logical 
+volumes
+but i think i have read somewhere that lvm-1.0.1 supports both the old 
+and new phisical volumes
 
-Thanks for the hint. Will change that.
+my advice befor copying anything to the LV ( i mean all the partitions 
+you mean to upgrade : / , /usr  ...
+go through all the documentation and man pages and try to find out 
+whether it's posible to create VG and LV's in the old format ( pre 
+lvm-0.9.1beta8) but i think it's not possible
 
-Regards,
-Heinz    -- The LVM Guy --
+or wait until MDK-8.1 come and then install lvm-1.0.1 
 
-
->=20
->=20
-> Very Respectfully,=20
->=20
-> Stuart Blake Tener, IT3, USNR-R, N3GWG=20
-> Beverly Hills, California
-> VTU 1904G (Volunteer Training Unit)=20
-> stuart@bh90210.net=20
-> west coast: (310)-358-0202 P.O. Box 16043, Beverly Hills, CA 90209-2043=
-=20
-> east coast: (215)-338-6005 P.O. Box 45859, Philadelphia, PA 19149-5859=20
->=20
-> Telecopier: (419)-715-6073 fax to email gateway via www.efax.com (it's fr=
-ee!)=20
->=20
-> JOIN THE US NAVY RESERVE, SERVE YOUR COUNTRY, AND BENEFIT FROM IT ALL.=20
->=20
-> Monday, September 10, 2001 7:23 PM
->=20
-> -----Original Message-----
-> From: linux-lvm-admin@sistina.com [mailto:linux-lvm-admin@sistina.com]On =
-Behalf Of Heinz J . Mauelshagen
-> Sent: Monday, September 10, 2001 6:49 AM
-> To: linux-lvm@sistina.com
-> Subject: Re: [linux-lvm] LVM kernel patch request
->=20
-> On Mon, Sep 10, 2001 at 06:35:25AM -0700, IT3 Stuart B. Tener, USNR-R wro=
-te:
-> > List members:
-> >
-> >       I am running a Mandrake 8.0 2.4.8 (or 2.4.9) kernel and cannot fi=
-nd the patch files on the ftp site.
->=20
-> Suart,
->=20
-> patches are created automagically(TM) running make in the PATCHES/ subdir=
-ectory
-> of the LVM source distro. Please follow the instructions in the contained
-> INSTALL and PATCHES/README files in order to hear the full story.
->=20
-> >
-> >       Has anyone thought to add the "FAQ" into the "How-To" or create a=
- combined PDF version of the FAQ/How-To or a PDF version of the FAQ?
->=20
-> I didn't think about this that way before, because both documents solve
-> different purposes.
->=20
-> FAQ is ment to be a source of questions/answers for typical problems
->=20
-> *but*
->=20
-> HOWTO is a bunch of process descriptions for achiving arbitrary
-> goals with LVM correctly.
->=20
-> If I missed your point, please provide some examples HOWTO ;-) integrate
-> FAQs and HOWTO.
->=20
-> Regards,
-> Heinz    -- The LVM Guy --
->=20
->=20
-> >
-> >
-> > Very Respectfully,
-> >
-> > Stuart Blake Tener, IT3, USNR-R, N3GWG
-> > Beverly Hills, California
-> > VTU 1904G (Volunteer Training Unit)
-> > stuart@bh90210.net
-> > west coast: (310)-358-0202 P.O. Box 16043, Beverly Hills, CA 90209-2043
-> > east coast: (215)-338-6005 P.O. Box 45859, Philadelphia, PA 19149-5859
-> >
-> > Telecopier: (419)-715-6073 fax to email gateway via www.efax.com (it's =
-free!)
-> >
-> > JOIN THE US NAVY RESERVE, SERVE YOUR COUNTRY, AND BENEFIT FROM IT ALL.
-> >
-> > Monday, September 10, 2001 6:31 AM
-> >
-> > =FF=FF=FF=FF=FF=FF=FF=FF=FF=FF=FF=FF=FF=FF=FF=FF=FF=FF=FF=FF=FF=FF=FF=
-=FF=FF=FF=FF=FF=FF=FF=FF=FF=FF=FF=FF=E5=8A{=B1=FE[=E6(tm)=A8=A5=8Ax%=8A=CBe=
-=8A{=B1=FE[=E6=FE=C8=AC=B6)=DA=FD=CA&=86=DBi=FF=FF=E5=8A=CBl=FE=C8=AC=B6)=
-=DA=FD=CA&=FEf=A2-f=A7=FEX=AC=B6)=DF=A3=F9b=9E=EC=FF-=F9"y=A7m...=E2=D50s-=
-=FD3=9A=B6=1Bm=FF=FF=FF=C3
-> =FF=B2+-=8Av=FFr=89=BF-=F9=BF=3D=A8-=B3=F8h=C2=DA=FF=86=D9=A5
->=20
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
-
-*** Software bugs are stupid.
-    Nevertheless it needs not so stupid people to solve them ***
-
-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D=
--=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=
-=3D-=3D-
-
-Heinz Mauelshagen                                 Sistina Software Inc.
-Senior Consultant/Developer                       Am Sonnenhang 11
-                                                  56242 Marienrachdorf
-                                                  Germany
-Mauelshagen@Sistina.com                           +49 2626 141200
-                                                       FAX 924446
-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D=
--=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=
-=3D-=3D-
+>
+>	As we speak, I am downloading this file. But, can you tell me, are there any major caveats to using this version in the link below?
+>
+>
+>Very Respectfully, 
+>
+>Stuart Blake Tener, IT3, USNR-R, N3GWG 
+>Beverly Hills, California
+>VTU 1904G (Volunteer Training Unit) 
+>stuart@bh90210.net 
+>west coast: (310)-358-0202 P.O. Box 16043, Beverly Hills, CA 90209-2043 
+>east coast: (215)-338-6005 P.O. Box 45859, Philadelphia, PA 19149-5859 
+>
+>Telecopier: (419)-715-6073 fax to email gateway via www.efax.com (it's free!) 
+>
+>JOIN THE US NAVY RESERVE, SERVE YOUR COUNTRY, AND BENEFIT FROM IT ALL. 
+>
+>Tuesday, September 11, 2001 4:00 AM
+>
+>-----Original Message-----
+>From: linux-lvm-admin@sistina.com [mailto:linux-lvm-admin@sistina.com]On Behalf Of Jos� Luis Domingo L�pez
+>Sent: Tuesday, September 11, 2001 5:20 AM
+>To: linux-lvm@sistina.com
+>Subject: Re: [linux-lvm] LVM
+>
+>On Monday, 10 September 2001, at 19:35:13 -0700,
+>IT3 Stuart B. Tener, USNR-R wrote:
+>
+>>Dear Sir:
+>>
+>>      I HAVE READ (and DID READ) PRIOR TO ASKING MY QUESTIONS, (when I noted I downloaded it, I figured everyone would realize I had read it as well!).
+>>
+>>All those whom are telling me to read the How-To, PLEASE, GO READ IT YOURSELF! SPECIFICALLY: section 7.2, paragraph 2. There is no such directory located on the Sistina FTP server. Where is this patch?
+>>
+>Your are right, links on the HOWTO don't point to the right location. To
+>get current sources of LVM download:
+>ftp://ftp.sistina.com/pub/LVM/1.0/lvm_1.0.1-rc2.tar.gz
+>
+>It works for recent kernels (even 2.4.9) and the documentation included
+>explains how to create a patch specifically suited for your current Linux
+>source tree.
+>
+>--
+>Jos� Luis Domingo L�pez
+>Linux Registered User #189436     Debian GNU/Linux Potato (P166 64 MB RAM)
+>
+>jdomingo EN internautas PUNTO org  => � Spam ? Atente a las consecuencias
+>jdomingo AT internautas DOT   org  => Spam at your own risk
+>
+>
+>_______________________________________________
+>linux-lvm mailing list
+>linux-lvm@sistina.com
+>http://lists.sistina.com/mailman/listinfo/linux-lvm
+>read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
+>
