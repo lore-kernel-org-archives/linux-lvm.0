@@ -1,12 +1,12 @@
-Return-Path: <bluca@comedia.it>
-Date: Wed, 18 Jul 2001 08:08:51 +0200
-From: Luca Berra <bluca@comedia.it>
-Subject: Re: [linux-lvm] how to deactivate vg hosting root filesystem
-Message-ID: <20010718080851.A3890@colombina.comedia.it>
-References: <3B54F04E.4FEF132@americasm01.nt.com>
+Return-Path: <thornber@btconnect.com>
+Date: Wed, 18 Jul 2001 09:16:39 +0100
+Subject: Re: [linux-lvm] FW: LVM on Linux
+Message-ID: <20010718091639.B382@btconnect.com>
+References: <85063BBE668FD411944400D0B744267A643418@AUSMAIL> <20010717174008.A1000@btconnect.com> <20010717122318.A20564@d3.front>
 Mime-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <3B54F04E.4FEF132@americasm01.nt.com>; from harvell@nortelnetworks.com on Tue, Jul 17, 2001 at 09:11:26PM -0500
+In-Reply-To: <20010717122318.A20564@d3.front>; from ralph@oro.net on Tue, Jul 17, 2001 at 12:23:18PM -0700
+From: Joe Thornber <thornber@btconnect.com>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -22,21 +22,47 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Tue, Jul 17, 2001 at 09:11:26PM -0500, Joe Harvell wrote:
-> So I set up an initrd that starts raid and lvm before doing a pivot_root
-> and execing init.  This has been working fine for a long time.
+On Tue, Jul 17, 2001 at 12:23:18PM -0700, Ralph Jennings wrote:
+> On Tue, Jul 17, 2001 at 05:40:08PM +0100, Joe Thornber wrote:
+> [snip]
+> >    Here there's one % that we can't get rid of (we could also do chunk = 
+> >    sector - (pe_size * index)), for the simple fact that the number of
+> >    stripes is not a power of 2, so we can't replace with shifts and masks.
+> > 
+> >    I just had a chat with one of the EVMS guys, EVMS *does* have this
+> >    exact same problem.
+> > 
+> >    Should we restrict stripes sets to powers of 2 ?
+> [snip]
 > 
-> The only problem I have is that the only way I know of to free up the vg
-> for deactivation is to make init exit, which panics the kernel.  How do
-> I do this safely?
-At the moment there is no need to deactivate the root VG.
+> Why not just make a mod function?
+> 
+> Preceeding code not tested, but should work?
+> It's been a while since I wrote C code.
+> 
+> BTW, what is a u64 (unsigned 64bit integer) in C called?
+> Is there any uniform cross platform way to say it (like
+> u64 perhaps)?
 
-L.
+long long ?
 
--- 
-Luca Berra -- bluca@comedia.it
-        Communication Media & Services S.r.l.
- /"\
- \ /     ASCII RIBBON CAMPAIGN
-  X        AGAINST HTML MAIL
- / \
+> 
+> u64 mod_64(u64 number, u64 modNum) {
+>     while (number > modNum) {
+>         number -= modNum;
+>     }
+>     return number;
+> }
+
+I'd like to see the flames if I put this into the driver :) The map
+function is called on every io block to an LVM device, it needs to be
+quick !  Since we know modNum is smallish, certainly less than 2^32,
+and 'number' is 64 bit we could be running around your loop a few
+times :)
+
+On a more serious note this function should be provided by the
+compiler, since it supports the 64 bit type.  I guess it is normally
+implemented in a function that gets linked automatically - it would still
+be good to get rid of it.
+
+- Joe
