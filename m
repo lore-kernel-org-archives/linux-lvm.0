@@ -1,26 +1,17 @@
 Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with SMTP id i25Mcn810953
-	for <linux-lvm@redhat.com>; Fri, 5 Mar 2004 17:38:49 -0500
-Received: from ms-smtp-02.rdc-kc.rr.com (ms-smtp-02.rdc-kc.rr.com [24.94.166.122])
-	by mx1.redhat.com (8.11.6/8.11.6) with SMTP id i25Mcnb03896
-	for <linux-lvm@redhat.com>; Fri, 5 Mar 2004 17:38:49 -0500
-Received: from sasami.localdomain (CPE-24-31-241-155.kc.rr.com [24.31.241.155])
-	by ms-smtp-02.rdc-kc.rr.com (8.12.10/8.12.7) with ESMTP id i25Mckgs013007
-	for <linux-lvm@redhat.com>; Fri, 5 Mar 2004 16:38:46 -0600 (CST)
-Received: from yggdrasil.localdomain ([192.168.0.2])
-	by sasami.localdomain with esmtp (Exim 4.30)
-	id 1AzNxu-00039k-61
-	for linux-lvm@redhat.com; Fri, 05 Mar 2004 16:38:46 -0600
-Received: from adric by yggdrasil.localdomain with local (Exim 4.30)
-	id 1AzNxu-0000ep-2g
-	for linux-lvm@redhat.com; Fri, 05 Mar 2004 16:38:46 -0600
-From: Greg Norris <haphazard@kc.rr.com>
-Subject: Re: [linux-lvm] linux 2.6.3 -- device-mapper: dm-linear: Device lookup failed
-Message-ID: <20040305223845.GA2513@yggdrasil.localdomain>
-References: <20040305003050.GA4134@yggdrasil.localdomain> <20040305090144.GC744@reti>
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with SMTP id i25Nxu830366
+	for <linux-lvm@redhat.com>; Fri, 5 Mar 2004 18:59:56 -0500
+Received: from magic.alttech.com ([64.140.60.35])
+	by mx1.redhat.com (8.11.6/8.11.6) with SMTP id i25Nxtb24674
+	for <linux-lvm@redhat.com>; Fri, 5 Mar 2004 18:59:55 -0500
+Received: from dogberry.ossmann.com (magic.alttech.com [64.140.60.35])
+	by magic.alttech.com (Postfix) with ESMTP id C01E22FEA2
+	for <linux-lvm@redhat.com>; Fri,  5 Mar 2004 16:59:49 -0700 (MST)
+From: Michael Ossmann <mike@ossmann.com>
+Message-ID: <20040305235958.GG8500@ossmann.com>
 Mime-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20040305090144.GC744@reti>
+Subject: [linux-lvm] lvm2 vgchange -a n problem
 Sender: linux-lvm-admin@redhat.com
 Errors-To: linux-lvm-admin@redhat.com
 Reply-To: linux-lvm@redhat.com
@@ -32,23 +23,32 @@ List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
 List-Archive: <https://www.redhat.com/archives/linux-lvm/>
-Date: Fri Mar  5 17:37:00 2004
+Date: Fri Mar  5 18:58:01 2004
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@redhat.com
 
-On Fri, Mar 05, 2004 at 09:01:44AM +0000, Joe Thornber wrote:
-> >    kernel: device-mapper: dm-linear: Device lookup failed
-> 
-> This is a serious error, it means that device mapper was asked to
-> instance a linear mapping across a non-existent device.  Could you
-> turn on verbose logging in the LVM2 tools, and try and find out which
-> LV is failing to activate please ?
+I'm using lvm2 with linux 2.6.4-rc1.  When I try to
+deactivate lvm with 'vgchange -a n' it always tells me:
 
-Once I did this, I quickly learned that LVM2 is perfectly happy with
-all of my LVs.  Apparently I managed to install both LVM2 and EVMS, and
-it was the latter throwing the errors.  Now that it's gone,
-everything's back to normal.
+  LV vgfoo/lvbar in use: not removing
 
-Sorry for cluttering up the list...
+even when the lv is not mounted at all.  So I try to
+'lvchange -a n' the lv, but it tells me the same thing.
+
+My workaround is to do 'dmsetup remove vgfoo-lvbar' for each
+lv prior to deactivation.  Then 'vgchange -a n' and
+'lvchange -a n' work.  My shutdown script includes:
+
+  for lv in $(lvs --noheadings | awk '{print $2 "-" $1}'); do
+    dmsetup remove $lv
+  done 
+  /sbin/vgchange -a n
+
+Is this how I'm supposed to do this?  Am I missing
+something?
+
+Thanks,
+
+mossmann
