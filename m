@@ -1,10 +1,12 @@
-From: Alasdair G Kergon <agk@uk.sistina.com>
-Subject: Re: [linux-lvm] problem
-Message-ID: <20030108214555.F28021@uk.sistina.com>
-References: <1042049056.1433.29.camel@tux.its.uiowa.edu> <33170000.1042057292@[192.168.200.4]> <1042057991.12153.0.camel@tux.its.uiowa.edu>
-Mime-Version: 1.0
+From: Steven Lembark <lembark@wrkhors.com>
+Subject: RE: [linux-lvm] Graphical tool to configure LVM for RedHat 8
+Message-ID: <69270000.1042064451@[192.168.200.4]>
+In-Reply-To: <55939F05720D954E9602518B77F6127F828BBA@FTWMLVEM01.e2k.ad.ge.com>
+References: <55939F05720D954E9602518B77F6127F828BBA@FTWMLVEM01.e2k.ad.ge.com
+ >
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Content-Disposition: inline
-In-Reply-To: <1042057991.12153.0.camel@tux.its.uiowa.edu>; from daniel-wittenberg@uiowa.edu on Wed, Jan 08, 2003 at 02:33:11PM -0600
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,35 +17,46 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Jan  8 15:45:02 2003
+Date: Wed Jan  8 16:12:02 2003
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: linux-lvm@sistina.com
 
-On Wed, Jan 08, 2003 at 02:33:11PM -0600, Daniel Wittenberg wrote:
-> Other ideas?
 
-Install the LVM2 utilities and perform the task with them?
+-- "Ma, Thanh(IndSys, GE Interlogix)" <Thanh.Ma@ge.com>
 
-"vgreduce --removemissing rootvg" will do exactly what you 
-want - but I haven't released it yet because I haven't finished 
-testing it with snapshots present etc.
+>
+>
+> -----Original Message-----
+> From: Anders Widman [mailto:andewid@tnonline.net]
+> Sent: Wednesday, January 08, 2003 3:12 PM
+> To: Linux-LVM@sistina.com
+> Subject: Re: [linux-lvm] Graphical tool to configure LVM for RedHat 8
+>
+> * The command line tools are great but I just wonder if there is a
+> graphical tool to do the same thing (for RedHat, BTW) ?
+>
+> I  know  RedHat  8  (graphical)  installation  has support for LVM and
+> creating  of  LVM  arrays.  However,  I have no idea if such tools are
+> included after the installation.
+> *
+> * No. they are not.
+>
+> In  any case. I do no recommend using 3rd party tools to configure and
+> manage your disks.
+> * What 3rd party tools can you suggest. ?
+> * I guess this should be part of the FAQ as well.
 
-For now, you run LVM2's vgcfgbackup (with -P), edit the 
-text file by hand to remove the PV and LV (easy to do), then 
-run vgcfgrestore to put the fixed metadata in the text file
-back onto disk.
-
-Then if you don't want to upgrade to LVM2 yet, you can
-simply revert to using the LVM1 tools again, starting
-by running LVM1's vgscan.
+Frankly, given the number of times you use any of the
+commands and the limited number of options (usually just
+-L<size> vgXX for lvcreate) it's probably simper to use
+the command line interface and be done with it.
 
 
-In circumstances like this, you don't need to change your
-kernel in order to use the LVM2 tools. You can just set 
-"activation = 0" in the lvm.conf file and then they'll 
-only manipulate on-disk metadata and they won't try to
-talk to device-mapper (the new kernel driver that LVM2 uses).
 
-Alasdair
+
+
+--
+Steven Lembark                               2930 W. Palmer
+Workhorse Computing                       Chicago, IL 60647
+                                            +1 773 252 1080
