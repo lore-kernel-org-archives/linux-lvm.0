@@ -1,12 +1,9 @@
-Date: Mon, 10 Sep 2001 17:38:51 +0200
-From: =?iso-8859-1?Q?Ragnar_Kj=F8rstad?= <lvm@ragnark.vestdata.no>
-Subject: Re: [linux-lvm] pv_move_pe() error again :/
-Message-ID: <20010910173851.A3751@vestdata.no>
-References: <E15f13v-0003bs-00@hermes.sistina.com> <E15fJux-0005Kk-00@hermes.sistina.com> <20010910001643.A19424@vestdata.no> <E15gELn-0004OG-00@hermes.sistina.com> <20010910103952.B31660@vestdata.no> <20010910132709.G31313@sistina.com>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20010910132709.G31313@sistina.com>; from mauelshagen@sistina.com on Mon, Sep 10, 2001 at 01:27:09PM +0200
-Content-Transfer-Encoding: quoted-printable
+Message-ID: <20010910154903.33297.qmail@web13902.mail.yahoo.com>
+Date: Mon, 10 Sep 2001 08:49:03 -0700 (PDT)
+From: Michael Holschbach <m_holschbach@yahoo.com>
+Subject: Re: [linux-lvm] missing vg after reboot
+In-Reply-To: <20010910131203.C31313@sistina.com>
+MIME-Version: 1.0
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -18,51 +15,84 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="iso-8859-1"
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Mon, Sep 10, 2001 at 01:27:09PM +0200, Heinz J . Mauelshagen wrote:
-> But I wonder, why in your case the locking of the PE failed. Are you ab=
-le to=20
-> reporduce your case and provide the error code?
+--- "Heinz J . Mauelshagen" <mauelshagen@sistina.com> wrote:
+> 
+> Michael,
+> 
+> the pvdata output below exposes a completely messy PV structure,
+> which makes me think of 2 possible reasons:
+> 
+> a. /dev/hda2 is not the device you used to create a physical volume
+> 
+> b. something accidentially overwrote /dev/hda2 after the PV creation
+> 
+> 
+> If b is true you might still have an actual VGDA backup in
+> /etc/lvmconf/ which
+> you can use to vgcfgrestore(8) it to /dev/hda2 presumed that
+> /dev/hda2 is
+> the right device.
+> 
+I already tried vgcfgrestore. All available backup files lead to the
+same result:
+ 
+> > server1:~ # vgcfgrestore -v -n data /dev/hda2
+> > vgcfgrestore -- locking logical volume manager
+> > vgcfgrestore -- restoring volume group "data" from
+> > "/etc/lvmconf/data.conf"
+> > vgcfgrestore -- checking existence of
+> > "/etc/lvmconf/data.conf"
+> > vgcfgrestore -- reading volume group data for "data"
+> > from "/etc/lvmconf/data.con
+> > f"
+> > vgcfgrestore -- reading physical volume data for
+> > "data" from "/etc/lvmconf/data.
+> > conf"
+> > vgcfgrestore -- reading logical volume data for "data"
+> > from "/etc/lvmconf/data.c
+> > onf"
+> > vgcfgrestore -- checking volume group consistency of
+> > "data"
+> > vgcfgrestore -- checking volume group consistency of
+> > "data"
+> > vgcfgrestore -- reading physical volume "/dev/hda2"
+> > vgcfgrestore -- ERROR "pv_read(): PV identifier
+> > invalid" reading physical volume
+> >  "/dev/hda2"
+> > 
+My idea was to reset the values of /dev/hda2 according to the following
+settings:
 
-It was reproducable at the time - now the disk in question has been
-replaced. If it's interesting enough, I can make a phone call and see if
-I can get the broken disk back.
+> > server1:~ # vgcfgrestore -v -ll -n data /dev/hda2
+...
+> > --- Physical volume ---
+> > PV Name               /dev/hda2
+> > VG Name               data
+> > PV Size               27.62 GB / NOT usable 2.48 MB
+> > [LVM: 148 KB]
+> > PV#                   2
+> > PV Status             available
+> > Allocatable           yes
+> > Cur LV                6
+> > PE Size (KByte)       4096
+> > Total PE              7069
+> > Free PE               669
+> > Allocated PE          6400
+> > PV UUID              
+> > e7sX5R-XnTm-keX6-jShf-tTlw-DUP3-mzp4zW
+> > 
 
-The error_occured in the pe_lock() call at the beginning of the
-move-operation - the one that I commented out in patch.
-
-This is the kernel-log from the time (well, I think it was from the time
-I ran pe_move):
-Sep  6 18:10:01 argus kernel: hdd: dma_intr: status=3D0x51 { DriveReady S=
-eekComplete Error }
-Sep  6 18:10:01 argus kernel: hdd: dma_intr: error=3D0x10 { SectorIdNotFo=
-und }, LBAsect=3D155058176, sector=3D0
-Sep  6 18:10:01 argus kernel: lvm -- lvm_blk_ioctl: unknown command 587
-Sep  6 18:10:01 argus kernel: hdd: dma_intr: status=3D0x51 { DriveReady S=
-eekComplete Error }
-Sep  6 18:10:01 argus kernel: hdd: dma_intr: error=3D0x10 { SectorIdNotFo=
-und }, LBAsect=3D155058176, sector=3D0
-Sep  6 18:10:01 argus kernel: lvm -- lvm_blk_ioctl: unknown command 587
-
-and:
-
-Sep  6 18:15:51 argus kernel: lvm -- lvm_blk_ioctl: unknown command 587
-Sep  6 18:15:55 argus last message repeated 213 times
-Sep  6 18:15:55 argus kernel: hdd: read_intr: status=3D0x59 { DriveReady =
-SeekComplete DataRequest E rror }
-Sep  6 18:15:55 argus kernel: hdd: read_intr: error=3D0x40 { Uncorrectabl=
-eError }, LBAsect=3D11801433 2, sector=3D118014332
-Sep  6 18:15:55 argus kernel: end_request: I/O error, dev 16:40 (hdd), se=
-ctor 118014332
-
-The kernel is standard 2.4.8 without the LVM-patches. The usersspace
-tools are version 1.0.1-rc2.
+These values seem plausible for me. Can i use them to manually edit the
+PV /dev/hda2 to rescue some data? 
 
 
+MfG Michael
 
-
---=20
-Ragnar Kj=F8rstad
-Big Storage
+__________________________________________________
+Do You Yahoo!?
+Get email alerts & NEW webcam video instant messaging with Yahoo! Messenger
+http://im.yahoo.com
