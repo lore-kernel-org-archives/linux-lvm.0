@@ -1,8 +1,8 @@
-From: "Tren Blackburn" <tren@eotnetworks.com>
-Message-ID: <007501c2a781$32784dc0$0201a8c0@fileserver>
+Message-ID: <20021221163403.56746.qmail@web14405.mail.yahoo.com>
+From: grenoml <grenoml@yahoo.com>
+Subject: Re: [linux-lvm] Re: RH8 install - LVM sizing problem
+In-Reply-To: <20021218215632.405.qmail@web14407.mail.yahoo.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] Operation Not Permitted on 2.4.20
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -13,54 +13,70 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Thu Dec 19 11:06:02 2002
+Date: Sat Dec 21 10:33:02 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Hi all;
-
-I've done some searching on the list and the closest I can come up with
-is this:
-http://lists.sistina.com/pipermail/lvm-devel/2002-March/000873.html
-
-This is a new NetFinity server, hardware RAID 5 array.  I partitioned
-the drive, set up a second partition as Linux LVM.  Linux kernel is
-2.4.20 and LVM version is 1.1-rc2 (kernel patched with this as well)
-
-Ran pvcreate which worked fine
-Ran vgcreate which worked fine
-Ran lvcreate -L1G -nlvusr rootvg which gave:
-  lvcreate -- ERROR "Operation not permitted" opening logical volume
-"/dev/rootvg/lvusr"
-
-Running lvremove /dev/rootvg/lvusr gives:
-  lvremove -- ERROR "lv_release(): LV number" releasing logical volume
-"/dev/rootvg/lvusr"
-
-And if I try to build a filesystem on this LV I get:
-
-count_blocks: open failed (Operation not permitted)
-
-If I run vgscan -f I can remove the lv properly, but I cannot create a
-filesystem still (get same error)  What can I give in the way of debug
-output to be helpful here.  Is anyone else experiencing this problem?
+  I checked the /var/log/boot.log and vgscan was working fine during
+bootup so I thought about it for a second and realized that these
+commands must require being run as 'root'.  So I did a 'su -' and tried
+both commands and they worked fine.  I didn't see any mention of this
+in the man pages and the errors that were thrown were rather cryptic. 
+My preference is that commands requiring certain user or authority
+should either work completely or not work at all and provide the user
+with a good hint as to why.
 
 Regards,
+Gerry Reno
 
-Tren
 
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-- Tren Blackburn - Owner                mailto:tren@eotnetworks.com  =
-= EOT Networks                           http://www.eotnetworks.com  -
-- Phone (403) 818-7658                           Fax (403) 269-2122  =
-=             ** Infinite Solutions for a Finite World **            -
--=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
---
-------------------------------------------------------------------------
-DISCLAIMER:  This e-mail message is intended only for the named 
-recipient(s) above and may contain information that is privileged, 
-confidential and/or exempt from disclosure under applicable law. If you 
-have received this message in error, or are not the named recipient(s), 
-please immediately notify the sender and delete this e-mail message.
-------------------------------------------------------------------------
+--- grenoml <grenoml@yahoo.com> wrote:
+> An update to the problem:
+>   I finally reinstalled RH8 and made the following adjustments:
+> -pulled / out of LVM and put in its own partition
+> -increased both the size of / (5G) and /usr (15G)
+> 
+>   An 'everything' installation went fine this time with the only
+> problem being it was trying to run kudzu on the first reboot and when
+> it came up I had no mouse or keyboard so I rebooted and everything
+> was
+> fine after that and so I finished the Setup config and Linux went to
+> the first login screen.  Once logged in I went to a terminal window
+> and
+> ran pvdisplay and vgscan and received the exact same response as
+> after
+> the first installation:
+> 
+> + /sbin/pvdisplay
+> pvdisplay -- ERROR: "/etc/lvmtab" doesn't exist; please run vgscan
+> 
+> + /sbin/vgscan
+> vgscan -- LVM driver/module not loaded?
+> 
+> So my question is what should I do to verify the state of LVM on the
+> system?
+> 
+> Regards,
+> Gerry Reno
+> 
+> 
+> 
+> 
+> __________________________________________________
+> Do you Yahoo!?
+> Yahoo! Mail Plus - Powerful. Affordable. Sign up now.
+> http://mailplus.yahoo.com
+> 
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@sistina.com
+> http://lists.sistina.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+
+
+__________________________________________________
+Do you Yahoo!?
+Yahoo! Mail Plus - Powerful. Affordable. Sign up now.
+http://mailplus.yahoo.com
