@@ -1,10 +1,11 @@
-Message-ID: <3BBC90C9.309A3D75@ti.com>
-Date: Thu, 04 Oct 2001 18:39:37 +0200
-From: christian e <cej@ti.com>
-MIME-Version: 1.0
-Subject: Re: [linux-lvm] lvm 1.0 and kernel 2.2.19.Is rawio patch necessary ??
-References: <3BBC550E.442F190C@ti.com> <3BBC7C22.1119BF0@promofinarsa.es>
-Content-Transfer-Encoding: 7bit
+From: Andreas Dilger <adilger@turbolabs.com>
+Date: Thu, 4 Oct 2001 11:10:23 -0600
+Subject: Re: [linux-lvm] kernel 2.2.19 support
+Message-ID: <20011004111023.C31061@turbolinux.com>
+References: <3BBC4146.51CD437D@promofinarsa.es> <wv669v3b96.fsf@freeze.oslo.dnmi.no> <3BBC4E6E.BCA3EE70@promofinarsa.es> <wvzo771uju.fsf@freeze.oslo.dnmi.no> <3BBC535B.59D6A5CB@promofinarsa.es> <wv3d4zh1r8.fsf@freeze.oslo.dnmi.no>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <wv3d4zh1r8.fsf@freeze.oslo.dnmi.no>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,47 +18,48 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Jesus Manuel NAVARRO LOPEZ wrote:
-
-
-> Well, I'm in same position than you, but having problems.
-> I also asked about the necesity of raw-io patches (specifically for
-> 2.2.19) but till the moment no answer.
-
-This concerns me if it's so important to patch with someone ought to
-know..
-I'm not keen on rolling this setup into production if I don't know the
-consequences of not having a rawio patch applied (if any).
-
-
-
-> Well, I patched kernel with raw-io for 2.2.18, and then with the lvm
-> patch provided by ./configure then make at PATCHES, but my kernel didn't
-> compile (well, the kernel did, but the make modules failed).
-
-I think I'll try the 2.2.18 patch as well..Will let you all know if it
-turned out ok or not..
-
-
+On Oct 04, 2001  17:18 +0200, Adrian Phillips wrote:
+> Jesus Manuel NAVARRO LOPEZ <jesus_navarro@promofinarsa.es> writes:
+> Note the change in hd_struct in include/linux/genhd.c between 2.2.19
+> and 2.4.xxx :-
 > 
-> So, from your experience I'm going to try to compile *without* the
-> raw-io patch and see what happens.  Anyway, since I know that at least
-> your compilation was ended with success, would you be kind enough to
-> e-mail me your configuration file (/usr/src/linux/.config) to look for
-> differencies?
-
-You've got mail :-)
-
+> # 2.2.19
+> struct hd_struct {
+> 	long start_sect;
+> 	long nr_sects;
+> 	int type;		/* RAID or normal */
+> };
 > 
-> And, if you know about the reason or necesity (or lack of) the raw-io
-> patch stuff, please post it to the list, so others like will know.
-> TIA
->
+> # 2.4.0-test12
+> struct hd_struct {
+> 	long start_sect;
+> 	long nr_sects;
+> 	devfs_handle_t de;              /* primary (master) devfs entry  */
+> };
+> 
+> So de is being set to the devfs_handle_t returned by lvm_fs_create_lv
+> and this doesn't exist in 2.2.19. So what needs to be set in 2.2 ?
 
-So far I haven't found out..If someone could enlighten us ,please ??
+What you need to do to "properly" fix this is add a lines like
 
-best regards
+#if LINUX_VERSION_CODE > KERNEL_VERSION ( 2, 3, X)
+	foo.de = bar;
+#endif
 
-Christian
+around the two offending code sections, and find the appropriate kernel version
+where this entry was added.  This can be done by looking at the kernel CVS:
+                http://lxr.linux.no/
+
+(best to start by checking if it is in 2.4.0, or a recent addition, and then
+going back through 2.3.X kernels).
+
+Send the resulting patch back to the list.
+
+Cheers, Andreas
+--
+Andreas Dilger  \ "If a man ate a pound of pasta and a pound of antipasto,
+                 \  would they cancel out, leaving him still hungry?"
+http://www-mddsp.enel.ucalgary.ca/People/adilger/               -- Dogbert
