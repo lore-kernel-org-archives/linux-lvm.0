@@ -1,10 +1,10 @@
 Return-Path: <>
-Date: Wed, 23 May 2001 12:14:52 +0200
+Date: Wed, 23 May 2001 12:17:32 +0200
 From: Mail Delivery Subsystem <MAILER-DAEMON@aseara.com>
-Message-Id: <200105231014.MAA23159@aseara.com>
+Message-Id: <200105231017.MAA25025@aseara.com>
 MIME-Version: 1.0
 Content-Type: multipart/report; report-type=delivery-status;
-	boundary="MAA23159.990612892/aseara.com"
+	boundary="MAA25025.990613052/aseara.com"
 Subject: [linux-lvm] Returned mail: Service unavailable
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
@@ -21,59 +21,59 @@ To: linux-lvm@sistina.com
 
 This is a MIME-encapsulated message
 
---MAA23159.990612892/aseara.com
+--MAA25025.990613052/aseara.com
 
-The original message was received at Wed, 23 May 2001 12:14:20 +0200
+The original message was received at Wed, 23 May 2001 12:17:00 +0200
 from bin@localhost
 
    ----- The following addresses had permanent fatal errors -----
 jldomingo@softhome.net
 
    ----- Transcript of session follows -----
-... while talking to mx0b.softhome.net.:
+... while talking to mx0d.softhome.net.:
 >>> MAIL From:<linux-lvm@sistina.com>
 <<< 554 does not resolve - check your DNS (#4.3.0)
 554 jldomingo@softhome.net... Service unavailable
 
---MAA23159.990612892/aseara.com
+--MAA25025.990613052/aseara.com
 Content-Type: message/delivery-status
 
 Reporting-MTA: dns; aseara.com
-Arrival-Date: Wed, 23 May 2001 12:14:20 +0200
+Arrival-Date: Wed, 23 May 2001 12:17:00 +0200
 
 Final-Recipient: RFC822; jldomingo@softhome.net
 Action: failed
 Status: 5.0.0
-Remote-MTA: DNS; mx0b.softhome.net
+Remote-MTA: DNS; mx0d.softhome.net
 Diagnostic-Code: SMTP; 554 does not resolve - check your DNS (#4.3.0)
-Last-Attempt-Date: Wed, 23 May 2001 12:14:51 +0200
+Last-Attempt-Date: Wed, 23 May 2001 12:17:31 +0200
 
---MAA23159.990612892/aseara.com
+--MAA25025.990613052/aseara.com
 Content-Type: text/rfc822-headers
 
 Return-Path: <linux-lvm@sistina.com>
 Received: (from bin@localhost)
-	by aseara.com (8.9.3/8.9.3) id MAA23151
-	for jldomingo@softhome.net; Wed, 23 May 2001 12:14:20 +0200
+	by aseara.com (8.9.3/8.9.3) id MAA25018
+	for jldomingo@softhome.net; Wed, 23 May 2001 12:17:00 +0200
 Received: from sistina.com (hermes.sistina.com [208.210.145.141])
-	by aseara.com (8.9.3/8.9.3) with SMTP id MAA23129
-	for <jdomingo@internautas.org>; Wed, 23 May 2001 12:14:17 +0200
-Received: (qmail 6358 invoked from network); 23 May 2001 10:11:08 -0000
+	by aseara.com (8.9.3/8.9.3) with SMTP id MAA24988
+	for <jdomingo@internautas.org>; Wed, 23 May 2001 12:16:59 +0200
+Received: (qmail 7184 invoked from network); 23 May 2001 10:14:05 -0000
 Received: from localhost (HELO hermes.sistina.com) (127.0.0.1)
-  by localhost with SMTP; 23 May 2001 10:11:08 -0000
+  by localhost with SMTP; 23 May 2001 10:14:05 -0000
 Delivered-To: linux-lvm@sistina.com
-Received: (qmail 6236 invoked from network); 23 May 2001 10:10:53 -0000
+Received: (qmail 7078 invoked from network); 23 May 2001 10:13:42 -0000
 Received: from professorwhealth.com (HELO aseara.com) (216.121.96.120)
-  by hermes.sistina.com with SMTP; 23 May 2001 10:10:53 -0000
+  by hermes.sistina.com with SMTP; 23 May 2001 10:13:42 -0000
 Received: from localhost (localhost)
-	by aseara.com (8.9.3/8.9.3) with internal id MAA20998;
-	Wed, 23 May 2001 12:12:02 +0200
+	by aseara.com (8.9.3/8.9.3) with internal id MAA23159;
+	Wed, 23 May 2001 12:14:52 +0200
 From: Mail Delivery Subsystem <MAILER-DAEMON@aseara.com>
-Message-Id: <200105231012.MAA20998@aseara.com>
+Message-Id: <200105231014.MAA23159@aseara.com>
 To: linux-lvm@sistina.com
 MIME-Version: 1.0
 Content-Type: multipart/report; report-type=delivery-status;
-	boundary="MAA20998.990612722/aseara.com"
+	boundary="MAA23159.990612892/aseara.com"
 Auto-Submitted: auto-generated (failure)
 Subject: [linux-lvm] Returned mail: Service unavailable
 Sender: linux-lvm-admin@sistina.com
@@ -90,6 +90,6 @@ List-Id: linux-lvm general discussion <linux-lvm.sistina.com>
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed, 23 May 2001 12:12:02 +0200
+Date: Wed, 23 May 2001 12:14:52 +0200
 
---MAA23159.990612892/aseara.com--
+--MAA25025.990613052/aseara.com--
