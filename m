@@ -1,12 +1,10 @@
-Return-Path: <michael@visi.com>
-Date: Sun, 27 May 2001 12:01:29 -0500
-From: idsfa@visi.com
-Subject: Re: [linux-lvm] LVM and *bad* performance (counterexample)
-Message-ID: <20010527120129.A4460@mitethe.eudyptes>
-References: <m2ofsguzp5.fsf@isnogud.escape.de> <200105270747.f4R7lIYa005098@webber.adilger.int>
+Return-Path: <peter@bartosch.net>
+Date: Sun, 27 May 2001 23:41:17 +0200
+From: Peter Bartosch <peter@bartosch.net>
+Message-ID: <20010527234117.A759@mind.bartosch.net>
 Mime-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <200105270747.f4R7lIYa005098@webber.adilger.int>; from adilger@turbolinux.com on Sun, May 27, 2001 at 01:47:18AM -0600
+Subject: [linux-lvm] lvm-problems?
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -22,62 +20,72 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Sun, May 27, 2001 at 01:47:18AM -0600, Andreas Dilger wrote:
+hello,
 
-> I'm not sure if it is an SMP or SCSI issue, or what.  Urs, do you also
-> have an SMP system?  Maybe there are locking slowdowns under SMP and
-> not under UP?
+i recently made my three LV new (caused by an accident as i tried to
+extend an existing (0.8i) LV)
 
-I haven't got a UP kernel to test right now to confirm, but my SMP
-purely IDE system (specs follow) shows rough parity at 512 byte
-reads and 2x FASTER on the LV at 4096 byte blocks.  When I switch
-to a striped LV I see parity at both sizes, with the LV being
-slightly faster.  For giggles, I also checked out a RAID-1 (mirror)
-set as well, which smoked everything, as it should.
+so i created a new kernel (2.4.2) with lvm 0.9.1_beta7
 
-Device                 Block     Real          User          Sys
-/dev/md0                512     2.080s        0.110s        0.660s
-/dev/hda1               512     5.079s        0.140s        2.040s
-/dev/mitethe/nostripe   512     4.795s        0.300s        2.380s
-/dev/mitethe/stripe     512     4.350s        0.090s        2.530s
+the first problems came when i tried to create more than one VG - the
+second VG couldn't be activated (always inactive after reboot and unable
+to activate)
 
-/dev/md0                4096   16.482s        0.060s        6.090s
-/dev/mitethe/nostripe   4096   26.278s        0.010s        7.270s
-/dev/mitethe/stripe     4096   32.803s        0.170s       12.020s
-/dev/hda1               4096   40.947s        0.180s       13.590s
+so i'm using only one VG
+
+the first two LV's of this VG could i create without problems, but the
+third makes problems:
+
+i created the reiserfs on it, but when i tried to mount it, the mount
+failed
+an reiserfsck --rebuild-sb and after that reiserfsck --rebuild-tree
+clears it and i could mount my LV -- UNTIL the next reboot
+
+i had to reboot because something oopsed:
+
+----
+
+is_leaf: item location seems wrong (second one): *NEW* [9 10 0x0 SD],
+item_len 44, item_location 2308, free_space(entry_count) 65535
+vs-5150: search_by_key: invalid format found in block 8271. Fsck?
+kernel BUG at namei.c:343!
+invalid operand: 0000
+CPU:    0
+EIP:    0010:[<c018ff08>]
+EFLAGS: 00010286
+eax: 0000001b   ebx: c6655e58   ecx: 00000001   edx: 00000001
+esi: c02d4fb4   edi: c6655edc   ebp: c6655e70   esp: c6655e40
+ds: 0018   es: 0018   ss: 0018
+Process cp (pid: 1799, stackpage=c6655000)
+Stack: c02d4c7e c02d4d7e 00000157 00000000 c02d4fb4 c6655e9c 00000002 0000000e 
+	4a0507ff 000001f4 00000000 00000003 c3e55a20 c0190030 c7742c20 c7dd3b20 
+        0000001b c6655e9c c6655edc fffffff4 c6654000 c7742c20
+	c3e55a20 00000001 
+Call Trace: [<c0190030>] [<c01468e9>] [<c013de9a>]
+        [<c013e6e9>] [<c013db5a>] [<c013ee4c>] [<c013b8c6>] 
+        [<c0133047>] [<c0108f5b>] 
+Code: 0f 0b 83 c4 0c 8d 76 00 8b 4d 10 51 8b 45 0c 50 57 8d 55 e8 
+
+-----
+
+this oops let the process which works on the third LV freeze - so i
+couldn't kill it
+
+the first and the second LV seem to work well
+
+when i reboot the third LV won't be mountet automagically and the
+filesystem seems to be corrupt
 
 
-Now comes the part where I admit we're comparing apples to oranges:
+any help will be appreciated
 
-Linux 2.4.3
-LVM   0.9.1_beta7
-2x Pentium III 600MHz
-Tyan Tiger 133 Mobo (running at 133 FSB)
 
-Maxtor 53073U6		30GB ATA/66    hda
-WDC WD300AB-00BVA0	30GB ATA/66    hdc
+:wq - until next mail B-), l8r
 
-/dev/hda:
- multcount    = 16 (on)
- I/O support  =  1 (32-bit)
- unmaskirq    =  1 (on)
- using_dma    =  1 (on)
- keepsettings =  0 (off)
- nowerr       =  0 (off)
- readonly     =  0 (off)
- readahead    =  8 (on)
- geometry     = 59554/16/63, sectors = 60030432, start = 0
-
-/dev/hdc:
- multcount    = 16 (on)
- I/O support  =  1 (32-bit)
- unmaskirq    =  1 (on)
- using_dma    =  1 (on)
- keepsettings =  0 (off)
- nowerr       =  0 (off)
- readonly     =  0 (off)
- readahead    =  8 (on)
- geometry     = 58168/16/63, sectors = 58633344, start = 0
-
+Peter
 -- 
-$ fortune -m Kellen
+   :~~~~~~~~~~~~~~~~~~  peter@bartosch.net  ~~~~~~~~~~~~~~~~~~:
+   :          student of technical computer science           :
+   :     university of applied sciences krefeld (germany)     :
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   FD314F21   C7 AE 2F 28 C1 33 71 77  0D 77 CD 6E 58 E9 06 6B
