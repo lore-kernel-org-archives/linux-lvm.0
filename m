@@ -1,11 +1,8 @@
-Subject: Re: [linux-lvm] e2fsadm and snapshots?
-From: Jim King <jrk@mipl.jpl.nasa.gov>
-In-Reply-To: <20021031232551.GG23959@clusterfs.com>
-References: <1036105045.10397.68.camel@theory.jpl.nasa.gov> 
-	<20021031232551.GG23959@clusterfs.com>
+Message-ID: <3DC1EFFC.A0EEBAFD@be.mbn.or.jp>
+From: Miwako Nakai <nickey@be.mbn.or.jp>
+MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
-Message-Id: <1036112887.10402.88.camel@theory.jpl.nasa.gov>
-Mime-Version: 1.0
+Subject: [linux-lvm] cache buffer size
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,29 +13,28 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Thu Oct 31 19:09:01 2002
+Date: Thu Oct 31 21:11:02 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@sistina.com
+To: lvm <linux-lvm@sistina.com>
 
-On Thu, 2002-10-31 at 15:25, Andreas Dilger wrote:
-> The LVM snapshot is the whole filesystem (with only the parts that
-> actually change being written to the snapshot LV) - no need to change
-> the filesystem size at all.  All you need to change is the LV size.
+I'm using jfs on lvm/raid5 with snapshot.
 
-OK -- so using lvextend I can extend it. But once it's extended, I can
-no longer mount it. I get:
+When I copy file, it happens frequently
+'raid5: switching cache buffer size XXX -> XXX'.
+This message appears to syslog. It caused speed down to access disks.
+So, I cut this message. It's seemed ok.
 
-  mount: wrong fs type, bad option, bad superblock on
-    /dev/data1/.mer_dev.hourly.3, or too many mounted file systems
+But it's still going to switch cache buffer size. I think it cost
+some cpu time. When switching buffer cache size, it always happen
+reflushing memories.
 
-Is there something I'm missing here? (ok -- obviously yes...)
+I want to fix buffer size. What shall I do?
+I asked JFS group. But they do nothing about cache buffer.
 
+kernel 2.4.20-pre10-ac2
+lvm    1.0.5
+jfs    1.0.23
 
--- 
-------------------------------------------------------
-Jim King
-Multimission Image Processing Lab  (MIPL) Engineering Group
-Science Data Processing Systems Section,  Jet Propulsion Lab
-James.King@jpl.nasa.gov  
-------------------------------------------------------
+--
+nakai@ezinc.com
