@@ -1,12 +1,10 @@
-From: "Chad C. Walstrom" <chewie@wookimus.net>
-Subject: [OT] List concerns and dieas (was Re: [linux-lvm] next step of recovering from tha vgchange problem)
-Message-ID: <20011102142310.C3791@wookimus.net>
+From: Andreas Dilger <adilger@turbolabs.com>
+Subject: Re: [linux-lvm] next step of recovering from tha vgchange problem
+Message-ID: <20011102140721.N746@lynx.no>
 References: <20011102195538.A467@bunuel.tii.matav.hu>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="ncSAzJYg3Aa9+CRW"
 Content-Disposition: inline
-In-Reply-To: <20011102195538.A467@bunuel.tii.matav.hu>
+In-Reply-To: <20011102195538.A467@bunuel.tii.matav.hu>; from mag@bunuel.tii.matav.hu on Fri, Nov 02, 2001 at 07:55:38PM +0100
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,51 +15,49 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Fri Nov  2 14:26:02 2001
+Date: Fri Nov  2 15:07:02 2001
 List-Id: <linux-lvm.redhat.com>
-To: linux-lvm@sistina.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: Magosanyi Arpad <mag@bunuel.tii.matav.hu>
+Cc: linux-lvm@sistina.com
 
---ncSAzJYg3Aa9+CRW
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Nov 02, 2001  19:55 +0100, Magosanyi Arpad wrote:
+> It seems that I have some "lost clusters" of extents. They are listed as
+> belonging to the two logical volumes I got rid off.
 
-List concern: please shut off reply-to munging.  I wanted to reply to
-the author of this email directly, but could not w/o manually cutting
-and pasting because of the reply-to munging done by this list.  PLEASE
-SHUT IT OFF!
+Yes, I recently ran into this problem as well.  vgck is not very good
+at doing anything to check these values.  I was accidentally running
+an old version of LVM (partly patched Linus kernel) and when I tried
+to lvreduce it would oops.  The LV data was correct (smaller size)
+but the PEs were still allocated.  The point isn't that I had a bad
+old kernel, but that vgck does not detect/fix these sorts of problems,
+which (IMHO) is exactly what it should be doing.
 
-References:
-[1] http://www.unicom.com/pw/reply-to-harmful.html
-[2] http://www.ietf.org/rfc/rfc822.txt
-[3] http://www.ietf.org/rfc/rfc2076.txt
-[3] http://www.ietf.org/rfc/rfc2822.txt
+It also turns out that vgcfgrestore is fundamentally broken when restoring
+PV UUIDs, I had to always use uuid_fixer to get it to work (even if I tried
+backing up the fixed VGDA and then restoring it).
 
-On Fri, Nov 02, 2001 at 07:55:38PM +0100, Magosanyi Arpad wrote:
-> Keywords: OOPS, vgchange, snapshot, rdev =3D 65535, "Bad address"
-> activating volume group
+> At the first sight, the sum of lv sizes is less than the
+> size of all allocated extents. (only calculated roughly, so not sure)
+> It is normal, or some inconsistency remaining?
+> If it isn't ok, how to make my vg consistent?
+> Is there any other source of inconsistency I am not aware of?
 
-Nice use of this field, one that was added as per RFC822 (see above).
-You can actually place this in the header of your email, if you wish
-(Recommended).
+One problem in the design of LVM metadata is that values such as PE/LE
+counts are stored in several places on disk, and depending on what piece
+of code is used, you may get one or the other.  When everything is OK
+it does not matter, in other times it does matter.
 
---=20
-Chad Walstrom <chewie@wookimus.net>                 | a.k.a. ^chewie
-http://www.wookimus.net/                            | s.k.a. gunnarr
-Key fingerprint =3D B4AB D627 9CBD 687E 7A31  1950 0CC7 0B18 206C 5AFD
+If you have time/effort/knowledge, I would suggest that rather than
+trying to find/fix the original problem, you spend time trying to make
+vgck better.  Put the function of uuid_fixer into vgck.  Make vgck only
+read data directly from disk (if it does not already do so).  This will
+not only help fix your current problem, but also help fix all other
+problems in the future.
 
-
---ncSAzJYg3Aa9+CRW
-Content-Type: application/pgp-signature
-Content-Disposition: inline
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.0.6 (GNU/Linux)
-Comment: For info see http://www.gnupg.org
-
-iD8DBQE74wCuDMcLGCBsWv0RAhGPAKCuP6JObqi+eSsoQxvKCQ9YAGFSegCgtjUv
-ari9bCs58Ewb1IPiCZrqJXc=
-=TuBK
------END PGP SIGNATURE-----
-
---ncSAzJYg3Aa9+CRW--
+Cheers, Andreas
+--
+Andreas Dilger
+http://sourceforge.net/projects/ext2resize/
+http://www-mddsp.enel.ucalgary.ca/People/adilger/
