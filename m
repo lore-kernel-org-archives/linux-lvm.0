@@ -1,9 +1,14 @@
-Return-Path: <Ron.Vissers@qtiworld.com>
-Message-ID: <139803A793E0D311AFF60050DA2BC540030214C3@qtiexch1.qgraph.com>
-From: "Vissers, Ron" <Ron.Vissers@qtiworld.com>
-Date: Mon, 2 Jul 2001 11:15:52 -0500 
-MIME-Version: 1.0
-Subject: [linux-lvm] Lost my physical volume on reboot?
+Return-Path: <lewis@sistina.com>
+Date: Mon, 2 Jul 2001 11:40:00 -0500
+From: AJ Lewis <lewis@sistina.com>
+Subject: Re: [linux-lvm] LVM kernel patch request
+Message-ID: <20010702114000.A11195@sistina.com>
+References: <3B401947.385A1472@home.com>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-md5;
+	protocol="application/pgp-signature"; boundary="lrZ03NoBR/3+SXJZ"
+Content-Disposition: inline
+In-Reply-To: <3B401947.385A1472@home.com>; from tomcosimano@home.com on Mon, Jul 02, 2001 at 01:48:39AM -0500
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,114 +20,78 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Hi,
+--lrZ03NoBR/3+SXJZ
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Bear with me, I'm new to LVM in Linux.  More accustomed to HPUX.
+On Mon, Jul 02, 2001 at 01:48:39AM -0500, Tom Cosimano wrote:
+> I'm running Redhat 7.1 kernel vmlinux-2.4.2-2smp.  I have tried a number
+> of times and can only conclude that I'm missing some step(s).
+> I have downloaded and installed the following RPMs from
+> ftp://ftp.sistina.com/pub/LVM/binaries/redhat/0.9.1_beta in the order:
+>=20
+> 1) lvm-base-1.1-1.i386.rpm
+> rebooted
+> 2a) lvm-iop10-0.9.1_beta7-1.i386.rpm
+> 2b) lvm-iop10-lib-0.9.1_beta7-1.i386.rpm
+> 3) lvm-iop10-man-0.9.1_beta7-1.i386.rpm
+> 4) lvm-iop10-patchgen-0.9.1_beta7-1.i386.rpm
+> rebooted
 
-Anyway, I seem to have lost my /dev/hdc1 physical volume and my /dev/vg02
-volume group, etc.  
+You need to build a kernel with LVM support built into it to use this.  The
+default Redhat kernel does not have this.  The lvm-iop10-patchgen* packages
+contain a stripped down version of the LVM source code made just for
+patching a stock kernel (from ftp.kernel.org).  If you need a Redhat kernel
+that supports LVM, you should talk to Redhat and let them know it is a
+requirement of yours.
 
-Suggestions on where to begin?
+You should look at the LVM HowTo at http://sistina.com/lvm/Pages/howto.html
 
-Thanks,
----------------------------------------------------------------------
+Regards,
+--=20
+AJ Lewis
+Sistina Software Inc.                  Voice:  612-638-0500
+1313 5th St SE, Suite 111              Fax:    612-638-0500
+Minneapolis, MN 55414                  E-Mail: lewis@sistina.com
+http://www.sistina.com
 
-(rvissers:root) /root # uname -a
-Linux rvissers 2.4.2 #2 Thu Apr 5 13:56:11 CDT 2001 i686 unknown
+Current GPG fingerprint =3D 3B5F 6011 5216 76A5 2F6B  52A0 941E 1261 0029 2=
+648
+Get my key at: http://www.sistina.com/~lewis/gpgkey
+ (Unfortunately, the PKS-type keyservers do not work with multiple sub-keys)
 
-(rvissers:root) /usr/local/bin # cat /proc/lvm/global
-LVM driver version 0.9.1_CVS (Date_CVS)
- 
-Total:  0 VGs  0 PVs  0 LVs (0 LVs open)
-Global: 149 bytes malloced   IOP version: 10   7 days 8:34:47 active
+-----Begin Obligatory Humorous Quote----------------------------------------
+File not found. Should I fake it? (Y/N)
+-----End Obligatory Humorous Quote------------------------------------------
+AJ Lewis
+Sistina Software Inc.                  Voice:  612-638-0500
+1313 5th St SE, Suite 111              Fax:    612-638-0500
+Minneapolis, MN 55414                  E-Mail: lewis@sistina.com
+http://www.sistina.com
 
+Current GPG fingerprint =3D 3B5F 6011 5216 76A5 2F6B  52A0 941E 1261 0029 2=
+648
+Get my key at: http://www.sistina.com/~lewis/gpgkey
+ (Unfortunately, the PKS-type keyservers do not work with multiple sub-keys)
 
-(rvissers:root) /root # pvscan /dev/hdc1
-pvscan -- reading all physical volumes (this may take a while...)
-pvscan -- ERROR "pv_read(): read" reading physical volumes
+-----Begin Obligatory Humorous Quote----------------------------------------
+Bad command or file name. Bad, bad command! Sit! Stay! Staaaay...
+-----End Obligatory Humorous Quote------------------------------------------
 
+--lrZ03NoBR/3+SXJZ
+Content-Type: application/pgp-signature
+Content-Disposition: inline
 
-(rvissers:root) /root # pvdisplay /dev/hdc1
-pvdisplay -- ERROR "pv_get_size(): lvm_dir_cache" getting size of physical
-volume "/dev/hdc1"
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.0.6 (GNU/Linux)
+Comment: For info see http://www.gnupg.org
 
+iD8DBQE7QKPgpE6/iGtdjLERAio3AJwJmE9wA2wvvGLhQyc4/vlj0uGouACePng2
+akuhsnLffsOvgyFTi+gvINI=
+=CSbF
+-----END PGP SIGNATURE-----
 
-(rvissers:root) /root # fdisk -l /dev/hdc1
- 
-Disk /dev/hdc1: 255 heads, 63 sectors, 1826 cylinders
-Units = cylinders of 16065 * 512 bytes
- 
-     Device Boot    Start       End    Blocks   Id  System
-
-
-(rvissers:root) /root # ls /etc/lvmconf
-vg02.conf  vg02.conf.1.old  vg02.conf.2.old
-(rvissers:root) /root # vgcfgrestore -n vg02 -ll
---- Volume group ---
-VG Name               vg02
-VG Access             read/write
-VG Status             NOT available/resizable
-VG #                  0
-MAX LV                256
-Cur LV                1
-Open LV               0
-MAX LV Size           255.99 GB
-Max PV                256
-Cur PV                1
-Act PV                1
-VG Size               13.98 GB
-PE Size               4 MB
-Total PE              3580
-Alloc PE / Size       2048 / 8 GB
-Free  PE / Size       1532 / 5.98 GB
-VG UUID               w91qX3-pAKn-GAOU-NRVi-Gnvf-xmTL-nWgG3E
-
---- Logical volume ---
-LV Name                /dev/vg02/lvol1
-VG Name                vg02
-LV Write Access        read/write
-LV Status              NOT available
-LV #                   1
-# open                 0
-LV Size                8 GB
-Current LE             2048
-Allocated LE           2048
-Allocation             next free
-Read ahead sectors     120
-Block device           58:0
-
-
---- Physical volume ---
-PV Name               /dev/hdc1
-VG Name               vg02
-PV Size               13.99 GB / NOT usable 3.55 MB [LVM: 134 KB]
-PV#                   1
-PV Status             available
-Allocatable           yes
-Cur LV                1
-PE Size (KByte)       4096
-Total PE              3580
-Free PE               1532
-Allocated PE          2048
-PV UUID               VFfrsv-or0w-vP6L-EJ9B-c23n-sVF5-dX37jF
- 
- 
- 
-(rvissers:root) /root # vgscan
-vgscan -- reading all physical volumes (this may take a while...)
-vgscan -- "/etc/lvmtab" and "/etc/lvmtab.d" successfully created
-vgscan -- WARNING: This program does not do a VGDA backup of your volume
-group
-
-
-
-
-     _/_/   _/_/_/_/_/ _/_/_/   Ron Vissers
-  _/    _/     _/       _/      IT Systems & Operations Team Lead
- _/  _/_/     _/       _/       Quad/Tech International 
-_/    _/     _/       _/        ph:414-566-7643  fx:262-246-1545
- _/_/  _/   _/     _/_/_/       Ron.Vissers@qtiworld.com
+--lrZ03NoBR/3+SXJZ--
