@@ -1,10 +1,14 @@
-Return-Path: <jweber@valinux.com>
-Date: Wed, 23 May 2001 14:08:20 -0700 (PDT)
-From: Jay Weber <jweber@valinux.com>
-Subject: Re: How about ext3? (was RE: [linux-lvm] XFS and LVM)
-In-Reply-To: <200105231653.f4NGrScO028621@webber.adilger.int>
-Message-ID: <Pine.LNX.4.33.0105231407270.3076-100000@beefcake.hdqt.valinux.com>
-MIME-Version: 1.0
+Return-Path: <blutgens@sistina.com>
+Date: Wed, 23 May 2001 16:51:57 -0500
+From: Ben Lutgens <blutgens@sistina.com>
+Subject: Re: [linux-lvm] The Info You Requested
+Message-ID: <20010523165157.A5993@minime.sistina.com>
+References: <Pine.A41.4.21.0105221126200.26750-100000@gigue.dlib.indiana.edu> <Pine.LNX.4.33.0105231548140.311-100000@duckman.distro.conectiva>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-md5;
+	protocol="application/pgp-signature"; boundary="SUOF0GtieIMvvwua"
+Content-Disposition: inline
+In-Reply-To: <Pine.LNX.4.33.0105231548140.311-100000@duckman.distro.conectiva>; from riel@conectiva.com.br on Wed, May 23, 2001 at 04:29:26PM -0300
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,58 +20,72 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
-Cc: Stephen Tweedie <sct@redhat.com>, Steve Wray <steve.wray@the.net.nz>
 
-Send it my way.  I'm game. :)  I haven't checked out any of your online
-resize at all up to this point, I've been using the resize2fs (Ted Tso)
-bit for offline resizing, but I'm more than willing to bang on the online
-support also. :)
+--SUOF0GtieIMvvwua
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, 23 May 2001, Andreas Dilger wrote:
+On Wed, May 23, 2001 at 04:29:26PM -0300, Rik van Riel wrote:
+>
+>No need to move the whole list to another domain.  All the
+>anti-spam filtering rules from NL.linux.org are publicly
+>available on a CVS tree.  For more info, see:
+>
+>http://spamfilter.nl.linux.org/
 
-> Date: Wed, 23 May 2001 10:53:28 -0600 (MDT)
-> From: Andreas Dilger <adilger@turbolinux.com>
-> Reply-To: linux-lvm@sistina.com
-> To: linux-lvm@sistina.com
-> Cc: Stephen Tweedie <sct@redhat.com>, Steve Wray <steve.wray@the.net.nz>
-> Subject: Re: How about ext3? (was RE: [linux-lvm] XFS and LVM)
+Thanks Rik, I'll have a look. I have some stuff in place now that I am pret=
+ty
+sure will work. It's not proactive though, I'll have to add rules as we get=
+ a
+spam but it's something.
+
 >
-> Stephen writes:
-> > On Wed, May 23, 2001 at 08:35:36PM +1200, Steve Wray wrote:
-> > > Any experience with ext3?
-> > > Is it shrinkable?
-> >
-> > It is format-compatible with ext2, so offline e2resize should work
-> > happily on ext3 for both shrinking and growing.  Online, only growing
-> > has been implemented (but not all of the kernel support is
-> > integrated).
-> >
-> > I haven't tried doing a resize on ext3 so we might have to teach the
-> > e2resize tools not to worry if they see the HAS_JOURNAL flag set in
-> > the superblock, but there is nothing in the format itself to prevent
-> > it from working.
+>(I just created this site to save me time explaining how
+>spamfilter works, it may take a few hours to have its DNS
+>entry percolate through)
+
+Yeah, no since making everyone change thier procmail filters now.
+
+>regards,
 >
-> The ext2resize code has no problem with the non-reserved journal files
-> for offline resizing.  However, I just noticed last night that it doesn't
-> handle the reserved journal inode properly.  It halts the resize because
-> it can't find the owner of the blocks that the reserved journal is using.
+>Rik
+>--
+>Linux MM bugzilla: http://linux-mm.org/bugzilla.shtml
 >
-> Also, while I have finished an online ext3 resizing patch which works
-> with the journaling properly, I haven't polished it up and finished the
-> user-space support for it.  It is available on request to people who
-> really want to play with it...
+>Virtual memory is like a game you can't win;
+>However, without VM there's truly nothing to lose...
 >
-> Cheers, Andreas
-> --
-> Andreas Dilger  \ "If a man ate a pound of pasta and a pound of antipasto,
->                  \  would they cancel out, leaving him still hungry?"
-> http://www-mddsp.enel.ucalgary.ca/People/adilger/               -- Dogbert
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
+>		http://www.surriel.com/
+>http://www.conectiva.com/	http://distro.conectiva.com/
 >
+>
+>_______________________________________________
+>linux-lvm mailing list
+>linux-lvm@sistina.com
+>http://lists.sistina.com/mailman/listinfo/linux-lvm
+>read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
+
+--=20
+Ben Lutgens	=09
+Sistina Software Inc.=09
+MIS Geek
+http://www.sistina.com/	<--- great software=20
+http://www.gentoo.org/  <--- great distro
+Kernel panic: I have no root and I want to scream <--- perfect error message
+
+--SUOF0GtieIMvvwua
+Content-Type: application/pgp-signature
+Content-Disposition: inline
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.0.4 (GNU/Linux)
+Comment: For info see http://www.gnupg.org
+
+iD8DBQE7DDD9LxkxGgLdGQgRAiTXAJsFmyOOLdAnTFroQSuE4yOCpdiERQCfR+8k
+J0ezdJaWyXFBfsl1QuGdWuY=
+=YNse
+-----END PGP SIGNATURE-----
+
+--SUOF0GtieIMvvwua--
