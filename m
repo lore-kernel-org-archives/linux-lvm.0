@@ -1,10 +1,10 @@
 Return-Path: <glenn@gecpalau.com>
-Message-ID: <3AF091E1.D57CEEA4@gecpalau.com>
-Date: Thu, 03 May 2001 08:01:53 +0900
+Message-ID: <3AF092F1.4196DB9B@gecpalau.com>
+Date: Thu, 03 May 2001 08:06:25 +0900
 From: Glenn Shannon <glenn@gecpalau.com>
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] New details on VGScan crash on 2.4.4
-References: <3AED170B.D5483465@gecpalau.com> <200104301544.JAA10700@lynx.turbolabs.com> <20010502122044.D30791@sistina.com>
+Subject: Re: [linux-lvm] Problems compiling 2.4.4
+References: <20010502182804.A6768@in-cadcae4.ing.temic.de>
 Content-Transfer-Encoding: 7bit
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
@@ -20,71 +20,58 @@ List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
 
-"Heinz J. Mauelshagen" wrote:
+Emanuel Quass wrote:
 
-> On Mon, Apr 30, 2001 at 09:44:43AM -0600, Andreas Dilger wrote:
-> > Glenn writes:
-> > > Well, after much deliberation as to how BADLY I needed a /usr partition
-> > > under 2.4.4....
-> > >
-> > > I booted it in single-user (blech) under 2.4.4 and ran vgscan and got:
-> > >
-> > > segmentation fault
-> > >
-> > > So I went about investigating as to whether I could get more info than
-> > > that.....
-> > >
-> > > vgscan -d >& vgscan.log generated the textfile vgscan1.txt I am
-> > > attaching to this email...hopefully it sheds some light (?)
-> >
-> > Looks like you have devfs configured but not mounted.  You really need to
-> > mount devfs before running vgscan.  Also, you are far better off to not
-> > use devfs and LVM at the same time.
-> >
-> > Granted, this is no reason for vgscan to segfault, but it may fix your
-> > problem.
+> Hi,
 >
-> Yep ;-)
+> I compiled a kernel(2.4.4) with your lvm patch (0.9.1_beta7).
+> At the end of make bzImage an error occours:
 >
-> Did somebody find the reason why it segfaults already and has
-> the finger pointing to the code location?
+> ld -m elf_i386 -T /mnt/kernel/linux/arch/i386/vmlinux.lds -e \
+>  stext arch/i386/kernel/head.o arch/i386/kernel/init_task.o \
+>  init/main.o init/version.o \
+>         --start-group \
+>         arch/i386/kernel/kernel.o arch/i386/mm/mm.o \
+> kernel/kernel.o mm/mm.o fs/fs.o ipc/ipc.o \
+>         drivers/block/block.o drivers/char/char.o \
+> drivers/misc/misc.o drivers/net/net.o drivers/media/media.o \
+> drivers/ide/idedriver.o drivers/scsi/scsidrv.o \
+> drivers/cdrom/driver.o drivers/pci/driver.o drivers/video/video.o \
+> drivers/md/mddev.o \
+>         net/network.o \
+>         /mnt/kernel/linux/arch/i386/lib/lib.a \
+> /mnt/kernel/linux/lib/lib.a /mnt/kernel/linux/arch/i386/lib/lib.a \
+>         --end-group \
+>         -o vmlinux \
+> drivers/md/mddev.o: In function `__update_hardblocksize':
+> drivers/md/mddev.o(.text+0x2316): undefined reference to `get_hardblocksize'
+> drivers/md/mddev.o(.text+0x2352): undefined reference to `get_hardblocksize'
+> make: *** [vmlinux] Error 1
+> Does anybody knwo where this comes from!
 >
-> >
-> > Cheers, Andreas
-> > --
-> > Andreas Dilger                               TurboLabs filesystem development
-> > http://sourceforge.net/projects/ext2resize/
-> > http://www-mddsp.enel.ucalgary.ca/People/adilger/
-> > _______________________________________________
-> > linux-lvm mailing list
-> > linux-lvm@sistina.com
-> > http://lists.sistina.com/mailman/listinfo/linux-lvm
+> Thanks in advance
+>
+>         Emanuel
+>
+> P.S. Please CC me because I am not in the list.
 >
 > --
 >
-> Regards,
-> Heinz    -- The LVM Guy --
+> ++++++++++++++++++++++++++++++++
+> Emanuel Quass
+> email :  emanuel.quass@temic.com
 >
-> *** Software bugs are stupid.
->     Nevertheless it needs not so stupid people to solve them ***
->
-> =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
->
-> Heinz Mauelshagen                                 Sistina Software Inc.
-> Senior Consultant/Developer                       Am Sonnenhang 11
->                                                   56242 Marienrachdorf
->                                                   Germany
-> Mauelshagen@Sistina.com                           +49 2626 141200
->                                                        FAX 924446
-> =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+> In a world without fences and walls,
+> who needs Windows and Gates?
+> ++++++++++++++++++++++++++++++++
 > _______________________________________________
 > linux-lvm mailing list
 > linux-lvm@sistina.com
 > http://lists.sistina.com/mailman/listinfo/linux-lvm
 
-I don't know what was causing the segfault, but I suspect it may have been a bad
-compile.
+go to your /usr/src/linux directory.....go to drivers/md and edit lvm.c and
+change the two entries of get_hardblocksize with get_hardsect_size
 
-I recompiled all over again and it works now :)
+That should do the trick.
 
 Glenn
