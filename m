@@ -1,9 +1,8 @@
-From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] Removing an old disk, and some vgexport/import love..
-Message-ID: <20020920130101.A6249@sistina.com>
-References: <002001c25fa7$482b2740$ccc67140@ownage> <20020919115935.A32578@sistina.com> <000d01c2615f$7f7d7130$ddc67140@nolove> <1032446901.3d89e3b5b98de@lola.Pin.LU> <001501c261b7$c1f6ed90$ddc67140@nolove> <20020920113750.A5931@sistina.com> <000901c26220$d67320e0$ddc67140@nolove> <20020920123404.A6172@sistina.com>
+Message-Id: <200209202150.RAA15711@www22.ureach.com>
+From: Ali Zaidi <smaliz@ureach.com>
+Subject: Re: Re: [linux-lvm] vgscan not returning UPDATE
 Mime-Version: 1.0
-In-Reply-To: <20020920123404.A6172@sistina.com>; from mauelshagen@sistina.com on Fri, Sep 20, 2002 at 12:34:04PM +0200
+Content-Transfer-Encoding: 7bit
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,99 +13,107 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Fri Sep 20 06:07:54 2002
+Date: Fri Sep 20 16:50:29 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: linux-lvm@sistina.com
+Content-Type: Text/Plain; charset="us-ascii"
+To: James Hawtin <linux-lvm@sistina.com>
 
-On Fri, Sep 20, 2002 at 12:34:04PM +0200, Heinz J . Mauelshagen wrote:
-> On Sun, Sep 22, 2002 at 03:14:29AM -0700, Matt wrote:
-> > Heinz, I am using LVM 1.0.5 with Linux kernel 2.4.19..
-> 
-> Then I have to do something about it ;-)
+I seem to have LVM working for me now.
+This is just so some of you guys can tell me if i have done something horribly 
+wrong.
+As vgscan was never returning, i did a strace on it and found out that it was 
+getting stuck at a read call for /dev/nb0.
 
-I have checked a fix for LVM1 vgimport into CVS (Branch: LVM_BRANCH_1-0)
-which is able to deal with out of sequence PV numbers.
+As i would only be using /dev/hd devices for LVM, i figured if i can comment 
+out references to "nb" from the LVM source, that might do the trick.
+I ended up commenting out two lines from tools/lib/lvm_dir_cache.c and one line 
+from tools/lib/lvm_check_partitioned_dev.c.
+After recompiling, vgscan now returns and i was also able to run pvcreate and 
+vgcreate successfully.
 
-Regards,
-Heinz    -- The LVM Guy --
+As i understand, if i am not going to be using Network Block devices under LVM, 
+i should be fine with the above arrangement.
+
+Ali
+
+
+
+---- On Thu, 19 Sep 2002, James Hawtin (oolon@ankh.org) wrote:
 
 > 
-> Thanks,
-> Heinz
 > 
-> > 
-> > -- Matt
-> > 
-> > ----- Original Message -----
-> > From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
-> > To: <linux-lvm@sistina.com>
-> > Sent: Friday, September 20, 2002 2:37 AM
-> > Subject: Re: [linux-lvm] Removing an old disk, and some vgexport/import
-> > love..
-> > 
-> > 
-> > > On Sat, Sep 21, 2002 at 02:42:18PM -0700, Matt wrote:
-> > > > Chris... I think I love you, that was indeed the problem and your
-> > solution
-> > > > solved it.  I'd like to thank you both for helping me out, have a good
-> > one..
-> > >
-> > > Which LVM version was it again.
-> > > Need to check if that bug still exists...
-> > >
-> > > Regards,
-> > > Heinz    -- The LVM Guy --
-> > >
-> > > >
-> > > > --Matt
-> > > >
-> <SNIP>
-> > >
-> > > _______________________________________________
-> > > linux-lvm mailing list
-> > > linux-lvm@sistina.com
-> > > http://lists.sistina.com/mailman/listinfo/linux-lvm
-> > > read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
-> > >
-> > >
-> > 
-> > 
-> > _______________________________________________
-> > linux-lvm mailing list
-> > linux-lvm@sistina.com
-> > http://lists.sistina.com/mailman/listinfo/linux-lvm
-> > read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+> On Thu, 19 Sep 2002, Ali Zaidi wrote:
 > 
-> *** Software bugs are stupid.
->     Nevertheless it needs not so stupid people to solve them ***
+> > Hi:
+> > I am a novice with LVM but after going through the man pages and howtos i 
+was
+> > unable to find a solution to my problem. I am hoping one of you might find 
+some
+> > time to point me in the right direction.
+> >
+> > I am trying to setup LVM on a RH box. I run vgscan before i can create the
+> > volumes but it never returns. Same thing happens with lvmdiskscan and 
+pvscan.
+> > Here is a -v and -d output of vgscan
 > 
-> =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+> Ok and now to try to answer your problem....
 > 
-> Heinz Mauelshagen                                 Sistina Software Inc.
-> Senior Consultant/Developer                       Am Sonnenhang 11
->                                                   56242 Marienrachdorf
->                                                   Germany
-> Mauelshagen@Sistina.com                           +49 2626 141200
->                                                        FAX 924446
-> =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+> Did you do a pvcreate?
+> 
+> did the disk have existing data on it?
+> 
+> Try dd to write /dev/zero to the first bit of the partitions you want to
+> put into lvm. then do you vgscan which should then return with an error
+> saying it found nothing.... you can then use pvcreate on them
+> 
+> Of course your LAME disk layout could be confusing lvm in which case as a
+> work arround just have one lvm partion and use lvm to allocate the disk,
+> which is what you should be doing in the first place!
+> 
+> 
+> ------
+> 
+> And now a few quick questions and answers....
+> 
+> Q: I can allocate my disk better than LVM!
+> 
+> A: No you cannot! or rather you can allocate your disk when you
+> first get the machine to produce nice continuous partions. YOU CAN DO THIS
+> WITH LVM. If you have a brand new volume group and just add partions to
+> it they will be continuous with LVM as well.... Don't trust LVM.. you can
+> do a pvdisplay to show you this fact!
+> 
+> A2: Sure, but what happens if you want to remove 2 partions, that are not
+> next door to each other, and them make the one big partion... with fdisk
+> its a dd nigtmare... with LVM its easy.
+> 
+> Q: but how can I move my stuff onto another disk... I use DD!
+> 
+> A: SO? There is nothing special about lvm devices apart from the fact they
+> make things easer for you... You want to work that way, make your new
+> device using LVM or fdisk and do your dd! But you could save yourself time
+> by using pvmove!
+> 
+> Q: LVM adds a level of indirection to my disk.. surely its better to use
+> the real disk
+> A: Theoritically yes... but the translation to where on the disk is a
+> calculation done on your computer not on the disk the slowest part of the
+> operation is pulling stuff from your disk! Think about is a software raid
+> faster or slower? Its faster cos the slow part was the disk and now there
+> is more than one disk!
+> 
+> Q: I like to micromanage my disk...
+> A: You can do that with LVM if you like or you can let LVM do the best it
+> can for you and use your bonus time to go down the pub.
+> 
+> 
+> James
+> 
 > 
 > _______________________________________________
 > linux-lvm mailing list
 > linux-lvm@sistina.com
 > http://lists.sistina.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
-
-*** Software bugs are stupid.
-    Nevertheless it needs not so stupid people to solve them ***
-
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-
-Heinz Mauelshagen                                 Sistina Software Inc.
-Senior Consultant/Developer                       Am Sonnenhang 11
-                                                  56242 Marienrachdorf
-                                                  Germany
-Mauelshagen@Sistina.com                           +49 2626 141200
-                                                       FAX 924446
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
+> 
+> 
