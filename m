@@ -1,8 +1,14 @@
-Message-Id: <3C83ADC8.50405@eecs.umich.edu>
-From: Chris Hamilton <cchamilt@eecs.umich.edu>
+From: Wiktor Wodecki <wodecki@gmx.de>
+Subject: Re: [linux-lvm] bug in lvm 1.0.[23]
+Message-Id: <20020304194901.GB769@kakerlak>
+References: <20020301185709.GC1654@kakerlak>
+    <20020301115523.S22608@lynx.adilger.int>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] RAID1/LVM lost my volume group
+Content-Type: multipart/signed; micalg=pgp-sha1;
+    protocol="application/pgp-signature";
+    boundary="IiVenqGWf+H9Y6IX"
+Content-Disposition: inline
+In-Reply-To: <20020301115523.S22608@lynx.adilger.int>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -13,27 +19,42 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Mar  4 11:22:05 2002
+Date: Mon Mar  4 12:54:01 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: linux-lvm@sistina.com
+To: Andreas Dilger <adilger@clusterfs.com>
+Cc: linux-lvm@sistina.com
 
-Hi, I have 4 drives set up as 2 RAID1s with a striped LVM across them.  
+--IiVenqGWf+H9Y6IX
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-After rebooting a few times vgscan and vgchange have stopped finding my 
-volume group.
-The pv* tools confirm that the physical volumes are still intact. 
- Everytime I try to call
-vgcfgrestore or really any vg tool, they segfault if I specify the group.
+begin  Andreas Dilger  quotation:
 
-I have been using 2.4.19-pre1-ac1, 2.4.19-pre2-ac2 on a glibc 2.2.4 
-system with lvm 1.03.
-The filesystem is (was) ext3.  Is there any way to get this recovered? 
- Why could it have happened?
+> On Mar 01, 2002  19:57 +0100, Wiktor Wodecki wrote:
+> Probably just old devices in /dev.  Just delete /dev/storage and /dev/vg0
+> and re-run vgscan.  It should set it up properly now.
 
-If I do have to start from zero, is there a recommended RAID 10-like 
-configuration for LVM I can use?  My goal is to have 10 reliability and 
-snapshots for backup.
+the point was that the system doesn't get it if I plug-in two vg's with
+the same name. That's the bug :-)
 
-Thanks,
-Chris Hamilton
+--=20
+Regards,
+
+Wiktor Wodecki      |    http://johoho.eggheads.org
+wodecki@gmx.de      |    IRC: Johoho@IrcNET
+
+--IiVenqGWf+H9Y6IX
+Content-Type: application/pgp-signature
+Content-Disposition: inline
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.0.6 (GNU/Linux)
+Comment: For info see http://www.gnupg.org
+
+iD8DBQE8g8+t6SNaNRgsl4MRAiXfAJoCx0rMcJsvrRV1GDFlMlkRrtEiPwCfcjg1
+DMwodbExJfxJVsl0aJE2Epw=
+=Z4j7
+-----END PGP SIGNATURE-----
+
+--IiVenqGWf+H9Y6IX--
