@@ -1,8 +1,10 @@
-From: Alasdair G Kergon <agk@uk.sistina.com>
-Message-ID: <20021118152231.A5567@uk.sistina.com>
+From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
+Subject: Re: [linux-lvm] mirrored logical volumes
+Message-ID: <20021118161955.A25728@sistina.com>
+References: <11538.1037603334@www65.gmx.net>
 Mime-Version: 1.0
-Content-Disposition: inline
-Subject: [linux-lvm] LVM2 Beta 4 available from ftp.sistina.com
+In-Reply-To: <11538.1037603334@www65.gmx.net>; from ThGrill@gmx.de on Mon, Nov 18, 2002 at 08:08:54AM +0100
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -13,51 +15,58 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Nov 18 09:23:03 2002
+Date: Mon Nov 18 09:26:02 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: lvm-devel@sistina.com, linux-lvm@sistina.com
+Content-Type: text/plain; charset="iso-8859-1"
+To: linux-lvm@sistina.com
 
-Summary of the main changes in Beta 4
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Thomas,
 
-  New format of LVM metadata now ready for testing.
-    Designed to improve efficiency and robustness and to 
-    offer more options for recovery in the event of problems.
+as Anders mentioned you want to combine MD and LVM to achive this today.
 
-  New command line tool options to support the new metadata format.
-    vgconvert to change a volume group from one format to another.
-    pvremove to remove a physical volume from LVM's management.
+We'll support mirroring directly in LVM2/device-mapper early next year.
 
-  New configuration file options (see doc/example.conf).
+On Mon, Nov 18, 2002 at 08:08:54AM +0100, Thomas Grill wrote:
+> Hi,
+>=20
+> I would like to install Linux (SuSE 8.1) on my pc (AMD 800 MHz, 2 x 8 G=
+B
+> SCSI harddiscs) with mirrored logical volumes (LVM + Soft-RAID). Is thi=
+s
+> possible ? If yes, how can that be done?
+>=20
+> Best regards,
+> Thomas Grill
+>=20
+> --=20
+> +++ GMX - Mail, Messaging & more  http://www.gmx.net +++
+> NEU: Mit GMX ins Internet. Rund um die Uhr f=FCr 1 ct/ Min. surfen!
+>=20
+>=20
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@sistina.com
+> http://lists.sistina.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
 
-  Updated manual pages explaining the new features.
+--=20
 
-  Improvements to the text archive file format to prepare for future 
-  extensions.  (N.B. Partially incompatible with previous betas.)
+Regards,
+Heinz    -- The LVM Guy --
 
-  Framework to support additional metadata formats in shared libraries.
+*** Software bugs are stupid.
+    Nevertheless it needs not so stupid people to solve them ***
 
-See the README, WHATS_NEW and INSTALL files for further information.
+=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D=
+-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=
+=3D-=3D-
 
-
-Tarballs are available from:
-  ftp://ftp.sistina.com/pub/LVM2/tools/LVM2.1.95.11.tgz
-The latest stable version of device-mapper is:
-  ftp://ftp.sistina.com/pub/LVM2/device-mapper/device-mapper.0.96.06.tgz
-
-To access the CVS tree use:
-  cvs -d :pserver:cvs@tech.sistina.com:/data/cvs login
-    CVS password: cvs1
-  cvs -d :pserver:cvs@tech.sistina.com:/data/cvs checkout LVM2
-
-
-Please use the LVM development mailing list to discuss these and
-possible future changes:
-  lvm-devel@sistina.com
-  http://lists.sistina.com/mailman/listinfo/lvm-devel
- 
-Alasdair
--- 
-agk@uk.sistina.com
+Heinz Mauelshagen                                 Sistina Software Inc.
+Senior Consultant/Developer                       Am Sonnenhang 11
+                                                  56242 Marienrachdorf
+                                                  Germany
+Mauelshagen@Sistina.com                           +49 2626 141200
+                                                       FAX 924446
+=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D=
+-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=
+=3D-=3D-
