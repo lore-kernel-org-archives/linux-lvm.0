@@ -1,10 +1,9 @@
-Return-Path: <claudio@conectiva.com>
-Date: Sat, 23 Dec 2000 16:46:52 -0200 (BRST)
-From: Claudio Matsuoka <claudio@conectiva.com>
-Subject: Re: [linux-lvm] 0.9 tools compatible with 0.8 kernel? (and vice
- versa)
-In-Reply-To: <Pine.LNX.4.30.0012231751490.5052-100000@fogarty.jakma.org>
-Message-ID: <Pine.LNX.4.21.0012231630430.649-100000@scuzzlebutt.helllabs>
+Return-Path: <shane@zeke.yi.org>
+Date: Sat, 23 Dec 2000 20:44:57 -0500 (EST)
+From: Shane Shrybman <shane@zeke.yi.org>
+Subject: Re: [linux-lvm] Can't find ext2 fs with LVM 0.9
+In-Reply-To: <20001223000507.A2334@gondor.com>
+Message-ID: <Pine.LNX.4.21.0012232038520.18926-100000@zeke.goatskin.org>
 MIME-Version: 1.0
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
@@ -19,59 +18,19 @@ List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: TEXT/PLAIN; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: linux-lvm@sistina.com
+To: Jan Niehusmann <jan@gondor.com>
+Cc: linux-lvm mailing list <linux-lvm@sistina.com>
 
-On Sat, 23 Dec 2000, Paul Jakma wrote:
+Please disregard previous post, my partition table was a
+little wacked. LVM version 0.9 was a little less tolerant
+than 0.8 ;)
 
-> on-disk LVM isn't touched though, right? so it's just a tools issue,
-> right? ie, booting lvm 0.9 isn't going to leave me with on-disk
-> structures that 0.8 would barf on?
+Shane
 
-It's tools + kernel, but the files in /etc/lvmtab.d are different
-(so make sure you're doing a vgscan after the root filesystem is
-mounted read-write).
+On Sat, 23 Dec 2000, Jan Niehusmann wrote:
 
-> > rpm http://distro.conectiva.com.br/experimental/
-> 
-> excellent. thanks!
-
-
-LVM initialization is tricky -- just calling lvmiopversion to load
-lvm-mod with IOP 10 (lvm 0.9) didn't work in all machines I tried :\
-An explicit insmod may be necessary. Something is being delayed in
-the module initialization, it would be nice to fix this as well in
-future versions.
-
-Also to avoid a "failed" status (in RH-style initscripts) when you have
-the tools installed but no VGs configured, you may need to do something
-like
-
-# Set up LVM
-# Warning: this requires lvm-base >= 1.0-4cl
-
-activate_lvm() {
-    lvm_msg="Activating logical volumes (LVM IOP $1): "
-    (/sbin/vgscan; /sbin/vgchange -a y) >/dev/null 2>&1
-    if [ $? -eq 0 ]; then
-        action "$lvm_msg" true
-    else
-        action "$lvm_msg" false
-    fi
-}   
-
-if [ -x /sbin/lvmiopversion ]; then
-    insmod -q lvm-mod >/dev/null
-    iopver=`/sbin/lvmiopversion`
-    if [ $iopver -gt 0 -a $iopver -lt 10 ]; then
-        grep -q VG /proc/lvm && activate_lvm $iopver
-    else
-        grep -q VG /proc/lvm/global && activate_lvm $iopver
-    fi
-fi
-
-just after the root fs is mounted read-write. I still prefer debian-style
-initialization, but if you're using RH/Mandrake/Conectiva you'll probably
-have to put that in rc.sysinit.
-
-
-claudio
+> On Fri, Dec 22, 2000 at 01:46:41PM -0500, Shane Shrybman wrote:
+> > VFS: Can't find an ext2 filesystem on dev lvm(58,1).
+> > mount: wrong fs type, bad option, bad superblock on /dev/vg01/lv01,
+> >        or too many mounted file systems
+[...SNIP...]
