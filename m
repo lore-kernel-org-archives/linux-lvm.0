@@ -1,10 +1,7 @@
-From: Alasdair G Kergon <agk@uk.sistina.com>
-Subject: Re: [linux-lvm] vgscan goes into an infinite loop (migration issues)
-Message-ID: <20040106232904.M21022@uk.sistina.com>
-References: <20040106165719.A26553@cs.mcgill.ca> <20040106225901.J21022@uk.sistina.com> <20040106181311.B26794@cs.mcgill.ca>
+Message-ID: <20040107065801.A27995@cs.mcgill.ca>
+From: Navindra Umanee <navindra@cs.mcgill.ca>
 Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20040106181311.B26794@cs.mcgill.ca>; from navindra@cs.mcgill.ca on Tue, Jan 06, 2004 at 06:13:11PM -0500
+Subject: [linux-lvm] setting VG UUID
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,20 +12,34 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Tue Jan  6 17:30:02 2004
+Date: Wed Jan  7 06:00:02 2004
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Tue, Jan 06, 2004 at 06:13:11PM -0500, Navindra Umanee wrote:
-> PV UUID               none
+Hi!
 
-LVM2 uses the UUID to distinguish between PVs - so it sees all the
-devices as duplicates of each other.
+After figuring out that my all my PVs were lacking UUIDs, I used this
+hack from Heinz to correct the situation:
 
-I'll try to change the code so it generates a UUID if it's missing.
- 
-Alasdair
--- 
-agk@uk.sistina.com
+http://lists.sistina.com/pipermail/linux-lvm/2002-January/010521.html
+
+(Alasdair also kindly provided a patch to handle the situation in LVM2.)
+
+Now my VG itself is still lacking a UUID and this causes problems such
+as vgcfgrestore refusing to continue.  Is there any way I can update
+my VG UUID?
+
+I also have this problem where my PV's are using different system ids:
+
+VG:        localhost.localdomain1073237462
+/dev/hda6: localhost.localdomain1073237462 (same)
+/dev/hda7: localhost.localdomain1073237466
+/dev/hda8: localhost.localdomain1073237470
+/dev/hda9: localhost.localdomain1073237474
+
+Is there a way of fixing this?
+
+Thanks,
+Navin.
