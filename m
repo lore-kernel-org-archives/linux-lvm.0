@@ -1,12 +1,9 @@
-Subject: Re: [linux-lvm] lvm-1.0.1 not working with DAC960/2.2.20
-References: <wvbshoy54w.fsf@freeze.oslo.dnmi.no>
-	<20011127111424.A8179@sistina.com> <20011127102808.A730@lynx.no>
-	<wv1yij762a.fsf@freeze.oslo.dnmi.no> <wvu1vf5pmr.fsf@freeze.oslo.dnmi.no>
-	<20011129151848.F1283@sistina.com>
-From: Adrian Phillips <a.phillips@dnmi.no>
-In-Reply-To: <20011129151848.F1283@sistina.com>
-Message-ID: <wv667ttz86.fsf@freeze.oslo.dnmi.no>
+Message-ID: <3C064B71.60707@larsshack.org>
+From: Lars Kellogg-Stedman <lars@larsshack.org>
 MIME-Version: 1.0
+Subject: Re: [linux-lvm] df and lvscan show differnet sizes
+References: <OF05414B2E.B23B3CDB-ON86256B12.007DCDB5@TEXASMUTUAL.COM>
+Content-Transfer-Encoding: 7bit
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,28 +14,25 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Thu Nov 29 08:42:01 2001
+Date: Thu Nov 29 08:50:02 2001
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: linux-lvm@sistina.com
 
->>>>> "Heinz" == Heinz J Mauelshagen <mauelshagen@sistina.com> writes:
+Jonathan S. Polacheck wrote:
 
-    Heinz> Well,
+> I am running Mandrake 8.1 w/devfs. df shows the original size of
+> /dev/vol_usr and /dev/vol_var.  lvscan shows sizes after lvextend.  I have
+> rebooted.
 
-    Heinz> actually it was mostly me who shouldn't check something in
-    Heinz> sitting at a the "Linux-Kongress" conference in Enschede
-    Heinz> ;-)
 
-Great, thanks for letting me know. Anyway I got the patches I needed
-out of CVS (ie. the correct DAC960 fix).
+Jonathan,
 
-Sincerely,
+lvscan is showing you the amount of available space on the LVM *device*, 
+while df is showing you the size of the *filesystem*.  The filesystem 
+will not automatically expand to fill the additional space -- you have 
+to do this manually using a tool such as e2fsadm or resize2fs (for 
+ext2), xfs_growfs (for xfs), resize_reisterfs (for reiserfs), or 
+whatever other tool is appropriate for the filesystem you're using.
 
-Adrian Phillips
-
--- 
-Your mouse has moved.
-Windows NT must be restarted for the change to take effect.
-Reboot now?  [OK]
+-- Lars
