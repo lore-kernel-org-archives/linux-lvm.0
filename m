@@ -1,9 +1,10 @@
-From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] LVM1 and a dying disk
-Message-ID: <20030903143730.D2618@sistina.com>
-References: <3F55ABF8.40608@webhackande.se> <20030903111442.C2618@sistina.com> <3F55C7F7.1090305@webhackande.se>
+From: Herbert Poetzl <herbert@13thfloor.at>
+Subject: Re: [linux-lvm] Can not boot: unable to mount root fs:
+Message-ID: <20030903174038.GA31636@DUK2.13thfloor.at>
+References: <3F54CEFE.2080203@redshift.com> <20030902224216.GB9145@DUK2.13thfloor.at> <3F5626D7.3070405@redshift.com>
 Mime-Version: 1.0
-In-Reply-To: <3F55C7F7.1090305@webhackande.se>; from richie@webhackande.se on Wed, Sep 03, 2003 at 12:52:39PM +0200
+Content-Disposition: inline
+In-Reply-To: <3F5626D7.3070405@redshift.com>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,147 +15,124 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Sep  3 07:46:01 2003
+Date: Wed Sep  3 12:41:02 2003
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: linux-lvm@sistina.com
+To: "Samuel A. Rogers" <srogers@redshift.com>
+Cc: linux-lvm@sistina.com
 
-On Wed, Sep 03, 2003 at 12:52:39PM +0200, Rickard Olsson wrote:
-> Heinz J . Mauelshagen wrote:
+On Wed, Sep 03, 2003 at 10:37:27AM -0700, Samuel A. Rogers wrote:
+> Herbert,
 > 
-> > you say that you don't have a recent LVM metadata backup reflecting
-> > your VG with /dev/ide/host0/bus1/target0/lun0/disc in it ?
-> 
-> I found a files_vg.conf and put it in /etc/lvmconf, did pvcreate and 
-> successful vgcfgrestores on all of them. I had to move the disks around 
-> a bit to make them appear in their old places since they're now in a new 
-> machine (vgcfgrestore complained otherwise).
+> I could send you a boot log but there is no information in it (to this 
+> problem) because the system locks up before it mounts the root (or other) 
+> partitions. Sorry your right that I should have included the boot loader, 
+> as it is grub. I am not sure what your wanting here, if it is a file or for 
+> me to discribe what I selected in the configuration. If it is a file please 
+> let me know what directory it is in and I will be happy to include it. I 
+> did select LVM and ext3 in the configuration.
 
-"vgcfgrestore -o ..." does the trick without moving disks around
-(which might be completely impossible with certain path changes anyway).
-"-o" takes the old path, which has been stored in the metadata backup.
+maybe you could put the following files/logs somewhere on the web
 
-"vgcfgrestore -ll ..." long lists the VG metadata stored in the backup.
+.config file from the kernel sources /usr/src/linux-<whatever>/.config
+the complete boot log (with all unrelated info ;)
+the grub config file
 
-> The bad disk is now at 
-> /dev/ide/host2/bus1/target1/lun0/disc
-> 
-> 
-> majestix root # pvscan
-> pvscan -- reading all physical volumes (this may take a while...)
-> pvscan -- ACTIVE   PV "/dev/ide/host4/bus1/target0/lun0/disc" of VG "f2" 
->        [
-> 149 GB / 0 free]
-> pvscan -- inactive PV "/dev/ide/host2/bus1/target0/lun0/disc"  is 
-> associated to
-> unknown VG "files_vg" (run vgscan)
-> pvscan -- inactive PV "/dev/ide/host2/bus1/target1/lun0/disc"  is 
-> associated to
-> unknown VG "files_vg" (run vgscan)
-> pvscan -- inactive PV "/dev/ide/host2/bus0/target0/lun0/disc"  is 
-> associated to
-> unknown VG "files_vg" (run vgscan)
-> pvscan -- inactive PV "/dev/ide/host2/bus0/target1/lun0/disc"  is 
-> associated to
-> unknown VG "files_vg" (run vgscan)
-> pvscan -- inactive PV "/dev/ide/host0/bus1/target0/lun0/disc"  is 
-> associated to
-> unknown VG "files_vg" (run vgscan)
-> pvscan -- inactive PV "/dev/ide/host0/bus1/target1/lun0/disc"  is 
-> associated to
-> unknown VG "files_vg" (run vgscan)
-> pvscan -- total: 7 [819.79 GB] / in use: 7 [819.79 GB] / in no VG: 0 [0]
-> 
-> 
-> majestix root # vgscan
-> vgscan -- reading all physical volumes (this may take a while...)
-> vgscan -- found active volume group "f2"
-> vgscan -- ERROR "vg_read_with_pv_and_lv(): current PV" can't get data of 
-> volume
-> group "files_vg" from physical volume(s)
-> vgscan -- "/etc/lvmtab" and "/etc/lvmtab.d" successfully created
-> vgscan -- WARNING: This program does not do a VGDA backup of your volume 
-> groups
-> 
-> 
-> majestix root # pvdata /dev/ide/host2/bus1/target1/lun0/disc
-> --- Physical volume ---
-> PV Name               /dev/ide/host2/bus1/target1/lun0/disc
-> VG Name               files_vg
-> PV Size               93.16 GB [195371568 secs] / NOT usable 16.19 MB 
-> [LVM: 151
-> KB]
-> PV#                   4
-> PV Status             NOT available
-> Allocatable           yes (but full)
-> Cur LV                1
-> PE Size (KByte)       16384
-> Total PE              5961
-> Free PE               0
-> Allocated PE          5961
-> PV UUID               KsET9a-qoKI-a2gr-z1GB-jwM1-vFw7-qHgxeZ
-> 
-> --- Volume group ---
-> VG Name
-> VG Access             read/write
-> VG Status             NOT available/resizable
-> VG #                  0
-> MAX LV                256
-> Cur LV                1
-> Open LV               0
-> MAX LV Size           1023.97 GB
-> Max PV                256
-> Cur PV                6
-> Act PV                6
-> VG Size               670.61 GB
-> PE Size               16 MB
-> Total PE              42919
-> Alloc PE / Size       42919 / 670.61 GB
-> Free  PE / Size       0 / 0
-> VG UUID               Z9MJ9w-UjoI-BO9X-rAb0-DPtF-pXqO-Haiji7
-> 
-> --- List of logical volumes ---
-> 
-> pvdata -- logical volume "/dev/files_vg/files_lv" at offset   0
-> pvdata -- logical volume struct at offset   1 is empty
-> [...]
-> 
-> 
-> What did I do wrong (this time)?
+best,
+Herbert
 
-Hmmm, if you pvcreated+vgcfgrestored every PV fine, nothing.
-
-Could you send the output of "pvdata -UPP" for all your PVs of "files_vg"
-and files_vg.conf to me in private email, please.
-
-
+> Thank you for your help,
 > 
->     / Rickard Olsson,IT-Konsult/
->    / Telefon: +46 70 635 01 42/
->   / http://www.webhackande.se/
+> 	Sam.
 > 
+> Herbert Poetzl wrote:
+> >On Tue, Sep 02, 2003 at 10:10:22AM -0700, Samuel A. Rogers wrote:
+> >
+> >>So far I can not compile and boot any kernel from 2.4.19 - 2.4.21. I get 
+> >>the below error message:
+> >>
+> >>VFS: cannot open device 3a:00
+> >>kernel panic: VFS: unable to mount root fs 3a:00
+> >
+> >
+> >send some more information, like a complete
+> >bootup log, your boot loader and your kernel
+> >configuration ...
+> >
+> >best,
+> >Herbert
+> >
+> >
+> >>I took this from an archive message and it should be very close to the 
+> >>message I get except for the device number. I think mine says 1a:00 as I 
+> >>am only using ide and not scsi. The system locks up and I have to 
+> >>manually press the reset button to reboot.
+> >>
+> >>I have checked the archives but could not find a solution.
+> >>
+> >>Also the kernels I get from Redhat can boot just fine, but they have 
+> >>turned off my sound card so I need to regen the kernel. I have tried to 
+> >>get ahold of Redhat by phone, e-mail and newsgroup but no reply.
+> >>
+> >>Regards,
+> >>
+> >>	Sam Rogers.
+> >>
+> >>
+> >>_______________________________________________
+> >>linux-lvm mailing list
+> >>linux-lvm@sistina.com
+> >>http://lists.sistina.com/mailman/listinfo/linux-lvm
+> >>read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+> >
+> >
+> >.
+> >
 > 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
 
--- 
-
-Regards,
-Heinz    -- The LVM Guy --
-
-*** Software bugs are stupid.
-    Nevertheless it needs not so stupid people to solve them ***
-
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-
-Heinz Mauelshagen                                 Sistina Software Inc.
-Senior Consultant/Developer                       Am Sonnenhang 11
-                                                  56242 Marienrachdorf
-                                                  Germany
-Mauelshagen@Sistina.com                           +49 2626 141200
-                                                       FAX 924446
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+> # grub.conf generated by anaconda
+> #
+> # Note that you do not have to rerun grub after making changes to this file
+> # NOTICE:  You have a /boot partition.  This means that
+> #          all kernel and initrd paths are relative to /boot/, eg.
+> #          root (hd0,0)
+> #          kernel /vmlinuz-version ro root=/dev/Volume00/LogVol00
+> #          initrd /initrd-version.img
+> #boot=/dev/hda
+> default=1
+> timeout=10
+> splashimage=(hd0,0)/grub/splash.xpm.gz
+> password --md5 $1$fJRwapbJ$jxsALxSgdFjk02dHBhHmL0
+> title Red Hat Linux (2.4.21)
+> 	root (hd0,0)
+> 	kernel /vmlinuz-2.4.21 ro root=/dev/Volume00/LogVol00
+> 	initrd /initrd-2.4.21.img
+> title Red Hat Linux (2.4.20-20.9)
+> 	root (hd0,0)
+> 	kernel /vmlinuz-2.4.20-20.9 ro root=/dev/Volume00/LogVol00
+> 	initrd /initrd-2.4.20-20.9.img
+> title Red Hat Linux (2.4.20-19.9)
+> 	root (hd0,0)
+> 	kernel /vmlinuz-2.4.20-19.9 ro root=/dev/Volume00/LogVol00
+> 	initrd /initrd-2.4.20-19.9.img
+> title Red Hat Linux (2.4.20-18.9)
+> 	root (hd0,0)
+> 	kernel /vmlinuz-2.4.20-18.9 ro root=/dev/Volume00/LogVol00
+> 	initrd /initrd-2.4.20-18.9.img
+> title Red Hat Linux (2.4.20-13.9)
+> 	root (hd0,0)
+> 	kernel /vmlinuz-2.4.20-13.9 ro root=/dev/Volume00/LogVol00
+> 	initrd /initrd-2.4.20-13.9.img
+> title Red Hat Linux (2.4.20-9custom)
+> 	root (hd0,0)
+> 	kernel /vmlinuz-2.4.20-9custom ro root=/dev/Volume00/LogVol00
+> 	initrd /initrd-2.4.20-9custom.img
+> title Red Hat Linux (2.4.20-9)
+> 	root (hd0,0)
+> 	kernel /vmlinuz-2.4.20-9 ro root=/dev/Volume00/LogVol00
+> 	initrd /initrd-2.4.20-9.img
+> title Red Hat Linux (2.4.20-6)
+> 	root (hd0,0)
+> 	kernel /vmlinuz-2.4.20-6 ro root=/dev/Volume00/LogVol00
+> 	initrd /initrd-2.4.20-6.img
