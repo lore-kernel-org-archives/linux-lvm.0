@@ -1,9 +1,9 @@
 From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] Painless upgrade to lvm2?
-Message-ID: <20021125151635.A25023@sistina.com>
-References: <1038231397.21369.23.camel@defiant.sonsofthunder.yi.org>
+Subject: Re: [linux-lvm] Accessing LVM partitions from a rescue system
+Message-ID: <20021125151746.B25023@sistina.com>
+References: <200211242207.33235.pantaleimon@home.no> <4117008562.20021125013930@tnonline.net> <20021125113323.A24431@sistina.com> <200211251500.26349.pantaleimon@home.no>
 Mime-Version: 1.0
-In-Reply-To: <1038231397.21369.23.camel@defiant.sonsofthunder.yi.org>; from storm@tux.org on Mon, Nov 25, 2002 at 08:36:37AM -0500
+In-Reply-To: <200211251500.26349.pantaleimon@home.no>; from pantaleimon@home.no on Mon, Nov 25, 2002 at 03:00:26PM +0100
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,85 +14,95 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Nov 25 08:23:02 2002
+Date: Mon Nov 25 08:25:01 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Bradley,
+On Mon, Nov 25, 2002 at 03:00:26PM +0100, Pantaleimon wrote:
+> On Monday 25 November 2002 11:33, Heinz J . Mauelshagen wrote:
+> > On Mon, Nov 25, 2002 at 01:39:30AM +0100, Anders Widman wrote:
+> > > Looks  like  something  is wrong with accessing all of your disks from
+> > >
+> > > the rescue floppy.. look at the pvscan:
+> > > >From rescue environment:
+> > >
+> > >    pvscan -- total: 20 [201.08 GB}
+> > >
+> > > Normal boot:
+> > >    pvscan -- total: 21 [211.14 GB]
+> > >
+> > > You  need  to  sort  out what disks/partitions that are not accessible
+> > > from  the  rescue  disks...  You can also try ungrading LVM as 1.01 is
+> > > quite old...
+> >
+> > Yes, that will solve it. You are running a quote old release candidate
+> > of LVM still.
+> > 1.0.1-rc2 failed on IDE partitions larger than 15.
+> > BTW: 1.0.1 had support for 64 partitions on IDE in.
+> >
+> > Please take 1.0.6 and retry.
+> >
+> > Regards,
+> > Heinz    -- The LVM Guy --
+> >
+> 
+> I get it. That solves the mystrey concerning hda16. But why can't I mount the 
+> LVM partitions from the rescue environment when they get mounted during a 
+> normal boot. I had a look at the boot script and it does the same thing as 
+> I'm doing manually from rescue. Even if an upgrade will solve that problem 
+> too I am a bit curious about what causes vgscan to fail in the rescue 
+> environment.
 
-get the LVM2 tools from
+Yeah, pretty strange...
 
-	ftp://ftp.sistina.com/pub/LVM2/tools/
-
-the device-mapper software from
-
-	ftp://ftp.sistina.com/pub/LVM2/device-mapper.
-
-You want to get recent device-mapper kernel patches from 
-
-	http://people.sistina.com/~thornber/patches/2.4-stable/
-
-as well.
-
-
-Unpack the tarballs giving you LVM2*/, device-mapper*/ and 2.4.19*/
-subdirectories.
-
-Patch a vanilla kernel with the device-mapper patches in the 2-4-19* subdir
-(works for 2.4.20-rc as well), activate it in the kernel configuration and
-generate the kernel.
-
-Generate and install the device-mapper software (library is needed to run
-the LVM2 tools).
-
-Generate and install the LVM2 tools.
-
-You can install those in a different path in order to be able to backup
-to LVM1 (just in case ;)
-
-LVM2 is format compatible to the LVM1 ondisk metadata format.
-It only misses pvmove which we want to add ASAP before we go for
-the final release.
-
-If you want to give this a try, feel free to contact the LVM team on IRC on
-channel #lvm at irc.openprojects.org for interactive aid.
+Forgot to ask: you run the _very_ same (LVM) versions on the rescue media too ?
 
 Regards,
 Heinz    -- The LVM Guy --
 
 
 
-On Mon, Nov 25, 2002 at 08:36:37AM -0500, Bradley Alexander wrote:
-> I'm running lvm-1.0.6 on a Debian/sid system, and was wondering what
-> would be the best upgrade path? Install from debs? From source? Is there
-> some kind of howto for making this transition?
-> 
-> Thanks,
-> -- 
-> --Brad
-> ============================================================================
-> Bradley M. Alexander                |
-> Debian Developer, Security Engineer |   storm [at] tux.org
-> Debian/GNU Linux Developer          |   storm [at] debian.org
-> ============================================================================
-> Key fingerprints:
-> DSA 0x54434E65: 37F6 BCA6 621D 920C E02E  E3C8 73B2 C019 5443 4E65
-> RSA 0xC3BCBA91: 3F 0E 26 C1 90 14 AD 0A  C8 9C F0 93 75 A0 01 34
-> ============================================================================
-> Stay out of clouds. The silver lining everyone keeps talking
-> about might be another airplane going in the opposite direction.
-> Reliable sources also report that mountains have been known to hide
-> out in clouds.
-> 					--Rules of the Air, #13
 > 
 > 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+> 
+> > > - Anders
+> > >
+> > > > Hello
+> > > >
+> > > > I am trying to mount my LVM partitions manually after booting into a
+> > > > rescue system from floppies. I am not able to do this. During a normal
+> > > > boot from my harddisk LVM works just fine. Notice the output from
+> > > > pvscan and lvmdiskscan below. I ran those commands first from the
+> > > > rescue system and then from a normally booted system. In the rescue
+> > > > system /dev/hda16 is not there. I don't know if that is related to my
+> > > > problem, though.
+> > > >
+> > > > Here are the details of what I am doing:
+> > > >
+> > > > Setup:
+> > > >
+> > > > boot partition      /dev/hda2 type Linux with Ext2
+> >
+> > <SNIP>
+> >
+> > > > lvmdiskscan -- 28 partitions
+> > > > lvmdiskscan -- 20 LVM physical volume partitions
+> > > >
+> > > >
+> > > > _______________________________________________
+> > > > linux-lvm mailing list
+> > > > linux-lvm@sistina.com
+> > > > http://lists.sistina.com/mailman/listinfo/linux-lvm
+> > > > read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+> > >
+> > > _______________________________________________
+> > > linux-lvm mailing list
+> > > linux-lvm@sistina.com
+> > > http://lists.sistina.com/mailman/listinfo/linux-lvm
+> > > read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+> >
 
 *** Software bugs are stupid.
     Nevertheless it needs not so stupid people to solve them ***
