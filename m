@@ -1,9 +1,9 @@
-From: Andreas Gorf <estevesgorf@freenet.de>
-Date: Sun, 09 Sep 2001 16:55:30 GMT
-Message-ID: <20010909.16553000@host.domain.de>
+Message-ID: <3B9BD5BD.6060606@ida.xs4all.nl>
+Date: Sun, 09 Sep 2001 22:49:01 +0200
+From: Jorg de Jong <lists@ida.xs4all.nl>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Subject: [linux-lvm] Problems with pvmove
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] lvcreate contiguous flag question
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,39 +15,23 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="windows-1252"
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: linux-lvm@sistina.com
 
-I've followed the discussion started by =84fejf=93.
+Hi,
 
-Indeed i have the same problem that pvmove exits with an error when i tr=
-y=20
-to
-move PEs from one PV to another.
+I created a lv with the option --contiguous y.
+But since my disks are rather full the created lv was NOT contiguous.
 
-To exclude the possibility of a defect HD i tried to reproduce the error=
-=20
-on several
-independent systems.
+Strange.
 
-The error always occurs when i try to move a complete filled PV to=20
-another. In this case all but the last
-PE on this PV are moved. The last one isn't movable whatever i did.
+If I try to change the allocation policy from contiguous to next free and to
+contiugues again for this lv, it will fail. It will only let me set it to
+next free. This makes sence since the lv is already fragmented.
 
-If the PV wasn't filled at 100% everything goes fine.
+But why is a newly created lv that has a allocation policy contiguous
+but is fragmented non the less not reset to next free ? Or not created at all ?
 
-To reproduce the error try the following:
+regards,
 
-- create a VG with three Pvs at the same size
-- create a LV which covers the first PV completely and the second partly=
-
-- try to all PEs from the first PV to the third - the error will occur
-- move the moved PEs back to the first PV - everything goes fine
-- try to move the PEs lying on the second PV to the third - everything=20
-goes fine
-
-
-...any ideas?
-
-
-Andreas...
+Jorg de Jong.
