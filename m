@@ -1,55 +1,41 @@
-From: Heinz Mauelshagen <mauelsha@ez-darmstadt.telekom.de>
-Message-Id: <200005040656.IAA11231@u9etz.ez-darmstadt.telekom.de>
-Subject: Re: [linux-lvm] bug in lvm tools 0.8i, 0.8final
-In-Reply-To: <20000503220359.A27090@cyberhqz.com> from Ryan Murray at "May 3, 2000 10: 3:59 pm"
-Date: Thu, 4 May 2000 08:56:28 +0200 (MEST)
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Message-ID: <E3A1ACFEDE71D3118C000020352285A04F4378@nbsjexm2.nbtel.nb.ca>
+From: "Shaw, Marco" <marco.shaw@nbtel.nb.ca>
+Subject: RE: [linux-lvm] SuSE/LVM boot problem
+Date: Thu, 4 May 2000 09:18:39 -0300 
+MIME-Version: 1.0
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: Ryan Murray <rmurray@cyberhqz.com>
-Cc: mge@ez-darmstadt.telekom.de, linux-lvm@msede.com
+Content-Transfer-Encoding: 7bit
+To: Linux LVM mailing list <linux-lvm@msede.com>
 
-> I've just come across a bug in lvm tools when not using /proc/partitions.
-> 
-> lvm_add_dir_cache adds an entry, but checks for duplicates with
-> lvm_dir_cache_hit.  The problem is simple:
-> 
-> lrwxrwxrwx    1 root     root            9 May  8  1999 /dev/cdrom -> /dev/hdd
-> 
-> If you have that symbolic link around, it will show up in the cache as
-> /dev/cdrom, so if you try to pvcreate /dev/hdd, /dev/hdd never makes it
-> into the cache.
+You've all seen this?
 
-Thanks for pointing this out.
+http://lwn.net/980514/a/resizefs.html
 
+Marco
+
+> -----Original Message-----
+> From:	Eric M. Hopper [SMTP:hopper@omnifarious.mn.org]
+> Sent:	May 3, 2000 11:38 PM
+> To:	Linux LVM mailing list
+> Subject:	Re: [linux-lvm] SuSE/LVM boot problem
 > 
-> Either the duplicate mechanism should be taken out, or ignore symlinks
-> and have things that check the cache dereference the symlinks...
+> On Wed, May 03, 2000 at 05:50:57PM -0600, Andreas Dilger wrote:
+> > 
+> > Why do you say that?  You can resize it while it is mounted:
+> > http://ext2resize.sourceforge.net/
 > 
-
-Will check that...
-
+> 	Thanks for pointing this out to me.  I had been illegally using
+> Partition Magic's utility.  :-)  Although, I may very well buy a copy of
+> that program because it's so useful.
+> 
+> Have fun (if at all possible),
 > -- 
-> Ryan Murray, (rmurray@cyberhqz.com, rmurray@stormix.com)
-> Programmer, Stormix Technologies Inc.
-> The opinions expressed here are my own.
-
-Regards,
-Heinz
-
--- 
-
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-
-Systemmanagement TS                              T-Nova
-                                                 Entwicklungszentrum Darmstadt
-Heinz Mauelshagen                                Otto-Roehm-Strasse 71c
-Senior Systems Engineer                          Postfach 10 05 41
-                                                 64205 Darmstadt
-mge@EZ-Darmstadt.Telekom.de                      Germany
-                                                 +49 6151 886-425
-                                                          FAX-386
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+> Its name is Public Opinion.  It is held in reverence. It settles
+> everything.
+> Some think it is the voice of God.  Loyalty to petrified opinion never yet
+> broke a chain or freed a human soul.     ---Mark Twain
+> -- Eric Hopper (hopper@omnifarious.mn.org
+> http://omnifarious.mn.org/~hopper) --
