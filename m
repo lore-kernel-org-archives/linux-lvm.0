@@ -1,10 +1,9 @@
-From: Luca Berra <bluca@comedia.it>
-Subject: Re: [linux-lvm] LVM Root
-Message-ID: <20030122083853.GA21169@percy.comedia.it>
-References: <1043113906.3e2ca7b2864b6@mail.serviceweb.net>
+From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
+Subject: Re: [linux-lvm] Broken Harddisk in LVM
+Message-ID: <20030122121446.A25896@sistina.com>
+References: <000101c2c19c$83a6f090$0300a8c0@quaiky>
 Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <1043113906.3e2ca7b2864b6@mail.serviceweb.net>
+In-Reply-To: <000101c2c19c$83a6f090$0300a8c0@quaiky>; from kai@stella.at on Tue, Jan 21, 2003 at 11:29:08PM +0100
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,35 +14,49 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Jan 22 02:38:01 2003
+Date: Wed Jan 22 05:15:01 2003
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: "linux-lvm@sistina.com" <linux-lvm@sistina.com>
+To: linux-lvm@sistina.com
 
-On Mon, Jan 20, 2003 at 08:51:46PM -0500, tlove@serviceweb.net wrote:
->VFS: Mounted root reiserfs filesystem) readonly
->Trying to move old root to /initrd ... failed
-try creating a /initrd directory (i suppose this is a pivot_root call
-which fails).
->Unmounting old root
-i wonder what is it unmounting since pivot_root failed can you send the
-/linuxrc code
->Trying to free ramdisk memory ... okay
->mount_dev_fs(): unable to mount devfs, err: -2
-dunno, hope it comes from an error before
->Freeing unused kernel memory: 120k freed
->Warning: unable to open an initial console.
-yep it could'nt mount dev in the above step
->Kernel panic: No init found.  Try passing init= option to kernel.
-....
+Install device-mapper + LVM2 tools _additionally_ in a seperate
+location and run "vgscan ; vgchange -a y -P".
 
-L.
+That might still leave you with unusable LVs in case their beginning
+is gone with the failed disk.
 
--- 
-Luca Berra -- bluca@comedia.it
-        Communication Media & Services S.r.l.
- /"\
- \ /     ASCII RIBBON CAMPAIGN
-  X        AGAINST HTML MAIL
- / \
+If you decide to do that get back to us in case you've got installation
+related questions.
+
+Regards,
+Heinz    -- The LVM Guy --
+
+On Tue, Jan 21, 2003 at 11:29:08PM +0100, Kai Iskratsch wrote:
+> One hard disk of my lvm System is completely broken, so that even the
+> controller cannot find it.
+> Is there a possibility to get the lvm running again without the data of
+> this disk.
+> 
+> Kai Iskratsch 
+> 
+> 
+> 
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@sistina.com
+> http://lists.sistina.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+
+*** Software bugs are stupid.
+    Nevertheless it needs not so stupid people to solve them ***
+
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+Heinz Mauelshagen                                 Sistina Software Inc.
+Senior Consultant/Developer                       Am Sonnenhang 11
+                                                  56242 Marienrachdorf
+                                                  Germany
+Mauelshagen@Sistina.com                           +49 2626 141200
+                                                       FAX 924446
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
