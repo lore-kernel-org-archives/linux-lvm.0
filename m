@@ -1,10 +1,11 @@
-From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] Segmentation fault in vgscan
-Message-ID: <20030822145330.J8426@sistina.com>
-References: <20030822130145.I8426@sistina.com> <E19qASV-0007ji-AX@server2.hostpoint.ch>
+From: Alasdair G Kergon <agk@uk.sistina.com>
+Subject: Re: [linux-lvm] LVM 2.0/Device-Mapper 1.0 update
+Message-ID: <20030822161605.X29420@uk.sistina.com>
+References: <20030821000539.P29420@uk.sistina.com> <20030821175554.GA1717@gondor.com> <20030821201803.T29420@uk.sistina.com>
 Mime-Version: 1.0
-In-Reply-To: <E19qASV-0007ji-AX@server2.hostpoint.ch>; from markus@markus.org on Fri, Aug 22, 2003 at 01:51:44PM +0200
-Content-Transfer-Encoding: quoted-printable
+Content-Type: multipart/mixed; boundary="UoPmpPX/dBe4BELn"
+Content-Disposition: inline
+In-Reply-To: <20030821201803.T29420@uk.sistina.com>; from agk@uk.sistina.com on Thu, Aug 21, 2003 at 08:18:03PM +0100
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,90 +16,85 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Fri Aug 22 08:01:01 2003
+Date: Fri Aug 22 10:21:01 2003
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="iso-8859-1"
 To: linux-lvm@sistina.com
+Cc: dm-devel@sistina.com
 
-On Fri, Aug 22, 2003 at 01:51:44PM +0200, Markus Baertschi wrote:
->=20
-> Heinz,
->=20
-> It looks like I'll be able to test stuff sometimes next week.
+--UoPmpPX/dBe4BELn
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Please do so.
+On Thu, Aug 21, 2003 at 08:18:03PM +0100, Alasdair Kergon wrote:
+> Well, many thanks for producing all the diagnostics: 
+> I don't know what's wrong yet, but I have managed to
+> reproduce your setup on a test machine here and 
+> I reproduced the problem 5 minutes ago.
+ 
+I attach a patch which should workaround the problem.
 
-> Is these anything I can do to help pinpoint the problem ?
+Memory that is still referenced gets freed if pvmove
+tries to move more than 8 LV segments at once, so all
+pvmove (dm_mirror target) users should apply this patch.
 
-Let's wait if it is reproducable with 1.0.7.
+It's in CVS now, and I'll update the tarball on the ftp site
+to 1.00.04.
 
-Can you make sure that you generate the software from scratch
-and fo a full install which makes sure that you really use the 1.0.7
-lib as well (configure ; make ; make install) ?
+Alasdair
+-- 
+agk@uk.sistina.com
 
->=20
-> Markus
->=20
-> On Fri, 22 Aug 2003 13:01:45 +0200, Heinz J . Mauelshagen wrote:
->=20
-> >On Fri, Aug 22, 2003 at 12:50:36PM +0200, Markus Baertschi wrote:
-> >>=20
-> >> Heinz,
-> >>=20
-> >> I'm pretty sure I've tested with 1.0.7. Look at the lines
->=20
-> >Well, I derived the line numbers from the respective sources.
->=20
-> >>=20
-> >> >> lblsapq00:~ # gdb ./LVM/1.0.7/tools/vgscan
-> >>   ...
-> >> >> (gdb) run
-> >> >> Starting program: /root/./LVM/1.0.7/tools/vgscan
-> >>=20
-> >> The other problem is that this is at a customer site on
-> >> production machines. I can test the next time I'm there
-> >> and got machine time to do some testing. This will happen
-> >> as soon as the SAN support guys come back to me to solve
-> >> the undelying problem (disks visible twice).
->=20
-> >Ok.
->=20
-> >Regards,
-> >Heinz    -- The LVM Guy --
->=20
->=20
-> --
->   Markus Baertschi             Phone: ++41 (21) 807 1677
->   Bas du Ross=E9 14b             Fax  : ++41 (21) 807 1678
->   CH-1163, Etoy                Email: markus@markus.org
->   Switzerland                  Homepage: www.markus.org
->=20
->=20
->=20
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+--UoPmpPX/dBe4BELn
+Content-Type: text/plain; charset=us-ascii
+Content-Description: pvmove_8_segments.patch
+Content-Disposition: attachment; filename=pvmove_corruption_patch1
 
---=20
+Supply #targets when creating a table to avoid needing to extend it later.
+--- linux-2.4.21/drivers/md/dm-ioctl.c	Mon Aug 18 21:24:26 2003
++++ linux/drivers/md/dm-ioctl.c	Fri Aug 22 13:49:01 2003
+@@ -764,7 +764,7 @@
+ 	struct hash_cell *hc;
+ 	struct dm_table *t;
+ 
+-	r = dm_table_create(&t, get_mode(param));
++	r = dm_table_create(&t, get_mode(param), param->target_count);
+ 	if (r)
+ 		return r;
+ 
+--- linux-2.4.21/drivers/md/dm-table.c	Tue Aug 19 15:43:50 2003
++++ linux/drivers/md/dm-table.c	Fri Aug 22 14:48:50 2003
+@@ -148,7 +148,7 @@
+ 	return 0;
+ }
+ 
+-int dm_table_create(struct dm_table **result, int mode)
++int dm_table_create(struct dm_table **result, int mode, unsigned num_targets)
+ {
+ 	struct dm_table *t = kmalloc(sizeof(*t), GFP_NOIO);
+ 
+@@ -159,8 +159,10 @@
+ 	INIT_LIST_HEAD(&t->devices);
+ 	atomic_set(&t->holders, 1);
+ 
+-	/* allocate a single nodes worth of targets to begin with */
+-	if (alloc_targets(t, KEYS_PER_NODE)) {
++	if (!num_targets)
++		num_targets = KEYS_PER_NODE;
++
++	if (alloc_targets(t, num_targets)) {
+ 		kfree(t);
+ 		t = NULL;
+ 		return -ENOMEM;
+--- linux-2.4.21/drivers/md/dm.h	Sat Jul 12 17:06:52 2003
++++ linux/drivers/md/dm.h	Fri Aug 22 13:50:19 2003
+@@ -96,7 +96,7 @@
+  * Functions for manipulating a table.  Tables are also reference
+  * counted.
+  *---------------------------------------------------------------*/
+-int dm_table_create(struct dm_table **result, int mode);
++int dm_table_create(struct dm_table **result, int mode, unsigned num_targets);
+ 
+ void dm_table_get(struct dm_table *t);
+ void dm_table_put(struct dm_table *t);
 
-Regards,
-Heinz    -- The LVM Guy --
-
-*** Software bugs are stupid.
-    Nevertheless it needs not so stupid people to solve them ***
-
-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D=
--=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=
-=3D-=3D-
-
-Heinz Mauelshagen                                 Sistina Software Inc.
-Senior Consultant/Developer                       Am Sonnenhang 11
-                                                  56242 Marienrachdorf
-                                                  Germany
-Mauelshagen@Sistina.com                           +49 2626 141200
-                                                       FAX 924446
-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D=
--=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=
-=3D-=3D-
+--UoPmpPX/dBe4BELn--
