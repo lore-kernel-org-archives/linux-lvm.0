@@ -1,10 +1,11 @@
-From: Alasdair G Kergon <agk@uk.sistina.com>
-Subject: Re: [linux-lvm] create vg with same name as exported vg
-Message-ID: <20031010204113.L6588@uk.sistina.com>
-References: <1065050019.1267.20.camel@rich> <1065126760.1280.0.camel@rich> <20031010200150.K6588@uk.sistina.com> <1065813644.1286.16.camel@rich>
-Mime-Version: 1.0
+From: Mike Williams <mike@gaima.co.uk>
+Subject: Re: [linux-lvm] inconsistent metadata
+References: <200310092100.11002.mike@gaima.co.uk> <20031010194212.J6588@uk.sistina.com>
+In-Reply-To: <20031010194212.J6588@uk.sistina.com>
+MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <1065813644.1286.16.camel@rich>; from rich@storix.com on Fri, Oct 10, 2003 at 12:20:44PM -0700
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <200310111215.53927.mike@gaima.co.uk>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,30 +16,41 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Fri Oct 10 14:42:01 2003
+Date: Sat Oct 11 06:17:01 2003
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: Rich Turner <rich@storix.com>
-Cc: linux-lvm@sistina.com
+Content-Type: Text/Plain; charset="us-ascii"
+To: linux-lvm@sistina.com
 
-On Fri, Oct 10, 2003 at 12:20:44PM -0700, Rich Turner wrote:
-> LVM1 actually handled this very well. With LVM1 it would rename the VG,
-> appending "PV_EXP" to the VG name when exporting it.
+=2D----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA1
 
-LVM2 still does that for lvm1-format VGs of course.
-And for lvm2-format VGs it simply sets a flag in the metadata
-to say it's exported.
+On Friday 10 October 2003 19:42, Alasdair G Kergon wrote:
 
-No, the issue is that LVM2 is using the not-guaranteed-to-be-unique 
-VG name internally in places where it ought to be using the unique
-VG uuid.
+> You can look at the metadata history in /etc/lvm/archive to try to
+> work out the sequence of events and at what point things started
+> going wrong.  [If you'd like me to take a look, send me a tarball
+> of /etc/lvm.]
 
-And vgimport should work by VG uuid (in case there are several
-exported VGs present all with the same name) and require a new 
-post-imported name to be specified if there's already a live VG
-with the same name.
+OK, I've look through the archive files and can't really see anything odd, =
+but=20
+I'm no expert.
+I will send /etc/lvm to you separately, any help you could offer will be=20
+gratefully received.
 
-Alasdair
--- 
-agk@uk.sistina.com
+> Filters in the config file can be used to hide the 2 devices that say
+> they're exported while you rename the real VG.
+
+Excuse my ignorance, but I don't understand :)
+I assume this is a reference to the 2 PV's which pvscan is saying are expor=
+ted=20
+in a VG, while the other 2 don't?
+
+=2D --=20
+Mike Williams
+=2D----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.2.3 (GNU/Linux)
+
+iD8DBQE/h+ZpInuLMrk7bIwRAk4YAJwJV/hIEksCzvcScYtbCVmUVGiwdACggMbF
+ope9x3trhJLux4XpQNdA7WA=3D
+=3DNuZ8
+=2D----END PGP SIGNATURE-----
