@@ -1,33 +1,31 @@
-From: iafilius@xs4all.nl
-Date: Sun, 10 Sep 2000 15:55:46 +0200 (CEST)
-Reply-To: Arjan Filius <iafilius@xs4all.nl>
-Subject: [linux-lvm] 2.4.0-test8 LVM(vgscan) on SCSI problems (report)
-Message-ID: <Pine.LNX.4.21.0009101525490.1920-100000@sjoerd.sjoerdnet>
-MIME-Version: 1.0
+Date: Sun, 10 Sep 2000 16:44:37 +0200
+From: Jan Niehusmann <jan@gondor.com>
+Subject: [linux-lvm] Re: 2.4.0-test8 LVM(vgscan) on SCSI problems (report)
+Message-ID: <20000910164437.A3499@gondor.com>
+References: <Pine.LNX.4.21.0009101525490.1920-100000@sjoerd.sjoerdnet>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <Pine.LNX.4.21.0009101525490.1920-100000@sjoerd.sjoerdnet>; from iafilius@xs4all.nl on Sun, Sep 10, 2000 at 03:55:46PM +0200
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: linux-kernel@vger.kernel.org
-Cc: linux-lvm@msede.com
+To: iafilius@xs4all.nl
+Cc: linux-kernel@vger.kernel.org, linux-lvm@msede.com
 
-Hello,
+On Sun, Sep 10, 2000 at 03:55:46PM +0200, iafilius@xs4all.nl wrote:
+> With 2.4.0-test8 (test8-pre6 seems to be OK) vgscan (at
+> boottime) "sees" al my volumegroups which are on IDE disk, but not those
+> on SCSI disk.
+> I had no problems mounting a "plain" ext2 scsi partition on same disk.
 
-With 2.4.0-test8 (test8-pre6 seems to be OK) vgscan (at
-boottime) "sees" al my volumegroups which are on IDE disk, but not those
-on SCSI disk.
-I had no problems mounting a "plain" ext2 scsi partition on same disk.
+Yes, if you look at /proc/partitions, you'll find that all scsi disks are
+duplicated. This confuses LVM and it doesn't activate any VG that contains
+partitons on SCSI drives. 
 
+If you comment out the last two lines of sd.c (module_init....) LVM works
+again. I don't know if this may cause other problems, but I'm just running
+such a patched -test8 kernel.
 
-After some "research" i found sd.c is patched, but not yet in test8-pre6.
-
-vgscan version:
-sjoerd:~ # vgscan -h
-Logical Volume Manager 0.8 by Heinz Mauelshagen  04/11/1999  (IOP 6)
-
-lvm,scsi-disk compiled into the kernel, but mostly as modules.
-
-
-Arjan Filius
-mailto:iafilius@xs4all.nl
+Jan
