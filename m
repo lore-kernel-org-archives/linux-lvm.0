@@ -1,7 +1,7 @@
 From: Steve_J_Brueggeman@notes.seagate.com
-Message-ID: <8825672B.0073427A.00@sv-gw1.stsv.seagate.com>
-Date: Fri, 5 Mar 1999 14:59:55 -0600
-Subject: Re: [linux-lvm] Problems with LVM 0.6
+Message-ID: <8825672B.0077D985.00@sv-gw1.stsv.seagate.com>
+Date: Fri, 5 Mar 1999 15:50:03 -0600
+Subject: [linux-lvm] More problems with LVM 0.6
 Mime-Version: 1.0
 Content-Disposition: inline
 Sender: owner-linux-lvm
@@ -9,104 +9,112 @@ Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: marka@a-wicked.demon.co.uk
-Cc: stevebr@primenet.com, linux-lvm@msede.com
+To: linux-lvm@msede.com
+
+I haven't looked into the source of this yet, but I suspect that some LVM
+tables are messed up, or some bounds calculations are incorrect.
+
+I am getting the following errors
+Mar  5 15:34:40 kilroy kernel: attempt to access beyond end of device
+Mar  5 15:34:40 kilroy kernel: 08:14: rw=1, want=3918612, limit=3004155
+Mar  5 15:34:40 kilroy kernel: attempt to access beyond end of device
+Mar  5 15:34:40 kilroy kernel: 08:14: rw=1, want=3926804, limit=3004155
+Mar  5 15:34:40 kilroy kernel: attempt to access beyond end of device
+Mar  5 15:34:40 kilroy kernel: 08:14: rw=1, want=3934996, limit=3004155
+Mar  5 15:34:40 kilroy kernel: attempt to access beyond end of device
+Mar  5 15:34:40 kilroy kernel: 08:14: rw=1, want=3943188, limit=3004155
+Mar  5 15:34:40 kilroy kernel: attempt to access beyond end of device
+Mar  5 15:34:40 kilroy kernel: 08:14: rw=1, want=3951380, limit=3004155
+Mar  5 15:34:40 kilroy kernel: attempt to access beyond end of device
+Mar  5 15:34:40 kilroy kernel: 08:14: rw=1, want=3959572, limit=3004155
+Mar  5 15:34:40 kilroy kernel: attempt to access beyond end of device
+Mar  5 15:34:40 kilroy kernel: 08:14: rw=1, want=3967764, limit=3004155
+Mar  5 15:34:40 kilroy kernel: attempt to access beyond end of device
+Mar  5 15:34:40 kilroy kernel: 08:14: rw=1, want=3975956, limit=3004155
+
+When I have configured a volume group as follows
+
+--- Volume group ---
+VG Name               vg00
+VG Access             read/write
+VG Status             available/resizable
+VG #                  0
+MAX LV                256
+Cur LV                2
+Open LV               0
+MAX LV Size           255.99 GB
+Max PV                256
+Cur PV                3
+Act PV                3
+VG Size               8.34 GB
+PE Size               4 MB
+Total PE              2134
+Alloc PE / Size       2048 / 8 GB
+Free  PE / Size       86 / 344 MB
+
+--- Logical volume ---
+LV Name               /dev/vg00/lv00
+VG Name               vg00
+LV Write Access       read/write
+LV Status             available
+LV #                  1
+# open                0
+LV Size               2 GB
+Current LE            512
+Allocated LE          512
+Allocation            next free
+Read ahead sectors    120
+Block device          58:0
+
+--- Logical volume ---
+LV Name               /dev/vg00/lv01
+VG Name               vg00
+LV Write Access       read/write
+LV Status             available
+LV #                  2
+# open                0
+LV Size               6 GB
+Current LE            1536
+Allocated LE          1536
+Allocation            next free
+Read ahead sectors    120
+Block device          58:1
 
 
-I've found the problem. It lies in tools/lib/lvm_tab_get_free_blk_dev.c
-I've changed from
---------------------------top------------------------
-#define   GET_LV_DEV \
-   { \
-      int i, l; \
-      for ( i = 0; i < lv_dev_count - 1; i++) { \
-         for ( l = 0; l < lv_dev_count; l++) { \
-            if ( lv_dev == lv_dev_this[l]) lv_dev++; \
-         } \
-      } \
-   }
+--- Physical volumes ---
+PV Name (#)           /dev/sdb2 (1)
+PV Status             available / allocatable
+Total PE / Free PE    360 / 0
 
---------------------------bot------------------------
+PV Name (#)           /dev/sdb3 (3)
+PV Status             available / allocatable
+Total PE / Free PE    802 / 86
 
-to
---------------------------top------------------------
-#define GET_LV_DEV \
-   { \
-      int i, l, foundfree=0; \
-      for ( i = 0; (i < lv_dev_count) && !foundfree; i++) { \
-         foundfree = 1; \
-         for ( l = 0; l < lv_dev_count; l++) { \
-            if ( lv_dev == lv_dev_this[l]) { \
-              lv_dev++; \
-              foundfree = 0; \
-            } \
-         } \
-      } \
-   }
---------------------------bot------------------------
-This changes the outer loop to test the whole list again.  The problem was
-when the number of existing Logical Devices was 1, the outer loops test
-would fail, and no matches would be found, so minor #0 would get reused
-again.
+PV Name (#)           /dev/sdb4 (2)
+PV Status             available / allocatable
+Total PE / Free PE    972 / 0
 
-I also added a test to drop out early, if the inner loop has made a whole
-round without finding any matches.  I'm sure there's a better way, but I
-was in a hurry.
+My disk partitons are
+Disk /dev/sdb: 255 heads, 63 sectors, 1106 cylinders
+Units = cylinders of 16065 * 512 bytes
+
+   Device Boot    Start      End   Blocks   Id  System
+/dev/sdb1             1       17   136521   82  Linux swap
+/dev/sdb2            18      201  1477980   fe  Unknown
+/dev/sdb3           202      610  3285292+  fe  Unknown
+/dev/sdb4           611     1106  3984120   fe  Unknown
+
+Note the order of creation above.  First I did a vgcreate vg00
+/dev/sdb[24], then a vgextend vg00 /dev/sdb3, then created a 2G LV and a 6G
+ LV that crosses past the end of /dev/sdb4.
 
 
-#define VG_BLK(a)       ( vg_lv_map[minor].vg_number)
-#define LV_BLK(a)       ( vg_lv_map[minor].lv_number)
-
-Also, while I was perusing the source, I noticed the following oddity, in
-include/linux/lvm.h, the following are defined...
---------------------------top------------------------
-/* block minor indexes into a volume group/logical volume indirection table
- */
-#define VG_BLK(a)       ( vg_lv_map[minor].vg_number)
-#define LV_BLK(a)       ( vg_lv_map[minor].lv_number)
---------------------------bot------------------------
-
-Note that the macro parameter (a) is not used in the macro defination.  I
-believe in the above that [minor] should be changed to [(a)], as follows
-#define VG_BLK(a)       ( vg_lv_map[(a)].vg_number)
-#define LV_BLK(a)       ( vg_lv_map[(a)].lv_number)
+Anybody got any clues? or pointers where to start debugging?
+I'd find it hard to believe that this would be related to the changes I
+just posted here that I made to tools/lib/lvm_tab_get_free_blk_dev.c, but
+little supprises me any more.
 
 
-The above changes have resolved the problem I was having, but I have not
-tested them out thoroughly, and I may have made some bad assumptions.  Let
-me know.
+Have a good weekend!
 
 Steve Brueggeman
-
-
-
-
-
-
-marka@a-wicked.demon.co.uk on 03/05/99 11:59:46 AM
-
-To:   Steve J Brueggeman, stevebr@primenet.com
-cc:
-Subject:  [linux-lvm] Problems with LVM 0.6
-
-
-
-
-Hello Steve,
-
-My mistake, thinking about it the minor number should increment
-what I did also was roll back to 0.5 version of lvm
-then created two logical volumes
-
-here is the output
-
-crw-r-----   1 root     root     109,   0 Mar  4 19:11 group
-brw-r-----   1 root     root      58,   1 Mar  4 19:12 lvol1
-brw-r-----   1 root     root      58,   2 Mar  4 19:12 lvol2
-
-as you can see from yours the minor number for the lvols is the same as
-the minor number for the group file
-
-Regards
-
-Mark
