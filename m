@@ -1,7 +1,11 @@
-Subject: Re: [linux-lvm] booting a dm+lvm2 kernel
+Message-ID: <3FF5AC86.A38E2357@groupe-ips.com>
+From: Jean Marie =?iso-8859-1?Q?Ari=E8s?= <jeanmarie.aries@groupe-ips.com>
 MIME-Version: 1.0
-From: Kjartan Reynir Hauksson <krh@os.is>
-Message-ID: <OF2BAA1563.F6E03716-ON00256E0F.005FE18B-00256E0F.005FE196@svunta.os.is>
+Subject: Re: [linux-lvm] Understand the snapshot process
+References: <3FF277FF.1D5400B4@groupe-ips.com>
+		 <1072905045.15299.38.camel@grandmother.littlebald.com>
+		 <3FF51A81.DC58AC89@groupe-ips.com> <1073061541.24004.6.camel@grandmother.littlebald.com>
+Content-Transfer-Encoding: 8bit
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -12,106 +16,63 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Fri Jan  2 11:37:02 2004
+Date: Fri Jan  2 11:40:03 2004
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
 To: linux-lvm@sistina.com
 
+Ok. In other sentence, the life of the snapshot is the time between the lvcreate
+-s and the lvremove command. The data must be saved if we need old files.
+
+So the snapshot is only a good solution to backup the data update every time ?
 
 
 
+David Johnston a �crit :
 
->no, mkinitrd 3.5.15.1 does not care about alternatives
->your logs, please.
+> On Fri, 2004-01-02 at 02:15, Jean Marie Ari�s wrote:
+> > Great !
+> >
+> > Your explanation is perfect :o)
+> >
+> > So, I understand better the use of a snapshot.
+> >
+> > The /data contains files sharing with Samba. So, I think I can do one
+> > snapshot per day at midnight, and remove it immediatly. If I have to restore
+> > data for the snapshot, its's alway possible to mount the /dev/OVG/snap_admin
+> > ?
+>
+> Jean Marie,
+> I'm not sure I understand what you accomplish this way.  Do you mean to
+> say that you would remove yesterday's snapshot and create a new one at
+> midnight each night?  This protects you from accidents ("rm -f /data")
+> but not from someone who needs last Friday's version of a file.
+>
+> If you need the data in the snapshot, you need to put it somewhere safe.
+>
+> To summarize:
+> 1. Unmount /data
+> 2. Make the snapshot
+> 3. Remount /data
+> 4. Mount the snapshot
+> 5. Back up the snapshot (copy the data to tape, cd, whatever)
+> 6. Unmount the snapshot
+> 7. Remove the snapshot
+>
+> -David
+> --
+> David Johnston <david@littlebald.com>
+> Little Bald Consulting, LLC
+>
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@sistina.com
+> http://lists.sistina.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
 
-Here's mkinitrd
+--
+Sinc�rement,
 
-[root@kjartan root]# mkinitrd -v -f /boot/initrd-2.4.22.img 2.4.22
-Looking for deps of module aic7xxx
-         scsi_mod
-Looking for deps of module scsi_mod
-Looking for deps of module sd_mod
-         scsi_mod
-Looking for deps of module scsi_mod
-/bin/ls: relocation error: /bin/ls: symbol gnu_dev_minor, version
-GLIBC_2.3.3 not defined in file l
-ibc.so.6 with link time reference
-/sbin/mkinitrd: line 529: [: too many arguments
-/sbin/mkinitrd: line 543: [: too many arguments
-Looking for deps of module ext3
-         jbd
-Looking for deps of module jbd
-Using modules:  ./kernel/drivers/scsi/scsi_mod.o
-./kernel/drivers/scsi/aic7xxx/aic7xxx.o ./kernel/d
-rivers/scsi/sd_mod.o ./kernel/fs/jbd/jbd.o ./kernel/fs/ext3/ext3.o
-Using /root/tmp as temporary directory.
-/sbin/nash -> /root/tmp/initrd.8wLSt0/bin/nash
-/sbin/insmod-DIET -> /root/tmp/initrd.8wLSt0/bin/insmod
-`/lib/modules/2.4.22/./kernel/drivers/scsi/scsi_mod.o' ->
-`/root/tmp/initrd.8wLSt0/lib/scsi_mod.o'
-`/lib/modules/2.4.22/./kernel/drivers/scsi/aic7xxx/aic7xxx.o' ->
-`/root/tmp/initrd.8wLSt0/lib/aic7x
-xx.o'
-`/lib/modules/2.4.22/./kernel/drivers/scsi/sd_mod.o' ->
-`/root/tmp/initrd.8wLSt0/lib/sd_mod.o'
-`/lib/modules/2.4.22/./kernel/fs/jbd/jbd.o' ->
-`/root/tmp/initrd.8wLSt0/lib/jbd.o'
-`/lib/modules/2.4.22/./kernel/fs/ext3/ext3.o' ->
-`/root/tmp/initrd.8wLSt0/lib/ext3.o'
-mknod: relocation error: mknod: symbol gnu_dev_makedev, version GLIBC_2.3.3
-not defined in file lib
-c.so.6 with link time reference
-mknod: relocation error: mknod: symbol gnu_dev_makedev, version GLIBC_2.3.3
-not defined in file lib
-c.so.6 with link time reference
-mknod: relocation error: mknod: symbol gnu_dev_makedev, version GLIBC_2.3.3
-not defined in file lib
-c.so.6 with link time reference
-mknod: relocation error: mknod: symbol gnu_dev_makedev, version GLIBC_2.3.3
-not defined in file lib
-c.so.6 with link time reference
-mknod: relocation error: mknod: symbol gnu_dev_makedev, version GLIBC_2.3.3
-not defined in file lib
-c.so.6 with link time reference
-mknod: relocation error: mknod: symbol gnu_dev_makedev, version GLIBC_2.3.3
-not defined in file lib
-c.so.6 with link time reference
-mknod: relocation error: mknod: symbol gnu_dev_makedev, version GLIBC_2.3.3
-not defined in file lib
-c.so.6 with link time reference
-mknod: relocation error: mknod: symbol gnu_dev_makedev, version GLIBC_2.3.3
-not defined in file lib
-c.so.6 with link time reference
-Loading module scsi_mod.o
-Loading module aic7xxx.o
-Loading module sd_mod.o
-Loading module jbd.o
-Loading module ext3.o
-Contents of RCFILE:
-#!/bin/nash
-
-echo "Loading scsi_mod.o module"
-insmod /lib/scsi_mod.o
-echo "Loading aic7xxx.o module"
-insmod /lib/aic7xxx.o
-echo "Loading sd_mod.o module"
-insmod /lib/sd_mod.o
-echo "Loading jbd.o module"
-insmod /lib/jbd.o
-echo "Loading ext3.o module"
-insmod /lib/ext3.o
-echo Mounting /proc filesystem
-mount -t proc /proc /proc
-echo Creating device files
-mkdevices /dev
-echo Creating root device
-mkrootdev /dev/root
-echo 0x0100 > /proc/sys/kernel/real-root-dev
-echo Mounting root filesystem
-mount -o defaults --ro -t ext3 /dev/root /sysroot
-pivot_root /sysroot /sysroot/initrd
-echo Remounting devfs at correct place if necessary
-handledevfs
-umount /initrd/proc
- Creating filesystem with size 777KB and 176 inodes
+Jean Marie Ari�s
+Imprimeries IPS
+Responsable Syst�mes/R�seaux
