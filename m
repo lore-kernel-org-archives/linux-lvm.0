@@ -1,11 +1,11 @@
-Return-Path: <mjt@tls.msk.ru>
-Message-ID: <3A2BF82D.7AB68B9B@tls.msk.ru>
-Date: Mon, 04 Dec 2000 23:01:49 +0300
-From: Michael Tokarev <mjt@tls.msk.ru>
+Return-Path: <mason@suse.com>
+Date: Mon, 04 Dec 2000 15:30:08 -0500
+From: Chris Mason <mason@suse.com>
+Message-ID: <34440000.975961808@coffee>
 MIME-Version: 1.0
-References: <200012020529.WAA00876@lynx.turbolabs.com> <3A298498.86AB907B@tls.msk.ru> <3A29A31E.BC6A6243@tls.msk.ru> <3A2B58EA.71F92196@tls.msk.ru> <3A2BADF1.A12C700A@tls.msk.ru> <3A2BB554.2D83919E@tls.msk.ru> <3A2BF1E6.55FF3BF6@freeler.nl>
 Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] Final Q: i/o with 512 bytes: lvm+raw... [was: Oracle, lvm, rawio, ...]
+Content-Disposition: inline
+Subject: [linux-lvm] vgextend and vgreduce errors in 0.9
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -20,40 +20,61 @@ List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
 
-Jorg de Jong wrote:
-[]
-> I successfully created a tabelspace on a raw device.
-> See the attachment...
 
-Oh, Thank you.  Thanks.
+Hello everyone,
 
-Now I have last 2 questions to LVM gurus.
+I searched through the archives for this, but did not see
+any similar patches.  It looks like lvm 0.9 has some
+double increments and decrements when extending/reducing
+volume groups, and the lvm_get_inode code was called
+twice when extending volume groups.
 
-1. 512-byte i/o is ok on 2.4 kernel, and failed on 2.2 kernel.
-For example, the following sequence of syscalls:
+The following diff should fix it, along with the known
+problem of an oops on vgextend.  Testing has been really,
+really light, don't apply this until it has been blessed
+by a few other eyes.
 
- open("/dev/raw/raw1", O_RDWR)           = 11
- lseek(11, 0, SEEK_SET)                  = 0
- write(11, "\0\0\0\0\0 \0\0\0\0\0\0]\\[Z\0\0\0\0\0\0\0\0\0\0\0\0\0"..., 8192) = 8192
- lseek(11, 7680, SEEK_SET)               = 7680
- read(11, "\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0"..., 512) = 512
+If there is another diff to fix the same bugs, please
+forward it to me ;-)
 
-will succed on 2.4 kernel (/dev/raw/raw1 bound to LV), and last read will fail on
-2.2 kernel with EINVAL.  Why the difference?
-With 1024-byte i/o, it will success on both.
+-chris
 
-2.  Is it ok to change BLOCK_SIZE in lvm.h to 512?  It seemed to be worked
-with that, but I'm not shure for all cases.  What drawbacks can be here?
-At least that definition in lvm.h looks strange, since for S390 it is ever
-"better" -- 4096, and if I set it that way, lvm+rawio allows me to write
-using 4096-bytes io, not 1024...
+------
 
-And for the last.  Does anybody knows why rawio always reports st_blksize=4096?
-It seemed to be that st_blksize should match blksize of "underlying" device,
-that in case of lvm has BLOCK_SIZE (from lvm.h) st_blksize...
-
-Thanks to all whu answered my (a bit stupid) questions, especially to Jorg de Jong
-for his testing with Oracle.
-
-Regards,
- Michael.
+--- linux/drivers/block/lvm.c.1	Mon Dec  4 14:52:31 2000
++++ linux/drivers/block/lvm.c	Mon Dec  4 16:15:18 2000
+@@ -2084,20 +2084,10 @@
+ 		for (p = 0; p < vg_ptr->pv_max; p++) {
+ 			if ( ( pv_ptr = vg_ptr->pv[p]) == NULL) {
+ 				ret = lvm_do_pv_create(arg, vg_ptr, p);
+-				lvm_do_create_proc_entry_of_pv ( vg_ptr, pv_ptr);
+ 				if ( ret != 0) return ret;
+-	
+-				/* We don't need the PE list
+-				   in kernel space like LVs pe_t list */
+-				pv_ptr->pe = NULL;
+-				vg_ptr->pv_cur++;
+-				vg_ptr->pv_act++;
+-				vg_ptr->pe_total +=
+-				    pv_ptr->pe_total;
+-#ifdef LVM_GET_INODE
+-				/* insert a dummy inode for fs_may_mount */
+-				pv_ptr->inode = lvm_get_inode(pv_ptr->pv_dev);
+-#endif
++                                pv_ptr = vg_ptr->pv[p] ;
++                                vg_ptr->pe_total += pv_ptr->pe_total;
++				lvm_do_create_proc_entry_of_pv ( vg_ptr, pv_ptr);
+ 				return 0;
+ 			}
+ 		}
+@@ -2123,10 +2113,6 @@
+ 		    strcmp(pv_ptr->pv_name,
+ 			       pv_name) == 0) {
+ 			if (pv_ptr->lv_cur > 0) return -EPERM;
+-			vg_ptr->pe_total -=
+-			    pv_ptr->pe_total;
+-			vg_ptr->pv_cur--;
+-			vg_ptr->pv_act--;
+ 			lvm_do_pv_remove(vg_ptr, p);
+ 			/* Make PV pointer array contiguous */
+ 			for (; p < vg_ptr->pv_max - 1; p++)
