@@ -1,14 +1,9 @@
-Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with SMTP id i1GF8xi04010
-	for <linux-lvm@redhat.com>; Mon, 16 Feb 2004 10:08:59 -0500
-Received: from einhorn.in-berlin.de (root@einhorn.in-berlin.de [192.109.42.8])
-	by mx1.redhat.com (8.11.6/8.11.6) with SMTP id i1GF8wb03005
-	for <linux-lvm@redhat.com>; Mon, 16 Feb 2004 10:08:58 -0500
-Message-ID: <1076944135.4030dd07ec870@webmail.in-berlin.de>
-From: Stefan Lucke <stefan@lucke.in-berlin.de>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: [linux-lvm] Error with "vg_read_with_pv_and_lv .. current PV" during boot
+Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with SMTP id i1H62Mi02483
+	for <linux-lvm@redhat.com>; Tue, 17 Feb 2004 01:02:22 -0500
+From: esr@thyrsus.com
+Message-Id: <200402170557.i1H5v4IG009199@snark.thyrsus.com>
+Subject: [linux-lvm] problems in one or more man pages you maintain
 Sender: linux-lvm-admin@redhat.com
 Errors-To: linux-lvm-admin@redhat.com
 Reply-To: linux-lvm@redhat.com
@@ -20,24 +15,63 @@ List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
 List-Archive: <https://www.redhat.com/archives/linux-lvm/>
-Date: Wed Feb 18 09:33:13 2004
+Date: Wed Feb 18 10:27:01 2004
 List-Id: <linux-lvm.redhat.com>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@redhat.com
-Cc: stefan@lucke.in-berlin.de
+Content-Transfer-Encoding: 7bit
+To: Heinz Mauelshagen <Linux-LVM@Sistina.com>
 
-Hi,
+This is automatically generated email about problems in a man page for which
+you appear to be responsible.  If you are not the right person or list, tell
+me and I will attempt to correct my database.
 
-I'm in trouble during boot due to vgscan reports above error.
+See http://catb.org/~esr/doclifter/problems.html for details on how and
+why these patches were generated.  Feel free to email me with any questions.
 
-Doing vgscan with Knoppix or from suse 9.0 rescue system, works without
-errors and my LVs are accessable.
+Note: This patch does not change the mod date of the manual page.  You
+may wish to do that by hand.
 
-hda (hda1 160MB unused, hda2 32MB /boot, hda3 9.8GB lvm)
-hdb (120 GB lvm )
+Problems with lvcreate.8:
 
-root filesystem is on /dev/vg00/lv04
+1. Unbalanced option group in command synopis, You probably forgot
+to open or close a [ ] group properly.
 
-Would be nice if someone can give a hint how to dig further.
+--- lvcreate.8	2003-02-16 14:39:48.000000000 -0500
++++ lvcreate.8	2003-02-16 14:40:22.000000000 -0500
+@@ -8,7 +8,7 @@
+ .RB [ \-d | \-\-debug]
+ .RB [ \-h | \-\-help ]
+ .RB [ \-i | \-\-stripes " " \fIStripes\fRI ]
+-.RB [\-I | \-\-stripesize " " \fIStripeSize\fRI ]]
++.RB [\-I | \-\-stripesize " " \fIStripeSize\fRI ]
+ .RB { \-l | \-\-extents " " \fILogicalExtentsNumber |
+ .RB   \-L | \-\-size " " \fILogicalVolumeSize[kKmMgGtT] }
+ .RB [ \-n | \-\-name " " \fILogicalVolumeName ]
+Problems with lvreduce.8:
 
-Stefan Lucke
+1. Unknown or invalid macro.  That is, one that does not fit in the
+macro set that the man page seems to be using.  This is a serious
+error; it often means part of your text is being lost or rendered
+incorrectly.
+
+--- lvreduce.8	2003-02-16 14:42:16.000000000 -0500
++++ lvreduce.8	2003-02-16 14:42:42.000000000 -0500
+@@ -18,12 +18,12 @@
+ .br 
+ You should therefore ensure that the (eg) filesystem on the volume is 
+ resized
+-.i before
++.I before
+ running lvreduce so that the extents that are to be removed are not in use.
+ If the filesystem is ext2 then you can use the 
+ .B e2fsadm(8)
+ command to both resize the filesystem and the logical volume together.
+-.br.
++.br
+ Shrinking snapshot logical volumes (see
+ .B lvcreate(8)
+ for information to create snapshots) is supported as well.
+
+--
+                             Eric S. Raymond
