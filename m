@@ -1,32 +1,52 @@
-Return-Path: <adilger@turbolinux.com>
-From: Andreas Dilger <adilger@turbolinux.com>
-Message-Id: <200011302016.eAUKGD501949@webber.adilger.net>
-Subject: Re: [linux-lvm] LVM 0.9 snapshot and ext3
-In-Reply-To: <200011301948.eAUJm6k01893@webber.adilger.net> "from Andreas Dilger
- at Nov 30, 2000 12:48:06 pm"
-Date: Thu, 30 Nov 2000 13:16:13 -0700 (MST)
-MIME-Version: 1.0
+Return-Path: <chewie@wookimus.net>
+Date: Thu, 30 Nov 2000 15:01:08 -0600
+From: Chewie <chewie@wookimus.net>
+Subject: OT: Re: [linux-lvm] lvm 0.9 kernel build problems
+Message-ID: <20001130150108.N1381@wookimus.net>
+References: <20001130024449.J1381@wookimus.net> <Pine.LNX.4.21.0011301646390.26098-100000@duckman.distro.conectiva>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="cs5saTBZh7UZl2eX"
+Content-Disposition: inline
+In-Reply-To: <Pine.LNX.4.21.0011301646390.26098-100000@duckman.distro.conectiva>; from riel@conectiva.com.br on Thu, Nov 30, 2000 at 04:46:53PM -0200
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: Andreas Dilger <adilger@turbolinux.com>
-Cc: Linux LVM mailing list <linux-lvm@sistina.com>, jweber@valinux.com
+To: linux-lvm@sistina.com
 
-I wrote:
-> The simple fix for this problem is to remove "ret" from lvm_map, and always
-> returning "0" at the end.
+--cs5saTBZh7UZl2eX
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Strangely, in 2.4 lvm_make_request() we totally ignore the return code from
-lvm_map() and always return 1.  This should also be fixed after lvm_map()
-no longer returns the snapshot error codes.  There is currently a thread
-on l-k (cc'd to linux-lvm) which is discussing this very issue.  A good
-time to clean this whole thing up.
+{ Modified for the sake of brevity }
+Falcon> You must to change gcc by kgcc in the Makefile
+Chewie> <rant> Is it just me, or does this sound like a Red
+        Hat-like solution?  Gee.=20
+Rik>    It's just you, don't worry.
 
-Cheers, Andreas
--- 
-Andreas Dilger  \ "If a man ate a pound of pasta and a pound of antipasto,
-                 \  would they cancel out, leaving him still hungry?"
-http://www-mddsp.enel.ucalgary.ca/People/adilger/               -- Dogbert
+I find it odd then, that I've had no problems compiling stock and
+patched kernels with 3.95.2 that weren't my own fault.  Anyway, I'll
+take this off list as its leaning toward being off topic and as it was
+said earlier, this topic's been beaten to death on lkml.  Sorry for
+bringing it up.
+
+--=20
+Chad "^chewie, gunnarr" Walstrom <chewie@wookimus.net>
+             http://www.wookimus.net/
+
+--cs5saTBZh7UZl2eX
+Content-Type: application/pgp-signature
+Content-Disposition: inline
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.0.4 (GNU/Linux)
+Comment: For info see http://www.gnupg.org
+
+iD8DBQE6JsAUDMcLGCBsWv0RArGXAJ97KuM/vRJU4XuCfIGiKMeFajWoTwCgvz3R
+j7ZdHvuoEY5lQztk/QAPLBc=
+=3Jn5
+-----END PGP SIGNATURE-----
+
+--cs5saTBZh7UZl2eX--
