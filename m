@@ -1,12 +1,12 @@
-Return-Path: <mason@suse.com>
-Date: Thu, 07 Dec 2000 15:56:11 -0500
-From: Chris Mason <mason@suse.com>
+Return-Path: <treed@ultraviolet.org>
+Date: Thu, 7 Dec 2000 18:25:14 -0800
+From: Tracy R Reed <treed@ultraviolet.org>
 Subject: Re: [linux-lvm] How do you mount a snapshot?
-Message-ID: <24530000.976222571@coffee>
-In-Reply-To: <20001207123743.B24307@ultraviolet.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Message-ID: <20001207182514.A2619@ultraviolet.org>
+References: <20001207123743.B24307@ultraviolet.org> <24530000.976222571@coffee>
+Mime-Version: 1.0
 Content-Disposition: inline
+In-Reply-To: <24530000.976222571@coffee>; from mason@suse.com on Thu, Dec 07, 2000 at 03:56:11PM -0500
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -19,30 +19,13 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
+On Thu, Dec 07, 2000 at 03:56:11PM -0500, Chris Mason wrote:
+> You can make reiserfs snapshots, but you also need to apply the
 
-On Thursday, December 07, 2000 12:37:43 -0800 Tracy R Reed
-<treed@ultraviolet.org> wrote:
+Ah-ha! It works. Thank you!
 
-> So...can I or can I not use snapshots with reiserfs? The snapshot was
-> taken of a currently mounted and functioning (reiserfs module
-> loaded...compiled into the kernel, actually) so if I did the snapshot
-> correctly there should be a filesystem there. I'm going to wipe it out
-> (nothing on it but some test files) and try again with ext2 and see what
-> happens. 
-> 
-> This should work, shouldn't it?
-> 
-
-It should work with ext2.
-
-You can make reiserfs snapshots, but you also need to apply the
-linux-2.4.0-test10-VFS-lock.patch that comes with the LVM 0.9 code.  This
-adds the hooks LVM needs to ask reiserfs to make the FS consistent before
-creating the snapshot.
-
-And, you need to edit linux/drivers/block/lvm.c, and uncomment the
-LVM_VFS_ENHANCEMENT #define.  This enables the LVM code that uses the hooks.
-
--chris
+-- 
+Tracy Reed      http://www.ultraviolet.org
