@@ -1,10 +1,9 @@
-From: Daniel Gardner <daniel@danielgardner.org>
-Subject: Re: [linux-lvm] vgcreate -- no valid physical volumes in command line
-References: <002901c25746$b78f1510$3200a8c0@warl0k>
-In-Reply-To: <002901c25746$b78f1510$3200a8c0@warl0k>
+From: "Glenn Shannon" <warl0k@lvcm.com>
+Subject: RE: [linux-lvm] vgcreate -- no valid physical volumes in command line
+Message-ID: <002a01c25748$4bfdeef0$3200a8c0@warl0k>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <200209081550.37511.daniel@danielgardner.org>
+Content-Transfer-Encoding: 7bit
+In-Reply-To: <200209081550.37511.daniel@danielgardner.org>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,10 +14,27 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Sun Sep  8 09:55:15 2002
+Date: Sun Sep  8 10:02:58 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
+
+It's not bad, I use it. It just takes a couple of tweaks.
+
+For one, the actual devices are in subdirs now. Like what was /dev/hda2
+is now /dev/ide/host0/bus0/target0/lun0/part2.
+
+So one needs to pass the devfs'ed name for the device to the lvmtools.
+
+:)
+
+-----Original Message-----
+From: linux-lvm-admin@sistina.com [mailto:linux-lvm-admin@sistina.com]
+On Behalf Of Daniel Gardner
+Sent: Sunday, September 08, 2002 7:51 AM
+To: linux-lvm@sistina.com
+Subject: Re: [linux-lvm] vgcreate -- no valid physical volumes in
+command line
 
 On Sunday 08 September 2002 3:47 pm, Glenn Shannon wrote:
 > Are you running DevFS by chance?
@@ -61,7 +77,8 @@ Daniel
 >
 > root@gentoo daniel # pvscan
 > pvscan -- reading all physical volumes (this may take a while...)
-> pvscan -- inactive PV "/dev/ide/host0/bus0/target0/lun0/part2" is in no
+> pvscan -- inactive PV "/dev/ide/host0/bus0/target0/lun0/part2" is in
+no
 > VG
 > [2.96 GB]
 > pvscan -- total: 1 [2.96 GB] / in use: 0 [0] / in no VG: 1 [2.96 GB]
@@ -72,17 +89,18 @@ Daniel
 > vgcreate -- no valid physical volumes in command line
 >
 > This is where I'm getting my baby steps from
-> http://www-106.ibm.com/developerworks/linux/library/l-lvm2.html?dwzone=3D=
-l
+>
+http://www-106.ibm.com/developerworks/linux/library/l-lvm2.html?dwzone=l
 > inux
 >
-> I was using stock kernel 2.4.18 and tools 1.0.5 to start with, but just
+> I was using stock kernel 2.4.18 and tools 1.0.5 to start with, but
+just
 > tried
 > 1.1-rc2 with the same results on both.
 >
 > I don't really know where to go further with this, don't know if it's
 > just me
-> being stupid or what. Anyone got any ideas? I'll provide any info that =
+> being stupid or what. Anyone got any ideas? I'll provide any info that
 I
 > need
 > to - just let me know what's needed!
@@ -104,3 +122,10 @@ I
 > linux-lvm@sistina.com
 > http://lists.sistina.com/mailman/listinfo/linux-lvm
 > read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
+
+
+_______________________________________________
+linux-lvm mailing list
+linux-lvm@sistina.com
+http://lists.sistina.com/mailman/listinfo/linux-lvm
+read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
