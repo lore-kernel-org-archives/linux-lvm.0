@@ -1,5 +1,5 @@
 From: "Kai-Min Sung" <k@kaisung.com>
-Message-ID: <002601c2fffb$e15f2b60$02fea8c0@nimiak>
+Message-ID: <002a01c2fffc$057db0c0$02fea8c0@nimiak>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
 In-Reply-To: 
@@ -14,7 +14,7 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Fri Apr 11 02:28:01 2003
+Date: Fri Apr 11 02:29:01 2003
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 To: Linux-lvm@sistina.com
