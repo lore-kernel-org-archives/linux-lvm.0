@@ -1,41 +1,76 @@
-Message-ID: <3A070E00.C4FE25F9@dell.com>
-Date: Mon, 06 Nov 2000 14:01:04 -0600
-From: Michael E Brown <Michael_E_Brown@dell.com>
-MIME-Version: 1.0
-Subject: Re: [linux-lvm] scsi/fc multipath failover patch
-References: <200011061933.eA6JXtF17815@webber.adilger.net>
-Content-Transfer-Encoding: 7bit
+Date: Mon, 6 Nov 2000 23:43:06 +0000
+From: Heinz J. Mauelshagen <Heinz.Mauelshagen@t-online.de>
+Subject: Re: [linux-lvm] / on LVM - what to do on shutdown?
+Message-ID: <20001106234306.A16931@srv.t-online.de>
+Reply-To: Mauelshagen@sistina.com
+References: <3A0694E7.52D2AF89@fl.priv.at>
+Mime-Version: 1.0
+In-Reply-To: <3A0694E7.52D2AF89@fl.priv.at>; from fl@fl.priv.at on Mon, Nov 06, 2000 at 12:24:23PM +0100
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: Andreas Dilger <adilger@turbolinux.com>
-Cc: Jos Visser <josv@osp.nl>, linux-lvm@msede.com
+Content-Transfer-Encoding: 7bit
+To: Friedrich Lobenstock <fl@fl.priv.at>
+Cc: linux-lvm@msede.com
 
-Andreas Dilger wrote:
+On Mon, Nov 06, 2000 at 12:24:23PM +0100, Friedrich Lobenstock wrote:
+> Hi!
+> 
+> I have a problem because I don't know what to do when / is on lvm.
+> 
+> Currently /sbin/init.d/halt does the following (/ is not on lvm):
+> 
+>   [..]
+>   echo "Unmounting file systems"
+>   umount -avt noproc,nonfs 
+>   [..]
+>   umount -anvt proc
+>   
+>   if test -d /etc/lvmtab.d -a -x /sbin/vgchange ; then
+>       /sbin/vgchange -a n
+>   fi
+>   
+>   [..]
+>   mount -no remount,ro / 2> /dev/null
+>   sync                
+>   [..]
+>   halt -d -f
+> 
+> 
+> Now what if / is on lvm? Should I really call "/sbin/vgchange -a n" ?
 
-> Joe Visser writes:
-> > Does anyone know whether md, lvm and likeminded drivers are resistant
-> > against this alternate pathing solution? I mean, when you connect a SCSI
-> > (or FC disk for that matter) through two controllers, any application or
-> > driver that does scanning of the attached disks and partitions will
-> > encounter the same disk/partitions twice.
->
-> Heinz has said that in the upcoming 0.9 release of LVM, there will be
+You can safely do it because it tries to deactivate all active VGs
+the LVM driver is aware which fails for VGs with open LVs anyway.
 
-Is there cvs repository or some such thing so that us mere mortals can
-test/contribute to upcoming release? I've a lab full of machines that can be
-used for the cause, several fibre-channel devices, lots of scsi external
-storage, and lots of other neat toys I can do horrible experiments on without
-whining about lost data.
+Nothing is written to any device by the LVM during "vgchange -a n".
+IOW: no harm happens if you avoid it completely during shutdown.
 
->
-> PVIDs (actually DCE UUIDs) so LVM will remove duplicate PVs from its
-> lists.  This can happen for reasons other than multipath, such as
-> /dev/md and /dev/{hd,sd} access to the same PV.
->
-> Cheers, Andreas
-> --
-> Andreas Dilger  \ "If a man ate a pound of pasta and a pound of antipasto,
->                  \  would they cancel out, leaving him still hungry?"
-> http://www-mddsp.enel.ucalgary.ca/People/adilger/               -- Dogbert
+> What are with the commands afterwards will they fail or might
+> the lvm device get mixed up because of not correctly closing it?
+> Or should I load a ramdisk to do the work, if at all possible?
+> 
+> I think the md-Device does a clean shutdown by itself, because
+> I use md to create a raid1 with lvm on top?
+> 
+> PS: You might gess that I'm using SuSE Linux, 7.0 to precise.
+> The kernel ist 2.4.0-test10.
+> 
+> 
+> MfG / Regards
+> Friedrich Lobenstock
+
+-- 
+
+Regards,
+Heinz      -- The LVM guy --
+
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+Heinz Mauelshagen                                 Sistina Software Inc.
+Senior Consultant/Developer                       Bartningstr. 12
+                                                  64289 Darmstadt
+                                                  Germany
+Mauelshagen@Sistina.com                           +49 6151 7103 86
+                                                       FAX 7103 96
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
