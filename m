@@ -1,8 +1,7 @@
-Message-ID: <20011002163140.77862.qmail@web14404.mail.yahoo.com>
-Date: Tue, 2 Oct 2001 09:31:40 -0700 (PDT)
-From: Aman Shahi <shahi_aman@yahoo.com>
-MIME-Version: 1.0
-Subject: [linux-lvm] VFS Patch for 2.4.10 ?
+Date: 2 Oct 2001 16:30:35 -0000
+From: MAILER-DAEMON@softhome.net
+Message-Id: <E15oSSQ-0007FV-00@hermes.sistina.com>
+Subject: [linux-lvm] failure notice
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,9 +13,59 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
+
+Hi. This is the qmail-send program at softhome.net.
+I'm afraid I wasn't able to deliver your message to the following addresses.
+This is a permanent error; I've given up. Sorry it didn't work out.
+
+<jldomingo@softhome.net>:
+Recipient's mailbox is full, message returned to sender. (#5.2.2)
+
+--- Below this line is a copy of the message.
+
+Return-Path: <linux-lvm@sistina.com>
+Received: (qmail 9683 invoked by uid 417); 2 Oct 2001 16:30:35 -0000
+Received: from unknown (HELO aseara.com) (216.121.96.120)
+  by i-softhome-jive-1 with SMTP; 2 Oct 2001 16:30:35 -0000
+Received: (from bin@localhost)
+	by aseara.com (8.9.3/8.9.3) id RAA21238
+	for jldomingo@softhome.net; Tue, 2 Oct 2001 17:39:38 +0200
+Received: from hermes.sistina.com (hermes.sistina.com [208.210.145.141])
+	by aseara.com (8.9.3/8.9.3) with ESMTP id RAA21226
+	for <jdomingo@internautas.org>; Tue, 2 Oct 2001 17:39:37 +0200
+Received: from localhost ([127.0.0.1] helo=hermes.sistina.com)
+	by hermes.sistina.com with esmtp (Exim 3.32 #6)
+	id 15oSRi-0007Ad-00; Tue, 02 Oct 2001 11:31:02 -0500
+Received: from web14404.mail.yahoo.com ([216.136.174.61])
+	by hermes.sistina.com with smtp (Exim 3.32 #6)
+	id 15oSQw-00079t-00
+	for linux-lvm@sistina.com; Tue, 02 Oct 2001 11:30:14 -0500
+Message-ID: <20011002163140.77862.qmail@web14404.mail.yahoo.com>
+Received: from [65.88.209.52] by web14404.mail.yahoo.com via HTTP; Tue, 02 Oct 2001 09:31:40 PDT
+From: Aman Shahi <shahi_aman@yahoo.com>
+To: linux-lvm@sistina.com
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Subject: [linux-lvm] VFS Patch for 2.4.10 ?
+Sender: linux-lvm-admin@sistina.com
+Errors-To: linux-lvm-admin@sistina.com
+X-BeenThere: linux-lvm@sistina.com
+X-Mailman-Version: 2.0.6
+Precedence: bulk
+Reply-To: linux-lvm@sistina.com
+List-Help: <mailto:linux-lvm-request@sistina.com?subject=help>
+List-Post: <mailto:linux-lvm@sistina.com>
+List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
+	<mailto:linux-lvm-request@sistina.com?subject=subscribe>
+List-Id: linux-lvm general discussion <linux-lvm.sistina.com>
+List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
+	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
+List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
+Date: Tue, 2 Oct 2001 09:31:40 -0700 (PDT)
 
 Hi,
 
@@ -33,3 +82,9 @@ __________________________________________________
 Do You Yahoo!?
 Listen to your Yahoo! Mail messages from any phone.
 http://phone.yahoo.com
+
+_______________________________________________
+linux-lvm mailing list
+linux-lvm@sistina.com
+http://lists.sistina.com/mailman/listinfo/linux-lvm
+read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
