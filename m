@@ -1,12 +1,15 @@
-Return-Path: <root@srv.sistina.com>
-Date: Thu, 26 Apr 2001 17:11:55 +0000
-From: "Heinz J. Mauelshagen" <Mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] badblocks handling with LVM
-Message-ID: <20010426171155.A11885@sistina.com>
-References: <200104231008.f3NA8Gkx001134@webber.adilger.int> <01042519594802.31687@lyta> <20010426100603.A9820@sistina.com> <20010426152651.B26041@vestdata.no>
+Return-Path: <raheesom@navpoint.com>
+Message-Id: <200104261605.f3QG5tt09735@west.navpoint.com>
+Subject: Re: [linux-lvm] I need to convert my root file system to LVM
+	(adding a 2nd disk as well).
+From: Rupert Heesom <raheesom@navpoint.com>
+In-Reply-To: <20010426082509.A14077@tykepenguin.com>
+References: <200104241645.f3OGjE001662@west.navpoint.com>
+	<20010425083538.B806@tykepenguin.com>
+	<200104252211.f3PMBK026102@west.navpoint.com> 
+	<20010426082509.A14077@tykepenguin.com>
+Date: 26 Apr 2001 06:58:13 -0400
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20010426152651.B26041@vestdata.no>; from lvm@ragnark.vestdata.no on Thu, Apr 26, 2001 at 03:26:52PM +0200
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -18,59 +21,24 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Thu, Apr 26, 2001 at 03:26:52PM +0200, Ragnar Kj�rstad wrote:
-> On Thu, Apr 26, 2001 at 10:06:03AM +0000, Heinz J. Mauelshagen wrote:
-> > > The problem is that when you move LV's around and make snapshots the bad 
-> > > blocks on the underlieing media will move.  Therefore I think that management 
-> > > of bad blocks possibly should be done in the LVM.
-> > > 
-> > > Or should we just assume that LVM runs over RAID arrays of ATA/SCSI disks 
-> > > that have sector-sparing so that bad blocks are not an issue?
-> > 
-> > That's what I recommend because disks typically "hide" bad sectors to a certain
-> > degree using bad block relocation et al.
-> > If the given disk capacity for this is not enough because too many bad blocks
-> > occured already then you are in serious trouble and need to repleace
-> > your disk (subsystem) anyway IMO.
+On 26 Apr 2001 08:25:09 +0100, Patrick Caulfield wrote:
+> On Wed, Apr 25, 2001 at 01:03:29PM -0400, Rupert Heesom wrote:
+> > On 25 Apr 2001 08:35:38 +0100, Patrick Caulfield wrote:
+> > > On Tue, Apr 24, 2001 at 11:39:02AM -0400, Rupert Heesom wrote:
+> What you need to do is lvreduce the volume to the size of the PV /dev/sdb1
+> (which will be slightly smaller than the actual partition), then use pvmove to
+> move the used extents from sdb2 to sdb2. *then* you can vgreduce vg /dev/sdb2.
 > 
-> And if anyone insist on using LVM to mark the blocks anyway, it can be
-> done with out special code. Just create a volume named "broken", and put
-> the PVs in question in this.
+> That might sound a little over-complicated but it's really the more common case
+> in "real world" situations to be LV focussed rather than PV focussed. (I think!)
 
-It is not that I really *insist*.
+Thanks, Patrick.  I'll try that.
 
-I just say that it doesn't make a whole lot of sense today, because most of
-the disk (subsystems) don't expose bad blacks any longer.
-
-Once those start too, they are ready to go to the trashcan IMO anyway.
-
-> 
-> 
-> -- 
-> Ragnar Kj�rstad
-> Big Storage
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
 
 -- 
-
-Regards,
-Heinz    -- The LVM Guy --
-
-*** Software bugs are stupid.
-    Nevertheless it needs not so stupid people to solve them ***
-
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-
-Heinz Mauelshagen                                 Sistina Software Inc.
-Senior Consultant/Developer                       Am Sonnenhang 11
-                                                  56242 Marienrachdorf
-                                                  Germany
-Mauelshagen@Sistina.com                           +49 2626 141200
-                                                       FAX 924446
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+regs
+rupert
