@@ -1,10 +1,10 @@
-Message-ID: <3EE875FD.20900@maintech.de>
-From: Thomas Kleffel <thomas.kleffel@maintech.de>
-MIME-Version: 1.0
-Subject: Re: [linux-lvm] How to grow a PV?
-References: <3EE83C19.10805@maintech.de> <20030612121012.C26918@sistina.com> <3EE857C8.2050300@maintech.de>
-In-Reply-To: <3EE857C8.2050300@maintech.de>
-Content-Transfer-Encoding: 7bit
+From: Jan-Benedict Glaw <jbglaw@lug-owl.de>
+Message-ID: <20030611213456.GC29685@lug-owl.de>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="5G06lTa6Jq83wMTw"
+Content-Disposition: inline
+Subject: [linux-lvm] Problem with 2.5.x DM + LVM1 metadata
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,31 +15,216 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Thu Jun 12 07:47:02 2003
+Date: Thu Jun 12 07:56:01 2003
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: linux-lvm@sistina.com
 
-Hi again...
+--5G06lTa6Jq83wMTw
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-...I'm sorry for having to ask again...
+Hi!
 
-Heinz J . Mauelshagen wrote:
+I'm running a machine since quite some time with DM-patches 2.4.x and
+LVM1 metadata PVs/VGs/LVs. It's a Debian box with lvm2-1.95.15 intalled.
 
-> LVM2 supports PV resizing. 
+Today, I tried to boot this machine with 2.5.70-bk16. Everything went
+well (most of my machines run 2.5.x since some time, so I'm used to the
+gotchas like modutils<-> module-init-tools etc.), but the 2.5.x DM seems
+so cause problems. During "vgchange -a y" (called by init scripts), one
+of my LVs cannot be activated. Here's the transcript of "/etc/init.d/lvm2
+start" (which basically only consists of the vgchange call):
+---------------------------------------------------------------------
+Initializing LVM:   /dev/hdc2: open failed: No such device or address
+  /dev/hdc3: open failed: No such device or address
+  /dev/hda4: open failed: No such device or address
+  /dev/hdc4: open failed: No such device or address
+  /dev/hda5: open failed: No such device or address
+  /dev/hda6: open failed: No such device or address
+  /dev/hda7: open failed: No such device or address
+  /dev/hda8: open failed: No such device or address
+  /dev/hda9: open failed: No such device or address
+  /dev/hda10: open failed: No such device or address
+  /dev/hda11: open failed: No such device or address
+  /dev/hda12: open failed: No such device or address
+  /dev/hda13: open failed: No such device or address
+  /dev/hda14: open failed: No such device or address
+  /dev/hda15: open failed: No such device or address
+  /dev/hda16: open failed: No such device or address
+  /dev/hda17: open failed: No such device or address
+  /dev/hda18: open failed: No such device or address
+  /dev/hdc18: open failed: No such device or address
+  /dev/hda19: open failed: No such device or address
+  /dev/hdc19: open failed: No such device or address
+  /dev/hda20: open failed: No such device or address
+  /dev/hdc20: open failed: No such device or address
+  /dev/hdd2: open failed: No such device or address
+  /dev/hdd3: open failed: No such device or address
+  /dev/hdd4: open failed: No such device or address
+  /dev/hdd15: open failed: No such device or address
+  /dev/hdd16: open failed: No such device or address
+  /dev/hdd17: open failed: No such device or address
+  /dev/hdd18: open failed: No such device or address
+  /dev/hdd19: open failed: No such device or address
+  /dev/hdd20: open failed: No such device or address
+  /dev/hdc2: open failed: No such device or address
+  /dev/hdc3: open failed: No such device or address
+  /dev/hda4: open failed: No such device or address
+  /dev/hdc4: open failed: No such device or address
+  /dev/hda5: open failed: No such device or address
+  /dev/hda6: open failed: No such device or address
+  /dev/hda7: open failed: No such device or address
+  /dev/hda8: open failed: No such device or address
+  /dev/hda9: open failed: No such device or address
+  /dev/hda10: open failed: No such device or address
+  /dev/hda11: open failed: No such device or address
+  /dev/hda12: open failed: No such device or address
+  /dev/hda13: open failed: No such device or address
+  /dev/hda14: open failed: No such device or address
+  /dev/hda15: open failed: No such device or address
+  /dev/hda16: open failed: No such device or address
+  /dev/hda17: open failed: No such device or address
+  /dev/hda18: open failed: No such device or address
+  /dev/hdc18: open failed: No such device or address
+  /dev/hda19: open failed: No such device or address
+  /dev/hdc19: open failed: No such device or address
+  /dev/hda20: open failed: No such device or address
+  /dev/hdc20: open failed: No such device or address
+  /dev/hdd2: open failed: No such device or address
+  /dev/hdd3: open failed: No such device or address
+  /dev/hdd4: open failed: No such device or address
+  /dev/hdd15: open failed: No such device or address
+  /dev/hdd16: open failed: No such device or address
+  /dev/hdd17: open failed: No such device or address
+  /dev/hdd18: open failed: No such device or address
+  /dev/hdd19: open failed: No such device or address
+  /dev/hdd20: open failed: No such device or address
+  /dev/hdc2: open failed: No such device or address
+  /dev/hdc3: open failed: No such device or address
+  /dev/hda4: open failed: No such device or address
+  /dev/hdc4: open failed: No such device or address
+  /dev/hda5: open failed: No such device or address
+  /dev/hda6: open failed: No such device or address
+  /dev/hda7: open failed: No such device or address
+  /dev/hda8: open failed: No such device or address
+  /dev/hda9: open failed: No such device or address
+  /dev/hda10: open failed: No such device or address
+  /dev/hda11: open failed: No such device or address
+  /dev/hda12: open failed: No such device or address
+  /dev/hda13: open failed: No such device or address
+  /dev/hda14: open failed: No such device or address
+  /dev/hda15: open failed: No such device or address
+  /dev/hda16: open failed: No such device or address
+  /dev/hda17: open failed: No such device or address
+  /dev/hda18: open failed: No such device or address
+  /dev/hdc18: open failed: No such device or address
+  /dev/hda19: open failed: No such device or address
+  /dev/hdc19: open failed: No such device or address
+  /dev/hda20: open failed: No such device or address
+  /dev/hdc20: open failed: No such device or address
+  /dev/hdd2: open failed: No such device or address
+  /dev/hdd3: open failed: No such device or address
+  /dev/hdd4: open failed: No such device or address
+  /dev/hdd15: open failed: No such device or address
+  /dev/hdd16: open failed: No such device or address
+  /dev/hdd17: open failed: No such device or address
+  /dev/hdd18: open failed: No such device or address
+  /dev/hdd19: open failed: No such device or address
+  /dev/hdd20: open failed: No such device or address
+  /dev/hdc2: open failed: No such device or address
+  /dev/hdc3: open failed: No such device or address
+  /dev/hda4: open failed: No such device or address
+  /dev/hdc4: open failed: No such device or address
+  /dev/hda5: open failed: No such device or address
+  /dev/hda6: open failed: No such device or address
+  /dev/hda7: open failed: No such device or address
+  /dev/hda8: open failed: No such device or address
+  /dev/hda9: open failed: No such device or address
+  /dev/hda10: open failed: No such device or address
+  /dev/hda11: open failed: No such device or address
+  /dev/hda12: open failed: No such device or address
+  /dev/hda13: open failed: No such device or address
+  /dev/hda14: open failed: No such device or address
+  /dev/hda15: open failed: No such device or address
+  /dev/hda16: open failed: No such device or address
+  /dev/hda17: open failed: No such device or address
+  /dev/hda18: open failed: No such device or address
+  /dev/hdc18: open failed: No such device or address
+  /dev/hda19: open failed: No such device or address
+  /dev/hdc19: open failed: No such device or address
+  /dev/hda20: open failed: No such device or address
+  /dev/hdc20: open failed: No such device or address
+  /dev/hdd2: open failed: No such device or address
+  /dev/hdd3: open failed: No such device or address
+  /dev/hdd4: open failed: No such device or address
+  /dev/hdd15: open failed: No such device or address
+  /dev/hdd16: open failed: No such device or address
+  /dev/hdd17: open failed: No such device or address
+  /dev/hdd18: open failed: No such device or address
+  /dev/hdd19: open failed: No such device or address
+  /dev/hdd20: open failed: No such device or address
+  device-mapper ioctl cmd 2 failed: No such device or address
+  Couldn't load device 'storage_vg-public_storage_lv'.
+  /dev/hdc2: open failed: No such device or address
+  /dev/hdc3: open failed: No such device or address
+  /dev/hda4: open failed: No such device or address
+  /dev/hdc4: open failed: No such device or address
+  /dev/hda5: open failed: No such device or address
+  /dev/hda6: open failed: No such device or address
+  /dev/hda7: open failed: No such device or address
+  /dev/hda8: open failed: No such device or address
+  /dev/hda9: open failed: No such device or address
+  /dev/hda10: open failed: No such device or address
+  /dev/hda11: open failed: No such device or address
+  /dev/hda12: open failed: No such device or address
+  /dev/hda13: open failed: No such device or address
+  /dev/hda14: open failed: No such device or address
+  /dev/hda15: open failed: No such device or address
+  /dev/hda16: open failed: No such device or address
+  /dev/hda17: open failed: No such device or address
+  /dev/hda18: open failed: No such device or address
+  /dev/hdc18: open failed: No such device or address
+  /dev/hda19: open failed: No such device or address
+  /dev/hdc19: open failed: No such device or address
+  /dev/hda20: open failed: No such device or address
+  /dev/hdc20: open failed: No such device or address
+  /dev/hdd2: open failed: No such device or address
+  /dev/hdd3: open failed: No such device or address
+  /dev/hdd4: open failed: No such device or address
+  /dev/hdd15: open failed: No such device or address
+  /dev/hdd16: open failed: No such device or address
+  /dev/hdd17: open failed: No such device or address
+  /dev/hdd18: open failed: No such device or address
+  /dev/hdd19: open failed: No such device or address
+  /dev/hdd20: open failed: No such device or address
+  0 logical volume(s) in volume group "nfsroot_vg" now active
+  1 logical volume(s) in volume group "storage_vg" now active
+lvm2.
+---------------------------------------------------------------------
 
-I just installed 1.95.15 and pvresize tells me "Command not implemented 
-yet."
-"pvresize --version" gives me the following:
+storage_vg should contain 2 LVs, nfsroot_vg currently doesn't hold any
+LVs. Any hints on this? Or more infos?
 
- > LVM version:       1.95.15 (2003-01-10)
- > Library version:      0.96.08-ioctrl (2003-03-27)
- > Driver version:      1.0.10
+MfG, JBG
 
-Did I fetch an old version? Or do I need to get some bleeding-edge-stuff 
-from the CVS?
-Or am I simply too stupid? :)
+--=20
+   Jan-Benedict Glaw       jbglaw@lug-owl.de    . +49-172-7608481
+   "Eine Freie Meinung in  einem Freien Kopf    | Gegen Zensur | Gegen Krieg
+    fuer einen Freien Staat voll Freier B=FCrger" | im Internet! |   im Ira=
+k!
+      ret =3D do_actions((curr | FREE_SPEECH) & ~(IRAQ_WAR_2 | DRM | TCPA));
 
-Thanks for your help,
+--5G06lTa6Jq83wMTw
+Content-Type: application/pgp-signature
+Content-Disposition: inline
 
-Thomas Kleffel
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.2.2 (GNU/Linux)
+
+iD8DBQE+56CAHb1edYOZ4bsRAjdMAJ9bGOgGAr3SCrpXRWhjJHVuQ5zyWgCePTnG
+rWG4fhVkbdx31II05pq8zAU=
+=Sr4g
+-----END PGP SIGNATURE-----
+
+--5G06lTa6Jq83wMTw--
