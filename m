@@ -1,10 +1,13 @@
-From: Luca Berra <bluca@comedia.it>
-Subject: Re: [linux-lvm] How to build LVM2 tools for 2.6?
-Message-ID: <20031223070013.GB20078@percy.comedia.it>
+From: Frank Benkstein <benkstein@math.tu-dresden.de>
+Subject: Re: [linux-lvm] umount returns device is busy
+Message-Id: <20031223102441.0f8e6f46.benkstein@math.tu-dresden.de>
+In-Reply-To: <1226895046.20031223010608@tnonline.net>
 References: <000701c3c8b7$3190a800$c3507580@atdsputnik>
+	<3FE76BD3.13937AA5@uiuc.edu>
+	<20031222231520.GA31471@MAIL.13thfloor.at>
+	<1226895046.20031223010608@tnonline.net>
 Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <000701c3c8b7$3190a800$c3507580@atdsputnik>
+Content-Transfer-Encoding: 7bit
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,44 +18,69 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Tue Dec 23 01:01:01 2003
+Date: Tue Dec 23 03:25:02 2003
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
 
-On Mon, Dec 22, 2003 at 11:12:43AM -0700, Charles Martin wrote:
->I'm running Linux 2.6.0 on a system that
->started life as Red Hat 9. I want to install
->the LVM2 tools (v2.0.8) so that I can resurrect
->my LVM disks.
->
->When I attempt to build the tools (./configure; make install),
->device/dev-io.c fails to compile, due to a missing definition
->of BLKGETSIZE64. Clearly, the compile needs to be looking
->at the headers in the 2.6.0 tree.
->
-try this patch i stole from fedora :)
-or use their rpm
-L.
+On Tue, 23 Dec 2003 01:06:08 +0100
+Spam <spam@tnonline.net> wrote:
 
---- LVM2.2.00.08/lib/device/dev-io.c.blksize64	2003-12-02 19:00:00.347446473 -0500
-+++ LVM2.2.00.08/lib/device/dev-io.c	2003-12-02 19:00:42.450641542 -0500
-@@ -23,6 +23,9 @@
- #  undef WUNTRACED		/* Avoid redefinition */
- #  include <linux/fs.h>		/* For block ioctl definitions */
- #  define BLKSIZE_SHIFT SECTOR_SHIFT
-+#ifndef BLKGETSIZE64
-+#  define BLKGETSIZE64 _IOR(0x12,114,size_t)
-+#endif /* BLKGETSIZE64 */
- #else
- #  include <sys/disk.h>
- #  define BLKBSZGET DKIOCGETBLOCKSIZE
+> 
+> 
+> > On Mon, Dec 22, 2003 at 04:10:27PM -0600, P. Larry Nelson wrote:
+> >> I've been using LVM now since sometime this past summer and
+> >> everything has worked great and as advertised, until I tried
+> >> to unmount a logical volume.  And this happens on both RedHat
+> >> 9 and ES_3.
+> >> 
+> >> I had occasion the other day to unmount one of the mounted raid 
+> >> arrays in order to upgrade some firmware.  When I tried to do an
+> >> unmount command, I got "device is busy".  Ok, I'm cd'd there
+> >> from one of my windows or something, so I make sure all open
+> >> terminal windows are *not* cd'd there.  Redo the umount command
+> >> with same result.  Weird, something's got a file open. So, I did
+> >> an lsof command and grep for the device (/dev/VG1/LV1).  Nothing.
+> >> I try greping for the mount name (/scratch/cdf).  Nothing.
+> >> It will not let me unmount the logical volume.
+> >> 
+> >> The system in question is running RedHat 9 w/kernel 2.4.20-24.9smp
+> >> with RedHat's lvm-1.0.3-12.  I just so happened to have built 
+> >> another system using RedHat's ES_3 w/kernel 2.4.21-4.0.1.ELsmp and
+> >> their lvm-1.0.3-15, so I thought I'd try it there.  Built an
+> >identical> logical volume, mounted it, tested it (works fine), tried
+> >to umount> the filesystem with identical results: device is busy. 
+> >Checked> again using lsof.  Nothing open on the mounted filesystem.
+> >> 
+> >> I went checking back thru about 4 months of this list and saw
+> >> (apparently) that no one else has this problem.  At this point
+> >> I'm a bit baffled why the umount command isn't working.  I've
+> >> also seen nothing that might address this in the LVM-HOWTO.
+> >> Then again, I could have missed it.
+> >> 
+> >> Ideas?
+> 
+> > maybe some kernel service is holding a reference
+> > to that device, nfs or samba server comes to mind, 
+> > just try to disable them one after the other and
+> > see if umount will work ...
+> 
+>   In  my opinion this is a severe mis-feature (aka: bug) in the Linux
+>   kernels.  In  some occasions it is impossible to kill an application
+>   when  unmounting  a filesystem. This leads to problems with shutting
+>   down  the  system  cleanly.  For  example  a  device might have been
+>   temporary  offline  when  samba tried to access it. The samba thread
+>   locks  indefinitely  and  it  is impossible to kill it and thus also
+>   impossible to unmount the filesystem.
+> 
+>   Not  sure  if LVM guys can do anything about this though. =) Perhaps
+>   you  can  push  kernel  developers to make it easier to recover from
+>   these kinds of problems?
+> 
 
--- 
-Luca Berra -- bluca@comedia.it
-        Communication Media & Services S.r.l.
- /"\
- \ /     ASCII RIBBON CAMPAIGN
-  X        AGAINST HTML MAIL
- / \
+Have you tried "fuser -v -m" (see fuser(1)). I think "umount -l" already
+serves the your case of unmounting a filesystem where kernel thinks it's
+busy but it isn't.
+
+Bye
+Frank Benkstein.
