@@ -1,11 +1,11 @@
 Return-Path: <root@srv.sistina.com>
-Date: Wed, 28 Feb 2001 11:15:10 +0000
+Date: Wed, 28 Feb 2001 12:22:38 +0000
 From: "Heinz J. Mauelshagen" <Mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] LVM and striping, defragmentation
-Message-ID: <20010228111510.U4361@srv.sistina.com>
-References: <m2pug5ph0m.fsf@isnogud.escape.de> <20010226203358.A2504@66bassett.freeserve.co.uk>
+Subject: Re: [linux-lvm] Possible to raise Max LV?
+Message-ID: <20010228122238.D4361@srv.sistina.com>
+References: <20010227131526.1C48E3FDB@math.ohio-state.edu> <200102271658.f1RGwkl27047@webber.adilger.net> <20010227132358.A24164@math.ohio-state.edu> <3A9C87A1.7205F1DC@wrkhors.com>
 Mime-Version: 1.0
-In-Reply-To: <20010226203358.A2504@66bassett.freeserve.co.uk>; from joe@66bassett.freeserve.co.uk on Mon, Feb 26, 2001 at 08:33:58PM +0000
+In-Reply-To: <3A9C87A1.7205F1DC@wrkhors.com>; from lembark@wrkhors.com on Tue, Feb 27, 2001 at 11:07:45PM -0600
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -21,60 +21,46 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Mon, Feb 26, 2001 at 08:33:58PM +0000, Joe Thornber wrote:
-> On Mon, Feb 26, 2001 at 05:04:41PM +0100, Urs Thuermann wrote:
-> > I'd like to experiment with LVM and striping.  The HOWTO at
-> > www.linuxdoc.org says in section 8.3 LVM native striping
-> > 
-> >     Performance notices
-> > 
-> >     The performance 'gain' may well be very negative if you stripe over 2
-> >     partitions of the same disk - take care to prevent that.
-> > 
-> > 
-> > How can I take care of it?  I've seen no option in lvcreate to specify
-> > where the PE should be taken from.  If I have a VG with only two PVs on
-> > two different disks, will LVM automatically choose PEs from the two
-> > PVs instead of one PV?  And what if I have a VG with several PVs on
-> > disk A and several PVs on disk B.  How can I "take care to prevent"
-> > that LVM does not choose two PEs from the same disk for striping?
+On Tue, Feb 27, 2001 at 11:07:45PM -0600, Steven Lembark wrote:
+> 
+> > I'm completely new to LVM, so can someone explain to me the purpose of
+> > the PE's and why they default to 4M?  Is there some kind of performance
+> > or space hit if I raise that to 16M (remember my setup: hardware RAID
+> > array that is currently at ~250G, soon to be ~325G)?
+> 
 
-Having more than one PV mapped to a physical device is *not* the recommended
-production configuration. The only reason why we build in that option is
-flexibility in test configurations.
+Linux LVM follows the paradigm of block oriented (like the AIX or HP ones)
+rather than section oriented Volume Managers (like the Veritas one).
 
-> 
-> You have highlighted an area where we want to do more work.
-> Specifically we want to write a tool that allows you more control over
-> the LE->PE mapping.  The striping allocation will try and allocate
-> LE's from two different PV's in the VG.  When you create the striped
-> LV just try not to have two PV's on the same disk.  You can always
-> disable allocation on an individual PV basis.
+Therefore it deals with so called Physical Extents (or PEs) as the basic
+allocation units. The actual LVM code supports up to ~64k extents per
+Logical Volume. If you like to have Logical Volumes larger than ~256G in the
+future you *need* to create your VG(s) with a PE size larger than the default
+of 4M.
 
-Check the lvcreate man page, please.
-You can add a list of PV device specials to allocate the PEs from to the
-lvcreate command line or use pvchange in order to prohibit allocation on
-that PV before using lvcreate.
+Even though that LVM constraint most likely will disappear in the future
+you should plan for larger PE sizes now in case 256G per LV maximum size
+is too small for you.
 
+If you raise the PE size to 16M your metadata usage will be a little bit smaller
+*but* the amount of free space after the metadata will likely be larger as
+with 4M PE size due to the allocation policy of LVM. This choice will give
+you a maximum LV size of 1T. Linux is limited to 2T per single block device
+at this point in time. In Linux 2.5 that constraint will disapear too.
+
+> also described in the docs.  
 > 
-> > When I resize my LVs in a VG multiple times, I can get some
-> > fragmentation, i.e. LVs in the VG are not contiguous.  Is there a tool
-> > to defragment LVs, i.e. to swap PEs so that all LVs in the VG are
-> > contiguous again.  I read in the man page that the allocation policy
-> > can be set to "contiguous", but how can I make LVs contiguous after
-> > some creating, removing, and resizing of LVs?
+> you might be better off splitting the space into smaller chunks.
+> with that much space in one unit you will be hit hard if any of
+> it fries -- backups or not.  do you have any files that really
+> take up 325G?  if not you could split the space into multiple
+> 128GB sections for separate use.  makes backups a whole lot 
+> easier...  let alone restores.
 > 
-> At the moment it's not easy, you might want to look at the pvmove
-> documentation.
-> 
-> > How much performance loss is to be expected in case of non-contiguous LVs?
-> 
-> It shouldn't be large, the LE's are normally 4 meg so the seeks to
-> different parts of the disk won't be that frequent.  To contrast with
-> stripes where the chunk size defaults to 64K, which can cause a lot of
-> thrashing if the stripes are on the same disk.
-> 
-> - Joe
+> -- 
+>  Steven Lembark                                   2930 W. Palmer St.
+>                                                  Chicago, IL  60647
+>  lembark@wrkhors.com                                   800-762-1582
 > _______________________________________________
 > linux-lvm mailing list
 > linux-lvm@sistina.com
