@@ -1,10 +1,10 @@
-From: Patrick Caulfield <caulfield@sistina.com>
-Subject: Re: [linux-lvm] hello sir
-Message-Id: <20020408071844.GB1321@tykepenguin.com>
-References: <20020406183800.5697.qmail@eyou.com>
+Message-Id: <200204080755.JAA28548@mailgate.sara.nl>
+From: Remco Post <r.post@sara.nl>
+Subject: Re: [linux-lvm] Red Hat upgrade over existing LVM
+In-Reply-To: Your message of
+    "07 Apr 2002 05:27:32 +0200."
+    <wxx4rio5gt7.fsf@nommo.uio.no>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20020406183800.5697.qmail@eyou.com>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,30 +15,29 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Apr  8 02:18:02 2002
+Date: Mon Apr  8 02:54:01 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Sat, Apr 06, 2002 at 06:38:00PM +0800, seaward@eyou.com wrote:
-> dear sir:
->     I am a lvm user in China. I found 2 bugs when I using it.
->     One: the patches of lvm-1.0.3 for kernel-2.4.18 has a wrong definition
-> in
-> lvm-internal.h:
-> #define lvm_sectsize(dev) get_hardblocksize(dev)
-> should change to
-> #define lvm_sectsize(dev) get_hardsect_size(dev)
+> 
+>   as far as I know LVM hasn't passed RedHat's testing grounds yet
+>   (I've muttered complaints about this a few times to them).  on the
+>   other hand, if you want a neat distro that has LVM support I'd have
+>   a peek at Gentoo.
+> 
+I use lvm (verion 0.9 something) that comes with mandrake linux and am very happy with it. I guess the new 8.2 distro will come with a mode up-to-date lvm, and Mandrake does support a wide range of filesystems as well...
 
-Sounds like the patch hasn't been generated correctly. 
-
-Make sure you configured LVM with the right kernel directory:
-
-./configure with-kernel_dir=/your/kernel/here
-
-Then do a "make clean" and a "make" in the PATCHES directory.
 
 -- 
+Met vriendelijke groeten,
 
-patrick
+Remco Post
+
+SARA - Stichting Academisch Rekencentrum Amsterdam    http://www.sara.nl
+High Performance Computing  Tel. +31 20 592 8008    Fax. +31 20 668 3167
+
+"I really didn't foresee the Internet. But then, neither did the computer
+industry. Not that that tells us very much of course - the computer industry
+didn't even foresee that the century was going to end." -- Douglas Adams
