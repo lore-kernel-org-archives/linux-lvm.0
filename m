@@ -1,10 +1,11 @@
-Content-Class: urn:content-classes:message
-MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Subject: RE: [linux-lvm] *** ANNOUNCEMENT *** LVM 1.0.1-rc3 available at www.sistina.com
-Date: Wed, 3 Oct 2001 15:34:12 +0200
-Message-ID: <B45465FD9C23D21193E90000F8D0F3DF0178FEC0@mailsrv.linkvest.com>
-From: "Jean-Eric Cuendet" <Jean-Eric.Cuendet@linkvest.com>
+From: Andreas Dilger <adilger@turbolabs.com>
+Date: Wed, 3 Oct 2001 08:52:26 -0600
+Subject: Re: [linux-lvm] *** ANNOUNCEMENT *** LVM 1.0.1-rc3 available at www.sistina.com
+Message-ID: <20011003085226.D8954@turbolinux.com>
+References: <B45465FD9C23D21193E90000F8D0F3DF0178FEC0@mailsrv.linkvest.com>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <B45465FD9C23D21193E90000F8D0F3DF0178FEC0@mailsrv.linkvest.com>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,19 +18,21 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-> LVM 1.0.1-rc3 supports both version 1 and 2 of the metadata.
->=20
-> There's *no* need to run any metadata update tools.
+On Oct 03, 2001  15:34 +0200, Jean-Eric Cuendet wrote:
+> > LVM 1.0.1-rc3 supports both version 1 and 2 of the metadata.
+> > 
+> > There's *no* need to run any metadata update tools.
+> 
+> Does it mean that having v1 or v2 metadata is not important? 
 
-Does it mean that having v1 or v2 metadata is not important?=20
-Or does it means that upgrade is automatic?
-Or does it mean that with v1 some features aren't available until v2 is
-set?
+Correct.  It turns out v2 metadata is not needed.
 
-More, I would like also if you include CHANGELOG in the ANNONCEMENT mail
-:-)
 
-Thanks for giving infos.
--jec
+Cheers, Andreas
+--
+Andreas Dilger  \ "If a man ate a pound of pasta and a pound of antipasto,
+                 \  would they cancel out, leaving him still hungry?"
+http://www-mddsp.enel.ucalgary.ca/People/adilger/               -- Dogbert
