@@ -1,14 +1,14 @@
 Return-Path: <lewis@sistina.com>
-Date: Tue, 13 Mar 2001 11:35:52 -0600
+Date: Tue, 13 Mar 2001 11:40:54 -0600
 From: AJ Lewis <lewis@sistina.com>
 Subject: Re: [linux-lvm] Problem with vgscan/ vgcfgrestore
-Message-ID: <20010313113552.D15679@sistina.com>
-References: <20010313012313.A3042@cistron.nl> <200103130056.f2D0uTi01167@webber.adilger.int> <20010313021438.A6401@cistron.nl> <20010312231208.A14087@sistina.com> <20010313095711.A516@tykepenguin.com>
+Message-ID: <20010313114054.E15679@sistina.com>
+References: <GIEGKMCLIJBKBNBCCHEACEJACAAA.heimdall@mail.org> <200103130059.f2D0xsJ01176@webber.adilger.int> <20010313084102.A28227@colombina.comedia.it>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="bjuZg6miEcdLYP6q"
+	protocol="application/pgp-signature"; boundary="KuLpqunXa7jZSBt+"
 Content-Disposition: inline
-In-Reply-To: <20010313095711.A516@tykepenguin.com>; from caulfield@sistina.com on Tue, Mar 13, 2001 at 09:57:11AM +0000
+In-Reply-To: <20010313084102.A28227@colombina.comedia.it>; from bluca@comedia.it on Tue, Mar 13, 2001 at 08:41:02AM +0100
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -22,44 +22,48 @@ List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 To: linux-lvm@sistina.com
 
---bjuZg6miEcdLYP6q
+--KuLpqunXa7jZSBt+
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Mar 13, 2001 at 09:57:11AM +0000, Patrick Caulfield wrote:
-> On Mon, Mar 12, 2001 at 11:12:08PM -0600, AJ Lewis wrote:
-> > On Tue, Mar 13, 2001 at 02:14:39AM +0100, Wichert Akkerman wrote:
-> > > BTW, the current LVM tools violate the FHS by putting binaries in
-> > > /sbin/lvm-*/. Would you accept a patch to move that to /lib/lvm-*/
-> > > instead?
-> >=20
-> > Erm.../lib/lvm-*/?  Really?  Hmm...guess I need to read the FHS.  Anyon=
-e got
-> > a pointer to that?
+On Tue, Mar 13, 2001 at 08:41:02AM +0100, Luca Berra wrote:
+> i have a couple of ideas, but no time to code (sorry)
+> 1) using realpath in the tools to solve issue 2
+
+This should be done no matter what.  I can't think of any good reason not to
+have the tools follow sym-links.
+
+> 2) checking if the devices mentioned in /proc/partition do really exist, =
+else
+>   switch the cache to "scan the dev directory mode"
+
+I believe this is the way it works at present
+
+> 	but better than the above=20
+> 3) add another structure to the cache which contains aliases to the device
+>  we have in the cache, aliases are added dynamically when found on the co=
+mmand
+>  line or in the VGDA of a PV. We use=20
+> 	alias[c].name=3Dpossible alias;
+> 	lstat(possible alias, &statbuf)
+> 	if (S_ISLNK(statbuf.st_mode)) {
+> 		alias[c].target=3Dlvm_dir_cache_find(realpath(possible alias));
+> 		if !(alias[c].target) stat(realptah(possible alias), &statbuf)
+> 	}
+> 	if (S_ISBLK(statbuf.st_mode)) {
+> 		alias[c].target=3Dlvm_dir_cache_find_dev(statbuf.st_dev>>8,statbuf.st_m=
+ode&((1<<8)-1));
+> 		/* the above function has to be written*/
+> 	}
+> 	if (!alias[c].target) complain(loudly);
+> 	c++;
 >=20
-> www.pathname.com/fhs
+>   then we modify lvm_dir_cache_find to loop also on alias[], before it st=
+arts searching th
+>   cache.
 
-OK, I'm confused now.  The current LVM tools are installed in /sbin, not
-/sbin/lvm-*/.  If you are getting packages from distros that place the
-binaries in /sbin/lvm-*/ you need to talk to the distros.  AFAICT, the LVM
-tools *should* be in /sbin
-
-This from the current FHS 2.1 standard:
-
-Utilities used for system administration (and other root-only commands) are
-stored in /sbin, /usr/sbin, and /usr/local/sbin. /sbin typically contains
-binaries essential for booting the system in addition to the binaries in
-/bin. Anything executed after /usr is known to be mounted (when there are no
-problems) should be placed into /usr/sbin. Local-only system administration
-binaries should be placed into /usr/local/sbin
-
-And this is what the FHS has to say about /lib:
-
-The /lib directory contains those shared library images needed to boot the
-system and run the commands in the root filesystem.
-
-So how does having LVM binaries in /lib/lvm-*/ _not_ violate the FHS?
+This looks interesting...and could possibly help a lot as well.
 
 Regards,
 --=20
@@ -75,11 +79,10 @@ Get my key at: http://www.sistina.com/~lewis/gpgkey
  (Unfortunately, the PKS-type keyservers do not work with multiple sub-keys)
 
 -----Begin Obligatory Humorous Quote----------------------------------------
-Einstein said that talking to yourself is a sign of intelligence.
-Answering yourself, however, is a sign of insanity.
+Life's short and hard, kind of like a bodybuilding elf
 -----End Obligatory Humorous Quote------------------------------------------
 
---bjuZg6miEcdLYP6q
+--KuLpqunXa7jZSBt+
 Content-Type: application/pgp-signature
 Content-Disposition: inline
 
@@ -87,9 +90,9 @@ Content-Disposition: inline
 Version: GnuPG v1.0.4 (GNU/Linux)
 Comment: For info see http://www.gnupg.org
 
-iD8DBQE6rlp4pE6/iGtdjLERAmbyAKCKJUdTJzTM9mT19p1/oXR6BGGvTACfSnDu
-uICDOzIRlHQY5Kuc8/F1k1o=
-=FHR7
+iD8DBQE6rlumpE6/iGtdjLERApjAAKCBg3ZmGvOY+VMd0Wy5zz5rWDytdgCeMx6H
+jOdare16cNlhmCR0GEtjhtw=
+=U4Sv
 -----END PGP SIGNATURE-----
 
---bjuZg6miEcdLYP6q--
+--KuLpqunXa7jZSBt+--
