@@ -1,10 +1,8 @@
-Subject: Re: [linux-lvm] 1.0.1rc4 tools don't like me!
-Message-ID: <20011113090736.A407@btconnect.com>
-References: <20011113030010.62924.qmail@web13605.mail.yahoo.com>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20011113030010.62924.qmail@web13605.mail.yahoo.com>; from todd_m_roy@yahoo.com on Mon, Nov 12, 2001 at 07:00:10PM -0800
-From: Joe Thornber <thornber@btconnect.com>
+From: Frode Ulsund <frode@gangstah.net>
+MIME-Version: 1.0
+Message-Id: <01111412324803.02444@nerds>
+Content-Transfer-Encoding: 8bit
+Subject: [linux-lvm] Vgchange : error code -22
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,18 +13,46 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Tue Nov 13 03:06:01 2001
+Date: Tue Nov 13 05:30:02 2001
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Mon, Nov 12, 2001 at 07:00:10PM -0800, Todd Roy wrote:
-> Oh yeah, in the latest stuff in cvs (hoping that would
-> bail me out) pv_move.c is badly broken (doesn't
-> compile).
+Hi there!
 
-Oops, my fault.  I must have committed in LVM rather than LVM2 last
-night.  I'll revert.  Thanks for pointing it out.
+I have read all the documentation in the LVM-package, but
+i can't find a sollution to my problem in the HOW-TOs.
 
-- Joe
+I run kernel 2.4.13 with Slackware 8.0. I tried to patch the rc.S with the 
+LVM-patch, but it looks like the patch is allready applied in the 
+distribution.
+
+When i run  : vgchange -v -d -a y i get the following output, but I don't 
+really know what the problem is.
+
+Any help is aprichiated.
+
+.....
+Frode Ulsund
+-----------------------------------------------------------------
+<333> vg_check_name -- vg_name: "vg01"
+<4444> lvm_check_chars -- CALLED with name: "vg01"
+<4444> lvm_check_chars -- LEAVING with ret: 0
+<333> vg_check_name -- LEAVING with ret: 0
+<22> vg_check_consistency -- LEAVING with ret: 0
+<1> vg_create_remove -- IOCTL
+<1> vg_create_remove -- IOCTL returned: -22
+<1> vg_create_remove -- LEAVING with ret: -22
+<> vgchange -- vg_create returned: -22
+<1> lvm_error -- CALLED with: -22
+<1> lvm_error -- LEAVING with: "Invalid argument"
+vgchange -- ERROR "Invalid argument" activating volume group "vg01"
+<1> vg_free -- CALLED
+<1> vg_free -- entering PV loop
+<1> vg_free -- entering LV loop
+<1> vg_free -- LEAVING with ret: 0
+vgchange -- unlocking logical volume manager
+<1> lvm_unlock -- CALLED
+<1> lvm_unlock -- LEAVING with ret: 0
+<1> lvm_unlock -- CALLED
+<1> lvm_unlock -- LEAVING with ret: -104
