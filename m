@@ -1,19 +1,18 @@
-Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j29M93n28580
-	for <linux-lvm@redhat.com>; Wed, 9 Mar 2005 17:09:03 -0500
-Received: from mail.utsl.gen.nz (210-54-92-184.ipnets.xtra.co.nz
-	[210.54.92.184])
-	by mx3.redhat.com (8.12.11/8.12.11) with ESMTP id j29M8u9Q004170
-	for <linux-lvm@redhat.com>; Wed, 9 Mar 2005 17:08:56 -0500
-Message-ID: <422F73E8.4070707@vilain.net>
-Date: Thu, 10 Mar 2005 11:08:40 +1300
-From: Sam Vilain <sam@vilain.net>
-MIME-Version: 1.0
-Subject: Re: [linux-lvm] Building up a RAID5 LVM home server (long)
-	[0x05B52F13]
-References: <422F679C.8010003@boyko.net>
-In-Reply-To: <422F679C.8010003@boyko.net>
-Content-Transfer-Encoding: 7bit
+Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j29KWTn30383
+	for <linux-lvm@redhat.com>; Wed, 9 Mar 2005 15:32:29 -0500
+Received: from wavehammer.waldi.eu.org (postfix@wavehammer.waldi.eu.org
+	[82.139.196.55])
+	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id j29KWS5S008589
+	for <linux-lvm@redhat.com>; Wed, 9 Mar 2005 15:32:28 -0500
+Date: Wed, 9 Mar 2005 21:32:26 +0100
+From: Bastian Blank <bastian@waldi.eu.org>
+Message-ID: <20050309203225.GA25309@wavehammer.waldi.eu.org>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="xXmbgvnjoT4axfJE"
+Content-Disposition: inline
+Subject: [linux-lvm] [PATCH] fix clean target
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -24,39 +23,104 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: Andy Boyko <andy@boyko.net>
-Cc: LVM general discussion and development <linux-lvm@redhat.com>
+To: linux-lvm@redhat.com
 
-Andy Boyko wrote:
->>The underlying principle, is keeping the MD layer as simple as possible,
->>so that you've got nice little resilient building blocks for your Volume
->>Group.  Never use concatenation, striping or RAID5 at the MD layer if
->>you've got LVM, it's simply in the wrong place!
-> Could you by any chance explain this?  Assuming, say, five identical
-> disks, is it really wrong to make an MD RAID-5 out of them, and then
-> put an LVM LV atop that, for later extension?   I'm feeling pretty 
-> dopey, 'cause I'm not immediately grasping what would be an alternative 
-> MD/LVM/EVMS/whatever approach, assuming you do fundamentally want N-1 
-> worth of available space from those disks.  What am I missing?
 
-Sorry, I shouldn't have said "never".  All I'm saying is that most of
-the time, you think you want this but in balance you probably want to
-simply buy a few more disks, or bigger disks, instead of worrying
-about an extra X% of space, which invariably will just increase
-backup requirements anyway.
+--xXmbgvnjoT4axfJE
+Content-Type: multipart/mixed; boundary="cWoXeonUoKmBZSoM"
+Content-Disposition: inline
 
-If you do have an equally sized (ideally also homogenous brand/model)
-set of disks, *and you don't overly care about write performance or
-excessive performance degradation in the case of a single failure*,
-then sure, RAID 5 setup as you say is the right solution.
 
-This is just an old saying repeated.
+--cWoXeonUoKmBZSoM
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-   RAID - Fast, Cheap, Reliable.  Pick any two.
+The attached patch fixes the clean target in tools.
 
-fast+cheap = raid 0/striping
-fast+reliable = raid 1 or 10
-cheap+reliable = raid 5
+Bastian
 
-Sam.
+--=20
+Fascinating is a word I use for the unexpected.
+		-- Spock, "The Squire of Gothos", stardate 2124.5
+
+--cWoXeonUoKmBZSoM
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: attachment; filename=diff
+Content-Transfer-Encoding: quoted-printable
+
+Date: Tue Mar  8 11:40:45 2005
+New Revision: 71
+
+Modified:
+   lvm2/trunk/tools/Makefile.in
+Log:
+* tools/Makefile.in: Fix clean.
+
+
+Modified: lvm2/trunk/tools/Makefile.in
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D
+--- lvm2/trunk/tools/Makefile.in	(original)
++++ lvm2/trunk/tools/Makefile.in	Tue Mar  8 11:40:45 2005
+@@ -20,7 +20,7 @@
+   SUBDIRS +=3D fsadm
+ endif
+=20
+-SOURCES =3D\
++lib_SOURCES =3D\
+ 	archiver.c \
+ 	dumpconfig.c \
+ 	formats.c \
+@@ -64,6 +64,12 @@
+ 	vgscan.c \
+ 	vgsplit.c
+=20
++tool_SOURCES =3D lvm.c
++
++lib_OBJECTS =3D $(lib_SOURCES:%.c=3D%.o)
++
++SOURCES =3D $(lib_SOURCES) $(tool_SOURCES)
++
+ TARGETS =3D\
+ 	.commands \
+ 	lvm
+@@ -92,14 +98,14 @@
+=20
+ include $(top_srcdir)/make.tmpl
+=20
+-lvm: $(OBJECTS) lvm.o $(top_srcdir)/lib/liblvm.a
+-	$(CC) -o $@ $(OBJECTS) lvm.o $(LDFLAGS) $(LVMLIBS) $(LIBS) -rdynamic
++lvm: $(OBJECTS) $(top_srcdir)/lib/liblvm.a
++	$(CC) -o $@ $(OBJECTS) $(LDFLAGS) $(LVMLIBS) $(LIBS) -rdynamic
+=20
+-lvm.static: $(OBJECTS) lvm.o $(top_srcdir)/lib/liblvm.a
+-	$(CC) -o $@ $(OBJECTS) lvm.o -static $(LDFLAGS) $(LVMLIBS) $(LIBS) \
++lvm.static: $(OBJECTS) $(top_srcdir)/lib/liblvm.a
++	$(CC) -o $@ $(OBJECTS) -static $(LDFLAGS) $(LVMLIBS) $(LIBS) \
+ 		-rdynamic
+=20
+-liblvm2cmd.a: $(top_srcdir)/lib/liblvm.a $(OBJECTS)
++liblvm2cmd.a: $(top_srcdir)/lib/liblvm.a $(lib_OBJECTS)
+ 	cat $(top_srcdir)/lib/liblvm.a > $@
+ 	$(AR) rs $@ $(OBJECTS)
+=20
+
+--cWoXeonUoKmBZSoM--
+
+--xXmbgvnjoT4axfJE
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+Content-Disposition: inline
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.0 (GNU/Linux)
+
+iEYEARECAAYFAkIvXVkACgkQnw66O/MvCNESoACgkjMMMKUZ8OW36I8mecx9T5t+
+NgQAnjunw/ut51hHRlzD9x1ctBBdN4eR
+=yU0S
+-----END PGP SIGNATURE-----
+
+--xXmbgvnjoT4axfJE--
