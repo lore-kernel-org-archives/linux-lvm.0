@@ -1,10 +1,8 @@
-From: Harri Haataja <harri.haataja@smilehouse.com>
-Subject: Re: [linux-lvm] resize LV
-Message-ID: <20030129110758.GA19302@mail1.smilehouse.com>
-References: <00bd01c2c710$52576aa0$0a42a8c0@darkstar> <Pine.LNX.4.44.0301281505150.5767-100000@zeus.itg.uiuc.edu>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <Pine.LNX.4.44.0301281505150.5767-100000@zeus.itg.uiuc.edu>
+Message-ID: <1043839567.3e37ba4fd327e@secure.st-peter.stw.uni-erlangen.de>
+From: Svetoslav Slavtchev <galia@st-peter.stw.uni-erlangen.de>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Subject: [linux-lvm] 2.4.20 + xfs +lvm2 =  raid0_make_request bug
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,33 +13,45 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Jan 29 05:08:01 2003
+Date: Wed Jan 29 05:27:01 2003
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: linux-lvm@sistina.com
+To: linux-xfs@oss.sgi.com
+Cc: linux-lvm@sistina.com, linux-kernel@vger.kernel.org
 
-On Tue, Jan 28, 2003 at 03:08:12PM -0600, Alexander Lazarevich wrote:
-> JFS can totally do it. I've been using AIX before we moved to Linux,
-> and I did it all the time.
-> There must be a way to do it on linux systems using ext3. Anyone?
+Hi, a kind of repost 
+useing lvm2(with lvm1 everything is working perfect for the last 6 months)
+ when i try to mount a xfs filesystem wich is on 
+lv over soft raid-0, i'm getting just like in
+2.5.2x - 2.5.4x (i didn't try later kernels) :
 
-> On Tue, 28 Jan 2003, Thomas Kleffel wrote:
-> > > I know how to expand the LV while the LV is mounted, piece of cake
-> > > (lvextend -L+50GB /dev/homevg/userslv - expands userslv by 50GB).
-> > > But how do I expand the filesystem while it is mounted? I don't
-> > > want to umount the filesystem down to do this.
-> > >
-> > > The filesystem is an ext3 filesystem. Can I use resize2fs?
-> > No, afaik neither ext2 nor ext3 support resizing while being
-> > mounted.  And if I'm not wrong JFS and ReiserFS can't do this either
-> > but XFS can.
-> > I'm using XFS for this reason and it works fine for me.
+############################
+raid0_make_request bug: can't convert block across chunks or bigger than 16k
+25181311 4
+raid0_make_request bug: can't convert block across chunks or bigger than 16k
+25181343 4
+############################
 
-FWIW
-On the kernels I've used (no JFS patches, notably), ext3, xfs, reiserfs
-resize on the fly and jfs (which requires a weird remount option) still
-doesn't. IIRC ICBW
+is this know problem, is it fixed ?
+i thought that the problem exist only in 2.5 kernel
 
-And I'm absolutely sure that the reiserfs's I resize while mount every
-now and then do so and don't even require force switches anymore.
+everything works with reiserfs and jfs
+( well not really sure but i could transfer ~10Gb to and from the LV, mkfs ..)
+
+but with xfs got this:
+mkfs.xfs -- 
+device-mapper: unknown block ioctl 0x6424
+device-mapper: unknown block ioctl 0x6424
+
+and with mount again :
+
+raid0_make_request bug: can't convert block across chunks or bigger than 16k
+213164570 4
+raid0_make_request bug: can't convert block across chunks or bigger than 16k
+213164602 4
+
+any hints?
+
+regards,
+
+svetljo
