@@ -1,12 +1,9 @@
-Subject: Re: [linux-lvm] help on pvcreate usage
-From: SystemError <system.error@gmx.net>
-In-Reply-To: 
-	<3397328CD915D711BE07000802B083C20236507B@bwga522a.ts.siemens.de>
-References: 
-	<3397328CD915D711BE07000802B083C20236507B@bwga522a.ts.siemens.de>
-Content-Transfer-Encoding: 7bit
-Message-Id: <1066414771.1200.10.camel@carthage>
+From: =?iso-8859-1?q?M=E5ns_Rullg=E5rd?= <mru@users.sourceforge.net>
+Message-ID: <yw1xptgvk92l.fsf@users.sourceforge.net>
+References: <3F903230.9070608@siue.edu>
 Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Subject: [linux-lvm] Re: LVM ext3 support
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,57 +14,26 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Fri Oct 17 13:20:02 2003
+Date: Fri Oct 17 13:34:03 2003
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: "'linux-lvm@sistina.com'" <linux-lvm@sistina.com>
-Cc: Balasubramaniyan.Sathiamoorthy.ext_TCS@ts.siemens.de
+Content-Type: text/plain; charset="utf-8"
+To: linux-lvm@sistina.com
 
-Bala Sat,
+anthony mayes <anmayes@siue.edu> writes:
 
-the command <<pvcreate /dev/sdb4>> will "only" destroy all data on the
-partition <</dev/sdb4>> all other partitions on <</dev/sdb>> should
-remain unaffected.
+> I am running Redhat 9 with kernel 2.4.20-20.9.  I am getting the
+> following errors when trying to mount an LVM snapshot:
+>
+> EXT3-fs: INFO: recovery required on readonly filesystem.
+> EXT3-fs: write access unavailable, cannot proceed.
+>
+> I saw a thread on redhat.com that said a kernel patch is needed.  My
 
-Of course backups are always handy when doing things like that...
+BS.  You are trying to mount a non-clean filesystem on a read-only
+LV.  I don't know why your LV is read-only.  You should find out why
+it is, make it writable, and run fsck on it.  After that, you should
+be able to mount it.
 
-Bye
-Lutz Reinegger
-
-Am Don, 2003-10-16 um 16.18 schrieb Sathiamoorthy Balasubramaniyan
-(ext_TCS):
-> Hi all,
-> I have 2 external disks connected to my suse 7.0 box :
-> sdb 80GB (has 4 partitions)
-> sdc  8GB (has 3 partitions)
-> I need to increase the size of the 3rd partition, i.e sdc3, of the disk sdc
-> by borrowing some space from one of the free partitions,ie, sdb4 of the disk
-> sdb.
-> 
->  Iam not sure whether i can do this by LVM. My question is:
->  Can i use the command pvcreate /dev/sdb4 without disturbing the data on
-> other partitions in the disk sdb ?
-> 
-> Thanks in Advance,
-> Bala Sath
-> SIEMENS Transportation Systems
-> TS RA D OC
-> Tel  +49 531 226-6154
-> Fax +49 531 226-4477
-> mailto:Balasubramaniyan.Sathiamoorthy.ext_TCS@ts.siemens.de
-> 
-> Note: This e-mail may contain privileged, undisclosed or otherwise
-> confidential information. 
-> If you have received this e-mail in error, you are hereby notified that any
-> review, copying or distribution 
-> of it is strictly prohibited. Please inform the sender immediately and
-> destroy the original transmittal.
-> Thank you for your understanding
-> 
-> 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
-> 
+-- 
+M�ns Rullg�rd
+mru@users.sf.net
