@@ -1,11 +1,11 @@
 Return-Path: <root@srv.sistina.com>
-Date: Thu, 21 Jun 2001 11:05:40 +0200
+Date: Thu, 21 Jun 2001 11:09:56 +0200
 From: "Heinz J. Mauelshagen" <Mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] LVM problems
-Message-ID: <20010621110540.C28374@sistina.com>
-References: <20010620155023.B25048@sistina.com> <Pine.LNX.4.33.0106210143280.996-100000@fogarty.jakma.org>
+Subject: Re: [linux-lvm] mount: bad address
+Message-ID: <20010621110956.D28374@sistina.com>
+References: <20010618220049.A652@g7iii.junglelink.co.uk> <20010620155329.A25139@sistina.com> <20010620222027.A1115@g7iii.junglelink.co.uk>
 Mime-Version: 1.0
-In-Reply-To: <Pine.LNX.4.33.0106210143280.996-100000@fogarty.jakma.org>; from paul@clubi.ie on Thu, Jun 21, 2001 at 01:58:32AM +0100
+In-Reply-To: <20010620222027.A1115@g7iii.junglelink.co.uk>; from iain@g7iii.junglelink.co.uk on Wed, Jun 20, 2001 at 10:20:27PM +0100
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -21,96 +21,36 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Thu, Jun 21, 2001 at 01:58:32AM +0100, Paul Jakma wrote:
-> On Wed, 20 Jun 2001, Heinz J. Mauelshagen wrote:
+On Wed, Jun 20, 2001 at 10:20:27PM +0100, Iain Young wrote:
+> Hi Heinz,
 > 
-> > Ed,
+> On Wed, Jun 20, 2001 at 03:53:29PM +0200, Heinz J. Mauelshagen wrote:
+>  
+> > did you follow the instructions in INSTALL and PATCHES/README contained
+> > in the LVM distro to put necessary LVM patches into the kernel?
 > 
-> > Linus *never* answered when we send hom patches even though I've
-> > send them multiple times.
-> 
-> and linus has said many many times on l-k: he gets loads and loads of
-> mail, he reads it with his finger on the D key, if you hear nothing
-> from him, keep sending.
+> Yup, applied with no prons, compiled with no probs. module loads fine,
+> everything works, except for the mount.
 
-Yes, we kept sending (sigh).
-Thanks to Alan, we'll hopefully make it soon into vanilla.
+Hmmm...
 
-> 
-> also, you can almost take it as given that he won't look at anything
-> but emails that contain an inline diff (unified format) that tackles
-> one specific problem/update. URL or mime attachment -> deleted.
+Could you send the following output then (VGName as a placeholder):
 
-We never have send attachements.
+- vgdisplay -v VGName
+- lvscan -b
+- ls -l /dev/VGName
 
-> 
-> > We are working together with Alan Cox since weeks to get his -ac
-> > tree updated.
-> >
-> > Once he has it in he will push it to Linus.  Hopefully small
-> > changes in the future will make it in easier (sigh).
-> 
-> hopefully so and look forward to it.
-
-We too.
+Heinz
 
 > 
-> >
-> > Regards,
-> > Heinz    -- The LVM Guy --
 > 
-> again, just like Ed, i have to say that i'm not bitching.. i think
-> LVM is just about the best thing since sliced bread - truly my
-> favourite linux kernel feature.
-
-Thanks :-)
-
-> so all i want to point out is that
-> LVM'd be just that -> <- much better if you guys kept LVM closely
-> in-sync with Linus. and best of all, for everyone ultimately, if
-> you'd ditch your private CVS tree altogether and just sync through
-> Linus very regularly..
-
-That's exactly what we want to conform to.
-It just takes a hole lot of time (several weeks now) to feed it into -ac.
-
-And believe me, Alan is *very* helpful here but he can't work on just LVM
-integration for sure.
-
-Once we've got -ac updated, we'll try setting up a cron job to feed in the
-small patches we are going to send to Alan/Linus ;-))
-
-> 
-> (we don't care if sometimes you introduce bugs by sending patches
-> very frequently to Linus, cause we'll know that you just as regularly
-> send fixes.  but don't accumulate bug-fixes over many months in a cvs
-> tree and sit on them.)
-
-Accepted.
-
-> 
-> but i do love LVM.
-
-We too ;-)
-
-> 
-> regards,
-> -- 
-> Paul Jakma	paul@clubi.ie	paul@jakma.org
-> PGP5 key: http://www.clubi.ie/jakma/publickey.txt
-> -------------------------------------------
-> Fortune:
-> That government is best which governs least.
-> 		-- Henry David Thoreau, "Civil Disobedience"
+> Iain
 > 
 > _______________________________________________
 > linux-lvm mailing list
 > linux-lvm@sistina.com
 > http://lists.sistina.com/mailman/listinfo/linux-lvm
 > read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
-
-Regards,
-Heinz    -- The LVM Guy --
 
 =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
