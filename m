@@ -1,10 +1,9 @@
-From: Tracy R Reed <treed@copilotconsulting.com>
-Message-ID: <20030915030139.A11888@copilotconsulting.com>
+From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
+Subject: Re: [linux-lvm] lvm and a dead disk
+Message-ID: <20030915152521.N2618@sistina.com>
+References: <16228.26968.804811.803799@gargle.gargle.HOWL>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-md5;
-	protocol="application/pgp-signature"; boundary="HcAYCG3uE/tztfnV"
-Content-Disposition: inline
-Subject: [linux-lvm] Kernel oops
+In-Reply-To: <16228.26968.804811.803799@gargle.gargle.HOWL>; from pk@q-leap.com on Sun, Sep 14, 2003 at 03:12:56PM +0200
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,77 +14,100 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Sep 15 06:49:03 2003
+Date: Mon Sep 15 08:35:02 2003
 List-Id: <linux-lvm.redhat.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
---HcAYCG3uE/tztfnV
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Peter,
 
-Linux home 2.4.20 #18 SMP Fri Sep 12 22:49:21 PDT 2003 i686 GNU/Linux
-home:~# lvcreate --version
-  LVM version:     1.95.15 (2003-01-10)
-  Library version: 0.96.07-ioctl-cvs (2002-11-21)
-  Driver version:  1.0.8
+the LVM1 way is to replace the broken disk, pvcreate the new one and
+vgcfgrestore the metadata to it.
 
-I created a script to take daily snapshots of my four logical volumes for
-backup purposes. Approximately every other time I run it the whole lvm
-system seems to freeze up. The first time it did this it crashed the whole
-computer by not allowing any writes to disk. The second two times the
-system didn't crash but I now have hung lvremove and lvcreate processes
-which appear to require a reboot to clear. strace on the processes shows
-nothing happening and kill -9 has no effect. In the dmesg I have lots of
-"invalidate: busy buffer" and then a kernel oops:
+In case you can install LVM2, vgchange has a "-P" option to activate
+partially available volume groups. No need for a new drive that way.
 
-Unable to handle kernel NULL pointer dereference at virtual address
-00000001
- printing eip:
-ce6a16d0
-*pde =3D 00000000
-Oops: 0002
-CPU:    1
-EIP:    0010:[<ce6a16d0>]    Tainted: P
-EFLAGS: 00010202
-eax: ce6a16d0   ebx: ce6a16a0   ecx: 00000010   edx: ce6a16d0
-esi: 00000001   edi: 00000000   ebp: c023c230   esp: df6c3f3c
-ds: 0018   es: 0018   ss: 0018
-Process kcopyd (pid: 69, stackpage=3Ddf6c3000)
-Stack: c023b83a ce6a16d0 00000001 00000001 00000b76 00000000 0000001b
-00000000
-       c7cc3c10 cda29004 00000010 c023a52f d41f3e8c c7c7b218 c023a4e0
-c7c7b218
-       c023c891 00000000 c7c7b218 cda29004 c031f858 c023c240 cda29004
-c023c394
-Call Trace:    [<c023b83a>] [<c023a52f>] [<c023a4e0>] [<c023c891>]
-[<c023c240>]
-  [<c023c394>] [<c023c424>] [<c023c230>] [<c023c535>] [<c01075ee>]
-[<c023c480>]
-=20
-Code: d0 16 6a ce d0 16 6a ce 00 00 00 00 69 dd 63 00 8c ff 7c f9
+3rd (hacky) option to avoid a new drive is to:
 
-This seems to be a reproduceable problem. I was under the impression that
-LVM was fairly stable by this point. The first crash happened in the
-middle of a backup that had been running for 48 hours which I will now
-have to restart. Not too happy. :( Uh oh...now the system can't write to
-disk again and I will have to reboot.=20
+# mkdir -p /etc/lvmtab.d
+# cp /etc/lvmconf/vg0.conf /etc/lvmtab.d
+# echo -ne "vg0\0" > /etc/lvmtab
+# vgchange -ay
 
---=20
-Tracy Reed
-http://copilotconsulting.com
+Which will activate the volume group but you'll get errors/hangs accessing
+the failed drive with this.
 
---HcAYCG3uE/tztfnV
-Content-Type: application/pgp-signature
-Content-Disposition: inline
+After retrieving whatever you still get off the logical volumes, you
+need to recreate the volume group and logical volumes in order to restore
+your data (and start thinking about RAID ;)
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.0.1 (GNU/Linux)
-Comment: For info see http://www.gnupg.org
+Regards,
+Heinz    -- The LVM Guy --
 
-iEYEARECAAYFAj9ljgMACgkQ9PIYKZYVAq0dygCfWRuYGllsezgyuOh19L/3dbeI
-IycAn0kBGtYIUmDDDy7e3MnX3qLEXDDt
-=ttiV
------END PGP SIGNATURE-----
 
---HcAYCG3uE/tztfnV--
+
+
+On Sun, Sep 14, 2003 at 03:12:56PM +0200, Peter wrote:
+> Hello,
+> 
+> using lvm under Debian woody with packages 
+> lvm-common v1.5.5 and lvm10 v1.04-5 and linux 2.4.21 I once had a
+> volume group vg0 with three physical volumes:
+> 
+> /dev/scsi/host0/bus0/target5/lun0/part1
+> /dev/scsi/host0/bus0/target3/lun0/part1
+> /dev/scsi/host0/bus0/target4/lun0/part6
+> 
+> Unfortunately the first disk failed, but while Linux was still up I
+> could still access some of the files.  That obviously changed after I
+> rebooted the system as the first disk was hopelessly broken and vg0
+> could no longer be activated.
+> 
+> Now as there still are two pv's left and I can see the data on them
+> (only with grep or strings), I was wondering if there is any way to
+> activate the volume group in some sort of broken mode?  Just to access
+> the files that are still there as it was before the reboot?
+> 
+> I already tried to vgcfgrestore the data to a newly created pv
+> actually with success:
+> 
+> /dev/ide/host0/bus0/target0/lun0/part2
+> /dev/scsi/host0/bus0/target3/lun0/part1
+> /dev/scsi/host0/bus0/target4/lun0/part6
+> 
+> (replaced the SCSI disk with an IDE) but I don't seem to be able to do
+> any useful (like mounting) with it.  I understand that the filesystem
+> is missing a lot of data in order to start up.  I just thought I ask
+> here before I finally overwrite the remaining partitions.
+> 
+> Before you ask why I don't restore the data from the backup I have to
+> admit that the last backup is almost a year old, and please don't ask
+> why :/
+> 
+> Thanks a lot in advance,
+> 
+>     Peter
+> 
+> --
+> .signature: No such file or directory.
+> 
+> 
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@sistina.com
+> http://lists.sistina.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+
+*** Software bugs are stupid.
+    Nevertheless it needs not so stupid people to solve them ***
+
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+Heinz Mauelshagen                                 Sistina Software Inc.
+Senior Consultant/Developer                       Am Sonnenhang 11
+                                                  56242 Marienrachdorf
+                                                  Germany
+Mauelshagen@Sistina.com                           +49 2626 141200
+                                                       FAX 924446
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
