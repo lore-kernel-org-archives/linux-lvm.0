@@ -1,13 +1,13 @@
 Received: from o.ww.redhat.com (vpn50-3.rdu.redhat.com [172.16.50.3])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id i1EABLi10139
-	for <linux-lvm@redhat.com>; Sat, 14 Feb 2004 05:11:21 -0500
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id i1EACNi10261
+	for <linux-lvm@redhat.com>; Sat, 14 Feb 2004 05:12:23 -0500
 From: Heinz Mauelshagen <mauelshagen@redhat.com>
-Subject: Re: [linux-lvm] LVM Problems :)
-Message-ID: <20040214101120.GA22753@redhat.com>
-References: <402CD9E4.8070402@demonlord.de> <20040213143846.GB10943@redhat.com> <402D0433.5000909@demonlord.de> <20040213173203.GA13188@redhat.com> <402D1432.8030003@demonlord.de>
+Subject: Re: [linux-lvm] lvm pvscan or vgscan very slow
+Message-ID: <20040214101222.GB22753@redhat.com>
+References: <402C0D65.80905@caltech.edu> <20040212180824.O10533@homer.msp.redhat.com> <402D5D93.7040802@caltech.edu> <20040213173423.C14206@homer.msp.redhat.com> <402D66C6.5090906@caltech.edu>
 Mime-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <402D1432.8030003@demonlord.de>
+In-Reply-To: <402D66C6.5090906@caltech.edu>
 Sender: linux-lvm-admin@redhat.com
 Errors-To: linux-lvm-admin@redhat.com
 Reply-To: linux-lvm@redhat.com
@@ -19,262 +19,45 @@ List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
 List-Archive: <https://www.redhat.com/archives/linux-lvm/>
-Date: Sat Feb 14 05:10:01 2004
+Date: Sat Feb 14 05:11:00 2004
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@redhat.com
 
-On Fri, Feb 13, 2004 at 07:15:14PM +0100, Christian Reiss wrote:
-> Greetings again,
+On Fri, Feb 13, 2004 at 04:07:34PM -0800, Ling Li wrote:
 > 
-> Yes, of course it was not a rogue lvm ;)
-> Fun is a must, eh?
+> 
+> Alasdair G Kergon wrote:
+> >On Fri, Feb 13, 2004 at 03:28:19PM -0800, Ling Li wrote:
+> >
+> >>I guess the number of devices to be scanned is just too large (and my 
+> >>computer is also a very slow one). Is there some way to specify a 
+> >>narrower range of devices to be scanned in LVM2?
+> >
+> > 
+> >The filter lines in lvm.conf.  See doc/example.conf and man lvm.conf.
+> 
+> Got it. The man page says lvm.conf is only loaded during the 
+> "initialization phase of LVM." Does this mean I have to reboot the 
+> computer for the new lvm.conf to be in effect? Can I just send some 
+> signal to some process?
 
-:)
+No, just run vgscan after setting up your filter in lvm.conf.
 
 > 
-> Anyway,
-> Here is my recipe of shrinking the lvm.
-> I hope i got it right, now with the e2fsadm thingy:
+> --Ling
+> 
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@redhat.com
+> https://www.redhat.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
 
-If you want to shrink a VG in order to reduce it by PVs, there's
-no need to deactivate the VG (see below).
+-- 
 
 Regards,
 Heinz    -- The LVM Guy --
-
-
-> 
-> 1. unmount it
-> 2. e2fsadm -L-(SIZE)G /dev/share/data
-> 3. pvmove /dev/(HDD)
-
-Not needed > 4. vgchange -a n
-
-4. vgchange -x y
-
-> 5. vgreduce share /dev/(HDD)
-
-Not needed > 6. vgchange -a y
-
-6. vgchange -x n
-
-> 7. fdisk /dev/(HDD)
-> 8. mkfs.ext2 auf /dev/(HDD)
-> 9. Copy files to reduce data amount on LVM
-> 10. repeat
-> 
-> Or am i missing anything? :)
-> If not, i will spent some hours of GREAT FUN
-> shrinking it. Ahh, the fsck's, movings and.. :)
-> 
-> -Christian.
-> BTW: Awesome support! :)
-> 
-> 
-> 
-> 
-> Heinz Mauelshagen wrote:
-> >On Fri, Feb 13, 2004 at 06:06:59PM +0100, Christian Reiss wrote:
-> >
-> >>Greetings again,
-> >>
-> >>Curious, I replied, but did not recive a copy of my reply,
-> >>maybe it got lost in the internet? :) Killed by a rogue lvm,
-> >>I assume ;) - If this was/is only me missing my reply, then
-> >>I am deeply sorry for spamming - not intentionally, really.
-> >
-> >
-> >Christian,
-> >
-> >as long as you agree that it wasn't LVM it is no problem ;-)
-> >
-> >
-> >>---
-> >>
-> >>Hi there!
-> >>
-> >>Big thanks for the very fast answer!!
-> >>Much appreciated!
-> >>
-> >>Just to be VERY sure, tune2fs -l says:
-> >>
-> >
-> ><SNIP>
-> >
-> >>Block count:              250576896
-> >
-> ><SNIP>
-> >
-> >>Block size:               4096
-> >
-> ><SNIP>
-> >
-> >>So What lvreduce size should i use to shrink it?
-> >>I better have a guru look over it, better safe than
-> >>sorry
-> >
-> >
-> >250576896 * 4KB / 1024MB/KB= 978816MB (which is a multiple of 32MB)
-> >
-> >->
-> >
-> ># lvreduce -L 978816M /dev/share/data
-> >
-> >That should free 112640MB or 3520 PEs in your VG.
-> >
-> >
-> >BTW: you should either run e2fsadm to grow/shrink the unmounted
-> >     filesystem _and_ the logical volume in one go
-> >     -or-
-> >     use the filesystem resizer and lvextend/lvreduce in the correct order
-> >     (lvextend + grow fs -or- shrink fs + lvreduce).
-> >
-> >     Problem with the later is getting the size arguments right ;-)
-> >
-> >
-> >Regards,
-> >Heinz    -- The LVM Guy --
-> >
-> >
-> >
-> >
-> >>-Christian.
-> >>
-> >>Heinz Mauelshagen wrote:
-> >>
-> >>
-> >>>Christian,
-> >>>
-> >>>the size of your filesystem and logical volume differs already.
-> >>>That's why e2fsadm fails.
-> >>>Did you eventually run resize2fs in order to shrink the filesystem ?
-> >>>
-> >>>Your logical volume size is 1091456MB (32MB/PE * 34108 PE) but your
-> >>>filesystem size is 963584GB (941GB * 1024MB/GB; check with
-> >>>"tune2fs -l" and look for the block count and block size to calculate
-> >>>this correctly).
-> >>>
-> >>>In case the result shows, that your filesystem is already smaller 
-> >>
-> >>than the LV,
-> >>
-> >>>lvreduce the logical volume appropriately.
-> >>>
-> >>>Use the block count * block size result and round it up to the next PE!
-> >>>
-> >>>Regards,
-> >>>Heinz    -- The LVM Guy --
-> >>>
-> >>>
-> >>>
-> >>>
-> >>>On Fri, Feb 13, 2004 at 03:06:28PM +0100, Christian Reiss wrote:
-> >>>
-> >>>
-> >>>>Greetings!
-> >>>>
-> >>>>I am trying to dissolve a running LVM, so i am doing
-> >>>>the e2fsadm, lvreduce, pvmove thingy. But ever since I
-> >>>>removed the first hdd, I am unable to resize the lvm
-> >>>>any more. The error can be seen below, with e2fsadm.
-> >>>>I also included the vg&lvdisplay commands.
-> >>>>
-> >>>>I am running the LVM1 sources (non-cvs, approx mid last
-> >>>>year), as i am unable to run LVM2 (need to downgrade kernel
-> >>>>to 2.4.22 (no patch included in lvm2 for 2.4.23)).
-> >>>>Also, I am (too dumb/unable) to locate a e2fsadm alike
-> >>>>tool for lvm2, as e2fsadm needs the lvm-tab thingy,
-> >>>>which lvm2 no longer provides.
-> >>>>
-> >>>>Any help is greatly appreciated.
-> >>>>
-> >>>>-Christian.
-> >>>>
-> >>>>
-> >>>>::::::::::::::::::
-> >>>>::: vgdisplay ::::
-> >>>>
-> >>>>--- Volume group ---
-> >>>>VG Name               share
-> >>>>VG Access             read/write
-> >>>>VG Status             available/NOT resizable
-> >>>>VG #                  0
-> >>>>MAX LV                256
-> >>>>Cur LV                1
-> >>>>Open LV               1
-> >>>>MAX LV Size           2 TB
-> >>>>Max PV                256
-> >>>>Cur PV                11
-> >>>>Act PV                11
-> >>>>VG Size               1.12 TB
-> >>>>PE Size               32 MB
-> >>>>Total PE              36668
-> >>>>Alloc PE / Size       34108 / 1.04 TB
-> >>>>Free  PE / Size       2560 / 80 GB
-> >>>>VG UUID               PSYbaQ-bl8d-xvHp-6re2-hoKd-9mE5-Wa5Tqz
-> >>>>
-> >>>>:::::::::::::::
-> >>>>:: lvdisplay ::
-> >>>>
-> >>>>--- Logical volume ---
-> >>>>LV Name                /dev/share/data
-> >>>>VG Name                share
-> >>>>LV Write Access        read/write
-> >>>>LV Status              available
-> >>>>LV #                   1
-> >>>># open                 1
-> >>>>LV Size                1.04 TB
-> >>>>Current LE             34108
-> >>>>Allocated LE           34108
-> >>>>Allocation             next free
-> >>>>Read ahead sectors     1024
-> >>>>Block device           58:0
-> >>>>
-> >>>>:::::::::::::
-> >>>>:: e2fsadm ::
-> >>>>
-> >>>>e2fsadm -L-10G /dev/share/data
-> >>>>e2fsadm -- logical volume size for "/dev/share/data" invalid
-> >>>>
-> >>>>:::::::::::
-> >>>>:: df -h ::
-> >>>>
-> >>>>Filesystem            Size  Used Avail Use% Mounted on
-> >>>>/dev/share/data       941G  910G   32G  97% /share/filebase
-> >>>>
-> >>>>
-> >>>>--
-> >>>>Christian Reiss <email@demonlord.de>
-> >>>>demonserver.de
-> >>>>
-> >>>>Key fingerprint = 2999 B7CD A218 06DF D658  5BE3 18B6 B232 02FF 71B2
-> >>>>Public Key can be obtained here: http://www.demonlord.de/pgp.txt
-> >>>_______________________________________________
-> >>>linux-lvm mailing list
-> >>>linux-lvm@redhat.com
-> >>>https://www.redhat.com/mailman/listinfo/linux-lvm
-> >>>read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
-> >>-- 
-> >>Christian Reiss <email@demonlord.de>
-> >>demonserver.de
-> >>
-> >>Key fingerprint = 2999 B7CD A218 06DF D658  5BE3 18B6 B232 02FF 71B2
-> >>Public Key can be obtained here: http://www.demonlord.de/pgp.txt
-> >_______________________________________________
-> >linux-lvm mailing list
-> >linux-lvm@redhat.com
-> >https://www.redhat.com/mailman/listinfo/linux-lvm
-> >read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
-> 
-> 
-> -- 
-> Christian Reiss <email@demonlord.de>
-> demonserver.de
-> 
-> Key fingerprint = 2999 B7CD A218 06DF D658  5BE3 18B6 B232 02FF 71B2
-> Public Key can be obtained here: http://www.demonlord.de/pgp.txt
 
 *** Software bugs are stupid.
     Nevertheless it needs not so stupid people to solve them ***
