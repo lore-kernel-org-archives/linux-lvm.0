@@ -1,9 +1,8 @@
-content-class: urn:content-classes:message
-MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Message-ID: <BD9F7FC07AAE534CAFF3DCC5DD395D6E046D85C0@uspto-is-111.uspto.gov>
-From: "Griffin, Michael (PEC)" <Michael.Griffin@USPTO.GOV>
-Subject: [linux-lvm] Performance question
+From: Paul Furness <paul.furness@vil.ite.mee.com>
+Message-Id: <1059493861.3664.3.camel@Zebra.vil.ite.mee.com>
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] LVM 1.x or 2.x?
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,24 +13,25 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Tue Jul 29 09:11:01 2003
+Date: Tue Jul 29 10:52:01 2003
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
 
-I have a Dell 4600 with a PERC quad channel raid controller attached to
-an external disk array (14 disks).  I am running Oracle 9i on Red Hat
-Linux.  I am running an import from an Oracle 8i database and
-normalizing the data.  My 3 import files are between 2-4GB each
-compressed, but grow to between 25-40GB each uncompressed.  It takes
-approximately 10 hours to import these into my database.  I currently
-have three disk arrays set up in RAID 0 to achieve as much speed as
-possible (so far). =20
+Hi.
 
-My question is, would it help my performance if I were to turn off RAID
-on the controller(s) and use LVM?  Any suggested configs would be
-helpful.
+What is the general consensus re: LVM 2? Is it stable for production
+systems? I have  afile server using lvm 1.0.7, and I will be updating
+some stuff on it this coming weekend. The question is: is it worth
+upgrading lvm on there? 
 
-Thank you,
+I have to recompile the kernel anyhow, but I don't want to spend hours
+trying to get it to work and end up going back to the old version. I
+also am not keen on losing the contents of the 1.5TB disk array attached
+to it, and having to spend all night restoring backups... ;)
 
-Michael
+Any thoughts gratefully received.
+
+Thanks
+
+Paul.
