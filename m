@@ -1,10 +1,9 @@
-From: Andreas Dilger <adilger@turbolabs.com>
-Subject: Re: [linux-lvm] ext2online fails
-Message-ID: <20011212142941.E940@lynx.no>
-References: <OFF0F6A876.96B3BE16-ON86256B13.005A4F63@TEXASMUTUAL.COM> <20011129095307.F29249@lynx.no> <m2itbkka3o.fsf@isnogud.escape.de>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <m2itbkka3o.fsf@isnogud.escape.de>; from urs@isnogud.escape.de on Thu, Dec 06, 2001 at 09:48:27AM +0100
+From: "Steve Wray" <steve.wray@the.net.nz>
+Subject: RE: [linux-lvm] reinstall, import, export question
+Message-ID: <NBBBKLKHMJHIJLHOGAOJCEKLJCAA.steve.wray@the.net.nz>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+In-Reply-To: <200112121346.fBCDkNQ18525@lewis.abi.tconline.net>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,27 +14,60 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Dec 12 15:28:02 2001
+Date: Wed Dec 12 16:12:02 2001
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: Urs Thuermann <urs@isnogud.escape.de>
-Cc: linux-lvm@sistina.com
+To: linux-lvm@sistina.com
 
-On Dec 06, 2001  09:48 +0100, Urs Thuermann wrote:
-> Andreas Dilger <adilger@turbolabs.com> writes:
-> > Unless you patched it yourself, I don't know of any kernels that include
-> > this patch by default.  Finally with 2.5 here, it will go into the main
-> > kernel.
-> 
-> Will it then also be able to reduce an ext2/3 filesystem while being
-> mounted?
+> From: linux-lvm-admin@sistina.com [mailto:linux-lvm-admin@sistina.com]On
+> Behalf Of Lewis Bergman
+>
+> > I want to be able to simply reinstall the system
+> > and carry the physical volumes, and the VG's and
+> > LV's they hold over to the rebuilt system.
+> I just finished doing this.
+> I installed a new python version from source which torched all my
+> printing in RH7. So instead of reinstalling the RPM I decided to wipe the
+OS and do a
+> fresh install. Here is my setup.
+>
+[snip]
+>
+> Of course You know most all of that I am sure but it is easier
+> for me to lay it out that way.
 
-No, that is terribly difficult, so it will never be done.  Since that is
-rarely a real requirement, offline resizing is the only solution.
+Nice and methodical!
+:)
 
-Cheers, Andreas
---
-Andreas Dilger
-http://sourceforge.net/projects/ext2resize/
-http://www-mddsp.enel.ucalgary.ca/People/adilger/
+> If you don't have a "dedicated" LVM disk as I do
+
+yeah I have 2 disks on seperate IDE controllers that I
+use for LVM. The system partitions are still on normal
+partitions and on one drive.
+
+> That will most surely complicate things if the OS doesn't support an
+> upgrade or install of LVM. I know RH and deb don't. (the two I use) I have
+seen on
+> the list that suse and another do. This worked for me at least.
+
+Mandrake seems to do it well; I set these volumes up at install
+time. I have this feeling that I'll be able to reintegrate my
+volumes at reinstall time too, but I wanted to clarify the
+export/import thing wondering if it was essential.
+
+
+
+> Hope I didn't forget anything major.
+> --
+> Lewis Bergman
+> Texas Communications
+> 4309 Maple St.
+> Abilene, TX 79602-8044
+> 915-695-6962 ext 115
+>
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@sistina.com
+> http://lists.sistina.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
+>
