@@ -1,13 +1,21 @@
-Date: Thu, 20 Jan 2005 17:59:00 +0000
-From: Alasdair G Kergon <agk@redhat.com>
-Subject: Re: [linux-lvm] Data corruption on large, multi-device filesystem
-Message-ID: <20050120175900.GE14093@agk.surrey.redhat.com>
-References: <20050118091059.GC27553@pcnocjb.dlan.cinetic.de>
-	<1106172883.41eedbd386498@www.eiler.net>
-	<41EFBAF4.5030403@svs.gsfc.nasa.gov>
+Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j0KNDIO14618
+	for <linux-lvm@redhat.com>; Thu, 20 Jan 2005 18:13:18 -0500
+Received: from neuralscape.com (synapse.neuralscape.com [198.144.200.82])
+	by mx3.redhat.com (8.12.11/8.12.11) with ESMTP id j0KNDCZ1030019
+	for <linux-lvm@redhat.com>; Thu, 20 Jan 2005 18:13:12 -0500
+Received: from shaeffer by neuralscape.com with local (Exim 4.12)
+	id 1CrlRK-0003X8-00
+	for linux-lvm@redhat.com; Thu, 20 Jan 2005 15:10:10 -0800
+Date: Thu, 20 Jan 2005 15:10:10 -0800
+From: Karen Shaeffer <shaeffer@neuralscape.com>
+Subject: Re: [linux-lvm] LVM + SAN Behavior
+Message-ID: <20050120231010.GA13560@synapse.neuralscape.com>
+References: <s1ee8563.047@kumc-smtpout.kumc.edu>
+	<OFF2B16D91.6DB8D9FD-ONC1256F8F.0021A89D-C1256F8F.00235D23@restena.lu>
 Mime-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <41EFBAF4.5030403@svs.gsfc.nasa.gov>
+In-Reply-To: <OFF2B16D91.6DB8D9FD-ONC1256F8F.0021A89D-C1256F8F.00235D23@restena.lu>
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -21,30 +29,25 @@ List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: LVM general discussion and development <linux-lvm@redhat.com>
-Cc: dm-devel@redhat.com
 
-On Thu, Jan 20, 2005 at 09:06:44AM -0500, Randall A. Jones wrote:
-> To verify, this corruption you are seeing only happens when you have a 
-> LV larger than 2TB
-> and when you use striping specifically with lvcreate -i.
-> Has anyone experienced data corruption with >2TB LV and no striping?
- 
-Does this patch help?
+On Thu, Jan 20, 2005 at 07:26:46AM +0100, gilles.massen@restena.lu wrote:
+> 
+> Concerning the enlargement of partitions: from what I saw, the kernel does 
+> not re-read the partition table easily. Short of rebooting, this can be 
+> achieved by starting fdisk (which should reread the partition table on its 
+> own) and writing it to the disk.
 
 
-Missing cast causing data corruption on devices with stripes > ~1TB.
---- diff/drivers/md/dm-stripe.c	2005-01-20 17:32:37.000000000 +0000
-+++ source/drivers/md/dm-stripe.c	2005-01-20 17:32:26.000000000 +0000
-@@ -179,7 +179,7 @@
- 
- 	bio->bi_bdev = sc->stripe[stripe].dev->bdev;
- 	bio->bi_sector = sc->stripe[stripe].physical_start +
--	    (chunk << sc->chunk_shift) + (offset & sc->chunk_mask);
-+	    ((sector_t) chunk << sc->chunk_shift) + (offset & sc->chunk_mask);
- 	return 1;
- }
- 
+Hello,
 
-Alasdair
+Have you tried running:
+
+blockdev --rereadpt <device>
+
+
+Thanks,
+Karen
 -- 
-agk@redhat.com
+ Karen Shaeffer
+ Neuralscape, Palo Alto, Ca. 94306
+ shaeffer@neuralscape.com  http://www.neuralscape.com
