@@ -1,10 +1,10 @@
-content-class: urn:content-classes:message
+Message-ID: <3EB16F3C.50807@mvista.com>
+From: Steven Dake <sdake@mvista.com>
 MIME-Version: 1.0
-Content-Type: multipart/alternative;
-	boundary="----_=_NextPart_001_01C30FE5.7F0F82DA"
-Message-ID: <389954B725462C48A5DD935C8E3526CA416F49@is-server.bondera.com>
-From: "Yaniv Valik" <Yanivv@savantis.com>
-Subject: [linux-lvm] ERROR: kernel and lvmtab are not consistent
+Subject: Re: [linux-lvm] Problems while trying to crash Oracle database
+References: <A11077E28200D51182EA00D0B775525307142799@xin02.india.hp.com>
+In-Reply-To: <A11077E28200D51182EA00D0B775525307142799@xin02.india.hp.com>
+Content-Transfer-Encoding: 7bit
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,218 +15,206 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Sat May 10 08:37:09 2003
+Date: Sat May 10 08:37:14 2003
 List-Id: <linux-lvm.redhat.com>
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: linux-lvm@sistina.com
 
-This is a multi-part message in MIME format.
+you could try kill -9 ? :)
 
-------_=_NextPart_001_01C30FE5.7F0F82DA
-Content-Type: text/plain;
-	charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+HERUR,CHANNABASAPPA (HP-India,ex2) wrote:
 
-Hi guys,
-=20
-From time to time, when I perform LVM operations, the response is:
-"ERROR: VGDA in kernel and lvmtab are NOT consistent: please run vgscan"
-=20
-Is there a solution for this problem? (beside rebooting)
-=20
-Are there any known causes for such problem that would help me avoid it?
-I belive importing twice will cause it but I also think it is not the
-only cause.
-=20
-Any help would be appreciated.
-=20
-Thanks,
---Yaniv
-=20
-=20
-
-------_=_NextPart_001_01C30FE5.7F0F82DA
-Content-Type: text/html;
-	charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-
-<html xmlns:o=3D"urn:schemas-microsoft-com:office:office" =
-xmlns:w=3D"urn:schemas-microsoft-com:office:word" =
-xmlns=3D"http://www.w3.org/TR/REC-html40">
-
-<head>
-<META HTTP-EQUIV=3D"Content-Type" CONTENT=3D"text/html; =
-charset=3Dus-ascii">
-
-
-<meta name=3DProgId content=3DWord.Document>
-<meta name=3DGenerator content=3D"Microsoft Word 10">
-<meta name=3DOriginator content=3D"Microsoft Word 10">
-<link rel=3DFile-List href=3D"cid:filelist.xml@01C30FFE.A4546510">
-<!--[if gte mso 9]><xml>
- <o:OfficeDocumentSettings>
-  <o:DoNotRelyOnCSS/>
- </o:OfficeDocumentSettings>
-</xml><![endif]--><!--[if gte mso 9]><xml>
- <w:WordDocument>
-  <w:SpellingState>Clean</w:SpellingState>
-  <w:GrammarState>Clean</w:GrammarState>
-  <w:DocumentKind>DocumentEmail</w:DocumentKind>
-  <w:EnvelopeVis/>
-  <w:Compatibility>
-   <w:BreakWrappedTables/>
-   <w:SnapToGridInCell/>
-   <w:ApplyBreakingRules/>
-   <w:WrapTextWithPunct/>
-   <w:UseAsianBreakRules/>
-  </w:Compatibility>
-  <w:BrowserLevel>MicrosoftInternetExplorer4</w:BrowserLevel>
- </w:WordDocument>
-</xml><![endif]-->
-<style>
-<!--
- /* Font Definitions */
- @font-face
-	{font-family:Tahoma;
-	panose-1:2 11 6 4 3 5 4 4 2 4;
-	mso-font-charset:0;
-	mso-generic-font-family:swiss;
-	mso-font-pitch:variable;
-	mso-font-signature:1627421319 -2147483648 8 0 66047 0;}
- /* Style Definitions */
- p.MsoNormal, li.MsoNormal, div.MsoNormal
-	{mso-style-parent:"";
-	margin:0in;
-	margin-bottom:.0001pt;
-	mso-pagination:widow-orphan;
-	font-size:12.0pt;
-	font-family:"Times New Roman";
-	mso-fareast-font-family:"Times New Roman";}
-a:link, span.MsoHyperlink
-	{color:blue;
-	text-decoration:underline;
-	text-underline:single;}
-a:visited, span.MsoHyperlinkFollowed
-	{color:purple;
-	text-decoration:underline;
-	text-underline:single;}
-pre
-	{margin:0in;
-	margin-bottom:.0001pt;
-	mso-pagination:widow-orphan;
-	font-size:10.0pt;
-	font-family:"Courier New";
-	mso-fareast-font-family:"Times New Roman";}
-span.EmailStyle17
-	{mso-style-type:personal-compose;
-	mso-style-noshow:yes;
-	mso-ansi-font-size:10.0pt;
-	mso-bidi-font-size:10.0pt;
-	font-family:Tahoma;
-	mso-ascii-font-family:Tahoma;
-	mso-hansi-font-family:Tahoma;
-	color:windowtext;
-	font-weight:normal;
-	font-style:normal;
-	text-decoration:none;
-	text-underline:none;
-	text-decoration:none;
-	text-line-through:none;}
-span.SpellE
-	{mso-style-name:"";
-	mso-spl-e:yes;}
-span.GramE
-	{mso-style-name:"";
-	mso-gram-e:yes;}
-@page Section1
-	{size:8.5in 11.0in;
-	margin:1.0in 1.25in 1.0in 1.25in;
-	mso-header-margin:.5in;
-	mso-footer-margin:.5in;
-	mso-paper-source:0;}
-div.Section1
-	{page:Section1;}
--->
-</style>
-<!--[if gte mso 10]>
-<style>
- /* Style Definitions */=20
- table.MsoNormalTable
-	{mso-style-name:"Table Normal";
-	mso-tstyle-rowband-size:0;
-	mso-tstyle-colband-size:0;
-	mso-style-noshow:yes;
-	mso-style-parent:"";
-	mso-padding-alt:0in 5.4pt 0in 5.4pt;
-	mso-para-margin:0in;
-	mso-para-margin-bottom:.0001pt;
-	mso-pagination:widow-orphan;
-	font-size:10.0pt;
-	font-family:"Times New Roman";}
-</style>
-<![endif]-->
-</head>
-
-<body lang=3DEN-US link=3Dblue vlink=3Dpurple =
-style=3D'tab-interval:.5in'>
-
-<div class=3DSection1><pre><font size=3D2 face=3D"Courier New"><span
-style=3D'font-size:10.0pt'>Hi =
-guys,<o:p></o:p></span></font></pre><pre><font
-size=3D2 face=3D"Courier New"><span =
-style=3D'font-size:10.0pt'><o:p>&nbsp;</o:p></span></font></pre><pre><fon=
-t
-size=3D2 face=3D"Courier New"><span style=3D'font-size:10.0pt'>From time =
-to time, when I perform LVM operations, the response =
-is:<o:p></o:p></span></font></pre><pre><b><font
-size=3D2 face=3D"Courier New"><span =
-style=3D'font-size:10.0pt;font-weight:bold'>&quot;ERROR: VGDA in kernel =
-and <span
-class=3DSpellE>lvmtab</span> are NOT consistent: please run <span =
-class=3DSpellE>vgscan</span>&quot;<o:p></o:p></span></font></b></pre><pre=
-><font
-size=3D2 face=3D"Courier New"><span =
-style=3D'font-size:10.0pt'><o:p>&nbsp;</o:p></span></font></pre><pre><fon=
-t
-size=3D2 face=3D"Courier New"><span style=3D'font-size:10.0pt'>Is there =
-a solution for this problem? (<span
-class=3DGramE>beside</span> =
-rebooting)<o:p></o:p></span></font></pre><pre><font
-size=3D2 face=3D"Courier New"><span =
-style=3D'font-size:10.0pt'><o:p>&nbsp;</o:p></span></font></pre><pre><fon=
-t
-size=3D2 face=3D"Courier New"><span style=3D'font-size:10.0pt'>Are there =
-any known causes for such problem that would help me avoid it? I <span
-class=3DSpellE>belive</span> importing twice will cause it but I also =
-think it <span
-class=3DGramE>is</span> not the only =
-cause.<o:p></o:p></span></font></pre><pre><font
-size=3D2 face=3D"Courier New"><span =
-style=3D'font-size:10.0pt'><o:p>&nbsp;</o:p></span></font></pre><pre><fon=
-t
-size=3D2 face=3D"Courier New"><span style=3D'font-size:10.0pt'>Any help =
-would be appreciated.<o:p></o:p></span></font></pre><pre><font
-size=3D2 face=3D"Courier New"><span =
-style=3D'font-size:10.0pt'><o:p>&nbsp;</o:p></span></font></pre><pre><fon=
-t
-size=3D2 face=3D"Courier New"><span =
-style=3D'font-size:10.0pt'>Thanks,<o:p></o:p></span></font></pre><pre><fo=
-nt
-size=3D2 face=3D"Courier New"><span =
-style=3D'font-size:10.0pt'>--Yaniv<o:p></o:p></span></font></pre>
-
-<p class=3DMsoNormal><font size=3D2 face=3DTahoma><span =
-style=3D'font-size:10.0pt;
-font-family:Tahoma;mso-bidi-font-family:"Times New =
-Roman"'><o:p>&nbsp;</o:p></span></font></p>
-
-<p class=3DMsoNormal><font size=3D3 face=3D"Times New Roman"><span =
-style=3D'font-size:
-12.0pt'><o:p>&nbsp;</o:p></span></font></p>
-
-</div>
-
-</body>
-
-</html>
-=00
-------_=_NextPart_001_01C30FE5.7F0F82DA--
+>Hi ,
+>	I am basically trying to crash the oracle database which has been
+>created using raw logical volumes . When I use 'dd' command to crash the
+>oracle database I find that the database is actually not crashing . 
+>
+>	I used the following steps to create Oracle database on raw logical
+>volumes .
+>
+>
+>1. Created Physical Volumes's using pvcreate command 
+># pvcreate /dev/sdp
+>pvcreate -- physical volume "/dev/sdp" successfully created
+>
+># pvcreate /dev/sdq
+>pvcreate -- physical volume "/dev/sdq" successfully created
+>
+>2. Created Volume Groups's
+># vgcreate vg06 /dev/sdp
+>vgcreate -- INFO: using default physical extent size 4.00 MB
+>vgcreate -- INFO: maximum logical volume size is 255.99 Gigabyte
+>vgcreate -- doing automatic backup of volume group "vg06"
+>vgcreate -- volume group "vg06" successfully created and activated
+>
+># vgcreate vg07 /dev/sdq
+>vgcreate -- INFO: using default physical extent size 4.00 MB
+>vgcreate -- INFO: maximum logical volume size is 255.99 Gigabyte
+>vgcreate -- doing automatic backup of volume group "vg07"
+>vgcreate -- volume group "vg07" successfully created and activated
+>
+>3. Created Logical Volume's
+>
+># lvcreate -l 25 -n control01.ctl /dev/vg06
+>lvcreate -- doing automatic backup of "vg06"
+>lvcreate -- logical volume "/dev/vg06/control01.ctl" successfully created
+>
+># lvcreate -l 25 -n control02.ctl /dev/vg06
+>lvcreate -- doing automatic backup of "vg06"
+>lvcreate -- logical volume "/dev/vg06/control02.ctl" successfully created
+>
+># lvcreate -l 100 -n system01.dbf /dev/vg06
+>lvcreate -- doing automatic backup of "vg06"
+>lvcreate -- logical volume "/dev/vg06/system01.dbf" successfully created
+>
+># lvcreate -l 100 -n log01.log /dev/vg07
+>lvcreate -- doing automatic backup of "vg07"
+>lvcreate -- logical volume "/dev/vg07/log01.log" successfully created
+>
+># lvcreate -l 100 -n log02.log /dev/vg07
+>lvcreate -- doing automatic backup of "vg07"
+>lvcreate -- logical volume "/dev/vg07/log02.log" successfully created
+>
+>4. Removed the existing raw devices
+>
+>[root@LNXSRVZ /dev]# rm /dev/raw/raw41
+>rm: remove `/dev/raw/raw41'? y
+>[root@LNXSRVZ /dev]# rm /dev/raw/raw42
+>rm: remove `/dev/raw/raw42'? y
+>[root@LNXSRVZ /dev]# rm /dev/raw/raw43
+>rm: remove `/dev/raw/raw43'? y
+>[root@LNXSRVZ /dev]# rm /dev/raw/raw44
+>rm: remove `/dev/raw/raw44'? y
+>[root@LNXSRVZ /dev]# rm /dev/raw/raw45
+>rm: remove `/dev/raw/raw45'? y
+>
+>5.Recreate raw devices using 'mknod' command
+>
+># mknod /dev/vg06/rsystem01.dbf c 162 41
+># mknod /dev/vg06/rcontrol01.ctl c 162 42
+># mknod /dev/vg06/rcontrol02.ctl c 162 43
+># mknod /dev/vg07/rlog01.log c 162 44
+># mknod /dev/vg07/rlog02.log c 162 45
+>
+>
+>6. Used 'raw' command to bind raw device to block device
+>
+># raw /dev/vg06/rsystem01.dbf /dev/vg06/system01.dbf
+>/dev/raw/raw41: bound to major 58, minor 19
+># raw /dev/vg06/rcontrol01.ctl /dev/vg06/control01.ctl
+>/dev/raw/raw42: bound to major 58, minor 17
+># raw /dev/vg06/rcontrol02.ctl /dev/vg06/control02.ctl
+>/dev/raw/raw43: bound to major 58, minor 18
+># raw /dev/vg07/rlog01.log /dev/vg07/log01.log
+>/dev/raw/raw44: bound to major 58, minor 20
+># raw /dev/vg07/rlog02.log /dev/vg07/log02.log
+>/dev/raw/raw45: bound to major 58, minor 21
+>
+>
+>7. CHANGED THE FILE PERMISSIONS
+># chmod 766 /dev/vg06
+># chmod 766 /dev/vg06/*
+># chmod 766 -R /dev/vg07         
+># chmod 766 -R /dev/vg07/*            
+># chown oracle:oinstall -R /dev/vg07  
+>
+># ll /dev/vg06/*
+>brwxrw-rw-    1 oracle   oinstall  58,  17 Apr 29 14:06
+>/dev/vg06/control01.ctl
+>brwxrw-rw-    1 oracle   oinstall  58,  18 Apr 29 14:06
+>/dev/vg06/control02.ctl
+>crwxrw-rw-    1 oracle   oinstall 109,   6 Apr 29 14:05 /dev/vg06/group
+>crwxrw-rw-    1 oracle   oinstall 162,  42 Apr 29 14:10
+>/dev/vg06/rcontrol01.ctl
+>crwxrw-rw-    1 oracle   oinstall 162,  43 Apr 29 14:10
+>/dev/vg06/rcontrol02.ctl
+>crwxrw-rw-    1 oracle   oinstall 162,  41 Apr 29 14:10
+>/dev/vg06/rsystem01.dbf
+>brwxrw-rw-    1 oracle   oinstall  58,  19 Apr 29 14:06
+>/dev/vg06/system01.dbf
+>
+># ll /dev/vg07/*
+>crwxrw-rw-    1 oracle   oinstall 109,   7 Apr 29 14:05 /dev/vg07/group
+>brwxrw-rw-    1 oracle   oinstall  58,  20 Apr 29 14:06 /dev/vg07/log01.log
+>brwxrw-rw-    1 oracle   oinstall  58,  21 Apr 29 14:07 /dev/vg07/log02.log
+>crwxrw-rw-    1 oracle   oinstall 162,  44 Apr 29 14:10 /dev/vg07/rlog01.log
+>crwxrw-rw-    1 oracle   oinstall 162,  45 Apr 29 14:10 /dev/vg07/rlog02.log
+>
+>9. init$ORACLE_SID.ora file had the following contents
+>
+>db_name                         = rawlvm1
+>
+>db_files                        = 400
+>
+>db_file_multiblock_read_count   = 16
+>
+>db_block_buffers                = 550
+>
+>shared_pool_size                = 5000000
+>
+>log_checkpoint_interval         = 10000
+>
+>processes                       = 100
+>
+>parallel_max_servers            = 8
+>
+>log_buffer                      = 32768
+>
+>global_names                    = TRUE
+>
+>control_files                   = (/dev/raw/raw42, /dev/raw/raw43)
+>
+>db_block_checksum               = true
+>
+>db_block_size                   = 4096
+>
+>background_dump_dest            = /u00/app/oracle/admin/hard/rawlvm/bdump
+>
+>core_dump_dest                  = /u00/app/oracle/admin/hard/rawlvm/cdump
+>
+>user_dump_dest                  = /u00/app/oracle/admin/hard/rawlvm/udump
+>
+>10. Created oracle database
+>
+>SQL> startup nomount;
+>ORACLE instance started.
+>
+>Total System Global Area   53178448 bytes
+>Fixed Size                   450640 bytes
+>Variable Size              50331648 bytes
+>Database Buffers            2252800 bytes
+>Redo Buffers                 143360 bytes
+>SQL>
+>SQL> create database "rawlvm1"
+>  2    controlfile reuse
+>  3    maxinstances 8
+>  4    maxlogfiles 32
+>  5    datafile
+>  6         '/dev/raw/raw41' size 40M reuse
+>  7      logfile
+>  8         '/dev/raw/raw44'  size 20M ,
+>  9         '/dev/raw/raw45'  size 20M ;
+>
+>Database created.
+>
+>	Please let me know if there is something fundamentally wrong in the
+>above steps used for creating Oracle database . After creating the database
+>I used the following 'dd' command to crash the database 
+>
+>	dd if=/boot/vmlinux-2.4.2-2 of=/dev/sdp
+>
+>	Strangely this command does'nt seem to crash the database . Can
+>anybody help me out to crash the Oracle database ?
+>
+>
+>
+>_______________________________________________
+>linux-lvm mailing list
+>linux-lvm@sistina.com
+>http://lists.sistina.com/mailman/listinfo/linux-lvm
+>read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+>
+>
+>
+>  
+>
