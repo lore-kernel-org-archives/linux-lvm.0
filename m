@@ -1,11 +1,10 @@
-Return-Path: <ph.l@libertysurf.fr>
-Message-ID: <3B3D8F40.29D5B41D@libertysurf.fr>
-Date: Sat, 30 Jun 2001 07:35:12 -0100
-From: Philippe Lefevre <ph.l@libertysurf.fr>
+Return-Path: <scott@devnull.dyndns.org>
+From: "S. Michael Denton" <smdenton@bellsouth.net>
+Date: Sat, 30 Jun 2001 09:55:14 -0400
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] LVM 1.0 release status
-References: <20010626005542.B23104@sistina.com>
-Content-Transfer-Encoding: quoted-printable
+Message-Id: <01063009551400.00262@devnull>
+Content-Transfer-Encoding: 8bit
+Subject: [linux-lvm] Cannot mount: device in use
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,26 +16,32 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="iso-8859-1"
+Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
+Cc: reiserfs-list@namesys.com
 
-"Heinz J. Mauelshagen" a =E9crit :
-> =
+Hello, just had a power outage in my area and when my system came back up, 
+all my  lvm'd reiserfs volumes reported that they were already mounted, even 
+though they were not.  I have seen this several times after system crashes 
+and each time, the only way to resolve the problem is to login in single-user 
+mode, umount the device (which reports <device>: not mounted) and then 
+reboot... after that, the devices go through the journal replay as expected.  
+As I do not have any lvm'd ext2fs, I will shortly create a small one, crash 
+the system, and see if the problem happens with the lvm'd ext2fs or not, but 
+until that time, here're my specifics:
 
-snip ....
-> Plan is to release 1.0 tomorrow afternoon CST.
-snip ...
+linux 2.2.19
+reiserfs 3.5.32
+lvm 0.9.1beta7
 
-May be it's a trivial question but I would like to understand:
+Also, someone previously asked if my mnttab file or /proc/mounts might have 
+been the issue, so in rcS i had it copy them elsewhere before it removed the 
+mnttab and started trying to mount filesystems... /proc/mounts only showed 
+/dev/root on / and procfs on /proc... mnttab didn't have the external volumes 
+in them either.
 
-Is LVM 1.0 version the first stable version after any 0.9 beta versions
-or is it a new branch within the development curse ??
+Thanks.
 
-Thanks for your reply and your very nice job on LVM.
-PhiL
--- =
-
-----------------------------------------------------------------------
-Linux 2.2.17 | Philippe Lefevre   E-mail: ph.l@libertysurf.fr |  =3D=B0)
-             |                                                |  /\\
-----------------------------------------------------------------_\_V--
+-- 
+Scott Denton
+smdenton@bellsouth.net
