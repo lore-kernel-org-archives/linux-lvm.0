@@ -1,9 +1,9 @@
 From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] Unable to mount snapshot
-Message-ID: <20031219110429.D18654@sistina.com>
-References: <9BBB7C9EFEF1874BAC4DC204E867EFAF02560DD0@s99mail06>
+Subject: Re: [linux-lvm] Changing PV position
+Message-ID: <20031219110923.E18654@sistina.com>
+References: <200312181208.49303.benoit.peccatte@enst-bretagne.fr>
 Mime-Version: 1.0
-In-Reply-To: <9BBB7C9EFEF1874BAC4DC204E867EFAF02560DD0@s99mail06>; from Chris.Little@okdhs.org on Thu, Dec 18, 2003 at 12:06:11PM -0600
+In-Reply-To: <200312181208.49303.benoit.peccatte@enst-bretagne.fr>; from benoit.peccatte@enst-bretagne.fr on Thu, Dec 18, 2003 at 12:08:49PM +0100
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,102 +14,62 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Fri Dec 19 04:10:02 2003
+Date: Fri Dec 19 04:15:02 2003
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Thu, Dec 18, 2003 at 12:06:11PM -0600, Little, Chris wrote:
-> don't use snapshot.  it sucks and the owners won't answer questions about
-> it.
+On Thu, Dec 18, 2003 at 12:08:49PM +0100, Benoit wrote:
+> Hello,
+> 
+> I'm currently using lvm on my box and one disk just died.
+> Then the second disk (hdb) became the first one (hda). The problem is that now 
+> I can't get back the physical volume which is on it. Is it possible to tell 
+> lvm to force the reading of a PV even if it isn't on the same disk as 
+> before ?
 
-Chris,
-what in particular problems do you have with snapshots ?
-
-Regards,
-Heinz    -- The LVM Guy --
-
+vgscan does whyt you are asking for (before trying "vgchange -ay").
 
 > 
-> > -----Original Message-----
-> > From: John Craig [mailto:johncraig01@netscape.net]
-> > Sent: Thursday, December 18, 2003 11:34 AM
-> > To: linux-lvm@sistina.com
-> > Subject: [linux-lvm] Unable to mount snapshot
-> > 
-> > 
-> > Hi,
-> > 
-> > I successfully created a snapshot of an active LV with XFS 
-> > filesystem, 
-> > and ldisplay shows it to be operating correctly. However, 
-> > when I try to 
-> > mount the snapshot, it says "wrong fs type, bad option, bad 
-> > superblock 
-> > on /dev/system/snap or too many mounted file systems"
-> > 
-> > Can anyone help, or shed some light on why this is happening? 
-> > Is there a 
-> > workaround?
-> > 
-> > The mount command was "mount -t xfs -o ro /dev/system/snap /mnt/snap"
-> > 
-> > I am running SuSE 9.0 on x86-64, with kernel 2.4.21-149, lvm version 
-> > 1.0.7(mp-v6). I have a volume group running on 3 raid arrays, 
-> > each 0.9 
-> > TB, for a total of 2.7 TB. It has 2 active LVs, one of them 2 TB, and 
-> > the other 500GB, leaving about 249GB unallocated. I created 
-> > the snapshot 
-> > with:
-> > 
-> > lvcreate -L 200G -s -n snap /dev/system/adsdata
-> > 
-> > As I said, the snapshot seems to be working correctly, but 
-> > when I bring 
-> > up the LVM tool in YAST, it shows the original LV, with 
-> > capacity 1.9 TB, 
-> > mounted, and the snapshot  with a capacity of 1.9TB, 
-> > unmounted. When I 
-> > try to set the mount point for the snapshot, it says the capacity is 
-> > wrong, it needs to be <= 249GB. In other words, it seems to 
-> > be treating 
-> > it as if it were a regular LV, not a snapshot..
-> > 
-> > The listing of lvdisplay is:
-> > --- Logical volume ---
-> > LV Name                /dev/system/snap
-> > VG Name                system
-> > LV Write Access        read only
-> > LV snapshot status     active destination for /dev/system/adsdata
-> > LV Status              available
-> > LV #                   3
-> > # open                 0
-> > LV Size                2 TB
-> > Current LE             16383
-> > Allocated LE           16383
-> > snapshot chunk size    64 KB
-> > Allocated to snapshot  16.66% [33.29 GB/199.90 GB]
-> > Allocated to COW-table 100 MB
-> > Allocation             next free
-> > Read ahead sectors     1024
-> > Block device           58:2
-> > 
-> > 
-> > 
-> > 
-> > _______________________________________________
-> > linux-lvm mailing list
-> > linux-lvm@sistina.com
-> > http://lists.sistina.com/mailman/listinfo/linux-lvm
-> > read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
-> > 
+> Thank you for your help.
+> Benoit
+> 
+> 
+> Informations :
+> 
+> peck:/# fdisk -l /dev/hda
+> 
+> Disk /dev/hda: 122.9 GB, 122942324736 bytes
+> 255 heads, 63 sectors/track, 14946 cylinders
+> Units = cylinders of 16065 * 512 = 8225280 bytes
+> 
+>    Device Boot      Start         End      Blocks   Id  System
+> /dev/hda1   *           1         898     7213153+   b  W95 FAT32
+> /dev/hda2             899        1384     3903795   83  Linux
+> /dev/hda3            1385       14946   108936765    5  Extended
+> /dev/hda5            1385        1992     4883728+  fd  Linux raid autodetect
+> /dev/hda6            1993       14946   104052973+  8e  Linux LVM
+> 
+> peck:/# pvs /dev/hda6
+>   Failed to read physical volume "/dev/hda6"
+> 
+> 
+> I'm currently using linux 2.6-test9, with lvm2 tools. 
+> The missing volume was created with lvm1 tools.
+> 
+> 
 > 
 > _______________________________________________
 > linux-lvm mailing list
 > linux-lvm@sistina.com
 > http://lists.sistina.com/mailman/listinfo/linux-lvm
 > read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+
+-- 
+
+Regards,
+Heinz    -- The LVM Guy --
 
 *** Software bugs are stupid.
     Nevertheless it needs not so stupid people to solve them ***
