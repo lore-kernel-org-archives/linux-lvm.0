@@ -1,8 +1,7 @@
-Message-Id: <200401191729.i0JHTJo24262@mail.osdl.org>
-From: markw@osdl.org
-In-Reply-To: <16395.42887.514077.642497@laputa.namesys.com>
+From: Marek Jan <xjan@informatics.muni.cz>
+Message-ID: <Pine.LNX.4.44.0401191838340.3041-100000@nymfe07.fi.muni.cz>
 MIME-Version: 1.0
-Subject: [linux-lvm] Re: linux-2.6.0 + reiser4 oops
+Subject: [linux-lvm] Initialize disk on /dev/nda
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -13,39 +12,35 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Jan 19 12:30:02 2004
+Date: Mon Jan 19 12:47:02 2004
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/plain; charset="us-ascii"
+Content-Type: TEXT/PLAIN; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: Nikita@Namesys.COM
-Cc: reiserfs-list@Namesys.COM, linux-lvm@sistina.com
+To: linux-lvm@sistina.com
 
-On 19 Jan, Nikita Danilov wrote:
-> markw@osdl.org writes:
->  > I was testing our DBT-2 workload on linux-2.6.0 with LVM2 and reiser4
->  > and got the following oops when I attempted to create a database with
->  > PostgreSQL.  Let me know if I can provide any additional information:
->  > 
->  > Unable to handle kernel NULL pointer dereference at virtual address 00000000
->  >  printing eip:                                                       
->  > c014c607      
->  > *pde = 00104001
->  > *pte = 00000000
->  > Oops: 0000 [#1]
-> 
-> This looks much like another bug report we had for
-> reiser4-on-top-of-raid0. A fix (tentative) for that was to use
-> bio_add_page() while constructing bios, and it will be included into
-> next reiser4 snapshot (that, I hope, will be released
-> to-day---2004.01.19).
+Hello,
+I have problem with pvcreate on network block device disk (/dev/nda). 
+When I run
 
-Hi Nikita,
+# pvcreate /dev/nda
+  /dev/nda: Couldn't find device.
 
-I ran the 2004.01.19 snapshot against 2.6.1 and now I get the following
-error when I attempt to mount the reiser4 parition:
+Device /dev/nda is OK, because Iam able to create ext3 file system on it.
 
-reiser4[mount(17176)]: _init_read_super (fs/reiser4/init_super.c:166)[nikita-2608]:
-WARNING: Wrong master super block magic.
 
-Thanks,
-Mark
+# mkfs.ext3 /dev/nda
+mke2fs 1.27 (8-Mar-2002)
+Filesystem label=
+OS type: Linux
+Block size=4096 (log=2)
+Fragment size=4096 (log=2)
+4120704 inodes, 8232588 blocks
+411629 blocks (5.00%) reserved for the super user
+...
+...
+
+I am running LVM2 on Debian with 2.4.22 kernel.
+Have anyone know what I doing wrong?
+Thank You, Marek Jan 
+PS I am very sorry of my really BAD english :-).
+MJ
