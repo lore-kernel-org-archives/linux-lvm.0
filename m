@@ -1,10 +1,9 @@
-From: Alex Zarochentsev <zam@namesys.com>
-Subject: Re: [linux-lvm] resize reiserfs
-Message-ID: <20011122233620.A1319@backtop>
-References: <20011122203009.A557@sky.net>
+From: Ulrich Wiederhold <U.Wiederhold@gmx.net>
+Message-ID: <20011123002839.A806@sky.net>
 Mime-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20011122203009.A557@sky.net>; from U.Wiederhold@gmx.net on Thu, Nov 22, 2001 at 08:30:10PM +0100
+Content-Transfer-Encoding: quoted-printable
+Subject: [linux-lvm] How to remove a vg manually?
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,37 +14,27 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Thu Nov 22 14:35:02 2001
+Date: Thu Nov 22 17:25:01 2001
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="iso-8859-1"
 To: linux-lvm@sistina.com
 
-hello !
+Hey,
+first I wanna say, the resize of the reiserfs worked ok. Thanks.
 
-> Hi,
-> I need to resize my lv /dev/store/data now.
-> 
-> I already added the 2nd HD (/dev/hdc1) to the vg store using vgextend
-> and extended the lv using lvextend.
-> 
-> Now I need to extend the reiserfs I got on this lv. I seached the web
-> and found the resize_reiserfs perl-script, but if I try it, I only get
-> this msg:
-> $#: ./resize_reiserfs --size +50G --lv /dev/store/data --dry-run          
-> 
->   only 0 free PE's (0 K) left on VG store
-> 
-> Sure, I already added the PE?s to the lv.
-> What to do?
+I move my hole data from the old vg01 with that error
+"pvmove -- ERROR reading input physical volume "/dev/hdb1" (still 65536 byt=
+es to read)"
 
-seems perl script tries extend lv again.
+to the new vg store at the moment. If it=B4s done I would like to remove
+the old vg01.
+How can I do this? Delete all files /etc/lvmconf/vg01* and change all
+Partition Types tp 83 instead of 8e?
 
-use resize_reiserfs from reiserfsprogs (3.x.0j or better) package,
-just type 
-	resize_reiserfs /dev/store/data
+Anything else or another possibility?
 
-it detects block device size and expands the file system as needed.
+Thanks
+Uli
 
---
-Alex.
+--=20
+'The box said, 'Requires Windows 95 or better', so i installed Linux - TKK 5
