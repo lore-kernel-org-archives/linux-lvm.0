@@ -1,7 +1,6 @@
-Message-ID: <2D0AFEFEE711D611923E009027D39F2B01066164@nasexs1.meridian-data.com>
-From: System Attendant <NASEXS1-SA@meridian-data.com>
-MIME-Version: 1.0
-Subject: [linux-lvm] ScanMail Message: To Recipient virus found and action taken.
+From: Antigen@sistina.com
+Message-ID: <WEBOWA-2K-01M3SOlbp00000343@mail.aspcenter.hu>
+Subject: [linux-lvm] Az On cimere VIRUS= Exploit.IFrame.FileDownload (Kaspersky) virussal fertozott levelet akartak tovabbitani.
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -12,21 +11,26 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Thu Sep 19 05:48:38 2002
+Date: Thu Sep 19 05:51:36 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: "'linux-lvm@sistina.com'" <linux-lvm@sistina.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+To: linux-lvm@sistina.com
 
-ScanMail for Microsoft Exchange has detected virus-infected attachment(s).
+T�j�koztatjuk, hogy a PSINet Menedzselt V�llalati levelez�rendszer�be �p�tett v�ruskeres�nk VIRUS= Exploit.IFrame.FileDownload (Kaspersky) v�rust tal�lt "[linux-lvm] Undelivered Mail Returned to Sender -OnetoOne" t�rgy� lev�lhez csatolt f�jlban, amelyet a MAILER-DAEMON@sistina.com c�mr�l k�ldtek �nnek.
 
-Sender = Mail Delivery System
-Recipient(s) = linux-lvm@sistina.com
-Subject = [linux-lvm] Undelivered Mail Returned to Sender -OnetoOne
-Scanning Time = 09/19/2002 03:47:12
+Az �n sz�m�t�g�p�nek biztons�ga �rdek�ben a v�russal fert�z�tt f�jl tov�bb�t�s�t rendszer�nk megakad�lyozta.
 
-Action on virus found:
-The attachment OnetoOne.mp3.bat matched file blocking settings. ScanMail has
-Deleted it. 
+A f�jl �llapota jelenleg: Removed. 
 
-Warning to recipient. ScanMail has detected a virus.
+�rdekl�dhet a lev�l k�ld�j�n�l, vagy k�rjen seg�ts�get helyi rendszergazd�j�t�l 
+
+            
+
+PSINet Managed Enterprise mail service found the file attached to the message with subject "[linux-lvm] Undelivered Mail Returned to Sender -OnetoOne" was infected with virus VIRUS= Exploit.IFrame.FileDownload (Kaspersky). The message was sent from MAILER-DAEMON@sistina.com.
+The delivery of the infected file has been blocked to ensure the safety of your computer.
+
+The file is currently Removed.
+
+For further instructions please consult with your local system administrator or the original sender of the message.
