@@ -1,11 +1,10 @@
-Date: Mon, 3 Sep 2001 08:29:47 -0400
-Subject: Re: [linux-lvm] LVM, defvs and initrd (for lvm rootfs)
-Message-ID: <20010903082947.W3385@pc.ilinx>
-References: <20010903000930.T3385@pc.ilinx> <002701c13436$3f5b2220$0b01a8c0@myplace.net> <20010903013954.V3385@pc.ilinx> <20010903134922.A3006@colombina.comedia.it>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20010903134922.A3006@colombina.comedia.it>
-From: "Brian J. Murrell" <4e93c7f8ae74f3689c71f348a23442b8@interlinx.bc.ca>
+Message-ID: <002d01c134ac$7ba0f590$0df1d981@piefke>
+From: "Alexander Bruns" <a.bruns@sauerland.de>
+References: <006b01c13448$755ea0b0$0df1d981@piefke> <3B934B19.1060308@st-peter.stw.uni-erlangen.de>
+Subject: Re: [linux-lvm] Foreign HD with LVM-Partition, how to read Data?
+Date: Mon, 3 Sep 2001 21:13:15 +0200
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -18,18 +17,29 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Mon, Sep 03, 2001 at 01:49:22PM +0200, Luca Berra wrote:
-> I believe this issue was fixed in a later revision of the
-> LVM tools, (i don't remember when precisely)
-> try upgrading tools.
+Hi,
 
-Excellent!  That was (and wasn't) what I was hoping to hear.  :-)
+> Hi i could't completly understand you
+>
+> is that true:
+>
+> you have instaled Redhat on a working sepatarate drive
+> and you hace added a drive from a crashed system
+> if this is the case i hope you can run
+>
 
-Thanx,
-b.
+no it is a newly installed system which never was intended to use lvm.
+i only compiled lvm etc to get hopefully read the data of the
+harddriver from the completely different system.
 
--- 
-Brian J. Murrell
+I never activated andy volume groups or defined something with lvm.
+
+do i have to define a volumegroup with this harddrive with the same
+name from the old system?
+
+
+Greetings
+
+Alexander Bruns
