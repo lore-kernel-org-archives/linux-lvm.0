@@ -1,16 +1,33 @@
 Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with SMTP id i237u3815790
-	for <linux-lvm@redhat.com>; Wed, 3 Mar 2004 02:56:03 -0500
-Received: from mail.goldenhope.com.cn ([220.249.10.10])
-	by mx1.redhat.com (8.11.6/8.11.6) with SMTP id i237u1b22956
-	for <linux-lvm@redhat.com>; Wed, 3 Mar 2004 02:56:02 -0500
-From: =?gb2312?B?zuLMzg==?= <wutao@mail.goldenhope.com.cn>
-Message-ID: <20040303075221.GA15698@lepton.goldenhope.com.cn>
-References: <20040302153451.GA13034@lepton.goldenhope.com.cn>
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with SMTP id i23F6D828208
+	for <linux-lvm@redhat.com>; Wed, 3 Mar 2004 10:06:13 -0500
+Received: from mwinf0503.wanadoo.fr (smtp5.wanadoo.fr [193.252.22.26])
+	by mx1.redhat.com (8.11.6/8.11.6) with SMTP id i23F6Db16559
+	for <linux-lvm@redhat.com>; Wed, 3 Mar 2004 10:06:13 -0500
+Received: from tangerine.coulon.evette (ADijon-107-1-19-194.w81-251.abo.wanadoo.fr [81.251.17.194])
+	by mwinf0503.wanadoo.fr (SMTP Server) with ESMTP id 804D2680026A
+	for <linux-lvm@redhat.com>; Wed,  3 Mar 2004 16:06:06 +0100 (CET)
+Received: from localhost ([127.0.0.1])
+	by tangerine.coulon.evette with esmtp (Exim 4.30)
+	id 1AyXwi-00084X-II
+	for linux-lvm@redhat.com; Wed, 03 Mar 2004 16:06:04 +0100
+Received: from tangerine.coulon.evette ([127.0.0.1])
+	by localhost (tangerine [127.0.0.1]) (amavisd-new, port 10024)
+	with ESMTP id 01162-09 for <linux-lvm@redhat.com>;
+	Wed, 3 Mar 2004 16:06:03 +0100 (CET)
+Received: from localhost ([127.0.0.1] helo=tangerine)
+	by tangerine.coulon.evette with esmtp (Exim 4.30)
+	id 1AyXwh-00084Q-1l
+	for linux-lvm@redhat.com; Wed, 03 Mar 2004 16:06:03 +0100
+From: "Jean-Luc Coulon (f5ibh)" <jean-luc.coulon@wanadoo.fr>
+Subject: =?iso-8859-1?Q?Re=A0=3A?= [linux-lvm] Re: Re
+Message-ID: <20040303150602.GA3465@tangerine.coulon.evette>
+References: <20040302152911.GI15556@tangerine.coulon.evette> <20040302154631.GB12779@tykepenguin.com> <200403021719.i22HJk407665@ecstasy1.winternet.com> <20040303085729.GC2532@tangerine.coulon.evette> <20040303091549.GB17625@tykepenguin.com>
 Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=PGP-SHA1;
+	protocol="application/pgp-signature"; boundary="X1bOJ3K7DJ5YkBrT"
 Content-Disposition: inline
-In-Reply-To: <20040302153451.GA13034@lepton.goldenhope.com.cn>
-Subject: [linux-lvm] Re: Why can't I extend a LV after many times extends?
+In-Reply-To: <20040303091549.GB17625@tykepenguin.com> (from pcaulfie@redhat.com on mer, mar 03, 2004 at 10:15:49 +0100)
 Sender: linux-lvm-admin@redhat.com
 Errors-To: linux-lvm-admin@redhat.com
 Reply-To: linux-lvm@redhat.com
@@ -22,137 +39,97 @@ List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
 List-Archive: <https://www.redhat.com/archives/linux-lvm/>
-Date: Wed Mar  3 09:50:05 2004
+Date: Wed Mar  3 10:04:08 2004
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@redhat.com
-Cc: submit@bugs.debian.org
 
-Package: lvm2
-Version: 2.00.08-4
+--X1bOJ3K7DJ5YkBrT
+Content-Type: text/plain; Format=Flowed; DelSp=Yes; charset=ISO-8859-15
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Ok , now I found the problem.
+Le 03.03.2004 10:15, Patrick Caulfield a =E9crit=A0:
+>On Wed, Mar 03, 2004 at 09:57:30AM +0100, Jean-Luc Coulon (f5ibh)
+>wrote:
+>> Tank you patrick and Ken for the answers,
+>>
+>> Here is what I dit.
+>> I've moved my root filesystemen (logical volume) to xfs and compiled
+>a
+>> couple of kernels, il was a bit long, my machine is not so fast. The
+>
+>> first one with xfs hard coded and the second with xfs as a module
+>> applying the recipe given by Ken: I have built the normal initrd =20
+>> with
+>
+>> lvmcreate_initrd, then mounted/edited/copied it and have the
+>following
+>> result:
+>>
+>> With XFS hardcoded, everything went fine and the system is running
+>> fine.
+>>
+>> With XFS as a module it isnot the case, even if the system load the
+>> modole at boot, I get a kernel panic. Here are the messages I =20
+>> wriiten
+>
+>> down by hand ( :-O ):
+>>
+>> /------------------
+>> |... snipped ..
+>> | RAMDISK: Compressed image found at block 0
+>> | Freeing initrd memory: 1532k freed
+>> | VFS: Mounter root (ext2 filesystem)
+>> | LVM version 1.0.8 (17/11/2003=E0 module loaded
+>> | SGI XFS with no debug enabled                 <-- was happy  ;-)
+>> | SGI: XFS Quota Management subsystem
+>> | vgscan -- reading all physical volumes (this may take a while)
+>> | vgscan -- found inactive volume group "v00"
+>> | vscan -- ERROR 28 writing volume group backup file
+>> |        /etc/lvmtab.d/vg00.tmp in vg-cfgbackup.c [line 273]
+>> | vgscan -- ERROR: unable to do  backup of volume group "vg003
+>> | vgscan -- ERROR: "lvm_tab_vg_removed": ulink "removing volume =20
+>> group
+>> |         "vg00" and "/etc/lvmtab.d"  succesfully created
+>> | vgscan -- WARNING: This program doesnt do a VGA backup of your
+>> |          volume group
+>> | vgchang  -- no volume roup found
+>> | VFS. Cannot open root device "3a02" or 3a:02
+>> | Please append a corret "root=3D" boot option
+>> |Kernel panic: VFS: Unable to mount root fs on 3a:02
+>> \___________
+>>
+>> End of story.
+>> It seems to find and load my xfs module but then there is a vgscan
+>> problem. As it work fine with xfs hard coded, I don't really *need*
+>it
+>> as a module but I would like to know where is the problem
+>
+>It looks like the initrd is too full to hold the LVM metadata backups.
+>That's
+>one of the prolems with adding stuff to initrds - it takes up space
+>that might
+>be needed for other things!
+>
+>patrick
+>
 
-There is a limit in code of lvm2 tools.
-Author has seen it as a problem... but no one has fixed it yet.
+Finally, I've modified the lvmcreate_initrd script to add the path to =20
+xfs.o and modprobe the module in linuxrc. This way, it works... even if =20
+it is not better than with the xfs driver hard coded in the kernel  ;-)
 
+--
+			- Jean-Luc
+--X1bOJ3K7DJ5YkBrT
+Content-Type: application/pgp-signature
+Content-Disposition: inline
 
-In lib/format_text/format-text.c ...
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.2.4 (GNU/Linux)
 
-around line 309
+iD8DBQBARfRaUdGGXzzGnNARAnRFAKClkdCL2GqIB5wmkd/WsQyEbpMiKwCaAlMS
+l7iYmcYhd+Q0IJgZup1snso=
+=fV/t
+-----END PGP SIGNATURE-----
 
-  /* FIXME Essential fix! Make dynamic (realloc? pool?) */
-  char buf[65536];
-  int found = 0;
-
-The buf size of 65536 is too small for me...
-
-I change it to 655360 then everyting is ok.
-
-The following is my quick patch, it can make things a little better.
-
-
-diff -urN lvm2-2.00.08/lib/format_text/format-text.c
-lvm2-2.00.08-new/lib/format_text/format-text.c
---- lvm2-2.00.08/lib/format_text/format-text.c  2004-03-03
-15:29:47.190121864 +0800
-+++ lvm2-2.00.08-new/lib/format_text/format-text.c      2004-03-03
-15:15:18.720149368 +0800
-@@ -306,7 +306,7 @@
-        uint32_t new_wrap = 0, old_wrap = 0;
-
-        /* FIXME Essential fix! Make dynamic (realloc? pool?) */
--       char buf[65536];
-+       char buf[655360];
-        int found = 0;
-
-        /* Ignore any mda on a PV outside the VG. vgsplit relies on this */
-
-On Tue, Mar 02, 2004 at 11:34:51PM +0800, lepton wrote:
-> LVM version:     2.00.08 (2003-11-14)
-> Library version: 1.00.07-ioctl (2003-11-21)
-> Driver version:  4.0.0
-> 
-> I am using linux kernel 2.6.3
-> 
-> For making my data can balance on all of my three scsi disk, I use such
-> methods to create my LV:
->   lvcreate -l 32 -n test vg /dev/sda1
->   lvextend -l +32 /dev/vg/test /dev/sdb1
->   lvextend -l +32 /dev/vg/test /dev/sdc1
->   lvextend -l +32 /dev/vg/test /dev/sda1
->   ......
-> 
->   (I use a shell script to do these)
-> 
-> But When I extend a Logic Volumn to 26.5G, it saids:
-> ....
->   Logical volume boards successfully resized
->   Extending logical volume boards to 26.75 GB
->   VG amd64 metadata writing failed
->   Extending logical volume boards to 26.75 GB
-> 
->   (lvextend using sdb1 and sdc1 will fail, but lvextend using sda1 will
->   sucess)
-> 
-> It is strange I have three scsi disk which are the same.
-> 
-> vgdisplay   
->   --- Volume group ---
->   VG Name               amd64
->   System ID             
->   Format                lvm2
->   Metadata Areas        3
->   Metadata Sequence No  1585
->   VG Access             read/write
->   VG Status             resizable
->   MAX LV                255
->   Cur LV                8
->   Open LV               0
->   Max PV                255
->   Cur PV                3
->   Act PV                3
->   VG Size               102.54 GB
->   PE Size               4.00 MB
->   Total PE              26250
->   Alloc PE / Size       20032 / 78.25 GB
->   Free  PE / Size       6218 / 24.29 GB
->   VG UUID               RSR1JG-3vRE-4esH-m8dI-rY4B-WG0p-XweADh
-> 
-> pvdisplay /dev/sda1
->   --- Physical volume ---
->   PV Name               /dev/sda1
->   VG Name               amd64
->   PV Size               34.18 GB / not usable 0   
->   Allocatable           yes 
->   PE Size (KByte)       4096
->   Total PE              8750
->   Free PE               2286
->   Allocated PE          6464
->   PV UUID               YAKwOe-oJlA-CbzF-5IwO-ReqH-JZiw-LdhtT7
->    
-> pvdisplay /dev/sdb1 
->   --- Physical volume ---
->   PV Name               /dev/sdb1
->   VG Name               amd64
->   PV Size               34.18 GB / not usable 0   
->   Allocatable           yes 
->   PE Size (KByte)       4096
->   Total PE              8750
->   Free PE               1966
->   Allocated PE          6784
->   PV UUID               FkVeuL-7JAW-UurK-GFcZ-e642-inMT-5MYYMq
-> 
->  pvdisplay /dev/sdc1
->   --- Physical volume ---
->   PV Name               /dev/sdc1
->   VG Name               amd64
->   PV Size               34.18 GB / not usable 0   
->   Allocatable           yes 
->   PE Size (KByte)       4096
->   Total PE              8750
->   Free PE               1966
->   Allocated PE          6784
->   PV UUID               sRSor7-r4KP-1PNr-nESn-sZPS-aKMx-7s3CU
-> 
+--X1bOJ3K7DJ5YkBrT--
