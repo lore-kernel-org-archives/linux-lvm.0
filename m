@@ -1,9 +1,11 @@
-From: FEJF <fejf@gmx.de>
-Date: Thu, 6 Sep 2001 17:28:04 +0200
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Message-Id: <E15f13v-0003bs-00@hermes.sistina.com>
-Subject: [linux-lvm] pv_move_pe() error again :/
+From: Andreas Dilger <adilger@turbolabs.com>
+Date: Thu, 6 Sep 2001 09:37:29 -0600
+Subject: Re: [linux-lvm] Root on LV
+Message-ID: <20010906093729.R32553@turbolinux.com>
+References: <OF44ABFE07.4419EBD8-ONC1256ABF.004C8662@ibcnet.hu> <3B978B57.8000208@st-peter.stw.uni-erlangen.de>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <3B978B57.8000208@st-peter.stw.uni-erlangen.de>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,38 +18,32 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
+Cc: dobos_s@IBCnet.hu
 
------BEGIN PGP SIGNED MESSAGE-----
-Hash: SHA1
+On Sep 06, 2001  16:42 +0200, svetljo wrote:
+> it probably will hold the kernel also
+> and as far i know there is no bootloader which can access logical volume
+> am i wrong
 
-hi,
-i search through the mailing list and found this question few times... and i 
-have also this problem atm and i didn't find a solution, i want to ask if 
-there is one now ? or perhaps will installing of lvm1.0.1-rc2 help (currently 
-using 0.9.1_beta7) ?
+Yes, you are wrong.  LILO+patch can get a kernel from a logical volume.
+Now that Linus has accepted my patch to fix LV_USER_BMAP from causing
+an oops I will submit the patch to the LILO maintainer.  It can also be
+found in the archives for this mailing list (have posted several times).
 
-root@bolm:[/x] # pvmove /dev/hdh1
-pvmove -- moving physical extents in active volume group "vg01"
-pvmove -- WARNING: if you lose power during the move you may need to restore 
-your LVM metadata from backup!
-pvmove -- do you want to continue? [y/n] y
-pvmove -- ERROR reading input physical volume "/dev/hdh1" (still 65536 bytes 
-to read)
+> dobos_s@IBCnet.hu wrote:
+> >My kernel has no modules.
+> >Why should I create an ext2 partition for holding an initrd which is not
+> >doing any essential things except vgscan and vgchange -ay ?
 
-pvmove -- ERROR "pv_move_pe(): read input PV" pv_move_pe
+You don't need vgscan at boot time unless the disks have moved around.
+You DO need "vgchange -a y" in order to load the LVM data into the kernel.
+If you are running EVMS you don't need that.  I think this is also on the
+TODO list for the next LVM version.
 
-pvmove -- ERROR "pv_move_pe(): read input PV" moving physical extents
-
-mfg, Florian E.J. Fruth
-
-- -- 
-Backups are usefull. Most often when you don't have one ;)
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.0.6 (GNU/Linux)
-Comment: For info see http://www.gnupg.org
-
-iD8DBQE7l5YE7Xtp66ctWuIRAvbXAJwPE9rdTBmtIz/stPOxlPIXS5PbwwCfQx41
-oCGlQD5AHCV0S9v/UDfog9o=
-=KYdJ
------END PGP SIGNATURE-----
+Cheers, Andreas
+-- 
+Andreas Dilger  \ "If a man ate a pound of pasta and a pound of antipasto,
+                 \  would they cancel out, leaving him still hungry?"
+http://www-mddsp.enel.ucalgary.ca/People/adilger/               -- Dogbert
