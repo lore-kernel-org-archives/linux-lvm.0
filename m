@@ -1,11 +1,12 @@
-Return-Path: <adilger@turbolinux.com>
-From: Andreas Dilger <adilger@turbolinux.com>
-Message-Id: <200012111835.eBBIZDs07974@webber.adilger.net>
-Subject: Re: [linux-lvm] How do you mount a snapshot?
-In-Reply-To: <20001210224808.B3772@archimedes.oak.suse.com> "from David Gould
- at Dec 10, 2000 10:48:08 pm"
-Date: Mon, 11 Dec 2000 11:35:13 -0700 (MST)
-MIME-Version: 1.0
+Return-Path: <chewie@wookimus.net>
+Date: Mon, 11 Dec 2000 14:03:58 -0600
+From: "Chad '^chewie' Walstrom" <chewie@wookimus.net>
+Message-ID: <20001211140358.A4533@wookimus.net>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="u3/rZRmxL6MmkK24"
+Content-Disposition: inline
+Subject: [linux-lvm] 0.8 to 0.9 transition
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,36 +18,34 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-David Gould writes:
-> On Fri, Dec 08, 2000 at 09:30:50PM +0100, Christian Limpach wrote:
-> > > Ok, so we are agreeing, it does not work on ext2 either unless you sync
-> > > and do not write between the sync and the snapshot. Doable, but not
-> > exactly
-> > > "safe".
-> > 
-> > hmm, I think it works for ext2 because you can always mount an ext2
-> > filesystem even if it's in an inconsistent state.  This is what happens
-> > everytime when your machine panics and you need to fsck your disks during
-> > the reboot, the root filesystem is mounted read-only...  It's my
-> 
-> Ok, but then you have an inconsistant filesystem. Which is not exactly
-> what I think of as "works" or "safe". My point was that snapshots are
-> great, but don't make the problem of consistancy magically disappear.
+--u3/rZRmxL6MmkK24
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Actually, the LVM snapshot code does an fsync_dev() call right before
-the snapshot is created, so the window in which the filesystem can
-become inconsistent is very small.  For ext2 this is relatively safe,
-because fsync_dev() will flush everything to disk.  For ext3 and reiserfs,
-the fsync_dev() isn't enough because it may only flush the data to the
-journal, and these filesystems will (currently) refuse to mount with a
-dirty journal on a read-only device.
+Will I be able to use the 0.9 tools with the 0.8 final LVM
+partitions/kernel during my shutdown sequence before booting into the
+new 0.9 enabled kernel?  If these 0.9 tools are not in place for use
+at boot time with the 0.9 enabled kernel, will the 0.8 final tools
+work to bring the system on line?
 
-Cheers, Andreas
--- 
-Andreas Dilger  \ "If a man ate a pound of pasta and a pound of antipasto,
-                 \  would they cancel out, leaving him still hungry?"
-http://www-mddsp.enel.ucalgary.ca/People/adilger/               -- Dogbert
+--=20
+Chad "^chewie, gunnarr" Walstrom <chewie@wookimus.net>
+             http://www.wookimus.net/
+
+--u3/rZRmxL6MmkK24
+Content-Type: application/pgp-signature
+Content-Disposition: inline
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.0.4 (GNU/Linux)
+Comment: For info see http://www.gnupg.org
+
+iD8DBQE6NTMuDMcLGCBsWv0RAjelAJ9r+J4RuU06HLic1YE8NBdduAqI0QCfbQhg
+S7KXaAoGhZykD/3b8f/GAQM=
+=hsHK
+-----END PGP SIGNATURE-----
+
+--u3/rZRmxL6MmkK24--
