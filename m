@@ -1,8 +1,10 @@
-Message-ID: <5E34D857F6BB704CA3369B7553233A81651A7E@ntsviemxs0152.connect.at-work.ent>
-From: "Csuk, Ferenc" <Ferenc.Csuk@one.at>
+Subject: Re: [linux-lvm] Setup for RAID1 with LVM
+References: <5E34D857F6BB704CA3369B7553233A81651A7E@ntsviemxs0152.connect.at-work.ent>
+From: Jason L Tibbitts III <tibbs@math.uh.edu>
+In-Reply-To: "Csuk, Ferenc"'s message of "Thu, 15 Nov 2001 16:57:44 +0100"
+Message-ID: <ufay9l8hv5v.fsf@epithumia.math.uh.edu>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-Subject: [linux-lvm] Setup for RAID1 with LVM
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -13,37 +15,23 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Thu Nov 15 10:01:01 2001
+Date: Thu Nov 15 10:09:02 2001
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="iso-8859-1"
-To: "'Mauelshagen@Sistina.com'" <Mauelshagen@Sistina.com>
-Cc: "'linux-lvm@sistina.com'" <linux-lvm@sistina.com>, "'jens.bruckmann@suse.de'" <jens.bruckmann@suse.de>
+To: linux-lvm@sistina.com
 
-Dear Heinz,
+>>>>> "FC" =3D=3D Ferenc Csuk <Csuk> writes:
 
-I have read your archive discussion on this topic and your suggested
-solution for it, see below. Now we would like to do it as well, but =
-when we
-start pvcreate /dev/md0 we get the following error: invalid partition =
-type
-0x83 for /dev/md0" (must be 0x8e). Unfortunatelly we can=B4t change it =
-using
-fdisk.
+FC> [...]  when we start pvcreate /dev/md0 we get the following error:
+FC> invalid partition type 0x83 for /dev/md0" (must be
+FC> 0x8e). Unfortunatelly we can=B4t change it using fdisk.
 
-What was the solution for it in your case?
+The manual page for pvcreate says:
 
-Thank you in advance.
+For whole disk devices only the partition table must be erased, which
+will effectively destroy all data on that disk.  This can be done by
+zeroing the first sector with:
+=20
+       dd if=3D/dev/zero of=3DPhysicalVolume bs=3D512 count=3D1
 
-Regards,
-Ferenc
-
-
-
-> - create a md0 RAID1 device with your 2 disks (mirror, no use of LVM)
->   - set the parttion ID to RAID autodetect (0xfd)
->   - edit /etc/raidtab (see RAID Howto)
->   - mkraid /dev/md0
-> - install LVM utilities (0.9.1beta3)
-> - pvcreate /dev/md0
-> - vgcreate -n BGNAME /dev/md0
-> - lvcreate <some logical volume>
+ - J<
