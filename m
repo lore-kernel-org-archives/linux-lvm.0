@@ -1,9 +1,10 @@
-Message-ID: <3E27EFD4.9060002@inrialpes.fr>
-From: Frederic Tronel <Frederic.Tronel@inrialpes.fr>
-MIME-Version: 1.0
-Subject: Re: [linux-lvm] Unable to mount root fs after kernel upgrade
-References: <004a01c2be1e$2f73cdd0$240b892c@pe1mhp.ampr.org>
-Content-Transfer-Encoding: 7bit
+From: jon+lvm@silicide.dk
+Subject: Re: re[2]: [linux-lvm] [Q] LVM snapshot volume extendable?
+Message-ID: <20030117182557.GA15272@gw.silicide.dk>
+References: <20030113214928.NXIW20432.imf21bis.bellsouth.net@marsha> <002701c2bdb8$6cf51b70$c600a8c0@COMPAQ> <20030117100237.GC15042@gw.silicide.dk> <001601c2be1b$fd442050$c600a8c0@COMPAQ>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <001601c2be1b$fd442050$c600a8c0@COMPAQ>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,38 +15,32 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Fri Jan 17 05:57:02 2003
+Date: Fri Jan 17 12:25:02 2003
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: linux-lvm@sistina.com, JanVG@Knoware.NL
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: linux-lvm@sistina.com
 
->>I'm not really sure of why this problem occurs but I've been able to 
->>solve it in the past doing a rdev on the linux kernel image to 
->>indicate that the root fs is /dev/vg00/root. man rdev should 
->>help you finding the 
->>accurate syntax. By the way I thought the problem was due to 
->>grub (since I'm using grub instead of lilo), but it seems 
->>that's not the reason.
->>
->>Fred.
+On Fri, Jan 17, 2003 at 08:31:34PM +0900, Sean Oh wrote:
 > 
+> ----- Original Message -----
+> From: <jon+lvm@silicide.dk>
+> To: <linux-lvm@sistina.com>
+> Sent: Friday, January 17, 2003 7:02 PM
+> Subject: Re: re[2]: [linux-lvm] [Q] LVM snapshot volume extendable?
+> > >
+> > > Very strange, since LVM snapshot does not hold FS. Am I right?
+> >
+> > i have successfully extented a ext3 snapshot. I did have to specify the
+> > mount as READONLY. You did do that too, didnt you ?
+> >
 > 
-> Fred do I understand you correct that this is a lilo issue ?
-> Lilo is not using the option "root=/dev/vg00/root" when booting ?
+> Yes, I specified the ro option in ext3 snapshots. But it is still not
+> mountable, giving the error 'Cant write to read-only device' and 'EXT3-FS:
+> write access unavailable, cannot proceed'
 
-To be honest I'm not really sure of the real source of this problem.
-I would rather say that it's related to the way the parameter 
-/dev/vg00/root is passed to the kernel. Indeed /dev/vg00/root must be 
-translated into a (major,minor) number before be usable by the kernel.
-This should be done at the time you ran lilo. With grub the problem is a 
-little bit different since you can change all the parameters at boot 
-time. But I'm pretty sure it is not due to lilo, since I had the same 
-problem using grub instead.
+strange.
 
-However, each time I've been able to solve the problem by rebooting on a 
-previous working kernel (lvm enabled), and writing the root fs inside 
-the new kernel image using rdev.
 
-BTW, have you been able to boot your new kernel ?
 
-Frederic
+JonB
