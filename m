@@ -1,9 +1,10 @@
-Return-Path: <raheesom@navpoint.com>
-From: Rupert Heesom <raheesom@navpoint.com>
-Date: 07 May 2001 18:42:29 -0400
-Message-Id: <989275349.1722.5.camel@localhost>
-Mime-Version: 1.0
-Subject: [linux-lvm] Upgrading from beta 6 to beta 7
+Return-Path: <darren_young@yahoo.com>
+Message-ID: <20010508032320.75000.qmail@web10802.mail.yahoo.com>
+Date: Mon, 7 May 2001 20:23:20 -0700 (PDT)
+From: Darren Young <darren_young@yahoo.com>
+Subject: RE: [linux-lvm] Can't pvcreate second partition...
+In-Reply-To: <B51F0C636E578A4E832D3958690CD73E0130BEE3@es04snlnt>
+MIME-Version: 1.0
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -19,20 +20,32 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Guys:
+If it helps. Fdisk to a disk that had no other
+partitions on it. Create an extended, then a logical
+inside it of 12G. Mark it as type 8e. Run pvcreate on
+/dev/hdb5 (the logical) and had the doesn't exist
+message. Reboot, create the physical, group and
+logical then an ext2 fs on it and all is well.
 
-I've currently got lvm beta6 RPMs installed on my PC, although I only
-have test vols in place.
+Kernel 2.4.2
+fdisk 2.10s
+LVM 0.9.1_beta6
 
-I think I ought to upgrade to beta 7 since there are now RPMs available.
-My question is in regard to patching the kernel.  I assume that I just
-run the beta 7 patch onto the source which had the beta 6 patch applied.
+Hop over to a machine with:
+Kernel 2.4.2
+fdisk 2.10s
+_NO LVM_
 
-When then compiling the source to get the updated LVM module, do I need
-to recompile the whole kernel & put that in place first as well as
-compiling & installing the modules, or do I just need to compile the
-modules, and install (make modules; make modules_install) ?
+Same steps, except no change of type to 8e on the
+logical partition. Create ext2 on it and mount away.
 
--- 
-regs
-rupert
+Maybe this helps...
+
+Darren Young
+
+
+
+__________________________________________________
+Do You Yahoo!?
+Yahoo! Auctions - buy the things you want at great prices
+http://auctions.yahoo.com/
