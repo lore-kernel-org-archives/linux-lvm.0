@@ -1,38 +1,49 @@
-From: Andreas Dilger <adilger@home.com>
-Message-Id: <200003221722.e2MHMlT01821@webber.adilger.net>
-Subject: Re: [linux-lvm] RaidZone RAID hardware.
-In-Reply-To: <20000322104034.B23747@nccr-cle-c.nccrs.com> from "jasonf@cronosys.com"
- at "Mar 22, 2000 10:40:34 am"
-Date: Wed, 22 Mar 2000 10:22:47 -0700 (MST)
-MIME-Version: 1.0
+From: Heinz Mauelshagen <mauelsha@ez-darmstadt.telekom.de>
+Message-Id: <200003221725.SAA21066@u9etz.ez-darmstadt.telekom.de>
+Subject: Re: [linux-lvm] snapshots not stable with 2.3.99pre2
+Date: Wed, 22 Mar 2000 18:25:17 +0100 (MET)
+Mime-Version: 1.0
 Content-Transfer-Encoding: 7bit
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: jasonf@Cronosys.COM
-Cc: Linux LVM mailing list <linux-lvm@msede.com>
+To: linux-lvm@msede.com
+Cc: mge@ez-darmstadt.telekom.de
 
-Jason writes:
-> P.S. [offtopic] Anyone know where the ext3 patches are, and whether any of
-> the various ext2 resizers (including the one that works when mounted) will
-> work with the ext3 journal in place?  And that ext3 works with LVM, of
-> course.
+> While testing lvm with linux 2.3.99pre2 I had 2 crashes while trying out snapshots.
+> Without snapshots lvm seems to be stable.
 
-While I've looked at ext3, I haven't looked at ext3+online resize.  However,
-I don't think that there would be a problem with using ext2resize on an
-unmounted ext3 filesystem, since the ext3 filesystem is on-disk identical
-to ext2 format filesystems.  When ext3 is unmounted, the only difference
-between it and ext2 is the journal file (just a regular file), and a bit
-in the superblock that says there is a journal.  It may be that ext2resize
-will complain about the unknown journal flag, but it may just work anyways.
+Investigating in the area of trouble with 2.3.99pr2 kio support...
 
-I think when there is 2.3 ext3 journal code, I will look at making ext2online
-work with it.  Right now, I'm trying to fix a few bugs and get it into the
-2.3.99 kernel if possible.
+> 
+> Another problem is (probably) a missing check in lvextend: I tried to extend a
+> striped lv, and while I had enough space available, nearly all this space was on
+> one pv, so it was not possible to create a correctly striped volume with the 
+> extended size. But I didn't get the error message I expected: lvextend told me
+> everything is ok, but when I tried to ext2resize the filesystem, I got a 
+> segmentation fault.
+> 
+> 
 
-Cheers, Andreas
+Could you provide more configuration information by "vgdisplay -v" on the
+involved VG, a "lvextend -d" stdout/stderr and an "strace ext2resize" of your
+try, please.
+
+Do you get any segfaults when you just read/write to the extended part
+of the Logical Volume with dd?
+
+Heinz
 -- 
-Andreas Dilger  \ "If a man ate a pound of pasta and a pound of antipasto,
-                 \  would they cancel out, leaving him still hungry?"
-http://www-mddsp.enel.ucalgary.ca/People/adilger/               -- Dogbert
+
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+Systemmanagement CS-TS                           T-Nova
+                                                 Entwicklungszentrum Darmstadt
+Heinz Mauelshagen                                Otto-Roehm-Strasse 71c
+Senior Systems Engineer                          Postfach 10 05 41
+                                                 64205 Darmstadt
+mge@EZ-Darmstadt.Telekom.de                      Germany
+                                                 +49 6151 886-425
+                                                          FAX-386
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
