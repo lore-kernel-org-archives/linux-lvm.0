@@ -1,8 +1,8 @@
-From: "Steffers" <stef@chronozon.dyndns.org>
-Reply-To: stef@chronozon.dyndns.org
-Subject: Re: [linux-lvm] Protection of used scsi disks by LVM
-Message-Id: <20000427162923.F40D21F473@chronozon.dyndns.org>
-Date: Thu, 27 Apr 2000 11:29:23 -0500 (CDT)
+Date: Fri, 28 Apr 2000 01:05:12 +0900 (KST)
+Message-Id: <200004271605.BAA10254@yeopo.postech.ac.kr>
+From: "Kim Tae-hyoung(M2000)" <kotaeji@yeopo.postech.ac.kr>
+Subject: [linux-lvm] I want some documentations.
+Reply-to: kotaeji@postech.ac.kr
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
@@ -11,39 +11,26 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@msede.com
 
-Hello everyone..
 
-> > I can easily go to /dev/sda1 for example, and erase everything on it.
->
-> These are the UNIX/Linux semantics.
-> 
-> If one has the file/device special permission one can do every kind
-> of stupid things which come to ones mind.
->
+Hi, all.
 
-cat /dev/null > /dev/ttyS0 comes rapidly to mind ;)
- 
-> > Of course it is a stupid thing to do, but there is a minimal requirement
-on
-> > protection, isn't it ?
-> Yes, you are right.
-> but IMHO there's no way today with the existing kernel implementation.
+I am a student, and very interested in this LVM project.
+So, I installed kernel 2.3.49 and lvm-0.8final. And then 
+I did several admin jobs such as creating VG, LV, etc.
+(I used 4 scsi-disks)
 
-this (afiak) isnt a 'kernel' problem but more a problem that could
-be fixed in the userspace. All it would take is a quick diff to 
-the 'mkfs' tools and fdisk (or whatever you use cfdisk, gdisk etc)
-so that it would recognise the partition type of '8e' as a LV
-and then not allow, or at least strenously warn, the user
-as to what they are doing. this would seem to make more sense
-and (to be honest) i would _hate_ it if Linux by default queried
-my every command, so that suggest to me that it +is+ a per
-user thing, and not a kernel issue.
+It worked so well. I have made ext2 file system on it, and
+did many many many jobs such as just copying linux source tree,
+, moving, compressing, untarring big directories, etc. But it
+still worked well. (But When I benchmarked with benchmarking
+program "bonnie", my system died frequently. Do you know why?)
 
-also remember, that this isnt like 'certain other operating systems'.
-*nix's in general are kind of like theism, with a 'god hands on
-the machine' approach. If you want to do anything to the system 
-then you have the power to do so at any point. If your 'god'
-in an idiot, well, *shrug*.
- 
-regards,
-Stefs
+And, Now I just want to investigate how the LVM source is made.
+But, I cannot find any implementation documents, or something like
+that.
+
+I want to know about user-level admin tools in addition to 
+the lvm support of kernel.
+
+Is there any good start point or document (not just HOWTO) to 
+recommend?
