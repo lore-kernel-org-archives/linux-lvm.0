@@ -1,9 +1,9 @@
-Return-Path: <raheesom@navpoint.com>
-Message-Id: <200104171821.f3HILdS05714@west.navpoint.com>
-Subject: Re: Re: [linux-lvm] CDRECORD not working when LVM loaded.
-From: Rupert Heesom <raheesom@navpoint.com>
-Date: 17 Apr 2001 13:13:57 -0400
+Return-Path: <root@srv.sistina.com>
+Date: Tue, 17 Apr 2001 21:09:11 +0000
+From: "Heinz J. Mauelshagen" <Mauelshagen@sistina.com>
+Message-ID: <20010417210911.B9015@sistina.com>
 Mime-Version: 1.0
+Subject: [linux-lvm] [bakyh@etri.re.kr: Hello~]
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -19,19 +19,31 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Well, gentlemen; I found out what the problem was .... nothing to do with LVM.
+----- Forwarded message from bakyh@etri.re.kr -----
 
-I was trying to run "cdrecord --scanbus" without the correct
-permissions.  "cdrecord" was set to root permissions.  So, I've set the
-UID & GID on CDRECORD.  Now works fine when logged in as myself.
+Return-Path: <bakyh@etri.re.kr>
+Delivered-To: Mauelshagen@Sistina.com
+Return-Path: <bakyh@etri.re.kr>
+From: bakyh@etri.re.kr
+To: linux.LVM@EZ-Darmstadt.Telekom.de
+Subject: Hello~
+Date: Tue, 17 Apr 2001 11:25:24 +0900
 
-Previously, I must have tried CDRECORD as myself, found it didn't work.
-SUed to root to unload the LVM module, then run CDRECORD whilst still
-logged in as root.  Of course it worked.
+Hello, I'm working at ETRI(Electronics and Telecommunication Research
+Institute) in Korea. 
+We are surveying about LVM, but we don't have any infomation about RAID
+processing in LVM.
 
-Well, on with LVM then !!!
+So, if you have any infomation about it, please send it to me.
 
+The Item that we want to get :
+1. how you are mapping address between logical and physical addr. using
+RAID technique.
+2. when volume's size is change in LVM using RAID, what processing is
+happen?
+ 
+thanks in advance.
 
--- 
-regs
-rupert
+Bak, yuhyeon
+
+----- End forwarded message -----
