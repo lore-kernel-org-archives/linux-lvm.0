@@ -1,10 +1,8 @@
-From: Patrick Caulfield <caulfield@sistina.com>
-Subject: Re: [linux-lvm] Disk crash , LVM and ext2... (bis)
-Message-ID: <20020925075113.GK1291@tykepenguin.com>
-References: <3D90EBDA.5070605@free.fr> <20020925071843.GI1291@tykepenguin.com> <3D91674F.3040601@free.fr>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <3D91674F.3040601@free.fr>
+From: Michael Frotscher <michael@frotscher.net>
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <200209251011.05774.michael@frotscher.net>
+Subject: [linux-lvm] drive-spindown
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,33 +13,23 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Sep 25 02:57:44 2002
+Date: Wed Sep 25 03:18:44 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Wed, Sep 25, 2002 at 09:35:43AM +0200, Emmanuel Varagnat wrote:
-> Patrick Caulfield wrote:
-> >
-> >LVM1 can't retrieve data from a VG with a crashed PV (That's what your 
-> >backups
-> >are for).
-> >
-> >LVM2 can if you active the VG with the -P (--partial) flag. LVM2 can read 
-> >LVM2
-> >metadata.
+Hello, all
 
-I meant, of course, that LVM2 can read LVM1 metadata :-)
- 
-> This system was on a Slackware 8.0, with a 2.4.18 kernel and LVM 
-> compiled by myself (can't remember the version).
-> 
-> I'm gonna take a look a this.
+I'd like to have the drives of my LVM-system (SuSE 8.0) to spin down=20
+when the volume is not used (it's a data-volume only, the system=20
+resides somewhere else). The volume consists of one partition of hda=20
+and drives hdb and hdc are completely dedicated to it.
 
-Don't forget, you'll need the "device-mapper" kernel patches too. They work best
-with 2.4.19 kernels, there were VM problems with 2.4.18 ones.
+I tried to set a spindown-time in BIOS as well as hdparm -S, but=20
+strangely only hdc powers down (checked that with hdparm -C). I don't=20
+really expect hda to power down as the system resides on it, but hdb=20
+obviously should. Does anyone have an idea why it doesn't?=20
+--=20
+cheers,
 
--- 
-
-patrick
+Michael
