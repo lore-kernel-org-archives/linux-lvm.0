@@ -1,24 +1,17 @@
 Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with SMTP id i2B1Lj826944
-	for <linux-lvm@redhat.com>; Wed, 10 Mar 2004 20:21:45 -0500
-Received: from salusa.poochiereds.net (rdu26-93-067.nc.rr.com [66.26.93.67])
-	by mx1.redhat.com (8.12.10/8.12.10) with SMTP id i2B1Li07009944
-	for <linux-lvm@redhat.com>; Wed, 10 Mar 2004 20:21:44 -0500
-Received: from localhost (localhost [127.0.0.1])
-	by salusa.poochiereds.net (Postfix) with ESMTP id 02EEF7127
-	for <linux-lvm@redhat.com>; Wed, 10 Mar 2004 20:21:44 -0500 (EST)
-Received: from salusa.poochiereds.net ([127.0.0.1])
-	by localhost (salusa [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id 01250-02 for <linux-lvm@redhat.com>;
-	Wed, 10 Mar 2004 20:21:43 -0500 (EST)
-Received: from tleilax.ix.dyndns.org (tleilax.ix.dyndns.org [192.168.1.3])
-	by salusa.poochiereds.net (Postfix) with ESMTP id 3AC264FA6
-	for <linux-lvm@redhat.com>; Wed, 10 Mar 2004 20:21:43 -0500 (EST)
-From: Jeff Layton <jtlayton@poochiereds.net>
-Content-Type: multipart/mixed; boundary="=-07Tp/sZFp7ItasWcCCQe"
-Message-Id: <1078968102.3348.20.camel@localhost>
-Mime-Version: 1.0
-Subject: [linux-lvm] Patch for Miguel Cabeca's lvm2create_initrd script
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with SMTP id i2B9DH818640
+	for <linux-lvm@redhat.com>; Thu, 11 Mar 2004 04:13:17 -0500
+Received: from grassmarket.ucs.ed.ac.uk (grassmarket.ucs.ed.ac.uk [129.215.166.64])
+	by mx1.redhat.com (8.12.10/8.12.10) with SMTP id i2B9DG07001771
+	for <linux-lvm@redhat.com>; Thu, 11 Mar 2004 04:13:16 -0500
+Received: from aphrodite (18779905.resnet.ed.ac.uk [10.7.0.72])
+	by grassmarket.ucs.ed.ac.uk (8.12.10/8.12.10) with ESMTP id i2B9D9PH022654
+	for <linux-lvm@redhat.com>; Thu, 11 Mar 2004 09:13:15 GMT
+From: "Rupert Hair" <rupert.hair@ntlworld.com>
+Message-ID: <000101c40748$d1b5f860$1530a8c0@aphrodite>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Subject: [linux-lvm] Some LVM 2 questions.
 Sender: linux-lvm-admin@redhat.com
 Errors-To: linux-lvm-admin@redhat.com
 Reply-To: linux-lvm@redhat.com
@@ -30,79 +23,25 @@ List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
 List-Archive: <https://www.redhat.com/archives/linux-lvm/>
-Date: Wed Mar 10 20:19:18 2004
+Date: Thu Mar 11 04:11:00 2004
 List-Id: <linux-lvm.redhat.com>
+Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@redhat.com
 
---=-07Tp/sZFp7ItasWcCCQe
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
+I have noticed that a friend's LVM 2 vgdisplay does not show a MAX LV Size
+value.  Should I take this to mean that LVM 2 does not impose a MAX LV Size
+or that it it so large that it will not be an isssue?
 
-Ok -- I think I have it now (for real this time :-). I've overhauled the
-mechanism for cleaning up device entries:
+I currently have a LVM 1.0.8 system that is nearing its MAX LV Size.  I
+would like to know if I can migrate it to LVM 2 so that I can expand beyond
+my MAX LV Size?  
 
-1) we first remove /rootvol/dev/mapper
-2) mknod a /rootvol/dev/mapper/control device file
-3) chroot to /rootvol, mount /proc, run /sbin/vgmknodes, and umount
-/proc
+I have four drives containing one linear VG and one LV on top of that
+formatted as ext3.  Can I set LVM (1 or 2) to make a backup of the file
+allocation tables (I'm not sure if that's the right term) of my ext3 system
+onto all my drives so that if the first disk in my LV died I would not loose
+all my data (just what was contained on that disk).
 
-This should make all the correct device entries and vg symlinks under
-/dev, and should allow the initrd images to cope with the renumbering of
-major/minor numbers, as I've found sometimes happens on kernel upgrades.
+Thanks,
 
-Attached is a patch to Miguel's original script. The current one is
-available from:
-
-http://poochiereds.net/svn/lvm2create_initrd
-
-As always, comments and/or patches are welcome.
--- 
-Jeff Layton <jtlayton@poochiereds.net>
-
---=-07Tp/sZFp7ItasWcCCQe
-Content-Disposition: attachment; filename=lvm2create_initrd.patch
-Content-Type: text/x-patch; name=lvm2create_initrd.patch; charset=ISO-8859-15
-Content-Transfer-Encoding: 7bit
-
-Index: lvm2create_initrd.sh
-===================================================================
---- lvm2create_initrd.sh	(revision 70)
-+++ lvm2create_initrd.sh	(working copy)
-@@ -77,7 +77,7 @@
- 
- # include in the path some dirs from the real root filesystem
- # for chroot, blockdev
--PATH="/sbin:/bin:/usr/sbin:/usr/bin:/lib/lvm-200"
-+PATH="/sbin:/bin:/usr/sbin:/usr/bin:/lib/lvm-200:/initrd/bin:/initrd/sbin"
- PRE="initrd:"
- 
- echo "$PRE Remounting / read/write"
-@@ -144,6 +144,26 @@
- echo "$PRE Umounting /proc"
- umount /proc
- 
-+# make /rootvol/proc if it doesn't exist
-+if [ ! -d /rootvol/proc ]; then
-+    mkdir /rootvol/proc
-+fi
-+ 
-+# remove old /dev/mapper directory
-+echo "$PRE Removing old /dev/mapper directory on $rootvol"
-+rm -rf /rootvol/dev/mapper
-+ 
-+# create /dev/mapper/control device on /rootvol
-+if test -n "$MAJOR" -a -n "$MINOR" ; then
-+    echo "$PRE Creating /dev/mapper/control device on $rootvol"
-+    mkdir -p -m 755 /rootvol/dev/mapper
-+    mknod -m 600 /rootvol/dev/mapper/control c $MAJOR $MINOR
-+fi
-+ 
-+echo "$PRE Creating LVM2 devices on $rootvol"
-+cd /rootvol
-+( chroot . sh -c 'mount -t proc none /proc; /sbin/vgmknodes; umount /proc' )
-+ 
- echo "$PRE Changing roots"
- cd /rootvol
- mkdir -p initrd
-
---=-07Tp/sZFp7ItasWcCCQe--
+Rupert
