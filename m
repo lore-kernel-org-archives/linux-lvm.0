@@ -1,12 +1,8 @@
-From: Jan-Benedict Glaw <jbglaw@lug-owl.de>
-Subject: Re: [linux-lvm] resize an ext3 on an LV
-Message-ID: <20030129163508.GW30184@lug-owl.de>
-References: <20030129152817.GT30184@lug-owl.de> <Pine.LNX.4.44.0301290929500.25534-100000@zeus.itg.uiuc.edu>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="VQx8a0J3gVIvXT58"
-Content-Disposition: inline
-In-Reply-To: <Pine.LNX.4.44.0301290929500.25534-100000@zeus.itg.uiuc.edu>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Message-Id: <E18dzcw-0003aS-00@gw.pe1mhp.ampr.org>
+From: "Jan H. van Gils" <janvg@vgnet.nl>
+Subject: [linux-lvm] LVM rootfs and cramfs as ramdisk
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,60 +13,51 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Jan 29 10:36:01 2003
+Date: Wed Jan 29 15:21:01 2003
 List-Id: <linux-lvm.redhat.com>
-To: Linux LVM Sistina <linux-lvm@sistina.com>
+Content-Type: text/plain; charset="us-ascii"
+To: linux-lvm@sistina.com
 
---VQx8a0J3gVIvXT58
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+	Hi,
 
-On Wed, 2003-01-29 09:32:33 -0600, Alexander Lazarevich <alazarev@itg.uiuc.=
-edu>
-wrote in message <Pine.LNX.4.44.0301290929500.25534-100000@zeus.itg.uiuc.ed=
-u>:
-> The LV is already expanded. All I want to do is resize the ext3 filesyste=
-m=20
-> to the new size of the LV, which is now 275GB.
->=20
-> But I need to know the commands. Or some hint of what the command is. Is=
-=20
-> it just "resize2fs /dev/homevg/userslv"? I've seen some posts saying that=
-=20
+First some thinks I found out.
 
-That's what I used several times. That's on a file server doing
-kernel.org/debian.org/... rsync mirrors. Those where added one by one,
-each time linked with at least one (for debian.org, this reads 4)
-extending sessions...
+When you create with lvmcreate_initrd the /boot/initrd-lvm-<kernel> file
+the file is an ext2 filesystem. On a debian distro that wil give you problems
+because the kernel expects a cramfs as ramdisk file.
 
-> using resize2fs will destroy an ext3 filesystem, is that not true? Will=
-=20
-> the journal stay intact? What's the command that you use?
+Here is a work around I found :
 
-For me (LVM1 metadata on 2.2.19-rcX patched to run with lvm2 userland +
-device-mapper), resize2fs just "worked" with ext3. However, LVM version
-should be irrelevant (sp?) wrt. to a (non)functional resize2fs. For me,
-it did it's job.
+mount the /boot/initrd-lvm-<kernel> file
+mount -t ext2 -o loop /boot/initrd-lvm-<kernel> /mnt
 
-MfG, JBG
+copy the file to temporary working directory
+cd /mnt; find . -print | cpio -udmp /var/tmp/lvm
 
---=20
-   Jan-Benedict Glaw       jbglaw@lug-owl.de    . +49-172-7608481
-   "Eine Freie Meinung in  einem Freien Kopf    | Gegen Zensur
-    fuer einen Freien Staat voll Freier B=FCrger" | im Internet!
-   Shell Script APT-Proxy: http://lug-owl.de/~jbglaw/software/ap2/
+dismount the /mnt file system and mount the kernel original
+mount -t cramfs -o loop /boot/initrd.img-<kernel>
+cd /mnt; find . -print | cpio -udmp /var/tmp/lvm
 
---VQx8a0J3gVIvXT58
-Content-Type: application/pgp-signature
-Content-Disposition: inline
+now create the new cramfs initrd file
+cd /var/tmp; mkcramfs lvm/ initrd.cramfs
+make sure the owner and group member are root <chown -R root:root initrd.cramfs)
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.2.1 (GNU/Linux)
+To be sure you can check the initrd.cramfs with cramfsck -v initrd.cramfs.
 
-iD8DBQE+OAK8Hb1edYOZ4bsRAkLQAJoDM7CoGTNu6/6oOX3qQKmHNI+M7QCgj/Hv
-7y9UMsBO6ovotClIFZ1dEW4=
-=Z6T6
------END PGP SIGNATURE-----
+Now I am wondering about one thing ? cramfs is a readonly filesystem
+when the system boot it executes a vgscan and that creates a
+"/etc/lvmtab" and "/etc/lvmtab.d" successfully created".
 
---VQx8a0J3gVIvXT58--
+But because the cramfs is readonly, wil this not be an impossibility,
+and is the cramfs ramdisk file not possible@all !!
+
+Please responce on this subject.
+
+Greetz, Jan
+
+
+-- 
+With regards Jan H. van Gils
+Internet web-page http://www.VGNet.NL/
+Internet e-mail address JanVG@VGNet.NL
+RIPE Whois JHG5-RIPE, 6BONE Whois JHG1-6BONE
