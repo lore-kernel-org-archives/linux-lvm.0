@@ -1,10 +1,8 @@
-Message-Id: <3EDE1623.1000504@vsf.renault.fr>
-From: Serge Rossi <Serge.Rossi@renault.com>
+From: Tim Randles <tcr@pacific.mps.ohio-state.edu>
 MIME-Version: 1.0
-References: <20030602131232.GB9679@wh9155.stw.uni-rostock.de> <20030602170507.B6678@sistina.com> <20030603193935.GA16294@wh9155.stw.uni-rostock.de>
-In-Reply-To: <20030603193935.GA16294@wh9155.stw.uni-rostock.de>
-Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] LVM + software Raid 5 : freeze when using snapshots.
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <200306041157.45859.tcr@pacific.mps.ohio-state.edu>
+Subject: [linux-lvm] pvmove problem
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,55 +13,128 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Jun  4 10:53:02 2003
+Date: Wed Jun  4 10:57:02 2003
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
+Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
 
-I'm using two IBM file servers (Samba, NFS...) running RH 7.2 (with 
-latest updates) and LVM over software Raid 5.
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA1
 
-RH Kernel 2.4.20-13.7 (Including LVM 1.0.3)
-lvm tools and lib 1.0.5
+Hello,
 
-Hardware : Dual Xeon MP (HT activated) + 1 GB Ram
+I'm trying to pvmove from a dying disk to a new disk.  I'm using version =
+1.0.7=20
+of the LVM tools.  I know that the source disk has bad sectors on it.  I=20
+figured one of two things would happen with the pvmove:
+1)  pvmove would work fine up to the bad sectors, where it would error wi=
+th=20
+I/O read errors.  I would then restart the pvmove with PEs that are past =
+the=20
+bad sectors on the source disk and things would finish.
+2)  pvmove would work fine up to the bad sectors, where it would encounte=
+r I/O=20
+read errors.  pvmove would report the errors and say the data is=20
+lost/corrupt, but continue reading valid/skipping bad sectors until it=20
+finished.
+I fear that I'm being naive about how pvmove will handle bad sectors...  =
+At=20
+any rate, the error I'm getting is:
 
-Each server have 14 * 73 GB Disks for the datas.
-md0 and md1 are RAID 5 units of 7 disks each, both included in a VG.
+[root@mills tools]# ./pvmove -vv /dev/sdb1
+pvmove -- checking name of source physical volume "/dev/sdb1"
+pvmove -- locking logical volume manager
+pvmove -- reading data of source physical volume from "/dev/sdb1"
+pvmove -- checking volume group existence
+pvmove -- reading data of volume group "vg1" from lvmtab
+pvmove -- checking volume group consistency of "vg1"
+pvmove -- searching for source physical volume "/dev/sdb1" in volume grou=
+p=20
+"vg1"
+pvmove -- building list of possible destination physical volumes
+pvmove -- checking volume group activity
+pvmove -- moving physical extents in active volume group "vg1"
+pvmove -- WARNING: if you lose power during the move you may need
+        to restore your LVM metadata from backup!
+pvmove -- do you want to continue? [y/n] y
+pvmove -- starting to move extents away from physical volume "/dev/sdb1"
+pvmove -- checking for enough free physical extents in "vg1"
+lv: /dev/vg1/lv7[7]  old_dev: 08:17  new_dev: 08:33  old_pe_sector: 41864=
+88 =20
+new_pe_sector: 4186488
+pvmove -- opening output physical volume "/dev/sdc1"
+pvmove -- llseeking input physical volume "/dev/sdb1"
+pvmove -- llseeking output physical volume "/dev/sdc1"
+pvmove -- /dev/sdb1 [PE 510 [lv7 [LE 5650]] -> /dev/sdc1 [PE 510] [1/4590=
+]
+pvmove -- locking physical extent 510 of "/dev/sdb1" in kernel
+pvmove -- about to read input physical volume "/dev/sdb1" and to write ou=
+tput=20
+physical volume "/dev/sdc1"
+pvmove -- ERROR reading input physical volume "/dev/sdb1" (still 131072 b=
+ytes=20
+to read)
+pvmove -- ERROR "pv_move_pe(): read input PV" moving physical extents
 
-The VG is subdivded into several 100 GB LV and some free space for 
-snapshots.
 
-Without snapshots, everything runs perfectly : 2 months without problems 
-with 1500 Windows PCs (SMB clients) and 500 SGI Workstations (NFS 
-clients). Load on the servers is between 0.1 and 1.0.
-
-We tried to snapshot 3 LV each night. After 2 or 3 days (6 or 9 
-snapshots stored in the VG), the load on the servers was between 2.0 and 
-3.0 but sometimes one of the servers stop responding.
-
-The kernel is still responsive to ping or Sysrq but not on the command 
-line, even on the console.
-
-No activity at all on the disks.
-
-Sysrq S only syncs the system disk (not in the VG) but did not sync the
-LVs. Reboot is the only way out.
-
-Nothing special in messages (no Oops).
+When I try to specify any random PE > 510 I get:
 
 
-We removed the snapshots and the servers are stable again.
-I have not tried to test what is the number of snapshots required to 
-freeze the servers (difficult on production servers !!!).
+[root@mills tools]# ./pvmove -vv /dev/sdb1:530 /dev/sdc1
+pvmove -- checking name of source physical volume "/dev/sdb1"
+pvmove -- locking logical volume manager
+pvmove -- reading data of source physical volume from "/dev/sdb1"
+pvmove -- checking volume group existence
+pvmove -- reading data of volume group "vg1" from lvmtab
+pvmove -- checking volume group consistency of "vg1"
+pvmove -- searching for source physical volume "/dev/sdb1" in volume grou=
+p=20
+"vg1"
+pvmove -- building list of possible destination physical volumes
+pvmove -- checking destination physical volume names in command line
+pvmove -- checking volume group activity
+pvmove -- moving physical extents in active volume group "vg1"
+pvmove -- WARNING: if you lose power during the move you may need
+        to restore your LVM metadata from backup!
+pvmove -- do you want to continue? [y/n] y
+pvmove -- starting to move extents away from physical volume "/dev/sdb1"
+pvmove -- checking for enough free physical extents in "vg1"
+lv: /dev/vg1/lv7[7]  old_dev: 08:17  new_dev: 08:33  old_pe_sector: 43503=
+28 =20
+new_pe_sector: 4186488
+pvmove -- opening output physical volume "/dev/sdc1"
+pvmove -- llseeking input physical volume "/dev/sdb1"
+pvmove -- llseeking output physical volume "/dev/sdc1"
+pvmove -- /dev/sdb1 [PE 530 [lv7 [LE 5670]] -> /dev/sdc1 [PE 510] [1/1]
+pvmove -- locking physical extent 530 of "/dev/sdb1" in kernel
+pvmove -- about to read input physical volume "/dev/sdb1" and to write ou=
+tput=20
+physical volume "/dev/sdc1"
+pvmove -- ERROR reading input physical volume "/dev/sdb1" (still 4194304 =
+bytes=20
+to read)
+pvmove -- ERROR "pv_move_pe(): read input PV" moving physical extents
 
 
-Did anybody have any idea on this problem ?
+Is there anything I can do to get the pvmove to finish?
 
-Are the servers too weak to handle the load caused by the snapshots ?
+Thanks,
+Tim
 
--- 
-   ----------------------------------------------------------------------
-    Serge Rossi - System & Network Architect  Tel : +33 (0)1 34 55 91 14
-                 iDVU - Renault               Fax : +33 (0)1 34 55 92 25
-   ----------------------------------------------------------------------
+- --=20
+Tim Randles
+Unix Administrator and Webmaster
+The Ohio State University
+Department of Physics Computing Facility
+Phone: 292-2630
+Email: tcr@pacific.mps.ohio-state.edu
+PGP key: http://www.physics.ohio-state.edu/~tcr/pgp.txt
+
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.0.7 (GNU/Linux)
+
+iD8DBQE+3hb5NMldGYWjmgoRAvG9AKDW6YmXjFOxj77lxwV3PNeO4VWbnwCfbjh0
+cpfrctuKsARxpsPImzopeoQ=3D
+=3DIyrK
+-----END PGP SIGNATURE-----
