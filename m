@@ -1,15 +1,9 @@
-From: "Jason H. Smith" <jason@oes.co.th>
-Subject: Re: [linux-lvm] lvm2 and xfs (repost)
-References: <200306061044.50925.krienke@uni-koblenz.de> <1054891523.3ee05e03b3e6f@secure.st-peter.stw.uni-erlangen.de>
-In-Reply-To: <1054891523.3ee05e03b3e6f@secure.st-peter.stw.uni-erlangen.de>
+Message-ID: <002801c32e8f$141de390$0d0a0a0a@spectrum.local>
+From: "Atanas Prejdarov" <prejdarov@home.bg>
 MIME-Version: 1.0
-Content-Type: multipart/signed;
-  protocol="application/pgp-signature";
-  micalg=pgp-sha1;
-  boundary="Boundary-02=_GQI4+dZmaUBOuq0";
-  charset="tis-620"
-Content-Transfer-Encoding: 7bit
-Message-Id: <200306061907.34469.jason@oes.co.th>
+Content-Type: multipart/alternative;
+	boundary="----=_NextPart_000_0025_01C32EA8.395EE690"
+Subject: [linux-lvm] lvm2 + XFS
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -20,44 +14,40 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Jun  9 09:32:08 2003
+Date: Mon Jun  9 09:32:10 2003
 List-Id: <linux-lvm.redhat.com>
 To: linux-lvm@sistina.com
 
---Boundary-02=_GQI4+dZmaUBOuq0
+This is a multi-part message in MIME format.
+
+------=_NextPart_000_0025_01C32EA8.395EE690
 Content-Type: text/plain;
-  charset="tis-620"
+	charset="koi8-r"
 Content-Transfer-Encoding: quoted-printable
-Content-Description: signed data
-Content-Disposition: inline
 
-On Friday 06 June 2003 04:25 pm, Svetoslav Slavtchev wrote:
-> why not go for a recent -ac kernel and skip patching :)
-> ( in -ac are included both xfs and dm )
->
-> and someone posted a dm-patch against xfs kernel on the list
+Hi, is there any way for running device-mapper + xfs in one kernel :)))) =
 
-I played with 2.4.20 + xfs + vfs lock + lvm2, plus some patches I made to=20
-output snapshot usage in 512-byte increments.  While the patches don't=20
-apply, per se, it's mostly because patch isn't smart enough to notice the=20
-code moving around.  I think there were like 1 or 2 .reg files, with=20
-maybe two trivial fixes each.  So merging manually isn't bad, e.g. if you=20
-don't want any of the other -ac changes.
 
-=2D-=20
-GPG: 03EE 9EB8 E500 874A F509  7B95 9B9A 84A1 26E9 4F79
-http://www.ece.utexas.edu/~jhs/public_key.gpg
+BR
+Atanas Prejdarov
+------=_NextPart_000_0025_01C32EA8.395EE690
+Content-Type: text/html;
+	charset="koi8-r"
+Content-Transfer-Encoding: quoted-printable
 
---Boundary-02=_GQI4+dZmaUBOuq0
-Content-Type: application/pgp-signature
-Content-Description: signature
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML><HEAD>
+<META http-equiv=3DContent-Type content=3D"text/html; charset=3Dkoi8-r">
+<META content=3D"MSHTML 6.00.2800.1170" name=3DGENERATOR>
+<STYLE></STYLE>
+</HEAD>
+<BODY bgColor=3D#ffffff>
+<DIV><FONT face=3DArial size=3D2>Hi, is there any way for running =
+device-mapper +=20
+xfs in one kernel :)))) </FONT></DIV>
+<DIV><FONT face=3DArial size=3D2></FONT>&nbsp;</DIV>
+<DIV><FONT face=3DArial size=3D2>BR</FONT></DIV>
+<DIV><FONT face=3DArial size=3D2>Atanas =
+Prejdarov</FONT></DIV></BODY></HTML>
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.2.1 (GNU/Linux)
-
-iD8DBQA+4IQGm5qEoSbpT3kRAnmmAJ43l2Je37edSMIM207AV/Vdxw+gTwCeNErz
-ahgu6dTuGZOfHKIWAHPAYwk=
-=1txR
------END PGP SIGNATURE-----
-
---Boundary-02=_GQI4+dZmaUBOuq0--
+------=_NextPart_000_0025_01C32EA8.395EE690--
