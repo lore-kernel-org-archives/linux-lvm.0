@@ -1,10 +1,12 @@
-Return-Path: <Jean-Eric.Cuendet@linkvest.com>
-Message-ID: <B45465FD9C23D21193E90000F8D0F3DF683923@mailsrv.linkvest.ch>
-From: Jean-Eric Cuendet <Jean-Eric.Cuendet@linkvest.com>
-Subject: RE: [linux-lvm] Setup for RAID1 with LVM
-Date: Thu, 8 Feb 2001 14:56:48 +0100 
-MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+Return-Path: <patrick@tykepenguin.cix.co.uk>
+Date: Thu, 8 Feb 2001 14:36:06 +0000
+From: Patrick Caulfield <caulfield@sistina.com>
+Subject: Re: [linux-lvm] the curious case of the semi-created Logical Volume
+Message-ID: <20010208143606.A31256@tykepenguin.com>
+References: <m21ytase6y.fsf_-_@andy.off.redeye.com> <20010208093123.B529@tykepenguin.com> <m2lmrhecgj.fsf@andy.off.redeye.com> <20010208100648.C529@tykepenguin.com> <m24ry5e9m9.fsf@andy.off.redeye.com>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <m24ry5e9m9.fsf@andy.off.redeye.com>; from andy@redeye.com on Thu, Feb 08, 2001 at 10:45:34AM +0000
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,62 +18,24 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="iso-8859-1"
-To: "'linux-lvm@sistina.com'" <linux-lvm@sistina.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: linux-lvm@sistina.com
 
-Hi,
-To do that:
-- create a md0 RAID1 device with your 2 disks (mirror, no use of LVM)
-  - set the parttion ID to RAID autodetect (0xfd)
-  - edit /etc/raidtab (see RAID Howto)
-  - mkraid /dev/md0
-- install LVM utilities (0.9.1beta3)
-- pvcreate /dev/md0
-- vgcreate -n BGNAME /dev/md0
-- lvcreate <some logical volume>
+On Thu, Feb 08, 2001 at 10:45:34AM +0000, Andy Cowling wrote:
+> >>>>> "Patrick" == Patrick Caulfield <caulfield@sistina.com> writes:
+> 
+>     Patrick> Sorry, I meant lvdisplay -d (note no -D). Stupidity is
+>     Patrick> contagious :-)
+> 
+> Hmmm. Hope this means more to you than it does to me.
+> 
+> Let me know if the output of 'lvdisplay -d -D /dev/pv01/lv01' would
+> also be of use.
 
-> -----Original Message-----
-> From: Jens Bruckmann [mailto:jens.bruckmann@suse.de]
-> Sent: jeudi, 8. f=E9vrier 2001 12:12
-> To: linux-lvm@sistina.com
-> Subject: [linux-lvm] Setup for RAID1 with LVM
->=20
->=20
-> Dear LVM-Specialists,
->=20
-> I would like to setup a configuration with LVM and RAID1. Poorly you
-> can't just do a lvextend -m 1 like on HP-UX :-))
->=20
-> I could not find any hints so far for a step by step description, the
-> part has to be included in the LVM-Howto.
->=20
-> I have two SCSI-Disks of nearly the same size, on Disk 1 I=20
-> already have
-> a working installation of Linux.
->=20
-> /usr, /opt and /var reside on LVs. I want these three LVs to=20
-> be mirrored
-> online to the second disk as it is possible on HP-UX.
->=20
-> Can someone shortly describe, how to setup such a configuration?
->=20
->=20
-> Thanks for help,
->=20
-> 	Jens
->=20
-> --=20
-> --------------------------------------------------------------
-> ---------
-> Jens Bruckmann              .-.       Mail:    jens.bruckmann@suse.de
-> SuSE Linux Solutions AG     /v\       Phone:   +49 - 40 - 89 69 82 18
-> Friesenweg 5F              // \\      Fax:     +49 - 40 - 85 40 04 35
-> D-22763 Hamburg           /(   )\
->                            ^^-^^     =20
-> --------------------------------------------------------------
-> ---------
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
->=20
+What version of LVM are you running ? That output doesn't match either my
+0.8final or 0.9 systems !
+
+Heinz ?
+
+patrick
