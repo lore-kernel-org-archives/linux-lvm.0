@@ -1,10 +1,9 @@
-Return-Path: <todd@staff.nm.org>
-Date: 1 May 2001 16:36:16 -0600
-Date: Tue, 1 May 2001 16:36:16 -0600 (MDT)
-From: Todd Underwood <todd@osogrande.com>
-Message-ID: <Pine.LNX.4.10.10105011628100.21405-100000@staff>
+Return-Path: <Evan.Day@SUMMITSITE.COM>
+Message-ID: <DC5B1A21E9E7D211B0020090273AD628242BC3@summit15.corvallis.summit>
+From: "Day, Evan" <Evan.Day@SUMMITSITE.COM>
+Subject: RE: [linux-lvm] odd problem
+Date: Tue, 1 May 2001 15:48:28 -0700 
 MIME-Version: 1.0
-Subject: [linux-lvm] odd problem
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,9 +15,23 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
+To: "'linux-lvm@sistina.com'" <linux-lvm@sistina.com>
+
+It sounds like the kernel patch revision doesn't match the revision of 
+the user-level tools - I saw these types of messages when running beta-7 
+tools with a stock 2.4.3 kernel.  Have you made sure the tools/libraries 
+on your initrd image are up to date?
+
+-Evan
+
+-----Original Message-----
+From: Todd Underwood [mailto:todd@osogrande.com]
+Sent: Tuesday, May 01, 2001 3:36 PM
 To: linux-lvm@sistina.com
+Subject: [linux-lvm] odd problem
+
 
 folx,
 
@@ -57,3 +70,9 @@ todd underwood
 chief technology officer
 oso grande technologies, inc.
 todd@osogrande.com
+
+
+_______________________________________________
+linux-lvm mailing list
+linux-lvm@sistina.com
+http://lists.sistina.com/mailman/listinfo/linux-lvm
