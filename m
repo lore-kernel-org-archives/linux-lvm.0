@@ -1,10 +1,11 @@
-From: Dave Jones <davej@codemonkey.org.uk>
-Subject: Re: [linux-lvm] Re: [PATCH] 2.5 version of device mapper submission
-Message-ID: <20021014171101.GA13897@suse.de>
-References: <1034453946.15067.22.camel@irongate.swansea.linux.org.uk> <1034614756.29775.5.camel@UberGeek.coremetrics.com>
+Subject: Re: [linux-lvm] Re: [PATCH] 2.5 version of device mapper submissi
+	on
+From: Austin Gonyou <austin@coremetrics.com>
+In-Reply-To: <20021014171101.GA13897@suse.de>
+References: <20021014171101.GA13897@suse.de>
+Content-Type: multipart/signed; micalg=pgp-sha1; protocol="application/pgp-signature"; boundary="=-sb/lbbFC7MR1apOBjAOX"
+Message-Id: <1034615636.29775.12.camel@UberGeek.coremetrics.com>
 Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <1034614756.29775.5.camel@UberGeek.coremetrics.com>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,21 +16,55 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Oct 14 12:14:39 2002
+Date: Mon Oct 14 12:19:44 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: Austin Gonyou <austin@coremetrics.com>
+To: Dave Jones <davej@codemonkey.org.uk>
 Cc: linux-lvm@sistina.com, Alan Cox <alan@lxorguk.ukuu.org.uk>, Joe Thornber <joe@fib011235813.fsnet.co.uk>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 
-On Mon, Oct 14, 2002 at 11:59:17AM -0500, Austin Gonyou wrote:
- > Just curious, but device-mapper and 2.5.42 do not seem to jive very
- > well. Please advise.
+--=-sb/lbbFC7MR1apOBjAOX
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 
-You need device-jiver. Doubtful it'll make the freeze in time though.
-Seriously, what exactly does this bug report mean ?
+On Mon, 2002-10-14 at 12:11, Dave Jones wrote:
+> On Mon, Oct 14, 2002 at 11:59:17AM -0500, Austin Gonyou wrote:
+>  > Just curious, but device-mapper and 2.5.42 do not seem to jive very
+>  > well. Please advise.
+>=20
+> You need device-jiver. Doubtful it'll make the freeze in time though.
+> Seriously, what exactly does this bug report mean ?
 
-		Dave
 
--- 
-| Dave Jones.        http://www.codemonkey.org.uk
+Sorry..sorry...I'm saying that the recent device-mapper doesn't seem to
+try to compile with 2.5.42, and was inquiring as to:=20
+1. Is it not supposed to work yet?
+2. Are there any patches, to make this work as yet?
+
+#2 is one of the main reasons I'm responding to this thread. I'm an
+interested party for testing LVM2 on 2.5, but can't seem to get there.
+There was discussion about using EVMS, but well, it didn't seem to work
+as seamlessly as LVM upgrades had, and I've not had the time to trouble
+shoot it till later this week.
+
+
+>                 Dave
+>=20
+> --=20
+> | Dave Jones.        http://www.codemonkey.org.uk
+--=20
+Austin Gonyou <austin@coremetrics.com>
+Coremetrics, Inc.
+
+--=-sb/lbbFC7MR1apOBjAOX
+Content-Type: application/pgp-signature; name=signature.asc
+Content-Description: This is a digitally signed message part
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.0.6 (GNU/Linux)
+Comment: For info see http://www.gnupg.org
+
+iD8DBQA9qvtU94g6ZVmFMoIRAghDAKC8/EPS96KWbYjEUgNEsYoCSbqrSACg4Qcb
+8ekLX8MIVF7nX/ShhuHltPI=
+=8eRQ
+-----END PGP SIGNATURE-----
+
+--=-sb/lbbFC7MR1apOBjAOX--
