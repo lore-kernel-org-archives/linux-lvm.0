@@ -1,102 +1,89 @@
-Message-ID: <396B8B3D.88BD3F73@libertysurf.fr>
-Date: Tue, 11 Jul 2000 17:01:49 -0400
-From: Philippe =?iso-8859-1?Q?Lef=E8vre?= <ph.l@libertysurf.fr>
+Date: Wed, 12 Jul 2000 13:22:34 -0500 (EST)
+From: Brian Poole <raj@cerias.purdue.edu>
+Subject: [linux-lvm] New LVM user, couple of problems
+Message-ID: <Pine.SOL.4.10.10007121311030.5718-100000@basm.cerias.purdue.edu>
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] [Fwd: boot from lvm volume] Is ther
-References: <m13Avjj-0000YgC@duffy1.franken.de>
-Content-Type: multipart/alternative;
- boundary="------------98CE04CB2E4237D5AC4C7919"
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
-To: Rolf Jakob <rjakob@duffy1.franken.de>, linux-lvm@msede.com
-
-
---------------98CE04CB2E4237D5AC4C7919
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-
-Hello,
-
-I'm very interested in using LVM for the root partitions (I use Redhat 6.2)=
- as
-I can do with IBM AIX.
-
-I would like to make a rootvg containing some LVs with /var /tmp /bin /usr
-/home for example, then make a datavg for SGBD, datas and so on.
-
-As I plan to update my production system running 2.2.16 to 2.4.0 as soon th=
-is
-new kernel is available, I did some tests with the new kernel-2.4.0.test2 a=
-nd
-lvm-0.8final patched. It seems to work perfectly but I was unable to find a=
- way
-to put rootvg under LVM.
-
-I understood that you use the initrd way to getting up your first VG but be=
-fore
-that, how can you do to put /var /usr /sbin etc... under LVM. I mean, chang=
-ing
-the filesystem tag (-> 0x8e) then creating PV, VG and LVs will distroy all
-datas on disk !!
-
-Is there any way to create LVs before installing my RH distribution ?
-
-Did I missed something ? Is there any documentation that could explain how =
-to
-do this ?
-
-
-NB: LVM is integrated into my kernel and is not a module.
-
-
-Could you please help me on that subject ?
-
-Thank you in advance,
-
-PhiL
-
-
------------------------------------------------------------------ _ ----
-Linux 2.2.16 | Philippe Lefevre E-mail: ph.l@libertysurf.fr   |  =3D=EF=BF=
-=BD)   |
-             |                                                |  /\\   |
---------------------------------------------------------------- _\_V ---
-
---------------98CE04CB2E4237D5AC4C7919
-Content-Type: text/html; charset=us-ascii
+Content-Type: TEXT/PLAIN; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
+To: linux-lvm@msede.com
 
-<!doctype html public "-//w3c//dtd html 4.0 transitional//en">
-<html>
-Hello,
-<p>I'm very interested in using LVM for the root partitions (I use Redhat
-6.2) as I can do with IBM AIX.
-<p>I would like to make a rootvg containing some LVs with /var /tmp /bin
-/usr /home for example, then make a datavg for SGBD, datas and so on.
-<p>As I plan to update my production system running 2.2.16 to 2.4.0 as
-soon this new kernel is available, I did some tests with the new kernel-2.4.0.test2
-and lvm-0.8final patched. It seems to work perfectly but I was unable to
-find a way to put rootvg under LVM.
-<p>I understood that you use the initrd way to getting up your first VG
-but before that, how can you do to put /var /usr /sbin etc... under LVM.
-I mean, changing the filesystem tag (-> 0x8e) then creating PV, VG and
-LVs will distroy all datas on disk !!
-<p>Is there any way to create LVs before installing my RH distribution
-?
-<p>Did I missed something ? Is there any documentation that could explain
-how to do this ?
-<br>&nbsp;
-<p>NB: LVM is integrated into my kernel and is not a module.
-<br>&nbsp;
-<p>Could you please help me on that subject ?
-<p>Thank you in advance,
-<p>PhiL
-<br>&nbsp;
-<pre>----------------------------------------------------------------- _ ----
-Linux 2.2.16 | Philippe Lefevre E-mail: ph.l@libertysurf.fr&nbsp;&nbsp; |&nbsp; =&deg;)&nbsp;&nbsp; |
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; |&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; |&nbsp; /\\&nbsp;&nbsp; |
---------------------------------------------------------------- _\_V ---</pre>
-</html>
+Hello all,
 
---------------98CE04CB2E4237D5AC4C7919--
+Playing with LVM on a spare machine to evaluate it for production usage.
+
+Setup is a P2 300, 2 Seagate 4.3G SCSI HDs, 128M RAM, BusLogic controller,
+2.4.0-test3 kernel, and 0.8final LVM tools.
+
+I have created the logical volumes + volume groups without a problem, I
+can make the filesystems, mount them and use them. All is well with basic
+usage so far.
+
+The first issue I hit upon is with lv[extend,reduce]. Essentially I will
+change the size of the lv (eg lvreduce /dev/vg00/lvol1 -L 200m) however
+when I mount lvol1 the size shown is the same as it was before, according
+to df. lvdisplay shows the correct size of 200m, but the system seems to
+disagree saying the lv is still 6.7g which was the original size. Curious
+I decided to test what would happen if I attempted to write more than 200m
+of data to the mounted lv, so I did dd if=/dev/zero of=/lvol1/bigfile
+bs=1024k count=500 which resulted in a looping scroll of lvm_map errors (I
+don't have them at the moment, but I can get them if it is needed|desired)
+after it passed the 200m mark. This obviously is a bad thing, if diskspace
+is exceeded it should just say no more diskspace, or similar, not go into
+a loop that I can't get out of except by reboot ;). Not sure if I missed
+some essential step to 'sync' between what lvdisplay thinks is there and
+what df, etc do? What I did appears very similar to the LVM-HOWTO.
+
+Secondly, I made another large lv (7.5G) after deleting the previous and
+once again mounted this at /lvol1. Curious about the speed and just
+feeling malicious in general, I started a *very* large dd (eg dd
+if=/dev/zero of=/lvol1/really-big-friggin-file bs=1024k count=7000). This
+proceeded along fine for a while, during which I realized that it should
+stop at 2G due to FS (ie ext2) limits. At 2G the ls output became rather
+unusual, but the dd continued and df continued to mark the fs as fuller
+and fuller. The dd finished succesfully (7000 records in + out) and df
+says 6.8G of the 7.5G is being used on the lv.
+This seems strange to me, is LVM bypassing ext2's filesize limit or has
+the limit been changed since I last checked? And what is with the weird ls
+output (reproduced below).. bad ls code, or problem with the LVM? It is
+interesting that it varies between an immense number and a just relatively
+absurd number tho (1,3 + 2 ;). du reports correct filesize as well, ls is
+the only thing I've hit weird things with which does make me lean towards 
+the problem being with ls.
+
+anywho, all advice would be appreciated, sorry if I missed some essential
+docs that explained all this but I didn't see anything ;)
+
+
+-b
+
+
+Note: Formatting may be off a bit, this is hand reproduced (mumbles
+something about stupid machines without mice).
+
+at one point:
+bloodhound:/lvol1# ls -la
+total 3225401
+drwxr-xr-x   3 root	root		4096 Jul 12 10:14 ./
+drwxr-xr-x  18 root	root		1024 Jul 12 09:51 ../
+drwxr-xr-x   2 root	root	       16384 Jul 12 10:13 lost+found/
+-rw-r--r--   1 root	root	18446744072714145792 Jul 12 10:21
+really-big-friggin-file
+
+little later:
+total 4443409
+drwxr-xr-x   3 root     root            4096 Jul 12 10:14 ./
+drwxr-xr-x  18 root     root            1024 Jul 12 09:51 ../
+drwxr-xr-x   2 root     root           16384 Jul 12 10:13 lost+found/
+-rw-r--r--   1 root     root       250609664 Jul 12 10:24
+really-big-friggin-file
+
+at the end:
+total 7175033
+drwxr-xr-x   3 root     root            4096 Jul 12 10:14 ./
+drwxr-xr-x  18 root     root            1024 Jul 12 09:51 ../
+drwxr-xr-x   2 root     root           16384 Jul 12 10:13 lost+found/
+-rw-r--r--   1 root     root    18446744072459649024 Jul 12 10:30
+really-big-friggin-file
