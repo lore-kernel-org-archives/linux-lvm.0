@@ -1,9 +1,9 @@
-Message-ID: <B51F0C636E578A4E832D3958690CD73E0130BFEF@es04snlnt>
+Message-ID: <B51F0C636E578A4E832D3958690CD73E0130BFF0@es04snlnt>
 From: "Diehl, Jeffrey" <jdiehl@sandia.gov>
-Date: Tue, 28 Aug 2001 10:40:36 -0600
+Subject: RE: [linux-lvm] Newly extended VG reporting errors.
+Date: Tue, 28 Aug 2001 11:59:52 -0600
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] Newly extended VG reporting errors.
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -18,23 +18,27 @@ List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 To: "'linux-lvm@sistina.com'" <linux-lvm@sistina.com>
 
-Hi all,
+Well, I went ahead and rebooted the machine...
 
-I just extended one of my VG's by adding 3 new PV's.  Now, when I do a
-vgscan, I get errors.  I would rather not have to reboot this machine if
-there is something else I can do.
+Now I have don't have any VolumeGroups.  When I run pvscan, it shows all of
+my PV's as being associated with an unknown VG and that I should run vgscan.
 
-The error message is:
+When I run vgscan, I get:
 
+[root@filmore jdiehl]# vgscan
+vgscan -- reading all physical volumes (this may take a while...)
+vgscan -- found active volume group "Database2"
 vgscan -- ERROR "vg_read_with_pv_and_lv(): allocated LE of LV" can't get
-data of volume group "Database2" from physical volume(s)
+data of
+ volume group "Database2" from physical volume(s)
 vgscan -- ERROR "vg_read_with_pv_and_lv(): allocated LE of LV" creating
-"/etc/lvmtab" and "/etc/lvmtab.d"
+"/etc/lv
+mtab" and "/etc/lvmtab.d"    
 
-What do these messages mean?  And how do I make them go away so I can resize
-my filesystem?
+But this doesn't seem to rebuild the VG.
 
-Thanx,
+How do I recover from this?  Or is my data gone?
+
 Mike Diehl,
 Network Monitoring Tool Devl.
 Sandia National Laboratories.
