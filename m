@@ -1,11 +1,10 @@
-Return-Path: <adilger@turbolinux.com>
-From: Andreas Dilger <adilger@turbolinux.com>
-Message-Id: <200101151709.f0FH9vn23739@webber.adilger.net>
-Subject: Re: [linux-lvm] hard-lock seems to have caused serious LVM problems
-In-Reply-To: <20010115100048.B23471@yendi.dmeyer.net> "from dmeyer@dmeyer.net
- at Jan 15, 2001 10:00:48 am"
-Date: Mon, 15 Jan 2001 10:09:57 -0700 (MST)
-MIME-Version: 1.0
+Return-Path: <dmeyer@dmeyer.net>
+Date: Mon, 15 Jan 2001 15:33:59 -0500
+From: dmeyer@dmeyer.net
+Subject: [linux-lvm] hard-lock seems to have caused serious LVM problems
+Message-ID: <20010115153359.A10551@jhereg.dmeyer.net>
+Mime-Version: 1.0
+Content-Disposition: inline
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -21,65 +20,32 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Dave writes:
-> Does the following seem right?
+In article <20010115172200.A31217@srv.t-online.de> you write:
+> On Mon, Jan 15, 2001 at 11:03:58AM -0500, dmeyer@dmeyer.net wrote:
+> > Interestingly enough, something seems to have fixed my PVs in the
+> > meantime - now they all have every UUID.  Either activating the VG or
+> > running vgck must have done it.
+> 
+> No, it doesn't happen while activating VGs or checking them.
+> 
+> The following tools call vg_write_with_pv_and_lv() in the library
+> which in turn calls pv_write_uuidlist() to do the UUID list update:
 
-> # pvdata -U /dev/hdb1 /dev/hdb5 /dev/hdb6 /dev/sda1 /dev/sda2
-> --- List of physical volume UUIDs ---
-> 
-> 000: pXMXm8FIECSb7mGPEIX3qVgQFbt21sKd
-> 001: --- EMPTY ---
-> 002: --- EMPTY ---
-> 003: --- EMPTY ---
-> 004: --- EMPTY ---
-> --- List of physical volume UUIDs ---
-> 
-> 000: pXMXm8FIECSb7mGPEIX3qVgQFbt21sKd
-> 001: efjtqFYhTIqyLO2cBURu5zN7rLJsG4dF
-> 002: --- EMPTY ---
-> 003: --- EMPTY ---
-> 004: --- EMPTY ---
-> --- List of physical volume UUIDs ---
-> 
-> 000: pXMXm8FIECSb7mGPEIX3qVgQFbt21sKd
-> 001: efjtqFYhTIqyLO2cBURu5zN7rLJsG4dF
-> 002: 931SNJ6F66g3n3qA9Nts3r4jqe4TOHW8
-> 003: --- EMPTY ---
-> 004: --- EMPTY ---
-> --- List of physical volume UUIDs ---
-> 
-> 000: pXMXm8FIECSb7mGPEIX3qVgQFbt21sKd
-> 001: efjtqFYhTIqyLO2cBURu5zN7rLJsG4dF
-> 002: 931SNJ6F66g3n3qA9Nts3r4jqe4TOHW8
-> 003: m2wuLpJ9AQmzXnbk4sCuQu8hjAev7pax
-> 004: --- EMPTY ---
-> --- List of physical volume UUIDs ---
-> 
-> 000: pXMXm8FIECSb7mGPEIX3qVgQFbt21sKd
-> 001: efjtqFYhTIqyLO2cBURu5zN7rLJsG4dF
-> 002: 931SNJ6F66g3n3qA9Nts3r4jqe4TOHW8
-> 003: m2wuLpJ9AQmzXnbk4sCuQu8hjAev7pax
-> 004: fdNejQ2DAp9A8KN0UrePxscwoY8vqVSu
-> 
-> Each PV only has the uuids from the PVs before it.  Should each PV
-> have the complete list of uuids in its VG (in which case there's
-> something screwy with my PVs)?  Or did pv_read_all_pv_of_vg somehow
-> pick the wrong PV to read the uuid list from?  Or something else?
+Maybe it was calling vgscan on the messed up VG once I managed to get
+it online did it, then.  I didn't call any of the others.
 
-No, this looks wrong.  Each PV should have the UUID from all PVs in the VG.
-What you can do in the meantime (if you are confident with such things) is
-to copy the UUIDs from /dev/sda2 (or whichever has all 5 UUIDs) to all of
-the other disks.  You can do this with "od -Ad -a /dev/sda2" to find where
-the UUIDs are stored in the VG (note that each UUID has 32 ASCII characters
-and 96 NULs), and "dd" to copy but you obviously need to be careful.
+> You must have run one of those tools in order to update the UUID list.
+> It is still rather interesting what caused the mess you reported in the first
+> place.
 
-It may also work to change pv_read_all_pv_of_vg() to call pv_read_uuidlist()
-for each PV and find the one with the longest list of UUIDs (appropriately
-saving uuids_max and pv_uuid_list_max).  However, I'm not sure if that is a
-permanent solution - it should really be the same list on all PVs.
+I wonder if it wasn't somehow related to calling vgscan -d and getting
+seg faults in the middle of it.  Or, more likely, running vgscan in
+the debugger trying to extract more information about what was going
+on.  
 
-Cheers, Andreas
+In any case, I hope fervantly never to have the opportunity to find
+out again :-).
+
 -- 
-Andreas Dilger  \ "If a man ate a pound of pasta and a pound of antipasto,
-                 \  would they cancel out, leaving him still hungry?"
-http://www-mddsp.enel.ucalgary.ca/People/adilger/               -- Dogbert
+David M. Meyer
+dmeyer@dmeyer.net
