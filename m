@@ -1,10 +1,12 @@
-From: Keith Owens <kaos@sgi.com>
-In-Reply-To: Your message of
-    "Tue, 08 Jan 2002 02:50:27 +1000."
-    <200201071648.IAA08511@sgi.com>
+Content-Type: text/plain; charset="us-ascii"
+From: Adrian Head <ahead@bigpond.net.au>
+References: <1010427293.29260.3.camel@UberGeek>
+    <m3666ej5t2.fsf@shakti.rupa.com>
+In-Reply-To: <m3666ej5t2.fsf@shakti.rupa.com>
 MIME-Version: 1.0
-Message-Id: <687.1010435796@ocs3.intra.ocs.com.au>
-Subject: [linux-lvm] Re: Unable to get XFS, ext3, reiserfs & LVM to coexist happily
+Content-Transfer-Encoding: 8bit
+Message-Id: <E16NkOK-0006og-00@hermes.sistina.com>
+Subject: [linux-lvm] Re: GRUB + LVM + XFS?
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,58 +17,56 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Jan  7 14:34:02 2002
+Date: Mon Jan  7 18:46:02 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: Adrian Head <ahead@bigpond.net.au>
-Cc: Linux XFS Mailing List <linux-xfs@oss.sgi.com>, linux-lvm@sistina.com
+To: Rupa Schomaker <rupa-list@rupa.com>, linux-xfs@oss.sgi.com
+Cc: linux-lvm@sistina.com
 
-On Tue, 8 Jan 2002 02:50:27 +1000, 
-Adrian Head <ahead@bigpond.net.au> wrote:
->On Tue, 8 Jan 2002 00:41, Keith Owens wrote:
->> On Tue, 8 Jan 2002 00:08:11 +1000,
->> Adrian Head <ahead@bigpond.net.au> wrote:
->> >
->> >Entering kdb (current=0xd600e000, pid 940) Oops: Oops
->> >due to oops @ 0xb800
->> >eax = 0xffffffff ebx = 0xd600e000 ecx = 0x0000b800 edx = 0xc018fd25
->> >esi = 0x00000008 edi = 0xd600e000 esp = 0xd600ff0c eip = 0x0000b800
->> >ebp = 0xd600ff30 xss = 0x00000018 xcs = 0x00000010 eflags = 0x00010086
->> >xds = 0x00000018 xes = 0x00000018 origeax = 0xffffffff &regs = 0xd600fed8
->> >kdb> bt
->> >    EBP       EIP         Function(args)
->> >0xd600ff30 0x0000b800 <unknown>+0xb800 (0x1)
->> >                               kernel <unknown> 0x0 0x0 0x0
->> >           0xc011ce83 dequeue_signal+0x43 (0xd600e560, 0xd600ff30,
->> >0xd600e560, 0xd600ffc4, 0xc01392ff)
->> >                               kernel .text 0xc0100000 0xc011ce40
->> > 0xc011cef0 0xc01069b9 do_signal+0x59 (0x11, 0xbfffec40, 0xbfffebb0, 0x8,
->> > 0x11) kernel .text 0xc0100000 0xc0106960 0xc0106c00 0xc0106d54
->> > signal_return+0x14
->> >                               kernel .text 0xc0100000 0xc0106d40
->> > 0xc0106d58
->>
->> kdb is correctly reporting the current eip, but the kernel has taken a
->> swan dive into nowhere.  It looks like the chunk of code below.  To
->> confirm, run
->>
->>   objdump --start-addr=0xc011ce40 --stop-address=0xc011ce90 vmlinux
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA1
+
+On Tue, 8 Jan 2002 05:54, Rupa Schomaker wrote:
+> I'm having toubles with the current CVS version of the XFS kernel.  I
+> haven't had time to look at it completely, but... it could be:
 >
->How did you get 0xc011ce40 and 0xc011ce90?  Do they come from above?  How are 
->they derived? Just interested.
+> 1) mismatch between userspace and kernel (what LVM is in the XFS
+>    kernel?  I'm using the debian lvm10 userspace).
+>
+> 2) bad config
+>
+> 3) ???
+>
+> A quick "bt" at boot in kdb shows that devfs is in the call path.  No,
+> I haven't had time to write everything down. :(  Man, I wish there was
+> an easy to dump the kdb info or an OOPs to disk...
 
-The backtrace shows a branch out of the kernel, the last good address
-is the starting point to find out why we branched to an invalid
-address.  Back trace is listed as 0xc011ce83 dequeue_signal+0x43,
-subtract 0x43 so dequeue_signal starts at 0xc011ce40.  Stop address is
-the backtrace entry plus a bit to bracket the probable call
-instruction.
+Well all I do is for getting kdb output is to use a serial console and 
+another computer - then cut and past then send  ;-).
 
->vmlinux - where does that come from?  I assume it is not the compressed 
->kernel found in /boot.
+It is very interesting that devfs is referenced - there was a LVM memory 
+corruption problem and a patch for LVM/devfs - it can be found here:
+http://marc.theaimsgroup.com/?l=linux-xfs&m=101031443221058&w=2
 
-The kernel build creates vmlinux under /usr/src/linux or wherever you
-build your kernel.  All architectures build vmlinux then modify it as
-required for booting.  Binutils tools like objdump do not understand
-bzImage, they need the original ELF kernel, i.e. vmlinux.
+- From my experience it seems that LVM 1.0.1rc4(ish) is way more robust than 
+the updated LVM 1.0.1 or even CVS LVM 1.0.1 yesterday.  However, not 
+everything works as expected with either. You can find a results table for a 
+few tests I have conducted here: (of course YMMV)
+http://marc.theaimsgroup.com/?l=linux-lvm&m=100994364215110&w=2
+
+I think you would be very interested in the discussions and activity that has 
+been occuring on the linux-xfs & linux-lvm lists at the moment regarding XFS 
+and LVM.  If you are seeing problems I would be very interested in finding 
+out how your problems differ from mine.
+
+- -- 
+Adrian Head
+
+(Public Key available on request.)
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.0.6 (GNU/Linux)
+Comment: For info see http://www.gnupg.org
+
+iD8DBQE8OkHO8ZJI8OvSkAcRAsHkAJ9OlEWOQMxiXXsJ0OzsllI7icT8pQCeLfM2
+95t821X+y25nYdf3WCDRg9k=
+=rjIv
+-----END PGP SIGNATURE-----
