@@ -1,11 +1,11 @@
 Return-Path: <Heinz.Mauelshagen@t-online.de>
-Date: Fri, 19 Jan 2001 11:52:01 +0000
+Date: Fri, 19 Jan 2001 12:42:10 +0000
 From: Heinz J. Mauelshagen <Heinz.Mauelshagen@t-online.de>
-Subject: Re: [linux-lvm] fdisk and the LVM partition.
-Message-ID: <20010119115201.B11381@srv.sistina.com>
-References: <200101190934.JAA05616@lindbergh.avbrief.com>
+Subject: Re: [linux-lvm] lvmtab and lvmtab.d   disappeared.
+Message-ID: <20010119124210.J11381@srv.sistina.com>
+References: <3A51DCD10039F1D2@mail.tiscalinet.it>
 Mime-Version: 1.0
-In-Reply-To: <200101190934.JAA05616@lindbergh.avbrief.com>; from tmdg@avbrief.com on Fri, Jan 19, 2001 at 09:34:18AM +0000
+In-Reply-To: <3A51DCD10039F1D2@mail.tiscalinet.it>; from doganello@tiscalinet.it on Thu, Jan 18, 2001 at 04:18:49PM +0100
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -21,55 +21,50 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-I registered 0x8E a long time ago.
-Obviously nobody (including me ;-) took care of extending fdisk.
-Could you go for it, please?
+Hi Doganello,
 
-On Fri, Jan 19, 2001 at 09:34:18AM +0000, Tom Dawes-Gamble wrote:
-> Hi,
+the error code 328 returned by vg_check_consistency() shows that you might
+have more PVs in your system which claim to belong to volume group "vg1"
+than there should be.
+
+Please check with pvscan and report again.
+
+Thanks,
+Heinz
+
+On Thu, Jan 18, 2001 at 04:18:49PM +0100, doganello wrote:
+> Hi there.
+> I use a Suse 6.4 (kernel 2.2.14-SUSE) with LVM since six months, with much pleasure.
+> I have only a Volume group, with 5 logical volumes.
+> Yesterday I decided to delete a logical volume and create a new one.
+> I went in single-user mode, made a  lvdelete,  then made a new logical volume with lvcreate, and create a new Reiser file system on it. After that, I came back in mode 3 and continuie to work. Everything war working fine.
+> Afer a normal shutdown, this morning my box couldn't access to the VG.
+> I Watched in the /etc directory, and there were no lvmtab and lvmtab.d
 > 
-> 	Is anyone actively pursuing getting the LVM partition ID
-> "Registered"?
+> I run a vgscan -v, and I got these messages (this i s a summary):
 > 
-> 	  I got a little tee-d off with the LVM partition showing 
-> 'Unknown' so I fixed my fdisk with this patch to i386_sys_types.c
+> ERROR - 132 volume group "vg1" is inconsistent
+> ERROR - unable to do a backup of volume group "vg1"
+> "etc/lvmtab" and "etc/lvmtab.d" were succesfully created.
+> But this was not true, there weren't any lvmtab in /etc.
 > 
-> *** i386_sys_types.c    Fri Jan 19 09:30:07 2001
-> --- i386_sys_types.c.new        Fri Jan 19 09:29:52 2001
-> ***************
-> *** 58,63 ****
-> --- 58,64 ----
->         {0x85, N_("Linux extended")},
->         {0x86, N_("NTFS volume set")},
->         {0x87, N_("NTFS volume set")},
-> +       {0x8e, N_("LVM Physical volume")}, /* LVM http://www.sistina.com/lvm/ */
->         {0x93, N_("Amoeba")},
->         {0x94, N_("Amoeba BBT")},       /* (bad block table) */
->         {0xa0, N_("IBM Thinkpad hibernation")},     
+> I watched at your mailing list, to search for answers, but I find nothing .
+> 
+> Do you think is's possible to recover my VG and my partitions? 
+> 
+> I'm sending a "vgscan -d" log.
+> 
+> Saluti
+> 
+> Anchise.
 > 
 > 
 > 
-> 	So now my fdisk knows about LVM partitions.
-> 
-> 	While checking that fdisk still worked correctly I was reminded
-> the we used to use Partition type 'fe' but I guess that got stolen by LANstep. 
-> 
-> 	I changed the type of my 'fe' to '8e' and rebooted no problems.
-> Though I guess I can't go back to my old and I mean "really" old kernel.  :-)
-> 
-> 	
-> Regards,
-> Tom.
-> 
-> -- 
-> char  *r,*e,*w="%.9s%.7s%.7s\n";extern int printf(const char*,...);int main(){
-> int l=*w,a,b,th=*(w-~(l/=l))-*(w+l);b=*w+~th--;a=b-th;//Aviation Briefing Ltd.
-> r=e="  DISPLAY'tmdg@avbr';,,;'ief.com'*>"+b;l+=~b,th-=printf(w,e-a,th+e,r);
-> r=e="  DISPLAY'http://www.avbrief.com/' *>"-~b,exit(~l-printf(w,e+~a,th+e,r));}
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
+> --
+> TiscaliNet, libero accesso ad Internet.
+> http://www.tiscalinet.it
+
+
 
 -- 
 
