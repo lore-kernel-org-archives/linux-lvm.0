@@ -1,91 +1,81 @@
-Message-ID: <389704AA.5696F9C4@ep-ag.com>
-Date: Tue, 01 Feb 2000 17:07:06 +0100
-From: Klaus Strebel <stb@ep-ag.com>
-MIME-Version: 1.0
-Subject: Re: [linux-lvm] Reduced dependecies for /root on lvm
-References: <389581F1.FC558D26@ep-ag.com> <20000131153248.A9022@gruyere.muc.suse.de>
-Content-Type: multipart/mixed;
- boundary="------------801E38E5D5707CDDAC798EFC"
+Date: Tue, 1 Feb 2000 17:55:46 +0100
+From: Jan-Benedict Glaw <jbglaw@lug-owl.de>
+Subject: Re: [linux-lvm] Patch 0.8i to 2.3.40: error during make
+Message-ID: <20000201175546.C25005@ev-stift-gymn.guetersloh.de>
+Reply-To: jbglaw@lug-owl.de
+References: <Pine.LNX.4.20.0001301910280.5714-100000@claudius.mgmt-inc.com> <20000131033652.A19554@ev-stift-gymn.guetersloh.de>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-md5;
+	protocol="application/pgp-signature"; boundary="bAmEntskrkuBymla"
+In-Reply-To: <20000131033652.A19554@ev-stift-gymn.guetersloh.de>; from jbglaw@lug-owl.de on Mon, Jan 31, 2000 at 03:36:52AM +0100
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
-To: Andi Kleen <ak@suse.de>
-Cc: linux-lvm@msede.com
+To: linux-lvm@msede.com
 
-This is a multi-part message in MIME format.
---------------801E38E5D5707CDDAC798EFC
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
 
-Andi Kleen wrote:
-> 
-> On Mon, Jan 31, 2000 at 01:37:05PM +0100, Klaus Strebel wrote:
-> > Comments and bugreports are welcome.
-> 
-> I don't think it will work with sub directories. dp->d_type
-> is normally DT_UNKNOWN on all Linux systems, libc5 dirent
-> does not even have that field. Please use a fstat.
-Well, i think your're right. Made i tiny small test proggy. But the new
-lvm_rm_rf.c does it (now tested with several dirs including subdirs and
-files and s.o.).
+--bAmEntskrkuBymla
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: quoted-printable
 
-Ciao
-Klaus
--- 
-Klaus Strebel
-stb@ep-ag.com
-EIGNER + PARTNER AG   - The Engineering Warehouse Company -
-<http://www.ep-ag.com>
------------------------------------------------------------------------
---------------801E38E5D5707CDDAC798EFC
-Content-Type: application/octet-stream;
- name="lvm_rm_rf.c"
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment;
- filename="lvm_rm_rf.c"
+On Mon, Jan 31, 2000 at 03:36:52AM +0100, Jan-Benedict Glaw wrote:
+> On Sun, Jan 30, 2000 at 07:11:04PM -0500, Jim Cain wrote:
+> > All,
+> >=20
+> > After applying the patch and running make config and make dep, make sho=
+ws
+> > the following:
+> >=20
+> > make[2]: Entering directory `/usr/src/linux-2.3.40-lvm/kernel'
+> > gcc -D__KERNEL__ -I/usr/src/linux-2.3.40-lvm/include -D__SMP__ -Wall -W=
+strict-prototypes -O2 -fomit-frame-pointer -fno-strict-aliasing -pipe -fno-=
+strength-reduce  -DCPU=3D686 -march=3Di686   -DEXPORT_SYMTAB -c ksyms.c
+> > ksyms.c:258: `block_fsync' undeclared here (not in a function)
+> > ksyms.c:258: initializer element for `__ksymtab_block_fsync.value' is n=
+ot constant
+> > ksyms.c:269: `blkdev_close' undeclared here (not in a function)
+> > ksyms.c:269: initializer element for `__ksymtab_blkdev_close.value' is =
+not constant
+> > make[2]: *** [ksyms.o] Error 1
+> >=20
+> > Has anyone else had a similar problem with this patch?
+>=20
+> Yes, /me... I've got no unmodified file handy and I'm working on a very s=
+low
+> machine so try this:
+>=20
+> - edit ./include/linux/fs.h
+> - locate line 775
+> - add the following two lines:
+>=20
+> extern int blkdev_close(struct inode *, struct file *);
+> extern int block_fsync(struct file *, struct dentry *);
+>=20
+> --> That's all. It's simply a problem of two missing declarations;(
 
-LyoKICogdG9vbHMvbGliL2x2bV9ybV9yZi5jCiAqCiAqIENvcHlyaWdodCAoQykgIDIwMDAg
-IEtsYXVzIFN0cmViZWwsIEdlcm1hbnkKICoKICogSmFudXJ5IDIwMDAKICoKICoKICogVGhp
-cyBMVk0gbGlicmFyeSBpcyBmcmVlIHNvZnR3YXJlOyB5b3UgY2FuIHJlZGlzdHJpYnV0ZSBp
-dCBhbmQvb3IKICogbW9kaWZ5IGl0IHVuZGVyIHRoZSB0ZXJtcyBvZiB0aGUgR05VIExpYnJh
-cnkgR2VuZXJhbCBQdWJsaWMKICogTGljZW5zZSBhcyBwdWJsaXNoZWQgYnkgdGhlIEZyZWUg
-U29mdHdhcmUgRm91bmRhdGlvbjsgZWl0aGVyCiAqIHZlcnNpb24gMiBvZiB0aGUgTGljZW5z
-ZSwgb3IgKGF0IHlvdXIgb3B0aW9uKSBhbnkgbGF0ZXIgdmVyc2lvbi4KICoKICogVGhpcyBM
-Vk0gbGlicmFyeSBpcyBkaXN0cmlidXRlZCBpbiB0aGUgaG9wZSB0aGF0IGl0IHdpbGwgYmUg
-dXNlZnVsLAogKiBidXQgV0lUSE9VVCBBTlkgV0FSUkFOVFk7IHdpdGhvdXQgZXZlbiB0aGUg
-aW1wbGllZCB3YXJyYW50eSBvZgogKiBNRVJDSEFOVEFCSUxJVFkgb3IgRklUTkVTUyBGT1Ig
-QSBQQVJUSUNVTEFSIFBVUlBPU0UuICBTZWUgdGhlIEdOVQogKiBMaWJyYXJ5IEdlbmVyYWwg
-UHVibGljIExpY2Vuc2UgZm9yIG1vcmUgZGV0YWlscy4KICoKICogWW91IHNob3VsZCBoYXZl
-IHJlY2VpdmVkIGEgY29weSBvZiB0aGUgR05VIExpYnJhcnkgR2VuZXJhbCBQdWJsaWMKICog
-TGljZW5zZSBhbG9uZyB3aXRoIHRoaXMgTFZNIGxpYnJhcnk7IGlmIG5vdCwgd3JpdGUgdG8g
-dGhlIEZyZWUKICogU29mdHdhcmUgRm91bmRhdGlvbiwgSW5jLiwgNTkgVGVtcGxlIFBsYWNl
-IC0gU3VpdGUgMzMwLCBCb3N0b24sCiAqIE1BIDAyMTExLTEzMDcsIFVTQQogKgogKi8KCiNp
-bmNsdWRlIDxsaWJsdm0uaD4KCiNpbmNsdWRlIDxkaXJlbnQuaD4KCmludCBsdm1fcm1fcmYg
-KGNoYXIgKmRpcm5hbWUpCnsKCURJUiAqZGlyX3BvaW50ZXI7CglzdHJ1Y3QgZGlyZW50ICpk
-cDsKCWludCBteV9lcnI9MDsKICAgICAgICBjaGFyICppbmRpcm5hbWVfYnVmZmVyOyAvKiBX
-aXRob3V0IGJ1ZmZlcmluZyBvZiBwYXJtLCB0aGUgcmVjdXJzaW9uIHNlZ2ZhdWx0cyBhdCB0
-aGUgMy4gbGV2ZWwhICovCiAgICAgICAgY2hhciAqZGlybmFtZV9idWZmZXI7CgoJaWYgKGRp
-cm5hbWUgIT0gTlVMTCAmJiBzdHJsZW4oZGlybmFtZSkgPiAwKQoJewkKCQlpbmRpcm5hbWVf
-YnVmZmVyID0gbWFsbG9jKHN0cmxlbihkaXJuYW1lKSsyKTsKCQlzcHJpbnRmKGluZGlybmFt
-ZV9idWZmZXIsICIlcyVjIiwgZGlybmFtZSwgMCk7CgkJaWYgKHVubGluayhpbmRpcm5hbWVf
-YnVmZmVyKSA9PSAwKSB7CgkJCWZyZWUoaW5kaXJuYW1lX2J1ZmZlcik7CgkJCXJldHVybiAw
-OwoJCX0KCQlpZiAoZXJybm8gIT0gRUlTRElSKSB7CgkJCW15X2VyciA9IGVycm5vOwoJCQlm
-cHJpbnRmKHN0ZGVyciwgImx2bV9ybV9yZjogRVJST1IgdW5saW5raW5nIDwlcz46JWxkXG4i
-LCBpbmRpcm5hbWVfYnVmZmVyLG15X2Vycik7CgkJCWZyZWUoaW5kaXJuYW1lX2J1ZmZlcik7
-CgkJCXJldHVybiBteV9lcnI7CgkJfQoJCWRpcl9wb2ludGVyID0gb3BlbmRpcihpbmRpcm5h
-bWVfYnVmZmVyKTsKCQlmb3IgKGRwID0gcmVhZGRpcihkaXJfcG9pbnRlcik7IGRwICE9IE5V
-TEw7IAoJCSAgICAgZHAgPSByZWFkZGlyKGRpcl9wb2ludGVyKSkgewoJCQlkaXJuYW1lX2J1
-ZmZlciA9IG1hbGxvYyhzdHJsZW4oaW5kaXJuYW1lX2J1ZmZlcikrc3RybGVuKGRwLT5kX25h
-bWUpKzIpOwoJCQlzcHJpbnRmKGRpcm5hbWVfYnVmZmVyLCAiJXMvJXMlYyIsIGluZGlybmFt
-ZV9idWZmZXIsIGRwLT5kX25hbWUsIDApOwoKCQkJaWYgKChzdHJjbXAoZHAtPmRfbmFtZSwg
-Ii4iKSAhPSAwKSAmJiAoc3RyY21wKGRwLT5kX25hbWUsICIuLiIpICE9IDApKSB7CgkJCQlp
-ZiAodW5saW5rKGRpcm5hbWVfYnVmZmVyKSAhPSAwKSB7CgoJCQkJCWlmIChlcnJubyA9PSBF
-SVNESVIpIHsKCQkJCQkJbXlfZXJyPWx2bV9ybV9yZiAoZGlybmFtZV9idWZmZXIpOwoJCQkJ
-CX0KCQkJCQllbHNlIHsKCQkJCQkJbXlfZXJyPWVycm5vOwoJCQkJCQlmcHJpbnRmKHN0ZGVy
-ciwgImx2bV9ybV9yZjogRVJST1IgdW5saW5raW5nIDwlcz46JWxkXG4iLCBkaXJuYW1lX2J1
-ZmZlcixteV9lcnIpOwoJCQkJCX0KCQkJCX0KCQkJfQoJCQlmcmVlKGRpcm5hbWVfYnVmZmVy
-KTsKCQl9CQoJCWNsb3NlZGlyKGRpcl9wb2ludGVyKTsKICAgICAgICAgICAgICAgIGlmICht
-eV9lcnIgPT0gMCkgCgkJCW15X2VyciA9IHJtZGlyKGluZGlybmFtZV9idWZmZXIpOwoJCWZy
-ZWUoaW5kaXJuYW1lX2J1ZmZlcik7CgkJcmV0dXJuIG15X2VycjsKCX0JCiAgICAgICAgcmV0
-dXJuIDA7Cn0JCg==
---------------801E38E5D5707CDDAC798EFC--
+Well, that's *nearly* all. You need to remove the "static" keywords from
+both blkdev_close and block_fsync in ./fs/block_dev.c, too.
+
+But that's really all;)
+
+MfG, JBG
+
+--=20
+Fehler eingestehen, Gr=F6=DFe zeigen: Nehmt die Rechtschreibreform zur=FCck=
+!!!
+keyID=3D0x8399E1BB fingerprint=3D250D 3BCF 7127 0D8C A444 A961 1DBD 5E75 83=
+99 E1BB
+
+--bAmEntskrkuBymla
+Content-Type: application/pgp-signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.0.1 (GNU/Linux)
+Comment: For info see http://www.gnupg.org
+
+iEYEAREBAAYFAjiXEBEACgkQHb1edYOZ4bvlYwCeKCqXkqlW2tG3RVzZ3r2dqt/2
+6joAn1nMbHHj916aE11gGzYRMvHhz8F7
+=jU0N
+-----END PGP SIGNATURE-----
+
+--bAmEntskrkuBymla--
