@@ -1,10 +1,11 @@
-Return-Path: <paul@clubi.ie>
-Date: Thu, 17 May 2001 01:41:21 +0100 (IST)
-From: Paul Jakma <paul@clubi.ie>
-Subject: Re: [linux-lvm] segfaults and "VGDATA .. inconsistent" beta7 tools
-In-Reply-To: <20010516104513.C11984@sistina.com>
-Message-ID: <Pine.LNX.4.33.0105170137020.9932-100000@fogarty.jakma.org>
+Return-Path: <glenn@gecpalau.com>
+Message-ID: <3B0338E9.8425E93B@gecpalau.com>
+Date: Thu, 17 May 2001 11:35:21 +0900
+From: Glenn Shannon <glenn@gecpalau.com>
 MIME-Version: 1.0
+Subject: Re: [linux-lvm] segfaults and "VGDATA .. inconsistent" beta7 tools
+References: <Pine.LNX.4.33.0105170137020.9932-100000@fogarty.jakma.org>
+Content-Transfer-Encoding: 7bit
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,50 +17,71 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
 
-On Wed, 16 May 2001, Heinz J. Mauelshagen wrote:
+Paul Jakma wrote:
 
-> The lvm library sets up a device name/number cache in order to
-> map between those. If pv_create_name_from_kdev_t() returns
-> (char*)NULL, an entry for /dev/ida/c0d0p6 couldn't be found in
-> the cache :-( Even though /dev/ida/ is a supported namespace, the
-> entry couldn't have made it into the cache, because the stat() on
-> the device returned an error.
+> On Wed, 16 May 2001, Heinz J. Mauelshagen wrote:
 >
-> In order to check this, you could for eg. add a "printf ("found
-> %s\n", devpath)" after the sprintf() in lvm_add_dir_cache() in
-> lvm_dir_cache.c and and a "printf ("ADDED %s\n", devpath)" after
-> the cache_size++ in the same function.
+> > The lvm library sets up a device name/number cache in order to
+> > map between those. If pv_create_name_from_kdev_t() returns
+> > (char*)NULL, an entry for /dev/ida/c0d0p6 couldn't be found in
+> > the cache :-( Even though /dev/ida/ is a supported namespace, the
+> > entry couldn't have made it into the cache, because the stat() on
+> > the device returned an error.
+> >
+> > In order to check this, you could for eg. add a "printf ("found
+> > %s\n", devpath)" after the sprintf() in lvm_add_dir_cache() in
+> > lvm_dir_cache.c and and a "printf ("ADDED %s\n", devpath)" after
+> > the cache_size++ in the same function.
+> >
+> > BTW: long time ago, we were faced with problems related to messy /dev/ entries.
+> >      In case you don't run devfs you need to make sure that /dev/ entries are
+> >      all right.
 >
-> BTW: long time ago, we were faced with problems related to messy /dev/ entries.
->      In case you don't run devfs you need to make sure that /dev/ entries are
->      all right.
+> hmm... devfs.... that got me thinking. i run devfs, but mounted on
+> /devfs instead of /dev for informational purposes. search through the
+> archive shows that having devfs compiled in but not mounted on /dev
+> is a known problem as devfs changes /proc/partitions.
+>
+> compile without devfs and hey presto both machines work fine...
+>
+> > No.
+> > See above.
+>
+> i think i've answered it myself.
+>
+> thing is, i still want to run devfs, but not on /dev. if i convert
+> all the file names in /dev to be the same as in devfs then LVM would
+> work, wouldn't it?
+>
+> regards,
+> --
+> Paul Jakma      paul@clubi.ie   paul@jakma.org
+> PGP5 key: http://www.clubi.ie/jakma/publickey.txt
+> -------------------------------------------
+> Fortune:
+> Committees have become so important nowadays that subcommittees have to
+> be appointed to do the work.
+>
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@sistina.com
+> http://lists.sistina.com/mailman/listinfo/linux-lvm
 
+Actually, I run LVM and DevFS.
 
-hmm... devfs.... that got me thinking. i run devfs, but mounted on
-/devfs instead of /dev for informational purposes. search through the
-archive shows that having devfs compiled in but not mounted on /dev
-is a known problem as devfs changes /proc/partitions.
+From my experience, LVM handles the change between using DevFS and non-DevFS /dev
+entries flawlessly.
 
-compile without devfs and hey presto both machines work fine...
+The problem is updating your fstab *before* you mount devfsd on /dev.
 
-> No.
-> See above.
+You must figure out where everything is going to be so that you can create the
+proper entries under your fstab. LVM entries need not change as they stay the same.
+(/dev/vg1/lv1 will still be /dev/vg1/lg1). But /dev/hda1 will be
+/dev/discs/disc0/part1 etc. and so forth.
 
-i think i've answered it myself.
+Good luck!
 
-thing is, i still want to run devfs, but not on /dev. if i convert
-all the file names in /dev to be the same as in devfs then LVM would
-work, wouldn't it?
-
-regards,
--- 
-Paul Jakma	paul@clubi.ie	paul@jakma.org
-PGP5 key: http://www.clubi.ie/jakma/publickey.txt
--------------------------------------------
-Fortune:
-Committees have become so important nowadays that subcommittees have to
-be appointed to do the work.
+Glenn
