@@ -1,20 +1,23 @@
-Received: from agk.surrey.redhat.com (agk.surrey.redhat.com [172.16.10.74])
-	by pobox.surrey.redhat.com (8.12.8/8.12.8) with ESMTP id iA8ESBbM004491
-	for <linux-lvm@redhat.com>; Mon, 8 Nov 2004 14:28:11 GMT
-Received: from agk by agk.surrey.redhat.com with local (Exim 4.34)
-	id 1CRAV9-00064p-1k
-	for linux-lvm@redhat.com; Mon, 08 Nov 2004 14:28:11 +0000
-Date: Mon, 8 Nov 2004 14:28:11 +0000
-From: Alasdair G Kergon <agk@redhat.com>
-Subject: Re: [linux-lvm] Creating PV over a /dev/mapper device
-Message-ID: <20041108142811.GH2717@agk.surrey.redhat.com>
-References: <tk9so0di0jsl44dagc1dl8at6e9ld4r1be@4ax.com>
-	<20041107192450.GF2717@agk.surrey.redhat.com>
-	<3e4to0lgsvjoe6mqijohlh8558vbbb9uhj@4ax.com>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <3e4to0lgsvjoe6mqijohlh8558vbbb9uhj@4ax.com>
-Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
+Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id iA8Enlr08300
+	for <linux-lvm@redhat.com>; Mon, 8 Nov 2004 09:49:47 -0500
+Received: from mail.fhbb.ch (smtp.fhbb.ch [193.222.241.18] (may be forged))
+	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id iA8EnfN1020331
+	for <linux-lvm@redhat.com>; Mon, 8 Nov 2004 09:49:42 -0500
+Date: Mon, 8 Nov 2004 15:49:07 +0100
+From: Markus Wiedmer - FHBB <markus.wiedmer@stud.fhbb.ch>
+Message-ID: <1535323208.20041108154907@stud.fhbb.ch>
+Subject: Re: [linux-lvm] VGs not detected at startup
+In-Reply-To: <20041108135339.GA5797@dragonhold.org>
+References: <88707567.20041108091624@stud.fhbb.ch>
+	<20041108094008.GA26201@goldfinger.local>
+	<1489446547.20041108144631@stud.fhbb.ch>
+	<20041108135339.GA5797@dragonhold.org>
+MIME-Version: 1.0
+Content-Type: multipart/signed; protocol="application/pgp-signature";
+	micalg="pgp-sha1"; boundary="----------C61B315131C087B2"
+Reply-To: Markus Wiedmer - FHBB <markus.wiedmer@stud.fhbb.ch>,
+	LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -24,30 +27,62 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: LVM general discussion and development <linux-lvm@redhat.com>
+To: linux-lvm@spam.dragonhold.org
+Cc: LVM general discussion and development <linux-lvm@redhat.com>
 
-On Sun, Nov 07, 2004 at 10:35:57PM +0100, Roman Medina-Heigl Hernandez wrote:
-> First, thanks for your fast answer. I added the "device-mapper" type
-> but it is still not working. Example:
- 
-    # List of pairs of additional acceptable block device types found 
-    # in /proc/devices with maximum (non-zero) number of partitions.
-    # types = [ "fd", "device-mapper", 16 ]
+------------C61B315131C087B2
+Content-Type: text/plain; charset=ISO-8859-15
+Content-Transfer-Encoding: quoted-printable
 
-Firstly the line is commented out;
-secondly make it:
-  types = [ "device-mapper", 16 ]
+llsdo> On Mon, Nov 08, 2004 at 02:46:31PM +0100, Markus Wiedmer - FHBB wrot=
+e:
+>> I now found a work-around that seems to work so far. In the
+>> LVM-Start-Script I just put "mount /dev/sda5 || true" before the vgscan.=
+ it
+>> looks like after a mount-command the system suddenly finds the VG.
+>> strange...
 
-You can run 'lvm dumpconfig' to check what settings have actually 
-been read in from the config files.
+llsdo> Apologies if this is something that's already been
+llsdo> discussed (if so I missed it), and also
+llsdo> for saying something that you've almost definitely covered but......
+
+llsdo> Check to see if there's any autoloading of modules, or
+llsdo> anything, going on as a result of the
+llsdo> mount/fdisk?
+
+llsdo> Also (instead of the mount) does a 'dd' work?  E.g. dd
+llsdo> if=3D/dev/sda of=3D/dev/null bs=3D512
+llsdo> count=3D1?
+
+llsdo> That's going to be faster & probably less intrusive.
+
+llsdo> Graham
+
+thanks a lot for your hint. it really was a module (sd_mod) that was
+not loaded at boottime. everything works now like a charm
+
+thanks
+
+markus
 
 
-> I've set-up lvm1 mode ('cause I read that it is more stable than lvm2)
 
-Don't know where you read that but I'd strongly dispute it.
+--=20
+Mit freundlichen Gr=FCssen
+Markus Wiedmer - FHBB
+mailto:markus.wiedmer@stud.fhbb.ch
 
-Alasdair
--- 
-agk@redhat.com
+
+------------C61B315131C087B2
+Content-Type: application/pgp-signature
+
+-----BEGIN PGP MESSAGE-----
+Version: PGP SDK 3.0.4
+Comment: ""
+
+iQA/AwUBQY+HY59eUGiOXF3kEQJwfACfaLfdOs2I2cmtS3SDYL791bNS3nAAoNhh
+XcASckrm/q+L72T4XiAaXUKs
+=8CrP
+-----END PGP MESSAGE-----
+
+------------C61B315131C087B2--
