@@ -1,8 +1,12 @@
-Message-ID: <20030910142742.84566.qmail@web42002.mail.yahoo.com>
-From: Gene <starrygene@yahoo.com>
-Subject: RE: [linux-lvm] Can't install LVM 1.0.7 on Redhat Advanced Server  2.1 Please help.
+Subject: RE: [linux-lvm] Can't install LVM 1.0.7 on Redhat Advanced Server
+	2.1 Please help.
+From: Geoff Dolman <geoff.dolman@cimr.cam.ac.uk>
 In-Reply-To: <90D12689EF7A0543AB11426D75D6ABC508C5CFE0@oa4-server.oa.oclc.org>
-MIME-Version: 1.0
+References: 
+	 <90D12689EF7A0543AB11426D75D6ABC508C5CFE0@oa4-server.oa.oclc.org>
+Content-Transfer-Encoding: 7bit
+Message-Id: <1063205214.31163.89.camel@lupin>
+Mime-Version: 1.0
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -13,29 +17,29 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Sep 10 09:28:01 2003
+Date: Wed Sep 10 09:48:02 2003
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Thanks Tom. Just wondering if anyone here has
-succesfully installed LVM1/2 on RH AS 2.1?
+Hi - do you know if RHAS 3.0 will support snapshotting with
 
-Regards,
-Gene
+(a) ext3
+(b) HIGHMEM
 
---- "Fought,Tom" <foughtt@oclc.org> wrote:
-> I have tried them all with AS 2.1, including
-> patches.
-> I won't say definitively that LVM and AS 2.1 are
-> impossible
+without needing to apply patches manually?
+
+thanks
+
+Geoff
+
+On Wed, 2003-09-10 at 14:35, Fought,Tom wrote:
+> I have tried them all with AS 2.1, including patches.
+> I won't say definitively that LVM and AS 2.1 are impossible
 > to make work.. but I couldn't do it.
 > 
-> Taroon/AS3 comes with 1.0.3 installed. Redhat is
-> currently not
-> going to move to a higher release of LVM from what I
-> have found
+> Taroon/AS3 comes with 1.0.3 installed. Redhat is currently not
+> going to move to a higher release of LVM from what I have found
 > on lists.
 > 
 > Tom
@@ -44,13 +48,11 @@ Gene
 > From: Gene [mailto:starrygene@yahoo.com]
 > Sent: Wednesday, September 10, 2003 9:29 AM
 > To: linux-lvm@sistina.com
-> Subject: Re: [linux-lvm] Can't install LVM 1.0.7 on
-> Redhat Advanced
+> Subject: Re: [linux-lvm] Can't install LVM 1.0.7 on Redhat Advanced
 > Server 2.1 Please help.
 > 
 > 
-> Thanks Luca, have you tried installing LVM2 on a RH
-> AS
+> Thanks Luca, have you tried installing LVM2 on a RH AS
 > 2.1 server?
 > 
 > Regards,
@@ -64,8 +66,7 @@ Gene
 > > /usr/src)
 > > install the kernel-source rpm
 > > 
-> > >Does anyone know where the kernel_dir for RH AS
-> is?
+> > >Does anyone know where the kernel_dir for RH AS is?
 > > I
 > > >would think it's in the /boot folder.
 > > /usr/src/linux, if you install the rpm.
@@ -97,34 +98,30 @@ Gene
 > > _______________________________________________
 > > linux-lvm mailing list
 > > linux-lvm@sistina.com
-> >
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
+> > http://lists.sistina.com/mailman/listinfo/linux-lvm
 > > read the LVM HOW-TO at
 > http://tldp.org/HOWTO/LVM-HOWTO/
 > 
 > 
 > __________________________________
 > Do you Yahoo!?
-> Yahoo! SiteBuilder - Free, easy-to-use web site
-> design software
+> Yahoo! SiteBuilder - Free, easy-to-use web site design software
 > http://sitebuilder.yahoo.com
 > 
 > _______________________________________________
 > linux-lvm mailing list
 > linux-lvm@sistina.com
 > http://lists.sistina.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at
-> http://tldp.org/HOWTO/LVM-HOWTO/
+> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
 > 
 > _______________________________________________
 > linux-lvm mailing list
 > linux-lvm@sistina.com
 > http://lists.sistina.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at
-http://tldp.org/HOWTO/LVM-HOWTO/
-
-
-__________________________________
-Do you Yahoo!?
-Yahoo! SiteBuilder - Free, easy-to-use web site design software
-http://sitebuilder.yahoo.com
+> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+-- 
+Geoff Dolman
+JDRF/WT Diabetes and Inflammation Laboratory
+Cambridge Institute for Medical Research
+University of Cambridge
+http://www-gene.cimr.cam.ac.uk/todd/
