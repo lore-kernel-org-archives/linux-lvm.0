@@ -1,26 +1,40 @@
-Date: Sat, 11 Sep 1999 23:38:54 -0500 (CDT)
-From: "Dominic J. Eidson" <sauron@the-infinite.org>
-Subject: [linux-lvm] Feature Freeze for 2.4...
-Message-ID: <Pine.LNX.4.05.9909112337150.8956-100000@morannon.kdi.com>
-MIME-Version: 1.0
+Message-Id: <B0000450335@ddaap077.deutschepost.de>
+From: "Schackel, Fa. Integrata, ZRZ DA" <B.Schackel@deutschepost.de>
+Subject: [linux-lvm] AW: Abwesenheitsnotiz: raid 1
+Date: Mon, 13 Sep 1999 10:22:46 +0200
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: Linux-LVM <linux-lvm@msede.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+To: "'linux-raid@vger.rutgers.edu'" <linux-raid@vger.rutgers.edu>, linux-lvm@msede.com
+Cc: 'Aaron Hatfield' <ahatfield@les.com>, "'Leonard N. Zubkoff'" <lnz@dandelion.com>, "'Olaf C. Bauer'" <Olaf_Bauer@public.uni-hamburg.de>, 'Eric Smith' <seric@geotec.net>, 'Skip Harrison' <skiph@newportnet.com>, 'esl' <esl@cio.med.va.gov>
+
+Hello to all in the list,
+
+sorry for misconfiguration of my autoresponder to send out fo office mails
+to mailinglists.
+will not happen again.
 
 
-Found this off of /.:
-
-http://kernelnotes.org/lnxlists/linux-kernel/lk_9909_02/msg00460.html
-
-Wonder what we did wrong... :(
-
-
-
--- 
-Dominic J. Eidson
-                                         "Baruk Khazad! Khazad ai-menu!" - Gimli
---------------------------------------------------------------------------------
-http://www.the-infinite.org/               http://www.the-infinite.org/~dominic/
+> -----Urspr=EF=BF=BDngliche Nachricht-----
+> Von: Aaron Hatfield [mailto:ahatfield@les.com]
+> Gesendet am: Mittwoch, 8. September 1999 20:17
+> An: Schackel, Fa. Integrata, ZRZ DA
+> Betreff: Re: Abwesenheitsnotiz: raid 1
+>=20
+>=20
+> Ihre Mail wurde gespeichert
+>=20
+> Ich bin ab 13.09. wieder erreichbar.
+>=20
+> mfg.
+> B. Schackel
+> Firewall Administration
+> KTZ-Da
+>=20
+>=20
+> In English please I can not read this
+>=20
+>=20
