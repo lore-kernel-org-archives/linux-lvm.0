@@ -1,109 +1,66 @@
-Subject: [linux-lvm] lvdisplay disagrees with df for resized LV
-From: Andy Cowling <andy@redeye.com>
-Date: 11 Oct 2000 13:25:50 +0100
-Message-ID: <m2u2ajmunl.fsf@puma.redeye>
-MIME-Version: 1.0
+Date: Wed, 11 Oct 2000 08:45:55 -0500
+From: "Eric M. Hopper" <hopper@omnifarious.mn.org>
+Subject: Re: [linux-lvm] lvdisplay disagrees with df for resized LV
+Message-ID: <20001011084555.A6983@omnifarious.mn.org>
+References: <m2u2ajmunl.fsf@puma.redeye>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="ibTvN161/egqYuK8"
+Content-Disposition: inline
+In-Reply-To: <m2u2ajmunl.fsf@puma.redeye>; from andy@redeye.com on Wed, Oct 11, 2000 at 01:25:50PM +0100
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@msede.com
-Cc: Dan Garcia <dan@redeye.com>
-
-I'm just starting out using LVM under SuSE 7.0. I created a logical
-volume which was initially 30Gb but I then resized it to 90Gb (using
-lvresize) spanning 3 physical volumes each of 30Gb.
-
-Now, lvdisplay/vgdisplay shows the LV/VG size as 90Gb, but df still
-lists the file system as 30Gb.
-
-How can I get df to recognise the addtional space ?
-
-Thanks in advance
--- 
-Andy Cowling
-Red Eye International
-http://www.redeye.com/
-
-root@lynx:/opt/oracle > df -h /lv01
-Filesystem            Size  Used Avail Use% Mounted on
-/dev/vg01/lv01         30G   17G   13G  58% /lv01
-
-root@lynx:/opt/oracle > lvdisplay  /dev/vg01/lv01
---- Logical volume ---
-LV Name               /dev/vg01/lv01
-VG Name               vg01
-LV Write Access       read/write
-LV Status             available
-LV #                  1
-# open                1
-LV Size               90 GB
-Current LE            23040
-Allocated LE          23040
-Allocation            next free
-Read ahead sectors    128
-Block device          58:0
-
-root@lynx:/opt/oracle > vgdisplay  vg01          
---- Volume group ---
-VG Name               vg01
-VG Access             read/write
-VG Status             available/resizable
-VG #                  0
-MAX LV                256
-Cur LV                1
-Open LV               1
-MAX LV Size           255.99 GB
-Max PV                256
-Cur PV                3
-Act PV                3
-VG Size               90.01 GB
-PE Size               4 MB
-Total PE              23043
-Alloc PE / Size       23040 / 90 GB
-Free  PE / Size       3 / 12 MB
-
-root@lynx:/opt/oracle > pvdisplay /dev/sdc5
---- Physical volume ---
-PV Name               /dev/sdc5
-VG Name               vg01
-PV Size               30.01 GB / NOT usable 1.85 MB [LVM: 260 KB]
-PV#                   3
-PV Status             available
-Allocatable           yes
-Cur LV                1
-PE Size (KByte)       4096
-Total PE              7681
-Free PE               3
-Allocated PE          7678
 
 
-root@lynx:/opt/oracle > pvdisplay /dev/sdd5
---- Physical volume ---
-PV Name               /dev/sdd5
-VG Name               vg01
-PV Size               30.01 GB / NOT usable 1.85 MB [LVM: 260 KB]
-PV#                   2
-PV Status             available
-Allocatable           yes (but full)
-Cur LV                1
-PE Size (KByte)       4096
-Total PE              7681
-Free PE               0
-Allocated PE          7681
+--ibTvN161/egqYuK8
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
+On Wed, Oct 11, 2000 at 01:25:50PM +0100, Andy Cowling wrote:
+> I'm just starting out using LVM under SuSE 7.0. I created a logical
+> volume which was initially 30Gb but I then resized it to 90Gb (using
+> lvresize) spanning 3 physical volumes each of 30Gb.
+>=20
+> Now, lvdisplay/vgdisplay shows the LV/VG size as 90Gb, but df still
+> lists the file system as 30Gb.
+>=20
+> How can I get df to recognise the addtional space ?
 
-root@lynx:/opt/oracle > pvdisplay /dev/sde5
---- Physical volume ---
-PV Name               /dev/sde5
-VG Name               vg01
-PV Size               30.01 GB / NOT usable 1.85 MB [LVM: 260 KB]
-PV#                   1
-PV Status             available
-Allocatable           yes (but full)
-Cur LV                1
-PE Size (KByte)       4096
-Total PE              7681
-Free PE               0
-Allocated PE          7681
+	I'm assume the filesystem is an ext2 filesystem.  If it is, then
+you need to find an ext2 resizing utility.  resize2fs is one such
+utility.  I'm not sure where to find them on the web, but they
+definitely exist.
+
+	In general, the filesystem can only be resized when it's
+offline.  The filesystem resizing utility updates all the filesystem
+data structures to reflect the new size, and creates new data structures
+in the new space.  df bases it's output on what the filesystem says
+about the size, not the block device itself.
+
+	It might be that SUSE came with a resizing utility.  I'd
+actually rather expect it if they also packaged LVM.
+
+Have fun (if at all possible),
+--=20
+The best we can hope for concerning the people at large is that they
+be properly armed.  -- Alexander Hamilton
+-- Eric Hopper (hopper@omnifarious.mn.org http://www.omnifarious.org/~hoppe=
+r) --
+
+--ibTvN161/egqYuK8
+Content-Type: application/pgp-signature
+Content-Disposition: inline
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.0.2 (GNU/Linux)
+Comment: For info see http://www.gnupg.org
+
+iD8DBQE55G8TG4QeWBeRdS8RAv2OAKCkEEjGHNvpobKJAbFi75jM1sN4qACgtIN/
+oi0UcOSt9a7miNJ5RHoPWAA=
+=jbGs
+-----END PGP SIGNATURE-----
+
+--ibTvN161/egqYuK8--
