@@ -1,28 +1,32 @@
-Date: Tue, 14 Nov 2000 16:09:47 +0000 (GMT)
-From: Paul Jakma <paulj@itg.ie>
-Subject: Re: [linux-lvm] LVM in shared parallel SCSI environment
-In-Reply-To: <20001114093855.A21984@kevorkian.evcom.net>
-Message-ID: <Pine.LNX.4.30.0011141608080.21566-100000@rossi.itg.ie>
+Message-ID: <3A1186DA.AAED9963@dorf.rwth-aachen.de>
+Date: Tue, 14 Nov 2000 19:39:22 +0100
+From: Robert Perkuhn <robatp@dorf.RWTH-Aachen.DE>
 MIME-Version: 1.0
+Subject: [linux-lvm] problem on booting
+Content-Transfer-Encoding: 7bit
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: Jesse Sipprell <jss@evcom.net>
-Cc: Jos Visser <josv@osp.nl>, linux-lvm@msede.com
+Content-Type: text/plain; charset="us-ascii"
+To: linux-lvm@msede.com
 
-On Tue, 14 Nov 2000, Jesse Sipprell wrote:
+Hi!
 
-> In the mean time, I'll just have to do things the old fashioned
-> way.  I'll put a procedure in place that any LVM changes done from
-> a particular node require the bouncing of VGs on all other
-> attached nodes.  Fortunately, after initial cluster setup,
-> manipulation of LVs won't really be performed on a routine basis.
+Stupid question:
 
-and so what do you do with these LV's? The filesystem/application you
-run on them has to be aware of the shared-access nature of the
-device.. so that rules out all but GFS - which IIRC already has some
-LVM like features.
+I've got RedHat 7 with 2.4.0-test-10. LVM works fine (1 VG over 2disks
+(hda5/hdc5), two LV mounted), except that the LVs are not auto-mounted
+in the boot-process. He hangs when the first LV is about to be mounted.
+When I put the LVs out of the fstab everything is fine.
 
---paulj
+I guess the reason is that the VG ist not set active. Because when I
+mount the LVs manually, I first have to activate the VG (every time).
+
+How can I make the LVM auto-activate the VG in the boot process?
+
+thx for a little HELP !!!
+
+
+bye
+
+robatp
