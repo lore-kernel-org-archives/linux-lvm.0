@@ -1,9 +1,9 @@
-Message-ID: <3EF7A4CF.5060302@cox.net>
-From: "Kevin P. Fleming" <kpfleming@cox.net>
+Message-ID: <3EF8129A.1060604@sina.com>
+From: more <more0401@sina.com>
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] read-only media in a LVM?
-References: <C42D120999B1CC4C886B6BB2832F356019BF90@hermes.genomatica.com>
-In-Reply-To: <C42D120999B1CC4C886B6BB2832F356019BF90@hermes.genomatica.com>
+Subject: Re: [linux-lvm] problem of snapshot on XFS
+References: <3EF69479.7060709@sina.com>
+In-Reply-To: <3EF69479.7060709@sina.com>
 Content-Transfer-Encoding: 7bit
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
@@ -15,22 +15,53 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Jun 23 20:10:01 2003
+Date: Tue Jun 24 03:59:02 2003
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: linux-lvm@sistina.com
 
-Sean P. Kane wrote:
-> I'd love to have a unionfs, but my understanding is that no such beast
-> exists for Linux 2.4 currently and won't likely appear until after the
-> 2.6 release. If this is not the case, I would love to hear about it. Is
-> there some decent (although maybe beta) support for a unionfs in the 2.5
-> kernels? I am using the LVM2 backport to 2.4 currently to test the
-> device-mapper approach out in the meantime, but if there is a better way
-> to do it, I'd love to hear about it.
-> 
+Hi,  friends,
 
-No, this won't appear for 2.4 kernels at any time, I'd wager. However 
-2.4 kernels support mount --bind just fine, so that may be an option 
-for you if the writable directories in your filesystem can be 
-predetermined.
+I forgot to send the information for the system configuration:
+LVM1.0.3 and XFS1.2 and 2.4.19 kernel.
+
+Thanks for your feeding.
+
+
+Regards,
+more
+
+
+more wrote:
+
+> Hi,
+>
+> I am using XFS on LVM1 now.
+>
+> I build snapshot LV using xfs_freeze and not using norecovery mount 
+> option. This is commended in lvm-howto.
+> But in my test, if I reboot the system in the progress of file writing 
+> on a LV that has snapshot,  the next time mounting snapshot will 
+> report XFS error and the system wants to repair the snapshot. So I 
+> will have to use norecovery option now.
+>
+> I feel puzzled that why XFS repairing is needed on snapshot, I am now 
+> building an enterprise network file server, the robust is very 
+> important for us.
+>
+> Very thanks for any feeding, by the way, it is not possible for me to 
+> use LVM2 in current.
+>
+>
+> Regards,
+> more
+>
+>
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@sistina.com
+> http://lists.sistina.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+>
+>
+>
