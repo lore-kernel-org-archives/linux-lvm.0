@@ -1,11 +1,13 @@
-From: Holger Grothe <grothe@mathematik.tu-darmstadt.de>
-Subject: Re: [linux-lvm] hmmm, curious...
-Message-Id: <20020201213029.E2947@fb0442.mathematik.tu-darmstadt.de>
-References: <25E4CA13D679FF48BC307694202209710164DEC1@nd1-clusa.local.bunnings.com.au>
+From: Marc MERLIN <marc_lvm@merlins.org>
+Subject: Re: [linux-lvm] vgchange -a y /dev/System fails
+Message-Id: <20020201210928.GO8651@merlins.org>
+References: <20020125233533.GK26045@merlins.org>
+    <20020128104258.A24830@sistina.com> <20020129215738.GA8651@merlins.org>
+    <20020130131205.A3769@sistina.com> <20020131030417.GN8651@merlins.org>
+    <20020131121417.A9764@sistina.com>
 MIME-Version: 1.0
-In-Reply-To: <25E4CA13D679FF48BC307694202209710164DEC1@nd1-clusa.local.bunnings.com.au>;
-    from CCoe@bunnings.com.au on Thu, Jan 31, 2002 at 09:11:13AM +0800
-Content-Transfer-Encoding: quoted-printable
+Content-Disposition: inline
+In-Reply-To: <20020131121417.A9764@sistina.com>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,68 +18,51 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Fri Feb  1 14:31:02 2002
+Date: Fri Feb  1 15:10:02 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="iso-8859-1"
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Thu, Jan 31, 2002 at 09:11:13AM +0800, Colin Coe wrote:
->=20
-> Hi all, I have come accross a strange problem while doing some scriptin=
-g
-> with lvdisplay.  When I use lvdisplay piped to awk in the first example
-> (noting that I have 'hard-wired' one field in awk), a second line is pr=
-inted
-> containing all hard-wired strings, including tabs.  But if I encase the
-> lvdisplay in backticks and use echo then piped to awk the problem does =
-not
-> exist.
->=20
-The whole "problem" is no problem and has absolutely nothing to do with l=
-vm.
-It's simply shell programming.
+On Thu, Jan 31, 2002 at 12:14:17PM +0100, Heinz J . Mauelshagen wrote:
+> > -> My BigAssLVMRaid VG is gone :-(
+> > 
+> > Did I just lose my data?
+> 
+> If you really tried all your  metadata backups unsuccessfully, I am afraid
+> so  :-(  
 
-> [root@linux-lvm bin]# lvdisplay -c /dev/rootvg/bbs | awk -F: '{print $1
-> "\t\t" $9 "\t" $9 "\t" "2" "\t" $4 }'
-> /dev/rootvg/bbs         16      16      2       1
->                                 2
->
-Works as designed :-). The output of lvdisplay -c <logvol> has two
-lines. One line with the informations and one empty line. The empty
-line contains no fourth or nineth field =3D=3D> Only "fixed" things are=20
-printed for the second line. (awk is primarily a line orientated tool).
- =20
-> [root@linux-lvm bin]# echo `lvdisplay -c /dev/rootvg/bbs` | awk -F: '{p=
-rint
-> $1 "\t\t" $9 "\t" $9 "\t" "2" "\t" $4 }'
-> /dev/rootvg/bbs         16      16      2       1
->
-Assuming you are using bash (from man bash):
+I tried other ones, but every time, I'm getting:
+vgcfgrestore -- VGDA for "BigAssLVMRaid" successfully restored to physical
+volume "/dev/rd/disc0/part7"
+vgcfgrestore -- you may not have an actual backup of restored volume group
+"BigAssLVMRaid"
 
-              `command`
+Am I supposed to give a special flag to vgcfgrestore, or maybe pvcreate?
+(I did not use the default physicalextentsize)
 
-       Bash  performs  the  expansion  by  executing  command and
-       replacing the command substitution with the standard  out=AD
-       put  of  the  command, with any trailing newlines deleted.
-                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-So, it's a feature of the shell.      =20
-=20
-> I have tried using sed to strip out newline characters, but this has no=
-t
-> helped.  lvdisplay -c /dev/rootvg/bbs | awk -F: '{print $1 "\t\t" $9 "\=
-t" $9
-> "\t" "2" "\t" $4 }' | sed "s/\n/ /g"
->=20
-> I have a work around so it is not a major issue, but I thought I'd rais=
-e it
-> anyway.
->=20
-If you wanna use only the first line of lvdisplay just use only the first
-line, e.g. use head in pipe.
+As a reminder, I am currently running this command:
+FILE=/etc/lvmconf/BigAssLVMRaid.conf.2.old; vgcfgrestore -f $FILE -n BigAssLVMRaid -ll; read a; pvcreate -yff `cat /tmp/partlist`; for pv in `cat /tmp/partlist `; do vgcfgrestore -f $FILE -n BigAssLVMRaid $pv; done; vgscan
 
-lvdisplay -c <logvol>| head -1| awk ...
+Short of all this, can I re-create the VG the same way I did the first
+time, and hope to get my filesytem again if I recreate the same LVs?
+(like I can do with software raid)
 
-Holger
---=20
-Holger Grothe  (Email: grothe@mathematik.tu-darmstadt.de)
-Fachbereich Mathematik, TU Darmstadt
+This VG was working fine before I restored the other one (active and all)
+
+> Some users reported snapshot problems with the recent 2.4.x kernels.  They
+> are not  100% reliable  due to VM  issues being sorted  out by  the kernel
+> community hopefully which will hopefully be integrated in 2.4.18.
+
+Ok. I guess I'll know to steer clear  from snapshots in the meantime, but if
+LVM doesn't even allow  me to recover a VG that  hasn't been overwriten with
+random data, I don't know how much data I'm willing to trust to it...
+
+Either way, thanks for your help.
+
+Marc
+-- 
+Microsoft is to operating systems & security ....
+                                      .... what McDonalds is to gourmet cooking
+  
+Home page: http://marc.merlins.org/   |   Finger marc_f@merlins.org for PGP key
