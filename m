@@ -1,10 +1,10 @@
 From: Patrick Caulfield <caulfield@sistina.com>
-Subject: Re: [linux-lvm] Typo in 1.0.5 install file
-Message-ID: <20020716070702.GA957@tykepenguin.com>
-References: <3D335ED1.29C1D3B3@funsoft.com>
+Subject: Re: [linux-lvm] recovering a bad physical volume
+Message-ID: <20020716071417.GB957@tykepenguin.com>
+References: <Pine.SOL.4.44.0207160055110.25080-100000@yellow.csi.cam.ac.uk>
 Mime-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <3D335ED1.29C1D3B3@funsoft.com>
+In-Reply-To: <Pine.SOL.4.44.0207160055110.25080-100000@yellow.csi.cam.ac.uk>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,24 +15,38 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Tue Jul 16 02:06:02 2002
+Date: Tue Jul 16 02:14:02 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Mon, Jul 15, 2002 at 07:46:25PM -0400, Gary Eheman wrote:
-> There may be a minor typo in
-> ftp://ftp.sistina.com/pub/LVM/1.0/INSTALL
+On Tue, Jul 16, 2002 at 01:02:08AM +0100, Matthew Johnson wrote:
+> Hi, I have just got lvm setup on my machine - and it works fine. However,
+> I had a problem with my root partition (not lvm) and when it came back up
+> one of the 2 lvm partitions on that disk said it wasn't a valid physical
+> volume. The otherone was fine, and the logical volumes that weren't on the
+> first physical volume (it wasn't striped) mounted OK. The one that was
+> partially on that first pv didn't, though - it said the device was not a
+> valid block device.
 > 
-> where it says
-> > 1. Unpack the source code.  This will create a directory called
-> >    LVM/1.0.4 containing the sourcecode, documentation and
-> >    the configure script.
+> The question is, can I easily get the partition back so it mounts OK, and
+> failing that can I recover all (or any) of the data. all my /usr is on
+> there, plus some other less critical stuff, so I really could do with it.
 > 
-> Should that not be LVM/1.0.5?  The first few lines of the file talk about 1.0.5.
+> more system details: Debian woody, with a custom 2.4.19 kernel with lvm
+> compiled in. The fs's all run reiserfs. THe volume group contains
+> /dev/hde6 /dev/hde7 & /dev/hda5. e7 & a5 are OK when I run pvdisplay, and
+> /dev/lvm1/var and /dev/lvm1/utils mount fine. /dev/lvm1/music doesn't
+> mount - I get errors reading superblock etc, and when I pvdisplay
+> /dev/hde6 it says it is not a valid physical volume.
 
-Yes, it should. Thanks for pointing that one out.
+# pvcreate /dev/hde6
+# vgcfgrestore -n lvm1 /dev/hde6
+# vgscan
+
+should recover the volume group for you.
+
 
 -- 
 
