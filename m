@@ -1,8 +1,8 @@
-Return-Path: <austin@coremetrics.com>
-Message-ID: <85063BBE668FD411944400D0B744267A481B89@AUSMAIL>
-From: "Gonyou, Austin" <austin@coremetrics.com>
-Subject: RE: [linux-lvm] vgcreate
-Date: Mon, 2 Jul 2001 21:14:41 -0500 
+Return-Path: <Robert_Macaulay@Dell.com>
+Message-ID: <8F120FA493CAD743B30EEB8F356985B54FD90E@AUSXMBT102VS1.amer.dell.com>
+From: Robert_Macaulay@Dell.com
+Subject: RE: [linux-lvm] LVM kernel patch request
+Date: Mon, 2 Jul 2001 14:41:42 -0500 
 MIME-Version: 1.0
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
@@ -17,54 +17,83 @@ List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: "'linux-lvm@sistina.com'" <linux-lvm@sistina.com>
+To: linux-lvm@sistina.com
 
-Can you run vgcreate -v volname /dev/hde11, and give more verbose output?
-also, some disks, after setting the type, you may actually need to reboot so
-the kernel recognizes it properly. It could also be that it's an logical
-drive on an extended partition too. 
-
--- 
-Austin Gonyou
-Systems Architect, CCNA
-Coremetrics, Inc.
-Phone: 512-796-9023
-email: austin@coremetrics.com 
+I have had success with the 2.4.3 kernel from RedHat. The difference is I
+didn't use RPMS, but went with the pure tarball. Following the INSTALL
+instructions worked perfectly for me. 
+Robert
 
 > -----Original Message-----
-> From: Joe Morris [mailto:heartboy@nycap.rr.com]
-> Sent: Monday, July 02, 2001 5:33 PM
+> From: AJ Lewis [mailto:lewis@sistina.com]
+> Sent: Monday, July 02, 2001 11:40 AM
 > To: linux-lvm@sistina.com
-> Subject: [linux-lvm] vgcreate
+> Subject: Re: [linux-lvm] LVM kernel patch request
 > 
 > 
-> Hey everyone, I'm new to this list adn have a question 
-> regarding LVM.  I 
-> wanted to experiment with LVM, so I went into fdisk and 
-> changed /dev/hde11's 
-> type to 8e.  I then ran
-> pvcreate /dev/hde11
+> On Mon, Jul 02, 2001 at 01:48:39AM -0500, Tom Cosimano wrote:
+> > I'm running Redhat 7.1 kernel vmlinux-2.4.2-2smp.  I have 
+> tried a number
+> > of times and can only conclude that I'm missing some step(s).
+> > I have downloaded and installed the following RPMs from
+> > ftp://ftp.sistina.com/pub/LVM/binaries/redhat/0.9.1_beta in 
+> the order:
+> > 
+> > 1) lvm-base-1.1-1.i386.rpm
+> > rebooted
+> > 2a) lvm-iop10-0.9.1_beta7-1.i386.rpm
+> > 2b) lvm-iop10-lib-0.9.1_beta7-1.i386.rpm
+> > 3) lvm-iop10-man-0.9.1_beta7-1.i386.rpm
+> > 4) lvm-iop10-patchgen-0.9.1_beta7-1.i386.rpm
+> > rebooted
 > 
-> To make sure everything went okay, I ran pvscan:
-> pvscan -- inactive PV 
-> "/dev/ide/host2/bus0/target0/lun0/part11" is in no VG  
-> [9.76 GB]
+> You need to build a kernel with LVM support built into it to 
+> use this.  The
+> default Redhat kernel does not have this.  The 
+> lvm-iop10-patchgen* packages
+> contain a stripped down version of the LVM source code made just for
+> patching a stock kernel (from ftp.kernel.org).  If you need a 
+> Redhat kernel
+> that supports LVM, you should talk to Redhat and let them know it is a
+> requirement of yours.
 > 
-> Things were looking up until I ran vgcreate:
-> vgcreate experiment /dev/hde11
-> vgcreate -- no valid physical volumes in command line  
+> You should look at the LVM HowTo at 
+> http://sistina.com/lvm/Pages/howto.html
 > 
-> I tried disabling devfs and got the same things.  I'm using 
-> kernel 2.4.5 and 
-> have LVM 0.9.1-beta7.  I made sure to patch the kernel and 
-> replace all the 
-> get_blocksize's with get_sect_size (or something like that, I 
-> forget).  Can 
-> anyone help me?  Thanks!
-> Joe
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
+> Regards,
+> -- 
+> AJ Lewis
+> Sistina Software Inc.                  Voice:  612-638-0500
+> 1313 5th St SE, Suite 111              Fax:    612-638-0500
+> Minneapolis, MN 55414                  E-Mail: lewis@sistina.com
+> http://www.sistina.com
+> 
+> Current GPG fingerprint = 3B5F 6011 5216 76A5 2F6B  52A0 941E 
+> 1261 0029 2648
+> Get my key at: http://www.sistina.com/~lewis/gpgkey
+>  (Unfortunately, the PKS-type keyservers do not work with 
+> multiple sub-keys)
+> 
+> -----Begin Obligatory Humorous 
+> Quote----------------------------------------
+> File not found. Should I fake it? (Y/N)
+> -----End Obligatory Humorous 
+> Quote------------------------------------------
+> AJ Lewis
+> Sistina Software Inc.                  Voice:  612-638-0500
+> 1313 5th St SE, Suite 111              Fax:    612-638-0500
+> Minneapolis, MN 55414                  E-Mail: lewis@sistina.com
+> http://www.sistina.com
+> 
+> Current GPG fingerprint = 3B5F 6011 5216 76A5 2F6B  52A0 941E 
+> 1261 0029 2648
+> Get my key at: http://www.sistina.com/~lewis/gpgkey
+>  (Unfortunately, the PKS-type keyservers do not work with 
+> multiple sub-keys)
+> 
+> -----Begin Obligatory Humorous 
+> Quote----------------------------------------
+> Bad command or file name. Bad, bad command! Sit! Stay! Staaaay...
+> -----End Obligatory Humorous 
+> Quote------------------------------------------
 > 
