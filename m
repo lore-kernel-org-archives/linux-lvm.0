@@ -1,10 +1,9 @@
-Return-Path: <mauelshagen@sistina.com>
-Date: Thu, 28 Jun 2001 07:47:18 -0500
-From: Heinz Mauelshagen <mauelshagen@sistina.com>
-Message-ID: <20010628074718.A22774@sistina.com>
+Return-Path: <rshukla@prl.ernet.in>
+Date: Thu, 28 Jun 2001 18:39:43 +0530 (IST)
+From: RAGHVENDRA SHUKLA <rshukla@prl.ernet.in>
+Message-Id: <Pine.A32.4.21.0106281835390.36986-100000@prlfs.prl.ernet.in>
 Mime-Version: 1.0
-Content-Disposition: inline
-Subject: [linux-lvm] vgcreate/vgextend with actual CVS code
+Subject: [linux-lvm] Installed the lvm on the Red Hat 7.1 then what to do
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,31 +15,27 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: TEXT/PLAIN; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Because we are still working on the misalignment fixes,
-please everybody *don't* use actual LVM in CVS!
+Hello, 
+       Thanks austin for the tech. help you have provided ,
+       But still i am not clear about the difference between
+       the already created partitions ( which are created during the
+       Installation of linux ) and those created by the lvm , 
+       also can i increase only those partitions which are created 
+       by the Lvm ?? Please Reply and help .
 
-It can and probably will corrupt your data.
+Thanks in advance .
+Rshukla
+        
 
-Thanks for your understanding.
-
--- 
-
-Regards,
-Heinz    -- The LVM Guy --
- 
-*** Software bugs are stupid.
-    Nevertheless it needs not so stupid people to solve them ***
-
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-
-Heinz Mauelshagen                                 Sistina Software Inc.
-Senior Consultant/Developer                       Am Sonnenhang 11
-                                                  56242 Marienrachdorf
-                                                  Germany
-Mauelshagen@Sistina.com                           +49 2626 141200
-                                                       FAX 924446
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+-------------------------------------------------------------------------------------
+Name : Raghvendra Narain Shukla
+       ( Engineer - SC )                     Address:Computer Centre,
+Email: rshukla@prl.ernet.in ,                        Physical Research Laboratory 
+       raghvendra55@yahoo.com                        Ahmedabad 380 015  
+Phone: +91 79 630-2129  ext. 4036 (0)                INDIA  
+FAX  : +91 79 630-1502                                           
+--------------------------------------------------------------------------------------
