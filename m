@@ -1,8 +1,10 @@
-From: Mark <mark@transvirtual.com>
-Message-ID: <20011026161505.B24285@transvirtual.com>
+From: Andreas Dilger <adilger@turbolabs.com>
+Subject: Re: [linux-lvm] invalidate: busy buffer message on boot w/ 2.4.13
+Message-ID: <20011026234159.B23590@turbolinux.com>
+References: <20011026161351.A24285@transvirtual.com>
 Mime-Version: 1.0
 Content-Disposition: inline
-Subject: [linux-lvm] sorry - delete prev post from me
+In-Reply-To: <20011026161351.A24285@transvirtual.com>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -13,18 +15,27 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Fri Oct 26 18:14:01 2001
+Date: Sat Oct 27 00:41:01 2001
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-gathering a bit more info here re this.
+On Oct 26, 2001  16:13 -0700, Mark wrote:
+ [re: invalidate busy buffer]
+> built and installed a 2.4.13 kernel and optioned on LVM support
+> and i get this message about ten times when I boot
 
-oops.
+That's because LVM is overzealous about running invalidate_buffers() when
+running vgscan (it shouldn't do that).  It was never able to invalidate
+busy buffers, but now there is a warning when it tries to do so.  I would
+submit a patch to remove the invalidate_buffers() call from PV_FLUSH, but
+since the -ac kernel still has block devices in buffer cache, there is
+the _possibility_ of a disconnect between user space and kernel space
+w.r.t. snapshot data (which is written from kernel space).
 
--- 
-  Mark Garey                            Tel:     (415) 243-4055 x1023
-  Transvirtual Technologies, Inc.,      Fax:     (415) 243-4056
-  San Francisco, CA. USA                Email:   mark@transvirtual.com
-  GPGfoo = OHMY GODC COMP UTER SHAV ETAK ENOV ERMY LIFE
+Cheers, Andreas
+--
+Andreas Dilger  \ "If a man ate a pound of pasta and a pound of antipasto,
+                 \  would they cancel out, leaving him still hungry?"
+http://www-mddsp.enel.ucalgary.ca/People/adilger/               -- Dogbert
