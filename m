@@ -1,10 +1,12 @@
-From: Jose Luis Domingo Lopez <linux-lvm@24x7linux.com>
-Subject: Re: [linux-lvm] help using LVM & md for RAID10
-Message-ID: <20030510175708.GA3353@localhost>
-References: <3EB07551.87856170@kasenna.com>
+Subject: Re: [linux-lvm] mount root filesystem on lvm
+From: Christophe Saout <christophe@saout.de>
+In-Reply-To: <3EBD22B3.4090808@inode.at>
+References: <3EBBF411.6060405@inode.at>  <3EBBFF45.4050006@inode.at>
+	 <1052511447.6321.22.camel@chtephan.cs.pocnet.net>
+	 <3EBD22B3.4090808@inode.at>
+Message-Id: <1052607008.1489.2.camel@chtephan.cs.pocnet.net>
 Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <3EB07551.87856170@kasenna.com>
+Content-Transfer-Encoding: 7bit
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,51 +17,37 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Sat May 10 12:56:02 2003
+Date: Sat May 10 17:49:02 2003
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: Linux-LVM@sistina.com
+To: Manfred Gschweidl <m.gschweidl@inode.at>
+Cc: linux-lvm@sistina.com
 
-On Wednesday, 30 April 2003, at 18:16:02 -0700,
-Alberto wrote:
+Am Sam, 2003-05-10 um 18.02 schrieb Manfred Gschweidl:
 
-> # cat /proc/mdstat
-> Personalities : [linear] [raid0] [raid1] [raid5] [multipath]
-> read_ahead 1024 sectors
-> md4 : active raid0 md3[3] md2[2] md1[1] md0[0]
->       143372288 blocks 512k chunks
-> md3 : active raid1 sdi[1] sdh[0]
->       35843584 blocks [2/2] [UU]
-> md2 : active raid1 sdg[1] sdf[0]
->       35843584 blocks [2/2] [UU]
-> md1 : active raid1 sde[1] sdd[0]
->       35843584 blocks [2/2] [UU]
-> md0 : active raid1 sdc[1] sdb[0]
->       35843584 blocks [2/2] [UU]
-> unused devices: <none>
-> 
-> # pvcreate /dev/md0
-> # pvcreate /dev/md1
-> # pvcreate /dev/md2
-> # pvcreate /dev/md3
-> # vgcreate vg01 /dev/md[0-3]
->
-In short, you set up a RAID1+0, four RAID1 devices bounded together in
-one big RAID0 (md4). But next, you configure md[0-3] as PVs, instead of
-just creating a PV from md4, the higher level RAID device.
+> i have one more question: what does your "lilo.conf" look like???
+> especially the "root=...." parameter ist he most interesting one. how 
+> does it need to be named with device-mapper???
 
-You should just do:
-# pvcreate /dev/md4
-# vgcreate vg01 /dev/md4
+It looks fairly simple:
 
-And then create LV from this new VG (vg01). Should work, and you get
-high performance (RAID0 md4), protection agains physical disk failures
-(between one and four disk crashes, depends on luck), and the ability to
-hot create, modify and destroy "partitions" (LVM).
+boot    = /dev/hda
+vga     = normal
+read-only
+lba32
+prompt
+timeout = 30
+message = /boot/message
 
-Hope it helps.
+image  = /boot/vmlinuz
+  label  = linux
+  root   = /dev/mapper/vg-root
+  initrd = /boot/initrd
+
+But I think you can also use /dev/vg/root (in my case). I think lilo
+only uses this line to look up the device number (major, minor).
+
+What's your problem?
 
 -- 
-Jose Luis Domingo Lopez
-Linux Registered User #189436     Debian Linux Sid (Linux 2.5.69)
+Christophe Saout <christophe@saout.de>
