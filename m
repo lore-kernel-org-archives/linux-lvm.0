@@ -1,11 +1,9 @@
-Date: Wed, 12 Sep 2001 09:40:47 +0000
-From: Tomas Edwardsson <tommi@tommi.org>
-Subject: Re: [linux-lvm] Re: Problem with vgscan "only found 626 of 625 LEs for LV"
-Message-ID: <20010912094047.A19059@hp.is>
-References: <20010911112241.A16588@hp.is> <20010911113054.B16588@hp.is> <20010911104934.C29347@turbolinux.com>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20010911104934.C29347@turbolinux.com>; from adilger@turbolabs.com on Tue, Sep 11, 2001 at 10:49:34AM -0600
+Message-ID: <2558.213.191.82.129.1000287790.squirrel@hactar.dnsalias.net>
+Date: Wed, 12 Sep 2001 11:43:10 +0200 (CEST)
+From: "Julian Glashoff" <helldog@gmx.net>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Subject: [linux-lvm] Problem: "only found 768 of 769 LEs for LV /dev/vg00/lvol1"
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -18,69 +16,49 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
+Cc: helldog@gmx.net
 
-Well, problem number 1. vgscan fails and therefore vgchange does also.
+Hello,
 
-]# ll -d /dev/vg00
-ls: /dev/vg00: No such file or directory
+I have a problem with my volume group:
+I was using kernel 2.4.7 with LVM 1.0.1-rc1.
+I tried to extend a logical volume (/dev/vg00/lvol2) by 4Gig and got the
+error message "No such device or address in kernel".
+Then I tried to extend /dev/vg00/lvol1 by 1 extent just to test if I was
+able to change volumes at all whereupon the system completely crashed.
+On the next reboot I got the following message from vgscan:
+-------------------------------------------------------------------
+# vgscan
+vgscan -- reading all physical volumes (this may take a while...)
+vgscan -- found inactive volume group "vg00"
+vgscan -- only found 768 of 769 LEs for LV /dev/vg00/lvol1 (1)
+vgscan -- ERROR "vg_read_with_pv_and_lv(): allocated LE of LV" can't get
+data of volume group "vg00" from physical volume(s)
+vgscan -- ERROR "vg_read_with_pv_and_lv(): allocated LE of LV" creating
+"/etc/lvmtab" and "/etc/lvmtab.d"
+-------------------------------------------------------------------
+And now I am unable to access the volume group.
+Then I tried to restore the backups with the following result:
+-------------------------------------------------------------------
+# vgcfgrestore -n vg00 -l
+vgcfgrestore -- ERROR: different structure size stored in
+"/etc/lvmconf/vg00.conf" than expected in file vg_cfgrestore.c [line 120]
+vgcfgrestore -- ERROR "vg_cfgrestore(): read" restoring volume group "vg00"
+-------------------------------------------------------------------
+The documentation says this would be caused by an incorrect LVM version.
+I was using 1.0.1-rc1 and have tried to restore the backups with every
+version from 0.9.1-beta1 up to 1.0.1-rc2 and all versions give me the same
+error.
 
+Is there anything I can do to restore my volume group?
 
-I ran the rest of the commands just the same since we have a backup.
-After I did that it seems all LV and LE info has evaporated.
+The output of "pvdata -a" can be found here:
 
-Current pvdata is http://vefur.hp.is/lvm/pvdata-hdd1-new.txt
+http://hactar.dnsalias.net/lvm/pvdata.hda5
+http://hactar.dnsalias.net/lvm/pvdata.hda7
+http://hactar.dnsalias.net/lvm/pvdata.hdc2
 
-Thanks, Tommi
-
-On Tue, Sep 11, 2001 at 10:49:34AM -0600, Andreas Dilger wrote:
-> On Sep 11, 2001  11:30 +0000, Tomas Edwardsson wrote:
-> > I had already tried the vgcfgrestore, it didn't seem to help but I discovered
-> > that the UUID for one of my PVs was missing so I ran the uuid-fixer and now
-> > they all have UUIDs again (don't know if that is relevant). 
-> > 
-> > I have run the pvdata on all my PVs although I think the right one is the
-> > following file run with pvdata -avP /dev/hdd1:
-> >   http://vefur.hp.is/lvm/pvdata-hdd1.txt
-> 
-> Yes, this clearly shows that lvol1 has 625 LEs (in the LV data), but it
-> has PE 0-625 from that PV assigned to it (total of 626 PEs).  I don't
-> know which one is correct, nor how it got that way.  If you have a
-> filesystem on that LV, you could find out how big the fs is to figure
-> out which value needs fixing.  For ext2, you can do:
-> 
-> dumpe2fs -h /dev/vg00/lvol1
-> 
-> and figure out if it is 2500MB (625 LE) or 2504MB (626LE).  Then (the fun
-> part) you need to go and edit either the LV table or the PE table to have
-> the right numbers in it.  I'm guessing the LV table is wrong (and even if
-> not, it is safer to add the PE to the end than to truncate your filesystem).
-> 
-> dd if=/dev/hdd1 of=/hdd.sav bs=1024 count=188		# backup LVM metadata
-> dd if=/dev/hdd1 of=/lv1.dat bs=1 skip=43008 count=328	# get lvol1 metadata
-> od -Ad -tx1 /lv1.dat					# show lvol1 metadata
-> 
-> # 625 = 0x271 which you should see at offset 300, 301 of the LV struct
-> # 626 = 0x272 = 0x02 0x72, 0x72 = "r" in ASCII, so we write this into LV
-> echo "r" | dd of=/lv1.dat count=1 seek=300		# write 0x72 to LE count
-> 
-> od -Ad -tx1 /lv1.dat					# show lvol1 metadata
-> # we should now see 0x72 0x02 0x00 0x00 at offset 300 of the LV metadata
-> 
-> dd if=/lv1.dat of=/dev/hdd1 bs=1 seek=43008		# write LV meta to disk
-> pvdata -avP /dev/hdd1					# verify all is well
-> vgscan							# should be OK now
-> 
-> Cheers, Andreas
-> -- 
-> Andreas Dilger  \ "If a man ate a pound of pasta and a pound of antipasto,
->                  \  would they cancel out, leaving him still hungry?"
-> http://www-mddsp.enel.ucalgary.ca/People/adilger/               -- Dogbert
-> 
-> 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
+--
+Julian Glashoff
+<helldog@gmx.net>
