@@ -1,51 +1,42 @@
 From: Andreas Dilger <adilger@turbolinux.com>
-Message-Id: <200009260147.e8Q1lGs19192@webber.adilger.net>
-Subject: Re: [linux-lvm] hangs when mounting snapshot
-In-Reply-To: <20000925142431.A8244@ultraviolet.org> "from Tracy R Reed at Sep
- 25, 2000 02:24:31 pm"
-Date: Mon, 25 Sep 2000 19:46:50 -0600 (MDT)
+Message-Id: <200009260151.e8Q1pdw19220@webber.adilger.net>
+Subject: Re: [linux-lvm] LVM on 2.2.17 (again)
+In-Reply-To: <39CFB8EA.7890B91D@cup.hp.com> "from John DeFranco at Sep 25, 2000
+ 01:43:22 pm"
+Date: Mon, 25 Sep 2000 19:51:39 -0600 (MDT)
 MIME-Version: 1.0
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: Tracy R Reed <treed@ultraviolet.org>
+To: John DeFranco <defranco@cup.hp.com>
 Cc: linux-lvm@msede.com
 
-Tracy writes:
-> Hello again. I upgraded to util-linux-2.10o which includes the latest version
-> of mount and it is still hanging when mounting snapshots. It segfaults first,
-> then hangs on the next attempt. Is there anything else I need to upgrade to
-> get this working? 
+John DeFranco writes:
+> I've checked the LVM email archives so I know there has
+> been lots of discussions on how to get LVM to work on
+> 2.2.17, but unfortunately I'm having problems just
+> building the kernel. I started with Turbolinux Server
+> 6.0.2 (which is 2.2.14) and then added the 2.2.15-2.2.17
+> patches. When I build I get:
 > 
-> On Wed, Sep 20, 2000 at 10:50:21PM -0700, Tracy R Reed wrote:
-> > [snip]
-> > # mount /dev/test_vg/snap /snap1
-> > Segmentation fault
-> > 
-> > Then I try:
-> > 
-> > # mount /dev/test_vg/snap /snap1
-> > 
-> > which hangs the mount command.
+> lvm-snap.c:28: linux/iobuf.h: No such file or directory
+> lvm-snap.c: In function `lvm_snapshot_COW':
+> lvm-snap.c:253: dereferencing pointer to incomplete type
+> lvm-snap.c:257: warning: implicit declaration of function
+> `brw_kiovec'
+> lvm-snap.c: In function `lvm_snapshot_alloc_iobuf_pages':
+> lvm-snap.c:308: warning: implicit declaration of function
+> `expand_kiobuf'
 
-The segmentation fault is happening inside the kernel itself, so the problem
-is not with the mount command, but with LVM.  It will have recorded an "OOPS"
-record in /var/log/messages, and depending if you have syslogd set up
-correctly, it would tell us where this is happening.  From what another
-poster said, it is happening inside lvm_snapshot_remap_block(), but since
-I've never really played with snapshots, I can't really comment...
-
-Do you know if you have the latest patches for the user tools, which are
-not included in the 0.8final tools you download from the LVM site?  These
-fix several longstanding problems in the user tools which may (or may not)
-be causing your problem.  The list of existing patches was posted by me
-to this mailing list on Aug 4, as "Additions to LVM-BUGS-0.8final",
-which would be a good starting point.  As I don't work with 2.4 lately,
-I'm not sure if the in-kernel LVM files are up-to-date with all of the
-fixes...  I know the 2.2 support is far behind 2.4, so I keep my own set
-of kernel patches.
+Are you using my 2.2 patches (which is a backport of 0.8final from 2.4)?
+In this case you need to also apply the RAWIO patches available at
+Stephen Tweedie's site  ftp://ftp.linux.org.uk/pub/linux/sct/
+Alternately, if you don't need/want LVM snapshots, you can delete lvm-snap.c,
+and delete the references in lvm.c to any "snap" functions, etc.  There
+are about half a dozen places where this happens.  If I get around to
+it, I will update my patch to simplify turning off lvm snapshots...
 
 Cheers, Andreas
 -- 
