@@ -1,10 +1,9 @@
-Return-Path: <adilger@turbolinux.com>
-From: Andreas Dilger <adilger@turbolinux.com>
-Message-Id: <200104061549.f36FnKn09371@webber.adilger.int>
-Subject: Re: [linux-lvm] Help! vgchange -> invalid argument
-In-Reply-To: <F3YA5kcDj6QqW9F0qnq000014e8@hotmail.com> from cjs 2895 at "Apr
- 6, 2001 11:00:08 am"
-Date: Fri, 6 Apr 2001 09:49:20 -0600 (MDT)
+Return-Path: <gerry@dorfam.ca>
+Date: Fri, 6 Apr 2001 19:34:47 -0400 (EDT)
+From: <gerry@dorfam.ca>
+Message-ID: <Pine.LNX.4.30.0104061930120.1564-100000@leopard.dorfam.ca>
+MIME-Version: 1.0
+Subject: [linux-lvm] 2.2.19 Patches??
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,34 +15,20 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: TEXT/PLAIN; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Christopher writes:
-> I am about one step away from setting up a new system with LVM!
-> There is just one thing keeping me back. When I try to activate
-> the volume group I've created -- vgchange does this for sure, I
-> get an error "Invalid Argument". According to all the debug
-> output I'm passing all of my checks, its the last point where
-> the volume group is brought online that this dies. I think this
-> is a known problem with a known fix, but I can't find a patch
-> in the mailing list. Could someone post it here or to me
-> in e-mail?
+I just spent the better part of a week finding out what patches to apply
+in what order to get the 2.2.17 stock kernel working with lvm.  Now that
+I've got that working it seems like I should go all the way and install
+2.2.19.
 
-You can find it in lvm-devel (or probably in this list as well).
-I posted it, and it relates to VG_CHANGE ioctl.
+Would someone please tell me what patches need to be applied and their
+location.  BTW, I think this information would be really, really nice in
+the HowTo!
 
-> My kernel is stock 2.4.3.
-> My tools are stock 0.9.1-Beta6
+Gerry
 
-If you use the current CVS code (soon to be 0.9.1b7) the problem is
-fixed there as well.  Alternately, you can apply a kernel patch
-(see PATCHES/README) to fix the problem (and many other problems also).
-
-Cheers, Andreas
--- 
-Andreas Dilger  \ "If a man ate a pound of pasta and a pound of antipasto,
-                 \  would they cancel out, leaving him still hungry?"
-http://www-mddsp.enel.ucalgary.ca/People/adilger/               -- Dogbert
+PS.  I'm running Redhat 7.0.  Are there patches available for the RH
+kernels??
