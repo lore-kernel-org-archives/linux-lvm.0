@@ -1,8 +1,8 @@
 From: Greg Freemyer <freemyer@NorcrossGroup.com>
-Subject: re[4]: [linux-lvm] A little Cluster/Newbie help pls!
+Subject: re: [linux-lvm] snapshots on shared fibre
 Mime-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-Message-Id: <20030328174704.INYS10170.imf25bis.bellsouth.net@tiger2>
+Message-Id: <20030328175337.IYQI10170.imf25bis.bellsouth.net@tiger2>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -13,27 +13,40 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Fri Mar 28 11:45:02 2003
+Date: Fri Mar 28 11:52:01 2003
 List-Id: <linux-lvm.redhat.com>
 Content-Type: Text/plain; charset="us-ascii"
 To: LVM Mailing list <linux-lvm@sistina.com>
 
- >>  Due to state issues, failover WILL cause any 'during failover' file
- >>  operations to fail. But on the other side of that, the way that samba
- >>  deals with file moves/copies ensures that no data will be lost.. simply,
- >>  restart the operation immediately after the error. In our system, the
- >>  error occurs the moment that the failover machine takes over. other than
- >>  having to redo any 'in failover' operations, the failover is completely
- >>  transparent to clients.. if no operations are occuring, then there will
- >>  be no sign to clients that a failover occured.
+ >>  I have a Xiotech Magnitude raid, that uses fibre ports to connect to
+ >>  multiple servers.=20
 
+ >>  We do NOT use a SAN filesystem. What I am wondering is, can I use
+ >>  snapshots that are mounted on 1 machine, where the original filesystem
+ >>  is mounted on another machine. both machines are connected to the raid
+ >>  via fibre.
+
+ >>  My hope is that, since it is a second filesystem, and is readonly, this
+ >>  operation will not cause problems..
+
+ >>  Is this correct?
+
+
+ >>  --=20
  >>  Matt Schillinger
 
 Matt,
 
-You should look at the Linux-HA (heartbeat) archives.  I'm pretty sure you can =
-even get truly transparent samba failover, but I have not tried to do that yet.
+I'm no expert on LVM, but I would be very surprised if the above works.
 
-It was the OpenGFS lock server failover I was talking about.
+You need both machines to see a single consistent view of the COW table.
+
+The COW table is possibly modified every time the r/w server writes to its LV.
+
+You really need the snapshot to be implemented in the raid unit itself.
+
+Or you could have the first server export the snapshot via nfs.
 
 Greg
+--=20
+Greg Freemyer
