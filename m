@@ -1,9 +1,10 @@
-From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] LVM is wont restore. DESPERATE. PLEASE HELP!
-Message-ID: <20021216165924.C19655@sistina.com>
-References: <20021211053254.IDFV22279.mta06.mail.mel.aone.net.au@[127.0.0.1]>
-Mime-Version: 1.0
-In-Reply-To: <20021211053254.IDFV22279.mta06.mail.mel.aone.net.au@[127.0.0.1]>; from acpretty@ozemail.com.au on Wed, Dec 11, 2002 at 04:32:54PM +1100
+From: Dieter Franzke <lists@franzke-online.de>
+Subject: Re: [linux-lvm] lvm-problems. vgda inconsistency
+References: <200212160923.58295.lists@franzke-online.de> <20021216164845.A19655@sistina.com>
+In-Reply-To: <20021216164845.A19655@sistina.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <200212161810.16866.lists@franzke-online.de>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,73 +15,65 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Dec 16 10:08:02 2002
+Date: Mon Dec 16 11:10:02 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: linux-lvm@sistina.com
+To: linux-lvm@sistina.com, "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
 
-Alex,
+Hi,
 
-you may want to try uuid_fixer which i've send to you in direct mail.
+Am Montag, 16. Dezember 2002 16:48 schrieb Heinz J . Mauelshagen:
+> On Mon, Dec 16, 2002 at 09:23:58AM +0100, Dieter Franzke wrote:
+> > Hi,
+> >
+> > I've created a pv, vg and lv
+> > via pvcreate, vgcreate and lvcreate.
+> > Everything went well.
+> > But when I tried to  initialize a filesystem via mkfs.xfs I get follo=
+wing
+> > error:
+> >
+> > VGDA in Kernel and lvmtab are NOT consistent; please run vgscan
+> >
+> > When I run vgscan nothing is changed.
+> > How can I fix this without rebooting?
+>
+> Rebooting won't help this. vgscan _reads_ the LVM metadata on the PVs
+> and tries to update the working copies of the metadata in /etc/lvmtab*.
+> No change to the metadata on the PVs happens during a vgscan run.
+>
+> Does vgscan display any error?
 
-Run "uuid_fixer YourPV1 YourPV2" and answer yes to the update question.
+2 VGs were recognized, the 3rd (the last I've created) isn't displayed.
 
-The run "vgscan; vgchange -ay".
 
-Regards,
-Heinz    -- The LVM Guy --
+> What does vgck display?
 
-On Wed, Dec 11, 2002 at 04:32:54PM +1100, acpretty@ozemail.com.au wrote:
-> Hey all, 
->   If someone is around who could help me it would be SO appreciated. 
-> 
-> I have a volume group (vg00) with two physical volumes in it.     
-> 
-> with in about half an hour .....
->    I extended one of the logical volumes, no probs
->    I extended the file system, noprobs 
->    was doing a large-ish transfer to my enlarged fs when the machine crashed...
-> 
-> upon restarting the machine told me I had inconsistencies in my PV's so I did a vgcfgrestore. Now upon restarting I get no acknowledgement of the volume group at all....
-> 
-> SO! I thought I'd try and force a vgimport of the volume group only to find that vgimport says that the two PV's in the VG are not from the same VG. 
-> 
-> now I'm a bit lost, if anyone could help, PLEASE!!!! I have one last thing I think I should try but I'm uncertain. 
-> 
-> When I run pvdata the bit at the bottom says:
-> 
->   --- List of physical volume UUIDs ---
-> 
->   001: EtJbdT-qZBP-P6Bf-yRwi-I4Bn-0qzS-L13XYu
->   002: --- EMPTY ---
-> 
-> shouldn't each PV know about all the other PV's UUID's in this list and therefore can anyone tell me if using the UUID fixer program is the thing to do?
-> 
-> more importantly can anyone tell me how much of the partitions I need to dd in order to preserve the meta data in case this doesn't help
-> 
-> Thanks reading this far and thanks in advance to the help
-> Alex
-> 
-> This message was sent through MyMail http://www.mymail.com.au
-> 
-> 
-> 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+VGDA in Kernel and lvmtab are NOT consistent; please run vgscan
 
-*** Software bugs are stupid.
-    Nevertheless it needs not so stupid people to solve them ***
+>
+> vgck should check the ondisk metadata fine or we need to restore it
+> from archive copies in /etc/lvmconf/ (please save those!)
 
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+in my /etc/lvm-conf there is .conf of my third VG  /etc/lvm-conf/daten.co=
+nf
 
-Heinz Mauelshagen                                 Sistina Software Inc.
-Senior Consultant/Developer                       Am Sonnenhang 11
-                                                  56242 Marienrachdorf
-                                                  Germany
-Mauelshagen@Sistina.com                           +49 2626 141200
-                                                       FAX 924446
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+vgcfgrestore -n daten -t /dev/sda1 works fine
+backup of VolumeGroup "daten" is consistent
+
+an the option -l works also fine.
+
+but a vgcfgrestore -n daten -f /etc/lvm-conf/daten.conf /dev/sda1
+displays: can't restore part of active Volume group daten.
+
+But vgscan says: daten isn't existent.
+shows only buero, datenbu
+
+ciao
+
+dieter
+
+
+--=20
+registered linuxuser 199810
+it's time to close windows....
