@@ -1,17 +1,19 @@
 Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j0TEQsO18590
-	for <linux-lvm@redhat.com>; Sat, 29 Jan 2005 09:26:54 -0500
-Received: from percy.comedia.it (percy.comedia.it [212.97.59.71])
-	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id j0TEQpvS031004
-	for <linux-lvm@redhat.com>; Sat, 29 Jan 2005 09:26:52 -0500
-Date: Sat, 29 Jan 2005 15:26:51 +0100
-From: Luca Berra <bluca@comedia.it>
-Subject: Re: [linux-lvm] LVM, udev and initrd problem booting
-Message-ID: <20050129142651.GA21542@percy.comedia.it>
-References: <20050128234026.GB22677@sushi.tonnikala.net>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20050128234026.GB22677@sushi.tonnikala.net>
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j0U7B1O28073
+	for <linux-lvm@redhat.com>; Sun, 30 Jan 2005 02:11:01 -0500
+Received: from intelenet.net (mail2.intelenet.net [209.80.45.9])
+	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id j0U7B04B007241
+	for <linux-lvm@redhat.com>; Sun, 30 Jan 2005 02:11:01 -0500
+Received: from [68.109.79.179] (HELO desktop)
+	by intelenet.net (CommuniGate Pro SMTP 4.2.7)
+	with ESMTP-TLS id 8030108 for linux-lvm@redhat.com;
+	Sat, 29 Jan 2005 23:10:49 -0800
+Message-ID: <006901c5069a$db39b690$4857fea9@desktop>
+From: "matthew zeier" <mrz@intelenet.net>
+Date: Sat, 29 Jan 2005 23:10:52 -0800
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] converting ext3 / to LVM
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -22,24 +24,14 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; format="flowed"; charset="us-ascii"; reply-type="original"
 To: linux-lvm@redhat.com
 
-On Sat, Jan 29, 2005 at 01:40:26AM +0200, Dominique wrote:
->Do you have any suggestions? They would be much appreciated.
-yes, if you are not reporting a problem with lvm please use mandrakesoft
-bugzilla.
-then, into /etc/rc.d/rc.sysint just after the 
-modprobe scsi_hostadapter line, add:
-/sbin/udevstart
 
-L.
+Are there any tips on converting an existing ext3 / to LVM?  I found 
+something that talks about ext2 using LVM1 but I'm not sure if that applies 
+to my system (RHEL ES v3).
 
--- 
-Luca Berra -- bluca@comedia.it
-        Communication Media & Services S.r.l.
- /"\
- \ /     ASCII RIBBON CAMPAIGN
-  X        AGAINST HTML MAIL
- / \
+--
+matthew zeier - "But if you only have love for your own race, Then you only
+leave space to discriminate, And to discriminate only generates hate." - BEP 
