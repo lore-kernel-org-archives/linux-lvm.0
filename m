@@ -1,28 +1,42 @@
-Date: Thu, 5 Oct 2000 16:32:39 +0100
-From: Tom Lees <tal26@cam.ac.uk>
+Message-ID: <39DCBAB9.45D82D18@fil.org>
+Date: Thu, 05 Oct 2000 13:30:33 -0400
+From: "Myers W. Carpenter" <myers@fil.org>
+MIME-Version: 1.0
 Subject: Re: [linux-lvm] Intresting notes on LVM in 2.4.0-test9
-Message-ID: <20001005163239.A3833@lpsg.demon.co.uk>
-References: <39DB7362.A28FBB77@fil.org>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <39DB7362.A28FBB77@fil.org>; from myers@fil.org on Wed, Oct 04, 2000 at 02:13:54PM -0400
+References: <39DB7362.A28FBB77@fil.org> <20001005163239.A3833@lpsg.demon.co.uk>
+Content-Transfer-Encoding: 7bit
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: linux-lvm@msede.com
+To: Tom Lees <tal26@cam.ac.uk>
+Cc: linux-lvm@msede.com
 
-On Wed, Oct 04, 2000 at 02:13:54PM -0400, Myers W. Carpenter wrote:
-> 	I have a deb at http://maski.org/lvm/ if anyone else on debian needs a
-> newer set that the 0.8i version that is official.
+Tom Lees wrote:
+> 
+> On Wed, Oct 04, 2000 at 02:13:54PM -0400, Myers W. Carpenter wrote:
+> >       I have a deb at http://maski.org/lvm/ if anyone else on debian needs a
+> > newer set that the 0.8i version that is official.
+> 
+> I'll take a look at your changes. I am the official Debian maintainer, I
+> have my current 0.8final packages at
+> http://www.lpsg.demon.co.uk/files/debian/
+> 
+> Probably still a couple of patches need applying to those though.
 
-I'll take a look at your changes. I am the official Debian maintainer, I
-have my current 0.8final packages at
-http://www.lpsg.demon.co.uk/files/debian/
+	Cool.
 
-Probably still a couple of patches need applying to those though.
+	No, after looking at what I did yesterday, I know I forgot something. 
+Besides the fact that I did put up a source package.
+
+	Rather than one big patch, what I think we really need is a directory
+of patch with descriptions.  Too bad we don't use sourceforge.
+
+	Why isn't this in the main debian archives anyway?  It seems like you
+would have to have this in order to play around with a 2.4.0-test kernel
+and lvm.
+
+	myers
 
 -- 
->-Tom Lees-< 2nd yr Maths Undergrad/St John's College/University of Cambridge
-       -- <Tom.Lees@bigfoot.com> <tal26@cam.ac.uk> <tom@debian.org> --
+You're just jealous because the voices only talk to me.
