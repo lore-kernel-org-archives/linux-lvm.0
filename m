@@ -1,10 +1,15 @@
-Message-Id: <009301c19918$6b3ab940$1600a8c0@aliz>
-From: "Daniel Ahlberg" <aliz@telia.com>
+Message-Id: <1010588497.3c3c5b5182e7e@www.snappymail.ca>
+From: IpSo <ipso@snappymail.ca>
+Subject: Re: [linux-lvm] A way to bypass LVM and extract the raw data off?
+References: <1010309724.3c381a5ce8cbe@www.snappymail.ca>
+    <1010343969.3c38a0214056f@www.snappymail.ca>
+    <20020106152433.Q12868@lynx.no>
+    <1010359883.3c38de4b3692f@www.snappymail.ca>
+    <1010543196.3c3baa5c40c49@www.snappymail.ca>
+    <20020108200408.R769@lynx.adilger.int>
+In-Reply-To: <20020108200408.R769@lynx.adilger.int>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=SHA1;
-    protocol="application/x-pkcs7-signature";
-    boundary="----=_NextPart_000_008F_01C19920.CA3579F0"
-Subject: [linux-lvm] LVM problems, possible solution
+Content-Transfer-Encoding: 8bit
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,108 +20,245 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Jan  9 08:19:01 2002
+Date: Wed Jan  9 09:02:02 2002
 List-Id: <linux-lvm.redhat.com>
+Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
 
-This is a multi-part message in MIME format.
+Well, I gave this a shot and everything seemed promising until I mounted the
+loop back file.
 
-------=_NextPart_000_008F_01C19920.CA3579F0
-Content-Type: text/plain;
-	charset="iso-8859-1"
-Content-Transfer-Encoding: 7bit
+dd if=/dev/hda bs=512 skip=4670127 count=35461377 of=/big/backup_hda6.bin
 
-Hello,
+-rw-r--r--    1 root     root     17105949184 Jan  8 22:05 backup_hda6.bin
 
-Im sorry if this is already known.
+File size seems about right. 
 
-I've been having trouble with LVM on my linux server for quite som time. On
-startup I got errors like (not sure, taken from memory) "0x59" and "0x04"
-from the IDE harddisks resulting in disabled DMA on startup. Re-enabling DMA
-was no problem, but I found it annoying to have to do that every time I
-restarted the server.
+[root@ipso big]# mount -o loop ./backup_hda6.bin /test -t reiserfs
+mount: wrong fs type, bad option, bad superblock on /dev/loop0,
+       or too many mounted file systems
 
-A couple of days ago I tried to fix the problem. While checking the dmesg
-output from the startup I noticed that the Partition check saying that I had
-a partition on a couple of my IDE disks (hda: hda1). The strange thing is
-that I remade some of the disks that I had created a partition of the whole
-disk to use as a LVM device to instead just use the the whole disk (/dev/hda
-instead of /dev/hda1). To try things I removed /dev/hda from the
-VolumeGroup, created a partition, ran pvcreate /dev/hda1 and added the disk
-to the volumegroup and from what I can see it works. Since then I get no
-more errors on startup that disables DMA or saying that linux can't find
-sectors and such.
+Understandable...
 
-Im using the latest Kernel together with a patch made from the latest
-relased LVM tarballs.
+[root@ipso big]# reiserfsck --rebuild-sb ./backup_hda6.bin
+reiserfsck, 2001 - reiserfsprogs 3.x.0j
+Will check SB and rebuild if it is needed
+Will put log info to 'stderr'
+Do you want to run this program?[N/Yes] (note need to type Yes):Yes
+reiserfs_open: neither new nor old reiserfs format found on ./backup_hda6.bin
 
-Suggestion: Make pvcreate reset the partition describing stuff when
-createing a new LVM disk if using it on the whole disk.
+what is version of ReiserFS you use[1-4]
+        (1)   3.6.x
+        (2) >=3.5.9
+        (3) < 3.5.9 converted to new format
+        (4) < 3.5.9
+        (X)   exit
+1
+Super block of format 3.6 found on the 0x3 in block 16
+Block count 4432672
+Blocksize 4096
+Free blocks 0
+Busy blocks (skipped 16, bitmaps - 136, journal blocks - 8193
+1 super blocks, 4424326 data blocks
+Root block 0
+Journal block (first) 18
+Journal dev 0
+Journal orig size 8192
+Filesystem state ERROR
+Tree height 0
+Hash function used to sort names: not set
+Objectid map size 0, max 972
+Version 2
+Is this ok ? [N/Yes]: Yes
 
-Hope this helps..
+Do not forget to run reiserfsck --rebuild-tree
 
-Sorry for any bad english..
+Seems like it found a backup super block, bitmaps, etc... Though "Filesystem
+state ERROR" doesn't look so good, but no errors so, lets try a rebuild.
 
-Im not subscribed to this list, so please include my adress in any reply you
-may write.
+[root@ipso big]# reiserfsck --rebuild-tree ./backup_hda6.bin
+reiserfsck, 2001 - reiserfsprogs 3.x.0j
 
-------=_NextPart_000_008F_01C19920.CA3579F0
-Content-Type: application/x-pkcs7-signature;
-	name="smime.p7s"
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment;
-	filename="smime.p7s"
+This is an experimental version of reiserfsck, MAKE A BACKUP FIRST!
+Don't run this program unless something is broken.
+Some types of random FS damage can be recovered
+from by this program, which basically throws away the internal nodes
+of the tree and then reconstructs them.  This program is for use only
+by the desperate, and is of only beta quality.  Email
+reiserfs@devlinux.com with bug reports.
+Will rebuild the filesystem tree
+Will put log info to 'stderr'
+Do you want to run this program?[N/Yes] (note need to type Yes):Yes
+reiserfs_open: bitmap 0 was marked free
+reiserfs_open: first bitmap looks corrupted
+reiserfs_open: bitmap 1 was marked free
+reiserfs_open: bitmap 2 was marked free
+reiserfs_open: bitmap 4 was marked free
+reiserfs_open: bitmap 5 was marked free
+reiserfs_open: bitmap 6 was marked free
+reiserfs_open: bitmap 9 was marked free
+reiserfs_open: bitmap 12 was marked free
+reiserfs_open: bitmap 13 was marked free
+reiserfs_open: bitmap 18 was marked free
+reiserfs_open: bitmap 22 was marked free
+reiserfs_open: bitmap 25 was marked free
+reiserfs_open: bitmap 26 was marked free
+reiserfs_open: bitmap 29 was marked free
+reiserfs_open: bitmap 30 was marked free
+reiserfs_open: bitmap 41 was marked free
+reiserfs_open: bitmap 42 was marked free
+reiserfs_open: bitmap 44 was marked free
+reiserfs_open: bitmap 46 was marked free
+reiserfs_open: bitmap 49 was marked free
+reiserfs_open: bitmap 55 was marked free
+reiserfs_open: bitmap 56 was marked free
+reiserfs_open: bitmap 59 was marked free
+reiserfs_open: bitmap 62 was marked free
+reiserfs_open: bitmap 63 was marked free
+reiserfs_open: bitmap 64 was marked free
+reiserfs_open: bitmap 65 was marked free
+reiserfs_open: bitmap 67 was marked free
+reiserfs_open: bitmap 70 was marked free
+reiserfs_open: bitmap 71 was marked free
+reiserfs_open: bitmap 75 was marked free
+reiserfs_open: bitmap 76 was marked free
+reiserfs_open: bitmap 77 was marked free
+reiserfs_open: bitmap 80 was marked free
+reiserfs_open: bitmap 81 was marked free
+reiserfs_open: bitmap 82 was marked free
+reiserfs_open: bitmap 83 was marked free
+reiserfs_open: bitmap 85 was marked free
+reiserfs_open: bitmap 86 was marked free
+reiserfs_open: bitmap 87 was marked free
+reiserfs_open: bitmap 88 was marked free
+reiserfs_open: bitmap 93 was marked free
+reiserfs_open: bitmap 96 was marked free
+reiserfs_open: bitmap 97 was marked free
+reiserfs_open: bitmap 98 was marked free
+reiserfs_open: bitmap 100 was marked free
+reiserfs_open: bitmap 101 was marked free
+reiserfs_open: bitmap 102 was marked free
+reiserfs_open: bitmap 103 was marked free
+reiserfs_open: bitmap 109 was marked free
+reiserfs_open: bitmap 110 was marked free
+reiserfs_open: bitmap 111 was marked free
+reiserfs_open: bitmap 113 was marked free
+reiserfs_open: bitmap 115 was marked free
+reiserfs_open: bitmap 116 was marked free
+reiserfs_open: bitmap 117 was marked free
+reiserfs_open: bitmap 118 was marked free
+reiserfs_open: bitmap 119 was marked free
+reiserfs_open: bitmap 120 was marked free
+reiserfs_open: bitmap 121 was marked free
+reiserfs_open: bitmap 129 was marked free
+reiserfs_open: bitmap 132 was marked free
+Analyzing journal..nothing to replay (no transactions match to latest mount id)
+Rebuilding..
+Loading on-disk bitmap .. Fetching on-disk bitmap..fetch_bitmap: on-disk bitmap
+is not padded p
+roperly
+done
+2036947 bits set - done
+Skipping 74 blocks (super block, journal, bitmaps) 2036873 blocks will be read
 
-MIAGCSqGSIb3DQEHAqCAMIACAQExCzAJBgUrDgMCGgUAMIAGCSqGSIb3DQEHAQAAoIII5zCCAnYw
-ggHfoAMCAQICAwYdKjANBgkqhkiG9w0BAQIFADCBkjELMAkGA1UEBhMCWkExFTATBgNVBAgTDFdl
-c3Rlcm4gQ2FwZTESMBAGA1UEBxMJQ2FwZSBUb3duMQ8wDQYDVQQKEwZUaGF3dGUxHTAbBgNVBAsT
-FENlcnRpZmljYXRlIFNlcnZpY2VzMSgwJgYDVQQDEx9QZXJzb25hbCBGcmVlbWFpbCBSU0EgMjAw
-MC44LjMwMB4XDTAxMTExNjEwNDU1NVoXDTAyMTExNjEwNDU1NVowQDEfMB0GA1UEAxMWVGhhd3Rl
-IEZyZWVtYWlsIE1lbWJlcjEdMBsGCSqGSIb3DQEJARYOYWxpekB0ZWxpYS5jb20wgZ8wDQYJKoZI
-hvcNAQEBBQADgY0AMIGJAoGBALi3xKFEsnvWNMXBnF0c9wca3kPJxj8nZmpFLLWOrHhbUhQ2IUJi
-YM+y0vFcBE5uMM49bLlVu51dEydo7MEWDLQZw7rzm/P2MTzNgUvl2QSTS33nl9Vmycly9l1ZRf50
-3K+9NBl8Nf4VJ9KoqIcof51FAmWZexAXk0pq0M01GUdpAgMBAAGjKzApMBkGA1UdEQQSMBCBDmFs
-aXpAdGVsaWEuY29tMAwGA1UdEwEB/wQCMAAwDQYJKoZIhvcNAQECBQADgYEAjMEvBhEb/oPhpAQS
-CVA6W6Vl1XHRfYhzjwU5zQDzhGebvWWhAfapM0EdPJ20xmL//TY7LD1QiHYUvhrT1GoFamqoyTuh
-kvU99J2JEA8mCKZPcG5QmrcoaXH2JF9hsaUrrtsjDWmGBohgKjuYyWikz8oVZwbhribt4cl687+v
-ma8wggMtMIIClqADAgECAgEAMA0GCSqGSIb3DQEBBAUAMIHRMQswCQYDVQQGEwJaQTEVMBMGA1UE
-CBMMV2VzdGVybiBDYXBlMRIwEAYDVQQHEwlDYXBlIFRvd24xGjAYBgNVBAoTEVRoYXd0ZSBDb25z
-dWx0aW5nMSgwJgYDVQQLEx9DZXJ0aWZpY2F0aW9uIFNlcnZpY2VzIERpdmlzaW9uMSQwIgYDVQQD
-ExtUaGF3dGUgUGVyc29uYWwgRnJlZW1haWwgQ0ExKzApBgkqhkiG9w0BCQEWHHBlcnNvbmFsLWZy
-ZWVtYWlsQHRoYXd0ZS5jb20wHhcNOTYwMTAxMDAwMDAwWhcNMjAxMjMxMjM1OTU5WjCB0TELMAkG
-A1UEBhMCWkExFTATBgNVBAgTDFdlc3Rlcm4gQ2FwZTESMBAGA1UEBxMJQ2FwZSBUb3duMRowGAYD
-VQQKExFUaGF3dGUgQ29uc3VsdGluZzEoMCYGA1UECxMfQ2VydGlmaWNhdGlvbiBTZXJ2aWNlcyBE
-aXZpc2lvbjEkMCIGA1UEAxMbVGhhd3RlIFBlcnNvbmFsIEZyZWVtYWlsIENBMSswKQYJKoZIhvcN
-AQkBFhxwZXJzb25hbC1mcmVlbWFpbEB0aGF3dGUuY29tMIGfMA0GCSqGSIb3DQEBAQUAA4GNADCB
-iQKBgQDUadfUsJRkW3HpR9gMUbbqcpGwhF59LQ2PexLfhSV1KHQ6QixjJ5+Ve0vvfhmHHYbqo925
-zpZkGsIUbkSsfOaP6E0PcR9AOKYAo4d49vmUhl6t6sBeduvZFKNdbnp8DKVLVX8GGSl/npom1Wq7
-OCQIapjHsdqjmJH9edvlWsQcuQIDAQABoxMwETAPBgNVHRMBAf8EBTADAQH/MA0GCSqGSIb3DQEB
-BAUAA4GBAMfskn5O+PWWpWdiKqTwTRFg0G+NYFhhrCa7UjVcCM8w+6hKloofYkIjjBcP9LpknBes
-RynfnZhe0mxgcVyirNx54+duAEcftQ0o6AKd5Jr9E/Sm2Xyx+NxfIyYJkYBz0BQb3kOpgyXy5pwv
-Fcr+pquKB3WLDN1RhGvk+NHOd6KBMIIDODCCAqGgAwIBAgIQZkVyt8x09c9jdkWE0C6RATANBgkq
-hkiG9w0BAQQFADCB0TELMAkGA1UEBhMCWkExFTATBgNVBAgTDFdlc3Rlcm4gQ2FwZTESMBAGA1UE
-BxMJQ2FwZSBUb3duMRowGAYDVQQKExFUaGF3dGUgQ29uc3VsdGluZzEoMCYGA1UECxMfQ2VydGlm
-aWNhdGlvbiBTZXJ2aWNlcyBEaXZpc2lvbjEkMCIGA1UEAxMbVGhhd3RlIFBlcnNvbmFsIEZyZWVt
-YWlsIENBMSswKQYJKoZIhvcNAQkBFhxwZXJzb25hbC1mcmVlbWFpbEB0aGF3dGUuY29tMB4XDTAw
-MDgzMDAwMDAwMFoXDTA0MDgyNzIzNTk1OVowgZIxCzAJBgNVBAYTAlpBMRUwEwYDVQQIEwxXZXN0
-ZXJuIENhcGUxEjAQBgNVBAcTCUNhcGUgVG93bjEPMA0GA1UEChMGVGhhd3RlMR0wGwYDVQQLExRD
-ZXJ0aWZpY2F0ZSBTZXJ2aWNlczEoMCYGA1UEAxMfUGVyc29uYWwgRnJlZW1haWwgUlNBIDIwMDAu
-OC4zMDCBnzANBgkqhkiG9w0BAQEFAAOBjQAwgYkCgYEA3jMypmPHCSVFPtJueCdngcXaiBmClw7j
-RCmKYzUqbXA8+tyu9+50bzC8M5B/+TRxoKNtmPHDT6Jl2w36S/HW3WGl+YXNVZo1Gp2Sdagnrthy
-+boC9tewkd4c6avgGAOofENCUFGHgzzwObSbVIoTh/+zm51JZgAtCYnslGvpoWkCAwEAAaNOMEww
-KQYDVR0RBCIwIKQeMBwxGjAYBgNVBAMTEVByaXZhdGVMYWJlbDEtMjk3MBIGA1UdEwEB/wQIMAYB
-Af8CAQAwCwYDVR0PBAQDAgEGMA0GCSqGSIb3DQEBBAUAA4GBADGxS0dd+QFx5fVTbF151j2YwCYT
-YoEipxL4IpXoG0m3J3sEObr85vIk65H6vewNKjj3UFWobPcNrUwbvAP0teuiR59sogxYjTFCCRFs
-sBpp0SsSskBdavl50OouJd2K5PzbDR+dAvNa28o89kTqJmmHf0iezqWf54TYyWJirQXGMYIB/jCC
-AfoCAQEwgZowgZIxCzAJBgNVBAYTAlpBMRUwEwYDVQQIEwxXZXN0ZXJuIENhcGUxEjAQBgNVBAcT
-CUNhcGUgVG93bjEPMA0GA1UEChMGVGhhd3RlMR0wGwYDVQQLExRDZXJ0aWZpY2F0ZSBTZXJ2aWNl
-czEoMCYGA1UEAxMfUGVyc29uYWwgRnJlZW1haWwgUlNBIDIwMDAuOC4zMAIDBh0qMAkGBSsOAwIa
-BQCggbowGAYJKoZIhvcNAQkDMQsGCSqGSIb3DQEHATAcBgkqhkiG9w0BCQUxDxcNMDIwMTA5MTQx
-NzQ1WjAjBgkqhkiG9w0BCQQxFgQUZ5iWPBjNgGGlvIYVC4x9G+xcMf8wWwYJKoZIhvcNAQkPMU4w
-TDAKBggqhkiG9w0DBzAOBggqhkiG9w0DAgICAIAwDQYIKoZIhvcNAwICAUAwBwYFKw4DAgcwDQYI
-KoZIhvcNAwICASgwBwYFKw4DAh0wDQYJKoZIhvcNAQEBBQAEgYCCZEcwCu/s7DiomjHlyULHf28G
-HPbKHsxCcPACl6EEcMS58axM8gRhseXs/KKxXrN7f/WrylOkpE5qVlCrh29Di21wxBI2oYXv2glM
-R0IHXmxB42T+dHqvOAsE23XtxQhA4IeaOpuxkYKMP5/Bdg9EdlxCKtFdQBzpacPidW9cpgAAAAAA
-AA==
+Pass 0 (2036873 (of 4432672) blocks will be read):
+0%....20%....40%....60%....80%....100%                         left 0, 795 /sec
+Looking for allocable blocks .. ok
+        Read blocks (but not data blocks) 2036873
+                Leaves among those 1
+                Blocks pointed by indirect items 96
+                        - once 96
+                Objectids found 50
+        allocable 4424229 blocks
 
-------=_NextPart_000_008F_01C19920.CA3579F0--
+Pass1:
+0%....20%....40%....60%....80%....100%                           left 0, 0 /sec
+        1 leaves read
+                1 inserted
+Tree is built. Checking it - done
+Syncing..done
+Pass 3 (semantic):
+dir 1 2 has wrong sd_size 48, has to be 80
+        Files found: 0
+        Directories found: 2
+Pass 3a (looking for lost files):
+Looking for lost directories:
+Looking for lost files:0 /sec
+        Objects without names 46
+        Files linked to /lost+found 46
+Pass 4 - done           left 2, 0 /sec
+        Deleted unreachable items 1
+Syncing..done
+Done
+[root@ipso big]# mount -o loop ./backup_hda6.bin /test -t reiserfs
+
+Mounts fine now...
+
+[root@ipso big]# df
+Filesystem           1k-blocks      Used Available Use% Mounted on
+/dev/hda5              2079404   1895672    183732  92% /
+/dev/big/1            18742720  17781164    961556  95% /big
+none                    192356         0    192356   0% /dev/shm
+/big/backup_hda6.bin  17730140     33228  17696912   1% /test
+
+Uhh, what happened to all the data? And theres no lost+found directory either.
+There _should_ be perfectly good data on /dev/hda6, just LVM won't let me access
+it. Do any LVM commands modify the data itself? Should this have worked?
+
+Thanks.   
+
+
+Quoting Andreas Dilger <adilger@turbolabs.com>:
+
+> On Jan 08, 2002  18:26 -0800, IpSo wrote:
+> > Well, it doesn't look like there is a way I can recover my LVM volume
+> groups
+> > and whatnot. (See below) But I know theres a fully intact ReiserFS of
+> 17315mb
+> > on /dev/hda6. "gpart" scanned my disk and came up with this: 
+> > 
+> > Possible extended partition at offset(249mb)
+> >    Possible partition(Linux LVM physical volume), size(17315mb),
+> offset(2280mb)
+> >       type: 142(0x8E)(Linux LVM physical volume)
+> >       size: 17315mb #s(35461377) s(4670127-40131503)
+> >       chs:  (1023/15/63)-(1023/15/63)d (4633/1/1)-(39812/15/63)r
+> >       hex:  00 0F FF FF 8E 0F FF FF AF 42 47 00 01 19 1D 02
+> > 
+> > End scan.
+> > 
+> > Is there some way to "dd" the data off onto another partition and access
+> it
+> > there? Because I know the filesystem was only on a single PV, and a
+> single
+> > LV, and the problems occured when trying to extend that LV, but I never
+> got
+> > to the point of extending the filesystem itself with reiser_resize. You
+> > would think I could somehow using the offsets given above create a new
+> > partition to copy the data to, run a reiserfsck and rebuild the file
+> system
+> > so I can access the data? Has anyone tryed something along these lines
+> before?
+> 
+> dd if=/dev/hda bs=512 skip=4670127 count=35461377 of=<somewhere>
+> 
+> Cheers, Andreas
+> --
+> Andreas Dilger
+> http://sourceforge.net/projects/ext2resize/
+> http://www-mddsp.enel.ucalgary.ca/People/adilger/
+> 
+> 
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@sistina.com
+> http://lists.sistina.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
+> 
+
+
+IpSo
+
+--------------------------------------------------------------------
+Never worry about viruses in your Email again.
+Get your FREE! virus scanned Email accounts at http://snappymail.ca
