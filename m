@@ -1,44 +1,49 @@
-From: jens@pinguin.conetix.de
-Date: Thu, 18 Feb 1999 20:03:12 +0100
-Subject: [linux-lvm] LVM or mdutils/raidtools?
-Message-ID: <19990218200312.C1529@debian.zuhause.de>
-References: <19990216180955.G972@debian.zuhause.de> <Pine.GHP.4.05.9902161554060.25565-100000@ixion.honeywell.com>
-Mime-Version: 1.0
-In-Reply-To: <Pine.GHP.4.05.9902161554060.25565-100000@ixion.honeywell.com>; from Shawn Leas on Tue, Feb 16, 1999 at 03:56:48PM -0600
+Date: Fri, 19 Feb 1999 09:38:22 -0600 (CST)
+From: Chris Stamborski <cstambor@uiuc.edu>
+Subject: Re: [linux-lvm] Problems on compile
+In-Reply-To: <199902180900.AA26287@mailgate1b.telekom.de>
+Message-ID: <Pine.GSO.3.96.990218221142.22919A-100000@eesnop1.ews.uiuc.edu>
+MIME-Version: 1.0
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: TEXT/PLAIN; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: sleas@ixion.honeywell.com, linux-lvm@msede.com
+To: linux-lvm@msede.com
 
-On Tue, Feb 16, 1999 at 03:56:48PM -0600, Shawn Leas wrote:
-> On Tue, 16 Feb 1999 jens@pinguin.conetix.de wrote:
-> > not yet. I am wonderin whether I should. Or probably use
-> > mdutils/raidtools instead. Maybe you can give me an ( unbiased ;> )
-> > suggestion.
-> Using LVM you would gain experience useful in Solaris, HPUX, etc...
+On Thu, 18 Feb 1999, Heinz Mauelshagen wrote:
 
-I do not need that just yet, it's only a home system.
+> Thank you Shawn.
+> 
+> It's concerned with BSD disk label support.
+> I never choosed that config option ;*)
+> 
+> It will be in 0.6alpha anyway.
+> 
+> BTW: hope to bring out 0.6alpha including some features and
+>      bug fixes before march.
 
-> Also, it's a LOT more flexible, and extensible.
+I did not apply the patch, but deselecting the BSD disk label support gave
+me a clean compile.  Thanks for the help.
 
-ACK, but partitions do not change _that_ often round here. What I would
-like, though is to seamlessly integrate a new hard disk into the existing
-volumes, when using striping.
+The creation of volume groups and logical volumes works wonderfully. 
+However, making an e2fs filesystem on a logical volume that is part of a 2
+physical volume group causes a null pointer dereference and a kernel dump,
+which causes the kernel to dump it's registers to screen. 
 
->> Primary issue is speed, but of course (as I have not had a single disk
->> failure save my two ZIP drives which were both broken) data safety would
->> be important as well. I do monthly complete backups (roughly) but I just
->> cannot afford a filesystem slowly corrupting itself.
-> For being labeled ALPHA, LVM is awesome.  I haven't had a single LV
-> related issue that I can see.
+I can sucessfully make an e2fs filesystem on a logical volume that is part
+of a 1 physical volume group.  I can also mount it.  I can touch a file on
+the filesystem, but any data that is written to the filesystem causes
+a similar kernel dump.
 
-I'll play around with it on my 'playground server'. If I like it, I'll
-probably use it. Thanks. :)
+After I connect a serial console to my machine I should be able to get
+details.
 
+But one general question:  Has smp support been tested?  I'm willing to be
+the guinea pig. :) 
 
--- 
-_ciao, Jens_______________________________ http://www.pinguin.conetix.de
-    cat /dev/boiler/water | tea | sieve > /cup
-    mount -t hdev /dev/human/mouth01 /mouth ; cat /cup >/mouth/gulp
+)chris(
+
+-----------------------------------------------------------------------------
+Chris Stamborski   |    "Make it idiot proof and someone will make a
+cstambor@uiuc.edu  |	 better idiot." 
