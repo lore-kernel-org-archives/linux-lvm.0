@@ -1,9 +1,11 @@
-Message-ID: <400C5158.2000000@stevek.com>
-From: Steve Kann <stevek@stevek.com>
+From: Nikita Danilov <Nikita@Namesys.COM>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] Cannot create snapshots with kernel 2.4.24, lvm 1.0.4: Cannor allocate
- memory
+Message-ID: <16396.5482.158701.28221@laputa.namesys.com>
+In-Reply-To: <200401191729.i0JHTJo24262@mail.osdl.org>
+References: <16395.42887.514077.642497@laputa.namesys.com>
+	<200401191729.i0JHTJo24262@mail.osdl.org>
+Subject: [linux-lvm] Re: linux-2.6.0 + reiser4 oops
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,63 +16,48 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Jan 19 16:59:01 2004
+Date: Tue Jan 20 08:42:01 2004
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: linux-lvm@sistina.com
+Content-Type: text/plain; charset="us-ascii"
+To: markw@osdl.org
+Cc: reiserfs-list@Namesys.COM, linux-lvm@sistina.com
 
+markw@osdl.org writes:
+ > On 19 Jan, Nikita Danilov wrote:
+ > > markw@osdl.org writes:
+ > >  > I was testing our DBT-2 workload on linux-2.6.0 with LVM2 and reiser4
+ > >  > and got the following oops when I attempted to create a database with
+ > >  > PostgreSQL.  Let me know if I can provide any additional information:
+ > >  > 
+ > >  > Unable to handle kernel NULL pointer dereference at virtual address 00000000
+ > >  >  printing eip:                                                       
+ > >  > c014c607      
+ > >  > *pde = 00104001
+ > >  > *pte = 00000000
+ > >  > Oops: 0000 [#1]
+ > > 
+ > > This looks much like another bug report we had for
+ > > reiser4-on-top-of-raid0. A fix (tentative) for that was to use
+ > > bio_add_page() while constructing bios, and it will be included into
+ > > next reiser4 snapshot (that, I hope, will be released
+ > > to-day---2004.01.19).
+ > 
+ > Hi Nikita,
+ > 
+ > I ran the 2004.01.19 snapshot against 2.6.1 and now I get the following
+ > error when I attempt to mount the reiser4 parition:
+ > 
+ > reiser4[mount(17176)]: _init_read_super (fs/reiser4/init_super.c:166)[nikita-2608]:
+ > WARNING: Wrong master super block magic.
 
-Hi,
+I am afraid, you have to re-create reiser4 file systems with new
+progs. It was decided that we should change super block magic to be more
+"descriptive".
 
-    I've seen some others on this (and other lists) who are having this 
-problem, but I haven't been able to find a solution.
+By the way, it turned out, that 2004.01.19 snapshot contained a bug, so
+new snapshot will be released to-night.
 
-    I have a new box that I'd like to use with LVM.  This will be a 
-production fileserver.  I've installed debian woody on it, and upgraded 
-to the latest debian kernel, 2.4.24.  I'm using the lvm 1.0.4 tools.
+ > Thanks,
+ > Mark
 
-    Naturally, I'm spending this time before this box is in use to play 
-with LVM so I know how to do what I need to quickly before the fires 
-hit.  So, I've been able to happily create, grow, shrink, and remove 
-lv's, as well as create and remove VGs and PVs.
-
-    However, I cannot create a snapshot volume.
-
-    This is pretty much why I wanted to use LVM in the first place 
-(backing up a 400G active filesystem would be pretty impossible otherwise).
-
-    The basic error I get is:
-
-  520  vgcreate -s 128M vg0 /dev/sda7
-  521  vgdisplay
-  522  lvcreate -L 256M  -nhome vg0
-
-u2:~# lvcreate -s -L128M -c 4k -nhomesnap /dev/vg0/home
-lvcreate -- WARNING: the snapshot will be automatically disabled once it 
-gets full
-lvcreate -- ERROR "Cannot allocate memory" creating VGDA for 
-"/dev/vg0/homesnap" in kernel
-
-Other snapshot creation attempts, all of which fail the same way:
-  525  lvcreate -s -L1M -nhomesnap /dev/vg0/home
-  526  lvcreate -s -L128M -c 1M -nhomesnap /dev/vg0/home
-
-
-    I've tried making a bunch of different volumes on which to base the 
-snapshot, as well as a number of different parameters for the snapshot 
-itself.  I thought that perhaps it couldn't handle snapshots that were 
-larger than a certain size, or snapshots of volumes that are beyond a 
-certain size, etc.
-
-    I should have plenty of memory:
-u2:~# free
-             total       used       free     shared    buffers     cached
-Mem:       4010744     111160    3899584          0      18444      58084
--/+ buffers/cache:      34632    3976112
-Swap:      2097136          0    2097136
-
-If 3.8GB of Real, or 5.8 GB of virtual memory aren't actually enough to 
-create a 128MB snapshot of a 256Mb volume (I tried making it very 
-small!), then something must be very wrong!
-
-Any ideas?
+Nikita.
