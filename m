@@ -1,7 +1,12 @@
-From: "Sean Oh" <benew666@hotmail.com>
+From: Jan-Benedict Glaw <jbglaw@lug-owl.de>
+Subject: Re: [linux-lvm] syncing with snapshots takes forever?
+Message-ID: <20030124133240.GS30184@lug-owl.de>
+References: <F59HdlQgdYXSVvR0Wss000091d0@hotmail.com>
 Mime-Version: 1.0
-Message-ID: <F59HdlQgdYXSVvR0Wss000091d0@hotmail.com>
-Subject: [linux-lvm] syncing with snapshots takes forever?
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="ahWNmK+0tXt5sn0+"
+Content-Disposition: inline
+In-Reply-To: <F59HdlQgdYXSVvR0Wss000091d0@hotmail.com>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -12,50 +17,41 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Fri Jan 24 07:08:01 2003
+Date: Fri Jan 24 07:33:01 2003
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; format=flowed; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-I am having difficult with LVM snapshots and syncing.
-I have tested LVM 1.0.6 and also LVM2. Both generate the same problem.
+--ahWNmK+0tXt5sn0+
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-My testing environment is as follows:
+On Fri, 2003-01-24 22:07:31 +0900, Sean Oh <benew666@hotmail.com>
+wrote in message <F59HdlQgdYXSVvR0Wss000091d0@hotmail.com>:
 
-VG vg01 Size 100GB
-LV lv01 Size 50GB
-LV lv01_snapshot1 size 10GB
-LV lv01_snapshot2 size 10GB
-LV lv01_snapshot3 size 10GB
+> and also the system has SCSI raid controller(Mylex) and 1024GB of RAM,=20
+                                                          ^^^^^^
 
-as you can see above, there 4 LVs, one LV and 3 snapshots for the LV
-and also the system has SCSI raid controller(Mylex) and 1024GB of RAM, 
-though these does not seem to matter, since the problem happens to other 
-systems, also.
-The FS does not matter here, since Reiserfs and XFS both produce the same 
-syncing problem.
+Wow... I'd really like to get in touch with that box:-)
 
-For LVM 1.0.6, I have applied VFS lock patch and lvm-1.0.6 patch to the 
-kernel 2.4.20. ---> same problem. Kernel 2.4.20 without any patches gives 
-the same problem,too.
+SCNR, JBG
 
-For LVM2 ---> I removed all the LVs and VG that made with LVM1 and remake 
-them with LVM2. No diifference at all. BTW, LVM2 genereates a stragne error 
-message to console 'invalidate: busy buffer'
+--=20
+   Jan-Benedict Glaw       jbglaw@lug-owl.de    . +49-172-7608481
+   "Eine Freie Meinung in  einem Freien Kopf    | Gegen Zensur
+    fuer einen Freien Staat voll Freier B=FCrger" | im Internet!
+   Shell Script APT-Proxy: http://lug-owl.de/~jbglaw/software/ap2/
 
-After copying a file with 1GB size to lv01 and typing 'sync' takes more 30 
-minitus or sometime forever. During these time period, access to lv01 is 
-neary blocked, producing very slow performance(0 ~ 400B/s). If I remove the 
-snapshots, sync returns normally. So it is the issue with LVM making the 
-changes in LV to 3 snapshots while locking the LV.
+--ahWNmK+0tXt5sn0+
+Content-Type: application/pgp-signature
+Content-Disposition: inline
 
-Is there any way to make the snapshots syncing faster? Is that what LVM2 
-promise? Is there any alternative to LVM for snapshoting?
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.2.1 (GNU/Linux)
 
-Any help and comments are apperciated.
+iD8DBQE+MUB4Hb1edYOZ4bsRAtKoAJ987lH3G2H6aTQjKlVOnMhEHpSyHQCdFyK8
+7XDvFpwrmCB0u71AgWLnDB8=
+=Kg01
+-----END PGP SIGNATURE-----
 
-
-_________________________________________________________________
-MSN 8 with e-mail virus protection service: 2 months FREE* 
-http://join.msn.com/?page=features/virus
+--ahWNmK+0tXt5sn0+--
