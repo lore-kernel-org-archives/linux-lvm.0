@@ -1,9 +1,11 @@
-Message-ID: <003801c16ffd$757c3d50$fc00a8c0@xp>
-From: "Sean Oh" <oh@linuxsecurity.co.kr>
-References: <20011117223754.B12510@auctionwatch.com>
+From: Petro <petro@auctionwatch.com>
 Subject: Re: [linux-lvm] Logical Volume max-size?
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
+Message-ID: <20011117231120.C12510@auctionwatch.com>
+References: <20011117223754.B12510@auctionwatch.com> <003801c16ffd$757c3d50$fc00a8c0@xp>
+Mime-Version: 1.0
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <003801c16ffd$757c3d50$fc00a8c0@xp>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,24 +16,44 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Sun Nov 18 00:50:02 2001
+Date: Sun Nov 18 01:09:02 2001
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+content-type: text/plain
 To: linux-lvm@sistina.com
 
-WWVzLCBpdCBpcyBzdGlsbCBpbiB0aGUgY3VycmVudCBDVlMsIGlmIEkgYW0gbm90IHdyb25nLg0K
-DQpCdXQsIHlvdSBjYW4gZ28gYXdheSB3aXRoIGJ5IGRlZmluaW5nIFBFIHNpemUgdG8gYSBiaWdn
-ZXIgbnVtYmVyIHRoYW4gZGVmYXVsdCA0TUIuDQpCeSBkZWZpbmluZyBQRSBzaXplIHRvIDE2TSwg
-aXQgZ2l2ZXMgDQoxNk0gKiA2NTUzNCA9IDEsMDQ4LDU0NE0sIHdoaWNoIGlzIGFib3V0IDFUQi4N
-Cg0KdGFrZSBhIGxvb2sgYXQgLXMgc3dpdGNoIGluIHZnY3JlYXRlLg0KDQoNCi0tLS0tIE9yaWdp
-bmFsIE1lc3NhZ2UgLS0tLS0gDQpGcm9tOiAiUGV0cm8iIDxwZXRyb0BhdWN0aW9ud2F0Y2guY29t
-Pg0KVG86IDxsaW51eC1sdm1Ac2lzdGluYS5jb20+DQpTZW50OiBTdW5kYXksIE5vdmVtYmVyIDE4
-LCAyMDAxIDM6MzcgUE0NClN1YmplY3Q6IFtsaW51eC1sdm1dIExvZ2ljYWwgVm9sdW1lIG1heC1z
-aXplPw0KDQoNCj4gSXMgdGhlIDI1NS45OSBHaWdhYnl0ZSBsaW1pdCBmb3IgYSBsb2dpY2FsIHZv
-bHVtZSBzdGlsbCBpbiBwbGFjZSwgb3INCj4gZG9lcyB0aGF0IGdvIGF3YXkvZ2V0IGJpZ2dlciB3
-aXRoIHRoZSBsYXRlciAocG9zdCAwLjkxKSB2ZXJzaW9ucz8gDQo+IA0KPiAtLSANCj4gU2hhcmUg
-YW5kIEVuam95LiANCj4gDQo+IF9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fDQo+IGxpbnV4LWx2bSBtYWlsaW5nIGxpc3QNCj4gbGludXgtbHZtQHNpc3RpbmEu
-Y29tDQo+IGh0dHA6Ly9saXN0cy5zaXN0aW5hLmNvbS9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWx2
-bQ0KPiByZWFkIHRoZSBMVk0gSE9XLVRPIGF0IGh0dHA6Ly93d3cuc2lzdGluYS5jb20vbHZtL1Bh
-Z2VzL2hvd3RvLmh0bWwNCj4gDQo=
+On Sun, Nov 18, 2001 at 03:51:32PM +0900, Sean Oh wrote:
+> Yes, it is still in the current CVS, if I am not wrong.
+> But, you can go away with by defining PE size to a bigger number than def=
+ault 4MB.
+> By defining PE size to 16M, it gives=20
+> 16M * 65534 =3D 1,048,544M, which is about 1TB.
+> take a look at -s switch in vgcreate.
+
+    Cool. I need about 300 gig.=20
+
+    Those 3ware cards rock. Lots of disk, fast and cheap.=20
+
+> ----- Original Message -----=20
+> From: "Petro" <petro@auctionwatch.com>
+> To: <linux-lvm@sistina.com>
+> Sent: Sunday, November 18, 2001 3:37 PM
+> Subject: [linux-lvm] Logical Volume max-size?
+>=20
+>=20
+> > Is the 255.99 Gigabyte limit for a logical volume still in place, or
+> > does that go away/get bigger with the later (post 0.91) versions?=20
+> >=20
+> > --=20
+> > Share and Enjoy.=20
+> >=20
+> > _______________________________________________
+> > linux-lvm mailing list
+> > linux-lvm@sistina.com
+> > http://lists.sistina.com/mailman/listinfo/linux-lvm
+> > read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
+> >=20
+> ?)??[?????x%??e?{??????b??(?=1Bm?????l?+-?v??o?j)fj=7F???b????)??[?????=
+=17?T??Y3??=1Bm????=0B"???i?&?[????z???=0Bh???
+
+--=20
+Share and Enjoy.=20
