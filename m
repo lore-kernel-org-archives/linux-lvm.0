@@ -1,9 +1,11 @@
-Message-ID: <20010911154835.85762.qmail@web13402.mail.yahoo.com>
-Date: Tue, 11 Sep 2001 08:48:35 -0700 (PDT)
-From: Pierre Lamb <plamb_98@yahoo.com>
-Subject: Re: [linux-lvm] rc2 problems
-In-Reply-To: <3B9E2B66.9030900@st-peter.stw.uni-erlangen.de>
-MIME-Version: 1.0
+From: Andreas Dilger <adilger@turbolabs.com>
+Date: Tue, 11 Sep 2001 10:49:34 -0600
+Subject: Re: [linux-lvm] Re: Problem with vgscan "only found 626 of 625 LEs for LV"
+Message-ID: <20010911104934.C29347@turbolinux.com>
+References: <20010911112241.A16588@hp.is> <20010911113054.B16588@hp.is>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20010911113054.B16588@hp.is>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -19,197 +21,45 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Yes have done that 10 times. I will try to do m"make
-modules" again.
+On Sep 11, 2001  11:30 +0000, Tomas Edwardsson wrote:
+> I had already tried the vgcfgrestore, it didn't seem to help but I discovered
+> that the UUID for one of my PVs was missing so I ran the uuid-fixer and now
+> they all have UUIDs again (don't know if that is relevant). 
+> 
+> I have run the pvdata on all my PVs although I think the right one is the
+> following file run with pvdata -avP /dev/hdd1:
+>   http://vefur.hp.is/lvm/pvdata-hdd1.txt
 
-Pierre
---- svetljo <galia@st-peter.stw.uni-erlangen.de>
-wrote:
-> have you tried once more runing
-> ./configure ; PATCHES/make ; and applying the new
-> patch
-> 
-> i think i had the same problem
-> and that's what worked for me  
-> 
-> Heinz J . Mauelshagen wrote:
-> 
-> >On Mon, Sep 10, 2001 at 06:16:12PM -0700, Pierre
-> Lamb wrote:
-> >
-> >>Here is what I did:
-> >>  Built patch, then applied it I got this
-> >> it patched various file, next it said it detected
-> a
-> >>provious patch I said (y) then it wanted to remove
-> a
-> >>file not detected.
-> >>
-> >>Next I did a xconfig selecting LVM. did a make dep
-> >>then a make clean did a make bzImage, then a make
-> >>modules ( no errors), then make modules_install
-> there
-> >>at the en it gave an error :
-> >>
-> >>Unsolved sysmbols in (path)lvm-mod.o
-> >>
-> >>depmod  lvm_init_fs
-> >>depmod  lvm_fs_remove.vg
-> >>depmod  lvm_fin_fs
-> >>depmod  lvm_fs_remove_lv
-> >>depmod  lvm_fs_remove_pv
-> >>depmod  lvm_fs_create_vg
-> >>depmod  lvm_fs_create_lv
-> >>depmod  lvm_fs_create_pv
-> >>
-> >>know what ???
-> >>
-> >
-> >This looks like "make modules" didn't compile
-> lvm-fs.c and didn't link it
-> >into lvm-mode.o.
-> >
-> >Could you check your "make modules" output in
-> detail, if that's true
-> >and if you see a reason for this.
-> >
-> >Regards,
-> >Heinz    -- The LVM Guy --
-> >
-> >
-> >>Pierre
-> >>
-> >>
-> >>--- "Heinz J . Mauelshagen"
-> <mauelshagen@sistina.com>
-> >>wrote:
-> >>
-> >>>On Fri, Sep 07, 2001 at 06:07:38AM -0700, Pierre
-> >>>Lamb wrote:
-> >>>
-> >>>>Well I got rh 2.4.7 made the rc2 patches and
-> >>>>
-> >>>patched
-> >>>
-> >>>>the kernel. No errors, complied the kernel,
-> >>>>
-> >>>modules,
-> >>>
-> >>>>and installed the modules. All with no errors.
-> >>>>
-> >>>Upon
-> >>>
-> >>>>booting the lvm-mod modules doesn't load so I
-> did
-> >>>>
-> >>>a
-> >>>
-> >>>>insmod on lvm-mod and get errors about
-> >>>>
-> >>>non-resloved
-> >>>
-> >>>>symbols,  What to do next????
-> >>>>
-> >>>Could you send what symbols are non resolved?
-> >>>
-> >>>>PIerre
-> >>>>
->
->>>>__________________________________________________
-> >>>>Do You Yahoo!?
-> >>>>Get email alerts & NEW webcam video instant
-> >>>>
-> >>>messaging with Yahoo! Messenger
-> >>>
-> >>>>http://im.yahoo.com
-> >>>>
-> >>>>_______________________________________________
-> >>>>linux-lvm mailing list
-> >>>>linux-lvm@sistina.com
-> >>>>
->
->>>http://lists.sistina.com/mailman/listinfo/linux-lvm
-> >>>
-> >>>>read the LVM HOW-TO at
-> >>>>
-> >>>http://www.sistina.com/lvm/Pages/howto.html
-> >>>
-> >>>-- 
-> >>>
-> >>>Regards,
-> >>>Heinz    -- The LVM Guy --
-> >>>
-> >>>*** Software bugs are stupid.
-> >>>    Nevertheless it needs not so stupid people to
-> >>>solve them ***
-> >>>
-> >>>_______________________________________________
-> >>>linux-lvm mailing list
-> >>>linux-lvm@sistina.com
->
->>>http://lists.sistina.com/mailman/listinfo/linux-lvm
-> >>>read the LVM HOW-TO at
-> >>>
-> >>http://www.sistina.com/lvm/Pages/howto.html
-> >>
-> >>
-> >>
-> >>__________________________________________________
-> >>Do You Yahoo!?
-> >>Get email alerts & NEW webcam video instant
-> messaging with Yahoo! Messenger
-> >>http://im.yahoo.com
-> >>
-> >>_______________________________________________
-> >>linux-lvm mailing list
-> >>linux-lvm@sistina.com
->
->>http://lists.sistina.com/mailman/listinfo/linux-lvm
-> >>read the LVM HOW-TO at
-> http://www.sistina.com/lvm/Pages/howto.html
-> >>
-> >
-> >*** Software bugs are stupid.
-> >    Nevertheless it needs not so stupid people to
-> solve them ***
-> >
->
->=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-> >
-> >Heinz Mauelshagen                                
-> Sistina Software Inc.
-> >Senior Consultant/Developer                      
-> Am Sonnenhang 11
-> >                                                 
-> 56242 Marienrachdorf
-> >                                                 
-> Germany
-> >Mauelshagen@Sistina.com                          
-> +49 2626 141200
-> >                                                   
->    FAX 924446
->
->=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-> >
-> >_______________________________________________
-> >linux-lvm mailing list
-> >linux-lvm@sistina.com
-> >http://lists.sistina.com/mailman/listinfo/linux-lvm
-> >read the LVM HOW-TO at
-> http://www.sistina.com/lvm/Pages/howto.html
-> >
-> 
-> 
-> 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at
-http://www.sistina.com/lvm/Pages/howto.html
+Yes, this clearly shows that lvol1 has 625 LEs (in the LV data), but it
+has PE 0-625 from that PV assigned to it (total of 626 PEs).  I don't
+know which one is correct, nor how it got that way.  If you have a
+filesystem on that LV, you could find out how big the fs is to figure
+out which value needs fixing.  For ext2, you can do:
 
+dumpe2fs -h /dev/vg00/lvol1
 
-__________________________________________________
-Do You Yahoo!?
-Get email alerts & NEW webcam video instant messaging with Yahoo! Messenger
-http://im.yahoo.com
+and figure out if it is 2500MB (625 LE) or 2504MB (626LE).  Then (the fun
+part) you need to go and edit either the LV table or the PE table to have
+the right numbers in it.  I'm guessing the LV table is wrong (and even if
+not, it is safer to add the PE to the end than to truncate your filesystem).
+
+dd if=/dev/hdd1 of=/hdd.sav bs=1024 count=188		# backup LVM metadata
+dd if=/dev/hdd1 of=/lv1.dat bs=1 skip=43008 count=328	# get lvol1 metadata
+od -Ad -tx1 /lv1.dat					# show lvol1 metadata
+
+# 625 = 0x271 which you should see at offset 300, 301 of the LV struct
+# 626 = 0x272 = 0x02 0x72, 0x72 = "r" in ASCII, so we write this into LV
+echo "r" | dd of=/lv1.dat count=1 seek=300		# write 0x72 to LE count
+
+od -Ad -tx1 /lv1.dat					# show lvol1 metadata
+# we should now see 0x72 0x02 0x00 0x00 at offset 300 of the LV metadata
+
+dd if=/lv1.dat of=/dev/hdd1 bs=1 seek=43008		# write LV meta to disk
+pvdata -avP /dev/hdd1					# verify all is well
+vgscan							# should be OK now
+
+Cheers, Andreas
+-- 
+Andreas Dilger  \ "If a man ate a pound of pasta and a pound of antipasto,
+                 \  would they cancel out, leaving him still hungry?"
+http://www-mddsp.enel.ucalgary.ca/People/adilger/               -- Dogbert
