@@ -1,16 +1,10 @@
-From: AJ Lewis <lewis@sistina.com>
-Subject: Re: [linux-lvm] multiple volumes..
-Message-Id: <20020410134810.GB69800@antimony.sistina.com>
-References: <18044083656.20020409231800@tnonline.net>
-    <611310000.1018387687@[192.168.200.4]> <3CB364D2.F612BD9B@silicide.dk>
-    <E16v6GS-0001n5-00@hermes.sistina.com>
-    <912081000.20020410121733@tnonline.net> <3CB41C35.473EC4B8@silicide.dk>
+From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
+Subject: Re: [linux-lvm] vg recovery after PV failure
+Message-Id: <20020410160541.A967@sistina.com>
+References: <1018291425.21592.7.camel@snifter>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-    protocol="application/pgp-signature";
-    boundary="hHWLQfXTYDoKhP50"
-Content-Disposition: inline
-In-Reply-To: <3CB41C35.473EC4B8@silicide.dk>
+In-Reply-To: <1018291425.21592.7.camel@snifter>; from
+    eamonn.hamilton@saic.com on Mon, Apr 08, 2002 at 07:43:44PM +0100
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -21,70 +15,68 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Apr 10 08:47:01 2002
+Date: Wed Apr 10 09:05:02 2002
 List-Id: <linux-lvm.redhat.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
---hHWLQfXTYDoKhP50
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Eamonn,
 
-On Wed, Apr 10, 2002 at 01:04:21PM +0200, Jon Bendtsen wrote:
-> Anders Widman wrote:
-> >=20
-> > Woha. Lot's of replies :)
->=20
-> Yes, and quite alot of uneassesary text. Could you and others possibly
-> cut
-> the text you dont reply to away ?? You're waisting bandwidth and
-> diskspace
-> for all on the list, and for the list server. If someone REALLLY needs
-> ALL
-> the text from the former mail, well they are on the mailing list and got
-> it
-> before your email, so they can read it there, or they can go to the
-> archives
-> and read it there. So please, cut the uneassesary text avoid, not all,
-> just
-> those lines you dont directly respond to.
+in case "a bit odd" means a HW flaw, you need to vgcfgrestore the LVM metadata
+back onto a sane device. You can even "vgcfgrestore -i" to a disk with
+different size, bacause you loose the data on the old flaky disk anyway
+(assuming it is completely inaccessable) :-(
 
-I'm sorry, but this rant is just plain silly.  We have plenty of disk space
-on the list server to handle people including the previous comments, and I'd
-rather not discourage helpful posters.  If you're going to start making this
-kind of argument, you might as well start telling people to stop including
-their sigs.  Or stop GPG signing their mails.  Or start using snail-mail
-'cause it saves on bandwidth.
+If your friend had all LVs striped onto both PVs, data is lost anyway.
 
-Oh yeah - it might be helpful for you to fix the width of your e-mail's
-'cause you're sending an double the number of lines that are really
-necessary and that wastes bandwidth... ;)
+Hint: backups are your friends friends.
+
+
+On Mon, Apr 08, 2002 at 07:43:44PM +0100, Eamonn Hamilton wrote:
+> 
+> 
+> Hi Folks.
+> 
+> I'm attempting to recover a VG on a friends system after one of the PVs
+> started acting a bit odd. The VG appears to say that it has no PVs
+> associated with it, and a vgscan only finds the second PV on the disk. A
+> pvdisplay, however, show both physical volumes have what appears to be
+> the correct information and extents.
+> 
+> I'm basically wondering how do I get these two physical volumes
+> associated again, and is there any way to determine how they were put
+> topgether, i.e. were they striped? Also, is there any way to get the
+> information off the non-dodgy disk ( it's ext3, btw ).
+> 
+> Cheers,
+> 
+> Eamonn
+> 
+>  
+> 
+> 
+> 
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@sistina.com
+> http://lists.sistina.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
+
+-- 
 
 Regards,
---=20
-AJ Lewis
-Sistina Software Inc.                  Voice:  612-638-0500
-1313 5th St SE, Suite 111              E-Mail: lewis@sistina.com
-Minneapolis, MN 55414
-http://www.sistina.com
+Heinz    -- The LVM Guy --
 
-Current GPG fingerprint =3D  7792 2F3E 9D86 DA4C 9111 7837 982D 737B 9DBC 4=
-EC9
------Begin Obligatory Humorous Quote----------------------------------------
-Error: Keyboard not attached. Press F1 to continue.
------End Obligatory Humorous Quote------------------------------------------
+*** Software bugs are stupid.
+    Nevertheless it needs not so stupid people to solve them ***
 
---hHWLQfXTYDoKhP50
-Content-Type: application/pgp-signature
-Content-Disposition: inline
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.0.6 (FreeBSD)
-Comment: For info see http://www.gnupg.org
-
-iD8DBQE8tEKamC1ze528TskRAivVAJ9dnwO9gE/5V5lkYgBk1Uy4z0gDuACgsaif
-bIBJrFLbfAbhg03a8C+9bvI=
-=XUf7
------END PGP SIGNATURE-----
-
---hHWLQfXTYDoKhP50--
+Heinz Mauelshagen                                 Sistina Software Inc.
+Senior Consultant/Developer                       Am Sonnenhang 11
+                                                  56242 Marienrachdorf
+                                                  Germany
+Mauelshagen@Sistina.com                           +49 2626 141200
+                                                       FAX 924446
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
