@@ -1,17 +1,21 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id iAUFC5r29116
-	for <linux-lvm@redhat.com>; Tue, 30 Nov 2004 10:12:05 -0500
-Received: from mail.gmx.net (imap.gmx.net [213.165.64.20])
-	by mx3.redhat.com (8.12.11/8.12.11) with SMTP id iAUFBxNU004030
-	for <linux-lvm@redhat.com>; Tue, 30 Nov 2004 10:11:59 -0500
-Message-ID: <41AC8DB9.4010301@gmx.net>
-Date: Tue, 30 Nov 2004 16:11:53 +0100
-From: Klaus Strebel <klaus.strebel@gmx.net>
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id iB1Da3r05024
+	for <linux-lvm@redhat.com>; Wed, 1 Dec 2004 08:36:03 -0500
+Received: from go4.ext.ti.com (go4.ext.ti.com [192.91.75.132])
+	by mx3.redhat.com (8.12.11/8.12.11) with ESMTP id iB1DZv4g001850
+	for <linux-lvm@redhat.com>; Wed, 1 Dec 2004 08:35:57 -0500
+Received: from dlep30.itg.ti.com ([157.170.139.157])
+	by go4.ext.ti.com (8.13.1/8.13.1) with ESMTP id iB1DZqRE018973
+	for <linux-lvm@redhat.com>; Wed, 1 Dec 2004 07:35:52 -0600 (CST)
+Received: from LTA0674253 (localhost [127.0.0.1])
+	by dlep30.itg.ti.com (8.12.11/8.12.11) with ESMTP id iB1DZpOl017762
+	for <linux-lvm@redhat.com>; Wed, 1 Dec 2004 07:35:51 -0600 (CST)
+From: "Jim Owenby" <jowenby@ti.com>
+Date: Wed, 1 Dec 2004 07:35:51 -0600
+Message-ID: <DAE695E47B9BCC45996768956410A6A90E9187@dlee2k03.ent.ti.com>
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] Installation of LVM on AS 2.1 - kernel 2.4.9-e.3
-References: <5EA812BF44E06D4B818A8EEEDDE12B7F0448BFA4@EX2BEL86MBX02>
-In-Reply-To: <5EA812BF44E06D4B818A8EEEDDE12B7F0448BFA4@EX2BEL86MBX02>
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] LVM and Kickstart
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -22,37 +26,32 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="iso-8859-1"; format="flowed"
-To: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="us-ascii"
+To: linux-lvm@redhat.com
 
-Johan.SEGERS@cec.eu.int schrieb:
-> During the configure part, i always get a message that it did not find =20
-> a Makefile in the /usr/src/linux directory.
-> My source directory of the redhat is /usr/src/linux/SOURCES and there is =
+Is there any examples of using LVM on RedHat 3.x in a kickstart 
+script? I am trying to creat one large LVM partion accross 3 drives to 
+about 400G and I am not having any luck at it.
 
-> no Makefile there. The Makefile for the
-> Lvm package is in the direvctory from where i try to install LVM nl=20
-> /tmp/lvm/LVM/1.0.3.
->=20
-> Any idea what is missing here ?
-Hi Johan,
+I have tired the following in the ks.cfg file:
+# partition information
+clearpart --all
+ part /boot --fstype ext3 --size=100 --ondisk=sda
+ part swap --size=8192 --ondisk=sda
+ part / --fstype ext3 --size=8192 --ondisk=sda
+ part pv.15 --size=100 --grow --ondisk=sdc
+ part pv.13 --size=100 --grow --ondisk=sdb
+ part pv.11 --size=100 --grow --ondisk=sda
+ volgroup Volume00 pv.11 pv.13 pv.15
+ logvol /tmp --fstype ext3 --name=LogVol00 --vgname=Volume00 
+ --pesize=16384 --size=354500
 
-yep, he's looking for the Makefile of your Linux-Kernel (that's usually=20
-at /usr/src/linux) - he's getting the Kernel-config from there (read the=20
-build instrunctions ??? ).
-
-Perhaps, you'd rather play around with compiling own kernels before=20
-trying to patch it ;-).
-
-Ciao
-Klaus
-
---=20
-Mit freundlichen Gr=EF=BF=BDssen / best regards
-
-Klaus Strebel, Dipl.-Inform. (FH), mailto:klaus.strebel@gmx.net
-
-/"\
-\ /     ASCII RIBBON CAMPAIGN
-  X        AGAINST HTML MAIL
-/ \
+Jim Owenby
+Texas Instruments Inc
+P.O. Box 660199 M/S 8714
+Dallas, Tx. 75265
+Design Systems,Compute Team
+Unix/Linux Administrator
+Ph: 214.480.4082
+Cell: 214.882.3831
+Email: jowenby@ti.com
