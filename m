@@ -1,10 +1,10 @@
-Return-Path: <hugo@carfax.nildram.co.uk>
-Date: Fri, 25 May 2001 16:26:19 +0100
-From: Hugo Mills <hugo@carfax.org.uk>
-Message-ID: <20010525162619.D24299@carfax>
-Mime-Version: 1.0
-Content-Disposition: inline
-Subject: [linux-lvm] Patching Linus' pre- kernels?
+Return-Path: <vidalrod@informatik.tu-muenchen.de>
+Message-ID: <3B0E7C7C.E434D0AE@in.tum.de>
+Date: Fri, 25 May 2001 17:38:36 +0200
+From: David Vidal Rodriguez <vidalrod@informatik.tu-muenchen.de>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] Symbol not found when pvcreating...
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,47 +17,27 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: linux-lvm@sistina.com
+To: lvm <linux-lvm@sistina.com>
 
-   Hi - 
+Hi (again)!
+When running the CVS version of kernel+tools, the pvcreate utility
+requests the following symbol that apparently isn't present in the
+liblvm-10.so.0 library:
+int pv_check_partitioned_whole(char *pv_name)
 
-   I've just tried to patch a recent, but otherwise virgin, Linus
-kernel, and had the kernel compile fail:
+(Error loading shared libraries... blahblah)
+An older version of pvcreate (I'm no sure if beta6 or less) does the job
+correctly.
+Do I have to change anything in the sources in order to get it working?
 
-make[2]: Leaving directory `/usr/src/linux-2.4.5-pre3/arch/i386/lib'
-ld -m elf_i386 -T /usr/src/linux-2.4.5-pre3/arch/i386/vmlinux.lds -e stext arch/i386/kernel/head.o arch/i386/kernel/init_task.o init/main.o init/version.o \
-        --start-group \
-        arch/i386/kernel/kernel.o arch/i386/mm/mm.o kernel/kernel.o mm/mm.o fs/fs.o ipc/ipc.o \
-        drivers/block/block.o drivers/char/char.o drivers/misc/misc.o drivers/net/net.o drivers/media/media.o  drivers/parport/driver.o drivers/char/agp/agp.o drivers/char/drm/drm.o drivers/ide/idedriver.o drivers/scsi/scsidrv.o drivers/cdrom/driver.o drivers/pci/driver.o drivers/video/video.o drivers/md/mddev.o \
-        net/network.o \
-        /usr/src/linux-2.4.5-pre3/arch/i386/lib/lib.a /usr/src/linux-2.4.5-pre3/lib/lib.a /usr/src/linux-2.4.5-pre3/arch/i386/lib/lib.a \
-        --end-group \
-        -o vmlinux
-drivers/md/mddev.o: In function `__update_hardblocksize':
-drivers/md/mddev.o(.text+0x22f1): undefined reference to `get_hardblocksize'
-drivers/md/mddev.o(.text+0x2332): undefined reference to `get_hardblocksize'
-make[1]: *** [vmlinux] Error 1
-make[1]: Leaving directory `/usr/src/linux-2.4.5-pre3'
-make: *** [stamp-build] Error 2
+Another --developer-- question:
+I've looked at the LVM code and a structure called partition, #include'd
+from <linux/genhd.h>, which contains the relevant information of a
+partition. What I don't understand is how to get this information from
+the kernel/drive (syscall, ioctl???). I'd be glad if somebody explained
+that to me briefly.
 
-I'm using:
-Debian testing
-Kernel 2.4.5-pre3
-LVM 0.9.1-beta7
-
-   Is the beta7 LVM expected to patch against Linus' pre- kernels? If
-it is, what have I done wrong? If not, which kernels should I be able
-to patch against?
-
-   Also, are there any potential problems with running LVM and devfs
-together?
-
-   Thanks,
-   Hugo.
-
+Thanks!
 --
-    ---- Hugo Mills --- The Creature from the Black Logon ----
-hugo@lug.org.uk     hugo@carfax.nildram.co.uk     hugo@soton.ac.uk
-     ---- "We did a risk management review. We concluded ----
-            that there was no risk of any management."
+  ------------------------------------------------------------------------
+ David Vidal R. (vidalrod <at> in DOT tum DOT de)
