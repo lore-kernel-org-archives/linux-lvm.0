@@ -1,17 +1,12 @@
-Received: from agk.surrey.redhat.com (agk.surrey.redhat.com [172.16.10.74])
-	by pobox.surrey.redhat.com (8.12.8/8.12.8) with ESMTP id iBLII7ge024778
-	for <linux-lvm@redhat.com>; Tue, 21 Dec 2004 18:18:08 GMT
-Received: from agk by agk.surrey.redhat.com with local (Exim 4.34)
-	id 1CgoaF-0007gP-VB
-	for linux-lvm@redhat.com; Tue, 21 Dec 2004 18:18:07 +0000
-Date: Tue, 21 Dec 2004 18:18:07 +0000
+Date: Tue, 21 Dec 2004 20:17:24 +0000
 From: Alasdair G Kergon <agk@redhat.com>
-Subject: Re: [linux-lvm] PVs that are reused / reformatted as filesystems
-Message-ID: <20041221181807.GK26670@agk.surrey.redhat.com>
-References: <41C650A3.2090302@vilain.net>
+Subject: Re: [linux-lvm] [PATCH] cannot create PV on empty drive
+Message-ID: <20041221201724.GP26670@agk.surrey.redhat.com>
+References: <41C1C572.15958.1B62373@localhost>
+	<20041218194256.GH26670@agk.surrey.redhat.com>
 Mime-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <41C650A3.2090302@vilain.net>
+In-Reply-To: <20041218194256.GH26670@agk.surrey.redhat.com>
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -24,15 +19,16 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: LVM general discussion and development <linux-lvm@redhat.com>
+To: Jerome Borsboom <j.borsboom@erasmusmc.nl>
+Cc: LVM general discussion and development <linux-lvm@redhat.com>
 
-On Mon, Dec 20, 2004 at 05:10:11PM +1300, Sam Vilain wrote:
-> I have a system on which a partition that was once a PV was recycled as
-> a filesystem.  Now, it has a valid ext3 filesystem on it, but also the
-> PV signature appears to be there.  
+On Sat, Dec 18, 2004 at 07:42:56PM +0000, Alasdair G Kergon wrote:
+> Do you have verbose output from the failing pvcreate with '-vvvv'?
+> (or debug-log-to-file output)
+ 
+I still don't know how to reproduce this.
 
-In future use pvremove to wipe a PV - the opposite of pvcreate.
-And first use vgreduce to remove it from its volume group.
+Meanwhile, I'm checking in a patch based on yours.
 
 Alasdair
 -- 
