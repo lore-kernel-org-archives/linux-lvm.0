@@ -1,33 +1,35 @@
-Date: Tue, 4 Jan 2000 11:08:14 -0500 (EST)
-From: Terry Hardie <terryh@orcas.net>
+Date: Tue, 4 Jan 2000 20:32:48 +0100
+From: Luca Berra <bluca@comedia.it>
 Subject: Re: [linux-lvm] [3 Questions... (fwd)
+Message-ID: <20000104203248.A11406@colombina.comedia.it>
+Reply-To: bluca@comedia.it
+References: <387158FF.F4EBEFB1@msede.com>
+Mime-Version: 1.0
 In-Reply-To: <387158FF.F4EBEFB1@msede.com>
-Message-ID: <Pine.LNX.4.21.0001041105330.26541-100000@orcas.net>
-MIME-Version: 1.0
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: jamesp@emporia.u-net.com
-Cc: linux-lvm@msede.com
+To: linux-lvm@msede.com
 
-On Tue, 4 Jan 2000, Michael Marxmeier wrote:
-
-> 2. LVM 0.8i kernel compile fails
+On Tue, Jan 04, 2000 at 03:20:47AM +0100, Michael Marxmeier wrote:
 > 
-> I got an error yesterday while trying to compile the latest LVM patch
-> - it
-> failed with 'undefined reference to lvm_init' or something when
-> linking
-> the final kernel. The kernel config works fine with 0.7...
+> 1. Raid / LVM
+> 
+> Does anyone have a patch against 2.2.13 that contains both the LVM
+> patch
+> and the super-raid patch (the one that uses MMX)? I want to get max
+> performance by having a striped /dev/md0 as my PV. And are there any
+> plans
+> for coordination with the RAID team so there are no clashes?
 
-Actually, on line 362 of lvm.c in your kernel source, block/drivers,
-change the word "static" to "extern". The problem doesn't show up if
-you're compiling LVM as a module.
+SGI, http://opensource.sgi.com/projects/sgilinux11/
+but they trew in a lot of other things as well, and i am non
+completely satisfied with their patch.
 
----
-Terry Hardie					terry@gxc.com
-Founder and Chief Technology officer		ICQ#: 977679
-Convergence Equipment Co, Manassas, VA, USA	V: +1-703-361-5566
-"Home of the BOB Class 4 convergence switch"
+L.
+
+-- 
+Luca Berra -- bluca@comedia.it
+    Communication Media & Services S.r.l.
