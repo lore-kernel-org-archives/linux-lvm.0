@@ -1,10 +1,9 @@
-Message-Id: <46CEA578.B03DDD14@qis-systemhaus.de>
-Date: Fri, 24 Aug 2007 11:31:36 +0200
-From: Dirk Heinrichs <heinrichs@qis-systemhaus.de>
-Mime-Version: 1.0
-Subject: Re: [linux-lvm] LVM, rawio, ext2?
-References: <20010823014012.A32700@greenhydrant.com>
-Content-Transfer-Encoding: quoted-printable
+Message-ID: <3B869643.6D130F2B@LookThatUp.com>
+Date: Fri, 24 Aug 2001 20:00:35 +0200
+From: Igor Dumaire <Igor.Dumaire@LookThatUp.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] vm_blk_ioctl: unknown command
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,30 +15,19 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="iso-8859-1"
-To: linux-lvm@sistina.com
+Content-Type: text/plain; charset="us-ascii"
+To: list LVM <linux-lvm@sistina.com>
 
-David Rees wrote:
->=20
-> Hi,
->=20
-> I'd like to create an ext2 filesystem over a raw io device, is this eve=
-n
-> possible?  (If not, skip the rest of this message! ;-)
-Why do you want to do that?
+Hi,
 
-These are two opposite things. One uses a raw device where an
-application has it's own storage layout, like databases.
+In /var/log/messages I see this messages :
 
-If you just want to make shure that your files on an ext2 are written
-immediately, then mount with sync option.
+Aug 24 09:44:32 dhcp110 kernel: lvm -- lvm_blk_ioctl: unknown command 4712
+Aug 24 09:45:59 dhcp110 kernel: lvm -- lvm_blk_ioctl: unknown command 4712
 
-Bye...
+What is it ?
 
-	Dirk
---=20
-Dirk Heinrichs		| Tel:	+49 (0)241 413 260
-Configuration Manager	| Fax:	+49 (0)241 413 2640
-QIS Systemhaus GmbH	| Mail:	dheinrichs@qis-systemhaus.de
-J=FClicher Str. 338b	| Web:	http://www.qis-systemhaus.de
-D-52070 Aachen		| ICQ#:	110037733
+-- 
+------------------------------------------
+Igor DUMAIRE - Igor.Dumaire@LookThatUp.com
+------------------------------------------
