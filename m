@@ -1,40 +1,41 @@
-From: Barry Roomberg <broom@voicenet.com>
-Reply-To: broom@voicenet.com
-Subject: [linux-lvm] Alternate Pathing?
-Date: Sun, 23 Jul 2000 11:35:52 -0400
+Date: Sun, 23 Jul 2000 18:16:57 +0100 (IST)
+From: Paul Jakma <paul@clubi.ie>
+Subject: Re: [linux-lvm] Alternate Pathing?
+In-Reply-To: <00072311385205.27541@cg965888-a.adubn1.nj.home.com>
+Message-ID: <Pine.LNX.4.21.0007231816160.21621-100000@fogarty.jakma.org>
 MIME-Version: 1.0
-Message-Id: <00072311385205.27541@cg965888-a.adubn1.nj.home.com>
-Content-Transfer-Encoding: 8bit
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@msede.com
+Content-Type: TEXT/PLAIN; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: Barry Roomberg <broom@voicenet.com>
+Cc: linux-lvm@msede.com
 
-Ohh LVM Gurus, I beseech thee:
+On Sun, 23 Jul 2000, Barry Roomberg wrote:
 
-Does the Linux kernel, filesystem, device tree,
-or LVM have the concept of Alternate Pathing?
+> Does this concept exist anywhere in Linux?
+> It seems the right place for it to exist
+> would be at the disk side of the LVM.
+> 
+> I searched GOOGLE and the LVM list archive
+> for mentions but did not come up with anything.
+> 
+> Any pointers?
+> 
 
-My situation is that one of the key features
-I have in Solaris (which I want in Linux) is the 
-ability to have multiple fibre channel devices 
-(disks, RAID luns, etc) seen
-via multiple cards in the system.  All are
-shown simultaneously through the different paths.
-If one of the paths should fail (slot, card, cable,
-controller) than the device can be picked up
-via the alternative path.
+GFS was designed spefically with FC in mind. see
+www.globalfilesystem.org
 
-Does this concept exist anywhere in Linux?
-It seems the right place for it to exist
-would be at the disk side of the LVM.
+> Thanks
+> Barry
+> broom@nospam-voicenet.com
+> 
+> 
 
-I searched GOOGLE and the LVM list archive
-for mentions but did not come up with anything.
-
-Any pointers?
-
-Thanks
-Barry
-broom@nospam-voicenet.com
+-- 
+Paul Jakma	paul@clubi.ie
+PGP5 key: http://www.clubi.ie/jakma/publickey.txt
+-------------------------------------------
+Fortune:
+Freedom begins when you tell Mrs. Grundy to go fly a kite.
