@@ -1,10 +1,8 @@
-Message-ID: <1045557392.f27fd349bc9f7@herzo.net>
-From: Sebastian Wormser <sibbi@sibbi.com>
-Subject: Re: [linux-lvm] Sharing Logical Volumes via NFS on Redhat 8.0
-References: <F42fiyTqv4jvQUMRlap0003beef@hotmail.com>
-In-Reply-To: <F42fiyTqv4jvQUMRlap0003beef@hotmail.com>
+Message-ID: <3E51F34A.55A8CF23@silicide.dk>
+From: Jon Bendtsen <jon+lvm@silicide.dk>
 MIME-Version: 1.0
-Content-Disposition: inline
+Subject: Re: [linux-lvm] encryption in LVM2
+References: <3E510115.C2FF3B83@silicide.dk> <20030217203406.GA6846@localhost>
 Content-Transfer-Encoding: 7bit
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
@@ -16,53 +14,38 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Tue Feb 18 02:37:01 2003
+Date: Tue Feb 18 02:48:01 2003
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
 
-Hi,
+Jose Luis Domingo Lopez wrote:
+> 
+> On Monday, 17 February 2003, at 16:34:45 +0100,
+> Jon Bendtsen wrote:
+> 
+> > I only have experience with LVM1, but naturaly i've heard about LVM2,
+> > and the device mapper.
+> > Has anyone built in encryption into the device mapper ?
+> > Is anyone working on it ?
+> >
+> I don't know of anyone working on block-based encryption for LVM2/DM,
+> but by now you can try one of the several filesystem-level encryption
+> solutions out there. I have personally used loop-aes, it is simple to
+> set up and works ok on my boxes.
 
-Quoting DJ TweeQ <djtweeq@hotmail.com>:
+been there, done that. The problem is that then i cant use the snapshot
+facility while the stuff is mounted, and i cant resize it while it is
+mounted. I'd like that feature. Okay, i could just encrypt the
+partition(s)
+below LVM, but that is troubled too, as i might not want to encrypt all
+my LV's, and either i might have to start severel loopback devices.
+And as for loop-aes... no thanks, i cant even change my password.
 
-> Regarding Sharing LVM LV's via NFS on Redhat 8.0...ie. mounting an LV from
-> another machine while already having a LV on the same machine. Is it ok or
-> not ok? I was talking to a buddy and he doesn't think it's a problem or an
-> issue but...
+> Hope it helps.
 
-Since there is no difference to the Samba server or the NFS server
-whether the underlying file system is managed via LVM or not, there
-should not be any problems regarding LVM.
+not really.
 
-> the current documentation on Sistina's site states that sharing LV's is
-> dangerous unless it's a SCSI or Fibre Storage Device?...and not only that
 
-This advice is only valid if you use the same LV on two different
-nodes(=computers). If you use the LVM managed logival volumes on just
-one node at a time, you should not run into any problems.
 
-> I'm thinking that it might not be a good idea to try to do maintenance on a
-> LV that is mounted on another system...but i think it makes a whole heck of
-> alot of sense to create/resize/mount an LV on a system before trying to
-> mount it via an NFS share. :)
-
-It does make sense to not change the layout of the file system while the
-nfs server is running, but otherwise there is no problem between any user
-land application and LVM, since those applications are not aware that LVM
-is managing the logical volumes they are accessing.
-
-> Oh one other thing...if it has been proven that a Redhat 8.0 2.4-24?.x
-> kernel can be patched to LVM 1.0.6+ ....will the data on those LV's be
-> affected in any way or will it all be ok? :)
-
-I'd go and see whether Redhat is providing Kernel packages containing
-LVM 1.0.6.
-
-cu,
-
-  Sibbi
--- 
-You can observe a lot by just watching.
-
--------------------------------------------------
-This mail sent through IMP: http://horde.org/imp/
+JonB
