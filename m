@@ -1,10 +1,7 @@
-From: Nathan Scott <nathans@sgi.com>
-Message-ID: <20031202211002.C2009778@wobbly.melbourne.sgi.com>
-References: <3FCB4AFB.3090700@backtobasicsmgmt.com> <20031201141144.GD12211@suse.de> <3FCB4CFA.4020302@backtobasicsmgmt.com> <20031201155143.GF12211@suse.de> <3FCC0EE0.9010207@backtobasicsmgmt.com> <20031202082713.GN12211@suse.de>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20031202082713.GN12211@suse.de>; from axboe@suse.de on Tue, Dec 02, 2003 at 09:27:13AM +0100
-Subject: [linux-lvm] Re: Reproducable OOPS with MD RAID-5 on 2.6.0-test11
+From: "Robert P. J. Day" <rpjday@mindspring.com>
+Message-ID: <Pine.LNX.4.44.0312020510230.4857-100000@localhost.localdomain>
+MIME-Version: 1.0
+Subject: [linux-lvm] still need to install device mapper with 2.6 kernel?
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,50 +12,67 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Tue Dec  2 07:51:20 2003
+Date: Tue Dec  2 07:51:42 2003
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: TEXT/PLAIN; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: Jens Axboe <axboe@suse.de>
-Cc: "Kevin P. Fleming" <kpfleming@backtobasicsmgmt.com>, LKML <linux-kernel@vger.kernel.org>, Linux-raid maillist <linux-raid@vger.kernel.org>, linux-lvm@sistina.com
+To: LVM mailing list <linux-lvm@sistina.com>
 
-On Tue, Dec 02, 2003 at 09:27:13AM +0100, Jens Axboe wrote:
-> On Mon, Dec 01 2003, Kevin P. Fleming wrote:
-> > 
-> > without device-mapper in place, though, and I could not reproduce the 
-> > problem! I copied > 500MB of stuff to the XFS filesystem created using 
-> > the entire /dev/md/0 device without a single unusual message. I then 
-> > unmounted the filesystem and used pvcreate/vgcreate/lvcreate to make a 
-> > 3G volume on the array, made an XFS filesystem on it, mounted it, and 
-> > tried copying data over. The oops message came back.
-> 
-> Smells like a bio stacking problem in raid/dm then. I'll take a quick
-> look and see if anything obvious pops up, otherwise the maintainers of
-> those areas should take a closer look.
+  i think i'm confused about the support for device mapper in the 
+2.6 kernel.  i'm aware that i need to install device-mapper for
+LVM2, and i know where to get the device-mapper tarball.
 
-One thing that might be of interest - XFS does tend to pass
-variable size requests down to the block layer, and this has
-tripped up md and other drivers in 2.4 in the distant past.
+  but, in the configuration process for the 2.6 kernel, you can 
+select device mapper support, so i did and built it into the
+kernel.  i assumed (perhaps unwisely) that device mapper was now
+part of the 2.6 kernel source tree, and i now had it since i'd
+selected it as part of the configuration in the kernel build for
+my 2.6.0-test11 kernel.  therefore, i didn't need to explicitly 
+install device-mapper anymore.
 
-Log IO is typically 512 byte aligned (as opposed to block or
-page size aligned), as are IOs into several of XFS' metadata
-structures.
+  however, when i went to configure/make LVM2 on my FC1 system,
+the configure worked fine, but the make gave me:
 
-> > I'm copying this message to linux-lvm; the original oops message is 
-> > repeated below for the benefit of those list readers. I've got one more 
-> > round of testing to do (after the array resyncs itself), which is to try 
-> > a filesystem other than XFS.
-> 
-> That might be a good idea, although it's not very likely to be an XFS
-> problem as it happens further down the io stack. It should trigger just
-> as happily on IDE or SCSI if that was the case.
+...
 
-I would tend to agree (but will happily fix things if proven
-wrong ;) - I took a brief look through dm & md this afternoon
-but nothing obvious jumped out at me.  I'm not particularly
-familiar with that code though.
+gcc -c -I. -I../include -DLVM1_INTERNAL -DDEVMAPPER_SUPPORT 
+-DO_DIRECT_SUPPORT -DHAVE_LIBDL -DHAVE_GETOPTLONG -fPIC -Wall -Wundef 
+-Wshadow -Wcast-align -Wwrite-strings -Wmissing-prototypes 
+-Wmissing-declarations -Wnested-externs -Winline -O2 cache/lvmcache.c -o 
+cache/lvmcache.o
+In file included from activate/activate.c:9:
+activate/activate.h:13:28: libdevmapper.h: No such file or directory
+activate/activate.c: In function `library_version':
+activate/activate.c:119: warning: implicit declaration of function 
+`dm_get_library_version'
+activate/activate.c: In function `driver_version':
+activate/activate.c:133: warning: implicit declaration of function 
+`dm_task_create'
+activate/activate.c:133: error: `DM_DEVICE_VERSION' undeclared (first use 
+in this function)
+activate/activate.c:133: error: (Each undeclared identifier is reported 
+only once
+activate/activate.c:133: error: for each function it appears in.)
+activate/activate.c:133: warning: assignment makes pointer from integer 
+without a cast
+activate/activate.c:138: warning: implicit declaration of function 
+`dm_task_run'
+activate/activate.c:141: warning: implicit declaration of function 
+`dm_task_get_driver_version'
+activate/activate.c:147: warning: implicit declaration of function 
+`dm_task_destroy'
+activate/activate.c: In function `_lv_info':
+activate/activate.c:160: error: storage size of `dminfo' isn't known
+activate/activate.c:160: warning: unused variable `dminfo'
+make[1]: *** [activate/activate.o] Error 1
+make[1]: *** Waiting for unfinished jobs....
+make[1]: Leaving directory `/home/rpjday/SW/lvm/LVM2.2.00.08/lib'
+make: *** [lib] Error 2
 
-cheers.
 
--- 
-Nathan
+  note the reference to no libdevmapper.h file.  so what's the
+proper recipe?  what exactly was the effect of adding device-mapper
+support to my kernel?  do i still have to explicitly configure/make
+and install device-mapper myself?  am i just confused?
+
+rday
