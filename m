@@ -1,10 +1,8 @@
-From: Alasdair G Kergon <agk@uk.sistina.com>
-Subject: Re: [linux-lvm] Trouble switching from LVM2 to LVM1
-Message-ID: <20030417214241.F14411@uk.sistina.com>
-References: <yw1x4r4yfiab.fsf@zaphod.guide>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <yw1x4r4yfiab.fsf@zaphod.guide>; from mru@users.sourceforge.net on Wed, Apr 16, 2003 at 07:45:16PM +0200
+Message-ID: <3E9F4A2C.9090806@mvista.com>
+From: Steven Dake <sdake@mvista.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] Question about VFS Locking patch, why is a change needed?
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,27 +13,35 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Thu Apr 17 15:42:02 2003
+Date: Fri Apr 18 16:34:01 2003
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: linux-lvm@sistina.com
 
-On Wed, Apr 16, 2003 at 07:45:16PM +0200, M?ns Rullg?rd wrote:
-> without errors, but all the LV device nodes are created with minor 0.
+Folks,
 
-Some time back, LVM1 introduced persistent minors, so the minor number is 
-stored on disk and remembered for subsequent activations.
+I was analyzing the VFS locking patch and I wanted to know if someone 
+could explain the purpose of a change in the reiserfs for me:
 
-In LVM2, persistent minors are optional and the default is *not* to use
-them, so the minor number may be different each time a device is
-activated, and no minor number is stored on disk.
+The change is:
+Index: linus.21/fs/reiserfs/super.c
+--- linus.21/fs/reiserfs/super.c Fri, 11 Jan 2002 10:14:59 -0500 root 
+(linux/41_super.c 1.2.2.1.2.1.1.1 644)
++++ linus.21(w)/fs/reiserfs/super.c Mon, 28 Jan 2002 13:50:56 -0500 root 
+(linux/41_super.c 1.2.2.1.2.1.1.1 644)
+@@ -66,7 +66,7 @@
+     reiserfs_prepare_for_journal(s, SB_BUFFER_WITH_SB(s), 1);
+     journal_mark_dirty(&th, s, SB_BUFFER_WITH_SB (s));
+     reiserfs_block_writes(&th) ;
+-    journal_end(&th, s, 1) ;
++    journal_end_sync(&th, s, 1) ;
+   }
+   s->s_dirt = dirty;
+   unlock_kernel() ;
 
+I tried LVM with and without this change even under heavy load and LVM 
+can still create mountable snapshots of a reiser filesystem without the 
+change.  Why is it there?
 
-IIRC Exporting the VG and then importing it again will reassign LVM1 
-minor numbers.
-
- 
-Alasdair
--- 
-agk@uk.sistina.com
+Thanks
+-steve
