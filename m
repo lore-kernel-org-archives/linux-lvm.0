@@ -1,8 +1,10 @@
-Message-ID: <20021212164259.39428.qmail@web40910.mail.yahoo.com>
-From: Tru64 User <tru64user@yahoo.com>
-Subject: SUMMARY: [linux-lvm] pvcreate -- ERROR "Success"
-In-Reply-To: <20021211202224.79940.qmail@web40906.mail.yahoo.com>
+Message-ID: <006059c266c5$31453530$0100a170@lsqhduo.net>
+From: "=?ks_c_5601-1987?B?wdnGx77Is7s=?=" <h1@hhansom.co.kr>
 MIME-Version: 1.0
+Content-Type: multipart/alternative;
+	boundary="----=_NextPart_000_0007_0A7E4FE0.35356880"
+Subject: [linux-lvm] =?ks_c_5601-1987?B?wNq68cPixscgvsizu1u9w8H9LLz2x8osvNK8syyw5sGmLLD=?=
+ =?ks_c_5601-1987?B?5r+1LMOzvLwgseLFuF1bsaSw7V0=?=
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -13,245 +15,196 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Thu Dec 12 10:43:03 2002
+Date: Thu Dec 12 15:47:02 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: linux-lvm@sistina.com
+To: linux-LVM@sistina.com
 
-I found out the problem, I believe.
-pvcreate was not able to handle the physical volume
-size (1.1 Tb --Promise Technology Raid5 BOX =7x200Gb
-ATA drives), thus the weird ERROR --"Success" message.
+This is a multi-part message in MIME format.
 
-I chunked up the RAID5 array into 2 partitions, 500Gb
-and 600Gb each, and pvcreate worked like a charm.
+------=_NextPart_000_0007_0A7E4FE0.35356880
+Content-Type: text/plain;
+	charset="ks_c_5601-1987"
+Content-Transfer-Encoding: base64
 
-When i delete the partitions and remake one large
-partition (sdb1 alone) of [First cylinder (1-145891,
-default 1):] 1.1Tb, it can't handle!
+v/iw7cHfsLMsIMDauvHD4sbHLCDA2rytwPwsILHiyLnD4sbHILXuIMPixse8rbrxvbogwPy5rsi4
+u+cgIMDauvHD4sbHIL7Is7sovcPB/Sy89sfKLLzSvLMssObBpiyw5r+1LMOzvLwsseLFuCkgICAg
+DQpsaW51eC1MVk201LKyICDH4Lq5wMwgx9SyssfPvcOx4rimILr3tM+02S4NCrHNx8/AxyAguN7A
+z8HWvNK0wiDApbytx87B37+hvK0gvsuw1CC1yLDNwMy45ywgRS1NYWlsIMHWvNIgv9y/oSwgtNm4
+pSAgwaS6uLTCILCusO0gwNbB9iC+yr3AtM+02S4gursguN7Az8C6IMGkurjF673FuMEgwMy/68PL
+wfggudcgwaS6uLq4yKMgILXuv6EgsPzH0SC5/bf8IMGmIDUwwba/oSDAx7DFx9FbsaSw7V0guN7A
+z8DUtM+02Q0KDQogDQq89r3FsMW6zrimIL/4x8+9w7jpIL+pseK4piDFrLivx8+x4ri4IMfPvLy/
+5H4gDQogDQogDQogIFvA2rrxw+LGx8DHICDA2ry8x9Egs7u/610NCiAgwPrA27HHu+fH1w0KICDA
++sDawMcgILvnu/Ow+iDDtsfQwLsgtOO+xiDHsMCnwNa0wiDDpcC4t84guLi16b7uICC15biztM+0
+2S4gIMPixse17rfPsPogILG5waYgua7H5bn4yKMoSVNCTim4piC6zr+px9ggteW4s7TPtNkuICAN
+CiCxubizwd++07W1vK2w/L+hICCzs7q7x8+/qSC+8MGmtvO1tSC/rbb3x8+9xyC89iDA1r3AtM+0
+2S4gIA0KIMD6wNuxx8C7ICDDtsD6x8+w1CC6uMDlx9W0z7TZLiAgICDBpsDbuea5/Q0KICCz67fD
+x9EgIL/uv7XAuLfOIMGmwNu68bimIMPWtOvH0SDA/b7gx8+/qSDA+rfFx9EgILrxv+vAzCC17LTP
+tNkuIA0KIMO2wPrHz7DUICDA+sDawMcgwMe1tbimIDEwMCUgud2/tcfVtM+02S4NCiC6u7musPog
+IMelwfbAxyCxs8Gkwfa4piDD1rzSx9Egtc4gufggwMy78yC6uLO7teW4s7TPtNkuICANCiDA+sDa
+wMcgIE9Lu+fAzsDMILOqvt+4uCDBpsDbv6Egtem+7rCptM+02S4gDQogsPiw3cD7wM4gILDmv7XA
+uLfOILDFt6G8rcGhwLsgx8+357W1ILr8wfbB9iC+yrDtICC55rmux8+/qSC1tbytwMcgwfi/rbvz
+xcK4piC89r3Dt84gwaGwy8fPsO0sICC09b/tIMHBwLogwNq4rr+hIMH4v621ySC89iDA1rW1t88g
+w9a8scC7ICC02cfVtM+02S4gICAgICDAzry8ICCw6L7guea9xA0KICDDs8C9ICDBpsDbuvHAxyDA
+z7rOuKYgwPrA2rChILrOtOPHz7TCILDNIL/cv6EgIMDPud0gw+LGx7mwsPogtb/Az8fRILDovuAg
+w9+wobrxv+sgIMD8x/QgvvjAuLjnIMOlwMwgwN8gxsi4rrjpIMD6wNq/obDUICDAzry8uKYgwfa8
+08D7wLi3ziDB9rHeIDEwJSAgvLHAzry8ICAgDQrA2ry8x9EgILvnx9fAuiC1tbytw+LGxyDA28C6
+vaO/obytICC77Mbsuri9w7HiILnZtvi0z7TZLg0KDQogICAgILW1vK3D4sbHIMDbwLq9oyANCiAN
+Cg0KIA0K
 
-Should this be sent to the lvm-bugs group? Not sure
-about rules in this mailing list, this was my first
-post.
+------=_NextPart_000_0007_0A7E4FE0.35356880
+Content-Type: text/html;
+	charset="ks_c_5601-1987"
+Content-Transfer-Encoding: base64
 
-_Thanks
+DQo8aHRtbD4NCjxoZWFkPg0KPHRpdGxlPr/4sO3B37CzLCDA2rrxw+LGxywgwNq8rcD8LCCx4si5
+w+LGxyC17iDD4sbHvK268b26IMD8ua7IuLvnPC90aXRsZT4NCjxtZXRhIG5hbWU9ImdlbmVyYXRv
+ciIgY29udGVudD0iv/iw7cHfsLMsIMDauvHD4sbHLCDA2rytwPwsILHiyLnD4sbHILXuIMPixse8
+rbrxvbogwPy5rsi4u+ciPg0KPC9oZWFkPg0KDQo8Ym9keSBiZ2NvbG9yPSJ3aGl0ZSIgdGV4dD0i
+YmxhY2siIGxpbms9ImJsdWUiIHZsaW5rPSJ3aGl0ZSIgYWxpbms9InJlZCIgbGVmdG1hcmdpbj0i
+MTAiIG1hcmdpbndpZHRoPSIxMCIgdG9wbWFyZ2luPSIxMCIgbWFyZ2luaGVpZ2h0PSIxMCI+DQoN
+Cjx0YWJsZSBib3JkZXI9IjAiIHdpZHRoPSI2MDAiPg0KICAgIDx0cj4NCiAgICAgICAgPHRkIHdp
+ZHRoPSIxMDAlIiBoZWlnaHQ9IjIyIiBiZ2NvbG9yPSIjMDA5NUEwIj48cCBhbGlnbj0iY2VudGVy
+Ij48Zm9udA0KICAgICAgICAgICAgIHNpemU9IjIiIGNvbG9yPSJ3aGl0ZSI+PGI+wNq68cPixscg
+vsizuyi9w8H9LLz2x8osvNK8syyw5sGmLLDmv7Usw7O8vCyx4sW4KTwvYj48L2ZvbnQ+PC90ZD4N
+CiAgICA8L3RyPg0KICAgIDx0cj4NCiAgICAgICAgPHRkIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjI1
+MyIgYmdjb2xvcj0id2hpdGUiPiAgICAgICAgICAgIA0KICAgICAgICAgICAgPHAgc3R5bGU9Imxp
+bmUtaGVpZ2h0OjEyMCU7IG1hcmdpbi10b3A6MDsgbWFyZ2luLXJpZ2h0OjA7IG1hcmdpbi1ib3R0
+b206MDsgbWFyZ2luLWxlZnQ6MzsiPjxzcGFuIHN0eWxlPSJmb250LXNpemU6OXB0OyI+PGJyPmxp
+bnV4LUxWTbTUsrIgDQogICAgICAgICAgICDH4Lq5wMwgx9SyssfPvcOx4rimILr3tM+02S48L3Nw
+YW4+PEZPTlQgc3R5bGU9IkZPTlQtU0laRTogOXB0Ij48c3BhbiBzdHlsZT0iZm9udC1zaXplOjlw
+dDsiPjxicj48L3NwYW4+PC9GT05UPjxzcGFuIHN0eWxlPSJmb250LXNpemU6OXB0OyI+sc3Hz8DH
+IA0KICAgICAgICAgICAguN7Az8HWvNK0wiDApbytx87B37+hvK0gvsuw1CC1yLDNwMy45ywgRS1N
+YWlsIMHWvNIgv9y/oSwgtNm4pSANCiAgICAgICAgICAgIMGkuri0wiCwrrDtIMDWwfYgvsq9wLTP
+tNkuILq7ILjewM/AuiDBpLq4xeu9xbjBIMDMv+vDy8H4ILnXIMGkuri6uMijIA0KICAgICAgICAg
+ICAgte6/oSCw/MfRILn9t/wgwaYgNTDBtr+hIMDHsMXH0VuxpLDtXSC43sDPwNS0z7TZPGJyPjwv
+c3Bhbj48L3A+DQogICAgICAgICAgICA8cCBzdHlsZT0ibGluZS1oZWlnaHQ6MTIwJTsgbWFyZ2lu
+LXRvcDowOyBtYXJnaW4tcmlnaHQ6MDsgbWFyZ2luLWJvdHRvbTowOyBtYXJnaW4tbGVmdDozOyI+
+PHNwYW4gc3R5bGU9ImZvbnQtc2l6ZTo5cHQ7Ij48Zm9udCBjb2xvcj0icmVkIj48YnI+PC9mb250
+Pjwvc3Bhbj48Rk9OVCBmYWNlPbG8uLLDvD48U1BBTiBzdHlsZT0iRk9OVC1TSVpFOiA5cHQiPrz2
+vcWwxbrOuKYgv/jHz73DuOkgDQo8YSBocmVmPSJodHRwOi8vd3d3LmNydXNhZGUuY28ua3IvcmVq
+ZWN0L3JlamVjdC5waHA/aWQ9MTAyMSZtb2RlPXdyaXRlJm1haWw9bGludXgtTFZNQHNpc3RpbmEu
+Y29tIj48U1BBTiBzdHlsZT0iRk9OVC1TSVpFOiA5cHQiPjxGT05UIGZhY2U9IrG8uLLDvCIgY29s
+b3I9InJlZCI+v6mx4jwvRk9OVD48L1NQQU4+PC9BPjxGT05UIGZhY2U9sby4ssO8PjxTUEFOIHN0
+eWxlPSJGT05ULVNJWkU6IDlwdCI+uKYgxay4r8fPseK4uCANCsfPvLy/5H48L1NQQU4+PC9GT05U
+PjxzcGFuIHN0eWxlPSJmb250LXNpemU6OXB0OyI+PGZvbnQgY29sb3I9InJlZCI+Jm5ic3A7PC9m
+b250Pjwvc3Bhbj48L3A+DQogICAgICAgICAgICA8cCBzdHlsZT0ibGluZS1oZWlnaHQ6MTIwJTsg
+bWFyZ2luLXRvcDowOyBtYXJnaW4tcmlnaHQ6MDsgbWFyZ2luLWJvdHRvbTowOyBtYXJnaW4tbGVm
+dDozOyI+IDxzcGFuIHN0eWxlPSJmb250LXNpemU6OXB0OyI+PGZvbnQgY29sb3I9InJlZCI+PGJy
+PiZuYnNwOzwvZm9udD48L3NwYW4+PC9wPg0KICAgICAgICAgICAgPHAgc3R5bGU9ImxpbmUtaGVp
+Z2h0OjEyMCU7IG1hcmdpbi10b3A6MDsgbWFyZ2luLXJpZ2h0OjA7IG1hcmdpbi1ib3R0b206MDsg
+bWFyZ2luLWxlZnQ6MzsiPjxzcGFuIHN0eWxlPSJmb250LXNpemU6OXB0OyI+Jm5ic3A7W8DauvHD
+4sbHwMcgDQogICAgICAgICAgICDA2ry8x9Egs7u/6108L3NwYW4+PC9wPg0KPFRBQkxFIGNlbGxT
+cGFjaW5nPTAgY2VsbFBhZGRpbmc9MSB3aWR0aD02MDAgYm9yZGVyPTAgc3R5bGU9ImxpbmUtaGVp
+Z2h0OjEyMCU7IG1hcmdpbi10b3A6MDsgbWFyZ2luLXJpZ2h0OjA7IG1hcmdpbi1ib3R0b206MDsg
+bWFyZ2luLWxlZnQ6MzsiPg0KPFRCT0RZPg0KPFRSPg0KPFREIGJnQ29sb3I9IzAwMDAwMCBoZWln
+aHQ9IjM0OCI+DQo8VEFCTEUgY2VsbFNwYWNpbmc9MSBjZWxsUGFkZGluZz0zIHdpZHRoPSIxMDAl
+IiBib3JkZXI9MCBzdHlsZT0ibGluZS1oZWlnaHQ6MTIwJTsgbWFyZ2luLXRvcDowOyBtYXJnaW4t
+cmlnaHQ6MDsgbWFyZ2luLWJvdHRvbTowOyBtYXJnaW4tbGVmdDozOyI+DQogICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgPHRyPg0KPFREIGJnQ29sb3I9I2U1ZDU4MiB3aWR0aD0iMTA5IiBoZWln
+aHQ9IjEwNCI+DQogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA8cCBzdHlsZT0i
+dGV4dC1pbmRlbnQ6MHB0OyBsaW5lLWhlaWdodDoxMjAlOyBtYXJnaW4tdG9wOjA7IG1hcmdpbi1y
+aWdodDowOyBtYXJnaW4tYm90dG9tOjA7IG1hcmdpbi1sZWZ0OjM7Ij48c3BhbiBzdHlsZT0iZm9u
+dC1zaXplOjlwdDsiPsD6wNuxx7vnx9c8L3NwYW4+PC9wPg0KPC9URD4NCjxURCBiZ0NvbG9yPSNm
+ZmZmZmYgd2lkdGg9IjQ3NCIgaGVpZ2h0PSIxMDQiPg0KICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgPHVsPg0KICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+IDxsaSBzdHlsZT0ibGluZS1oZWlnaHQ6MTIwJTsgbWFyZ2luLXRvcDowOyBtYXJnaW4tcmlnaHQ6
+MDsgbWFyZ2luLWJvdHRvbTowOyBtYXJnaW4tbGVmdDozOyI+PHNwYW4gc3R5bGU9ImZvbnQtc2l6
+ZTo5cHQ7Ij7A+sDawMcgDQogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+u+e787D6IMO2x9DAuyC0477GIMewwKfA1rTCIMOlwLi3ziC4uLXpvu4gDQogICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgteW4s7TPtNkuIDwvc3Bhbj48L2xpPg0KICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDxsaSBzdHlsZT0ibGluZS1oZWlnaHQ6
+MTIwJTsgbWFyZ2luLXRvcDowOyBtYXJnaW4tcmlnaHQ6MDsgbWFyZ2luLWJvdHRvbTowOyBtYXJn
+aW4tbGVmdDozOyI+PHNwYW4gc3R5bGU9ImZvbnQtc2l6ZTo5cHQ7Ij7D4sbHte63z7D6IA0KICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgILG5waYgua7H5bn4yKMoSVNCTim4
+piC6zr+px9ggteW4s7TPtNkuIA0KICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgIDxicj48L3NwYW4+PC9saT4NCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICA8bGkgc3R5bGU9ImxpbmUtaGVpZ2h0OjEyMCU7IG1hcmdpbi10b3A6MDsgbWFyZ2luLXJp
+Z2h0OjA7IG1hcmdpbi1ib3R0b206MDsgbWFyZ2luLWxlZnQ6MzsiPjxzcGFuIHN0eWxlPSJmb250
+LXNpemU6OXB0OyI+sbm4s8HfvtO1tbytsPy/oSANCiAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICCzs7q7x8+/qSC+8MGmtvO1tSC/rbb3x8+9xyC89iDA1r3AtM+02S4gDQog
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgPGJyPjwvc3Bhbj48L2xpPg0K
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDxsaSBzdHlsZT0ibGluZS1o
+ZWlnaHQ6MTIwJTsgbWFyZ2luLXRvcDowOyBtYXJnaW4tcmlnaHQ6MDsgbWFyZ2luLWJvdHRvbTow
+OyBtYXJnaW4tbGVmdDozOyI+PHNwYW4gc3R5bGU9ImZvbnQtc2l6ZTo5cHQ7Ij7A+sDbscfAuyAN
+CiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICDDtsD6x8+w1CC6uMDlx9W0
+z7TZLjwvc3Bhbj48L2xpPg0KICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgPC91
+bD4NCjwvVEQ+DQogICAgICAgICAgICAgICAgICAgICAgICAgICAgPC90cj4NCiAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICA8dHI+DQo8VEQgYmdDb2xvcj0jZTVkNTgyIHdpZHRoPSIxMDkiIGhl
+aWdodD0iMTQ4Ij4NCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDxwIHN0eWxl
+PSJ0ZXh0LWluZGVudDowcHQ7IGxpbmUtaGVpZ2h0OjEyMCU7IG1hcmdpbi10b3A6MDsgbWFyZ2lu
+LXJpZ2h0OjA7IG1hcmdpbi1ib3R0b206MDsgbWFyZ2luLWxlZnQ6MzsiPjxzcGFuIHN0eWxlPSJm
+b250LXNpemU6OXB0OyI+wabA27nmuf08L3NwYW4+PC9wPg0KPC9URD4NCjxURCBiZ0NvbG9yPSNm
+ZmZmZmYgd2lkdGg9IjQ3NCIgaGVpZ2h0PSIxNDgiPg0KICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgPHVsPg0KICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+IDxsaSBzdHlsZT0ibGluZS1oZWlnaHQ6MTIwJTsgbWFyZ2luLXRvcDowOyBtYXJnaW4tcmlnaHQ6
+MDsgbWFyZ2luLWJvdHRvbTowOyBtYXJnaW4tbGVmdDozOyI+PHNwYW4gc3R5bGU9ImZvbnQtc2l6
+ZTo5cHQ7Ij6z67fDx9EgDQogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+v+6/tcC4t84gwabA27rxuKYgw9a068fRIMD9vuDHz7+pIMD6t8XH0SANCiAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICC68b/rwMwgtey0z7TZLiA8YnI+PC9zcGFuPjwvbGk+
+DQogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgPGxpIHN0eWxlPSJsaW5l
+LWhlaWdodDoxMjAlOyBtYXJnaW4tdG9wOjA7IG1hcmdpbi1yaWdodDowOyBtYXJnaW4tYm90dG9t
+OjA7IG1hcmdpbi1sZWZ0OjM7Ij48c3BhbiBzdHlsZT0iZm9udC1zaXplOjlwdDsiPsO2wPrHz7DU
+IA0KICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIMD6wNrAxyDAx7W1uKYg
+MTAwJSC53b+1x9W0z7TZLjxicj48L3NwYW4+PC9saT4NCiAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICA8bGkgc3R5bGU9ImxpbmUtaGVpZ2h0OjEyMCU7IG1hcmdpbi10b3A6
+MDsgbWFyZ2luLXJpZ2h0OjA7IG1hcmdpbi1ib3R0b206MDsgbWFyZ2luLWxlZnQ6MzsiPjxzcGFu
+IHN0eWxlPSJmb250LXNpemU6OXB0OyI+uru5rrD6IA0KICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgIMelwfbAxyCxs8Gkwfa4piDD1rzSx9Egtc4gufggwMy78yC6uLO7teW4
+s7TPtNkuIA0KICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDxicj48L3Nw
+YW4+PC9saT4NCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA8bGkgc3R5
+bGU9ImxpbmUtaGVpZ2h0OjEyMCU7IG1hcmdpbi10b3A6MDsgbWFyZ2luLXJpZ2h0OjA7IG1hcmdp
+bi1ib3R0b206MDsgbWFyZ2luLWxlZnQ6MzsiPjxzcGFuIHN0eWxlPSJmb250LXNpemU6OXB0OyI+
+wPrA2sDHIA0KICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIE9Lu+fAzsDM
+ILOqvt+4uCDBpsDbv6Egtem+7rCptM+02S4gPGJyPjwvc3Bhbj48L2xpPg0KICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgIDxsaSBzdHlsZT0ibGluZS1oZWlnaHQ6MTIwJTsg
+bWFyZ2luLXRvcDowOyBtYXJnaW4tcmlnaHQ6MDsgbWFyZ2luLWJvdHRvbTowOyBtYXJnaW4tbGVm
+dDozOyI+PHNwYW4gc3R5bGU9ImZvbnQtc2l6ZTo5cHQ7Ij6w+LDdwPvAziANCiAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICCw5r+1wLi3ziCwxbehvK3BocC7IMfPt+e1tSC6
+/MH2wfYgvsqw7SANCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICC55rmu
+x8+/qSC1tbytwMcgwfi/rbvzxcK4piC89r3Dt84gwaGwy8fPsO0sIA0KICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgILT1v+0gwcHAuiDA2riuv6Egwfi/rbXJILz2IMDWtbW3
+zyDD1ryxwLsgDQogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgtNnH1bTP
+tNkuIDwvc3Bhbj48L2xpPg0KICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgPC91
+bD4NCjwvVEQ+DQogICAgICAgICAgICAgICAgICAgICAgICAgICAgPC90cj4NCiAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICA8dHI+DQo8VEQgYmdDb2xvcj0jZTVkNTgyIHdpZHRoPSIxMDkiIGhl
+aWdodD0iOTUiPg0KICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgPHAgc3R5bGU9
+ImxpbmUtaGVpZ2h0OjEyMCU7IG1hcmdpbi10b3A6MDsgbWFyZ2luLXJpZ2h0OjA7IG1hcmdpbi1i
+b3R0b206MDsgbWFyZ2luLWxlZnQ6MzsiPjxzcGFuIHN0eWxlPSJmb250LXNpemU6OXB0OyI+Jm5i
+c3A7wM68vCANCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgILDovuC55r3EPC9z
+cGFuPjwvcD4NCjwvVEQ+DQo8VEQgYmdDb2xvcj0jZmZmZmZmIHdpZHRoPSI0NzQiIGhlaWdodD0i
+OTUiPg0KICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgPHVsPg0KICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDxsaSBzdHlsZT0ibGluZS1oZWlnaHQ6MTIw
+JTsgbWFyZ2luLXRvcDowOyBtYXJnaW4tcmlnaHQ6MDsgbWFyZ2luLWJvdHRvbTowOyBtYXJnaW4t
+bGVmdDozOyI+PHNwYW4gc3R5bGU9ImZvbnQtc2l6ZTo5cHQ7Ij48Zm9udCBjb2xvcj0icmVkIj7D
+s8C9IA0KICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIMGmwNu68cDHIMDP
+us64piDA+sDasKEgus6048fPtMIgsM0gv9y/oSANCiAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICDAz7ndIMPixse5sLD6ILW/wM/H0SCw6L7gPC9mb250Pjwvc3Bhbj48L2xp
+Pg0KICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDxsaSBzdHlsZT0ibGlu
+ZS1oZWlnaHQ6MTIwJTsgbWFyZ2luLXRvcDowOyBtYXJnaW4tcmlnaHQ6MDsgbWFyZ2luLWJvdHRv
+bTowOyBtYXJnaW4tbGVmdDozOyI+PHNwYW4gc3R5bGU9ImZvbnQtc2l6ZTo5cHQ7Ij7D37ChuvG/
+6yANCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICDA/Mf0IL74wLi45yDD
+pcDMIMDfIMbIuK646SDA+sDav6Gw1CANCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICDAzry8uKYgwfa808D7wLi3ziDB9rHePC9zcGFuPjwvbGk+DQogICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgPGxpIHN0eWxlPSJsaW5lLWhlaWdodDoxMjAlOyBt
+YXJnaW4tdG9wOjA7IG1hcmdpbi1yaWdodDowOyBtYXJnaW4tYm90dG9tOjA7IG1hcmdpbi1sZWZ0
+OjM7Ij48c3BhbiBzdHlsZT0iZm9udC1zaXplOjlwdDsiPjEwJSANCiAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICC8scDOvLw8L3NwYW4+PC9saT4NCiAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgIDwvdWw+DQo8L1REPg0KICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgIDwvdHI+DQo8L1RCT0RZPjwvVEFCTEU+DQo8L1REPjwvVFI+PC9UQk9EWT48L1RBQkxF
+Pg0KICAgICAgICAgICAgPHAgc3R5bGU9ImxpbmUtaGVpZ2h0OjEyMCU7IG1hcmdpbi10b3A6MDsg
+bWFyZ2luLXJpZ2h0OjA7IG1hcmdpbi1ib3R0b206MDsgbWFyZ2luLWxlZnQ6MzsiPjxGT05UIHN0
+eWxlPSJGT05ULVNJWkU6IDlwdCI+PEZPTlQgDQpzdHlsZT0iRk9OVC1TSVpFOiA5cHQiPjxzcGFu
+IHN0eWxlPSJmb250LXNpemU6OXB0OyI+PEJSPjwvc3Bhbj48L0ZPTlQ+PC9GT05UPjxzcGFuIHN0
+eWxlPSJmb250LXNpemU6OXB0OyI+PGZvbnQgY29sb3I9ImJsYWNrIj7A2ry8x9EgDQogICAgICAg
+ICAgICC758fXwLogPC9mb250PjxhIGhyZWY9Imh0dHA6Ly9qYWJpLmNvLmtyIj48Zm9udCBjb2xv
+cj0iYmxhY2siPrW1vK3D4sbHIMDbwLq9ozwvZm9udD48L2E+PGZvbnQgY29sb3I9ImJsYWNrIj6/
+obytIA0KICAgICAgICAgICAgu+zG7Lq4vcOx4iC52bb4tM+02S48L2ZvbnQ+PGJyPjxicj4mbmJz
+cDs8L3NwYW4+Jm5ic3A7PC90ZD4NCiAgICA8L3RyPg0KICAgIDx0cj4NCiAgICAgICAgPHRkIHdp
+ZHRoPSIxMDAlIiBoZWlnaHQ9IjE1IiBiZ2NvbG9yPSIjMDA5NUEwIj48cCBhbGlnbj0iY2VudGVy
+IiBzdHlsZT0ibGluZS1oZWlnaHQ6MTAwJTsgbWFyZ2luLXRvcDowOyBtYXJnaW4tYm90dG9tOjA7
+Ij48YSBocmVmPSJodHRwOi8vamFiaS5jby5rciI+PGZvbnQNCiAgICAgICAgICAgICBzaXplPSIy
+IiBjb2xvcj0id2hpdGUiPrW1vK3D4sbHIMDbwLq9ozwvZm9udD48L2E+PC90ZD4NCiAgICA8L3Ry
+Pg0KPC90YWJsZT4NCjxwPiZuYnNwOzwvcD4NCjxwPiZuYnNwOzwvcD4NCjwvYm9keT4NCg0KPC9o
+dG1sPg==
 
-Richard Mollel
-
-
-
-
---- Tru64 User <tru64user@yahoo.com> wrote:
-> Firsttimer, trying to take advantage of LVM on
-> Linux.
-> I have used it on AIX, so i have the concept.
-> 
-> I have a RAID Array (1.1Tb) SCSI-ATA drive (sdb)
-> that
-> i was trying to create a volume out of (pvcreate).
-> 
-> However, it gives me an ERROR "Success" message.
-> I initially had it formatted with with reiserfs, but
-> then wiped it clean, and erased partition table as
-> described in howtos (dd /dev/zero....). Debug also
-> posted below.
-> Any leads to get this working?
-> Exact error below. Thnks in advance.
-> 
-> ******************
-> chinook@/home/moll# pvcreate /dev/sdb
-> Password:
-> pvcreate -- ERROR "Success" getting size of physical
-> volume "/dev/sdb"
-> 
-> 
-> pvcreate [-d|--debug] [-f[f]|--force [--force]]
-> [-h|--help] [-y|--yes]
->         [-v|--verbose] [--version] PhysicalVolume
-> [PhysicalVolume...]
-> 
-> chinook@/home/moll$ 
-> 
-> **********BEGIN_Debug*****************
-> 
-> Script started on Wed Dec 11 15:17:09 2002
-> cerebus@/home/mollel$ s pvcreate --debug /dev/sdb
-> <1> lvm_get_iop_version -- CALLED
-> <22> lvm_check_special -- CALLED
-> <22> lvm_check_special -- LEAVING
-> <1> lvm_get_iop_version -- AFTER ioctl ret: 0
-> <1> lvm_get_iop_version -- LEAVING with ret: 10
-> <1> lvm_lock -- CALLED
-> <22> lvm_check_special -- CALLED
-> <22> lvm_check_special -- LEAVING
-> <1> lvm_lock -- LEAVING with ret: 0
-> <1> pv_check_name -- CALLED with "/dev/sdb"
-> <22> lvm_check_chars -- CALLED with name: "/dev/sdb"
-> <22> lvm_check_chars -- LEAVING with ret: 0
-> <22> lvm_check_dev -- CALLED
-> <333> lvm_check_partitioned_dev -- CALLED
-> <4444> lvm_get_device_type called
-> <4444> lvm_get_device_type leaving with 1
-> <333> lvm_check_partitioned_dev -- LEAVING with ret:
-> TRUE
-> <22> lvm_check_dev -- LEAVING with ret: 1
-> <1> pv_check_name -- LEAVING with ret: 0
-> <1> pv_get_size -- CALLED with /dev/sdb and
-> 0xbfffdfa0
-> <22> lvm_dir_cache -- CALLED
-> <333> lvm_add_dir_cache -- CALLED with /dev/sda
-> <4444> lvm_check_dev -- CALLED
-> <55555> lvm_check_partitioned_dev -- CALLED
-> <666666> lvm_get_device_type called
-> <666666> lvm_get_device_type leaving with 1
-> <55555> lvm_check_partitioned_dev -- LEAVING with
-> ret:
-> TRUE
-> <4444> lvm_check_dev -- LEAVING with ret: 1
-> <333> lvm_add_dir_cache -- LEAVING with ret: ADDED
-> <333> lvm_add_dir_cache -- CALLED with /dev/sda1
-> <4444> lvm_check_dev -- CALLED
-> <55555> lvm_check_partitioned_dev -- CALLED
-> <666666> lvm_get_device_type called
-> <666666> lvm_get_device_type leaving with 1
-> <55555> lvm_check_partitioned_dev -- LEAVING with
-> ret:
-> TRUE
-> <4444> lvm_check_dev -- LEAVING with ret: 1
-> <333> lvm_add_dir_cache -- LEAVING with ret: ADDED
-> <333> lvm_add_dir_cache -- CALLED with /dev/sdb
-> <4444> lvm_check_dev -- CALLED
-> <55555> lvm_check_partitioned_dev -- CALLED
-> <666666> lvm_get_device_type called
-> <666666> lvm_get_device_type leaving with 1
-> <55555> lvm_check_partitioned_dev -- LEAVING with
-> ret:
-> TRUE
-> <4444> lvm_check_dev -- LEAVING with ret: 1
-> <333> lvm_add_dir_cache -- LEAVING with ret: ADDED
-> <333> lvm_add_dir_cache -- CALLED with /dev/hda
-> <4444> lvm_check_dev -- CALLED
-> <55555> lvm_check_partitioned_dev -- CALLED
-> <666666> lvm_get_device_type called
-> <666666> lvm_get_device_type leaving with 0
-> <55555> lvm_check_partitioned_dev -- LEAVING with
-> ret:
-> TRUE
-> <4444> lvm_check_dev -- LEAVING with ret: 1
-> <333> lvm_add_dir_cache -- LEAVING with ret: ADDED
-> <333> lvm_add_dir_cache -- CALLED with /dev/hda1
-> <4444> lvm_check_dev -- CALLED
-> <55555> lvm_check_partitioned_dev -- CALLED
-> <666666> lvm_get_device_type called
-> <666666> lvm_get_device_type leaving with 0
-> <55555> lvm_check_partitioned_dev -- LEAVING with
-> ret:
-> TRUE
-> <4444> lvm_check_dev -- LEAVING with ret: 1
-> <333> lvm_add_dir_cache -- LEAVING with ret: ADDED
-> <333> lvm_add_dir_cache -- CALLED with /dev/hda2
-> <4444> lvm_check_dev -- CALLED
-> <55555> lvm_check_partitioned_dev -- CALLED
-> <666666> lvm_get_device_type called
-> <666666> lvm_get_device_type leaving with 0
-> <55555> lvm_check_partitioned_dev -- LEAVING with
-> ret:
-> TRUE
-> <4444> lvm_check_dev -- LEAVING with ret: 1
-> <333> lvm_add_dir_cache -- LEAVING with ret: ADDED
-> <333> lvm_add_dir_cache -- CALLED with /dev/hda5
-> <4444> lvm_check_dev -- CALLED
-> <55555> lvm_check_partitioned_dev -- CALLED
-> <666666> lvm_get_device_type called
-> <666666> lvm_get_device_type leaving with 0
-> <55555> lvm_check_partitioned_dev -- LEAVING with
-> ret:
-> TRUE
-> <4444> lvm_check_dev -- LEAVING with ret: 1
-> <333> lvm_add_dir_cache -- LEAVING with ret: ADDED
-> <333> lvm_add_dir_cache -- CALLED with /dev/hda6
-> <4444> lvm_check_dev -- CALLED
-> <55555> lvm_check_partitioned_dev -- CALLED
-> <666666> lvm_get_device_type called
-> <666666> lvm_get_device_type leaving with 0
-> <55555> lvm_check_partitioned_dev -- LEAVING with
-> ret:
-> TRUE
-> <4444> lvm_check_dev -- LEAVING with ret: 1
-> <333> lvm_add_dir_cache -- LEAVING with ret: ADDED
-> <333> lvm_add_dir_cache -- CALLED with /dev/hda7
-> <4444> lvm_check_dev -- CALLED
-> <55555> lvm_check_partitioned_dev -- CALLED
-> <666666> lvm_get_device_type called
-> <666666> lvm_get_device_type leaving with 0
-> <55555> lvm_check_partitioned_dev -- LEAVING with
-> ret:
-> TRUE
-> <4444> lvm_check_dev -- LEAVING with ret: 1
-> <333> lvm_add_dir_cache -- LEAVING with ret: ADDED
-> <333> lvm_add_dir_cache -- CALLED with /dev/hda8
-> <4444> lvm_check_dev -- CALLED
-> <55555> lvm_check_partitioned_dev -- CALLED
-> <666666> lvm_get_device_type called
-> <666666> lvm_get_device_type leaving with 0
-> <55555> lvm_check_partitioned_dev -- LEAVING with
-> ret:
-> TRUE
-> <4444> lvm_check_dev -- LEAVING with ret: 1
-> <333> lvm_add_dir_cache -- LEAVING with ret: ADDED
-> <333> lvm_add_dir_cache -- CALLED with /dev/hda9
-> <4444> lvm_check_dev -- CALLED
-> <55555> lvm_check_partitioned_dev -- CALLED
-> <666666> lvm_get_device_type called
-> <666666> lvm_get_device_type leaving with 0
-> <55555> lvm_check_partitioned_dev -- LEAVING with
-> ret:
-> TRUE
-> <4444> lvm_check_dev -- LEAVING with ret: 1
-> <333> lvm_add_dir_cache -- LEAVING with ret: ADDED
-> <333> lvm_add_dir_cache -- CALLED with /dev/hda9
-> <4444> lvm_check_dev -- CALLED
-> <55555> lvm_check_partitioned_dev -- CALLED
-> <666666> lvm_get_device_type called
-> <666666> lvm_get_device_type leaving with 0
-> <55555> lvm_check_partitioned_dev -- LEAVING with
-> ret:
-> TRUE
-> <4444> lvm_check_dev -- LEAVING with ret: 1
-> <333> lvm_add_dir_cache -- LEAVING with ret: NOT
-> ADDED
-> <22> lvm_dir_cache -- LEAVING with ret: 11
-> <22> lvm_dir_cache_find -- CALLED with /dev/sdb
-> <333> pv_check_name -- CALLED with "/dev/sdb"
-> <4444> lvm_check_chars -- CALLED with name:
-> "/dev/sdb"
-> <4444> lvm_check_chars -- LEAVING with ret: 0
-> <4444> lvm_check_dev -- CALLED
-> <55555> lvm_check_partitioned_dev -- CALLED
-> <666666> lvm_get_device_type called
-> <666666> lvm_get_device_type leaving with 1
-> <55555> lvm_check_partitioned_dev -- LEAVING with
-> ret:
-> TRUE
-> <4444> lvm_check_dev -- LEAVING with ret: 1
-> <333> pv_check_name -- LEAVING with ret: 0
-> <333> lvm_dir_cache -- CALLED
-> <333> lvm_dir_cache -- LEAVING with ret: 11
-> <22> lvm_dir_cache_find -- LEAVING with entry: 2
-> <22> lvm_check_partitioned_dev -- CALLED
-> <333> lvm_get_device_type called
-> <333> lvm_get_device_type leaving with 1
-> <22> lvm_check_partitioned_dev -- LEAVING with ret:
-> TRUE
-> 
-=== message truncated ===
-
-
-=====
-
-
-__________________________________________________
-Do you Yahoo!?
-Yahoo! Mail Plus - Powerful. Affordable. Sign up now.
-http://mailplus.yahoo.com
+------=_NextPart_000_0007_0A7E4FE0.35356880--
