@@ -1,9 +1,10 @@
-Subject: Re: [linux-lvm] Anyone brave tried lvm-1.0.3 & 2.4.18/2.4.19pre1 yet?
-References: <20020224203344.78e8ec8b.milanuk@yahoo.com>
-From: Urs Thuermann <urs@isnogud.escape.de>
-In-Reply-To: <20020224203344.78e8ec8b.milanuk@yahoo.com>; from Monte
-    Milanuk on Sun, 24 Feb 2002 20:33:44 -0800
-Message-Id: <m2r8n85rgz.fsf@isnogud.escape.de>
+From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
+Subject: Re: [linux-lvm] lvm 1.0.3 in 2.4
+Message-Id: <20020226140003.A14192@sistina.com>
+References: <20020226124611.D02F215411@oscar.casa.dyndns.org>
+MIME-Version: 1.0
+In-Reply-To: <20020226124611.D02F215411@oscar.casa.dyndns.org>;
+    from tomlins@cam.org on Tue, Feb 26, 2002 at 07:46:11AM -0500
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,21 +15,44 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Tue Feb 26 07:00:02 2002
+Date: Tue Feb 26 07:00:06 2002
 List-Id: <linux-lvm.redhat.com>
-MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Monte Milanuk <milanuk@yahoo.com> writes:
+On Tue, Feb 26, 2002 at 07:46:11AM -0500, Ed Tomlinson wrote:
+> Hi,
+> 
+> Are patches being sent to Marcelo (or Alan) to bring LVM in the 
+> mainline kernel up-to-date?  When the opening of 2.4.19pre this
+> is an ideal time to send the patches...
 
-> Well? Inquiring minds want to know!
+Will do.
 
-Linux-2.4.18 with lvm-1.0.2 (which is exactly the same as 1.0.3 in the
-kernel except for the version number) and lvm-1.0.3 user space tools.
+> 
+> Ed Tomlinson
+> 
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@sistina.com
+> http://lists.sistina.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
 
-Up and running since approx 7 hours.
+-- 
 
+Regards,
+Heinz    -- The LVM Guy --
 
-urs
+*** Software bugs are stupid.
+    Nevertheless it needs not so stupid people to solve them ***
+
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+Heinz Mauelshagen                                 Sistina Software Inc.
+Senior Consultant/Developer                       Am Sonnenhang 11
+                                                  56242 Marienrachdorf
+                                                  Germany
+Mauelshagen@Sistina.com                           +49 2626 141200
+                                                       FAX 924446
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
