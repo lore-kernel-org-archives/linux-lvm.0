@@ -1,9 +1,10 @@
-From: Friedrich Lobenstock <fl@fl.priv.at>
-Subject: Re: [linux-lvm] SuSe 7.3 snapshot / reiserfs /
-In-Reply-To: <23601.1010510215@joergli.cocolab.de>
-Message-ID: <Pine.LNX.4.33.0201081927510.31998-100000@www.scotty.co.at>
-MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+From: Andreas Dilger <adilger@turbolabs.com>
+Subject: Re: [linux-lvm] NEED HELP ON VGDA!!
+Message-ID: <20020108113147.G769@lynx.adilger.int>
+References: <20020105170323.M12868@lynx.no> <20020108174903.23381.qmail@web13003.mail.yahoo.com>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20020108174903.23381.qmail@web13003.mail.yahoo.com>; from pdkharche@yahoo.com on Tue, Jan 08, 2002 at 09:49:03AM -0800
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,23 +15,23 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Tue Jan  8 12:31:01 2002
+Date: Tue Jan  8 12:32:02 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="iso-8859-1"
-To: linux-lvm@sistina.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: Prashant Kharche <pdkharche@yahoo.com>
+Cc: linux-lvm@sistina.com
 
-On Tue, 8 Jan 2002 18:16, J=FCrgen Vollmer wrote:
+On Jan 08, 2002  09:49 -0800, Prashant Kharche wrote:
+>          Im working on the LVM.. I want to know the
+> VGDA structure.. and how it is stored on the PVs. If
+> anyone has the documentation of the VGDA please
+> forward it to me..
 
->
-> (may be a silly question) where do I find that kernel sources??
+include/linux/lvm.h
 
-IIRC ftp://ftp.suse.com/pub/people/mantel/next/
-You just need to get the kernel RPMS and apply
-eg.
-  rpm -Uvh k_deflt-2.4.16-22.i386.rpm
-  mk_initrd && lilo
-reboot and that's it.
-
---=20
-MfG / Regards
-Friedrich Lobenstock
+Cheers, Andreas
+--
+Andreas Dilger
+http://sourceforge.net/projects/ext2resize/
+http://www-mddsp.enel.ucalgary.ca/People/adilger/
