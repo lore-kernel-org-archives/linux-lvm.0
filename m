@@ -1,12 +1,11 @@
-From: Tracy R Reed <treed@ultraviolet.org>
-Subject: Re: [linux-lvm] pvcreate problem on new IDE disk
-Message-ID: <20030420212233.B18402@ultraviolet.org>
-References: <20030419192108.A18402@ultraviolet.org> <20030421000714.A30038@uk.sistina.com>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-md5;
-	protocol="application/pgp-signature"; boundary="IrhDeMKUP4DT/M7F"
-Content-Disposition: inline
-In-Reply-To: <20030421000714.A30038@uk.sistina.com>; from agk@uk.sistina.com on Mon, Apr 21, 2003 at 12:07:15AM +0100
+Message-ID: <3EA42C2E.3090807@mvista.com>
+From: Steven Dake <sdake@mvista.com>
+MIME-Version: 1.0
+Subject: Re: [linux-lvm] Question about VFS Locking patch, why is a change
+ needed?
+References: <3E9F4A2C.9090806@mvista.com> <1050930393.13309.9.camel@tiny.suse.com>
+In-Reply-To: <1050930393.13309.9.camel@tiny.suse.com>
+Content-Transfer-Encoding: 7bit
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,68 +16,69 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Tue Apr 22 07:12:01 2003
+Date: Tue Apr 22 07:12:04 2003
 List-Id: <linux-lvm.redhat.com>
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: linux-lvm@sistina.com
 
---IrhDeMKUP4DT/M7F
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Chris,
 
-On Mon, Apr 21, 2003 at 12:07:15AM +0100, Alasdair G Kergon spake thusly:
-> Two things to check first:
->   Make sure that /dev/hdd2 exists and that other programs can
-> write/read it;
+Thanks for the info !
 
-brw-rw----    1 root     disk      22,  66 Mar 14  2002 /dev/hdd2
+-steve
 
->   Run 'vgscan' and then try the pvcreate again.
-> [vgscan needs running after new devices are added]=20
+Chris Mason wrote:
 
-home:/# vgscan
-  Reading all physical volumes.  This may take a while...
-  Found volume group "system" using metadata type lvm1
-home:/# pvcreate /dev/hdd2
-  Failed to read existing physical volume '/dev/hdd2'
-  Physical volume "/dev/hdd2" successfully created
-
-It still says "failed to read" etc. but then says successfully created.
-Hmm...
-
-home:/# vgextend system /dev/hdd2
-  Volume group "system" successfully extended
-
-Ok, looks like it is working ok. Now another problem...
-
-home:/# pvmove
-  Command not implemented yet.
-
-Ugh...looks like LVM1 had it but LVM2 does not yet. Has this changed since
-my version?
-
-  LVM version:     1.95.10 (2002-05-31)
-
-Even if pvmove is still nonexistant I guess I can put the new disk in anoth=
-er
-VG, create LV's over there, and manually copy the data over.
-
-Thanks for the help!=20
-
---=20
-Tracy Reed      http://www.ultraviolet.org
-
---IrhDeMKUP4DT/M7F
-Content-Type: application/pgp-signature
-Content-Disposition: inline
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.0.1 (GNU/Linux)
-Comment: For info see http://www.gnupg.org
-
-iEYEARECAAYFAj6jcgkACgkQ9PIYKZYVAq2IhgCfVkIH5z52HJtOXJeIAs+zcwY/
-2P4AnA2rvRGsAgwALvZ/u0WQH9ZxWZzc
-=S8Xb
------END PGP SIGNATURE-----
-
---IrhDeMKUP4DT/M7F--
+>On Thu, 2003-04-17 at 20:43, Steven Dake wrote:
+>  
+>
+>>Folks,
+>>
+>>I was analyzing the VFS locking patch and I wanted to know if someone 
+>>could explain the purpose of a change in the reiserfs for me:
+>>
+>>The change is:
+>>Index: linus.21/fs/reiserfs/super.c
+>>--- linus.21/fs/reiserfs/super.c Fri, 11 Jan 2002 10:14:59 -0500 root 
+>>(linux/41_super.c 1.2.2.1.2.1.1.1 644)
+>>+++ linus.21(w)/fs/reiserfs/super.c Mon, 28 Jan 2002 13:50:56 -0500 root 
+>>(linux/41_super.c 1.2.2.1.2.1.1.1 644)
+>>@@ -66,7 +66,7 @@
+>>     reiserfs_prepare_for_journal(s, SB_BUFFER_WITH_SB(s), 1);
+>>     journal_mark_dirty(&th, s, SB_BUFFER_WITH_SB (s));
+>>     reiserfs_block_writes(&th) ;
+>>-    journal_end(&th, s, 1) ;
+>>+    journal_end_sync(&th, s, 1) ;
+>>   }
+>>   s->s_dirt = dirty;
+>>   unlock_kernel() ;
+>>
+>>I tried LVM with and without this change even under heavy load and LVM 
+>>can still create mountable snapshots of a reiser filesystem without the 
+>>change.  Why is it there?
+>>    
+>>
+>
+>journal_end will do an asynchronous commit, which means it won't wait
+>for the journal to actually finish writing to disk.  journal_end_sync
+>will wait until the commit is fully on disk.
+>
+>In most cases, the reiserfs_block_writes call is sufficient and the
+>journal_end_sync change isn't needed, but there are a few corner cases
+>depending on the number of log writers where journal_end_sync is
+>required.
+>
+>-chris
+>
+>
+>
+>_______________________________________________
+>linux-lvm mailing list
+>linux-lvm@sistina.com
+>http://lists.sistina.com/mailman/listinfo/linux-lvm
+>read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+>
+>
+>
+>  
+>
