@@ -1,12 +1,12 @@
-Return-Path: <bluca@comedia.it>
-Date: Tue, 30 Jan 2001 09:51:04 +0100
-From: Luca Berra <bluca@comedia.it>
-Subject: Re: [linux-lvm] [CVS LVM Mon Jan 29 16:18:57 EST 2001] Device /dev/hdc1 doesn'texist
-Message-ID: <20010130095104.D4740@colombina.comedia.it>
-References: <Pine.LNX.4.21.0101291625150.29156-100000@mordor.parrish.org.au> <20010129163432.J8567@srv.sistina.com> <002601c08a3a$20d57450$0a01a8c0@valhalla>
+Return-Path: <patrick@tykepenguin.cix.co.uk>
+Date: Tue, 30 Jan 2001 10:43:36 +0000
+From: Patrick Caulfield <caulfield@sistina.com>
+Subject: Re: [linux-lvm] Help recovering my volume groups
+Message-ID: <20010130104336.A488@tykepenguin.com>
+References: <20010129125826.E594@tykepenguin.com> <Pine.LNX.4.10.10101291021220.10901-100000@coco.comstar.net>
 Mime-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <002601c08a3a$20d57450$0a01a8c0@valhalla>; from dparrish@excido.com on Tue, Jan 30, 2001 at 08:26:22AM +1100
+In-Reply-To: <Pine.LNX.4.10.10101291021220.10901-100000@coco.comstar.net>; from gregm@comstar.net on Mon, Jan 29, 2001 at 10:45:09AM -0500
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -22,24 +22,17 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Tue, Jan 30, 2001 at 08:26:22AM +1100, David Parrish wrote:
-> I did patch the kernel (re Lewis), and the /dev entries are correct. However pvcreate *did* eventually work if I use 
+On Mon, Jan 29, 2001 at 10:45:09AM -0500, Gregory McLean wrote:
 > 
-> pvcreate /dev/ide/host0/bus1/target0/lun0/part1
+> To save the list bandwidth spammage:
+> 
+> http://tweetie.comstar.net/pvdump/
+> 
+> contains all the generated files so far (both the orginal 2) and the
+> requested ones.
 
-uhm devfs....
-yess this is expected, lvm tools read /proc/partitions to find which disks are available
-and /proc/partitions only contains looong device names with devfs.
+Hmmm, interesting. When you extended the volume did you do a vgextend too? (if
+so, which drive did you add?) or just an lvextend?
 
-use lvmdiskscan to have lvm idea of what you have.
 
-regards,
-L.
-
--- 
-Luca Berra -- bluca@comedia.it
-        Communication Media & Services S.r.l.
- /"\
- \ /     ASCII RIBBON CAMPAIGN
-  X        AGAINST HTML MAIL
- / \
+patrick
