@@ -1,9 +1,9 @@
-Message-ID: <001401c3214b$89789230$6c7745cb@codevel>
-From: "armani" <armani@codevel.com>
-References: <OF3FA18EC2.6DB9EC24-ONC1256D2F.00199A52@phoenixcontact.com> <1053696372.1216.92.camel@prvpcompq249.css.twable.com>
+From: grobe@gmx.de
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] Can't make an on-line snapshot with LVM !
+Message-ID: <8189.1053716777@www16.gmx.net>
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Subject: [linux-lvm] LVM on Mylex DAC 960 (Raid1)
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,37 +14,33 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Fri May 23 11:50:02 2003
+Date: Fri May 23 14:05:02 2003
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
 
-Dear Sir
+Hi!=20
+=20
+I know that this is a known problem, but I didn't find the=20
+solution so far, so I have to ask here now...=20
+=20
+I have some machines with Mylex-controllers that are to=20
+be used with RAID1s. As the controller supports only=20
+6 partitions (and fo other reasons, too) I wanted to use=20
+LVM on this. I have created a primary /boot, a /swap and=20
+a logical partition in an extended one that became type "LVM".=20
+I am doing all this in SuSE 8.1's installation routine (Yast).=20
+=20
+I have choosed a VG, put the PV into it, and created LVs for=20
+/, /usr, /var, /tmp, /home, however, when Yast is going to=20
+execute the steps choosen before, I get a failure by pvcreate=20
+(can't get device size of /dev/rd/c0d0p5).=20
+=20
+I know that the Mylex raidset appears in a somehow special=20
+device in the Linux devtree, but I am quite sure it is possible=20
+to put LVM on top of it - now I just wonder how to do this?=20
+=20
+Thank You, CU, Lars.=20
 
-I don't know that if this is a FAQ.
-But when I create a snapshot for my LV2
-
-# lvcreate -L1M -s -nsnapshot1 /dev/VG1/LV2
-lvcreate -- rounding size up to physical extent boundary
-lvcreate -- WARNING: the snapshot will be automatically disabled once it
-gets full
-lvcreate -- INFO: using default snapshot chunk size of 64 KB for
-"/dev/VG1/snapshot1"
-lvcreate -- doing automatic backup of "VG1"
-lvcreate -- logical volume "/dev/VG1/snapshot1" successfully created
-
-This will create a /dev/VG1/snapshot1 for me.
-
-But I can't mount it with the following command:
-# mount /dev/VG1/snapshot1 /mnt
-when I still mount  /dev/VG1/LV2 on my /var1 mount point.
-
-After umount /var1
-# umount /var1
-
-Then redo the command
-# lvcreate -L1M -s -nsnapshot2 /dev/VG1/LV2
-
-This will be ok ..
-
-What's wrong with the snapshot ?
+--=20
++++ GMX - Mail, Messaging & more  http://www.gmx.net +++
+Bitte l=EF=BF=BDcheln! Fotogalerie online mit GMX ohne eigene Homepage!
