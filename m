@@ -1,45 +1,32 @@
-Date: Wed, 17 Feb 1999 22:34:49 -0600 (CST)
+Date: Wed, 17 Feb 1999 22:38:42 -0600 (CST)
 From: Shawn Leas <sleas@ixion.honeywell.com>
 Subject: Re: [linux-lvm] Re: your mail
-In-Reply-To: <199902180316.AA16770@mailgate1b.telekom.de>
-Message-Id: <Pine.GHP.4.05.9902172219500.17992-100000@ixion.honeywell.com>
+In-Reply-To: <4.1.19990217215840.0096c480@mail.msy.bellsouth.net>
+Message-Id: <Pine.GHP.4.05.9902172236530.17992-100000@ixion.honeywell.com>
 Mime-Version: 1.0
-Resent-To: linux-lvm@msede.com
-Resent-Message-Id: <Pine.GHP.4.05.9902172236380.17992@ixion.honeywell.com>
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
 Content-Type: TEXT/PLAIN; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: Heinz Mauelshagen <mauelsha@ez-darmstadt.telekom.de>
-Cc: mge@ts1.ez-darmstadt.telekom.de
+To: Daniel Whicker <heimdall@mail.org>
+Cc: linux-lvm@msede.com
 
-On Thu, 18 Feb 1999, Heinz Mauelshagen wrote:
+On Wed, 17 Feb 1999, Daniel Whicker wrote:
 
-> This implies no need for a special boot area _if_ we lay all
-> sectors LILO needs into the LV parts on that one disk.
-> Or did you mean that with voot area?
+> Okay.  Let me make sure I understand this.  I think that what you're saying
+> is that at this point, LILO should be able handle an LV like any other
+> partition as far as booting is concerned?  If so, then the real problem
+> lies in getting the LVM turned on early enough that we can finish the boot
+> process, correct?  And if that were the case, we should be able to treat
+> the LVM like any other necessary kernel driver and install it with an
+> initrd.  Sorry to repeat things, but I want to make sure that I have a firm
+> understanding of what you're saying.
 
-Mirrored configurations would work ok then I guess, right? This
-(mirroring) would be my main reason for root on an LV. By voot,
-what did you mean? (Sorry, it's probably in some M somewhere that I
-should be RTFing...)
-
-> If LILO would be able to deal with sectors scattered over many disks,
-> why to have a special boot area anyway?
-
-Probably none. /me says KISS! ;P
-
-> HP-UX's 2nd stage bootstrap loader is only able to deal with a contiguous
-> HFS formated filesystem.
-> That's the reason they mark the boot/root LV contiguous.
-> Without tricks you are stuck with the initial created size.
-> AFAIK this hasn't been changed including 11.X.
-
-Geez... Well, commercial eunices are driven my market demand and
-not quality or grace or programmer's pride. Luckily, there's you,
-Linus, Alan, Richard Gooch, SCT, HJ Lu, HPA, Andreas, and all the
-rest of the code wariors out there doing it better!
+I guess now that I think of it, I was kindof thinking of
+an area on the root VG that lilo could find, which would
+hold a kernel, and an initrd image so the extra partition
+isn't needed.
 
 -Shawn
 <=========== America Held Hostage ===========>
