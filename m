@@ -1,11 +1,8 @@
-Subject: Re: [linux-lvm] Problems after upgrading LVM
-From: Klaus Agnoletti <ultra@mailme.dk>
-In-Reply-To: <1007456242.666.2.camel@ultra>
-References: <1007411943.2423.2.camel@ultra> 
-	<20011203130616.E20168@auctionwatch.com>  <1007456242.666.2.camel@ultra>
-Content-Transfer-Encoding: 7bit
-Message-Id: <1007626843.693.0.camel@ultra>
-Mime-Version: 1.0
+Subject: Re: [linux-lvm] ext2online fails
+References: <OFF0F6A876.96B3BE16-ON86256B13.005A4F63@TEXASMUTUAL.COM> <20011129095307.F29249@lynx.no>
+From: Urs Thuermann <urs@isnogud.escape.de>
+In-Reply-To: <20011129095307.F29249@lynx.no>; from Andreas Dilger on Thu, 29 Nov 2001 09:53:07 -0700
+Message-ID: <m2itbkka3o.fsf@isnogud.escape.de>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,32 +13,21 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Thu Dec  6 00:18:02 2001
+Date: Thu Dec  6 02:48:01 2001
 List-Id: <linux-lvm.redhat.com>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-I got my problem solved.
-It seems like I can't restore a vg created with an older version of LVM
-than the one I am currently using.
-This means that VGs in my stup created with LVM 0.9 can't be restored
-after upgrading to 1.0.1.
-Is this a bug ? (I would say yes) - if not, what is the correct
-procedure to get your VG up and running after an update ?
+Andreas Dilger <adilger@turbolabs.com> writes:
 
-I tried doing a 
-vgcfgrestore -n vg_name /dev/hdXX (for each pertitions in the VG)
-vgchange -ay
+> Unless you patched it yourself, I don't know of any kernels that include
+> this patch by default.  Finally with 2.5 here, it will go into the main
+> kernel.
 
-And after that just a regular mount.
-
-After this discovery, my setup is debian linux with kernel 2.4.16 (which
-has lvm 1.0.1rc4) and the tools for lvm 0.9 which I originally created
-the vg with) - to me this sounds rather weird.
-
-What did I miss ?
+Will it then also be able to reduce an ext2/3 filesystem while being
+mounted?
 
 
-Thanks,
-
-Klaus Pedersen
+urs
