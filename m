@@ -1,11 +1,10 @@
-Return-Path: <alan@lxorguk.ukuu.org.uk>
-Subject: Re: [linux-lvm] Re: [repost] Announce: Linux-OpenLVM mailing list
-Date: Thu, 19 Apr 2001 21:03:24 +0100 (BST)
-In-Reply-To: <20010419145337.K10345@sistina.com> from "AJ Lewis" at Apr 19, 2001 02:53:37 PM
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Message-Id: <E14qKeF-0007wb-00@the-village.bc.nu>
-From: Alan Cox <alan@lxorguk.ukuu.org.uk>
+Return-Path: <blutgens@minime.sistina.com>
+Date: Thu, 19 Apr 2001 15:02:07 -0500
+From: Ben Lutgens <blutgens@sistina.com>
+Message-ID: <20010419150207.C3948@minime.sistina.com>
+Mime-Version: 1.0
+Content-Disposition: inline
+Subject: [linux-lvm] censoring
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -18,24 +17,18 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: AJ Lewis <lewis@sistina.com>
-Cc: linux-lvm@sistina.com, Alan Cox <alan@lxorguk.ukuu.org.uk>, Jes Sorensen <jes@linuxcare.com>, linux-kernel@vger.kernel.org, linux-openlvm@nl.linux.org, Arjan van de Ven <arjanv@redhat.com>, Jens Axboe <axboe@suse.de>, Martin Kasper Petersen <mkp@linuxcare.com>, riel@conectiva.com.br
+Content-Transfer-Encoding: 7bit
+To: linux-lvm@sistina.com
 
-> As far as getting patches into the stock kernel, we've been sending patches
-> to Linus for over a month now, and none of them have made it in.  Maybe
-> someone has some pointers on how we get our code past his filters.
+The mail has never been selectively censored. If it was blatant SPAM I marked
+it as discard, if it was legit mail but from someone not on the list it got
+REJECTED in mailman. The idea is to get people to subscribe in order to be
+allowed to post. This way I could DISCARD all the SPAM. I hate spam. Perhaps
+the error you recieved was misleading but I never intended to anger any of
+you. I didn't think it was unreasonable to expect someone to subscribe if they
+wanted to post, and it is possible with mailman to subscribe a given address
+as "nomail"
 
-Has it occured to you that some of this might be because the code does stuff
-like hide flags in the low bits of addresses and do unchecked kmallocs ?
-Things people have tried to send patches for ..
-
-The best way to get stuff to Linus is to feed him changes one at a time and
-make them all clean and clearly correct. When I have a big set of changes I
-normally start by feeding Linus all the 'fluff' - spelling checks and small
-warning fixes. After that its normally easy to pick out changes one at a time
-and feed them on.
-
-Given 500 lines of mixed up diff it is very hard to verify the correctness of
-anything. 
-
-Alan
+Please be patient with me as I try to get this situation resolve and keep in
+mind when the spam starts comming, why it's comming. The only truly viable way
+I can stop it is to limit posting to members. 
