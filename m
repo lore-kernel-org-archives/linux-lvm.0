@@ -1,6 +1,6 @@
 From: me@vger.org
-In-Reply-To: <Pine.LNX.4.21.0205301458230.20123-100000@kenny.worldonline.se>
-Message-ID: <Pine.LNX.4.21.0205301649250.20123-100000@kenny.worldonline.se>
+In-Reply-To: <Pine.LNX.4.21.0205301649250.20123-100000@kenny.worldonline.se>
+Message-ID: <Pine.LNX.4.21.0205301706550.20123-100000@kenny.worldonline.se>
 MIME-Version: 1.0
 Subject: [linux-lvm] Re: Strange RAID2 behavier...
 Sender: linux-lvm-admin@sistina.com
@@ -13,131 +13,87 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Thu May 30 09:24:03 2002
+Date: Thu May 30 09:37:03 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: TEXT/PLAIN; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: linux-lvm@sistina.com, lvm-devel@sistina.com
-Cc: Lionel Bouton <Lionel.Bouton@inet6.fr>, linux-kernel@vger.kernel.org, Neil Brown <neilb@cse.unsw.edu.au>
+To: lvm-devel@sistina.com, linux-lvm@sistina.com
 
-No worry linux-kernel, this seams to be a lvm problem.
+Here is more info:
+--------------
+# /etc/init.d/raid2 start
+Starting RAID devices: /dev/md0 /dev/md1 /dev/md2 /dev/md3
+done.
+# /etc/init.d/raid2 stop 
+Stopping RAID devices: /dev/md0 /dev/md1 /dev/md2 /dev/md3
+done.
+# /etc/init.d/raid2 start
+Starting RAID devices: /dev/md0 /dev/md1 /dev/md2 /dev/md3
+done.
+# modprobe lvm-mod
+# vgscan
+vgscan -- reading all physical volumes (this may take a while...)
+vgscan -- found inactive volume group "data"
+vgscan -- "/etc/lvmtab" and "/etc/lvmtab.d" successfully created
+vgscan -- WARNING: This program does not do a VGDA backup of your volume group
 
-Hi linux-lvm,
+# vgchange -ay
+vgchange -- volume group "data" successfully activated
 
-In short, I got 4 md devices (md0-4) that I make one device with using
-lvm. When I'm going to shutdown this device it seams that lvm locks md2-3.
+# mount /dev/data/lvol1 /mnt
+# df
+Filesystem           1k-blocks      Used Available Use%
+Mounted on
+/dev/data/lvol1      ********        20 ********   1% /mnt
+# umount /mnt
+# vgchange -an
+vgchange -- volume group "data" successfully deactivated
 
-Booting linux without lvm there is no problem what so ever to start and
-stop the raid mds.
+# rmmod lvm-mod
+# /etc/init.d/raid2 stop
+Stopping RAID devices: /dev/md0 /dev/md1 /dev/md2: Device or resource busy
+/dev/md3: Device or resource busy
+done.
+# cat /proc/mdstat 
+Personalities : [linear] [raid0] [raid1] [raid5] [multipath] 
 
-Also as you read the futher down, the reason I could stop md3 was because
-I hadnt used lvm yet that time and hadnt made any VGs or LVs or mounted
-them. Also, the way i stop lvm is as described in the documents "umount,
-vgchange -an".
+read_ahead 1024 sectors
+md3 : active raid0 hdl1[1] hdh1[0]
+      ******** blocks 4k chunks
+      
+md2 : active linear hdk1[0]
+      ******** blocks 4k rounding
+      
+unused devices: <none>
+# /etc/init.d/raid2 stop
+Stopping RAID devices: /dev/md2: Device or resource busy
+/dev/md3: Device or resource busy
+done.
+--------------
 
-Im using lvm-1.1rc-2, 2.4.19-pre9 and debian testing dist.
-
-Im going to try running lvm as module and unloading the module after
-stopping the lvm VGs and see if it still locks the mds.
-
-If you need more info, please send a mail.
-
+Going to switch to lvm-1.0.4 and try.
 
 On Thu, 30 May 2002 me@vger.org wrote:
 
-> On Thu, 30 May 2002, Lionel Bouton wrote:
+> No worry linux-kernel, this seams to be a lvm problem.
 > 
-> > On jeu, mai 30, 2002 at 02:37:53 +0200, me@vger.org wrote:
-> > > I made the md2 a linear raid of one drive, now I can stop the md3.
-> > > This means that for example making md0 and md3 will make md3 unstoppable,
-> > > has this bug already been reported?
-> > 
-> > This could be a bug/constraint in raidtools as said in mad raidtab:
-> > "the  parsing  code  isn't  overly bright".
-> > 
-> > I've had small glitches when using comments in raidtab. Try removing all
-> > your commented /dev/md2 related lines instead of building a dumb array.
-> > 
+> Hi linux-lvm,
 > 
-> Ok, i tought id fixed the problem (parsing problem) but it doesnt seam to
-> be that.
+> In short, I got 4 md devices (md0-4) that I make one device with using
+> lvm. When I'm going to shutdown this device it seams that lvm locks md2-3.
 > 
-> The md's ive got I later make a linear lvm partition from, may have
-> something to do with that.
+> Booting linux without lvm there is no problem what so ever to start and
+> stop the raid mds.
 > 
-> I can start the raid, get lvm running, mount the lvm partition.
-> And then I umount the lvm partition and do vgchange -an to deactivate all
-> lvms. Now i can stop md0-1 but not md2-3.
+> Also as you read the futher down, the reason I could stop md3 was because
+> I hadnt used lvm yet that time and hadnt made any VGs or LVs or mounted
+> them. Also, the way i stop lvm is as described in the documents "umount,
+> vgchange -an".
 > 
-> --- strace raidstop ---
-> # strace raidstop /dev/md3
-> execve("/sbin/raidstop", ["raidstop", "/dev/md3"], [/* 14 vars */]) = 0
-> uname({sys="Linux", node="odd", ...})   = 0
-> brk(0)                                  = 0x804fd50
-> open("/etc/ld.so.preload", O_RDONLY)    = -1 ENOENT (No such file or
-> directory)
-> open("/etc/ld.so.cache", O_RDONLY)      = 3
-> fstat64(3, {st_mode=S_IFREG|0644, st_size=9361, ...}) = 0
-> old_mmap(NULL, 9361, PROT_READ, MAP_PRIVATE, 3, 0) = 0x40014000
-> close(3)                                = 0
-> open("/lib/libpopt.so.0", O_RDONLY)     = 3
-> read(3, "\177ELF\1\1\1\0\0\0\0\0\0\0\0\0\3\0\3\0\1\0\0\0`\21\0\000"...,
-> 1024) = 1024
-> fstat64(3, {st_mode=S_IFREG|0644, st_size=20704, ...}) = 0
-> old_mmap(NULL, 23828, PROT_READ|PROT_EXEC, MAP_PRIVATE, 3, 0) = 0x40017000
-> mprotect(0x4001c000, 3348, PROT_NONE)   = 0
-> old_mmap(0x4001c000, 4096, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED, 3,
-> 0x4000) = 0x4001c000
-> close(3)                                = 0
-> open("/lib/libc.so.6", O_RDONLY)        = 3
-> read(3, "\177ELF\1\1\1\0\0\0\0\0\0\0\0\0\3\0\3\0\1\0\0\0\30\222"...,
-> 1024) = 1024
-> fstat64(3, {st_mode=S_IFREG|0755, st_size=1153784, ...}) = 0
-> old_mmap(NULL, 1166560, PROT_READ|PROT_EXEC, MAP_PRIVATE, 3, 0) =
-> 0x4001d000
-> mprotect(0x40130000, 40160, PROT_NONE)  = 0
-> old_mmap(0x40130000, 24576, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED,
-> 3, 0x113000) = 0x40130000
-> old_mmap(0x40136000, 15584, PROT_READ|PROT_WRITE,
-> MAP_PRIVATE|MAP_FIXED|MAP_ANONYMOUS, -1, 0) = 0x40136000
-> close(3)                                = 0
-> old_mmap(NULL, 4096, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1,
-> 0) = 0x4013a000
-> munmap(0x40014000, 9361)                = 0
-> brk(0)                                  = 0x804fd50
-> brk(0x804fef8)                          = 0x804fef8
-> brk(0x8050000)                          = 0x8050000
-> brk(0x8051000)                          = 0x8051000
-> open("/etc/raidtab", O_RDONLY)          = 3
-> open("/dev/md0", O_RDONLY)              = 4
-> ioctl(4, 0x800c0910, 0x804fd3c)         = 0
-> close(4)                                = 0
-> open("/dev/md3", O_RDWR)                = 4
-> fstat64(4, {st_mode=S_IFBLK|0660, st_rdev=makedev(9, 3), ...}) = 0
-> ioctl(4, 0x932, 0)                      = -1 EBUSY (Device or resource
-> busy)
-> dup(2)                                  = 5
-> fcntl64(5, F_GETFL)                     = 0x8002 (flags
-> O_RDWR|O_LARGEFILE)
-> fstat64(5, {st_mode=S_IFCHR|0600, st_rdev=makedev(136, 0), ...}) = 0
-> old_mmap(NULL, 4096, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1,
-> 0) = 0x40014000
-> _llseek(5, 0, 0xbffff964, SEEK_CUR)     = -1 ESPIPE (Illegal seek)
-> write(5, "/dev/md3: Device or resource bus"..., 34/dev/md3: Device or
-> resource busy
-> ) = 34
-> close(5)                                = 0
-> munmap(0x40014000, 4096)                = 0
-> _exit(1)                                = ?
-> ------------------
+> Im using lvm-1.1rc-2, 2.4.19-pre9 and debian testing dist.
 > 
-> Can this be a version problem with raidtool2 ? Im using debian testing
-> dist.
+> Im going to try running lvm as module and unloading the module after
+> stopping the lvm VGs and see if it still locks the mds.
 > 
-> Any way i can check why/who has that device? lsof shows no md3.
-> 
-> Im clueless right now, sure the raid work even if md2 md3 are in use under
-> reboot but this not correct.
-> 
-> 
+> If you need more info, please send a mail.
 > 
