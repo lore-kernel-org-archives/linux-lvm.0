@@ -1,11 +1,14 @@
-Return-Path: <oliver@wonderpixel.de>
-Message-ID: <003b01c0fa4a$342d93e0$97c18fc3@wonderpixel.de>
-From: "Oliver Zeyen" <oliver@wonderpixel.de>
-Date: Thu, 21 Jun 2001 14:03:37 +0200
-MIME-Version: 1.0
-Content-Type: multipart/alternative;
-	boundary="----=_NextPart_000_0038_01C0FA5A.F794D220"
-Subject: [linux-lvm] Help ! raidpatch doesn't work !
+Return-Path: <bg@blacknet.de>
+Date: Thu, 21 Jun 2001 13:08:41 +0200
+From: Goetz Bock <bock@blacknet.de>
+Subject: Re: [linux-lvm] Help ! raidpatch doesn't work !
+Message-ID: <20010621130841.C1278@dragon.blacknet.de>
+References: <003b01c0fa4a$342d93e0$97c18fc3@wonderpixel.de>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-md5;
+	protocol="application/pgp-signature"; boundary="ncSAzJYg3Aa9+CRW"
+Content-Disposition: inline
+In-Reply-To: <003b01c0fa4a$342d93e0$97c18fc3@wonderpixel.de>; from oliver@wonderpixel.de on Thu, Jun 21, 2001 at 02:03:37PM +0200
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -19,56 +22,46 @@ List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 To: linux-lvm@sistina.com
 
-This is a multi-part message in MIME format.
-
-------=_NextPart_000_0038_01C0FA5A.F794D220
-Content-Type: text/plain;
-	charset="iso-8859-1"
+--ncSAzJYg3Aa9+CRW
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-Hello !
-I have to patch my Kernel with raid0145-19990713-2.2.10.gz !
-BUT I can't decompress this file !
-Is there anybody who can tell me what's my Problem !
-Gunzip aways says "uexpected end of file " !
-My English is very bad , so sorry about this !
-Thanks ,Oliver !
 
-p.s. I'm trying to setup a Raid1 System !
+On Thu, Jun 21 '01 at 14:03, Oliver Zeyen wrote:
+> I have to patch my Kernel with raid0145-19990713-2.2.10.gz !
+While I did not verify this, the version number apears to be ancient.
+It seams to be for a 2.2.10 Kernel and from 13. Jul 1999.
+You should try to get a more recent version. On
+ftp://ftp.de.kernel.org/pub/linux/kernel/v2.2 you can get the latest
+linux kernel (of the 2.2 series, it's 2.2.19) and on
+ftp://ftp.de.kernel.org/pub/linux/kernel/people/mingo/raid-patches/
+You can get the latest RAID patches (raid-2.2.19-A1).=20
+Please be carefull when applying the patches in conjunction with the LVM
+patches, there is a special section of the README (in LVM/.../PATCHES)
+that gives you some IMPORTANT hints.
 
+> BUT I can't decompress this file !
+If you download .gz files with MS IE, it tends to uncompress them for
+you but still save them as .gz. =20
 
-------=_NextPart_000_0038_01C0FA5A.F794D220
-Content-Type: text/html;
-	charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+> Gunzip aways says "uexpected end of file " !
+Prhapes you have an incomplete download, try downloading again. To be on
+the save side, try wget or lynx from a linux terminal console.=20
 
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
-<HTML><HEAD>
-<META http-equiv=3DContent-Type content=3D"text/html; =
-charset=3Diso-8859-1">
-<META content=3D"MSHTML 5.50.4134.100" name=3DGENERATOR>
-<STYLE></STYLE>
-</HEAD>
-<BODY bgColor=3D#ffffff>
-<DIV><FONT face=3DArial size=3D2>Hello !</FONT></DIV>
-<DIV><FONT face=3DArial size=3D2>I have to patch my Kernel with=20
-raid0145-19990713-2.2.10.gz !</FONT></DIV>
-<DIV><FONT face=3DArial size=3D2>BUT I can't decompress this file =
-!</FONT></DIV>
-<DIV><FONT face=3DArial size=3D2>Is there anybody who can tell me what's =
-my Problem=20
-!</FONT></DIV>
-<DIV><FONT face=3DArial size=3D2>Gunzip aways says "uexpected end of =
-file "=20
-!</FONT></DIV>
-<DIV><FONT face=3DArial size=3D2>My English is very bad , so sorry about =
-this=20
-!</FONT></DIV>
-<DIV><FONT face=3DArial size=3D2>Thanks ,Oliver !</FONT></DIV>
-<DIV><FONT face=3DArial size=3D2></FONT>&nbsp;</DIV>
-<DIV><FONT face=3DArial size=3D2>p.s. I'm trying to setup a Raid1 System =
+    Goetz.
 
-!</FONT></DIV>
-<DIV><FONT face=3DArial size=3D2></FONT>&nbsp;</DIV></BODY></HTML>
+--ncSAzJYg3Aa9+CRW
+Content-Type: application/pgp-signature
+Content-Disposition: inline
 
-------=_NextPart_000_0038_01C0FA5A.F794D220--
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.0.4 (GNU/Linux)
+Comment: For info see http://www.gnupg.org
+
+iD8DBQE7MdW4f5srOMkjkQoRAitSAKCcUZTZNjySbYhO/8+cnxl29nWToACgqUpy
+YbTsHMbPqyIltKcIFb0wMZQ=
+=AY2h
+-----END PGP SIGNATURE-----
+
+--ncSAzJYg3Aa9+CRW--
