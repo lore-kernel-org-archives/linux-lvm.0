@@ -1,9 +1,10 @@
-From: Benoit <benoit.peccatte@enst-bretagne.fr>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Message-ID: <20031218015654.GA1981@amphibian.dyndns.org>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="mYCpIKhGyMATD0i+"
 Content-Disposition: inline
-Message-Id: <200312181208.49303.benoit.peccatte@enst-bretagne.fr>
-Subject: [linux-lvm] Changing PV position
+From: Toad <toad@amphibian.dyndns.org>
+Subject: [linux-lvm] LVM2 pvmove
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,41 +15,57 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Thu Dec 18 05:11:01 2003
+Date: Thu Dec 18 07:58:02 2003
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
 
-Hello,
+--mYCpIKhGyMATD0i+
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-I'm currently using lvm on my box and one disk just died.
-Then the second disk (hdb) became the first one (hda). The problem is that now 
-I can't get back the physical volume which is on it. Is it possible to tell 
-lvm to force the reading of a PV even if it isn't on the same disk as 
-before ?
+Having major problems trying to use pvmove on LVM2. I was told that
+pvmove was fixed with LVM2 by the person who wrote it and put out
+2.0.08. Apparently it isn't. This is a formerly LVM1 format system=20
+recently upgraded via vgconvert.
 
-Thank you for your help.
-Benoit
+root@amphibian:~# pvmove /dev/ide/host0/bus1/target1/lun0/disc
+device-mapper: error adding target to table
+  device-mapper ioctl cmd 9 failed: Invalid argument
+  Couldn't load device 'vg--big-pvmove0'.
+  ABORTING: Temporary mirror activation failed.
+device-mapper: device 254:034 too small for target
+device-mapper: dm-stripe: Couldn't parse stripe destination
+device-mapper: error adding target to table
+  device-mapper ioctl cmd 9 failed: No such device or address
+  Couldn't load device 'vg--big-usr--src--cvs'.
+device-mapper: device 254:034 too small for target
+device-mapper: dm-stripe: Couldn't parse stripe destination
+device-mapper: error adding target to table
+  device-mapper ioctl cmd 9 failed: No such device or address
+  Couldn't load device 'vg--big-var--log--freenet_stable'.
 
+I have seen two reports of similar problems recently, none of which were
+successfully concluded. Is it likely that this will be fixed? If not, I
+doubt that LVM2 will be regarded as production quality by anyone for a
+long time to come... and I'll have to manually mess around with
+recreating every last LV... :(
+--=20
+Matthew J Toseland - toad@amphibian.dyndns.org
+Freenet Project Official Codemonkey - http://freenetproject.org/
+ICTHUS - Nothing is impossible. Our Boss says so.
 
-Informations :
+--mYCpIKhGyMATD0i+
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+Content-Disposition: inline
 
-peck:/# fdisk -l /dev/hda
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.2.3 (GNU/Linux)
 
-Disk /dev/hda: 122.9 GB, 122942324736 bytes
-255 heads, 63 sectors/track, 14946 cylinders
-Units = cylinders of 16065 * 512 = 8225280 bytes
+iD8DBQE/4Qlmr5e+zmpNTm8RAqUZAJ94F9z92bHMy02RkMhrAQK4ifP86QCfbR4P
+EhefseAHGGPv7D1vk6GE07Y=
+=XxxZ
+-----END PGP SIGNATURE-----
 
-   Device Boot      Start         End      Blocks   Id  System
-/dev/hda1   *           1         898     7213153+   b  W95 FAT32
-/dev/hda2             899        1384     3903795   83  Linux
-/dev/hda3            1385       14946   108936765    5  Extended
-/dev/hda5            1385        1992     4883728+  fd  Linux raid autodetect
-/dev/hda6            1993       14946   104052973+  8e  Linux LVM
-
-peck:/# pvs /dev/hda6
-  Failed to read physical volume "/dev/hda6"
-
-
-I'm currently using linux 2.6-test9, with lvm2 tools. 
-The missing volume was created with lvm1 tools.
+--mYCpIKhGyMATD0i+--
