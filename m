@@ -1,10 +1,12 @@
-Return-Path: <498fbd26599115c750cccb626b7d5622@interlinx.bc.ca>
-Date: Mon, 4 Jun 2001 01:07:50 -0700
-Message-ID: <20010604010750.A2560@pc.ilinx>
+Return-Path: <thornber@btconnect.com>
+Date: Mon, 4 Jun 2001 09:27:42 +0100
+Subject: Re: [linux-lvm] LVM status in ac7?
+Message-ID: <20010604092742.A395@66bassett.freeserve.co.uk>
+References: <01060222104000.23925@oscar>
 Mime-Version: 1.0
 Content-Disposition: inline
-From: "Brian J. Murrell" <lvm@interlinx.bc.ca>
-Subject: [linux-lvm] LILO configuration for LVM "boot" filesystem
+In-Reply-To: <01060222104000.23925@oscar>; from tomlins@cam.org on Sat, Jun 02, 2001 at 10:10:40PM -0400
+From: Joe Thornber <thornber@btconnect.com>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -20,45 +22,16 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-I know this is starting to become a LILO issue but I think that the
-problem I have is really got to do with LILO and it's interacting with
-LVM.  I have applied Andreas' patch, thanks Andreas.
+On Sat, Jun 02, 2001 at 10:10:40PM -0400, Ed Tomlinson wrote:
+> Hi,
+> 
+> What is the status of LVM in ac7?  Is it safe to use the ac7 LVM code on
+> a system currently using beta7?  Is the beta7 patched needed with ac7?
+> What is not in the ac7 patches?  Is it apt to cause problems?
 
-When I try to boot with the LVM disk I get "LI" and that is it.  The
-LILO docs say this about "LI":
+I would say that -ac7 is now half way between vanilla 2.4.5 and beta7.
 
-This means the first-stage loader gained control; it thought it success-
-fully loaded the second-stage loader; but it never got there.  This most
-often occurs when the second-stage loader, '/boot/boot.b', is not load-
-able using the BIOS.
+As such I still recommend you patch with beta7, or even better use the
+latest code from CVS.
 
-Which would suggest to me that the mapping is not making it through
-LVM correct me.  But I don't really know that much about how LILO
-really works with the underlying device.
-
-My current lilo.conf is:
-
-boot=/dev/hdg
-map=/boot/map
-install=/boot/boot.b
-vga=780
-default=linux
-keytable=/boot/us.klt
-lba32
-prompt
-timeout=50
-message=/boot/message
-
-image=/boot/vmlinuz
-    label=linux
-    root=/dev/system/root
-    initrd=/boot/initrd-lvm-2.4.5-1.1mdk.gz
-    append=" hda=ide-scsi devfs=mount video=matrox:vesa:263"
-    read-only
-
-Anyone got any ideas or run into this before?
-
-b.
-
--- 
-Brian J. Murrell
+- Joe
