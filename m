@@ -1,8 +1,12 @@
-From: James Mello <kingjamm@colltech.com>
+From: Andreas Dilger <adilger@turbolabs.com>
 Subject: Re: [linux-lvm] Backup costs (was: LVM reimplementationre)
-In-Reply-To: <1013024531.21447.19.camel@Daniel>
-Message-Id: <Pine.GSO.4.21.0202061343080.17353-100000@psasolar.private.psa.pencom.com>
+Message-Id: <20020206124518.E15496@lynx.turbolabs.com>
+References: <Pine.LNX.4.10.10202051326310.19683-100000@pzat.meep.org>
+    <Pine.LNX.4.44.0202061338480.13203-100000@dragon.inside.ntisys.com>
 MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <Pine.LNX.4.44.0202061338480.13203-100000@dragon.inside.ntisys.com>;
+    from bscott@ntisys.com on Wed, Feb 06, 2002 at 02:14:05PM -0500
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -13,67 +17,47 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Feb  6 13:46:01 2002
+Date: Wed Feb  6 13:46:04 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: linux-lvm@sistina.com
+To: Benjamin Scott <bscott@ntisys.com>
+Cc: linux-lvm@sistina.com
 
-With your argument, were would you stick 10 IDE drives then? Add the cost
-of controllers, etc and you start to add more and more cost. The deal is,
-backups to tape are done to tape when the media cost savings justify the
-outlay of cash for the hardware. Like it was said before, most small
-business could get away with burning a CD. But what you *can't* do is
-ignore the fact that if you want to be safe, you *must* do backups. Disk
-is cool, but make sure that you fully account for the expense in your
-environment.
+On Feb 06, 2002  14:14 -0500, Benjamin Scott wrote:
+>   Here are some prices from a recent Datacomm Warehouse catalog:
+> 
+>   Item            GB   Cost  $/GB
+>   --------------  ---  ----  ----
+>   IDE HDD         100   270  2.70
+>   AIT2             50    90  1.80
+>   SuperDLT        110   150  1.36
+>   LTO Ultrium     100   130  1.30
+>   DDS-4            20    24  1.20
+> 
+>   As you can see, hard disk is actually the most expensive media, not the
+> least.  This whole "hard disks are cheaper" thing is a myth propagated by
+> people who have never actually looked at the numbers.
 
-	-- Cheers
-	-- James
+You don't include the cost of the tape drive, which is often high, while
+the cost of the IDE drive has no such additional cost.
 
-> Ben,
-> 	I think you missed a very important aspect.  The actual investment of
-> the tape drives.  A SDLT or LTO drive is going to run from about $4000
-> on up.  According to datacomm warehouse, a HP 230 external LTO drives
-> runs $3700.  An SDLT drive runs $4300.  You can't compare just the media
-> costs with that of the drive.  Let's consider a 1TB of data.
+>   Sure, backups cost money.  You might spend $1500 on a data protection
+> scheme for a small office server.  Of course, consider how much it would
+> cost if they did not do that.  I know business that have *gone out of
+> business* when they lost their only copy of mission-critical data.
 > 
-> SDLT:
-> $4300 + (10 tapes * $50) = $4800
+>   $1500 vs bankruptcy.  Gee, tough call.
 > 
-> LTO:
-> $3700 + (10 tapes * $130) = $5000
-> 
-> AIT2:
-> $2800 + (20 tapes * $90) = $4600
-> 
-> IDE:
-> 10  Drives * 270 = $2700
-> 
-> DDS4:
-> $900 + (50 tapes * $24) = $2100
-> 
-> >From these numbers (using DataComm Warehouse pricing), you can see that
-> to backup 1TB, the IDE drives are actually the second cheapest.  And
-> from a raw performance point of view, they far exceed all the other
-> alternatives from a random access standpoint, and they are comparable to
-> even LTO from a transfer rate point of view.
-> 
-> Sorry... had to address this point.
-> 
-> On Wed, 2002-02-06 at 13:14, Benjamin Scott wrote:
-> >   Here are some prices from a recent Datacomm Warehouse catalog:
-> > 
-> >   Item            GB   Cost  $/GB
-> >   --------------  ---  ----  ----
-> >   IDE HDD         100   270  2.70
-> >   AIT2             50    90  1.80
-> >   SuperDLT        110   150  1.36
-> >   LTO Ultrium     100   130  1.30
-> >   DDS-4            20    24  1.20
-> > 
-> >   As you can see, hard disk is actually the most expensive media, not the
-> > least.  This whole "hard disks are cheaper" thing is a myth propagated by
-> > people who have never actually looked at the numbers.
-> 
-> 
+>   Anyone who has ever bothered to work out the numbers knows that backups
+> are a bargain.  People who think otherwise are either ignorant or just plain
+> don't want to know the truth.
+
+Oh, I totally agree.  I used to work for IBM and met a lot of people who
+lost their hard drive data.  I personally do a lot of backups these days.
+
+Cheers, Andreas
+--
+Andreas Dilger
+http://sourceforge.net/projects/ext2resize/
+http://www-mddsp.enel.ucalgary.ca/People/adilger/
