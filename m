@@ -1,11 +1,11 @@
-Return-Path: <steve.wray@the.net.nz>
-From: "Steve Wray" <steve.wray@the.net.nz>
-Subject: RE: [linux-lvm] LILO configuration for LVM "boot" filesystem
-Date: Fri, 8 Jun 2001 10:24:53 +1200
-Message-ID: <NBBBKLKHMJHIJLHOGAOJOECDIPAA.steve.wray@the.net.nz>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-In-Reply-To: <20010607171549.A13292@stocks.pillory.com>
+Return-Path: <markv@wave.co.nz>
+Date: Fri, 8 Jun 2001 10:29:36 +1200
+From: Mark van Walraven <markv@wave.co.nz>
+Subject: Re: [linux-lvm] LILO configuration for LVM "boot" filesystem
+Message-ID: <20010608102936.A9167@mail.wave.co.nz>
+References: <20010605210727.C1870@pc.ilinx> <3B1F9E1C.1984FAF8@wrkhors.com> <20010607104301.A29848@stocks.pillory.com>
+Mime-Version: 1.0
+In-Reply-To: <20010607104301.A29848@stocks.pillory.com>; from Jack McKinney on Thu, Jun 07, 2001 at 10:43:02AM -0500
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -18,35 +18,22 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-> From: linux-lvm-admin@sistina.com [mailto:linux-lvm-admin@sistina.com]On
-> Behalf Of Jack McKinney
+On Thu, Jun 07, 2001 at 10:43:02AM -0500, Jack McKinney wrote:
+> cd / ; mv tmp tmp.old ; ln -s /var/tmp .
+> reboot
+> rm -rf /tmp.old
 > 
-> Big Brother tells me that Steve Wray wrote:
-> > > 
-> > > LV are generally slower than other types of storage.  Since the
-> > > boot partition is generally cyl 0 it's on the fastest storage
-> > > available (short of tmpfs).  
-> > 
-> > Proportionally, how much slower is it? 50%? 25%? 12%? 
-> > less than 1% slower?
-> 
-[snip]
-> 
->     In other words, every block read that goes through LVM adds basically
-> a division, a memory lookup and an addition.  The time it takes 
-> to transfer
-> the block from the drive is EONs compared to the time it takes to perform
-> a couple of arithmetical computations.
+>     Now you don't have to worry about root filling up at all...
 
-Unless the machine in question is an i386 with no math copro?
-8-)
+/tmp is commonly emptied on boot, unlike /var/tmp.  Vi, for example,
+stores it's recovery files in /var/tmp.
 
-Sounds good to me; I was surprised someone raised a speed issue
-for /tmp on a LV.
-Are there any other (good) reasons to have /tmp (or anything else other
-than /boot) on a 'real' partition rather than on LV?
+I prefer a separate partition for /tmp, to reduce the need to write to
+the root fs and thereby lower the risk of damage to it in a crash.
 
-How about swap on LV? Or does swap need to be used before the LV's
-are accessible?
+Regards,
+
+Mark.
