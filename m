@@ -1,69 +1,42 @@
-Date: Sun, 15 Oct 2000 07:42:05 +0930 (CST)
-From: Mark Phillips <mark@ist.flinders.edu.au>
-Subject: [linux-lvm] Re: vgcreate -- ERROR "lvm_tab_read(): size" inserting...
-In-Reply-To: <Pine.GSO.4.10.10010141425320.10567-100000@kurango>
-Message-ID: <Pine.GSO.4.10.10010150739240.21204-100000@kurango>
+Date: Mon, 16 Oct 2000 00:29:28 +0100 (IST)
+From: Paul Jakma <paul@clubi.ie>
+Subject: Re: [linux-lvm] lv inactive after reboot
+In-Reply-To: <20001012224338.A17900@muon.de>
+Message-ID: <Pine.LNX.4.21.0010160028130.1693-100000@fogarty.jakma.org>
 MIME-Version: 1.0
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
 Content-Type: TEXT/PLAIN; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: Mark Phillips <mark@ist.flinders.edu.au>
+To: Nils Juergens <nils@muon.de>
 Cc: linux-lvm@msede.com
 
+On Thu, 12 Oct 2000, Nils Juergens wrote:
 
-Just writing to say that I have overcome the problem.
+> Isn't this default behavior? My vgscan showns no sign of -a or -y, these
+> are vgchange options.
+> 
+> This is what i do in my startup-scripts:
+> 
+> /sbin/vgscan
+> /sbin/vgchange -a y
+> 
 
-The way I did it was to delete /etc/lvmtab and then run vgscan which
-seemed to fix things up.
+i do this too of course (everything but /boot and / is on LVM),
+however it fails to bring this one LV up. And the only difference
+with this one is that it was once renamed.
 
-I still don't know what caused the initial error though.  I still think it
-might be a bug.
-
-Cheers,
-
-Mark.
-
-On Sat, 14 Oct 2000, Mark Phillips wrote:
-
-> Hi,
+> cu,
 > 
-> I'm using LVM for the first time and I got this error:
-> 
-> # vgcreate main_vg /dev/hda2
-> vgcreate -- INFO: using default physical extent size 4 MB
-> vgcreate -- INFO: maximum logical volume size is 255.99 Gigabyte
-> vgcreate -- ERROR "lvm_tab_read(): size" inserting volume group "main_vg"
-> into "/etc/lvmtab"
-> 
-> Can anyone tell me what's wrong?
-> 
-> All I've did before the above command was make /dev/hda2 into a 8e
-> partition and then run:
-> 
-> # pvcreate /dev/hda2
-> pvcreate -- physical volume "/dev/hda2" successfully created
-> 
-> Thanks,
-> 
-> Mark.
-> 
-> _/~~~~~~~~___/~~~~~~____________________________________________________
-> ____/~~_____/~~__/~~__________________________Mark_Phillips____________
-> ____/~~_____/~~________________________________mark@ist.flinders.edu.au_
-> ____/~~\HE___/~~__/~~\APTAIN_____________________________________________
-> ____/~~______/~~~~~~____________________________________________________
-> __________________________________________________________________________
->         "They told me I was gullible ... and I believed them!" 
-> 
+> Nils
 > 
 > 
 
-_/~~~~~~~~___/~~~~~~____________________________________________________
-____/~~_____/~~__/~~__________________________Mark_Phillips____________
-____/~~_____/~~________________________________mark@ist.flinders.edu.au_
-____/~~\HE___/~~__/~~\APTAIN_____________________________________________
-____/~~______/~~~~~~____________________________________________________
-__________________________________________________________________________
-        "They told me I was gullible ... and I believed them!" 
+-- 
+Paul Jakma	paul@clubi.ie
+PGP5 key: http://www.clubi.ie/jakma/publickey.txt
+-------------------------------------------
+Fortune:
+According to all the latest reports, there was no truth in any of the
+earlier reports.
