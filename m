@@ -1,14 +1,19 @@
-Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id iA752kr14556
-	for <linux-lvm@redhat.com>; Sun, 7 Nov 2004 00:02:46 -0500
-Message-ID: <418DAC9C.70205@dakotacom.net>
-Date: Sat, 06 Nov 2004 22:03:24 -0700
-From: ewf <erich@dakotacom.net>
+Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id iA69war13773
+	for <linux-lvm@redhat.com>; Sat, 6 Nov 2004 04:58:36 -0500
+Received: from sutr101.sanderscorner.com (sanderscorner.demon.nl
+	[212.238.245.37])
+	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id iA69wZOb008643
+	for <linux-lvm@redhat.com>; Sat, 6 Nov 2004 04:58:36 -0500
+Message-ID: <418CA044.1090505@sanderscorner.com>
+Date: Sat, 06 Nov 2004 10:58:28 +0100
+From: Sander <sander@sanderscorner.com>
 MIME-Version: 1.0
+Subject: Re: [linux-lvm] 'vgscan' at boot-up
+References: <20041106011259.GB11112@nile.gs.washington.edu>
+In-Reply-To: <20041106011259.GB11112@nile.gs.washington.edu>
 Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] Possible version problem
-Reply-To: erich1@dakotacom.net,
-	LVM general discussion and development <linux-lvm@redhat.com>
+Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -19,31 +24,40 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: Heinz Mauelshagen <Linux-LVM@Sistina.com>
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-Well
-      I have a 2.2.20 kernel, (Debian stable), and I have a Debian 
-package for lvm10 and lvm-common:
+David S. wrote:
 
-            lvm10,  install version, 1.0.4-4
+>I'm using lvm2-2.00.15 and device-mapper-1.00.17 on a Slackware (x86)
+>system, with a 2.6.9 kernel and udev-026.  I've created a volume
+>group and a logical volume without any trouble, but the file system
+>I built on the volume won't mount at boot-up.  That's apparently
+>because the 'vgscan' program run from the system initialization
+>script does not find an volume groups.  After the system boots,
+>'vgscan' works fine.  I can get the file system mounted by putting
+>
+>	/sbin/vgscan 2>/dev/null
+>	sleep 10
+>	/sbin/vgchange -ay
+>	/sbin/mount -a
+>
+>in 'rc.local'.  Does anyone have a idea why 'vgscan' would fail
+>in the sytem initialization script, but succeed in 'rc.local'?
+>
+>David S.
+>
+>_______________________________________________
+>linux-lvm mailing list
+>linux-lvm@redhat.com
+>https://www.redhat.com/mailman/listinfo/linux-lvm
+>read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+>
+>
+>  
+>
+What version of Slackware? I use LVM with 8.1 and 9.1. In 9.1 it should 
+work 'out-of-the-box' in 8.1 I had to put the LVM mounting stuf  my 
+self. Did you put  / on a logical volume? Is /proc mounted before you 
+try to bring the volumes online (i remember I had to do that in 8.1)
 
-            lvm-common, install version, 1.5.5
-
-     I read that, for this early a version, a kernel module must be 
-installed. However, I see no evidence that
-one has been installed. I suspect that the new, (lvm), package may not 
-contain  the kernel module
-necessary to run with the old kernel version. Please confirm.
-
-     I assume that the process of installing a package under Debian 
-automatically installs a kernel
-module if a given package requires it and contains it.
-
-     I am setting up a MythTV system for home usage, and would like to 
-gain the benefits of LVM.
-
-                                                                        
-                                                              Sincerely,
-                                                                        
-                                                              Erich 
-Flothmeier
+Sander
