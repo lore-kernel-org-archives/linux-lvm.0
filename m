@@ -1,6 +1,6 @@
-From: Andreas Dilger <adilger@turbolabs.com>
+From: Alex Zarochentsev <zam@namesys.com>
 Subject: Re: [linux-lvm] resize reiserfs
-Message-ID: <20011122130248.L1308@lynx.no>
+Message-ID: <20011122233620.A1319@backtop>
 References: <20011122203009.A557@sky.net>
 Mime-Version: 1.0
 Content-Disposition: inline
@@ -15,14 +15,17 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Thu Nov 22 14:01:01 2001
+Date: Thu Nov 22 14:35:02 2001
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: Ulrich Wiederhold <U.Wiederhold@gmx.net>
-Cc: linux-lvm@sistina.com
+To: linux-lvm@sistina.com
 
-On Nov 22, 2001  20:30 +0100, Ulrich Wiederhold wrote:
+hello !
+
+> Hi,
+> I need to resize my lv /dev/store/data now.
+> 
 > I already added the 2nd HD (/dev/hdc1) to the vg store using vgextend
 > and extended the lv using lvextend.
 > 
@@ -32,19 +35,17 @@ On Nov 22, 2001  20:30 +0100, Ulrich Wiederhold wrote:
 > $#: ./resize_reiserfs --size +50G --lv /dev/store/data --dry-run          
 > 
 >   only 0 free PE's (0 K) left on VG store
+> 
+> Sure, I already added the PE?s to the lv.
+> What to do?
 
-It looks like the resize_reiserfs script is trying to do LVM operations
-internally, and then doing the resize afterwards.  However, this is
-terribly confusing, because the resize_reiserfs _program_ has the same
-name.  You should get resize_reiserfs with the other reiserfs tools,
-but I'm not sure whether it is compiled and installed by default.
+seems perl script tries extend lv again.
 
-I would suggest just reducing the LV to the original size, or not using
-a relative size but an absolute size (so it doesn't try to grow the
-LV), and continue to use the script.
+use resize_reiserfs from reiserfsprogs (3.x.0j or better) package,
+just type 
+	resize_reiserfs /dev/store/data
 
-Cheers, Andreas
+it detects block device size and expands the file system as needed.
+
 --
-Andreas Dilger
-http://sourceforge.net/projects/ext2resize/
-http://www-mddsp.enel.ucalgary.ca/People/adilger/
+Alex.
