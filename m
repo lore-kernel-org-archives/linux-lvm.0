@@ -1,11 +1,11 @@
 Return-Path: <root@srv.sistina.com>
-Date: Wed, 16 May 2001 10:53:58 +0000
+Date: Wed, 16 May 2001 11:19:03 +0000
 From: "Heinz J. Mauelshagen" <Mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] lvm deadlock with 2.4.x kernel?
-Message-ID: <20010516105358.D11984@sistina.com>
-References: <200105160032.f4G0WPIP022333@webber.adilger.int> <28230000.989975826@tiny> <20010516093929.B482@66bassett.freeserve.co.uk>
+Subject: Re: [linux-lvm] LVM 1.0 release decision
+Message-ID: <20010516111903.E11984@sistina.com>
+References: <3AFC42EB.2910DAAE@wrkhors.com> <Pine.LNX.4.21.0105132046150.5468-100000@imladris.rielhome.conectiva>
 Mime-Version: 1.0
-In-Reply-To: <20010516093929.B482@66bassett.freeserve.co.uk>; from thornber@btconnect.com on Wed, May 16, 2001 at 09:39:29AM +0100
+In-Reply-To: <Pine.LNX.4.21.0105132046150.5468-100000@imladris.rielhome.conectiva>; from riel@conectiva.com.br on Sun, May 13, 2001 at 08:48:19PM -0300
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -20,26 +20,67 @@ List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
+Cc: linux-kernel@vger.kernel.org
 
-On Wed, May 16, 2001 at 09:39:29AM +0100, Joe Thornber wrote:
-> On Tue, May 15, 2001 at 09:17:06PM -0400, Chris Mason wrote:
-> > You're right though, pv_flush certainly doesn't look like it could cause
-> > any deadlocks.
+On Sun, May 13, 2001 at 08:48:19PM -0300, Rik van Riel wrote:
+> On Fri, 11 May 2001, Steven Lembark wrote:
 > 
-> I must admit I'm struggling to understand why PV_FLUSH even exists.
-> It does *exactly* the same thing as a BLKFLSBUF ioctl to the pv device
-> itself.
+> > for my part running the system i'd rather have the "production"
+> > LVM and kernel releases in sync and not have to worry about it.
+> > if i need a beta/inter-version release then i'll deal with the
+> > extra issues.
+> 
+> Agreed.  If the in-kernel LVM cannot be trusted, I really
+> don't see why Sistina would ever want to associate its name
+> with something broken?
 
-Joe is right.
-It is a few lines of unneccesary code in the LVM driver ;-)
-We can remove it > 1.0 and call the ioctl of the underlying driver directly.
+Rik, that's not an issue at all and sorry, it doesn't help either!
 
-> As such I agree that it's unlikely to be the culprit.
+With the help of community contributors we *do* provide the most recent
+code with as few bugs as possible at www.sistina.com/lvm as we always did.
 
-Correct.
+Everybody could and can get it from there and established LVM users continue
+to do it this way.
+
+OTOH we need a lot of time now to get smaller patches into vanilla.
+
+Therefore we kindly asked for community oppinions to help the situation.
+
+
+Unless a bigger LVM patch to vanilla is accepted, we need to spend a lot of work
+on providing those smaller chunks of patches which distracts us a lot from
+other work.
+
+Don't tell me that this is all our fault; 
+this wouldn't *help* to fasten the process either!
+
+A little trust to accept a bigger patch *and* to sort pending issues
+out with the help of the community afterwards is a valid approach IMO to
+get faster to the point of an updated vanilla LVM driver than with the
+tiny patches approach.
+
+Linus, Alan et al.: maybe you could think about it again and
+                    accept one larger LVM patch. Thanks.
 
 > 
-> - Joe
+> I think it would be better for everyone (users, Sistina's
+> corporate image and Linux) to get something stable into the
+> kernel before sending out the press release ;)
+> 
+> (after all, a version number change is just a one-liner patch
+> away ;))
+> 
+> regards,
+> 
+> Rik
+> --
+> Virtual memory is like a game you can't win;
+> However, without VM there's truly nothing to lose...
+> 
+> http://www.surriel.com/		http://distro.conectiva.com/
+> 
+> Send all your spam to aardvark@nl.linux.org (spam digging piggy)
+> 
 > _______________________________________________
 > linux-lvm mailing list
 > linux-lvm@sistina.com
