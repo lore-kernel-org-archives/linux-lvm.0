@@ -1,9 +1,8 @@
-From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] Changing PV position
-Message-ID: <20031219110923.E18654@sistina.com>
-References: <200312181208.49303.benoit.peccatte@enst-bretagne.fr>
+From: Xavier Brouckaert <xbr@info.ucl.ac.be>
+Message-Id: <1071837164.7460.37.camel@Chimay.bugfactory.org>
 Mime-Version: 1.0
-In-Reply-To: <200312181208.49303.benoit.peccatte@enst-bretagne.fr>; from benoit.peccatte@enst-bretagne.fr on Thu, Dec 18, 2003 at 12:08:49PM +0100
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] 2.4 LVM1 devfs  -> 2.6.0 LVM2 udev
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,72 +13,32 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Fri Dec 19 04:15:02 2003
+Date: Fri Dec 19 06:34:01 2003
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Thu, Dec 18, 2003 at 12:08:49PM +0100, Benoit wrote:
-> Hello,
-> 
-> I'm currently using lvm on my box and one disk just died.
-> Then the second disk (hdb) became the first one (hda). The problem is that now 
-> I can't get back the physical volume which is on it. Is it possible to tell 
-> lvm to force the reading of a PV even if it isn't on the same disk as 
-> before ?
+Hi,
 
-vgscan does whyt you are asking for (before trying "vgchange -ay").
+As the 2.6.0 is out, it's time for me to see if I can switch to it.
+What is the procedure and the things to know to switch from a 2.4 LVM1
+devfs to a 2.6 LVM2 udev ?  I'm using a debian/unstable.  I've seen that
+there was a package lvm2 (2.00.08-3) but the comment contains at the end
+"requires Linux kernel 2.4.". Does this mean that this package really
+cannot handle 2.6 kernels ?
 
-> 
-> Thank you for your help.
-> Benoit
-> 
-> 
-> Informations :
-> 
-> peck:/# fdisk -l /dev/hda
-> 
-> Disk /dev/hda: 122.9 GB, 122942324736 bytes
-> 255 heads, 63 sectors/track, 14946 cylinders
-> Units = cylinders of 16065 * 512 = 8225280 bytes
-> 
->    Device Boot      Start         End      Blocks   Id  System
-> /dev/hda1   *           1         898     7213153+   b  W95 FAT32
-> /dev/hda2             899        1384     3903795   83  Linux
-> /dev/hda3            1385       14946   108936765    5  Extended
-> /dev/hda5            1385        1992     4883728+  fd  Linux raid autodetect
-> /dev/hda6            1993       14946   104052973+  8e  Linux LVM
-> 
-> peck:/# pvs /dev/hda6
->   Failed to read physical volume "/dev/hda6"
-> 
-> 
-> I'm currently using linux 2.6-test9, with lvm2 tools. 
-> The missing volume was created with lvm1 tools.
-> 
-> 
-> 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+I've also seen that devfs has been obsoleted by udev. However, I didn't
+find a udev package for sid nor a kernel option for it (but I've read
+that it is only in userspace).  The udev FAQ
+(http://www.kernel.org/pub/linux/utils/kernel/hotplug/udev-FAQ) does not
+mention if I need to install hotplug to have udev working.
 
--- 
+Do I have to change something in /etc/lvmtab.d and /etc/lvmconf ?
 
-Regards,
-Heinz    -- The LVM Guy --
+It seems that a thing called "device-mapper" is needed, but I couldn't
+find it in the kernel. Is it CONFIG_DM_IOCTL_V4 ? The "DM" substring
+makes me think it's that but the comment in "make menuconfig" doesn't
+say that it's for LVM nor that it's a device mapper.
 
-*** Software bugs are stupid.
-    Nevertheless it needs not so stupid people to solve them ***
-
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-
-Heinz Mauelshagen                                 Sistina Software Inc.
-Senior Consultant/Developer                       Am Sonnenhang 11
-                                                  56242 Marienrachdorf
-                                                  Germany
-Mauelshagen@Sistina.com                           +49 2626 141200
-                                                       FAX 924446
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+Thanks !
+Xavier
