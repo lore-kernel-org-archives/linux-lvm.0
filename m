@@ -1,9 +1,11 @@
-Subject: Re: [linux-lvm] LVM-1.0.1-rc4 and kernel-2.2.19 patch
-References: <3BD1E714.B8CF216D@libertysurf.fr>
-From: Adrian Phillips <a.phillips@dnmi.no>
-In-Reply-To: <3BD1E714.B8CF216D@libertysurf.fr>
-Message-ID: <wvofn15sgl.fsf@freeze.oslo.dnmi.no>
-MIME-Version: 1.0
+From: =?iso-8859-1?Q?Ragnar_Kj=F8rstad?= <lvm@ragnark.vestdata.no>
+Subject: Re: [linux-lvm] pvmove with Bad bocks
+Message-ID: <20011021140746.B15468@vestdata.no>
+References: <55159047260.20011020155124@gmx.de>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <55159047260.20011020155124@gmx.de>; from stonki@gmx.de on Sat, Oct 20, 2001 at 03:51:24PM +0200
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,36 +16,36 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Sun Oct 21 03:04:01 2001
+Date: Sun Oct 21 07:06:02 2001
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="iso-8859-1"
 To: linux-lvm@sistina.com
 
->>>>> "Philippe" == Philippe Lefevre <ph.l@libertysurf.fr> writes:
+On Sat, Oct 20, 2001 at 03:51:24PM +0200, Stonki wrote:
+> Hello list, Hello Heinz,
+>=20
+> on Tuesday you explained me the function of moving data from one
+> hard disc to another.
+> Well, regarding to Murphies Law... pvmove complains about read errors
+> and stops before moving all data.
+>=20
+> Error reading input physical volume /dev/hdf1 still 393216 bytes to
+> read).
 
-    Philippe>  Hello all, I had to update my current kernel (2.2.17)
-    Philippe> to 2.2.19 with ext3 but I totaly forget to check if a
-    Philippe> patch were created for it to support LVM-1.0.1-rc4
-    Philippe> (which runs fine for me with K2.4.10, thank you LVM team
-    Philippe> !!)
- 
-    Philippe>  I was able to build one using the rawio patch designed
-    Philippe> to 2.2.18 and easily fixing two small problems (two
-    Philippe> hunks were failed) but I'm tiedous to apply it like
-    Philippe> this.
- 
-2.2.18 would work fine but there was a problem with a change in rc4 -
-check the archive; this is fixed in CVS but I haven't had any success
-in connecting to CVS yet so I haven't so what was required to fix it
-and nobody else seems to have had time yet either. My hope is that
-there will be a rc5 soon with this fix in.
+If you browse the archive for the last month you will find a couple of
+threads on the subject.
 
-Sincerely,
+I've posted a cruel patch to make pvmove ignore read-errors, and update
+the meta-data even if the sector is bad. (The extent will be moved to
+the other disk, but contain garbage). With this patch the behaviour is
+undefined when moving more than one PE. Other than that, I think it
+should work.
 
-Adrian Phillips
+Others posted suggestions and possible some patches too - allthough
+there was no complete perfect solution, I think you should be able to
+make it work from the different tips submitted in the thread.
 
--- 
-Your mouse has moved.
-Windows NT must be restarted for the change to take effect.
-Reboot now?  [OK]
+
+--=20
+Ragnar Kj=F8rstad
+Big Storage
