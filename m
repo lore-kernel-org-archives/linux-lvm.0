@@ -1,10 +1,9 @@
-Return-Path: <adilger@turbolinux.com>
-From: Andreas Dilger <adilger@turbolinux.com>
-Message-Id: <200102070845.f178jXs23806@webber.adilger.net>
-Subject: Re: [linux-lvm] lvm buglet in 0.9.1_beta
-In-Reply-To: <20010206093700.A528@tykepenguin.com> from Patrick Caulfield at
- "Feb 6, 2001 09:37:00 am"
-Date: Wed, 7 Feb 2001 01:45:32 -0700 (MST)
+Return-Path: <james@fr.clara.net>
+Date: Wed, 7 Feb 2001 10:25:25 +0100 (CET)
+From: James <james@fr.clara.net>
+Message-ID: <Pine.LNX.4.21.0102071013170.15807-100000@munster.noc.fr.clara.net>
+MIME-Version: 1.0
+Subject: [linux-lvm] lvm with raid
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,32 +15,41 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: TEXT/PLAIN; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Patrick Caulfield writes:
-> It probably just needs COMPAQ_SMART2_MAJOR (& COMPAQ_SMART_MAJOR[1-7])
-> adding into the list in lvm_check_partitioned_dev.c. It's already in
-> lvm_check_dev.c so I suspect it's just an oversight.
+Hello
 
-It may not be exactly this.  AFAIK, when we call lvm_check_partitioned_dev()
-when we are scanning disks, I think this determines if LVM will start doing
-the gross DOS partition stuff.  Is it the case with these COMPAQ devices
-that they use DOS partitions?
+I am trying to use lvm with a /dev/md0 partition which I believe is
+possible. But I miust be missing something. 
 
-IMHO, it should be possible (CONFIG_ flag or so) to simply turn off LVM
-partition grubbing, and stick with what we get from /proc/partitions and
-/dev scanning.  The only reason we do this, AFAIK, is to check the LVM
-partition type in DOS partition table, but it causes bug reports too.
+Using lvm_0.9, kernel 2.4.0 under debian Linux
 
-In any case, while you are in there, can you add COMPAQ_CISS_MAJOR + [1-7]
-also.  This is basically the same thing as COMPAQ_SMART_MAJOR.  It will
-avoid yet another similar bug report on this in the future.
+I created /dev/md0 (raid autodetect)
+Did a pvcreate /dev/md0
+lvcreate'd partitions /usr /home /var
 
-Cheers, Andreas
--- 
-Andreas Dilger  \ "If a man ate a pound of pasta and a pound of antipasto,
-                 \  would they cancel out, leaving him still hungry?"
-http://www-mddsp.enel.ucalgary.ca/People/adilger/               -- Dogbert
+copied and remounted everything.
+This all goes surprisingly well, until I decided to test with a reboot.
+
+vgscan and vgchange don't find a thing !
+
+test:/home/james# vgscan 
+vgscan -- reading all physical volumes (this may take a while...)
+vgscan -- no volume groups found
+
+test:/home/james# vgchange -a y
+vgchange -- no volume groups found
+
+but if I try to recreate a PV 
+
+test:/home/james# pvcreate /dev/md0
+pvcreate -- ERROR: can't initialize physical volume "/dev/md0" of volume
+group "devlvm" without -ff
+ 
+Everything is still there apparantly.
+
+I must be missing something fundamental. Thanks fot any help in advance.
+
+James
