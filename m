@@ -1,17 +1,16 @@
-Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with SMTP id i22FZ4832399
-	for <linux-lvm@redhat.com>; Tue, 2 Mar 2004 10:35:04 -0500
-Received: from mail.goldenhope.com.cn ([220.249.10.10])
-	by mx1.redhat.com (8.11.6/8.11.6) with SMTP id i22FZ2b10944
-	for <linux-lvm@redhat.com>; Tue, 2 Mar 2004 10:35:03 -0500
-Received: from lepton.goldenhope.com.cn (lepton.goldenhope.com.cn [192.168.1.138])
-	by mail.goldenhope.com.cn (Postfix) with ESMTP id A95D8DA21
-	for <linux-lvm@redhat.com>; Tue,  2 Mar 2004 23:34:27 +0800 (HKT)
-From: lepton <lepton@mail.goldenhope.com.cn>
-Message-ID: <20040302153451.GA13034@lepton.goldenhope.com.cn>
+Received: from fentible.pjc.net (vpnuser4.surrey.redhat.com [172.16.9.4])
+	by pobox.surrey.redhat.com (8.12.8/8.12.8) with ESMTP id i22Fjeuq029699
+	for <linux-lvm@redhat.com>; Tue, 2 Mar 2004 15:45:40 GMT
+Received: from patrick by fentible.pjc.net with local (Exim 4.30)
+	id 1AyC6K-0003cB-Da
+	for linux-lvm@redhat.com; Tue, 02 Mar 2004 15:46:32 +0000
+From: Patrick Caulfield <pcaulfie@redhat.com>
+Subject: Re: [linux-lvm] Adding xfs module to the initrd-lvm
+Message-ID: <20040302154631.GB12779@tykepenguin.com>
+References: <20040302152911.GI15556@tangerine.coulon.evette>
 Mime-Version: 1.0
 Content-Disposition: inline
-Subject: [linux-lvm] Why can't I extend a LV after many times extends?
+In-Reply-To: <20040302152911.GI15556@tangerine.coulon.evette>
 Sender: linux-lvm-admin@redhat.com
 Errors-To: linux-lvm-admin@redhat.com
 Reply-To: linux-lvm@redhat.com
@@ -23,94 +22,29 @@ List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
 List-Archive: <https://www.redhat.com/archives/linux-lvm/>
-Date: Tue Mar  2 10:33:02 2004
+Date: Tue Mar  2 10:44:07 2004
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@redhat.com
 
-LVM version:     2.00.08 (2003-11-14)
-Library version: 1.00.07-ioctl (2003-11-21)
-Driver version:  4.0.0
+On Tue, Mar 02, 2004 at 04:29:11PM +0100, Jean-Luc Coulon (f5ibh) wrote:
+> Hi,
+> 
+> I would like to add the xfs module to the lvm created by  
+> lvmcreate_initrd.
+> 
+> Is there a mean to do that easily?
+> So I have to mount and existing one and add the module by hand?
 
-I am using linux kernel 2.6.3
+I suspect that's the easiest way if that's what you really need to do.
 
-For making my data can balance on all of my three scsi disk, I use such
-methods to create my LV:
-  lvcreate -l 32 -n test vg /dev/sda1
-  lvextend -l +32 /dev/vg/test /dev/sdb1
-  lvextend -l +32 /dev/vg/test /dev/sdc1
-  lvextend -l +32 /dev/vg/test /dev/sda1
-  ......
+> So I have to use the standard initrd tools?
 
-  (I use a shell script to do these)
+You could edit the existing lvmcreate_initrd to add the module (look for lvm-mod
+and write some similar code underneath it).
 
-But When I extend a Logic Volumn to 26.5G, it saids:
-....
-  Logical volume boards successfully resized
-  Extending logical volume boards to 26.75 GB
-  VG amd64 metadata writing failed
-  Extending logical volume boards to 26.75 GB
+But the easiest way, by far, is to have your kernel with XFS compiled into it
+rather than as a module!
 
-  (lvextend using sdb1 and sdc1 will fail, but lvextend using sda1 will
-  sucess)
-
-It is strange I have three scsi disk which are the same.
-
-vgdisplay   
-  --- Volume group ---
-  VG Name               amd64
-  System ID             
-  Format                lvm2
-  Metadata Areas        3
-  Metadata Sequence No  1585
-  VG Access             read/write
-  VG Status             resizable
-  MAX LV                255
-  Cur LV                8
-  Open LV               0
-  Max PV                255
-  Cur PV                3
-  Act PV                3
-  VG Size               102.54 GB
-  PE Size               4.00 MB
-  Total PE              26250
-  Alloc PE / Size       20032 / 78.25 GB
-  Free  PE / Size       6218 / 24.29 GB
-  VG UUID               RSR1JG-3vRE-4esH-m8dI-rY4B-WG0p-XweADh
-
-pvdisplay /dev/sda1
-  --- Physical volume ---
-  PV Name               /dev/sda1
-  VG Name               amd64
-  PV Size               34.18 GB / not usable 0   
-  Allocatable           yes 
-  PE Size (KByte)       4096
-  Total PE              8750
-  Free PE               2286
-  Allocated PE          6464
-  PV UUID               YAKwOe-oJlA-CbzF-5IwO-ReqH-JZiw-LdhtT7
-   
-pvdisplay /dev/sdb1 
-  --- Physical volume ---
-  PV Name               /dev/sdb1
-  VG Name               amd64
-  PV Size               34.18 GB / not usable 0   
-  Allocatable           yes 
-  PE Size (KByte)       4096
-  Total PE              8750
-  Free PE               1966
-  Allocated PE          6784
-  PV UUID               FkVeuL-7JAW-UurK-GFcZ-e642-inMT-5MYYMq
-
- pvdisplay /dev/sdc1
-  --- Physical volume ---
-  PV Name               /dev/sdc1
-  VG Name               amd64
-  PV Size               34.18 GB / not usable 0   
-  Allocatable           yes 
-  PE Size (KByte)       4096
-  Total PE              8750
-  Free PE               1966
-  Allocated PE          6784
-  PV UUID               sRSor7-r4KP-1PNr-nESn-sZPS-aKMx-7s3CU
+Patrick
