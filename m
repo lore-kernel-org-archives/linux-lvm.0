@@ -1,39 +1,43 @@
-Message-Id: <199911111249.AA26995@mailgate1b.telekom.de>
+Message-Id: <199911111126.AA20540@mailgate1b.telekom.de>
 From: Heinz Mauelshagen <mauelsha@ez-darmstadt.telekom.de>
-Subject: Re: [linux-lvm] modular MD and LVM
-Date: Thu, 11 Nov 1999 13:46:47 MET
-In-Reply-To: <5lr9hzf1lc.fsf@tequila.cs.yale.edu>; from "Stefan Monnier" at Nov 09, 99 10:49 pm
+Subject: [linux-lvm] Actual status of LVM in stock kernel
+Date: Thu, 11 Nov 1999 12:23:56 MET
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: monnier+lists/linux/lvm/news/@tequila.cs.yale.edu
-Cc: mge@ts1.ez-darmstadt.telekom.de, linux-lvm@msede.com
+To: linux-lvm@msede.com
+Cc: mge@ts1.ez-darmstadt.telekom.de
 
 
-Hi Stefan,
+Hi all,
 
-basically the generic functions in the blk_dev_struct structure 
-will be reduced to one because this is sufficient for MD, GFS and LVM.
+just wanted to give you the actual status of the LVM driver
+on its long long way into the stock kernel.
 
-But due to the fact that you can't push a lot of things to Linux
-at this point in time it will take us a while...
 
+Dirk Hohndel (THX Dirk!) supported me by talking to Linus in person
+about 5 weeks ago. He convinced Linus to be open to include the LVM 
+in the stock kernel (good idea(tm)) and asked me to send a patch
+for 2.3.x directly to Linus.
+
+I did but didn't get any answer from Linux within a couple of days.
+
+So i had to ask for Dirk's help again.
+
+He told me to resend the patch to Linus.
+
+I did but didn't .......... 8*(((
+
+Dirk will talk to Linus again in person next week.
+
+
+Somebody out there to help me stay optimistic?
+
+Kind regards,
 Heinz
-
-> 
-> 
-> What happened to the patch that provided `map_fn' and `makerq_fn'
-> to allow MD, LVM (and GFS' Pool) to be made more modular ?
-> 
-> 
-> 	Stefan
-> 
-> PS: see http://linux.msede.com/lvm/mlist/archive/0269.html
-> 
-
 
 --
 
