@@ -1,25 +1,20 @@
-Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id i3LIL2p11258
-	for <linux-lvm@redhat.com>; Wed, 21 Apr 2004 14:21:02 -0400
-Received: from mailgate.Cadence.COM (mailgate.Cadence.COM [158.140.2.1])
-	by mx1.redhat.com (8.12.10/8.12.10) with ESMTP id i3LIL1Fe030229
-	for <linux-lvm@redhat.com>; Wed, 21 Apr 2004 14:21:01 -0400
-Received: from mailhub.Cadence.COM (mailhub.Cadence.COM [158.140.128.33])
-	by mailgate.Cadence.COM (8.9.3/8.9.3) with ESMTP id LAA00443
-	for <linux-lvm@redhat.com>; Wed, 21 Apr 2004 11:21:00 -0700 (PDT)
-Received: from d158140025182.cadence.com (localhost [127.0.0.1])
-	by mailhub.Cadence.COM (8.12.8/8.8.5) with ESMTP id i3LIKUdp007073
-	for <linux-lvm@redhat.com>; Wed, 21 Apr 2004 11:20:30 -0700 (PDT)
-Subject: Re: [linux-lvm] pvscan takes a lot of time
-From: Chris Croswhite <csc@cadence.com>
-In-Reply-To: <Pine.LNX.4.43.0404212006390.4766-100000@beo.doppingen.nu>
-References: <Pine.LNX.4.43.0404212006390.4766-100000@beo.doppingen.nu>
-Message-Id: <1082572088.5799.611.camel@d158140025182.Cadence.COM>
-Mime-Version: 1.0
-Date: Wed, 21 Apr 2004 11:28:08 -0700
+Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id i3LJ2up27631
+	for <linux-lvm@redhat.com>; Wed, 21 Apr 2004 15:02:56 -0400
+Received: from smtp.doruk.net.tr (smtp.doruk.net.tr [212.58.5.248])
+	by mx3.redhat.com (8.12.10/8.12.10) with ESMTP id i3LJ2sMc007756
+	for <linux-lvm@redhat.com>; Wed, 21 Apr 2004 15:02:55 -0400
+Received: from VAHOXP (vahric.doruk.net.tr [212.58.13.17])
+	by smtp.doruk.net.tr (8.12.8/8.12.8) with ESMTP id i3LJ82cJ003525
+	for <linux-lvm@redhat.com>; Wed, 21 Apr 2004 22:08:02 +0300
+Message-Id: <200404211908.i3LJ82cJ003525@smtp.doruk.net.tr>
+From: "Vahric MUHTARYAN" <vahric@doruk.net.tr>
+Subject: RE: [linux-lvm] About Extending LVM size with Hardware Raid
+Date: Wed, 21 Apr 2004 22:05:15 +0300
+MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
-Reply-To: csc@cadence.com,
-	LVM general discussion and development <linux-lvm@redhat.com>
+In-Reply-To: <4086BAC6.2080604@stercomm.com>
+Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -30,70 +25,50 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: LVM general discussion and development <linux-lvm@redhat.com>
+To: 'LVM general discussion and development' <linux-lvm@redhat.com>
 
-Is your system scanning dummy nodes like nbd* or something?  What does
-the log file look like?
+	Okey you mean create a new raid5 with new disks and add it to volume
+group okey you right . 
+
+	But My question is , Think that I have raid5 array with 3 disk ( I'm
+using ICP Raid controller card )  then I add 4.th disk to my raid array ( I
+know clearly that I can extend raid5 ) at this I have more disk space but I
+have to intorduce it to system , and I can't imagine How ?! it's easy if I
+have free partiton but I can't show this extended array like a free
+partition  :( 
+
+Thanks For your answer 
+Vahric 
+
+-----Original Message-----
+From: linux-lvm-bounces@redhat.com [mailto:linux-lvm-bounces@redhat.com] On
+Behalf Of Chris Cox
+Sent: Wednesday, April 21, 2004 9:18 PM
+To: LVM general discussion and development
+Subject: Re: [linux-lvm] About Extending LVM size with Hardware Raid
+
+Vahric MUHTARYAN wrote:
+> Hi Everybody ?! 
+> 
+> 	Maybe everybody know Raid5 can extend easily. I'm using hardware
+> raid and I wonder What extend utulity I have to use for system . resize or
+> LVM .. 
+> Because with hardware raid system looks all disks like a one logical disk
+at
+> this moment How can I intorduce extended array to system ... 
+
+Uh... you don't generally extend RAID 5.  But if your hardware
+raid solution has unutilized disks (or disks you can add), you can
+create a new logical hw raid disk and easily add that disk into existing
+volume groups.
+
+If you have left over space on your existing logical disk, that
+too can be added quite easily.  You need to provide more info.
 
 
-On Wed, 2004-04-21 at 11:17, Tomas wrote:
-> Hi all LVM:ers... (Hmm .. almost sound like lamers ;-) )
-> 
-> I have upgraded a Mandrake 9.2 system to Mandrake 10.0 Community. The
-> lvm1 volumes was imported correctly. When I had the volumes imported and
-> ready I converted them into lvm2
-> 
-> Now pvscan takes a lot of time. I can't remember if it took a long time
-> to pvscan before I converted the volumes. At least I know for sure pvscan
-> ran quite fast on MDK 9.2
-> 
-> Still pvscan takes a long time to complete +1 minute and on my other
-> systems running lvm1 or lvm2 it takes seconds. Have I done something
-> wrong?
-> The /dev/md10 and /dev/md20 are soft mirrors.
-> 
-> Also the summary of GB seem to be wrong.
-> 
-> Output from pvscan -v below
-> 
-> Yes I know. I like partitions or at least liked them. ;-)
-> I will rebuild this to fewer partitions in the future I am in progress of
-> doing that for the moment.
-> 
-> pvscan -v
->     Wiping cache of LVM-capable devices
->     Wiping internal cache
->     Walking through all physical volumes
-> 
-> ->>> Here it takes a LOT of time
-> 
->   PV /dev/md10   VG mirr_vg01   lvm2 [18,97 GB / 1,84 GB free]
->   PV /dev/md20   VG mirr_vg01   lvm2 [24,00 GB / 4,19 GB free]
->   PV /dev/hda5   VG work_vg01   lvm2 [29,25 GB / 0    free]
->   PV /dev/hdc5   VG work_vg01   lvm2 [8,50 GB / 2,41 GB free]
->   PV /dev/hda6   VG work_vg01   lvm2 [8,06 GB / 0    free]
->   PV /dev/hdc7   VG work_vg01   lvm2 [3,44 GB / 0    free]
->   PV /dev/hdb2   VG work_vg01   lvm2 [24,00 GB / 0    free]
->   PV /dev/hdd7   VG work_vg01   lvm2 [7,97 GB / 4,81 GB free]
->   PV /dev/hdd8   VG work_vg01   lvm2 [7,97 GB / 1,19 GB free]
->   PV /dev/hdd9   VG work_vg01   lvm2 [1,22 GB / 0    free]
->   PV /dev/hda2   VG burn_vg01   lvm2 [29,30 GB / 96,00 MB free]
->   PV /dev/hdc2                  lvm2 [24,03 GB]
->   PV /dev/hda3                  lvm2 [29,30 GB]
->   PV /dev/hdc6                  lvm2 [8,55 GB]
->   PV /dev/hdd2                  lvm2 [2,49 GB]
->   PV /dev/hdb3                  lvm2 [24,03 GB]
->   PV /dev/hdd3                  lvm2 [2,49 GB]
->   PV /dev/hdb4                  lvm2 [42,93 GB]
->   PV /dev/hdd5                  lvm2 [8,00 GB]
->   PV /dev/hdd6                  lvm2 [8,00 GB]
->   Total: 20 [164,36 GB] / in use: 11 [14,53 GB] / in no VG: 9 [149,83 GB]
-> 
-> Best regards
-> /Tomas
-> 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+
+_______________________________________________
+linux-lvm mailing list
+linux-lvm@redhat.com
+https://www.redhat.com/mailman/listinfo/linux-lvm
+read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
