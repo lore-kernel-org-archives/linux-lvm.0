@@ -1,35 +1,38 @@
-Date: Wed, 12 Apr 2000 21:14:53 +0200
-From: =?iso-8859-1?Q?Ragnar_Kj=F8rstad?= <lvm@ragnark.vestdata.no>
-Subject: [linux-lvm] Re: converting a filesystem to a logic volume
-Message-ID: <20000412211453.C21004@vestdata.no>
+Date: Wed, 12 Apr 2000 22:18:48 +0200
+From: bert hubert <ahu@ds9a.nl>
+Subject: Re: [linux-lvm] LVM viewer / manager APP
+Message-ID: <20000412221848.A4188@home.ds9a.nl>
+References: <20000412205600.B21004@vestdata.no>
 Mime-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20000412205600.B21004@vestdata.no>; from lvm@ragnark.vestdata.no on Wed, Apr 12, 2000 at 08:56:00PM +0200
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="iso-8859-1"
 To: linux-lvm@msede.com
 
+On Wed, Apr 12, 2000 at 08:56:00PM +0200, Ragnar Kj=EF=BF=BDrstad wrote:
 
-Is it needed to move the filesystem in question to do this?
+> I made some screenshots of vxva available at
+> http://www.stud.ntnu.no/~ragnarkj/download/vxva
 
-Whould not the following work:
-* Create the VG that should contain the filesystem
-  This must be created on some other device. If the disk in question is
-  full, it's possible to
-   * shrink the filesystem
-   * shrink the partition
-   * create a new partition after the one with the filesystem
-  and use the new partition for the VG.
-* Add the device with the filesystem as a new PV in the existing VG.
-  The LV can cover the PV completely, and the filesystem does not have
-  to be shrinked or moved
+I'm not sure what to think. On one hand it is visual and it gives an
+indication of relative size. On the other hand, I don't understand what it
+means. Especially the 'worldview' thing is obscure.
 
-This will only work assuming that LVM does not have to store any
-metadata on every PV. Does it?
+I currently intend to stick with the Column Tree display, as shown on
+http://ds9a.nl/lvm-howto/screenshot.gif
 
-Moving filesystems should be avoided if possible.
+Depending on what row you selected, different buttons appear.=20
 
+Thanks for your screenshots!
+
+Regards,
+
+bert hubert.
 
 --=20
-Ragnar Kj=EF=BF=BDrstad
+                       |              http://www.rent-a-nerd.nl
+                       |                     - U N I X -
+                       |          Inspice et cautus eris - D11T'95
