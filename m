@@ -1,13 +1,10 @@
-From: Stefan Weigel <sw@global-linxs.de>
-Message-ID: <7937632.20021020161850@global-linxs.de>
-Subject: Re[2]: [linux-lvm] Re: problem with lvm on root-fs
-In-Reply-To: <20021020103456.GC26167@percy.comedia.it>
-References: <200210170859.03682.sw@global-linxs.de>
- <20021018095829.GA687@percy.comedia.it> <200210181241.28210.sw@global-linxs.de>
- <200210181505.11782.sw@global-linxs.de>
- <20021020103456.GC26167@percy.comedia.it>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+From: Jose Luis Domingo Lopez <linux-lvm@24x7linux.com>
+Subject: Re: [linux-lvm] creating a LVM ontop of a cryptated (ppdd) loop back device
+Message-ID: <20021020153212.GA2950@localhost>
+References: <3DAEDEE5.4540B954@silicide.dk> <20021017211217.GB4861@localhost> <3DAFB713.A2E7FAB3@silicide.dk> <20021018213759.GA4471@localhost> <3DB266FF.94DA814C@silicide.dk>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <3DB266FF.94DA814C@silicide.dk>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -18,57 +15,33 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Sun Oct 20 09:20:01 2002
+Date: Sun Oct 20 10:32:02 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: Luca Berra <linux-lvm@sistina.com>
+Content-Transfer-Encoding: 7bit
+To: linux-lvm@sistina.com
 
-Sunday, October 20, 2002, 12:34:57 PM, you wrote:
+On Sunday, 20 October 2002, at 10:19:11 +0200,
+Jon Bendtsen wrote:
 
-LB> On Fri, Oct 18, 2002 at 03:05:11PM +0200, Stefan Weigel wrote:
->>Hi Luca!
->>I should be happy now but there's still a problem left. First: now I can boot 
->>from my lvm-root-fs (yeeehhaaa). My problem: one line in /etc/lilo.conf 
->>(ramdisk=16384 instead of ramdisk=8192).
->>But if I now want to run lilo I get this message:
->>
->>Fatal: Sorry, dont know how to handle device 0x3a05
->>
-LB> this could be caused by an old lilo version.
+> > As said in my first post to this thread, the encryption layer is
+> > provided by loop-aes (loop-aes.sourceforge.net), which is easy to setup
+> > and is quite well documented (except for one little but annoying detail:
+> > instead of "AES", the algorithm is called "rijndael", otherwise "loop"
+> > complains loudly about an "unknown algorithm type").
+> 
+> hmm ?? rijndael ?
+> I've used it just fine with losetup -e AES256
+> 
+Just a final note, and trying not to go too off-topic, this is maybe an
+issue with my "mount" package version more than a "loop-aes" problem.
+But I am not sure of which program or code checks for the "correctness"
+of an algorithm name when you use "losetup" (in fact, the /proc/cipher
+files don't appear on my system :-).
 
-LB> LVM support was added to mainstream lilo in version 22.
-
-LB> upgrade to latest version from
-LB> ftp://metalab.unc.edu/pub/Linux/system/boot/lilo
-
-LB> L.
-
-
-Yes, this could be the problem. But on the other hand it's a SuSE
-Linux Enterprise version. And SuSE is very common with LVM. So I will
-be very surprised if their packages wouldn't work together. But I will
-give this a try..I will report if this problem is caused by an old
-lilo version.
-
-best regards
-
-Stefan
+I will investigate it further, but this is off-topic here, so end of
+thread on my part ;-).
 
 -- 
-
-__________________________________________
-
- stefan weigel
- administration
-
- global linxs gmbh
- knowledge interaction
- romanstrasse 16
- 80639 munich - germany
- www.global-linxs.com
-
- tel.: +49(0)89. 189 336- 61
- fax.: +49(0)89. 189 336- 99
- email: sw@global-linxs.com
-
-__________________________________________
+Jose Luis Domingo Lopez
+Linux Registered User #189436     Debian Linux Woody (Linux 2.4.19-pre6aa1)
