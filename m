@@ -1,7 +1,10 @@
-From: "Ian E. Morgan" <imorgan@webcon.ca>
-Message-ID: <Pine.LNX.4.53.0303121824410.2531@light.webcon.net>
-MIME-Version: 1.0
-Subject: [linux-lvm] Help: LVM on top of SW RAID0+1
+From: Petro <petro@auctionwatch.com>
+Subject: Re: [linux-lvm] Problems and questions with LVM on a large raid system.
+Message-ID: <20030312234520.GA19335@auctionwatch.com>
+References: <20030312195217.GC18876@auctionwatch.com> <20030312221320.GA15196@gw.silicide.dk>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20030312221320.GA15196@gw.silicide.dk>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -12,48 +15,79 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Mar 12 17:38:31 2003
+Date: Wed Mar 12 17:46:02 2003
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Current config:
+On Wed, Mar 12, 2003 at 11:13:20PM +0100, jon+lvm@silicide.dk wrote:
+> On Wed, Mar 12, 2003 at 11:52:17AM -0800, Petro wrote:
+> > I've got a couple of brand new boxes I'm trying to get LVM set up
+> > properly on. 
+> > These machines have 6 200GiB drives attached to a 3ware controller card,
+> > for a total of 1,200,000,000,000 bytes of storage. 
+> later down you write you need speed. In that case i would suggest
+> ditching the hardware raid, and use pure software raid, it is faster.
+> I dont mind 3ware, i have dome myself, but my benchmarking revealed
+> that software was faster.
 
-md1: raid0 of hda3, hdb3
-md2: raid0 of hdc3, hdd3
-md3: raid1 of md1, md2
+    The production data we gathered showed the opposite--at least for the 
+    3ware cards in our environment (we had about 5-8% more overhead
+    running the 3ware cards RAID0 than we did running either raw disk
+    (cheap IDE cards) or having the 3ware card pretend to be a jbod. 
 
-Situation:
+    This wasn't benchmarking, this was set it up and throw it over the
+    wall for a month or two and see what the numbers looked like. 
 
-md1 was created first, and is currently one big PV in VG "foo".
+    A really nervous way of testing. 
+    
+> > I'm running kernel 2.4.18, with LVM version 1.0.3, and the lvmtools
+> > version 1.0.1rc3-1 (long story, but upgrading is a path-of-last-resort).
+> if you need snapshots, get 1.0.7
 
-md2 was created identically to md1, and then md3 was created causing md2 to
-be synced to be identical to md1.
+    If I get the chance I'm probably going to ditch LVM since I don't
+    need snapshots. I initially was give snapshots as a requirement. 
 
-I would now like VG "foo" to use md3 instead of md1.
+    Unfortunately I'll probably not get a chance to redo these. 
+  
+> > Initially I had the drives set up as a single raid0 device, but doing a
+> > pvcreate on it failed with a message that said something about "can't
+> > get size". 
+> strange, linux should be able to handle 2T block devices.
 
-I tried:
+    Yes. It should. 
 
-# vgexport foo
-# vgimport foo /dev/md3
+    But when I did a pvcreate /dev/sda, where sda was 6 drives in a
+    raid0, it failed. 
+    
+> > So I set up 2 3 disk RAID0 devices, and did a vgcreate /dev/sda /dev/sdb.
+> > Now, one question I have is: 
+> >     Does this concatenate the devices, or does it interleave the
+> >     devices? IE do I have a stripe of stripes, or two stripes? 
+> that depends. You can stripe the lvm, but then you cant resize it.
+> if you made a LV, then it would proberly just allokate all on one
+> "disk", aka sda, and then on sdb.
+ 
+    I'm using 100% of the VG for the same LV. 
 
+    I'm fine with not being able to resize it. Do I need the MD stuff to
+    stripe it? 
 
-This seemed to suceed, but vgdisplay says that VG "foo" is still only using
-PV md1.
+> > Since I need the disk write rate of all 6 drives, I'm *REALLY* hoping
+> > that it's interleaved. 
+> sorry... it is not interleaved.
+> JonB
+> ps: how big a partition do you need stripping for? Do you need the
+> advanced LVM stuff, like resize, snapshot...
 
-It seems that pvscan and friends see md[123] all as belonging to VG "foo".
+    I need slightly over 1T of formatted disk space on each system. 
 
-How do I make LVM ignore md1 and md2, and force only md3 to be used on VG
-"foo"?
-
-
-Regards,
-Ian Morgan
+    Which means i really need to find a way to send an <alt-3> through
+    an ssh session to a telnet window. 
 
 -- 
--------------------------------------------------------------------
- Ian E. Morgan          Vice President & C.O.O.       Webcon, Inc.
- imorgan@webcon.ca          PGP: #2DA40D07           www.webcon.ca
-    *  Customized Linux network solutions for your business  *
--------------------------------------------------------------------
+"On two occasions, I have been asked [by members of Parliament], 'Pray, 
+Mr. Babbage, if you put into the machine wrong figures, will the right 
+answers come out?' I am not able to rightly apprehend the kind of confusion 
+of ideas that could provoke such a question." -- Charles Babbage 
