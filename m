@@ -1,18 +1,24 @@
-Received: from homer.msp.redhat.com (homer.msp.redhat.com [172.16.30.9])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id i4HIXq030369
-	for <linux-lvm@redhat.com>; Mon, 17 May 2004 14:33:52 -0400
-Received: (from agk@localhost)
-	by homer.msp.redhat.com (8.11.6/8.11.6) id i4HIXpd09338
-	for linux-lvm@redhat.com; Mon, 17 May 2004 13:33:51 -0500
-Date: Mon, 17 May 2004 13:33:51 -0500
-From: Alasdair G Kergon <agk@redhat.com>
-Subject: Re: [linux-lvm] Snapshot support for LVM2?
-Message-ID: <20040517133351.L5945@homer.msp.redhat.com>
-References: <8CCBDD5583C50E4196F012E79439B45C04C9A3EF@atl-ms1.megatrends.com>
+Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id i4HKTF011253
+	for <linux-lvm@redhat.com>; Mon, 17 May 2004 16:29:15 -0400
+Received: from chaos.ao.net (root@chaos.ao.net [208.5.40.6])
+	by mx3.redhat.com (8.12.10/8.12.10) with ESMTP id i4HKT9x7002912
+	for <linux-lvm@redhat.com>; Mon, 17 May 2004 16:29:10 -0400
+Received: from chaos.ao.net (harik@localhost [127.0.0.1])
+	by chaos.ao.net (8.12.9/8.12.9/Debian-5) with ESMTP id i4HKT8uE006096
+	for <linux-lvm@redhat.com>; Mon, 17 May 2004 16:29:08 -0400
+Received: (from harik@localhost)
+	by chaos.ao.net (8.12.9/8.12.9/Debian-5) id i4HKT8tg006095
+	for linux-lvm@redhat.com; Mon, 17 May 2004 16:29:08 -0400
+Date: Mon, 17 May 2004 16:29:08 -0400
+From: Dan Merillat <dmerillat@sequiam.com>
+Subject: Re: [linux-lvm] /boot on lvm?
+Message-ID: <20040517202908.GB2216@chaos.ao.net>
+References: <40A72846.5050801@mlug.missouri.edu> <22463-19176@sneakemail.com>
+	<40A90413.905@ipax.tk>
 Mime-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <8CCBDD5583C50E4196F012E79439B45C04C9A3EF@atl-ms1.megatrends.com>;
-	from vineshc@ami.com on Mon, May 17, 2004 at 01:36:21PM -0400
+In-Reply-To: <40A90413.905@ipax.tk>
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -27,20 +33,12 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-On Mon, May 17, 2004 at 01:36:21PM -0400, Vinesh Christopher wrote:
-> When is the official stable release of 
-> Snapshot support for LVM2?
-  
-Starting from http://sources.redhat.com/dm,
+On Mon, 17 May 2004, raoul bhatia wrote:
 
-  Stable 2.4.26 kernel patch is in:
-   ftp://sources.redhat.com/pub/dm/device-mapper.1.00.17.tgz
+> what about compiling these modules into your kernel, since they are an 
+> integrated part of your setup?
 
-For 2.6, there is not a stable snapshot release yet, but it's close.
-The snapshot support in
-  ftp://sources.redhat.com/pub/dm/patches/2.6-unstable/2.6.6-rc2/2.6.6-rc2-udm1.tar.bz2
-is the best available; there's still an issue with SMP.
+You still have to vgscan; vgchange -ay in order to activate the volume
+group, so that gets done in initrd.  Still, it's fairly painless.
 
-Alasdair
--- 
-agk@redhat.com
+--Dan
