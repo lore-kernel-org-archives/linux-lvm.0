@@ -1,12 +1,10 @@
-Return-Path: <jan@moria.gondor.com>
-Date: Mon, 8 Jan 2001 01:40:15 +0100
-From: Jan Niehusmann <list039@gondor.com>
-Subject: Re: [linux-lvm] vgcfgrestore bug followup
-Message-ID: <20010108014014.A6944@gondor.com>
-References: <0ada40824210711NYCSMTP2@nyc.rr.com> <20010107223300.A6050@gondor.com> <20010108012632.A11834@fb0442.mathematik.tu-darmstadt.de>
+Return-Path: <jan.w@lzer.net>
+Date: Mon, 8 Jan 2001 14:10:26 +0100
+From: Jan Walzer <jan.w@lzer.net>
+Message-ID: <1504018708.20010108141026@lzer.net>
 Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20010108012632.A11834@fb0442.mathematik.tu-darmstadt.de>; from grothe@mathematik.tu-darmstadt.de on Mon, Jan 08, 2001 at 01:26:32AM +0100
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] Once again ... Kernel 2.4.0 - What can I do ?
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -19,38 +17,32 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Mon, Jan 08, 2001 at 01:26:32AM +0100, Holger Grothe wrote:
-> > Index: pv_read_all_pv_of_vg.c
-> > ===================================================================
-> > RCS file: /data/cvs/LVM/tools/lib/pv_read_all_pv_of_vg.c,v
-> > retrieving revision 1.3
-> > diff -u -1 -b -p -r1.3 pv_read_all_pv_of_vg.c
-> > --- pv_read_all_pv_of_vg.c	2000/11/20 02:47:20	1.3
-> > +++ pv_read_all_pv_of_vg.c	2000/12/22 23:27:00
-> > @@ -103,2 +103,3 @@ int pv_read_all_pv_of_vg ( char *vg_name
-> >              pv_this_sav = pv_this;
-> > +	    if(np<pv_tmp[p]->pv_number) np=pv_tmp[p]->pv_number;
-> >              if ( ( pv_this = realloc ( pv_this,
-> > @@ -111,5 +112,4 @@ int pv_read_all_pv_of_vg ( char *vg_name
-> >              }
-> > -            pv_this[np] = pv_tmp[p];
-> > -            pv_this[np+1] = NULL;
-> > -            np++;
-> > +            pv_this[pv_tmp[p]->pv_number-1] = pv_tmp[p];
-> > +            //pv_this[np+1] = NULL; // XXX???
->                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-> IMHO the pv_this list has to be terminated by NULL (see next lines of 
-> source). Otherwise you may get "seg faults" while running vgscan
-> (see. Rik's mail). Replacing the marked line with 'pv_this[np] = NULL;' 
-> worked for me.
+Hello List,
 
-Yes, that's why I marked this line with XXX ;-). 
-I did fix the bug that hit me, but I didn't check if I may have introduced
-new bugs.
-You are probably right that pv_this[np]=NULL is needed. By the way, 
-the realloc can be changed to (np+1)*sizeof(...) instead of (np+2)*sizeof(...).
+  I'm currently using Kernel 2.4.0-test10 with LVM 0.8final ...
+  I have a 55Gig LVM-Partition (with reiserfs) and no backup ....
+  (Yes I know, but there's no money for a poor student to backup ...)
 
-Jan
+  Now I want to use the final 2.4.0 and it is now a fact, that there
+  is v0.9 in it. (why it is, is another question...)
+
+  I ask now, what I can do ...
+  It seems that they both are not compatible, as the vgscan under
+  2.4.0fin brings me a protocol error ...
+
+  Is there a way to "downpatch" the kernel to lvm0.8 ???
+  or better:
+  can I convert the volume to 0.9 without data-loss ???
+
+Thanx in advance ... Jan
+
+  PS: Please don't tell me all the reasons, why I need a backup.
+      I know it myself, but there is at the moment no way ....
+
+-- 
+
+ ,',    Jan Walzer      \V/  http://wa.lzer.net     ,',
+',','   student of      >|<  mailto:jan.w@lzer.net ',','
+  '   ComputerScience   /A\  +49-177-7403863         '
