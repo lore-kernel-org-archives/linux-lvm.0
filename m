@@ -1,6 +1,6 @@
-From: Andreas Dilger <adilger@turbolabs.com>
+From: Theo Van Dinter <felicity@kluge.net>
 Subject: Re: [linux-lvm] Backup costs (was: LVM reimplementationre)
-Message-Id: <20020206124518.E15496@lynx.turbolabs.com>
+Message-Id: <20020206145137.J427@kluge.net>
 References: <Pine.LNX.4.10.10202051326310.19683-100000@pzat.meep.org>
     <Pine.LNX.4.44.0202061338480.13203-100000@dragon.inside.ntisys.com>
 MIME-Version: 1.0
@@ -17,14 +17,13 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Feb  6 13:46:04 2002
+Date: Wed Feb  6 13:48:01 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: Benjamin Scott <bscott@ntisys.com>
-Cc: linux-lvm@sistina.com
+To: linux-lvm@sistina.com
 
-On Feb 06, 2002  14:14 -0500, Benjamin Scott wrote:
+On Wed, Feb 06, 2002 at 02:14:05PM -0500, Benjamin Scott wrote:
 >   Here are some prices from a recent Datacomm Warehouse catalog:
 > 
 >   Item            GB   Cost  $/GB
@@ -39,25 +38,28 @@ On Feb 06, 2002  14:14 -0500, Benjamin Scott wrote:
 > least.  This whole "hard disks are cheaper" thing is a myth propagated by
 > people who have never actually looked at the numbers.
 
-You don't include the cost of the tape drive, which is often high, while
-the cost of the IDE drive has no such additional cost.
+Pot, kettle, black.
 
->   Sure, backups cost money.  You might spend $1500 on a data protection
-> scheme for a small office server.  Of course, consider how much it would
-> cost if they did not do that.  I know business that have *gone out of
-> business* when they lost their only copy of mission-critical data.
-> 
->   $1500 vs bankruptcy.  Gee, tough call.
-> 
->   Anyone who has ever bothered to work out the numbers knows that backups
-> are a bargain.  People who think otherwise are either ignorant or just plain
-> don't want to know the truth.
+Yes, a AIT2 _TAPE_ is $90, but you need to factor in the drive, otherwise
+the media is useless.  A $270 IDE drive is ready to go.  A quick look at
+warehouse.com (to keep the numbers on-par):
 
-Oh, I totally agree.  I used to work for IBM and met a lot of people who
-lost their hard drive data.  I personally do a lot of backups these days.
+AIT2 drive/Sony		2800 + 90 (tape) / 50GB   = 57.80
+SuperDLT drive/LaCie	5000 + 150 (tape) / 110GB = 46.82
+LTO Ultrium drive/HP	3650 + 130 (tape) / 100GB = 37.80
+DDS-4 drive/Seagate	970 + 24 (tape) / 20GB    = 49.70
 
-Cheers, Andreas
---
-Andreas Dilger
-http://sourceforge.net/projects/ext2resize/
-http://www-mddsp.enel.ucalgary.ca/People/adilger/
+
+So yes, not surprisingly, tape is more expensive than disk everytime.
+Even if you halfed the prices assuming full (2x) compression on the
+tape. Now over time, the per GB price of tape will come down since you
+only need the large outlay of cash once, but you can only use one tape
+at a time at any given moment.
+
+
+-- 
+Randomly Generated Tagline:
+"perl is awesome, perl is great
+  perl gets my programs running without all the wait,
+  perl lets me do my job smooth as silk,
+  it even stays crispy in milk.." - Greg London
