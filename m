@@ -1,10 +1,12 @@
-Return-Path: <mike@marxmeier.com>
-From: "Jamie Krasnoo" <webmaster@myeboard.com>
-Date: Thu, 18 Jan 2001 15:22:01 -0800
-Message-ID: <NEBBLAGGCLKLIANPIBEJAEEDCLAA.webmaster@myeboard.com>
+Return-Path: <adilger@turbolinux.com>
+From: Andreas Dilger <adilger@turbolinux.com>
+Message-Id: <200101182352.f0INq7Q02223@webber.adilger.net>
+Subject: Re: [linux-lvm]  Migration path - 2.2.17 & LVM 0.8final -> 2.4.0 & LVM
+  0.9.1-b2
+In-Reply-To: <3A6768A6.CC431D9@attglobal.net> "from Les Hazelton at Jan 18, 2001
+ 05:05:26 pm"
+Date: Thu, 18 Jan 2001 16:52:07 -0700 (MST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] ReiserFS
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,39 +19,52 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: Linux-Lvm <linux-lvm@msede.com>
+Content-Transfer-Encoding: 7bit
+To: linux-lvm@sistina.com
 
-I'm using LVM 0.9 quite well with RH 7.0. I'm impressed with the fact that
-after blowing up an installation of RH not once but twice, that LVM saw the
-volumes and put them back. Now with the ReiserFS craze going on, I'd like to
-know if ReiserFS is compatible with LVM.
+Les, you write:
+> Most of the system is reiserfs created on lvm devices.  In fact, the
+> only part of the system that is not reiserfs/lvm is the /boot tree as
+> you can see:
+> 
+> Filesystem            Size  Used Avail Use% Mounted on
+> /dev/lvg01/slash      600M  268M  332M  45% /
+> /dev/hda1              45M  4.4M   39M  10% /boot
+> /dev/lvg01/home       1.0G  133M  891M  13% /home
+> /dev/lvg01/usr        2.0G  1.3G  752M  63% /usr
+> /dev/lvg01/src        700M  249M  451M  36% /usr/src
+> /dev/lvg01/local      1.0G  537M  487M  52% /usr/local
+> /dev/lvg01/var        300M  123M  177M  41% /var
+> /dev/lvg01/mp3        1.5G  1.4G  110M  93% /mp3
+> /dev/lvg01/pictures   1.0G   38M  986M   4% /pictures
+> /dev/lvg01/wine       1.0G   32M  992M   3% /wine
 
-Jamie Krasnoo
-www.MyEBoard.com
-webmaster@myeboard.com
+I'm _hoping_ to get some time soon to update LILO to support the new
+0.9 ioctl so that /boot can be in LVM as well.
 
------BEGIN PGP PUBLIC KEY BLOCK-----
-Version: GnuPG v1.0.4 (GNU/Linux)
-Comment: Jamie Krasnoo (BMaximus) <webmaster@myeboard.com>
+> I want to migrate to the source from
+>  
+> 	kernel-headers-2.4.0-5mdk.i586.rpm
+> 	kernel-source-2.4.0-5mdk.i586.rpm
+> 
+> patched with lvm_0.9.1_beta2.tar.gz.
+> 
+> The problem is, I am not sure of the implementation order.  i.e., should
+> I first try to add the 0.9.1 user space tools and then the new kernel.
+> Or, should I try to add a 0.9.1 patch to the current kernel before
+> switching to the new 2.4.0 kernel etc...
 
-mQGiBDpiu/gRBACJ+U9ti3GHIr2oF9emUGPIKiRrpg0MwC+9kyzWm+aGpoNpuRZ6
-VH/nLgjAFBr7vsVHkPehoIEYxdTDnq5UE4/HOfWeHeTlm8/Oz8zx4TOAcMrEfYV2
-4Ny8g4PyJaeutUcn+nqckDsUQ7mWFcn/3XdA7TrQrm1baRrepubA2uqt+wCgnK0Q
-jucnmH5xafdmqNDdAH+7rhED/02ze3B3o8xtcYK+0XYEN0v+XihtuWip6J0zdqMr
-P0QTzgGV1BVjpXLnry/po/q9Hs6YiGnVmixIAH1KMZpJD4MG/77WYfwqDpUaaSZn
-tCwQkjVHU1BJum9TYuo1Q3auvJaQ5Pg3dE2J3YG2FVaU5veygGfsxltt8WEWEJ3i
-f8pLA/9P75/hy51sESmlCzmc5mNL8rBWUisMF9WMosCZkGKz0A1yCC9lZM09dxCw
-hTkQvRBkrFwRx2eaFgy7eD40vbkI1Rlaelvx5atvHXOJenpSfShPut6JmND+cehW
-6BfqT2ROLBRrSJD3cO1FAHt7dyTgceshgW2g6WtWeP5zzRhRB7QxSmFtaWUgS3Jh
-c25vbyAoQk1heGltdXMpIDx3ZWJtYXN0ZXJAbXllYm9hcmQuY29tPohXBBMRAgAX
-BQI6Yrv4BQsHCgMEAxUDAgMWAgECF4AACgkQgSA4ibDuKIsstwCgic5D6/qsWsgT
-2vfkpSTUF4HL750AoIwGn+pvt6Hms2lAogM/nOSDDNxDuQENBDpivAgQBAC4BNtD
-hsawho/Bb8OGw1zq+B8KCEnaWxjEamIlOU/diU9cuuNmoiQkRpHajzcNjQ3O5sxA
-GxpAsthOhFeHnDRejDLN8Om7kydB4XdaPW5hqOZFlzNF97cbg2Y+fbscQWtPfRkl
-3t/qEemwQZpGtCi7L+yqiXaJoXVEBqtBtlD1twAFEwP+Oz3e0H1eVWh7p5hGp6cN
-AJaGYaLHNMsbYw5l1+kUdJ0yxDPkLiTgdcGsbmgBLpnpJUujHOQF6/gWVPhzSzY2
-VKqNshhJua+tt94Oo5AMlKCOQDje95Ks7ZdJUAjYKerhfvabDqASREgFhcPD5oXe
-UN4Lw7bNy1fI6PMGv1SACDyIRgQYEQIABgUCOmK8CAAKCRCBIDiJsO4oi3RuAJwJ
-kiuCZBveRLOFL+7iwlv9FhLNtgCZAYi6NAa98h82BLFi2kpVkm4YCFs=
-=1BAm
------END PGP PUBLIC KEY BLOCK-----
+I did the upgrade from 0.8final to 0.9 relatively painlessly, by installing
+the Conectiva RPMs that support multiple user-tools before rebooting.  This
+was all on a 2.2 ext2 system with far less LVM on it, however.  YMMV.
+
+The Conectiva RPMs allow you to do proper shutdown of the current system,
+start the new kernel and be off and running.  If you ever need to reboot
+into the old kernel, it should also work without any changes (assuming
+everything else is OK).  See http://distro.conectiva.com.br/experimental/
+
+Cheers, Andreas
+-- 
+Andreas Dilger  \ "If a man ate a pound of pasta and a pound of antipasto,
+                 \  would they cancel out, leaving him still hungry?"
+http://www-mddsp.enel.ucalgary.ca/People/adilger/               -- Dogbert
