@@ -1,10 +1,12 @@
-Return-Path: <riel@conectiva.com.br>
-Date: Mon, 12 Mar 2001 21:59:30 -0300 (BRST)
-From: Rik van Riel <riel@conectiva.com.br>
-Subject: Re: [linux-lvm] File System Limitations?
-In-Reply-To: <F95YLqVpUOF9vJZTuG500007732@hotmail.com>
-Message-ID: <Pine.LNX.4.21.0103122159130.2102-100000@imladris.rielhome.conectiva>
-MIME-Version: 1.0
+Return-Path: <wichert@cistron.nl>
+Date: Tue, 13 Mar 2001 02:14:39 +0100
+From: Wichert Akkerman <wichert@cistron.nl>
+Subject: Re: [linux-lvm] Problem with vgscan/ vgcfgrestore
+Message-ID: <20010313021438.A6401@cistron.nl>
+References: <20010313012313.A3042@cistron.nl> <200103130056.f2D0uTi01167@webber.adilger.int>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <200103130056.f2D0uTi01167@webber.adilger.int>; from adilger@turbolinux.com on Mon, Mar 12, 2001 at 05:56:29PM -0700
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,22 +18,30 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Mon, 12 Mar 2001, hail narcissus wrote:
+Previously Andreas Dilger wrote:
+> Just released this minute...
 
-> Just wondering if I could convert to EXT2 -> EXT3 FS.  I am guessing
-> it should work with no problem since the file system sits above LVM.  
-> But I wanted to know if anyone has tried this.
+I just saw the announce :)
 
-Works great. I'm running ext3 over LVM on NL.linux.org ;)
+> IOP was reverted to 10 because the 1 reason it was changed to 11 was
+> removed (*).  Having IOP 11 tools, when stock 2.4.x has IOP 10 is just
+> asking for lots of bug reports, not to mention headaches for users.
 
-Rik
---
-Virtual memory is like a game you can't win;
-However, without VM there's truly nothing to lose...
+I figured that out by now. I think I'll add the LVM10 ioctls to 
+strace 4.4 actually :)
 
-		http://www.surriel.com/
-http://www.conectiva.com/	http://distro.conectiva.com.br/
+BTW, the current LVM tools violate the FHS by putting binaries in
+/sbin/lvm-*/. Would you accept a patch to move that to /lib/lvm-*/
+instead?
+
+Wichet.
+
+-- 
+   ________________________________________________________________
+ / Generally uninteresting signature - ignore at your convenience  \
+| wichert@cistron.nl                  http://www.liacs.nl/~wichert/ |
+| 1024D/2FA3BC2D 576E 100B 518D 2F16 36B0  2805 3CB8 9250 2FA3 BC2D |
