@@ -1,12 +1,9 @@
-Return-Path: <tomlins@cam.org>
-From: Ed Tomlinson <tomlins@cam.org>
-Subject: Re: [linux-lvm] Segfault at boot with vgscan and linux 2.4.4 kernel
-Date: Sun, 29 Apr 2001 09:13:49 -0400
-References: <3AEBF85F.8EC404@gecpalau.com>
-In-Reply-To: <3AEBF85F.8EC404@gecpalau.com>
-MIME-Version: 1.0
-Message-Id: <01042909134900.18233@oscar>
-Content-Transfer-Encoding: 8bit
+Return-Path: <kirth@hole.org>
+Message-Id: <5.0.2.1.0.20010429184602.00ac9e88@mail.hole.org>
+Date: Sun, 29 Apr 2001 18:47:48 +0100
+From: Kirth <kirth@hole.org>
+Mime-Version: 1.0
+Subject: [linux-lvm] lowest spec LVM run on ?
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -18,27 +15,22 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@sistina.com, Glenn Shannon <glenn@gecpalau.com>
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+Content-Transfer-Encoding: 7bit
+To: linux-lvm@sistina.com
 
-On Sunday 29 April 2001 07:17, Glenn Shannon wrote:
-> Hi all (again!),
->
-> Just got done compiling my new 2.4.4 kernel using the same options as
-> before and now at boot vgscan is segfaulting......
->
-> Anyone else have this problem?
->
-> Tried recompiling the lvm tools....no dice. Still segfaulting...
->
-> Tried recompiling my kernel with pgcc and no dice (wont finish
-> compiling....complains a bunch and error 2s out on the make bzImage
-> phase...modules compile fine tho (wierd).
->
-> Tried updating my binutils and recompiling....no luck there either
+Hi,
 
-is lvm built as a module?  If so what does depmod -ae show.  If you
-have undefined ref you need to apply the patch posted on this list on 
-top of beta7.
+	I'm just wondering whats the lowest spec machine that anyone has an LVM 
+running (stable) on ?
+	The reason is, I have just built another one, but it's on a p100 with 
+16megs of ram, I tried to reiserfs
+	the drive but that crashed the kernel (still no idea why, same kernel as 
+my p133 with 128megs... which
+	works fine). I have made the fs just ext2 for now (this is all testing NOT 
+live).
 
-Ed
+	Any suggestions for ensuring it's stable ? I am trying to find some simm's 
+for the pc ;)
+
+Kirth
