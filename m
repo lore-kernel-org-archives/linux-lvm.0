@@ -1,17 +1,12 @@
-Subject: Re: [linux-lvm] disk naming
-From: Matt Schillinger <mschilli@vss.fsi.com>
-In-Reply-To: <20030104195544.GB11424@tykepenguin.com>
-References: <1041610095.19844.45.camel@mosix>
-	<20030103174618.Z9539@zealot.blacknet.de> <1041613503.20036.49.camel@mosix>
-	<1023440000.1041619125@[192.168.200.4]>
-	<20030103192045.GI18613@tykepenguin.com>
-	<1121550000.1041664663@[192.168.200.4]>
-	<20030104100014.GA11424@tykepenguin.com>
-	<1216750000.1041705320@[192.168.200.4]> 
-	<20030104195544.GB11424@tykepenguin.com>
-Content-Transfer-Encoding: 7bit
-Message-Id: <1042043372.15431.8.camel@mosix>
+From: AJ Lewis <lewis@sistina.com>
+Message-ID: <20030108165545.GC25266@antimony.sistina.com>
+References: <Pine.LNX.4.33.0301081907180.471-100000@epsilon.cs.karelia.ru>
 Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="yrj/dFKFPuw6o+aM"
+Content-Disposition: inline
+In-Reply-To: <Pine.LNX.4.33.0301081907180.471-100000@epsilon.cs.karelia.ru>
+Subject: [linux-lvm] Re: lvm question
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -22,33 +17,68 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Jan  8 10:28:02 2003
+Date: Wed Jan  8 10:48:02 2003
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@sistina.com
+To: Timophey.Nazarov@cs.karelia.ru
+Cc: linux-lvm@sistina.com
 
-I have another scenario... If I have 1 volume setup
-(/dev/test_vg/testlv1) and mounted on say, /mnt.
+--yrj/dFKFPuw6o+aM
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-The disk is connected via scsi host channel 0, scsi id 4, and lun 0.
+You really should match the version of your LVM module and tools.  I suggest
+you upgrade to LVM 1.0.6 for both the kernel driver and the tools.  The
+version mismatch is likely causing the segfault.
 
-If i umount /mnt,
-move the scsi disk to host channel 1,
+On Wed, Jan 08, 2003 at 07:27:22PM +0300, Timophey V. Nazarov wrote:
+> Hello.
+> Maybe it will be usefull for you.
+> I use RedHat Linux 7.0, kernel 2.2.21 with lvm driver (v1.0.2) as loadable
+> module, which has been compiled from ftp sources, and lvm software
+> (v0.9.1_beta7), which has been got from ftp server in binary form.
+> Now I cannot remove one VG by vgremove. I can pvcreate, vgcreate,
+> lvcreate, [vg,lv]rename, vgreduce, etc. All but vgremove.
+>=20
+> When I try to vgremove it returns me "Segmentation fault" after
+> "...initializing all physical volumes".
+>=20
+>=20
+> A propos, in HOWTO at tLDP you said that initscripts RH Linux 7, 7.1 are
+> able to work with LVM, but I use RH7 and I customized initscripts
+> manually.
+>=20
+>=20
+> 	Timophey
+>=20
+>=20
 
-Then run rescan-scsi-bus.sh 1, it should scan the scsi bus on host
-channel 1, then find the scsi disk.
+--=20
+AJ Lewis
+Sistina Software Inc.                  Voice:  612-638-0500
+1313 5th St SE, Suite 111              E-Mail: lewis@sistina.com
+Minneapolis, MN 55414
+http://www.sistina.com
 
-is there a way to make lvm see the new disk in a way that is mountable?
+Current GPG fingerprint =3D FE77 4B43 6A9B F982 A731  02FA 2BF5 7574 294A A=
+A5A
+Grab the key at: http://people.sistina.com/~lewis/gpg.html or one of the
+many keyservers out there...
+-----Begin Obligatory Humorous Quote----------------------------------------
+I have yet to meet a C compiler that is more friendly and easier to use
+than eating soup with a knife.
+-----End Obligatory Humorous Quote------------------------------------------
 
+--yrj/dFKFPuw6o+aM
+Content-Type: application/pgp-signature
+Content-Disposition: inline
 
-I have done the previous, but i see in /proc/lvm/global, that each VG is
-associated with PV devices (/dev/sda1, etc). Is there a way that lvm can
-rescan and reassociate VGs to new PV devices? (as in the disk on the
-host channel 1 is added in as /dev/sdd).. If i reboot, this is no
-problem to register things, but I am wonder if it is possible to do the
-task without a reboot..
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.0.7 (GNU/Linux)
 
-Thanks,
+iD8DBQE+HFgRK/V1dClKqloRAl1RAJ0YF4UAj5Mv30teCCY71Gt53zTSIQCfSBTP
+QwYksttl/nq8JhzIgxxwFlY=
+=M4HU
+-----END PGP SIGNATURE-----
 
-Matt Schillinger
-mschilli@vss.fsi.com
+--yrj/dFKFPuw6o+aM--
