@@ -1,11 +1,10 @@
-Message-Id: <se193d29.070@bne17srv215.workcover.qld.gov.au>
-From: "Damian Hickey" <hickeyd@workcoverqld.com.au>
+From: Alasdair G Kergon <agk@uk.sistina.com>
+Subject: Re: [linux-lvm] Linux 2.4.20 devmapper + userland utilities issue
+Message-ID: <20030106184520.D9208@uk.sistina.com>
+References: <20030105090400.1d4e61be.david@eelf.ddts.net> <20030105205306.A6754@uk.sistina.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
 Content-Disposition: inline
-Subject: [linux-lvm] Re: linux-lvm digest, Vol 1 #751 - 14 msgs (On Leave until Jan 28th
- 2003)
+In-Reply-To: <20030105205306.A6754@uk.sistina.com>; from agk@uk.sistina.com on Sun, Jan 05, 2003 at 08:53:06PM +0000
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,35 +15,23 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Sun Jan  5 16:24:02 2003
+Date: Mon Jan  6 12:45:08 2003
 List-Id: <linux-lvm.redhat.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Dear all,
+On Sun, Jan 05, 2003 at 08:53:06PM +0000, Alasdair Kergon wrote:
+> please email the full debug log(*) from the lvcreate
+> directly to me and I'll investigate on Monday.
 
-I am on leave until Jan 28th 2003. Please forward any work queries to:
-upport@workcoverqld.com.au
-
-With thanks,
-
-Damian Hickey
-Unix Administrator
-Workcover Queensland
-15th Floor, 280 Adelaide St.
-Brisbane
-ph 07 30066422
-fax 07 30066424
-mob 0421 093582
-
-
-***************************************************************************
-Messages included in this e-mail and any of its attachments are those
-of the author unless specifically stated to represent WorkCover Queensland.
-The contents of this message are to be used for the intended purpose only
-and are to be kept confidential at all times. This message may contain
-privileged information directed only to the intended addressee/s.
-Accidental receipt of this information should be deleted promptly
-and the sender notified.
-This e-mail has been scanned by Sophos for known viruses.
-However, no warranty nor liability is implied in this respect.
-**********************************************************************
+For the record, the problem was LVM2 with new-format metadata seeing
+the same PV on both /dev/md1 and /dev/hda6.  The fix was to add a
+filter line to the config file to tell LVM2 only to look at md1.  LVM2
+with old-format metadata handles the situation OK without the filter
+line (displays a warning message) and I've changed LVM2 with
+new-format metadata to do the same - will go into CVS shortly.
+ 
+Alasdair
+-- 
+agk@uk.sistina.com
