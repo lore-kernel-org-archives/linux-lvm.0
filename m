@@ -1,8 +1,8 @@
-Date: Sat, 14 Oct 2000 15:59:01 +0930 (CST)
+Date: Sat, 14 Oct 2000 16:29:19 +0930 (CST)
 From: Mark Phillips <mark@ist.flinders.edu.au>
 Subject: [linux-lvm] Re: vgcreate -- ERROR "lvm_tab_read(): size" inserting...
 In-Reply-To: <Pine.GSO.4.10.10010141425320.10567-100000@kurango>
-Message-ID: <Pine.GSO.4.10.10010141555520.12482-100000@kurango>
+Message-ID: <Pine.GSO.4.10.10010141624510.12772-100000@kurango>
 MIME-Version: 1.0
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
@@ -12,14 +12,26 @@ Content-Transfer-Encoding: 7bit
 To: Mark Phillips <mark@ist.flinders.edu.au>
 Cc: linux-lvm@msede.com
 
-I thought I'd add a bit of extra information:
+The other thing I thought of doing is sending the output of
 
-I run Debian Linux.  I am running linux kernel version 2.4.0-test9 and
-have installed LVM tools provided by the Debian package
-lvm_0.8.final-1_i386.deb which corresponds to version 0.8.final of the LVM
-tools.
+  vgcreate -vd main_vg /dev/hda2
 
-Cheers,
+but first I would need to delete the main_vg that is already there, but I
+can't because of the error:
+
+# vgremove main_vg
+vgremove -- ERROR: can't remove active volume group "main_vg"
+
+I can't even display info:
+
+# vgdisplay
+vgdisplay -- "/etc/lvmtab.d/main_vg" doesn't exist
+vgdisplay -- volume group "main_vg" not found
+
+Any help on this would be most appreciated.  Even just to get rid of
+main_vg so I can try again!
+
+Thanks,
 
 Mark.
 
