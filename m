@@ -1,11 +1,10 @@
-Return-Path: <joe@66bassett.freeserve.co.uk>
-Date: Sat, 17 Feb 2001 15:48:56 +0000
-From: Joe Thornber <joe@66bassett.freeserve.co.uk>
-Subject: Re: [linux-lvm] Newbie question: ERROR "pv_move_pe(): PE lock" pv_move_pe
-Message-ID: <20010217154855.B337@66bassett.freeserve.co.uk>
-References: <20010217111625.B32060@colombina.comedia.it> <E14U4vX-0006ka-00@whittlesey.cl.cam.ac.uk>
-Mime-Version: 1.0
-In-Reply-To: <E14U4vX-0006ka-00@whittlesey.cl.cam.ac.uk>; from Piete.Brooks@cl.cam.ac.uk on Sat, Feb 17, 2001 at 10:49:19AM +0000
+Return-Path: <adilger@turbolinux.com>
+From: Andreas Dilger <adilger@turbolinux.com>
+Message-Id: <200102171618.f1HGI0L12286@webber.adilger.net>
+Subject: Re: [linux-lvm] Newbie question: ERROR "pv_move_pe(): PE lock"  pv_move_pe
+In-Reply-To: <E14U4vX-0006ka-00@whittlesey.cl.cam.ac.uk> from Piete Brooks at
+ "Feb 17, 2001 10:49:19 am"
+Date: Sat, 17 Feb 2001 09:18:00 -0700 (MST)
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,26 +16,49 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
+Cc: Piete.Brooks@cl.cam.ac.uk
 
-On Sat, Feb 17, 2001 at 10:49:19AM +0000, Piete Brooks wrote:
-> >> # pvmove /dev/hda9 
-> >> pvmove -- moving physical extents in inactive volume group "vg01"
-> >> pvmove -- WARNING: moving of active logical volumes may cause data loss!
-> >> pvmove -- do you want to continue? [y/n] y
-> >> pvmove -- ERROR "pv_move_pe(): PE lock" pv_move_pe
-> >> 
-> >> pvmove -- ERROR "pv_move_pe(): PE lock" moving physical extents 
-> > i believe the vg should be active....
+Piete Brooks writes:
+> I got the data onto the RAID device, and when that's active, I get a
+> different message:
 > 
-> Sigh -- it warns that data loss can occur if they are active, so I assumed 
-> that they should be inactive.  If it has to be active, why does it quietly say 
-> `extents in inactive volume' and not warn that they should be active ?
+> # pvmove /dev/md7
+> pvmove -- ERROR "pv_read(): multiple device" reading source physical volume 
+> "/dev/md7"
 
-I think the warning is just telling you that if you loose power whilst
-the move is in progress bad things could happen.  Heinz can you
-clarify please.
+This is because (I don't know why) LVM user tools return an "error code"
+when accessing an MD device.  It is up to the caller to single out the
+MD error code, and pretend like it is OK.  Probably pvmove (or pv_read)
+doesn't do this correctly.  IMO we should treat MD devices just like
+regular devices, since pv_read_all_pv_of_vg() already cleans this up for us.
 
-- Joe
+Maybe the MD cleanup should be moved down to pv_read_all_pv() and be
+done with it?  This may cause some problems if people are doing changes
+to LVM when the MD devices are not active, but this problem is there no
+matter where we do filtering of MD devices.
+
+In any case, try the below patch, and it should fix this problem.
+
+Cheers, Andreas
+=============================================================================
+diff -u -u -r1.3.2.5 pvmove.c
+--- tools/pvmove.c	2001/02/14 14:48:01	1.3.2.5
++++ tools/pvmove.c	2001/02/17 16:12:49
+@@ -234,7 +234,8 @@
+ 
+    if ( opt_v > 0) printf ( "%s -- reading data of source physical volume "
+                             "from \"%s\"\n", cmd, src_pv_name);
+-   if ( ( ret = pv_read ( src_pv_name, &pv, NULL)) < 0) {
++   if ( ( ret = pv_read ( src_pv_name, &pv, NULL)) < 0 &&
++	ret != -LVM_EPV_READ_MD_DEVICE) {
+       if ( ret == -LVM_EPV_READ_OPEN) {
+          fprintf ( stderr, "%s -- source physical volume \"%s\" "
+                            "doesn't exist\n\n",
+-- 
+Andreas Dilger  \ "If a man ate a pound of pasta and a pound of antipasto,
+                 \  would they cancel out, leaving him still hungry?"
+http://www-mddsp.enel.ucalgary.ca/People/adilger/               -- Dogbert
