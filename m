@@ -1,9 +1,8 @@
-Message-ID: <3EC0225A.8010606@inode.at>
-From: Manfred Gschweidl <m.gschweidl@inode.at>
+Message-ID: <3EC0951E.90304@silicide.dk>
+From: Jon Bendtsen <jon+lvm@silicide.dk>
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] mount root filesystem on lvm
-References: <3EBBF411.6060405@inode.at>  <3EBBFF45.4050006@inode.at>	 <1052511447.6321.22.camel@chtephan.cs.pocnet.net>	 <3EBD22B3.4090808@inode.at>	 <1052607008.1489.2.camel@chtephan.cs.pocnet.net>	 <3EBDAFF0.5090608@inode.at> <1052647076.580.9.camel@chtephan.cs.pocnet.net>		  <3EBE8FCC.10302@inode.at>	 <1052680419.1131.8.camel@chtephan.cs.pocnet.net>	 <3EBEA6CA.7050500@inode.at> <1052683220.1786.9.camel@chtephan.cs.pocnet.net>
-In-Reply-To: <1052683220.1786.9.camel@chtephan.cs.pocnet.net>
+Subject: Re: [linux-lvm] LVM & LFS support
+References: <B742DEF5E2578F43AB48979887E6CF060E16BD@MAIL001.AD.MLP.COM> <20030510155825.GA24798@localhost>
 Content-Transfer-Encoding: 7bit
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
@@ -15,73 +14,44 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon May 12 17:38:02 2003
+Date: Tue May 13 01:47:02 2003
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: Christophe Saout <christophe@saout.de>
-Cc: linux-lvm@sistina.com
+To: linux-lvm@sistina.com
 
-thanks for your help.
+Jose Luis Domingo Lopez wrote:
+> On Tuesday, 29 April 2003, at 14:09:44 -0400,
+> Selimaj, Naxhije wrote:
+> 
+> 
+>>Does LVM support files greater that 2GB?  
+>>I'm running the default LVM (1.0.3) on RH8.  I currently have a 1.2TB
+>>LVM  ext3 filesystem mounted.  If >2GB  file is supported, what changes
+>>need to be made to my existing setup.
+>>
+> 
+> I think the 2 GB limit on files is a filesystem limitation, not a block
+> device limitation, and as LVM is a block device level feature, it should
+> not impose any limits on file sizes.
 
-after more than one week, now my system boots cleanly without problems, 
-and everything is ok now.
-
-greetings from austria,
-
-manfred
+Other than not being larger than the blockdevice, and doesnt the
+blockdevice has a limit of 2T ?
 
 
+> As far as I know, RH8 is recent enough to fully support large files
+> (greater than 2 GB), but maybe you are using some sort of application
+> not ported still to support large files, or an application on your.
+> 
+> I seem to remember that things like "old" cpio didn't support large
+> files, check if this is the case with "strace", and look for file
+> open()'s with flags O_LARGEFILE. From open(2):
+> 
+>        O_LARGEFILE
+>               On  32-bit  systems  that  support the Large Files System, allow
+>               files whose sizes cannot be represented in 31 bits to be opened.
+
+Maybe thats why i have some trouble with pipes for files larger than 2G
 
 
 
-Christophe Saout wrote:
-> Am Son, 2003-05-11 um 21.38 schrieb Manfred Gschweidl:
-> 
-> 
->>uupps...sorry, maybe i should carefully read my mails, after writing 
->>them. ;-)
->>i mean only one entry exists in "/dev/mapper", and this is "control", 
->>but no other entry.
-> 
-> 
-> Ah, ok, I'm seeing. Well, I think that's a problem with LVM2. At the
-> moment the device files are created either when a volume group gets
-> activated or when it is already active and you add a logical volume.
-> 
-> But when the volume group got activated by the ramdisk and the system
-> switches the root filesystem, you now don't have the devices files.
-> 
-> I think that's where "lvm mknodes" should kick it, but... not
-> implemented yet. And you can't deactivate and reactivate the volume
-> group because the root filesystem on it is mounted.
-> 
-> Great. :D
-> 
-> So it looks like you must create the device files manually.
-> 
-> cd /dev/mapper
-> mknod volumegroupname-logicalvolumename b 254 0
-> mknod volumegroupname-logicalvolumename b 254 1
-> ...
-> 
-> After that you also should create the symlinks
-> 
-> cd /dev/volumegroupname
-> ln -s ../mapper/volumegroupname-logicalvolumename logicalvolumename
-> ...
-> 
-> Since you already put an ls command into the ramdisk before you should
-> know which minor got assigned to which volume.
-> 
-> Or, perhaps this should work: AFAIK if you have a directory /initrd on
-> your root filesystem, the old ramdisk should be moved there after the
-> root filesystem is mounted, so you can just copy the directories and
-> device files that got create there in /dev (/initrd/dev/mapper and
-> /initrd/dev/volumegroupname) to your /dev. But I have never tested this.
-> 
-> This sounds rather ugly and complicated, but it only occurs when
-> switching from LVM1 to LVM2 while having it mounted (because you can't
-> activate it via LVM2 while running on the real filesystem where the
-> device nodes should be created correctly. Or wait until the mknodes
-> command is finished or implement it yourself. ;-)
-> 
+JonB
