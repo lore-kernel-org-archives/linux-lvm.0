@@ -1,11 +1,10 @@
-Return-Path: <joe@66bassett.freeserve.co.uk>
-Date: Tue, 27 Feb 2001 21:29:53 +0000
-From: Joe Thornber <joe@66bassett.freeserve.co.uk>
-Subject: Re: [linux-lvm] q: BLOCK_SIZE
-Message-ID: <20010227212953.A2977@66bassett.freeserve.co.uk>
-References: <3A9BF392.2E4C3DA5@tls.msk.ru> <200102272025.f1RKPg727605@webber.adilger.net>
+Return-Path: <ralph@oro.net>
+Date: Tue, 27 Feb 2001 14:36:04 -0800
+From: Ralph Jennings <ralph@oro.net>
+Message-ID: <20010227143604.A9170@oro.net>
 Mime-Version: 1.0
-In-Reply-To: <200102272025.f1RKPg727605@webber.adilger.net>; from adilger@turbolinux.com on Tue, Feb 27, 2001 at 01:25:42PM -0700
+Content-Disposition: inline
+Subject: [linux-lvm] LVM with devfs
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -19,21 +18,17 @@ List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: linux-lvm@sistina.com
+To: LVM Mailing List <linux-lvm@sistina.com>
 
-On Tue, Feb 27, 2001 at 01:25:42PM -0700, Andreas Dilger wrote:
-> Michael writes:
-> > Little question that I already posted here a long time ago.
-> > What drawbacks can suffer if one changes BLOCK_SIZE in
-> > include/linux/lvm.h from 1024 (or 4096 on S/390) to 512?
-> 
-> On S/390 it would appear that the DASD block devices have a 4096
-> byte sector size.  However, on most other systems there is only
-> a 512 byte sector size, so I don't see any reason there would
-> be problems with BLOCK_SIZE = 512.
-> 
-> I think Andrea Arcangeli was complaining about this as well.
+In case anybody cares, I have an experience here to share:
 
-I checked Andrea's patch into cvs, try and see.
+When I do a pvcreate on /dev/md/3 with devfs, pvcreate says file
+doesn't exist (talking about /dev/md/3).
 
-- Joe
+Also dies with /dev/discs/disc1/part1. (problem with symlinks?)
+When I use /dev/ide/host0/bus1/target0/lun0/part1 it works.
+
+When I take off devfs (append=devfs=nomount), then /dev/md3 works.
+Also /dev/hdc1 works.
+
+Using LVM "0.9.1_beta5_a", and Kernel "2.4.1".
