@@ -1,10 +1,10 @@
-From: "Jonathan DeHaan" <jdehaan@home.com>
-Subject: RE: [linux-lvm] PBs with LVM over software RAID ( and XFS ? ext2 reiserfs?)-2.4.7
-Date: Fri, 7 Sep 2001 10:50:23 -0400
-Message-ID: <000001c137ac$6ca156e0$0400a8c0@ci696011a.lxintn1.ky.home.com>
-MIME-Version: 1.0
+Date: Fri, 07 Sep 2001 16:21:01 +0100
+From: "Svetoslav  Dimitrov Slavtchev" <svetljo@lycos.com>
+Message-ID: <JODHKCECKGHOLAAA@mailcity.com>
+Mime-Version: 1.0
+Content-Language: en
 Content-Transfer-Encoding: 7bit
-In-Reply-To: <3B97B21D.10309@st-peter.stw.uni-erlangen.de>
+Subject: [linux-lvm] PBs with LVM over software RAID ( and XFS ? ext2 reiserfs?)-2.4.7
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -19,55 +19,37 @@ List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
 
-svetljo,
-I think I've done what you are trying to do.
+well
+i have it working with JFS and XFS but i can not format the LV with ext2 and reiserfs
 
-Starting with Mandrake 8.1b1:
-kernel 2.4.9
-patch-2.4.9-xfs-2001-08-26
-lvm-1.0.1-rc2
-xfsprogs-1.3.5
-Apply xfs patch before doing make in lvm.
-Configure lvmtools with --enable-static_link
+and i've tested it with
+vanila 2.4.7 lvm-1.0.1rc2
+vanila 2.4.9 lvm-1.0.1rc1
+Alan Cox's 2.4.9-ac5 lvm-1.0
+XFS cvs kernels 2.4.9-xfs lvm-1.0.1rc1
+                2.4.10-pre2-xfs lvm-1.0.1rc2
+                2.4.10-pre4-xfs lvm-1.0.1rc2
+i'll try it ( hopefully after 2h) with 
+vanila 2.4.4 
+the VG:
+/dev/hdh10
+/dev/md6 linear software RAID
+/dev/md7 linear software RAID
+the LV's are striped over the 3 devices
 
-/dev/md/0 is RAID0 over three partitions - hda1, sda1, sdb1
-pvcreate /dev/md/0
-vgcreate vg /dev/md/0
-lvcreate -s 4G -n root vg
-mkfs -t xfs /dev/vg/root
-mount /dev/vg/root /mnt
+and i had it working some time ago 
+on software RAID-0 with lvm-0.9beta6
+XFS progs from the cvs tree
+JFS progs 1.0.3
+reiserfs 3.x.0j
+e2fsprogs 1.23 1.24 1.24a
 
-No errors.
+---
+Svetoslav Dimitrov Slavtschev
+svetoslav@mail.com
+svetljo@mailcity.com
 
-If this same sequence of commands produces errors on your system, then I
-would suspect something other than md, lvm, or xfs. Unless you really have a
-need to run both, I would not patch both XFS and JFS into the same kernel. I
-also would not use modules for any filesystems that I expect to use daily.
 
-Hope this helps,
-Jonathan DeHaan
-jdehaan@home.com
 
-> -----Original Message-----
-> From: linux-lvm-admin@sistina.com [mailto:linux-lvm-admin@sistina.com]On
-> Behalf Of svetljo
-> Sent: Thursday, September 06, 2001 1:28 PM
-> To: linux-lvm@sistina.com
-> Subject: Re: [linux-lvm] PBs with LVM over software RAID ( and XFS ?
-> ext2 reiserfs?)-2.4.7
->
->
-> Hi again
-> it took me some time but it's the same with 2.4.7
-> mke2fs and mkreiserfs segfaults and there are no OOPSes
-> and jfs has no problems
->
-> vanila 2.4.7 with jfs-1.0.4 and LVM-cvs from about an hour ago
->
->
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
->
+Get 250 color business cards for FREE!
+http://businesscards.lycos.com/vp/fastpath/
