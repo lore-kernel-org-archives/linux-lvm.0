@@ -1,13 +1,12 @@
-From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] (no subject)
-Message-Id: <20020117180111.A27850@sistina.com>
-References: <200201170225.g0H2P4805926@kebi.com>
-    <20020117115050.GD1066@tykepenguin.com>
-    <20020117151328.A26850@sistina.com>
-    <20020117151936.GF1066@tykepenguin.com>
+Subject: Re: [linux-lvm] Paralell IO performance with LVM and XFS
+From: Austin Gonyou <austin@coremetrics.com>
+In-Reply-To: <20020117164304.GH1066@tykepenguin.com>
+References: <20020117164304.GH1066@tykepenguin.com>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+    protocol="application/pgp-signature";
+    boundary="=-KlrufBaXPBvgdr2uLXl6"
+Message-Id: <1011287191.26064.0.camel@UberGeek>
 MIME-Version: 1.0
-In-Reply-To: <20020117151936.GF1066@tykepenguin.com>; from
-    caulfield@sistina.com on Thu, Jan 17, 2002 at 03:19:36PM +0000
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -18,49 +17,59 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Thu Jan 17 11:05:02 2002
+Date: Thu Jan 17 11:07:02 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Thu, Jan 17, 2002 at 03:19:36PM +0000, Patrick Caulfield wrote:
-> On Thu, Jan 17, 2002 at 03:13:28PM +0100, Heinz J . Mauelshagen wrote:
-> > 
+--=-KlrufBaXPBvgdr2uLXl6
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
+
+Hmm..it seems like writing with LVM striping isn't very good.=20
+10MB/s or so. Is this IDE only, or SCSI too?
+
+On Thu, 2002-01-17 at 10:43, Patrick Caulfield wrote:
+> On Thu, Jan 17, 2002 at 10:43:45AM -0600, mitch@mdmiller.com wrote:
 > > Patrick,
-> > 
-> > could you proove what Chris pointed out in this thread:
-> > 
-> > <begin chris input>
-> > All of the lvm10 utilities segfault on sparc. The root cause of the 
-> > problem is that the shared library is compiled with both -fPIC and -pg. On 
-> > sparc, this results in gcc outputting:
-> > 
-> > cc1: warning: -fPIC and profiling conflict: disabling -fPIC
-> > 
-> > This can be seen in the buildd logs:
-> > http://buildd.debian.org/fetch.php?&pkg=lvm10&ver=1.0.1release-1&arch=sparc&stamp=1007871077&file=log&as=raw
-> > 
-> > Removing the -pg from the CFLAGS definition on line 73 of make.tmpl fixed 
-> > the problem -- all LVM utilities worked fine.
-> > <end chris input>
-> 
-> I can confirm that this is true on my box.
-> 
-> I removed -pg from make.tmpl.in some time ago (probably in response to a
-> similar bug report!) but not early enough to reach 1.0.1.
-
-Could you tweak configure for 1.0.2 then, please?
-
-Thanks,
-Heinz
-
-> 
+> >=20
+> > I can't seem to get this URL to work ... it tells me the file ain't
+> > there!?
+>=20
+> Sorry, superfluous s got in there after I tested it. try:
+>=20
+> http://www.cix.co.uk/~tykepenguin/stripetest.png
+>=20
+> ...it's not that impressive, honest :)
+>=20
 > patrick
-> 
-> 
+>=20
+>=20
 > _______________________________________________
 > linux-lvm mailing list
 > linux-lvm@sistina.com
 > http://lists.sistina.com/mailman/listinfo/linux-lvm
 > read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
+--=20
+Austin Gonyou
+Systems Architect, CCNA
+Coremetrics, Inc.
+Phone: 512-698-7250
+email: austin@coremetrics.com
+
+"It is the part of a good shepherd to shear his flock, not to skin it."
+Latin Proverb
+
+--=-KlrufBaXPBvgdr2uLXl6
+Content-Type: application/pgp-signature; name=signature.asc
+Content-Description: This is a digitally signed message part
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.0.6 (GNU/Linux)
+Comment: For info see http://www.gnupg.org
+
+iD8DBQA8RwSX94g6ZVmFMoIRAkNFAJ0bVZEAB2dvCKr1JkG33M9qJuvf6wCgoMeQ
+lIPkp3ArLrcF/vrJkxvvZ8M=
+=Lq6c
+-----END PGP SIGNATURE-----
+
+--=-KlrufBaXPBvgdr2uLXl6--
