@@ -1,12 +1,11 @@
-Return-Path: <olivier.thauvin@aerov.jussieu.fr>
-From: Olivier Thauvin <olivier.thauvin@aerov.jussieu.fr>
-Subject: Re: [linux-lvm] Upgrading to Mandrake 8.0
-Date: Wed, 30 May 2001 11:21:50 +0200
-References: <NBBBKLKHMJHIJLHOGAOJCEOLIOAA.steve.wray@the.net.nz>
-In-Reply-To: <NBBBKLKHMJHIJLHOGAOJCEOLIOAA.steve.wray@the.net.nz>
-MIME-Version: 1.0
-Message-Id: <01053011215001.01986@andromede.aerov.jussieu.fr>
-Content-Transfer-Encoding: 8bit
+Return-Path: <root@srv.sistina.com>
+Date: Wed, 30 May 2001 11:22:44 +0200
+From: "Heinz J. Mauelshagen" <Mauelshagen@sistina.com>
+Subject: Re: [linux-lvm] Re: [reiserfs-list] lvm-list pointed to reiserfs: fs/lvm-problems?
+Message-ID: <20010530112244.A30938@sistina.com>
+References: <20010528183105.C924@mind.bartosch.net> <15123.55304.751997.122954@crimson.namesys.com> <20010529222304.A4888@mind.bartosch.net>
+Mime-Version: 1.0
+In-Reply-To: <20010529222304.A4888@mind.bartosch.net>; from peter@bartosch.net on Tue, May 29, 2001 at 10:23:04PM +0200
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -18,63 +17,81 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Mandrake 8.0's LVM have many probleme (ver 0.9)
-I've create my LVM and when I reboot vgchange do an Ooops.
+On Tue, May 29, 2001 at 10:23:04PM +0200, Peter Bartosch wrote:
+> Hi!
+> 
+> 
+> >  PB> extend an existing (0.8i) LV)
+> > 
+> >  PB> so i created a new kernel (2.4.2) with lvm 0.9.1_beta7
+> > 
+> > Linux-2.4.4 has serious reiserfs bugs fixed.
+> 
+> hmm, i tried to make a LVM patch for it but this fails - yesterday i saw a
+> message, that there's somewhere a patch for the 2.4.4 that LVM-sources
+> will make a patch
 
-I will update to LVM 0.9.1 beta 7 !
+You didn't tell what the failure cause was.
 
+It could likely be the renaming of get_hardblocksize to get_hardsect_size
+in the 2.4.4 kernel which hits lvm.c.
 
-Le Dimanche 27 Mai 2001 00:38, vous avez �crit :
-> Have you actually used mandrake 8.0 already?
->
-> Unless you have some good reason to do so, ie not mere
-> upgrade-fever, stay with 7.2
->
-> Believe me... 8.0 is still "cooker" they just *had* to
-> release it for wider testing...
->
-> But LVM-wise, I havn't a clue that would help you do the upgrade.
-> However, I did try going from 7.1 to 7.2 and it broke BADLY!
->
-> Best bet is to reinstall not upgrade.
->
-> > -----Original Message-----
-> > From: linux-lvm-admin@sistina.com [mailto:linux-lvm-admin@sistina.com]On
-> > Behalf Of Diederick van Dijk
-> > Sent: Sunday, May 27, 2001 9:37 AM
-> > To: linux-lvm@sistina.com
-> > Subject: [linux-lvm] Upgrading to Mandrake 8.0
-> >
-> >
-> > Hi,
-> >
-> > I've Mandrake 7.2 with LVM 0.9.1-beta7 installed on one volume group. My
-> > logical volumes are reiserfs formatted. Upgrading to Mandrake 8.0 fails
-> > because the standard upgrade program doesn't recognize my volume
-> > group very
-> > well. Has someone succeeded in upgrading ?
-> >
-> > Thanks,
-> >
-> > Diederick
-> > _______________________________________________
-> > linux-lvm mailing list
-> > linux-lvm@sistina.com
-> > http://lists.sistina.com/mailman/listinfo/linux-lvm
-> > read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
->
+The recent CVS software at www.sistina.com has that fix already or
+you change it in lvm.c end recompile/reinstall.
+
+Hope this helps.
+
+Regards,
+Heinz    -- The LVM Guy --
+
+> 
+> >  PB> i created the reiserfs on it, but when i tried to mount it, the mount
+> >  PB> failed
+> >  PB> an reiserfsck --rebuild-sb and after that reiserfsck --rebuild-tree
+> >  PB> clears it and i could mount my LV -- UNTIL the next reboot
+> > 
+> > What kernel messages were ?
+> > 
+> > Sorry, but it looks for me like a lvm problem.  Can you test you LV by
+> > coping some random data (~ 64 MB) to a file in reliable location and
+> > to LV, and compare them (or md5 hashes) after reboot ?
+> 
+> hmm, i haven't really tried another filesystem, maybe i should try ext2?
+> 
+> > Reiserfs error handling not an ideal one.  Kernel oops below is a
+> > normal :( reaction on damaged data coming from disk.
+> > 
+> > Same reason (damaged data), I think, prevented reiserfs volume from
+> > mounting. 
+> 
+> yes you're right - but why does it oops when i _only_ want to do an "ls
+> -l"?
+> 
+> :wq - until next mail B-), l8r
+> 
+> Peter
+> -- 
+>    :~~~~~~~~~~~~~~~~~~  peter@bartosch.net  ~~~~~~~~~~~~~~~~~~:
+>    :          student of technical computer science           :
+>    :     university of applied sciences krefeld (germany)     :
+>     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+>    FD314F21   C7 AE 2F 28 C1 33 71 77  0D 77 CD 6E 58 E9 06 6B
 > _______________________________________________
 > linux-lvm mailing list
 > linux-lvm@sistina.com
 > http://lists.sistina.com/mailman/listinfo/linux-lvm
 > read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
 
--- 
-Olivier Thauvin-CNRS Service Aeronomie
-olivier.thauvin@aerov.jussieu.fr 
-T�l�phone:
-01 64 47 43 60 � Verri�res (lundi,mercredi et vendredi)
-01 44 27 47 59 � Jussieu (Mardi et Jeudi)
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+Heinz Mauelshagen                                 Sistina Software Inc.
+Senior Consultant/Developer                       Am Sonnenhang 11
+                                                  56242 Marienrachdorf
+                                                  Germany
+Mauelshagen@Sistina.com                           +49 2626 141200
+                                                       FAX 924446
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
