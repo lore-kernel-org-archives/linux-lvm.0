@@ -1,7 +1,9 @@
-From: Peder O. Klingenberg <peder@klingenberg.no>
-Message-ID: <ujur86u631z.fsf@nfsd.linpro.no>
-MIME-Version: 1.0
-Subject: [linux-lvm] Reconstructing missing volume groups (LVM2)
+From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
+Subject: Re: [linux-lvm] Newbie to snapshot
+Message-ID: <20030520092734.A9086@sistina.com>
+References: <001501c31d2a$0ea25f20$6c7745cb@codevel> <3EC788E9.9020701@adelphia.net> <002001c31d4d$eebf5630$6c7745cb@codevel>
+Mime-Version: 1.0
+In-Reply-To: <002001c31d4d$eebf5630$6c7745cb@codevel>; from armani@codevel.com on Sun, May 18, 2003 at 10:58:23PM +0800
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -12,76 +14,82 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon May 19 16:26:02 2003
+Date: Tue May 20 02:36:01 2003
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Hi.
+On Sun, May 18, 2003 at 10:58:23PM +0800, armani wrote:
+> Thanks for toby's explainations!
+> ==
+> Eventually I create a new snapshot of my LV partition.
+> But I have another problem with the snapshot of LV.
+> That is how much snapshot I could create for my LV partition ?
+> As I know some commercial software could create 254 snapshots for one LV
+> such as IBM.
+> 
+> So I try to create another snapshot for LV by issuing the following command:
+> 
+> This is my first snapshot for /dev/Vol1/LV1
+> 
+> [root@met root]# lvcreate --size 100M -s -nsnapshot /dev/Vol1/LV1
+> lvcreate -- WARNING: the snapshot will be automatically disabled once it
+> gets full
+> lvcreate -- INFO: using default snapshot chunk size of 64 KB for
+> "/dev/Vol1/snapshot"
+> lvcreate -- doing automatic backup of "Vol1"
+> lvcreate -- logical volume "/dev/Vol1/snapshot" successfully created
+> 
+> I tried to create another snapshot for /dev/Vol1/LV1
+> 
+> [root@met root]# lvcreate --size 100M -s -nsnapshot1 /dev/Vol1/LV1
+> lvcreate -- WARNING: the snapshot will be automatically disabled once it
+> gets full
+> lvcreate -- INFO: using default snapshot chunk size of 64 KB for
+> "/dev/Vol1/snapshot1"
+> lvcreate -- doing automatic backup of "Vol1"
+> lvcreate -- logical volume "/dev/Vol1/snapshot1" successfully created
+> 
+> And how can I estimate the sizes and counts for them ?
 
-I'm hoping you can help me with a little problem.
+lvdisplay /dev/Vol1/snapsh*
 
-I have a box with Debian Sarge, kernel 2.4.19+device mapper patch
-compiled in (not a module), and lvm2. / is an ordinary partition,
-/home, /usr, /var and /mm are logical volumes, all in the same volume
-group.  There is only one physical disk, but it's partitioned, giving
-lvm2 3 physical volumes.  The filesystem is ext3 on all volumes.
+> Is there any rules or principles to formalize the procedures ?
 
-A dist-upgrade in early May installed new versions of glibc as well as
-the lvm2 tools.  --version on pvscan and vgchange after the upgrade
-now reports
-"
-LVM version:     1.95.15 ((2003-01-10)
-Library version: 0.96.07-ioctl-cvs (2002-11-21)
-Driver version:  1.0.3
-"
+There's no tool in the LVM distro for that so far.
+You can write a script (Shell, Perl, ...) around lvdisplay to
+create alerts when a snapshot runs out of space or extend it automatically.
 
-The box was happily working for a week or two.  Then, for various
-reasons, it had to be rebooted.  As it came down, I saw the lvm2 init
-script complaining about something, but I didn't catch the message.
+> 
+> 
+> > A snapshot will only capture what you have in the fs at the moment you
+> -- snip --
+> > -toby
+> 
+> -- Armani Liao
+> 
+> 
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@sistina.com
+> http://lists.sistina.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
 
-When it came back up, it couldn't find any volume groups or logical
-volumes.  Any lvm2-command induces a lot of "invalidate: busy buffer"
-messages from the kernel.  According to google, these messages are not
-really anything to worry about, but I can't remember seing them
-before.  pvscan reports the full set of physical volumes, but says "in
-use: 0 [ 0]/ in no vg: 3 [53 GB]".
-
-Since / is not a logical volume, the box comes up in single user mode.
-I have textfiles in /etc/lvm/backup that look sane (to my untrained
-eye), and so does the single file in /etc/lvm/metadata.  The vg00 file
-in backup and the vg00 file in metadata actually look quite similar,
-but /usr/bin/diff is missing, so I don't know _how_ similar.
-
-I tried vgcfgrestore (in test mode), but it reports "Can't process
-text file - missing contents field" and "Restore failed".  I also
-thought vgck looked like a promising command, but it segfaulted on
-me.
-
-It may be relevant that the upgrade of the lvm2 tools included a new
-lvm.conf with a new directive locking_dir, set to /var/lock/lvm.
-Which, in my setup is in a LV.  I didn't spot the comment that said
-"local non-LV directory...".  Fixed now, but to no avail.
-
-So...
-
-Does anybody have any tips/pointers for reconstructing my vg and lvs,
-given the metadata textfile I have?  Or can someone say
-authoritatively that I'm SOL, and I should whip out the install cds
-and backups? (I have backups of the important stuff, but the
-non-important stuff is kind of important to me as well. :) )
-
-The LVs can't really be less useful than they are now, so I'm willing
-to try anything, including using ed on /dev/hdaX, if that has a remote
-chance of salvaging my data.
-
-I'm also interested in finding out why this happened and what I can do
-to prevent it happening again.
-
-Please let me know if I can provide any more relevant info.  TIA for
-any insights you can share.
-
-...Peder...
 -- 
-Cogito ergo panta rei.
+
+Regards,
+Heinz    -- The LVM Guy --
+
+*** Software bugs are stupid.
+    Nevertheless it needs not so stupid people to solve them ***
+
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+Heinz Mauelshagen                                 Sistina Software Inc.
+Senior Consultant/Developer                       Am Sonnenhang 11
+                                                  56242 Marienrachdorf
+                                                  Germany
+Mauelshagen@Sistina.com                           +49 2626 141200
+                                                       FAX 924446
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
