@@ -1,10 +1,10 @@
-Return-Path: <wigren@home.se>
-Message-ID: <3A76F94A.711D56ED@home.se>
-Date: Tue, 30 Jan 2001 18:26:34 +0100
-From: Per Wigren <wigren@home.se>
+Return-Path: <dieter.woerz@debis.com>
+Message-ID: <3A77EE78.131F24B5@debis.com>
+Date: Wed, 31 Jan 2001 11:52:40 +0100
+From: Dieter Woerz <dieter.woerz@debis.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] lvextend segfault
+Content-Transfer-Encoding: quoted-printable
+Subject: [linux-lvm] Updating from Suse Linux 6.4 to Suse Linux 7.0 with LVM
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,112 +16,50 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@sistina.com, lvm-bugs@sistina.com
+Content-Type: text/plain; charset="iso-8859-1"
+To: suse-linux@suse.com, linux-lvm@sistina.com
 
-Linux-LVM-Bug@sistina.com, as told in the README, doesn't work so I send
-it here instead.
-I'm not on the list so please CC wigren@home.se!
+Hello,
 
-I created a VG with only /dev/hdd1. Then I try to extend that VG with
-/dev/hdc1, but lvextend segfaults.
-Still, vgdisplay says it's there, but "VG Size: 42.95 GB", which is the
-size of /dev/hdd1 ONLY.... /dev/hdc1 is 29 GB so it should say "72
-GB"...
-They trying to remove /dev/hdc1 from the VG it says it doesn't belong to
+I am trying to update Suse Linux 6.4 to Suse Linux 7.0 Professional. I ha=
+ve all
+my file systems except /boot and / and swap under lvm.
 
-VG??!!!
+When I try to use Suse's yast1, it doesn't recognize and mount my lvm bas=
+ed file
+systems. Suse writes on its support page, that the lvm version coming wit=
+h the
+7.0 does not recognize lvm partitions in an Win98 extended partition, whi=
+ch is
+the case with me and that I should install a newer version of lvm.
 
-Please help!
+When I am trying to reimport the exported vg (vgimport vgxy /dev/hdaz) I =
+always
+get a read error -256 on that partition. Based on that I think that it is=
+ still
+using the old lvm library, even though I use the executables from the new
+version of lvm.
 
-I think this is best explained with an example:
+Now my problem is, how do I make Linux Suse 7.0 on CD use that new lvm. W=
+hen I
+try to load liblvm.so e.g. by creating a ld.so.preload, I get an error ab=
+out an
+undefined symbols and I cannot do anything after that. I also get message=
+s about
+undefined symbols when I try to load the module lvm.o with insmod.
 
-stormie:/usr/src/temp/LVM/0.9.1_beta3# vgextend -v vg02 /dev/hdc1
-vgextend -- locking logical volume manager
-vgextend -- checking volume group name "vg02"
-vgextend -- checking volume group "vg02" existence
-vgextend -- checking for inactivity of volume group
-vgextend -- reading data of volume group "vg02" from lvmtab
-vgextend -- INFO: maximum logical volume size is 255.99 Gigabyte
-vgextend -- reading data for all physical volumes from disk(s)
-vgextend -- extending VGDA structures of volume group "vg02"
-vgextend -- volume group "vg02" will be extended by 1 new physical
-volumes
-vgextend -- extending volume group "vg02" by physical volume "/dev/hdc1"
+I am lost on how to mount my lvm partitions.=20
 
-in kernel
-Segmentation fault
-stormie:/usr/src/temp/LVM/0.9.1_beta3# vgdisplay -v vg02
---- Volume group ---
-VG Name               vg02
-VG Access             read/write
-VG Status             available/resizable
-VG #                  0
-MAX LV                256
-Cur LV                2
-Open LV               1
-MAX LV Size           255.99 GB
-Max PV                256
-Cur PV                4
-Act PV                4
-VG Size               42.95 GB
-PE Size               4 MB
-Total PE              10994
-Alloc PE / Size       6681 / 26.1 GB
-Free  PE / Size       4313 / 16.85 GB
-VG UUID               z2W4tI-xK3w-dE2Q-DUYl-CrHN-3KzM-zyBXA5
+I do not want to install everyth8ing from scratch.
 
---- Logical volume ---
-LV Name                /dev/vg02/music
-VG Name                vg02
-LV Write Access        read/write
-LV Status              available
-LV #                   1
-# open                 0
-LV Size                1.1 GB
-Current LE             281
-Allocated LE           281
-Allocation             next free
-Read ahead sectors     120
-Block device           58:0
+Thanks in advance
 
---- Logical volume ---
-LV Name                /dev/vg02/temp
-VG Name                vg02
-LV Write Access        read/write
-LV Status              available
-LV #                   2
-# open                 1
-LV Size                25 GB
-Current LE             6400
-Allocated LE           6400
-Allocation             next free
-Read ahead sectors     120
-Block device           58:1
-
-
---- Physical volumes ---
-PV Name (#)           /dev/hdc1 (2)
-PV Status             available / allocatable
-Total PE / Free PE    7328 / 7328
-
-PV Name (#)           /dev/hdd1 (1)
-PV Status             available / allocatable
-Total PE / Free PE    10994 / 4313
-
-stormie:/usr/src/temp/LVM/0.9.1_beta3# vgreduce -v vg02 /dev/hdc1
-vgreduce -- locking logical volume manager
-vgreduce -- checking volume group name "vg02"
-vgreduce -- checking volume group "vg02" existence
-vgreduce -- checking volume group "vg02" activity
-vgreduce -- reading data of volume group "vg02" from disk(s)
-vgreduce -- reducing VGDA structures of volume group "vg02"
-vgreduce -- physical volume "/dev/hdc1" doesn't belong to volume group
-"vg02"
-stormie:/usr/src/temp/LVM/0.9.1_beta3#
-
-
-I use kernel 2.4.0ac12 and 0.9.1beta3 of the lvm-tools.
-
-Best regards
-Per Wigren
+Dieter W=F6rz
+--=20
+Dieter W=F6rz                                        Tel: +49 711  17 497=
+17
+debis Systemhaus Industry                          Tel: +49 7031 90 81141
+Engineering Data Management EDM/S                  Fax: +49 711  17 40331
+Erich-Herion-Strasse 13                           =20
+D 70736 Fellbach                                   Mail: Dieter.Woerz@deb=
+is.com
