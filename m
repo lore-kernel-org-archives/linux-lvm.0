@@ -1,40 +1,48 @@
-Message-ID: <391FC4D1.833698B8@msede.com>
-Date: Mon, 15 May 2000 11:35:13 +0200
-From: Michael Marxmeier <mike@msede.com>
-Reply-To: kressb@icp.siemens.com
+Message-ID: <00a201bfbe75$7395a020$4b1f04d5@migue>
+From: "Miguel Angel" <falcon_lvm@yahoo.com>
+Subject: [linux-lvm] How can activate the LVM in start
+Date: Mon, 15 May 2000 15:57:02 +0200
 MIME-Version: 1.0
-Subject: [linux-lvm] LVM over MD on 2.3.x
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/alternative;
+	boundary="----=_NextPart_000_009F_01BFBE86.3594C2E0"
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@msede.com
 
-Forwarded message from Brian Kress (kressb@icp.siemens.com) ...
+This is a multi-part message in MIME format.
 
--------- Original Message --------
-Message-ID: <391F4C50.3842370A@icp.siemens.com>
-Date: Sun, 14 May 2000 21:01:04 -0400
-From: Brian Kress <kressb@icp.siemens.com>
-Subject: LVM over MD on 2.3.x
+------=_NextPart_000_009F_01BFBE86.3594C2E0
+Content-Type: text/plain;
+	charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 
-	Since RAID 1/5 has finally been included in 2.3,
-I can not try to get my setup working under 2.3.  I have
-run into a problem with getting LVM working over RAID5. This
-works under 2.2.x, with LVM 0.8i and RAID 0.90, but with
-2.3.99pre8, it doesn't work.  I can get vgscan to find
-the VGs, and I can get vgchange to activate them (with
-a small hack to the source, anyway), but the kernel driver
-has problems.  Any access to an LV returns the contents of
-md0.  It looks like the LVM driver isn't remapping blocks
-when used over raid.
-	I remember Andrea Arcangeli posting to the
-linux-kernel list about stacking block drivers and saying
-something about this, but I can't find the post.
-	Any idea what's going wrong and what I can do
-fix it?
+When I restart de computer I have to execute "vgchange -a y " to =
+activate /dev/mi_vg . How can I activate it at the start ?=20
+
+------=_NextPart_000_009F_01BFBE86.3594C2E0
+Content-Type: text/html;
+	charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML><HEAD>
+<META content=3D"text/html; charset=3Diso-8859-1" =
+http-equiv=3DContent-Type>
+<META content=3D"MSHTML 5.00.2314.1000" name=3DGENERATOR>
+<STYLE></STYLE>
+</HEAD>
+<BODY bgColor=3D#ffffff>
+<DIV><FONT face=3DArial size=3D2>When I restart de computer I have to =
+execute=20
+"vgchange -a y " to activate /dev/mi_vg . How can I activate it at the =
+start ?=20
+</FONT></DIV></BODY></HTML>
+
+------=_NextPart_000_009F_01BFBE86.3594C2E0--
 
 
-Brian Kress
-kressb@icp.siemens.com
+__________________________________________________
+Do You Yahoo!?
+Talk to your friends online with Yahoo! Messenger.
+http://im.yahoo.com
