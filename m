@@ -1,8 +1,6 @@
-Message-ID: <3DDAA535.3030206@backflip.com>
-From: Kenny Gorman <kgorman@backflip.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] LVM and mounting
+From: kalle@idlar.nu
+Message-Id: <E18EFOt-0001Qf-00@hermes.sistina.com>
+Subject: [linux-lvm] LE/PE Question
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -13,28 +11,26 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Tue Nov 19 14:55:02 2002
+Date: Tue Nov 19 14:56:02 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-I am having a problem where when I boot up the machine, the machine says 
-I need to fsck one of my logical volumes.  This volume I just added a 
-new filesystem to, but it hung on mount, so I rebooted.  Then I tried to 
-  lvremove the volume, and it says it successfully removed it, then I am 
-running vgchange -a n <grp> and vgremove <grp>.  But it says I can't 
-remove the group.. because it belongs to a volume.
+Hi!
 
-I think my lvmtab or someting is all messed up because the some messages 
-seem to indicate that the volume is there, and some say it's not. 
-lvdisplay says it does not exist.
+Im researching some diffrent what-if-scenarios to be more prepared if our lvm fails.
+and I'm wondering..Is there any utility to find which file (or fs inode) a specific LE/PE is assigned to?
+  What I would like to acomplish it to be able to know what files are located on a specific disk in a 
 
-I would just like to remove the entire volume and group and start over 
-so I can get my machine to boot.  Is there some option to just 'ignore' 
-or 'force' destroy the volume?  If I fdisk the disk will I still get 
-this error?
+VG/LV. So if I detect that a disk in a LV is starting to fail I would like to know which files are more 
 
-Any help would be great!!
+likely to be non-recoverable.
 
-thx
--kg
+
+Thanks!
+
+
+Regards
+Kalle
