@@ -1,12 +1,12 @@
-Return-Path: <lembark@wrkhors.com>
-Message-ID: <3A60E42E.B7588C50@wrkhors.com>
-Date: Sat, 13 Jan 2001 17:26:38 -0600
-From: Steven Lembark <lembark@wrkhors.com>
-MIME-Version: 1.0
-Subject: Re: [linux-lvm] *** ANNOUNCEMENT *** LVM 0.9.1 beta1 available at 
- www.sistina.com
-References: <20010113011532.B21587@srv.t-online.de> <20010113170408.A4296@gondor.com> <20010113163514.A24224@goliath.geekthing.com>
-Content-Transfer-Encoding: 7bit
+Return-Path: <lars.bensmann@epost.de>
+Date: Sun, 14 Jan 2001 07:54:35 +0100
+From: Lars Bensmann <lars.bensmann@epost.de>
+Subject: Re: [linux-lvm] Help: ERROR -154
+Message-ID: <20010114075435.A7184@epost.de>
+References: <3A5DBB0000001DCB@mail.epost.de>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <3A5DBB0000001DCB@mail.epost.de>; from lars.bensmann@epost.de on Sat, Jan 13, 2001 at 09:41:32PM +0100
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -19,35 +19,28 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-> I wonder if this is why I lost all of my data last Thursday...
+Hello,
+
+On Sat, Jan 13, 2001 at 09:41:32PM +0100, lars.bensmann@epost.de wrote:
+> when running vgscan I get the following error message:
 > 
-> vg w/ 2 pv's (hde1 & hdg1) and 3 lv's.  Add a pv (hdc1) and
-> reboot, and all of a sudden, even though the vg is still there,
-> with 3 pv's and 3 lv's, the lv's won't even fsck (bad magic
-> number in superblock -- doesn't even look like a filesystem was
-> even there).  I though maybe it had a problem w/ rearranging the
-> pv's or something...  How else could it completely lose track
-> of my data?
-> 
-> It was kernel 2.4.0 w/ the several-line vg_extend patch, and the 0.9
-> tools...
+> vgscan -- ERROR -154: can't get data of volume group "part" from physical
+> volume(s)
+> vgscan -- ERROR -154 creating "/etc/lvmtab" and "/etc/lvmtab.d"
 
-you probably hadn't lost anything.  one approach that usually
-works is to:
+sorry for posting to the list and then finding the answer in the archives.
 
-	vgexport vg0;
-	vgimport vg0 /first/disk /second/disk;
+I tried to run vgcfgrestore before posting to the list, but I didn't know
+that "/etc/lvmtab" does not exist was not a feature, but a bug. After
+touching it and mkdir'ing /etc/lvmtab.d/ it worked OK, although it gave an
+error on the first run about not being able to insert the VG into
+/etc/lvmtab. But that went away on the second run.
 
-likely to get you back to where you were before the vgextend.
-
-if vgimport doesn't like them anymore you can create a new lv,
-vgextend it to the two devices and create new vg's w/ the same
-allocations as the old ones (simple enough if they havn't been
-extended too many times).
+Thanks for LVM which worked perfectly for me (until now :-),
+Lars
 
 -- 
- Steven Lembark                                   2930 W. Palmer St.
-                                                 Chicago, IL  60647
- lembark@wrkhors.com                                   800-762-1582
+I consume, therefore I am
