@@ -1,11 +1,8 @@
-From: Frank Van Damme <frank.vandamme@student.kuleuven.ac.be>
-Subject: Re: [linux-lvm] 2 Q's: power outages during pvmove and fragmentation
-References: <200307271524.49670.frank.vandamme@student.kuleuven.ac.be> <20030728101744.GD376@fib011235813.fsnet.co.uk>
-In-Reply-To: <20030728101744.GD376@fib011235813.fsnet.co.uk>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Disposition: inline
-Message-Id: <200307281740.36593.frank.vandamme@student.kuleuven.ac.be>
+Message-ID: <OFDDDFDAC9.CDBEAD7D-ONC1256D72.004CF0D2@paris.cnp.fr>
+From: eric.boissier@cnp.fr
+Content-Type: text/plain; charset="us-ascii"
+Subject: [linux-lvm] pvcreate problem on ia64 with GPT
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,36 +13,50 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Jul 28 10:41:02 2003
+Date: Tue Jul 29 09:05:02 2003
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Monday 28 July 2003 12:17, Joe Thornber wrote:
-> > 1: suppose my hamster bites my power cord during a pvmove and only half
-> > of the data will have moved. How great a disaster does this result in?
-> > Does lvm move one extend and does it write to disk which LE has been
-> > mapped to which PE, or does it first write all the data and rewrite the
-> > metadata?
->
-> First off I encourage you to use LVM2 rather than LVM1.  An
-> interrupted pvmove can be resumed or aborted after a crash.
+Hello,
 
-Hm, I'll consider upgrading, since lvm2 seems to be largely compatible with=
-=20
-older lvm installations.
+I created on my boot disk a partition with parted (/dev/sda6).
+But when I want to create a pv with that partition, no way, it does not 
+work.
+It seems that the pvcreate command still use the MBR informations :-(
 
-> > 2: does lvm ever get fragmented if one moves data around across differe=
-nt
-> > disks a lot?
->
-> The extent size is normally so large (4M+) that fragmentation isn't
-> really a big problem with LVM.  But we will be making a more general
-> remapping tool in the future that allows you to do this sort of thing.
+Did anybody have a clue (or better, a solution) to solve this issue ?
 
-Ok. Cool :-)
+Thank's,
+Eric.
 
-=2D-=20
-=46rank Van Damme    http://www.openstandaarden.be=20
-~~~~~~~~~~~~~~~    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-"Je pense, donc je suis brevet=E9."
+-----------------------------------------
+
+[root@pss913 /]# fdisk -l /dev/sda
+
+Disk /dev/sda: 64 heads, 32 sectors, 34732 cylinders
+Units = cylinders of 2048 * 512 bytes
+
+   Device Boot    Start       End    Blocks   Id  System
+/dev/sda1             1     34733  35566479+  ee  EFI GPT
+Partition 1 does not end on cylinder boundary:
+     phys=(1023, 254, 63) should be (1023, 63, 32)
+[root@pss913 /]# parted /dev/sda print
+Disk geometry for /dev/sda: 0.000-34732.890 megabytes
+Disk label type: GPT
+Minor    Start       End     Filesystem  Name                  Flags
+1          0.017    100.000  FAT                               boot, lba
+2        100.000    500.000  FAT                               hp-service, 
+lba
+3        500.000   2548.000  ext3                              lba
+4       2548.000   4596.000  linux-swap                        lba
+5       4596.000   6644.000  ext3                              lba
+6       6645.000  34732.874                                    lvm, lba
+[root@pss913 /]# pvcreate /dev/sda6
+pvcreate
+pvcreate -- extended partition "/dev/sda6" doesn't exist
+
+pvcreate [-d|--debug] [-f[f]|--force [--force]] [-h|--help] [-y|--yes]
+        [-v|--verbose] [-V|--version] PhysicalVolume [PhysicalVolume...]
+
+-----------------------------------------------
