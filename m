@@ -1,10 +1,10 @@
-From: Wolfgang Weisselberg <weissel@netcologne.de>
-Subject: Re: [linux-lvm] Keep snapshots active for 24 hours?
-Message-ID: <20011217040753.C4880@tiger.bigcats.invalid>
-References: <20011214113804.I940@lynx.no> <NBBBKLKHMJHIJLHOGAOJKELIJCAA.steve.wray@the.net.nz> <20011216202511.D26924@tiger.bigcats.invalid> <3C1D1B23.2080805@birddog.com>
+Subject: Re: [linux-lvm] Can someone _please_ tell me whats going on?
+From: Bradley Alexander <storm@tux.org>
+In-Reply-To: <Pine.LNX.4.33.0112170410450.12782-100000@www.scotty.co.at>
+References: <Pine.LNX.4.33.0112170410450.12782-100000@www.scotty.co.at>
+Content-Transfer-Encoding: 7bit
+Message-Id: <1008560587.831.6.camel@defiant>
 Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <3C1D1B23.2080805@birddog.com>; from kbohling@birddog.com on Sun, Dec 16, 2001 at 04:07:31PM -0600
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,51 +15,39 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Sun Dec 16 21:12:09 2001
+Date: Sun Dec 16 21:41:02 2001
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Hi, Kirby!
+On Sun, 2001-12-16 at 22:13, Friedrich Lobenstock wrote:
+> On 16 Dec 2001 21:57, Bradley Alexander wrote:
+> 
+> > hdc: dma_intr: status=0x51 { DriveReady SeekComplete Error }
+> > hdc: dma_intr: error=0x10 { SectorIdNotFound }, LBAsect=211681280,
+> > sector=0
+> > hdc: DMA disabled
+> > hdd: DMA disabled
+> > ide1: reset: success
+> 
+> This looks like a IDE-cable problem to me. Checked the length?
+> Is it really a ATA66/100 cable? Do you use a drive cage?
 
-Kirby C. Bohling (kbohling@birddog.com) wrote 88 lines:
+Its a standard IDE cable. I have a 40-pin/40-wire cable and a
+40-pin/80-wire (I'm assuming this is an ATA66/100 cable). Originally, i
+had both drives on the ATA cable, but since I split them to different
+channels, I had to use a standard IDE cable on the second channel.
+However, I was getting the same errors when both were on the ATA cable
+as well.
 
-> 	While the concept of a writeable LVM is cool, I believe LVM operates a 
-> low enough level that the migrations you speak of is impossible at the 
-> LVM level (in the kernel).
-
-Moving the *complete* snapshot onto the LVM should be easy:
-lock the FS (or be very clever), replay the changes in the
-snapshot and migrate them onto the parent (i.e. look up the
-page mapping and write the used pages onto their respective
-pages in the parent).
-
-Moving just selective parts has to be done as a FS-level
-tool, though, you are right there.
-
-> It would be cool to have an filesystem diff, 
-> but on a live filesystem that could be quite tricky.  Essentially, that 
-> would be a differential backup utility.
-
-Well, that's what a snapshot is, isn't it?  Just that it
-operates on (usually) 4M pages...
-
-> 	A writeable LVM would solve the problem of taking a snapshot of a 
-> journalling filesystem.
-
-Actually there is a patch to do that even while the journalled
-FS is mounted.  You also have to allow that change by enabling
-it in the LVM-kernel-sourcecode by changing a #define.
-
-Cleanly umounted partitions should be no problem, they have
-no log that needs a replay.
-
-Anyway, there are more useful things you can do with
-writable snapshots; just think of an error-resistant system.
-Everything happens on the big-enough snapshots, but you can
-reset the system in a snap; just drop all the snapshots and
-recreate them.  This is far faster than copying or extracting
-a .tar.gz, and the 'base system' is easier to upgrade, too.
-
--Wolfgang
+-- 
+--Brad
+============================================================================
+Bradley M. Alexander, CISSP              |   Co-Chairman,
+Beowulf System Admin/Security Specialist |    NoVALUG/DCLUG Security SIG
+Debian/GNU Linux Developer		 |   storm [at] debian.org
+                                         |   storm [at] tux.org
+============================================================================
+It's always a good idea to keep the pointy end going forward as
+much as possible.
+					--Rules of the Air, #21
