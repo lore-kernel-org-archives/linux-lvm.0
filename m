@@ -1,12 +1,11 @@
-Return-Path: <erik@bagfors.nu>
-Subject: Re: [linux-lvm] can't remove logical volume  under snapshot???
-From: Erik =?ISO-8859-1?Q?B=E5gfors?= <erik@bagfors.nu>
-In-Reply-To: <20010411170727.A23096@sistina.com>
-References: <987004247.3002.10.camel@detrius> 
-	<20010411170727.A23096@sistina.com>
-Date: 11 Apr 2001 18:11:25 +0200
-Message-Id: <987005485.3003.11.camel@detrius>
-Mime-Version: 1.0
+Return-Path: <adilger@turbolinux.com>
+From: Andreas Dilger <adilger@turbolinux.com>
+Message-Id: <200104111949.f3BJnFHt014761@webber.adilger.int>
+Subject: Re: [linux-lvm] LVM and *bad* performance (no striping)
+In-Reply-To: <m2k84rn0im.fsf@isnogud.escape.de> "from Urs Thuermann at Apr 11,
+ 2001 01:23:13 pm"
+Date: Wed, 11 Apr 2001 13:49:14 -0600 (MDT)
+MIME-Version: 1.0
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -18,74 +17,133 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Ok, thank you. I love fast answers like this. :)
+Urs, you write:
+> > One thing that now comes to mind is if the LVM I/O is not aligned,
+> > because LVM PEs are aligned with the end of the PV and not the
+> > start, this _may_ cause performance problems because of misaligned
+> > read-modify-write causing extra seeking (purely speculation).
+> 
+> I don't understand, what you're saying here (and above).  I was
+> *reading* with dd if=/dev/vg0/test of=/dev/null.  So why is there an
+> RMW involved?
 
-/Erik
+Sorry, too sleepy I guess.  Obviously don't need read-modify-write
+when only reading pages.
 
-> Erik,
-> 
-> you seem to have an older LVM version here which had this problem.
-> 
-> Please upgrade to the recent one from www.sistina.com which should fix it.
-> 
-> On Wed, Apr 11, 2001 at 05:50:47PM +0200, Erik B�gfors wrote:
-> > What does this mean??
-> > 
-> > detrius:/# lvremove  -v /dev/disk_vg/home_lv 
-> > lvremove -- locking logical volume manager
-> > lvremove -- checking logical volume name "/dev/disk_vg/home_lv"
-> > lvremove -- checking existence of volume group "disk_vg"
-> > lvremove -- checking for active volume group "disk_vg"
-> > lvremove -- getting status of volume group "disk_vg" from kernel
-> > lvremove -- getting status of logical volume /dev/disk_vg/home_lv from
-> > VGDA in kernel
-> > lvremove -- can't remove logical volume "/dev/disk_vg/home_lv" under
-> > snapshot
-> > 
-> > I've tried making a snapshot once but I removed that.  Does this lv
-> > still think there is one???  How do I get past this?
-> > 
-> > /Erik
-> > 
-> > -- 
-> > Erik B�gfors               | http://erik.bagfors.nu/    
-> > erik@bagfors.nu            | Erik.Bagfors@engohol.se
-> > Supporter of free software | GSM +46 733 279 273
-> > fingerprint: 6666 A85B 95D3 D26B 296B 6C60 4F32 2C0B 693D 6E32
-> > _______________________________________________
-> > linux-lvm mailing list
-> > linux-lvm@sistina.com
-> > http://lists.sistina.com/mailman/listinfo/linux-lvm
-> 
-> -- 
-> 
-> Regards,
-> Heinz    -- The LVM Guy --
-> 
-> *** Software bugs are stupid.
->     Nevertheless it needs not so stupid people to solve them ***
-> 
-> =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-> 
-> Heinz Mauelshagen                                 Sistina Software Inc.
-> Senior Consultant/Developer                       Am Sonnenhang 11
->                                                   56242 Marienrachdorf
->                                                   Germany
-> Mauelshagen@Sistina.com                           +49 2626 141200
->                                                        FAX 924446
-> =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-> 
+> Could you explain the interaction of the kernel, LVM and the physical
+> device a little bit or give a pointer to some text?
 
+Ok, the chain of events is as follows (hopefully correct):
+
+Non-LVM read			LVM read
+------------			--------
+sys_read			sys_read
+block_read			block_read
+ll_rw_block			ll_rw_block
+submit_bh			submit_bh
+generic_make_request		generic_make_request
+				lvm_make_request_fn
+				lvm_map
+__make_request			__make_request
+
+The rest should be the same because you have the same IDE driver below.
+
+
+> > Try the following patch, which will align the PE structs to 64kB
+> > boundaries from the start of the disk, as well as making the other
+> > large VGDA structs start on 4k boundaries.
+> 
+> Does it align to the start of the disk (as you write) or to the start
+> of the PV?
+
+You are correct, it aligns to the start of the PV, and not the disk.
+
+> And is this a patch that will go into further releases anyway or is it
+> just to find my reported performance problem?  Since alignment is changed,
+> I think I will have to recreate the PV, VG and LV with pvcreate, vgcreate
+> and lvcreate, right?  The patched tools and kernel would not work with
+> my existing LV, would they?
+
+I'm hoping this patch will make it into the stock LVM because it aligns
+all of the large VGDA structs to PAGE_SIZE (at least 4k pages), and the
+PE alignment matches MD RAID device alignment.
+
+Yes, you will need to re-create the PV and VG and LV for this to take
+effect.  However, the kernel currently knows nothing at all about on-disk
+layout of VGDA data.  Also, the tools all use the VGDA locations stored
+in the PV header (they are written at pvcreate and vgcreate time), so even
+if you create your VG/LV with this patch and it doesn't make it into the
+stock kernel, it is 100% compatible with unpatched tools.
+
+> I don't expect this change in alignment to cause a change in performance.
+
+Neither do I.  Just something that I was thinking about when I had writing
+on my mind, not reading.
+
+> For testing, I have written my own very simple version of dd which can
+> seek (not only skip) on the input file (I called it di since it understands
+> only if= but not of=, it always writes to stdout).  With this I have read
+> from /dev/sda5 exactly the same sectors that /dev/vg0/test allocates
+> (the first PE in vg0 starts at sector 4352 and /dev/vg0/test allocates
+> PEs from vg0 contigously starting at PE no 0, see my last mail):
+> 
+>     # time ~urs/src/di bs=512 count=131072 if=/dev/sda5 >/dev/null
+>     131072+0
+>     
+>     real    0m9.345s
+>     user    0m0.180s
+>     sys     0m1.250s
+>     # time ~urs/src/di bs=512 count=131072 if=/dev/sda5 seek=4352 >/dev/null
+>     131072+0
+>     
+>     real    0m8.955s
+>     user    0m0.130s
+>     sys     0m1.570s
+>     # time ~urs/src/di bs=512 count=131072 if=/dev/vg0/test >/dev/null
+>     131072+0
+>     
+>     real    0m54.611s
+>     user    0m0.110s
+>     sys     0m2.480s
+
+Very strange.  I just tested the same on my system, and LVM ends up
+_faster_ than raw disk access in each of the 3 tests I did:
+
+dd if=<dev> of=/dev/null bs=512 count=131072
+
+LVM /dev/lvtest/vgtest: 11.099s, 11.393s, 10.785s
+IDE /dev/hda9:          12.073s, 11.822s, 11.843s
+
+This may have something to do with how my LV is set up.  The first 5
+PEs are actually closer to the end of the PV, and then the remaining
+PEs are contiguous from the start of the PV.
+
+> Anyway, I will try your patch, probably today.  I have not applied
+> patches from the lvm-0.9... to the kernel before.  AFAICS, I have to
+> apply your patch to the lvm-0.9.1beta7 package, then ./configure; cd
+> PATCHES; make and then apply lvm-0.9.1_beta7-2.4.3.patch to my kernel
+> src, right?
+
+Yes, but you really don't need to change the kernel code to use my
+patch.  The VGDA alignment is purely a user-space issue.  The kernel
+never does I/O to the VGDA - it is all read in user-space and passed
+to the kernel via ioctl.
+
+> Also, does lvm-0.9.1_beta7-2.4.3.patch affect files other than
+> lvm-mod.o, i.e. do I have to restart my kernel or only reload the LVM
+> module?
+
+Actually, I think you should be OK with only rebuilding the LVM module.
+However, you should be able to see from the patch itself if it affects
+anything outside lvm*.  AFAIK, noting includes lvm.h in the kernel that
+would be affected.
+
+Cheers, Andreas
 -- 
-Erik B�gfors               | http://erik.bagfors.nu/    
-erik@bagfors.nu            | Erik.Bagfors@engohol.se
-Supporter of free software | GSM +46 733 279 273
-fingerprint: 6666 A85B 95D3 D26B 296B 6C60 4F32 2C0B 693D 6E32
+Andreas Dilger  \ "If a man ate a pound of pasta and a pound of antipasto,
+                 \  would they cancel out, leaving him still hungry?"
+http://www-mddsp.enel.ucalgary.ca/People/adilger/               -- Dogbert
