@@ -1,12 +1,11 @@
-Return-Path: <bluca@comedia.it>
-Date: Wed, 13 Jun 2001 15:20:32 +0200
-From: Luca Berra <bluca@comedia.it>
+Return-Path: <prj@multivac.cwru.edu>
 Subject: Re: [linux-lvm] expanding physical disks
-Message-ID: <20010613152032.A18554@colombina.comedia.it>
-References: <20010612212804.P1658@pc.ilinx> <200106130710.f5D7AhaX005430@webber.adilger.int>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <200106130710.f5D7AhaX005430@webber.adilger.int>; from adilger@turbolinux.com on Wed, Jun 13, 2001 at 01:10:42AM -0600
+References: <200106130710.f5D7AhaX005430@webber.adilger.int>
+From: Paul Jarc <prj@po.cwru.edu>
+Date: 13 Jun 2001 13:22:26 -0400
+In-Reply-To: <200106130710.f5D7AhaX005430@webber.adilger.int> (Andreas Dilger's message of "Wed, 13 Jun 2001 01:10:42 -0600 (MDT)")
+Message-ID: <m3ofrsguqf.fsf@multivac.cwru.edu>
+MIME-Version: 1.0
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -22,26 +21,26 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Wed, Jun 13, 2001 at 01:10:42AM -0600, Andreas Dilger wrote:
+Andreas Dilger <adilger@turbolinux.com> writes:
 > Brian Murrell writes:
-> > How does LVM deal with physical disks that can get bigger or smaller,
-> > such as a hardware RAID device?  What happens to a PV on a hardware
-> > RAID-5 device that is presented to the system as a single (say scsci)
-> > target when you put a few more disks in it and tell the hardware raid
-> > device to add them to the given (scsi) target that a PV was created
-> > on?  (what a mouthful).
+>> How does LVM deal with physical disks that can get bigger or smaller,
+>> such as a hardware RAID device?
 > 
 > Doesn't work at this time.  LVM will only see what was originally there
 > at the time pvcreate was run (or possibly vgcreate/vgextend).
-At the moment your only chance is to create partitions on it and use those
-partitions as PVs
 
-L.
+But it won't do any harm either, right?
 
--- 
-Luca Berra -- bluca@comedia.it
-        Communication Media & Services S.r.l.
- /"\
- \ /     ASCII RIBBON CAMPAIGN
-  X        AGAINST HTML MAIL
- / \
+> If the new PEs don't all fit into the padding space (it may happen if
+> your starting PV size is just a couple hundred kB over n * PE size),
+> then you will need to pvmove PE0 from its current location to somewhere
+> else in the VG, and then renumber all of the PEs on that PV as (PE# - 1).
+> That couble be ugly because I believe the PE number is stored in the
+> snapshot tables and such.
+
+Since this is a case of making the PV bigger, all the PEs could simply
+be shifted by one; there is, after all, more room at the end now.
+That would still be ugly, though.
+
+
+paul
