@@ -1,14 +1,24 @@
-Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id iAT8bir25464
-	for <linux-lvm@redhat.com>; Mon, 29 Nov 2004 03:37:44 -0500
-Message-ID: <5EA812BF44E06D4B818A8EEEDDE12B7F0448BFA4@EX2BEL86MBX02>
-From: Johan.SEGERS@cec.eu.int
-Date: Mon, 29 Nov 2004 09:36:55 +0100
+Received: from fentible.pjc.net (vpnuser1.surrey.redhat.com [172.16.9.1])
+	by pobox.surrey.redhat.com (8.12.8/8.12.8) with ESMTP id iATFa9lZ020572
+	for <linux-lvm@redhat.com>; Mon, 29 Nov 2004 15:36:09 GMT
+Received: from patrick by fentible.pjc.net with local (Exim 4.34)
+	id 1CYnZR-0007AY-Ct
+	for linux-lvm@redhat.com; Mon, 29 Nov 2004 15:36:09 +0000
+Resent-Message-ID: <20041129153609.GM16269@tykepenguin.com>
+Resent-To: linux-lvm@redhat.com
+Resent-To: debian-bugs-dist@lists.debian.org
+Resent-Message-ID: <handler.283507.B.11017404994401@bugs.debian.org>
+Content-Type: text/plain; charset="us-ascii"
 MIME-Version: 1.0
-Content-Type: multipart/alternative;
-	boundary="----_=_NextPart_001_01C4D5EE.051ABC6C"
-Subject: [linux-lvm] Installation of LVM on AS 2.1 - kernel 2.4.9-e.3
-Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Transfer-Encoding: 7bit
+From: Antoine Comte <antoine@comte.cc>
+Date: Mon, 29 Nov 2004 16:00:52 +0100
+Message-Id: <E1CYn1I-0002Nl-Ll@comet.comte.cc>
+Sender: ant <ant@comet.redhat.com>
+Subject: [linux-lvm] Bug#283507: lvm2: snapshot module not loaded at boot
+	time
+Reply-To: Antoine Comte <antoine@comte.cc>, 283507@bugs.debian.org,
+	LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -18,92 +28,28 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: Linux-LVM@Sistina.com
+To: Debian Bug Tracking System <submit@bugs.debian.org>
 
-This message is in MIME format. Since your mail reader does not understand
-this format, some or all of this message may not be legible.
+Package: lvm2
+Version: 2.00.24-1
+Severity: normal
 
-------_=_NextPart_001_01C4D5EE.051ABC6C
-Content-Type: text/plain;
-	charset="utf-8"
+/etc/init.d/lvm script does not load the dm_snapshot module. One have to manualy load it in order to create/use snapshots
 
-Hi,
 
-I try to install LVM on my Red Hat AS2.1 server and have the following
-problem :
 
-After the installation of the lvm package 1.0.3 and of the kernel source
-package of 2.4.9-e.3, i have to run
+-- System Information:
+Debian Release: 3.1
+  APT prefers testing
+  APT policy: (500, 'testing')
+Architecture: i386 (i686)
+Kernel: Linux 2.6.8-1-k7-smp
+Locale: LANG=C, LC_CTYPE=C (charmap=ANSI_X3.4-1968)
 
-Configure
-Make
-Make install.
+Versions of packages lvm2 depends on:
+ii  libc6                       2.3.2.ds1-18 GNU C Library: Shared libraries an
+ii  libdevmapper1.00            2:1.00.19-2  The Linux Kernel Device Mapper use
+ii  lvm-common                  1.5.17       The Logical Volume Manager for Lin
 
-During the configure part, i always get a message that it did not find  a
-Makefile in the /usr/src/linux directory.
-My source directory of the redhat is /usr/src/linux/SOURCES and there is no
-Makefile there. The Makefile for the 
-Lvm package is in the direvctory from where i try to install LVM nl
-/tmp/lvm/LVM/1.0.3. 
-
-Any idea what is missing here ?
-
-Thanks in advance
-
-Johan Segers
-
-------_=_NextPart_001_01C4D5EE.051ABC6C
-Content-Type: text/html;
-	charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
-<HTML>
-<HEAD>
-<META HTTP-EQUIV=3D"Content-Type" CONTENT=3D"text/html; =
-charset=3Dutf-8">
-<META NAME=3D"Generator" CONTENT=3D"MS Exchange Server version =
-5.5.2658.2">
-<TITLE>Installation of LVM on AS 2.1 - kernel 2.4.9-e.3</TITLE>
-</HEAD>
-<BODY>
-
-<P><FONT SIZE=3D2 FACE=3D"Arial">Hi,</FONT>
-</P>
-
-<P><FONT SIZE=3D2 FACE=3D"Arial">I try to install LVM on my Red Hat =
-AS2.1 server and have the following problem :</FONT>
-</P>
-
-<P><FONT SIZE=3D2 FACE=3D"Arial">After the installation of the lvm =
-package 1.0.3 and of the kernel source package of 2.4.9-e.3, i have to =
-run</FONT>
-</P>
-
-<P><FONT SIZE=3D2 FACE=3D"Arial">Configure</FONT>
-<BR><FONT SIZE=3D2 FACE=3D"Arial">Make</FONT>
-<BR><FONT SIZE=3D2 FACE=3D"Arial">Make install.</FONT>
-</P>
-
-<P><FONT SIZE=3D2 FACE=3D"Arial">During the configure part, i always =
-get a message that it did not find&nbsp; a Makefile in the =
-/usr/src/linux directory.</FONT>
-<BR><FONT SIZE=3D2 FACE=3D"Arial">My source directory of the redhat is =
-/usr/src/linux/SOURCES and there is no Makefile there. The Makefile for =
-the </FONT>
-<BR><FONT SIZE=3D2 FACE=3D"Arial">Lvm package is in the direvctory from =
-where i try to install LVM nl /tmp/lvm/LVM/1.0.3. </FONT>
-</P>
-
-<P><FONT SIZE=3D2 FACE=3D"Arial">Any idea what is missing here ?</FONT>
-</P>
-
-<P><FONT SIZE=3D2 FACE=3D"Arial">Thanks in advance</FONT>
-</P>
-
-<P><FONT SIZE=3D2 FACE=3D"Arial">Johan Segers</FONT>
-</P>
-
-</BODY>
-</HTML>
-------_=_NextPart_001_01C4D5EE.051ABC6C--
+-- debconf information:
+  lvm2/snapshots:
