@@ -1,7 +1,7 @@
-From: "Samarjeet Tomar" <samarjeet_tomar@hotmail.com>
+Message-ID: <20040106165719.A26553@cs.mcgill.ca>
+From: Navindra Umanee <navindra@cs.mcgill.ca>
 Mime-Version: 1.0
-Message-ID: <Law10-F48ilSS82Im4U000796ca@hotmail.com>
-Subject: [linux-lvm] Hang during boot after creating LVM volumes
+Subject: [linux-lvm] vgscan goes into an infinite loop (migration issues)
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -12,42 +12,85 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Tue Jan  6 15:46:02 2004
+Date: Tue Jan  6 15:59:01 2004
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; format=flowed; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
 Hi,
 
-I am observing this hang after I created four LVM volumes,
-created two mirrored volumes out of them using md, and
-added two entries in fstab to mount two filesystems (ext3)
-on these mirrored volumes. When the machine was rebooted,
-it hung at this point:
+I have an LVM1 system working under 2.4.  I've installed 2.6.0 with
+devmapper and the LVM2 tools.  Now I'm trying to get 2.6.0 to mount my
+LVM1 system or at least to convert LVM1 to LVM2.
 
-<snip>
-Journalled Block Device driver loaded
-EXT3-fs: INFO: recovery required on readonly filesystem.
-EXT3-fs: write access will be enabled during recovery.
-kjournald starting.  Commit interval 5 seconds
-EXT3-fs: recovery complete.
-EXT3-fs: mounted filesystem with ordered data mode.
-Freeing unused kernel memory: 244k freed
+I have a single IDE harddrive with one VG named /dev/bytepool
+containing four LVM partitions.  I have a few LVs under
+/dev/bytepool/.
 
-Same hang happened again on the next reboot.
+vgconvert runs for a long long time, uses more than 3G of memory
+(including swap) and then fails with an out of memory error.  I can
+increase swap if it will help, but I don't think it will. 
 
-I haven't changed /etc/rc.d/rc.sysinit to load the
-LVM module. Is that what is could be causing this problem?
-I want to somehow boot all the way up and change the
-rc script.
+vgscan does the same thing with global/format set to LVM1.  So I put
+vgscan in verbose and debug mode:
 
-How can I get out of this? I am using Red Hat 7.1, 2.4.21
-kernel.
+locking/file_locking.c:158   Locking /var/lock/lvm/V_bytepool RB
+toollib.c:305   Finding volume group "bytepool"
+device/dev-io.c:325   Opened /dev/hda6
+format1/disk-rep.c:353   Found /dev/hda6 in VG bytepool
+device/dev-io.c:325   Opened /dev/hda7
+format1/disk-rep.c:353   Found /dev/hda7 in VG bytepool
+format1/disk-rep.c:392   Ignoring duplicate PV  on /dev/hda7
+device/dev-io.c:325   Opened /dev/hda8
+format1/disk-rep.c:353   Found /dev/hda8 in VG bytepool
+format1/disk-rep.c:392   Ignoring duplicate PV  on /dev/hda8
+device/dev-io.c:325   Opened /dev/hda9
+format1/disk-rep.c:353   Found /dev/hda9 in VG bytepool
+format1/disk-rep.c:392   Ignoring duplicate PV  on /dev/hda9
+format1/disk-rep.c:353   Found /dev/hda6 in VG bytepool
+format1/disk-rep.c:392   Ignoring duplicate PV  on /dev/hda6
+format1/disk-rep.c:353   Found /dev/hda7 in VG bytepool
+format1/disk-rep.c:392   Ignoring duplicate PV  on /dev/hda7
+format1/disk-rep.c:353   Found /dev/hda8 in VG bytepool
+format1/disk-rep.c:392   Ignoring duplicate PV  on /dev/hda8
+format1/disk-rep.c:353   Found /dev/hda9 in VG bytepool
+format1/disk-rep.c:392   Ignoring duplicate PV  on /dev/hda9
+format1/disk-rep.c:353   Found /dev/hda6 in VG bytepool
+format1/disk-rep.c:392   Ignoring duplicate PV  on /dev/hda6
+format1/disk-rep.c:353   Found /dev/hda7 in VG bytepool
+format1/disk-rep.c:392   Ignoring duplicate PV  on /dev/hda7
+format1/disk-rep.c:353   Found /dev/hda8 in VG bytepool
+format1/disk-rep.c:392   Ignoring duplicate PV  on /dev/hda8
+format1/disk-rep.c:353   Found /dev/hda9 in VG bytepool
+format1/disk-rep.c:392   Ignoring duplicate PV  on /dev/hda9
+format1/disk-rep.c:392   Ignoring duplicate PV  on /dev/hda6
+format1/disk-rep.c:353   Found /dev/hda7 in VG bytepool
+format1/disk-rep.c:392   Ignoring duplicate PV  on /dev/hda7
+format1/disk-rep.c:353   Found /dev/hda8 in VG bytepool
+format1/disk-rep.c:392   Ignoring duplicate PV  on /dev/hda8
+format1/disk-rep.c:353   Found /dev/hda9 in VG bytepool
+format1/disk-rep.c:392   Ignoring duplicate PV  on /dev/hda9
+format1/disk-rep.c:353   Found /dev/hda6 in VG bytepool
+format1/disk-rep.c:392   Ignoring duplicate PV  on /dev/hda6
+format1/disk-rep.c:353   Found /dev/hda7 in VG bytepool
+format1/disk-rep.c:392   Ignoring duplicate PV  on /dev/hda7
+format1/disk-rep.c:353   Found /dev/hda8 in VG bytepool
+format1/disk-rep.c:392   Ignoring duplicate PV  on /dev/hda8
+format1/disk-rep.c:353   Found /dev/hda9 in VG bytepool
+format1/disk-rep.c:392   Ignoring duplicate PV  on /dev/hda9
+[...]
+
+Basically it's an infinite loop.  Any idea what is going on?  I would
+greatly appreciate any suggestions.
+
+Btw, it was quite an unpleasant shock to find that Linux 2.6.0 no
+longer supported my LVM filesystems -- the kernel documentation
+completely fails to mention anything at all about LVM changes.  Can
+someone take care of this oversight?  
+
+I *am* really glad my partitions and data have not been toasted so
+far...  :-)
 
 Thanks,
-Samar.
-
-_________________________________________________________________
-Worried about inbox overload? Get MSN Extra Storage now!  
-http://join.msn.com/?PAGE=features/es
+Navin.
