@@ -1,11 +1,10 @@
-Date: Tue, 4 Sep 2001 09:33:21 +0200
-From: Luca Berra <bluca@comedia.it>
-Subject: Re: [linux-lvm] LVM and SPL
-Message-ID: <20010904093321.A7079@colombina.comedia.it>
-References: <E504453C04C1D311988D00508B2C5C2D01D812F4@mail11.gruppocredit.it>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <E504453C04C1D311988D00508B2C5C2D01D812F4@mail11.gruppocredit.it>; from ChemolliF@GruppoCredit.it on Mon, Sep 03, 2001 at 10:42:58AM +0200
+Message-ID: <3B949CC1.1030604@st-peter.stw.uni-erlangen.de>
+Date: Tue, 04 Sep 2001 11:20:01 +0200
+From: svetljo <galia@st-peter.stw.uni-erlangen.de>
+MIME-Version: 1.0
+Subject: Re: [linux-lvm] PBs with LVM over software RAID ( and XFS ? ext2 reiserfs?)
+References: <3B8E3F0E.8050609@st-peter.stw.uni-erlangen.de> <20010830083546.A20989@sistina.com> <3B8EC633.40202@st-peter.stw.uni-erlangen.de> <3B8F8C5E.7030603@st-peter.stw.uni-erlangen.de> <20010831110512.V541@turbolinux.com> <3B90C9A4.3080005@st-peter.stw.uni-erlangen.de> <3B90EC90.4050606@st-peter.stw.uni-erlangen.de> <20010903215300.B32553@turbolinux.com>
+Content-Transfer-Encoding: 7bit
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,27 +16,36 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: "'linux-lvm@sistina.com'" <linux-lvm@sistina.com>
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+To: linux-lvm@sistina.com
 
-On Mon, Sep 03, 2001 at 10:42:58AM +0200, Chemolli Francesco (USI) wrote:
-> Actually, EMC and GFS are different things AFAIK. EMC provides you
-> with virtual disks over FC, you still have to use them.
-> I don't see why you shouldn't be able to run GFS over an EMC-provided
-> virtual disk.
+wich one should i try 2.4.5 2.4.6 2.4.7 2.4.8
+and should it be -ac
+should i try to patch the kerenel eith badram
 
-Emc sells a product called SRDF which provides data replication between
-emc2 boxes, it is also possible to use the replica in readonly mode.
-this is one of the feature provided by GFS.
+i'm going to run memtest now
 
-regards,
-L.
+Andreas Dilger wrote:
 
--- 
-Luca Berra -- bluca@comedia.it
-        Communication Media & Services S.r.l.
- /"\
- \ /     ASCII RIBBON CAMPAIGN
-  X        AGAINST HTML MAIL
- / \
+>On Sep 01, 2001  16:11 +0200, svetljo wrote:
+>
+>>clean Linus kernel-2.4.9  LVM-1.0.1rc1                    ext2 and 
+>>reiserfs segfaults
+>>clean            linux-2.4.9-ac5 LVM-1.0                        ext2 and 
+>>reiserfs segfaults
+>>                  | linux-2.4.10-pre2-xfs LVM-1.0.1rc2      ext2 and 
+>>reiserfs segfaults, but xfs seems to work
+>>                  | from SGI's cvs tree  linux-2.4-xfs taken today in 
+>>the early morning
+>>
+>
+>Is it possible that you are having memory problems?  Did this work with
+>earlier kernels and it now only fails with 2.4.9?  Have you tried running
+>with memtest86 to check your RAM?  It seems like you are having too many
+>problems with different filesystems.
+>
+>Cheers, Andreas
+>
+well i'm seeing a bit different  the realy journaling FS's doesn't have 
+problems
+and the others not
