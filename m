@@ -1,10 +1,8 @@
-From: Petro <petro@auctionwatch.com>
-Subject: Re: [linux-lvm] Kernel-2.4.15pre6
-Message-ID: <20011119111218.A25684@auctionwatch.com>
-References: <20011117231937.D12510@auctionwatch.com> <20011119083610.B755@tykepenguin.com>
+From: Ben <kf4wbx@hamsnet.net>
+Content-Transfer-Encoding: 7bit
+Message-Id: <1006197162.28796.26.camel@outback.key>
 Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20011119083610.B755@tykepenguin.com>
+Subject: [linux-lvm] Help!  VG corrupted?
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,30 +13,81 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Nov 19 13:10:02 2001
+Date: Mon Nov 19 13:12:01 2001
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
+Cc: tim@insightsys.com
 
-On Mon, Nov 19, 2001 at 08:36:10AM +0000, Patrick Caulfield wrote:
-> On Sat, Nov 17, 2001 at 11:19:37PM -0800, Petro wrote:
-> > Is it known which version of LVM is in this kernel, and which version of
-> > the lvm tools go best with it? 
-> 
-> It's almost 1.0.1rc4. There is some difference between that and CVS but it's
-> quite decent to use. The 1.0.1rc4 tools are recommended.
-> > As well, am I missing something, or do I still need to apply the VFS
-> > patch? 
-> If you want to do snapshots of reiserfs (and, I think, ext3) then you will
-> still need the VFS lock patch yes.
+Hello,
 
-    I seem to have gotten it working with the VFS lock patch (I was able
-    to do a snap while writing to the volume and have it mount
-    properly). 
+I am running Mandrake 8.1 which installs Linux LVM 0.9.  I've read posts
+that mention that 0.9 is "bad for your health."  While I'm not totally
+sure why or how, it seems to be the case for me as well.
 
-    Is there any indication that this patch will make it in to the
-    official kernel at some point? 
+I installed the OS and ran find with one IDE HD partition dedicated
+(/dev/hda9, one VG on one PV) to LVM and two LV's (/usr and /var).
+Yesterday, I added another partition (/dev/hda7) and added its PEs to
+the VG.  I thhen added the newly added PE's to the /usr LV.  Everything
+was great.  Then I rebooted.  Upon reboot, I got:
+[root@cray]# vgscan -v
+vgscan -- removing "/etc/lvmtab" and "/etc/lvmtab.d"
+vgscan -- reading all physical volumes (this may take a while...)
+vgscan -- scanning for all active volume group(s) first
+vgscan -- found inactive volume group "vg0"
+vgscan -- reading data of volume group "vg0" from physical volume(s)
+vgscan -- ERROR "vg_read_with_pv_and_lv(): allocated LE of LV" can't get
+data of volume group "vg0" from physical volume(s)
+vgscan -- ERROR "vg_read_with_pv_and_lv(): allocated LE of LV" creating
+"/etc/lvmtab" and "/etc/lvmtab.d"
+[root@cray]#
 
--- 
-Share and Enjoy. 
+I then tried the vgcfgrestore, which ran sucessfully.  Now I get vgscan
+reporting no volumes.  Found a reference on how to fix this (using dd
+and reading uuids from pv's, then writing them back to the disk).  That
+procedure brings me back to the starting point.
+
+It seems the data is there because pvscan reports:
+
+[root@cray]# pvscan
+pvscan -- reading all physical volumes (this may take a while...)
+pvscan -- inactive PV "/dev/ide0/host0/bus0/target0/lun0/part7" is
+associated to an unknown VG (run vgscan)
+pvscan -- inactive PV "/dev/ide0/host0/bus0/target0/lun0/part9" is
+associated to an unknown VG (run vgscan)
+pvscan -- total 2 [12.02 GB] / in use: 2 [12.02 GB] / in no VG: 0 [0]
+[root@cray]#
+
+One more note of interest:  My partitions on disk are out of order.
+hda7 occupies cylinders 2848-3736 and hda9 occupies cylinders 2168-2847.
+
+[root@cray]# fdisk /dev/hda
+Command (m for help): p
+
+Disk /dev/hda: 255 heads, 63 sectors, 3763 cylinders
+Units = cylinders of 16065 * 512 bytes
+
+   Device Boot     Start       End      Blocks    Id  System
+/dev/hda1  *           1       934     7502323+    b  Win95 FAT32
+/dev/hda2            935      3736    22507065     5  Extended
+/dev/hda5  *         935      1874     7550518+    7  HPFS/NTFS
+/dev/hda6           1875      2135     2096451    83  Linux
+/dev/hda7           2848      3736     7140861    8e  Linux LVM
+/dev/hda8           2136      2167      256977    82  Linux swap
+/dev/hda9           2168      2847     5462037    8e  Linux LVM
+
+Partition table entries are not in disk order
+
+
+
+
+So, can anyone help me?  Would recreating the VG and adding the PV's to
+it restore access to my data?  Or would I just blow it all away in the
+attempt?
+
+Please send responses directly to kf4wbx@hamsnet.net
+
+
+Thanks for any help!
+-Ben K
+kf4wbx@hamsnet.net
