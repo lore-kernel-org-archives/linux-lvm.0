@@ -1,8 +1,12 @@
-Return-Path: <dick@britain.agilent.com>
-Date: Thu, 3 May 2001 16:35:06 +0100 (BST)
-From: Dick Middleton <dick@britain.agilent.com>
-Message-Id: <200105031535.QAA04020@queeg.britain.agilent.com>
-Subject: [linux-lvm] Patching 2.2.18 with lvm + sw raid
+Return-Path: <blutgens@sistina.com>
+Date: Thu, 3 May 2001 13:38:44 -0500
+From: Ben Lutgens <blutgens@sistina.com>
+Message-ID: <20010503133844.A30661@minime.sistina.com>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-md5;
+	protocol="application/pgp-signature"; boundary="ew6BAiZeqk4r7MaW"
+Content-Disposition: inline
+Subject: [linux-lvm] linux-lvm DNS
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,18 +18,45 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
+Cc: lvm-devel@sistina.com, sistina@sistna.com, gfs@sistina.com
 
-Hi,
+--ew6BAiZeqk4r7MaW
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-        I'm a bit new to all this and I'm struggling to patch my 2.2.18
-kernel with both software raid and lvm.  I can patch the kernel OK with
-either of them separately but I can't patch lvm over sw raid or raid over
-lvm.
+You may have noticed that attempts to resolve linux-lvm.org|com|de fail. We
+are experiencing some registrar issues. I apologize for this and will try to
+get it reolving again as fast as I can.
 
-Somebody else must have had this problem - how do I workaround it?
+We are having some domain admin / owner issues please stand by.
 
-Dick
+In the meantime the lvm website can also be reached at
+http://www.sistina.com/lvm/=20
+
+The other domainnames where just redirects to here anyway.
+
+thanx
+--=20
+Ben Lutgens		cell: XXX.XXX.XXXX
+Sistina Software Inc.	work: XXX.XXX.XXXX
+Mailing list admin / Punching Bag (and sorta sysadmin guy)
+http://www.sistina.com/	<--- great software=20
+http://www.gentoo.org/  <--- great distro
+Kernel panic: I have no root and I want to scream <--- perfect error message
+
+--ew6BAiZeqk4r7MaW
+Content-Type: application/pgp-signature
+Content-Disposition: inline
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.0.4 (GNU/Linux)
+Comment: For info see http://www.gnupg.org
+
+iD8DBQE68aW0LxkxGgLdGQgRAmb7AJ9qPD8YsXIj4z6J28HZF2sqYjlVVgCfQAFB
+AuG2mttjJRJwGuQ+XlWMjqw=
+=ZrHb
+-----END PGP SIGNATURE-----
+
+--ew6BAiZeqk4r7MaW--
