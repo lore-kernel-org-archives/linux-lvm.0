@@ -1,8 +1,8 @@
+Message-ID: <000701c2caba$18106290$0101a8c0@youriwyju5dfsf>
+From: "Rocky Lee" <gozila@ms20.url.com.tw>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
-Message-Id: <E18fePh-0001Zk-00@gw.pe1mhp.ampr.org>
-From: "Jan H. van Gils" <janvg@vgnet.nl>
-Subject: [linux-lvm] Re:cramfs ramdisk and rootfs on LVM
+Subject: [linux-lvm] Does LVM2 support RAID?
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -13,36 +13,34 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Feb  3 05:06:01 2003
+Date: Mon Feb  3 08:26:01 2003
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
 
-	Hi,
 
-I tryed the options Francis gave to me but it doesn't work.
 
-Here is my linuxrc file:
+ Hi
 
-#!/bin/sh
-/sbin/modprobe lvm-mod
-/bin/mount -t tmpfs none /etc
-/bin/mount -t proc none /proc
-/bin/mount
-echo "Scanning for Volume Groups ..."
-/sbin/vgscan
-echo "Activating Volume Groups ..."
-/sbin/vgchange -a y
-/bin/umount /proc
-/bin/umount /etc
 
-What is wrong in this file.
-The thing that I see, is that the /bin/mount option doesn't show me any mounted file
-systems. So /etc is not mounted with a tmpfs file system.
+ Thank you Mr. Heinz   : - D
 
-Jan 
--- 
-With regards Jan H. van Gils
-Internet web-page http://www.VGNet.NL/
-Internet e-mail address JanVG@VGNet.NL
-RIPE Whois JHG5-RIPE, 6BONE Whois JHG1-6BONE
+ I'm interesting in differents between  LVM1 and LVM2,
+ I like LVM, it's very simple but powerful tool to maintain volumes.
+
+
+> > > If I use LVM2 will be better than use LVM1 + MD?
+>
+> > You still need to combine LVM2 with MD in order to have RAID > 0 (RAID0
+is
+> > supported natively as it is in LVM1).
+> > Because LVM2 offers various enhancements you migth still want to give it
+> > a try :-)
+>
+
+Does LVM2 will support bad block reallocation?
+ It'll be great to use with MD.
+
+ Have a nice day ^_^
+
+ Rocky Lee
