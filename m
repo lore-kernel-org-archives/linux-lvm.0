@@ -1,10 +1,10 @@
-From: "Markus Baertschi" <markus@markus.org>
-In-Reply-To: <LAW10-F1120m25q8awY00047be5@hotmail.com>
+Message-ID: <3FE2A609.9050401@sina.com>
+From: more <more0401@sina.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [linux-lvm] LVM and kernel 2.4.21
-Message-Id: <E1AXEkO-0005js-7P@server6.hostpoint.ch>
+Subject: Re: [linux-lvm] Unable to mount snapshot
+References: <3FE1E518.3010601@netscape.net>
+In-Reply-To: <3FE1E518.3010601@netscape.net>
+Content-Transfer-Encoding: 7bit
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,32 +15,72 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Fri Dec 19 01:10:02 2003
+Date: Fri Dec 19 01:19:02 2003
 List-Id: <linux-lvm.redhat.com>
-To: "linux-lvm@sistina.com" <linux-lvm@sistina.com>
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+To: linux-lvm@sistina.com
 
-On=20Fri,=2019=20Dec=202003=2001:26:40=20+0000,=20Samarjeet=20Tomar=20wrot=
-e:
->Is=20LVM=20part=20of=202.4.21=20kernel?
+Hi, John,
 
->Thanks,=20Samar.
+You should use "-onouuid,ro" as parameter for mount snapshot volume.
 
-Samar,
 
-I'm=20using=20LVM=20with=20a=20stock=202.4.18=20and=20a=202.4.19=20kernel=20=
-(SUsE)=20without=20problems.
-It=20was=20also=20present=20in=20the=202.4.21=20kernel=20I=20replaced=20wi=
-th=202.4.19=20to=20get=20some
-binary-only=20drivers=20working.
+John Craig wrote:
 
-Markus
-
---
-=20=20Markus=20Baertschi=20=20=20=20=20=20=20=20=20=20=20=20=20Phone:=20++=
-41=20(21)=20807=201677
-=20=20Bas=20du=20Ross=E9=2014b=20=20=20=20=20=20=20=20=20=20=20=20=20Fax=20=
-=20:=20++41=20(21)=20807=201678
-=20=20CH-1163,=20Etoy=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20Email=
-:=20markus@markus.org
-=20=20Switzerland=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20Hom=
-epage:=20www.markus.org
+> Hi,
+>
+> I successfully created a snapshot of an active LV with XFS filesystem, 
+> and ldisplay shows it to be operating correctly. However, when I try 
+> to mount the snapshot, it says "wrong fs type, bad option, bad 
+> superblock on /dev/system/snap or too many mounted file systems"
+>
+> Can anyone help, or shed some light on why this is happening? Is there 
+> a workaround?
+>
+> The mount command was "mount -t xfs -o ro /dev/system/snap /mnt/snap"
+>
+> I am running SuSE 9.0 on x86-64, with kernel 2.4.21-149, lvm version 
+> 1.0.7(mp-v6). I have a volume group running on 3 raid arrays, each 0.9 
+> TB, for a total of 2.7 TB. It has 2 active LVs, one of them 2 TB, and 
+> the other 500GB, leaving about 249GB unallocated. I created the 
+> snapshot with:
+>
+> lvcreate -L 200G -s -n snap /dev/system/adsdata
+>
+> As I said, the snapshot seems to be working correctly, but when I 
+> bring up the LVM tool in YAST, it shows the original LV, with capacity 
+> 1.9 TB, mounted, and the snapshot  with a capacity of 1.9TB, 
+> unmounted. When I try to set the mount point for the snapshot, it says 
+> the capacity is wrong, it needs to be <= 249GB. In other words, it 
+> seems to be treating it as if it were a regular LV, not a snapshot..
+>
+> The listing of lvdisplay is:
+> --- Logical volume ---
+> LV Name                /dev/system/snap
+> VG Name                system
+> LV Write Access        read only
+> LV snapshot status     active destination for /dev/system/adsdata
+> LV Status              available
+> LV #                   3
+> # open                 0
+> LV Size                2 TB
+> Current LE             16383
+> Allocated LE           16383
+> snapshot chunk size    64 KB
+> Allocated to snapshot  16.66% [33.29 GB/199.90 GB]
+> Allocated to COW-table 100 MB
+> Allocation             next free
+> Read ahead sectors     1024
+> Block device           58:2
+>
+>
+>
+>
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@sistina.com
+> http://lists.sistina.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+>
+>
+>
