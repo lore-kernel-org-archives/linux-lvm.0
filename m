@@ -1,22 +1,17 @@
-Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j0RMMjO08595
-	for <linux-lvm@redhat.com>; Thu, 27 Jan 2005 17:22:45 -0500
-Received: from rproxy.gmail.com (rproxy.gmail.com [64.233.170.207])
-	by mx3.redhat.com (8.12.11/8.12.11) with ESMTP id j0RMMdTn007776
-	for <linux-lvm@redhat.com>; Thu, 27 Jan 2005 17:22:39 -0500
-Received: by rproxy.gmail.com with SMTP id a41so604282rng
-	for <linux-lvm@redhat.com>; Thu, 27 Jan 2005 14:22:36 -0800 (PST)
-Message-ID: <3b24531c05012714224523e810@mail.gmail.com>
-Date: Thu, 27 Jan 2005 16:22:36 -0600
-From: Myrddin Emrys <myrddin@gmail.com>
-Subject: Re: [linux-lvm] PE Size and Waste
-In-Reply-To: <20050127191416.GC21230@percy.comedia.it>
+Date: Fri, 28 Jan 2005 10:23:17 +0100
+From: Jens Beyer <jbe@webde-ag.de>
+Subject: Re: [linux-lvm] Data corruption on large, multi-device filesystem
+Message-ID: <20050128092317.GA22682@pcnocjb.dlan.cinetic.de>
+References: <20050118091059.GC27553@pcnocjb.dlan.cinetic.de>
+	<1106172883.41eedbd386498@www.eiler.net>
+	<41EFBAF4.5030403@svs.gsfc.nasa.gov>
+	<20050120175900.GE14093@agk.surrey.redhat.com>
+	<20050121150913.GA16975@pcnocjb.dlan.cinetic.de>
+	<1106674648.41f683d80ea75@www.eiler.net>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
-References: <3b24531c050127035217717af5@mail.gmail.com>
-	<20050127191416.GC21230@percy.comedia.it>
-Reply-To: Myrddin Emrys <myrddin@gmail.com>,
-	LVM general discussion and development <linux-lvm@redhat.com>
+Content-Disposition: inline
+In-Reply-To: <1106674648.41f683d80ea75@www.eiler.net>
+Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -27,35 +22,28 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: LVM general discussion and development <linux-lvm@redhat.com>
-
-Very confusing. Then I must be mistaken... I think I know the culprit.
-It must be my NFS client that is wrong. If so, my apologies for
-spreading misinformation.
+Content-Transfer-Encoding: 7bit
+To: joe@eiler.net
+Cc: dm-devel@redhat.com, LVM general discussion and development <linux-lvm@redhat.com>
 
 
-On Thu, 27 Jan 2005 20:14:16 +0100, Luca Berra <bluca@comedia.it> wrote:
-> On Thu, Jan 27, 2005 at 05:52:57AM -0600, Myrddin Emrys wrote:
-> >It appears that one PE can only hold a single file. Since my PE size
-> >is 16MB, that means that the files on my LVM array are... well, less
-> >than efficiently packed. What puzzles me is that this fact is never
-> this is not true, there is no relation between PE size and filesystem.
-> i wonder were you got this impression.
-> 
-> Regards,
-> L.
-> 
-> --
-> Luca Berra -- bluca@comedia.it
->         Communication Media & Services S.r.l.
->  /"\
->  \ /     ASCII RIBBON CAMPAIGN
->   X        AGAINST HTML MAIL
->  / \
-> 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
->
+Hi,
+
+since the two patches (stripe_width and sector_t cast) didnt help, 
+I started to put printk in the dm-stripe code. 
+
+At a certain point stripe_map() starts to get called with zero data 
+(eg bio->bi_sector = 0 or 2^32, 2^31 ). This lead me to put some debugging 
+into dm.c especially into max_io_len() where an inline function dm_round_up()
+is used. Interpreting my printk's this funktion doesnt work well with 
+offsets larger then 2^32. I did some (very) ugly hack to calculate the
+boundary in that case and it seems that the error is gone (though the
+full check takes a few days).
+
+Maybe someone with insight on what should happen in dm.c can have 
+a look at max_io_len and the inlined function?
+
+Jens
+
+-- 
+Nur tote Fische schwimmen mit dem Strom
