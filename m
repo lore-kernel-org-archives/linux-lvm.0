@@ -1,10 +1,10 @@
-Return-Path: <steve.wray@the.net.nz>
-From: "Steve Wray" <steve.wray@the.net.nz>
-Date: Sun, 20 May 2001 01:39:04 +1200
-Message-ID: <NBBBKLKHMJHIJLHOGAOJEELGIOAA.steve.wray@the.net.nz>
+Return-Path: <pwk.linuxfan@gmx.de>
+From: Peter Kirk <pwk.linuxfan@gmx.de>
+Date: Sat, 19 May 2001 16:33:36 +0200
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] LVM on multi-boot Linux system?
+Message-Id: <01051916333601.00791@mama>
+Content-Transfer-Encoding: 8bit
+Subject: [linux-lvm] Problems: reiserfs lvm as /
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -19,45 +19,40 @@ List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
 
- 
------BEGIN PGP SIGNED MESSAGE-----
-Hash: SHA1
-
 Hi,
-I just built a non-root LVM system,
-created a Lvolume for root, migrated root to it.
-I can now dual boot between these; root on LV or root on
-partition.
 
-I've also built a "Linux From Scratch" system
-on a new Lvolume.
+I am new to LVM, and I ran into some problems.
+First thing I did, was to setup LVM within the SuSE7.1 setup tools, which 
+worked out fine.
+/boot is not on LVM, ext2fs
+swap is not on LVM
+LVM:
+	/	[reiserfs]
+	/usr	[reiserfs]
+	/home	[reiserfs]
 
-So now I have a 'pristine' Linux system,
-with supporting programs, libraries and kernel which
-actually *boots* and when it does boot,
-/dev/commsVG/lfsLV is mounted on /
+I have too disks, so I set the strip option to two, to get better 
+performance. Now I want to compile a new kernel (2.4.4), and I cannot get lvm 
+working with it. Since root is on LVM I need to do this lvmcreate_initrd 
+stuff, but it does not work ! I get:
 
-So its an LVM-root system...
+VFS: Mounted root (ext2 file system).
+attempt to access beyond end of device
+01:00: rw=0, want=4612, limit=4096
+attempt to access beyond end of device
+01:00: rw=0, want=4613, limit=4096
+attempt to access beyond end of device
+01:00: rw=0, want=4614, limit=4096
+attempt to access beyond end of device
+01:00: rw=0, want=4615, limit=4096
+VFS: Cannot open root device "3a02" or 3a:02
+Please append the correct "root=" boot option
+kernel panic: VFS: Unable to mount root fs on 3a:02
 
-(Now triple-boot; 
-	non-LVM root RH7.1, LVM-root RH7.1 and LVM-root LFS)
+in lilo.conf it says:
+boot=/dev/raid/root
+This should be the correct root. It works with the old 2.4.0 Kernel made from 
+SuSE, propably something is with the initrd or with the Kernel-Setup
 
-
-Problem; 
-- - pvscan finds the physical volumes
-- - vgscan fails with an error
-- - there is *no* /dev/commsVG
-	hence no volumes can be accessed...
-
-Any ideas? 
-Am I just pushing my luck?
-8)
-
-
------BEGIN PGP SIGNATURE-----
-Version: PGPfreeware 7.0.3 for non-commercial use <http://www.pgp.com>
-
-iQA/AwUBOwZ3dwhKySqSS+rVEQLSWQCg5gnr20iPpR/QbukkML3uf41f2aIAoM2F
-LwSCcvYvkPpvzr9/RlbQFHDS
-=Av5x
------END PGP SIGNATURE-----
+Please help !!
+Thanks
