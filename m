@@ -1,10 +1,7 @@
-Message-ID: <401EA69A.5040807@stercomm.com>
-From: Chris Cox <chris_cox@stercomm.com>
+From: Iordan Iordanov <iordanov@utias.utoronto.ca>
+Message-ID: <Pine.LNX.4.44.0402021857360.23295-100000@arrow.utias.utoronto.ca>
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] Best practice for lvm on raid-5
-References: <20040202153506.GN5191@deepthought.hausboot.org>
-In-Reply-To: <20040202153506.GN5191@deepthought.hausboot.org>
-Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] wrong available size reported by df on lvm
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,27 +12,118 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Feb  2 14:37:02 2004
+Date: Mon Feb  2 19:09:02 2004
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
+Content-Type: TEXT/PLAIN; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Jens Hoffrichter wrote:
-> Hi everyone,
-> 
-> I have a LVM vg on top of a softraid 5 consisting of 3 80 GB harddrives.
-> 
-> Currently I have /dev/md0 as my only physical volume, but this will lead
-> to problems if I am going to expand the raid 5 by adding another 80 GB
-> harddrive to (as pvresize is not implemented again yet, as I understand).
-> 
-> What is the best practice in this case? To add a partition table on top
-> of /dev/md0 (but how is it represented in the /dev filesystem) and only
-> add single partitions as pvs to the vg?
-> 
-> I'm happy for every suggestion :)
+Hi,
 
-Obviously you cannot extend the existing md0 RAID5.  However you can
-add another PV to the VG.  That new PV could be another soft RAID5.
-It doesn't have to be though... you can basically build quite
-a menagerie with LVM if you really want to.
+I wonder if anybody can help me with this. I have created two volume 
+groups, each with four 67GB SCSI drives. The total reported size is 267GB. 
+I have also created a single logical volume on top of each of the two 
+volume groups, and a single ext3 file system on each of the two logical 
+volumes. Output of all utilities looks alright, except for 'df', which 
+reports the following *odd* values:
+
+------------------------------------------------------------------
+Filesystem           1k-blocks      Used Available Use% Mounted on
+.
+.
+.
+.
+/dev/fe02_lvm_1/vol1 279834624     32828 274115896   1% /mnt/lvm1
+/dev/fe02_lvm_2/vol1 279834624     32828 265587040   1% /mnt/lvm2
+------------------------------------------------------------------
+
+the two volume groups are fe01_lvm_1 and fe02_lvm_2, the logical volumes 
+are both called vol1. Notice - the size is reported correctly. The usage 
+is reported correctly. However, the Available size is wrong on both of the 
+file systems!
+
+I am also attaching output from vgdisplay, lvdisplay,
+
+------------------------------------------------------------------
+vgdisplay:
+------------------------------------------------------------------
+
+--- Volume group ---
+VG Name               fe02_lvm_1
+VG Access             read/write
+VG Status             available/resizable
+VG #                  0
+MAX LV                256
+Cur LV                1
+Open LV               1
+MAX LV Size           2 TB
+Max PV                256
+Cur PV                4
+Act PV                4
+VG Size               271.12 GB
+PE Size               32 MB
+Total PE              8676
+Alloc PE / Size       8676 / 271.12 GB
+Free  PE / Size       0 / 0
+VG UUID               kdkfM2-vQEg-Ppw1-O4r8-8dvc-matc-w680LA
+ 
+--- Volume group ---
+VG Name               fe02_lvm_2
+VG Access             read/write
+VG Status             available/resizable
+VG #                  1
+MAX LV                256
+Cur LV                1
+Open LV               1
+MAX LV Size           2 TB
+Max PV                256
+Cur PV                4
+Act PV                4
+VG Size               271.12 GB
+PE Size               32 MB
+Total PE              8676
+Alloc PE / Size       8676 / 271.12 GB
+Free  PE / Size       0 / 0
+VG UUID               nnD2OW-9J5w-BFvM-Qnpt-IN8v-NOnm-UMNWa5
+
+------------------------------------------------------------------
+lvdisplay /dev/fe02_lvm_1
+------------------------------------------------------------------
+--- Logical volume ---
+LV Name                /dev/fe02_lvm_1/vol1
+VG Name                fe02_lvm_1
+LV Write Access        read/write
+LV Status              available
+LV #                   1
+# open                 1
+LV Size                271.12 GB
+Current LE             8676
+Allocated LE           8676
+Allocation             next free
+Read ahead sectors     1024
+Block device           58:0
+------------------------------------------------------------------
+
+------------------------------------------------------------------
+lvdisplay /dev/fe02_lvm_2
+------------------------------------------------------------------
+--- Logical volume ---
+LV Name                /dev/fe02_lvm_2/vol1
+VG Name                fe02_lvm_2
+LV Write Access        read/write
+LV Status              available
+LV #                   1
+# open                 1
+LV Size                271.12 GB
+Current LE             8676
+Allocated LE           8676
+Allocation             next free
+Read ahead sectors     1024
+Block device           58:1
+------------------------------------------------------------------
+
+Has anybody seen this alleged bug, or can anybody explain it?  Thank you 
+very much!
+
+Sincerely yours,
+Iordan Iordanov
