@@ -1,23 +1,17 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j23N4rK12544
-	for <linux-lvm@redhat.com>; Thu, 3 Mar 2005 18:04:53 -0500
-Received: from pastinakel.tue.nl (pastinakel.tue.nl [131.155.2.7])
-	by mx3.redhat.com (8.12.11/8.12.11) with ESMTP id j23N4j8w009717
-	for <linux-lvm@redhat.com>; Thu, 3 Mar 2005 18:04:45 -0500
-Received: from iris.tue.nl (iris.tue.nl [131.155.2.34])
-	by pastinakel.tue.nl (Postfix) with ESMTP id CA2A714BB8A
-	for <linux-lvm@redhat.com>; Fri,  4 Mar 2005 00:04:40 +0100 (CET)
-Received: from [131.155.224.79] (t-26-79.athome.tue.nl [131.155.224.79])
-	by iris.tue.nl (Postfix) with ESMTP id C1DC110C07C
-	for <linux-lvm@redhat.com>; Fri,  4 Mar 2005 00:04:40 +0100 (CET)
-Message-ID: <42279807.60501@are-b.org>
-Date: Fri, 04 Mar 2005 00:04:39 +0100
-From: oliver <oliver@are-b.org>
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j23NAYK14329
+	for <linux-lvm@redhat.com>; Thu, 3 Mar 2005 18:10:34 -0500
+Received: from mail.clunker.utsl.gen.nz (210-54-92-184.ipnets.xtra.co.nz
+	[210.54.92.184])
+	by mx3.redhat.com (8.12.11/8.12.11) with ESMTP id j23NAQ4c010493
+	for <linux-lvm@redhat.com>; Thu, 3 Mar 2005 18:10:26 -0500
+Message-ID: <42279953.8030108@vilain.net>
+Date: Fri, 04 Mar 2005 12:10:11 +1300
+From: Sam Vilain <sam@vilain.net>
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] Internal Knowlegde required. Follow up.
-References: <4225FBC8.9020904@are-b.org>	<20050302174819.GN17589@lug-owl.de>	<4225FEBC.2060505@are-b.org>	<20050302180537.GO17589@lug-owl.de>	<42260F1B.2030803@are-b.org>	<1109791034l.28794l.3l@tangerine>	<1109796276.31821.263.camel@seki.nac.uci.edu>	<42278F9F.4090009@are-b.org>
-	<42279465.8090009@are-b.org>
-In-Reply-To: <42279465.8090009@are-b.org>
+Subject: Re: [linux-lvm] Building up a RAID5 LVM home server (long)
+References: <!~!UENERkVCMDkAAQACAAAAAAAAAAAAAAAAABgAAAAAAAAAiKro/zVEU02Xw5blW4RJy8KAAAAQAAAAfEOWBfOtF0efRP286+fnTQEAAAAA@echohome.org>
+In-Reply-To: <!~!UENERkVCMDkAAQACAAAAAAAAAAAAAAAAABgAAAAAAAAAiKro/zVEU02Xw5blW4RJy8KAAAAQAAAAfEOWBfOtF0efRP286+fnTQEAAAAA@echohome.org>
 Content-Transfer-Encoding: 7bit
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
@@ -30,114 +24,225 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: LVM general discussion and development <linux-lvm@redhat.com>
+To: Erik@echohome.org, LVM general discussion and development <linux-lvm@redhat.com>
 
-I couldn't figure out what was written at first onto this disk. The 
-first few bytes made sense, text strings about Missing operation system 
-and such. However 0x1fe and 0x1ff it said '55 AA'. Looking at my 
-'normal' partitioned hda it made perfect sense however. That's the exact 
-point where all the 'data' e.g. partition table? stops. So unless this 
-raid controller wrote data anywhere else (got an e-mail to highpoint and 
-waiting for answer on that) I can even say that only the first 0x200 
-addresses (512 bytes DOH) are foobared.
+OK kid.  You've played quiet, done your homework and asked nicely, so
+here's a recommended configuration for free.  Don't ask me how much I've
+charged for this sort of thing distant times ago.
 
-So the re-ask and re-phrase my question. Does pvcreate write 'different' 
-data each run in the first 512 bytes. Not counting the UUID and the 
-timestamp. Does vgcreate write anything else in the first 512 besides 
-the volume name on 0xac?
+You've got yourself plenty of space.  So don't worry about RAID 5.  If you
+ever find yourself thinking, "maybe I could make a little more space...",
+forget it.  It's for certain niches that IMHO you don't fit into.
+Especially with disks all different sizes like yours.  RAID 5 arrays with
+hot spares are screaming madness, I tell you.
 
-I hope some one can answer me that. If not by tomorrow round 3ish, I 
-might get bold and try it anyhow! HA! And then, all I can ask for is 
-lots of luck.
+Look at it this way: with RAID 1, just about all access to the filesystem
+is at worst the same speed as before (sans a little extra load on the
+system sending the data to the IDE controller twice), or twice as fast
+(for reads).  For any application with heavy random access patterns this
+makes a considerable difference.  Also, it means streaming applications
+don't kill access times.  All this, for one more disk than a 5 disk RAID5
+with hot spare array.
+
+You've got 2x40GB.  Those will be good as base disks for a system.
+
+Normally it's best for performance to pair up identical disks throughout
+a system for mirrors, do I'd be inclined to go for something like this:
+
+   40GB - /dev/hda
+    /dev/hda1 -  1GB - root (/dev/md0)
+    /dev/hda2 -  1GB - swap (/dev/md1)
+    /dev/hda3 - 38GB - LVM space (PV: /dev/md2)
+
+   80GB - /dev/hdb
+     whole disk - LVM space (PV: /dev/md3)
+
+   40GB - /dev/hdc
+   mirror pair of /dev/hda
+    /dev/hdc1 -  1GB - root (/dev/md0)
+    /dev/hdc2 -  1GB - swap (/dev/md1)
+    /dev/hdc3 - 38GB - LVM space (PV: /dev/md2)
+
+   80GB - /dev/hdd
+   mirror pair of /dev/hdb
+     whole disk - LVM space (PV: /dev/md3)
+
+  200GB - /dev/hde
+    /dev/hde1 - 60GB - LVM space (PV: /dev/md4)
+    /dev/hde2 - 140GB - LVM space (PV: /dev/md5)
+
+   60GB - /dev/hdg
+   mirror pair of first partition on /dev/hde
+     whole disk - LVM space (PV: /dev/md4)
+
+In this setup, you end up with:
+
+   - two mirrored "raw" partitions, that you can use for a root filesystem,
+     and swap.  Or turn swap off while you install a different distribution
+     into one of them for testing.  You'll at some point want to move your
+     /usr to an LVM partition, which means that you'll want to keep an LVM
+     `cheat sheet' on hand in case your LVM doesn't come up and you need to
+     use the admin utilities.  Either that, or only put /usr/local on LVM,
+     keeping /usr minimal.  Or just make a bigger / :).
+   - total 38GB + 60GB + 80GB = 180GB *fast* mirrored LVM space
+   - total 140GB *fast* unmirrored space
+
+the unmirrored space would be great for keeping large caches of stuff
+you already have on media.  everything else, the OS and things that you
+want random access to be as fast as possible.
+
+You could also then use `pvmove' to move stuff from mirrored to unmirrored
+space on the LVM.
+
+Even though your unmirrored space has no pair currently, notice how it's
+still got a mirror device in the above plan - /dev/md5.  This will be set
+up as a "degenerate" (one-way) mirror, using an /etc/raidtab entry like:
+
+  raiddev /dev/md5
+    raid-level       1
+    nr-raid-disks    2
+    nr-spare-disks   0
+    persistent-superblock 1
+    chunk-size        4
+    device   /dev/hde2
+    raid-disk 0
+    device   /dev/hdg2
+    raid-disk 1
+    failed-disk 1
+
+This will allow you to attach a mirror pair to that partition later
+without much effort at all.
+
+In fact, in practice setting a whole system up like this in the first
+place is a great way to prototype a layout without losing the ability to
+back-out (sans inconveniently timed disasters).  Then you can set up the
+partition tables when you're happy, `raidhotadd' to attach the other half
+of the mirrors, and `cat /proc/mdstat' to kill time while it syncs.
+
+...
+
+Alternatives exist, which break the "mirror identical disks across
+controllers" best mirroring practice, but maximise mirrored space:
+
+   40GB - /dev/hda
+    /dev/hda1 -  1GB - root (/dev/md0)
+    /dev/hda2 -  1GB - swap (/dev/md1)
+    /dev/hda3 - 38GB - LVM space (PV: /dev/md2)
+
+   40GB - /dev/hdc
+   mirror pair of /dev/hda
+    /dev/hdc1 -  1GB - root (/dev/md0)
+    /dev/hdc2 -  1GB - swap (/dev/md1)
+    /dev/hdc3 - 38GB - LVM space (PV: /dev/md2)
+
+   60GB - /dev/hdd
+   mirror pair of last /dev/hde partition
+    /dev/hdd1 - 40GB - LVM space (PV: /dev/md5)
+    /dev/hdd2 - 20GB - unmirrored LVM space (PV: /dev/md6)
+
+  200GB - /dev/hde
+    /dev/hde1 - 80GB - LVM space (PV: /dev/md3)
+    /dev/hde2 - 80GB - LVM space (PV: /dev/md4)
+    /dev/hde3 - 40GB - LVM space (PV: /dev/md5)
+
+   80GB - /dev/hdg
+     whole disk - LVM space (PV: /dev/md3)
+
+   80GB - /dev/hdh
+   mirror pair of /dev/hdb
+     whole disk - LVM space (PV: /dev/md4)
+
+This gives you:
+
+   - total 38GB + 80GB + 80GB + 40GB = 238GB *fast* mirrored LVM space
+   - total 20GB unmirrored space
+
+...
+
+Hopefully that should give you enough of a hint about how best to go
+about arranging these sorts of things :)
+
+The underlying principle, is keeping the MD layer as simple as possible,
+so that you've got nice little resilient building blocks for your Volume
+Group.  Never use concatenation, striping or RAID5 at the MD layer if
+you've got LVM, it's simply in the wrong place!
+
+You'll need to do a little work to get GRUB to be able to boot off the
+mirrored root.  But it's well worth it.  "kernel RAID device
+autodetection" is a highly recommended kernel option.
+
+HTH,
+Sam.
 
 
-(The plan then, for those interested, and future archive readers is to:
-    pvcreate on hde
-    dd the first 512 bytes, edit the UUID and the timestamp (timestamp 
-will match hdg, 'just in case it needs to be older'
-    restore the backup I still have of hde (while I sleep as it takes 2 
-hours or so with just dd if=/mnt/hd/backupfile of=/dev/hde atleast the 
-other way around did)
-    dd the first 512 bytes from above with the new UUID back onto hde.
-    Party!, I hope.
-)
 
-
-oliver wrote:
-
-> WAS: Re: [linux-lvm] Partition table gone? Any way to restore?
->
-> After further examination the 'hostname<someserialnumber>' I've 
-> mention that worried me at first appears to be a unix timestamp. I 
-> don't think that it matters much. I've noticed that on my other LVM 
-> setup where I most likley did a pvcreate /dev/hdg /dev/hdi (to create 
-> them simultaniously) since the timestamps are 100% identical.
->
-> So I think I can be pretty safe by using the timestamp on my hde that 
-> I have on my hdg. I did create them the same day, I'm sure of that. (I 
-> am using LVM to span across multipledisks after all) The 3rd disk was 
-> added later, hence the different timestamp. So all I really need to 
-> know if some kind of crc/hash is computed after 0x0001000 so that I 
-> can try this.
->
-> Oliver.
->
-> oliver wrote:
->
->> Small update. Using a hex editor i was able to more closley examine 
->> my disk(s). Since I have 2 LVM setups I was somewhat able to compare 
->> what I have to what I should have. I do still need some insite however.
->>
->> From what I can tell, pvcreate only modifies the first few k's of the 
->> disk, followed by information stored from the vgcreate.
->> Then the lvcreate adds some more information after this. (vg00/lv 
->> basicly).
->>
->> I hope i got it right so far : )
->>
->> Now, the vgcreate information is identical on the two surviving parts 
->> except for a 'hostname<someserialnumber>' part around address 0x00012c.
->>
->> Then at 0x0001000 we see the UUID of the VG passing by followed by 
->> some data (which is identical on all three vgs.
->>
->> I don't think i have to look beyond this point in space/address.
->>
->> Assuming that none of the tools (besides pvcreate) write anything 
->> before 0x0001000, I should be able to pvcreate /dev/hde edit the UUID 
->> of that specific PV (to the same stored in the other two PV's so the 
->> three match up again) and have a fully workable LVM set again.
->>
->> The only thing that might worry me is crc information stored 
->> somewhere after 0x0001000 (However it appears to me that there isn't 
->> a whole bunch of data stored before 0x0001000 and the data created by 
->> pvcreate is identical on all 3 drives with the exception of the UUID 
->> so the crc value should match again) and the string 'vg00'at 0x0000ac 
->> i see on all disks (the name of the vg.
->>
->> What my question is (without spending days reading the sourcecode : ) 
->> is am I correct? Assuming that all the 'important' metadata and such 
->> is stored 'after' 0x0001000 hex, is there a good chance of it working?
->>
->> I'm thinking of running a pvcreate, change the UUID of the PV to what 
->> I expect it to be, add 'vg00' at 0x000ac and be happy?
->>
->> I could simply try, I know, but some feedback first would be 
->> appreciated ; ) I really don't want to loose my data.
->>
->> Thanks a lot.
->>
->> Oliver
->>
->> _______________________________________________
->> linux-lvm mailing list
->> linux-lvm@redhat.com
->> https://www.redhat.com/mailman/listinfo/linux-lvm
->> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
->
->
+Erik Ohrnberger wrote:
+> Dear Peeps of the LVM discussion list,
+> 
+>     In the past you've come to my rescue a number of times, and I wish to
+> thank you all for this assistance.
+> 
+>     I fear that my desires have once again out stripped my hands on
+> practical knowledge.  So I pose to you this discussion.  Mind you that if
+> there is a web page that covers the topic, please don't hesitate to point
+> into that direction.  This has been a self study project all along.
+> 
+> Some History: (skip if you want - see The Questions below) =============
+>     I've had a LVM up and running for some time for large file storage.  As
+> the storage needs grew, it was easy to add another hard disk, add it to the
+> volume group, and grow the file system.  This worked fairly seamlessly and
+> easily, and I figured it all out from the howtos and other information
+> resources.  The same held true for when the need for storage decreased and I
+> squeezed hard drives out of the file system and then the volume group.
+> Cool!  Up until one of the active hard disks with data died, and I lost
+> nearly all my data.  Oh well.  That's the way that it goes.  Thank the
+> computer gods that there was nothing of the data really all that terribly
+> irreplaceable, but still....
+> 
+>     After this I just went and got a 200 GB drive and left it at that (I was
+> going to school and had limited time for my computer addiction).  But now
+> that I'm done with that, I'm thinking of building a MythTV system, and I'm
+> certain that I will want to have a large amount of robust storage available
+> on the network.  So the question is what's the best way to build it?
+> 
+> The Questions:
+> ==============
+>     It seems to me that RAID5 with at least one hot spare hard disk is one
+> of the safest ways to go for this type of storage.  The only concern that I
+> have is specific to the wide variety of hard disk sizes that I have
+> available (2 40GB, 1 60GB, 2 80GB, and I'll probably add the 200GB drive
+> once I've migrated that data off it to the array).  My limited understanding
+> of RAID5 is that it's best if all the hard drives are exactly the same.  Is
+> this true?  What are the downsides of using such a mix of hard disk sizes?
+> 
+>     Being able to resize the storage is a key, as is having a robust and
+> reliable storage pool.  As storage demands rise and fall, it's great to have
+> the flexibility to add and drop hard disks from the storage pool and use
+> them for other things, resizing the file system and the volume group as you
+> go along, of course.  If the storage pool is RAID5, and I add a larger hard
+> disk to the pool as a hot spare, and then use the software tools to fault
+> out the drive that I want, forcing a reconstruction, couldn't I pull the
+> faulted drive out, and use it for something else?  What sort of shape or
+> state will the RAID5 array be in at this point?  Will it use all of the
+> space on the newly added hot spare?
+> 
+>     Again, if there is a discussion thread that I've not found that covers
+> these questions and this topic, I will not be offended by a mere pointer to
+> the web page, I wish to educate myself about the trade offs to arrive at the
+> best possible compromise for my needs.
+> 
+>     Thanks as always and in advance.
+>         Erik.
+> 
+> 
 > _______________________________________________
 > linux-lvm mailing list
 > linux-lvm@redhat.com
 > https://www.redhat.com/mailman/listinfo/linux-lvm
 > read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+> 
+
+
+-- 
+Sam Vilain, sam /\T vilain |><>T net, PGP key ID: 0x05B52F13
+(include my PGP key ID in personal replies to avoid spam filtering)
