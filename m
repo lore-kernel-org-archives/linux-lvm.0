@@ -1,10 +1,8 @@
-From: Patrick Caulfield <pcaulfie@redhat.com>
-Subject: Re: [linux-lvm] Re: mac-fdisk and 0x8e partitions for LVM
-Message-ID: <20040115161357.GA1535@tykepenguin.com>
-References: <1074115853.3983.24.camel@telecentro2> <Pine.LNX.4.44.0401151349110.20860-100000@zirkon.biophys.uni-duesseldorf.de>
+From: Rich Turner <rich@storix.com>
+Message-Id: <1074199517.2443.27.camel@rich>
 Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <Pine.LNX.4.44.0401151349110.20860-100000@zirkon.biophys.uni-duesseldorf.de>
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] understanding snapshot
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,36 +13,37 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Thu Jan 15 11:14:01 2004
+Date: Thu Jan 15 15:47:02 2004
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Thu, Jan 15, 2004 at 02:00:12PM +0100, Michael Schmitz wrote:
-> > 	mac-fdisk won't allow me to create a 0x8e partition, thus precluding
-> > LVM usage... any solutions in view?  Would pmac-fdisk or parted do the
-> > job?
-> 
-> There's no such thing as a numerical partition type in Apple partition
-> maps. cfdisk or parted could be used to create a different partition table
-> (precluding use of MacOS). Or LVM could be made Apple partition format
-> aware (using either a new partition type or partition name for detection;
-> I'd prefer the partition name (like, "LVM 1" etc. as that can easily be
-> added with mac-fdisk. (Creating other partition types is only marginally
-> more difficult, simply us 'C' instead of 'c' to create the partition).
-> 
-> To reiterate: I don't see any solution without making LVM accept Apple
-> partition maps in the first place. Which part of LVM checks the partition
-> type? Can you show me some sample code?
-> 
+i am trying to get a thorough understanding of the snapshot process. i
+have searched around for documentation but was unable to find detailed
+information. perhaps someone can point me in the right direction or tell
+me if my assumptions are correct.
 
-Stick 
+i understand my snapshot lv only needs to be 15-20% the size of my
+original lv. that leads me to believe:
 
-#define __alpha__
+1. we only write to the snapshot lv when data from the original lv has
+changed. this copies the original version of the file to the snapshot lv
+so that when we backup the snapshot lv it uses the original file and not
+the changed version. all files that were not changed will be taken from
+the original lv. this process requires 2 writes and 1 read.
 
-at the top of tools/lib/pv_get_size.c and it will skip
-the partition type check.
--- 
+2. if there are numerous writes to the original lv after the snapshot
+has been created (and before it has been removed) we could exceed our
+snapshot lv size. this is because we have to copy the original versions
+of the file to the snapshot lv, and depending on the number of writes
+and the size of the files we could run out of logical extents. when this
+happens the snapshot is unusable.
 
-patrick
+what will happen to the backup process (tar for example) of a snapshot
+lv when it runs out of storage?
+
+do chunks contain the metadata for the data in the original lv?
+
+what is the effect of increasing/reducing the chunk size?
+
+rich turner
