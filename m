@@ -1,12 +1,11 @@
 From: Tim <tim@connectlive.com>
-Subject: Re: re[2]: [linux-lvm] System Suggestions
-Message-Id: <20020306180032.B12548@connectlive.com>
-References: <20020306210600.JKKL21197.imf11bis.bellsouth.net@taz>
-    <1015450169.3240.80.camel@Steven>
+Subject: Re: [linux-lvm] LVM/RAID again
+Message-Id: <20020306181319.C12548@connectlive.com>
+References: <20020306203532.GA622@human.galaxy>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <1015450169.3240.80.camel@Steven>; from critch@dtsam.com on
-    Wed, Mar 06, 2002 at 03:29:28PM -0600
+In-Reply-To: <20020306203532.GA622@human.galaxy>; from
+    frank.lenaerts@advalvas.be on Wed, Mar 06, 2002 at 09:35:32PM +0100
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,38 +16,52 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Mar  6 17:00:03 2002
+Date: Wed Mar  6 17:13:01 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Whatever other people may say about RedHat, I have found that (with rare
-and well-documented exceptions) their kernels (as kernel-2.x.x-source
-and kernel-2.x.x-headers RPMs) accept patches fairly well (if not, I'm
-comfortable doing it manually) and have been reliable in some extremely
-high-load environments, when properly customized.  RH is most definitely
-not perfect, but 7.2 is IMHO a perfectly serviceable starting point for
-large systems.  I have used Debian, LinuxPPC, Solaris, AIX, FreeBSD,
-etc. in the past and they all have their ups and downs, but my *nix
-systems are either OpenBSD or RedHat these days, and the reason is
-simply that I can get better support for them than anything else.
-
-LVM on RH7.2 has worked well for me, but as I previously mentioned, the
-support for LSI Logic boards is quite solid, and using hardware
-enclosures eliminates an enormous number of potential problems.
+Having used and despised VxVM on Solaris before, and finding out about
+Heartbeat since then, I'd look into attached enclosures shared
+physically on a SCSI bus (there is an article in SysAdmin magazine that
+I used for my starting point) and serial heartbeats across the nodes, if
+the cluster is simple enough...  if not post to the linux-HA list :-)
 
 
-> Although my first thought is to write RH and remind them how much we
-> hate it when they build things in a non standard way and therefore cause
-> other standard systems to break. I have several peices of hardware that
-> are only supported with a RH kernel. I may be braver than some in the
-> fact that I have removed the RH kernel and used in to build other
-> distros with it. RH should provide a source version of the kernel in
-> which you can attempt to put XFS into, then compile, and should still be
-> able to load the promise driver into that new kernel. It will take some
-> effort, but should be usable. Of course you could return it as
-> essentially broken and buy the 3ware card that has better support.
+Quoth Frank Lenaerts:
+> I've been reading several LVM/RAID postings on this mailinglist to
+> find out if someone else is also having the same question as I have,
+> but this does not seem to be the case; I hope this is the right place
+> to ask this.
+> 
+> As LVM does not provide RAID1 (etc.) as VXVM does with its plexes, I
+> wanted to use LVM on top of the standard Linux metadevices
+> (RAID1). However, I wanted to do this for a cluster system using a
+> shared SCSI bus. I am aware of the fact that ownership of disks is
+> important, while something like LVM actually tries to abstract this
+> away, but I want to use LVM to be able to extend the filesystem, to
+> take snapshot backups etc.. The problem I currently face however, is
+> the fact that both nodes autodetect the metadevices and start syncing
+> the mirrors, independently of each other (I do not have the LVM and
+> cluster software installed on these machines yet). The synchronization
+> however, is initiated by the raidstart command, that is true (it is
+> not the detection itself which does this), but I wonder how I should
+> solve this problem. Below, some ideas that come to my mind:
+> 
+> - do not use LVM at all, just use the physical disks instead
+> 
+> - have two separate raidtab files where each of them is only "owned"
+>   by a single node (to prevent syncing problems) and only start the
+>   raid for a certain metadevice when a logical volume is imported on a
+>   node
+> 
+> What do you think about this?
+> 
+> -- 
+> frank.lenaerts@advalvas.be
+
+
 
 -- 
      "To be suspended from the legal profession is the moral equivalent of 
