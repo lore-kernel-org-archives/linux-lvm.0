@@ -1,11 +1,12 @@
-Return-Path: <mjt@tls.msk.ru>
-Message-ID: <3B0BB7C5.2F2881B8@tls.msk.ru>
-Date: Wed, 23 May 2001 17:14:45 +0400
-From: Michael Tokarev <mjt@tls.msk.ru>
-MIME-Version: 1.0
-Subject: Re: [linux-lvm] Converting my Root file system to LVM
-References: <200105222325.f4MNPJVw012336@webber.adilger.int>
-Content-Transfer-Encoding: 7bit
+Return-Path: <agk@uk.sistina.com>
+Date: Wed, 23 May 2001 14:18:35 +0100
+From: Alasdair G Kergon <agk@uk.sistina.com>
+Subject: Re: [linux-lvm] unsubscribe
+Message-ID: <20010523141835.C1478@uk.sistina.com>
+References: <006801c0e3eb$5c7efde0$2100000a@intranet.zeropiu.it>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <006801c0e3eb$5c7efde0$2100000a@intranet.zeropiu.it>; from christianv@zeropiu.it on Thu, May 24, 2001 at 02:49:17AM +0200
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -18,19 +19,17 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Andreas Dilger wrote:
-[]
-> No, the problem is in the wrapper script for the LVM tools.  It is using
-> "sed" in the script, but that is not on the initrd.  I don't see sed in
-> my LVM wrapper script, so you must have a different one.  Either fix the
-> wrapper script (edit /sbin/vgscan should be enough), or add "sed" to the
-> list of required files, INITRDFILES, in lvmcreate_initrd.
+On Thu, May 24, 2001 at 02:49:17AM +0200, Christian Verdelli wrote:
+> I don't see any link to unsunscribe from this list!!
+Mailman lists put this information into the message *headers* !
 
-Initrd intended to be used with exactly one version of kernel, so there should
-be NO sed there -- it is used to determine kernel iop version, but that known
-at an initrd creation time.  Initrd should contain real utils, not wrappers.
+List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>
 
-Regards,
- Michael.
+(The looping messages will stop very shortly. BTW)
+
+Alasdair
+-- 
+agk@uk.sistina.com
