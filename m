@@ -1,9 +1,7 @@
+Message-Id: <200308122330.h7CNUco11467@mail.osdl.org>
+From: markw@osdl.org
 MIME-Version: 1.0
-Message-ID: <OFC533CBF5.65BDBE78-ONC1256D80.00417F46@paris.cnp.fr>
-From: eric.boissier@cnp.fr
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Subject: [linux-lvm] =?iso-8859-1?Q?R=E9f=2E_=3A_[linux-lvm]_lvm_and_Red_Hat_AS_2=2E1?=
+Subject: [linux-lvm] compiling lvm2.2.00.05 w/ linux-2.6.0-test3
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,52 +12,37 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Tue Aug 12 06:58:02 2003
+Date: Tue Aug 12 18:31:02 2003
 List-Id: <linux-lvm.redhat.com>
+Content-Type: TEXT/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
-Cc: linux-lvm-admin@sistina.com
 
-RH AS 2.1 does NOT support LVM, so you wont have any support from RH for=20
-that functionality.
-RH AS 3.0 comming in october (Beta version on RH site) will support it.
+Hello, I'm having a little problem building the lvm2 tools.  I'm
+starting with a RedHat 8.0 distro, built the 2.6.0-test3 kernel with
+CONFIG_BLK_DEV_DM=y and CONFIG_DM_IOCTL_V4=y, built and installed
+device-mapper 1.00.02.  Then I created a simlink from /usr/include/linux
+to the 2.6.0-test3 include/linux directory.  When I try to build the
+lvm2 2.00.05 tools, I get the following errors:
 
-Cordialement,
-Eric Boissier
+gcc -c -I. -I../include -DLVM1_INTERNAL -DDEVMAPPER_SUPPORT -DHAVE_LIBDL -DHAVE_GETOPTLONG -fPIC -Wall -Wundef -Wshadow -Wcast-align -Wwrite-strings -Wmissing-prototypes -Wmissing-declarations -Wnested-externs -Winline -O2 filters/filter-composite.c -o filters/filter-composite.o
+In file included from /usr/include/linux/fs.h:9,
+                 from device/dev-io.c:24:
+/usr/include/linux/config.h:6:22: asm/kgdb.h: No such file or directory
+In file included from /usr/include/linux/fs.h:10,
+                 from device/dev-io.c:24:
+/usr/include/linux/linkage.h:5:25: asm/linkage.h: No such file or directory
+In file included from /usr/include/linux/fs.h:16,
+                 from device/dev-io.c:24:
 
+I wasn't sure how to best get around this, so I wanted to ask for some
+advice.
 
-
-
-
-Michael.Griffin@USPTO.GOV
-Envoy=E9 par : linux-lvm-admin@sistina.com
-12/08/2003 13:24
-Veuillez r=E9pondre =E0 linux-lvm
-
-=20
-
-        Pour :        linux-lvm
-        cc :=20
-=20
-        Objet : [linux-lvm] lvm and Red Hat AS 2.1
-
-
-Does Red Hat AS 2.1 have lvm support by default or do I need to compile it
-as a module.  I can't seem to find where it does or doesn't have lvm=20
-support
-on Red Hat's Web site.
-
-Michael E. Griffin
-Red Hat Linux Systems Administrator
-PEC Solutions
-12750 Fair Lakes Circle
-Fairfax, VA 22033
-703.306.3094
-Michael.Griffin@pec.com=20
-
-
-=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=
-=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F=5F
-linux-lvm mailing list
-linux-lvm@sistina.com
-http://lists.sistina.com/mailman/listinfo/linux-lvm
-read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+Thanks!
+-- 
+Mark Wong - - markw@osdl.org
+Open Source Development Lab Inc - A non-profit corporation
+12725 SW Millikan Way - Suite 400 - Beaverton, OR 97005
+(503) 626-2455 x 32 (office)
+(503) 626-2436      (fax)
+http://www.osdl.org/archive/markw/
