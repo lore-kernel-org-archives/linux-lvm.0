@@ -1,9 +1,9 @@
 From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
-Subject: Re: [E.Kowallik@tu-bs.de: [linux-lvm] lvm and raw devices (with Oracle 9 RAC)]
-Message-ID: <20020722125828.A23420@sistina.com>
-References: <20020703195115.E999@portatile.milano.dt> <20020704113000.C9129@sistina.com> <20020719212754.A1121@portatile.milano.dt>
+Subject: Re: [linux-lvm] upgrade to rh7.3 broke lvm
+Message-ID: <20020722130252.B23420@sistina.com>
+References: <3D358A8D.27A77928@mooncrest.net>
 Mime-Version: 1.0
-In-Reply-To: <20020719212754.A1121@portatile.milano.dt>; from E.Kowallik@tu-bs.de on Fri, Jul 19, 2002 at 09:27:54PM +0200
+In-Reply-To: <3D358A8D.27A77928@mooncrest.net>; from yossi@Mooncrest.Net on Wed, Jul 17, 2002 at 05:17:33PM +0200
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,52 +14,33 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Jul 22 06:08:02 2002
+Date: Mon Jul 22 06:13:02 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Fri, Jul 19, 2002 at 09:27:54PM +0200, Eike Kowallik wrote:
-> Hello!
-> 
-> On Thu, Jul 04, 2002 at 11:30:00AM +0200, Heinz J . Mauelshagen wrote:
-> > On Wed, Jul 03, 2002 at 07:51:15PM +0200, Eike Kowallik wrote:
-> 
-> > > Hmm...  nobody can give me a hint? Are my problems and my questions
-> > > so strange??
-> > 
-> > No, it is because we are all at the beach ;-)
-> 
-> Oh, sorry, I didn't know... ;-)
-> 
-> 
-> > You are using a rather old LVM version. In case you can afford an upgrade
-> > to LVM 1, your problem will be gone.
-> 
-> Yes, now the following command works here without any problems! :-))
-> 
-> > # raw -qa
-> > /dev/raw/raw1:  bound to major 58, minor 0
-> > dd if=/dev/raw/raw1 of=/dev/null bs=512 count=10
-> > 10+0 records in
-> > 10+0 records out
-> 
-> Before I wrote my first email to this list I had read the CHANGELOG,
-> because I hadn't found any hint for my problem. Now, knowing the
-> solution, I would like to understand the problem - a little bit. ;-)
-> Which fix made the above command work?
+Yossi,
 
-We had 1024 byte minimal block sizes earlier.
-Recent versions are back to 512 byte :)
+the upgrade should have brought you compatible user space and kernel LVM parts.
 
+Can you find your VG(s) running vgdisplay?
+
+/dev/mg0 is no valid logical volume name to be use for mounting.
+Must be something like /dev/YourVGName/YourLVName.
+
+On Wed, Jul 17, 2002 at 05:17:33PM +0200, Yossi wrote:
+> Upgraded from RH7.1 to RH7.3. The 7.1 was built with the lvm patch to
+> the kernel. The 7.3 RH kernel has lvm built in. After the upgrade, I
+> receive the message "/dev/mg0 not a block device" when I try to mount
+> it. I tried exporting the vg and importing it without errors but it
+> still doesn't mount. I suspect that this may be due to different
+> versions of the kernel part of the lvm versus the usermode parts of lvm.
 > 
-> Of course, this isn't a real important thing...
+> Thanks for any help,
 > 
-> 
-> > Heinz    -- The LVM Guy --
-> 
-> Thanks a lot, Heinz! Bye, Eike
+> L. Baker
+> MVS, Ltd.
 > 
 > 
 > _______________________________________________
