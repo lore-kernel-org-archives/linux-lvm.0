@@ -1,10 +1,9 @@
-From: Petro <petro@auctionwatch.com>
-Subject: Re: [linux-lvm] Problems after upgrading LVM
-Message-ID: <20011203130616.E20168@auctionwatch.com>
-References: <1007411943.2423.2.camel@ultra>
+From: Mark van Walraven <markv@wave.co.nz>
+Subject: Re: [linux-lvm] Mandrake 8.1 and LVM
+Message-ID: <20011204151431.B11429@mail.wave.co.nz>
+References: <3C06A624.80205@larsshack.org> <Pine.LNX.4.33.0111291548580.4437-100000@lx1.daboard.com>
 Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <1007411943.2423.2.camel@ultra>
+In-Reply-To: <Pine.LNX.4.33.0111291548580.4437-100000@lx1.daboard.com>; from mitch@mdmiller.com on Thu, Nov 29, 2001 at 03:50:54PM -0600
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,66 +14,22 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Dec  3 15:04:02 2001
+Date: Mon Dec  3 20:12:02 2001
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Mon, Dec 03, 2001 at 09:39:03PM +0100, Klaus Agnoletti wrote:
-> Hi,
-> I recently updated from linux 2.4.6 to 2.4.13-ac8, from LVM 0.9something
-> to 1.0.1rc4.
-> I am using debian, so I grabbed the two packages - lvm10 and lvm-common.
-> Something must be wrong though, cause I can't mount my LVM anymore.
+On Thu, Nov 29, 2001 at 03:50:54PM -0600, mitch@mdmiller.com wrote:
+> Pardon me for being a neophyte here, but what else goes on the root
+> partition which takes any significant or dynamic amount of space?  Isn't
+> the root just a place to put all the top level directories, the contents
+> of which are typically all on another partition anyway?
 
-    2.4.13-ac8 is no good on Intel, regress to ac7. 
+/bin, /sbin and /lib can get quite large; /etc can also get a little fat.
+I like to keep them (and /boot) on the root partition, I guess because
+they are all critical for booting and seldom altered.
 
-    I had some problems with ac8, and asked about it on the linux-kernel
-    mailing list and was told by about 96G people that it was bad. 
+Regards,
 
-    I don't know if this is your problem. 
-
-> This is what happens :
-> 
-> Vault:~# mount /glftpd/site
-> mount: /dev/site_vg/lvol1 is not a valid block device
-> Vault:~# pvscan
-> pvscan -- reading all physical volumes (this may take a while...)
-> pvscan -- inactive PV "/dev/hda8"  is associated to an unknown VG (run
-> vgscan)
-> pvscan -- inactive PV "/dev/hdb1"  is associated to an unknown VG (run
-> vgscan)
-> pvscan -- total: 2 [71.35 GB] / in use: 2 [71.35 GB] / in no VG: 0 [0]
-> 
-> Vault:~# vgscan
-> vgscan -- reading all physical volumes (this may take a while...)
-> vgscan -- "/etc/lvmtab" and "/etc/lvmtab.d" successfully created
-> vgscan -- WARNING: This program does not do a VGDA backup of your volume
-> group
-> 
-> Vault:~# vgcfgrestore -n site_vg /dev/hdb1
-> vgcfgrestore -- ERROR: different structure size stored in
-> "/etc/lvmconf/site_vg.conf" than expected in file vg_cfgrestore.c [line
-> 139]
-> vgcfgrestore -- ERROR "vg_cfgrestore(): read" restoring volume group
-> "site_vg"
-> 
-> Vault:~# vgchange -ay
-> vgchange -- no volume groups found
-> 
-> What's the matter ? Is it a problem that can be fixed by uuid_fixer ?
-> 
-> Thanks in advance,
-> 
-> Klaus
-> 
-> 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
-
--- 
-Share and Enjoy. 
+Mark.
