@@ -1,8 +1,8 @@
-Date: Wed, 3 Oct 2001 20:52:35 +0100 (IST)
+Date: Wed, 3 Oct 2001 20:56:16 +0100 (IST)
 From: Paul Jakma <paulj@alphyra.ie>
 Subject: Re: [linux-lvm] lvcreate segfault in vg_setup_pointers_for_snapshots
-In-Reply-To: <3BBB69B1.8060901@st-peter.stw.uni-erlangen.de>
-Message-ID: <Pine.LNX.4.33.0110032051000.16480-100000@dunlop.dub.ie.alphyra.com>
+In-Reply-To: <20011003133021.K8954@turbolinux.com>
+Message-ID: <Pine.LNX.4.33.0110032052370.16480-100000@dunlop.dub.ie.alphyra.com>
 MIME-Version: 1.0
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
@@ -19,17 +19,23 @@ Content-Type: TEXT/PLAIN; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Wed, 3 Oct 2001, svetljo wrote:
+On Wed, 3 Oct 2001, Andreas Dilger wrote:
 
-> i ment he could not patch cleanly vanila 2.4.9 with lvm-0.9.1beta7, and 
-> he is using beta7 tools with beta2 kernel code
+> The min/max issues are easily fixed
 
-see my 2nd mail. it's 2.4.9 patched with beta7:
+yep. fixed it by hand.
 
-[root@dunlop tmp]# cat /proc/lvm/global 
-LVM driver version 0.9.1_beta7 (10/04/2001)
+> Infomation about whether the coredump is in user space or a kernel oops
+> would be helpful.
 
-the 1.0.1rc3 tools should be compatible, in fact they are, cause 
-vgscan and vgdisplay work fine.
+no kernel oops. purely a segfault in lvcreate.
+
+>  Also, there is a known issue about the "inline"
+> functions, which may not have been fixed yet (it is a compiler bug).
+> 
+> Cheers, Andreas
+> --
+
+regards
 
 --paulj
