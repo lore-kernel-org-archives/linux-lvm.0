@@ -1,8 +1,12 @@
-From: Dossy <dossy@panoptic.com>
-Message-ID: <20030207042425.GF22795@panoptic.com>
-Mime-Version: 1.0
+From: Jason Smith <jhs@openenterprise.biz>
+References: <20030206.kbn.38328100@si.homelinux.org>
+In-Reply-To: <20030206.kbn.38328100@si.homelinux.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Description: clearsigned data
 Content-Disposition: inline
-Subject: [linux-lvm] LVM 1.0.1 to LVM2 upgrade path
+Message-Id: <200302071226.49241.jhs@openenterprise.biz>
+Subject: [linux-lvm] Re: RAID5 bug? [was: Re: raid and lvm]
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -13,30 +17,40 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Thu Feb  6 22:25:02 2003
+Date: Thu Feb  6 23:42:02 2003
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: linux-lvm@sistina.com
+Content-Type: Text/Plain; charset="us-ascii"
+To: linux-lvm@lists.sistina.com
 
-Everyone,
+=2D----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA1
 
-I'm currently running on Linux 2.4.20 with LVM 1.0.1 26/11/2001 ... yes,
-it's outdated, but this is a production system and LVM has been
-(seemingly) stable without any issues.
+On Friday 07 February 2003 03:03 am, SI Reasoning wrote:
+> I have had much better results with software (linux) raid 1 and then lvm
 
-I'm figuring I should consider upgrading to LVM2, but I don't want to
-just go "trying it" -- is there a specific upgrade path I have to take?
-Is LVM2 backward compatible with LVM1?  Are there any "gotchas" and are
-they documented somewhere?
+Thanks for the input.
 
-Any pointers to documentation would be appreciated.  Meanwhile, I'm busy
-Googling ...
+But I want to use raid 5 in order to get more volume space while maintainin=
+g=20
+redundancy.
 
--- Dossy
+The problem I described was explained by Neil Brown over a year ago:
+  http://www.cs.helsinki.fi/linux/linux-kernel/2001-00/0762.html
 
--- 
-Dossy Shiobara                       mail: dossy@panoptic.com 
-Panoptic Computer Network             web: http://www.panoptic.com/ 
-  "He realized the fastest way to change is to laugh at your own
-    folly -- then you can let go and quickly move on." (p. 70)
+But I still have not seen a good solution.  Hopefully, I just haven't searc=
+hed=20
+well enough.  Does nobody use RAID level 5 with LVM?  If this is still a=20
+problem, then it's a big showstopper for Linux as a file server, as I see i=
+t.
+
+=2D --=20
+Jason Smith
+Open Enterprise Systems
+Bangkok, Thailand
+=2D----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.2.1 (GNU/Linux)
+
+iD8DBQE+Q0OXm5qEoSbpT3kRAuBDAJ9W58OCkpq5lkdijjw9tI8HO1zN7gCdGY8e
+C4O7Q+a02Z1D2wY7rNF07UU=3D
+=3DTDPx
+=2D----END PGP SIGNATURE-----
