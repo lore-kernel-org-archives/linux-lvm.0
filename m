@@ -1,9 +1,11 @@
-Return-Path: <austin@coremetrics.com>
-Message-ID: <85063BBE668FD411944400D0B744267A643418@AUSMAIL>
-From: "Gonyou, Austin" <austin@coremetrics.com>
-Subject: RE: [linux-lvm] FW: LVM on Linux
-Date: Mon, 16 Jul 2001 15:42:00 -0500
-MIME-Version: 1.0
+Return-Path: <ragnark@stine.vestdata.no>
+Date: Mon, 16 Jul 2001 23:10:25 +0200
+From: =?iso-8859-1?Q?Ragnar_Kj=F8rstad?= <lvm@ragnark.vestdata.no>
+Subject: Re: [linux-lvm] FW: LVM on Linux
+Message-ID: <20010716231024.I14564@vestdata.no>
+References: <85063BBE668FD411944400D0B744267A643418@AUSMAIL>
+Mime-Version: 1.0
+In-Reply-To: <85063BBE668FD411944400D0B744267A643418@AUSMAIL>; from Gonyou, Austin on Mon, Jul 16, 2001 at 03:42:00PM -0500
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,124 +19,29 @@ List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: "'linux-lvm@sistina.com'" <linux-lvm@sistina.com>
+To: linux-lvm@sistina.com
 
-I think ELVM at the bottom is EVMS. I wish I knew where the original article
-was, cause I'd like to know what 64bit frame he's talking about. Currently
-I'm using LVM for striping, and plan to use it with Fibre. From what I
-understand on this list, is that others are using it on fibre already. So,
-if they are using a 2.4 kernel, with fibre, wouldn't that mean that they'd
-need to employ 64-bit access(if they use a 64-bit controller+driver?)
+On Mon, Jul 16, 2001 at 03:42:00PM -0500, Gonyou, Austin wrote:
+> I think ELVM at the bottom is EVMS. I wish I knew where the original article
+> was, cause I'd like to know what 64bit frame he's talking about. Currently
+> I'm using LVM for striping, and plan to use it with Fibre. From what I
+> understand on this list, is that others are using it on fibre already. So,
+> if they are using a 2.4 kernel, with fibre, wouldn't that mean that they'd
+> need to employ 64-bit access(if they use a 64-bit controller+driver?)
+
+I'm not sure what you mean here.
+
+The 32/64 bit question in this thread was the datatype used to store
+sector-numbers; the effect of using 32bit is that it limits the
+device-size to 1 (2) TB.
+
+If you're talking about 64 bit PCI busses and such; this is totally
+unrelated.
+
+And yes, we'd like to use LVM on FibreChannel devices, and need 64 bit 
+sector numbers :)
+
 
 -- 
-Austin Gonyou
-Systems Architect, CCNA
-Coremetrics, Inc.
-Phone: 512-796-9023
-email: austin@coremetrics.com 
-
-> -----Original Message-----
-> From: Gonyou, Austin [mailto:austin@coremetrics.com]
-> Sent: Monday, July 16, 2001 3:36 PM
-> To: 'linux-lvm@sistina.com'
-> Subject: [linux-lvm] FW: LVM on Linux
-> 
-> 
-> From the XFS list. 
-> 
-> -- 
-> Austin Gonyou
-> Systems Architect, CCNA
-> Coremetrics, Inc.
-> Phone: 512-796-9023
-> email: austin@coremetrics.com 
-> 
-> > -----Original Message-----
-> > From: Ric Tibbetts [mailto:ric@pipcws.ca.boeing.com]
-> > Sent: Monday, July 16, 2001 3:09 PM
-> > To: Linux XFS Mailing List; JFS Discussion List
-> > Subject: LVM on Linux
-> > 
-> > 
-> > For anyone considering using LVM on Linux. You might want to take a 
-> > second to look at the following "short" article. It casts a 
-> > questionalble light on the current state of the LVM code.
-> > 
-> > ================================================
-> > 
-> > 0 Jun - 5 Jul (8 posts) Archive Link: [RFC][PATCH] first cut 
-> > 64 bit block
-> > support
-> >                   Summary by Zack Brown
-> > 
-> > Ben LaHaise posted a patch and announced, "Below is the first 
-> > cut at making
-> > the block size limit configurable to 64 bits on x86, as well 
-> > as always 64
-> > bits on 64 bit machines. The audit isn't complete yet, but a 
-> > good chunk of
-> > it is done." [..] "The following should be 64 bit clean now: 
-> > nbd, loop,
-> > raid0, raid1, raid5." He gave links to two homepages at
-> > http://people.redhat.com/bcrl/lb/ and
-> > http://www.kvack.org/~blah/lb/. He added, "Ugly bits: I had 
-> > to add libgcc.a
-> > to satisfy the need for 64 bit division. Yeah, it sucks, but 
-> > RAID needs some
-> > more massaging before I can remove the 64 bit division 
-> > completely. This will
-> > be fixed." Chris Wedgwood proposed some changes to libgcc.a 
-> > to be less ugly,
-> > and Ben replied, "I'm getting rid of the need for libgcc 
-> > entirely. That's
-> > what "This will be fixed" means. If you want to expedite the 
-> > process, send a
-> > patch. Until then, this is Good Enough for testing purposes."
-> > 
-> > Elsewhere, Ragnar Kjarstad was very happy about Ben's work, 
-> > asking if LVM
-> > was also 64-bit clean. Ben replied cryptically, "Errr, I'll 
-> > refrain from
-> > talking about LVM." Ragnar wanted some clarification, and Ben 
-> > explained:
-> > 
-> > Fixing LVM is not on the radar of my priorities. The code is 
-> > sorely in need
-> > of a
-> > rewrite and violates several of the basic planning tenents 
-> > that any good
-> > code in the block layer should follow. Namely, it should have 
-> > 1) planned on
-> > supporting 64 bit offsets, 2) never used multiplication, 
-> > division or modulus
-> > on block numbers, and 3) don't allocate memory structures 
-> > that are indexed
-> > by block numbers. LVM failed on all three of these -- and 
-> > this si just what
-> > I noticed in a quick 5 minute glance through the code. Sorry, 
-> > but LVM is
-> > obsolete by design. It will continue to work on 32 bit block 
-> > devices, but if
-> > you try to use it beyond that, it will fail. That said, we'll 
-> > have to make
-> > sure these failures are graceful and occur prior to the user 
-> > having a chance
-> > at loosing any data.
-> > 
-> > Now, thankfully there are alternatives like ELVM, which are 
-> working on
-> > getting the
-> > details right from the lessons learned. Given that, I think 
-> > we'll be in good
-> > shape
-> > during the 2.5 cycle.
-> > 
-> > End Of Thread (tm).
-> > 
-> > 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
-> 
+Ragnar Kjorstad
+Big Storage
