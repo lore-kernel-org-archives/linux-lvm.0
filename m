@@ -1,11 +1,9 @@
-From: Ewen McNeill <lvm@ewen.mcneill.gen.nz>
-Subject: Re: [linux-lvm] access special devices 
-In-Reply-To: Message from "Michael Vogt" <MichaelVogt@abcsystems.ch> 
-   of "Wed, 30 Apr 2003 10:45:15 +0200." <772FBCA525B8FB4C9299D8D27FD4A5AA04715E@ABCSYSEXC1.abcsystems.ch> 
-MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <16456.1051693240.1@basilica.la.naos.co.nz>
-Message-Id: <20030430090041.35E0FAE4F5@basilica.la.naos.co.nz>
+From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
+Subject: Re: [linux-lvm] vgscan problem (was vgscan segmentation faults, VG name problems)
+Message-ID: <20030430130450.A5346@sistina.com>
+References: <3EAC2003.5030106@shaw.ca> <20030428105618.A28159@sistina.com> <3EAF28A8.5010107@shaw.ca>
+Mime-Version: 1.0
+In-Reply-To: <3EAF28A8.5010107@shaw.ca>; from devenson@shaw.ca on Tue, Apr 29, 2003 at 07:36:40PM -0600
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,47 +14,255 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Apr 30 04:00:02 2003
+Date: Wed Apr 30 06:11:01 2003
 List-Id: <linux-lvm.redhat.com>
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-In message <772FBCA525B8FB4C9299D8D27FD4A5AA04715E@ABCSYSEXC1.abcsystems.ch>, "M
-ichael Vogt" writes:
->ive a question, i want to use lvm in my san environment, i use a san 
->virtualisation. the point is, my (scsi) disks are not called /dev/sdX, 
->they are called /dev/svm/svmXXX.  [not seen by lvmdiskscan]
->so i checked the source, and in the file /tools/lib/lvm_dir_cache.c are 
->some definitions called LVM_DIR_PREFIX. i tried to add my definitions 
->(/dev/svm/svm and svm/svm) but this didnt work. what i need to do, that 
->my disks are aviable for lvm?
+Duane,
 
-Having been down this road today (investigating the ataraid
-issues I've posted about), you'll probably also need to look at
-tools/lib/lvm_check_dev.c and tools/lib/lvm_check_partitioned_dev.c
-and liblvm.h (and perhaps some others).  In particular with LVM 1 (eg,
-1.0.7) there is an enumerated type, lvm_device_type_t used to identify
-applicable devices, and a function lvm_get_device_type() which is used as
-a filter on the lvm_dir_cache() results, based on that enumerated list,
-and another table, when scanning for physical volumes.
+does pvscan evetually find more than hde (which I assume should be your
+_only_ PV in the system) ?
+If so, you need to decide, if those can be removed (pvcreate -ff ...).
 
-I suspect your virtualisation layer isn't one of the types recognised
-from matching against /proc/devices, and so it's being ignored.
+If not, you might want to restore the metadata to hde and rescan+activate.
+(pvcreate -ff /dev/hde;vgcfgrestore -n data_group /dev/hde;vgscan;vgchange -ay).
 
-In the case of ataraid it appears that (in addition to not having the
-same hacks as for md to prevent aliasing, and hence the
-accessing-raw-devices issues I've mentioned) LVM considers ataraid to be
-unpartitioned (a la, md, loopback, etc).  In fact this isn't the case,
-ataraid is a whole-disk device, with partitions (/dev/ataraid/dNpM where
-N is the raid array, and M is the partition number).
+pvcreate doesn't destroy any data, it just initializes the LVM metadata area
+for vgcfgrestore to work.
 
-BTW, I'm not sure if you're trying to use LVM 1 or LVM 2.  I've been
-told that LVM 2 has a more configurable system for scanning for physical
-volumes which might avoid some of the ataraid issues I found; and might
-perhaps allow you to get it to see your san virtualisation devices
-without hacking on the code.
+Regards,
+Heinz    -- The LVM Guy --
 
-For now, I've put aside the idea of using LVM on ataraid.  When LVM 2
-is released, and I've got some more time, I might give that a go instead.
 
-Ewen
+On Tue, Apr 29, 2003 at 07:36:40PM -0600, Duane Evenson wrote:
+> I've upgraded to 1.0.7 but now get the following output - indicating the 
+> real problem.
+> If I recreate the volume group and logical volume, will the data 
+> contained therein still be available or is there another way to recover 
+> the volume?
+> vgscan -v
+> vgscan -- removing "/etc/lvmtab" and "/etc/lvmtab.d"
+> vgscan -- creating empty "/etc/lvmtab" and "/etc/lvmtab.d"
+> vgscan -- reading all physical volumes (this may take a while...)
+> vgscan -- scanning for all active volume group(s) first
+> vgscan -- reading data of volume group "data_group" from physical volume(s)
+> vgscan -- ERROR "vg_read_with_pv_and_lv(): current PV" can't get data of 
+> volume
+> group "data_group" from physical volume(s)
+> vgscan -- "/etc/lvmtab" and "/etc/lvmtab.d" successfully created
+> vgscan -- WARNING: This program does not do a VGDA backup of your volume 
+> group
+> 
+> Some other information of the system:
+> 
+> # pvdisplay /dev/hde
+> --- Physical volume ---
+> PV Name               /dev/hde
+> VG Name               data_group
+> PV Size               111.79 GB [234441648 secs] / NOT usable 4.25 MB 
+> [LVM: 239
+> KB]
+> PV#                   1
+> PV Status             available
+> Allocatable           yes
+> Cur LV                1
+> PE Size (KByte)       4096
+> Total PE              28617
+> Free PE               3017
+> Allocated PE          25600
+> PV UUID               x1l2a2-XUzX-XEjZ-hP3k-qAmo-G5jH-U1z1C8
+> 
+> 
+> # vgcfgrestore   -n data_group -ll
+> vgcfgrestore -- INFO: using backup file "/etc/lvmconf/data_group.conf"
+> --- Volume group ---
+> VG Name               data_group
+> VG Access             read/write
+> VG Status             NOT available/resizable
+> VG #                  0
+> MAX LV                256
+> Cur LV                1
+> Open LV               0
+> MAX LV Size           255.99 GB
+> Max PV                256
+> Cur PV                1
+> Act PV                1
+> VG Size               111.79 GB
+> PE Size               4 MB
+> Total PE              28617
+> Alloc PE / Size       25600 / 100 GB
+> Free  PE / Size       3017 / 11.79 GB
+> VG UUID               rVEO6Y-kq5c-5SR0-uw0I-VPF1-v1ka-HK1WQS
+> 
+> --- Logical volume ---
+> LV Name                /dev/data_group/logical_volume1
+> VG Name                data_group
+> LV Write Access        read/write
+> LV Status              NOT available
+> LV #                   1
+> # open                 0
+> LV Size                100 GB
+> Current LE             25600
+> Allocated LE           25600
+> Allocation             next free
+> Read ahead sectors     10000
+> Block device           58:0
+> 
+> 
+> --- Physical volume ---
+> PV Name               /dev/hde
+> VG Name               data_group
+> PV Size               111.79 GB [234441648 secs] / NOT usable 4.25 MB 
+> [LVM: 239
+> KB]
+> PV#                   1
+> PV Status             available
+> Allocatable           yes
+> Cur LV                1
+> PE Size (KByte)       4096
+> Total PE              28617
+> Free PE               3017
+> Allocated PE          25600
+> PV UUID               x1l2a2-XUzX-XEjZ-hP3k-qAmo-G5jH-U1z1C8
+> 
+> 
+> Heinz J . Mauelshagen wrote:
+> 
+> >Duane,
+> >
+> >since you're running 1.0.3 I assume you might be hitting an array derefenerence
+> >bug in the LVM1 library we fixed in 1.0.6.
+> >
+> >Please upgrade to 1.0.7 and try again.
+> >
+> >Regards,
+> >Heinz    -- The LVM Guy --
+> >
+> >On Sun, Apr 27, 2003 at 12:22:59PM -0600, Duane Evenson wrote:
+> >  
+> >
+> >>I'm having troubles and can't find the solution in the HOWTO, or the 
+> >>archived mailing lists articles.
+> >>I installed lvm on an entire hard drive (hde), made one logical group 
+> >>with a logical volume of 100G.
+> >>I mounted to volume, copied files over OK, but vgscan caused 
+> >>segmentation faults.
+> >>I rebooted, hoping that it was a conflict between the kernel info and 
+> >>physical info. Obviously, it wasn't.
+> >>Here are the results of running pvdisplay, pvscan, vgscan, and vgdisplay.
+> >>
+> >># pvdisplay /dev/hde -v
+> >>--- Physical volume ---
+> >>PV Name               /dev/hde
+> >>VG Name               data_group
+> >>PV Size               111.79 GB [234441648 secs] / NOT usable 4.25 MB 
+> >>[LVM: 239
+> >>KB]
+> >>PV#                   1
+> >>PV Status             available
+> >>Allocatable           yes
+> >>Cur LV                1
+> >>PE Size (KByte)       4096
+> >>Total PE              28617
+> >>Free PE               3017
+> >>Allocated PE          25600
+> >>PV UUID               x1l2a2-XUzX-XEjZ-hP3k-qAmo-G5jH-U1z1C8
+> >>
+> >>pvdisplay -- "/etc/lvmtab.d/data_group" doesn't exist
+> >>
+> >># pvscan -v
+> >>pvscan -- reading all physical volumes (this may take a while...)
+> >>pvscan -- walking through all physical volumes found
+> >>pvscan -- inactive PV "/dev/hde"  is associated to unknown VG 
+> >>"data_group" (run
+> >>vgscan)
+> >>pvscan -- total: 1 [111.79 GB] / in use: 1 [111.79 GB] / in no VG: 0 [0]
+> >>
+> >># vgscan -v
+> >>vgscan -- removing "/etc/lvmtab" and "/etc/lvmtab.d"
+> >>vgscan -- creating empty "/etc/lvmtab" and "/etc/lvmtab.d"
+> >>vgscan -- reading all physical volumes (this may take a while...)
+> >>vgscan -- scanning for all active volume group(s) first
+> >>vgscan -- reading data of volume group "data_group" from physical volume(s)
+> >>Segmentation fault
+> >>
+> >># vgscan -d
+> >>...
+> >><55555> pv_create_name_from_kdev_t -- LEAVING with dev_name: /dev/hde
+> >><55555> system_id_check_exported -- CALLED
+> >><55555> system_id_check_exported -- LEAVING with ret: 0
+> >><4444> pv_read -- LEAVING with ret: 0
+> >><4444> vg_copy_from_disk -- CALLED
+> >><55555> vg_check_vg_disk_t_consistency -- CALLED
+> >><666666> vg_check_name -- CALLED with VG:
+> >><7777777> lvm_check_chars -- CALLED with name: ""
+> >><7777777> lvm_check_chars -- LEAVING with ret: 0
+> >><666666> vg_check_name -- LEAVING with ret: 0
+> >><55555> vg_check_vg_disk_t_consistency -- LEAVING with ret: -344
+> >><4444> vg_copy_from_disk -- LEAVING
+> >>Segmentation fault
+> >>
+> >># vgdisplay data_group -h
+> >>Logical Volume Manager 1.0.3
+> >>Heinz Mauelshagen, Sistina Software  19/02/2002 (IOP 10)
+> >>
+> >>vgdisplay -- display volume group information
+> >>
+> >>
+> >>
+> >>
+> >>
+> >>
+> >>_______________________________________________
+> >>linux-lvm mailing list
+> >>linux-lvm@sistina.com
+> >>http://lists.sistina.com/mailman/listinfo/linux-lvm
+> >>read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+> >>    
+> >>
+> >
+> >*** Software bugs are stupid.
+> >    Nevertheless it needs not so stupid people to solve them ***
+> >
+> >=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+> >
+> >Heinz Mauelshagen                                 Sistina Software Inc.
+> >Senior Consultant/Developer                       Am Sonnenhang 11
+> >                                                  56242 Marienrachdorf
+> >                                                  Germany
+> >Mauelshagen@Sistina.com                           +49 2626 141200
+> >                                                       FAX 924446
+> >=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+> >
+> >_______________________________________________
+> >linux-lvm mailing list
+> >linux-lvm@sistina.com
+> >http://lists.sistina.com/mailman/listinfo/linux-lvm
+> >read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+> >
+> >  
+> >
+> 
+> 
+> 
+> 
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@sistina.com
+> http://lists.sistina.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+
+*** Software bugs are stupid.
+    Nevertheless it needs not so stupid people to solve them ***
+
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+Heinz Mauelshagen                                 Sistina Software Inc.
+Senior Consultant/Developer                       Am Sonnenhang 11
+                                                  56242 Marienrachdorf
+                                                  Germany
+Mauelshagen@Sistina.com                           +49 2626 141200
+                                                       FAX 924446
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
