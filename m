@@ -1,41 +1,33 @@
-Date: Sat, 29 Jan 2000 12:32:15 -0800
-From: "Peter C. Norton" <spacey@lenin.nu>
-Subject: Re: [linux-lvm] Re: (reiserfs) Re: AIX JFS dual-mount
-Message-ID: <20000129123215.B24375@lenin.nu>
-References: <Pine.LNX.4.10.10001280539550.13561-100000@home.suse.com> <20000129001449.A13523@ultraviolet.org> <20000129095403.A24375@lenin.nu> <20000129122614.C13523@ultraviolet.org>
-Mime-Version: 1.0
-In-Reply-To: <20000129122614.C13523@ultraviolet.org>; from treed@ultraviolet.org on Sat, Jan 29, 2000 at 12:26:14PM -0800
+From: Torsten Neumann <torsten@londo.rhein-main.de>
+Subject: Re: [linux-lvm] Subject: LVM and Debian (fwd)
+Date: 29 Jan 2000 20:46:24 +0100
+Message-ID: <86vg2g$65c$1@londo.rhein-main.de>
+References: <389240C3.C11F5303@msede.com>
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: Tracy R Reed <treed@ultraviolet.org>
-Cc: linux-lvm@msede.com
+To: linux-lvm@msede.com
 
-There does seem to be a seagate scsi drive listed that does some kind of
-dlocks.  Dlocks may not be FC only.
+Michael Marxmeier <mike@msede.com> wrote:
 
--Peter
 
-On Sat, Jan 29, 2000 at 12:26:14PM -0800, Tracy R Reed wrote:
-> On Sat, Jan 29, 2000 at 09:54:03AM -0800, Peter C. Norton wrote:
-> > GFS seems to require some support from hardware in the way of "dlocks", a
-> > not-too widely supported standard.  I think you'd need to have drives that
-> > implement dlocks, and that the lvm would have to know about them.  What
-> > would need to be done to the volume stuff to support dlocks?  Could any
-> > filesystem be built on top of a volume manager with dlock support?
-> 
-> There are two options: You can use dlocks with special drive firmware or you
-> can use a global lock manager over TCP with one of the hosts running the lock
-> manager. I was thinking the latter way might be possible for non-fibrechannel
-> setups.
-> 
-> --
-> Tracy Reed      http://www.ultraviolet.org
-> "She moves in mysterious ways"
+> -------- Original Message --------
+> Date: Fri, 28 Jan 2000 14:13:51 -0500
+> Resent-Date: Sat, 29 Jan 2000 2:19:12 MEZ
+> From: Amrit Pal Singh <abamrah@idirect.com>
+> Subject: LVM and Debian
 
--- 
-The 5 year plan:
-In five years we'll make up another plan.
-Or just re-use this one.
+> I am trying to install LVM v0.7 on my debian box. I have tried with
+> Kernel 2.2.13, 2.2.14, and 2.3.40 but nowhere I could find a
+> configuration option that I can select to enable support for LVM.
+> Though
+> in the Install instructions for LVM, it says get a kernel >=2.2.10-ac2
+> and also in step 8
+
+LVM was only a short time part of the ac patches.
+You need the separate kernel patches (http://linux.msede.com/lvm)
+
+   Torsten
