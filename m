@@ -1,9 +1,7 @@
-Message-Id: <011f01c1d32e$ddcbc580$9865fea9@homecomputer>
-From: "dan.am" <lvm@lonx.net>
+From: Donald Thompson <dlt@lunanet.biz>
+Message-Id: <Pine.LNX.4.44.0203242158260.19733-100000@junior.luna.home>
 MIME-Version: 1.0
-Content-Type: multipart/alternative;
-    boundary="----=_NextPart_000_011C_01C1D337.3BEF3900"
-Subject: [linux-lvm] vgscan on bootup
+Subject: [linux-lvm] Mounting ext3 snapshots
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,52 +12,38 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Sun Mar 24 06:26:04 2002
+Date: Sun Mar 24 23:08:01 2002
 List-Id: <linux-lvm.redhat.com>
+Content-Type: TEXT/PLAIN; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-This is a multi-part message in MIME format.
+I'm trying to mount ext3 snapshot LV's, and having a bit of trouble. I
+could have sworn I read this become possible awhile back on one of the
+lists (maybe that was reiserfs?). Anyways I've attempted the following:
 
-------=_NextPart_000_011C_01C1D337.3BEF3900
-Content-Type: text/plain;
-	charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+mount -t ext3 /dev/SCSI/home_test /mnt
+dmesg reports:
+	EXT3-fs: INFO: recovery required on readonly filesystem.
+	EXT3-fs: write access unavailable, cannot proceed.
 
-Hi there,
-New to this list, running SuSE 7.3 with 2.4 Kernel and a simple =
-LVM-setup.=20
-vgscan seems to be destoying the LVM-conf on bootup. While this is =
-annoying, could I simply disable=20
-vgscan ? Would running vgchange -a y not be sufficient ?=20
-Anybody had a problem like this ?=20
-Regards=20
-Dan
+mount -o noload -t ext3 /dev/SCSI/home_test /mnt
+dmesg reports:
+	ext3: No journal on filesystem on lvm(58,17)
 
-------=_NextPart_000_011C_01C1D337.3BEF3900
-Content-Type: text/html;
-	charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Attempting to mount as -t ext2 doesn't help.
 
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
-<HTML><HEAD>
-<META http-equiv=3DContent-Type content=3D"text/html; =
-charset=3Diso-8859-1">
-<META content=3D"MSHTML 6.00.2600.0" name=3DGENERATOR>
-<STYLE></STYLE>
-</HEAD>
-<BODY bgColor=3D#ffffff>
-<DIV><FONT size=3D2>Hi there,</FONT></DIV>
-<DIV><FONT size=3D2>New to this list, running SuSE 7.3 with 2.4 Kernel =
-and a=20
-simple LVM-setup. </FONT></DIV>
-<DIV><FONT size=3D2>vgscan seems to be destoying the LVM-conf on bootup. =
-While=20
-this is annoying, could I simply disable </FONT></DIV>
-<DIV><FONT size=3D2>vgscan ? Would running vgchange -a y not be =
-sufficient ?=20
-</FONT></DIV>
-<DIV><FONT size=3D2>Anybody had a problem like this ? </FONT></DIV>
-<DIV><FONT size=3D2>Regards </FONT></DIV>
-<DIV><FONT size=3D2>Dan</FONT></DIV></BODY></HTML>
+But non of them allow me to mount the snapshots.
 
-------=_NextPart_000_011C_01C1D337.3BEF3900--
+Attempting to mount a -t ext2 doesn't help.
+
+I'm using:
+debian 3.0
+mount 2.11n (debian package)
+LVM 1.0.1
+Kernel 2.4.18-pre7
+
+I'm guessing I just have the wrong mount options...anyone have any
+pointers? TIA.
+
+-Don
