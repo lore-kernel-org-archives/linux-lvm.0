@@ -1,7 +1,9 @@
-Message-ID: <20020522124620.25273.qmail@sina.com>
-From: lysindybear <lysindybear@sina.com>
-Subject: Re: Re: [linux-lvm] (no subject)
-MIME-Version: 1.0
+From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
+Subject: Re: [linux-lvm] Problem with vgscan
+Message-ID: <20020522145005.G9107@sistina.com>
+References: <scebab71.015@MS106BN>
+Mime-Version: 1.0
+In-Reply-To: <scebab71.015@MS106BN>; from dmitri.levitin@postbank.de on Wed, May 22, 2002 at 02:30:02PM +0200
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -12,57 +14,64 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed May 22 07:53:02 2002
+Date: Wed May 22 07:54:01 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
->On Wed, May 22, 2002 at 07:54:53PM +0800, lysindybear wrote:
->> I am modifying the lvm source file,I want to make lvm as module instead into kernel,but the compiler tell me something wrong,can 
->> someboby tell me what I should modify in the source file? thanks
->
->Just change the LVM option in the kernel to build as a module.  No
->need to change source.
->
->- Joe
+Well, this is an ancient LVM version:
 
-yes i know this,i've change the config file and use make modules command,below is the error message:
+ - what does pvscan say?
 
-some explaination : I've write a new file named raidde.c,i want to compile it as a module,i compile it into kernel before,but it waste too much time to compile to debug,so i want to compile it as a module 
+ - what does "vgscan -d" say?
 
-make[2]: Entering directory `/usr/src/linux-2.4.2/drivers/md'
-gcc -D__KERNEL__ -I/usr/src/linux-2.4/include -Wall -Wstrict-prototypes -O2 -fom
-it-frame-pointer -fno-strict-aliasing -fno-common -Wno-unused -pipe -mpreferred-
-stack-boundary=2 -march=i686 -DMODULE -DMODVERSIONS -include /usr/src/linux-2.4/
-include/linux/modversions.h   -c -o raidde.o raidde.c
-In file included from /usr/src/linux-2.4/include/linux/spinlock.h:35,
-                 from /usr/src/linux-2.4/include/linux/module.h:11,
-                 from raidde.c:17:
-/usr/src/linux-2.4/include/asm/spinlock.h:8: nondigits in number and not hexadec
-imal
-/usr/src/linux-2.4/include/asm/spinlock.h:8: nondigits in number and not hexadec
-imal
-/usr/src/linux-2.4/include/asm/spinlock.h:8: parse error before `1b7d4074'
-/usr/src/linux-2.4/include/asm/spinlock.h:9: `printk_R_ver_str' declared as func
-tion returning a function
-/usr/src/linux-2.4/include/asm/spinlock.h:9: warning: function declaration isn't
- a prototype
-In file included from raidde.c:17:
-/usr/src/linux-2.4/include/linux/module.h:173: nondigits in number and not hexad
-ecimal
-/usr/src/linux-2.4/include/linux/module.h:173: nondigits in number and not hexad
-ecimal
-/usr/src/linux-2.4/include/linux/module.h:173: nondigits in number and not hexad
-ecimal
-/usr/src/linux-2.4/include/linux/module.h:173: nondigits in number and not hexad
-ecimal����������������
-����������������
-����������������
-something like this
+Send both outputs plus the file "Dmitri.vgda" created with
+"dd if=/dev/sdd1 bs=1k count=4k of=Dmitri.vgda" in a bziped tar archive to
+me for further investigation (mge@sistina.com).
 
-______________________________________
+On Wed, May 22, 2002 at 02:30:02PM +0200, Dmitri Levitin wrote:
+> Hi,
+> 
+> I have installed the LVM-0.9-1 on my Linux Suse7.0 Kernel 2.2.18 and I have marked /dev/sdd1 with Linux LVM label. When I run vgscan for the first time it tells the follows:
+> 
+> $ vgscan -v
+> vgscan -- removing "/etc/lvmtab" and "/etc/lvmtab.d"
+> vgscan -- reading all physical volumes (this may take a while...)
+> vgscan -- scanning for all active volume group(s) first
+> vgscan -- found inactive volume group "data"
+> vgscan -- reading data of volume group "data" from physical volume(s)
+> vgscan -- ERROR "vg_read_with_pv_and_lv(): allocated LE of LV" can't get data of volume group "data" from physical volume(s)
+> vgscan -- ERROR "vg_read_with_pv_and_lv(): allocated LE of LV" creating "/etc/lvmtab" and "/etc/lvmtab.d"
+> 
+> 
+> What's the problem? Could anybody help my?
+> 
+> Thanks a lot
+> 
+> Dmitri
+> 
+> 
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@sistina.com
+> http://lists.sistina.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
 
-===================================================================
-������ѵ������� (http://mail.sina.com.cn)
-���˷�����Ϣ�������г���һ�ߣ��ó���ʱ�ͳ��֣� (http://classad.sina.com.cn/2shou/)
+-- 
+
+Regards,
+Heinz    -- The LVM Guy --
+
+*** Software bugs are stupid.
+    Nevertheless it needs not so stupid people to solve them ***
+
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+Heinz Mauelshagen                                 Sistina Software Inc.
+Senior Consultant/Developer                       Am Sonnenhang 11
+                                                  56242 Marienrachdorf
+                                                  Germany
+Mauelshagen@Sistina.com                           +49 2626 141200
+                                                       FAX 924446
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
