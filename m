@@ -1,8 +1,8 @@
-Message-ID: <20021108120250.GA3810@reti>
+From: liqui-D-read <liquid@nano.cz>
+Content-Transfer-Encoding: 7bit
+Message-Id: <1036764034.26152.7.camel@ceros>
 Mime-Version: 1.0
-Content-Disposition: inline
-From: Joe Thornber <joe@fib011235813.fsnet.co.uk>
-Subject: [linux-lvm] 2.4 backport of the 2.5 changes to dm
+Subject: [linux-lvm] lvm -- lvm_blk_ioctl: unknown command 0x24b
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -13,18 +13,30 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Fri Nov  8 06:03:01 2002
+Date: Fri Nov  8 08:10:01 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: linux-lvm@sistina.com, lvm-devel@sistina.com
+To: LVM <linux-lvm@sistina.com>
 
-A new *beta* version of dm for 2.4 is available here:
+i
 
-http://people.sistina.com/~thornber/patches/2.4-unstable/2.4.19-dm-backport-1.patch.bz2
+i'm running 
 
-This contains a backport of all the code changes that were made in the
-2.5 version of dm.  It would be really cool if people could give this
-some testing before the proper release next week.
+Linux base 2.4.19 #2 Thu Nov 7 09:57:09 CET 2002 i686 unknown
 
-- Joe
+and it makes 
+
+lvm -- lvm_blk_ioctl: unknown command 0x24b
+
+during
+
+reiserfsck /dev/loop1
+
+(disk is mounted via loopAES)
+
+distribution is debian 3.0
+
+please help
+
+regards 
+h.kfm
