@@ -1,13 +1,10 @@
-Date: Wed, 5 Sep 2001 13:30:45 -0500
-From: AJ Lewis <lewis@sistina.com>
-Subject: Re: [linux-lvm] lvm kernel version
-Message-ID: <20010905133045.A3227@sistina.com>
-References: <20010905175331.97946.qmail@web13403.mail.yahoo.com>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-md5;
-	protocol="application/pgp-signature"; boundary="EVF5PPMfhYS0aIcm"
-Content-Disposition: inline
-In-Reply-To: <20010905175331.97946.qmail@web13403.mail.yahoo.com>; from plamb_98@yahoo.com on Wed, Sep 05, 2001 at 10:53:31AM -0700
+Message-ID: <3B966FA5.8080808@st-peter.stw.uni-erlangen.de>
+Date: Wed, 05 Sep 2001 20:32:05 +0200
+From: svetljo <galia@st-peter.stw.uni-erlangen.de>
+MIME-Version: 1.0
+Subject: Re: [linux-lvm] PBs with LVM over software RAID ( and XFS ? ext2 reiserfs?)
+References: <B45465FD9C23D21193E90000F8D0F3DF404FF5@mailsrv.linkvest.com> <3B95E36E.6070703@st-peter.stw.uni-erlangen.de> <20010905120549.H32553@turbolinux.com> <3B966C63.7080309@st-peter.stw.uni-erlangen.de>
+Content-Transfer-Encoding: 7bit
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -19,64 +16,48 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: linux-lvm@sistina.com
 
---EVF5PPMfhYS0aIcm
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+i'm building curently 2.4.10-pre4-xfs with the patches from Neil Brown
+and i'll try with a Mandrake-2.4.5 i'll have to update the LVM-code of 
+the is it necessary to be lvm-1.0.1rc2
+or i can do it with lvm-1.0 for the mandrake kernel (my internet 
+connection pretty slow currently)  
 
-On Wed, Sep 05, 2001 at 10:53:31AM -0700, Pierre Lamb wrote:
-> Is there an easy way to find out what version of "LVM"
-> is currently in a kernel ie "rh" release.=20
+svetljo wrote:
 
-If you have the modules loaded (or compiled in the kernel), you can look at
-/proc/lvm/global
-
-It should look something like this:
-$ cat /proc/lvm/global=20
-LVM module LVM version 0.9.1_beta8(24/07/2001)
-
-Total:  3 VGs  16 PVs  8 LVs (7 LVs open 7 times)
-
-Global: 106301 bytes malloced   IOP version: 10   4:30:32 active
-
-VG:  main  [4 PV, 1 LV/0 open]  PE Size: 4096 KB
-
-<...snip...>
-
-VG:  temp  [1 PV, 2 LV/2 open]  PE Size: 4096 KB
-  Usage [KB/PE]: 8957952 /2187 total  7593984 /1854 used  1363968 /333 free
-  PV:  [AA] sda                    8957952 /2187     7593984 /1854 1363968 =
-/333  =20
-    LVs: [AWDL  ] usr                        4759552 /1162     1x open
-         [AWDL  ] local                      2834432 /692      1x open
-
---=20
-AJ Lewis
-Sistina Software Inc.                  Voice:  612-638-0500
-1313 5th St SE, Suite 111              Fax:    612-638-0500
-Minneapolis, MN 55414                  E-Mail: lewis@sistina.com
-http://www.sistina.com
-
-Current GPG fingerprint =3D 60F3 160D C0D5 2C4B 751B  4FF9 6F67 E9BC 44CD D=
-E95
-
------Begin Obligatory Humorous Quote----------------------------------------
-"We succeed because our competitors are idiots" - anonymous
------End Obligatory Humorous Quote------------------------------------------
-
---EVF5PPMfhYS0aIcm
-Content-Type: application/pgp-signature
-Content-Disposition: inline
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.0.6 (GNU/Linux)
-Comment: For info see http://www.gnupg.org
-
-iD8DBQE7lm9Vb2fpvETN3pURAvzaAJ90xUBKDbL4rwGxwsG1sNkGCPKRZACgqmJp
-36oGMjib/v+qtcZF2hGdFmE=
-=mA+2
------END PGP SIGNATURE-----
-
---EVF5PPMfhYS0aIcm--
+> and what should i try now
+> i was writing to Nail Brown about the XFS mount problem  but i think 
+> he stop writing to me
+> after i couldn't recreate the problem
+>
+> which kernel should i test 2.4.5 2.4.6 2.4.7
+>
+> Andreas Dilger wrote:
+>
+>> On Sep 05, 2001  10:33 +0200, svetljo wrote:
+>>
+>>> some ideas whom should i write to and what else should i try
+>>> i've already written to the developers of e2fsprogs and to Hans Reiser
+>>> but i still don't have a reply( it was 2-3 days ago) and mr Hans 
+>>> Reiser wonts $25 for looking at a problem
+>>>
+>>
+>> I don't think it has anything to do with e2fsprogs or reiserfs.  The
+>> problem is clearly in LVM, MD, or the block layer.  Thousands of people
+>> are using both e2fsprogs and reiserfsprogs, and if they had such 
+>> problems
+>> more people would know about it.
+>>
+>> Cheers, Andreas
+>>
+>
+>
+>
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@sistina.com
+> http://lists.sistina.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
+>
