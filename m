@@ -1,12 +1,12 @@
-Return-Path: <lewis@sistina.com>
-Date: Thu, 5 Jul 2001 11:46:18 -0500
-From: AJ Lewis <lewis@sistina.com>
+Return-Path: <hopper@omnifarious.mn.org>
+Date: Thu, 5 Jul 2001 12:09:34 -0500
+From: "Eric M. Hopper" <hopper@omnifarious.org>
 Subject: Re: [linux-lvm] Re: [PATCH] 64 bit scsi read/write
-Message-ID: <20010705114618.A5662@sistina.com>
+Message-ID: <20010705120934.A30277@omnifarious.org>
 References: <20010705083402.D11805@vestdata.no> <Pine.LNX.4.33.0107050310570.1063-100000@toomuch.toronto.redhat.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-md5;
-	protocol="application/pgp-signature"; boundary="envbJBWh7q8WU6mo"
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="qMm9M+Fa2AknHoGS"
 Content-Disposition: inline
 In-Reply-To: <Pine.LNX.4.33.0107050310570.1063-100000@toomuch.toronto.redhat.com>; from bcrl@redhat.com on Thu, Jul 05, 2001 at 03:35:31AM -0400
 Sender: linux-lvm-admin@sistina.com
@@ -22,13 +22,14 @@ List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 To: linux-lvm@sistina.com
 
---envbJBWh7q8WU6mo
+--qMm9M+Fa2AknHoGS
 Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
 On Thu, Jul 05, 2001 at 03:35:31AM -0400, Ben LaHaise wrote:
 > On Thu, 5 Jul 2001, Ragnar Kj=F8rstad wrote:
+>=20
 > > What do you mean?
 > > Is it not feasible to fix this in LVM as well, or do you just not know
 > > what needs to be done to LVM?
@@ -38,63 +39,37 @@ On Thu, Jul 05, 2001 at 03:35:31AM -0400, Ben LaHaise wrote:
 > any good code in the block layer should follow.  Namely, it should have 1)
 > planned on supporting 64 bit offsets, 2) never used multiplication,
 > division or modulus on block numbers, and 3) don't allocate memory
-> structures that are indexed by block numbers.  LVM failed on all three of
-> these -- and this si just what I noticed in a quick 5 minute glance
-> through the code.  Sorry, but LVM is obsolete by design.  It will continue
-> to work on 32 bit block devices, but if you try to use it beyond that, it
-> will fail.  That said, we'll have to make sure these failures are graceful
-> and occur prior to the user having a chance at loosing any data.
+> structures that are indexed by block numbers.
 
-So are these tenents written down somewhere, or is it just understood that
-this is how it needs to be?
+	It would seem to me that it would be nearly impossible to write
+something that does the kind of block remapping that LVM does without
+violating tenets 2 and 3.
 
-Getting LVM 64-bit ready is certainly a priority for the LVM team, but this
-is the first I've seen of concrete requirements for doing so.  Of course, I
-could just be blind and have missed everything too.  ;)
+	To me, that's like saying that no code that deals with memory
+can have a data structure indexed by address, and you can't do masking
+operations on memory addresses.  That would completely kill virtual
+memory right there.
 
-Regards,
+Have fun (if at all possible),
 --=20
-AJ Lewis
-Sistina Software Inc.                  Voice:  612-638-0500
-1313 5th St SE, Suite 111              Fax:    612-638-0500
-Minneapolis, MN 55414                  E-Mail: lewis@sistina.com
-http://www.sistina.com
+"It does me no injury for my neighbor to say there are twenty gods or no Go=
+d.
+It neither picks my pocket nor breaks my leg."  --- Thomas Jefferson
+"Go to Heaven for the climate, Hell for the company."  -- Mark Twain
+-- Eric Hopper (hopper@omnifarious.org  http://www.omnifarious.org/~hopper)=
+ --
 
-Current GPG fingerprint =3D 3B5F 6011 5216 76A5 2F6B  52A0 941E 1261 0029 2=
-648
-Get my key at: http://www.sistina.com/~lewis/gpgkey
- (Unfortunately, the PKS-type keyservers do not work with multiple sub-keys)
-
------Begin Obligatory Humorous Quote----------------------------------------
-The three most dangerous things are a programmer with a soldering iron, a
-manager who codes, and a user who gets ideas.
------End Obligatory Humorous Quote------------------------------------------
-AJ Lewis
-Sistina Software Inc.                  Voice:  612-638-0500
-1313 5th St SE, Suite 111              Fax:    612-638-0500
-Minneapolis, MN 55414                  E-Mail: lewis@sistina.com
-http://www.sistina.com
-
-Current GPG fingerprint =3D 3B5F 6011 5216 76A5 2F6B  52A0 941E 1261 0029 2=
-648
-Get my key at: http://www.sistina.com/~lewis/gpgkey
- (Unfortunately, the PKS-type keyservers do not work with multiple sub-keys)
-
------Begin Obligatory Humorous Quote----------------------------------------
-Linux: Because rebooting is for adding new hardware.
------End Obligatory Humorous Quote------------------------------------------
-
---envbJBWh7q8WU6mo
+--qMm9M+Fa2AknHoGS
 Content-Type: application/pgp-signature
 Content-Disposition: inline
 
 -----BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.0.6 (GNU/Linux)
+Version: GnuPG v1.0.2 (GNU/Linux)
 Comment: For info see http://www.gnupg.org
 
-iD8DBQE7RJnapE6/iGtdjLERAi4gAJwIl1t1qoyWxjn+iXj78Snvydp62wCgl+jJ
-MqmkhnuqjcMAPdFRbmHcbOE=
-=v2m/
+iD8DBQE7RJ9OG4QeWBeRdS8RAlQPAJsFUZ0gvRmTLD0Xg1PvFWNTDPIvVQCgw6Ey
+aUVpn9KMKx5IrqBN6Tb5wZ4=
+=Iklr
 -----END PGP SIGNATURE-----
 
---envbJBWh7q8WU6mo--
+--qMm9M+Fa2AknHoGS--
