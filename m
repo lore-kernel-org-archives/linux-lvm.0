@@ -1,39 +1,35 @@
-From: Andreas Dilger <adilger@enel.ucalgary.ca>
-Message-Id: <199908270344.VAA23954@webber.adilger.net>
-Subject: [linux-lvm] e2fsadm Q's
-Date: Thu, 26 Aug 1999 21:44:12 -0600 (MDT)
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+From: rolf.aebi@systor.com
+Message-ID: <412567DA.0027C794.00@ajr.systor.com>
+Date: Fri, 27 Aug 1999 08:37:52 +0100
+Subject: [linux-lvm] Revised petition WAS: LVM in stock kernel!?
+Mime-Version: 1.0
+Content-Disposition: inline
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: Linux LVM mailing list <linux-lvm@msede.com>
+Content-Transfer-Encoding: 7bit
+To: linux-lvm@msede.com
 
-Johhny Brassow writes:
-> The reason I'm asking is because I am going to start work on a file 
-> system resizer for GFS.  I would like it to be an online resizer (mmm... 
-> lots of problems:).  Does anyone have any experience in this or could 
-> point me to some source code (other than the LVM stuff - I'm looking that 
-> over now:)?
+Shane writes:
 
-There are several ext2 offline resizers available, as well as my online
-ext2 resizer.  If the filesystem is structured correctly on disk, there
-isn't much change needed in the kernel to make online resizing work.  I
-did much of the change in user-space, and then called (effectively):
+> We need more SUPPORTERS!
+>
+> Please tell me explicitly if you would like to be added to the list, ( I
+> don't feel comfortable adding names to a petition otherwise).
 
-mount -o remount,resize=<new block count> /dev/XXX
+I think features like this are strongly needed to bring Linux into the real
+big Datacenters.
+I've been working with IBM's LVM on SP Systems in the xTB Region, and with
+this
+amount of Space, such a feature is IMHO a must.
 
-to have the kernel do the modifications to the parts of the superblock in
-use, and to update the kernel data about the filesystem.  If you are
-going to write a similar tool for GFS, feel free to use my code, and it
-would be nice to keep the interfaces to the user-space tools and kernel
-as similar as possible, so maybe there can be a common front-end (like
-there is with fsck calling fsck.ext2, etc).
+For this reason you can add me also as a strong supporter of LVM for
+Linux to the list.
 
-Cheers, Andreas
--- 
-Andreas Dilger  University of Calgary \ "If a man ate a pound of pasta and
-                Micronet Research Group \ a pound of antipasto, would they
-Dept of Electrical & Computer Engineering \  cancel out, leaving him still
-http://www-mddsp.enel.ucalgary.ca/People/adilger/      hungry?" -- Dogbert
+
+
+Regards
+
+Rolf
+rolf.aebi@systor.com
