@@ -1,10 +1,18 @@
-Subject: Re: [linux-lvm] system crash caused by lvm's fault?
-Message-ID: <20021021121401.GA5738@fib011235813.fsnet.co.uk>
-References: <20021021115620.C9466@sistina.com> <Pine.LNX.4.44.0210211352420.17745-100000@server.piarista-kkt.sulinet.hu>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <Pine.LNX.4.44.0210211352420.17745-100000@server.piarista-kkt.sulinet.hu>
-From: Joe Thornber <joe@fib011235813.fsnet.co.uk>
+Subject: Re: [linux-lvm] Fwd: LVM on ATA-Raid Working - but Poorly
+References: <1034915787.3daf8fcb66a42@mail.dornquast.com>
+	<3DAFB7D4.B88B6737@silicide.dk>
+	<ufaelanvnav.fsf@epithumia.math.uh.edu>
+	<3DB02DD6.B8B4B48E@silicide.dk>
+	<ufa65vzviuo.fsf@epithumia.math.uh.edu>
+	<3DB0348D.42FFC0A4@silicide.dk>
+	<ufawuoftw8h.fsf@epithumia.math.uh.edu>
+	<3DB264D3.A994B237@silicide.dk>
+	<ufabs5oord6.fsf@epithumia.math.uh.edu>
+	<3DB30743.91439340@silicide.dk>
+From: Jason L Tibbitts III <tibbs@math.uh.edu>
+In-Reply-To: Jon Bendtsen's message of "Sun, 20 Oct 2002 21:42:59 +0200"
+Message-ID: <ufaheffvog3.fsf@epithumia.math.uh.edu>
+MIME-Version: 1.0
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,33 +23,37 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Oct 21 07:14:01 2002
+Date: Mon Oct 21 09:47:01 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Mon, Oct 21, 2002 at 01:54:04PM +0200, NagyZ wrote:
-> On Mon, 21 Oct 2002, Heinz J . Mauelshagen wrote:
-> 
-> > You need to make sure, that your (disk) power supply is sufficient, sorry.
-> i have already done it, i just want to be sure.
-> 
-> > 
-> > > 
-> > > and an other question:
-> > > i have a VG from 2 partition. (on 2 HDD)
-> > > if one fell off, then how can i access the data on the remaining disk?
-> > 
-> > LVM2 has a partial activation feature for this case which will activate
-> > such a partially available volume group.
-> > 
-> > Which filesystem or other data is still usable heavily depends on your
-> > allocation.
-> > 
-> when will lvm2 be stable?
+>>>>> "JB" == Jon Bendtsen <jon+lvm@silicide.dk> writes:
 
-The only reason lvm2 is still officially in beta is because the pvmove
-command hasn't been implemented yet.  I would use LVM2 in preference to LVM1.
+JB> oh, whats in your lilo.conf then ?
 
-- Joe
+I had to get the machine booting again; since the IBM disks die so
+regularly I can't use the machine for anything useful.  In any case:
+
+boot=/dev/md0
+map=/boot/map
+install=/boot/boot.b
+prompt
+timeout=50
+message=/boot/message
+linear
+default=l-2.4.12-ac5_lvm_uh_1
+
+image=/boot/vmlinuz-2.4.12-ac5_lvm_uh_1
+        label=l-2.4.12-ac5
+        password=XXX
+        restricted
+        initrd=/boot/initrd-2.4.12-ac5_lvm_uh_1.img
+        read-only
+        root=/dev/md1
+
+md0 is an eight-way mirror, mounted on /boot.  None of the system
+volumes are on LVM.
+
+ - J<
