@@ -1,27 +1,57 @@
-Message-ID: <379B99D3.67007D3@thephaedo.com>
-Date: Sun, 25 Jul 1999 23:12:20 +0000
-From: "S. Ryan Quick" <ryan@thephaedo.com>
+Date: Mon, 26 Jul 1999 01:12:17 +0100 (IST)
+From: Paul Jakma <paul@clubi.ie>
+Subject: Re: [linux-lvm] RAID and LVM?
+In-Reply-To: <19990726002923.C6315@colombina.comedia.it>
+Message-ID: <Pine.LNX.4.10.9907260107230.14960-100000@hibernia.spin.ie>
 MIME-Version: 1.0
-Subject: [linux-lvm] Compile Problems (Thanks!)
-Content-Transfer-Encoding: 7bit
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@msede.com
+Content-Transfer-Encoding: 7bit
+To: Luca Berra <bluca@comedia.it>
+Cc: linux-lvm@msede.com
 
-Thanks everyone, I got it.
+On Mon, 26 Jul 1999, Luca Berra wrote:
 
-Turns out the Debian convention of using the debian.rules moniker and
-relinking the header files for the kernel was
-the problem.  I forced a rebuild of the include files (make_kpkg
-kernel_source) as well as the installed kernel and
-everything went like clockwork.   Already working with 2 vgs and now
-playing with the resize functions.
+  i checked alan cox's linux-2.2.10-ac12 pacth wich includes
+  a heavily modified raid and lvm0.6 patch.
+  i added my devfs patch 
+  http://www.comedia.it/bluca/lvm/devfs-patch-v99.4-2.2.10-ac12.gz
+  and i was able to create and use a vg on a raid 1 device
 
-Thanks . . .
+cool! Tell me, how is md_make_request in md.c defined? The old way,
+or the new way:
 
-Ryan
+int md_make_request (struct buffer_head * bh, int rw)
+  
+this is what's been causing me problems.
 
-PS.  If anyone wants detailed information on the fix (it's all Debian's
-slightly-odd control of header files) I can post it.
+  todo: adding the diffs to the latest raid and lvm patches,
+  		incremental diff for those can be found at
+  		http://www.comedia.it/bluca/lvm/
+  	checking autodetect, especially with both raid and
+  		lvm loaded as modules. raid autorun happens before
+  		and after initrd, now i need it during initrd.
+
+i noticed lvm does autodetect based on partition ID. Raid does
+aswell. So how can we do autodetection for LVM on RAID? The md device
+won't have a partition id, and the underlying device will have to
+have a RAID partition ID for RAID to autodetect it. 
+
+Can LVM check for some magic within each block device and use that to
+decide whether a device is a PV or not?
+  
+  Regards,
+  Luca
+  
+regards,
+-- 
+Paul Jakma
+paul@clubi.ie	http://hibernia.clubi.ie
+PGP5 key: http://www.clubi.ie/jakma/publickey.txt
+-------------------------------------------
+Fortune:
+I cannot conceive that anybody will require multiplications at the rate
+of 40,000 or even 4,000 per hour ...
+		-- F. H. Wales (1936)
