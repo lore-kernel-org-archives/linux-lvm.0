@@ -1,9 +1,11 @@
-Content-Class: urn:content-classes:message
-MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Message-ID: <CEADF0D83077F7458B763904E47AA709BD64@exchange.neokimia.com>
-From: "Yanick Quirion" <yanick.quirion@neokimia.com>
-Subject: [linux-lvm] Is there a maximum for LV?
+From: Remco Post <r.post@sara.nl>
+Subject: Re: [linux-lvm] EXT3 vs Reiserfs
+Message-Id: <20031209185108.7f36d1f0.r.post@sara.nl>
+In-Reply-To: <3FD4B28E.6030602@stercomm.com>
+References: <E1ATOLU-0004dz-1c@server6.hostpoint.ch>
+	<3FD4B28E.6030602@stercomm.com>
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,86 +16,45 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Tue Dec  9 08:31:02 2003
+Date: Tue Dec  9 11:53:03 2003
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="iso-8859-1"
+Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
 
-Hi,
-
-On the past I was using lvm 1.1rc2. For an unknown reason, the version =
-is not anymore available.
-But with this version, when I do a "vgdisplay" I was able to saw the LV =
-Max Size:
-
-[moonlight]:/# vgdisplay   =20
---- Volume group ---
-VG Name               vg1=20
-VG Access             read/write
-VG Status             available/resizable
-VG #                  1
-MAX LV                255
-Cur LV                1
-Open LV               1
-MAX LV Size           1023.97 GB  <----------
-Max PV                255
-Cur PV                2
-Act PV                2
-VG Size               254.31 GB
-PE Size               16 MB
-Total PE              16276
-Alloc PE / Size       16276 / 254.31 GB
-Free  PE / Size       0 / 0
-VG UUID               31iNWK-Ario-C4tq-yQNi-sGVk-gGs0-CjVV7T
-
-How I'm testing LVM2. The field "MAX LV Size" is not there anymore. Is =
-this means that LV doesn't have a maximum?
-
-Output from LVM2:
-[neptune]:/u# lvm vgdisplay vg02
-  /dev/cdrom: open failed: Read-only file system
-  --- Volume group ---
-  VG Name               vg02
-  System ID             localhost.localdomain1070620502
-  Format                lvm2
-  Metadata Areas        2
-  Metadata Sequence No  18
-  VG Access             read/write
-  VG Status             resizable
-  MAX LV                256
-  Cur LV                1
-  Open LV               1
-  Max PV                256
-  Cur PV                2
-  Act PV                2
-  VG Size               50.86 GB
-  PE Size               4.00 MB
-  Total PE              13019
-  Alloc PE / Size       13019 / 50.86 GB
-  Free  PE / Size       0 / 0  =20
-  VG UUID               Rw0ckX-GCd2-vlyF-KSWf-Q5tg-Qp2u-0Qjc7E
+On Mon, 08 Dec 2003 11:19:10 -0600
+Chris Cox <chris_cox@stercomm.com> wrote:
 
 
-I just want to make sure that my configuration is all set to support =
-very large LV.
+> I have never experienced the data loss element, however, since
+> reiser3 does not do true data journaling, but only metadata, it is
+> well known fact that while reiser can bring the filesystem
+> integrity back to normal after a bad shutdown, some data loss
+> is possible.  This is usually true of any metadata only journaling
+> filesystem.  Reiser4 supposed fixes this and of course has that
+> whiz-bang plugins feature.  Could make reiser4 the best (feature wise).
+> 
 
-Thanks again for your precious help!
+unorderly shutdowns will, even will full journaling, lead to dataloss of all
+data in the buffercache. Filesystem consistency is far more important,
+having to resore any filesystem from tape is a pita. Especially ext2 was
+very sensitive to unorderly shutdowns.
 
-Regards!
+> I certainly have nothing against JFS or AIX.  I really like its ability
+> to dynamically grow without intervention (though that could give
+> some administrators a headache).
 
------------
-Yanick Quirion
-Administrateur R=E9seau/Network Manager
-NEOKIMIA INC.
-Institut de Pharmacologie de Sherbrooke
-3e =E9tage (=C9difice Z5)
-3001 12e avenue Nord
-Sherbrooke, Qu=E9bec
-CANADA
-J1H 5N4
-=A0
-T=E9l.:=A0=A0=A0 +1 819 820-6040
-Direct:=A0 +1 819 820-6855
-Fax.:=A0=A0=A0 +1 819 820-6841
-=A0
-email: Yanick.Quirion@neokimia.com
+AIX LVM system (even booting from a LV, though not in the most elegant
+fashion thinkable) is quite mature. It is one of AIX typical features I like
+the most (unlike smitty... ;-)
+
+-- 
+Met vriendelijke groeten,
+
+Remco Post
+
+SARA - Reken- en Netwerkdiensten                      http://www.sara.nl
+High Performance Computing  Tel. +31 20 592 8008    Fax. +31 20 668 3167
+
+"I really didn't foresee the Internet. But then, neither did the computer
+industry. Not that that tells us very much of course - the computer industry
+didn't even foresee that the century was going to end." -- Douglas Adams
