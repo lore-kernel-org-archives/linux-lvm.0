@@ -1,10 +1,9 @@
-From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] Does LVM work with NBD?
-Message-Id: <20020320171121.E23233@sistina.com>
-References: <1BD922A62552D411B48A00D0B74723751120A947@kecmsg04.ad.infosys.com>
+From: James Hawtin <oolon@ankh.org>
+Subject: Re: [linux-lvm] *** ANNOUNCEMENT *** LVM 1.1-rc1    available at
+    www.sistina.com
+In-Reply-To: <Pine.LNX.4.02.10203201650360.28349-100000@murnau.science-computing.de>
+Message-Id: <Pine.LNX.4.44.0203202348090.27835-100000@pzat.meep.org>
 MIME-Version: 1.0
-In-Reply-To: <1BD922A62552D411B48A00D0B74723751120A947@kecmsg04.ad.infosys.com>;
-    from ashish_gupta@infy.com on Wed, Mar 20, 2002 at 04:04:54PM +0530
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,100 +14,184 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Mar 20 10:13:02 2002
+Date: Wed Mar 20 18:01:02 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: TEXT/PLAIN; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Wed, Mar 20, 2002 at 04:04:54PM +0530, ASHISH GUPTA wrote:
-> Hi All,
->  
-> 1) I'm using NBD and LVM . I have mounted the remote device 
-> using NBD(version 2.4.27). When I do pvcreate on mounted disk,it is successful.
->  
-> #pvcreate /dev/nb0
-> pvcreate -- physical volume "/dev/nb0" successfully created
->  
-> But when we try out other commands such as pvdisplay, vgcreate etc. it gives the
-> following error. 
->  
->  #pvdisplay /dev/nb0
-> pvdisplay -- ERROR "pv_read(): pv_create_name_from_kdev_t" no VALID physical volume "/d
-> ev/nb0"
->  
-> # ./vgcreate /dev/nb0
-> vgcreate -- please enter physical volume name(s)
->  
-> pvcreate uses the information from /proc/partitions. 
-> It  works although the /proc/partitions is not updated with the remote device information.
-> However the other LVM commands like "vgcreate", "pvdisplay" look for remote device
-> information in /proc/partition and as the entry is not there in dir_cache, it fails.
->  
-> To make it run, I have added a entry for nb0 in the file lvm_dir_cache.c in _noprocdir.
-> /* devices *not* showing up in /proc/partitions must be scanned anyway */
-> static char *_noprocdir[] = {
->         LVM_DIR_PREFIX "loop",
->         LVM_DIR_PREFIX "nb0",
->         NULL
-> };
->  
-> After doing,I am able to do pvcreate, vgcreate and so.Is it right way to do this?
+pvmove has fixed the 2GB file offset problem. YAY! it works great however
+I did get it to segv ;-)
 
-Yes.
+Summary, I have a 22 gig lv, on one disk which I want to move on off it,
+There is enough disk space on two other pvs.
 
-That array is meant to name all devices, which don't show up in
-/proc/partitions. In addition to that you need to define a LVM device type
-(which is already there) in liblvm.h and a case to declare NBD as
-non-partitioned devices in lvm_check_partitioned_dev.c (which is already done).
+So pvmove -v -n oolon3_lv /dev/ide/host2/bus0/target0/lun0/part4
 
-So you inserted the only missing definition which made it work :-)
+Should work.... in theory
 
-Regards,
-Heinz    -- The LVM Guy --
+However it didn't a segv was produced, I solved the problem by specifying
+the LE extent ranges and PEs to move them two, a two stage op, but still,
+it should not have segved.
+
+James
+
+More detailed info from this point...
+
+Here is the setup
+
+pvscan -- reading all physical volumes (this may take a while...)
+pvscan -- ACTIVE   PV "/dev/ide/host2/bus1/target0/lun0/part2" of VG
+"sunset_vg" [30.84 GB / 19.66 GB free]
+pvscan -- ACTIVE   PV "/dev/ide/host2/bus1/target1/lun0/part1" of VG
+"sunset_vg" [19.03 GB / 8.09 GB free]
+pvscan -- ACTIVE   PV "/dev/ide/host2/bus0/target0/lun0/part4" of VG
+"sunset_vg" [35.06 GB / 13.06 GB free]
+pvscan -- total: 3 [85.07 GB] / in use: 3 [85.07 GB] / in no VG: 0 [0]
+
+--- Volume group ---
+VG Name               sunset_vg
+VG Access             read/write
+VG Status             available/resizable
+VG #                  0
+MAX LV                255
+Cur LV                6
+Open LV               0
+MAX LV Size           2 TB
+Max PV                255
+Cur PV                3
+Act PV                3
+VG Size               84.94 GB
+PE Size               32 MB
+Total PE              2718
+Alloc PE / Size       1412 / 44.12 GB
+Free  PE / Size       1306 / 40.81 GB
+VG UUID               HMrqdp-Hf5n-FfCP-5W2D-fyw6-UHcn-MMB7Wr
+
+--- Logical volume ---
+LV Name                /dev/sunset_vg/var_lv
+VG Name                sunset_vg
+LV Write Access        read/write
+LV Status              available
+LV #                   1
+# open                 0
+LV Size                256 MB
+Current LE             8
+Allocated LE           8
+Allocation             next free
+Read ahead sectors     120
+Block device           58:0
+
+--- Logical volume ---
+LV Name                /dev/sunset_vg/usr_lv
+VG Name                sunset_vg
+LV Write Access        read/write
+LV Status              available
+LV #                   2
+# open                 0
+LV Size                3 GB
+Current LE             96
+Allocated LE           96
+Stripes                2
+Stripe size (KByte)    16
+Allocation             next free
+Read ahead sectors     120
+Block device           58:1
+
+--- Logical volume ---
+LV Name                /dev/sunset_vg/swap1_lv
+VG Name                sunset_vg
+LV Write Access        read/write
+LV Status              available
+LV #                   3
+# open                 0
+LV Size                256 MB
+Current LE             8
+Allocated LE           8
+Allocation             next free
+Read ahead sectors     120
+Block device           58:2
+
+--- Logical volume ---
+LV Name                /dev/sunset_vg/swap2_lv
+VG Name                sunset_vg
+LV Write Access        read/write
+LV Status              available
+LV #                   4
+# open                 0
+LV Size                256 MB
+Current LE             8
+Allocated LE           8
+Allocation             next free
+Read ahead sectors     120
+Block device           58:3
+
+--- Logical volume ---
+LV Name                /dev/sunset_vg/oolon4_lv
+VG Name                sunset_vg
+LV Write Access        read/write
+LV Status              available
+LV #                   5
+# open                 0
+LV Size                18.38 GB
+Current LE             588
+Allocated LE           588
+Stripes                2
+Stripe size (KByte)    16
+Allocation             next free
+Read ahead sectors     120
+Block device           58:4
+
+--- Logical volume ---
+LV Name                /dev/sunset_vg/oolon3_lv
+VG Name                sunset_vg
+LV Write Access        read/write
+LV Status              available
+LV #                   6
+# open                 0
+LV Size                22 GB
+Current LE             704
+Allocated LE           704
+Allocation             next free
+Read ahead sectors     120
+Block device           58:5
 
 
->  
-> 2)As per some mail in lvm-linux archieve, if I make an entry for nbd device in _devdir[] in file lvm_dir_cache.c
->  and just modify this following check by replacing _cache_size with '1'.Still pvcreate fails.And it gives the following error.
->  
-> if(!_cache_size)
->                         _scan_devs( TRUE);
->                 else
->                         _scan_devs( FALSE);
->         }
->  
->  
-> # pvcreate /dev/nb0
-> "/dev/nb0 has a partition table"
->  
->  
-> 3) Is there any patch available to make NBD working with LVM?
->  
->  
->  
-> Regards,
-> Ashish
->  
->  
->  
->  
->  
->  
->  
->  
->  
->  
+--- Physical volumes ---
+PV Name (#)           /dev/ide/host2/bus1/target0/lun0/part2 (3)
+PV Status             available / allocatable
+Total PE / Free PE    987 / 629
 
-*** Software bugs are stupid.
-    Nevertheless it needs not so stupid people to solve them ***
+PV Name (#)           /dev/ide/host2/bus1/target1/lun0/part1 (2)
+PV Status             available / allocatable
+Total PE / Free PE    609 / 259
 
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+PV Name (#)           /dev/ide/host2/bus0/target0/lun0/part4 (1)
+PV Status             available / NOT allocatable
+Total PE / Free PE    1122 / 418
 
-Heinz Mauelshagen                                 Sistina Software Inc.
-Senior Consultant/Developer                       Am Sonnenhang 11
-                                                  56242 Marienrachdorf
-                                                  Germany
-Mauelshagen@Sistina.com                           +49 2626 141200
-                                                       FAX 924446
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+Now the problem.
+
+bash# pvmove -v -n oolon3_lv /dev/ide/host2/bus0/target0/lun0/part4
+pvmove -- checking name of source physical volume
+"/dev/ide/host2/bus0/target0/lun0/part4"
+pvmove -- locking logical volume manager
+pvmove -- reading data of source physical volume from
+"/dev/ide/host2/bus0/target0/lun0/part4"
+pvmove -- checking volume group existence
+pvmove -- checking volume group consistency of "sunset_vg"
+pvmove -- searching for source physical volume
+"/dev/ide/host2/bus0/target0/lun0/part4" in volume group "sunset_
+vg"
+pvmove -- checking logical volume "oolon3_lv"
+pvmove -- building list of possible destination physical volumes
+pvmove -- checking volume group activity
+pvmove -- moving physical extents in active volume group "sunset_vg"
+pvmove -- WARNING: if you lose power during the move you may need
+        to restore your LVM metadata from backup!
+pvmove -- do you want to continue? [y/n] y
+pvmove -- starting to move linear logical volume
+"/dev/sunset_vg/oolon3_lv"
+pvmove -- checking for enough free physical extents in "sunset_vg"
+Segmentation fault
+bash#
