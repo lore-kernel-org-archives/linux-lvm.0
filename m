@@ -1,11 +1,12 @@
-Return-Path: <root@srv.sistina.com>
-Date: Wed, 9 May 2001 09:37:27 +0000
-From: "Heinz J. Mauelshagen" <Mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] Upgrading from beta 6 to beta 7
-Message-ID: <20010509093727.C4918@sistina.com>
-References: <989275349.1722.5.camel@localhost>
+Return-Path: <thornber@btconnect.com>
+Date: Wed, 9 May 2001 09:29:03 +0100
+Subject: Re: [linux-lvm] Patching my kernel.
+Message-ID: <20010509092903.C809@66bassett.freeserve.co.uk>
+References: <989363474.1329.2.camel@localhost> <20010509085110.G23157@colombina.comedia.it>
 Mime-Version: 1.0
-In-Reply-To: <989275349.1722.5.camel@localhost>; from raheesom@navpoint.com on Mon, May 07, 2001 at 06:42:29PM -0400
+Content-Disposition: inline
+In-Reply-To: <20010509085110.G23157@colombina.comedia.it>; from bluca@comedia.it on Wed, May 09, 2001 at 08:51:10AM +0200
+From: Joe Thornber <thornber@btconnect.com>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -21,46 +22,39 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-As Luca already pointed out in his answer:
-you need to start with a *clean* kernel and do a full compile/install run.
+On Wed, May 09, 2001 at 08:51:10AM +0200, Luca Berra wrote:
+> On Tue, May 08, 2001 at 07:11:14PM -0400, Rupert Heesom wrote:
+> > I had previously patched the kernel (stock 2.4.3) with the beta 6 patch.
+> > 
+> > Now I'm trying to update to beta 7.  I tried patching the kernel is
+> > exactly the same way as before (maybe a mistake).  Most of the output is
+> > pasted in here (at the end).  I'm concerned about the prompts I got -
+> > 
+> > "Reversed (or previously applied) patch detected!  Assume -R? [n]"
+> are you starting with a clean kernel or with the kernel you previously
+> patched with b6?
+> the former is the correvt approach,
+> the latter....
 
-Regards,
-Heinz    -- The LVM Guy --
+The problem is that the patches mentioned in the fragments file
+(LVM/PATCHES/fragments-*) for your kernel should only be applied once.
+So either do as Luca says and go back to a clean kernel.  Or just
+empty the fragments file (do not delete it, and do keep a back up in
+case you go back to a clean kernel at some point).
 
+- Joe
 
-On Mon, May 07, 2001 at 06:42:29PM -0400, Rupert Heesom wrote:
-> Guys:
 > 
-> I've currently got lvm beta6 RPMs installed on my PC, although I only
-> have test vols in place.
 > 
-> I think I ought to upgrade to beta 7 since there are now RPMs available.
-> My question is in regard to patching the kernel.  I assume that I just
-> run the beta 7 patch onto the source which had the beta 6 patch applied.
-> 
-> When then compiling the source to get the updated LVM module, do I need
-> to recompile the whole kernel & put that in place first as well as
-> compiling & installing the modules, or do I just need to compile the
-> modules, and install (make modules; make modules_install) ?
-> 
+> L.
 > -- 
-> regs
-> rupert
-> 
+> Luca Berra -- bluca@comedia.it
+>         Communication Media & Services S.r.l.
+>  /"\
+>  \ /     ASCII RIBBON CAMPAIGN
+>   X        AGAINST HTML MAIL
+>  / \
 > _______________________________________________
 > linux-lvm mailing list
 > linux-lvm@sistina.com
 > http://lists.sistina.com/mailman/listinfo/linux-lvm
-
-*** Software bugs are stupid.
-    Nevertheless it needs not so stupid people to solve them ***
-
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-
-Heinz Mauelshagen                                 Sistina Software Inc.
-Senior Consultant/Developer                       Am Sonnenhang 11
-                                                  56242 Marienrachdorf
-                                                  Germany
-Mauelshagen@Sistina.com                           +49 2626 141200
-                                                       FAX 924446
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
