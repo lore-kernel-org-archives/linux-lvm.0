@@ -1,8 +1,10 @@
-From: Tobias Wagener <tobias-lvm@tobias.wagener.nu>
-Message-ID: <20031106130748.A15981@wagener.nu>
-Mime-Version: 1.0
-Content-Disposition: inline
-Subject: [linux-lvm] Can I dd one disc of a lv
+Message-ID: <3FAA3C95.8010708@webhackande.se>
+From: Rickard Olsson <richie@webhackande.se>
+MIME-Version: 1.0
+Subject: Re: [linux-lvm] Can I dd one disc of a lv
+References: <20031106130748.A15981@wagener.nu>
+In-Reply-To: <20031106130748.A15981@wagener.nu>
+Content-Transfer-Encoding: 7bit
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -13,25 +15,26 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Thu Nov  6 06:08:02 2003
+Date: Thu Nov  6 06:22:01 2003
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: linux-lvm@sistina.com
 
-Hi,
+Tobias Wagener wrote:
 
-I have 3 discs, two 180 GB and one 200 GB drive, every drive is
-one Partion with a one PV which builds a 560 GB VG from that I 
-get a 500 GB LV.
+> Now the question: Can I "dd" the faulty 200 GB drive to the new 200 GB
+> drive? And if, how? Does "dd if=/dev/hde1 of=/dev/hdf1" the job, or what
+> have I to do?
 
-Now the 200 GB hdd is faulty. But I have no change to extend the 
-LV, because the Max LV Size is 512 GB. So pvmove isn't possible.
-But I have another 200 GB Drive in my system. 
+Heinz told me:
+"You need to dd starting from the first physical extent (use pvdata -PP 
+on the old one and look for pe_on_disk.base) to the same offset on the 
+new disk (skip and seek dd option) and you want dd to continue after 
+read errors (noerror option)."
 
-Now the question: Can I "dd" the faulty 200 GB drive to the new 200 GB
-drive? And if, how? Does "dd if=/dev/hde1 of=/dev/hdf1" the job, or what
-have I to do?
+Also, I was recently told about the dd_rescue utility, but I haven't had 
+the misfortune/opportunity to try that one yet.
 
-
-Greetings Tobias
+    / Rickard Olsson,IT-Konsult/
+   / Telefon: +46 70 635 01 42/
+  / http://www.webhackande.se/
