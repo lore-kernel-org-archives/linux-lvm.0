@@ -1,11 +1,9 @@
-From: Steven Lembark <lembark@wrkhors.com>
-Subject: RE: [linux-lvm] LVM performance
-Message-ID: <8690000.1006506624@dizzy>
-In-Reply-To: <NBBBKLKHMJHIJLHOGAOJIEADJCAA.steve.wray@the.net.nz>
-References: <NBBBKLKHMJHIJLHOGAOJIEADJCAA.steve.wray@the.net.nz>
+From: "Mark Anders" <mark_a_anders@yahoo.com>
+Message-ID: <ABEIKDKIEHNINPAIOGPAGECMCAAA.mark_a_anders@yahoo.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
+Content-Type: multipart/mixed;
+	boundary="----=_NextPart_000_0000_01C1744C.BA1C5500"
+Subject: [linux-lvm] LDM and devfs with LVM
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,78 +14,67 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Fri Nov 23 09:11:01 2001
+Date: Fri Nov 23 20:27:02 2001
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: linux-lvm@sistina.com
+Cc: mark_a_anders@yahoo.com
+
+This is a multi-part message in MIME format.
+
+------=_NextPart_000_0000_01C1744C.BA1C5500
+Content-Type: text/plain;
+	charset="iso-8859-1"
+Content-Transfer-Encoding: 7bit
 
 
--- Steve Wray <steve.wray@the.net.nz>
+I am trying to make LVM work with both LDM and devfs.  Is this supported?  I
+have two disks which were configured as dynamic disks in windows.  Linux is
+able to see and access all the dynamic disk partitions (through
+/dev/discs/disc0/part? and /proc/partitions but not through fdisk).  Does
+LVM need to access the partition table or can it operate using only
+/proc/partitions and the device files?
 
->> From: linux-lvm-admin@sistina.com [mailto:linux-lvm-admin@sistina.com]On
->> Behalf Of Bradley M Alexander
->> On Fri, Nov 23, 2001 at 05:32:07PM +1300, Steve Wray wrote:
->> >
->> > thats dead right; ide can't simultaneously write to the master and
->> > slave on the same controller. Also, the pair of drives uses the
->> > controller circuitry
->> > of the master, so it always pays to make the master the most modern
->> > one.
->>
->> Since both controllers have a drive master and a cd slave, this shouldn't
->> matter, per se.
->
-> yeah but I thought I'd mention it, for completeness
-> :)
+Thanks,
+Mark Anders
 
-Dependong on the bios, for example, there still could be
-contention on the SB chipset for access to the controllers.
-Point is that there can be multiple bottlenecks.
+------=_NextPart_000_0000_01C1744C.BA1C5500
+Content-Type: application/ms-tnef;
+	name="winmail.dat"
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment;
+	filename="winmail.dat"
 
->> > > Can anyone give me any ideas as to why the machine gets
->> beaten about so
->> > > much during IO operations and more importantly how can I minimize the
->> > > impact.
->> >
->> > Dunno, if it was because the fs is striped across those drives then
->> > splitting them across controllers would have made it go away.
->>
->> Nothing should be striped across the drives. I have two PVs and made two
->> VGs, one on each drive. The way it works out, the data I am
->> mastering is on
->
-> yup you have to tell it to stripe, as I recall. Never used that feature
-> tho.
+eJ8+IgMCAQaQCAAEAAAAAAABAAEAAQeQBgAIAAAA5AQAAAAAAADoAAEIgAcAGAAAAElQTS5NaWNy
+b3NvZnQgTWFpbC5Ob3RlADEIAQ2ABAACAAAAAgACAAEGgAMADgAAANEHCwAXABIAHAAAAAUALQEB
+A5AGAIQFAAAiAAAACwACAAEAAAALACMAAAAAAAMAJgAAAAAACwApAAAAAAADADYAAAAAAB4AcAAB
+AAAAFwAAAExETSBhbmQgZGV2ZnMgd2l0aCBMVk0AAAIBcQABAAAAFgAAAAHBdI/DVGEwyNvTdkAk
+ufjRyuCFMf8AAAIBHQwBAAAAHQAAAFNNVFA6TUFSS19BX0FOREVSU0BZQUhPTy5DT00AAAAACwAB
+DgAAAABAAAYOAHiWoo90wQECAQoOAQAAABgAAAAAAAAADraoCPQxAUijqEludwASwcKAAAALAB8O
+AQAAAAIBCRABAAAAwwEAAL8BAAAuAgAATFpGdc1a1uYDAAoAcmNwZzEyNRYyAPgLYG4OEDAzM08B
+9wKkA+MCAGNoCsBzsGV0MCAHEwKAfQqBknYIkHdrC4BkNAxgPmMAUAsDC7YKsQqASSBAYW0gdHJ5
+C4BnCRRgbyAAwGtlIExQVk0gdwWwaxWQaZh0aCAG4BYRTEQVgCkAcGQgAQB2A9AuIBwgSQQgFhAE
+ACBzdaxwcAkRCYA/F3EgEPC6dhVAdBWgFwAEAGsEIH53F9AQ4BWQBJAVQAWgbnhmaWcIcAmAFDAE
+IGT8eW4UQA3gGXULgBXhEoCUb3cXUkwLgHV4HED7BCABoGwZIRTwESAVQBbS7QDQYweQHZFsAyAW
+EBVA1Rt6IAqxdBYAaQIgBCCmKBYQA2B1ZxYgLxcRkyGwBABjcyHzMC8gcm8YoBbSIrADYGMisyC1
+Yvp1BUBuFlAXsSFUBXAZkbIpF2FEbweRFWJuCeD/FvAU4R61H2IgdxRgHbMFsa5jA5EWACiwcASQ
+YRhwnCB1AJAUsQIgbHkjX38Wwx9jFyAN4BVAGsAd0HNWPxPEE8RUEPBuGbAs7RPETQrAFdBBEoAE
+kBCwCxPTEeEAL9AACwABgAggBgAAAAAAwAAAAAAAAEYAAAAAA4UAAAAAAAADAAOACCAGAAAAAADA
+AAAAAAAARgAAAAAQhQAAAAAAAAMAB4AIIAYAAAAAAMAAAAAAAABGAAAAAFKFAAC2dAEAHgAJgAgg
+BgAAAAAAwAAAAAAAAEYAAAAAVIUAAAEAAAAEAAAAOS4wAAsADYAIIAYAAAAAAMAAAAAAAABGAAAA
+AIKFAAABAAAACwA6gAggBgAAAAAAwAAAAAAAAEYAAAAADoUAAAAAAAADADyACCAGAAAAAADAAAAA
+AAAARgAAAAARhQAAAAAAAAMAPYAIIAYAAAAAAMAAAAAAAABGAAAAABiFAAAAAAAACwBSgAggBgAA
+AAAAwAAAAAAAAEYAAAAABoUAAAAAAAADAFOACCAGAAAAAADAAAAAAAAARgAAAAABhQAAAAAAAAIB
++A8BAAAAEAAAAA62qAj0MQFIo6hJbncAEsECAfoPAQAAABAAAAAOtqgI9DEBSKOoSW53ABLBAgH7
+DwEAAABeAAAAAAAAADihuxAF5RAaobsIACsqVsIAAFBTVFBSWC5ETEwAAAAAAAAAAE5JVEH5v7gB
+AKoAN9luAAAAXFxjbGVhclxtYXJrIEFuZGVyc1xNYWlsXE1hcmsncyBNYWlsAAAAAwD+DwUAAAAD
+AA00/TcAAAIBfwABAAAANwAAADxBQkVJS0RLSUVITklOUEFJT0dQQUdFQ01DQUFBLm1hcmtfYV9h
+bmRlcnNAeWFob28uY29tPgAAAwAGENJ8ASADAAcQVgEAAAMAEBAAAAAAAwAREAAAAAAeAAgQAQAA
+AGUAAABJQU1UUllJTkdUT01BS0VMVk1XT1JLV0lUSEJPVEhMRE1BTkRERVZGU0lTVEhJU1NVUFBP
+UlRFRD9JSEFWRVRXT0RJU0tTV0hJQ0hXRVJFQ09ORklHVVJFREFTRFlOQU1JQ0RJAAAAAMYz
 
-I'm using LVM with several striped volumes. Hardware is Tekram
-160MB scsi + pair of 80MB drives. The striping works rather
-nicely: sustained I/O is high for large copies and latency is
-low for reads. The file system uses a 4KB page w/ the inodes
-reduced to a reasonable value (e.g., mkfs.ext2 -b4096 -i10240).
+------=_NextPart_000_0000_01C1744C.BA1C5500--
 
-If you are using the default of 1block / page then it can
-hammer a system due to 2ndary access and higher write rate.
 
->> > I've seen no performance problems at all and really thrashed an
->> > LVM-root machine for test purposes while working on a movie. It took
->> > it well, performance-wise. (reliability is another issue; never go
->> > LVM-root... but thats just my 2 cents, YMMV).
->>
->> Yeah, I wasn't brave enough to go all out...And with the problems I was
->> having, I'm glad I made that decision. :)
->
-> I think the worst part is the lack of backward compatibility
-> at some stages of LVM. With root on LVM it can be a bit dangerous
-> to upgrade! Or at least it was...
-
-<broken-record>
-This can also be a real pain to fix if something goes wrong. If
-the lvm is --prefix-ed to, say, /lvm and the root volume is
-on a paritition then you can fix most things w/o having to
-play with rescue file systems.
-</broken-record>
-
---
-Steven Lembark                               2930 W. Palmer
-Workhorse Computing                       Chicago, IL 60647
-                                            +1 800 762 1582
+_________________________________________________________
+Do You Yahoo!?
+Get your free @yahoo.com address at http://mail.yahoo.com
