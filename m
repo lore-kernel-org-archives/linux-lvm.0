@@ -1,10 +1,10 @@
 From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] lvm-1.0.1 not working with DAC960/2.2.20
-Message-ID: <20011127111424.A8179@sistina.com>
-References: <wvbshoy54w.fsf@freeze.oslo.dnmi.no>
+Subject: Re: [linux-lvm] LVM 1.0.1-rc5 or use CVS ?
+Message-ID: <20011127112413.B8179@sistina.com>
+References: <wv8zcu1128.fsf@freeze.oslo.dnmi.no>
 Mime-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <wvbshoy54w.fsf@freeze.oslo.dnmi.no>; from a.phillips@dnmi.no on Tue, Nov 27, 2001 at 09:44:47AM +0100
+In-Reply-To: <wv8zcu1128.fsf@freeze.oslo.dnmi.no>; from a.phillips@dnmi.no on Mon, Nov 26, 2001 at 07:46:55AM +0100
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,36 +15,32 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Tue Nov 27 04:13:01 2001
+Date: Tue Nov 27 04:23:02 2001
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Checked it in.
+On Mon, Nov 26, 2001 at 07:46:55AM +0100, Adrian Phillips wrote:
+> 
+> If I remember correctly there was some mention of a new release last
+> week. I'm using LVM CVS at home and have 2 new servers at work to
+> setup but am uncertain what state the CVS version is in at any one
+> time.
+> 
+> Do the LVM folks tag CVS versions so that one can always grab the
+> latest "stable-to-be" without having to worry about untested patches ?
 
-Heinz
+We tag the announced releases (or release candidates as with -rcX).
 
-On Tue, Nov 27, 2001 at 09:44:47AM +0100, Adrian Phillips wrote:
+> I assume not because the web page says "assume alpha-quality code".
+
+You are assuming right ;-)
+
 > 
-> The problem seems to be (and I believe GRUB had the same problem) that
-> the device name for DAC960 changed from rd to dac960 in 2.4.
-> 
-> This patch fixes the partition checking code :-
-> 
-> --- tools/lib/lvm_check_partitioned_dev.c.orig  Tue Nov 27 09:16:03 2001
-> +++ tools/lib/lvm_check_partitioned_dev.c       Tue Nov 27 09:42:38 2001
-> @@ -140,7 +140,8 @@
->         "md",                   /* Multiple Disk driver (SoftRAID)   */
->         "loop",                 /* Loop device              */
->         "dasd",                 /* DASD disk (IBM S/390, zSeries)      */
-> -       "dac960",               /* DAC960              */
-> +       "rd",                   /* DAC960 2.2          */
-> +       "dac960",               /* DAC960 2.4          */
->         "nbd",                  /* Network Block Device              */
->         "ida",                  /* Compaq SMART2              */
->         "cciss",                /* Compaq CCISS array              */
-> 
+> Anyway, I'd just like to also say how much I appreciate the amount of
+> effort gone into LVM and its stability, and a big thank you to anyone
+> who has had a hand in it.
 > 
 > Sincerely,
 > 
@@ -60,6 +56,14 @@ On Tue, Nov 27, 2001 at 09:44:47AM +0100, Adrian Phillips wrote:
 > linux-lvm@sistina.com
 > http://lists.sistina.com/mailman/listinfo/linux-lvm
 > read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
+
+-- 
+
+Regards,
+Heinz    -- The LVM Guy --
+
+*** Software bugs are stupid.
+    Nevertheless it needs not so stupid people to solve them ***
 
 =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
