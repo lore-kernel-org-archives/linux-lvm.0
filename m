@@ -1,8 +1,8 @@
 Return-Path: <adilger@turbolinux.com>
 From: Andreas Dilger <adilger@turbolinux.com>
-Message-Id: <200101260035.f0Q0ZaM01818@webber.adilger.net>
-Subject: Re: [linux-lvm] Basic Questions on LVM
-Date: Thu, 25 Jan 2001 17:35:36 -0700 (MST)
+Message-Id: <200101260035.f0Q0Zv401823@webber.adilger.net>
+Subject: Re: [linux-lvm] Newbie questions
+Date: Thu, 25 Jan 2001 17:35:57 -0700 (MST)
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -19,46 +19,24 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: Linux LVM mailing list <linux-lvm@sistina.com>
 
-Sherlock writes:
-> 1.During initialisation y is it LVM is registered both
-> as a block and char device where as according to me it
-> is supposed to be a block device driver and when one
-> does the pvcreate,vgcreate..etc it calls the ioctls of
-> the char device of LVM.
+Mayank writes:
+> Read a lil' more and have one more question. From a application point of
+> view, would the resize utility (extonline) take care of application flushing
+> or not?
 
-The LVM char device is used to control the kernel LVM.  This is needed
-because there may not be any block devices (LVs) yet.  There is 1 char
-device per VG.
+I don't understand the question.  What is "application flushing"?  The
+ext2online code can resize the filesystem while it is in use and apps
+have files open and are writing to them.  That's why it is "online".
+It can't shrink a mounted filesystem, but that can be done while the
+filesystem is unmounted.
 
-> 2.what is exactly the control flow when and read/write
-> request is given to a file residing on the LVM
-> partition...(ie where and how exactly the mapping
-> tables exist..?)
+> If it does, how? If not, wouldn't you need to take care of that?
 
-The mapping tables are read from disk by the user tools, and sent to the
-kernel when a VG is activated.  The mapping tables are kept in RAM and
-are never changed by the kernel.  The block remapping is done inside
-ll_rw_block(), and is just a small amount of math.
-
-> 3.what is the importance of VGDA and vgscan?
-
-The VGDA is the Volume Group Descriptor Area, and it is where the above
-mapping tables are stored on disk, along with other PV, VG, LV info.
-The vgscan command reads the VGDA from the disk.
-
-> 4.during boot up time what are checks/modification
-> made by the kernel with respect to the LVM/logical
-> volumes?
-
-Almost nothing is done by the kernel, except the block remapping.  Most
-of the work is done by the user tools.
-
-> 5.moreover to what extent is KIOBUF supported on linux
-> 2.4. Can someone give me the workaround to check for
-> KIOBUF working..
-
-The KIOBUF code is only used for LVM snapshots.  The normal LVM block
-I/O code does not use KIOBUFs.
+There are two parts to ext2online - the user tool, which does a lot
+of the boring work like writing ext2 format information onto the disk,
+and the kernel part, which updates the ext2 superblock free block and
+free inode counts, and does all the "atomic" things that you can't
+safely do from user space.
 
 Cheers, Andreas
 
