@@ -1,10 +1,9 @@
-From: Theodore Ts'o <tytso@mit.edu>
-Message-ID: <20031205065522.GA28825@thunk.org>
-References: <3FCB4AFB.3090700@backtobasicsmgmt.com> <20031201141144.GD12211@suse.de> <3FCB4CFA.4020302@backtobasicsmgmt.com> <20031201155143.GF12211@suse.de> <3FCC0EE0.9010207@backtobasicsmgmt.com> <20031202082713.GN12211@suse.de> <Pine.LNX.4.58.0312021009070.1519@home.osdl.org> <20031204011236.GA5622@simulated.ca> <Pine.LNX.4.58.0312031721210.2055@home.osdl.org> <20031204043106.GA19017@netnation.com>
-Mime-Version: 1.0
+From: "=?iso-8859-1?Q?Ronan=2DYann?= Lorin" <ronan@les-lorin.homeip.net>
+Message-ID: <20031205.Vak.86770400@gw.les-lorin.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Content-Disposition: inline
-In-Reply-To: <20031204043106.GA19017@netnation.com>
-Subject: [linux-lvm] Re: Reproducable OOPS with MD RAID-5 on 2.6.0-test11
+Subject: [linux-lvm] half my space lost
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,36 +14,58 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Fri Dec  5 07:17:02 2003
+Date: Fri Dec  5 07:19:02 2003
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: Simon Kirby <sim@netnation.com>
-Cc: Linus Torvalds <torvalds@osdl.org>, Linux-raid maillist <linux-raid@vger.kernel.org>, Jens Axboe <axboe@suse.de>, Neil Brown <neilb@cse.unsw.edu.au>, "Kevin P. Fleming" <kpfleming@backtobasicsmgmt.com>, LKML <linux-kernel@vger.kernel.org>, linux-lvm@sistina.com
+To: linux-lvm@sistina.com
 
-On Wed, Dec 03, 2003 at 08:31:06PM -0800, Simon Kirby wrote:
-> 
-> Without the patches, the box gets as far as assembling the array and
-> activating it, but dies on "mke2fs".  Running mke2fs through strace shows
-> that it stops during the early stages, before it even tries to write
-> anything.  mke2fs appears to seek through the whole device and do a bunch
-> of small reads at various points, and as soon as it tries to read from an
-> offset > 2 TB, it hangs.
+Hi,
 
-It sounds like mke2fs tried using BLKGETSIZE ioctl, but given that
-this returns the number of 512 byte sectors in a device in a 4 byte
-word, the BLKGETSIZE ioctl quite rightly threw up its hands and said,
-"sorry, I can't tell you the correct size."
+I'm using LVM 1.0.7 on Linux 2.4.22 (Mandrake 9.2).
+I'm triyng to setup a VG build on RAID 1 partitions.
+When the parition is added to the VG, half of it space mysteriously disapear.
 
-The mke2fs fell back to its backup algorithm, which uses a modified
-binary search to find the size of the device.  It started to see if
-the device was at least 1k, and checks to see if the device is at
-least 2k, 4k, 8k, 16k, 32k, 64k, 128k, etc.  So it sounds like it's
-dieing when it tries to seek past 2TB using llseek(). 
+for example:
 
-It would probably be worthwhile to write a little test program which
-opens the disk, llseeks to 2TB+1, and then tries reading a byte.  If
-that fiailes, then there's definitely a bug somewhere in the device
-driver....
+my RAID 1 partitions are /dev/md/7 and /dev/md/8 and are about 128Mb size.
 
-						- Ted
+[root@fw root]# pvscan
+pvscan -- reading all physical volumes (this may take a while...)
+pvscan -- inactive PV "/dev/md/7"                               is in no VG
+[125.38 MB]
+pvscan -- inactive PV "/dev/md/8"                               is in no VG
+[125.38 MB]
+pvscan -- ACTIVE   PV "/dev/ide/host0/bus1/target0/lun0/part13" of VG "lvm1" [17
+GB / 16.97 GB free]
+pvscan -- total: 3 [17.28 GB] / in use: 1 [17.04 GB] / in no VG: 2 [250.75 MB]
+
+I create one VG using one of the RAID 1 partitions:
+
+[root@fw root]# vgcreate secured /dev/md/7
+vgcreate -- INFO: using default physical extent size 32 MB
+vgcreate -- INFO: maximum logical volume size is 2 Terabyte
+vgcreate -- doing automatic backup of volume group "secured"
+vgcreate -- volume group "secured" successfully created and activated
+
+The size of the partition get shrink by half:
+
+[root@fw root]# pvscan
+pvscan -- reading all physical volumes (this may take a while...)
+pvscan -- ACTIVE   PV "/dev/md/7"                               of VG "secured"
+[64 MB / 64 MB free]
+pvscan -- inactive PV "/dev/md/8"                               is in no VG
+[125.38 MB]
+pvscan -- ACTIVE   PV "/dev/ide/host0/bus1/target0/lun0/part13" of VG "lvm1"
+[17 GB / 16.97 GB fr
+pvscan -- total: 3 [17.28 GB] / in use: 2 [17.16 GB] / in no VG: 1 [125.38 MB]
+
+Is this a known/solved problem?
+Did I made a mistake?
+
+Thanks in advance for your help.
+Regards.
+
+--
+R.Y. Lorin
+mailto:ryl@free.fr
+http://les-lorin.webhop.net/
