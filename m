@@ -1,11 +1,11 @@
-Return-Path: <adilger@turbolinux.com>
-From: Andreas Dilger <adilger@turbolinux.com>
-Message-Id: <200102072245.f17Mjqk25883@webber.adilger.net>
-Subject: Re: [linux-lvm] Weird corruption of volume group configuration with
- LVM.
-In-Reply-To: <Pine.LNX.4.20.0102072051410.604-100000@menswerk.cyclone.se> from
- Hans Engren at "Feb 7, 2001 09:01:26 pm"
-Date: Wed, 7 Feb 2001 15:45:52 -0700 (MST)
+Return-Path: <riel@conectiva.com.br>
+Date: Wed, 7 Feb 2001 20:47:55 -0200 (BRDT)
+From: Rik van Riel <riel@conectiva.com.br>
+Subject: Re: [linux-lvm] Re: [lvm-commit] cvs commit: LVM/tools/lib
+ pv_read_all_pv_of_vg.c
+In-Reply-To: <20010207153515.O22166@sistina.com>
+Message-ID: <Pine.LNX.4.21.0102072046440.1193-100000@duckman.distro.conectiva>
+MIME-Version: 1.0
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,28 +17,41 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: TEXT/PLAIN; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Hans Engren writes:
-> Doing a vgscan locates no volume groups what so ever.
-> After doing a `vgcfgrestore -f /etc/lvmconf/mw1.conf -n mw1 /dev/<DISK>`,
-> I am able to do a `vgchange -a y`, and actually mount /dev/mw1/ftpd.
+On Wed, 7 Feb 2001, AJ Lewis wrote:
+> On Wed, Feb 07, 2001 at 06:29:24PM -0200, Rik van Riel wrote:
 
-I posted a patch to lvm-devel mailing list yesterday which will likely
-fix this.  It will require another vgcfgrestore to be run.
+> > Would it be an idea to have some debugging tool around which
+> > allows us to fix (simple) things like this ourselves ?
+> 
+> It looks like the following *should* fix things for you (this from Patrick):
+> 
+>  o Grab the latest CVS code for LVM.
+>  o Create a very small LV (or extend an existing one) to force a meta-data
+>    update.
+>  o The UUIDs should be cleaned up
+> 
+> If this is not possible with your setup, or does not work for
+> you, let me know and we'll see what else we can do to fix the
+> problem.
 
-> I hope you see what my problem is, otherwise, tell me what output that
-> would be needed, and I'll provide it.
+# lvcreate -h
+lvcreate -- ERROR: VGDA in kernel and lvmtab are NOT consistent; please run vgscan
 
-Try pvdata -U on your PVs and see if any of the UUIDs are missing.  If
-this is the case, either use my patch, or you could also comment out
-the lines in "pv_read_all_pv_of_vg" which check UUIDs.
+(yes, every utility except for vgscan and pvdata
+seem to spit out this complaint ...)
 
-Cheers, Andreas
--- 
-Andreas Dilger  \ "If a man ate a pound of pasta and a pound of antipasto,
-                 \  would they cancel out, leaving him still hungry?"
-http://www-mddsp.enel.ucalgary.ca/People/adilger/               -- Dogbert
+regards,
+
+Rik
+--
+Linux MM bugzilla: http://linux-mm.org/bugzilla.shtml
+
+Virtual memory is like a game you can't win;
+However, without VM there's truly nothing to lose...
+
+		http://www.surriel.com/
+http://www.conectiva.com/	http://distro.conectiva.com/
