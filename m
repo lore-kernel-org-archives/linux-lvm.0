@@ -1,11 +1,12 @@
-Return-Path: <steve.wray@the.net.nz>
-From: "Steve Wray" <steve.wray@the.net.nz>
-Subject: RE: [linux-lvm] Migrating to an LVM system (boot/root) disk
-Date: Sun, 3 Jun 2001 22:59:35 +1200
-Message-ID: <NBBBKLKHMJHIJLHOGAOJEEAMIPAA.steve.wray@the.net.nz>
+Return-Path: <russell@coker.com.au>
+From: Russell Coker <russell@coker.com.au>
+Subject: Re: [linux-lvm] mirroring boot and root
+Date: Sun, 3 Jun 2001 14:31:22 +0200
+References: <E156DD7-00078c-00@kirk.banal.collective>
+In-Reply-To: <E156DD7-00078c-00@kirk.banal.collective>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-In-Reply-To: <20010603032225.K21442@linux.interlinx.bc.ca>
+Message-Id: <01060314312209.06022@lyta>
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -18,63 +19,27 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@sistina.com
+To: linux-lvm@sistina.com, evan.day@home.com
 
-> Behalf Of Brian J. Murrell
-> On Sun, Jun 03, 2001 at 05:02:41PM +1200, Steve Wray wrote:
+On Saturday 02 June 2001 17:21, evan.day@home.com wrote:
+> LILO 21.7 contains support for placing a boot sector on RAID devices.  =
+I
+> used install-mbr to put a boot MBR on sda and sdb, then lilo to put a
+> LILO boot sector on /dev/md0, which is sda1 and sdb1.  The rest of my
+> system is built on PV /dev/md1, which is sda4 and sdb4.
 
-> > 2. Having a /boot on LVM *is* possible, BUT you will need to boot
-> > from floppy.
-> 
-> No you don't.  There are several in depth discussions in the archive
-> about doing this including a posting (several times in fact) of a
-> patch to Lilo to help it locate the kernel and initrd on an LVM /boot.
-> Please see the archives for details.
+I tried the booting from RAID-1 thing on one of my IDE systems.  It seems=
+=20
+impossible with the current LILO because it writes different boot data to=
+=20
+each drive, so if the first drive is removed the other drive becomes BIOS=
+=20
+device 0x80 and won't boot because LILO expects 0x81.
 
-Cool, I'll check it out!
+The next version of LILO may address this...
 
-
-> > 3. to get over your night horrors, make a boot disk
-> 
-> disks!  My initrd is 1.3MB alone!
-
-compressed? Two disks (1 for kernel 1 for root) is not unusual.
-
-
-> > that includes the LVM
-> > tools. A good starting point is miniroot. I posted a URL to it on this
-> > list a little while ago. I don't have it to hand but it'll be in the
-> > archive!
-> 
-> Yeah, I realize that making boot diskettes is what I have to do, but
-> the "automated" mkbootdisk that some distros ship as well as the
-> various root/boot kits out there sure are not going to inclue the LMV
-> tools.  Having to manually craft the pair is a pain.  :-)
-
-No need.
-Given the miniroot.gz file, one uncompresses it, mounts it
-(eg)
-mount -o loop miniroot /mnt/loop/
-
-then simply copy the lvm tools over to /mnt/loop/sbin
-You can change the init script too.
-Then just unmount it and regzip it and rerun lilo.
-
-The lvm initramdrive can be mounted in the same way.
-It should give some clues.
-
- 
-> Perhaps just like LVM has a nice little script for creating the
-> initrd, they can ship with a nice little script for creating root/boot
-> diskettes.
-
-Yes and I hope the mkinitrd (whatever its called...) is fixed so that
-it copies sed to the ramdrive...
-
- 
-> Of course a lot of this headache goes away if the kernel had the
-> "auto-detection" code like it does for MDs.
-
-ahhhh that would be cool!
-:)
-Shoudn't be too far off?
+--=20
+http://www.coker.com.au/bonnie++/     Bonnie++ hard drive benchmark
+http://www.coker.com.au/postal/       Postal SMTP/POP benchmark
+http://www.coker.com.au/projects.html Projects I am working on
+http://www.coker.com.au/~russell/     My home page
