@@ -1,9 +1,9 @@
 Subject: Re: [linux-lvm] pvmove error
 From: Juan Pablo =?ISO-8859-1?Q?Gim=E9nez?= <jpg@rcom.com.ar>
-In-Reply-To: <sf12bd11.080@gwia201.syr.edu>
-References: <sf12bd11.080@gwia201.syr.edu>
-Content-Type: multipart/signed; micalg=pgp-sha1; protocol="application/pgp-signature"; boundary="=-5vfD6zcIEGxGFPGRt9G8"
-Message-Id: <1058364567.4583.50.camel@hugo>
+In-Reply-To: <sf152e81.098@gwia201.syr.edu>
+References: <sf152e81.098@gwia201.syr.edu>
+Content-Type: multipart/signed; micalg=pgp-sha1; protocol="application/pgp-signature"; boundary="=-WKQKo6X+hmG1OPW2Cw6a"
+Message-Id: <1058369346.4582.64.camel@hugo>
 Mime-Version: 1.0
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
@@ -15,41 +15,41 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Jul 16 14:38:01 2003
+Date: Wed Jul 16 14:38:04 2003
 List-Id: <linux-lvm.redhat.com>
-To: linux-lvm@sistina.com, sjfralic@syr.edu
+To: linux-lvm@sistina.com
 
---=-5vfD6zcIEGxGFPGRt9G8
-Content-Type: multipart/alternative; boundary="=-3K1Gi9lP6+w4E3I/H20o"
+--=-WKQKo6X+hmG1OPW2Cw6a
+Content-Type: multipart/alternative; boundary="=-uGqdxIHo8CAG7THgObEg"
 
 
---=-3K1Gi9lP6+w4E3I/H20o
+--=-uGqdxIHo8CAG7THgObEg
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
 
-El lun, 14-07-2003 a las 15:23, Stephen Fralich escribi=C3=B3:
+El mi=C3=A9, 16-07-2003 a las 11:52, Stephen Fralich escribi=C3=B3:
 
-> I'm running RedHat 9.  pvmove works fine with the LVM and kernel that com=
-e with RH9.  I would like to use XFS in place of ext3 though, which means p=
-atching the kernel.  I'm using the vanilla kernel 2.4.21 and lvm 1.0.7 (too=
-ls and driver).  Everything goes fine until I use pvmove.  I haven't patche=
-d the kernel for XFS yet, so the LVM patch is the only change to the kernel=
-.   I'm using an IBM ServeRAID-4H card with the ips driver v6.00.31.  Any s=
-uggestions?  Thanks.
+> I'm not using the redhat pvmove (v1.0.3).  I'm using pvmove 1.0.7 which I=
+ downloaded from the Sistina site.  I updated the rc scripts to use 1.0.7. =
+ The volume was created totally under 1.0.7.  I'm using a plain kernel (fro=
+m kernel.org) 2.4.21 patched with LVM 1.0.7 (from Sistina).
+
+But may be you are using the redhat liblvm
+
 >=20
-> pvmove -- ERROR "Inappropriate ioctl for device" copying extent from "/de=
-v/sdb"
->=20
-> pvmove -- ERROR "Inappropriate ioctl for device" moving physical extents
->=20
-> This appears on the console as well ::=20
-> lvm -- lvm_chr_ioctl: unknown command 0x4004fe51
+> [root@sauron root]# /sbin/pvmove --version
+> pvmove: Logical Volume Manager 1.0.3
+> Heinz Mauelshagen, Sistina Software  19/02/2002 (IOP 10)
+> [root@sauron root]# pvmove --version
+> pvmove: Logical Volume Manager 1.0.7
 
 
-The pvmove you are using is the redhat patched. The redhat pvmove use a
-ioctl call to move physical extends, ioctl(group, PE_LOCKED_COPY,
-&pe_copy_req);. You could patch the kernel to implement that call or
-install an unpatched pvmove.
+Where is the second pvmove? Please try,
+
+        ldd /sbin/pvmove
+        ldd pvmove
+        LD_PRELOAD=3D<unpatchedlvmliblocation> pvmove ...
+       =20
 
 
 
@@ -68,7 +68,7 @@ GnuPG fingerprint: ED97 6FB8 A9BE
 
 http://www.greenpeace.org.ar/secciones/cyberactivismo/nuclear.php3
 
---=-3K1Gi9lP6+w4E3I/H20o
+--=-uGqdxIHo8CAG7THgObEg
 Content-Type: text/html; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
 
@@ -79,31 +79,31 @@ Content-Transfer-Encoding: quoted-printable
   <META NAME=3D"GENERATOR" CONTENT=3D"GtkHTML/3.0.5">
 </HEAD>
 <BODY>
-El lun, 14-07-2003 a las 15:23, Stephen Fralich escribi&#243;:
+El mi&#233;, 16-07-2003 a las 11:52, Stephen Fralich escribi&#243;:
 <BLOCKQUOTE TYPE=3DCITE>
-<PRE><FONT COLOR=3D"#737373"><I>I'm running RedHat 9.  pvmove works fine wi=
-th the LVM and kernel that come with RH9.  I would like to use XFS in place=
- of ext3 though, which means patching the kernel.  I'm using the vanilla ke=
-rnel 2.4.21 and lvm 1.0.7 (tools and driver).  Everything goes fine until I=
- use pvmove.  I haven't patched the kernel for XFS yet, so the LVM patch is=
- the only change to the kernel.   I'm using an IBM ServeRAID-4H card with t=
-he ips driver v6.00.31.  Any suggestions?  Thanks.
-
-pvmove -- ERROR &quot;Inappropriate ioctl for device&quot; copying extent f=
-rom &quot;/dev/sdb&quot;
-
-pvmove -- ERROR &quot;Inappropriate ioctl for device&quot; moving physical =
-extents
-
-This appears on the console as well ::=20
-lvm -- lvm_chr_ioctl: unknown command 0x4004fe51</I></FONT></PRE>
+<PRE><FONT COLOR=3D"#737373"><I>I'm not using the redhat pvmove (v1.0.3).&n=
+bsp; I'm using pvmove 1.0.7 which I downloaded from the Sistina site.&nbsp;=
+ I updated the rc scripts to use 1.0.7.&nbsp; The volume was created totall=
+y under 1.0.7.&nbsp; I'm using a plain kernel (from kernel.org) 2.4.21 patc=
+hed with LVM 1.0.7 (from Sistina).</I></FONT></PRE>
+</BLOCKQUOTE>
+But may be you are using the redhat liblvm
+<BLOCKQUOTE TYPE=3DCITE>
+<PRE><FONT COLOR=3D"#737373"><I>
+[root@sauron root]# /sbin/pvmove --version
+pvmove: Logical Volume Manager 1.0.3
+Heinz Mauelshagen, Sistina Software  19/02/2002 (IOP 10)
+[root@sauron root]# pvmove --version
+pvmove: Logical Volume Manager 1.0.7</I></FONT></PRE>
 </BLOCKQUOTE>
 <BR>
-The pvmove you are using is the redhat patched. The redhat pvmove use a ioc=
-tl call to move physical extends, ioctl(group, PE_LOCKED_COPY, &amp;pe_copy=
-_req);. You could patch the kernel to implement that call or install an unp=
-atched pvmove.<BR>
-<BR>
+Where is the second pvmove? Please try,
+<BLOCKQUOTE>
+    ldd /sbin/pvmove<BR>
+    ldd pvmove<BR>
+    LD_PRELOAD=3D&lt;unpatchedlvmliblocation&gt; pvmove ...<BR>
+    <BR>
+</BLOCKQUOTE>
 <BR>
 <PRE><TABLE CELLSPACING=3D"0" CELLPADDING=3D"0" WIDTH=3D"100%">
 <TR>
@@ -143,9 +143,9 @@ e.org.ar/secciones/cyberactivismo/nuclear.php3" BORDER=3D"0"></A>
 </BODY>
 </HTML>
 
---=-3K1Gi9lP6+w4E3I/H20o--
+--=-uGqdxIHo8CAG7THgObEg--
 
---=-5vfD6zcIEGxGFPGRt9G8
+--=-WKQKo6X+hmG1OPW2Cw6a
 Content-Type: application/pgp-signature; name=signature.asc
 Content-Description: Esta parte del mensaje =?ISO-8859-1?Q?est=E1?= firmada
 	digitalmente
@@ -153,9 +153,9 @@ Content-Description: Esta parte del mensaje =?ISO-8859-1?Q?est=E1?= firmada
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v1.2.1 (GNU/Linux)
 
-iD8DBQA/FVyXmwwiUvOlMjQRAnE5AJ94d3NglVVtxH0ZoL2fripYRc0nvgCeL/CK
-o3qnlNVngnqRZEVHi/Dqkbg=
-=RjHn
+iD8DBQA/FW9CmwwiUvOlMjQRAmt4AJ4o5kcQULjwifYg8raLZNjZAbHcmwCgiMX6
+VWQoACPwABps4sUyIJjiJkc=
+=NYD9
 -----END PGP SIGNATURE-----
 
---=-5vfD6zcIEGxGFPGRt9G8--
+--=-WKQKo6X+hmG1OPW2Cw6a--
