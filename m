@@ -1,9 +1,11 @@
-From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] lvm on loopback mount problems
-Message-ID: <20031021123829.E848@sistina.com>
-References: <2D4B6CD74137D4119A1100104BC6BCBF0BC585CD@dubntex006.qwest.net> <20030924103325.B2618@sistina.com> <1066581326.3895.77.camel@bob.gp.ln>
+Subject: Re: [linux-lvm] RAID 1 on Device Mapper - best practices?
+Message-ID: <20031021171817.GA28462@mail.parplies.de>
 Mime-Version: 1.0
-In-Reply-To: <1066581326.3895.77.camel@bob.gp.ln>; from gpmidi@k4lrg.org on Sun, Oct 19, 2003 at 12:35:26PM -0400
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="rwEMma7ioTxnRzrJ"
+Content-Disposition: inline
+In-Reply-To: <200310172212.06301.mike@gaima.co.uk>
+From: wopp@parplies.de
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,173 +16,108 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Tue Oct 21 05:37:01 2003
+Date: Wed Oct 22 08:02:02 2003
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Sun, Oct 19, 2003 at 12:35:26PM -0400, Paulson McIntyre wrote:
-> I tryed the same procedure on my rh9 box; dident work for me either. I
-> then used dd to create a random file the same size as the lv i had
-> created, copyed the data onto the lv, copyed the data off the lv, and
-> did a 'cmp'...they differ at byte1, line1. 
+--rwEMma7ioTxnRzrJ
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Ouch, silent data corruption!
-Please try a mainline kernel and see if this disapears.
+Hi all,
+
+Mike Williams wrote on 17.10.2003 at 22:12:06 [Re: [linux-lvm] RAID 1 on De=
+vice Mapper - best practices?]:
+> On Friday 17 October 2003 21:48, John Stoffel wrote:=20
+> > Well, it could make more sense that way, but I was trying to get it do
+> > that I could move and expand/shrink the filesystems as needed on the
+> > various volumes.
+>=20
+> Ahh, but that's the beauty of RAID and LVM, what you end up with is just
+> another block device. Which ever way you do it you'll get the same benefi=
+t.
+
+I believe that is not true. How do you resize a RAID device? The only
+option I can think of is to re-create it, which is clearly beside the=20
+point. With LVM on top of RAID, you can lvextend (or lvreduce), pvmove
+and so on - where's the problem?
+
+To put it differently, LVM devices are not just "another block device",
+they're resizeable block devices. You get this benefit at the level you use
+LVM on. Below RAID it's not really worth much (which is probably why Debian
+starts RAID first).
+
+> > The other downside of the MD underneath LVM is that when a MD RAID
+> > goes bad, I need to resync the entire disk.
+
+I've thought about that too. At the moment, I'm experimenting with several
+disk partitions on each physical disk and RAID-1 devices made up of one
+partition of each disk. Each MD is a PV in my VG. This way, if one
+partition fails (i.e. runs in degenerated mode) the others will still be
+mirrored. Maybe some ASCII-art can make this a bit clearer:
+
+     +------+   +------+
+     | hda1 | + | hdb1 |  -> md0 \
+     +------+   +------+          +- VG0
+     | hda2 | + | hdb2 |  -> md1 /
+     +------+   +------+
+
+[Yes, I'd prefer sda/sdb too ;-]
+
+I'm not totally happy with this setup, because it's partly pointless :).
+First of all, I'd like to point out that redundancy-providing RAID is,
+PRIMARILY, a means of minimizing downtime, NOT a means of preventing data
+loss. RAID reacts on disk failures (which affect the whole disk) and on
+read/write errors. In these cases, normal operation proceeds without
+interruption. If your data goes bad on disk but does not trigger a read
+error, RAID doesn't care, i.e. it does not compare the contents of your
+mirrors. Backups are against data loss and data corruption.
+
+Of course, there's also the case of a partial failure (surface damage or
+something the like) - I've just recently experienced it myself. In my case,
+it hit a non-mirrored LVM PV, resulting in one or more filesystems being
+remounted read-only, which was a pain ...
+I've replaced the faulty disk with a new one, and now everything is
+mirrored as described above (so "next time", there will hopefully be no
+service interruption due to an FS which is unexpectedly read-only).
+So? I'd have had to resync the whole disk in any case.
+
+My conclusion is: Either you're only "playing around" with RAID, in which
+case you should probably do whatever is most fun or gives you the most
+learning experience, or you're serious about it, in which case you'll
+immediately replace any disk showing errors anyway.
+
+
+Just for the sake of contradicting myself, I'd like to add one thing which
+is not stressed often enough here for my taste :).
+
+People, if you're spreading out file systems over several physical disks
+without providing some sort of redundancy, you're asking for trouble.
+You're increasing the points of failure, making it much more probable for
+a hardware error on any one of the disks to take all your data with it.
+This is the reason RAID level 1+0 and RAID level 5 (yes, and 4 ...) were
+invented shortly after RAID 0. Learn from other people's mistakes :).
+
+Redundancy does HELP to keep your data safe :).
+
+
+I'm sure more people have thought about these topics. What are your
+conclusions?
 
 Regards,
-Heinz    -- The LVM Guy --
+Holger
 
-> 
-> On Wed, 2003-09-24 at 04:33, Heinz J . Mauelshagen wrote:
-> > Never seen this here.
-> > Did a quick test and it works with 1.0.7 on 2.4.21 vanilla here.
-> > It could be a problem with that RedHat kernel.
-> > 
-> > Regards,
-> > Heinz    -- The LVM Guy --
-> > 
-> > 
-> > On Tue, Sep 23, 2003 at 05:14:31PM -0400, Montgomery, Kendal L wrote:
-> > > I've seen a few things about using lvm on a loopback filesystem, but nothing
-> > > concrete, so I tried it myself.  Most everything works okay until I get to
-> > > acutally mounting the filesystem.  Here are the steps I did:
-> > > 
-> > > [root@klmontg tmp]# dd if=/dev/zero of=fake_disk.img bs=1M count=500
-> > > 500+0 records in
-> > > 500+0 records out
-> > > [root@klmontg tmp]# losetup /dev/loop0 fake_disk.img
-> > > [root@klmontg tmp]# pvcreate /dev/loop0
-> > > pvcreate -- physical volume "/dev/loop0" successfully created
-> > > 
-> > > [root@klmontg tmp]# vgcreate /dev/vgtest /dev/loop0
-> > > vgcreate -- INFO: using default physical extent size 4 MB
-> > > vgcreate -- INFO: maximum logical volume size is 255.99 Gigabyte
-> > > vgcreate -- doing automatic backup of volume group "vgtest"
-> > > vgcreate -- volume group "vgtest" successfully created and activated
-> > >  
-> > > [root@klmontg tmp]# lvcreate --name lv_one --size 200M /dev/vgtest
-> > > lvcreate -- doing automatic backup of "vgtest"
-> > > lvcreate -- logical volume "/dev/vgtest/lv_one" successfully created
-> > >  
-> > > [root@klmontg tmp]# mke2fs /dev/vgtest/lv_one
-> > > mke2fs 1.32 (09-Nov-2002)
-> > > Filesystem label=
-> > > OS type: Linux
-> > > Block size=1024 (log=0)
-> > > Fragment size=1024 (log=0)
-> > > 51200 inodes, 204800 blocks
-> > > 10240 blocks (5.00%) reserved for the super user
-> > > First data block=1
-> > > 25 block groups
-> > > 8192 blocks per group, 8192 fragments per group
-> > > 2048 inodes per group
-> > > Superblock backups stored on blocks:
-> > >         8193, 24577, 40961, 57345, 73729
-> > >  
-> > > Writing inode tables: done
-> > > Writing superblocks and filesystem accounting information: done
-> > >  
-> > > This filesystem will be automatically checked every 26 mounts or
-> > > 180 days, whichever comes first.  Use tune2fs -c or -i to override.
-> > > [root@klmontg tmp]# e2fsck /dev/vgtest/lv_one
-> > > e2fsck 1.32 (09-Nov-2002)
-> > > Couldn't find ext2 superblock, trying backup blocks...
-> > > e2fsck: Bad magic number in super-block while trying to open
-> > > /dev/vgtest/lv_one
-> > >  
-> > > The superblock could not be read or does not describe a correct ext2
-> > > filesystem.  If the device is valid and it really contains an ext2
-> > > filesystem (and not swap or ufs or something else), then the superblock
-> > > is corrupt, and you might try running e2fsck with an alternate superblock:
-> > >     e2fsck -b 8193 <device>
-> > >  
-> > > [root@klmontg tmp]# e2fsck -b 8193 /dev/vgtest/lv_one
-> > > e2fsck 1.32 (09-Nov-2002)
-> > > e2fsck: Bad magic number in super-block while trying to open
-> > > /dev/vgtest/lv_one
-> > >  
-> > > The superblock could not be read or does not describe a correct ext2
-> > > filesystem.  If the device is valid and it really contains an ext2
-> > > filesystem (and not swap or ufs or something else), then the superblock
-> > > is corrupt, and you might try running e2fsck with an alternate superblock:
-> > >     e2fsck -b 8193 <device>
-> > >  
-> > > [root@klmontg tmp]# mount /dev/vgtest/lv_one /mnt
-> > > mount: you must specify the filesystem type
-> > > [root@klmontg tmp]# mount -t ext2 /dev/vgtest/lv_one /mnt
-> > > mount: wrong fs type, bad option, bad superblock on /dev/vgtest/lv_one,
-> > >        or too many mounted file systems
-> > > 
-> > > As you can see, one the filesystem was made, nothing else works. I can't
-> > > fsck the filesystem on the new logical volume, or mount it.  This is
-> > > obviously a problem since, well, it's useless unless I can mount it.
-> > > 
-> > > I'm using RedHat 9 with the  2.4.20-20.9 kernel.  I've also tried this on
-> > > RedHat 8 on another box.  I got the latest version of util-linux which is
-> > > 2.11z and compiled that (in case it was a possible bug in mount 2.11y which
-> > > comes with redhat).  I'm using lvm 1.0.3-12 that comes with redhat 9.  I
-> > > have not tried getting the latest lvm tools.  That's my next step...
-> > > 
-> > > Anyone else had this problem, or tried doing this?  The reason I wanted to
-> > > do this in the first place is so I can test snapshots.  I want to be able to
-> > > have a filesystem which is static, that I will then take a snapshot of, then
-> > > change things on it, and then use the snapshot to bring it back to it's
-> > > original form.  I know there is some work on union filesystems or
-> > > translucent filesystems, and such things, but none of it seems mature
-> > > enough, so this solution seemed like it might work until I hit this snag.
-> > > 
-> > > Is anyone else doing this (lvm on loopback)?  Does anyone have it working
-> > > correctly?  Am I doing something wrong?  Do I need a different version of
-> > > something?
-> > > 
-> > > Thanks in advance for any help.
-> > > 
-> > > Kendal.
-> > > 
-> > > _______________________________________________
-> > > linux-lvm mailing list
-> > > linux-lvm@sistina.com
-> > > http://lists.sistina.com/mailman/listinfo/linux-lvm
-> > > read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
-> > 
-> > *** Software bugs are stupid.
-> >     Nevertheless it needs not so stupid people to solve them ***
-> > 
-> > =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-> > 
-> > Heinz Mauelshagen                                 Sistina Software Inc.
-> > Senior Consultant/Developer                       Am Sonnenhang 11
-> >                                                   56242 Marienrachdorf
-> >                                                   Germany
-> > Mauelshagen@Sistina.com                           +49 2626 141200
-> >                                                        FAX 924446
-> > =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-> > 
-> > _______________________________________________
-> > linux-lvm mailing list
-> > linux-lvm@sistina.com
-> > http://lists.sistina.com/mailman/listinfo/linux-lvm
-> > read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
-> > 
-> 
-> 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+--rwEMma7ioTxnRzrJ
+Content-Type: application/pgp-signature
+Content-Disposition: inline
 
-*** Software bugs are stupid.
-    Nevertheless it needs not so stupid people to solve them ***
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.2.1 (GNU/Linux)
 
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+iD8DBQE/lWpYIGbA/1goeB8RAsNfAJ0Y9OS5s6lWKrBxoNPTCuknkvf1SgCfUdp7
+M0DID4DWVrj1OdbRc1pUdkE=
+=cxVc
+-----END PGP SIGNATURE-----
 
-Heinz Mauelshagen                                 Sistina Software Inc.
-Senior Consultant/Developer                       Am Sonnenhang 11
-                                                  56242 Marienrachdorf
-                                                  Germany
-Mauelshagen@Sistina.com                           +49 2626 141200
-                                                       FAX 924446
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+--rwEMma7ioTxnRzrJ--
