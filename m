@@ -1,11 +1,9 @@
-Return-Path: <mbp@valinux.com>
-Date: Fri, 27 Jul 2001 18:57:05 +1000
-From: Martin Pool <mbp@valinux.com>
-Subject: Re: [linux-lvm] File System type on (LVM) partition
-Message-ID: <20010727185703.A13520@valinux.com>
+Return-Path: <mauelshagen@sistina.com>
+Date: Fri, 27 Jul 2001 12:53:19 +0200
+From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
+Message-ID: <20010727125319.A5029@sistina.com>
 Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <5.0.2.1.2.20010727102408.00a35ec0@127.0.0.1>
+Subject: [linux-lvm] Vacation
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -21,20 +19,23 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On 27 Jul 2001, Benoit SERRA <bs@infologic.fr> wrote:
-> At 27/07/01, you wrote:
-> >  is there a way to know the file system type installed on a partition
-> >(wich could be of LVM type or not)
-> >  tanx for your help.
+Folks,
 
-Either run 'mount', as suggested, or do 
+I'll be on vacation until August, 12.
 
-  # file -sL /dev/hda1
+Hopefully you'll enjoy LVM as well as
+I will my vacation trip to the 'Lago Maggiore' ;-)
 
--- 
-Martin
 
-The search for the perfect martini is a fraud.  The perfect martini is
-a belt of gin from the bottle; anything else is the decadent trappings
-of civilization.
-		-- T.K.
+Regards,
+Heinz    -- The LVM Guy --
+
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+Heinz Mauelshagen                                 Sistina Software Inc.
+Senior Consultant/Developer                       Am Sonnenhang 11
+                                                  56242 Marienrachdorf
+                                                  Germany
+Mauelshagen@Sistina.com                           +49 2626 141200
+                                                       FAX 924446
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
