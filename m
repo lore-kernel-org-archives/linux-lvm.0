@@ -1,36 +1,34 @@
-Date: Fri, 28 Apr 2000 01:05:12 +0900 (KST)
-Message-Id: <200004271605.BAA10254@yeopo.postech.ac.kr>
-From: "Kim Tae-hyoung(M2000)" <kotaeji@yeopo.postech.ac.kr>
-Subject: [linux-lvm] I want some documentations.
-Reply-to: kotaeji@postech.ac.kr
+Date: Thu, 27 Apr 2000 19:32:27 +0200
+From: "Andi Kleen" <ak@suse.de>
+Subject: Re: [linux-lvm] Protection of used scsi disks by LVM
+Message-ID: <20000427193227.A3507@gruyere.muc.suse.de>
+References: <DCBFB8E1BD8BD311A94D00A0C9CA44EA0CCCE1@mail.store-age.com>
+Mime-Version: 1.0
+In-Reply-To: <DCBFB8E1BD8BD311A94D00A0C9CA44EA0CCCE1@mail.store-age.com>; from SVichik@store-age.com on Thu, Apr 27, 2000 at 03:52:47PM +0200
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
-MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: linux-lvm@msede.com
+To: Sergey Vichik <SVichik@store-age.com>
+Cc: "'linux-lvm@msede.com'" <linux-lvm@msede.com>
+
+On Thu, Apr 27, 2000 at 03:52:47PM +0200, Sergey Vichik wrote:
+> 
+> Hello,
+> 
+> I have a question : 
+> Why does LVM not protect the scsi devices which are used for volumes ?
+> 
+> I can easily go to /dev/sda1 for example, and erase everything on it.
+> 
+> Of course it is a stupid thing to do, but there is a minimal requirement on
+> protection, isn't it ?
+
+<as folklore says:>
+
+Unix/Linux doesn't stop you (=root) from doing stupid things, because
+that would stop you from doing clever things.
 
 
-Hi, all.
-
-I am a student, and very interested in this LVM project.
-So, I installed kernel 2.3.49 and lvm-0.8final. And then 
-I did several admin jobs such as creating VG, LV, etc.
-(I used 4 scsi-disks)
-
-It worked so well. I have made ext2 file system on it, and
-did many many many jobs such as just copying linux source tree,
-, moving, compressing, untarring big directories, etc. But it
-still worked well. (But When I benchmarked with benchmarking
-program "bonnie", my system died frequently. Do you know why?)
-
-And, Now I just want to investigate how the LVM source is made.
-But, I cannot find any implementation documents, or something like
-that.
-
-I want to know about user-level admin tools in addition to 
-the lvm support of kernel.
-
-Is there any good start point or document (not just HOWTO) to 
-recommend?
+-Andi
