@@ -1,9 +1,10 @@
-Message-ID: <3BFAAE55.27443B0A@LTUtech.com>
-From: Igor Dumaire <Igor.Dumaire@LTUtech.com>
-MIME-Version: 1.0
-Subject: Re: [linux-lvm] vgcfgrestore error !
-References: <3BF8E5DE.ABAEB618@LTUtech.com> <20011119125632.A12388@sistina.com> <3BF8F8BF.3FE1491C@LTUtech.com> <20011119151746.A13040@sistina.com> <3BF923C3.A2060FDD@LTUtech.com> <20011120121947.B18529@sistina.com>
-Content-Transfer-Encoding: 7bit
+From: Andreas Dilger <adilger@turbolabs.com>
+Subject: Re: [linux-lvm] Just for information ....
+Message-ID: <20011120125632.Z1308@lynx.no>
+References: <3BFAA389.24AAB2A1@LTUtech.com>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <3BFAA389.24AAB2A1@LTUtech.com>; from Igor.Dumaire@LTUtech.com on Tue, Nov 20, 2001 at 07:40:09PM +0100
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,73 +15,24 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Tue Nov 20 13:24:02 2001
+Date: Tue Nov 20 13:55:02 2001
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@sistina.com
+Content-Transfer-Encoding: 7bit
+To: Igor Dumaire <Igor.Dumaire@LTUtech.com>
+Cc: list LVM <linux-lvm@sistina.com>
 
-#  vgimport -f -v lvm1 /dev/hdc1
-vgimport -- locking logical volume manager
-vgimport -- checking volume group name
-vgimport -- checking volume group "lvm1" existence
-vgimport -- trying to read physical volume
-vgimport -- checking for duplicate physical volumes
-vgimport -- checking physical volume name "/dev/hdc1"
-vgimport -- reading data of physical volume "/dev/hdc1" from disk
-vgimport -- checking for exported physical volume "/dev/hdc1"
-vgimport -- reallocating memory
-vgimport -- checking consistency of physical volume "/dev/hdc1"
-vgimport -- ERROR: wrong number of physical volumes to import volume group
-"lvm1"
-I try vgimport on the three disks :
- 
-#  vgimport -f -v lvm1 /dev/hde1
-vgimport -- locking logical volume manager
-vgimport -- checking volume group name
-vgimport -- checking volume group "lvm1" existence
-vgimport -- trying to read physical volume
-vgimport -- checking for duplicate physical volumes
-vgimport -- checking physical volume name "/dev/hde1"
-vgimport -- reading data of physical volume "/dev/hde1" from disk
-vgimport -- checking for exported physical volume "/dev/hde1"
-vgimport -- reallocating memory
-vgimport -- checking consistency of physical volume "/dev/hde1"
-Segmentation fault
+On Nov 20, 2001  19:40 +0100, Igor Dumaire wrote:
+> I have 4 disks : 1 for system and 3 for data with LVM (only 1 vg).
+> 
+> If my system drive burn, Can I read my datas with an other system compiled
+> with LVM ?
 
-#  vgimport -f -v lvm1 /dev/hdf1
-vgimport -- locking logical volume manager
-vgimport -- checking volume group name
-vgimport -- checking volume group "lvm1" existence
-vgimport -- trying to read physical volume
-vgimport -- checking for duplicate physical volumes
-vgimport -- checking physical volume name "/dev/hdf1"
-vgimport -- reading data of physical volume "/dev/hdf1" from disk
-vgimport -- checking for exported physical volume "/dev/hdf1"
-vgimport -- reallocating memory
-vgimport -- checking consistency of physical volume "/dev/hdf1"
-vgimport -- ERROR: wrong number of physical volumes to import volume group
-"lvm1"
+Yes.  You will need to do a vgscan to find the new disks.  Hopefully they
+will not have the same VG name as another VG on that system.
 
-
-#  vgimport -f -v lvm1 /dev/hdc1
-vgimport -- locking logical volume manager
-vgimport -- checking volume group name
-vgimport -- checking volume group "lvm1" existence
-vgimport -- trying to read physical volume
-vgimport -- checking for duplicate physical volumes
-vgimport -- checking physical volume name "/dev/hdc1"
-vgimport -- reading data of physical volume "/dev/hdc1" from disk
-vgimport -- checking for exported physical volume "/dev/hdc1"
-vgimport -- reallocating memory
-vgimport -- checking consistency of physical volume "/dev/hdc1"
-vgimport -- ERROR: wrong number of physical volumes to import volume group
-"lvm1"
-
-Why ERROR? Why coredump ?!
-
-
--- 
-Igor Dumaire
-
-www.LTUtech.com - Making Sense of Visual Content
-------------------------------------------------
+Cheers, Andreas
+--
+Andreas Dilger
+http://sourceforge.net/projects/ext2resize/
+http://www-mddsp.enel.ucalgary.ca/People/adilger/
