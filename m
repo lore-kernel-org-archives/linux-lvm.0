@@ -1,10 +1,8 @@
-From: Luca Berra <bluca@comedia.it>
-Subject: Re: [linux-lvm] lvm on initrd
-Message-ID: <20040124095810.GA6204@percy.comedia.it>
-References: <200401240137.35706.arekm@pld-linux.org>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <200401240137.35706.arekm@pld-linux.org>
+Message-ID: <4012D858.1020005@dpincorp.com>
+From: "Mr. David" <david@dpincorp.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] Raid and LVM, GFS newbie question
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,34 +13,36 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Sat Jan 24 04:59:02 2004
+Date: Sat Jan 24 15:44:01 2004
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"; format="flowed"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Sat, Jan 24, 2004 at 01:37:35AM +0100, Arkadiusz Miskiewicz wrote:
->Are there any plans to add makefile target which would produce very small + 
->features stripped down lvm binary with only two commands:
->vgscan vgchange
->for usage on initrd images?
-patches for lvm2 are:
-http://www.comedia.it/~bluca/cooker/lvm2/lvm2-2.00.08-7mdk/LVM2.2.00.08-diet.patch.bz2
+Hi,
+I apologize if my questions are too basic for the list.  I am new to 
+Redhat implementation in production environment.  I am in proccess of 
+impletmenting Redhat ES 2.1 and Redhat AS 2.1..  My background is solaris.
 
-patches for lvm1 are:
-http://www.comedia.it/~bluca/cooker/lvm2/lvm1-1.0.8-2mdk/lvm-1.0.8-dietlibc.patch.bz2
-http://www.comedia.it/~bluca/cooker/lvm2/lvm1-1.0.8-2mdk/lvm-1.0.8-wrapper.patch.bz2
+1.  How does most people manage root file systems in linux production 
+environment?  I have two JBOD scsi disks for root file systems.  I 
+already install the OS on one disk.  I just need to mirror the OS disk 
+to the other disk.  Do I use raidtool? or do I use LVM to mirror?  How 
+does raidtool and LVM work together?  Or does LVM have RAID 0, 1, 5 
+capability also?  What is the easiest/best setup for 24/7 production 
+environment?
 
-NB1 the lvm1 patches come originally from redhat, but have been modified
-NB2 the urls there might change slightly due to repackaging of rpms, so
-if (404) backtrack();
+2.  I need to have LVM support for data disks, does ES 2.1 or AS 2.1 
+come with LVM?  If not how difficult is it to implement it.  Is it 
+recommended with ES 2.1 or AS 2.1?  Your reccomendation?
 
-L.
+4.  How do people do this in production if you have to mass install 
+identical systems with Root file systems using Software RAID or LVM?   
+Will Ghost/DD do the job?  Any reccomdation?
 
--- 
-Luca Berra -- bluca@comedia.it
-        Communication Media & Services S.r.l.
- /"\
- \ /     ASCII RIBBON CAMPAIGN
-  X        AGAINST HTML MAIL
- / \
+3.  I need to have mulitiple nodes see the same file systems through the 
+SAN impletmentation.  I read about Sistina's GFS.   Is this product 
+similar to Veritas SanPoint foundation suite where multiple nodes can 
+see same file systems.  How much does GFS cost for, say  for 2 cpu's, 4 
+- 6 nodes?  Are there other products that does similiar job?
+
+Thank you for your help!
