@@ -1,8 +1,8 @@
-From: Matt Schillinger <mschilli@vss.fsi.com>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <1054146530.1176.19.camel@mosix>
-Mime-Version: 1.0
-Subject: [linux-lvm] RAID Failure Problems
+Message-ID: <047501c3254d$6066b880$fc6a6d0a@corp.int.digex.com>
+From: "Anastasios A. Papadopoulos \(Tas\)" <vze2sjj7@verizon.net>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] Building LVM 2 -- More information
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -13,57 +13,76 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed May 28 13:28:02 2003
+Date: Wed May 28 14:13:02 2003
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="iso-8859-1"
+Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
 
-I recently had a RAID disk failure, which, due to a firmware bug, a
-second drive went down.. Anyway, the data is being rebuilt (via RAID
-Controller) now. It is online, but when i do a vgscan, i now only see 2
-of the 4 volumes that were setup.  I am using reiserfs on all
-filesystems affected.
-
-Anyway, for lvm, i have simply used: 'pvcreate /dev/sda' (for the
-/dev/sda). In other words, I didn't fdisk and set to Linux LVM. From
-what I've seen, this so far has caused no problems.  Anyway, now, when i
-do a vgscan, i only see 2 of the volumes.  When I do a pvdata /dev/sda
-(one of the PVs not showing up), i get what looks like corrupted
-naming..
+----- Original Message ----- 
+From: Anastasios A. Papadopoulos (Tas)
+To: linux-lvm@sistina.com
+Sent: Wednesday, May 28, 2003 10:42 AM
+Subject: Building LVM 2
 
 
---------------------------------
+I'm having a little trouble following directions:
 
-[root@thor root]# pvdata /dev/sda
---- Physical volume ---
-PV Name               /dev/sda
-VG Name               ??=D0=BC
-PV Size               93.13 GB [195312500 secs] / NOT usable 2.49 GB
-[LVM: 16.15 MB]
-PV#                   48979801
-PV Status             NOT available
-Allocatable           yes (but full)
-Cur LV                1
-PE Size (KByte)       4096
-Total PE              23840
-Free PE               0
-Allocated PE          23840
-PV UUID               ?
+I'm trying to build a new kernel with 'dm'.
+
+Should I be issuing the 'make modules modules-install' after building the
+new kernel or not.  This doesn't appear in the LVM pages I've seen, but it
+does appear in the Redhat documentation on rebuilding the kernel.
+
+Thanks
+Tas
 
 
---- List of logical volumes ---
+I am getting the following errors during "make modules"
 
-Segmentation fault
-[root@thor root]#
-
-
-Is there a way I can fix this?
-
-Thanks for all your help,
-
---=20
-Matt Schillinger
-System Administrator
-FlightSafety International
-mschilli@vss.fsi.com
-314-551-8403
+gcc -D__KERNEL__ -I/usr/src/linux-2.4.20-13.8/include -Wall -Wstrict-prototy
+pes
+-Wno-trigraphs -O2 -fno-strict-aliasing -fno-common -fomit-frame-pointer -pi
+pe -
+mpreferred-stack-boundary=2 -march=i686 -DMODULE -DMODVERSIONS -include
+/usr/src
+/linux-2.4.20-13.8/include/linux/modversions.h  -nostdinc -iwithprefix
+include -
+DKBUILD_BASENAME=lvm_fs  -c -o lvm-fs.o lvm-fs.c
+ld -m elf_i386 -r -o lvm-mod.o lvm.o lvm-snap.o lvm-fs.o
+gcc -D__KERNEL__ -I/usr/src/linux-2.4.20-13.8/include -Wall -Wstrict-prototy
+pes
+-Wno-trigraphs -O2 -fno-strict-aliasing -fno-common -fomit-frame-pointer -pi
+pe -
+mpreferred-stack-boundary=2 -march=i686 -DMODULE -DMODVERSIONS -include
+/usr/src
+/linux-2.4.20-13.8/include/linux/modversions.h  -nostdinc -iwithprefix
+include -
+DKBUILD_BASENAME=dm  -c -o dm.o dm.c
+In file included from dm.c:7:
+dm.h:97: parse error before "sector_t"
+dm.h:97: warning: function declaration isn't a prototype
+dm.h:100: parse error before "dm_table_get_size"
+dm.h:100: warning: type defaults to `int' in declaration of
+`dm_table_get_size'
+dm.h:100: warning: data definition has no type or storage class
+dm.h:102: parse error before "sector_t"
+dm.h:102: warning: function declaration isn't a prototype
+dm.c: In function `dec_pending':
+dm.c:319: `dm_endio_fn' undeclared (first use in this function)
+dm.c:319: (Each undeclared identifier is reported only once
+dm.c:319: for each function it appears in.)
+dm.c:319: parse error before "endio"
+dm.c:321: `endio' undeclared (first use in this function)
+dm.c:322: `endio' used prior to declaration
+dm.c:322: warning: implicit declaration of function `endio'
+dm.c: In function `__map_buffer':
+dm.c:352: dereferencing pointer to incomplete type
+dm.c:365: dereferencing pointer to incomplete type
+dm.c: In function `__bmap':
+dm.c:484: dereferencing pointer to incomplete type
+dm.c:485: dereferencing pointer to incomplete type
+make[2]: *** [dm.o] Error 1
+make[2]: Leaving directory `/usr/src/linux-2.4.20-13.8/drivers/md'
+make[1]: *** [_modsubdir_md] Error 2
+make[1]: Leaving directory `/usr/src/linux-2.4.20-13.8/drivers'
+make: *** [_mod_drivers] Error 2
