@@ -1,10 +1,11 @@
 From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] Can't mke2fs lv
-Message-Id: <20020211190928.A31248@sistina.com>
-References: <20020211173404.GB23@merlins.org>
+Subject: Re: [linux-lvm] lvm cannot vgchange -a y _pv_get_number failed
+    for rdev = 65535
+Message-Id: <20020211192222.B31248@sistina.com>
+References: <Pine.GSO.4.30.0202111056330.13668-100000@persius.rz.uni-potsdam.de>
 MIME-Version: 1.0
-In-Reply-To: <20020211173404.GB23@merlins.org>; from marc_lvm@merlins.org
-    on Mon, Feb 11, 2002 at 09:34:04AM -0800
+In-Reply-To: <Pine.GSO.4.30.0202111056330.13668-100000@persius.rz.uni-potsdam.de>;
+    from lglnberg@rz.uni-potsdam.de on Mon, Feb 11, 2002 at 11:17:15AM +0100
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,52 +16,48 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Feb 11 12:11:02 2002
+Date: Mon Feb 11 12:24:01 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Mon, Feb 11, 2002 at 09:34:04AM -0800, Marc MERLIN wrote:
-> I've never had this problem before, it's on a 2.4.14 kernel with lvm
-> 1.0.1rc4:
-> 
-> gargamel:~# lvscan 
-> lvscan -- ACTIVE            "/dev/BootMylexLVM/usr" [1.50 GB]
-> lvscan -- ACTIVE            "/dev/BootMylexLVM/var" [2.00 GB]
-> lvscan -- ACTIVE            "/dev/BootMylexLVM/home" [115.00 GB]
-> lvscan -- 3 logical volumes with 118.50 GB total in 1 volume group
-<SNIP>
->         4096000, 7962624, 11239424, 20480000, 23887872
-> 
-> File size limit exceeded
-> 
-> 
-> Did I do something stupid, or do I need to upgrade?
-> (I did do a quick search on this kind of failure, but didn't find anything)
+Well, this means that your copy on write exception table got toasted :-(
 
-No, there's an OS bug related to the 2 GB file size limit which causes both your
-problems. You must be directly logged in as 'root', *no* 'su root' in order
-to run the commands fine.
+Check out top of LVM CVS at www.sistina.com (follow guidelines for CVS access
+provided there) which contains a "-r" (or --remove_snapshots) option for
+vgscan. That option removes *all* snapshots of all or a particular VG
+at VG activation time so that vgchange can activate VGs afterwards.
 
+For eg. "vgscan -r vg00" would try to activate all VGs and
+remove all snapshots in the VG named "vg00".
+
+
+On Mon, Feb 11, 2002 at 11:17:15AM +0100, Lars-Gunnar Ellenberg wrote:
+> 
+> hi,
+> I found only three matches, two postings, for this, and no solution. may
+> be you solved this problem back then, and can tell me about it.
+> 
+> I cannot vgchange -a y :
+> _pv_get_number_failed for rdev = 65535
+> _lvm_snapshot_fill_COW_page failed
+> 
+> (I once toyed around with a snapshot, but never used it actually, and
+> obviously never removed it again)
+> 
+> so is there an "easy" solution except recreating the whole thing and
+> hoping for some recent backup (which I doubt...)
+> 
+> if theres no solution, is there a way to dd the data somewhere
+>  and mount -o loop it to get the data back?
 > 
 > 
-> Details on the VG:
-> gargamel:~# vgdisplay  -v
-> --- Volume group ---
-> VG Name               BootMylexLVM
-<SNIP>
-> PV Status             available / allocatable
-> Total PE / Free PE    8700 / 1116
+> --                                                       ,,,
 > 
+>  -- Lars                                                (o o)
+>                                                   ---o00-(_)-00o----
 > 
-> Thanks,
-> Marc
-> -- 
-> Microsoft is to operating systems & security ....
->                                       .... what McDonalds is to gourmet cooking
->   
-> Home page: http://marc.merlins.org/   |   Finger marc_f@merlins.org for PGP key
 > 
 > _______________________________________________
 > linux-lvm mailing list
