@@ -1,8 +1,9 @@
-From: Bradley M Alexander <storm@tux.org>
-Message-ID: <20030320214806.GE26040@defiant.sonsofthunder.yi.org>
-Mime-Version: 1.0
-Content-Disposition: inline
-Subject: [linux-lvm] Upgrade path
+content-class: urn:content-classes:message
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Subject: RE: [linux-lvm] LVM snap size weirdness...
+Message-ID: <08628CA53C6CBA4ABAFB9E808A5214CB0142B55E@mercury.infiniconsys.com>
+From: "Barry, Christopher" <cbarry@infiniconsys.com>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -13,62 +14,52 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Thu Mar 20 15:48:01 2003
+Date: Thu Mar 20 16:00:02 2003
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Hi,
-    
-Got a quick question. I just bought a 120GB hard drive for my system. I am
-currently running lvm-1.0.6, but I am also considering upgrading to lvm2.
+Joe (the Magician),
+	Thanks, for the insight on exactly what snapshots are doing. I was =
+unaware that snapshots were updated by deltas (or, more precisely, only =
+are the deltas) - I thought they were a static view of the volume at 'x' =
+point in time. Guess that's why it only took a few secs to make!
 
-Right now, I have the following:
+Another question:
 
-    hda  Maxtor 30GB
-    hdb  LG DVD ROM
+	When a backup program grabs files from the snapshot volume, is it =
+subject to open file issues that are normally a problem during backups?
 
-    hdc  Maxtor 30GB
-    hdd  LG CD-RW
+--
+Christopher Barry
+Manager of Information Systems
+InfiniCon Systems
+http://www.infiniconsys.com
 
-    hde  WD 30GB
 
-The 30GB drive on hde (on the on-board Promise PDC20265 controller) locks the
-system when I boot with the drive connected. Not sure if it is a bad drive or 
-some idiosyncracy with the controller. Now I have been told that you take a
-pretty severe performance hit on the controller with a drive and a CD on the
-same chain. So what I am thinking i
-s
-    hda  Maxtor 30GB
-    hdb  Maxtor 30GB
+-----Original Message-----
+From: Joe Thornber [mailto:joe@fib011235813.fsnet.co.uk]
+Sent: Thursday, March 20, 2003 3:31 PM
+To: linux-lvm@sistina.com
+Subject: Re: [linux-lvm] LVM snap size weirdness...
 
-    hdc  WD 120GB
-    hdd  WD 30GB
 
-    hde  DVD ROM
-    hdf  CD-RW
 
-or
+On Thursday, March 20, 2003, at 08:00 PM, Barry, Christopher wrote:
 
-    hdg  CD-RW
+> I have dumped an ls of both the snap lv and the home lv and diffed=20
+> them - no differences.
+> Why/how can df be confused?
 
-What would be the best drive configuration and upgrade path to lvm2? I'm
-particularly concerned about scattering the drives to the wind and "losing"
-them to lvm or having a lot of bogus lvm data floating around that I can't 
-get rid of.
+It's magic ;)  Think of the filesystem that df is looking at as a=20
+combination of the original volume with some modifications held in the=20
+snapshot volume.
 
-Thoughts?
--- 
---Brad
-============================================================================
-Bradley M. Alexander                |
-Debian Developer, Security Engineer |   storm [at] tux.org
-Debian/GNU Linux Developer          |   storm [at] debian.org
-============================================================================
-Key fingerprints:
-DSA 0x54434E65: 37F6 BCA6 621D 920C E02E  E3C8 73B2 C019 5443 4E65
-RSA 0xC3BCBA91: 3F 0E 26 C1 90 14 AD 0A  C8 9C F0 93 75 A0 01 34
-============================================================================
-Never draw fire, it irritates everyone around you.
-						--Murphy's Laws of Combat
+- Joe
+
+
+_______________________________________________
+linux-lvm mailing list
+linux-lvm@sistina.com
+http://lists.sistina.com/mailman/listinfo/linux-lvm
+read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
