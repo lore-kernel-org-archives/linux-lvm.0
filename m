@@ -1,9 +1,10 @@
-Return-Path: <linuxbest_hugang@yahoo.com>
-Date: Thu, 22 Feb 2001 17:14:28 -0800
-From: hugang <linuxbest_hugang@yahoo.com>
-Subject: Re: [linux-lvm] lvm on a brand-new server
-Message-Id: <20010222171428.77e057e5.linuxbest_hugang@yahoo.com>
-Mime-Version: 1.0
+Return-Path: <bs@infologic.fr>
+Message-ID: <3A950C2C.9D6E8737@infologic.fr>
+Date: Thu, 22 Feb 2001 13:55:09 +0100
+From: Benoit SERRA <bs@infologic.fr>
+MIME-Version: 1.0
+Subject: Re: [linux-lvm] online resize of ext2
+References: <200102211725.f1LHPPv31859@webber.adilger.net>
 Content-Transfer-Encoding: 7bit
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
@@ -19,64 +20,21 @@ List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
 
-	I thinks your can do it in folowing :
 
-	1: Use the hardware RAID controller to make mirror .
+Andreas Dilger wrote:
 
-	2: <Install Linux .	>
-		( Your will Can see ONE DISK , Create a partion in it ( < 800MB ),And install a linux in it )
+> Because the code is only used at resize time it does not affect normal
+> operations, so it is OK to put into a production kernel, IMHO (although
+> being the author makes me a bit biased ;-).  Any other ext2online users
+> out there?
 
-	3: Install LVM and reiserfs patch and software.
+I use it on a test system, and I made a big amount of resize without any
+loss of data.
+Really good.
+Since I didn't have any production system runnig with Linux, I can't say
+if it is stable enough sorry.
 
-	4: <MOVE system to LVM>
-		Create  the other partition with LVM ,mkreiserfs ,copy all system to it .
-	
+Just after the release of 2.4.0 kernel, I patched it with the patch for
+2.3.99 kernels and everything worked perfectly.
 
-
->Hi everyone,
->
->I'm just starting out learning about lvm and I have a couple questions.
->
->First, a description of the machine:
->
->Compaq DL380 933 MHz PIII (rack-mount) w/ 640 MB RAM and (2) 18 GB SCSI
->disks. The machine has Compaq's built-in hardware RAID controller. My plan
->is to mirror the two disks using RAID.
->
->I'd like to use LVM (and likely ReiserFS) on this box, but I'm not sure how
->to get it installed on a bare system. I'll likely be using Debian on this
->system.
->
->Can anyone suggest a basic outline of the process? I'm certain there's a lot
->more reading to do, but I'm not sure where to start. (I have looked over the
->LVM How-to and the FAQ.)
->
->-Tim
->
->--
->Tim Wilson      | Visit Sibley online:         | Check out:
->Henry Sibley HS | http://www.isd197.k12.mn.us/ | http://www.zope.org/
->W. St. Paul, MN |                              | http://slashdot.org/
->wilson@visi.com |   <dtml-var pithy_quote>     | http://linux.com/
->
->_______________________________________________
->linux-lvm mailing list
->linux-lvm@sistina.com
->http://lists.sistina.com/mailman/listinfo/linux-lvm
-
-
--- 
---------------------------------------------------------------------
-                       Hu  Gang 
---------------------------------------------------------------------
-Email	: linuxbest@sina.com,linuxhappy@tang.com,gang_hu@soul.com.cn 
-Comany  : China Beijing Soul
-Phone   : +860168425741~~44
-MP	: 13601394711
---------------------------------------------------------------------
-Linux Reigstered User ID 	#204016
---------------------------------------------------------------------
-
-_________________________________________________________
-Do You Yahoo!?
-Get your free @yahoo.com address at http://mail.yahoo.com
+I only get a few rejects on Config.in, but I inserted it by hand.
