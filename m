@@ -1,9 +1,11 @@
-Message-ID: <005501c31ea7$b52505e0$e0bba5cc@patni.com>
-From: "Sameer Halgatti" <sameer.halgatti@patni.com>
-MIME-Version: 1.0
-Content-Type: multipart/alternative;
-	boundary="----=_NextPart_000_0052_01C31ED5.BCE8DA30"
-Subject: [linux-lvm] Query For MULTIPATH & LVM
+Subject: RE: [linux-lvm] snapshot with bigmem broken
+From: Andrew Rechenberg <arechenberg@shermfin.com>
+In-Reply-To: <37885B2630DF0C4CA95EFB47B30985FB020EBDA8@exchange-1.umflint.edu>
+References: 
+	 <37885B2630DF0C4CA95EFB47B30985FB020EBDA8@exchange-1.umflint.edu>
+Content-Transfer-Encoding: 7bit
+Message-Id: <1053531846.12974.147.camel@cinshrlnxws01.shermfin.com>
+Mime-Version: 1.0
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,74 +16,76 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Tue May 20 08:28:02 2003
+Date: Wed May 21 10:45:02 2003
 List-Id: <linux-lvm.redhat.com>
+Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
 
-This is a multi-part message in MIME format.
+I have HIGHMEM enabled on my kernel but I have to limit the memory to
+~6GB for snapshots to work.  I added mem=6000M to my kernel command line
+and snapshots work fine.  
 
-------=_NextPart_000_0052_01C31ED5.BCE8DA30
-Content-Type: text/plain;
-	charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+I also found this thread on the LKML that has a patch that may fix the
+problem:
 
-Hi All,
-I am a new user to LVM.
-I have a system with Linux RH 7.2 (Kernel version 2.4.7-10)
-The version of LVM, I am using is lvm-1.0.3-4.
-I have connected a Storage Machine (SAN) to my host. So I could have =
-multiple paths to any LUN. (e.g sda & sdb are pointing to the same LUN).
-So whenever I do "pvcreate" on /dev/sda, PV gets created on /dev/sdb =
-also since they (sda & sdb) are pointing to same disk/LUN.
-In such a scenario can I use lvm-1.0.3.4 ??
-If not then please give me reasons as well as solution.
+http://marc.theaimsgroup.com/?l=linux-kernel&m=104549874128521&w=2
 
-Pls REPLY to my QUERY!!!
+The only machine we have that has >4GB RAM is a production box and I
+really don't want to test something in production (call me crazy :) ).
 
-Thanks & Regards,
-Sameer Halgatti
+Here are my specs:
+
+Kernel 2.4.18-27.SHRbigmem
+LVM 1.0.7
+
+Hope this helps,
+Andy.
 
 
-------=_NextPart_000_0052_01C31ED5.BCE8DA30
-Content-Type: text/html;
-	charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
-<HTML><HEAD>
-<META content=3D"text/html; charset=3Diso-8859-1" =
-http-equiv=3DContent-Type>
-<META content=3D"MSHTML 5.00.2314.1000" name=3DGENERATOR>
-<STYLE></STYLE>
-</HEAD>
-<BODY bgColor=3D#ffffff>
-<DIV><FONT face=3DArial size=3D2>Hi All,</FONT></DIV>
-<DIV><FONT face=3DArial size=3D2>I am a new user to LVM.</FONT></DIV>
-<DIV><FONT face=3DArial size=3D2>I have a system with Linux RH 7.2 =
-(Kernel version=20
-2.4.7-10)</FONT></DIV>
-<DIV><FONT face=3DArial size=3D2>The version of LVM, I am using is=20
-lvm-1.0.3-4.</FONT></DIV>
-<DIV><FONT face=3DArial size=3D2>I have connected a Storage Machine =
-(SAN) to my=20
-host. So I could have multiple paths to any LUN. (e.g sda &amp; sdb are =
-pointing=20
-to the same LUN).</FONT></DIV>
-<DIV><FONT face=3DArial size=3D2>So whenever I do "pvcreate" on =
-/dev/sda, PV gets=20
-created on /dev/sdb also since they (sda &amp; sdb) are pointing to same =
-
-disk/LUN.</FONT></DIV>
-<DIV><FONT face=3DArial size=3D2>In such a scenario can I use =
-lvm-1.0.3.4=20
-??</FONT></DIV>
-<DIV><FONT face=3DArial size=3D2>If not then please give me reasons as =
-well as=20
-solution.</FONT></DIV>
-<DIV>&nbsp;</DIV>
-<DIV><FONT face=3DArial size=3D2>Pls REPLY to my QUERY!!!</FONT></DIV>
-<DIV>&nbsp;</DIV>
-<DIV><FONT face=3DArial size=3D2>Thanks &amp; Regards,<BR>Sameer=20
-Halgatti<BR></FONT></DIV></BODY></HTML>
-
-------=_NextPart_000_0052_01C31ED5.BCE8DA30--
+On Fri, 2003-05-16 at 08:38, Lauro, John wrote:
+> > > I did more testing, and it appears that snapshots in LVM will not
+> work
+> > > with either 4GB or or 64GB support enabled in the kernel under
+> 2.4.20.
+> > > This includes both LVM 1.0.7 or the latest LVM2.
+> > >
+> > 
+> > That's a known issue. You are faced with a VM flaw.
+> > 
+> > I presume that it's not LVM snapshots only bacause HIGHMEM is
+> > basically broken.
+> 
+> Can you give more specifics/examples/web links/etc?  Does this mean I
+> should avoid LVM completely with HIGHMEM?  What if any other problems
+> should I expect with LVM (and/or other software)?
+> 
+> > > Is there anyone using LVM snapshots with 64GB RAM support (or even
+> 4GB
+> > > RAM support, as snapshots would be good for at least our medium
+> size
+> > > servers if not our large ones)?  Is so, let me know the kernel
+> version
+> > > and LVM version you are using so that I can try it.
+> > 
+> > Probably not, because the system lifelocks on bounce buffers (which
+> is
+> > the sympton of the principle HIGHMEM bug).
+> > Obviously not a lot of HIGHMEM users out there raising priorities to
+> fix
+> > this.
+> 
+> Is this easy to reproduce?  If so, how?  Sounds like I am either a
+> lucky early adopter of a >4GB Libux system, and/or the problem is rare
+> even on HIGHMEM systems?
+> 
+> Thanks.
+> 
+> 
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@sistina.com
+> http://lists.sistina.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+-- 
+Andrew Rechenberg <arechenberg@shermfin.com>
+Infrastrucutre Team, Sherman Financial Group
