@@ -1,41 +1,41 @@
-From: Michael Lausch <mla@1012surf.net>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Message-ID: <14801.35603.881485.66498@loki.1012internet.at>
-Date: Wed, 27 Sep 2000 07:52:19 +0200 (CEST)
-Subject: Re: [linux-lvm] lvm and fibre channel
-In-Reply-To: <200009261746.e8QHksg25808@webber.adilger.net>
-References: <39D093AC.54E9D40A@rds.ro>
-	<200009261746.e8QHksg25808@webber.adilger.net>
+Date: Wed, 27 Sep 2000 12:28:10 +0200
+From: "Andi Kleen" <ak@suse.de>
+Subject: Re: [linux-lvm] current lvm function questions
+Message-ID: <20000927122810.C31723@gruyere.muc.suse.de>
+References: <39D14B6C.4C9F6C26@us.oracle.com>
+Mime-Version: 1.0
+In-Reply-To: <39D14B6C.4C9F6C26@us.oracle.com>; from dbrower@us.oracle.com on Tue, Sep 26, 2000 at 06:20:44PM -0700
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: Andreas Dilger <adilger@turbolinux.com>
+Content-Transfer-Encoding: 7bit
+To: David Brower <dbrower@us.oracle.com>
 Cc: linux-lvm@msede.com
 
-Andreas Dilger writes:
- > Florin writes:
- > > We have a big Web project, involving several disk arrays (over 3 TB total
- > > storage space) and around 24 Linux servers.
- > > 
- > > On the disk arrays, we need to create aprox. 2600 partitions, which may be
- > > mounted by the Linux servers (but no server can mount more than 16 partitions
- > > at any given moment).
- > > 
- > > So here is the problem: the Fibre Channel devices are seen as SCSI devices,
- > > but Linux doesn't support more than 2048 partitions on SCSI disks (max 128
- > > disks, max 16 partitions each).
- > > 
- > > Does LVM works over Fibre Channel?
- > 
- > Someone on the list was trying to get LVM to work on FC, but they were
- > having problems.  I don't know if they got it working at the end.
- > 
- > LVM will not help you here either, because it currently limits you to
- > 255 LVs, regardless of how many VGs you have, because there is only 1
- > block major for LVM.
+On Tue, Sep 26, 2000 at 06:20:44PM -0700, David Brower wrote:
+> Area 1:  Stable device naming.
+> 
+> Is there a way in Linux to get a stable name for a
+> disk that survive reconfiguration and discovery 
+> randomization?
 
-is using devfs an option? We are planing to attach a PC to a storage
-array (HP XP256) using LVM and devfs over fibre channel next week and
-doing some tests (performance, ease of use, etc....)
+Yes, there are programs to create SysV style LUN device nodes
+after the SCSI scan.  Look for scsidev or scsidev2.
+
+> It seems to me that lvm already slaps a label on the 
+> disk when it does pvcreate.  What i'm not sure of is
+> whether the label used is (a) globally unique and suitable
+> for stable device naming, or (b) tied to the device it
+> happened to be on at the time the pvcreate was issued.
+
+LVM uses an UUID iirc. ext2 does too BTW (and newer mount even
+supports mounting by UUID without lvm). An UUID aims to be globally unique.
+ 
+> Can lvm volumes be accessed as raw devices?  If so, how?
+> Is there /dev/rlvname?
+
+Sure. Usually it is a /dev/VG/LVname though. Just bind a raw device
+to them.
+
+-Andi
