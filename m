@@ -1,10 +1,7 @@
-From: Jesse Keating <jkeating@pogolinux.com>
-Subject: Re: [linux-lvm] Sharing LVM's via NFS on Redhat 8.0
-References: <F66Jmn8eeGbdBmM9SJL000066dc@hotmail.com> <27438.1045848354@www69.gmx.net>
-In-Reply-To: <27438.1045848354@www69.gmx.net>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Message-Id: <200302210930.36038.jkeating@pogolinux.com>
+From: "DJ TweeQ" <djtweeq@hotmail.com>
+Subject: [linux-lvm] RE: Sharing LVM's via NFS on Redhat 8.0 (nice clarification)
+Mime-Version: 1.0
+Message-ID: <F42aXibm60wcP2dIuld0000538b@hotmail.com>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,19 +12,58 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Fri Feb 21 11:33:01 2003
+Date: Fri Feb 21 15:17:02 2003
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; format=flowed; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Friday 21 February 2003 09:25, grobe@gmx.net wrote:
-> How do you want to share a LV which is not on a scsi or fc device? Never
-> heard about shared ide...;-))) Do you want to share a device or the data on
-> the device???
+Thanks Patrick...nice clarification and more than helpfull visual 
+description :) Hey Sistina...wouldn't be such a bad idea to add that one to 
+the sharing LV's/dangerous operations section on the HOWTO. :)
 
-HyperSCSI will allow for shared IDE devices (;
+>Sharing over NFS is fine. What you are doing with NFS is sharing the 
+> >filesystem.
+>The dangerous behaviour mentioned is when you are sharing the actual >block
+>device that is the LV. A subtle but very important distinction.
 
--- 
-Jesse Keating RHCE MCSE
-Pogo Linux -- Support Tech
-tel: (888) 828-7646
+>This is safe:
+>
+>+----+   NFS   +---------+
+>|    |---------|  Box B  |
+>|boxA|         |         | +----+         +---------+                    | 
+>SCSI/IDE/FC
+>                    |
+>		  ^^^^^^^
+>		  |disks|
+>		  |     |
+>		  |     |
+>		  |     |
+>		  ^^^^^^^
+>		  		  This is dangerous:
+>
+>+----+         +----+
+>|    |         |    |
+>|boxA|         |boxB| +----+         +----+      \       /       ^^^^^^^
+>       |disks|
+>       |     |
+>       |     |
+>       |     |
+>       ^^^^^^^
+>
+>
+>
+>patrick
+>
+
+
+
+
+
+
+
+
+
+_________________________________________________________________
+The new MSN 8: smart spam protection and 2 months FREE*  
+http://join.msn.com/?page=features/junkmail
