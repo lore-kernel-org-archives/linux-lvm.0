@@ -1,11 +1,11 @@
-Return-Path: <terjekv@ifi.uio.no>
-Subject: Re: [linux-lvm] LVM on root, Kernel panic: "I have no root and I must scream"
-References: <DC5B1A21E9E7D211B0020090273AD628242BBD@summit15.corvallis.summit> <20010428014015.D10716@dragon.blacknet.de>
-From: Terje Kvernes <terjekv@math.uio.no>
-Date: 29 Apr 2001 21:18:34 +0200
-In-Reply-To: Goetz Bock's message of "Sat, 28 Apr 2001 01:40:15 +0200"
-Message-ID: <wxx8zkjldkl.fsf@thrir.ifi.uio.no>
+Return-Path: <glenn@gecpalau.com>
+Message-ID: <3AEC9E45.B76C4996@gecpalau.com>
+Date: Mon, 30 Apr 2001 08:05:41 +0900
+From: Glenn Shannon <glenn@gecpalau.com>
 MIME-Version: 1.0
+Subject: Re: [linux-lvm] Segfault at boot with vgscan and linux 2.4.4 kernel
+References: <3AEBF85F.8EC404@gecpalau.com> <01042909134900.18233@oscar>
+Content-Transfer-Encoding: 7bit
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -18,19 +18,41 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Goetz Bock <bock@blacknet.de> writes:
+Hi there!
 
-> Whilt I don't know if this I true, I once read that the letters of
-> LILO tells you what exactly is broken with your setup.
+LVM is compiled in to the kernel, not as a module.
 
-  they do.
+I have hand-patched the lvm.c file with the patch that was on the list. My
+kernel compiles fine.
 
-  <url: http://www.fan.nb.ca/~aa126/troubleshoot-LILO.html >
+Glenn
 
-  why this isn't in the LILO-howto, I don't know.
+Ed Tomlinson wrote:
 
--- 
-Terje
+> On Sunday 29 April 2001 07:17, Glenn Shannon wrote:
+> > Hi all (again!),
+> >
+> > Just got done compiling my new 2.4.4 kernel using the same options as
+> > before and now at boot vgscan is segfaulting......
+> >
+> > Anyone else have this problem?
+> >
+> > Tried recompiling the lvm tools....no dice. Still segfaulting...
+> >
+> > Tried recompiling my kernel with pgcc and no dice (wont finish
+> > compiling....complains a bunch and error 2s out on the make bzImage
+> > phase...modules compile fine tho (wierd).
+> >
+> > Tried updating my binutils and recompiling....no luck there either
+>
+> is lvm built as a module?  If so what does depmod -ae show.  If you
+> have undefined ref you need to apply the patch posted on this list on
+> top of beta7.
+>
+> Ed
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@sistina.com
+> http://lists.sistina.com/mailman/listinfo/linux-lvm
