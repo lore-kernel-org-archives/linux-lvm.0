@@ -1,7 +1,7 @@
-From: Adrian Phillips <a.phillips@dnmi.no>
-Message-ID: <wv8zcu1128.fsf@freeze.oslo.dnmi.no>
+Message-ID: <20011126172715.1498.qmail@web12301.mail.yahoo.com>
+From: Lars Kellogg-Stedman <thelars@yahoo.com>
 MIME-Version: 1.0
-Subject: [linux-lvm] LVM 1.0.1-rc5 or use CVS ?
+Subject: [linux-lvm] Re: Here we go again: vgscan doesn't see my volume groups.
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -12,30 +12,39 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Nov 26 00:46:01 2001
+Date: Mon Nov 26 11:25:02 2001
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-If I remember correctly there was some mention of a new release last
-week. I'm using LVM CVS at home and have 2 new servers at work to
-setup but am uncertain what state the CVS version is in at any one
-time.
+> This is a different problem than what I encountered earlier, which
+> appeared to be a problem with software RAID devices that went away
+> when
+> I upgraded to the latest code from CVS.  I'm now using whatever was
+> in
+> CVS as of Monday Nov. 19.
 
-Do the LVM folks tag CVS versions so that one can always grab the
-latest "stable-to-be" without having to worry about untested patches ?
-I assume not because the web page says "assume alpha-quality code".
+I've upgraded the userspace tools to today's CVS code.  There's not
+much I can do with the kernel until *after* I'm able to access the
+volume group again.
 
-Anyway, I'd just like to also say how much I appreciate the amount of
-effort gone into LVM and its stability, and a big thank you to anyone
-who has had a hand in it.
+There doesn't appear to be any chance in behavior with the updated
+tools.
 
-Sincerely,
+Is there any way for me to determine *why* the lvm tools won't assemble
+this volume group?  Vgscan isn't giving me any errors, and the debug
+output, while copious, doesn't really help me much.
 
-Adrian Phillips
+Thanks,
 
--- 
-Your mouse has moved.
-Windows NT must be restarted for the change to take effect.
-Reboot now?  [OK]
+-- Lars
+
+
+=====
+lars@larsshack.org
+
+__________________________________________________
+Do You Yahoo!?
+Yahoo! GeoCities - quick and easy web site hosting, just $8.95/month.
+http://geocities.yahoo.com/ps/info1
