@@ -1,9 +1,11 @@
-Message-Id: <4F5EF80AA509D211BB340000F6B7DF9B932F5E@wtmah05>
-From: Yaniv Gueta <yanivg@eds.co.il>
+From: Luca Berra <bluca@comedia.it>
+Subject: Re: [linux-lvm] pvcreate problem
+Message-Id: <20020102094855.A12546@colombina.comedia.it>
+References: <25E4CA13D679FF48BC307694202209710164DE23@nd1-clusa.local.bunnings.com.au>
 MIME-Version: 1.0
-Content-Type: multipart/mixed;
-    boundary="----_=_NextPart_000_01C19365.A36D8C10"
-Subject: [linux-lvm] char/block raw devices
+Content-Disposition: inline
+In-Reply-To: <25E4CA13D679FF48BC307694202209710164DE23@nd1-clusa.local.bunnings.com.au>;
+    from CCoe@bunnings.com.au on Wed, Jan 02, 2002 at 04:09:44PM +0800
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,66 +16,33 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Jan  2 02:14:02 2002
+Date: Wed Jan  2 02:46:02 2002
 List-Id: <linux-lvm.redhat.com>
-To: linux-lvm@sistina.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: "'linux-lvm@sistina.com'" <linux-lvm@sistina.com>
 
-This message is in MIME format. Since your mail reader does not understand
-this format, some or all of this message may not be legible.
+On Wed, Jan 02, 2002 at 04:09:44PM +0800, Colin Coe wrote:
+> 
+> Hi all, when I try and 'pvcreate /dev/md0' I get the error: "pvcreate --
+> device '/dev/md0' has a partition table".  I have tried using the -f and
+> --force options without success.
+> 
+> /dev/md0 used to have an XFS partition on it.
+> 
+> Any ideas?
 
-------_=_NextPart_000_01C19365.A36D8C10
-Content-Type: text/plain;
-	charset="windows-1255"
+I believe you are running an older version of the tools
+either upgrade your tools to the latest version or
+scan the list archives for a patch for this.
 
-hi there 
-i recently installed lvm 1.0.1-rc4 on kernel 2.4.7-10
-but i didnt understand how to create a char raw device
-is there any howto ?
+L.
+P.S. latest version is 1.0.1
 
-best regards 
-
-Yaniv Gueta
-DBA - EDS -TNUVA
-972-3-6904447
-972-53-651385
-yanivg@eds.co.il
-
-
-
-------_=_NextPart_000_01C19365.A36D8C10
-Content-Type: application/ms-tnef
-Content-Transfer-Encoding: base64
-
-eJ8+Ih4IAQaQCAAEAAAAAAABAAEAAQeQBgAIAAAA5AQAAAAAAADoAAEIgAcAGAAAAElQTS5NaWNy
-b3NvZnQgTWFpbC5Ob3RlADEIAQWAAwAOAAAA0gcBAAIACgAPABwAAwAUAQEggAMADgAAANIHAQAC
-AAoADwAcAAMAFAEBCYABACEAAAA1MjI4RkQzNzJDRjM4MzRBOTY4REM3MkFFMTYxRjQ1MAAnBwEE
-gAEAFwAAAGNoYXIvYmxvY2sgcmF3IGRldmljZXMARQgBDYAEAAIAAAACAAIAAQOQBgDcBQAALAAA
-AAsAAgABAAAAQAA5ABCMbaNlk8EBHgBwAAEAAAAXAAAAY2hhci9ibG9jayByYXcgZGV2aWNlcwAA
-AgFxAAEAAAAWAAAAAcGTZZcwD2juQndORfCIali7I683cgAAHgAxQAEAAAAHAAAAeWFuaXZnAAAD
-ABpAAAAAAB4AMEABAAAABwAAAHlhbml2ZwAAAwAZQAAAAAACAQkQAQAAAIwBAACIAQAAEwIAAExa
-RnVKEeAu4QAFZmJpZAQAAGQAcoBjcGcxMjU1APhFC2BuDoAwMzcB9yAnAqQD4wIAY2gKwHNleHQw
-IAcTAoMNQRD+VGxhaANxAoB9CoAIyCA+OwliDqIJygKACoF1Y+MAUAsDbHRyCrEL1AEwQCBoaSB0
-aASQZS8K4wqAGFAJcGMJ8HRslHkgC4BzAZBsbAmAACBsdm0gMS4wgC4xLXJjNCACIBQgawSRZQMg
-Mi40mC43LQ+wGNRidQVAixhQDZBkAjAgdW4EgRcaAR2wGDBvB+B0byDRBQBlYXQYsGEesBFxrRlA
-YQfgAQB2DlBlGNW/BCAYdABwGcAeUR6RPxjU7xyFB5AFQAlwZwsRBCEh+ScI0ABBDDEgWQBwaXY8
-IEcKUAGQI9cR0ERCQEEgLSBFRAXwLaBUTlVWQRjUOQHAgC0zLTY5MDQoEAo3Jyg1J8E1MTM4Sw7A
-GON5JNJnQAmAc7ouBaAuAxAh5Q91MwxA7wLRFuMrKChAYhfyGNQUQQIALiADAN4/5wQAAAMACVkD
-AAAAAwACgAggBgAAAAAAwAAAAAAAAEYAAAAAEIUAAAAAAAADAAWACCAGAAAAAADAAAAAAAAARgAA
-AABShQAAjmoBAB4AKIAIIAYAAAAAAMAAAAAAAABGAAAAAFSFAAABAAAABAAAADkuMAALAA+BCCAG
-AAAAAADAAAAAAAAARgAAAAAGhQAAAAAAAAMAGIAIIAYAAAAAAMAAAAAAAABGAAAAAAGFAAAAAAAA
-CwAAgAggBgAAAAAAwAAAAAAAAEYAAAAAA4UAAAAAAAALACyACCAGAAAAAADAAAAAAAAARgAAAAAO
-hQAAAAAAAAMALYAIIAYAAAAAAMAAAAAAAABGAAAAABGFAAAAAAAAAwAvgAggBgAAAAAAwAAAAAAA
-AEYAAAAAGIUAAAAAAAAeAD6ACCAGAAAAAADAAAAAAAAARgAAAAA2hQAAAQAAAAEAAAAAAAAAHgA/
-gAggBgAAAAAAwAAAAAAAAEYAAAAAN4UAAAEAAAABAAAAAAAAAB4AQIAIIAYAAAAAAMAAAAAAAABG
-AAAAADiFAAABAAAAAQAAAAAAAAADAPE/DQQAAAMA/T/nBAAAAwAmAAAAAAADADYAAAAAAAMAgBD/
-////AgFHAAEAAAAuAAAAYz1VUzthPSA7cD1UTlVWQTtsPVdUTUFIMDUtMDIwMTAyMDgxNTI4Wi0y
-MjY5AAAAHgA4QAEAAAAHAAAAeWFuaXZnAAAeADlAAQAAAAcAAAB5YW5pdmcAAEAABzDKqk6jZZPB
-AUAACDA644ejZZPBAR4APQABAAAAAQAAAAAAAAAeAB0OAQAAABcAAABjaGFyL2Jsb2NrIHJhdyBk
-ZXZpY2VzAAAeADUQAQAAADEAAAA8NEY1RUY4MEFBNTA5RDIxMUJCMzQwMDAwRjZCN0RGOUI5MzJG
-NUVAd3RtYWgwNT4AAAAACwApAAAAAAALACMAAAAAAAMABhBnSi36AwAHELcAAAADABAQAAAAAAMA
-ERAAAAAAHgAIEAEAAABlAAAASElUSEVSRUlSRUNFTlRMWUlOU1RBTExFRExWTTEwMS1SQzRPTktF
-Uk5FTDI0Ny0xMEJVVElESUROVFVOREVSU1RBTkRIT1dUT0NSRUFURUFDSEFSUkFXREVWSUNFSVNU
-SEVSRQAAAAACAX8AAQAAADEAAAA8NEY1RUY4MEFBNTA5RDIxMUJCMzQwMDAwRjZCN0RGOUI5MzJG
-NUVAd3RtYWgwNT4AAAAAGxw=
-
-------_=_NextPart_000_01C19365.A36D8C10--
+-- 
+Luca Berra -- bluca@comedia.it
+        Communication Media & Services S.r.l.
+ /"\
+ \ /     ASCII RIBBON CAMPAIGN
+  X        AGAINST HTML MAIL
+ / \
