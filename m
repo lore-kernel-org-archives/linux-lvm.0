@@ -1,12 +1,12 @@
 Return-Path: <patrick@tykepenguin.cix.co.uk>
-Date: Thu, 3 May 2001 10:20:18 +0100
+Date: Thu, 3 May 2001 12:00:30 +0100
 From: Patrick Caulfield <caulfield@sistina.com>
-Subject: Re: [linux-lvm] lvcreate segfault
-Message-ID: <20010503102018.A518@tykepenguin.com>
-References: <Pine.LNX.4.30.0105020957190.11191-100000@beefcake.hdqt.valinux.com> <Pine.LNX.4.30.0105021155070.16582-100000@beefcake.hdqt.valinux.com>
+Subject: Re: [linux-lvm] lvm on alpha/sparc
+Message-ID: <20010503120030.B518@tykepenguin.com>
+References: <20010502012851.A4517@ikar.t17.ds.pwr.wroc.pl>
 Mime-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <Pine.LNX.4.30.0105021155070.16582-100000@beefcake.hdqt.valinux.com>; from jweber@valinux.com on Wed, May 02, 2001 at 11:55:29AM -0700
+In-Reply-To: <20010502012851.A4517@ikar.t17.ds.pwr.wroc.pl>; from misiek@pld.ORG.PL on Wed, May 02, 2001 at 01:28:51AM +0200
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -22,9 +22,10 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Wed, May 02, 2001 at 11:55:29AM -0700, Jay Weber wrote:
-> And here's a fix.
+On Wed, May 02, 2001 at 01:28:51AM +0200, Arkadiusz Miskiewicz wrote:
+> Small fix for alpha was required:
 
-Thanks Jay, I'll get that applied.
+I've integrated the alpha fix but it all compiles flawlessly on my Debian 2.2
+SPARC machine.
 
-Patrick
+patrick
