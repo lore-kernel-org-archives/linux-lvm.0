@@ -1,30 +1,28 @@
-Message-ID: <C3BF2D4A3A74D3118CCF0090278CAAB701B9D956@xboi06.boi.hp.com>
-From: "PATTERSON,ANDREW (HP-Loveland,ex2)" <andrew_patterson@hp.com>
-Subject: [linux-lvm] How do I remove a physical volume
-Date: Fri, 2 Jun 2000 12:58:26 -0600 
+Message-ID: <20000605160017.28678.qmail@web106.yahoomail.com>
+Date: Mon, 5 Jun 2000 09:00:16 -0700 (PDT)
+From: Chris Campbell <dash_ampersand@yahoo.com>
+Subject: [linux-lvm] performance problems
 MIME-Version: 1.0
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: "'linux-lvm@msede.com'" <linux-lvm@msede.com>
+To: linux-lvm@msede.com
 
-I am doing some development with liblvm and need the capability to remove a
-physical volume (so I can then recreate it later as part of testing).  There
-doesn't seem be a "pvremove" command or equivalent library call, so I have
-resorted to the following brute
-force method:
+We are using LVM on a (hardware) RAID array and are
+having some performance problems.  File copying is
+very slow and one of the guys using it reported that
+untarring was very sluggish, and he got I/O errors. 
+Is this a known problem?  I believe we are using 0.8i
+and we are using 2.2.13 kernel.  Any help would be
+greatly appreciated.
 
-  1. Remove the physical volume from a the volume group
-  2. Deactivate the volume
-  3. Write arbitrary data to the partition to trash the private volume
-record
- 
-Is it safe to do this?  Is there a better way?  Should there be a pvremove
-command?
- 
-Thanks,
 
-Andrew Patterson
-Hewlett-Packard 
+
+Chris
+
+__________________________________________________
+Do You Yahoo!?
+Yahoo! Photos -- now, 100 FREE prints!
+http://photos.yahoo.com
