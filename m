@@ -1,22 +1,47 @@
-Date: Thu, 8 Jul 1999 09:18:12 -0400 (EDT)
-From: <jeremy@xxedgexx.com>
-Subject: [linux-lvm] what does this mean?
-In-Reply-To: <199907052049.OAA23677@munet-d.enel.ucalgary.ca>
-Message-ID: <Pine.LNX.4.05.9907080917500.15441-100000@srv1.ecropolis.com>
-MIME-Version: 1.0
+Date: Thu, 8 Jul 1999 10:34:47 -0400
+Message-Id: <199907081434.KAA29476@rsts-11.mit.edu>
+In-reply-to: <004a01bec785$01f0f920$0102010a@adminstation.sgymsdam.nl>
+	(buytenh@dsv.nl)
+Subject: Re: [linux-lvm] Re: ext2resize
+From: tytso@mit.edu
+References: <004a01bec785$01f0f920$0102010a@adminstation.sgymsdam.nl>
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: LVM on Linux <linux-lvm@msede.com>
+To: buytenh@dsv.nl
+Cc: linux-lvm@msede.com, linux-fsdevel@vger.rutgers.edu
 
+   From: "Lennert Buytenhek" <buytenh@dsv.nl>
+   Date:   Tue, 6 Jul 1999 09:56:07 +0200
 
-lvm - lvm_map *rsector: 3905085658 + size: 2 too large for 00:00
-Bad lvm_map in ll_rw_block
-lvm - lvm_map *rsector: 3905085658 + size: 2 too large for 00:00
-Bad lvm_map in ll_rw_block
+   I just got an email from John Finlay saying he's got a 52GB fs with
+   6000+ block groups. So the 1024 block group limit is just bogus.
+   The header in question which #defined the max # of block groups
+   to be 1024 is wrong, then.
 
+I'm curious *where* people thought a header defined the max # of block
+groups to be 1024?  Yes, that limit is completely bogus.
 
-Thanks!
--jeremy
+   From: "Lennert Buytenhek" <buytenh@dsv.nl>
+   Date:   Tue, 6 Jul 1999 10:56:06 +0200
+
+   Moving the inode/block bitmap blocks is not that difficult when
+   unmounted, but moving the inode table is tricky to get right (w.r.t
+   atomicity). One ext2resize user got a segfault while the inode table
+   was being moved (yes, that bug is fixed now) a while ago and
+   we're still cleaning up the mess.
+
+The trick here is to try *very* hard not to have to do an overlapping
+move of the inode table (which you may be forced to do if the filesystem
+is too full, but in most cases it can be avoided).  Then do a copy of
+that portion of the inode table, and only update the GDT *after* the
+inode table has been safely moved.  
+
+You may have to move some extra data blocks belonging to files to do
+this, though, so it's much easier to do this safely during an offline
+resize. 
+
+						- Ted
