@@ -1,8 +1,9 @@
-From: Eddahbi Karim <installation_fault_association@yahoo.fr>
-Message-Id: <1064270489.2443.2.camel@super.gamux.chezmoi>
-Mime-Version: 1.0
+From: Qv6 <sundiatah1@comcast.net>
+MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] Sorry for double post...
+Content-Disposition: inline
+Message-Id: <200309230122.09869.sundiatah1@comcast.net>
+Subject: [linux-lvm] vgcreate problem
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -13,22 +14,26 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Sep 22 17:43:03 2003
+Date: Tue Sep 23 01:25:02 2003
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
 
+	
 Hi,
 
-I'm sorry about my post which appeared twice.
+I just created 2 PVs with the following commands:
 
-I sended two mails to the mailing list from another mail account and I
-thought it wouldn't pass because it wasn't my original account (The
-account I suscribed with).
+pvcreate /dev/hda6
 
-I'm really sorry,
+pvcreate /dev/hdb
 
-Eddahbi Karim.
+When I ran vgcreate, I got this error:
 
--- 
-ThE_TemPLaR
+vgcreate gentis /dev/hda6 /dev/hdb
+
+vgcreate -- no valid physical volumes in command line
+
+Any help to resolve this error will be appreciated.
+
+Qv6
