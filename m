@@ -1,12 +1,8 @@
-Date: Tue, 18 Sep 2001 12:23:08 -0500
-From: lembark@wrkhors.com
 Subject: Re: [linux-lvm] Root on LV
-Message-ID: <26260000.1000833788@duke.wrkhors.com>
-In-Reply-To: <OFE0B97CD3.C5A33405-ON85256ACA.004E9D80@raleigh.ibm.com>
-References: <OFE0B97CD3.C5A33405-ON85256ACA.004E9D80@raleigh.ibm.com>
+Message-ID: <OFB98B66D9.BF1F5CB9-ON85256ACC.0066E63E@raleigh.ibm.com>
+From: "Steve Pratt" <slpratt@us.ibm.com>
+Date: Wed, 19 Sep 2001 13:54:23 -0500
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -19,34 +15,26 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
+>.Q:  Why bother to put 64MB on an LVM?
 
--- Steve Pratt <slpratt@us.ibm.com> on 09/17/01 09:26:12 -0500
+>The root volume doesn't grow much (make it 128MB and it'll never need to
+>grow).
 
->>> > dobos_s@IBCnet.hu wrote:
->>> > > My kernel has no modules.
->>> > > Why should I create an ext2 partition for holding an initrd which is
-> not
->>> > > doing any essential things except vgscan and vgchange -ay ?
->>> 
->>> You don't need vgscan at boot time unless the disks have moved around.
->>> You DO need "vgchange -a y" in order to load the LVM data into the
-> kernel.
-> 
->> If you are running EVMS you don't need that.
-> 
->> But you need EVMS tools which are not available fo far :-(
-> 
-> Actually that is not entirely true.  All of the volume group and physical
-> volumes tools are done.  We have started on all of the logical volume
-> commands.  We have stand alone utilities which minic the LVM ones, as well
-> as a GUI which integrates LVM function with other volume management
-> functions such as partitioning.
+Sure, you could always do this.
 
-Q:  Why bother to put 64MB on an LVM?
+>If you ever have a problem with LVM you'll end up with an unbootable
+>system...
 
-The root volume doesn't grow much (make it 128MB and it'll never need to
-grow).
-If you ever have a problem with LVM you'll end up with an unbootable
-system...
+Right, which is why volume managers need to be really stable and robust.
+Bottom line is that if this is the confidence level you have in your volume
+manager (whether it is LVM or EVMS), I would question putting any data on
+it.
+
+Steve
+
+EVMS Development - http://www.sf.net/projects/evms
+Linux Technology Center - IBM Corporation
+(512) 838-9763  EMAIL: SLPratt@US.IBM.COM
