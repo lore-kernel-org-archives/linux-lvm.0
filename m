@@ -1,14 +1,9 @@
-Return-Path: <bg@blacknet.de>
-Date: Thu, 28 Jun 2001 22:28:56 +0200
-From: Goetz Bock <bock@blacknet.de>
-Subject: Re: [linux-lvm] HowTo: EIDE/ATA-100 + RAID 1 + LVM
-Message-ID: <20010628222856.E16466@dragon.blacknet.de>
-References: <03b201c0fff4$aa4007c0$01e6a8c0@oulx>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-md5;
-	protocol="application/pgp-signature"; boundary="AsxXAMtlQ5JHofzM"
-Content-Disposition: inline
-In-Reply-To: <03b201c0fff4$aa4007c0$01e6a8c0@oulx>; from emmanuel.blot@ireland.sun.com on Thu, Jun 28, 2001 at 06:06:25PM +0100
+Return-Path: <Robert_Macaulay@Dell.com>
+Message-ID: <8F120FA493CAD743B30EEB8F356985B5BB57D5@AUSXMBT102VS1.amer.dell.com>
+From: Robert_Macaulay@Dell.com
+Subject: RE: [linux-lvm] HowTo: EIDE/ATA-100 + RAID 1 + LVM
+Date: Thu, 28 Jun 2001 16:46:10 -0500
+MIME-Version: 1.0
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -20,78 +15,69 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
---AsxXAMtlQ5JHofzM
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+About the Raid 1.
+
+I had a 4G RAM box(HIMEM64 enabled) with Hardware RAID 1 and LVM beta7,
+kernel is from RH 7.1, version 2.4.3-6.
+
+I added 4GB of RAM, kept the kernel the same, and switched to Software RAID
+1. Now, I'm getting all sorts of instabilities. For example, I had a APIC
+error fly by. umount core dumped. pvscan crashed twice and worked on the
+third try(but saw a fraction to the disks, the 4th shot saw them all).
+crond randomly crashed. I have the oops from the crond dump, but looked
+fairly innocent of lvm code.
+
+I know I changed 2 variables(RAM and RAID). I'm going to go back to HW raid
+1 for now, and see if it makes a difference.
+
+Just wondering if this has been seen, and if anyone knows what could have
+caused it. The oops follows.
+
+Robert
 
 
-On Thu, Jun 28 '01 at 18:06, Emmanuel Blot wrote:
-> I have to set up a server, and I'd like to know if it's possible=20
-yes
-> - and reliable- to setup a server with RAID 1 (mirrored disk) with a=20
-perhapes
-> pure software solution (not RAID controller) and LVM
->=20
-> [ ... ]
-> * motherboard: Asus with AMD760 + DDR (Athlon Thunderbird)
-I don't know about the reliability of the AMD760 ATA100 port, the VIA
-one is pritty screwed. If you can you should perhapes get a prommise
-ATA100 controller.
-> [ ... ]
 
-> - Any other suggestion
-Just a few hints and MHO:
-- use just one drive per channel (e.g. /dev/hda and /dev/hdc not hdb)
-- the 2.4.x series of linux kernels is called stable but probably not
-  realy ready for primetime yet. (mainly VM problems)
-- with 2.2.x the softraid drivers are a lot older (e.g. not so reliable)
-  and you'd have to create your own patches. and the stock 2.2.x kernel
-  does not come with the new IDE drivers. But 2.2.x is more stable.
-- always get the latest LVM patches, if you can wait for 1.0
-- never try RAID on top of LVM. This is nice for testing, but I can't
-  see why you might want to do this.=20
-- If you can partition your disk like this:
-  128MB   /dev/hd[ac]1  /boot   for savety put boot /onto its own partition
-  (2x)RAM /dev/hd[ac]2  swap    putting swap onto raid does not make
-                                sence to me. The 2.4.x kernel NEEDS
-                                twice the ammound of RAM as swap. The
-                                kernel can do raid0 with swap partitions
-                                (on its own)
-  rest    /dev/hd[ac]3  md0     put the rest into a RAID1 device
+Unable to handle kernel paging request at virtual address 2e2e3e83
+c0144078
+Oops: 0000
+CPU:    0
+EIP:    0010:[<c0144078>]
+Using defaults from ksymoops -t elf32-i386 -a i386
+EFLAGS: 00010202
+eax: 2e2e3e5b   ebx: ccf0dd60   ecx: e839d700   edx: e8123f54
+esi: 00000000   edi: e81832c0   ebp: e821f00c   esp: e8123f34
+ds: 0018   es: 0018   ss: 0018
+Process crond (pid: 817, stackpage=e8123000)
+Stack: 000041ed 00000009 00000000 ccf0dd60 00000000 00001000 fffffff4
+e821f000
+       e821f005 00000007 0af98a86 0804c702 00000000 e821f000 e8123f9c
+bffff758
+       c014462a e821f000 e8123f9c e8122000 bffffbe0 00000003 c0140ff3
+0804c702
+Call Trace: [<c014462a>] [<c0140ff3>] [<c012035b>] [<c0106f3b>]
+Code: 8b 40 28 85 c0 74 71 be 00 e0 ff ff 21 e6 8b 86 40 03 00 00
 
-  make /dev/md0 the only PV, with your VG in it.
-- put some recovery tools into /boot (this will not realy help you if
-  your server stands to far away, but perhapes you can attach a serial
-  console connected to a different box ...)
-- while the newest LILO beta can boot from a raid1 device, I would not
-  stress it and just put one individual version /boot on each harddrive
-  (with it's own bootloader) and handsync them (e.g. rsync). You should
-  not have to much changes to the /boot partition, so I think this is
-  ok.
-- after the installation, make a full backup and than realy beat the
-  system (focus on the ATA controller, cabeling, disks) to check it.
-  Silent data corruption realy sucks, if it results from bad cabeling
-  not even RAID will help you.
-(- don't use SUSE if you can. Ok, well ignore this, this is just MVHO)
-
---=20
-Goetz Bock                                              IT Consultant
-Dipl.-Inf. Univ.
-
---AsxXAMtlQ5JHofzM
-Content-Type: application/pgp-signature
-Content-Disposition: inline
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.0.4 (GNU/Linux)
-Comment: For info see http://www.gnupg.org
-
-iD8DBQE7O5OIf5srOMkjkQoRAt4bAJ4lvW8LOWwW6nonjhx0cq7AC7BSvwCeMsxz
-7GLffFcP5jJwzrU23XjdDUA=
-=ZR+D
------END PGP SIGNATURE-----
-
---AsxXAMtlQ5JHofzM--
+>>EIP; c0144078 <path_walk+748/8b0>   <=====
+Trace; c014462a <__user_walk+3a/60>
+Trace; c0140ff3 <sys_stat64+13/70>
+Trace; c012035b <sys_nanosleep+11b/190>
+Trace; c0106f3b <system_call+33/38>
+Code;  c0144078 <path_walk+748/8b0>
+00000000 <_EIP>:
+Code;  c0144078 <path_walk+748/8b0>   <=====
+   0:   8b 40 28                  mov    0x28(%eax),%eax   <=====
+Code;  c014407b <path_walk+74b/8b0>
+   3:   85 c0                     test   %eax,%eax
+Code;  c014407d <path_walk+74d/8b0>
+   5:   74 71                     je     78 <_EIP+0x78> c01440f0
+<path_walk+7c0/8b0>
+Code;  c014407f <path_walk+74f/8b0>
+   7:   be 00 e0 ff ff            mov    $0xffffe000,%esi
+Code;  c0144084 <path_walk+754/8b0>
+   c:   21 e6                     and    %esp,%esi
+Code;  c0144086 <path_walk+756/8b0>
+   e:   8b 86 40 03 00 00         mov    0x340(%esi),%eax
