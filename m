@@ -1,11 +1,12 @@
-Return-Path: <steve.wray@the.net.nz>
-From: "Steve Wray" <steve.wray@the.net.nz>
-Subject: RE: [linux-lvm] LILO configuration for LVM "boot" filesystem
-Date: Fri, 8 Jun 2001 10:38:40 +1200
-Message-ID: <NBBBKLKHMJHIJLHOGAOJGECEIPAA.steve.wray@the.net.nz>
+Return-Path: <russell@coker.com.au>
+From: Russell Coker <russell@coker.com.au>
+Subject: Re: [linux-lvm] LILO configuration for LVM "boot" filesystem
+Date: Fri, 8 Jun 2001 04:28:36 +0200
+References: <NBBBKLKHMJHIJLHOGAOJGECDIPAA.steve.wray@the.net.nz> <3B1FFEF8.38A5146A@wrkhors.com>
+In-Reply-To: <3B1FFEF8.38A5146A@wrkhors.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-In-Reply-To: <20010608102936.A9167@mail.wave.co.nz>
+Message-Id: <01060804283606.26916@lyta>
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -18,26 +19,23 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@sistina.com
+To: linux-lvm@sistina.com, Steven Lembark <lembark@wrkhors.com>
 
-> From: linux-lvm-admin@sistina.com [mailto:linux-lvm-admin@sistina.com]On
-> Behalf Of Mark van Walraven
-> 
-> On Thu, Jun 07, 2001 at 10:43:02AM -0500, Jack McKinney wrote:
-> > cd / ; mv tmp tmp.old ; ln -s /var/tmp .
-> > reboot
-> > rm -rf /tmp.old
-> > 
-> >     Now you don't have to worry about root filling up at all...
-> 
-> /tmp is commonly emptied on boot, unlike /var/tmp.  Vi, for example,
-> stores it's recovery files in /var/tmp.
-> 
-> I prefer a separate partition for /tmp, to reduce the need to write to
-> the root fs and thereby lower the risk of damage to it in a crash.
+On Friday 08 June 2001 00:23, Steven Lembark wrote:
+> > Proportionally, how much slower is it? 50%? 25%? 12%?
+> > less than 1% slower?
+> > Does it really matter?
+>
+> For things like /, /tmp or primary swap even a few % can
+> make a difference (especially on newer drives that use
+> variable sector allocation).  This is something the system
+> hits frequently with quite a bit of data.
 
-Yeah, I've been wondering about this whole discussion since
-I thought it was "the done thing" to have /var and /tmp
-on their own partitions (for precisely that reason).
-I've been doing it that way since 1994 (when I moved up from
-having my Linux on a 120 meg hard drive...)
+However if you use two partitions at opposite ends of the drive then the=20
+seek times will kill performance...
+
+--=20
+http://www.coker.com.au/bonnie++/     Bonnie++ hard drive benchmark
+http://www.coker.com.au/postal/       Postal SMTP/POP benchmark
+http://www.coker.com.au/projects.html Projects I am working on
+http://www.coker.com.au/~russell/     My home page
