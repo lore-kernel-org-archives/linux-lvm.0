@@ -1,12 +1,12 @@
-Return-Path: <bg@blacknet.de>
-Date: Tue, 27 Mar 2001 16:37:01 +0200
-From: Goetz Bock <lvm@blacknet.de>
-Message-ID: <20010327163701.B6980@dragon.blacknet.de>
+Return-Path: <patrick@tykepenguin.cix.co.uk>
+Date: Tue, 27 Mar 2001 15:14:58 +0100
+From: Patrick Caulfield <caulfield@sistina.com>
+Subject: Re: [linux-lvm] LVM, lilo and MBR?
+Message-ID: <20010327151458.E993@tykepenguin.com>
+References: <m2g0fzsghb.fsf@isnogud.escape.de> <20010327110158.A2403@tykepenguin.com> <m2ae67s4yc.fsf@isnogud.escape.de>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-md5;
-	protocol="application/pgp-signature"; boundary="QTprm0S8XgL7H0Dt"
 Content-Disposition: inline
-Subject: [linux-lvm] Can I use snapshots for this?
+In-Reply-To: <m2ae67s4yc.fsf@isnogud.escape.de>; from urs@isnogud.escape.de on Tue, Mar 27, 2001 at 03:43:07PM +0200
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -18,42 +18,38 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
---QTprm0S8XgL7H0Dt
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+On Tue, Mar 27, 2001 at 03:43:07PM +0200, Urs Thuermann wrote:
+> Patrick Caulfield <caulfield@sistina.com> writes:
+> 
+> > Yes it is. Don't run LILO on /dev/sda if it's a PV because it will
+> > destroy it.  You should partition the disk into /dev/sda1 (that way
+> > the PV will start further in and leave space for LILO)
+> 
+> Hm, I hoped I could get rid of the broken partitioning scheme of the
+> PC and C/H/S addressing used in the partition table.
+> 
+> Are there objections to change LVM so that the VGDA is placed at some
+> fixed offset (say 1 sector or 1 block (1K)) from the beginning of the
+> PV?  This is how many file systems also use block devices to avoid
+> conflicts with MBR, boot sectors and so on.
+
+There are no plans to do this for the near future
+
+ 
+> BTW, are the other partitioning schemes that I could use than the one
+> that the standard MBR and MSDOS use?  Can the linux kernel recognize
+> other partition tables which only use absolut, linear sector numbers?
+
+LVM works quite happily with any of Linux's supported disk labelling systems,
+but I think Sun and IRIX disk labels still use cylinders.
+
+If you're really worried about broken partitioning systems then perhaps you
+should use a less broken platform than a PC :-) Alphas are very nice, and you
+could use the BSD disklabel utility to slice up the disk.
 
 
-Hi,
-
-I'm sorry, if this whould haven been obvious by simply triing, but I did
-can not remember to read anything in the docs:
-
-I'm currently running a small 20GB RAID array and allow my users a
-simple versioning by storing a copy of all files one an IDE drive in the
-system every night at 4:00.
-
-As 20GB are very small, we'll get a 180GB RAID in the next month.
-Unfortunately there is no cheep 180GB ide drive do have this way of
-verioning :-(.
-
-But I thought about using LVMs snapshoots for this. Can I do so?
-
-Thanks,
-    Goetz.
-
---QTprm0S8XgL7H0Dt
-Content-Type: application/pgp-signature
-Content-Disposition: inline
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.0.4 (GNU/Linux)
-Comment: For info see http://www.gnupg.org
-
-iD8DBQE6wKWMf5srOMkjkQoRAhbsAJ4jCgqCEXEjxNno1rFZ30Cc38ECLACfaLaV
-7zwo58Aj9Sxljq1zIpx5fb8=
-=aiku
------END PGP SIGNATURE-----
-
---QTprm0S8XgL7H0Dt--
+patrick
