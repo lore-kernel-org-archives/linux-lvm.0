@@ -1,12 +1,13 @@
-Return-Path: <russell@coker.com.au>
-From: Russell Coker <russell@coker.com.au>
-Subject: Re: [linux-lvm] badblocks handling with LVM
-Date: Wed, 25 Apr 2001 19:59:48 +0200
-References: <200104231008.f3NA8Gkx001134@webber.adilger.int>
-In-Reply-To: <200104231008.f3NA8Gkx001134@webber.adilger.int>
-MIME-Version: 1.0
-Message-Id: <01042519594802.31687@lyta>
-Content-Transfer-Encoding: quoted-printable
+Return-Path: <raheesom@navpoint.com>
+Message-Id: <200104252032.f3PKWY005110@west.navpoint.com>
+Subject: Re: [linux-lvm] I need to convert my root file system to LVM
+	(adding a 2nd disk as well).
+From: Rupert Heesom <raheesom@navpoint.com>
+In-Reply-To: <20010425083538.B806@tykepenguin.com>
+References: <200104241645.f3OGjE001662@west.navpoint.com> 
+	<20010425083538.B806@tykepenguin.com>
+Date: 25 Apr 2001 11:24:42 -0400
+Mime-Version: 1.0
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -19,35 +20,25 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@sistina.com, Andreas Dilger <adilger@turbolinux.com>
+Content-Transfer-Encoding: 7bit
+To: linux-lvm@sistina.com
 
-On Monday 23 April 2001 12:08, Andreas Dilger wrote:
-> Laurent writes:
-> > I have blocks marked bad on a ext2 filesystem.  The device has bad
-> > blocks. I'm wondering how bad blocks are handled with lvm.  I would l=
-ike
-> > to create a phycal volume on this device and use reiserfs on it.
-> > Could you give me some informations ?
->
-> As long as the bad blocks are not in the first ~250kB of the partition/=
-disk
-> then LVM doesn't care about it.  However, reiserfs doesn't yet support =
-bad
-> blocks in the filesystem (this is currently under development AFAIK), s=
-o
-> this will not help you.
+On 25 Apr 2001 08:35:38 +0100, Patrick Caulfield wrote:
+> On Tue, Apr 24, 2001 at 11:39:02AM -0400, Rupert Heesom wrote:
+> 
+> Yes you should be able to do that. Follow the instructions in the HOWTO
+> (without shrinking the main disk obviously!) substituting hdb1 for hda4.
+> 
+> When you've got it working you can then make a PV on sda5 and 
+> pvmove hdb1 back onto it if you want to keep root on the SCSI disk.
+> 
+> If you're not very familiar with LVM I recommend you have a play with it on the
+> new disk before attempting to convert the root filesystem though.
 
-The problem is that when you move LV's around and make snapshots the bad=20
-blocks on the underlieing media will move.  Therefore I think that manage=
-ment=20
-of bad blocks possibly should be done in the LVM.
+Thanks, Patrick.    Yes, I think I'll have a play with it on the 2nd
+disk.  I'm not very familiar at all with LVM.
 
-Or should we just assume that LVM runs over RAID arrays of ATA/SCSI disks=
-=20
-that have sector-sparing so that bad blocks are not an issue?
 
---=20
-http://www.coker.com.au/bonnie++/     Bonnie++ hard drive benchmark
-http://www.coker.com.au/postal/       Postal SMTP/POP benchmark
-http://www.coker.com.au/projects.html Projects I am working on
-http://www.coker.com.au/~russell/     My home page
+-- 
+regs
+rupert
