@@ -1,7 +1,8 @@
-From: NagyZ <nagyz@piarista-kkt.sulinet.hu>
-Message-ID: <Pine.LNX.4.44.0212190026320.11789-100000@server.piarista-kkt.sulinet.hu>
-MIME-Version: 1.0
-Subject: [linux-lvm] lvm2 + 2.4.20
+From: Monty Taylor <mordred@inaugust.com>
+Content-Transfer-Encoding: 7bit
+Message-Id: <1040273929.24435.8.camel@blackbird>
+Mime-Version: 1.0
+Subject: [linux-lvm] PV Resizing
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -12,18 +13,22 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Dec 18 17:23:02 2002
+Date: Wed Dec 18 22:57:02 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
 
-hi!
+Hello.
 
-i wondering.. there will be an other dm patchet for this kernel as like 
-for 2.5 ?
-how much time does take to upgrade my lvm1 metadata to lvm2?
-i have 1T+ data..
-( i dont have a couple of hours.. max. 15-30 minutes )
+I've managed to get myself into a rather funny spot -- I use LVM to
+provide administrative flexibility, but I didn't account for one
+possibility. I'm hoping someone has an idea...
 
-NagyZ
+I have a machine with a single hard drive. I have three partitions,
+boot, swap, and the lvm partition. I now need to install a windows
+partition... (damn CAD program won't run under WINE) Is there _any_ way
+to resize the PV from under LVM? (Like with parted or something) so I
+can create another partition? 
+
+Thanks in advance.
+Monty
