@@ -1,25 +1,17 @@
-Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id i81LKS307354
-	for <linux-lvm@redhat.com>; Wed, 1 Sep 2004 17:20:28 -0400
-Received: from main.gmane.org (main.gmane.org [80.91.224.249])
-	by mx1.redhat.com (8.12.10/8.12.10) with ESMTP id i81LKPS0007773
-	for <linux-lvm@redhat.com>; Wed, 1 Sep 2004 17:20:25 -0400
-Received: from root by main.gmane.org with local (Exim 3.35 #1 (Debian))
-	id 1C2cWm-0001DD-00
-	for <linux-lvm@redhat.com>; Wed, 01 Sep 2004 23:20:24 +0200
-Received: from adsl-214-28-210.asm.bellsouth.net ([68.214.28.210])
-	by main.gmane.org with esmtp (Gmexim 0.1 (Debian))
-	id 1AlnuQ-0007hv-00
-	for <linux-lvm@redhat.com>; Wed, 01 Sep 2004 23:20:24 +0200
-Received: from ecashin by adsl-214-28-210.asm.bellsouth.net with local (Gmexim
-	0.1 (Debian)) id 1AlnuQ-0007hv-00
-	for <linux-lvm@redhat.com>; Wed, 01 Sep 2004 23:20:24 +0200
-From: Ed L Cashin <ecashin@coraid.com>
-Date: Wed, 01 Sep 2004 17:10:14 -0400
-Message-ID: <87k6vdhf0p.fsf@coraid.com>
+Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id i821cT332178
+	for <linux-lvm@redhat.com>; Wed, 1 Sep 2004 21:38:29 -0400
+Date: Wed, 1 Sep 2004 18:37:37 -0700
+From: "David S. Miller" <davem@davemloft.net>
+Message-Id: <20040901183737.7bf17a39.davem@davemloft.net>
+In-Reply-To: <1093989609.2124.139.camel@duncow>
+References: <1093911340.2116.55.camel@duncow>
+	<20040830174015.10edb69b.davem@davemloft.net>
+	<1093989609.2124.139.camel@duncow>
 Mime-Version: 1.0
-Sender: news <news@sea.gmane.org>
-Subject: [linux-lvm] LVM2 configure options for CLVM with GFS
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] Re: [PATCH] Re: lvm problems on sparc64 - Trying to
+ vfree() nonexistent vm area
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -31,38 +23,14 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: linux-lvm@redhat.com
+To: Richard Mortimer <richm@oldelvet.org.uk>
+Cc: sparclinux@vger.kernel.org, debian-sparc@lists.debian.org, linux-lvm@sistina.com, marcelo.tosatti@cyclades.com
 
-Hi.  The example at ...
+On Tue, 31 Aug 2004 23:00:10 +0100
+Richard Mortimer <richm@oldelvet.org.uk> wrote:
 
-  http://gfs.wikidev.net/Installation
+> How do they look
 
-... shows this command line for LVM2 configuration:
-
-  ./configure --with-clvmd --with-cluster=shared \
-     --with-kernel-source=/path/to/patched/kernel
-
-I see there are more options that look to me like they should be set
-to "shared" for using CLVMD with GFS:
-
-  --with-pool=TYPE        GFS pool read-only support: internal/shared/none
-                          TYPE=internal
-  --with-cluster=TYPE     Cluster LVM locking support: internal/shared/none
-                          TYPE=internal
-  --with-snapshots=TYPE   Snapshot support: internal/shared/none
-                          TYPE=internal
-  --with-mirrors=TYPE     Mirror support: internal/shared/none
-                          TYPE=internal
-
-If I'm already running the patched kernel that I plan to use, should I
-configure LVM2 like this?
-
-  ./configure --with-clvmd --with-cluster=shared \
-    --with-pool=shared \
-    --with-snapshots=shared \
-    --with-mirrors=shared
-
-
--- 
-  Ed L Cashin <ecashin@coraid.com>
+Please resend your patch without all the line breaks
+created by your email client.  It looks fine otherwise
+:)
