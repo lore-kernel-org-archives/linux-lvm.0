@@ -1,27 +1,16 @@
 Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with SMTP id i31JToj16649
-	for <linux-lvm@redhat.com>; Thu, 1 Apr 2004 14:29:50 -0500
-Received: from salusa.poochiereds.net (rdu26-93-067.nc.rr.com [66.26.93.67])
-	by mx1.redhat.com (8.12.10/8.12.10) with SMTP id i31JTnjj004721
-	for <linux-lvm@redhat.com>; Thu, 1 Apr 2004 14:29:49 -0500
-Received: from localhost (localhost [127.0.0.1])
-	by salusa.poochiereds.net (Postfix) with ESMTP id D7C8FB450
-	for <linux-lvm@redhat.com>; Thu,  1 Apr 2004 14:29:48 -0500 (EST)
-Received: from salusa.poochiereds.net ([127.0.0.1])
-	by localhost (salusa [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id 22521-08 for <linux-lvm@redhat.com>;
-	Thu, 1 Apr 2004 14:29:48 -0500 (EST)
-Received: from localhost (salusa.ix.dyndns.org [192.168.1.2])
-	by salusa.poochiereds.net (Postfix) with ESMTP id 29F743673
-	for <linux-lvm@redhat.com>; Thu,  1 Apr 2004 14:29:48 -0500 (EST)
-Subject: Re: [linux-lvm] Migration of linux 2.4/LVM1 to linux 2.6/LVM2 with
-	root fs in LVM
-From: Jeffrey Layton <jtlayton@poochiereds.net>
-In-Reply-To: <406C3010.2040103@shoenix.net>
-References: <406C3010.2040103@shoenix.net>
-Message-Id: <1080847790.3404.74.camel@tesla.mmt.bellhowell.com>
-Mime-Version: 1.0
-Date: Thu, 01 Apr 2004 14:29:50 -0500
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with SMTP id i31JcCj19771
+	for <linux-lvm@redhat.com>; Thu, 1 Apr 2004 14:38:12 -0500
+Received: from percy.comedia.it (percy.comedia.it [212.97.59.71])
+	by mx1.redhat.com (8.12.10/8.12.10) with SMTP id i31JcAjj007818
+	for <linux-lvm@redhat.com>; Thu, 1 Apr 2004 14:38:10 -0500
+Message-ID: <406C6F9E.4000400@comedia.it>
+Date: Thu, 01 Apr 2004 21:38:06 +0200
+From: Luca Berra <bluca@comedia.it>
+MIME-Version: 1.0
+Subject: Re: [linux-lvm] Migrate to kernel 2.6 and lvm2 with root fs on lvm1
+References: <OF12DEDDF3.CC314224-ON00256E65.005D8012-00256E65.00647CD5@svunta.os.is>
+In-Reply-To: <OF12DEDDF3.CC314224-ON00256E65.005D8012-00256E65.00647CD5@svunta.os.is>
 Content-Transfer-Encoding: 7bit
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
@@ -33,45 +22,28 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+To: LVM general discussion and development <linux-lvm@redhat.com>, krh@os.is
 
-Hi Martin,
-   You're right -- that was a lot of text :-). I haven't done an
-2.4/LVM1-2.6/LVM2 conversion yet, but am going to have to at some point
-in the not too distant future. I _have_ however, set up a 2.6/LVM2
-root-on-LVM-on-MD setup. Here's some comments for ya (and anyone else
-looking at this), roughly corresponding to your questions:
+Kjartan Reynir Hauksson wrote:
 
-10) You might want to have a look at the lvm2create_initrd script that's
-been bandied about here. (I have a fairly recent copy at:
-http://poochiereds.net/svn/lvm2create_initrd). It has a number of
-features that are helpful -- in particular a lvm2rescue mode, which
-brings up a shell prior to the pivot_root. Also the old lvmcreate_initrd
-script uses the deprecated change_root function.
+> I've written earlier on the same subject but never got it resolved so I'm
+> going to give it another go since my desktop constantly stalls on me with
+> my 2.4 kernel.  I'm now running MDK 10.0 with
+> kernel24-tmp-2.4.25-2.tmp.1mdk rpm package from Thomas Backlund.  This
+Mdk 10 supports LVM1 and LVM2 seamlessly with kernel 2.4 and LVM2 with 
+kernel-2.6.
+you don't have to edit initscripts or do any other modifications by hand
+you only have to be sure you install the lvm2 package.
 
-8) yes, the DM control device numbers can (and do) change.
+Then you either:
+- install kernel 2.6 and an initrd that supports lvm2 will be created
+- run /sbin/mkinitrd again against your 2.4 kernel telling it to use lvm2
 
-7) You're quite correct about the problems with major/minor numbers on
-dm devices. In fact its even worse than you know, since a kernel upgrade
-or rebuild can now cause your DM major/minor numbers to change
-(depending on how drivers get loaded).
+you can remove the lvm1 package afterwards.
+(you can even switch between lvm1 and lvm2 if you want)
 
-The best way to handle it (as far as I can see) is to use udev (the
-replacement for devfs). Under Debian (probably other distribs too), it
-mounts a ramdisk over /dev early in rcS.d. This means you need a startup
-script that happens after /dev getting mounted and before root gets
-fsck'ed that runs a vgscan --mknodes.
+Let me know if you have problems.
 
-We considered trying to make the initrd image fix the device entries on
-the root filesystem, but that's dangerous since you're mucking with the
-rootfs before it's been fscked. So at this point using udev is _highly_
-recommended for root-on-LVM2 setups (prob. for root on EVMS setups etc
-too), as it gets around the whole problem of invalid devices on the
-rootfs.
-
-There are prob. a lot of things I'm forgetting too, but I'm glad you got
-your setup transitioned without data loss!!!
-
-Cheers,
-Jeff
+-- 
+Luca Berra -- bluca@comedia.it
