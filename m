@@ -1,8 +1,10 @@
-Message-ID: <000701c1662e$69e79d00$8400a8c0@EFOLAPTOP>
-From: "Frode Ulsund" <frode@gangstah.net>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] problem with activating volume group
+From: Andreas Dilger <adilger@turbolabs.com>
+Subject: Re: [linux-lvm] snapshot questions
+Message-ID: <20011105132224.D3957@lynx.no>
+References: <3.0.6.32.20011102140312.00806c50@mail.doorpi.net> <0111021621181I.08803@khayes-lin> <3BE66C5A.C5BA896C@promofinarsa.es> <01110508512502.30934@khayes-lin>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <01110508512502.30934@khayes-lin>; from khayes@quicknet.net on Mon, Nov 05, 2001 at 08:51:25AM -0800
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -13,53 +15,31 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Nov  5 13:08:01 2001
+Date: Mon Nov  5 14:21:01 2001
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: Linux-LVM@sistina.com
+Content-Transfer-Encoding: 7bit
+To: Kyle Hayes <khayes@quicknet.net>
+Cc: linux-lvm@sistina.com, Jesus Manuel NAVARRO LOPEZ <jesus_navarro@promofinarsa.es>
 
-Hi there!
+On Nov 05, 2001  08:51 -0800, Kyle Hayes wrote:
+> We can insure 1 with no problem.  2 seems to require either patches or
+> new versions of various code.  I have not yet seen a full reply as to
+> what patches are necessary for which kernels.
 
-I have read all the documentation in the LVM-package and your homepage, but
-i can't find a
-sollution to my problem in the HOW-TOs.
+You need LVM-VFS patch on all kernels, you need ext3 or reiserfs or XFS
+to get "real" VFS lock usage.  For non-journaled fs (like ext2) it just
+syncs, and you mount the snapshot - it will complain that it is dirty,
+but fsck will verify that there are no errors.
 
-I run kernel 2.4.13 with Slackware 8.0. I tried to patch the rc.S with the
-patch i found on your homepage
-but it looks like the patch is allready applied in the distribution.
+> I have seen that the AC kernels are being patched nearly up to the level
+> of what is in CVS.  But, this is for 2.4.x.  What about 2.2.x?  Is 2.2.20
+> going to have the latest LVM patches?
 
-I have loaded LVM as a module in the boot. Everything runs perfectly until i
-try to activate my
-volume group "vg01".
+No, LVM was never part of 2.2, so you always need to patch.
 
-When i run  : vgchange -v -d -a y i get the following output, but I don't
-really know what the problem is.
-
-Any help is aprichiated.
-
-And thank you for making great software.
-
-mvh
-Frode Ulsund
--------------------------------------------------------------------------
-<333> vg_check_name -- vg_name: "vg01"
-<4444> lvm_check_chars -- CALLED with name: "vg01"
-<4444> lvm_check_chars -- LEAVING with ret: 0
-<333> vg_check_name -- LEAVING with ret: 0
-<22> vg_check_consistency -- LEAVING with ret: 0
-<1> vg_create_remove -- IOCTL
-<1> vg_create_remove -- IOCTL returned: -22
-<1> vg_create_remove -- LEAVING with ret: -22
-<> vgchange -- vg_create returned: -22
-<1> lvm_error -- CALLED with: -22
-<1> lvm_error -- LEAVING with: "Invalid argument"
-vgchange -- ERROR "Invalid argument" activating volume group "vg01"
-<1> vg_free -- CALLED
-<1> vg_free -- entering PV loop
-<1> vg_free -- entering LV loop
-<1> vg_free -- LEAVING with ret: 0
-vgchange -- unlocking logical volume manager
-<1> lvm_unlock -- CALLED
-<1> lvm_unlock -- LEAVING with ret: 0
-<1> lvm_unlock -- CALLED
-<1> lvm_unlock -- LEAVING with ret: -104
+Cheers, Andreas
+--
+Andreas Dilger
+http://sourceforge.net/projects/ext2resize/
+http://www-mddsp.enel.ucalgary.ca/People/adilger/
