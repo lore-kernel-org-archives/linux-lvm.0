@@ -1,14 +1,11 @@
-Return-Path: <hopper@omnifarious.mn.org>
-Date: Wed, 24 Jan 2001 13:10:35 -0600
-From: "Eric M. Hopper" <hopper@omnifarious.mn.org>
-Message-ID: <20010124131035.A22731@omnifarious.mn.org>
-References: <20010124181324.A7233@66bassett.freeserve.co.uk> <Pine.LNX.4.30.0101241041490.11299-100000@beefcake.hdqt.valinux.com>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="envbJBWh7q8WU6mo"
-Content-Disposition: inline
-In-Reply-To: <Pine.LNX.4.30.0101241041490.11299-100000@beefcake.hdqt.valinux.com>; from jweber@valinux.com on Wed, Jan 24, 2001 at 10:42:07AM -0800
-Subject: [linux-lvm] Debugging and testing
+Return-Path: <adilger@turbolinux.com>
+From: Andreas Dilger <adilger@turbolinux.com>
+Message-Id: <200101242108.f0OL87Q22724@webber.adilger.net>
+Subject: Re: [linux-lvm] Debugging help.
+In-Reply-To: <Pine.LNX.4.30.0101240945020.9779-100000@beefcake.hdqt.valinux.com>
+ "from Jay Weber at Jan 24, 2001 09:58:23 am"
+Date: Wed, 24 Jan 2001 14:08:07 -0700 (MST)
+MIME-Version: 1.0
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -20,50 +17,42 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
---envbJBWh7q8WU6mo
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Jay Webber writes:
+> Any suggestions on what to turn on debugging wise?  I'm currently
+> utilizing SysRq and kdb v1.5 on stock 2.2.18 with LVM patches applied from
+> 0.9.1beta2 using the PATCHES/README instructions.  All I manage to get
+> after the system hangs, using SysRq's PrintPC or dropping into kdb
+> (manually) and doing a backtrace, is reference to cpu_idle and
+> init_task_union.  This leads me to believe the system is just sitting in
+> an indefinate idle loop state?
+> 
+> I've also initially tried enabling the debug code in lvm-snap.c but it's
+> not much help since the box hangs and the info that may be output from it
+> is stuck in buffer and SysRq Sync don't manage to drop it to disk for me
+> after hanging.
+> 
+> Any clues, suggestions, hints, pointers?
 
-	On a debugging and testing note...
+One option is to use a serial console (preferrably to another PC) to capture
+the debugging info.  Unfortunately, like me, you are using a VAIO which
+doesn't have a serial port.  I've also used a patch "kmsgdump" which
+allows you to save the syslog to floppy.  However, I haven't used it at
+the same time as kdb, so there may be conflicts.  Both appear on the
+console after an OOPS, so I'm not sure what would happen.
 
-	Has anybody tried building up sets of test data for the ioctl
-calls that are designed to crash the kernel?  For example, random ioctls
-on the character device, ones with invalid pointers, ones with strangely
-inconsistent data, etc...
+> Nobody else sees this problem?  I'm currently reproducing this on my Vaio
+> laptop using a loop device attached file as the simulated disk, but will
+> use another box with real disks here shortly and double check. Granted,
+> this problem surfaced on another box to start with. :)
 
-	Perhaps I'm being a bit too picky, but it seems to me there
-should be as few ways as possible for a user space program (even one run
-by root) to crash the kernel.  The LVM deice is especially this way
-since whenever you're using it you're trying to perform some system
-maintenance task with the express desire of not shutting down.  And,
-since you're performing a system maintenance task, the system is likely
-to be in an interesting state that may make it difficult to recover from
-a crash.
+So far I haven't been using snapshots.
 
-	Anyway, I didn't know if anybody had done this or not, so I
-thought I'd ask.
-
-Have fun (if at all possible),
---=20
-The best we can hope for concerning the people at large is that they
-be properly armed.  -- Alexander Hamilton
--- Eric Hopper (hopper@omnifarious.mn.org http://www.omnifarious.org/~hoppe=
-r) --
-
---envbJBWh7q8WU6mo
-Content-Type: application/pgp-signature
-Content-Disposition: inline
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.0.2 (GNU/Linux)
-Comment: For info see http://www.gnupg.org
-
-iD8DBQE6byirG4QeWBeRdS8RAkyTAJ0RxpA3BSq0x3afpMH6Zzg0bUrQUACfcPpA
-7FsY2PfU4UURKv81S0RIzdA=
-=vSyb
------END PGP SIGNATURE-----
-
---envbJBWh7q8WU6mo--
+Cheers, Andreas
+-- 
+Andreas Dilger  \ "If a man ate a pound of pasta and a pound of antipasto,
+                 \  would they cancel out, leaving him still hungry?"
+http://www-mddsp.enel.ucalgary.ca/People/adilger/               -- Dogbert
