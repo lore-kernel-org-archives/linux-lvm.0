@@ -1,12 +1,10 @@
-Return-Path: <alden@math.ohio-state.edu>
-Date: Tue, 27 Feb 2001 13:23:58 -0500
-From: Dave Alden <alden@math.ohio-state.edu>
-Subject: Re: [linux-lvm] Possible to raise Max LV?
-Message-ID: <20010227132358.A24164@math.ohio-state.edu>
-References: <20010227131526.1C48E3FDB@math.ohio-state.edu> <200102271658.f1RGwkl27047@webber.adilger.net>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <200102271658.f1RGwkl27047@webber.adilger.net>; from adilger@turbolinux.com on Tue, Feb 27, 2001 at 09:58:46AM -0700
+Return-Path: <mjt@tls.msk.ru>
+Message-ID: <3A9BF392.2E4C3DA5@tls.msk.ru>
+Date: Tue, 27 Feb 2001 21:36:02 +0300
+From: Michael Tokarev <mjt@tls.msk.ru>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] q: BLOCK_SIZE
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -19,21 +17,29 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Hi,
-  First let me apologize -- I just realized my question was in the FAQ.
-I'm usually brighter than this, honest.  :-)  Now on to my new question:
+This is a repost, basically.  When I posted this question
+for a first time (8 Dec 2000), noone answered, but there
+was a way low traffic on this list that time...
 
-On Tue, Feb 27, 2001 at 09:58:46AM -0700, Andreas Dilger wrote:
-> The max LV size is dependent upon the PE size that you select at VG
-> creation time.  This is because there is a limit of 64k PEs per LV.
+Little question that I already posted here a long time ago.
+What drawbacks can suffer if one changes BLOCK_SIZE in
+include/linux/lvm.h from 1024 (or 4096 on S/390) to 512?
+I can't understand from code what't a real purpose of
+this constant, -- lvm seemed to work well with BLOCK_SIZE=512,
+no troubles so far, -- but i'm still not shure if it is
+"legal" to change that.  At least there is some purpose on
+having different values for this constant on S/390 and other
+platforms, -- again, can't see that purposes...
 
-I'm completely new to LVM, so can someone explain to me the purpose of
-the PE's and why they default to 4M?  Is there some kind of performance
-or space hit if I raise that to 16M (remember my setup: hardware RAID
-array that is currently at ~250G, soon to be ~325G)?
+This is about using lvm with rawio -- on 2.2, rawio wan't
+work with i/o size be not a multiple of blocksize, while
+on 2.4 it works.  Or at least this was on Dec-2000.
 
-...thnx,
-...dave alden
+Oh yes, this is about 2.2 kernel and lvm-0.9.
+
+Thank you.
+
+Regards,
+ Michael.
