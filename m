@@ -1,11 +1,10 @@
-Return-Path: <iain@g7iii.junglelink.co.uk>
-Date: Wed, 20 Jun 2001 22:20:27 +0100
-From: Iain Young <iain@g7iii.junglelink.co.uk>
-Subject: Re: [linux-lvm] mount: bad address
-Message-ID: <20010620222027.A1115@g7iii.junglelink.co.uk>
-References: <20010618220049.A652@g7iii.junglelink.co.uk> <20010620155329.A25139@sistina.com>
-Mime-Version: 1.0
-In-Reply-To: <20010620155329.A25139@sistina.com>; from Mauelshagen@sistina.com on Wed, Jun 20, 2001 at 03:53:29PM +0200
+Return-Path: <paul@clubi.ie>
+Date: Wed, 20 Jun 2001 02:15:30 +0100 (IST)
+From: Paul Jakma <paul@clubi.ie>
+Subject: Re: [linux-lvm] LVM problems
+In-Reply-To: <20010619161930.A15720@sistina.com>
+Message-ID: <Pine.LNX.4.33.0106200212360.21696-100000@fogarty.jakma.org>
+MIME-Version: 1.0
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,19 +16,26 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: TEXT/PLAIN; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Hi Heinz,
+On Tue, 19 Jun 2001, AJ Lewis wrote:
 
-On Wed, Jun 20, 2001 at 03:53:29PM +0200, Heinz J. Mauelshagen wrote:
- 
-> did you follow the instructions in INSTALL and PATCHES/README contained
-> in the LVM distro to put necessary LVM patches into the kernel?
+> or you can use the CVS repository.  I really don't know what else you expect
+> us to do.
 
-Yup, applied with no prons, compiled with no probs. module loads fine,
-everything works, except for the mount.
+make releases on a more timely basis?
 
+>
+> Regards,
+>
 
-Iain
+-- 
+Paul Jakma	paul@clubi.ie	paul@jakma.org
+PGP5 key: http://www.clubi.ie/jakma/publickey.txt
+-------------------------------------------
+Fortune:
+He:	Let's end it all, bequeathin' our brains to science.
+She:	What?!?  Science got enough trouble with their OWN brains.
+		-- Walt Kelly
