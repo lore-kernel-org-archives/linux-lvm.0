@@ -1,15 +1,15 @@
-Received: from agk.surrey.redhat.com (agk.surrey.redhat.com [172.16.10.74])
-	by pobox.surrey.redhat.com (8.12.8/8.12.8) with ESMTP id i5AH1CbI030060
-	for <linux-lvm@redhat.com>; Thu, 10 Jun 2004 18:01:12 +0100
-Received: from agk by agk.surrey.redhat.com with local (Exim 4.34)
-	id 1BYSvQ-0003kZ-OY
-	for linux-lvm@redhat.com; Thu, 10 Jun 2004 18:01:12 +0100
-Date: Thu, 10 Jun 2004 18:01:12 +0100
-From: Alasdair G Kergon <agk@redhat.com>
-Message-ID: <20040610170112.GL6302@agk.surrey.redhat.com>
+Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id i5AKFL017317
+	for <linux-lvm@redhat.com>; Thu, 10 Jun 2004 16:15:21 -0400
+Received: from nerim.mx.42-networks.com (gw.c9x.org [213.41.131.17])
+	by mx1.redhat.com (8.12.10/8.12.10) with SMTP id i5AKFKi5011312
+	for <linux-lvm@redhat.com>; Thu, 10 Jun 2004 16:15:21 -0400
+Date: Thu, 10 Jun 2004 22:32:47 +0159
+From: Jedi/Sector One <lvm@pureftpd.org>
+Message-ID: <20040610203309.GA18186@c9x.org>
 Mime-Version: 1.0
 Content-Disposition: inline
-Subject: [linux-lvm] LVM2 tutorial at LinuxTag, 23rd June
+Subject: [linux-lvm] Multipath without round-robin?
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -22,13 +22,26 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: LVM general discussion and development <linux-lvm@redhat.com>
+To: linux-lvm@redhat.com
 
-There are still places left on the 1-day LVM2 tutorial 
-at LinuxTag in Germany in a couple of weeks time:
+  Hello.
+  
+  I'm trying to get multipath working with LVM2 (2.6.7-rc2-udm2 kernel) with
+an LSI storage array.
 
-  http://www.linuxtag.org/2004/tutorials/lvm.html
+  The array has two FC controllers, HBAs are two identical Qlogic 2340.
+  
+  On the array, "preferred" controllers are assigned to each LUN.
+  
+  Unfortunately, it looks like dm-multipath always does round-robin load
+balancing.
 
-Alasdair
--- 
-agk@redhat.com
+  The result is that the array fills up the (SANtricity) error log with
+messages like "LUN was accessed through the wrong controller".
+
+  Is there any way to keep failover abilities without load balancing?
+  
+  Best regards,
+  
+       -Frank.
+       
