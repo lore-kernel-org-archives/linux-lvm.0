@@ -1,18 +1,29 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id i7V0pR307137
-	for <linux-lvm@redhat.com>; Mon, 30 Aug 2004 20:51:27 -0400
-Received: from hotmail.com (bay13-dav9.bay13.hotmail.com [64.4.31.183])
-	by mx3.redhat.com (8.12.11/8.12.10) with ESMTP id i7V0pKPY027011
-	for <linux-lvm@redhat.com>; Mon, 30 Aug 2004 20:51:21 -0400
-From: "Benjamin Runnels" <krav3n@hotmail.com>
-Subject: RE: [linux-lvm] Why do I only have 11.51GB Free PE's when DF
-	saysIhave 441GB free in the volume?
-Date: Mon, 30 Aug 2004 19:52:59 -0500
-Message-ID: <000401c48ef4$dc530810$1400000a@nforce>
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id i7VGPl322329
+	for <linux-lvm@redhat.com>; Tue, 31 Aug 2004 12:25:47 -0400
+Received: from smtp05.wanadoo.nl (smtp05.wanadoo.nl [194.134.35.145])
+	by mx3.redhat.com (8.12.11/8.12.10) with ESMTP id i7VGPaw1025040
+	for <linux-lvm@redhat.com>; Tue, 31 Aug 2004 12:25:41 -0400
+Received: from giant.koningspage.nl (adsl-dc-1f2f8.adsl.wanadoo.nl
+	[81.70.16.248]) by smtp5.wanadoo.nl (Postfix) with ESMTP id 847DD5AEE
+	for <linux-lvm@redhat.com>; Tue, 31 Aug 2004 17:55:57 +0200 (CEST)
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by giant.koningspage.nl (Postfix) with ESMTP id 74E777C3F8
+	for <linux-lvm@redhat.com>; Tue, 31 Aug 2004 17:56:19 +0200 (CEST)
+Received: from giant.koningspage.nl ([127.0.0.1])
+	by localhost (giant.koningspage.nl [127.0.0.1]) (amavisd-new,
+	port 10024) with SMTP id 10487-01 for <linux-lvm@redhat.com>;
+	Tue, 31 Aug 2004 17:56:17 +0200 (CEST)
+From: Melis van den Brink <m.vd.brink@worldonline.nl>
+Date: Tue, 31 Aug 2004 17:56:17 +0200
 MIME-Version: 1.0
-In-Reply-To: <006501c48e65$e40461b0$1c01010a@christianh>
-Content-Transfer-Encoding: 8bit
-Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: Multipart/Mixed;
+  boundary="Boundary-00=_h+JNBzEhEHwvw5/"
+Message-Id: <200408311756.17593.m.vd.brink@worldonline.nl>
+Subject: [linux-lvm] Fwd: <Q>: Help please with corrupted LVM/reiserfs
+	filesystems
+Reply-To: m.vd.brink@worldonline.nl,
+	LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -22,93 +33,102 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: 'LVM general discussion and development' <linux-lvm@redhat.com>
-
-Thanks Christian, that makes perfect sense.  I don't know why it didn't
-click for me earlier but I get it now.
+To: linux-lvm@redhat.com
 
 
+--Boundary-00=_h+JNBzEhEHwvw5/
+Content-Type: text/plain;
+  charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
 
------Original Message-----
-From: linux-lvm-bounces@redhat.com [mailto:linux-lvm-bounces@redhat.com] On
-Behalf Of Christian Hack
-Sent: Monday, August 30, 2004 2:50 AM
-To: 'LVM general discussion and development'
-Subject: RE: [linux-lvm] Why do I only have 11.51GB Free PE's when DF
-saysIhave 441GB free in the volume?
+Dear LVM-list readers,
 
-Your file system although only 59% used still occupies the PEs. The space is
-allocated by the file system and thus also by the logical volume group.
+I've sent the following question to the reiserfs-list. Sadly there wasn't much 
+response other than the suggestion to try the same question on this list. I 
+hope you can give some good advice on how to tackle this problem. It would 
+surely help to recover some precious photos and videos. And yes: a backup 
+should've solved my problems but alas....
+-- 
+Regards,
 
-To fix this you need to:
-1) Unmount and reduce your file system size first. 
-2) Then reduce the logical volume using lvreduce
-3) Then use pvmove to remove the failing physical device
+Melis van den Brink
 
-The tool you use to resize your file system is obviously dependant on the
-file system, and I can't see what you are using so you'll have to work that
-out yourself.
+--Boundary-00=_h+JNBzEhEHwvw5/
+Content-Type: message/rfc822;
+  name="forwarded message"
+Content-Transfer-Encoding: 7bit
+Content-Description: Melis van den Brink <melis@koningspage61.myweb.nl>: <Q>:
+	Help please with corrupted reiserfs filesystems
 
-I think this is all right, but it's off the top of my head so if I'm wrong
-please correct me guys.
+From: Melis van den Brink <melis@koningspage61.myweb.nl>
+Reply-To: melis@koningspage61.myweb.nl
+Organization: Private
+X-KMail-Identity: 1380841211
+To: reiserfs-list@namesys.com
+Subject: <Q>: Help please with corrupted reiserfs filesystems
+Date: Mon, 16 Aug 2004 17:36:04 +0200
+User-Agent: KMail/1.5.3
+MIME-Version: 1.0
+Content-Type: text/plain;
+  charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+Message-Id: <200408161736.04472.melis@koningspage61.myweb.nl>
+Status: RO
+X-Status: S
+X-KMail-EncryptionState: 
+X-KMail-SignatureState: 
 
-CH
+Dear reiserfs-list readers,
+
+I'm following this list for a few years mostly in "lurker"-mode just to see 
+what happens with reiserfs. I've been using reiserfs (version 3) for many 
+years now without much problems. Up until now... :-(.
+Last week I ran into diskspace problems and I decided to make a new volume 
+where I could place all my multimedia stuff (movies, audio and pictures). I 
+fdisk-ed a new disk and made few partitions. After that I used LVM 1.0.7 
+(pvcreate, vgcreate and lvcreate) to get me some logical volumes and used 
+mkreiserfs (version 3.6.10) to get a filesystem on it. All looked well and I 
+started moving my data to those new filesystems. Even this looked ok up until 
+I experienced a locked-up system. No way to shut it down in a nice way I was 
+forced to power-down and power-up and that's where the shit hitted the fan 
+:-(.
+Recovery of my older filesystems worked like a charm but the newly made stuff 
+was nowhere in sight. In hindsight the only thing I could think of I did 
+wrong in making the new filesystems was I forgot to reboot after fdisk-ing 
+the disk.
+It turned out that LVM couldn't find the newly created volume-group and the 
+logical volumes it contained. Subsequently neither could reiserfs find it's 
+(or rather my)  precious filesystems. Using vgcfgrestore I eventually could 
+recover the LVM-data so that at least LVM was consistent again. The 
+reiserfs-filesystems however I just can't seem to get them back. Using 
+reiserfsck in --check, --rebuild-sb, --fix-fixable or --rebuild-tree-mode 
+eventually turned out in the following message:
+	No reiserfs metadata found.  If you are sure that you had the reiserfs
+	on this partition,  then the start  of the partition  might be changed
+	or all data were wiped out. The start of the partition may get changed
+	by a partitioner  if you have used one.  Then you probably rebuilt the
+	superblock as there was no one.  Zero the block at 64K offset from the
+	start of the partition (a new super block you have just built) and try
+	to move the start of the partition a few cylinders aside  and check if
+	debugreiserfs /dev/xxx detects a reiserfs super block. If it does this
+	is likely to be the right super block version.
+	If this makes you nervous, try  www.namesys.com/support.html,  and for
+	$25 the author of fsck,  or a colleague  if he is out,  will  step you
+	through it all.
+
+I tried some other suggestions in previous messages in this list, but always 
+came back to the above sequence of reiserfsck-commands.
+
+Could anybody please help (suggestions, examples, other commands) with this 
+annoying problem ?
+I will happily supply other information (machine, kernel, versions, 
+filesystem-dumps) if needed.
+-- 
+Regards,
+
+Melis van den Brink
 
 
-> -----Original Message-----
-> From: linux-lvm-bounces@redhat.com 
-> [mailto:linux-lvm-bounces@redhat.com] On Behalf Of Benjamin Runnels
-> Sent: Monday, 30 August 2004 1:49 PM
-> To: 'LVM general discussion and development'
-> Subject: [linux-lvm] Why do I only have 11.51GB Free PE's 
-> when DF says Ihave 441GB free in the volume?
-> 
-> 
-> Anyone know how I can free up some PE's so I can do pvmove on 
-> a 160gb PV I
-> think may be failing?
-> 
-> 
-> 
-> p4:~ # vgdisplay
->   --- Volume group ---
->   VG Name               solar
->   System ID             
->   Format                lvm2
->   Metadata Areas        6
->   Metadata Sequence No  20
->   VG Access             read/write
->   VG Status             resizable
->   MAX LV                256
->   Cur LV                1
->   Open LV               1
->   Max PV                256
->   Cur PV                6
->   Act PV                6
->   VG Size               1.01 TB
->   PE Size               4.00 MB
->   Total PE              265091
->   Alloc PE / Size       262144 / 1.00 TB
->   Free  PE / Size       2947 / 11.51 GB
->   VG UUID               nEwuBX-aKsk-gFIb-DrqQ-zREN-33SE-R09Q4b
->    
-> p4:~ # df
-> Filesystem           1K-blocks      Used Available Use% Mounted on
-> /dev/hda2             38569376  11102844  27466532  29% /
-> tmpfs                   128216         4    128212   1% /dev/shm
-> /dev/mapper/solar-saturn
->                      1073709052 632227192 441481860  59% /media/saturn
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
-> 
-
-
-_______________________________________________
-linux-lvm mailing list
-linux-lvm@redhat.com
-https://www.redhat.com/mailman/listinfo/linux-lvm
-read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+--Boundary-00=_h+JNBzEhEHwvw5/--
