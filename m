@@ -1,9 +1,10 @@
-Return-Path: <dice@mfa.kfki.hu>
-Date: Thu, 21 Dec 2000 10:43:33 +0100 (CET)
-From: Gergely Tamas <dice@mfa.kfki.hu>
-Subject: Re: [linux-lvm] '/etc/init.d/lvm' script in debian package
-In-Reply-To: <20001221090437.D511@tykepenguin.com>
-Message-ID: <Pine.LNX.4.31.0012211041260.9973-100000@falka.mfa.kfki.hu>
+Return-Path: <claudio@conectiva.com>
+Date: Thu, 21 Dec 2000 08:28:26 -0200 (BRST)
+From: Claudio Matsuoka <claudio@conectiva.com>
+Subject: Re: [linux-lvm] IOP selection scripts (was: '/etc/init.d/lvm' script
+ in debian package)
+In-Reply-To: <200012210034.eBL0Yih02808@webber.adilger.net>
+Message-ID: <Pine.LNX.4.21.0012210820170.569-100000@scuzzlebutt.helllabs>
 MIME-Version: 1.0
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
@@ -18,30 +19,41 @@ List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: TEXT/PLAIN; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: Patrick Caulfield <patrick@tykepenguin.com>
-Cc: linux-lvm@sistina.com, Russell Coker <bofh@coker.com.au>
+To: linux-lvm@sistina.com
+Cc: Gergely Tamas <dice@mfa.kfki.hu>
 
-Hi!
+On Wed, 20 Dec 2000, Andreas Dilger wrote:
 
-> On Thu, Dec 21, 2000 at 09:37:58AM +0100, Gergely Tamas wrote:
-> >
-> > A few ideas ...
-> > 1) if LVM is compiled into the kernel and /boot/System.map is reachable,
-> > than it could be detected using e.g. 'grep lvm System.map'
-> >
-> > 2) if /usr/src/kernel/.config is reachable, than it could be detected
-> > using e.g. 'grep -i lvm .config'
-> >
-> > 3) maybe doing a check for directories countaining 'group' in /dev would
-> > be a usable idea...
->
-> How about looking in /proc/devices for the lvm block & char devices ?
+> Claudio writes:
+> > if [ "$util" = "lvm-wrapper" ]; then
+> >     echo "$util: you don't want to call the wrapper directly" 1>&2
+> >     exit -2
+>            ^^ I don't think this is legal...
+> > fi
 
-This is a good idea too.
+Oops. C-ism, I think.
 
-But I noticed, that looking in /etc for lvmtab is usable too.
 
-But your idea seems to be the most usable. It would be good to change the
-init.d/lvm script to something using this.
+> Is there ever a reason why you would want to install this program as
+> "lvm-wrapper" anywhere?
 
-Gergely
+I'm installing it as /sbin/lvm-wrapper and symlinking all utilities to it
+(seems better than using one wrapper per tool).
+
+
+> Probably some simple checks for the existence of /lib/lvm-iop$iop and
+> /lib/lvm-iop$iop/$util and printing a nice message would be helpful, like:
+> 
+> if [ ! -d $LIBLVM ]; then
+> 	echo "$util: $LIBLVM not found.  Is $LVMPKG installed?" 1>&2
+> 	exit 3
+> fi
+> exec $LIBLVM/$util "$@"	# this will print out a localized error message for us
+
+Indeed, it's better. Thanks.
+
+Regarding lvmiopversion, is it supposed to be statically linked? Otherwise,
+it wouldn't know what liblvm link to, assuming that we have liblvm-iopX.so.
+
+
+claudio
