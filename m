@@ -1,12 +1,8 @@
-Subject: Re: [linux-lvm] can't snap a mounted (reiserfs|ext3) with kernel
-	2.2.x
-From: Chris Mason <mason@suse.com>
-In-Reply-To: <20020824090719.GA5327@tykepenguin.com>
-References: <3D6606DD.72E5BB37@ac-amiens.fr> 
-	<20020824090719.GA5327@tykepenguin.com>
+From: "Handymanweb.com" <horlings101@zonnet.nl>
+MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
-Message-Id: <1030216872.17780.89.camel@tiny>
-Mime-Version: 1.0
+Message-Id: <E17ihI1-0001L4-00@hermes.sistina.com>
+Subject: [linux-lvm] Everybody is good at something!
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,29 +13,26 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Sat Aug 24 14:20:01 2002
+Date: Sat Aug 24 15:14:01 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
 
-On Sat, 2002-08-24 at 05:07, Patrick Caulfield wrote:
-> On Fri, Aug 23, 2002 at 11:56:45AM +0200, Thierry VOYAT wrote:
-> > I need to unmount the lvm partition before i can realize a valid
-> > snapshot of a journalized fs (reiserfs or ext)
-> > All works fine with ext2 :
-> > 
-> > I known there was a patch for kernel 2.4.x for VFS-lock but nothing for
-> > kenel 2.2.x series.
-> > 
-> > I can't upgrade to kernel 2.4. What can i do ?
-> 
-> I don't think there is such a thing as the VFS lock patch for 2.2 (unless Chris
-> Mason knows otherwise!). 
-> 
-> In which case, Im afraid, you're stuck.
+Hi there!
 
-We do have patch in the 2.2.x suse kernel to add the lockfs calls to the
-kernel, but not a reiserfs patch to use them.  Anyone know if 2.2.x ext3
-provides a lockfs call?
+We have just launched a new website for all indviduals that need to have a job done now and then, and all others that want to offer their sevices.
 
--chris
+For any job around the house, such as (small) REPAIRS, CLEANING, CHILD CARE, CONSTRUCTION etc. 
+
+Do you need a baby sitter, a plumber, a gardener, a cleaning lady, a computer wizard, or a mechanic (etc)? 
+Just take a look at http://www.handymanweb.com to find someone in your own neigborhood! 
+Can't find anybody? Just post a FREE ad yourself!
+
+Are you a handyman, a cleaning lady, a baby sitter, etc. or just have some time to spare?  
+you can offer your services at http://www.handymanweb.com.
+Post a FREE ad!
+
+---Because EVERYBODY is good at SOMETHING.----
+
+
+There is no need to unsubscribe. This is a one-time-only message from Handymanweb.com. We apologise if you have received this message in error..
