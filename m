@@ -1,12 +1,10 @@
-Subject: RE: [linux-lvm] Can't install LVM 1.0.7 on Redhat Advanced Server
-	2.1 Please help.
-From: Geoff Dolman <geoff.dolman@cimr.cam.ac.uk>
-In-Reply-To: <90D12689EF7A0543AB11426D75D6ABC508C5CFE0@oa4-server.oa.oclc.org>
-References: 
-	 <90D12689EF7A0543AB11426D75D6ABC508C5CFE0@oa4-server.oa.oclc.org>
-Content-Transfer-Encoding: 7bit
-Message-Id: <1063205214.31163.89.camel@lupin>
-Mime-Version: 1.0
+From: "Markus Baertschi" <markus@markus.org>
+In-Reply-To: <20030910132010.GC10632@percy.comedia.it>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [linux-lvm] Devices seen twice - how does LVM handle ?
+Message-Id: <E19x7pQ-0006HO-Q5@server2.hostpoint.ch>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,111 +15,98 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Sep 10 09:48:02 2003
+Date: Wed Sep 10 11:29:02 2003
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@sistina.com
+To: "linux-lvm@sistina.com" <linux-lvm@sistina.com>
 
-Hi - do you know if RHAS 3.0 will support snapshotting with
+Hi=20Luca,
 
-(a) ext3
-(b) HIGHMEM
+On=20Wed,=2010=20Sep=202003=2015:20:11=20+0200,=20Luca=20Berra=20wrote:
+>>However,=20does=20LVM=20handles=20this=20situation=20(disks=20visible=20=
+twice)=20nicely=20?
+>does=20not=20seem=20broken=20to=20me=20if=20you=20have=20two=20hba.
+>lvm=20does=20not=20support=20multipath
 
-without needing to apply patches manually?
+What=20does=20LVM=20do=20if=20it=20sees=20two=20paths=20(/dev/sdx1=20entri=
+es)=20to=20the=20same
+virtual=20disk=20?
 
-thanks
+>>or=20should=20I=20continue=20to=20use=20my=20workaround=20(pull=20a=20fi=
+ber)=20to=20make=20sure
+>>the=20disks=20are=20visible=20only=20once=20?
+>it=20is=20not=20a=20nice=20workaround.
 
-Geoff
+Yes,=20but=20the=20only=20one=20I=20got=20to=20work=20in=20the=20timeframe=
+=20I=20had=20to=20get=20the
+machines=20up=20and=20running=20again.
 
-On Wed, 2003-09-10 at 14:35, Fought,Tom wrote:
-> I have tried them all with AS 2.1, including patches.
-> I won't say definitively that LVM and AS 2.1 are impossible
-> to make work.. but I couldn't do it.
-> 
-> Taroon/AS3 comes with 1.0.3 installed. Redhat is currently not
-> going to move to a higher release of LVM from what I have found
-> on lists.
-> 
-> Tom
-> 
-> -----Original Message-----
-> From: Gene [mailto:starrygene@yahoo.com]
-> Sent: Wednesday, September 10, 2003 9:29 AM
-> To: linux-lvm@sistina.com
-> Subject: Re: [linux-lvm] Can't install LVM 1.0.7 on Redhat Advanced
-> Server 2.1 Please help.
-> 
-> 
-> Thanks Luca, have you tried installing LVM2 on a RH AS
-> 2.1 server?
-> 
-> Regards,
-> Gene
-> --- Luca Berra <bluca@comedia.it> wrote:
-> > On Wed, Sep 10, 2003 at 04:48:40AM -0700, Gene
-> > wrote:
-> > >I run the ./configure --with-kernel_dir=/boot    
-> > >command, as I could not find a /usr/src/linux
-> > >directory.. (There are no directories under
-> > /usr/src)
-> > install the kernel-source rpm
-> > 
-> > >Does anyone know where the kernel_dir for RH AS is?
-> > I
-> > >would think it's in the /boot folder.
-> > /usr/src/linux, if you install the rpm.
-> > but you will soon discover that lvm 1.0.7 patches
-> > won't apply cleanly
-> > to the redhat patched kernel, and running a RHAS
-> > with a vanilla kernel
-> > is kinda silly.
-> > so, either you are prepared to fix the build by
-> > hand, or you wait for
-> > RHAS 3.0
-> > 
-> > regards,
-> > L.
-> > no, i don't have a RHAS handy anymore, so cannot
-> > give you a proper
-> > patch, besides i am not at all interested in lvm 1
-> > since lvm 2
-> > rocks.
-> > 
-> > -- 
-> > Luca Berra -- bluca@comedia.it
-> >         Communication Media & Services S.r.l.
-> >  /"\
-> >  \ /     ASCII RIBBON CAMPAIGN
-> >   X        AGAINST HTML MAIL
-> >  / \
-> > 
-> > _______________________________________________
-> > linux-lvm mailing list
-> > linux-lvm@sistina.com
-> > http://lists.sistina.com/mailman/listinfo/linux-lvm
-> > read the LVM HOW-TO at
-> http://tldp.org/HOWTO/LVM-HOWTO/
-> 
-> 
-> __________________________________
-> Do you Yahoo!?
-> Yahoo! SiteBuilder - Free, easy-to-use web site design software
-> http://sitebuilder.yahoo.com
-> 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
-> 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
--- 
-Geoff Dolman
-JDRF/WT Diabetes and Inflammation Laboratory
-Cambridge Institute for Medical Research
-University of Cambridge
-http://www-gene.cimr.cam.ac.uk/todd/
+>>-=20Are=20there=20risks=20of=20corruption=20?
+>i=20don't=20think=20so.
+Why=20?
+
+>>-=20What=20happens=20if=20the=20path=20the=20LVM=20happens=20to=20use=20=
+breaks,=20but=20the=20other
+>>is=20still=20up.=20Will=20LVM=20handle=20fail-over=20?
+>lvm=20does=20not=20support=20multipath
+OK.
+
+>at=20the=20moment=20your=20best=20chance=20is=20setting=20up=20an=20md=20=
+multipath
+>and=20building=20your=20lvm=20over=20the=20md=20devices.=20be=20sure=20to=
+=20use=20mdadm=20instead
+>of=20raidtools=20to=20manage=20the=20md.
+
+I'm=20not=20familiar=20with=20md.=20The=20volumes=20are=20already=20there=20=
+and=20in=20production,
+If=20possible=20I=20don't=20want=20to=20reconfigure=20(downtime...).
+
+>i=20have=20this=20setup=20(2=20hbas=20to=20same=20storage=20with=20lvm=20=
+over=20md=20multipath)=20in
+>production,=20and=20it=20works=20fine.
+>another=20option=20could=20be=20if=20your=20hba=20driver=20handles=20mult=
+ipath.=20i=20know
+>some=20qlogic=20boards=20do.
+
+I'm=20using=20qlogic=20boards=20with=20the=20qla2300=20failover=20driver.=20=
+This=20was=20working
+perfectly=20until=20someone=20installed=20a=20blade=20center=20on=20unrela=
+ted=20ports
+of=20the=20same=20storage=20box=20and=20changed=20the=20WWN=20of=20the=20b=
+ox=20in=20the=20process.
+The=20linux=20servers=20were=20rebooted=20three=20months=20(!)=20later=20f=
+or=20an=20unrelated
+purpose=20and=20promptly=20failed=20to=20come=20up=20(vgscan=20segfault...=
+).=20The=20failover
+driver=20now=20thinks=20we=20have=20two=20storage=20boxes...
+
+In=20the=20short=20run=20the=20only=20solution=20I=20had=20was=20to=20remo=
+ve=20one=20path/fiber.
+
+The=20real=20fix=20is=20to=20reconfigure=20the=20storage=20box,=20but=20th=
+is=20has=20to=20be=20done
+when=20I=20can=20stop=20all=20servers=20connected=20to=20it=20(sunday=2002=
+:00=20AM...).
+
+In=20the=20meantime=20I=20installed=20the=20latest=20LVM=20and=20this=20fi=
+xes=20the=20segfault
+problem.=20My=20main=20priority=20is=20stability=20right=20now=20and=20I=20=
+prefer=20running
+on=20one=20fiber=20than=20in=20a=20potentially=20dangerous=20configuration=
+.=20The=20fiber
+can=20be=20switched=20in=20a=20hurry=20(just=20plug=20in=20the=20other=20o=
+ne),=20software=20needs
+skills=20the=20local=20people=20don't=20have=20(I'm=20most=20of=20the=20ti=
+me=20not=20on=20site).
+
+Markus
+
+
+--
+=20=20Markus=20Baertschi=20=20=20=20=20=20=20=20=20=20=20=20=20Phone:=20++=
+41=20(21)=20807=201677
+=20=20Bas=20du=20Ross=E9=2014b=20=20=20=20=20=20=20=20=20=20=20=20=20Fax=20=
+=20:=20++41=20(21)=20807=201678
+=20=20CH-1163,=20Etoy=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20Email=
+:=20markus@markus.org
+=20=20Switzerland=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20=20Hom=
+epage:=20www.markus.org
