@@ -1,10 +1,9 @@
-Subject: Re: [linux-lvm] LVM2 modifies the buffer_head struct?
-Message-ID: <20020702141702.GA9769@fib011235813.fsnet.co.uk>
-References: <F19741gcljD2E2044cY00004523@hotmail.com>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <F19741gcljD2E2044cY00004523@hotmail.com>
-From: Joe Thornber <joe@fib011235813.fsnet.co.uk>
+From: "James B. Byrne " <ByrneJB@Harte-Lyne.ca>
+MIME-Version: 1.0
+Message-ID: <3D2235F8.8485.6AEF946@localhost>
+Content-transfer-encoding: 7BIT
+Content-description: Mail message body
+Subject: [linux-lvm] Odd problem with Pure-ftpd on lvm volume.
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,50 +14,31 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Tue Jul  2 09:17:02 2002
+Date: Tue Jul  2 22:24:02 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: linux-lvm@sistina.com
-Cc: linux-kernel@vger.kernel.org
+To: linux-lvm@sistina.com, pureftpd-users@lists.sourceforge.net
 
-Tom,
+OS RedHat7.3 Linux
+lvm 1.0.3
+pure-ftpd 1.0.11
 
-On Tue, Jul 02, 2002 at 09:40:56AM -0400, Tom Walcott wrote:
-> Hello,
-> 
-> Browsing the patch submitted for 2.4 inclusion, I noticed that LVM2 
-> modifies the buffer_head struct. Why does LVM2 require the addition of it's 
-> own private field in the buffer_head? It seems that it should be able to 
-> use the existing b_private field.
+I initially setup a logical volume with a capacity of 300 Mb. which is 
+used to receive files transmitted via pure-ftpd.  The initial space 
+allocation was insufficient and I extended the lv by an additional 50 
+Mb.  Now pure-ftp is reporting a "disk full error" when trying to 
+upload files, however local users can add files to the lv without error.
 
-This is a horrible hack to get around the fact that ext3 uses the
-b_private field for its own purposes after the buffer_head has been
-handed to the block layer (it doesn't just use b_private when in the
-b_end_io function).  Is this acceptable behaviour ?  Other filesystems
-do not have similar problems as far as I know.
+I have absolutely no idea of where to go from here.  It seems to me 
+that either both should work, or neither should work, but not that one 
+should fail and the other succeed.  Any help or direction on how to 
+investigate this would be appreciated.
 
-device-mapper uses the b_private field to 'hook' the buffer_heads so
-it can keep track of in flight ios (essential for implementing
-suspend/resume correctly).  See dm.c:dec_pending()
-
-As a simple fix I added the b_bdev_private field with the intention
-that this is the private field for use by the block layer, and
-b_private then effectively becomes b_fs_private.  I wont pretend to be
-remotely happy with it.
-
-I would love any suggestions of how else I can implement this, it
-seems unreasonable to penalise everybody - not just those using ext3.
-
-> How does that extra field affect performance relative to the cache? Won't 
-> any negative effects be seen by everything that uses buffer_heads? Also, as 
-> I understand the slab code and hardware cache alignment, won't the addition 
-> of the new field cause the each buffer_head to consume 128 bytes instead of 
-> 96?
-
-Obviously there will be some negative effect, though don't have a feel
-for how significant it would be.  I'm not even sure of what the best
-way to measure this would be; if people can point me towards the most
-suitable benchmark I'll be happy to do some testing for the list.
-
-- Joe
+Regards,
+Jim
+---     e-mail is NOT a secure channel 
+James B. Byrne                mailto:ByrneJB@Harte-Lyne.ca
+Harte & Lyne Limited          http://www.harte-lyne.ca
+9 Brockley Drive              vox: +1 905 561 1241
+Hamilton, Ontario             fax: +1 905 561 0757
+Canada  L8E 3C3
