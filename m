@@ -1,11 +1,11 @@
 Return-Path: <root@srv.sistina.com>
-Date: Wed, 23 May 2001 09:51:42 +0000
+Date: Wed, 23 May 2001 10:02:07 +0000
 From: "Heinz J. Mauelshagen" <Mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] Working together
-Message-ID: <20010523095142.A22671@sistina.com>
-References: <OF97CFF081.B6DCBCCA-ON85256A50.004CE72A@raleigh.ibm.com>
+Subject: Re: [linux-lvm] The Info You Requested
+Message-ID: <20010523100207.D22671@sistina.com>
+References: <20010522094151.D20912@minime.sistina.com> <Pine.A41.4.21.0105221126200.26750-100000@gigue.dlib.indiana.edu>
 Mime-Version: 1.0
-In-Reply-To: <OF97CFF081.B6DCBCCA-ON85256A50.004CE72A@raleigh.ibm.com>; from peloquin@us.ibm.com on Fri, May 18, 2001 at 09:01:49AM -0500
+In-Reply-To: <Pine.A41.4.21.0105221126200.26750-100000@gigue.dlib.indiana.edu>; from jomarqua@indiana.edu on Tue, May 22, 2001 at 11:29:12AM -0500
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -21,49 +21,128 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Mark,
+John,
 
-we thank you for your invitation to join you with work on the EVMS
-project.  Obviously we are interested in the work you are doing and
-support it whole heartedly.
+thanks for your input in regard to your feelings about spam we all share :-(
 
-We will be happy to help you with any technical assistance you may need
-with regard to the Linux LVM system.  However we do not feel able to commit a
-developer to work full time on your project for various reasons:
+As Ben stated: we are doing something against it but I beed to and I will
+take care that more capacity will be spend in order to solve the problem soon.
 
-o The LVM team is very small, consisting of three main developers, we
-  really do not have much spare man power.
+Thanks for your patience!
 
-o EVMS, though heading in a direction that we like, is a long way from
-  going into production.  Our priority must be with the existing LVM
-  system, especially now 0.9 is approaching production level.
-
-o Our new development for the 1.2/2.0 branches has cluster support as
-  it's main goal.  This does not seem to be anywhere on your roadmap.
-
-On a more positive note components of our work, such as the standalone
-snapshot driver, will undoubtedly benefit both projects.  We will take
-the time to ensure that your requirements are taken into consideration
-when writing these.
-
-Regards,
+Kind regards,
 Heinz    -- The LVM Guy --
 
 
-On Fri, May 18, 2001 at 09:01:49AM -0500, Mark Peloquin wrote:
-> Hello everyone,
+       
+On Tue, May 22, 2001 at 11:29:12AM -0500, John Marquart wrote:
+> I by far don't want to replay the schizm that occurred a few weeks ago -
+> but if this is such a major nuisance to sistina to manage a little spam
+> filtering - perhaps we should allow linux-openlvm@mail.nl.linux.org to be
+> the lvm mailing list.  they seemed willing and interested in keeping spam
+> out of the mailing list - while keeping it open to the public.   Having an
+> open list does not mean that the list should be polutted w/ toner adverts
+> and long distance specials.
 > 
-> On behalf of the EVMS project (http://sourceforge.net/projects/evms or
-> http://oss.software.ibm.com/developerworks/opensource/evms) team, we
-> would like to invite the Linux LVM project to join/collaborate with our
-> project.  The goal of this collaboration is to offer a complimentary set of
-<SNIP>
+> -john
 > 
-> We hope you will join us as we look forward to working with you.
 > 
-> Thanks.
+> On Tue, 22 May 2001, Ben Lutgens wrote:
 > 
-> The EVMS Team
+> > On Tue, May 22, 2001 at 12:28:44PM +0000, Heinz J. Mauelshagen wrote:
+> > >
+> > >Sorry Steve,
+> > >
+> > >list is open now on requests.
+> > >
+> > >Will talk to our admin to enhance filters.
+> > 
+> > Yes, we used to have a very nice simple setup where non-subscribers could not
+> > post. People thought that this was used to "censor" posts, on popular request
+> > I opened the list and informed everyone that soon the spam would start, and
+> > that I probably would not do anything to stop it.
+> > 
+> > The fact is, I just don't have the time to do anything about it right now.
+> > You'll all have to fire up text editors and use procmail or something for the
+> > time being.
+> > 
+> > >
+> > >Regards,
+> > >Heinz    -- The LVM Guy --
+> > >
+> > >
+> > >On Tue, May 22, 2001 at 09:56:11PM +1200, Steve Wray wrote:
+> > >> what the HELL is this *SPAM* doing going out to the LVM list??
+> > >> 
+> > >> 
+> > >> > -----Original Message-----
+> > >> > From: linux-lvm-admin@sistina.com [mailto:linux-lvm-admin@sistina.com]On
+> > >> > Behalf Of sabrina_B@hwmcplus.com
+> > >> > Sent: Tuesday, May 22, 2001 9:30 PM
+> > >> > To: everyone@mvsw.int.net
+> > >> > Subject: [linux-lvm] The Info You Requested 6291
+> > >> > 
+> > >> > 
+> > >> > Long Distance Conference Calls 18 Cents Per Minute!
+> > >> > 
+> > >> > 
+> > >> > -Connect up to 100 participants
+> > >> > -No set up fees or contractual fees
+> > >> > -Call anytime, from anywhere, to anywhere
+> > >> > -Web, Data, and Video Conferencing Available
+> > >> > 
+> > >> > Why pay more for something you don't have to.
+> > >> > 
+> > >> > Learn More About Conference Calls For Less Here
+> > >> > http://marketing201.net/ccfl/
+> > >> > 
+> > >> > 
+> > >> > 
+> > >> > This is not SPAM.  You have been emailed this message 
+> > >> > because you have opted to receive information regarding
+> > >> > business opportunities.  If you feel that your email address
+> > >> > has been used without your consent and wish to be removed, click
+> > >> > the following link.  We will gladly remove you from our distribution
+> > >> > list and apologize for any inconvenience.
+> > >> > box808@excite.com
+> > >> > _______________________________________________
+> > >> > linux-lvm mailing list
+> > >> > linux-lvm@sistina.com
+> > >> > http://lists.sistina.com/mailman/listinfo/linux-lvm
+> > >> > 
+> > >> _______________________________________________
+> > >> linux-lvm mailing list
+> > >> linux-lvm@sistina.com
+> > >> http://lists.sistina.com/mailman/listinfo/linux-lvm
+> > >
+> > >=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+> > >
+> > >Heinz Mauelshagen                                 Sistina Software Inc.
+> > >Senior Consultant/Developer                       Am Sonnenhang 11
+> > >                                                  56242 Marienrachdorf
+> > >                                                  Germany
+> > >Mauelshagen@Sistina.com                           +49 2626 141200
+> > >                                                       FAX 924446
+> > >=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+> > >_______________________________________________
+> > >linux-lvm mailing list
+> > >linux-lvm@sistina.com
+> > >http://lists.sistina.com/mailman/listinfo/linux-lvm
+> > 
+> > -- 
+> > Ben Lutgens		
+> > Sistina Software Inc.	
+> > MIS Geek
+> > http://www.sistina.com/	<--- great software 
+> > http://www.gentoo.org/  <--- great distro
+> > Kernel panic: I have no root and I want to scream <--- perfect error message
+> > 
+> 
+> 
+> John "Jamie" Marquart		|     This message posted 100% MS free.
+> Digital Library SysAdmin	|  Work: 812-856-5174   Pager: 812-334-6018
+> Indiana University Libraries	|  ICQ: 1131494	 	D'net Team:  6265
+> 
 > 
 > _______________________________________________
 > linux-lvm mailing list
