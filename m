@@ -1,40 +1,34 @@
-From: "Matthew O'Keefe" <okeefe@borg.umn.edu>
-Date: Mon, 5 Jun 2000 21:17:23 -0500
-Subject: Re: [linux-lvm] performance problems
-Message-ID: <20000605211723.A17820@brule.borg>
-References: <20000605160017.28678.qmail@web106.yahoomail.com>
-Mime-Version: 1.0
-In-Reply-To: <20000605160017.28678.qmail@web106.yahoomail.com>
+Date: Mon, 05 Jun 2000 21:00:02 -0700 (PDT)
+From: Cristina Bulfon <bulfon@SLAC.Stanford.EDU>
+Subject: [linux-lvm] Problem with kernel 2.2.13
+Message-id: <Pine.GSO.4.10.10006052054560.952-100000@flora04.SLAC.Stanford.EDU>
+MIME-version: 1.0
+Content-transfer-encoding: 7BIT
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: Chris Campbell <dash_ampersand@yahoo.com>
-Cc: linux-lvm@msede.com
+Content-Type: TEXT/PLAIN; charset="us-ascii"
+To: linux-lvm@msede.com
 
 
-Hi,
+Hello,
 
-have you really isolated the problem to LVM?  Is the performance
-good without LVM on this particular array?
+I'm trying to rebuild the kernel 2.2.13 with lvm patch
+"patch-2.2.13-LVM-0.8i.gz" and during the _make_bzImage_ I got the
+following error:
 
-Matt O'Keefe
+drivers/block/block.a(ll_rw_blk.o): In function `blk_dev_init':
+ll_rw_blk.o(.text.init+0xb0): undefined reference to `lvm_init'
+make: *** [vmlinux] Error 1
 
-On Mon, Jun 05, 2000 at 09:00:16AM -0700, Chris Campbell wrote:
-> We are using LVM on a (hardware) RAID array and are
-> having some performance problems.  File copying is
-> very slow and one of the guys using it reported that
-> untarring was very sluggish, and he got I/O errors. 
-> Is this a known problem?  I believe we are using 0.8i
-> and we are using 2.2.13 kernel.  Any help would be
-> greatly appreciated.
-> 
-> 
-> 
-> Chris
-> 
-> __________________________________________________
-> Do You Yahoo!?
-> Yahoo! Photos -- now, 100 FREE prints!
-> http://photos.yahoo.com
+Any suggestion ? 
+
+Thanks Cristina
+
+_____________________________________________________________________________
+
+       Cristina Bulfon              E-mail Cristina.Bulfon@slac.stanford.edu
+Stanford Linear Accelerator Center  Phone +1-650-926-5028
+PO Box 4349, M/S 88		    Fax   +1-650-926-3329
+Stanford, CA 94309, USA
+_____________________________________________________________________________
