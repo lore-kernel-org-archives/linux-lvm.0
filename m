@@ -1,10 +1,11 @@
-Message-ID: <3BB220C3.2C96C183@divsol.com>
-Date: Wed, 26 Sep 2001 12:38:59 -0600
-From: Jim Cromie <jcromie@divsol.com>
+From: Andre Margis <andre@sam.com.br>
+Date: Wed, 26 Sep 2001 15:47:48 -0300
+References: <Pine.LNX.4.33.0109261252450.23800-100000@ct41987-a.jfrvil1.in.home.com> <3BB220C3.2C96C183@divsol.com>
+In-Reply-To: <3BB220C3.2C96C183@divsol.com>
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] 1.0.1-rc2 lvcreate segfaults, pvcreate, vgcreate ok
-References: <Pine.LNX.4.33.0109261252450.23800-100000@ct41987-a.jfrvil1.in.home.com>
-Content-Transfer-Encoding: 7bit
+Message-Id: <01092615474801.01062@dpd16>
+Content-Transfer-Encoding: 8bit
+Subject: [linux-lvm] vgscan 1.0.1-rc2 + kernel 2.4.10
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -19,50 +20,30 @@ List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
 
-John Marquart wrote:
+I'm using lvm 1.0.1-rc2 under kernel 2.4.9 and work fine.
 
-> I think you are running into a problem i had.   look in the archives for
-> mails from/to jomarqua@indiana.edu - but i think the problem is your
-> inline functions that lvcreate uses.
->
-> There is a patch that was recommended to me - should fix your problem i
-> think - it is at:
->
-> http://incandescent.mp3revolution.net/lvm/inline_fix.diff
->
-> -j
+When using with kernel 2.4.10 vgscan hang, running vgscan -d, the log is 
+listed above:
 
-yup, that did it.
-
-after flailing with patch rejects against unknown sources,
-backed up and re-did  tar xvfz
-
-then the patch applied w/o rejects,
-compiled w/o errors,
-
-and lvcreate worked !
+<1> lvm_get_iop_version -- CALLED
+<22> lvm_check_special -- CALLED
+<22> lvm_check_special -- LEAVING
+<1> lvm_get_iop_version -- AFTER ioctl ret: 0
+<1> lvm_get_iop_version -- LEAVING with ret: 10
+<1> lvm_lock -- CALLED
+<22> lvm_check_special -- CALLED
+<22> lvm_check_special -- LEAVING
 
 
-[root@groucho 1.0.1-rc2]# lvcreate -L1500 -nVL_test VG_test
-lvcreate -- doing automatic backup of "VG_test"
-lvcreate -- logical volume "/dev/VG_test/VL_test" successfully created
+I have two servers Dell 8450 and they have the same problem.
 
-[root@groucho 1.0.1-rc2]# lvscan
-lvscan -- ACTIVE            "/dev/VG_test/VL_test" [1.46 GB]
-lvscan -- 1 logical volumes with 1.46 GB total in 1 volume group
-lvscan -- 1 active logical volumes
 
-[root@groucho 1.0.1-rc2]# lvdisplay /dev/VG_test/VL_test
---- Logical volume ---
-LV Name                /dev/VG_test/VL_test
-VG Name                VG_test
-LV Write Access        read/write
-LV Status              available
-LV #                   1
-# open                 0
-LV Size                1.46 GB
-Current LE             375
-Allocated LE           375
-Allocation             next free
-Read ahead sectors     120
-Block device           58:0
+and no more messages
+
+
+
+Thank's in advance
+
+
+
+Andre
