@@ -1,10 +1,10 @@
 Return-Path: <>
-Date: Wed, 23 May 2001 13:54:05 +0200
+Date: Wed, 23 May 2001 13:57:39 +0200
 From: Mail Delivery Subsystem <MAILER-DAEMON@aseara.com>
-Message-Id: <200105231154.NAA02228@aseara.com>
+Message-Id: <200105231157.NAA05471@aseara.com>
 MIME-Version: 1.0
 Content-Type: multipart/report; report-type=delivery-status;
-	boundary="NAA02228.990618845/aseara.com"
+	boundary="NAA05471.990619059/aseara.com"
 Subject: [linux-lvm] Returned mail: Service unavailable
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
@@ -21,9 +21,9 @@ To: linux-lvm@sistina.com
 
 This is a MIME-encapsulated message
 
---NAA02228.990618845/aseara.com
+--NAA05471.990619059/aseara.com
 
-The original message was received at Wed, 23 May 2001 13:53:35 +0200
+The original message was received at Wed, 23 May 2001 13:57:07 +0200
 from bin@localhost
 
    ----- The following addresses had permanent fatal errors -----
@@ -35,45 +35,45 @@ jldomingo@softhome.net
 <<< 554 does not resolve - check your DNS (#4.3.0)
 554 jldomingo@softhome.net... Service unavailable
 
---NAA02228.990618845/aseara.com
+--NAA05471.990619059/aseara.com
 Content-Type: message/delivery-status
 
 Reporting-MTA: dns; aseara.com
-Arrival-Date: Wed, 23 May 2001 13:53:35 +0200
+Arrival-Date: Wed, 23 May 2001 13:57:07 +0200
 
 Final-Recipient: RFC822; jldomingo@softhome.net
 Action: failed
 Status: 5.0.0
 Remote-MTA: DNS; mx0d.softhome.net
 Diagnostic-Code: SMTP; 554 does not resolve - check your DNS (#4.3.0)
-Last-Attempt-Date: Wed, 23 May 2001 13:54:05 +0200
+Last-Attempt-Date: Wed, 23 May 2001 13:57:38 +0200
 
---NAA02228.990618845/aseara.com
+--NAA05471.990619059/aseara.com
 Content-Type: text/rfc822-headers
 
 Return-Path: <linux-lvm@sistina.com>
 Received: (from bin@localhost)
-	by aseara.com (8.9.3/8.9.3) id NAA02226
-	for jldomingo@softhome.net; Wed, 23 May 2001 13:53:35 +0200
+	by aseara.com (8.9.3/8.9.3) id NAA05429
+	for jldomingo@softhome.net; Wed, 23 May 2001 13:57:07 +0200
 Received: from sistina.com (hermes.sistina.com [208.210.145.141])
-	by aseara.com (8.9.3/8.9.3) with SMTP id NAA02217
-	for <jdomingo@internautas.org>; Wed, 23 May 2001 13:53:34 +0200
-Received: (qmail 29458 invoked from network); 23 May 2001 11:42:05 -0000
+	by aseara.com (8.9.3/8.9.3) with SMTP id NAA05382
+	for <jdomingo@internautas.org>; Wed, 23 May 2001 13:57:06 +0200
+Received: (qmail 30071 invoked from network); 23 May 2001 11:44:05 -0000
 Received: from localhost (HELO hermes.sistina.com) (127.0.0.1)
-  by localhost with SMTP; 23 May 2001 11:42:05 -0000
+  by localhost with SMTP; 23 May 2001 11:44:05 -0000
 Delivered-To: linux-lvm@sistina.com
-Received: (qmail 29332 invoked from network); 23 May 2001 11:41:44 -0000
+Received: (qmail 30018 invoked from network); 23 May 2001 11:43:56 -0000
 Received: from professorwhealth.com (HELO aseara.com) (216.121.96.120)
-  by hermes.sistina.com with SMTP; 23 May 2001 11:41:44 -0000
+  by hermes.sistina.com with SMTP; 23 May 2001 11:43:56 -0000
 Received: from localhost (localhost)
-	by aseara.com (8.9.3/8.9.3) with internal id NAA26411;
-	Wed, 23 May 2001 13:42:52 +0200
+	by aseara.com (8.9.3/8.9.3) with internal id NAA27928;
+	Wed, 23 May 2001 13:45:04 +0200
 From: Mail Delivery Subsystem <MAILER-DAEMON@aseara.com>
-Message-Id: <200105231142.NAA26411@aseara.com>
+Message-Id: <200105231145.NAA27928@aseara.com>
 To: linux-lvm@sistina.com
 MIME-Version: 1.0
 Content-Type: multipart/report; report-type=delivery-status;
-	boundary="NAA26411.990618172/aseara.com"
+	boundary="NAA27928.990618304/aseara.com"
 Auto-Submitted: auto-generated (failure)
 Subject: [linux-lvm] Returned mail: Service unavailable
 Sender: linux-lvm-admin@sistina.com
@@ -90,6 +90,6 @@ List-Id: linux-lvm general discussion <linux-lvm.sistina.com>
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed, 23 May 2001 13:42:52 +0200
+Date: Wed, 23 May 2001 13:45:04 +0200
 
---NAA02228.990618845/aseara.com--
+--NAA05471.990619059/aseara.com--
