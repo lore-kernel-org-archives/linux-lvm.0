@@ -1,9 +1,21 @@
-Date: Wed, 31 Mar 2004 14:41:30 -0600
-From: Alasdair G Kergon <agk@redhat.com>
-Message-ID: <20040331144130.S17377@homer.msp.redhat.com>
+Received: from mx2.redhat.com (mx2.redhat.com [10.255.15.25])
+	by int-mx2.corp.redhat.com (8.11.6/8.11.6) with SMTP id i2VKgwM02890
+	for <linux-lvm@redhat.com>; Wed, 31 Mar 2004 15:42:58 -0500
+Received: from abelia.cimr.cam.ac.uk (abelia.cimr.cam.ac.uk [131.111.181.212])
+	by mx2.redhat.com (8.11.6/8.11.6) with SMTP id i2VKGbG16959
+	for <linux-lvm@redhat.com>; Wed, 31 Mar 2004 15:16:37 -0500
+Received: from lupin ([192.168.101.134])
+	by abelia.cimr.cam.ac.uk with esmtp (Exim 4.24) id 1B8mXt-0006GY-AK
+	for linux-lvm@redhat.com; Wed, 31 Mar 2004 21:42:45 +0100
+Subject: Re: [linux-lvm] lvm 1 unable to boot
+From: Geoff Dolman <geoff.dolman@cimr.cam.ac.uk>
+In-Reply-To: <20040331154915.GD27360@tykepenguin.com>
+References: <1080745179.12286.16.camel@lupin.private.cimr.cam.ac.uk>
+	<20040331154915.GD27360@tykepenguin.com>
+Message-Id: <1080765764.12286.20.camel@lupin.private.cimr.cam.ac.uk>
 Mime-Version: 1.0
-Content-Disposition: inline
-Subject: [linux-lvm] LVM2 Release 2.00.09 / device-mapper Release 1.00.09
+Date: Wed, 31 Mar 2004 21:42:44 +0100
+Content-Transfer-Encoding: 7bit
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -15,37 +27,42 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: linux-lvm@redhat.com, dm-devel@redhat.com
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-I have generated new tarballs from today's CVS.
+On Wed, 2004-03-31 at 16:49, Patrick Caulfield wrote:
+> On Wed, Mar 31, 2004 at 03:59:39PM +0100, Geoff Dolman wrote:
+> > Hi
+> > 
+> > I have a machine with the following partition structure:
+> > 
+> > /dev/sda1 /boot (ext3)
+> > /dev/sda2 swap
+> > /dev/sda3 LVM
+> > 
+> > The LVM (1.03/rh9) contains one PV and this has Volume00 in it which
+> > contains lvs for slash, usr, var, /usr/local and so on...
+> > 
+> > I rebooted the machine for the first time in ages (same kernel
+> > configuration as the last reboot and no changes - or very few).
+> > 
+> > The machine won't reboot - it panics because of a message (something)
+> > like:
+> > 
+> > vgscan found inactive "Volume00"
+> > Error 28 Unable to make /etc/lvmtab.d/Volume00/Volume00.tmp
+> > vg_cfgbackup.c line 273
+> > 
+> 
+> Error 28 is ENOSPC - your initrd is too small to hold the metadata backups.
 
-Main LVM2 changes since the last release:
+Thanks - but how do I fix this?
 
-  Use sysfs to speed up device filtering with 2.6 kernels.
-  Add basic infrastructure for internationalisation.
-  Various build process tidy-ups and fixes.
-  Option to compile tools into library form.
-  Add LVM1-style colon output to vgdisplay.
-  Fix vgmknodes to remove dud /dev/mapper entries. [needs libdevmapper 1.00.09]
-  Add lvchange --refresh to reload active LVs.
-  Fix LVM1-format lvreduce PV extent calculation.
-  Add support for tagging PV/VG/LVs and hosts.
-  Update docs to reflect move to sources.redhat.com.
+cheers
 
-  ftp://sources.redhat.com/pub/lvm2/LVM2.2.00.09.tgz
-  http://sources.redhat.com/lvm2/
+Geoff
 
-Main device-mapper changes:
-
-  Support for DM_LIST_VERSIONS ('dmsetup targets') with 2.4 kernels.
-  Move mknodes support from dmsetup to libdevmapper so LVM2 can use it.
-  Generated patches against 2.4.26-rc1.
-
-  ftp://sources.redhat.com/pub/dm/device-mapper.1.00.09.tgz
-  http://sources.redhat.com/dm/
-
-
-Alasdair
 -- 
-agk@redhat.com
+JDRF/WT Diabetes and Inflammation Laboratory
+Cambridge Institute for Medical Research
+University of Cambridge
+http://www-gene.cimr.cam.ac.uk/todd/
