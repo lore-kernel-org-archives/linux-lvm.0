@@ -1,9 +1,10 @@
-Message-ID: <20031215195720.84933.qmail@web13505.mail.yahoo.com>
-From: Stuart Felenstein <stuart4m@yahoo.com>
+From: Luca Berra <bluca@comedia.it>
 Subject: Re: [linux-lvm] LVM and devfs
-In-Reply-To: <20031215194252.GA30671@percy.comedia.it>
-MIME-Version: 1.0
-Content-Type: multipart/alternative; boundary="0-202673445-1071518240=:84439"
+Message-ID: <20031215224841.GA7977@percy.comedia.it>
+References: <20031215194252.GA30671@percy.comedia.it> <20031215195720.84933.qmail@web13505.mail.yahoo.com>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20031215195720.84933.qmail@web13505.mail.yahoo.com>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,52 +15,35 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Dec 15 15:22:05 2003
+Date: Mon Dec 15 16:49:02 2003
 List-Id: <linux-lvm.redhat.com>
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
---0-202673445-1071518240=:84439
-Content-Type: text/plain; charset=us-ascii
+On Mon, Dec 15, 2003 at 11:57:20AM -0800, Stuart Felenstein wrote:
+>   I  think  you may be off here.  It was RedHat9 that gave me the option
+>   of using LVM.
 
-Luca, 
- 
-I think you may be off here.  It was RedHat9 that gave me the option of using LVM.  
-I've gone to the 2.4.23 kernel with devfs and lvm support.  I know there is alot or a good amount of controvery around devfs but I think I'll ride it out and see how it works for me.
-Thank you for your response.
- 
-Stuart 
+i said _devfs_ is not supported,
+_lvm_ is.
 
-Luca Berra <bluca@comedia.it> wrote:
-- devfs in not supported on redhat 9
-- lvm created on a non devfs system do not work on a devfs system
-without tinkering and vice versa. devfs=nomount yelds even worse
-results
-remove devfs from your kernel
+>   I've  gone  to  the  2.4.23 kernel with devfs and lvm support.  I know
+>   there  is alot or a good amount of controvery around devfs but I think
+>   I'll ride it out and see how it works for me.
+>
+lvm1 tools do have a problem with switching from devfs to non-devfs,
+and vice-versa since they use /proc/partitions to find pvs, and do write
+the pv name in the metadata. (read the list archives for the gory
+details)
 
 L.
 
+
 -- 
 Luca Berra -- bluca@comedia.it
-Communication Media & Services S.r.l.
-/"\
-\ / ASCII RIBBON CAMPAIGN
-X AGAINST HTML MAIL
-/ \
-
-_______________________________________________
-linux-lvm mailing list
-linux-lvm@sistina.com
-http://lists.sistina.com/mailman/listinfo/linux-lvm
-read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
---0-202673445-1071518240=:84439
-Content-Type: text/html; charset=us-ascii
-
-<DIV>Luca, </DIV>
-<DIV>&nbsp;</DIV>
-<DIV>I think you may be off here.&nbsp; It was RedHat9 that gave me the option of using LVM.&nbsp; </DIV>
-<DIV>I've gone to the 2.4.23 kernel with devfs and lvm support.&nbsp;&nbsp;I know there is alot&nbsp;or a good amount of controvery around devfs but I think I'll ride it out and see how it works for me.</DIV>
-<DIV>Thank you for your response.</DIV>
-<DIV>&nbsp;</DIV>
-<DIV>Stuart&nbsp;<BR><BR><B><I>Luca Berra &lt;bluca@comedia.it&gt;</I></B> wrote:</DIV>
-<BLOCKQUOTE class=replbq style="PADDING-LEFT: 5px; MARGIN-LEFT: 5px; BORDER-LEFT: #1010ff 2px solid">- devfs in not supported on redhat 9<BR>- lvm created on a non devfs system do not work on a devfs system<BR>without tinkering and vice versa. devfs=nomount yelds even worse<BR>results<BR>remove devfs from your kernel<BR><BR>L.<BR><BR>-- <BR>Luca Berra -- bluca@comedia.it<BR>Communication Media &amp; Services S.r.l.<BR>/"\<BR>\ / ASCII RIBBON CAMPAIGN<BR>X AGAINST HTML MAIL<BR>/ \<BR><BR>_______________________________________________<BR>linux-lvm mailing list<BR>linux-lvm@sistina.com<BR>http://lists.sistina.com/mailman/listinfo/linux-lvm<BR>read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/</BLOCKQUOTE>
---0-202673445-1071518240=:84439--
+        Communication Media & Services S.r.l.
+ /"\
+ \ /     ASCII RIBBON CAMPAIGN
+  X        AGAINST HTML MAIL
+ / \
