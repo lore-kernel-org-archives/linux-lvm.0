@@ -1,57 +1,162 @@
-From: Andreas Dilger <adilger@turbolabs.com>
-Message-Id: <200006150619.AAA24808@lynx.turbolabs.com>
-Subject: [linux-lvm] Re: IBM to release LVM Technology to the Linux Community
-Date: Thu, 15 Jun 2000 00:19:37 -0600 (MDT)
-In-Reply-To: <852568FE.00750CE1.00@d54mta02.raleigh.ibm.com> from "benr@us.ibm.com" at Jun 14, 2000 05:18:26 PM
+From: stk@rmi.de
+Message-Id: <200006151923.VAA24789@musashi.stan.de>
+Date: Thu, 15 Jun 2000 21:23:49 +0200 (CEST)
+Subject: [linux-lvm] Problems activating VG (2.4.0-test1 / raid 0.9)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: benr@us.ibm.com
-Cc: Linux LVM mailing list <linux-lvm@msede.com>
+Content-Type: TEXT/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: linux-lvm@msede.com
 
-Ben Rafanello writes:
-> IBM is releasing one of its most advanced architectures for a Logical
-> Volume Management System.  This architecture is quite interesting as it
-> completely integrates all disk and volume management into a single, highly
-> extensible, easy to use entity.  We hope that the release of this
-> technology will lead to a world class logical volume management system for
-> Linux, one which satisfies the requirements of our customers as well as
-> those of the Linux Community.
+Hello everyone,
 
-It isn't clear from the white paper how the LVMS you describe relates
-to the existing Linux LVM and/or IBM's AIX/OS2 LVM developments.
-Is the LVMS described going to allow breaking up of "logical partitions"
-(which appear to be the same as DOS or BSD partitions) into "logical
-extents (LE)" of a fixed size (e.g. 4MB)?  Having smaller fixed-size LEs
-are very important in terms of being able to manage the space properly.
-Unfortunately, in IBM's LVM there is already something called a "logical
-partition" which doesn't appear to be the same thing you refer to in
-the white paper, so this is a bit confusing.
+at the moment im experimenting with lvm on top of raid1 (v0.9)
+but ran into a problem with the pv and vg activation. That is
+that I'm able to create md0, a pv on md0 a vg in that pv and
+some lv's in the vg, also no problem with making (reiser) 
+filesystems in the logical volumes. But after a vgchange -a n 
+it is not possible to activate the vg again. pvchange -a y 
+exits with errorcode 0 (wich should be fine) but a vgdisplay -D
+will always report the vg (or pv) as inactive. Nethertheless vgscan 
+is still detecting the volume group.
 
-From looking at the separate LVMS components, it appears that the Linux
-kernel already has a majority of the functionality for this (e.g. RAID 0,
-RAID 1 (mirroring, drive linking), RAID 5, partition managers, many device
-managers).  Having it implemented in the LVMS framework would still be
-(IMHO) a very good thing, as it makes things considerably more modular.
+Any ideas on this? I have read the documentation and faq, butI may 
+have overlooked something, have I ?
 
-One thing that I'm not too sure about is why the filesystem interface
-modules (FIMs) need to be able to do things like fsck and mkfs?  I
-can understand that resizing the filesystem needs co-operation between
-the LVM and the filesystem.  However, it also sounds like you would
-incorporate fsck and mkfs to be functions that the kernel could call -
-why is this?
+Hopefully someone can comment on this, attached are (some) of the 
+details, if needed i will provide even more of them :)
 
-One thing that is not very clear is if IBM will be leveraging its AIX/OS2
-code for the LVM, or will this essentially be a new implementation?
-It would be good to hear that IBM is making its LVM available, as it is a
-very stable, mature code base.  It does sound like the LVMS described
-has more functionality than the existing AIX LVM, because it has to deal
-with the morass of partition formats and filesystems that exist under
-Linux.  Also, the plug-in support sounds like a good improvement over
-the existing LVM implementations, since it brings the various disk
-"drivers" like LVM/RAID/encryption/partition into a cohesive framework.
+thanx in advance
+Stefan
 
-Cheers, Andreas
+
+Now here are the details:
+
+Linux 2.4.0-test1 (with reiserfs patch)
+raidtools 0.9
+lvm_0.8final (+ patch2)
+
+
+[root@host42 /etc]# pvcreate /dev/md0 -ff
+pvcreate -- really INITIALIZE physical volume "/dev/md0" of volume group "vg01" [y/n]? y
+pvcreate -- WARNING: forcing physical volume creation on "/dev/md0" of volume group "vg01"
+pvcreate -- removing lvmtab entry
+pvcreate -- physical volume "/dev/md0" successfully created
+
+[root@host42 /etc]# vgscan
+vgscan -- reading all physical volumes (this may take a while...)
+vgscan -- no volume groups found
+
+[root@host42 /etc]# vgcreate vg01 /dev/md0
+vgcreate -- INFO: using default physical extent size 4 MB
+vgcreate -- INFO: maximum logical volume size is 255.99 Gigabyte
+vgcreate -- doing automatic backup of volume group "vg01"
+vgcreate -- volume group "vg01" successfully created and activated
+
+[root@host42 /etc]# vgdisplay 
+--- Volume group ---
+VG Name               vg01
+VG Access             read/write
+VG Status             available/resizable
+VG #                  0
+MAX LV                256
+Cur LV                0
+Open LV               0
+MAX LV Size           255.99 GB
+Max PV                256
+Cur PV                1
+Act PV                1
+VG Size               18.45 GB
+PE Size               4 MB
+Total PE              4724
+Alloc PE / Size       0 / 0
+Free  PE / Size       4724 / 18.45 GB
+
+
+[root@host42 /etc]# cat /proc/lvm 
+LVM module version 0.8final  (15/02/2000)
+
+Total:  1 VG  1 PV  0 LVs (0 LVs open)
+Global: 3089 bytes malloced   IOP version: 6   0:01:43 active
+
+VG:  vg01  [1 PV, 0 LV/0 open]  PE Size: 4096 KB
+  Usage [KB/PE]: 19349504 /4724 total  0 /0 used  19349504 /4724 free
+  PV:  [AA] md0                   19349504 /4724           0 /0       19349504 /4724  
+    LVs: none
+
+[root@host42 /root]# vgchange -a n 
+vgchange -- volume group "vg01" successfully deactivated
+
+[root@host42 /root]#  cat /proc/mdstat 
+Personalities : [raid1] 
+read_ahead 1024 sectors
+md0 : active raid1 hdc3[1] hda3[0]
+      19350208 blocks [2/2] [UU]
+      
+unused devices: <none>
+
+[root@host42 /root]# vgscan
+vgscan -- reading all physical volumes (this may take a while...)
+vgscan -- found inactive volume group "vg01"
+vgscan -- "/etc/lvmtab" and "/etc/lvmtab.d" successfully created
+vgscan -- WARNING: you may not have an actual VGDA backup of your volume group
+
+[root@host42 /root]# cat /proc/lvm 
+LVM module version 0.8final  (15/02/2000)
+
+Total:  0 VGs  0 PVs  0 LVs (0 LVs open)
+Global: 143 bytes malloced   IOP version: 6   0:00:19 active
+
+
+[root@host42 /root]# vgchange -a y
+
+[root@host42 /root]# echo $?
+0
+
+[root@host42 /root]# cat /proc/lvm 
+LVM module version 0.8final  (15/02/2000)
+
+Total:  0 VGs  0 PVs  0 LVs (0 LVs open)
+Global: 143 bytes malloced   IOP version: 6   0:02:58 active
+
+[root@host42 /root]# vgdisplay -D
+--- Volume group ---
+VG Name               vg01
+VG Access             read/write
+VG Status             NOT available/resizable
+VG #                  0
+MAX LV                256
+Cur LV                0
+Open LV               0
+MAX LV Size           255.99 GB
+Max PV                256
+Cur PV                1
+Act PV                1
+VG Size               18.45 GB
+PE Size               4 MB
+Total PE              4724
+Alloc PE / Size       0 / 0
+Free  PE / Size       4724 / 18.45 GB
+
+
+[root@host42 /root]# pvdisplay /dev/md0
+--- Physical volume ---
+PV Name               /dev/md0
+VG Name               vg01
+PV Size               18.45 GB / NOT usable 704 KB [LVM: 197 KB]
+PV#                   1
+PV Status             NOT available
+Allocatable           yes
+Cur LV                0
+PE Size (KByte)       4096
+Total PE              4724
+Free PE               4724
+Allocated PE          0
+
+
+
+-- 
+ Stefan K                                       email:     stk@rmi.de
+ Aix-la-Chapelle                                fax/data: +49-241-533353
