@@ -1,11 +1,10 @@
-From: Andreas Dilger <adilger@turbolabs.com>
-Subject: Re: [linux-lvm] kernel: invalidate: busy buffer
-Message-Id: <20011228130411.V12868@lynx.no>
-References: <3C2C88AF.9010206@ti.com>
+From: Petro <petro@auctionwatch.com>
+Subject: Re: [linux-lvm] anyone tried 2.4.17 yet ??
+Message-Id: <20011228205627.GE18975@auctionwatch.com>
+References: <3C2C6DE9.9020306@ti.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <3C2C88AF.9010206@ti.com>; from cej@ti.com on Fri,
-    Dec 28, 2001 at 03:58:55PM +0100
+In-Reply-To: <3C2C6DE9.9020306@ti.com>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,23 +15,35 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Fri Dec 28 14:02:01 2001
+Date: Fri Dec 28 14:54:01 2001
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: christian e <cej@ti.com>
-Cc: linux lvm <linux-lvm@sistina.com>
+To: linux-lvm@sistina.com
 
-On Dec 28, 2001  15:58 +0100, christian e wrote:
-> Just tried 2.4.17 and this was the first non-ac kernel that was able to 
-> boot on this machine :-)  anyways things seem to be running ok,but 
-> there's lots of these errors:  kernel: invalidate: busy buffer
+On Fri, Dec 28, 2001 at 02:04:41PM +0100, christian e wrote:
+> Hi,all
+> 
+> Just wondering..Did anyone give 2.4.17 a try ? And what needs to be done 
+> with regards to LVM ? Up until now I've only run ac kernels,but I'd like 
+> to give 2.4.17 a try.Any pacthes necessary ??
 
-It is not a problem.  Please ignore for now, it disappears in a future
-kernel.
+    We're running it on a couple of production servers--or rather we're
+    running the rc2 patch to 2.4.16. 
 
-Cheers, Andreas
---
-Andreas Dilger
-http://sourceforge.net/projects/ext2resize/
-http://www-mddsp.enel.ucalgary.ca/People/adilger/
+    You still need to apply the vfs-lock patch, and I did a build in the
+    patches directory and applied that. 
+
+> best regards
+> 
+> Christian
+> 
+> 
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@sistina.com
+> http://lists.sistina.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
+
+-- 
+Share and Enjoy. 
