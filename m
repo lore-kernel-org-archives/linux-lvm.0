@@ -1,66 +1,60 @@
-Message-ID: <39355918.C2B6A94B@msede.com>
-Date: Wed, 31 May 2000 20:25:28 +0200
-From: Michael Marxmeier <mike@msede.com>
-MIME-Version: 1.0
+Date: Thu, 1 Jun 2000 02:01:31 -0700
+From: David Gould <dg@suse.com>
 Subject: Re: [linux-lvm] SuSE/LVM boot problem
-References: <390FD771.DB59EECB@msede.com> <20000503095326.A4439@archimedes.suse.com> <20000531110128.A22796@gruyere.muc.suse.de> <12xB7E-0izhAGC@fwd05.sul.t-online.de> <20000531181803.A30169@gruyere.muc.suse.de>
-Content-Transfer-Encoding: 7bit
+Message-ID: <20000601020131.E17555@archimedes.suse.com>
+References: <390FD771.DB59EECB@msede.com> <20000503095326.A4439@archimedes.suse.com> <20000531110128.A22796@gruyere.muc.suse.de>
+Mime-Version: 1.0
+In-Reply-To: <20000531110128.A22796@gruyere.muc.suse.de>; from ak@suse.de on Wed, May 31, 2000 at 11:01:28AM +0200
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: Andi Kleen <ak@suse.de>
-Cc: Christoph Hellwig <chhellwig@t-online.de>, adilger@turbolabs.com, linux-lvm@msede.com
+Cc: dgould@suse.com, adilger@turbolabs.com, linux-lvm@msede.com
 
-Andi Kleen wrote:
+On Wed, May 31, 2000 at 11:01:28AM +0200, Andi Kleen wrote:
+> On Wed, May 03, 2000 at 09:53:26AM -0700, dgould@suse.com wrote:
+> > If I have understood this, we need the following to make this
+> > work (some of this may already exist):
+> > 
+> >  - lvm needs to provide an way for other programs to translate logical
+> >    blocks to physical
 > 
-> On Wed, May 31, 2000 at 06:13:08PM +0200, Christoph Hellwig wrote:
-> > Andi Kleen schrieb:
-> > > >
-> > > >  - lilo needs to understand about lvm and use the lvm provided ways to
-> > > >    get physical mappings.
-> > >
-> > > That's complicated. Someone did a similar hack for RAID0, but LVM is more
-> > > complicated than MD RAID0. Better just supply the real block numbers to lilo
-> > > and rerun it as needed (LVM could warn about it)
-> >
-> > Don't use lilo, use grub. I'm trying to implement lvm support in grub. The idea
-> > is that grub should read the first lvm on each pv. This first lv must be only on
-> > this pv. (and have a special name, eg lv_root, so grub can find it)
+> A physical equivalent to FIBMAP. Not too hard to implement I think.  
+
+Yes. That is what I meant. 
+ 
+> >  - lvm needs to have a way of tracking/enforcing/satisfying the constraint
+> >    that specified lvs need to be in the bios bootable physical area
 > 
-> Limiting to the ``first LV'' sounds ugly. When you read the first, is it
-> that hard to read the second (and allow arbitary names)  ?
+> That's pretty much impossible. How would e.g. LVM find out that the scsi
+> controller of disk X does not have a boot rom? You have to trust the user there.
 
-You need to distinguish 'bootable' LV from others. This could either
-be 
-by LV name or a 'bootable' flag.  However if we need a flag anyway and 
-could accept the restriction to have to root fs contigous on a single
-PV
-and non striped we could simply save the starting block and size as
-well.
-This is not that different from a partition.
+Fine. Trusting the user is ok, but I like the marked bootable idea to
+protect against arbitrary reconfigs.
 
-For example HP-UX has a simple hack in the boot area which holds
-the start and size of the /stand fs such that the boot loader
-and the kernel could simply handle this as a partition equivalent
-during boot.
+> >  - lilo needs to understand about lvm and use the lvm provided ways to
+> >    get physical mappings.
+> 
+> That's complicated. Someone did a similar hack for RAID0, but LVM is more
+> complicated than MD RAID0. Better just supply the real block numbers to lilo
+> and rerun it as needed (LVM could warn about it) 
 
-It should be possible to detect this 'bootable' flag and the
-start/size
-in the LVM init code without causing much kernel bloat and create the 
-equivalent of a partition using a fixed major/minor. vgscan could then 
-in user space create the device files accordingly such that the 
-major/minor of the LV holding the root fs is mapped accordingly.
+I meant only that lilo needs to call the lvm flavored FIBMAP, to get the
+block numbers. That is, lilo will need a small patch.
 
-AFAIR someone already did something similar by hacking the partition
-table  and creating an overlapping partition which just happened to
-map to the root LV.
+> >  - the kernel needs to be able to reconstruct enough of the lvm
+> >    descriptors to mount / at boot time.
+> 
+> That's handled in the initrd (lilo loads kernel + initrd, initrd contains
+> LVM tools) 
 
+Ok.
 
-Michael
+-dg
 
 -- 
-Michael Marxmeier           Marxmeier Software AG
-E-Mail: mike@msede.com      Besenbruchstrasse 9
-Phone : +49 202 2431440     42285 Wuppertal, Germany
-Fax   : +49 202 2431420     http://www.msede.com/
+David Gould                                                 dg@suse.com
+SuSE, Inc.,  580 2cd St. #210,  Oakland, CA 94607          510.628.3380
+C++ : an octopus made by nailing extra legs onto a dog
