@@ -1,9 +1,10 @@
-Date: Thu, 4 Oct 2001 17:04:47 -0400
-From: urmk@reason.marist.edu
-Message-ID: <20011004170447.A17897@reason.marist.edu>
+Date: Fri, 5 Oct 2001 09:05:22 +0200
+From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
+Subject: Re: [linux-lvm] What have I done!?
+Message-ID: <20011005090522.A1245@sistina.com>
+References: <009401c14cc3$c63106c0$836788cf@industry> <009501c14cc7$2f5cd360$836788cf@industry> <20011004113309.E31061@turbolinux.com> <30980000.1002218241@dizzy>
 Mime-Version: 1.0
-Content-Disposition: inline
-Subject: [linux-lvm] no such member 'de'
+In-Reply-To: <30980000.1002218241@dizzy>; from lembark@wrkhors.com on Thu, Oct 04, 2001 at 12:57:21PM -0500
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,40 +18,61 @@ List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: Linux-LVM@sistina.com
+To: linux-lvm@sistina.com
 
-LVM 1.0.1rc4, Linux 2.2.19 stock kernel:
+On Thu, Oct 04, 2001 at 12:57:21PM -0500, Steven Lembark wrote:
+> 
+> 
+> -- Andreas Dilger <adilger@turbolabs.com>
+> 
+> >> Is there a way that I can blow the whole thing away and start over?  I
+> >> think I've screwed things up too badly to try to resurrect them.  I'd
+> >> really like to blow it all away and start over and see if this stuff
+> >> happens again, but again I can't use the lv* tools to remove the
+> >> configurations because of the errors I mention in my initial post so I
+> >> need a manual way to blow away the entire LVM configuration and start
+> >> from scratch again.
+> >
+> > "pvcreate -ff" I think
+> 
+> If you really want to wipe things clean:
+> 
+>     (1) vgexport /dev/vgname; # avoids collisions w/ stale config info.
+>     (2) for disk in your disks here; do pvcreate -ff $disk; done;
+> 
+> The export isn't strictly necessar:  rm -rf and a vgscan should do the
+> same basic thing with a few nastygrams added in.  Personally, I get
+> enough nastygrams to prefer avoiding a few more :-)
 
-I applied the rawio patch for 2.2.18 (no errors, a few fuzzy offsets).
-Configured LVM, ran make in the PATCHES dir.
-Applied the newly made LVM patch.  Again, no errors, some fuzzy offsets.
-Configured LVM support in the kernel.
+I'm curious: which ones are thouse?
 
-Make fails, with:
-
-cc -D__KERNEL__ -I/usr/src/linux-2.2.19/include -Wall -Wstrict-prototypes -O2 -fomit-frame-pointer -fno-strict-aliasing -D__SMP__ -pipe -fno-strength-reduce -m486 -malign-loops=2 -malign-jumps=2 -malign-functions=2 -DCPU=586   -c -o lvm.o lvm.c
-lvm.c: In function `lvm_do_lv_create':
-lvm.c:2192: structure has no member named `de'
-lvm.c: In function `lvm_do_lv_remove':
-lvm.c:2277: structure has no member named `de'
-make[3]: *** [lvm.o] Error 1
-make[3]: Leaving directory `/usr/src/linux-2.2.19/drivers/block'
-make[2]: *** [first_rule] Error 2
-make[2]: Leaving directory `/usr/src/linux-2.2.19/drivers/block'
-make[1]: *** [_subdir_block] Error 2
-make[1]: Leaving directory `/usr/src/linux-2.2.19/drivers'
-
-It appears it's hardcoded to refer to the devfs entries, which don't exit in 
-2.2.19 -- is this simply the final stage of dropping support for 2.2.19, or 
-an oversight?
-
--m
-
-
+> 
+> 
+> --
+> Steven Lembark                                               2930 W. Palmer
+> Workhorse Computing                                       Chicago, IL 60647
+>                                                             +1 800 762 1582
+> 
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@sistina.com
+> http://lists.sistina.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
 
 -- 
-Michael Kershaw
-Michael.Kershaw@reason.marist.edu
-Linux Systems Programmer, Information Technology
 
-"Don't worry, I'm sure they'll listen to Reason." -- Fisheye, Snowcrash
+Regards,
+Heinz    -- The LVM Guy --
+
+*** Software bugs are stupid.
+    Nevertheless it needs not so stupid people to solve them ***
+
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+Heinz Mauelshagen                                 Sistina Software Inc.
+Senior Consultant/Developer                       Am Sonnenhang 11
+                                                  56242 Marienrachdorf
+                                                  Germany
+Mauelshagen@Sistina.com                           +49 2626 141200
+                                                       FAX 924446
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
