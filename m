@@ -1,11 +1,10 @@
-From: Andreas Dilger <adilger@turbolabs.com>
-Date: Tue, 28 Aug 2001 17:57:21 -0600
-Subject: Re: [linux-lvm] Very small but important whoops in lvmcreate_initrd in 1.0.1-rc1
-Message-ID: <20010828175721.I1367@turbolinux.com>
-References: <200108282153.f7SLr3b05929@foo-bar-baz.cc.vt.edu>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <200108282153.f7SLr3b05929@foo-bar-baz.cc.vt.edu>
+Content-Class: urn:content-classes:message
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Subject: RE: [linux-lvm] Strange message with 2.4.8+1.0.1rc1
+Date: Wed, 29 Aug 2001 12:29:20 +0200
+Message-ID: <B45465FD9C23D21193E90000F8D0F3DF0178FD30@mailsrv.linkvest.com>
+From: "Jean-Eric Cuendet" <Jean-Eric.Cuendet@linkvest.com>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -18,22 +17,32 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: Valdis.Kletnieks@vt.edu
-Cc: LVM-Devel@sistina.com, Linux-LVM@sistina.com
+To: linux-lvm@sistina.com
 
-On Aug 28, 2001  17:53 -0400, Valdis.Kletnieks@vt.edu wrote:
-> There was a gratuitous 'shift' in the script, causing it to swallow the
-> next parameter.  This wasn't very nice when I tried to call it with
-> '--nodep 2.4.9' and watched it over-write my initrd-lvm-2.4.5.gz ;)
+> > Is there a limit to 8 characters in LVM VGs names?
+>=20
+> No. The limit is 128 characters and I've had plenty that were=20
+> longer than 10. I suspect that the action of renaming has=20
+> made the difference. I suspect (and if you're brave you could=20
+> try this!) that if you rename the VG back to NORAID_HDX will=20
+> still work.
 
-Have fixed this in CVS.
+I haven't renamed it!
+What I made:
+1st try:
+- create NORAID_HDX VG
+- create LV
+- reboot
+- VG not found by vgscan. NO way to restore it.
 
-Cheers, Andreas
+2nd try:
+- create NORAID VG
+- create LV
+- reboot
+- VG found by vgscan.
 
-PS - no commit message was mailed out, because "adilger@sistina.com" is
-     not a valid user ID.  Somebody broke the commit message script.
--- 
-Andreas Dilger  \ "If a man ate a pound of pasta and a pound of antipasto,
-                 \  would they cancel out, leaving him still hungry?"
-http://www-mddsp.enel.ucalgary.ca/People/adilger/               -- Dogbert
+Note that VG was entirely destroyed between each attempt. Pvcreate
+rerun.
+
+Idea?
+-jec
