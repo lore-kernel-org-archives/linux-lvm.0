@@ -1,9 +1,9 @@
-content-class: urn:content-classes:message
-MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Subject: RE: [linux-lvm] Kernel 2.4.12 bug?
-Message-ID: <B45465FD9C23D21193E90000F8D0F3DF0178FF82@mailsrv.linkvest.com>
-From: "Jean-Eric Cuendet" <Jean-Eric.Cuendet@linkvest.com>
+From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
+Subject: Re: [linux-lvm] badiane: problem with LVM
+Message-ID: <20011024092841.B19037@sistina.com>
+References: <20011023205857.A4280@dardhal.mired.net> <61238.64.34.222.41.1003884986.squirrel@webmail.tekmd.com>
+Mime-Version: 1.0
+In-Reply-To: <61238.64.34.222.41.1003884986.squirrel@webmail.tekmd.com>; from gdurand@tekmd.com on Tue, Oct 23, 2001 at 08:56:26PM -0400
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,26 +14,49 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Oct 24 02:19:01 2001
+Date: Wed Oct 24 02:31:01 2001
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-> Also at reboot/halt I get:
->  printing eip:
-> c014c022
-> Oops: 0000
-> CPU:    0
-> EIP:    0010:[proc_match+18/56]    Tainted: P
-> EFLAGS: 00010206
-> eax: d9fc2609   ebx: 03   ecx: 03   edx: 5a5a5a5a
-> esi: d9fc2609   edi: d9fc260d   ebp: d65f7d18   esp: d65f7d10
-> ds: 0018   es: 0018   ss: 0018
-> Process vgchange (pid: 345, stackpage=3Dd65f7000)
-> etc...
+On Tue, Oct 23, 2001 at 08:56:26PM -0400, gdurand@tekmd.com wrote:
+> I downloaded the deb packages from sistina and installed them on the 3
+> systems in question.  Upon a reboot, I was able to pvcreate /dev/hda5
+> successfuly.  Now an interesting thing is that when I cfdisk the partition
+> type is still unknown on two of the machines.
 
-I also have problems with 2.4.12 + LVM rc4. I have a kernel panic with a
-"stack trace" in the kernel *before* it mounts ROOT.
-Any idea? Everything works fine with 2.4.7 / 2.4.9
+The recent fdisk code support displaing "Linux LVM partition" rather than
+unknown.
 
--jec
+> 
+> Do you know why that is?
+> 
+> Badiane
+> 
+> 
+> 
+> 
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@sistina.com
+> http://lists.sistina.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
+
+-- 
+
+Regards,
+Heinz    -- The LVM Guy --
+
+*** Software bugs are stupid.
+    Nevertheless it needs not so stupid people to solve them ***
+
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+Heinz Mauelshagen                                 Sistina Software Inc.
+Senior Consultant/Developer                       Am Sonnenhang 11
+                                                  56242 Marienrachdorf
+                                                  Germany
+Mauelshagen@Sistina.com                           +49 2626 141200
+                                                       FAX 924446
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
