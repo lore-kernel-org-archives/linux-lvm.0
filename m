@@ -1,8 +1,9 @@
-Subject: Re: [linux-lvm] 33% of my space is missing?
-Message-ID: <OF3246CEC7.7F5BD99E-ON85256AC6.0071033C@raleigh.ibm.com>
-From: "Kevin M Corry" <corryk@us.ibm.com>
-Date: Thu, 13 Sep 2001 15:40:07 -0500
+Message-ID: <B51F0C636E578A4E832D3958690CD73E0130C026@es04snlnt>
+From: "Diehl, Jeffrey" <jdiehl@sandia.gov>
+Subject: RE: [linux-lvm] 33% of my space is missing?
+Date: Thu, 13 Sep 2001 14:53:51 -0600
 MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,8 +16,20 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+To: 'Kevin M Corry ' <corryk@us.ibm.com>, "'linux-lvm@sistina.com '" <linux-lvm@sistina.com>
+
+Ok, I found my space.  I did something stupid.  Kevin, you were right. 
+
+Now I feel pretty dumb.  I'll get over it.
+
+Thanx,
+Mike Diehl.
+
+-----Original Message-----
+From: Kevin M Corry
 To: linux-lvm@sistina.com
+Sent: 9/13/2001 2:40 PM
+Subject: Re: [linux-lvm] 33% of my space is missing?
 
 Hi Mike,
 
@@ -78,6 +91,14 @@ Here we see that I only have access to 215Gb.
 Where is the rest of my space?
 
 Mike Diehl.
+
+
+_______________________________________________
+linux-lvm mailing list
+linux-lvm@sistina.com
+http://lists.sistina.com/mailman/listinfo/linux-lvm
+read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
+
 
 
 _______________________________________________
