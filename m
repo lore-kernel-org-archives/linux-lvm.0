@@ -1,10 +1,12 @@
-Return-Path: <jdiehl@sandia.gov>
-Message-ID: <B51F0C636E578A4E832D3958690CD73E0130BF4D@es04snlnt>
-From: "Diehl, Jeffrey" <jdiehl@sandia.gov>
-Date: Tue, 26 Jun 2001 15:47:49 -0600
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] Help removing a PV to find stability problem.
+Return-Path: <jdomingo@crosswinds.net>
+Date: Wed, 27 Jun 2001 00:50:59 +0000
+From: =?iso-8859-1?Q?Jos=E9_Luis_Domingo_L=F3pez?= <jdomingo@internautas.org>
+Subject: Re: [linux-lvm] Request for misalignment tests
+Message-ID: <20010627005059.A3595@dardhal.mired.net>
+Mime-Version: 1.0
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20010626161947.A11918@sistina.com>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,31 +18,46 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: "'linux-lvm@sistina.com'" <linux-lvm@sistina.com>
+Content-Type: text/plain; charset="utf-8"
+To: linux-lvm@sistina.com
+Cc: Heinz Mauelshagen <mauelshagen@sistina.com>
 
-Hi all,
+On Tuesday, 26 June 2001, at 16:19:47 -0500,
+Heinz Mauelshagen wrote:
 
-I'm having sever filesystem instability problems and am trying to figure out
-what is causing it.  I'm running kernel 2.2.18.smp with LVM 0.91.b7 and the
-ReiserFS 3.5.31.
+> 
+> All,
+> [...]
+>
+Linux kerne 2.4.4 here, with LVM 0.9.1_beta7 patches applied
+PV is a 2-partition software RAID-0 device (600 MB total)
+VG spans the whole RAID device, and no more PVs
+Three LV created over the described VG, 100, 100 and 200 MB each
 
-If anyone knows a reason why this combination won't play well together,
-please let me know.  Otherwise....
+pvdisplay -v /dev/md0 | grep "^ *00000"
+   00000 /dev/Grupo00/Unidad00     00000   512
 
-I have resized my filesystem and shortened it by about 60G.  Now I need to
-figure out how to remove a physical volume from the volume group.  
+root@server01:~# pvdisplay /dev/md0 
+--- Physical volume ---
+PV Name               /dev/md0
+VG Name               Grupo00
+PV Size               600.25 MB / NOT usable 256 KB [LVM: 121 KB]
+PV#                   1
+PV Status             available
+Allocatable           yes
+Cur LV                3
+PE Size (KByte)       4096
+Total PE              150
+Free PE               50
+Allocated PE          100
+PV UUID               oNXntA-Dg6p-5C5z-pybt-87B0-gI2C-SLzUmp
 
-My intent is to then put an ext2 fs on it and beat on the drive. If the
-machine is still stable, my RAID driver is ok.  Then I will put a reiserfs
-on it and beat on it again.  If it is still ok, then the the reiserfs is
-ok....
+Everything seems to be OK here. Sending all this information, just in
+case. Greetings.
 
-I just need to know how to remove a selected PV from a VG.
-
-Thanx in advance,
-Mike Diehl,
-Network Monitoring Tool Devl.
-Sandia National Laboratories.
-(505) 284-3137
-jdiehl@sandia.gov
+--
+Jos� Luis Domingo L�pez
+Linux Registered User #189436     Debian GNU/Linux Potato (P166 64 MB RAM)
+ 
+jdomingo EN internautas PUNTO org  => � Spam ? Atente a las consecuencias
+jdomingo AT internautas DOT   org  => Spam at your own risk
