@@ -1,8 +1,7 @@
-From: Donald Thompson <dlt@lunanet.biz>
-Subject: Re: [linux-lvm] Any way to remove a PV from LV for backup?
-In-Reply-To: <000b01c2504a$f5db57f0$5701a8c0@bomoon>
-Message-ID: <Pine.LNX.4.44.0208301443580.29266-100000@junior.lunanet.biz>
-MIME-Version: 1.0
+From: Frank Joerdens <frank@joerdens.de>
+Message-ID: <20020831201710.B17207@superfly.archi-me-des.de>
+Mime-Version: 1.0
+Subject: [linux-lvm] compile error with lvm_1.1-rc2
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -13,41 +12,61 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Fri Aug 30 15:54:21 2002
+Date: Sat Aug 31 13:17:31 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Fri, 30 Aug 2002, bo wrote:
+These are the errors I get:
 
->  Hello,
->
->  The system has 4 PVs, which belongs to one VG and one LV.
->  I want to remove a disk and replace it with new when the system
->  consumes all of its space then start to use next PV.
->
->  Q1: Is it really possible by LVM concept?
+In file included from basename.c:36:
+../../tools/lib/liblvm.h:61: linux/autoconf.h: No such file or directory
 
-Yes.
+and
 
-> Q2: If I have one extra PV I could use "pvmove", but I do not have.
->         Any way to resolve it?
+In file included from ../tools/lvm_user.h:47,
+                 from e2fsadm.c:60:
+../tools/lib/liblvm.h:61: linux/autoconf.h: No such file or directory
 
-Assuming you will enough free PE's in the remaining 3 PV's, you should be
-able to use pvmove to do this without needing a spare disk to add to the
-VG. Look at the first 'EXAMPLE' in the manpage for pvmove.
+My kernel sources are in the default location /usr/src/linux and I also
+tried to explicitly give this path to configure with
 
-> Q3: Are there any way to replay each PV(backup PV) independently on
->        the seperate system?
+./configure --with-kernel_dir=/usr/src/linux
 
-I'm not sure what you mean by 'replay'. If you mean import the volume
-group and any LV's that reside on that PV, it depends on how the LV's are
-laid out on the PV. If the LV's are stripped across multiple PV's or if an
-LV happens to span multiple PV's, then no you can't. I believe its
-possible to recover LV's if the entire LV resides on a single PV that was
-removed from the VG...but off the top of my head I don't know how. I know
-its not as simple as doing a vgimport because it complains about the lack
-of the other PV's when your missing PV's that made up the VG.
+I am using 2.4.18 with Reiser and quota patches . . . and I apparently
+need this LVM version because I ran into the pvmove issue trying to move
+~30GB of stuff:
 
--Don
+imedes:~ # pvmove /dev/sdc1 /dev/hdd
+pvmove -- moving physical extents in active volume group "funkadelic"
+pvmove -- WARNING: if you lose power during the move you may need to
+restore your LVM metadata from backup!
+pvmove -- do you want to continue? [y/n] y
+pvmove -- ERROR "Invalid argument" remapping
+
+pvmove -- ERROR "pv_move(): LE of LV remap" pv_move_pe
+
+pvmove -- ERROR "pv_move(): LE of LV remap" moving physical extents
+
+weirdly, I've got exactly one PE allocated left on this PV:
+
+limedes:~ # pvdisplay /dev/sdc1
+--- Physical volume ---
+PV Name               /dev/sdc1
+VG Name               funkadelic
+PV Size               30.64 GB / NOT usable 944 KB [LVM: 151 KB]
+PV#                   1
+PV Status             available
+Allocatable           yes
+Cur LV                1
+PE Size (KByte)       4096
+Total PE              7844
+Free PE               7843
+Allocated PE          1
+PV UUID               mPFcyy-wTUk-X3OI-fczK-XzHN-lkdF-nDrH3q
+
+what I didn't understand either was whether the kernel needed to be
+patched as well to get the cast fix for the llseek function?
+
+Regards, Frank
