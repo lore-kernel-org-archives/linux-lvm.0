@@ -1,8 +1,11 @@
-Message-ID: <20010830134914.13181.qmail@web14401.mail.yahoo.com>
-Date: Thu, 30 Aug 2001 06:49:14 -0700 (PDT)
-From: Aman Shahi <shahi_aman@yahoo.com>
-MIME-Version: 1.0
-Subject: [linux-lvm] Problem with Snapshot or something else ?
+Date: Thu, 30 Aug 2001 16:03:48 +0100
+Subject: Re: [linux-lvm] A Caldera related bug?
+Message-ID: <20010830160347.A700@btconnect.com>
+References: <OF8D6ACD21.34A36C6E-ON87256AB7.007C475A@sc.blm.gov> <20010830090848.A27345@caldera.de> <20010830032321.I541@turbolinux.com> <20010830114613.B12766@caldera.de> <20010830120929.A541@btconnect.com> <20010830141631.A27638@caldera.de>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20010830141631.A27638@caldera.de>; from hch@caldera.de on Thu, Aug 30, 2001 at 02:16:31PM +0200
+From: Joe Thornber <thornber@btconnect.com>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -18,84 +21,34 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-> >>Chris Mason posted a new VFA lock patch for 2.4.8+
-> >>heer:
->
->>http://lists.sistina.com/pipermail/lvm-devel/2001-August/000612.html
+On Thu, Aug 30, 2001 at 02:16:31PM +0200, Christoph Hellwig wrote:
+> On Thu, Aug 30, 2001 at 12:09:29PM +0100, Joe Thornber wrote:
+> > On Thu, Aug 30, 2001 at 11:46:13AM +0200, Christoph Hellwig wrote:
+> > > On Thu, Aug 30, 2001 at 03:23:21AM -0600, Andreas Dilger wrote:
+> > > > In the end, what is really needed is a well-defined LVM API between
+> > > > kernel and user-space that doesn't pass this kind of stuff.
+> > > 
+> > > Completly agreed.
+> > 
+> > I think every one is aware of this, but we can't change the interface during
+> > the 2.4 series.
+> 
+> Well, you change it all over the time..
+> IMHO replacing all these kernel types in the structures also used by the
+> tools to others that have the same size but do not depend on kernel headers
+> would be a very good thing for 1.0.2.
 
-I have linux kernel 2.4.8-ac8 and applied the VFS lock
-patch. I am having a problem when having snapshots.
+ok, I'll look at them.  I can't see how we can get rid of the kdev_t's
+though.
 
-1. I create a VG over three disk partitions
-sda2,sdb2,sdc2 ( total size being around 90G)
-2. I then create a LV of size 10G. 
-3. I create a reiser file system over this LV and
-mount it.
-4. I copy around 1.2G of data to this LV.
-5. I take a snapshot of this LV.
-6. I leave the snapshot and try copying another 1.2G
-of data to the LVM. I am doing the I/O using cp
-command. The cp command gives segmentation fault and I
-get a kernel message...
+> 
+> > If you're interested check out the LVM2 module and look
+> > at the code in driver/device-mapper (dm.h is a good intro).
+> 
+> Yes, this looks very promising.  Not for the near future, though.
 
-Code: 8b 0b eb 12 eb 0d 90 90 90 90 90 90 90 90 90 90
-90 90 90 8b
- <1>Unable to handle kernel paging request at virtual
-address 0001d108
- printing eip:
-c01c65cd
-*pde = 00000000
-Oops: 0000
-CPU:    0
-EIP:    0010:[<c01c65cd>]
-EFLAGS: 00010246
-eax: 00003a21   ebx: 0001d108   ecx: c0da5800   edx:
-00000000
-esi: 00000000   edi: 007919f8   ebp: 00000812   esp:
-cc911d34
-ds: 0018   es: 0018   ss: 0018
-Process cp (pid: 1341, stackpage=cc911000)
-Stack: 00000080 cc910000 00000040 00000000 c0da5970
-c0da5800 00790178 00000001
-       c01c3580 cc911d8e cc911d84 00790178 c0da5800
-000000ff 00000080 00000000
-       cd073400 ccee0000 00790178 00003c70 00791a38
-00791a38 08120000 00000000
-Call Trace: [<c01c3580>] [<c01695e2>] [<c01c366f>]
-[<c0192c92>] [<c015b5c7>]
-   [<c01323b1>] [<c0192cec>] [<c0192f17>] [<c0111f42>]
-[<c0134118>] [<c0132fb6>]
-   [<c01334e3>] [<c015e9a5>] [<c0133491>] [<c012631a>]
-[<c01244f0>] [<c01305c6>]
-   [<c0106ebb>]
+Well it shouldn't take too long to get the tools working with the new
+driver (a few weeks).  I'm really waiting for approval from
+linux-kernel before committing time to this though.
 
-Code: 8b 0b eb 12 eb 0d 90 90 90 90 90 90 90 90 90 90
-90 90 90 8b
-
-When I do not have any snapshot, I am able to copy any
-amount of data to the LV. But I am consistently
-getting this error when I have sometimes one, or more
-than snapshot in the system. 
-
-Am I doing something wrong ??
-I am not sure whether this is a problem with snapshot
-or some other problem. But as I see it only when I
-have snapshots in the system, I am reporting it here.
-
-I would also like to know how do I get the latest VFS
-lock patch ? I mean with normal source code we get
-linux-2.4.4-VFS-lock.patch. I found that it was
-different from the one mentioned above(start of this
-mail), which is supposed to be for 2.4.8-ac8. But when
-I tried this(2.4.8-ac8) with kernel 2.4.8-ac9 it
-failed. So which patch do I use for generic purpose ?
-
-regards,
-Aman Shahi.
-
-
-
-__________________________________________________
-Do You Yahoo!?
-Get email alerts & NEW webcam video instant messaging with Yahoo! Messenger
-http://im.yahoo.com
+- Joe
