@@ -1,10 +1,8 @@
-From: John DeFranco <defranco@cup.hp.com>
-Subject: Re: [linux-lvm] Question when installing LVM
-References: <269ACE34F7A8744688CC03618BF3B67D0645DA12@c092ex03.na.cintas.com>
-In-Reply-To: <269ACE34F7A8744688CC03618BF3B67D0645DA12@c092ex03.na.cintas.com>
-MIME-Version: 1.0
+From: Greg Freemyer <freemyer@NorcrossGroup.com>
+Mime-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-Message-Id: <200305150914.30282.defranco@cup.hp.com>
+Message-Id: <20030515163910.VDIH8294.imf58bis.bellsouth.net@tiger2>
+Subject: [linux-lvm] re[2]: iSCSI and LVM
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,45 +13,61 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Thu May 15 11:13:02 2003
+Date: Thu May 15 11:36:01 2003
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@sistina.com, "Murray, Bobby" <MurrayB@cintas.com>
+Content-Type: Text/plain; charset="us-ascii"
+To: Kai-Min Sung <k@kaisung.com>
+Cc: Linux-lvm@sistina.com
 
-Hi,
+Kai,
 
-If you are building a newer version of lvm from source for redhat 7.3=20
-(there is one already compiled and provided as a module), you  need=20
-to be sure you have the kernel-source rpm installed. Since redhat=20
-uses /usr/src/linux-2.4 instead of /usr/src/linux as the kernel=20
-source base you either need to create the /usr/src/linux link=20
-yourself or when you run the LVM configure command use the option=20
---with-kernel_dir=3D/usr/src/linux-2.4, this is what I do.
+Thanks for keeping me informed.
 
-I have had no problems with lvm on rh7.3.
+I am particularily interested in getting a Linux iSCSI target to work with a =
+Windows iSCSI initiator.
 
-On Thursday 15 May 2003 08:57, Murray, Bobby wrote:
-> I installed the LVM on Redhat Linux 7.3. I am not able to display
-> anything when I do a vgdisplay or lvdisplay. Nothing seems to work.
-> I was trying to compile the source but the configure is failing on
-> a /usr/src/src/linux not found. Redhat does not have such a file
-> thats why I turned to the RPM's but they do not seem to be working
-> correctly. Has anyone else experienced any problems compiling or
-> using LVM? thanks in advance
->
-> Bobby Murray
-> Unix Administrator / AIX Certified Specialist
->
->
->
->
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+Microsoft is projecting a June release of their half of this, last I knew.
 
-John DeFranco=09=09=09Hewlett-Packard Company
-john.defranco@hp.com=09=09Availability Clusters Solution Division
-phone: 408-447-7543=09=0919111 Pruneridge Ave, M/S 4101
-fax: 408-447-0056=09=09Cupertino, CA 95014=20
+Hopefully someone will introduce a compatible Linux target.
+
+=3D=3D=3D>  Other totally different ways to export a FS:
+
+I know the OpenGFS filesystem has been used with iSCSI backend drives.
+
+That is not exactly what you are looking for, but maybe ogfs could partially =
+satisfy the needs you have.
+
+Another very different choice is HyperSCSI.  There are Open Source Linux =
+initiators and targets available.
+
+IIRC, HyperSCSI's claim to fame is they are a low-level protocol.  (i.e. No TCP =
+/ UDP.)
+
+That makes it much faster.  i.e. much of the iSCSI overhead has to do with TCP =
+sockets.
+
+Greg
+--
+Greg Freemyer
+
+ >>  Hi Greg,
+ >>      Thanks for responding. I'm currently trying out the iSCSI
+ >>  implementation provided by the UNH IOL iSCSI Consortium:
+
+ >>  http://www.iol.unh.edu/consortiums/iscsi/
+
+ >>  They provide modules for both target and initiator. Unfortunately, the
+ >>  implementation is based on the v18 draft and doesn't include support for
+ >>  ErrorRecoveryLevel 2. I'd like level 2 recovery so that I can failover
+ >>  the node running the iSCSI target, and have the initiator automatically
+ >>  reconnect to the new iSCSI target node. Also, their implementation
+ >>  doesn't have support for setting up a logical volume as an iSCSI target.
+ >>  You can specify a file as an iSCSI target, so I tried specifying the
+ >>  logical volume's block device file, but when I imported it on the
+ >>  initiator node, the capacity of the device was all screwed up. Anyways,
+ >>  I'll try your pointer to the Intel implementation and see if it works
+ >>  better. Alternatively, I may try looking into using ENBD to export the
+ >>  logical volumes.
+
+ >>  Thanks,
+ >>  -Kai=20
