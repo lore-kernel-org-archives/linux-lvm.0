@@ -1,12 +1,10 @@
-From: Andreas Dilger <adilger@turbolabs.com>
-Date: Fri, 14 Sep 2001 09:52:31 -0600
-Subject: Re: [linux-lvm] Re: =?unknown-8bit?B?W2xp?=
-	=?unknown-8bit?Q?nux-lvm=5D_Verst=E4ndnis?= von Stripes bei LVM
-Message-ID: <20010914095230.S1541@turbolinux.com>
-References: <4C45858D148AD411A8B800A024B36E5009F4C994@granada.fhm.de> <20010914121333.A11814@dragon.blacknet.de>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20010914121333.A11814@dragon.blacknet.de>
+From: "IT3 Stuart B. Tener, USNR-R" <stuart@bh90210.net>
+Subject: RE: [linux-lvm] Lock Patch
+Date: Fri, 14 Sep 2001 09:25:32 -0700
+Message-ID: <NBBBJHKIOKPKOGOEPEDPAEFGDNAA.stuart@bh90210.net>
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+In-Reply-To: <20010914134124.B5191@sistina.com>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -18,59 +16,86 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+content-type: text/plain
 To: linux-lvm@sistina.com
 
-On Sep 14, 2001  12:13 +0200, Goetz Bock wrote:
-> On Fri, Sep 14 '01 at 11:32, Pawlowski Julian wrote:
-> > ich habe eine Frage zur Funktion von Stripes beim LVM. Wof?r genau
-> > ben?tigt man diese Funktion? Wird damit das LV auf mehrere der reellen
-> > Partitionen zwecks Performancegewinn verteilt?
->
-> Yes, that's exactly the intended bahaviour. if you have n (e.g. 2 or
-> more) PV than a striped LV is splitted between this n PV. This can
-> increase performance (like RIAD0 does) but it may backfire, if your PV
-> are on the same reald device.
-> If you want to use striped LVs, only use one PV per real device.
-> 
-> e.g.: 4 HDDs of 40GB each (sda, sdb, sdc, sdd)
-> 
-> you boot from sda and decide to have a 512MB root/boot partition for
-> this. Than make 3 swap partitiones on sdb, sdc and sdd.
-> 
-> on each device make a seccond partition with the rest of the space.
-> create a PV out of each of this 4 partitions.
-> 
-> you now have:
-> 
-> sda: sda1    512MB  root/boot
->      sda2   39.5GB  PV1
-> sdb: sdb1    512MB  swap
->      sdb2   39.5GB  PV2
-> sdc: sdc1    512MB  swap
->      sdc2   39.5GB  PV3
-> sdd: sdd1    512MB  swap
->      sdd2   39.5GB  PV4
-> 
-> VG1:       118.0GB  PV1 PV2 PV3 PV4
-> 
-> if you now make a striped LV of 20GB it will use 5GB on each PV and the
-> stripes will be read from PV1 PV2 PV3 PV4 PV1 PV2 PV3 PV4 ...
-
-A note here - very rarely can one really get the theoretical performance
-from striped LVs.  There are several problems with stipes:
-
-- bus bandwidth is often limited, so you often do not get N*disk_bandwidth
-- application bandwidth is often limited, so you do not NEED N*disk_bandwidth
-- for EACH read from a striped LV, you need to seek all disks to that
-  spot, which means you often have to wait for the MAXIMUM seek time
-  of all disks.  With non-striped LVs, you can do parallel read/write
-  from different parts of the each disk (e.g. /usr, /home, /var, swap)
-- if you have problems with ANY disk, you have lost ALL of your data
-
-Cheers, Andreas
--- 
-Andreas Dilger  \ "If a man ate a pound of pasta and a pound of antipasto,
-                 \  would they cancel out, leaving him still hungry?"
-http://www-mddsp.enel.ucalgary.ca/People/adilger/               -- Dogbert
+TXIuIE1hdWVsc2hhZ2VuOg0KDQoJSSBhbSBub3QgbWVhbmluZyB0byBiZSBydWRlLCBpdHMganVz
+dCBoaXMgYW5zd2VyIGlzIHVuY2xlYXIgYW5kIGRvZXMgbm90IHNwZWNpZnkgcmVhbGx5IHdoYXQg
+dG8gZG8uIEhlIGp1c3QgZ2VuZXJhbGx5IHNheXMsICJ0cnkgaXQgYWxsIiwgd2hhdGV2ZXIuIElm
+IEkgYW0gYXNraW5nIGEgcXVlc3Rpb24sIGl0IGlzIGJlY2F1c2UgSSBhbSB0cnVseSBsb3N0LiBJ
+IGFtIGFza2luZyBmb3Igbm90IG9ubHkgYXNzaXN0YW5jZSBidXQgYWxzbyBhbiB1bmRlcnN0YW5k
+aW5nIG9mIHdoYXQgSSBtdXN0IGRvLiBJIGFtIGEgcmVsYXRpdmVseSB0ZWNobmljYWwgcGVyc29u
+LCBhbmQgd2lsbCBub3QgdHJ5IGFueSBvZiB0aGUgYmVsb3cgc29sdXRpb25zIHdpdGhvdXQgdW5k
+ZXJzdGFuZGluZyB0aGVpciBpbXBhY3QgYW5kIHRoZSBleGFjdCBtZXRob2QgdGhleSBvdWdodCB0
+byBiZSBkZXBsb3kgd2l0aGluDQoNCglEb2VzIGhlIG1lYW4gSSBvdWdodCB0byBhcHBseSBib3Ro
+IHBhdGNoZXMsIG9uZSBmb2xsb3dlZCBieSB0aGUgb3RoZXI/DQoNCglEb2VzIGhlIG1lYW4gYXBw
+bHkgb25lIHBhdGNoIHRyeSBpdCwgdGhlbiByZW1vdmUgaXQgYW5kIGFwcGx5IHRoZSBzZWNvbmQ/
+DQoNCglEb2VzIGhlIG1lYW4gYXBwbHkgb25lIHBhdGNoIHRyeSBpdCwgbGVhdmUgaXQgYW5kIHRo
+ZW4gYXBwbHkgdGhlIHNlY29uZD8NCg0KCURvZXMgaGUgbWVhbiBwYXRjaGVzIHdoaWNoIGFyZSBz
+cGVjaWZpYyB0byBtYW5kcmFrZSdzIGRpc3RyaWJ1dGlvbnM/IEFyZSB0aGVyZSBzdWNoIHBhdGNo
+ZXM/IE11c3QgSSB1cGdyYWRlIHRvIDIuNC45Pw0KDQoNClZlcnkgUmVzcGVjdGZ1bGx5LCANCg0K
+U3R1YXJ0IEJsYWtlIFRlbmVyLCBJVDMsIFVTTlItUiwgTjNHV0cgDQpCZXZlcmx5IEhpbGxzLCBD
+YWxpZm9ybmlhDQpWVFUgMTkwNEcgKFZvbHVudGVlciBUcmFpbmluZyBVbml0KSANCnN0dWFydEBi
+aDkwMjEwLm5ldCANCndlc3QgY29hc3Q6ICgzMTApLTM1OC0wMjAyIFAuTy4gQm94IDE2MDQzLCBC
+ZXZlcmx5IEhpbGxzLCBDQSA5MDIwOS0yMDQzIA0KZWFzdCBjb2FzdDogKDIxNSktMzM4LTYwMDUg
+UC5PLiBCb3ggNDU4NTksIFBoaWxhZGVscGhpYSwgUEEgMTkxNDktNTg1OSANCg0KVGVsZWNvcGll
+cjogKDQxOSktNzE1LTYwNzMgZmF4IHRvIGVtYWlsIGdhdGV3YXkgdmlhIHd3dy5lZmF4LmNvbSAo
+aXQncyBmcmVlISkgDQoNCkpPSU4gVEhFIFVTIE5BVlkgUkVTRVJWRSwgU0VSVkUgWU9VUiBDT1VO
+VFJZLCBBTkQgQkVORUZJVCBGUk9NIElUIEFMTC4gDQoNCkZyaWRheSwgU2VwdGVtYmVyIDE0LCAy
+MDAxIDk6MjEgQU0NCg0KLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCkZyb206IGxpbnV4LWx2
+bS1hZG1pbkBzaXN0aW5hLmNvbSBbbWFpbHRvOmxpbnV4LWx2bS1hZG1pbkBzaXN0aW5hLmNvbV1P
+biBCZWhhbGYgT2YgSGVpbnogSiAuIE1hdWVsc2hhZ2VuDQpTZW50OiBGcmlkYXksIFNlcHRlbWJl
+ciAxNCwgMjAwMSA0OjQxIEFNDQpUbzogbGludXgtbHZtQHNpc3RpbmEuY29tDQpTdWJqZWN0OiBS
+ZTogW2xpbnV4LWx2bV0gTG9jayBQYXRjaA0KDQoNClN0dWFydCwNCg0KUGF0cmljayBnYXZlIHlv
+dSBhIGhlbHBmdWxsIGhpbnQsIHNvIHRoZXJlJ3Mgbm8gcmVhc29uIGZvciB5b3VyIHJ1ZGUgcmVh
+Y3Rpb24uDQpEb2luZyB3aGF0IGhlIHJlY29tbWVuZGVkIGlzIGEgbWF0dGVyIG9mIGxpdHRsZSB0
+aW1lIGFzIHdlbGwuDQoNCkFzayB0aGUgTWFuZHJha2UgTFZNIG1haW50YWluZXIgaWYgdGhhdCdz
+IG1vcmUgcHJlZmVyYWJsZSBmb3IgeW91Lg0KDQpSZWdhcmRzLA0KSGVpbnogICAgLS0gVGhlIExW
+TSBHdXkgLS0NCg0KT24gRnJpLCBTZXAgMTQsIDIwMDEgYXQgMDQ6MTA6MDhBTSAtMDcwMCwgSVQz
+IFN0dWFydCBCLiBUZW5lciwgVVNOUi1SIHdyb3RlOg0KPiBNci4gQ2F1bGZpZWxkOg0KPg0KPiAg
+ICAgICBXZWxsIHRoYW5rIHlvdSBmb3IgdGhhdCBtb3N0IGhlbHBmdWwgc3VnZ2VzdGlvbiwgYnV0
+IHNpbGx5IG1lLCBJIGNvbnNpZGVyIG15IHRpbWUgbW9yZSB2YWx1YWJsZS4gSSBzaGFsbCB3YWl0
+IGZvciBzb21lb25lIHRvIHBvc3QgYSBwcm9wZXIgYW5zd2VyLCByYXRoZXIgdGhhbiBvbmUsIHdo
+aWNoIGlzIGJvdGggb2J2aW91cyBhbmQgaW5lZmZpY2llbnQuDQo+DQo+DQo+IFZlcnkgUmVzcGVj
+dGZ1bGx5LA0KPg0KPiBTdHVhcnQgQmxha2UgVGVuZXIsIElUMywgVVNOUi1SLCBOM0dXRw0KPiBC
+ZXZlcmx5IEhpbGxzLCBDYWxpZm9ybmlhDQo+IFZUVSAxOTA0RyAoVm9sdW50ZWVyIFRyYWluaW5n
+IFVuaXQpDQo+IHN0dWFydEBiaDkwMjEwLm5ldA0KPiB3ZXN0IGNvYXN0OiAoMzEwKS0zNTgtMDIw
+MiBQLk8uIEJveCAxNjA0MywgQmV2ZXJseSBIaWxscywgQ0EgOTAyMDktMjA0Mw0KPiBlYXN0IGNv
+YXN0OiAoMjE1KS0zMzgtNjAwNSBQLk8uIEJveCA0NTg1OSwgUGhpbGFkZWxwaGlhLCBQQSAxOTE0
+OS01ODU5DQo+DQo+IFRlbGVjb3BpZXI6ICg0MTkpLTcxNS02MDczIGZheCB0byBlbWFpbCBnYXRl
+d2F5IHZpYSB3d3cuZWZheC5jb20gKGl0J3MgZnJlZSEpDQo+DQo+IEpPSU4gVEhFIFVTIE5BVlkg
+UkVTRVJWRSwgU0VSVkUgWU9VUiBDT1VOVFJZLCBBTkQgQkVORUZJVCBGUk9NIElUIEFMTC4NCj4N
+Cj4gRnJpZGF5LCBTZXB0ZW1iZXIgMTQsIDIwMDEgNDowNSBBTQ0KPg0KPiAtLS0tLU9yaWdpbmFs
+IE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBsaW51eC1sdm0tYWRtaW5Ac2lzdGluYS5jb20gW21haWx0
+bzpsaW51eC1sdm0tYWRtaW5Ac2lzdGluYS5jb21dT24gQmVoYWxmIE9mIFBhdHJpY2sgQ2F1bGZp
+ZWxkDQo+IFNlbnQ6IEZyaWRheSwgU2VwdGVtYmVyIDE0LCAyMDAxIDE6NTUgQU0NCj4gVG86IGxp
+bnV4LWx2bUBzaXN0aW5hLmNvbQ0KPiBTdWJqZWN0OiBSZTogW2xpbnV4LWx2bV0gTG9jayBQYXRj
+aA0KPg0KPiBPbiBUaHUsIFNlcCAxMywgMjAwMSBhdCAxMTowMDo0N1BNIC0wNzAwLCBJVDMgU3R1
+YXJ0IEIuIFRlbmVyLCBVU05SLVIgd3JvdGU6DQo+ID4gTGlzdCBtZW1iZXJzOg0KPiA+DQo+ID4g
+ICAgICAgSSBhbSBjdXJpb3VzOyBpZiBJIGFtIHJ1bm5pbmcgMi40LjgtMTJtZGsgKE1hbmRyYWtl
+IDgsMCksIHdoaWNoIGxvY2sgcGF0Y2ggZG8gSSB1c2UgdGhlIDIuNC40IHZlcnNpb24gb3IgdGhl
+IDIuNC45IHZlcnNpb24/DQo+ID4NCj4gPg0KPg0KPiBJIHdvdWxkIHRyeSB0aGUgMi40LjQgb25l
+LiBJZiB0aGF0IGRvZXNuJ3QgYXBwbHkgdGhlbiB0cnkgdGhlIDIuNC45Lg0KPg0KPiBwYXRyaWNr
+DQo+DQo+DQo+IF9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+DQo+IGxpbnV4LWx2bSBtYWlsaW5nIGxpc3QNCj4gbGludXgtbHZtQHNpc3RpbmEuY29tDQo+IGh0
+dHA6Ly9saXN0cy5zaXN0aW5hLmNvbS9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWx2bQ0KPiByZWFk
+IHRoZSBMVk0gSE9XLVRPIGF0IGh0dHA6Ly93d3cuc2lzdGluYS5jb20vbHZtL1BhZ2VzL2hvd3Rv
+Lmh0bWwNCj4gPz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/P3s/P1s/Pz8/P3gl
+Pz9lP3s/P1s/Pz8/Pyk/Pz8mPz9pPz8/Pz9sPz8/Pyk/Pz8mP2Y/P2Y/P1g/Pyk/Pz9iPz8/Pz8/
+eT9tPz8/MHM/PzM/PxttPz8/Pw0KPz8rLT92P3I/Pz8/Pz0/LT8/aD8/Pz8/Pw0KKioqIFNvZnR3
+YXJlIGJ1Z3MgYXJlIHN0dXBpZC4NCiAgICBOZXZlcnRoZWxlc3MgaXQgbmVlZHMgbm90IHNvIHN0
+dXBpZCBwZW9wbGUgdG8gc29sdmUgdGhlbSAqKioNCg0KPS09LT0tPS09LT0tPS09LT0tPS09LT0t
+PS09LT0tPS09LT0tPS09LT0tPS09LT0tPS09LT0tPS09LT0tPS09LT0tPS09LT0tPS09LT0tDQoN
+CkhlaW56IE1hdWVsc2hhZ2VuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgU2lzdGlu
+YSBTb2Z0d2FyZSBJbmMuDQpTZW5pb3IgQ29uc3VsdGFudC9EZXZlbG9wZXIgICAgICAgICAgICAg
+ICAgICAgICAgIEFtIFNvbm5lbmhhbmcgMTENCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgNTYyNDIgTWFyaWVucmFjaGRvcmYNCiAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgR2VybWFueQ0KTWF1ZWxzaGFnZW5A
+U2lzdGluYS5jb20gICAgICAgICAgICAgICAgICAgICAgICAgICArNDkgMjYyNiAxNDEyMDANCiAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBGQVgg
+OTI0NDQ2DQo9LT0tPS09LT0tPS09LT0tPS09LT0tPS09LT0tPS09LT0tPS09LT0tPS09LT0tPS09
+LT0tPS09LT0tPS09LT0tPS09LT0tPS09LT0tPS0NCg0KX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX18NCmxpbnV4LWx2bSBtYWlsaW5nIGxpc3QNCmxpbnV4LWx2
+bUBzaXN0aW5hLmNvbQ0KaHR0cDovL2xpc3RzLnNpc3RpbmEuY29tL21haWxtYW4vbGlzdGluZm8v
+bGludXgtbHZtDQpyZWFkIHRoZSBMVk0gSE9XLVRPIGF0IGh0dHA6Ly93d3cuc2lzdGluYS5jb20v
+bHZtL1BhZ2VzL2hvd3RvLmh0bWwNCg==
