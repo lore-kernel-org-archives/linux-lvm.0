@@ -1,8 +1,9 @@
-Return-Path: <scott@dixie.dyndns.org>
-Date: Thu, 24 May 2001 18:55:31 -0400
-Message-Id: <200105242255.f4OMtUN02394@dixie.dyndns.org>
-From: scott@dixie.dyndns.org
-Subject: [linux-lvm] LVM success story
+Return-Path: <austin@coremetrics.com>
+Date: Thu, 24 May 2001 21:46:11 -0500 (CDT)
+From: Austin Gonyou <austin@coremetrics.com>
+Message-ID: <Pine.LNX.4.33.0105242142530.6231-100000@UberGeek.coremetrics.com>
+MIME-Version: 1.0
+Subject: [linux-lvm] EMC Storage + LVM + XFS
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,30 +15,21 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: TEXT/PLAIN; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-I know this list gets quite a few complaints and bug reports, so I figured
-a success story would be a welcome post :)  After fighting a bit with the
-BIOS and lilo, it was good to see how quickly and seamlessly LVM caught its
-breath and kept moving.  I had LVM 0.9.1b6 on 2.2.19 for quite some time
-when I decided I was sick of having to boot off of floppy due to BIOS
-incompatibilities, so I flipped the primary and secondary chains such that
-hda became hdc and hdb became hdd.  The only disk that gave -any- problem
-was the root disk, which wasn't LVM anyway so I expected problems.  As far
-as the other 3, which were LVM'd into several LV's under a single VG, I
-just had to remove the lvm files from /etc and do a vgscan.
+I have a potential dilemma, and I'd like some feedback for those who might
+be able to give it. If I have say 2-4 Fibre HBAs connected to an EMC
+Symmetrix say 3930, and I create volumes, then disks are added some of
+which who's LUN value is lower than disks already in the system, wouldn't
+that cause all my sd values to change and move? I know if I add a scsi
+disk into a LAS array that happens. So if this does happen, what's a good
+procedure for recovering from it and making sure all my volumes are ok?
 
-One weirdness I did see while fighting with lilo was a few times was that
-it would see my scsi vg and detect its name but vgdisplay subsequentally
-would see 2 identical vg's, both the ide/internal disk vg.  It is entirely
-possible that it was just a weirdness with my lvm files in /etc, however,
-as a complete clean and rescan fixed it.
-
-Great job on a much-needed volume manager for linux!
---------------------------------------------------------------------------
-Scott Denton
-smdenton@bellsouth.net
-EFNet Handle: SteelWyng
+-- 
+Austin Gonyou
+Systems Architect, CCNA
+Coremetrics, Inc.
+Phone: 512-796-9023
+email: austin@coremetrics.com
