@@ -1,10 +1,10 @@
 Return-Path: <adilger@turbolinux.com>
 From: Andreas Dilger <adilger@turbolinux.com>
-Message-Id: <200102272022.f1RKMIk27598@webber.adilger.net>
-Subject: Re: [linux-lvm] Possible to raise Max LV?
-In-Reply-To: <20010227132358.A24164@math.ohio-state.edu> from Dave Alden at "Feb
- 27, 2001 01:23:58 pm"
-Date: Tue, 27 Feb 2001 13:22:18 -0700 (MST)
+Message-Id: <200102272025.f1RKPg727605@webber.adilger.net>
+Subject: Re: [linux-lvm] q: BLOCK_SIZE
+In-Reply-To: <3A9BF392.2E4C3DA5@tls.msk.ru> from Michael Tokarev at "Feb 27,
+ 2001 09:36:02 pm"
+Date: Tue, 27 Feb 2001 13:25:42 -0700 (MST)
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -21,22 +21,25 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Dave Alden writes:
-> I'm completely new to LVM, so can someone explain to me the purpose of
-> the PE's and why they default to 4M?  Is there some kind of performance
-> or space hit if I raise that to 16M (remember my setup: hardware RAID
-> array that is currently at ~250G, soon to be ~325G)?
+Michael writes:
+> Little question that I already posted here a long time ago.
+> What drawbacks can suffer if one changes BLOCK_SIZE in
+> include/linux/lvm.h from 1024 (or 4096 on S/390) to 512?
 
-Basically, the PE size is the minimum allocation unit of LVM.  If you
-make PE size very large, then you are generally wasting PE/2 disk space
-for each PV.  If (as in your case) the HW raid appears as a single large
-disk, then a large PE size may be appropriate, since you will only waste
-PE/2 once and it will still let you grow the LV to the current 2TB block
-device limit (kernel limit).
+On S/390 it would appear that the DASD block devices have a 4096
+byte sector size.  However, on most other systems there is only
+a 512 byte sector size, so I don't see any reason there would
+be problems with BLOCK_SIZE = 512.
 
-However, LVM DOES NOT handle PVs that change size!!!  In this case you
-need to make the new disk space appear as a new PV (via a new LUN number
-or something) and add that PV to the VG.  Sorry.
+I think Andrea Arcangeli was complaining about this as well.
+
+> This is about using lvm with rawio -- on 2.2, rawio wan't
+> work with i/o size be not a multiple of blocksize, while
+> on 2.4 it works.  Or at least this was on Dec-2000.
+> Oh yes, this is about 2.2 kernel and lvm-0.9.
+
+If it works for you at 512 bytes, leave it then.  Maybe Heinz
+will let us know why it is set to 1024 bytes.
 
 Cheers, Andreas
 -- 
