@@ -1,9 +1,10 @@
-From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] lvm und promise fasttrack
-Message-ID: <20011026101802.B32377@sistina.com>
-References: <3BD849C6.7060308@gmx.de> <20011026081326.A18287@dragon.blacknet.de>
+From: Patrick Caulfield <caulfield@sistina.com>
+Subject: Re: [linux-lvm] read_intr errors
+Message-ID: <20011026091007.A587@tykepenguin.com>
+References: <20011024101331.A2271@tykepenguin.com> <011101c15ded$a59767c0$0300000a@pacbell.net>
 Mime-Version: 1.0
-In-Reply-To: <20011026081326.A18287@dragon.blacknet.de>; from bock@blacknet.de on Fri, Oct 26, 2001 at 08:13:26AM +0200
+Content-Disposition: inline
+In-Reply-To: <011101c15ded$a59767c0$0300000a@pacbell.net>; from e@arix.com on Fri, Oct 26, 2001 at 12:13:00AM -0700
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,75 +15,60 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Fri Oct 26 03:20:02 2001
+Date: Fri Oct 26 03:29:02 2001
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Fri, Oct 26, 2001 at 08:13:26AM +0200, Goetz Bock wrote:
+On Fri, Oct 26, 2001 at 12:13:00AM -0700, Erick Calder wrote:
+> Patrick,
 > 
-> Hallo Jens,
-> > > ich hab schon wieder ein "Problem".
-> Well, it might be a good idea to write your requests to an international
-> mailing list in english ...
-
-Well, Jens probably wanted to send it to me personally :-)
-
-> so let's translate your questions (not a strict translation)
+> looking over the man page on lvreduce it states:
 > 
-> > > Auf meinem Mainboard ist ein Promise Fasttrack 100 Controller.
-> > > Die Festplatten kann ich ueber /dev/hd[e-h] ansprechen.
-> > My mainboard features a Promise Fasttrack 100 Controller, and I can
-> > access my harddrives as /dev/hd[e-h]
-> > 
-> > > Es gibt aber auch die Moeglichkeit das Hardware Raid anzuspechen ueber
-> > > /dev/ataraid/d[0-2]px , mit x als Partitionsnummer.
-> > But there is also the option to use the hardware raid as
-> > /dev/ataraid/d[0-2]px, with x beeing the partition number
-> > 
-> > > Beim Aufruf von vgcreate passiert folgendes :
-> > when calling vgcreate like this:
-> > vgcreate gl_lvm /dev/ataraid/d0p1
-> > vgcreate -- physical volume name "/dev/ataraid/d0p1" is invalid
-> For this to work, you must first use pvcreate to add the LVM's PV
-> information to your device:
-> pvcreate /dev/ataraid/d0p1
+> > lvreduce allows you to reduce the size of a  logical  volume.
+> > Be  careful  when reducing a logical volume's size,
+> > because data in the reduced part is lost!!!
 > 
-> But this will not help you, as pvcreate checls the device name against a
-> list of valid devices, and /dev/ataraid is not port of this (at last not
-> in the way outdated 0.9.1beta5 src I've on this system)
+> the above warning is not conclusive as to whether data loss occurs only when
+> the LV is full i.e. it has no choice but to lose data, of if data loss may
+> occur regardless i.e. there's no smarts in lvreduce to move data around...
 > 
-> OOTH you should not trust the bios based softraid of any of the consumer
-> raid devices, it is no hardware raid (not just MHO). If you want to do raid
-> with IDE devices, I'd suggest using the kernel based MD drivers, and putting 
-> every IDE disk on it's own channel.   
+> can you clarify this point and perhaps reword the above for a next release
+> of that man page?
 
-Yes, but if Jens still wants it, "atatraid" needs to be added to the _devdir
-array in lvm_dir_cache.c.
-In future LVM you just change/add an entry to a central config file.
 
+What it's warning you about is reducing the size of the LV without first changing
+the size of the filesystem that is using it. eg (for reiserfs) you *must*
+
+# resize_reiserfs <blah>
+# lvreduce <blah>
+
+Otherwise the filesystem will still think it is the same size as before and try
+to read/write off the end of the block device. This is almost guaranteed to
+cause problems.
+ 
+> anyhow, I understand what you're suggesting... however it's not clear to me
+> what "a little" means... would 1K do? 1M?
 > 
-> -- 
-> Goetz Bock                                              IT Consultant
-> Dipl.-Inf. Univ.
+> with the above, would I do:
+> 
+> # lvreduce -l -1 /dev/LVM/mp3z
+> 
+> to test this theory?
+
+You should reduce it by at least 1 Physical Extent (default is 4Meg), if you
+use the lower-case l to lvreduce it will do that for you (Capital L is for
+K/Meg/Gigabyes, lowercase l is for PEs) so
+
+# lvreduce -l 1 /dev/LVM/mp3z
+
+Will do the job *BUT YOU MUST RESIZE THE FILESYSTEM FIRST*
+
+If you are using an ext2 filesystem then you can use the e2fsadm command:
+
+# e2fsadm -l -1 /dev/LVM/mp3z
 
 
 
--- 
-
-Regards,
-Heinz    -- The LVM Guy --
-
-*** Software bugs are stupid.
-    Nevertheless it needs not so stupid people to solve them ***
-
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-
-Heinz Mauelshagen                                 Sistina Software Inc.
-Senior Consultant/Developer                       Am Sonnenhang 11
-                                                  56242 Marienrachdorf
-                                                  Germany
-Mauelshagen@Sistina.com                           +49 2626 141200
-                                                       FAX 924446
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+patrick
