@@ -1,8 +1,11 @@
-Message-ID: <0cd601c350cf$5b642d10$02de2a9e@aboheif>
-From: aboheif@manager.de
+From: ratler@lunar-linux.org
+Subject: Re: [linux-lvm] LVM1 problem, exported volumegroup with one dead
+ drive (fwd)
+In-Reply-To: <1058913244.3f1dbbdca4242@webmail.phys.unsw.edu.au>
+Message-ID: <Pine.LNX.4.56.0307230921240.18176@gumpie.wea.se>
+References: <Pine.LNX.4.56.0307221242540.30328@gumpie.wea.se>
+ <1058913244.3f1dbbdca4242@webmail.phys.unsw.edu.au>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] Easy System Anyone Can Do
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -13,44 +16,82 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Tue Jul 22 23:32:02 2003
+Date: Wed Jul 23 02:25:30 2003
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: debroah <linux-lvm@sistina.com>, sistina@sistina.com, conrad@sistina.com, mge@sistina.com
+Content-Type: TEXT/PLAIN; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: linux-lvm@sistina.com
 
-QKCOM01nOF7V
-Ixy
+Hi Melinda,
 
+Yes I tried using LVM2 very early since it was said it could cope with
+disks that were inaccesible. However the vgreduce --removemissing doesn't
+work. I believe it is because I did a vgexport before the 2nd disk went
+out of business. And since I cant import the VG because one of the drives
+are gone Im kinda in a dead end.
 
-IMMEDIATE CASH WITH RESIDUAL
+Sincerely
+Stefan Wold
 
-Now for the first time, you can own a business
-in your area with the most unique, innovative
-product in America today.
+On Wed, 23 Jul 2003, Melinda Taylor wrote:
 
-Work less than ten hours a week with the
-potential to earn $60,000 a year!
-The profit margin is simply amazing.
-
-There is not selling and no competition,
-and this is not MLM either.
-
-Break down those walls and live the life
-you've only dreamed about.
-
-Limited availability.
-You must check this out if you
-are serious about making money!
-
----------
-Push on this link for your free information package.
-http://www.m-la-ta-di.com.br/tb/EliasM_gnm5x/index.htm
-
-
----------
-
-
-*******
-Visit bottom of the above site To 0pt-0ut
-
-K5
+> Hi Stefan,
+>
+> I am working through the exact same scenario so you may like to look through my
+> posts and peoples advice in the LVM archive (july):
+>
+> http://lists.sistina.com/pipermail/linux-lvm/2003-July/subject.html
+>
+> Basically I had 2 disks fail which were part of my VG. I now have 2 of 4 LV's
+> left and am trying to retrieve the data. As suggested the only way to recover
+> data from a partial VG is to upgrade to LVM2.
+>
+> I have done that and LVM2 can now activate my partial VG - but I haven't quite
+> retrieved the data from it yet.
+>
+> Hope that helps,
+>
+> Melinda
+>
+>
+> Quoting ratler@lunar-linux.org:
+>
+> > Hi,
+> >
+> > I think I have tried all solutions google could give me without any luck
+> > restoring any data.
+> >
+> > The problem is the following:
+> >
+> > 1. I had to reinstall a server to where this volumegroup belonged
+> > 2. I umounted all LVs. And deactivated the VG. And then I did a vgexport
+> > of the VG
+> > 3. After the reinstall of the linux server it was time to import the VG
+> > that had 2 harddrives. I ran a pvscan and it only detected one drive! I
+> > started some investigation and i noticed the second drive was totaly dead!
+> >
+> >
+> > And of course since this was a server at my home I didnt have any backups
+> > of this VG. And since one drive is missing it's impossible to import the
+> > part of the VG I have left. I know that most of all PEs for my /home
+> > are on the drive that is still working.
+> >
+> > Now I wonder how on earth can I restore any of the data that is still on
+> > my working drive? I had 4 years of mail and some source code I would die
+> > for to get back. Since I only have metadata from the only drive working I
+> > think I have a little problem ;)
+> > All I want is to get as much of the data out from datavg/homelv.
+> >
+> > I attached a log file with the output from pvscan and pvdata.
+> >
+> > Sincerely
+> > Stefan Wold
+>
+>
+>
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@sistina.com
+> http://lists.sistina.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+>
