@@ -1,12 +1,14 @@
-Return-Path: <lewis@sistina.com>
-Date: Fri, 16 Mar 2001 12:44:46 -0600
-From: AJ Lewis <lewis@sistina.com>
-Message-ID: <20010316124446.B1478@sistina.com>
+Return-Path: <hopper@omnifarious.mn.org>
+Date: Fri, 16 Mar 2001 13:15:23 -0600
+From: "Eric M. Hopper" <hopper@omnifarious.mn.org>
+Subject: Re: [linux-lvm] LVM 0.9.1 Beta6 RPMS
+Message-ID: <20010316131523.A21757@omnifarious.mn.org>
+References: <20010316124446.B1478@sistina.com>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="ftEhullJWpWg/VHq"
+	protocol="application/pgp-signature"; boundary="fUYQa+Pmc3FrFX/N"
 Content-Disposition: inline
-Subject: [linux-lvm] LVM 0.9.1 Beta6 RPMS
+In-Reply-To: <20010316124446.B1478@sistina.com>; from lewis@sistina.com on Fri, Mar 16, 2001 at 12:44:46PM -0600
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -20,58 +22,47 @@ List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 To: linux-lvm@sistina.com
 
---ftEhullJWpWg/VHq
+--fUYQa+Pmc3FrFX/N
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-LVM 0.9.1 Beta6 RPMS are up on the Sistina FTP site:
-ftp://ftp.sistina.com/pub/LVM/0.9.1_beta/binaries/redhat
+On Fri, Mar 16, 2001 at 12:44:46PM -0600, AJ Lewis wrote:
+> LVM 0.9.1 Beta6 RPMS are up on the Sistina FTP site:
+> ftp://ftp.sistina.com/pub/LVM/0.9.1_beta/binaries/redhat
+>=20
+> These are based on the Connectiva LVM packages, but were created on a
+> Redhat 6.2 system.  (I think they will work on any RPM based system
+> though...) They use a modified version of the wrapper script (it uses
+> sed instead of basename and the libary name has changed).  You need to
+> grab at a minimum, the lvm-base, lvm-iop10, and lvm-iop10-lib
+> packages.
 
-These are based on the Connectiva LVM packages, but were created on a Redhat
-6.2 system.  (I think they will work on any RPM based system though...) They
-use a modified version of the wrapper script (it uses sed instead of
-basename and the libary name has changed).  You need to grab at a minimum,
-the lvm-base, lvm-iop10, and lvm-iop10-lib packages.
+	Would you consider releasing kernel patches against the 2.4.x
+series kernels?
 
-This should be considered a Beta version of the package as well as of LVM.
-Please don't go using these on your production system and then complain
-because they clobber your system.  I'm putting these out there for people to
-test so we have them right when we release a production version of LVM.
+	I want to upgrade to 2.4.x someday soon.  I currently use LVM on
+my system, but my confusion over exactly what patches I need to apply
+prevents me from upgrading to 2.4.x.
 
-Debian packages are next in line.  Hopefully I'll have those done by the end
-of Monday...
-
-Go forth and test!
+Have fun (if at all possible),
 --=20
-AJ Lewis
-Sistina Software Inc.                  Voice:  612-379-3951
-1313 5th St SE, Suite 111              Fax:    612-379-3952
-Minneapolis, MN 55414                  E-Mail: lewis@sistina.com
-http://www.sistina.com
+The best we can hope for concerning the people at large is that they
+be properly armed.  -- Alexander Hamilton
+-- Eric Hopper (hopper@omnifarious.mn.org http://www.omnifarious.org/~hoppe=
+r) --
 
-Current GPG fingerprint =3D 3B5F 6011 5216 76A5 2F6B  52A0 941E 1261 0029 2=
-648
-Get my key at: http://www.sistina.com/~lewis/gpgkey
- (Unfortunately, the PKS-type keyservers do not work with multiple sub-keys)
-
------Begin Obligatory Humorous Quote----------------------------------------
-"Memory is like gasoline. You use it up when you are running. Of
-course you get it all back when you reboot..."; Actual explanation
-obtained from the Micro help desk.
------End Obligatory Humorous Quote------------------------------------------
-
---ftEhullJWpWg/VHq
+--fUYQa+Pmc3FrFX/N
 Content-Type: application/pgp-signature
 Content-Disposition: inline
 
 -----BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.0.4 (GNU/Linux)
+Version: GnuPG v1.0.2 (GNU/Linux)
 Comment: For info see http://www.gnupg.org
 
-iD8DBQE6sl8epE6/iGtdjLERAtY6AJ4m35kvYvWQrL7yIh4i9YE30ZvaCACdEq7n
-ColsMq0Pet0l6LezsfPH6jo=
-=6r5u
+iD8DBQE6smZLG4QeWBeRdS8RAq3HAJ9jYRqL8wPoVQ9VduDK6+LpmT3SAwCdFwGs
+Y4uggfGimYl/x1bW96mMjAI=
+=YMUi
 -----END PGP SIGNATURE-----
 
---ftEhullJWpWg/VHq--
+--fUYQa+Pmc3FrFX/N--
