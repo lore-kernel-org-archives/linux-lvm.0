@@ -1,10 +1,9 @@
-Return-Path: <jorg.de.jong@ida.xs4all.nl>
-Message-ID: <3AD3543F.6CC8BC6B@ida.xs4all.nl>
-Date: Tue, 10 Apr 2001 20:43:11 +0200
-From: Jorg de Jong <jorg.de.jong@ida.xs4all.nl>
+Return-Path: <ardy@rdb.linux-help.org>
+Date: Tue, 10 Apr 2001 14:52:21 -0400 (EDT)
+From: <ardy@rdb.linux-help.org>
+Message-ID: <Pine.LNX.4.21.0104101450100.7875-100000@rdb.linux-help.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] man page of vgdisplay incorrect
+Subject: [linux-lvm] LVM GUI
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,18 +15,11 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: TEXT/PLAIN; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Hi,
-
-the manpage of vgdisplay and the command are not inline.
-See vgdisplay -c, the uuid is displayed but not mentioned in the manpage.
-
-Minor, I know :-)...
-
-
--- 
-Jorg de Jong
-Work : jorg.de.jong@ict.nl 
-Play : jorg.de.jong@ida.xs4all.nl
+I did a search on freshmeat.net for LVM GUIs. Found one called
+Logical Volume Administrator, apparently written in perl/TK.
+Anyone tried this, and if so, with success?
+Thoughts?
