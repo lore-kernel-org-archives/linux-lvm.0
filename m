@@ -1,13 +1,12 @@
 From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] Re: lvm 1.0.3, kernel 2.4.17 and the libs...
-Message-Id: <20020227184102.A21636@sistina.com>
-References: <1014762518.12325.76.camel@dirac.cids.ca>
-    <20020226155618.C12832@lynx.adilger.int>
-    <1014830883.13642.12.camel@dirac.cids.ca>
+Subject: Re: [linux-lvm] lvm 0.8 to 1.0 transition?
+Message-Id: <20020227184310.B21636@sistina.com>
+References: <3C7BC9BB.F1ABAC3@fl.priv.at>
+    <20020227102700.C19249@sistina.com> <3C7CE18F.BCFDDD7B@fl.priv.at>
 MIME-Version: 1.0
-In-Reply-To: <1014830883.13642.12.camel@dirac.cids.ca>; from
-    dsavard@cids.ca on Wed, Feb 27, 2002 at 12:28:03PM -0500
 Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <3C7CE18F.BCFDDD7B@fl.priv.at>; from fl@fl.priv.at on Wed,
+    Feb 27, 2002 at 02:39:27PM +0100
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -18,65 +17,96 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Feb 27 11:41:02 2002
+Date: Wed Feb 27 11:43:01 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="iso-8859-1"
+Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
 
-On Wed, Feb 27, 2002 at 12:28:03PM -0500, Daniel Savard wrote:
-> le mar 26-02-2002 =E0 17:56, Andreas Dilger a =E9crit :
-> > On Feb 26, 2002  17:28 -0500, Daniel Savard wrote:
-> > > I did mkfs.ext2 on /dev/sda8 !!! However, this was still pointing t=
-o my
-> > > LVM partition even if fdisk was not showing this.
-> > >=20
-> > > The big question: Is it still possible to recover some data from th=
-e LVM
-> > > partition which was the only partition in my VG?
+On Wed, Feb 27, 2002 at 02:39:27PM +0100, Friedrich Lobenstock wrote:
+> "Heinz J . Mauelshagen" wrote:
 > >=20
-> > Well, mke2fs writes a LOT of data into the partition, being especiall=
-y
-> > careful to overwrite everything at the start of the disk.  It might b=
-e
-> > possible to recover this with "vgcfgrestore", but even then you have =
-the
-> > problem of overwriting the rest of the data on the disk.  If the prim=
-ary
-> > ext2 superblock is overwritten on an LV inside this disk, you can use
-> > "e2fsck -b 32768" or so to try and recover.
+> > In case you just want to update your LVM software, you don't need to
+> > vgexport/vgimport your VGs as described under that URL.
 > >=20
-> > Cheers, Andreas
-> > --
-> > Andreas Dilger
-> > http://sourceforge.net/projects/ext2resize/
-> > http://www-mddsp.enel.ucalgary.ca/People/adilger/
-> >=20
+> > Presuming that you took backups of your data and metadata (/etc/lvmconf=
+/*)
+> > and don't have root on a LV,
 >=20
-> Since my LVM partition has been moved by the operations on the
-> partitions with fdisk. I had to use the vgcfgrestore command as follow
-> and getting the following error:
+> Yes root is on a LV on RAID1 and the data is on a LV on another RAID1
 >=20
-> [root@einstein sbin]# vgcfgrestore -n datavg -o /dev/sda9 /dev/sda7
-> vgcfgrestore -- INFO: using backup file "/etc/lvmconf/datavg.conf"
-> vgcfgrestore -- ERROR "pv_read(): PV identifier invalid" reading physic=
-al volume "/dev/sda7"
+> # uname -a
+> Linux www 2.4.0-test12-pre4-reiserfs-md-fixes #4 Fri Jan 19 14:48:29 CET =
+2001 i686 unknown
 >=20
-> Is there still something I can try or should I forget it?
+> # cat /proc/lvm
+> LVM driver version 0.8final  (15/02/2000)
+> =20
+> Total:  2 VGs  2 PVs  6 LVs (6 LVs open 6 times)
+> =20
+> Global: 156410 bytes malloced   IOP version: 6   22:43:33 active
+> =20
+> VG:  system-disk  [1 PV, 4 LV/4 open]  PE Size: 4096 KB
+>   Usage [KB/PE]: 9969664 /2434 total  9969664 /2434 used  0 /0 free
+>   PV:  [AA] md1                    9969664 /2434     9969664 /2434       =
+    0 /0
+>     LVs: [AWCL  ] swap                        524288 /128      1x open
+>          [AWDL  ] root                       2097152 /512      1x open
+>          [AWDL  ] tmp                         524288 /128      1x open
+>          [AWDL  ] var                        6823936 /1666     1x open
+> =20
+> VG:  data-disk  [1 PV, 2 LV/2 open]  PE Size: 8192 KB
+>   Usage [KB/PE]: 78143488 /9539 total  55615488 /6789 used  22528000 /275=
+0 free
+>   PV:  [AA] md3                   78143488 /9539    55615488 /6789    225=
+28000 /2750
+>     LVs: [AWDL  ] 1                         18022400 /2200     1x open
+>          [AWDL  ] 2                         37593088 /4589     1x open
+>=20
+> # df -h
+> Filesystem            Size  Used Avail Use% Mounted on
+> /dev/system-disk/root
+>                       2.0G  1.5G  522M  75% /
+> /dev/md0               50M   37M   13M  74% /boot
+> /dev/system-disk/tmp  512M   32M  480M   6% /tmp
+> /dev/system-disk/var  6.5G   92M  6.4G   1% /var
+> /dev/data-disk/1       17G   12G  5.1G  70% /mount/1
+> /dev/data-disk/2       36G   12G   24G  34% /mount/2
+>=20
+> /dev/system-disk/ has PV /dev/md1
+> /dev/data-disk/ has PV /dev/md3
+>=20
+> # cat /proc/mdstat
+> Personalities : [raid1]
+> read_ahead 1024 sectors
+> md0 : active raid1 hdc1[0] hda1[1]
+>       51264 blocks [2/2] [UU]
+> =20
+> md1 : active raid1 hdc2[0] hda2[1]
+>       9970560 blocks [2/2] [UU]
+> =20
+> md3 : active raid1 hdg1[1] hde1[0]
+>       78150592 blocks [2/2] [UU]
+>=20
+> Therefore I will install a new system and I'll just take the disks
+> that belong to /dev/md3 and put them in this new system. So I'll
+> have the old system to put the disks back if anything goes wrong
+> in the new system.=20
+>=20
+> In the new system I just need to pvmove the the data onto the new=20
+> disks, this time hardware RAID instead of software RAID, so no=20
+> fancy stuff to get lilo boot with root on LV.
+>=20
+> So how should I do it, just "vgscan;vgchange -ay" or do I need to
+> vgexport/vgimport and will this cause troubles?
 
-"pvcreate -ff /dev/sda7" before you try vgcfgrestore again.
+If you want to move the devices over to another system, vgexport+vgimport
+is the recommended way to go.
 
 >=20
 > --=20
->=20
-> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> Daniel Savard
->=20
-> Internet: dsavard@cids.ca
-> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
->=20
->=20
+> MfG / Regards
+> Friedrich Lobenstock
+> =7F
 >=20
 > _______________________________________________
 > linux-lvm mailing list
