@@ -1,38 +1,39 @@
-Date: Wed, 8 Nov 2000 17:53:26 +0100
+Date: Wed, 8 Nov 2000 18:04:03 +0100
 From: Andrea Arcangeli <andrea@suse.de>
 Subject: [linux-lvm] Re: LVM 2.2 snapshot bug
-Message-ID: <20001108175326.D3650@inspiron.suse.de>
-References: <20001107142152.G1276@inspiron.random> <Pine.LNX.4.05.10011071550270.28283-100000@humbolt.nl.linux.org> <20001107174504.A5834@inspiron.suse.de> <20001107170420.D12477@redhat.com> <20001107205137.A7093@inspiron.suse.de> <20001108111028.F11411@redhat.com>
+Message-ID: <20001108180403.E3650@inspiron.suse.de>
+References: <20001108173113.B3650@inspiron.suse.de> <898720000.973701988@coffee>
 Mime-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20001108111028.F11411@redhat.com>; from sct@redhat.com on Wed, Nov 08, 2000 at 11:10:28AM +0000
+In-Reply-To: <898720000.973701988@coffee>; from mason@suse.com on Wed, Nov 08, 2000 at 11:46:28AM -0500
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: "Stephen C. Tweedie" <sct@redhat.com>
-Cc: Rik van Riel <riel@conectiva.com.br>, linux-lvm@msede.com, marcelo@conectiva.com.br
+To: Chris Mason <mason@suse.com>
+Cc: Rik van Riel <riel@conectiva.com.br>, linux-lvm@msede.com, marcelo@conectiva.com.br, "Stephen C. Tweedie" <sct@redhat.com>
 
-On Wed, Nov 08, 2000 at 11:10:28AM +0000, Stephen C. Tweedie wrote:
-> "sorry, this operation is not possible" and saying "sure, fine"
-> followed by a thousand IO errors in the syslog when the user tries to
-> mount the ext3 filesystem.  Journal recovery can generate several
+On Wed, Nov 08, 2000 at 11:46:28AM -0500, Chris Mason wrote:
+> But, if is_read_only(dev) returns 0,[..]
 
-I agree the bug is annoying but OTOH it's also _harmless_ as far I can see and
-I _much_ prefer to fix by making the snapshot writeable (side note: writeable
-and persistent are completly orthogonal features). Note that you will get I/O
-errors if during the writes you run out of snapshot space (this is possible if
-you given less space to the snapshot than to the real blockdevice) so expect
-I/O errors in that case too. Really we could allow the creation of a writeable
-snapshot only if the user made the snapshot as large as the real logical
-volume, but I think that shouldn't be a requirement and a warning during the
-snapshot creation should be enough IMHO. (if the user want to make
-sure not to run out of snapshot space he should only care to give
-to the snapshot the same space he given to the snapshotted blockdevice)
+That is the case for a read only floppy disk and for a LVM snapshot but
+in reality both generates I/O errors after calling ll_rw_block(WRITE)
+because in reality they are both read only.
 
-Another possible feature then is to be able to snapshot a snapshot
-(however to make that to work we should break some more assumption of the
-userspace tools).
+> [..] reiserfs tries to update the journal
+> header block on mount. [..]
+
+So it does the same thing of ext3, I remeber we also discussed that design
+decision in the past and I remeber there are good reasons for that.
+
+> Heinz and found the bug where is_read_only returns 0 for the snapshot
+
+Oh, I didn't know you were just aware of it.
+
+> volume while we were working on the snapshot api for journaled filesystems,
+> so this code got a lot of testing.
+
+Ok.
 
 Andrea
