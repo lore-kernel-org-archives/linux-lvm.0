@@ -1,23 +1,56 @@
-Message-ID: <373824DA.F20EC83D@aholdusa.com>
-Date: Tue, 11 May 1999 08:38:50 -0400
-From: Dave Venus <dvenus@aholdusa.com>
-MIME-Version: 1.0
-Subject: [linux-lvm] Raw partitions in LVM-Linux?
-Content-Transfer-Encoding: 7bit
+Message-Id: <199905111334.AA16137@mailgate1b.telekom.de>
+From: Heinz Mauelshagen <mauelsha@ez-darmstadt.telekom.de>
+Subject: [linux-lvm] Re: Raw partitions (volumes) in Linux-LVM?
+Date: Tue, 11 May 1999 15:31:00 METDST
+In-Reply-To: <8525676E.0046463F.00@USCOMM02.aholdusa.com>; from "David Venus" at May 11, 99 8:50 am
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@msede.com
+Content-Transfer-Encoding: 7bit
+To: dvenus@aholdusa.com
+Cc: linux-lvm@msede.com, mge@u9ete.ez-darmstadt.telekom.de
 
-Hi!
+> 
+> Hi!
+> 
+> This is very very cool!
+> 
 
-Does/will LVM-Linux support raw partitions? We are interested in running
-Oracle Parallel Server (OPS) and it requires raw partitions (volumes). I
-know this worked on HP LVM.
+8*)
 
-Thanks!
+> Does/will Linux-LVM support raw paritions (volumes)? I know that HP LVM
+> did. We are interested in running Oracle Parallel Server (OPS) which
+> requires raw volumes (partitions).
 
-Dave Venus
-Ahold Information Services
-Greenville, SC.
+This is no special LVM feature but a feature Stephen Tweedie already implemeted.
+A patch against plain 2.2.4 kernel is available.
+
+Have a look at <ftp://ftp.uk.linux.org/pub/linux/sct/fs/raw-io/>
+
+It allows you to bind a raw device special to _any_
+existing block device including LVM devices.
+
+> 
+> Thanks for your time and help on this!
+> 
+
+You're welcome.
+
+Regards,
+Heinz
+
+--
+
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+Systemmanagement C/S                             Deutsche Telekom AG
+                                                 Entwicklungszentrum Darmstadt
+Heinz Mauelshagen                                Otto-Roehm-Strasse 71c
+Senior Systems Engineer                          Postfach 10 05 41
+                                                 64205 Darmstadt
+mge@ez-darmstadt.telekom.de                      Germany
+                                                 +49 6151 886-425
+                                                          FAX-386
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
