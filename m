@@ -1,10 +1,10 @@
-Date: Tue, 9 Oct 2001 16:12:20 +0100
-Subject: Re: [linux-lvm] LVM seems to be causing SCSI errors.
-Message-ID: <20011009161220.C745@btconnect.com>
-References: <134865292.1002635774089.JavaMail.root@boots>
+Date: Tue, 9 Oct 2001 16:13:25 +0100
+Subject: Re: [linux-lvm] Too many problems
+Message-ID: <20011009161325.D745@btconnect.com>
+References: <002901c150b3$9d330860$836788cf@industry>
 Mime-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <134865292.1002635774089.JavaMail.root@boots>; from rmvzj001@sneakemail.com on Tue, Oct 09, 2001 at 06:55:54AM -0700
+In-Reply-To: <002901c150b3$9d330860$836788cf@industry>; from jlixfeld@andromedas.com on Tue, Oct 09, 2001 at 07:14:50AM -0400
 From: Joe Thornber <thornber@btconnect.com>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
@@ -21,24 +21,17 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Tue, Oct 09, 2001 at 06:55:54AM -0700, Karl wrote:
-> > > When I ran an fsck on the file system with the errors (I did not re-do
-> > > this experiment recently) it found bad blocks on the files system, but
-> > > no inconsistencies on the file system itself.
-> > 
-> > Strange, running out of ideas here.
-> > We don't have similar reports, do we?
+On Tue, Oct 09, 2001 at 07:14:50AM -0400, Jason A. Lixfeld wrote:
+> I just need to know what a stable release of LVM is for RedHat and what
+> compiler to use.  The stock RedHat 7.1 compiler is buggy, from what I
+> understand here.  I've had so many problems in the last week and I'm
+> getting really frustrated with all of this :(  I'm using kernel 2.4.10
+> but am more than willing go to down a couple revs for something stable.
 > 
-> I did not see anything when checking the archives. Any thing else I can
-> do to provide info on this problem?
-> 
-> Could the SCSI ID have anything to do with it? Size of drives? Phase of
-> the moon? :-)
-> 
-> It is odd that this is only lvol2 that has the problem. My lvol1 and
-> lvol3 have been working perfectly. Maybe I should add an lvol2 and lvol4
-> in and see if the even numbers have problems...
+> Please let me know what's a stable LVM/Kernel/Compiler setup so I can
+> keep my systems up.
 
-Have you tried running md across these disks ?
+Get the latest CVS code - this has optimisation turned off so you
+should be ok with redhat.
 
 - Joe
