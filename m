@@ -1,9 +1,9 @@
 From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] about snapshot
-Message-ID: <20020604150300.B17699@sistina.com>
-References: <OFFE9BA733.A06B07FF-ON48256BCE.002BC32B@legend.com.cn>
+Subject: Re: [linux-lvm] Questions about PE size and clustering
+Message-ID: <20020604151157.C17699@sistina.com>
+References: <F888C30C3021D411B9DA00B0D0209BE8038F9515@cvo-exchange.cvo.roguewave.com>
 Mime-Version: 1.0
-In-Reply-To: <OFFE9BA733.A06B07FF-ON48256BCE.002BC32B@legend.com.cn>; from lilha@legend.com.cn on Tue, Jun 04, 2002 at 04:13:16PM +0800
+In-Reply-To: <F888C30C3021D411B9DA00B0D0209BE8038F9515@cvo-exchange.cvo.roguewave.com>; from petersp@roguewave.com on Mon, Jun 03, 2002 at 06:23:17PM -0700
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,60 +14,110 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Tue Jun  4 08:08:01 2002
+Date: Tue Jun  4 08:17:02 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Tue, Jun 04, 2002 at 04:13:16PM +0800, lilha@legend.com.cn wrote:
-> 
-> i have a question about snapshot in lvm.
-> why implementing snapshot in vm, there is any reason about it ?
+On Mon, Jun 03, 2002 at 06:23:17PM -0700, Poul Petersen wrote:
+> 	Are there any concerns, performance or otherwise, with using a
+> larger PE size then the 4MB default?  It would seem that the only problem
+> with using a larger PE is that there is an increased potential for waste,
+> sort of like "cluster overhang" on FAT file-systems?
 
+Yes, that's it.
 
-Implementing snapshot support in the LVM has the big advantage that any
-arbitrary software *without* snapshot capabilities of its own, which uses
-LVM logical volumes (like filesystems, database systems, ...) can take
-advantage of the generic LVM snapshot feature (for backups, online recovery,
-...) out of the box.
+> That is, if I set the
+> PE size to 128MB and then create a 150MB LV, I'll end up wasting 106MB of
+> space since the LV needs two PEs. Of course, this means that the waste is
+> always less than 1 PE. 
 
-> why not do snapshot in filesystem,such as snapfs?
-
-Filesystem snapshot support is a particular case which helps covering
-a particular area (namely filesystems :), but not all the others, where an
-application makes direct use of the underlying LVM device.
-
-> and what are the advantage and disadvantage in it?
-
-An application/filesystem level snapshot implementation has the potential
-to minimize housekeeping overhead on snapshot metadata, because it can
-just store the necessary minimized amount of metadata and is likely faster.
-
-LVM as a block device layer entity is just capable to handle blocks and
-therefore needs to keep track of changed blocks rather than for eg. typically
-smaller metadata like filesystem inodes.
-
-IOW: application/filesystem snapshots *force* a paritcular snapshot
-     implementation which is costly but can offer better performance.
-
-     LVM offers a generic snapshot feature avoiding costly
-     application/filesystem level enhancements but buys this with
-     some more housekeeping overhead.
+Well, in that case your LV will be 256MB in size. which yu might not want.
+But yes, that's always less than 1 PE, because the PE size is the LVM
+internal allocation units causing LV sizes of multiples of the PE size.
 
 > 
-> thanks for any reply.
+> 	My other question relates to "clustering" if I can abuse the term.
+> We currently have a fibre-channel RAID device and one NFS server which
+> serves 7 distinct filesystems (distinct in the sense that they are separate
+> partitions). One possible way for us to implement LVM is to create a single
+> VG and then LVs for each of the 7 filesystems. This provides us with the
+> best flexibility in re-sizing each filesystems since all LVs can be extended
+> with any free PEs. Now the problem is that at a future date we may wish to
+> add a second NFS server, not as a redundant system perhaps, but just to
+> balance the NFS traffic. If I understand correctly, this will work even with
+> one VG provided that:
 > 
-> TIA for your help and sorry for my poor English.
+> 	1) No attempt is made to mount a single LV from two machines (unless
+> using GFS)
+
+Correct.
+
+> 	2) All nodes except one must "vgchange -an" before making any
+> changes to VG layout.
+
+Correct.
+
+In summer, you can go with Cluster LVM + GFS in order to avoid these
+constraints. That'll give you shared volume groups active on all nodes
+and GFS filesystems mounted on all as well.
+
 > 
-> Echo
+> 	The first restriction isn't really a problem since this is the same
+> problem one would have without using a filesystem like GFS, irrespective of
+> whether LVM is in use. However, the second restriction is a bit of a problem
+> because all NFS services essentially need to be stopped on the second node
+> before modifications can be made to the VG, even if the change is simply a
+> lvextend, etc. One possible solution that we are considering is creating a
+> separate VG for each of the filesystems that we have exported, so we would
+> have 7 VGs each with one maximally sized LV. The disadvantage to this is of
+> course that a PV can only be assigned to one VG. To solve this, what we are
+> considering is simply partitioning the RAID device into many partitions (The
+> RAID device will allow us to partition RAID sets which will then look like
+> separate disks, and we can physically partition each of these disks as
+> well). The goal would be to have enough partitions to minimize waste in each
+> filesystem. Now, if we need to extend a LV (and thus a VG since each VG has
+> just one maximally sized LV) we simply add the necessary number of
+> partitions to the VG and then issue lvextend. This will also allow moving a
+> VG, and thus a LV, from one node to another using vgexport/vgimport. And
+> since each node manages it's own VGs, there is hopefully no need for step 2
+> above. 
+
+Splitting capacity either way as a workaround is no acceptable solution.
+
+LVM + GFS would enable you to add your second server (or even more) later
+by installing Cluster LVM additionally which avoids problems like those
+below as well.
+
+
 > 
+> 	One possible problem I can see is if I add a partition to a VG on
+> one node, then the other node still thinks of that partition as being
+> unused. Other than possible user error (that is, trying to then assign that
+> partition to a different VG from the other node since it looks free) are
+> there any problems? Would a vgscan correct from the second node correctly
+> identify the partition as now being in use without interfering with the VG
+> activity? Is it necessary to ensure that each node only vgchange -a the
+> volume groups it is managing?
+> 
+> 	One thing that is interesting is that if it were possible to
+> export/import a LV, then the same functionality could be achieved with a
+> single VG for each node. 
+> 
+> Thanks for any comments,
+> 
+> (my, that was long winded - apologies)
+> 
+> -poul
 > 
 > _______________________________________________
 > linux-lvm mailing list
 > linux-lvm@sistina.com
 > http://lists.sistina.com/mailman/listinfo/linux-lvm
 > read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
+
+-- 
 
 Regards,
 Heinz    -- The LVM Guy --
