@@ -1,7 +1,10 @@
-Message-ID: <23233866A70C32479532C8D0B8AE7B96032AAC12@i2km07-ukbr.domain1.systemhost.net>
-From: narsimha.kulkarni@bt.com
-MIME-Version: 1.0
-Subject: [linux-lvm] volume group and physical volume
+Subject: Re: [linux-lvm] where do i find the device mapper/LVM2 documentation?
+Message-ID: <20030527220901.GA32508@gw.silicide.dk>
+References: <3ED32F3E.9000009@silicide.dk> <20030527100801.GB646@fib011235813.fsnet.co.uk> <3ED33DA4.3090803@silicide.dk> <20030527104959.GC646@fib011235813.fsnet.co.uk>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20030527104959.GC646@fib011235813.fsnet.co.uk>
+From: Debian User <jb@silicide.dk>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -12,35 +15,39 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Tue May 27 10:10:02 2003
+Date: Tue May 27 17:08:01 2003
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-I am trying to create volume group and physical volume.
+On Tue, May 27, 2003 at 11:49:59AM +0100, Joe Thornber wrote:
+> On Tue, May 27, 2003 at 12:27:48PM +0200, Jon Bendtsen wrote:
+> > Joe Thornber wrote:
+> > >On Tue, May 27, 2003 at 11:26:22AM +0200, Jon Bendtsen wrote:
+> > >
+> > >>Hi there, i'm looking for documentation for the device mapper/lvm2 in 
+> > >>the linux 2.5/6 kernel.
+> > >
+> > >
+> > >i) Enable dm in the kernel config.
+> > >ii) Install libdevmapper from the latest device-mapper release at 
+> > >www.sistina.com
+> > >iii) Install LVM2 tools.
+> > >
+> > >There is more documentation in the device-mapper and LVM2 packages.
+> > 
+> > i downloaded devicemapper.?.98?.tar.gz or something (the latest one) and 
+> > i dont find much documentation in that, though i have looked into the 
+> > INTRO file i didnt find others that from name appeared to be documentation.
+> 
+> What exactly do you want to know ?
+
+How it is built up. Detailed information explaining to me how i can expand
+it, stuff like that. The LVM1 howto has a part that describes how the LVM1
+is built up piece by piece, Physical Volumes, Physical Extends, ...
 
 
-when i do vgscan 
-
-helena:/etc # vgscan
-vgscan -- reading all physical volumes (this may take a while...)
-vgscan -- found inactive volume group "helena_vg"
-vgscan -- ERROR "lv_read_all_lv(): number of LV" can't get data of volume
-group)
-vgscan -- ERROR "lv_read_all_lv(): number of LV" creating "/etc/lvmtab" and
-"/e"
-
-the conf file for helena_vg is not to be found. how can i completely remove
-it.
-
-helena:/etc # vgremove helena_vg
-vgremove -- volume group "helena_vg" doesn't exist
-
-then i want to remove this PV /dev/hda3
-
-pvscan -- inactive PV "/dev/hda3"  is associated to an unknown VG (run
-vgscan)
 
 
-narsimha
+JonB
