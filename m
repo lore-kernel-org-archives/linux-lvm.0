@@ -1,9 +1,8 @@
-From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] vgscan fails after more or less successful pvmove
-Message-ID: <20030123123658.B30188@sistina.com>
-References: <E18bT4s-00050k-00@hermes.sistina.com>
-Mime-Version: 1.0
-In-Reply-To: <E18bT4s-00050k-00@hermes.sistina.com>; from mrnatcho@gmx.net on Wed, Jan 22, 2003 at 11:08:39PM +0100
+From: <jrelist@ntlworld.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Message-Id: <20030123143305.MLXI4699.mta03-svc.ntlworld.com@[10.137.100.63]>
+Subject: [linux-lvm] Installing LVM on s/390 redhat 7.2 2.4.7-39
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,95 +13,33 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Thu Jan 23 05:37:01 2003
+Date: Thu Jan 23 08:32:01 2003
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Stefan,
+Hi
 
-you say that you didn't put the error down pvmove displayed in the first place.
+I'm wondering has anybody been able to install LVM onto s/390 Redhat Linux 7.2 ? I have kernel 2.4.7-39 running and the rpm for lvm 1.0.3. is part of the build, but not the lvm-mod.o module. 
 
-No chance for us to tell you the reason of the failure that way, sorry.
-Could be a hardware flaw or a pvmove bug. I don't know.
+I've attempted rebuilding the kernel from source with patches etc. from versions 1.0.3 and 1.0.6 following the instructions from sistina and redhat (including enabling lvm support !) but I always fall at the final hurdle, when doing the make_install :
 
-You continued to change your LVM config _after_ that first failure happened,
-which is bad.
+---------------------------------------
+cd /lib/modules/2.4.9-37lvm; \                                                  
+mkdir -p pcmcia; \                                                              
+find kernel -path '*/pcmcia/*' -name '*.o' | xargs -i -r ln -sf ../{} pcmcia    
+if [ -r System.map ]; then /sbin/depmod -ae -F System.map  2.4.9-37lvm; fi      
+depmod: *** Unresolved symbols in /lib/modules/2.4.9-37lvm/kernel/drivers/md/lvm
+-mod.o                                                                          
+depmod:         alloc_kiovec                                                    
+depmod:         free_kiovec                                                     
+make: *** [_modinst_post] Error 1                                               
+[root@rother-8 linux]#              
+------------------------------------
 
-That was 'Full stop. Ask first'-time.
+If anyone can help me, I'd be grateful. I'm an os/390 guy, this is my first dive into the Linux pool and so far I'm enjoying it !
 
-At that point you still had the chance to restore your metadata backup
-to unfail your VG.
+Thanks in advance
 
-After so many changes there's no chance any more I am afraid.
-
-Sorry, it is time for reaching out to the backup media.
-Hopefully you have recent ones as recommended in the pvmove manual page.
-
-Regards,
-Heinz    -- The LVM Guy --
-
-
-On Wed, Jan 22, 2003 at 11:08:39PM +0100, MrNatcho wrote:
-> Hi all,
-> 
-> I am having problems to access my LV after trying to move data off two PV's. Here's what I did before the 
-> error occured:
-> 
-> 1. I freed up enough space and resize'd the ReiserFS partition
-> 2. I reduced the LV using lvreduce, leaving approx. 100GB free space in the VG
-> 3. I tried to free up a 80GB Disk in the VG using "pvmove /dev/hdc1" - this one failed after a dozen or so 
-> PE's giving an error message I unfortunately didn't put down
-> 4. I tried to free up a 60GB Disk using the same command...to no avail - error after 20 or 30 PE's
-> 5. I tried different parameters for pvmove: -i didn't help, addressing the PE's to be moved directly fails 
-> every few PE's. Putting in a destination device with enough free space didn't do any good, too. Finally, I 
-> managed to free up a whole device by addressing the LE's to be moved away from the device.
-> 6. The PV then showed 0 allocated PE's, so I tried to remove the PV using vgreduce. That one failed 
-> saying that the device wasn't empty. At that point, I was totally confused and tried to find the cause using 
-> the display commands to see if I missed any vital information. At one point, I started vgscan to see that 
-> brings any more information. the output is as follows:
-> 
-> vgscan -- reading all physical volumes (this may take a while...)
-> vgscan -- found active volume group "ftpdata_vg"
-> vgscan -- only found 30458 of 29947 LEs for LV /dev/evil_vg/lvol1 (0)
-> vgscan -- ERROR "vg_read_with_pv_and_lv(): allocated LE of LV" can't get data of volume group 
-> "evil_vg" from physical volume(s)
-> vgscan -- "/etc/lvmtab" and "/etc/lvmtab.d" successfully created
-> vgscan -- WARNING: This program does not do a VGDA backup of your volume groups
-> 
-> >From searching the list archives I have seen that other people have had this problem before, but I have 
-> been unable to find a solution in the list archives.
-> 
-> Can anyone give me a hint what to try? Restoring the configuration didn't help, probably because the 
-> several pvmove's did fill the 9 .old config's with messed up data...
-> 
-> The box is a SuSE 8.0 with a vanilla 2.4.18 kernel and the LVM tools are version 1.0.3.
-> 
-> Any help is greatly appreciated.
-> 
-> Regards
-> Stefan
-> 
-> 
-> 
-> 
-> 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
-
-*** Software bugs are stupid.
-    Nevertheless it needs not so stupid people to solve them ***
-
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-
-Heinz Mauelshagen                                 Sistina Software Inc.
-Senior Consultant/Developer                       Am Sonnenhang 11
-                                                  56242 Marienrachdorf
-                                                  Germany
-Mauelshagen@Sistina.com                           +49 2626 141200
-                                                       FAX 924446
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+John Ellis
+UK
