@@ -1,8 +1,9 @@
+Message-ID: <3BE666F3.C1A15761@promofinarsa.es>
+From: Jesus Manuel NAVARRO LOPEZ <jesus_navarro@promofinarsa.es>
 MIME-Version: 1.0
+Subject: Re: [linux-lvm] snapshot questions
+References: <3.0.6.32.20011102140312.00806c50@mail.doorpi.net> <0111021341411E.08803@khayes-lin>
 Content-Transfer-Encoding: quoted-printable
-Message-ID: <E823FA92099E6C4C854CE791DFA1A3D265BA56@got02.vikingtelecom.com>
-From: "Turbo Fredriksson" <turbo.fredriksson@viking-telecom.com>
-Subject: [linux-lvm] XFS with LVM
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -13,76 +14,101 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Nov  5 03:43:02 2001
+Date: Mon Nov  5 04:15:02 2001
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="iso-8859-1"
-To: "Linux LVM Mailinglist (E-mail)" <linux-lvm@sistina.com>
-Cc: "Linux XFS Mailinglist (E-mail)" <linux-xfs@oss.sgi.com>
+To: linux-lvm@sistina.com
 
-I have resently re-mkfs'ed all of my partitions to use XFS. Previously I
-had an Software
-RAID (Linear) system which used ext2. But using LVM instead would give
-me much more freedom
-to replace disks etc. And XFS so it don't take ages to fsck 60Gb (not
-much, but takes
-long enough! :).
+Hi, Kyle:
 
-I tried to use LVM on that, which worked fine. Mkfs'ed it to XFS which
-also worked fine, to
-start with.
+Kyle Hayes wrote:
+>=20
+> Hmm, seems to be quite a range of opinion.  However, I must say that
+> having so many negative options is not a good sign.  Do snapshots
+> work at all?
+>=20
 
-The problem started when to processes tried to write to LVM/XFS disk
-simultaneous.
+Well, I can't say if LVM snapshots do work, but I know for sure they can
+be very useful on a wide bunch of situations.
 
-When I was to change fs on the disk, I borrowed a 62Gb IDE disk to which
-I moved all the
-data, configured LVM (default params) and then mkfs.xfs that device.
-Then all the info was
-copied back (find | cpio). If I didn't accessed the LVM device,
-everthing went well, but
-if I started to copy some (large) files from my homedirectory to the LVM
-disk, the kernel
-hung/freezed...
+[...]
 
+>=20
+> It is good to hear that it works more like Veritas and less like the
+> SuSE whitepaper claims.  That paper claimed that the changes will go
+> to the snapshot partition.  This implied that there would be a terrible
+> IO hit when you deleted the snapshot partition and the changes need to
+> be written back to the original partition.
+>=20
 
-Now, I talked to a friend that tried LVM+XFS about a year ago, and he
-had the same problem
-then. So, I thought that since I don't have much time to play around
-with this, the machine
-must be up and running propperly, I went back to using SW-RAID.
+Huh?  Well, I haven't search the code, but the LVM How to stays that it
+has to "...hold all the changes that are likely to happen to the
+original volume during the lifetime of the snapshot", and it says too
+"...You should remove snapshot volume when you have finished with them
+because they take a copy of all data wirtten to the original volume".
+On the other hand, rigth in between those two states it says: "Note that
+the [snapshot] volume was mounted read-only. Snapshots can never be
+written to, and the data in them cannot change."  So there is obviously
+something missed in here.
 
-Now I get the same problem, but 'earlier', ie I don't even have to 'dual
-access' the device!
+> I am confused by the claim (see below) that you need the same amount
+> of space for the snapshot partition as you had on the original LV.
 
+Again, from the LVM How To: "A snapshot volume can be as large or a
+[sic] small as you like but it must be large enough to hold all the
+changes that are likely to happen... [...]  A snapshot logical volume
+can be a maximum of 1.1x the size of the original volume".
 
-Is there any special tricks that have to be done here? How important is
-the kernel option
+[...]
 
-	[ ] Build Adapter Firmware with Kernel Build
+> Under what circumstances do snapshots work?  I am confused by the
+> claims that a snapshot partition is going to be "corrupt" as far as
+> the OS is concerned.  In my scenario, here is what I am planning on
+> doing:
+>=20
+> 1) lock all tables against writes.
+>=20
+> 2) flush all logs and tables to disk.
+>=20
+> 3) create a snapshot partition for the filesystem (ext2 or probably)
+> on which the database data resides.  These are not raw disks.
+>=20
+> 4) unlock the tables.
+>=20
+> 5) mount the snapshot partition and copy the database data out.
+>=20
 
-I currently have NOT enabled this option. As most of us, I read the
-HOWTO/FAQ/manual only
-when things go wrong :) I'm currently compiling a kernel with this
-option, but how important
-is it really? Is that the source of my problems?
+That's a "standard procedure" for RDBMs that don't support hot backups
+with the exception that the "standard" would include a dump of the
+database contents instead of the filesystem snapshot.  *If* you know
+there won't be operations spanning more than one database, you can
+reduce comptention by just blocking/dumping one database at a time.=20
+Then I would evaluate speed.  If the dump doesn't need too much time
+than the snapshot I would go with it because of portability and
+(somehow) integrity (you will have a database operation completly driven
+from the RDBM).  Under some circumnstances size can be an issue too: if
+you go with the snapshot you will have to do it big enough to cope with
+the worst case scenario, and since it does involve creating and deleting
+a filesystem you will find more dificult to reclaim that disk space if
+needed.  On the other hand, the dump will most probably need less space
+(specially if you pipe it through gzip, or tar -z) and will need as much
+space as really needed, which can be reclaimed as soon as the dump is
+finished and properly stored somewhere else.
 
+>=20
+> We run 24/7 systems and it is not an option to take down a system to
+> back it up.  We can handle slightly degraded performance, but even
+> that is a problem.
+>=20
 
-The LVM consists of the following devices:
-
-	Device	Size (MB)	Type
-	/dev/sdb1	 5.88 GB	0x83
-	/dev/sdc1	 1008 MB	0x83
-	/dev/sdd10	 2.37 GB	0x83
-	/dev/sde1	 8.51 GB	0x83
-	/dev/sdf1	17.09 GB	0x83
-	/dev/sdg1	15.55 GB	0x83
-
-I have a Adaptec 2940U2W SCSI Card (AIC7xxx driver). The kernel is a
-2.4.9, but I can't
-remember which XFS patch I used, the machine have crashed again (and I
-have no physical
-access to it at the moment).
-
-
-Best regards/Med v=E4nlig h=E4lsning
-Turbo Fredriksson, System developer
+Again, regarding database operations you will end up most probably
+recognizing that database backup is a database issue best coped with
+database tools.  Snapshots can be useful tool for many other situations
+like mail (or other) spools, user data, etc.
+(just my 2 cents)
+--=20
+SALUD,
+Jes=EF=BF=BDs
+***
+jesus_navarro@promofinarsa.es
+***
