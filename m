@@ -1,12 +1,12 @@
-Return-Path: <mauelshagen@sistina.com>
-Date: Tue, 27 Mar 2001 12:28:36 -0600
-From: Heinz Mauelshagen <mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] LVM, lilo and MBR?
-Message-ID: <20010327122836.B12883@sistina.com>
-References: <m2ae67s4yc.fsf@isnogud.escape.de> <200103271811.f2RIBS005020@webber.adilger.int>
+Return-Path: <ralph@oro.net>
+Date: Tue, 27 Mar 2001 12:23:11 -0800
+From: Ralph Jennings <ralph@oro.net>
+Subject: Re: [linux-lvm] lvmgui 0.2 release
+Message-ID: <20010327122311.A25656@d3.front>
+References: <3ABDD38D.A841FFD3@ida.xs4all.nl> <wxx1yrkklzx.fsf@fjorir.ifi.uio.no>
 Mime-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <200103271811.f2RIBS005020@webber.adilger.int>; from adilger@turbolinux.com on Tue, Mar 27, 2001 at 11:11:28AM -0700
+In-Reply-To: <wxx1yrkklzx.fsf@fjorir.ifi.uio.no>; from terjekv@math.uio.no on Tue, Mar 27, 2001 at 04:02:10AM +0200
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -22,67 +22,24 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Tue, Mar 27, 2001 at 11:11:28AM -0700, Andreas Dilger wrote:
-> Urs Thuermann wrote:
-> > Patrick Caulfield <caulfield@sistina.com> writes:
-> > > 2. IIRC, someone had a patch for lilo to load the kernel and initrd
-> > >    image from a LV.  Where can I get it?  And will it go into the
-> > >    standard lilo package?
+On Tue, Mar 27, 2001 at 04:02:10AM +0200, Terje Kvernes wrote:
+> Jorg de Jong <jorg.de.jong@ida.xs4all.nl> writes:
+> > + New Features / Enhancements / Bug Fixes
 > > 
-> > Andreas will be along in a moment !
+> > - added images for LV and PV. 
+> > - extend/reduce a VG
+> > - extend/reduce a LV
+> > - added vgscan in menu
+> > - changed File->Rescan to File->Refresh
 > 
-> Yes, patch for LILO has already been sent to LVM mailing lists a
-> couple of times.  I found a copy at:
-> 
-> http://marc.theaimsgroup.com/?l=linux-lvm&m=98451699131728&w=4
-> 
-> I have not yet submitted it to the LILO maintainer, because if you try
-> to run it on older LVM kernel code (i.e. what's in the official 2.4.2
-> kernel), it will immediately crash your system.  The Sistina folks have
-> told me they will submit an LVM kernel patch with the fix...
-> 
+>   sounds cute. I was actually thinking of writing something like this
+>   myself, but can't really decide on what language to do it in. :)
 
-Which is already history now.
-Linus has it since 10 days or something...
+How about Tcl/Tk?  Quick and easy to learn (a bit C, and Perl combined).
+I picked it up quick by hacking allready made scripts, and I didn't know
+any perl, but I know some C.  And you've got a good one allready made,
+"/usr/src/linux/scripts/kconfig.tk" (might have to do "make xconfig" to
+create it though).  Not as pretty as java, or C, but much faster than C
+to create, and will run on most systems.
 
-Regards,
-Heinz      -- The LVM guy --
-
-
-> > > Don't run LILO on /dev/sda if it's a PV because it will destroy
-> > > it.  You should partition the disk into /dev/sda1 (that way
-> > > the PV will start further in and leave space for LILO)
-> > 
-> > Hm, I hoped I could get rid of the broken partitioning scheme of the
-> > PC and C/H/S addressing used in the partition table.
-> 
-> But then again, your MBR has the same problems, so why worry?  Even so,
-> you only need the partition table on the boot disk, so no big deal.
-> 
-> > Are there objections to change LVM so that the VGDA is placed at some
-> > fixed offset (say 1 sector or 1 block (1K)) from the beginning of the
-> > PV?  This is how many file systems also use block devices to avoid
-> > conflicts with MBR, boot sectors and so on.
-> 
-> Yes, because it will break every LVM setup around.  Too bad it wasn't
-> in the original design, but it is too late to change.
-> 
-> Cgeers, Andreas
-> -- 
-> Andreas Dilger  \ "If a man ate a pound of pasta and a pound of antipasto,
->                  \  would they cancel out, leaving him still hungry?"
-> http://www-mddsp.enel.ucalgary.ca/People/adilger/               -- Dogbert
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-
-Heinz Mauelshagen                                 Sistina Software Inc.
-Senior Consultant/Developer                       Bartningstr. 12
-                                                  64289 Darmstadt
-                                                  Germany
-Mauelshagen@Sistina.com                           +49 6151 7103 86
-                                                       FAX 7103 96
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+ -Me
