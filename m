@@ -1,10 +1,10 @@
 From: Andreas Dilger <adilger@turbolabs.com>
-Subject: Re: [linux-lvm] [Q]XFS + LVM Snapshot?
-Message-ID: <20011117152233.R1308@lynx.no>
-References: <007201c16f91$a8d49650$fc00a8c0@xp>
+Subject: Re: [linux-lvm] 2.4.9 + lvm-1.0.1rc1 + ext2online
+Message-ID: <20011117152858.T1308@lynx.no>
+References: <000801c16f99$c997c210$2101a8c0@raleigh.ibm.com>
 Mime-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <007201c16f91$a8d49650$fc00a8c0@xp>; from oh@linuxsecurity.co.kr on Sun, Nov 18, 2001 at 02:59:53AM +0900
+In-Reply-To: <000801c16f99$c997c210$2101a8c0@raleigh.ibm.com>; from leonbrn@bellsouth.net on Sat, Nov 17, 2001 at 01:58:04PM -0500
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,30 +15,26 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Sat Nov 17 16:21:02 2001
+Date: Sat Nov 17 16:27:01 2001
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: Sean Oh <oh@linuxsecurity.co.kr>
+To: Leon Brown <leonbrn@bellsouth.net>
 Cc: linux-lvm@sistina.com
 
-On Nov 18, 2001  02:59 +0900, Sean Oh wrote:
-> Kernel: 2.4.15-pre4 with XFS patch ( linux-2.4-xfs CVS tree from SGI site)
-> LVM: current - LVM CVS
-> 
-> Patches applied: linux-2.4.11-VFS-lock.patch from LVM CVS
-> 
-> *I can not mount the original FS and snapshot FS at the same time. If
-> I unmount the origianal XFS FS and then mount the snapshot FS, it works,
-> tough.
+On Nov 17, 2001  13:58 -0500, Leon Brown wrote:
+> I saw your append indicating that you have successfully use the
+> EXT2ONLINE patch on kernel level 2.4.9. I attempted to apply the patch
+> on the same kernel level and received errors updating the super.c
+> source. Did  you encounter this also. Do you have a updated patch that
+> will apply. I am not a programmer type so I am at a lost for trying to
+> fix the mismatches. I'd appreciate any help you could me. Thanks.
 
-Yes, you need an XFS patch which does something with the filesystem UUID
-in the snapshot.  XFS has a feature which prevents the same filesystem
-from being mounted more than once.
+You need to go to the sourceforge site and check out the patches section.
+http://sourceforge.net/projects/ext2resize/
 
-What they do to fix this is to create writable snapshots.  What I would
-rather they do is in the "duplicate UUID detection" code, allow mounting
-of devices which are on read-only media (e.g. a snapshot).
+There is a patch for 2.4.8 which should apply to newer kernels.  If it
+doesn't, give me a shout.
 
 Cheers, Andreas
 --
