@@ -1,8 +1,8 @@
 Return-Path: <Heinz.Mauelshagen@t-online.de>
-Date: Sat, 13 Jan 2001 12:11:43 +0000
+Date: Sat, 13 Jan 2001 12:12:33 +0000
 From: Heinz J. Mauelshagen <Heinz.Mauelshagen@t-online.de>
 Subject: Re: [linux-lvm] LVM 0.9.1beta1 vgscan segfault when run with -d
-Message-ID: <20010113121143.I21587@srv.t-online.de>
+Message-ID: <20010113121233.J21587@srv.t-online.de>
 References: <20010112223600.A846@mvista.com>
 Mime-Version: 1.0
 In-Reply-To: <20010112223600.A846@mvista.com>; from cduffy@mvista.com on Fri, Jan 12, 2001 at 10:36:00PM -0800
@@ -21,10 +21,7 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Charles, is this under devfs?
-Side remark: you probably run "vgscan -d", right?
-
-Didn't get the attachement, sorry. Send it again please.
+Did you try 0.9.1 beta1 and face the same behaviour?
 
 On Fri, Jan 12, 2001 at 10:36:00PM -0800, Charles Duffy wrote:
 > Howdy. I'm experiencing some difficulties while transitioning from LVM
