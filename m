@@ -1,14 +1,12 @@
-Return-Path: <lewis@sistina.com>
-Date: Thu, 26 Jul 2001 10:39:45 -0500
-From: AJ Lewis <lewis@sistina.com>
-Subject: Re: [linux-lvm] LVM Bug, or Human Incompetence?
-Message-ID: <20010726103945.A17862@sistina.com>
-References: <20010726072115.A19419@paranoid.dyn.dhs.org>
+Return-Path: <eli@zendo.net>
+Date: Thu, 26 Jul 2001 12:02:50 -0500
+From: Eli Criffield <eli@zendo.net>
+Message-ID: <20010726120250.A11839@zendo.net>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-md5;
-	protocol="application/pgp-signature"; boundary="qMm9M+Fa2AknHoGS"
+	protocol="application/pgp-signature"; boundary="mP3DRpeJDSE+ciuQ"
 Content-Disposition: inline
-In-Reply-To: <20010726072115.A19419@paranoid.dyn.dhs.org>; from paranoid-lvm@tweet.paranoid.dhs.org on Thu, Jul 26, 2001 at 07:21:15AM -0700
+Subject: [linux-lvm] 100% LVM 100% reiserfs success story
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -21,104 +19,169 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 To: linux-lvm@sistina.com
+Cc: Mi Un Kim <Mi_Un_Kim/CDC/UNO/UNEBR@unomail.unomaha.edu>, Josh <skulcap@mammoth.org>, Jay Hannah <jay@jays.net>, "W. Mark Hagler" <hagler@th.in.gs>
 
---qMm9M+Fa2AknHoGS
+--mP3DRpeJDSE+ciuQ
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Jul 26, 2001 at 07:21:15AM -0700, Mark Glines wrote:
-> Note that the system is still useable at this point... the kernel LVM is =
-fine,
-> but none of the userland tools can find their asses (this includes receiv=
-ing
-> periodic lvmsadc crontab mouth-frothings about the kernel and /etc/lvmtab=
- DB
-> mismatch).  After a reboot, however, vgscan still can't find its ass and
-> everything fails, taking most of the machine's overall competence with it=
-=20
-> (obvious due to lack of /usr).  After a reboot, a sequence like the follo=
-wing
-> is necessary to bring it back:
->=20
-> cd /etc/lvmconf
-> mv tweet.conf.1.old tweet.conf
-> vgcfgrestore -v -n tweet /dev/hdb
-> vgscan
-> /etc/init.d/lvm restart
-> mount /usr
-> mount /home
-> mount /music
-> *start various services manually, reboot, or switch init runlvls*
 
-odd...
-=20
-> I'm running stock linux 2.4.6 LVM built as a module, with the debian sid =
-"lvm10"
-> package userland utilities (debian package version 0.9-1.2).
+I have successfully migrated my entire system to LVM and reiserfs.
 
-I think you might want to try using the LVM 0.9.1 Beta2 tools.  That is the
-toolset that most closely matches the kernel LVM module.  That being said, =
-it is
-strongly recommended that you upgrade to the 0.9.1 Beta8 LVM, and patch your
-kernel.  If you have an existing LVM setup, you will need to do some metada=
-ta
-migration (this is outlined in the README.1st on the FTP site where you can=
- get
-LVM 0.9.1 Beta8 (ftp://ftp.sistina.com/pub/LVM/0.9.1_beta)
+I have one ide disk, (/dev/hda) and on that disk i have 1 partition
+(/dev/hda1). That partition is type 8e (Linux LVM). I have no non lvm=20
+/boot partition for the kernel or initird image.=20
 
-> hda2 used to be a DOS "extended" partition, containing 3 logical drives. =
- All 3
-> of these have been migrated successfully to LV's (the VG using hdb as sol=
-e PV).
-> That leaves me (after a bit of cfdisking) with one free partition taking =
-up 80%
-> of hda.  I'd love to use this partition as a PV and chuck it into the VG,=
- but
-> it doesn't seem to work, as I've documented above.
->=20
-> Am I doing something wrong?  How outdated is the LVM code in stock 2.4.6?=
-  If this
-> isn't my fault, is this likely to be a kernel bug or userland bug?  Would=
- a redo
-> of the transscript, using -d instead of (or in addition to) -v, be useful?
+# fdisk -l
+Disk /dev/hda: 240 heads, 63 sectors, 2586 cylinders
+Units =3D cylinders of 15120 * 512 bytes
 
-The kernel LVM code is about 5-6 months out of date.  I am pretty sure that=
- your
-toolset is not very well matched for the kernel code.  As I said earlier, i=
-t is
-strongly recommended that you download LVM 0.9.1 Beta8, and follow the proc=
-edure
-in README.1st to upgrade to that version of LVM.
+   Device Boot    Start       End    Blocks   Id  System
+/dev/hda1             1      2586  19550128+  8e  Linux LVM
 
-Hopefully the changes will be incorporated in the vanilla kernel soon...
---=20
-AJ Lewis
-Sistina Software Inc.                  Voice:  612-638-0500
-1313 5th St SE, Suite 111              Fax:    612-638-0500
-Minneapolis, MN 55414                  E-Mail: lewis@sistina.com
-http://www.sistina.com
+# df     =20
+Filesystem           1k-blocks      Used Available Use% Mounted on
+/dev/rootvg/root_lv     307184    111008    196176  37% /
+/dev/rootvg/boot_lv      53240     39820     13420  75% /boot
+/dev/rootvg/usr_lv     2097084   1562720    534364  75% /usr
+/dev/rootvg/var_lv      716772    339836    376936  48% /var
+/dev/rootvg/home_lv    4194172   2834836   1359336  68% /home
 
-Current GPG fingerprint =3D 3B5F 6011 5216 76A5 2F6B  52A0 941E 1261 0029 2=
-648
-Get my key at: http://www.sistina.com/~lewis/gpgkey
- (Unfortunately, the PKS-type keyservers do not work with multiple sub-keys)
 
------Begin Obligatory Humorous Quote----------------------------------------
-Choose a job you love, and you will never have to work a day in your life.
------End Obligatory Humorous Quote------------------------------------------
+How did you do that you ask?
 
---qMm9M+Fa2AknHoGS
+Well it's a big pain in the ass. But hears the short story.
+
+I used rpms when i could. First thing i installed was
+reiserfs-utils-3.x.0f-1.i386.rpm for the reiserfs stuff and installed all
+of the lvm 0.9.1_beta7 rpms.=20
+
+I then downloaded linux-2.4.6 and patched it with the patch program from
+the lvm patchgen rpm.
+I configured the kernel to have LVM, reiserfs, minix, iso9660 and my
+ethernet driver all as non modules. (important later)
+
+After doing it the hard way and trashing a couple file systems and not
+being able to boot a couple of times  i found that there are two more
+patches that need to be applied before you are done with the kernel
+One is
+ftp://ftp.sistina.com/pub/LVM/0.9.1_beta/lvm_0.9.1_beta7-get_hardblocksize.=
+patch
+This fixed the 'undefined reference to `get_hardblocksize'' error when
+compiling.
+
+I did not apply this patch, i instead edited it all manually but I'm sure
+the patch would be easer.
+
+You also need to add a patch to make LVM work with lilo (which you also
+have to patch)
+
+I used the patch at
+
+http://lists.sistina.com/pipermail/linux-lvm/2001-June/007538.html
+
+and applied it directly to /usr/src/linux-2.4.6/drivers/md/lvm.c
+
+I haven't tried this with LVM 0.9.1_beta8 yet, and probably won't for a
+while, I just got it working so i don't think I'll mess with it. You
+probably don't need the two extra patches after installing the LVM
+patchgen created patch.
+
+
+The other thing you need is lilo 21.7.5, this has support to boot off a
+reiserfs partition, but not of an LVM partition so you'll need to patch
+it.
+
+http://lists.sistina.com/pipermail/linux-lvm/2001-June/007682.html
+
+has a patch for lilo-21.7.5 to add support for booting off an lvm.
+
+After i figured out what patches i need for the kernel and lilo the hard
+way, I got both installed with everything needed.
+
+Now i installed redhat 7.1 right from the beginning with the intention of
+converting it to all LVM and reiserfs. I had 3 partitions a big /dev/hda1
+(about 4 gig)
+that was / and had the entire redhat distribution installed in  a /dev/hda2
+just for swap (500meg) and the rest in /dev/hda3 (14 gig or so).
+
+I created a volumegroup on /dev/hda3 and made all my lvs, formated them=20
+all with reiserfs and cpioed all the files over there, then set the kernel
+to boot with root as /dev/rootvg/root_lv.
+
+Note at this point the kernel is still on /dev/hda1 the normal ext2
+partition, but i just wanted to check everything. I got working after a
+few tries. It was easy to recover from a failed attempt at this point
+since it was still on the non lvm partition i just had a different line in
+my lilo.conf to boot back to the old way.=20
+
+Now that i had all that working i make sure that /boot
+(/dev/rootvg/boot_lv now that i was booted using the rootvg) has the new
+lilo and the new kernel with all the patches I've determined i needed and
+set it to boot off the kernel in rootvg/boot_lv  and with root as
+rootvg/root_lv.
+
+Once that all worked fine the easy thing to do would be to delete
+/dev/hda1 and /dev/hda2 and make one bigger /dev/hda1, pvcreate on it and
+just add it to the volumegroup and go have a beer.=20
+
+But i thought it would be cool to only have one physical volume.=20
+To do this i would need to backup everything to some other device, boot
+from a rescue cd and recreate the volumegroup and logical volumes. Then
+restore all files from this other device, chroot to the voluegroup and run
+the lilo i had patched.
+
+This is pretty much what i did, I used a tape drive on another box as the
+backup device witch complicated things because you have to get your
+rescue operating system up on the network enough to run=20
+rsh otherhost dd if=3D/dev/rmt0 obs=3D20b |cpio -iv --block-size=3D20
+
+To do this i used a program called BYLD. it can be found at
+http://byld.sourceforge.net/ I found it to be pretty buggy and could never
+get it to include all the programs i needed, but i did get it to work. I
+didn't delete my old partition until i had copied all the programs and
+library's off of it i need to little ram disks i had created. That way once
+i remove the partition i would still have my lvm tools, reiserfs
+tools, cpio, rsh and all the tools i need to be get on the network, at
+least until i rebooted. I misplaced reset would have really ruined my day.
+
+By the way its much easer if you're kernel doesn't need modules, at least
+for the lvm, the minix fs (which it uses for its ramdisk), reiserfs,
+ext2 and ISO9660.
+
+I also made the mistake of using a rescue cd i had created before that
+had a kernel using beta2 of LVM. Bad idea, when i went to run lilo it
+wouldn't work because it needs the beta7 patched kernel i made earlier.
+So i took used another linux box i have here and recreated the kernel with
+all the patches on it and made another rescue cd iso, and bought my friend
+with the cd burner another lunch.=20
+
+With the correct kernel and already having created /dev/hda1 containing
+the hole disk, it being the only pv in the rootvg, And having created all
+my LVs formated with reiserfs, restored all my files from the remote host
+all i had to do was chroot to the new root partition and run lilo and all
+was well.
+
+And yes that really is the short story of how i did it.
+
+eli
+
+P.S. yes i know there is no real point to this exercise but being the
+first geek on the block with 100% lvm 100% reiserfs linux os, and
+have it be nearly imposible to recover from when something goes wrong.
+
+--mP3DRpeJDSE+ciuQ
 Content-Type: application/pgp-signature
 Content-Disposition: inline
 
 -----BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.0.6 (GNU/Linux)
+Version: GnuPG v1.0.4 (GNU/Linux)
 Comment: For info see http://www.gnupg.org
 
-iD8DBQE7YDnBpE6/iGtdjLERAox7AJ93KAcD8pEvfeTKuJuTxJHgveP0cgCfbcSM
-P0gTajJH9dtI/Ph9pDGt94A=
-=Ousp
+iD8DBQE7YE06m2VvYlVjW2oRAr+3AJkBB91mCwhVVioqNBsAiqcklkPuHACg3txW
+4qkDgqnkYbndpv4Td8SFK/M=
+=zUqK
 -----END PGP SIGNATURE-----
 
---qMm9M+Fa2AknHoGS--
+--mP3DRpeJDSE+ciuQ--
