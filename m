@@ -1,17 +1,19 @@
-Received: from o.ww.redhat.com (vpn50-11.rdu.redhat.com [172.16.50.11])
-	by pobox.stuttgart.redhat.com (8.12.8/8.12.8) with ESMTP id
-	i2VDYCmX010179
-	for <linux-lvm@redhat.com>; Wed, 31 Mar 2004 15:34:12 +0200
-Date: Wed, 31 Mar 2004 15:34:12 +0200
-From: Heinz Mauelshagen <mauelshagen@redhat.com>
-Subject: Re: [linux-lvm] LVM LUNs and scsi reserve/release
-Message-ID: <20040331133412.GB29222@redhat.com>
-References: <2F75AEE4E86FDE44BF97709D289BAA7C7196EC@vega.voltaire.com>
+Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with SMTP id i2VExlj31931
+	for <linux-lvm@redhat.com>; Wed, 31 Mar 2004 09:59:47 -0500
+Received: from abelia.cimr.cam.ac.uk (abelia.cimr.cam.ac.uk [131.111.181.212])
+	by mx1.redhat.com (8.12.10/8.12.10) with SMTP id i2VExk1X015468
+	for <linux-lvm@redhat.com>; Wed, 31 Mar 2004 09:59:47 -0500
+Received: from lupin ([192.168.101.134])
+	by abelia.cimr.cam.ac.uk with esmtp (Exim 4.24) id 1B8hBs-00052n-JE
+	for linux-lvm@redhat.com; Wed, 31 Mar 2004 15:59:40 +0100
+From: Geoff Dolman <geoff.dolman@cimr.cam.ac.uk>
+Message-Id: <1080745179.12286.16.camel@lupin.private.cimr.cam.ac.uk>
 Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <2F75AEE4E86FDE44BF97709D289BAA7C7196EC@vega.voltaire.com>
-Reply-To: mauelshagen@redhat.com,
-	LVM general discussion and development <linux-lvm@redhat.com>
+Date: Wed, 31 Mar 2004 15:59:39 +0100
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] lvm 1 unable to boot
+Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -22,39 +24,60 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: LVM general discussion and development <linux-lvm@redhat.com>
+To: linux-lvm@redhat.com
 
-On Tue, Mar 30, 2004 at 10:55:19AM +0300, Dan Bar Dov wrote:
-> 
-> I wonder if LVM LUNs (LVs) have any means of dealing with scsi
-> reserve/release commands, and if so how?
+Hi
 
-No, LVM completely ignores SCSI specific features.
+I have a machine with the following partition structure:
 
-> 
-> 
-> Dan
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+/dev/sda1 /boot (ext3)
+/dev/sda2 swap
+/dev/sda3 LVM
 
+The LVM (1.03/rh9) contains one PV and this has Volume00 in it which
+contains lvs for slash, usr, var, /usr/local and so on...
+
+I rebooted the machine for the first time in ages (same kernel
+configuration as the last reboot and no changes - or very few).
+
+The machine won't reboot - it panics because of a message (something)
+like:
+
+vgscan found inactive "Volume00"
+Error 28 Unable to make /etc/lvmtab.d/Volume00/Volume00.tmp
+vg_cfgbackup.c line 273
+
+It then gives an error about pivot_root panic with the error unable to
+mount /dev/Volume00/slash mount error 2 
+(the same sort of error as if fstab was wrong but it isn't)
+
+
+Here's what I've tried to fix this:
+
+- boot into rescue mode: lvscan shows all lvs no problem
+	checked pvscan, vgscan, lvscan - no problems
+	fscked slash - okay
+	checked configuration files, fstab, etc.
+tried a reboot - another panic
+- rescue mode again
+	delete /etc/lvmtab and /etc/lvmtab.d
+reboot - panic
+- rescue: reinstall lvm rpm and kernel
+panic
+- make a new initrd.img
+panic
+...plus lots of other things that were probably irrelevant.
+
+The machine *still* panics when booted normally but works fine in rescue
+mode, with a chrooted slash.
+
+Any ideas?
+
+Thanks
+
+Geoff Dolman
 -- 
-
-Regards,
-Heinz    -- The LVM Guy --
-
-*** Software bugs are stupid.
-    Nevertheless it needs not so stupid people to solve them ***
-
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-
-Heinz Mauelshagen                                 Red Hat GmbH
-Consulting Development Engineer                   Am Sonnenhang 11
-                                                  56242 Marienrachdorf
-                                                  Germany
-Mauelshagen@RedHat.com                            +49 2626 141200
-                                                       FAX 924446
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+JDRF/WT Diabetes and Inflammation Laboratory
+Cambridge Institute for Medical Research
+University of Cambridge
+http://www-gene.cimr.cam.ac.uk/todd/
