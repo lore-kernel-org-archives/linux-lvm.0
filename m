@@ -1,10 +1,11 @@
-From: John DeFranco <defranco@cup.hp.com>
-Subject: Re: [linux-lvm] Question when installing LVM
-References: <269ACE34F7A8744688CC03618BF3B67D0645DA13@c092ex03.na.cintas.com>
-In-Reply-To: <269ACE34F7A8744688CC03618BF3B67D0645DA13@c092ex03.na.cintas.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <200305151520.21578.defranco@cup.hp.com>
+From: "B. J. Zolp" <bjzolp@wisc.edu>
+Subject: Re: [linux-lvm] Drive failure
+In-reply-to: <20030515203908.66A9CAE4F5@basilica.la.naos.co.nz>
+Message-id: <200305151834.10480.bjzolp@wisc.edu>
+MIME-version: 1.0
+Content-transfer-encoding: 7BIT
+Content-disposition: inline
+References: <20030515203908.66A9CAE4F5@basilica.la.naos.co.nz>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,82 +16,60 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Thu May 15 17:19:01 2003
+Date: Thu May 15 18:36:01 2003
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@sistina.com, "Murray, Bobby" <MurrayB@cintas.com>
+To: linux-lvm@sistina.com
 
-Hi,
+On Thursday 15 May 2003 15:39, Ewen McNeill wrote:
+> In message <200305150917.21504.bjzolp@wisc.edu>, "B. J. Zolp" writes:
+> >On Thursday 15 May 2003 03:14, Ewen McNeill wrote:
+> >> - make sure you do the dd with an option to replace unreadable sectors
+> >>   with blank sectors (otherwise nothing will be written out for the
+> >>   unreadable sectors, causing everything to be "out of alignment" after
+> >>   the first bad block)
+> >
+> >I plan on using the noerror switch for dd, what else would I need to use
+> > to make sure it replaces with blank sectors.  I could not find anything
+> > in info dd or man dd.
+>
+> The option I was thinking of is conv=noerror,sync
+>
+> The "noerror" is "continue reading after read errors", and the "sync"
+> is "pad each input block with zero bytes to block size".  Possibly GNU
+> dd is better behaved, but my recollection is that at least some "dd"s
+> will happily skip over blocks they can't read given "conv=noerror" (by
+> assuming they just read 0 bytes that time), but result in effectively
+> fewer blocks written out than read in, effectively shuffling everything
+> after the blocks with errors down a bit.  This is, suffice to say,
+> a bad thing to have happen to your file system.
+>
+> You might want to practice a little with copying from the disk into some
+> temporary location (eg outputting to /dev/null will do for this
+> purpose), and watch the "input blocks" and "output blocks" counts that
+> are reported -- if they're not the same, you're going to have a problem.
 
-If you have the cds is on the first one I believe. Otherwise you can=20
-download it from redhat (or any mirror I believe).
+I'm doing a
+ dd bs=512 conv=noerror,sync if=/dev/hdf of=/dev/null 
+right now.  It has been going for a few hours, but does not seem to be taking 
+up any cpu cycles (it looks hung up).  I will let it go over night and see 
+how it is tomorrow.  What would you suggest I do if the I can only get the 
+data on the HD up until the bad sector (or where ever it is hung up).  This 
+is the last drive in the logical volume, so there was not too much data on 
+it, but how would I go about added the new replacement drive to the logical 
+volume without messing up my entire filesystem?
 
-On Thursday 15 May 2003 11:49, Murray, Bobby wrote:
-> John,
-> Thanks for the information. I think my problem is I do not have the
-> kernel- source rpm installed. Any idea where I can get it from?
-> thanks
+Thanks again.
+
+bjz
+
+
+
 >
->
-> -----Original Message-----
-> From: John DeFranco [mailto:defranco@cup.hp.com]
-> Sent: Thursday, May 15, 2003 12:14 PM
-> To: linux-lvm@sistina.com; Murray, Bobby
-> Subject: Re: [linux-lvm] Question when installing LVM
->
->
-> Hi,
->
-> If you are building a newer version of lvm from source for redhat
-> 7.3 (there is one already compiled and provided as a module), you=20
-> need to be sure you have the kernel-source rpm installed. Since
-> redhat uses /usr/src/linux-2.4 instead of /usr/src/linux as the
-> kernel source base you either need to create the /usr/src/linux
-> link yourself or when you run the LVM configure command use the
-> option --with-kernel_dir=3D/usr/src/linux-2.4, this is what I do.
->
-> I have had no problems with lvm on rh7.3.
->
-> On Thursday 15 May 2003 08:57, Murray, Bobby wrote:
-> > I installed the LVM on Redhat Linux 7.3. I am not able to display
-> > anything when I do a vgdisplay or lvdisplay. Nothing seems to
-> > work. I was trying to compile the source but the configure is
-> > failing on a /usr/src/src/linux not found. Redhat does not have
-> > such a file thats why I turned to the RPM's but they do not seem
-> > to be working correctly. Has anyone else experienced any problems
-> > compiling or using LVM? thanks in advance
-> >
-> > Bobby Murray
-> > Unix Administrator / AIX Certified Specialist
-> >
-> >
-> >
-> >
-> > _______________________________________________
-> > linux-lvm mailing list
-> > linux-lvm@sistina.com
-> > http://lists.sistina.com/mailman/listinfo/linux-lvm
-> > read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
->
-> John DeFranco=09=09=09Hewlett-Packard Company
-> john.defranco@hp.com=09=09Availability Clusters Solution Division
-> phone: 408-447-7543=09=0919111 Pruneridge Ave, M/S 4101
-> fax: 408-447-0056=09=09Cupertino, CA 95014
->
+> Ewen
 >
 > _______________________________________________
 > linux-lvm mailing list
 > linux-lvm@sistina.com
 > http://lists.sistina.com/mailman/listinfo/linux-lvm
 > read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
->
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
-
-John DeFranco=09=09=09Hewlett-Packard Company
-john.defranco@hp.com=09=09Availability Clusters Solution Division
-phone: 408-447-7543=09=0919111 Pruneridge Ave, M/S 4101
-fax: 408-447-0056=09=09Cupertino, CA 95014=20
