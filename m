@@ -1,13 +1,14 @@
 Received: from o.ww.redhat.com (vpn50-5.rdu.redhat.com [172.16.50.5])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id i1DEcmi26446
-	for <linux-lvm@redhat.com>; Fri, 13 Feb 2004 09:38:48 -0500
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id i1DElRi29458
+	for <linux-lvm@redhat.com>; Fri, 13 Feb 2004 09:47:27 -0500
 From: Heinz Mauelshagen <mauelshagen@redhat.com>
-Subject: Re: [linux-lvm] LVM Problems :)
-Message-ID: <20040213143846.GB10943@redhat.com>
-References: <402CD9E4.8070402@demonlord.de>
+Subject: Re: [linux-lvm] Probs with lvm on large filesystem
+Message-ID: <20040213144726.GC10943@redhat.com>
+References: <OFD56946C5.68D2F3AD-ONC1256E39.0041DE2E-C1256E39.0041D5D3@st.behr.de>
 Mime-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <402CD9E4.8070402@demonlord.de>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <OFD56946C5.68D2F3AD-ONC1256E39.0041DE2E-C1256E39.0041D5D3@st.behr.de>
 Sender: linux-lvm-admin@redhat.com
 Errors-To: linux-lvm-admin@redhat.com
 Reply-To: linux-lvm@redhat.com
@@ -19,113 +20,101 @@ List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
 List-Archive: <https://www.redhat.com/archives/linux-lvm/>
-Date: Fri Feb 13 09:38:00 2004
+Date: Fri Feb 13 09:46:38 2004
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
 To: linux-lvm@redhat.com
 
-Christian,
+Andreas,
 
-the size of your filesystem and logical volume differs already.
-That's why e2fsadm fails.
-Did you eventually run resize2fs in order to shrink the filesystem ?
+this is a matter of units used.
 
-Your logical volume size is 1091456MB (32MB/PE * 34108 PE) but your
-filesystem size is 963584GB (941GB * 1024MB/GB; check with
-"tune2fs -l" and look for the block count and block size to calculate
-this correctly).
+fdisk shows 292555849728 Bytes / 1000^3 rounded to 292.5GB whereas
+LVM uses 1024(2^10) per order of magnitude ->
+292555849728 Bytes / 1024^3 = 272.45GB
+(which it shows below in the vgdisplay output).
 
-In case the result shows, that your filesystem is already smaller than the LV,
-lvreduce the logical volume appropriately.
+# lvcreate -c 8k -l 34873 -n lvo1 vg_daten
 
-Use the block count * block size result and round it up to the next PE!
+allocates all free physical extents in your VG to your new logical volume.
 
 Regards,
 Heinz    -- The LVM Guy --
 
 
-
-
-On Fri, Feb 13, 2004 at 03:06:28PM +0100, Christian Reiss wrote:
-> Greetings!
+On Fri, Feb 13, 2004 at 12:59:45PM +0100, Andreas Reschke wrote:
+> Hello,
+> we want to use our Red Hat Enterprise ES 3.0 with lvm as a file server. 
+> The server is connected to a IBM Fast T 900 via qlogic2200 Fiber Channel. 
+> On the FastT I have created a partition with 295 GB.
+> Fdisk shows this partition as /dev/sda1 with 292,5 GB:
 > 
-> I am trying to dissolve a running LVM, so i am doing
-> the e2fsadm, lvreduce, pvmove thingy. But ever since I
-> removed the first hdd, I am unable to resize the lvm
-> any more. The error can be seen below, with e2fsadm.
-> I also included the vg&lvdisplay commands.
+> Output of fdisk:
+> fdisk -l
 > 
-> I am running the LVM1 sources (non-cvs, approx mid last
-> year), as i am unable to run LVM2 (need to downgrade kernel
-> to 2.4.22 (no patch included in lvm2 for 2.4.23)).
-> Also, I am (too dumb/unable) to locate a e2fsadm alike
-> tool for lvm2, as e2fsadm needs the lvm-tab thingy,
-> which lvm2 no longer provides.
+> Platte /dev/sda: 292.5 GByte, 292555849728 Byte
+> 255 K�pfe, 63 Sektoren/Spuren, 35567 Zylinder
+> Einheiten = Zylinder von 16065 * 512 = 8225280 Bytes
 > 
-> Any help is greatly appreciated. :)
+>     Ger�t boot.  Anfang      Ende    Bl�cke   Id  Dateisystemtyp
+> /dev/sda1             1     35567 285691896   8e  Linux LVM
 > 
-> -Christian.
+> [root@fastlinux lvmgui-0.4]# pvcreate  /dev/sda1
+> pvcreate -- physical volume "/dev/sda1" successfully created
 > 
+> [root@fastlinux lvmgui-0.4]# vgcreate -s 8M vg_daten /dev/sda1
+> vgcreate -- INFO: maximum logical volume size is 511.98 Gigabyte
+> vgcreate -- doing automatic backup of volume group "vg_daten"
+> vgcreate -- volume group "vg_daten" successfully created and activated
 > 
-> ::::::::::::::::::
-> ::: vgdisplay ::::
+> [root@fastlinux lvmgui-0.4]#lvcreate -c 8k -L 292G -n lvo1 vg_daten
+> lvcreate -- only 34873 free physical extents in volume group "vg_daten"
+> [root@fastlinux lvmgui-0.4]# lvcreate -c 1024k -L 292G -n lvo1 vg_daten
+> lvcreate -- only 34873 free physical extents in volume group "vg_daten"
 > 
+> vgdisplay
 > --- Volume group ---
-> VG Name               share
+> VG Name               vg_daten
 > VG Access             read/write
-> VG Status             available/NOT resizable
+> VG Status             available/resizable
 > VG #                  0
 > MAX LV                256
-> Cur LV                1
-> Open LV               1
-> MAX LV Size           2 TB
+> Cur LV                0
+> Open LV               0
+> MAX LV Size           511.98 GB
 > Max PV                256
-> Cur PV                11
-> Act PV                11
-> VG Size               1.12 TB
-> PE Size               32 MB
-> Total PE              36668
-> Alloc PE / Size       34108 / 1.04 TB
-> Free  PE / Size       2560 / 80 GB
-> VG UUID               PSYbaQ-bl8d-xvHp-6re2-hoKd-9mE5-Wa5Tqz
+> Cur PV                1
+> Act PV                1
+> VG Size               272.45 GB
+> PE Size               8 MB
+> Total PE              34873
+> Alloc PE / Size       0 / 0
+> Free  PE / Size       34873 / 272.45 GB
+> VG UUID               OOjBLA-sHjN-LtHG-YRlE-JIRZ-miEk-m6S5vv
 > 
-> :::::::::::::::
-> :: lvdisplay ::
+> I have a volume group with maximum 511.98 Gigabyte and want to create a 
+> logical volume with 292 GB (greater than 266 GB), but lvcreate allow only 
+> 34873 extents (= 266 BG).
 > 
-> --- Logical volume ---
-> LV Name                /dev/share/data
-> VG Name                share
-> LV Write Access        read/write
-> LV Status              available
-> LV #                   1
-> # open                 1
-> LV Size                1.04 TB
-> Current LE             34108
-> Allocated LE           34108
-> Allocation             next free
-> Read ahead sectors     1024
-> Block device           58:0
-> 
-> :::::::::::::
-> :: e2fsadm ::
-> 
-> e2fsadm -L-10G /dev/share/data
-> e2fsadm -- logical volume size for "/dev/share/data" invalid
-> 
-> :::::::::::
-> :: df -h ::
-> 
-> Filesystem            Size  Used Avail Use% Mounted on
-> /dev/share/data       941G  910G   32G  97% /share/filebase
+> Where is the resulotion?
 > 
 > 
+> 
+> Thanks
+> Andreas
 > -- 
-> Christian Reiss <email@demonlord.de>
-> demonserver.de
+> BEHR GmbH & Co                          Tel. 0711-896-4598
+> Andreas Reschke                         Fax: 0711-8902-4598
+> Abteilung BG-IM23 IT-Services           Mobil: 0172-6307978
+> Unix/Linux-Administration               andreas.reschke@behrgroup.com
+> Siemensstrasse 164
+> D-70469 Stuttgart
 > 
-> Key fingerprint = 2999 B7CD A218 06DF D658  5BE3 18B6 B232 02FF 71B2
-> Public Key can be obtained here: http://www.demonlord.de/pgp.txt
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@redhat.com
+> https://www.redhat.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
 
 *** Software bugs are stupid.
     Nevertheless it needs not so stupid people to solve them ***
