@@ -1,32 +1,18 @@
-Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id iAEFIpr08861
-	for <linux-lvm@redhat.com>; Sun, 14 Nov 2004 10:18:51 -0500
-Received: from ivar.at12.de ([213.133.114.22])
-	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id iAEFIlGD008619
-	for <linux-lvm@redhat.com>; Sun, 14 Nov 2004 10:18:47 -0500
-Received: from localhost (localhost [127.0.0.1])
-	by ivar.at12.de (Postfix) with ESMTP id 286684BDAE
-	for <linux-lvm@redhat.com>; Sun, 14 Nov 2004 15:18:38 +0100 (CET)
-Received: from ivar.at12.de ([127.0.0.1])
-	by localhost (ivar.at12.de [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id 14023-07 for <linux-lvm@redhat.com>;
-	Sun, 14 Nov 2004 15:18:37 +0100 (CET)
-Received: from anton.in.meissner.it (p5084B8DE.dip.t-dialin.net
-	[80.132.184.222])
-	(using TLSv1 with cipher EDH-RSA-DES-CBC3-SHA (168/168 bits))
-	(No client certificate requested)
-	by ivar.at12.de (Postfix) with ESMTP id 097404BDAA
-	for <linux-lvm@redhat.com>; Sun, 14 Nov 2004 15:18:37 +0100 (CET)
-Received: from emc2.in.meissner.it (emc2.in.meissner.it [192.168.12.20])
-	by anton.in.meissner.it (Postfix) with ESMTP id 844E5CCFE
-	for <linux-lvm@redhat.com>; Sun, 14 Nov 2004 15:18:35 +0100 (CET)
-From: Markus Meissner <mlist@meissner.it>
-MIME-Version: 1.0
+Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id iAFAO7r18279
+	for <linux-lvm@redhat.com>; Mon, 15 Nov 2004 05:24:07 -0500
+Received: from mail.o2w.nl (postfix@mail.o2w.nl [213.227.141.209])
+	by mx3.redhat.com (8.12.11/8.12.11) with ESMTP id iAFAO10i001970
+	for <linux-lvm@redhat.com>; Mon, 15 Nov 2004 05:24:01 -0500
+Date: Mon, 15 Nov 2004 11:24:00 +0100
+From: Jelle Herold <wires@o2w.nl>
+Subject: Re: [linux-lvm] recover lost VG (VG data differs between PVs)
+Message-ID: <20041115102400.GA19918@hotwire.nl>
+References: <20041114225853.GB20425@hotwire.nl>
+	<20041114232126.GH24229@agk.surrey.redhat.com>
+Mime-Version: 1.0
 Content-Disposition: inline
-Date: Sun, 14 Nov 2004 15:18:34 +0100
-Content-Transfer-Encoding: 7bit
-Message-Id: <200411141518.34636.mlist@meissner.it>
-Subject: [linux-lvm] lvm on raid, vgcreate doesn't create vg
+In-Reply-To: <20041114232126.GH24229@agk.surrey.redhat.com>
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -38,89 +24,29 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@redhat.com
+Content-Transfer-Encoding: 7bit
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-Hi,
+Hi Alasdair,
 
-I have successfully setup lvm on top of my software raid 1 (two ide-disks, 
-hda, hdb, two raid1 on top, md0 and md1, one as root and one for the first 
-volume group, vg0). Everything works as expected, no problems at all. 
+On Sun, Nov 14, 2004 at 11:21:26PM +0000, Alasdair G Kergon wrote:
+> >  VG data differs between PVs /dev/hde and /dev/hdf3
+> >  Volume group "datavg" doesn't exist
+>  
+> So hde should be in the VG at the moment, but not hdf3?
 
-Now I want to put two more disks (hdc/hdd) in the machine. For simplicity 
-reasons (the data is on the second disk) I describe the problem with one 
-harddisk:
+precisely.
 
-/etc/raidtab
-[...]
-raiddev /dev/md3
- raid-level 1
- nr-raid-disks 2
- nr-spare-disks 0
- persistent-superblock 1
- device  /dev/hdc1
- raid-disk 0
- device  /dev/hdd1
- failed-disk 1
+> Add a filter to lvm.conf so lvm only looks at hde.  Run vgscan and see
+> check if things look OK eg vgcfgbackup and read the text backup file.
+> If things *are* OK like that, then pvremove hdf3, remove the filter &
+> vgscan.
 
-root@fs:~# mkraid /dev/md3
-handling MD device /dev/md3
-analyzing super-block
-disk 0: /dev/hdc1, 100522768kB, raid superblock at 100522688kB
-disk 1: /dev/hdd1, failed
-root@fs:~# pvcreate /dev/md3
-  Physical volume "/dev/md3" successfully created
-root@fs:~# vgcreate -v vgnew /dev/md3
-    Adding physical volume '/dev/md3' to volume group 'vgnew'
-    Archiving volume group "vgnew" metadata.
-    Creating volume group backup "/etc/lvm/backup/vgnew"
-  Volume group "vgnew" successfully created
-root@fs:~# vgscan
-  Reading all physical volumes.  This may take a while...
-  Found volume group "vg0" using metadata type lvm2
-root@fs:~# lvcreate -L 83G -n smb2 vgnew
-  Volume group "vgnew" doesn't exist
+Wow! *phew* that did the job! THANKS A LOT!!
 
-Uah. Whats that? Creating a filesystem on md3 is no problem, data can be 
-written and read, mounted, unmounted. So, I decided to test without md:
+Just a question out of curiosity, what does "VG data differs..." mean,
+and why does filtering hdf3 help (I thought vgreduce removed that PV
+from the VG)?
 
-root@fs:~# pvremove /dev/md3
-  Labels on physical volume "/dev/md3" successfully wiped
-root@fs:~# raidstop /dev/md3
-root@fs:~# pvcreate /dev/hdc1
-  Physical volume "/dev/hdc1" successfully created
-root@fs:~# vgcreate -v vgnew /dev/hdc1
-    Adding physical volume '/dev/hdc1' to volume group 'vgnew'
-    Archiving volume group "vgnew" metadata.
-    Creating volume group backup "/etc/lvm/backup/vgnew"
-  Volume group "vgnew" successfully created
-root@fs:~# vgscan
-  Reading all physical volumes.  This may take a while...
-  Found volume group "vgnew" using metadata type lvm2
-  Found volume group "vg0" using metadata type lvm2
-root@fs:~# lvcreate -L 83G -n smb2 vgnew
-  Logical volume "smb2" created
-root@fs:~# ls -al /dev/vgnew/
-total 32
-drwx------   2 root root  4096 Nov  8 12:59 .
-drwxr-xr-x  16 root root 28672 Nov  8 12:59 ..
-lrwxrwxrwx   1 root root    22 Nov  8 12:59 smb2 -> /dev/mapper/vgnew-smb2
-
-Hmm, this works. Whats up with creating lvm on top of raid? On the same 
-machine this works (vg0) without problems. There a no strange messages in 
-syslog, no dmessages etc. I have put the lvm2.log (with the requested 
-config-parameters from http://www.tldp.org/HOWTO/LVM-HOWTO/reportbug.html) 
-here: http://www.meissner.it/lvm2.log.gz
-
-Some machine-data:
-
-Debian testing/sarge
-AMD Athlon(TM) XP 1900+
-Linux fs 2.6.8-1-k7 #1 Thu Oct 7 02:47:47 EDT 2004 i686 GNU/Linux
-ii  lvm-common  1.5.17
-ii  lvm2        2.00.24-1 
-ii  raidtools2  1.00.3-15
-
-How can I trace the problem? Any hints?
-
--- 
-Beste Gruesse / Best regards Markus Meissner
+well, again, thanks a zillion
+Jelle.
