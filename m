@@ -1,14 +1,9 @@
-Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id i4FA4F001538
-	for <linux-lvm@redhat.com>; Sat, 15 May 2004 06:04:15 -0400
-Received: from hotmail.com (bay18-f54.bay18.hotmail.com [65.54.187.104])
-	by mx3.redhat.com (8.12.10/8.12.10) with ESMTP id i4FA498K029336
-	for <linux-lvm@redhat.com>; Sat, 15 May 2004 06:04:09 -0400
-From: "Bob Goddard" <bib_aab@hotmail.com>
-Date: Sat, 15 May 2004 10:04:03 +0000
+From: Jeff Layton <jtlayton@poochiereds.net>
+Content-Transfer-Encoding: 7bit
+Message-Id: <1084643736.3043.17.camel@localhost>
 Mime-Version: 1.0
-Message-ID: <BAY18-F54PzADZgsSTF000262e9@hotmail.com>
-Subject: [linux-lvm] lost all logical volumes
+Date: Sat, 15 May 2004 13:55:36 -0400
+Subject: [linux-lvm] updated lvm2create_initrd script
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -19,33 +14,42 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; format=flowed; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@redhat.com
+Cc: Alasdair G Kergon <agk@redhat.com>, Miguel =?ISO-8859-1?Q?Cabe=E7a?= <cabeca@ist.utl.pt>
 
-I was reinstalling the O/S when I created a new LVM2 volume group over the
-existing LVM1 partition. It was named system but was recreated as system2.
+I've done some major updates to the lvm2create_initrd script today --
+many of these were features I'd been wanting to add for a while. I'm
+hoping this will bring the script closer to where it could be included
+with the official tarballs.
 
-vgscan -v gives:
-    Wiping cache of LVM-capable devices
-    Wiping internal cache
-  Reading all physical volumes.  This may take a while...
-    Finding all volume groups
-    Finding volume group "system"
-  Found volume group "system" using metadata type lvm2
-    Finding volume group "system2"
-  Found volume group "system2" using metadata type lvm1
+I've done a little shuffling of my SVN tree, so it's now here:
 
-while vgchange -ay gives:
-  8 logical volume(s) in volume group "system" now active
-  0 logical volume(s) in volume group "system2" now active
+http://www.poochiereds.net/svn/lvm2
 
-No logical volumes were recreated and hence were not formatted.
-Is there any way to recover these or do I have to resort to a disk editor.
+A small changelog:
 
+* added support for including modules in the initrd image. You have to
+specify them on the commandline or pass in the $MODULES env. var to use
+it.
 
-Bob Goddard
+* Added support for activating specified MD devices during the initrd
+phase. This requires you to have mdadm installed.
 
-_________________________________________________________________
-Want to block unwanted pop-ups? Download the free MSN Toolbar now!  
-http://toolbar.msn.co.uk/
+* Per Alasdair's suggestion, we no longer copy lvm.conf by default, but
+now do an lvm dumpconfig and build a new lvm.conf file. The script now
+only includes device filters by default. You can also build your own
+lvm.conf and have the script use that instead.
+
+* doesn't clobber as many environment vars when running now. Most
+everything that can be set on the command line (and more) can also be
+set via environment vars (I may have missed a few though).
+
+I've also started work on a man page for it, but haven't gotten very far
+with it yet.
+
+Alasdair, can you have a look at the new version of this script and let
+me know if there are other changes you'd like to see?
+
+-- 
+Jeff Layton <jtlayton@poochiereds.net>
