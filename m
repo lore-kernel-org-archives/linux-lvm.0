@@ -1,11 +1,10 @@
-Return-Path: <mag@fbab.net>
-Message-ID: <030b01c10269$390e61b0$020a0a0a@totalmef>
-From: "Magnus Naeslund\(f\)" <mag@fbab.net>
-References: <873d8gtpjl.fsf@nase.motakef.de>
-Subject: Re: [linux-lvm] lvm and software raid1
-Date: Sun, 1 Jul 2001 22:05:49 +0200
+Return-Path: <tomcosimano@home.com>
+Message-ID: <3B401947.385A1472@home.com>
+Date: Mon, 02 Jul 2001 01:48:39 -0500
+From: Tom Cosimano <tomcosimano@home.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] LVM kernel patch request
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -20,51 +19,51 @@ List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
 
-I think maybe you should use cfdisk instead of fdisk...
-That solved my similar problem
+I'm running Redhat 7.1 kernel vmlinux-2.4.2-2smp.  I have tried a number
+of times and can only conclude that I'm missing some step(s).
+I have downloaded and installed the following RPMs from
+ftp://ftp.sistina.com/pub/LVM/binaries/redhat/0.9.1_beta in the order:
 
-Magnus
+1) lvm-base-1.1-1.i386.rpm
+rebooted
+2a) lvm-iop10-0.9.1_beta7-1.i386.rpm
+2b) lvm-iop10-lib-0.9.1_beta7-1.i386.rpm
+3) lvm-iop10-man-0.9.1_beta7-1.i386.rpm
+4) lvm-iop10-patchgen-0.9.1_beta7-1.i386.rpm
+rebooted
 
--=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
- Programmer/Networker [|] Magnus Naeslund
- PGP Key: http://www.genline.nu/mag_pgp.txt
--=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+Per the instructions in the LVM HOWTO section 7.4
+I edited the /etc/rc.d/rc.sysinit to add the following lines:
 
------ Original Message ----- 
-From: "Ramin Motakef" <ramin@motakef.de>
-To: <linux-lvm@sistina.com>
-Sent: Sunday, July 01, 2001 9:30 PM
-Subject: [linux-lvm] lvm and software raid1
+/sbin/vgscan
+/sbin/vgchange -ay
 
+and the file /etc/rc.d/init.d/halt with the following line
 
-> Hi!
-> This is my first contact with LVM, so maybe i am doing something
-> wrong, however this are my problems:
-> 
-> I try to install LVM on /dev/md1:
-> 
-> # cat /proc/mdstat 
-> md1 : active raid1 sdb7[1] sda7[0]
->       15411072 blocks [2/2] [UU]
-> 
-> Kernel is vanilla 2.4.5, distribution debian sid of today.
-> 
-> md1 is about 15GB, but when i run pvcreate on it, it uses only 1.8 GB:
-> 
-> # pvcreate -ff /dev/md1
-> pvcreate -- WARNING: forcing physical volume creation on "/dev/md1"
-> pvcreate -- physical volume "/dev/md1" successfully created
-> 
-> # pvdisplay /dev/md1
-> pvdisplay -- "/dev/md1" is a new physical volume of 1.86 GB
-> 
-> Any hints?
-> 
-> Thanks, Ramin
-> 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
-> 
+/sbin/vgchange -an
+
+I boot my system using PowerQuest BootMagic and enter my Redhat
+Partition.
+As Linux is booting and the vgscan is executed I see the following error
+message:
+
+vgscan
+lvmiopversion -- LVM driver/module not loaded?
+
+vgscan: /lib/lvm-iop not found.  Is lvm-iop installed?
+
+I get the same message if I try to run vgscan after logging in and the
+same or similar message from any vg command.
+
+Also when I run lsmod, I do not see LVM listed and it is not under
+/proc.
+
+I verified the install of all five rpm(s) and do not understand what I
+may be doing wrong.
+
+I can only conclude that it is not loading and I'm missing something.
+
+Please HELP
+
+Thanks
+Tom
