@@ -1,8 +1,8 @@
-From: Eamonn Hamilton <eamonn.hamilton@saic.com>
-Content-Transfer-Encoding: 7bit
-Message-Id: <1018291425.21592.7.camel@snifter>
+From: Anders Widman <andewid@tnonline.net>
+Message-Id: <18044083656.20020409231800@tnonline.net>
 MIME-Version: 1.0
-Subject: [linux-lvm] vg recovery after PV failure
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] multiple volumes..
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -13,27 +13,25 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Apr  8 13:45:02 2002
+Date: Tue Apr  9 16:17:02 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
 
+I have a problem which I want to solve as efficiently as possible.
 
-Hi Folks.
+The problem is that I have 13 drives os various sizes (30-120GB) which
+I want to combine into one (or a few) logical volumes with redundancy
+if one drive would fail.
 
-I'm attempting to recover a VG on a friends system after one of the PVs
-started acting a bit odd. The VG appears to say that it has no PVs
-associated with it, and a vgscan only finds the second PV on the disk. A
-pvdisplay, however, show both physical volumes have what appears to be
-the correct information and extents.
+How would the smartest layout be? I was thinking about multiple
+partiontions and then combine them into several RAID 5 chains, and
+then use LVM to manage the logical volumes.
 
-I'm basically wondering how do I get these two physical volumes
-associated again, and is there any way to determine how they were put
-topgether, i.e. were they striped? Also, is there any way to get the
-information off the non-dodgy disk ( it's ext3, btw ).
+There is an expamle of my ideas at http://www.tnonline.net/raid-lvm.png
+As you can see there are 8 chains and about 50 GB unallocated data in
+this example. Can I minimize the loss even better?
 
-Cheers,
+Any help or insight in this would be greatly appreciaded
 
-Eamonn
-
- 
+//Anders
