@@ -1,9 +1,9 @@
 content-class: urn:content-classes:message
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-Message-ID: <08628CA53C6CBA4ABAFB9E808A5214CB0142B4A2@mercury.infiniconsys.com>
+Subject: RE: [linux-lvm] Snapshot creating problem
+Message-ID: <08628CA53C6CBA4ABAFB9E808A5214CB0142B4A5@mercury.infiniconsys.com>
 From: "Barry, Christopher" <cbarry@infiniconsys.com>
-Subject: [linux-lvm] Snapshot creating problem
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,10 +14,30 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Mar 17 12:21:02 2003
+Date: Mon Mar 17 12:38:01 2003
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: "Lvm (E-mail)" <linux-lvm@sistina.com>
+To: linux-lvm@sistina.com
+
+Oh - sorry for the omission:
+
+LVM version: 1.95.15
+Library version 0.96.07-ioctl-cvs
+driver version: 1.0.8
+
+--
+Christopher Barry
+Manager of Information Systems
+InfiniCon Systems
+http://www.infiniconsys.com
+
+
+-----Original Message-----
+From: Barry, Christopher=20
+Sent: Monday, March 17, 2003 1:21 PM
+To: Lvm (E-mail)
+Subject: [linux-lvm] Snapshot creating problem
+
 
 Hi all,
 	I'm experimenting with lvm2 on a patched 2.4.20 kernel with xfs =
@@ -50,3 +70,9 @@ Christopher Barry
 Manager of Information Systems
 InfiniCon Systems
 http://www.infiniconsys.com
+
+_______________________________________________
+linux-lvm mailing list
+linux-lvm@sistina.com
+http://lists.sistina.com/mailman/listinfo/linux-lvm
+read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
