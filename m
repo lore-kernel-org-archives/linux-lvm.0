@@ -1,18 +1,19 @@
-Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j0C8rgr01217
-	for <linux-lvm@redhat.com>; Wed, 12 Jan 2005 03:53:42 -0500
-Received: from mail.clunker.utsl.gen.nz (210-54-92-184.ipnets.xtra.co.nz
-	[210.54.92.184])
-	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id j0C8rUPG023815
-	for <linux-lvm@redhat.com>; Wed, 12 Jan 2005 03:53:36 -0500
-Message-ID: <41E4E575.6030802@vilain.net>
-Date: Wed, 12 Jan 2005 21:53:09 +1300
-From: Sam Vilain <sam@vilain.net>
+Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j0BGPar31752
+	for <linux-lvm@redhat.com>; Tue, 11 Jan 2005 11:25:36 -0500
+Received: from monkey.sneakemail.com (sneakemail.com [38.113.6.61])
+	by mx3.redhat.com (8.12.11/8.12.11) with SMTP id j0BGPV38016124
+	for <linux-lvm@redhat.com>; Tue, 11 Jan 2005 11:25:31 -0500
+Date: Tue, 11 Jan 2005 16:25:23 +0000
+From: "Andrew Hilborne" <cseoqs002@sneakemail.com>
+Subject: Re: [linux-lvm] strange logical volume issue
+Message-ID: <9053-04726@sneakemail.com>
+In-Reply-To: <20050111142411.GU26670@agk.surrey.redhat.com>
+References: <20050110234240.749ebab3@eric.placeverte.home>
+	<20050111142411.GU26670@agk.surrey.redhat.com>
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] Resizing a volume group
-References: <853E1A0C-6071-11D9-A1E3-000A95AF6760@hawaii.rr.com>
-In-Reply-To: <853E1A0C-6071-11D9-A1E3-000A95AF6760@hawaii.rr.com>
 Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -24,36 +25,33 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: deant@hawaii.rr.com
-Cc: LVM general discussion and development <linux-lvm@redhat.com>
+To: linux-lvm@redhat.com
 
-Dean Takemori wrote:
-> I'm running a Fedora Core 1 box using LVM on RAID (lvm-1.0.3-13)  I moved
-> from a pair of RAID1 hard drives to a larger pair of drives by 
-> strategically
-> failing and replacing the drives. 
-> This has left me with the following situation : Volume group lv0 (26GB) 
-> resides
-> on /dev/md1, which are a pair of 250GB partitions.  But the lvm tools 
-> only see
-> /dev/md1 as being 26GB (which is what it was on the old hard drives).  
-> (Oddly,
-> vgdisplay does note that the maximum lv size is 250GB).
-> 
-> Is it possible to resize the pv and lv so that they use up the full 
-> space of
-> the partition?
+--On 11 January 2005 14:24 +0000 "Alasdair G Kergon agk@redhat.com" wrote:
+>
+> On Mon, Jan 10, 2005 at 11:42:40PM +0100, messmate wrote:
+>> there is somewhat strange with a lv of mine: lv_usr-local.
+>> Marked as /dev/mapper/vg1_hda1-lv_usr--local    and
+>> as /dev/vg1_hda/lv_usr-local  !
+>>
+>> See the (-) differences.
+>
+> A hyphen in the name in /dev/mapper separates the volume
+> group name from the logical volume name.
+>
+> If you put hyphens in either of those names they
+> get quoted by doubling them up.
 
-so, blockdev -s /dev/md1 shows 26 or 250GB ?
+Yes indeed. Sadly (I now feel) I created my VG with the name "VG-1" and now 
+I see exactly this "problem."
 
-I'm struggling to see how you would have changed the size of a block
-device with "strategically failing and replacing" drives.
+So far as I can see, I have a VG with this naming issue, some LVs with 
+*names" which reflect the same problem, and some entries in /etc/fstab (I'm 
+running Debian on this machine, FWIW) which contain associated /dev/mapper 
+names.
 
-> ~ > pvdisplay /dev/md1
-> PV Size               26.44 GB [55453952 secs] / NOT usable 4.19 MB 
+Now that someone has brought this up, can someone possibly tell me a safe 
+way to go about renaming things? I was thinking of something like "VG1" :)
 
-If /dev/md1 really is 250GB then you might have some surgical disk 
-partitioning to do.  ie, get it back to the size it was, then add the
-rest of the disk as another /dev/md PV.
-
-Sam.
+--
+Andrew Hilborne
