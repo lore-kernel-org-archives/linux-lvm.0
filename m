@@ -1,12 +1,11 @@
-Return-Path: <lewis@sistina.com>
-Date: Thu, 19 Apr 2001 14:48:15 -0500
-From: AJ Lewis <lewis@sistina.com>
-Message-ID: <20010419144815.J10345@sistina.com>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="YZVh52eu0Ophig4D"
-Content-Disposition: inline
-Subject: [linux-lvm] linux-lvm list now open
+Return-Path: <alan@lxorguk.ukuu.org.uk>
+Subject: Re: [linux-lvm] Re: [repost] Announce: Linux-OpenLVM mailing list
+Date: Thu, 19 Apr 2001 20:51:22 +0100 (BST)
+In-Reply-To: <200104191945.f3JJjKRn015661@webber.adilger.int> from "Andreas Dilger" at Apr 19, 2001 01:45:20 PM
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Message-Id: <E14qKSa-0007vI-00@the-village.bc.nu>
+From: Alan Cox <alan@lxorguk.ukuu.org.uk>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -18,50 +17,17 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-To: linux-lvm@sistina.com
+Content-Type: text/plain; charset="us-ascii"
+To: Andreas Dilger <adilger@turbolinux.com>
+Cc: linux-lvm@sistina.com, Alan Cox <alan@lxorguk.ukuu.org.uk>, Jes Sorensen <jes@linuxcare.com>, linux-kernel@vger.kernel.org, linux-openlvm@nl.linux.org, Arjan van de Ven <arjanv@redhat.com>, Jens Axboe <axboe@suse.de>, Martin Kasper Petersen <mkp@linuxcare.com>, riel@conectiva.com.br
 
---YZVh52eu0Ophig4D
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> Not to be negative, but isn't Alan the pot calling the kettle black?  You
+> use ORBS to block email as well, with no hope of reprieve.  AFAIK, the
 
-Just FYI:
+I dont stop other people discussing the kernel. Its very very different.
 
-This list is now completely unmoderated.  If you haven't been following the
-thread, a number of people got pissed off and decided to open a new ML,
-linux-openlvm@nl.linux.org, when they couldn't get a response from us.  This
-was an unfortunate misunderstanding, and hopefully it's resolved now.
-Please feel free to e-mail me with any questions or concerns you might have
-regarding this list if you don't get a response through the normal channels.
+> linux-lvm list has a moderator which _should_ forward legitimate emails
+> on to the list.  Maybe they are piling up somewhere, unread?
 
-Regards,
---=20
-AJ Lewis
-Sistina Software Inc.                  Voice:  612-379-3951
-1313 5th St SE, Suite 111              Fax:    612-379-3952
-Minneapolis, MN 55414                  E-Mail: lewis@sistina.com
-http://www.sistina.com
-
-Current GPG fingerprint =3D 3B5F 6011 5216 76A5 2F6B  52A0 941E 1261 0029 2=
-648
-Get my key at: http://www.sistina.com/~lewis/gpgkey
- (Unfortunately, the PKS-type keyservers do not work with multiple sub-keys)
-
------Begin Obligatory Humorous Quote----------------------------------------
-Bad command or file name. Bad, bad command! Sit! Stay! Staaaay...
------End Obligatory Humorous Quote------------------------------------------
-
---YZVh52eu0Ophig4D
-Content-Type: application/pgp-signature
-Content-Disposition: inline
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.0.4 (GNU/Linux)
-Comment: For info see http://www.gnupg.org
-
-iD8DBQE630D/pE6/iGtdjLERAnKmAJ9kiR4UIW9BYkhLqLHEG8IFzOlkyQCfTwrK
-ivnGKZtdnhLKFuodTaj2rX8=
-=0cyv
------END PGP SIGNATURE-----
-
---YZVh52eu0Ophig4D--
+If they were that would be understandable but they were being rejected. Anyway
+it seems to be a finished discussion. 
