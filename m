@@ -1,9 +1,11 @@
-From: Patrick McCarty <mccartyp@apu.edu>
-Subject: Re: [linux-lvm] 2.2.13ac5 with LVM
-In-Reply-To: <ufa7ktnb90y.fsf@epithumia.math.uh.edu>
-Message-ID: <Pine.LNX.4.33.0110221651370.12322-200000@home.apu.edu>
-MIME-Version: 1.0
-Content-Type: MULTIPART/MIXED; BOUNDARY="-1194884627-222006494-1003794832=:12322"
+From: Benjamin Lee <benjaminlee@consultant.com>
+Subject: Re: [linux-lvm] How to mount volumes during boot
+Message-ID: <20011023102630.A2174@pov.home.ben>
+References: <8BFE9B4949BB4346A146F5231AEF1B87F3D5@CX975884-A.mdmiller.com>
+Mime-Version: 1.0
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <8BFE9B4949BB4346A146F5231AEF1B87F3D5@CX975884-A.mdmiller.com>; from mitch@mdmiller.com on Sat, Oct 20, 2001 at 08:29:51PM -0500
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,130 +16,38 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Oct 22 18:53:01 2001
+Date: Mon Oct 22 19:25:04 2001
 List-Id: <linux-lvm.redhat.com>
-To: Jason L Tibbitts III <tibbs@math.uh.edu>
-Cc: linux-lvm@sistina.com
+Content-Type: text/plain; charset="iso-8859-1"
+To: linux-lvm@sistina.com
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
-  Send mail to mime@docserver.cac.washington.edu for more info.
+Mitch,
 
----1194884627-222006494-1003794832=:12322
-Content-Type: TEXT/PLAIN; charset=US-ASCII
+Your problem can be fixed by compiling the LVM code into the kernel
+rather than as a module.
 
+If you like modules, make sure that you are using an initrd.
 
-Jason,
+The RH 7.1 scripts already have the necessary logic to mount your LVM
+filesystems.
 
-Thanks for the patch.
+On Sunday, 21 October, 2001, Mitchell D. Miller scribbled:
+> I am running Red Hat 7.1 (with 2.4.12 kernel) and LVM 1.0.1-rc4.  I read
+> the documentation on Sistina's website about boot time scripts, but the
+> info there seems to deal only with getting LVM loaded at boot time. =20
+>=20
+> I'm still uncertain how I should configure my system so the volumes I
+> have created (three of them so far) get mounted during boot.  I tried
+> modifying my fstab file, but the system didn't boot right after.  It
+> stopped, complaining that one of the devices couldn't be mounted.  Is
+> this even the right place to configure LVM volumes to be mounted?
 
-I've cleaned it up quite a bit, and attached my changes.
+--=20
+Benjamin Lee
+Melbourne, Australia             "Always real."    http://realthought.net/
 
-I just successfully built a 2.4.12ac5 kernel with it -- about to try it 
-out.
-
-Thanks again!
-
--- Patrick
-
-Thank you sir. May I have another?
-
-
-
----1194884627-222006494-1003794832=:12322
-Content-Type: TEXT/PLAIN; charset=US-ASCII; name="lvm-1.0.1rc4-2.4.12ac5.fix.patch"
-Content-Transfer-Encoding: BASE64
-Content-ID: <Pine.LNX.4.33.0110221653520.12322@home.apu.edu>
-Content-Description: 
-Content-Disposition: attachment; filename="lvm-1.0.1rc4-2.4.12ac5.fix.patch"
-
-ZGlmZiAtcnVOIG1kLm9sZC9sdm0tc25hcC5jIG1kL2x2bS1zbmFwLmMNCi0t
-LSBtZC5vbGQvbHZtLXNuYXAuYwlNb24gT2N0IDIyIDE4OjE4OjE0IDIwMDEN
-CisrKyBtZC9sdm0tc25hcC5jCU1vbiBPY3QgMjIgMTg6MjQ6MjggMjAwMQ0K
-QEAgLTQzOCw3ICs0MzgsNyBAQA0KIGludCBsdm1fc25hcHNob3RfYWxsb2Nf
-aW9idWZfcGFnZXMoc3RydWN0IGtpb2J1ZiAqIGlvYnVmLCBpbnQgc2VjdG9y
-cykNCiB7DQogCWludCBieXRlcywgbnJfcGFnZXMsIGVyciwgaTsNCi0NCisJ
-DQogCWJ5dGVzID0gc2VjdG9ycyAqIFNFQ1RPUl9TSVpFOw0KIAlucl9wYWdl
-cyA9IChieXRlcyArIH5QQUdFX01BU0spID4+IFBBR0VfU0hJRlQ7DQogCWVy
-ciA9IGV4cGFuZF9raW9idWYoaW9idWYsIG5yX3BhZ2VzKTsNCkBAIC01MTEs
-OSArNTExLDEwIEBADQogaW50IGx2bV9zbmFwc2hvdF9hbGxvYyhsdl90ICog
-bHZfc25hcCkNCiB7DQogCWludCByZXQsIG1heF9zZWN0b3JzOw0KKwlpbnQg
-bmJocyA9IEtJT19NQVhfU0VDVE9SUzsNCiANCiAJLyogYWxsb2NhdGUga2lv
-dmVjIHRvIGRvIGNodW5rIGlvICovDQotCXJldCA9IGFsbG9jX2tpb3ZlYygx
-LCAmbHZfc25hcC0+bHZfaW9idWYpOw0KKwlyZXQgPSBhbGxvY19raW92ZWNf
-c3ooMSwgJmx2X3NuYXAtPmx2X2lvYnVmLCZuYmhzKTsNCiAJaWYgKHJldCkg
-Z290byBvdXQ7DQogDQogCW1heF9zZWN0b3JzID0gS0lPX01BWF9TRUNUT1JT
-IDw8IChQQUdFX1NISUZULTkpOw0KQEAgLTUyMiw3ICs1MjMsNyBAQA0KIAlp
-ZiAocmV0KSBnb3RvIG91dF9mcmVlX2tpb3ZlYzsNCiANCiAJLyogYWxsb2Nh
-dGUga2lvdmVjIHRvIGRvIGV4Y2VwdGlvbiB0YWJsZSBpbyAqLw0KLQlyZXQg
-PSBhbGxvY19raW92ZWMoMSwgJmx2X3NuYXAtPmx2X0NPV190YWJsZV9pb2J1
-Zik7DQorCXJldCA9IGFsbG9jX2tpb3ZlY19zeigxLCAmbHZfc25hcC0+bHZf
-Q09XX3RhYmxlX2lvYnVmLCZuYmhzKTsNCiAJaWYgKHJldCkgZ290byBvdXRf
-ZnJlZV9raW92ZWM7DQogDQogCXJldCA9IGx2bV9zbmFwc2hvdF9hbGxvY19p
-b2J1Zl9wYWdlcyhsdl9zbmFwLT5sdl9DT1dfdGFibGVfaW9idWYsDQpAQCAt
-NTM4LDEyICs1MzksMTIgQEANCiANCiBvdXRfZnJlZV9ib3RoX2tpb3ZlY3M6
-DQogCXVubWFwX2tpb2J1Zihsdl9zbmFwLT5sdl9DT1dfdGFibGVfaW9idWYp
-Ow0KLQlmcmVlX2tpb3ZlYygxLCAmbHZfc25hcC0+bHZfQ09XX3RhYmxlX2lv
-YnVmKTsNCisJZnJlZV9raW92ZWNfc3ooMSwgJmx2X3NuYXAtPmx2X0NPV190
-YWJsZV9pb2J1ZiwmbmJocyk7DQogCWx2X3NuYXAtPmx2X0NPV190YWJsZV9p
-b2J1ZiA9IE5VTEw7DQogDQogb3V0X2ZyZWVfa2lvdmVjOg0KIAl1bm1hcF9r
-aW9idWYobHZfc25hcC0+bHZfaW9idWYpOw0KLQlmcmVlX2tpb3ZlYygxLCAm
-bHZfc25hcC0+bHZfaW9idWYpOw0KKwlmcmVlX2tpb3ZlY19zeigxLCAmbHZf
-c25hcC0+bHZfaW9idWYsJm5iaHMpOw0KIAlsdl9zbmFwLT5sdl9pb2J1ZiA9
-IE5VTEw7DQogCWlmIChsdl9zbmFwLT5sdl9zbmFwc2hvdF9oYXNoX3RhYmxl
-ICE9IE5VTEwpDQogCQl2ZnJlZShsdl9zbmFwLT5sdl9zbmFwc2hvdF9oYXNo
-X3RhYmxlKTsNCkBAIC01NTMsNiArNTU0LDggQEANCiANCiB2b2lkIGx2bV9z
-bmFwc2hvdF9yZWxlYXNlKGx2X3QgKiBsdikNCiB7DQorCWludCBuYmhzID0g
-S0lPX01BWF9TRUNUT1JTOw0KKw0KIAlpZiAobHYtPmx2X2Jsb2NrX2V4Y2Vw
-dGlvbikNCiAJew0KIAkJdmZyZWUobHYtPmx2X2Jsb2NrX2V4Y2VwdGlvbik7
-DQpAQCAtNTY4LDE0ICs1NzEsMTQgQEANCiAJew0KIAkgICAgICAgIGtpb2J1
-Zl93YWl0X2Zvcl9pbyhsdi0+bHZfaW9idWYpOw0KIAkJdW5tYXBfa2lvYnVm
-KGx2LT5sdl9pb2J1Zik7DQotCQlmcmVlX2tpb3ZlYygxLCAmbHYtPmx2X2lv
-YnVmKTsNCisJCWZyZWVfa2lvdmVjX3N6KDEsICZsdi0+bHZfaW9idWYsJm5i
-aHMpOw0KIAkJbHYtPmx2X2lvYnVmID0gTlVMTDsNCiAJfQ0KIAlpZiAobHYt
-Pmx2X0NPV190YWJsZV9pb2J1ZikNCiAJew0KIAkgICAgICAgIGtpb2J1Zl93
-YWl0X2Zvcl9pbyhsdi0+bHZfQ09XX3RhYmxlX2lvYnVmKTsNCiAJCXVubWFw
-X2tpb2J1Zihsdi0+bHZfQ09XX3RhYmxlX2lvYnVmKTsNCi0JCWZyZWVfa2lv
-dmVjKDEsICZsdi0+bHZfQ09XX3RhYmxlX2lvYnVmKTsNCisJCWZyZWVfa2lv
-dmVjX3N6KDEsICZsdi0+bHZfQ09XX3RhYmxlX2lvYnVmLCZuYmhzKTsNCiAJ
-CWx2LT5sdl9DT1dfdGFibGVfaW9idWYgPSBOVUxMOw0KIAl9DQogfQ0KZGlm
-ZiAtcnVOIG1kLm9sZC9sdm0uYyBtZC9sdm0uYw0KLS0tIG1kLm9sZC9sdm0u
-YwlNb24gT2N0IDIyIDE4OjE4OjE0IDIwMDENCisrKyBtZC9sdm0uYwlNb24g
-T2N0IDIyIDE4OjIxOjE1IDIwMDENCkBAIC00MzIsOCArNDMyLDYgQEANCiAg
-Ki8NCiBpbnQgbHZtX2luaXQodm9pZCkNCiB7DQotCXN0cnVjdCBnZW5kaXNr
-ICpnZW5kaXNrX3B0ciA9IE5VTEw7DQotDQogCWlmIChkZXZmc19yZWdpc3Rl
-cl9jaHJkZXYoTFZNX0NIQVJfTUFKT1IsDQogCQkJCSAgbHZtX25hbWUsICZs
-dm1fY2hyX2ZvcHMpIDwgMCkgew0KIAkJcHJpbnRrKEtFUk5fRVJSICIlcyAt
-LSBkZXZmc19yZWdpc3Rlcl9jaHJkZXYgZmFpbGVkXG4iLA0KQEAgLTQ1NSwx
-OCArNDUzLDcgQEANCiAJbHZtX2dlbmluaXQoJmx2bV9nZW5kaXNrKTsNCiAN
-CiAJLyogaW5zZXJ0IG91ciBnZW5kaXNrIGF0IHRoZSBjb3JyZXNwb25kaW5n
-IG1ham9yICovDQotCWlmIChnZW5kaXNrX2hlYWQgIT0gTlVMTCkgew0KLQkJ
-Z2VuZGlza19wdHIgPSBnZW5kaXNrX2hlYWQ7DQotCQl3aGlsZSAoZ2VuZGlz
-a19wdHItPm5leHQgIT0gTlVMTCAmJg0KLQkJICAgICAgIGdlbmRpc2tfcHRy
-LT5tYWpvciA+IGx2bV9nZW5kaXNrLm1ham9yKSB7DQotCQkJZ2VuZGlza19w
-dHIgPSBnZW5kaXNrX3B0ci0+bmV4dDsNCi0JCX0NCi0JCWx2bV9nZW5kaXNr
-Lm5leHQgPSBnZW5kaXNrX3B0ci0+bmV4dDsNCi0JCWdlbmRpc2tfcHRyLT5u
-ZXh0ID0gJmx2bV9nZW5kaXNrOw0KLQl9IGVsc2Ugew0KLQkJZ2VuZGlza19o
-ZWFkID0gJmx2bV9nZW5kaXNrOw0KLQkJbHZtX2dlbmRpc2submV4dCA9IE5V
-TEw7DQotCX0NCisJYWRkX2dlbmRpc2soJmx2bV9nZW5kaXNrKTsNCiANCiAj
-aWZkZWYgTFZNX0hEX05BTUUNCiAJLyogcmVmZXJlbmNlIGZyb20gZHJpdmVy
-cy9ibG9jay9nZW5oZC5jICovDQpAQCAtNDk5LDcgKzQ4Niw2IEBADQogDQog
-c3RhdGljIHZvaWQgbHZtX2NsZWFudXAodm9pZCkNCiB7DQotCXN0cnVjdCBn
-ZW5kaXNrICpnZW5kaXNrX3B0ciA9IE5VTEwsICpnZW5kaXNrX3B0cl9wcmV2
-ID0gTlVMTDsNCiANCiAJaWYgKGRldmZzX3VucmVnaXN0ZXJfY2hyZGV2KExW
-TV9DSEFSX01BSk9SLCBsdm1fbmFtZSkgPCAwKQ0KIAkJcHJpbnRrKEtFUk5f
-RVJSICIlcyAtLSBkZXZmc191bnJlZ2lzdGVyX2NocmRldiBmYWlsZWRcbiIs
-DQpAQCAtNTA4LDE4ICs0OTQsNyBAQA0KIAkJcHJpbnRrKEtFUk5fRVJSICIl
-cyAtLSBkZXZmc191bnJlZ2lzdGVyX2Jsa2RldiBmYWlsZWRcbiIsDQogCQkg
-ICAgICAgbHZtX25hbWUpOw0KIA0KLQ0KLQ0KLQlnZW5kaXNrX3B0ciA9IGdl
-bmRpc2tfcHRyX3ByZXYgPSBnZW5kaXNrX2hlYWQ7DQotCXdoaWxlIChnZW5k
-aXNrX3B0ciAhPSBOVUxMKSB7DQotCQlpZiAoZ2VuZGlza19wdHIgPT0gJmx2
-bV9nZW5kaXNrKQ0KLQkJCWJyZWFrOw0KLQkJZ2VuZGlza19wdHJfcHJldiA9
-IGdlbmRpc2tfcHRyOw0KLQkJZ2VuZGlza19wdHIgPSBnZW5kaXNrX3B0ci0+
-bmV4dDsNCi0JfQ0KLQkvKiBkZWxldGUgb3VyIGdlbmRpc2sgZnJvbSBjaGFp
-biAqLw0KLQlpZiAoZ2VuZGlza19wdHIgPT0gJmx2bV9nZW5kaXNrKQ0KLQkJ
-Z2VuZGlza19wdHJfcHJldi0+bmV4dCA9IGdlbmRpc2tfcHRyLT5uZXh0Ow0K
-KwlkZWxfZ2VuZGlzaygmbHZtX2dlbmRpc2spOw0KIA0KIAlibGtfc2l6ZVtN
-QUpPUl9OUl0gPSBOVUxMOw0KIAlibGtzaXplX3NpemVbTUFKT1JfTlJdID0g
-TlVMTDsNCg==
----1194884627-222006494-1003794832=:12322--
+Weather outside looks to be 18=EF=BF=BDC, mostly cloudy.
+__________________________________________________________________________
+I hate it when my foot falls asleep during the day cause that means
+it's going to be up all night.
+		-- Steven Wright
