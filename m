@@ -1,38 +1,53 @@
-Date: Thu, 7 Sep 2000 16:21:52 -0300 (BRT)
-From: Marcelo Tosatti <marcelo@conectiva.com.br>
-Subject: Re: [linux-lvm] LVM patch for kernel 2.2.17?
-In-Reply-To: <200009052050.OAA19872@lynx.turbolabs.com>
-Message-ID: <Pine.LNX.4.21.0009071613560.21842-100000@freak.distro.conectiva>
+From: Andreas Dilger <adilger@turbolinux.com>
+Message-Id: <200009072239.QAA09511@lynx.turbolabs.com>
+Subject: Re: [linux-lvm] LVM support for LILO
+Date: Thu, 7 Sep 2000 16:39:39 -0600 (MDT)
+In-Reply-To: <20000907234301.B21294@gruyere.muc.suse.de> from "Andi Kleen" at Sep 07, 2000 11:43:01 PM
 MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: Andreas Dilger <adilger@turbolinux.com>
-Cc: linux-lvm@msede.com
+Content-Type: text/plain; charset="us-ascii"
+To: Andi Kleen <ak@suse.de>
+Cc: Linux LVM mailing list <linux-lvm@msede.com>, idsfa@visi.com
 
+Andi Kleen, you write:
+> I did some similar work. I implemented an LVM_BMAP ioctl for LVM that
+> simply translates a given block to a (dev_t, blocknr in dev). lilo 
+> simply does a normal FIOBMAP and then calls LVM_BMAP for every block
+> it gets. When the dev_t ever changes it complains loudly. Then it does
+> its normal work with the resulting blocks.
 
-On Tue, 5 Sep 2000, Andreas Dilger wrote:
+Do you have the corresponding patches to LILO?  Have you ever tried
+submitting them to the LILO maintainers?
 
-> Franken Klaus, you write:
-> > > Any plans for a lvm-patch for kernel 2.2.17 ??
-> > > 
-> > > My lvm patch for 2.2.16 works at 2.2.17 too but it's version 0.8i.
-> > >  
-> > > Should we use a newer version ? For example 0.8 final ?
-> > > Should i do that ?
-> > 
-> > Yes, you should.  Thanks!!
-> 
-> I have already made a version of LVM 0.8final available for Linux 2.2.16 +
-> 2.2.17-pre patches, which _should_ work for 2.2.17 as well, although the
-> snapshot feature depends on some 2.4 code which is only available for 2.2
-> as a patch.
-> 
-> It is available online at ftp://ftp.stelias.com/pub/adilger/
+> It works ok. The only problem is that a standard PV cannot be used for
+> booting, because it does leave any space for a MBR (it probably needs 
+> a PV format revision that simply leaves 4K free) 
 
-Andreas, 
+I think if you make a partition on your boot disk (even if it is the
+full size of the disk), then you will have enough space for a MBR.  No
+need to change LVM formats.  You can use full-disk PVs if you want for
+your other disks, but it quiets the boot process down a bit if you have
+a partition on the disk (or at least it complained the last time I tried
+a full-disk PV).
 
-Dont forget to fix the return typo in lvm_snapshot_COW in your backport. 
- 
+> I'm just calling lvm_bmap from my ioctl. It is easy enough (patch against
+> 2.2 appended) 
+
+Ah, you mean lvm_map.  Very clever.  I had thought to take out the mapping
+code into another function, but yours is much easier, because you don't
+even need to know the LV or do any other complex work.
+
+> +	case LV_BMAP:
+> +		/* turn logical block into (dev_t, block). non privileged. */ 
+                                                           ^^^^^^^^^^^^^^
+This is one area that LVM needs to work on.  Doing the SUSER checks in
+liblvm is not really helpful, because you might have disk admin people,
+and people can always compile their code without the checks.  Being able
+to at least do "pvscan" or "lvdisplay" as an unprivileged user is useful,
+and other tasks should be possible if you have write access to /dev/vg/lv
+and/or /dev/hdaX.
+
+Cheers, Andreas
