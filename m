@@ -1,10 +1,11 @@
-Message-ID: <3E40245C.8030808@ednet.ns.ca>
-From: Patrick Boutilier <boutilpj@ednet.ns.ca>
+From: Stefan Nilsen <stefan.nilsen@wale.dyndns.dk>
+References: <200302041927.44619.stefan.nilsen@wale.dyndns.dk> <200302041953.23662.stefan.nilsen@wale.dyndns.dk> <3E40245C.8030808@ednet.ns.ca>
+In-Reply-To: <3E40245C.8030808@ednet.ns.ca>
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] New lv cannot span pv's
-References: <200302041927.44619.stefan.nilsen@wale.dyndns.dk> <3E4006F9.9080100@ednet.ns.ca> <200302041953.23662.stefan.nilsen@wale.dyndns.dk>
-In-Reply-To: <200302041953.23662.stefan.nilsen@wale.dyndns.dk>
 Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+Message-Id: <200302042246.39398.stefan.nilsen@wale.dyndns.dk>
+Subject: [linux-lvm] Re: [SOLVED] New lv cannot span pv's
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,49 +16,48 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Tue Feb  4 14:39:02 2003
+Date: Tue Feb  4 16:14:01 2003
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
+Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
 
-Does
+On Tuesday 04 February 2003 21.36, Patrick Boutilier wrote:
+> Does
+>
+> lvcreate -ntest -l1383 vgdata
+>
+>
+> work ?
+>
 
-lvcreate -ntest -l1383 vgdata
+It did not.
 
+wale:~ # lvcreate -ntest -l1383 vgdata
+lvcreate -- not enough allocatable/free physical volume space in 
+"vgdata"
+lvcreate -- please check, if physical volumes are allocatable
 
-work ?
+I looked around little more and found this:
 
+wale:~ # pvdisplay /dev/hda5
+--- Physical volume ---
+PV Name               /dev/hda5
+VG Name               vgdata
+PV Size               11.61 GB [24338412 secs] / NOT usable 3.99 MB 
+[LVM: 134 KB]
+PV#                   1
+PV Status             available
+Allocatable           NO
+Cur LV                5
+PE Size (KByte)       4096
+Total PE              2970
+Free PE               553
+Allocated PE          2417
+PV UUID               eQxblH-x1uS-bb9G-reYu-ocZo-QSOW-5j6QB0
 
+I seem to have managed to turn off the allocatable status of one of the 
+pv's. :-)
 
-Stefan Nilsen wrote:
-> On Tuesday 04 February 2003 19.31, Patrick Boutilier wrote:
-> 
->>What does vgdisplay show?
-> 
-> 
-> wale:~ # vgdisplay
-> --- Volume group ---
-> VG Name               vgdata
-> VG Access             read/write
-> VG Status             available/resizable
-> VG #                  0
-> MAX LV                256
-> Cur LV                7
-> Open LV               7
-> MAX LV Size           255.99 GB
-> Max PV                256
-> Cur PV                2
-> Act PV                2
-> VG Size               33.31 GB
-> PE Size               4 MB
-> Total PE              8527
-> Alloc PE / Size       7144 / 27.91 GB
-> Free  PE / Size       1383 / 5.40 GB
-> VG UUID               hTrW0U-F9mz-tjQN-re4H-G5df-rjP0-9HucNn
-> 
-> 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+I changed it with "pvchange -xy /dev/hda5" and now it works.
+
+Thanks for help.
