@@ -1,9 +1,9 @@
-From: "MRS. MARIAM ABACHA" <mariamahabacha@zwallet.com>
+Message-ID: <006001c32661$b055c4c0$e0bba5cc@patni.com>
+From: "Sameer Halgatti" <sameer.halgatti@patni.com>
+References: <23233866A70C32479532C8D0B8AE7B96032AAC5E@i2km07-ukbr.domain1.systemhost.net>
+Subject: Re: [linux-lvm] help needed
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <E19LXFq-0006Kh-00@hermes.sistina.com>
-Subject: [linux-lvm] BUSINESS RELATIONSHIP
+Content-Transfer-Encoding: 7bit
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,33 +14,77 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Thu May 29 18:57:03 2003
+Date: Thu May 29 23:15:02 2003
 List-Id: <linux-lvm.redhat.com>
+Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
+Cc: narsimha.kulkarni@bt.com
 
-DEAR SIR=2C
-IT IS WITH HEART FULL OF HOPE THAT I WRITE TO SEEK YOUR HELP IN THE CONTEXT BELOW=2E
-I AM MRS=2C MARIAM ABACHA =28WIDOW=29 THE WIFE OF FORMER HEAD OF STATE OF NIGERIA=2C GENERAL SANI ABACHA WHO'S SUDDEN DEATH OCCURRED ON THE 8TH OF JUNE=2C 1998=2E AS A RESULT OF CARDIAC ARREST WHILE STILL IN GOVERNMENT=2E
-I GOT YOUR EMAIL CONTACT FROM ONE OF THE MY FAMILY FRIEND A DIRECTOR=2C WITH THE NIGERIA CHEMBERS OF COMMERCE AND INDUSTRY=2E
-I HAVE NO DOUBT ABOUT YOUR CAPACITY AND GOODWILL TO ASSIST ME IN RECEIVING INTO YOUR PERSONAL BANK ACCOUNT =28FOR SAFETY=29 THE SUM OF US$ 32=2C800=2C000=2E00 =28THIRTY TWO MILLION=2C EIGTH HUNDRED THOUSAND US DOLLAS=29 =22WILLED=22 AND DEPOSITED IN MY LATE HUSBAND'S FAVOUR
-=2E
-THIS MONEY IS CURRENTLY DEPOSITED WITH A SECURITY COMPANY IN TWO TRUNK BOXES AS BELONGINGS AWAITING COLLECTION=2E AS IT IS LEGALLY REQUIRED=2C THE ADMINISTRATION OF MY LATE HUSBAND'S PROPERTIES IS UNDER THE AUTHORITY OF THE FAMILY'S LAWYER NAMED =28BARRISTER H
-OSSANA LUYA & ASSOCIATES=29=2E
-SINCE THE DEMISE OF MY HUSBAND=2C THE PRESENT REGIME =28GOVERNMENT=29 HAS BEEN PROBING MY LATE HUSBAND'S WEALTH=2E PRESENTLY=2C SOME CASH ASSETS WITHIN AND OUTSIDE NIGERIA HAVE BEEN FROZEN AND SEIZED=2E FORTUNATELY=2C OUR FAMILY LAWYER HAD SECRETLY PROTECTED THE PERSO
-NAL =22 WILL=22 OF MY LATE HUSBAND FROM THE NOTICE OF THE GOVERNMENT MEANWHILE=2C I AND EVERY MEMBER OF MY FAMILY ARE BEING MONITORED AND ALSO DENIAD ACCESS TO FINANCIAL DEALING WITHIN AND OUTSIDE NIGERIA=2E HENCE=2C I WAS ADVICE BY MY PERSONAL ASSISTANCE TO EMPL
-OYE THE ASSISTANCE OF A NEUTRAL INDIVIDUAL OUTSIDE NIGERIA AND WITH THE LEGAL BACKING OF MY FAMILY LAWYER TO POSE AS THE BENEFICIARY OF THE WILLED MONEY AND THEREFORE CLAIM THE CONSIGNMENT FROM THE SECURITY COMPANY FOR BENEFIT OF US ALL=2E
-THE GOVERNMENT HAD EARLIER PLACED FOREIGN EMBARGO ON ALL OUR FAMILY MEMBERS=2C SEIZED ALL KNOWN LOCAL AND INTERNATIONALOUTFITS OF OUR BUSINESS EMPIRE=2E THE SITUATION HAS BEEN SO TERRIBLE THAT WE ARE VIRTUALLY LIVING ON THE ASSISTANCE OF OUR WELL WISHERS=2E
-IN VIEW OF THIS PLIGHT THEREFORE=2C I EXPECT YOU TO BE TRUST WORTHY AND KIND ENOUGH TO RESPOND TO MAIL TO SAVE MY FAMILY AND I FROM A HOPELESS FUTURE=2E
-I HEREBY AGREE TO CONPENSATE YOUR SINCERE AND CANDID EFFORT IN THIS REGARD WITH 20% OF THE FUND WHEN FINALLY RECEIVED IN YOUR PERSONAL BANK ACCOUNT=2E 
-MY LAWYER WILL MAKE EVERY ARRENGMENTS TO EFFECT COMPLETE DISLODGMENT OF THIS MONEY WITHIN A WEEK OF THE RECEIPT OF YOUR RESPONSE THROUGH E-MAIL=2E 
-PLEASE=2C ALL CONTACT ON PHONE MUST BE THROUGH OUR FAMILY LAWYER- HOSSANA LUYA & ASSOCIATES OR MY PERSONAL ASSISTANCE WHILE YOU COMMUNICATE WITH ME ON EMAIL AS I AND MY FAMILY MEMBER IS BEEN HEAVELY MONITORED BY THE GOVERNMENT=2E
-I WILL ALSO FORWARD THE EMAIL AND PHONE NUMBER OF BARRISTER
-HOSSANA LUYA & ASSOCIATES OR THAT OF MY ASSISTANCE TO YOU AS SOON AS I RECIEVE YOUR RESPONSE=2E
-I LOOK FORWARD TO YOUR QUICK RESPONSE=2E MAY ALLAH BLESS YOU=2E 
-BEST WISHES=2C
-MRS=2E MARIAM ABACHA =28WIDOW=29=2E
+hi narsimha,
+If u want to completely remove ur PV (i.e. if u want to lose ur data) then
+there is a very simple way to get rid of this problem. Just do following....
+dd of=/dev/hda3                  ......hda3 becuse ur PV resides on that
+<enter approx 50 chars>
+<press cntrl+d>
 
-NB=3A PLEASE I WILL WANT YOU TO GO THROUGH THE FOLLOWING WEBSITE IN OTHER TO CONFIRM MORE ON THE ISSUES OF THE ABACHA AND THEFEDERAL GOVERNMENT SEIZURE AND FROZON ON THE ABACHA'S WEALTH=2E
-http=3A=2F=2Fnews=2Ebbc=2Eco=2Euk=2F1=2Fhi=2Fworld=2Fafrica=2F877113=2Estm
-http=3A=2F=2Fnews=2Ebbc=2Eco=2Euk=2F1=2Fhi=2Fworld=2Fafrica=2F909972=2Estm
-http=3A=2F=2Fwww=2Emarcosbillions=2Ecom=2Fmarcos=2FDictators%20Abacha=2Ehtm
+Of course it not the recommend solution, but it will solve ur problem :-)
+Actually ur VGDA data on the disk may be corrupted, that's why u r getting
+this error message.
+When u create a PV/VG, some data is written on the disk (on some initial
+disk blocks). So if u erase that by doing 'dd', then u can create fresh
+PV/VG using that disk.
+
+
+----- Original Message -----
+From: <narsimha.kulkarni@bt.com>
+To: <linux-lvm@sistina.com>
+Sent: Thursday, May 29, 2003 8:03 PM
+Subject: [linux-lvm] help needed
+
+
+> hi following is the log of the commands....
+> i want to remove the volume group completely....
+> or i want to restore it....
+>
+> how do i do it
+>
+> vgscan -- reading all physical volumes (this may take a while...)
+> vgscan -- found active volume group "helena_vg"
+> vgscan -- ERROR "lv_read_all_lv(): number of LV" can't get data of volume
+> group)
+> vgscan -- found active volume group "volg"
+> vgscan -- "/etc/lvmtab" and "/etc/lvmtab.d" successfully created
+> vgscan -- WARNING: This program does not do a VGDA backup of your volume
+> groups
+>
+> vgremove -- ERROR: can't remove active volume group "helena_vg"
+>
+>
+> vgcfgrestore -- locking logical volume manager
+> vgcfgrestore -- restoring volume group "helena_vg" from
+> "/etc/lvmconf/helena_vg.conf"
+> vgcfgrestore -- checking existence of "/etc/lvmconf/helena_vg.conf"
+> vgcfgrestore -- "/etc/lvmconf/helena_vg.conf" doesn't exist
+> vgcfgrestore -- a backup for volume group helena_vg is not available
+>
+>
+> pvscan -- reading all physical volumes (this may take a while...)
+> pvscan -- inactive PV "/dev/hda3"  is associated to an unknown VG (run
+> vgscan)
+> pvscan -- ACTIVE   PV "/dev/hdb1" of VG "volg"      [31.48 GB / 31.48 GB
+> free]
+> pvscan -- total: 2 [39.08 GB] / in use: 2 [39.08 GB] / in no VG: 0 [0]
+>
+> pvchange -- locking logical volume manager
+> pvchange -- reading physical volume data /dev/hda3 from disk
+> pvchange -- checking physical volume "/dev/hda3" consistency
+> pvchange -- finding volume group of physical volume "/dev/hda3"
+> pvchange -- unable to find volume group of "/dev/hda3" (VG not active?)
+> pvchange -- unlocking logical volume manager
+> pvchange -- 0 physical volumes changed / 0 physical volumes already o.k.
+>
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@sistina.com
+> http://lists.sistina.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
