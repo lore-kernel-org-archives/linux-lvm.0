@@ -1,37 +1,47 @@
-Message-Id: <m11cXuW-0000YHC@duffy1.franken.de>
-From: Rolf Jakob <rjakob@duffy1.franken.de>
-Subject: Re: [linux-lvm] which kernel for lvm + devfs
-In-Reply-To: <19991014142018.A2878@redneck.sk.oracle.com> from Adrien Farkas at "Oct 14, 1999  2:20:18 pm"
-Date: Sat, 16 Oct 1999 19:46:27 +0200 (MEST)
+From: Andreas Dilger <adilger@enel.ucalgary.ca>
+Message-Id: <199910170419.WAA26043@webber.adilger.net>
+Subject: [linux-lvm] ext2 online resizer available
+Date: Sat, 16 Oct 1999 22:19:23 -0600 (MDT)
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@msede.com
+To: Linux FS development list <linux-fsdevel@vger.rutgers.edu>, Linux LVM mailing list <linux-lvm@msede.com>, Linux kernel development list <linux-kernel@vger.rutgers.edu>
 
-> I'm using adaptec 2940uw and aha152x with LVM and devfs, with no problems. kernel version 2.2.12, devfs 0.99.5 and LVM 0.7. you have to apply LVM at first, then devfs patch, the problems are lessened. there is only one rejected file, which is quite okay I assume (when you patch it by hand)
+Hello all,
+my online ext2 resizer is now available in a fully functional state.  If
+the underlying partition supports it, it is possible to resize an ext2
+filesystem while it is mounted and in use by applications.
 
-You're right, it was very easy then, thanks.
+This capability is provided by a kernel patch (2.2/2.3 and 2.0 versions
+available - should apply cleanly to most versions as that part of the
+kernel code hasn't changed much in a long time) and some user-space tools.
+The amount that you can resize a filesystem depends on the block size and
+whether or not you have "prepared" the filesystem for large resizes.  The
+ext2 filesystem is maintained as a normal filesystem at all times, and it
+can be used by a non-patched kernel at any time, and with one exception
+(if you have an old e2fsck) will fsck clean after a resize.
 
-Now there is only one problem remaining :
-After executing linuxrc the kernel cannot find my root lv.
-The activation worked, but it says it cannot mount /dev/rootvg/rootlv
-or 0:0.
-My lilo.conf reads:
-image=/boot/zImage.2212
-append="root=/dev/rootvg/rootlv"
-root=/dev/rootvg/rootlv
-initrd=/boot/lvmboot.gz
-label=2212
+Note that you need some way to resize the underlying partition (via LVM
+probably) in order to resize the filesystem.  For testing purposes you
+can also create a small filesystem on a large partition, and then resize
+to fill the partition.
 
-/boot is a partition based file system on its own, rootlv is accessible
-while booting with my old root partition.
+Patches are available at my web site:
+http://www-mddsp.enel.ucalgary.ca/People/adilger/online-ext2/
 
-What am I missing ?
+The user-space tools are now part of Lennert Buytenhek's ext2resize suite:
+http://www.dsv.nl/~buytenh/ext2resize/
+for which a patch is required from my site.
 
-Rolf
+Please give it a good testing, as I haven't been able to find any problems
+while putting a hundred copies of an 11MB filesystem tree into a filesystem
+while doing thousands of resizes to the same mounted filesystem.
+
+Cheers, Andreas
 -- 
-Rolf Jakob at home (rjakob@duffy1.franken.de)
-WWW : http://www.franken.de/users/duffy1/rjakob (KDE-Utils and CCS)
+Andreas Dilger  \ "If a man ate a pound of pasta and a pound of antipasto,
+                 \  would they cancel out, leaving him still hungry?"
+http://www-mddsp.enel.ucalgary.ca/People/adilger/               -- Dogbert
