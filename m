@@ -1,9 +1,8 @@
-From: =?iso-8859-1?q?M=E5ns_Rullg=E5rd?= <mru@kth.se>
-Message-ID: <yw1xwu7w4v1y.fsf@kth.se>
-References: <20040112153912.1530c7d3.luca.ferroni@studio.unibo.it>
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: [linux-lvm] Re: df and lvs incompatible output
+From: Spam <spam@tnonline.net>
+Message-ID: <1424171942.20040113154554@tnonline.net>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] Moving a PV to a new, larger, disk.
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,22 +13,20 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Jan 12 18:17:02 2004
+Date: Tue Jan 13 09:47:02 2004
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
 
-Luca Ferroni <luca.ferroni@studio.unibo.it> writes:
+  Hello,
 
-> Hi all,
-> I use LVM2 on my laptop, and I have one volume group called "mio_vg"
->
-> I extended my Logical Volume lv_usr and I experienced some problems:
-> according to LVM2 (lvs output) my lv_usr is 7,5G, whereas with df
-> its size seems to be 4,0G.
+  Is it possible to use dd/dd_rescue to simply copy a PV to a new disk
+  that is slightly (16MiB)larger?
 
-Most likely, you didn't also extend the filesystem inside the LV.
+  The old pv is on /dev/hdb1 and the new disk is /dev/hdc and is
+  unpartitioned so far. How would I proceed to make this work?
+  
+  This might seem odd to do as I could perhaps use pvmove, but pvmove
+  requires the whole vg to be present in the system, right?
 
--- 
-M�ns Rullg�rd
-mru@kth.se
+  //Anders
