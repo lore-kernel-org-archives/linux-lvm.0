@@ -1,17 +1,18 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id i57FcK009508
-	for <linux-lvm@redhat.com>; Mon, 7 Jun 2004 11:38:20 -0400
-Received: from eclectic.kluge.net (eclectic.kluge.net [66.92.69.221])
-	by mx3.redhat.com (8.12.10/8.12.10) with ESMTP id i57FcEXn006985
-	for <linux-lvm@redhat.com>; Mon, 7 Jun 2004 11:38:14 -0400
-Date: Mon, 7 Jun 2004 11:38:09 -0400
-From: Theo Van Dinter <felicity@kluge.net>
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id i57GWZ030251
+	for <linux-lvm@redhat.com>; Mon, 7 Jun 2004 12:32:35 -0400
+Received: from neuralscape.com (synapse.neuralscape.com [198.144.200.82])
+	by mx3.redhat.com (8.12.10/8.12.10) with ESMTP id i57GWSXn017512
+	for <linux-lvm@redhat.com>; Mon, 7 Jun 2004 12:32:29 -0400
+Received: from shaeffer by neuralscape.com with local (Exim 4.12)
+	id 1BXMza-0001MP-00
+	for linux-lvm@redhat.com; Mon, 07 Jun 2004 09:28:58 -0700
+Date: Mon, 7 Jun 2004 09:28:58 -0700
+From: Karen Shaeffer <shaeffer@neuralscape.com>
 Subject: Re: [linux-lvm] software raid or lvm?
-Message-ID: <20040607153809.GM31405@kluge.net>
+Message-ID: <20040607162858.GA5220@synapse.neuralscape.com>
 References: <40C48905.80608@blocked.name>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="RLVVO53zhS75EYih"
 Content-Disposition: inline
 In-Reply-To: <40C48905.80608@blocked.name>
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
@@ -24,39 +25,20 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-
---RLVVO53zhS75EYih
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
 On Mon, Jun 07, 2004 at 05:25:57PM +0200, philip wrote:
-> like to install suse91, which doesn't support siimage chipset, so i've to=
-=20
-> use software raid or lvm.
-> what would be better/faster?
+> hello all,
+> 
+> i've got mobo with nforce2 and siimage3112 chipset and two sata hd. i'd 
 
-Well, what are you trying to do?  If you want redundancy, go with RAID.
-If you want volume management, go with LVM.  I'd say you should do both
-(RAID the disks then use LVM on top), but without more data there is no
-answer for "better/faster".
+You can find Sil311x support in the 2.6.6 kernel. I've run it with the
+Sil3114 controller.
 
---=20
-Randomly Generated Tagline:
-Why is there a file in the /usr/include/unused directory?
-
---RLVVO53zhS75EYih
-Content-Type: application/pgp-signature
-Content-Disposition: inline
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.2.1 (GNU/Linux)
-
-iD8DBQFAxIvh7tgKAJaXVyoRAp2UAKC07r9l7y6LZWQgwLdDH3vLI9wceQCaAwW3
-TSX0UnbFJvqkXmHwYstKCLc=
-=wvKV
------END PGP SIGNATURE-----
-
---RLVVO53zhS75EYih--
+Karen
+-- 
+ Karen Shaeffer
+ Neuralscape, Palo Alto, Ca. 94306
+ shaeffer@neuralscape.com  http://www.neuralscape.com
