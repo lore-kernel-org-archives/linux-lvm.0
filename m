@@ -1,12 +1,12 @@
 From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] Could vgscan read a file of "preferred" LV name
-    -> minor device id ?
-Message-Id: <20020115150022.C11005@sistina.com>
-References: <E16Ovq8-0007VV-00@whittlesey.cl.cam.ac.uk>
-    <20020111104116.GB1274@tykepenguin.com>
+Subject: Re: [linux-lvm] ERROR "pv_read(): PV identifier invalid" reading
+    physical volumes
+Message-Id: <20020115151222.D11005@sistina.com>
+References: <1010527606.19493.46.camel@localhost.localdomain>
+    <1010529428.19493.48.camel@localhost.localdomain>
 MIME-Version: 1.0
-In-Reply-To: <20020111104116.GB1274@tykepenguin.com>; from
-    caulfield@sistina.com on Fri, Jan 11, 2002 at 10:41:16AM +0000
+In-Reply-To: <1010529428.19493.48.camel@localhost.localdomain>;
+    from mkennedy@opushealthcare.com on Tue, Jan 08, 2002 at 04:37:08PM -0600
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,43 +17,45 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Tue Jan 15 08:03:02 2002
+Date: Tue Jan 15 08:15:02 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Fri, Jan 11, 2002 at 10:41:16AM +0000, Patrick Caulfield wrote:
-> On Fri, Jan 11, 2002 at 07:11:00AM +0000, Piete Brooks wrote:
-> > I'm getting complaints from NFS users that when servers reboot, they often 
-> > find that their mounts have the wrong data.  I've never really worked out 
-> > which end hold what in NFS FHs, but the basic idea is that a client identifies 
-> > a FH which encodes (major dev id,minor dev id,inode number,version).
-> > This appears to break down when a new LV is created ane the server rebooted.
-> > As the /dev/<vg>/<lv> nodes are numbered strictly in the order that they are 
-> > discovered, all LV minor device IDs on subsequent VGs are renumbered, so any 
-> > remote caching of FHs breaks (( as with SCSI )).
-> > 
-> > Is that about right ?
-> > 
-> > Would it be possible for vgscan to read a "hints" file consisting of <vg>/<lv> 
-> > and minor device number pairs ?
-> > 
-> > As each <vg>/<lv> is found, if it's in the file, the nominated minor device id 
-> > is used; if it's not found, then the next minor device id which is not listed 
-> > in the file is used.
-> > 
-> > [[ I use devfs, so using existing data in /dev/ would not help -- but I think 
-> > it would do no harm to use that data by default ]]
-> > 
+On Tue, Jan 08, 2002 at 04:37:08PM -0600, Matthew Kennedy wrote:
 > 
-> I thought Heinz had fixed this in 1.0.1, what version are you using (tools &
-> kernel)?
+> Never mind. A little more perseverance and I learned that it was my IDE
+> cdrw drive. I needed to add "append="ide-scsi"" to the relevant
+> /etc/lilo.conf stanza and then add ide-scsi to /etc/modules so that it
+> loads at boot.
+> 
+> Shouldn't LVM check against such devices being present and then skip
+> over them though?
 
-That's right. It is in since 1.0.1.
+We are adding config file support for inclusion and exclusion of arbitrary
+devices to LVM2 which will give the user much more control as any hard coded
+logic.
 
 > 
-> patrick
+> Matt
+> 
+> On Tue, 2002-01-08 at 16:06, Matthew Kennedy wrote:
+> > Hello,
+> > 
+> > I'm having some trouble getting LVM to work on a Debian system. The
+> > actions I performed are bellow (--verbose --debug versions are
+> > attached). Bascically, I get "ERROR "pv_read(): PV identifier invalid"
+> > reading physical volumes" when I run vgcreate even though the PV I
+> > initialized succeeded.
+> > 
+> > My user tools are IOP10. Kernel is 2.4.17.
+> > 
+> > Thanks
+> > 
+> > Matt
+> > 
+> 
 > 
 > 
 > _______________________________________________
