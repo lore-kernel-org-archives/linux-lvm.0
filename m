@@ -1,12 +1,10 @@
-Return-Path: <mason@suse.com>
-Date: Wed, 21 Feb 2001 12:07:31 -0500
-From: Chris Mason <mason@suse.com>
-Subject: Re: [linux-lvm] snapshot of Reiserfs
-Message-ID: <2169260000.982775251@tiny>
-In-Reply-To: <200102211644.f1LGiee31545@webber.adilger.net>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
+Return-Path: <adilger@turbolinux.com>
+From: Andreas Dilger <adilger@turbolinux.com>
+Message-Id: <200102211725.f1LHPPv31859@webber.adilger.net>
+Subject: Re: [linux-lvm] online resize of ext2
+In-Reply-To: <B45465FD9C23D21193E90000F8D0F3DF68399D@mailsrv.linkvest.com> from
+ Jean-Eric Cuendet at "Feb 21, 2001 06:04:53 pm"
+Date: Wed, 21 Feb 2001 10:25:24 -0700 (MST)
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -18,33 +16,33 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
+Jean-Eric Cuendet writes:
+> What's the status of that thing? Is it stable for production use? 
 
-On Wednesday, February 21, 2001 09:44:39 AM -0700 Andreas Dilger
-<adilger@turbolinux.com> wrote:
+I have been using it for quite some time without any problems, and there
+have been no bug reports for a long time either.  The only recent change
+was to update the kernel patch for 2.4.0, because some changes in the
+quota code were causing it to oops.
 
-> Given that the VFS support for the *unlockfs methods is included in 2.4.1,
-> this should probably become something like:
-> 
-> /* lvm_do_lv_create calls fsync_dev_lockfs()/unlockfs() */
-> #if LINUX_KERNEL_VERSION >= KERNEL_VERSION(2,4,1)
-> #define	LVM_VFS_ENHANCEMENT
-> #else
-> /* Need to apply a kernel patch to add lockfs/unlockfs VFS methods */
-> /* #define	LVM_VFS_ENHANCEMENT */
-> #endif
-> 
+Because the code is only used at resize time it does not affect normal
+operations, so it is OK to put into a production kernel, IMHO (although
+being the author makes me a bit biased ;-).  Any other ext2online users
+out there?
 
-I like this idea.
+> Will it go into the mainstream kernel anytime soon?
 
-> Also, if the sync_supers_lockfs() method is changed to call write_super()
-> if write_super_lockfs() doesn't exist, like:
-> 
+I haven't tried submitting it for 2.4.0 yet.  1.5 years ago when "the 2.4
+kernel is going to be released very soon now", Linus, Alan, et. al. said
+it would be added in 2.4 or 2.5.  Maybe it is time for me to try adding
+the code to the 2.4 kernel again.
 
-The fsync_dev_lockfs call does this for us, if there is no
-write_super_lockfs provided, fsync_dev_lockfs is effectively the same as
-calling fsync_dev.
-
--chris
+Cheers, Andreas
+-- 
+Andreas Dilger  \ "If a man ate a pound of pasta and a pound of antipasto,
+                 \  would they cancel out, leaving him still hungry?"
+http://www-mddsp.enel.ucalgary.ca/People/adilger/               -- Dogbert
