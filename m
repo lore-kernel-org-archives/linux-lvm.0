@@ -1,10 +1,11 @@
-From: Luca Berra <bluca@comedia.it>
+Message-ID: <1045557392.f27fd349bc9f7@herzo.net>
+From: Sebastian Wormser <sibbi@sibbi.com>
 Subject: Re: [linux-lvm] Sharing Logical Volumes via NFS on Redhat 8.0
-Message-ID: <20030218082739.GE26590@percy.comedia.it>
 References: <F42fiyTqv4jvQUMRlap0003beef@hotmail.com>
-Mime-Version: 1.0
-Content-Disposition: inline
 In-Reply-To: <F42fiyTqv4jvQUMRlap0003beef@hotmail.com>
+MIME-Version: 1.0
+Content-Disposition: inline
+Content-Transfer-Encoding: 7bit
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,43 +16,53 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Tue Feb 18 02:28:01 2003
+Date: Tue Feb 18 02:37:01 2003
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
 
-On Tue, Feb 18, 2003 at 03:04:48AM +0000, DJ TweeQ wrote:
->(repost):
->
->Regarding Sharing LVM LV's via NFS on Redhat 8.0...ie. mounting an LV from 
->another machine while already having a LV on the same machine. Is it ok or 
->not ok? I was talking to a buddy and he doesn't think it's a problem or an 
->issue but...
+Hi,
 
-you are making a lot of confusion.
-with nfs/samba you share a filesystem regardless of where it is located.
-(i consider 'share' to be a horrible term for exporting/mounting a
-remote filesystem)
+Quoting DJ TweeQ <djtweeq@hotmail.com>:
 
-yes you can do that.
+> Regarding Sharing LVM LV's via NFS on Redhat 8.0...ie. mounting an LV from
+> another machine while already having a LV on the same machine. Is it ok or
+> not ok? I was talking to a buddy and he doesn't think it's a problem or an
+> issue but...
 
->the current documentation on Sistina's site states that sharing LV's is 
->dangerous unless it's a SCSI or Fibre Storage Device?...and not only that 
->...adminisitration can only be done on one node? (is it really possible to 
->create/resize lv's from one node/machine to another (that has an LV or was 
->it meant to mean that it's only possible on cluster aware network storage 
->devices)??? ....
+Since there is no difference to the Samba server or the NFS server
+whether the underlying file system is managed via LVM or not, there
+should not be any problems regarding LVM.
 
-that part does not refer to nfs/samba it says that if you want to
-connect two different computers to the same hard disk .....
+> the current documentation on Sistina's site states that sharing LV's is
+> dangerous unless it's a SCSI or Fibre Storage Device?...and not only that
 
-L.
+This advice is only valid if you use the same LV on two different
+nodes(=computers). If you use the LVM managed logival volumes on just
+one node at a time, you should not run into any problems.
 
+> I'm thinking that it might not be a good idea to try to do maintenance on a
+> LV that is mounted on another system...but i think it makes a whole heck of
+> alot of sense to create/resize/mount an LV on a system before trying to
+> mount it via an NFS share. :)
+
+It does make sense to not change the layout of the file system while the
+nfs server is running, but otherwise there is no problem between any user
+land application and LVM, since those applications are not aware that LVM
+is managing the logical volumes they are accessing.
+
+> Oh one other thing...if it has been proven that a Redhat 8.0 2.4-24?.x
+> kernel can be patched to LVM 1.0.6+ ....will the data on those LV's be
+> affected in any way or will it all be ok? :)
+
+I'd go and see whether Redhat is providing Kernel packages containing
+LVM 1.0.6.
+
+cu,
+
+  Sibbi
 -- 
-Luca Berra -- bluca@comedia.it
-        Communication Media & Services S.r.l.
- /"\
- \ /     ASCII RIBBON CAMPAIGN
-  X        AGAINST HTML MAIL
- / \
+You can observe a lot by just watching.
+
+-------------------------------------------------
+This mail sent through IMP: http://horde.org/imp/
