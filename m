@@ -1,10 +1,10 @@
-From: Alasdair G Kergon <agk@uk.sistina.com>
-Subject: Re: [linux-lvm] Instability with 2.6, recovering (meta)data?
-Message-ID: <20031110190730.J16901@uk.sistina.com>
-References: <20031109213821.GA4425@amphibian.dyndns.org> <20031110174615.GE20777@amphibian.dyndns.org>
+Subject: Re: [linux-lvm] LVM and RAID
+Message-ID: <20031110204133.GB3352@planungsteam-eb.de>
+References: <21E8E34076807C41A646FDC666B15BDF0876A1@minna.combox.de> <1067952111.20554.26.camel@lupin> <20031109221838.GD4425@amphibian.dyndns.org>
 Mime-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20031110174615.GE20777@amphibian.dyndns.org>; from toad@amphibian.dyndns.org on Mon, Nov 10, 2003 at 05:46:15PM +0000
+In-Reply-To: <20031109221838.GD4425@amphibian.dyndns.org>
+From: Holger Parplies <wopp@planungsteam-eb.de>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,26 +15,39 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Nov 10 13:09:01 2003
+Date: Mon Nov 10 14:43:02 2003
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: Toad <toad@amphibian.dyndns.org>
-Cc: linux-lvm@sistina.com
+To: linux-lvm@sistina.com
 
-On Mon, Nov 10, 2003 at 05:46:15PM +0000, Toad wrote:
-> With agk's help, I eventually found that this worked:
-> vgcfgrestore vg-big -M1 -f /etc/lvm/archive/vg-big_00003.vg
+Toad wrote:
+> On Tue, Nov 04, 2003 at 01:21:51PM +0000, Geoff Dolman wrote:
+> > On Tue, 2003-11-04 at 13:09, Tobias Gablunsky wrote:
+> > > [...]
+> > > Well thats fine but if you want your kernel to boot use your RAID-Volumes
+> > > automatically you have to give it partition type 0xFD. And if you want
+> > > automatically mounted LVM you need to give it the partition type 0x8E 
+> > 
+> > But why? Your RAID set will be made on say /dev/hda1 and /dev/hdb1
+> > creating say /dev/md0, but your lvm partition will exist on /dev/md0.
+> 
+> Does the kernel autodetection work in this case?
 
-LVM2 tools default to using a new improved metadata format.
-To tell some tools to use the old LVM1 format of metadata, you need -M1.
-(Most tools work it out for themselves, but some, like vgcreate
-& vgcfgrestore still need to be told).
+Yes. Presuming your init scripts start RAID first before executing
+vgscan ...
 
-You can change the default choice for all tools back to the LVM1 format 
-in the config file with:
-  global { format = "lvm1" }
- 
-Alasdair
--- 
-agk@uk.sistina.com
+Why should it not work? vgscan doesn't care about partition types. It
+scans possible block devices for LVM metadata (in LVM1 it's a hardcoded
+list of devices, in LVM2 it's configurable, I believe). Among these are
+the raid devices, so if they're active, they'll be recognized as PVs.
+
+> Would you need to partition /dev/md0 into a boot partition and an LVM PV?
+
+No. You can't anyway, as far as I'm aware. Well, you can probably write
+a partition table to it, but you can do that with /dev/zero too (I just
+tried it out :-). Nobody will use it.
+
+Regards,
+
+Holger
