@@ -1,11 +1,10 @@
-Return-Path: <adilger@turbolinux.com>
-From: Andreas Dilger <adilger@turbolinux.com>
-Message-Id: <200012212206.eBLM6qi00832@webber.adilger.net>
+Return-Path: <claudio@conectiva.com>
+Date: Thu, 21 Dec 2000 21:06:33 -0200 (BRST)
+From: Claudio Matsuoka <claudio@conectiva.com>
 Subject: Re: [linux-lvm] IOP selection scripts (was: '/etc/init.d/lvm' script
  in debian package)
-In-Reply-To: <Pine.LNX.4.21.0012210820170.569-100000@scuzzlebutt.helllabs>
- "from Claudio Matsuoka at Dec 21, 2000 08:28:26 am"
-Date: Thu, 21 Dec 2000 15:06:52 -0700 (MST)
+In-Reply-To: <200012212206.eBLM6qi00832@webber.adilger.net>
+Message-ID: <Pine.LNX.4.21.0012212101510.15611-100000@scuzzlebutt.helllabs>
 MIME-Version: 1.0
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
@@ -18,36 +17,59 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: TEXT/PLAIN; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 Cc: Gergely Tamas <dice@mfa.kfki.hu>
 
-Claudio writes:
-> On Wed, 20 Dec 2000, Andreas Dilger wrote:
-> > Is there ever a reason why you would want to install this program as
-> > "lvm-wrapper" anywhere?
-> 
-> I'm installing it as /sbin/lvm-wrapper and symlinking all utilities to it
-> (seems better than using one wrapper per tool).
+On Thu, 21 Dec 2000, Andreas Dilger wrote:
 
-Why not simply install it as one of the commands (e.g. vgscan) and make
-hard links to it.  Hard links don't even take up inodes - only directory
-entries.
+> Why not simply install it as one of the commands (e.g. vgscan) and make
+> hard links to it.  Hard links don't even take up inodes - only directory
+> entries.
 
-> Regarding lvmiopversion, is it supposed to be statically linked? Otherwise,
-> it wouldn't know what liblvm link to, assuming that we have liblvm-iopX.so.
+Uhm.. yes, why not?
 
-Yes.  Basically, it is only a single ioctl call, so it is not dependent
-on the LVM version at all.  Compiled in tools as:
 
-gcc -I . -I lib -o lvmiopversion lvmiopversion.c lib/lvm_get_iop_version.c
-	lib/lvm_check_special.c
+> gcc -I . -I lib -o lvmiopversion lvmiopversion.c lib/lvm_get_iop_version.c
+> 	lib/lvm_check_special.c
+> and stripped it is only 4408 bytes on my system.
 
-and stripped it is only 4408 bytes on my system.
+Ok, lvm-base SRPM updated and uploaded to
+http://distro.conectiva.com.br/experimental/.
 
-Cheers, Andreas
--- 
-Andreas Dilger  \ "If a man ate a pound of pasta and a pound of antipasto,
-                 \  would they cancel out, leaving him still hungry?"
-http://www-mddsp.enel.ucalgary.ca/People/adilger/               -- Dogbert
+Using hardlinks and lvmiopversion the script becomes:
+
+#!/bin/sh
+#
+# This is a wrapper to call the appropriate LVM userspace tools based
+# on the IOP version in use.
+#
+# 20001221  Claudio Matsuoka <clausio@conectiva.com>
+# - using lvmiopversion to get the IOP version
+#
+# 20001220  Andreas Dilger <adilger@turbolinux.com>
+# - fixed return values
+# - better error messages
+#
+# 20001217  Claudio Matsuoka <claudio@conectiva.com>
+# - first version
+
+util=`basename $0`
+iopver=/sbin/lvmiopversion
+
+if [ ! -x $iopver ]; then
+    echo "$util: $iopver not found (can't determine IOP version)" 1>&2
+    exit 1
+fi
+
+IOP=`/sbin/lvmiopversion`
+liblvm=/lib/lvm-iop${IOP}
+lvmpkg=lvm-iop${IOP}
+
+if [ ! -d $liblvm ]; then
+    echo "$util: $liblvm not found.  Is $lvmpkg installed?" 1>&2
+    exit 3
+fi
+
+exec $liblvm/$util "$@" # this will print out a localized error message for us
