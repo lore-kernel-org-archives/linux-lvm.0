@@ -1,8 +1,8 @@
 Return-Path: <root@srv.sistina.com>
-Date: Mon, 30 Apr 2001 16:04:31 +0000
+Date: Mon, 30 Apr 2001 16:07:32 +0000
 From: "Heinz J. Mauelshagen" <Mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] vgcfgrestore fails.
-Message-ID: <20010430160431.H19810@sistina.com>
+Subject: Re: [linux-lvm] Removing a disk from the system
+Message-ID: <20010430160732.I19810@sistina.com>
 Mime-Version: 1.0
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
@@ -19,92 +19,63 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Sat, Apr 28, 2001 at 12:33:58PM -0500, root wrote:
-> I am running SuSe 7.1 
-> 2.4.0 kernel 
-> 512M Ram
-> AhA2940U2W
-> suse lvm
+On Sat, Apr 28, 2001 at 10:41:25PM +0200, Torsten Landschoff wrote:
+> Hi *,
 > 
-> I had three volume groups and a week ago the volume group that contained user 
-> had a drive crash.  I was unable to save usr but now I can not mount any of 
-> my other volume groups and vgcfgrestore fails.  Is their any thing I can do 
-> to get my data?  
-> thor:~ # pvdisplay /dev/sdd2
-> --- Physical volume ---
-> PV Name               /dev/sdd2
-> VG Name               export
-> PV Size               8.3 GB / NOT usable 3.31 MB [LVM: 238 KB]
-> PV#                   2
-> PV Status             available
-> Allocatable           yes (but full)
-> Cur LV                1
-> PE Size (KByte)       4096
-> Total PE              2123
-> Free PE               0
-> Allocated PE          2123
-> PV UUID               ruLId0-1JoY-34Ja-oLW0-FmzV-Q5ZN-NQaZw9
-> thor:~ # pvdisplay /dev/sdc2
-> --- Physical volume ---
-> PV Name               /dev/sdc2
-> VG Name               export
-> PV Size               8.3 GB / NOT usable 3.31 MB [LVM: 238 KB]
-> PV#                   1
-> PV Status             available
-> Allocatable           yes (but full)
-> Cur LV                1
-> PE Size (KByte)       4096
-> Total PE              2123
-> Free PE               0
-> Allocated PE          2123
-> PV UUID               ynnKCX-mjlT-jeNe-9MHY-tnP2-XCIC-nbKrmq
->  
-> thor:~ # vgcfgrestore -n export /dev/sdd2
-> vgcfgrestore -- ERROR: different structure size stored in "/etc/lvmconf/export.conf" than expected in file vg_cfgrestore.c [line 
-> 122]
-> vgcfgrestore -- ERROR "vg_cfgrestore(): read" restoring volume group "export"
->                                                                               
+> Today I learned something about LVM the hard way. We are still using
+> 0.8i with 2.2.19 over here since I had nothing but problems with 
+> 0.8 and 0.9beta2 (or which beta it was). (The problems were already
+> reported on this list so I chose to do nothing about it).
+> 
+> Now today I replaced a disk in the server being the only PV of the VG
+> data. Simple thing: Install the next disk, add it to the VG and pvmove 
+> the data over to it, then remove the old PV.
+> 
+> Then I took out the old disk and jumpered the new one as master. As
+> expected I got an error message from LVM on reboot - I should run
+> vgscan. 
+> 
+> I then ran vgscan to get the vg activated again but killed my other
+> volume group!? I spent hours to get it working again but finally
+> figured to jumper the new disk as slave again, vgexport the VG and
+> import it again after setting it to master.
+> 
+> Seems like I should have used vgexport/import in the first time.
 
-You are using a newer LVM versions which has different metadata definitions
-that the one which created those backups.
+Actually not.
+vgscan *should* have cut it.
 
-My guess is, that you are using LVM > 0.9.1 Beta 3 *now* but created the
-backups with a lower LVM 0.9 version and you suffer from a PV uuid related
-bug preventing vgscan to find your VG.
+It would be rather helpful, if you could provide the VGDA of the problematic
+configuration and the vgscan output with option "-d" in order to investigate
+searching for any bugs better.
 
+In case you are able to reproduce the situation, where vgscan just finds
+one but not both of the VGs, please send that data to me.
 
-One way to address the situation (pressuming no VGs are active) is:
+BTW: jou can provide the VGDA copy by:
 
-- create /etc/lvmtab.d/ in case it doesn't exist
+   dd if=/dev/hdWhatever bs=1k count=4000 | bzip2 > vgda
 
-- copy /etc/lvmconf/export.conf to /etc/lvmtab.d/export
+> Anyway, 
+> now I am wondering what will happen if we need to replace a disk
+> since it starts to die or something along that line? pvmoving the 
+> data is no problem, but what can I do if the disk fails before I can 
+> do anything? 
 
-- echo -ne 'export\0' > /etc/lvmtab
+The only way around such hardware flaws or failures is to set up
+disk redundancy.
+You can achive that using Linux MD, configure RAID1 or RAID5 sets
+and use those as LVM PVs *or* you could go for hardware raid subsystems.
 
-- vgchange -ay
+> 
+> IOW: Is the problem I ran into a problem by design or is it a bug in 
+> the 0.8i LVM?
 
-If the VG named "export" comes back to life this way (assuming that the user LV
-belongs to it) do:
+See my above request.
 
-- lvreduce -l1 /dev/export/user
-- lvrextend -l1 /dev/export/user
-
-replace "user" with a valid LV name in case I assumed wrong.
-
-The purpose of that NULL operation in the end is, that your PV uuid list
-gets recreated by LVM >= 0.9.1 Beta 4 which should make vgscan happy again ;-)
-
-The last 2 commands just shrink user by 1 LE and grow it again which
-is necessary, because your export VG is *full*. This will not harm the user
-LV in the end, because the allocator has the only option to use the very same
-PE for growing which was freed before by the shrinking of user.
-
-If your VG had at least 1 free PE a lvcreate/lvremove cycle for a dummy
-LV with just 1 LE had done it as well.
-
-Please tell us if this helps you or we need to go for another solution.
-
->           
+> 
+> cu
+> 	Torsten
 > _______________________________________________
 > linux-lvm mailing list
 > linux-lvm@sistina.com
