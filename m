@@ -1,12 +1,11 @@
-Return-Path: <wichert@cistron.nl>
-Date: Mon, 13 Aug 2001 13:27:36 +0200
-From: Wichert Akkerman <wichert@cistron.nl>
+Return-Path: <terjekv@ifi.uio.no>
 Subject: Re: [linux-lvm] Writing forward compatible applications using /proc
-Message-ID: <20010813132736.A28871@cistron.nl>
-References: <20010811235718.A20414@linux.com> <20010812200701.A657@btconnect.com> <20010812221650.A6589@vestdata.no> <20010813100858.C362@btconnect.com>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20010813100858.C362@btconnect.com>; from thornber@btconnect.com on Mon, Aug 13, 2001 at 10:08:58AM +0100
+References: <20010811235718.A20414@linux.com> <20010812200701.A657@btconnect.com> <20010812221650.A6589@vestdata.no> <20010813100858.C362@btconnect.com> <20010813132736.A28871@cistron.nl>
+From: Terje Kvernes <terjekv@math.uio.no>
+Date: 13 Aug 2001 14:48:17 +0200
+In-Reply-To: Wichert Akkerman's message of "Mon, 13 Aug 2001 13:27:36 +0200"
+Message-ID: <wxxhevcyvla.fsf@nommo.uio.no>
+MIME-Version: 1.0
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -22,16 +21,19 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Previously Joe Thornber wrote:
-> It may be a good idea for Sistina to produce a tiny 'wrap the tools'
-> library for use by gui implementors.
+Wichert Akkerman <wichert@cistron.nl> writes:
 
-With python and perl bindings preferably.
+> Previously Joe Thornber wrote:
+>
+> > It may be a good idea for Sistina to produce a tiny 'wrap the
+> > tools' library for use by gui implementors.
+> 
+> With python and perl bindings preferably.
 
-Wichert.
+  *raises a hand* 
+
+  I think I'll see about getting the perl-version into a releaseable
+  state. ie: add documentation. of sorts. :)
 
 -- 
-  _________________________________________________________________
- /       Nothing is fool-proof to a sufficiently talented fool     \
-| wichert@wiggy.net                   http://www.liacs.nl/~wichert/ |
-| 1024D/2FA3BC2D 576E 100B 518D 2F16 36B0  2805 3CB8 9250 2FA3 BC2D |
+Terje
