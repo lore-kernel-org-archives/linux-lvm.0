@@ -1,12 +1,10 @@
-From: Andreas Dilger <adilger@turbolabs.com>
-Subject: Re: [linux-lvm] Partition resizing and whatnot
-Message-Id: <20020220163107.H1506@lynx.adilger.int>
-References: <CBEHLLOPCKAOIAOINGKAMEHACAAA.jmoser@erc.wisc.edu>
-    <CBEHLLOPCKAOIAOINGKAMEHOCAAA.jmoser@erc.wisc.edu>
+From: "Steve Wray" <steve.wray@paradise.net.nz>
+Message-Id: <NBBBKLKHMJHIJLHOGAOJMEPJJEAA.steve.wray@paradise.net.nz>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <CBEHLLOPCKAOIAOINGKAMEHOCAAA.jmoser@erc.wisc.edu>;
-    from jmoser@erc.wisc.edu on Wed, Feb 20, 2002 at 03:40:35PM -0600
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+In-Reply-To: <NBBBKLKHMJHIJLHOGAOJEEPHJEAA.steve.wray@paradise.net.nz>
+Subject: [linux-lvm] striping volumes
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,30 +15,31 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Feb 20 17:31:02 2002
+Date: Wed Feb 20 18:18:02 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: John Moser <jmoser@erc.wisc.edu>
-Cc: linux-lvm@sistina.com
+To: linux-lvm@sistina.com
 
-On Feb 20, 2002  15:40 -0600, John Moser wrote:
-> So, after installation the ATA update patches that people recommended, I now
-> have a linux system that recognizes the full 160 gigabytes of disk space on
-> my disks.  However, I'm not entirely sure as to how I should go about
-> resizing my filesystem.  I'm already well aquanted with adding disks to
-> existing filesystems and growing them.  However, what are the recommended
-> steps for taking existing disk partitions, resizing them to fill the disks
-> they reside on, and then resizing the LVM/e2fs filesystems that use those
-> disks?
+Ok,
+after a bit more benchmarking, it seems clear
+that striping logical volumes across multiple
+heterogenous IDE drives (all masters)
+is only beneficial (WRT performance) on large
+file sizes. The file size at which the performance
+increase happens appears to depend on system memory.
+On my system at 128M RAM, the filesize is around 32M,
+with 64M RAM that drops to 8M files; but the point at
+which the step occurs is nothing to do with striping vs
+linear.
 
-With the current LVM setup, you are probably just as well off to create a
-new partition on the remaining space, make it a PV, and then use the PEs
-as you see fit.  Anything else means binary editing of PV and VG structs
-at this point, so you probably don't want to do it...
+Also, there seems to be very very little difference
+for *reads*; only writes (and the difference is definitely
+worth it. I get a 10Mps improvement over linear mapping
+starting at 64M files and that improvement is stable as filesize 
+increases; linear mapping performance seems to constantly drop off
+as file size increases).
+I guess that this makes sense all things considered.
 
-Cheers, Andreas
---
-Andreas Dilger
-http://sourceforge.net/projects/ext2resize/
-http://www-mddsp.enel.ucalgary.ca/People/adilger/
+What I'd like to know is;
+has anyone else done any similar benchmarking on LVM?
+If so, where can I get a peek at it please!
+:)
