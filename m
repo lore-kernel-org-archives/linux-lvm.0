@@ -1,11 +1,11 @@
 Return-Path: <root@srv.sistina.com>
-Date: Tue, 17 Jul 2001 13:28:59 +0200
+Date: Tue, 17 Jul 2001 13:29:32 +0200
 From: "Heinz J. Mauelshagen" <Mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] HUGE LVM log file...
-Message-ID: <20010717132859.D17345@sistina.com>
-References: <20010717131430.A17345@sistina.com> <Pine.LNX.4.31.0107171225320.12608-100000@erdos.shef.ac.uk>
+Subject: Re: [linux-lvm] Upgrade path
+Message-ID: <20010717132932.E17345@sistina.com>
+References: <85063BBE668FD411944400D0B744267A643413@AUSMAIL>
 Mime-Version: 1.0
-In-Reply-To: <Pine.LNX.4.31.0107171225320.12608-100000@erdos.shef.ac.uk>; from g.liakhovetski@ragingbull.com on Tue, Jul 17, 2001 at 12:28:07PM +0100
+In-Reply-To: <85063BBE668FD411944400D0B744267A643413@AUSMAIL>; from austin@coremetrics.com on Mon, Jul 16, 2001 at 03:11:43PM -0500
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -21,40 +21,80 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Tue, Jul 17, 2001 at 12:28:07PM +0100, Guennadi Liakhovetski wrote:
-> > > My /var/log/lvm has grown up to 800MB+... and has filled up the disk...
-> >
-> > Remove it.
-> > lvmsadc is probably filling it run by cron.
-> 
-> Thanks! But why / what for is it needed and why is it created by default
-> without any size control?
+On Mon, Jul 16, 2001 at 03:11:43PM -0500, Gonyou, Austin wrote:
+> Soon I hope? I hope? :) 
 
-It is not created/activated by default.
-Someone must have put it into crontab.
+We too, we too :)
 
-But you are right: there's no size control so far.
+Heinz
 
 > 
-> Guennadi
-> ___
+> -- 
+> Austin Gonyou
+> Systems Architect, CCNA
+> Coremetrics, Inc.
+> Phone: 512-796-9023
+> email: austin@coremetrics.com 
 > 
-> Dr. Guennadi V. Liakhovetski
-> Department of Applied Mathematics
-> University of Sheffield, Sheffield, U.K.
-> email: g.liakhovetski@sheffield.ac.uk
-> 
-> 
+> > -----Original Message-----
+> > From: Heinz J. Mauelshagen [mailto:Mauelshagen@sistina.com]
+> > Sent: Monday, July 16, 2001 2:49 PM
+> > To: linux-lvm@sistina.com
+> > Subject: Re: [linux-lvm] Upgrade path
+> > 
+> > 
+> > On Mon, Jul 16, 2001 at 04:42:53PM +0200, Wichert Akkerman wrote:
+> > > Previously Heinz J. Mauelshagen wrote:
+> > > > I announced the holdup caused by the misalignment bugs we found.
+> > > > We'll need to release another Beta ASAP to get test 
+> > feedback on that.
+> > > 
+> > > I saw that, but there seems to have been a consensus on a fix
+> > > for that for over a week now already.
+> > 
+> > We are testing...
+> > 
+> > Heinz
+> > 
+> > > 
+> > > Wichert.
+> > > 
+> > > -- 
+> > >   _________________________________________________________________
+> > >  /       Nothing is fool-proof to a sufficiently talented fool     \
+> > > | wichert@wiggy.net                   
+> > http://www.liacs.nl/~wichert/ |
+> > > | 1024D/2FA3BC2D 576E 100B 518D 2F16 36B0  2805 3CB8 9250 
+> > 2FA3 BC2D |
+> > > _______________________________________________
+> > > linux-lvm mailing list
+> > > linux-lvm@sistina.com
+> > > http://lists.sistina.com/mailman/listinfo/linux-lvm
+> > > read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
+> > 
+> > -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+> > -=-=-=-=-=-=-=-
+> > 
+> > Heinz Mauelshagen                                 Sistina 
+> > Software Inc.
+> > Senior Consultant/Developer                       Am Sonnenhang 11
+> >                                                   56242 Marienrachdorf
+> >                                                   Germany
+> > Mauelshagen@Sistina.com                           +49 2626 141200
+> >                                                        FAX 924446
+> > =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+> > =-=-=-=-=-=-=-=-
+> > _______________________________________________
+> > linux-lvm mailing list
+> > linux-lvm@sistina.com
+> > http://lists.sistina.com/mailman/listinfo/linux-lvm
+> > read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
+> > 
 > _______________________________________________
 > linux-lvm mailing list
 > linux-lvm@sistina.com
 > http://lists.sistina.com/mailman/listinfo/linux-lvm
 > read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
-
--- 
-
-Regards,
-Heinz    -- The LVM Guy --
 
 *** Software bugs are stupid.
     Nevertheless it needs not so stupid people to solve them ***
