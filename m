@@ -1,52 +1,56 @@
-Date: Thu, 26 Aug 1999 13:33:40 -0400 (EDT)
-From: Shane Shrybman <shane@zeke.yi.org>
-Reply-To: Shane Shrybman <shane@zeke.yi.org>
+Message-Id: <4.2.0.58.19990826121935.00fc6c30@204.151.72.2>
+Date: Thu, 26 Aug 1999 12:30:21 -0600
+From: Mats Wichmann <mats@laplaza.org>
 Subject: Re: [linux-lvm] LVM in stock kernel!?
-Message-ID: <Pine.LNX.3.96.990826125142.20183A-100000@zeke.sympatico.ca>
-MIME-Version: 1.0
+In-Reply-To: <Pine.LNX.3.96.990826125142.20183A-100000@zeke.sympatico.ca
+ >
+Mime-Version: 1.0
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
 Content-Transfer-Encoding: 7bit
-To: linux-lvm mailing list <linux-lvm@msede.com>
+To: linux-lvm@msede.com
 
 
-Hi Everyone !
+>
+>PROS
+>- LVM is almost a necessity when managing large amounts of storage.
 
-We do not want LVM to miss the 2.4 bandwagon! It sounds like Jonny B.'s
-idea of a petition is the best course of action, (I have not heard any
-other suggestions). This petition should include a concise list of the
-pros and cons of including LVM in the kernel, and a list of people who
-agree with these points.
+although at some cost in performance since there's an additional layer of
+translation before you get to the actual disk blocks....
 
-Before we submit our petition, we should have a LVM that works with the
-2.3 series. Heinz, what is the status on this and a 0.8 release?
+>- Many unix people think that storage layout is one of the most difficult
+>aspects of maintaining a system. LVM simply makes storage management much
+>more flexible by allowing storage to be reallocated easily at anytime.
 
-Here is my list of pros and cons.
+at some cost again....insulation from actual details of storage does mean you
+are not necessarily making the optimal use of layout....but the benefits seem
+to far outweigh these costs.
 
-PROS
-- LVM is almost a necessity when managing large amounts of storage.
-- Many unix people think that storage layout is one of the most difficult
-aspects of maintaining a system. LVM simply makes storage management much
-more flexible by allowing storage to be reallocated easily at anytime.
-- Folks coming to Linux from other UNIXes which use an LVM (HP, AIX etc..)
-will be familiar and comfortable with LVM concepts and will more readily
-embrace the penguin.
-- The "out of storage space" is a very common problem for users especially
-new users. LVM makes resizing allocated space easier. This is perhaps the
-most common problem I here about from new users.
-- LVM is not a new concept and has been proven to be indispensible in
-other OSes, (ie. It is not just some hair-brained scheme that just makes
-things harder to learn and more complicated).
+>- Folks coming to Linux from other UNIXes which use an LVM (HP, AIX etc..)
+>will be familiar and comfortable with LVM concepts and will more readily
+>embrace the penguin.
 
-CONS
-- Using LVM is by definition adding a another logical layer for storage.
-Users not already familiar with an LVM will have to do some learning, or
-not use LVM.
+add at least Solaris (Solstice Disk Suite) and SGI IRIX  (xlv - a very nice
+combination with the xfs filesystem) to this list.
 
-Comments ?
+>- The "out of storage space" is a very common problem for users especially
+>new users. LVM makes resizing allocated space easier. This is perhaps the
+>most common problem I here about from new users.
+>- LVM is not a new concept and has been proven to be indispensible in
+>other OSes, (ie. It is not just some hair-brained scheme that just makes
+>things harder to learn and more complicated).
+>
+>CONS
+>- Using LVM is by definition adding a another logical layer for storage.
+>Users not already familiar with an LVM will have to do some learning, or
+>not use LVM.
 
-Please feel free to edit and add your own points!
-
-Shane
+Not terribly familiar with Linux LVM (listening here to help become so)...other
+LVMs require a large number of commands to become familar with (the AIX
+LVM being the prototype which _most_ folks have followed; Solaris takes
+a somewhat different approach).  Actually, a well-thought out GUI can be
+a great help here.  The author of a course I teach has constructed one as
+a sample which gives you drag-and-drop LVM management - in very little
+tk/perl code.
