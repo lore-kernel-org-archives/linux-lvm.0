@@ -1,10 +1,7 @@
+From: Holger Rauch <Holger.Rauch@heitec.de>
 Subject: Re: [linux-lvm] XFS crash on lvm
-From: Christophe Zwecker <doc@zwecker.de>
-In-Reply-To: <1017874608.931.1426.camel@jen.americas.sgi.com>
-References: <1017872898.18631.8.camel@dumbo.zwecker.de>
-    <1017874608.931.1426.camel@jen.americas.sgi.com>
-Content-Transfer-Encoding: 7bit
-Message-Id: <1017908119.5373.3.camel@fry.sysctl-office.de>
+In-Reply-To: <1017908119.5373.3.camel@fry.sysctl-office.de>
+Message-Id: <Pine.LNX.4.21.0204041116060.719-100000@miami.datech2.er.heitec.net>
 MIME-Version: 1.0
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
@@ -16,53 +13,26 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Thu Apr  4 02:15:02 2002
+Date: Thu Apr  4 03:17:02 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: Steve Lord <lord@sgi.com>
-Cc: linux-lvm@sistina.com
+Content-Type: TEXT/PLAIN; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: linux-lvm@sistina.com
 
-im gonna kill myself!  :-)
+Hi!
 
-the 200gb volume was made of a 160gb and  a 40 gb partition. I order for
-the kernel to see the whole 160gb I had applied the ide patch to the
-kernel, which I forgot to apply to 2.4.18!!
+On 4 Apr 2002, Christophe Zwecker wrote:
 
-so now Im rebuilding 2.4.18-xfs with new ide driver, pretty sure
-everything be back after reboot, I alrady had used the xfs patch from
-below.
+> [...] 
+> the 200gb volume was made of a 160gb and  a 40 gb partition. I order for
+> the kernel to see the whole 160gb I had applied the ide patch to the
+> kernel, which I forgot to apply to 2.4.18!!
 
-damn, Im stupid :-)
+What's the maximum hard drive space a 2.4.18 kernel is able to see without
+the IDE patch applied? Where did you get this IDE patch from?
 
-thx for your help anyways, you mentioning the patch made it click :-.)
+Thanks for the info!
 
-regards,
+Greetings,
 
-Christophe
-
-On Thu, 2002-04-04 at 00:56, Steve Lord wrote:
-> On Wed, 2002-04-03 at 16:28, Christophe Zwecker wrote:
-> > Hi,
-> > 
-> > I use 2.4.18-xfs with lvm-tools-1.0.1rc4_iop10-fr2
-> > lvm-base-1.2-fr1
-> > 
-> > I havw a 200GB lv. I had 2.4.16 running after fiddling with usb the
-> > whole machine crashed, reboot, the fs was corrupt. I had to zerosize the
-> > journal log, xfs_repair, everything in lost+found.
-> 
-> Are you running on ide with write caching enabled? corruption after a
-> crash is possible in that configuration. Also the forced shutdown path
-> did used to corrupt the filesystem, so once you hit a forced shutdown
-> it is possible to end up with a zeroed superblock and lose your root
-> directory too. That is fixed in current code - which is difficult to get
-> right now. There are ftp mirrors, here is one:
-> 
-> 	ftp://ftp.thebarn.com/mirror/SGI
-
-
-Christophe Zwecker                     mail: doc@zwecker.de
-Hamburg, Germany                        fon: +49 179 3994867
-http://www.zwecker.de
-
-"Who is General Failure ?  And why is he reading my disk ??"
+	Holger
