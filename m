@@ -1,9 +1,11 @@
-Return-Path: <claudio@conectiva.com>
-Date: Wed, 20 Dec 2000 21:42:12 -0200 (BRST)
-From: Claudio Matsuoka <claudio@conectiva.com>
-Subject: Re: [linux-lvm] vgextend segfaults (lvm 0.9, kernel test10)
-In-Reply-To: <20001216171754.J20332@jensbenecke.de>
-Message-ID: <Pine.LNX.4.21.0012202133160.3255-100000@scuzzlebutt.helllabs>
+Return-Path: <adilger@turbolinux.com>
+From: Andreas Dilger <adilger@turbolinux.com>
+Message-Id: <200012210034.eBL0Yih02808@webber.adilger.net>
+Subject: Re: [linux-lvm] IOP selection scripts (was: '/etc/init.d/lvm' script
+ in debian package)
+In-Reply-To: <Pine.LNX.4.21.0012202112590.3255-100000@scuzzlebutt.helllabs>
+ "from Claudio Matsuoka at Dec 20, 2000 09:29:38 pm"
+Date: Wed, 20 Dec 2000 17:34:43 -0700 (MST)
 MIME-Version: 1.0
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
@@ -16,19 +18,50 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
-Cc: aris@conectiva.com
+Cc: Gergely Tamas <dice@mfa.kfki.hu>
 
-On Sat, 16 Dec 2000, Jens Benecke wrote:
+Claudio writes:
+> if [ "$util" = "lvm-wrapper" ]; then
+>     echo "$util: you don't want to call the wrapper directly" 1>&2
+>     exit -2
+           ^^ I don't think this is legal...
+> fi
 
-> Additionally, (very strange) since I patched my 2.2.17 with ReiserFS and
-> LVM I get occasional network outages (rtl8139). ifconfig down ; ifconfig up
-> with IP addr. etc brings it back up, but that' not a solution for a server.
+Is there ever a reason why you would want to install this program as
+"lvm-wrapper" anywhere?
 
-My 8139s were giving me so much problems (with both 2.2.17 and 2.4.0-test)
-that I decided to replace them by a couple of 3c905C cards. From our
-tests with the 8139 at Conectiva, rev. "A" RTLs and a motherboard with
-a SiS chipset (but also VIA and PIIX3) is very crash-prone. Rev. "B" cards
-seem to be a bit better.
+> if [ -f $proclvm ]; then
+>     IOP=`grep "$ver_str" $proclvm|sed "s/.*$ver_str\([0-9]*\).*/\1/"`
+> elif [ -d $proclvm ]; then
+>     IOP=`grep "$ver_str" $proclvm/global|sed "s/.*$ver_str\([0-9]*\).*/\1/"`
+> else
+>     echo "$util: $proclvm not found (can't determine IOP version)" 1>&2
+>     exit -1
+> fi
+> 
+> exec /lib/lvm-iop${IOP}/$util $*
+
+Probably some simple checks for the existence of /lib/lvm-iop$iop and
+/lib/lvm-iop$iop/$util and printing a nice message would be helpful, like:
+
+LIBLVM=/lib/lvm-iop${IOP}
+LVMPKG=lvm-iop${IOP}
+
+if [ ! -d $LIBLVM ]; then
+	echo "$util: $LIBLVM not found.  Is $LVMPKG installed?" 1>&2
+	exit 3
+fi
+exec $LIBLVM/$util "$@"	# this will print out a localized error message for us
+
+
+I think I will go with an approach like this as well, since it still keeps
+/sbin/<lvmcommand> in place (for scripts that have this hard-coded).
+
+Cheers, Andreas
+-- 
+Andreas Dilger  \ "If a man ate a pound of pasta and a pound of antipasto,
+                 \  would they cancel out, leaving him still hungry?"
+http://www-mddsp.enel.ucalgary.ca/People/adilger/               -- Dogbert
