@@ -1,12 +1,10 @@
-From: Stephan Austermuehle <au@hcsd.de>
+From: jon+lvm@silicide.dk
 Subject: Re: [linux-lvm] Max storage size per system
-Message-ID: <20030305195052.GC11043@hcsd.de>
-References: <20030304114851.GA22965@hcsd.de> <20030304144121.GB23975@hcsd.de> <4857903125.20030305160532@tnonline.net> <200303050854.10805.jkeating@pogolinux.com>
+Message-ID: <20030306162150.GA11451@gw.silicide.dk>
+References: <20030304114851.GA22965@hcsd.de> <3E64B885.1AF49EDA@silicide.dk> <20030304144121.GB23975@hcsd.de> <4857903125.20030305160532@tnonline.net> <20030305194551.GA11043@hcsd.de>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="3siQDZowHQqNOShm"
 Content-Disposition: inline
-In-Reply-To: <200303050854.10805.jkeating@pogolinux.com>
+In-Reply-To: <20030305194551.GA11043@hcsd.de>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,34 +15,28 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Thu Mar  6 08:19:07 2003
+Date: Thu Mar  6 10:23:02 2003
 List-Id: <linux-lvm.redhat.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
---3siQDZowHQqNOShm
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+On Wed, Mar 05, 2003 at 08:45:51PM +0100, Stephan Austermuehle wrote:
+> On Wed, Mar 05, 2003 at 04:05:32PM +0100, Anders Widman wrote:
+> 
+> > Hm,  sounds  like  lots.  :)  What kind of devices will you be running
+> > with.  Even  with  300GB  drives  you will need 300-400 of them to get
+> > 100TB.
+> 
+> A single HP XP 1024 (which is an OEM product of a HDS Lightning) stores
+> 130 TB with a 7p1 RAID5 configuration and 146 GB disks.
 
-On Wed, Mar 05, 2003 at 08:54:10AM -0800, Jesse Keating wrote:
+hmm, that would need 130T/0.146T = 890 disks. And running raid 5...
+personaly i dont like raid5, because if you loose more than one
+disk your data are gone, and with this ammount of disks, i expect
+failure rather often. (it's proberly not one big raid5 array,
+but that just makes it need more disks).
 
-> Easily achieved w/ such technologies as iscsi and hyperscsi (;
 
-Which are nothing but trash.
 
-Kind regards,
-
-Stephan
-
---3siQDZowHQqNOShm
-Content-Type: application/pgp-signature
-Content-Disposition: inline
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.2.1 (GNU/Linux)
-
-iD8DBQE+ZlUc+QMu5be4tHkRAvWfAKDIijURl0AVmpC18JiW9+JNA5bYXgCguEMf
-5oXsU7nH25efNeFsh+HhCX0=
-=/M9r
------END PGP SIGNATURE-----
-
---3siQDZowHQqNOShm--
+JonB
