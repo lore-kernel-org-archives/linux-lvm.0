@@ -1,11 +1,9 @@
-Subject: Re: [linux-lvm] Repairing LVM installations
-From: Bradley Alexander <storm@tux.org>
-In-Reply-To: <20021028100812.C16452@sistina.com>
-References: <20021026045558.GA7158@sonsofthunder.yi.org> 
-	<20021028100812.C16452@sistina.com>
-Content-Transfer-Encoding: 7bit
-Message-Id: <1035810145.11532.117.camel@defiant>
-Mime-Version: 1.0
+From: James Hawtin <oolon@ankh.org>
+Subject: Re: [linux-lvm] still problems with removing "non existant" dead
+ snapshots :/
+In-Reply-To: <20021028101305.E16452@sistina.com>
+Message-ID: <Pine.LNX.4.44.0210281427290.1432-100000@pzat.meep.org>
+MIME-Version: 1.0
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,58 +14,43 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Oct 28 07:03:01 2002
+Date: Mon Oct 28 08:34:01 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: TEXT/PLAIN; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Mon, 2002-10-28 at 04:08, Heinz J . Mauelshagen wrote:
-> 
-> Bradley,
-> 
-> looks like Norton defrag toasted your physical volume :(
 
-Yep.
- 
-> There might be a slight chance to get it back, if you have an LVM
-> metadata backup at hand (/etc/lvmconf/vg00.conf) and use vgcfgrestore
-> to restore it to the physical volume.
+On Mon, 28 Oct 2002, Heinz J . Mauelshagen wrote:
 
-I tried this and when I tried listing the file, I got the same
-consistency error message:
+> On Fri, Oct 25, 2002 at 01:23:18PM +0000, James Hawtin wrote:
+> >
+> >
+> > On Fri, 25 Oct 2002, Heinz J . Mauelshagen wrote:
+> >
+> > > You should give LVM2 + device-mapper a try or downgrade to 1.0.5.
+> >
+> > Hmmm what are the problems with 1.1-rc2? thats the version I am currently
+> > running, 1.0.5 I beleive has a problem with pvmove > 2 gig? or am I
+> > rembering the wrong version.
+>
+> No, there's no such problem in 1.1.
 
-[defiant /etc/lvmconf]# vgcfgrestore -f /etc/lvmconf/vg00.conf.2.old -l
--n vg00
-vgcfgrestore -- ERROR "vg_cfgrestore(): pv_check_consistency" restoring
-volume group "vg00"
+no no I ment is there a pvmove greater than 2 gig problem with 1.0.5? I
+seem to rember that was why i upgraded to 1.1-rc2
 
-vg00.conf.2.old should be the one immediately prior to the "incident".
+>
+> It is just an intermediate development version which got replaced by
+> LVM2/device-mapper.
+>
+> Use that combination if you want stable, cutting-edge Linux LVM :)
+>
 
-When I tried an actual restore, it groused about changing an active
-volume group, so I guess I'll go single-user and try it again.
+Cutting or Bleeding edge?
 
-> But I guess Norton damaged more than just the LVM metadata area which sits
-> at the beginning of the drive.
-> You should try restoring the metadata though.
+How painful is the upgrade from 1.1-rc2 to the 2 series (which I have not
+tried yet). Does it require a complete lvm system rebuild or can it use my
+old pvs, vgs? Which version is the best to go for? Ie any "known problems"
+why I should not use the latest....
 
-Not knowing what Norton has cabbaged, I would be happy if I could just
-move the active extents from the damaged volume to another one long
-enough to remobe, rebuild and reactivate it.
-
-> Hopefully you've got an actual backup of your logical volumes!
-
-I'm using the one prior to the drive getting nortoned. :)
-
--- 
---Brad
-============================================================================
-Bradley M. Alexander                |   storm [at] debian.org
-Debian Developer, Security Engineer |   storm [at] tux.org
-Debian/GNU Linux Developer          | Visit the 99th VFS website at:
-99th VFS 'Tuskegee Airmen'          |   http://99thvfs-ta.org
-============================================================================
-Key fingerprints:
-DSA 0x54434E65: 37F6 BCA6 621D 920C E02E  E3C8 73B2 C019 5443 4E65
-RSA 0xC3BCBA91: 3F 0E 26 C1 90 14 AD 0A  C8 9C F0 93 75 A0 01 34
-============================================================================
-If guns are outlawed, can we use swords?
+James
