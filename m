@@ -1,32 +1,55 @@
-Date: Thu, 20 Apr 2000 08:55:45 +0200
-From: bert hubert <ahu@ds9a.nl>
-Subject: [linux-lvm] Re: patch for Makefile of LVM 0.8final
-Message-ID: <20000420085544.A21528@home.ds9a.nl>
-References: <20000414163242.A21335@home.ds9a.nl> <200004191940.VAA05783@u9etz.ez-darmstadt.telekom.de>
+From: Heinz Mauelshagen <mauelsha@ez-darmstadt.telekom.de>
+Message-Id: <200004200910.LAA18267@u9etz.ez-darmstadt.telekom.de>
+Subject: Re: [linux-lvm] Re: patch for Makefile of LVM 0.8final
+In-Reply-To: <20000420085544.A21528@home.ds9a.nl> from bert hubert at "Apr 20, 2000  8:55:45 am"
+Date: Thu, 20 Apr 2000 11:10:25 +0200 (MEST)
 Mime-Version: 1.0
-In-Reply-To: <200004191940.VAA05783@u9etz.ez-darmstadt.telekom.de>; from mauelsha@EZ-Darmstadt.telekom.de on Wed, Apr 19, 2000 at 09:40:33PM +0200
+Content-Transfer-Encoding: 7bit
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: Heinz Mauelshagen <mauelsha@ez-darmstadt.telekom.de>
-Cc: linux-lvm@msede.com, mge@ez-darmstadt.telekom.de
+To: bert hubert <ahu@ds9a.nl>
+Cc: mge@ez-darmstadt.telekom.de, linux-lvm@msede.com
 
-On Wed, Apr 19, 2000 at 09:40:33PM +0200, Heinz Mauelshagen wrote:
+> On Wed, Apr 19, 2000 at 09:40:33PM +0200, Heinz Mauelshagen wrote:
+> > 
+> > Applied.
 > 
-> Applied.
+> Heinz, 
+> 
+> Did you receive my 2 patches?
 
-Heinz, 
+Yes.
 
-Did you receive my 2 patches?
+I've got and applied the Makefile and the lvchange related patches.
 
+THX,
+Heinz
 
-Regards,
+> 
+> 
+> Regards,
+> 
+> bert hubert
+> 
+> -- 
+>                        |              http://www.rent-a-nerd.nl
+>                        |                     - U N I X -
+>                        |          Inspice et cautus eris - D11T'95
+> 
 
-bert hubert
 
 -- 
-                       |              http://www.rent-a-nerd.nl
-                       |                     - U N I X -
-                       |          Inspice et cautus eris - D11T'95
+
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+Systemmanagement TS                              T-Nova
+                                                 Entwicklungszentrum Darmstadt
+Heinz Mauelshagen                                Otto-Roehm-Strasse 71c
+Senior Systems Engineer                          Postfach 10 05 41
+                                                 64205 Darmstadt
+mge@EZ-Darmstadt.Telekom.de                      Germany
+                                                 +49 6151 886-425
+                                                          FAX-386
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
