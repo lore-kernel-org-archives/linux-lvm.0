@@ -1,9 +1,9 @@
 From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] Problems with snapshots on sparc64
-Message-ID: <20030602170507.B6678@sistina.com>
-References: <20030529001029.GB16622@wh9155.stw.uni-rostock.de> <20030602113939.D5039@sistina.com> <20030602131232.GB9679@wh9155.stw.uni-rostock.de>
+Subject: Re: [linux-lvm] LVM2 roadmap?
+Message-ID: <20030602170727.C6678@sistina.com>
+References: <20030602104046.68BE147990@doppingen.nu>
 Mime-Version: 1.0
-In-Reply-To: <20030602131232.GB9679@wh9155.stw.uni-rostock.de>; from daniel.bayer@stud.uni-rostock.de on Mon, Jun 02, 2003 at 03:12:32PM +0200
+In-Reply-To: <20030602104046.68BE147990@doppingen.nu>; from tomas@doppingen.nu on Mon, Jun 02, 2003 at 12:40:46PM +0200
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,50 +14,32 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Jun  2 10:15:02 2003
+Date: Mon Jun  2 10:17:02 2003
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Mon, Jun 02, 2003 at 03:12:32PM +0200, Daniel Bayer wrote:
-> Hallo
+On Mon, Jun 02, 2003 at 12:40:46PM +0200, tomas wrote:
+> Hi. 
 > 
-> On Mon, Jun 02, 2003 at 11:39:39AM +0200, Heinz J . Mauelshagen wrote:
-> > which LVM version (kernel and tools)
+> I am wondering one thing. 
 > 
-> kernel: 1.0.5+(22/07/2002)
-> tools:  1.0.4-4
+> I have seen (I think) that mirroring will be implemented in LVM2 is this 
+> true
+> or am I misinformed regarding this? 
 > 
-> > and do you have HIGHMEM configured
-> > (IOW: more than 960M memory) ?
-> 
-> Its a 64Bit architecture. There is no need for things like HIGHMEM.
-> But yes, the system has 2GB RAM.
+> If it is planned when will it be released? 
 
-Oh, overlooked that in your email :(
+We want to have it in 2.2 (fall 2003).
 
 > 
-> > There's flaws with Linux 2.4.20 highmem which show with snapshots :(
+> I realise that this question may be hard to answer but, never, this summer, 
+> this fall or next year will suffice as an answer. 
 > 
-> But this problem:
-> > > Another related problem is, that "cat /proc/lvm/global" in the most
-> > > cases doesn't output the usual data but some random memory. Its really
-> > > odd. But if I try often enough I sometimes also get the right output
-> > > (and no, I didn't calculated the probability). The other files in
-> > > /proc/lvm work fine.
+> Brg
+> /Tomas 
 > 
-> appears also if there are no snapshots at all. (This time I only had
-> to try 2 times to get the version-string.)
-> 
-> Tomorrow I will have some time to update the kernel and the tools to
-> the current versions.
-
-Yes, my recommendation anyway.
-
-> 
-> 
-> Daniel
 > 
 > _______________________________________________
 > linux-lvm mailing list
