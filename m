@@ -1,34 +1,25 @@
-Date: Tue, 19 Oct 1999 11:01:03 -0500 (EST)
-From: theodore russell wickell <twickell@indiana.edu>
-Subject: [linux-lvm] thank you!
-Message-ID: <Pine.HPP.3.96.991019105627.9817F-100000@falstaff.ucs.indiana.edu>
+Message-ID: <000701bf1a62$42ee64a0$030116ac@fd1>
+From: "Fernando Dammous" <ferdam@internetcom.com.br>
+References: <Pine.HPP.3.96.991019105627.9817F-100000@falstaff.ucs.indiana.edu>
+Subject: Re: [linux-lvm] thank you!
+Date: Tue, 19 Oct 1999 16:46:24 -0200
 MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: linux-lvm@msede.com
+Content-Type: text/plain; charset="us-ascii"
+To: theodore russell wickell <twickell@indiana.edu>, linux-lvm@msede.com
 
-hello,
+Hello,
+I am using Oracle 8.0.5.1 (upgraded from 8.0.5.0) with LVM and I'm not
+having problems up to now.
 
-To everyone who helped me with my mundane little problems with the LVM I
-thank you. I finally got it all working. I wanted to ask how many people
-are using this in production? I am going to install oracle on top of it
-and I wanted to see if anyone had problems with corruption or other. From
-what I hear it is quite stable. I still have a little problem getting my /
-partition to be a logical volume, but that is not imperative. I would get
-the same errors someone else was posting about not being able to mount 0:0
-or my /dev/rootvg/rootlv. It made it much easier once I just tried to set
-it up without worrying about the rootvg booting. From there setting up is
-a breeze. Again Thanks to all!!
+I could use LVM to follow the OFA recommendations  from Oracle and I created
+4 LVs (/u01, /u02, /u03 and /u04) with 4 STRIPES in 4 IDE DISKS.
 
-Rusty
+I didn't just use RAW-IO because my kernel is still the 2.0.36 and I didn't
+want to take a risk.
 
-
-----------------------------------------------------------------------------
-Rusty Wickell					200 S. Jordan Ave.
-Digital Library Sytem Administrator		Simon 060
-Indiana University				Bloomington IN 
-812-856-5174					47405
-----------------------------------------------------------------------------
+Cheers,
+Fernando
