@@ -1,14 +1,16 @@
-Date: Thu, 04 Oct 2001 12:57:21 -0500
-From: Steven Lembark <lembark@wrkhors.com>
-Subject: Re: [linux-lvm] What have I done!?
-Message-ID: <30980000.1002218241@dizzy>
-In-Reply-To: <20011004113309.E31061@turbolinux.com>
-References: <009401c14cc3$c63106c0$836788cf@industry>
- <009501c14cc7$2f5cd360$836788cf@industry>
- <20011004113309.E31061@turbolinux.com>
+Subject: Re: [linux-lvm] kernel 2.2.19 support
+References: <3BBC4146.51CD437D@promofinarsa.es>
+	<wv669v3b96.fsf@freeze.oslo.dnmi.no> <3BBC4E6E.BCA3EE70@promofinarsa.es>
+	<wvzo771uju.fsf@freeze.oslo.dnmi.no> <3BBC535B.59D6A5CB@promofinarsa.es>
+	<wv3d4zh1r8.fsf@freeze.oslo.dnmi.no>
+	<20011004111023.C31061@turbolinux.com>
+	<wvy9mrfhmy.fsf@freeze.oslo.dnmi.no>
+	<20011004114903.G31061@turbolinux.com>
+From: Adrian Phillips <a.phillips@dnmi.no>
+Date: 04 Oct 2001 20:05:42 +0200
+In-Reply-To: <20011004114903.G31061@turbolinux.com>
+Message-ID: <wvpu83ffgp.fsf@freeze.oslo.dnmi.no>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -20,33 +22,35 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
+>>>>> "Andreas" == Andreas Dilger <adilger@turbolabs.com> writes:
 
--- Andreas Dilger <adilger@turbolabs.com>
+    Andreas> On Oct 04, 2001 19:18 +0200, Adrian Phillips wrote:
+    >> Yes, but what concerned me was if there was some equivalent for
+    >> 2.2 (foo.dev22 = bar). I was going to check the LVM CVS to see
+    >> what changes had been done but was unable to login :-
 
->> Is there a way that I can blow the whole thing away and start over?  I
->> think I've screwed things up too badly to try to resurrect them.  I'd
->> really like to blow it all away and start over and see if this stuff
->> happens again, but again I can't use the lv* tools to remove the
->> configurations because of the errors I mention in my initial post so I
->> need a manual way to blow away the entire LVM configuration and start
->> from scratch again.
->
-> "pvcreate -ff" I think
+    Andreas> It was just added recently (probably a devfs thing).
+    Andreas> Before that, it just ran the "lvm_fs_setup()" (or
+    Andreas> whatever) function, and didn't do anything with the
+    Andreas> output.  Hmm, that means my suggestion may be broken.
 
-If you really want to wipe things clean:
+    Andreas> Need something like:
 
-    (1) vgexport /dev/vgname; # avoids collisions w/ stale config info.
-    (2) for disk in your disks here; do pvcreate -ff $disk; done;
+    Andreas> #if LINUX_KERNEL_VERSION > KERNEL_VERSION (2, 3, 38)
+    Andreas> foo.de = #endif lvm_fs_setup();
 
-The export isn't strictly necessar:  rm -rf and a vgscan should do the
-same basic thing with a few nastygrams added in.  Personally, I get
-enough nastygrams to prefer avoiding a few more :-)
+Great thanks for the help. I'll have a look at the weekend. It anyone
+else with troubles wants to beat me to it, be my guest :-)
 
+Sincerely,
 
---
-Steven Lembark                                               2930 W. Palmer
-Workhorse Computing                                       Chicago, IL 60647
-                                                            +1 800 762 1582
+Adrian Phillips
+
+-- 
+Your mouse has moved.
+Windows NT must be restarted for the change to take effect.
+Reboot now?  [OK]
