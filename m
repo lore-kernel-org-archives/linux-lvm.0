@@ -1,8 +1,10 @@
-From: Eddahbi Karim <installation_fault_association@yahoo.fr>
-Message-Id: <1063981890.1127.5.camel@super.gamux.chezmoi>
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] Migrate from LVM1 to LVM2...
+Message-ID: <1063982920.3f6b1748a8029@secure.st-peter.stw.uni-erlangen.de>
+From: Svetoslav Slavtchev <galia@st-peter.stw.uni-erlangen.de>
+Subject: Re: [linux-lvm] Migrate from LVM1 to LVM2...
+References: <1063917231.1786.13.camel@super.gamux.chezmoi> <3F6B0E0F.5080807@webhackande.se> <1063980916.3f6b0f740b738@secure.st-peter.stw.uni-erlangen.de> <3F6B1281.8080300@webhackande.se>
+In-Reply-To: <3F6B1281.8080300@webhackande.se>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -13,31 +15,29 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Fri Sep 19 09:35:02 2003
+Date: Fri Sep 19 09:49:02 2003
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
 
-Hi,
+Quoting Rickard Olsson <richie@webhackande.se>:
 
-I want to test 2.6 kernels, but I can't do it without migrate from LVM 1
-to LVM 2.
+> Svetoslav Slavtchev wrote:
+> 
+> > so your scripts are already for dm-mod ?-)
+> 
+> The LVM2 ebuild has device-mapper as a dependency and although I haven't 
+> checked what it does in detail, it seems to install properly.
 
-So, I tried to find some documentations, but the only I can found is the
-README of the LVM 2 package.
+that's really nice :-)
+ 
+>  > ( happy Gentoo users :-) )
+> 
+> Well, we're forced to use devfs...
+> 
 
-Is there a howto somewhere ?
+should this be really bad ?
+i no devfs is depricated in 2.6, but i'm not that sure 
+that udev is already usable
 
-Is there something I must do before migrate to LVM2 (I'll test LVM 2 on
-a kernel 2.4.21 first).
-
-Must I edit my init script to add new LVM commands after installing the
-device-mapper, LVM2 and the new kernel patched for LVM2 ?
-
-I'm working with a Gentoo system, vanilla source 2.4.21 + preempt.
-gcc 3.2
-
-Thank you.
-
--- 
-ThE_TemPLaR
+svetljo
