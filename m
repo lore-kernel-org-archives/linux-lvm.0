@@ -1,9 +1,9 @@
 From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] problem with activating volume group
-Message-ID: <20011107143940.B6920@sistina.com>
-References: <000701c1662e$69e79d00$8400a8c0@EFOLAPTOP>
+Subject: Re: [linux-lvm] trying to pvcreate
+Message-ID: <20011107144324.C6920@sistina.com>
+References: <20011105142032.3919438C40@perninha.conectiva.com.br>
 Mime-Version: 1.0
-In-Reply-To: <000701c1662e$69e79d00$8400a8c0@EFOLAPTOP>; from frode@gangstah.net on Mon, Nov 05, 2001 at 08:16:47PM +0100
+In-Reply-To: <20011105142032.3919438C40@perninha.conectiva.com.br>; from ffv@conectiva.com.br on Mon, Nov 05, 2001 at 12:20:16PM -0200
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,75 +14,157 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Nov  7 07:43:01 2001
+Date: Wed Nov  7 07:47:02 2001
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Frode,
+Fabiano,
 
-you didn't metion the LVM version you use and if you followed the kernel
-patch instrcutions contained in the LVM source distro.
+the debug output shows a read error on /dev/hda3 which is strange if it is
+a valid device.
 
-I guess you have a user/kernel code mismatch because 2.4.13 is still not
-up to date. Recent Alan Cox kernel is and we hope that he'll update Linus
-*soon*.
-
-In order to get a clean LVM configuration, please get the LVM distro
-from www.sistina.com and follow the instructions in the files INSTALL
-and PATCHES/README.
+In case you have a 2.96 gcc compiler, you might suffer from its optimizer flaws.
+If so, please try to compile LVM without optimization by changing '-O2'
+to '-O0' in LVMs configure script, regenerate and reinstall.
 
 Regards,
 Heinz    -- The LVM Guy --
 
-On Mon, Nov 05, 2001 at 08:16:47PM +0100, Frode Ulsund wrote:
-> Hi there!
+
+On Mon, Nov 05, 2001 at 12:20:16PM -0200, Fabiano Fantini Vitale wrote:
+> Hi,
 > 
-> I have read all the documentation in the LVM-package and your homepage, but
-> i can't find a
-> sollution to my problem in the HOW-TOs.
+> when I  try to perform a pvcreate a segmentation fault error 
+> occur. I'm using kernel 2.4.12-BOOT, iop10 and lvm-1.0.1
+> thanks for any help
 > 
-> I run kernel 2.4.13 with Slackware 8.0. I tried to patch the rc.S with the
-> patch i found on your homepage
-> but it looks like the patch is allready applied in the distribution.
+> /* logs */
+> pvcreate /dev/hda3
 > 
-> I have loaded LVM as a module in the boot. Everything runs perfectly until i
-> try to activate my
-> volume group "vg01".
-> 
-> When i run  : vgchange -v -d -a y i get the following output, but I don't
-> really know what the problem is.
-> 
-> Any help is aprichiated.
-> 
-> And thank you for making great software.
-> 
-> mvh
-> Frode Ulsund
-> -------------------------------------------------------------------------
-> <333> vg_check_name -- vg_name: "vg01"
-> <4444> lvm_check_chars -- CALLED with name: "vg01"
+> <1> lvm_get_iop_version -- CALLED
+> <22> lvm_check_special -- CALLED
+> <22> lvm_check_special -- LEAVING
+> <1> lvm_get_iop_version -- AFTER ioctl ret: 0
+> <1> lvm_get_iop_version -- LEAVING with ret: 10
+> <1> lvm_lock -- CALLED
+> <22> lvm_check_special -- CALLED
+> <22> lvm_check_special -- LEAVING
+> <1> lvm_lock -- LEAVING with ret: 0
+> <1> pv_check_name -- CALLED with "/dev/hda3"
+> <22> lvm_check_chars -- CALLED with name: "/dev/hda3"
+> <22> lvm_check_chars -- LEAVING with ret: 0
+> <22> lvm_check_dev -- CALLED
+> <333> lvm_check_partitioned_dev -- CALLED
+> <4444> lvm_get_device_type called
+> <4444> lvm_get_device_type leaving with 0
+> <333> lvm_check_partitioned_dev -- LEAVING with ret: TRUE
+> <22> lvm_check_dev -- LEAVING with ret: 1
+> <1> pv_check_name -- LEAVING with ret: 0
+> <1> pv_get_size -- CALLED with /dev/hda3 and 0xbffffa48
+> <22> lvm_dir_cache -- CALLED
+> <333> lvm_add_dir_cache -- CALLED with /dev/hda
+> <4444> lvm_check_dev -- CALLED
+> <55555> lvm_check_partitioned_dev -- CALLED
+> <666666> lvm_get_device_type called
+> <666666> lvm_get_device_type leaving with 0
+> <55555> lvm_check_partitioned_dev -- LEAVING with ret: TRUE
+> <4444> lvm_check_dev -- LEAVING with ret: 1
+> <333> lvm_add_dir_cache -- LEAVING with ret: ADDED
+> <333> lvm_add_dir_cache -- CALLED with /dev/hda1
+> <4444> lvm_check_dev -- CALLED
+> <55555> lvm_check_partitioned_dev -- CALLED
+> <666666> lvm_get_device_type called
+> <666666> lvm_get_device_type leaving with 0
+> <55555> lvm_check_partitioned_dev -- LEAVING with ret: TRUE
+> <4444> lvm_check_dev -- LEAVING with ret: 1
+> <333> lvm_add_dir_cache -- LEAVING with ret: ADDED
+> <333> lvm_add_dir_cache -- CALLED with /dev/hda2
+> <4444> lvm_check_dev -- CALLED
+> <55555> lvm_check_partitioned_dev -- CALLED
+> <666666> lvm_get_device_type called
+> <666666> lvm_get_device_type leaving with 0
+> <55555> lvm_check_partitioned_dev -- LEAVING with ret: TRUE
+> <4444> lvm_check_dev -- LEAVING with ret: 1
+> <333> lvm_add_dir_cache -- LEAVING with ret: ADDED
+> <333> lvm_add_dir_cache -- CALLED with /dev/hda2
+> <4444> lvm_check_dev -- CALLED
+> <55555> lvm_check_partitioned_dev -- CALLED
+> <666666> lvm_get_device_type called
+> <666666> lvm_get_device_type leaving with 0
+> <55555> lvm_check_partitioned_dev -- LEAVING with ret: TRUE
+> <4444> lvm_check_dev -- LEAVING with ret: 1
+> <333> lvm_add_dir_cache -- LEAVING with ret: NOT ADDED
+> <22> lvm_dir_cache -- LEAVING with ret: 3
+> <22> lvm_dir_cache_find -- CALLED with /dev/hda3
+> <333> pv_check_name -- CALLED with "/dev/hda3"
+> <4444> lvm_check_chars -- CALLED with name: "/dev/hda3"
 > <4444> lvm_check_chars -- LEAVING with ret: 0
-> <333> vg_check_name -- LEAVING with ret: 0
-> <22> vg_check_consistency -- LEAVING with ret: 0
-> <1> vg_create_remove -- IOCTL
-> <1> vg_create_remove -- IOCTL returned: -22
-> <1> vg_create_remove -- LEAVING with ret: -22
-> <> vgchange -- vg_create returned: -22
-> <1> lvm_error -- CALLED with: -22
-> <1> lvm_error -- LEAVING with: "Invalid argument"
-> vgchange -- ERROR "Invalid argument" activating volume group "vg01"
-> <1> vg_free -- CALLED
-> <1> vg_free -- entering PV loop
-> <1> vg_free -- entering LV loop
-> <1> vg_free -- LEAVING with ret: 0
-> vgchange -- unlocking logical volume manager
-> <1> lvm_unlock -- CALLED
-> <1> lvm_unlock -- LEAVING with ret: 0
-> <1> lvm_unlock -- CALLED
-> <1> lvm_unlock -- LEAVING with ret: -104
-> 
+> <4444> lvm_check_dev -- CALLED
+> <55555> lvm_check_partitioned_dev -- CALLED
+> <666666> lvm_get_device_type called
+> <666666> lvm_get_device_type leaving with 0
+> <55555> lvm_check_partitioned_dev -- LEAVING with ret: TRUE
+> <4444> lvm_check_dev -- LEAVING with ret: 1
+> <333> pv_check_name -- LEAVING with ret: 0
+> <333> lvm_dir_cache -- CALLED
+> <333> lvm_dir_cache -- LEAVING with ret: 3
+> <22> lvm_dir_cache_find -- LEAVING with entry: -1
+> <22> pv_get_dev_size -- CALLED with /dev/hda3 and 0xbffffa48
+> <22> pv_get_dev_size -- LEAVING with ret: 0
+> <1> pv_get_size -- LEAVING with ret: 0
+> <1> pv_create_kdev_t -- CALLED with "/dev/hda3"
+> <22> pv_check_name -- CALLED with "/dev/hda3"
+> <333> lvm_check_chars -- CALLED with name: "/dev/hda3"
+> <333> lvm_check_chars -- LEAVING with ret: 0
+> <333> lvm_check_dev -- CALLED
+> <4444> lvm_check_partitioned_dev -- CALLED
+> <55555> lvm_get_device_type called
+> <55555> lvm_get_device_type leaving with 0
+> <4444> lvm_check_partitioned_dev -- LEAVING with ret: TRUE
+> <333> lvm_check_dev -- LEAVING with ret: 1
+> <22> pv_check_name -- LEAVING with ret: 0
+> <1> pv_create_kdev_t -- LEAVING with ret: 303
+> <1> lvm_check_partitioned_dev -- CALLED
+> <22> lvm_get_device_type called
+> <22> lvm_get_device_type leaving with 0
+> <1> lvm_check_partitioned_dev -- LEAVING with ret: TRUE
+> <1> lvm_partition_count -- CALLED for 0x303
+> <22> lvm_get_device_type called
+> <22> lvm_get_device_type leaving with 0
+> <1> lvm_partition_count -- LEAVING with ret: 16
+> <1> lvm_dir_cache -- CALLED
+> <1> lvm_dir_cache -- LEAVING with ret: 3
+> <1> pv_read -- CALLED with /dev/hda3
+> <22> pv_check_name -- CALLED with "/dev/hda3"
+> <333> lvm_check_chars -- CALLED with name: "/dev/hda3"
+> <333> lvm_check_chars -- LEAVING with ret: 0
+> <333> lvm_check_dev -- CALLED
+> <4444> lvm_check_partitioned_dev -- CALLED
+> <55555> lvm_get_device_type called
+> <55555> lvm_get_device_type leaving with 0
+> <4444> lvm_check_partitioned_dev -- LEAVING with ret: TRUE
+> <333> lvm_check_dev -- LEAVING with ret: 1
+> <22> pv_check_name -- LEAVING with ret: 0
+> <22> pv_read_already_red -- CALLED with PV /dev/hda3
+> <22> pv_read_already_red -- LEAVING with ret: 0
+> <22> pv_flush -- CALLED to flush /dev/hda3
+> <333> pv_check_name -- CALLED with "/dev/hda3"
+> <4444> lvm_check_chars -- CALLED with name: "/dev/hda3"
+> <4444> lvm_check_chars -- LEAVING with ret: 0
+> <4444> lvm_check_dev -- CALLED
+> <55555> lvm_check_partitioned_dev -- CALLED
+> <666666> lvm_get_device_type called
+> <666666> lvm_get_device_type leaving with 0
+> <55555> lvm_check_partitioned_dev -- LEAVING with ret: TRUE
+> <4444> lvm_check_dev -- LEAVING with ret: 1
+> <333> pv_check_name -- LEAVING with ret: 0
+> <22> pv_flush -- LEAVING with ret: 0
+> <1> pv_read -- going to read /dev/hda3
+> <1> pv_read -- LEAVING with ret: -282
+> <1> pv_check_active -- CALLED
+> Segmentation Fault
 > 
 > _______________________________________________
 > linux-lvm mailing list
