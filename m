@@ -1,8 +1,10 @@
-Message-ID: <3DC7FF36.3000504@jumpline.com>
-From: Ben Snyder <ben@jumpline.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] enterprise kernel
+From: Andreas Dilger <adilger@clusterfs.com>
+Subject: Re: [linux-lvm] e2fsadm and snapshots?
+Message-ID: <20021105191111.GD588@clusterfs.com>
+References: <20021105172624.QSMY10479.imf26bis.bellsouth.net@TAZ2>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20021105172624.QSMY10479.imf26bis.bellsouth.net@TAZ2>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -13,26 +15,31 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Tue Nov  5 11:27:02 2002
+Date: Tue Nov  5 13:14:01 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-My company uses a software package that 'requires' a RedHat Enterprise 
-kernel.  The word 'requires' is in quotes as it doesnt seem to be 
-required other than by the vendor's policy.  They wont support it if 
-it's not enterprise, although the software seems to function just fine.
+On Nov 05, 2002  12:24 -0500, Greg Freemyer wrote:
+> Andreas Dilger wrote:
+> >  I would suggest putting your snapshot LV onto a separate disk and see how
+> >  that does.
+>
+> Can that be done?
+> 
+> I thought the snapshot LV had to share the same VG/PV as the base LV.
 
-The problem I'm running into, is that LVM doesnt seem to be included in 
-the enterprise build available from RedHat in rpm format.    I know I 
-can build my own enterprise kernel, but I'm an RPM rookie (in the 
-context of creating them).
+Same VG, but it can be on any PV therein.
 
-I am curious if anyone out there knew of a workaround or a pre-existing 
-config file that I can plug into my kernel source or rpm spec file that 
-will provide the compile options and/or modules for LVM to function 
-correctly in a 2.4 enterprise kernel?  The whole idea of kernels in 
-pre-configured in rpm format makes me shudder, but I have to do what I 
-have to do in order to get things working.
+> Is there some way to force the snapshot on to separate physical drives.
 
-aTdHvAaNnKcSe
+You just specify the PV on which to create the snapshot LV.  This is no
+different than any other LV creation, for which you can optionally specify
+the PV(s) on which it is created.
+
+Cheers, Andreas
+--
+Andreas Dilger
+http://www-mddsp.enel.ucalgary.ca/People/adilger/
+http://sourceforge.net/projects/ext2resize/
