@@ -1,41 +1,36 @@
-Date: Mon, 23 Oct 2000 14:08:56 +0100 (IST)
-From: Paul Jakma <paulj@itg.ie>
-Subject: Re: [linux-lvm] more LVM 0.8 patches
-In-Reply-To: <20001022162253.C24630@colombina.comedia.it>
-Message-ID: <Pine.LNX.4.21.0010231407260.31248-100000@rossi.itg.ie>
+Subject: Re: [linux-lvm] using previously created lvm
+References: <000401c03a8e$4861a620$a200a8c0@babbage.siliconinfusion.com>
+	<20001020154123.A10018@colombina.comedia.it>
+	<yq1puku53kx.fsf@jaguar.mkp.net>
+	<20001022160940.B24630@colombina.comedia.it>
+From: "Martin K. Petersen" <mkp@linuxcare.com>
+Date: 23 Oct 2000 09:03:10 -0400
+In-Reply-To: Luca Berra's message of "Sun, 22 Oct 2000 16:09:40 +0200"
+Message-ID: <yq1og0b90c1.fsf@jaguar.mkp.net>
 MIME-Version: 1.0
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: Luca Berra <bluca@comedia.it>
-Cc: Andreas Dilger <adilger@turbolinux.com>, linux-lvm@msede.com
+To: bluca@comedia.it
+Cc: linux-lvm@msede.com
 
-excellent...
+>>>>> "Luca" == Luca Berra <bluca@comedia.it> writes:
 
-this fixes the compile problem i had with the tools that i reported to
-Andreas before (but i hadn't compiled the kernel, so he asked me to do
-that).
+>> Actually, I implemented HFS support in Linux ufs when we started
+>> the PA-RISC port.  It's been included in the 2.[34] kernels for
+>> quite a while now...
 
-successfully compiles against 2.4.0-test10-pre4, glibc-2.94, gcc-2.96.
+Luca> Another well hidden secret :( it is not documented anywhere
+Luca> except in /usr/src/linux/fs/ufs/super.c, besides as of
+Luca> 2.4.0-test8 it seems read-only.
 
-regards,
+Yes, it's read-only -- I only cared about being able to read a Linux
+kernel off an HP/UX partition.
 
-paul jakma
+Feel free to hack on it...
 
-On Sun, 22 Oct 2000, Luca Berra wrote:
-
-> hello here are more lvm patches.
-> they apply over patches in lvm-0.8final-3.3.src.rpm
-> 1st chunk is needed to compile on my system (mine only?? K6-2, kernel 2.4.0-test8, glibc 2.1.3, pgcc-2.95.3)
-> 2nd chunk is nice for devfs
-> 3rd chunk is NEEDED for lvm over raid
-> 
-> I am still missing something on the vgchange front, the binary version i saved
-> before trashing my whole system this summer works, the one built from
-> these sources doesn't.
-> 
-> Regards
-> L.
-> 
+-- 
+Martin K. Petersen      Cereal Bowl Engineer, Linuxcare, Inc.
+http://mkp.net/         SGI XFS, Linux/PA-RISC, GNOME
