@@ -1,9 +1,9 @@
 Return-Path: <austin@coremetrics.com>
-Date: Fri, 25 May 2001 09:46:01 -0500 (CDT)
+Date: Fri, 25 May 2001 09:47:34 -0500 (CDT)
 From: Austin Gonyou <austin@coremetrics.com>
-Subject: RE: [linux-lvm] EMC Storage + LVM + XFS
-In-Reply-To: <23D04BDBA646D411BDDD00D0B774B539028C894A@SA-BWMAIL1>
-Message-ID: <Pine.LNX.4.33.0105250945150.10104-100000@UberGeek.coremetrics.com>
+Subject: Re: [linux-lvm] EMC Storage + LVM + XFS
+In-Reply-To: <20010525085816.F18197@babbage.hcsd.de>
+Message-ID: <Pine.LNX.4.33.0105250946400.10104-100000@UberGeek.coremetrics.com>
 MIME-Version: 1.0
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
@@ -18,11 +18,12 @@ List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: TEXT/PLAIN; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: "'linux-lvm@sistina.com'" <linux-lvm@sistina.com>
+To: linux-lvm@sistina.com
 
-Yeah. I thought of all those things already, though thanks for the advice.
-The DevFS idea is one I suppose I could try, but don't know if that's a
-good idea. Thanks for your help!
+I don't think I'm clear on your statement. As far as I know, which is a
+lot about EMC, you can definitely plug disks online. Having Linux see
+them? Not necessarily so, but I believe the polling interval for the Fibre
+driver will take care of that.
 
 -- 
 Austin Gonyou
@@ -31,31 +32,21 @@ Coremetrics, Inc.
 Phone: 512-796-9023
 email: austin@coremetrics.com
 
-On Fri, 25 May 2001, Christian, Chip wrote:
+On Fri, 25 May 2001, Stephan Austermuehle wrote:
 
-> You could play games with chains of:
-> 	echo 'scsi-remove-single-device 1 0 0 2' >/proc/scsi/scsi
-> 	echo 'scsi-add-single-device 1 0 0 1' >/proc/scsi/scsi
-> to get them to line up how you want.
+> On Thu, May 24, 2001 at 10:57:25PM -0400, S. Michael Denton wrote:
 >
-> You could use devfs and access your devices through
-> /dev/sd/...
+> > vgscan is your friend :) (read my earlier post about moving an entire
+> > bus around)
 >
-> On RedHat, at least, apparently you can use kudzu to do it (though I don't know how, not having explored this option).
+> This can only be a workaround because you cannot plug disks online
+> when you need to vgscan.
 >
-> -----Original Message-----
-> From: Austin Gonyou [mailto:austin@coremetrics.com]
-> Sent: Thursday, May 24, 2001 22:46
-> To: linux-lvm@sistina.com
-> Subject: [linux-lvm] EMC Storage + LVM + XFS
+> Stephan
 >
->
-> I have a potential dilemma, and I'd like some feedback for those who might
-> be able to give it. If I have say 2-4 Fibre HBAs connected to an EMC
-> Symmetrix say 3930, and I create volumes, then disks are added some of
-> which who's LUN value is lower than disks already in the system, wouldn't
-> that cause all my sd values to change and move? I know if I add a scsi
-> disk into a LAS array that happens. So if this does happen, what's a good
-> procedure for recovering from it and making sure all my volumes are ok?
->
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@sistina.com
+> http://lists.sistina.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
 >
