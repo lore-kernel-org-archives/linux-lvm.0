@@ -1,9 +1,9 @@
-From: Miquel van Smoorenburg <miquels@cistron.nl>
-Message-ID: <20031230125845.GA2577@cistron.nl>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20031229125412.GA28262@cistron.nl>
-Subject: [linux-lvm] Performance issue with non-4K blocksize on 3ware [was: Re: Speed drop /dev/sda -> /dev/sda1 -> /dev/vg0/test (3ware/LVM)]
+Message-ID: <003501c3ce26$acb02550$0a00a8c0@brane>
+From: "Branko" <brankob@avtomatika.com>
+MIME-Version: 1.0
+Content-Type: multipart/alternative;
+	boundary="----=_NextPart_000_0032_01C3CE2F.0E68A670"
+Subject: [linux-lvm] LVM2 on Gentoo-Dual Opteron/Amd64 system troubles...
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,113 +14,204 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Tue Dec 30 07:00:02 2003
+Date: Tue Dec 30 09:32:15 2003
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: linux-kernel@vger.kernel.org
-Cc: linux-lvm@sistina.com
+To: linux-lvm@sistina.com
 
-In article <cistron.20031229125412.GA28262@cistron.nl>,
-Miquel van Smoorenburg  <miquels@cistron.nl> wrote:
->Hello,
->
->	I'm running Linux 2.6.0 with a 3ware 8506 controller in
->hardware RAID5 mode. The RAID5 array is built of 7+1 200 GB SATA
->disks.
->
->Now it appears that more "mappings" on the array have a bad
->influence on speed. /dev/sda is the fastest, /dev/sda1 is quite
->a bit slower, LVM on /dev/sda is slower yet and LVM on /dev/sda1
->is the slowest.
+This is a multi-part message in MIME format.
 
-Okay, I found a clue. It appears that by default, the blocksize
-of /dev/sda is 4096 and the blocksize of /dev/sda1 is 1024 on my system:
+------=_NextPart_000_0032_01C3CE2F.0E68A670
+Content-Type: text/plain;
+	charset="iso-8859-2"
+Content-Transfer-Encoding: quoted-printable
 
-# blockdev --getbsz /dev/sda
-4096
-# blockdev --getbsz /dev/sda1
-1024
+Hi to all,
 
-On 2.4, setting the blocksize is sticky, on 2.6 it isn't. So I have
-to work around that to test with other blocksizes, for example:
+I'm trying to use LVM on my new dual Opteron with 64-bit Gentoo and have
+some troubles.=20
+My system is :
 
-# /usr/bin/time -p sh -c "blockdev --setbsz 4096 /dev/stdout; dd if=/dev/zero bs=4k count=100000; sync" > /dev/sda1
-100000+0 records in
-100000+0 records out
-real 5.00
-user 0.03
-sys 0.89
+- dual Opteron 240 on TYAN Thunder S2885
+-2 Gb RAM
+-ATA RAID Controller 3Ware Escalade 7506-12 (12 IDE ports, hardware XOR,
+supports multiple RAD fields and separate discs, does RAID 0/1/10/5)
+- 4 x 180 Gb discs=20
+- 6 x 200 Gb discs
 
-409600000 bytes in 5 seconds =~ 80 MB/sec, which is quite good and
-the same throughput as through /dev/sda. So, it appears that the
-3ware driver really really wants a 4K blocksize, otherwise performance
-drops at least 30-40%.
+4 CDRW units
 
-Now with LVM on top of it, performance drops again. Say I create a
-logical volume on /dev/sda1:
+gentoo kernel 2.6 with usual gentoo patches. Kernel has devfs, pts etc =
+compiled-in=20
 
-# pvcreate /dev/sda1
-# vgcreate vg0 /dev/sda1
-# lvcreate -L 100G -n test vg0
+Driver for 3ware is also compiled in kernel (not as a module) as are all =
+main scsi modules...
 
-# blockdev --getbsz /dev/sda1
-1024
-# blockdev --getbsz /dev/vg0/test
-4096
+All CDRW units are connected to MB's primary and secondary channel.
 
-Performance:
-# /usr/bin/time -p sh -c "dd if=/dev/zero of=/dev/vg0/test bs=4k count=100000; sync"
-100000+0 records in
-100000+0 records out
-409600000 bytes transferred in 8.512663 seconds (48116553 bytes/sec)
-real 8.54
-user 0.04
-sys 1.02
+All discs are on 3Ware card.
 
-So, I tried a small patch in dm-table.c to set the blocksize of the
-underlying device to 4096:
+Five 200 GB units are in RAID5 array and four 180 Gb units and one 200 =
+GB are
+free.=20
 
-# diff -u dm-table.c.b4 dm-table.c
---- dm-table.c.b4       2003-12-29 15:18:18.000000000 +0100
-+++ dm-table.c  2003-12-30 13:08:06.000000000 +0100
-@@ -359,8 +359,10 @@
-        r = bd_claim(bdev, _claim_ptr);
-        if (r)
-                blkdev_put(bdev, BDEV_RAW);
--       else
-+       else {
-                d->bdev = bdev;
-+               set_blocksize(bdev, 4096);
-+       }
-        return r;
- }
-  
-While it appears to work, it doesn't seem to make any difference:
+Machine sees 3Ware card as a SCSI controller with one big SCSI 800 Gb =
+disc
+and five smaller discs.
 
-# blockdev --getbsz /dev/sda1
-4096
-# blockdev --getbsz /dev/vg0/test
-4096
+I have partitioned array in three partitions:
+-small ext2 /boot partition (512 Mb or so)
+-4 Gb swap partition
+-the rest (cca 790 GB) is type 8E partition for LVM to be mounted as /
 
-Performance:
-# /usr/bin/time -p sh -c "dd if=/dev/zero of=/dev/vg0/test bs=4k count=100000; sync"
-100000+0 records in
-100000+0 records out
-409600000 bytes transferred in 8.528826 seconds (48025367 bytes/sec)
-real 8.54
-user 0.05
-sys 0.98
+I have emerged LVM2 tools, made volume group etc and formatted it under
+ext3.
 
-Not so weird, since in dm-table.c the device is opened in RAW mode
-and raw devices do I/O at hardsect_size, right? So that would be
-512 bytes, explaining the bad performance.
+I can activate it and mount it, but after reboot kernel doesn't see it
+anymore...
 
-I'm hoping someone has read this far and can offer me a clue as
-how to fix this. Are somehow requests not merged right, and are
-small 512 byte requests submitted to the 3ware driver? Is the
-3ware driver responsible for merging requests ? I really don't
-know anything about the block layer or bio's so I'm kind of
-lost here.
+Manual recommends using special script called lvmcreate_initdr to do =
+initrd initialisations, but my lvm2 doesn't have that script. After many =
+trials and errors  i have made initrd which succeeds with LVM =
+initialisation, but machine reboots just at the point when it should =
+drop initrd environment and jump into root  on LV.
 
-Mike.
+In the initrd environment machine recognises VG and its LV just fine. I =
+can mount it and check it, but right after returning from linuxrc script =
+machine spews something like:
+
+3w-xxxx driver: shutting off card (0)
+3w-xxxx: reboot  (not sure about that one, it is shown just for a short =
+moment)
+
+
+Otherwise, I can boot just fine from any other physical partition on one =
+of other discs on the 3Ware card
+Lvm gets initialised (vgscan, vgchange -a y etc) and LV is available =
+just fine, but that's not what I want.
+
+I guess I'm asking if:
+
+-anyone else has similar machine with 3Ware RAID card and root on LV and =
+how did he accomplish this ?
+
+-how does one make initrd with LVM ? I had to scavenge script from LVM1, =
+without much success...
+
+
+
+Regards,
+
+
+Branko
+------=_NextPart_000_0032_01C3CE2F.0E68A670
+Content-Type: text/html;
+	charset="iso-8859-2"
+Content-Transfer-Encoding: quoted-printable
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML><HEAD>
+<META http-equiv=3DContent-Type content=3D"text/html; =
+charset=3Diso-8859-2">
+<META content=3D"MSHTML 6.00.2800.1276" name=3DGENERATOR>
+<STYLE></STYLE>
+</HEAD>
+<BODY bgColor=3D#ffffff>
+<DIV><FONT face=3DArial size=3D2><FONT face=3D"Times New Roman" =
+size=3D3>Hi to=20
+all,<BR><BR>I'm trying to use LVM on my new dual Opteron with 64-bit =
+Gentoo and=20
+have<BR>some troubles. <BR>My system is :<BR><BR>- dual Opteron 240 on =
+TYAN=20
+Thunder S2885<BR>-2 Gb RAM<BR>-ATA RAID Controller 3Ware Escalade =
+7506-12 (12=20
+IDE ports, hardware XOR,<BR>supports multiple RAD fields and separate =
+discs,=20
+does RAID 0/1/10/5)<BR>- 4 x 180 Gb discs <BR>- 6 x 200 Gb =
+discs<BR><BR>4 CDRW=20
+units</FONT></FONT></DIV>
+<DIV><FONT face=3DArial size=3D2><FONT face=3DArial =
+size=3D2></FONT></FONT>&nbsp;</DIV>
+<DIV><FONT face=3DArial size=3D2><FONT face=3D"Times New Roman" =
+size=3D3>gentoo kernel=20
+2.6 with usual gentoo patches. K</FONT></FONT><FONT face=3DArial =
+size=3D2><FONT=20
+face=3D"Times New Roman" size=3D3>ernel has devfs, pts etc compiled-in =
+</DIV><FONT=20
+face=3DArial size=3D2></FONT><FONT face=3DArial size=3D2></FONT><FONT =
+face=3DArial=20
+size=3D2></FONT>
+<DIV><FONT face=3DArial size=3D2></FONT><FONT face=3DArial =
+size=3D2></FONT><BR>Driver=20
+for 3ware is also compiled in kernel (not as a module) as are all main =
+scsi=20
+modules...<BR><BR>All CDRW units are connected to MB's primary and =
+secondary=20
+channel.<BR><BR>All discs are on 3Ware card.<BR><BR>Five 200 GB units =
+are in=20
+RAID5 array and four 180 Gb units and one 200 GB&nbsp;are<BR>free. =
+</DIV>
+<DIV><FONT face=3DArial size=3D2></FONT><FONT face=3DArial =
+size=3D2></FONT><FONT=20
+face=3DArial size=3D2></FONT><BR>Machine sees 3Ware card as a SCSI =
+controller with=20
+one big SCSI 800 Gb disc<BR>and five smaller discs.<BR><BR>I have =
+partitioned=20
+array in three partitions:</DIV>
+<DIV>-small ext2 /boot partition (512 Mb or so)</DIV>
+<DIV><FONT face=3DArial size=3D2>-</FONT>4 Gb swap partition</DIV>
+<DIV>-the rest (cca 790 GB) is&nbsp;type&nbsp;8E partition for LVM to be =
+mounted=20
+as /<BR><BR>I have emerged LVM2 tools, made volume group etc and =
+formatted it=20
+under<BR>ext3.<BR><BR>I can activate it and mount it, but after reboot =
+kernel=20
+doesn't see it<BR>anymore...<BR></DIV>
+<DIV>Manual&nbsp;recommends using special script called lvmcreate_initdr =
+to do=20
+initrd initialisations, but my lvm2 doesn't have that script. After many =
+trials=20
+and errors&nbsp; i have made initrd which succeeds with LVM =
+initialisation, but=20
+machine reboots just at the point when it should drop initrd environment =
+and=20
+jump into root&nbsp; on LV.</DIV>
+<DIV><FONT face=3DArial size=3D2></FONT>&nbsp;</DIV>
+<DIV><FONT face=3DArial size=3D2>In the initrd environment machine =
+recognises VG and=20
+its LV just fine. I can mount it and check it, but right after returning =
+from=20
+linuxrc script machine spews something like:</FONT></DIV>
+<DIV><FONT face=3DArial size=3D2></FONT>&nbsp;</DIV>
+<DIV><FONT face=3DArial size=3D2>3w-xxxx driver: shutting off card =
+(0)</FONT></DIV>
+<DIV><FONT face=3DArial size=3D2>3w-xxxx: reboot&nbsp; (not sure about =
+that one, it=20
+is shown just for a short moment)</FONT></DIV>
+<DIV><FONT face=3DArial size=3D2></FONT>&nbsp;</DIV>
+<DIV><FONT face=3DArial size=3D2></FONT>&nbsp;</DIV>
+<DIV><FONT face=3DArial size=3D2>Otherwise, I can boot just fine from =
+any other=20
+physical partition on one of other discs on the 3Ware card</FONT></DIV>
+<DIV><FONT face=3DArial size=3D2>Lvm gets initialised (vgscan, vgchange =
+-a y etc)=20
+and LV is available just fine, but that's not what I want.</FONT></DIV>
+<DIV><FONT face=3DArial size=3D2></FONT>&nbsp;</DIV>
+<DIV><FONT face=3DArial size=3D2>I guess I'm asking if:</FONT></DIV>
+<DIV><FONT face=3DArial size=3D2></FONT>&nbsp;</DIV>
+<DIV><FONT face=3DArial size=3D2>-anyone else has similar machine with =
+3Ware RAID=20
+card and root on LV and how did he accomplish this ?</FONT></DIV>
+<DIV><FONT face=3DArial size=3D2></FONT>&nbsp;</DIV>
+<DIV><FONT face=3DArial size=3D2>-how does one make initrd with LVM ? I =
+had to=20
+scavenge script from LVM1, without much success...</FONT></DIV>
+<DIV><FONT face=3DArial size=3D2></FONT>&nbsp;</DIV>
+<DIV><FONT face=3DArial size=3D2></FONT>&nbsp;</DIV>
+<DIV><FONT face=3DArial size=3D2></FONT>&nbsp;</DIV>
+<DIV><FONT face=3DArial size=3D2>Regards,</FONT></DIV>
+<DIV><FONT face=3DArial size=3D2></FONT>&nbsp;</DIV>
+<DIV><FONT face=3DArial size=3D2></FONT>&nbsp;</DIV>
+<DIV><FONT face=3DArial =
+size=3D2>Branko</FONT></FONT></DIV></FONT></BODY></HTML>
+
+------=_NextPart_000_0032_01C3CE2F.0E68A670--
