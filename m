@@ -1,13 +1,11 @@
-From: Andres Salomon <dilinger@mp3revolution.net>
-Subject: Re: [linux-lvm] mapping blocks to PVs?
-Message-Id: <20020226070917.GA15021@mp3revolution.net>
-References: <20020223214540.GA12317@mp3revolution.net>
-    <20020224000143.D12832@lynx.adilger.int>
-    <20020224225832.GA4123@mp3revolution.net>
-    <20020224215921.E12832@lynx.adilger.int>
+From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
+Subject: Re: [linux-lvm] LVM ate my data!
+Message-Id: <20020226114538.A13520@sistina.com>
+References: <20020225192811.A9674@sistina.com>
+    <Pine.OSF.4.05.10202252007450.18015-100000@cpca7.uea.ac.uk>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20020224215921.E12832@lynx.adilger.int>
+In-Reply-To: <Pine.OSF.4.05.10202252007450.18015-100000@cpca7.uea.ac.uk>;
+    from W.B.Hill@uea.ac.uk on Mon, Feb 25, 2002 at 08:18:10PM +0000
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -18,59 +16,48 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Tue Feb 26 01:09:01 2002
+Date: Tue Feb 26 04:45:02 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-That did the trick, thank you :)
+On Mon, Feb 25, 2002 at 08:18:10PM +0000, wbh wrote:
+> Wahey - I got my data back, thankyou!
+> 
+> > pvcreate -yff /dev/hda[34]
+> > vgcfgrestore -n YourVGName /dev/hda3
+> > vgcfgrestore -n YourVGName /dev/hda4
+> > vgscan
+> > vgchange -ay
+> 
+> What I did, from .bash_history
+> rm -rf /etc/lvmtab /etc/lvmtab.d /dev/pvg # I had backed up already.
+> ~/LVM/1.0.3/tools/vgscan
+> ~/LVM/1.0.3/pvcreate -yff /dev/hda[34]
+> vgcfgrestore -n pvg /dev/hda3
+> vgcfgrestore -n pvg /dev/hda4
+> ~/uuid_fixer/uuid_fixer /dev/hda3 /dev/hda4
+> ~/LVM/1.0.3/tools/vgscan
+> ~/LVM/1.0.3/tools/vgchange -ay
+> mount -treiserfs /dev/pvg/1 /mnt/dat
+> 
+> Don't know how much of that was needed...
 
-On Sun, Feb 24, 2002 at 09:59:21PM -0700, Andreas Dilger wrote:
+All of that probably.
+uuid_fixer covers a bug in older vgcfgrestore versions which prevented correct
+restores of the PV UUID tables to all PVs.
+
 > 
-> On Feb 24, 2002  17:58 -0500, Andres Salomon wrote:
-> > Ok, assuming the block/sector stuff is correct:
-> > 
-> >    --- Physical extents ---
-> >    PE    LV                        LE      Disk sector
-> >    00000 /dev/site/lvol1           00000   33144
-> >    00001 /dev/site/lvol1           00001   65912
-> > 
-> > badblocks(2) is not picking up those blocks as being bad; this means I
-> > need to manually remove the first LE from this LV.  I assume I can
-> > do something similar to `pvmove -n /dev/site/lvol1:0 /dev/hdf1 /dev/hdb1`
-> > (hdf1 is the one causing problems, but I can't simply remove the PV from the
-> > VG w/out deleting lots of stuff).  However, how do I lvreduce from the
-> > beginning of the LV?  Is that possible?
+> I had been playing with snapshots recently, but they didn't seem to work
+> with my ancient (2.4.3) kernel. Could that have been the cause?
+
+In case you haven't patched in the newest LVM driver code following the 
+instrcutions in PATCHES/README contained in the LVM distro -> yes.
+
 > 
-> Actually, judging by the error, I think that this error is in the layout
-> of the journal itself instead of a disk error.  If it was a disk error
-> you would also be getting IDE errors, and badblocks would detect it.
-> The "bad block at offset" message happens when it is doing a bmap on the
-> journal, and hasn't even started the read.
-> 
-> I would suggest just removing the journal (tune2fs -O^has_journal <LV>) and
-> then re-creating it (tune2fs -j <LV>) and the problem should go away.
-> 
-> Cheers, Andreas
-> 
-> > On Sun, Feb 24, 2002 at 12:01:43AM -0700, Andreas Dilger wrote:
-> > > On Feb 23, 2002  16:45 -0500, Andres Salomon wrote:
-> > > > I've got a LV that keeps corrupting, made up of several IDE disks.  I've
-> > > > already discovered one of the drives to be flaking out, after various
-> > > > read tests on the device gave BadCRC/IRQ timeout errors.  Read tests on
-> > > > the other drives succeeded; however, I'm still getting stuff like:
-> > > > 
-> > > > journal_bmap: journal block not found at offset 7180 on lvm(58,0)
-> > > > 
-> > > > and
-> > > > 
-> > > > /dev/site/lvol1: recovering journal
-> > > > JFS: bad block at offset 7182
-> --
-> Andreas Dilger
-> http://sourceforge.net/projects/ext2resize/
-> http://www-mddsp.enel.ucalgary.ca/People/adilger/
+> Thanks!
+>     Bill
 > 
 > 
 > _______________________________________________
@@ -80,6 +67,19 @@ On Sun, Feb 24, 2002 at 09:59:21PM -0700, Andreas Dilger wrote:
 > read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
 
 -- 
-"I think a lot of the basis of the open source movement comes from
-  procrastinating students..."
-	-- Andrew Tridgell <http://www.linux-mag.com/2001-07/tridgell_04.html>
+
+Regards,
+Heinz    -- The LVM Guy --
+
+*** Software bugs are stupid.
+    Nevertheless it needs not so stupid people to solve them ***
+
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+Heinz Mauelshagen                                 Sistina Software Inc.
+Senior Consultant/Developer                       Am Sonnenhang 11
+                                                  56242 Marienrachdorf
+                                                  Germany
+Mauelshagen@Sistina.com                           +49 2626 141200
+                                                       FAX 924446
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
