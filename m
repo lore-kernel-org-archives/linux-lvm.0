@@ -1,12 +1,12 @@
-Return-Path: <thornber@btconnect.com>
-Date: Fri, 17 Aug 2001 10:28:59 +0100
-Subject: Re: [linux-lvm] [PATCH] LVM 1.0 & Linux 2.4.9
-Message-ID: <20010817102859.B450@btconnect.com>
-References: <Pine.LNX.4.33.0108162238310.5208-100000@greebo.foobarhouse.com>
+Return-Path: <patrick@tykepenguin.cix.co.uk>
+Date: Fri, 17 Aug 2001 10:58:36 +0100
+From: Patrick Caulfield <caulfield@sistina.com>
+Subject: Re: [linux-lvm] Problems with 1.0
+Message-ID: <20010817105835.C709@tykepenguin.com>
+References: <BJEHIDHMNHMANMFJEKAPCEAGCAAA.tren@eotnetworks.com> <20010817110043.A10370@sistina.com>
 Mime-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <Pine.LNX.4.33.0108162238310.5208-100000@greebo.foobarhouse.com>; from jamesp@foobarhouse.com on Thu, Aug 16, 2001 at 10:40:52PM +0100
-From: Joe Thornber <thornber@btconnect.com>
+In-Reply-To: <20010817110043.A10370@sistina.com>; from mauelshagen@sistina.com on Fri, Aug 17, 2001 at 11:00:43AM +0200
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -22,14 +22,22 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Thu, Aug 16, 2001 at 10:40:52PM +0100, James Pattinson wrote:
-> Hi!
+On Thu, Aug 16, 2001 at 10:55:35PM -0600, Tren Blackburn wrote:
+> Hi List;
 > 
-> Another day, another kernel to compile! But after applying LVM 1.0 to
-> 2.4.9 this evening, I found it didn't compile. It's to do with a mismatch
-> between the max and min macros in the kernel and in LVM. Here's a patch to
-> make things work:
+> I had installed the 1.0 driver into my 2.4.8 kernel, and rebooted.
+> Everything came up fine, so I installed the user tools and forgot about
+> them...until I had to reboot this evening...Now the LVM tools are
+> dynamically linked (Looking for libgcc_s.so.1)?  Or so it seems.  I am no
+> a C programmer and don't fully understand how linking works, but it seems
+> to me that the beta 8 tools were statically linked as they didn't need any
+> external libraries, but the 1.0 user tools are dynamically linked.
 
-Thanks, will update cvs.
+libgcc_s.so.1 is new for GCC 3.0. gcc 2 statically linked libgcc. So it looks
+like maybe you built beta8 with gcc 2 and 1.0 with gcc 3.
 
-- Joe
+In any event, as Heinz says, libgcc.so.1 should be in /lib if gcc was correctly
+installed - though if you are booting from an initrd it may not have found its
+way onto that.
+
+patrick
