@@ -1,11 +1,9 @@
-Return-Path: <grobe@gmx.net>
-Date: Tue, 21 Aug 2001 11:25:04 +0200 (MEST)
-From: Lars Grobe <grobe@gmx.net>
+Return-Path: <elim@nutrot.ern-e.org>
+Date: Tue, 21 Aug 2001 05:53:48 -0400 (EDT)
+From: elim <elim@nutrot.ern-e.org>
+Message-ID: <Pine.LNX.4.21.0108210453440.15709-100000@nutrot.ern-e.org>
 MIME-Version: 1.0
-Message-ID: <2382.998385904@www19.gmx.net>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] resizing a filesystem failed, but volume was resized... can I restore the previous lv?
+Subject: [linux-lvm] Ow.. not again
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,73 +15,37 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
+Content-Type: TEXT/PLAIN; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Hi!
+Hiya
 
-I have had problems with resizing (shrinking) a reiser fs on a lv. The fs
-resizing wasn't completed, but the lv was resized than. So I wonder if I can
-"undo" the resizing of the lv? In fact, the lv would have to take the same
-space as before, so I could do fsck and rebuild my fs.
+After a lengthy period of uptime, my Linux box was rebooted today and this
+is what it spewed out on bootup:
 
-Thank You, CU, Lars.
-
-www.rechnerpool.com
-
-
-
-The messgae from the reiserfs-list follows:
-___
-
-LOG> Hi!
- LOG> This is part two of my report of a failed resize:
-
- LOG> Yesterday I tried to resize a reiser fs. It is build on a LVM
-partition.
- LOG> As I know that there is some calculation to make the resize of LVM an
- LOG> Reiserfs fit, I used the script resize_rfs from the German magazine
- LOG> Linuxmagazin (6/2000). This script is doing some checks and
-calculations
- LOG> on parameters. So I tried to shrink my fs from 320 to 290 GB.
-
-can you send that script to me ?
-
- LOG> But the process was interrupted, so the fs wasn't resized completely,
- LOG> while the script did go on to the next step and resized the logical
- LOG> volume to 290 GB.
-
- LOG> So there are two errors in the fs: there is a started, but not
-completed
- LOG> resize of the fs AND the fs is on a lvm-volume that is smaller than
-the
- LOG> filesystem.
-
- LOG> What should I do? I would usually try to set the size of the lv back
-to
- LOG> 320 GB. 
-
-Yes. But I do not know how to force LVM system to allocate same disk space
-in
-same order for your logical volume again :(
-
- LOG> Should I do a fsck than? 
-
-Yes. run reiserfsck --check /dev/... , then follow the instructions.
-
- LOG> Is there a way to keep the data (else I
- LOG> will have to replay from the backup, so I should start soon)?
-
-I think you should try to restore LV and then run reiserfsck on it.
-
- LOG> Thank You, CU, Lars.
-
--- 
-Thanks,
-Alex.
+vgscan -- found inactive volume group "vg01"
+vgscan -- reading data of volume group "vg01" from physical volume(s)
+vgscan -- ERROR "vg_read_with_pv_and_lv(): allocated LE of LV" can't get
+data of volume group "vg01" from physical volume(s)
+vgscan -- ERROR "vg_read_with_pv_and_lv(): allocated LE of LV" creating
+"/etc/lvmtab" and "/etc/lvmtab.d"
 
 
+I tried the vgcfgrestore but then I ended up with "No volume groups
+found" error. I then tried dd'ing the vg info onto the pv's as per a
+previous post which basically got me back to the "ERROR
+"vg_read_with_pv_and_lv(): allocated LE of LV" can't get
+data of volume group "vg01" from physical volume(s)" error. 
 
+Basically Im going in circles. I even tried the uuid_fixer but it seems it
+does the same thing as the dd trick.
 
--- 
-GMX - Die Kommunikationsplattform im Internet.
-http://www.gmx.net
+I've scoured the faq's and read one too many list messages... can somebody
+please help??? Having my fs's back would be really convenient right now :)
+
+Kernel is 2.2.19aa1 and Iam using 0.9beta4 of lvm and the tools. The vg
+on disk was created pre 0.6.. i cant remember exactly.
+
+Thanks.
+Ernie
