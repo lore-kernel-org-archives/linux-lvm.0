@@ -1,9 +1,9 @@
 From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] Is 1.0.6 causing regular data corruption
-Message-ID: <20030422100425.A30960@sistina.com>
-References: <20030421232813.2742.qmail@web14410.mail.yahoo.com>
+Subject: Re: [linux-lvm] cvs anonymous update problem && ftp anonymous acces failed
+Message-ID: <20030422100620.B30960@sistina.com>
+References: <3EA450A0.8010302@tiscali.be>
 Mime-Version: 1.0
-In-Reply-To: <20030421232813.2742.qmail@web14410.mail.yahoo.com>; from grenoml@yahoo.com on Mon, Apr 21, 2003 at 04:28:13PM -0700
+In-Reply-To: <3EA450A0.8010302@tiscali.be>; from joel.soete@tiscali.be on Mon, Apr 21, 2003 at 08:12:16PM +0000
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,38 +14,34 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Tue Apr 22 03:10:01 2003
+Date: Tue Apr 22 03:12:02 2003
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Mon, Apr 21, 2003 at 04:28:13PM -0700, grenoml wrote:
-> Redhat indicates that 1.0.6 is regularly corrupting data?
+Joel,
 
-NO.
+sorry for the inconvenience.
 
-1.0.7 is the actual version though, which has some bug fixes mainly
-related to snapshots (memory leaks, exception table, ...).
+Problem is probably caused by sonmething missed during a server relocation
+last Friday. We'll try to fix it ASAP.
 
+On Mon, Apr 21, 2003 at 08:12:16PM +0000, Joel Soete wrote:
+> Hi all,
 > 
->   http://bugzilla.redhat.com/bugzilla/show_bug.cgi?id=89233
+> That is a long time that I regulary update without pb your lvm src cvs.
+> But since some days I couldn't any more because:
+> Unknown host tech.sistina.com
 > 
-> Does 1.0.6 have a chronic problem with pvmove?  Or is the pvmove issue
-> I see in the list just an isolated incident?
+> The same for ftp.sistina.com or lists.sistina.com??
+> 
+> Could this be an ISP pb?
+> 
+> Thanks in advance for advice,
+>     Joel
 > 
 > 
-> 
-> 
-> 
-> 
-> 
-> 
-> 
-> __________________________________________________
-> Do you Yahoo!?
-> The New Yahoo! Search - Faster. Easier. Bingo
-> http://search.yahoo.com
 > 
 > _______________________________________________
 > linux-lvm mailing list
