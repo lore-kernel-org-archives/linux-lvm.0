@@ -1,40 +1,32 @@
-Date: Fri, 21 Jan 2000 09:01:29 -0600
-From: "Heinz J. Mauelshagen" <mge@ez-darmstadt.telekom.de>
-Subject: Re: [linux-lvm] lvm mirroring
-Message-ID: <20000121090129.A7348@congo.borg.umn.edu>
-Reply-To: mge@ez-darmstadt.telekom.de
-References: <38886E0B.78D7FEE2@bct.ericsson.se>
-Mime-Version: 1.0
-In-Reply-To: <38886E0B.78D7FEE2@bct.ericsson.se>; from sebastian.tomac@bct.ericsson.se on Fri, Jan 21, 2000 at 03:32:43PM +0100
+From: paul@clubi.ie
+Message-Id: <200001212321.XAA01797@tribble.medianet.ie>
+Subject: [linux-lvm] 0.8i pvcreate doesn't recognise Mylex RAID
+Date: Fri, 21 Jan 2000 23:21:46 GMT
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: Sebastian Tomac <sebastian.tomac@bct.ericsson.se>
-Cc: linux-lvm@msede.com, mge@ez-darmstadt.telekom.de
+To: linux-lvm@msede.com
 
-On Fri, Jan 21, 2000 at 03:32:43PM +0100, Sebastian Tomac wrote:
-> Correct me if I'm wrong, but if I read the LVM-0.8 code right there is
-> no mirroring  implemented.  Both AIX and Solaris lvm has mirroring
-> capabilities (sk. lv copies).
+OK, I've compiled and installed 2.2.14+0.8i+devfs 99.10, but still
+pvcreate returns an error in pv_get_size when trying to init a
+Mylex /dev/rd/.../partX device:
 
-Yes, i know :-)
+pvcreate  /dev/rd/disc0/part3
+pvcreate -- ERROR -241 getting size of physical volume "/dev/rd/disc0/part3"
 
-> 
-> If there is interest to enable this feature in LVM, I  would be prepared
-> to start working on it.
-> 
-> Let me know...
+ls -l /dev/rd/disc0/part3
+brw-------   1 root     root      48,   3 Jan  1  1970 /dev/rd/disc0/part3
 
-Great offer.
-Thanks a lot!
+Any solution to this problem? Where can i teach pv_get_size about
+Mylex /dev/rd? Also does it matter that I'm using devfs and hence
+have long nested /dev/ path names?
 
-What about metadata (VGDA) mirroring as well?
-IMO this is necessary too, because data mirroring is not usefull if
-we get rid of our metadata which will lead to unaccessable data anyway.
+thanks,
 
-Could you provied your concept ideas?
+Paul Jakma
+paul@clubi.ie
 
-Regards,
-Heinz
+---------------------------------------------
