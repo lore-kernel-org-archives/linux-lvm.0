@@ -1,9 +1,10 @@
-From: "YC" <yckim62@hotmail.com>
-MIME-Version: 1.0
-Content-Type: multipart/alternative;
-	boundary="----=_NextPart_000_0005_01C22DFC.B62FF540"
-Message-ID: <OE49paiw5Y5z4IssCQq0000187f@hotmail.com>
-Subject: [linux-lvm] can't mount snapshot, if created at ext3 logical volume
+From: Patrick Caulfield <caulfield@sistina.com>
+Subject: Re: [linux-lvm] can't mount snapshot, if created at ext3 logical volume
+Message-ID: <20020717182859.GA3723@tykepenguin.com>
+References: <OE49paiw5Y5z4IssCQq0000187f@hotmail.com>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <OE49paiw5Y5z4IssCQq0000187f@hotmail.com>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,71 +15,34 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Jul 17 11:48:02 2002
+Date: Wed Jul 17 13:28:02 2002
 List-Id: <linux-lvm.redhat.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-This is a multi-part message in MIME format.
+On Thu, Jul 18, 2002 at 01:44:53AM +0900, YC wrote:
+>    I am testing LVM 1.0.4 in Linux 2.4.18.
+>    and I found one problem in mounting snapshot volume for ext3 file system.
+>    at 1.0.3, it was usable, but not now.
+>     
+>    in my testing,
+>    it was OK if created snapshot volume for ext2 file system.
+>    But if created snapshot volume for ext3 file system,
+>    that snapshot volume can not mount with error-message
+>    "mount: wrong fs type, bad option, bad superblock on /dev/VG00/snap3,
+>           or too many mounted file systems".
+>     
+>    if I mount original volume with ext2, snapshot volume also has no problem
+>    in create and mount.
+>    But
+>    if I mount same original volume with ext3, snapshot volume was created
+>    successfully, and can not mount.
 
-------=_NextPart_000_0005_01C22DFC.B62FF540
-Content-Type: text/plain;
-	charset="ks_c_5601-1987"
-Content-Transfer-Encoding: base64
+You need to apply the VFS lock patch included in the source distribution.
 
-SSBhbSB0ZXN0aW5nIExWTSAxLjAuNCBpbiBMaW51eCAyLjQuMTguDQphbmQgSSBmb3VuZCBvbmUg
-cHJvYmxlbSBpbiBtb3VudGluZyBzbmFwc2hvdCB2b2x1bWUgZm9yIGV4dDMgZmlsZSBzeXN0ZW0u
-DQphdCAxLjAuMywgaXQgd2FzIHVzYWJsZSwgYnV0IG5vdCBub3cuDQoNCmluIG15IHRlc3Rpbmcs
-DQppdCB3YXMgT0sgaWYgY3JlYXRlZCBzbmFwc2hvdCB2b2x1bWUgZm9yIGV4dDIgZmlsZSBzeXN0
-ZW0uDQpCdXQgaWYgY3JlYXRlZCBzbmFwc2hvdCB2b2x1bWUgZm9yIGV4dDMgZmlsZSBzeXN0ZW0s
-IA0KdGhhdCBzbmFwc2hvdCB2b2x1bWUgY2FuIG5vdCBtb3VudCB3aXRoIGVycm9yLW1lc3NhZ2UN
-CiJtb3VudDogd3JvbmcgZnMgdHlwZSwgYmFkIG9wdGlvbiwgYmFkIHN1cGVyYmxvY2sgb24gL2Rl
-di9WRzAwL3NuYXAzLA0KICAgICAgIG9yIHRvbyBtYW55IG1vdW50ZWQgZmlsZSBzeXN0ZW1zIi4N
-Cg0KaWYgSSBtb3VudCBvcmlnaW5hbCB2b2x1bWUgd2l0aCBleHQyLCBzbmFwc2hvdCB2b2x1bWUg
-YWxzbyBoYXMgbm8gcHJvYmxlbSBpbiBjcmVhdGUgYW5kIG1vdW50Lg0KQnV0DQppZiBJIG1vdW50
-IHNhbWUgb3JpZ2luYWwgdm9sdW1lIHdpdGggZXh0Mywgc25hcHNob3Qgdm9sdW1lIHdhcyBjcmVh
-dGVkIHN1Y2Nlc3NmdWxseSwgYW5kIGNhbiBub3QgbW91bnQuDQoNCnBsZWFzZSBhZHZpc2UgYWJv
-dmUgcHJvYmxlbS4NClJlZ2FyZHMsDQpZb25nQ2h1bCBLaW0sIHlja2ltQGxpbnV4c2VjdXJpdHku
-Y28ua3IgDQoNCg==
+note: the VFS lock patch is 1.0.4 is rather broken so use the one from 1.0.5 -
+it'll be fine with a 1.0.4 kernel.
+-- 
 
-------=_NextPart_000_0005_01C22DFC.B62FF540
-Content-Type: text/html;
-	charset="ks_c_5601-1987"
-Content-Transfer-Encoding: base64
-
-PCFET0NUWVBFIEhUTUwgUFVCTElDICItLy9XM0MvL0RURCBIVE1MIDQuMCBUcmFuc2l0aW9uYWwv
-L0VOIj4NCjxIVE1MPjxIRUFEPg0KPE1FVEEgaHR0cC1lcXVpdj1Db250ZW50LVR5cGUgY29udGVu
-dD0idGV4dC9odG1sOyBjaGFyc2V0PWtzX2NfNTYwMS0xOTg3Ij4NCjxNRVRBIGNvbnRlbnQ9Ik1T
-SFRNTCA2LjAwLjI3MTYuMjIwMCIgbmFtZT1HRU5FUkFUT1I+DQo8U1RZTEU+PC9TVFlMRT4NCjwv
-SEVBRD4NCjxCT0RZIGJnQ29sb3I9I2ZmZmZmZj4NCjxESVY+PEZPTlQgZmFjZT2xvLiyw7wgc2l6
-ZT0yPkkgYW0gdGVzdGluZyBMVk0gMS4wLjQgaW4gTGludXggMi40LjE4LjwvRk9OVD48L0RJVj4N
-CjxESVY+PEZPTlQgZmFjZT2xvLiyw7wgc2l6ZT0yPmFuZCBJIGZvdW5kIG9uZSBwcm9ibGVtIGlu
-IG1vdW50aW5nIHNuYXBzaG90IHZvbHVtZSANCmZvciBleHQzIGZpbGUgc3lzdGVtLjwvRk9OVD48
-L0RJVj4NCjxESVY+PEZPTlQgZmFjZT2xvLiyw7wgc2l6ZT0yPmF0IDEuMC4zLCBpdCB3YXMgdXNh
-YmxlLCBidXQgbm90IG5vdy48L0ZPTlQ+PC9ESVY+DQo8RElWPjxGT05UIGZhY2U9sby4ssO8IHNp
-emU9Mj48L0ZPTlQ+Jm5ic3A7PC9ESVY+DQo8RElWPjxGT05UIGZhY2U9sby4ssO8IHNpemU9Mj5p
-biBteSB0ZXN0aW5nLDwvRk9OVD48L0RJVj4NCjxESVY+PEZPTlQgZmFjZT2xvLiyw7wgc2l6ZT0y
-Pml0IHdhcyBPSyBpZiBjcmVhdGVkIHNuYXBzaG90IHZvbHVtZSBmb3IgZXh0MiBmaWxlIA0Kc3lz
-dGVtLjwvRk9OVD48L0RJVj4NCjxESVY+PEZPTlQgZmFjZT2xvLiyw7wgc2l6ZT0yPkJ1dCBpZiBj
-cmVhdGVkIHNuYXBzaG90IHZvbHVtZSBmb3IgZXh0MyBmaWxlIHN5c3RlbSwgDQo8L0ZPTlQ+PC9E
-SVY+DQo8RElWPjxGT05UIGZhY2U9sby4ssO8IHNpemU9Mj50aGF0IHNuYXBzaG90IHZvbHVtZSBj
-YW4gbm90IG1vdW50IHdpdGggDQplcnJvci1tZXNzYWdlPC9GT05UPjwvRElWPg0KPERJVj48Rk9O
-VCBmYWNlPbG8uLLDvCBzaXplPTI+Im1vdW50OiB3cm9uZyBmcyB0eXBlLCBiYWQgb3B0aW9uLCBi
-YWQgc3VwZXJibG9jayBvbiANCi9kZXYvVkcwMC9zbmFwMyw8QlI+Jm5ic3A7Jm5ic3A7Jm5ic3A7
-Jm5ic3A7Jm5ic3A7Jm5ic3A7IG9yIHRvbyBtYW55IG1vdW50ZWQgDQpmaWxlIHN5c3RlbXMiLjwv
-Rk9OVD48L0RJVj4NCjxESVY+PEZPTlQgZmFjZT2xvLiyw7wgc2l6ZT0yPjwvRk9OVD4mbmJzcDs8
-L0RJVj4NCjxESVY+PEZPTlQgZmFjZT2xvLiyw7wgc2l6ZT0yPmlmIEkgbW91bnQgb3JpZ2luYWwg
-dm9sdW1lIHdpdGggZXh0Miwgc25hcHNob3Qgdm9sdW1lIA0KYWxzbyBoYXMgbm8gcHJvYmxlbSBp
-biBjcmVhdGUgYW5kIG1vdW50LjwvRk9OVD48L0RJVj4NCjxESVY+PEZPTlQgZmFjZT2xvLiyw7wg
-c2l6ZT0yPkJ1dDwvRk9OVD48L0RJVj4NCjxESVY+PEZPTlQgZmFjZT2xvLiyw7wgc2l6ZT0yPg0K
-PERJVj48Rk9OVCBmYWNlPbG8uLLDvCBzaXplPTI+aWYgSSBtb3VudCBzYW1lIG9yaWdpbmFsIHZv
-bHVtZSB3aXRoIGV4dDMsIHNuYXBzaG90IA0Kdm9sdW1lIHdhcyBjcmVhdGVkIHN1Y2Nlc3NmdWxs
-eSwgYW5kIGNhbiBub3QgbW91bnQuPC9GT05UPjwvRElWPjwvRk9OVD48L0RJVj4NCjxESVY+PEZP
-TlQgZmFjZT2xvLiyw7wgc2l6ZT0yPjwvRk9OVD4mbmJzcDs8L0RJVj4NCjxESVY+PEZPTlQgZmFj
-ZT2xvLiyw7wgc2l6ZT0yPnBsZWFzZSBhZHZpc2UgYWJvdmUgcHJvYmxlbS48L0ZPTlQ+PC9ESVY+
-DQo8RElWPjxGT05UIGZhY2U9sby4ssO8IHNpemU9Mj5SZWdhcmRzLDwvRk9OVD48L0RJVj4NCjxE
-SVY+PEZPTlQgZmFjZT2xvLiyw7wgc2l6ZT0yPllvbmdDaHVsIEtpbSwgPEEgDQpocmVmPSJtYWls
-dG86eWNraW1AbGludXhzZWN1cml0eS5jby5rciI+eWNraW1AbGludXhzZWN1cml0eS5jby5rcjwv
-QT4gDQo8L0ZPTlQ+PC9ESVY+DQo8RElWPjxGT05UIGZhY2U9sby4ssO8IHNpemU9Mj48L0ZPTlQ+
-Jm5ic3A7PC9ESVY+PC9CT0RZPjwvSFRNTD4NCg==
-
-------=_NextPart_000_0005_01C22DFC.B62FF540--
+patrick
