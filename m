@@ -1,10 +1,11 @@
-Return-Path: <anders@schlund.de>
-Date: Sat, 28 Jul 2001 18:27:41 +0200
-From: Anders Henke <anders@schlund.de>
-Message-ID: <20010728182741.S13121@schlund.de>
-Mime-Version: 1.0
-Content-Disposition: inline
-Subject: [linux-lvm] rw-snapshot as an addition for lvm
+Return-Path: <mjt@tls.msk.ru>
+Message-ID: <3B6311A7.69D01F70@tls.msk.ru>
+Date: Sat, 28 Jul 2001 23:25:27 +0400
+From: Michael Tokarev <mjt@tls.msk.ru>
+MIME-Version: 1.0
+Subject: Re: [linux-lvm] AJ's postings
+References: <Pine.LNX.4.33.0107271727460.16916-100000@greebo.foobarhouse.com> <20010727125542.B14486@sistina.com> <20010727125750.M5363@unirez.com> <20010727132910.A20153@sistina.com> <3B61CE2B.F8B4BE1@divsol.com>
+Content-Transfer-Encoding: 7bit
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,53 +18,44 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Hi,
+I use netscape too (look to headers of this my mail), and
+it displays his mails (and many other mails with digital
+signatures) just like all other normal text/plain messages.
+It only shows one little attachtment at the end, of type
+application/pgp-signature, that it doesn't understand.
+So it is something wrong with your netscape...
 
-Currently, you take a snapshot from a logical volume and define a bufferlimit
-after which the snapshot becomes invalid. As long as this limit has not
-been reached, the snapshot is mountable as a readonly device.
+Regards,
+ Michael.
 
-Since journaled filesystems see a unclean fs, they do want to replay
-their journal - which currently fails if the fs has not been prepared for
-exactly this case where their unclean fs resides on a readonly-volume.
-
-
-I think it's also quite interesting to have a rw-snapshot in which changes
-of both real and snapshot are being written to a smaller bufferspace on disk:
-the snapshot always represents the state of the LV when taking the snapshot,
-but permits changes on 'its copy'.
-
-However, if you're changing data on snapshot or original lv, this bufferspace
-has to be used to keep the snapshot 'old' (to the time of snapshotting the lv)
-as well as current (when you're writing to your snapshot). When the bufferspace
-fills up, the snapshot has to return a 'disk full'-error at some point and
-finally becomes invalid when too much data has been altered.
-
-With such a function you might 
--replay a journaled fs without changes for the journaled fs.
- So if I want to use a snapshot for backup, I don't have to
- take down the fs before snapshotting it or applying patches
- to a kernel release you don't yet prefer on your systems.
-
--put a snapshotted database back online and perform e.g. perform
- additional integrity checks (if the system really came down clean before
- the snapshot has been performed or you've just a bad timing) before doing
- a tape backup of the snapshots files.
-
--doing 'critical' or development work on a testbed without altering the
- original system, e.g. test if e2fsck will unlink your critical files or
- you'd better try to copy them from the unclean fs.
- Or just to learn 'how can I manually try to recover this system in case
- the vendor-supplied check fails'.
-
-What do you think about such a system?
-
-
-Anders
--- 
-Schlund + Partner AG              System Administration and Security
-Erbprinzenstrasse 4-12            v://49.721.91374.50
-D-76133 Karlsruhe                 f://49.721.91374.212
+Jim Cromie wrote:
+> 
+> AJ Lewis wrote:
+> 
+> > On Fri, Jul 27, 2001 at 12:57:50PM -0500, Mark Bainter wrote:
+> > > AJ Lewis [lewis@sistina.com] wrote:
+> > > > You need to make sure you apply the linux-2.4.x-VFS-lock.patch, and also
+> > > > apply this:
+> > > >
+> > > [snip]
+> 
+> sorry to bring the level-of-discourse down, but..
+> 
+> AJ,
+> 
+> all your recent postings (that I still have, back to last thurs)  are all in
+> attachements - no body.
+> I cant get netscape messenger to actually do inline-format, at least for your
+> text/plain attachment.
+> 
+> I can read it either by;
+> a- replying-to  ( seems to inline properly )
+> b-  grab attachement pane, right-click attachment, select open
+> 
+> its probably just me, but if theres some attachment options at your disposal,
+> Id appreciate it.
+> 
+> tia,
+> jimc
