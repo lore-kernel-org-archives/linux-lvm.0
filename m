@@ -1,9 +1,8 @@
-From: =?iso-8859-1?q?M=E5ns_Rullg=E5rd?= <mru@kth.se>
-Message-ID: <yw1xllq9vn9s.fsf@kth.se>
-References: <1069370480.3fbd4c706cd12@netmail.pipex.net>
+From: Alasdair G Kergon <agk@uk.sistina.com>
+Message-ID: <20031121233558.E16901@uk.sistina.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: [linux-lvm] Re: LVM2 on 2.4.22. (Fedora core 1 with nptl)
+Content-Disposition: inline
+Subject: [linux-lvm] LVM2/Device-Mapper update
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,94 +13,52 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Fri Nov 21 15:45:05 2003
+Date: Fri Nov 21 17:37:02 2003
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="utf-8"
-To: linux-lvm@sistina.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: linux-lvm@lists.sistina.com, lvm-devel@lists.sistina.com, dm-devel@lists.sistina.com
 
-tugg <tugg@dial.pipex.com> writes:
+I've updated the LVM 2.0 and Device-Mapper 1.0 tarballs at
+ftp.sistina.com again to incorporate some minor bug fixes
+and enhancements.
+ 
+device-mapper:
+  - dmsetup optionally accepts table data from standard input now
+  - dmsetup mknodes will resync non-devfs /dev/mapper directory
+  - userspace components can be compiled against current 2.6 kernel headers
+  - default build excludes support for the obsolete dm version 1 interface
+  - updated kernel patches for 2.4.20, 2.4.21 & 2.4.22
+  - sync with ejt's 2.4.23-pre7-umd1 patchset
+    [excludes patch 7 (reiserfs issue); adds missing header some archs need]
 
-> Trying to install LVM2 on 2.4.22. (Fedora core 1 with nptl)
->
-> Downloaded device mapper (device-mapper-stable.tgz) and LVM2
-> (LVM2.0- stable.tgz) from sistina.com. Unpacked to
-> device-mapper.1.00.5 and LVM2.2.00.07.
->
-> For device mapper: did configure followed by make install. There is
-> no patch for 2.4.22 so I assumed that the kernel was already patched
-> (mistake?).
+LVM2:
+  - Fix for a bug sometimes seen when deleting a LV from a LVM1 VG with
+    many LVs.
+  - When reverting to using the LVM1 kernel driver after creating or
+    editing LVs with the LVM2 tools, sometimes you had to use
+    vgexport and LVM1's vgimport first.  No longer necessary.
+  - Missing man pages written.
+  - Tool error codes made more consistent.
+  - vgmknodes written (needs the updated libdevmapper).
+  - O_DIRECT can be turned off if it doesn't work in your kernel.
+  - lvm dumpconfig to display the active configuration file.
 
-Device-mapper is not in any vanilla 2.4 kernel.  Maybe redhat added
-it.
+If your root filesystem is on a LV, you should run 'vgmknodes' or
+'vgscan --mknodes' to fix up the special files in /dev in your real root
+filesystem after finishing with your initrd.  Also, you can use
+'vgchange --ignorelockingfailure' on your initrd if the tool fails
+because it can't write a lock file to a read-only filesystem.
+[A patch for mounting read-only volumes from read-only PVs went into
+CVS today - it's not in this particular release.]
 
-> LVM and device mapper are already loadable modules, so
-> no need to recompile kernel (correct?). Added script to
-> /etc/modules.conf and reboot. DMESG shows LVM version
-> 1.0.5+(22/07/2002) module loaded.
->
-> pvscan -h gives me the following:
->
-> Logical Volume Manager 1.0.3
-> Heinz Mauelshagen, Sistina Software  19/02/2002 (IOP 10)
-> 	
-> Why is it telling me 1.0.3 when DMESG says 1.0.5+?
+ftp://ftp.sistina.com/pub/LVM2/tools/LVM2.0-stable.tgz
+   (CVS tag v2.00.08)
+ 
+ftp://ftp.sistina.com/pub/LVM2/device-mapper/device-mapper-stable.tgz
+   (CVS tag v1.00.07)
+ 
 
-pvscan -h tells you the version of the pvscan utility.  The kernel log
-contains the version of LVM in the kernel.  In this case, they are not
-the same.  This is nothing to worry about, in general.
-
-> dmsetup --version gives me:
->
-> Library version:   1.00.05-ioctl-cvs (2003-09-01)
-> device-mapper: ioctl interface mismatch: kernel(1.0.3), user(4.0.0), cmd(0)
-> Driver version:    1.0.3
->
-> The ioctl interface mismatch message behaves kind of strangely in
-> that it isn't written to std error, i.e. dmsetup --version 1>
-> dmsetup.log 2>&1 doesn't write the message to dmsetup.log. It still
-> appears on the console. Even more bizarrely, if I log in through
-> OpenSSH it doesn't appear in my session - it appears on the physical
-> console (i.e. the monitor connected to the server), and it does this
-> even when no user is logged on!!! It also doesn't appear in a
-> terminal session under X. Is this behaviour 'by design'? I missed
-> the message initially and only found it when I physically went to
-> the server...
-
-This is because the message is generated by the kernel, and your
-syslog daemon is configured to print whatever type of message that was
-to the console.
-
-> For LVM:
->
-> Did configure and make install. Got the following error message:
->
-> device/dev-io.c: In function `dev_get_size':
-> device/dev-io.c:215: error: `BLKGETSIZE64' undeclared (first use in this 
-> function)
-> device/dev-io.c:215: error: (Each undeclared identifier is reported only once
-> device/dev-io.c:215: error: for each function it appears in.)
-> make[1]: *** [device/dev-io.o] Error 1
-> make[1]: *** Waiting for unfinished jobs....
-> make[1]: Leaving directory `/usr/LVM/LVM2.2.00.07/lib'
-> make: *** [lib] Error 2
-
-Something in the sources is incompatible with your kernel.
-
-> Is this caused by the ioctl mismatch or is there something else
-> going on here?  If it is a known problem, is there a workaround?
->
-> After trying all of the above, found patches for 2.4.22 via mailing list 
-> archives (2.4.22-dm-1.tar.bz2) and upacked to get directory 2.4.22-dm-1 
-> containing patch files 00001 through 00016 and INDEX. Used cat to create one 
-> large patch file (file patches-2.4.22.patch attached) with all the patches 
-> (mistake?) and did patch --dry-run -p1 
-> with this file (only dry run, so nothing applied yet). This indicates some 
-> patches will apply, some are already applied, and quite a few will fail (see 
-> attached patches-2.4.22.log file). Is this because I installed device mapper 
-> before the patches, or do these patches just not fit my system? 
-
-Apparently you already have device-mapper in your kernel.
-
+Alasdair
 -- 
-M�ns Rullg�rd
-mru@kth.se
+agk@uk.sistina.com
