@@ -1,12 +1,11 @@
-Return-Path: <patrick@tykepenguin.cix.co.uk>
-Date: Tue, 23 Jan 2001 15:53:50 +0000
-From: Patrick Caulfield <caulfield@sistina.com>
+Return-Path: <bs@infologic.fr>
+Message-ID: <3A6DAE2B.D7E48966@infologic.fr>
+Date: Tue, 23 Jan 2001 17:15:39 +0100
+From: Benoit SERRA <bs@infologic.fr>
+MIME-Version: 1.0
 Subject: Re: [linux-lvm] New dumb question
-Message-ID: <20010123155349.F556@tykepenguin.com>
-References: <3A6D73AB.FC7E1753@infologic.fr> <3A6DA541.E2F7280C@infologic.fr>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <3A6DA541.E2F7280C@infologic.fr>; from bs@infologic.fr on Tue, Jan 23, 2001 at 04:37:37PM +0100
+References: <3A6D73AB.FC7E1753@infologic.fr> <3A6DA541.E2F7280C@infologic.fr> <20010123155349.F556@tykepenguin.com>
+Content-Transfer-Encoding: 7bit
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -19,19 +18,20 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Tue, Jan 23, 2001 at 04:37:37PM +0100, Benoit SERRA wrote:
-> I build it into the kernel with the 2940 driver, reiserfs and the
-> software raid (I don't like to have critical drivers as modules)
+
+Patrick Caulfield wrote:
+
+> If you're doing striped LVs on top of software RAID I'm not really surprised.
+> Pick one method of striping (LVM *or* RAID) and stick to it but don't mix them
+> or who knows where your data will end up!
 > 
-> Stripped LV and NonStripped LVs reported the same bonnie++ result. Is it
-> normal ?
+> patrick
 
-If you're doing striped LVs on top of software RAID I'm not really surprised.
-Pick one method of striping (LVM *or* RAID) and stick to it but don't mix them 
-or who knows where your data will end up!
+Software RAID is build in, but is not used. Nevermind !
+I'm not using LVM on top of SOFTWARE RAID for the moment.
+If I use LVM on top of SOFTWARE RAID, it will be for redudancy, not for
+striping.
 
-
-patrick
+My kernel is a 2.4.0 patched for the reiserfs and online ext2 resizing.
