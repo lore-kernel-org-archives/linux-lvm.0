@@ -1,11 +1,10 @@
-Date: Sat, 13 Oct 2001 02:40:27 -0600
-From: Andreas Dilger <adilger@turbolabs.com>
-Subject: Re: [linux-lvm] pv recovery after trashing partition table.
-Message-ID: <20011013024027.B29785@turbolinux.com>
-References: <20011013.022001.-448365.3.james.cromie@juno.com>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20011013.022001.-448365.3.james.cromie@juno.com>
+Subject: Re: [linux-lvm] LVM kernel patch request
+References: <OF9050ED8F.CEC7BA29-ON85256AE3.0053EEC0@mkm.can.ibm.com>
+From: Adrian Phillips <a.phillips@dnmi.no>
+Date: 13 Oct 2001 10:53:50 +0200
+In-Reply-To: <OF9050ED8F.CEC7BA29-ON85256AE3.0053EEC0@mkm.can.ibm.com>
+Message-ID: <wvsncn2a5d.fsf@freeze.oslo.dnmi.no>
+MIME-Version: 1.0
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -19,44 +18,28 @@ List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: Jim Cromie <james.cromie@juno.com>
-Cc: linux-lvm@sistina.com
+To: linux-lvm@sistina.com
 
-On Oct 13, 2001  02:20 -0600, Jim Cromie wrote:
-> So somehow I managed to corrupt hda4 at about the same time that
-> I blanked the MBR.  I dont know how, but Ill accept that theyre
-> causally (not casually) related.
-> 
-> I looked a bit at gpart's partition-type-guessing code, it shouldnt
-> be too hard to work out which bytes are failing gpart's guesser.
-> Getting LVM to accept my hacks may be much harder.
+>>>>> "David" == David R Scott/Markham/IBM <dscott7@ca.ibm.com> writes:
 
-Well, I just ran gpart on a system I have with LVM partitions, and it
-does detect them properly.
+    David> I am trying to install LVM-1.0.1-rc4 on a S/390 SuSe 7.0
+    David> system with kernel 2.2.16.  Has anyone successfully managed
+    David> to create a patch for kernel 2.2.16 ?  I have copied the
+    David> fragments-2.2.18 to 2.2.16 and have made the
+    David> lvm-1.0.1-rc4-2.2.16.patch file.  It will need some
+    David> reworking to get the patch to apply correctly.  Has anyone
+    David> else succeded in doing this, and have they shared the patch
+    David> file ?
 
-> So how big is an LVM super-block ?
+Upgrade to 2.2.19 (or 2.2.20pre?). There are a lot of important fixes
+between 2.2.16 and the latest as far as I can recall and you'll make
+your life easier by doing so.
 
-There are several parts to the LVM metadata.  The PV data (first on the
-partition), the VG data (next), LV data, and then the PE map.  Because
-LVM metadata has been known to have problems in the past, one thing
-you can try is to restore the metadata from backups (see vgcfgrestore).
+Sincerely,
 
-The real problem is that the start of the filesystem depends on how big
-the actual disk is, and the alignment.  If any of the LVM data is there,
-doing something like "od -Ax -a /dev/hda4 | more", or even better
-"strings -tx /dev/hda4" should show you the VG name, LV names, etc
-(along with other stuff, of course).  If you find such data, it may be
-possible to reconstruct your LVM setup, or at least recover the data.
+Adrian Phillips
 
-> I always have the (probably 1-way) fallback - a partion type change, 
-> then an fsck to see what it finds.
-
-It will find nothing, because the filesystem doesn't start until (maybe)
-a few MB into the partition.  Any fsck program will expect the filesystem
-to start right at the beginning.
-
-Cheers, Andreas
---
-Andreas Dilger  \ "If a man ate a pound of pasta and a pound of antipasto,
-                 \  would they cancel out, leaving him still hungry?"
-http://www-mddsp.enel.ucalgary.ca/People/adilger/               -- Dogbert
+-- 
+Your mouse has moved.
+Windows NT must be restarted for the change to take effect.
+Reboot now?  [OK]
