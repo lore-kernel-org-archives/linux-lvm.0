@@ -1,36 +1,53 @@
-From: Andreas Dilger <adilger@enel.ucalgary.ca>
-Message-Id: <199906300435.WAA17970@webber.adilger.net>
-Subject: Re: [linux-lvm] Alpha testers rqd for ext2 fs extend utility.
-Date: Tue, 29 Jun 1999 22:35:37 -0600 (MDT)
-In-Reply-To: <3779A456.15F5@erols.com> from "guruju@erols.com" at Jun 29, 99 10:00:06 pm
+Message-ID: <19990630052507.22408.rocketmail@web602.mail.yahoo.com>
+Date: Tue, 29 Jun 1999 22:25:07 -0700 (PDT)
+From: =?iso-8859-1?q?Michael=20Field?= <hamster_nz@yahoo.com>
+Reply-To: mafield@the.net.nz
+Subject: [linux-lvm] A minor fs extend brainwave....
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: guruju@erols.com
-Cc: Linux LVM mailing list <linux-lvm@msede.com>
+To: linux-lvm@msede.com
 
-You write:
-> There is no limit in sun solaris 2.7, the file system can be more than 
-> 2gigs. This is one of the nice features in solaris2.7
+Hi again...
 
-You misunderstood my posting.  For AIX 4.1.5, the hard FS limit is 64GB,
-and for AIX 4.3 it is 256GB or something like that.  The 2GB limit I
-mentioned is a "soft" limit which is set for a FS which starts life at
-less than 2GB, otherwise the soft limit = current FS size.
+I've just realised that the inode table, block bitmaps
+and inode bitmaps do not need to follow the
+superblock/group descriptors at the start of the
+group.
 
-Because it is so easy to grow AIX filesystems, and you do it on a
-regular basis on running systems, there is a "safety" built in which you
-have to override when growing a FS past this size, so you don't
-accidentally grow a 160MB filesystem to 16GB instead of 1.6GB and use up
-all of the space on your disks.  It is easy to grow a filesystem, but
-lots of work to shrink it (ie backup, rebuild, restore).
+If they are moved to the end of the file system
+*BEFORE* the file system is put to use, their is no
+big problem with extending the file system later, and
+no large scale move of data (or inodes as I was first
+thinking) is required, only a maximum of 1 block of
+user data per group needs to be relocated (128K / GB),
+and the new group descriptors written in it's place.
 
-Cheers, Andreas
--- 
-Andreas Dilger  University of Calgary \ "If a man ate a pound of pasta and
-                Micronet Research Group \ a pound of antipasto, would they
-Dept of Electrical & Computer Engineering \  cancel out, leaving him still
-http://www-mddsp.enel.ucalgary.ca/People/adilger/      hungry?" -- Dogbert
+I've already hacked up a program to move these tables
+around (on an empty file system), and the kernel and
+fsck like it as long as the inode table is not hard up
+against the end of the group (strange - must be an off
+by one error somewhere in fsck.ext2).
+
+The short trailing groups at the end of a file system
+are not a problem, as by default mkfs.ext2 makes sure
+that they have 50 blocks of data in there, enough to
+extend a file system 12.5GB (greater than it's size at
+creation (can ext2 file systems be that big?). 
+
+This makes things a lot simpler....
+
+Ideas/Comments?
+
+Mike
+
+
+
+
+
+_________________________________________________________
+Do You Yahoo!?
+Get your free @yahoo.com address at http://mail.yahoo.com
