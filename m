@@ -1,10 +1,8 @@
-From: Herbert Poetzl <herbert@13thfloor.at>
-Subject: Re: [linux-lvm] Can not boot: unable to mount root fs:
-Message-ID: <20030902224216.GB9145@DUK2.13thfloor.at>
-References: <3F54CEFE.2080203@redshift.com>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <3F54CEFE.2080203@redshift.com>
+Message-ID: <3F5522A7.5030900@phys.unsw.edu.au>
+From: Melinda Taylor <melinda@phys.unsw.edu.au>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] Remove VOlume group that doesn't exist
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,45 +13,31 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Tue Sep  2 17:43:01 2003
+Date: Tue Sep  2 18:09:01 2003
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: "Samuel A. Rogers" <srogers@redshift.com>
-Cc: linux-lvm@sistina.com
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+To: linux-lvm@sistina.com
 
-On Tue, Sep 02, 2003 at 10:10:22AM -0700, Samuel A. Rogers wrote:
-> So far I can not compile and boot any kernel from 2.4.19 - 2.4.21. I get 
-> the below error message:
-> 
-> VFS: cannot open device 3a:00
-> kernel panic: VFS: unable to mount root fs 3a:00
+Hello,
 
-send some more information, like a complete
-bootup log, your boot loader and your kernel
-configuration ...
+After my couple of disks died I have been left with one working volume 
+group vg02 and
+one non-existant volume group vg01 which I would like to remove.
+Since /dev/sdd2 and /dev/sde2 no longer exist I am unable to remove the 
+volume group with the usual method:
 
-best,
-Herbert
+/sbin/vgremove vg01
+VG data differs between PVs /dev/sdd2 and /dev/sde2
+Volume group "vg01" doesn't exist
 
-> I took this from an archive message and it should be very close to the 
-> message I get except for the device number. I think mine says 1a:00 as I am 
-> only using ide and not scsi. The system locks up and I have to manually 
-> press the reset button to reboot.
-> 
-> I have checked the archives but could not find a solution.
-> 
-> Also the kernels I get from Redhat can boot just fine, but they have turned 
-> off my sound card so I need to regen the kernel. I have tried to get ahold 
-> of Redhat by phone, e-mail and newsgroup but no reply.
-> 
-> Regards,
-> 
-> 	Sam Rogers.
-> 
-> 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+
+Actually /dev/sdd2 does still exist as a normal formatted linux partition
+so I don't want to damage that while trying to remove my volume group.
+
+How do I tell lvm that vg01 no longer exists? It is not in lvmtab so I 
+am unsure where it store this info.
+
+
+Many Thanks,
+
+melinda
