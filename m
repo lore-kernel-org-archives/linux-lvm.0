@@ -1,23 +1,22 @@
-Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id iB7JuOr28998
-	for <linux-lvm@redhat.com>; Tue, 7 Dec 2004 14:56:24 -0500
-Received: from rproxy.gmail.com (rproxy.gmail.com [64.233.170.202])
-	by mx3.redhat.com (8.12.11/8.12.11) with ESMTP id iB7JuI8c016669
-	for <linux-lvm@redhat.com>; Tue, 7 Dec 2004 14:56:18 -0500
-Received: by rproxy.gmail.com with SMTP id c16so433947rne
-	for <linux-lvm@redhat.com>; Tue, 07 Dec 2004 11:56:18 -0800 (PST)
-Message-ID: <b9a453c204120711564bb852b0@mail.gmail.com>
-Date: Tue, 7 Dec 2004 20:56:14 +0100
-From: =?ISO-8859-1?Q?=D2scar_=C1lvarez_Vilaplana?= <grimborg@gmail.com>
+Received: from agk.surrey.redhat.com (agk.surrey.redhat.com [172.16.10.74])
+	by pobox.surrey.redhat.com (8.12.8/8.12.8) with ESMTP id iB7JwJH6020181
+	for <linux-lvm@redhat.com>; Tue, 7 Dec 2004 19:58:19 GMT
+Received: from agk by agk.surrey.redhat.com with local (Exim 4.34)
+	id 1CblTX-0005UL-1L
+	for linux-lvm@redhat.com; Tue, 07 Dec 2004 19:58:19 +0000
+Date: Tue, 7 Dec 2004 19:58:18 +0000
+From: Alasdair G Kergon <agk@redhat.com>
 Subject: Re: [linux-lvm] recovering a lvm volume group after one partition's
 	deletion
-In-Reply-To: <20041207192907.GD24229@agk.surrey.redhat.com>
-Mime-Version: 1.0
+Message-ID: <20041207195818.GE24229@agk.surrey.redhat.com>
 References: <b9a453c204120710477fb9fcf7@mail.gmail.com>
 	<20041207192907.GD24229@agk.surrey.redhat.com>
+	<b9a453c204120711564bb852b0@mail.gmail.com>
+Mime-Version: 1.0
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-Reply-To: =?ISO-8859-1?Q?=D2scar_=C1lvarez_Vilaplana?= <grimborg@gmail.com>,
-	LVM general discussion and development <linux-lvm@redhat.com>
+In-Reply-To: <b9a453c204120711564bb852b0@mail.gmail.com>
+Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -30,38 +29,15 @@ List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="utf-8"
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-Thanks!
+On Tue, Dec 07, 2004 at 08:56:14PM +0100, �scar �lvarez Vilaplana wrote:
+> Now the logical volumes appear in /dev/mygroup/, but when I try to
+> mount them I get the error "mount: special device /mount/mygroup/myvol
+> does not exist"
 
-I did a pvcreate --restorefile thefile --uuid theuuid mygroup and then
-vgcfgrestore thefile.
+vgmknodes
 
-Now the logical volumes appear in /dev/mygroup/, but when I try to
-mount them I get the error "mount: special device /mount/mygroup/myvol
-does not exist"
-
-I googled for an answer but I couldn't find anything relevant.
-
-Any ideas?
-
-Thanks!
-
-On Tue, 7 Dec 2004 19:29:07 +0000, Alasdair G Kergon <agk@redhat.com> wrote:
-> On Tue, Dec 07, 2004 at 07:47:57PM +0100, �scar �lvarez Vilaplana wrote:
-> > What I've tried is running pvcreate on the formatted partition, but
-> > vgdisplay complains that that it can't find the partition with the
-> > uuid of the lost partition. I then tried hexedit'ing the partition and
-> > changing its uuid, but this didn't fool lvm either: i got the same
-> > error.
->  
-> man vgcfgrestore
-> 
-> Alasdair
-> --
-> agk@redhat.com
-> 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
->
+lvchange -ay
+ 
+Alasdair
+-- 
+agk@redhat.com
