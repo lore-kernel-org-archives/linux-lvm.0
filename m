@@ -1,8 +1,11 @@
-From: Xavier Montagutelli <Xavier.Montagutelli@gmm.insa-tlse.fr>
+From: Wolfgang Weisselberg <weissel@netcologne.de>
 Subject: Re: [linux-lvm] mount reiserfs snapshot failed
-In-Reply-To: <3CBEA630.E186CE9C@mc-lindinger.de>
-Message-Id: <Pine.LNX.4.44.0204181405220.24233-100000@gmmpc1.gmm.priv>
+Message-Id: <20020418130718.GA30701@tiger.bigcats.invalid>
+References: <3CBE92EB.89FB2B07@mc-lindinger.de>
+    <20020418094402.GA1233@fib011235813.fsnet.co.uk>
 MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20020418094402.GA1233@fib011235813.fsnet.co.uk>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -13,39 +16,63 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Thu Apr 18 07:14:02 2002
+Date: Thu Apr 18 08:07:01 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Thu, 18 Apr 2002, Markus Bartl wrote:
+Hi, Joe!
 
-> Joe Thornber wrote:
-> >
-> > On Thu, Apr 18, 2002 at 11:33:31AM +0200, Markus Bartl wrote:
-> > > Hi there.
-> > >
-> > > Im using the original kernel 2.4.18 with the locking patch and the
-> > > lvm-patch applied. I use the lvm in Version 1.1rc1.
-> > > I got one harddisk with 4 partitions on it, 1 partition is Linux LVM.
-> > > The volume to backup is mounted on /home and has reiserfs.
-> > >
-[..]
-> > > In some cases mounting the snapshot volume fails with error 32 (wrong fs
-> > > type or bad superblock).
-> > > Anybody got any idea???
+Joe Thornber (joe@fib011235813.fsnet.co.uk) wrote 31 lines:
 
-No idea, but for information, I have the same problem on a kernel 2.4.17 +
-linux-2.4.11-VFS-lock.patch + patch reiserfs-quota, with LVM 1.0.2
+> On Thu, Apr 18, 2002 at 11:33:31AM +0200, Markus Bartl wrote:
+> > Im using the original kernel 2.4.18 with the locking patch and the
+> > lvm-patch applied. I use the lvm in Version 1.1rc1.
 
-> Im now going to build the 1.0.3 kernel module and try it that way.
+> > In some cases mounting the snapshot volume fails with error 32 (wrong fs
+> > type or bad superblock).
 
+> Do version 1.0.3 tools fail in the same way ?
 
+I am running a similar configuration: 
+Kernel 2.4.18-rc4 
+    + LVM 1.0.3
+    + linux-2.4.18-VFS-lock.patch
+    + sched-O1-2.4.18-pre8-K3.patch
+I use ext3, and the LVM 1.0.3-tools + LVM-1.0.3-pmove-patch 
 
-[ Xavier Montagutelli          `""'                                   ]
-[ INSA Toulouse                0--0                                   ]
-[               ---------oOOo---()---oOOo----------                   ]
-[ Dpt de Math / Service Informatique  Tel: +33 5 61 55 93 38 / 67     ]
-[ 135, Avenue de Rangueil             Fax: +33 5 61 55 93 20 / 60     ]
-[ 31077 Toulouse Cedex 4              Mel: montagut@gmm.insa-tlse.fr  ]
+Snapshots work.
+
+I upgrade to 2.4.19-pre6, must merge the VFS-lock.patch by hand
+and drop the sched-O1-* patch; and use the LVM 1.1rc1-Tools:
+
+Snapshots get generated, but first some (depending on the
+order of generation!), later all of them are unreadable (even
+a simple cat fails complaining about that), so mount fails.
+
+I decide this might be due to a bad merge on my side or a
+kernel problem, so I downgrade to:
+
+Kernel 2.4.18-rc4 
+    + LVM 1.1rc1 
+    + linux-2.4.18-VFS-lock.patch
+    + sched-O1-2.4.18-pre8-K3.patch
+LVM 1.1rc1-Tools.
+
+Snapshots still unreadable.
+
+I downgrade the Kernel to LVM 1.0.3:
+
+Kernel 2.4.18-rc4 
+    + LVM 1.0.3
+    + linux-2.4.18-VFS-lock.patch
+    + sched-O1-2.4.18-pre8-K3.patch
+but still with LVM 1.1rc1-Tool
+
+Snapshots still show the same problems as before.
+
+Downgrading to LVM 1.0.3-tools on the running system:
+everything works again.
+
+-Wolfgang
