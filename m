@@ -1,11 +1,12 @@
-Return-Path: <phillips@bonn-fries.net>
-From: Daniel Phillips <phillips@bonn-fries.net>
-Date: Sun, 15 Jul 2001 03:53:54 +0200
-References: <E15LL3Y-0000yJ-00@the-village.bc.nu> <0107142211300W.00409@starship> <3B50F000.53EAB651@uow.edu.au>
-In-Reply-To: <3B50F000.53EAB651@uow.edu.au>
-MIME-Version: 1.0
-Message-Id: <01071503535411.00409@starship>
-Content-Transfer-Encoding: 7BIT
+Return-Path: <jlundell@pobox.com>
+Mime-Version: 1.0
+Message-Id: <p05100313b776de2f4b7e@[207.213.214.37]>
+In-Reply-To: <20010715160247.I7624@weta.f00f.org>
+References: <E15LL3Y-0000yJ-00@the-village.bc.nu>
+ <p05100307b7762dc5d8ad@[207.213.214.37]>
+ <20010715160247.I7624@weta.f00f.org>
+Date: Sat, 14 Jul 2001 22:46:20 -0700
+From: Jonathan Lundell <jlundell@pobox.com>
 Subject: [linux-lvm] Re: [PATCH] 64 bit scsi read/write
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
@@ -18,44 +19,27 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: Andrew Morton <andrewm@uow.edu.au>
-Cc: linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, linux-lvm@sistina.com
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+Content-Transfer-Encoding: 7bit
+To: Chris Wedgwood <cw@f00f.org>
+Cc: Alan Cox <alan@lxorguk.ukuu.org.uk>, Andrew Morton <andrewm@uow.edu.au>, Andreas Dilger <adilger@turbolinux.com>, "Albert D. Cahalan" <acahalan@cs.uml.edu>, Ben LaHaise <bcrl@redhat.com>, Ragnar Kjxrstad <kernel@ragnark.vestdata.no>, linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, mike@bigstorage.com, kevin@bigstorage.com, linux-lvm@sistina.com
 
-On Sunday 15 July 2001 03:21, Andrew Morton wrote:
-> Daniel Phillips wrote:
-> > On Saturday 14 July 2001 16:50, Chris Wedgwood wrote:
-> > > On Sat, Jul 14, 2001 at 09:45:44AM +0100, Alan Cox wrote:
-> > >
-> > >     As far as I can tell none of them at least in the IDE world
-> > >
-> > > SCSI disk must, or at least some... if not, how to peopel like
-> > > NetApp get these cool HA certifications?
-> >
-> > Atomic commit.  The superblock, which references the updated
-> > version of the filesystem, carries a sequence number and a
-> > checksum.  It is written to one of two alternating locations.  On
-> > restart, both locations are read and the highest numbered
-> > superblock with a correct checksum is chosen as the new filesystem
-> > root.
+At 4:02 PM +1200 2001-07-15, Chris Wedgwood wrote:
+>On Sat, Jul 14, 2001 at 10:33:44AM -0700, Jonathan Lundell wrote:
 >
-> But this assumes that it is the most-recently-written sector/block
-> which gets lost in a power failure.
+>     What's worse, though the spec is not explicit on this point, it
+>     appears that the write cache is lost on a SCSI reset, which is
+>     typically used by drivers for last-resort error recovery. And of
+>     course a SCSI bus reset affects all the drives on the bus, not
+>     just the offending one.
 >
-> The disk will be reordering writes - so when it fails it may have
-> written the commit block but *not* the data which that block is
-> committing.
+>Doesn't SCSI have a notion of write barriers?
 >
-> You need a barrier or a full synchronous flush prior to writing
-> the commit block.  A `don't-reorder-past-me' barrier is very much
-> preferable, of course.
+>Even if this is required, the above still works because for anything
+>requiring a barrier, you wait for a positive SYNCHRONIZE CACHE
 
-Oh yes, absolutely, that's very much part of the puzzle.  Any disk
-that doesn't support a real write barrier or write cache flush is
-fundamentally broken as far as failsafe operation goes.  A disk that
-claims to provide such support and doesn't is an even worse offender.
-I find Alan's comment there worrisome.  We need to know which disks
-devliver on this and which don't.
-
---
-Daniel
+Sure, if you keep all your write buffers around until then, so you 
+can re-write if the sync fails. And if you don't crash in the 
+meantime.
+-- 
+/Jonathan Lundell.
