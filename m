@@ -1,9 +1,9 @@
 From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] Does LVM2 support RAID?
-Message-ID: <20030130102535.A26745@sistina.com>
-References: <007201c2c815$08d488d0$c70aa8c0@RD.proware.com.tw>
+Subject: Re: [linux-lvm] BMT-LVM performance with snapshots
+Message-ID: <20030130102935.B26745@sistina.com>
+References: <F80oe73FqS0XrPoqxBJ00008bbe@hotmail.com>
 Mime-Version: 1.0
-In-Reply-To: <007201c2c815$08d488d0$c70aa8c0@RD.proware.com.tw>; from gozila@ms20.url.com.tw on Thu, Jan 30, 2003 at 12:06:57PM +0800
+In-Reply-To: <F80oe73FqS0XrPoqxBJ00008bbe@hotmail.com>; from benew666@hotmail.com on Thu, Jan 30, 2003 at 12:30:32AM +0900
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,46 +14,75 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Thu Jan 30 03:28:01 2003
+Date: Thu Jan 30 03:32:02 2003
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Thu, Jan 30, 2003 at 12:06:57PM +0800, Rocky Lee wrote:
-> Hello all 
-> 
-> Happy Chinese New Year to you!
-> and thanks for reading my issues.
-> 
-> Here's my question about LVM1 and LVM2
-> 
-> LVM1+ MD is good methd to support backup and data recovery of data.
-> I found some documents said that LVM2 already can support disk protection and data recovery.
-> does it mean that LVM2 including various raid algorithms ? or other features?
+This is to be expected in principal but _not_ in this order of magnitude.
+Did you allcoate the original and the snapshot logical volumes on the
+same physical device?
+If so, this means that you trash different areas of that device
+with additional read+write ios per write to the original LV.
+Change this to see better performanace.
 
-Not today.
-Maybe later ;)
-
-> 
-> How they work?
-> 
-> If I use LVM2 will be better than use LVM1 + MD?
-
-You still need to combine LVM2 with MD in order to have RAID > 0 (RAID0 is
-supported natively as it is in LVM1).
-Because LVM2 offers various enhancements you migth still want to give it
-a try :-)
-
-> 
-> Thank you
-> Have a nice day
->                             Rocky Lee
-
--- 
+FYI: LVM1 deals with snapshots in a synchronous way which can be outperformed
+     by LVM2s asynchronous design.
 
 Regards,
 Heinz    -- The LVM Guy --
+
+
+On Thu, Jan 30, 2003 at 12:30:32AM +0900, tester7 A. wrote:
+> 
+> Kernel: 2.4.20
+> LVM: 1.0.6 with kernel patched(VFS-lock and lvm-1.0.6)
+> CPU: PIII 1.4
+> RAM: 512M
+> 
+> This is the output from bonnie++ with lv only and with lv + snapshot
+> 
+> Version  1.03      ------Sequential Output------ --Sequential Input- 
+> --Random-
+>                     -Per Chr- --Block-- -Rewrite- -Per Chr- --Block-- 
+> --Seeks--
+> Machine        Size K/sec %CP K/sec %CP K/sec %CP K/sec %CP K/sec %CP  /sec 
+> %CP
+> lv_wo_snap 2G           78505  32 41745  27           151742  41 435.4   1
+> lv_wo_snap 2G           75501  31 40277  25           150466  42 436.8   1
+> lv_wo_snap 2G           73933  29 41213  26           150052  41 433.4   1
+> lv_wo_snap 2G           76434  30 40980  26           147544  41 399.0   0
+> lv_with_sn 2G            1367   0 10196   6           128362  35 437.4   1
+>                     ------Sequential Create------ --------Random 
+> Create--------
+>                     -Create-- --Read--- -Delete-- -Create-- --Read--- 
+> -Delete--
+> files:max:min        /sec %CP  /sec %CP  /sec %CP  /sec %CP  /sec %CP  /sec 
+> %CP
+> lv_wo_snap 16  1669  17 +++++ +++  2532  23  1464  17 +++++ +++   475   5
+> lv_wo_snap 16  1572  17 +++++ +++  2265  24  1431  14 +++++ +++   457   5
+> lv_wo_snap 16  1481  17 +++++ +++  2100  22  1405  15 +++++ +++   478   6
+> lv_wo_snap 16  1536  16 +++++ +++  2286  23  1513  17 +++++ +++   458   5
+> lv_with_sn 16   625   8 +++++ +++  2333  26  1174  12 +++++ +++   460   5
+> 
+> 
+> After making snapshots for a LV, the write performance goes down from 75M/s 
+> to 1.3M/s.
+> 
+> Something must be wrong in LVM.
+> 
+> 
+> _________________________________________________________________
+> The new MSN 8: smart spam protection and 2 months FREE*  
+> http://join.msn.com/?page=features/junkmail
+> 
+> 
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@sistina.com
+> http://lists.sistina.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
 
 *** Software bugs are stupid.
     Nevertheless it needs not so stupid people to solve them ***
