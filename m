@@ -1,10 +1,9 @@
-From: Andreas Dilger <adilger@turbolabs.com>
-Subject: Re: [linux-lvm] LVM + 2.4.7 kernel
-Message-ID: <20011120114558.U1308@lynx.no>
-References: <OFBB873518.294BA1D6-ON05256B0A.005AE0D8@pe.ibm.com>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <OFBB873518.294BA1D6-ON05256B0A.005AE0D8@pe.ibm.com>; from mpighi@pe.ibm.com on Tue, Nov 20, 2001 at 11:44:01AM -0500
+Message-ID: <3BFAA72B.B15F9B4C@LTUtech.com>
+From: Igor Dumaire <Igor.Dumaire@LTUtech.com>
+MIME-Version: 1.0
+Subject: Re: [linux-lvm] vgcfgrestore error !
+References: <3BF8E5DE.ABAEB618@LTUtech.com> <20011119125632.A12388@sistina.com> <3BF8F8BF.3FE1491C@LTUtech.com> <20011119151746.A13040@sistina.com> <3BF923C3.A2060FDD@LTUtech.com> <20011120121947.B18529@sistina.com>
+Content-Transfer-Encoding: 7bit
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,38 +14,49 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Tue Nov 20 12:46:02 2001
+Date: Tue Nov 20 12:54:02 2001
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: Marco Pighi/Peru/Contr/IBM <mpighi@pe.ibm.com>
-Cc: linux-lvm@sistina.com
+To: linux-lvm@sistina.com
 
-On Nov 20, 2001  11:44 -0500, Marco Pighi/Peru/Contr/IBM wrote:
-> We have upgraded the kernel from a SuSE 7.0 (2.2.16 kernel) to a 2.4.7
-> kernel in our Linux for S/390 system. We upgraded modutils, binutils, gcc
-> and installed s390 tools as well. Almost everything is working well; the
-> only problem we have is lvm: it loads without problems at boot time but
-> when we try the vgscan command we get the following message:
-> 
->      invalid i/o protocol version
-> 
-> Does anyone have any idea what could be wrong?
+When I try :
+# vgimport -v lvm1 /dev/hde1
+vgimport -- locking logical volume manager
+vgimport -- checking volume group name
+vgimport -- checking volume group "lvm1" existence
+vgimport -- trying to read physical volume
+vgimport -- checking for duplicate physical volumes
+vgimport -- checking physical volume name "/dev/hde1"
+vgimport -- reading data of physical volume "/dev/hde1" from disk
+vgimport -- checking for exported physical volume "/dev/hde1"
+vgimport -- ERROR: physical volume "/dev/hde1" doesn't belong to an exported
+volume group
 
-The LVM user tools you have do not work with the kernel version.  The
-2.2.16 kernel uses IOP6, while the 2.4 kernel uses IOP10 (this version
-number identifies all user<->kernel communication structs).
+Ok, I hadn't used vgexport !
 
-Depending on how the LVM user tools are installed, you can have both
-versions installed at the same time.  This can be done with an
-"lvm-wrapper" put in place of the normal binaries (e.g. /sbin/vgscan)
-and then it calls the appropriate version tool under /lib/lvm-iopX/vgscan.
-The alternative is to change your PATH depending on IOP version (use
-the lvmiopversion command in a new LVM tools package) to use the right
-directory depending on the current kernel.
+# vgimport -f -v lvm1 /dev/hde1
+vgimport -- locking logical volume manager
+vgimport -- checking volume group name
+vgimport -- checking volume group "lvm1" existence
+vgimport -- trying to read physical volume
+vgimport -- checking for duplicate physical volumes
+vgimport -- checking physical volume name "/dev/hde1"
+vgimport -- reading data of physical volume "/dev/hde1" from disk
+vgimport -- checking for exported physical volume "/dev/hde1"
+vgimport -- reallocating memory
+vgimport -- checking consistency of physical volume "/dev/hde1"
+Segmentation fault
 
-Cheers, Andreas
---
-Andreas Dilger
-http://sourceforge.net/projects/ext2resize/
-http://www-mddsp.enel.ucalgary.ca/People/adilger/
+why "Segmentation fault" ?
+
+
+An idea ?
+
+Thanks.
+
+
+-- 
+Igor Dumaire
+
+www.LTUtech.com - Making Sense of Visual Content
+------------------------------------------------
