@@ -1,12 +1,11 @@
-Return-Path: <oleg@bitband.com>
-Message-ID: <3AB5C7F4.A9CCCB0B@bitband.com>
-Date: Mon, 19 Mar 2001 10:48:52 +0200
-From: Oleg Volkov <oleg@bitband.com>
-MIME-Version: 1.0
-Subject: Re: [linux-lvm] Apparent performance degradation for each PV with 
- striping
-References: <3AB59501.FF6ED9F3@dataventures.com>
-Content-Transfer-Encoding: 7bit
+Return-Path: <joe@66bassett.freeserve.co.uk>
+Date: Mon, 19 Mar 2001 09:15:14 +0000
+From: Joe Thornber <joe@66bassett.freeserve.co.uk>
+Subject: Re: [linux-lvm] Apparent performance degradation for each PV with striping
+Message-ID: <20010319091514.A667@66bassett.freeserve.co.uk>
+References: <3AB59501.FF6ED9F3@dataventures.com> <15029.41256.426234.309500@nv.192.168.71.6> <3AB5AFC0.5C4A58C9@dataventures.com>
+Mime-Version: 1.0
+In-Reply-To: <3AB5AFC0.5C4A58C9@dataventures.com>; from dlt@dataventures.com on Mon, Mar 19, 2001 at 12:05:36AM -0700
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -19,44 +18,18 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Donald Thompson wrote:
+On Mon, Mar 19, 2001 at 12:05:36AM -0700, Donald Thompson wrote:
+> I actually was thinking seriously about getting a 3ware card when I
+> started this machine, but I wussed out and just went with the two onboard
+> IDE interfaces. Its definately a cheaper option than replacing or adding
+> SCSI drives to the system.
 
-> dd if=/dev/ide/host0/bus0/target0/lun0/disc of=/dev/null
-> gave me around 5500 blocks read per second.
->
-> lvcreate -i4 -I4 -L somesize vgname -n lvname
->
-> My system:
->
-> Linux 2.4.2
-> Libc 2.1.3
-> Debian Potato
-> LVM 0.9.1_beta6 utilities and patch.
-> ATA 100 IDE interfaces on MB
-> idebus set to 66 in /etc/lilo.conf
-> CPU is Athlon 1000mhz thunderbird
-> 256 megs of RAM
->
-> -Don
->
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
+I did some striping tests at the weekend with a pair of IDE disks, I
+managed to get 56 M/s read and 28M/s write (according to bonnie++).
+These numbers are twice the performance of the slowest of the two IDE
+drives, which is good.
 
-80G disks may be IBM or Maxtor disks ( right ? )
-I had experience with IBM disks. A good stripe
-size for them is 64k. I don't know about Maxtor disks
-but you can play with stripe size around 64k also.
-
-Basically 64k is a DMA buffer size and should be good.
-
-So try to use -I64 not -I4.
-
-
---
-Volkov Oleg
-BitBand Technologies Ltd.
-http://www.bitband.com
+- Joe
