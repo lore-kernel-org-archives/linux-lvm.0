@@ -1,10 +1,10 @@
-From: Goetz Bock <bock@blacknet.de>
-Subject: Re: [linux-lvm] Accessing VG in multiboot environment
-Message-ID: <20030303115255.I13193@zealot.blacknet.de>
-References: <200303031001.h23A127e010167@pcrz175.hrz.uni-marburg.de>
+From: Alasdair G Kergon <agk@uk.sistina.com>
+Subject: Re: [linux-lvm] lvm2: VG data differs between PVs /dev/hda3 and /dev/hdg3
+Message-ID: <20030303130619.A11845@uk.sistina.com>
+References: <20030302150724.GB745@gallifrey>
 Mime-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <200303031001.h23A127e010167@pcrz175.hrz.uni-marburg.de>; from gebhardt@HRZ.Uni-Marburg.DE on Mon, Mar 03, 2003 at 11:01:02AM +0100
+In-Reply-To: <20030302150724.GB745@gallifrey>; from gilbertd@treblig.org on Sun, Mar 02, 2003 at 03:07:24PM +0000
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,58 +15,34 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Mar  3 04:53:01 2003
+Date: Mon Mar  3 07:07:02 2003
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: linux-lvm@sistina.com
+To: gilbertd@treblig.org
+Cc: linux-lvm@sistina.com
 
-On Mon, Mar 03 '03 at 11:01, Thomas Gebhardt wrote:
-> I'd like to install several linux distributions on one disk
-> in a multiboot environment, each of them accessing the data
-> in a LVM 1.x volume group.
-I did that with TSL1.5, TSL2.0 and RH8.0 on one box:
+On Sun, Mar 02, 2003 at 03:07:24PM +0000, Dr. David Alan Gilbert wrote:
+> Below I've included the output of a few commands from the working 
+> lvm1 installation - more info available as required.
 
-- partition harddrive:
-    hda1: 256M  ext2 /boot
-    hda2: 2G    ext2 /  # see below
-    hda3: rest  LVM
+So I can find the seg fault, please send me full diagnostic output 
+from the failing 'pvs' command:
+e.g. add to config file:
+    log {
+            file="/tmp/lvm2.log"
+	    level=7
+    }
+Run the failing 'pvs' command then send lvm2.log.
 
-- than I install TSL1.5 into hda2
-- install the LVM tools
-- pvcreate hda3
-- vgcreate vg00 hda3
-- lvcreate -n tsl15root -L 1G vg00
-- move tsl1.5 into tsl15root
-- fix initrd (I'v a special initrd that activates LVM/MD and comes with
-  a busybox based rescue system)
-- fix lilo
-- shutdown, reboot new setup make sure it works
+For the other problem, a copy of how LVM2 interprets the 
+metadata might help:
+  vgcfgbackup -P -f <outputfile>
 
-- install TSL2.0 into hda2
-- install lvmtools
-- vgscan
-- vgchange -a y
-- lvcreate -n tsl20root -L 1G vg00
-- move tsl2.0 into tsl20root
-- fix initrd
-- fix lilo
-- shutdown, reboot, test
+And also you can use LVM1's 'pvdata' with various flags 
+to see how LVM1 interprets the same on-disk metadata:
+  e.g. pvdata -a -v /dev/hda1
 
-- install TH80 into hda2
-- install lvmtoold
-- vgscan
-- vgchange -a y
-- lvcreate -n rh80root -L 1G vg00
-- move rh80 into rh80root
-- fix initrd
-- fix lilo
-- shutdown, reboot, test
-
-quite simple. boot gets a little bit messy, but I like to have /boot on
-a primary partition and not on LVM.
+Alasdair
 -- 
-Goetz Bock       (c) 2003 as     blacknet.de - Munich - Germany   /"\
-IT Consultant    GNU FDL 1.1    secure mobile Linux everNETting   \ /
-                                                                   X
- ASCII Ribbon Campaign against HTML email & microsoft attachments / \
+agk@uk.sistina.com
