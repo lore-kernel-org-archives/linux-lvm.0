@@ -1,11 +1,10 @@
-From: Arkadiusz Miskiewicz <arekm@pld-linux.org>
-Subject: Re: [linux-lvm] LVM2 compilation problem
-References: <200311301742.37307.arekm@pld-linux.org> <20031130171859.F16901@uk.sistina.com>
-In-Reply-To: <20031130171859.F16901@uk.sistina.com>
-MIME-Version: 1.0
+From: Kai Weber <lists@glorybox.de>
+Subject: Re: [linux-lvm] vgscan messages regarding read-only cdrom
+Message-ID: <20031201100842.GA3038@glorybox.de>
+References: <20031130185807.GF7634@glorybox.de> <20031130212501.GO19217@percy.comedia.it>
+Mime-Version: 1.0
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <200312010102.31796.arekm@pld-linux.org>
+In-Reply-To: <20031130212501.GO19217@percy.comedia.it>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,18 +15,47 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Dec  1 03:45:02 2003
+Date: Mon Dec  1 04:11:02 2003
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="iso-8859-1"
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Sunday 30 of November 2003 18:18, Alasdair G Kergon wrote:
-> The word 'latest' is missing from that sentence!
+* Luca Berra <bluca@comedia.it>:
 
-That was it - with latest device-mapper it compiles fine. Thanks!
+> >* why is vgscan reading /dev/cdrom (a link to my first IDE
+> >CD-ROM /dev/hdc)?
+> >
+> >* how can I disable this message?
+> 
+> man lvm.conf
 
-> Alasdair
+Done and and /etc/lvm/lvm.conf adjusted:
+                                                                                
+devices {
+    dir = "/dev"
+    scan = [ "/dev" ]
+    filter = [ "r|cdrom|" ]
+    cache = "/etc/lvm/.cache"
+    write_cache_state = 1
+}
+                                                                                
+vgscan still reports
+"/dev/cdrom: open failed: Read-only file system"
 
-=2D-=20
-Arkadiusz Mi=B6kiewicz    CS at FoE, Wroclaw University of Technology
-arekm.pld-linux.org AM2-6BONE, 1024/3DB19BBD, arekm(at)ircnet, PLD/Linux
+I tried the following variants:
+                                                                                
+        filter = [ "r|/dev/cdrom" ]
+        filter = [ "r|/dev/cdrom", "r|/dev/hdc" ]
+        filter = [ "r|cdrom", "r|hdc" ]
+                                                                                
+Ideas? Kernel is 2.6.0-test9
+                                                                                
+LVM version:     2.00.07 (2003-09-16)
+Library version: 1.00.05-ioctl-cvs (2003-09-01)
+Driver version:  4.0.0
+                                                                                
+Kai
+-- 
+* mail kai.weber@glorybox.de . icq 102024972
+  web http://www.glorybox.de . pgp 0x594D4132
