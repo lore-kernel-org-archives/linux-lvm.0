@@ -1,8 +1,10 @@
-Message-ID: <5E34D857F6BB704CA3369B7553233A81651FC7@ntsviemxs0152.connect.at-work.ent>
-From: "Csuk, Ferenc" <Ferenc.Csuk@one.at>
-MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Subject: [linux-lvm] Mirroring using LVM for root, boot, and swap too
+From: Petro <petro@auctionwatch.com>
+Subject: [linux-lvm] 1.0.1-rc4 and kernel 2.4.14, A different question.
+Message-ID: <20011114105633.A6117@auctionwatch.com>
+References: <3BF19929.959A3055@phor.com> <20011113231527.D28062@colombina.comedia.it> <3BF270A2.36E36B24@phor.com>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <3BF270A2.36E36B24@phor.com>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -13,44 +15,20 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Nov 14 12:12:02 2001
+Date: Wed Nov 14 12:55:01 2001
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="iso-8859-1"
-To: "'linux-lvm@sistina.com'" <linux-lvm@sistina.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: linux-lvm@sistina.com
+Cc: bluca@comedia.it
 
-Hi All,
+Question, if I apply a patch generated off the 1.0.1-rc4 source code, 
+can I stull use the utils from .91beta7, or do I need to upgrade
+everything? 
 
-I just joined this mailing list, because I couldn=B4t find the solution =
-for my
-problem.=20
+If the answer is everything, anyone have a .deb laying around? (or at
+least the debian/ directory that someone who isn't all that familiar
+with building debian packages yet could use to build a .deb)?
 
-I want to establish a RAID-1 mirroring solution by using LVM. I want to
-mirror the whole content of my SCSI disks, like root, boot, and swap.=20
-
-I installed Suse Linux 6.4 using 3 partition and then I followed the
-instruction written in Chapter 19(converting root filesystem to LVM) of =
-the
-manual which I found on the internet.
-
-http://www.sistina.com/lvm_howtos/lvm_howto.pdf
-
-I managed to complete until point 11. However, when I rebooted the =
-system I
-got this error message:
-
-Kernel panic.....
-VFS: Cannot open root device 3a:01
-Unable to mount root fs on 3a:01
-
-I don=B4t know where I made the mistake!!!
-
-My questions:
-
-1., Has anyone followed this instruction and finished succesfully?
-2., Maybe I am  on the wrong way, so could you recommend another =
-solution
-for the above mentioned issue?
-
-Thank you in advance.
-
-Ferenc Csuk
+-- 
+Share and Enjoy. 
