@@ -1,11 +1,11 @@
 Return-Path: <root@srv.sistina.com>
-Date: Wed, 28 Feb 2001 11:05:54 +0000
+Date: Wed, 28 Feb 2001 11:15:10 +0000
 From: "Heinz J. Mauelshagen" <Mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] LVM and *bad* performance (no striping)
-Message-ID: <20010228110554.T4361@srv.sistina.com>
-References: <m2snl1phy5.fsf@isnogud.escape.de> <20010226203933.B2504@66bassett.freeserve.co.uk> <m27l2c2u6d.fsf@isnogud.escape.de>
+Subject: Re: [linux-lvm] LVM and striping, defragmentation
+Message-ID: <20010228111510.U4361@srv.sistina.com>
+References: <m2pug5ph0m.fsf@isnogud.escape.de> <20010226203358.A2504@66bassett.freeserve.co.uk>
 Mime-Version: 1.0
-In-Reply-To: <m27l2c2u6d.fsf@isnogud.escape.de>; from urs@isnogud.escape.de on Tue, Feb 27, 2001 at 01:21:14PM +0100
+In-Reply-To: <20010226203358.A2504@66bassett.freeserve.co.uk>; from joe@66bassett.freeserve.co.uk on Mon, Feb 26, 2001 at 08:33:58PM +0000
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -21,285 +21,69 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Hi Urs,
-
-I can't reproduce at all what you are seeing with your configuration.
-
-
-My test configuration is:
-
- - Dual Pentium II/350
- - 256MB RAM
- - Adaptec 2940UW
- - HDD Vendor: QUANTUM  Model: XP34550W Rev: LXY4 (/dev/sdb)
- - first 300M of the LV involved allocated contiguous at the beginning
-   of /dev/sdb1
- - LVM 0.9.1 Beta 5
- - Linux 2.4.2
- - dd (GNU fileutils) 4.0
-
-
-This table records test runs which where run one after the other
-*without* any additional load on the machine using dd to copy 300m
-into /dev/null. Each run performed twice with little difference + build average.
-
-		1k	2k	4k	8k	16k
------------------------------------------------------------
-sdb1		32.63	32.8	32,7	32.55	32.9
-vg00/u1		32.58	33.1	32.63	32.4	32.4
-
-
-This gives *no* hint to me that there's any basical overhead invloved
-with LVM as oposed to the native device beeing used at all.
-
-
-Therefore I guess that the allocation policy of LVM might have an impact here.
-
-LVM calculates the offset of the first PE from the end of the PV.
-There could be drives used which suffer from that placement with
-regard to drive internal caching, latency or other model specific issues.
-
-
-Could everybody who posts with regard to this performance subject please provide
-
-   - "lvdisplay -v" of the test LV
-   - the drive vendor and model
-   - the host adaptor used to access it
-   - the motherboard and CPU(s)
-   - the RAM size
-
-in order to get a better understanding.
-
-
-BTW: Rik van Riel's assumption in another mail of this thread, that LVM
-     does some sort of read ahead is correct (as you can see with the
-     above numbers).
-     Even though we still only have a per block major read ahead in the kernel
-     *and* multithreading will make the actual read ahead implementation fail
-     with regard parallel access LVs (as Andrea Arcangeli pointed out a while
-     ago), it hits quite good on not too heavy loaded systems.
-     Taking into account that a lot of users most likely don't change the
-     read ahead default of LVs, it won't have an impact at all.
-
-
-Regards,
-Heinz    -- The LVM Guy --
-
-
-
-On Tue, Feb 27, 2001 at 01:21:14PM +0100, Urs Thuermann wrote:
-> Joe Thornber <joe@66bassett.freeserve.co.uk> writes:
-> 
-> > Every now and then someone posts to the list claiming LVM performance
-> > is really bad.  We go off and try it and find the overhead is
-> > typically less than 1%.
+On Mon, Feb 26, 2001 at 08:33:58PM +0000, Joe Thornber wrote:
+> On Mon, Feb 26, 2001 at 05:04:41PM +0100, Urs Thuermann wrote:
+> > I'd like to experiment with LVM and striping.  The HOWTO at
+> > www.linuxdoc.org says in section 8.3 LVM native striping
 > > 
-> > Normally people are trying to stripe to two partitions on the same
-> > device, but you aren't.
+> >     Performance notices
 > > 
-> > Is any one else on the list seeing a similar performance hit ?
+> >     The performance 'gain' may well be very negative if you stripe over 2
+> >     partitions of the same disk - take care to prevent that.
+> > 
+> > 
+> > How can I take care of it?  I've seen no option in lvcreate to specify
+> > where the PE should be taken from.  If I have a VG with only two PVs on
+> > two different disks, will LVM automatically choose PEs from the two
+> > PVs instead of one PV?  And what if I have a VG with several PVs on
+> > disk A and several PVs on disk B.  How can I "take care to prevent"
+> > that LVM does not choose two PEs from the same disk for striping?
+
+Having more than one PV mapped to a physical device is *not* the recommended
+production configuration. The only reason why we build in that option is
+flexibility in test configurations.
+
 > 
-> I did some more tests to ensure that this is not a caching issue.
-> Also, I found the performance of dd on LVM depends much on the block
-> size.
+> You have highlighted an area where we want to do more work.
+> Specifically we want to write a tool that allows you more control over
+> the LE->PE mapping.  The striping allocation will try and allocate
+> LE's from two different PV's in the VG.  When you create the striped
+> LV just try not to have two PV's on the same disk.  You can always
+> disable allocation on an individual PV basis.
+
+Check the lvcreate man page, please.
+You can add a list of PV device specials to allocate the PEs from to the
+lvcreate command line or use pvchange in order to prohibit allocation on
+that PV before using lvcreate.
+
 > 
-> I still have the effect that reading from LVM with small block size
-> (smaller than 8k on my system) is *much* slower than reading the
-> physical disk directly.  IMHO it'd be worth looking into it and
-> possibly fixing this performance hit.  Could it be possible, that the
-> read syscall on the LVM block device has so much overhead that reading
-> small blocks can't cope with SCSI disk's transfer rate, so that
-> additional disk revolutions are needed to read all the physical
-> blocks?  I find it noticable that when doubling the block size from
-> 1k to 8k the time for reading quite exactly halves until it reaches
-> the performance of reading /dev/sda5 directly.
+> > When I resize my LVs in a VG multiple times, I can get some
+> > fragmentation, i.e. LVs in the VG are not contiguous.  Is there a tool
+> > to defragment LVs, i.e. to swap PEs so that all LVs in the VG are
+> > contiguous again.  I read in the man page that the allocation policy
+> > can be set to "contiguous", but how can I make LVs contiguous after
+> > some creating, removing, and resizing of LVs?
 > 
-> In case it matters, the machine I did the test on is a
-> 	ASUS P2L97-S mainboard
-> 	PII 333MHz
-> 	128 MB RAM
-> 	Adaptec AIC-7880U onboard UW-SCSI controller
-> 	/dev/sda is a IBM DCAS-34330W
-> 	kernel: Linux 2.4.2
+> At the moment it's not easy, you might want to look at the pvmove
+> documentation.
 > 
-> I've put the commands into a script that uses "set -x" to show what is
-> exec'ed.  Here's the result:
+> > How much performance loss is to be expected in case of non-contiguous LVs?
 > 
-> Initialisation:
+> It shouldn't be large, the LE's are normally 4 meg so the seeks to
+> different parts of the disk won't be that frequent.  To contrast with
+> stripes where the chunk size defaults to 64K, which can cause a lot of
+> thrashing if the stripes are on the same disk.
 > 
->     + pvcreate /dev/sda5
->     pvcreate -- physical volume "/dev/sda5" successfully created
->     
->     + vgcreate vg0 /dev/sda5
->     vgcreate -- INFO: using default physical extent size 4 MB
->     vgcreate -- INFO: maximum logical volume size is 255.99 Gigabyte
->     vgcreate -- doing automatic backup of volume group "vg0"
->     vgcreate -- volume group "vg0" successfully created and activated
->     
->     + lvcreate -n test /dev/vg0 -L 500M
->     lvcreate -- doing automatic backup of "vg0"
->     lvcreate -- logical volume "/dev/vg0/test" successfully created
->     
->     
-> The first test shows, that, with small block sizes, LVM over sda5 is
-> much slower than reading sda5 directly.  I do the reading three times
-> to see if any caching affects the numbers.  This is obviously not the
-> case:
-> 
->     + dd if=/dev/sda5 of=/dev/null count=128k bs=512
->     131072+0 records in
->     131072+0 records out
->     
->     real    0m8.862s
->     user    0m0.120s
->     sys     0m1.690s
->     + dd if=/dev/sda5 of=/dev/null count=128k bs=512
->     131072+0 records in
->     131072+0 records out
->     
->     real    0m8.860s
->     user    0m0.200s
->     sys     0m1.670s
->     + dd if=/dev/sda5 of=/dev/null count=128k bs=512
->     131072+0 records in
->     131072+0 records out
->     
->     real    0m8.860s
->     user    0m0.110s
->     sys     0m1.800s
->     + dd if=/dev/vg0/test of=/dev/null count=128k bs=512
->     131072+0 records in
->     131072+0 records out
->     
->     real    0m54.860s
->     user    0m0.150s
->     sys     0m2.780s
->     + dd if=/dev/vg0/test of=/dev/null count=128k bs=512
->     131072+0 records in
->     131072+0 records out
->     
->     real    0m54.810s
->     user    0m0.170s
->     sys     0m2.660s
->     + dd if=/dev/vg0/test of=/dev/null count=128k bs=512
->     131072+0 records in
->     131072+0 records out
->     
->     real    0m54.936s
->     user    0m0.200s
->     sys     0m3.010s
->     
-> 
-> The next test shows that the performance of LVM is very dependend on
-> the blocksize but that of sda5 is not, which I find surprising since
-> the same physical device is involved.
-> 
->     + dd if=/dev/sda5 of=/dev/null count=512 bs=128k
->     512+0 records in
->     512+0 records out
->     
->     real    0m8.857s
->     user    0m0.010s
->     sys     0m1.440s
->     + dd if=/dev/vg0/test of=/dev/null count=128k bs=512
->     131072+0 records in
->     131072+0 records out
->     
->     real    0m55.120s
->     user    0m0.190s
->     sys     0m2.760s
->     + dd if=/dev/vg0/test of=/dev/null count=64k bs=1k
->     65536+0 records in
->     65536+0 records out
->     
->     real    0m55.195s
->     user    0m0.170s
->     sys     0m2.970s
->     + dd if=/dev/vg0/test of=/dev/null count=32k bs=2k
->     32768+0 records in
->     32768+0 records out
->     
->     real    0m28.470s
->     user    0m0.090s
->     sys     0m1.830s
->     + dd if=/dev/vg0/test of=/dev/null count=16k bs=4k
->     16384+0 records in
->     16384+0 records out
->     
->     real    0m15.209s
->     user    0m0.010s
->     sys     0m1.860s
->     + dd if=/dev/vg0/test of=/dev/null count=8k bs=8k
->     8192+0 records in
->     8192+0 records out
->     
->     real    0m8.859s
->     user    0m0.010s
->     sys     0m1.670s
->     + dd if=/dev/vg0/test of=/dev/null count=4k bs=16k
->     4096+0 records in
->     4096+0 records out
->     
->     real    0m8.860s
->     user    0m0.010s
->     sys     0m1.570s
->     + dd if=/dev/vg0/test of=/dev/null count=2k bs=32k
->     2048+0 records in
->     2048+0 records out
->     
->     real    0m8.873s
->     user    0m0.010s
->     sys     0m1.390s
->     + dd if=/dev/vg0/test of=/dev/null count=1k bs=64k
->     1024+0 records in
->     1024+0 records out
->     
->     real    0m8.883s
->     user    0m0.000s
->     sys     0m1.380s
->     + dd if=/dev/vg0/test of=/dev/null count=512 bs=128k
->     512+0 records in
->     512+0 records out
->     
->     real    0m8.862s
->     user    0m0.000s
->     sys     0m1.370s
->     	    
-> 
-> Performance on filessystems on LVM is better, since the buffer cache
-> can be used.  I thought that the buffer cache works on block devices.
-> But this seems to suggest that it only works with files systems
-> mounted on the block device.  Is this really so and why?
-> 
->     + mke2fs -q /dev/vg0/test
->     mke2fs 1.19, 13-Jul-2000 for EXT2 FS 0.5b, 95/08/09
->     + mount /dev/vg0/test /mnt
->     + dd if=/dev/vg0/test of=/dev/null count=512 bs=128k
->     512+0 records in
->     512+0 records out
->     
->     real    0m8.792s
->     user    0m0.000s
->     sys     0m1.280s
->     + dd if=/dev/vg0/test of=/dev/null count=512 bs=128k
->     512+0 records in
->     512+0 records out
->     
->     real    0m1.044s
->     user    0m0.000s
->     sys     0m1.050s
->     
-> 
-> For tests like this it would be useful to be able to completely flush
-> the kernel's cache.  Is there a tool to do this?
-> 
-> 
-> urs
+> - Joe
 > _______________________________________________
 > linux-lvm mailing list
 > linux-lvm@sistina.com
 > http://lists.sistina.com/mailman/listinfo/linux-lvm
 
+-- 
+
+Regards,
+Heinz    -- The LVM Guy --
 
 *** Software bugs are stupid.
     Nevertheless it needs not so stupid people to solve them ***
