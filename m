@@ -1,9 +1,10 @@
-From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] Snapshot resizing bug (LVM1)
-Message-ID: <20030213131105.B20098@sistina.com>
-References: <A00B669E-3934-11D7-A9B9-0003937830E4@mac.com> <20030206112752.B22450@sistina.com> <3E424EDF.CC7A4F56@silicide.dk> <20030206194148.B23955@sistina.com> <3E4A9FD7.88850BEE@silicide.dk>
-Mime-Version: 1.0
-In-Reply-To: <3E4A9FD7.88850BEE@silicide.dk>; from jon+lvm@silicide.dk on Wed, Feb 12, 2003 at 08:26:15PM +0100
+From: Jason Smith <jhs@openenterprise.biz>
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Description: clearsigned data
+Content-Disposition: inline
+Message-Id: <200302132047.13938.jhs@openenterprise.biz>
+Subject: [linux-lvm] Available snapshot chunks known in LVM2
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,76 +15,80 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Thu Feb 13 06:15:02 2003
+Date: Thu Feb 13 08:40:01 2003
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: Text/Plain; charset="us-ascii"
 To: linux-lvm@sistina.com
 
-On Wed, Feb 12, 2003 at 08:26:15PM +0100, Debian User wrote:
-> "Heinz J . Mauelshagen" wrote:
-> > 
-> > On Thu, Feb 06, 2003 at 01:02:39PM +0100, Jon Bendtsen wrote:
-> > > "Heinz J . Mauelshagen" wrote:
-> > > >
-> > > > Dale,
-> > > >
-> > > > thanks for finding this bug.
-> > >
-> > > yeah, thanks from me too, i plan to TEST it.
-> > 
-> > Good :)
-> > 
-> > Please checkout from MAIN.
-> > We reverted 1.0.6 as mentioned in my other email today.
-> 
-> so, i got to test it, and... i dont think i did the correct CVS.
-> i followed what was written on
-> http://www.sistina.com/products_CVS.htm
-> 
-> but it appears that the patch isnt in, or that i have lvm-rc1 ?
-> from the changelog
-> 
-> "
-> Logical Volume Manager Changelog
-> 
-> Changelog for 1.1-rc1 to 1.1-rc2
-> 
-> "
-> 
-> hmmm
-> How do i checkout MAIN ?
-> I did try writing MAIN instead of LVM, but that failed.
+=2D----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA1
 
-Obviously an update problem with our external CVS.
-Will be fixed later today.
+Hi.
 
-> 
-> 
-> 
-> 
-> JonB
-> 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+I am trying to implement a script that will automagically grow a snapshot=20
+volume if it is getting too full, using 2.4.20-dm-7 and the latest stable=20
+LVM2 and libdevmapper.
 
--- 
+My problem is that the integer percent full value is not precise enough: on=
+=20
+for example a 100GB volume, those increments of course only tell me my=20
+snapshot usage down to 1GB, and my ultimate goal is to put off reallocating=
+=20
+as long as possible, so I need to see this number down to, say, a 100MB=20
+granularity.  Also, the current implementation rounds down, so 99.97% could=
+=20
+be interpreted as 1GB free in this example.  So I spent the last couple of=
+=20
+hours learning LVM code and implementing this change.
 
-Regards,
-Heinz    -- The LVM Guy --
+My first attempt worked!  But I'm not sure it's the best approach.  Basical=
+ly=20
+these are the changes necessary:
+In device-mapper:
+1) modify struct exception_store to include two new methods; one returns=20
+chunks used, the other the total chunks
+2) implement them in dm-exception-store.c
+3) modify snapshot_status() to snprintf the percentage (as original), but t=
+o=20
+append the used and total chunks from the said functions (this is backward=
+=20
+compatible with current LVM userland functionality)
 
-*** Software bugs are stupid.
-    Nevertheless it needs not so stupid people to solve them ***
+In LVM2:
+1) Change dev_manager_snapshot_percent() to grab the appended "used" and=20
+"total size" values from dm
+2) Modify lv_snapshot_percent() to calculate the percentage instead.  Actua=
+lly=20
+when I did it this way, I got a little win because the percentage is an=20
+actual float, and not a type conversion from the dm's int.  (Although maybe=
+ a=20
+simpler fix would be just to make persistent_percentfull return float like=
+=20
+any function named "percentfull" should!)
+3) Actually at this point, I was log_print()ing for debugging purposes so m=
+y=20
+proof-of-concept script just greps it out of the output at this time.
 
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+Thoughts?  IMO, firstly, the percentage full is certainly a number only=20
+interesting to users (or rather userland), so why is it getting calculated =
+in=20
+the kernel?  Secondly, my script and any similar daemon, etc. would just be=
+=20
+pulling the data back out of that fraction anyway to get a clearer picture,=
+=20
+so why not just return it from the kernel?  Anyway, my changes fixed both=20
+problems.  I'd be happy to send diffs, BTW.
 
-Heinz Mauelshagen                                 Sistina Software Inc.
-Senior Consultant/Developer                       Am Sonnenhang 11
-                                                  56242 Marienrachdorf
-                                                  Germany
-Mauelshagen@Sistina.com                           +49 2626 141200
-                                                       FAX 924446
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+Thanks.
+
+=2D --=20
+Jason Smith
+Open Enterprise Systems
+Bangkok, Thailand
+=2D----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.2.1 (GNU/Linux)
+
+iD8DBQE+S6Hfm5qEoSbpT3kRAuQ3AJ9KNw4swX49SFda96gJVT08bChsrgCdFpdb
+fVNsVMBkX/yQRuzPhTwaLNA=3D
+=3DH4M7
+=2D----END PGP SIGNATURE-----
