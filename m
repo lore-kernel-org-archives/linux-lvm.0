@@ -1,10 +1,10 @@
-Return-Path: <jorg.de.jong@ida.xs4all.nl>
-Message-ID: <3AB90364.2D8EB2A9@ida.xs4all.nl>
-Date: Wed, 21 Mar 2001 20:39:16 +0100
-From: Jorg de Jong <jorg.de.jong@ida.xs4all.nl>
+Return-Path: <list@showme.wox.org>
+Message-ID: <008b01c0b293$2873fac0$0e01a8c0@myplace.net>
+From: "Bas" <list@showme.wox.org>
+Date: Wed, 21 Mar 2001 21:44:27 -0800
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] [rfc] announcement LVM Gui Project
+Subject: [linux-lvm] LVM-0.9.1beta6, XFS and 2.4.2 ...
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -19,19 +19,16 @@ List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
 
-Hi, 
+Hi,
 
-I like to share my LVM Gui Project with you. 
-I have made a graphical front end for LVM. 
-You can download it at the projects website:
+Today this message showed up in my system log.
 
-	http://www.xs4all.nl/~mmj/lvm
+Mar 21 20:22:40 wisdom kernel: lvm -- lvm_blk_ioctl: unknown command 0x126e
+Mar 21 20:23:08 wisdom kernel: Start mounting filesystem: lvm(58,13)
+Mar 21 20:23:13 wisdom kernel: Ending clean XFS mount for filesystem:
+lvm(58,13)
 
-There you will also find some screen shots. 
+What does it mean ?
 
-Feedback is highly appreciated, but please don't
-flame me into the ground.
-
-Regards,
-
-Jorg de Jong
+Thanks,
+Bas.
