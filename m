@@ -1,12 +1,10 @@
-Return-Path: <hal@hal.mailgate.net>
-Date: Fri, 15 Jun 2001 17:57:38 +0200
-From: Hugo Lombard <hal@mailgate.net>
-Subject: Re: [linux-lvm] expanding physical disks
-Message-ID: <20010615175738.F21571@hal.mailgate.net>
-References: <20010612212804.P1658@pc.ilinx> <200106130710.f5D7AhaX005430@webber.adilger.int> <20010613152032.A18554@colombina.comedia.it> <20010615161151.B9980@hal.mailgate.net> <20010615165135.A4266@sistina.com>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20010615165135.A4266@sistina.com>; from Mauelshagen@sistina.com on Fri, Jun 15, 2001 at 04:51:35PM +0200
+Return-Path: <fl@fl.priv.at>
+Date: Fri, 15 Jun 2001 22:54:17 +0200 (CEST)
+From: Friedrich Lobenstock <fl@fl.priv.at>
+Subject: Re: [linux-lvm] $(DESTDIR) inclusion into Makefile.in files
+In-Reply-To: <20010615091805.A8645@sistina.com>
+Message-ID: <Pine.LNX.4.33.0106152246350.23466-100000@www.scotty.co.at>
+MIME-Version: 1.0
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -18,55 +16,32 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: TEXT/PLAIN; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Fri, Jun 15, 2001 at 04:51:35PM +0200, Heinz J. Mauelshagen wrote:
-> On Fri, Jun 15, 2001 at 04:11:51PM +0200, Hugo Lombard wrote:
-> > 
-> > If you're using LVM primarily as a way to make it possible for you to
-> > expand your storage space on-line (and on-mount-point) wouldn't it be
-> > "easier" to _just_ use the RAID? i.e. expand the RAID volume on the
-> > controller, so basically the "disk" is bigger now, and the just "grow"
-> > your partition, extend your filesystem, and that's it?
-> 
-> I think you're right in case you can live with the restrictions involved.
-> 
+On Fri, 15 Jun 2001, AJ Lewis wrote:
 
-I'm right!?!?! Mother would be so proud!! ;)
+> On Fri, Jun 15, 2001 at 12:12:09PM +0200, Gergely Tamas wrote:
+> > It would be probably a good idea to insert a $(DESTDIR) in front of all
+> > installation targets. This would make packagers life easyer.
+>
+> Thanks Gergely,
+> I've been intending to do that but hadn't yet.  Instead of putting it in the
+> Makefiles themselves though, I put it where the install directories are
+> defined, make.tmpl.in.  The head of the current CVS has these changes.
 
-> If the amount of resizable volumes a single smart controller can support is
-> enough, you can surely go with that solution. When it comes to more storage
-> you need a logical volume manager to group multiple disk subsystems together
-> in order to support large storage configurations.
-> 
+When modifying makefiles for packaging I'd do it the same way as
+Gregely because what if the "make install" creates a symlink to let's
+say /usr/bin/some-file which now would link it to
+$(DESTDIR)/usr/bin/some-file and so we'd break the whole thing. Also
+some other stuff like config files end up wrongly referenced in the
+compiled files. So I'd say, never do it where the install directories
+get defined, use $(DESTDIR) only in the install section of the
+makefile.
 
-*nod*  As usual, there's no universal answer, and it depends on you
-needs/configuration/preference/phase of moon...
-
-> > 
-> > It's a thought I've been toying with since seeing the IBM ServeRAID's
-> > capability to grow volumes.  I've not attempted any testing though, so
-> > this is pure speculation...
-> > 
-> > (PS: All this means nothing if you're using LVM for it's other
-> > features, like striping, but then the RAID can do that too...)
-> 
-> Plus LVM's features to move data around online in order to relocate it to
-> faster/bigger/newer disk subsystems, to have more that just a couple of 
-> resizable devices, support for hardware block device reconfiguration without
-> any changes in the namespace of the logical volumes, snapshot support etc.
-> 
-
-Very important features to consider, for sure.
+Just my 2 euro cents.
 
 -- 
-Dorothy:	But how can you talk without a brain?
-Scarecrow:	Well, I don't know... but some people without brains
-		do an awful lot of talking.
-		-- The Wizard of Oz
----------------------------------------------------------------------------
- Hugo Lombard                    Infoline (Pty) Ltd
- System Administrator
----------------------------------------------------------------------------
+MfG / Regards
+Friedrich Lobenstock
