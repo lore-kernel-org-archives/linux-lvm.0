@@ -1,39 +1,45 @@
-Message-Id: <4.2.0.58.19990924114354.0095dc60@mail.lig.bellsouth.net>
-Date: Fri, 24 Sep 1999 11:45:01 -0400
-From: David Cooley <n5xmt@bellsouth.net>
-Subject: [linux-lvm] Re: Linux LVM & Software RAID.
-In-Reply-To: <Pine.LNX.4.10.9909241623500.1163-100000@gatekeeper.zwax.mt
- g.co.at>
-Mime-Version: 1.0
+Date: Sat, 25 Sep 1999 00:49:15 +0200 (CEST)
+From: Andreas Kostyrka <andreas@mtg.co.at>
+Subject: [linux-lvm] LVM 0.7: optimization bug
+Message-ID: <Pine.LNX.4.10.9909250041580.8042-100000@gatekeeper.zwax.mtg.co.at>
+MIME-Version: 1.0
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
+Content-Type: TEXT/PLAIN; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: Andreas Kostyrka <andreas@mtg.co.at>, Linux LVM Mailinglist <linux-lvm@msede.com>
-Cc: linux-raid@vger.rutgers.edu
+To: Linux LVM Mailinglist <linux-lvm@msede.com>
 
-At 04:29 PM 9/24/1999 +0200, Andreas Kostyrka wrote:
->Hi!
->
->Just been wondering if somebody does have a working 2.2.12 system that
->does include these features:
->-) LVM 0.7
->-) md-raid0145
->
->Actually, I've tried to do this, but there is a small conflict in
->ll_rw_blk.c. Obviously I didn't solve it correctly, because after mkraid
->on /dev/md0 (RAID5 on 5 SCSI discs), my mke2fs crashed.
->
->So did anybody solve this conflict, or am I on my own?
+Hi!
+
+I've found some buggy assumptions (in my case, like that I do have
+16 loop devices. RH6 comes with loop0-loop7).
+
+The following patch fixes this:
+diff -uNr LVM.org/0.7/tools/lib/pv_read_all_pv.c
+LVM/0.7/tools/lib/pv_read_all_pv.c
+--- LVM.org/0.7/tools/lib/pv_read_all_pv.c      Mon Jul 12 23:21:26 1999
++++ LVM/0.7/tools/lib/pv_read_all_pv.c  Sat Sep 25 03:19:51 1999
+@@ -99,13 +99,6 @@
+          debug ( "pv_read_all_pv -- calling pv_read with \"%s\"\n",
+                   dev_name);
+ #endif
+-         if ( ( tst = open ( dev_name, O_RDONLY)) == -1) {
+-            if ( MAJOR ( dir_cache[n].st_rdev) != MD_MAJOR &&
+-                 MINOR ( dir_cache[n].st_rdev) % 16 == 0) {
+-               n += 15;
+-               continue;
+-            }
+-         } else close ( tst);
+ 
+          pv_read_errno = 0;
+          if ( ( ret = pv_read ( dev_name, &pv_tmp, &pv_read_errno)) == 0
+||
 
 
-I don't have LVM, but am running the 2.2.12 kernel with the o824 raid patch 
-installed against it, and have 2 MD devices configured from 12 SCSI disks 
-on a Sun Ultra 2.  It's rock stable.
-
-===========================================================
-David Cooley N5XMT Internet: N5XMT@bellsouth.net
-Packet: N5XMT@KQ4LO.#INT.NC.USA.NA T.A.P.R. Member #7068
-We are Borg... Prepare to be assimilated!
-===========================================================
+Andreas
+--
+Andreas Kostyrka                     | andreas@mtg.co.at
+phone: +43/1/7070750                 | phone: +43/676/4091256   
+MTG Handelsges.m.b.H.                | fax:   +43/1/7065299
+Raiffeisenstr. 16/9                  | 2320 Zwoelfaxing AUSTRIA        
