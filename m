@@ -1,58 +1,39 @@
-Date: Tue, 24 Oct 2000 18:40:45 +0200 (CEST)
-From: Holger Rauch <Holger.Rauch@heitec.de>
-Reply-To: Holger Rauch <Holger.Rauch@heitec.de>
+From: Andreas Dilger <adilger@turbolinux.com>
+Message-Id: <200010241642.e9OGgOn31554@webber.adilger.net>
 Subject: Re: [linux-lvm] swap lv
-In-Reply-To: <20001024224017.E27491@ist.flinders.edu.au>
-Message-ID: <Pine.LNX.4.21.0010241826130.24309-100000@miami.datech2.er.heitec.net>
+In-Reply-To: <20001024224017.E27491@ist.flinders.edu.au> "from Mark Phillips
+ at Oct 24, 2000 10:40:17 pm"
+Date: Tue, 24 Oct 2000 10:42:24 -0600 (MDT)
 MIME-Version: 1.0
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: Mark Phillips <mark@ist.flinders.edu.au>
-Cc: linux-lvm@msede.com
+Cc: Holger Rauch <Holger.Rauch@heitec.de>, linux-lvm@msede.com
 
-Hi!
-
-First of all, thanks a lot for your quick reply!
-
-On Tue, 24 Oct 2000, Mark Phillips wrote:
-
+Mark Phillips writes:
 > Holger Rauch [Holger.Rauch@heitec.de] wrote:
-> 
 > > Is it possible to have only one swap partition that resides on an LV? If
 > > so, how can this be achieved? Are swap LVs resizable?
-> 
-> I'm not quite sure what you mean by your first question.
-
-What I mean is whether the swap partition residing on an LV may be the
-only swap partition that's found on the system. Or do I need a normal swap
-partition that resides on a "real" partition?
-  
-> But yes, you
-> can have a single lv which acts as a swap partition.  You need to
-> create the partition.  Then use mkswap on it, and then mount it as
-> swap.  For example, I have the line:
-> 
-> /dev/main_vg/swap_lv    none   swap    sw     0   0
-> 
-> in my /etc/fstab file.
 > 
 > As for resizing a swap partition.  What I would do is as follows.
 > First unmount your swap partition so that you are not using it
 > anymore.  Then delete the partition.  Then create it again, making it
 > a different size.  Then run mkswap again and mount it again.
->
-> (Not that I have actually tried this myself, but I don't see why it
-> wouldn't work.)
 
-Isn't there a danger that while the swap LV is unmounted one can run out
-of memory? What I mean is that there is almost always a small amount of
-swap space that's used by the system. When I really unmount the swap
-partition, I'm taking this space away from the system and I'm afraid that 
-this will cause unexpected results.
+Actually, it is probably better to make a new swap LV, activate it, and
+then deactivate the old one (assuming you have enough disk space to do
+so).  Otherwise, you may run out of memory if you don't have a swap
+partition.
 
-Greetings,
+The other alternative is to simply have 2 or more swap partitions.  If
+they are created with equal priority, then they will both be used.  There
+is no problem with having multiple swap partitions.
 
-	Holger
+Cheers, Andreas
+-- 
+Andreas Dilger  \ "If a man ate a pound of pasta and a pound of antipasto,
+                 \  would they cancel out, leaving him still hungry?"
+http://www-mddsp.enel.ucalgary.ca/People/adilger/               -- Dogbert
