@@ -1,11 +1,12 @@
-Return-Path: <hch@ns.caldera.de>
-Date: Fri, 9 Feb 2001 09:34:05 +0100
-From: Christoph Hellwig <hch@caldera.de>
-Subject: Re: [linux-lvm] questions
-Message-ID: <20010209093404.B21158@caldera.de>
-References: <20010209003003.B29707@vestdata.no> <200102090005.f1905bc08799@webber.adilger.net>
+Return-Path: <patrick@tykepenguin.cix.co.uk>
+Date: Fri, 9 Feb 2001 08:46:51 +0000
+From: Patrick Caulfield <caulfield@sistina.com>
+Subject: Re: [linux-lvm] lvm buglet in 0.9.1_beta
+Message-ID: <20010209084651.A528@tykepenguin.com>
+References: <20010208091418.A529@tykepenguin.com> <200102081838.f18Icgf11614@webber.adilger.net>
 Mime-Version: 1.0
-In-Reply-To: <200102090005.f1905bc08799@webber.adilger.net>; from adilger@turbolinux.com on Thu, Feb 08, 2001 at 05:05:36PM -0700
+Content-Disposition: inline
+In-Reply-To: <200102081838.f18Icgf11614@webber.adilger.net>; from adilger@turbolinux.com on Thu, Feb 08, 2001 at 11:38:42AM -0700
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -21,13 +22,24 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Thu, Feb 08, 2001 at 05:05:36PM -0700, Andreas Dilger wrote:
-> Change all of the code paths in the kernel that assume block size is 512
-> bytes...
+On Thu, Feb 08, 2001 at 11:38:42AM -0700, Andreas Dilger wrote:
+> Patrick, you write:
+> > On Wed, Feb 07, 2001 at 11:15:55AM -0700, Andreas Dilger wrote:
+> > > Sure you can run fdisk on just about anything, but you can't access the
+> > > partitions unless it is a partitioned device (i.e. the minor numbers
+> > > mean "look at a partition").
+> > 
+> > I wasn't being entirely serious here, but the original bug report had 
+> > a /proc/partitions file showing several minors attached to major 72 so
+> > it seemed reasonable to me that it was partitioned.
+> 
+> There is a problem, IMHO, that LVM assumes a partitioned device is the
+> same thing as a DOS partitioned device.  I'm sure that anyone using
+> BSD/Sun/SGI/etc disklabels can not use LVM for this reason.  The only
+> reason LVM does this is to check the partition type (not very important
+> IMO), otherwise we could just check /proc/partitions and be done, like
+> the #ifdef __alpha__ code.
 
-IIRC some S/390 devices already use 4K block size.
+It does work with SUN & SGI disklabels since beta3. I've been testing that.
 
-	Christoph
-
--- 
-Of course it doesn't work. We've performed a software upgrade.
+patrick
