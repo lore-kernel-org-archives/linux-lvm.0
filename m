@@ -1,8 +1,11 @@
-Message-Id: <20020424170945.22840.qmail@web21407.mail.yahoo.com>
-From: Miguel Ha <falcon_lvm@yahoo.com>
-In-Reply-To: <E04CF3F88ACBD5119EFE00508BBB2121026DCB00@exch-01.noida.hcltech.com>
+From: Andres Salomon <dilinger@mp3revolution.net>
+Subject: Re: [linux-lvm] LVM2 beta2
+Message-Id: <20020424171730.GA2145@chunk.voxel.net>
+References: <20020424153354.GA627@fib011235813.fsnet.co.uk>
+    <3CC6DAFE.5070007@st-peter.stw.uni-erlangen.de>
 MIME-Version: 1.0
-Subject: [linux-lvm] unsubscribe
+Content-Disposition: inline
+In-Reply-To: <3CC6DAFE.5070007@st-peter.stw.uni-erlangen.de>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -13,67 +16,53 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Apr 24 12:08:02 2002
+Date: Wed Apr 24 12:16:02 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
---- "Chitaranjan Behera, Noida"
-<cbehera@noida.hcltech.com> wrote:
-> Hi,
+I think things like stability and features are more important atm for
+LVM2, than supporting linux 2.5 is..
+
+On Wed, Apr 24, 2002 at 06:19:10PM +0200, svetljo wrote:
 > 
-> I tried to do lvextend and then lvreduce (same
-> space) without unmounting the
-> file system, bcoz of online read/write operation on
-> that file system. System
-> seems slow (almost hanged). So can anybody please
-> tell me whether the SAME
-> extended block is reduced by the lvreduce command or
-> not. And what could be
-> the reason of system hang.
->   
-> --
-> Regards,
-> Chitaranjan
-> 91-4510701/02   Ext -3159
+> >
+> >
+> >There are tarballs available for the second beta test of LVM2.
+> >
+> > ftp://ftp.sistina.com/pub/LVM2/tools/LVM2.0-beta2.0.tgz
+> > ftp://ftp.sistina.com/pub/LVM2/device-mapper/device-mapper-beta2.0.tgz
+> >
+> >The main new addition to the release is that we have begun merging in
+> >the asynchronous snapshot code.  This code tries to minimise the time
+> >taken to perform the copy on write operation.  In addition it has
+> >identical performance at all snapshot chunk sizes, unlike LVM1 and
+> >EVMS whose performance degrades exponentially as the chunk size
+> >decreases.
+> >
+> >The default snapshot chunk size for LVM2 has now dropped to 16k, it
+> >may be reduced further depending on test results.
+> >
+> >Please not that although snapshots are available in this release they
+> >are currently non-persistent, ie. the snapshot will be lost if you
+> >deactivate it, or reboot the machine.  Persistent snapshots will
+> >follow shortly.
+> >
+> >- Joe
+> >
+> no support for the 2.5 kernel again ?
+> nothing in the tarbals and cvs
 > 
-> " Make sincerity and innocence as your real
-> strengths !! "
-> --
-> Disclaimer
-> This document is intended for transmission to the
-> named recipient only.  If
-> you are not that person, you should note that legal
-> rights reside in this
-> document and you are not authorized to access, read,
-> disclose, copy, use or
-> otherwise deal with it and any such actions are
-> prohibited and may be
-> unlawful. The views expressed in this document are
-> not necessarily those of
-> HCL Technologies Ltd. Notice is hereby given that no
-> representation,
-> contract or other binding obligation shall be
-> created by this e-mail, which
-> must be interpreted accordingly. Any
-> representations, contractual rights or
-> obligations shall be separately communicated in
-> writing and signed in the
-> original by a duly authorized officer of the
-> relevant company.
-> --
+> regards svetljo
 > 
 > 
 > _______________________________________________
 > linux-lvm mailing list
 > linux-lvm@sistina.com
 > http://lists.sistina.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at
-http://www.sistina.com/lvm/Pages/howto.html
+> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
 
-
-__________________________________________________
-Do You Yahoo!?
-Yahoo! Games - play chess, backgammon, pool and more
-http://games.yahoo.com/
+-- 
+Andres Salomon  <dilinger@voxel.net>
+Voxel Dot Net, Inc.                          518.269.0569
