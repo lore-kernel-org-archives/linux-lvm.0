@@ -1,9 +1,11 @@
-From: "Jason A. Lixfeld" <jlixfeld@andromedas.com>
-Date: Tue, 9 Oct 2001 07:14:50 -0400
-Message-ID: <002901c150b3$9d330860$836788cf@industry>
+From: Ed Tomlinson <tomlins@CAM.ORG>
+Date: Tue, 9 Oct 2001 07:42:58 -0400
+References: <20011003230330.508E91104F@oscar.casa.dyndns.org> <20011009015759.BF5E472AE3@oscar.casa.dyndns.org> <175160000.1002594564@tiny>
+In-Reply-To: <175160000.1002594564@tiny>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] Too many problems
+Content-Transfer-Encoding: 8bit
+Message-Id: <20011009114258.EE8BA11D3@oscar.casa.dyndns.org>
+Subject: [linux-lvm] Re: [OOPS] full snapshot (with test vfs locking patch for reiserfs snapshots in 11-pre)
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,15 +18,38 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@sistina.com
+To: Chris Mason <mason@suse.com>
+Cc: linux-lvm@sistina.com
 
-I just need to know what a stable release of LVM is for RedHat and what
-compiler to use.  The stock RedHat 7.1 compiler is buggy, from what I
-understand here.  I've had so many problems in the last week and I'm
-getting really frustrated with all of this :(  I'm using kernel 2.4.10
-but am more than willing go to down a couple revs for something stable.
+On October 8, 2001 10:29 pm, Chris Mason wrote:
 
-Please let me know what's a stable LVM/Kernel/Compiler setup so I can
-keep my systems up.
+> We've got a write lock on the lv semaphore, so nobody else should be
+> calling lvm_drop_snapshot on us.  I hate to ask, but are you sure you did
+> an rmmod before the modules_install?
 
-Thanks.
+my root is lvm so the only way to reload the module is to boot.  In this case
+I rebuilt from scratch (clean, dep, bzImage, modules, modules_install, stuff, 
+lvmcreate_initrd <kernel>, lilo, reboot).  After I got the oops I rebooted
+and rechecked the source...
+
+> Regardless, we can fix the oops in _disable_snapshot, I just don't see how
+> the locking allows it to happen.  This incremental fix should do it:
+
+I will try this tonight.  Was off yesterday.
+
+Thanks Chris
+Ed
+
+> --- 0.21/drivers/md/lvm-snap.c Sat, 06 Oct 2001 00:07:22 -0400
+> +++ 0.21(w)/drivers/md/lvm-snap.c Mon, 08 Oct 2001 22:39:54 -0400
+> @@ -687,6 +694,10 @@
+>
+>  static void _disable_snapshot(vg_t *vg, lv_t *lv) {
+>  	const char *err;
+> +	if (!lv->lv_block_exception) {
+> +		printk(KERN_ERR "%s -- snapshot already disabled\n", lvm_name);
+> +		return ;
+> +	}
+>  	lv->lv_block_exception[0].rsector_org = LVM_SNAPSHOT_DROPPED_SECTOR;
+>  	if(_write_COW_table_block(vg, lv, 0, &err) < 0) {
+>  		printk(KERN_ERR "%s -- couldn't disable snapshot: %s\n",
