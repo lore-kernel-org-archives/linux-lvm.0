@@ -1,11 +1,9 @@
-Subject: Re: [linux-lvm] one PV crashed
-References: <878zad8qrx.fsf@papadoc.bayour.com>
-    <20020201111151.B15491@sistina.com> <87wuxx1duy.fsf@papadoc.bayour.com>
-    <87r8nyan7a.fsf@papadoc.bayour.com> <20020206205702.A6967@sistina.com>
-From: Turbo Fredriksson <turbo@bayour.com>
-In-Reply-To: <20020206205702.A6967@sistina.com>
-Message-Id: <87g04deij8.fsf@papadoc.bayour.com>
+Message-Id: <3C624EF1.41007537@conterra.de>
+From: Dieter Stueken <stueken@conterra.de>
 MIME-Version: 1.0
+Subject: Re: [linux-lvm] Backup costs (was: LVM reimplementationre)
+References: <3YZU4ZCA1Z2YG72C3276A7F0MLTRF0.3c619374@kadzuki>
+Content-Transfer-Encoding: 8bit
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,41 +14,62 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Thu Feb  7 03:41:02 2002
+Date: Thu Feb  7 03:55:02 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
 To: linux-lvm@sistina.com
 
-Quoting "Heinz J . Mauelshagen" <mauelshagen@sistina.com>:
-
-> On Wed, Feb 06, 2002 at 12:01:29PM +0100, Turbo Fredriksson wrote:
-> > Quoting Turbo Fredriksson <turbo@bayour.com>:
-> > 
-> > > [papadoc.root]# vgcfgrestore -f /etc/lvmconf/vg1.conf -n vg1 /dev/loop0
-> > > vgcfgrestore -- physical volume "/dev/loop0" doesn't belong to volume group "vg1"
-> > > 
-> > > [papadoc.root]# vgcfgrestore -f /etc/lvmconf/vg1.conf -n vg1 -o /dev/sdg1 /dev/loop0
-> > > vgcfgrestore -- ERROR "pv_read(): pv_create_name_from_kdev_t" reading physical volume "/dev/loop0"
-> > >
-> > > [papadoc.root]# pvdisplay -v /dev/loop0 
-> > > pvdisplay -- getting physical volume size
-> > > pvdisplay -- ERROR "pv_read(): pv_create_name_from_kdev_t" no VALID physical volume "/dev/loop0"
-> > 
-> > 
-> > Does anyone have a solution to this? What am I doing wrong?
+Anders Widman wrote:
 > 
-> Turbo,
+> Well, have you ever heard of diskcabbinettes? I use them alot wich means I don't have to have 10 disks in the same coputer at the same time. Then what, hot swap? Well this is very much possible, and secure
+> (look at Promise.com).
 > 
-> you seem to be using an older LVM version with broken loop support :-(
-> Found a bug in vgcfgrestore(8) which will likely cause problems with this too.
-> More to follow...
+> IDE disk drives are very cheap and fast enough (Maxtor 160GB has a write performance of about 35MB/s in average) for most purposes and does not require special hardware or software.
 
-Dang! My LVM version is: 1.0.1-rc4
+I also developed a backup strategy based on a LVM Disk Array and it
+works great.
+I currently have to backup about 100GB of data. I build a mirroring
+system copying
+all data each night. Our traditional incremental backup showed, that
+about 2Gb are
+changed each day. So, for the next day, a new directory is created and
+all backuped
+data from yesterday are hard linked (cp -al) to the new destination.
+Second, a cp -u
+updates all files which have been changed. With 140Gb available I can
+hold about 2 weeks
+on disk. After that only one snapshot per week, later on one per month
+is kept. I have
+to see, how far I can go. In addition i make full backups from these
+snapshots as an
+disaster backup.
 
-I'll try the other solution, with a separate harddisk. I borrowed a 18Gb disk to at least hold
-SOME of the data I and my users are collecting (mail etc) :)
+This procedure has a lot of advantages. Recent backups of single files
+can be done
+instantaneous. This took me hours of spooling DDS tapes back an forth
+before. The backup
+system can even be accessed by the users themselves. The backup mirror
+is located on
+an other building, an both systems see each other read only.
 
-smuggle Honduras Iran class struggle Treasury PLO Serbian colonel spy
-nuclear president FSF assassination Soviet kibo
-[See http://www.aclu.org/echelonwatch/index.html for more about this]
+I think about saving the incremental data on tape too, to have a 3rd
+stage, if the
+backup disk fails. Any tape backup can now be done off-line from the
+mirror. I don't
+have to spend my weekends changing tapes to realize a fill backup from
+the hot system.
+I also may continue to use my old DDS4 backup drive, because it does not
+really matter
+if the tape backup is slow.
+
+Recovering all data from DDS4 tape may take longer than using some fancy
+LTO, this will
+be necessary only if both buildings burned down, and I thing we have a
+bigger problem then...
+
+Dieter.
+-- 
+Dieter St�ken, con terra GmbH, M�nster
+    stueken@conterra.de         stueken@qgp.uni-muenster.de
+    http://www.conterra.de/     http://qgp.uni-muenster.de/~stueken
+    (0)251-980-2027             (0)251-83-334974
