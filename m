@@ -1,29 +1,37 @@
-Date: Sat, 20 Nov 1999 15:22:29 +0100
-From: Sune Kirkeby <sune@interspace.dk>
-Subject: Re: [linux-lvm] kernel oops.
-Message-ID: <19991120152229.A28224@interspace.dk>
-References: <Pine.A32.3.94.991119162848.17956A-100000@clio.dlib.indiana.edu> <19991119235840.A11444@gruyere.muc.suse.de>
+Message-Id: <4.2.2.19991121094946.00a59400@mail.iname.com>
+Date: Sun, 21 Nov 1999 09:56:18 -0600
+From: Daniel Whicker <heimdall@mail.org>
+Subject: [linux-lvm] Problem with possible failed disk...
 Mime-Version: 1.0
-In-Reply-To: <19991119235840.A11444@gruyere.muc.suse.de>; from Matthias G. Eckermann on Fri, Nov 19, 1999 at 11:58:40PM +0100
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
 Content-Transfer-Encoding: 7bit
-To: "Matthias G. Eckermann" <mge@suse.de>
-Cc: linux-lvm@msede.com, Rusty Wickell <twickell@clio.dlib.indiana.edu>
+To: linux-lvm@msede.com
 
-On Fri, Nov 19, 1999 at 11:58:40PM +0100, Matthias G. Eckermann wrote:
-> 
-> Well, I did not check, but I think, switches and parameters
-> should be separated by space, i.e.:
-> 	lvcreate -L 5000 -n reallv realvg
->  
+Hey Gang,
+	I was hoping that someone might be able to help.  I just recently moved 
+and found that one of my systems wouldn't be, hanging  at single user after 
+trying to fsck an LVM filesystem.  Further checking resulted in the 
+discovery that LVM hadn't found any volume groups.  At that point I did a 
+"vgscan -d 2>&1 | tee /tmp/out" and dug through /tmp/out and found that one 
+of my two LVM disks (/dev/hdd) was being skipped.  A bit more checking and 
+I found that /dev/ide/hdd/geometry was reporting that this disk had a 
+NEGATIVE number of cylinders.  This brings me to two questions;  does 
+anyone know how to remove a disk from a volume group when you can't get the 
+system to see the VG?  (/dev/hdb and /dev/hdd are both members of vg00)  I 
+know that there was no data on that disk yet, I had just added it, so 
+removing it shouldn't affect any file systems.  Also, would anyone have 
+ideas why Linux would see a negative number of cylinders for that 
+disk?  The BIOS seems to see it just fine, and before I moved, Linux had 
+seen that disk fine.  I assume that the disk is bad, but it seems strange 
+that the BIOS and Linux aren't jiving on the geometry of the disk.
 
-Actually, the LVM-HOWTO (which is where the commands are introduced)
-gives all it's examples w/o separation of switches and parameters,
-it probably does not matter at all.
+Any help would be greatly appreciated.
 
--- 
-Sune Kirkeby | "Imagine, if you will, that there were no such
-             |  thing as a hypothetical situation..."
+Thanks,
+Daniel
+									-Daniel
+		------------------------------------------
+		Daniel Whicker  (heimdall@mail.org)
