@@ -1,18 +1,18 @@
-Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id iBGInbr14936
-	for <linux-lvm@redhat.com>; Thu, 16 Dec 2004 13:49:37 -0500
-Received: from dcs.nac.uci.edu (root@dcs.nac.uci.edu [128.200.34.32])
-	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id iBGInVWh018326
-	for <linux-lvm@redhat.com>; Thu, 16 Dec 2004 13:49:36 -0500
-Subject: Re: [linux-lvm] Can't mount after crash
-From: Dan Stromberg <strombrg@dcs.nac.uci.edu>
-In-Reply-To: <41C1D30A.6030201@danielroth.se>
-References: <41BB808E.60108@danielroth.se> <41BFC24F.6060207@danielroth.se>
-	<41C1D30A.6030201@danielroth.se>
-Date: Thu, 16 Dec 2004 10:49:24 -0800
-Message-Id: <1103222964.31909.224.camel@tesuji.nac.uci.edu>
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id iBGJLwr26996
+	for <linux-lvm@redhat.com>; Thu, 16 Dec 2004 14:21:58 -0500
+Received: from fry.mrunge.se (1-1-10-25a.gtd.gbg.bostream.se [82.182.172.17])
+	by mx3.redhat.com (8.12.11/8.12.11) with ESMTP id iBGJLpAh029015
+	for <linux-lvm@redhat.com>; Thu, 16 Dec 2004 14:21:52 -0500
+Received: from [192.168.1.52] (1-1-10-34a.gtd.gbg.bostream.se [82.182.172.29])
+	by fry.mrunge.se (Postfix) with ESMTP id 429D73476D
+	for <linux-lvm@redhat.com>; Thu, 16 Dec 2004 20:21:55 +0100 (CET)
+Message-ID: <41C1E058.1020300@slacker.se>
+Date: Thu, 16 Dec 2004 20:22:00 +0100
+From: Mattias Runge <mattias@slacker.se>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Subject: [linux-lvm] Problems with LVM
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -23,104 +23,19 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="utf-8"; format="flowed"
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
+Hi
 
-FWIW:
+I had a lvm-array with 3 disks � 120gb. One failed and then I could not 
+bring the array online. I had one partition spanning the whole array. 
+Finaly I tried vgreduce --removemissing, this got rid of the errors, but 
+unfortunatly it now seems that the whole lvm-array of the two remaing 
+disks is unallocated. My problem is that I would like to get the data of 
+the two remaining disks. Is there any way of doing this or did I !@"#� 
+up when i did vgreduce --removemissing?
+I am using reiserfs on the disk.
 
-1) I suspect that if you install FC3 without LVM2, you may not suffer
-from this kind of problem
-
-2) I've posted on this mailing list (lvm), the redhat buzilla bug
-mentioned below, the fedora users list, the e2salvage list, the ext3
-users list, and don't seem to be getting satisfaction.
-
-3) I've tried fsck, fsck with a huge variety of different superblocks,
-e2salvage, e2extract, and nothing is working.
-
-4) I've finally sent a message to gmane.linux.kernel (moderated),
-inquiring as to the availability of a better data recovery program, or
-alternatively, the on-disk datastructures used by ext3 and lvm2, with
-the hope of finding time to write a program to recover my ext3 data.
-
-On Thu, 2004-12-16 at 19:25 +0100, Daniel Roth wrote:
-> Hi all,
-> 
-> Not anyone out there having a clue on what to do? It seems that about 
-> the same thing has happened to the submitter of 
-> https://bugzilla.redhat.com/bugzilla/show_bug.cgi?id=142737 "Fedora Core 
-> 3 system with lvm2 won't boot". Is this acceptable? Because of its 
-> impact., this is the kind of bug my company would consider a 
-> "show-stopper", and relabel the project "beta" again.
-> 
-> So if there is no way to fix the error, is there any way to recover any 
-> of my ~300GB of data? Fourtunately I have backuped all the crucial 
-> stuff, but there are a lot of things I would want to recover.
-> 
-> Best regards,
-> 
-> Daniel
-> 
-> 
-> > Hi!
-> >
-> >>
-> >> roth:/dev# pvscan
-> >> ....
-> >>  PV /dev/hdi1   VG my_volume_group   lvm2 [149.05 GB / 0    free]
-> >>  PV /dev/hde1   VG my_volume_group   lvm2 [76.69 GB / 0    free]
-> >>  PV /dev/hdg5   VG my_volume_group   lvm2 [57.25 GB / 964.00 MB free]
-> >>  Total: 3 [282.99 GB] / in use: 3 [282.99 GB] / in no VG: 0 [0   ]
-> >>
-> >> roth:/dev# vgscan
-> >>  Found volume group "my_volume_group" using metadata type lvm2
-> >
-> >
-> >
-> > With pvscan --partial -vvv I found some extra info.
-> >
-> >        /dev/mapper/my_volume_group-mylv: Added to device cache
-> >        /dev/my_volume_group/mylv: Aliased to 
-> > /dev/mapper/my_volume_group-mylv in device cache (preferred name)
-> >        /dev/my_volume_group/mylv: Skipping: Unrecognised LVM device 
-> > type 254 <---
-> > ...
-> >    Finding volume group "my_volume_group"
-> >        Opened /dev/hde1
-> >        Opened /dev/hdi1
-> >      /dev/hdi1: lvm2 label detected
-> >      /dev/hde1: lvm2 label detected
-> >        Opened /dev/hdg5
-> >      /dev/hdg5: lvm2 label detected
-> >        Read my_volume_group metadata (5) from /dev/hde1 at 4096 size 1341
-> >      /dev/hdi1: lvm2 label detected
-> >      /dev/hde1: lvm2 label detected
-> >      /dev/hdg5: lvm2 label detected
-> >        Read my_volume_group metadata (5) from /dev/hdi1 at 4096 size 1341
-> >      /dev/hdi1: lvm2 label detected
-> >      /dev/hde1: lvm2 label detected
-> >      /dev/hdg5: lvm2 label detected
-> >        Read my_volume_group metadata (5) from /dev/hdg5 at 4096 size 1341
-> >  Found volume group "my_volume_group" using metadata type lvm2
-> >
-> >
-> > Is this perhaps why I cant mount it? How can I restore?
-> > I still am a bit confused with Metadata file saying:
-> >               pv0 {
-> >                       id = "3Pv4bt-9E47-aDii-mJbB-6OYc-pCFS-7dOBv9"
-> >                       device = "/dev/hdi"     # Hint only
-> >               }
-> >
-> > when I pv(re)created hdi1
-> >
-> > Regards,
-> > Daniel
-> 
-> 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
-> 
+Thanks
+Mattias
