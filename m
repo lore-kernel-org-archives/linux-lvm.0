@@ -1,10 +1,14 @@
-Return-Path: <claudio@conectiva.com>
-Date: Wed, 20 Dec 2000 20:21:16 -0200 (BRST)
-From: Claudio Matsuoka <claudio@conectiva.com>
-Subject: Re: [linux-lvm] '/etc/init.d/lvm' script in debian package
-In-Reply-To: <0012210840470T.08762@lyta>
-Message-ID: <Pine.LNX.4.21.0012202018200.3255-100000@scuzzlebutt.helllabs>
-MIME-Version: 1.0
+Return-Path: <lewis@sistina.com>
+From: lewis@sistina.com
+Date: Wed, 20 Dec 2000 16:30:22 -0600
+Subject: Re: [linux-lvm] Debian packaging
+Message-ID: <20001220163022.A5042@sistina.com>
+References: <XFMail.20001219212422.fionn@unix-ag.org> <0012210853290U.08762@lyta>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="2oS5YaxWCcQjTEyO"
+Content-Disposition: inline
+In-Reply-To: <0012210853290U.08762@lyta>; from bofh@coker.com.au on Thu, Dec 21, 2000 at 08:53:29AM +1100
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,34 +20,61 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
-Cc: Gergely Tamas <dice@mfa.kfki.hu>
 
-On Thu, 21 Dec 2000, Russell Coker wrote:
+--2oS5YaxWCcQjTEyO
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> Thanks for the suggestion about checking for a directory.  But how will I 
-> determine what version of LVM if it's a directory?  Will there be 
-> /proc/lvm/version?
+On Thu, Dec 21, 2000 at 08:53:29AM +1100, Russell Coker wrote:
+> > > Think PATH - this is really easy, and shells already support it.  No =
+more
+> > > work to be done, and it's not ugly.  The IOP version will probably ne=
+ver
+> > > change within a boot (unless LVM is a module and it gets upgraded wit=
+hout
+> > > upgrading the kernel - unlikely).
+> >
+> > Shouldnt the debian alternatives mechanism (see "man 8
+> > update-alternatives") be most appropriate for this task?
+>=20
+> Update-alternatives doesn't work when the file-system in question is moun=
+ted=20
+> read-only.  Also it's not really designed to be run at every boot.
+>=20
+> PATH is a bad idea IMHO.  It is set in too many places and has too many=
+=20
+> possibilities to be stuffed up.
 
-You can check the LVM and IOP version in /proc/lvm/global.
+Doesn't the liblvm.so versioning in the cvs code take care of this problem?
 
-[claudio@pokey:/home/claudio] cat /proc/lvm/global
-LVM module version 0.9 (13/11/2000)
+--=20
+AJ Lewis
+Sistina Software Inc.                  Voice:  612-379-3951
+1313 5th St SE, Suite 111              Fax:    612-379-3952
+Minneapolis, MN 55414                  E-Mail: lewis@sistina.com
+http://www.sistina.com
 
-Total:  1 VG  1 PV  5 LVs (5 LVs open 5 times)
+Current GPG fingerprint =3D 3B5F 6011 5216 76A5 2F6B  52A0 941E 1261 0029 2=
+648
+Get my key at: http://www.sistina.com/~lewis/gpgkey
+ (Unfortunately, the PKS-type keyservers do not work with multiple sub-keys)
+-----Begin Obligatory Humorous Quote----------------------------------------
+No-one suspects the butterfly!
+-----End Obligatory Humorous Quote------------------------------------------
 
-Global: 15258 bytes malloced   IOP version: 10   14:55:25 active
+--2oS5YaxWCcQjTEyO
+Content-Type: application/pgp-signature
+Content-Disposition: inline
 
-VG:  vg00  [1 PV, 5 LV/5 open]  PE Size: 4096 KB
-  Usage [KB/PE]: 7557120 /1845 total  2465792 /602 used  5091328 /1243 free
-  PV:  [AA] hda3                   7557120 /1845     2465792 /602      5091328 /1243  
-    LVs: [AWDL  ] lv_swap                     131072 /32       1x open
-         [AWDL  ] lv_tmp                       32768 /8        1x open
-         [AWDL  ] lv_share                    204800 /50       1x open
-         [AWDL  ] lv_home                    1048576 /256      1x open
-         [AWDL  ] lv_src                     1048576 /256      1x open
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.0.4 (GNU/Linux)
+Comment: For info see http://www.gnupg.org
 
+iD8DBQE6QTL+pE6/iGtdjLERAhayAJ9O4VyPOaorO0RLQhOWGgVxxgUOnACfXYQa
++g0kSUB4iHN21iby90dyoew=
+=cE2F
+-----END PGP SIGNATURE-----
 
-claudio
+--2oS5YaxWCcQjTEyO--
