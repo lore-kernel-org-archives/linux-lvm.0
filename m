@@ -1,39 +1,39 @@
-From: Andreas Dilger <adilger@enel.ucalgary.ca>
-Message-Id: <199910180544.XAA02421@webber.adilger.net>
-Subject: [linux-lvm] Re: changing the size of a mounted partition
-Date: Sun, 17 Oct 1999 23:43:38 -0600 (MDT)
-In-Reply-To: <UTC199910172316.BAA10217.aeb@violet.cwi.nl> from "Andries.Brouwer@cwi.nl" at Oct 18, 99 01:16:40 am
+Message-ID: <000801bf197e$45d7af80$0ebcfea9@brd>
+From: "Nicolas Brouard" <brouard@ined.fr>
+Subject: [linux-lvm] FAQ Question not found
+Date: Mon, 18 Oct 1999 17:34:23 +0200
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: Andries.Brouwer@cwi.nl
+To: linux-lvm@msede.com
 
-Andries writes:
-> If you want to be able to shrink a mounted partition then that
-> seems tricky - we have to collect from the rest of the kernel
-> how much is being used as swap, or how large the currently
-> mounted filesystem is. On the other hand, if you only want to
-> grow a partition, there is no problem.
+I have used and appreciated LVM on AIX for years. The main use for me
+consisted in having initially a hard disk too big for my actual but
+increasing needs.
+It was very nice to increase a filesystem like /home /usr/local or /var when
+mail traffic increased.
+Now I have a similar need. I am using a laptop with 2Gb. I bought a 6Gb hard
+disk which should replace the old one. I would like to have at the beginning
+2Gb for Win98 and some initially small logical volumes for a Linux system.
+With my 2Gb old disk, I used 1Gb for Windows and 1Gb for Linux.
 
-Currently, my patch only allows growing the filesystem, so your patch
-will probably do the right thing.  At some time in the future it might
-allow shrinking the filesystem.  The real problem with shrinking an ext2
-filesystem is that ext2 normally spreads the directories across all of
-the available groups, so it is rare that the groups at the end of a
-filesystem are totally empty, even if the filesystem is mostly unused.
+Is it a good idea to try to implement LVM for the linux partition? How does
+it deal with other partitions and the limitation to 4 primary partitions.
+How to begin? Should I first install Linux with arbitrary partitions, and
+then build a LVM kernel and then? I do only have one physical disk and can't
+play so much with other partitions.
 
-I don't think it will be very easy to do an online shrink unless the end
-groups are free, which will only happen if the filesystem was newly
-extended, or if it is nearly empty.  This shouldn't be a major problem,
-since most other filesystems don't allow shrinking at all, even when
-unmounted.  For ext2, you can always unmount your filesystem and use
-ext2resize to shrink it.
+In fact I do not understand how it works. On AIX, all the disk was managed
+with LVM? Here, can I decide that logical volume manager will only deal with
+a big ext2 partition. And within this partition I would be able to have
+variable sized /var /home / ?
 
-Cheers, Andreas
--- 
-Andreas Dilger  \ "If a man ate a pound of pasta and a pound of antipasto,
-                 \  would they cancel out, leaving him still hungry?"
-http://www-mddsp.enel.ucalgary.ca/People/adilger/               -- Dogbert
+I would appreciate any help, even if it is: Ok, do fixed partitions and not
+LVM!
+
+Nicolas Brouard
+brouard@ined.fr
+http://sauvy.ined.fr/brouard/english
