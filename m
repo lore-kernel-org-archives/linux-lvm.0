@@ -1,21 +1,21 @@
 Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with SMTP id i1Q3oW830251
-	for <linux-lvm@redhat.com>; Wed, 25 Feb 2004 22:50:32 -0500
-Received: from ms-smtp-03.nyroc.rr.com (ms-smtp-03.nyroc.rr.com [24.24.2.57])
-	by mx1.redhat.com (8.11.6/8.11.6) with SMTP id i1Q3oWb30161
-	for <linux-lvm@redhat.com>; Wed, 25 Feb 2004 22:50:32 -0500
-Received: from dman13.dyndns.org (roc-66-66-61-253.rochester.rr.com [66.66.61.253])
-	by ms-smtp-03.nyroc.rr.com (8.12.10/8.12.10) with ESMTP id i1Q3oTlK021116
-	for <linux-lvm@redhat.com>; Wed, 25 Feb 2004 22:50:29 -0500 (EST)
-From: "Derrick 'dman' Hudson" <dman@dman13.dyndns.org>
-Message-ID: <20040226035421.GA13065@dman13.dyndns.org>
-References: <20040224031633.GA7431@dman13.dyndns.org> <20040224072602.GB23439@percy.comedia.it> <20040224131632.GA20556@dman13.dyndns.org> <20040224222521.GA31185@percy.comedia.it> <20040225014950.GA5519@dman13.dyndns.org> <20040225193630.GC15582@percy.comedia.it>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="a8Wt8u1KmwUX3Y2C"
-Content-Disposition: inline
-In-Reply-To: <20040225193630.GC15582@percy.comedia.it>
-Subject: [linux-lvm] Re: upgrade from kernel 2.4 to 2.6
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with SMTP id i1QDm8819919
+	for <linux-lvm@redhat.com>; Thu, 26 Feb 2004 08:48:08 -0500
+Received: from isbox.insidesystems.net (verbotenplanet.net [209.123.232.30])
+	by mx1.redhat.com (8.11.6/8.11.6) with SMTP id i1QDm7b23325
+	for <linux-lvm@redhat.com>; Thu, 26 Feb 2004 08:48:07 -0500
+Received: from [65.204.53.10] (helo=grayskies.net)
+	by isbox.insidesystems.net with asmtp (Exim 4.30; FreeBSD)
+	id 1AwLry-0005XF-LR
+	for linux-lvm@redhat.com; Thu, 26 Feb 2004 08:48:06 -0500
+Message-ID: <403DF916.9060808@grayskies.net>
+From: David Powers <david@grayskies.net>
+MIME-Version: 1.0
+References: <2F75AEE4E86FDE44BF97709D289BAA7C719649@vega.voltaire.com>
+In-Reply-To: <2F75AEE4E86FDE44BF97709D289BAA7C719649@vega.voltaire.com>
+Content-Type: multipart/alternative;
+ boundary="------------090007070109000506020201"
+Subject: [linux-lvm] snapshots with XFS and 2.6 kernel
 Sender: linux-lvm-admin@redhat.com
 Errors-To: linux-lvm-admin@redhat.com
 Reply-To: linux-lvm@redhat.com
@@ -27,110 +27,95 @@ List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
 List-Archive: <https://www.redhat.com/archives/linux-lvm/>
-Date: Wed Feb 25 22:49:30 2004
+Date: Thu Feb 26 08:46:05 2004
 List-Id: <linux-lvm.redhat.com>
 To: linux-lvm@redhat.com
 
---a8Wt8u1KmwUX3Y2C
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+This is a multi-part message in MIME format.
+--------------090007070109000506020201
+Content-Type: text/plain; charset=windows-1255; format=flowed
+Content-Transfer-Encoding: 7bit
+
+I was attempting to implement a quick snapshot backup solution using 
+lvm2, XFS, and snapshots on a 2.6 kernel.  After some very odd hangs I 
+started hunting around in the lists and came across some posts that 
+snapshots were not yet properly implemented in 2.6.  These were from a 
+few months ago and a quick scan of the lvm2 tarball (in particular 
+WHATS_NEW and README) doesn't seem to indicate that snaphots should be 
+avoided.  So the question is, are snapshots usable?  And if they aren't 
+where would I find more current information about when they will be?  as 
+it stands now creating a snapshot tends to produce:
+
+disk1 snapshots # lvcreate -L5G -nsnaptest -s /dev/filestore/archive
+  device-mapper ioctl cmd 9 failed: Invalid argument
+  Couldn't load device 'filestore-snaptest'.
+  Problem reactivating origin archive
+
+an lvscan afterwards shows the snapshot:
+
+disk1 snapshots # lvscan
+  ACTIVE   Original '/dev/filestore/archive' [60.00 GB] next free (default)
+  ACTIVE            '/dev/filestore/groups' [50.00 GB] next free (default)
+  ACTIVE            '/dev/filestore/personal' [50.00 GB] next free (default)
+  ACTIVE   Snapshot '/dev/filestore/snaptest' [5.00 GB] next free (default)
+
+but the device isn't actually created and it takes hard rebooting and a 
+lot of fiddling and poking to delete it.  Any help or insight is 
+appreciated.
+
+-David
+
+--------------090007070109000506020201
+Content-Type: text/html; charset=windows-1255
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Feb 25, 2004 at 08:36:31PM +0100, Luca Berra wrote:
-| On Tue, Feb 24, 2004 at 08:49:50PM -0500, Derrick 'dman' Hudson wrote:
-| >On Tue, Feb 24, 2004 at 11:25:22PM +0100, Luca Berra wrote:
-| >| look in /etc/lvm/lvm.conf
-| >| there is a log section, you can make lvm log to a different file, so
-| >| you can save and post logs from lvm activation commands.
-| >
-| >Ok, I found that.
-| >
-| >Here is the log file, in its entirety :
-| >
-| >----
-| >toollib.c:298 vgscan  No volume groups found
-| >----
-| >
-| >I did set verbosity=3D3 because the comments in lvm.conf said that is
-| >the highest verbosity.
-| try changing other parameters in the log {} section, eg 'level'
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+  <meta content=3D"text/html;charset=3Dwindows-1255"
+ http-equiv=3D"Content-Type">
+  <title></title>
+</head>
+<body>
+<small><font face=3D"Helvetica, Arial, sans-serif">I was attempting to
+implement a quick snapshot backup solution using lvm2, XFS, and
+snapshots on a 2.6 kernel.=A0 After some very odd hangs I started hunting=
 
-Ah, finally I find some real information in the log!  Thanks for your
-patience.
+around in the lists and came across some posts that snapshots were not
+yet properly implemented in 2.6.=A0 These were from a few months ago and
+a quick scan of the lvm2 tarball (in particular WHATS_NEW and README)
+doesn't seem to indicate that snaphots should be avoided.=A0 So the
+question is, are snapshots usable?=A0 And if they aren't where would I
+find more current information about when they will be?=A0 as it stands
+now creating a snapshot tends to produce:<br>
+<br>
+disk1 snapshots # lvcreate -L5G -nsnaptest -s /dev/filestore/archive <br>=
 
----- booting with kernel 2.6.3
-filters/filter-composite.c:22 vgscan  Using /dev/hdb
-device/dev-io.c:315 vgscan  Opened /dev/hdb
-label/label.c:174 vgscan  /dev/hdb: No label detected
-device/dev-io.c:339 vgscan  Closed /dev/hdb
-label/label.c:266 vgscan  <backtrace>
-filters/filter-composite.c:22 vgscan  Using /dev/hdb1
-device/dev-io.c:315 vgscan  Opened /dev/hdb1
-label/label.c:174 vgscan  /dev/hdb1: No label detected
-device/dev-io.c:339 vgscan  Closed /dev/hdb1
-label/label.c:266 vgscan  <backtrace>
-toollib.c:298 vgscan  No volume groups found
-filters/filter-persistent.c:170 vgscan  Dumping persistent device cache to =
-/etc/lvm/.cache
-----
+=A0 device-mapper ioctl cmd 9 failed: Invalid argument<br>
+=A0 Couldn't load device 'filestore-snaptest'.<br>
+=A0 Problem reactivating origin archive<br>
+<br>
+an lvscan afterwards shows the snapshot:<br>
+<br>
+disk1 snapshots # lvscan<br>
+=A0 ACTIVE=A0=A0 Original '/dev/filestore/archive' [60.00 GB] next free
+(default)<br>
+=A0 ACTIVE=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 '/dev/filestore/groups' [50.0=
+0 GB] next free
+(default)<br>
+=A0 ACTIVE=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 '/dev/filestore/personal' [50=
+=2E00 GB] next free
+(default)<br>
+=A0 ACTIVE=A0=A0 Snapshot '/dev/filestore/snaptest' [5.00 GB] next free
+(default)<br>
+<br>
+but the device isn't actually created and it takes hard rebooting and a
+lot of fiddling and poking to delete it.=A0 Any help or insight is
+appreciated.<br>
+<br>
+-David<br>
+</font></small>
+</body>
+</html>
 
-The label wasn't found.  I guess that's a good enough reason to not
-find the vg.
-
----- kernel 2.4.23
-filters/filter-composite.c:22 vgscan  Using /dev/hdb
-device/dev-io.c:315 vgscan  Opened /dev/hdb
-label/label.c:174 vgscan  /dev/hdb: No label detected
-device/dev-io.c:339 vgscan  Closed /dev/hdb
-label/label.c:266 vgscan  <backtrace>
-filters/filter-composite.c:22 vgscan  Using /dev/hdb1
-device/dev-io.c:315 vgscan  Opened /dev/hdb1
-label/label.c:156 vgscan  /dev/hdb1: lvm2 label detected
-device/dev-io.c:339 vgscan  Closed /dev/hdb1
-device/dev-io.c:315 vgscan  Opened /dev/hdb1
-device/dev-io.c:339 vgscan  Closed /dev/hdb1
-filters/filter-persistent.c:209 vgscan  /dev/initrd: Skipping (cached)
-locking/file_locking.c:154 vgscan  Locking /var/lock/lvm/V_MaxtorDisk RB
-toollib.c:309 vgscan  Finding volume group "MaxtorDisk"
-device/dev-io.c:315 vgscan  Opened /dev/hdb1
-label/label.c:156 vgscan  /dev/hdb1: lvm2 label detected
-format_text/format-text.c:279 vgscan  Read MaxtorDisk metadata (1) from /de=
-v/hdb1 at 2560 size 1469
-vgscan.c:41 vgscan  Found volume group "MaxtorDisk" using metadata type lvm2
-locking/file_locking.c:51 vgscan  Unlocking /var/lock/lvm/V_MaxtorDisk
-device/dev-io.c:339 vgscan  Closed /dev/hdb1
-filters/filter-persistent.c:170 vgscan  Dumping persistent device cache to =
-/etc/lvm/.cache
-----
-
-The second log continues to find the lvs and works there.
-
-
-Any ideas as to why it doesn't find the lvm label with kernel 2.6?
-What should I do to try correcting it?
-
-TIA,
--D
-
---=20
-Pride only breeds quarrels,
-but wisdom is found in those who take advice.
-        Proverbs 13:10
-=20
-www: http://dman13.dyndns.org/~dman/            jabber: dman@dman13.dyndns.=
-org
-
---a8Wt8u1KmwUX3Y2C
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-Content-Disposition: inline
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.2.4 (GNU/Linux)
-
-iD8DBQFAPW3siB6vp1xAVUARAiz4AJ4iQ2MvdikNB4PltJMNSIdAAD5G7QCfeQZ3
-GYS+mKEzmpxnYHIWddBLXbc=
-=KraR
------END PGP SIGNATURE-----
-
---a8Wt8u1KmwUX3Y2C--
+--------------090007070109000506020201--
