@@ -1,12 +1,11 @@
-Return-Path: <pwk.linuxfan@gmx.de>
-From: Peter Kirk <pwk.linuxfan@gmx.de>
-Subject: Re: [linux-lvm] Problems: reiserfs lvm as /
-Date: Sun, 20 May 2001 09:01:17 +0200
-References: <01051916333601.00791@mama> <3B069CF2.7AAC10DD@ednet.ns.ca> <01051919153100.01524@mama>
-In-Reply-To: <01051919153100.01524@mama>
+Return-Path: <mjt@tls.msk.ru>
+Message-ID: <3B082B2E.A0EB9C96@tls.msk.ru>
+Date: Mon, 21 May 2001 00:38:06 +0400
+From: Michael Tokarev <mjt@tls.msk.ru>
 MIME-Version: 1.0
-Message-Id: <01052009011700.00553@mama>
-Content-Transfer-Encoding: 8bit
+Subject: Re: [linux-lvm] Problems: reiserfs lvm as /
+References: <01051916333601.00791@mama>
+Content-Transfer-Encoding: 7bit
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -21,10 +20,43 @@ List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
 
-Hi,
+Peter Kirk wrote:
+> 
+> Hi,
+> 
+> I am new to LVM, and I ran into some problems.
+> First thing I did, was to setup LVM within the SuSE7.1 setup tools, which
+> worked out fine.
+> /boot is not on LVM, ext2fs
+> swap is not on LVM
+> LVM:
+>         /       [reiserfs]
+>         /usr    [reiserfs]
+>         /home   [reiserfs]
+> 
+> I have too disks, so I set the strip option to two, to get better
+> performance. Now I want to compile a new kernel (2.4.4), and I cannot get lvm
+> working with it. Since root is on LVM I need to do this lvmcreate_initrd
+> stuff, but it does not work ! I get:
+> 
+> VFS: Mounted root (ext2 file system).
+                     ^^^^
 
-reiserfs on root in LVM is working now, but I had to use a totipotent Kernel, 
-with all options aktivated. Could anybody tell me which Options are Required 
-for Initial Ram Disk (initrd) support ??
+What a hell ext2fs does with your reiserfs filesystem??
+Do you have compiled reiser as a module or in kernel?
+Do you have included and loaded reiserfs from your initrd
+if it is a module?
+Why in a case when your root is on reiserfs, you included
+ext2 in kernel?
 
-Thanks
+Ummm... :)
+
+> attempt to access beyond end of device
+> 01:00: rw=0, want=4612, limit=4096
+
+Doh!  Ext2 code should check more carefully if it
+mounted (or attempted to) ext2 fs -- what a bizzare,
+ext2 code treats reiserfs as ext2fs!..
+
+Regards,
+ Michael.
