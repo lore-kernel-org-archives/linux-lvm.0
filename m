@@ -1,44 +1,49 @@
-Date: Thu, 27 Apr 2000 16:13:04 +0100 (IST)
-From: Paul Jakma <paul.jakma@itg.ie>
+From: "Steffers" <stef@chronozon.dyndns.org>
+Reply-To: stef@chronozon.dyndns.org
 Subject: Re: [linux-lvm] Protection of used scsi disks by LVM
-In-Reply-To: <200004271314.PAA09502@u9etz.ez-darmstadt.telekom.de>
-Message-ID: <Pine.LNX.4.21.0004271610391.1702-100000@rossi.itg.ie>
-MIME-Version: 1.0
+Message-Id: <20000427162923.F40D21F473@chronozon.dyndns.org>
+Date: Thu, 27 Apr 2000 11:29:23 -0500 (CDT)
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: Heinz Mauelshagen <mauelsha@ez-darmstadt.telekom.de>
-Cc: linux-lvm@msede.com
+To: linux-lvm@msede.com
 
-On Thu, 27 Apr 2000, Heinz Mauelshagen wrote:
+Hello everyone..
 
-> Because it can't.
-> The only way would be to remove then underlying devices from the genhd
-> in the kernel, which obviously is not a good idea(tm) ;-{)
-> 
-
-:)
-
-
+> > I can easily go to /dev/sda1 for example, and erase everything on it.
+>
 > These are the UNIX/Linux semantics.
 > 
 > If one has the file/device special permission one can do every kind
 > of stupid things which come to ones mind.
+>
 
-indeed. However we can try to build a measure of intelligence into the
-tools. Eg Digital Unix disklabel tools will not allow you to mess with
-disklabels that are under control of the LVM or AdvFs.
+cat /dev/null > /dev/ttyS0 comes rapidly to mind ;)
+ 
+> > Of course it is a stupid thing to do, but there is a minimal requirement
+on
+> > protection, isn't it ?
+> Yes, you are right.
+> but IMHO there's no way today with the existing kernel implementation.
 
-(course you can still do it manually.)
+this (afiak) isnt a 'kernel' problem but more a problem that could
+be fixed in the userspace. All it would take is a quick diff to 
+the 'mkfs' tools and fdisk (or whatever you use cfdisk, gdisk etc)
+so that it would recognise the partition type of '8e' as a LV
+and then not allow, or at least strenously warn, the user
+as to what they are doing. this would seem to make more sense
+and (to be honest) i would _hate_ it if Linux by default queried
+my every command, so that suggest to me that it +is+ a per
+user thing, and not a kernel issue.
 
-So who wants to hack fdisk to check for LVM? :)
-
-> 
-> Regards,
-> Heinz
-> 
-> 
-
--paul jakma
+also remember, that this isnt like 'certain other operating systems'.
+*nix's in general are kind of like theism, with a 'god hands on
+the machine' approach. If you want to do anything to the system 
+then you have the power to do so at any point. If your 'god'
+in an idiot, well, *shrug*.
+ 
+regards,
+Stefs
