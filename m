@@ -1,9 +1,10 @@
-Message-Id: <6.0.0.22.2.20031111225828.0249dda8@quake.swe.net>
-From: Hjalmar =?iso-8859-1?Q?W=E5hlander?= <grazzy@quake.swe.net>
-Subject: Re: [linux-lvm] pvscan cant find my volume..
-In-Reply-To: <6.0.0.22.2.20031111224443.02452ef0@quake.swe.net>
-References: <6.0.0.22.2.20031111224443.02452ef0@quake.swe.net>
+From: Patrick Caulfield <caulfield@sistina.com>
+Subject: Re: [linux-lvm] root on LVM error message
+Message-ID: <20031112084907.GA2169@tykepenguin.com>
+References: <20031111211146.5e619f90.jan@rhebergen.net>
 Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20031111211146.5e619f90.jan@rhebergen.net>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,70 +15,34 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Tue Nov 11 16:00:09 2003
+Date: Wed Nov 12 02:50:01 2003
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-As stated in a eariler message, I also tried this:
+On Tue, Nov 11, 2003 at 09:11:46PM +0100, Jan Rhebergen wrote:
+> Hi there,
+> 
+> Trying to construct a Debian (Sarge) root-on-LVM system I get the following error message:
+> 
+>    lvmiopversion -- Exec of vgscan failed
+> 
+>    lvmiopversion: No such file or directory
+> 
+> does this indicate lvm-mod was not loaded or what?
 
-[root@mircosoft /mnt]# cp /etc/lvmconf/the_data.conf /etc/lvmtab.d/the_data
-[root@mircosoft /mnt]# echo -ne "the_data\0" > /etc/lvmtab
-[root@mircosoft /mnt]# vgchange -ay the_data
-vgchange -- ERROR: physical volume "/dev/hdc" of volume group "the_data" is 
-offline
-vgchange -- run vgscan
+It could do. Generally it probably means that lvmiopversion could not determine
+which version of lvm (1 or 2) you have. This could be caused by the module not
+being loaded.
 
+There was also a bug in older Debian packages that caused this problem so it's
+worth making sure that you have the latest version:
 
+lvm-common: 1.5.9.3
+lvm10:      1:1.0.7-8
 
+Both of which I think are in "testing" now.
+-- 
 
-At 22:49 2003-11-11, you wrote:
->Hi,
->
->This started out when I rebooted my machine. Prior to the reboot I ran 
->fsck on the lvm-filesystem and got quite alot of errors.
->
->My vg contains three hdds:
->hdc, hde and hdf.
->
->----------------
->[root@mircosoft /mnt]# vgscan
->vgscan -- reading all physical volumes (this may take a while...)
->vgscan -- ERROR "vg_read_with_pv_and_lv(): current PV" can't get data of 
->volume group "the_data" from physical volume(s)
->vgscan -- "/etc/lvmtab" and "/etc/lvmtab.d" successfully created
->vgscan -- WARNING: This program does not do a VGDA backup of your volume group
->-----------------
->
->This error I've seen quite a few times in this list, however, as many 
->replies are suggesting - running "pvcreate -ff" - does not help.
->Why?
->
->--------------
->[root@mircosoft /mnt]# pvcreate -ff /dev/hdc
->pvcreate -- device "/dev/hdc" has a partition table
->---------------
->
->And, to my surprise, dmesg, reports that hdc has a hdc1 (not that I can 
->remember ever creating one... ), but anyway, how can I bypass this?
->
->Some extras:
->
->[root@mircosoft /mnt]# pvdisplay /dev/hdc
->pvdisplay -- no physical volume identifier on "/dev/hdc"
->
->
->(But it works fine on hde and hdf).
->
->
->Im very grateful for any help!
->
->--grazzy.
->
->
->_______________________________________________
->linux-lvm mailing list
->linux-lvm@sistina.com
->http://lists.sistina.com/mailman/listinfo/linux-lvm
->read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+patrick
