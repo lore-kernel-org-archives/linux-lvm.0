@@ -1,11 +1,7 @@
-From: Steven Lembark <lembark@wrkhors.com>
-Subject: Re: [linux-lvm] Adding to vg broke it :-(
-Message-ID: <69060000.1036972268@[192.168.200.4]>
-In-Reply-To: <20021110213716.spltd+lvmlist@force9>
-References: <20021110213716.spltd+lvmlist@force9>
+From: CAROLINE_FIELDS@mech.disa.mil
+Message-ID: <OFB75DBCA3.D8E0652D-ON85256C6E.00211191-85256C6E.00211192@mech.disa.mil>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
+Subject: [linux-lvm] CAROLINE FIELDS will return Thursday, Nov 14
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,22 +12,25 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Sun Nov 10 17:47:02 2002
+Date: Mon Nov 11 00:03:01 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
+I will be out of the office starting  11/08/2002 and will not return until
+11/14/2002.
 
--- lvmlist@spltd.f9.co.uk
+If you need assistance from the acting Open Systems Supervisor, please call
+Bill Fernandez at 717-605-5435.  If he cannot be reached, please try Mike
+Kobiako at 717-605-5361.
 
-> Any guidance as to where to go from here would
-> be appreciated pls.
+If you would like to speak to me, please call my cell phone at
+717-991-7035.
 
-vgcfgrecover them or vgimport the pv's.
+If you cannot reach any of the above contacts, please call the DISA DECC
+Mech help desk at 717-605-7426.
 
+Thanks,
 
-
---
-Steven Lembark                               2930 W. Palmer
-Workhorse Computing                       Chicago, IL 60647
-                                            +1 800 762 1582
+Caroline Fields
