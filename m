@@ -1,7 +1,7 @@
-Message-ID: <2D92FEBFD3BE1346A6C397223A8DD3FC0924D1@THOR.goeci.com>
-From: Murthy Kambhampaty <murthy.kambhampaty@goeci.com>
 MIME-Version: 1.0
-Subject: [linux-lvm] ERROR creating snapshot: "Cannot allocate memory"
+From: Frank Bagehorn <fba@zurich.ibm.com>
+Message-ID: <OF8AA51DBA.465B6F61-ONC1256DF2.004DF072-C1256DF2.004EE5DD@ch.ibm.com>
+Subject: [linux-lvm] vgscan error 2
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -12,24 +12,55 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Dec  3 16:22:02 2003
+Date: Thu Dec  4 08:23:01 2003
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: "'linux-lvm@sistina.com'" <linux-lvm@sistina.com>
+To: linux-lvm@sistina.com
 
-While trying to snapshot a 335 GB LV (sdd1) on a machine with 12 GB of RAM,
-and 67 GB of free space (sdc1), I get the following error:
+I have a SuSE SLES 8 machine with the following disk setup:
+internal disks RAID 5 (/dev/sda)
+external disks RAID 5 (/dev/sdc)
 
-lvcreate -s -l 21 -n snapshot /dev/VGdb01/LVdb
-lvcreate -- WARNING: the snapshot will be automatically disabled once it
-gets full
-lvcreate -- INFO: using default snapshot chunk size of 64 KB for
-"/dev/VGdb01/snapshot"
-lvcreate -- ERROR "Cannot allocate memory" creating VGDA for
-"/dev/VGdb01/snapshot" in kernel
+/dev/sda consists of a Linux partition (/boot), a Linux swap partition and 
+a physical volume (/dev/sda2).
+The physical volume is used for the rootvg volume group, which contains 
+several logical volumes.
+The root file system "/" is mounted from the rootlv (/dev/rootvg/rootlv).
 
-kernel is 2.4.21 (LVM 1.0.5+) with tools form
-~redhat/contrib/lvm-1.0.5.src.rpm
+When I boot the machine, it now does a vgscan, detects all the inactive 
+volume groups and gives an error message:
+        ERROR 2 - writing volume group backup file 
+/etc/lvmtab.d/rootvg.tmp in vg_cfgbackup
+        unable to do a backup of volume group "rootvg"
+        removing volume group "rootvg" from /etc/lvmtab
+As a result I get a kernel panic the next second as the / file system 
+cannot be mounted.
+(The tsm01lv volume group on the external disks can be written to 
+/etc/lvmtab and /etc/lvmtab.d however.)
 
-Help
+I can boot in rescue mode, vgscan doesn't complain there and I can mount 
+all the logical volumes out of rootvg.
+(So I assume the volume group and the logical volumes are ok.)
+I moved away some older /etc/lmvconf files to ensure that there is enough 
+space on the file system.
+(It has about 350MB free space.)
+To make sure that the /etc/lvmtab.d folder is ok, I removed and re-created 
+it.
+Nothing helps.
+
+What else can I do, or where shall I look ?
+
+Thx and regards
+Frank
+
+----------------------------------------------------------------------
+Dr. Frank Bagehorn
+IBM Zurich Research Lab.
+Saeumerstr. 4
+CH-8803 Rueschlikon 
+Switzerland
+----------------------------------------------------------------------
+SMTP: fba@zurich.ibm.com
+Notes: Frank Bagehorn/Zurich/IBM@IBMCH
+phone: ++41 (01) 724 83 23  fax: ++41 (01) 724 89 59
