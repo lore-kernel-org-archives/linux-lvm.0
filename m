@@ -1,12 +1,9 @@
-From: Anders Widman <andewid@tnonline.net>
-Message-ID: <8110365212.20030505180845@tnonline.net>
-Subject: Re: [linux-lvm] Trouble with pvmove
-In-Reply-To: <20030505155456.GA549@guldukat>
-References: <001401c31014$efdcc840$0100a8c0@andre6xtbp6uza>
- <20030503114458.GB541@guldukat> <001801c3131b$2acd7ae0$0100a8c0@andre6xtbp6uza>
- <20030505155456.GA549@guldukat>
+Message-ID: <009601c3133d$fcdd24f0$ec36ca51@desi>
+From: "fnt" <FNT@mail.ono.es>
+References: <20030304114851.GA22965@hcsd.de> <3E64B885.1AF49EDA@silicide.dk> <20030304144121.GB23975@hcsd.de> <20030305143938.GI1513@gmx.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] can i extend a volumen bigger 256 gigas ?thx
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,36 +14,32 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon May  5 11:07:02 2003
+Date: Mon May  5 14:39:02 2003
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
 
-> On Mon, 05.05.03, Andre? ?str?m <andree.astrom@home.se> wrote:
+Hello,
 
->> We were using 1.0.4, so updated to 1.0.7 today. No luck tough. Computer
->> locks up completly at
->> certain PE's.
+It is possible to extend a volumen more than 256 gigas?
+it doesnt let me grow the space.
+this is muy info :
+root]# cat /proc/lvm/global
+LVM module LVM version 1.0.3(19/02/2002)
 
-> You could try to use 'dd' to backup the damaged pv to a new (equally-sized)
-> partition, using 'conv=noerror' option to skip faulty blocks.
+Total:  1 VG  2 PVs  1 LV (1 LV open 1 times)
 
-Or   even  a  better  tool  specifically  made  for this; dd_rescue :)
-Simple, fast and secure.
+Global: 449424 bytes malloced   IOP version: 10   1175 days 12:40:03 active
 
-> Perhaps you could use strace or on of the debugging options of pvmove to
-> determine wher it locks. I suspect it locks trying to read the faulty block
-> over and over again.
+VG:  gl  [2 PV, 1 LV/1 open]  PE Size: 4096 KB
+  Usage [KB/PE]: 294883328 /71993 total  113950720 /27820 used  180932608
+/44173 free
+  PVs: [AA] ide/host0/bus0/target0/lun0/part4 113950720 /27820   113950720
+/27820          0 /0
+       [AA] ide/host0/bus0/target1/lun0/part1 180932608 /44173          0 /0
+180932608 /44173
+    LV:  [AWDL  ] vol1                     113950720 /27820    1x open
 
-> good luck,
+i have installed: lvm-1.0.1-2mdk.i586.rpm
 
-> Nils
-
-
-
-   
-
-
-
---------
-PGP public key: https://tnonline.net/secure/pgp_key.txt
+thanks on advanced.
