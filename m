@@ -1,14 +1,9 @@
-Return-Path: <lewis@sistina.com>
-Date: Tue, 3 Jul 2001 06:55:17 -0500
-From: AJ Lewis <lewis@sistina.com>
-Subject: Re: [linux-lvm] Lost my physical volume on reboot?
-Message-ID: <20010703065517.A20405@sistina.com>
-References: <139803A793E0D311AFF60050DA2BC540030214D3@qtiexch1.qgraph.com>
+Return-Path: <rshukla@prl.ernet.in>
+Date: Tue, 3 Jul 2001 18:12:59 +0530 (IST)
+From: RAGHVENDRA SHUKLA <rshukla@prl.ernet.in>
+Message-Id: <Pine.A32.4.21.0107031806220.54566-100000@prlfs.prl.ernet.in>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-md5;
-	protocol="application/pgp-signature"; boundary="ibTvN161/egqYuK8"
-Content-Disposition: inline
-In-Reply-To: <139803A793E0D311AFF60050DA2BC540030214D3@qtiexch1.qgraph.com>; from Ron.Vissers@qtiworld.com on Mon, Jul 02, 2001 at 03:53:46PM -0500
+Subject: [linux-lvm] Parted not making partitions
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -20,77 +15,36 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
+Content-Type: TEXT/PLAIN; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
---ibTvN161/egqYuK8
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Hello ,
+       My lINUX RED HAT 7.1 HAS THE disk partitions ( as given by parted
+-print ) are as follows :
 
-On Mon, Jul 02, 2001 at 03:53:46PM -0500, Vissers, Ron wrote:
-> Hi,
-> I only had one physical volume under lvm control.  Here are the results:
->=20
-> (rvissers:root) /home/rvissers/lvm_uuid/uuid_fixer # ./uuid_fixer /dev/hd=
-c1
-> /dev/hdc1 - pv_read(): pv_create_name_from_kdev_t
+    1 	0.031	23.532		ext2	boot
+    2	23.533	28623.625	extended
+    5   23.563	1357.053	logical	ext2
+    6 	28027.494	28529.494	logical	linux-swap
 
-Hmm...you should definitely gotten more output from the uuid_fixer program
-here.  If bad UUIDs are the only problem, then you would have gotten a list
-of UUIDs and a prompt asking if you wanted to write them to the PVs.  It
-looks like there are deeper problems here than just the UUIDs, as Heinz said
-in his reply.
 
-> (rvissers:root) /home/rvissers/lvm_uuid/uuid_fixer # pvscan
-> pvscan -- reading all physical volumes (this may take a while...)
-> pvscan -- ERROR "pv_read(): read" reading physical volumes
->=20
-> I'm thinking I either misunderstood something in the readme, or something
-> else is an issue.
+    Now i know that there is space between the 1357.053 - 28027.494 ,
+( as i have reduced this partition by myself and this is root )
+whenever i give the command --> mkpart primary ext2 1357.054 28027.493
+then it says that the partition overlaps . This is not clear to me .
 
-Regards,
---=20
-AJ Lewis
-Sistina Software Inc.                  Voice:  612-638-0500
-1313 5th St SE, Suite 111              Fax:    612-638-0500
-Minneapolis, MN 55414                  E-Mail: lewis@sistina.com
-http://www.sistina.com
+Thanks in advance .
 
-Current GPG fingerprint =3D 3B5F 6011 5216 76A5 2F6B  52A0 941E 1261 0029 2=
-648
-Get my key at: http://www.sistina.com/~lewis/gpgkey
- (Unfortunately, the PKS-type keyservers do not work with multiple sub-keys)
+Raghav
 
------Begin Obligatory Humorous Quote----------------------------------------
-There's nary an animal alive that can outrun a greased Scotsman.
-   - Groundskeeper Willie
------End Obligatory Humorous Quote------------------------------------------
-AJ Lewis
-Sistina Software Inc.                  Voice:  612-638-0500
-1313 5th St SE, Suite 111              Fax:    612-638-0500
-Minneapolis, MN 55414                  E-Mail: lewis@sistina.com
-http://www.sistina.com
+	 
 
-Current GPG fingerprint =3D 3B5F 6011 5216 76A5 2F6B  52A0 941E 1261 0029 2=
-648
-Get my key at: http://www.sistina.com/~lewis/gpgkey
- (Unfortunately, the PKS-type keyservers do not work with multiple sub-keys)
-
------Begin Obligatory Humorous Quote----------------------------------------
-665.9238429876 - Number of the Pentium Beast
------End Obligatory Humorous Quote------------------------------------------
-
---ibTvN161/egqYuK8
-Content-Type: application/pgp-signature
-Content-Disposition: inline
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.0.6 (GNU/Linux)
-Comment: For info see http://www.gnupg.org
-
-iD8DBQE7QbKlpE6/iGtdjLERAuTjAJ9nuQZEyvXKTaIle48FO5gLnUy2lgCdHTHy
-V4rtly4gNW0zx67mFn1KD1M=
-=+5yZ
------END PGP SIGNATURE-----
-
---ibTvN161/egqYuK8--
+-------------------------------------------------------------------------------------
+Name : Raghvendra Narain Shukla
+       ( Engineer - SC )                     Address:Computer Centre,
+Email: rshukla@prl.ernet.in ,                        Physical Research Laboratory 
+       raghvendra55@yahoo.com                        Ahmedabad 380 015  
+Phone: +91 79 630-2129  ext. 4036 (0)                INDIA  
+FAX  : +91 79 630-1502                                           
+--------------------------------------------------------------------------------------
