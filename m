@@ -1,46 +1,57 @@
-From: Bodo Bock <B.Bock@bk-cad.de>
+Message-ID: <387DD4C0.BF36517A@ep-ag.com>
+Date: Thu, 13 Jan 2000 14:36:00 +0100
+From: Klaus Strebel <stb@ep-ag.com>
 MIME-Version: 1.0
+Subject: [linux-lvm] Re: Problems compiling client utilities
+References: <387CCD28.5C188941@ep-ag.com> <387D0648.1AD34B95@osp.nl>
 Content-Transfer-Encoding: 7bit
-Message-ID: <14461.51269.323212.877604@pcn.bk-cad.de>
-Date: Thu, 13 Jan 2000 13:42:45 +0100 (CET)
-Subject: [linux-lvm] SuSE Linux 6.3 and LVM
-In-Reply-To: <6411.000111@fgan.de>
-References: <6411.000111@fgan.de>
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: Peter Knott <knott@fgan.de>
-Cc: linux-lvm@msede.com
+To: linux-lvm@msede.com
+Cc: Jos Visser <josv@osp.nl>
 
-Peter Knott writes:
- > I tried installing LVM using the installation program YAST
- > provided by SuSE which offers facilities to create physical
- > volume groups and logical volumes.
- > I succesfully created a PV consisting of 2 partitions:
- >   sda1 ( 500MB)
- >   sdc1 (4300MB)
- > 
- > When I tried to create a LV of any size (I tried 1MB up to the
- > max. amount) YAST returned an error message:
- > error code: 95
- > "malloc ..."
- > 
- > Has anyone tried to use the LVM support in SuSE Linux 6.3? If
- > yes, have you encountered similar problems or is this a problem
- > with my hardware?
+Jos Visser wrote:
+> 
+> Hi Klaus,
+> 
+> Unfortunately not. As it turns out, the devfs patch modifies certain
+> kernel include files to the extent that the LVM client utilities run
+> into all sorts of compile problems. However, it is my educated guess
+> that you can compile the client utilities on a non-devfs system, and
+> the use them on a devfs enabled system.
+> 
+> ++Jos
+> 
+> Klaus Strebel wrote:
+> >
+> > Hi Jos,
+> >
+> > i ran into the same problems, did you find a solution?
+Ok Jos, i diffed in like swine and found a very very dirty hack!
 
-No I had no such problems but my yast (not yast2) created a filesystem
-on the pv and the lv. Sounds funny for me.
+First, remove the "-D__KERNEL__" from the Makefiles in the tools
+directory. Then do the following around the include of <linux/kdev_t.h>
+in <linux/lvm.h>:
 
-Regards
+/* KS : Look out! Following is a bad, bad hack to solve compile
+problems         * when for tools with devfs and lvm! */
+#if !defined (__KERNEL__)
+#define  __KERNEL__ oh_no_no_no
+#include <linux/kdev_t.h>
+#undef __KERNEL__
+#else
+#include <linux/kdev_t.h>
+#endif
 
-   Bodo
+It works for me, hope it helps you!
 
+Ciao
+Klaus
 -- 
-######################################################################
-# b+k CAD/CAM Unternehmensberatung GmbH         Anschrift:           #
-# Bodo Bock                                     Varrentrappstr. 3    #
-# Fax.: 05 31 / 5 80 04 - 56                    D-38114 Braunschweig #
-# e-mail: B.Bock@bk-cad.de                                           #
-######################################################################
+Klaus Strebel
+stb@ep-ag.com
+EIGNER + PARTNER AG   - The Engineering Warehouse Company -
+<http://www.ep-ag.com>
+-----------------------------------------------------------------------
