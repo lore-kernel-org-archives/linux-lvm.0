@@ -1,11 +1,11 @@
-Return-Path: <markv@wave.co.nz>
-Date: Fri, 29 Jun 2001 14:09:23 +1200
-From: Mark van Walraven <markv@wave.co.nz>
-Subject: Re: [linux-lvm] Re: another nice feature for packagers ...
-Message-ID: <20010629140922.B32501@mail.wave.co.nz>
-References: <Pine.LNX.4.33.0106171519240.14970-200000@moon.dice.hu> <20010618095533.A32072@sistina.com>
-Mime-Version: 1.0
-In-Reply-To: <20010618095533.A32072@sistina.com>; from AJ Lewis on Mon, Jun 18, 2001 at 09:55:33AM -0500
+Return-Path: <jspies@maties.sun.ac.za>
+Subject: Re: [linux-lvm] Problem installing lvm
+References: <E15FdV8-00028p-00@maties1.sun.ac.za>
+From: Johann Spies <jspies@maties.sun.ac.za>
+Date: 29 Jun 2001 10:27:52 +0000
+In-Reply-To: AJ Lewis's message of "Thu, 28 Jun 2001 17:11:05 +0200"
+Message-ID: <87ae2rshqv.fsf@#maties.sun.ac.za>
+MIME-Version: 1.0
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -20,17 +20,25 @@ List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
-Cc: AJ Lewis <lewis@sistina.com>
 
-On Mon, Jun 18, 2001 at 09:55:33AM -0500, AJ Lewis wrote:
-> Just FYI, the entire build system is going to get an overhaul after the 1.0   
-> release, so I will definitely be making sure these detail are kept in mind    
-> for that.
+AJ Lewis <lewis@sistina.com> writes:
 
-Would it be possible to automatically build a liblvm_pic.a?  That would
-allow building a "reduced" liblvm.so (containing only those functions
-required for vgscan and vgchange), suitable for a tight initrd.
+> Goto the LVM FTP site: ftp.sistina.com
+> and get to the directory that you grabbed the tarball from:
+> /pub/LVM/0.9.1_beta
+> 
+> Grab the file: lvm_0.9.1_beta7-get_hardblocksize.patch
 
-Thanks,
+Thanks.  it is working now.
 
-Mark.
+Johann
+-- 
+Johann Spies
+Informasietegnologie
+Universiteit van Stellenbosch
+
+     "One thing have I desired of the LORD, that will I seek
+      after; that I may dwell in the house of the LORD all
+      the days of my life, to behold the beauty of the LORD,
+      and to inquire in his temple."            
+                               Psalms 27:4       
