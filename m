@@ -1,10 +1,8 @@
-From: Ed Tomlinson <tomlins@cam.org>
-Subject: Re: [linux-lvm] Recovering a volume after OS upgrade (lost /etc/lvm*)
-References: <20011119014754.A1308@lynx.no> <20011119155741.7961.qmail@web12306.mail.yahoo.com> <20011119095105.G1308@lynx.no>
-In-Reply-To: <20011119095105.G1308@lynx.no>
+From: Benjamin Scott <bscott@ntisys.com>
+Subject: Re: [linux-lvm] LAZY MODE: Exchanging a LVM'ed disk
+In-Reply-To: <87wv0lu1rw.fsf@papadoc.bayour.com>
+Message-ID: <Pine.LNX.4.33.0111201025540.2520-100000@dragon.inside.ntisys.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Message-Id: <20011120131612.7E7A02533C@oscar.casa.dyndns.org>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,24 +13,36 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Tue Nov 20 08:09:02 2001
+Date: Tue Nov 20 09:30:01 2001
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@sistina.com, Andreas Dilger <adilger@turbolabs.com>, Lars Kellogg-Stedman <thelars@yahoo.com>
+Content-Type: TEXT/PLAIN; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: linux-lvm@sistina.com
 
-On November 19, 2001 11:51 am, Andreas Dilger wrote:
-> On Nov 19, 2001  07:57 -0800, Lars Kellogg-Stedman wrote:
-> > The RAID device appears to be working just fine.  With the MD driver,
-> > simply recreating /etc/raidtab and running raidstart worked without a
-> > problem.
+On 20 Nov 2001, Turbo Fredriksson wrote:
+> I currently have a disk in my LVM set which is only 1Gb. It's also quite
+> old, so I'd like to replace that with a newer/bigger one..
 >
-> You saw the other posting about the MD devices fix?  This is fixed in
-> CVS, but not 1.0.1rc4.  Maybe it is time for a new LVM release.
+> How would I go about doing this?
 
-If so please push the chagnes into the kernel asap.   Lets not end up months
-behind in the kernel again - please!  When you release, send the patches to 
-Linus or Marcelo at the same time.  If it was up to me I would send the patches
-first, then release.
+http://tech.sistina.com/lvm/doc/lvm_howto/Removing_an_old_disk.html
 
-Thanks
-Ed Tomlinson
+  1. Backup the existing filesystem(s)
+  2. Verify the backup
+  3. Create a PV on the new disk (pvcreate)
+  4. Add the new PV to the existing VG (vgextend)
+  5. Move the data from the old PV to the new PV (pvmove)
+  6. Remove the old PV from the VG (vgreduce)
+  7. Extend the LV to use the entire new PV (lvextend)
+  8. Resize the filesystem to use the entire LV
+
+> Bare in mind that all the SCSI id's will change when i remove the old
+> disk, will that complicate issues?
+
+  It will (it always does), but "vgscan" should handle most of it.
+
+-- 
+Ben Scott <bscott@ntisys.com>
+| The opinions expressed in this message are those of the author and do not |
+| necessarily represent the views or policy of any other person, entity or  |
+| organization.  All information is provided without warranty of any kind.  |
