@@ -1,24 +1,28 @@
-Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id i8DKeSr29385
-	for <linux-lvm@redhat.com>; Mon, 13 Sep 2004 16:40:28 -0400
-Received: from mproxy.gmail.com (rproxy.gmail.com [64.233.170.192])
-	by mx3.redhat.com (8.12.11/8.12.10) with ESMTP id i8DKeC4l015653
-	for <linux-lvm@redhat.com>; Mon, 13 Sep 2004 16:40:12 -0400
-Received: by mproxy.gmail.com with SMTP id 74so286855rnl
-	for <linux-lvm@redhat.com>; Mon, 13 Sep 2004 13:40:02 -0700 (PDT)
-Message-ID: <ce9f1f9e0409131339319648a3@mail.gmail.com>
-Date: Mon, 13 Sep 2004 13:39:58 -0700
-From: Stanley Yue <stanley.yue@gmail.com>
-Subject: Re: [linux-lvm] Unable to create lvm1 configurations
-In-Reply-To: <20040913104134.GO1094@agk.surrey.redhat.com>
+Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id i8E0uBr31423
+	for <linux-lvm@redhat.com>; Mon, 13 Sep 2004 20:56:11 -0400
+Received: from copilotconsulting.com (ip-66-181-5-46.cust.i2bnetworks.com
+	[66.181.5.46])
+	by mx1.redhat.com (8.12.11/8.12.10) with ESMTP id i8E0u3c7011324
+	for <linux-lvm@redhat.com>; Mon, 13 Sep 2004 20:56:10 -0400
+Received: from localhost (copilotconsulting.com [127.0.0.1])
+	by copilotconsulting.com (Postfix) with ESMTP id 325FF9564A
+	for <linux-lvm@redhat.com>; Mon, 13 Sep 2004 17:46:09 -0700 (PDT)
+Received: from copilotconsulting.com ([127.0.0.1])
+	by localhost (copilotconsulting.com [127.0.0.1]) (amavisd-new,
+	port 10024) with ESMTP id 18022-02 for <linux-lvm@redhat.com>;
+	Mon, 13 Sep 2004 17:46:07 -0700 (PDT)
+Date: Mon, 13 Sep 2004 17:46:07 -0700
+From: Tracy R Reed <treed@copilotconsulting.com>
+Subject: Re: [linux-lvm] massive LV corruption
+Message-ID: <20040914004607.GB9253@copilotconsulting.com>
+References: <20040911110830.GC32306@copilotconsulting.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
-References: <ce9f1f9e040911233347ca7ec8@mail.gmail.com>
-	<20040912115653.GK1094@agk.surrey.redhat.com>
-	<ce9f1f9e04091301587ea0256b@mail.gmail.com>
-	<20040913104134.GO1094@agk.surrey.redhat.com>
-Reply-To: Stanley Yue <stanley.yue@gmail.com>,
-	LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="wq9mPyueHGvFACwf"
+Content-Disposition: inline
+In-Reply-To: <20040911110830.GC32306@copilotconsulting.com>
+Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -28,59 +32,42 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: Stanley Yue <stanley.yue@gmail.com>, LVM general discussion and development <linux-lvm@redhat.com>
-
-Thanks Alasdair, your suggestion work.
-
-However, I'm encountering yet another problem....;p
-Looks like device-mapper always return an error on "cmd 13" when I
-tried to create a lv:
-
-[root@DAP-RHLNX1 2.4.21]# lvcreate -v -L 32 -n syueVol vg00-lvm1
-  device-mapper ioctl cmd 13 failed: Invalid argument
-  device-mapper ioctl cmd 13 failed: Invalid argument
-    Finding volume group "vg00-lvm1"
-    Creating logical volume syueVol
-    Archiving volume group "vg00-lvm1" metadata.
-    Creating volume group backup "/etc/lvm/backup/vg00-lvm1"
-    Found volume group "vg00-lvm1"
-    Loading vg00--lvm1-syueVol
-    Zeroing start of logical volume "syueVol"
-    Creating volume group backup "/etc/lvm/backup/vg00-lvm1"
-  Logical volume "syueVol" created
-[root@DAP-RHLNX1 2.4.21]# 
-
-Here are the version information:
-=========================
-LVM version 2.2.00.22
-Device Mapper version 1.00.18
-
-Does anyone know what the problem is?
-
-Thanks,
-
-Stanley
+To: linux-lvm@redhat.com
 
 
-On Mon, 13 Sep 2004 11:41:34 +0100, Alasdair G Kergon <agk@redhat.com> wrote:
-> On Mon, Sep 13, 2004 at 01:58:14AM -0700, Stanley Yue wrote:
-> > with the lvm-mod and device-mapper from lvm2. I want to test out
-> > whether lvm2 utilities can detect configurations created from lvm1
-> > utilities.
-> 
-> > pvcreate -- ERROR: VGDA in kernel and lvmtab are NOT consistent;
-> > please run vgscan
-> 
-> Never run LVM2 utilities while you have LVs active under LVM1.
-> Never run LVM1 tools while you have LVs active under LVM2.
-> 
-> i.e. Never mix use of the two, and always vgchange -an before switching
-> between LVM1 and LVM2.
-> Also, if switching back from LVM2 to LVM1 you must first reset the
-> LVM1 driver with lvmchange -R followed by vgscan -f.
-> 
-> Alasdair
-> --
-> agk@redhat.com
->
+--wq9mPyueHGvFACwf
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Sat, Sep 11, 2004 at 04:08:30AM -0700, Tracy R Reed spake thusly:
+> I am running Fedora Core 1 with stock RedHat kernel 2.4.22-1.2188.nptl. I
+> filled my /usr/local to 100% and decided I needed some more space so I ran
+> the lvextend and resize_reiserfs commands like I have done many times
+
+Nobody has an opinion to offer? I've been a big fan of LVM for ages but
+this incident has really shaken my confidence in it. It is my
+understanding that all of the software I am using should be pretty solid
+by now. I am hesitatnt to allow LVM operations on production systems
+anymore if this sort of thing can happen without explanation. :( I would
+like to think I did something wrong but I've used lvextend and
+resize_reiserfs a number of times before on other machines without
+incident.
+
+--=20
+Tracy Reed                     The attachment is a digital signature.
+http://copilotconsulting.com   More info: http://copilotconsulting.com/sig
+
+--wq9mPyueHGvFACwf
+Content-Type: application/pgp-signature
+Content-Disposition: inline
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.2.3 (GNU/Linux)
+
+iD8DBQFBRj9P9PIYKZYVAq0RAv2qAKCDXzzHUtfMved5/1oxjvhXeIr0swCdHbew
+1+hXDBvcpsHU0fsxXXu5G1g=
+=FZLC
+-----END PGP SIGNATURE-----
+
+--wq9mPyueHGvFACwf--
