@@ -1,10 +1,9 @@
 Return-Path: <jweber@valinux.com>
-Date: Fri, 19 Jan 2001 09:22:55 -0800 (PST)
+Date: Fri, 19 Jan 2001 09:26:55 -0800 (PST)
 From: Jay Weber <jweber@valinux.com>
-Subject: Re: [linux-lvm] Kernel panic while snapshotting.
-In-Reply-To: <20010119163758.B1874@66bassett.freeserve.co.uk>
-Message-ID: <Pine.LNX.4.30.0101190915110.28951-100000@beefcake.hdqt.valinux.com>
+Message-ID: <Pine.LNX.4.30.0101190924390.28951-100000@beefcake.hdqt.valinux.com>
 MIME-Version: 1.0
+Subject: [linux-lvm] [lvm-devel] Propose a patch. (fwd) -- Patch for loopback devices.
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -20,112 +19,85 @@ Content-Type: TEXT/PLAIN; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Are the LockPage() calls necessary?  I just reverted to iobuf->locked = 1;
-and tested with IO in background and it seems to work again.  Feedback is
-of course welcome.  I noticed your comment regarding LockPage() in commit
-logs, hence why I ask.  To reiterate, I didn't readd the LockPage() chunk
-of code.
+This is for those asking about loopback devices and below is a patch which
+I use to allow scanning of loopback devices on 2.2 based kernel (I've no
+idea if 2.4 differs, I wouldn't think so).  Enjoy!
 
-Btw, I'm also using the LVM_VFS_ENHANCEMENT option for snapshotting
-journaled ext3 filesystem to flush the journal and mark the fs clean in
-all these snapshot testings.
+Patch the lvm tools appropriately and then
+'export LVM_FORCE_DEV_SCAN=1' in your shell to enable forcing LVM scan of
+/dev dir.
 
-On Fri, 19 Jan 2001, Joe Thornber wrote:
+---------- Forwarded message ----------
+Date: Sun, 14 Jan 2001 16:36:31 -0800 (PST)
+From: Jay Weber <jweber@valinux.com>
+Reply-To: lvm-devel@sistina.com
+To: lvm-devel@sistina.com
+Subject: [lvm-devel] Propose a patch.
 
-> Date: Fri, 19 Jan 2001 16:37:58 +0000
-> From: Joe Thornber <joe@66bassett.freeserve.co.uk>
-> Reply-To: linux-lvm@sistina.com
-> To: linux-lvm@sistina.com
-> Subject: Re: [linux-lvm] Kernel panic while snapshotting.
->
-> Hi Jay,
->
-> Drat.  I'm really sorry about this.
->
-> Can you try reversing this patch please ?  It should fix it.
->
-> Let me know if you're still having trouble afterwards.
->
-> - Joe
->
-> diff -u -r1.2.2.6 -r1.2.2.7
-> --- LVM/kernel/lvm-snap.c	2001/01/12 16:08:12	1.2.2.6
-> +++ LVM/kernel/lvm-snap.c	2001/01/17 15:20:27	1.2.2.7
-> @@ -45,10 +45,6 @@
->
->  static char *lvm_snap_version __attribute__ ((unused)) = "LVM 0.9 snapshot code (13/11/2000)\n";
->
-> -#ifndef LockPage
-> -#define LockPage(map) set_bit(PG_locked, &(map)->flags)
-> -#endif
-> -
->  extern const char *const lvm_name;
->  extern int lvm_blocksizes[];
->
-> @@ -492,7 +488,7 @@
->  		goto out;
->
->  	err = -ENOMEM;
-> -	iobuf->locked = 1;
-> +	iobuf->locked = 0;
->  	iobuf->nr_pages = 0;
->  	for (i = 0; i < nr_pages; i++)
->  	{
-> @@ -513,9 +509,6 @@
->  #endif
->
->  		iobuf->maplist[i] = page;
-> -		/* the only point to lock the page here is to be allowed
-> -		   to share unmap_kiobuf() in the fail-path */
-> -		LockPage(page);
->  		iobuf->nr_pages++;
->  	}
->  	iobuf->offset = 0;
->
->
-> On Fri, Jan 19, 2001 at 07:56:26AM -0800, Jay Weber wrote:
-> > Hi,
-> >
-> > I just got a kernel panic while snapshotting with 0.9.1beta2.  I wonder if
-> > anybody has seen any similar issues or I possibly fubar'd the patch on my
-> > end?
-> >
-> > Panic was:
-> >
-> > 	Kernel panic: brw_kiovec: iobuf not locked for I/O
-> >
-> > This occured while simultanously copying 20 tarballs back and forth
-> > between two dirs on the source volume and performing a snapshot at that
-> > time.  It appears to have hung my lvcreate (snapshot) command shell.
-> > Oh, this was also using loop device for the source volume on my laptop in
-> > this case.  Hmm, actually could this panic be related to the following
-> > change in lvm.c?  It did work prior in 0.9.1beta1.
-> >
-> > @@ -492,7 +488,7 @@
-> >                 goto out;
-> >
-> >         err = -ENOMEM;
-> > -       iobuf->locked = 1;
-> > +       iobuf->locked = 0;
-> >         iobuf->nr_pages = 0;
-> >         for (i = 0; i < nr_pages; i++)
-> >         {
-> >
-> >
-> > I haven't seen this one before myself, but in testing on our bigger scsi
-> > based boxes in the back while snapshots are active and heavy IO is
-> > performed on the source volume, the box tends to hang.  I gather this is
-> > related to having to journal all source volume changes to the snapshot and
-> > when you throw massive IO at it, things get slow. Any thoughts on this one
-> > as well?
-> >
-> > _______________________________________________
-> > linux-lvm mailing list
-> > linux-lvm@sistina.com
-> > http://lists.sistina.com/mailman/listinfo/linux-lvm
-> >
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
->
+Hi,
+
+I'd like to propose the following patch which addresses an issue in
+lvm_dir_cache.c which scans /proc/partitions.  This helps when using
+loopback devices (which aren't populated in /proc/partitions) and if
+/proc/partitions contains an entry the /dev scan will not be performed,
+hence, I'll never see my loopback device.
+
+This also has solved my problems of having an empty /proc/partitions
+which would cause me to never see my Mylex Raid controller during a RedHat
+install which I setup LVM devices in.
+
+Thanks.
+
+Index: tools/lib/lvm_dir_cache.c
+===================================================================
+RCS file: /data/cvs/LVM/tools/lib/lvm_dir_cache.c,v
+retrieving revision 1.4.2.2
+diff -u -r1.4.2.2 lvm_dir_cache.c
+--- tools/lib/lvm_dir_cache.c	2001/01/05 11:46:14	1.4.2.2
++++ tools/lib/lvm_dir_cache.c	2001/01/15 00:28:28
+@@ -62,6 +62,7 @@
+    char minor[20] = { 0, };
+    char blocks[20] = { 0, };
+    char devname[30] = { 0, };
++   char *envptr = NULL;
+    static char *devdir[] = {
+       "/dev/ida",
+       "/dev/ide/hd",
+@@ -96,7 +97,8 @@
+       }
+       fclose ( proc);
+    }
+-   if ( cache_size == 0 && lvm_check_devfs() == FALSE) {
++   if ( (cache_size == 0 && lvm_check_devfs() == FALSE)
++    || (envptr = getenv("LVM_FORCE_DEV_SCAN")) != NULL ) {
+       for ( d = 0; devdir[d] != NULL; d++) {
+          dirname = devdir[d];
+ #ifdef DEBUG
+Index: tools/man8/lvm.8
+===================================================================
+RCS file: /data/cvs/LVM/tools/man8/lvm.8,v
+retrieving revision 1.2
+diff -u -r1.2 lvm.8
+--- tools/man8/lvm.8	2000/11/13 00:20:14	1.2
++++ tools/man8/lvm.8	2001/01/15 00:28:28
+@@ -179,6 +179,15 @@
+
+ Now let's rock and roll.
+ For example create a file system with "mkfs -t ext2 /dev/test_vg/my_test_lv" and mount it with "mount /dev/test_vg/my_test_lv /usr1"
++.SH ENVIRONMENT VARIABLES
++.TP
++\fBLVM_FORCE_DEV_SCAN\fP
++If this variable is set (to any value) it will force LVM to scan the /dev
++directory to search for devices.  This is useful at times, for instance when
++using loop devices which do not register in /proc/partitions or when installing
++LVM during a Linux Installation procedure which may have an empty
++/proc/partitions.
++
+ .SH See also
+ e2fsadm(8), lvchange(8), lvcreate(8), lvdisplay(8),
+ .br
+
+_______________________________________________
+lvm-devel mailing list
+lvm-devel@sistina.com
+http://lists.sistina.com/mailman/listinfo/lvm-devel
