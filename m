@@ -1,10 +1,14 @@
-From: Markus Dobel <mdobel@kawo2.rwth-aachen.de>
-Subject: Re: [linux-lvm] lvcreate, vgscan problem!
-Message-Id: <20020118144035.GA31421@balu.kawo2.rwth-aachen.de>
-References: <20020118141431.32744.qmail@web13005.mail.yahoo.com>
+From: Patrick Caulfield <caulfield@sistina.com>
+Subject: Re: [linux-lvm] Paralell IO performance with LVM and XFS
+Message-Id: <20020118150514.GK1684@tykepenguin.com>
+References: <200201171229.g0HCTVe10111@localhost.localdomain>
+    <20020117125640.35CF032FDE6@lyta.coker.com.au>
+    <20020117152130.GG1066@tykepenguin.com>
+    <20020117173959.5BF1F35FA9E@lyta.coker.com.au>
+    <20020117175832.GL1066@tykepenguin.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20020118141431.32744.qmail@web13005.mail.yahoo.com>
+In-Reply-To: <20020117175832.GL1066@tykepenguin.com>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,44 +19,19 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Fri Jan 18 08:41:01 2002
+Date: Fri Jan 18 09:06:01 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Fri, Jan 18, 2002 at 06:14:31AM -0800, Prashant Kharche wrote:
-> Hi! 
->     I have LVM 1.0.4.rc4 package and linux kernel
-> 2.4.17. Following commands are giving me errors :
-> 
-> vgscan - > gives error message as 
-> " Invalidate :Busy Buffer ..."
+On Thu, Jan 17, 2002 at 05:58:32PM +0000, Patrick Caulfield wrote:
+> On Thu, Jan 17, 2002 at 06:39:58PM +0100, Russell Coker wrote:
+> > 
+> > Why are you so certain that it's the FC interface at fault?  The FC interface 
+> > should be able to do more than 60MB/s.
 
-Ignore that.
+Just for the record, I can't get more tham 60M/s out of it using MD striping
+either.
 
-> pvcreate, vgcreate commands are working properly.. and
-> also manages to create to volume groups.. 
-> my sequence of commands is -
-> 1.vgscan 
-> 2.pvcreate
-> 3.vgcreate
-> 4.lvcreate : gives me error ..
-> 
-> What should i do to avoid this error ??
-
-Would be helpful to tell what error you get. Please paste the error
-message.
-
-> Also, I have compiled the kernel 2.4.17 and loaded the
-> LVM module.. and installed the LVM package 1.0.4rc4..
-> 
-> Everytime i have to load the module "lvm-mod.o"
-> manually.. how do i add it to startup script.. ??
-
-Read "INSTALL". Especially the part about /etc/modules.conf
-
-Regards, Markus
-
--- 
-Free the Fluffy Bunny.
+patrick
