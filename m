@@ -1,25 +1,20 @@
 Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with SMTP id i2NHqrj24514
-	for <linux-lvm@redhat.com>; Tue, 23 Mar 2004 12:52:53 -0500
-Received: from mail.cs.umass.edu
-	(IDENT:ZEIP2g/AafhUusCDcr6bD/hk/mWItxy7@loki.cs.umass.edu
-	[128.119.243.168])
-	by mx1.redhat.com (8.12.10/8.12.10) with SMTP id i2NHqqWA014747
-	for <linux-lvm@redhat.com>; Tue, 23 Mar 2004 12:52:52 -0500
-Received: from loki.cs.umass.edu
-	(IDENT:+jClYgP9V0f8E9UaH7ugJMSf5LZ3vpkw@localhost [127.0.0.1])
-	by mail.cs.umass.edu (8.12.10/8.12.5) with ESMTP id i2NHqojW021814
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NOT)
-	for <linux-lvm@redhat.com>; Tue, 23 Mar 2004 12:52:50 -0500
-Received: from localhost (vijay@localhost)
-	by loki.cs.umass.edu (8.12.10/8.12.5/Submit) with ESMTP id
-	i2NHqoRB021811
-	for <linux-lvm@redhat.com>; Tue, 23 Mar 2004 12:52:50 -0500
-Date: Tue, 23 Mar 2004 12:52:50 -0500 (EST)
-From: Vijay Sundaram <vijay@cs.umass.edu>
-Message-ID: <Pine.LNX.4.44.0403231238320.15959-100000@loki.cs.umass.edu>
-MIME-Version: 1.0
-Subject: [linux-lvm] moving logical volumes online
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with SMTP id i2NJOuj20406
+	for <linux-lvm@redhat.com>; Tue, 23 Mar 2004 14:24:56 -0500
+Received: from percy.comedia.it (percy.comedia.it [212.97.59.71])
+	by mx1.redhat.com (8.12.10/8.12.10) with SMTP id i2NJOsWA014188
+	for <linux-lvm@redhat.com>; Tue, 23 Mar 2004 14:24:54 -0500
+Date: Tue, 23 Mar 2004 20:24:52 +0100
+From: Luca Berra <bluca@comedia.it>
+Subject: Re: [linux-lvm] root on lvm
+Message-ID: <20040323192451.GE24728@percy.comedia.it>
+References: <1079478024.2432.9.camel@rich>
+	<1079705946.29353.6.camel@tesla.mmt.bellhowell.com>
+	<1079729272.2126.12.camel@pascal>
+	<1079922026.2361.7.camel@localhost>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <1079922026.2361.7.camel@localhost>
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -30,31 +25,40 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
 Content-Transfer-Encoding: 7bit
-To: linux-lvm@redhat.com
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
+On Sun, Mar 21, 2004 at 09:20:26PM -0500, Jeff Layton wrote:
+>My solution for this (so far) is to make a non-LVM2 /boot partition and
+>store a kernel and initrd in that. You can then build everything else as
+>a LVM partition. Perhaps when the available bootloaders become LVM2
+>aware we'll be able to do away with a seperate /boot, but for now it
+>seems to be the best way to deal with it.
+>Cheers,
+>-- Jeff
+>
+>
+>On Fri, 2004-03-19 at 15:47, Garcia Pascal wrote:
+>> Hello,
+>> I experienced also difficulties with / and lvm2.
+>> configuration: 
+>>    MANDRAKE 10.0, 
+>>    kernel 2.6.3, 
+>>    lilo 22.5.8, 
+>>    reiserfs 3.6.11 ?
+>>    lvm 2.00.08
 
-Hi,
+lilo on mandrake 10.0 is lvm2 aware.
+i don't know if there are reiserfs related problems that affect Pascal
+configuration.
 
-I had the following questions:
+L.
 
-1. Linux lvm has snapshot capability, but to make sure that all changes to
-a logical volume have propogated to secondary storage it is recommended
-that the logical volume be unmounted before the snapshot is taken. Is this
-absolutely necessary?
-
-2. The second question is regarding moving or migrating a logical volume 
-from one volume group to another when the logical volume is online. 
-	Taking snapshots allows one to create a backup, but my question
-then essentially is: if one creates the backup on another volume group,
-can one bring this backup up-to-date with any changes that may have been
-made to the primary copy. I can then make this backup the primary copy and
-delete the original copy.
-	Of course, it is required that the logical volume be online and
-functional (available) at all times.
-	Does lvm have this capability, or does it already achieve it in a
-transparent way?
-
-thanks,
--- Vijay
+-- 
+Luca Berra -- bluca@comedia.it
+        Communication Media & Services S.r.l.
+ /"\
+ \ /     ASCII RIBBON CAMPAIGN
+  X        AGAINST HTML MAIL
+ / \
