@@ -1,10 +1,10 @@
-Message-ID: <002b01c13c98$d3080be0$6601a8c0@foobarhouse.com>
-From: "Neil Macvicar" <neilm@foobarhouse.com>
-References: <Pine.LNX.4.21.0109130913590.994-100000@tompth.localdomain> <004101c13c4d$cfc929a0$6601a8c0@foobarhouse.com>
-Subject: Re: [linux-lvm] How to boot with LVM?
-Date: Thu, 13 Sep 2001 22:12:41 +0100
+From: "IT3 Stuart B. Tener, USNR-R" <stuart@bh90210.net>
+Subject: RE: [linux-lvm] How to boot with LVM?
+Date: Thu, 13 Sep 2001 14:08:33 -0700
+Message-ID: <NBBBJHKIOKPKOGOEPEDPMEENDNAA.stuart@bh90210.net>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: base64
+In-Reply-To: <002b01c13c98$d3080be0$6601a8c0@foobarhouse.com>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -19,139 +19,111 @@ List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
 
-A few notes I missed: This ramdisk I made myself. You can mount it on
-loopback after untarring it to examine it's contents. It's size sould be set
-to 8192.
-
-Regards,
---Neil.
-
------ Original Message -----
-From: "Neil Macvicar" <neilm@foobarhouse.com>
-To: <linux-lvm@sistina.com>
-Sent: Thursday, September 13, 2001 1:15 PM
-Subject: Re: [linux-lvm] How to boot with LVM?
-
-
-> If it's any help, I have put my initrd on public ftp at
-> fruits.foobarhouse.com in the LVM directory. It's served me well for as
-long
-> as I've been using LVM'ed root.
->
-> I'm currently using LVM 0.9.1beta8.
->
-> Regards,
-> --Neil.
->
-> ----- Original Message -----
-> From: "A.R. (Tom) Peters" <tpeters@xs4all.nl>
-> To: <linux-lvm@sistina.com>
-> Sent: Thursday, September 13, 2001 8:18 AM
-> Subject: [linux-lvm] How to boot with LVM?
->
->
-> > I bought a 30 GB HD, and decided to put it under the LVM and put
-> > ReiserFS on it.  I managed to initialize it fine, and it now has a base
-> > Debian install on it, but I cannot manage to boot from it.
-> >
-> > You cannot boot from a LV; therefore I made a small (16 MB) ext2
-> > partition with a kernel and an initrd.  My intended root FS is on a LV,
-> > and you need to jump through some hoops to get the kernel mount it on /
-> > : that is documented in the LVM-HOWTO and FAQ that comes with the LVM
-> > tools.  Use of initrd is documented in
-> > /usr/src/linux/Documents/initrd.txt .  Finally, the Bootdisk-HOWTO
-> > helps.
-> >
-> > I use LVM tools 1.0.1-rc2, and a 2.4.10-pre7 kernel, patched with the
-> > patches of the LVM tools; no .rej there.  I compiled the LVM binaries
-> > with liblvm-10 statically linked, because otherwise the executables in
-> > the initrd had problems with finding the .so (I think I know what was
-> > going on, but won't go into that now).  Therefore I have to make a
-> > Ramdisk of 5MB instead of the default 4 MB.
-> >
-> > My new HD is /dev/hdd, and is the 3rd HD in the system: this allows me
-> > to still use my computer to read docs and send you this message.  So for
-> > now I do not want to put a bootloader on the disk because the hardware
-> > config is going to change: instead I use a boot floppy with GRUB.
-> >
-> > LVM has a utility script lvmcreate_initrd to make an initrd suitable to
-> > prepare for mounting a LV on / .
-> >
-> > The system boots with the floppy; the correct kernel is loaded from the
-> > ext2 partition, as well as the initrd; the LVM tools on the initrd are
-> > executed and seem to work properly.
-> >
-> > PROBLEM: subsequently the kernel panics because it still cannot mount a
-> > root.
-> >
-> > I got a GRUB bootdisk that works.  /grub/menu.lst :
-> > title  Linux24
-> > root (hd2,4)
-> > kernel /vmlinuz-2.4.10-pre7 root=/dev/SYSDISK/Root ramdisk_size=5120
-> > # If I specify root=/dev/ram0 then I get a shell on the rudimentary
-> > initrd system.
-> > initrd /initrd-lvm-2.4.10-pre7.gz
-> >
-> > On initrd:
-> >
-> > etc/fstab:
-> > /dev/ram        /               ext2    defaults        0   0
-> > proc            /proc           proc    defaults        0   0
-> >
-> > linuxrc:
-> > #!/bin/sh
-> > /bin/mount /proc
-> > /sbin/vgscan
-> > /sbin/vgchange -a y
-> > /bin/umount /proc
-> >
-> > devices:
-> > # ls -l dev/SYSDISK/
-> > total 0
-> > brw-rw----    1 root     disk      58,   2 Sep 11 19:23 Opt
-> > brw-rw----    1 root     disk      58,   0 Sep 11 19:23 Root
-> > brw-rw----    1 root     disk      58,   4 Sep 11 19:23 Scratch
-> > brw-rw----    1 root     disk      58,   1 Sep 11 19:23 Usr
-> > brw-rw----    1 root     disk      58,   3 Sep 11 19:23 Var
-> > crw-r-----    1 root     disk     109,   0 Sep 11 19:23 group
-> >
-> > Kernel:
-> > # rdev vmlinuz-2.4.10-pre7
-> > Root device /dev/ram0   # Root device /dev/SYSDISK/Root
-> >   (-> 0x3a00) does not make a difference
-> > # rdev -R vmlinuz-2.4.10-pre7
-> > Root flags 0    # i.e. mount ro
-> > # rdev -r vmlinuz-2.4.10-pre7
-> > Ramsize 49152   # i.e. offset=0; bit14=1: load ramdisk; bit15=1:
-> >                 #   prompt before loading rootfs - this never happens!
-> >
-> > What am I supposed to change?  The kernel initrd.txt has a long and
-> > complicated story on using pivot_root to switch rootfs, but apparently
-> > the LVM linuxrc relies on the deprecated method that does this
-> > automatically.
-> >
-> > Any advice welcome.
-> >
-> > --
-> >
->
-#>!$!%(@^%#%*(&(#@#*$^@^$##*#@&(%)@**$!(&!^(#((#&%!)%*@)(&$($$%(@#)&*!^$)^@*
-> ^@)
-> >
-> > Tom "thriving on chaos" Peters
-> > NL-1062 KD nr 149 tel.    +31-204080204
-> >   Amsterdam e-mail  tpeters@xs4all.nl
-> >
-> >
-> > _______________________________________________
-> > linux-lvm mailing list
-> > linux-lvm@sistina.com
-> > http://lists.sistina.com/mailman/listinfo/linux-lvm
-> > read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
->
->
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
+TXIuIE1hY3ZpY2FyOg0KDQoJQ2FuIHlvdSBwcm92aWRlIGluc3RydWN0aW9ucyBvbiBob3cgSSBt
+aWdodCBkbyB0aGF0Pw0KDQoNClZlcnkgUmVzcGVjdGZ1bGx5LCANCg0KU3R1YXJ0IEJsYWtlIFRl
+bmVyLCBJVDMsIFVTTlItUiwgTjNHV0cgDQpCZXZlcmx5IEhpbGxzLCBDYWxpZm9ybmlhDQpWVFUg
+MTkwNEcgKFZvbHVudGVlciBUcmFpbmluZyBVbml0KSANCnN0dWFydEBiaDkwMjEwLm5ldCANCndl
+c3QgY29hc3Q6ICgzMTApLTM1OC0wMjAyIFAuTy4gQm94IDE2MDQzLCBCZXZlcmx5IEhpbGxzLCBD
+QSA5MDIwOS0yMDQzIA0KZWFzdCBjb2FzdDogKDIxNSktMzM4LTYwMDUgUC5PLiBCb3ggNDU4NTks
+IFBoaWxhZGVscGhpYSwgUEEgMTkxNDktNTg1OSANCg0KVGVsZWNvcGllcjogKDQxOSktNzE1LTYw
+NzMgZmF4IHRvIGVtYWlsIGdhdGV3YXkgdmlhIHd3dy5lZmF4LmNvbSAoaXQncyBmcmVlISkgDQoN
+CkpPSU4gVEhFIFVTIE5BVlkgUkVTRVJWRSwgU0VSVkUgWU9VUiBDT1VOVFJZLCBBTkQgQkVORUZJ
+VCBGUk9NIElUIEFMTC4gDQoNClRodXJzZGF5LCBTZXB0ZW1iZXIgMTMsIDIwMDEgMjowOCBQTQ0K
+DQotLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KRnJvbTogbGludXgtbHZtLWFkbWluQHNpc3Rp
+bmEuY29tIFttYWlsdG86bGludXgtbHZtLWFkbWluQHNpc3RpbmEuY29tXU9uIEJlaGFsZiBPZiBO
+ZWlsIE1hY3ZpY2FyDQpTZW50OiBUaHVyc2RheSwgU2VwdGVtYmVyIDEzLCAyMDAxIDI6MTMgUE0N
+ClRvOiBsaW51eC1sdm1Ac2lzdGluYS5jb20NClN1YmplY3Q6IFJlOiBbbGludXgtbHZtXSBIb3cg
+dG8gYm9vdCB3aXRoIExWTT8NCg0KQSBmZXcgbm90ZXMgSSBtaXNzZWQ6IFRoaXMgcmFtZGlzayBJ
+IG1hZGUgbXlzZWxmLiBZb3UgY2FuIG1vdW50IGl0IG9uDQpsb29wYmFjayBhZnRlciB1bnRhcnJp
+bmcgaXQgdG8gZXhhbWluZSBpdCdzIGNvbnRlbnRzLiBJdCdzIHNpemUgc291bGQgYmUgc2V0DQp0
+byA4MTkyLg0KDQpSZWdhcmRzLA0KLS1OZWlsLg0KDQotLS0tLSBPcmlnaW5hbCBNZXNzYWdlIC0t
+LS0tDQpGcm9tOiAiTmVpbCBNYWN2aWNhciIgPG5laWxtQGZvb2JhcmhvdXNlLmNvbT4NClRvOiA8
+bGludXgtbHZtQHNpc3RpbmEuY29tPg0KU2VudDogVGh1cnNkYXksIFNlcHRlbWJlciAxMywgMjAw
+MSAxOjE1IFBNDQpTdWJqZWN0OiBSZTogW2xpbnV4LWx2bV0gSG93IHRvIGJvb3Qgd2l0aCBMVk0/
+DQoNCg0KPiBJZiBpdCdzIGFueSBoZWxwLCBJIGhhdmUgcHV0IG15IGluaXRyZCBvbiBwdWJsaWMg
+ZnRwIGF0DQo+IGZydWl0cy5mb29iYXJob3VzZS5jb20gaW4gdGhlIExWTSBkaXJlY3RvcnkuIEl0
+J3Mgc2VydmVkIG1lIHdlbGwgZm9yIGFzDQpsb25nDQo+IGFzIEkndmUgYmVlbiB1c2luZyBMVk0n
+ZWQgcm9vdC4NCj4NCj4gSSdtIGN1cnJlbnRseSB1c2luZyBMVk0gMC45LjFiZXRhOC4NCj4NCj4g
+UmVnYXJkcywNCj4gLS1OZWlsLg0KPg0KPiAtLS0tLSBPcmlnaW5hbCBNZXNzYWdlIC0tLS0tDQo+
+IEZyb206ICJBLlIuIChUb20pIFBldGVycyIgPHRwZXRlcnNAeHM0YWxsLm5sPg0KPiBUbzogPGxp
+bnV4LWx2bUBzaXN0aW5hLmNvbT4NCj4gU2VudDogVGh1cnNkYXksIFNlcHRlbWJlciAxMywgMjAw
+MSA4OjE4IEFNDQo+IFN1YmplY3Q6IFtsaW51eC1sdm1dIEhvdyB0byBib290IHdpdGggTFZNPw0K
+Pg0KPg0KPiA+IEkgYm91Z2h0IGEgMzAgR0IgSEQsIGFuZCBkZWNpZGVkIHRvIHB1dCBpdCB1bmRl
+ciB0aGUgTFZNIGFuZCBwdXQNCj4gPiBSZWlzZXJGUyBvbiBpdC4gIEkgbWFuYWdlZCB0byBpbml0
+aWFsaXplIGl0IGZpbmUsIGFuZCBpdCBub3cgaGFzIGEgYmFzZQ0KPiA+IERlYmlhbiBpbnN0YWxs
+IG9uIGl0LCBidXQgSSBjYW5ub3QgbWFuYWdlIHRvIGJvb3QgZnJvbSBpdC4NCj4gPg0KPiA+IFlv
+dSBjYW5ub3QgYm9vdCBmcm9tIGEgTFY7IHRoZXJlZm9yZSBJIG1hZGUgYSBzbWFsbCAoMTYgTUIp
+IGV4dDINCj4gPiBwYXJ0aXRpb24gd2l0aCBhIGtlcm5lbCBhbmQgYW4gaW5pdHJkLiAgTXkgaW50
+ZW5kZWQgcm9vdCBGUyBpcyBvbiBhIExWLA0KPiA+IGFuZCB5b3UgbmVlZCB0byBqdW1wIHRocm91
+Z2ggc29tZSBob29wcyB0byBnZXQgdGhlIGtlcm5lbCBtb3VudCBpdCBvbiAvDQo+ID4gOiB0aGF0
+IGlzIGRvY3VtZW50ZWQgaW4gdGhlIExWTS1IT1dUTyBhbmQgRkFRIHRoYXQgY29tZXMgd2l0aCB0
+aGUgTFZNDQo+ID4gdG9vbHMuICBVc2Ugb2YgaW5pdHJkIGlzIGRvY3VtZW50ZWQgaW4NCj4gPiAv
+dXNyL3NyYy9saW51eC9Eb2N1bWVudHMvaW5pdHJkLnR4dCAuICBGaW5hbGx5LCB0aGUgQm9vdGRp
+c2stSE9XVE8NCj4gPiBoZWxwcy4NCj4gPg0KPiA+IEkgdXNlIExWTSB0b29scyAxLjAuMS1yYzIs
+IGFuZCBhIDIuNC4xMC1wcmU3IGtlcm5lbCwgcGF0Y2hlZCB3aXRoIHRoZQ0KPiA+IHBhdGNoZXMg
+b2YgdGhlIExWTSB0b29sczsgbm8gLnJlaiB0aGVyZS4gIEkgY29tcGlsZWQgdGhlIExWTSBiaW5h
+cmllcw0KPiA+IHdpdGggbGlibHZtLTEwIHN0YXRpY2FsbHkgbGlua2VkLCBiZWNhdXNlIG90aGVy
+d2lzZSB0aGUgZXhlY3V0YWJsZXMgaW4NCj4gPiB0aGUgaW5pdHJkIGhhZCBwcm9ibGVtcyB3aXRo
+IGZpbmRpbmcgdGhlIC5zbyAoSSB0aGluayBJIGtub3cgd2hhdCB3YXMNCj4gPiBnb2luZyBvbiwg
+YnV0IHdvbid0IGdvIGludG8gdGhhdCBub3cpLiAgVGhlcmVmb3JlIEkgaGF2ZSB0byBtYWtlIGEN
+Cj4gPiBSYW1kaXNrIG9mIDVNQiBpbnN0ZWFkIG9mIHRoZSBkZWZhdWx0IDQgTUIuDQo+ID4NCj4g
+PiBNeSBuZXcgSEQgaXMgL2Rldi9oZGQsIGFuZCBpcyB0aGUgM3JkIEhEIGluIHRoZSBzeXN0ZW06
+IHRoaXMgYWxsb3dzIG1lDQo+ID4gdG8gc3RpbGwgdXNlIG15IGNvbXB1dGVyIHRvIHJlYWQgZG9j
+cyBhbmQgc2VuZCB5b3UgdGhpcyBtZXNzYWdlLiAgU28gZm9yDQo+ID4gbm93IEkgZG8gbm90IHdh
+bnQgdG8gcHV0IGEgYm9vdGxvYWRlciBvbiB0aGUgZGlzayBiZWNhdXNlIHRoZSBoYXJkd2FyZQ0K
+PiA+IGNvbmZpZyBpcyBnb2luZyB0byBjaGFuZ2U6IGluc3RlYWQgSSB1c2UgYSBib290IGZsb3Bw
+eSB3aXRoIEdSVUIuDQo+ID4NCj4gPiBMVk0gaGFzIGEgdXRpbGl0eSBzY3JpcHQgbHZtY3JlYXRl
+X2luaXRyZCB0byBtYWtlIGFuIGluaXRyZCBzdWl0YWJsZSB0bw0KPiA+IHByZXBhcmUgZm9yIG1v
+dW50aW5nIGEgTFYgb24gLyAuDQo+ID4NCj4gPiBUaGUgc3lzdGVtIGJvb3RzIHdpdGggdGhlIGZs
+b3BweTsgdGhlIGNvcnJlY3Qga2VybmVsIGlzIGxvYWRlZCBmcm9tIHRoZQ0KPiA+IGV4dDIgcGFy
+dGl0aW9uLCBhcyB3ZWxsIGFzIHRoZSBpbml0cmQ7IHRoZSBMVk0gdG9vbHMgb24gdGhlIGluaXRy
+ZCBhcmUNCj4gPiBleGVjdXRlZCBhbmQgc2VlbSB0byB3b3JrIHByb3Blcmx5Lg0KPiA+DQo+ID4g
+UFJPQkxFTTogc3Vic2VxdWVudGx5IHRoZSBrZXJuZWwgcGFuaWNzIGJlY2F1c2UgaXQgc3RpbGwg
+Y2Fubm90IG1vdW50IGENCj4gPiByb290Lg0KPiA+DQo+ID4gSSBnb3QgYSBHUlVCIGJvb3RkaXNr
+IHRoYXQgd29ya3MuICAvZ3J1Yi9tZW51LmxzdCA6DQo+ID4gdGl0bGUgIExpbnV4MjQNCj4gPiBy
+b290IChoZDIsNCkNCj4gPiBrZXJuZWwgL3ZtbGludXotMi40LjEwLXByZTcgcm9vdD0vZGV2L1NZ
+U0RJU0svUm9vdCByYW1kaXNrX3NpemU9NTEyMA0KPiA+ICMgSWYgSSBzcGVjaWZ5IHJvb3Q9L2Rl
+di9yYW0wIHRoZW4gSSBnZXQgYSBzaGVsbCBvbiB0aGUgcnVkaW1lbnRhcnkNCj4gPiBpbml0cmQg
+c3lzdGVtLg0KPiA+IGluaXRyZCAvaW5pdHJkLWx2bS0yLjQuMTAtcHJlNy5neg0KPiA+DQo+ID4g
+T24gaW5pdHJkOg0KPiA+DQo+ID4gZXRjL2ZzdGFiOg0KPiA+IC9kZXYvcmFtICAgICAgICAvICAg
+ICAgICAgICAgICAgZXh0MiAgICBkZWZhdWx0cyAgICAgICAgMCAgIDANCj4gPiBwcm9jICAgICAg
+ICAgICAgL3Byb2MgICAgICAgICAgIHByb2MgICAgZGVmYXVsdHMgICAgICAgIDAgICAwDQo+ID4N
+Cj4gPiBsaW51eHJjOg0KPiA+ICMhL2Jpbi9zaA0KPiA+IC9iaW4vbW91bnQgL3Byb2MNCj4gPiAv
+c2Jpbi92Z3NjYW4NCj4gPiAvc2Jpbi92Z2NoYW5nZSAtYSB5DQo+ID4gL2Jpbi91bW91bnQgL3By
+b2MNCj4gPg0KPiA+IGRldmljZXM6DQo+ID4gIyBscyAtbCBkZXYvU1lTRElTSy8NCj4gPiB0b3Rh
+bCAwDQo+ID4gYnJ3LXJ3LS0tLSAgICAxIHJvb3QgICAgIGRpc2sgICAgICA1OCwgICAyIFNlcCAx
+MSAxOToyMyBPcHQNCj4gPiBicnctcnctLS0tICAgIDEgcm9vdCAgICAgZGlzayAgICAgIDU4LCAg
+IDAgU2VwIDExIDE5OjIzIFJvb3QNCj4gPiBicnctcnctLS0tICAgIDEgcm9vdCAgICAgZGlzayAg
+ICAgIDU4LCAgIDQgU2VwIDExIDE5OjIzIFNjcmF0Y2gNCj4gPiBicnctcnctLS0tICAgIDEgcm9v
+dCAgICAgZGlzayAgICAgIDU4LCAgIDEgU2VwIDExIDE5OjIzIFVzcg0KPiA+IGJydy1ydy0tLS0g
+ICAgMSByb290ICAgICBkaXNrICAgICAgNTgsICAgMyBTZXAgMTEgMTk6MjMgVmFyDQo+ID4gY3J3
+LXItLS0tLSAgICAxIHJvb3QgICAgIGRpc2sgICAgIDEwOSwgICAwIFNlcCAxMSAxOToyMyBncm91
+cA0KPiA+DQo+ID4gS2VybmVsOg0KPiA+ICMgcmRldiB2bWxpbnV6LTIuNC4xMC1wcmU3DQo+ID4g
+Um9vdCBkZXZpY2UgL2Rldi9yYW0wICAgIyBSb290IGRldmljZSAvZGV2L1NZU0RJU0svUm9vdA0K
+PiA+ICAgKC0+IDB4M2EwMCkgZG9lcyBub3QgbWFrZSBhIGRpZmZlcmVuY2UNCj4gPiAjIHJkZXYg
+LVIgdm1saW51ei0yLjQuMTAtcHJlNw0KPiA+IFJvb3QgZmxhZ3MgMCAgICAjIGkuZS4gbW91bnQg
+cm8NCj4gPiAjIHJkZXYgLXIgdm1saW51ei0yLjQuMTAtcHJlNw0KPiA+IFJhbXNpemUgNDkxNTIg
+ICAjIGkuZS4gb2Zmc2V0PTA7IGJpdDE0PTE6IGxvYWQgcmFtZGlzazsgYml0MTU9MToNCj4gPiAg
+ICAgICAgICAgICAgICAgIyAgIHByb21wdCBiZWZvcmUgbG9hZGluZyByb290ZnMgLSB0aGlzIG5l
+dmVyIGhhcHBlbnMhDQo+ID4NCj4gPiBXaGF0IGFtIEkgc3VwcG9zZWQgdG8gY2hhbmdlPyAgVGhl
+IGtlcm5lbCBpbml0cmQudHh0IGhhcyBhIGxvbmcgYW5kDQo+ID4gY29tcGxpY2F0ZWQgc3Rvcnkg
+b24gdXNpbmcgcGl2b3Rfcm9vdCB0byBzd2l0Y2ggcm9vdGZzLCBidXQgYXBwYXJlbnRseQ0KPiA+
+IHRoZSBMVk0gbGludXhyYyByZWxpZXMgb24gdGhlIGRlcHJlY2F0ZWQgbWV0aG9kIHRoYXQgZG9l
+cyB0aGlzDQo+ID4gYXV0b21hdGljYWxseS4NCj4gPg0KPiA+IEFueSBhZHZpY2Ugd2VsY29tZS4N
+Cj4gPg0KPiA+IC0tDQo+ID4NCj4NCiM+ISQhJShAXiUjJSooJigjQCMqJF5AXiQjIyojQCYoJSlA
+KiokISgmIV4oIygoIyYlISklKkApKCYkKCQkJShAIykmKiFeJCleQCoNCj4gXkApDQo+ID4NCj4g
+PiBUb20gInRocml2aW5nIG9uIGNoYW9zIiBQZXRlcnMNCj4gPiBOTC0xMDYyIEtEIG5yIDE0OSB0
+ZWwuICAgICszMS0yMDQwODAyMDQNCj4gPiAgIEFtc3RlcmRhbSBlLW1haWwgIHRwZXRlcnNAeHM0
+YWxsLm5sDQo+ID4NCj4gPg0KPiA+IF9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fDQo+ID4gbGludXgtbHZtIG1haWxpbmcgbGlzdA0KPiA+IGxpbnV4LWx2bUBz
+aXN0aW5hLmNvbQ0KPiA+IGh0dHA6Ly9saXN0cy5zaXN0aW5hLmNvbS9tYWlsbWFuL2xpc3RpbmZv
+L2xpbnV4LWx2bQ0KPiA+IHJlYWQgdGhlIExWTSBIT1ctVE8gYXQgaHR0cDovL3d3dy5zaXN0aW5h
+LmNvbS9sdm0vUGFnZXMvaG93dG8uaHRtbA0KPg0KPg0KPiBfX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fXw0KPiBsaW51eC1sdm0gbWFpbGluZyBsaXN0DQo+IGxp
+bnV4LWx2bUBzaXN0aW5hLmNvbQ0KPiBodHRwOi8vbGlzdHMuc2lzdGluYS5jb20vbWFpbG1hbi9s
+aXN0aW5mby9saW51eC1sdm0NCj4gcmVhZCB0aGUgTFZNIEhPVy1UTyBhdCBodHRwOi8vd3d3LnNp
+c3RpbmEuY29tL2x2bS9QYWdlcy9ob3d0by5odG1sDQoNCg0KX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX18NCmxpbnV4LWx2bSBtYWlsaW5nIGxpc3QNCmxpbnV4
+LWx2bUBzaXN0aW5hLmNvbQ0KaHR0cDovL2xpc3RzLnNpc3RpbmEuY29tL21haWxtYW4vbGlzdGlu
+Zm8vbGludXgtbHZtDQpyZWFkIHRoZSBMVk0gSE9XLVRPIGF0IGh0dHA6Ly93d3cuc2lzdGluYS5j
+b20vbHZtL1BhZ2VzL2hvd3RvLmh0bWwNCg==
