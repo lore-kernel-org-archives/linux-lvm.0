@@ -1,9 +1,9 @@
-content-class: urn:content-classes:message
+Message-ID: <005501c3370c$737e0600$7631a8c0@waw137>
+From: "Marcin Giedz" <marcin.giedz@hermes.pl>
+References: <077f01c336a7$2df27a90$6501a8c0@portege>
 MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Message-ID: <2E7F9C924F6A6546AF777BD072071EC6091243@mars.lbmc.net>
-From: "David Sornig" <dsornig@lbmc.com>
-Subject: [linux-lvm] Snapshot Problem JFS
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] busy buffer
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,19 +14,27 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Thu Jun 19 21:08:01 2003
+Date: Fri Jun 20 04:16:01 2003
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
 
-SSBhbSBydW5uaW5nIFJlZEhhdCA5LjANCktlcm5lbCAyLjQuMjAtOA0KTFZNIFZlcnNpb24gMS4w
-LjUrKDIyLzA3LzIwMDIpDQogDQpJIGhhdmUgYSAxLjRUIExvZ1ZvbCB3aXRoIDQwMEcgb2Ygc3Bh
-Y2UgYmVpbmcgdXNlZCBvbiBhIEpGUyBmaWxlIHN5c3RlbS4NCiANClRoZSBMVk0gaXMgd29ya2lu
-ZyBleGNlbGxlbnQuICBIb3dldmVyLCAgSSBjYW5ub3QgY3JlYXRlIGEgc25hcHNob3QuICBJIHJ1
-biB0aGUgZm9sbG93aW5nIGx2Y3JlYXRlIGNvbW1hbmQgYXMgcGVyIHRoZSBtYW4gcGFnZSBhbmQg
-Z2V0IHRoZSBmb2xsb3dpbmcgZXJyb3I6DQogDQpsdmNyZWF0ZSAtLWVycm9yICJDYW5ub3QgYWxs
-b2NhdGUgbWVtb3J5IiAgY3JlYXRpbmcgVkdEQSBmb3IgIi9kZXYvVm9sdW1lMDAvc25hcDAxIiBp
-biBrZXJuZWwNCiANCk5vdCBzdXJlIHdoeSB0aGlzIGlzIGhhcHBlbmluZy4gIEkgaGF2ZSByZWFk
-IHRoZSBsaXN0IGFuZCBtYXliZSBJIGp1c3QgZG9uJ3QgdW5kZXJzdGFuZCB0aGUgcHJvYmxlbS4g
-IFRoZXNlIHNlcnZlcnMgaGF2ZSA0IEdpZ3Mgb2YgUkFNLg0KIA0KUmVnYXJkcywNCiANCkRhdmlk
-DQo=
+Hi,
+
+My linux box is Debian3.0 with kernel 2.4.20 with latest patch and cvs LVM.
+LVM works OK but every command like pvdisplay or lvdisplay is proceeded with
+text:
+    invalidate: busy buffer
+    invalidate: busy buffer
+    invalidate: busy buffer
+    invalidate: busy buffer
+    invalidate: busy buffer
+    invalidate: busy buffer
+    invalidate: busy buffer
+    invalidate: busy buffer
+LV    VG ....
+zasoby_lvm    hermes_lvm ...
+
+What is wrong???
+
+Thanks,Marcin
