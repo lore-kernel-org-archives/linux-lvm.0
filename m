@@ -1,10 +1,12 @@
-Return-Path: <vidalrod@informatik.tu-muenchen.de>
-Message-ID: <3AE4388C.2FEF8162@in.tum.de>
-Date: Mon, 23 Apr 2001 16:13:32 +0200
-From: David Vidal Rodriguez <vidalrod@informatik.tu-muenchen.de>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] LVM version of 2.4.2 kernel?
+Return-Path: <thornber@btconnect.com>
+Date: Mon, 23 Apr 2001 17:17:26 +0100
+Subject: Re: [linux-lvm] LVM version of 2.4.2 kernel?
+Message-ID: <20010423171726.A1837@66bassett.freeserve.co.uk>
+References: <3AE4388C.2FEF8162@in.tum.de>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <3AE4388C.2FEF8162@in.tum.de>; from vidalrod@informatik.tu-muenchen.de on Mon, Apr 23, 2001 at 04:13:32PM +0200
+From: Joe Thornber <thornber@btconnect.com>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,13 +19,15 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: lvm <linux-lvm@sistina.com>
+Content-Transfer-Encoding: 7bit
+To: linux-lvm@sistina.com
 
-Hi!
-I want to know what version of LVM (beta_x etc.) is included within
-Kernel 2.4.2 and if I can use the fresh compiled beta7 tools with it.
+On Mon, Apr 23, 2001 at 04:13:32PM +0200, David Vidal Rodriguez wrote:
+> Hi!
+> I want to know what version of LVM (beta_x etc.) is included within
+> Kernel 2.4.2 and if I can use the fresh compiled beta7 tools with it.
 
-Thanks in advance,
---
-  ------------------------------------------------------------------------
- David Vidal R. (vidalrod@in.tum.de)
+Beta2 is in the 2.4.2 kernel.  You are advised to upgrade both the
+kernel and the userland tools to beta7.
+
+- Joe Thornber
