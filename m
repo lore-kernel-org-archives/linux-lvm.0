@@ -1,9 +1,9 @@
 From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] 2 Questions about Linux LVM
-Message-ID: <20030318100632.B30525@sistina.com>
-References: <CFBA5E82884BD411A02A00D0B76C124F028CE039@hvrrd11a.hvr.fsc.net>
+Subject: Re: [linux-lvm] Help: LVM on top of SW RAID0+1
+Message-ID: <20030318100926.C30525@sistina.com>
+References: <Pine.LNX.4.53.0303121824410.2531@light.webcon.net> <3E70411C.AC385DAD@silicide.dk> <140150000.1047758272@[192.168.200.4]> <20030315223816.GB16976@gw.silicide.dk> <20030316194809.A9464@uk.sistina.com>
 Mime-Version: 1.0
-In-Reply-To: <CFBA5E82884BD411A02A00D0B76C124F028CE039@hvrrd11a.hvr.fsc.net>; from Dirk.Laurenz@fujitsu-siemens.com on Fri, Mar 14, 2003 at 06:08:24PM +0100
+In-Reply-To: <20030316194809.A9464@uk.sistina.com>; from agk@uk.sistina.com on Sun, Mar 16, 2003 at 07:48:09PM +0000
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,70 +14,40 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Tue Mar 18 03:08:01 2003
+Date: Tue Mar 18 03:12:02 2003
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Fri, Mar 14, 2003 at 06:08:24PM +0100, Laurenz, Dirk wrote:
-> Hello,
+On Sun, Mar 16, 2003 at 07:48:09PM +0000, Alasdair G Kergon wrote:
+> On Sat, Mar 15, 2003 at 11:38:16PM +0100, jon+lvm@silicide.dk wrote:
+> > You cant resize striped LV's. (AFAIR).
 > 
-> i have two questions concerning the linux lvm v1.x.x.
-> 
-> 1. how log should (min and max) a volume group or logical volume name be.
+> Unless you upgrade to LVM2.
 
-Long you mean ?
-Min 1 char, max 127 path name length.
+Well,
+LVM1 limits a stripe to a PV. So growing a striped LV is limited by
+the PV size. The only way to grow a striped LV in LVM1 in case one of
+its stripes hits the PV size is to pvmove the stripe to a larger PV.
 
-> 2. Is it better to export and import a volume group between several systems,
->    or is it enough to import a volume group once and activate it on the desired system for use
->    while it has been deactivated on the others?
+LVM2 doesn't have such constraint any longer :)
 
-Run "vgscan ; vgchange -ay" on the failover system making sure that
-this doesn't happen on both systems at the same time.
-
-Regards,
-Heinz    -- The LVM Guy --
-
-> 
-> Here is a sort of graph, about what i mean:
-> 
-> before switch:
-> 		SYS1				SYS2
-> activated	yes				no
-> 
-> 
-> after switch:
-> 		SYS1				SYS2
-> activated	no				yes
-> 
-> Thanks for your help.
-> 
-> Kind regards
-> 
-> 
-> Dirk Laurenz
-> Systems Engineer	
-> Competence Center PRIMERGY Server Solutions
-> Fujitsu Siemens Computers
-> Hildesheimer Strasse 25
-> 30880 Laatzen
-> Germany
-> 
-> Telephone:	+49 (511) 84 89 - 18 08
-> Telefax:	+49 (511) 84 89 - 28 99
-> Mobile:	+49 (170) 22 10 781
-> Email:	mailto:dirk.laurenz@fujitsu-siemens.com
-> Internet:	http://www.fujitsu-siemens.com
->             http://www.fujitsu-siemens.de/rl/servicesupport/itdienstleistungen/competencecenter.html
-> *******************************************************************************************************************
+>  
+> Alasdair
+> -- 
+> agk@uk.sistina.com
 > 
 > _______________________________________________
 > linux-lvm mailing list
 > linux-lvm@sistina.com
 > http://lists.sistina.com/mailman/listinfo/linux-lvm
 > read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+
+-- 
+
+Regards,
+Heinz    -- The LVM Guy --
 
 *** Software bugs are stupid.
     Nevertheless it needs not so stupid people to solve them ***
