@@ -1,7 +1,9 @@
-From: bcharles_36@erols.com
-Mime-Version: 1.0
-Message-Id: <E19iBkr-0000NJ-00@hermes.sistina.com>
-Subject: [linux-lvm] Re: hi
+From: Marc Cousin <cousinmarc@free.fr>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+Message-Id: <200307311721.24805.cousinmarc@free.fr>
+Subject: [linux-lvm] lvm2 + linux 2.6.0-test2 + nptl
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -12,16 +14,30 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Thu Jul 31 06:38:01 2003
+Date: Thu Jul 31 10:22:02 2003
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-I saw you online and thought you might like to take a look at this
+Hi,
 
-it's very special.only the banks know about it..
+i just wanted to try NPTL on my glibc today, so I recompiled it with nptl 
+support, and lvm2 hanged during boot.
 
-I hope your ready for lower mortgage repayments!
+It seems that in fact the tools work but never return :
+if I run vgscan &, wait a bit, kill -9 vgscan,  then vgchange, wait, kill -9 
+vgscan, everything's ok
+What information can I provide ?
+kernel is 2.6.0-test2
+lvm tools are LVM2.2.00.05
+glibc is 2.3.2, with NPTL 0.55
 
-http://srd.yahoo.com/drst/157765/*http://cheapermortgage.cn/4/index.asp?RefID=198478
+Is it a know problem ?
+
+Cheers
+
+-- 
+   Calvin: Know what I pray for?  Hobbes: What?  Calvin: The strength to 
+change
+what I can, the inability to accept what I can't, and the incapacity to tell
+the difference.  -- Calvin
