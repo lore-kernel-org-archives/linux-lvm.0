@@ -1,11 +1,12 @@
-Return-Path: <lembark@wrkhors.com>
-Message-ID: <3A86F85C.ADEE5C04@wrkhors.com>
-Date: Sun, 11 Feb 2001 14:38:52 -0600
-From: Steven Lembark <lembark@wrkhors.com>
-MIME-Version: 1.0
+Return-Path: <bluca@comedia.it>
+Date: Sun, 11 Feb 2001 22:40:54 +0100
+From: Luca Berra <bluca@comedia.it>
 Subject: Re: [linux-lvm] 0.9.1-beta4 install bug
-References: <3A85CE89.67D252D7@wrkhors.com> <17316403266.20010211154237@lopez.at> <20010211193524.B5840@colombina.comedia.it>
-Content-Transfer-Encoding: 7bit
+Message-ID: <20010211224053.B6755@colombina.comedia.it>
+References: <3A85CE89.67D252D7@wrkhors.com> <17316403266.20010211154237@lopez.at> <20010211193524.B5840@colombina.comedia.it> <3A86F85C.ADEE5C04@wrkhors.com>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <3A86F85C.ADEE5C04@wrkhors.com>; from lembark@wrkhors.com on Sun, Feb 11, 2001 at 02:38:52PM -0600
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -18,71 +19,33 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
- 
-> --- ./configure.in.bluca        Sat Feb 10 13:00:50 2001
-> +++ ./configure.in      Sun Feb 11 19:22:22 2001
-> @@ -74,8 +74,8 @@
->                            statically.  Default is dynamic linking],  STATIC_LINK=$enableval, STATIC_LINK=no)
+> configure.in now looks like:
 > 
->  dnl Mess with default exec_prefix
-> -if [[ "x$exec_prefix" = xNONE ]];
-> - then  exec_prefix="/";
-> +if [[ "x$exec_prefix" = xNONE -a "x$prefix" = xNONE ]];
-> + then  exec_prefix="";
->  fi;
+>                           statically.  Default is dynamic linking], 
+> STATIC_LINK=$enableval, STATIC_LINK=no)
+> 
+> if [[ "x$exec_prefix" = xNONE -a "x$prefix" = xNONE ]];
+>  then  exec_prefix="";
+> fi;
+> 
+> make distclean;
+> ./configure --prefix=/opt/lvm/0.91 --enable-jobs=2;
+> make all install fails w/ errors updating /lib, /sbin, etc.
 
-configure.in now looks like:
+i requote myself:
+if you want to change the behaviour do this                                     
+and rerun autoconf       
+^^^^^^^^^^^^^^^^^^
 
-                          statically.  Default is dynamic linking], 
-STATIC_LINK=$enableval, STATIC_LINK=no)
-
-if [[ "x$exec_prefix" = xNONE -a "x$prefix" = xNONE ]];
- then  exec_prefix="";
-fi;
-
-make distclean;
-./configure --prefix=/opt/lvm/0.91 --enable-jobs=2;
-make all install fails w/ errors updating /lib, /sbin, etc.
-
-Done Library parts
-
-make[3]: Leaving directory `/scratch/LVM/0.9.1_beta4/tools/lib'
-make[3]: Entering directory `/scratch/LVM/0.9.1_beta4/tools/lib'
-*** Installing liblvm.a and liblvm-10.so in /opt/lvm/0.91//lib ***
-rm: cannot unlink `//lib/liblvm-10.so': Permission denied
-rm: cannot unlink `//lib/liblvm-10.so.0.9': Permission denied
-rm: cannot unlink `//lib/liblvm-10.so.0': Permission denied
-rm: cannot unlink `//lib/liblvm.a': Permission denied
-make[3]: *** [install_this] Error 1
-make[3]: Leaving directory `/scratch/LVM/0.9.1_beta4/tools/lib'
-make[2]: *** [install] Error 2
-make[2]: Leaving directory `/scratch/LVM/0.9.1_beta4/tools/lib'
-make[2]: Entering directory `/scratch/LVM/0.9.1_beta4/tools/man8'
-make[3]: Entering directory `/scratch/LVM/0.9.1_beta4/tools/man8'
-make[3]: Leaving directory `/scratch/LVM/0.9.1_beta4/tools/man8'
-
-<snip>
-
-/opt/bin//install: //sbin: Operation not permitted
-/opt/bin//install: cannot remove old link to `//sbin/vgscan': Permission
-denied
-/opt/bin//install: cannot create regular file `//sbin/vgscan':
-Permission denied
-rm: cannot unlink `//sbin/vgsplit': Permission denied
-/opt/bin//install: //sbin: Operation not permitted
-/opt/bin//install: cannot remove old link to `//sbin/vgsplit':
-Permission denied
-/opt/bin//install: cannot create regular file `//sbin/vgsplit':
-Permission denied
-
-and /opt/lvm/0.91 contains only the man directory.
-
-still seems stuck on installing in /sbin
-
+L.
 
 -- 
- Steven Lembark                                   2930 W. Palmer St.
-                                                 Chicago, IL  60647
- lembark@wrkhors.com                                   800-762-1582
+Luca Berra -- bluca@comedia.it
+        Communication Media & Services S.r.l.
+ /"\
+ \ /     ASCII RIBBON CAMPAIGN
+  X        AGAINST HTML MAIL
+ / \
