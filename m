@@ -1,12 +1,12 @@
 Return-Path: <patrick@tykepenguin.cix.co.uk>
-Date: Wed, 9 May 2001 15:43:48 +0100
+Date: Wed, 9 May 2001 15:45:33 +0100
 From: Patrick Caulfield <caulfield@sistina.com>
-Subject: Re: [linux-lvm] Patching my kernel.
-Message-ID: <20010509154348.H520@tykepenguin.com>
-References: <989363474.1329.2.camel@localhost> <20010509085110.G23157@colombina.comedia.it> <989404772.3725.0.camel@localhost>
+Subject: Re: [linux-lvm] Graphical tool for LVM?
+Message-ID: <20010509154533.I520@tykepenguin.com>
+References: <3AF91E23.163C9119@in.tum.de> <Pine.LNX.4.21.0105091343490.28295-100000@tolppa.kotisivupalvelu.fi>
 Mime-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <989404772.3725.0.camel@localhost>; from raheesom@navpoint.com on Wed, May 09, 2001 at 06:39:31AM -0400
+In-Reply-To: <Pine.LNX.4.21.0105091343490.28295-100000@tolppa.kotisivupalvelu.fi>; from harri@smilehouse.com on Wed, May 09, 2001 at 01:46:30PM +0300
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -22,20 +22,14 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Wed, May 09, 2001 at 06:39:31AM -0400, Rupert Heesom wrote:
+On Wed, May 09, 2001 at 01:46:30PM +0300, Harri Haataja wrote:
+> On Wed, 9 May 2001, David Vidal Rodriguez wrote:
 > 
-> BTW, I know there's a way to keep the config from the "used kernel", so
-> that I don't have to guess the settings again for my system (I made
-> several config errors last time).  Can you remind me how to migrate the
-> .config file across to a new source tree?   I'll try & find some docs on
-> how to do this, but have forgotten where I last read about it.
-> 
+> > Does anybody know of somebody working on a X-based management tool for
+> > LVM?
 
-Copy the .config file from the old kernel tree into the new one and type
+There's a Java one at:
 
-make oldconfig
-
-You'll get asked questions about any new options that have appeared in this
-kernel release.
+http://www.xs4all.nl/~mmj/lvm/
 
 patrick
