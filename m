@@ -1,10 +1,9 @@
-Return-Path: <gregm@comstar.net>
-Date: Tue, 30 Jan 2001 18:17:37 -0500 (EST)
-From: Gregory McLean <gregm@comstar.net>
-Subject: Re: [linux-lvm] Help recovering my volume groups
-In-Reply-To: <20010130104336.A488@tykepenguin.com>
-Message-ID: <Pine.LNX.4.30.0101301816500.21192-100000@tweetie.comstar.net>
-MIME-Version: 1.0
+Return-Path: <root@srv.sistina.com>
+Date: Wed, 31 Jan 2001 00:26:17 +0000
+From: "Heinz J. Mauelshagen" <Mauelshagen@sistina.com>
+Message-ID: <20010131002617.E23357@srv.sistina.com>
+Mime-Version: 1.0
+Subject: [linux-lvm] LVM 0.9.1 beta2 in 2.4.1-pre12
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,22 +15,33 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: linux-lvm@sistina.com
+To: linux-lvm@sistina.com, lvm-devel@sistina.com
 
-On Tue, 30 Jan 2001, Patrick Caulfield wrote:
+Hi all,
 
-> On Mon, Jan 29, 2001 at 10:45:09AM -0500, Gregory McLean wrote:
-> >
-> > To save the list bandwidth spammage:
-> >
-> > http://tweetie.comstar.net/pvdump/
-> >
-> > contains all the generated files so far (both the orginal 2) and the
-> > requested ones.
->
-> Hmmm, interesting. When you extended the volume did you do a vgextend too? (if
-> so, which drive did you add?) or just an lvextend?
+Linus included LVM 0.9.1 beta2 in 2.4.1-pre12.
 
-Just a lvextend of mediafiles
+If you use this prerelease, you don't need to apply the patch contained
+in the LVM distribution any longer.
+
+We'll release a patch with the beta3 changes soon.
+
+-- 
+
+Regards,
+Heinz    -- The LVM Guy --
+
+*** Software bugs are stupid.
+    Nevertheless it needs not so stupid people to solve them ***
+
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+Heinz Mauelshagen                                 Sistina Software Inc.
+Senior Consultant/Developer                       Am Sonnenhang 11
+                                                  56242 Marienrachdorf
+                                                  Germany
+Mauelshagen@Sistina.com                           +49 2626 141200
+                                                       FAX 924446
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
