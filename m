@@ -1,5 +1,5 @@
-Message-ID: <38F2F0E4.CA631C60@ednet.ns.ca>
-Date: Tue, 11 Apr 2000 06:31:17 -0300
+Message-ID: <38F2F122.457FB740@ednet.ns.ca>
+Date: Tue, 11 Apr 2000 06:32:18 -0300
 From: Patrick Boutilier <boutilpj@ednet.ns.ca>
 MIME-Version: 1.0
 Subject: Re: [linux-lvm] lvm'ing root fs
@@ -12,9 +12,12 @@ Content-Type: text/plain; charset="us-ascii"
 To: "Shaw, Marco" <marco.shaw@nbtel.nb.ca>
 Cc: linux-lvm@msede.com
 
+Second attempt with correction to rsync statement.
+
+
 I've used rsync to move a whole / filesystem.
 
-rsync -avr --exclude-from=FILE /mnt_root_vg/* /.
+rsync -avr --exclude-from=FILE /mnt/root_vg/* /.
 
 Put anything you want excluded in the "FILE" file.
 
