@@ -1,16 +1,15 @@
 Received: from o.ww.redhat.com (vpnuser2.stuttgart.redhat.com [172.16.4.2])
 	by pobox.stuttgart.redhat.com (8.12.8/8.12.8) with ESMTP id
-	i5K8mGqd020784
-	for <linux-lvm@redhat.com>; Sun, 20 Jun 2004 10:48:16 +0200
-Date: Sun, 20 Jun 2004 10:48:17 +0200
+	i5K8n9qd020800
+	for <linux-lvm@redhat.com>; Sun, 20 Jun 2004 10:49:09 +0200
+Date: Sun, 20 Jun 2004 10:49:10 +0200
 From: Heinz Mauelshagen <mauelshagen@redhat.com>
-Subject: Re: [linux-lvm] volume group to another machine when system crashed
-Message-ID: <20040620084817.GB3519@redhat.com>
-References: <40D2C9BA.6080301@iosmd.com>
+Subject: Re: [linux-lvm] lvm2 & e2fsadm (or safe scripted resizing)
+Message-ID: <20040620084910.GC3519@redhat.com>
+References: <54553.192.168.1.12.1087519164.squirrel@192.168.1.12>
 Mime-Version: 1.0
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <40D2C9BA.6080301@iosmd.com>
+In-Reply-To: <54553.192.168.1.12.1087519164.squirrel@192.168.1.12>
 Reply-To: mauelshagen@redhat.com,
 	LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
@@ -22,52 +21,38 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-On Fri, Jun 18, 2004 at 12:53:46PM +0200, St�phane Danel wrote:
-> Hi,
-> bonjour,
-> 
-> I made a volume group with a SCSI tower of IBM  disk of 36 Go.
-> 
-> One disk is out and we are trying to restore the data.
-> 
-> AND the system disk crashed too.
-> 
-> Thus i can't do these commands to export my volume group:
-> 
-> http://tldp.org/HOWTO/LVM-HOWTO/recipemovevgtonewsys.html
-> 
-> # vgchange -an volumeGroup
-> # vgexport volumeGroup
-> 
-> If I get the Datas.
-> Is it possible without these commands to 
-> create (or restore) my volume group to another system ?
 
-If no disk was missing, you could actually just attach the drives
-to the other system and vgscan.
-With the missing disk, you need LVM2 (eg, in Fedora > 1) to access
-the non-quorum VG.
+(e2)fsadm code for LVM2 is in the development pipe for integration.
+Will take a bit of time still... 
 
+On Thu, Jun 17, 2004 at 07:39:24PM -0500, Nick Bartos wrote:
+> >From what I can see, there is no e2fsadm util for lvm2.
 > 
-> thank you.
+> I want to script parition resizes, but without that tool I cringe a
+> little.  I need to write a script that automates this in a distro, so it
+> needs to be completely scripted and very reliably reproduceable.  I am
+> using e2fsadm now which works very well since I can just tell it how much
+> to shrink/grow the partition, without getting the size first.
 > 
-> I am sorry for my english.... :-[ 
+> I don't mind doing this manually, but I want to make damn sure that I
+> calculate everything right.  I don't want to miss something by a byte here
+> or there.
+> 
+> If someone could contribute a good script or some directions on exactly
+> how I get the right numbers, I would appreciate it.  I could just start
+> doing it myself, but I am afraid that I would make it work, but then miss
+> something where in some case of rounding I would mess up the partition.
+> 
+> I was also looking at the reiserfs utility, it looks like that works
+> nicely as far as I can tell, there wouldn't seem to be any need to
+> calculate anything.  Possibly I will consider upgrading the ext3 paritions
+> to reiserfs as well.
 > 
 > 
-> 
-> 
-> 
-> 
-> 
-> -- 
-> 
-> St�phane DANEL
-> 
-> 
-
 > _______________________________________________
 > linux-lvm mailing list
 > linux-lvm@redhat.com
