@@ -1,10 +1,12 @@
-From: Anders Widman <andewid@tnonline.net>
-In-Reply-To: <20020118114002.B32516@sistina.com>
-Message-Id: <3X4YQWUJH6271XR1A6HC31ZUZTTSVR.3c4b44c1@kadzuki>
-Subject: Re: [linux-lvm] Pvmove fails... No free PE's (and lvextend does
-    not work...)
+Subject: Re: [linux-lvm] LVM causing IO contention or slowdown?
+From: Austin Gonyou <austin@coremetrics.com>
+In-Reply-To: <3C4AD059.4070800@sgi.com>
+References: <3C4AD059.4070800@sgi.com>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+    protocol="application/pgp-signature";
+    boundary="=-AGaImqU3oClFhM+7B4O1"
+Message-Id: <1011592472.15963.4.camel@UberGeek>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,230 +17,119 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Sun Jan 20 16:30:02 2002
+Date: Sun Jan 20 23:55:02 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-This script did not output anything. Isn't the VGDA data in /etc/lvmconf/volumegroup.conf ?
+--=-AGaImqU3oClFhM+7B4O1
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 
-//Anders
+Thanks for the info Steve. The biggest part about this was that just
+putting the HW RAID0 under LVM control caused a major slowdown. Even if
+it is from 100MB/s to 80MB/s. I really expect none, or just a small
+amount. e.g. from 100MB/s to 95MB/s, not 80MB/s or less.=20
 
-2002-01-18 11:40:02, "Heinz J . Mauelshagen" <mauelshagen@sistina.com> wrote:
+It was just very relieving to see that even though I was using LVM, if I
+added logbufs=3D8 to my mount line for a given filesystem it certainly
+relieved MUCH contention. I just wish I knew why LVM was dogging it so
+bad.=20
 
->On Thu, Jan 17, 2002 at 10:18:39PM +0100, Anders Widman wrote:
->> I currently use RedHat 7.2 with kernel 2.4.18-4, but I have tested most kernel versions from 2.4.16. I am also using lvm 1.0.1.
->> 
->> I have tried to move all extents and just a few (or even one) extents with no luck... Could it be that this disk is 120GB (114,44) and there would be some problems with that?
->
->Hmmm.., shouldn't be the case.
->
->Could you send me all the metadata of your VG "server" attached in private email
->(mge@sistina.com) for further investigation?
->
->You can create the copies running this script:
->
->#!/bin/sh
->for d in $(pvscan|sed '/server1/!d;s!^.* PV "!!;s!" .*$!!'); do
->   dd if=$d of=$(basename $d).VGDA bs=1k count=512
->done
->
->Thanks,
->Heinz
->
->> 
->> //Anders
->> 
->> 
->> 2002-01-17 12:32:53, "Heinz J . Mauelshagen" <mauelshagen@sistina.com> wrote:
->> 
->> >
->> >Hmmm,
->> >we didn't talk about versions.
->> >Which Linux/LVM version are you using?
->> >
->> >Another point (assuming that you might siffer from an old OBO error):
->> >does the extent still fail with less than 1221 extents?
->> >
->> >Regards,
->> >Heinz    -- The LVM Guy --
->> >
->> >On Wed, Jan 16, 2002 at 10:28:39PM +0100, Anders Widman wrote:
->> >> Well... here is what the problem is right now.:
->> >> 
->> >> First I scan all physical disks to determine where I have free space to grow..
->> >> 
->> >> 
->> >> pvscan -- reading all physical volumes (this may take a while...)
->> >> pvscan -- ACTIVE   PV "/dev/hdo1" of VG "Server" [55.84 GB / 0 free]
->> >> pvscan -- ACTIVE   PV "/dev/hdp1" of VG "Server" [28.56 GB / 0 free]
->> >> pvscan -- ACTIVE   PV "/dev/hdm1" of VG "Server" [76.28 GB / 0 free]
->> >> pvscan -- ACTIVE   PV "/dev/hdn1" of VG "Server" [76.28 GB / 0 free]
->> >> pvscan -- ACTIVE   PV "/dev/hdk1" of VG "Server" [38.12 GB / 0 free]
->> >> pvscan -- ACTIVE   PV "/dev/hdl1" of VG "Server" [55.84 GB / 0 free]
->> >> pvscan -- ACTIVE   PV "/dev/hdg1" of VG "Server" [55.88 GB / 0 free]
->> >> pvscan -- ACTIVE   PV "/dev/hdh1" of VG "Server" [55.88 GB / 0 free]
->> >> pvscan -- ACTIVE   PV "/dev/hde1" of VG "Server" [114.44 GB / 38.16 GB free]
->> >> pvscan -- ACTIVE   PV "/dev/hdf1" of VG "Server" [57.22 GB / 0 free]
->> >> pvscan -- ACTIVE   PV "/dev/hdc1" of VG "Server" [71.53 GB / 0 free]
->> >> pvscan -- ACTIVE   PV "/dev/hdd1" of VG "Server" [71.53 GB / 0 free]
->> >> pvscan -- ACTIVE   PV "/dev/hdb1" of VG "Server" [4.28 GB / 0 free]
->> >> pvscan -- ACTIVE   PV "/dev/hdb3" of VG "Server" [52.88 GB / 0 free]
->> >> pvscan -- total: 14 [815.29 GB] / in use: 14 [815.29 GB] / in no VG: 0 [0]
->> >> 
->> >> --- Volume group ---
->> >> VG Name               Server
->> >> VG Access             read/write
->> >> VG Status             available/resizable
->> >> VG #                  0
->> >> MAX LV                256
->> >> Cur LV                1
->> >> Open LV               1
->> >> MAX LV Size           1.00 TB
->> >> Max PV                256
->> >> Cur PV                14
->> >> Act PV                14
->> >> VG Size               814.56 GB
->> >> PE Size               32.00 MB
->> >> Total PE              26066
->> >> Alloc PE / Size       24845 / 776.41 GB
->> >> Free  PE / Size       1221 / 38.16 GB
->> >> VG UUID               ElJLCd-ln4W-k3YA-yg8W-HmVU-gs0O-mcR0pA
->> >> 
->> >> --- Physical volume ---
->> >> PV Name               /dev/hde1
->> >> VG Name               Server
->> >> PV Size               114.50 GB / NOT usable 62.91 MB [LVM: 142.00 KB]
->> >> PV#                   13
->> >> PV Status             available
->> >> Allocatable           yes
->> >> Cur LV                1
->> >> PE Size (KByte)       32768
->> >> Total PE              3662
->> >> Free PE               1221
->> >> Allocated PE          2441
->> >> PV UUID               7ScWsg-0vX4-ccX3-W1sO-mFnz-0Sl0-gDWKmM
->> >> 
->> >> -----------------------------------------------------------------------
->> >> 
->> >> 
->> >> Now I use "lvextend -l +1221 /dev/Server/FTPRoot /dev/hde1" to grow my LV "FTPRoot". It worked fine on my new disk (to wich I also moved the old PE's from the bad disk), but not on this one. 
->> What 
->> >> can be the problem. Where should I even begin to look?
->> >> 
->> >> lvextend -- extending logical volume "/dev/Server/FTPRoot" to 814.56 GB
->> >> lvextend -- not enough free/allocatable physical extents to extend logical volume /dev/Server/FTPRoot
->> >> 
->> >> Thanks for any help!
->> >> 
->> >> //Anders
->> >> 
->> >> 
->> >> 2002-01-16 19:28:03, Anders Widman <andewid@tnonline.net> wrote:
->> >> 
->> >> >No, my LV is not striped, so this should have worked. Well.. I have bought another disk and will move all pe's to that one instead. Hopefully this will work better.
->> >> >
->> >> >//Anders
->> >> >
->> >> >2002-01-16 16:08:44, "Heinz J . Mauelshagen" <mauelshagen@sistina.com> wrote:
->> >> >
->> >> >>
->> >> >>Anders,
->> >> >>
->> >> >>is your LV striped? In this case, pvmove complains because it can't
->> >> >>move 2 stripes onto one PV.
->> >> >>
->> >> >>If so, you need another disk to be pvcreated/vgextend to your VG in order
->> >> >>to pvmove data over.
->> >> >>
->> >> >>On Wed, Jan 16, 2002 at 07:52:18AM +0100, Anders Widman wrote:
->> >> >>> I have a bad disk (hdl1) that needs to be replaced. It is 40GB, or 1220 PE's. I have another disk which is about 120GB, but has 1221 free PE's. Both disks are in the same VG, Server and the 
-same 
->> LV, 
->> >> >>> FTPRoot. When I try "pvmove -v /dev/hdl1" it failes (doesn't even start, really) and tells me I haven't any free PE's.
->> >> >>> 
->> >> >>> What can I have missed...
->> >> >>> 
->> >> >>> 1) I shrick the filesystem first with about 60GB
->> >> >>> 2) I use lvreduce to shrick the LV with about 59GB
->> >> >>> 3) I tried "pvmove -v /dev/hdl" to move all PE's on this 40GB disk to the free ones on the other disks. This should have worked, shoudln't it?
->> >> >>> 
->> >> >>> have I missed something critical?
->> >> >>> 
->> >> >>> //Anders
->> >> >>> 
->> >> >>> 
->> >> >>> 
->> >> >>> _______________________________________________
->> >> >>> linux-lvm mailing list
->> >> >>> linux-lvm@sistina.com
->> >> >>> http://lists.sistina.com/mailman/listinfo/linux-lvm
->> >> >>> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
->> >> >>
->> >> >>-- 
->> >> >>
->> >> >>Regards,
->> >> >>Heinz    -- The LVM Guy --
->> >> >>
->> >> >>*** Software bugs are stupid.
->> >> >>    Nevertheless it needs not so stupid people to solve them ***
->> >> >>
->> >> >>=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
->> >> >>
->> >> >>Heinz Mauelshagen                                 Sistina Software Inc.
->> >> >>Senior Consultant/Developer                       Am Sonnenhang 11
->> >> >>                                                  56242 Marienrachdorf
->> >> >>                                                  Germany
->> >> >>Mauelshagen@Sistina.com                           +49 2626 141200
->> >> >>                                                       FAX 924446
->> >> >>=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
->> >> >>
->> >> >>_______________________________________________
->> >> >>linux-lvm mailing list
->> >> >>linux-lvm@sistina.com
->> >> >>http://lists.sistina.com/mailman/listinfo/linux-lvm
->> >> >>read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
->> >> >>
->> >> >>
->> >> >
->> >> >
->> >> >
->> >> >
->> >> >_______________________________________________
->> >> >linux-lvm mailing list
->> >> >linux-lvm@sistina.com
->> >> >http://lists.sistina.com/mailman/listinfo/linux-lvm
->> >> >read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
->> >> >
->> >> >
->> >> 
->> >> 
->> >> 
->> >> 
->> >> _______________________________________________
->> >> linux-lvm mailing list
->> >> linux-lvm@sistina.com
->> >> http://lists.sistina.com/mailman/listinfo/linux-lvm
->> >> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
->> >
->> >*** Software bugs are stupid.
->> >    Nevertheless it needs not so stupid people to solve them ***
->> >
->
->=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
->
->Heinz Mauelshagen                                 Sistina Software Inc.
->Senior Consultant/Developer                       Am Sonnenhang 11
->                                                  56242 Marienrachdorf
->                                                  Germany
->Mauelshagen@Sistina.com                           +49 2626 141200
->                                                       FAX 924446
->=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
->
->_______________________________________________
->linux-lvm mailing list
->linux-lvm@sistina.com
->http://lists.sistina.com/mailman/listinfo/linux-lvm
->read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
->
->
+On Sun, 2002-01-20 at 08:12, Stephen Lord wrote:
+> Austin Gonyou wrote:
+>=20
+> >As a follow up to this I've done some more testing, and will test the
+> >rest of this weekend, using AIM db benchmark.=20
+> >
+> >What I've found is that when mounting with logbufs=3D8 on my Quad Xeon
+> 2MB
+> >cache 6450 with 8 Ultra-2 Drives, 4 RAID0 volumes, two of 3 disks each
+> >and two of 1 disk each.=20
+> >
+> >The larger Volumes, the more "costly" volumes, when mounted using
+> >logbufs=3D8, outperformed the same volume addressed when not under LVM
+> >control. Not only did it out perform itself, but either WITH or WITHOUT
+> >LVM controlling the volume, I nearly doubled my throughput to those
+> >drives.=20
+> >
+> >Here is what I'm talking about:
+> >
+> >#With LVM management
+> >Throughput 109.715 MB/sec (NB=3D137.144 MB/sec  1097.15 MBit/sec)  200
+> >procs
+> >
+> >#Without LVM management
+> >Throughput 100.803 MB/sec (NB=3D126.004 MB/sec  1008.03 MBit/sec)  200
+> >procs
+> >
+> >
+> >This only happened once though and I'm not sure exactly why. Still, the
+> >max I could get out of it for the same test more than once with LVM
+> >enabled was around 80-85 MB/s. Still a HUGE improvement over 43/44
+> MB/s.
+> >
+>=20
+> Off topic for the lvm list, but....
+>=20
+> The logbufs=3D8 parameter basically means you have 8 buffers capable of=20
+> pushing
+> transactions out to disk. If you have lots of threads going at once in=20
+> xfs then the
+> transactions tend to get throttled waiting for a buffer to do a log=20
+> write into, so
+> adding more is good.
+>=20
+> There is a perl script in the cmd/xfsmisc directory called xfs_stats.pl=20
+> if you
+> run this it will format the output of the xfs /proc kernel statistics.=20
+> You will
+> see a parameter called xs_log_noiclogs near the bottom of the first
+> column.
+> This number means a transaction finished, but then had to wait for a log
+> buffer before it could hand off its data.
+>=20
+> The downside of increasing the number of logbuffers is the amount of
+> data
+> which can be lost after a crash (i.e. how many ops in the filesystem are
+> effectively undone by recovery). However,  looking at stats on my box,
+> each log write contains about 5 transactions, so you can never loose
+> much.
+>=20
+> We have found adding more than 8 usually does not help, making them
+> bigger would be a different story, but that is actually a very
+> non-trivial
+> change.
+>=20
+> Steve
+>=20
+>=20
+>=20
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@sistina.com
+> http://lists.sistina.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
+--=20
+Austin Gonyou
+Systems Architect, CCNA
+Coremetrics, Inc.
+Phone: 512-698-7250
+email: austin@coremetrics.com
+
+"It is the part of a good shepherd to shear his flock, not to skin it."
+Latin Proverb
+
+--=-AGaImqU3oClFhM+7B4O1
+Content-Type: application/pgp-signature; name=signature.asc
+Content-Description: This is a digitally signed message part
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.0.6 (GNU/Linux)
+Comment: For info see http://www.gnupg.org
+
+iD8DBQA8S60X94g6ZVmFMoIRArVvAJ9ZEf0GIeYqpFjFPhYGXUXFABr2NQCfSseI
+Hom3bwipLHK4NFNS1RzGWcI=
+=kLtE
+-----END PGP SIGNATURE-----
+
+--=-AGaImqU3oClFhM+7B4O1--
