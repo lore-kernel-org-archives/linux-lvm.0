@@ -1,10 +1,8 @@
-From: Petro <petro@auctionwatch.com>
-Subject: Re: [linux-lvm] Problems and questions with LVM on a large raid system.
-Message-ID: <20030312234520.GA19335@auctionwatch.com>
-References: <20030312195217.GC18876@auctionwatch.com> <20030312221320.GA15196@gw.silicide.dk>
+From: Greg Freemyer <freemyer@NorcrossGroup.com>
+Subject: re[2]: [linux-lvm] Core questions from a LVM neophyte...
 Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20030312221320.GA15196@gw.silicide.dk>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <20030312234602.BKIB19534.imf41bis.bellsouth.net@tiger2>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,79 +13,122 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Mar 12 17:46:02 2003
+Date: Wed Mar 12 17:53:01 2003
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: linux-lvm@sistina.com
+Content-Type: Text/plain; charset="us-ascii"
+To: LVM Mailing list <linux-lvm@sistina.com>
 
-On Wed, Mar 12, 2003 at 11:13:20PM +0100, jon+lvm@silicide.dk wrote:
-> On Wed, Mar 12, 2003 at 11:52:17AM -0800, Petro wrote:
-> > I've got a couple of brand new boxes I'm trying to get LVM set up
-> > properly on. 
-> > These machines have 6 200GiB drives attached to a 3ware controller card,
-> > for a total of 1,200,000,000,000 bytes of storage. 
-> later down you write you need speed. In that case i would suggest
-> ditching the hardware raid, and use pure software raid, it is faster.
-> I dont mind 3ware, i have dome myself, but my benchmarking revealed
-> that software was faster.
+Just to re-iterate, HPs Virtual Replicator does this.  (IIRC $10K)
 
-    The production data we gathered showed the opposite--at least for the 
-    3ware cards in our environment (we had about 5-8% more overhead
-    running the 3ware cards RAID0 than we did running either raw disk
-    (cheap IDE cards) or having the 3ware card pretend to be a jbod. 
+They like you to put a MSA-1000 FC Array behind your VR server (IIRC $15K =
+entry), but it supports/exports any FC array or local disk solution.
 
-    This wasn't benchmarking, this was set it up and throw it over the
-    wall for a month or two and see what the numbers looked like. 
+It does not provide any RAID aspects.
 
-    A really nervous way of testing. 
-    
-> > I'm running kernel 2.4.18, with LVM version 1.0.3, and the lvmtools
-> > version 1.0.1rc3-1 (long story, but upgrading is a path-of-last-resort).
-> if you need snapshots, get 1.0.7
+If you want to know more, e-mail me off-list.
 
-    If I get the chance I'm probably going to ditch LVM since I don't
-    need snapshots. I initially was give snapshots as a requirement. 
+Greg
+  (HP certified SAN architect)
 
-    Unfortunately I'll probably not get a chance to redo these. 
-  
-> > Initially I had the drives set up as a single raid0 device, but doing a
-> > pvcreate on it failed with a message that said something about "can't
-> > get size". 
-> strange, linux should be able to handle 2T block devices.
 
-    Yes. It should. 
+ >>  I'm interested in a block level export.  The exported space will be used
+ >>  as the disk part of an Hierarchical Storage Manager that is backed up by
+ >>  qualstar tape libraries.  We have several such systems and I would like
+ >>  to try to consolidate the disk portions of each into a "SAN" like
+ >>  environment.  At the same time, we are also looking at more customer
+ >>  disk based storage.  I have several storage servers (hopefully running
+ >>  Linux soon but running W2K now) that need access to large areas of
+ >>  storage.  I would like to carve and export virtualized chunks for this
+ >>  as well. =20
 
-    But when I did a pvcreate /dev/sda, where sda was 6 drives in a
-    raid0, it failed. 
-    
-> > So I set up 2 3 disk RAID0 devices, and did a vgcreate /dev/sda /dev/sdb.
-> > Now, one question I have is: 
-> >     Does this concatenate the devices, or does it interleave the
-> >     devices? IE do I have a stripe of stripes, or two stripes? 
-> that depends. You can stripe the lvm, but then you cant resize it.
-> if you made a LV, then it would proberly just allokate all on one
-> "disk", aka sda, and then on sdb.
- 
-    I'm using 100% of the VG for the same LV. 
+ >>  The main reason for the block level export is that the software we use
+ >>  does not support "NAS" type network disks.  They only support "locally
+ >>  attached" drives.  iSCSI would at least appear as a local SCSI disk.
 
-    I'm fine with not being able to resize it. Do I need the MD stuff to
-    stripe it? 
+ >>  For management purposes, I would like to have a single way to export
+ >>  everything.  This may or may not be feasible at present.
 
-> > Since I need the disk write rate of all 6 drives, I'm *REALLY* hoping
-> > that it's interleaved. 
-> sorry... it is not interleaved.
-> JonB
-> ps: how big a partition do you need stripping for? Do you need the
-> advanced LVM stuff, like resize, snapshot...
+ >>  - Steve
 
-    I need slightly over 1T of formatted disk space on each system. 
+ >>  > Stephen,
+ >>  >     What do you want it for - backups? Why not samba over GigE?
+ >>  >=20
+ >>  > --
+ >>  > Christopher Barry
+ >>  > Manager of Information Systems
+ >>  > InfiniCon Systems
+ >>  > http://www.infiniconsys.com
+ >>  >=20
+ >>  > -----Original Message-----
+ >>  > From: Stephen Perkins [mailto:perkins@netmass.com]
+ >>  > Sent: Monday, March 10, 2003 4:14 PM
+ >>  > To: linux-lvm@sistina.com
+ >>  > Subject: RE: [linux-lvm] Core questions from a LVM neophyte...
+ >>  >=20
+ >>  >=20
+ >>  > Hi all,
+ >>  > =20
+ >>  > >     I have built a very cool NAS box, and want to use LVM2=20
+ >>  > > on it. My machine is as follows:
+ >>  > >=20
+ >>  > > Tyan Thunder i7500 w/ 2-2.4GHz XEON processors.
+ >>  > > 2GB RAM
+ >>  > > 3ware Escalade 7500-12 IDE RAID controller
+ >>  > > 12-160GB Maxtor IDE HDs
+ >>  > > System on a separate 20GB Maxtor HD
+ >>  > > Floppy, slimline CDROM, and a DVDRW drive.
+ >>  > > All in a 12-bay chassis from=20
+ >>  > > http://www.rackmountpro.com/productpage.cfm?> prodid=3D1460
+ >>  > >=20
+ >>  > > This=20
+ >>  > > config gives me 1.8TB of RAID 5 for under=20
+ >>  > > $8K - not too shabby.
+ >>  >=20
+ >>  > This is a superb value and I'm very interested in your=20
+ >>  > proposed "how-to"
+ >>  > site.
+ >>  >=20
+ >>  > I am wanting to deploy some larger virtualized storage in a mixed
+ >>  > Linux/W2K environment.    Is anybody out there exporting virtualized
+ >>  > volumes to Win2K boxes?  If so, how?  I checked HyperSCSI and they do
+ >>  > not appear to have a Win2K client (although a beta is supposed to be
+ >>  > coming soon).  I have not yet found target information for Linux along
+ >>  > with a known interoperable Win2K initiator.  Anybody doing it?
+ >>  >=20
+ >>  > Disk performance is not so much an issue for me since the disk arrays
+ >>  > will be replacing large tape libraries.  Even with pathetic=20
+ >>  > performance,
+ >>  > they should behave much faster than large AIT libraries. =20
+ >>  >=20
+ >>  > Question 1:  Is it possible today to:
+ >>  >=20
+ >>  > Have a large IDE RAID5 array that is virtualized through LVM and then
+ >>  > exported to a Dynamic Disk on Win2K over a LAN (not necessarily WAN)?
+ >>  >=20
+ >>  > I believe iSCSI and HyperSCSI would both work... However I have not
+ >>  > found the approporiate interoperable software drivers.
+ >>  >=20
+ >>  > Question 2: The system that is described above is a linux system with
+ >>  > direct attached storage.  It is a SPOF.  Any inexpensive=20
+ >>  > solutions that
+ >>  > would allow the Linux portion to be clustered for active/pasive
+ >>  > failover?  Is FC the only alternative here?
+ >>  >=20
+ >>  > TIA,
+ >>  >=20
+ >>  > - Steve
+ >>  >=20
+ >>  >=20
+ >>  >=20
+ >>  >=20
+ >>  > _______________________________________________
+ >>  > linux-lvm mailing list
+ >>  > linux-lvm@sistina.com
+ >>  > http://lists.sistina.com/mailman/listinfo/linux-lvm
+ >>  > read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+ >>  >=20
 
-    Which means i really need to find a way to send an <alt-3> through
-    an ssh session to a telnet window. 
 
--- 
-"On two occasions, I have been asked [by members of Parliament], 'Pray, 
-Mr. Babbage, if you put into the machine wrong figures, will the right 
-answers come out?' I am not able to rightly apprehend the kind of confusion 
-of ideas that could provoke such a question." -- Charles Babbage 
+
+ >>  -- NextPart --
+ >>  Attached File: c:\program files\goldmine\MailBox\Attach\gaf\smime(2).p7s
