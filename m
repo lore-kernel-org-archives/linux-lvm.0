@@ -1,9 +1,11 @@
-Return-Path: <ricardo@mail.mnsu.edu>
-Date: Fri, 8 Dec 2000 10:47:26 -0600 (CST)
-From: Ricardo Muggli <ricardo.muggli@mnsu.edu>
-Message-ID: <Pine.OSF.4.21.0012081042590.14388-100000@mail.mnsu.edu>
-MIME-Version: 1.0
-Subject: [linux-lvm] Linux 2.4.0-test12-pre7 LVM .9 vs .8final
+Return-Path: <dg@suse.com>
+Date: Fri, 8 Dec 2000 10:30:07 -0800
+From: David Gould <dg@suse.com>
+Subject: Re: [linux-lvm] How do you mount a snapshot?
+Message-ID: <20001208103007.D27307@archimedes.oak.suse.com>
+References: <20001207223300.D25533@archimedes.oak.suse.com> <323270000.976284597@coffee>
+Mime-Version: 1.0
+In-Reply-To: <323270000.976284597@coffee>; from mason@suse.com on Fri, Dec 08, 2000 at 09:09:57AM -0500
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,23 +17,50 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: linux-lvm@sistina.com, linux-kernel@vger.kernel.org
+To: linux-lvm@sistina.com
 
-I have noticed that Linux 2.4.0-test12-pre7 still comes with .8final. Is
-there a plan to have .9 incorporated at some future time into the stock
-2.4 kernels? Will this happen before 2.4 comes out?
+On Fri, Dec 08, 2000 at 09:09:57AM -0500, Chris Mason wrote:
+> 
+> 
+> On Thursday, December 07, 2000 22:33:00 -0800 David Gould <dg@suse.com>
+> wrote:
+> 
+> > On Thu, Dec 07, 2000 at 03:56:11PM -0500, Chris Mason wrote:
+> 
+> [ snapshots ]
+> 
+> >> It should work with ext2.
+> > 
+> > Really? I wonder. Maybe right after a sync before anything gets dirtied,
+> > but otherwise, how could the disk image be consistantly, er, consistant?
+> > And would not e2fsck have the same issues about writing?
+> > 
+> > Or did I just wake up pessimistic today?
+> > 
+> 
+> The reason it will not work on reiserfs without the extra API is that on
+> reiserfs, sync == commit to log, not commit to disk.  So, there is no way
+> over the command line (or in the kernel) to ask the FS to sync to disk,
+> even when there is no traffic at all on the FS.
+> 
+> With ext2, if nothing is going on, you can type sync and have all the
+> buffers on disk.  It is at least possible ;-)  It would be better if ext2
+> could provide the write suspension hooks as well, but I'm guessing that
+> will be done in ext3 first (where the journal already does most of the
+> work).
 
-Also is there a transition path between .8final and .9? (short of save
-everything to tape and restore?)
+Ok, so we are agreeing, it does not work on ext2 either unless you sync
+and do not write between the sync and the snapshot. Doable, but not exactly
+"safe".
 
-
+-dg
+ 
 -- 
-Ricardo Muggli (ricardo.muggli@mnsu.edu)
-Systems Manager
-Information and Technology Services
-Minnesota State University, Mankato
-101 Morris Hall
-Mankato, MN  56001
-Phone: (507) 389-1164 Fax: (507) 389-6115
+David Gould                                                 dg@suse.com
+SuSE, Inc.,  580 2cd St. #210,  Oakland, CA 94607          510.628.3380
+"As I've gained more experience with Perl it strikes me that it
+ resembles Lisp in many ways, albeit Lisp as channeled by an awk
+ script on acid."  -- Tim Moore <moore@herschel.bricoworks.com>,
+                      on comp.lang.lisp
