@@ -1,10 +1,11 @@
-Content-Class: urn:content-classes:message
+From: Bodo Bock <B.Bock@bk-cad.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Subject: RE: [linux-lvm] Strange message with 2.4.8+1.0.1rc1
-Date: Wed, 29 Aug 2001 12:29:20 +0200
-Message-ID: <B45465FD9C23D21193E90000F8D0F3DF0178FD30@mailsrv.linkvest.com>
-From: "Jean-Eric Cuendet" <Jean-Eric.Cuendet@linkvest.com>
+Content-Transfer-Encoding: 7bit
+Message-ID: <15245.1949.744344.861012@bobau.bk-cad.de>
+Date: Wed, 29 Aug 2001 17:17:49 +0200 (CEST)
+Subject: Re: [linux-lvm] Start Accepting Credit Cards``
+In-Reply-To: <0999022471.0268982118@mail.bigfoot.com>
+References: <0999022471.0268982118@mail.bigfoot.com>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -19,30 +20,40 @@ List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
 
-> > Is there a limit to 8 characters in LVM VGs names?
->=20
-> No. The limit is 128 characters and I've had plenty that were=20
-> longer than 10. I suspect that the action of renaming has=20
-> made the difference. I suspect (and if you're brave you could=20
-> try this!) that if you rename the VG back to NORAID_HDX will=20
-> still work.
-
-I haven't renamed it!
-What I made:
-1st try:
-- create NORAID_HDX VG
-- create LV
-- reboot
-- VG not found by vgscan. NO way to restore it.
-
-2nd try:
-- create NORAID VG
-- create LV
-- reboot
-- VG found by vgscan.
-
-Note that VG was entirely destroyed between each attempt. Pvcreate
-rerun.
-
-Idea?
--jec
+kaite3@bigfoot.de writes:
+> mvc9vc
+> We help business owners accept credit cards!
+> 
+> Competitive Rates! Below Market Prices!
+> 
+> Our approval process is quick and simple!
+> 
+> We offer complete processing systems for your business:
+> 
+> *Internet
+> *Retail
+> *Mail Order
+> *Phone Order
+> 
+> Free information request form:
+> PLEASE VISIT
+> 
+> http://www.freewebdirect.net/merchantservices/
+> 
+> 
+> ****************************************************************
+> Since you have received this message you have either responded
+> to one of our offers in the past or your address has been
+> registered with us.  If you wish to be removed please reply to:
+> mailto:morleads7@yahoo.com?subject=remove
+> ****************************************************************
+> 
+> mv9vc
+> 
+> *********
+> 
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@sistina.com
+> http://lists.sistina.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
