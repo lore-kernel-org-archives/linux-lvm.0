@@ -1,10 +1,10 @@
 Return-Path: <adilger@turbolinux.com>
 From: Andreas Dilger <adilger@turbolinux.com>
-Message-Id: <200102071810.f17IAmY14296@webber.adilger.net>
-Subject: Re: [linux-lvm] Help! Problems finding VG after reboot.
-In-Reply-To: <20010207172506.7555.qmail@fraggle.cs.uit.no> from "gobo@gimle.nu"
- at "Feb 7, 2001 06:25:06 pm"
-Date: Wed, 7 Feb 2001 11:10:47 -0700 (MST)
+Message-Id: <200102071815.f17IFtN14302@webber.adilger.net>
+Subject: Re: [linux-lvm] lvm buglet in 0.9.1_beta
+In-Reply-To: <20010207134549.E525@tykepenguin.com> from Patrick Caulfield at
+ "Feb 7, 2001 01:45:49 pm"
+Date: Wed, 7 Feb 2001 11:15:55 -0700 (MST)
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -21,25 +21,27 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Gobo writes:
-> I tried viewing the output of pvdata as shown in that thread, and I think 
-> that might be the source of my problems. At least if all the UUIDs are 
-> supposed to be equal.
+Patrick, you write:
+> On Wed, Feb 07, 2001 at 01:45:32AM -0700, Andreas Dilger wrote:
+> > It may not be exactly this.  AFAIK, when we call lvm_check_partitioned_dev()
+> > when we are scanning disks, I think this determines if LVM will start doing
+> > the gross DOS partition stuff.  Is it the case with these COMPAQ devices
+> > that they use DOS partitions?
 > 
-> I have attached the results from that to this mail along with the results
-> form running vgcfgrestore -ll. Please note that the pvdata outputs are
-> taken after I had tried running vgcfgrestore on all the partitions.
+> I'm not sure - that's why I asked the user to test it for me! Anyway you can
+> partition any block device you like - or even a file :-)
+
+Sure you can run fdisk on just about anything, but you can't access the
+partitions unless it is a partitioned device (i.e. the minor numbers
+mean "look at a partition").
+
+> > In any case, while you are in there, can you add COMPAQ_CISS_MAJOR + [1-7]
+> > also.  This is basically the same thing as COMPAQ_SMART_MAJOR.  It will
+> > avoid yet another similar bug report on this in the future.
 > 
-> I hope someone has a way/hack to get this VG back online. I would really
-> appreciate getting my files back.
+> OK.
 
-There are two ways to fix this:
-
-1) comment out the UUID checking in pv_read_all_pv_of_vg(), recompile.
-2) apply the UUID patch I posted to the list a few hours ago, recompile
-   and re-run vgcfgrestore.  This patch will force creation of new UUIDs
-   for all PVs which are missing them, and it will do it properly so
-   that they are stored on all disks.
+You also need to add "/dev/cciss" to lvm_dir_cache.c"
 
 Cheers, Andreas
 -- 
