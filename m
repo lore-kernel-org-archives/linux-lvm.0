@@ -1,9 +1,14 @@
-Return-Path: <jay@lazy.accessus.net>
-Date: Mon, 18 Dec 2000 10:12:33 -0600 (CST)
-From: Jay Weber <jay@lazy.accessus.net>
-Message-ID: <Pine.OSF.4.21.0012181003480.27048-100000@lazy.accessus.net>
-MIME-Version: 1.0
-Subject: [linux-lvm] tools/lib/lvm_dir_cache.c -- still can't find devices
+Return-Path: <lewis@sistina.com>
+From: lewis@sistina.com
+Date: Mon, 18 Dec 2000 10:29:45 -0600
+Subject: Re: [linux-lvm] Patches for 0.8.1
+Message-ID: <20001218102945.A30254@sistina.com>
+References: <00121619514201.00774@lyta>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="OXfL5xGRrasGEqWY"
+Content-Disposition: inline
+In-Reply-To: <00121619514201.00774@lyta>; from russell@coker.com.au on Sat, Dec 16, 2000 at 07:51:42PM +0100
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,33 +20,56 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Hi,
+--OXfL5xGRrasGEqWY
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Seems lvm_dir_cache.c still has some subtle problems in that it's not
-quite proper in device detection.
+On Sat, Dec 16, 2000 at 07:51:42PM +0100, Russell Coker wrote:
+> This one removes an unnecessary library check (which doesn't work) and ad=
+ds=20
+> version data to the config file (this is so handy).
 
-In my case I'm using LVM with loopback devices for testing out,
-etc.  Basically it appears that LVM scans /proc/partitions, finds some
-devices listed there, adds them to the cache and increments cache_size
-variable.  Next, if cache_size == 0 it will then scan /dev, unfortunately
-my cache_size isn't == 0 at this point and /dev/loop devices are not
-listed in /proc/partitions.
+Now we just have to make sure we rev the version number before a release.  =
+;)
 
-Any thoughts on how to fix this one?  Possibly add an option for the tools
-that specify you want to forcefully scan /dev or such?  I'm thinking there
-are times when this may be wanted since it's conceivable that some other
-device or such may be used or become avail that would not get caught under
-the other scanning cases.
+> +AC_SUBST(VERSION)
+> +VERSION=3D0.8final
 
-Another thought, why even use the dircache scheme, is it vital elsewhere?  
-I'm thinking if I run pvcreate /dev/loop0 it should just use the
-devicename I specified to setup whatever structs, etc.  Am I missing
-something?  Then the vgscan/lvscan tools and such could default to
-scanning all of dev, these tools imply to me that you want to scan your
-entire system's devices for LVM volumes, etc.
+Shouldn't this be '+VERSION=3D0.8.1'?
 
-Thanks.
+I'm not going to put this completely in until we get the ./configure stuff
+worked out, but I'll hand apply most of it to the 'LVM_0-9-patches' and
+'LVM_0-8-1-patches' tagged version of the CVS.  Make sure you're working wi=
+th
+those as you continue.
+
+Thanks,
+--=20
+AJ Lewis
+Sistina Software Inc.                  Voice:  612-379-3951
+1313 5th St SE, Suite 111              Fax:    612-379-3952
+Minneapolis, MN 55414                  E-Mail: lewis@sistina.com
+http://www.sistina.com
+Current GPG fingerprint =3D 3B5F 6011 5216 76A5 2F6B  52A0 941E 1261 0029 2=
+648
+
+I have yet to meet a C compiler that is more friendly and easier to use
+than eating soup with a knife.
+
+--OXfL5xGRrasGEqWY
+Content-Type: application/pgp-signature
+Content-Disposition: inline
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.0.4 (GNU/Linux)
+Comment: For info see http://www.gnupg.org
+
+iD8DBQE6Pjt5pE6/iGtdjLERAhQzAKCEOjVOJdpGvkKWTJsZrRCHD4ZQpgCfSE8B
+EQk8tvoJq8fbVdFzb6YiIzs=
+=lC5Z
+-----END PGP SIGNATURE-----
+
+--OXfL5xGRrasGEqWY--
