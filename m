@@ -1,11 +1,7 @@
-From: Marc MERLIN <marc@merlins.org>
-Subject: Re: [linux-lvm] Backup costs (was: LVM reimplementationre)
-Message-Id: <20020212070020.GN22416@merlins.org>
-References: <Pine.LNX.4.44.0202061338480.13203-100000@dragon.inside.ntisys.com>
-    <3C6187A0.3DFEA8BE@lmco.com> <3C6242D0.3090005@promofinarsa.es>
+From: Thor Kristoffersen <Thor.Kristoffersen@nr.no>
+Message-Id: <yznvgd3dqbr.fsf@triumph.nr.no>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <3C6242D0.3090005@promofinarsa.es>
+Subject: [linux-lvm] [BUG] pvmove failed on last PE in PV
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,32 +12,29 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Tue Feb 12 01:00:01 2002
+Date: Tue Feb 12 03:04:01 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: linux-lvm@sistina.com
+To: Linux-LVM@sistina.com
 
-On Thu, Feb 07, 2002 at 10:03:12AM +0100, Jesus Manuel NAVARRO LOPEZ wrote:
-> That's plainly untrue: AMANDA for one is free and very good for small 
-> systems.
+I have been running LVM for the past six months without any problems until
+last night when I migrated all PVs to a new disk.  On one particular PV
+(hda2) which had all its physical extents allocated, LVM managed to move
+all physical extents except the last one.  It complained about not being
+able to read past the end of the device, and that it was missing the last
+65536 bytes.  I eventually managed to solve the problem by adding the hda3
+partition to hda2.  Only then was it able to move the last physical extent.
 
-We use amanda at VA Software, and  also for sourceforge.net, but while it is
-nice as long  as your backup sets  are smaller than half your  tape size, it
-starts to choke  a bit when you  have backups that start  reaching your tape
-size, and it fails miserably if any backup takes more than your tape.
+Hardware setup:
+  Mainboard: MSI K7T266-Pro2
+  Primary master: IBM DTLA-307045
+  Secondary master: Seagate ST380021A
 
-It is disapointing  that in the last 3 years,  that major shortcoming hasn't
-effectively been fixed, but  eh, it's free software, I get to  fix it if I'm
-not happy :-)
+Software setup:
+  Redhat 7.1
+  Linux 2.4.6.
+  LVM 0.9.1-beta7
 
-As for autoloaders  and tape libraries, you  can make it work  with mtx, but
-expect to have  to write some glue  and to go through non  trivial trial and
-error.
 
-Marc
--- 
-Microsoft is to operating systems & security ....
-                                      .... what McDonalds is to gourmet cooking
-  
-Home page: http://marc.merlins.org/   |   Finger marc_f@merlins.org for PGP key
+Thor
