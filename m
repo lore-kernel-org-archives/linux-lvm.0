@@ -1,10 +1,13 @@
 From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] NBD-2.4.26
-Message-Id: <20020308093838.B519@sistina.com>
-References: <20020307141913.34861.qmail@web13008.mail.yahoo.com>
+Subject: Re: [linux-lvm] vgscan errors
+Message-Id: <20020308094454.C519@sistina.com>
+References: <3C83AD42.20301@theiqgroup.com>
+    <20020305002428.B13751@sistina.com> <3C85289C.8060606@theiqgroup.com>
+    <20020305223226.A19035@sistina.com> <3C854B93.2060402@theiqgroup.com>
+    <3C87A0A3.8080605@theiqgroup.com>
 MIME-Version: 1.0
-In-Reply-To: <20020307141913.34861.qmail@web13008.mail.yahoo.com>;
-    from pdkharche@yahoo.com on Thu, Mar 07, 2002 at 06:19:13AM -0800
+In-Reply-To: <3C87A0A3.8080605@theiqgroup.com>; from
+    kcorbin@theiqgroup.com on Thu, Mar 07, 2002 at 11:17:23AM -0600
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,59 +18,94 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Fri Mar  8 02:40:02 2002
+Date: Fri Mar  8 02:47:02 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Thu, Mar 07, 2002 at 06:19:13AM -0800, Prashant Kharche wrote:
-> Hi!
->    I want to test LVM on a SAN.. But i dont have a
-> SAN.. SO im trying to use Network Block Device -
-> 2.4.26 to export partitions to other client 
-> machines.. if im wrong please correct me.. But when i
-> mount the partitions on the client machine..
+On Thu, Mar 07, 2002 at 11:17:23AM -0600, Kelly Corbin wrote:
+> OK, now I have another problem.  I got vgscan to run fine now off of my 
+> boot CD, but now the system fails the vgscan on boot (/ is an LVM) with 
+> an 'ERROR 28 writing volume group backup file /etc/...'
+> 
+> I'm assuming this is because the initrd created by lvmcreate_initrd is 
+> not big enough to accomodate the metadata backup.
 
-With mountinge you mean NBD client accessability?
+Exactly.
 
-> LVM
-> version 1.0.2 is not able to recognize the VG already
-> present on that partition.. what should i do now..
+> What size is this 
+> generally (lvmcreate_initrd says it calculates this automatically) and 
+> to what size should I set this manually to get this to work?  How much 
+> space do I need for the backups during vgscan?
 
-Did you run pvcreate on the NBDs?
-Did you vgcreate a volume group using them?
+Calculate your given initrd size plus your /etc/lvconf/* backup sizes
+you need to store in the initrd once vgscan is run
+and change the INITRDSIZE to that number in kilobytes + 1MB.
+
+Regards,
+Heinz    -- The LVM Guy --
 
 > 
-> Or is there any other way to emulate a SAN.. 
-
-It doesn't make a SAN to use NBD to access remote block devices
-on another machine. You need multiple of those to 'fake' one (IOW:
-no specific SAN hardware) plus SAN software like a shared disk filesystem
-(for eg. GFS) to really get use out of it.
-
-In order to have a real one you need SAN hardware such us fibre-channel
-hubs and the like.
+> Thanks.
+> 
+> Kelly Corbin wrote:
+> 
+> > Doh! I didn't get what you were saying in your first reply.  I'm sure 
+> > that's it.  It's running in an init. ramdisk image and there's very 
+> > little actual space.  Generally speaking, how big do those backups get?
+> > 
+> > Thanks for your help.
+> > 
+> > Heinz J . Mauelshagen wrote:
+> > 
+> >> On Tue, Mar 05, 2002 at 02:20:44PM -0600, Kelly Corbin wrote:
+> >>
+> >> It is probably too little free space in the root fs.
+> >> Because you've got somany extents the size of the metadata backup is 
+> >> bigger
+> >> as well.
+> >>
+> >> Check your root fs free space, please.
+> >>
+> >>
+> >>> Thanks.
+> >>>
+> >>>
+> >>> Heinz J . Mauelshagen wrote:
+> >>>
+> >>>
+> >>>> Error 2 is ENOENT (no entry).
+> >>>> Could be a space problem in case / run full.
+> >>>>
+> >>>> Regards,
+> >>>> Heinz    -- The LVM Guy --
+> >>>
+> > 
+> > 
 > 
 > 
+> -- 
+> --------------------------------------------
+> -- Kelly Corbin
+> -- Systems Administrator
+> --
+> -- http://www.theiqgroup.com
+> -- The Future of eServices...
+> --
+> -- The IQ Group, Inc.
+> -- 6740 Antioch Suite 110
+> -- Merriam, KS 66204
+> -- (913)-722-6700 x105
+> -- Fax (913)722-7264
+> --------------------------------------------
 > 
-> 
-> 
-> __________________________________________________
-> Do You Yahoo!?
-> Try FREE Yahoo! Mail - the world's greatest free email!
-> http://mail.yahoo.com/
 > 
 > _______________________________________________
 > linux-lvm mailing list
 > linux-lvm@sistina.com
 > http://lists.sistina.com/mailman/listinfo/linux-lvm
 > read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
-
--- 
-
-Regards,
-Heinz    -- The LVM Guy --
 
 *** Software bugs are stupid.
     Nevertheless it needs not so stupid people to solve them ***
