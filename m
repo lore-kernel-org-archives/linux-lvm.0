@@ -1,25 +1,15 @@
-Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id iATFGxr09079
-	for <linux-lvm@redhat.com>; Mon, 29 Nov 2004 10:16:59 -0500
-Received: from mail.software.plasmon.com (mail@mail.software.plasmon.co.uk
-	[194.130.136.212])
-	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id iATFGvai027495
-	for <linux-lvm@redhat.com>; Mon, 29 Nov 2004 10:16:58 -0500
-Received: from leo.devel.pcs ([10.4.2.17] ident=mail)
-	by mail.software.plasmon.com with esmtp (Exim 3.35 #1 (Debian))
-	id 1CYnGk-0006ZY-00
-	for <linux-lvm@redhat.com>; Mon, 29 Nov 2004 15:16:50 +0000
-Received: from steve by leo.devel.pcs with local (Exim 3.36 #1 (Debian))
-	id 1CYnGj-0006gz-00
-	for <linux-lvm@redhat.com>; Mon, 29 Nov 2004 15:16:49 +0000
-Date: Mon, 29 Nov 2004 15:16:49 +0000
-From: Steve McIntyre <smcintyre@software.plasmon.com>
-Subject: Re: [linux-lvm] Snapshots (overheads and 2.6 kernel status)
-Message-ID: <20041129151630.GD1506@software.plasmon.com>
-References: <37E80E80B681A24B8F768D607373CA80010A5454@largo.campus.ncl.ac.uk>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <37E80E80B681A24B8F768D607373CA80010A5454@largo.campus.ncl.ac.uk>
+Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id iATI6Lr04865
+	for <linux-lvm@redhat.com>; Mon, 29 Nov 2004 13:06:21 -0500
+Received: from www.austinlogistics.com (mail.austinlogistics.com
+	[69.150.203.234])
+	by mx3.redhat.com (8.12.11/8.12.11) with ESMTP id iATI6FVo001681
+	for <linux-lvm@redhat.com>; Mon, 29 Nov 2004 13:06:16 -0500
+Message-ID: <OF44682A09.C6D944AC-ON86256F5B.005FCD50-86256F5B.00636C35@austinlogistics.com>
+From: Jetkins@austinlogistics.com
+Date: Mon, 29 Nov 2004 12:06:03 -0600
+MIME-Version: 1.0
+Subject: [linux-lvm] Reusing a physical volume
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -32,23 +22,46 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: LVM general discussion and development <linux-lvm@redhat.com>
+To: linux-lvm@redhat.com
 
-On Mon, Nov 29, 2004 at 03:08:50PM -0000, C R Ritson wrote:
->Does anybody know how much overhead is involved in keeping a snapshot of
->an active volume (for 24 hours)? I am currently running LVM1 (waiting
->for snapshots in LVM2/device mapper) and am making a snapshot of my user
->volumes overnight. These are left available for 24 hours in the hope
->that users who damage a file will be able to get "yesterday's copy" from
->the snapshot without us needing to restore from tape. There is obviously
->some overhead involved, but does anyone know how much?
+Hi folks, me again.
 
-It can be quite significant, depending on your workload. I'm using
-snapshots in a similar way, and I saw performance drop by a factor of
-2 (or more) on our main NFS server. It's very useful to have the
-snapshot, so we live with it.
+You may recall I asked a couple of weeks ago about the possibility of
+expanding a PV on a hardware RAID.  Well, having determined that there was
+no way to expand it in situ, I went to Plan B and attached an external
+storage enclosure so that I could shuffle the data off of the existing PV
+and then reuse the internal storage.
 
--- 
-Steve McIntyre, Plasmon                       smcintyre@software.plasmon.com
- 
-"C++ ate my sanity" -- Jon Rabone
+I pvcreate'd a second PV on the external storage (/dev/sdc1) and pvmove'd
+everything from /dev/sdb, then vgreduce'd the original volume from the VG.
+I now have the following:
+
+      # pvscan
+      pvscan -- reading all physical volumes (this may take a while...)
+      pvscan -- inactive PV "/dev/sdb"  is in no VG  [819.73 GB]
+      pvscan -- ACTIVE   PV "/dev/sdc1" of VG "vg01" [956.31 GB / 136.62 GB
+free]
+      pvscan -- total: 2 [1.73 TB] / in use: 1 [956.35 GB] / in no VG: 1
+[819.73 GB]
+
+      # pvdisplay /dev/sdb
+      pvdisplay -- "/dev/sdb" is a new physical volume of 819.73 GB
+
+My dilemma is what to do next.  The HOWTO simply says "The drive can now be
+either physically removed when the machine is next powered down or
+reallocated to other users."  I can "remove the drive" by blowing away the
+first RAID volume at the next reboot, but won't that move /dev/sdc1 to
+/dev/sdb1?  How does LVM handle that?
+
+I'm also puzzled how to get LVM to forget about the inactive PV on
+/dev/sdb.  Will it automatically remove it from the configuration if the
+drive is removed?  I can't seem to find a "pvremove" or "pvdelete" command.
+(I'm using LVM 1).
+
+Any guidance and assistance gratefully accepted,
+
+Jon Etkins
+IT Administration & Support
+Austin Logistics, Inc
+ph:  (512) 651-5641
+fax: (512) 329-5625
