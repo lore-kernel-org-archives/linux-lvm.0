@@ -1,10 +1,8 @@
-From: Goetz Bock <bock@blacknet.de>
-Subject: Re: [linux-lvm] How to extend logical vol beyong 256GB
-Message-ID: <20030715153023.H18605@zealot.blacknet.de>
-References: <20030714022301.24234.qmail@web10001.mail.yahoo.com>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20030714022301.24234.qmail@web10001.mail.yahoo.com>; from tazkoh@yahoo.com on Sun, Jul 13, 2003 at 07:23:01PM -0700
+From: =?ks_c_5601-1987?B?wdbH/Ly3?= <dadion@hanmail.net>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Message-Id: <E19cQZ5-0007s7-00@hermes.sistina.com>
+Subject: [linux-lvm] =?ks_c_5601-1987?B?vr7GvMC6x+AgtOvD4iDE3beivMc=?=
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,28 +13,47 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Tue Jul 15 08:31:02 2003
+Date: Tue Jul 15 09:14:02 2003
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: linux-lvm@sistina.com
+Content-Type: text/plain; charset="utf-8"
+To: "linux-lvm@sistina.com" <linux-lvm@sistina.com>
 
-On Sun, Jul 13 '03 at 19:23, Tazkoh wrote:
-> I tried to extend the logical volume to 512GB (or more) but keeping
-> getting this error message after executing this command lvextend
-> -L512G /dev/vg01/lvol1
->  
-> lvextend -- size 571473920 KB is larger than maximum VGDA kernel size
-> of 268427264 KB
-> 
-> It seems like the logical volume is fixed at 256GB. How can I increase
-> it?
-You can't. Your VG was created with a too smal value for a PE. Your only
-option is to remove the VG and create a new one.
+�ȳ��Ͻʴϱ�? �켱, ������� ������ �����帰 �� ���ظ����� �帳�ϴ�.
 
-BTW: 4. Read the archive *before* you post  -- this is a FAQ.
--- 
-/"\ Goetz Bock at blacknet dot de  --  secure mobile Linux everNETting
-\ /                     (c) 2003 as GNU FDL 1.1
- X   [ 1. Use descriptive subjects - 2. Edit a reply for brevity -  ]
-/ \  [ 3. Reply to the list - 4. Read the archive *before* you post ]
+�̷��� ������ �����帰���� �ٸ��ƴ϶�, ���� ��Ƽ���࿡�� �����ϴ� 
+
+���ο��žȳ��� �ϱ����� ���Դϴ�. 
+
+�Ʒ������� �������ֽñ� �ٶ��ϴ�. 
+
+
+
+
+CITIBANK �ſ� ���� �ȳ�
+
+��Ƽ���࿡�� ������ �����ô� ����, �������� �ɷ��� ���� ������ ���Դϴ�.
+���� �����ְ��� ���� ��Ƽ����� �Բ� �Ͻʽÿ�. �����Ͻ� �� �Դϴ�.
+
+�� �ſ����
+�������ѵ� : 1000����~5000���� 
+����    �� : ���� 1700�����̻�, 6�����̻� �ٹ���, 75~45�� ��
+������Ⱓ :  3��, 5��
+����ȯ��� : �����ݱյ����, �ſ����ڳ��� & ���ݺ��һ�ȯ
+�����񼭷� : ����������, ��õ¡��������, ����, �ź���
+������ݸ� : ���� �� 8.9%~
+
+���������� Ÿ ������� ��ä�� ������ �ʰ��Ͽ��� �߰� ���� ����
+(��, ������ ���ݽ�񽺴� �߰� ����)
+
+�� �㺸���� : �������, ���μ��������� ���� ����
+
+ ������ݸ� : ��6.4% ~
+
+Citibank  
+              ������         017-548-3533 
+              
+              Email        dadion@hanmail.net
+                                  
+                   ���� ��Ƽ�׷��� ������������ ���������� ��ȣ�մϴ�.
+��Ƽ������ ���������� ������������ ���������� �����ϰ� ��ȣ�ϰ� �������� �ʿ�� 
+ �Ͻô� ��쿡�� ����ϵ��� �����ϴ� ���� �ֿ켱���� ��� �ֽ��ϴ�.
