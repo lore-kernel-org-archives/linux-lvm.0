@@ -1,20 +1,18 @@
-Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id i4HIRd027974
-	for <linux-lvm@redhat.com>; Mon, 17 May 2004 14:27:39 -0400
-Received: from mail.ipax.tk (postfix@ipax.tk [213.158.115.2])
-	by mx1.redhat.com (8.12.10/8.12.10) with ESMTP id i4HIRbRm018483
-	for <linux-lvm@redhat.com>; Mon, 17 May 2004 14:27:38 -0400
-Received: from ipax.tk (raoul.bhatia.at [80.109.78.225])
-	by mail.ipax.tk (Postfix) with ESMTP id 4949C86B6C
-	for <linux-lvm@redhat.com>; Mon, 17 May 2004 20:27:13 +0200 (CEST)
-Message-ID: <40A90413.905@ipax.tk>
-Date: Mon, 17 May 2004 20:27:31 +0200
-From: raoul bhatia <r.bhatia@ipax.tk>
-MIME-Version: 1.0
-Subject: Re: [linux-lvm] /boot on lvm?
-References: <40A72846.5050801@mlug.missouri.edu> <22463-19176@sneakemail.com>
-In-Reply-To: <22463-19176@sneakemail.com>
-Content-Transfer-Encoding: 7bit
+Received: from homer.msp.redhat.com (homer.msp.redhat.com [172.16.30.9])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id i4HIXq030369
+	for <linux-lvm@redhat.com>; Mon, 17 May 2004 14:33:52 -0400
+Received: (from agk@localhost)
+	by homer.msp.redhat.com (8.11.6/8.11.6) id i4HIXpd09338
+	for linux-lvm@redhat.com; Mon, 17 May 2004 13:33:51 -0500
+Date: Mon, 17 May 2004 13:33:51 -0500
+From: Alasdair G Kergon <agk@redhat.com>
+Subject: Re: [linux-lvm] Snapshot support for LVM2?
+Message-ID: <20040517133351.L5945@homer.msp.redhat.com>
+References: <8CCBDD5583C50E4196F012E79439B45C04C9A3EF@atl-ms1.megatrends.com>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <8CCBDD5583C50E4196F012E79439B45C04C9A3EF@atl-ms1.megatrends.com>;
+	from vineshc@ami.com on Mon, May 17, 2004 at 01:36:21PM -0400
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -25,40 +23,24 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-what about compiling these modules into your kernel, since they are an 
-integrated part of your setup?
+On Mon, May 17, 2004 at 01:36:21PM -0400, Vinesh Christopher wrote:
+> When is the official stable release of 
+> Snapshot support for LVM2?
+  
+Starting from http://sources.redhat.com/dm,
 
-best regards,
-raoul bhatia
+  Stable 2.4.26 kernel patch is in:
+   ftp://sources.redhat.com/pub/dm/device-mapper.1.00.17.tgz
 
-Peter Valdemar Morch wrote:
+For 2.6, there is not a stable snapshot release yet, but it's close.
+The snapshot support in
+  ftp://sources.redhat.com/pub/dm/patches/2.6-unstable/2.6.6-rc2/2.6.6-rc2-udm1.tar.bz2
+is the best available; there's still an issue with SMP.
 
-> Running RH9 with /root on LVM gave me no end of headaches when upgrading 
-> to 2.6 kernels. Primarily because I had to make a initrd RAM disk image.
-> 
-> So now it works fine. But next time I set up my own box, I'll make sure 
-> that at least /boot and /root are no-frills partitions.
-> 
-> Peter
-> 
-> Michael mogmios-at-mlug.missouri.edu |Lists| wrote:
-> 
->> Is it okay to put everything, including /boot and other critical Linux 
->> files on an LVM drive? How about swap space?
->> _______________________________________________
->> linux-lvm mailing list
->> linux-lvm@redhat.com
->> https://www.redhat.com/mailman/listinfo/linux-lvm
->> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
-> 
-> 
-
+Alasdair
 -- 
-____________________________________________________________________
-raoul bhatia                              email.    r.bhatia@ipax.tk
-- ipax.tk -                               web.    http://www.ipax.tk
-chief technician, support                 irc.      #ipax (quakenet)
-____________________________________________________________________
+agk@redhat.com
