@@ -1,10 +1,14 @@
-Return-Path: <kirth@hole.org>
-Date: Tue, 13 Mar 2001 02:08:51 +0000
-From: Kirth <kirth@hole.org>
-Message-ID: <20010313020851.A16727@prodding>
+Return-Path: <lewis@sistina.com>
+Date: Mon, 12 Mar 2001 23:12:08 -0600
+From: AJ Lewis <lewis@sistina.com>
+Subject: Re: [linux-lvm] Problem with vgscan/ vgcfgrestore
+Message-ID: <20010312231208.A14087@sistina.com>
+References: <20010313012313.A3042@cistron.nl> <200103130056.f2D0uTi01167@webber.adilger.int> <20010313021438.A6401@cistron.nl>
 Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="r5Pyd7+fXNt84Ff3"
 Content-Disposition: inline
-Subject: [linux-lvm] Hardlock and volume loss ?
+In-Reply-To: <20010313021438.A6401@cistron.nl>; from wichert@cistron.nl on Tue, Mar 13, 2001 at 02:14:39AM +0100
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,32 +20,57 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Hi,
-	I've been playing with LVM for a few days, and finally decided to
-risk 80gigs of data to it... bit of a mistake with hindsight. Earlier this
-evening during an ftp transfer to the machine the box hardlocked. No errors
-or anything, just completely dead to the world. On reboot I found i could
-not access my LVM. After reading the postings, I had a poke and found that
-while pvscan initally said it found the drives but didnt know which VG,
-using vgcfgrestore i could fix that. The problem is if I try to make the PV
-active, it "looses" this information and says 
+--r5Pyd7+fXNt84Ff3
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-milita:/etc/lvmconf# vgchange -ay
-vgchange -- ERROR "Invalid argument" activating volume group "media"
+On Tue, Mar 13, 2001 at 02:14:39AM +0100, Wichert Akkerman wrote:
+> BTW, the current LVM tools violate the FHS by putting binaries in
+> /sbin/lvm-*/. Would you accept a patch to move that to /lib/lvm-*/
+> instead?
 
-	I've posted what I thought was relavent to
-	http://black.hole.org/deadlvm.txt
+Erm.../lib/lvm-*/?  Really?  Hmm...guess I need to read the FHS.  Anyone got
+a pointer to that?
 
-	I'm pretty sure the data is intact, and I hope the lvm can be
-put back together (hopefully so I can still resize/add to it)
+I've been planning on putting the connectiva type wrapper scripts into the
+mainline LVM src, but haven't had a chance yet.  This would make hard links=
+ to
+the wrapper script for all of the tools in /sbin, but the tools themselves
+would be located in /lib/lvm-*/.  Would that violate the FHS?
 
-	Any help would be apprecaited, oh and I'm running todays (12/13th
-March 2001) cvs lvm programs.
+More info on this would be very useful.
 
-Thanks in advance
+Thanks,
+--=20
+AJ Lewis
+Sistina Software Inc.                  Voice:  612-379-3951
+1313 5th St SE, Suite 111              Fax:    612-379-3952
+Minneapolis, MN 55414                  E-Mail: lewis@sistina.com
+http://www.sistina.com
 
-Richard
+Current GPG fingerprint =3D 3B5F 6011 5216 76A5 2F6B  52A0 941E 1261 0029 2=
+648
+Get my key at: http://www.sistina.com/~lewis/gpgkey
+ (Unfortunately, the PKS-type keyservers do not work with multiple sub-keys)
+
+-----Begin Obligatory Humorous Quote----------------------------------------
+Choose a job you love, and you will never have to work a day in your life.
+-----End Obligatory Humorous Quote------------------------------------------
+
+--r5Pyd7+fXNt84Ff3
+Content-Type: application/pgp-signature
+Content-Disposition: inline
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.0.4 (GNU/Linux)
+Comment: For info see http://www.gnupg.org
+
+iD8DBQE6rawopE6/iGtdjLERAoWgAJ9XwbVzJwSm/4zNqcyvVvShJy5vNACaAtU8
+vnV9wjD4lF4YE15nxNLM0ak=
+=zVX7
+-----END PGP SIGNATURE-----
+
+--r5Pyd7+fXNt84Ff3--
