@@ -1,33 +1,32 @@
-Message-ID: <9D377901C29FD01198C500609737B809AB0575@SRHS_APP_0001>
-From: "Kolb, Mark" <MKolb@srhs.org>
-Subject: [linux-lvm] Vote for LVM
-Date: Thu, 26 Aug 1999 10:16:07 -0400
+Date: Thu, 26 Aug 1999 11:37:12 -0500 (CDT)
+From: "Jonny B." <brassow@lcse.umn.edu>
+Subject: [linux-lvm] e2fsadm Q's
+Message-ID: <Pine.SGI.3.91.990826112146.14438A-100000@nile.lcse.umn.edu>
 MIME-Version: 1.0
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: TEXT/PLAIN; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: "'linux-lvm@msede.com'" <linux-lvm@msede.com>
+To: linux-lvm@msede.com
 
-Hello All,
+I see that in order to resize ext2 file systems, you need this 
+"resize2fs" tool.  However, you need to have registered PartitionMagic 
+3.x in order to download it.
 
-I have been working with IBM's LVM for three years and I find it an
-invaluable tool.  I can think of several times in recent history that I have
-bailed production systems out by the ability to extend filesystems on the
-fly.  From this point of view alone I would like to see an option for LVM in
-the Linux kernel as soon as is possible.  Having a good volume manager also
-simplifies the take-over of resources in a High-Availability environment.
+So, I'm thinking that this product is probably not open source.  If I'm 
+wrong (or I can get a developement version of some source code 
+somewhere), could someone please tell me?
 
-Coupling LVM with a logging/journaling filesystem on Linux is the computer
-nirvana that I hope to base my career on over the next years.  Thanks for
-listening.
+The reason I'm asking is because I am going to start work on a file 
+system resizer for GFS.  I would like it to be an online resizer (mmm... 
+lots of problems:).  Does anyone have any experience in this or could 
+point me to some source code (other than the LVM stuff - I'm looking that 
+over now:)?
 
+ brassow
 
-Mark Kolb
-Systems Engineer
-Information Services, Network Management
-The Hospital of Saint Raphael
-New Haven, CT 06511
-Phone: (203) 789-3791
-e-mail: mkolb@srhs.org
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+There are more than 1,000 chemicals in coffee; of those, 26 have
+been tested, of the 26, 1/2 cause cancer in laboratory rats.
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
