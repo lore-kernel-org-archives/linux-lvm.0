@@ -1,11 +1,12 @@
-Return-Path: <fzzgrr@gmx.net>
-Date: Tue, 21 Aug 2001 00:43:15 +0200
-From: Ulrich Wiederhold <U.Wiederhold@gmx.net>
-Message-ID: <20010821004315.B5358@sky.net>
-Mime-Version: 1.0
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: [linux-lvm] vgcfgbackup
+Return-Path: <warl0k@lvcm.com>
+Message-ID: <001c01c129cd$b910b940$f04b7818@lvcm.com>
+From: "Glenn Shannon" <warl0k@lvcm.com>
+References: <20010820200942.82753.qmail@web13404.mail.yahoo.com>
+Subject: Re: [linux-lvm] no volume groups found
+Date: Mon, 20 Aug 2001 16:13:29 -0700
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Return-Path: warl0k@lvcm.com
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,77 +18,194 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="iso-8859-1"
+Content-Type: text/plain; charset="utf-8"
 To: linux-lvm@sistina.com
 
-Hello,
-looking for a solution in the mailinglist-archive I found something, so
-I reinstalled an older lvm-version:
-~ $ dpkg --list | grep lvm
-ii  lvm-common     1.2            The Logical Volume Manager for Linux
-ii  lvm10          0.9.1-final-1  The Logical Volume Manager for Linux
+Pierre,
 
-I did a=20
-home:# vgcfgrestore -l -n vg01
---- Volume group ---
-VG Name               vg01
-VG Access             read/write
-VG Status             NOT available/resizable
-VG #                  0
-MAX LV                256
-Cur LV                3
-Open LV               0
-MAX LV Size           255.99 GB
-Max PV                256
-Cur PV                5
-Act PV                5
-VG Size               49.15 GB
-PE Size               4 MB
-Total PE              12583
-Alloc PE / Size       12583 / 49.15 GB
-Free  PE / Size       0 / 0
-VG UUID               p8KJS0-eei7-s10H-61hT-7uJS-Euiq-bXhlNs
+It's not proper to yell at people like that. The guy is asking an honest
+question and you yelling at him will not get him any closer to a solution.
 
-And restored the vg01 using "vgcfgrestore -f /etc/lvmconf/vg01.conf -n vg01=
- /dev/XXX"
-for every pv I use, output is like
-home:# vgcfgrestore -f /etc/lvmconf/vg01.conf -n vg01 /dev/hda2
-vgcfgrestore -- VGDA for "vg01" successfully restored to physical volume
-"/dev/hda2"
-vgcfgrestore -- you may not have an actual backup of restored volume
-group "vg01"
+I use debian unstable, but I have upgraded to lvm 1.0.
 
-What should I do now?
-vgchange still won=B4t find a volume group, vgcfgbackup show this:
-home:# vgcfgbackup -v vg01
-vgcfgbackup -- using volume group(s) on command line
-vgcfgbackup -- locking logical volume manager
-vgcfgbackup -- checking volume group name "vg01"
-vgcfgbackup -- checking existence of volume group "vg01"
-vgcfgbackup -- ERROR: volume group "vg01" has an invalid number of
-physical volumes
-vgcfgbackup -- ERROR "vg_cfgbackup(): vg_check_exist" backing up volume
-group vg01
+My suggestion is to use lvm 1.0-rc1. Any other valid suggestions?
 
-and:
-home:# pvscan         =20
-pvscan -- reading all physical volumes (this may take a while...)
-pvscan -- inactive PV "/dev/sdb1" of VG "vg01" [8.51 GB / 0 free]
-pvscan -- inactive PV "/dev/sdc1" of VG "vg01" [4.23 GB / 0 free]
-pvscan -- inactive PV "/dev/hda2" of VG "vg01" [19.1 GB / 0 free]
-pvscan -- inactive PV "/dev/hdb1" of VG "vg01" [7.87 GB / 0 free]
-pvscan -- inactive PV "/dev/hdd1" of VG "vg01" [9.44 GB / 0 free]
-pvscan -- total: 5 [49.17 GB] / in use: 5 [49.17 GB] / in no VG: 0 [0]
-
-How can I continue?
-Thanks for your hints.
-
-Uli
+Glenn
+----- Original Message -----
+From: "Pierre Lamb" <plamb_98@yahoo.com>
+To: <linux-lvm@sistina.com>
+Sent: Monday, August 20, 2001 1:09 PM
+Subject: Re: [linux-lvm] no volume groups found
 
 
-P.S.: I haven=B4t written the last email to this list because I need an inf=
-ormation about the meaning
-of unstable.
-
---=20
-'The box said, 'Requires Windows 95 or better', so i installed Linux - TKK 5
+> THATS WHY IT IS CALLED UNSTABLE!!!!!!!!!!!!!!!!!
+> --- Ulrich Wiederhold <U.Wiederhold@gmx.net> wrote:
+> > Hello,
+> > I use 2.4.9 with debian unstable and lvm version
+> > 0.9.1_beta6. I don�t
+> > use devfs and compiled lvm into the kernel.
+> > I created a vg nameed vg01 containing
+> > hda2,hdb1,hdd1,sdb1 and sdc1. Then
+> > I created some lv�s and made a mkfs.xfs.
+> > I could do a "vgscan -v && vgchange -a y" and mount
+> > my lv�s.
+> >
+> > After a reboot, /etc/rcS.d/S25lvm couldn�t find any
+> > vg�s. So I ran the
+> > script manually and it works.
+> >
+> > I had some other problems that need me to reboot and
+> > my PC crashed several
+> > times. Now, I can�t even run the script manually. I
+> > always get this:
+> >
+> > home:# vgscan -v
+> > vgscan -- removing "/etc/lvmtab" and "/etc/lvmtab.d"
+> > vgscan -- creating empty "/etc/lvmtab" and
+> > "/etc/lvmtab.d"
+> > vgscan -- reading all physical volumes (this may
+> > take a while...)
+> > vgscan -- "/etc/lvmtab" and "/etc/lvmtab.d"
+> > successfully created
+> > vgscan -- WARNING: This program does not do a VGDA
+> > backup of your volume
+> > group
+> >
+> > home:# vgchange -a y
+> > vgchange -- no volume groups found
+> >
+> > home:# vgdisplay
+> > vgdisplay -- no volume groups found
+> >
+> > Then I did "man vgcfgrestore" and tryed
+> > home:# vgcfgrestore -n vg01 -l
+> > vgcfgrestore -- ERROR: different structure size
+> > stored in
+> > "/etc/lvmconf/vg01.conf" than expected in file
+> > vg_cfgrestore.c [line
+> > 137]
+> > vgcfgrestore -- ERROR "vg_cfgrestore(): read"
+> > restoring volume group
+> > "vg01"
+> >
+> > and:
+> > home:# vgcfgrestore -f /etc/lvmconf/vg01.conf.1.old
+> > -n vg01 /dev/sdb1
+> > vgcfgrestore -- ERROR: different structure size
+> > stored in
+> > "/etc/lvmconf/vg01.conf.1.old" than expected in file
+> > vg_cfgrestore.c
+> > [line 137]
+> > vgcfgrestore -- ERROR "vg_cfgrestore(): read"
+> > restoring volume group
+> > "vg01"
+> >
+> > What "PhysicalVolumePath" should I use with it?
+> >
+> > Then I looked in the mail-archive and did a:
+> > home:/home/fzzgrr# vgcfgrestore -v -d -n vg01
+> > /dev/hda2
+> > <1> vg_check_name -- CALLED with VG: vg01
+> > <22> lvm_check_chars -- CALLED with name: "vg01"
+> > <22> lvm_check_chars -- LEAVING with ret: 0
+> > <1> vg_check_name -- LEAVING with ret: 0
+> > <1> pv_check_name -- CALLED with "/dev/hda2"
+> > <22> lvm_check_chars -- CALLED with name:
+> > "/dev/hda2"
+> > <22> lvm_check_chars -- LEAVING with ret: 0
+> > <22> lvm_check_dev -- CALLED
+> > <333> lvm_check_partitioned_dev -- CALLED
+> > <333> lvm_check_partitioned_dev -- LEAVING with ret:
+> > TRUE
+> > <22> lvm_check_dev -- LEAVING with ret: 1
+> > <1> pv_check_name -- LEAVING with ret: 0
+> > <1> vg_check_active -- CALLED with VG: vg01
+> > <22> vg_check_name -- CALLED with VG: vg01
+> > <333> lvm_check_chars -- CALLED with name: "vg01"
+> > <333> lvm_check_chars -- LEAVING with ret: 0
+> > <22> vg_check_name -- LEAVING with ret: 0
+> > <22> vg_status -- CALLED with VG: vg01
+> > <333> vg_check_name -- CALLED with VG: vg01
+> > <4444> lvm_check_chars -- CALLED with name: "vg01"
+> > <4444> lvm_check_chars -- LEAVING with ret: 0
+> > <333> vg_check_name -- LEAVING with ret: 0
+> > <22> vg_status -- LEAVING with ret: -6
+> > <1> vg_check_active -- LEAVING with ret: -6
+> > <1> lvm_get_iop_version -- CALLED
+> > <22> lvm_check_special -- CALLED
+> > <22> lvm_check_special -- LEAVING
+> > <1> lvm_get_iop_version -- AFTER ioctl ret: 0
+> > <1> lvm_get_iop_version -- LEAVING with ret: 10
+> > vgcfgrestore -- locking logical volume manager
+> > <1> lvm_lock -- CALLED
+> > <22> lvm_check_special -- CALLED
+> > <22> lvm_check_special -- LEAVING
+> > <1> lvm_lock -- LEAVING with ret: 0
+> > <1> lvm_dont_interrupt -- CALLED
+> > <1> lvm_dont_interrupt -- LEAVING
+> > vgcfgrestore -- restoring volume group "vg01" from
+> > "/etc/lvmconf/vg01.conf"
+> > <1> vg_cfgrestore -- CALLED
+> > <22> vg_check_name -- CALLED with VG: vg01
+> > <333> lvm_check_chars -- CALLED with name: "vg01"
+> > <333> lvm_check_chars -- LEAVING with ret: 0
+> > <22> vg_check_name -- LEAVING with ret: 0
+> > vgcfgrestore -- checking existence of
+> > "/etc/lvmconf/vg01.conf"
+> > vgcfgrestore -- reading volume group data for "vg01"
+> > from
+> > "/etc/lvmconf/vg01.conf"
+> > <22> vg_check_consistency -- CALLED
+> > <333> vg_check_name -- CALLED with VG: vg01
+> > <4444> lvm_check_chars -- CALLED with name: "vg01"
+> > <4444> lvm_check_chars -- LEAVING with ret: 0
+> > <333> vg_check_name -- LEAVING with ret: 0
+> > <22> vg_check_consistency -- LEAVING with ret: 0
+> > vgcfgrestore -- reading physical volume data for
+> > "vg01" from
+> > "/etc/lvmconf/vg01.conf"
+> > vgcfgrestore -- ERROR: different structure size
+> > stored in
+> > "/etc/lvmconf/vg01.conf" than expected in file
+> > vg_cfgrestore.c [line
+> > 137]
+> > <1> vg_cfgrestore -- LEAVING with ret: -328
+> > <1> lvm_error -- CALLED with: -328
+> > <1> lvm_error -- LEAVING with: "vg_cfgrestore():
+> > read"
+> > vgcfgrestore -- ERROR "vg_cfgrestore(): read"
+> > restoring volume group
+> > "vg01"
+> >
+> > <1> lvm_unlock -- CALLED
+> > <1> lvm_unlock -- LEAVING with ret: 0
+> >
+> >
+> > So, what else can I do?
+> > I don�t want lose my data!
+> > :(
+> >
+> > Any hints?
+> > Thanks.
+> > Uli
+> >
+> > --
+> > 'The box said, 'Requires Windows 95 or better', so i
+> > installed Linux - TKK 5
+> > _______________________________________________
+> > linux-lvm mailing list
+> > linux-lvm@sistina.com
+> > http://lists.sistina.com/mailman/listinfo/linux-lvm
+> > read the LVM HOW-TO at
+> http://www.sistina.com/lvm/Pages/howto.html
+>
+>
+> __________________________________________________
+> Do You Yahoo!?
+> Make international calls for as low as $.04/minute with Yahoo! Messenger
+> http://phonecard.yahoo.com/
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@sistina.com
+> http://lists.sistina.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
