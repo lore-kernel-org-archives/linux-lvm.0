@@ -1,11 +1,8 @@
-Content-Type: text/plain; charset="us-ascii"
-From: Adrian Head <ahead@bigpond.net.au>
-Subject: Re: [linux-lvm] Do I loose all my data if one disk crashes?
-References: <3CD06BAB.7080905@uci.edu>
-In-Reply-To: <3CD06BAB.7080905@uci.edu>
+From: Craig Tierney <ctierney@hpti.com>
+Message-Id: <20020502121825.B3956@hpti.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Message-Id: <E1732j2-00059D-00@hermes.sistina.com>
+Content-Disposition: inline
+Subject: [linux-lvm] Can no longer mount lvm striped volume
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,28 +13,45 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed May  1 17:38:02 2002
+Date: Thu May  2 13:20:02 2002
 List-Id: <linux-lvm.redhat.com>
-To: linux-lvm@sistina.com, Dave Newman <newman@uci.edu>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: linux-lvm@sistina.com
 
-On Thu, 2 May 2002 08:26, Dave Newman wrote:
-> My question is: Do I loose all my data if any of the three disks
-> crashes?  And if so, what can I do to improve the "restore-ability" of
-> my configuration.
+I just had a power outage and now I cannot
+remount my LVM volumes.  I have to volume
+groups each with one logical volume.  Each
+vg is striped across two luns.
 
-I have not read the LVM instructions so I'm unsure what config you have ended 
-up with.
+I started getting the errors:
 
-One thing to remember is that LVM does not implement RAID5 only RAID0 and 
-linear.  Therefore, if a drive dies you will lose data.
+vgscan -- ERROR: logical volume "/dev/sdd_vol2/lv1" reuses 
+an existing device number; please vgexport/vgimport that VG 
 
-To give the system a little extra survivability (yes you 
-_still_need_backups_) you can have LVM ontop of a Linux software RAID5.  This 
-will allow one drive to fail but the array will still be accessable.  Of 
-course with this config you effectively lose one of your drives because of 
-parity information.
+I was using lvm-1.0.2 at the time so I could
+not run vgscan -f.  So I upgraded my 2.4.14 kernel
+to lvm-1.1-rc2 and gave it a try.
+
+Now I vgscan will not complain about the logical
+volumes, but I still cannot mount the ext3 filesystems
+that are installed on the volumes.
+
+I am now getting the error message:
+
+[root@x06 /root]# mount -t ext3 /dev/sdd_vol2/ /export/sdd_vol2
+mount: /dev/sdd_vol2/ is not a block device
+
+IO nodes have gone down in the past due to
+power interruptions, but I have never had
+this catastrophic of a problem.  I have 16 volume
+groups, and 3 or 4 appear to be affected.
+
+Any ideas?
+
+Thanks,
+Craig
+
 
 -- 
-Adrian Head
-
-(Public Key available on request.)
+Craig Tierney (ctierney@hpti.com)
