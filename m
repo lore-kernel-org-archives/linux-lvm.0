@@ -1,7 +1,7 @@
 From: Robert Macaulay <robert_macaulay@dell.com>
-Message-ID: <Pine.LNX.4.33.0110252342580.23688-100000@ping.us.dell.com>
+Message-ID: <Pine.LNX.4.33.0110260000350.23688-100000@ping.us.dell.com>
 MIME-Version: 1.0
-Subject: [linux-lvm] LVM read performance bad
+Subject: [linux-lvm] More information on my LV with bad read performance..
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -12,30 +12,63 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Thu Oct 25 23:49:02 2001
+Date: Fri Oct 26 00:02:02 2001
 List-Id: <linux-lvm.redhat.com>
 Content-Type: TEXT/PLAIN; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-I have been running some tests on LVM on 2.4.9-6 kernel from redhat, 
-1.0.1rc4. I have created a test volume, 64k stripe size, 26 stripes, 9Gig 
-size, 8Gig RAM.
+I realized I didn't include a lvdisplay -v of my volume. Here it is.
+The disks are spread out over 4 scsi busses. 
+Thanks again.
 
-Here is the odd part. I am using iozone to benchmark the disks. I start a 
-9Gig file test. The write gets about 56MB/sec, the re-write gets 68MB/sec, 
-and the read get a whopping 13MB/sec. 
+--- Logical volume ---
+LV Name                /dev/vgOracle/foo
+VG Name                vgOracle
+LV Write Access        read/write
+LV Status              available
+LV #                   52
+# open                 0
+LV Size                9.04 GB
+Current LE             2314
+Allocated LE           2314
+Stripes                26
+Stripe size (KByte)    64
+Allocation             next free
+Read ahead sectors     120
+Block device           58:51
 
-This seems completely backward to me. I'm not subscribed to lvm-devel, but 
-a similar question has come up there under the topic, [lvm-devel] stripe 
-performance (read_ahead vs. max_readahead) omn the 15th of October.
+   --- Distribution of logical volume on 26 physical volumes  ---
+   PV Name                  PE on PV     reads      writes
+   /dev/sdh1                89           13629      173625
+   /dev/sdi1                89           13616      173386
+   /dev/sdj1                89           13630      173372
+   /dev/sdl1                89           13619      173354
+   /dev/sdm1                89           13625      173369
+   /dev/sdn1                89           13619      173384
+   /dev/sdo1                89           13635      173391
+   /dev/sdp1                89           13632      173387
+   /dev/sdq1                89           13641      173401
+   /dev/sdr1                89           13633      173386
+   /dev/sds1                89           13639      173398
+   /dev/sdt1                89           13633      173388
+   /dev/sdu1                89           13625      173367
+   /dev/sdv1                89           13617      173357
+   /dev/sdw1                89           13625      173367
+   /dev/sdx1                89           13617      173358
+   /dev/sdy1                89           13624      173366
+   /dev/sdz1                89           13618      173354
+   /dev/sdaa1               89           13606      173366
+   /dev/sdab1               89           13600      173388
+   /dev/sdac1               89           13609      173366
+   /dev/sdad1               89           13603      173356
+   /dev/sdae1               89           13609      173364
+   /dev/sdaf1               89           13600      173361
+   /dev/sdag1               89           13607      173366
+   /dev/sdah1               89           13602      173354
 
-Can anyone shed any light on this? The PV's are mirrored Fiber Channel 
-disks. All separate disks. I've tried different FC drivers with the same 
-results. We're about to run some Oracle tests, I was just checking the 
-relative speeds.
+   --- logical volume i/o statistic ---
+   354113 reads  4507931 writes
 
-Is there any more information I can provide to help speed this up? 
 
-Thanks
-Robert
+--cut--
