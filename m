@@ -1,9 +1,11 @@
-Return-Path: <adilger@turbolinux.com>
-From: Andreas Dilger <adilger@turbolinux.com>
-Message-Id: <200012230200.eBN20hU29913@webber.adilger.net>
-Date: Fri, 22 Dec 2000 19:00:43 -0700 (MST)
+Return-Path: <mike@marxmeier.com>
+Date: Sat, 23 Dec 2000 17:58:31 +0000 (GMT)
+From: Paul Jakma <paul@clubi.ie>
+Subject: Re: [linux-lvm] 0.9 tools compatible with 0.8 kernel? (and vice
+ versa)
+In-Reply-To: <200012220613.eBM6Dwx06755@webber.adilger.net>
+Message-ID: <Pine.LNX.4.30.0012231751490.5052-100000@fogarty.jakma.org>
 MIME-Version: 1.0
-Subject: [linux-lvm] [PATCH] some strange things I noticed
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,97 +17,62 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: TEXT/PLAIN; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: Linux LVM mailing list <linux-lvm@sistina.com>
-Cc: lvm-devel@sistina.com
+To: linux-lvm@sistina.com
+Cc: Linux LVM list <linux-lvm@msede.com>
 
-Heinz,
-here are some things I noticed while looking at the LVM permissions.
+On Thu, 21 Dec 2000, Andreas Dilger wrote:
 
-When you are checking the file mode in the kernel, I don't think O_RDWR
-is the right thing, but rather FMODE_WRITE (see filp_open).  Also, it
-is hard to tell what you originally intended with the LV_ACTIVE check,
-but basically, it should be that any access to the block device on an
-inactive LV is an error, right?
+> No.
+>
 
-The second chunk is also a bit strange - if lv_open == 1, then it will
-become negative, I believe.  I'm not really sure why you want an extra
-reference on the opens, but reversing the checks would seem to be the
-right thing to do, based on how the increments are done.
+eek.
 
-The last part is a bit of indentation cleanup, but also the I'm not sure
-the return value is being calculated correctly.  According to my K&R book,
-|| has a higher precedence than ?: so if there is an error you are returning
-a positive int (for the first put_user), or -EFAULT (for the second put_user).
-I had this same problem in my code and it was hard to find.
+> Yes, that's why we have been discussing all of the "LVM user tools wrappers"
 
-Cheers, Andreas
-============================================================================
---- drivers/block/lvm.c.orig	Mon Dec 18 17:46:40 2000
-+++ drivers/block/lvm.c	Fri Dec 22 16:17:50 2000
-@@ -982,10 +982,11 @@
- 		if (lv_ptr->lv_status & LV_SPINDOWN) return -EPERM;
- 
- 		/* Check inactive LV and open for read/write */
--		if (file->f_mode & O_RDWR) {
--			if (!(lv_ptr->lv_status & LV_ACTIVE)) return -EPERM;
--			if (!(lv_ptr->lv_access & LV_WRITE))  return -EACCES;
--		}
-+		if (!(lv_ptr->lv_status & LV_ACTIVE))
-+			return -EPERM;
-+		if (!(lv_ptr->lv_access & LV_WRITE) &&
-+		    file->f_mode & FMODE_WRITE))
-+			return -EACCES;
- 
- #ifndef BLOCK_DEVICE_OPERATIONS
- 		file->f_op = &lvm_blk_fops;
-@@ -1220,8 +1219,8 @@
- #endif
- 
- 	sync_dev(inode->i_rdev);
--	if (lv_ptr->lv_open == 1) vg_ptr->lv_open--;
- 	lv_ptr->lv_open--;
-+	if (lv_ptr->lv_open == 1) vg_ptr->lv_open--;
- 
- 	MOD_DEC_USE_COUNT;
- 
-@@ -1234,22 +1233,23 @@
- 	struct buffer_head bh;
- 	unsigned long block;
- 	int err;
--	
-+
- 	if (get_user(block, &user_result->lv_block))
--	return -EFAULT;
--	
-+		return -EFAULT;
-+
- 	memset(&bh,0,sizeof bh);
- 	bh.b_rsector = block;
- 	bh.b_dev = bh.b_rdev = inode->i_dev;
- 	bh.b_size = lvm_get_blksize(bh.b_dev);
--	if ((err=lvm_map(bh.b_rdev, &bh.b_rdev, &bh.b_rsector, bh.b_size >> 9, READ)) < 0)  {
--	printk("lvm map failed: %d\n", err);
--	return -EINVAL;
-+	if ((err = lvm_map(bh.b_rdev, &bh.b_rdev, &bh.b_rsector, bh.b_size >> 9,
-+			   READ)) < 0)  {
-+		printk("lvm map failed: %d\n", err);
-+		return -EINVAL;
- 	}
--	
--	return put_user(  kdev_t_to_nr(bh.b_rdev), &user_result->lv_dev) ||
--	put_user(bh.b_rsector, &user_result->lv_block) ? -EFAULT : 0;
--}     
-+
-+	return (put_user(kdev_t_to_nr(bh.b_rdev), &user_result->lv_dev) ||
-+		put_user(bh.b_rsector, &user_result->lv_block)) ? -EFAULT : 0;
-+}
- 
- 
- /*
+ah, i tuned out out of that one cause i thought it was to do with
+debian packaging.
 
+> issues here over the last week.  With the current setup, you can't even
+> _install_ multiple versions of the LVM tools at the same time, let alone
+> have a single version handle multiple protocols.
+>
+
+ehhmm.. problem.
+
+on-disk LVM isn't touched though, right? so it's just a tools issue,
+right? ie, booting lvm 0.9 isn't going to leave me with on-disk
+structures that 0.8 would barf on?
+
+> Try out Marcelo's latest LVM user tools install, which is really required
+> before trying to update your system, as it allows multiple versions of
+> user tools to be installed and work well.  Also keep a boot floppy with the
+> LVM 0.8 and LVM 0.9 tools available in case of trouble, if you don't have
+> an emergency non-LVM boot partition.
+>
+
+my root is non-lvm. i think what'll do is remove the LVM v0.9 update
+from t13pre4 and see how well it works wrt to the issues i had with
+t12, before committing to upgrading lvm.
+
+how stable is 0.9 compared to 0.8.1? (guess i should have paid more
+attention to this list).
+
+> rpm http://distro.conectiva.com.br/experimental/
+>
+
+excellent. thanks!
+
+> Cheers, Andreas
+>
+
+happy christmas!
+
+regards,
 -- 
-Andreas Dilger  \ "If a man ate a pound of pasta and a pound of antipasto,
-                 \  would they cancel out, leaving him still hungry?"
-http://www-mddsp.enel.ucalgary.ca/People/adilger/               -- Dogbert
+Paul Jakma	paul@clubi.ie	paul@jakma.org
+PGP5 key: http://www.clubi.ie/jakma/publickey.txt
+-------------------------------------------
+Fortune:
+The finest eloquence is that which gets things done.
