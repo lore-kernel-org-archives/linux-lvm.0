@@ -1,9 +1,10 @@
-Subject: Re: [linux-lvm] OK...interesting dilemma... 
-In-Reply-To: Your message of "Thu, 01 Nov 2001 21:21:19 MST."
-             <20011101212119.S16554@lynx.no> 
-References: <20011102022256.536AC182DE@skuld.wookimus.net>  <20011101212119.S16554@lynx.no> 
-From: "Chad C. Walstrom" <chewie@wookimus.net>
-Message-Id: <20011102131633.965D8180A6@skuld.wookimus.net>
+From: "Stephen C. Tweedie" <sct@redhat.com>
+Subject: Re: [linux-lvm] Re: What really works?
+Message-ID: <20011102153732.A5007@redhat.com>
+References: <E15vISM-0005YX-00.2001-10-21-14-15-58@mail5.svr.pol.co.uk> <002501c15a66$34f8d010$836788cf@industry> <20011022230524.B4212@redhat.com> <20011023104359.B385@btconnect.com>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20011023104359.B385@btconnect.com>; from thornber@btconnect.com on Tue, Oct 23, 2001 at 10:43:59AM +0100
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,28 +15,29 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Fri Nov  2 07:19:02 2001
+Date: Fri Nov  2 09:40:02 2001
 List-Id: <linux-lvm.redhat.com>
-MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: Andreas Dilger <adilger@turbolabs.com>
-Cc: linux-lvm@sistina.com
+To: linux-lvm@sistina.com
+Cc: Stephen Tweedie <sct@redhat.com>, Joe Thornber <thornber@btconnect.com>
 
-In message <20011101212119.S16554@lynx.no>, Andreas Dilger writes:
-> Did you vgexport that VG?  If so, when you vgimport it you can give it
-> a new name.
+Hi,
 
-DOH!  I don't know what I was thinking.  Thanks for the help.  I'll have
-to do some interesting re-swaping of hardware, then. ;-)
+On Tue, Oct 23, 2001 at 10:43:59AM +0100, Joe Thornber wrote:
+ 
+> You're not missing anything.  The correct thing to do (as pointed out
+> by Andrea Arc.) is to hook b_end_io such that we can keep track of all
+> 'in flight' io's, and only start moving once these have completed.
 
-> > Will it correctly choose the inactive volume?
-> 
-> Probably not if you use vgrename.
+Precisely.
 
-Thanks for the heads-up!
+> This is implemented in the new device-mapper driver that we are
+> switching to shortly.  I consider 'live' pvmove broken in the current
+> LVM.
 
---
-Chad Walstrom <chewie@wookimus.net>                 | a.k.a. ^chewie
-http://www.wookimus.net/                            | s.k.a. gunnarr
-Key fingerprint = B4AB D627 9CBD 687E 7A31  1950 0CC7 0B18 206C 5AFD
+Just while we're on the subject, does anyone have a timescale for
+fixing this?
+
+Cheers,
+ Stephen
