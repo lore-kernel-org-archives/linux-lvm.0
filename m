@@ -1,20 +1,22 @@
-Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id i9S6Zir07064
-	for <linux-lvm@redhat.com>; Thu, 28 Oct 2004 02:35:44 -0400
-Received: from percy.comedia.it (percy.comedia.it [212.97.59.71])
-	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id i9S6ZabS015298
-	for <linux-lvm@redhat.com>; Thu, 28 Oct 2004 02:35:42 -0400
-Date: Thu, 28 Oct 2004 08:35:31 +0200
-From: Luca Berra <bluca@comedia.it>
-Subject: Re: [linux-lvm] Software raid on top of lvm logical volume
-Message-ID: <20041028063530.GA13279@percy.comedia.it>
-References: <41801ADE.6030308@monjoin.net> <20041028011738.GD13737@kluge.net>
-	<41808B37.40406@monjoin.net>
-Mime-Version: 1.0
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <41808B37.40406@monjoin.net>
-Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
+Received: from fentible.pjc.net (vpnuser9.surrey.redhat.com [172.16.9.9])
+	by pobox.surrey.redhat.com (8.12.8/8.12.8) with ESMTP id i9S7UuX7019304
+	for <linux-lvm@redhat.com>; Thu, 28 Oct 2004 08:30:56 +0100
+Received: from patrick by fentible.pjc.net with local (Exim 4.34)
+	id 1CN4kQ-0007Gw-No
+	for linux-lvm@redhat.com; Thu, 28 Oct 2004 08:31:02 +0100
+Resent-Message-ID: <20041028073102.GA27043@tykepenguin.com>
+Resent-To: linux-lvm@redhat.com
+Resent-To: debian-bugs-dist@lists.debian.org
+Resent-Message-ID: <handler.278606.B.109894297823788@bugs.debian.org>
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+From: lvm2 <sam@vilain.net>
+Date: Thu, 28 Oct 2004 18:55:43 +1300
+Message-Id: <E1CN3GB-0004i8-6C@samv.private.marketview.co.nz>
+Subject: [linux-lvm] Bug#278606: LV names with hyphens don't work
+Reply-To: lvm2 <sam@vilain.net>, 278606@bugs.debian.org,
+	LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -24,49 +26,38 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="iso-8859-1"; format="flowed"
-To: LVM general discussion and development <linux-lvm@redhat.com>
+To: Debian Bug Tracking System <submit@bugs.debian.org>
 
-On Thu, Oct 28, 2004 at 08:01:27AM +0200, Eric Monjoin wrote:
->Theo Van Dinter a =EF=BF=BDcrit :
->
->Well it's because we have problems in this way. We have a server=20
->connected to 2 EMC Symmetrix where we assign some 70Gb and 40Gb Luns. =20
->We used Powerpath to manage the dual path to the Luns and so I first=20
->created mirror as this :
+Package: lvm2
+Version: 2.00.24-1
+Severity: normal
 
+Hi there,
 
->But after a while I obtain that :
->Personalities : [raid1]
->read_ahead 1024 sectors
->Event: 10                =20
->md9 : active raid1 [dev e9:31][1] [dev e8:e1][0]
->      42829184 blocks [2/2] [UU]
->and if we try to rebuild the mirror after after loosing access to one of=20
-this might be a problem with powerpath, it seems harmless tough
+I just created an LV with a hyphen, and it had all sorts of problems
+when I went to remove it - I couldn't remove the mount point directory
+(rmdir returned EBUSY), and I couldn't remove it with lvremove (it said
+the volume was active).  I eventually had to reboot to clear the bung
+references in the kernel.
 
->the EMC, we have really bad result :
->Personalities : [raid1]
->read_ahead 1024 sectors
->Event: 26                =20
->md9 : active raid1 emcpowerd1[2] [dev e8:e1][0]
->      42829184 blocks [2/1] [U_]
->      [>....................]  recovery =3D  1.4% (630168/42829184)=20
->finish=3D68.1min speed=3D10315K/sec
-this is a problem with linux md raid. it does not support fast resync
-with a bitmap of changed sectors, there is a project to implement it,
-but it is not yet in the standard kernel.
-look on the linux-raid mailing list archives for something called 'fast
-raid 1'.
-i do not believe you would have any advantage in stacking md above lvm
-anyway.
-Regards,
-Luca
+If there is no upstream fix ready, may I humbly suggest disallowing
+hyphens in lvcreate without a special force option.  I can probably
+provide a patch if required.
 
---=20
-Luca Berra -- bluca@comedia.it
-        Communication Media & Services S.r.l.
- /"\
- \ /     ASCII RIBBON CAMPAIGN
-  X        AGAINST HTML MAIL
- / \
+Cheers,
+Sam.
+
+-- System Information:
+Debian Release: testing/unstable
+  APT prefers unstable
+  APT policy: (500, 'unstable'), (500, 'testing')
+Architecture: i386 (i686)
+Kernel: Linux 2.6.9-final-vs1.9.3-rc3
+Locale: LANG=C, LC_CTYPE=C
+
+Versions of packages lvm2 depends on:
+ii  libc6                       2.3.2.ds1-12 GNU C Library: Shared libraries an
+ii  libdevmapper1.00            2:1.00.19-2  The Linux Kernel Device Mapper use
+ii  lvm-common                  1.5.17       The Logical Volume Manager for Lin
+
+-- debconf information excluded
