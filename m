@@ -1,11 +1,11 @@
 Return-Path: <mauelshagen@sistina.com>
-Date: Fri, 17 Aug 2001 11:00:43 +0200
+Date: Fri, 17 Aug 2001 11:03:37 +0200
 From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] Problems with 1.0
-Message-ID: <20010817110043.A10370@sistina.com>
-References: <BJEHIDHMNHMANMFJEKAPCEAGCAAA.tren@eotnetworks.com>
+Subject: Re: [linux-lvm] LVM Quick License Question
+Message-ID: <20010817110337.B10370@sistina.com>
+References: <6AE5C1ECED455C47B6B5D01AA6C41CA4D99293@EXCHANGE01.plaza.ds.adp.com>
 Mime-Version: 1.0
-In-Reply-To: <BJEHIDHMNHMANMFJEKAPCEAGCAAA.tren@eotnetworks.com>; from tren@eotnetworks.com on Thu, Aug 16, 2001 at 10:55:35PM -0600
+In-Reply-To: <6AE5C1ECED455C47B6B5D01AA6C41CA4D99293@EXCHANGE01.plaza.ds.adp.com>; from bmock@plaza.ds.adp.com on Thu, Aug 16, 2001 at 01:38:57PM -0700
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -21,50 +21,60 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Thu, Aug 16, 2001 at 10:55:35PM -0600, Tren Blackburn wrote:
-> Hi List;
+On Thu, Aug 16, 2001 at 01:38:57PM -0700, Brad Mock wrote:
+> Hello Heinz,
 > 
-> I had installed the 1.0 driver into my 2.4.8 kernel, and rebooted.
-> Everything came up fine, so I installed the user tools and forgot about
-> them...until I had to reboot this evening...Now the LVM tools are
-> dynamically linked (Looking for libgcc_s.so.1)?  Or so it seems.  I am no
-> a C programmer and don't fully understand how linking works, but it seems
-> to me that the beta 8 tools were statically linked as they didn't need any
-> external libraries, but the 1.0 user tools are dynamically linked.
-> 
-> Now this probably doesn't seem like a problem, but when your libraries are
-> mounted on a LVM volume and you have no tools to activate your volume
-> with...well...you can probably guess  =)  Luckilly I had an identically
-> configured machine that I hadn't upgraded to 1.0 yet (same gcc 3.0
-> compiler, etc) so I just copied the tools across to the other machine
-> (beta 8 tools) and all is fine again.
-> 
-> If I am completely off base as to what is happening here, please correct
-> me, and please also let me know how to solve this problem.
+> I apologize for contacting you but you are the author of LVM.
 
-Tren,
-that shouldn't be a problem because the default installation directory for
-shared libraries is /lib which belongs to the root directory. LVM tools just
-access any shread libraries from there unless you use the --libdir configure
-option to chosse a different one.
+Brad,
 
-If you are not able to mount the root filesystem (no matter on which block 
-device including a logical volume it sits) you are in trouble anyway ;-)
+you don't need too; it is my pleasure to answer :-)
 
 > 
-> As always I appreciate all help this list gives.
+> I am the licensing representative for my company.
 > 
-> Regards,
+> My developer's are using LVM (I'm not sure which release), so:
 > 
-> Tren.
+> 1.  The LVM product is licensed to us under the GNU GPL, Version 2.
 
--- 
+Yes.
 
-Regards,
+> 
+> 2.  Does the GNU GPL apply to all releases including 1.0 and all previous
+> releases (example V0.9.1)?
+
+Yes.
+
+> 
+> I thank you in advance for your reply.
+
+You're welcome.
+
+FYI: the existing LVM software and the core single host functionality we'll
+     add in the future will stay GPLed. Nevertheless we'll put future cluster
+     enhancencements and particular modules under other licensing schemes in
+     order to make our living ;-)
+
+Kind regards,
 Heinz    -- The LVM Guy --
 
-*** Software bugs are stupid.
-    Nevertheless it needs not so stupid people to solve them ***
+>  
+> 
+> 
+> Brad Mock, Contract Negotiator
+> ADP, Dealer Services Group
+> 2525 SW First Avenue, Suite 450
+> Portland  OR 97201
+> (503) 294-5217 office
+> (503) 294-5292 fax
+> bmock@plaza.ds.adp.com
+> 
+> 
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@sistina.com
+> http://lists.sistina.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
 
 =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
