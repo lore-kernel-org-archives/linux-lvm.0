@@ -1,11 +1,10 @@
-From: Erkki Seppala <flux@inside.org>
-Subject: Re: [linux-lvm] pvmoving from a pv with bad sectors
-Message-Id: <20020209150956.GA11057@xulfad.ton.tut.fi>
-References: <20020209142411.GA10226@xulfad.ton.tut.fi>
+From: Christian Hammers <ch@westend.com>
+Message-Id: <20020209161547.GA16631@westend.com>
+References: <20020209150809.GC28694@westend.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20020209142411.GA10226@xulfad.ton.tut.fi>
+In-Reply-To: <20020209150809.GC28694@westend.com>
+Subject: [linux-lvm] SOLUTION: error moving last PE away
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,34 +15,45 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Sat Feb  9 09:10:02 2002
+Date: Sat Feb  9 10:16:02 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="utf-8"
-To: linux-lvm@sistina.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: Linux-LVM@sistina.com
 
-It appears I didn't try rescuing the data a moment too soon, as the
-drive stopped giving me data shortly after writing that message..
+On Sat, Feb 09, 2002 at 04:08:09PM +0100, Christian Hammers wrote:
+> # pvmove   -v   /dev/hda10  /dev/hda8
+> ...
+> pvmove -- /dev/hda10 [PE 999 [lvol5 [LE 1365]] -> /dev/hda8 [PE 560] [1/1]
+> pvmove -- ERROR reading input physical volume "/dev/hda10" (still 65536
+> bytes to read)
+> pvmove -- ERROR "pv_move_pe(): read input PV" pv_move_pe
+> pvmove -- ERROR "pv_move_pe(): read input PV" moving physical extents
 
-And as I predicted, /dev/archive is gone. Is there a way to retrieve
-it, I imagine the lost device physically had only one logical volume
-in it?  The device had 20 gigabytes of data. I imagine reiserfs cannot
-handle so big holes in filesystem, so I'll just hope the hole hits one
-of the smaller, backed up logical volumes instead of the one, huge,
-non-backed up volume :).
+A friend gave me the hint to enlarge the partition by one block. It helped,
+after rebooting to let the kernel reload the partition table, pvmove ran
+successfully.
 
-The output of vgscan -d is available at
-http://xulfad.inside.org/~flux/vgscan . Also the latest backup of LVM
-is at http://xulfad.inside.org/~flux/archive.conf .
+The partition in question looked like:
+$ LC_ALL=C fdisk -l
 
-I imagine I need to somehow remove the invalid device from the volume
-group, but as I cannot even activate it, it cannot be done with
-default utilities? Also the now-gone-and-disconnected physical volume
-contained some data, and cannot be removed from the volume group
-before the VG knows the device is empty. I can propably get a new disc
-next week, would that make things easier?
+Disk /dev/hda: 255 heads, 63 sectors, 4867 cylinders
+Units = cylinders of 16065 * 512 bytes
 
--- 
-  _____________________________________________________________________
-     / __// /__ ____  __                              Erkki Sepp�l�\   \
-    / /_ / // // /\ \/ //ircnet                           Modeemi Ry\  /
-   /_/  /_/ \___/ /_/\_\@modeemi.fi        http://www.modeemi.fi/~flux/
+   Device Boot    Start       End    Blocks   Id  System
+/dev/hda1             1         8     64228+  83  Linux
+/dev/hda2   *         9       518   4096575    b  Win95 FAT32
+/dev/hda3           519      4867  34933342+   5  Extended
+/dev/hda5           519       773   2048256   83  Linux
+/dev/hda6           774      1283   4096543+  8e  Linux LVM
+/dev/hda7          1284      1793   4096543+  8e  Linux LVM
+/dev/hda8          1794      2303   4096543+  8e  Linux LVM
+/dev/hda9          2304      2813   4096543+  8e  Linux LVM
+
+/dev/hda10         2814      3323   4096543+  8e  Linux LVM    NOT WORKING
+/dev/hda10         2814      3324   4096543+  8e  Linux LVM        WORKING
+[the rest of the drive was already empty]
+
+bye,
+
+-christian-
