@@ -1,21 +1,25 @@
-Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j2F1THY27386
-	for <linux-lvm@redhat.com>; Mon, 14 Mar 2005 20:29:17 -0500
-Received: from sif.nh.is (sif.nh.is [81.15.112.68])
-	by mx3.redhat.com (8.12.11/8.12.11) with ESMTP id j2F1TAe7016093
-	for <linux-lvm@redhat.com>; Mon, 14 Mar 2005 20:29:11 -0500
-Received: from thor.nh.is (thor.nh.is [81.15.112.69])
-	by sif.nh.is (Postfix) with ESMTP id 12B7D1CD2CA
-	for <linux-lvm@redhat.com>; Tue, 15 Mar 2005 01:28:49 +0000 (GMT)
-Received: from [192.168.2.2] (britney.gella.is [81.15.120.92])
-	by thor.nh.is (Postfix) with ESMTP id 2BD9061EB
-	for <linux-lvm@redhat.com>; Tue, 15 Mar 2005 01:29:11 +0000 (GMT)
-Message-ID: <42363A43.9060205@biti.is>
-Date: Tue, 15 Mar 2005 01:28:35 +0000
-From: =?ISO-8859-1?Q?Andri_=D3skarsson?= <andri@biti.is>
+Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j2GFVPY29852
+	for <linux-lvm@redhat.com>; Wed, 16 Mar 2005 10:31:25 -0500
+Received: from mail.zapeng.com (webdev.zapeng.com [70.150.3.68])
+	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id j2GFVOOo005654
+	for <linux-lvm@redhat.com>; Wed, 16 Mar 2005 10:31:24 -0500
+Received: from localhost (smokey [127.0.0.1])
+	by mail.zapeng.com (Postfix) with ESMTP id 49C4A1E4053
+	for <linux-lvm@redhat.com>; Wed, 16 Mar 2005 10:31:36 -0500 (EST)
+Received: from mail.zapeng.com ([127.0.0.1])
+	by localhost (smokey.zapeng.com [127.0.0.1]) (amavisd-new, port 10024)
+	with ESMTP id 32302-02 for <linux-lvm@redhat.com>;
+	Wed, 16 Mar 2005 10:31:36 -0500 (EST)
+Received: from ze0124 (ws-93.ze.zapeng.com [70.150.3.93])
+	by mail.zapeng.com (Postfix) with ESMTP id C72191E404E
+	for <linux-lvm@redhat.com>; Wed, 16 Mar 2005 10:31:35 -0500 (EST)
+From: "Bryan Ragon" <bragon@zapeng.com>
+Date: Wed, 16 Mar 2005 10:30:42 -0500
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] Disk crash, lost volume group, cant remove lost disk
+Message-Id: <20050316153135.C72191E404E@mail.zapeng.com>
+Subject: [linux-lvm] Can't find physical volume / vgcfgrestore not helping
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -26,22 +30,110 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
+Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@redhat.com
 
-I was adding a disk to my volume group and after adding it, extending 
-the volume and logical groups I was going to resize my ext3 fs but had 
-to do a fsck first (which was good).
+Greetings,
+	I am having problems with my LVM setup.  I recently had to reboot my
+machine and when it came back my, my LVM is not mounting.  It is currently
+only a one-drive setup (was going to add more drives to LVM eventually).
+Any help would be greatly appreciated.  Most of this data is backed up,
+however there are a significant number of photos that can't be replaced from
+a recent event.  If anyone could point me in the right direction for
+something to try that I've missed, it would be greatly appreciated.
 
-One of my drives totally dies on me. After that I can't recover my 
-volume group.
+pvscan, lvscan, vgscan, and lvmdiskscan all report nothing useable.
 
-Is there any way of removing a physical volume from a volume group by uuid?
+I have a current backup in /etc/lvm/backup/media_vg
 
-vgcfgrestore fails, vgscan returns alot of missing uuids... Been 
-Google'ing for hours and no answers yet.
+# vgcfgrestore -vv media_vg
 
-Not on the list but if you have any ideas, it would be much appriciated.
+      Setting global/locking_type to 1
+      Setting global/locking_dir to /var/lock/lvm
+      File-based locking enabled.
+      Locking /var/lock/lvm/P_orphans WB
+      Locking /var/lock/lvm/V_media_vg W
+      /dev/hda1: No label detected
+      /dev/hda2: No label detected
+      /dev/hda3: No label detected
+      /dev/hdb1: No label detected
+      /dev/hda1: No label detected
+      /dev/hda2: No label detected
+      /dev/hda3: No label detected
+      /dev/hdb1: No label detected
+  Couldn't find device with uuid 'Hot5vl-31e1-MI0e-MbAD-ZNjY-WGFs-6LyVgG'.
+  Couldn't find all physical volumes for volume group media_vg.
+      Unlocking /var/lock/lvm/V_media_vg
+      Unlocking /var/lock/lvm/P_orphans
+  Restore failed.
 
-Regards,
-Andri
+# fdisk -l /dev/hdb
+<snip>
+   Device Boot      Start         End      Blocks   Id  System
+/dev/hdb1               1       14593   117218241   83  Linux
+
+(Is that a proper Id? Plus, looking at my media_vg backup, I don't believe
+there should be a partition because the hint is /dev/hdb, not /dev/hdb1)
+
+# parted /dev/hdb print
+Disk geometry for /dev/ide/host0/bus0/target1/lun0/disc: 0.000-114473.460
+megabytes
+Disk label type: msdos
+Minor    Start       End     Type      Filesystem  Flags
+1          0.031 114470.969  primary
+
+And finally, my /etc/lvm/backup/media_vg
+
+# Generated by LVM2: Sat Jan 24 11:14:02 2004
+
+contents = "Text Format Volume Group"
+version = 1
+
+description = "Created *after* executing 'lvcreate -l 28618 media_vg -n
+media_lv'"
+
+creation_host = "rocky" # Linux rocky 2.6.2-rc1 #1 Thu Jan 22 01:07:01 EST
+2004 i686
+creation_time = 1074960842      # Sat Jan 24 11:14:02 2004
+
+media_vg {
+        id = "qwA0eK-7qJo-Y5pL-w0Wi-mvIT-bqaY-fsmVWz"
+        seqno = 2
+        status = ["RESIZEABLE", "READ", "WRITE"]
+        extent_size = 8192              # 4 Megabytes
+        max_lv = 255
+        max_pv = 255
+
+        physical_volumes {
+
+                pv0 {
+                        id = "Hot5vl-31e1-MI0e-MbAD-ZNjY-WGFs-6LyVgG"
+                        device = "/dev/hdb"     # Hint only
+
+                        status = ["ALLOCATABLE"]
+                        pe_start = 384
+                        pe_count = 28618        # 111.789 Gigabytes
+                }
+        }
+
+        logical_volumes {
+
+                media_lv {
+                        id = "uUGJw0-TaGx-nFKh-SZKI-94cU-oadb-3BNzXU"
+                        status = ["READ", "WRITE", "VISIBLE"]
+                        segment_count = 1
+
+                        segment1 {
+                                start_extent = 0
+                                extent_count = 28618    # 111.789 Gigabytes
+
+                                type = "striped"
+                                stripe_count = 1        # linear
+
+                                stripes = [
+                                        "pv0", 0
+                                ]
+                        }
+                }
+        }
+}
