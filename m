@@ -1,10 +1,9 @@
-Return-Path: <julien@atix.de>
-Message-ID: <3B5D127D.E932FDD1@atix.de>
-Date: Tue, 24 Jul 2001 08:15:25 +0200
-From: Julien Baboud <julien@atix.de>
+Return-Path: <plamb_98@yahoo.com>
+Message-ID: <20010724140509.41099.qmail@web13407.mail.yahoo.com>
+Date: Tue, 24 Jul 2001 07:05:09 -0700 (PDT)
+From: Pierre Lamb <plamb_98@yahoo.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] pb with pvcreate and partition tables
+Subject: [linux-lvm] lvm help
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,33 +16,20 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-hi,
+I recomplied my kernel (2.4.3-12) to include lvm as a
+module, added the entries to "modules.conf" made the
+pe/vg/lvol finally added vgscan and vgchange -ay to
+rc.sysinit before hte line mounting the other fs.  The
+problem is it does not do the vgscan/vgchane during
+the boot ptocess thus forcing me to do these 2 steps
+after logging in. What am I missing
 
- I use LVM with the 0.9 beta 7 on a SuSE 7.1 distrib and
- i've encoutered a pb with pvcreate on a partition that is set to the
-LVM type (and was another type before, which is the source of the pb).
-Here is
-the output of the command i used :
+Pierre
 
- %pvcreate /dev/hda16 
-
- pvcreate -- device "/dev/hda16" has a partition table 
- pvcreate [-d|--debug] [-f[f]|--force [--force]] [-h|--help] [-y|--yes]
-         [-v|--verbose] [-V|--version] PhysicalVolume
-[PhysicalVolume...]
-
-
-and the -f option show me the same output.
-
- I don't know if it's a pb with LVM or with fdisk wich i use to set the
-type of the partitions, but i would appreciate if any could tell me a 
-solution to correct this.
-
-
- tanx.
- julien, for ATIX
-
- join the LVM Republic
-------------------------
+__________________________________________________
+Do You Yahoo!?
+Make international calls for as low as $.04/minute with Yahoo! Messenger
+http://phonecard.yahoo.com/
