@@ -1,10 +1,9 @@
-From: Petro <petro@auctionwatch.com>
-Subject: [linux-lvm] 1.0.1-rc4 and kernel 2.4.14, A different question.
-Message-ID: <20011114105633.A6117@auctionwatch.com>
-References: <3BF19929.959A3055@phor.com> <20011113231527.D28062@colombina.comedia.it> <3BF270A2.36E36B24@phor.com>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <3BF270A2.36E36B24@phor.com>
+Message-ID: <3BF2C1F9.197C1D2C@divsol.com>
+From: Jim Cromie <jcromie@divsol.com>
+MIME-Version: 1.0
+Subject: Re: [linux-lvm] patch to fix segfault complaints.
+References: <3BF14F8E.477BC73E@divsol.com> <20011114013315.A3564@tiger.bigcats.invalid>
+Content-Transfer-Encoding: 7bit
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,20 +14,40 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Nov 14 12:55:01 2001
+Date: Wed Nov 14 13:10:02 2001
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: linux-lvm@sistina.com
-Cc: bluca@comedia.it
+To: Wolfgang Weisselberg <weissel@netcologne.de>, "linux-lvm@sistina.com" <linux-lvm@sistina.com>
 
-Question, if I apply a patch generated off the 1.0.1-rc4 source code, 
-can I stull use the utils from .91beta7, or do I need to upgrade
-everything? 
+Wolfgang Weisselberg wrote:
 
-If the answer is everything, anyone have a .deb laying around? (or at
-least the debian/ directory that someone who isn't all that familiar
-with building debian packages yet could use to build a .deb)?
+> Hi, Jim!
+>
+> Jim Cromie (jcromie@divsol.com) wrote 62 lines:
+>
+> > [root@groucho 1.0.1-rc4]# diff -u configure configure~
+> > --- configure Tue Nov 13 09:35:54 2001
+> > +++ configure~ Thu Sep  6 07:02:34 2001
+> > @@ -796,33 +796,22 @@
+>
+> This patch seems reversed...
+>
+> -Wolfgang
 
--- 
-Share and Enjoy. 
+yes, I suppose it is, judging from the --- and +++ associated with ARGS.
+
+but before its used, Id like to see discussion on;
+
+whether its accurate enough wrt 2.96-85 or -O1
+whether compiler / vendor / phase-of-moon accomodations are appropriate.
+
+how to do it better.
+
+in other words, it probably wont be applied to CVS unless and until
+tested by us (the users) ..
+
+so -
+
+did you reverse apply it ? successfully ?
+did you formerly have a segfault problem due to -O2 ?  does -O1 fix it
+for you ?
