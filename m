@@ -1,10 +1,13 @@
-From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] vg recovery after PV failure
-Message-Id: <20020410160541.A967@sistina.com>
-References: <1018291425.21592.7.camel@snifter>
+From: Eike Bernhardt <eike@unorganized.net>
+Subject: Re: [linux-lvm] Known Issues with FreeBSD Slices on Disks?
+Message-Id: <20020410150204.GA50366@unorganized.homeip.net>
+References: <20020405172933.GA71085@unorganized.homeip.net>
+    <20020408142641.GE1321@tykepenguin.com>
+    <20020408173054.GA77542@unorganized.homeip.net>
+    <20020410073925.GK1321@tykepenguin.com>
 MIME-Version: 1.0
-In-Reply-To: <1018291425.21592.7.camel@snifter>; from
-    eamonn.hamilton@saic.com on Mon, Apr 08, 2002 at 07:43:44PM +0100
+Content-Disposition: inline
+In-Reply-To: <20020410073925.GK1321@tykepenguin.com>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,68 +18,45 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Apr 10 09:05:02 2002
+Date: Wed Apr 10 10:01:01 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Eamonn,
+Hi!
 
-in case "a bit odd" means a HW flaw, you need to vgcfgrestore the LVM metadata
-back onto a sane device. You can even "vgcfgrestore -i" to a disk with
-different size, bacause you loose the data on the old flaky disk anyway
-(assuming it is completely inaccessable) :-(
+On Wed Apr 10 09:39:25 2002 CEST Patrick Caulfield wrote:
 
-If your friend had all LVs striped onto both PVs, data is lost anyway.
+> On Mon, Apr 08, 2002 at 07:30:54PM +0200, Eike Bernhardt wrote:
+> > On Mon Apr  8 16:26:41 2002 CEST Patrick Caulfield wrote:
+> 
+> It sounds a lot like
+> 
+> http://lists.sistina.com/pipermail/lvm-devel/2002-March/000873.html
 
-Hint: backups are your friends friends.
+Hm, must have missed that one while searching for similar problems.
 
+> Can you try removing the lines
+> 
+> 
+>         /* Check parallel LV spindown (LV remove) */
+>         if (lv_ptr->lv_status & LV_SPINDOWN)
+>                         return -EPERM;
+> 
+> 
+> in lvm_blk_open() and see if that fixes the problem please ?
 
-On Mon, Apr 08, 2002 at 07:43:44PM +0100, Eamonn Hamilton wrote:
-> 
-> 
-> Hi Folks.
-> 
-> I'm attempting to recover a VG on a friends system after one of the PVs
-> started acting a bit odd. The VG appears to say that it has no PVs
-> associated with it, and a vgscan only finds the second PV on the disk. A
-> pvdisplay, however, show both physical volumes have what appears to be
-> the correct information and extents.
-> 
-> I'm basically wondering how do I get these two physical volumes
-> associated again, and is there any way to determine how they were put
-> topgether, i.e. were they striped? Also, is there any way to get the
-> information off the non-dodgy disk ( it's ext3, btw ).
-> 
-> Cheers,
-> 
-> Eamonn
-> 
->  
-> 
-> 
-> 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
+The "operation not permitted" is happening with a unpatched 2.4.19-pre5
+Kernel, and also when the Kernel is patched to lvm-1.1-rc1.
+
+When removing the lines quoted above, it is possible to create another
+VG without the "operation not permitted" Problem.
+
+I don't know how to debug this further, so if anyone needs more specific
+Information, please tell me.
 
 -- 
-
-Regards,
-Heinz    -- The LVM Guy --
-
-*** Software bugs are stupid.
-    Nevertheless it needs not so stupid people to solve them ***
-
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-
-Heinz Mauelshagen                                 Sistina Software Inc.
-Senior Consultant/Developer                       Am Sonnenhang 11
-                                                  56242 Marienrachdorf
-                                                  Germany
-Mauelshagen@Sistina.com                           +49 2626 141200
-                                                       FAX 924446
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+Eike Bernhardt              http://unorganized.net/                ICQ: 11256658
+      "Duct tape is like the force. It has a light side, and a dark side,
+       and it holds the universe together."               -- Carl Zwanzig
