@@ -1,6 +1,6 @@
 From: benr@us.ibm.com
-Message-ID: <8525690E.00706FDC.00@d54mta02.raleigh.ibm.com>
-Date: Fri, 30 Jun 2000 15:28:04 -0500
+Message-ID: <8525690E.00728471.00@d54mta02.raleigh.ibm.com>
+Date: Fri, 30 Jun 2000 15:50:47 -0500
 Subject: Re: [linux-lvm] Re: IBM to release LVM Technology to the Linux
 Mime-Version: 1.0
 Content-Disposition: inline
@@ -9,158 +9,65 @@ Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: Ragnar =?iso-8859-1?Q?Kj=F8rstad?= <lvm@ragnark.vestdata.no>
+To: Jan Niehusmann <jan@gondor.com>
 Cc: linux-lvm@msede.com
 
 
 
-Ragnar,
+Jan,
+
+Welcome to the discussion!
 
 
->Is it not possible to make an LVM-volume on an md device, and an md
->device on an LVM-volume? That's what you want, right?
-
-If both volumes could exist and be used simultaneously, then this would be
-a simple example of what we want.  However, I have been told that:
-
-"What is definitely lacking is a generic API for this case; the current way
-of letting remappers change a function pointer requires special support in
-every single remapper and it is hard to remove or insert them on the fly;"
-(Andi Kleen - from a post earlier this month on this thread)
-
-This tells me that the current mechanism can not handle what we desire.
-
->This may be implemented within the current architecture by having the
->block-device drivers export some data (e.g. in proc), and have the
->userspace utilities check that data before they perform any actions.
-
->The data in proc should be standarized, so the userspace-utilities
->don't have to know every block-device specificly.
-
-What you suggest could be made to work, but the way it is handled by the
-LVMS is cleaner and more efficient, and requires much less code.
-
->> >> The elimination of reboots after partitioning or volume changes
->> >Even for MS-DOS partitions?
->>
->> Yes.
->
->There was a suggestion on L-K (or maybe it was reiserfs) that the kernel
->should reread the partition-table, and compare it to the old one - if
->none of the mounted partitions changed the new partition-table would be
->accepted (and reboot avoided).
-
-What constitutes a change to a mounted partition?  Currently, the creation
-of a new partition (or the deletion of an existing one) can cause the
-identifiers associated with existing partitions to change, even though the
-existing partitions have not been changed themselves.  Thus, unless this is
-changed, the proposed method does not eliminate reboots due to partitioning
-changes.
-
->> >From the man page for lvreduce:
->>
->> "lvreduce allows you to reduce the size of a logical volume. Be careful
->> when reducing a logical volume's size, because data in the reduced part
-is
->> lost!!!"
->>
+>On Thu, Jun 29, 2000 at 06:39:51PM -0500, benr@us.ibm.com wrote:
 >> If you are using ext2, then you could use e2fsadm, but if you are using
 >> another filesystem, then what?  Even if you are using ext2, a user could
 >> still use lvreduce directly.  Thus, this is a data security hole.
 >
->There are also utilities for resizing reiserfs - I believe they
->communicate with LVM to do this automaticly? Is the manpage outdated, or
->am I wrong here?
+>We'll always have that kind of 'data security hole'. We have lvreduce, we
+>have mke2fs, we even have cat /dev/zero >/dev/hda.
+
+lvreduce doesn't need to be a data security hole.  In the LVMS, the
+filesystems have direct input to the LVMS through the Filesystem Interface
+Modules (FIM).  This input is gathered by the LVMS, not by the user
+interface.  Thus, any user interface which issues a command to the LVMS to
+resize a volume will automatically cause the affected filesystem to be
+consulted.  Thus, in the LVMS, lvreduce would not be a data security hole
+as the LVMS would consult with the affected filesystem.
+
+In other words, under the LVMS, the LVMS assumes the responsibility for
+consulting the affected filesystem before resizing a volume, not the user
+interface.  Under the current system, the user interface is responsible for
+such integration.
+
 >
->The reason this don't work for other filesystems is of course that they
->can't be resized at all.
+>I think admin tools should be easily usable, and that includes safety. It
+>should be difficult to destroy data accidently. So, obviously, it's a bad
+>thing if you have to shrink the fs size first, then shrink the volume
+size,
+>and if you misstype one of the sizes you lose data.
 
-Other filesystems can be resized, it is just that a resize utility has not
-be written for them yet! :-)
+Agreed.
 
-There is currently no true integration between the LVM and the filesystems.
-The resize utilities that are available attempt to hide this by having the
-utility communicate with both the LVM and the filesystem, but there is no
-intrinsic communication between the filesystems and the LVM as there would
-be in the LVMS.  As a result, lvreduce does not talk to the filesystems,
-and bad things can happen!
-
->> >And how can this be eliminated? In LVM this is not a problem, because
->> >name-space is different, but how can it be solved for msdos-partitions?
->>
->> The way this is solved in other operating systems is that the operating
->> system only recognizes volumes.  Volumes are given user defined, unique
->> names.  Volumes are then mounted by referring to the volume's name.
 >
->The best way to handle this (IMHO) is to provide special utilities that
->ease the mounting, and do the checking. The operating-system shouldn't
->prevent mounting of the partitions directly, because it is sometimes
->desired.
-
-Special utilities - this means more commands that a user must learn - a
-more complicated user interface.  Our customers are already saying that the
-existing user interface it too complicated and too hard to use.  Adding
-more special utilities just makes the situation worse.
-
-What we are talking about here is making the user go through the LVM to
-mount a partition.  This gives the LVM the opportunity to examine what the
-user is doing and ensure that it does not violate the integrity of any
-volumes/volume groups.  This in no way prevents the user from mounting a
-partition, it just allows the LVM to be involved.  It also gives the user a
-single place to go to manipulate his volumes/volume
-groups/partitions/disks.
-
->> Partitions are not visible to the operating system, they are only
-visible
->> to the LVMS.  If the user wishes to mount a partition, they must first
-make
->> it a volume using the LVMS.  This places the partition into the LVMS
-name
->> space and forces the user to give it a unique name.  If partitions are
->> created or destroyed (which must be done through the LVMS), no reboots
-are
->> required as the names of the existing volumes are not affected.
-Similarly,
->> if a volume is created or destroyed, no reboot is required as the names
-of
->> the remaining volumes have not changed, and their associations still
-hold.
+>I see two possible solutions: One is an integrated tool like e2fsadm,
+>generalized to know about all possible filesystems. (If you call it to
+>shrink a fs that it doesn't know about, it fails with a proper error
+>message).
 >
->I don't like to "force" anything.... What's the problem with just
->modifying the utilities to check this - or give warnings?
-
-1.  Every utility would have to contain the appropriate set of checks.  If
-you miss a check in a utility, then you have a data security hole.  It is
-easier to have all of the checks in one place - the LVM.
-
-2.  The method you outlined before does not eliminate reboots.  You need a
-major change to the way partitions are identified and accessed in order to
-eliminate reboots.  If you go to the method used by other operating
-systems, you kill several birds with one stone.  Otherwise, to eliminate
-reboots, you need to devise a new method for identifying and communicating
-with partitions that avoids the problems of the current one.
-
->> One last point here is that a partition can be turned into a volume
-without
->> affecting its contents, and without affecting the ability of MS-DOS and
->> Windows to recognize or use it.  This is actually done by both OS/2 and
-NT.
+>The second is a check in lvreduce to ensure the fs on the partition fits
+into
+>the new volume size. The user still has to call ext2resize (or another
+tool)
+>first, and then lvreduce, but user faults are caught.
 >
->You still need to store some metadata, right? So where can you store it
->without affecting its contents?
+>(Of course, lvreduce will have a --i-know-this-doesnt-fit-do-it-anyway
+option
+>to allow the admin to shoot himself in the foot if he really wants to...)
 
-There is a minimal amount of metadata required to do this.  This data can
-be stored in either a centralized or distributed fashion.  In the
-centralized approach, the metadata is stored in a database to which only
-the LVM has both read and write access.  In the distributed method, the
-metadata is stored on the disk itself.  Where it is stored depends upon the
-partitioning scheme in use on the drive.  As an example, a partition could
-be set aside for the use of the LVM.  In this partition, the LVM could
-store whatever it wanted, including the metadata to turn a partition into a
-volume.  Another method would be to store the metadata in an unused area of
-the disk.  This method is actually used by OS/2 since the partitioning
-scheme used by MS-DOS/Windows/OS2 always results in some unused sectors.
-There are probably other methods as well.
+There is a third option.  The third option is to remove the responsibility
+for integration from the user interface and place it in the LVM.  This is
+what the LVMS does, as the previous discussion on lvreduce showed.
 
 Regards,
 
