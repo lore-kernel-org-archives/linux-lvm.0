@@ -1,10 +1,9 @@
-Return-Path: <riel@conectiva.com.br>
-Date: Fri, 2 Feb 2001 14:35:46 -0200 (BRDT)
-From: Rik van Riel <riel@conectiva.com.br>
-Subject: Re: [linux-lvm] with 2.4.1, should I use beta2 or beta3 lvm-tools?
-In-Reply-To: <20010202155441.A1771@66bassett.freeserve.co.uk>
-Message-ID: <Pine.LNX.4.21.0102021433100.1328-100000@duckman.distro.conectiva>
+Return-Path: <james@fr.clara.net>
+Date: Fri, 2 Feb 2001 09:43:38 +0100 (CET)
+From: JAmes <james@fr.clara.net>
+Message-ID: <Pine.LNX.4.21.0102020941400.426-100000@munster.noc.fr.clara.net>
 MIME-Version: 1.0
+Subject: [linux-lvm] start-up scripts
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -20,29 +19,12 @@ Content-Type: TEXT/PLAIN; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Fri, 2 Feb 2001, Joe Thornber wrote:
+Hello
 
-> 2.4.1 has beta2 in it, we have been maintaining this to produce
-> beta3 and shortly beta4.  Alan and Linus have been sent these
-> updates
+Could any body tell me where I should put the vgcreate -ay . I am using a
+Debian.I assume /etc/rc2.d/ but at what moment?
 
-Interesting, the only reference to LVM in Linus' changelog
-is the following:
+Thanks any help apreciated !
 
-- Andrea Arkangeli: LVM update
 
-And I seem to remember only a more limited patch by Andrea
-which solved one or two problems. Did Andrea send your release
-to Linus or did he send his own set of bugfixes ?
-
-regards,
-
-Rik
---
-Linux MM bugzilla: http://linux-mm.org/bugzilla.shtml
-
-Virtual memory is like a game you can't win;
-However, without VM there's truly nothing to lose...
-
-		http://www.surriel.com/
-http://www.conectiva.com/	http://distro.conectiva.com/
+James
