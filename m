@@ -1,11 +1,10 @@
-Return-Path: <claudio@conectiva.com>
-Date: Sun, 17 Dec 2000 09:01:04 -0200 (BRST)
-From: Claudio Matsuoka <claudio@conectiva.com>
-Subject: Re: [linux-lvm] Fwd: [md@Linux.IT: LVM tools broken on PPC (and many
- other archs)]
-In-Reply-To: <0012170917090F.00774@lyta>
-Message-ID: <Pine.LNX.4.21.0012170855330.16662-100000@scuzzlebutt.helllabs>
+Return-Path: <fertile@nildram.co.uk>
+From: "fertile" <fertile@nildram.co.uk>
+Date: Sun, 17 Dec 2000 12:49:32 -0000
+Message-ID: <LPBBJKAONKCJOLEHOLPDCELECAAA.fertile@nildram.co.uk>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] segfault using vgmerge ?? not a clue why - (newbie)
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,44 +16,40 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
-Cc: md@Linux.IT
 
-On Sun, 17 Dec 2000, Russell Coker wrote:
+/usr/sbin/vgmerge -v vg1 vg2
+vgmerge -- locking logical volume manager
+vgmerge -- checking volume group name "vg1"
+vgmerge -- checking volume group name "vg2"
+vgmerge -- checking for volume group "vg2" activity
+vgmerge -- reading data of volume group "vg1" from "/etc/lvmtab"
+vgmerge -- reading data of volume group "vg2"
+vgmerge -- merging VGDA of volume group "vg2" into that of "vg1"
+vgmerge -- extending volume group "vg1" by physical volume "/dev/hdb1" in
+kernel
+Segmentation fault
 
-> This is a general LVM driver issue, and therefore something that's more 
-> appropriate for the main LVM developers to deal with, as don't have access to 
-> non-Intel hardware and I don't have the knowledge of LVM driver internals 
-> that these people have it doesn't make sense for me to try and deal with this.
+ok i have vg1 setup and running fine (one 40 gig drive)
+vg2 seems to be fine ? .. ( a 40 and a 30 gig drive running as 70 gig vg2 )
 
-I have access to a PPC box (an iMac DV running Debian), so I can test the
-changes eventually done to the code. I can't promise a fix myself since
-I'm no PPC expert, and no LVM expert either.
+vgextend gives me a segfault..so does vgmerge
 
+-rw-------   1 3009     users       25337 Nov 21 10:11
+linux-2.2.17-rawio.patch
+-rw-------   1 3009     users      149954 Nov 21 10:09
+lvm-0.9-2.2.17-stock.patch
+-rw-r--r--   1 root     root      1876737 Nov 29 23:09 lvm-0_9-1.i386.rpm
 
-> Date: Fri, 15 Dec 2000 18:07:27 +0100
-> From: Marco d'Itri <md@Linux.IT>
-> 
-> pv_get_size() tries parsing the MBR, but that fails on PPC because of
-> the different endianess from what the function expects.
-> 
-> From the changelog I see Andrea Arcangeli contributed a very crude
-> workaround for the alpha platform, which has the same endianess of i386
-> but (I suppose) a different disk label format.
-> The same "fix" works for PPC too (and sparc, and so on), so I think the
-> #ifndef __alpha__ at the beginning of lib/pv_get_size.c should really be
-> #ifdef __i386__ until some better code is written (FYI, you can find
-> byte swapping code within fdisk).
-> 
-> The fix needs to be fixed too, because other code will expect something
-> in the buffer pointed by the second argument. I just added that at the
-> end of the function:
-> 
->         if (dummy)
->                 memset(dummy, 0, sizeof (struct partition));
-> 
-> With this fix, everything seems to work fine.
+above kernel.. and above version of LVM im using ..(trying to )
 
-I'll have a look.
+i know this is a vague question, but i am not at all skilled in linux and
+its taken a lot of work to get this far :)
+
+if you can think of any possible things i can look for / check , then id
+appreciate it a lot ..
+
+thanks,
+
+kev
