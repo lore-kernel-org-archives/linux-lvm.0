@@ -1,10 +1,9 @@
-From: Herbert Poetzl <herbert@13thfloor.at>
-Subject: Re: [linux-lvm] LVM and Linux quotas
-Message-ID: <20040129022703.GA15422@MAIL.13thfloor.at>
-References: <20040127231733.GA25501@oddprocess.org>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20040127231733.GA25501@oddprocess.org>
+Message-Id: <200401290444.i0T4iVX02132@ecstasy.winternet.com>
+From: Ken Fuchs <kfuchs@winternet.com>
+In-reply-to: <20040129022341.88184.qmail@web80402.mail.yahoo.com> (message
+	from Chris Conn on Wed, 28 Jan 2004 18:23:41 -0800 (PST))
+Subject: Re: [linux-lvm] combining two vg's into one
+References: <20040129022341.88184.qmail@web80402.mail.yahoo.com>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,47 +14,66 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Jan 28 21:28:01 2004
+Date: Wed Jan 28 23:38:02 2004
 List-Id: <linux-lvm.redhat.com>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Tue, Jan 27, 2004 at 06:17:33PM -0500, Matthew Daubenspeck wrote:
-> First off, please excuse the the newbie question :)
-> 
-> Does LVM work with the standard Linux quotas? I did some googling and
-> found nothing other then people having problems. Does it work?
+Chris Conn wrote:
 
-although there is nothing like 'standard Linux quotas',
-because (almost) every filesystem, either brings a bunch 
-of quota routines, if not an entire quota system (like xfs) 
-with it, or doesn't support quota at all (like jfs), but 
-in any case the quota stuff lies somewhere between blocklevel 
-and filelevel access, and I don't think that there are many 
-possibilities for collisions with something like raid or
-lvm/devmapper (which is basically slightly below block level).
+>I've got 2 vg's on two different partitions on
+>different disks, one is my root vg and the other
+>has /usr, /var and /tmp filesystems. I'd like to
+>keep them on separate disks but use the same vg
+>if I can, but I'm unsure how to combine them.
 
-the 'standard' filesystem is ext2 (or ext3 nowadays ;) and
-the ext2/ext3 quota had some issues for a while, mainly
-because it is fairly complex and not widely used. AFAIK
-none of those issues where ever related to lvm or md.
+To keep / on one disk and /usr, /var and /tmp on another
+disk, one volume group per disk as described above is the
+best way to do this.  There is no advantage to combining
+the two volume groups together given that one wants to
+keep logical volumes exclusively on one disk or the other.
 
-to answer your question, yes ext2/ext3 quota and the
-journaled quota xfs provides do work on lvm (over raid5)
-(at least for me ;)
+Combining the two volume groups into one volume group
+would allow logical volumes to span the two disks and
+lvm striping, but that is contrary to the desire to keep
+each logical volume exclusively on a particular disk.
 
-HTH,
-Herbert
+>Do I have to move the lv's on disk2 out of their vg
+>or can I just expand the vg on disk1 to include
+>them? The filesystems are all ReiserFS, system
+>is Slackware Linux 9.1.
 
-> -- 
-> :wq!
-> 
->   Matthew Daubenspeck
->   http://www.oddprocess.org
-> 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+Logical volumes can't be moved between volume groups.
+
+If the physical extents of two volume groups are the
+same and the limits of the destination group are not
+exceeded, the two volume groups can be merged using
+vgmerge(8).  Go to step 9 below.
+
+To join two volume groups with unequal logical extents:
+
+1) Back up all logical volumes.
+2) Remove all logical volumes in one volume group,
+   preferably the volume group NOT containing /,
+   using lvremove(8).
+3) Remove all physical volumes from the volume
+   group to be removed using vgreduce(8).
+4) Finally remove that volume group using vgremove(8).
+5) Add all physical volumes that were in the removed
+   volume group into the remaining volume group using
+   vgextend(8)
+6) Within the remaining volume group, create all logical
+   volumes removed in step 2 using lvcreate(8)
+7) Create the desired filesystems for each logical
+   volume created in step 6.
+8) Restore from backup each filesystem created in
+   step 7.
+9) Modify /etc/fstab and any other configuration files
+   to reflect the volume group name change in the
+   "moved" (removed/recreated) volumes.
+
+Sincerely,
+
+Ken Fuchs <kfuchs@winternet.com>
