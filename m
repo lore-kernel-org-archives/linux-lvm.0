@@ -1,8 +1,10 @@
-From: Mark <lvm@ruby.ridersoft.net>
-Message-Id: <200306271121.h5RBLoKx018854@ruby.ridersoft.net>
-Subject: Re: [linux-lvm] can't find volumes
+From: Kevin Corry <kevincorry@sbcglobal.net>
+Subject: Re: [linux-lvm] ioctl interface mismatch
+References: <20030626201310.GA1042@gmx.de>
+In-Reply-To: <20030626201310.GA1042@gmx.de>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="bound1056712910"
+Content-Transfer-Encoding: 8bit
+Message-Id: <200306270849.22072.kevincorry@sbcglobal.net>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -13,124 +15,27 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Fri Jun 27 08:34:08 2003
+Date: Fri Jun 27 08:59:01 2003
 List-Id: <linux-lvm.redhat.com>
-To: linux-lvm@sistina.com
+Content-Type: text/plain; charset="us-ascii"
+To: linux-lvm@sistina.com, Wiktor Wodecki <wodecki@gmx.de>
 
-This is a multi-part message in MIME format.
+On Thursday 26 June 2003 15:13, Wiktor Wodecki wrote:
+> Hello,
+>
+> I am running 2.5.72 and use device-mapper to manage two vg's with
+> several lv's. However at boot-time I see the following message:
+>
+> device-mapper: ioctl interface mismatch: kernel(1.0.6), user(3.0.0),
+> cmd(0)
+>
+> 1.0.6 could be an lvm release, however, I have lvm2 metadata and not
+> lvm1. My system runs debian testing with the lvm2 utilities installed
+> (1.95.15-1). I run x86.
+>
+> Any help would be appreciated.
 
---bound1056712910
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
+The EVMS tools use version 3.0.0 of the Device-Mapper ioctl interface. Are you 
+boot-scripts running evms_activate?
 
-"Heinz J . Mauelshagen" <mauelshagen@sistina.com> wrote ..
-> 
-> Mark,
-> 
-> that's probably the missing /proc in your chroot environment.
-> 
-
-It is ?
-Before chrooting, I do (mind you, this is from a livecd environment)
-
-vgscan 
-vgchange -ay
-
-mount /dev/lv/ide /mnt/gentoo
-mount /dev/hde7 /mnt/gentoo/boot
-mount -t proc proc /mnt/gentoo/proc
-
-chroot /mnt/gentoo /bin/bash
-
-(where /mnt/gentoo is the root of the to be installed linux system)
-If that isn't the right thing to do, then how do I do it right ?
-
-Many thanx already, hope I can get some more help.
-
-best regards
-Mark
-
-<--- previous mail follows from on here --->
-
-"Heinz J . Mauelshagen" <mauelshagen@sistina.com> wrote ..
-> 
-> On Thu, Jun 26, 2003 at 12:12:24PM +0200, lvm@ruby.ridersoft.net wrote:
-> > Hi, I come seeking sage advice :)
-> > 
-> > Anyways, I've been busy installing a new Linux system using Gentoo. I
-> am running this on a spare box, Duron 800 w 300mb, with the harddisk connected
-> to the Promise ATA 100 onboard controller as /dev/hde8.
-> > 
-> > Al goes well, and I create the following partitions
-> > 
-> > /dev/hde6      swap
-> > /dev/hde7      ext3 fs     /boot
-> > /dev/hde8      lvm
-> > 
-> > I also create the pv on /dev/hde8 and a logical volume at /dev/lv/ide
-> > 
-> > /dev/lv/ide is my /
-> > 
-> > >From my running livecd I then chroot'ed into /dev/lv/ide, and then the
-> troubles began. When I run vgscan when chroot'ed it doesn't find any volume
-> groups. When I run vgchange, i claims that the VDGA record doesn't match
-> the kernel, and urges me to run vgscan, running vgscan doesn't solve this
-> problem since it doesn't find the volume groups.
-> > 
-> > ls -l /dev/lv/ide shows me that my volume group indeed doesn't excist.
-> However, the mount command shows me that /dev/lv/ide is mounted at root.
-> So in summary, I can't find the volumegroup, even tough I am working on/in
-> it.
-> > 
-> > I decided to go ahead anyways, and created a initrd using lvmcreate_initrd
-> (based on the kernel i made, 2.4.21 ) it does this, and when I boot it
-> loads this initrd as it is supposed to. It neatly finds my /dev/hda and
-> /dev/hdb cdroms, and once insmod'ed it also find /dev/hde, but the it runs
-> vgscan and finds no volumegroups, that causes vgchange to not find anything
-> either. That causes the kernel to panic, since it cannot find root.
-> > 
-> > Weird thing is, if I boot with any other rescue/livecd, such as SuSE
-> rescue, knoppix or gentoo live cd, I can vgscan and vgchange -ay to find
-> my volume group and logical volume. But once chroot'ed or booting to my
-> new system, I cannot and will not find it.
-> > 
-> > Does anyone have any suggestions on why vgscan doesn't find anything
-> and how to solve this ?
-> > 
-> > Many thanx in advance, I have been strugling with this one for almost
-> a week now, and I am out of options. I have been able to install lvm as
-> root on quite a few systems before, including a LFS system, but right now,
-> I am stumped.
-> > 
-> > best regards
-> > Mark
-> > 
-> > 
-> > When I boot from a livecd image, such as 
-> 
-> 
-> -- 
-> 
-> Regards,
-> Heinz    -- The LVM Guy --
-> 
-> *** Software bugs are stupid.
->     Nevertheless it needs not so stupid people to solve them ***
-> 
-> =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-> 
-> Heinz Mauelshagen                                 Sistina Software Inc.
-> Senior Consultant/Developer                       Am Sonnenhang 11
->                                                   56242 Marienrachdorf
->                                                   Germany
-> Mauelshagen@Sistina.com                           +49 2626 141200
->                                                        FAX 924446
-> =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-> 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
-
---bound1056712910--
+-Kevin Corry
