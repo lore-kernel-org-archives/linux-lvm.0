@@ -1,10 +1,11 @@
-Return-Path: <pwk.linuxfan@gmx.de>
-From: Peter Kirk <pwk.linuxfan@gmx.de>
-Date: Sat, 19 May 2001 16:33:36 +0200
-MIME-Version: 1.0
-Message-Id: <01051916333601.00791@mama>
-Content-Transfer-Encoding: 8bit
-Subject: [linux-lvm] Problems: reiserfs lvm as /
+Return-Path: <okeefe@brule.borg.umn.edu>
+From: "Matthew O'Keefe" <okeefe@borg.umn.edu>
+Date: Sat, 19 May 2001 11:37:54 -0500
+Subject: Re: [linux-lvm] Working together
+Message-ID: <20010519113754.A14371@brule.borg>
+References: <OF97CFF081.B6DCBCCA-ON85256A50.004CE72A@raleigh.ibm.com>
+Mime-Version: 1.0
+In-Reply-To: <OF97CFF081.B6DCBCCA-ON85256A50.004CE72A@raleigh.ibm.com>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,42 +18,35 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
+Cc: Matthew O'Keefe <okeefe@brule.borg.umn.edu>
+
+On Fri, May 18, 2001 at 09:01:49AM -0500, Mark Peloquin wrote:
+> Hello everyone,
+> 
+> 
+> > Why should Linux LVM join the EVMS project ?
+> 
+> The EVMS project can offer some immediate solutions to current Linux LVM
+> issues.
+> 
+> - EVMS supports in-kernel reading/writing of metadata
+> 
+> - EVMS supports in-kernel discovery of volume groups and volumes
+> 
 
 Hi,
+does the EVMS code work in production today?  If not, then saying
+it "can offer some immediate solutions to current Linux LVM issues"
+is inaccurate.  That said, its great to see another alternative
+LVM appearing on the horizon for Linux.
 
-I am new to LVM, and I ran into some problems.
-First thing I did, was to setup LVM within the SuSE7.1 setup tools, which 
-worked out fine.
-/boot is not on LVM, ext2fs
-swap is not on LVM
-LVM:
-	/	[reiserfs]
-	/usr	[reiserfs]
-	/home	[reiserfs]
+Matt O'Keefe
+Sistina Software, Inc.
 
-I have too disks, so I set the strip option to two, to get better 
-performance. Now I want to compile a new kernel (2.4.4), and I cannot get lvm 
-working with it. Since root is on LVM I need to do this lvmcreate_initrd 
-stuff, but it does not work ! I get:
-
-VFS: Mounted root (ext2 file system).
-attempt to access beyond end of device
-01:00: rw=0, want=4612, limit=4096
-attempt to access beyond end of device
-01:00: rw=0, want=4613, limit=4096
-attempt to access beyond end of device
-01:00: rw=0, want=4614, limit=4096
-attempt to access beyond end of device
-01:00: rw=0, want=4615, limit=4096
-VFS: Cannot open root device "3a02" or 3a:02
-Please append the correct "root=" boot option
-kernel panic: VFS: Unable to mount root fs on 3a:02
-
-in lilo.conf it says:
-boot=/dev/raid/root
-This should be the correct root. It works with the old 2.4.0 Kernel made from 
-SuSE, propably something is with the initrd or with the Kernel-Setup
-
-Please help !!
-Thanks
+> 
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@sistina.com
+> http://lists.sistina.com/mailman/listinfo/linux-lvm
