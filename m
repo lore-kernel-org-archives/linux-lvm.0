@@ -1,15 +1,19 @@
-Received: from o.ww.redhat.com (vpnuser1.stuttgart.redhat.com [172.16.4.1])
-	by pobox.stuttgart.redhat.com (8.12.8/8.12.8) with ESMTP id
-	iAOEQZMY030872
-	for <linux-lvm@redhat.com>; Wed, 24 Nov 2004 15:26:36 +0100
-Date: Wed, 24 Nov 2004 15:26:33 +0100
-From: Heinz Mauelshagen <mauelshagen@redhat.com>
-Message-ID: <20041124142633.GA16696@redhat.com>
-Mime-Version: 1.0
-Content-Disposition: inline
-Subject: [linux-lvm] *** Announcement: dmraid 1.0.0-rc5f ***
-Reply-To: mauelshagen@redhat.com,
-	LVM general discussion and development <linux-lvm@redhat.com>
+Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id iAQ7WQr07329
+	for <linux-lvm@redhat.com>; Fri, 26 Nov 2004 02:32:26 -0500
+Received: from languor.static.net (lethargy.static.net [66.92.70.19])
+	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id iAQ7WQLv008537
+	for <linux-lvm@redhat.com>; Fri, 26 Nov 2004 02:32:26 -0500
+Received: from syndrome.static.net ([66.92.109.119] helo=[192.168.1.103])
+	by languor.static.net with asmtp (Exim 3.35 #1) id 1CXadh-0001K9-00
+	for linux-lvm@redhat.com; Fri, 26 Nov 2004 02:35:33 -0500
+Mime-Version: 1.0 (Apple Message framework v619)
+Content-Transfer-Encoding: 7bit
+Message-Id: <6E9EA468-3F7D-11D9-8E13-003065F94C4C@static.net>
+From: Armen Babikyan <armenb@static.net>
+Date: Fri, 26 Nov 2004 02:33:14 -0500
+Subject: [linux-lvm] problem with LVM and fstab...bug?
+Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -19,157 +23,64 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: linux-lvm@redhat.com
 
+Hi,
 
-               *** Announcement: dmraid 1.0.0-rc5f ***
+I am seeing unexpected behavior with getting LVM drives to 
+automatically mount when I boot my machine.  The expected behavior 
+works for one LV but not the other.  I specified these lines in my 
+/etc/fstab:
 
-dmraid 1.0.0-rc5f is available at
-http://people.redhat.com:/heinzm/sw/dmraid/ in source, source rpm and i386 rpm.
+/dev/mapper/vg0-www    /www    ext3    rw                      0       2
+/dev/mapper/vg0-uml   /uml    ext3    rw                      0       2
 
-dmraid (Device-Mapper Raid tool) discovers, [de]activates and displays
-properties of software RAID sets (i.e. ATARAID) and contained DOS
-partitions using the device-mapper runtime of the 2.6 kernel.
+These entries didn't work, so I thought I'd try these next two lines:
 
-The following ATARAID types are supported on Linux 2.6:
+/dev/vg0/www    /www    ext3    rw                      0       2
+/dev/vg0/uml   /uml    ext3    rw                      0       2
 
-Highpoint HPT37X
-Highpoint HPT45X
-Intel Software RAID
-NVidia NForce		*** NEW ***
-Promise FastTrack
-Silicon Image Medley
+Oddly enough, the uml disk mounts on bootup, while the www one does 
+not!  Is it just me, or is this chain of events, rather unexpectedly 
+strange:
 
-This ATARAID type is only basically supported in this version (I need
-better metadata format specs; please help):
+# umount /uml
+# mount /dev/vg0/www
+mount: wrong fs type, bad option, bad superblock on /dev/vg0/www,
+or too many mounted file systems
+# ls -al /dev/vg0/www
+lrwx------ 1 root root 19 Nov 26 01:29 /dev/vg0/www -> 
+/dev/mapper/vg0-www
+# mount /dev/mapper/vg0-www /www
+#
 
-LSI Logic MegaRAID
+But:
 
-Please provide insight to support those metadata formats completely.
+# mount /dev/vg0/uml
+#
 
-Thanks.
+After this, both drives are mounted:
 
+# df
+Filesystem           1K-blocks      Used Available Use% Mounted on
+[my other partitions]
+/dev/mapper/vg0-www   30237648  10572760  18128888  37% /www
+/dev/mapper/vg0-uml   10079084    945240   8621844  10% /uml
+#
 
-See files README and CHANGELOG, which come with the source tarball for
-prerequisites to run this software, further instructions on installing
-and using dmraid!
+I am running Linux 2.6.8 on an Athlon with LVM on top of software 
+RAID5.  Both partitions were created with mkfs -t ext3 (i.e. no special 
+options...at least...I don't remember using any special options...).  I 
+uncommented the "uml" line from /etc/fstab and rebooted, and saw the 
+same sort of behavior.  Any ideas?  Feel free to email me for more 
+info.
 
-CHANGELOG is contained below for your convenience as well.
+[side question: why is there a symbolic link from /dev/X/Y to 
+/dev/mapper/X-Y anyway?]
 
+Any and all advice is greatly appreciated!
 
-Call for testers:
------------------
+Thanks,
 
-I need testers with the above ATARAID types, to check that the mapping
-created by this tool is correct (see options "-t -ay") and access to the
-ATARAID data is proper.
-
-In case you have a different ATARAID solution from those listed above,
-please feel free to contact me about supporting it in dmraid.
-
-You can activate your ATARAID sets without danger of overwriting
-your metadata, because dmraid accesses it read-only unless you use
-option -E together with -r in order to erase ATARAID metadata
-(see 'man dmraid')!
-
-This is a release candidate version so you want to have backups of your valuable
-data *and* you want to test accessing your data read-only first in order to
-make sure that the mapping is correct before you go for read-write access.
-
-
-Contacts:
----------
-
-The author is reachable at <Mauelshagen@RedHat.com>.
-
-For test results, mapping information, discussions, questions, patches,
-enhancement requests and the like, please subscribe and mail to
-<ataraid-list@redhat.com>.
-
---
-
-Regards,
-Heinz    -- The LVM Guy --
-
-
-CHANGELOG:
----------
-
-FIXES:
-------
-o make suffix in hpt45x set names numeric
-o HPT37x metadata format handler RAID10 grouping logic
-o HPT37x/HPT45x avoid devision by zero bug
-  in case ->raid_disks is zero for spares
-o avoid devision by zero bug in case of stride = 0
-o SIL device names / checksums
-o calc_total_sectors() on unsymmetric mirrors
-o Partition name suffix to make GRUB happy
-o perform() could return an error without releasing a lock
-
-
-FEATURES:
----------
-o added NVidia metadata format handler
-o quorate SIL metadata copies
-o sorting order of stacked subset enhanced
-  (RAID10; hpt37x, hpt45x, lsi, nvidia and sil)
-o started event methods implementation in metadata format handlers
-o output linefeed to .offset files for better readability (-r -D)
-o use /sys/block/*/removable to avoid acessing removable devices
-o display of spare devices with -r -c{0,2}
-o enhanced spare device handling
-o '-h' option doesn't need to stand alone any more
-o -s displays top level sets only. "-s -s" shows subsets as well.
-o -f allows partial qualification of format names now
-  (eg, "dmraid -f hpt -r" will search for hpt37x and hpt45x formats)
-
-
-MISCELANIOUS:
-------------
-o HPT37X shows subset name suffixes with -r
-o streamlined display.c
-o added lib_context* argument to alloc_disk_info() in order
-  to be able to display an error message on failure
-o factored basic RAID set allocation code out of
-  all metadata format handler into find_or_alloc_set()
-o factored RAID superset allocation code out of metadata format
-  handlers into join_superset()
-o streamlined endianess code using CVT* macros
-o streamlined free_set() code
-o check option enum valid
-o introduced various metadata extraction macros to streamline
-  related code (eg, RD(), RS())
-o optimized format handler pre-registration checks
-o avoid format handler type() method altogether by introducing
-  a RAID device type member
-o generalized list_add_sorted() which can be used to sort any
-  "struct list_head*" which voided list_add_dev_sorted()
-o find_set() modified to avoid global searches for stacked sets
-o converted get_scsi_serial to fallback using SG_IO,
-  SCSI_IOCTL_SEND_COMMAND and ATA identify
-o introduced p_fmt() for formated string pushs in order to
-  streamline activate.c; value return code of p_fmt()
-o moved some paths + filenames to lib_context
-o introduced RAID set flag for metadata format handlers 
-  which decide to maximize capacity in unsymetric RAID0 sets
-o factored out device information allocation of scan.c into metadata.c
-o introduced RAID device list to library context in order to remove
-  pointer from device info and be able to handle remaining RAID device
-  structures better on library cleanup
-o streamlined commands.c
-o changed column output delimiter to ':'
-o introduced various enums replacing integers
-
-
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-
-Heinz Mauelshagen                                 Red Hat GmbH
-Consulting Development Engineer                   Am Sonnenhang 11
-                                                  56242 Marienrachdorf
-                                                  Germany
-Mauelshagen@RedHat.com                            +49 2626 141200
-                                                       FAX 924446
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+   - Armen
