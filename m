@@ -1,12 +1,12 @@
-Return-Path: <root@srv.sistina.com>
-Date: Thu, 21 Jun 2001 07:58:15 +0200
-From: "Heinz J. Mauelshagen" <Mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] LVM 1.0 release schedule
-Message-ID: <20010621075815.A28374@sistina.com>
-References: <20010620172013.A25559@sistina.com> <20010620225153.D1776@dardhal.mired.net>
+Return-Path: <thornber@btconnect.com>
+Date: Thu, 21 Jun 2001 09:46:45 +0100
+Subject: Re: [linux-lvm] What is a good stripe size?
+Message-ID: <20010621094645.A300@gambit>
+References: <134718885.992837796416.JavaMail.root@boots> <20010618123318.A31606@tiger.bigcats.invalid>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20010620225153.D1776@dardhal.mired.net>; from jdomingo@internautas.org on Wed, Jun 20, 2001 at 10:51:53PM +0000
+Content-Disposition: inline
+In-Reply-To: <20010618123318.A31606@tiger.bigcats.invalid>; from weissel@netcologne.de on Mon, Jun 18, 2001 at 12:33:18PM +0200
+From: Joe Thornber <thornber@btconnect.com>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -18,57 +18,34 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Wed, Jun 20, 2001 at 10:51:53PM +0000, Jos� Luis Domingo L�pez wrote:
-> On Wednesday, 20 June 2001, at 17:20:13 +0200,
-> Heinz J. Mauelshagen wrote:
-> 
-> > 
-> > Because we are investigating a snapshot allocation offset bug,
-> > we are planning to release LVM 1.0 on Friday.
-> > 
-> Will this 1.0 release be integrated into the mainstream Linux kernel
-> (2.4.6 I suppose) ?. Or will it be necessary to continue applying patches
-> for a while ?
+On Mon, Jun 18, 2001 at 12:33:18PM +0200, Wolfgang Weisselberg wrote:
+...
 
-The Alan Cox -ac series is planned to be up to date around that.
-Linus will get the update (hopefully) shortly after from Alan.
+> First, we need a fool^Wcrashproof, completely interruptible
+> pvmove for active, being currently read from and written
+> to LVs.
 
-> 
-> Greetings, and good job !
+I hope this is already there.  Do your experiences suggest it isn't
+working for active pv's ?
 
-Thanks a lot.
+>  Once this is there, we need to have a pvmove which
+> can be told the physical place to move to, else we can only
+> spread the most accessed PEs over the PVs.
 
-> 
-> --
-> Jos� Luis Domingo L�pez
-> Linux Registered User #189436     Debian GNU/Linux Potato (P166 64 MB RAM)
->  
-> jdomingo EN internautas PUNTO org  => � Spam ? Atente a las consecuencias
-> jdomingo AT internautas DOT   org  => Spam at your own risk
-> 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
+This is exactly what we're planning for the next version of LVM.  The
+moving of extents will be performed by the kernel rather than in user
+space, the ioctl interface will allow the user to specify a list of pe
+movements.
 
--- 
+> Then the rest is simply ripping a balancing algorithm from
+> somewhere and slap it into a wrapper.  Data aquisition is
+> already done via lvmsadc/lvmsar.
 
-Regards,
-Heinz    -- The LVM Guy --
+Yes, a little Perl script to process the usage stats and then create a
+new map.
 
-*** Software bugs are stupid.
-    Nevertheless it needs not so stupid people to solve them ***
-
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-
-Heinz Mauelshagen                                 Sistina Software Inc.
-Senior Consultant/Developer                       Am Sonnenhang 11
-                                                  56242 Marienrachdorf
-                                                  Germany
-Mauelshagen@Sistina.com                           +49 2626 141200
-                                                       FAX 924446
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+- Joe
