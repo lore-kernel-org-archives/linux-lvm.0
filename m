@@ -1,7 +1,7 @@
-From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
-Message-ID: <20031226083944.A18663@sistina.com>
-Mime-Version: 1.0
-Subject: [linux-lvm] Merry Christmas
+Message-Id: <200312261919.hBQJJOM00527@mail.osdl.org>
+From: markw@osdl.org
+MIME-Version: 1.0
+Subject: [linux-lvm] DBT-2 PostgreSQL on STP w/ LVM2
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -12,33 +12,25 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Fri Dec 26 01:46:02 2003
+Date: Fri Dec 26 13:21:01 2003
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: TEXT/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: linux-lvm@sistina.com
-Cc: mge@sistina.com
+To: linux-kernel@vger.kernel.org, stp-devel@lists.sourceforge.net, linux-lvm@sistina.com, osdldbt-general@lists.sourceforge.net, pgsql-hackers@postgresql.org
 
-All,
+DBT-2 and PostgreSQL 7.4 is finally working with LVM2 at 100 and 200
+warehouse scale factors on 8-processor system in STP with 40 drives (38
+managed under LVM), but not without a few catches. I have written up
+some brief instructions on how to execute the test successfully with the
+Linux-2.6.0 stable release:
+	http://developer.osdl.org/markw/stp_dbt2_howto.html
 
-the LVM team is taking off arround Christmas till the new year.
-
-So don't expect reactions from us before January 5
-unless there's _real_ good reasons ;-)
-
-A merry Christmas and a happy new year to all of you and
-thanks a lot for your support of the LVM.
-
-
-Warm regards,
-Heinz    -- The LVM Guy --
-
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-
-Heinz Mauelshagen                                 Sistina Software Inc.
-Senior Consultant/Developer                       Am Sonnenhang 11
-                                                  56242 Marienrachdorf
-                                                  Germany
-Mauelshagen@Sistina.com                           +49 2626 141200
-                                                       FAX 924446
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+The instructions also cover how to get oprofile annoted assembly source
+in the test results.  Feel free to ask any questions.
+-- 
+Mark Wong - - markw@osdl.org
+Open Source Development Lab Inc - A non-profit corporation
+12725 SW Millikan Way - Suite 400 - Beaverton, OR 97005
+(503) 626-2455 x 32 (office)
+(503) 626-2436      (fax)
+http://developer.osdl.org/markw/
