@@ -1,14 +1,22 @@
-From: Roman Medina-Heigl Hernandez <roman@rs-labs.com>
-Subject: Re: [linux-lvm] Creating PV over a /dev/mapper device
-Date: Sun, 07 Nov 2004 22:35:57 +0100
-Message-ID: <3e4to0lgsvjoe6mqijohlh8558vbbb9uhj@4ax.com>
-References: <tk9so0di0jsl44dagc1dl8at6e9ld4r1be@4ax.com>
-	<20041107192450.GF2717@agk.surrey.redhat.com>
-In-Reply-To: <20041107192450.GF2717@agk.surrey.redhat.com>
+Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id iA88Gpr19466
+	for <linux-lvm@redhat.com>; Mon, 8 Nov 2004 03:16:51 -0500
+Received: from mail.fhbb.ch (smtp.fhbb.ch [193.222.241.18] (may be forged))
+	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id iA88Gl7l010163
+	for <linux-lvm@redhat.com>; Mon, 8 Nov 2004 03:16:47 -0500
+Received: from IFIC8078 ([10.1.100.183])
+	by mail.fhbb.ch (8.12.3/8.12.3/SuSE Linux 0.6) with ESMTP id
+	iA88FCE5007183
+	for <linux-lvm@redhat.com>; Mon, 8 Nov 2004 09:15:17 +0100
+Date: Mon, 8 Nov 2004 09:16:24 +0100
+From: Markus Wiedmer - FHBB <markus.wiedmer@stud.fhbb.ch>
+Message-ID: <88707567.20041108091624@stud.fhbb.ch>
 MIME-Version: 1.0
-Content-Type: multipart/mixed;
-	boundary="--=_t95to050iqh75pfsdmd390eb5n1p9s9ad0.MFSBCHJLHS"
-Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: multipart/signed; protocol="application/pgp-signature";
+	micalg="pgp-sha1"; boundary="----------DC1B52472BE9BDBA"
+Subject: [linux-lvm] VGs not detected at startup
+Reply-To: Markus Wiedmer - FHBB <markus.wiedmer@stud.fhbb.ch>,
+	LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -18,265 +26,46 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: LVM general discussion and development <linux-lvm@redhat.com>
-Cc: agk@redhat.com
+To: linux-lvm@redhat.com
 
-
-----=_t95to050iqh75pfsdmd390eb5n1p9s9ad0.MFSBCHJLHS
-Content-Type: text/plain; charset=us-ascii
+------------DC1B52472BE9BDBA
+Content-Type: text/plain; charset=ISO-8859-15
 Content-Transfer-Encoding: quoted-printable
 
+hi all,
 
-Hi Alasdair,
+I'm running lvm2.00.25 on kernel 2.6.9, but I have problems with
+detecting the VGs.Immediately after bootup, vgscan returns: no volume
+groups found, same for lvscan and pvscan. I have my root
+partition on my Primary IDE-Drive (hda) and the VGs lie on the
+serial-ATA-Drive (sda).
 
-=46irst, thanks for your fast answer. I added the "device-mapper" type
-but it is still not working. Example:
+Now after I run fdisk on /dev/sda (just run it an quit again). all my
+VGs mysteriously appear on the next vgscan.
 
-jupiter:~# ls -l /dev/mapper
-total 0
-crw-------    1 root     root      10,  63 Nov  3 23:25 control
-brw-r-----    1 root     root     253,   4 Nov  7 13:00 crypt10
-brw-r-----    1 root     root     253,   5 Nov  7 13:02 crypt11
-brw-r-----    1 root     root     253,   6 Nov  7 13:02 crypt12
-brw-r-----    1 root     root     253,   7 Nov  7 13:02 crypt13
-brw-r-----    1 root     root     253,   8 Nov  7 13:03 crypt14
-brw-r-----    1 root     root     253,   9 Nov  7 13:03 crypt15
-brw-------    1 root     root     253,   3 Nov  5 22:14 rs-home
-brw-------    1 root     root     253,   0 Nov  5 22:14 rs-root
-brw-------    1 root     root     253,   1 Nov  5 22:14 rs-usr
-brw-------    1 root     root     253,   2 Nov  5 22:14 rs-var
-jupiter:~# vgscan
-  Reading all physical volumes.  This may take a while...
-  Found volume group "rs" using metadata type lvm1
-jupiter:~# grep crypt /etc/lvm/.cache
-jupiter:~#=20
+I guess I'm missing something, but I can't see what. Does anyone know
+this problem?
 
-So grep shows that no crypt devices were found :(. I've attached my
-current lvm.conf file. Please, if you were so kind to have a look...
-I've set-up lvm1 mode ('cause I read that it is more stable than lvm2)
-but I also did some tests with lvm2 and vgscan didn't detect my crypt
-(=3Dmapper) devices either. I've also set up a strict filter (although
-I've also tried with less-restrictive ones with no success).
+Thanks in advance
 
- Saludos,
- --Roman
-
---
-PGP Fingerprint:
-09BB EFCD 21ED 4E79 25FB  29E1 E47F 8A7D EAD5 6742
-[Key ID: 0xEAD56742. Available at KeyServ]
-
-On Sun, 7 Nov 2004 19:24:50 +0000, you wrote:
-
->On Sun, Nov 07, 2004 at 03:01:10PM +0100, Roman Medina-Heigl Hernandez =
-wrote:
->> When trying to create PV, I got the following error:
->> jupiter:/# pvcreate /dev/mapper/crypt10
->>   /dev/mapper/crypt10: Couldn't find device.
->=20
->By default LVM2 won't let you turn mapped devices into PVs,
->or if you're not careful you could get things horribly tangled up.
->(e.g. create pv2 on lv1 in vg1, then add pv2 to vg1...)
->
->> I know how to temporaly fix the problem by adding the device to
->> /etc/lvm/.cache.=20
->Don't edit that file: the tools are free to regenerate it whenever
->they wish.
->
->> filter =3D [ "a|/dev/mapper/crypt.*|" ]
->> scan =3D [ "/dev/mapper" "/dev" ]
->=20
->As long as you understand how to avoid recursion like the example
->above, you can edit the 'types =3D' line to include "device-mapper".
->[The 16 or whatever after it is for historic reasons - nothing=20
->currently uses it.]
+markus
 
 
-----=_t95to050iqh75pfsdmd390eb5n1p9s9ad0.MFSBCHJLHS
-Content-Type: application/octet-stream; name=lvm.conf
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename=lvm.conf
+--=20
+Mit freundlichen Gr=FCssen
+Markus Wiedmer - FHBB
 
-IyBUaGlzIGlzIGFuIGV4YW1wbGUgY29uZmlndXJhdGlvbiBmaWxlIGZvciB0aGUgTFZNMiBzeXN0
-ZW0uCiMgSXQgY29udGFpbnMgdGhlIGRlZmF1bHQgc2V0dGluZ3MgdGhhdCB3b3VsZCBiZSB1c2Vk
-IGlmIHRoZXJlIHdhcyBubwojIC9ldGMvbHZtL2x2bS5jb25mIGZpbGUuCiMKIyBSZWZlciB0byAn
-bWFuIGx2bS5jb25mJyBmb3IgZnVydGhlciBpbmZvcm1hdGlvbiBpbmNsdWRpbmcgdGhlIGZpbGUg
-bGF5b3V0LgojCiMgVG8gcHV0IHRoaXMgZmlsZSBpbiBhIGRpZmZlcmVudCBkaXJlY3RvcnkgYW5k
-IG92ZXJyaWRlIC9ldGMvbHZtIHNldAojIHRoZSBlbnZpcm9ubWVudCB2YXJpYWJsZSBMVk1fU1lT
-VEVNX0RJUiBiZWZvcmUgcnVubmluZyB0aGUgdG9vbHMuCgoKIyBUaGlzIHNlY3Rpb24gYWxsb3dz
-IHlvdSB0byBjb25maWd1cmUgd2hpY2ggYmxvY2sgZGV2aWNlcyBzaG91bGQKIyBiZSB1c2VkIGJ5
-IHRoZSBMVk0gc3lzdGVtLgpkZXZpY2VzIHsKCiAgICAjIFdoZXJlIGRvIHlvdSB3YW50IHlvdXIg
-dm9sdW1lIGdyb3VwcyB0byBhcHBlYXIgPwogICAgZGlyID0gIi9kZXYiCgogICAgIyBBbiBhcnJh
-eSBvZiBkaXJlY3RvcmllcyB0aGF0IGNvbnRhaW4gdGhlIGRldmljZSBub2RlcyB5b3Ugd2lzaAog
-ICAgIyB0byB1c2Ugd2l0aCBMVk0yLgogICAgc2NhbiA9IFsgIi9kZXYiLCAiL2Rldi9tYXBwZXIi
-IF0KCiAgICAjIEEgZmlsdGVyIHRoYXQgdGVsbHMgTFZNMiB0byBvbmx5IHVzZSBhIHJlc3RyaWN0
-ZWQgc2V0IG9mIGRldmljZXMuCiAgICAjIFRoZSBmaWx0ZXIgY29uc2lzdHMgb2YgYW4gYXJyYXkg
-b2YgcmVndWxhciBleHByZXNzaW9ucy4gIFRoZXNlCiAgICAjIGV4cHJlc3Npb25zIGNhbiBiZSBk
-ZWxpbWl0ZWQgYnkgYSBjaGFyYWN0ZXIgb2YgeW91ciBjaG9pY2UsIGFuZAogICAgIyBwcmVmaXhl
-ZCB3aXRoIGVpdGhlciBhbiAnYScgKGZvciBhY2NlcHQpIG9yICdyJyAoZm9yIHJlamVjdCkuCiAg
-ICAjIFRoZSBmaXJzdCBleHByZXNzaW9uIGZvdW5kIHRvIG1hdGNoIGEgZGV2aWNlIG5hbWUgZGV0
-ZXJtaW5lcyBpZgogICAgIyB0aGUgZGV2aWNlIHdpbGwgYmUgYWNjZXB0ZWQgb3IgcmVqZWN0ZWQg
-KGlnbm9yZWQpLiAgRGV2aWNlcyB0aGF0CiAgICAjIGRvbid0IG1hdGNoIGFueSBwYXR0ZXJucyBh
-cmUgYWNjZXB0ZWQuCgogICAgIyBSZW1lbWJlciB0byBydW4gdmdzY2FuIGFmdGVyIHlvdSBjaGFu
-Z2UgdGhpcyBwYXJhbWV0ZXIgdG8gZW5zdXJlIAogICAgIyB0aGF0IHRoZSBjYWNoZSBmaWxlIGdl
-dHMgcmVnZW5lcmF0ZWQgKHNlZSBiZWxvdykuCgogICAgIyBXZSBwZXJtaXQgZW5jcnlwdGVkIGRl
-dmljZXMgYW5kIHJlamVjdCBjZHJvbSBkZXZpY2UKICAgIGZpbHRlciA9IFsgImF8Xi9kZXYvbWFw
-cGVyL2NyeXB0LiokfCIsICJyfC9kZXYvbWFwcGVyLy4qfCIsICJyfC9kZXYvY2Ryb218IiwgInJ8
-L2Rldi9oZGR8IiBdCiAgICAKICAgICMgQnkgZGVmYXVsdCB3ZSBhY2NlcHQgZXZlcnkgYmxvY2sg
-ZGV2aWNlCiAgICAjIGZpbHRlciA9IFsgImEvLiovIiBdCgogICAgIyBFeGNsdWRlIHRoZSBjZHJv
-bSBkcml2ZQogICAgIyBmaWx0ZXIgPSBbICJyfC9kZXYvY2Ryb218IiwgInJ8L2Rldi9oZGR8IiBd
-CgogICAgIyBXaGVuIHRlc3RpbmcgSSBsaWtlIHRvIHdvcmsgd2l0aCBqdXN0IGxvb3BiYWNrIGRl
-dmljZXM6CiAgICAjIGZpbHRlciA9IFsgImEvbG9vcC8iLCAici8uKi8iIF0KCiAgICAjIE9yIG1h
-eWJlIGFsbCBsb29wcyBhbmQgaWRlIGRyaXZlcyBleGNlcHQgaGRjOgogICAgIyBmaWx0ZXIgPVsg
-ImF8bG9vcHwiLCAicnwvZGV2L2hkY3wiLCAiYXwvZGV2L2lkZXwiLCAicnwuKnwiIF0KCiAgICAj
-IFVzZSBhbmNob3JzIGlmIHlvdSB3YW50IHRvIGJlIHJlYWxseSBzcGVjaWZpYwogICAgIyBmaWx0
-ZXIgPSBbICJhfF4vZGV2L2hkYTgkfCIsICJyLy4qLyIgXQoKICAgICMgVGhlIHJlc3VsdHMgb2Yg
-dGhlIGZpbHRlcmluZyBhcmUgY2FjaGVkIG9uIGRpc2sgdG8gYXZvaWQKICAgICMgcmVzY2Fubmlu
-ZyBkdWQgZGV2aWNlcyAod2hpY2ggY2FuIHRha2UgYSB2ZXJ5IGxvbmcgdGltZSkuICBCeQogICAg
-IyBkZWZhdWx0IHRoaXMgY2FjaGUgZmlsZSBpcyBoaWRkZW4gaW4gdGhlIC9ldGMvbHZtIGRpcmVj
-dG9yeS4KICAgICMgSXQgaXMgc2FmZSB0byBkZWxldGUgdGhpcyBmaWxlOiB0aGUgdG9vbHMgcmVn
-ZW5lcmF0ZSBpdC4KICAgIGNhY2hlID0gIi9ldGMvbHZtLy5jYWNoZSIKCiAgICAjIFlvdSBjYW4g
-dHVybiBvZmYgd3JpdGluZyB0aGlzIGNhY2hlIGZpbGUgYnkgc2V0dGluZyB0aGlzIHRvIDAuCiAg
-ICB3cml0ZV9jYWNoZV9zdGF0ZSA9IDEKCiAgICAjIEFkdmFuY2VkIHNldHRpbmdzLgoKICAgICMg
-TGlzdCBvZiBwYWlycyBvZiBhZGRpdGlvbmFsIGFjY2VwdGFibGUgYmxvY2sgZGV2aWNlIHR5cGVz
-IGZvdW5kIAogICAgIyBpbiAvcHJvYy9kZXZpY2VzIHdpdGggbWF4aW11bSAobm9uLXplcm8pIG51
-bWJlciBvZiBwYXJ0aXRpb25zLgogICAgIyB0eXBlcyA9IFsgImZkIiwgImRldmljZS1tYXBwZXIi
-LCAxNiBdCgogICAgIyBJZiBzeXNmcyBpcyBtb3VudGVkICgyLjYga2VybmVscykgcmVzdHJpY3Qg
-ZGV2aWNlIHNjYW5uaW5nIHRvIAogICAgIyB0aGUgYmxvY2sgZGV2aWNlcyBpdCBiZWxpZXZlcyBh
-cmUgdmFsaWQuCiAgICAjIDEgZW5hYmxlczsgMCBkaXNhYmxlcy4KICAgIHN5c2ZzX3NjYW4gPSAx
-CQoKICAgICMgQnkgZGVmYXVsdCwgTFZNMiB3aWxsIGlnbm9yZSBkZXZpY2VzIHVzZWQgYXMgY29t
-cG9uZW50cyBvZgogICAgIyBzb2Z0d2FyZSBSQUlEIChtZCkgZGV2aWNlcyBieSBsb29raW5nIGZv
-ciBtZCBzdXBlcmJsb2Nrcy4KICAgICMgMSBlbmFibGVzOyAwIGRpc2FibGVzLgogICAgbWRfY29t
-cG9uZW50X2RldGVjdGlvbiA9IDAKfQoKIyBUaGlzIHNlY3Rpb24gdGhhdCBhbGxvd3MgeW91IHRv
-IGNvbmZpZ3VyZSB0aGUgbmF0dXJlIG9mIHRoZQojIGluZm9ybWF0aW9uIHRoYXQgTFZNMiByZXBv
-cnRzLgpsb2cgewoKICAgICMgQ29udHJvbHMgdGhlIG1lc3NhZ2VzIHNlbnQgdG8gc3Rkb3V0IG9y
-IHN0ZGVyci4KICAgICMgVGhlcmUgYXJlIHRocmVlIGxldmVscyBvZiB2ZXJib3NpdHksIDMgYmVp
-bmcgdGhlIG1vc3QgdmVyYm9zZS4KICAgIHZlcmJvc2UgPSAwCgogICAgIyBTaG91bGQgd2Ugc2Vu
-ZCBsb2cgbWVzc2FnZXMgdGhyb3VnaCBzeXNsb2c/CiAgICAjIDEgaXMgeWVzOyAwIGlzIG5vLgog
-ICAgc3lzbG9nID0gMQoKICAgICMgU2hvdWxkIHdlIGxvZyBlcnJvciBhbmQgZGVidWcgbWVzc2Fn
-ZXMgdG8gYSBmaWxlPwogICAgIyBCeSBkZWZhdWx0IHRoZXJlIGlzIG5vIGxvZyBmaWxlLgogICAg
-I2ZpbGUgPSAiL3Zhci9sb2cvbHZtMi5sb2ciCgogICAgIyBTaG91bGQgd2Ugb3ZlcndyaXRlIHRo
-ZSBsb2cgZmlsZSBlYWNoIHRpbWUgdGhlIHByb2dyYW0gaXMgcnVuPwogICAgIyBCeSBkZWZhdWx0
-IHdlIGFwcGVuZC4KICAgIG92ZXJ3cml0ZSA9IDAKCiAgICAjIFdoYXQgbGV2ZWwgb2YgbG9nIG1l
-c3NhZ2VzIHNob3VsZCB3ZSBzZW5kIHRvIHRoZSBsb2cgZmlsZSBhbmQvb3Igc3lzbG9nPwogICAg
-IyBUaGVyZSBhcmUgNiBzeXNsb2ctbGlrZSBsb2cgbGV2ZWxzIGN1cnJlbnRseSBpbiB1c2UgLSAy
-IHRvIDcgaW5jbHVzaXZlLgogICAgIyA3IGlzIHRoZSBtb3N0IHZlcmJvc2UgKExPR19ERUJVRyku
-CiAgICBsZXZlbCA9IDAKICAgIAogICAgIyBGb3JtYXQgb2Ygb3V0cHV0IG1lc3NhZ2VzCiAgICAj
-IFdoZXRoZXIgb3Igbm90ICgxIG9yIDApIHRvIGluZGVudCBtZXNzYWdlcyBhY2NvcmRpbmcgdG8g
-dGhlaXIgc2V2ZXJpdHkKICAgIGluZGVudCA9IDEKCiAgICAjIFdoZXRoZXIgb3Igbm90ICgxIG9y
-IDApIHRvIGRpc3BsYXkgdGhlIGNvbW1hbmQgbmFtZSBvbiBlYWNoIGxpbmUgb3V0cHV0CiAgICBj
-b21tYW5kX25hbWVzID0gMAoKICAgICMgQSBwcmVmaXggdG8gdXNlIGJlZm9yZSB0aGUgbWVzc2Fn
-ZSB0ZXh0IChidXQgYWZ0ZXIgdGhlIGNvbW1hbmQgbmFtZSwKICAgICMgaWYgc2VsZWN0ZWQpLiAg
-RGVmYXVsdCBpcyB0d28gc3BhY2VzLCBzbyB5b3UgY2FuIHNlZS9ncmVwIHRoZSBzZXZlcml0eQog
-ICAgIyBvZiBlYWNoIG1lc3NhZ2UuCiAgICBwcmVmaXggPSAiICAiCgogICAgIyBUbyBtYWtlIHRo
-ZSBtZXNzYWdlcyBsb29rIHNpbWlsYXIgdG8gdGhlIG9yaWdpbmFsIExWTSB0b29scyB1c2U6CiAg
-ICAjICAgaW5kZW50ID0gMAogICAgIyAgIGNvbW1hbmRfbmFtZXMgPSAxCiAgICAjICAgcHJlZml4
-ID0gIiAtLSAiCgogICAgIyBTZXQgdGhpcyBpZiB5b3Ugd2FudCBsb2cgbWVzc2FnZXMgZHVyaW5n
-IGFjdGl2YXRpb24uCiAgICAjIERvbid0IHVzZSB0aGlzIGluIGxvdyBtZW1vcnkgc2l0dWF0aW9u
-cyAoY2FuIGRlYWRsb2NrKS4KICAgICMgYWN0aXZhdGlvbiA9IDAKfQoKIyBDb25maWd1cmF0aW9u
-IG9mIG1ldGFkYXRhIGJhY2t1cHMgYW5kIGFyY2hpdmluZy4gIEluIExWTTIgd2hlbiB3ZQojIHRh
-bGsgYWJvdXQgYSAnYmFja3VwJyB3ZSBtZWFuIG1ha2luZyBhIGNvcHkgb2YgdGhlIG1ldGFkYXRh
-IGZvciB0aGUKIyAqY3VycmVudCogc3lzdGVtLiAgVGhlICdhcmNoaXZlJyBjb250YWlucyBvbGQg
-bWV0YWRhdGEgY29uZmlndXJhdGlvbnMuCiMgQmFja3VwcyBhcmUgc3RvcmVkIGluIGEgaHVtYW4g
-cmVhZGVhYmxlIHRleHQgZm9ybWF0LgpiYWNrdXAgewoKICAgICMgU2hvdWxkIHdlIG1haW50YWlu
-IGEgYmFja3VwIG9mIHRoZSBjdXJyZW50IG1ldGFkYXRhIGNvbmZpZ3VyYXRpb24gPwogICAgIyBV
-c2UgMSBmb3IgWWVzOyAwIGZvciBOby4KICAgICMgVGhpbmsgdmVyeSBoYXJkIGJlZm9yZSB0dXJu
-aW5nIHRoaXMgb2ZmIQogICAgYmFja3VwID0gMQoKICAgICMgV2hlcmUgc2hhbGwgd2Uga2VlcCBp
-dCA/CiAgICAjIFJlbWVtYmVyIHRvIGJhY2sgdXAgdGhpcyBkaXJlY3RvcnkgcmVndWxhcmx5IQog
-ICAgYmFja3VwX2RpciA9ICIvZXRjL2x2bS9iYWNrdXAiCgogICAgIyBTaG91bGQgd2UgbWFpbnRh
-aW4gYW4gYXJjaGl2ZSBvZiBvbGQgbWV0YWRhdGEgY29uZmlndXJhdGlvbnMuCiAgICAjIFVzZSAx
-IGZvciBZZXM7IDAgZm9yIE5vLgogICAgIyBPbiBieSBkZWZhdWx0LiAgVGhpbmsgdmVyeSBoYXJk
-IGJlZm9yZSB0dXJuaW5nIHRoaXMgb2ZmLgogICAgYXJjaGl2ZSA9IDEKCiAgICAjIFdoZXJlIHNo
-b3VsZCBhcmNoaXZlZCBmaWxlcyBnbyA/CiAgICAjIFJlbWVtYmVyIHRvIGJhY2sgdXAgdGhpcyBk
-aXJlY3RvcnkgcmVndWxhcmx5IQogICAgYXJjaGl2ZV9kaXIgPSAiL2V0Yy9sdm0vYXJjaGl2ZSIK
-ICAgIAogICAgIyBXaGF0IGlzIHRoZSBtaW5pbXVtIG51bWJlciBvZiBhcmNoaXZlIGZpbGVzIHlv
-dSB3aXNoIHRvIGtlZXAgPwogICAgcmV0YWluX21pbiA9IDEwCgogICAgIyBXaGF0IGlzIHRoZSBt
-aW5pbXVtIHRpbWUgeW91IHdpc2ggdG8ga2VlcCBhbiBhcmNoaXZlIGZpbGUgZm9yID8KICAgIHJl
-dGFpbl9kYXlzID0gMzAKfQoKIyBTZXR0aW5ncyBmb3IgdGhlIHJ1bm5pbmcgTFZNMiBpbiBzaGVs
-bCAocmVhZGxpbmUpIG1vZGUuCnNoZWxsIHsKCiAgICAjIE51bWJlciBvZiBsaW5lcyBvZiBoaXN0
-b3J5IHRvIHN0b3JlIGluIH4vLmx2bV9oaXN0b3J5CiAgICBoaXN0b3J5X3NpemUgPSAxMDAKfQoK
-CiMgTWlzY2VsbGFuZW91cyBnbG9iYWwgTFZNMiBzZXR0aW5ncwpnbG9iYWwgewogICAgCiAgICAj
-IFRoZSBmaWxlIGNyZWF0aW9uIG1hc2sgZm9yIGFueSBmaWxlcyBhbmQgZGlyZWN0b3JpZXMgY3Jl
-YXRlZC4KICAgICMgSW50ZXJwcmV0ZWQgYXMgb2N0YWwgaWYgdGhlIGZpcnN0IGRpZ2l0IGlzIHpl
-cm8uCiAgICB1bWFzayA9IDA3NwoKICAgICMgQWxsb3cgb3RoZXIgdXNlcnMgdG8gcmVhZCB0aGUg
-ZmlsZXMKICAgICN1bWFzayA9IDAyMgoKICAgICMgRW5hYmxpbmcgdGVzdCBtb2RlIG1lYW5zIHRo
-YXQgbm8gY2hhbmdlcyB0byB0aGUgb24gZGlzayBtZXRhZGF0YQogICAgIyB3aWxsIGJlIG1hZGUu
-ICBFcXVpdmFsZW50IHRvIGhhdmluZyB0aGUgLXQgb3B0aW9uIG9uIGV2ZXJ5CiAgICAjIGNvbW1h
-bmQuICBEZWZhdWx0cyB0byBvZmYuCiAgICB0ZXN0ID0gMAoKICAgICMgV2hldGhlciBvciBub3Qg
-dG8gY29tbXVuaWNhdGUgd2l0aCB0aGUga2VybmVsIGRldmljZS1tYXBwZXIuCiAgICAjIFNldCB0
-byAwIGlmIHlvdSB3YW50IHRvIHVzZSB0aGUgdG9vbHMgdG8gbWFuaXB1bGF0ZSBMVk0gbWV0YWRh
-dGEgCiAgICAjIHdpdGhvdXQgYWN0aXZhdGluZyBhbnkgbG9naWNhbCB2b2x1bWVzLgogICAgIyBJ
-ZiB0aGUgZGV2aWNlLW1hcHBlciBrZXJuZWwgZHJpdmVyIGlzIG5vdCBwcmVzZW50IGluIHlvdXIg
-a2VybmVsCiAgICAjIHNldHRpbmcgdGhpcyB0byAwIHNob3VsZCBzdXBwcmVzcyB0aGUgZXJyb3Ig
-bWVzc2FnZXMuCiAgICBhY3RpdmF0aW9uID0gMQoKICAgICMgSWYgd2UgY2FuJ3QgY29tbXVuaWNh
-dGUgd2l0aCBkZXZpY2UtbWFwcGVyLCBzaG91bGQgd2UgdHJ5IHJ1bm5pbmcgCiAgICAjIHRoZSBM
-Vk0xIHRvb2xzPwogICAgIyBUaGlzIG9wdGlvbiBvbmx5IGFwcGxpZXMgdG8gMi40IGtlcm5lbHMg
-YW5kIGlzIHByb3ZpZGVkIHRvIGhlbHAgeW91CiAgICAjIHN3aXRjaCBiZXR3ZWVuIGRldmljZS1t
-YXBwZXIga2VybmVscyBhbmQgTFZNMSBrZXJuZWxzLgogICAgIyBUaGUgTFZNMSB0b29scyBuZWVk
-IHRvIGJlIGluc3RhbGxlZCB3aXRoIC5sdm0xIHN1ZmZpY2VzCiAgICAjIGUuZy4gdmdzY2FuLmx2
-bTEgYW5kIHRoZXkgd2lsbCBzdG9wIHdvcmtpbmcgYWZ0ZXIgeW91IHN0YXJ0IHVzaW5nCiAgICAj
-IHRoZSBuZXcgbHZtMiBvbi1kaXNrIG1ldGFkYXRhIGZvcm1hdC4KICAgICMgVGhlIGRlZmF1bHQg
-dmFsdWUgaXMgc2V0IHdoZW4gdGhlIHRvb2xzIGFyZSBidWlsdC4KICAgICMgZmFsbGJhY2tfdG9f
-bHZtMSA9IDAKCiAgICAjIFRoZSBkZWZhdWx0IG1ldGFkYXRhIGZvcm1hdCB0aGF0IGNvbW1hbmRz
-IHNob3VsZCB1c2UgLSAibHZtMSIgb3IgImx2bTIiLgogICAgIyBUaGUgY29tbWFuZCBsaW5lIG92
-ZXJyaWRlIGlzIC1NMSBvciAtTTIuCiAgICAjIERlZmF1bHRzIHRvICJsdm0xIiBpZiBjb21waWxl
-ZCBpbiwgZWxzZSAibHZtMiIuCiAgICBmb3JtYXQgPSAibHZtMSIKCiAgICAjIExvY2F0aW9uIG9m
-IHByb2MgZmlsZXN5c3RlbQogICAgcHJvYyA9ICIvcHJvYyIKCiAgICAjIFR5cGUgb2YgbG9ja2lu
-ZyB0byB1c2UuIERlZmF1bHRzIHRvIGZpbGUtYmFzZWQgbG9ja2luZyAoMSkuCiAgICAjIFR1cm4g
-bG9ja2luZyBvZmYgYnkgc2V0dGluZyB0byAwIChkYW5nZXJvdXM6IHJpc2tzIG1ldGFkYXRhIGNv
-cnJ1cHRpb24KICAgICMgaWYgTFZNMiBjb21tYW5kcyBnZXQgcnVuIGNvbmN1cnJlbnRseSkuCiAg
-ICBsb2NraW5nX3R5cGUgPSAxCgogICAgIyBMb2NhbCBub24tTFYgZGlyZWN0b3J5IHRoYXQgaG9s
-ZHMgZmlsZS1iYXNlZCBsb2NrcyB3aGlsZSBjb21tYW5kcyBhcmUKICAgICMgaW4gcHJvZ3Jlc3Mu
-ICBBIGRpcmVjdG9yeSBsaWtlIC90bXAgdGhhdCBtYXkgZ2V0IHdpcGVkIG9uIHJlYm9vdCBpcyBP
-Sy4KICAgIGxvY2tpbmdfZGlyID0gIi92YXIvbG9jay9sdm0iCgogICAgIyBPdGhlciBlbnRyaWVz
-IGNhbiBnbyBoZXJlIHRvIGFsbG93IHlvdSB0byBsb2FkIHNoYXJlZCBsaWJyYXJpZXMKICAgICMg
-ZS5nLiBpZiBzdXBwb3J0IGZvciBMVk0xIG1ldGFkYXRhIHdhcyBjb21waWxlZCBhcyBhIHNoYXJl
-ZCBsaWJyYXJ5IHVzZQogICAgIyAgIGZvcm1hdF9saWJyYXJpZXMgPSAibGlibHZtMmZvcm1hdDEu
-c28iIAogICAgIyBGdWxsIHBhdGhuYW1lcyBjYW4gYmUgZ2l2ZW4uCgogICAgIyBTZWFyY2ggdGhp
-cyBkaXJlY3RvcnkgZmlyc3QgZm9yIHNoYXJlZCBsaWJyYXJpZXMuCiAgICAjICAgbGlicmFyeV9k
-aXIgPSAiL2xpYiIKfQoKYWN0aXZhdGlvbiB7CiAgICAjIERldmljZSB1c2VkIGluIHBsYWNlIG9m
-IG1pc3Npbmcgc3RyaXBlcyBpZiBhY3RpdmF0aW5nIGluY29tcGxldGUgdm9sdW1lLgogICAgIyBG
-b3Igbm93LCB5b3UgbmVlZCB0byBzZXQgdGhpcyB1cCB5b3Vyc2VsZiBmaXJzdCAoZS5nLiB3aXRo
-ICdkbXNldHVwJykKICAgICMgRm9yIGV4YW1wbGUsIHlvdSBjb3VsZCBtYWtlIGl0IHJldHVybiBJ
-L08gZXJyb3JzIHVzaW5nIHRoZSAnZXJyb3InIAogICAgIyB0YXJnZXQgb3IgbWFrZSBpdCByZXR1
-cm4gemVyb3MuCiAgICBtaXNzaW5nX3N0cmlwZV9maWxsZXIgPSAiL2Rldi9pb2Vycm9yIgoKICAg
-ICMgU2l6ZSAoaW4gS0IpIG9mIGVhY2ggY29weSBvcGVyYXRpb24gd2hlbiBtaXJyb3JpbmcKICAg
-IG1pcnJvcl9yZWdpb25fc2l6ZSA9IDUxMgoKICAgICMgSG93IG11Y2ggc3RhY2sgKGluIEtCKSB0
-byByZXNlcnZlIGZvciB1c2Ugd2hpbGUgZGV2aWNlcyBzdXNwZW5kZWQKICAgIHJlc2VydmVkX3N0
-YWNrID0gMjU2CgogICAgIyBIb3cgbXVjaCBtZW1vcnkgKGluIEtCKSB0byByZXNlcnZlIGZvciB1
-c2Ugd2hpbGUgZGV2aWNlcyBzdXNwZW5kZWQKICAgIHJlc2VydmVkX21lbW9yeSA9IDgxOTIKCiAg
-ICAjIE5pY2UgdmFsdWUgdXNlZCB3aGlsZSBkZXZpY2VzIHN1c3BlbmRlZAogICAgcHJvY2Vzc19w
-cmlvcml0eSA9IC0xOAoKICAgICMgSWYgdm9sdW1lX2xpc3QgaXMgZGVmaW5lZCwgZWFjaCBMViBp
-cyBvbmx5IGFjdGl2YXRlZCBpZiB0aGVyZSBpcyBhCiAgICAjIG1hdGNoIGFnYWluc3QgdGhlIGxp
-c3QuCiAgICAjICAgInZnbmFtZSIgYW5kICJ2Z25hbWUvbHZuYW1lIiBhcmUgbWF0Y2hlZCBleGFj
-dGx5LgogICAgIyAgICJAdGFnIiBtYXRjaGVzIGFueSB0YWcgc2V0IGluIHRoZSBMViBvciBWRy4K
-ICAgICMgICAiQCoiIG1hdGNoZXMgaWYgYW55IHRhZyBkZWZpbmVkIG9uIHRoZSBob3N0IGlzIGFs
-c28gc2V0IGluIHRoZSBMViBvciBWRwogICAgIwogICAgIyB2b2x1bWVfbGlzdCA9IFsgInZnMSIs
-ICJ2ZzIvbHZvbDEiLCAiQHRhZzEiLCAiQCoiIF0KfQoKCiMjIyMjIyMjIyMjIyMjIyMjIyMjCiMg
-QWR2YW5jZWQgc2VjdGlvbiAjCiMjIyMjIyMjIyMjIyMjIyMjIyMjCgojIE1ldGFkYXRhIHNldHRp
-bmdzCiMKIyBtZXRhZGF0YSB7CiAgICAjIERlZmF1bHQgbnVtYmVyIG9mIGNvcGllcyBvZiBtZXRh
-ZGF0YSB0byBob2xkIG9uIGVhY2ggUFYuICAwLCAxIG9yIDIuCiAgICAjIEl0J3MgYmVzdCB0byBs
-ZWF2ZSB0aGlzIGF0IDIuCiAgICAjIFlvdSBtaWdodCB3YW50IHRvIG92ZXJyaWRlIGl0IGZyb20g
-dGhlIGNvbW1hbmQgbGluZSB3aXRoIDAgb3IgMSAKICAgICMgd2hlbiBydW5uaW5nIHB2Y3JlYXRl
-IG9uIG5ldyBQVnMgd2hpY2ggYXJlIHRvIGJlIGFkZGVkIHRvIGxhcmdlIFZHcy4KCiAgICAjIHB2
-bWV0YWRhdGFjb3BpZXMgPSAyCgogICAgIyBBcHByb3hpbWF0ZSBkZWZhdWx0IHNpemUgb2Ygb24t
-ZGlzayBtZXRhZGF0YSBhcmVhcyBpbiBzZWN0b3JzLgogICAgIyBZb3Ugc2hvdWxkIGluY3JlYXNl
-IHRoaXMgaWYgeW91IGhhdmUgbGFyZ2Ugdm9sdW1lIGdyb3VwcyBvcgogICAgIyB5b3Ugd2FudCB0
-byByZXRhaW4gYSBsYXJnZSBvbi1kaXNrIGhpc3Rvcnkgb2YgeW91ciBtZXRhZGF0YSBjaGFuZ2Vz
-LgoKICAgICMgcHZtZXRhZGF0YXNpemUgPSAyNTUKCiAgICAjIExpc3Qgb2YgZGlyZWN0b3JpZXMg
-aG9sZGluZyBsaXZlIGNvcGllcyBvZiB0ZXh0IGZvcm1hdCBtZXRhZGF0YS4KICAgICMgVGhlc2Ug
-ZGlyZWN0b3JpZXMgbXVzdCBub3QgYmUgb24gbG9naWNhbCB2b2x1bWVzIQogICAgIyBJdCdzIHBv
-c3NpYmxlIHRvIHVzZSBMVk0yIHdpdGggYSBjb3VwbGUgb2YgZGlyZWN0b3JpZXMgaGVyZSwKICAg
-ICMgcHJlZmVyYWJseSBvbiBkaWZmZXJlbnQgKG5vbi1MVikgZmlsZXN5c3RlbXMsIGFuZCB3aXRo
-IG5vIG90aGVyIAogICAgIyBvbi1kaXNrIG1ldGFkYXRhIChwdm1ldGFkYXRhY29waWVzID0gMCku
-IE9yIHRoaXMgY2FuIGJlIGluCiAgICAjIGFkZGl0aW9uIHRvIG9uLWRpc2sgbWV0YWRhdGEgYXJl
-YXMuCiAgICAjIFRoZSBmZWF0dXJlIHdhcyBvcmlnaW5hbGx5IGFkZGVkIHRvIHNpbXBsaWZ5IHRl
-c3RpbmcgYW5kIGlzIG5vdAogICAgIyBzdXBwb3J0ZWQgdW5kZXIgbG93IG1lbW9yeSBzaXR1YXRp
-b25zIC0gdGhlIG1hY2hpbmUgY291bGQgbG9jayB1cC4KICAgICMKICAgICMgTmV2ZXIgZWRpdCBh
-bnkgZmlsZXMgaW4gdGhlc2UgZGlyZWN0b3JpZXMgYnkgaGFuZCB1bmxlc3MgeW91CiAgICAjIHlv
-dSBhcmUgYWJzb2x1dGVseSBzdXJlIHlvdSBrbm93IHdoYXQgeW91IGFyZSBkb2luZyEgVXNlCiAg
-ICAjIHRoZSBzdXBwbGllZCB0b29sc2V0IHRvIG1ha2UgY2hhbmdlcyAoZS5nLiB2Z2NmZ3Jlc3Rv
-cmUpLgoKICAgICMgZGlycyA9IFsgIi9ldGMvbHZtL21ldGFkYXRhIiwgIi9tbnQvZGlzazIvbHZt
-L21ldGFkYXRhMiIgXQojfQoKCg==
 
-----=_t95to050iqh75pfsdmd390eb5n1p9s9ad0.MFSBCHJLHS--
+------------DC1B52472BE9BDBA
+Content-Type: application/pgp-signature
+
+-----BEGIN PGP MESSAGE-----
+Version: PGP SDK 3.0.4
+Comment: ""
+
+iQA/AwUBQY8rWJ9eUGiOXF3kEQK8cACgyra+8NCP0vB0RGI2O1NrmqIwOYwAnjcM
+tD/MR3DRUQ80h+5+aOXDbmQW
+=e4sz
+-----END PGP MESSAGE-----
+
+------------DC1B52472BE9BDBA--
