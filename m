@@ -1,10 +1,11 @@
-Return-Path: <jalvo@mbay.net>
-Date: Sat, 14 Jul 2001 23:05:36 -0700 (PDT)
-From: John Alvord <jalvo@mbay.net>
-In-Reply-To: <20010715153607.A7624@weta.f00f.org>
-Message-ID: <Pine.LNX.4.20.0107142304010.17541-100000@otter.mbay.net>
+Return-Path: <cognac@toppoint.de>
+Date: Sun, 15 Jul 2001 14:56:47 +0200
+From: Andreas Czerniak <cognac@toppoint.de>
+Message-ID: <16210000.995201807@czerny>
 MIME-Version: 1.0
-Subject: [linux-lvm] Re: [PATCH] 64 bit scsi read/write
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+Subject: [linux-lvm] q: lvm with kernel 2.4.4-suse and 2.4.6
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,46 +17,26 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: Chris Wedgwood <cw@f00f.org>
-Cc: Daniel Phillips <phillips@bonn-fries.net>, Alan Cox <alan@lxorguk.ukuu.org.uk>, Andrew Morton <andrewm@uow.edu.au>, Andreas Dilger <adilger@turbolinux.com>, "Albert D. Cahalan" <acahalan@cs.uml.edu>, Ben LaHaise <bcrl@redhat.com>, Ragnar Kjxrstad <kernel@ragnark.vestdata.no>, linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, mike@bigstorage.com, kevin@bigstorage.com, linux-lvm@sistina.com
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+To: linux-lvm@sistina.com
 
+Dear,
 
-On Sun, 15 Jul 2001, Chris Wedgwood wrote:
+i use a suse 2.4.4-suse (4GB) kernel with lvm-0.9.1_beta7 on a i386.
 
-> On Sat, Jul 14, 2001 at 10:11:30PM +0200, Daniel Phillips wrote:
-> 
->     Atomic commit.  The superblock, which references the updated
->     version of the filesystem, carries a sequence number and a
->     checksum.  It is written to one of two alternating locations.  On
->     restart, both locations are read and the highest numbered
->     superblock with a correct checksum is chosen as the new filesystem
->     root.
-> 
-> Yes... and which ever part of the superblock contains the sequence
-> number must be written atomically.
-> 
-> The point is, you _NEED_ to be sure that data written before the
-> superblock (or indeed anywhere further up the tree, you can make
-> changes in theory which don't require super-block updates) are written
-> firmly to the platters before any thing which refers to it is updated.
-> 
-> Alan was saying with IDE you cannot reliably do this, I assume you can
-> with SCSI was my point.
+I update the kernel to 2.4.6 with included lvm-0.9.1_beta2. I download the 
+latest version beta7 and patch the kernel (beta7 and get_hardsect_size 
+patch). The lvm is compiled in the kernel and now, when i boot the new 
+kernel, lvm can't find any of lvm-partitions.
 
-In the IBM solution to this (1977-78, VM/CMS) the critical data was
-written at the begining and the end of the block. If the two data items
-didn't match then the block was rejected.
+under 2.4.4-suse i have:
+lvscan -- 6 active logical volumes
 
-john alvord
- > 
-> 
-> 
->   --cw
-> -
-> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> Please read the FAQ at  http://www.tux.org/lkml/
-> 
+Is there a way to verbose/debug the lvm disk scan during the boottime ?
+
+Regards,
+			Andreas.
+---------------------------------------------------------------------------
+Andreas Czerniak                                         cognac@toppoint.de
+Kiel - FRG            May the source be with you.       Fax: +49-431-678454
+PGPkey: http://wwwkeys.nl.pgp.net:11371/pks/lookup?op=get&search=0xEDB224EC
