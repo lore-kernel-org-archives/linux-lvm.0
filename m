@@ -1,9 +1,10 @@
-Return-Path: <gene_yee@hotmail.com>
-From: "hail narcissus" <gene_yee@hotmail.com>
-Date: Thu, 08 Feb 2001 14:37:42 -0800
-Mime-Version: 1.0
-Message-ID: <F77hOQmIpgVCt3hqAde000059ff@hotmail.com>
-Subject: [linux-lvm] fschk & LVM
+Return-Path: <adilger@turbolinux.com>
+From: Andreas Dilger <adilger@turbolinux.com>
+Message-Id: <200102082244.f18MiYt07465@webber.adilger.net>
+Subject: Re: [linux-lvm] questions
+In-Reply-To: <20010208205551.C21949@vestdata.no> from =?UNKNOWN-8BIT?Q?Ragnar_Kj=F8rstad?=
+ at "Feb 8, 2001 08:55:51 pm"
+Date: Thu, 8 Feb 2001 15:44:33 -0700 (MST)
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,16 +16,27 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; format=flowed; charset="us-ascii"
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-First of all, I live in California, home of the rolling blackouts.  :)
+Ragnar Kj_rstad writes:
+> Is there a limit for the maximum size of a LVM diskgroup?
+> (internally in LVM-code, or because of other limits in the kernel)
+> The 2TB (1 TB) maximum devicesize in the linux-kernel doesn't apply, does
+> it?
 
-I was wondering what LVM does for 'fschk'.  Can I run it on my volume group 
-or is this considered a pretty bad thing?  If not, is there something that 
-LVM uses in it's place?
+Yes, even LVM has the 2TB limit at this point.  This is because LVM
+presents itself to the rest of the kernel as a block device (just like
+any other), so the kernel 2TB limit for block devices still holds.
 
-Thanks.
-_________________________________________________________________
-Get your FREE download of MSN Explorer at http://explorer.msn.com
+Heinz talked about allowing LVM to have PAGE_SIZE (4k) blocks (unlike
+the rest of the kernel, which uses 512 byte blocks) so it may be possible
+to go up to 16TB with LVM without a huge amount of kernel redesign.
+
+Cheers, Andreas
+-- 
+Andreas Dilger  \ "If a man ate a pound of pasta and a pound of antipasto,
+                 \  would they cancel out, leaving him still hungry?"
+http://www-mddsp.enel.ucalgary.ca/People/adilger/               -- Dogbert
