@@ -1,15 +1,15 @@
 Received: from o.ww.redhat.com (vpn50-23.rdu.redhat.com [172.16.50.23])
 	by pobox.stuttgart.redhat.com (8.12.8/8.12.8) with ESMTP id
-	i3UAv0Nv028819
-	for <linux-lvm@redhat.com>; Fri, 30 Apr 2004 12:57:01 +0200
-Date: Fri, 30 Apr 2004 12:53:23 +0200
+	i3UB3XNv029084
+	for <linux-lvm@redhat.com>; Fri, 30 Apr 2004 13:03:33 +0200
+Date: Fri, 30 Apr 2004 12:59:56 +0200
 From: Heinz Mauelshagen <mauelshagen@redhat.com>
-Subject: Re: [linux-lvm] Help with my LVM
-Message-ID: <20040430105323.GB15691@redhat.com>
-References: <20040428162429.9978.qmail@qmail-local.click21.com.br>
+Subject: Re: [linux-lvm] Extending LVM and SomeQuestion ..
+Message-ID: <20040430105956.GC15691@redhat.com>
+References: <200404270720.i3R7Ko0c016764@smtp.doruk.net.tr>
 Mime-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20040428162429.9978.qmail@qmail-local.click21.com.br>
+In-Reply-To: <200404270720.i3R7Ko0c016764@smtp.doruk.net.tr>
 Reply-To: mauelshagen@redhat.com,
 	LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
@@ -25,52 +25,42 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-On Wed, Apr 28, 2004 at 01:24:29PM -0300, Rodolfo Sikora de Melo 2 wrote:
-> Guys, I'm desperate needing help.
-> After a reboot one of lvm pv stopped do work.
+On Tue, Apr 27, 2004 at 10:17:22AM +0300, Vahric MUHTARYAN wrote:
+> Hi Everybody , 
+> 
+> I created Volume Group and I added 2 disk into VG. That's ok problem is; 
+> 
+> I checked Howto http://tldp.org/HOWTO/LVM-HOWTO/recipeadddisk.html 
+> 
+> it's using only vgextend ( not lvextend ) to extend size of Volume Group and
+> file system ?! Does it true ?! Do I have to use lvextend ?! don't I ?! 
 
-What *exactly* happened to your LVM PVs before the reboot ?
-
-> 
-> The scenario:
-> 10 disks: 
-> 5 disks in channel A Raid 5
-> 5 disks in channel B Raid 5
-> 
-> the sda has sda1 sda2 sda3, where only sda3 is a physical volume and is working great.
-> 
-> the sda has sdb1 sdb2 sdb3, where only sdb3 is a physical volume and after a reboot stopped to work.
-> 
-> licor:~/uuid_fixer# pvdisplay /dev/sdb3
-> pvdisplay -- no physical volume identifier on "/dev/sdb3"
-
-Presumably your RAID is fully operational, some{one|thing} has written
-over the LVM metadata. At least partionally.
+With vgextend you grow a Volume Group (think about it like a resizable disk),
+with lvextend you grow a Logical Volume (like a resizable partition).
 
 > 
-> What I can do to fix this? I have 100Gb of important data inside this PV. 
+> and 
+> 
+> it's look like ext3 not good choise for resizing filesystem because ext2,
+> ReiserFS , xfs , jfs have more tools for extending ?! 
 
-If just the LVM metatada and no data on /dev/sdb3 is gone *and* you've
-got /etc/lvmconf/ metadata backups, you want to run:
+You can resize an unmounted ext3 with resize2fs (the ext2 resize tool).
 
-# pvcreate -ff /dev/sdb3
-# vgcfgrestore -n VGName /dev/sdb3
+The steps you need to carry out for growing your VG and LV(s) are:
 
-Before you do that or any other changes to your disks, let's make clear 
-what really happend first!
+# vgextend YourVGName /dev/dsk1 /dev/dsk2 # You did that already, right ?
+# lvextend -L+WhateverGrowths /dev/YourVGName/YourLVName
+# resize2fs /dev/YourVGName/YourLVName # Presumably this is ext2/3
+
+Use the respective tools to resize any other filesystem type
+(eg, resize_reiserfs).
 
 > 
-> I can provide any information u need to help me!
-> Thank you very much.
 > 
 > 
 > 
-> 
-> ___________________________________________________________________________________
-> Acesse nosso portal www.click21.com.br
-> 
-> Porque internet gr?tis, nem a Embratel pode fazer mais barato. Mas pode fazer melhor.
-> 
+> Best Regards ..
+> Vahric MUHTARYAN 
 > 
 > _______________________________________________
 > linux-lvm mailing list
