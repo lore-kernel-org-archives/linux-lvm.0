@@ -1,11 +1,11 @@
-Date: Mon, 26 Apr 2004 09:13:13 +0100
+Date: Mon, 26 Apr 2004 09:14:49 +0100
 From: thornber@redhat.com
-Message-ID: <20040426081313.GJ8379@nimzo>
-References: <20040423220806.GA29188@osdl.org>
+Message-ID: <20040426081449.GK8379@nimzo>
+References: <20040423221637.GA29746@osdl.org>
 Mime-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20040423220806.GA29188@osdl.org>
-Subject: [linux-lvm] Re: [PATCH] trivial patch to trivial patch to dm-table.c
+In-Reply-To: <20040423221637.GA29746@osdl.org>
+Subject: [linux-lvm] Re: [PATCH] trivial patch to dm-exception-store.c
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -21,11 +21,10 @@ Content-Transfer-Encoding: 7bit
 To: Dave Olien <dmo@osdl.org>
 Cc: thornber@redhat.com, linux-kernel@vger.kernel.org, linux-lvm@redhat.com
 
-On Fri, Apr 23, 2004 at 03:08:06PM -0700, Dave Olien wrote:
-> Here's a trivial patch to call to dm_vcalloc().
+On Fri, Apr 23, 2004 at 03:16:37PM -0700, Dave Olien wrote:
+> Here's another trivial patch to dm-exception-store.c  It just makes
+> some function declarations static.
 
-Merged into udm.
-
-Thanks,
+Also merged thanks.
 
 - Joe
