@@ -1,110 +1,59 @@
-Date: Thu, 24 Jun 1999 19:22:41 +0200
-From: Luca Berra <bluca@comedia.it>
-Subject: Re: [linux-lvm] Compiling LVM 0.6 on Redhat 6.0
-Message-ID: <19990624192241.B18126@colombina.comedia.it>
-Reply-To: bluca@comedia.it
-References: <ENJGHHKIMLNCBAAA@my-deja.com> <199906231110.AA22585@mailgate1b.telekom.de>
-Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="FsscpQKzF/jJk6ya"
-In-Reply-To: <199906231110.AA22585@mailgate1b.telekom.de>; from Heinz Mauelshagen on Wed, Jun 23, 1999 at 01:09:00PM +0000
+From: Andreas Dilger <adilger@enel.ucalgary.ca>
+Message-Id: <199906250609.AAA09300@webber.adilger.net>
+Subject: Re: [linux-lvm] lvm-0.6, Linux 2.2.9
+Date: Fri, 25 Jun 1999 00:09:49 -0600 (MDT)
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
-To: Heinz Mauelshagen <mauelsha@ez-darmstadt.telekom.de>, gnicolao@my-deja.com
-Cc: linux-lvm@msede.com
+Content-Type: text/plain; charset="us-ascii"
+To: Linux LVM mailing list <linux-lvm@msede.com>
 
+Rolf writes:
+> thanks for the link. Maybe we should bring the code to the author of
+> ext2resize. A combination of both approaches may be what we are (or at
+> least I am) looking for.
 
---FsscpQKzF/jJk6ya
-Content-Type: text/plain; charset=us-ascii
+I had a closer look at the ext2-volume code today.  There are two parts -
+1) a program (e2extend) to take a newly mke2fs'd device and increment the
+   inode block numbers and the group descriptor block counts in the new
+   device by the number of blocks in the original fs.
+2) a kernel patch to ext2 code which will handle the fact that we need to
+   look at multiple devices when accessing different parts of the fs.  One
+   interesting thing is that it never modifies the original fs data, only
+   the in-kernel representation by totalling the blocks, groups, inodes
+   as each extension filesystem is mounted...  It may do something in
+   addition to this but I couldn't see it.
 
-On Wed, Jun 23, 1999 at 01:09:00PM +0000, Heinz Mauelshagen wrote:
-> 
-> Hi there!
-> 
-> Looks like you had a compile problem in the LVM lib which caused
-> the library _not_ to be build.
-> 
-i had to use this patche to compile with glibc2.0/2.1 and a recent
-(2.2.10-ac3) kernel
+What I don't understand (since I haven't really looked at ext2 internals
+before), is what is different about the above scheme compared to running
+"mke2fs -S" on the LVM-enlarged LV?  According to Theodore, the "mke2fs -S"
+method will corrupt the fs if it is enlarged past a 250MB? boundary because
+an ext2 sturcture (superblock?, bitmap?, anyone know?) will grow and
+overwrite other data on the filesystem.
 
-should not break other cases
+I haven't yet looked at ext2resize to see what it does to overcome this
+issue, and I don't know enough about ext2 to know what it is myself.
+Otherwise, 90% of the ext2-volume patch to the kernel can be discarded
+because LVM makes the enlarged LV appear to be a single device to the
+kernel, and "all" we need to do is have mke2fs create only the ext2
+structures on the newly extended part of the LV, and then go back to
+the ext2 superblock(s) to update the data there.  According to
+ext_update_summary() in the ext2-multi-device.diff we would need to update:
+blocks_count, free_blocks_count, r_blocks_count, free_inodes_count,
+inodes_count, groups_count
 
-Regards,
-Luca
+in the superblock, and then remount the filesystem.  There are no doubt
+issues about flushing in-kernel fs metadata to disk before we update the
+on-disk structures.  It may be better to update the in-kernel metadata
+like the ext2-volume patch does, and then when the filesystem is unmounted
+(or remounted?) it will update the data on disk, or we could force a flush
+to disk somehow.
 
+Cheers, Andreas
 -- 
-Luca Berra -- bluca@comedia.it
-    Communications Media & Services S.r.l.
-
---FsscpQKzF/jJk6ya
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: attachment; filename="lvm-0.6.glibc.patch"
-
---- 0.6/tools/lib/liblvm.h.make.orig	Fri Feb 26 01:46:28 1999
-+++ 0.6/tools/lib/liblvm.h	Thu Jun 24 08:08:26 1999
-@@ -78,6 +78,25 @@
- #  include <time.h>
- int llseek ( unsigned int, unsigned long long, unsigned int);
- 
-+/* from genhd.h */
-+#define DOS_EXTENDED_PARTITION 5
-+#define LINUX_EXTENDED_PARTITION 0x85
-+#define WIN98_EXTENDED_PARTITION 0x0f
-+#define LINUX_SWAP_PARTITION	0x82
-+
-+struct partition {
-+	unsigned char boot_ind;		/* 0x80 - active */
-+	unsigned char head;		/* starting head */
-+	unsigned char sector;		/* starting sector */
-+	unsigned char cyl;		/* starting cylinder */
-+	unsigned char sys_ind;		/* What partition type */
-+	unsigned char end_head;		/* end head */
-+	unsigned char end_sector;	/* end sector */
-+	unsigned char end_cyl;		/* end cylinder */
-+	unsigned int start_sect;	/* starting sector counting from 0 */
-+	unsigned int nr_sects;		/* nr of sectors in partition */
-+} __attribute__((packed));
-+
- #else /* __GLIBC__ < 2 */
- 
- #if LINUX_VERSION_CODE >= KERNEL_VERSION ( 2, 1, 0)
-@@ -94,10 +113,10 @@
- #  include <linux/msdos_fs.h>
- #  include <malloc.h>
- #  include <stdio.h>
-+#  include <linux/genhd.h>
- #endif /* __GLIBC__ > 1 */
- 
- #include <sys/ioctl.h>
--#include <linux/genhd.h>
- #include <linux/major.h>
- 
- #include <lvm.h>
---- 0.6/tools/lib/pv_get_size.c.make.orig	Fri Feb 26 01:46:28 1999
-+++ 0.6/tools/lib/pv_get_size.c	Thu Jun 24 08:05:16 1999
-@@ -112,9 +112,10 @@
- #endif
-          /* is it a welcome extended partition? */
-          if ( part[i].sys_ind == DOS_EXTENDED_PARTITION ||
--              part[i].sys_ind == LINUX_EXTENDED_PARTITION) {
-+              part[i].sys_ind == LINUX_EXTENDED_PARTITION ||
-+              part[i].sys_ind == WIN98_EXTENDED_PARTITION) {
- #ifdef DEBUG
--            debug ( "pv_get_size -- DOS/LINUX_EXTENDED_PARTITION\n");
-+            debug ( "pv_get_size -- DOS/LINUX/W98_EXTENDED_PARTITION\n");
- #endif
-             extended_flag = 1;
-             offset = extended_offset + part[i].start_sect;
---- 0.6/tools/lvm_user.h.make.orig	Thu Jun 24 08:09:49 1999
-+++ 0.6/tools/lvm_user.h	Thu Jun 24 08:09:57 1999
-@@ -42,7 +42,7 @@
- #include <features.h>
- #include <liblvm.h>
- 
--#include <linux/genhd.h>
-+/* #include <linux/genhd.h> */
- #include <linux/major.h>
- 
- #if ( __GLIBC__ > 1)
-
---FsscpQKzF/jJk6ya--
+Andreas Dilger  University of Calgary \ "If a man ate a pound of pasta and
+                Micronet Research Group \ a pound of antipasto, would they
+Dept of Electrical & Computer Engineering \  cancel out, leaving him still
+http://www-mddsp.enel.ucalgary.ca/People/adilger/      hungry?" -- Dogbert
