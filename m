@@ -1,9 +1,8 @@
-Message-ID: <3CF6653D.6DD2E0E@online.fr>
-From: Thierry DE CARVALHO <thierry.decarvalho@online.fr>
+Message-ID: <20020530180012.95991.qmail@web10102.mail.yahoo.com>
+From: Vahid Pazirandeh <vpaziran@yahoo.com>
+Subject: Re: [linux-lvm] can't use all VG free space for an LV stripe
+In-Reply-To: <0d3e01c206d0$7fc1b280$070414ac@Home.PIN.LU>
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] LVM 1.03 root file system on Redhat 7.3
-References: <3CF4C4D4.13851.A9276BF@localhost>
-Content-Transfer-Encoding: 7bit
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,40 +13,56 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Thu May 30 12:50:02 2002
+Date: Thu May 30 13:01:02 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 To: linux-lvm@sistina.com
 
-"James B. Byrne" wrote:
-> 
-> We are using the grub bootloader.  We have followed the
-> instructions contained in the the lvm howto document provided by
-> sistina, to the best of my ability to understand them.
-> 
-> The problem is that system gives a kernel panic when started using
-> the lvm boot option.  Is there a way to redirect the boot dialogue
-> output to a file?  It appears that the most informative messages may
-> be scrolling of the top of the screen.  What I am seeing is this:
-> 
-> kmod: failed to exec /sbin/modeprobe -s -k block-major-7 errno = 2
-> 
-> repeated 16 times, followed by
-> 
-> vgvchange -- volume group "vg00" successfully activated
-> 
-> VFS: Cannot open root device "vg00"/lv01: or 00:00
-> Please append correct "root=" boot option
-> Kernel panic: VFS: Unable to mount root fs on 00:00
+hi Christian,
 
-The problem is that at this time the kernel don't known anything about
-your LVs and their major/minor ! (the root FS is not mounted).
-It uses an internal table for translating /dev/hda* and others to 
-major/minor(see init/main.c).
+does this imply that all PV sizes in a VG must have the same size if i want=
+ to
+stripe along all of them, thus using 100% of the VG space?
 
-Try with grub (here /dev/vg00/lvol1 is the root fs):
+ps. i'm no longer on the linux-lvm mail list.
 
-title=GNU/Linux Debian 2.2 (potato)
-kernel (hd0,1)/vmlinuz-2.2.19 root=3a00 ramdisk_size=8192 vga=10
-#                                   ^^^^ <major><minor> of the lv device in hex
-initrd (hd0,1)/initrd-lvm-2.2.19.gz
+regards,
+vahid
+
+
+
+--- Christian Limpach <chris@Pin.LU> wrote:
+> > my volume group has 48396 PEs free using three disks.  whenever i try to
+> setup
+> > a striped LV using 48396 PEs it fails with "please check, if physical
+> volumes
+> > are allocatable".
+>=20
+> yes, I guess you can't stripe over a single disk. ;-)  i.e of those 48396
+> PEs only 43977 are on 3 disks, the rest is on a single disk.  With 43977 =
+PEs
+> you get around 171G.
+>=20
+>     christian
+>=20
+>=20
+>=20
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@sistina.com
+> http://lists.sistina.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
+
+
+=3D=3D=3D=3D=3D
+< NPACI Education Center on Computational Science and Engineering >
+< http://edcenter.sdsu.edu >
+
+"Career is great, but you can=EF=BF=BDt run your hands through its hair."
+=3D=3D=3D=3D=3D
+
+__________________________________________________
+Do You Yahoo!?
+Yahoo! - Official partner of 2002 FIFA World Cup
+http://fifaworldcup.yahoo.com
