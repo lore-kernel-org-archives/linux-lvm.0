@@ -1,14 +1,11 @@
-Return-Path: <lewis@sistina.com>
-Date: Wed, 28 Feb 2001 15:44:09 -0600
-From: AJ Lewis <lewis@sistina.com>
-Subject: Re: [linux-lvm] (no subject)
-Message-ID: <20010228154409.C13808@sistina.com>
-References: <80256A01.0065EE53.00@lonn000101.uk.paribas.com>
+Return-Path: <joe@66bassett.freeserve.co.uk>
+Date: Thu, 1 Mar 2001 09:12:18 +0000
+From: Joe Thornber <joe@66bassett.freeserve.co.uk>
+Subject: Re: [linux-lvm] Bugs in LVM and ext2: patch for LVM
+Message-ID: <20010301091217.A438@66bassett.freeserve.co.uk>
+References: <200102272007.f1RK7aM27545@webber.adilger.net> <m21ysi3m0z.fsf@isnogud.escape.de> <m21ysik82q.fsf_-_@isnogud.escape.de>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="hYooF8G/hrfVAmum"
-Content-Disposition: inline
-In-Reply-To: <80256A01.0065EE53.00@lonn000101.uk.paribas.com>; from bertrand.sirodot@bnpparibas.com on Wed, Feb 28, 2001 at 06:36:43PM +0000
+In-Reply-To: <m21ysik82q.fsf_-_@isnogud.escape.de>; from urs@isnogud.escape.de on Wed, Feb 28, 2001 at 06:53:33PM +0100
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -20,88 +17,60 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
---hYooF8G/hrfVAmum
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Urs,
 
-Please go to the link at the bottom of this page and read the info above the
-textbox. =20
+Could you try the latest code from CVS ? (to be released tomorrow),
+since Andrea Arcangeli has already supplied a similar patch.
 
-On Wed, Feb 28, 2001 at 06:36:43PM +0000, bertrand.sirodot@bnpparibas.com w=
-rote:
->=20
->=20
-> unsuscribe linux-lvm
->=20
->=20
->=20
->=20
-> ___________________________________________________________
->=20
-> This message and any attachments (the "message") are intended solely for
-> the addressees and are confidential.  If you receive this message in erro=
-r,
-> please delete it and immediately notify the sender.
->=20
-> Any use not in accord with its purpose, any dissemination or disclosure,
-> either whole or partial, is prohibited except formal approval.
->=20
-> The internet can not guarantee the integrity of this message.  BNP PARIBAS
-> (and its subsidiaries) shall (will) not therefore be liable for the messa=
-ge
-> if modified.
->                       ---------------------------------------------
->=20
-> Ce message et toutes les pieces jointes (ci-apres le "message") sont
-> etablis a l'intention exclusive de ses destinataires et sont confidentiel=
-s.
-> Si vous recevez ce message par erreur, merci de le detruire et d'en avert=
-ir
-> immediatement l'expediteur.
->=20
-> Toute utilisation de ce message non conforme a sa destination, toute
-> diffusion ou toute publication, totale ou partielle, est interdite, sauf
-> autorisation expresse.
->=20
-> L'internet ne permettant pas d'assurer l'integrite de ce message, BNP
-> PARIBAS (et ses filiales) decline(nt) toute responsabilite au titre de ce
-> message, dans l'hypothese ou il aurait ete modifie.
-> ___________________________________________________________
+- Joe
+
+
+On Wed, Feb 28, 2001 at 06:53:33PM +0100, Urs Thuermann wrote:
+> Urs Thuermann <urs@isnogud.escape.de> writes:
+> 
+> > I've read lots of EXT2 and LVM src code and I think it turns out that
+> > there is a bug in both.  Andreas has already given the fix for the
+> > ext2, a suggestion for LVM is below (sorry, no patch, I really know to
+> > little about all the block sizes and buffers of block devices).
+> 
+> Despite my limited knowledge of the src code for buffering and block
+> devices I have made an patch which fixes the LVM problem for me.  I'm
+> not 100% sure it is correct and if it is the clean solution.  Some
+> kernel god should therefore take a look on it.  At least I have
+> running it here in my kernel.
+> 
+> 
+> --- linux-2.4.2/drivers/md/lvm.c.orig	Wed Feb 28 18:27:40 2001
+> +++ linux-2.4.2/drivers/md/lvm.c	Wed Feb 28 17:00:25 2001
+> @@ -376,6 +376,8 @@
+>  static struct hd_struct lvm_hd_struct[MAX_LV];
+>  static int lvm_blocksizes[MAX_LV] =
+>  {0,};
+> +static int lvm_hardsizes[MAX_LV] =
+> +{0,};
+>  static int lvm_size[MAX_LV] =
+>  {0,};
+>  static struct gendisk lvm_gendisk =
+> @@ -3035,11 +3037,12 @@
+>  		lvm_gendisk.part[i].start_sect = -1;	/* avoid partition check */
+>  		lvm_size[i] = lvm_gendisk.part[i].nr_sects = 0;
+>  		lvm_blocksizes[i] = BLOCK_SIZE;
+> +		lvm_hardsizes[i] = BLOCK_SIZE;
+>  	}
+>  
+>  	blk_size[MAJOR_NR] = lvm_size;
+>  	blksize_size[MAJOR_NR] = lvm_blocksizes;
+> -	hardsect_size[MAJOR_NR] = lvm_blocksizes;
+> +	hardsect_size[MAJOR_NR] = lvm_hardsizes;
+>  
+>  	return;
+>  } /* lvm_gen_init() */
 > _______________________________________________
 > linux-lvm mailing list
 > linux-lvm@sistina.com
 > http://lists.sistina.com/mailman/listinfo/linux-lvm
-
---=20
-AJ Lewis
-Sistina Software Inc.                  Voice:  612-379-3951
-1313 5th St SE, Suite 111              Fax:    612-379-3952
-Minneapolis, MN 55414                  E-Mail: lewis@sistina.com
-http://www.sistina.com
-
-Current GPG fingerprint =3D 3B5F 6011 5216 76A5 2F6B  52A0 941E 1261 0029 2=
-648
-Get my key at: http://www.sistina.com/~lewis/gpgkey
- (Unfortunately, the PKS-type keyservers do not work with multiple sub-keys)
-
------Begin Obligatory Humorous Quote----------------------------------------
-Computers make very fast, very accurate mistakes.
------End Obligatory Humorous Quote------------------------------------------
-
---hYooF8G/hrfVAmum
-Content-Type: application/pgp-signature
-Content-Disposition: inline
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.0.4 (GNU/Linux)
-Comment: For info see http://www.gnupg.org
-
-iD8DBQE6nXEppE6/iGtdjLERAmnVAKCR6Xv8PrAVYLbvpUlgTDYdaLLtSwCffQHs
-qL9lPz37coJebHUJoOzvhrw=
-=FEkq
------END PGP SIGNATURE-----
-
---hYooF8G/hrfVAmum--
+> 
