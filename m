@@ -1,9 +1,8 @@
-content-class: urn:content-classes:message
-MIME-Version: 1.0
+From: Greg Freemyer <freemyer@NorcrossGroup.com>
+Subject: re[2]: [linux-lvm] where do i find the device mapper/LVM2 documentation?
+Mime-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-Message-ID: <689F43A6CF84E541A721C5C3FD5ADECC323C0D@blr-m3-msg.wipro.com>
-From: "Sharad Tiwari" <sharad.tiwari@wipro.com>
-Subject: [linux-lvm] Size of the LVM private region...
+Message-Id: <20030530171732.KHXN4433.imf46bis.bellsouth.net@tiger2>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,19 +13,35 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Fri May 30 12:06:10 2003
+Date: Fri May 30 12:14:02 2003
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: lvm-devel@sistina.com
-Cc: linux-lvm@sistina.com
+Content-Type: Text/plain; charset="us-ascii"
+To: LVM Mailing list <linux-lvm@sistina.com>
 
-Hi All,
+ >>  On Thu, May 29, 2003 at 10:21:27PM +0100, Joe Thornber wrote:
+ >>  > On Thu, May 29, 2003 at 02:27:15PM +0200, Daniel Phillips wrote:
+ >>  >=20
+ >>  > If you're interested in writing your own targets I suggest you look at
+ >>  > a couple of the trivial targets that already exist.  Such as
+ >>  > dm-linear.c, dm-stripe.c.
 
-	Can anyone let me know the size of the "private region" present
-in LVM partition? Also, I would like to know about the "maximum size" of
-the LVM2 metadata.
+ >>  i am planning to write my own targets as a graduate project.
+ >>  My idea was encryption and possibly compression as well.
+ >>  (is anyone else doing any of these targets?)
 
-Thanks for the help.
+An encrypting target would be nice, but does it offer any value over an =
+encrypting loopback device?
 
-Thanks,
-Sharad
+(I assume LVM2 is compatible with the existing loopback encrypting devices.)
+
+A compressing target would be uniquely valuable because I don't think it can be =
+implemented via a loopback device.
+
+i.e. I believe a loopback device requires a 1:1 (or constant) ratio between =
+input size and output size.
+
+Actually, that sounds like a pretty interesting problem to try to work on. =20
+
+Greg
+--=20
+Greg Freemyer
