@@ -1,8 +1,10 @@
-Date: Thu, 13 Sep 2001 09:18:47 +0200 (CEST)
-From: "A.R. (Tom) Peters" <tpeters@xs4all.nl>
-Message-ID: <Pine.LNX.4.21.0109130913590.994-100000@tompth.localdomain>
+Message-ID: <3BA060F7.9050303@st-peter.stw.uni-erlangen.de>
+Date: Thu, 13 Sep 2001 09:32:07 +0200
+From: svetljo <galia@st-peter.stw.uni-erlangen.de>
 MIME-Version: 1.0
-Subject: [linux-lvm] How to boot with LVM?
+Subject: Re: [linux-lvm] LVM
+References: <NBBBJHKIOKPKOGOEPEDPCEEGDNAA.stuart@bh90210.net>
+Content-Transfer-Encoding: 7bit
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,95 +16,317 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: linux-lvm@sistina.com
 
-I bought a 30 GB HD, and decided to put it under the LVM and put
-ReiserFS on it.  I managed to initialize it fine, and it now has a base
-Debian install on it, but I cannot manage to boot from it.
 
-You cannot boot from a LV; therefore I made a small (16 MB) ext2
-partition with a kernel and an initrd.  My intended root FS is on a LV,
-and you need to jump through some hoops to get the kernel mount it on /
-: that is documented in the LVM-HOWTO and FAQ that comes with the LVM
-tools.  Use of initrd is documented in
-/usr/src/linux/Documents/initrd.txt .  Finally, the Bootdisk-HOWTO
-helps.
+Hi
 
-I use LVM tools 1.0.1-rc2, and a 2.4.10-pre7 kernel, patched with the
-patches of the LVM tools; no .rej there.  I compiled the LVM binaries
-with liblvm-10 statically linked, because otherwise the executables in
-the initrd had problems with finding the .so (I think I know what was
-going on, but won't go into that now).  Therefore I have to make a
-Ramdisk of 5MB instead of the default 4 MB.
+have you tried to pass to lilo : linux ramdisk_size=8192 or 
+ramdisk_size=17000
+after the lvm How-to you have to have in lilo.conf in the append section 
+" ramdisk_size=8192 "
 
-My new HD is /dev/hdd, and is the 3rd HD in the system: this allows me
-to still use my computer to read docs and send you this message.  So for
-now I do not want to put a bootloader on the disk because the hardware
-config is going to change: instead I use a boot floppy with GRUB.
-
-LVM has a utility script lvmcreate_initrd to make an initrd suitable to
-prepare for mounting a LV on / .
-
-The system boots with the floppy; the correct kernel is loaded from the
-ext2 partition, as well as the initrd; the LVM tools on the initrd are
-executed and seem to work properly.
-
-PROBLEM: subsequently the kernel panics because it still cannot mount a
-root.
-
-I got a GRUB bootdisk that works.  /grub/menu.lst :
-title  Linux24
-root (hd2,4)
-kernel /vmlinuz-2.4.10-pre7 root=/dev/SYSDISK/Root ramdisk_size=5120
-# If I specify root=/dev/ram0 then I get a shell on the rudimentary
-initrd system.
-initrd /initrd-lvm-2.4.10-pre7.gz
-
-On initrd:
-
-etc/fstab:
-/dev/ram        /               ext2    defaults        0   0
-proc            /proc           proc    defaults        0   0
-
-linuxrc:
-#!/bin/sh
-/bin/mount /proc
-/sbin/vgscan
-/sbin/vgchange -a y
-/bin/umount /proc
-
-devices:
-# ls -l dev/SYSDISK/
-total 0
-brw-rw----    1 root     disk      58,   2 Sep 11 19:23 Opt
-brw-rw----    1 root     disk      58,   0 Sep 11 19:23 Root
-brw-rw----    1 root     disk      58,   4 Sep 11 19:23 Scratch
-brw-rw----    1 root     disk      58,   1 Sep 11 19:23 Usr
-brw-rw----    1 root     disk      58,   3 Sep 11 19:23 Var
-crw-r-----    1 root     disk     109,   0 Sep 11 19:23 group
-
-Kernel:
-# rdev vmlinuz-2.4.10-pre7
-Root device /dev/ram0   # Root device /dev/SYSDISK/Root
-			  (-> 0x3a00) does not make a difference
-# rdev -R vmlinuz-2.4.10-pre7
-Root flags 0    # i.e. mount ro
-# rdev -r vmlinuz-2.4.10-pre7
-Ramsize 49152   # i.e. offset=0; bit14=1: load ramdisk; bit15=1: 
-                #   prompt before loading rootfs - this never happens!
-
-What am I supposed to change?  The kernel initrd.txt has a long and
-complicated story on using pivot_root to switch rootfs, but apparently
-the LVM linuxrc relies on the deprecated method that does this
-automatically.
-
-Any advice welcome.
-
---
-#>!$!%(@^%#%*(&(#@#*$^@^$##*#@&(%)@**$!(&!^(#((#&%!)%*@)(&$($$%(@#)&*!^$)^@*^@)
-
-	Tom "thriving on chaos" Peters
-		NL-1062 KD nr 149	tel.    +31-204080204
- 			Amsterdam	e-mail  tpeters@xs4all.nl
+>
+>NET4: Unix domain sockets 1.0/SMP for Linux NET4.0.
+>RAMDISK: Compressed image found at block 0
+>Uncompressing.................................................................................................................................................................................................................................................................................done.
+>Freeing initrd memory: 869k freed
+>VFS: Mounted root (ext2 filesystem).
+>attempt to access beyond end of device
+>01:00: rw=0, want=8198 x(=0x), limit=8198
+>EXT2-fs error (device ramdisk(1,0)): ext2_read_inode: unable to read inode block - inode=8199, block=8197
+>attempt to access beyond end of device
+>01:00: rw=0, want=16390 x(=0x), limit=16390
+>EXT2-fs error (device ramdisk(1,0)): ext2_read_inode: unable to read inode block - inode=16387, block=16389
+>attempt to access beyond end of device
+>01:00: rw=0, want=8198 x(=0x), limit=8198
+>EXT2-fs error (device ramdisk(1,0)): ext2_read_inode: unable to read inode block - inode=8194, block=8197
+>reiserfs: checking transaction log (device 03:01) ...
+>Using r5 hash to sort names
+>ReiserFS version 3.6.25
+>VFS: Mounted root (reiserfs filesystem) readonly.
+>change_root: old root has d_count=2
+>Trying to unmount old root ... okay
+>Freeing unused kernel memory: 216k freed
+>clm-6006: writing inode 17393 on readonly FS
+>clm-6006: writing inode 17393 on readonly FS
+>clm-6006: writing inode 17393 on readonly FS
+>clm-6006: writing inode 17393 on readonly FS
+>clm-6006: writing inode 17393 on readonly FS
+>clm-6006: writing inode 17393 on readonly FS
+>clm-6006: writing inode 17393 on readonly FS
+>clm-6006: writing inode 17393 on readonly FS
+>clm-6006: writing inode 17393 on readonly FS
+>clm-6006: writing inode 17393 on readonly FS
+>clm-6006: writing inode 17393 on readonly FS
+>clm-6006: writing inode 17393 on readonly FS
+>clm-6006: writing inode 17393 on readonly FS
+>clm-6006: writing inode 17393 on readonly FS
+>clm-6006: writing inode 17393 on readonly FS
+>clm-6006: writing inode 17393 on readonly FS
+>clm-6006: writing inode 17393 on readonly FS
+>clm-6006: writing inode 17393 on readonly FS
+>clm-6006: writing inode 17393 on readonly FS
+>clm-6006: writing inode 17393 on readonly FS
+>clm-6006: writing inode 17393 on readonly FS
+>clm-6006: writing inode 17393 on readonly FS
+>clm-6006: writing inode 17393 on readonly FS
+>clm-6006: writing inode 17393 on readonly FS
+>clm-6006: writing inode 17393 on readonly FS
+>clm-6006: writing inode 17393 on readonly FS
+>clm-6006: writing inode 17393 on readonly FS
+>clm-6006: writing inode 17519 on readonly FS
+>clm-6006: writing inode 17393 on readonly FS
+>clm-6006: writing inode 17393 on readonly FS
+>clm-6006: writing inode 17393 on readonly FS
+>clm-6006: writing inode 17393 on readonly FS
+>clm-6006: writing inode 17393 on readonly FS
+>clm-6006: writing inode 17393 on readonly FS
+>clm-6006: writing inode 17393 on readonly FS
+>clm-6006: writing inode 17393 on readonly FS
+>clm-6006: writing inode 17393 on readonly FS
+>clm-6006: writing inode 17393 on readonly FS
+>clm-6006: writing inode 17393 on readonly FS
+>clm-6006: writing inode 17393 on readonly FS
+>clm-6006: writing inode 17393 on readonly FS
+>clm-6006: writing inode 17393 on readonly FS
+>clm-6006: writing inode 17393 on readonly FS
+>clm-6006: writing inode 17393 on readonly FS
+>clm-6006: writing inode 17393 on readonly FS
+>clm-6006: writing inode 17393 on readonly FS
+>clm-6006: writing inode 17393 on readonly FS
+>clm-6006: writing inode 17393 on readonly FS
+>clm-6006: writing inode 17393 on readonly FS
+>clm-6006: writing inode 17393 on readonly FS
+>clm-6006: writing inode 17393 on readonly FS
+>clm-6006: writing inode 17393 on readonly FS
+>clm-6006: writing inode 17519 on readonly FS
+>clm-6006: writing inode 17393 on readonly FS
+>clm-6006: writing inode 17393 on readonly FS
+>clm-6006: writing inode 17393 on readonly FS
+>clm-6006: writing inode 17393 on readonly FS
+>clm-6006: writing inode 17393 on readonly FS
+>clm-6006: writing inode 17393 on readonly FS
+>clm-6006: writing inode 17393 on readonly FS
+>clm-6006: writing inode 17393 on readonly FS
+>clm-6006: writing inode 17393 on readonly FS
+>clm-6006: writing inode 17393 on readonly FS
+>clm-6006: writing inode 17393 on readonly FS
+>clm-6006: writing inode 17393 on readonly FS
+>clm-6006: writing inode 17393 on readonly FS
+>clm-6006: writing inode 17393 on readonly FS
+>clm-6006: writing inode 17393 on readonly FS
+>clm-6006: writing inode 17393 on readonly FS
+>clm-6006: writing inode 17393 on readonly FS
+>clm-6006: writing inode 17393 on readonly FS
+>clm-6006: writing inode 17393 on readonly FS
+>clm-6006: writing inode 17393 on readonly FS
+>clm-6006: writing inode 17393 on readonly FS
+>clm-6006: writing inode 17393 on readonly FS
+>clm-6006: writing inode 17393 on readonly FS
+>clm-6006: writing inode 17393 on readonly FS
+>clm-6006: writing inode 17393 on readonly FS
+>clm-6006: writing inode 17393 on readonly FS
+>clm-6006: writing inode 17393 on readonly FS
+>clm-6006: writing inode 17393 on readonly FS
+>clm-6006: writing inode 17393 on readonly FS
+>clm-6006: writing inode 17393 on readonly FS
+>clm-6006: writing inode 17393 on readonly FS
+>clm-6006: writing inode 17393 on readonly FS
+>clm-6006: writing inode 17393 on readonly FS
+>clm-6006: writing inode 17393 on readonly FS
+>clm-6006: writing inode 17393 on readonly FS
+>clm-6006: writing inode 17393 on readonly FS
+>clm-6006: writing inode 17393 on readonly FS
+>clm-6006: writing inode 17393 on readonly FS
+>clm-6006: writing inode 17393 on readonly FS
+>clm-6006: writing inode 17393 on readonly FS
+>clm-6006: writing inode 17393 on readonly FS
+>clm-6006: writing inode 17393 on readonly FS
+>clm-6006: writing inode 17393 on readonly FS
+>clm-6006: writing inode 17393 on readonly FS
+>clm-6006: writing inode 17393 on readonly FS
+>clm-6006: writing inode 17393 on readonly FS
+>clm-6006: writing inode 17393 on readonly FS
+>clm-6006: writing inode 17393 on readonly FS
+>clm-6006: writing inode 17393 on readonly FS
+>clm-6006: writing inode 17393 on readonly FS
+>clm-6006: writing inode 17393 on readonly FS
+>clm-6006: writing inode 17393 on readonly FS
+>clm-6006: writing inode 17393 on readonly FS
+>clm-6006: writing inode 17393 on readonly FS
+>clm-6006: writing inode 17393 on readonly FS
+>clm-6006: writing inode 17393 on readonly FS
+>clm-6006: writing inode 17393 on readonly FS
+>clm-6006: writing inode 17393 on readonly FS
+>clm-6006: writing inode 17393 on readonly FS
+>clm-6006: writing inode 17393 on readonly FS
+>LVM version 0.9.1_beta3  by Heinz Mauelshagen  (25/01/2001)
+>lvm -- Module successfully initialized
+>clm-6005: writing inode 17393 on readonly FS
+>clm-6005: writing inode 17519 on readonly FS
+> hdc: hdc1 hdc2 hdc3 hdc4
+> hdc: hdc1 hdc2 hdc3 hdc4
+>ide-floppy: hdc: I/O error, pc = 28, key =  5, asc = 21, ascq =  0
+>end_request: I/O error, dev 16:01 (hdc), sector 0
+> hdc: hdc1 hdc2 hdc3 hdc4
+>ide-floppy: hdc: I/O error, pc = 28, key =  5, asc = 21, ascq =  0
+>end_request: I/O error, dev 16:02 (hdc), sector 0
+> hdc: hdc1 hdc2 hdc3 hdc4
+>ide-floppy: hdc: I/O error, pc = 28, key =  5, asc = 21, ascq =  0
+>end_request: I/O error, dev 16:03 (hdc), sector 0
+> hdc: hdc1 hdc2 hdc3 hdc4
+>ide-floppy: hdc: I/O error, pc = 28, key =  5, asc = 21, ascq =  0
+>end_request: I/O error, dev 16:04 (hdc), sector 0
+>clm-6006: writing inode 17393 on readonly FS
+>clm-6006: writing inode 17393 on readonly FS
+>clm-6005: writing inode 17393 on readonly FS
+>clm-6006: writing inode 17393 on readonly FS
+>clm-6006: writing inode 17393 on readonly FS
+>clm-6006: writing inode 17393 on readonly FS
+>clm-6006: writing inode 17393 on readonly FS
+>clm-6006: writing inode 17393 on readonly FS
+>clm-6006: writing inode 17393 on readonly FS
+>clm-6006: writing inode 17393 on readonly FS
+>clm-6006: writing inode 17393 on readonly FS
+>clm-6006: writing inode 17393 on readonly FS
+>clm-6006: writing inode 17393 on readonly FS
+>clm-6006: writing inode 17393 on readonly FS
+>clm-6006: writing inode 17393 on readonly FS
+>clm-6006: writing inode 17393 on readonly FS
+>clm-6006: writing inode 17393 on readonly FS
+>clm-6006: writing inode 17393 on readonly FS
+>clm-6006: writing inode 17393 on readonly FS
+>clm-6006: writing inode 17393 on readonly FS
+>clm-6006: writing inode 17393 on readonly FS
+>clm-6006: writing inode 17393 on readonly FS
+>clm-6006: writing inode 17393 on readonly FS
+>clm-6006: writing inode 17393 on readonly FS
+>clm-6006: writing inode 17393 on readonly FS
+>clm-6006: writing inode 17393 on readonly FS
+>clm-6005: writing inode 17393 on readonly FS
+>SCSI subsystem driver Revision: 1.00
+>scsi0 : SCSI host adapter emulation for IDE ATAPI devices
+>  Vendor: TOSHIBA   Model: DVD-ROM SD-R2002  Rev: 1D26
+>  Type:   CD-ROM                             ANSI SCSI revision: 02
+>md: md driver 0.90.0 MAX_MD_DEVS=256, MD_SB_DISKS=27
+>Linux Kernel Card Services 3.1.22
+>  options:  [pci] [cardbus] [pm]
+>PCI: Found IRQ 11 for device 02:0f.0
+>PCI: Sharing IRQ 11 with 00:1f.2
+>PCI: Sharing IRQ 11 with 02:0f.1
+>PCI: Sharing IRQ 11 with 02:0f.2
+>PCI: Found IRQ 11 for device 02:0f.1
+>PCI: Sharing IRQ 11 with 00:1f.2
+>PCI: Sharing IRQ 11 with 02:0f.0
+>PCI: Sharing IRQ 11 with 02:0f.2
+>Yenta IRQ list 06d8, PCI irq11
+>Socket status: 30000006
+>Yenta IRQ list 06d8, PCI irq11
+>Socket status: 30000006
+>cs: IO port probe 0x0c00-0x0cff: clean.
+>cs: IO port probe 0x0100-0x04ff: excluding 0x280-0x287 0x378-0x37f 0x4d0-0x4d7
+>cs: IO port probe 0x0a00-0x0aff: clean.
+>eepro100.c:v1.09j-t 9/29/99 Donald Becker http://cesdis.gsfc.nasa.gov/linux/drivers/eepro100.html
+>eepro100.c: $Revision: 1.36 $ 2000/11/17 Modified by Andrey V. Savochkin <saw@saw.sw.com.sg> and others
+>eth0: OEM i82557/i82558 10/100 Ethernet, 00:20:E0:66:C5:8A, I/O at 0xecc0, IRQ 11.
+>  Receiver lock-up bug exists -- enabling work-around.
+>  Board assembly 727095-002, Physical connectors present: RJ45
+>  Primary interface chip i82555 PHY #1.
+>  General self-test: passed.
+>  Serial sub-system self-test: passed.
+>  Internal registers self-test: passed.
+>  ROM checksum self-test: passed (0x04f4518b).
+>  Receiver lock-up workaround activated.
+>Installing knfsd (copyright (C) 1996 okir@monad.swb.de).
+>Winbond Super-IO detection, now testing ports 3F0,370,250,4E,2E ...
+>SMSC Super-IO detection, now testing Ports 2F0, 370 ...
+>PnPBIOS: Parport found PNPBIOS PNP0401 at io=0378,0778 irq=7 dma=1
+>0x378: FIFO is 16 bytes
+>0x378: writeIntrThreshold is 8
+>0x378: readIntrThreshold is 8
+>0x378: PWord is 8 bits
+>0x378: Interrupts are ISA-Pulses
+>0x378: ECP port cfgA=0x10 cfgB=0x00
+>0x378: ECP settings irq=<none or set by other means> dma=<none or set by other means>
+>parport0: PC-style at 0x378 (0x778), irq 7, dma 1 [PCSPP,TRISTATE,COMPAT,ECP,DMA]
+>parport0: cpp_daisy: aa5500ff(38)
+>parport0: assign_addrs: aa5500ff(38)
+>parport0: cpp_daisy: aa5500ff(38)
+>parport0: assign_addrs: aa5500ff(38)
+>lp0: using parport0 (interrupt-driven).
+>
+>
+>
+>Very Respectfully, 
+>
+>Stuart Blake Tener, IT3, USNR-R, N3GWG 
+>Beverly Hills, California
+>VTU 1904G (Volunteer Training Unit) 
+>stuart@bh90210.net 
+>west coast: (310)-358-0202 P.O. Box 16043, Beverly Hills, CA 90209-2043 
+>east coast: (215)-338-6005 P.O. Box 45859, Philadelphia, PA 19149-5859 
+>
+>Telecopier: (419)-715-6073 fax to email gateway via www.efax.com (it's free!) 
+>
+>JOIN THE US NAVY RESERVE, SERVE YOUR COUNTRY, AND BENEFIT FROM IT ALL. 
+>
+>Wednesday, September 12, 2001 7:00 PM
+>
+>-----Original Message-----
+>From: Jason Edgecombe [mailto:jedgecombe@carolina.rr.com]
+>Sent: Wednesday, September 12, 2001 6:02 PM
+>To: stuart@bh90210.net
+>Cc: linux-lvm@sistina.com
+>Subject: Re: [linux-lvm] LVM
+>
+>hi,
+>
+>  according to reiserfs's FAQ:
+>http://www.reiserfs.org/faq.html#ReiserFS-as-root
+>
+>you need the notail option on the /boot partition.
+>the fstab might look as follows:
+>/dev/hda1    /boot   reiserfs    defaults,notail  0 0
+>/dev/hda2    /   reiserfs    defaults  0 0
+>
+>if there isn't the word "notail" in the fourth column of your root fstab
+>entry, then you ARE booting with tails.
+>
+>according the lilo changelog:
+>ftp://brun.dyndns.org/pub/linux/lilo/CHANGES
+>
+>lilo has been able to boot from a reiserfs partition with tail support
+>since version 21.6 (Oct. 1, 2000)
+>
+>*under an rpm-based distro such as redhat or mandrake, "rpm -qi lilo"
+>should give you the version. (assuming you haven't downloaded lilo as a
+>tarball and compiled it.)
+>
+>Both were last modified in August 2001, I don't know which to believe.
+>For safety sake, I made my /boot ext2. Most recent computers (within the
+>past two years) can boot from a partition after the 1024 boundary. I
+>just like to make a separate /boot at the beginning of the drive as a
+>precaution.
+>
+>as for the matter of initrd's, this is the way that I understand it:
+>in a non-lvm root fs, your root fs type must either be compiled in or in
+>the initrd image.
+>in a lvm root, you MUST have an initrd even if lvm is compiled into the
+>kernel (not as a module) because you need to run a vgchange -ay and you
+>need your lvm config files in the initrd.
+>
+>as for having /boot (booting the kernel) straight in an lvm fs, I have
+>no idea.
+>
+>
+>If I am wrong, someone please correct me.
+>
+>Sincerely,
+>Jason Edgecombe
+>
+>"IT3 Stuart B. Tener, USNR-R" wrote:
+>
+>>        I am curious what version of lilo in fact supports ReiserFS tails. I am running Mandrake 8.0, and using the lilo supplied therewith, and have been booting a / partition as ReiserFS (with tails I believe, how do I check?).
+>>
