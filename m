@@ -1,43 +1,57 @@
-From: Andreas Dilger <adilger@enel.ucalgary.ca>
-Message-Id: <199904082311.RAA02097@munet-d.enel.ucalgary.ca>
-Subject: [linux-lvm] Ramdisk: Why not boot compressed from hda ?
-Date: Thu, 8 Apr 1999 17:11:52 -0600 (MDT)
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Message-Id: <199904121654.AA05665@mailgate1b.telekom.de>
+From: Heinz Mauelshagen <mauelsha@ez-darmstadt.telekom.de>
+Subject: Re: [linux-lvm] LVM on Sparc-linux 2.2.4
+Date: Mon, 12 Apr 1999 18:54:15 METDST
+In-Reply-To: <19990329140718.57465@doit.wisc.edu>; from "jleu@doit.wisc.edu" at Mar 29, 99 2:07 pm
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-To: LVM on Linux <linux-lvm@msede.com>
+Content-Transfer-Encoding: 7bit
+To: jleu@doit.wisc.edu
+Cc: mge@u9ete.ez-darmstadt.telekom.de, linux-lvm@msede.com
 
-This message I saw today in c.o.l.d.s (in case anyone missed it) looks
-interesting, especially since some people have tried to install a similar
-setup with LVM, so that the root filesystem can live in LVM (ie rootvg)...
+Sorry for the late answer.
+I'm back the first day after vacation 8*)
 
-Maybe it's worth another shot at booting from LVM?
+> 
+> Has anyone tries LVM on SPARC-linux kernel 2.2.4?
+> 
 
-Cheers, Andreas
-------- start of forwarded message -------
-> Newsgroups: comp.os.linux.development.system
+Not me ;*)
+
+I'll try to bring some patches for the recent kernels online
+next days... (i'm still on 2.2.3)
+
+> I applied that patch, but the LVM option didn't show up in 
+> the menu config.  I tried adding the appropriate defines to .config
+> but I'm not sure if that worked.
 > 
-> My problem is this:
-> If I try to boot a compressed kernel into ramdisk from the hard drive
-> (hda1), it fails!
-> This works successfully if I do the same thing from  fd0.
+> When I run vgscan it says:
 > 
-> I traced this behaviour to a source line in "rd.c" where it tests to see
-> if the Major # of the booting device
-> is for the floppy! Why ?
+> vgscan -- invalid i/o protocol version
 > 
-> I commented this line out and now I can load a compressed Kernel from
-> hda1 into ram0.
-> [snip]
+> Anyone else see this?
 > 
-> thanks
-> Vipin
-------- end of forwarded message -------
--- 
-Andreas Dilger   University of Calgary  \"If a man ate a pound of pasta and
-                 Micronet Research Group \ a pound of antipasto, would they
-Dept of Electrical & Computer Engineering \   cancel out, leaving him still
-http://www-mddsp.enel.ucalgary.ca/People/adilger/       hungry?" -- Dogbert
+
+Please try patch <ftp://linux.msede.com/lvm/v0.6/lvm_0.6-patch-15031999a.gz>
+to fix this.
+
+
+Regards,
+Heinz
+
+--
+
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+Systemmanagement C/S                             Deutsche Telekom AG
+                                                 Entwicklungszentrum Darmstadt
+Heinz Mauelshagen                                Otto-Roehm-Strasse 71c
+Senior Systems Engineer                          Postfach 10 05 41
+                                                 64205 Darmstadt
+mge@ez-darmstadt.telekom.de                      Germany
+                                                 +49 6151 886-425
+                                                          FAX-386
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
