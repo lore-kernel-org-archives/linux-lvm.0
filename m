@@ -1,12 +1,12 @@
-Return-Path: <bernat@free.fr>
-Date: Fri, 13 Jul 2001 18:41:53 +0200
-From: Vincent Bernat <bernat@free.fr>
+Return-Path: <bluca@comedia.it>
+Date: Fri, 13 Jul 2001 20:01:13 +0200
+From: Luca Berra <bluca@comedia.it>
 Subject: Re: [linux-lvm] Newbie question
-Message-ID: <20010713184153.C4738@lucas.loria>
-References: <FDEJIMPDHJAAPNLFKBMGAECACEAA.tgs@iafrica.com> <20010712094638.B418@btconnect.com> <200107121612.MAA13656@burns.luca.2y.net> <20010713131200.C32198@sistina.com> <200107131652.MAA15766@burns.luca.2y.net>
+Message-ID: <20010713200112.A11175@colombina.comedia.it>
+References: <FDEJIMPDHJAAPNLFKBMGAECACEAA.tgs@iafrica.com> <20010712094638.B418@btconnect.com> <200107121612.MAA13656@burns.luca.2y.net> <20010713131200.C32198@sistina.com>
 Mime-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <200107131652.MAA15766@burns.luca.2y.net>; from luca@lucarella.com.ar on Fri, Jul 13, 2001 at 12:33:31PM -0300
+In-Reply-To: <20010713131200.C32198@sistina.com>; from Mauelshagen@sistina.com on Fri, Jul 13, 2001 at 01:12:00PM +0200
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -22,15 +22,28 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Le Fri Jul 13, 2001 at 12:33 -0300, 
-Leandro Lucarella <luca@lucarella.com.ar> disait :
+On Fri, Jul 13, 2001 at 01:12:00PM +0200, Heinz J. Mauelshagen wrote:
+> > Another question is the boot stuff, what is better? compile LVM as a module
+> > and use inird or compile the kernel with built-in LVM support?
+> 
+> It doesn't make a difference if you go for the module or the build in driver,
+> you need to have an initrd today anyway to activate your VGs at boot time.
+> 
+> We are working on boot time recognition of VGs in the driver which will vanish
+> the initrd. That will be in a post 1.0 version of the Linux LVM.
 
-> Now I have a question. I read the HOWTO migrate the old root partition to a
-> LV, and the method is to make a LV on another HD (or the same if it's
-> room), copy the root FS to this LV, delete the old partition and add it to
-> the new LV. My question is. It's possible to make a VG without striping
-> ('cause I have just 1 HD in the begining) and then, when I add the old
-> partition to the VG, make this VG to do striping????
+is this still worthwile since i read Linus in thinking of a new way
+to handle initrd (appending a tar file to a kernel image and populating
+a ramfs with it) and moving many _init code that now bloats kernel
+to userspace.
 
-The FAQ seems to say it is not possible. You cannot add a PV to a
-stripping LV. It may change in the future.
+Regards,
+L.
+
+-- 
+Luca Berra -- bluca@comedia.it
+        Communication Media & Services S.r.l.
+ /"\
+ \ /     ASCII RIBBON CAMPAIGN
+  X        AGAINST HTML MAIL
+ / \
