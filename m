@@ -1,8 +1,7 @@
-Message-Id: <3C61E289.DD2CFF54@bellsouth.net>
-From: Jeff Layton <laytonjb@bellsouth.net>
-MIME-Version: 1.0
+Message-Id: <200202070309.g1739t930318@stf.comptex.com.au>
+From: "Richard Barbara" <richard@stf.comptex.com.au>
 Subject: Re: [linux-lvm] Backup costs (was: LVM reimplementationre)
-References: <Pine.GSO.4.21.0202062006560.17353-100000@psasolar.private.psa.pencom.com>
+MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
@@ -14,43 +13,60 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Feb  6 20:11:02 2002
+Date: Wed Feb  6 21:10:02 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
 
-James Mello wrote:
+Does anyone have an opinion as to what the cost of storage should be (say
+in $ /Gbyte) to enable wider use of 'direct to disk' backup?
+Would tape emulation help in this issue?  
 
-> > > Petabytes are another matter entirely. If you must absolutely have that
-> > > much data backed up, you start looking at more exotic solutions. Backing
-> > > up solely to disk is *way* to expensive, hence the wonderful, but of
-> > > poorly implemented idea of HSM.... Disk and tape :)
+----------
+> From: Jeff Layton <laytonjb@bellsouth.net>
+> To: linux-lvm@sistina.com
+> Subject: Re: [linux-lvm] Backup costs (was: LVM reimplementationre)
+> Date: Thursday, 7 February 2002 13:04
+> 
+> James Mello wrote:
+> 
+> > >    Large amounts of data brings in even more issues. How do
+> > > you stream Petabytes of data to tape in a resonable of time?
+> > > Unless you spend HUGE amounts of money to buy multiple
+> > > silos to handle slices of the data and put in a fantastic network
+> > > to handle the traffic, you can't backup in a reasonable amount
+> > > of time. In this case, disk is your only choice. The data size
+> > > break point between disk and tape depends on lots of things,
+> > > but that point is moving downward all the time (perhaps in
+> > > the Terabyte range).
 > >
-> > Yes, HSM has never panned out the way it was supposed to.
-> > However, try backing up Petabytes with tape in a reasonable
-> > amount of time. While I've never configure such a system,
-> > the numbers from systems I have seen indicate that disk is
-> > much cheaper than tape (even if tape is a feasible solution
-> > because of speed).
->
-> HSM systems that I've seen work generally used some form of nearline disk
-> storage and an *HUGE* array of tape drives to write too (100+ tape
-> drives). The data went to near line storage (which they only held for
-> like 24 hours) and was then written to the tape. The deal is, the more
-> data you *must* save, the more money you *must* spend.
-
-Agreed.
-
-I've never had good luck keeping HSM systems up
-for very long. The ones I have experience with liked to lock
-up at least once a week and the software never liked to be
-restarted - had to reboot the whole box.
-
-Jeff
-
-
->
->
+> > Petabytes are another matter entirely. If you must absolutely have that
+> > much data backed up, you start looking at more exotic solutions.
+Backing
+> > up solely to disk is *way* to expensive, hence the wonderful, but of
+> > poorly implemented idea of HSM.... Disk and tape :)
+> 
+> Yes, HSM has never panned out the way it was supposed to.
+> However, try backing up Petabytes with tape in a reasonable
+> amount of time. While I've never configure such a system,
+> the numbers from systems I have seen indicate that disk is
+> much cheaper than tape (even if tape is a feasible solution
+> because of speed).
+> 
+> Jeff
+> 
+> 
+> >
+> >         -- Cheers
+> >         -- James
+> >
+> > _______________________________________________
+> > linux-lvm mailing list
+> > linux-lvm@sistina.com
+> > http://lists.sistina.com/mailman/listinfo/linux-lvm
+> > read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
+> 
+> 
 > _______________________________________________
 > linux-lvm mailing list
 > linux-lvm@sistina.com
