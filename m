@@ -1,13 +1,14 @@
 Received: from o.ww.redhat.com (vpnuser1.stuttgart.redhat.com [172.16.4.1])
-	by pobox.stuttgart.redhat.com (8.12.8/8.12.8) with ESMTP id i1PESla5004880
-	for <linux-lvm@redhat.com>; Wed, 25 Feb 2004 15:28:47 +0100
+	by pobox.stuttgart.redhat.com (8.12.8/8.12.8) with ESMTP id i1PEWva5005239
+	for <linux-lvm@redhat.com>; Wed, 25 Feb 2004 15:32:57 +0100
 From: Heinz Mauelshagen <Mauelshagen@redhat.com>
-Subject: Re: [linux-lvm] finding the right size for rootvg
-Message-ID: <20040225142841.GA11757@redhat.com>
-References: <20040220152636.GC25086@redhat.com> <20040220155635.46931.qmail@web80007.mail.yahoo.com>
+Subject: Re: [linux-lvm] Kernel Patch for LVm-1.0.8
+Message-ID: <20040225143257.GC11757@redhat.com>
+References: <E1AtfOX-0007TZ-00@jade.ima.umn.edu>
 Mime-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20040220155635.46931.qmail@web80007.mail.yahoo.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <E1AtfOX-0007TZ-00@jade.ima.umn.edu>
 Sender: linux-lvm-admin@redhat.com
 Errors-To: linux-lvm-admin@redhat.com
 Reply-To: linux-lvm@redhat.com
@@ -19,32 +20,48 @@ List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
 List-Archive: <https://www.redhat.com/archives/linux-lvm/>
-Date: Wed Feb 25 09:27:02 2004
+Date: Wed Feb 25 09:31:03 2004
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
 To: linux-lvm@redhat.com
 
-On Fri, Feb 20, 2004 at 07:56:35AM -0800, cmc2slack-lvm@yahoo.com wrote:
-> Heinz writes:
-> 
-> > It'll 'limit' you to a maximum LV size of 512GB if that is an issue
-> > in LVM1.
-> > Once you migrate to LVM2 there's no such constraint any more.
-> 
-> Thanks Heinz, that's not a problem since this is a 
-> home system, only has 8GB and 60GB HD's. Will the
-> small extent make a difference in performance?
+Kumsup,
 
-Smaller extents cause larger mapping tables in LVM1.
-Typically you won't be able to see a performance difference.
+you can use actual 2.4 kernels fine with the LVM 1.0.8 tools.
+Your problem seems to be related to on-disk metadata.
 
+Can you see all Physical Volumes fine with pvscan ?
+What does vgck display ?
+
+On Wed, Feb 18, 2004 at 10:02:37PM -0600, Kumsup Lee wrote:
+> Hi There,
 > 
-> =====
-> Chris Conn
-> cmc2goat@swbell.net
-> http://storm.cadcam.iupui.edu/~cmcgoat
-> Austin, TX, USA
+>   I used to have kernel 2.8.18 with LVM-1.0.4 on my machine.  After I
+> upgraded kernel to 2.4.22 because of security problem, I couldn't 
+> make any snapshot.  So, I tried to use LVM-1.0.8 on kernel 2.4.22.  Then 
+> it complains about inconsistency.  Is there any LVM patch for 2.4.22+ ?
+> 
+> sys:/# vgscan
+> vgscan -- reading all physical volumes (this may take a while...)
+> vgscan -- found active volume group "mailspool"
+> vgscan -- ERROR "vg_read_with_pv_and_lv(): current PV" can't get data of
+> volume group "mailspool" from physical volume(s)
+> vgscan -- "/etc/lvmtab" and "/etc/lvmtab.d" successfully created
+> vgscan -- WARNING: This program does not do a VGDA backup of your volume
+> group
+> 
+> sys:/#
+> 
+> Thanks,
+> 
+> -- 
+> 
+> =============================================================================
+>  Kumsup Lee (ÀÌ±ÝŒ·) 				 System/Network Manager 
+>  Institute for Mathematics and its Applications, University of Minnesota 
+>  400 Lind Hall,   207 Church Street S.E.,   Minneapolis, MN 55455   USA
+>  Tel : 612-624-4353	FAX : 612-626-7370	PAGE : 952-608-0112
+>  klee@ima.umn.edu	www.ima.umn.edu/~klee
 > 
 > _______________________________________________
 > linux-lvm mailing list
