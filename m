@@ -1,12 +1,10 @@
-Return-Path: <bluca@comedia.it>
-Date: Wed, 15 Aug 2001 23:30:04 +0200
-From: Luca Berra <bluca@comedia.it>
-Subject: Re: [linux-lvm] Adding a mirror after-the-fact
-Message-ID: <20010815233003.A2260@colombina.comedia.it>
-References: <20010814171159.B28266@linux.com> <20010815105623.A29693@sistina.com>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20010815105623.A29693@sistina.com>; from mauelshagen@sistina.com on Wed, Aug 15, 2001 at 10:56:23AM +0200
+Return-Path: <jdiehl@sandia.gov>
+Message-ID: <B51F0C636E578A4E832D3958690CD73E0130BFC4@es04snlnt>
+From: "Diehl, Jeffrey" <jdiehl@sandia.gov>
+Subject: RE: [linux-lvm] Renumbered drives hosed VG.
+Date: Wed, 15 Aug 2001 15:47:22 -0600
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -19,32 +17,99 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: linux-lvm@sistina.com
+To: "'linux-lvm@sistina.com'" <linux-lvm@sistina.com>
 
-On Wed, Aug 15, 2001 at 10:56:23AM +0200, Heinz J . Mauelshagen wrote:
-> On Tue, Aug 14, 2001 at 05:11:59PM -0400, Jason Tackaberry wrote:
-> > I know this isn't strictly an LVM question, but ...
+Well, if I do a vgscan, it should find all of the VG's, right?  The log
+below indicates that this isn't happening.  All I want to do is create a
+large volume, move the data from the Database VG onto that new volume, then
+incorporate the space used by Database into the new volume and resize my
+filesystem.  This should not take 2 days!
+
+Any help would be most appreciated.
+
+
+
+Script started on Wed Aug 15 08:29:02 2001
+
+[root@filmore jdiehl]# vgscan
+vgscan -- reading all physical volumes (this may take a while...)
+vgscan -- found active volume group "Database"
+vgscan -- "/etc/lvmtab" and "/etc/lvmtab.d" successfully created
+vgscan -- WARNING: you may not have an actual VGDA backup of your volume
+group
+
+
+[root@filmore jdiehl]# vgcreate Database2 -s 8M /dev/sdc6
+vgcreate -- "/dev/sdc6" is no new physical volume
+vgcreate -- physical volume "/dev/sdc6" already belongs to volume group
+"Database2"
+
+[root@filmore jdiehl]# 
+[root@filmore jdiehl]# exit
+
+Mike Diehl,
+Network Monitoring Tool Devl.
+Sandia National Laboratories.
+(505) 284-3137
+jdiehl@sandia.gov
+
+
+> -----Original Message-----
+> From: Heinz J . Mauelshagen [mailto:mauelshagen@sistina.com]
+> Sent: August 15, 2001 2:57 AM
+> To: linux-lvm@sistina.com
+> Subject: Re: [linux-lvm] Renumbered drives hosed VG.
+> 
+> 
+> On Tue, Aug 14, 2001 at 02:52:17PM -0600, Diehl, Jeffrey wrote:
+> > Hi all,
 > > 
-> > Suppose I have a volume group with 1 physical volume, say a 9GB disk.
-> > Now, after some time, I decide I want to mirror this VG with another 9GB
-> > disk.  What options do I have?  AFAICS, the only way to do this would be
-> > to start from scratch?  This is a pretty simple and presumably common
-> > thing to want to do, so I hope I'm wrong.  :)
+> > I recently upgraded from a modular kernel to a monolithic 
+> kernel, which
+> > renumbered all of my drives.  sda became sdb, sdb became 
+> sdc and adc became
+> > sda, etc.  Now one of my VG's is hosed.  How do I recover from this?
 > 
-> Yes, you are (with 2.4 kernels) ;-)
+> A vgscan run should excatly address this.
+> Did it take place after the changes and *before* "vgchange -ay"?
 > 
-> You could either mirror the whole disk using MD *without* persistent superblocks
+> > 
+> > Thanx,
+> > Mike Diehl,
+> > Network Monitoring Tool Devl.
+> > 284-3137
+> > jdiehl@sandia.gov
+> > 
+> > 
+> > _______________________________________________
+> > linux-lvm mailing list
+> > linux-lvm@sistina.com
+> > http://lists.sistina.com/mailman/listinfo/linux-lvm
+> > read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
 > 
-raid superblock is at end of disk, so you could also
-create an lv with only the last PE of the PV and NEVER USE it
-
-L.
-
--- 
-Luca Berra -- bluca@comedia.it
-        Communication Media & Services S.r.l.
- /"\
- \ /     ASCII RIBBON CAMPAIGN
-  X        AGAINST HTML MAIL
- / \
+> -- 
+> 
+> Regards,
+> Heinz    -- The LVM Guy --
+> 
+> *** Software bugs are stupid.
+>     Nevertheless it needs not so stupid people to solve them ***
+> 
+> =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+> =-=-=-=-=-=-=-=-
+> 
+> Heinz Mauelshagen                                 Sistina 
+> Software Inc.
+> Senior Consultant/Developer                       Am Sonnenhang 11
+>                                                   56242 Marienrachdorf
+>                                                   Germany
+> Mauelshagen@Sistina.com                           +49 2626 141200
+>                                                        FAX 924446
+> =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+> =-=-=-=-=-=-=-=-
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@sistina.com
+> http://lists.sistina.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
+> 
