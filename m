@@ -1,8 +1,9 @@
-From: darren.miller@philips.com
-Message-ID: <OF156AE06C.675A04C9-ON80256E78.00455CE7-80256E78.0045D771@philips.com>
-Date: Fri, 16 Apr 2004 13:41:01 +0100
-MIME-Version: 1.0
-Subject: [linux-lvm] LVM2-Snapshot 2.6.5 with udm2
+Date: Fri, 16 Apr 2004 16:35:35 -0500
+From: Alasdair G Kergon <agk@redhat.com>
+Message-ID: <20040416163535.N863@homer.msp.redhat.com>
+Mime-Version: 1.0
+Content-Disposition: inline
+Subject: [linux-lvm] LVM2 Release 2.00.14 / device-mapper Release 1.00.16
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -15,33 +16,36 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: linux-lvm@redhat.com
-Cc: linux-lvm-admin@redhat.com
+To: linux-lvm@redhat.com, dm-devel@redhat.com
 
+Main LVM2 changes since the last announcement:
 
+   Added filter for LVM2 to ignore devices that are constituents of 
+   inactive md devices.  [Luca Berra]
+   64-bit lseek now used.
+   Improvements to the configurability of the build process.
+   Installs /etc/lvm/lvm.conf if it's not there already.
+   Some selinux support.
+   A fix to the pre-deactivation device-in-use check.
+   A fix to the mounted sysfs detection on 2.6.
+   Optionally invoke lvm1 binaries if running on 2.4 without device-mapper.
+ 
+   ftp://sources.redhat.com/pub/lvm2/LVM2.2.00.14.tgz
+   http://sources.redhat.com/lvm2/
 
+The device-mapper changes are all minor, mostly related to improving the
+configurability of the build process.
+There's one change to the kernel patch (driver now reports version 4.1.1):
+a fix to an overflow check in the code that reports target status.
 
+   ftp://sources.redhat.com/pub/dm/device-mapper.1.00.16.tgz
+   http://sources.redhat.com/dm/
 
-running command: lvcreate -L 28G -s -n snapFri /dev/vault/vol1 completely
-hangs, where it did work with UDM1
+More details of changes in the WHATS_NEW files in the tarballs.
 
-or though I was able to remove the previous snapshot from using udm1 with
-rc1 kernel.
-
-I still have an error relating to LVM when running lilo which might be a
-contributing factor:
-
-Warning: '/proc/partitions' does not match '/dev' directory structure.
-    Name change: '/dev/dm-3' -> '/dev/mapper/vault-vol1'
-
-Please advise..
-==============================================================================
-
-Darren Miller
-Senior Systems Support Engineer
-Microsoft Certified Professional
-SCO Advanced Certified Engineer
-Infomation Systems Department (Core Server Support)
-Philips Semiconductors,Milbrook Industrial Estate,Southampton,SO15
-0DJ,England
-Direct Dial In: +44 (0) 2380 312681
+Rawhide and Fedora now join Debian in being maintained in line with 
+the latest tarball releases.
+ 
+Alasdair
+-- 
+agk@redhat.com
