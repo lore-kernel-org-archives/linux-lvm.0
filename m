@@ -1,10 +1,9 @@
-From: Jose Luis Domingo Lopez <linux-lvm@24x7linux.com>
-Subject: Re: [linux-lvm] LVM & LFS support
-Message-ID: <20030513190831.GA4777@localhost>
-References: <B742DEF5E2578F43AB48979887E6CF060E16BD@MAIL001.AD.MLP.COM> <20030510155825.GA24798@localhost> <3EC0951E.90304@silicide.dk>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <3EC0951E.90304@silicide.dk>
+Content-Class: urn:content-classes:message
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Message-ID: <37885B2630DF0C4CA95EFB47B30985FB0187FFAF@exchange-1.umflint.edu>
+From: "Lauro, John" <jlauro@umflint.edu>
+Subject: [linux-lvm] Snapshot attempt causes kernel BUG
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,26 +14,27 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Tue May 13 14:08:02 2003
+Date: Tue May 13 15:10:02 2003
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Tuesday, 13 May 2003, at 08:47:58 +0200,
-Jon Bendtsen wrote:
-
-> Other than not being larger than the blockdevice, and doesnt the
-> blockdevice has a limit of 2T ?
-> 
-Your are right. There has been native support for huge (huge is large than
-large :) block devices in 2.5.x for some time, and I think there is also
-a backport to 2.4.x (I suppose main Linux distributors have some sort of
-support for huge block devices, at least on their latest business-grade
-offerings).
-
-Regards.
-
--- 
-Jose Luis Domingo Lopez
-Linux Registered User #189436     Debian Linux Sid (Linux 2.5.69)
+SGVsbG8sDQogDQpXaGVuIEkgdHJ5IHRvIGNyZWF0ZSBhIHNuYXBzaG90IChvZiBhIDQwMEdCIGxv
+Z2ljYWwgdm9sdW1lKQ0KKGNvbW1hbmQ6IGx2cmVhdGUgLS1zaXplIDIwME0gLS1zbmFwZXNob3Qg
+LW4gc25hcA0KL2Rldi9Wb2x1bWUwMC9Mb2dWb2wwMCkNCiANCkkgcmVjZWl2ZSBhIGtlcm5lbCBi
+dWcuDQouLi4NCmtlcm5lbCBCVUcgYXQgdm1hbGxvYy5jOjI0MiENCi4uLi4gICAoYXNrIGlmIHlv
+dSB3YW50IHN0YWNrIHRyYWNlLCBldGMpDQpTZWdtZW50YXRpb24gZmF1bHQNCiANCkkgYWxzbyB0
+cmVpZCB3aXRoIGEgZGVmYXVsdCBpbnN0YWxsIG9mIFJlZEhhdCA5IChJIG5lZWQgdG8gYnVpbGQg
+bXkNCm93biBrZXJuZWwsIGJ1dCBmaWd1cmVkIGl0IHNob3VsZCBiZSB3b3JraW5nIG91dCBvZiB0
+aGUgYm94LCBzbyB0cmllZA0KdmlyZ2luIFJIOSBmb3IgdGVzdGluZy4uLi4pICBJdCBkaWRuJ3Qg
+Z2l2ZSB0aGUga2VybmVsIGJ1ZywgYnV0IGENCm1lbW9yeSBhbGxvY2F0aW9uIGVycm9yIChhbmQg
+dGhpcyBzZXJ2ZXIgaGFzIDEyR0Igb2YgUkFNKS4NCiANCkkgdGhlbiBidWlsdCBteSBvd24ga2Vy
+bmVsLCB3aXRoIGEgc3RhbmRhcmQgMi40LjIwIGtlcm5lbCBhbmQgcGF0Y2hlcw0KZm9yIExWTSAx
+LjAuNywgYW5kIHRoZSBWRlMtTE9DSyBwYXRjaC4gIFRoYXQgcHJvZHVjZXMgdGhlIGJ1ZyB3aGVu
+DQpsdmNyZWF0ZSBmb3IgYSBzbmFwc2hvdCBpcyBydW4uLi4gIE9uIHRoZSBvZmYgY2hhbmNlIGl0
+IHdhcyBzeXN0ZW0NCnJlbGF0ZWQgSSB0cmllZCBtYW55IGRpZmZlcmVudCB0aGluZ3MsIHdpdGgg
+bm8gbHVjay4gIEkgZmluYWxseSB3YXMNCmFibGUgdG8gZ2V0IGl0IHRvIHdvcmsgYWZ0ZXIgSSB0
+dXJuZWQgb2ZmIHRoZSBCSUdNRU0gc3VwcG9ydCAoc28gb25seQ0KdXNpbmcgMUdCIG9mIFJBTSBp
+bnN0ZWFkIG9mIDEyR0IpLCBhbmQgYnJvdWdodCB0aGUgQ1BVIGRvd24gdG8gNDg2DQppbnN0ZWFk
+IG9mIFAtNC4gIEl0IHRoZW4gd29ya2VkISAgTm90IHN1cmUgaWYgaXQncyB0aGUgUC00IG9yIHRo
+ZQ0KQklHTUVNIHRoYXQgY2F1c2VzIHRoZSBwcm9ibGVtIHlldC4uLg0KIA0KIA0KIA0K
