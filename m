@@ -1,10 +1,9 @@
-Return-Path: <bill@mbsmm.com>
-Message-ID: <3AA65DD7.B1256051@mbsmm.com>
-Date: Wed, 07 Mar 2001 11:12:07 -0500
-From: Bill Clark <bill@mbsmm.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] EXT2-fs panic (device lvm(58,0)):
+Return-Path: <root@srv.sistina.com>
+Date: Wed, 7 Mar 2001 18:04:48 +0000
+From: "Heinz J. Mauelshagen" <Mauelshagen@sistina.com>
+Message-ID: <20010307180448.B28534@sistina.com>
+Mime-Version: 1.0
+Subject: [linux-lvm] LVM 0.9.1 Beta 6 release delay :-(
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,19 +16,29 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Not sure if this is a LVM problem or a ext2fs problem. It is happening
-with the 2.4.2 kernel and the 0.9 release of the LVM user tools.  
+Hi all,
 
-kernel: Kernel panic: EXT2-fs panic (device lvm(58,0)):
-load_block_bitmap: block_group >= groups_count - block_group = 131071,
-groups_count = 24
+we are sorry to announce another LVM 0.9.1 Beta 6 release delay.
 
-There is a 1gig+ file on the filesystem, and most operations on it seem
-to bring about the error.  
+We are working on a serious snapshot bug we like to fix before Beta 6.
+Our actual plan is to release next monday.
 
-Any ideas?
+Thanks for your understanding.
 
-Thanx
-Bill
+-- 
+
+Regards,
+Heinz    -- The LVM Guy --
+
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+Heinz Mauelshagen                                 Sistina Software Inc.
+Senior Consultant/Developer                       Am Sonnenhang 11
+                                                  56242 Marienrachdorf
+                                                  Germany
+Mauelshagen@Sistina.com                           +49 2626 141200
+                                                       FAX 924446
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
