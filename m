@@ -1,12 +1,12 @@
 Return-Path: <root@srv.sistina.com>
-Date: Tue, 29 May 2001 21:10:02 +0000
+Date: Tue, 29 May 2001 21:11:28 +0000
 From: "Heinz J. Mauelshagen" <Mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] Problem extending a LV
-Message-ID: <20010529211002.A27030@sistina.com>
-References: <3B136D02.2B4C5178@gmx.de>
+Subject: Re: [linux-lvm] Re: Help! Upgrade 2.2.18 -> 2.4.4 killed a PV
+Message-ID: <20010529211128.B27030@sistina.com>
+References: <20010529010628.E1971@jensbenecke.de> <20010529093436.A792@jensbenecke.de>
 Mime-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <3B136D02.2B4C5178@gmx.de>; from cabalzer@gmx.de on Tue, May 29, 2001 at 11:33:54AM +0200
+In-Reply-To: <20010529093436.A792@jensbenecke.de>; from jens@jensbenecke.de on Tue, May 29, 2001 at 09:34:36AM +0200
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -21,103 +21,125 @@ List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="iso-8859-1"
 To: linux-lvm@sistina.com
 
-Carsten,
+Jens,
+you need to run pvcreate on the invalid PV before running vgcfgrestore.
 
-sorry, you can't extend a striped LV like this today :-(
-Will be enhanced in a later release.
+Regards,
+Heinz    -- The LVM Guy --
 
-
-On Tue, May 29, 2001 at 11:33:54AM +0200, Carsten Balzer wrote:
-> Hi
+On Tue, May 29, 2001 at 09:34:36AM +0200, Jens Benecke wrote:
+> On Tue, May 29, 2001 at 01:06:28AM +0200, Jens Benecke wrote:
+> > Hello,
+> >=20
+> > I upgraded to 2.2.4 (0.9.1-beta2) from 2.2.18 (LVM 0.9) and this seems =
+to
+> > have killed one of my PVs. I tried the 0.9 utilities and updated to
+> > 0.9.1-beta7 when I noticed the problems. No change. Booting back to 2.2=
+.18
+> > didn't help, the PV was gone there as well.
 >=20
-> I have a strange problem with kernel 2.2.19 an lvm-tools 0.9.1_beta7.
+> follow-up:
 >=20
-> I have a existing VG with 2 80GB disks containing one 160GB LV.
-> I added a additional 80GB disk and wanted to extend the LV. But that
-> didn't
-> work.
+> vgcfgrestore doesn't work, because LVM thinks my hdc1 is no PV. Here's the
+> output:
 >=20
-> seven:/ # pvdisplay /dev/hdf1
-> --- Physical volume ---
-> PV Name               /dev/hdf1
-> VG Name               NVolGroup
-> PV Size               76.34 GB / NOT usable 3.22 MB [LVM: 306 KB]
-> PV#                   3
-> PV Status             available
-> Allocatable           yes
-> Cur LV                0
-> PE Size (KByte)       4096
-> Total PE              19541
-> Free PE               19541
-> Allocated PE          0
-> PV UUID               o593Dd-Uo4Z-Hv1Z-yTI0-QtYy-p0Wq-a4XL3q
 >=20
-> seven:/ # vgdisplay
-> --- Volume group ---
-> VG Name               NVolGroup
-> VG Access             read/write
-> VG Status             available/resizable
-> VG #                  0
-> MAX LV                256
-> Cur LV                1
-> Open LV               1
-> MAX LV Size           255.99 GB
-> Max PV                256
-> Cur PV                3
-> Act PV                3
-> VG Size               229 GB
-> PE Size               4 MB
-> Total PE              58623
-> Alloc PE / Size       39082 / 152.66 GB
-> Free  PE / Size       19541 / 76.33 GB
-> VG UUID               lHyDca-e7yA-4Rkt-keGF-uJHY-YCRk-3qqw7N
+> vgcfgrestore -n data -ll:
+> 	--- Volume group ---
+> 	VG Name               data
+> 	VG Access             read/write
+> 	VG Status             NOT available/resizable
+> 	VG #                  0
+> 	MAX LV                256
+> 	Cur LV                1
+> 	Open LV               0
+> 	MAX LV Size           255.99 GB
+> 	Max PV                256
+> 	Cur PV                2
+> 	Act PV                2
+> 	VG Size               95.44 GB
+> 	PE Size               4 MB
+> 	Total PE              24432
+> 	Alloc PE / Size       24432 / 95.44 GB
+> 	Free  PE / Size       0 / 0
+> 	VG UUID               ec0e1J-hf9c-2DVg-VMGE-Qn1c-HPgl-z1jMGO
+> =09
+> 	--- Logical volume ---
+> 	LV Name                /dev/data/archiv
+> 	VG Name                data
+> 	LV Write Access        read/write
+> 	LV Status              NOT available
+> 	LV #                   1
+> 	# open                 0
+> 	LV Size                95.44 GB
+> 	Current LE             24432
+> 	Allocated LE           24432
+> 	Allocation             next free
+> 	Read ahead sectors     120
+> 	Block device           58:0
+> =09
+> =09
+> 	--- Physical volume ---
+> 	PV Name               /dev/hdc1
+> 	VG Name               data
+> 	PV Size               76.33 GB / NOT usable 3.96 MB [LVM: 197 KB]
+> 	PV#                   1
+> 	PV Status             NOT available
+> 	Allocatable           yes (but full)
+> 	Cur LV                1
+> 	PE Size (KByte)       4096
+> 	Total PE              19539
+> 	Free PE               0
+> 	Allocated PE          19539
+> 	PV UUID               Re4KFN-ES3b-K2zz-EIer-iYKv-i7wX-lHTPGN
+> =09
+> 	--- Physical volume ---
+> 	PV Name               /dev/hda1
+> 	VG Name               data
+> 	PV Size               19.12 GB / NOT usable 2.27 MB [LVM: 140 KB]
+> 	PV#                   2
+> 	PV Status             NOT available
+> 	Allocatable           yes (but full)
+> 	Cur LV                1
+> 	PE Size (KByte)       4096
+> 	Total PE              4893
+> 	Free PE               0
+> 	Allocated PE          4893
+> 	PV UUID               qT529c-dwfb-utXE-1Ds4-18AV-0I6O-2cHdfR
 >=20
-> seven:/ # lvdisplay /dev/NVolGroup/nVol
-> --- Logical volume ---
-> LV Name                /dev/NVolGroup/nVol
-> VG Name                NVolGroup
-> LV Write Access        read/write
-> LV Status              available
-> LV #                   1
-> # open                 1
-> LV Size                152.66 GB
-> Current LE             39082
-> Allocated LE           39082
-> Stripes                2
-> Stripe size (KByte)    16
-> Allocation             next free
-> Read ahead sectors     120
-> Block device           58:0
 >=20
-> If I try to extend the LV with:
-> lvextend -L+78164M /dev/NVolGroup/nVol
-> then I get:
-> lvextend -- rounding size 240119808 KB to stripe boundary size 240123904
-> KB
-> lvextend -- only 19541 free physical extents in volume group "NVolGroup"
+> vgcfgrestore -v -n data /dev/hdc1:
+> 	vgcfgrestore -- locking logical volume manager
+> 	vgcfgrestore -- restoring volume group "data" from "/etc/lvmconf/data.co=
+nf"
+> 	vgcfgrestore -- checking existence of "/etc/lvmconf/data.conf"
+> 	vgcfgrestore -- reading volume group data for "data" from "/etc/lvmconf/=
+data.conf"
+> 	vgcfgrestore -- reading physical volume data for "data" from "/etc/lvmco=
+nf/data.conf"
+> 	vgcfgrestore -- reading logical volume data for "data" from "/etc/lvmcon=
+f/data.conf"
+> 	vgcfgrestore -- checking volume group consistency of "data"
+> 	vgcfgrestore -- checking volume group consistency of "data"
+> 	vgcfgrestore -- reading physical volume "/dev/hdc1"
+> 	vgcfgrestore -- ERROR "pv_read(): PV identifier invalid" reading physica=
+l volume "/dev/hdc1"
 >=20
-> Next try with: lvextend -l+19541 /dev/NVolGroup/nVol
-> lvextend -- rounding size 240119808 KB to stripe boundary size 240123904
-> KB
-> lvextend -- only 19541 free physical extents in volume group "NVolGroup"
 >=20
-> Where is the error?
+> Thank you!
 >=20
-> Gru=EF=BF=BD
->   Carsten
->=20
-> --
-> "Who the fuck is General Failure and why is he reading my disk?"
+> --=20
+> Jens Benecke             /* Nobody will ever see this error message :-) */
+>                             panic("Cannot initialize video hardware\n");
+>                                   -- Linux 2.0.38,  arch/m68k/atari/atafb=
+.c
+> http://www.hitchhikers.de/ - Die kostenlose Mitfahrzentrale f=EF=BF=BDr g=
+anz Europa
 > _______________________________________________
 > linux-lvm mailing list
 > linux-lvm@sistina.com
 > http://lists.sistina.com/mailman/listinfo/linux-lvm
 > read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
-
---=20
-
-Regards,
-Heinz    -- The LVM Guy --
 
 *** Software bugs are stupid.
     Nevertheless it needs not so stupid people to solve them ***
