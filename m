@@ -1,11 +1,8 @@
-Date: Thu, 6 Sep 2001 13:55:02 +0100
-Subject: Re: [linux-lvm] Will LVM stay GPL?
-Message-ID: <20010906135502.B638@btconnect.com>
-References: <200109061207.f86C79N7021746@pcrz175.HRZ.Uni-Marburg.DE>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <200109061207.f86C79N7021746@pcrz175.HRZ.Uni-Marburg.DE>; from gebhardt@HRZ.Uni-Marburg.DE on Thu, Sep 06, 2001 at 02:07:08PM +0200
-From: Joe Thornber <thornber@btconnect.com>
+From: dobos_s@IBCnet.hu
+Message-ID: <OF44ABFE07.4419EBD8-ONC1256ABF.004C8662@ibcnet.hu>
+Date: Thu, 6 Sep 2001 16:03:49 +0200
+MIME-Version: 1.0
+Subject: [linux-lvm] Root on LV
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -21,24 +18,21 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Thu, Sep 06, 2001 at 02:07:08PM +0200, Thomas Gebhardt wrote:
-> Hi,
-> 
-> after the GFS switch to the non-free SPL: can we hope/trust that
-> LVM will remain GPL'd ?
-> 
-> The SPL FAQ does not address this point. It however, mentions that 
-> there will be several closed source LVM related utilities this
-> fall. What about LVM itself?
+Hi!
 
-Mike Declerck has already addressed this issue on the mailing list,
-but I'll reiterate.  The LVM kernel driver is GPL, the LVM userland
-tools are GPL.  We have no intention to change this, and even if we
-wanted to we couldn't since lots of people outside Sistina have
-contributed.
+I cannot understand something.
+My kernel has no modules.
+Why should I create an ext2 partition for holding an initrd which is not
+doing any essential things except vgscan and vgchange -ay ?
+Why cant these things built into the kernel?
 
-If it makes people feel happier I will accept patches that add their
-names to the copyright notices (assuming they've made significant
-contributions).
+Maybe I didnt understand something...
 
-- Joe
+
+Please CC to me, because I am not member on list...
+
+Thanks
+
+
+Dobos Sandor
+IBCnet Hungary Ltd.
