@@ -1,56 +1,74 @@
-Message-Id: <4.2.0.58.19990826121935.00fc6c30@204.151.72.2>
-Date: Thu, 26 Aug 1999 12:30:21 -0600
-From: Mats Wichmann <mats@laplaza.org>
+Date: Thu, 26 Aug 1999 15:28:35 -0400 (EDT)
+From: "S. Ryan Quick" <ryan@phaedo.com>
 Subject: Re: [linux-lvm] LVM in stock kernel!?
-In-Reply-To: <Pine.LNX.3.96.990826125142.20183A-100000@zeke.sympatico.ca
- >
-Mime-Version: 1.0
+In-Reply-To: <4.2.0.58.19990826121935.00fc6c30@204.151.72.2>
+Message-ID: <Pine.LNX.3.96.990826151731.23765C-100000@aristotle.phaedo.com>
+MIME-Version: 1.0
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
+Content-Type: TEXT/PLAIN; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: linux-lvm@msede.com
+To: Mats Wichmann <mats@laplaza.org>
+Cc: linux-lvm@msede.com
 
+-----BEGIN PGP SIGNED MESSAGE-----
 
->
->PROS
->- LVM is almost a necessity when managing large amounts of storage.
+On Thu, 26 Aug 1999, Mats Wichmann wrote:
 
-although at some cost in performance since there's an additional layer of
-translation before you get to the actual disk blocks....
+[deletia]
 
->- Many unix people think that storage layout is one of the most difficult
->aspects of maintaining a system. LVM simply makes storage management much
->more flexible by allowing storage to be reallocated easily at anytime.
+> 
+> Not terribly familiar with Linux LVM (listening here to help become so)...other
+> LVMs require a large number of commands to become familar with (the AIX
+> LVM being the prototype which _most_ folks have followed; Solaris takes
+> a somewhat different approach).  Actually, a well-thought out GUI can be
+> a great help here.  The author of a course I teach has constructed one as
+> a sample which gives you drag-and-drop LVM management - in very little
+> tk/perl code.
 
-at some cost again....insulation from actual details of storage does mean you
-are not necessarily making the optimal use of layout....but the benefits seem
-to far outweigh these costs.
+While I think the GUI thing is nice, and as a proponent of the VERITAS Volume Manager despite a great affinity for IBM's
+LVM, I have to say that the GUI inevitably leaves some small, but super-crucial piece out.  As a long time AIX and Veritas
+consultant, I have to say I long ago gave up both smit and vxva in favor of the good old CLI.  I think that giving Linux LVM
+a gui might eventually prove useful, but right now, I think it better to develop as many CLI tools as possible and stabilize
+the code.  I want to see Oracle start recommending LVM (on Debian -- I'm tired of all this redhat stuff, hehehe) as a
+definite boost.
 
->- Folks coming to Linux from other UNIXes which use an LVM (HP, AIX etc..)
->will be familiar and comfortable with LVM concepts and will more readily
->embrace the penguin.
+Some other Pros to add:
 
-add at least Solaris (Solstice Disk Suite) and SGI IRIX  (xlv - a very nice
-combination with the xfs filesystem) to this list.
+Integration with IBM's ADSM backup allows Linux machines to be backed up "snapshot" style by simply syncing volumes and
+grabbing volume data.
 
->- The "out of storage space" is a very common problem for users especially
->new users. LVM makes resizing allocated space easier. This is perhaps the
->most common problem I here about from new users.
->- LVM is not a new concept and has been proven to be indispensible in
->other OSes, (ie. It is not just some hair-brained scheme that just makes
->things harder to learn and more complicated).
->
->CONS
->- Using LVM is by definition adding a another logical layer for storage.
->Users not already familiar with an LVM will have to do some learning, or
->not use LVM.
+The ability to add a sort of volume log allows almost instant volume resyncing while maintaining an active data volume.
 
-Not terribly familiar with Linux LVM (listening here to help become so)...other
-LVMs require a large number of commands to become familar with (the AIX
-LVM being the prototype which _most_ folks have followed; Solaris takes
-a somewhat different approach).  Actually, a well-thought out GUI can be
-a great help here.  The author of a course I teach has constructed one as
-a sample which gives you drag-and-drop LVM management - in very little
-tk/perl code.
+The (unique) ability to use either physical disks or partitions (and even flat files via the loopback device) allows for a
+very flexible Volume Group makeup (e.g. I don't get stuck having to allocate all of that 18GB drive to a volume when I only
+need 4GB of it, etc.).  NOTE:  This does add some cons when it comes to deporting (exporting) volumes and migrating disks,
+but it should be easy enough to overcome.
+
+Ryan
+
+> 
+> 
+
+%                                                       %%%%%%%%%%
+%%           S. Ryan Quick                               %%%%%%%%%
+%%%           UNIX Systems Engineer                       %%%%%%%%
+%%%%           Phaedo Consulting, Inc. -- Exec VP          %%%%%%%
+%%%%%                                                       %%%%%%
+%%%%%%         www.phaedo.com/ryan/  ryan@phaedo.com         %%%%%
+%%%%%%%       ------------ PGP FingerPrint -------------      %%%%
+%%%%%%%%  CF 19 6B BA 31 8E B8 8E  20 DF 4F 2B 2E 69 81 F5     %%%
+%%%%%%%%%     ------------------------------------------        %%
+%%%%%%%%%%                                                       %
+
+-----BEGIN PGP SIGNATURE-----
+Version: 2.6.3a
+Charset: noconv
+
+iQCVAwUBN8WVZPUYDAQiV+tNAQGCUAP+OOrbJdssjX+D3FUCtM4+BmrZy4nPYCh+
+lcPS2QNCfU96YI9XAuVcs/e33JkQB/ZTJw41q+dnSLKUi1RvIKy8xx2OfJ7HFKFB
+7wmmM+WunHlcAj0xn72qvL2RhsDUE2VHM8LsaByOPtvxyMbXYctEg22fRNV7sEAL
+9nJiqqdiw+U=
+=FjWD
+-----END PGP SIGNATURE-----
