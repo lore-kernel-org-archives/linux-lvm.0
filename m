@@ -1,34 +1,32 @@
-Date: Thu, 8 Jun 2000 12:11:20 +0200
-From: Jan Niehusmann <jan@gondor.com>
-Subject: Re: [linux-lvm] Reliability
-Message-ID: <20000608121120.A2855@gondor.com>
-References: <20000607194335.B17473@hmsysv.t-online.de> <200006080031.CAA16192@e35.marxmeier.com>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <200006080031.CAA16192@e35.marxmeier.com>; from mike@msede.com on Thu, Jun 08, 2000 at 02:31:19AM +0000
+Date: Thu, 8 Jun 2000 12:49:53 +0100 (IST)
+From: Paul Jakma <paulj@itg.ie>
+Subject: Re: [linux-lvm] LVM 0.8final for 2.2.15/2.2.16?
+In-Reply-To: <20000608103415.A3935@gruyere.muc.suse.de>
+Message-ID: <Pine.LNX.4.21.0006081245010.3252-100000@rossi.itg.ie>
+MIME-Version: 1.0
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: TEXT/PLAIN; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: Michael Marxmeier <mike@msede.com>
-Cc: Mauelshagen@Sistina.com, linux-lvm@msede.com
+To: Andi Kleen <ak@suse.de>
+Cc: Jos Visser <josv@osp.nl>, Paul Jakma <paul@clubi.ie>, Michael Marxmeier <mike@msede.com>, jan@gondor.com, linux-lvm@msede.com
 
-On Thu, Jun 08, 2000 at 02:31:19AM +0000, Michael Marxmeier wrote:
-> As far as i can see Quorum support looks like the saner option:
-> If you loose a disk and only restore the partition table and VGDA
-> the replacement disk still mostly contains garbage (eg. not a fs).
+On Thu, 8 Jun 2000, Andi Kleen wrote:
 
-That, and it may be usefull to be able to say: I know something is
-wrong, but I need some files _now_, so please give me everything 
-you have and don't wait until I mounted and initialized a new drive.
+> consider a database that uses user space journaling using fsync:
+> to make its disk files consistent after the snapshot it requires
+> both the log write and the data write. When one is missing the
+> log needs to be replayed, which requires writes.
 
-Perhaps damaged VGs should be read only, at least by default, to prevent
-further damage. 
+but doesn't the call to block_fsync that Heinz confirmed exists cover
+this?
 
-I was really worried when LVM didn't start with a corrupted partition
-table: The PV on that disk was actually empty (perhaps a LV on it,
-but no data) as I only added it to try out ext2 resizing without risking
-the other partitons.
+nothing can cover the case where app data consistency depends on a future
+write(). But that's the app's problem, and anyway a good database should
+be consistent/recover itself if it's died between write(?)'s. right?
 
-Jan
+(in which case lvm snapshot is perfectly suitable for backing up
+databases..)
+
+--paulj
