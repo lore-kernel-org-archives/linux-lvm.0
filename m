@@ -1,10 +1,10 @@
-Message-ID: <1026674081.3d31cda16b6d1@lola.Pin.LU>
-From: Christian Limpach <chris@Pin.LU>
-Subject: Re: [linux-lvm] RAID extension and lvm
-References: <Pine.LNX.4.44.0207142010160.29796-100000@poseidon.ihs.uni-stuttgart.de>
-In-Reply-To: <Pine.LNX.4.44.0207142010160.29796-100000@poseidon.ihs.uni-stuttgart.de>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+From: Goetz Bock <bock@blacknet.de>
+Subject: Re: [linux-lvm] Extending an LVM-Partition
+Message-ID: <20020714212214.A22165@zealot.blacknet.de>
+References: <20020714190504.GA880@glorybox.de>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20020714190504.GA880@glorybox.de>; from kai.weber@glorybox.de on Sun, Jul 14, 2002 at 09:05:04PM +0200
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,32 +15,24 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Sun Jul 14 14:14:02 2002
+Date: Sun Jul 14 14:19:02 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@sistina.com, Ralf Eisinger <rei@ihs.uni-stuttgart.de>
+Content-Transfer-Encoding: 7bit
+To: linux-lvm@sistina.com
 
-Quoting Ralf Eisinger <rei@ihs.uni-stuttgart.de>:
-
-> Is it possible to handle that with lvm and when the answer is "yes", in
-> which way? One point was a command named "pvresize" but I didn't find it
-> in my distribution (SuSE 8.0) and I find nothing about that in the HOWTO.
-
-You want to (find and) use the pvresize command, it is available at least in 
-1.1-rc2: ftp://linux.msede.com:21/lvm/1.1/lvm_1.1-rc2.tar.gz
-This should work well if your pv spans your raid5 device completely or at 
-least your pv is at the end of your raid5 device.
-
-If you don't want to try pvresize, you have two other options:
-- if your raid5 device has a partition table, you can add the new space as a 
-new partition and pvcreate a new pv on this partition and add the new pv to 
-your volume group.
-- you can use losetup with the -o option to create a loopback device covering 
-the new space.  This is definitely not an ideal setup, but it should work and 
-most of all it should work even if you couldn't use pvresize.
-
-Then there's a few more options if you use device-mapper which lets you map 
-multiple ranges of sectors into a device.
-
+On Sun, Jul 14 '02 at 21:05, Kai Weber wrote:
+> Or I ask for an "you can just add the PV hda2 and it does not matter, if
+> there is another PV on this disk" advice.
+It's ok to do this (I do this all the time with my regular setups:
+install the system to a mini ext2 partition, make the rest LVM, move
+system to LVM, add former ext2 partition to LVM. As the installers
+nowadays support LVM this is nolonger needed, but when I started LVM
+no installer knew it).
+It is only a bad idea when you want to try striping (for, I hope,
+obviouse reasons)
 -- 
-Christian Limpach <chris@Pin.LU>
+Goetz Bock       (c) 2002 as     blacknet.de - Munich - Germany   /"\
+IT Consultant    GNU FDL 1.1    secure mobile Linux everNETting   \ /
+                                                                   X
+ ASCII Ribbon Campaign against HTML email & microsoft attachments / \
