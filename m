@@ -1,12 +1,11 @@
 Return-Path: <root@srv.sistina.com>
-Date: Wed, 9 May 2001 09:22:58 +0000
+Date: Wed, 9 May 2001 09:35:10 +0000
 From: "Heinz J. Mauelshagen" <Mauelshagen@sistina.com>
-Subject: Re: [Fwd: [linux-lvm] LVM export]
-Message-ID: <20010509092258.A4918@sistina.com>
-References: <3AF6A532.38B30041@lanzenberg.at> <3AF8B558.CBAB57EB@jusline.com>
+Subject: Re: [linux-lvm] SCSI/LVM problems after power outage
+Message-ID: <20010509093510.B4918@sistina.com>
+References: <DC5B1A21E9E7D211B0020090273AD628242BE0@summit15.corvallis.summit>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <3AF8B558.CBAB57EB@jusline.com>; from h.kerndler@jusline.com on Wed, May 09, 2001 at 05:11:21AM +0200
+In-Reply-To: <DC5B1A21E9E7D211B0020090273AD628242BE0@summit15.corvallis.summit>; from Evan.Day@SUMMITSITE.COM on Tue, May 08, 2001 at 02:05:16PM -0700
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -18,173 +17,81 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Wed, May 09, 2001 at 05:11:21AM +0200, Harald Kerndler wrote:
-> We have found the command vgcfgrestore and we have him tested.
-> We have follow command used: vgcfgrestore -n vol0 /dev/hda4 and then comes this
-> error:
-> vgcfgrestore -- ERROR "pv_read(): PV exported" reading physical volume "/dev/hda4"
-> We have follow command used: vgcfgrestore -n vol0 /dev/hda4 and then comes this
+On Tue, May 08, 2001 at 02:05:16PM -0700, Day, Evan wrote:
+> It looks like device 2 is having issues:
 > 
-> Is the VG demaged ?
+> SCSI disk error : host 2 channel 0 id 2 lun 0 return code = 18000002
+> 
+> However, it has been several years since I worked with Sun machines, so I
+> could be wrong.  Regardless, it doesn't sound like an LVM issue, but a
+> hardware issue.  Unfortunately, I can't offer much recovery advice - most of
+> my LVM experience is with HP-UX, and we use mirroring (RAID-1) at work -
+> just unplug the bad drive, plug in a new one, and do a vgsync.  I think you
+> can add a replacement drive to the VG and use pvmove to try and move the PEs
+> from the bad drive to the new drive, but I wouldn't take my word for it...
 
-This doesn't necessarily imply that your VG is damaged.
+In case the PEs on the flaky device are still readable:
+extending your VG and using pvmove is the way to go.
 
-vgcfgrestore recognized that /dev/hda4 belongs to an exported VG and therefore
-it complained.
+Steps needed (crossing your fingers that the flaky drive can still stand this):
 
-If Torsten's guess below is right: if you copied the PV content to a different
-disk (of the same size!) there was no need to export the VG in the first place.
+- install or use an additional drive of at least the size of the flaky one
+- pvcreate that drive
+- vgextend the VG by it
+- pvmove /dev/FlakyDrive
+- wait until pvmove is done
+- vgreduce VG /dev/FlakyDrive
 
-You didn't mention if you tried Torsten's hints in case his assumption
-was right.
+You should have your LVs offline in case you have an older version than
+LVM 0.9.1 Beta 7, because they had a pvmove related bug which could cause
+oopses when you moved PEs in use.
 
-My general problem is, that you didn't provide more information, as I requested
-in my first answer to your e-mail, in order to *really* understand for sure
-what your situation is and which steps you made to get there.
-
-So input like:
-
-- what was the starting configuration *before* you changed something?
-- what was the configuration change you wnated to achive?
-- what where the commands you run in sequence to get there?
-
-would be appreciated in order to help you at all.
-
-
-Could you at least provide the following outputs to get a little more
-light into this:
-
-- "pvscan"
-- "vgscan -d"
-- "vgdisplay -Dv"
-- "ls -l /etc/lvmconf"
-
+BTW: you need to configure MD (RAID 1 or 5) or use hardware raid subsystems
+     to avoid suffering from such flaky disk problems.
 
 Regards,
 Heinz    -- The LVM Guy --
 
 
 > 
-> >
-> >
-> >   ------------------------------------------------------------------------
-> >
-> > Subject: Re: [linux-lvm] LVM export
-> > Date: Mon, 7 May 2001 13:58:47 +0200
-> > From: Torsten Landschoff <torsten@pclab.ifg.uni-kiel.de>
-> > Reply-To: linux-lvm@sistina.com
-> > To: linux-lvm@sistina.com
-> > References: <3AF68126.93ACCE81@lanzenberg.at> <20010507134024.A26477@sistina.com>
-> >
-> > On Mon, May 07, 2001 at 01:40:24PM +0000, Heinz J. Mauelshagen wrote:
-> >
-> > > There's a hack to reactivate it in case you still have a valid VGDA backup,
-> > > but let me first understand what your actual problem is, before we can decide
-> > > to try that.
-> >
-> > I guess he tried to move a disk to a new one by exporting the volume
-> > group, moving the data onto the new disk and importing that one. I guess
-> > the solution would be to import the volume group from the old disk
-> > (assuming the data is still available on it) and using pvcreate,
-> > vgextend and pvmove to get the data on the new disk, the use vgreduce
-> > to remove the pv of the old disk and remove it from the system.
-> >
-> > Greetings
-> >
-> >         Torsten
-> > _______________________________________________
-> > linux-lvm mailing list
-> > linux-lvm@sistina.com
-> > http://lists.sistina.com/mailman/listinfo/linux-lvm
-> >
-> >   ------------------------------------------------------------------------
-> >
-> > Subject: Re: [linux-lvm] LVM export
-> > Date: Mon, 7 May 2001 13:40:24 +0000
-> > From: "Heinz J. Mauelshagen" <Mauelshagen@sistina.com>
-> > Reply-To: linux-lvm@sistina.com
-> > To: linux-lvm@sistina.com
-> > References: <3AF68126.93ACCE81@lanzenberg.at>
-> >
-> > On Mon, May 07, 2001 at 01:04:06PM +0200, h.kerndler@lanzenberg.at wrote:
-> > > Hello !
-> > > Yesterday, I have tested the export/import Funktion from LVM.
-> > > I have exported the LVM, that has gone.
-> >
-> > Without further information, I can't provide a solution.
-> >
-> > Do you mean you successfully run "vgexport VGName" on your deactivated VG
-> > named "VGName"?
-> >
-> > > In the next step I would import the LVM on a other disk.
-> >
-> > What do you mean with "other disk"?
-> >
-> > The vgimport(8) command has the synopsis:
-> >
-> >    vgimport VGName PhysicalVolumePath [PhysicalVolumePath...]
-> >
-> > If you exported the VG just to test the feature as you mentioned,
-> > you should run pvscan which should list you all of the physical volume
-> > pathes belonging to the exported VG and feed those pathes into vgimport.
-> >
-> > See "man vgimport" for further details.
-> >
-> > > The LVM has not imported the LVM on a other disc, becaus I became a
-> > > Failure.
-> >
-> > What was the failure message?
-> >
-> > > My question, can I make a un-export on the old-disk?
-> >
-> > No, you can just import it.
-> >
-> > There's a hack to reactivate it in case you still have a valid VGDA backup,
-> > but let me first understand what your actual problem is, before we can decide
-> > to try that.
-> >
-> > >
-> > > Thanks, Harald
-> > > _______________________________________________
-> > > linux-lvm mailing list
-> > > linux-lvm@sistina.com
-> > > http://lists.sistina.com/mailman/listinfo/linux-lvm
-> >
-> > --
-> >
-> > Regards,
-> > Heinz    -- The LVM Guy --
-> >
-> > *** Software bugs are stupid.
-> >     Nevertheless it needs not so stupid people to solve them ***
-> >
-> > =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-> >
-> > Heinz Mauelshagen                                 Sistina Software Inc.
-> > Senior Consultant/Developer                       Am Sonnenhang 11
-> >                                                   56242 Marienrachdorf
-> >                                                   Germany
-> > Mauelshagen@Sistina.com                           +49 2626 141200
-> >                                                        FAX 924446
-> > =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-> > _______________________________________________
-> > linux-lvm mailing list
-> > linux-lvm@sistina.com
-> > http://lists.sistina.com/mailman/listinfo/linux-lvm
-> 
-> --
-> mit freundlichen Gr��en
-> J�rgen Greil
-> 
-> JUSLINE - Direkt zu Ihrem Recht
-> http://www.jusline.com
-> e-mail: dev5@jusline.com
+> -----Original Message-----
+> From: Dave Wapstra [mailto:dave@xs4all.nl]
+> Sent: Tuesday, May 08, 2001 9:33 AM
+> To: linux-lvm@sistina.com
+> Subject: [linux-lvm] SCSI/LVM problems after power outage
 > 
 > 
+> Hi all,
 > 
+> After a power outage, our ftp server with LVM has not survived very well.
+> 
+> System: UltraSparc II, Linux 2.4(2) + io.path + LVM 0.9.1beta6
+> 
+> All normal ext2 paritions were fsck'd fine, however, the volume is having
+> problems.
+> 
+> The syslog has a lot of SCSI errors:
+> 
+> May  7 19:15:52 ftp kernel: sym53c8xx_reset: pid=0 reset_flags=1
+> serial_number=0 serial_number_at_timeout=0
+<SNIP>
+> Read ahead sectors     120
+> Block device           58:0
+> 
+> 
+> -Dave
+> 
+> -- 
+> Dave Wapstra
+> dave@xs4all.nl
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@sistina.com
+> http://lists.sistina.com/mailman/listinfo/linux-lvm
 > _______________________________________________
 > linux-lvm mailing list
 > linux-lvm@sistina.com
