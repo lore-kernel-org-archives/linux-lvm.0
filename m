@@ -1,27 +1,19 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j0UJajO31472
-	for <linux-lvm@redhat.com>; Sun, 30 Jan 2005 14:36:45 -0500
-Received: from postfix4-2.free.fr (postfix4-2.free.fr [213.228.0.176])
-	by mx3.redhat.com (8.12.11/8.12.11) with ESMTP id j0UJadt6020441
-	for <linux-lvm@redhat.com>; Sun, 30 Jan 2005 14:36:39 -0500
-Received: from eric.placeverte.home
-	(lns-vlq-7-lil-82-254-193-239.adsl.proxad.net [82.254.193.239])
-	by postfix4-2.free.fr (Postfix) with SMTP id 31EAA2BC4B7
-	for <linux-lvm@redhat.com>; Sun, 30 Jan 2005 20:36:39 +0100 (CET)
-Date: Sun, 30 Jan 2005 20:36:38 +0100
-From: messmate <messmate@free.fr>
-Subject: Re: [linux-lvm] converting ext3 / to LVM
-Message-ID: <20050130203638.17a5cba3@eric.placeverte.home>
-In-Reply-To: <1107106390l.10159l.2l@tangerine-64>
-References: <006901c5069a$db39b690$4857fea9@desktop>
-	<1107077143l.22995l.0l@tangerine-64>
-	<20050130115544.65cfaef3@eric.placeverte.home>
-	<1107084645l.24357l.2l@tangerine-64>
-	<20050130180420.271340f7@eric.placeverte.home>
-	<1107106390l.10159l.2l@tangerine-64>
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j0VLv6O00348
+	for <linux-lvm@redhat.com>; Mon, 31 Jan 2005 16:57:06 -0500
+Received: from wproxy.gmail.com (wproxy.gmail.com [64.233.184.206])
+	by mx3.redhat.com (8.12.11/8.12.11) with ESMTP id j0VLv0ic020228
+	for <linux-lvm@redhat.com>; Mon, 31 Jan 2005 16:57:00 -0500
+Received: by wproxy.gmail.com with SMTP id 71so850472wra
+	for <linux-lvm@redhat.com>; Mon, 31 Jan 2005 13:56:55 -0800 (PST)
+Message-ID: <2e06c5c205013113562f2cd2ff@mail.gmail.com>
+Date: Mon, 31 Jan 2005 15:56:54 -0600
+From: Rajesh Akula <rajesh.akula@gmail.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] LVM help
+Reply-To: Rajesh Akula <rajesh.akula@gmail.com>,
+	LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -31,51 +23,47 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="utf-8"
-To: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="us-ascii"
+To: linux-lvm@redhat.com
 
-On Sun, 30 Jan 2005 17:33:10 +0000
-"Jean-Luc Coulon (f5ibh)" <jean-luc.coulon@wanadoo.fr> wrote:
+I have 154 disks.
+136 of them are 36GB
+18 are 73Gb
+I made two partitions on all these disks. First partitions is 31Gb
+rest of the space is second partition.
+I am trying to create one big logical volume group of 1.1TB on the
+second partition on all the disks.
+Here is the script I used to create volume group
+vgcreate volgroup1 /dev/sdb2......................./dev/sdey (154 disks)
+lvcreate -i 154 -I 16 -L 1100G -n lv01 volgroup18
+Failed and the got the following message.
+Number of stripes (154) must be between 1 and 128.
+The I changed number of stripes to 128 ran the script like this
+lvcreate -i 154 -I 16 -L 1100G -n lv01 volgroup18
+Rounding size (17600 extents) up to stripe boundary size (17664 extents)
+Insufficient allocatable extents suitable for parallel use for
+logical volume lv01: 17664 required
 
->Le 30.01.2005 18:04:20, messmate a �crit�:
->> On Sun, 30 Jan 2005 11:30:45 +0000
->> "Jean-Luc Coulon (f5ibh)" <jean-luc.coulon@wanadoo.fr> wrote:
->> 
->>> Le 30.01.2005 11:55:44, messmate a �crit�:
->>>> On Sun, 30 Jan 2005 09:25:43 +0000
->>>> "Jean-Luc Coulon (f5ibh)" <jean-luc.coulon@wanadoo.fr> wrote:
->>>> 
->>>>> Le 30.01.2005 08:10:52, matthew zeier a �crit�:
->>>>>> 
->>>>>> Are there any tips on converting an existing ext3 / to LVM?
->>>> 
->>>> Be carefull; as I know converting an EXISTING ext3 to LVM loses all
->>>> data.
->>>> Jean-Luc, can  you confirm this ??
->>> 
->>> Tell us *how* you plan to convert it to lvm.
->>> 
->>> J-L
->>> 
->> Reading section 12.3 on the LVM HowTo; there is no good way migrating
->> an
->> existing filesystem ( with data) to lvm !
->> I'm in doubt if LVM is very usefull following what this howto
->> recommend.
->> EVMS more suitable?
->> mess-mate
->> Sorry, I mean 12.1
->
->I don't find it neither, do you have any reference?
->http://www.tldp.org/HOWTO/LVM-HOWTO/index.html
-This one :
-http://www.tldp.org/HOWTO/LVM-HOWTO/multpartitions.html
->
->I've done the migration some time ago from etx3 non LVM to xfs LVM.  
->Only the migration of the root filesystem is a bit tricky. But this is 
-> not really more diffult that moving a (non LVM) system to a new HDD.
->
->Jean-Luc
->
-
-mess-mate
+Here is how vgdisplay shows. Somebody please help. I am new to LINUX.
+BTW this is Suse Linux Enterprize edition 9.
+le576p2:~ # vgdisplay
+--- Volume group ---
+VG Name               volgroup18
+System ID
+Format                lvm2
+Metadata Areas        128
+Metadata Sequence No  1
+VG Access             read/write
+VG Status             resizable
+MAX LV                255
+Cur LV                0
+Open LV               0
+Max PV                255
+Cur PV                128
+Act PV                128
+VG Size               1.22 TB
+PE Size               64.00 MB
+Total PE              19923
+Alloc PE / Size       0 / 0
+Free  PE / Size       19923 / 1.22 TB
+VG UUID               zdkjo6-8jtQ-PHUU-bUfa-ysor-jAM4-QTOWqn
