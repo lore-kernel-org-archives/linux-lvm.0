@@ -1,7 +1,8 @@
-Message-ID: <20011119032207.97984.qmail@web12306.mail.yahoo.com>
-From: Lars Kellogg-Stedman <thelars@yahoo.com>
-MIME-Version: 1.0
-Subject: [linux-lvm] Recovering a volume after OS upgrade (lost /etc/lvm*)
+From: Bradley M Alexander <storm@tux.org>
+Message-ID: <20011119010011.A891@sonsofthunder.yi.org>
+Mime-Version: 1.0
+Content-Disposition: inline
+Subject: [linux-lvm] More research on lvm problems
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -12,62 +13,75 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Sun Nov 18 21:20:02 2001
+Date: Sun Nov 18 23:59:02 2001
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-I just upgraded a system to RedHat 7.2 (+ XFS from SGI) (lvm-1.0.1RC4),
-and I'm trying to mount a LVM-based logical volume created using LVM
-0.9mumble.  The volume group consisted of a single PV on opt of a
-software RAID5 device.
+Hi all,
 
-pvscan says:
+I still have not gotten lvm to work as advertised. I used the old /var
+partition since it would hang the machine because it could not mount the
+/var partition in the volgroup.
 
-  pvscan -- reading all physical volumes (this may take a while...)
-  pvscan -- WARNING: physical volume "/dev/sda" belongs to a meta
-device
-  pvscan -- inactive PV "/dev/md0"  is associated to an unknown VG (run
-vgscan)
-  pvscan -- total: 2 [8.48 GB] / in use: 2 [8.48 GB] / in no VG: 0 [0]
+The machine booted and I ran vgscan and vgchange -a y, and got the drive
+errors prior to it finding and activating the volume group. I logged in and
+tried to mount -a, and got the following:
 
-And pvdisplay says:
+[defiant /home/storm]# mount -a
+mount: special device /dev/vg01/lvm_tmp does not exist
+mount: special device /dev/vg01/lvm_home does not exist
+mount: special device /dev/vg01/lvm_usrlocal does not exist
+mount: special device /dev/vg01/lvm_opt does not exist
+mount: special device /dev/vg01/lvm_backup does not exist
+mount: special device /dev/vg01/lvm_archive does not exist
 
-  --- Physical volume ---
-  PV Name               /dev/md0
-  VG Name               vg0
-  PV Size               8.48 GB / NOT usable 2.75 MB [LVM: 129.00 KB]
-  PV#                   1
-  PV Status             NOT available
-  Allocatable           yes (but full)
-  Cur LV                1
-  PE Size (KByte)       4096
-  Total PE              2169
-  Free PE               0
-  Allocated PE          2169
-  PV UUID               HHv1Tm-79Hx-uk4m-caqb-QUA5-8WGF-0yUe4Q
+But looking in /dev:
 
-Which looks great.  But I can't for the life of me figure out how to
-turn this back into a valid volume group.  Vgscan doesn't pick up this
-device:
+[defiant /home/storm]# ls -l /dev/vg01
+total 0
+crw-r-----    1 root     root     109,   0 Dec 31  1969 group
+brw-r-----    1 root     root      58,   0 Dec 31  1969 lv_archive
+brw-r-----    1 root     root      58,   6 Dec 31  1969 lv_backup
+brw-r-----    1 root     root      58,   3 Dec 31  1969 lv_home
+brw-r-----    1 root     root      58,   5 Dec 31  1969 lv_opt
+brw-r-----    1 root     root      58,   2 Dec 31  1969 lv_tmp
+brw-r-----    1 root     root      58,   4 Dec 31  1969 lv_usrlocal
+brw-r-----    1 root     root      58,   1 Dec 31  1969 lv_var
 
-  vgscan -- reading all physical volumes (this may take a while...)
-  vgscan -- "/etc/lvmtab" and "/etc/lvmtab.d" successfully created
-  vgscan -- WARNING: This program does not do a VGDA backup of your
-volume group
+And finally, I can mount the filesystems individually:
 
-How do I recover this volume?
+[defiant /home/storm]# mount /dev/vg01/lv_usrlocal /usr/local
+[defiant /home/storm]# mount /dev/vg01/lv_opt /opt           
+[defiant /home/storm]# mount /dev/vg01/lv_tmp /tmp
+[defiant /home/storm]# df
+Filesystem           1k-blocks      Used Available Use% Mounted on
+/dev/hda3              1542188   1069696    472492  70% /
+/dev/hda1                 7746      3512      3834  48% /boot
+/dev/hda5              1517920    768924    718156  52% /var
+/dev/vg01/lv_archive  15728156  13261664   2466492  85% /archive
+/dev/vg01/lv_home      1048540    877700    170840  84% /home
+/dev/vg01/lv_usrlocal
+                       1572812    965736    607076  62% /usr/local
+/dev/vg01/lv_opt        511980    286836    225144  57% /opt
+/dev/vg01/lv_tmp        155636     32848    122788  22% /tmp
+
+Can anyone tell me why this is happening? The only time the drive errors
+happen is when I vgscan, and not when the drive is in normal use. But why
+must I manually mount the drives instead of using a mount -a (or better
+yet, why can't the mount -a in the bootup make it happen)? Is it possible
+that somewhere along the line, devfs is not properly registering the device
+entries?
 
 Thanks,
-
--- Lars
-
-
-=====
-lars@larsshack.org
-
-__________________________________________________
-Do You Yahoo!?
-Find the one for you at Yahoo! Personals
-http://personals.yahoo.com
+-- 
+--Brad
+============================================================================
+Bradley M. Alexander, CISSP              |   Co-Chairman,
+Beowulf System Admin/Security Specialist |    NoVALUG/DCLUG Security SIG
+Debian/GNU Linux Developer		 |   storm@debian.org
+                                         |   storm@tux.org
+============================================================================
+Try to look unimportant, they may be low on ammo.
+						--Murphy's Laws of Combat
