@@ -1,10 +1,11 @@
-From: "IT3 Stuart B. Tener, USNR-R" <stuart@bh90210.net>
-Subject: RE: [linux-lvm] Lock Patch
-Date: Fri, 14 Sep 2001 04:10:08 -0700
-Message-ID: <NBBBJHKIOKPKOGOEPEDPGEFEDNAA.stuart@bh90210.net>
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-In-Reply-To: <20010914095500.A813@tykepenguin.com>
+Date: Fri, 14 Sep 2001 13:37:49 +0200
+From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
+Message-ID: <20010914133749.A5191@sistina.com>
+References: <4C45858D148AD411A8B800A024B36E5009F4C994@granada.fhm.de>
+Mime-Version: 1.0
+In-Reply-To: <4C45858D148AD411A8B800A024B36E5009F4C994@granada.fhm.de>; from Julian.Pawlowski@szm.de on Fri, Sep 14, 2001 at 11:32:13AM +0200
+Content-Transfer-Encoding: quoted-printable
+Subject: [linux-lvm] Re: =?iso-8859-1?Q?=5Blinux-lvm=5D_Verst=E4ndnis_von_Stripes_bei_LVM?=
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,33 +17,59 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="iso-8859-1"
 To: linux-lvm@sistina.com
 
-TXIuIENhdWxmaWVsZDoNCg0KCVdlbGwgdGhhbmsgeW91IGZvciB0aGF0IG1vc3QgaGVscGZ1bCBz
-dWdnZXN0aW9uLCBidXQgc2lsbHkgbWUsIEkgY29uc2lkZXIgbXkgdGltZSBtb3JlIHZhbHVhYmxl
-LiBJIHNoYWxsIHdhaXQgZm9yIHNvbWVvbmUgdG8gcG9zdCBhIHByb3BlciBhbnN3ZXIsIHJhdGhl
-ciB0aGFuIG9uZSwgd2hpY2ggaXMgYm90aCBvYnZpb3VzIGFuZCBpbmVmZmljaWVudC4NCg0KDQpW
-ZXJ5IFJlc3BlY3RmdWxseSwgDQoNClN0dWFydCBCbGFrZSBUZW5lciwgSVQzLCBVU05SLVIsIE4z
-R1dHIA0KQmV2ZXJseSBIaWxscywgQ2FsaWZvcm5pYQ0KVlRVIDE5MDRHIChWb2x1bnRlZXIgVHJh
-aW5pbmcgVW5pdCkgDQpzdHVhcnRAYmg5MDIxMC5uZXQgDQp3ZXN0IGNvYXN0OiAoMzEwKS0zNTgt
-MDIwMiBQLk8uIEJveCAxNjA0MywgQmV2ZXJseSBIaWxscywgQ0EgOTAyMDktMjA0MyANCmVhc3Qg
-Y29hc3Q6ICgyMTUpLTMzOC02MDA1IFAuTy4gQm94IDQ1ODU5LCBQaGlsYWRlbHBoaWEsIFBBIDE5
-MTQ5LTU4NTkgDQoNClRlbGVjb3BpZXI6ICg0MTkpLTcxNS02MDczIGZheCB0byBlbWFpbCBnYXRl
-d2F5IHZpYSB3d3cuZWZheC5jb20gKGl0J3MgZnJlZSEpIA0KDQpKT0lOIFRIRSBVUyBOQVZZIFJF
-U0VSVkUsIFNFUlZFIFlPVVIgQ09VTlRSWSwgQU5EIEJFTkVGSVQgRlJPTSBJVCBBTEwuIA0KDQpG
-cmlkYXksIFNlcHRlbWJlciAxNCwgMjAwMSA0OjA1IEFNDQoNCi0tLS0tT3JpZ2luYWwgTWVzc2Fn
-ZS0tLS0tDQpGcm9tOiBsaW51eC1sdm0tYWRtaW5Ac2lzdGluYS5jb20gW21haWx0bzpsaW51eC1s
-dm0tYWRtaW5Ac2lzdGluYS5jb21dT24gQmVoYWxmIE9mIFBhdHJpY2sgQ2F1bGZpZWxkDQpTZW50
-OiBGcmlkYXksIFNlcHRlbWJlciAxNCwgMjAwMSAxOjU1IEFNDQpUbzogbGludXgtbHZtQHNpc3Rp
-bmEuY29tDQpTdWJqZWN0OiBSZTogW2xpbnV4LWx2bV0gTG9jayBQYXRjaA0KDQpPbiBUaHUsIFNl
-cCAxMywgMjAwMSBhdCAxMTowMDo0N1BNIC0wNzAwLCBJVDMgU3R1YXJ0IEIuIFRlbmVyLCBVU05S
-LVIgd3JvdGU6DQo+IExpc3QgbWVtYmVyczoNCj4NCj4gICAgICAgSSBhbSBjdXJpb3VzOyBpZiBJ
-IGFtIHJ1bm5pbmcgMi40LjgtMTJtZGsgKE1hbmRyYWtlIDgsMCksIHdoaWNoIGxvY2sgcGF0Y2gg
-ZG8gSSB1c2UgdGhlIDIuNC40IHZlcnNpb24gb3IgdGhlIDIuNC45IHZlcnNpb24/DQo+DQo+DQoN
-Ckkgd291bGQgdHJ5IHRoZSAyLjQuNCBvbmUuIElmIHRoYXQgZG9lc24ndCBhcHBseSB0aGVuIHRy
-eSB0aGUgMi40LjkuDQoNCnBhdHJpY2sNCg0KDQpfX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fXw0KbGludXgtbHZtIG1haWxpbmcgbGlzdA0KbGludXgtbHZtQHNp
-c3RpbmEuY29tDQpodHRwOi8vbGlzdHMuc2lzdGluYS5jb20vbWFpbG1hbi9saXN0aW5mby9saW51
-eC1sdm0NCnJlYWQgdGhlIExWTSBIT1ctVE8gYXQgaHR0cDovL3d3dy5zaXN0aW5hLmNvbS9sdm0v
-UGFnZXMvaG93dG8uaHRtbA0K
+Julian,
+
+because you asked me directly:
+are the other already fiven answers sufficient for you?
+
+
+On Fri, Sep 14, 2001 at 11:32:13AM +0200, Pawlowski Julian wrote:
+> Hallo Heinz!
+>=20
+> ich habe eine Frage zur Funktion von Stripes beim LVM. Wof=FCr genau
+> ben=F6tigt man diese Funktion? Wird damit das LV auf mehrere der reelle=
+n
+> Partitionen zwecks Performancegewinn verteilt?
+>=20
+> Hoffe auf eine Antwort... ;-)
+>=20
+>=20
+> Gru=DF
+>=20
+> Julian
+> --=20
+> SZM Studios GmbH IT-Service . ProSiebenSat.1 Media AG
+> Julian Pawlowski . mailto:Julian.Pawlowski@szm.de
+> Gutenbergstra=DFe 3 . 85774 Unterf=F6hring
+> http://www.szm.de/ . http://www.ProSiebenSat1.com/=20
+>=20
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@sistina.com
+> http://lists.sistina.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
+
+--=20
+
+Regards,
+Heinz    -- The LVM Guy --
+
+*** Software bugs are stupid.
+    Nevertheless it needs not so stupid people to solve them ***
+
+=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D=
+-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=
+=3D-=3D-
+
+Heinz Mauelshagen                                 Sistina Software Inc.
+Senior Consultant/Developer                       Am Sonnenhang 11
+                                                  56242 Marienrachdorf
+                                                  Germany
+Mauelshagen@Sistina.com                           +49 2626 141200
+                                                       FAX 924446
+=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D=
+-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=
+=3D-=3D-
