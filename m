@@ -1,11 +1,11 @@
 Return-Path: <thornber@btconnect.com>
-Date: Thu, 26 Jul 2001 13:39:38 +0100
-Subject: Re: [linux-lvm] Some ideas regarding snapshots (was: Reiserfs, 2.4.7, snapshots w/ 0.9)
-Message-ID: <20010726133938.A723@btconnect.com>
-References: <20010725103640.J5363@unirez.com> <01072511465701.00921@exodus> <20010726135514.B26425@tiger.bigcats.invalid>
+Date: Thu, 26 Jul 2001 13:43:10 +0100
+Subject: Re: [linux-lvm] Upgrade to 0.9.1b8 went ok but....
+Message-ID: <20010726134310.B723@btconnect.com>
+References: <85063BBE668FD411944400D0B744267A643517@AUSMAIL> <20010726081633.A11299@math.ohio-state.edu>
 Mime-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20010726135514.B26425@tiger.bigcats.invalid>; from weissel@netcologne.de on Thu, Jul 26, 2001 at 01:55:14PM +0200
+In-Reply-To: <20010726081633.A11299@math.ohio-state.edu>; from alden@math.ohio-state.edu on Thu, Jul 26, 2001 at 08:16:33AM -0400
 From: Joe Thornber <thornber@btconnect.com>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
@@ -22,18 +22,25 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Thu, Jul 26, 2001 at 01:55:14PM +0200, Wolfgang Weisselberg wrote:
-> Iain Campbell (iain@sandon.ca) wrote 64 lines:
-> > Quote from Teigland and Mauelshagens's Volume Manager whitepaper:
+On Thu, Jul 26, 2001 at 08:16:33AM -0400, Dave Alden wrote:
+> Hi,
 > 
-> > journalled file system. These operations (fsck or journal replay) require 
-> > writing to  the snapshot ligical volume, which is not allowed."
+>   Are you aware that the XFS folks modified LVM to work with XFS (something
+> about a new ioctl or such)?  They state that if you install the latest
+> patches, you'll back out the XFS-specific changes which can cause you to
+> lose your XFS filesystem.  For more info, see the thread with a subject
+> of "When LVM-0.9.1beta7 will be merged to XFS cvs tree?" from:
 > 
-> On a related subject: would it be possible to have a writable
-> snapshot (probably a 'reverse' snapshot)?
+> http://oss.sgi.com/projects/xfs/mail_archive/0107/threads.html#00127
+> 
+> My understanding is that this applies to any LVM patches (including the beta8
+> patches).
 
-Writeable snapshot's are easy to implement, I believe someone has
-already made a patch for the current LVM series (search the list).  I
-certainly intend putting it into the experimental LVM branch soon.
+No I wasn't aware of this, though Patrick may be since he uses XFS.
 
-- Joe
+from http://oss.sgi.com/projects/xfs/mail_archive/0107/msg00132.html:
+
+> All block devices in a XFS kernel need a special patch to add an ioctl
+> to set the logical block size. The original poster probably didn't add
+> that ioctl to his new hacked in LVM; which will cause all kinds of 
+> problems with xfs user tools and also probably file system corruption.
