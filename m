@@ -1,7 +1,10 @@
-Message-ID: <F888C30C3021D411B9DA00B0D0209BE8038F9518@cvo-exchange.cvo.roguewave.com>
-From: Poul Petersen <petersp@roguewave.com>
-Subject: RE: [linux-lvm] Questions about PE size and clustering
-MIME-Version: 1.0
+From: Luca Berra <bluca@comedia.it>
+Subject: Re: [linux-lvm] Cannot deactivate VG when shutting down
+Message-ID: <20020604184800.GD31785@colombina.comedia.it>
+References: <20020604180039.I8663@babbage.hcsd.de>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20020604180039.I8663@babbage.hcsd.de>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -12,38 +15,27 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Tue Jun  4 11:48:02 2002
+Date: Tue Jun  4 13:48:02 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: "'linux-lvm@sistina.com'" <linux-lvm@sistina.com>
+To: linux-lvm@sistina.com
 
-> From: Heinz J . Mauelshagen [mailto:mauelshagen@sistina.com]
-> Sent: Tuesday, June 04, 2002 6:12 AM
-> To: linux-lvm@sistina.com
-> Subject: Re: [linux-lvm] Questions about PE size and clustering
+On Tue, Jun 04, 2002 at 06:00:39PM +0200, Stephan Austermuehle wrote:
+> Hi,
 > 
-<snip> 
-> 
-> Correct.
-> 
-> In summer, you can go with Cluster LVM + GFS in order to avoid these
-> constraints. That'll give you shared volume groups active on all nodes
-> and GFS filesystems mounted on all as well.
-> 
+> I set up a Debian system that is completely installed on LVs including
+> the root filesystem. When shutting down the system deactivating the
+> Volume Group fails because the root filesystem is still mounted
+> (read-only). Is there already a solution available for this problem or
+> can the VG safely remain activated when shutting down?
 
-	Ah, it's already in the works :) I've managed to poke around and dig
-up some sketchy information about Cluster LVM and now I have the following
-questions:
+the VG can safely remain activated when shutting down
 
-	1) Any ideas on whether Cluster LVM be open/free, or will it follow
-GFS?
-	2) It looks like Cluster LVM is being based on the 1.x LVM model?
-Will this
-		actually be considered a separate product, or simply a
-release of 1.x with the
-		necessary global locking?
-
-Thanks,
-
--poul
+-- 
+Luca Berra -- bluca@comedia.it
+        Communication Media & Services S.r.l.
+ /"\
+ \ /     ASCII RIBBON CAMPAIGN
+  X        AGAINST HTML MAIL
+ / \
