@@ -1,10 +1,9 @@
-From: "Erick Calder" <e@arix.com>
-Subject: RE: [linux-lvm] read_intr errors
-Date: Wed, 17 Oct 2001 13:08:30 -0700
-Message-ID: <000801c15747$7d86df10$0300000a@pacbell.net>
-MIME-Version: 1.0
+Message-ID: <134783342.1003350775542.JavaMail.root@boots>
+Date: Wed, 17 Oct 2001 13:21:41 -0700
+From: "Karl" <rmvzj001@sneakemail.com>
+Subject: Re: [linux-lvm] read_intr errors
+Mime-Version: 1.0
 Content-Transfer-Encoding: 7bit
-In-reply-to: <20011017152957.E644@tykepenguin.com>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -19,43 +18,22 @@ List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
 
-Patrick,
+Have you tried mke2fs with the -c option in LVM and on the drive without
+LVM?  I'm seeing a lot of errors on a SCSI disk that has no hardware
+problems unless it is in LVM.
 
-> I'm afraid they look a lot like hardware errors to me. It might just be
-that it
-> doesn't like MULTI_MODE though. I'm not an IDE expert.
-
-I turned MULTI_MODE on at a suggestion aimed to fix these very problems...
-they certainly are hardware errors but as we know anecdotally from other
-postings, the hardware can be perfectly ok and the errors still persist.  as
-my drive is brand new and I had no such errors before installing a PV on it,
-it seems reasonable to think it's not the drive.
-
-is my data at risk of corruption?  I've slowly been checking the integrity
-of files but I'm concerned about backing up bad data!
-
------Original Message-----
-From:	linux-lvm-admin@sistina.com [mailto:linux-lvm-admin@sistina.com] On
-Behalf Of Patrick Caulfield
-Sent:	Wednesday, October 17, 2001 7:30 AM
-To:	linux-lvm@sistina.com
-Subject:	Re: [linux-lvm] read_intr errors
-
-On Wed, Oct 17, 2001 at 02:27:21AM -0700, Erick Calder wrote:
-> hi everyone, I've read a number of dialogues on the archives concerning
-the
+On Wed, Oct 17, 2001 at 02:27:21AM -0700, Erick Calder e@arix.com XXXXXXXXXXXXXXXXXXXX wrote:
+> hi everyone, I've read a number of dialogues on the archives concerning the
 > errors below which I'm getting but have not found any answers:
->
+> 
 > I'm running RedHat 7.0 (2.4.9 kernel + LVM 1.0.1rc1) on a little PIII box
-> and I'm using the ide controllers built into the motherboard (drivers
-built
+> and I'm using the ide controllers built into the motherboard (drivers built
 > into the kernel - not modules).  I have CONFIG_IDEDISK_MULTI_MODE set to y
-> in the .config for the kernel.  The drive is an IBM-DTLA-307030 (as
-reported
+> in the .config for the kernel.  The drive is an IBM-DTLA-307030 (as reported
 > by /proc/ide) and is brand new.
->
+> 
 > here are the errors:
->
+> 
 > Oct 17 02:00:34 beowulf kernel: hdc: read_intr: error=0x04 {
 > DriveStatusError }
 > Oct 17 02:00:34 beowulf kernel: hdc: read_intr: status=0x59 { DriveReady
@@ -63,21 +41,20 @@ reported
 > Oct 17 02:00:34 beowulf kernel: hdc: read_intr: error=0x04 {
 > DriveStatusError }
 > Oct 17 02:00:34 beowulf kernel: ide1: reset: success
->
-> I've been moving data in and out of the drive and everything seems ok but
-I
+> 
+> I've been moving data in and out of the drive and everything seems ok but I
 > get lots of the above errors which leaves me with a queasy feeling...
 > anyone know what the deal is with this?
+> 
+> 1k thx - e
+> 
+> 
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@sistina.com
+> http://lists.sistina.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
 
-I'm afraid they look a lot like hardware errors to me. It might just be that
-it
-doesn't like MULTI_MODE though. I'm not an IDE expert.
-
-patrick
-
-
-_______________________________________________
-linux-lvm mailing list
-linux-lvm@sistina.com
-http://lists.sistina.com/mailman/listinfo/linux-lvm
-read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
+-- 
+Karl Hakimian
+XXXXXXXXXXXXXXXX
