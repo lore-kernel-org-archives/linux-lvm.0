@@ -1,8 +1,11 @@
-Message-ID: <E504453C04C1D311988D00508B2C5C2DF2FBB8@mail11.gruppocredit.it>
-From: "Chemolli Francesco (USI)" <ChemolliF@GruppoCredit.it>
-Subject: RE: [linux-lvm] LVM and SPL
-Date: Fri, 31 Aug 2001 17:06:56 +0200
-MIME-Version: 1.0
+Date: Fri, 31 Aug 2001 17:28:18 +0200
+From: Jan Niehusmann <list039@gondor.com>
+Subject: Re: [linux-lvm] Why aren't the linux-sources up to date?
+Message-ID: <20010831172817.A2287@gondor.com>
+References: <OF41C775E9.837668B1-ONC1256AB9.002E0C80@gillette.com> <20010831134717.A585@btconnect.com>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20010831134717.A585@btconnect.com>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,26 +19,15 @@ List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: "'linux-lvm@sistina.com'" <linux-lvm@sistina.com>
-Cc: rlatham@plogic.com
+To: linux-lvm@sistina.com
 
-> I hate to say it - time to fork the code. We could also jump ship to
+On Fri, Aug 31, 2001 at 01:47:17PM +0100, Joe Thornber wrote:
+> Linus' kernels contain beta2 level code.  I can only assume that Alan
+> has pushed the patches forward to Linus and they have been rejected.
 
-Uhm, aren't you overreacting? Sure, the GFS thing is not pleasant (I know,
-I'm a GFS user) but it's a different project at all, with a VERY different
-"market".
+IIRC, Alan said on linux-kernel that he doesn't actively push stuff 
+to Linus if there are active maintainers who can do it themselfes.
+Of course things are different if you agreed that he will forward
+the patches to Linus.
 
-Wait for Sistina to actually _do_ somethingbefore coming
-to town with guns ablaze.
-
-> IBM's opensource EVMS. To be honest, I don't want to do either thing
-> because I really like LVM, I've had very good luck with it, and I use
-> it in production systems. However, changing licenses like this, while
-> not on LVM, is not a good sign to me (call it a bad feeling 
-> if you like).
-
-Well, they haven't taken anything from you yet. IF they turn LVM into
-proprietary stuff, THEN do fork :)
-
--- 
-	/kinkie 
+Jan
