@@ -1,11 +1,9 @@
-Return-Path: <root@srv.sistina.com>
-Date: Sat, 17 Feb 2001 19:04:56 +0000
-From: "Heinz J. Mauelshagen" <Mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] Newbie question: ERROR "pv_move_pe(): PE lock" pv_move_pe
-Message-ID: <20010217190456.D10095@srv.sistina.com>
-References: <20010217111625.B32060@colombina.comedia.it> <E14U4vX-0006ka-00@whittlesey.cl.cam.ac.uk> <20010217154855.B337@66bassett.freeserve.co.uk>
-Mime-Version: 1.0
-In-Reply-To: <20010217154855.B337@66bassett.freeserve.co.uk>; from joe@66bassett.freeserve.co.uk on Sat, Feb 17, 2001 at 03:48:56PM +0000
+Return-Path: <jweber@valinux.com>
+Date: Sat, 17 Feb 2001 22:24:38 -0800 (PST)
+From: Jay Weber <jweber@valinux.com>
+Message-ID: <Pine.LNX.4.30.0102172218260.8781-100000@beefcake.hdqt.valinux.com>
+MIME-Version: 1.0
+Subject: [linux-lvm] vgscan creation of device nodes for volume groups.
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,60 +15,77 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: TEXT/PLAIN; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Sat, Feb 17, 2001 at 03:48:56PM +0000, Joe Thornber wrote:
-> On Sat, Feb 17, 2001 at 10:49:19AM +0000, Piete Brooks wrote:
-> > >> # pvmove /dev/hda9 
-> > >> pvmove -- moving physical extents in inactive volume group "vg01"
-> > >> pvmove -- WARNING: moving of active logical volumes may cause data loss!
-> > >> pvmove -- do you want to continue? [y/n] y
-> > >> pvmove -- ERROR "pv_move_pe(): PE lock" pv_move_pe
-> > >> 
-> > >> pvmove -- ERROR "pv_move_pe(): PE lock" moving physical extents 
-> > > i believe the vg should be active....
-> > 
-> > Sigh -- it warns that data loss can occur if they are active, so I assumed 
-> > that they should be inactive.  If it has to be active, why does it quietly say 
-> > `extents in inactive volume' and not warn that they should be active ?
-> 
-> I think the warning is just telling you that if you loose power whilst
-> the move is in progress bad things could happen.  Heinz can you
-> clarify please.
+Hi,
 
-Yes, that warning exactly means that.
-There's an aproach to work around that already but it's not yet implemented :-(
+I've noticed the following and am wondering about the proper way to handle
+this.
 
-OTOH the ERROR displayed shouldn't happen.
-Is probably related to the MD assumption further down in this thread.
+I'll try to explain by example, since it's kinda awkward.
 
-As Andreas Dilger pointed out: we need to fix pv_read() and friends in order
-to stop dealing with MDs through error codes.
+I've created 3 volume groups.  vol0, vol1, vol2.  On these I have a
+logical volume for each, same names.  Each volume group lives on a
+seperate device (pv).  After creation, here's the layout for the /dev/
+entries.
+
+[root@localhost jweber]# ls -la /dev/vol0
+total 40
+dr-xr-xr-x    2 root     root         4096 Feb 17 22:21 .
+drwxr-xr-x   10 root     root        36864 Feb 17 22:18 ..
+crw-r-----    1 root     disk     109,   0 Feb 17 22:15 group
+brw-rw----    1 root     disk      58,   0 Feb 17 22:21 vol0
+[root@localhost jweber]# ls -la /dev/vol1
+total 40
+dr-xr-xr-x    2 root     root         4096 Feb 17 22:21 .
+drwxr-xr-x   10 root     root        36864 Feb 17 22:18 ..
+crw-r-----    1 root     disk     109,   1 Feb 17 22:16 group
+brw-rw----    1 root     disk      58,   1 Feb 17 22:21 vol1
+[root@localhost jweber]# ls -la /dev/vol2
+total 40
+dr-xr-xr-x    2 root     root         4096 Feb 17 22:21 .
+drwxr-xr-x   10 root     root        36864 Feb 17 22:18 ..
+crw-r-----    1 root     disk     109,   2 Feb 17 22:18 group
+brw-rw----    1 root     disk      58,   2 Feb 17 22:21 vol2
 
 
-> 
-> - Joe
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
+Next, I turn all the volumes off and essentially turn off lvm.  I remove
+one of the devices (loop devices in this case to test this out).  I'm
+removing /dev/loop1 which is the device for /dev/vol1.  I then rerun
+vgscan and activate my volumes.  Below are the new /dev entries for the
+volumes.
 
--- 
+[jweber@localhost jweber]$ ls -la /dev/vol0
+total 40
+dr-xr-xr-x    2 root     root         4096 Feb 17 22:38 .
+drwxr-xr-x   10 root     root        36864 Feb 17 22:38 ..
+crw-r-----    1 root     disk     109,   0 Feb 17 22:38 group
+brw-rw----    1 root     disk      58,   0 Feb 17 22:38 vol0
+[jweber@localhost jweber]$ ls -la /dev/vol1
+total 40
+dr-xr-xr-x    2 root     root         4096 Feb 17 22:21 .
+drwxr-xr-x   10 root     root        36864 Feb 17 22:38 ..
+crw-r-----    1 root     disk     109,   1 Feb 17 22:16 group
+brw-rw----    1 root     disk      58,   1 Feb 17 22:21 vol1
+[jweber@localhost jweber]$ ls -la /dev/vol2
+total 40
+dr-xr-xr-x    2 root     root         4096 Feb 17 22:38 .
+drwxr-xr-x   10 root     root        36864 Feb 17 22:38 ..
+crw-r-----    1 root     disk     109,   1 Feb 17 22:38 group
+brw-rw----    1 root     disk      58,   1 Feb 17 22:38 vol2
+[jweber@localhost jweber]$
 
-Regards,
-Heinz    -- The LVM Guy --
+Note the duplicate device nodes numbers for vol1 and vol2.  This makes
+sense in that the prior /dev entry for a volume is left around after
+volumes are disable (rather than cleaned up).  Now, the problem I'm having
+with this situation is that obviously any entries in /etc/fstab based on
+the device node entries may not be proper, I could end up with the wrong
+devices mounted on the wrong mount points. ;(
 
-*** Software bugs are stupid.
-    Nevertheless it needs not so stupid people to solve them ***
+I gather one possible way around this would be to use a filesystem label
+on the filesystem on above devices and mount via that.  But last I check,
+mount via fslabel didn't work with LVM devices.
 
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-
-Heinz Mauelshagen                                 Sistina Software Inc.
-Senior Consultant/Developer                       Am Sonnenhang 11
-                                                  56242 Marienrachdorf
-                                                  Germany
-Mauelshagen@Sistina.com                           +49 2626 141200
-                                                       FAX 924446
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+Any thoughts on this?  Much appreciated.
