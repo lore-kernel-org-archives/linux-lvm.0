@@ -1,38 +1,35 @@
-Date: Tue, 22 Feb 2000 12:11:57 -0600 (CST)
-From: "Dominic J. Eidson" <sauron@the-infinite.org>
-Subject: [linux-lvm] LVM Petition (Or, page-to-show-our-interest-for-LVM-in-the-Kernel
- :)
-In-Reply-To: <20000222002342.A7687@gruyere.muc.suse.de>
-Message-ID: <Pine.LNX.4.10.10002221207070.21065-100000@morannon.kdi.com>
-MIME-Version: 1.0
+Message-ID: <20000222212528.19158.qmail@www0l.netaddress.usa.net>
+Date: 22 Feb 00 16:25:28 EST
+From: Eric Gandt <egandt@netscape.net>
+Subject: [linux-lvm] Linux2.3.47 problems
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: Linux-LVM <linux-lvm@msede.com>
+Content-Type: text/plain; charset="us-ascii"
+To: linux-lvm@msede.com
 
-On Tue, 22 Feb 2000, Andi Kleen wrote:
+I can not get LVM to complie in 2.3.47, when I try I get:
 
-> LVM is in 2.3.47.
+lvm.c:313: `blkdev_close' undeclared here (not in a function)
+lvm.c:313: initializer element for `lvm_blk_fops.release' is not constant=
 
-This is I'm sure a great day for us all - I noticed this, went to add it
-to the "news" section on the petition page (I've been told "petition" was
-a poor word choice, but at the time I couldn't think of anything better -
-and the name (as taken from the subject) would sound a little funny... ;)
-- I also updated all the links to point to the correct posts (apologies
-for not noticing it before - the archives changed, and all links to the
-posts changed with it..) - anyways, I just thought I'd post my 2 cents
-worth of trivial information before I go back to lurking...
+lvm.c:318: `block_fsync' undeclared here (not in a function)
+lvm.c:318: initializer element for `lvm_blk_fops.fsync' is not constant
+lvm.c:318: initializer element for `lvm_blk_fops' is not constant
+lvm.c:318: initializer element for `lvm_blk_fops' is not constant
+/usr/src/linux/include/linux/blk.h:454: warning: `end_request' defined bu=
+t not
+used
 
+There does not look to be anything wrong with the code at first glance, h=
+as
+anyone else encountered this problem? if so is there away around it?
 
-Dominic
+ERIC
+egandt@netscape.net
 
-P.S> Finally got to play with LVM on a SuSE box here at work... Aah, feels
-good to be back in good old LVM-land again... :)
-
--- 
-Dominic J. Eidson
-                                         "Baruk Khazad! Khazad ai-menu!" - Gimli
---------------------------------------------------------------------------------
-http://www.the-infinite.org/               http://www.the-infinite.org/~dominic/
+____________________________________________________________________
+Get your own FREE, personal Netscape WebMail account today at http://webm=
+ail.netscape.com.
