@@ -1,10 +1,11 @@
-Return-Path: <unseen@sover.net>
-Date: Mon, 26 Feb 2001 15:38:45 -0500 (EST)
-From: Jason Walker <unseen@sover.net>
-Subject: Re: [linux-lvm] XFS & 2.4.2
-In-Reply-To: <005101c0a073$730d2b60$0f01a8c0@myplace.net>
-Message-ID: <Pine.LNX.4.10.10102261534200.27416-100000@surreal.localdomain>
-MIME-Version: 1.0
+Return-Path: <joe@66bassett.freeserve.co.uk>
+Date: Mon, 26 Feb 2001 20:39:33 +0000
+From: Joe Thornber <joe@66bassett.freeserve.co.uk>
+Subject: Re: [linux-lvm] LVM and *bad* performance (no striping)
+Message-ID: <20010226203933.B2504@66bassett.freeserve.co.uk>
+References: <m2snl1phy5.fsf@isnogud.escape.de>
+Mime-Version: 1.0
+In-Reply-To: <m2snl1phy5.fsf@isnogud.escape.de>; from urs@isnogud.escape.de on Mon, Feb 26, 2001 at 04:44:34PM +0100
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,34 +17,63 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-I have been running XFS and reiser on LVM for oh....4 days now :)
+On Mon, Feb 26, 2001 at 04:44:34PM +0100, Urs Thuermann wrote:
+> I tried to use LVM today using Linux 2.4.2 and it mostly works like I
+> expected.  But the performance is unacceptably bad:
 
-I am running the CVS kernel (2.4.2-XFS) from SGI, and LVM tools version
-0.9.  I have only had one problem, and that was copying large amounts of
-data to the LVM off my old hard drive.  My box would lock up after about
-1/2 through it. I couldn't determine the cause of this.  I moved several
-partition jsut fine to LVM, several GB each time, but that one fought me.
-In addition, I didn't know if it was LVM, 2.4.2, XFS or reiser (I have a
-reiser volume on LVM, I *thought* I heard there were issues with that.  not
-sure)  That is my expirience.  other than that, I have had no problems.  I
-hope your transition goes smoothly.
+Every now and then someone posts to the list claiming LVM performance
+is really bad.  We go off and try it and find the overhead is
+typically less than 1%.
 
-RegEx
+Normally people are trying to stripe to two partitions on the same
+device, but you aren't.
 
-On Mon, 26 Feb 2001, B. ten Berge wrote:
+Is any one else on the list seeing a similar performance hit ?
 
-> Hi,
+- Joe
+
 > 
-> Anybody knows if you need some patch to use LVM 0.9.1 beta 5a on kernel
-> 2.4.2 to run XFS from SGI ? I'm about to try but was curious...
+>     isnogud:/root# fdisk -l /dev/sda|grep sda5
+>     /dev/sda5            80       399   2570368+  8e  Linux LVM
+>     isnogud:/root# pvcreate /dev/sda5
+>     pvcreate -- physical volume "/dev/sda5" successfully created
+>     
+>     isnogud:/root# vgcreate vg0 /dev/sda5
+>     vgcreate -- INFO: using default physical extent size 4 MB
+>     vgcreate -- INFO: maximum logical volume size is 255.99 Gigabyte
+>     vgcreate -- doing automatic backup of volume group "vg0"
+>     vgcreate -- volume group "vg0" successfully created and activated
+>     
+>     isnogud:/root# lvcreate -n test /dev/vg0 -L 300M
+>     lvcreate -- doing automatic backup of "vg0"
+>     lvcreate -- logical volume "/dev/vg0/test" successfully created
+>     
+>     isnogud:/root# time dd if=/dev/sda5 of=/dev/null count=100000
+>     100000+0 records in
+>     100000+0 records out
+>     
+>     real    0m6.720s
+>     user    0m0.300s
+>     sys     0m0.970s
+>     isnogud:/root# time dd if=/dev/vg0/test of=/dev/null count=100000
+>     100000+0 records in
+>     100000+0 records out
+>     
+>     real    0m41.851s
+>     user    0m0.350s
+>     sys     0m2.250s
 > 
-> Thanks,
-> Bas
+> When making an ext2 filesystem on /dev/sda5 or /dev/vg0/test
+> respectivley, the performance of cp'ing, grep'ing all files and rm'ing
+> all files, seems to be comparable.  But why is the performance of
+> reading the block device with dd so bad?
 > 
+> 
+> urs
 > _______________________________________________
 > linux-lvm mailing list
 > linux-lvm@sistina.com
