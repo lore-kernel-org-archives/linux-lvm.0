@@ -1,11 +1,9 @@
-From: Nikita Danilov <Nikita@Namesys.COM>
+Message-ID: <400CD3A6.9070201@kapp-coburg.de>
+From: Roland Morgenroth <Roland.Morgenroth@kapp-coburg.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Message-ID: <16396.5482.158701.28221@laputa.namesys.com>
-In-Reply-To: <200401191729.i0JHTJo24262@mail.osdl.org>
-References: <16395.42887.514077.642497@laputa.namesys.com>
-	<200401191729.i0JHTJo24262@mail.osdl.org>
-Subject: [linux-lvm] Re: linux-2.6.0 + reiser4 oops
+Content-Type: multipart/mixed;
+ boundary="------------010105050809080008040201"
+Subject: [linux-lvm] LVM and HP SecurePath
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,48 +14,86 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Tue Jan 20 08:42:01 2004
+Date: Tue Jan 20 08:42:05 2004
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: markw@osdl.org
-Cc: reiserfs-list@Namesys.COM, linux-lvm@sistina.com
+To: linux-lvm@sistina.com
 
-markw@osdl.org writes:
- > On 19 Jan, Nikita Danilov wrote:
- > > markw@osdl.org writes:
- > >  > I was testing our DBT-2 workload on linux-2.6.0 with LVM2 and reiser4
- > >  > and got the following oops when I attempted to create a database with
- > >  > PostgreSQL.  Let me know if I can provide any additional information:
- > >  > 
- > >  > Unable to handle kernel NULL pointer dereference at virtual address 00000000
- > >  >  printing eip:                                                       
- > >  > c014c607      
- > >  > *pde = 00104001
- > >  > *pte = 00000000
- > >  > Oops: 0000 [#1]
- > > 
- > > This looks much like another bug report we had for
- > > reiser4-on-top-of-raid0. A fix (tentative) for that was to use
- > > bio_add_page() while constructing bios, and it will be included into
- > > next reiser4 snapshot (that, I hope, will be released
- > > to-day---2004.01.19).
- > 
- > Hi Nikita,
- > 
- > I ran the 2004.01.19 snapshot against 2.6.1 and now I get the following
- > error when I attempt to mount the reiser4 parition:
- > 
- > reiser4[mount(17176)]: _init_read_super (fs/reiser4/init_super.c:166)[nikita-2608]:
- > WARNING: Wrong master super block magic.
+This is a multi-part message in MIME format.
+--------------010105050809080008040201
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Transfer-Encoding: 7bit
 
-I am afraid, you have to re-create reiser4 file systems with new
-progs. It was decided that we should change super block magic to be more
-"descriptive".
+hi,
 
-By the way, it turned out, that 2004.01.19 snapshot contained a bug, so
-new snapshot will be released to-night.
+i cannot use LVM, after activating HP SecurePath (failover and load balancing driver).
+lvmdiskscan does not see the devices:
 
- > Thanks,
- > Mark
+kappco1:~ # lvmdiskscan
+lvmdiskscan -- reading all disks / partitions (this may take a while...)
+lvmdiskscan -- /dev/cciss/c0d0p1 [          1 GB] Primary   [0x82]
+lvmdiskscan -- /dev/cciss/c0d0p2 [      15.95 GB] Primary  LINUX native partition [0x83]
+lvmdiskscan -- 1 disk
+lvmdiskscan -- 0 whole disks
+lvmdiskscan -- 0 loop devices
+lvmdiskscan -- 0 multiple devices
+lvmdiskscan -- 0 network block devices
+lvmdiskscan -- 2 partitions
+lvmdiskscan -- 0 LVM physical volume partitions
 
-Nikita.
+but they exist:
+kappco1:~ # fdisk -l /dev/sda /dev/sdb
+
+Disk /dev/sda: 64 heads, 32 sectors, 262144 cylinders
+Units = cylinders of 2048 * 512 bytes
+
+    Device Boot    Start       End    Blocks   Id  System
+/dev/sda1             1    262144 268435440    5  Extended
+/dev/sda5             1    262144 268435424   8e  Linux LVM
+
+Disk /dev/sdb: 64 heads, 32 sectors, 262144 cylinders
+Units = cylinders of 2048 * 512 bytes
+
+    Device Boot    Start       End    Blocks   Id  System
+/dev/sdb1             1    262144 268435440    5  Extended
+/dev/sdb5             1    262144 268435424   8e  Linux LVM
+
+i can put a reiserFS on a single partition and use it:
+kappco1:~ # df -l
+Filesystem           1K-blocks      Used Available Use% Mounted on
+/dev/cciss/c0d0p2     16723404   2833480  13889924  17% /
+shmfs                  1034212         0   1034212   0% /dev/shm
+/dev/sda5            268427228   2841496 265585732   2% /data
+
+
+what is wrong?
+
+my config:
+HP Proliant DL380
+2 QLOGIC 2340 FC HBA
+HP EVA3000 2 TByte
+
+UnitedLinux 1.0 SP2a
+HP SecurePath 3.0b
+LVM 1.05 / 1.0.8
+
+--------------010105050809080008040201
+Content-Type: text/x-vcard; charset=utf8;
+ name="Roland.Morgenroth.vcf"
+Content-Transfer-Encoding: 7bit
+Content-Disposition: attachment;
+ filename="Roland.Morgenroth.vcf"
+
+begin:vcard
+fn:Morgenroth, Roland
+n:Morgenroth;Roland
+org:KAPP GmbH Werkzeugmaschinenfabrik;C-ITE
+adr;quoted-printable:;;Callenberger Stra=C3=9Fe 52;Coburg;Bayern;96450;Deutschland
+email;internet:Roland.Morgenroth@kapp-coburg.de
+tel;work:+49 9561 866371
+tel;fax:+49 9561 866271
+tel;cell:+49 172 8393602
+version:2.1
+end:vcard
+
+
+--------------010105050809080008040201--
