@@ -1,8 +1,13 @@
-From: me@vger.org
-In-Reply-To: <Pine.LNX.4.21.0205301649250.20123-100000@kenny.worldonline.se>
-Message-ID: <Pine.LNX.4.21.0205301706550.20123-100000@kenny.worldonline.se>
+From: Anders Widman <andewid@tnonline.net>
+Message-ID: <907284671.20020530171458@tnonline.net>
+Subject: Re[2]: [linux-lvm] LVM 2
+In-Reply-To: <20020530151804.GA1179@fib011235813.fsnet.co.uk>
+References: <15347980890.20020529141644@tnonline.net>
+ <20020529141823.GC4655@fib011235813.fsnet.co.uk>
+ <2169056421.20020529200758@tnonline.net>
+ <20020530151804.GA1179@fib011235813.fsnet.co.uk>
 MIME-Version: 1.0
-Subject: [linux-lvm] Re: Strange RAID2 behavier...
+Content-Transfer-Encoding: 7bit
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -13,87 +18,74 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Thu May 30 09:37:03 2002
+Date: Thu May 30 10:15:02 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: lvm-devel@sistina.com, linux-lvm@sistina.com
+Content-Type: text/plain; charset="us-ascii"
+To: linux-lvm@sistina.com, Joe Thornber <joe@fib011235813.fsnet.co.uk>
 
-Here is more info:
---------------
-# /etc/init.d/raid2 start
-Starting RAID devices: /dev/md0 /dev/md1 /dev/md2 /dev/md3
-done.
-# /etc/init.d/raid2 stop 
-Stopping RAID devices: /dev/md0 /dev/md1 /dev/md2 /dev/md3
-done.
-# /etc/init.d/raid2 start
-Starting RAID devices: /dev/md0 /dev/md1 /dev/md2 /dev/md3
-done.
-# modprobe lvm-mod
-# vgscan
-vgscan -- reading all physical volumes (this may take a while...)
-vgscan -- found inactive volume group "data"
-vgscan -- "/etc/lvmtab" and "/etc/lvmtab.d" successfully created
-vgscan -- WARNING: This program does not do a VGDA backup of your volume group
+> On Wed, May 29, 2002 at 08:07:58PM +0200, Anders Widman wrote:
+>> > On Wed, May 29, 2002 at 02:16:44PM +0200, Anders Widman wrote:
+>> What exactly shown in those diagrams? :)
 
-# vgchange -ay
-vgchange -- volume group "data" successfully activated
+> It's trying to answer the question 'how does io to a volume slow down
+> if I take a snapshot'.  The *overhead* is plotted on the vertical scale,
+> in terms of the time taken to do the operation with no snapshot.
 
-# mount /dev/data/lvol1 /mnt
-# df
-Filesystem           1k-blocks      Used Available Use%
-Mounted on
-/dev/data/lvol1      ********        20 ********   1% /mnt
-# umount /mnt
-# vgchange -an
-vgchange -- volume group "data" successfully deactivated
+> So if I use a chunk size of 16k we see that LVM2 has an overhead of
+> 0.23, ie. the 'dbench 2' operation on a freshly snapshotted origin
+> will take 1.23 times as long compared to the snapshot not being
+> present.  EVMS on the other hand takes 7.84 times as long.  
 
-# rmmod lvm-mod
-# /etc/init.d/raid2 stop
-Stopping RAID devices: /dev/md0 /dev/md1 /dev/md2: Device or resource busy
-/dev/md3: Device or resource busy
-done.
-# cat /proc/mdstat 
-Personalities : [linear] [raid0] [raid1] [raid5] [multipath] 
+> If you find the numbers confusing just look at the raw results in the
+> first table.  If you use 8k chunk sizes with EVMS expect 'dbench 2' to
+> take ~227 seconds compared to LVM2's ~15.
 
-read_ahead 1024 sectors
-md3 : active raid0 hdl1[1] hdh1[0]
-      ******** blocks 4k chunks
-      
-md2 : active linear hdk1[0]
-      ******** blocks 4k rounding
-      
-unused devices: <none>
-# /etc/init.d/raid2 stop
-Stopping RAID devices: /dev/md2: Device or resource busy
-/dev/md3: Device or resource busy
-done.
---------------
+>> > LVM2 by default uses the same metadata format as LVM1, so there really
+>> > isn't any conversion procedure.  So try LVM2 for a bit, if you don't
+>> > like it (unlikely) revert to LVM1.  Please note that metadata backups
+>> > and archives are held in a very different form.
+>> 
+>> So I can just install LVM2 and continue as usual, and switch back if I
+>> get  into  trouble?
 
-Going to switch to lvm-1.0.4 and try.
+> Yes.
 
-On Thu, 30 May 2002 me@vger.org wrote:
+>> And, what if I get into trouble? I can not backup
+>> all data. There is not enough space for that.
 
-> No worry linux-kernel, this seams to be a lvm problem.
-> 
-> Hi linux-lvm,
-> 
-> In short, I got 4 md devices (md0-4) that I make one device with using
-> lvm. When I'm going to shutdown this device it seams that lvm locks md2-3.
-> 
-> Booting linux without lvm there is no problem what so ever to start and
-> stop the raid mds.
-> 
-> Also as you read the futher down, the reason I could stop md3 was because
-> I hadnt used lvm yet that time and hadnt made any VGs or LVs or mounted
-> them. Also, the way i stop lvm is as described in the documents "umount,
-> vgchange -an".
-> 
-> Im using lvm-1.1rc-2, 2.4.19-pre9 and debian testing dist.
-> 
-> Im going to try running lvm as module and unloading the module after
-> stopping the lvm VGs and see if it still locks the mds.
-> 
-> If you need more info, please send a mail.
-> 
+> What happens if you get in trouble with LVM1 ?  If that data is
+> important you should really back it up, all drives fail eventually.
+
+True.  Backups would be great, but, I have almost 1TB of data, and
+there is difficult to find a costworthy sollution. Actually I have had
+very  bad  luck  with some of my drives. During a  crash,  probably  a
+electric  surge  or  something,  4  out  of  14  drives  got   severe
+read/write   errors.   I   could, however, rebuild data using reiserfs
+tools.
+
+If there were errors in the logical volume management, things might be
+more difficult to repair?
+
+>> >>    Also,  is  it  possible to convert (with and LVM version) a spanded
+>> >>    volume to a striped volume?
+>> 
+>> > Not until we get the new pvmove infrastructure.
+>> 
+>> So,   when newer pvmove tools develops it would be possible to convert
+>> a spanned volume to a sriped (RAID0 or 5?) volume without loosing data?
+
+> RAID5 is probably 6 months away, but I would hope to be able to remap
+> a linear volume to a striped volume in the next month or so.
+
+Ok.  I'll  wait  for  the RAID 5, as it would give me the redundancy I
+need.
+
+//Anders
+
+> - Joe
+
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@sistina.com
+> http://lists.sistina.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
