@@ -1,41 +1,32 @@
-Date: Sat, 21 Oct 2000 10:19:31 +0100 (IST)
-From: Paul Jakma <paulj@itg.ie>
+Date: Sat, 21 Oct 2000 11:21:47 +0200
+From: Jan Niehusmann <jan@gondor.com>
 Subject: Re: [linux-lvm] Is LVM dead ?
-In-Reply-To: <20001021054924.A636@gruyere.muc.suse.de>
-Message-ID: <Pine.LNX.4.21.0010211015170.21966-100000@rossi.itg.ie>
-MIME-Version: 1.0
+Message-ID: <20001021112147.A1131@gondor.com>
+References: <39F0B45C.6735D447@tls.msk.ru> <20001020220300.B22203@homer.sistina.com> <20001021054924.A636@gruyere.muc.suse.de>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20001021054924.A636@gruyere.muc.suse.de>; from ak@suse.de on Sat, Oct 21, 2000 at 05:49:24AM +0200
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: Andi Kleen <ak@suse.de>
 Cc: Heinz Mauelshagen <mauelshagen@sistina.com>, Michael Tokarev <mjt@tls.msk.ru>, linux-lvm@msede.com
 
-On Sat, 21 Oct 2000, Andi Kleen wrote:
+On Sat, Oct 21, 2000 at 05:49:24AM +0200, Andi Kleen wrote:
+> Perhaps it would be useful if you could do an interim 0.8 mainteance
+> release, with e.g. all the simple bugfixes Andreas Dilger has collected
+> (segfaults etc.) There are unfortunately a few annoying bugs in the stock 
+> 0.8 userland, which people rediscover and rereport all the time.
 
-> Perhaps it would be useful if you could do an interim 0.8
-> mainteance release, with e.g. all the simple bugfixes Andreas
-> Dilger has collected (segfaults etc.).
+Actually I think Andreas could do the interim releases (if he wants to).
+There is nothing wrong with having one maintainer for the development tree
+and one for the stable tree. Andreas already has a .rpm with all the known
+bugfixes, all we need now, is a tarball of that stuff.
 
-i second this. possibly Heinz as the main developer is currently very
-deep into the cool new stuff of his upcoming v0.9, and so working on
-0.8 isn't very attractive to him.
+And the 0.8 userlevel tools will be important: The 0.9 kernel changes are 
+probably fairly huge, so Linus may not include them in 2.4. That means we
+need stable 0.8 tools for 2.4.
 
-however, for users, 0.8 is what we have and it's become very difficult
-to keep track of all the different patches/fixes. (least it would be
-if it wasn't for andreas).
-
-> There are unfortunately a few annoying bugs in the stock 0.8
-> userland, which people rediscover and rereport all the time.
-> 
-
-also, there are people who'd love to try LVM out on bigger machines
-than home servers and laptops. but who need to convince a boss
-first. a clean install process makes that latter part a lot
-easier. 
-
-> -Andi
-> 
-
---paulj
+Jan
