@@ -1,9 +1,9 @@
-Return-Path: <michael_e_brown@dell.com>
-Date: Fri, 15 Dec 2000 17:29:26 -0600 (CST)
-From: Michael E Brown <michael_e_brown@dell.com>
-Subject: Re: [linux-lvm] RawIO patch for 2.2.18
-In-Reply-To: <20001215155529.H22904@jadzia.josv.com>
-Message-ID: <Pine.LNX.4.30.0012151728360.877-100000@blap.linuxdev.us.dell.com>
+Return-Path: <dice@mfa.kfki.hu>
+Date: Sat, 16 Dec 2000 08:19:26 +0100 (CET)
+From: Gergely Tamas <dice@mfa.kfki.hu>
+Subject: Re: [linux-lvm] Debian packaging
+In-Reply-To: <20001215231042.D25445@vestdata.no>
+Message-ID: <Pine.LNX.4.30.0012160817280.25428-100000@falka.mfa.kfki.hu>
 MIME-Version: 1.0
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
@@ -18,20 +18,12 @@ List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: TEXT/PLAIN; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: linux-lvm@sistina.com
+To: =?iso-8859-1?Q?Ragnar_Kj=F8rstad?= <lvm@ragnark.vestdata.no>
+Cc: linux-lvm@sistina.com, HIBINO Kei <ex8k-hbn@asahi-net.or.jp>
 
-http://boudicca.tux.org/hypermail/linux-kernel/latest/1051.html
+Hi!
 
-On Fri, 15
-Dec 2000, Jos Visser wrote:
+> If lvm was compiled into the kernel /proc/lvm will exist, right?
+Yes, e.g. this could be used to detect compiled-in lvm.
 
-> Hi,
->
-> I have been looking for the RawIO patch for Linux 2.2.18, but I have not
-> been able to find it (my current web connection sucks, so I can not
-> glide through the net with my usual agility and speed). Does anyone have
-> a current pointer for me? Would be much appreciated.
->
-> ++Jos
->
->
+Gergely
