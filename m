@@ -1,9 +1,9 @@
-Return-Path: <dice@mfa.kfki.hu>
-Date: Wed, 20 Dec 2000 10:29:23 +0100 (CET)
-From: Gergely Tamas <dice@mfa.kfki.hu>
-Message-ID: <Pine.LNX.4.30.0012201012130.4495-100000@falka.mfa.kfki.hu>
+Return-Path: <claudio@conectiva.com>
+Date: Wed, 20 Dec 2000 10:18:28 -0500 (EST)
+From: Claudio Matsuoka <claudio@conectiva.com>
+Subject: Re: [linux-lvm] Debian packaging
+Message-ID: <Pine.LNX.4.30.0012201018130.4847-100000@pokey.distro.conectiva>
 MIME-Version: 1.0
-Subject: [linux-lvm] '/etc/init.d/lvm' script in debian package
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -19,34 +19,25 @@ Content-Type: TEXT/PLAIN; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Hi!
+On Tue, 19 Dec 2000, Andreas Dilger wrote:
 
-Some notes to the /etc/init.d/lvm script in the debian packages ...
+> No, because you can have multiple kernels installed, and the LVM IOP may
+> change depending on the LVM version, even within a single kernel release
+> (i.e. 2.2 or 2.4).  It would be nice (but more complex) if the LVM user
+> tools could handle multiple IOP versions, but they don't.  Also, the
+> update-alternatives functionality is only available on Debian, so we
+> would still need another mechanism on RPM-based systems, and it may
+> as well be uniform across all systems.
 
-1] --- it would be better to add '-a ! -d /proc/lvm' as shown bellow,
-       becouse in in the newer versions '/proc/lvm' is a directory
-       (but what if compiled without /proc/lvm info...)
+Ok, experimental lvm-base, lvm-iop6 and lvm-iop10 RPM packages available
+at http://distro.conectiva.com.br/experimental/lvm. They certainly need
+improvements, but I'm able to transparently switch back and forth between
+IOP 6 and IOP 10.
 
-if [ ! -f /proc/lvm -a ! -d /proc/lvm ]; then
-   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ was: '[ ! -f /proc/lvm ]; then'
+To get the packages using APT, add the following lines to sources.list:
 
-	if [ ! -f /lib/modules/`uname -r`/block/lvm.o -a ! -f /lib/modules/`uname -r`/block/lvm-mod.o ]; then
-		exit 0
-	fi
-fi
----
+rpm http://distro.conectiva.com.br/experimental lvm/conectiva main
+rpm-src http://distro.conectiva.com.br/experimental lvm/conectiva main
 
-2] --- I still think that an init.d script should display a usage help as
-       default
 
-case "$1" in
-	start)
-        ^^^^^^ was: 'start|"")'
-
-		echo "Setting up LVM Volume Groups..."
-		#/sbin/vgscan
-		/sbin/vgchange -a y
-		;;
-
-Thanks,
-Gergely
+claudio
