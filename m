@@ -1,7 +1,8 @@
-Message-ID: <OFE8C7233D.E443DB74-ON86256BC8.005050DC@lsu.edu>
-From: "Michael K Lambert" <mlambe7@lsu.edu>
+Message-ID: <20020529154350.22094.qmail@web10104.mail.yahoo.com>
+From: Vahid Pazirandeh <vpaziran@yahoo.com>
+In-Reply-To: <0d3e01c206d0$7fc1b280$070414ac@Home.PIN.LU>
 MIME-Version: 1.0
-Subject: [linux-lvm] FYI - Red Hat 7.2 and LVM module
+Subject: [linux-lvm] striped lvm must have identical PV sizes?
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -12,30 +13,56 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed May 29 10:33:02 2002
+Date: Wed May 29 10:44:01 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 To: linux-lvm@sistina.com
 
-Hello, all.
+hi all,
 
-Although RH does not support LVM in 7.2, I've been making use of it by
-compiling my own kernel. The LVM patches will not patch clean on my RH 390
-systems, so we are stuck at version .9.1, but it does work. Just yesterday
-I built a new kernel and compiled LVM as a module for the first time. After
-building the kernel, I rebooted and was surpirsed to see that LVM did not
-initialize. After boot, I could run vgscan manually and lvm would become
-active, but not during boot up.
+based on my experience below i'm guessing that all PVs included in a VG mus=
+t be
+identical in size if i want to stripe all of the PVs and take all of the VG
+free space?  if so, is there a workaround so i can still write in parallel =
+with
+different PV sizes?  ala md-tools.
 
-After looking into rc.sysinit, I found that for vgscan to run, three
-conditions needed to be met.../sbin/vgscan had to exist, /etc/lvmtab must
-exist, and /proc/lvm must exist. Unfortunately, when lvm is modularized,
-the /proc entry is created whenever the module is loaded, not permanently.
-This causes the rc.sysinit test to fail and LVM is not initialized. Of
-course, it is simple to work around this. I changed rc.sysinit to test for
-/proc/lvm OR the existence of the lvm-mod, and that seemed to work fine.
-This is just an FYI so that others in similar circumstances can avoid any
-confusion.
+regards,
+vahid
 
-Michael Lambert
+
+--- Christian Limpach <chris@Pin.LU> wrote:
+> > my volume group has 48396 PEs free using three disks.  whenever i try to
+> setup
+> > a striped LV using 48396 PEs it fails with "please check, if physical
+> volumes
+> > are allocatable".
+>=20
+> yes, I guess you can't stripe over a single disk. ;-)  i.e of those 48396
+> PEs only 43977 are on 3 disks, the rest is on a single disk.  With 43977 =
+PEs
+> you get around 171G.
+>=20
+>     christian
+>=20
+>=20
+>=20
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@sistina.com
+> http://lists.sistina.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
+
+
+=3D=3D=3D=3D=3D
+< NPACI Education Center on Computational Science and Engineering >
+< http://edcenter.sdsu.edu >
+
+"Career is great, but you can=EF=BF=BDt run your hands through its hair."
+=3D=3D=3D=3D=3D
+
+__________________________________________________
+Do You Yahoo!?
+Yahoo! - Official partner of 2002 FIFA World Cup
+http://fifaworldcup.yahoo.com
