@@ -1,9 +1,10 @@
-content-class: urn:content-classes:message
+From: "Srikanth R K" <srikanth.rayas@wipro.com>
+Message-ID: <000201c2e9dd$893c4d70$be2454c0@m21w>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Subject: RE: [linux-lvm] Patching a kernel that already has VFS-lock
-Message-ID: <8075D5C3061B9441944E1373776451180F077E@cinshrexc03.shermfin.com>
-From: "Rechenberg, Andrew" <ARechenberg@shermanfinancialgroup.com>
+Content-Type: multipart/mixed;
+	boundary="----=_NextPartTM-000-c98f589a-52c0-11d7-ba7f-006067005148"
+In-Reply-To: <200303131010.PAA28647@WS0005.indiatimes.com>
+Subject: [linux-lvm] volume group for root disk
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,74 +15,64 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Fri Mar 14 05:57:02 2003
+Date: Fri Mar 14 08:12:01 2003
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
 
-Partick,
+This is a multi-part message in MIME format.
 
-That change did the trick.  My snapshots are now mounting.  Thanks for
-your help.
+------=_NextPartTM-000-c98f589a-52c0-11d7-ba7f-006067005148
+Content-Type: multipart/alternative;
+	boundary="----=_NextPart_000_0003_01C2EA0B.A2FAA3F0"
 
-Andy.
+------=_NextPart_000_0003_01C2EA0B.A2FAA3F0
+Content-Type: text/plain;
+	charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 
------Original Message-----
-From: Patrick Caulfield [mailto:caulfield@sistina.com]=20
-Sent: Thursday, March 13, 2003 3:10 AM
-To: linux-lvm@sistina.com
-Subject: Re: [linux-lvm] Patching a kernel that already has VFS-lock
+Hi,
+ 
+I am an user of LVM2. I would like to know whether root disk can be
+brought under the control of LVM. I mean to say, can we create root
+volume in LVM2?
+ 
+Thanks,
+Rayas
+ 
 
+------=_NextPart_000_0003_01C2EA0B.A2FAA3F0
+Content-Type: text/html;
+	charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Mar 12, 2003 at 05:18:35PM -0500, Rechenberg, Andrew wrote:
-> Good day,
->=20
-> I'm trying to upgrade my kernel from LVM 1.0.3 to 1.0.7.  My kernel
-with
-> 1.0.3 already has the VFS lock pactch installed and all I want to do
-is
-> upgrade the LVM code because my snapshots are misbehaving.  I should
-not
-> have to re-patch to get the VFS-lock to work should I?
->=20
-> The reason I ask is because when I just patch the kernel with LVM
-1.0.7
-> and reboot all my VG's/LV's come up clean, and I can create snapshots
-> but the snapshots do not mount.  I get the:
->=20
-> mount: wrong fs type, bad option, bad superblock on /dev/flux1/snap,
->        or too many mounted file systems
->=20
-> error which would indicate to me that the VFS lock is not working with
-> my ext3 filesystem.  Does anyone have any ideas on what could be
-causing
-> this problem? =20
->=20
-> Red Hat kernel source RPM 2.4.18-26
-> LVM 1.0.7 from the Sistina FTP site
->=20
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML><HEAD>
+<META HTTP-EQUIV=3D"Content-Type" CONTENT=3D"text/html; =
+charset=3Dus-ascii">
+<TITLE>Message</TITLE>
 
+<META content=3D"MSHTML 5.50.4807.2300" name=3DGENERATOR></HEAD>
+<BODY>
+<DIV><SPAN class=3D621204803-14032003><FONT face=3DArial=20
+size=3D2>Hi,</FONT></SPAN></DIV>
+<DIV><SPAN class=3D621204803-14032003><FONT face=3DArial=20
+size=3D2></FONT></SPAN>&nbsp;</DIV>
+<DIV><SPAN class=3D621204803-14032003><FONT face=3DArial size=3D2>I am =
+an user of=20
+LVM2. I would like to know whether root disk can be brought under the =
+control of=20
+LVM. I mean to say, can we create root volume in =
+LVM2?</FONT></SPAN></DIV>
+<DIV><SPAN class=3D621204803-14032003><FONT face=3DArial=20
+size=3D2></FONT></SPAN>&nbsp;</DIV>
+<DIV><SPAN class=3D621204803-14032003><FONT face=3DArial=20
+size=3D2>Thanks,</FONT></SPAN></DIV>
+<DIV><SPAN class=3D621204803-14032003><FONT face=3DArial=20
+size=3D2>Rayas</FONT></SPAN></DIV>
+<DIV><SPAN class=3D621204803-14032003><FONT face=3DArial=20
+size=3D2></FONT></SPAN>&nbsp;</DIV></BODY></HTML>
 
-If you've managed to successfully patch LVM into the kernel (and it
-sounds like
-you have), all that should be needed to enable VFS-Lock functionality is
-to
-uncomment the line in lvm.c that reads:
-
-/* #define LVM_VFS_ENHANCEMENT */
-
-
-to be
-
-#define LVM_VFS_ENHANCEMENT
-
-and rebuild.
-
-patrick
+------=_NextPart_000_0003_01C2EA0B.A2FAA3F0--
 
 
-_______________________________________________
-linux-lvm mailing list
-linux-lvm@sistina.com
-http://lists.sistina.com/mailman/listinfo/linux-lvm
-read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+------=_NextPartTM-000-c98f589a-52c0-11d7-ba7f-006067005148--
