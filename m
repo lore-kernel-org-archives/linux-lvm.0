@@ -1,13 +1,9 @@
-From: Luca Berra <bluca@comedia.it>
-Subject: Re: [linux-lvm] Implementation questions
-Message-Id: <20011221091546.E31106@colombina.comedia.it>
-References: <200112181346.fBIDkX513319@lewis.abi.tconline.net>
-    <Pine.LNX.4.33.0112180802190.1822-100000@lx1.daboard.com>
-    <20011218093315.A10276@kluge.net>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20011218093315.A10276@kluge.net>; from felicity@kluge.net on
-    Tue, Dec 18, 2001 at 09:33:15AM -0500
+Subject: Re: [linux-lvm] 2.4.17rc2
+References: <20011221022542.GH15643@auctionwatch.com>
+From: Urs Thuermann <urs@isnogud.escape.de>
+In-Reply-To: <20011221022542.GH15643@auctionwatch.com>; from Petro on Thu,
+    20 Dec 2001 18:25:42 -0800
+Message-Id: <m2k7vfacfj.fsf@isnogud.escape.de>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -18,35 +14,36 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Fri Dec 21 02:13:02 2001
+Date: Sat Dec 22 02:28:01 2001
 List-Id: <linux-lvm.redhat.com>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Tue, Dec 18, 2001 at 09:33:15AM -0500, Theo Van Dinter wrote:
-> On Tue, Dec 18, 2001 at 08:03:58AM -0600, mitch@mdmiller.com wrote:
-> > Doesn't Ghost support Linux / LILO configurations?  That would allow you
-> > to configure up one PC, and duplicate it to 129 others, and it's VERY
-> > quick.  You do, however, still have to make any individualized changes to
-> > each one after the duplication.
-> 
-> I've tried using Ghost2k (newer versions may be better) to just backup/copy
-> my Linux partitions (straight ext2 at the time), and it sucked horribly.  The
-why don't you give Partition Image a try
-http://www.partimage.org/
+Petro <petro@auctionwatch.com> writes:
 
-it supports
-reiserfs, ext2/ext3, fat16/fat32
-ntfs (experimental but i successfully cloned a win2k box)
-jfs, xfs, hpfs (os2), hfs (mac), ufs (bsd/sun experimental)
+> Did a bunch of stuff get updated in the 2.4.17rc2 kernel? I ask because
+> I just applied that patch to 2.4.16, and at one point patch stated it
+> looked like a patch had already been applied. 
 
-L.
+Yes, you probably mean the patch from patch-2.4.17
 
--- 
-Luca Berra -- bluca@comedia.it
-        Communication Media & Services S.r.l.
- /"\
- \ /     ASCII RIBBON CAMPAIGN
-  X        AGAINST HTML MAIL
- / \
+    --- linux-2.4.16/drivers/md/lvm-snap.c  Mon Nov 12 17:34:20 2001
+    +++ linux/drivers/md/lvm-snap.c Fri Dec 21 16:40:32 2001
+    @@ -542,8 +542,6 @@
+     
+     void lvm_snapshot_release(lv_t * lv)
+     {
+    -       int     nbhs = KIO_MAX_SECTORS;
+    -
+    	    if (lv->lv_block_exception)
+    	    {
+    		    vfree(lv->lv_block_exception);
+
+which seems already to be in LVM-1.0.1.  This patch in uncritical
+anyway since it does nothing, except cosmetic cleanup (removal of
+unused variable).
+
+
+urs
