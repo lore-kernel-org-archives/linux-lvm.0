@@ -1,10 +1,9 @@
-Return-Path: <mauelshagen@sistina.com>
-Date: Wed, 27 Jun 2001 05:17:55 -0500
-From: Heinz Mauelshagen <mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] lvm on alpha 
-Message-ID: <20010627051755.A26216@sistina.com>
+Return-Path: <rshukla@prl.ernet.in>
+Date: Wed, 27 Jun 2001 16:13:04 +0530 (IST)
+From: RAGHVENDRA SHUKLA <rshukla@prl.ernet.in>
+Message-Id: <Pine.A32.4.21.0106271605580.39195-100000@prlfs.prl.ernet.in>
 Mime-Version: 1.0
-Content-Disposition: inline
+Subject: [linux-lvm] Installed the lvm on the Red Hat 7.1 then what to do now
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,46 +15,25 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: TEXT/PLAIN; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Sean,
+Hello ,
+        I have installed the lvm in the Red hat 7.1 ( kernel 2.4 , with
+        kernel enabled as lvm ( in kernel ) , installed the lvm , also
+        created one physical volume , But i am confused as my df gives 
+      
+    Filesystem 1k-blocks Used Available Use% Mounted on 
+        /dev/hda5 4870252 3272660 1350196 71% / 
+        /dev/hda2 23333 2468 19661 11% /boot
+	/dev/hda6 2624792   2124756    366700  85% /var 
 
-could you provide your "fdisk -l" output on the disk(s) in question
-and the pvcreate output as well?
 
-Thanks,
-Heinz      -- The LVM guy --
+is i will be able to change the size of / or /var or /boot partition,
+are they hardcore partition . What i want is  i want to make
+/home , /var , /boot ,/ all resizeable , please clearify. I am confused
 
-On Tue, Jun 26, 2001 at 03:50:31PM -0700, Sean McConnell wrote:
-> 
-> I may just be blind, but do people have the lvm working
-> on alphas.  I compiled and tryied both 2.4.4 and 2.4.5
-> on Rh7 on my alpha, but no matter what pvcreate won't
-> see the partition type of any partition, just says
-> they're 0x1...
-> a simple NO will do unless there's a solution.
-> thanks
-> 
-> sean mcconnell
-> 
-> 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
- 
-*** Software bugs are stupid.
-    Nevertheless it needs not so stupid people to solve them ***
 
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-
-Heinz Mauelshagen                                 Sistina Software Inc.
-Senior Consultant/Developer                       Am Sonnenhang 11
-                                                  56242 Marienrachdorf
-                                                  Germany
-Mauelshagen@Sistina.com                           +49 2626 141200
-                                                       FAX 924446
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+Regards
+Raghav
