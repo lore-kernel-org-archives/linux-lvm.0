@@ -1,43 +1,21 @@
-Date: Wed, 13 Oct 1999 17:44:11 +0100 (BST)
-From: James Pattinson <jamesp@aethos.co.uk>
-Subject: Re: [linux-lvm] kernel 2.2.10 patching
-In-Reply-To: <H00004e90305d0a1@MHS>
-Message-ID: <Pine.LNX.4.10.9910131743360.6508-100000@fuse.aethos.co.uk>
+Date: Wed, 13 Oct 1999 13:37:53 -0400
+Message-Id: <H00004e903060ec3@MHS>
+In-Reply-To: <31A612FE6020D2119F6400A0C9B67EBB116E2B@fthw901e.as.fth.sbs.de>
+Subject: RE: [linux-lvm] kernel 2.2.10 patching
 MIME-Version: 1.0
+From: "Al Smith" <Al.Smith@mail.tju.edu>
+Content-Disposition: inline; filename="RE:"
+Content-Transfer-Encoding: 7bit
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: Al Smith <Al.Smith@mail.tju.edu>
-Cc: linux-lvm@msede.com
+Content-Type: text/plain; charset="us-ascii"
+To: james@aethos.co.uk, Klaus.Franken@fth2.siemens.de, linux-lvm@msede.com
 
-You need to do 
+That worked. 
 
-patch -p1 < /download/patch-2.2.10-LVM
+Thanks very much...
 
-because patch expects stuff from stdin.
+Time to compile a new kernel...
 
-James
-
-On Wed, 13 Oct 1999, Al Smith wrote:
-
-> Greetings,
-> 
->   I am trying to patch a already installed 2.2.10 kernel with the patch
-> from msede. I downloaded the file (which doesn't put it into gz
-> formating).
-> 
->   Then I cd /usr/src/linux
-> 
-> then I do:
-> 
-> patch -p1 /download/patch-2.2.10-LVM
-> 
-> and it just sits there. Is there a problem with the patch?
-> 
-> Al Smith
-> Systems Engineer
-> TJUH
-> al.smith@mail.tju.edu
-> 
+-Al
