@@ -1,11 +1,9 @@
-Return-Path: <joe@66bassett.freeserve.co.uk>
-Date: Mon, 19 Mar 2001 09:15:14 +0000
-From: Joe Thornber <joe@66bassett.freeserve.co.uk>
-Subject: Re: [linux-lvm] Apparent performance degradation for each PV with striping
-Message-ID: <20010319091514.A667@66bassett.freeserve.co.uk>
-References: <3AB59501.FF6ED9F3@dataventures.com> <15029.41256.426234.309500@nv.192.168.71.6> <3AB5AFC0.5C4A58C9@dataventures.com>
-Mime-Version: 1.0
-In-Reply-To: <3AB5AFC0.5C4A58C9@dataventures.com>; from dlt@dataventures.com on Mon, Mar 19, 2001 at 12:05:36AM -0700
+Return-Path: <JSO@europay.com>
+Message-ID: <A4A5E4C468B5D11190220001FA6835DD04DD889A@EPIXCH003>
+From: =?iso-8859-1?Q?SOETE_Jo=EBl?= <JSO@EUROPAY.COM>
+Date: Mon, 19 Mar 2001 12:03:25 +0100
+MIME-Version: 1.0
+Subject: [linux-lvm] lvm-0.9.1beta6 & kernel-2.4.2?
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -19,17 +17,27 @@ List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: linux-lvm@sistina.com
+To: "'linux-lvm@sistina.com'" <linux-lvm@sistina.com>
 
-On Mon, Mar 19, 2001 at 12:05:36AM -0700, Donald Thompson wrote:
-> I actually was thinking seriously about getting a 3ware card when I
-> started this machine, but I wussed out and just went with the two onboard
-> IDE interfaces. Its definately a cheaper option than replacing or adding
-> SCSI drives to the system.
+Hello all,
 
-I did some striping tests at the weekend with a pair of IDE disks, I
-managed to get 56 M/s read and 28M/s write (according to bonnie++).
-These numbers are twice the performance of the slowest of the two IDE
-drives, which is good.
+Continuing my investigation to build an all lvm boot disk, I implement
+lvm-0.9.1beta6 on kernel-2.4.2.
 
-- Joe
+Then I run lvmcreate_initrd but script hang on mount -o loop ... ?
+
+As I do not use frequently loopback devices, I came back to 2.4.1 to test
+with 0.9.1.beta5 first then with 0.9.1beta6. It works all fine .
+
+Is something was broken in loopback device into 2.4.2 or do I have to use a
+more recent release of 'mount' (dpkg shows me 2.10o)?
+
+Thanks in advance for help?
+	Joel
+
+
+
+**********************************************************************
+This e-mail and any attachments to it may contain confidential information which is strictly intended for the use of the authorised recipient.  If you have received this e-mail in error, please delete it and notify the sender by replying to this e-mail.
+Thank you for your co-operation.
+**********************************************************************
