@@ -1,10 +1,11 @@
-Message-Id: <1889.200.184.103.3.1018973242.squirrel@www.dokbua.com>
+From: Markus Dobel <mdobel@kawo2.rwth-aachen.de>
 Subject: Re: [linux-lvm] kernel: invalidate: busy buffer
-From: "Rene @ Webscorpion.com" <rene.madsen@webscorpion.com>
-In-Reply-To: <20020417014553.J27907@progsoc.uts.edu.au>
-References: <20020417014553.J27907@progsoc.uts.edu.au>
+Message-Id: <20020416163659.GA19531@balu.kawo2.rwth-aachen.de>
+References: <2D0AFEFEE711D611923E009027D39F2B02F124@cdserv.meridian-data.com>
+    <4186.200.184.103.3.1018972960.squirrel@www.dokbua.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Disposition: inline
+In-Reply-To: <4186.200.184.103.3.1018972960.squirrel@www.dokbua.com>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,39 +16,28 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Tue Apr 16 11:06:02 2002
+Date: Tue Apr 16 11:36:01 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-later kernel versions in 2.4.x output that message when
-> invalidate_buffers() is called too many times. I would get a few of
-> them on startup (2.4.16).
+On Tue, Apr 16, 2002 at 01:02:40PM -0300, Rene @ Webscorpion.com wrote:
+> 
+> LVM tools are 1.0.3 - but as I said, I was unable to run the patch against
+> my kernel source -- and I need and -AC kernel to keep aquote happy.
 
-I run LVM on a non-AC 2.4.17 Kernel without problems so somehow it must be
-related to the -ac hacks.
+At least there's a non-AC-Patch for quota 2 (i guess that's what you
+mean with "aquote"). I'm using it here on a Redhat System with a custom
+kernel. 
 
+ftp://ftp.suse.com/pub/people/mason/patches/reiserfs/
 
->> How can I patch a standard kernel for both -ac and LVM ? As I
->> understand it they both require a "clean" kernel to apply good?
->
-> Grab the clean kernel; apply LVM patches; apply redhat patches. Stephen
-> Tweddie was on here pointing out a patch that Redhat have done to the
-> kernel does buffer locking if you do pvmove -- so not all of the Redhat
-> patches may apply cleanly.
+There are patches for adding Quota to ReiserFS which also need Quota 2
+to work, so the V2 Quota patch is included.
 
-Just to make sure I understand correctly: Is "RH patches" and "AC patches"
-the same thing?
+Regards, Markus
 
-How can I apply RH patches if some of them fail?  Dont they somehow depend
-on each other?
-
->> Sorry for the perhaps stupid quiestions, but I am not a kernel guru -
->> I only know just enough to get myself into trouble :-)  I *did* read
->> the FAQ and I *did* search google (usenet) - didnt' find the answers
->> tho...
->
-> I searched google for 'busy buffer linux' and the first hit is on the
-> linux-lvm list from 2001
-
-Yes I saw that, but it wasn't the answer.
+-- 
+Kostenloses MySQL Datenbank-Hosting:
+http://www.google.com/search?q=welcome+to+phpmyadmin
