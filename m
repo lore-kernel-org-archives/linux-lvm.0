@@ -1,9 +1,10 @@
-Return-Path: <iafilius@xs4all.nl>
-Date: Tue, 26 Dec 2000 12:28:54 +0100 (CET)
-From: Arjan Filius <iafilius@xs4all.nl>
-Message-ID: <Pine.LNX.4.30.0012261217100.1895-100000@sjoerd.sjoerdnet>
-MIME-Version: 1.0
-Subject: [linux-lvm] 2.4.0-13-4: raid on lvm: VFS: Unsupported blocksize on dev md(9,3)
+Return-Path: <jss@kevorkian.evcom.net>
+From: Jesse Sipprell <jss@evcom.net>
+Date: Wed, 27 Dec 2000 16:59:05 -0500
+Message-ID: <20001227165905.A24456@kevorkian.evcom.net>
+Mime-Version: 1.0
+Content-Disposition: inline
+Subject: [linux-lvm] 0.8 to 0.9 problems, odd vg corruption
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,47 +16,44 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: linux-lvm@sistina.com, linux-kernel@vger.kernel.org
+To: linux-lvm@sistina.com
 
-Hello,
+I've been in the process of upgrading four LVM 0.8final boxes to 0.9.  The
+first three went off without a hitch: compile kernel with 0.9 patches, install
+user tools and reboot.
 
-I get messages like (2.4.0-13-4):
-Dec 26 11:59:35 sjoerd kernel: VFS: Unsupported blocksize on dev md(9,3).
-when trying to mount these /dev/md? .
+The fourth one didn't go as smoothly:
 
-It worked fine with the 2.4.0-12, and the ext2 on lvm seems to work
-properly (after the LVM 0.9 utils update)
+After installing the new kernel, user-land tools and rebooting, vgscan is no
+longer able to see the volume group (only one used on the box).
 
-a 'cat /dev/md1 > /images/md1' and
-'mount -oloop /images/md1 /mnt' works fine with test-13-4.
+Rebooted back into 0.8, vgscan still doesn't work but I AM able to
+vgcfgrestore the previous volume group config onto the physical volumes.
 
-Just in case it matters:
-# mount --version
-mount: mount-2.10m
+Reboot into 0.9.  vgscan sees the volume group and vgdisplay seems fine, but
+when I try to run vgcfgbackup, it reports 'ERROR: volume group "vg04" has an
+invalid number of physical volumes'  There are four physical volumes in the
+group and vgdisplay -D vg04 looks perfectly normal.  I am also able to mount
+the lvs and all filesystems appear good.  Next, I vgchange bounce the vg down
+and then up and suddenly I am back to square one; vgscan no longer sees vg04
+and my only recourse is to reboot to a 0.8 kernel and vgcfgrestore an old
+backup.
 
-# cat /proc/mdstat
-Personalities : [linear] [raid0] [raid1] [raid5]
-read_ahead 1024 sectors
-md3 : active linear lvmz[1] lvmy[0]
-      155520 blocks 32k rounding
+Now I am stuck. ;)  I can vgcfgrestore from 0.8 and see it ONCE under 0.9, but
+as soon as I vgchange -a it up and then down, the same "corruption" seems to
+occur.  At no point can I seem to vgcfgbackup under 0.9, although 0.8 works
+normally.
 
-md2 : active raid1 lvmx[1] lvmw[0]
-      102336 blocks [2/2] [UU]
+Anyone have any suggestions?
 
-md1 : active raid5 lks level 5, 32k chunk, algorithm 0 [4/4] [UUUU]
+Best Regards,
 
-md0 : active raid0 lvmv[3] lvmu[2] lvmt[1] lvms[0]
-      409344 blocks 4k chunks
+-- 
+Jesse Sipprell
+Technical Operations Director
+Evolution Communications, Inc.
+800.496.4736
 
-unused devices: <none>
-
-
-Greatings,
-
-
---
-Arjan
-Filius
-mailto:iafilius@xs4all.nl
+* Finger jss@evcom.net for my PGP Public Key *
