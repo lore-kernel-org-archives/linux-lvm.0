@@ -1,13 +1,16 @@
-Date: Thu, 9 Dec 2004 12:55:08 +0100
+Received: from o.ww.redhat.com (vpnuser1.stuttgart.redhat.com [172.16.4.1])
+	by pobox.stuttgart.redhat.com (8.12.8/8.12.8) with ESMTP id
+	iB9C0K3u006002
+	for <linux-lvm@redhat.com>; Thu, 9 Dec 2004 13:00:21 +0100
+Date: Thu, 9 Dec 2004 13:00:20 +0100
 From: Heinz Mauelshagen <mauelshagen@redhat.com>
-Subject: Re: [linux-lvm] Can't access LVM volume group after changing a
-	non-LVM partition
-Message-ID: <20041209115508.GA30928@redhat.com>
-References: <b9a453c204120705542e927fac@mail.gmail.com>
+Subject: Re: [linux-lvm] Steps for adding DASD to existing LVM group using
+	SLES9
+Message-ID: <20041209120020.GB30928@redhat.com>
+References: <0F0A80F76F5AC046B9D428F09598451BB03DBA@mypxmail05.bco-home.com>
 Mime-Version: 1.0
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <b9a453c204120705542e927fac@mail.gmail.com>
+In-Reply-To: <0F0A80F76F5AC046B9D428F09598451BB03DBA@mypxmail05.bco-home.com>
 Reply-To: mauelshagen@redhat.com,
 	LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
@@ -19,67 +22,46 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="utf-8"
-To: =?iso-8859-1?Q?=D2scar_=C1lvarez?= Vilaplana <grimborg@gmail.com>, LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-On Tue, Dec 07, 2004 at 02:54:39PM +0100, �scar �lvarez Vilaplana wrote:
-> Hi,
+On Mon, Dec 06, 2004 at 03:48:07PM -0800, dclark@bco.com wrote:
+> Running SLES9 for S/390 (31-bit) in an LPAR > (no VM) using a shared IFL
 > 
-> When I try to access my lvm group (for example, running vgdisplay) I
-> get the following error:
->   Couldn't find device with uuid '5VBBLW-70Dj-fwjf-Xvzc-7VZr-icQa-l9XQ2N'.
->   Couldn't find all physical volumes for volume group data.
->   Couldn't find device with uuid '5VBBLW-70Dj-fwjf-Xvzc-7VZr-icQa-l9XQ2N'.
->   Couldn't find all physical volumes for volume group data.
->   Volume group "data" doesn't exist
-> 
-> It happened just right after I deleted a /dev/hda6 (a *non-lvm*
-> partition) and created two partitions in the space that the deleted
-> partition was occupying (/dev/hda6 and /dev/hda8) (my idea was to
-> shrink /dev/hda6, and that did work).
-> 
-> Here's what the partition table looked before and after the change:
-> 
-> before:
->    Device Boot      Start         End      Blocks   Id  System
-> /dev/hda1   *           1        1459    11719386   8e  Linux LVM
-> /dev/hda2            1460        3891    19535040   83  Linux
-> /dev/hda3            3892       14593    85963815    5  Extended
-> /dev/hda5            3892        5107     9767488+  8e  Linux LVM
-> /dev/hda6            5108       14225    73240303+  83  Linux
-> /dev/hda7           14226       14471     1975963+  8e  Linux LVM
-> /dev/hda8           14472       14593      979933+  82  Linux swap
-> 
-> after:
-> /dev/hda1   *           1        1459    11719386   8e  Linux LVM
-> /dev/hda2            1460        3891    19535040   83  Linux
-> /dev/hda3            3892       14593    85963815    5  Extended
-> /dev/hda5            3892        5107     9767488+  8e  Linux LVM
-> /dev/hda6           11796       14225    19518943+  8e  Linux LVM
-> /dev/hda7           14226       14471     1975963+  8e  Linux LVM
-> /dev/hda8            5108       11795    53721328+  83  Linux
+> Is there a "Howto" document for adding dasd to an existing LVM system volume
+> group?
 > 
 > 
-> I looked up (in /etc/lvm) the uuid lvm was complaining about and found
-> out it corresponds to /dev/hda7. This seems odd, /dev/hda7 should not
-> have been affected by the partition deleting & creation... its start
-> and end cylinder remained the same throughout the process and there
-> was no partition overlapping.
+> /dev/system/home     /home                reiserfs   acl,user_xattr        1
+> 2
+> /dev/system/opt      /opt                 reiserfs   acl,user_xattr        1
+> 2
+> /dev/system/var      /var                 reiserfs   acl,user_xattr        1
+> 2
 > 
-> I thought maybe changing the uuid for /dev/hda7 in the /etc/lvm files,
-> but I couldn't find how to get the correct uuid for /dev/hda7.
-> 
-> What course of action do you suggest? Is it possible to get the data back?
+> I would like to add 3 more mod3 devices to my system and extend the capacity
+> of the /opt and /var filesystems.  
 
-vgscan ; vgdisplay
+Presumably the dasds are accessible in your Linux LPAR, pvcreate
+them, vgextend system, lvextend /dev/system/opt and /dev/system/var to
+your needs and run resize_reiserfs on both of them.
+
+Documented in the lvm2 manual pages and in the howto.
+
+You can use yast for those steps as well.
 
 > 
-> Thanks a lot,
-> Oscar.
+> TIA
 > 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
+> Doug
+> -----Original Message-----
+> From: linux-lvm-request@redhat.com [mailto:linux-lvm-request@redhat.com] 
+> Sent: Wednesday, September 01, 2004 7:11 PM
+> To: linux-lvm@redhat.com
+> Subject: linux-lvm Digest, Vol 7, Issue 1
+> 
+<SNIP>
 > https://www.redhat.com/mailman/listinfo/linux-lvm
 > read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
 
