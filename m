@@ -1,8 +1,9 @@
-Message-ID: <3F00F024.8050006@cablespeed.com>
-From: Howard Clifford <howardclifford@cablespeed.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] performance writing to an lv with no file system
+From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
+Subject: Re: [linux-lvm] LVM2 strangeness.
+Message-ID: <20030602113157.A5039@sistina.com>
+References: <17160000.1054244981@valkyrie.lsit.ucsb.edu> <5610000.1054251328@valkyrie.lsit.ucsb.edu>
+Mime-Version: 1.0
+In-Reply-To: <5610000.1054251328@valkyrie.lsit.ucsb.edu>; from max+lists.lvm-dev@lsit.ucsb.edu on Thu, May 29, 2003 at 04:35:28PM -0700
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -13,77 +14,103 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Jun 30 21:22:01 2003
+Date: Mon Jun  2 04:42:02 2003
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Heinz,
+On Thu, May 29, 2003 at 04:35:28PM -0700, Max Kalika wrote:
+> Quick followup...
+> 
+> I blew away the snapshots and tried again.  The performance was much better
+> (not surprisingly), but I still have lots of "busy buffer" messages in the
+> kernel log.  Would anyone know what this is all about, and whether or not I
+> should worry about it?
 
-Thank you for the response.
+No, they're are caused by our tools syncing LVM metadata and will
+disapapear in the next LVM2 release (as Joe mentioned).
 
-My logical volume is striped - 7 ways.
+> I'm considering putting LVM2 on a production mail
+> server, primarily for the simple resize capabilities, but also to use
+> snapshots during the rsync process (so as not to get many "file doesn't
+> exist" errors).
 
-I am writing to the lv with a simple c program I wrote.
-
-Each write is 7*stripesize, which in this case is 28 blocks.
-
-Any thoughts on how I can get top speeds without mounting and unmounting 
-  the volume?
-
-Thanks,
-Howie
-
-
- > Howard,
-
- > what's the LV layout (linear/striped ?).
- > How do you write to the LV (dd or soemthing).
- > What's the write pattern (sequential ? block size ?)
-
- > 80MB/sec raw sounds like you use a striped LV.
-
-
-On Sun, Jun 29, 2003 at 12:08:34PM -0400, Howard Clifford wrote:
- > I built a 7 disk vg and put 1 lv on it.  I do not want to mount a file
- > system.
- > I just want to write directly to the disk device, /dev/vg1/vol1.
- >
- > My write performance has an odd behavior.
- > If after booting I write to the volume I get roughly 175MB/sec.
- > If after booting I do a mke2fs on the volume, mount it, umount it, then
- > write to the volume I get roughly 230 MB/sec.
- >
- > Any ideas?  How can I get top speed without first mounting then
- > umounting the volume?
- > By the way, I tried binding a raw device to the lv and got very bad
- > performance; around 80 MB/sec.  Would that be expected?
- >
- > (I'm using redhat 9.0 -> lvm-1.0.3-12)
- >
- > Thanks...
- >
- >
- > _______________________________________________
- > linux-lvm mailing list
- > linux-lvm@sistina.com
- > http://lists.sistina.com/mailman/listinfo/linux-lvm
- > read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
-
--- 
+Go for it :)
 
 Regards,
 Heinz    -- The LVM Guy --
 
+
+> 
+> Quoting Max Kalika <max+lists.lvm-dev@lsit.ucsb.edu>:
+> 
+> > Hello LVM devs and others,
+> > 
+> > I've been trying to use LVM2 on a backup server for the past few days and
+> > I'm seeing some very strange things.
+> > 
+> > My configuration:
+> >   Dell PowerEdge 1300 (800Mhz)
+> >   512 MB RAM (2GB swap)
+> >   4 120GB IDE (8mb cache) disks in a RAID-5 configuration (on a 3ware
+> > card)   Custom built vanilla kernel (2.4.20) with DM patches (0.96.08)
+> > applied   LVM2 utilities version 1.95.15
+> > 
+> > I have a 300GB VG with a 150GB LV on it.  I also have a 50GB snapshot and
+> > a 10GB snapshot.  I first rsync all remote server data (8 other machines)
+> > to this "holding area" -- where I also hope to have 7 days of snapshot
+> > information available on disk.  From here, the latest "current" data gets
+> > pushed to tape.
+> > 
+> > Right now during an rsync of a huge mailstore (lots of small files) from
+> > the mail server, the performance on the backup server degrades severly (up
+> > to 12 1min load ave. and higher) and I'm seeing lots of the following in
+> > the kernel log:
+> > 
+> >   May 29 14:14:15 butters invalidate: busy buffer
+> >   May 29 14:14:15 butters invalidate: busy buffer
+> >   May 29 14:14:15 butters invalidate: busy buffer
+> >   May 29 14:14:15 butters invalidate: busy buffer
+> >   ... on and on and on ...
+> > 
+> > I'm guessing that most of the cpu is busy copying stuff from the original
+> > LV to the snapshots.  Is this a valid assumption?  What can one do to help
+> > the situation?  Or do I have a different misconfiguration?  Any light you
+> > can shed on this is greatly appreciated.  TIA.
+> > 
+> > --
+> > ---max kalika
+> > --max@lsit.ucsb.edu
+> > -lsit systems administrator
+> > 
+> > _______________________________________________
+> > linux-lvm mailing list
+> > linux-lvm@sistina.com
+> > http://lists.sistina.com/mailman/listinfo/linux-lvm
+> > read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+> 
+> 
+> 
+> ---max kalika
+> --max@lsit.ucsb.edu
+> -lsit systems administrator
+> 
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@sistina.com
+> http://lists.sistina.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+
 *** Software bugs are stupid.
-     Nevertheless it needs not so stupid people to solve them ***
+    Nevertheless it needs not so stupid people to solve them ***
 
 =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
 Heinz Mauelshagen                                 Sistina Software Inc.
 Senior Consultant/Developer                       Am Sonnenhang 11
-                                                   56242 Marienrachdorf
-                                                   Germany
+                                                  56242 Marienrachdorf
+                                                  Germany
 Mauelshagen@Sistina.com                           +49 2626 141200
-                                                        FAX 924446
+                                                       FAX 924446
 =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
