@@ -1,13 +1,8 @@
-Content-Type: text/plain; charset="us-ascii"
-From: Adrian Head <ahead@bigpond.net.au>
-References: <200201020451.g024pPg00867@oss.sgi.com>
-    <1010186076.1414.22.camel@stout.americas.sgi.com>
-    <200201050346.g053kmg29738@oss.sgi.com>
-In-Reply-To: <200201050346.g053kmg29738@oss.sgi.com>
+Message-Id: <1010309724.3c381a5ce8cbe@www.snappymail.ca>
+From: IpSo <ipso@snappymail.ca>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Message-Id: <E16N6eN-00071V-00@hermes.sistina.com>
-Subject: [linux-lvm] Re: Unable to get XFS, ext3, reiserfs & LVM to coexist happily
+Subject: [linux-lvm] VG dissappeared without a trace?
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -18,314 +13,225 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Sun Jan  6 00:20:02 2002
+Date: Sun Jan  6 03:33:02 2002
 List-Id: <linux-lvm.redhat.com>
-To: Eric Sandeen <sandeen@sgi.com>
-Cc: Linux XFS Mailing List <linux-xfs@oss.sgi.com>, linux-lvm@sistina.com
+Content-Type: text/plain; charset="us-ascii"
+To: linux-lvm@sistina.com
 
------BEGIN PGP SIGNED MESSAGE-----
-Hash: SHA1
+I was trying to extend my LVM partition to another disk, but being late and my
+head not screwed on straight, things went terribly wrong.
 
-I have upgraded the lvm in the kernel to the CVS version from the sistina 
-site.  The lvm-1.0.1 upgrade patch it generates is different from the 
-previous one used.  The kdb output is pretty much identical though.
+I was using diskdrake (from Mandrake) and what I did was create a LVM partition
+/dev/hdb6 and added it to my "quantum" VG which contained a single partition of
+/dev/hda6. I was simply doing this as a test (my first time using LVM), so as
+soon as it worked, I removed /dev/hdb6 from the "quantum" VG. I then proceeded
+to create a larger partition /dev/hdc that I wanted to add to "quantum" for
+good. I added it to the "quantum" VG and attemped to resize the "quantum" VG to
+the full size of both /dev/hda6 (17gb) and /dev/hdc (12gb). Everything "seemed"
+to go fine, so I exited from diskdrake and rebooted.
 
-What I will do next is to remove ext3 from the kernel and see what happens as 
-well as upgrade to the ext3 CVS and see what happens.
+During the reboot, it said it couldn't mount /dev/quantum/1 as it was not a
+proper block device. So I ran the following programs to try and collect as much
+data as possible:
 
-This is the full Oops output when trying to create an XFS snapshot.
-2.4.17-xfs
- + lvm-1.0.1 upgrade (from LVM CVS)
- + VFS-lock
+[root@ipso root]# pvscan -v
+pvscan -- reading all physical volumes (this may take a while...)
+pvscan -- walking through all physical volumes found
+pvscan -- inactive PV "/dev/hda6"  is associated to an unknown VG (run vgscan)
+pvscan -- inactive PV "/dev/hdb6"  is associated to an unknown VG (run vgscan)
+pvscan -- total: 2 [19.01 GB] / in use: 2 [19.01 GB] / in no VG: 0 [0]
 
-Entering kdb (current=0xd5db2000, pid 934) Oops: Oops
-due to oops @ 0xc015bc06
-eax = 0x748b5356 ebx = 0xc019fdf0 ecx = 0xd7894040 edx = 0x00000000
-esi = 0xd5db2000 edi = 0xd7894040 esp = 0xd5db3eac eip = 0xc015bc06
-ebp = 0xd7ed4800 xss = 0x00000018 xcs = 0x00000010 eflags = 0x00010286
-xds = 0x00000018 xes = 0x00000018 origeax = 0xffffffff &regs = 0xd5db3e78
-kdb> bt
-    EBP       EIP         Function(args)
-0xd7ed4800 0xc015bc06 journal_start+0x36 (0xd7ed4800, 0x1, 0x40018000, 
-0xd5db3f5c, 0x2)
-                               kernel .text 0xc0100000 0xc015bbd0 0xc015bcb0
-           0xc0156fd8 ext3_dirty_inode+0x58 (0xd7894040)
-                               kernel .text 0xc0100000 0xc0156f80 0xc0157050
-           0xc0141b1e __mark_inode_dirty+0x2e (0xd7894040, 0x1)
-                               kernel .text 0xc0100000 0xc0141af0 0xc0141b70
-           0xc0143001 update_atime+0x51 (0xd7894040, 0x6d6, 0x1, 0x0, 0x6d6)
-                               kernel .text 0xc0100000 0xc0142fb0 0xc0143010
-           0xc01254ac do_generic_file_read+0x40c (0xd7757840, 0xd7757860, 
-0xd5db3f5c, 0xc0125690, 0x6d6)
-                               kernel .text 0xc0100000 0xc01250a0 0xc01254c0
-           0xc012576a generic_file_read+0x7a (0xd7757840, 0x40018000, 0x1000, 
-0xd7757860, 0x0)
-                               kernel .text 0xc0100000 0xc01256f0 0xc0125810
-           0xc0130cf5 sys_read+0x95 (0x4, 0x40018000, 0x1000, 0x8086ab0, 
-0x40018000)
-                               kernel .text 0xc0100000 0xc0130c60 0xc0130d30
-           0xc0106d1b system_call+0x33
-                               kernel .text 0xc0100000 0xc0106ce8 0xc0106d20
-kdb> btp 934
-    EBP       EIP         Function(args)
-0xc019fdf0 0xc015bc06 journal_start+0x36 (0xd7ed4800, 0x1, 0x40018000, 
-0xd5db3f5c, 0x2)
-                               kernel .text 0xc0100000 0xc015bbd0 0xc015bcb0
-           0xc0156fd8 ext3_dirty_inode+0x58 (0xd7894040)
-                               kernel .text 0xc0100000 0xc0156f80 0xc0157050
-           0xc0141b1e __mark_inode_dirty+0x2e (0xd7894040, 0x1)
-                               kernel .text 0xc0100000 0xc0141af0 0xc0141b70
-           0xc0143001 update_atime+0x51 (0xd7894040, 0x6d6, 0x1, 0x0, 0x6d6)
-                               kernel .text 0xc0100000 0xc0142fb0 0xc0143010
-           0xc01254ac do_generic_file_read+0x40c (0xd7757840, 0xd7757860, 
-0xd5db3f5c, 0xc0125690, 0x6d6)
-                               kernel .text 0xc0100000 0xc01250a0 0xc01254c0
-           0xc012576a generic_file_read+0x7a (0xd7757840, 0x40018000, 0x1000, 
-0xd7757860, 0x0)
-                               kernel .text 0xc0100000 0xc01256f0 0xc0125810
-           0xc0130cf5 sys_read+0x95 (0x4, 0x40018000, 0x1000, 0x8086ab0, 
-0x40018000)
-                               kernel .text 0xc0100000 0xc0130c60 0xc0130d30
-           0xc0106d1b system_call+0x33
-                               kernel .text 0xc0100000 0xc0106ce8 0xc0106d20
-kdb> ps
-Task Addr  Pid      Parent   [*] cpu  State Thread     Command
-0xd7fe2000 00000001 00000000  1  000  stop  0xd7fe2270 init
-0xc163c000 00000002 00000001  1  000  stop  0xc163c270 keventd
-0xc1638000 00000003 00000000  1  000  stop  0xc1638270 ksoftirqd_CPU0
-0xc1636000 00000004 00000000  1  000  stop  0xc1636270 kswapd
-0xc1634000 00000005 00000000  1  000  stop  0xc1634270 bdflush
-0xc1632000 00000006 00000000  1  000  stop  0xc1632270 kupdated
-0xd7ec4000 00000007 00000001  1  000  stop  0xd7ec4270 mdrecoveryd
-0xd7eae000 00000008 00000001  1  000  stop  0xd7eae270 raid5d
-0xd7b32000 00000009 00000001  1  000  stop  0xd7b32270 kjournald
-0xd72a6000 00000153 00000001  1  000  stop  0xd72a6270 kjournald
-0xd729a000 00000154 00000001  1  000  stop  0xd729a270 kjournald
-0xd7292000 00000155 00000001  1  000  stop  0xd7292270 kjournald
-0xd7172000 00000157 00000001  1  000  stop  0xd7172270 kreiserfsd
-0xd70ac000 00000158 00000001  1  000  stop  0xd70ac270 kjournald
-0xd6f68000 00000160 00000001  1  000  stop  0xd6f68270 pagebuf_daemon
-0xd6256000 00000523 00000001  1  000  stop  0xd6256270 dhcpcd
-0xd77e0000 00000659 00000001  1  000  stop  0xd77e0270 syslogd
-0xd6212000 00000664 00000001  1  000  stop  0xd6212270 klogd
-0xd61a2000 00000684 00000001  1  000  stop  0xd61a2270 portmap
-0xd60aa000 00000712 00000001  1  000  stop  0xd60aa270 rpc.statd
-0xd5f74000 00000825 00000001  1  000  stop  0xd5f74270 crond
-more>
-0xd5f5e000 00000861 00000001  1  000  stop  0xd5f5e270 atd
-0xd602c000 00000868 00000001  1  000  stop  0xd602c270 login
-0xd5f48000 00000869 00000001  1  000  stop  0xd5f48270 mingetty
-0xd5fa2000 00000870 00000001  1  000  stop  0xd5fa2270 mingetty
-0xd5f5a000 00000871 00000001  1  000  stop  0xd5f5a270 mingetty
-0xd63a8000 00000872 00000001  1  000  stop  0xd63a8270 mingetty
-0xd6008000 00000873 00000001  1  000  stop  0xd6008270 mingetty
-0xd5f76000 00000874 00000001  1  000  stop  0xd5f76270 mgetty
-0xd74aa000 00000877 00000868  1  000  stop  0xd74aa270 bash
-0xd5db2000 00000934 00000877  1  000  run   0xd5db2270*lvcreate
-kdb> id %eip
-0xc015bc06 journal_start+0x36:  cmp    %ebp,(%eax)
-0xc015bc08 journal_start+0x38:  je     0xc015bc2d journal_start+0x5d:
-0xc015bc0a journal_start+0x3a:  push   $0xc022e920
-0xc015bc0f journal_start+0x3f:  push   $0xe1
-0xc015bc14 journal_start+0x44:  push   $0xc022a62b
-0xc015bc19 journal_start+0x49:  push   $0xc0229f00
-0xc015bc1e journal_start+0x4e:  push   $0xc022c9e0
-0xc015bc23 journal_start+0x53:  call   0xc0115380 printk:
-0xc015bc28 journal_start+0x58:  ud2a
-0xc015bc2a journal_start+0x5a:  add    $0x14,%esp
-0xc015bc2d journal_start+0x5d:  incl   0x8(%ebx)
-0xc015bc30 journal_start+0x60:  jmp    0xc015bca0 journal_start+0xd0:
-0xc015bc32 journal_start+0x62:  push   $0x1
-0xc015bc34 journal_start+0x64:  push   $0xf0
-0xc015bc39 journal_start+0x69:  push   $0x14
-0xc015bc3b journal_start+0x6b:  push   $0xc0229f00
-kdb> go
-Oops: 0000
-CPU:    0
-EIP:    0010:[<c015bc06>]    Not tainted
-EFLAGS: 00010286
-eax: 748b5356   ebx: c019fdf0   ecx: d7894040   edx: 00000000
-esi: d5db2000   edi: d7894040   ebp: d7ed4800   esp: d5db3eac
-ds: 0018   es: 0018   ss: 0018
-Process lvcreate (pid: 934, stackpage=d5db3000)
-Stack: c019fdf0 c019fdf0 ffffffe2 d7894040 00000000 c0156fd8 d7ed4800 00000001
-       40018000 d5db3f5c 00000002 00000018 d7894040 d7b41000 00000001 c0141b1e
-       d7894040 3c385279 d7757860 d78940f0 c0143001 d7894040 00000001 00000000
-Call Trace: [<c019fdf0>] [<c019fdf0>] [<c0156fd8>] [<c0141b1e>] [<c0143001>]
-   [<c01254ac>] [<c012576a>] [<c0125690>] [<c0130cf5>] [<c0106d1b>]
-
-Code: 39 28 74 23 68 20 e9 22 c0 68 e1 00 00 00 68 2b a6 22 c0 68
+[root@ipso root]# vgscan -v
+vgscan -- removing "/etc/lvmtab" and "/etc/lvmtab.d"
+vgscan -- reading all physical volumes (this may take a while...)
+vgscan -- no volume groups found
 
 
-On Sat, 5 Jan 2002 12:46, Adrian Head wrote:
-> This is the full output from kdb when trying to create a snapshot on an XFS
-> volume for me.
->
-> What I was going to do next was follow Andreas Dilger's sugestion and try
-> again.
->
-> Entering kdb (current=0xc7228000, pid 1435) Oops: Oops
-> due to oops @ 0xc015c446
-> eax = 0x748b5356 ebx = 0xc01a1550 ecx = 0xd7894040 edx = 0x00000000
-> esi = 0xc7228000 edi = 0xd7894040 esp = 0xc7229eac eip = 0xc015c446
-> ebp = 0xd7ed4800 xss = 0x00000018 xcs = 0x00000010 eflags = 0x00010286
-> xds = 0x00000018 xes = 0x00000018 origeax = 0xffffffff &regs = 0xc7229e78
-> kdb> bt
->     EBP       EIP         Function(args)
-> 0xd7ed4800 0xc015c446 journal_start+0x36 (0xd7ed4800, 0x1, 0x40018000,
-> 0xc7229f5c, 0x2)
->                                kernel .text 0xc0100000 0xc015c410
-> 0xc015c4f0 0xc01571a8 ext3_dirty_inode+0x58 (0xd7894040)
->                                kernel .text 0xc0100000 0xc0157150
-> 0xc0157250 0xc0141b1e __mark_inode_dirty+0x2e (0xd7894040, 0x1)
->                                kernel .text 0xc0100000 0xc0141af0
-> 0xc0141b70 0xc0143001 update_atime+0x51 (0xd7894040, 0x6d6, 0x1, 0x0,
-> 0x6d6) kernel .text 0xc0100000 0xc0142fb0 0xc0143010 0xc01254ac
-> do_generic_file_read+0x40c (0xd5fc7740, 0xd5fc7760, 0xc7229f5c, 0xc0125690,
-> 0x6d6)
->                                kernel .text 0xc0100000 0xc01250a0
-> 0xc01254c0 0xc012576a generic_file_read+0x7a (0xd5fc7740, 0x40018000,
-> 0x1000, 0xd5fc7760, 0x0)
->                                kernel .text 0xc0100000 0xc01256f0
-> 0xc0125810 0xc0130cf5 sys_read+0x95 (0x4, 0x40018000, 0x1000, 0x8086ab0,
-> 0x40018000)
->                                kernel .text 0xc0100000 0xc0130c60
-> 0xc0130d30 0xc0106d1b system_call+0x33
->                                kernel .text 0xc0100000 0xc0106ce8
-> 0xc0106d20 kdb> btp 1435
->     EBP       EIP         Function(args)
-> 0xc01a1550 0xc015c446 journal_start+0x36 (0xd7ed4800, 0x1, 0x40018000,
-> 0xc7229f5c, 0x2)
->                                kernel .text 0xc0100000 0xc015c410
-> 0xc015c4f0 0xc01571a8 ext3_dirty_inode+0x58 (0xd7894040)
->                                kernel .text 0xc0100000 0xc0157150
-> 0xc0157250 0xc0141b1e __mark_inode_dirty+0x2e (0xd7894040, 0x1)
->                                kernel .text 0xc0100000 0xc0141af0
-> 0xc0141b70 0xc0143001 update_atime+0x51 (0xd7894040, 0x6d6, 0x1, 0x0,
-> 0x6d6) kernel .text 0xc0100000 0xc0142fb0 0xc0143010 0xc01254ac
-> do_generic_file_read+0x40c (0xd5fc7740, 0xd5fc7760, 0xc7229f5c, 0xc0125690,
-> 0x6d6)
->                                kernel .text 0xc0100000 0xc01250a0
-> 0xc01254c0 0xc012576a generic_file_read+0x7a (0xd5fc7740, 0x40018000,
-> 0x1000, 0xd5fc7760, 0x0)
->                                kernel .text 0xc0100000 0xc01256f0
-> 0xc0125810 0xc0130cf5 sys_read+0x95 (0x4, 0x40018000, 0x1000, 0x8086ab0,
-> 0x40018000)
->                                kernel .text 0xc0100000 0xc0130c60
-> 0xc0130d30 0xc0106d1b system_call+0x33
->                                kernel .text 0xc0100000 0xc0106ce8
-> 0xc0106d20 kdb> ps
-> Task Addr  Pid      Parent   [*] cpu  State Thread     Command
-> 0xd7fe2000 00000001 00000000  1  000  stop  0xd7fe2270 init
-> 0xc163c000 00000002 00000001  1  000  stop  0xc163c270 keventd
-> 0xc1638000 00000003 00000000  1  000  stop  0xc1638270 ksoftirqd_CPU0
-> 0xc1636000 00000004 00000000  1  000  stop  0xc1636270 kswapd
-> 0xc1634000 00000005 00000000  1  000  stop  0xc1634270 bdflush
-> 0xc1632000 00000006 00000000  1  000  stop  0xc1632270 kupdated
-> 0xd7ec4000 00000007 00000001  1  000  stop  0xd7ec4270 mdrecoveryd
-> 0xd7eae000 00000008 00000001  1  000  stop  0xd7eae270 raid5d
-> 0xd7b32000 00000009 00000001  1  000  stop  0xd7b32270 kjournald
-> 0xd72a6000 00000153 00000001  1  000  stop  0xd72a6270 kjournald
-> 0xd729c000 00000154 00000001  1  000  stop  0xd729c270 kjournald
-> 0xd7292000 00000155 00000001  1  000  stop  0xd7292270 kjournald
-> 0xd7174000 00000157 00000001  1  000  stop  0xd7174270 kreiserfsd
-> 0xd70ac000 00000158 00000001  1  000  stop  0xd70ac270 kjournald
-> 0xd6f68000 00000160 00000001  1  000  stop  0xd6f68270 pagebuf_daemon
-> 0xd6250000 00000525 00000001  1  000  stop  0xd6250270 dhcpcd
-> 0xd6c56000 00000661 00000001  1  000  stop  0xd6c56270 syslogd
-> 0xd623a000 00000666 00000001  1  000  stop  0xd623a270 klogd
-> 0xd619e000 00000686 00000001  1  000  stop  0xd619e270 portmap
-> 0xd60ac000 00000714 00000001  1  000  stop  0xd60ac270 rpc.statd
-> 0xd62d6000 00000827 00000001  1  000  stop  0xd62d6270 crond
-> more>
-> 0xd5f3a000 00000863 00000001  1  000  stop  0xd5f3a270 atd
-> 0xd6a80000 00000870 00000001  1  000  stop  0xd6a80270 login
-> 0xd5f5a000 00000871 00000001  1  000  stop  0xd5f5a270 login
-> 0xd5f56000 00000872 00000001  1  000  stop  0xd5f56270 mingetty
-> 0xd6c9c000 00000873 00000001  1  000  stop  0xd6c9c270 mingetty
-> 0xd5f6a000 00000874 00000001  1  000  stop  0xd5f6a270 mingetty
-> 0xd6c9a000 00000875 00000001  1  000  stop  0xd6c9a270 mingetty
-> 0xd6338000 00000876 00000001  1  000  stop  0xd6338270 login
-> 0xd739c000 00000879 00000876  1  000  stop  0xd739c270 bash
-> 0xd5d86000 00000925 00000870  1  000  stop  0xd5d86270 bash
-> 0xd580c000 00000977 00000871  1  000  stop  0xd580c270 bash
-> 0xc7228000 00001435 00000925  1  000  run   0xc7228270*lvcreate
-> kdb> id %eip
-> 0xc015c446 journal_start+0x36:  cmp    %ebp,(%eax)
-> 0xc015c448 journal_start+0x38:  je     0xc015c46d journal_start+0x5d:
-> 0xc015c44a journal_start+0x3a:  push   $0xc02309e0
-> 0xc015c44f journal_start+0x3f:  push   $0xe1
-> 0xc015c454 journal_start+0x44:  push   $0xc022becf
-> 0xc015c459 journal_start+0x49:  push   $0xc022b6a0
-> 0xc015c45e journal_start+0x4e:  push   $0xc022e6a0
-> 0xc015c463 journal_start+0x53:  call   0xc0115380 printk:
-> 0xc015c468 journal_start+0x58:  ud2a
-> 0xc015c46a journal_start+0x5a:  add    $0x14,%esp
-> 0xc015c46d journal_start+0x5d:  incl   0x8(%ebx)
-> 0xc015c470 journal_start+0x60:  jmp    0xc015c4e0 journal_start+0xd0:
-> 0xc015c472 journal_start+0x62:  push   $0x1
-> 0xc015c474 journal_start+0x64:  push   $0xf0
-> 0xc015c479 journal_start+0x69:  push   $0x14
-> 0xc015c47b journal_start+0x6b:  push   $0xc022b6a0
-> kdb> go
-> Oops: 0000
-> CPU:    0
-> EIP:    0010:[<c015c446>]    Not tainted
-> EFLAGS: 00010286
-> eax: 748b5356   ebx: c01a1550   ecx: d7894040   edx: 00000000
-> esi: c7228000   edi: d7894040   ebp: d7ed4800   esp: c7229eac
-> ds: 0018   es: 0018   ss: 0018
-> Process lvcreate (pid: 1435, stackpage=c7229000)
-> Stack: c01a1550 c01a1550 ffffffe2 d7894040 00000000 c01571a8 d7ed4800
-> 00000001 40018000 c7229f5c 00000002 00000018 d7894040 d7b41000 00000001
-> c0141b1e d7894040 3c36dd6f d5fc7760 d78940f0 c0143001 d7894040 00000001
-> 00000000 Call Trace: [<c01a1550>] [<c01a1550>] [<c01571a8>] [<c0141b1e>]
-> [<c0143001>] [<c01254ac>] [<c012576a>] [<c0125690>] [<c0130cf5>]
-> [<c0106d1b>]
->
-> Code: 39 28 74 23 68 e0 09 23 c0 68 e1 00 00 00 68 cf be 22 c0 68
->
-> On Sat, 5 Jan 2002 09:14, Eric Sandeen wrote:
-> > On Fri, 2002-01-04 at 16:49, Adrian Head wrote:
-> > > What does your backtrace look like?  Its the ext3_dirt_inode in my
-> > > backtrace thats got me.  I have compiled a kernel without ext3 so will
-> > > also give it a run later.
-> >
-> > No, ext3 functions do not show up for me when it oopses on snapshot
-> > creation:
-> >
-> > kdb> bt
-> >     EBP       EIP         Function(args)
-> > 0xc1c2bf78 0xc013649e path_init+0x36 (0xc1c2a000)
-> >                                kernel .text 0xc0100000 0xc0136468
-> > 0xc013659c 0xc1c2bf90 0xc01366cf __user_walk+0x2f (0xc1c2a000, 0x804f1bc)
-> >                                kernel .text 0xc0100000 0xc01366a0
-> > 0xc01366f8 0xc1c2bfbc 0xc013381e sys_stat64+0x1a (0x8052474, 0xbfffe980,
-> > 0x40196154, 0x804f1bc, 0x3) kernel .text 0xc0100000 0xc0133804 0xc0133874
-> > 0xc0106c5b system_call+0x33
-> >                                kernel .text 0xc0100000 0xc0106c28
-> > 0xc0106c60
-> >
-> >
-> > It's trying to stat64 /dev/sda2, one of my lvm partitions.  I dunno why
-> > this blows up.  :/
-> >
-> > The code has some fastcalls & inlines around here, though, so this may
-> > not be the most accurate.
-> >
-> > Still looking...
-> >
-> > -Eric
+vgcfgrestore -n quantum -l -f /etc/lvmconf/quantum.conf.1.old
+--- Volume group ---
+VG Name               quantum
+VG Access             read/write
+VG Status             NOT available/resizable
+VG #                  0
+MAX LV                256
+Cur LV                1
+Open LV               0
+MAX LV Size           255.99 GB
+Max PV                256
+Cur PV                2
+Act PV                2
+VG Size               19 GB
+PE Size               4 MB
+Total PE              4865
+Alloc PE / Size       4328 / 16.91 GB
+Free  PE / Size       537 / 2.1 GB
+VG UUID               54LQnu-1gQl-mNuO-KR7U-yypa-woKi-iu7PRF
 
-- -- 
-Adrian Head
+[root@ipso lvmconf]# vgcfgrestore -n quantum -l -f /etc/lvmconf/quantum.conf
+--- Volume group ---
+VG Name               quantum
+VG Access             read/write
+VG Status             NOT available/resizable
+VG #                  0
+MAX LV                256
+Cur LV                1
+Open LV               0
+MAX LV Size           255.99 GB
+Max PV                256
+Cur PV                3
+Act PV                3
+VG Size               30.88 GB
+PE Size               4 MB
+Total PE              7904
+Alloc PE / Size       4328 / 16.91 GB
+Free  PE / Size       3576 / 13.97 GB
+VG UUID               54LQnu-1gQl-mNuO-KR7U-yypa-woKi-iu7PRF
 
-(Public Key available on request.)
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.0.6 (GNU/Linux)
-Comment: For info see http://www.gnupg.org
 
-iD8DBQE8N+0o8ZJI8OvSkAcRAgk+AJ4/0P4qg1A2UnABK5O+0kM9jYlYfgCgn+fv
-GRJHFM6+Mt9CJNg9n13XoEI=
-=ZVhu
------END PGP SIGNATURE-----
+[root@ipso lvmconf]# pvdata -a /dev/hda6
+
+--- Physical volume ---
+PV Name               /dev/hda6
+VG Name               quantum
+PV Size               16.91 GB / NOT usable 3.12 MB [LVM: 137 KB]
+PV#                   1
+PV Status             NOT available
+Allocatable           yes (but full)
+Cur LV                1
+PE Size (KByte)       4096
+Total PE              4328
+Free PE               0
+Allocated PE          4328
+PV UUID               e42Ge3-mpoP-PNat-1xLg-TMjr-4hRU-Q2agG9
+
+--- Volume group ---
+VG Name
+VG Access             read/write
+VG Status             NOT available/resizable
+VG #                  0
+MAX LV                256
+Cur LV                1
+Open LV               0
+MAX LV Size           255.99 GB
+Max PV                256
+Cur PV                2
+Act PV                2
+VG Size               19 GB
+PE Size               4 MB
+Total PE              4865
+Alloc PE / Size       4328 / 16.91 GB
+Free  PE / Size       537 / 2.1 GB
+VG UUID               54LQnu-1gQl-mNuO-KR7U-yypa-woKi-iu7PRF
+
+--- List of logical volumes ---
+
+pvdata -- logical volume "/dev/quantum/1" at offset   0
+pvdata -- logical volume struct at offset   1 is empty
+pvdata -- logical volume struct at offset   2 is empty
+pvdata -- logical volume struct at offset   3 is empty
+pvdata -- logical volume struct at offset   4 is empty
+pvdata -- logical volume struct at offset   5 is empty
+pvdata -- logical volume struct at offset   6 is empty
+pvdata -- logical volume struct at offset   7 is empty
+pvdata -- logical volume struct at offset   8 is empty
+pvdata -- logical volume struct at offset   9 is empty
+pvdata -- logical volume struct at offset  10 is empty
+...
+pvdata -- logical volume struct at offset 254 is empty
+pvdata -- logical volume struct at offset 255 is empty
+
+--- List of physical extents ---
+
+PE: 00000  LV: 001  LE: 00000
+PE: 00001  LV: 001  LE: 00001
+PE: 00002  LV: 001  LE: 00002
+...
+PE: 04326  LV: 001  LE: 04326
+PE: 04327  LV: 001  LE: 04327
+--- List of physical volume UUIDs ---
+
+000: e42Ge3mpoPPNat1xLgTMjr4hRUQ2agG9
+001: --- EMPTY ---
+
+
+
+[root@ipso lvmconf]# pvdata -a /dev/hdb6
+
+
+--- Physical volume ---
+PV Name               /dev/hdb6
+VG Name               quantum
+PV Size               2.1 GB / NOT usable 1.75 MB [LVM: 123 KB]
+PV#                   2
+PV Status             NOT available
+Allocatable           yes
+Cur LV                0
+PE Size (KByte)       4096
+Total PE              537
+Free PE               537
+Allocated PE          0
+PV UUID               PFyl3d-HSJD-adUL-vpzS-Sib3-jy78-tgR569
+
+--- Volume group ---
+VG Name
+VG Access             read/write
+VG Status             NOT available/resizable
+VG #                  0
+MAX LV                256
+Cur LV                1
+Open LV               0
+MAX LV Size           255.99 GB
+Max PV                256
+Cur PV                3
+Act PV                3
+VG Size               30.88 GB
+PE Size               4 MB
+Total PE              7904
+Alloc PE / Size       4328 / 16.91 GB
+Free  PE / Size       3576 / 13.97 GB
+VG UUID               54LQnu-1gQl-mNuO-KR7U-yypa-woKi-iu7PRF
+
+--- List of logical volumes ---
+
+pvdata -- logical volume "/dev/quantum/1" at offset   0
+pvdata -- logical volume struct at offset   1 is empty
+pvdata -- logical volume struct at offset   2 is empty
+pvdata -- logical volume struct at offset   3 is empty
+...
+pvdata -- logical volume struct at offset 254 is empty
+pvdata -- logical volume struct at offset 255 is empty
+
+--- List of physical extents ---
+
+PE: 00000  LV: ---  LE: -----
+PE: 00001  LV: ---  LE: -----
+PE: 00002  LV: ---  LE: -----
+...
+PE: 00535  LV: ---  LE: -----
+PE: 00536  LV: ---  LE: -----
+--- List of physical volume UUIDs ---
+
+000: e42Ge3mpoPPNat1xLgTMjr4hRUQ2agG9
+001: PFyl3dHSJDadULvpzSSib3jy78tgR569
+002: TeWEsY1qLF4PPwfZAlljyT3KiE4CCajd
+
+
+Unfortunately, I deleted the partition from the larger drive I was planning on
+adding to the "quantum" VG, (/dev/hdc it didn't have any data on it yet). I
+don't really care about /dev/hdb6 either, I would just like the data off of
+/dev/hda6.
+
+Partition table for: /dev/hda6
+   Device Boot    Start       End    Blocks   Id  System
+/dev/hda1   *         1       507    255496+  82  Linux swap
+/dev/hda2           508     39813  19810224    5  Extended
+/dev/hda5           508      4633   2079472+  83  Linux
+/dev/hda6          4634     39813  17730688+  8e  Linux LVM
+
+Any ideas how I can get /dev/hda6 mountable again? Thanks.
+
+IpSo
+
+--------------------------------------------------------------------
+Never worry about viruses in your Email again.
+Get your FREE! virus scanned Email accounts at http://snappymail.ca
