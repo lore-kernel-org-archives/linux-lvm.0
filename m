@@ -1,10 +1,10 @@
-From: Wolfgang Weisselberg <weissel@netcologne.de>
-Subject: Re: [linux-lvm] Can someone _please_ tell me whats going on?
-Message-ID: <20011217093030.C9157@tiger.bigcats.invalid>
-References: <Pine.LNX.4.33.0112170410450.12782-100000@www.scotty.co.at> <1008560587.831.6.camel@defiant> <1008573872.790.10.camel@defiant>
+From: Ulrich Wiederhold <U.Wiederhold@gmx.net>
+Subject: Re: [linux-lvm] invalidate: busy buffer
+Message-ID: <20011217090042.GA18563@sky.net>
+References: <20011214191634.GB24486@auctionwatch.com> <20011216205044.F26924@tiger.bigcats.invalid> <20011216215414.GB12889@sky.net> <20011217035359.A4880@tiger.bigcats.invalid>
 Mime-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <1008573872.790.10.camel@defiant>; from storm@tux.org on Mon, Dec 17, 2001 at 02:24:31AM -0500
+In-Reply-To: <20011217035359.A4880@tiger.bigcats.invalid>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,21 +15,21 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Dec 17 02:41:07 2001
+Date: Mon Dec 17 02:56:01 2001
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Hi, Bradley!
+Hi,
+* Wolfgang Weisselberg <weissel@netcologne.de> [011217 03:53]:
+> Faaar to late -- considering that all the daemons start up early
+> and need fancy things like /usr, /var and sometimes /tmp ..
 
-Bradley Alexander (storm@tux.org) wrote 41 lines:
+ok. I only have data on lvm-drives, so it won't bother me if it's
+mounted lately.
 
-> 1. The drive light stays illuminated when the machine is up, whether the
-> lv is mounted or not. Could this also be an indication of what killed
-> the first drive?
+Uli
 
-Uh-oH!  That doesn't look good... Bad cable?  Cable inserted
-wrong?  IDE-Controller gone bad?
-
--Wolfgang
+-- 
+'The box said, 'Requires Windows 95 or better', so i installed Linux - TKK 5
