@@ -1,21 +1,20 @@
 Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with SMTP id i36EFcj09465
-	for <linux-lvm@redhat.com>; Tue, 6 Apr 2004 10:15:38 -0400
-Received: from srv1.alteeve.com (thelinuxexperience.com [209.167.86.38])
-	by mx1.redhat.com (8.12.10/8.12.10) with SMTP id i36EFa5D017205
-	for <linux-lvm@redhat.com>; Tue, 6 Apr 2004 10:15:36 -0400
-Received: from alteeve.com (nabiki.thelinuxexperience.com [209.167.86.34])
-	(authenticated bits=0)
-	by srv1.alteeve.com (8.12.10/8.12.10) with ESMTP id i36EDUYe023169
-	for <linux-lvm@redhat.com>; Tue, 6 Apr 2004 10:13:31 -0400
-Message-ID: <4072BB82.4020706@alteeve.com>
-Date: Tue, 06 Apr 2004 10:15:30 -0400
-From: Madison Kelly <linux@alteeve.com>
-MIME-Version: 1.0
-Subject: Re: [linux-lvm] Converting the root filesystem to ReiserFS on LVM...
-References: <40717062.6050401@alteeve.com>
-	<1081259282.14982.2.camel@grandmother.littlebald.com>
-In-Reply-To: <1081259282.14982.2.camel@grandmother.littlebald.com>
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with SMTP id i36EMRj11666
+	for <linux-lvm@redhat.com>; Tue, 6 Apr 2004 10:22:27 -0400
+Received: from bucket.localnet (dsl-202-72-149-28.wa.westnet.com.au
+	[202.72.149.28])
+	by mx1.redhat.com (8.12.10/8.12.10) with SMTP id i36EMN5D019753
+	for <linux-lvm@redhat.com>; Tue, 6 Apr 2004 10:22:25 -0400
+Received: from [127.0.0.1] (6to4-localhost [127.0.0.1] (may be forged))
+	by bucket.localnet (8.12.8/8.12.8) with ESMTP id i36EMnx4016898
+	for <linux-lvm@redhat.com>; Tue, 6 Apr 2004 22:22:49 +0800
+Subject: Re: [linux-lvm] snapshots and 2.6 kernel
+From: Craig Ringer <craig@postnewspapers.com.au>
+In-Reply-To: <OFDA4623E8.BF7156E4-ON80256E62.004D4E4D-80256E62.004DBAD7@philips.com>
+References: <OFDA4623E8.BF7156E4-ON80256E62.004D4E4D-80256E62.004DBAD7@philips.com>
+Message-Id: <1081260082.6908.12.camel@albert.localnet>
+Mime-Version: 1.0
+Date: Tue, 06 Apr 2004 22:01:22 +0800
 Content-Transfer-Encoding: 7bit
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
@@ -27,44 +26,22 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
+Content-Type: text/plain; charset="us-ascii"
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-David Johnston wrote:
-> On Mon, 2004-04-05 at 10:42, Madison Kelly wrote:
-> 
->>Hi all,
->>
->>I am officially stumped... 
->>When I use the FC1 cd I can't unmount '/mnt/sysimage' which is seen 
->>as the LVM device '/dev/VG00/LV00', it keeps saying the device or 
->>resource is busy
->>Under Fedora the devices I need to mount are on:
->>/dev/VG00/LV00 = '/' (currently ext3)
->>/dev/VG00/LV01 = '/backup' (reiserfs)
->>/dev/VG00/LV02 = '/snapshot' (reiserfs)
-> 
-> 
-> Madison,
-> do you by any chance have /mnt/sysimage/backup or /mnt/sysimage/snapshot
-> mounted when you get the "resource busy" error?
+On Thu, 2004-03-25 at 22:07, darren.miller@philips.com wrote:
+> Getting the volume active is a pain I found that you have to reboot the 
+> system and when it comes back you need to create a link your volume group 
+> directory for the snapshot you create, atleast after the reboot the 
+> snapshot device showup in /dev/mapper which is a start right.
 
-Nope, I made sure to dismount anything mounted under /mnt/sysimage (inc. 
-  boot/). I have since been able to copy the data by using the SysRescCD 
-and then using EVMS to simply look at the partitions and then saving out 
-and mounting /dev/evms/lvm/<vg>/<lv> but after restoring and rebooting 
-it would kernel panic still thinking that '/' was ext3 despite editing 
-'/etc/blkid.tab' and '/etc/fstab'.
+It would be _really_ good if LVM2 would fail gracefully when a snapshot
+fails, or try to discover whether or not it can take the snapshot before
+trying. At the very least a big **WARNING** in the _LVM2_ docs and in
+lvcreate would help a lot.
 
-I am trying now to figure out how to properly use 'chroot /mnt/sysimage' 
-followed by 'lvcreate_initrd' to write a new boot loaded but despit 
-double checking that the file name was right Grub still fails to find 
-the file...
+I found LVM1 snapshots so perfect that I never thought about them
+anymore; LVM2 on 2.6 was a nasty shock that I'd love to see others saved
+from.
 
-Quite an ordeal but I am making progress, slowly.
-
-Thanks for your reply! Any other tips by chance?
-
-Madison
-
-PS - For the archives, this is a Fedora Core 1 install.
+Craig Ringer
