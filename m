@@ -1,9 +1,8 @@
-Message-ID: <3F426A3F.10506@gmx.net>
-From: Andreas Piesk <a.piesk@gmx.net>
+Message-Id: <200308192012.h7JKCvo00429@mail.osdl.org>
+From: markw@osdl.org
+Subject: Re: [linux-lvm] lvcreate with a 52 drive volume
+In-Reply-To: <20030819163419.H29420@uk.sistina.com>
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] SEGSEGV with vgcreate
-References: <200308142049.h7EKnFo04036@mail.osdl.org>
-Content-Transfer-Encoding: 7bit
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,36 +13,28 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Tue Aug 19 13:20:02 2003
+Date: Tue Aug 19 15:14:03 2003
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: linux-lvm@sistina.com
+Content-Type: TEXT/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: linux-lvm@sistina.com, agk@uk.sistina.com
+Cc: dm-devel@sistina.com
 
------BEGIN PGP SIGNED MESSAGE-----
-Hash: SHA1
+On 19 Aug, Alasdair G Kergon wrote:
+> On Mon, Aug 18, 2003 at 05:00:12PM -0700, markw@osdl.org wrote:
+>> On 18 Aug, Alasdair G Kergon wrote:
+>> > On Mon, Aug 18, 2003 at 02:09:18PM -0700, markw@osdl.org wrote:
+>> >> Ok, I increased the size of argv to 2048 in the dm-table.c file that's
+>> > 2048 is probably too big for the kernel stack.
+>> > Set it only as big as you need it.
+>> Yeah, I got greedy, 1024 worked for me. :)
+>  
+> Here's a patch to try that removes the hard-coded limit of 32.
+> 
+> (Plus one to fix the error message if you give a linear
+> target more than 2 arguments.)
 
-markw@osdl.org schrieb:
-|
-| I ran strace on vgcreate, and I'll attached the output.  Is there any
-| other information I can provide?
+I've applied it to 2.6.0-test3-mm3 and it works.
 
-the next time you send such a stacktrace please compress it.
-such huge attachments are not funny, especially not for modem users.
-
-Best regards,
-
-- -ap
-
-- --
-Andreas Piesk <a.piesk@gmx.net>
-
-GNUPG: E9D6 44A5 DCF2 D097 8113  0223 4E2B 3014 58DE BE88
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.2.2 (MingW32)
-Comment: Using GnuPG with Netscape - http://enigmail.mozdev.org
-
-iD8DBQE/Qmo/TiswFFjevogRArUiAJ4u/yMALlbG/mLsev16fF29iiUdzQCg7xTI
-e0uKxNss3krqgqTuypS8ehM=
-=GEyV
------END PGP SIGNATURE-----
+Thanks,
+Mark
