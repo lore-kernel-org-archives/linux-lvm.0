@@ -1,10 +1,11 @@
-From: "IT3 Stuart B. Tener, USNR-R" <stuart@bh90210.net>
-Subject: RE: [linux-lvm] LVM
-Date: Tue, 11 Sep 2001 04:03:44 -0700
-Message-ID: <NBBBJHKIOKPKOGOEPEDPOEDKDNAA.stuart@bh90210.net>
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-In-reply-to: <20010911122020.A1836@dardhal.mired.net>
+Date: Tue, 11 Sep 2001 11:30:54 +0000
+From: Tomas Edwardsson <tommi@tommi.org>
+Message-ID: <20010911113054.B16588@hp.is>
+References: <20010911112241.A16588@hp.is>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20010911112241.A16588@hp.is>; from tommi@tommi.org on Tue, Sep 11, 2001 at 11:22:41AM +0000
+Subject: [linux-lvm] Re: Problem with vgscan "only found 626 of 625 LEs for LV"
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,50 +17,47 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="iso-8859-1"
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-TXIuIEzzcGV6Og0KDQoJWWVzLCBhbmQgdGhhbmsgeW91IGZvciB0aGUgbGluayEgSSB3aWxsIGdy
-YWIgdGhlIG1vc3QgY3VycmVudCBzb3VyY2UsIGFuZCBhdHRlbXB0IHRvIG1ha2UgaXQgd29yay4g
-SSBhbSB1c2luZyB2ZXJzaW9uIDIuNC44LTEybWRrIChtYW5kcmFrZSkgb2YgdGhlIGtlcm5lbC4g
-TWFuZHJha2UgOC4xIGlzIGdvaW5nIHRvIGJlIGNvbWluZyBzb29uLCBhbmQgd2hlbiBpdCBkb2Vz
-IGNvbWUgZm9ydGgsIEkgcGxhbiB0byB1cGdyYWRlLiBIYXZpbmcgTFZNIHJ1bm5pbmcgd2lsbCBt
-YWtlIHRoZSB1cGdyYWRlIG11Y2ggbGVzcyBwYWluZnVsIQ0KDQoJQXMgd2Ugc3BlYWssIEkgYW0g
-ZG93bmxvYWRpbmcgdGhpcyBmaWxlLiBCdXQsIGNhbiB5b3UgdGVsbCBtZSwgYXJlIHRoZXJlIGFu
-eSBtYWpvciBjYXZlYXRzIHRvIHVzaW5nIHRoaXMgdmVyc2lvbiBpbiB0aGUgbGluayBiZWxvdz8N
-Cg0KDQpWZXJ5IFJlc3BlY3RmdWxseSwgDQoNClN0dWFydCBCbGFrZSBUZW5lciwgSVQzLCBVU05S
-LVIsIE4zR1dHIA0KQmV2ZXJseSBIaWxscywgQ2FsaWZvcm5pYQ0KVlRVIDE5MDRHIChWb2x1bnRl
-ZXIgVHJhaW5pbmcgVW5pdCkgDQpzdHVhcnRAYmg5MDIxMC5uZXQgDQp3ZXN0IGNvYXN0OiAoMzEw
-KS0zNTgtMDIwMiBQLk8uIEJveCAxNjA0MywgQmV2ZXJseSBIaWxscywgQ0EgOTAyMDktMjA0MyAN
-CmVhc3QgY29hc3Q6ICgyMTUpLTMzOC02MDA1IFAuTy4gQm94IDQ1ODU5LCBQaGlsYWRlbHBoaWEs
-IFBBIDE5MTQ5LTU4NTkgDQoNClRlbGVjb3BpZXI6ICg0MTkpLTcxNS02MDczIGZheCB0byBlbWFp
-bCBnYXRld2F5IHZpYSB3d3cuZWZheC5jb20gKGl0J3MgZnJlZSEpIA0KDQpKT0lOIFRIRSBVUyBO
-QVZZIFJFU0VSVkUsIFNFUlZFIFlPVVIgQ09VTlRSWSwgQU5EIEJFTkVGSVQgRlJPTSBJVCBBTEwu
-IA0KDQpUdWVzZGF5LCBTZXB0ZW1iZXIgMTEsIDIwMDEgNDowMCBBTQ0KDQotLS0tLU9yaWdpbmFs
-IE1lc3NhZ2UtLS0tLQ0KRnJvbTogbGludXgtbHZtLWFkbWluQHNpc3RpbmEuY29tIFttYWlsdG86
-bGludXgtbHZtLWFkbWluQHNpc3RpbmEuY29tXU9uIEJlaGFsZiBPZiBKb3PpIEx1aXMgRG9taW5n
-byBM83Bleg0KU2VudDogVHVlc2RheSwgU2VwdGVtYmVyIDExLCAyMDAxIDU6MjAgQU0NClRvOiBs
-aW51eC1sdm1Ac2lzdGluYS5jb20NClN1YmplY3Q6IFJlOiBbbGludXgtbHZtXSBMVk0NCg0KT24g
-TW9uZGF5LCAxMCBTZXB0ZW1iZXIgMjAwMSwgYXQgMTk6MzU6MTMgLTA3MDAsDQpJVDMgU3R1YXJ0
-IEIuIFRlbmVyLCBVU05SLVIgd3JvdGU6DQoNCj4gRGVhciBTaXI6DQo+DQo+ICAgICAgIEkgSEFW
-RSBSRUFEIChhbmQgRElEIFJFQUQpIFBSSU9SIFRPIEFTS0lORyBNWSBRVUVTVElPTlMsICh3aGVu
-IEkgbm90ZWQgSSBkb3dubG9hZGVkIGl0LCBJIGZpZ3VyZWQgZXZlcnlvbmUgd291bGQgcmVhbGl6
-ZSBJIGhhZCByZWFkIGl0IGFzIHdlbGwhKS4NCj4NCj4gQWxsIHRob3NlIHdob20gYXJlIHRlbGxp
-bmcgbWUgdG8gcmVhZCB0aGUgSG93LVRvLCBQTEVBU0UsIEdPIFJFQUQgSVQgWU9VUlNFTEYhIFNQ
-RUNJRklDQUxMWTogc2VjdGlvbiA3LjIsIHBhcmFncmFwaCAyLiBUaGVyZSBpcyBubyBzdWNoIGRp
-cmVjdG9yeSBsb2NhdGVkIG9uIHRoZSBTaXN0aW5hIEZUUCBzZXJ2ZXIuIFdoZXJlIGlzIHRoaXMg
-cGF0Y2g/DQo+DQpZb3VyIGFyZSByaWdodCwgbGlua3Mgb24gdGhlIEhPV1RPIGRvbid0IHBvaW50
-IHRvIHRoZSByaWdodCBsb2NhdGlvbi4gVG8NCmdldCBjdXJyZW50IHNvdXJjZXMgb2YgTFZNIGRv
-d25sb2FkOg0KZnRwOi8vZnRwLnNpc3RpbmEuY29tL3B1Yi9MVk0vMS4wL2x2bV8xLjAuMS1yYzIu
-dGFyLmd6DQoNCkl0IHdvcmtzIGZvciByZWNlbnQga2VybmVscyAoZXZlbiAyLjQuOSkgYW5kIHRo
-ZSBkb2N1bWVudGF0aW9uIGluY2x1ZGVkDQpleHBsYWlucyBob3cgdG8gY3JlYXRlIGEgcGF0Y2gg
-c3BlY2lmaWNhbGx5IHN1aXRlZCBmb3IgeW91ciBjdXJyZW50IExpbnV4DQpzb3VyY2UgdHJlZS4N
-Cg0KLS0NCkpvc+kgTHVpcyBEb21pbmdvIEzzcGV6DQpMaW51eCBSZWdpc3RlcmVkIFVzZXIgIzE4
-OTQzNiAgICAgRGViaWFuIEdOVS9MaW51eCBQb3RhdG8gKFAxNjYgNjQgTUIgUkFNKQ0KDQpqZG9t
-aW5nbyBFTiBpbnRlcm5hdXRhcyBQVU5UTyBvcmcgID0+IL8gU3BhbSA/IEF0ZW50ZSBhIGxhcyBj
-b25zZWN1ZW5jaWFzDQpqZG9taW5nbyBBVCBpbnRlcm5hdXRhcyBET1QgICBvcmcgID0+IFNwYW0g
-YXQgeW91ciBvd24gcmlzaw0KDQoNCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fDQpsaW51eC1sdm0gbWFpbGluZyBsaXN0DQpsaW51eC1sdm1Ac2lzdGluYS5j
-b20NCmh0dHA6Ly9saXN0cy5zaXN0aW5hLmNvbS9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWx2bQ0K
-cmVhZCB0aGUgTFZNIEhPVy1UTyBhdCBodHRwOi8vd3d3LnNpc3RpbmEuY29tL2x2bS9QYWdlcy9o
-b3d0by5odG1sDQo=
+I had already tried the vgcfgrestore, it didn't seem to help but I discovered
+that the UUID for one of my PVs was missing so I ran the uuid-fixer and now
+they all have UUIDs again (don't know if that is relevant). 
+
+I have run the pvdata on all my PVs although I think the right one is the
+following file run with pvdata -avP /dev/hdd1:
+  http://vefur.hp.is/lvm/pvdata-hdd1.txt
+
+I also documented a few more commands:
+
+  pvdata -avP /dev/hdb2,	http://vefur.hp.is/lvm/pvdata-hdb2.txt
+  pvdata -avP /dev/hdc2,	http://vefur.hp.is/lvm/pvdata-hdc2.txt
+  pvscan,			http://vefur.hp.is/lvm/pvscan.txt
+  vgscan,			http://vefur.hp.is/lvm/vgscan.txt
+
+On Tue, Sep 11, 2001 at 11:22:41AM +0000, Tomas Edwardsson wrote:
+> On Sep 07, 2001  10:35 +0000, Tomas Edwardsson wrote:
+> > Hmm, anyone able to help with this? All my data is currently offline and
+> > I really need it back so if anyone could help please!
+> >
+> > - Tommi
+> >
+> > On Thu, Sep 06, 2001 at 12:32:45PM +0000, Tomas Edwardsson wrote:
+> > > Here is what vgscan shows:
+> > >
+> > > vgscan -- reading all physical volumes (this may take a while...)
+> > > vgscan -- found inactive volume group "vg00"
+> > > vgscan -- only found 626 of 625 LEs for LV /dev/vg00/lvol1 (0)
+> > > vgscan -- ERROR "vg_read_with_pv_and_lv(): allocated LE of LV" can't get data of volume group "vg00" from physical volume(s)
+> > > vgscan -- ERROR "vg_read_with_pv_and_lv(): allocated LE of LV" creating "/etc/lvmtab" and "/etc/lvmtab.d"
+> 
+> It looks like the PE table does not match what is in the LV table for
+> that LV (i.e. the PE table has 626 PEs that claim to be part of the LV,
+> but the LV says it has only 625 LEs allocated). Two possibilities: you recently added an LE to the LV and you had a crash
+> (or an LVM bug), or somehow you had an error writing to disk.  You can try
+> restoring a copy of the metadata with vgcfgrestore to see if it helps. Failing that, check pvdata -avP <disk> to see what is wrong. Cheers, Andreas
+> --
+> Andreas Dilger  \ "If a man ate a pound of pasta and a pound of antipasto,
+>                  \  would they cancel out, leaving him still hungry?"
+> http://www-mddsp.enel.ucalgary.ca/People/adilger/               -- Dogbert
