@@ -1,65 +1,54 @@
-Date: Tue, 27 Jun 2000 04:53:40 +0100 (IST)
-From: Paul Jakma <paul@clubi.ie>
 Subject: Re: [linux-lvm] Re: IBM to release LVM Technology to the Linux
-In-Reply-To: <8525690A.0077720E.00@d54mta02.raleigh.ibm.com>
-Message-ID: <Pine.LNX.4.21.0006270444180.5989-100000@fogarty.jakma.org>
+References: <Pine.LNX.4.21.0006240048000.30225-100000@fogarty.jakma.org> <39545721.E8C392C5@inet.net.nz>
+From: "Martin K. Petersen" <mkp@linuxcare.com>
+Date: 26 Jun 2000 08:31:04 +0200
+In-Reply-To: Dale Kemp's message of "Sat, 24 Jun 2000 18:37:21 +1200"
+Message-ID: <yq1ituxkl7b.fsf@tyra.mkp.net>
 MIME-Version: 1.0
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: benr@us.ibm.com
-Cc: linux-lvm@msede.com
+To: Dale Kemp <dale@inet.net.nz>
+Cc: Linux LVM mailing list <linux-lvm@msede.com>
 
-On Mon, 26 Jun 2000 benr@us.ibm.com wrote:
+>>>>> "Dale" == Dale Kemp <dale@inet.net.nz> writes:
 
-> If the existing LVM could accommodate what our customers have
-> asked for, then, yes, it would have been more efficient to
-> improve the current Linux LVM.  However, in order for the current
-> LVM to be able to do what our customers have asked for,
+Dale> Not only this, but SGI are looking at releasing their volume
+Dale> management system as well. 
 
-what have your customers asked for exactly? 
-
-and are these customers AIX customers?
-
-> it would have to be based upon a different architecture.  This
-> would require major changes to the code, the equivalent of a
-> re-write.  This does not mean, however, that the current LVM is
-> in any way bad.  It just means that our customers have needs that
-> are not being met by the current LVM, and something different is
-> required to meet those needs.
-
-but rather than throwing your LVM at Linux (and having 2 different
-LVM implementations - bad), why not re-examine your customers needs
-and work with current LVM using your experience/concepts from IBM LVM
-to develop an architecture that does meet those needs. An
-architecture perhaps different from current-LVM/IBM-LVM but still
-drawing on that experience.
-
-i take it adapting IBM's LVM to linux will not be straight forward,
-so the choices are:
-
-1. port IBM LVM -> 2 seperate LVM implementations.
-2. use current LVM with only slight improvements (possibly not
-meeting your customer's needs)
-3. work with Heinz and the rest of the linux community to build a new
-LVM architecture, taking the best concepts from both IBM and Heinz
-LVM to build a new LVM architecture superior to all the rest.
-
-whatever you do, i think option 1. is the least desirable.
-
-> 
-> Regards,
-> 
-> Ben
+Porting it, yes.  It is a prerequisite for CXFS.  Whether XVM will be
+released as GPL has yet to be determined.
 
 
-regards,
+Dale> Now does the user really want three (or more) logical volume
+Dale> management systems, all with different toolsets and kernel
+Dale> modules? 
+
+There are many different approaches to volume management.  Neither of
+the three in question are similar enough to make integration trivial.
+
+I suspect the users will have several LVMs to choose from in the
+future.  Just as it is the case with file systems.  This has the
+advantage that the user can choose whatever implementation solves
+his/her problems.
+
+
+Dale> Now are we going to see SGI's XFS sitting on top of IBM's LVMS!?
+
+If IBM's LVMS will be using a kiobuf-based request scheme instead of
+buffer_heads, yes.
+
+
+Dale> Wouldn't it be much nicer to see XFS, JFS, EXT3, ReiserFS all
+Dale> sitting on top of Linux-LVM; 
+
+We'll certainly do our best to make sure XFS will work with all LVMs.
+
+Heinz' implementation doesn't quite cut it for all purposes, however.
+Neither does any of the other volume managers out there.
+
 -- 
-Paul Jakma	paul@clubi.ie
-PGP5 key: http://www.clubi.ie/jakma/publickey.txt
--------------------------------------------
-Fortune:
-According to the latest official figures, 43% of all statistics are
-totally worthless.
+Martin K. Petersen      Principal Linux Consultant, Linuxcare, Inc.
+http://mkp.net/         SGI XFS, Linux/PA-RISC, GNOME
