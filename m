@@ -1,11 +1,12 @@
 Return-Path: <mauelshagen@sistina.com>
-Date: Wed, 25 Jul 2001 21:48:00 +0200
+Date: Wed, 25 Jul 2001 21:48:43 +0200
 From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] pvversion failure
-Message-ID: <20010725214800.D27765@sistina.com>
-References: <Pine.LNX.4.33.0107251611250.9570-100000@greebo.foobarhouse.com> <Pine.LNX.4.33.0107251710580.10117-100000@greebo.foobarhouse.com>
+Subject: Re: [linux-lvm] Logical Volume file system
+Message-ID: <20010725214843.E27765@sistina.com>
+References: <20010725162635.F32341@cistron.nl> <20010725165117.B598@dardhal.mired.net> <20010725165527.I32341@cistron.nl>
 Mime-Version: 1.0
-In-Reply-To: <Pine.LNX.4.33.0107251710580.10117-100000@greebo.foobarhouse.com>; from jamesp@foobarhouse.com on Wed, Jul 25, 2001 at 05:11:42PM +0100
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20010725165527.I32341@cistron.nl>; from wichert@cistron.nl on Wed, Jul 25, 2001 at 04:55:27PM +0200
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,66 +18,34 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
 To: linux-lvm@sistina.com
 
-On Wed, Jul 25, 2001 at 05:11:42PM +0100, James Pattinson wrote:
-> Oops - hate to reply to my own message, but I just noticed the -1 in my
-> pvversion command. To clarify, I get the same behaviour if I use -2 as
-> well.
+On Wed, Jul 25, 2001 at 04:55:27PM +0200, Wichert Akkerman wrote:
+> Previously Jos� Luis Domingo L�pez wrote:
+> > Does it mean that applications can use a LV as a "raw device" ?.
+> 
+> There is no such as a `raw device'. A LV can be seen as a normal blockdevice
+> from userland, just like a normal harddisk or disk slice.
+> 
+> I think what you are referring to is `raw io', which is something you
+> can do with any block device. Currently you still need a special rawio
+> patch for Linux kernels, but it's a well tested and stable patch.
 
-Yes, I guessed that already.
+Wichert is right,
 
-My guess is, that the long device pathes trigger a regex bug we didn't hit
-during our tests.
+you need a patch for 2.2.
 
-Could you switch devfs of and retry pvversion in order
-to work around that assumed flaw?
+rawio is included in 2.4.
 
 > 
-> James
+> Wichert.
 > 
-> On Wed, 25 Jul 2001, James Pattinson wrote:
-> 
-> > Hi
-> >
-> > Trying to upgrade from beta7 to beta8. I have 2 PVs, neither of which are
-> > empty, that belong to a single VG, vg00.
-> >
-> > When trying to upgrade the PVs to version 2, I get:
-> >
-> > ./pvversion -1 /dev/ide/host2/bus0/target0/lun0/part1
-> > pvversion -- created dummy LV "/dev/vg00/pvversionpart19519" on empty PV
-> > "/dev/ide/host2/bus0/target0/lun0/part1"
-> > pvversion -- ERROR: pv_display() failed again
-> > pvversion -- giving up on "/dev/ide/host2/bus0/target0/lun0/part1"
-> >
-> > [root@greebo tools]# lvmdiskscan | grep LVM
-> > lvmdiskscan -- /dev/ide/host2/bus0/target0/lun0/part1  [      16.02 GB]
-> > Primary  LVM partition [0x8E]
-> > lvmdiskscan -- /dev/ide/host2/bus1/target0/lun0/part1  [      16.02 GB]
-> > Primary  LVM partition [0x8E]
-> > lvmdiskscan -- 2 LVM physical volume partitions
-> > [root@greebo tools]#
-> >
-> > It seems the pvversion program thinks my PV is empty, and tries to create
-> > a dummy LV on it. But of course it's not empty.
-> >
-> > I created my PVs, VG and LVs using beta7 kernel and tools not too long
-> > ago. Im using devfs as you can see.
-> >
-> > Any ideas?
-> >
-> > James
-> >
-> > _______________________________________________
-> > linux-lvm mailing list
-> > linux-lvm@sistina.com
-> > http://lists.sistina.com/mailman/listinfo/linux-lvm
-> > read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
-> >
-> 
+> -- 
+>   _________________________________________________________________
+>  /       Nothing is fool-proof to a sufficiently talented fool     \
+> | wichert@wiggy.net                   http://www.liacs.nl/~wichert/ |
+> | 1024D/2FA3BC2D 576E 100B 518D 2F16 36B0  2805 3CB8 9250 2FA3 BC2D |
 > _______________________________________________
 > linux-lvm mailing list
 > linux-lvm@sistina.com
