@@ -1,13 +1,11 @@
-From: "Stephen C. Tweedie" <sct@redhat.com>
-Message-Id: <20020201145855.G2149@redhat.com>
-References: <20020201051251.B10893@devserv.devel.redhat.com>
-    <E16WevQ-0005H0-00@the-village.bc.nu>
+Message-Id: <3C5AB7CF.5C96DDFB@bellsouth.net>
+From: Jeff Layton <laytonjb@bellsouth.net>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <E16WevQ-0005H0-00@the-village.bc.nu>; from
-    alan@lxorguk.ukuu.org.uk on Fri, Feb 01, 2002 at 02:44:24PM +0000
-Subject: [linux-lvm] Re: [Evms-devel] Re: [ANNOUNCE] LVM reimplementation ready for
- beta testing
+Subject: Re: [linux-lvm] Re: [lvm-devel] [ANNOUNCE] LVM reimplementationre
+    ady for beta testing
+References: <OFBCE93B66.F7B9C14E-ON85256B52.006B8AB3@raleigh.ibm.com>
+    <3C59A3A4.71A869A8@bellsouth.net> <20020201102439.B15135@sistina.com>
+Content-Transfer-Encoding: 7bit
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -18,59 +16,150 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Fri Feb  1 08:59:02 2002
+Date: Fri Feb  1 09:43:02 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: Alan Cox <alan@lxorguk.ukuu.org.uk>
-Cc: Arjan van de Ven <arjanv@redhat.com>, Joe Thornber <thornber@fib011235813.fsnet.co.uk>, lvm-devel@sistina.com, Jim McDonald <Jim@mcdee.net>, Andreas Dilger <adilger@turbolabs.com>, linux-lvm@sistina.com, linux-kernel@vger.kernel.org, evms-devel@lists.sourceforge.net
+To: linux-lvm@sistina.com
 
-Hi,
+"Heinz J . Mauelshagen" wrote:
 
-On Fri, Feb 01, 2002 at 02:44:24PM +0000, Alan Cox wrote:
-> > But "flushes all pending io" is *far* from trivial. there's no current
-> > kernel functionality for this, so you'll have to do "weird shit" that will
-> > break easy and often.
-> > 
-> > Also "suspending" is rather dangerous because it can deadlock the machine
-> > (think about the VM needing to write back dirty data on this LV in order to
-> >  make memory available for your move)...
-> 
-> I don't think you need to suspend I/O except momentarily. I don't use LVM and
-> while I can't resize volumes I migrate them like this
+> On Thu, Jan 31, 2002 at 03:05:56PM -0500, Jeff Layton wrote:
+> > (snip)
+> >
+> > >
+> > > >LVM2 may not seem that exciting initially, since the first release is
+> > > >just concentrating on reproducing LVM1 functionality.  But a lot of
+> > > >the reason for this rewrite is to enable us to add in the new features
+> > > >that we want (such as a transaction based disk format).  It's on this
+> > > >new feature list that we'll be mainly competing with EVMS.
+> > >
+> > > Why compete, come on over and help us :-)
+> >
+> > You guy man!
+> >
+> > I've worked with Kevin a few months ago on using EVMS
+> > to recover a filesystem ontop of LVM when a disk went
+> > south and we had no backups
+>
+> It is quite intersting how many people don't take backups even though
+> almost everybody claims to know that backups are crucial and some of them
+> know that they are still, even though they might have RAID in place.
 
-LVM1 has some problems here.  First, when it needs to flush IO as
-part of its locking it does so with fsync_dev, which is not a valid
-way of flushing certain types IO.  Second, its copy is done in user
-space, so there is no cache coherence with the logical device contents
-and there is enough VM pressure to give a good chance of deadlocking.
+I was ordered by my management NOT to make backups or
+I would be fired (exact words). So, I didn't. I told everyone
+concerned that we HAD to have backups and follow corporate
+policy. Everyone said thank you and go away. So I did.
 
-However, it _does_ do its locking at a finer granularity than the
-whole disk (it locks an extent --- 4MB by default --- at a time), so
-even with LVM1 it is possible to do the move on a live volume without
-locking up all IO for the duration of the entire copy.
 
-LVM2's device-mirror code is much closer to the raid1 mechanism in
-design, so it doesn't even have to lock down an extent during the
-copy.
+>
+>
+> Well I guess it, but you didn't mention if you had success to recover.
+>
+> Was it quorum (we are implementing it with LVM2 BTW) which helped and have
+> you been lucky that at least a part of your LVs where sitting on other than the
+> gone disk? Otherwise you probably had your VG back but no usable data.
 
-> the situation here seems analogous. You never need to suspend I/O to the
-> volume until you actually kill it, by which time you can just skip the write
-> to the dead volume.
+Actually, we had partial success and got back most data. Then
+on a whim we tried the bad drive again, and BINGO it came back
+to life! I tried every trick I know to get that drive back and spoke
+with the vendor that agreed I did everything they knew how to
+do. Then another admin walked in, popped it back in the case and
+and it came back. I had the biggest egg on my face! Oh well, at least
+we got the data back.
 
-Right.  LVM1 doesn't actually suspend IO to the volume, just to an
-extent.  What it does volume-wide is to flush IO, which is different.
 
-The problem is that when we come to copy a chunk of the volume,
-however large that chunk is, we need to make sure both that no new IOs
-arrive on it, AND that we have waited for all outstanding IOs against
-that chunk.  It's the latter part which is the problem.  It is 
-expensive to keep track of all outstanding IOs on a per-stripe basis,
-so when we place a lock on a stripe and come to wait for
-already-submitted IOs to complete, it is much easier just to do that
-flush volume-wide.  It's not a complete lock on the whole volume, just
-a temporary mutex to ensure that there are no IOs left outstanding on
-the stripe we're locking.
+>
+>
+> > (I know, but I was told by the
+> > people in charge that backups were not needed - that's why
+> > I left).
+>
+> Probably a good choice to leave if they don't understand such basics
+> and you couldn't convince them.
 
-Cheers,
- Stephen
+<vent>
+
+My manager at that time couldn't spell UNIX, doesn't have a college
+degree of any type and has never taken a single college course. My lead
+admin can only spell "Sun" even though he claims to have a Linux box at
+home and is pretty much hated by all UNIX/Linux admins (as well as
+most NT admins as well). He is the king of micro managers (and I have
+seen plenty of these in the aerospace industry).
+
+Thanks for the venting time and space. I apologize.
+
+</vent>
+
+
+>
+>
+> > I really like EVMS and can't wait for it to be in 2.5 and
+> > then 2.6 (just keep up the patches for 2.4 please :)
+>
+> EVMS hallelujah on linux-lvm? ;-)
+
+I like EVMS and it's concepts. However, I'm currently using LVM
+(I learned LVM on HPUX, so it was trivial to move to LVM on
+Linux!). So, I guess you could say that I started with LVM - like it,
+use it, depend on it; moving on to EVMS after some experimentation
+and testing. I hope the two  merge at some point to avoid
+proprietary-isms that seem to be coming.
+
+Plus, I'm interested in the Open Cluster Framework
+developments with EVMS. I don't know if these kinds of
+things are happening with LVM or not.
+
+Jeff
+
+
+>
+>
+> >
+> > Jeff Layton
+> >
+> >
+> > >
+> > >
+> > > Steve
+> > >
+> > > EVMS Development - http://www.sf.net/projects/evms
+> > > Linux Technology Center - IBM Corporation
+> > > (512) 838-9763  EMAIL: SLPratt@US.IBM.COM
+> > >
+> > > _______________________________________________
+> > > linux-lvm mailing list
+> > > linux-lvm@sistina.com
+> > > http://lists.sistina.com/mailman/listinfo/linux-lvm
+> > > read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
+> >
+> >
+> >
+> > _______________________________________________
+> > linux-lvm mailing list
+> > linux-lvm@sistina.com
+> > http://lists.sistina.com/mailman/listinfo/linux-lvm
+> > read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
+>
+> --
+>
+> Regards,
+> Heinz    -- The LVM Guy --
+>
+> *** Software bugs are stupid.
+>     Nevertheless it needs not so stupid people to solve them ***
+>
+> =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+>
+> Heinz Mauelshagen                                 Sistina Software Inc.
+> Senior Consultant/Developer                       Am Sonnenhang 11
+>                                                   56242 Marienrachdorf
+>                                                   Germany
+> Mauelshagen@Sistina.com                           +49 2626 141200
+>                                                        FAX 924446
+> =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+>
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@sistina.com
+> http://lists.sistina.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
