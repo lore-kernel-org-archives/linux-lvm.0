@@ -1,9 +1,10 @@
-Return-Path: <dice@mfa.kfki.hu>
-Date: Mon, 12 Feb 2001 11:44:16 +0100 (CET)
-From: Gergely Tamas <dice@mfa.kfki.hu>
-Message-ID: <Pine.LNX.4.32.0102121140430.18287-100000@falka.mfa.kfki.hu>
+Return-Path: <penguin_master_2000@yahoo.com>
+Message-ID: <20010212114109.14372.qmail@web10909.mail.yahoo.com>
+Date: Mon, 12 Feb 2001 03:41:09 -0800 (PST)
+From: "Mr. Penguin" <penguin_master_2000@yahoo.com>
+In-Reply-To: <200102071815.f17IFtN14302@webber.adilger.net>
 MIME-Version: 1.0
-Subject: [linux-lvm] debianized version of 0.9.1b4
+Subject: [linux-lvm] lv nodes in /dev ??
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,18 +16,26 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Hi!
+Hi people
 
-For those of us, who liked my previous packaging-style (modified version
-of AJs original work [init.d script & file locations])...
+Just noticed that all my LVs have nodes not only in
+/dev/vg00/ but also /dev !
 
-I've uploaded a debianized version of 0.9.1b4 to
+So I have /dev/vg00/lvol1 and also /dev/lvol1 with the
+same major and minor numbers. I don't like to think
+what will happen if I create a new VG called vg01 also
+with an lvol1...
 
-http://dice.mfa.kfki.hu/download/lvm/lvm_0.9.1b4/
+This seems to be occuring in beta3 and beta4. I'm
+using 2.4.1 / reiserfs (root on LVM)
 
-Thanks,
-Gergely
+James
+
+__________________________________________________
+Do You Yahoo!?
+Get personalized email addresses from Yahoo! Mail - only $35 
+a year!  http://personal.mail.yahoo.com/
