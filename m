@@ -1,10 +1,10 @@
-Message-ID: <3BB8FFE2.C92C5728@adelaide.edu.au>
-Date: Tue, 02 Oct 2001 09:14:34 +0930
-From: Sean Burford <sean.burford@adelaide.edu.au>
+Message-ID: <3BB941F5.F22E3159@americasm01.nt.com>
+Date: Mon, 01 Oct 2001 23:26:29 -0500
+From: "Joe Harvell" <harvell@nortelnetworks.com>
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] vgscan 1.0.1-rc2 + kernel 2.4.10
-References: <Pine.LNX.4.33.0109261252450.23800-100000@ct41987-a.jfrvil1.in.home.com> <01092615474801.01062@dpd16> <3BB2C142.20604@st-peter.stw.uni-erlangen.de> <01092712051501.01050@dpd16>
+References: <3A7B17B2.8A75537B@asosa.org> <Pine.LNX.4.21.0102021002400.23087-100000@compath.asosa.org> <20010203144323.A704@guldukat.muon>
 Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] how to upgrade from rh70 to rh71
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,43 +17,34 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@sistina.com
+To: linux-lvm@sistina.com, Greg Stovall <gstovall@nortelnetworks.com>, Mark Flacy <flacy@nortelnetworks.com>, Jim Wolff <jwolff@nortelnetworks.com>, William Mcnamara <wmcnamar@nortelnetworks.com>
 
-Andre Margis wrote:
-> I found the error, my /proc/partitions have thousands and thousands of lines!
-> maybe a kernel bug!
+Hmm:
 
-I ran into this as well.  It happened with the Alan Cox 14 patch to
-Linux kernel 2.4.9 when I installed a fiber channel driver (which added
-partitions).  I patched up drivers/block/genhd.c to detect and break
-circular links in the partition link list, and also to refuse to add
-entries that where already in the list (which was successful, though not
-recommended).  Next I used a plain kernel without the AC patch, and
-again the problem went away.
+I never really thought about this when I decided to put all my filesystems on
+LVM logical volumes; but how am I going to be able to upgrade to RedHat 7.1?
+If I remember correctly, the installer has its own custom kernel and root
+filesystem to boot into for the upgrade.
 
-Are you using an otherwise unpatched kernel?
+My setup is two IDE disks with 4 RAID-1 devices.  I have an LVM volume group
+(/dev/w0) on one of these (/dev/md2), that has all my filesystems on it (except
+/boot).
 
-> > have you tried the cvs lvm-1.0.1rc2
-> > i have it working without PBs with 2.4.10-xfs cvs kernel
-> >
-> > Andre Margis wrote:
-> > >I'm using lvm 1.0.1-rc2 under kernel 2.4.9 and work fine.
-> > >
-> > >When using with kernel 2.4.10 vgscan hang, running vgscan -d, the log is
-> > >listed above:
-> > >
-> > ><1> lvm_get_iop_version -- CALLED
-> > ><22> lvm_check_special -- CALLED
-> > ><22> lvm_check_special -- LEAVING
-> > ><1> lvm_get_iop_version -- AFTER ioctl ret: 0
-> > ><1> lvm_get_iop_version -- LEAVING with ret: 10
-> > ><1> lvm_lock -- CALLED
-> > ><22> lvm_check_special -- CALLED
-> > ><22> lvm_check_special -- LEAVING
-> > >
-> > >I have two servers Dell 8450 and they have the same problem.
+/dev/w0/root
+/dev/w0/var
+/dev/w0/usr
+/dev/w0/home
+/dev/w0/opt.
 
--- 
-Sean Burford    x34135
-ITS Systems Specialist
-Adelaide University
+So the redhat upgrade kernel will need to have support for RAID and LVM.  And
+it will need to run vgscan, and vgchange -ay.  And it will need to have devfs
+support or it will need to use mknod to make the directories enumerated above.
+Does anyone know if it does all these things?
+
+Am I going to have to use my own rescue disk as the platform from which to
+manually do the upgrade (by issuing the appropriate rpm commands?
+
+Has anyone with a similar configuration done this?
+
+---
+Joe Harvell
