@@ -1,8 +1,11 @@
-From: Josh Duncan <linux-lvm@msmd.net>
-Message-ID: <20021014200329.GA4885@msmd.net>
+Subject: Re: [linux-lvm] Re: [PATCH] 2.5 version of device mapper submissi
+	on
+From: Austin Gonyou <austin@coremetrics.com>
+In-Reply-To: <20021014175608.GA14963@fib011235813.fsnet.co.uk>
+References: <20021014175608.GA14963@fib011235813.fsnet.co.uk>
+Content-Type: multipart/signed; micalg=pgp-sha1; protocol="application/pgp-signature"; boundary="=-NWjd/4Jn1xyGjCaNQwKx"
+Message-Id: <1034629393.30834.55.camel@UberGeek.coremetrics.com>
 Mime-Version: 1.0
-Content-Disposition: inline
-Subject: [linux-lvm] lvm with gpt partitioning?
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -13,51 +16,42 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Oct 14 15:07:51 2002
+Date: Mon Oct 14 16:09:00 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: linux-lvm@sistina.com
+To: Joe Thornber <joe@fib011235813.fsnet.co.uk>
+Cc: linux-lvm@sistina.com, Alan Cox <alan@lxorguk.ukuu.org.uk>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 
-Hi all,
+--=-NWjd/4Jn1xyGjCaNQwKx
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 
-I hope this isn't a redundant question, I've tried looking through the mailing
-lists with no luck:
+On Mon, 2002-10-14 at 12:56, Joe Thornber wrote:
+> On Mon, Oct 14, 2002 at 11:59:17AM -0500, Austin Gonyou wrote:
+> > Just curious, but device-mapper and 2.5.42 do not seem to jive very
+> > well. Please advise.
+>=20
+> Try the patches at:
+>=20
+> http://people.sistina.com/~thornber/patches/2.5-unstable/
+>=20
 
-I'm having a problem setting up physical volumes on an ia64 machine running a
-2.4.18+lvm1.0.5 kernel.
 
-the disk is labelled using an "EFI GPT" disk label/partitioning arrangement.  I
-currently have two partitions defined, the first is 2gb and the second is 16gb.
-I can do a pvcreate on the second, but not on the first.  I've attached output
-from parted, fdisk, and pvcreate below...
+Thanks Joe, I will. I will let you know ASAP.
+--=20
+Austin Gonyou <austin@coremetrics.com>
+Coremetrics, Inc.
 
-any ideas?
---Josh
+--=-NWjd/4Jn1xyGjCaNQwKx
+Content-Type: application/pgp-signature; name=signature.asc
+Content-Description: This is a digitally signed message part
 
-------
-fdisk:
-------
-[root@one sbin]# fdisk -l /dev/sdb
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.0.6 (GNU/Linux)
+Comment: For info see http://www.gnupg.org
 
-Disk /dev/sdb: 255 heads, 63 sectors, 4427 cylinders
-Units = cylinders of 16065 * 512 bytes
+iD8DBQA9qzEQ94g6ZVmFMoIRAmJtAJ4ypiQcKAog5F1cp0mM1qLOhADSjACg8O3C
+KwRk/kGG/feUiiyHKOyoRLM=
+=n2O2
+-----END PGP SIGNATURE-----
 
-   Device Boot    Start       End    Blocks   Id  System
-/dev/sdb1             1      4428  35566479+  ee  EFI GPT
-
--------
-parted:
--------
-[root@one sbin]# parted /dev/sdb print
-Disk geometry for /dev/sdb: 0.000-34732.890 megabytes
-Disk label type: GPT
-Minor    Start       End     Filesystem  Name                  Flags
-1          0.017   2047.000                                    lba
-2       2047.000  18733.000                                    lba
-
----------
-pvcreate:
----------
-[root@one sbin]# pvcreate /dev/sdb1
-pvcreate -- invalid partition type 0xee for "/dev/sdb1" (must be 0x8e)
+--=-NWjd/4Jn1xyGjCaNQwKx--
