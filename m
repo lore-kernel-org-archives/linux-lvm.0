@@ -1,19 +1,12 @@
-Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id i8764Q329265
-	for <linux-lvm@redhat.com>; Tue, 7 Sep 2004 02:04:26 -0400
-Received: from mproxy.gmail.com (rproxy.gmail.com [64.233.170.199])
-	by mx1.redhat.com (8.12.10/8.12.10) with ESMTP id i8764JS0025861
-	for <linux-lvm@redhat.com>; Tue, 7 Sep 2004 02:04:19 -0400
-Received: by mproxy.gmail.com with SMTP id 74so220728rnl
-	for <linux-lvm@redhat.com>; Mon, 06 Sep 2004 23:04:09 -0700 (PDT)
-Message-ID: <ce9f1f9e04090623046460fed8@mail.gmail.com>
-Date: Mon, 6 Sep 2004 23:04:09 -0700
-From: Stanley Yue <stanley.yue@gmail.com>
+Date: Tue, 7 Sep 2004 10:44:13 +0100
+From: Alasdair G Kergon <agk@redhat.com>
+Subject: Re: [linux-lvm] Resend: API for retrieving linux lvm information
+Message-ID: <20040907094413.GA6264@agk.surrey.redhat.com>
+References: <ce9f1f9e04090623046460fed8@mail.gmail.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] Resend: API for retrieving linux lvm information
-Reply-To: Stanley Yue <stanley.yue@gmail.com>,
-	LVM general discussion and development <linux-lvm@redhat.com>
+Content-Disposition: inline
+In-Reply-To: <ce9f1f9e04090623046460fed8@mail.gmail.com>
+Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -24,19 +17,43 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@redhat.com
+Content-Transfer-Encoding: 7bit
+To: Stanley Yue <stanley.yue@gmail.com>, LVM general discussion and development <linux-lvm@redhat.com>
 
-Hi:
+These answers are for LVM2.
 
-I have ask about this before, however, i didn't any response.
+On Mon, Sep 06, 2004 at 11:04:09PM -0700, Stanley Yue wrote:
+> 1) Is there any api library for retrieve linux lvm configuration? I.e.
+> querying for all the vg(s), pv(s), lv(s) on the system?
+ 
+The commands: lvs, pvs, vgs with numerous cmdline flags.
+See lib/report/columns.h for field names
 
-I would appreciate very much if anyone can answer my question.
+Access to cmds via library interface: configure --enable-cmdlib
 
-1) Is there any api library for retrieve linux lvm configuration? I.e.
-querying for all the vg(s), pv(s), lv(s) on the system?
+include lvm2cmd.h
 
-2) If yes, what license is the library release under?
+Example usage: doc/example_cmdlib.c
 
-Thanks,
+Recommend only manipulating one thing at once, so if it
+returns an error you don't have to work out which thing
+went wrong.
 
-Stanley
+[May yet add an optional argc/argv-style entry point.]
+
+> 2) If yes, what license is the library release under?
+The library API is intended to be LGPL.
+It's effectively a wrapper around the command-line interface,
+but more efficient because it's able to cache some internal 
+state between commands.
+[I shall correct the copyright notices: the library entry-point 
+got moved which messed up the original GPL/LGPL code split.]
+
+liblvm.a does *not* provide a supported API and will sometimes 
+change in subtle or incompatible ways without warning.  Don't be 
+tempted to link against it.  The only interface supported
+is the one based on the command-line.
+
+Alasdair
+-- 
+agk@redhat.com
