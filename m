@@ -1,12 +1,12 @@
 Return-Path: <weissel@netcologne.de>
 From: Wolfgang Weisselberg <weissel@netcologne.de>
-Date: Thu, 26 Jul 2001 13:36:32 +0200
-Subject: Re: [linux-lvm] lvm on root
-Message-ID: <20010726133632.A26425@tiger.bigcats.invalid>
-References: <Pine.LNX.4.33.0107251827170.28361-100000@willow.nutstreet.net> <Pine.LNX.4.33.0107260038030.3644-100000@greebo.foobarhouse.com>
+Date: Thu, 26 Jul 2001 13:55:14 +0200
+Subject: Re: [linux-lvm] Some ideas regarding snapshots (was: Reiserfs, 2.4.7, snapshots w/ 0.9)
+Message-ID: <20010726135514.B26425@tiger.bigcats.invalid>
+References: <20010725103640.J5363@unirez.com> <01072511465701.00921@exodus>
 Mime-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <Pine.LNX.4.33.0107260038030.3644-100000@greebo.foobarhouse.com>; from jamesp@foobarhouse.com on Thu, Jul 26, 2001 at 12:39:20AM +0100
+In-Reply-To: <01072511465701.00921@exodus>; from iain@sandon.ca on Wed, Jul 25, 2001 at 11:46:57AM -0400
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -22,27 +22,40 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-James Pattinson (jamesp@foobarhouse.com) wrote 42 lines:
+Iain Campbell (iain@sandon.ca) wrote 64 lines:
+> Quote from Teigland and Mauelshagens's Volume Manager whitepaper:
 
-> Because it looks nice, and for the geek-factor :)
+> journalled file system. These operations (fsck or journal replay) require 
+> writing to  the snapshot ligical volume, which is not allowed."
 
-Because one can.  That's why I used soft-raid, that's why I
-use SMP... but I still have a non-lvm root/bootpartition.
+On a related subject: would it be possible to have a writable
+snapshot (probably a 'reverse' snapshot)?
 
-> [root@greebo /root]# bdf
-> Filesystem           1k-blocks      Used Available Use% Mounted on
-> /dev/vg00/lvol1         262132     92988    169144  36% /
-> /dev/vg00/lvol2        3145628   2382316    763312  76% /usr
-> /dev/vg00/lvol3         262132    103400    158732  40% /var
-[...]
+I remember a few situations where I would have done a lot for
+a feature like that; e.g. building a system that's 'guaranteed'
+the same after restarting/rebooting it.
 
-Personally, I name my LVs to match their (usual) mountpoints,
-because I do not want to remember the number/mountpoint
-matching, so I have LV names like 
+The idea is along the lines of:
+- you have the system in a known good, fscked state on the HD.
+- you snapshot that (possibly huge) system
+- you mount the snapshots r/w
+- the original will probably stay unmounted or r/o (but not
+  neccessarily, I am thinking of robust, networked stand-alone
+  devices which could be upgraded in the background while
+  running; a simple restart will have the upgrade applied.)
+- The system can scribble onto the snapshots until they
+  are full.
+- To reset the complete system to the known good state, umount,
+  unsnapshot, start over.  Or even -- horror -- reboot.
 
-    /dev/main_vg/usr
-    /dev/main_vg/var
-    /dev/main_vg/var_spool_news         # mounts on /var/spool/news
-etc.
+This should be *much* faster than a reintarnation or the use
+of dd, not to mention easier, simpler, more elegant and using
+less space.
+
+
+And on another related idea: can we have the option of making
+snapshots non-persistant again?  Or is that lots of work?
+There sometimes are cases where snapshots lose all value over
+a reboot, so they could/should automagically disappear.
 
 -Wolfgang
