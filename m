@@ -1,8 +1,8 @@
-Message-ID: <3BE666F3.C1A15761@promofinarsa.es>
+Message-ID: <3BE66C5A.C5BA896C@promofinarsa.es>
 From: Jesus Manuel NAVARRO LOPEZ <jesus_navarro@promofinarsa.es>
 MIME-Version: 1.0
 Subject: Re: [linux-lvm] snapshot questions
-References: <3.0.6.32.20011102140312.00806c50@mail.doorpi.net> <0111021341411E.08803@khayes-lin>
+References: <3.0.6.32.20011102140312.00806c50@mail.doorpi.net> <0111021341411E.08803@khayes-lin> <20011102153947.P746@lynx.no> <0111021621181I.08803@khayes-lin>
 Content-Transfer-Encoding: quoted-printable
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
@@ -14,98 +14,120 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Nov  5 04:15:02 2001
+Date: Mon Nov  5 04:38:02 2001
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="iso-8859-1"
 To: linux-lvm@sistina.com
 
-Hi, Kyle:
+Hi again, Kyle:
 
 Kyle Hayes wrote:
 >=20
-> Hmm, seems to be quite a range of opinion.  However, I must say that
-> having so many negative options is not a good sign.  Do snapshots
-> work at all?
->=20
-
-Well, I can't say if LVM snapshots do work, but I know for sure they can
-be very useful on a wide bunch of situations.
 
 [...]
 
 >=20
-> It is good to hear that it works more like Veritas and less like the
-> SuSE whitepaper claims.  That paper claimed that the changes will go
-> to the snapshot partition.  This implied that there would be a terrible
-> IO hit when you deleted the snapshot partition and the changes need to
-> be written back to the original partition.
+> > Depending on your I/O and response requirements, you can do the backups
+> > while your tables are in hot backup mode, without using snapshots at
+> > all.
+>=20
+> With MySQL this is not possible at this time.  I suspect they'll have it
+> relatively soon.  They seem to add features based on demand and as it
+> expands in popularity, I suppose that better backup features will be
+> demanded.
 >=20
 
-Huh?  Well, I haven't search the code, but the LVM How to stays that it
-has to "...hold all the changes that are likely to happen to the
-original volume during the lifetime of the snapshot", and it says too
-"...You should remove snapshot volume when you have finished with them
-because they take a copy of all data wirtten to the original volume".
-On the other hand, rigth in between those two states it says: "Note that
-the [snapshot] volume was mounted read-only. Snapshots can never be
-written to, and the data in them cannot change."  So there is obviously
-something missed in here.
+So, can I suppouse your RDBM is MySQL? If so, my previous assertion goes
+from *very sensible* to a totally must.  Don't go with snapshots, go
+with dump.  If it is safe to suppouse that there's not transaction-like
+operations spanning more than one database, write-block and dump on a
+per database basis, and pipe the dump to tar -z.  This will be safest
+method.  Well, there's no fool proof backup with MySQL apart from
+shuting down the engine and you can bet *there will be* database
+unconsistancies disregarding what you do to avoid them  (since even
+write blocking doesn't guard against bad programming practices and you
+can bet your database accessing programs will have more than a bug
+regarding "pseudo transacting" through multiple table locking).
 
-> I am confused by the claim (see below) that you need the same amount
-> of space for the snapshot partition as you had on the original LV.
-
-Again, from the LVM How To: "A snapshot volume can be as large or a
-[sic] small as you like but it must be large enough to hold all the
-changes that are likely to happen... [...]  A snapshot logical volume
-can be a maximum of 1.1x the size of the original volume".
-
-[...]
-
-> Under what circumstances do snapshots work?  I am confused by the
-> claims that a snapshot partition is going to be "corrupt" as far as
-> the OS is concerned.  In my scenario, here is what I am planning on
-> doing:
->=20
-> 1) lock all tables against writes.
->=20
-> 2) flush all logs and tables to disk.
->=20
-> 3) create a snapshot partition for the filesystem (ext2 or probably)
-> on which the database data resides.  These are not raw disks.
->=20
-> 4) unlock the tables.
->=20
-> 5) mount the snapshot partition and copy the database data out.
+> The LVM solution seems like it will also be usable for other things
+> than databases.  I'd like to be able to create a set of scripts and
+> tools for our use that can be used for more than databases.
 >=20
 
-That's a "standard procedure" for RDBMs that don't support hot backups
-with the exception that the "standard" would include a dump of the
-database contents instead of the filesystem snapshot.  *If* you know
-there won't be operations spanning more than one database, you can
-reduce comptention by just blocking/dumping one database at a time.=20
-Then I would evaluate speed.  If the dump doesn't need too much time
-than the snapshot I would go with it because of portability and
-(somehow) integrity (you will have a database operation completly driven
-from the RDBM).  Under some circumnstances size can be an issue too: if
-you go with the snapshot you will have to do it big enough to cope with
-the worst case scenario, and since it does involve creating and deleting
-a filesystem you will find more dificult to reclaim that disk space if
-needed.  On the other hand, the dump will most probably need less space
-(specially if you pipe it through gzip, or tar -z) and will need as much
-space as really needed, which can be reclaimed as soon as the dump is
-finished and properly stored somewhere else.
+What I would suggest is use snapshots for everything you want *except*
+database backups.  They can be acomplished easier and safer using
+mysqldump.
+
 
 >=20
-> We run 24/7 systems and it is not an option to take down a system to
-> back it up.  We can handle slightly degraded performance, but even
-> that is a problem.
+> The locking tables part does this.  It prevents other threads from writing
+> to any table.  I explain this above.
 >=20
 
-Again, regarding database operations you will end up most probably
-recognizing that database backup is a database issue best coped with
-database tools.  Snapshots can be useful tool for many other situations
-like mail (or other) spools, user data, etc.
-(just my 2 cents)
+But it doesn't protect you against bad programming practices: *Any*
+multiple table writing *must* be wrapped between write blocks, *and*
+rollback code *must* be in place.  I bet that there's at least one
+operation on the code accesing those databases that doesn't follow this
+must.  In this case, sooner or later you will end up "cutting" a
+multiple writing operation by half when you write block tables for the
+backup.  *If* you're very carefull still you will be able to restore to
+a stable state using the mysqldump *and* a timestamped transaction log,
+but this is a pain in the ass.  Luckily enough MySQL is fairly stable,
+so you won't need your backups but very rarely.
+
+> > In Oracle, the files that are part of the snapshot are not consistent
+> > (corrupted).  Thats just how it works.  Then when you use Oracle to
+> > recover, it puts together the coherent database image using the System
+> > Change Number and the blocks in the redo logs (recovery structures) and
+> > archive logs.  It's pretty advanced in this regard.
+>=20
+
+Yes it is, while quite curious: as you say, once in hot-backup mode
+Oracle tables are backuped in an unconsistent manner, but it can recover
+to a consistent state because of the fact that though tables change, SCN
+markers do not, so redologs -holding the entire block contents, can do
+the trick.
+
+> You have the choice in MySQL of locking all tables, or a subset.  If you
+> lock a subset, then you'll probably get a partially incoherent snapshot.
+>=20
+
+Well yes.  As it usually turns to be even if you can find common groups
+of tables that can be locked since no operation crosses its boundaries,
+things will change tomorrow without you noting it.  The only safe
+asumption is that you can block database by database instead of all
+databases at a time... provided you can policy-force there won't be
+cross-database operations.
+
+> The lock plus flush actions are fast enough that I think we can use them
+> successfully for this purpose.
+>=20
+
+They usually are... if there's no code flaws around there.
+
+>=20
+> I am doing all my testing on SuSE as well.  We have deployed Red Hat
+> in the past, but have not been thrilled with the stability of the
+> product.  By the time you get to a X.2 or so, they are fine.  We had
+
+That's why I'm still with RH6.2 and 2.2 kernels.
+
+> problems with installation of binary drivers on Red Hat (they were our
+> own drivers!) too, so that also has soured us on it.  We have since
+> released our drivers under the GPL, so that isn't as much of an issue,
+> but about 75% of the extra work in the configuration and installation
+> testing just tests Red Hat specific quirks.  Sigh.
+>=20
+> I really like the fact that SuSE bundles all this stuff already so
+> that I do not have to go hunting all over the place for an RPM that
+> might work.  I love source but I don't have time to compile everything
+> myself.
+>=20
+
+Not being used to the SuSE way, I can't say for sure but it surprises my
+that SuSE will do "thingies" regarding drivers on a different way RH
+does, or that you have less problems "haunting" RPMs for SuSE than for
+RH.
 --=20
 SALUD,
 Jes=EF=BF=BDs
