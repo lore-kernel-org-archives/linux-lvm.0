@@ -1,26 +1,19 @@
 Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id iA2FF6r20733
-	for <linux-lvm@redhat.com>; Tue, 2 Nov 2004 10:15:06 -0500
-Received: from cardinal.mail.pas.earthlink.net
-	(cardinal.mail.pas.earthlink.net [207.217.121.226])
-	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id iA2FF3HT009703
-	for <linux-lvm@redhat.com>; Tue, 2 Nov 2004 10:15:03 -0500
-Received: from user-0c8h9va.cable.mindspring.com ([24.136.167.234]
-	helo=earthlink.net)
-	by cardinal.mail.pas.earthlink.net with esmtp (Exim 3.33 #1)
-	id 1CP0NC-0003xq-01
-	for linux-lvm@redhat.com; Tue, 02 Nov 2004 07:15:02 -0800
-Date: Tue, 2 Nov 2004 10:14:01 -0500
-From: Brian McCullough <bdmc@bdmcc-us.com>
-Subject: Re: [linux-lvm] Linux RAID Resync and LVM
-Message-ID: <20041102151401.GA22829@bdmcc-us.com>
-References: <20041102122603.GA12325@bdmcc-us.com>
-	<20041102140210.GD10845@percy.comedia.it>
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id iA2FlBr30113
+	for <linux-lvm@redhat.com>; Tue, 2 Nov 2004 10:47:11 -0500
+Received: from nexredback-216-168-119-94.nexicom.net
+	(nexredback-216-168-119-94.nexicom.net [216.168.119.94])
+	by mx1.redhat.com (8.12.11/8.12.11) with SMTP id iA2Fl9E8019793
+	for <linux-lvm@redhat.com>; Tue, 2 Nov 2004 10:47:09 -0500
+Message-ID: <4187ABF1.1070004@mikebabcock.ca>
+Date: Tue, 02 Nov 2004 10:46:57 -0500
+From: "Michael T. Babcock" <mike@mikebabcock.ca>
 Mime-Version: 1.0
-Content-Type: multipart/signed; protocol="application/x-pkcs7-signature";
-	micalg=sha1; boundary="PNTmBPCT7hxwcZjr"
-Content-Disposition: inline
-In-Reply-To: <20041102140210.GD10845@percy.comedia.it>
+Content-Transfer-Encoding: 7bit
+Subject: Re: [linux-lvm] Re: Software raid on top of lvm logical volume
+References: <41801ADE.6030308@monjoin.net>	<20041028011738.GD13737@kluge.net>	<41808B37.40406@monjoin.net>	<20041028063530.GA13279@percy.comedia.it>	<n6t752-uf2.ln1@triangulo.it.uc3m.es>	<41865DE3.6040409@mikebabcock.ca>
+	<44376.64.233.217.29.1099327893.squirrel@64.233.217.29>
+In-Reply-To: <44376.64.233.217.29.1099327893.squirrel@64.233.217.29>
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -31,78 +24,39 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+To: Erik@echohome.org, LVM general discussion and development <linux-lvm@redhat.com>
 
+Erik Ohrnberger wrote:
 
---PNTmBPCT7hxwcZjr
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+>This solution would seem to be as the holy grail in that it would give you
+>the best of all worlds: resizable RAID storage.  Or am I wrong about this
+>assumption?
+>  
+>
 
-On Tue, Nov 02, 2004 at 03:02:11PM +0100, Luca Berra wrote:
-> slow it, reduce the numbers in:
-> /proc/sys/dev/raid/speed_limit_max
-> /proc/sys/dev/raid/speed_limit_min
+I've been trying to figure out a reason why it wouldn't be doable for a 
+few weeks now.
 
+Currently, one can create RAID-0 like performance with LVM2 by 
+specifying stripes for one's LVs.  Why not:
 
-Luca,
+lvcreate -L 3GB --raid-level 5 --stripes 3 -n SafeData VG001 /dev/sda 
+/dev/sdb /dev/sdc
 
-You are a life saver!  I did as you suggested and the machine is usable
-again.
+PV section 1 on sda and sdb are data, section 1 on sdc is XOR data.  PV 
+section 2 on sda and sdc are data, and XOR data on section 2 of sdb, and 
+so on.
 
+One of the major performance implications would be the larger block 
+sizes being dealt with; many people seem to find smaller stripes better 
+for performance in RAID-0/5 situations, and by default one would have 
+4MB stripes.  With some effort, I'm sure this could be rectified as well.
 
-( It will take a bit longer to resync but I will turn the numbers back
-up when we get past the deadline. )
+Thoughts?  Or should I blog about it instead? ;-)
 
-
-Brian
-
-
---PNTmBPCT7hxwcZjr
-Content-Type: application/x-pkcs7-signature
-Content-Disposition: attachment; filename="smime.p7s"
-Content-Transfer-Encoding: base64
-
-MIIIsQYJKoZIhvcNAQcCoIIIojCCCJ4CAQExCzAJBgUrDgMCGgUAMAsGCSqGSIb3DQEHAaCC
-BjUwggLuMIICV6ADAgECAgMNNaEwDQYJKoZIhvcNAQEEBQAwYjELMAkGA1UEBhMCWkExJTAj
-BgNVBAoTHFRoYXd0ZSBDb25zdWx0aW5nIChQdHkpIEx0ZC4xLDAqBgNVBAMTI1RoYXd0ZSBQ
-ZXJzb25hbCBGcmVlbWFpbCBJc3N1aW5nIENBMB4XDTA0MTAxMjAzMDQ0MFoXDTA1MTAxMjAz
-MDQ0MFowYjETMBEGA1UEBBMKTWNDdWxsb3VnaDEOMAwGA1UEKhMFQnJpYW4xGTAXBgNVBAMT
-EEJyaWFuIE1jQ3VsbG91Z2gxIDAeBgkqhkiG9w0BCQEWEWJkbWNAYmRtY2MtdXMuY29tMIIB
-IjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAwUh7NBHH0qjx/XGykx6hJUO+Vf6DItvO
-evGuzrYybuTmra8y0P8ewrXqdeLsWr0IrGNLoXKIltCx/F3WvNTPoPcpKTkBc53eT0xBnnXN
-ljlToJX2LyRMqTs2nrkOkVLf2IGbsUe9zymJjqUOQq6HlpPyaS7/3/7wc1L9JdVX5EGb9Op5
-RseESqg6c+7wXv+uaJ5ZyqhU31gRu1hQCu6rBnDtwetRrBR6+Fg00UQ64EOomOxam9UNMofI
-IrQX16oQdVXwqW+s9edjFf7stYS1l93HEiW3VhalKkP/ObrgnQFv8ggsddYBlaZ19Ogsg31r
-3DZ76EHyBhWQP6l9E033rQIDAQABoy4wLDAcBgNVHREEFTATgRFiZG1jQGJkbWNjLXVzLmNv
-bTAMBgNVHRMBAf8EAjAAMA0GCSqGSIb3DQEBBAUAA4GBAKmI1cDnZfQYBb2B/hRenhu8327X
-+7QxIkPYItv57oztR5+4r/WpAuKerZSsBrbK+YJ3lN22Yms9BqM2gTAovvuIB+y/UcQB10RU
-OWDLwtAmGR16D5BR7rp/1y6kyuubWe34cHuaIjhZhMl99cCPL7KRzPes9+LodO9Tz4CEcnCK
-MIIDPzCCAqigAwIBAgIBDTANBgkqhkiG9w0BAQUFADCB0TELMAkGA1UEBhMCWkExFTATBgNV
-BAgTDFdlc3Rlcm4gQ2FwZTESMBAGA1UEBxMJQ2FwZSBUb3duMRowGAYDVQQKExFUaGF3dGUg
-Q29uc3VsdGluZzEoMCYGA1UECxMfQ2VydGlmaWNhdGlvbiBTZXJ2aWNlcyBEaXZpc2lvbjEk
-MCIGA1UEAxMbVGhhd3RlIFBlcnNvbmFsIEZyZWVtYWlsIENBMSswKQYJKoZIhvcNAQkBFhxw
-ZXJzb25hbC1mcmVlbWFpbEB0aGF3dGUuY29tMB4XDTAzMDcxNzAwMDAwMFoXDTEzMDcxNjIz
-NTk1OVowYjELMAkGA1UEBhMCWkExJTAjBgNVBAoTHFRoYXd0ZSBDb25zdWx0aW5nIChQdHkp
-IEx0ZC4xLDAqBgNVBAMTI1RoYXd0ZSBQZXJzb25hbCBGcmVlbWFpbCBJc3N1aW5nIENBMIGf
-MA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDEpjxVc1X7TrnKmVoeaMB1BHCd3+n/ox7svc31
-W/Iadr1/DDph8r9RzgHU5VAKMNcCY1osiRVwjt3J8CuFWqo/cVbLrzwLB+fxH5E2JCoTzyvV
-84J3PQO+K/67GD4Hv0CAAmTXp6a7n2XRxSpUhQ9IBH+nttE8YQRAHmQZcmC3+wIDAQABo4GU
-MIGRMBIGA1UdEwEB/wQIMAYBAf8CAQAwQwYDVR0fBDwwOjA4oDagNIYyaHR0cDovL2NybC50
-aGF3dGUuY29tL1RoYXd0ZVBlcnNvbmFsRnJlZW1haWxDQS5jcmwwCwYDVR0PBAQDAgEGMCkG
-A1UdEQQiMCCkHjAcMRowGAYDVQQDExFQcml2YXRlTGFiZWwyLTEzODANBgkqhkiG9w0BAQUF
-AAOBgQBIjNFQg+oLLswNo2asZw9/r6y+whehQ5aUnX9MIbj4Nh+qLZ82L8D0HFAgk3A8/a3h
-YWLD2ToZfoSxmRsAxRoLgnSeJVCUYsfbJ3FXJY3dqZw5jowgT2Vfldr394fWxghOrvbqNOUQ
-Gls1TXfjViF4gtwhGTXeJLHTHUb/XV9lTzGCAkQwggJAAgEBMGkwYjELMAkGA1UEBhMCWkEx
-JTAjBgNVBAoTHFRoYXd0ZSBDb25zdWx0aW5nIChQdHkpIEx0ZC4xLDAqBgNVBAMTI1RoYXd0
-ZSBQZXJzb25hbCBGcmVlbWFpbCBJc3N1aW5nIENBAgMNNaEwCQYFKw4DAhoFAKCBsTAYBgkq
-hkiG9w0BCQMxCwYJKoZIhvcNAQcBMBwGCSqGSIb3DQEJBTEPFw0wNDExMDIxNTE0MDFaMCMG
-CSqGSIb3DQEJBDEWBBR7BH+OaGbQu9L5tGNiwVjBn/bCYjBSBgkqhkiG9w0BCQ8xRTBDMAoG
-CCqGSIb3DQMHMA4GCCqGSIb3DQMCAgIAgDANBggqhkiG9w0DAgIBQDAHBgUrDgMCBzANBggq
-hkiG9w0DAgIBKDANBgkqhkiG9w0BAQEFAASCAQB1vv9mrpMvKLbMiMGkkh2FLiuh8lc9acUj
-sz5RPATQ6d0HSFhV/M3AEa1YBk6Suy7G3Vl2KN9lNw1YgFBBg9kt9LsNFpxCZeuIExnOKrym
-9BNJiHJGtimhebpPIBskhdbafHiiilRpsiH7AoD1/C9q/1wNzW3L8TRws5gVGGFlwgC++76w
-w/CAeoAmLH79r6ze4xQwGIu8aXZxm2AGY2xk+K5GXGzszl4QV0SCU7Gsnqh7bmNQ4rNY81wF
-1ZuU1VJakoxNEaY5RfMqTF2vfftXyFXVBmJ9sJqlMKeJytt5DIL0i1OWbGYrR9b180f5mANq
-Sx60s6CXp93dUP+ZFdLe
-
---PNTmBPCT7hxwcZjr--
+If I didn't have multiple out-of-town server and firewall installations 
+this week, I'd code instead :-)
+-- 
+Michael T. Babcock
+http://mikebabcock.ca
