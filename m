@@ -1,13 +1,10 @@
-Content-Type: text/plain; charset="us-ascii"
-From: Adrian Head <ahead@bigpond.net.au>
+From: Anselm Kruis <A.Kruis@science-computing.de>
 Subject: Re: [linux-lvm] summary of what I need to do to mount snapshot on XFS
-References: <1010503449.28039.5.camel@cali.nesnahhouse.com>
-    <20020109130259.GC744@tykepenguin.com>
-    <1010606990.15375.22.camel@jeremy-linux.intranet.qualys.com>
-In-Reply-To: <1010606990.15375.22.camel@jeremy-linux.intranet.qualys.com>
+In-Reply-To: <1010607611.15375.24.camel@jeremy-linux.intranet.qualys.com>
+Message-Id: <Pine.LNX.4.02.10201100929130.5006-200000@murnau.science-computing.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Message-Id: <E16OSId-0005Vf-00@hermes.sistina.com>
+Content-Type: MULTIPART/MIXED;
+    BOUNDARY="-1811261415-430695237-1010651952=:5006"
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -18,56 +15,328 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Jan  9 17:39:01 2002
+Date: Thu Jan 10 02:40:02 2002
 List-Id: <linux-lvm.redhat.com>
-To: linux-lvm@sistina.com, Jeremy Hansen <jeremy@troubletext.com>
+To: linux-lvm@sistina.com
 
-If this works for you - good.  I have had heaps of issues that I have been 
-working with various developers and trying to get fixed.
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
+  Send mail to mime@docserver.cac.washington.edu for more info.
 
-Basically if I used the SGI 2.4.17-xfs kernel with lvm-1.0.1rc4(ish) some 
-file systems would work but others would fail.  Some would fail on snapshot 
-creation, others would fail on snapshot mount and others would fail when the 
-snapshot overflowed.  When I upgraded LVM to lvm-1.0.1 other filesystems 
-issues were fixed but others broke again.  Check out the "Unable to get XFS, 
-ext3, reiserfs & LVM to coexist happily"
-http://marc.theaimsgroup.com/?l=linux-lvm&m=100994364215110&w=2
- thread on linux-lvm / linux-xfs mail archives and see if any of this relates 
-to your problem.  With 2.4.17-xfs + lvm-1.0.1 upgrade patch + VFS-lock patch 
-ext2/3 & resierfs will operate correctly but XFS will fail at snapshot 
-creation.  You can do a little source code change and get a XFS snapshot 
-created and mounted; but then it will fail on an overfull snapshot.  These 
-problems are being worked on by myself and the great SGI XFS developers.
+---1811261415-430695237-1010651952=:5006
+Content-Type: TEXT/PLAIN; charset=ISO-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 
-The lvm.c change you talk about I assume is the LVM_VFS_ENHANCEMENT change?  
-For some reason when adding the lvm-1.0.1 upgrade patch this disappears from 
-lvm.c   I have been able to get this to compile with the change but I have 
-forgoten what I did.  
+On 9 Jan 2002, Jeremy Hansen wrote:
 
-This is one question I would like answered by the LVM gurus:  should #define 
-LVM_VFS_ENHANCEMENT still be there after upgrading to lvm-1.0.1?  What does 
-LVM_VFS_ENHANCEMENT actually do w.r.t lvm-1.0.1rc4(ish) and lvm-1.0.1?  I 
-know that LVM_VFS_ENHANCEMENT in older LVM versions was the locking of the 
-VFS so that snapshots would be consistant - is this still correct and is it 
-still needed?
+> On Wed, 2002-01-09 at 05:02, Patrick Caulfield wrote:
+> > On Wed, Jan 09, 2002 at 10:06:04PM +1000, Adrian Head wrote:
+> > > The basic concept is you create a snapshot LV
+> > > lvcreate -L1G -s -n snap /dev/vg/lv1
+> > >=20
+> > > This will create a 1G snapshot logical volume called snap for the ori=
+ginal=20
+> > > logical volume /dev/vg/lv1
+> > >=20
+> > > If this has completed successfully then you can mount it.
+> > >=20
+> > > mount -t xfs -o nouuid /dev/vg/snap /mnt/snapshot
+> >=20
+> > You may also need -o norecovery too.
+>=20
+> Ahh, it looks as if this did the trick.  I was able to mount it!
 
-For the "large discussion" you are talking about the "Unable to get XFS, 
-ext3, reiserfs & LVM to coexist happily" thread - hit me off list and I will 
-attempt to summarise it for you.
+Alternatively you could try the writeable snapshot patch. Then do an
 
-On Thu, 10 Jan 2002 06:09, Jeremy Hansen wrote:
-> My issue wasn't so much with how to create the snapshot but how to
-> simultaneously mount the snapshot with the live filesystem.  I saw a big
-> thread about having to uncomment from lvm.c, did that but then got
-> unresolved symbols...
->
-> It seemed as if there were some issues and a large discussion related to
-> doing this with XFS.
->
-> Thanks
+lvchange -p rw /dev/vg/snap
+mount -t xfs -o nouuid /dev/vg/snap /mnt/snapshot
+umount /dev/vg/snap
+sync
+lvchange -p r /dev/vg/snap
+# now the xfs on the snapshot is clean
+mount -t xfs -o ro,nouuid /dev/vg/snap /mnt/snapshot
+
+>=20
 > -jeremy
+> =20
+> > patrick
+> >=20
+> >=20
+> > _______________________________________________
+> > linux-lvm mailing list
+> > linux-lvm@sistina.com
+> > http://lists.sistina.com/mailman/listinfo/linux-lvm
+> > read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
+>=20
+>=20
+>=20
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@sistina.com
+> http://lists.sistina.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
+>=20
 
--- 
-Adrian Head
+---
+ Anselm Kruis                                 Tel. +49 (0)89-356386-74
+ science + computing ag=09=09              FAX  +49 (0)89-356386-37
+ Ingolst=E4dter Str. 22             mailto: A.Kruis@science-computing.de
+ D-80807 M=FCnchen                 WWW: http://www.science-computing.de/
 
-(Public Key available on request.)
+**********************************************************************
+***     CeBIT 2002                                                 ***
+***     Besuchen Sie uns auf der CeBIT vom 13.-20.03.2002          ***
+***     auf dem Messegel=E4nde in Hannover, Halle 11                 ***
+**********************************************************************
+
+---1811261415-430695237-1010651952=:5006
+Content-Type: TEXT/PLAIN; charset=US-ASCII; name="lvm-writeable_snapshot.patch"
+Content-Transfer-Encoding: BASE64
+Content-ID: <Pine.LNX.4.02.10201100939120.5006@murnau.science-computing.de>
+Content-Description: 
+Content-Disposition: attachment; filename="lvm-writeable_snapshot.patch"
+
+ZGlmZiAtYyAtciAtYiAtQiAtTiAteCBDVlMgTFZNLnZhbmlsbGEvUEFUQ0hF
+Uy9saW51eC0yLjQuMTUtd3JpdGVhYmxlLXNuYXBzaG90cy5wYXRjaCBMVk0v
+UEFUQ0hFUy9saW51eC0yLjQuMTUtd3JpdGVhYmxlLXNuYXBzaG90cy5wYXRj
+aA0KKioqIExWTS52YW5pbGxhL1BBVENIRVMvbGludXgtMi40LjE1LXdyaXRl
+YWJsZS1zbmFwc2hvdHMucGF0Y2gJVGh1IEphbiAgMSAwMTowMDowMCAxOTcw
+DQotLS0gTFZNL1BBVENIRVMvbGludXgtMi40LjE1LXdyaXRlYWJsZS1zbmFw
+c2hvdHMucGF0Y2gJU3VuIE5vdiAxOCAxMTowNToxNCAyMDAxDQoqKioqKioq
+KioqKioqKioNCioqKiAwICoqKioNCi0tLSAxLDI3IC0tLS0NCisgZGlmZiAt
+dSAtLXJlY3Vyc2l2ZSAtLW5ldy1maWxlIGxpbnV4LTIuNC4xNXByZTQudmFu
+aWxsYS9Eb2N1bWVudGF0aW9uL0NvbmZpZ3VyZS5oZWxwIGxpbnV4L0RvY3Vt
+ZW50YXRpb24vQ29uZmlndXJlLmhlbHANCisgLS0tIGxpbnV4LTIuNC4xNXBy
+ZTQudmFuaWxsYS9Eb2N1bWVudGF0aW9uL0NvbmZpZ3VyZS5oZWxwCVN1biBO
+b3YgMTggMTA6NDY6MTcgMjAwMQ0KKyArKysgbGludXgvRG9jdW1lbnRhdGlv
+bi9Db25maWd1cmUuaGVscAlTYXQgTm92IDE3IDIyOjU1OjEzIDIwMDENCisg
+QEAgLTE2OTMsNiArMTY5MywxMyBAQA0KKyAgICB3YW50KSwgc2F5IE0gaGVy
+ZSBhbmQgcmVhZCA8ZmlsZTpEb2N1bWVudGF0aW9uL21vZHVsZXMudHh0Pi4g
+IFRoZQ0KKyAgICBtb2R1bGUgd2lsbCBiZSBjYWxsZWQgbHZtLW1vZC5vLg0K
+KyAgDQorICtTdXBwb3J0IGZvciB3cml0ZWFibGUgc25hcHNob3RzDQorICtD
+T05GSUdfTFZNX1dSSVRFQUJMRV9TTkFQU0hPVFMNCisgKyAgVGhlIExWTSBk
+cml2ZXIgYWxsb3dzIHlvdSB0byBtYWtlIHNuYXBzaG90cyBvZiBhIGxvZ29j
+YWwgdm9sdW1lLg0KKyArICBVc3VhbGx5IHRoZXNlIHNuYXBzaG90cyBhcmUg
+cmVhZC1vbmx5LiBUaGlzIG9wdGlvbnMgYWRkIHN1cHBvcnQgZm9yDQorICsg
+IHdyaXRlYWJsZSBzbmFwc2hvdHMuIFlvdSBjYW4gdXNlIGEgd3JpdGVhYmxl
+IHNuYXBzaG90IHRvIHJ1biBhDQorICsgIGZpbGVzeXN0ZW0gY2hlY2sgb24g
+dGhlIHNuYXBzaG90IHByaW9yIHRvIG1vdW50aW5nIGl0Lg0KKyArDQorICBN
+dWx0aXBsZSBkZXZpY2VzIGRyaXZlciBzdXBwb3J0IChSQUlEIGFuZCBMVk0p
+DQorICBDT05GSUdfTUQNCisgICAgU3VwcG9ydCBtdWx0aXBsZSBwaHlzaWNh
+bCBzcGluZGxlcyB0aHJvdWdoIGEgc2luZ2xlIGxvZ2ljYWwgZGV2aWNlLg0K
+KyBkaWZmIC11IC0tcmVjdXJzaXZlIC0tbmV3LWZpbGUgbGludXgtMi40LjE1
+cHJlNC52YW5pbGxhL2RyaXZlcnMvbWQvQ29uZmlnLmluIGxpbnV4L2RyaXZl
+cnMvbWQvQ29uZmlnLmluDQorIC0tLSBsaW51eC0yLjQuMTVwcmU0LnZhbmls
+bGEvZHJpdmVycy9tZC9Db25maWcuaW4JRnJpIFNlcCAxNCAyMzoyMjoxOCAy
+MDAxDQorICsrKyBsaW51eC9kcml2ZXJzL21kL0NvbmZpZy5pbglTYXQgTm92
+IDE3IDIyOjQxOjAyIDIwMDENCisgQEAgLTE0LDUgKzE0LDYgQEANCisgIGRl
+cF90cmlzdGF0ZSAnICBNdWx0aXBhdGggSS9PIHN1cHBvcnQnIENPTkZJR19N
+RF9NVUxUSVBBVEggJENPTkZJR19CTEtfREVWX01EDQorICANCisgIGRlcF90
+cmlzdGF0ZSAnIExvZ2ljYWwgdm9sdW1lIG1hbmFnZXIgKExWTSkgc3VwcG9y
+dCcgQ09ORklHX0JMS19ERVZfTFZNICRDT05GSUdfTUQNCisgK2RlcF9tYm9v
+bCAgICAgJyAgU3VwcG9ydCBmb3Igd3JpdGVhYmxlIHNuYXBzaG90cycgQ09O
+RklHX0xWTV9XUklURUFCTEVfU05BUFNIT1RTICRDT05GSUdfQkxLX0RFVl9M
+Vk0gJENPTkZJR19FWFBFUklNRU5UQUwNCisgIA0KKyAgZW5kbWVudQ0KZGlm
+ZiAtYyAtciAtYiAtQiAtTiAteCBDVlMgTFZNLnZhbmlsbGEva2VybmVsL2x2
+bS5jIExWTS9rZXJuZWwvbHZtLmMNCioqKiBMVk0udmFuaWxsYS9rZXJuZWwv
+bHZtLmMJVHVlIEphbiAgMSAyMTo0OTo0OCAyMDAyDQotLS0gTFZNL2tlcm5l
+bC9sdm0uYwlUdWUgSmFuICAxIDIyOjA0OjAxIDIwMDINCioqKioqKioqKioq
+KioqKg0KKioqIDIxNCwyMTkgKioqKg0KLS0tIDIxNCwyMjAgLS0tLQ0KICAg
+KiAgICAgICAgICAgICAgICAgaW4gdGhlIExWIGVhY2ggdGltZS4gIFtBRURd
+DQogICAqICAgIDEyLzEwLzIwMDEgLSBVc2UgYWRkL2RlbF9nZW5kaXNrKCkg
+cm91dGluZXMgaW4gMi40LjEwKw0KICAgKiAgICAwMS8xMS8yMDAxIC0gQmFj
+a3BvcnQgcmVhZF9haGVhZCBjaGFuZ2UgZnJvbSBMaW51cyBrZXJuZWwgW0FF
+RF0NCisgICogICAgMDEvMDEvMjAwMiAtIFN1cHBvcnQgZm9yIHdyaXRlYWJs
+ZSBzbmFwc2hvdHMgW0EuS3J1aXNAc2NpZW5jZS1jb21wdXRpbmcuZGVdDQog
+ICAqDQogICAqLw0KICANCioqKioqKioqKioqKioqKg0KKioqIDM3NCwzNzkg
+KioqKg0KLS0tIDM3NSwzODUgLS0tLQ0KICB1c2hvcnQgbHZtX2lvcF92ZXJz
+aW9uID0gTFZNX0RSSVZFUl9JT1BfVkVSU0lPTjsNCiAgaW50IGxvYWR0aW1l
+ID0gMDsNCiAgY29uc3QgY2hhciAqY29uc3QgbHZtX25hbWUgPSBMVk1fTkFN
+RTsNCisgdXNob3J0IGx2bV9mZWF0dXJlX2JpdHMgPQ0KKyAjaWZkZWYgQ09O
+RklHX0xWTV9XUklURUFCTEVfU05BUFNIT1RTDQorICAgICAgICAgTFZNX0ZF
+QVRVUkVfV1JJVEVBQkxFX1NOQVBTSE9UUyB8DQorICNlbmRpZg0KKyAwOw0K
+ICANCiAgDQogIC8qIHZvbHVtZSBncm91cCBkZXNjcmlwdG9yIGFyZWEgcG9p
+bnRlcnMgKi8NCioqKioqKioqKioqKioqKg0KKioqIDcxNyw3MjIgKioqKg0K
+LS0tIDcyMyw3MzUgLS0tLQ0KICANCiAgCS8qIE1haW4gY29tbWFuZCBzd2l0
+Y2ggKi8NCiAgCXN3aXRjaCAoY29tbWFuZCkgew0KKyAJY2FzZSBMVk1fR0VU
+X0ZFQVRVUkVfQklUUzoNCisgCQkvKiByZXR1cm4gYSB0aGUgZmVhdHVyZSBi
+aXRzLiBUaGVzZSBiaXRzIGluZGljYXRlIHBhcnRpY3VsYXINCisgCQkgICBm
+ZWF0dXJlcyBzdXBwb3J0ZWQgYnkgdGhpcyBrZXJuZWwuICovDQorIAkJaWYg
+KGNvcHlfdG9fdXNlcihhcmcsICZsdm1fZmVhdHVyZV9iaXRzLCBzaXplb2Yo
+dXNob3J0KSkgIT0gMCkNCisgCQkJcmV0dXJuIC1FRkFVTFQ7DQorIAkJcmV0
+dXJuIDA7DQorIA0KICAJY2FzZSBMVk1fTE9DS19MVk06DQogIAkJLyogbG9j
+ayB0aGUgTFZNICovDQogIAkJcmV0dXJuIGx2bV9kb19sb2NrX2x2bSgpOw0K
+KioqKioqKioqKioqKioqDQoqKiogMTA2MywxMDY4ICoqKioNCi0tLSAxMDc2
+LDEwODQgLS0tLQ0KICAJCQlyZXR1cm4gLUVGQVVMVDsNCiAgCQlicmVhazsN
+CiAgDQorIAljYXNlIEJMS0JTWkdFVDoNCisgCWNhc2UgQkxLQlNaU0VUOg0K
+KyAJCXJldHVybiBibGtfaW9jdGwgKGlub2RlLT5pX3JkZXYsIGNvbW1hbmQs
+IGEpOw0KICANCiAgCWNhc2UgSERJT19HRVRHRU86DQogIAkJLyogZ2V0IGRp
+c2sgZ2VvbWV0cnkgKi8NCioqKioqKioqKioqKioqKg0KKioqIDEyOTMsMTI5
+OCAqKioqDQotLS0gMTMwOSwxMzE1IC0tLS0NCiAgCWx2X3QgKmx2ID0gdmdf
+dGhpcy0+bHZbTFZfQkxLKG1pbm9yKV07DQogIA0KICANCisgIHJlc3RhcnQ6
+DQogIAlkb3duX3JlYWQoJmx2LT5sdl9sb2NrKTsNCiAgCWlmICghKGx2LT5s
+dl9zdGF0dXMgJiBMVl9BQ1RJVkUpKSB7DQogIAkJcHJpbnRrKEtFUk5fQUxF
+UlQNCioqKioqKioqKioqKioqKg0KKioqIDEzODEsMTM4OSAqKioqDQogIAkJ
+Z290byBvdXQ7DQogIA0KICAJaWYgKGx2LT5sdl9hY2Nlc3MgJiBMVl9TTkFQ
+U0hPVCkgeyAvKiByZW1hcCBzbmFwc2hvdCAqLw0KISAJCWlmIChsdm1fc25h
+cHNob3RfcmVtYXBfYmxvY2soJnJkZXZfbWFwLCAmcnNlY3Rvcl9tYXAsDQoh
+IAkJCQkJICAgICBwZV9zdGFydCwgbHYpIDwgMCkNCiAgCQkJZ290byBiYWQ7
+DQogIA0KICAJfSBlbHNlIGlmIChydyA9PSBXUklURSB8fCBydyA9PSBXUklU
+RUEpIHsgLyogc25hcHNob3Qgb3JpZ2luICovDQogIAkJbHZfdCAqc25hcDsN
+Ci0tLSAxMzk4LDE0MjUgLS0tLQ0KICAJCWdvdG8gb3V0Ow0KICANCiAgCWlm
+IChsdi0+bHZfYWNjZXNzICYgTFZfU05BUFNIT1QpIHsgLyogcmVtYXAgc25h
+cHNob3QgKi8NCiEgCQlpbnQgcmV0Ow0KISAJCXJldCA9IGx2bV9zbmFwc2hv
+dF9yZW1hcF9ibG9jaygmcmRldl9tYXAsICZyc2VjdG9yX21hcCwNCiEgCQkJ
+CQkJcGVfc3RhcnQsIGx2KTsNCiEgCQlpZiAocmV0IDwgMCkgDQogIAkJCWdv
+dG8gYmFkOw0KKyAJCWlmIChyZXQgPiAwIHx8ICEocncgPT0gV1JJVEUgfHwg
+cncgPT0gV1JJVEVBKSkNCisgCQkJZ290byBvdXQ7IC8qIGFscmVhZHkgcmVt
+YXBwZWQgb3IgcmVhZCBhY2Nlc3MgKi8NCisgDQorICNpZmRlZiBDT05GSUdf
+TFZNX1dSSVRFQUJMRV9TTkFQU0hPVFMNCisgCQkvKiByZW1hcCB0aGUgYmxv
+Y2sgKi8NCisgDQorIAkJLyogU2VyaWFsaXplcyB0aGUgQ09XIHdpdGggdGhl
+IGFjY2Vzc2VzIHRvIHRoZQ0KKyAJCSAgIHNuYXBzaG90IGRldmljZS4NCisg
+DQorIAkJICAgX19yZW1hcF9zbmFwc2hvdCBhY3F1aXJlcyB0aGUgd3JpdGUg
+bG9jay4gKi8NCisgCQl1cF9yZWFkKCZsdi0+bHZfbG9jayk7DQorIAkJX19y
+ZW1hcF9zbmFwc2hvdChyZGV2X21hcCwgcnNlY3Rvcl9tYXAsDQorIAkJCQkg
+cGVfc3RhcnQsIGx2LCB2Z190aGlzKTsNCisgCQlnb3RvIHJlc3RhcnQ7DQor
+ICNlbHNlDQorIAkJZ290byBiYWQ7DQorICNlbmRpZg0KICANCiAgCX0gZWxz
+ZSBpZiAocncgPT0gV1JJVEUgfHwgcncgPT0gV1JJVEVBKSB7IC8qIHNuYXBz
+aG90IG9yaWdpbiAqLw0KICAJCWx2X3QgKnNuYXA7DQpkaWZmIC1jIC1yIC1i
+IC1CIC1OIC14IENWUyBMVk0udmFuaWxsYS9rZXJuZWwvbHZtLmggTFZNL2tl
+cm5lbC9sdm0uaA0KKioqIExWTS52YW5pbGxhL2tlcm5lbC9sdm0uaAlUdWUg
+SmFuICAxIDIxOjQ5OjQ4IDIwMDINCi0tLSBMVk0va2VybmVsL2x2bS5oCVRo
+dSBOb3YgMjkgMjI6MDY6NDYgMjAwMQ0KKioqKioqKioqKioqKioqDQoqKiog
+NzIsNzcgKioqKg0KLS0tIDcyLDc4IC0tLS0NCiAgICogICAgMjIvMDYvMjAw
+MSAtIGFkZGVkIEFuZHJlYXMgRGlsZ2VyJ3MgUEUgb24gNGsgYm91bmRhcnkg
+YWxpZ25tZW50IGVuaGFuY2VtZW50cw0KICAgKiAgICAxOS8wNy8yMDAxIC0g
+YWRkZWQgcndzZW0gY29tcGF0aWJpbGl0eSBtYWNyb3MgZm9yIDIuMiBrZXJu
+ZWxzDQogICAqICAgIDEzLzExLzIwMDEgLSByZWR1Y2VkIHVzZXJzcGFjZSBp
+bmNsdXNpb24gb2Yga2VybmVsIGhlYWRlcnMgdG8gYSBtaW5pbXVtDQorICAq
+ICAgIDE4LzExLzIwMDEgLSBhZGRlZCBkZWZpbmVzIGZvciBMVk1fR0VUX0ZF
+QVRVUkVfQklUUyBpb2N0bCBbQS5LcnVpc10NCiAgICoNCiAgICovDQogIA0K
+KioqKioqKioqKioqKioqDQoqKiogMzY4LDM3NCAqKioqDQotLS0gMzY5LDM4
+NCAtLS0tDQogIC8qIFRoaXMgaXMgYWN0dWFsbHkgdGhlIHNhbWUgYXMgX0lP
+ICggMHhmZiwgMHgwMCksIG9vcHMuICBSZW1vdmUgZm9yIElPUCAxMisgKi8N
+CiAgI2RlZmluZQlMVk1fTE9DS19MVk0gICAgICAgICAgICBfSU8gKCAweGZl
+LCAweDEwMCkNCiAgI2VuZGlmDQorIC8qIGdldCBsdm0gZmVhdHVyZSBiaXRz
+ICovDQorICNkZWZpbmUgTFZNX0dFVF9GRUFUVVJFX0JJVFMgICAgX0lPUiAo
+IDB4ZmUsIDB4OWIsIDEpDQogIC8qIEVORCBpb2N0bHMgKi8NCisgDQorIA0K
+KyAvKg0KKyAgKiBGZWF0dXJlIEJpdHMNCisgICovDQorIC8qIG1ha2Vpbmcg
+YSBzbmFwc2hvdCB3aXRlYWJsZSBpcyBzYXZlICovDQorICNkZWZpbmUgTFZN
+X0ZFQVRVUkVfV1JJVEVBQkxFX1NOQVBTSE9UUyAweDAxDQogIA0KICANCiAg
+LyoNCmRpZmYgLWMgLXIgLWIgLUIgLU4gLXggQ1ZTIExWTS52YW5pbGxhL3Rv
+b2xzL2xpYi9saWJsdm0uaCBMVk0vdG9vbHMvbGliL2xpYmx2bS5oDQoqKiog
+TFZNLnZhbmlsbGEvdG9vbHMvbGliL2xpYmx2bS5oCVR1ZSBKYW4gIDEgMjE6
+NDk6NDggMjAwMg0KLS0tIExWTS90b29scy9saWIvbGlibHZtLmgJVGh1IE5v
+diAyOSAyMjowNjo0NiAyMDAxDQoqKioqKioqKioqKioqKioNCioqKiA0MDks
+NDE0ICoqKioNCi0tLSA0MDksNDE1IC0tLS0NCiAgdm9pZCAgIGx2bV9kb250
+X2ludGVycnVwdCAoIGludCk7DQogIGludCAgICBsdm1fZ2V0X2NvbF9udW1i
+ZXJzICggY2hhciAqLCBsb25nICoqKTsNCiAgaW50ICAgIGx2bV9nZXRfaW9w
+X3ZlcnNpb24gKCB2b2lkKTsNCisgaW50ICAgIGx2bV9nZXRfZmVhdHVyZV9i
+aXRzICggdm9pZCk7DQogIHZvaWQgICBsdm1faW5pdChpbnQgYXJnYywgY2hh
+ciAqKmFyZ3YpOw0KICB2b2lkICAgbHZtX2ludGVycnVwdCAoIHZvaWQpOw0K
+ICBpbnQgICAgbHZtX2xvY2sgKCB2b2lkKTsNCmRpZmYgLWMgLXIgLWIgLUIg
+LU4gLXggQ1ZTIExWTS52YW5pbGxhL3Rvb2xzL2xpYi9sdm1fZ2V0X2ZlYXR1
+cmVfYml0cy5jIExWTS90b29scy9saWIvbHZtX2dldF9mZWF0dXJlX2JpdHMu
+Yw0KKioqIExWTS52YW5pbGxhL3Rvb2xzL2xpYi9sdm1fZ2V0X2ZlYXR1cmVf
+Yml0cy5jCVRodSBKYW4gIDEgMDE6MDA6MDAgMTk3MA0KLS0tIExWTS90b29s
+cy9saWIvbHZtX2dldF9mZWF0dXJlX2JpdHMuYwlNb24gTm92IDE5IDE5OjQ5
+OjExIDIwMDENCioqKioqKioqKioqKioqKg0KKioqIDAgKioqKg0KLS0tIDEs
+NjAgLS0tLQ0KKyAvKg0KKyAgKiB0b29scy9saWIvbHZtX2dldF9pb3BfdmVy
+c2lvbi5jDQorICAqDQorICAqIENvcHlyaWdodCAoQykgMjAwMSBBbnNlbG0g
+S3J1aXMNCisgICoNCisgICogTm92ZW1iZXIgMjAwMQ0KKyAgKg0KKyAgKg0K
+KyAgKiBUaGlzIExWTSBsaWJyYXJ5IGlzIGZyZWUgc29mdHdhcmU7IHlvdSBj
+YW4gcmVkaXN0cmlidXRlIGl0IGFuZC9vcg0KKyAgKiBtb2RpZnkgaXQgdW5k
+ZXIgdGhlIHRlcm1zIG9mIHRoZSBHTlUgTGlicmFyeSBHZW5lcmFsIFB1Ymxp
+Yw0KKyAgKiBMaWNlbnNlIGFzIHB1Ymxpc2hlZCBieSB0aGUgRnJlZSBTb2Z0
+d2FyZSBGb3VuZGF0aW9uOyBlaXRoZXINCisgICogdmVyc2lvbiAyIG9mIHRo
+ZSBMaWNlbnNlLCBvciAoYXQgeW91ciBvcHRpb24pIGFueSBsYXRlciB2ZXJz
+aW9uLg0KKyAgKg0KKyAgKiBUaGlzIExWTSBsaWJyYXJ5IGlzIGRpc3RyaWJ1
+dGVkIGluIHRoZSBob3BlIHRoYXQgaXQgd2lsbCBiZSB1c2VmdWwsDQorICAq
+IGJ1dCBXSVRIT1VUIEFOWSBXQVJSQU5UWTsgd2l0aG91dCBldmVuIHRoZSBp
+bXBsaWVkIHdhcnJhbnR5IG9mDQorICAqIE1FUkNIQU5UQUJJTElUWSBvciBG
+SVRORVNTIEZPUiBBIFBBUlRJQ1VMQVIgUFVSUE9TRS4gIFNlZSB0aGUgR05V
+DQorICAqIExpYnJhcnkgR2VuZXJhbCBQdWJsaWMgTGljZW5zZSBmb3IgbW9y
+ZSBkZXRhaWxzLg0KKyAgKg0KKyAgKiBZb3Ugc2hvdWxkIGhhdmUgcmVjZWl2
+ZWQgYSBjb3B5IG9mIHRoZSBHTlUgTGlicmFyeSBHZW5lcmFsIFB1YmxpYw0K
+KyAgKiBMaWNlbnNlIGFsb25nIHdpdGggdGhpcyBMVk0gbGlicmFyeTsgaWYg
+bm90LCB3cml0ZSB0byB0aGUgRnJlZQ0KKyAgKiBTb2Z0d2FyZSBGb3VuZGF0
+aW9uLCBJbmMuLCA1OSBUZW1wbGUgUGxhY2UgLSBTdWl0ZSAzMzAsIEJvc3Rv
+biwNCisgICogTUEgMDIxMTEtMTMwNywgVVNBDQorICAqDQorICAqLw0KKyAN
+CisgLyoNCisgICogQ2hhbmdlbG9nDQorICAqDQorICAqICAgIDE4LzExLzIw
+MDEgLSBjcmVhdGVkDQorICAqDQorICAqLw0KKyANCisgI2luY2x1ZGUgPGxp
+Ymx2bS5oPg0KKyANCisgaW50IGx2bV9nZXRfZmVhdHVyZV9iaXRzICggdm9p
+ZCkgew0KKyAgICBpbnQgZ3JvdXAgPSAtMTsNCisgICAgaW50IHJldCA9IDA7
+DQorICAgIHVzaG9ydCBsdm1fZmVhdHVyZV9iaXRzID0gMDsNCisgDQorICAg
+IGRlYnVnX2VudGVyICggImx2bV9nZXRfZmVhdHVyZV9iaXRzIC0tIENBTExF
+RFxuIik7DQorIA0KKyAgICAvKiBqdXN0IHRvIGVuc3VyZSBleGlzdGFuY2Ug
+b2YgL2Rldi9sdm0gaW50ZXJmYWNlIHNwZWNpYWwgKi8NCisgICAgbHZtX2No
+ZWNrX3NwZWNpYWwgKCk7DQorIA0KKyAgICBpZiAoICggZ3JvdXAgPSBvcGVu
+ICggTFZNX0RFViwgT19SRE9OTFkpKSA9PSAtMSkNCisgICAgICAgcmV0ID0g
+LUxWTV9FTFZNX0lPUF9WRVJTSU9OX09QRU47DQorICAgIGVsc2UgaWYgKCAo
+IHJldCA9IGlvY3RsICggZ3JvdXAsIExWTV9HRVRfRkVBVFVSRV9CSVRTLA0K
+KyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICZsdm1fZmVhdHVyZV9i
+aXRzKSkgPT0gLTEpIHJldCA9IC1lcnJubzsNCisgICAgZGVidWcgKCAibHZt
+X2dldF9mZWF0dXJlX2JpdHMgLS0gQUZURVIgaW9jdGwgcmV0OiAlZFxuIiwg
+cmV0KTsNCisgICAgaWYgKCBncm91cCAhPSAtMSkgY2xvc2UgKCBncm91cCk7
+DQorICAgIC8qIG9sZGVyIGtlcm5lbHMgZGlkbid0IGhhdmUgdGhpcyBJT0NU
+TCAqLw0KKyAgICBpZiAoIC1yZXQgPT0gRUlOVkFMICkgew0KKyAgICAgIHJl
+dCA9IDA7DQorICAgICAgbHZtX2ZlYXR1cmVfYml0cyA9IDA7IC8qIG5vIHNw
+ZWNpYWwgZmVhdHVyZXMgKi8NCisgICAgfQ0KKyAgICBpZiAoIHJldCA9PSAw
+KSByZXQgPSBsdm1fZmVhdHVyZV9iaXRzOw0KKyANCisgICAgZGVidWdfbGVh
+dmUgKCAibHZtX2dldF9mZWF0dXJlX2JpdHMgLS0gTEVBVklORyB3aXRoIHJl
+dDogJWRcbiIsIHJldCk7DQorICAgIHJldHVybiByZXQ7DQorIH0NCmRpZmYg
+LWMgLXIgLWIgLUIgLU4gLXggQ1ZTIExWTS52YW5pbGxhL3Rvb2xzL2x2Y2hh
+bmdlLmMgTFZNL3Rvb2xzL2x2Y2hhbmdlLmMNCioqKiBMVk0udmFuaWxsYS90
+b29scy9sdmNoYW5nZS5jCVdlZCBKdWwgMjUgMTY6NTI6MTkgMjAwMQ0KLS0t
+IExWTS90b29scy9sdmNoYW5nZS5jCU1vbiBOb3YgMTkgMTk6NDY6MTIgMjAw
+MQ0KKioqKioqKioqKioqKioqDQoqKiogMzIzLDMzNCAqKioqDQogICAgICAg
+ICAgIGNvbnRpbnVlOw0KICAgICAgICB9DQogICAgIA0KISAgICAgICBpZiAo
+IGx2LT5sdl9hY2Nlc3MgJiBMVl9TTkFQU0hPVCkgew0KICAgICAgICAgICBm
+cHJpbnRmICggc3RkZXJyLCAiJXMgLS0gY2hhbmdlIG9uIHNuYXBzaG90IGxv
+Z2ljYWwgIg0KICAgICAgICAgICAgICAgICAgICAgICAgICAgICAidm9sdW1l
+IFwiJXNcIiBub3QgYWxsb3dlZFxuIiwgY21kLCBsdl9uYW1lKTsNCiAgICAg
+ICAgICAgY29udGludWU7DQogICAgICAgIH0NCiAgDQogICAgICAgIGlmICgg
+bHYtPmx2X2FjY2VzcyAmIExWX1NOQVBTSE9UX09SRykgew0KICAgICAgICAg
+ICBmcHJpbnRmICggc3RkZXJyLCAiJXMgLS0gY2hhbmdlIG9uIGxvZ2ljYWwg
+dm9sdW1lIFwiJXNcIiB1bmRlciAiDQogICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICJzbmFwc2hvdCBub3QgYWxsb3dlZFxuIiwgY21kLCBsdl9uYW1l
+KTsNCi0tLSAzMjMsMzQ1IC0tLS0NCiAgICAgICAgICAgY29udGludWU7DQog
+ICAgICAgIH0NCiAgICAgDQohICAgICAgIGlmICggKCBsdi0+bHZfYWNjZXNz
+ICYgTFZfU05BUFNIT1QpICYmDQohICAgICAgICAgICAgKCAob3B0X0MpIHx8
+IChvcHRfYSkgfHwgKG9wdF9yKSkpIHsNCiAgICAgICAgICAgZnByaW50ZiAo
+IHN0ZGVyciwgIiVzIC0tIGNoYW5nZSBvbiBzbmFwc2hvdCBsb2dpY2FsICIN
+CiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgInZvbHVtZSBcIiVzXCIg
+bm90IGFsbG93ZWRcbiIsIGNtZCwgbHZfbmFtZSk7DQogICAgICAgICAgIGNv
+bnRpbnVlOw0KICAgICAgICB9DQogIA0KKyAgICAgICBpZiAoICggbHYtPmx2
+X2FjY2VzcyAmIExWX1NOQVBTSE9UKSAmJiAob3B0X3ApKSB7DQorIAkgaW50
+IGZlYXR1cmVfYml0cyA9IGx2bV9nZXRfZmVhdHVyZV9iaXRzKCk7DQorIAkg
+aWYgKCBmZWF0dXJlX2JpdHMgPCAwIHx8ICEoZmVhdHVyZV9iaXRzICYgTFZN
+X0ZFQVRVUkVfV1JJVEVBQkxFX1NOQVBTSE9UUykpIHsNCisgCSAgIGZwcmlu
+dGYgKCBzdGRlcnIsICIlcyAtLSBjaGFuZ2Ugb24gc25hcHNob3QgbG9naWNh
+bCAiDQorIAkJICAgICAidm9sdW1lIFwiJXNcIiBub3QgYWxsb3dlZFxuIiwg
+Y21kLCBsdl9uYW1lKTsNCisgCSAgIGNvbnRpbnVlOw0KKyAJIH0NCisgICAg
+ICAgfQ0KKyAgICAgICANCisgICAgICAgLyogZml4bWU6IG9wdF9wIHNob3Vs
+ZCBiZSBzYXZlICovDQogICAgICAgIGlmICggbHYtPmx2X2FjY2VzcyAmIExW
+X1NOQVBTSE9UX09SRykgew0KICAgICAgICAgICBmcHJpbnRmICggc3RkZXJy
+LCAiJXMgLS0gY2hhbmdlIG9uIGxvZ2ljYWwgdm9sdW1lIFwiJXNcIiB1bmRl
+ciAiDQogICAgICAgICAgICAgICAgICAgICAgICAgICAgICJzbmFwc2hvdCBu
+b3QgYWxsb3dlZFxuIiwgY21kLCBsdl9uYW1lKTsNCioqKioqKioqKioqKioq
+Kg0KKioqIDM2NCwzNzAgKioqKg0KICAgICANCiAgICAgICAgICAgaWYgKCBk
+b2l0ID4gMCkgew0KICAgICAgICAgICAgICBkb2l0X3N1bSsrOw0KISAgICAg
+ICAgICAgICBsdi0+bHZfYWNjZXNzID0gbHZfYWNjZXNzOw0KICAgICAgICAg
+ICAgICBpZiAoIG9wdF92ID4gMCkgcHJpbnRmICggIiVzIC0tIGNoYW5naW5n
+IGFjY2VzcyBwZXJtaXNzaW9ucyAiDQogICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAib2YgbG9naWNhbCB2b2x1bWUgXCIlc1wiXG4i
+LA0KICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgY21k
+LCBsdl9uYW1lKTsNCi0tLSAzNzUsMzgzIC0tLS0NCiAgICAgDQogICAgICAg
+ICAgIGlmICggZG9pdCA+IDApIHsNCiAgICAgICAgICAgICAgZG9pdF9zdW0r
+KzsNCiEgICAgICAgICAgICAgLyogZG9uJ3QgY2xlYXIgYWNjZXNzIGZsYWdz
+IGV4Y2VwdCBmb3IgTFZfV1JJVEUgYW5kIExWX1JFQUQgKi8NCiEgICAgICAg
+ICAgICAgbHYtPmx2X2FjY2VzcyAmPSB+KCBMVl9SRUFEIHwgTFZfV1JJVEUg
+KSB8IGx2X2FjY2VzczsNCiEgICAgICAgICAgICAgbHYtPmx2X2FjY2VzcyB8
+PSBsdl9hY2Nlc3M7DQogICAgICAgICAgICAgIGlmICggb3B0X3YgPiAwKSBw
+cmludGYgKCAiJXMgLS0gY2hhbmdpbmcgYWNjZXNzIHBlcm1pc3Npb25zICIN
+CiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICJvZiBs
+b2dpY2FsIHZvbHVtZSBcIiVzXCJcbiIsDQogICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICBjbWQsIGx2X25hbWUpOw0K
+---1811261415-430695237-1010651952=:5006--
