@@ -1,8 +1,10 @@
-Message-ID: <3DF4A287.2050806@ednet.ns.ca>
-From: Patrick Boutilier <boutilpj@ednet.ns.ca>
+From: Pantaleimon <pantaleimon@home.no>
+Subject: Re: [linux-lvm] I'm confused
+References: <BDEMIPDEGABMNEFIHCPDEECAEEAA.bill+f.9sfuw6uo@tao-group.com>
+In-Reply-To: <BDEMIPDEGABMNEFIHCPDEECAEEAA.bill+f.9sfuw6uo@tao-group.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] PV Status: NOT available
+Content-Transfer-Encoding: 8bit
+Message-Id: <200212091512.49269.pantaleimon@home.no>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -13,80 +15,57 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Dec  9 08:03:02 2002
+Date: Mon Dec  9 08:13:02 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: LVM Mailing List <linux-lvm@mlists.sistina.com>
+Content-Type: text/plain; charset="us-ascii"
+To: linux-lvm@sistina.com
 
-Kernel 2.4.20 with LVM 1.0.6
+On Monday 09 December 2002 11:29, William Blunn wrote:
+> > I think hardisk manufacturers use base 10, rather than base 2,
+> > when they speak of "mega" and "giga", ie. mega = 1000K and not
+> > 1024K. That means that a 120G hardisk is only 114.4G.
+>
+> No.
+>
+> You are right in that "mega = 1000K", but from your figure of 114.4, you
+> still appear to have "K = 1024" and "G = 1024M", both of which are
+> wrong.
+>
 
+I had G=1000, M=1000 and K=1024 which would give 120 x 10^6 x 1024 =114.4KiB. 
+I stand corrected on the matter of me saying/implying K=1024.
 
-I can mount /dev/imap_vg/imap_lv without any problems but I can 
-understand why the PV status is NOT available.
-
-
-
-
-pvdisplay /dev/sda6
-
---- Physical volume ---
-PV Name               /dev/sda6
-VG Name               imap_vg
-PV Size               261.11 GB [547591527 secs] / NOT usable 16.25 MB 
-[LVM: 189 KB]
-PV#                   1
-PV Status             NOT available
-Allocatable           yes (but full)
-Cur LV                1
-PE Size (KByte)       16384
-Total PE              16710
-Free PE               0
-Allocated PE          16710
-PV UUID               O7WnwM-5ASt-AsiV-8BlZ-h6KP-NjFl-cdY33C
+I am glad to hear that symbols have been defined for the base 2 multipliers. I 
+shall try to use them. I seem to remember reading somthing about it sometime 
+ago. Didn't someone propose to use something like KK, MM and GG, too. When I 
+tell some people that, even when it comes to computers, the multiplier "kilo" 
+formally, if not in practice, means "x 1000" they just won't believe me.
 
 
-
-
-
-vgdisplay
-
---- Volume group ---
-VG Name               imap_vg
-VG Access             read/write
-VG Status             available/resizable
-VG #                  0
-MAX LV                255
-Cur LV                1
-Open LV               1
-MAX LV Size           1023.97 GB
-Max PV                255
-Cur PV                1
-Act PV                1
-VG Size               261.09 GB
-PE Size               16 MB
-Total PE              16710
-Alloc PE / Size       16710 / 261.09 GB
-Free  PE / Size       0 / 0
-VG UUID               ON35SA-1UEm-YjpU-FzQu-vw4V-CC0y-YG6qfw
-
-
-
-
-
-
-
-lvdisplay /dev/imap_vg/imap_lv
-
---- Logical volume ---
-LV Name                /dev/imap_vg/imap_lv
-VG Name                imap_vg
-LV Write Access        read/write
-LV Status              available
-LV #                   1
-# open                 1
-LV Size                261.09 GB
-Current LE             16710
-Allocated LE           16710
-Allocation             next free
-Read ahead sectors     1024
-Block device           58:0
+> Hard disk manufacturers use SI defined multipliers, i.e. they use a
+> documented standard.
+>
+>   K = 10^3
+>   M = 10^6
+>   G = 10^9
+>
+>   120 GB = 120 000 000 000 B
+>
+> Computer people have traditionally abused these symbols to mean
+> multipliers with similar values, but based on powers of two.
+>
+> Symbols have been defined for these multipliers, but some people still
+> haven't caught up to them.
+>
+>   Ki = 2^10 = 1024
+>   Mi = 2^20 = 1048576
+>   Gi = 2^30 = 1073741824
+>
+> So
+>
+>   120 GB ~= 111.8 GiB
+>
+> Interestingly, LVM1's vgdisplay incorrectly uses "GB" in its output
+> where it should say "GiB".
+>
+> Bill
