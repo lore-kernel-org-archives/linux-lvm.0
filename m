@@ -1,9 +1,9 @@
 From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] pvscan and vgscan
-Message-ID: <20030425105718.A16006@sistina.com>
-References: <1051208166.1179.9.camel@rich>
+Subject: Re: [linux-lvm] restoring volume group from file
+Message-ID: <20030425112124.B16006@sistina.com>
+References: <20030424163942.GH12350@mit.edu>
 Mime-Version: 1.0
-In-Reply-To: <1051208166.1179.9.camel@rich>; from rich@storix.com on Thu, Apr 24, 2003 at 11:16:07AM -0700
+In-Reply-To: <20030424163942.GH12350@mit.edu>; from jwa@mit.edu on Thu, Apr 24, 2003 at 12:39:42PM -0400
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,34 +14,59 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Fri Apr 25 04:03:01 2003
+Date: Fri Apr 25 04:27:02 2003
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Thu, Apr 24, 2003 at 11:16:07AM -0700, Rich Turner wrote:
-> how does pvscan and vgscan know what devices to scan to search for pv's
-> and vg's? is there a file that it uses to determine which disks to open?
-> it does not appear to try to open all devices when their respective
-> modules have not been loaded yet.
+James,
 
-LVM1 has the tradeoff that all supported devices are hard-coded which we
-changed in LVM2 to be configurable (using regular expressions).
+sounds like you had a problem with your LVs before you copied already,
+which I assume was the reason to copy hde5 and run vgcfgrestore.
 
+What does vgck (metadata checker) display ?
+
+Maybe you have better luck with an older metadata backup from
+/etc/lvmconf ?
+
+On Thu, Apr 24, 2003 at 12:39:42PM -0400, James W Anderson wrote:
+> Hi,
 > 
-> my situation is that i have volume groups on multiple scsi devices but
-> the scsi modules are not being loaded before vgscan is being run in the
-> rc.sysinit. i realize that this is a problem inherent with the
-> rc.sysinit and can be fixed within it. but, my question is how does
-> vgscan scan all devices without opening them? normally when a device is
-> opened all of the modules are automatically loaded, hence vgscan will
-> find them.
-
-It does open them. You likely have a kmod misconfiguration preventing
-module load if it fails to.
+> I recently made a copy of an lvm partition to a file, using dd:
 > 
-> using lvm 1.0.3
+> dd if=/dev/hde5 of=lvm-file bs=...
+> 
+> I would now like to mount this file, which contains a single volume
+> group, on a different machine.  Here is what I have done so far:
+> 
+> 1) create a loopback device for the file
+> 
+> # losetup /dev/loop0 lvm-file
+> 
+> 2) pvscan, detects the volume group
+> 
+> # pvscan
+> pvscan -- reading all physical volumes (this may take a while...)
+> pvscan -- inactive PV "/dev/loop0" of VG "vg00" [23.45 GB / 3.20 GB free]
+> pvscan -- total: 1 [23.46 GB] / in use: 1 [23.46 GB] / in no VG: 0 [0]
+> 
+> 3) Now, when I try to do vgcfgrestore, I get the following error:
+> 
+> # vgcfgrestore -n vg00 -f vg00.conf -o /dev/hde5 /dev/loop0
+> vgcfgrestore -- size of physical volume /dev/loop0 differs from backup
+> 
+> 
+> I tried passing the -i option to tell it to ignore the size
+> difference, and then it did create the volume group, but all of the
+> logical volumes are unusable---e2fsck cannot find the superblocks on
+> the filesystems.
+> 
+> Does anyone have any suggestions as to what I might try to get this to
+> work?  Any help would be tremendously appreciated.
+> 
+> Many thanks,
+> James
 > 
 > 
 > _______________________________________________
