@@ -1,11 +1,11 @@
 Return-Path: <adilger@turbolinux.com>
 From: Andreas Dilger <adilger@turbolinux.com>
-Message-Id: <200102121931.f1CJVWE08511@webber.adilger.net>
+Message-Id: <200102121935.f1CJZxd08517@webber.adilger.net>
 Subject: Re: [linux-lvm] Weird corruption of volume group configuration with
  LVM
-In-Reply-To: <Pine.LNX.4.20.0102120713030.5354-101000@menswerk.cyclone.se> from
- Hans Engren at "Feb 12, 2001 07:14:10 am"
-Date: Mon, 12 Feb 2001 12:31:32 -0700 (MST)
+In-Reply-To: <Pine.LNX.4.20.0102120702400.5354-100000@menswerk.cyclone.se> from
+ Hans Engren at "Feb 12, 2001 07:09:49 am"
+Date: Mon, 12 Feb 2001 12:35:59 -0700 (MST)
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -23,28 +23,22 @@ Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
 Hans, you write:
-> Forgot the attachment in my previous mail. Oups.
+> Very true. I did not. New attached output has, although your code was
+> beta3 instead of beta4. I guess that won't make a difference in my
+> case. See the attached file (which actually has 44889 lines .. ?) with
+> output from 'your' vgscan.
+> 
+> Using beta3, vgscan doesn't segfault. It does with beta4. :/
 
-[Attachment, skipping...]
+The output you sent ends with:
 
-This still isn't "my" vgscan either.  For example, my code prints:
+<4444> pv_read_all_pv_of_vg -- LEAVING with ret: -267
 
-<4444> lvm_add_dir_cache -- CALLED with /dev/hda
-
-instead of only:
-
-<4444> lvm_add_dir_cache -- CALLED
-
-and if lvm_dir_cache is called multiple times, it looks like:
-
-<333> pv_get_size -- CALLED with /dev/hda2 and BFFFF9AC
-<4444> lvm_dir_cache_find -- CALLED
-<55555> lvm_dir_cache -- CALLED
-<55555> lvm_dir_cache -- LEAVING with ret: 12
-<4444> lvm_dir_cache_find -- LEAVING
-
-so lvm_dir_cache doesn't re-read the whole device list each time it is
-called, which is still happening in your output.
+and error 267 is "LVM_EPV_READ_ALL_PV_OF_VG_PV_NUMBER" which means it
+found fewer PVs than it should have (my code outputs an error at this
+point, and it also says why the PVs were removed from the list, likely
+due to missing UUIDs).  I would suggest removing the UUID checking from
+pv_read_all_pv_of_vg and re-running vgscan.  It may fix your problem.
 
 Cheers, Andreas
 -- 
