@@ -1,11 +1,10 @@
-Subject: Re: [linux-lvm] A tool to administrate LVM.
-In-Reply-To: <3DA679AD.B77ACC01@silicide.dk>
-References: <20021011142810B.jyoshida@miraclelinux.com>
-	<3DA679AD.B77ACC01@silicide.dk>
+Message-ID: <20021011075220.GA1153@fib011235813.fsnet.co.uk>
+References: <1034276879.2396.11.camel@mars.goatskin.org>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Message-Id: <20021011164755X.jyoshida@miraclelinux.com>
-From: Jun YOSHIDA <jyoshida@miraclelinux.com>
+Content-Disposition: inline
+In-Reply-To: <1034276879.2396.11.camel@mars.goatskin.org>
+From: Joe Thornber <joe@fib011235813.fsnet.co.uk>
+Subject: [linux-lvm] Re: device-mapper transition
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,33 +15,44 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Fri Oct 11 02:48:05 2002
+Date: Fri Oct 11 02:53:06 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Type: Text/Plain; charset="us-ascii"
-To: linux-lvm@sistina.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: Shane Shrybman <shrybman@sympatico.ca>
+Cc: linux-lvm@sistina.com
 
-on [Fri, 11 Oct 2002 09:11:41 +0200], 
-Jon Bendtsen <jon+lvm@silicide.dk> wrote on "Re: [linux-lvm] A tool to administrate LVM."
-> Jun YOSHIDA wrote:
-> > 
-> > Hello all,
-> > 
-> > I am a developer working for MIRACLE LINUX which is one of the linux
-> > distributors in Japan.
-> > 
-> > I made a tool to administrate LVM easily and named it LVMAdmin temporarily.
-> > It will help beginners to create PV/VG/LV easily.
-> > 
-> > Small screenshot is put at:
-> >         http://www.miraclelinux.com/developer/lvmadmin.html
-> 
-> It must be very small, because i cant see it :/
+Shane,
 
-I put English manual temporarily.
+On Thu, Oct 10, 2002 at 03:07:58PM -0400, Shane Shrybman wrote:
+> Is it fully backwards compatible? Can a move from 2.4 to 2.5 and back
+> again without problems? I think it is but just wanted to make sure.
 
-	http://www.miraclelinux.com/developer/lvmadmin-doc-e.html
+Yes
 
-Please try to read it.
+> In terms of making the transition it looks like I have to be running a
+> kernel with dev-mapper in it before I can compile the user space LVM2
+> tools.
 
-Thank you,
--Jun
+This isn't quite true.  The lvm2 tools link to libdevmapper, which is
+a tiny library that encapsulates the ioctl interface to the kernel.
+In order to build libdevmapper (found in the device-mapper tarball)
+you will need a kernel *source* tree that has been patched with
+device-mapper.  You can use the --with-kernel_dir option to configure
+to specify kernel source that is not in /usr/src/linux.
+
+Don't hesitate to come and get help on irc.openprojects.net #lvm if
+you need more help.
+
+> I understand from your posts that LVM2 is basically stable but does not
+> support snapshots at this time. Does it support pvmove, extend and
+> shrink or are these dangerous/unsupported?
+
+2.5 doesn't yet support snapshots, 2.4 does.  The only other major
+feature missing is the pvmove tool (missing from both kernels).
+Resizing is fine, if the tool is there we believe it works, don't be
+afraid of running something because it might not be finished.
+
+If you do try 2.5 feedback would be appreciated.
+
+- Joe
