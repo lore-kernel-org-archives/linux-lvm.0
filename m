@@ -1,10 +1,8 @@
-From: Patrick Caulfield <caulfield@sistina.com>
-Subject: Re: [linux-lvm] Can't find LVM partition
-Message-ID: <20020613191447.GK1038@tykepenguin.com>
-References: <C394073E4521D411ABF10006293838D604CA574F@cmh0401mai01.amr.stercomm.com>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <C394073E4521D411ABF10006293838D604CA574F@cmh0401mai01.amr.stercomm.com>
+Message-ID: <OF8353947B.FB8E02FC-ON80256BD8.00693D8A@de.ibm.com>
+From: "Andre Borkenfeld" <BORKEN@de.ibm.com>
+MIME-Version: 1.0
+Content-transfer-encoding: quoted-printable
+Subject: [linux-lvm] LVM mit einem Readonly rootfs =?iso-8859-1?Q?m=F6glich=3F?=
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,22 +13,62 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Thu Jun 13 14:15:01 2002
+Date: Fri Jun 14 13:32:02 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: linux-lvm@sistina.com
+Content-Type: text/plain; charset="iso-8859-1"
+To: Linux-LVM@Sistina.com
+Cc: Matthias Hein <mathein@de.ibm.com>
 
-On Thu, Jun 13, 2002 at 11:36:38AM -0400, Stauffer, Darryl wrote:
-> Hello,
-> 
-> I just got done upgrading from Redhat 7.2 to Redhat 7.3.  My home directory
-> was setup on its own partition using LVM and reiserFS.  The upgrade was done
-> by formatting the original root partition and reinstalling OS which means
-> that all the LVM info is gone.  Is there any way to recover my LVM
-> partition?
+Hallo Herr Mauelshagen,
 
-If all that was upgraded was an existing non-LVM root partition then vgscan
-should fine the LVM bits again without help. 
+wir setzen die SuSE Distribution f=FCr die zSeries ein (s390, 64bit). U=
+nserer
+kernelstand ist 2.4.17-timer mit gcc 2.95.
+Wir haben folgendes vor:
+- Aufbau eines Linux systems als "Mastersystem"
+- Aufbau mehrerer Linux-Clone. Diese haben readonly Zugriff auf das
+root-filesystem des Mastersystemes.
+Dies soll Plattenplatz aber vor allem Wartung sparen.
 
-patrick
+Wir haben nun ein Problem:
+Wir wollen Ihren LVM einsetzen. Leider schreibt der LVM in /etc mehrere=
+
+files/directories. Die Directories konnten wir durch links in ein
+rw-filesystem umlenken; Bei der lvmtab versagt diese Technik jedoch.
+
+Gibt es einen weg, dem LVM mitzuteilen, ein anderes Verzeichnis als /et=
+c
+zuverwenden (z.B. /rw/etc)? Einen versteckten Parameter oder eine
+environment Variable?
+
+Wir haben auch ein wenig getestet und folgendes getan:
+In liblvm.h haben wir die Variablen LVMTAB, LVMTAB_DIR, VG_BACKUP_DIR a=
+uf
+/rw/etc umgesetzt und die lvm sourcen neu compiliert und dann installie=
+rt.
+Es scheint zu funktionieren. Ist dies ausreichend? Sehen sie noch irgen=
+dwo
+Probleme?
+
+Wir schreiben gerade ein Buch (Redbook) in den USA =FCber unsere
+Implementierung des Cloning. Daher w=E4re uns am liebsten, wenn es soet=
+was
+wie einen Parameter gibt.
+
+Wir w=FCrden uns sehr =FCber eine baldige Antwort freuen, da wir unsere=
+ Arbeit
+mitte n=E4chster Woche abschlie=DFen m=FCssen.
+
+Vielen Dank!
+
+Mit freundlichem Gru=DF
+
+   Andre Borkenfeld
+
+
+IBM Global Service
+BIS ERP MP North D=FCsseldorf
+Festnetz:
+Mobil: 0172/7355725
+e-mail: borken@de.ibm.com
+=
