@@ -1,9 +1,8 @@
-Message-ID: <001501c261b7$c1f6ed90$ddc67140@nolove>
-From: "Matt" <lightning@aci.net>
-References: <002001c25fa7$482b2740$ccc67140@ownage> <20020919115935.A32578@sistina.com> <000d01c2615f$7f7d7130$ddc67140@nolove> <1032446901.3d89e3b5b98de@lola.Pin.LU>
-Subject: Re: [linux-lvm] Removing an old disk, and some vgexport/import love..
+From: James Hawtin <oolon@ankh.org>
+Subject: Re: [linux-lvm] vgscan not returning
+In-Reply-To: <200209192114.RAA28859@www23.ureach.com>
+Message-ID: <Pine.LNX.4.44.0209192137300.5967-100000@pzat.meep.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,53 +13,73 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Thu Sep 19 16:46:37 2002
+Date: Thu Sep 19 17:10:52 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: TEXT/PLAIN; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Chris... I think I love you, that was indeed the problem and your solution
-solved it.  I'd like to thank you both for helping me out, have a good one..
 
---Matt
+On Thu, 19 Sep 2002, Ali Zaidi wrote:
 
------ Original Message -----
-From: "Christian Limpach"
-To: <linux-lvm@sistina.com>
-Sent: Thursday, September 19, 2002 7:48 AM
-Subject: Re: [linux-lvm] Removing an old disk, and some vgexport/import
-love..
+> Hi:
+> I am a novice with LVM but after going through the man pages and howtos i was
+> unable to find a solution to my problem. I am hoping one of you might find some
+> time to point me in the right direction.
+>
+> I am trying to setup LVM on a RH box. I run vgscan before i can create the
+> volumes but it never returns. Same thing happens with lvmdiskscan and pvscan.
+> Here is a -v and -d output of vgscan
+
+Ok and now to try to answer your problem....
+
+Did you do a pvcreate?
+
+did the disk have existing data on it?
+
+Try dd to write /dev/zero to the first bit of the partitions you want to
+put into lvm. then do you vgscan which should then return with an error
+saying it found nothing.... you can then use pvcreate on them
+
+Of course your LAME disk layout could be confusing lvm in which case as a
+work arround just have one lvm partion and use lvm to allocate the disk,
+which is what you should be doing in the first place!
 
 
-> Quoting Matt <lightning@aci.net>:
->
-> > > > PV Name (#)           /dev/hde1 (1)
-> > > > PV Name (#)           /dev/hdg1 (3)
-> > > > PV Name (#)           /dev/hdf1 (4)
->
-> what happened here is that vgreduce doesn't renumber the PVs and if you
-> export the VG and try to reimport it, vgimport complains because it
-expects
-> the PVs to be numbered contiguously.  I had this same problem a couple of
-> weeks ago.  I solved it by patching the VGDA on the new disk, renumbering
-the
-> PV to get the number of the PV I had removed and then everything was ok
-again.
->
-> It seems like you'll need to renumber /dev/hdf1 to be PV#2 from being
-PV#4.
-> Check with pvdata that the PVs are indeed numbered as above, make a copy
-of
-> the first few sectors of /dev/hdf1 and then try the following:
-> printf "\0002" | dd of=/dev/hdf1 bs=1 count=1 seek=432 conv=notrunc
->
-> --
-> Christian Limpach <chris@Pin.LU>
->
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
->
->
+------
+
+And now a few quick questions and answers....
+
+Q: I can allocate my disk better than LVM!
+
+A: No you cannot! or rather you can allocate your disk when you
+first get the machine to produce nice continuous partions. YOU CAN DO THIS
+WITH LVM. If you have a brand new volume group and just add partions to
+it they will be continuous with LVM as well.... Don't trust LVM.. you can
+do a pvdisplay to show you this fact!
+
+A2: Sure, but what happens if you want to remove 2 partions, that are not
+next door to each other, and them make the one big partion... with fdisk
+its a dd nigtmare... with LVM its easy.
+
+Q: but how can I move my stuff onto another disk... I use DD!
+
+A: SO? There is nothing special about lvm devices apart from the fact they
+make things easer for you... You want to work that way, make your new
+device using LVM or fdisk and do your dd! But you could save yourself time
+by using pvmove!
+
+Q: LVM adds a level of indirection to my disk.. surely its better to use
+the real disk
+A: Theoritically yes... but the translation to where on the disk is a
+calculation done on your computer not on the disk the slowest part of the
+operation is pulling stuff from your disk! Think about is a software raid
+faster or slower? Its faster cos the slow part was the disk and now there
+is more than one disk!
+
+Q: I like to micromanage my disk...
+A: You can do that with LVM if you like or you can let LVM do the best it
+can for you and use your bonus time to go down the pub.
+
+
+James
