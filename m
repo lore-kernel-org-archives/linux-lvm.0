@@ -1,10 +1,9 @@
-Message-ID: <3F6806CC.6050506@tupshin.com>
-From: Tupshin Harper <tupshin@tupshin.com>
+From: "Rene Olsen" <rene_olsen@post3.tele.dk>
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] pvscan showing 0 free on all PV's.
-References: <3F676739.13431.C25AFD2@localhost> <3F675CDB.80002@tupshin.com> <3F6804B5.6060608@webhackande.se>
-In-Reply-To: <3F6804B5.6060608@webhackande.se>
-Content-Transfer-Encoding: 7bit
+Message-ID: <3F679A44.6121.CED1C6A@localhost>
+Content-transfer-encoding: 7BIT
+Content-description: Mail message body
+Subject: [linux-lvm] pvscan showing 0 free on all PV's.
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,31 +14,68 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Sep 17 02:02:01 2003
+Date: Wed Sep 17 07:07:02 2003
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
+Content-Type: text/html; charset="us-ascii"
 To: linux-lvm@sistina.com
 
-Rickard Olsson wrote:
-
-> Tupshin Harper wrote:
->
->> If you are using reiserfs, jfs, or xfs, you are probably out of luck, 
->> as these filesystems don't currently support reduction.
->
->
-> resize_reiserfs shrinks or grows reiserfs3 filesystems.
->
-> http://www.namesys.com/resize_reiserfs.html
->
-> [evidence type=anecdotal] I have used it to grow and shrink my 
-> reiserfs filesystems on many occasions for several years with no 
-> problems whatsoever. [/evidence] I typically use ext3 on the / and 
-> /boot partitions and LVM with Reiser on all large storage areas, like 
-> /home and /files. This is specifically because it is easy to change 
-> the sizes of the filesystems and handle the disks - move them around 
-> and so on.
-
-Yup, I misspoke. It's JFS and XFS that don't shrink.
-
--Tupshin
+<?xml  version="1.0" ?><html>
+<head>
+<title></title>
+</head>
+<body>
+<div align="left"><font face="Arial"><span style="font-size:10pt">Hi.</span></font></div>
+<div align="left"><br/></div>
+<p><font face="Times New Roman" size="3"><span style="font-size:12pt">&gt;df shows how much free space there is on the *filesystem*. Even if the 
+&gt;filesystem isn't full, it can occupy the entire lvm, which occupies the entire 
+&gt;volume group. If you have only one filesystem on the lvm, then you may or may 
+&gt;not have a problem, depending on what filesystem you are using. If you are 
+&gt;using ext2 or ext3, then you can probably do an ext2resize to shrink it, followed 
+&gt;by an lvreduce to reduce the size of the partition that the filesystem lives on, but 
+&gt;*DANGER* *DANGER* *DANGER*. Reducing the size of an existing 
+&gt;filesystem is inherently dangerous, so back up, tread with caution, and don't 
+&gt;blame me when a meteorite flattens your house. If you are using reiserfs, jfs, or 
+&gt;xfs, you are probably out of luck, as these filesystems don't currently support 
+&gt;reduction. </span></font></p>
+<div align="left"><br/>
+</div>
+<div align="left"><font face="Times New Roman" size="3"><span style="font-size:12pt">So what I should do is the following:</span></font></div>
+<div align="left"><br/>
+</div>
+<div align="left"><font face="Times New Roman" size="3"><span style="font-size:12pt">Lets say the 200GB disc is 6000 PE's big.</span></font></div>
+<div align="left"><br/>
+</div>
+<div align="left"><font face="Times New Roman" size="3"><span style="font-size:12pt">e2fsadm -v -l -6076 /dev/vol1/lv_vol</span></font></div>
+<div align="left"><br/>
+</div>
+<div align="left"><font face="Times New Roman" size="3"><span style="font-size:12pt">This should make the lvm 200GB smaler.</span></font></div>
+<div align="left"><br/>
+</div>
+<div align="left"><font face="Times New Roman" size="3"><span style="font-size:12pt">Then after that I do</span></font></div>
+<div align="left"><br/>
+</div>
+<div align="left"><font face="Times New Roman" size="3"><span style="font-size:12pt">pvmove /dev/hdh1</span></font></div>
+<div align="left"><br/>
+</div>
+<div align="left"><font face="Times New Roman" size="3"><span style="font-size:12pt">That should then move the content of hdh1 to the other drives ?</span></font></div>
+<div align="left"><br/>
+</div>
+<div align="left"><font face="Times New Roman" size="3"><span style="font-size:12pt">Sorry, but I am a bit lost here.</span></font></div>
+<div align="left"><br/>
+</div>
+<div align="left"><font face="Times New Roman" size="3"><span style="font-size:12pt">All I want to do is to get the 200GB out of the lvm.</span></font></div>
+<div align="left"><br/>
+</div>
+<div align="left"><font face="Times New Roman" size="3"><span style="font-size:12pt">I am running ext2 and there is just that lvm on the system and a small 6GB system 
+disc.</span></font></div>
+<div align="left"><br/>
+</div>
+<div align="left"><font face="Times New Roman" size="3"><span style="font-size:12pt">Best regards</span></font></div>
+<div align="left"><br/>
+</div>
+<div align="left"><font face="Times New Roman" size="3"><span style="font-size:12pt">Rene Olsen</span></font></div>
+<div align="left"><br/>
+</div>
+<div align="left"></div>
+</body>
+</html>
