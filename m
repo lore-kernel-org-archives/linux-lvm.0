@@ -1,41 +1,44 @@
-Date: Thu, 24 Aug 2000 07:57:25 -0400
+Date: Thu, 24 Aug 2000 07:59:10 -0400
 From: Peter Green <pcg@gospelcom.net>
 Subject: Re: [linux-lvm] LVM and sw RAID1
-Message-ID: <20000824075725.B7996@gospelcom.net>
-References: <OFBD402CC0.EADC9B6D-ONC1256945.00396FA2@resnova.de>
+Message-ID: <20000824075910.C7996@gospelcom.net>
+References: <20000823162957.B8398@gospelcom.net> <20000824111944.A974@guldukat.muon>
 Mime-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <OFBD402CC0.EADC9B6D-ONC1256945.00396FA2@resnova.de>; from Peter.Wuestefeld@resnova.de on Thu, Aug 24, 2000 at 12:37:43PM +0200
+In-Reply-To: <20000824111944.A974@guldukat.muon>; from nils@muon.de on Thu, Aug 24, 2000 at 11:19:44AM +0200
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: Peter.Wuestefeld@resnova.de
-Cc: Andreas Dilger <adilger@turbolinux.com>, linux-lvm@msede.com, owner-linux-lvm@msede.com
+To: linux-lvm@msede.com
 
-Thanks for the response,
-
-also sprach Peter.Wuestefeld:
+also sprach nils:
+> On Wed, 23.08.00, Peter Green <pcg@gospelcom.net> wrote:
+> >   (pcg@dmna) ~> uname -a
+> >   Linux dmna 2.4.0-0.21 #2 Wed Aug 23 11:46:12 EDT 2000 i686 unknown
 > 
->    Hi,
->    I think you are trying to cure the wrong disease ;-)
->    > [root@dmna /root]# pvcreate -f /dev/md0
->    > pvcreate -- invalid partition type 0x83 for "/dev/md0" (must be
->    0x8e)
->    shows what is wrong:
->    try to set the partition id to 0x8e with fdisk/sfdisk/cfdisk - that
->    should solve the problem.
+> I'm a bit confused. Shouldnt the kernel-version be something like
+> "2.4.0-testN" instead of "2.4.0-0.21"?
 
-There *aren't* any partitions on a /dev/md? device. Look at the strace I
-sent; it's trying to pvcreate /dev/sda, even though I specify /dev/md0 on
-the command line.
+It's a RedHat kernel from rawhide.
 
-Thanks for your help.
+> I for one am using 2.4.0-test5 with LVM 0.8final on sw-Raid Lv.5 wihout any
+> problems so far, my pvcreate behaved like it should.
+
+Hrm, I might try the stock kernel instead. Usually, RedHat does fairly good
+things with any patches they add to their kernel, but this might be a case
+in which they've done something naughty.
+
+Thanks for the pointers!
 
 /pg
 -- 
 Peter Green : Gospel Communications Network, SysAdmin : pcg@gospelcom.net
 ---
-We come to bury DOS, not to praise it.
-(Paul Vojta, vojta@math.berkeley.edu, paraphrasing a quote of Shakespeare)
+/*
+ * Oops. The kernel tried to access some bad page. We'll have to
+ * terminate things with extreme prejudice.
+*/
+die_if_kernel("Oops", regs, error_code);
+(From linux/arch/i386/mm/fault.c)				   
