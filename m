@@ -1,10 +1,10 @@
-Subject: Re: [linux-lvm] LVM and SPL 
-In-Reply-To: Message from Rob Latham <rlatham@plogic.com> 
-   of "Fri, 31 Aug 2001 08:40:53 EDT." <20010831084053.A24948@otto.plogic.internal> 
-Mime-Version: 1.0
-Date: Fri, 31 Aug 2001 11:11:18 -0700
-From: "Michael J. Declerck" <declerck@sistina.com>
-Message-Id: <20010831181118.4F4BE32643@spook>
+Message-ID: <3B8FD788.798E82AF@bellsouth.net>
+Date: Fri, 31 Aug 2001 14:29:28 -0400
+From: Jeff Layton <laytonjb@bellsouth.net>
+MIME-Version: 1.0
+Subject: Re: [linux-lvm] LVM and SPL
+References: <E504453C04C1D311988D00508B2C5C2DF2FBB8@mail11.gruppocredit.it>
+Content-Transfer-Encoding: 7bit
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,39 +17,66 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-I'll preface this with the statement that I am not a lawyer (nor do I have
-a desire to become one).
+"Chemolli Francesco (USI)" wrote:
+
+> > I hate to say it - time to fork the code. We could also jump ship to
+>
+> Uhm, aren't you overreacting? Sure, the GFS thing is not pleasant (I know,
+> I'm a GFS user) but it's a different project at all, with a VERY different
+> "market".
+
+Agreed.
+
+>
+>
+> Wait for Sistina to actually _do_ somethingbefore coming
+> to town with guns ablaze.
+
+OK, maybe I did over react a little. However, I've seen this before and
+I DO NOT want to see it again.
+
+I agree that Sistina may be in a very akward position and I think it is
+a very good thing for them to change the license on GFS. They have
+to compete with the spector of EMC looming over them (I tried to
+convince Lockheed to give up on EMC and a different route without
+any luck. Their reason? "Because they're EMC!").
 
 
-rlatham@plogic.com said:
-> sistina this week switched the license for the GFS tools from the GPL
-> to the SPL 
+>
+>
+> > IBM's opensource EVMS. To be honest, I don't want to do either thing
+> > because I really like LVM, I've had very good luck with it, and I use
+> > it in production systems. However, changing licenses like this, while
+> > not on LVM, is not a good sign to me (call it a bad feeling
+> > if you like).
+>
+> Well, they haven't taken anything from you yet. IF they turn LVM into
+> proprietary stuff, THEN do fork :)
 
-> http://www.sistina.com/Sistina%20Public%20License%201.0.pdf 
+Yes. But until the email from Michael Declerck we heard nothing
+from Sistina to reassure us. Sometimes pre-emptive strikes are
+needed :)
 
-> I'm worried now that Sistina will switch the license for LVM. However,
-> considering there was almost a fork of the project (mostly) because of
-> something as "simple" as mailing list policy, i guess openLVM would
-> pop up again pretty quickly in that case...   Is it concievable that
-> the kernel patches will stay GPL'ed but a more restrictive license
-> applied to the userspace tools ? 
+However, you convinced me. I'll wait and see (but I'll start testing
+EVMS to hedge my bets :)   ).
 
-LVM is GPL'ed and the copyright is held by a number of entities that have
-contributed substantial pieces of code to the project over its life. IMO,
-this makes it impossible to relicense LVM under a different license.
-
-Sistina has no intention of changing the existing LVM user-space tools to
-another license.  The LVM kernel patches and use-space tools will remain under
-the GPL.
-
-As I said earlier, LVM is GPL'ed and has multiple copyright holders currently
-that protect its position as a GPL project.  Sistina is committed to
-maintaining this status and working with the LVM community to enhance and
-maintain it.
+Thanks.
 
 
----
-Michael Declerck, declerck@sistina.com   +1.510.823.7991
+Jeff Layton
+
+Lockheed-Martin
+
+
+>
+>
+> --
+>         /kinkie
+>
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@sistina.com
+> http://lists.sistina.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
