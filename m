@@ -1,11 +1,9 @@
-Date: Thu, 06 Sep 2001 11:53:11 -0500
-From: lembark@wrkhors.com
-Subject: Re: [linux-lvm] Root on LV
-Message-ID: <135560000.999795191@duke.wrkhors.com>
-In-Reply-To: <OF44ABFE07.4419EBD8-ONC1256ABF.004C8662@ibcnet.hu>
+Date: Thu, 6 Sep 2001 18:08:13 +0100 (IST)
+From: Paul Jakma <paulj@alphyra.ie>
+Subject: Re: [linux-lvm] ftp.sistina.com down?
+In-Reply-To: <20010905123417.A3252@sistina.com>
+Message-ID: <Pine.LNX.4.33.0109061806460.28151-100000@dunlop.dub.ie.alphyra.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,26 +15,29 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: TEXT/PLAIN; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
+On Wed, 5 Sep 2001, AJ Lewis wrote:
 
--- dobos_s@IBCnet.hu on 09/06/01 16:03:49 +0200
+> It should be up again.  Thanks for letting us know.
 
-> Hi!
-> 
-> I cannot understand something.
-> My kernel has no modules.
-> Why should I create an ext2 partition for holding an initrd which is not
-> doing any essential things except vgscan and vgchange -ay ?
-> Why cant these things built into the kernel?
+excellent...
 
-Don't put an initrd on it.  Create the first few partitions on 
-your drive at 128MB (/), 64 or 128MB (primary swap), 320MB (/var).
-Leave the rest on LVM.  With these three you can normally start
-up and recover a damaged LVM system; if the root and primary swap
-at least aren't in non-LVM storage you'll be unable to boot if 
-LVM fries for any reason; /var is usually a pain to loose and 
-doesn't grow all that much so I leave it on a partition also.
+> > also, are there any RPMS for 1.0.1?
+>
+> Nope.  Either grabbing the source tarball or talking to your distro is the
+> best option at this point.  The source is not difficult to build and install
+> IMHO, so that's probably your best bet for now.
 
-sl
+ok.. i've no technical problems with source, but from experience i
+don't like installing from source onto production systems that use
+package management - bad idea for long term maintainability of the
+machine.
+
+anyway.. thanks AJ!
+
+> Regards,
+
+--paulj
