@@ -1,15 +1,12 @@
-Received: from o.ww.redhat.com (vpnuser6.stuttgart.redhat.com [172.16.4.6])
-	by pobox.stuttgart.redhat.com (8.12.8/8.12.8) with ESMTP id
-	i7IJ6BRE001279
-	for <linux-lvm@redhat.com>; Wed, 18 Aug 2004 21:06:12 +0200
-Date: Wed, 18 Aug 2004 21:06:10 +0200
-From: Heinz Mauelshagen <mauelshagen@redhat.com>
-Message-ID: <20040818190610.GA6267@redhat.com>
-Mime-Version: 1.0
-Content-Disposition: inline
-Subject: [linux-lvm] *** Announcement: dmraid 1.0.0-rc3 ***
-Reply-To: mauelshagen@redhat.com,
-	LVM general discussion and development <linux-lvm@redhat.com>
+Message-ID: <4124D256.7060605@backtobasicsmgmt.com>
+Date: Thu, 19 Aug 2004 09:16:22 -0700
+From: "Kevin P. Fleming" <kpfleming@backtobasicsmgmt.com>
+MIME-Version: 1.0
+Subject: Re: [linux-lvm] *** Announcement: dmraid 1.0.0-rc3 ***
+References: <20040818190610.GA6267@redhat.com>
+In-Reply-To: <20040818190610.GA6267@redhat.com>
+Content-Transfer-Encoding: 7bit
+Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -19,114 +16,27 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: linux-lvm@redhat.com
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+To: mauelshagen@redhat.com, LVM general discussion and development <linux-lvm@redhat.com>
 
+Heinz Mauelshagen wrote:
 
-               *** Announcement: dmraid 1.0.0-rc3 ***
+> The following ATARAID types are supported on Linux 2.6:
+> 
+> Highpoint HPT37X
+> Highpoint HPT45X
+> Intel Software RAID
+> Promise FastTrack
+> Silicon Image Medley
 
-dmraid 1.0.0-rc3 is available at
-http://people.redhat.com:/~heinzm/sw/dmraid/ in source, source rpm and i386 rpm.
+Heinz,
 
-dmraid (Device-Mapper Raid tool) discovers, [de]activates and displays
-properties of software RAID sets (ie. ATARAID) and contained DOS
-partitions using the device-mapper runtime of the 2.6 kernel.
+I'd really like to see dmraid be able to support Linux software RAID (md 
+driver) as well, at least for RAID-0/1. On my newer systems, using udev, 
+mdadm is difficult to use to discover arrays because it requires that 
+the /dev/md? devices already exist before they have been activated :-)
 
-The following ATARAID types are supported on Linux 2.6:
-
-Highpoint HPT37X
-Highpoint HPT45X
-Intel Software RAID
-Promise FastTrack
-Silicon Image Medley
-
-This ATARAID type is only basically supported in this version (I need
-better metadata format specs; please help):
-LSI Logic MegaRAID
-
-Please provide insight to support those metadata formats completely.
-
-Thanks.
-
-See files README and CHANGELOG, which come with the source tarball for
-prerequisites to run this software, further instructions on installing
-and using dmraid!
-
-CHANGELOG is contained below for your convenience as well.
-
-
-Call for testers:
------------------
-
-I need testers with the above ATARAID types, to check that the mapping
-created by this tool is correct (see options "-t -ay") and access to the ATARAID
-data is proper.
-
-You can activate your ATARAID sets without danger of overwriting
-your metadata, because dmraid accesses it read-only unless you use
-option -E with -r in order to erase ATARAID metadata (see 'man dmraid')!
-
-This is a release candidate version so you want to have backups of your valuable
-data *and* you want to test accessing your data read-only first in order to
-make sure that the mapping is correct before you go for read-write access.
-
-
-The author is reachable at <Mauelshagen@RedHat.com>.
-
-For test results, mapping information, discussions, questions, patches,
-enhancement requests and the like, please subscribe and mail
-to <ataraid@redhat.com>.
-
---
-
-Regards,
-Heinz    -- The LVM Guy --
-
-
-CHANGELOG:
----------
-
-Changelog from dmraid 1.0.0-rc2 to 1.0.0-rc3		2004.08.18
-
-FIXES:
-------
-o HPT37X mapping on first disk of set
-o dietlibc sscanf() use prevented activation
-o le*_to_cpu() for certain glibc environments (Luca Berra)
-o sysfs discovery (Luca Berra)
-o permissions to write on binary, which is needed
-  by newer strip versions (Luca Berra)
-o SCSI serial number string length bug
-o valgrinded memory leaks
-o updated design document
-o comments
-
-FEATURES:
----------
-o added basic support for activation of LSI Logic MegaRAID/MegaIDE;
-  more reengineering of the metadata needed!
-o root check using certain options (eg, activation of RAID sets)
-o implemented locking abstraction
-o implemented writing device metadata offsets with "-r[D/E]"
-  for ease of manual restore
-o file based locking to avoid parallel tool runs competing
-  with each other for the same resources
-o streamlined library context
-o implemented access functions for library context
-o streamlined RAID set consistency checks
-o implemented log function and removed macros to shrink binary size further
-o removed superfluous disk geometry code
-o cleaned up metadata.c collapsing free_*() functions
-o slimmed down minimal binary (configure option DMRAID_MINI
-  for early boot environment)
-
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-
-Heinz Mauelshagen                                 Red Hat GmbH
-Consulting Development Engineer                   Am Sonnenhang 11
-                                                  56242 Marienrachdorf
-                                                  Germany
-Mauelshagen@RedHat.com                            +49 2626 141200
-                                                       FAX 924446
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+I've thought (and talked to Neil B.) about extending the MD driver to 
+have ways around this problem, but for my needs (RAID-1), using the DM 
+raid 1 target would suffice, and if dmraid could discover and activate 
+my arrays I'd be all set.
