@@ -1,11 +1,12 @@
+From: Markus Dobel <mdobel@kawo2.rwth-aachen.de>
 Subject: Re: [linux-lvm] lvm and Debian
+Message-Id: <20020118115639.GA30348@balu.kawo2.rwth-aachen.de>
 References: <E16RWI7-00083Z-00@arwen.dev33.cvf>
-    <wvpu47hqdr.fsf@freeze.oslo.dnmi.no> <E16RX7u-0000Su-00@arwen.dev33.cvf>
-    <E16RXPP-0006iF-00@brooks.homenet> <20020118114639.GE11018@wiggy.net>
-From: Adrian Phillips <a.phillips@dnmi.no>
-In-Reply-To: <20020118114639.GE11018@wiggy.net>
-Message-Id: <wvd707ho2j.fsf@freeze.oslo.dnmi.no>
+    <20020118104418.GA29876@balu.kawo2.rwth-aachen.de>
+    <E16RWih-0000HQ-00@arwen.dev33.cvf>
 MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <E16RWih-0000HQ-00@arwen.dev33.cvf>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,41 +17,28 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Fri Jan 18 05:55:02 2002
+Date: Fri Jan 18 05:57:02 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
->>>>> "Wichert" == Wichert Akkerman <wichert@cistron.nl> writes:
+On Fri, Jan 18, 2002 at 11:58:03AM +0100, Pierrick PONS wrote:
+>
+> There's a thing I don't understand : is the lvm_1.0.1rc4 patch still in the 
+> 2.4.17 kernel or do I have to patch my 2.4.17 kernel to use lvm and lvm 
+> commands ?
 
-    Wichert> Previously Chris Danis wrote:
-    >> These packages are present only in the 'unstable' distribution
-    >> of Debian, or sid. They are not in stable nor are they in
-    >> testing.
+There is some kind of LVM 1.0.1rc4 (therefore called 1.0.1rc4(ish)) in
+kernel 2.4.17.
 
-    Wichert> Hmm, indeed:
+> I thought that using a 2.4.17 kernel permitted to have lvm fonctionalities and 
+> not to be obliged to patch the kernel.
 
-    Wichert> lvm-common | 1.3 | unstable | mips, mipsel, powerpc, sh,
-    Wichert> sparc lvm-common | 1.4 | unstable | source, alpha, arm,
-    Wichert> hppa, i386, ia64, m68k, s390 lvm10 | 1.0-1 | unstable |
-    Wichert> sh lvm10 | 1.0.1release-1 | unstable | source, alpha,
-    Wichert> arm, hppa, i386, ia64, m68k, mips, mipsel, powerpc, s390,
-    Wichert> sparc
+No, you don't *need* to patch the kernel to have LVM. It's in the
+kernel, just in an older version.
 
-    Wichert> However you can manually grab the package for unstable
-    Wichert> and install it on a testing system without any problems.
-
-Yes, sorry about that Pierrick. I wasn't sure whether they were in
-testing or unstable. I have done exactly what Wichert said (well,
-actually I have setup a little pool with newer, than testing, packages
-that cfengine should use for installation on our servers),
-
-Sincerely,
-
-Adrian Phillps
+Regards, Markus
 
 -- 
-Your mouse has moved.
-Windows NT must be restarted for the change to take effect.
-Reboot now?  [OK]
+Free the Fluffy Bunny.
