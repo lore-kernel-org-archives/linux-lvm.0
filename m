@@ -1,11 +1,11 @@
-Return-Path: <Heinz.Mauelshagen@t-online.de>
-Date: Sun, 3 Dec 2000 14:29:01 +0000
-From: Heinz J. Mauelshagen <Heinz.Mauelshagen@t-online.de>
-Subject: Re: [linux-lvm] lvm
-Message-ID: <20001203142901.H3984@srv.t-online.de>
-References: <000d01c05b69$6b5ca020$3f06fea9@licht1>
-Mime-Version: 1.0
-In-Reply-To: <000d01c05b69$6b5ca020$3f06fea9@licht1>; from ABehler@t-online.de on Fri, Dec 01, 2000 at 08:36:28AM +0100
+Return-Path: <mjt@tls.msk.ru>
+Message-ID: <3A2B58EA.71F92196@tls.msk.ru>
+Date: Mon, 04 Dec 2000 11:42:18 +0300
+From: "Michael Ju. Tokarev" <mjt@tls.msk.ru>
+MIME-Version: 1.0
+Subject: Re: [linux-lvm] Using Oracle with lvm AND rawio: read(512) from
+References: <200012020529.WAA00876@lynx.turbolabs.com> <3A298498.86AB907B@tls.msk.ru> <3A29A31E.BC6A6243@tls.msk.ru>
+Content-Transfer-Encoding: 7bit
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -18,40 +18,43 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Fri, Dec 01, 2000 at 08:36:28AM +0100, andreas wrote:
-> hi guys,
+"Michael Ju. Tokarev" wrote:
 > 
-> after a hdisc crash i got only data (various logical volumes) on one of three physical volumes.
-> could someone tell me, if there is a way to use this physical volume and it's logical volumes in my new created volume group without having
-> any backup of my old one.
-
-There's no way to use it in a new created VG.
-But you can restore the VG metadata (VGDA) of the disapeared disk(s)
-using vgcfgrestore(8) in order to make use of the available data.
-
-Please remember that in case you had eg. filesystem data in LVs on the dead
-disk(s), you can't make use of it any longer.
-
+[]
+> I see in linux/include/linux/lvm.h :
 > 
+>  [...]
+>  #ifdef BLOCK_SIZE
+>  #undef BLOCK_SIZE
+>  #endif
 > 
-> thank you guys for your support,
+>  #ifdef CONFIG_ARCH_S390
+>  #define BLOCK_SIZE     4096
+>  #else
+>  #define BLOCK_SIZE     1024  <<<<<<<<<========
+>  #endif
 > 
->     andreas behler
+>  #ifndef        SECTOR_SIZE
+>  #define SECTOR_SIZE    512
+>  #endif
+>  [...]
 
--- 
+Hm.  The same definitions are in 2.4-pre kernel patch...
+So 2.4 lvm should also *not* work for 512-byte i/o size.
+But Jorg de Jong claims that he successefully created
+tablespace on raw dev with 2.4-pre11 kernel... I'm
+confused...  And for S390 -- is smallest i/o size 4K ?!
+
+[]
+> Little *strong* suggestion.  Please rename BLOCK_SIZE
+> and SECTOR_SIZE to LVM_BLOCK_SIZE and LVM_SECTOR_SIZE
+> in lvm.h -- currently used names are very common to
+> be a source of namespace collisions.
+
+The same for 2.4.  Let's change those definitions while
+it isn't *too* late...
 
 Regards,
-Heinz      -- The LVM guy --
-
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-
-Heinz Mauelshagen                                 Sistina Software Inc.
-Senior Consultant/Developer                       Bartningstr. 12
-                                                  64289 Darmstadt
-                                                  Germany
-Mauelshagen@Sistina.com                           +49 6151 7103 86
-                                                       FAX 7103 96
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+ Michael.
