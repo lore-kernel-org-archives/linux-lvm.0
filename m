@@ -1,10 +1,9 @@
-From: "IT3 Stuart B. Tener, USNR-R" <stuart@bh90210.net>
-Subject: RE: [linux-lvm] Lock Patch
-Date: Fri, 14 Sep 2001 09:32:06 -0700
-Message-ID: <NBBBJHKIOKPKOGOEPEDPCEFHDNAA.stuart@bh90210.net>
+Date: Fri, 14 Sep 2001 19:16:09 +0200 (CEST)
+From: "A.R. (Tom) Peters" <tpeters@xs4all.nl>
+Subject: Re: [linux-lvm] How to boot with LVM?
+In-Reply-To: <002b01c13c98$d3080be0$6601a8c0@foobarhouse.com>
+Message-ID: <Pine.LNX.4.21.0109141908220.617-100000@tompth.localdomain>
 MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-In-Reply-To: <2481270000.1000475493@tiny>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,38 +15,46 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: TEXT/PLAIN; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-TXIuIE1hc29uOg0KDQoJV2VsbCBJIHNoYWxsIGRvIHRoYXQsIGJ1dCBpZiBzdmV0bGpvIGhhcyBh
-IGxpbmsgZm9yIGEgbWFuZHJha2Ugc3BlY2lmaWMgdmVyc2lvbiBvZiB0aGUgcGF0Y2ggZm9yIHRo
-ZSBleGFjdCBrZXJuZWwgdmVyc2lvbiBJIGFtIHJ1bm5pbmcsIEkgdGhpbmsgSSB3aWxsIHByZWZl
-ciB0aGF0IHNvbHV0aW9ucy4gSSB3aWxsIGhvd2V2ZXIgcmV2aWV3IHlvdXIgc3VnZ2VzdGlvbnMg
-bm9uZSB0aGUgbGVzcy4NCg0KDQpWZXJ5IFJlc3BlY3RmdWxseSwgDQoNClN0dWFydCBCbGFrZSBU
-ZW5lciwgSVQzLCBVU05SLVIsIE4zR1dHIA0KQmV2ZXJseSBIaWxscywgQ2FsaWZvcm5pYQ0KVlRV
-IDE5MDRHIChWb2x1bnRlZXIgVHJhaW5pbmcgVW5pdCkgDQpzdHVhcnRAYmg5MDIxMC5uZXQgDQp3
-ZXN0IGNvYXN0OiAoMzEwKS0zNTgtMDIwMiBQLk8uIEJveCAxNjA0MywgQmV2ZXJseSBIaWxscywg
-Q0EgOTAyMDktMjA0MyANCmVhc3QgY29hc3Q6ICgyMTUpLTMzOC02MDA1IFAuTy4gQm94IDQ1ODU5
-LCBQaGlsYWRlbHBoaWEsIFBBIDE5MTQ5LTU4NTkgDQoNClRlbGVjb3BpZXI6ICg0MTkpLTcxNS02
-MDczIGZheCB0byBlbWFpbCBnYXRld2F5IHZpYSB3d3cuZWZheC5jb20gKGl0J3MgZnJlZSEpIA0K
-DQpKT0lOIFRIRSBVUyBOQVZZIFJFU0VSVkUsIFNFUlZFIFlPVVIgQ09VTlRSWSwgQU5EIEJFTkVG
-SVQgRlJPTSBJVCBBTEwuIA0KDQpGcmlkYXksIFNlcHRlbWJlciAxNCwgMjAwMSA5OjMwIEFNDQoN
-Ci0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQpGcm9tOiBsaW51eC1sdm0tYWRtaW5Ac2lzdGlu
-YS5jb20gW21haWx0bzpsaW51eC1sdm0tYWRtaW5Ac2lzdGluYS5jb21dT24gQmVoYWxmIE9mIENo
-cmlzIE1hc29uDQpTZW50OiBGcmlkYXksIFNlcHRlbWJlciAxNCwgMjAwMSA2OjUyIEFNDQpUbzog
-bGludXgtbHZtQHNpc3RpbmEuY29tDQpTdWJqZWN0OiBSZTogW2xpbnV4LWx2bV0gTG9jayBQYXRj
-aA0KDQoNCk9uIEZyaWRheSwgU2VwdGVtYmVyIDE0LCAyMDAxIDA5OjU1OjAwIEFNICswMTAwIFBh
-dHJpY2sgQ2F1bGZpZWxkDQo8Y2F1bGZpZWxkQHNpc3RpbmEuY29tPiB3cm90ZToNCg0KPiBPbiBU
-aHUsIFNlcCAxMywgMjAwMSBhdCAxMTowMDo0N1BNIC0wNzAwLCBJVDMgU3R1YXJ0IEIuIFRlbmVy
-LCBVU05SLVINCj4gd3JvdGU6DQo+PiBMaXN0IG1lbWJlcnM6DQo+Pg0KPj4gICAgICBJIGFtIGN1
-cmlvdXM7IGlmIEkgYW0gcnVubmluZyAyLjQuOC0xMm1kayAoTWFuZHJha2UgOCwwKSwgd2hpY2gg
-bG9jaw0KPj4gICAgICBwYXRjaCBkbyBJIHVzZSB0aGUgMi40LjQgdmVyc2lvbiBvciB0aGUgMi40
-LjkgdmVyc2lvbj8NCj4+DQo+Pg0KPg0KPiBJIHdvdWxkIHRyeSB0aGUgMi40LjQgb25lLiBJZiB0
-aGF0IGRvZXNuJ3QgYXBwbHkgdGhlbiB0cnkgdGhlIDIuNC45Lg0KDQpZb3UgY291bGQgYWxzbyBs
-b29rIGZvciBkcm9wX3N1cGVyKCkgaW4gZnMvc3VwZXIuYy4gIElmIGl0IGlzIHRoZXJlLCB1c2UN
-CnRoZSAyLjQuOSBwYXRjaCwgaWYgaXQgaXNuJ3QsIHVzZSB0aGUgMi40LjQgcGF0Y2guICBJJ20g
-Z3Vlc3NpbmcgeW91J2xsDQpuZWVkIHRoZSAyLjQuNCBvbmUuDQoNCi1jaHJpcw0KDQoNCl9fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fDQpsaW51eC1sdm0gbWFp
-bGluZyBsaXN0DQpsaW51eC1sdm1Ac2lzdGluYS5jb20NCmh0dHA6Ly9saXN0cy5zaXN0aW5hLmNv
-bS9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWx2bQ0KcmVhZCB0aGUgTFZNIEhPVy1UTyBhdCBodHRw
-Oi8vd3d3LnNpc3RpbmEuY29tL2x2bS9QYWdlcy9ob3d0by5odG1sDQo=
+On Thu, 13 Sep 2001, Neil Macvicar wrote:
+
+> A few notes I missed: This ramdisk I made myself. You can mount it on
+> loopback after untarring it to examine it's contents. It's size sould be set
+> to 8192.
+
+> ----- Original Message -----
+> From: "Neil Macvicar" <neilm@foobarhouse.com>
+> To: <linux-lvm@sistina.com>
+> Sent: Thursday, September 13, 2001 1:15 PM
+> Subject: Re: [linux-lvm] How to boot with LVM?
+> 
+> 
+> > If it's any help, I have put my initrd on public ftp at
+> > fruits.foobarhouse.com in the LVM directory. It's served me well for as
+> long
+> > as I've been using LVM'ed root.
+> >
+> > I'm currently using LVM 0.9.1beta8.
+
+The past week I have tried very many times to get Linux mount the root
+on my LVM disk: but whenever the linuxrc on the initrd finishes, the
+kernel finds itself without a root.
+Switching root is supposed to happen automatically, but that mechanism is
+obsoleted: instead, we are supposed to do a pivot_root and chroot (see
+/usr/src/linux/Documents/initrd.txt).  neither method works.
+I suspect a kernel problem now.  I suppose I should go back to an earlier
+kernel version, and maybe to a 0.9 LVM.  Can you please advice what kernel
+you use?
+Additionally, would you try out the latest kernel (2.4.10-pre8) and LVM
+(1.0.1-rc2) to see if that works for you?
+
+	Thanx,
+--
+#>!$!%(@^%#%*(&(#@#*$^@^$##*#@&(%)@**$!(&!^(#((#&%!)%*@)(&$($$%(@#)&*!^$)^@*^@)
+
+	Tom "thriving on chaos" Peters
+		NL-1062 KD nr 149	tel.    +31-204080204
+ 			Amsterdam	e-mail  tpeters@xs4all.nl
