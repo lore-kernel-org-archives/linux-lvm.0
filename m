@@ -1,12 +1,12 @@
-Return-Path: <tomlins@cam.org>
-From: Ed Tomlinson <tomlins@cam.org>
-Subject: Re: [linux-lvm] success!
-Date: Thu, 26 Jul 2001 08:32:14 -0400
-References: <Pine.LNX.4.33.0107261218290.1277-100000@greebo.foobarhouse.com>
-In-Reply-To: <Pine.LNX.4.33.0107261218290.1277-100000@greebo.foobarhouse.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Message-Id: <20010726123215.5AAFC17B28@oscar.casa.dyndns.org>
+Return-Path: <thornber@btconnect.com>
+Date: Thu, 26 Jul 2001 13:39:38 +0100
+Subject: Re: [linux-lvm] Some ideas regarding snapshots (was: Reiserfs, 2.4.7, snapshots w/ 0.9)
+Message-ID: <20010726133938.A723@btconnect.com>
+References: <20010725103640.J5363@unirez.com> <01072511465701.00921@exodus> <20010726135514.B26425@tiger.bigcats.invalid>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20010726135514.B26425@tiger.bigcats.invalid>; from weissel@netcologne.de on Thu, Jul 26, 2001 at 01:55:14PM +0200
+From: Joe Thornber <thornber@btconnect.com>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -19,29 +19,21 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@sistina.com, James Pattinson <jamesp@foobarhouse.com>
+Content-Transfer-Encoding: 7bit
+To: linux-lvm@sistina.com
 
-On July 26, 2001 07:23 am, James Pattinson wrote:
-> I've just upgraded my LVM-on-root system from beta7 to beta8 succesfuly. I
-> only had two problems:
->
-> 1.	The lvmcreate_initrd script failed when it tried to mount the
-> image in /tmp as a loopback device. The error was ioctl: LOOP_SET_FD:
-> Invalid argument. I believe this is due to my /tmp filesystem being tmpfs
-> and could be a kernel bug. It worked OK when I used /root instead of /tmp.
+On Thu, Jul 26, 2001 at 01:55:14PM +0200, Wolfgang Weisselberg wrote:
+> Iain Campbell (iain@sandon.ca) wrote 64 lines:
+> > Quote from Teigland and Mauelshagens's Volume Manager whitepaper:
+> 
+> > journalled file system. These operations (fsck or journal replay) require 
+> > writing to  the snapshot ligical volume, which is not allowed."
+> 
+> On a related subject: would it be possible to have a writable
+> snapshot (probably a 'reverse' snapshot)?
 
-I reported this to the tmpfs maintainer a while back.  Turns out that supporting
-loop mounts on tmpfs is not easy.  From the messages exchanged between the Linus
-and the maintainer I sort of doubt a fix will be forthcoming soon.  
+Writeable snapshot's are easy to implement, I believe someone has
+already made a patch for the current LVM series (search the list).  I
+certainly intend putting it into the experimental LVM branch soon.
 
-Would it be possible to check for a tmpfs on /tmp and change 
-
-DEVRAM=/tmp/initrd.$$
-to 
-DEVRAM=/var/initrd.$$
-
-when encountered?
-
-TIA,
-
-Ed Tomlinson
+- Joe
