@@ -1,9 +1,10 @@
-From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] Management Tools Version.
-Message-ID: <20020606102714.A24029@sistina.com>
-References: <20020605113543.C8251@yukon.drivingbeat.com>
+From: Patrick Caulfield <caulfield@sistina.com>
+Subject: Re: [linux-lvm] lvmcreate_initrd problem
+Message-ID: <20020606144120.GI1080@tykepenguin.com>
+References: <20020422023605.A12545@golem.blacknet.de> <20020603193550.73967.qmail@web14602.mail.yahoo.com>
 Mime-Version: 1.0
-In-Reply-To: <20020605113543.C8251@yukon.drivingbeat.com>; from jleach@mail.ocis.net on Wed, Jun 05, 2002 at 11:35:43AM -0700
+Content-Disposition: inline
+In-Reply-To: <20020603193550.73967.qmail@web14602.mail.yahoo.com>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,51 +15,34 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Thu Jun  6 03:32:02 2002
+Date: Thu Jun  6 09:41:02 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Wed, Jun 05, 2002 at 11:35:43AM -0700, Jason C. Leach wrote:
-> hi,
+On Mon, Jun 03, 2002 at 12:35:50PM -0700, Adrian Noland wrote:
+> Hello,
+> I'm trying to create an initrd and I'm hitting my head against this
+> error:
 > 
-> If I am using Linux Kernel 2.4.18 with the 1.0.1 LVM module, do I need to be using
-> v1.0.1 of the lvm managment tools, or can I run v1.0.4?
+> lvmcreate_initrd -- ummounting ram disk
+> umount: /tmp/initrd.2400: not mounted
+> lvmcreate_initrd -- ERROR umounting /tmp/initrd.2400
+>                  -- removing /tmp/initrd.2400
+>                  -- removing /tmp/mnt.2400
+> rmdir: `/tmp/mnt.2400': Device or resource busy
+>                  -- removing /tmp/lib.2400
+>                  -- exit with code 1
+> 
+> How do I find out why /tmp/initrd.$$ isn't mounted? Furthermore, can I
+> unmount it on my own and complete the script my self? What values would
+> I use for $DEVRAM and $INITRD?
+> 
 
-You can run stock kernel + 1.0.4 tools.
+The wierd thing is that mount hasn't given an error. I suppose the thing to do
+is to stick a "pause" or an "exit" after the mount to see if has actually worked
+(if not, then strace it and see why not). If it has worked then figure out why
+it get umounted in between or if the variable named gets mangled for any reason.
 
-> 
-> Thanks,
-> j.
-> 
-> 
-> 
-> -- 
-> ......................
-> ..... Jason C. Leach
-> .. 
-> 
-> Current PGP/GPG Key ID: 43AD2024 
-> 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
-
-Regards,
-Heinz    -- The LVM Guy --
-
-*** Software bugs are stupid.
-    Nevertheless it needs not so stupid people to solve them ***
-
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-
-Heinz Mauelshagen                                 Sistina Software Inc.
-Senior Consultant/Developer                       Am Sonnenhang 11
-                                                  56242 Marienrachdorf
-                                                  Germany
-Mauelshagen@Sistina.com                           +49 2626 141200
-                                                       FAX 924446
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+patrick
