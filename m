@@ -1,10 +1,9 @@
-From: Bradley M Alexander <storm@tux.org>
-Subject: Re: [linux-lvm] LVM performance
-Message-ID: <20011123002611.N5393@sonsofthunder.yi.org>
-References: <20011122231706.M5393@sonsofthunder.yi.org> <NBBBKLKHMJHIJLHOGAOJIEACJCAA.steve.wray@the.net.nz>
+From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
+Subject: Re: [linux-lvm] Just for information ....
+Message-ID: <20011123130149.A4829@sistina.com>
+References: <3BFAA389.24AAB2A1@LTUtech.com> <20011120125632.Z1308@lynx.no> <20011120214104.A24005@cistron.nl> <20011120150638.E1308@lynx.no>
 Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <NBBBKLKHMJHIJLHOGAOJIEACJCAA.steve.wray@the.net.nz>
+In-Reply-To: <20011120150638.E1308@lynx.no>; from adilger@turbolabs.com on Tue, Nov 20, 2001 at 03:06:38PM -0700
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,43 +14,66 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Thu Nov 22 23:24:02 2001
+Date: Fri Nov 23 06:07:02 2001
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Fri, Nov 23, 2001 at 05:32:07PM +1300, Steve Wray wrote:
+On Tue, Nov 20, 2001 at 03:06:38PM -0700, Andreas Dilger wrote:
+> On Nov 20, 2001  21:41 +0100, Wichert Akkerman wrote:
+> > Previously Andreas Dilger wrote:
+> > > Yes.  You will need to do a vgscan to find the new disks.  Hopefully they
+> > > will not have the same VG name as another VG on that system.
+> > 
+> > What if they do?
 > 
-> thats dead right; ide can't simultaneously write to the master and slave
-> on the same controller. Also, the pair of drives uses the controller
-> circuitry
-> of the master, so it always pays to make the master the most modern one.
+> Then it will depend on disk ordering which one you get under that name, and
+> the other will be unavailable.  vgscan will see all of the disks, but then
+> start checking the UUIDs on the PVs against the list on the "first" disk,
+> and the extra disks with UUIDs that don't match will be discarded.
 
-Since both controllers have a drive master and a cd slave, this shouldn't
-matter, per se.
+Worst case would be a temporary disconnect of the PVs belonging to one
+of the VGs which share the same name. vgscan+vgrename the found one and
+reconnect the drives and vgscan again.
+
 
 > 
-> > Can anyone give me any ideas as to why the machine gets beaten about so
-> > much during IO operations and more importantly how can I minimize the
-> > impact.
+> I don't think there are any likely scenarios with LVM 0.9+ that will cause
+> problems, but since UUIDs were only introduced in 0.9, it may be much harder
+> to handle this in older LVM versions.
+
+See above.
+
 > 
-> Dunno, if it was because the fs is striped across those drives then
-> splitting them across controllers would have made it go away.
+> You might be able to vgexport the disks from the "other" VG at that time,
+> and reimport it with a different name, but I don't know how reliable that
+> will be (if it even works).  LVM has been confused by less.
 
-Nothing should be striped across the drives. I have two PVs and made two
-VGs, one on each drive. The way it works out, the data I am mastering is on
-vg01 (hdc), and the ISO is being created there as well. the CD write actually
-happens from hdc -> hdd.
+???
 
-> I've seen no performance problems at all and really thrashed an LVM-root
-> machine for test purposes while working on a movie. It took it well,
-> performance-wise. (reliability is another issue; never go LVM-root...
-> but thats just my 2 cents, YMMV).
+> Better to just
+> "not do that" in the first place.
+> 
+> FYI, AIX LVM does not keep the VG name on the disk itself, only a UUID.
+> You also never do something like "vgscan" at boot time to reconfigure
+> the LVM setup.  When you attach the disks to a new system, you have to
+> import them (at which point they get a name that is stored in a config
+> file in /etc), and your LVM config is never touched until you change it.
+> When you export the VG, it also doesn't write to the disks, just deletes
+> the config from /etc.  This means you don't need to do anything to the
+> VG before moving it to another system.
 
-Yeah, I wasn't brave enough to go all out...And with the problems I was
-having, I'm glad I made that decision. :)
+Well, actually you can just "vgscan" in the VG without vgexport'ing it
+in Linux LVM as well. vgexport/vgimport exactly is the clean procedure
+to make sure that name clashes don't happen!
 
+> 
+> Cheers, Andreas
+> --
+> Andreas Dilger
+> http://sourceforge.net/projects/ext2resize/
+> http://www-mddsp.enel.ucalgary.ca/People/adilger/
 > 
 > 
 > _______________________________________________
@@ -61,14 +83,19 @@ having, I'm glad I made that decision. :)
 > read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
 
 -- 
---Brad
-============================================================================
-Bradley M. Alexander, CISSP              |   Co-Chairman,
-Beowulf System Admin/Security Specialist |    NoVALUG/DCLUG Security SIG
-Debian/GNU Linux Developer		 |   storm@debian.org
-                                         |   storm@tux.org
-============================================================================
-You start with a bag full of luck and an empty bag of
-experience. The trick is to fill the bag of experience before you
-empty the bag of luck.
-					--Rules of the Air, #16
+
+Regards,
+Heinz    -- The LVM Guy --
+
+*** Software bugs are stupid.
+    Nevertheless it needs not so stupid people to solve them ***
+
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+Heinz Mauelshagen                                 Sistina Software Inc.
+Senior Consultant/Developer                       Am Sonnenhang 11
+                                                  56242 Marienrachdorf
+                                                  Germany
+Mauelshagen@Sistina.com                           +49 2626 141200
+                                                       FAX 924446
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
