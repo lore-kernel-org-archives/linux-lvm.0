@@ -1,12 +1,9 @@
-From: Steven Lembark <lembark@wrkhors.com>
-Subject: Re: [linux-lvm] offtopic but ...
-Message-ID: <1288440000.1021303821@[192.168.200.4]>
-In-Reply-To: <Pine.LNX.4.44.0205131053020.6095-100000@dragon.inside.ntisys.com>
-References: <Pine.LNX.4.44.0205131053020.6095-100000@dragon.inside.ntisys.co
- m>
+Message-ID: <3CDFE39B.1080903@lausch.at>
+From: Michael Lausch <mla@lausch.at>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
+Subject: Re: [linux-lvm] has anyone used LVM in a HA cluster?
+References: <20020510072608.GA1001@tykepenguin.com> <1021071171.17474.44.camel@UberGeek> <671160000.1021077884@[192.168.200.4]> <20020511192728.GB3125@colombina.comedia.it> <3CDF8482.7010109@lausch.at> <20020513073337.A31182@connectlive.com>
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,42 +14,28 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon May 13 10:30:02 2002
+Date: Mon May 13 10:59:02 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
+Content-Type: text/plain; charset="iso-8859-1"; format="flowed"
 To: linux-lvm@sistina.com
 
+Tim wrote:
 
--- Benjamin Scott <bscott@ntisys.com>
+> Or don't, and buy a power supply that you can control from serial, and
+> do so -- STONITH, it's called -- Shoot The Other Node In The Head.  Onc=
+e
+> the power is off, there is no danger of fsck'ing...
+>=20
+> It's a rather elegant way to solve that problem, IMHO.
+>=20
+> We're going that route.
+>=20
 
->   Offline backups are for disaster recovery, not availability.  I think
-> you're trying to say that, but the point is getting confused.  The
-> difference between a small office's and a large bank's disaster recovery
-> plans is the difference between their definitions of "disaster".  A small
-> office probably considers a hard drive failure or OS corruption a
-> "disaster".  A bank thinks more along the lines of "multiple terrorist
-> attacks".
-
-Actually they are more concerned about data corruption
-and audits. The hardend offline facilities are about
-being able to compare known data to what's online or
-meet gov't requirements for audit background. Their rule
-for designing systems is that any one box can get nuked
-without bringing the whole thing down.
-
-This is why I've gotten into the habit of differentiating
-archival storage from backup systems. In most warehousing
-systems people mean "redundant" when they say "backup" (e.g.,
-"a backup power system") and "archival" or "offline" for
-slow storage used to recover from data failures.
-
-Aside: most places have plenty of ways to deal with hardware
-failure. Unless they hire consultants, most never even think
-about how they'll handle data corruption. Hmmm... how about
-"You're not paranoid, the boxes ARE out to get you" as a
-slogan?
-
---
-Steven Lembark                               2930 W. Palmer
-Workhorse Computing                       Chicago, IL 60647
-                                            +1 800 762 1582
+which may backfire, if both nodes think the other one is down (split=20
+brain again) and start the shutdown procedure. okay, this is a very rare=20
+situation, and may happen only under strange load and scheduling=20
+parameters, but it will happen as any other "very rare situation"=20
+happens ;-). especially in HA environments they seem to happen much more=20
+often then in simple single point of failure environments ;-) you won'=C4=
+t=20
+loosew your filesystem, but the service is unavailable.
