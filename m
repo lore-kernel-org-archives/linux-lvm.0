@@ -1,21 +1,11 @@
-Received: from antimony.msp.redhat.com (antimony.msp.redhat.com [172.16.30.61])
-	by pobox.corp.redhat.com (8.12.8/8.12.8) with ESMTP id i1DEccPr030016
-	for <linux-lvm@redhat.com>; Fri, 13 Feb 2004 09:38:39 -0500
-Received: from antimony.msp.redhat.com (localhost.localdomain [127.0.0.1])
-	by antimony.msp.redhat.com (8.12.8/8.12.8) with ESMTP id i1DEYT9h017322
-	for <linux-lvm@redhat.com>; Fri, 13 Feb 2004 08:34:49 -0600
-Received: (from lewis@localhost)
-	by antimony.msp.redhat.com (8.12.8/8.12.8/Submit) id i1DEYTh3017318
-	for linux-lvm@redhat.com; Fri, 13 Feb 2004 08:34:29 -0600
-From: AJ Lewis <alewis@redhat.com>
-Subject: Re: [linux-lvm] LVM Problems :)
-Message-ID: <20040213143429.GB16615@antimony.msp.redhat.com>
-References: <402CD9E4.8070402@demonlord.de>
+From: Heinz Mauelshagen <mauelshagen@redhat.com>
+Subject: Re: [linux-lvm] Probs with lvm on large filesystem
+Message-ID: <20040213145043.GD10943@redhat.com>
+References: <OFD56946C5.68D2F3AD-ONC1256E39.0041DE2E-C1256E39.0041D5D3@st.behr.de>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="Bn2rw/3z4jIqBvZU"
 Content-Disposition: inline
-In-Reply-To: <402CD9E4.8070402@demonlord.de>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <OFD56946C5.68D2F3AD-ONC1256E39.0041DE2E-C1256E39.0041D5D3@st.behr.de>
 Sender: linux-lvm-admin@redhat.com
 Errors-To: linux-lvm-admin@redhat.com
 Reply-To: linux-lvm@redhat.com
@@ -27,58 +17,102 @@ List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
 List-Archive: <https://www.redhat.com/archives/linux-lvm/>
-Date: Fri Feb 13 09:47:06 2004
+Date: Fri Feb 13 09:50:01 2004
 List-Id: <linux-lvm.redhat.com>
+Content-Type: text/plain; charset="utf-8"
 To: linux-lvm@redhat.com
+Cc: hjm@redhat.com
 
---Bn2rw/3z4jIqBvZU
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Ah, I overlooked: you don't need "-c ..." with lvcreate
+(-c is optional with snapshots).
 
-On Fri, Feb 13, 2004 at 03:06:28PM +0100, Christian Reiss wrote:
-> I am trying to dissolve a running LVM, so i am doing
-> the e2fsadm, lvreduce, pvmove thingy. But ever since I
-> removed the first hdd, I am unable to resize the lvm
-> any more. The error can be seen below, with e2fsadm.
-> I also included the vg&lvdisplay commands.
->=20
-> I am running the LVM1 sources (non-cvs, approx mid last
-> year), as i am unable to run LVM2 (need to downgrade kernel
-> to 2.4.22 (no patch included in lvm2 for 2.4.23)).
-> Also, I am (too dumb/unable) to locate a e2fsadm alike
-> tool for lvm2, as e2fsadm needs the lvm-tab thingy,
-> which lvm2 no longer provides.
+Regards
+Heinz    -- The LVM Guy --
 
-Well, AFAIK, the 2.4.22 patches work fine with 2.4.23.  As far as e2fsadm,
-there is currently no equivilant for LVM2, so you have to do the resizing by
-hand (shrink fs then shrink lv).
 
-regards,
---=20
-AJ Lewis                                   Voice:  612-638-0500
-Red Hat Inc.                               E-Mail: alewis@redhat.com
-720 Washington Ave. SE, Suite 200
-Minneapolis, MN 55414
+On Fri, Feb 13, 2004 at 12:59:45PM +0100, Andreas Reschke wrote:
+> Hello,
+> we want to use our Red Hat Enterprise ES 3.0 with lvm as a file server. 
+> The server is connected to a IBM Fast T 900 via qlogic2200 Fiber Channel. 
+> On the FastT I have created a partition with 295 GB.
+> Fdisk shows this partition as /dev/sda1 with 292,5 GB:
+> 
+> Output of fdisk:
+> fdisk -l
+> 
+> Platte /dev/sda: 292.5 GByte, 292555849728 Byte
+> 255 K�pfe, 63 Sektoren/Spuren, 35567 Zylinder
+> Einheiten = Zylinder von 16065 * 512 = 8225280 Bytes
+> 
+>     Ger�t boot.  Anfang      Ende    Bl�cke   Id  Dateisystemtyp
+> /dev/sda1             1     35567 285691896   8e  Linux LVM
+> 
+> [root@fastlinux lvmgui-0.4]# pvcreate  /dev/sda1
+> pvcreate -- physical volume "/dev/sda1" successfully created
+> 
+> [root@fastlinux lvmgui-0.4]# vgcreate -s 8M vg_daten /dev/sda1
+> vgcreate -- INFO: maximum logical volume size is 511.98 Gigabyte
+> vgcreate -- doing automatic backup of volume group "vg_daten"
+> vgcreate -- volume group "vg_daten" successfully created and activated
+> 
+> [root@fastlinux lvmgui-0.4]#lvcreate -c 8k -L 292G -n lvo1 vg_daten
+> lvcreate -- only 34873 free physical extents in volume group "vg_daten"
+> [root@fastlinux lvmgui-0.4]# lvcreate -c 1024k -L 292G -n lvo1 vg_daten
+> lvcreate -- only 34873 free physical extents in volume group "vg_daten"
+> 
+> vgdisplay
+> --- Volume group ---
+> VG Name               vg_daten
+> VG Access             read/write
+> VG Status             available/resizable
+> VG #                  0
+> MAX LV                256
+> Cur LV                0
+> Open LV               0
+> MAX LV Size           511.98 GB
+> Max PV                256
+> Cur PV                1
+> Act PV                1
+> VG Size               272.45 GB
+> PE Size               8 MB
+> Total PE              34873
+> Alloc PE / Size       0 / 0
+> Free  PE / Size       34873 / 272.45 GB
+> VG UUID               OOjBLA-sHjN-LtHG-YRlE-JIRZ-miEk-m6S5vv
+> 
+> I have a volume group with maximum 511.98 Gigabyte and want to create a 
+> logical volume with 292 GB (greater than 266 GB), but lvcreate allow only 
+> 34873 extents (= 266 BG).
+> 
+> Where is the resulotion?
+> 
+> 
+> 
+> Thanks
+> Andreas
+> -- 
+> BEHR GmbH & Co                          Tel. 0711-896-4598
+> Andreas Reschke                         Fax: 0711-8902-4598
+> Abteilung BG-IM23 IT-Services           Mobil: 0172-6307978
+> Unix/Linux-Administration               andreas.reschke@behrgroup.com
+> Siemensstrasse 164
+> D-70469 Stuttgart
+> 
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@redhat.com
+> https://www.redhat.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
 
-Current GPG fingerprint =3D FE77 4B43 6A9B F982 A731  02FA 2BF5 7574 294A A=
-A5A
-Grab the key at: http://people.redhat.com/alewis/gpg.html or one of the
-many keyservers out there...
------Begin Obligatory Humorous Quote----------------------------------------
-Computers make very fast, very accurate mistakes.
------End Obligatory Humorous Quote------------------------------------------
+*** Software bugs are stupid.
+    Nevertheless it needs not so stupid people to solve them ***
 
---Bn2rw/3z4jIqBvZU
-Content-Type: application/pgp-signature
-Content-Disposition: inline
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.2.1 (GNU/Linux)
-
-iD8DBQFALOB1hn5UyEmEOBMRAmF0AKCHJQSqtl4U9zOWxW1r5Z57p13aJwCglRwI
-kp5CJ292kIBLhHj868v0AGE=
-=56vH
------END PGP SIGNATURE-----
-
---Bn2rw/3z4jIqBvZU--
+Heinz Mauelshagen                                 Red Hat, Inc.
+Consulting Development Engineer                   Am Sonnenhang 11
+                                                  56242 Marienrachdorf
+                                                  Germany
+Mauelshagen@RedHat.com                            +49 2626 141200
+                                                       FAX 924446
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
