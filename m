@@ -1,10 +1,12 @@
-Message-ID: <3FCC906C.5040907@backtobasicsmgmt.com>
-From: "Kevin P. Fleming" <kpfleming@backtobasicsmgmt.com>
-MIME-Version: 1.0
-References: <3FCB4AFB.3090700@backtobasicsmgmt.com> <20031201141144.GD12211@suse.de> <3FCB4CFA.4020302@backtobasicsmgmt.com> <20031201155143.GF12211@suse.de> <3FCC0EE0.9010207@backtobasicsmgmt.com> <20031202082713.GN12211@suse.de> <20031202211002.C2009778@wobbly.melbourne.sgi.com>
-In-Reply-To: <20031202211002.C2009778@wobbly.melbourne.sgi.com>
-Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] Re: Reproducable OOPS with MD RAID-5 on 2.6.0-test11
+From: Theo Van Dinter <felicity@kluge.net>
+Subject: Re: [linux-lvm] RPM for 1.0.8?
+Message-ID: <20031201193759.GJ21437@kluge.net>
+References: <20031129084035.GG22999@percy.comedia.it> <014c01c3b837$e7a491a0$c900a8c0@mithrandir>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="wHh0aNzodMFDTGdO"
+Content-Disposition: inline
+In-Reply-To: <014c01c3b837$e7a491a0$c900a8c0@mithrandir>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,35 +17,40 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Tue Dec  2 07:16:02 2003
+Date: Tue Dec  2 07:51:02 2003
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: Nathan Scott <nathans@sgi.com>
-Cc: Jens Axboe <axboe@suse.de>, LKML <linux-kernel@vger.kernel.org>, Linux-raid maillist <linux-raid@vger.kernel.org>, linux-lvm@sistina.com
+To: linux-lvm@sistina.com
 
-Nathan Scott wrote:
+--wHh0aNzodMFDTGdO
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> One thing that might be of interest - XFS does tend to pass
-> variable size requests down to the block layer, and this has
-> tripped up md and other drivers in 2.4 in the distant past.
-> 
-> Log IO is typically 512 byte aligned (as opposed to block or
-> page size aligned), as are IOs into several of XFS' metadata
-> structures.
+On Mon, Dec 01, 2003 at 10:21:14AM -0800, Erick Calder wrote:
+> what you're saying then is that I can't run 1.0.8 at all
 
-Hey, thanks for the pointer! I think we're getting somewhere now. Here's 
-a recap of the tested combinations:
+More of: "if you want to stick with RedHat's kernel, don't change the lvm t=
+ools".
 
-XFS on raw disk: OK
-XFS on LVM2 on single disk: OK
-XFS on LVM2 on RAID-5: fails
-ext2 on LVM2 on RAID-5: OK
+I just compile my own kernel and upgrade the lvm-tools at the same time.
+I do it more for XFS support than updated LVM, but it's a nice side
+benefit. :)
 
-I just tested XFS on LVM2 on RAID-5 using "-l sunit=8" while creating 
-the filesystem to force log writes be block-sized and block-aligned; 
-this seems to work :-) I have not been able to force a failure using my 
-test script, although ATM the system is still running a RAID-5 resync of 
-the array, but that should only make the problem more likely, not less.
+--=20
+Randomly Generated Tagline:
+lp1 on fire
+ (One of the more obfuscated kernel messages)
 
-So, this does appear to be an md/dm stacking problem, that is exposed by 
-XFS sending non-block-sized and/or non-block-aligned IOs.
+--wHh0aNzodMFDTGdO
+Content-Type: application/pgp-signature
+Content-Disposition: inline
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.2.3 (GNU/Linux)
+
+iD8DBQE/y5iXAuOQUeWAs2MRAqZ0AKDK8zk/yt/Mq6DsGzf1apjZohv/fgCgvFqK
+OG99vMLFgpR2xeZ9CEQMqJM=
+=napd
+-----END PGP SIGNATURE-----
+
+--wHh0aNzodMFDTGdO--
