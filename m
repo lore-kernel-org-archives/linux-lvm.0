@@ -1,10 +1,10 @@
 From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] lvm 1.0.3, kernel 2.4.17 and the libs...
-Message-Id: <20020227101910.B19249@sistina.com>
-References: <1014754031.10436.60.camel@dirac.cids.ca>
+Subject: Re: [linux-lvm] lvm 0.8 to 1.0 transition?
+Message-Id: <20020227102700.C19249@sistina.com>
+References: <3C7BC9BB.F1ABAC3@fl.priv.at>
 MIME-Version: 1.0
-In-Reply-To: <1014754031.10436.60.camel@dirac.cids.ca>; from
-    dsavard@cids.ca on Tue, Feb 26, 2002 at 03:07:11PM -0500
+In-Reply-To: <3C7BC9BB.F1ABAC3@fl.priv.at>; from fl@fl.priv.at on Tue,
+    Feb 26, 2002 at 06:45:31PM +0100
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,44 +15,40 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Feb 27 03:19:02 2002
+Date: Wed Feb 27 03:27:01 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Tue, Feb 26, 2002 at 03:07:11PM -0500, Daniel Savard wrote:
-> I did a major mistake while playing with my LVs resulting in corruption
-> or my VG. So, I am trying to recover as much as I can from my system.
-> All my filesystems where LV except /, /boot and /usr. However, /var,
-> /tmp, /home and /opt were LVs which are no longer accessible.
+On Tue, Feb 26, 2002 at 06:45:31PM +0100, Friedrich Lobenstock wrote:
+> Anything special I have to take care if I make a transition from
+> lvm 0.8 to lvm 1.0? 
 > 
-> I tried to run the vgcfgrestore command and I am running into the
-> following error:
-> 
-> vgcfgrestore: error while loading shared libraries: /lib/liblvm-10.so.1:
-> undefined symbol: opt_ignore
+> Otherwise I would do the same as described in
+> http://www.sistina.com/lvm_howtos/lvm_howto/Moving_a_volume_group_to_.html
 
-Clean build (configure;make;make install) should avoid this.
-Looks like an old vgcfgrestore uses the newer library.
-Please check, if you really start the newly installed tools or hit
-older ones (PATH, alias).
+In case you just want to update your LVM software, you don't need to
+vgexport/vgimport your VGs as described under that URL.
+
+Presuming that you took backups of your data and metadata (/etc/lvmconf/*)
+and don't have root on a LV, you just need to install the new LVM software
+(take LVM 1.0.3!), and run "vgscan;vgchange -ay" after the successfull
+installation and reboot. "vgscan;vgchange -ay" is probably in your system
+startup script anyway.
+
+To be save, you could copy your LVM 0.8 software to /sbin/lvm-0.8 (tools) and
+/lib/lvm-0.8 (library) respectively. Make your LVM 0.8 capable kernel
+bootable too.
+
+With these preperations, you still can boot into single user for LVM 0.8
+recovery in case something goes wrong.
 
 > 
-> I built all the stuff in the lvm-build directory and installed it
-> accordingly to the instructions (make, make install).
-> 
-> Anybody can help me with this one?
 > 
 > -- 
-> 
-> =======================================
-> Daniel Savard
-> 
-> Internet: dsavard@cids.ca
-> =======================================
-> 
-> 
+> MfG / Regards
+> Friedrich Lobenstock
 > 
 > _______________________________________________
 > linux-lvm mailing list
