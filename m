@@ -1,12 +1,12 @@
-Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j317C4O17055
-	for <linux-lvm@redhat.com>; Fri, 1 Apr 2005 02:12:04 -0500
-Message-ID: <424CF437.1050607@cs.wisc.edu>
-Date: Fri, 01 Apr 2005 01:11:51 -0600
-From: Vivek Shrivastava <viveks@cs.wisc.edu>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] Relationship between Device Mapper and LVM2
+Date: Fri, 1 Apr 2005 16:10:01 +0100
+From: Alasdair G Kergon <agk@redhat.com>
+Message-ID: <20050401151001.GB14307@agk.surrey.redhat.com>
+References: <20050401142031.GA21976@wavehammer.waldi.eu.org>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20050401142031.GA21976@wavehammer.waldi.eu.org>
+Subject: [linux-lvm] Re: [Linux-cluster] [PATCH] iddev - convert to general
+	purpose device identifier
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -17,20 +17,21 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: dm@uk.sistina.com, linux-LVM@sistina.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: linux-cluster@redhat.com
+Cc: linux-lvm@redhat.com
 
-Dear Sir,
-        We are trying to do some work on LVM2, by trying to make it more 
-dynamic and suitable for virtual machines. We have a very fundamental 
-doubt as follows:
+On Fri, Apr 01, 2005 at 04:20:31PM +0200, Bastian Blank wrote:
+> I currently try to do some cleanups in lvm2/fsadm. This tool currently
+> relies on an entry in /etc/fstab to get the filesystem type and a
+> temporary mount to get the block size. With this changes I can just use
+> iddev to gather the informations.
+ 
+Also, if online and offline resizers are both available, fsadm
+should choose whichever is most appropriate according to whether
+the filesystem is already mounted or not.
 
-Is LVM2 based on top of "device mapper" and uses "device mapper" as the 
-underlying layer of support for writing /reading on the disk. Or Device 
-mapper is placed between the kernel and the LVM2. Aslo if possible 
-please tell us the entry point of kernel into the device mapper.
-
-Any suggestions on this topic will be highly appreciated.
-
-Thanks,
-Vivek
+Alasdair
+-- 
+agk@redhat.com
