@@ -1,14 +1,12 @@
-Return-Path: <blutgens@sistina.com>
-Date: Tue, 3 Jul 2001 16:33:50 -0500
-From: Ben Lutgens <blutgens@sistina.com>
-Subject: Re: [linux-lvm] LVM on Redhat 2.4.3-12 Kernel
-Message-ID: <20010703163350.B2043@minime.sistina.com>
-References: <994015538.6465.5.camel@detrius> <Pine.LNX.4.33.0107031707230.15782-100000@leopard.dorfam.ca>
+Return-Path: <weissel@netcologne.de>
+From: Wolfgang Weisselberg <weissel@netcologne.de>
+Date: Wed, 4 Jul 2001 02:43:04 +0200
+Subject: Re: [linux-lvm] HowTo: EIDE/ATA-100 + RAID 1 + LVM
+Message-ID: <20010704024304.A8019@tiger.bigcats.invalid>
+References: <03b201c0fff4$aa4007c0$01e6a8c0@oulx> <20010628222856.E16466@dragon.blacknet.de>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-md5;
-	protocol="application/pgp-signature"; boundary="UHN/qo2QbUvPLonB"
 Content-Disposition: inline
-In-Reply-To: <Pine.LNX.4.33.0107031707230.15782-100000@leopard.dorfam.ca>; from gerry@dorfam.ca on Tue, Jul 03, 2001 at 05:13:57PM -0400
+In-Reply-To: <20010628222856.E16466@dragon.blacknet.de>; from bock@blacknet.de on Thu, Jun 28, 2001 at 10:28:56PM +0200
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -20,46 +18,22 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
---UHN/qo2QbUvPLonB
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Hi, Goetz!
 
-On Tue, Jul 03, 2001 at 05:13:57PM -0400, gerry@dorfam.ca wrote:
->
->In other words, how do I get this going under the new kernel???
+Goetz Bock (bock@blacknet.de) wrote 80 lines:
 
-We always recommend downloading kernel source from kernel.org, get a copy
-of the latest released source from ftp.sistina.com and follow the steps
-in the howto.=20
+>   (2x)RAM /dev/hd[ac]2  swap    putting swap onto raid does not make
+>                                 sence to me. The 2.4.x kernel NEEDS
 
-RedHat applies tons of custom patches ( 200+ ) to the vanilla source tree i=
-n an
-attempt to one-up thier competition. While this is not inherintly bad, it
-can make things difficult to sort out when you start trying to apply
-patches that were generated based off of stock linus brand kernels. Also
-there may be some hidden differences which let you think everything is
-working while it in fact is not.
+Swap on RAID will not give you speed (it will slow you rather),
+but a HD failure will not crash the server, because suddenly
+the swap has gone.  And without stability even over the loss of
+a HD -- what is RAID worth?  Speed you can gain by striping
+partitions -- at the cost of having to hope that all HDs
+survive, instead of a quorum as with RAID.
 
-
---=20
-Ben Lutgens	=09
-Sistina Software Inc.=09
-Kernel panic: I have no root and I want to scream
-
---UHN/qo2QbUvPLonB
-Content-Type: application/pgp-signature
-Content-Disposition: inline
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.0.6 (GNU/Linux)
-Comment: For info see http://www.gnupg.org
-
-iD8DBQE7Qjo+LxkxGgLdGQgRAsOBAJ46hPt0YIfmCwijw8KEv+++M0vxNgCffV9g
-iF2k6vqX9X0acn1zdzOGJCg=
-=YSxA
------END PGP SIGNATURE-----
-
---UHN/qo2QbUvPLonB--
+-Wolfgang
