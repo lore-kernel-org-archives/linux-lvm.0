@@ -1,14 +1,9 @@
-Return-Path: <lewis@sistina.com>
-Date: Thu, 14 Jun 2001 09:36:38 -0500
-From: AJ Lewis <lewis@sistina.com>
-Subject: Re: [linux-lvm] LVM kernel patch request
-Message-ID: <20010614093637.A22499@sistina.com>
-References: <000601c0f4bd$f1bbb1e0$3533a8c0@leo2000>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-md5;
-	protocol="application/pgp-signature"; boundary="mP3DRpeJDSE+ciuQ"
-Content-Disposition: inline
-In-Reply-To: <000601c0f4bd$f1bbb1e0$3533a8c0@leo2000>; from leowong@i-stt.com.hk on Thu, Jun 14, 2001 at 06:36:54PM +0800
+Return-Path: <dice@mfa.kfki.hu>
+Date: Fri, 15 Jun 2001 12:12:09 +0200 (CEST)
+From: Gergely Tamas <dice@mfa.kfki.hu>
+Message-ID: <Pine.LNX.4.33.0106151209260.29617-100000@falka.mfa.kfki.hu>
+MIME-Version: 1.0
+Subject: [linux-lvm] $(DESTDIR) inclusion into Makefile.in files
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -20,73 +15,90 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
+Content-Type: TEXT/PLAIN; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
---mP3DRpeJDSE+ciuQ
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Hi!
 
-On Thu, Jun 14, 2001 at 06:36:54PM +0800, Leo Wong wrote:
-> I am using RedHat7.1 with Kernel version 2.4.2-2. I downloaded the binari=
-es patch-generator0.91beta7 rpm. i follow the instructions(i.e. ./configure=
- and then make in PATCHES, then a patch -p1 < /xx/xxx/PATCHES/xxxxx.patch) =
- to patch the kernel and everything wents well when i do a make config in t=
-he /usr/src/linux, configuring the LVM as a modules.=20
+It would be probably a good idea to insert a $(DESTDIR) in front of all
+installation targets. This would make packagers life easyer.
 
-Where is your kernel source located?  Did you specify this location when you
-ran ./configure?  (ie, './configure --with-kernel_dir=3D/usr/src/linux-2.4.=
-2-2')
+The following patch does this.
 
-> But i cannot do a make modules, after i make dep;make clean;make bzlilo, =
-lots of compilation errors jump out.
+Thanks,
+Gergely
 
-A log of the exact errors would be nice.  I really don't have any idea what
-is going wrong unless I can see those.
+diff -ur 0.9.1_beta7-orig/tools/Makefile.in 0.9.1_beta7/tools/Makefile.in
+--- 0.9.1_beta7-orig/tools/Makefile.in	Wed Feb 14 19:28:06 2001
++++ 0.9.1_beta7/tools/Makefile.in	Wed Jun 13 12:40:40 2001
+@@ -72,18 +72,18 @@
+ l:	list
 
-> I then try compile the LVM in the kernel by running make config again. af=
-ter i build everything, when i run the vgscan, it says "lvmiopversion -- LV=
-M driver/module not loaded?"
+ install-bin:	$(ALL_TARGETS) $(ALL_SCRIPTS)
+-	@echo "*** Installing $(ALL_TARGETS) $(ALL_SCRIPTS) in ${sbindir} ***"
++	@echo "*** Installing $(ALL_TARGETS) $(ALL_SCRIPTS) in $(DESTDIR)${sbindir} ***"
+ 	@for f in $(ALL_TARGETS); \
+ 	do \
+-  	   rm -f ${sbindir}/$$f; \
+-	   @INSTALL@ -d ${sbindir}; \
+-	   @INSTALL@ -o ${OWNER} -g ${GROUP} -m 555 -s $$f ${sbindir}/$$f; \
++  	   rm -f $(DESTDIR)${sbindir}/$$f; \
++	   @INSTALL@ -d $(DESTDIR)${sbindir}; \
++	   @INSTALL@ -o ${OWNER} -g ${GROUP} -m 555 -s $$f $(DESTDIR)${sbindir}/$$f; \
+ 	done
+ 	@for f in $(ALL_SCRIPTS); \
+ 	do \
+-	   rm -f ${sbindir}/$$f; \
+-	   @INSTALL@ -d ${sbindir}; \
+-	   @INSTALL@ -o ${OWNER} -g ${GROUP} -m 555 $$f ${sbindir}/$$f; \
++	   rm -f $(DESTDIR)${sbindir}/$$f; \
++	   @INSTALL@ -d $(DESTDIR)${sbindir}; \
++	   @INSTALL@ -o ${OWNER} -g ${GROUP} -m 555 $$f $(DESTDIR)${sbindir}/$$f; \
+ 	done
 
-Did you install the new kernel and reboot?  It may be possible to get along
-without rebooting if you are building the kernel modules, but you will
-definitely need to reboot if LVM is built into the kernel.
+ remove-bin:	$(ALL_TARGETS) $(ALL_SCRIPTS)
+diff -ur 0.9.1_beta7-orig/tools/lib/Makefile.in 0.9.1_beta7/tools/lib/Makefile.in
+--- 0.9.1_beta7-orig/tools/lib/Makefile.in	Fri Mar  2 17:34:03 2001
++++ 0.9.1_beta7/tools/lib/Makefile.in	Wed Jun 13 12:41:37 2001
+@@ -44,14 +44,14 @@
+ 	@echo ""
 
-> Seemingly the LVM module/compilation doesn't work for this kernel.
+ install_this:
+-	@echo "*** Installing $(ARCHIVE) and $(SO) in ${prefix}/lib ***"
+-	@rm -f ${libdir}/${SO} ${libdir}/${SOV} ${libdir}/${SOM} ${libdir}/$(ARCHIVE);
+-	@INSTALL@ -d ${libdir}
+-	@INSTALL@ -o ${OWNER} -g ${GROUP} $(ARCHIVE) $(SOV) ${libdir}
+-	chmod 444 ${libdir}/$(ARCHIVE)
+-	chmod 555 ${libdir}/$(SOV)
+-	ln -s $(SOV) ${libdir}/${SO}
+-	ln -s $(SOV) ${libdir}/${SOM}
++	@echo "*** Installing $(ARCHIVE) and $(SO) in $(DESTDIR)${prefix}/lib ***"
++	@rm -f $(DESTDIR)${libdir}/${SO} $(DESTDIR)${libdir}/${SOV} $(DESTDIR)${libdir}/${SOM} $(DESTDIR)${libdir}/$(ARCHIVE);
++	@INSTALL@ -d $(DESTDIR)${libdir}
++	@INSTALL@ -o ${OWNER} -g ${GROUP} $(ARCHIVE) $(SOV) $(DESTDIR)${libdir}
++	chmod 444 $(DESTDIR)${libdir}/$(ARCHIVE)
++	chmod 555 $(DESTDIR)${libdir}/$(SOV)
++	ln -s $(SOV) $(DESTDIR)${libdir}/${SO}
++	ln -s $(SOV) $(DESTDIR)${libdir}/${SOM}
 
-It should work, but RedHat puts a lot of additional patches into their
-kernels, and it is possible there is a conflict somewhere.  Did the patch
-apply cleanly?
+ remove_this:
+ 	@echo "*** Removing $(ARCHIVE) and $(SO) in ${prefix}/lib ***"
+diff -ur 0.9.1_beta7-orig/tools/man8/Makefile.in 0.9.1_beta7/tools/man8/Makefile.in
+--- 0.9.1_beta7-orig/tools/man8/Makefile.in	Wed Feb 14 19:28:07 2001
++++ 0.9.1_beta7/tools/man8/Makefile.in	Wed Jun 13 12:41:59 2001
+@@ -36,11 +36,11 @@
+ 	@true
 
-Regards,
---=20
-AJ Lewis
-Sistina Software Inc.                  Voice:  612-638-0500
-1313 5th St SE, Suite 111              Fax:    612-638-0500
-Minneapolis, MN 55414                  E-Mail: lewis@sistina.com
-http://www.sistina.com
+ install-man8:
+-	@echo "*** Installing $(ALL_MANUALS) in $(MAN8DIR) ***"
++	@echo "*** Installing $(ALL_MANUALS) in $(DESTDIR)$(MAN8DIR) ***"
+ 	@for f in $(ALL_MANUALS); \
+ 	do \
+-	   rm -f $(MAN8DIR)/$$f; \
+-	   @INSTALL@ -D -o ${OWNER} -g ${GROUP} -m 444 $$f $(MAN8DIR)/$$f; \
++	   rm -f $(DESTDIR)$(MAN8DIR)/$$f; \
++	   @INSTALL@ -D -o ${OWNER} -g ${GROUP} -m 444 $$f $(DESTDIR)$(MAN8DIR)/$$f; \
+ 	done
 
-Current GPG fingerprint =3D 3B5F 6011 5216 76A5 2F6B  52A0 941E 1261 0029 2=
-648
-Get my key at: http://www.sistina.com/~lewis/gpgkey
- (Unfortunately, the PKS-type keyservers do not work with multiple sub-keys)
-
------Begin Obligatory Humorous Quote----------------------------------------
-Hope is NOT a thing with feathers, the thing with feathers is my nephew,
-and I have to take him to a specialist in Zurich. - Woody Allen
------End Obligatory Humorous Quote------------------------------------------
-
---mP3DRpeJDSE+ciuQ
-Content-Type: application/pgp-signature
-Content-Disposition: inline
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.0.6 (GNU/Linux)
-Comment: For info see http://www.gnupg.org
-
-iD8DBQE7KMv1pE6/iGtdjLERAvBXAKCbJvfKWheXXo7m1yX5jd7mMnY5JQCfTmfm
-KyGgYQxRamnfk6eEodqfBmc=
-=nJ3q
------END PGP SIGNATURE-----
-
---mP3DRpeJDSE+ciuQ--
+ remove-man8:
