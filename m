@@ -1,10 +1,8 @@
-From: Luca Berra <bluca@comedia.it>
-Subject: Re: [linux-lvm] lvm/devfs bug?
-Message-ID: <20030410212134.GA20504@percy.comedia.it>
-References: <1049829705.2312.16.camel@rich> <20030408204334.GD22951@percy.comedia.it> <1049836943.7411.19.camel@rich> <20030409072130.GD1366@tykepenguin.com> <1049932652.7946.4.camel@rich-laptop> <1049998095.1031.5.camel@rich-laptop>
+From: "=?GB2312?Q?=C0=EE=B1=D8=B8=D5?=" <lbg01@mails.tsinghua.edu.cn>
+Subject: Re: RE: [linux-lvm] extending LVM for school project
 Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <1049998095.1031.5.camel@rich-laptop>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <E193nUt-0007ox-00@hermes.sistina.com>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,39 +13,88 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Thu Apr 10 16:22:01 2003
+Date: Thu Apr 10 20:39:02 2003
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-Content-Transfer-Encoding: 7bit
-To: linux-lvm@sistina.com
+Content-Type: text/plain; charset="gb2312"
+To: linux-lvm@sistina.comlinux-lvm@sistina.com
 
-On Thu, Apr 10, 2003 at 11:08:14AM -0700, rich turner wrote:
->does anyone recognize this as a bug within lvm?
+Sharad Tiwari,
 
-agreed.
+I'm very interesting with your plan.I've shared disks in a=
+ clustered environment
+and I'll plan to develop the LVM more available,be fit for=
+ cluster environment,
+and if possible,make the storage pool in the LVM.
 
-there are long standing bugs in the dev scanning code of lvm1,
-did you try using the devfs name (even if you don't mount devfs you can
-create the device file manually)
-you could also add some more info instead of requoting yourself
-eg: contents of the damned /proc/partitions
-which version of lvm tools are you running
-output of lvmdiskscan
-lvmdiskscan -d
-pvcreate -d
-and so on.
+thanks,
+zonk.
 
-L.
+=09
 
-P.S.
-please don't post to the list, put it somewhere accessible.
+=3D=3D=3D=3D=3D=3D=3D 2003-04-09 11:51:00 =C4=FA=D4=DA=C0=B4=D0=C5=D6=D0=D0=B4=B5=C0=A3=BA=3D=3D=3D=3D=3D=3D=3D
 
-L.
+>What about working towards making LVM cluster aware and making=
+ it more
+>available, putting in better failover mechanisms in a clustered
+>environment ...
+>
+>If the work is done for for a hybrid setup (no need to have a=
+ shared
+>disk, or you may have a mix of shared disk and just a some=
+ disks
+>connected to one of the nodes in the network.) you can save the=
+ cost of
+>having to buy expensive disks and switches and can do the work=
+ with the
+>available setup in the university.
+>
+>I am myself planning to work towards extending LVM2 for such a=
+ setup and
+>we can share our work : )O
+>
+>Thanks,
+>Sharad.
+>
+>> >-----Original Message-----
+>> >From: Kai-Min Sung [mailto:k@kaisung.com]
+>> >Sent: Wednesday, April 09, 2003 11:25 AM
+>> >To: Linux-lvm@sistina.com
+>> >Subject: [linux-lvm] extending LVM for school project
+>> >
+>> >Hey everyone,
+>> >=09I'm a masters student taking a distributed systems project=
+ class
+>> >and would like to work on extending LVM. My initial idea was=
+ to
+>modify
+>> >LVM and allow it to create physical volumes using disks on=
+ remote
+>nodes.
+>> >But then I read posts about using ENBD to achieve this. Do=
+ people on
+>> >this list have suggestions or ideas for a fun/interesting=
+ project
+>that
+>> >could be accomplished within 10 weeks?
+>> >
+>> >Regards,
+>> >Kai-Min Sung
+>> >
+>> >
+>> >
+>> >_______________________________________________
+>> >linux-lvm mailing list
+>> >linux-lvm@sistina.com
+>> >http://lists.sistina.com/mailman/listinfo/linux-lvm
+>> >read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+>
+>_______________________________________________
+>linux-lvm mailing list
+>linux-lvm@sistina.com
+>http://lists.sistina.com/mailman/listinfo/linux-lvm
+>read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+>.
 
--- 
-Luca Berra -- bluca@comedia.it
-        Communication Media & Services S.r.l.
- /"\
- \ /     ASCII RIBBON CAMPAIGN
-  X        AGAINST HTML MAIL
- / \
+
+=A1=A1=A1=A1=A1=A1=A1=A1=A1=A1=A1=A1=A1=A1=A1=A1lbg01@mails.tsinghua.edu.cn
+=A1=A1=A1=A1=A1=A1=A1=A1=A1=A1=A1=A1=A1=A1=A1=A1=A1=A1=A1=A12003-04-11
