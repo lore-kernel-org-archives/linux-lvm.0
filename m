@@ -1,18 +1,22 @@
-Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j0LIitO11089
-	for <linux-lvm@redhat.com>; Fri, 21 Jan 2005 13:44:55 -0500
-Received: from nile.gs.washington.edu (nile.gs.washington.edu [128.95.231.71])
-	by mx3.redhat.com (8.12.11/8.12.11) with ESMTP id j0LIin7x029825
-	for <linux-lvm@redhat.com>; Fri, 21 Jan 2005 13:44:49 -0500
-Date: Fri, 21 Jan 2005 10:44:39 -0800
-From: "David S." <dgs@gs.washington.edu>
-Subject: Re: [linux-lvm] Why the dramatic increase in filesystem performance
-	when usingxfs????
-Message-ID: <20050121184439.GA10053@nile.gs.washington.edu>
-References: <1106304669.3943.14.camel@grma-lap>
+Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j0LMPfO13649
+	for <linux-lvm@redhat.com>; Fri, 21 Jan 2005 17:25:41 -0500
+Received: from postfix2-c.free.fr (postfix2-c.free.fr [213.228.0.80])
+	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id j0LMPd4G032691
+	for <linux-lvm@redhat.com>; Fri, 21 Jan 2005 17:25:39 -0500
+Received: from postfix3-2.free.fr (postfix3-2.free.fr [213.228.0.169])
+	by postfix2-c.free.fr (Postfix) with ESMTP id 423A2A2C2F1
+	for <linux-lvm@redhat.com>; Fri, 21 Jan 2005 23:25:39 +0100 (CET)
+Received: from eric.placeverte.home
+	(lns-vlq-9-lil-82-65-151-242.adsl.proxad.net [82.65.151.242])
+	by postfix3-2.free.fr (Postfix) with SMTP id 5242FC1BC
+	for <linux-lvm@redhat.com>; Fri, 21 Jan 2005 23:25:35 +0100 (CET)
+Date: Fri, 21 Jan 2005 23:25:33 +0100
+From: messmate <messmate@free.fr>
+Message-ID: <20050121232533.38a267e4@eric.placeverte.home>
 Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <1106304669.3943.14.camel@grma-lap>
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] access files in an ext3 filesystem from lvm
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -24,60 +28,19 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: Gary.Mansell@ricardo.com, LVM general discussion and development <linux-lvm@redhat.com>
+To: linux-lvm <linux-lvm@redhat.com>
 
-> 
-> As the xfs performance comes back about twice the performance of ext3
-> for this test I am of the opinion that xfs must be cheating somehow. It
-> has always been my opinion that the IO bottleneck is the hardware and
-> not the filesystem hence changing the filesystem but using the same
-> hardware should not make a huge difference to performance (you still
-> have to get the same amount of data out to disk at the end of the day)
-> 
-> I am struggling to comprehend how xfs can cheat, though, as it can't
-> cache such a huge file as there is not enough memory. Is it perhaps
-> cheating because the file is comprised entirely of zero's?
-> 
-> Can someone please enlighten me
+Hi,
+I've 2 distributions, one with LVM/ext3 configured and the second with
+only an ext3 filesystem.
+How can i acces the files in the LVM/ext3 from distribution 2 ??
+LVM/etx3 is as follows:
 
-Try mounting your ext3 file system with the "data=writeback" option.
-See mount(8).
+                                       |-> lv1   
+                                       |
+pv1,pv2,pv3 -->vg1---|-> lv2
+                                       |
+                                       |-> lv3
 
-David S.
-
-> 
-> Thanks in advance
-> 
-> Gary Mansell
-> -- 
-> 
-> This e-mail and any files transmitted with it are confidential and intended
-> solely for the use of the individual or entity to whom they are addressed.
-> If you have received this e-mail in error please notify the sender immediately
-> and delete this e-mail from your system.  Please note that any views or opinions
-> presented in this e-mail are solely those of the author and do not necessarily
-> represent those of Ricardo (save for reports and other documentation formally
-> approved and signed for release to the intended recipient).  Only Directors
-> or Duly Authorised Officers are authorised to enter into legally binding
-> obligations on behalf of Ricardo unless the obligation is contained within
-> a Ricardo Purchase Order.
-> 
-> Ricardo may monitor outgoing and incoming e-mails and other telecommunications
-> on its e-mail and telecommunications systems.  By replying to this e-mail you
-> give consent to such monitoring.  The recipient should check this e-mail and
-> any attachments for the presence of viruses.  Ricardo accepts no liability for
-> any damage caused by any virus transmitted by this e-mail.  "Ricardo" means
-> Ricardo plc and its subsidiary companies.
-> 
-> Ricardo plc is a public limited company registered in England with registered
-> number 00222915.
-> The registered office of Ricardo plc is Bridge Works, Shoreham-by Sea,
-> West Sussex, BN43 5FG.
->  
-> 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+Thanks for your help in advance
+mess-mate
