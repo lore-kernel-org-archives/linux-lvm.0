@@ -1,55 +1,47 @@
-From: Heinz Mauelshagen <mauelsha@ez-darmstadt.telekom.de>
-Message-Id: <200003080812.JAA11917@u9etz.ez-darmstadt.telekom.de>
-Subject: Re: [linux-lvm] Snapshot documentation
-Date: Wed, 8 Mar 2000 09:12:51 +0100 (MET)
-Mime-Version: 1.0
+Message-ID: <38C632C4.FC682FC4@ep-ag.com>
+Date: Wed, 08 Mar 2000 12:00:20 +0100
+From: Klaus Strebel <stb@ep-ag.com>
+MIME-Version: 1.0
+Subject: Re: [linux-lvm] building the binary utilities
+References: <20000307213810.3824.qmail@web117.yahoomail.com>
 Content-Transfer-Encoding: 7bit
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@msede.com
+To: Chris Campbell <dash_ampersand@yahoo.com>
+Cc: linux-lvm@msede.com
 
+Chris Campbell wrote:
+> 
+> kernel location is what it should be, but I still get
+> all these errors.  I'm not sure what's going on, other
+> than it can't find the lvm and liblvm header files,
+> which are in a directory below the current one:
+Hi Chris,
 
-Enabling you to create snapshots with less space than that of the
-Original Logical Volume is an option to save space in case you have
-data which doesn't change a lot.
+the variable TOP in your '/root/lvmstuff/LVM/0.8final/make.tmpl' is set
+to '/root/LVM/0.8final', as you could see in following snipped from your
+make-errors file:
 
-The only chance to deal with for eg. a filesystem which changes rapidly
-and in the extrem case totally is to create equal sized snapshots.
+cc -c -pipe -Wall -O2 -DDEBUG -I/root/LVM/0.8final/tools/lib
+-I/root/LVM/0.8fina
+l/tools -o basename.o basename.c
+cc -c -pipe -Wall -O2 -DDEBUG -I/root/LVM/0.8final/tools/lib
+-I/root/LVM/0.8fina
+l/tools -o debug.o debug.c
+basename.c:34: liblvm.h: No such file or directory
 
-Heinz
+the -I options in the gcc line are expanded from '-I$(TOP)/tools/lib
+-I$(TOP)'. You should control your changes in config files at first when
+your're searching for errors before you start symlinking around ;-).
 
-> Hi,
-> 
-> Been playing with snapshots and am noticing I can create a snapshot with
-> less PE's than my source LV that I'm snapshotting, with the small side
-> effect of:
-> 
-> lvcreate -- WARNING: all snapshots will be disabled if more than 12 MB are
-> changed
-> 
-> Is the above message implying that if I change more than 12MB of data on
-> my source LV that the snapshot is then defunct/useless?  Does that include
-> deletes, etc?
-> 
-> Mainly a pointer to any information or documentation regarding how this
-> all works would be well appreciated.  I'm noticing LVM has some HP history
-> involved, so I'll go see if they have relevant data in their HPUX docs.
-> 
-> Maybe this is included in the recent EN-HOWTO I noticed mention of as
-> well?
-> 
+Bye
+Klaus
+
 -- 
-
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-
-Systemmanagement CS-TS                           T-Nova
-                                                 Entwicklungszentrum Darmstadt
-Heinz Mauelshagen                                Otto-Roehm-Strasse 71c
-Senior Systems Engineer                          Postfach 10 05 41
-                                                 64205 Darmstadt
-mge@EZ-Darmstadt.Telekom.de                      Germany
-                                                 +49 6151 886-425
-                                                          FAX-386
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+Klaus Strebel
+stb@ep-ag.com
+EIGNER + PARTNER AG   - The Engineering Warehouse Company -
+<http://www.ep-ag.com>
+-----------------------------------------------------------------------
