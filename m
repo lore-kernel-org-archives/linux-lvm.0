@@ -1,7 +1,9 @@
-Message-ID: <2D92FEBFD3BE1346A6C397223A8DD3FC09235F@THOR.goeci.com>
-From: Murthy Kambhampaty <murthy.kambhampaty@goeci.com>
+content-class: urn:content-classes:message
 MIME-Version: 1.0
-Subject: [linux-lvm] [SOLVED] RE: VG incorrectly displayed/unusable
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [linux-lvm] LVM 1.0.7, kernel 2.4.21 and snapshots over ext3 filesystem
+Message-ID: <BC28A9E979C56C44BCBC2DED313A4470017E83E8@bond.ncl.ac.uk>
+From: "C R Ritson" <C.R.Ritson@newcastle.ac.uk>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -12,115 +14,47 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Thu Jul  3 09:10:02 2003
+Date: Thu Jul  3 11:14:02 2003
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: "'linux-lvm@sistina.com'" <linux-lvm@sistina.com>
+To: linux-lvm@sistina.com
 
-vexport-ing the volume in rescue mode and vgimporting-ing after system
-restart did solve the problem
+> Date: Tue, 1 Jul 2003 23:16:54 +0200
+> To: linux-lvm@sistina.com
+> Subject: Re: [linux-lvm] LVM 1.0.7, kernel 2.4.21 and=20
+>=20
+> My bet is that you first patched the kernel for VFS-lock and
+> *then* patched the kernel for LVM.  This undoes (parts of)
+> the VFS-lock.  The reason is as follows:
+>=20
+> - AFAICS the LVM kernel patch generator has functions as they
+>   should be in the kernel
+> - this means the 'patch' is dynamically build by comparing
+>   the current kernel with the functions LVM wants there.
+> - so if the VFS-lock patch is in the kernel, LVM will
+>   'correct' it, undoing it's efforts.
 
+That is strange - my exprience with kernel 2.4.20 and LVM 1.0.7 was as
+follows:
 
->-----Original Message-----
->From: Murthy Kambhampaty 
->Sent: Wednesday, July 02, 2003 02:44
->To: 'linux-lvm@sistina.com'
->Subject: VG incorrectly displayed/unusable
->
->
->After reinstalling Redhat 8.0 on a server system, I am having 
->an odd problem: vgscan recognizes the various VGs on the 
->system, VGsys, VGdata0 and VGdb01. However, LVM seems to 
->confuse VGdata0 and VGsys - "/sbin/vgdisplay VGdata0" produces 
->a VGdisplay for VGsys and "/sbin/lvscan" shows duplicate 
->information for VGsys. As shown below, "/sbin/vgdisplay -D 
->VGdata0" shows the correct information for VGdata0.
->
->I am thinking of booting to the Redhat 8.0 installer's rescue mode
->, vgexport-ing VGdata0, reboot to the system and 
->"vgimport"-ing VGdata0 (and its PVs). Is this likely to solve 
->the problem (I half-expect that all that vgexport does is 
->remove the VG config from the "old" system in preparation for 
->moving the volume, so I'm not sure this will do me any good.)
->
->The system runs RedHat Linux 8.0 with the latest updates, and 
->the 2.4.21 kernel with xfs patches (LVM userspace has been 
->updated to redhat/contribs/libc6/SRPMS/lvm-1.0.5-1.src.rpm 
->rebuilt on this system). Hardware is 
->Supermicro Super8050
->AIC79XX (onboard u160, connects VGsys)
->DAC960 (Acceleraid 352, connects VGdata0)
->aacraid (Adaptec 2200s, connects VGdb01)
->
->One thing to note is that one of the PVs in VGdata0 is a whole 
->(HW RAID-5 logical) disk.
->
->Listed below are output from:
->/sbin/vgdisplay -D VGdata0
->/sbin/vgdisplay VGdata0
->and
->/sbin/pvdisplay
->
->Thanks for the help,
->   Murthy
->
->
->
-># /sbin/vgdisplay -D VGdata0
->--- Volume group ---
->VG Name               VGdata0
->VG Access             read/write
->VG Status             NOT available/resizable
->VG #                  0
->MAX LV                256
->Cur LV                3
->Open LV               0
->MAX LV Size           2 TB
->Max PV                256
->Cur PV                2
->Act PV                2
->VG Size               266.16 GB
->PE Size               32 MB
->Total PE              8517
->Alloc PE / Size       5185 / 162.03 GB
->Free  PE / Size       3332 / 104.12 GB
->VG UUID               QmFOyx-ILlI-uNTb-z4hG-ZDnD-kL3Q-UyJGEZ
->
->
-># /sbin/vgdisplay VGdata0
->--- Volume group ---
->VG Name               VGsys
->VG Access             read/write
->VG Status             available/resizable
->VG #                  0
->MAX LV                256
->Cur LV                4
->Open LV               4
->MAX LV Size           255.99 GB
->Max PV                256
->Cur PV                1
->Act PV                1
->VG Size               31.65 GB
->PE Size               4 MB
->Total PE              8103
->Alloc PE / Size       8103 / 31.65 GB
->Free  PE / Size       0 / 0
->VG UUID               DWvjLY-tFNc-cxXU-epjF-vaEx-uEAA-IM3CtK
->
->
-># /sbin/lvscan
->pvscan -- reading all physical volumes (this may take a while...)
->pvscan -- inactive PV "/dev/rd/c0d0p4" of VG "VGdata0" [129.38 GB /
->104.12 GB free]
->pvscan -- inactive PV "/dev/rd/c0d1"   of VG "VGdata0" [136.78 GB / 0
->free]
->pvscan -- ACTIVE   PV "/dev/md2"       of VG "VGsys"   [31.65 GB / 0
->free]
->pvscan -- ACTIVE   PV "/dev/sdc1"      of VG "VGdb01"  [67.75 GB / 0
->free]
->pvscan -- ACTIVE   PV "/dev/sdd1"      of VG "VGdb01"  [271.12 GB / 0
->free]
->pvscan -- total: 5 [636.88 GB] / in use: 5 [636.88 GB] / in no 
->VG: 0 [0]
->
+With no VFS-lock patch I get problems with snapshots as described.
+
+Attempting to apply the VFS-lock patch AFTER the LVM generated patch
+gives me an un-compilable tree with with unresolved reverences to
+fsync_dev_lockfs and unlockfs.
+
+On one test machine I am running a 2.4.20 kernel in which the VFS-lock
+patch was applied BEFORE the LVM patch. Here, I am taking a snapshot at
+about 23:30 every night, and backing that up to tape to ensure that
+backup sees a stable volume, then leaving the snapshot around for the
+next 24 hours to allow users to recover from sinple file deletions and
+corruptions themselves.
+
+Would Heinz care to comment on these two apparently conflicting results?
+
+Chris Ritson (Computing Officer)
+
+Rm 618, Claremont Bridge,       EMAIL: C.R.Ritson@newcastle.ac.uk
+School of Computing Science,    PHONE: +44 191 222 8175
+University of Newcastle,        FAX  : +44 191 222 8232
+Newcastle on Tyne, UK NE1 7RU.  http://www.cs.ncl.ac.uk/~c.r.ritson/
