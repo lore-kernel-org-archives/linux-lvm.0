@@ -1,19 +1,17 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id i52HAY013796
-	for <linux-lvm@redhat.com>; Wed, 2 Jun 2004 13:10:34 -0400
-Received: from matrix.tmit.bme.hu (mail@matrix.tmit.bme.hu [152.66.246.235])
-	by mx3.redhat.com (8.12.10/8.12.10) with ESMTP id i52HANXn004273
-	for <linux-lvm@redhat.com>; Wed, 2 Jun 2004 13:10:23 -0400
-Received: from kefir (helo=localhost)
-	by matrix.tmit.bme.hu with local-esmtp (Exim 3.35 #1 (Debian))
-	id 1BVZFu-0001Sm-00
-	for <linux-lvm@redhat.com>; Wed, 02 Jun 2004 19:10:22 +0200
-Date: Wed, 2 Jun 2004 19:10:22 +0200 (CEST)
-From: Andras Gefferth <g_a@freeXdeletethisXmail.hu.redhat.com>
-Message-ID: <Pine.LNX.4.44.0406021905350.5350-100000@matrix.tmit.bme.hu>
-MIME-Version: 1.0
-Sender: Andras Gefferth <kefir@matrix.tmit.bme.hu>
-Subject: [linux-lvm] PV size error
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id i53EwB025173
+	for <linux-lvm@redhat.com>; Thu, 3 Jun 2004 10:58:11 -0400
+Received: from monkey.sneakemail.com (clean.sneakemail.com [38.136.15.35])
+	by mx3.redhat.com (8.12.10/8.12.10) with SMTP id i53Ew4Xn028764
+	for <linux-lvm@redhat.com>; Thu, 3 Jun 2004 10:58:05 -0400
+Date: Thu, 3 Jun 2004 16:57:53 +0200
+Subject: Re: [linux-lvm] dd of a used part of a logical volume?
+Message-ID: <27202-34029@sneakemail.com>
+References: <20040528064553.GA1007%alexy.khrabrov@setup.org>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20040528064553.GA1007%alexy.khrabrov@setup.org>
+From: "Wolfgang Weisselberg" <uzx87lvfmukwc001@sneakemail.com>
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -24,20 +22,52 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@redhat.com
 
-Hi All!
+Alexy Khrabrov wrote 40 lines:
 
-I'm using LVM 2 with linux 2.6.5. The size of the partition (as reported
-by fdisk, or cfdisk) is around 20G, while pvdisplay (or something similar)
-says 30G for this pv. I think this shouldn't happen. Am I right?
+[undeleting files w/ReiserFS]
 
-What should I do?
+> Now I'd like to play with the dd copying of the whole reiserfs (I'm
+> avoiding the word partition since it covers the whole logical volume
+> which spans the whole RAID device).
 
-pls send answers to my private address too
+To any file system a logical volume is a partition.  
 
-thanks
+It just happens that the underlying system may be split over
+several hard disks and do not even have to be continous --- just
+as LVM sees a single hard drive, but in reality it's several hard
+drives joined by a RAID system.
 
-Andras
+> I simply do not have space to copy
+> the whole RAID, but the size of the used space on this reiserfs volume was
+> under about 9 GB.  I wonder how can I copy just about that -- I assume it
+> fills the logical volume contiguously,
+
+And each time a file grows, you have to jump to the end of the
+currently used space, just for that?  That's one of the things
+that makes FAT a simple, slow file system.  ReiserFS --- and
+most other intelligent file systems --- spread their data over
+the whole disk, so even if files grow, the number of jumps the
+hard disk head has to make to read a file completely stays low.
+
+> Are there LVM methods to shrink it/copy just the used blocks in
+> conjunction with reiserfs, such as resize_reiserfs?
+
+How about asking if your RAID can't do that?  How *can* LVM know
+if one chunk of it's space allocated to ReiserFS has been used
+by ReiserFS or not?  And what if your precious files were on a
+chunk that's *now* unused?
+
+And even if LVM left out the blocks, wouldn't ReiserFS say "Go
+block X (roughly 140 GB from the start) and read this block"
+and wouldn't it be just too bad if you only had 9 GB, so this
+search would fall wide outside the data range you have?
+
+Do you really want LVM to know all intricacies of all file systems,
+just to be able to do the job of a completely different tool,
+badly?
+
+-Wolfgang
