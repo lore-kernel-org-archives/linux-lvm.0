@@ -1,10 +1,10 @@
-From: Andreas Dilger <adilger@turbolabs.com>
-Subject: Re: [linux-lvm] File size limit exceeded
-Message-ID: <20011217004350.L855@lynx.no>
-References: <20011217014227.A453@golem.blacknet.de> <20011217035851.B4880@tiger.bigcats.invalid>
+From: Patrick Caulfield <caulfield@sistina.com>
+Subject: Re: [linux-lvm] Does LVM compile on Sparc64?
+Message-ID: <20011217082051.GA1027@tykepenguin.com>
+References: <20011214185558.A11845@trash.net> <20011214191520.GA19114@tykepenguin.com> <20011214224027.A122@trash.net>
 Mime-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20011217035851.B4880@tiger.bigcats.invalid>; from weissel@netcologne.de on Mon, Dec 17, 2001 at 03:58:51AM +0100
+In-Reply-To: <20011214224027.A122@trash.net>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,40 +15,31 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Dec 17 01:41:02 2001
+Date: Mon Dec 17 02:19:02 2001
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: linux-lvm <linux-lvm@sistina.com>
+To: linux-lvm@sistina.com
 
-On Dec 17, 2001  03:58 +0100, Wolfgang Weisselberg wrote:
-> Goetz Bock (bock@blacknet.de) wrote 160 lines:
-> > I've a strange problem with my LVM:
+On Fri, Dec 14, 2001 at 10:40:27PM +0100, Thomas Bader wrote:
+> Hi
 > 
-> > root # lvcreate -L 20G -n dragon filebase
-> > root # mke2fs /dev/filebase/dragon
+> In alphanet.ml.linux.lvm, you wrote:
+> >  See http://lists.sistina.com/pipermail/linux-lvm/2001-December/009950.html
+> >  
+> >  for a patch that should work.
 > 
-> > File size limit exceeded
+> Oh nice.  I didn't found this patch yet (searched with
+> google).
 > 
-> Funny, that one popped up over here as well (though I get
-> it when lvcreate'ing).  I belive it started somewhere after
-> kernel 2.4.15 or 16 and/or LVM 1.0.1.
-> 
-> Also funny: It works OK from the console, but not under X -- if
-> I use screen on the console and reconnect to that screen under
-> X it still works, even creating new windows inside screen.
-> (Yes, yes, the ulimits are the same under the console and
-> under X for root.  X itself doesn't run under root, of course.)
+> I applied it and it compiled without error.  But now, my
+> machine does not boot anymore - it hangs directly after it
+> has detected my raid arrays:
 
-It is a kernel problem, and not limited to LVM.  You need to log
-in directly as root (no "su -") so that you don't have any ulimit
-set for your shell.  Block devices moved into the page cache in
-2.4.10, and were (incorrectly) affected by file size limits.  This
-is fixed in 2.4.17-pre(something), or there is a patch to fix this
-also (search for "setrlimit" on l-k).
+I honestly don't know what that should be, sorry. I know for sure that LVM has
+worked for me on SPARC64 with those patches applied so all I can suggest is to
+check the rest of your kernel config and maybe do a clean rebuild of the kernel.
 
-Cheers, Andreas
---
-Andreas Dilger
-http://sourceforge.net/projects/ext2resize/
-http://www-mddsp.enel.ucalgary.ca/People/adilger/
+-- 
+
+patrick
