@@ -1,9 +1,10 @@
-From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] pvmove problem
-Message-ID: <20030210145349.C5997@sistina.com>
-References: <F119Oc0Ne0PaLI9mK6P0000568f@hotmail.com>
-Mime-Version: 1.0
-In-Reply-To: <F119Oc0Ne0PaLI9mK6P0000568f@hotmail.com>; from bdobalina@hotmail.com on Fri, Feb 07, 2003 at 05:50:21PM +0000
+Message-ID: <3E47B064.9040506@ednet.ns.ca>
+From: Patrick Boutilier <boutilpj@ednet.ns.ca>
+MIME-Version: 1.0
+Subject: Re: [linux-lvm] PV Status NOT available
+References: <000801c2d0e8$91e8d320$0d01a8c0@aphrodite> <20030210143353.A5958@sistina.com>
+In-Reply-To: <20030210143353.A5958@sistina.com>
+Content-Transfer-Encoding: 7bit
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,95 +15,84 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Feb 10 07:57:02 2003
+Date: Mon Feb 10 08:02:01 2003
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: linux-lvm@sistina.com
 
-On Fri, Feb 07, 2003 at 05:50:21PM +0000, B. Dobalina wrote:
-> Its linux 2.4.19 (with the sgi xfs patch) and lvm 1.0.6. I have two volumes, 
-> the other volume (vol1) is unaffected. All lvm operations seem to be working 
-> on vol1. For vol2 (the one that I executed a pvmove on), I cannot get lvm to 
-> recognize it so I cannot perform any lvm operations.
+I have the same problem on RedHat 8.0
 
-You've got the actual LVM software. Let's try to approach the problem
-a bit more...
 
-Have there been any syslog messages spotting some light on this ?
-Are you still able to use vol2's content ?
+# pvdisplay /dev/sda6
 
-Before changing anything, don't forget to keep recent backups!
+--- Physical volume ---
+PV Name               /dev/sda6
+VG Name               imap_vg
+PV Size               261.11 GB [547591527 secs] / NOT usable 16.25 MB 
+[LVM: 189 KB]
+PV#                   1
+PV Status             NOT available
+Allocatable           yes (but full)
+Cur LV                1
+PE Size (KByte)       16384
+Total PE              16710
+Free PE               0
+Allocated PE          16710
+PV UUID               O7WnwM-5ASt-AsiV-8BlZ-h6KP-NjFl-cdY33C
 
-Regards,
-Heinz    -- The LVM Guy --
 
-> 
-> -skip
-> 
-> 
-> 
-> 
-> Which LVM and Linux  version is this ?
-> Does everything else irt LVM with the exception of pvmove ru fine
-> (i.e. creating/removing LVs etc.) ?
-> 
-> Regards,
-> Heinz    -- The LVM Guy --
-> 
-> 
-> On Thu, Feb 06, 2003 at 11:26:44PM +0000, B. Dobalina wrote:
-> >I am trying to remove an old harddrive from one of my volumes using:
-> >   pvmove -v /dev/hdh3
-> >It was chugging along just find until about half way through when it froze. 
-> >Linux was not "frozen", but I do not think it would allow any io to the 
-> >block devices (logins, ls's, etc would stall). I waited about an hour, at 
-> >which point it was still stuck on the same extent, and had no other option 
-> >but to hard reboot. When the system was booted, the volume to which hdh3 
-> >belonged, would no longer mount:
-> >
-> >$ vgscan
-> >vgscan -- reading all physical volumes (this may take a while...)
-> >vgscan -- found active volume group "vol1"
-> >vgscan -- only found 2523 of 768 LEs for LV /dev/vol2/software (1)
-> >vgscan -- ERROR "vg_read_with_pv_and_lv(): allocated LE of LV" can't get 
-> >data of volume group "vol2" from physical volume(s)
-> >vgscan -- "/etc/lvmtab" and "/etc/lvmtab.d" successfully created
-> >vgscan -- WARNING: This program does not do a VGDA backup of your volume 
-> >groups
-> >
-> >
-> >Looks like some lvm metadata has been corrupted. So I ran vgcfgrestore on 
-> >/dev/hdh3: same result. Then I ran it on all the PVs in vol2: same result. 
-> >Does anybody have a solution to get this volume mounted? There is a bunch 
-> >of data on vol2, but not all that much in /dev/hdh3, so a partial restore 
-> >would be ok.
-> >
-> >Thanks,
-> >Skip
-> >
-> >
-> >_________________________________________________________________
-> >Help STOP SPAM with the new MSN 8 and get 2 months FREE*  
-> >http://join.msn.com/?page=features/junkmail
-> >
-> >
-> >_______________________________________________
-> >linux-lvm mailing list
-> >linux-lvm@sistina.com
-> >http://lists.sistina.com/mailman/listinfo/linux-lvm
-> >read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
-> 
+# cat /proc/lvm/global
 
-*** Software bugs are stupid.
-    Nevertheless it needs not so stupid people to solve them ***
+LVM driver LVM version 1.0.6(25/10/2002)
 
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+Total:  1 VG  1 PV  1 LV (1 LV open 1 times)
 
-Heinz Mauelshagen                                 Sistina Software Inc.
-Senior Consultant/Developer                       Am Sonnenhang 11
-                                                  56242 Marienrachdorf
-                                                  Germany
-Mauelshagen@Sistina.com                           +49 2626 141200
-                                                       FAX 924446
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+Global: 271038 bytes malloced   IOP version: 10   63 days 17:26:47 active
+
+VG:  imap_vg  [1 PV, 1 LV/1 open]  PE Size: 16384 KB
+   Usage [KB/PE]: 273776640 /16710 total  273776640 /16710 used  0 /0 free
+   PV:  [AA] sda6                  273776640 /16710   273776640 /16710 
+         0 /0
+     LV:  [AWDL  ] imap_lv                  273776640 /16710    1x open
+
+
+
+
+
+
+Heinz J . Mauelshagen wrote:
+> Rupert,
+> 
+> do all 3 PVs show up active (the [] following 'PV:' should contain 'AA'
+> unless you set a PV to inallocatable) in /proc/lvm/global ?
+> 
+> if so pvdisplay (pv_status in the library respectively) doesn't seem
+> to get the PV_ACTIVE status from the kernel correctly.
+> 
+> 
+> On Mon, Feb 10, 2003 at 09:41:18AM -0000, Rupert Hair wrote:
+> 
+>>Hi Everyone.
+>>
+>>I have a rather strange 'problem' with my LVM setup.  I am using a very
+>>standard install of Redhat 8.0 (Kernel 2.4.18-14smp (I guess the "-14smp" is
+>>some Redhat version number.)) with LVM version 1.0.3(19/02/2002).  I used
+>>the Redhat installer to create a single VG (datavg) and LV (datalv) made up
+>>of 3 PVs (hdd5 hdd6 hdd7 (Yes all three PVs are on the same disk as this is
+>>just a test setup.)).  This all went fine and the installer created an ext3
+>>filesystem on top of the LV.  I have put some data on the filesystem and
+>>rebooted a few times to test it out and everything works great.
+>>
+>>Now the 'problem': two of my PVs (hdd5 hdd7) have a status of "NOT
+>>available" (reported by pvdisplay).  This is very strange as the whole setup
+>>seems to work fine and all three PVs are on the same disk (which is working
+>>fine).  I have attached various files which are the outputs of some of the
+>>LVM utilities that seemed useful.
+>>
+>>I would be very grateful if anyone could shed any light on this problem and
+>>what I have done wrong.
+>>
+>>Thanks.
+>>Rupert
+> 
+> 
