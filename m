@@ -1,16 +1,20 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j09JDHr27728
-	for <linux-lvm@redhat.com>; Sun, 9 Jan 2005 14:13:17 -0500
-Received: from web52701.mail.yahoo.com (web52701.mail.yahoo.com
-	[206.190.39.152])
-	by mx3.redhat.com (8.12.11/8.12.11) with SMTP id j09JD7Ir020044
-	for <linux-lvm@redhat.com>; Sun, 9 Jan 2005 14:13:12 -0500
-Message-ID: <20050109191257.6887.qmail@web52701.mail.yahoo.com>
-Date: Sun, 9 Jan 2005 11:12:57 -0800 (PST)
-From: Patrick Bartkus <patrckb22@yahoo.com>
-MIME-Version: 1.0
-Subject: [linux-lvm] she-bang doesn't work - bad interpreter: Permission
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j09KTIr08409
+	for <linux-lvm@redhat.com>; Sun, 9 Jan 2005 15:29:18 -0500
+Received: from zippy.toger.us (zippy.toger.us [65.19.178.247])
+	by mx3.redhat.com (8.12.11/8.12.11) with ESMTP id j09KT597029941
+	for <linux-lvm@redhat.com>; Sun, 9 Jan 2005 15:29:11 -0500
+Date: Sun, 9 Jan 2005 12:28:33 -0800
+Subject: Re: [linux-lvm] she-bang doesn't work - bad interpreter: Permission
 	denied
+Message-ID: <20050109202833.GT1816@zippy.toger.us>
+References: <20050109191257.6887.qmail@web52701.mail.yahoo.com>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="LXsBfGm2MIDJcXyT"
+Content-Disposition: inline
+In-Reply-To: <20050109191257.6887.qmail@web52701.mail.yahoo.com>
+From: Jason Martin <jhmartin@toger.us>
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -21,52 +25,36 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@redhat.com
 
-I've searched the mailing list archives and can't find
-any relevant threads.
 
-Here's my environment:
-Fedora Core 3
+--LXsBfGm2MIDJcXyT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-[root@aslan bin]# rpm -q lvm2
-lvm2-2.00.25-1.01
-[root@aslan bin]# lvm version
-  LVM version:     2.00.25 (2004-09-29)
-  Library version: 1.00.19-ioctl (2004-07-03)
-  Driver version:  4.1.0
+On Sun, Jan 09, 2005 at 11:12:57AM -0800, Patrick Bartkus wrote:
+> When I try to excute a simple perl program on my
+> /home/.../bin (which is on a logical volume partition)
+> I get:
+Make sure that /home isn't mounted noexec.
 
-When I try to excute a simple perl program on my
-/home/.../bin (which is on a logical volume partition)
-I get:
+-Jason Martin
+--=20
+Confucius say: Man who run behind truck get exhausted.
+This message is PGP/MIME signed.
 
-[root@aslan bin]# cat hello-world
-#!/usr/bin/perl -wT
-print "hello, world!\n" ;
-[root@aslan bin]# ./hello-world
-bash: ./hello-world: /usr/bin/perl: bad interpreter:
-Permission denied
-[root@aslan bin]#
+--LXsBfGm2MIDJcXyT
+Content-Type: application/pgp-signature
+Content-Disposition: inline
 
-But I try the same exact program on the same partition
-as the interperter
-[root@aslan bin]# /tmp/hello-world
-hello, world!
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.2.6 (GNU/Linux)
+Comment: --no-verbose
 
-Am I not holding my mouth right? What could be
-preventing the execution of my scripts from my logical
-volume?
+iD8DBQFB4ZPwl2ODWuqVSBMRAkFpAJ9ZQK7gheX/0Aco6XrN0TJxjF1WkQCbBefm
+/AXJv2TCBgWOu9LOpqSNAb4=
+=PXRo
+-----END PGP SIGNATURE-----
 
-Patrick
-
-=====
-Patrick Bartkus, RHCE, CCNP, SCM 	Sr. Network Support Analyst
-         Atlanta, GA
-If truth was not absolute, how could there be justice?
-
-__________________________________________________
-Do You Yahoo!?
-Tired of spam?  Yahoo! Mail has the best spam protection around 
-http://mail.yahoo.com 
+--LXsBfGm2MIDJcXyT--
