@@ -1,11 +1,9 @@
-From: Ed Tomlinson <tomlins@CAM.ORG>
-Date: Mon, 8 Oct 2001 13:05:48 -0400
-References: <20011003230330.508E91104F@oscar.casa.dyndns.org> <20011008155346.A741C76E3B@oscar.casa.dyndns.org> <4650000.1002560095@tiny>
-In-Reply-To: <4650000.1002560095@tiny>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Message-Id: <20011008170549.3B15E76467@oscar.casa.dyndns.org>
-Subject: [linux-lvm] Re: [OOPS] full snapshot (with test vfs locking patch for reiserfs snapshots in 11-pre)
+Message-ID: <134691555.1002562652686.JavaMail.root@boots>
+Date: Mon, 8 Oct 2001 10:37:04 -0700
+From: "Karl" <rmvzj001@sneakemail.com>
+Subject: Re: [linux-lvm] LVM seems to be causing SCSI errors.
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -18,24 +16,24 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: Chris Mason <mason@suse.com>
-Cc: linux-lvm@sistina.com
+To: linux-lvm@sistina.com
 
-On October 8, 2001 12:54 pm, Chris Mason wrote:
-> On Monday, October 08, 2001 11:53:46 AM -0400 Ed Tomlinson
->
-> <tomlins@CAM.ORG> wrote:
-> > Hi Chris,
-> >
-> > To summerize, with 2.4.11-pre5 and lvm-1.01-rc4 + your test vfslocking
-> > patch  for 2.4.11-pre I, unlike you, was able to make snapshots and
-> > reiserfsck them without  problems.  Then I tried a debench 50 run and got
-> > an oops.
->
-> Confirmed, similar oops here.  Do you get this with rc4 in 2.4.10?
+> The only thing I can think is that the SCSI device is not being
+> opened/initialised properly by LVM.  This certainly wasn't happening
+> before ~July when I put the open/close_pv() functions in.  But should
+> be working now.  Puzzled.  You really are using the new tools and not
+> old binaries in strange places ?  I've been caught a couple of times
+> by this ...
 
-Funny you should ask...  Guess what was runing when this email arrived?  The 
-answer is that with 2.4.10 + lvm 1.01-rc4 the snapshot deactivates correctly - 
-I do not see an oops.
+I'm pretty sure I'm using the correct binaries. Date/time stamps on the
+only ones I find on my system agree with when I compiled the latest
+release.
 
-Ed Tomlinson
+I'm using the static links so the libraries should not be an issue
+either. The only binaries I run on my tests are pvcreate, vgextend,
+vgreduce, lvcreate, and lvremove. The patch of the kernel and kernel
+recompile went without errors. LVM is compiled as a module, not in the
+kernel itself.
+
+-- 
+Karl Hakimian
