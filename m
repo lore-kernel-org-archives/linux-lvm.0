@@ -1,22 +1,15 @@
-Received: from fentible.pjc.net (vpnuser1.surrey.redhat.com [172.16.9.1])
-	by pobox.surrey.redhat.com (8.12.8/8.12.8) with ESMTP id i2PA3RJh004629
-	for <linux-lvm@redhat.com>; Thu, 25 Mar 2004 10:03:27 GMT
-Received: from patrick by fentible.pjc.net with local (Exim 4.30)
-	id 1B6Rjz-0002hc-5F
-	for linux-lvm@redhat.com; Thu, 25 Mar 2004 10:05:35 +0000
-Resent-Message-ID: <20040325100535.GC7799@tykepenguin.com>
-Resent-To: linux-lvm@redhat.com
-Resent-To: debian-bugs-dist@lists.debian.org
-Resent-Message-ID: <handler.240002.B.10802073449378@bugs.debian.org>
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
+Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with SMTP id i2PI9rj03322
+	for <linux-lvm@redhat.com>; Thu, 25 Mar 2004 13:09:53 -0500
+Subject: Re: [linux-lvm] Somewhat offtopic: Strange umount problem ....
+From: David Johnston <david@littlebald.com>
+In-Reply-To: <200403251534.47502.krienke@uni-koblenz.de>
+References: <200403251534.47502.krienke@uni-koblenz.de>
 Content-Transfer-Encoding: 7bit
-From: Daniel Burton <daniel@mothra.cable.nu>
-Date: Thu, 25 Mar 2004 01:35:39 -0800
-Message-Id: <E1B6RH1-0003W7-7X@mothra.cable.nu>
-Subject: [linux-lvm] Bug#240002: lvm10: lvcreate fails
-Reply-To: Daniel Burton <daniel@mothra.cable.nu>, 240002@bugs.debian.org,
-	LVM general discussion and development <linux-lvm@redhat.com>
+Message-Id: <1080238182.5985.3.camel@grandmother.littlebald.com>
+Mime-Version: 1.0
+Date: 25 Mar 2004 13:09:42 -0500
+Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -26,33 +19,27 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: Debian Bug Tracking System <submit@bugs.debian.org>
+Content-Type: text/plain; charset="us-ascii"
+To: LVM general discussion and development <linux-lvm@redhat.com>
+Cc: linux-lvm@sistina.com
 
-Package: lvm10
-Version: 1:1.0.8-2
-Severity: normal
+On Thu, 2004-03-25 at 09:34, Rainer Krienke wrote:
+> Hello,
+> 
+> I have a problem with 3 server machines
+> I am running 3 NFS and SMB servers which run perfectly stable but
+> show a strange behaviour when rebooting the machines: The
+> filesystems which contain user directories cannot be umounted
 
+> fuser -v shows only  this:
+> /export/user1        root     kernel mount  /export/user1
 
-I am unable to create a new logical volume.  I get the following
-messsages:
+Rainer,
+nfsd will do this.  Make sure all of your NFS servers are stopped before
+you try to umount your filesystems.
 
-mothra:/home/daniel# lvcreate -n harvester -L 5G vg0
-lvcreate -- ERROR "pv_status_all_pv_of_vg(): no PV" getting status of
-volume group "vg0" from kernel
-
--- System Information:
-Debian Release: testing/unstable
-  APT prefers testing
-  APT policy: (500, 'testing')
-Architecture: i386 (i686)
-Kernel: Linux 2.4.25
-Locale: LANG=C, LC_CTYPE=C
-
-Versions of packages lvm10 depends on:
-ii  debconf                     1.4.16       Debian configuration management sy
-ii  file                        4.07-2       Determines file type using "magic"
-ii  libc6                       2.3.2.ds1-11 GNU C Library: Shared libraries an
-ii  lvm-common                  1.5.12       The Logical Volume Manager for Lin
-
--- debconf information:
-* lvm10/warning: 
+Does that help?
+-David
+-- 
+David Johnston <david@littlebald.com>
+Little Bald Consulting, LLC
