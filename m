@@ -1,9 +1,9 @@
 Return-Path: <jay@lazy.accessus.net>
-Date: Wed, 29 Nov 2000 00:21:57 -0600 (CST)
+Date: Wed, 29 Nov 2000 00:24:54 -0600 (CST)
 From: Jay Weber <jay@lazy.accessus.net>
 Subject: Re: [linux-lvm] LVM 0.9 snapshot and ext3
 In-Reply-To: <Pine.OSF.4.21.0011290004310.19912-100000@lazy.accessus.net>
-Message-ID: <Pine.OSF.4.21.0011290020380.11459-100000@lazy.accessus.net>
+Message-ID: <Pine.OSF.4.21.0011290023290.14720-100000@lazy.accessus.net>
 MIME-Version: 1.0
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
@@ -13,9 +13,41 @@ Content-Type: TEXT/PLAIN; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Using ext2 I don't oops, so maybe it is an ext3 issue.  I still do get the
-Bad lvm_map in ll_rw_block though.  I don't recall that in 0.8, but then
-again maybe I never filled a snapshot's reserved space. :)
+Proper OOPS output below, sorry, pasted useless one in prior message.
+
+Nov 28 22:12:52 slippey kernel: Bad lvm_map in ll_rw_block 
+Nov 28 22:12:52 slippey kernel: Assertion failure in
+journal_write_metadata_buffer() at journal.c line
+302: "!buffer_locked(bh_in)" 
+Nov 28 22:12:52 slippey kernel: Unable to handle kernel NULL pointer
+dereference at virtual address 00000000 
+Nov 28 22:12:52 slippey kernel: current->tss.cr3 = 00101000, %cr3 =
+00101000 
+Nov 28 22:12:52 slippey kernel: *pde = 00000000 
+Nov 28 22:12:52 slippey kernel: Oops: 0002 
+Nov 28 22:12:52 slippey kernel: CPU:    0 
+Nov 28 22:12:52 slippey
+kernel: EIP:    0010:[journal_write_metadata_buffer+60/436] 
+Nov 28 22:12:52 slippey kernel: EFLAGS: 00010282 
+Nov 28 22:12:52 slippey kernel: eax: 00000067   ebx: 00000000
+ecx: 000000d4   edx: c6da6000 
+Nov 28 22:12:52 slippey kernel: esi: c3b85c60   edi: c3b85c60
+ebp: 00000000   esp: c3ac7e64 
+Nov 28 22:12:53 slippey kernel: ds: 0018   es: 0018   ss: 0018 
+Nov 28 22:12:53 slippey kernel: Process kjournald (pid: 968, process
+nr: 60, stackpage=c3ac7000) 
+Nov 28 22:12:53 slippey kernel: Stack: c01e2c20 0000012e c01e2c7a c3ac7fc4
+c3b85c60 c7e3aac0 c3ac7fc8 00000000  
+Nov 28 22:12:53 slippey kernel:        c015851c c7e3aac0 c3b85c60 c3ac7fc4
+00000427 c6161a40 c5d9c8c0 c3aed3c0  
+Nov 28 22:12:53 slippey kernel:        c5ae82a0 c5ae85a0 c5ae86a0 c6fb3560
+c6fb3de0 c6fb3ee0 c10114a0 c7b89b20  
+Nov 28 22:12:53 slippey kernel: Call Trace: [cprt+21728/40165]
+[cprt+21818/40165] [journal_commit_transaction+1356/3588]
+[kjournald+257/424] [commit_timeout+0/12] [kernel_thread+35/48]  
+Nov 28 22:12:53 slippey kernel: Code: c6 05 00 00 00 00 00 83 c4 14 89 f6
+8b 7c 24 1c 8b 47 18 a8  
+
 
 On Wed, 29 Nov 2000, Jay Weber wrote:
 
