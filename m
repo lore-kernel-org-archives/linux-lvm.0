@@ -1,12 +1,7 @@
-Subject: Re: [linux-lvm] file system type
-In-Reply-To: Your message of
-    "Mon, 21 Jan 2002 11:44:50 EST."
-    <20020121114450.G30661@kluge.net>
-References: <E16ShQA-0000Wq-00@arwen.dev33.cvf>
-    <20020121114450.G30661@kluge.net>
+Message-Id: <10FE17AD5F7ED31188CE002048406DE8462D19@lsv-msg06a.stortek.com>
+From: "Nemecek, Lad" <NemecL@LOUISVILLE.STORTEK.COM>
 MIME-Version: 1.0
-From: Pierrick PONS <ppons@cvf.fr>
-Message-Id: <E16Shpx-0000kd-00@arwen.dev33.cvf>
+Subject: [linux-lvm] How to get lvm partition size from kernel space?
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,43 +12,17 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Jan 21 11:03:02 2002
+Date: Mon Jan 21 12:04:02 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: linux-lvm@sistina.com
+To: "'linux-lvm@sistina.com'" <linux-lvm@sistina.com>
 
-> On Mon, Jan 21, 2002 at 05:35:46PM +0100, Pierrick PONS wrote:
-> > I don't really understand how we can have ext2 partition as we use linuxx-lvm 
-> > type (8E) for logical volume.
-> 
-> ext2 is a filesystem, the partition type doesn't matter.
-> 
+Greetings,
 
-That was my mistake .
+Does anyone know how to obtain lvm partition size when we are in 
+a kernel module? 
 
-> > I can't see how I can mount a ext2 file system from a logical volume.
-> 
-> First, create the LV:
-> 
-> lvcreate -n foo -L 1G volume_group
-> 
-> Then make the filesystem:
-> 
-> mke2fs /dev/volume_group/foo
-> 
+Thanks,
 
-That was what I forget. 
-I'm confused ... I'm a fool .... :-(
-
-> The mount the filesystem:
-> 
-> mkdir /mnt/temp
-> mount /dev/volume_group/foo /mnt/temp
-> 
-> 
-> :)
-> 
-
-
-Thank you very much.
+Lad Nemecek
