@@ -1,9 +1,11 @@
-Message-ID: <134783342.1003350775542.JavaMail.root@boots>
-Date: Wed, 17 Oct 2001 13:21:41 -0700
-From: "Karl" <rmvzj001@sneakemail.com>
-Subject: Re: [linux-lvm] read_intr errors
+From: Andreas Dilger <adilger@turbolabs.com>
+Date: Wed, 17 Oct 2001 14:53:27 -0600
+Subject: Re: [linux-lvm] shrink issue
+Message-ID: <20011017145327.L7859@turbolinux.com>
+References: <E15twHP-0005Ro-00@hermes.sistina.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+In-Reply-To: <E15twHP-0005Ro-00@hermes.sistina.com>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,45 +18,20 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Have you tried mke2fs with the -c option in LVM and on the drive without
-LVM?  I'm seeing a lot of errors on a SCSI disk that has no hardware
-problems unless it is in LVM.
+On Oct 17, 2001  21:24 +0200, FEJF wrote:
+> is it possible to tell the lvmtools (when shrinking a lvm-volume with 
+> resizereiserfs and lvreduce) which hd should be used for free space and which 
+> should stay in the lvm ?
 
-On Wed, Oct 17, 2001 at 02:27:21AM -0700, Erick Calder e@arix.com XXXXXXXXXXXXXXXXXXXX wrote:
-> hi everyone, I've read a number of dialogues on the archives concerning the
-> errors below which I'm getting but have not found any answers:
-> 
-> I'm running RedHat 7.0 (2.4.9 kernel + LVM 1.0.1rc1) on a little PIII box
-> and I'm using the ide controllers built into the motherboard (drivers built
-> into the kernel - not modules).  I have CONFIG_IDEDISK_MULTI_MODE set to y
-> in the .config for the kernel.  The drive is an IBM-DTLA-307030 (as reported
-> by /proc/ide) and is brand new.
-> 
-> here are the errors:
-> 
-> Oct 17 02:00:34 beowulf kernel: hdc: read_intr: error=0x04 {
-> DriveStatusError }
-> Oct 17 02:00:34 beowulf kernel: hdc: read_intr: status=0x59 { DriveReady
-> SeekComplete DataRequest Error }
-> Oct 17 02:00:34 beowulf kernel: hdc: read_intr: error=0x04 {
-> DriveStatusError }
-> Oct 17 02:00:34 beowulf kernel: ide1: reset: success
-> 
-> I've been moving data in and out of the drive and everything seems ok but I
-> get lots of the above errors which leaves me with a queasy feeling...
-> anyone know what the deal is with this?
-> 
-> 1k thx - e
-> 
-> 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
+No.  When you reduce the size of an LV, the free space is made from the end
+of the LV only.  If you want to make a particular PV free, then you need to
+use "pvmove" to free any PEs that are allocated on it.
 
--- 
-Karl Hakimian
-XXXXXXXXXXXXXXXX
+Cheers, Andreas
+--
+Andreas Dilger  \ "If a man ate a pound of pasta and a pound of antipasto,
+                 \  would they cancel out, leaving him still hungry?"
+http://www-mddsp.enel.ucalgary.ca/People/adilger/               -- Dogbert
