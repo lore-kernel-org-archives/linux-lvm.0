@@ -1,8 +1,11 @@
-Message-Id: <3C6AB5E9.8000300@nocrew.org>
-From: Martin =?ISO-8859-1?Q?Budsj=F6?= <marbud@nocrew.org>
+From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
+Subject: Re: [linux-lvm] How big is a PV?
+Message-Id: <20020213224002.A10678@sistina.com>
+References: <87vgd1935x.fsf@papadoc.bayour.com>
+    <20020213112404.B7457@sistina.com> <87eljp8wox.fsf@papadoc.bayour.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] Volume group inaccessable after RAID metadice trouble.
+In-Reply-To: <87eljp8wox.fsf@papadoc.bayour.com>; from turbo@bayour.com on
+    Wed, Feb 13, 2002 at 12:09:50PM +0100
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -13,227 +16,55 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Feb 13 12:57:01 2002
+Date: Wed Feb 13 15:41:02 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Hi!
+On Wed, Feb 13, 2002 at 12:09:50PM +0100, Turbo Fredriksson wrote:
+> Quoting "Heinz J . Mauelshagen" <mauelshagen@sistina.com>:
+> 
+> > Following patch should help. Will be in CVS soon.
+> 
+> How stable is the CVS tree currently? I'd prefer not to upgrade
+> my production system with something that will break it (BADLY)...
 
-I have find myself in a troublesome spot. After a disk failure, with 
-lots of IDE bus timeouts etc i managed to get the disk in error replaced 
-and my raid5 set in full operation. But i can't get the volume group 
-active any more.  The volume group in question is VG1.
+Sure.
 
-I have read one year worth of messages in this list archives, and i 
-still can't se how i can recover my VG1.
+We are just testing for the 1.0.3 release but as long as the test are being run
+I can't give you more than the fact that I run it on all my systems here without
+breaking them.
 
-Please find the details below
-
-dent:/etc/lvmconf >sudo pvdata --version
-pvdata: Logical Volume Manager 1.0.1-rc4
-Heinz Mauelshagen, Sistina Software  03/10/2001 (IOP 10)
-
-dent:/etc/lvmconf >uname -a
-Linux dent 2.4.17 #4 Thu Jan 3 00:39:34 CET 2002 alpha unknown
-    The kernel is compiled with the  lvm-1.0.1-rc4-2.4.17 patch.
-
-dent:~ >sudo pvscan
-Password:
-pvscan -- reading all physical volumes (this may take a while...)
-pvscan -- inactive PV "/dev/md0"    is associated to an unknown VG (run 
-vgscan)
-pvscan -- ACTIVE   PV "/dev/sda7"  of VG "vg0" [1.86 GB / 0 free]
-pvscan -- ACTIVE   PV "/dev/sda8"  of VG "vg0" [1.86 GB / 0 free]
-pvscan -- ACTIVE   PV "/dev/sda9"  of VG "vg0" [68.00 MB / 0 free]
-pvscan -- ACTIVE   PV "/dev/sda10" of VG "vg0" [68.00 MB / 0 free]
-pvscan -- ACTIVE   PV "/dev/sda11" of VG "vg0" [68.00 MB / 0 free]
-pvscan -- ACTIVE   PV "/dev/sda12" of VG "vg0" [68.00 MB / 0 free]
-pvscan -- ACTIVE   PV "/dev/sda13" of VG "vg0" [56.00 MB / 0 free]
-pvscan -- WARNING: physical volume "/dev/hdg1" belongs to a meta device
-pvscan -- WARNING: physical volume "/dev/hde1" belongs to a meta device
-pvscan -- total: 10 [41.37 GB] / in use: 10 [41.37 GB] / in no VG: 0 [0]
+If you are really concerned, please wait till Friday where we have planned to
+release 1.0.3.
 
 
-dent:~ >sudo vgscan
-vgscan -- reading all physical volumes (this may take a while...)
-vgscan -- found active volume group "vg1"
-vgscan -- ERROR "lv_read_all_lv(): number of LV" can't get data of 
-volume group "vg1" from physical volume(s)
-vgscan -- found active volume group "vg0"
-vgscan -- "/etc/lvmtab" and "/etc/lvmtab.d" successfully created
-vgscan -- WARNING: This program does not do a VGDA backup of your volume 
-groups
+> 
+> critical NORAD nuclear bomb DES cracking FSF Serbian Marxist Iran
+> Semtex strategic Uzi Khaddafi AK-47
+> [See http://www.aclu.org/echelonwatch/index.html for more about this]
+> 
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@sistina.com
+> http://lists.sistina.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
 
-dent:~ >sudo vgchange -a y vg1
-vgchange -- volume group "vg1" does not exist
+-- 
 
-dent:~ >sudo vgcfgrestore  -l -l -n vg1
---- Volume group ---
-VG Name               vg1
-VG Access             read/write
-VG Status             NOT available/resizable
-VG #                  1
-MAX LV                255
-Cur LV                1
-Open LV               0
-MAX LV Size           255.99 GB
-Max PV                255
-Cur PV                1
-Act PV                1
-VG Size               37.29 GB
-PE Size               4.00 MB
-Total PE              9545
-Alloc PE / Size       9324 / 36.42 GB
-Free  PE / Size       221 / 884.00 MB
-VG UUID               gK6O7c-YSy6-SHqF-6oiZ-L47x-PLqR-JsJzDq
+Regards,
+Heinz    -- The LVM Guy --
 
---- Logical volume ---
-LV Name                /dev/vg1/lv1
-VG Name                vg1
-LV Write Access        read/write
-LV Status              available
-LV #                   1
-# open                 0
-LV Size                36.42 GB
-Current LE             9324
-Allocated LE           9324
-Allocation             next free
-Read ahead sectors     120
-Block device           58:1
+*** Software bugs are stupid.
+    Nevertheless it needs not so stupid people to solve them ***
 
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
---- Physical volume ---
-PV Name               /dev/md0
-VG Name               vg1
-PV Size               37.29 GB / NOT usable 5.62 MB [LVM: 161.00 KB]
-PV#                   1
-PV Status             available
-Allocatable           yes
-Cur LV                1
-PE Size (KByte)       4096
-Total PE              9545
-Free PE               221
-Allocated PE          9324
-PV UUID               6qOL59-G611-Groj-PMBU-y4lg-ZtdX-IhaOuQ
-
-dent:~ >cat /proc/mdstat
-Personalities : [raid1] [raid5]
-read_ahead 1024 sectors
-md0 : active raid5 hdg1[2] hdf1[1] hde1[0]
-      39102080 blocks level 5, 32k chunk, algorithm 2 [3/3] [UUU]
-
-
-dent:~ >sudo pvdisplay /dev/md0
---- Physical volume ---
-PV Name               /dev/md0
-VG Name               vg1
-PV Size               37.29 GB / NOT usable 5.62 MB [LVM: 161.00 KB]
-PV#                   1
-PV Status             available
-Allocatable           yes
-Cur LV                1
-PE Size (KByte)       4096
-Total PE              9545
-Free PE               221
-Allocated PE          9324
-PV UUID               6qOL59-G611-Groj-PMBU-y4lg-ZtdX-IhaOuQ
-
-
-dent:~ >sudo  pvdata  -v -L /dev/md0
-
---- List of logical volumes ---
-
---- Logical volume ---
-LV Name                /dev/vg1/lv1
-VG Name                vg1
-LV Write Access        read/write
-LV Status              available
-LV #                   1
-# open                 0
-LV Size                36.42 GB
-Current LE             9324
-Allocated LE           9324
-Allocation             next free
-Read ahead sectors     120
-Block device           58:0
-read_ahead: 120
-
-pvdata -- logical volume struct at offset   1 is empty
-pvdata -- logical volume struct at offset   2 is empty
-pvdata -- logical volume struct at offset   3 is empty
-pvdata -- logical volume struct at offset   4 is empty
--- stuff deleted --
-pvdata -- logical volume struct at offset 160 is empty
-pvdata -- logical volume struct at offset 161 is inconsistent
-pvdata -- logical volume struct at offset 162 is inconsistent
-pvdata -- logical volume struct at offset 163 is empty
--- stuff deleted --
-pvdata -- logical volume struct at offset 253 is empty
-pvdata -- logical volume struct at offset 254 is empty
-
-dent:/etc/lvmconf >sudo pvdata -UPV /dev/md0
---- Physical volume ---
-PV Name               /dev/md0
-VG Name               vg1
-PV Size               37.29 GB / NOT usable 5.62 MB [LVM: 161.00 KB]
-PV#                   1
-PV Status             available
-Allocatable           yes
-Cur LV                1
-PE Size (KByte)       4096
-Total PE              9545
-Free PE               221
-Allocated PE          9324
-PV UUID               6qOL59-G611-Groj-PMBU-y4lg-ZtdX-IhaOuQ
-
---- Volume group ---
-VG Name              
-VG Access             read/write
-VG Status             NOT available/resizable
-VG #                  0
-MAX LV                255
-Cur LV                1
-Open LV               0
-MAX LV Size           255.99 GB
-Max PV                255
-Cur PV                1
-Act PV                1
-VG Size               37.29 GB
-PE Size               4.00 MB
-Total PE              9545
-Alloc PE / Size       9324 / 36.42 GB
-Free  PE / Size       221 / 884.00 MB
-VG UUID               gK6O7c-YSy6-SHqF-6oiZ-L47x-PLqR-JsJzDq
---- List of physical volume UUIDs ---
-
-001: 6qOL59-G611-Groj-PMBU-y4lg-ZtdX-IhaOuQ
-
-
-dent:~ >sudo vgcfgrestore -v -n vg1 -t  /dev/md0
-vgcfgrestore -- locking logical volume manager
-vgcfgrestore -- restoring volume group "vg1" from "/etc/lvmconf/vg1.conf"
-vgcfgrestore -- checking existence of "/etc/lvmconf/vg1.conf"
-vgcfgrestore -- reading volume group data for "vg1" from 
-"/etc/lvmconf/vg1.conf"
-vgcfgrestore -- reading physical volume data for "vg1" from 
-"/etc/lvmconf/vg1.conf"
-vgcfgrestore -- reading logical volume data for "vg1" from 
-"/etc/lvmconf/vg1.conf"
-vgcfgrestore -- checking volume group consistency of "vg1"
-vgcfgrestore -- checking volume group consistency of "vg1"
-vgcfgrestore -- backup of volume group "vg1"  is consistent
-vgcfgrestore -- test run for volume group "vg1" end
-
-vgcfgrestore -- unlocking logical volume manager
-
-dent:~ >sudo vgcfgrestore -v -n vg1  /dev/md0
-vgcfgrestore -- can't restore part of active volume group "vg1"
-vgcfgrestore [-d|--debug] [-f|--file VGConfPath] [-l[l]|--list [--list]]
-    [-n|--name VolumeGroupName] [-h|--help]
-    [-o|--oldpath OldPhysicalVolumePath] [-t|--test] [-v|--verbose]
-    [--version] [PhysicalVolumePath]
-
-
-
-Regards            Martin
+Heinz Mauelshagen                                 Sistina Software Inc.
+Senior Consultant/Developer                       Am Sonnenhang 11
+                                                  56242 Marienrachdorf
+                                                  Germany
+Mauelshagen@Sistina.com                           +49 2626 141200
+                                                       FAX 924446
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
