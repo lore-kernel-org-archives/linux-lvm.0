@@ -1,12 +1,11 @@
-Return-Path: <lvm-bugs-admin@sistina.com>
-Return-Path: <steffen.stempel@security.kpnqwest.com>
-Message-ID: <3A5B5DC3.3BE6439F@security.kpnqwest.com>
-Date: Tue, 09 Jan 2001 19:51:47 +0100
-From: "Dr. Steffen Stempel" <steffen.stempel@security.kpnqwest.com>
+Return-Path: <cworley@liberate.com>
+Message-ID: <3A5C9E71.9070209@liberate.com>
+Date: Wed, 10 Jan 2001 10:40:01 -0700
+From: Chris Worley <cworley@liberate.com>
 MIME-Version: 1.0
+Subject: Re: [linux-lvm] lvmcreate_initrd don't find module lvm.o
+References: <010109143056Z.WT03137.119*/PN=Frederic.BODART/OU=MICH/O=ATO/PRMD=ELF03/ADMD=ATLAS/C=FR/@MHS>
 Content-Transfer-Encoding: 7bit
-Resent-To: linux-lvm@sistina.com
-Subject: [linux-lvm] Bug in LVM tools 0.9
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -18,106 +17,76 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: lvm-bugs@sistina.com
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+To: linux-lvm@sistina.com, Frederic.BODART@MICH.elf-atochem.fr
 
-Hi,
+That's not a problem if lvm is built into your kernel (it won't need 
+the module).
 
-I've discovered some minor and one serious bug in the LVM-0.9
-distribution.
-The environment I'm using LVM is:
- - linux-2.4.0 with reiserfs patch applied
- - LVM 0.9 (I've tried debian packages and the source code)
- - a Raid-1 MD device is used as a physical volume
+I found that my lvmcreate_initrd (w/ SuSE 7.0) was missing "mount", 
+"umount", and "/proc".  Modify the script to include these, if necessary.
 
-Problems detected:
+Note, also, when creating the initrd, the current system has to be 
+booted with 8MB ramdisks (either specified to lilo or in the kernel 
+build).
 
-1. lvm tools have a problem with physical volumes on /dev/md?
-   As far as I've figured out, at least the functions pv_get_size
-   doesn't handle md devices properly. They try to access the
-   partition table just as if the device is an ordinary.
-   I've done a "quick and very dirty" patch to check for "/dev/md"
-   at the beginning of the device name. It would be fancier to check
-   for the major device number of /dev/md? ....
+Chris
 
-   Another problem with /dev/md devices is in vg_read_from_pv.c:
-   if pv_read returns LVM_EPV_READ_MD_DEVICE the function
-   vg_read_from_pv should not fail.
-   This problem is also solved by the patch
+Frederic BODART wrote:
 
-2. at least ``vgchange'' dumps core with segemntation fault if the
-   device node for one of the physical volumes can't be accessed. This
-   is independent from the /dev/md? problem.
-
-3. The debian pacjet for 0.9 installs a broken /etc/init.d/lvm script:
-   Binaries are installed in /usr/sbin, the lvm script looks form
-   them in /sbin.
-
-Please note that the patch I've included was indended to make lvm work
-in my environment. There might be additional locations which need some
-modification in order to make lvm tools work with md devices.
-
-Hope these hints help you to improve lvm - it's very nice work!
-
-Best regards
-
-Steffen Stempel
-
-----------------------------------------------------------------------
-
-diff -cr 0.9/tools/lib/pv_get_size.c 0.9-patched/tools/lib/pv_get_size.c
-*** 0.9/tools/lib/pv_get_size.c Mon Nov 13 01:20:11 2000
---- 0.9-patched/tools/lib/pv_get_size.c Sat Jan  6 21:08:33 2001
-***************
-*** 88,93 ****
---- 88,104 ----
-     }
-  
-     if ( ( cache_entry = lvm_dir_cache_find ( dev_name)) != NULL) {
-+      if (!strncmp(dev_name,"/dev/md",7) && isdigit(dev_name[7])) {
-+        if ( ( pv_handle = open ( dev_name, O_RDONLY)) == -1) {
-+        ret = -LVM_EPV_GET_SIZE_OPEN;
-+        }
-+        else {
-+        ioctl ( pv_handle, BLKGETSIZE, &ret);
-+        close(pv_handle);
-+        }
-+        goto pv_get_size_end;
-+      }
-+ 
-        if ( lvm_check_partitioned_dev ( cache_entry->st_rdev) == TRUE) {
-           st_rdev = cache_entry->st_rdev -
-                     ( cache_entry->st_rdev %
-Only in 0.9-patched/tools/lib: pv_get_size.c~
-diff -cr 0.9/tools/lib/vg_read_from_pv.c
-0.9-patched/tools/lib/vg_read_from_pv.c
-*** 0.9/tools/lib/vg_read_from_pv.c     Mon Nov 13 01:26:33 2000
---- 0.9-patched/tools/lib/vg_read_from_pv.c     Sat Jan  6 21:41:17 2001
-***************
-*** 32,37 ****
---- 32,38 ----
-     static vg_disk_t vg_this;
-     pv_t pv_this;
-     pv_t *pv_this_ptr = &pv_this;
-+    int h;
-  
-  
-  #ifdef DEBUG
-***************
-*** 45,51 ****
-        goto vg_read_from_pv_end;
-     }
-  
-!    if ( pv_read ( pv_name, &pv_this_ptr, NULL) == 0) {
-        /* read the VG info */
-        if ( ( pv_handle = open ( pv_name, O_RDONLY)) == -1)
-           ret = -LVM_EVG_READ_OPEN;
---- 46,53 ----
-        goto vg_read_from_pv_end;
-     }
-  
-!    if ( (h=pv_read ( pv_name, &pv_this_ptr, NULL)) == 0 ||
-!       h == -LVM_EPV_READ_MD_DEVICE ) {
-        /* read the VG info */
-        if ( ( pv_handle = open ( pv_name, O_RDONLY)) == -1)
-           ret = -LVM_EVG_READ_OPEN;
+> I've tried to install root filesystem on a logical volume as explained in the mini "HOWTO boot your root FS OFF oF LVM"
+> but lvmcreate_initrd doesn't find lvm.o module :
+> 
+> pc031104:~ # lvmcreate_initrd
+> 
+> Logical Volume Manager 0.8 by Heinz Mauelshagen  11/11/1999
+> 
+> lvmcreate_initrd -- this script creates a LVM initial ram disk in /boot/initrd.gz
+> 
+> lvmcreate_initrd -- making ram filesystem
+> lvmcreate_initrd -- mounting ram filesystem
+> lvmcreate_initrd -- creating etc/conf.modules
+> lvmcreate_initrd -- creating new modules.dep
+> lvmcreate_initrd -- copying files to ram disk
+> find: /lib/modules/2.2.16/block/lvm.o: No such file or directory
+> lvmcreate_initrd -- figuring out shared libraries
+> lvmcreate_initrd -- copying shared libraries to ram disk
+> lvmcreate_initrd -- creating linuxrc
+> lvmcreate_initrd -- creating etc/fstab
+> lvmcreate_initrd -- ummounting ram disk
+> lvmcreate_initrd -- creating compressed initrd in /boot/initrd.gz
+> 8192+0 records in
+> 8192+0 records out
+> pc031104:~ #   
+> 
+> pc031104:~ # ls -al /lib/modules/2.2.16/block/
+> total 128
+> drwxr-xr-x   2 root     root         1024 Dec  1 17:08 .
+> drwxr-xr-x  14 root     root         1024 Dec 22 11:43 ..
+> -rw-r--r--   1 root     root        70648 Aug  2 22:36 DAC960.o
+> -rw-r--r--   1 root     root        23736 Aug  2 22:36 cpqarray.o
+> -rw-r--r--   1 root     root         8160 Aug  2 22:36 nbd.o
+> -rw-r--r--   1 root     root        21644 Aug  2 22:36 xd.o
+> pc031104:~ # 
+> 
+> If i try to boot with root file system on /dev/vg00/root, kernel is launched but boot fails when mounting root file system.
+> 
+> --> Kernel release is 2.2.16 and the distribution is SuSE 7.0 French release.LVM V0.8-112
+> 
+> LVM is  used for others file systems 
+> 
+> pc031104:~ # df
+> Filesystem           1k-blocks      Used Available Use% Mounted on
+> /dev/hda3               147327        46867     92598  34%    /
+> /dev/vg00/lvol3         991872    381640    559032  41%    /opt
+> /dev/vg00/lvol4         198299        25    188034   0%    /tmp
+> /dev/vg00/lvol5        1289400    786880    435960  64%    /usr
+> /dev/vg00/lvol6         495682     27113    442969   6%    /var
+> /dev/hda1                22635      2824     18603  13%      /boot                  
+> 
+> How can I obtain lvm.o module?
+> Regards
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@sistina.com
+> http://lists.sistina.com/mailman/listinfo/linux-lvm
