@@ -1,15 +1,15 @@
-Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id iATI6Lr04865
-	for <linux-lvm@redhat.com>; Mon, 29 Nov 2004 13:06:21 -0500
-Received: from www.austinlogistics.com (mail.austinlogistics.com
-	[69.150.203.234])
-	by mx3.redhat.com (8.12.11/8.12.11) with ESMTP id iATI6FVo001681
-	for <linux-lvm@redhat.com>; Mon, 29 Nov 2004 13:06:16 -0500
-Message-ID: <OF44682A09.C6D944AC-ON86256F5B.005FCD50-86256F5B.00636C35@austinlogistics.com>
-From: Jetkins@austinlogistics.com
-Date: Mon, 29 Nov 2004 12:06:03 -0600
+Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id iAJJrMr10611
+	for <linux-lvm@redhat.com>; Fri, 19 Nov 2004 14:53:22 -0500
+Received: from gorski.com.pl (qmailr@wm38.internetdsl.tpnet.pl [80.55.194.38])
+	by mx1.redhat.com (8.12.11/8.12.11) with SMTP id iAJJr9fB010018
+	for <linux-lvm@redhat.com>; Fri, 19 Nov 2004 14:53:17 -0500
+Message-ID: <419E4F1C.7060006@gorski.com.pl>
+Date: Fri, 19 Nov 2004 20:53:00 +0100
+From: SoboL <sobol@gorski.com.pl>
 MIME-Version: 1.0
-Subject: [linux-lvm] Reusing a physical volume
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] Lost PV info after moving box to new place
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -20,48 +20,38 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: linux-lvm@redhat.com
 
-Hi folks, me again.
+Hello
+We moved server box with linux and lvm1 to new server room. After power 
+up we discovered that system doesent see sda drvice.
+After some maintaince in box, moving cables etc system see sda, fdisk 
+see correct info on /dev/sda.
+But well lvm is not. He doesent see PV info on sda1. Here's my errors:
 
-You may recall I asked a couple of weeks ago about the possibility of
-expanding a PV on a hardware RAID.  Well, having determined that there was
-no way to expand it in situ, I went to Plan B and attached an external
-storage enclosure so that I could shuffle the data off of the existing PV
-and then reuse the internal storage.
+vgscan
+vgscan -- reading all physical volumes (this may take a while...)
+vgscan -- only found 33167 of 37507 LEs for LV /dev/worm/worm
+vgscan -- ERROR: no volume group quorum on "worm" (8 / 9 physical volumes)!
+vgscan -- found inactive volume group "worm"
+vgscan -- only found 33167 of 37507 LEs for LV /dev/worm/worm
+vgscan -- only found 33167 of 37507 LEs for LV /dev/worm/worm
+vgscan -- "/etc/lvmtab" and "/etc/lvmtab.d" successfully created
+vgscan -- WARNING: This program does not do a VGDA backup of your volume 
+group
 
-I pvcreate'd a second PV on the external storage (/dev/sdc1) and pvmove'd
-everything from /dev/sdb, then vgreduce'd the original volume from the VG.
-I now have the following:
+pvdisplay /dev/sda1
+pvdisplay -- ERROR "pv_read(): open" no VALID physical volume "/dev/sda1"
 
-      # pvscan
-      pvscan -- reading all physical volumes (this may take a while...)
-      pvscan -- inactive PV "/dev/sdb"  is in no VG  [819.73 GB]
-      pvscan -- ACTIVE   PV "/dev/sdc1" of VG "vg01" [956.31 GB / 136.62 GB
-free]
-      pvscan -- total: 2 [1.73 TB] / in use: 1 [956.35 GB] / in no VG: 1
-[819.73 GB]
+lvmdiskscan
+lvmdiskscan -- /dev/sda  [      33.92 GB] free whole disk
+lvmdiskscan -- /dev/sdb1 [      33.92 GB] Primary  LVM partition [0x8E]
 
-      # pvdisplay /dev/sdb
-      pvdisplay -- "/dev/sdb" is a new physical volume of 819.73 GB
+fdisk
+   Device Boot    Start       End    Blocks   Id  System
+/dev/sda1             1     34732  35565552   8e  Linux LVM
 
-My dilemma is what to do next.  The HOWTO simply says "The drive can now be
-either physically removed when the machine is next powered down or
-reallocated to other users."  I can "remove the drive" by blowing away the
-first RAID volume at the next reboot, but won't that move /dev/sdc1 to
-/dev/sdb1?  How does LVM handle that?
-
-I'm also puzzled how to get LVM to forget about the inactive PV on
-/dev/sdb.  Will it automatically remove it from the configuration if the
-drive is removed?  I can't seem to find a "pvremove" or "pvdelete" command.
-(I'm using LVM 1).
-
-Any guidance and assistance gratefully accepted,
-
-Jon Etkins
-IT Administration & Support
-Austin Logistics, Inc
-ph:  (512) 651-5641
-fax: (512) 329-5625
+Anyone can help please ?
+                                                                         
+                           greetz SoboL
