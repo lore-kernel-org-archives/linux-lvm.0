@@ -1,9 +1,7 @@
-From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] Volume group not found on restart [resent]
-Message-ID: <20020523191059.B13788@sistina.com>
-References: <E631530D51ABD411B823009027855C5B0278BF@THOR>
-Mime-Version: 1.0
-In-Reply-To: <E631530D51ABD411B823009027855C5B0278BF@THOR>; from Murthy.Kambhampaty@goeci.com on Wed, May 22, 2002 at 03:04:51PM -0400
+Message-ID: <F888C30C3021D411B9DA00B0D0209BE8038F94F9@cvo-exchange.cvo.roguewave.com>
+From: Poul Petersen <petersp@roguewave.com>
+Subject: RE: [linux-lvm] LVM 1.0.4 pvmove is broken
+MIME-Version: 1.0
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,94 +12,78 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Thu May 23 12:15:02 2002
+Date: Thu May 23 12:21:01 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: linux-lvm@sistina.com
+To: "'linux-lvm@sistina.com'" <linux-lvm@sistina.com>
 
-On Wed, May 22, 2002 at 03:04:51PM -0400, Murthy Kambhampaty wrote:
-> Heinz, 
-> 
-> > 
-> > Well, that shouldn't have happened in case "vgreduce db_vol 
-> > /dev/sda" went ok
-> > back then.
-> > Do you have any memory of failure messages for that one?
-> There weren't really any failure messages. I was just trying to go through
-> the steps of removing the PV from the VG, then "remove the PV", then
-> reformat the drive/yank it. I had a similar problem on another box, where
-> I'd set up a VG create an LV, use if for a while then try to scrap the
-> system because I needed to redeploy my HDDs. Once the vgreduce/vgremove step
-> was completed, I'd do a PV scan and it would still list the removed PV as
-> belonging to the VG or list the size of the VG at the old size. I'd reboot
-> and do a pvscan, and it would give the correct list of PVs/VG
-> membership/size of VGs; so I never thought anything of it (I have a couple
-> of disks to play with, once I get the data I take care of db_vol, and I will
-> try to replicate my experience).
+> It is well known that pvmove of live volumes in LVM1 is broken for a
+> couple of reasons, the most obvious being the deadlock under memory
+> pressure that you are experiencing.
 
-Strange.
-If you were able to "lvremove /dev/db_vol/snap_db" it shouldn't be 
-visible in the metadata I got from you.
+	If it is so well know, should it be in the known_bugs for 1.0.4? I
+saw
+the following entries:
 
-But it still is in there and has extents allocated on the physical volume
-you wanted to remove from the volumegroup "db_vol". Unless there was no
-extents allocated on physical volume /dev/sda, running 
-"vgreduce db_vol /dev/sda" was impossible.
+- There is a very slight change that pvmove on a live system can
+  corrupt your data.  A pvmove on an offline (ie. not mounted) LV
+  should be fine.
 
-The steps needed would have been:
+- There is also a chance under high load that a live pvmove will
+  deadlock your system.
 
-- close /dev/db_vol/db_snap by unmounting it
-- successfully removing the LV with "lvremove /dev/db_vol_snap"
-- reducing the volume group successfully with "vgreduce db_vol /dev/sda"
+	However, what I have been seeing is not a "very slight chance"; it
+fails
+every time. Also, whether or not the LV is mounted doesn't matter - in all
+of the
+failures I have seen the LV was *not* mounted. The three critical failure
+elements seem 
+to be:
 
-To check it:
-- vgdisplay -v db_vol # just showing 1 PV in VG "db_vol"
-- pvscan              # showing /dev/sda to be an unused PV
+	1) use the LVM 1.0.4 Makefile generated patch for 2.4.18
+	2) use 1.0.4 pvmove tool.
+	3) Use an active VG, that is vgchange -ay
+
+	As long as I do all three things, it will fail every time without
+question 
+on three different machines that I have tested. If I change any element, say
+use the
+1.0.3 toolset or use 1.0.4 but simply don't apply the Makefile generated
+patch, then
+it works fine. Is this still the same problem? Load is also not in question
+- the
+three machines I have tested were all in a lab environment, so there is no
+concern 
+about system load, lack of memory, etc. I guess what I am seeing is that if
+I follow
+the installation directions for 1.0.4 (apply the patch etc) then pvmove is
+completely
+broken. Is this right? Obviously I wouldn't want to have to deactivate the
+entire VG
+to move PEs around.
+
+> I would encourage you to try Stephen Tweedies patch and post your
+> findings.
+
+	I will try that... Thanks for the pointer, I evidently missed that
+post while
+searching through the archives before. If pvmove is as broken as his post
+suggests, I'll
+probably just stay away from it - I only brought up this issue because the
+way in which
+I was seeing pvmove fail incessantly suggested that there might be a simple
+fix.
+
+> In the longer term the solution is to move to LVM2; we are currently
+> working on pvmove and will have it in the next beta (beginning of
+> June), pvmove is the last major feature from LVM1 that LVM2 doesn't
+> yet support.
+
+	Speaking of LVM2, will the transition to LVM2 require recreating the
+VGs?
 
 
+Thanks,
 
-> 
-> > > 
-> > > So, the preferred course here is to "to change the metadata 
-> > in order to get
-> > > rid of the gone physical volume", and all will be well. 
-> > 
-> > So there's cons vs. (temporarly) trying 1.1-rc to quorum 
-> > activate db_vol
-> > in order to retrieve the data?
-> > 
-> Only to the extent that your message indicated that LVM 1.1-rc2 was unstable
-> (BTW, do I only install the userspace tools and retain my LVM 1.0.1rc4
-> kernel code (or do I have to patch the XFS cvs kernel with the LVM 1.1-rc2
-> kernel code to implement this alternative?)
-
-You can go with just the tools in a temporary location.
-
-> 
-> Thanks,
-> 	Murthy
-> 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
-
--- 
-
-Regards,
-Heinz    -- The LVM Guy --
-
-*** Software bugs are stupid.
-    Nevertheless it needs not so stupid people to solve them ***
-
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-
-Heinz Mauelshagen                                 Sistina Software Inc.
-Senior Consultant/Developer                       Am Sonnenhang 11
-                                                  56242 Marienrachdorf
-                                                  Germany
-Mauelshagen@Sistina.com                           +49 2626 141200
-                                                       FAX 924446
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+-poul
