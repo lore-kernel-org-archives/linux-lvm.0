@@ -1,12 +1,11 @@
-Return-Path: <dablake@speakeasy.net>
-From: Hcd <dablake@speakeasy.net>
-Subject: Re: [linux-lvm] vgcfgrestore fails.
-Date: Mon, 30 Apr 2001 07:03:48 -0500
-References: <20010430160431.H19810@sistina.com>
-In-Reply-To: <20010430160431.H19810@sistina.com>
+Return-Path: <adilger@turbolinux.com>
+From: Andreas Dilger <adilger@turbolinux.com>
+Message-Id: <200104301703.LAA11435@lynx.turbolabs.com>
+Subject: Re: [linux-lvm] Re: [lvm-devel] 1.2 directory heirarchy
+Date: Mon, 30 Apr 2001 11:03:17 -0600 (MDT)
+In-Reply-To: <20010430155827.B19810@sistina.com> from "Heinz J. Mauelshagen" at Apr 30, 2001 03:58:27 PM
 MIME-Version: 1.0
-Message-Id: <01043007034800.04719@vidar>
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -21,111 +20,81 @@ List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
 
-No joy on this on this method.
-If you need I can supply more inforamation.
-BTW I am running on an Athlon..
-thor:/etc # cp /etc/lvmconf/export.conf /etc/lvmtab.d/export
-thor:/etc # cp /etc/lvmconf/opt.conf /etc/lvmtab.d/opt
-thor:/etc # echo -ne "export\0" > /etc/lvmtab
-thor:/etc # echo -ne "opt\0" >> /etc/lvmtab
-thor:/etc # vgchange -ay
-vgchange -- ERROR: different structure size stored in "/etc/lvmtab.d/export" 
-than expected in file vg_cfgrestore.c [line 122]
-vgchange -- volume group "export" does not exist
-vgchange -- ERROR: different structure size stored in "/etc/lvmtab.d/opt" 
-than expected in file vg_cfgrestore.c [line 122]
-vgchange -- volume group "opt" does not exist
-                                                                 
+Heinz writes:
+> On Fri, Apr 27, 2001 at 04:34:43PM -0600, Andreas Dilger wrote:
+> > If I could vent on an LVM pet peeve here...  When we re-organize the
+> > structure of the LVM code, can we ensure that data is verified exactly
+> > _once_?
+> 
+> Sure, this is a resonable recommendation at first glance ;-)
+> 
+> For everybodies information:
+> the reason why Andreas recommends things like this is IMO, that LVM already
+> has plenty of check functions which are called in multiple layers of
+> the sofatware (like in the tools and in the library itself).
+> 
+> For eg. the tool layer which has the need to check the name of a PV
+> handed in on the command line, calls pv_check_name() in order to display an
+> error message in case of a crappy name and exits.
+> 
+> If that PV name is passed into a library routine it will be checked again
+> using pv_check_name() because the function takes care that it gets called
+> with reasonable parameters.
+> 
+> IMO this doesn't imply bad interface abstraction at all.
+> It just addresses different needs of different levels in the LVM software
+> *but* has the tradeof of calling the same check functions multiple times.
 
-On Monday 30 April 2001 11:04, you wrote:
-> On Sat, Apr 28, 2001 at 12:33:58PM -0500, root wrote:
-> > I am running SuSe 7.1
-> > 2.4.0 kernel
-> > 512M Ram
-> > AhA2940U2W
-> > suse lvm
-> >
-> > I had three volume groups and a week ago the volume group that contained
-> > user had a drive crash.  I was unable to save usr but now I can not mount
-> > any of my other volume groups and vgcfgrestore fails.  Is their any thing
-> > I can do to get my data?
-> > thor:~ # pvdisplay /dev/sdd2
-> > --- Physical volume ---
-> > PV Name               /dev/sdd2
-> > VG Name               export
-> > PV Size               8.3 GB / NOT usable 3.31 MB [LVM: 238 KB]
-> > PV#                   2
-> > PV Status             available
-> > Allocatable           yes (but full)
-> > Cur LV                1
-> > PE Size (KByte)       4096
-> > Total PE              2123
-> > Free PE               0
-> > Allocated PE          2123
-> > PV UUID               ruLId0-1JoY-34Ja-oLW0-FmzV-Q5ZN-NQaZw9
-> > thor:~ # pvdisplay /dev/sdc2
-> > --- Physical volume ---
-> > PV Name               /dev/sdc2
-> > VG Name               export
-> > PV Size               8.3 GB / NOT usable 3.31 MB [LVM: 238 KB]
-> > PV#                   1
-> > PV Status             available
-> > Allocatable           yes (but full)
-> > Cur LV                1
-> > PE Size (KByte)       4096
-> > Total PE              2123
-> > Free PE               0
-> > Allocated PE          2123
-> > PV UUID               ynnKCX-mjlT-jeNe-9MHY-tnP2-XCIC-nbKrmq
-> >
-> > thor:~ # vgcfgrestore -n export /dev/sdd2
-> > vgcfgrestore -- ERROR: different structure size stored in
-> > "/etc/lvmconf/export.conf" than expected in file vg_cfgrestore.c [line
-> > 122]
-> > vgcfgrestore -- ERROR "vg_cfgrestore(): read" restoring volume group
-> > "export"
->
-> You are using a newer LVM versions which has different metadata definitions
-> that the one which created those backups.
->
-> My guess is, that you are using LVM > 0.9.1 Beta 3 *now* but created the
-> backups with a lower LVM 0.9 version and you suffer from a PV uuid related
-> bug preventing vgscan to find your VG.
->
->
-> One way to address the situation (pressuming no VGs are active) is:
->
-> - create /etc/lvmtab.d/ in case it doesn't exist
->
-> - copy /etc/lvmconf/export.conf to /etc/lvmtab.d/export
->
-> - echo -ne 'export\0' > /etc/lvmtab
->
-> - vgchange -ay
->
-> If the VG named "export" comes back to life this way (assuming that the
-> user LV belongs to it) do:
->
-> - lvreduce -l1 /dev/export/user
-> - lvrextend -l1 /dev/export/user
->
-> replace "user" with a valid LV name in case I assumed wrong.
->
-> The purpose of that NULL operation in the end is, that your PV uuid list
-> gets recreated by LVM >= 0.9.1 Beta 4 which should make vgscan happy again
-> ;-)
->
-> The last 2 commands just shrink user by 1 LE and grow it again which
-> is necessary, because your export VG is *full*. This will not harm the user
-> LV in the end, because the allocator has the only option to use the very
-> same PE for growing which was freed before by the shrinking of user.
->
-> If your VG had at least 1 free PE a lvcreate/lvremove cycle for a dummy
-> LV with just 1 LE had done it as well.
->
-> Please tell us if this helps you or we need to go for another solution.
->
-> > _______________________________________________
-> > linux-lvm mailing list
-> > linux-lvm@sistina.com
-> > http://lists.sistina.com/mailman/listinfo/linux-lvm
+I will have to disagree here.  There are several reasons for this:
+- Running any of the LVM user tools with "-d" produces _far_ too much
+  output to be useful.  This makes debugging user problems a real chore,
+  and basically impossible for the users themselves, because they can't
+  easily see where there is a real problem.  A good example of why too
+  much output is an issue - until I had my own vgscan problem to debug,
+  NOBODY noticed that lvm_dir_cache() didn't work properly, and was
+  scanning devices each time it was called.
+- Overhead is overhead, no matter how small it seems to be.  When you
+  start doing things many times for each disk, it slows things down,
+  especially when you start having hundreds of disks.  This is probably
+  (in conjunction with the lvm_dir_cache() problem) the reason that the
+  lvmtab* files were created - because it is too slow to access each
+  disk dozens of times.  However having data in lvmtab* different from
+  on disk is itself a source of problems.
+- If you have tools using "internal" liblvm routines (i.e. ones which do
+  not check parameters), this means to me that the library interface is
+  not defined correctly.  There should be well defined interfaces to LVM
+  (i.e. kernel interface routines, external interface routines, internal
+  routines), and programs should only normally use external routines.
+  If they do anything else, and it breaks, they get to keep both pieces.
+
+> This might be seen as an overhead but we should pay it because the
+> LVM library is in principle designed to be used by different CLIs or GUIs.
+> In this regard the checks need to stay in place in order to recognize bad
+> actual arguments and to return an error code then.
+
+Yes, but only in _principle_ do other CLIs or GUIs use liblvm.  One reason
+is that too much of the actual interface is inside the command-line commands.
+There is not a clear separation of what is part of the "interface" and what
+is "internal" to liblvm.  This is clearly a problem because each CLI tool
+is dependent upon the IOP version, which it should not be.
+
+> > In between, we should assume that it is correct
+> > otherwise madness will quickly follow.
+> 
+> It depends on your definition of madness :-)
+
+Well, if you are checking pv_name, vg_name, lv_name in each routine (even
+in cases where we are passed *vg, when do you stop?  Maybe we should call
+vg_check_consistency_with_pv_and_lv() at the start of every function?  How
+do you trust _anything_ that is passed as an argument to a function?  Just
+because the name is OK, doesn't mean that any of the other data is OK????
+
+What I'm saying is that the only way to do things safely is to ensure you
+check data _once_ from wherever it is input, and thereafter it _has_ to be
+correct so checking it again will not make it more correct, so is pointless.
+
+Cheers, Andreas
+-- 
+Andreas Dilger                               TurboLabs filesystem development
+http://sourceforge.net/projects/ext2resize/
+http://www-mddsp.enel.ucalgary.ca/People/adilger/
