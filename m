@@ -1,19 +1,23 @@
-Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id i6HLnQa22580
-	for <linux-lvm@redhat.com>; Sat, 17 Jul 2004 17:49:26 -0400
-Received: from home.menalto.com (home.menalto.com [198.144.206.35])
-	by mx3.redhat.com (8.12.10/8.12.10) with ESMTP id i6HLnKXn026047
-	for <linux-lvm@redhat.com>; Sat, 17 Jul 2004 17:49:20 -0400
-Received: from firebrand.menalto.com ([10.0.5.11])
-	by home.menalto.com with esmtp (Exim 4.34) id 1Blx3X-0005f7-S4
-	for linux-lvm@redhat.com; Sat, 17 Jul 2004 14:49:19 -0700
-Message-ID: <40F99EDF.3070005@menalto.com>
-Date: Sat, 17 Jul 2004 14:49:19 -0700
-From: Bharat Mediratta <bharat@menalto.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] Cleanly removing a PV from an LV or,
- how do I get more available extents?
+Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id i6IFdIa26267
+	for <linux-lvm@redhat.com>; Sun, 18 Jul 2004 11:39:18 -0400
+Received: from darrel.wageswebworks.hom (cols6946139190.cols.net
+	[69.46.139.190])
+	by mx1.redhat.com (8.12.10/8.12.10) with ESMTP id i6IFdDe1027500
+	for <linux-lvm@redhat.com>; Sun, 18 Jul 2004 11:39:14 -0400
+Received: from darrel.wageswebworks.hom (localhost.localdomain [127.0.0.1])
+	by darrel.wageswebworks.hom (8.12.11/8.12.11) with ESMTP id
+	i6IFd38X025849
+	for <linux-lvm@redhat.com>; Sun, 18 Jul 2004 10:39:11 -0500
+Received: (from darrel@localhost)
+	by darrel.wageswebworks.hom (8.12.11/8.12.11/Submit) id i6IEi3ve025512
+	for linux-lvm@redhat.com; Sun, 18 Jul 2004 09:44:03 -0500
+From: "Darrel Wages Jr." <dotcomdmc@centurytel.net>
+Content-Type: multipart/alternative; boundary="=-GWeE+09N6j7ChtgHMz2n"
+Message-Id: <1090076983.4381.15.camel@darrel.wageswebworks.hom>
+Mime-Version: 1.0
+Date: Sun, 18 Jul 2004 09:44:03 -0500
+Subject: [linux-lvm] lvm2 problems adding a new physical volume
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -24,124 +28,185 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: linux-lvm@redhat.com
 
 
-I've been happily using LVM for a couple of months now to aggregate a 
-bunch of disks together into one logical drive for a Debian box that I 
-use as an over-the-network backup of my various other boxen.  Thus far, 
-it's been great.
+--=-GWeE+09N6j7ChtgHMz2n
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
 
-Recently however, I started getting parity errors on one of the drives 
-that's in my logical volume.  It's a tiny drive that I threw in there 
-merely because I had it, and its loss will not be missed.  I just want 
-to remove it altogether and pretend like it never existed.  I'd like to 
-preserve the data that's on the drive, if possible, but if not -- I'm ok 
-  with losing it, since that data will come back next time I run my backups.
+I have a vg darrel I wish to extend to a new disk.  I installed the new
+disk and ran 
+pvcreate /dev/hdd
 
-I read the FAQ, the HOWTO and scanned the mailing list archives and it 
-appears that I need to do a pvmove to get the data off of that drive, 
-and then a vgreduce to remove it from the volume group.  Unfortunately, 
-when I try to do the pvmove, I get:
+it returns 
+ No physical volume label read from /dev/hdd
+ Physical volume "/dev/hdd" successfully created
 
-% pvmove /dev/sdb
-No extents available for allocation
+pvscan returns 
+  PV /dev/hdb    VG darrel   lvm2 [19.08 GB / 0    free]
+  PV /dev/sda    VG darrel   lvm2 [8.48 GB / 0    free]
+  PV /dev/hda2   VG darrel   lvm2 [26.33 GB / 0    free]
+  PV /dev/hdd                lvm2 [115.04 GB]
+  Total: 4 [168.93 GB] / in use: 3 [53.89 GB] / in no VG: 1 [115.04 GB]
 
-I'm assuming that this means that there's nowhere to move the data that 
-is on /dev/sdb.  I further assume this means that I need some free 
-physical extents somewhere.  This is where I'm confused.  When I set up 
-LVM, I allocated all of my spare drives to it.  So I have a 271GB
-logical volume of which I'm using only 32GB.  So I know that I have free 
-space to move the data around; I just don't know how to do it.
+I try to extend vg darrel with vgextend but it failed. So I ran
+pvdisplay
 
-So.  How do I get more free physical extents inside my logical volume? 
-I feel confident that there's an easy answer for this that I overlooked, 
-but I can't find it.  Hopefully the context below will help a bit.
+it returns 
 
-Thanks in advance,
--Bharat
+  --- Physical volume ---
+  PV Name               /dev/hdb
+  VG Name               darrel
+  PV Size               19.08 GB / not usable 0
+  Allocatable           yes (but full)
+  PE Size (KByte)       4096
+  Total PE              4885
+  Free PE               0
+  Allocated PE          4885
+  PV UUID               qatt1G-G33A-vgrF-i6pV-MT6N-W91I-cTvJ7q
+    
+  --- Physical volume ---
+  PV Name               /dev/sda
+  VG Name               darrel
+  PV Size               8.48 GB / not usable 0
+  Allocatable           yes (but full)
+  PE Size (KByte)       4096
+  Total PE              2170
+  Free PE               0
+  Allocated PE          2170
+  PV UUID               IP2WI7-ye5K-mDME-5z5u-R4v7-nYjB-08Nh1O
+    
+  --- Physical volume ---
+  PV Name               /dev/hda2
+  VG Name               darrel
+  PV Size               26.33 GB / not usable 0
+  Allocatable           yes (but full)
+  PE Size (KByte)       4096
+  Total PE              6740
+  Free PE               0
+  Allocated PE          6740
+  PV UUID               1Z1XPp-SzFQ-osnY-HqU5-WGsh-JXjG-TXkDoP
+    
+  --- NEW Physical volume ---
+  PV Name               /dev/hdd
+  VG Name
+  PV Size               115.04 GB
+  Allocatable           NO
+  PE Size (KByte)       0
+  Total PE              0
+  Free PE               0
+  Allocated PE          0
+  PV UUID               k14iEH-C7W2-904v-DEh1-ANlT-rhD3-H3O0oP
 
-================================
+So I try pvchange -v -x y /dev/hdd
 
-% lvdisplay
-   --- Logical volume ---
-   LV Name                /dev/data/data1
-   VG Name                data
-   LV UUID                abrnMJ-2MqB-tkQl-g8g6-xYXx-KLE8-PMbNdG
-   LV Write Access        read/write
-   LV Status              available
-   # open                 1
-   LV Size                275.19 GB
-   Current LE             70448
-   Segments               4
-   Allocation             inherit
-   Read ahead sectors     0
-   Block device           254:0
+    Using physical volume(s) on command line
+  /dev/cdrom: open failed: Read-only file system
+  Allocatability not supported by orphan lvm2 format PV /dev/hdd
+  0 physical volumes changed / 1 physical volume not changed
 
-% vgdisplay
-   --- Volume group ---
-   VG Name               data
-   System ID
-   Format                lvm2
-   Metadata Areas        4
-   Metadata Sequence No  8
-   VG Access             read/write
-   VG Status             resizable
-   MAX LV                255
-   Cur LV                1
-   Open LV               1
-   Max PV                255
-   Cur PV                4
-   Act PV                4
-   VG Size               275.19 GB
-   PE Size               4.00 MB
-   Total PE              70448
-   Alloc PE / Size       70448 / 275.19 GB
-   Free  PE / Size       0 / 0
-   VG UUID               PjytLd-X99E-iUTf-drKH-42dl-2QHO-6qBcmB
+I have searched the net and found nothing about this.  I have also tried
+fdisk and added a lvm partition /dev/hdd1 with the same results.  I can
+however make a linux partition on the disk and it works fine.  I have
+used dd and blockdev as discribed in the howto to wipe the partition
+table on the disk.  I am using FC2 with all the updates and latest
+kernel.  This drive is a new IBM drive 120 G. 
 
-% pvdisplay
-   --- Physical volume ---
-   PV Name               /dev/sda
-   VG Name               data
-   PV Size               34.20 GB / not usable 0
-   Allocatable           yes (but full)
-   PE Size (KByte)       4096
-   Total PE              8755
-   Free PE               0
-   Allocated PE          8755
-   PV UUID               q8ElTG-XOoB-nQy6-8VTU-wZlR-uj3b-Vrnxlp
+Thank you.
 
-   --- Physical volume ---
-   PV Name               /dev/sdb
-   VG Name               data
-   PV Size               8.55 GB / not usable 0
-   Allocatable           yes (but full)
-   PE Size (KByte)       4096
-   Total PE              2189
-   Free PE               0
-   Allocated PE          2189
-   PV UUID               dDZOFg-nQES-cCgO-l5KF-9JIz-i2hh-OpcP1V
 
-   --- Physical volume ---
-   PV Name               /dev/sdc
-   VG Name               data
-   PV Size               34.25 GB / not usable 0
-   Allocatable           yes (but full)
-   PE Size (KByte)       4096
-   Total PE              8768
-   Free PE               0
-   Allocated PE          8768
-   PV UUID               B8dtE3-gdB7-aakQ-p4EY-CysX-b6VU-LrBYmc
 
-   --- Physical volume ---
-   PV Name               /dev/hde7
-   VG Name               data
-   PV Size               198.19 GB / not usable 0
-   Allocatable           yes (but full)
-   PE Size (KByte)       4096
-   Total PE              50736
-   Free PE               0
-   Allocated PE          50736
-   PV UUID               bz31lu-ck6I-439l-IbWs-hb40-g6rm-rWE3oq
+
+
+--=-GWeE+09N6j7ChtgHMz2n
+Content-Type: text/html; charset=utf-8
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 TRANSITIONAL//EN">
+<HTML>
+<HEAD>
+  <META HTTP-EQUIV="Content-Type" CONTENT="text/html; CHARSET=UTF-8">
+  <META NAME="GENERATOR" CONTENT="GtkHTML/3.1.7">
+</HEAD>
+<BODY>
+I have a vg darrel I wish to extend to a new disk.&nbsp; I installed the new disk and ran <BR>
+pvcreate /dev/hdd<BR>
+<BR>
+it returns <BR>
+ No physical volume label read from /dev/hdd<BR>
+ Physical volume &quot;/dev/hdd&quot; successfully created<BR>
+<BR>
+pvscan returns <BR>
+&nbsp; PV /dev/hdb&nbsp;&nbsp;&nbsp; VG darrel&nbsp;&nbsp; lvm2 [19.08 GB / 0&nbsp;&nbsp;&nbsp; free<BR>
+&nbsp; PV /dev/sda&nbsp;&nbsp;&nbsp; VG darrel&nbsp;&nbsp; lvm2 [8.48 GB / 0&nbsp;&nbsp;&nbsp; free]<BR>
+&nbsp; PV /dev/hda2&nbsp;&nbsp; VG darrel&nbsp;&nbsp; lvm2 [26.33 GB / 0&nbsp;&nbsp;&nbsp; free]<BR>
+&nbsp; PV /dev/hdd&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; lvm2 [115.04 GB]<BR>
+&nbsp; Total: 4 [168.93 GB] / in use: 3 [53.89 GB] / in no VG: 1 [115.04 GB]<BR>
+<BR>
+I try to extend vg darrel with vgextend but it failed. So I ran<BR>
+pvdisplay<BR>
+<BR>
+it returns <BR>
+<BR>
+&nbsp; --- Physical volume ---<BR>
+&nbsp; PV Name&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; /dev/hdb<BR>
+&nbsp; VG Name&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; darrel<BR>
+&nbsp; PV Size&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 19.08 GB / not usable 0<BR>
+&nbsp; Allocatable&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; yes (but full)<BR>
+&nbsp; PE Size (KByte)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 4096<BR>
+&nbsp; Total PE&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 4885<BR>
+&nbsp; Free PE&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0<BR>
+&nbsp; Allocated PE&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 4885<BR>
+&nbsp; PV UUID&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; qatt1G-G33A-vgrF-i6pV-MT6N-W91I-cTvJ7q<BR>
+&nbsp;&nbsp;&nbsp; <BR>
+&nbsp; --- Physical volume ---<BR>
+&nbsp; PV Name&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; /dev/sda<BR>
+&nbsp; VG Name&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; darrel<BR>
+&nbsp; PV Size&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 8.48 GB / not usable 0<BR>
+&nbsp; Allocatable&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; yes (but full)<BR>
+&nbsp; PE Size (KByte)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 4096<BR>
+&nbsp; Total PE&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 2170<BR>
+&nbsp; Free PE&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0<BR>
+&nbsp; Allocated PE&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 2170<BR>
+&nbsp; PV UUID&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; IP2WI7-ye5K-mDME-5z5u-R4v7-nYjB-08Nh1O<BR>
+&nbsp;&nbsp;&nbsp; <BR>
+&nbsp; --- Physical volume ---<BR>
+&nbsp; PV Name&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; /dev/hda2<BR>
+&nbsp; VG Name&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; darrel<BR>
+&nbsp; PV Size&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 26.33 GB / not usable 0<BR>
+&nbsp; Allocatable&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; yes (but full)<BR>
+&nbsp; PE Size (KByte)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 4096<BR>
+&nbsp; Total PE&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 6740<BR>
+&nbsp; Free PE&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0<BR>
+&nbsp; Allocated PE&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 6740<BR>
+&nbsp; PV UUID&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1Z1XPp-SzFQ-osnY-HqU5-WGsh-JXjG-TXkDoP<BR>
+&nbsp;&nbsp;&nbsp; <BR>
+&nbsp; --- NEW Physical volume ---<BR>
+&nbsp; PV Name&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; /dev/hdd<BR>
+&nbsp; VG Name<BR>
+&nbsp; PV Size&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 115.04 GB<BR>
+&nbsp; Allocatable&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; NO<BR>
+&nbsp; PE Size (KByte)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0<BR>
+&nbsp; Total PE&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0<BR>
+&nbsp; Free PE&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0<BR>
+&nbsp; Allocated PE&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0<BR>
+&nbsp; PV UUID&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; k14iEH-C7W2-904v-DEh1-ANlT-rhD3-H3O0oP<BR>
+<BR>
+So I try pvchange -v -x y /dev/hdd<BR>
+<BR>
+&nbsp;&nbsp;&nbsp; Using physical volume(s) on command line<BR>
+&nbsp; /dev/cdrom: open failed: Read-only file system<BR>
+&nbsp; Allocatability not supported by orphan lvm2 format PV /dev/hdd<BR>
+&nbsp; 0 physical volumes changed / 1 physical volume not changed<BR>
+<BR>
+I have searched the net and found nothing about this.&nbsp; I have also tried fdisk and added a lvm partition /dev/hdd1 with the same results.&nbsp; I can however make a linux partition on the disk and it works fine.&nbsp; I have used dd and blockdev as discribed in the howto to wipe the partition table on the disk.&nbsp; I am using FC2 with all the updates and latest kernel.&nbsp; This drive is a new IBM drive 120 G. <BR>
+<BR>
+Thank you.<BR>
+<BR>
+<BR>
+<BR>
+<BR>
+</BODY>
+</HTML>
+
+--=-GWeE+09N6j7ChtgHMz2n--
