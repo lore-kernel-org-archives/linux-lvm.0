@@ -1,21 +1,29 @@
-Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j0AFwmr20866
-	for <linux-lvm@redhat.com>; Mon, 10 Jan 2005 10:58:48 -0500
-Received: from zippy.toger.us (zippy.toger.us [65.19.178.247])
-	by mx3.redhat.com (8.12.11/8.12.11) with ESMTP id j0AFwg3c000648
-	for <linux-lvm@redhat.com>; Mon, 10 Jan 2005 10:58:42 -0500
-Date: Mon, 10 Jan 2005 07:58:35 -0800
-Subject: Re: [linux-lvm] she-bang doesn't work - bad interpreter: Permission
-	denied
-Message-ID: <20050110155835.GU1816@zippy.toger.us>
-References: <20050109202833.GT1816@zippy.toger.us>
-	<20050110125840.55588.qmail@web52707.mail.yahoo.com>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="YgseLHR9uOh11QTZ"
+Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j0AKikr19868
+	for <linux-lvm@redhat.com>; Mon, 10 Jan 2005 15:44:46 -0500
+Received: from postfix3-1.free.fr (postfix3-1.free.fr [213.228.0.44])
+	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id j0AKiju6007279
+	for <linux-lvm@redhat.com>; Mon, 10 Jan 2005 15:44:45 -0500
+Received: from flo.18rcarmes.fr (unknown [81.56.213.72])
+	by postfix3-1.free.fr (Postfix) with ESMTP id B48EA1734E9
+	for <linux-lvm@redhat.com>; Mon, 10 Jan 2005 21:44:41 +0100 (CET)
+Received: from localhost (localhost [127.0.0.1])
+	by flo.18rcarmes.fr (Postfix) with ESMTP id 0FE038BF7
+	for <linux-lvm@redhat.com>; Mon, 10 Jan 2005 21:44:40 +0100 (CET)
+Received: from flo.18rcarmes.fr ([127.0.0.1])
+	by localhost (flo [127.0.0.1]) (amavisd-new, port 10024) with ESMTP
+	id 01664-07 for <linux-lvm@redhat.com>;
+	Mon, 10 Jan 2005 21:44:34 +0100 (CET)
+Received: from marco (marco.18rcarmes.fr [192.168.0.1])
+	by flo.18rcarmes.fr (Postfix) with ESMTP id 845448BF5
+	for <linux-lvm@redhat.com>; Mon, 10 Jan 2005 21:44:34 +0100 (CET)
+From: Marc Cousin <cousinmarc@free.fr>
+Date: Mon, 10 Jan 2005 21:44:34 +0100
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Content-Disposition: inline
-In-Reply-To: <20050110125840.55588.qmail@web52707.mail.yahoo.com>
-From: Jason Martin <jhmartin@toger.us>
+Message-Id: <200501102144.34198.cousinmarc@free.fr>
+Subject: [linux-lvm] scary message (incorrect header checksum)
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -26,39 +34,23 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
+Content-Type: text/plain; charset="us-ascii"
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
+Hi, 
+I'm having the following message ...
+flo:~# vgscan
+  Reading all physical volumes.  This may take a while...
+  Incorrect metadata area header checksum
+  Found volume group "data" using metadata type lvm2
 
---YgseLHR9uOh11QTZ
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+It doesn't seem to be a problem, as the lvms are working correctly, but I'd 
+like to get rid of this warning...
+How can I do this ?
 
-On Mon, Jan 10, 2005 at 04:58:40AM -0800, Patrick Bartkus wrote:
-> Jason,
-> [Very embarrassed sheepish grin]
-> Well, as a matter of fact, it was...
-> Thanks! That fixed everything.
-I've always thought that the error message generated in that
-situation wasn't very helpful. I've hit that a lot with things
-stored in /tmp, whomever sees it always goes off on a wild goose
-chase checking why perl or sh isn't working.
+Cheers
 
--Jason Martin
---=20
-This message is PGP/MIME signed.
+-- 
+BOFH Excuse #236:
 
---YgseLHR9uOh11QTZ
-Content-Type: application/pgp-signature
-Content-Disposition: inline
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.2.6 (GNU/Linux)
-Comment: --no-verbose
-
-iD8DBQFB4qYrl2ODWuqVSBMRAtbsAJ47hxEh//ni5oR8CzWw3P9WDeDWfgCeLu/Y
-fXFlRiRsJkBw+CkEXu1VrqI=
-=ABVe
------END PGP SIGNATURE-----
-
---YgseLHR9uOh11QTZ--
+Fanout dropping voltage too much, try cutting some of those little traces
