@@ -1,10 +1,8 @@
-From: Luca Berra <bluca@comedia.it>
-Subject: Re: [linux-lvm] booting a dm+lvm2 kernel
-Message-ID: <20040103102839.GD28358@percy.comedia.it>
-References: <OF9AFD797D.B4785EDD-ON00256E0F.008318E6-00256E0F.008318ED@svunta.os.is>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <OF9AFD797D.B4785EDD-ON00256E0F.008318E6-00256E0F.008318ED@svunta.os.is>
+Message-ID: <3FF6CADE.5020601@foulplay.org>
+From: Avijit Pathania <foulplay@foulplay.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] Growing raid5 md pv
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,29 +13,26 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Sat Jan  3 04:30:02 2004
+Date: Sat Jan  3 08:01:01 2004
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"; format="flowed"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Fri, Jan 02, 2004 at 11:51:55PM +0000, Kjartan Reynir Hauksson wrote:
->>If you could tell me what your machine prints before the kernel panic i
->>could try to guess what happened
->
->hmmmm... this looks a little suspicious: invalid compressed format
->(err=2)<6> Freeing initrd memory 451k freed
+Hi.
 
-this means either your initrd is corrupted, or you did not rerun lilo
-after createing the initrd.
+Using LVM 1.0.8, kernel 2.4.23 and mdadm 1.4 on i386. There is a raid5 
+device under LVM's control that needs to have another disk added to it.
 
-Regards,
-L.
+pvscan -- reading all physical volumes (this may take a while...)
+pvscan -- ACTIVE   PV "/dev/md0" of VG "dg" [111.75 GB / 4.31 GB free]
+pvscan -- total: 1 [111.80 GB] / in use: 1 [111.80 GB] / in no VG: 0 [0]
 
--- 
-Luca Berra -- bluca@comedia.it
-        Communication Media & Services S.r.l.
- /"\
- \ /     ASCII RIBBON CAMPAIGN
-  X        AGAINST HTML MAIL
- / \
+A new disk will be added to the above /dev/md0 using mdadm --add.
+
+What needs to be done on the LVM side for it to recognize the new size 
+of the pv?
+
+Any input will be appreciated.
+
+Thanks
+Avijit
