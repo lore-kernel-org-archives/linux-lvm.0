@@ -1,8 +1,8 @@
-From: NagyZ <nagyz@piarista-kkt.sulinet.hu>
-Subject: Re: [linux-lvm] vgcreate bug?
-In-Reply-To: <20021223224907.A20127@uk.sistina.com>
-Message-ID: <Pine.LNX.4.44.0212240010060.32481-100000@server.piarista-kkt.sulinet.hu>
+Message-ID: <1040726414.3e08398e92f76@webmail.kuleuven.ac.be>
+From: FRANK VAN DAMME <frank.vandamme@student.kuleuven.ac.be>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Subject: [linux-lvm] broken computer
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -13,33 +13,26 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Dec 23 17:05:02 2002
+Date: Tue Dec 24 04:40:02 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
 
-On Mon, 23 Dec 2002, Alasdair G Kergon wrote:
-
-> On Mon, Dec 23, 2002 at 07:34:35PM +0100, NagyZ wrote:
-> > vgchange -an
-> > and (with lvm2 tools):
-> > vgconvert -M2 test
-> 
-> Missing vgchange -ay (with LVM2 tools) here?
-that doesnt matter :)
-
->  
-> > then:
-> > debian:~# mount /dev/test/testlv /teszt
-> > mount: /dev/test/testlv is not a valid block device
-> 
-> [It's possible the problem is with LVM1 volume group links in /dev left behind 
-> by LVM1; if so, just remove them before the LVM2 vgchange -ay; this is 
-> libdevmapper being ultra-cautious; will get changed soon.]
-yes..
-i tested again:
-after the convert i did rm /dev/test -Rf, then vgchange -ay, and WORKS! :)
-thnx
-
-NagyZ
+  
+  
+Hello,  
+  
+I have a quick question. I have been running lvm on my system for a while, it  
+works very good. However, the motherbord is wearing and the thing refuses to  
+boot. Can I, if I put my hard disk in another system, mount the lvm volumes on  
+it? I need my data right now...   
+  
+Normally the drive is on hda, but it will certainly have another adresse in my  
+other box, since I only have athlon-optimised kernels on the faulty box and  
+the only other useable machine I have is a p133, which has to boot from a  
+smaller disk (1024 cylinder limit you see). My root filesystem is not in the  
+lvm volume.   
+  
+Frank  
+ 
+P.S. I am NOT on the LVM mailing list, so could you please CC me? Thanks. 
