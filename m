@@ -1,10 +1,9 @@
-From: Toby Dickenson <tdickenson@geminidataloggers.com>
-Subject: Re: [linux-lvm] raid1+lvm without initrd
-References: <BDEMIPDEGABMNEFIHCPDGENPDPAA.bill+f.9sfuw6uo@tao-group.com>
-In-Reply-To: <BDEMIPDEGABMNEFIHCPDGENPDPAA.bill+f.9sfuw6uo@tao-group.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <200209231117.46026.tdickenson@geminidataloggers.com>
+From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
+Subject: Re: Re: [linux-lvm] vgscan not returning UPDATE
+Message-ID: <20020923134143.A18533@sistina.com>
+References: <200209202150.RAA15711@www22.ureach.com>
+Mime-Version: 1.0
+In-Reply-To: <200209202150.RAA15711@www22.ureach.com>; from smaliz@ureach.com on Fri, Sep 20, 2002 at 05:50:08PM -0400
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,56 +14,141 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Sep 23 05:17:44 2002
+Date: Mon Sep 23 06:43:06 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@sistina.com, William Blunn <bill+f.9sfuw6uo@tao-group.com>
+Content-Transfer-Encoding: 7bit
+To: linux-lvm@sistina.com
 
-On Monday 23 Sep 2002 10:49 am, William Blunn wrote:
-> > A few of the regulars on this list seem to have a setup like this
-> > working.
-> >
-> > I have 2 disks mirrored with linux software raid-1. on top of this I =
-have
-> > created 3 lv's: root, var, and swap. So far I have not been able to
-> > figure out the boot=3D,root=3D parameters that'll coax lilo into boot=
-ing
-> > this.
-> >
-> > A few of the regulars on this list seem to have something like this
-> > working. Would someone post a working lilo configuration for a raid1+=
-lvm
-> > noninitrd setup?
-> >
-> > references to setups like this working:
-> > http://lists.sistina.com/pipermail/linux-lvm/2002-September/012245.ht=
-ml
-> > http://lists.sistina.com/pipermail/lvm-devel/2001-October/000686.html
->
-> People often ask me questions to which my answer begins "One or more of
-> the premises on which your question is based is false, therefore your
-> question does not make any sense. Peeling back a layer and looking at
-> what you are really trying to achieve, you might find that your best
-> solution would be this: ... ".
->
-> Don't put your root filesystem in an LVM.
->
-> The small benefit of having it resizable is far outweighed by the setup
-> cost and the maintenance difficulties you will get when things go wrong=
-=2E
->
-> Anything which is big and which might cause you to want to have a bigge=
-r
-> root filesystem shouldn't be in there, and should be in one of your
-> other filesystems instead.
->
-> If you don't have a suitable filesystem for the new big thing, you can
-> just create one --- you have an LVM!
+On Fri, Sep 20, 2002 at 05:50:08PM -0400, Ali Zaidi wrote:
+> I seem to have LVM working for me now.
+> This is just so some of you guys can tell me if i have done something horribly 
+> wrong.
+> As vgscan was never returning, i did a strace on it and found out that it was 
+> getting stuck at a read call for /dev/nb0.
+> 
+> As i would only be using /dev/hd devices for LVM, i figured if i can comment 
+> out references to "nb" from the LVM source, that might do the trick.
+> I ended up commenting out two lines from tools/lib/lvm_dir_cache.c and one line 
+> from tools/lib/lvm_check_partitioned_dev.c.
+> After recompiling, vgscan now returns and i was also able to run pvcreate and 
+> vgcreate successfully.
+> 
+> As i understand, if i am not going to be using Network Block devices under LVM, 
+> i should be fine with the above arrangement.
 
-Those are all good reason for always having one root filesystem that is n=
-ot in=20
-LVM. If you have more than one root filesystem then I dont see a problem =
-with=20
-putting it in LVM. Im not sure if this applies to the orginal poster, but=
- I=20
-do think his question is still valid.
+Ali,
+
+you shouldn't be forced to change the source.
+If you don't need nbd anyways, disabling it in you kernel config should be fine.
+
+FYI: LVM2 enables you to filter out devices in a config file.
+     If you get a chance, please give it a try.
+
+Regards,
+Heinz    -- The LVM Guy --
+
+> 
+> Ali
+> 
+> 
+> 
+> ---- On Thu, 19 Sep 2002, James Hawtin (oolon@ankh.org) wrote:
+> 
+> > 
+> > 
+> > On Thu, 19 Sep 2002, Ali Zaidi wrote:
+> > 
+> > > Hi:
+> > > I am a novice with LVM but after going through the man pages and howtos i 
+> was
+> > > unable to find a solution to my problem. I am hoping one of you might find 
+> some
+> > > time to point me in the right direction.
+> > >
+> > > I am trying to setup LVM on a RH box. I run vgscan before i can create the
+> > > volumes but it never returns. Same thing happens with lvmdiskscan and 
+> pvscan.
+> > > Here is a -v and -d output of vgscan
+> > 
+> > Ok and now to try to answer your problem....
+> > 
+> > Did you do a pvcreate?
+> > 
+> > did the disk have existing data on it?
+> > 
+> > Try dd to write /dev/zero to the first bit of the partitions you want to
+> > put into lvm. then do you vgscan which should then return with an error
+> > saying it found nothing.... you can then use pvcreate on them
+> > 
+> > Of course your LAME disk layout could be confusing lvm in which case as a
+> > work arround just have one lvm partion and use lvm to allocate the disk,
+> > which is what you should be doing in the first place!
+> > 
+> > 
+> > ------
+> > 
+> > And now a few quick questions and answers....
+> > 
+> > Q: I can allocate my disk better than LVM!
+> > 
+> > A: No you cannot! or rather you can allocate your disk when you
+> > first get the machine to produce nice continuous partions. YOU CAN DO THIS
+> > WITH LVM. If you have a brand new volume group and just add partions to
+> > it they will be continuous with LVM as well.... Don't trust LVM.. you can
+> > do a pvdisplay to show you this fact!
+> > 
+> > A2: Sure, but what happens if you want to remove 2 partions, that are not
+> > next door to each other, and them make the one big partion... with fdisk
+> > its a dd nigtmare... with LVM its easy.
+> > 
+> > Q: but how can I move my stuff onto another disk... I use DD!
+> > 
+> > A: SO? There is nothing special about lvm devices apart from the fact they
+> > make things easer for you... You want to work that way, make your new
+> > device using LVM or fdisk and do your dd! But you could save yourself time
+> > by using pvmove!
+> > 
+> > Q: LVM adds a level of indirection to my disk.. surely its better to use
+> > the real disk
+> > A: Theoritically yes... but the translation to where on the disk is a
+> > calculation done on your computer not on the disk the slowest part of the
+> > operation is pulling stuff from your disk! Think about is a software raid
+> > faster or slower? Its faster cos the slow part was the disk and now there
+> > is more than one disk!
+> > 
+> > Q: I like to micromanage my disk...
+> > A: You can do that with LVM if you like or you can let LVM do the best it
+> > can for you and use your bonus time to go down the pub.
+> > 
+> > 
+> > James
+> > 
+> > 
+> > _______________________________________________
+> > linux-lvm mailing list
+> > linux-lvm@sistina.com
+> > http://lists.sistina.com/mailman/listinfo/linux-lvm
+> > read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
+> > 
+> > 
+> 
+> 
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@sistina.com
+> http://lists.sistina.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+
+*** Software bugs are stupid.
+    Nevertheless it needs not so stupid people to solve them ***
+
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+Heinz Mauelshagen                                 Sistina Software Inc.
+Senior Consultant/Developer                       Am Sonnenhang 11
+                                                  56242 Marienrachdorf
+                                                  Germany
+Mauelshagen@Sistina.com                           +49 2626 141200
+                                                       FAX 924446
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
