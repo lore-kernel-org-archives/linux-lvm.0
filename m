@@ -1,10 +1,11 @@
-Return-Path: <bluca@comedia.it>
-Date: Fri, 20 Apr 2001 09:37:51 +0200
-From: Luca Berra <bluca@comedia.it>
+Return-Path: <jgarzik@mandrakesoft.com>
+Message-ID: <3ADFEC4E.BBB210DF@mandrakesoft.com>
+Date: Fri, 20 Apr 2001 03:59:10 -0400
+From: Jeff Garzik <jgarzik@mandrakesoft.com>
+MIME-Version: 1.0
 Subject: Re: [linux-lvm] Re: [repost] Announce: Linux-OpenLVM mailing list
-Message-ID: <20010420093751.D12971@colombina.comedia.it>
-Mime-Version: 1.0
-Content-Disposition: inline
+References: <20010420093751.D12971@colombina.comedia.it>
+Content-Transfer-Encoding: 7bit
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -17,59 +18,39 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: linux-lvm@sistina.com, linux-openlvm@nl.linux.org
-Cc: AJ Lewis <lewis@sistina.com>, Jes Sorensen <jes@linuxcare.com>, linux-kernel@vger.kernel.org, Andreas Dilger <adilger@turbolinux.com>, Arjan van de Ven <arjanv@redhat.com>, Jens Axboe <axboe@suse.de>, Martin Kasper Petersen <mkp@linuxcare.com>, riel@conectiva.com.br, Alan Cox <alan@lxorguk.ukuu.org.uk>
+To: bluca@comedia.it
+Cc: linux-lvm@sistina.com, linux-openlvm@nl.linux.org, AJ Lewis <lewis@sistina.com>, Jes Sorensen <jes@linuxcare.com>, linux-kernel@vger.kernel.org, Andreas Dilger <adilger@turbolinux.com>, Arjan van de Ven <arjanv@redhat.com>, Jens Axboe <axboe@suse.de>, Martin Kasper Petersen <mkp@linuxcare.com>, riel@conectiva.com.br, Alan Cox <alan@lxorguk.ukuu.org.uk>
 
-Fuck!  I hate these things early in the morning.
+Luca Berra wrote:
+> we have some serous problems here.
+[...]
+> a better lvm (still buggy according to many kernel hackers, but better still),
+> which does not get into the kernel for communication reasons. (Alan can you help?
+> there is a lot of stuff that goes in -ac before going to mainstream)
 
-what gets me extremely pissed in the whole business is that i don't
-believe that splitting the mailing list is the solution to LVM problems.
-Escpecially since we have a number of lusers of lwm at the time being.
+I do not think this is a communication problem at all, but a clear lack
+of understanding (perhaps willful) on the part of the "LVM maintainers"
+about how to get things into the kernel.
 
-I believe sistina is mostly at fault there, not for the mailing list issue
-(i really don't believe people getting kicked out, while the moderation
-messages are probably due to mailman braindamage)
-but for political reasons (stop making it look as a sistina-only project, it pisses
-everyone)
+linux/Documentation/SubmittingPatches exist to bonk people on the head
+if they are screwing up, and it sounds like such is occurring now.
 
-we have some serous problems here.
+Quite simply,
 
-an lvm in the kernel which is badly broken(tm)
+1) Split up your patches.  How many times does it have to be said? 
+Think ONE CHANGE, ONE PATCH.  Big patches full of tons of disparate
+changes are impossible to review.
 
-a better lvm (still buggy according to many kernel hackers, but better still),
-which does not get into the kernel for communication reasons. (Alan can you help?
-there is a lot of stuff that goes in -ac before going to mainstream)
+2) (parroting Linus)  Open source is about lack of control, not hoarding
+code and lording over it.  That's why Linus will take a patch from Jens
+or another knowledgeable person who says "this LVM code is broken,
+-here- is a fix." -- regardless of who the "official" maintainer of the
+code is listed as...
 
-A development model where only sistina people have access to cvs. This is bad, has the only
-effect of pissing off people like Andreas which has been feeding patches and good ideas for
-many months now, besides it leads to people having their own lvm tree, so everybody is
-testing their development version, which has nothing to do with the version in the
-goddamned kernel.
-
-now what i propose is (some has already been said):
-lets's vote for which mailing list we want to keep (and everybody accept the result)
-
-open the goddam cvs to hackers that request access to it, you can use different branches
-and do code freezes with cvs, so it won't hurt releases schedules.
-
-try to ship the most evident bugfixes from cvs to linus, please all long-time kernel hakcers
-who got involved in this help do this.
-
-open up also the decision process (IOP 11 in beta5 and IOP 10 back in beta6
-could not have happened if somebody eles knew about the IOP change.)
-
-Regards,
-L.
-
-(Sorry for the big CC list, but i dunno who is subscribed to what anymore)
-
-
+[Luca, this is not directed at you, I just used this message as an
+opportunity to spout :)]
 
 -- 
-Luca Berra -- bluca@comedia.it
-        Communication Media & Services S.r.l.
- /"\
- \ /     ASCII RIBBON CAMPAIGN
-  X        AGAINST HTML MAIL
- / \
+Jeff Garzik       | "The universe is like a safe to which there is a
+Building 1024     |  combination -- but the combination is locked up
+MandrakeSoft      |  in the safe."    -- Peter DeVries
