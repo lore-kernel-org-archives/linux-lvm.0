@@ -1,9 +1,9 @@
 From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] Problem at compiling kernel 2.4.18 with lvm 1.0.7
-Message-ID: <20031031112821.B1850@sistina.com>
-References: <20031030112411.A1850@sistina.com> <3148427bab931f44bbc9f77bed7a9b67@10.3.11.254>
+Subject: Re: [linux-lvm] access beyond end of the device :(
+Message-ID: <20031031113005.C1850@sistina.com>
+References: <wazza.87fzhdbh1t.fsf@message.id>
 Mime-Version: 1.0
-In-Reply-To: <3148427bab931f44bbc9f77bed7a9b67@10.3.11.254>; from krisztian.gyoerffy@selecktra.com on Thu, Oct 30, 2003 at 11:59:34AM +0100
+In-Reply-To: <wazza.87fzhdbh1t.fsf@message.id>; from laurent.ml@linuxfr.org on Tue, Oct 28, 2003 at 02:58:06PM +0100
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,128 +14,134 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Fri Oct 31 04:28:02 2003
+Date: Fri Oct 31 04:30:02 2003
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Krisztian,
+On Tue, Oct 28, 2003 at 02:58:06PM +0100, laurent.ml@linuxfr.org wrote:
+> 
+> Hi,
+> 
+> I've been experienced "access beyond end of the device" kind of error
+> on my lvm1 logical volume.
 
-you said you used the SuSE 2.4.18 source ?
-Get a mainline source and retry patching/compiling.
+This typically means fs corruption (which can caused be your test9 kernel).
+Backup your date and run fsck.
 
 Regards,
 Heinz    -- The LVM Guy --
 
 
-On Thu, Oct 30, 2003 at 11:59:34AM +0100, Krisztian Gyoerffy wrote:
-> Hello Heinz,
+> I'm using:
+> - LVM2.2.00.07
+> - DM 2.4.23-pre7-dm3
+> - linux kernel 2.4.23-pre8
+> - debian sid
+> - ext3
 > 
+> I'm not sure it has something to do with it, but I tried 2.6.0-test9 +
+> 2.6.0-t6-mm1-dm2 for 5 minutes and went back to 2.4.23-pre8.
 > 
-> no I haven't, because till now I ever patched my kernels with any of the
-> LVM versions I chose to compile the kernel by myself. And it was ok.
-> This is the first time that I get a compilation error like this.
+> I'm now having that kind of errors:
+> kernel: attempt to access beyond end of device
+> kernel: fe:00: rw=0, want=1898713640, limit=183500800
+> kernel: attempt to access beyond end of device
+> kernel: fe:00: rw=0, want=1543813092, limit=183500800
+> kernel: attempt to access beyond end of device
+> kernel: fe:00: rw=0, want=214402632, limit=183500800
 > 
-> Can we fix the problem somehow, that I can compile then kernel with the
-> LVM patch 1.0.7?
+> fsck complains about a file system with errors.
+> (illegal block #### (######) in inode ####)
+> I did not let it correct them.
 > 
-> Because to tell the truth I don't really rely on that rpm from suse,
-> since I had big troubles with an apache rpm, and finaly it turned out
-> that there was a failure in it, and when I compiled apache from the
-> source it was ok.
+> How can I correct that ?
+> What informations do you need ?
 > 
+> vgdisplay -v
+>     Finding all volume groups
+>     Finding volume group "data"
+>   --- Volume group ---
+>   VG Name               data
+>   System ID             fozzy1051979424
+>   Format                lvm1
+>   VG Access             read/write
+>   VG Status             resizable
+>   MAX LV                256
+>   Cur LV                1
+>   Open LV               1
+>   Max PV                256
+>   Cur PV                2
+>   Act PV                2
+>   VG Size               175.00 GB
+>   PE Size               32.00 MB
+>   Total PE              5600
+>   Alloc PE / Size       5600 / 175.00 GB
+>   Free  PE / Size       0 / 0   
+>   VG UUID               06g3cd-Jd4B-bYvU-xLhA-pYMX-OZSH-LVShS4
+>    
+>   --- Logical volume ---
+>   LV Name                /dev/data/data
+>   VG Name                data
+>   LV UUID                000000-0000-0000-0000-0000-0000-000000
+>   LV Write Access        read/write
+>   LV Status              available
+>   # open                 1
+>   LV Size                175.00 GB
+>   Current LE             5600
+>   Segments               2
+>   Allocation             next free
+>   Read ahead sectors     1024
+>   Block device           254:0
+>    
+>   --- Physical volumes ---
+>   PV Name               /dev/hdc1     
+>   PV UUID               7Ny8DG-mLrZ-3wkK-aXEI-LPfA-NGx4-vMVoha
+>   PV Status             allocatable
+>   Total PE / Free PE    3680 / 0
+>    
+>   PV Name               /dev/hda9     
+>   PV UUID               XVbt8d-RFx0-z6Db-yfC3-lN32-P7Dt-mdH84j
+>   PV Status             allocatable
+>   Total PE / Free PE    1920 / 0
 > 
-> Thanks a lot
+> pvdisplay -v
+>     Scanning for physical volume names
+>   Physical volume "/dev/hdc1" of volume group "data" is exported
+>   --- Physical volume ---
+>   PV Name               /dev/hdc1
+>   VG Name               data (exported)
+>   PV Size               115.04 GB / not usable 36.90 MB
+>   Allocatable           yes (but full)
+>   PE Size (KByte)       32768
+>   Total PE              3680
+>   Free PE               0
+>   Allocated PE          3680
+>   PV UUID               7Ny8DG-mLrZ-3wkK-aXEI-LPfA-NGx4-vMVoha
+>    
+>   Physical volume "/dev/hda9" of volume group "data" is exported
+>   --- Physical volume ---
+>   PV Name               /dev/hda9
+>   VG Name               data (exported)
+>   PV Size               60.06 GB / not usable 63.72 MB
+>   Allocatable           yes (but full)
+>   PE Size (KByte)       32768
+>   Total PE              1920
+>   Free PE               0
+>   Allocated PE          1920
+>   PV UUID               XVbt8d-RFx0-z6Db-yfC3-lN32-P7Dt-mdH84j
 > 
-> Krisztian
+> Any help would be greatly appreciated.
 > 
-> -----Original Message-----
-> From: linux-lvm-admin@sistina.com [mailto:linux-lvm-admin@sistina.com]On
-> Behalf Of Heinz J . Mauelshagen
-> Sent: Donnerstag, 30. Oktober 2003 11:24
-> To: linux-lvm@sistina.com
-> Subject: Re: [linux-lvm] Problem at compiling kernel 2.4.18 with lvm
-> 1.0.7
+> -- 
+> Laurent
 > 
-> 
-> 
-> Krisztian,
-> 
-> running the SuSE LVM rpm with the SuSE kernel should work fine.
-> Have you tried that yet ?
-> 
-> Regards,
-> Heinz    -- The LVM Guy --
-> 
-> 
-> On Wed, Oct 29, 2003 at 01:19:26PM +0100, Krisztian Gyoerffy wrote:
-> > Hi LVM friends,
-> > 
-> > 
-> > I have problems with the following scenario:
-> > 
-> > - I use SuSE linux 7.1 (I know, this might be a bit old, but I follow
-> > the rule "never touch a running system") with kernel 2.4.16 and lvm
-> > 1.0.7
-> > 
-> > - Since SuSE rolled out the latest kernel for 7.1 and I would like to
-> > keep my OS up to date I installed the 2.4.18 kernel source from SuSE
-> on
-> > my machine
-> > 
-> > - I tried to patch the kernel with the LVM 1.0.7, so I executed
-> exactly
-> > the steps written in INSTALL and PATCH/README. Everything was ok
-> > 
-> > - Then I configured the rest of the kernel and tried to compile. But
-> > after a while, when it was compiling the LVM stuff, it stopped
-> compiling
-> > with the following message:
-> > 
-> > gcc -D__KERNEL__ -I/usr/src/linux-2.4.18.SuSE/include -Wall
-> > -Wstrict-prototypes -Wno-trigraphs -O2 -fno-strict-aliasing
-> -fno-common
-> > -fomit-frame-pointer -pipe -mpreferred-stack-boundary=2 -march=i686
-> > -DKBUILD_BASENAME=lvm  -c -o lvm.o lvm.c
-> > gcc -D__KERNEL__ -I/usr/src/linux-2.4.18.SuSE/include -Wall
-> > -Wstrict-prototypes -Wno-trigraphs -O2 -fno-strict-aliasing
-> -fno-common
-> > -fomit-frame-pointer -pipe -mpreferred-stack-boundary=2 -march=i686
-> > -DKBUILD_BASENAME=lvm_snap  -c -o lvm-snap.o lvm-snap.c
-> > lvm-snap.c: In function `lvm_snapshot_COW':
-> > lvm-snap.c:365: structure has no member named `blocks'
-> > make[3]: *** [lvm-snap.o] Error 1
-> > make[3]: Leaving directory 
-> > `/usr/src/linux-2.4.18.SuSE/drivers/md'
-> > make[2]: *** [first_rule] Error 2
-> > make[2]: Leaving directory 
-> > `/usr/src/linux-2.4.18.SuSE/drivers/md'
-> > make[1]: *** [_subdir_md] Error 2
-> > make[1]: Leaving directory 
-> > `/usr/src/linux-2.4.18.SuSE/drivers'
-> > make: *** [_dir_drivers] Error 2
-> > 
-> > Afterwards I looked into the patch file, and into the lvm-snap.c at
-> the
-> > given position, line 365. There is the reference to the "blocks"
-> > variable of the iobuf structure. This iobuf structure is defined in
-> the
-> > /usr/src/linux/include/linux/iobuf.h header file. But this header file
-> > is completly different in the source of the 2.4.18 kernel than in the
-> > source of the 2.4.16 kernel, where the patch and compiling were ok.
-> > 
-> > Do you have any idea what can I do to get it compiled?
-> > 
-> > I attach the lvm patch file generated by make and the iobuf.h file for
-> > both versions 2.4.16 and 2.4.18.
-> > 
-> > 
-> > Hope to hear from you soon, and thanks in advance
-> > 
-> > 
-> > Krisztian
-> > 
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@sistina.com
+> http://lists.sistina.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
 
 *** Software bugs are stupid.
     Nevertheless it needs not so stupid people to solve them ***
