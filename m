@@ -1,10 +1,11 @@
-Message-ID: <3BBB78C0.3060004@st-peter.stw.uni-erlangen.de>
-Date: Wed, 03 Oct 2001 22:44:48 +0200
-From: svetljo <galia@st-peter.stw.uni-erlangen.de>
+From: Russell Coker <russell@coker.com.au>
+Subject: Re: [linux-lvm] SNMP MIB for LVM
+Date: Wed, 3 Oct 2001 23:24:23 +0200
+References: <25369470B6F0D41194820002B328BDD23004@ATLOPS>
+In-Reply-To: <25369470B6F0D41194820002B328BDD23004@ATLOPS>
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] lvcreate segfault in vg_setup_pointers_for_snapshots
-References: <Pine.LNX.4.33.0110032051000.16480-100000@dunlop.dub.ie.alphyra.com>
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Message-Id: <20011003222642.A30A4328FBD@lyta.coker.com.au>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,39 +17,23 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: linux-lvm@sistina.com
+Content-Type: text/plain; charset="us-ascii"
+To: linux-lvm@sistina.com, Arvind Jain <arvind_jain@ivivity.com>"'linux-lvm@sistina.com'" <linux-lvm@sistina.com>
 
->
->
->>i ment he could not patch cleanly vanila 2.4.9 with lvm-0.9.1beta7, and 
->>he is using beta7 tools with beta2 kernel code
->>
->
->see my 2nd mail. it's 2.4.9 patched with beta7:
->
-my mistake
+On Tue, 2 Oct 2001 20:17, Arvind Jain wrote:
+> Has anybody written or come across MIB for LVM configuration and
+> maintenance? It will be nice if could configure LVM using SNMP MIB. thx,
+> arv.
 
->
->[root@dunlop tmp]# cat /proc/lvm/global 
->LVM driver version 0.9.1_beta7 (10/04/2001)
->
->the 1.0.1rc3 tools should be compatible, in fact they are, cause 
->vgscan and vgdisplay work fine.
->
-they should, but  i had a problem some time ago with lvm-1.0 kernel code 
-and lvm-1.0.1rc2 tools
-xxscan and xxdisplay worked but when i tried to make a VG/LV to change 
-the name or the size
-it didn't work, the tools segfaultet 
+First issue, do you have an OSI number assigned for this?
 
->
->--paulj
->
->
->_______________________________________________
->linux-lvm mailing list
->linux-lvm@sistina.com
->http://lists.sistina.com/mailman/listinfo/linux-lvm
->read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
->
+If not then I can arrange sub-delegation of part of the Debian number 
+hierarchy to the LVM project.  In Debian discussions it's been generally 
+agreed to give away what are effectively "ISO sub-domains" to open source 
+projects that request them.
+
+-- 
+http://www.coker.com.au/bonnie++/     Bonnie++ hard drive benchmark
+http://www.coker.com.au/postal/       Postal SMTP/POP benchmark
+http://www.coker.com.au/projects.html Projects I am working on
+http://www.coker.com.au/~russell/     My home page
