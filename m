@@ -1,27 +1,13 @@
-Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with SMTP id i1K2Wui08588
-	for <linux-lvm@redhat.com>; Thu, 19 Feb 2004 21:32:56 -0500
-From: Andrew Morton <akpm@osdl.org>
-Message-Id: <20040219183218.2b3c4706.akpm@osdl.org>
-In-Reply-To: <40356599.3080001@cyberone.com.au>
-References: <20040216133047.GA9330@suse.de>
-	<20040217145716.GE30438@traveler.cistron.net>
-	<20040218235243.GA30621@drinkel.cistron.nl>
-	<20040218172622.52914567.akpm@osdl.org>
-	<20040219021159.GE30621@drinkel.cistron.nl>
-	<20040218182628.7eb63d57.akpm@osdl.org>
-	<20040219101519.GG30621@drinkel.cistron.nl>
-	<20040219101915.GJ27190@suse.de>
-	<20040219205907.GE32263@drinkel.cistron.nl>
-	<40353E30.6000105@cyberone.com.au>
-	<20040219235303.GI32263@drinkel.cistron.nl>
-	<40355F03.9030207@cyberone.com.au>
-	<20040219172656.77c887cf.akpm@osdl.org>
-	<40356599.3080001@cyberone.com.au>
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] Re: [PATCH] per process request limits (was Re: IO scheduler, queue
- depth, nr_requests)
+Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with SMTP id i1K505i14512
+	for <linux-lvm@redhat.com>; Fri, 20 Feb 2004 00:00:05 -0500
+Received: from web14713.mail.yahoo.com (web14713.mail.yahoo.com [216.136.225.226])
+	by mx1.redhat.com (8.11.6/8.11.6) with SMTP id i1K504b32556
+	for <linux-lvm@redhat.com>; Fri, 20 Feb 2004 00:00:04 -0500
+Message-ID: <20040220050003.68594.qmail@web14713.mail.yahoo.com>
+From: Randy Rubins <lv_hockey@yahoo.com>
+Subject: Re: [linux-lvm] inactive PV associated to unknown VG
+MIME-Version: 1.0
 Sender: linux-lvm-admin@redhat.com
 Errors-To: linux-lvm-admin@redhat.com
 Reply-To: linux-lvm@redhat.com
@@ -33,71 +19,150 @@ List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
 List-Archive: <https://www.redhat.com/archives/linux-lvm/>
-Date: Thu Feb 19 21:32:00 2004
+Date: Thu Feb 19 23:59:03 2004
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: Nick Piggin <piggin@cyberone.com.au>
-Cc: miquels@cistron.nl, axboe@suse.de, linux-lvm@sistina.com, linux-kernel@vger.kernel.org, thornber@redhat.com
+Content-Transfer-Encoding: 7bit
+To: linux-lvm@redhat.com
 
-Nick Piggin <piggin@cyberone.com.au> wrote:
->
+Thanks, Heinz!
+
+I got impatient this morning and executed:
+dd if=/dev/zero of=/dev/sdb bs=1 count=1
+
+hoping the result would be that /dev/sdb1 would
+contain the only valid VG descriptor, and it worked.
+
+Just for confirmation,
+
+1) Does VG always get written at the beginning of PE
+(first 128 bytes), whether it's the whole disk
+(/dev/sdb) or a partition (/dev/sdb1)? 
+
+2) I was expecting kickstart to clear the disk label,
+but looking at my ks.cfg I only see
+clearpart --all
+It probably should have said:
+clearpart --all --initlabel
+to avoid the situation of having an "old" PV structure
+info on /dev/sdb...  I haven't tried it yet but would
+that have been the right approach?
+
+3) AJ Lewis's LVM-HOWTO contains a statement:
+"The recommended method of partitioning a disk is to
+create a single partition that covers the whole disk.
+This avoids any nasty accidents with whole disk drive
+device nodes and prevents the kernel warning about
+unknown partition types at boot-up."
+
+Is there a general agreement amongst lvm developers
+and users that the partition based PE (/dev/sdb1) is
+preferred over the "partitionless" PE (/dev/sdb) in a
+"normal" production environment when the intent is to
+use the entire physical disk as a PE?
+
+Cheers,
+Randy
+
+--------------------------------------------------------------------------------
+
+From: Heinz Mauelshagen <mauelshagen redhat com> 
+To: linux-lvm redhat com 
+Subject: Re: [linux-lvm] inactive PV associated to
+unknown VG 
+Date: Thu Feb 19 10:38:31 2004 
+
+--------------------------------------------------------------------------------
+
+Randy,
+
+the PV structure on /dev/sdb hasn't been removed.
+Overwrite the first 128 bytes of /dev/sdb and rerun
+vgscan.
+
+
+On Wed, Feb 18, 2004 at 03:56:56PM -0800, Randy Rubins
+wrote:
+> I'm having a problem importing a VG after
+> re-installing the server (original OS version RH
+7.3,
+> new RHEL 3 AS).  LVM is picking up the /dev/sdb, as
+> well as the new /dev/sdb1 PV.  Any way to tell LVM
+to
+> ignore /dev/sdb and force it to use /dev/sdb1?  
+> BTW, the LVM version used on RH 7.3 was 0.9.1_beta7,
+> the new LVM version - whatever comes with RHEL 3 AS
+> update 1.
+
+1.0.3
+
 > 
+> Thanks,
+> Randy
 > 
-> Andrew Morton wrote:
+> pvscan -- reading all physical volumes (this may
+take
+> a while...)
+> pvscan -- ACTIVE   PV "/dev/sda2" of VG "rootvg" 
+> [16.45 GB / 4.69 GB free]
+> pvscan -- inactive PV "/dev/sdb"   is associated to
+> unknown VG "localvg" (run vgscan)
+> pvscan -- inactive PV "/dev/sdb1"  is associated to
+> unknown VG "localvg" (run vgscan)
+> pvscan -- total: 3 [45.42 GB] / in use: 3 [45.42 GB]
+/
+> in no VG: 0 [0]
 > 
-> >Nick Piggin <piggin@cyberone.com.au> wrote:
-> >
-> >>Even with this patch, it might still be a good idea to allow
-> >>pdflush to disregard the limits...
-> >>
-> >
-> >Has it been confirmed that pdflush is blocking in get_request_wait()?  I
-> >guess that can happen very occasionally because we don't bother with any
-> >locking around there but if it's happening a lot then something is bust.
-> >
-> >
+> =====
+> Randy Rubins (eBay ID: lv_hockey)
+> mailto://lv_hockey yahoo com
 > 
-> Miquel's analysis is pretty plausible, but I'm not sure if
-> he's confirmed it or not, Miquel? Even if it isn't happening
-> a lot, and something isn't bust it might be a good idea to
-> do this.
+> __________________________________
+> Do you Yahoo!?
+> Yahoo! Mail SpamGuard - Read only the mail you want.
+> http://antispam.yahoo.com/tools
+> 
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm redhat com
+> https://www.redhat.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at
+http://tldp.org/HOWTO/LVM-HOWTO/
 
-Seems OK from a quick check.  pdflush will block in get_request_wait()
-occasionally, but not at all often.  Perhaps we could move the
-write_congested test into the mpage_writepages() inner loop but it hardly
-seems worth the risk.
+-- 
 
-Maybe things are different on Miquel's clockwork controller.
+Regards,
+Heinz    -- The LVM Guy --
+
+*** Software bugs are stupid.
+    Nevertheless it needs not so stupid people to
+solve them ***
+
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+Heinz Mauelshagen                                 Red
+Hat, Inc.
+Consulting Development Engineer                   Am
+Sonnenhang 11
+                                                 
+56242 Marienrachdorf
+                                                 
+Germany
+Mauelshagen RedHat com                            +49
+2626 141200
+                                                      
+FAX 924446
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
 
 
- drivers/block/ll_rw_blk.c |    2 ++
- fs/fs-writeback.c         |    2 ++
- 2 files changed, 4 insertions(+)
 
-diff -puN drivers/block/ll_rw_blk.c~pdflush-blockage-check drivers/block/ll_rw_blk.c
---- 25/drivers/block/ll_rw_blk.c~pdflush-blockage-check	2004-02-19 18:16:33.000000000 -0800
-+++ 25-akpm/drivers/block/ll_rw_blk.c	2004-02-19 18:16:33.000000000 -0800
-@@ -1651,6 +1651,8 @@ static struct request *get_request_wait(
- 		if (!rq) {
- 			struct io_context *ioc;
- 
-+			WARN_ON(current_is_pdflush());
-+
- 			io_schedule();
- 
- 			/*
-diff -puN fs/fs-writeback.c~pdflush-blockage-check fs/fs-writeback.c
---- 25/fs/fs-writeback.c~pdflush-blockage-check	2004-02-19 18:22:25.000000000 -0800
-+++ 25-akpm/fs/fs-writeback.c	2004-02-19 18:22:43.000000000 -0800
-@@ -279,6 +279,8 @@ sync_sb_inodes(struct super_block *sb, s
- 		}
- 
- 		if (wbc->nonblocking && bdi_write_congested(bdi)) {
-+			if (current_is_pdflush())
-+				printk("saved pdflush\n");
- 			wbc->encountered_congestion = 1;
- 			if (sb != blockdev_superblock)
- 				break;		/* Skip a congested fs */
 
-_
+=====
+Randy Rubins (eBay ID: lv_hockey)
+mailto://lv_hockey@yahoo.com
+
+__________________________________
+Do you Yahoo!?
+Yahoo! Mail SpamGuard - Read only the mail you want.
+http://antispam.yahoo.com/tools
