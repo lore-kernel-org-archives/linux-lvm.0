@@ -1,10 +1,12 @@
 From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] LVM2 CVS access?
-Message-Id: <20020131131510.D9764@sistina.com>
-References: <1012476509.3c592a5de7bab@webmail.tiscalinet.be>
+Subject: Re: [linux-lvm] Re: [ANNOUNCE] LVM reimplementation ready for
+    beta testing
+Message-Id: <20020131132548.F9764@sistina.com>
+References: <20020130202254.A7364@fib011235813.fsnet.co.uk>
+    <E16W6PW-0000K0-00@starship.berlin>
 MIME-Version: 1.0
-In-Reply-To: <1012476509.3c592a5de7bab@webmail.tiscalinet.be>;
-    from joel.soete@freebel.net on Thu, Jan 31, 2002 at 12:28:29PM +0100
+In-Reply-To: <E16W6PW-0000K0-00@starship.berlin>; from
+    phillips@bonn-fries.net on Thu, Jan 31, 2002 at 02:53:10AM +0100
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,50 +17,39 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Thu Jan 31 06:20:01 2002
+Date: Thu Jan 31 06:30:04 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Thu, Jan 31, 2002 at 12:28:29PM +0100, joel.soete@freebel.net wrote:
-> Hi all,
+On Thu, Jan 31, 2002 at 02:53:10AM +0100, Daniel Phillips wrote:
+> On January 30, 2002 09:22 pm, Joe Thornber wrote:
+> > The new kernel driver (known as "device-mapper") supports volume
+> > management in general and is no longer Linux LVM specific.
+> > As such it is a separate package from LVM2 which you will need
+> > to download and install before building LVM2.
+> > 
+> >  ftp://ftp.sistina.com/pub/LVM2/device-mapper/device-mapper-beta1.tgz
 > 
-> Can you let me know if there will be created new cvs modules to co lvm2 as well
-> as device-mapper (I do not yet find a relevant way to list available modules
-> from a cvs server) ?
+> Hi, thanks a lot for this fine gift.  One small point: I downloaded these
+> files right away of course, then I renamed device-mapper-beta1.tgz as
+> LVM2-mapper-beta1.tgz, so I'd be able to find these things in my (very
+> full) download directory.  What do you think about doing it that way at
+> source?
 
-Please follow the instructions for "CVS Repository" you'll find following
-the LVM link at www.sistina.com and run:
-
-cvs -d :pserver:cvs@tech.sistina.com:/data/cvs checkout LVM2
-
-and 
-
-cvs -d :pserver:cvs@tech.sistina.com:/data/cvs checkout device-mapper
-
-We'll update that information soon.
-
-In addition to this we offer CVSWeb as well (you find that link on
-the CVS Repository page) to browse all available public
-repositoris at Sistina.
-
-Comlete link chain is
-
-www.sistina.com ->
-Products&Support ->
-Logical Volume Manager ->
-CVS Repository -> (stay here to checkout LVM2 and/or device-mapper
-                   using the above hints)
-CVSWeb (if you like to browse)
+Well, as said in the annoucement the device-mapper is no longer Linux LVM
+specific and therefore we choosed to give it a name without any 'LVM' substring
+in its name. device-mapper is just a package LVM2 needs to run beside others
+like linux-kernel ;-)
 
 > 
-> Thanks in advance for info,
->         Joel
+> > The userland tools are available from here:
+> > 
+> >  ftp://ftp.sistina.com/pub/LVM2/tools/LVM2.0-beta1.tgz
 > 
-> 
-> -------------------------------------------------
-> This mail sent through Tiscali Webmail (http://webmail.tiscali.be)
+> -- 
+> Daniel
 > 
 > _______________________________________________
 > linux-lvm mailing list
@@ -70,6 +61,9 @@ CVSWeb (if you like to browse)
 
 Regards,
 Heinz    -- The LVM Guy --
+
+*** Software bugs are stupid.
+    Nevertheless it needs not so stupid people to solve them ***
 
 =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
