@@ -1,16 +1,16 @@
 Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with SMTP id i28G1D826057
-	for <linux-lvm@redhat.com>; Mon, 8 Mar 2004 11:01:13 -0500
-Received: from localhost (30-223.surfsnel.dsl.internl.net [145.99.223.30])
-	by mx1.redhat.com (8.12.10/8.12.10) with SMTP id i28G1AST010534
-	for <linux-lvm@redhat.com>; Mon, 8 Mar 2004 11:01:11 -0500
-Received: from localhost ([::1] helo=fel.tno.nl)
-	by localhost with esmtp (Exim 4.30)
-	id 1B0NBg-0001K7-P5
-	for linux-lvm@redhat.com; Mon, 08 Mar 2004 17:01:04 +0100
-Message-ID: <404C98C0.109@fel.tno.nl>
-From: Jan Rhebergen <Rhebergen@fel.tno.nl>
-MIME-Version: 1.0
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with SMTP id i28L9Q826580
+	for <linux-lvm@redhat.com>; Mon, 8 Mar 2004 16:09:26 -0500
+Received: from rhebergen.net (rhebergen.net [212.13.199.46])
+	by mx1.redhat.com (8.12.10/8.12.10) with SMTP id i28L9OST023384
+	for <linux-lvm@redhat.com>; Mon, 8 Mar 2004 16:09:25 -0500
+Received: from 30-223.surfsnel.dsl.internl.net ([145.99.223.30] helo=tuzhi.rhebergen.is-a-geek.net)
+	by rhebergen.net with esmtp (Exim 4.30)
+	id 1B0Rzo-00025T-Qj
+	for linux-lvm@redhat.com; Mon, 08 Mar 2004 22:09:08 +0100
+From: Jan Rhebergen <jan@rhebergen.net>
+Message-Id: <1078780112.6313.1.camel@localhost>
+Mime-Version: 1.0
 Content-Transfer-Encoding: 7bit
 Subject: [linux-lvm] lvmguy(s) assistance needed recovering VG
 Sender: linux-lvm-admin@redhat.com
@@ -24,21 +24,21 @@ List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
 List-Archive: <https://www.redhat.com/archives/linux-lvm/>
-Date: Mon Mar  8 16:26:07 2004
+Date: Mon Mar  8 16:27:06 2004
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
+Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@redhat.com
 
 Dear readers,
 
 Losing access to a VG seems to be a frequent problem especially with 
-(relative) newbies like I am. Once before this occurred to me. With some 
+(relative) newbies like I am. Once before this occurred to me. With some
 coaching of Patrick (PJC) I was able to fully recover. I've tried to 
 search the linux-lvm list but I keep getting the message "redhat.com is 
 temporarily unavailable. Please try back later."
 
 Now I am in trouble again! :( I've gone through a similar procedure as 
-last time to try and recover the inaccessible VG. Alas, to no avail. So, 
+last time to try and recover the inaccessible VG. Alas, to no avail. So,
 please lvmguy(s) help me get my data back. (i'm not talking about 
 recovering some lost mail or mp3's but i'm trying to recover 
 valuable/unique scientific data)
@@ -56,9 +56,9 @@ my system you cannot resize a mounted file system. Unfortunately, when
 rebooting (so before getting the chance to resize the LV with /usr) it 
 could not find the VG!
 
-Now I have an emergency system installed on the same box which still has 
-some old configuration/meta data which I hope would enable me to restore 
-an older configuration, which at least would grant me access to the root 
+Now I have an emergency system installed on the same box which still has
+some old configuration/meta data which I hope would enable me to restore
+an older configuration, which at least would grant me access to the root
 on lvm where the most recent configuration info can be found (yes, I 
 know there is a lesson there). I've restored a previous configuration, 
 but this failed to get my VGs back. Now the metadata on the two drives 
@@ -743,3 +743,8 @@ pvdata -- logical volume struct at offset 255 is empty
 
 001: E2IXqI-x6Dr-NIBk-EnhJ-UZt8-gcTn-n0YCoG
 002: r5BNbe-7xyz-SS53-89Vw-cHf0-wkGM-uChV9B
+
+
+-- 
+Jan Rhebergen <jan@rhebergen.net>
+private
