@@ -1,8 +1,9 @@
-From: Greg Freemyer <freemyer@NorcrossGroup.com>
-Subject: re: [linux-lvm] High level architecture (Long)
+From: "Dr. David Alan Gilbert" <gilbertd@treblig.org>
+Message-ID: <20030302150724.GB745@gallifrey>
 Mime-Version: 1.0
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
-Message-Id: <20030228212026.PJNT658.imf23bis.bellsouth.net@tiger2>
+Subject: [linux-lvm] lvm2: VG data differs between PVs /dev/hda3 and /dev/hdg3
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -13,76 +14,159 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Fri Feb 28 15:18:01 2003
+Date: Sun Mar  2 09:07:01 2003
 List-Id: <linux-lvm.redhat.com>
-Content-Type: Text/plain; charset="us-ascii"
-To: LVM Mailing list <linux-lvm@sistina.com>
+Content-Type: text/plain; charset="us-ascii"
+To: linux-lvm@sistina.com
 
-Steve,
+Hi,
+  (I'm not on this list - because LVM just works for me normally! - so
+	please cc me)
 
-You are right about that being a long e-mail.  I have a Compaq (HP) background, =
-and they call this a Disaster Tolerant SAN (DT-SAN).
+	I'm trying to move from 2.4.x to 2.5.x and in the process move
+=66rom lvm1 to lvm2 but when I install lvm2 I get the error:
 
-Your also right about DT-SANs requiring deep pockets, and even with Linux I =
-think it will take some fairly deep pockets.
+  VG data differs between PVs /dev/hda3 and /dev/hdg3
+  1 PV(s) found for VG totality: expected 2
+  Logical volume (cross) contains an incomplete mapping table.
+  VG data differs between PVs /dev/hda3 and /dev/hdg3
 
-HP has a consulting business specifically targeting DT-SANs. I don't know if =
-they support Linux or not.  (It used to be VMS and Tru64 only.)=20
+This was from running the 'pvs' command in lvm2; this seg'd at that
+point (a backtrace showed it was in ttree_creat, report_object,pvscan,
+process_each_pv, pvscan, pvs, help, main). However the main error
+(VG data differs) happened with most commands. I guess what would be
+useful would be a way to display the VG data off each PV - how would I
+do this?
 
-http://h18000.www1.hp.com/products/storageworks/solutions/dtsan/
+The setup is a pair of IDE drives with a striped lvm set accross
+the drives for speed.
 
-I have no idea where you will get a overall interest in your DT-SAN project=20
+This is a Debian/sid system running the lvm10 package (1.0.6-2)
+and failing on the lvm2 package (1.95.10-2)
 
-Maybe someone at OSDL (http://www.osdl.org/) or on the linux-ha (heartbeat) =
-list can give you a recommendation, or maybe you will have to start your own =
-DT-SAN project
+Below I've included the output of a few commands from the working=20
+lvm1 installation - more info available as required.
 
-(A little more below)
+Thanks in advance,
 
- >>  Hi all,
+Dave
 
- >>  1) A highly available, peer replicated (i.e. active-active),
- >>  geographically separated (n locations where n=3D2 and n>2), virtualized,
- >>  and Backed-up SAN solution.  That's a tall order.  Companies such as
- >>  FalconStor provide some of this, but at an exceptionally high price.
+{->}{->}{->}{->}{->}{->}{->}{->}{->}{->}{->}{->}{->}{->}{->}{->}{->}{->}{->=
+}{->}
+vgdisplay -v
 
-You do know how expensive that is from a communications perspective don't you.  =
-The commercial offerings I have seen require a T3 or larger. =20
+--- Volume group ---
+VG Name               totality
+VG Access             read/write
+VG Status             available/resizable
+VG #                  1
+MAX LV                255
+Cur LV                3
+Open LV               3
+MAX LV Size           255.99 GB
+Max PV                255
+Cur PV                2
+Act PV                2
+VG Size               81.12 GB
+PE Size               4 MB
+Total PE              20768
+Alloc PE / Size       20768 / 81.12 GB
+Free  PE / Size       0 / 0
+VG UUID               Ld6QsX-6b3y-I1UW-7U97-25za-21oU-PaZUEe
 
-I have never priced one, but I assume your talking the 10's of thousands per =
-month if you are going between major cities.
+--- Logical volume ---
+LV Name                /dev/totality/misc
+VG Name                totality
+LV Write Access        read/write
+LV Status              available
+LV #                   1
+# open                 1
+LV Size                25.39 GB
+Current LE             6500
+Allocated LE           6500
+Stripes                2
+Stripe size (KByte)    4
+Allocation             next free
+Read ahead sectors     120
+Block device           58:0
 
-I have priced a 100mbit connection across the north end of Atlanta.  That =
-actually wasn't so bad.  Around $2K/month IIRC, but I think that is a rare =
-situation with Atlanta having excess fiber in the ground.
+--- Logical volume ---
+LV Name                /dev/totality/cross
+VG Name                totality
+LV Write Access        read/write
+LV Status              available
+LV #                   2
+# open                 1
+LV Size                25.39 GB
+Current LE             6500
+Allocated LE           6500
+Stripes                2
+Stripe size (KByte)    4
+Allocation             next free
+Read ahead sectors     120
+Block device           58:1
 
- >>  2) SCSI over IP or something similar is desirable so that application
- >>  servers can use the exported virtualized storage (either locally on the
- >>  same LAN or remotely over a WAN).  Security here is a big ?.
+--- Logical volume ---
+LV Name                /dev/totality/local
+VG Name                totality
+LV Write Access        read/write
+LV Status              available
+LV #                   3
+# open                 1
+LV Size                30.34 GB
+Current LE             7768
+Allocated LE           7768
+Stripes                2
+Stripe size (KByte)    4
+Allocation             next free
+Read ahead sectors     120
+Block device           58:2
 
-I have tried the Intel iSCSI demo initiator/target pair and they seem to work =
-well.  (I was just curious, so I did not do much testing.)
 
-http://sourceforge.net/projects/intel-iscsi
+--- Physical volumes ---
+PV Name (#)           /dev/hdg3 (2)
+PV Status             available / allocatable
+Total PE / Free PE    10384 / 0
 
-The target software allows any Linux box to export a drive (or LV) to a Linux =
-computer running the initiator. =20
+PV Name (#)           /dev/hda3 (1)
+PV Status             available / allocatable
+Total PE / Free PE    10384 / 0
 
-Since iSCSI was just formally approved, there should be a flurry of real =
-targets, but I'm not sure thats what you want anyway.
+{<-}{<-}{<-}{<-}{<-}{<-}{<-}{<-}{<-}{<-}{<-}{<-}{<-}{<-}{<-}{<-}{<-}{<-}{<-=
+}{<-}
+gallifrey:~# pvdisplay /dev/hda3
+--- Physical volume ---
+PV Name               /dev/hda3
+VG Name               totality
+PV Size               40.57 GB [85080240 secs] / NOT usable 4.18 MB
+[LVM: 164 KB]
+PV#                   1
+PV Status             available
+Allocatable           yes (but full)
+Cur LV                3
+PE Size (KByte)       4096
+Total PE              10384
+Free PE               0
+Allocated PE          10384
+PV UUID               oqvvl9-ursZ-TaJJ-gsJJ-Zy2D-NI52-FM5cH3
 
-Another competitive product is HyperSCSI, but I don't think HyperSCSI supports =
-routers, so it is purely LAN.  (ie. It is a pure ethernet protocol, not a =
-TCP/IP protocol).
+gallifrey:~# pvdisplay /dev/hdg3
+--- Physical volume ---
+PV Name               /dev/hdg3
+VG Name               totality
+PV Size               40.57 GB [85080240 secs] / NOT usable 4.18 MB
+[LVM: 164 KB]
+PV#                   2
+PV Status             available
+Allocatable           yes (but full)
+Cur LV                3
+PE Size (KByte)       4096
+Total PE              10384
+Free PE               0
+Allocated PE          10384
+PV UUID               MpCKD6-ZbRe-LqqN-fZNO-WFhV-w9p9-1JKXI8
 
- >>  3) A highly available virtualized application server pool that supports
- >>  automatic failover to a remote location.  A combination of Clusters,
- >>  LVS, user-mode-linux and replicated SANs can provide a potential
- >>  solution.
-
-I follow clustering, and I don't know any split clustering solutions for Linux. =
-=20
-
-One big issue is when the VIP moves, you have to update the routers to send =
-traffic for the VIP to the new location.  This can be done, but it takes =
-coordination with your ISP, or a lot of your own infrastructure.
+ ---------------- Have a happy GNU millennium! ----------------------  =20
+/ Dr. David Alan Gilbert    | Running GNU/Linux on Alpha,68K| Happy  \=20
+\ gro.gilbert @ treblig.org | MIPS,x86,ARM,SPARC,PPC & HPPA | In Hex /
+ \ _________________________|_____ http://www.treblig.org   |_______/
