@@ -1,9 +1,9 @@
 From: "William Blunn" <bill+f.9sfuw6uo@tao-group.com>
 Subject: Re: [linux-lvm] I'm confused
-Message-ID: <BDEMIPDEGABMNEFIHCPDCEBPEEAA.bill+f.9sfuw6uo@tao-group.com>
+Message-ID: <BDEMIPDEGABMNEFIHCPDEECAEEAA.bill+f.9sfuw6uo@tao-group.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <73620000.1039399481@[192.168.100.3]>
+In-Reply-To: <200212082343.49466.pantaleimon@home.no>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,44 +14,46 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Dec  9 04:16:02 2002
+Date: Mon Dec  9 04:29:02 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
 
-> > I think hardisk manufacturers use base 10, rather than base 2, when they
-> > speak  of "mega" and "giga", ie. mega =3D 1000K and not 1024K. That mea=
-ns
-> > that a 120G  hardisk is only 114.4G. Hence, 109.77G + about 3G =3D about
-> > 113G. Hmm, still  about 1.5G missing.
->=20
-> They also quote the size before laying down timing tracks
-> and bad block mappings -- along with the bad blocks. That
-> accounts for another 10%.
+> I think hardisk manufacturers use base 10, rather than base 2,
+> when they speak of "mega" and "giga", ie. mega =3D 1000K and not
+> 1024K. That means that a 120G hardisk is only 114.4G.
 
-What you are saying is completely wrong.
+No.
 
-When a drive manufacturer quotes a drive with a capacity of 100 GB, what
-they are quoting is the *user* capacity.
+You are right in that "mega =3D 1000K", but from your figure of 114.4, you
+still appear to have "K =3D 1024" and "G =3D 1024M", both of which are
+wrong.
 
-There are at least 100 GB available to the "user".
+Hard disk manufacturers use SI defined multipliers, i.e. they use a
+documented standard.
 
-The "user" is the host machine.
+  K =3D 10^3
+  M =3D 10^6
+  G =3D 10^9
 
-For a typical 512 byte block size that will mean that there will be at
-least:
+  120 GB =3D 120 000 000 000 B
 
-   100 x 10^9 / 512 blocks
+Computer people have traditionally abused these symbols to mean
+multipliers with similar values, but based on powers of two.
 
-   195 312 500 blocks
+Symbols have been defined for these multipliers, but some people still
+haven't caught up to them.
 
-available to the *user*, i.e. the host machine.
+  Ki =3D 2^10 =3D 1024
+  Mi =3D 2^20 =3D 1048576
+  Gi =3D 2^30 =3D 1073741824
 
-Whatever the drive uses internally is not counted.
+So
 
-If you look at drive specs, you will sometimes see a figure quoted for
-"user data sectors" (in this case 195 312 500) and this always indicates
-a capacity higher than the quoted drive capacity.
+  120 GB ~=3D 111.8 GiB
+
+Interestingly, LVM1's vgdisplay incorrectly uses "GB" in its output
+where it should say "GiB".
 
 Bill
 --=20
