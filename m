@@ -1,13 +1,13 @@
-Return-Path: <jdomingo@crosswinds.net>
-Date: Sun, 12 Aug 2001 22:21:39 +0000
-From: =?iso-8859-1?Q?Jos=E9_Luis_Domingo_L=F3pez?= <jdomingo@internautas.org>
+Return-Path: <toon@vdpas.hobby.nl>
+Date: Sun, 12 Aug 2001 22:21:26 +0200
+From: toon@vdpas.hobby.nl
 Subject: Re: [linux-lvm] Writing forward compatible applications using /proc
-Message-ID: <20010812222139.A14464@dardhal.mired.net>
-References: <20010812135402.A452@dardhal.mired.net> <997636232.20870.2.camel@monster.omnifarious.org>
+Message-ID: <20010812222126.A2247@vdpas.hobby.nl>
+References: <20010811235718.A20414@linux.com> <20010812135402.A452@dardhal.mired.net>
 Mime-Version: 1.0
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <997636232.20870.2.camel@monster.omnifarious.org>
+In-Reply-To: <20010812135402.A452@dardhal.mired.net>; from jdomingo@internautas.org on Sun, Aug 12, 2001 at 01:54:02PM +0000
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -22,31 +22,32 @@ List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="utf-8"
 To: linux-lvm@sistina.com
 
-On Sunday, 12 August 2001, at 12:10:31 -0500,
-Eric M. Hopper wrote:
-
-> On 12 Aug 2001 13:54:02 +0000, Jos� Luis Domingo L�pez wrote:
-> > As far as I know, there are plans to remove much of the thingss that
-> > currently appear under /proc. It seems that only information about
-> > processes currently running will remain under /proc.
+On Sun, Aug 12, 2001 at 01:54:02PM +0000, Jos� Luis Domingo L�pez wrote:
+> On Saturday, 11 August 2001, at 23:57:18 -0400, Jason Tackaberry wrote:
+> 
+> > [...]
+> > I am curious if it's a silly idea to write an application that relies on
+> > the data in /proc?  Do the kernel developers attempt to keep the data
+> > and format provided in /proc as stable as possible?  Or is it fair game
+> > for trivial changes that could break applications that parse it?  Should
+> > I use ioctl instead?
 > > 
->
-Check this linux kernel mailing list for the (still scarce) details about
-"removing" kernel tunables from /proc:
-http://uwsg.iu.edu/hypermail/linux/kernel/0105.3/1439.html
+> As far as I know, there are plans to remove much of the thingss that
+> currently appear under /proc. It seems that only information about
+> processes currently running will remain under /proc.
+> 
+> Kernel parameters, system information, kernel variables and kernel
+> tunables will probably disappear and will be replaced by some sort of
+> user-space application that will allow query and modfication of kernel
+> values and tunables. Something similar to Solaris' ndd, AFAIK.
 
-To be precise, dicussion about modifying existing /proc starts here:
-http://uwsg.iu.edu/hypermail/linux/kernel/0105.3/1469.html
+Are you sure about the /proc filesystem disappearing?
+Linus Torvalds likes it much more than ioctl's, as far as I know.
+Besides, the story about the user-space application doesn't sound
+very realistically to me.
 
-There were not much discussion about the subject, but it seems that in
-2.5.x /proc will just hold information about running processes. The rest
-is still to be defined :)
+I advise you to ask the question about the future of the /proc
+filesystem on the linux-kernel mailing list.
 
-Regards.
-
---
-Jos� Luis Domingo L�pez
-Linux Registered User #189436     Debian GNU/Linux Potato (P166 64 MB RAM)
- 
-jdomingo EN internautas PUNTO org  => � Spam ? Atente a las consecuencias
-jdomingo AT internautas DOT   org  => Spam at your own risk
+Regards,
+Toon.
