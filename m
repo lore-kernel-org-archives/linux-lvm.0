@@ -1,9 +1,7 @@
-From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] questions
-Message-ID: <20011108091932.A12401@sistina.com>
-References: <20011106000923.B3409@bunuel.tii.matav.hu> <20011108021452.B5485@tiger.bigcats.invalid>
-Mime-Version: 1.0
-In-Reply-To: <20011108021452.B5485@tiger.bigcats.invalid>; from weissel@netcologne.de on Thu, Nov 08, 2001 at 02:14:52AM +0100
+From: John Marquart <jomarqua@vaixcon.net>
+Message-ID: <Pine.LNX.4.33.0111080415060.13338-100000@vaixcon.net>
+MIME-Version: 1.0
+Subject: [linux-lvm] DOH! NT's fixboot killed PV
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,77 +12,42 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Thu Nov  8 02:23:02 2001
+Date: Thu Nov  8 03:21:02 2001
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: TEXT/PLAIN; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Thu, Nov 08, 2001 at 02:14:52AM +0100, Wolfgang Weisselberg wrote:
-> Hi, Magosanyi!
-> 
-> Magosanyi Arpad (mag@bunuel.tii.matav.hu) wrote 14 lines:
-> 
-> > What would you check on disk related to snapshots? 
-> 
-> There shall be no snapshot of a snapshot.  (Yes, I have that
-> right here on my disk.  Can't remove the snapshot-of-snapshot
-> (segfault), can't remove the snapshot (under snapshot)).
+Hello,
+	Through my own carelessness  - my helper ended up running w2k's
+fixboot program on my rootvg's primary PV.  It wrote FAT info of some sort
+to the header area of my /dev/hda1 partition.
 
-Wolfgang,
+I am (desperately) hoping that there is some way to recover this header
+info. (And that ppl on this list can aide me.)
 
-with which LVM version do you have trouble removing snapshots?
-Which compiler did you use to compile LVM? With or without optimization?
+I thought perhaps the way to go about it was to do a vgcfgrestore ..
+however I had no luck - when i ran it w/ the -l / -l -l flags - it would
+show me the correct info - but if i ran it w/out the -l flags - then it
+would give me the following error:
 
-> 
-> Does the snapshot point to the correct device?  (Happened to
-> me, too.  Usually after an (unrelated?) crash.  No idea how
-> to check -- but all Devices Under Snapshot shall have at
-> least 1 snapshot.)
+ERROR "pv_read(): PV identifier invalid" reading physical volumes
 
-Do you mean, that a snapshot didn't refer to the correct device after
-a crash any longer?
+I get the same error if I try to do pvscan.
 
-> 
-> Does the persistent snapshot-map look like it could work on
-> that device claims to be against? (bigger than the device
-> in question?)
+pvdata shows that things are FUBAR - w/ a UUID of something like "0
+NAME-     -FAT1-2   - <GARBAGE>" - but I know the proper identifier is in
+the cfg backup file - since it can be displayed and is
+"Nku12O-iI1H-Ee4v-Lpa0-SxtF-31z)-xZs7sr"
 
-?
 
-> 
-> Ability to turn persistent snapshots into non-persistent ones
-> (cleaned up after reboot) -- so that rogue ones can be
-> removed during a reboot.
+If anyone could provide tips / directions on how to go about fixing this
+problem - I would be very greatful - I just finally got the system
+built/installed to my satisfaction and would hate to start over.
 
-Well, this wouldn't make a difference because just the copy on write
-exception tables would be removed but the rest of the snapshots metadata
-where still in place making it most likely still impossible to remove it
-in case we have a real bug related here.
+tia,
+-john marquart
 
-> 
-> -Wolfgang
-> 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
 
--- 
 
-Regards,
-Heinz    -- The LVM Guy --
-
-*** Software bugs are stupid.
-    Nevertheless it needs not so stupid people to solve them ***
-
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-
-Heinz Mauelshagen                                 Sistina Software Inc.
-Senior Consultant/Developer                       Am Sonnenhang 11
-                                                  56242 Marienrachdorf
-                                                  Germany
-Mauelshagen@Sistina.com                           +49 2626 141200
-                                                       FAX 924446
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+ps.  Bill & Ted rule!
