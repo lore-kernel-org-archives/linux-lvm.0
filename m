@@ -1,11 +1,12 @@
-Return-Path: <ulf@twc.de>
-Message-ID: <3A7FAB7A.29CFB419@twc.de>
-Date: Tue, 06 Feb 2001 08:44:58 +0100
-From: Ulf Bartelt <ulf@twc.de>
-MIME-Version: 1.0
-Subject: Re: [linux-lvm] startup stuff an dnew question :-)
-References: <Pine.LNX.4.21.0102021438490.380-100000@munster.noc.fr.clara.net> <3A7E61D7.D417A879@twc.de> <20010205213917.C29990@bar.nowhere>
-Content-Transfer-Encoding: 7bit
+Return-Path: <dmeyer@dmeyer.net>
+Date: Tue, 6 Feb 2001 03:22:56 -0500
+From: dmeyer@dmeyer.net
+Subject: Re: [linux-lvm] 0.9.1 vgscan doesn't detect upgraded vg's
+Message-ID: <20010206032256.A831@jhereg.dmeyer.net>
+References: <3A7F6413.A80D1803@twisted.net>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <200102060630.f166UYM32021@webber.adilger.net>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -18,24 +19,46 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-zoo1@corecomm.net wrote:
-> >But the tricky part is: hda2 and hda1 are LVs too...
-> >I just faked partition map entries for them and I use them only by this
-> >"partition aliases", so I can boot a system living totally in LVs using
-> >conventional things like lilo...
+In article <200102060630.f166UYM32021@webber.adilger.net> you write:
+> Michael McLinn writes:
+> > My theory is each pv is supposed to have the the UUID's of 
+> > itself, and all other pv's in it's vg within it's UUID 
+> > datastructure.  Is this so?
 > 
-> erm... just what does this gain you, then? if you resize or move those
-> LVs, wouldn't you have to manually change the fake partition map
-> entries, sort of negating the entire point of using LVM...?
+> Correct.  There was another user who reported the same bug, but after
+> they were playing with the system a bit, it started to work (i.e. the
+> UUIDs were filled in) so it was not looked at further.
 
-...I do not want to use an initrd to switch on some service I cannot
-switch off properly because no exitrd exists. But that's
-philosophical...
+That other user was me.  I eventually commented out the UUID check in
+pv_read_all_pv_of_vg as the previous poster suggested.  This let me
+run vgscan, vgchange -ay, and mount my LVs.  Just go to
+pv_read_all_pv_of_vg.c and get rid of the code after the
+    if ( uuids > 0 ) {
+check.
 
-...but for now I never needed to resize /boot or /, only the other
-LVs...
+> > If this is the case, it seems it would be possible to write the 
+> > correct UUID's to the datastructure on disk, and potentially 
+> > improve (maybe even fix) my situation.
 
-...and admittedly I never spent a thought on relations between partition
-aliases and snapshots... :-(
+After getting vgscan to find my VGs, I pretty much just lucked into my
+UUIDs getting set correctly and I'm still not sure what did it.  All I
+did was activate my VGs (which I'm told couldn't have fixed the
+UUIDs), run vgck (ditto), and run vgscan after the VGs were active.
+vgscan at least _calls_ pv_write_uuidlist, so it is a possibility.
+However, running vgscan on the non-active VGs definitely didn't update
+the UUIDs for me.
+
+> > One more note that might be of interest, these volume groups were
+> > created with a much earlier version of lvm, 0.6 or 0.7 I believe.
+> 
+> I don't know what the situation was with the other person who had
+> this same bug, but it is good to know anyways.
+
+Mine were originally created with 0.8final.
+
+-- 
+Dave Meyer
+dmeyer@dmeyer.net
