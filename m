@@ -1,8 +1,9 @@
-Message-ID: <3FBE18CE.1020508@icaro.com.br>
-From: Hugo Kawamorita de Souza <hugo@icaro.com.br>
-MIME-Version: 1.0
-Subject: [linux-lvm] Rezising root ("/") partition
-Content-Transfer-Encoding: quoted-printable
+From: =?iso-8859-1?q?M=E5ns_Rullg=E5rd?= <mru@kth.se>
+Message-ID: <yw1xllq9vn9s.fsf@kth.se>
+References: <1069370480.3fbd4c706cd12@netmail.pipex.net>
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Subject: [linux-lvm] Re: LVM2 on 2.4.22. (Fedora core 1 with nptl)
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -13,133 +14,94 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Fri Nov 21 15:45:02 2003
+Date: Fri Nov 21 15:45:05 2003
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="iso-8859-1"; format="flowed"
+Content-Type: text/plain; charset="utf-8"
 To: linux-lvm@sistina.com
 
-Keywords to this subject: Linux LVM , root ( / ) partition / directory /=20
-filesystem rezize , vgreduce problem , filesystem / superblock info size =
-greater=20
-than VG size , fsck ,  etc.
+tugg <tugg@dial.pipex.com> writes:
 
+> Trying to install LVM2 on 2.4.22. (Fedora core 1 with nptl)
+>
+> Downloaded device mapper (device-mapper-stable.tgz) and LVM2
+> (LVM2.0- stable.tgz) from sistina.com. Unpacked to
+> device-mapper.1.00.5 and LVM2.2.00.07.
+>
+> For device mapper: did configure followed by make install. There is
+> no patch for 2.4.22 so I assumed that the kernel was already patched
+> (mistake?).
 
-Hello guys,
+Device-mapper is not in any vanilla 2.4 kernel.  Maybe redhat added
+it.
 
-I just would like write down the expirience I had yesterday, actually it =
-spent=20
-the whole night, trying to resize a main file server root partition.
+> LVM and device mapper are already loadable modules, so
+> no need to recompile kernel (correct?). Added script to
+> /etc/modules.conf and reboot. DMESG shows LVM version
+> 1.0.5+(22/07/2002) module loaded.
+>
+> pvscan -h gives me the following:
+>
+> Logical Volume Manager 1.0.3
+> Heinz Mauelshagen, Sistina Software  19/02/2002 (IOP 10)
+> 	
+> Why is it telling me 1.0.3 when DMESG says 1.0.5+?
 
-Our server runs a RedHat Linux 9.
-My main difficulty was to umount the / partition in order to resize its=20
-filesystem. So I used the shell from the installation CD. I did the whole=
- steps=20
-using that CD shell: create a new partition PV (I did not rebooted after =
-this!=20
-Maybe it was the great fault), extended the VG, exnteded the LV and resiz=
-ed the=20
-filesystem. Then, I mounted the / partiton, executed a "df" which showed =
-the new=20
-size of the / filesystem. So I rebooted the system, without the CD. And t=
-he nthe=20
-terrifying error: "the superblock says that the / filesystem has NEW_BIG_=
-SIZE=20
-blocks, but the it only has OLD_SMALL_SIZE physical blocks. The partition=
- table=20
-or the superblock information is wrong. run fsck to correct the error...".
-So I gave the root password and tried to see what's happened. After all I=
- found=20
-out that the new PV was contained in the root VG, the root VG had the new=
- big=20
-size, the filesystem also had the new size, but if I remembered it right,=
- the=20
-root LV was with the old small size and also the "allocable(?, or somethi=
-ng=20
-like)" size of the root VG was the old small one. I could not resize the =
-root=20
-filesystem and the root LV again and I could not remove the new PV from t=
-he root=20
-VG either. I tried to do "pvmove", etc, I just could do anything, and eve=
-ry scan=20
-and display said the thaere was no inconsistency. I knew about vgcfgresto=
-re, but=20
-I was not able to make it work correctly.
+pvscan -h tells you the version of the pvscan utility.  The kernel log
+contains the version of LVM in the kernel.  In this case, they are not
+the same.  This is nothing to worry about, in general.
 
-Any way, let me try to try explain my solution too. 2 threads that helped=
- me to=20
-figured out:
+> dmsetup --version gives me:
+>
+> Library version:   1.00.05-ioctl-cvs (2003-09-01)
+> device-mapper: ioctl interface mismatch: kernel(1.0.3), user(4.0.0), cmd(0)
+> Driver version:    1.0.3
+>
+> The ioctl interface mismatch message behaves kind of strangely in
+> that it isn't written to std error, i.e. dmsetup --version 1>
+> dmsetup.log 2>&1 doesn't write the message to dmsetup.log. It still
+> appears on the console. Even more bizarrely, if I log in through
+> OpenSSH it doesn't appear in my session - it appears on the physical
+> console (i.e. the monitor connected to the server), and it does this
+> even when no user is logged on!!! It also doesn't appear in a
+> terminal session under X. Is this behaviour 'by design'? I missed
+> the message initially and only found it when I physically went to
+> the server...
 
-Fixing a VG with an empty borked PV
-  http://lists.sistina.com/pipermail/lvm-devel/2003-March/001195.html
+This is because the message is generated by the kernel, and your
+syslog daemon is configured to print whatever type of message that was
+to the console.
 
-Help! unable to mount lv's - can't see why!
-  http://lists.sistina.com/pipermail/linux-lvm/2002-September/012263.html
+> For LVM:
+>
+> Did configure and make install. Got the following error message:
+>
+> device/dev-io.c: In function `dev_get_size':
+> device/dev-io.c:215: error: `BLKGETSIZE64' undeclared (first use in this 
+> function)
+> device/dev-io.c:215: error: (Each undeclared identifier is reported only once
+> device/dev-io.c:215: error: for each function it appears in.)
+> make[1]: *** [device/dev-io.o] Error 1
+> make[1]: *** Waiting for unfinished jobs....
+> make[1]: Leaving directory `/usr/LVM/LVM2.2.00.07/lib'
+> make: *** [lib] Error 2
 
-Using the rescue from the installtion CD, I had the thought to rollback w=
-hat I=20
-have done, but I just could not remove the dammed new PV from the root VG=
-. After=20
-a long time (I started all this at 7:00h PM of 2003-11-20, it was already=
- 2:00 AM=20
-of 2003-11-21 and just finished all this at 4:15 AM of 2003-11-21) and af=
-ter I=20
-did a backup of all our changed data on thsi server, I could try to do so=
-me=20
-operations not being so afraid. The root VG had already 2 partition PVs a=
-nd I was=20
-trying to add another one. At some time, I was able to go vgcfgrestore of=
- the=20
-root VG from /etc/lvmconf to the first 2 PVs. This backup was done automa=
-tically=20
-at some time before where the new PV was not contained the root VG. After=
- the=20
-restore the root VG information show that the new PV was not in the root =
-VG and=20
-the pvscan was saying that the new PV was in the root VG but it was INACT=
-IVE:=20
-that was a good news for me. At this time I decided to delete that PV par=
-tition=20
-with fdisk,  after thsi the root VG has gone in inconsistency, so I did t=
-he=20
-vgcfgrestore again to the first 2 PVs and the VG became consistent again,=
- GREAT!=20
-After thsi I was able to do all the process again:
+Something in the sources is incompatible with your kernel.
 
-_ using the Rescue CD
-_ create the new partition again using fdisk
-_ pvcreate
-_ vgextend
-_ resize the LV and the filesystem with e2fsadm (without, ignoring fsck, =
-which=20
-reports some inconsistencies due the superblock stuff...)
+> Is this caused by the ioctl mismatch or is there something else
+> going on here?  If it is a known problem, is there a workaround?
+>
+> After trying all of the above, found patches for 2.4.22 via mailing list 
+> archives (2.4.22-dm-1.tar.bz2) and upacked to get directory 2.4.22-dm-1 
+> containing patch files 00001 through 00016 and INDEX. Used cat to create one 
+> large patch file (file patches-2.4.22.patch attached) with all the patches 
+> (mistake?) and did patch --dry-run -p1 
+> with this file (only dry run, so nothing applied yet). This indicates some 
+> patches will apply, some are already applied, and quite a few will fail (see 
+> attached patches-2.4.22.log file). Is this because I installed device mapper 
+> before the patches, or do these patches just not fit my system? 
 
-After this I did a vgcfgbackup and copied it to my real /etc/lvmconf. I a=
-lso=20
-copied the file /etc/lvmtab.d/<ROOT_VG> to my rela /etc/lvmtab.d .
+Apparently you already have device-mapper in your kernel.
 
-Here I leave a question: is this really necessary? It worked for me after=
- this,=20
-but I do not know if the LVM information goes to the correct place, so th=
-at after=20
-booting without the Rescue CD it will be effective.
-
-So, my last night and my sleeping hours were spent with this...
-
-I hope this could help someone else.
-
-
-Bye.
-
-
-Hugo K.S.
-LPI ID: LPI000032731
-
---=20
--------------------------------------------------------------------------=
-----
-Hugo K. de Souza                =CDcaro Technologies
-Software Consultant             http://www.icaro.com.br
-mailto:hugo@icaro.com.br        Av. Bar=E3o de Itapura, 950, 8o andar, Bo=
-tafogo
-Work: +55 19 3237-7878 Ext: 248 Campinas, SP, Brazil
-Fax: +55 19 3237-7008           CEP: 13020-431
+-- 
+M�ns Rullg�rd
+mru@kth.se
