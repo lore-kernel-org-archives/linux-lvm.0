@@ -1,54 +1,25 @@
-Message-ID: <393C8A1D.30BD26E4@msede.com>
-Date: Tue, 06 Jun 2000 07:20:29 +0200
-From: Michael Marxmeier <mike@msede.com>
+Date: Tue, 6 Jun 2000 10:51:54 +0100 (IST)
+From: Paul Jakma <paul@clubi.ie>
+Subject: [linux-lvm] LVM 0.8final for 2.2.15/2.2.16?
+Message-ID: <Pine.LNX.4.21.0006061049540.26807-100000@fogarty.jakma.org>
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] Problem with kernel 2.2.13
-References: <Pine.GSO.4.10.10006052054560.952-100000@flora04.SLAC.Stanford.EDU>
-Content-Transfer-Encoding: 7bit
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: Cristina Bulfon <bulfon@SLAC.Stanford.EDU>
-Cc: linux-lvm@msede.com
+Content-Type: TEXT/PLAIN; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: Linux LVM list <linux-lvm@msede.com>
 
-Cristina Bulfon wrote:
-> I'm trying to rebuild the kernel 2.2.13 with lvm patch
-> "patch-2.2.13-LVM-0.8i.gz" and during the _make_bzImage_ I got the
-> following error:
-> ...
+is 0.8final going to be backported to 2.2? I'd love to have the
+snapshot capabilities of 0.8final, but there's no way i'm going to
+run 2.3/2.4test on a production machine.
 
-Please refer to
-http://linux/lvm/doc/BUGS
-
-for a list of kown problems and solutions.
-
---- snip ---
-
-3. Compile with kernel 2.2.13 or 2.2.14 fails:
-
-> drivers/block/block.a(ll_rw_blk.o): In function `blk_dev_init':
-> ll_rw_blk.o(.text.init+0xb0): undefined reference to `lvm_init'
-
-Terry Hardie (terryh@orcas.net) notes:
-> Actually, on line 362 of lvm.c in your kernel source, block/drivers,
-> change the word "static" to "extern". The problem doesn't show up if
-> you're compiling LVM as a module.
-
-The line in question is:
-__initfunc(static int lvm_init(void))
-
-This should be changed to:
-__initfunc(extern int lvm_init(void))
-
---- snip ---
-
-
-Hope this helps
-Michael
-
+regards,
 -- 
-Michael Marxmeier           Marxmeier Software AG
-E-Mail: mike@msede.com      Besenbruchstrasse 9
-Phone : +49 202 2431440     42285 Wuppertal, Germany
-Fax   : +49 202 2431420     http://www.msede.com/
+Paul Jakma	paul@clubi.ie
+PGP5 key: http://www.clubi.ie/jakma/publickey.txt
+-------------------------------------------
+Fortune:
+Where it is a duty to worship the sun it is pretty sure to be a crime to
+examine the laws of heat.
+		-- Christopher Morley
