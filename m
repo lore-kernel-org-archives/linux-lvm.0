@@ -1,12 +1,12 @@
-Return-Path: <ted@10cust182.starstream.net>
-Date: Sun, 19 Aug 2001 19:49:42 -0700
-From: Ted Deppner <ted@psyber.com>
-Subject: Re: [linux-lvm] Adding a mirror after-the-fact
-Message-ID: <20010819194942.A13616@dondra.ofc.psyber.com>
-References: <20010814171159.B28266@linux.com>
+Return-Path: <fauxpas@trellisinc.com>
+Date: Mon, 20 Aug 2001 00:05:31 -0400
+From: Faux Pas III <fauxpas@trellisinc.com>
+Subject: Re: [linux-lvm] Problem using lvreduce
+Message-ID: <20010820000531.A25018@trellisinc.com>
+References: <051DFF3BBA73D3119A5800A0C95BD021C03C32@barracuda.alpha-processor.com> <20010817114344.D450@btconnect.com> <20010817114344.D450@btconnect.com> <20010817163831.A11977@sistina.com> <20010817114143.A16214@trellisinc.com> <20010817114143.A16214@trellisinc.com> <20010818110442.A414@btconnect.com>
 Mime-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20010814171159.B28266@linux.com>
+In-Reply-To: <20010818110442.A414@btconnect.com>; from thornber@btconnect.com on Sat, Aug 18, 2001 at 11:04:42AM +0100
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -21,49 +21,17 @@ List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
+Cc: thornber@btconnect.com, j@trellisinc.com
 
-On Tue, Aug 14, 2001 at 05:11:59PM -0400, Jason Tackaberry wrote:
-> I know this isn't strictly an LVM question, but ...
-> 
-> Suppose I have a volume group with 1 physical volume, say a 9GB disk.
-> Now, after some time, I decide I want to mirror this VG with another 9GB
-> disk.  What options do I have?  AFAICS, the only way to do this would be
-> to start from scratch?  This is a pretty simple and presumably common
-> thing to want to do, so I hope I'm wrong.  :)
+On Sat, Aug 18, 2001 at 11:04:42AM +0100, Joe Thornber wrote:
+ 
+> Grab 1.0.1-rc1, please mail me how you get on.
 
-I've done this using RAID only on ext2fs partitions, no LVM...  it's not
-too tough.  I recommend *using* persistent superblocks (they come in handy
-sometimes), though it's a little fun to add them to a live file system.
-
-Fact 1:  with or without persistent superblocks, adding raid to a device
-doesn't change the initial offset (ie the underlying filesystem begins at
-the 0th block regardless of raid or non raid).
-
-Fact 2:  persistent superblock adds a superblock at the end of the device,
-of variying size (not sure why).
-
-You can "ext2resize /dev/blah numblocks" where numblocks is the size of
-the device minus 5 to 50mb (enough for the superblock, yes it's overkill).  
-Once you mkraid on the device, just "ext2resize /dev/blah" to get back
-whatever space you over-reserved.  
-
-If you *KNOW* the filesystem isn't using blocks near the end of the
-device, you can skip the initial resize, do the mkraid, and "e2fsck
-/dev/blah" (read off the actual block size, then abort the e2fsck) and
-"ext2resize /dev/blah newnumblocks" 
-
-
-If you're not using ext2, then do some tests with your filesystems resize
-utility to make sure it's bulletproof and go at it.  reiserfs_resize was
-buggy in this regard a few months ago when I was testing it...  I've
-not tested recently, so maybe it's been fixed.  (it grows just fine, but
-introduces errors when shrinking).
-
-And finally, since this is a LVM list, I've no idea what changing device
-layers under LVM will do... I know the raid won't do anything but clip
-some blocks off the end of the device, but I don't know LVM's handling or
-block resize options.
+I'm using 2.4.9 + ext3 + lvm 1.0.1rc1, and everything seems 
+solid; I've done quite a bit of resizing and shuffling PE's 
+around and my data is still intact.  Thanks ! 
 
 -- 
-Ted Deppner
-http://www.psyber.com/~ted/
+Josh Litherland (fauxpas@trellisinc.com)
+ It is by caffeine alone that I set my mind in motion.
+  It is by the juice of Mtn Dew that thoughts acquire speed.
