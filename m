@@ -1,9 +1,8 @@
-Message-ID: <3B94FC0D.1080205@st-peter.stw.uni-erlangen.de>
-Date: Tue, 04 Sep 2001 18:06:37 +0200
+Message-ID: <3B950A7A.40902@st-peter.stw.uni-erlangen.de>
+Date: Tue, 04 Sep 2001 19:08:10 +0200
 From: svetljo <galia@st-peter.stw.uni-erlangen.de>
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] *** ANNOUNCEMENT *** LVM 1.0.1-rc2 available at www.sistina.com
-References: <20010830154448.A28281@sistina.com> <20010830210309.0D0B01225@oscar.casa.dyndns.org> <20010904110411.B1028@sistina.com>
+Subject: what i need is a little attention-RE [linux-lvm] SoftRaid and LVM   Jean-Eric Cuendet
 Content-Transfer-Encoding: 7bit
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
@@ -19,24 +18,16 @@ List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: linux-lvm@sistina.com
 
-for me it worked  with 2.4.10 pre2  
-but i had problems patching  2.4.9-ac5 with 1.0.1rc1 and rc2
+i had only  reply from Andreas Dilger (3 the previous month and 1 this) 
+and all the other posts are from me
+what am i doing , what the results are
+i'm still waiting smbd to help me
 
-AJ Lewis wrote:
+all started  here
+http://lists.sistina.com/pipermail/linux-lvm/2001-August/008579.html
 
->On Thu, Aug 30, 2001 at 05:03:08PM -0400, Ed Tomlinson wrote:
->
->>On August 30, 2001 04:44 pm, you wrote:
->>
->>>We have a new 1.0.1 Release Candidate!  The major difference between rc1
->>>and rc2 is that rc2 uses PV version 1 metadata on all new PVs and PVs
->>>modified with the rc2 tools.
->>>
->>Does the patch generator in rc2 handle 2.4.10pre<x> correctly?
->>
->
->It *should*.  We fixed that before the release I believe.  If it does not,
->please let us know.
->
->Regards,
->
+if smbd take a look at all meseages with sender svetljo and with subject 
+releated to PB's with LVM on software RAID
+ i think he'll get the idea what is all about
+
+thank's
