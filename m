@@ -1,10 +1,11 @@
-Date: Thu, 4 Oct 2001 12:42:24 +0200
-From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] SNMP MIB for LVM
-Message-ID: <20011004124224.B27001@sistina.com>
-References: <25369470B6F0D41194820002B328BDD23004@ATLOPS>
+Date: Thu, 4 Oct 2001 12:53:06 +0200
+From: Wichert Akkerman <wichert@cistron.nl>
+Subject: Re: [linux-lvm] Re: partition table read incorrectly
+Message-ID: <20011004125306.A10138@cistron.nl>
+References: <200110031901.TAA04080@vlet.cwi.nl> <20011004013950.A16757@cistron.nl> <20011003211508.O8954@turbolinux.com>
 Mime-Version: 1.0
-In-Reply-To: <25369470B6F0D41194820002B328BDD23004@ATLOPS>; from arvind_jain@ivivity.com on Tue, Oct 02, 2001 at 02:17:09PM -0400
+Content-Disposition: inline
+In-Reply-To: <20011003211508.O8954@turbolinux.com>; from adilger@turbolabs.com on Wed, Oct 03, 2001 at 09:15:08PM -0600
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -18,37 +19,34 @@ List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: linux-lvm@sistina.com
+To: linux-lvm@sistina.com, alan@lxorguk.ukuu.org.uk, linux-kernel@vger.kernel.org
 
-On Tue, Oct 02, 2001 at 02:17:09PM -0400, Arvind Jain wrote:
-> 
-> Has anybody written or come across MIB for LVM configuration and
-> maintenance? It will be nice if could configure LVM using SNMP MIB. thx,
-> arv.
+Previously Andreas Dilger wrote:
+> If you already have data on the PV in
+> question, you can "dd if=/dev/zero of=/dev/sdb bs=1 seek=510 count=2"
+> to remove only the partition signature.
 
-No that we are ware of.
+That helped and the kernel no longer sees that partition anymore.
+However LVM still doesn't work:
 
-Any volunteers to write it ;-)
+cloud:/dev/discs/disc1# vgscan
+vgscan -- reading all physical volumes (this may take a while...)
+vgscan -- found active volume group "vg_user"
+vgscan -- "/etc/lvmtab" and "/etc/lvmtab.d" successfully created
+vgscan -- WARNING: This program does not do a VGDA backup of your volume group
 
-Regards,
-Heinz    -- The LVM Guy --
+cloud:/dev/discs/disc1# vgchange -a y
+vgchange -- ERROR: VGDA in kernel and lvmtab are NOT consistent; please run vgscan
 
-> 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
+I did a bit of looking around and it seems the confusement is in the
+kernel: when lvm_check_kernel_lvmtab_consistency() compares the kernel
+and the lvmtab entries the list from the kernel mentions the vg_user
+volume group twice, while the lvmtab only mentions it once.
 
-*** Software bugs are stupid.
-    Nevertheless it needs not so stupid people to solve them ***
+Wichert.
 
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-
-Heinz Mauelshagen                                 Sistina Software Inc.
-Senior Consultant/Developer                       Am Sonnenhang 11
-                                                  56242 Marienrachdorf
-                                                  Germany
-Mauelshagen@Sistina.com                           +49 2626 141200
-                                                       FAX 924446
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+-- 
+  _________________________________________________________________
+ /       Nothing is fool-proof to a sufficiently talented fool     \
+| wichert@wiggy.net                   http://www.liacs.nl/~wichert/ |
+| 1024D/2FA3BC2D 576E 100B 518D 2F16 36B0  2805 3CB8 9250 2FA3 BC2D |
