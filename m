@@ -1,9 +1,10 @@
-Date: Fri, 14 Sep 2001 19:16:09 +0200 (CEST)
-From: "A.R. (Tom) Peters" <tpeters@xs4all.nl>
-Subject: Re: [linux-lvm] How to boot with LVM?
-In-Reply-To: <002b01c13c98$d3080be0$6601a8c0@foobarhouse.com>
-Message-ID: <Pine.LNX.4.21.0109141908220.617-100000@tompth.localdomain>
+Message-ID: <3BA249C0.3050402@st-peter.stw.uni-erlangen.de>
+Date: Fri, 14 Sep 2001 20:17:36 +0200
+From: svetljo <galia@st-peter.stw.uni-erlangen.de>
 MIME-Version: 1.0
+Subject: Re: [linux-lvm] Lock Patch
+References: <NBBBJHKIOKPKOGOEPEDPKEFGDNAA.stuart@bh90210.net>
+Content-Transfer-Encoding: 7bit
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,46 +16,158 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+content-type: text/plain; format="flowed"
 To: linux-lvm@sistina.com
 
-On Thu, 13 Sep 2001, Neil Macvicar wrote:
+Hi
+thats in case we are tolking about linux-2.4.1-VFS-lock.patch, 
+linux-2.4.2-VFS-lock.patch, linux-2.4.4-VFS-lock.patch
+and linux-2.4.9-VFS-lock.patch which are in LVM/1.0x/PATCHES
 
-> A few notes I missed: This ramdisk I made myself. You can mount it on
-> loopback after untarring it to examine it's contents. It's size sould be set
-> to 8192.
+there is no such speciefic patch , you should create it yourself
+have you folowed what i told you, you should then have it
 
-> ----- Original Message -----
-> From: "Neil Macvicar" <neilm@foobarhouse.com>
-> To: <linux-lvm@sistina.com>
-> Sent: Thursday, September 13, 2001 1:15 PM
-> Subject: Re: [linux-lvm] How to boot with LVM?
-> 
-> 
-> > If it's any help, I have put my initrd on public ftp at
-> > fruits.foobarhouse.com in the LVM directory. It's served me well for as
-> long
-> > as I've been using LVM'ed root.
-> >
-> > I'm currently using LVM 0.9.1beta8.
+from the beginig
+untar the lvm-code lvm-1.0.1-rc2.tar.bz2: tar xjvf lvm-1.0.1-rc2.tar.bz2
+you have now directory LVM and in it 1.0.1-rc2
+cd LVM/1.0.1-rc2
+configure the sources for your system: ./configure
+go to PATCHES and prepare the patch for your kernel: make
+you should have now the patch for your kernel
+apply the patch
 
-The past week I have tried very many times to get Linux mount the root
-on my LVM disk: but whenever the linuxrc on the initrd finishes, the
-kernel finds itself without a root.
-Switching root is supposed to happen automatically, but that mechanism is
-obsoleted: instead, we are supposed to do a pivot_root and chroot (see
-/usr/src/linux/Documents/initrd.txt).  neither method works.
-I suspect a kernel problem now.  I suppose I should go back to an earlier
-kernel version, and maybe to a 0.9 LVM.  Can you please advice what kernel
-you use?
-Additionally, would you try out the latest kernel (2.4.10-pre8) and LVM
-(1.0.1-rc2) to see if that works for you?
+recompile the kernel or modules
+and compile the tools - go back to LVM/1.0.1-rc2 and type make
+and then install them : make install
 
-	Thanx,
---
-#>!$!%(@^%#%*(&(#@#*$^@^$##*#@&(%)@**$!(&!^(#((#&%!)%*@)(&$($$%(@#)&*!^$)^@*^@)
 
-	Tom "thriving on chaos" Peters
-		NL-1062 KD nr 149	tel.    +31-204080204
- 			Amsterdam	e-mail  tpeters@xs4all.nl
+IT3 Stuart B. Tener, USNR-R wrote:
+
+>Svetljo:
+>
+>	Where does one get the patch you refer to? Can you provide a link for it?
+>
+>
+>Very Respectfully, 
+>
+>Stuart Blake Tener, IT3, USNR-R, N3GWG 
+>Beverly Hills, California
+>VTU 1904G (Volunteer Training Unit) 
+>stuart@bh90210.net 
+>west coast: (310)-358-0202 P.O. Box 16043, Beverly Hills, CA 90209-2043 
+>east coast: (215)-338-6005 P.O. Box 45859, Philadelphia, PA 19149-5859 
+>
+>Telecopier: (419)-715-6073 fax to email gateway via www.efax.com (it's free!) 
+>
+>JOIN THE US NAVY RESERVE, SERVE YOUR COUNTRY, AND BENEFIT FROM IT ALL. 
+>
+>Friday, September 14, 2001 9:26 AM
+>
+>-----Original Message-----
+>From: linux-lvm-admin@sistina.com [mailto:linux-lvm-admin@sistina.com]On Behalf Of svetljo
+>Sent: Friday, September 14, 2001 4:55 AM
+>To: linux-lvm@sistina.com
+>Subject: Re: [linux-lvm] Lock Patch
+>
+>one question
+>are we talking about LVM/PATCHES/linux-2.4.x-VFS-lock-patch
+>if thats so i don't think it's that good idea to try  both patches
+>
+>simply run  $LVM_ROOT./configure ; cd PATCHES ; make ; and aply the patch
+>
+>linux-lvm-1.0.1rc2-2.4.8-12mdk.mdk
+>
+>but in case we are not tolking about this patch
+>what are we talking about , which lock.patch
+>
+>
+>Heinz J . Mauelshagen wrote:
+>
+>>Stuart,
+>>
+>>Patrick gave you a helpfull hint, so there's no reason for your rude reaction.
+>>Doing what he recommended is a matter of little time as well.
+>>
+>>Ask the Mandrake LVM maintainer if that's more preferable for you.
+>>
+>>Regards,
+>>Heinz    -- The LVM Guy --
+>>
+>>On Fri, Sep 14, 2001 at 04:10:08AM -0700, IT3 Stuart B. Tener, USNR-R wrote:
+>>
+>>>Mr. Caulfield:
+>>>
+>>>     Well thank you for that most helpful suggestion, but silly me, I consider my time more valuable. I shall wait for someone to post a proper answer, rather than one, which is both obvious and inefficient.
+>>>
+>>>
+>>>Very Respectfully,
+>>>
+>>>Stuart Blake Tener, IT3, USNR-R, N3GWG
+>>>Beverly Hills, California
+>>>VTU 1904G (Volunteer Training Unit)
+>>>stuart@bh90210.net
+>>>west coast: (310)-358-0202 P.O. Box 16043, Beverly Hills, CA 90209-2043
+>>>east coast: (215)-338-6005 P.O. Box 45859, Philadelphia, PA 19149-5859
+>>>
+>>>Telecopier: (419)-715-6073 fax to email gateway via www.efax.com (it's free!)
+>>>
+>>>JOIN THE US NAVY RESERVE, SERVE YOUR COUNTRY, AND BENEFIT FROM IT ALL.
+>>>
+>>>Friday, September 14, 2001 4:05 AM
+>>>
+>>>-----Original Message-----
+>>>From: linux-lvm-admin@sistina.com [mailto:linux-lvm-admin@sistina.com]On Behalf Of Patrick Caulfield
+>>>Sent: Friday, September 14, 2001 1:55 AM
+>>>To: linux-lvm@sistina.com
+>>>Subject: Re: [linux-lvm] Lock Patch
+>>>
+>>>On Thu, Sep 13, 2001 at 11:00:47PM -0700, IT3 Stuart B. Tener, USNR-R wrote:
+>>>
+>>>>List members:
+>>>>
+>>>>     I am curious; if I am running 2.4.8-12mdk (Mandrake 8,0), which lock patch do I use the 2.4.4 version or the 2.4.9 version?
+>>>>
+>>>>
+>>>I would try the 2.4.4 one. If that doesn't apply then try the 2.4.9.
+>>>
+>>>patrick
+>>>
+>>>
+>>>_______________________________________________
+>>>linux-lvm mailing list
+>>>linux-lvm@sistina.com
+>>>http://lists.sistina.com/mailman/listinfo/linux-lvm
+>>>read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
+>>>?????????????????????????????????????{??[?????x%??e?{??[?????)???&??i?????l????)???&?f??f??X??)???b??????y?m???0s??3??m????
+>>>
+>??+-?v?r?????=?-??h??????
+>
+>>*** Software bugs are stupid.
+>>   Nevertheless it needs not so stupid people to solve them ***
+>>
+>>=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+>>
+>>Heinz Mauelshagen                                 Sistina Software Inc.
+>>Senior Consultant/Developer                       Am Sonnenhang 11
+>>                                                 56242 Marienrachdorf
+>>                                                 Germany
+>>Mauelshagen@Sistina.com                           +49 2626 141200
+>>                                                      FAX 924446
+>>=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+>>
+>>_______________________________________________
+>>linux-lvm mailing list
+>>linux-lvm@sistina.com
+>>http://lists.sistina.com/mailman/listinfo/linux-lvm
+>>read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
+>>
+>
+>
+>
+>
+>_______________________________________________
+>linux-lvm mailing list
+>linux-lvm@sistina.com
+>http://lists.sistina.com/mailman/listinfo/linux-lvm
+>read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
+>
