@@ -1,13 +1,9 @@
-Return-Path: <wichert@cistron.nl>
-Date: Wed, 25 Jul 2001 16:55:27 +0200
-From: Wichert Akkerman <wichert@cistron.nl>
-Subject: Re: [linux-lvm] Logical Volume file system
-Message-ID: <20010725165527.I32341@cistron.nl>
-References: <20010725162635.F32341@cistron.nl> <20010725165117.B598@dardhal.mired.net>
-Mime-Version: 1.0
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20010725165117.B598@dardhal.mired.net>; from jdomingo@internautas.org on Wed, Jul 25, 2001 at 04:51:17PM +0000
+Return-Path: <jamesp@foobarhouse.com>
+Date: Wed, 25 Jul 2001 16:14:40 +0100 (BST)
+From: James Pattinson <jamesp@foobarhouse.com>
+Message-ID: <Pine.LNX.4.33.0107251611250.9570-100000@greebo.foobarhouse.com>
+MIME-Version: 1.0
+Subject: [linux-lvm] pvversion failure
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -19,23 +15,37 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="utf-8"
+Content-Type: TEXT/PLAIN; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Previously Jos� Luis Domingo L�pez wrote:
-> Does it mean that applications can use a LV as a "raw device" ?.
+Hi
 
-There is no such as a `raw device'. A LV can be seen as a normal blockdevice
-from userland, just like a normal harddisk or disk slice.
+Trying to upgrade from beta7 to beta8. I have 2 PVs, neither of which are
+empty, that belong to a single VG, vg00.
 
-I think what you are referring to is `raw io', which is something you
-can do with any block device. Currently you still need a special rawio
-patch for Linux kernels, but it's a well tested and stable patch.
+When trying to upgrade the PVs to version 2, I get:
 
-Wichert.
+./pvversion -1 /dev/ide/host2/bus0/target0/lun0/part1
+pvversion -- created dummy LV "/dev/vg00/pvversionpart19519" on empty PV
+"/dev/ide/host2/bus0/target0/lun0/part1"
+pvversion -- ERROR: pv_display() failed again
+pvversion -- giving up on "/dev/ide/host2/bus0/target0/lun0/part1"
 
--- 
-  _________________________________________________________________
- /       Nothing is fool-proof to a sufficiently talented fool     \
-| wichert@wiggy.net                   http://www.liacs.nl/~wichert/ |
-| 1024D/2FA3BC2D 576E 100B 518D 2F16 36B0  2805 3CB8 9250 2FA3 BC2D |
+[root@greebo tools]# lvmdiskscan | grep LVM
+lvmdiskscan -- /dev/ide/host2/bus0/target0/lun0/part1  [      16.02 GB]
+Primary  LVM partition [0x8E]
+lvmdiskscan -- /dev/ide/host2/bus1/target0/lun0/part1  [      16.02 GB]
+Primary  LVM partition [0x8E]
+lvmdiskscan -- 2 LVM physical volume partitions
+[root@greebo tools]#
+
+It seems the pvversion program thinks my PV is empty, and tries to create
+a dummy LV on it. But of course it's not empty.
+
+I created my PVs, VG and LVs using beta7 kernel and tools not too long
+ago. Im using devfs as you can see.
+
+Any ideas?
+
+James
