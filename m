@@ -1,29 +1,19 @@
 Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j0AKikr19868
-	for <linux-lvm@redhat.com>; Mon, 10 Jan 2005 15:44:46 -0500
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j0AMfZr27968
+	for <linux-lvm@redhat.com>; Mon, 10 Jan 2005 17:41:35 -0500
 Received: from postfix3-1.free.fr (postfix3-1.free.fr [213.228.0.44])
-	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id j0AKiju6007279
-	for <linux-lvm@redhat.com>; Mon, 10 Jan 2005 15:44:45 -0500
-Received: from flo.18rcarmes.fr (unknown [81.56.213.72])
-	by postfix3-1.free.fr (Postfix) with ESMTP id B48EA1734E9
-	for <linux-lvm@redhat.com>; Mon, 10 Jan 2005 21:44:41 +0100 (CET)
-Received: from localhost (localhost [127.0.0.1])
-	by flo.18rcarmes.fr (Postfix) with ESMTP id 0FE038BF7
-	for <linux-lvm@redhat.com>; Mon, 10 Jan 2005 21:44:40 +0100 (CET)
-Received: from flo.18rcarmes.fr ([127.0.0.1])
-	by localhost (flo [127.0.0.1]) (amavisd-new, port 10024) with ESMTP
-	id 01664-07 for <linux-lvm@redhat.com>;
-	Mon, 10 Jan 2005 21:44:34 +0100 (CET)
-Received: from marco (marco.18rcarmes.fr [192.168.0.1])
-	by flo.18rcarmes.fr (Postfix) with ESMTP id 845448BF5
-	for <linux-lvm@redhat.com>; Mon, 10 Jan 2005 21:44:34 +0100 (CET)
-From: Marc Cousin <cousinmarc@free.fr>
-Date: Mon, 10 Jan 2005 21:44:34 +0100
-MIME-Version: 1.0
+	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id j0AMfSuY006527
+	for <linux-lvm@redhat.com>; Mon, 10 Jan 2005 17:41:28 -0500
+Received: from eric.placeverte.home
+	(lns-vlq-9-lil-82-65-150-249.adsl.proxad.net [82.65.150.249])
+	by postfix3-1.free.fr (Postfix) with SMTP id 0501E1734B5
+	for <linux-lvm@redhat.com>; Mon, 10 Jan 2005 23:41:27 +0100 (CET)
+Date: Mon, 10 Jan 2005 23:41:27 +0100
+From: messmate <messmate@free.fr>
+Message-ID: <20050110234127.291fb93d@eric.placeverte.home>
+Mime-Version: 1.0
 Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-Message-Id: <200501102144.34198.cousinmarc@free.fr>
-Subject: [linux-lvm] scary message (incorrect header checksum)
+Subject: [linux-lvm] strange logical volume issue
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -35,22 +25,18 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: LVM general discussion and development <linux-lvm@redhat.com>
+To: linux-lvm <linux-lvm@redhat.com>
 
-Hi, 
-I'm having the following message ...
-flo:~# vgscan
-  Reading all physical volumes.  This may take a while...
-  Incorrect metadata area header checksum
-  Found volume group "data" using metadata type lvm2
+Hi list,
+there is somewhat strange with a lv of mine: lv_usr-local.
+Marked as /dev/mapper/vg1_hda1-lv_usr--local    and
+as /dev/vg1_hda/lv_usr-local  !
 
-It doesn't seem to be a problem, as the lvms are working correctly, but I'd 
-like to get rid of this warning...
-How can I do this ?
+See the (-) differences.
 
-Cheers
+I've tryed to change this without success.
+Manually, with lvremove and lvcreate.....
 
--- 
-BOFH Excuse #236:
-
-Fanout dropping voltage too much, try cutting some of those little traces
+Is there a special way to do this changes ?
+Thanks for your help in advance.
+mess-mate
