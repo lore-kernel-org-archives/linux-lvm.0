@@ -1,112 +1,124 @@
-Return-Path: <jay@lazy.accessus.net>
-Date: Wed, 29 Nov 2000 11:22:15 -0600 (CST)
-From: Jay Weber <jay@lazy.accessus.net>
-Subject: RE: [linux-lvm] lvm 0.9 kernel build problems
-In-Reply-To: <OLEAJMNOEMOMMNEIMMINIENLCBAA.pswartz@digitalrom.com>
-Message-ID: <Pine.OSF.4.21.0011291121240.18343-100000@lazy.accessus.net>
+Return-Path: <defranco@cup.hp.com>
+Message-ID: <3A255040.275AE009@cup.hp.com>
+Date: Wed, 29 Nov 2000 10:51:44 -0800
+From: John DeFranco <defranco@cup.hp.com>
 MIME-Version: 1.0
+References: <3A22A3BC.72EDA5AF@cup.hp.com> <20001128013518.K20735@srv.t-online.de>
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] Re: Installation Problems with 0.9
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: linux-lvm@sistina.com
+Content-Type: text/plain; charset="us-ascii"
+To: Mauelshagen@sistina.com, linux-lvm@sistina.com
 
-Ah thats' it.  Now my brain kicks in since you mentioned it.  That failure
-from earlier only happens when you don't enable LVM proc-fs option.  I
-guess it's a bug.  That's what I had todo.
+Hi,
 
-On Wed, 29 Nov 2000, Patrick Swartz wrote:
+Thanks Heinz, one other question then, if I install
+things in the following sequence:
 
-> I have found a way around the problem I was having.  The first time I tried
-> to build the kernel I built lvm into the kernel, but I said "no" to the lvm
-> proc fs question.  This time I went ahead and said "yes" and everything
-> worked.
-> Now my question is having lvm report things to /proc will I notice any slow
-> downs?
-> Just courious.
+2.2.17
+raid-2.2.17-A0
+linux-2.2.17-rawio.patch
+lvm-0.9-2.2.17-stock.patch
+
+I get two hunk failures (#3,4) in drivers/block/ll_rw_blk.c.
+Are these expected or is there some other problem? If I
+don't
+load the raid-2.2.17-A0 patch everything is ok, but then
+after I boot that kernel I cannot create any raid devices
+so I need the raid-2.2.17-A0 patch.
+
+Thanks.
+
+
+"Heinz J. Mauelshagen" wrote:
 > 
-> Thanks for all of the hard work everyone is putting into lvm!!!!!!!
+> Please don't use the lvm-0.9-2.2.17-new_raid.patch file.
+> It has been deleted from our ftp site (it is still in the LVM tarball though).
 > 
-> Patrick
+> Go with the lvm-0.9-2.2.17-stock.patch instead.
 > 
-> -----Original Message-----
-> From: linux-lvm-admin@sistina.com [mailto:linux-lvm-admin@sistina.com]On
-> Behalf Of Jay Weber
-> Sent: Wednesday, November 29, 2000 9:42 AM
-> To: linux-lvm@sistina.com
-> Subject: Re: [linux-lvm] lvm 0.9 kernel build problems
+> Sorry for the inconvenience.
 > 
+> --
 > 
-> I had the same errors in past when compiling it on 2.2.18pre kernels.
-> I believe my problem was that my /usr/src/linux didn't point back to the
-> proper kernel source tree.  It was a while ago though, but I'm thinking
-> that solved it for me.  I believe one of the files included in lvm.c is a
-> <linux/*whatever*> and that didn't exist or have the proper struct or
-> such.
+> Regards,
+> Heinz      -- The LVM guy --
 > 
-> On Wed, 29 Nov 2000, Patrick Swartz wrote:
-> 
-> > Hello,
+> On Mon, Nov 27, 2000 at 10:11:08AM -0800, John DeFranco wrote:
 > >
-> > Could someone give me some hints to why I get the following error when
-> > trying to build my kernel with the lvm 0.9patches.  This box started out
-> as
-> > a RH7.0 with all current RH updates, then installed the stock 2.4.0-test10
-> > kernel with lvm built into the kernel.  This build worked.  I then applied
-> > the two patches for 2.4.0-test10 and they applied cleanly.  I normally
-> build
-> > kernels using the following approach -- make dep clean bzImage modules
-> > modules_install, then take care of lilo.  This error happens during the
-> > bzImage stage.
+> > Hi,
 > >
+> > Has anyone else had any problems install the
+> > lvm-0.9-2.2.17-new_raid.patch? I'm using the following
+> > procedure:
 > >
-> > lvm.c: In function `lvm_do_vg_extend':
-> > lvm.c:2020: warning: implicit declaration of function
-> > `lvm_do_create_proc_entry_
-> > of_pv'
-> > lvm.c: In function `lvm_do_create_proc_entry_of_lv':
-> > lvm.c:3012: `pde' undeclared (first use in this function)
-> > lvm.c:3012: (Each undeclared identifier is reported only once
-> > lvm.c:3012: for each function it appears in.)
-> > lvm.c: At top level:
-> > lvm.c:3040: warning: type mismatch with previous implicit declaration
-> > lvm.c:2020: warning: previous implicit declaration of
-> > `lvm_do_create_proc_entry_
-> > of_pv'
-> > lvm.c:3040: warning: `lvm_do_create_proc_entry_of_pv' was previously
-> > implicitly
-> > declared to return `int'
-> > lvm.c: In function `lvm_do_create_proc_entry_of_pv':
-> > lvm.c:3046: `pde' undeclared (first use in this function)
-> > lvm.c: At top level:
-> > lvm.c:146: warning: `lvm_short_version' defined but not used
-> > make[3]: *** [lvm.o] Error 1
-> > make[3]: Leaving directory `/usr/src/linux-2.4.0-test10/drivers/md'
-> > make[2]: *** [first_rule] Error 2
-> > make[2]: Leaving directory `/usr/src/linux-2.4.0-test10/drivers/md'
-> > make[1]: *** [_subdir_md] Error 2
-> > make[1]: Leaving directory `/usr/src/linux-2.4.0-test10/drivers'
-> > make: *** [_dir_drivers] Error 2
+> > # gunzip -dc linux-2.2.17.tar.gz | tar -xvf -
+> > # cd linux
+> > # patch -p1 <../raid-2.2.17-A0
+> > # patch -p1 <../linux-2.2.17-rawio.patch
+> > # patch -p1 <../lvm-0.9-2.2.17-new_raid.patch
+> > patching file `CREDITS'
+> > patching file `Documentation/Configure.help'
+> > Hunk #2 succeeded at 992 with fuzz 2 (offset 7 lines).
+> > Hunk #3 succeeded at 1070 with fuzz 2.
+> > patching file `Documentation/LVM-HOWTO'
+> > patching file `drivers/block/Config.in'
+> > Hunk #1 FAILED at 96.
+> > 1 out of 1 hunk FAILED -- saving rejects to
+> > drivers/block/Config.in.rej
+> > patching file `drivers/block/Makefile'
+> > Hunk #2 FAILED at 290.
+> > Hunk #3 succeeded at 353 (offset 18 lines).
+> > 1 out of 3 hunks FAILED -- saving rejects to
+> > drivers/block/Makefile.rej
+> > patching file `drivers/block/README.lvm'
+> > patching file `drivers/block/genhd.c'
+> > Reversed (or previously applied) patch detected!  Assume -R?
+> > [n]
+> > .
+> > .
+> > .
 > >
-> > Thanks for your help,
+> > There are about 5 files that have some problem. The end
+> > result is not being able to build a new kernel due to
+> > complication errors.
 > >
-> > Patrick Swartz
+> > If I don't install the raid-2.2.17-A0 patch and then
+> > install the lvm-0.9-2.2.17-stock.patch everything works
+> > ok from the kernel end, but if I try to build an md
+> > device I get the following:
+> > analyzing super-block
+> > disk 0: /dev/sdc1, 8883913kB, raid superblock at 8883840kB
+> > disk 1: /dev/sdd1, 8883913kB, raid superblock at 8883840kB
+> > mkraid: aborted, see the syslog and /proc/mdstat for
+> > potential clues.
+> > [root@ham linux]#
 > >
-> > _______________________________________________
-> > linux-lvm mailing list
-> > linux-lvm@sistina.com
-> > http://lists.sistina.com/mailman/listinfo/linux-lvm
+> > If I have the raid-2.2.17-A0 patch then this works.
 > >
+> > Any clues?
+> >
+> > Thanks!
+> >
+> > --
+> > ==========
+> > Cheers
+> >    -jdf
 > 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
+> =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 > 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-> 
+> Heinz Mauelshagen                                 Sistina Software Inc.
+> Senior Consultant/Developer                       Bartningstr. 12
+>                                                   64289 Darmstadt
+>                                                   Germany
+> Mauelshagen@Sistina.com                           +49 6151 7103 86
+>                                                        FAX 7103 96
+> =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+-- 
+==========
+Cheers
+   -jdf
