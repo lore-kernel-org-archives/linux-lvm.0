@@ -1,8 +1,14 @@
-Return-Path: <tgs@iafrica.com>
-From: "Theo" <tgs@iafrica.com>
-Date: Wed, 11 Jul 2001 20:33:14 +0200
-Message-ID: <FDEJIMPDHJAAPNLFKBMGAECACEAA.tgs@iafrica.com>
-Subject: [linux-lvm] syslogd reports:  kernel: lvm -- lvm_chr_ioctl: unknown command 4004fe0a
+Return-Path: <eli@zendo.net>
+Date: Wed, 11 Jul 2001 13:41:23 -0500
+From: Eli Criffield <eli@zendo.net>
+Subject: Re: [linux-lvm] about to give up
+Message-ID: <20010711134123.D1863@zendo.net>
+References: <85063BBE668FD411944400D0B744267A64338A@AUSMAIL> <212820000.994872353@duke.wrkhors.com>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-md5;
+	protocol="application/pgp-signature"; boundary="UfEAyuTBtIjiZzX6"
+Content-Disposition: inline
+In-Reply-To: <212820000.994872353@duke.wrkhors.com>; from lembark@wrkhors.com on Wed, Jul 11, 2001 at 12:25:53PM -0500
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,34 +20,36 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
-Cc: volkerdi@slackware.com
 
-Hello guys.
+--UfEAyuTBtIjiZzX6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-This is my first time using lvm.
+> try:
+>=20
+>     vgexport blah;
+>     vgimport blah PV PV PV;
+>=20
 
-After using pvcreate and vgcreate I rebooted and tried to activate the
-volume group.
+I can't export it because it doesn't know it exists because vgscan can't fi=
+nd
+it.
 
-After the reboot I found the following in the kernel log:
-Jul 11 19:40:52 alderaan kernel: LVM version 0.9.1_beta2  by Heinz
-Mauelshagen (18/01/2001)
-Jul 11 19:40:52 alderaan kernel: lvm -- Driver successfully initialized
+eli
 
-Okay the driver is then in the kernel. No problem... later.... in the kernel
-log:
-Jul 11 19:40:53 alderaan kernel: lvm -- lvm_chr_ioctl: unknown command
-4004fe0a
+--UfEAyuTBtIjiZzX6
+Content-Type: application/pgp-signature
+Content-Disposition: inline
 
-Same same error appears I run "vgchange"
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.0.4 (GNU/Linux)
+Comment: For info see http://www.gnupg.org
 
-I am a bit confused about this ?
+iD8DBQE7TJ3Tm2VvYlVjW2oRAsbtAKCDui0lbTge2jV1UdMi30Z6dxAn9QCfXutD
+PH4w6UAurXmdkYo3k8yX0vI=
+=tkod
+-----END PGP SIGNATURE-----
 
-I'm  using slackware 8.0 and I'm using the 2.4.5 kernel that comes with the
-bare245.i image file.
-
-Any ideas ?
+--UfEAyuTBtIjiZzX6--
