@@ -1,8 +1,8 @@
-From: Rich Turner <rich@storix.com>
-Message-Id: <1074199517.2443.27.camel@rich>
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] understanding snapshot
+From: Michael Schmitz <schmitz@zirkon.biophys.uni-duesseldorf.de>
+In-Reply-To: <1074177806.3983.87.camel@telecentro2>
+Message-ID: <Pine.LNX.4.44.0401151550450.21542-100000@zirkon.biophys.uni-duesseldorf.de>
+MIME-Version: 1.0
+Subject: [linux-lvm] Re: mac-fdisk and 0x8e partitions for LVM
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -13,37 +13,38 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Thu Jan 15 15:47:02 2004
+Date: Thu Jan 15 17:05:02 2004
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@sistina.com
+Content-Type: TEXT/PLAIN; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: Leandro =?ISO-8859-1?Q?Guimar=E3es?= Faria Corcete Dutra <ldutra@prefeitura.sp.gov.br>
+Cc: PowerPC <debian-powerpc@lists.debian.org>, Victor Tramp <linux-lvm@sistina.com>
 
-i am trying to get a thorough understanding of the snapshot process. i
-have searched around for documentation but was unable to find detailed
-information. perhaps someone can point me in the right direction or tell
-me if my assumptions are correct.
+> > parted should indeed use names on Apple partitioned disks; LVM (from what
+> > I gather) doesn't cope with names here.
+>
+> 	Too bad... I guess not even LVM2?
 
-i understand my snapshot lv only needs to be 15-20% the size of my
-original lv. that leads me to believe:
+Honestly, I don't know. I've never tried LVM on PowerPC.
 
-1. we only write to the snapshot lv when data from the original lv has
-changed. this copies the original version of the file to the snapshot lv
-so that when we backup the snapshot lv it uses the original file and not
-the changed version. all files that were not changed will be taken from
-the original lv. this process requires 2 writes and 1 read.
+> > You didn't answer my implied question: do you need to keep the Apple
+> > partition format, (f.e. because you need to keep MacOS on the machine)?
+>
+> 	Yes, it is a beige Apple Power Macintosh G3 which does need BootX.
 
-2. if there are numerous writes to the original lv after the snapshot
-has been created (and before it has been removed) we could exceed our
-snapshot lv size. this is because we have to copy the original versions
-of the file to the snapshot lv, and depending on the number of writes
-and the size of the files we could run out of logical extents. when this
-happens the snapshot is unusable.
+So you do indeed need to keep the original partition format. Without Apple
+partition support in LVM, you could always try a sick hack: Add a PC style
+partition table to the disk (they can, in fact, coexist, that's how dual
+PC/Mac zip media are done). Make sure the partition maps match exactly,
+and use the 0x8e partition type in the PC style table. AFAIR the kernel
+does first probe for PC style partition tables, so it should work both
+ways.
 
-what will happen to the backup process (tar for example) of a snapshot
-lv when it runs out of storage?
+This hack is not for the faint of heart, and I cannot stress enough that
+you need to have a backup of your partition maps (the first few sectors of
+the disk), as well as a method to restore the maps (booting from floppy,
+or some such, with another floppy holding the backup) before even
+considering such a hack. If the above doesn't make sense to you, please do
+not attempt to force it.
 
-do chunks contain the metadata for the data in the original lv?
-
-what is the effect of increasing/reducing the chunk size?
-
-rich turner
+	Michael
