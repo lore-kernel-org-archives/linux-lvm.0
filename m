@@ -1,33 +1,104 @@
-Date: Wed, 22 Mar 2000 19:59:12 +0100
-From: Jan Niehusmann <list039@gondor.com>
-Subject: Re: [linux-lvm] snapshots not stable with 2.3.99pre2
-Message-ID: <20000322195912.A17361@gondor.com>
-References: <20000322145124.A6838@gondor.com> <38D9054C.A53AB6AB@heider.de>
+From: jasonf@Cronosys.COM
+Message-ID: <20000322181245.A23099@nccr-cle-c.nccrs.com>
+Date: Wed, 22 Mar 2000 18:12:45 -0500
+Subject: Re: [linux-lvm] RaidZone RAID hardware.
+References: <20000322104034.B23747@nccr-cle-c.nccrs.com> <20000322182603.A2086@sb.t-online.de>
 Mime-Version: 1.0
-In-Reply-To: <38D9054C.A53AB6AB@heider.de>; from rhj@heider.de on Wed, Mar 22, 2000 at 06:39:24PM +0100
+In-Reply-To: <20000322182603.A2086@sb.t-online.de>; from Christoph Hellwig on Wed, Mar 22, 2000 at 06:26:03PM +0100
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: richard@heider.de
-Cc: "linux-lvm@msede.com" <linux-lvm@msede.com>
+To: linux-lvm@msede.com
 
-On Wed, Mar 22, 2000 at 06:39:24PM +0100, Richard Heider jr. wrote:
-> When snapshots were mentioned the other week, I tried finding something
-> in the docs, but I couldn't. Could someone please give me a reference
-> on what snapshots are and how they work - or is it "RTF..Source" ?-)
+On Wed, Mar 22, 2000 at 06:26:03PM +0100, Christoph Hellwig wrote:
+> On Wed, Mar 22, 2000 at 10:40:34AM -0500, jasonf@Cronosys.COM wrote:
+> > Has this been seen before, and might anyone have any clues?  My config is
+> > using the 0.8i patch on 2.2.14 with the RaidZone patch.  The RaidZone patch
+> > basically just implements the RaidZone devices (/dev/rz*), but also adds
+> > support for more IDE major numbers (all of the drives in the
+> > RAID can are also individually accessible, although I haven't tested that).
+> 
+> Try ingo's raid patches for 2.2.14 (http://www.redhat.com/~mingo/),
+> they should be much better then the raidzone crap.
 
-Snapshots are virtual copys of logical volumes. Such a copy is read only
-and doesn't change when you write to the cloned volume. 
+Okay, I got that up and working, and a huge md0 device.  It's a pitty I
+can't monitor the can temperature and fan power draw now ;-)
 
-This is often used for backups: If you backup a filesystem while 
-it's in use, you may end up with an inconsistant or incomplete backup.
-(after you wrote the first half of your filesystem to tape, someone moves
-a file from the second half to the first one, so you miss it when you write
-the second half to tape, for example.)
-If you have snapshots, you create the snapshot at one moment and then 
-write the (read only) snapshot to tape.
+(I can probably hack Consensus' patch to get that info without enabling
+the fault tolerant stuff, but I'm lazy.)
+
+> 
+> > The RaidZone patch is only available for 2.2.12, 2.2.13, and 2.2.14, which
+> > is why I chose 2.2.14; are there any issues with 0.8i on 2.2.14 this might
+> > be exposing?  When will 0.8final be available for 2.2.14, and what needs to
+> > be done there?
+> 
+> You can use 2.2.14aa10, that has lvm included
+> (ftp.kernel.org/pub/linux/kernel/andrea/)
+
+I ended up throwing the aforementioned raid patches with lvm and Consensus'
+patches so that the IDE drives are detected (but with Consensus' software
+raid and other stuff disabled).
+
+> 
+> > P.S. [offtopic] Anyone know where the ext3 patches are, and whether any of
+> 
+> ftp://ftp.linux.org.uk/pub/linux/sct/fs/jfs/
+> 
+> > the various ext2 resizers (including the one that works when mounted) will
+> > work with the ext3 journal in place? 
+> > And that ext3 works with LVM, of course.
+> 
+> ext3 works with lvm but no with software raid.
+
+Okay, ext2 it is then.
+
+I'm having another problem now.  I've made the md0 raid device, and it's
+the proper size (about 155 gig).  Now I create a volume group, and it seems
+to work, but vgdisplay shows me:
+
+[root@medusa /root]# vgdisplay
+--- Volume group ---
+VG Name               raid_vg
+VG Access             read/write
+VG Status             available/resizable
+VG #                  0
+MAX LV                256
+Cur LV                1
+Open LV               1
+MAX LV Size           64 GB
+Max PV                32
+Cur PV                1
+Act PV                1
+VG Size               159 MB
+PE Size               1 MB
+Total PE              159
+Alloc PE / Size       100 / 100 MB
+Free  PE / Size       59 / 59 MB
 
 
-Jan
+[root@medusa /root]#
+
+Why is the VG size 159Mb when the md0 volume is ~150Gb?
+
+(I have a logical volume I was playing around with to make sure LVM wasn't
+lying to me, and it *works*, but I can't create a lv greater than 159Mb,
+and this is with a 1mb PE.  The default 4mb PE gives me like thirty-something
+PEs to play with, and 8mb gives me a different number, but still way
+inapropriate.)
+
+What do you think?  Have I hit a limit of lvm or software RAID?  There
+will be more playing to-morrow.
+
+> 
+> 
+> Christoph
+> 
+> -- 
+> Always remember that you are unique.  Just like everyone else.
+
+
+-Jay 'Eraserhead' Felice
+(Hmm, forgot to sign that last message).
