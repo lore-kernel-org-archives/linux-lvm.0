@@ -1,7 +1,7 @@
 Return-Path: <timshel@pobox.com>
-Date: Sat, 9 Jun 2001 10:38:37 +1000
+Date: Sat, 9 Jun 2001 10:48:22 +1000
 From: Timshel Knoll <timshel@pobox.com>
-Message-ID: <20010609103837.A29022@knoll.ln>
+Message-ID: <20010609104822.B29022@knoll.ln>
 Mime-Version: 1.0
 Content-Disposition: inline
 In-Reply-To: <20010609004002.B3656@knoll.ln>
@@ -21,26 +21,25 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-[Sorry, should have mentioned that I'm not subscribed to get mail from
- this list - I get enough mail already ;-) - please CC all replies to me]
+[please CC all replies to me, I don't read mail from this list]
 
-> It appears from the attached file that you have also applied XFS patches
-> into the kernel.  Which version of the XFS patches did you apply?  Has
-> anyone else tried 'pvmove' with that combination of patches successfully?
-> It's possible we're seeing some kind of conflict between the two.
+> The ENXIO error is returned if the vg you are trying to move does not
+> exist (at least that's what it looks like).  This is returned from
+> within the kernel when vg_ptr = NULL inside lvm_do_pe_lock_unlock().
 >
-> Also, in which order did you patch the kernel, and did you apply any other
-> patches?
+> It would _appear_ that /dev/vg0/group is pointing to a bogus device.
+> In lvm_chr_open() you are allowed to open non-existent devices (so
+> that you can create new devices if desired).
+>
+>When was the last time you ran vgscan and/or rebooted?  Did you do anything
+>strange in the meantime?
 
-The first version I tried was a vanilla 2.4.3 with the default LVM in it
-(version 0.9.1beta6?) and the XFS 1.0 patch. The last one I tried was
-the CVS version of the XFS kernel (from SGI, 2.4.4, dated 15/05/2001)
-patched with the CVS version of LVM ...
+I had just rebooted before I ran pvmove. The vg0 vg is definately a
+valid vg ... I think I ran vgscan during the process of trying to get it
+all to work, and nothing strange came up ...
 
-I'm going to try the latest CVS XFS patched with CVS LVM, but I've got
-to wait for the CVS update (which takes ages over my 56K link) :-(
-
-Everything else is working fine, just not pvmove :-(
+I'll be away for the next couple of days, so I won't be recieving email
+during that time ...
 
 Thanks,
 
