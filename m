@@ -1,10 +1,12 @@
-Message-Id: <3CBEB032.F1A6123A@mc-lindinger.de>
-From: Markus Bartl <m.bartl@mc-lindinger.de>
-MIME-Version: 1.0
 Subject: Re: [linux-lvm] mount reiserfs snapshot failed
+From: Chris Mason <mason@suse.com>
+In-Reply-To: <3CBEB032.F1A6123A@mc-lindinger.de>
 References: <3CBE92EB.89FB2B07@mc-lindinger.de>
     <20020418094402.GA1233@fib011235813.fsnet.co.uk>
+    <3CBEB032.F1A6123A@mc-lindinger.de>
 Content-Transfer-Encoding: 7bit
+Message-Id: <1019131514.669.37.camel@tiny>
+MIME-Version: 1.0
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,53 +17,32 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Thu Apr 18 06:39:01 2002
+Date: Thu Apr 18 07:05:02 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
 
-Joe Thornber wrote:
-> 
-> On Thu, Apr 18, 2002 at 11:33:31AM +0200, Markus Bartl wrote:
-> > Hi there.
-> >
-> > Im using the original kernel 2.4.18 with the locking patch and the
-> > lvm-patch applied. I use the lvm in Version 1.1rc1.
-> > I got one harddisk with 4 partitions on it, 1 partition is Linux LVM.
-> > The volume to backup is mounted on /home and has reiserfs.
-> >
-> > I made a shell-script to perform a test using snapshots.
-> > Here is what it does (looped):
-> > 1) create snapshot
-> > 2) mount snapshot --> fails sometimes (35 loops, 6 fails)
-> > 3) backup snapshot
-> > 4) create file on original volume while backup is still running
-> > 5) unmount snapshot
-> > 6) remove snapshot
-> >
-> > In some cases mounting the snapshot volume fails with error 32 (wrong fs
-> > type or bad superblock).
-> > Anybody got any idea???
-> 
-> Do version 1.0.3 tools fail in the same way ?
-> 
-> - Joe
-> 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
-Hi there.
+On Thu, 2002-04-18 at 07:38, Markus Bartl wrote:
 
-I rebuilt the kernel with lvm 1.0.3 and used the 1.0.3 tools. The
-problem is still there.
-Anyone got any other idea???
-Thanks!!!
+> I rebuilt the kernel with lvm 1.0.3 and used the 1.0.3 tools. The
+> problem is still there.
 
-Markus
--- 
-MC-Lindinger GmbH
-Markus Bartl
-Wiesenweg 1
-D-94099 Ruhstorf
+Could you please send the script?
+
+During snapshot testing, I run two loops in the background:
+
+while(1) 
+mount /dev/vg/lv1 /foo
+touch /foo/foo
+rm /foo/foo
+umount /foo/foo
+end
+
+while(1)
+create snapshot
+mount snapshot
+umount snapshot
+remove snapshot
+end
+
+-chris
