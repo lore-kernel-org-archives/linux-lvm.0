@@ -1,14 +1,11 @@
-Return-Path: <bg@blacknet.de>
-Date: Tue, 7 Aug 2001 23:53:26 +0200
-From: Goetz Bock <bock@blacknet.de>
-Subject: Re: [linux-lvm] Looking for recipe for LVM
-Message-ID: <20010807235326.A30149@dragon.blacknet.de>
-References: <20010807165556.C29254@dragon.blacknet.de> <Pine.LNX.4.33.0108071749560.5978-100000@dunlop.itg.ie>
+Return-Path: <markv@wave.co.nz>
+Date: Wed, 8 Aug 2001 14:38:01 +1200
+From: Mark van Walraven <markv@wave.co.nz>
+Subject: Re: [linux-lvm] Installing Linux on LVM
+Message-ID: <20010808143801.C4638@mail.wave.co.nz>
+References: <20010807105410.A31158@verb.syntaxsleuth.org> <000901c11f71$1b950100$f04b7818@lvcm.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-md5;
-	protocol="application/pgp-signature"; boundary="qMm9M+Fa2AknHoGS"
-Content-Disposition: inline
-In-Reply-To: <Pine.LNX.4.33.0108071749560.5978-100000@dunlop.itg.ie>; from paulj@alphyra.ie on Tue, Aug 07, 2001 at 05:50:35PM +0100
+In-Reply-To: <000901c11f71$1b950100$f04b7818@lvcm.com>; from Glenn Shannon on Tue, Aug 07, 2001 at 11:45:19AM -0700
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -20,37 +17,44 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
+Cc: Glenn Shannon <warl0k@lvcm.com>
 
---qMm9M+Fa2AknHoGS
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Tue, Aug 07, 2001 at 11:45:19AM -0700, Glenn Shannon wrote:
+> is if there is any way to get Debian (or any linux really) to install
+> straight into an LVM without the aforementioned steps above? Or would I need
+> to create my own bootfloppy/installation system?
 
+These are just my thoughts; I'm running a couple of root-on-LVM Debian
+systems, but I got there by cloning exiting systems.  Here's how I would
+attack a fresh install:
 
-On Tue, Aug 07 '01 at 17:50, Paul Jakma wrote:
-> > I'll try to make my RPMs workable on redhat (But I've a lot of work to
-> To save you some work: Alan Cox's latest patches have a 'make rpm'
-> target.
-Well, nice to hear, but I was talking about making my patched 2.2.19
-kernel work on RedHat 7.1. Apparently there are some small compatibility
-problems, and the build targets (basically only i686) do not smouthely
-integrate with RH.
---=20
-Goetz Bock                                              IT Consultant
-Dipl.-Inf. Univ.
+Replace the kernel on the rescue floppy (there are instructions on
+the disk on how to do this) with a kernel that includes the LVM patch.
+Start the install and partition the disk, switch to an alternate console
+and create and activate any LVM volumes you want.  Since the LVM tools
+(pvcreate, vgscan, etc.) aren't on the boot-floppies, you will need to
+get them onto the system some other way - perhaps another floppy.
 
---qMm9M+Fa2AknHoGS
-Content-Type: application/pgp-signature
-Content-Disposition: inline
+The boot-floppies initial ramdisk might be too small for the files vgscan
+creates in /etc.  If so, create another ramdisk for /etc.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.0.4 (GNU/Linux)
-Comment: For info see http://www.gnupg.org
+Switching back to the installer console, the LVM volumes may automagically
+show up in the list of partitions.  Failing that, go back to the alternate
+console, make filesystems on the LVM volumes and mount them under /target.
 
-iD8DBQE7cGNWf5srOMkjkQoRAtAlAKDeFcxq1oh8dHrhqw82a09ttpwHywCfQfBe
-7YdwaA1QU/zI7v6iLZrfbd8=
-=UGOv
------END PGP SIGNATURE-----
+The rest of the install *might* then proceed normally ...
 
---qMm9M+Fa2AknHoGS--
+But, unless you genuinely enjoy - as I do - booting linux from a lilo
+floppy with an initrd and linuxrc=/bin/sh to work past hiccups, it's
+probably easier to install onto a borrowed disk and copy the entire
+system onto your LVM volumes afterwards.
+
+I don't think direct support for LVM will appear in the Debian installer
+until LVM auto-detect makes it into the kernel.
+
+Regards,
+
+Mark.
