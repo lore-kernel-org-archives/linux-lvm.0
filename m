@@ -1,9 +1,9 @@
-Message-ID: <3BD43865.6050803@ednet.ns.ca>
-From: Patrick Boutilier <boutilpj@ednet.ns.ca>
+Message-ID: <8BFE9B4949BB4346A146F5231AEF1B87F3D5@CX975884-A.mdmiller.com>
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] which kernel would you recommend ??
-References: <3BD40062.2D93A980@ti.com> <3BD432EE.76993E30@ti.com>
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
+content-class: urn:content-classes:message
+From: "Mitchell D. Miller" <mitch@mdmiller.com>
+Subject: [linux-lvm] How to mount volumes during boot
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,44 +14,20 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Oct 22 10:14:04 2001
+Date: Mon Oct 22 10:28:02 2001
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
+Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
 
-I used 2.4.7 with LVM 0.9.1beta6 and 2.4.10/2.4.12 with LVM 1.01rc4 
-successfully.
+I am running Red Hat 7.1 (with 2.4.12 kernel) and LVM 1.0.1-rc4.  I read
+the documentation on Sistina's website about boot time scripts, but the
+info there seems to deal only with getting LVM loaded at boot time. =20
 
-I am currently using 2.4.12 with LVM on a heavily used mail/IMP server 
-with no problems.
+I'm still uncertain how I should configure my system so the volumes I
+have created (three of them so far) get mounted during boot.  I tried
+modifying my fstab file, but the system didn't boot right after.  It
+stopped, complaining that one of the devices couldn't be mounted.  Is
+this even the right place to configure LVM volumes to be mounted?
 
-
-
-christian e wrote:
-
->christian e wrote:
->
->>Hi,all
->>
->>I've been trying for some days now to get lvm installed on a 2.4
->>kernel..Has not been very successful to say the least.What kernel would
->>you recommend for a production file-server ?? Should I go back to 2.2.19
->>again ?? I upgraded to 2.4 due to NFS and ext3 mainly.It also has the
->>latest drivers for my megaraid controllers.But now I can't get lvm
->>compiled ..Is 2.4 even stable enough to use in production ? Can't allow
->>this server to be down as it's our primary fil-server..
->>
->
->Never mind.Down to 2.2.19 again and everything works now..Guess I'll
->keep it here for the time being..
->
->best regards
->
->Christian
->
->_______________________________________________
->linux-lvm mailing list
->linux-lvm@sistina.com
->http://lists.sistina.com/mailman/listinfo/linux-lvm
->read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
->
+Thanks,
+Mitch
