@@ -1,9 +1,9 @@
-Return-Path: <austin@coremetrics.com>
-Message-ID: <85063BBE668FD411944400D0B744267A481AD6@AUSMAIL>
-From: "Gonyou, Austin" <austin@coremetrics.com>
-Subject: RE: [linux-lvm] Software Raid 1 problems(core dumps)
-Date: Sat, 23 Jun 2001 22:50:33 -0500
+Return-Path: <mark@bobak.net>
+Date: Sun, 24 Jun 2001 17:30:27 -0400 (EDT)
+From: "Mark J. Bobak" <mark@bobak.net>
+Message-ID: <Pine.LNX.4.33.0106241729370.4554-100000@bobak.net>
 MIME-Version: 1.0
+Subject: [linux-lvm] LVM configuration question....
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,53 +15,39 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: TEXT/PLAIN; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: "'linux-lvm@sistina.com'" <linux-lvm@sistina.com>
+To: linux-lvm@sistina.com
 
-The error you're getting actually sounds correct, not that it should
-core-dump but an error should be displayed to tell you it must read a
-partition otherwise it can't really do what it's supposed to do. 
+Hi,
 
--- 
-Austin Gonyou
-Systems Architect, CCNA
-Coremetrics, Inc.
-Phone: 512-796-9023
-email: austin@coremetrics.com 
+I just installed SuSE 7.2, I have the LVM configured, all storage is on
+LVM except for '/'.  It's working great.  All storage is SCSI.  I have one
+9GB drive that I did not configure, that I left data I wanted to save.
+So, I've copied everything I want from there back on to the new running
+system.  Now I want to add this disk to the Volume Group.  So, I deleted
+the partitions on it w/ fdisk.  As I could read in the LVM whitepaper,
+that's not good enough.  So, I did:
 
-> -----Original Message-----
-> From: Robert_Macaulay@Dell.com [mailto:Robert_Macaulay@Dell.com]
-> Sent: Saturday, June 23, 2001 4:26 PM
-> To: linux-lvm@sistina.com
-> Subject: [linux-lvm] Software Raid 1 problems(core dumps)
-> 
-> 
-> This is on the CVS version of LVM checked out June 23rd.
-> 
-> When using the entire block device for a MD RAID1 device 
-> along with LVM,
-> vgscan will core dump after VG's are defined. Example
-> 
-> /dev/md0 = /dev/sdc and /dev/sdd
-> 
-> The following commands work fine.
-> vgscan
-> pvcreate /dev/md0
-> vgscan
-> vgcreate test_vg /dev/md0
-> vgscan(core dump)
-> 
-> But once I try a vgscan after the vgcreate, it core dumps. 
-> Changing from
-> /dev/sdc to /dev/sdc1 in the /etc/raidtab makes it work just fine. 
-> 
-> Perhaps a line in the faq about core dumping with MD devices 
-> could help
-> someone in the future.
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
-> 
+dd if=/dev/zero of=/dev/sdc bs=1k count=1
+
+And that didn't work.  I noticed an (apparent) typo in the the whitepaper,
+in that the comment made after the above command is "This command
+overwrites the first 10k Bytes of a disk with zeros, deleting any
+partition table."  Well, since the command specifies bs=1k and count=1, I
+suspect it only overwrites 1k.  So, I tried w/ 'bs=10k count=1', 'bs=1k
+count=10', and even 'bs=100k count=1'.  All with the same results.  When I
+try to run 'pvcreate', I get:
+
+# pvcreate /dev/sdc
+pvcreate -- device "/dev/sdc" has a partition table
+
+pvcreate [-d|--debug] [-f[f]|--force [--force]] [-h|--help] [-y|--yes]
+        [-v|--verbose] [-V|--version] PhysicalVolume [PhysicalVolume...]
+
+
+So, can anyone offer me a clue as to the problem?
+
+Thanks,
+
+-Mark
