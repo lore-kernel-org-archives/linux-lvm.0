@@ -1,12 +1,10 @@
-Return-Path: <tomlins@cam.org>
-From: Ed Tomlinson <tomlins@cam.org>
-Subject: Re: [linux-lvm] [BUG] segmentation fault on snapshot with beta8
-Date: Tue, 31 Jul 2001 17:09:37 -0400
-References: <20010726122738.E052917573@oscar.casa.dyndns.org> <20010727162747.9542515354@oscar.casa.dyndns.org> <20010730083550.A20819@sistina.com>
-In-Reply-To: <20010730083550.A20819@sistina.com>
+Return-Path: <julien@atix.de>
+Message-ID: <3B67C4E5.3FADCA6B@atix.de>
+Date: Wed, 01 Aug 2001 10:59:17 +0200
+From: Julien Baboud <julien@atix.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Message-Id: <20010731210937.CA04F6F2E@oscar.casa.dyndns.org>
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] pb mounting reiserfs snapshot LV
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -19,19 +17,26 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@sistina.com, AJ Lewis <lewis@sistina.com>
+To: linux-lvm@sistina.com
 
-On July 30, 2001 09:35 am, AJ Lewis wrote:
-> On Fri, Jul 27, 2001 at 12:27:47PM -0400, Ed Tomlinson wrote:
-> > My impression with the above bug is that the snapshot is filling much too
-> > quickly and getting disabled.  At this point seg faults start happening.
->
-> I saw some Oopses and segfaults on 2.4.6 on Friday, but after I put the kdb
-> into the kernel I can't reproduce it.  I never see this with 2.4.7.
->
-> This was with LVM 0.9.1 Beta8 and the patches you previously mentioned.
+hi,
 
-I have seen this happen only once here too.  It was with 2.4.7 though.  I will see
-if I can get trigger it again.
+ i recently have recompiled a 2.4.5 linux kernel with the lvm 0.9.1
+beta8 tools into it (ie not as a module),
+ and have applied the patches that enables taking ReiserFS Snapshot.
 
-Ed Tomlinson
+ I've encountered a problem :
+
+ when i create a LV with a reiser FS on it, and then take a snapshot of
+this LV, i'm not able to mount the Snap;
+ but if i mount the LV to be snaped before taking a snapshot of it, all
+is right, i can mount the Snap.
+
+ This pb doesn't appear with ext2 FS.
+ Is it a bug a the lvm/reiser tools ? Have some people yet have the same
+pb as me ?
+
+ tanx.
+
+ julien,
+ 4 Atix.
