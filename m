@@ -1,10 +1,9 @@
-Return-Path: <ultra@mailme.dk>
-From: "Klaus Agnoletti" <ultra@mailme.dk>
-Date: Tue, 10 Jul 2001 22:07:55 +0200
-Message-ID: <MPEELPOMDADEHPNEDEPBIELOCAAA.ultra@mailme.dk>
+Return-Path: <fox@theendoftime.net>
+Date: Wed, 11 Jul 2001 06:43:09 -0600 (MDT)
+From: <fox@theendoftime.net>
+Message-ID: <Pine.LNX.4.31L2.0107110613260.30807-100000@theendoftime.net>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] Just installed LVM on deb - got module errors
+Subject: [linux-lvm] Question about LVM
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,37 +15,32 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: TEXT/PLAIN; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Hi,
+Hi;
 
-I just installed lvm 0.9.1 beta 7 from .deb archives via apt-get
-For some reason I get the following error when trying to prepare a LVM
-partition :
+I ran into this issue with AIX lvm.  A hard drive died and the IBM
+hardware monkeys removed the drive before mirroring could be broken
+(removing lv copies down to one, and reducing the volume group by the one
+dead drive)
 
-vault:/etc/modutils# pvcreate /dev/hdb1
-pvcreate -- LVM driver/module not loaded?
+However, because the drive had been removed before this could be done, the
+VGDA still had the old PVID of the old hdisk and would not let me remove
+it by the cannonical hdisk name.  The eventual solution was to run the
+rmlvcopy command and reducevg command with the PVID instead of the
+cannonical hdisk name.  There is no such command as rmlvcopy (or anything
+related as far as I can tell with Linux) but the reducevg is the same as
+vgreduce.  I am wondering if it's possible for a PV to be removed from the
+VG in such a way that the PV path (device name?) no longer exists in the
+system and thus, you wouldn't be able to do a vgreduce with the PV path
+(device name?)  In this case, is it possible to run the vgreduce command
+with the PVID of the removed drive?  Or does the Linux LVM handle this
+automagically?  Is this even a possible case under Linux?  I have to admit
+I'm still new to the Linux LVM after having worked with AIX LVM for years
+now.
 
-Clearly it is missing a kernel module.
+Thanks,
 
-trying to modprobe lvm-mod gives the following error :
-
-vault:/etc/modutils# modprobe lvm-mod
-modprobe: Can't locate module lvm-mod
-
-I assume the following messages in /var/log/syslog is related :
-
-Jul 10 22:00:02 vault modprobe: modprobe: Can't locate module char-major-109
-Jul 10 22:00:02 vault modprobe: modprobe: Can't locate module char-major-109
-
-So I guess that this really is what it needs. Am I right ? - how do I get
-this then ?
-
-If I am totally off the track, please help me back =)
-
-
-Thanks in advance
-
-
-Klaus Agnoletti
+Tren.
