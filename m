@@ -1,9 +1,8 @@
-From: "Jan H. van Gils" <JanVG@Knoware.NL>
-Subject: RE: [linux-lvm] LVM rootfs and cramfs as ramdisk
-Message-ID: <002901c2ca3a$03c98e90$240b892c@pe1mhp.ampr.org>
+Message-ID: <3E3C62E4.7030409@home.nl>
+From: Sander Alberink <s.alberink@home.nl>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
-In-Reply-To: <3E39BCA9.3020103@wanadoo.fr>
+Subject: [linux-lvm] Severe problem: data lost while adding a partition
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,53 +13,81 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Sat Feb  1 15:37:02 2003
+Date: Sat Feb  1 18:15:01 2003
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: francis.souyri@wanadoo.fr
-Cc: linux-lvm@sistina.com
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+To: linux-lvm@sistina.com
 
->
->Hi Jan,
+Hello all,
 
-Hi Francis,
+I write to you with a rather grave problem. I have a small LVM setup at 
+home, consisting of 4 partitions. These were created by the Mandrake 8.2 
+  installation system. After deciding to upgrade the system to Mandrake 
+9.0, I found out that I had another partition lying around which was 
+also prepared for LVM use. I had meant for that disc to use later on in 
+  a different scheme for my /usr partition but never got around to do it.
+However, during installation I decided to add it to the LVM. The idea 
+was that I would extend the FS later (of course, I was not going to 
+involve this LVM setup in the rest of the installation, I would do all 
+that manually.)
 
->
->You need "/etc" in rw for this you can mount "/etc" in the "linuxrc" 
->script using a tmpfs filesystem like this:
->
+But as you probably guessed, something went horribly wrong during 
+install time and my LVM setup is properly hosed. I wanted to re-create 
+the setup, but alas: I forgot which was the disk that I added.
 
-Thanks for the information.
-I was already wondering if I was the only one with this problem.
+The name of the LV (there was only 1) was home, the disks involved were 
+/dev/hda1, /dev/hda[4-6].
 
-But what about the init files that are normaly in "/etc" ?
-I can imagion that a tmpfs is an empty filesystem.
-Or do I not fully understand what you mount option does ?
+Output of pvscan:
+----------------------------------------------------------------------
+pvscan -- reading all physical volumes (this may take a while...)
+pvscan -- walking through all physical volumes found
+pvscan -- inactive PV "/dev/ide/host0/bus0/target0/lun0/part1"  is 
+associated to an unknown VG (run vgscan)
+pvscan -- inactive PV "/dev/ide/host0/bus0/target0/lun0/part4"  is 
+associated to an unknown VG (run vgscan)
+pvscan -- inactive PV "/dev/ide/host0/bus0/target0/lun0/part5"  is 
+associated to an unknown VG (run vgscan)
+pvscan -- inactive PV "/dev/ide/host0/bus0/target0/lun0/part6"  is 
+associated to an unknown VG (run vgscan)
+pvscan -- inactive PV "/dev/ide/host0/bus0/target0/lun0/part7"  is 
+associated to an unknown VG (run vgscan)
+pvscan -- total: 5 [1.97 GB] / in use: 5 [1.97 GB] / in no VG: 0 [0]
 
->/#!/bin/sh
->...
->mount -t tmpfs none /etc
->mount -t proc none /proc
->echo "Scanning for Volume Groups..."
->/sbin/vgscan
->echo "Activating Volume Groups"
->/sbin/vgchange -a y
->...
->umount /proc
->umount /etc
->/
->I used "romfs" for the "initrd" ramdisk.
->
->Best regards.
->
->Francis
->
+-----------------------------------------------------------------------
 
-With regards Jan
+output of vgscan:
+-----------------------------------------------------------------------
+vgscan -- reading all physical volumes (this may take a while...)
+vgscan -- "/etc/lvmtab" and "/etc/lvmtab.d" successfully created
+vgscan -- WARNING: This program does not do a VGDA backup of your volume 
+group
 
+-----------------------------------------------------------------------
 
-----
-With regards Jan H. van Gils
-Internet web-page http://www.Knoware.NL/users/janvg/
-Internet e-mail address JanVG@Knoware.NL
-RIPE Whois JHG5-RIPE, 6BONE Whois JHG1-6BONE
+output of pvdisplay /dev/hda1 (this partition belonged to the LV for sure)
+-----------------------------------------------------------------------
+pvdisplay -- getting physical volume size
+--- Physical volume ---
+PV Name               /dev/ide/host0/bus0/target0/lun0/part1
+VG Name               home
+PV Size               399.62 MB / NOT usable 3.62 MB [LVM: 121.00 KB]
+PV#                   1
+PV Status             NOT available
+Allocatable           yes (but full)
+Cur LV                1
+PE Size (KByte)       4096
+Total PE              99
+Free PE               0
+Allocated PE          99
+PV UUID               NCf9U6-nqVy-zn3K-upFo-S0PB-SFqb-o2ERjs
+-----------------------------------------------------------------------
+
+If you need any further information, please let me know!
+I do hope you can help me with this, since I stand to loose a lot of 
+personal data, of which exists no backup (of course, you guys probably 
+hear this all the time).
+
+Best regards,
+
+Sander Alberink
