@@ -1,13 +1,11 @@
-Return-Path: <jdomingo@crosswinds.net>
-Date: Fri, 11 May 2001 20:36:53 +0000
-From: =?us-ascii?Q?Jos=E9_Luis_Domingo_L=F3pez?= <jdomingo@internautas.org>
-Subject: Re: [linux-lvm] LVM 1.0 release decision
-Message-ID: <20010511203653.B965@dardhal.mired.net>
-References: <20010511155311.A17689@sistina.com>
-Mime-Version: 1.0
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20010511155311.A17689@sistina.com>; from Mauelshagen@sistina.com on Fri, May 11, 2001 at 03:53:11PM +0000
+Return-Path: <lembark@wrkhors.com>
+Message-ID: <3AFC4056.D013D2B6@wrkhors.com>
+Date: Fri, 11 May 2001 14:41:10 -0500
+From: Steven Lembark <lembark@wrkhors.com>
+MIME-Version: 1.0
+Subject: Re: [linux-lvm] What happens when a disk dies?
+References: <85256A49.0053DE83.00@janus.eci.esys.com>
+Content-Transfer-Encoding: 7bit
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -19,38 +17,51 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
 
-On Friday, 11 May 2001, at 15:53:11 +0000,
-Heinz J. Mauelshagen wrote:
-
+> I am very interested in starting to use LVM.  We have large amounts of data
+> that is fairly dynamic.  Since it is dynamic, we don't need to incur the
+> cost expensive SCSI RAID solutions for data integrity.  We currently use
+> four 80 Gig Maxtor Hard Drives to store our data at test events. Of course
+> this means with a /drive1 /drive2 /drive3 and a /drive4 directory.  So the
+> user has to search the drives to find the file of interest.  We kind of
+> hide this by creating links but the links need to be periodically updated
+> as files are added or deleted.  LVM solves this problem.  But before I move
+> to LVM, I curious on what happens if a drive dies.
 > 
-> As most of you probably know, we've got criticism a couple of weeks ago about
-> our Linux kernel patch policy causing the LVM vanilla kernel code to differ
-> from the one we release directly.
+>  If drive2 goes down and I replace it with another drive, do I just lose
+> the data on drive2 or do I lose all of the data in the Logical Volume?
 > 
-IMHO it is a better long term solution to integrate current LVM into the
-mainstream linux kernel base: maybe this causes LVM 1.0 schedule to be
-postponed a couple of weeks, but benefits are great:
+> If I don't lose the data on the other drives, can LVM also be reconfigured
+> to remove the dead drive and then continue working with just the other
+> three drives (only losing the data on the dead drive)?
+> 
+> I read the FAQs and one of them shows how to recover from a dead drive.  It
+> is says you lose the data in the Logical Volume but I'm hoping just the
+> data on the physical disk that died and not the entire volume.
 
-a) More developers looking at the code, and better and faster integration
-with kernel changes (VFS and so on).
 
-b) More people giving LVM a try: perhaps the need for patches and maybe
-some tweaking with kernel sources prevented some users from using LVM.
+LVM will not replace mirroring or RAID solutions.  for lots of
+dynamic data the best solution will probably be hardware RAID
+for the physical layer with LVM using RAID volumes as PV's.
 
-c) Linux kernel's LVM version up to date. Those people trying LVM from
-original 2.4.x source tree can get frustated with bugs/functionality of an
-old LVM version. Would avoid bug reports on closed bugs.
+e.g., if you can 4 disks into a RAID5 set then take the whole
+RAID volume and use the entire space as a single PV.  you can
+then group multiple PV's together into a single VG.  this VG
+then gets divied up for the users into various LV's which get
+mounted wherever the folks are supposed to use them.  you can
+expand an LV within the VG (example:  you just bought 4 more
+disks and need to expand existing space into them).  
 
-d) Sooner or later, it has to be done, why wait ?
+nice thing about this arrangement is that you can have huge amounts
+of total space without needing to expose all of it at once or
+drop and rebiuld the filesystems to grow them.  when someone
+really does run out of space (or someone new needs it) just expand
+or create a LV and go along with life.
 
-Greetings, and keep up the good work !
 
---
-Jos� Luis Domingo L�pez
-Linux Registered User #189436     Debian GNU/Linux Potato (P166 64 MB RAM)
- 
-jdomingo EN internautas PUNTO org  => � Spam ? Atente a las consecuencias
-jdomingo AT internautas DOT   org  => Spam at your own risk
+-- 
+ Steven Lembark                                   2930 W. Palmer St.
+                                                 Chicago, IL  60647
+ lembark@wrkhors.com                                   800-762-1582
