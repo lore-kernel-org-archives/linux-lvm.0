@@ -1,11 +1,10 @@
-From: Andreas Dilger <adilger@turbolabs.com>
-Subject: Re: [linux-lvm] Removing a physical volume.
-Message-Id: <20011228150135.Z12868@lynx.no>
-References: <04QKIFOKE0E9XSJIWRCAD0V3Y3UQ3Y.3c2ce3cf@kadzuki>
+From: "Mario 'BitKoenig' Holbe" <Mario.Holbe@RZ.TU-Ilmenau.DE>
+Subject: Re: [linux-lvm] RAID support...
+Message-Id: <20011229104244.GB23434@irc.fem.tu-ilmenau.de>
+References: <3C2CBAFB.90103@cdimed.com> <20011228123140.A9647@omnifarious.org>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <04QKIFOKE0E9XSJIWRCAD0V3Y3UQ3Y.3c2ce3cf@kadzuki>;
-    from andewid@tnonline.net on Fri, Dec 28, 2001 at 10:27:43PM +0100
+In-Reply-To: <20011228123140.A9647@omnifarious.org>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,39 +15,23 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Fri Dec 28 15:59:01 2001
+Date: Sat Dec 29 04:40:01 2001
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: Anders Widman <andewid@tnonline.net>
-Cc: linux-lvm@sistina.com
+To: linux-lvm@sistina.com
 
-On Dec 28, 2001  22:27 +0100, Anders Widman wrote:
-> This is my current setup:
-> 
-> 14 physical disks in one logical volume (share) formated with reiserfs,
-> in one volumegroup (server). There are no free physical extents, though
-> there are about 150GB free space in the filesystem.
-> I want to remove one physical disk and have all data moved over to the
-> remaining disks.
+On Fri, Dec 28, 2001 at 12:31:40PM -0600, Eric M. Hopper wrote:
+> OS.  I question whether even RAID0 support is really necessary in LVM.
+> RAID should be stacked below, or above LVM, not packed inside.
 
-You need to run resize_reiserfs (on the unmounted filesystem) to reduce the
-size of the filesystem by _at_least_ the size of the disk you want to
-remove.  Then, after the filesystem is shrunk, you run lvreduce to reduce
-the size of the LV.  Shrink the LV no more than you shrunk the filesystem
-or you will have problems*.
+Totally agreed. There is working RAID0 code in the Software-RAID.
+Why blowing up the kernel with two RAID0-code-trees...
 
-After this, you need to run "pvmove -v <pv>" to remove any PEs that are
-in use on this disk to other disks.  You should have enough free PEs at
-this point because you reduced the size of the LV enough to remove the disk.
-Finally, run "vgreduce <pv>" to remove the (now unused) PV from the VG and
-you are set.`
+Maybe one could 'migrate it out' - mark it as deprecated, deny
+to create, but support old ones still a lot of time - something
+like this.
 
-Cheers, Andreas
 
-(*) Normally, what I would do is overshrink the fs, shrink the LV
-    conservatively, then expand the fs to fill the rest of the LV again.
---
-Andreas Dilger
-http://sourceforge.net/projects/ext2resize/
-http://www-mddsp.enel.ucalgary.ca/People/adilger/
+regards,
+   Mario
