@@ -1,10 +1,12 @@
-Return-Path: <root@vidar.deathbringer.com>
-From: root <root@vidar.deathbringer.com>
-Date: Sat, 28 Apr 2001 12:33:58 -0500
+Return-Path: <banal@home.com>
+Message-ID: <3AEB0146.C9D05ED5@home.com>
+Date: Sat, 28 Apr 2001 10:43:34 -0700
+From: Evan Day <banal@home.com>
 MIME-Version: 1.0
-Message-Id: <01042812335801.12586@vidar>
-Content-Transfer-Encoding: 8bit
-Subject: [linux-lvm] vgcfgrestore fails.
+Subject: Re: [linux-lvm] LVM on root, Kernel panic: "I have no root and I must 
+ scream"
+References: <DC5B1A21E9E7D211B0020090273AD628242BBB@summit15.corvallis.summit> <20010428095923.B4149@colombina.comedia.it>
+Content-Transfer-Encoding: 7bit
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -19,48 +21,70 @@ List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
 
-I am running SuSe 7.1 
-2.4.0 kernel 
-512M Ram
-AhA2940U2W
-suse lvm
+A quick thanks to everyone on the list who offered tips & advice for making
+my setup work.  I finally got everything loaded, configured, partitioned,
+mirrored, and LVMed!
 
-I had three volume groups and a week ago the volume group that contained user 
-had a drive crash.  I was unable to save usr but now I can not mount any of 
-my other volume groups and vgcfgrestore fails.  Is their any thing I can do 
-to get my data?  
-thor:~ # pvdisplay /dev/sdd2
---- Physical volume ---
-PV Name               /dev/sdd2
-VG Name               export
-PV Size               8.3 GB / NOT usable 3.31 MB [LVM: 238 KB]
-PV#                   2
-PV Status             available
-Allocatable           yes (but full)
-Cur LV                1
-PE Size (KByte)       4096
-Total PE              2123
-Free PE               0
-Allocated PE          2123
-PV UUID               ruLId0-1JoY-34Ja-oLW0-FmzV-Q5ZN-NQaZw9
-thor:~ # pvdisplay /dev/sdc2
---- Physical volume ---
-PV Name               /dev/sdc2
-VG Name               export
-PV Size               8.3 GB / NOT usable 3.31 MB [LVM: 238 KB]
-PV#                   1
-PV Status             available
-Allocatable           yes (but full)
-Cur LV                1
-PE Size (KByte)       4096
-Total PE              2123
-Free PE               0
-Allocated PE          2123
-PV UUID               ynnKCX-mjlT-jeNe-9MHY-tnP2-XCIC-nbKrmq
- 
-thor:~ # vgcfgrestore -n export /dev/sdd2
-vgcfgrestore -- ERROR: different structure size stored in "/etc/lvmconf/export.conf" than expected in file vg_cfgrestore.c [line 
-122]
-vgcfgrestore -- ERROR "vg_cfgrestore(): read" restoring volume group "export"
-                                                                              
-          
+Problem 1: needed to use install-mbr to put an MBR on /dev/sda and /dev/sdb.
+Problem 2: needed to upgrade LILO
+
+Now I have the install-mbr MBR booting, which gets me to LILO (21.7) 
+installed on /dev/md0 (/dev/sda1, /dev/sdb1).  The older version of LILO I 
+was using (21.5) didn't seem to work with md devices (I recall reading about
+that somewhere, too).
+
+Running Kernel 2.4.4 w/ LVM 0.9.1b7 (had to make a minor change to lvm.c to 
+get the kernel to compile):
+
+day@kirk:~$ df
+Filesystem           1k-blocks      Used Available Use% Mounted on
+/dev/vg00/lvol1         131064    102124     28940  78% /
+/dev/md0                 48056     38656      9400  80% /boot
+/dev/vg00/lvol2        1048540    551088    497452  53% /usr
+/dev/vg00/lvol3         262132    130240    131892  50% /var
+/dev/vg00/lvol4         262132     32840    229292  13% /tmp
+/dev/vg00/lvol5         262132     32840    229292  13% /hom
+
+kirk:~# fdisk /dev/sda
+
+Command (m for help): p
+
+Disk /dev/sda: 255 heads, 63 sectors, 522 cylinders
+Units = cylinders of 16065 * 512 bytes
+
+   Device Boot    Start       End    Blocks   Id  System
+/dev/sda1   *         1         6     48163+  fd  Linux raid autodetect
+/dev/sda2             7        23    136552+  82  Linux swap
+/dev/sda3            24        40    136552+  82  Linux swap
+/dev/sda4            41       522   3871665   fd  Linux raid autodetect
+
+(/dev/sdb is the same)
+
+kirk:~# cat /etc/lilo.conf
+lba32
+boot=/dev/md0
+root=/dev/hda2
+install=/boot/boot.b
+map=/boot/map
+delay=20
+vga=normal
+default=lvm-linux
+
+image=/vmlinuz
+        label=linux
+        read-only
+        initrd=/boot/initrd-lvm-2.4.4.gz
+
+image=/vmlinuz.lvm
+        label=lvm-linux
+        initrd=/boot/initrd-lvm-2.4.4.gz
+        root=/dev/vg00/lvol1
+        read-only
+
+image=/vmlinuz.old
+        label=linux-old
+        read-only
+        optional
+
+Thanks again!
+-Evan
