@@ -1,22 +1,9 @@
-Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id iBBAgVr06912
-	for <linux-lvm@redhat.com>; Sat, 11 Dec 2004 05:42:31 -0500
-Received: from dedicated.mountainviewdata.com
-	(207-234-129-26.ptr.primarydns.com [207.234.129.26])
-	by mx3.redhat.com (8.12.11/8.12.11) with ESMTP id iBBAgNNN003543
-	for <linux-lvm@redhat.com>; Sat, 11 Dec 2004 05:42:23 -0500
-Received: from DavidLT.cn.mvd (adsl-64-169-170-250.dsl.snfc21.pacbell.net
-	[64.169.170.250])
-	by dedicated.mountainviewdata.com (Postfix) with ESMTP id 3DBDDA0026
-	for <linux-lvm@redhat.com>; Sat, 11 Dec 2004 02:39:52 -0800 (PST)
-Date: Sat, 11 Dec 2004 18:42:10 +0800
-From: David Yu <david@mountainviewdata.com>
-Subject: Re: [linux-lvm] LVM and umount strangeness
-Message-Id: <20041211184210.10ac7870.david@mountainviewdata.com>
-In-Reply-To: <1101958776.41ae8e789ded6@elm2a.cns.ohiou.edu>
-References: <1101958776.41ae8e789ded6@elm2a.cns.ohiou.edu>
-Mime-Version: 1.0
+Message-ID: <41BB808E.60108@danielroth.se>
+Date: Sun, 12 Dec 2004 00:19:42 +0100
+From: Daniel Roth <daniel@danielroth.se>
+MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] Can't mount after crash
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -27,26 +14,210 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+To: LVM general discussion and development <linux-lvm@redhat.com>, agk@redhat.com
 
-Hi Tim,
-On Wed, 01 Dec 2004 22:39:36 -0500
-Tim Hibbard <hibbard@ohio.edu> wrote:
-> I try to do a umount /dev/lvm/disks I get a message "umount: /dev/lvm/disks: not
-> mounted" (even though it is).  
- It seems that the volume is still mounted. You can check /proc/mounts for this.
-"Not mounted" means "umount" cannot find a entry in /etc/mtab. You can
-add the proper entry in mtab and try umount again.
- Btw, this is my 1st post in lvm list :)
+Hi all!
 
--- 
+My lvm-system crashed a day ago and I was really lost in how to do. Buy 
+I found the metadatafile and could with
+pvcreate --uuid ... --restorefile ... .... /hdg5,
+pvcreate --uuid ... --restorefile ... .... /hdi1,
+restore those two drives. It didnt work with just /hdg/hdi as the 
+metafile decribes. hde couldn't be fixed with the restoredfile command, 
+it said that it was to small or equiv, so I just did a pvcreate --uuid 
+... /hde1
 
-Best regards,
-David
-___________________________________________________
-David Yu
-Mountain View Data Inc.
-http://www.mountainviewdata.com
-Tel: +86(10)8440-8185
-Fax: +86(10)8440-7519
+my lvm version is 2.00.29.
+
+After this I did the vgcfgrestore from the metadatafile, 
+my_volume_group, which worked fine, and finally I hade to do a vgmknodes 
+my_volume_group which also worked fine. But then when I tried to the lv 
+I get this
+
+roth:/dev# mount /dev/my_volume_group/mylv /disk
+/dev/my_volume_group/mylv: Invalid argument
+mount: you must specify the filesystem type
+roth:/dev# mount -t ext2 /dev/my_volume_group/mylv /disk
+mount: wrong fs type, bad option, bad superblock on 
+/dev/my_volume_group/mylv,
+       missing codepage, or too many mounted file systems
+       (could this be the IDE device where you in fact use
+       ide-scsi so that sr0 or sda or so is needed?)
+
+so I tried to fsck it but nothing worked. What have I done wrong? How 
+can I get back my data?
+I'll paste some shelldumps as help.
+
+Regards
+
+Daniel
+
+----
+roth:/dev# lvscan
+  ACTIVE            '/dev/my_volume_group/mylv' [282.05 GB] inherit
+roth:/dev# lvmdiskscan
+  /dev/hda1  [        2.05 GB]
+  /dev/hde1  [       76.69 GB] LVM physical volume
+  /dev/hdg1  [        1.00 KB]
+  /dev/hdi1  [      149.05 GB] LVM physical volume
+  /dev/hda2  [        1.00 KB]
+  /dev/hda5  [      346.47 MB]
+  /dev/hdg5  [       57.25 GB] LVM physical volume
+  0 disks
+  4 partitions
+  0 LVM physical volume whole disks
+  3 LVM physical volumes
+roth:/dev# lvdisplay
+  --- Logical volume ---
+  LV Name                /dev/my_volume_group/mylv
+  VG Name                my_volume_group
+  LV UUID                jUl5rP-jVIH-5Ne1-p0y9-VTeL-P8su-UF2o2F
+  LV Write Access        read/write
+  LV Status              available
+  # open                 0
+  LV Size                282.05 GB
+  Current LE             72204
+  Segments               3
+  Allocation             inherit
+  Read ahead sectors     0
+  Block device           254:0
+
+
+roth:/dev# pvdisplay
+  --- Physical volume ---
+  PV Name               /dev/hdi1
+  VG Name               my_volume_group
+  PV Size               149.05 GB / not usable 0
+  Allocatable           yes (but full)
+  PE Size (KByte)       4096
+  Total PE              38156
+  Free PE               0
+  Allocated PE          38156
+  PV UUID               3Pv4bt-9E47-aDii-mJbB-6OYc-pCFS-7dOBv9
+
+  --- Physical volume ---
+  PV Name               /dev/hde1
+  VG Name               my_volume_group
+  PV Size               76.69 GB / not usable 0
+  Allocatable           yes (but full)
+  PE Size (KByte)       4096
+  Total PE              19633
+  Free PE               0
+  Allocated PE          19633
+  PV UUID               jfqDXu-rwu3-9SyS-U39k-O6TL-M7Kj-0QDpwB
+
+  --- Physical volume ---
+  PV Name               /dev/hdg5
+  VG Name               my_volume_group
+  PV Size               57.25 GB / not usable 0
+  Allocatable           yes
+  PE Size (KByte)       4096
+  Total PE              14656
+  Free PE               241
+  Allocated PE          14415
+  PV UUID               6erEsN-BDBw-KFnO-voBg-FtJu-vUVD-D0SH0p
+
+
+roth:/dev# cat /etc/lvm/backup/my_volume_group
+# Generated by LVM2: Fri Dec 10 22:31:29 2004
+
+contents = "Text Format Volume Group"
+version = 1
+
+description = "Created *after* executing '/sbin/vgcfgbackup'"
+
+creation_host = "roth"  # Linux roth 2.4.22 #8 SMP Mon Apr 5 05:19:01 
+CEST 2004 i686
+creation_time = 1102714289      # Fri Dec 10 22:31:29 2004
+
+my_volume_group {
+        id = "73sskf-3Yve-YD3u-iHIt-pX5X-Va4f-iXC1i7"
+        seqno = 4
+        status = ["RESIZEABLE", "READ", "WRITE"]
+        extent_size = 8192              # 4 Megabytes
+        max_lv = 255
+        max_pv = 255
+
+        physical_volumes {
+
+                pv0 {
+                        id = "3Pv4bt-9E47-aDii-mJbB-6OYc-pCFS-7dOBv9"
+                        device = "/dev/hdi"     # Hint only
+
+                        status = ["ALLOCATABLE"]
+                        pe_start = 384
+                        pe_count = 38156        # 149.047 Gigabytes
+                }
+
+                pv1 {
+                        id = "jfqDXu-rwu3-9SyS-U39k-O6TL-M7Kj-0QDpwB"
+                        device = "/dev/hde"     # Hint only
+
+                        status = ["ALLOCATABLE"]
+                        pe_start = 384
+                        pe_count = 19633        # 76.6914 Gigabytes
+                }
+
+                pv2 {
+                        id = "6erEsN-BDBw-KFnO-voBg-FtJu-vUVD-D0SH0p"
+                        device = "/dev/hdg"     # Hint only
+
+                        status = ["ALLOCATABLE"]
+                        pe_start = 384
+                        pe_count = 14656        # 57.25 Gigabytes
+                }
+        }
+
+        logical_volumes {
+
+                mylv {
+                        id = "jUl5rP-jVIH-5Ne1-p0y9-VTeL-P8su-UF2o2F"
+                        status = ["READ", "WRITE", "VISIBLE"]
+                        segment_count = 3
+
+                        segment1 {
+                                start_extent = 0
+                                extent_count = 38156    # 149.047 Gigabytes
+
+                                type = "striped"
+                                stripe_count = 1        # linear
+
+                                stripes = [
+                                        "pv0", 0
+                                ]
+                        }
+                        segment2 {
+                                start_extent = 38156
+                                extent_count = 19633    # 76.6914 Gigabytes
+
+                                type = "striped"
+                                stripe_count = 1        # linear
+
+                                stripes = [
+                                        "pv1", 0
+                                ]
+                        }
+                        segment3 {
+                                start_extent = 57789
+                                extent_count = 14415    # 56.3086 Gigabytes
+
+                                type = "striped"
+                                stripe_count = 1        # linear
+
+                                stripes = [
+                                        "pv2", 0
+                                ]
+                        }
+                }
+        }
+}
+roth:/dev# pvscan
+....
+  PV /dev/hdi1   VG my_volume_group   lvm2 [149.05 GB / 0    free]
+  PV /dev/hde1   VG my_volume_group   lvm2 [76.69 GB / 0    free]
+  PV /dev/hdg5   VG my_volume_group   lvm2 [57.25 GB / 964.00 MB free]
+  Total: 3 [282.99 GB] / in use: 3 [282.99 GB] / in no VG: 0 [0   ]
+
+roth:/dev# vgscan
+  Found volume group "my_volume_group" using metadata type lvm2
