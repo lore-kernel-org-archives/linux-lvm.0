@@ -1,13 +1,12 @@
-Return-Path: <tandem@dnmi.no>
-Subject: Re: [linux-lvm] SCSI/LVM problems after power outage
-References: <DC5B1A21E9E7D211B0020090273AD628242BE0@summit15.corvallis.summit>
-	<20010509093510.B4918@sistina.com> <3AFB9CB4.DEFEC342@wrkhors.com>
-	<wveltwffhe.fsf@freeze.oslo.dnmi.no> <wxxsnic56bq.fsf@fjorir.ifi.uio.no>
-From: Adrian Phillips <a.phillips@dnmi.no>
-Date: 11 May 2001 16:48:20 +0200
-In-Reply-To: Terje Kvernes's message of "11 May 2001 16:05:45 +0200"
-Message-ID: <wvd79gdjrf.fsf@freeze.oslo.dnmi.no>
-MIME-Version: 1.0
+Return-Path: <hch@ns.caldera.de>
+Date: Fri, 11 May 2001 17:02:26 +0200
+From: Christoph Hellwig <hch@caldera.de>
+Subject: Re: [linux-lvm] LVM 1.0 release decision
+Message-ID: <20010511170226.A20533@caldera.de>
+References: <20010511155311.A17689@sistina.com>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20010511155311.A17689@sistina.com>; from Mauelshagen@sistina.com on Fri, May 11, 2001 at 03:53:11PM +0000
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -22,21 +21,24 @@ List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
+Cc: linux-kernel@sistina.com, mge@sistina.com
 
->>>>> "Terje" == Terje Kvernes <terjekv@math.uio.no> writes:
+On Fri, May 11, 2001 at 03:53:11PM +0000, Heinz J. Mauelshagen wrote:
+> In regard to this situation we'ld like to know about your oppinion on
+> the following request:
+> is it acceptable to release 1.0 soon *before* all patches to reach the 1.0 code
+> status are in vanilla (presumed that we provide them with our release as we
+> always did before)?
 
-    Terje> Adrian Phillips <a.phillips@dnmi.no> writes:
-    >> I might have misunderstood but : dd if=<lv> of=<tape>
+IMHO you should get out a 0.9.1final and sync the stock kernel before...
+If and only IF 1.0 will change the IOP again I don't want to see it all
+in stock 2.4.0 - the stable series should stay backward compatible.
+Otherwise:  just relese 1.0 and send the diffs to Alan and Linus - if
+they think you changes are ok they will merge it.
 
-    Terje>   doesn't dd fail if it reaches a single back block?
+Vendors interested in having 1.0 in their kernels will put it in anyway.
 
-Oh, try dd if=<lv> of=<tape> conv=noerror
-
-Sincerely,
-
-Adrian Phillips
+	Christoph
 
 -- 
-Your mouse has moved.
-Windows NT must be restarted for the change to take effect.
-Reboot now?  [OK]
+Of course it doesn't work. We've performed a software upgrade.
