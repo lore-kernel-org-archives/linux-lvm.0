@@ -1,8 +1,8 @@
-From: Greg Freemyer <freemyer@NorcrossGroup.com>
-Subject: re[2]: [linux-lvm] LVM & LFS support
-Mime-Version: 1.0
+From: Gerald Catling <geraldcc@optusnet.com.au>
+MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-Message-Id: <20030513201453.UJUM4718.imf39bis.bellsouth.net@tiger2>
+Message-Id: <200305140813.46680.geraldcc@optusnet.com.au>
+Subject: [linux-lvm] LVM resizing
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -13,33 +13,29 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Tue May 13 15:12:03 2003
+Date: Tue May 13 17:19:02 2003
 List-Id: <linux-lvm.redhat.com>
-Content-Type: Text/plain; charset="us-ascii"
-To: LVM Mailing list <linux-lvm@sistina.com>
+Content-Type: text/plain; charset="us-ascii"
+To: linux-lvm@sistina.com
 
- >>  On Tuesday, 13 May 2003, at 08:47:58 +0200,
- >>  Jon Bendtsen wrote:
+Greetings from oz to all,
 
- >>  > Other than not being larger than the blockdevice, and doesnt the
- >>  > blockdevice has a limit of 2T ?
- >>  >=20
- >>  Your are right. There has been native support for huge (huge is large than
- >>  large :) block devices in 2.5.x for some time, and I think there is also
- >>  a backport to 2.4.x (I suppose main Linux distributors have some sort of
- >>  support for huge block devices, at least on their latest business-grade
- >>  offerings).
+I have just started to use LVM with SuSE 8.1, after reading an article in=
+=20
+LinuxPro form the makers of Linux Format in the UK.
 
-XFS has a couple 2.4.x LBD (Large Block Device) patches available on their ftp =
-site.
+Istallation went well.
+However resizing goes verry badly and the article implies it is possible =
+to=20
+grow and shrink  --- usr,home and data partitions.
 
-ftp://oss.sgi.com/projects/xfs/download/patches/weekly-snapshot-patch/
+Although partitions change size, KDiskfree does not show any changes.
+e2fschk shows block size missmatch and gives up.
+LVM in the SuSE control panel shows the correct size, but i cannot use it=
+=2E
+By the way growing/shrinking looses some 100MBytes of data, regrowing rec=
+overs=20
+some 70MBytes of data, not all good data as far as i can see.
 
-I'm pretty sure they just have them there for convenience.  I don't know where =
-the official source is.
-
-I have never used, them nor do I know any specifics.
-
-Greg
---=20
-Greg Freemyer
+Any help on this problem would be appreciated
+Gerald
