@@ -1,19 +1,16 @@
-Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with SMTP id i2ABTB803149
-	for <linux-lvm@redhat.com>; Wed, 10 Mar 2004 06:29:11 -0500
-Received: from zaphod.bangor.ac.uk (zaphod42.bangor.ac.uk [147.143.42.245])
-	by mx1.redhat.com (8.12.10/8.12.10) with SMTP id i2ABT807022145
-	for <linux-lvm@redhat.com>; Wed, 10 Mar 2004 06:29:08 -0500
-Received: from sbs.bangor.ac.uk (milliways [147.143.41.38])
-	by zaphod.bangor.ac.uk (Postfix) with ESMTP id 49088182D4
-	for <linux-lvm@redhat.com>; Wed, 10 Mar 2004 11:29:07 +0000 (GMT)
-Message-ID: <404EFC03.5030006@sbs.bangor.ac.uk>
-From: Simeon Walker <simeon@sbs.bangor.ac.uk>
-MIME-Version: 1.0
-Subject: Re: [linux-lvm] unknown ioctl problems
-References: <871xpynzwy.fsf@freezer.burling>
-In-Reply-To: <871xpynzwy.fsf@freezer.burling>
-Content-Transfer-Encoding: 7bit
+Received: from reti (vpn50-34.rdu.redhat.com [172.16.50.34])
+	by pobox.surrey.redhat.com (8.12.8/8.12.8) with ESMTP id i2ADRSuq004774
+	for <linux-lvm@redhat.com>; Wed, 10 Mar 2004 13:27:29 GMT
+Received: from joe by reti with local (Exim 4.30)
+	id 1B13la-0000Ne-Ph
+	for linux-lvm@redhat.com; Wed, 10 Mar 2004 13:28:58 +0000
+From: Joe Thornber <thornber@redhat.com>
+Subject: Re: [linux-lvm] Patch for Miguel Cabe?a's lvm2create_initrd script
+Message-ID: <20040310132858.GD643@reti>
+References: <403E8A0E.9070308@ist.utl.pt> <1078884314.2919.16.camel@localhost>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <1078884314.2919.16.camel@localhost>
 Sender: linux-lvm-admin@redhat.com
 Errors-To: linux-lvm-admin@redhat.com
 Reply-To: linux-lvm@redhat.com
@@ -25,47 +22,21 @@ List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
 List-Archive: <https://www.redhat.com/archives/linux-lvm/>
-Date: Wed Mar 10 06:27:03 2004
+Date: Wed Mar 10 08:25:00 2004
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@redhat.com
 
-Jason Parker-Burlingham wrote:
+On Tue, Mar 09, 2004 at 09:05:14PM -0500, Jeff Layton wrote:
+>  The second one is an ugly hack, and I'm definitely open to better ways
+> of handling it. After my kernel upgrade (from 2.6.1 to 2.6.4-rc2), the
+> major number of the device mapper devices on my system changed. So, I
+> added a hack to copy the contents of the ramdisk /dev/mapper directory
+> to the /dev/mapper directory on the lvm2 root filesystem, prior to the
+> pivot_root. It works for me, but I'd love to hear about better ways of
+> handling this.
 
->I'm running LVM (version 1 with 1.0.7 tools) on a 2.4 system
->(2.4.24-pre1, recently upgraded to 2.4.25-pre4).  When the initrd
->boots (/ is an LVM filesystem, /boot is a standard block device) I see 
->
->   lvm -- lvm_blk_ioctl: unknown cmd 0x5310
->
->which I guess is something to do with mounting the ramdisk.
->
->But at other times I have noticed that the machine will lock up; I'm
->not sure if it's a hardware problem but lately it seems to be related
->to disk activity.  I turned off screen blanking before the most recent
->crash and saw no kernel oops, but a couple of repetitions of
->
->   lvm -- lvm_blk_ioctl: unknown cmd 0x801c6d02
->
->Is it possible that this is some sort of reasonable ioctl?  Is it
->possible that this is what's crashing the machine?  How can I find out
->what the system is trying do (and maybe even why)?  I don't see any
->reports of exactly this problem through google, so I'm pretty lost.
->
->jason
->  
->
-I have just seen your latter problem. I am running Debian unstable (as 
-of late Feb) and building Kernel 2.4.24. I use debian's make-kpg, when 
-doing dpkg -i I get the above error. Because I had not yet installed the 
-matching modules package (for i2c) I get some unresolved symbols. The 
-lockup seems to occur during or just after the depmod. I'm still looking 
-into it...
+Mount tmpfs on /dev/mapper, and then run 'dmsetup mknods' ?
 
-Sim
-
--- 
-Simeon Walker,                      email: simeon@sbs.bangor.ac.uk
-School of Biological Sciences,      phone: +44 (0)1248 383702
-University of Wales, Bangor,        fax: +44 (0)1248 382569
-Gwynedd, LL57 2UW, UK.              www: http://biology.bangor.ac.uk/
+- Joe
