@@ -1,11 +1,8 @@
-Date: Fri, 12 Oct 2001 15:44:45 +0200
-Subject: Re: [linux-lvm] Lock patch
-Message-ID: <20011012154445.A4346@brightstar.swin.de>
-References: <20011011184323.A20226@brightstar.swin.de> <1348330000.1002820832@tiny>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <1348330000.1002820832@tiny>
-From: Julian Einwag <julian@brightstar.swin.de>
+Message-ID: <OF9050ED8F.CEC7BA29-ON85256AE3.0053EEC0@mkm.can.ibm.com>
+From: "David R Scott/Markham/IBM" <dscott7@ca.ibm.com>
+Date: Fri, 12 Oct 2001 13:54:02 -0400
+MIME-Version: 1.0
+Subject: [linux-lvm] LVM kernel patch request
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -21,13 +18,17 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Thu, Oct 11, 2001 at 01:20:32PM -0400, Chris Mason wrote:
+I am trying to install LVM-1.0.1-rc4 on a S/390 SuSe 7.0 system with kernel
+2.2.16.
+Has anyone successfully managed to create a patch for kernel 2.2.16 ?
+I have copied the fragments-2.2.18 to 2.2.16 and have made the
+lvm-1.0.1-rc4-2.2.16.patch  file.
+It will need some reworking to get the patch to apply correctly.  Has
+anyone else succeded in doing this, and have they shared the patch file ?
 
-> > Will there be a VFS lock patch for 2.4.12? The patch for 2.4.9 doesn't
-> > work with kernels > 2.4.10
-> 
-> I'd like to clean this up a little so the extra semaphore isn't required,
-> but it does work.  There's an extra hunk tacked onto the end that you'll
-> need for reiserfs.
-
-Thank you!
+Thanks,
+Dave Scott
+e-business Development - Hosting, Managed Storage Services, IBM Global
+Services
+Tel  (416) 490-4987     Fax  (416) 490-4730   TieLine 492
+email:  dscott7@ca.ibm.com
