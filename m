@@ -1,14 +1,17 @@
-Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id i52FYo011960
-	for <linux-lvm@redhat.com>; Wed, 2 Jun 2004 11:34:50 -0400
-Received: from vega.voltaire.com ([212.143.27.73])
-	by mx1.redhat.com (8.12.10/8.12.10) with ESMTP id i52FYni5018078
-	for <linux-lvm@redhat.com>; Wed, 2 Jun 2004 11:34:49 -0400
-Message-ID: <2F75AEE4E86FDE44BF97709D289BAA7C719823@vega.voltaire.com>
-From: Dan Bar Dov <danb@voltaire.com>
-Subject: RE: [linux-lvm] LVM problem on MD devices
-Date: Wed, 2 Jun 2004 18:34:43 +0300 
+Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id i52LmF013567
+	for <linux-lvm@redhat.com>; Wed, 2 Jun 2004 17:48:15 -0400
+Received: from mx2.lost-oasis.net (eloise.lost-oasis.net [80.67.179.98])
+	by mx3.redhat.com (8.12.10/8.12.10) with ESMTP id i52Lm9Xn022880
+	for <linux-lvm@redhat.com>; Wed, 2 Jun 2004 17:48:09 -0400
+Received: from meuh by mx2.lost-oasis.net with local (Exim 3.35 #1 (Debian))
+	id 1BVdai-0002f1-00
+	for <linux-lvm@redhat.com>; Wed, 02 Jun 2004 23:48:08 +0200
+From: Yann Droneaud <ydroneaud@meuh.eu.org>
+Date: Wed, 02 Jun 2004 23:48:08 +0200
+Message-ID: <82hdttvdgn.fsf@eloise.tuxfamily.net>
 MIME-Version: 1.0
+Subject: [linux-lvm] PV resizing
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -21,30 +24,27 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: LVM general discussion and development <linux-lvm@redhat.com>
+To: linux-lvm@redhat.com
 
- Yes, /dev/md/2 is the actual device file (I'm using devfs).
 
-Also, I tested the same with LVM 1.0.8 plus I applied the kernel patches to
-1.0.8, - same problem.
+Hi,
 
-Dan
+First, sorry to bother you with my stupid question.
 
-> -----Original Message-----
-> From: Jeffrey Layton [mailto:jtlayton@poochiereds.net] 
-> Sent: Wednesday, June 02, 2004 5:55 PM
-> To: LVM general discussion and development
-> Cc: Dan Bar Dov
-> Subject: Re: [linux-lvm] LVM problem on MD devices
-> 
-> On Wed, 2004-06-02 at 10:44, Dan Bar Dov wrote:
-> > I create an MD multipath device, and then a PV on it. 
-> > Pvdisplay on the device fails with
-> > pvdisplay -- ERROR "pv_read(): pv_create_name_from_kdev_t" no VALID 
-> > physical volume "/dev/md/2"
-> 
-> Just a guess here, but is /dev/md/2 an actual block device 
-> file? LVM is picky about symlinks and such...
-> -- Jeff
-> 
-> 
+I have a PV set in a partition (dos partition table).
+
+Can i resize (grow) this partition so that the PV become bigger, 
+and new space will be available to the VG the PV is currently inside.
+
+To summary, will the PV/VG take account of the new partition size ?
+I would know about LVM 1 and LVM 2.
+
+Otherwise i will have to remove my current VG.
+
+Regards.
+
+-- 
+Yann Droneaud      <ydroneaud@meuh.eu.org>     +33 6 88 40 82 43
+<yann@droneaud.com>  <meuh@tuxfamily.org>  <ydroneaud@april.org>
+http://droneaud.com/ http://meuh.org/ http://meuh.tuxfamily.org/
+1024D/BEA43321 5D91 B5B0 5137 B8FE 6882 FE19 CAA0 6F05 BEA4 3321
