@@ -1,8 +1,9 @@
-Return-Path: <scott@dixie.dyndns.org>
-Date: Tue, 17 Apr 2001 12:29:51 -0400
-Message-Id: <200104171629.f3HGTmR25269@dixie.dyndns.org>
-From: "S. Michael Denton" <scott@dixie.dyndns.org>
+Return-Path: <raheesom@navpoint.com>
+Message-Id: <200104171821.f3HILdS05714@west.navpoint.com>
 Subject: Re: Re: [linux-lvm] CDRECORD not working when LVM loaded.
+From: Rupert Heesom <raheesom@navpoint.com>
+Date: 17 Apr 2001 13:13:57 -0400
+Mime-Version: 1.0
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,54 +15,23 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-I also have LVM 0.9.1beta6 with cdrecord and it runs flawlessly... perhaps
-you have some weirdness in your cdr drive's bus?
+Well, gentlemen; I found out what the problem was .... nothing to do with LVM.
 
-adilger@turbolinux.com wrote:
-> Rupert writes:
-> > I had some trouble using cdrecord, and saw the man page for cdrecord,
-> > particularly the following part where it says that cdrecord cannot be
-> > used in conjunction with volume management.
-> 
-> When cdrecord is talking about "volume management" they mean automatic
-> CD-ROM volume detection.  Solaris has a daemon called "vold" which sees
-> that a new CD-ROM is inserted and mounts it automatically.  This breaks
-> cdrecord, because the CD-ROM is then busy before it has a chance to open
-> it.
-> 
-> > I unloaded the "lvm-mod" kernel module, and cdrecord works fine without
+I was trying to run "cdrecord --scanbus" without the correct
+permissions.  "cdrecord" was set to root permissions.  So, I've set the
+UID & GID on CDRECORD.  Now works fine when logged in as myself.
 
-> > it.
-> 
-> Sorry, probably unrelated to LVM.
-> 
-> > Basically I'm merely trying to find out whether I can get my system
-> > working with both LVM and cdrecord concurrently.
-> 
-> I have LVM and Grip running on my laptop at the same time without
-problems.
-> Grip is a GTK CD ripper, which uses cdparanoia for the back end.
-> 
-> Cheers, Andreas
-> -- 
-> Andreas Dilger  \ "If a man ate a pound of pasta and a pound of
-antipasto,
->		   \  would they cancel out, leaving him still hungry?"
-> http://www-mddsp.enel.ucalgary.ca/People/adilger/		  --
-Dogbert
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-> 
-> 
+Previously, I must have tried CDRECORD as myself, found it didn't work.
+SUed to root to unload the LVM module, then run CDRECORD whilst still
+logged in as root.  Of course it worked.
 
---------------------------------------------------------------------------
-Scott Denton
-smdenton@bellsouth.net
-EFNet Handle: SteelWyng
+Well, on with LVM then !!!
+
+
+-- 
+regs
+rupert
