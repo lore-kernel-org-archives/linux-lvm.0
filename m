@@ -1,10 +1,11 @@
-From: Alasdair G Kergon <agk@uk.sistina.com>
-Subject: Re: [linux-lvm] cannot extend lv
-Message-ID: <20030119193214.B14313@uk.sistina.com>
-References: <3E2A7AE4.8080801@informatik.uni-erlangen.de> <20030119180753.GA15083@mitethe.eudyptes>
-Mime-Version: 1.0
+From: Steven Lembark <lembark@wrkhors.com>
+Subject: Re: [linux-lvm] vgimport
+Message-ID: <12270000.1043010311@[192.168.200.4]>
+In-Reply-To: <200301191715.33238.lists@franzke-online.de>
+References: <200301191715.33238.lists@franzke-online.de>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Content-Disposition: inline
-In-Reply-To: <20030119180753.GA15083@mitethe.eudyptes>; from idsfa@visi.com on Sun, Jan 19, 2003 at 12:07:53PM -0600
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,22 +16,17 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Sun Jan 19 13:31:01 2003
+Date: Sun Jan 19 14:57:02 2003
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: linux-lvm@sistina.com
 
-On Sun, Jan 19, 2003 at 12:07:53PM -0600, idsfa@visi.com wrote:
-> The only
-> way to do what you want would have been to use kernel RAID to combine
-> the physical devices into a single logical device before creating the
-> stripe set.
+> lvm 1.0.5
 
-Or try out LVM2 which no longer imposes these restrictions when
-extending striped volumes.  (You can vary the number of stripes and the
-stripesize.)
+One thing is to try 1.0.6
 
-Alasdair
--- 
-agk@uk.sistina.com
+
+--
+Steven Lembark                               2930 W. Palmer
+Workhorse Computing                       Chicago, IL 60647
+                                            +1 773 252 1080
