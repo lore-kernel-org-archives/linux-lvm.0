@@ -1,9 +1,9 @@
-From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] ablout LVM's limits
-Message-ID: <20020603120445.D14161@sistina.com>
-References: <OF526818D0.B4893AF1-ON48256BCA.00314BE3@legend.com.cn>
-Mime-Version: 1.0
-In-Reply-To: <OF526818D0.B4893AF1-ON48256BCA.00314BE3@legend.com.cn>; from lilha@legend.com.cn on Fri, May 31, 2002 at 05:00:58PM +0800
+Message-ID: <3CFC24C4.EC91EE54@skyinet.net>
+From: "jeany c. vanzuela" <jaws@skyinet.net>
+MIME-Version: 1.0
+Subject: Re: [linux-lvm] how to increase the size of allocated PE
+References: <3CFBD09D.542EAE62@skyinet.net> <20020603115209.A14161@sistina.com>
+Content-Transfer-Encoding: 7bit
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,50 +14,60 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Jun  3 05:10:02 2002
+Date: Mon Jun  3 05:14:01 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Fri, May 31, 2002 at 05:00:58PM +0800, lilha@legend.com.cn wrote:
-> 
-> i want to know the limits of PV in lvm.
-> Is there any limits in PV?
-> Do I can create a PV in a more 2TB partition in theory?
+"Heinz J . Mauelshagen" wrote:
 
-Not with Linux 2.4. 2.5 is starting to raise that limit.
+> If you want to extende the size of a logical volume, see lvextend(8).
+>
+> Growing the size of physical/logical extents is not supported.
+> Set this property when you create a volume group (see vgcreate(8), option -s).
+>
 
-With 2.4 you can have PVs up to 2TB, VGs can have up to 256 PVs and
-LVs are limited by Linux 2.4 to 2TB max too.
+Heinz,
 
-> 
-> 
-> TIA for your help and sorry for my poor English.
-> 
-> Echo
-> 
-> 
+how many times can I invoke the e2fsadm -L+<size>M /dev/vgname/lvname ?
+
+
+>
+> On Mon, Jun 03, 2002 at 12:25:02PM -0800, root wrote:
+> > hi all,
+> >
+> > i'm new to this list and with linux LVM. I would like to know how to
+> > increase the size of allocated PE for a given logical volume.
+> >
+> > thanks.
+> >
+> >
+> > _______________________________________________
+> > linux-lvm mailing list
+> > linux-lvm@sistina.com
+> > http://lists.sistina.com/mailman/listinfo/linux-lvm
+> > read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
+>
+> --
+>
+> Regards,
+> Heinz    -- The LVM Guy --
+>
+> *** Software bugs are stupid.
+>     Nevertheless it needs not so stupid people to solve them ***
+>
+> =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+>
+> Heinz Mauelshagen                                 Sistina Software Inc.
+> Senior Consultant/Developer                       Am Sonnenhang 11
+>                                                   56242 Marienrachdorf
+>                                                   Germany
+> Mauelshagen@Sistina.com                           +49 2626 141200
+>                                                        FAX 924446
+> =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+>
 > _______________________________________________
 > linux-lvm mailing list
 > linux-lvm@sistina.com
 > http://lists.sistina.com/mailman/listinfo/linux-lvm
 > read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
-
--- 
-
-Regards,
-Heinz    -- The LVM Guy --
-
-*** Software bugs are stupid.
-    Nevertheless it needs not so stupid people to solve them ***
-
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-
-Heinz Mauelshagen                                 Sistina Software Inc.
-Senior Consultant/Developer                       Am Sonnenhang 11
-                                                  56242 Marienrachdorf
-                                                  Germany
-Mauelshagen@Sistina.com                           +49 2626 141200
-                                                       FAX 924446
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
