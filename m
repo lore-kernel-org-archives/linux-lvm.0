@@ -1,10 +1,8 @@
-From: Pantaleimon <pantaleimon@home.no>
-Subject: Re: [linux-lvm] I'm confused
-References: <BDEMIPDEGABMNEFIHCPDEECAEEAA.bill+f.9sfuw6uo@tao-group.com>
-In-Reply-To: <BDEMIPDEGABMNEFIHCPDEECAEEAA.bill+f.9sfuw6uo@tao-group.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Message-Id: <200212091512.49269.pantaleimon@home.no>
+From: Richard Chan <rspchan@starhub.net.sg>
+Message-id: <3DF4A591.8010109@starhub.net.sg>
+MIME-version: 1.0
+Content-transfer-encoding: 7BIT
+Subject: [linux-lvm] Error with 2.5.50-dm-2; vanilla OK
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,57 +13,70 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Dec  9 08:13:02 2002
+Date: Mon Dec  9 08:14:02 2002
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: linux-lvm@sistina.com
+Cc: cshihpin@dso.org.sg
 
-On Monday 09 December 2002 11:29, William Blunn wrote:
-> > I think hardisk manufacturers use base 10, rather than base 2,
-> > when they speak of "mega" and "giga", ie. mega = 1000K and not
-> > 1024K. That means that a 120G hardisk is only 114.4G.
->
-> No.
->
-> You are right in that "mega = 1000K", but from your figure of 114.4, you
-> still appear to have "K = 1024" and "G = 1024M", both of which are
-> wrong.
->
+Hi, I'm getting an error with 2.5.50-dm2 but vanilla 2.5.50 is OK.
 
-I had G=1000, M=1000 and K=1024 which would give 120 x 10^6 x 1024 =114.4KiB. 
-I stand corrected on the matter of me saying/implying K=1024.
+When I try lvm vgchange -ay I get the error messages
 
-I am glad to hear that symbols have been defined for the base 2 multipliers. I 
-shall try to use them. I seem to remember reading somthing about it sometime 
-ago. Didn't someone propose to use something like KK, MM and GG, too. When I 
-tell some people that, even when it comes to computers, the multiplier "kilo" 
-formally, if not in practice, means "x 1000" they just won't believe me.
+Dec  9 21:49:54 dyndns12 kernel: device-mapper: allocating minor 0.
+Dec  9 21:49:54 dyndns12 kernel: device-mapper: device /dev/hdb7 too 
+small for target
+Dec  9 21:49:54 dyndns12 kernel: device-mapper: internal error adding 
+target to table
+Dec  9 21:49:54 dyndns12 kernel: device-mapper: destroying table
 
+3 of 4 LVs in the VG are OK
 
-> Hard disk manufacturers use SI defined multipliers, i.e. they use a
-> documented standard.
->
->   K = 10^3
->   M = 10^6
->   G = 10^9
->
->   120 GB = 120 000 000 000 B
->
-> Computer people have traditionally abused these symbols to mean
-> multipliers with similar values, but based on powers of two.
->
-> Symbols have been defined for these multipliers, but some people still
-> haven't caught up to them.
->
->   Ki = 2^10 = 1024
->   Mi = 2^20 = 1048576
->   Gi = 2^30 = 1073741824
->
-> So
->
->   120 GB ~= 111.8 GiB
->
-> Interestingly, LVM1's vgdisplay incorrectly uses "GB" in its output
-> where it should say "GiB".
->
-> Bill
+If I use vanilla 2.5.50 the LVs are created OK
+
+Dec  9 21:49:54 dyndns12 kernel: device-mapper: allocating minor 0.
+Dec  9 21:49:54 dyndns12 kernel: device-mapper: allocating minor 1.
+Dec  9 21:49:54 dyndns12 kernel: device-mapper: allocating minor 2.
+Dec  9 21:49:54 dyndns12 kernel: device-mapper: allocating minor 3.
+
+lvm version
+  LVM version:     1.95.11-cvs (2002-11-18)
+  Library version: 0.96.07-ioctl-cvs (2002-11-21)
+  Driver version:  1.0.6
+
+lvm vgdisplay vg00
+ --- Volume group ---
+  VG Name               vg00
+  System ID             caesar1000557946
+  Format                lvm1
+  VG Access             read/write
+  VG Status             resizable
+  MAX LV                255
+  Cur LV                4
+  Open LV               2
+  Max PV                255
+  Cur PV                2
+  Act PV                2
+  VG Size               39.89GB
+  PE Size               4.00MB
+  Total PE              10212
+  Alloc PE / Size       9920 / 38.75GB
+  Free  PE / Size       292 / 1.14GB
+  VG UUID               SsC7qF-Jb43-vh72-TctL-wlpU-iPvx-1Hr3hS
+
+This is the LV that causes grief:
+ 
+lvm lvdisplay vg00
+  --- Logical volume ---
+  LV Name                /dev/vg00/LVmisc
+  VG Name                vg00
+  LV UUID                000000-0000-0000-0000-0000-0000-000001
+  LV Write Access        read/write
+  LV Status              available
+  # open                 1
+  LV Size                20.00GB
+  Current LE             5120
+  Segments               2
+  Allocation             next free
+  Read ahead sectors     120
+  Block device           254:1
