@@ -1,10 +1,7 @@
-Subject: Re: [linux-lvm] LVM2: Problems with "lvextend" on device with mounted filesystem
-Message-ID: <13009-56014@sneakemail.com>
-References: <3FC757CA.2030205@daemons-point.com>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <3FC757CA.2030205@daemons-point.com>
-From: "Wolfgang Weisselberg" <uzx87lvfmukwc001@sneakemail.com>
+Subject: Re: [linux-lvm] booting a dm+lvm2 kernel
+MIME-Version: 1.0
+From: Kjartan Reynir Hauksson <krh@os.is>
+Message-ID: <OF2A36FAD2.4372439D-ON00256E0E.00034E31-00256E0E.00034E39@svunta.os.is>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,31 +12,31 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Mon Dec  1 07:57:04 2003
+Date: Wed Dec 31 18:46:01 2003
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Uli Heller wrote 90 lines:
 
-[resorted, cut, mangled ...]
-> 1) Create a new logical volume:
-> 2) Display this new LV:
-> 2.5)     Create and mount a file system on the LV:
-> 3) Try to write right behind the end of the LV:
-> ~   --> This error message is OK
-> 4) Extend the LV:
-> 5) Repeat step 3
-[which generates an error]
 
-> 3,4,5)   Like above **BUT** step 5 now produces the same
-> ~   error message as step 3! You have to "umount /mnt"
-> ~   in order to be able to access the enlarged portion
-> ~   of the LV.
 
-You never told reiserfs that it's partition had increased.  AFAIK
-you can either remount it with the correct parameters or use some
-tool to alert it.
 
--Wolfgang
+>are you running a particular distro? if so telling which one it is could
+>be useful in gifing you the right hints.
+
+I using Mandrake 9.2 with mkinitrd 3.5.15.1 and a patched lilo 22.5.8
+
+>your distro probably has an mkinitrd command, so you would need to patch
+>it to support lvm2 if it does not already.
+>you might also need to patch your sysinit boot script
+
+Could you be a little more specific regarding the sysinit boot scripts as
+it's probably the most confusing part of the process.
+
+>you will also need patching lilo to understand device-mapper, else it
+>will not run anymore on your dm patched kernel (see
+>http://www.saout.de/misc/)
+
+ Thanks
+-Kjartan
