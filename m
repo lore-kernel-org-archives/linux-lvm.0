@@ -1,19 +1,15 @@
-Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id iA8Kijr22776
-	for <linux-lvm@redhat.com>; Mon, 8 Nov 2004 15:44:45 -0500
-Received: from snark.apl.washington.edu (postfix@snark.apl.washington.edu
-	[128.208.78.3])
-	by mx3.redhat.com (8.12.11/8.12.11) with ESMTP id iA8Kiddr005290
-	for <linux-lvm@redhat.com>; Mon, 8 Nov 2004 15:44:39 -0500
-Received: from pcaxel (dhcp-96-42.apl.washington.edu [128.95.96.42])
-	by snark.apl.washington.edu (Postfix) with ESMTP id 36BB897903
-	for <linux-lvm@redhat.com>; Mon,  8 Nov 2004 10:40:18 -0800 (PST)
-From: "Axel Schweiger" <axel@apl.washington.edu>
-Subject: Re: [linux-lvm] Backup/Recovery Strategies
-Date: Mon, 8 Nov 2004 10:40:18 -0800
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Message-Id: <20041108184018.36BB897903@snark.apl.washington.edu>
+Received: from fentible.pjc.net (vpnuser1.surrey.redhat.com [172.16.9.1])
+	by pobox.surrey.redhat.com (8.12.8/8.12.8) with ESMTP id iA98ZKbM009816
+	for <linux-lvm@redhat.com>; Tue, 9 Nov 2004 08:35:20 GMT
+Date: Tue, 9 Nov 2004 08:35:18 +0000
+From: Patrick Caulfield <pcaulfie@redhat.com>
+Subject: Re: [linux-lvm] Possible version problem
+Message-ID: <20041109083518.GB18685@tykepenguin.com>
+References: <418DAC9C.70205@dakotacom.net>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <418DAC9C.70205@dakotacom.net>
+Sender: Patrick <patrick@tykepenguin.com>
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -25,34 +21,36 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@redhat.com
+Content-Transfer-Encoding: 7bit
+To: erich1@dakotacom.net, LVM general discussion and development <linux-lvm@redhat.com>
 
-Heinz,
-Thanks for your reply. Couple of clarification questions:
-Lets say the disk that holds the the lvm metadata (and system files) dies
-and I have to rebuild from scratch:
+On Sat, Nov 06, 2004 at 10:03:24PM -0700, ewf wrote:
+> Well
+>      I have a 2.2.20 kernel, (Debian stable), and I have a Debian 
+> package for lvm10 and lvm-common:
+> 
+>            lvm10,  install version, 1.0.4-4
+> 
+>            lvm-common, install version, 1.5.5
+> 
+>     I read that, for this early a version, a kernel module must be 
+> installed. However, I see no evidence that
+> one has been installed. I suspect that the new, (lvm), package may not 
+> contain  the kernel module
+> necessary to run with the old kernel version. Please confirm.
 
-1) I restore the system disk
-2) restore the /etc/lvm* files from backup ?
-3) Am I done? 
+Linux 2.2 does not have LVM as standard. If you want to use a 2.2 kernel with
+LVM you will have to patch and build your own kernel from sources. In which
+case it would be far easier just to get a Debian packaged 2.4 kernel....
  
-Lets say I have another a couple of other LVs that don't include PVs from
-the crashed disk. Lets say the data on 
-the filesystem have changed. since the last backup of the /etc/lvm* data.
-Will those filesystems be OK after the
-restore of the /etc/lvm* data?
+>     I assume that the process of installing a package under Debian 
+> automatically installs a kernel
+> module if a given package requires it and contains it.
 
-Besten Dank
-Axel
+No. Debian packages don't automatically install kernel modules because they
+don't know which kernel you are running.
+ 
 
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-=-
+-- 
 
-Heinz Mauelshagen                                 Red Hat GmbH
-Consulting Development Engineer                   Am Sonnenhang 11
-                                                  56242 Marienrachdorf
-                                                  Germany
-Mauelshagen RedHat com                            +49 2626 141200
-                                                       FAX 924446
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-=-
+patrick
