@@ -1,18 +1,20 @@
-Received: from agk.surrey.redhat.com (agk.surrey.redhat.com [172.16.10.74])
-	by pobox.surrey.redhat.com (8.12.8/8.12.8) with ESMTP id i69EeQhp025832
-	for <linux-lvm@redhat.com>; Fri, 9 Jul 2004 15:40:26 +0100
-Received: from agk by agk.surrey.redhat.com with local (Exim 4.34)
-	id 1BiwY6-0003WZ-4z
-	for linux-lvm@redhat.com; Fri, 09 Jul 2004 15:40:26 +0100
-Date: Fri, 9 Jul 2004 15:40:26 +0100
-From: Alasdair G Kergon <agk@redhat.com>
-Subject: Re: [linux-lvm] vgscan eating memory
-Message-ID: <20040709144026.GX30186@agk.surrey.redhat.com>
-References: <40EE5E61.5070702@smartlink.ee>
+Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id i6DJSI021888
+	for <linux-lvm@redhat.com>; Tue, 13 Jul 2004 15:28:18 -0400
+Received: from leviathan.ele.uri.edu (leviathan.ele.uri.edu [131.128.51.64])
+	by mx3.redhat.com (8.12.10/8.12.10) with ESMTP id i6DJSCXn012478
+	for <linux-lvm@redhat.com>; Tue, 13 Jul 2004 15:28:12 -0400
+Received: from [127.0.0.1] (leviathan [131.128.51.64])
+	by leviathan.ele.uri.edu (8.12.9/8.12.9) with ESMTP id i6DJS94h007741
+	for <linux-lvm@redhat.com>; Tue, 13 Jul 2004 15:28:10 -0400 (EDT)
+From: Ming Zhang <mingz@ele.uri.edu>
+Message-Id: <1089746889.2988.20.camel@Smeagol.geministorage.com>
 Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <40EE5E61.5070702@smartlink.ee>
-Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
+Date: Tue, 13 Jul 2004 15:28:09 -0400
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] wrong data unit in lvdiskplay?
+Reply-To: mingz@ele.uri.edu,
+	LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -23,43 +25,46 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: LVM general discussion and development <linux-lvm@redhat.com>
+To: linux-lvm@redhat.com
 
-On Fri, Jul 09, 2004 at 11:59:13AM +0300, Tarmo Samuel wrote:
-> lvm2-2.00.15
- 
-> Problem: lvm vgscan runs, eats up more and more memory until it gets 
-> OOM-killed.
+I am not sure if this is a bug or my stupid error.
 
-I've seen a similar bug in the past, but that one got fixed.
- 
-(1) Please reproduce with the latest LVM2 release (2.00.20)
+I am using lvm-1.0.3-13, which come from Fedora core 1. I created a
+lvol1 with size -L 2000M. then
 
-(2) Also reproduce after building with configure --disable-o_direct
+# lvdisplay /dev/vg1/lvol1
+--- Logical volume ---
+LV Name                /dev/vg1/lvol1
+VG Name                vg1
+LV Write Access        read/write
+LV Status              available
+LV #                   1
+# open                 0
+LV Size                1.95 GB
+Current LE             500
+Allocated LE           500
+Allocation             next free
+Read ahead sectors     1024
+Block device           58:0
 
-(3) Then send standard lvm2 diagnostics: turn on debug logging to file 
-    in lvm.conf, run vgscan, and send me (not the list) the 
-    (compressed) output.   [If it's big, you can truncate it from
-    where it starts repeating itself.]
+# lvdisplay -c /dev/vg1/lvol1
+/dev/vg1/lvol1:vg1:3:1:0:0:4096000:500:500:0:1024:58:0
+                                                                                           here i found that its size is 4096000. base on the document of lvdiskplay, this should be in KB unit. so two output from lvdisplay is mismatched. can anybody tell me why?
 
-  log {
-        file="/tmp/lvm2.log"
-        level=7
-  }
 
->  Reading all physical volumes.  This may take a while...
->  Ignoring additional label on /dev/hda11 at sector 1
 
-That suggests you've somehow got more than one LVM2 label on /dev/hda11:
-the debug output may give more details.
-[Or send me the first 2k of the device.]
+ming
 
-What's the history of LVM commands affecting that device?
-(eg created with an old LVM2 pvcreate or/and the current one,
-or with the --labelsector option?  dd onto it? vgcreate/extend?
-adjusted partition table?)
 
-Alasdair
 -- 
-agk@redhat.com
+ --------------------------------------------------
+| Ming Zhang, PhD. Student
+| Dept. of Electrical & Computer Engineering
+| College of Engineering
+| University of Rhode Island
+| Kingston RI. 02881
+| e-mail: mingz at ele.uri.edu
+| Tel. (401) 874-2293 
+| Fax. (401) 782-6422
+| http://www.ele.uri.edu/~mingz/
+ --------------------------------------------------
