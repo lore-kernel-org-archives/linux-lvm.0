@@ -1,12 +1,11 @@
-Return-Path: <josv@osp.nl>
-From: josv@osp.nl
-Date: Tue, 29 May 2001 23:55:23 +0200
-Subject: Re: [linux-lvm] Problem extending a LV
-Message-ID: <20010529235523.B1414@gatekeeper.osp.nl>
-References: <20010529120104.C29771@sistina.com> <Pine.LNX.4.33.0105291333520.8330-100000@UberGeek.coremetrics.com>
+Return-Path: <markv@wave.co.nz>
+Date: Wed, 30 May 2001 12:51:43 +1200
+From: Mark van Walraven <markv@wave.co.nz>
+Subject: Re: [linux-lvm] Converting my Root file system to LVM [last
+Message-ID: <20010530125142.A27177@mail.wave.co.nz>
+References: <200105232106.f4NL6Bl01557@dixie.dyndns.org> <20010528104951.D26710@sistina.com> <20010529113604.A28657@mail.wave.co.nz> <20010529091217.A25011@sistina.com>
 Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <Pine.LNX.4.33.0105291333520.8330-100000@UberGeek.coremetrics.com>; from austin@coremetrics.com on Tue, May 29, 2001 at 01:35:07PM -0500
+In-Reply-To: <20010529091217.A25011@sistina.com>; from Heinz J. Mauelshagen on Tue, May 29, 2001 at 09:12:17AM +0000
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -21,69 +20,51 @@ List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
-Cc: AJ Lewis <lewis@sistina.com>
 
-Hi,
-
-You mention that Veritas (presumably the Volume Manager) has this
-functionality. Are you sure that you can add a subdisk to a striped plex
-in a volume? I'm just curious because I can not remember that this is
-actually possible....
-
-++Jos
-
-And thus it came to pass that Austin Gonyou wrote:
-(on Tue, May 29, 2001 at 01:35:07PM -0500 to be exact)
-
-> Are there plans to have this functionality? As in, I have a 2 disk striped
-> set, and now I'm running out of space, so I add a third pv, and now I want
-> to restripe and extend onto the third disk? I ask because Veritas has this
-> ability, and it could be a deal breaker for some choosing which to use.
+On Tue, May 29, 2001 at 09:12:17AM +0000, Heinz J. Mauelshagen wrote:
+> > When/if you do this, please consider systems with root on LVM.  Building a
+> > ramdisk and pivoting root to that seems clumsy at best.  Perhaps vgchange
+> > could have an option to request a metadata flush, which is deferred until
+> > the relevant volumes are closed?
 > 
-> -- 
-> Austin Gonyou
-> Systems Architect, CCNA
-> Coremetrics, Inc.
-> Phone: 512-796-9023
-> email: austin@coremetrics.com
-> 
-> On Tue, 29 May 2001, AJ Lewis wrote:
-> 
-> > On Tue, May 29, 2001 at 11:33:54AM +0200, Carsten Balzer wrote:
-> > > If I try to extend the LV with:
-> > > lvextend -L+78164M /dev/NVolGroup/nVol
-> > > then I get:
-> > > lvextend -- rounding size 240119808 KB to stripe boundary size
-> > 240123904
-> > > KB
-> > > lvextend -- only 19541 free physical extents in volume group
-> > "NVolGroup"
-> > >
-> > > Next try with: lvextend -l+19541 /dev/NVolGroup/nVol
-> > > lvextend -- rounding size 240119808 KB to stripe boundary size
-> > 240123904
-> > > KB
-> > > lvextend -- only 19541 free physical extents in volume group
-> > "NVolGroup"
-> >
-> > You cannot currently extend a striped LV onto a new disk.  It would
-> > involve
-> > completely rearranging the data to account for the new striping
-> > configuration.  The reason you get the error is because the tools know
-> > this
-> > and are trying to extend on the two original PVs.  If you want to have
-> > the
-> > ability to extend the LV onto new disks, you must use linear LVs.
-> >
-> > Regards,
-> >
-> 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
+> Mark,
+> I am not sure if I get you right here...
 
--- 
-If you do what you've always done,
-You get what you've always gotten.
+Probably because I didn't make sense.  I was thinking that the metadata
+write could be scheduled to pend until all LVs were closed.  But that
+doesn't help, because root is never unmounted ...
+
+> But in case a metadata write at VG deactivation is needed in the future,
+> the update would take place *before* the try to unload it from the kernel.
+
+Do you mean that the metadata write might be a separate operation to
+deactivation, permitted even before the LVs were closed?
+
+> This is a valid sequence IMO, because reasons for unloadable metadata are
+
+s/unloadable/non-unloadable/ ?
+
+> open LVs caused by hanging applications (database systems et al.) or unmounted
+> filesystems which don't influence the correctness of the LVM metadata anyway.
+
+How about filesystems mounted read-only?  My current shutdown sequence goes:
+
+	/etc/rc6.d/S40umountfs:
+		swapoff -a
+		umount -f -a -r
+		mount -n -o remount,ro /
+
+	/etc/rc6.d/S50lvm:
+		/sbin/vgchange -A n -a n
+
+	/etc/rc6.d/S90reboot:
+		reboot -d -f -i
+
+Which doesn't work because root is on an LV.  But even if the lvm
+shutdown script could write the metadata while root was open, the VGDA
+would still end up recording an active VG and open LV, unless you had
+something analogous to "re-mount read-only" for LVs and VGs.
+
+Regards,
+
+Mark.
