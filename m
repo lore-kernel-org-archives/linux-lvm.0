@@ -1,11 +1,12 @@
-Return-Path: <root@srv.sistina.com>
-Date: Mon, 16 Jul 2001 13:34:17 +0200
-From: "Heinz J. Mauelshagen" <Mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] Newbie question
-Message-ID: <20010716133417.F11625@sistina.com>
-References: <FDEJIMPDHJAAPNLFKBMGAECACEAA.tgs@iafrica.com> <20010712094638.B418@btconnect.com> <200107121612.MAA13656@burns.luca.2y.net> <20010713131200.C32198@sistina.com> <20010713200112.A11175@colombina.comedia.it>
+Return-Path: <wichert@cistron.nl>
+Date: Mon, 16 Jul 2001 14:03:13 +0200
+From: Wichert Akkerman <wichert@cistron.nl>
+Subject: Re: [linux-lvm] Upgrade path
+Message-ID: <20010716140313.H8175@cistron.nl>
+References: <3B4EE8F2.5050506@ednet.ns.ca> <20010716132959.C11625@sistina.com>
 Mime-Version: 1.0
-In-Reply-To: <20010713200112.A11175@colombina.comedia.it>; from bluca@comedia.it on Fri, Jul 13, 2001 at 08:01:13PM +0200
+Content-Disposition: inline
+In-Reply-To: <20010716132959.C11625@sistina.com>; from Mauelshagen@sistina.com on Mon, Jul 16, 2001 at 01:29:59PM +0200
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -21,56 +22,17 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Fri, Jul 13, 2001 at 08:01:13PM +0200, Luca Berra wrote:
-> On Fri, Jul 13, 2001 at 01:12:00PM +0200, Heinz J. Mauelshagen wrote:
-> > > Another question is the boot stuff, what is better? compile LVM as a module
-> > > and use inird or compile the kernel with built-in LVM support?
-> > 
-> > It doesn't make a difference if you go for the module or the build in driver,
-> > you need to have an initrd today anyway to activate your VGs at boot time.
-> > 
-> > We are working on boot time recognition of VGs in the driver which will vanish
-> > the initrd. That will be in a post 1.0 version of the Linux LVM.
-> 
-> is this still worthwile since i read Linus in thinking of a new way
-> to handle initrd (appending a tar file to a kernel image and populating
-> a ramfs with it) and moving many _init code that now bloats kernel
-> to userspace.
+Previously Heinz J. Mauelshagen wrote:
+> If you can wait for LVM 0.9.1 Beta 8, you should.
+> We are just some days away from that release (hopefully ;-)
 
-Yes, we do move the functions to read metadata into the LVM kernel code
-because we need them in the cluster case anyway.
+Whatever happened to the 1.0 release? I haven't seen anything on the LVM
+lists explains what the current holdups and new timeframe are.
 
-> 
-> Regards,
-> L.
-> 
-> -- 
-> Luca Berra -- bluca@comedia.it
->         Communication Media & Services S.r.l.
->  /"\
->  \ /     ASCII RIBBON CAMPAIGN
->   X        AGAINST HTML MAIL
->  / \
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
+Wichert.
 
 -- 
-
-Regards,
-Heinz    -- The LVM Guy --
-
-*** Software bugs are stupid.
-    Nevertheless it needs not so stupid people to solve them ***
-
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-
-Heinz Mauelshagen                                 Sistina Software Inc.
-Senior Consultant/Developer                       Am Sonnenhang 11
-                                                  56242 Marienrachdorf
-                                                  Germany
-Mauelshagen@Sistina.com                           +49 2626 141200
-                                                       FAX 924446
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+  _________________________________________________________________
+ /       Nothing is fool-proof to a sufficiently talented fool     \
+| wichert@wiggy.net                   http://www.liacs.nl/~wichert/ |
+| 1024D/2FA3BC2D 576E 100B 518D 2F16 36B0  2805 3CB8 9250 2FA3 BC2D |
