@@ -1,95 +1,34 @@
-Message-ID: <38C7A5C9.913E7946@alwan.com>
-Date: Thu, 09 Mar 2000 07:23:21 -0600
-From: Chris Anderson <chris@alwan.com>
+Date: Thu, 9 Mar 2000 17:41:15 +0200 (SAST)
+From: Bruce Hewitson <hewitson@egs.uct.ac.za>
+Subject: [linux-lvm] 12 x UDMA disks -- problems
+Message-ID: <Pine.LNX.4.10.10003091735500.19333-100000@tie.egs.uct.ac.za>
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] 0.8final for 2.2?
-References: <Pine.WNT.4.21.0003091210200.145-100000@8938cs820195.ied.cpqcorp.net>
-Content-Type: multipart/signed; protocol="application/x-pkcs7-signature"; micalg=sha1; boundary="------------ms88F010748D646DDD80EF4D9A"
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
-To: Paul Jakma <paul.jakma@compaq.com>
-Cc: linux-lvm@msede.com
-
-This is a cryptographically signed message in MIME format.
-
---------------ms88F010748D646DDD80EF4D9A
-Content-Type: text/plain; charset=us-ascii
+Content-Type: TEXT/PLAIN; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
+To: linux-lvm@msede.com
 
-Paul Jakma wrote:
 
-> is there an 0.8final patch for 2.2.14? I can only see patches for 2.3.
+I am trying to use 12x37Gig UDMA disks off 3 Promise/Ultra-66 ide
+controlers providing 6 ide chains.  However, MAKEDEV will only create
+devices hd[a-l] --- I need in addition devices hd[m-p].  I looked in the
+MAKEDEV script, and can see two places where I can extend the devices to
+inlude these, but am stumped whith the lines
 
-It would be nice to see a html/web page that list the patches and that
-type of info in more detail.  This will not be an issue in 2.3 and 2.4
-but us 2.2 people (and more will come) would like to have this at our
-finger tips.  Also a lot people do not access to this list.  I guess that
-goes back to the more doc issues.
+...
+...
+major=`Major ide4 56`
+major=`Major ide5 57`
 
-I would be will to help with this.
+For ide6 and ide7, how do I determine the Major numbers?
 
->
->
-> -paul.
->
-> (who wants to get his hands on that snapshot code)
+Any help appreciated.
 
---------------ms88F010748D646DDD80EF4D9A
-Content-Type: application/x-pkcs7-signature; name="smime.p7s"
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="smime.p7s"
-Content-Description: S/MIME Cryptographic Signature
-
-MIIKpgYJKoZIhvcNAQcCoIIKlzCCCpMCAQExCzAJBgUrDgMCGgUAMAsGCSqGSIb3DQEHAaCC
-CF0wggUnMIIEkKADAgECAhA14LyrFmviXOa5H/eKmM+TMA0GCSqGSIb3DQEBBAUAMIHMMRcw
-FQYDVQQKEw5WZXJpU2lnbiwgSW5jLjEfMB0GA1UECxMWVmVyaVNpZ24gVHJ1c3QgTmV0d29y
-azFGMEQGA1UECxM9d3d3LnZlcmlzaWduLmNvbS9yZXBvc2l0b3J5L1JQQSBJbmNvcnAuIEJ5
-IFJlZi4sTElBQi5MVEQoYyk5ODFIMEYGA1UEAxM/VmVyaVNpZ24gQ2xhc3MgMSBDQSBJbmRp
-dmlkdWFsIFN1YnNjcmliZXItUGVyc29uYSBOb3QgVmFsaWRhdGVkMB4XDTAwMDIwNzAwMDAw
-MFoXDTAxMDIwNjIzNTk1OVowggEQMRcwFQYDVQQKEw5WZXJpU2lnbiwgSW5jLjEfMB0GA1UE
-CxMWVmVyaVNpZ24gVHJ1c3QgTmV0d29yazFGMEQGA1UECxM9d3d3LnZlcmlzaWduLmNvbS9y
-ZXBvc2l0b3J5L1JQQSBJbmNvcnAuIGJ5IFJlZi4sTElBQi5MVEQoYyk5ODEeMBwGA1UECxMV
-UGVyc29uYSBOb3QgVmFsaWRhdGVkMTMwMQYDVQQLEypEaWdpdGFsIElEIENsYXNzIDEgLSBO
-ZXRzY2FwZSBGdWxsIFNlcnZpY2UxFzAVBgNVBAMUDkNocmlzIEFuZGVyc29uMR4wHAYJKoZI
-hvcNAQkBFg9jaHJpc0BhbHdhbi5jb20wgZ8wDQYJKoZIhvcNAQEBBQADgY0AMIGJAoGBAN31
-Pw5bIWCEGpDtVb3kV1G7JEMH/ECRNxH4s9EfaJZ0T5ee/nm0BujUEu0ek3RqAouEBxz5o0vy
-oZBxBBf5AAyUyAFVbComcVQfWRJ2rDCvOe6cpsPCa9AAweMESWd1IUaE2GHU9QYwVdg+viyu
-0DmDaYqBCOsfpYQzMvnCNh3pAgMBAAGjggHBMIIBvTAJBgNVHRMEAjAAMIGsBgNVHSAEgaQw
-gaEwgZ4GC2CGSAGG+EUBBwEBMIGOMCgGCCsGAQUFBwIBFhxodHRwczovL3d3dy52ZXJpc2ln
-bi5jb20vQ1BTMGIGCCsGAQUFBwICMFYwFRYOVmVyaVNpZ24sIEluYy4wAwIBARo9VmVyaVNp
-Z24ncyBDUFMgaW5jb3JwLiBieSByZWZlcmVuY2UgbGlhYi4gbHRkLiAoYyk5NyBWZXJpU2ln
-bjARBglghkgBhvhCAQEEBAMCB4AwgYYGCmCGSAGG+EUBBgMEeBZ2ZDQ2NTJiZDYzZjIwNDcw
-MjkyOTg3NjNjOWQyZjI3NTA2OWM3MzU5YmVkMWIwNTlkYTc1YmM0YmM5NzAxNzQ3ZGE1ZDNm
-MjE0MWJlYWRiMmJkMmU4OTIxMGFkNmJmM2QyMTE0ODljYTFiMjQ0ZmFmM2VhNDUwYzAwBgpg
-hkgBhvhFAQYHBCIWIDZkNjgwYWY3ZGM0NWE5OWM1NTJkN2Q3YjRjYTI4OGRjMDMGA1UdHwQs
-MCowKKAmoCSGImh0dHA6Ly9jcmwudmVyaXNpZ24uY29tL2NsYXNzMS5jcmwwDQYJKoZIhvcN
-AQEEBQADgYEAfxMC1IcZq/V/Mi9W8Ngok5Tg4ru3Z/kNihrBpkzXbwkx2MOqD6iPLHmv3MP4
-g0x1f5noUVEKAbiMh9r9T2EhezsdyfGSS4EcGH0AFmpovR4FD5RK3sjtoFQ9ETO/WLGzwY33
-LkUP3Zd3XtgB7/1zqYio4uaPr+iHedKIeAn6d3EwggMuMIICl6ADAgECAhEA0nYujRQMPX2y
-qCVdr+4NdTANBgkqhkiG9w0BAQIFADBfMQswCQYDVQQGEwJVUzEXMBUGA1UEChMOVmVyaVNp
-Z24sIEluYy4xNzA1BgNVBAsTLkNsYXNzIDEgUHVibGljIFByaW1hcnkgQ2VydGlmaWNhdGlv
-biBBdXRob3JpdHkwHhcNOTgwNTEyMDAwMDAwWhcNMDgwNTEyMjM1OTU5WjCBzDEXMBUGA1UE
-ChMOVmVyaVNpZ24sIEluYy4xHzAdBgNVBAsTFlZlcmlTaWduIFRydXN0IE5ldHdvcmsxRjBE
-BgNVBAsTPXd3dy52ZXJpc2lnbi5jb20vcmVwb3NpdG9yeS9SUEEgSW5jb3JwLiBCeSBSZWYu
-LExJQUIuTFREKGMpOTgxSDBGBgNVBAMTP1ZlcmlTaWduIENsYXNzIDEgQ0EgSW5kaXZpZHVh
-bCBTdWJzY3JpYmVyLVBlcnNvbmEgTm90IFZhbGlkYXRlZDCBnzANBgkqhkiG9w0BAQEFAAOB
-jQAwgYkCgYEAu1pEigQWu1X9A3qKLZRPFXg2uA1Ksm+cVL+86HcqnbnwaLuV2TFBcHqBS7lI
-E1YtxwjhhEKrwKKSq0RcqkLwgg4C6S/7wju7vsknCl22sDZCM7VuVIhPh0q/Gdr5FegPh7Yc
-48zGmo5/aiSS4/zgZbqnsX7vyds3ashKyAkG5JkCAwEAAaN8MHowEQYJYIZIAYb4QgEBBAQD
-AgEGMEcGA1UdIARAMD4wPAYLYIZIAYb4RQEHAQEwLTArBggrBgEFBQcCARYfd3d3LnZlcmlz
-aWduLmNvbS9yZXBvc2l0b3J5L1JQQTAPBgNVHRMECDAGAQH/AgEAMAsGA1UdDwQEAwIBBjAN
-BgkqhkiG9w0BAQIFAAOBgQCIuDc73dqUNwCtqp/hgQFxHpJqbS/28Z3TymQ43BuYDAeGW4UV
-ag+5SYWklfEXfWe0fy0s3ZpCnsM+tI6q5QsG3vJWKvozx74Z11NMw73I4xe1pElCY+zCphcP
-XVgaSTyQXFWjZSAA/Rgg5V+CprGoksVYasGNAzzrw80FopCubjGCAhEwggINAgEBMIHhMIHM
-MRcwFQYDVQQKEw5WZXJpU2lnbiwgSW5jLjEfMB0GA1UECxMWVmVyaVNpZ24gVHJ1c3QgTmV0
-d29yazFGMEQGA1UECxM9d3d3LnZlcmlzaWduLmNvbS9yZXBvc2l0b3J5L1JQQSBJbmNvcnAu
-IEJ5IFJlZi4sTElBQi5MVEQoYyk5ODFIMEYGA1UEAxM/VmVyaVNpZ24gQ2xhc3MgMSBDQSBJ
-bmRpdmlkdWFsIFN1YnNjcmliZXItUGVyc29uYSBOb3QgVmFsaWRhdGVkAhA14LyrFmviXOa5
-H/eKmM+TMAkGBSsOAwIaBQCggYYwGAYJKoZIhvcNAQkDMQsGCSqGSIb3DQEHATAcBgkqhkiG
-9w0BCQUxDxcNMDAwMzA5MTMyMzIzWjAjBgkqhkiG9w0BCQQxFgQUJYkGACz5N3DF2Km57KG7
-bqwlsqowJwYJKoZIhvcNAQkPMRowGDAHBgUrDgMCBzANBggqhkiG9w0DAgIBKDANBgkqhkiG
-9w0BAQEFAASBgFxrgIBQTASP1c5qluXu+jeYkiuSg1CxTmybMi7pRSfCK0B8WkkJQALGrN6T
-RiKGr1lGCMCkBHH6c2AGkV+8+JLgA2CEjswnLjwngbpNZ0dIqLBTSc85A1ZmXquDxBFqauR9
-ix6YlHk51BoEEwqSmeC/4PDOmIimtM3QNWOKQ/c3
---------------ms88F010748D646DDD80EF4D9A--
+ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ | Assoc. Prof. Bruce C. Hewitson                  Ph: +27 21 650 2878 |
+ | Dept. Environmental & Geographical Sc.         Fax: +27 21 650 3791 |
+ | University of Cape Town, Private Bag, Rondebosch, South Africa 7701 |
+ |      hewitson@egs.uct.ac.za       http://www.egs.uct.ac.za/csag     |
+ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 
