@@ -1,7 +1,8 @@
-From: "B. Dobalina" <bdobalina@hotmail.com>
+From: Dossy <dossy@panoptic.com>
+Message-ID: <20030207042425.GF22795@panoptic.com>
 Mime-Version: 1.0
-Message-ID: <F1945ldnekJfv5qUWSG000090bf@hotmail.com>
-Subject: [linux-lvm] pvmove problem
+Content-Disposition: inline
+Subject: [linux-lvm] LVM 1.0.1 to LVM2 upgrade path
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -12,42 +13,30 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Thu Feb  6 17:27:02 2003
+Date: Thu Feb  6 22:25:02 2003
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; format=flowed; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-I am trying to remove an old harddrive from one of my volumes using:
-  pvmove -v /dev/hdh3
-It was chugging along just find until about half way through when it froze. 
-Linux was not "frozen", but I do not think it would allow any io to the 
-block devices (logins, ls's, etc would stall). I waited about an hour, at 
-which point it was still stuck on the same extent, and had no other option 
-but to hard reboot. When the system was booted, the volume to which hdh3 
-belonged, would no longer mount:
+Everyone,
 
-$ vgscan
-vgscan -- reading all physical volumes (this may take a while...)
-vgscan -- found active volume group "vol1"
-vgscan -- only found 2523 of 768 LEs for LV /dev/vol2/software (1)
-vgscan -- ERROR "vg_read_with_pv_and_lv(): allocated LE of LV" can't get 
-data of volume group "vol2" from physical volume(s)
-vgscan -- "/etc/lvmtab" and "/etc/lvmtab.d" successfully created
-vgscan -- WARNING: This program does not do a VGDA backup of your volume 
-groups
+I'm currently running on Linux 2.4.20 with LVM 1.0.1 26/11/2001 ... yes,
+it's outdated, but this is a production system and LVM has been
+(seemingly) stable without any issues.
 
+I'm figuring I should consider upgrading to LVM2, but I don't want to
+just go "trying it" -- is there a specific upgrade path I have to take?
+Is LVM2 backward compatible with LVM1?  Are there any "gotchas" and are
+they documented somewhere?
 
-Looks like some lvm metadata has been corrupted. So I ran vgcfgrestore on 
-/dev/hdh3: same result. Then I ran it on all the PVs in vol2: same result. 
-Does anybody have a solution to get this volume mounted? There is a bunch of 
-data on vol2, but not all that much in /dev/hdh3, so a partial restore would 
-be ok.
+Any pointers to documentation would be appreciated.  Meanwhile, I'm busy
+Googling ...
 
-Thanks,
-Skip
+-- Dossy
 
-
-_________________________________________________________________
-Help STOP SPAM with the new MSN 8 and get 2 months FREE*  
-http://join.msn.com/?page=features/junkmail
+-- 
+Dossy Shiobara                       mail: dossy@panoptic.com 
+Panoptic Computer Network             web: http://www.panoptic.com/ 
+  "He realized the fastest way to change is to laugh at your own
+    folly -- then you can let go and quickly move on." (p. 70)
