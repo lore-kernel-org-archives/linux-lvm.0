@@ -1,14 +1,11 @@
 From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
-Subject: Re: [linux-lvm] vgcreate not working
-Message-Id: <20020313120153.B23051@sistina.com>
-References: <20020310150455.E7514@majestic.ukshells.co.uk>
-    <1015773451.4127.1.camel@cr227180-a>
-    <20020310153909.F7514@majestic.ukshells.co.uk>
-    <20020311162953.C13418@sistina.com>
-    <20020312192251.GD30057@colombina.comedia.it>
+Subject: Re: [linux-lvm] Removing PV with disk errors from VG
+Message-Id: <20020313120449.C23051@sistina.com>
+References: <20020311163211.D13418@sistina.com>
+    <Pine.LNX.4.44.0203121806380.14816-100000@clapper.digitalpulp.com>
 MIME-Version: 1.0
-In-Reply-To: <20020312192251.GD30057@colombina.comedia.it>; from
-    bluca@comedia.it on Tue, Mar 12, 2002 at 08:22:51PM +0100
+In-Reply-To: <Pine.LNX.4.44.0203121806380.14816-100000@clapper.digitalpulp.com>;
+    from charwell@digitalpulp.com on Tue, Mar 12, 2002 at 06:16:10PM -0500
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -19,240 +16,196 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Mar 13 05:03:01 2002
+Date: Wed Mar 13 05:06:02 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Luca,
+Chris,
 
-I have already implemented a function, which does canonical PV names and
-aims to address this.
-Testing this in order to have it in the LVM 1.0.4 release.
+have you applied the cast patch for the llseek function, which fixes
+this problem mentioned several times here on the list?
+
+You should definitely *not* use CVS right now because it is a moving pre-release
+target which still has bugs!
 
 Regards,
 Heinz    -- The LVM Guy --
 
-
-On Tue, Mar 12, 2002 at 08:22:51PM +0100, Luca Berra wrote:
-> On Mon, Mar 11, 2002 at 04:29:53PM +0100, Heinz J . Mauelshagen wrote:
-> > > just tried using the long devfs names, as printed above and it works fine!
-> > > argggh.  thats me being dumb.
-> > 
-> > No, not really.
-> > Need to do something about it, so that LVM can cope with both dev pathes.
-> > 
-> i had an idea some time back, but no time to code,
-> after an year i believe the idea is still sound, but never got around to try it
-> i'll repost part of the thread, volunteers???
+On Tue, Mar 12, 2002 at 06:16:10PM -0500, Chris Harwell wrote:
+> hi,
 > 
-> L.
+> i've also run into errors when trying to use pvmove.
+> 
+> after offline shrinking with e2fsadm i was able to pvmove the PE's from
+> several partitions succesfully - all small ~256MB. then the last one, a 
+> large one ~3GB ran into troubles:
+> 
+> [root@totally80s init.d]# pvmove /dev/hda14
+> pvmove -- moving physical extents in active volume group "vg0"
+> pvmove -- WARNING: if you lose power during the move you may need
+>         to restore your LVM metadata from backup!
+> pvmove -- do you want to continue? [y/n] y
+> pvmove -- ERROR reading input physical volume "/dev/hda14" (still 458752 
+> bytes to read)
+> pvmove -- ERROR "pv_move_pe(): read input PV" moving physical extents
+> 
+> and then this (same without the -i and --force options, which i tried 
+> first). btw. a --test completed w/o errors. 
+> 
+> [root@totally80s init.d]# pvmove -i --force --verbose /dev/hda14 
+> pvmove -- checking name of source physical volume "/dev/hda14"
+> pvmove -- locking logical volume manager
+> pvmove -- reading data of source physical volume from "/dev/hda14"
+> pvmove -- checking volume group existence
+> pvmove -- reading data of volume group "vg0" from lvmtab
+> pvmove -- checking volume group consistency of "vg0"
+> pvmove -- searching for source physical volume "/dev/hda14" in volume 
+> group "vg0"
+> pvmove -- building list of possible destination physical volumes
+> pvmove -- checking volume group activity
+> pvmove -- moving physical extents in active volume group "vg0"
+> pvmove -- starting to move extents away from physical volume "/dev/hda14"
+> pvmove -- checking for enough free physical extents in "vg0"
+> pvmove -- /dev/hda14 [PE 0 [lvol1 [LE 310]] -> /dev/hdd9 [PE 16182] 
+> [1/1202]
+> pvmove -- ERROR "Invalid argument" remapping
+> pvmove -- ERROR "pv_move(): LE of LV remap" moving physical extents
+> 
+> 
+> before:
+> [root@totally80s /root]# pvscan
+> pvscan -- reading all physical volumes (this may take a while...)
+> pvscan -- ACTIVE   PV "/dev/hdc1"  of VG "vg0" [19.53 GB / 0 free]
+> pvscan -- ACTIVE   PV "/dev/hdc2"  of VG "vg0" [19.53 GB / 0 free]
+> pvscan -- ACTIVE   PV "/dev/hdc3"  of VG "vg0" [19.53 GB / 0 free]
+> pvscan -- ACTIVE   PV "/dev/hdc4"  of VG "vg0" [13 GB / 0 free]
+> pvscan -- ACTIVE   PV "/dev/hdd9"  of VG "vg0" [72 GB / 0 free]
+> pvscan -- ACTIVE   PV "/dev/hda9"  of VG "vg0" [248 MB / 0 free]
+> pvscan -- ACTIVE   PV "/dev/hda10" of VG "vg0" [248 MB / 0 free]
+> pvscan -- ACTIVE   PV "/dev/hda11" of VG "vg0" [248 MB / 0 free]
+> pvscan -- ACTIVE   PV "/dev/hda12" of VG "vg0" [248 MB / 0 free]
+> pvscan -- ACTIVE   PV "/dev/hda13" of VG "vg0" [248 MB / 0 free]
+> pvscan -- ACTIVE   PV "/dev/hda14" of VG "vg0" [4.70 GB / 0 free]
+> pvscan -- ACTIVE   PV "/dev/hdb1"  of VG "vg0" [19.53 GB / 0 free]
+> pvscan -- ACTIVE   PV "/dev/hdb2"  of VG "vg0" [19.53 GB / 0 free]
+> pvscan -- ACTIVE   PV "/dev/hdb3"  of VG "vg0" [19.53 GB / 0 free]
+> pvscan -- ACTIVE   PV "/dev/hdb4"  of VG "vg0" [17.72 GB / 0 free]
+> pvscan -- total: 15 [225.84 GB] / in use: 15 [225.84 GB] / in no VG: 0 [0]
+> 
+> after the successful
+> pvmove, vgreduce.. cycle for hda9,10,11,12,13 and pvmove hda14 failure:
+> 
+> pvscan -- reading all physical volumes (this may take a while...)
+> pvscan -- ACTIVE   PV "/dev/hdc1"  of VG "vg0" [19.53 GB / 0 free]
+> pvscan -- ACTIVE   PV "/dev/hdc2"  of VG "vg0" [19.53 GB / 0 free]
+> pvscan -- ACTIVE   PV "/dev/hdc3"  of VG "vg0" [19.53 GB / 0 free]
+> pvscan -- ACTIVE   PV "/dev/hdc4"  of VG "vg0" [13 GB / 0 free]
+> pvscan -- ACTIVE   PV "/dev/hdd9"  of VG "vg0" [72 GB / 6.79 GB free]
+> pvscan -- inactive PV "/dev/hda9"  is in no VG  [250.98 MB]
+> pvscan -- inactive PV "/dev/hda10" is in no VG  [250.98 MB]
+> pvscan -- inactive PV "/dev/hda11" is in no VG  [250.98 MB]
+> pvscan -- inactive PV "/dev/hda12" is in no VG  [250.98 MB]
+> pvscan -- inactive PV "/dev/hda13" is in no VG  [250.98 MB]
+> pvscan -- ACTIVE   PV "/dev/hda14" of VG "vg0" [4.70 GB / 2 GB free]
+> pvscan -- ACTIVE   PV "/dev/hdb1"  of VG "vg0" [19.53 GB / 0 free]
+> pvscan -- ACTIVE   PV "/dev/hdb2"  of VG "vg0" [19.53 GB / 0 free]
+> pvscan -- ACTIVE   PV "/dev/hdb3"  of VG "vg0" [19.53 GB / 0 free]
+> pvscan -- ACTIVE   PV "/dev/hdb4"  of VG "vg0" [17.72 GB / 0 free]
+> pvscan -- total: 15 [225.84 GB] / in use: 10 [224.62 GB] / in no VG: 5 
+> [1.23 GB]
+> 
+> RedHat 7.0 + Linux 2.4.18 + lvm-1.0.3
+> 
+> any advise? should i also try that cvs version? 
+> 
+> On Mon, 11 Mar 2002, Heinz J . Mauelshagen wrote:
+> 
+> > 
+> > Kalle,
+> > 
+> > well that's a bug in 1.0.3 which will be fixed in 1.0.4.
+> > If you wnat to try it at your own risk, check out LVM1 CVS and
+> > try "pvmove -i" again.
+> > 
+> > 1.0.4 will hopefully be released this week :)
+> > 
+> > Regards,
+> > Heinz    -- The LVM Guy --
+> > 
+> > 
+> > On Fri, Mar 08, 2002 at 04:40:19PM +0100, kalle@idlar.nu wrote:
+> > > Hello
+> > > 
+> > > I have built a VG from a couple of disks and have now discovered that one 
+> > > disk is not working right. Im getting a lot of theese kinds of errors:
+> > > 
+> > > end_request: I/O error, dev 03:03 (hdd), sector 2321462
+> > > hdd: read_intr: status=0x59 { DriveReady SeekComplete DataRequest Error }
+> > > hdd: read_intr: error=0x40 { UncorrectableError }, LBAsect=12571028, 
+> > > sector=2321558
+> > > 
+> > > So I would like to move the data that still can be accessed from the bad 
+> > > disk and remove the disk from the VG.
+> > > When I run pvmove /dev/hdd1 I get theese errors:
+> > > pvmove -- ERROR "Input/output error" reading sector 130688 from "/dev/hdd1"
+> > > pvmove -- ERROR "Input/output error" reading sector 130689 from "/dev/hdd1"
+> > > pvmove -- ERROR "Input/output error" reading sector 130690 from "/dev/hdd1"
+> > > pvmove -- ERROR "Input/output error" reading sector 130691 from "/dev/hdd1"
+> > > pvmove -- ERROR "Input/output error" reading sector 130692 from "/dev/hdd1"
+> > > pvmove -- ERROR "Input/output error" reading sector 130693 from "/dev/hdd1"
+> > > pvmove -- ERROR "Input/output error" reading sector 130694 from "/dev/hdd1"
+> > > pvmove -- ERROR "Input/output error" reading sector 130695 from "/dev/hdd1"
+> > > pvmove -- ERROR reading input physical volume "/dev/hdd1" (still 393216 
+> > > bytes to read)
+> > > pvmove -- ERROR "pv_move_pe(): read input PV" moving physical extents
+> > > 
+> > > I have tried to upgrade to the 1.0.3 tools and doing "pvmove -i /dev/hdd1" 
+> > > but I still get the same errors.
+> > > Im using lvm-mod version 1.0.1-rc4 with kernel 2.4.17.
+> > > 
+> > > Im willing to accept data loss, so is it possible to force the removal of 
+> > > the  PV, even if its not empty?
+> > > 
+> > > Can I somehow display the files that occupies a PV? so that I know which 
+> > > files will be lost.
+> > > 
+> > > What if I just remove the /dev/hdd1 partition with fdisk? will that mess up 
+> > > the whole VG?
+> > > 
+> > > any help appreciateed!
+> > > 
+> > > 
+> > > /Regards kalle...
+> > > 
+> > > 
+> > > _______________________________________________
+> > > linux-lvm mailing list
+> > > linux-lvm@sistina.com
+> > > http://lists.sistina.com/mailman/listinfo/linux-lvm
+> > > read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
+> > 
+> > *** Software bugs are stupid.
+> >     Nevertheless it needs not so stupid people to solve them ***
+> > 
+> > _______________________________________________
+> > linux-lvm mailing list
+> > linux-lvm@sistina.com
+> > http://lists.sistina.com/mailman/listinfo/linux-lvm
+> > read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
+> > 
 > 
 > -- 
-> Luca Berra -- bluca@comedia.it
->         Communication Media & Services S.r.l.
->  /"\
->  \ /     ASCII RIBBON CAMPAIGN
->   X        AGAINST HTML MAIL
->  / \
-
-> Return-Path: <linux-lvm-admin@sistina.com>
-> Delivered-To: bluca@comedia.it
-> Received: from sistina.com (hermes.sistina.com [208.210.145.141])
-> 	by colombina.comedia.it (Postfix) with SMTP id BEE91506D
-> 	for <bluca@comedia.it>; Tue, 13 Mar 2001 07:44:43 +0000 ()
-> Received: (qmail 2563 invoked from network); 13 Mar 2001 07:41:08 -0000
-> Received: from localhost (HELO hermes.sistina.com) (127.0.0.1)
->   by localhost with SMTP; 13 Mar 2001 07:41:08 -0000
-> Delivered-To: linux-lvm@sistina.com
-> Received: (qmail 2440 invoked from network); 13 Mar 2001 07:40:04 -0000
-> Received: from colombina.comedia.it (213.246.1.10)
->   by hermes.sistina.com with SMTP; 13 Mar 2001 07:40:04 -0000
-> Received: by colombina.comedia.it (Postfix, from userid 506)
-> 	id 0695A508D; Tue, 13 Mar 2001 07:41:02 +0000 ()
-> From: Luca Berra <bluca@comedia.it>
-> To: linux-lvm@sistina.com
-> Cc: lvm-devel@sistina.com
-> Subject: Re: [linux-lvm] Problem with vgscan/ vgcfgrestore
-> Message-ID: <20010313084102.A28227@colombina.comedia.it>
-> Mail-Followup-To: linux-lvm@sistina.com, lvm-devel@sistina.com
-> References: <GIEGKMCLIJBKBNBCCHEACEJACAAA.heimdall@mail.org> <200103130059.f2D0xsJ01176@webber.adilger.int>
-> Mime-Version: 1.0
-> Content-Type: text/plain; charset=us-ascii
-> Content-Disposition: inline
-> User-Agent: Mutt/1.2.5i
-> In-Reply-To: <200103130059.f2D0xsJ01176@webber.adilger.int>; from adilger@turbolinux.com on Mon, Mar 12, 2001 at 05:59:54PM -0700
-> X-Operating-System: Linux colombina.comedia.it 2.0.36 i586
-> Sender: linux-lvm-admin@sistina.com
-> Errors-To: linux-lvm-admin@sistina.com
-> X-BeenThere: linux-lvm@sistina.com
-> X-Mailman-Version: 2.0
-> Precedence: bulk
-> Reply-To: linux-lvm@sistina.com
-> X-Reply-To: bluca@comedia.it
-> List-Help: <mailto:linux-lvm-request@sistina.com?subject=help>
-> List-Post: <mailto:linux-lvm@sistina.com>
-> List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
-> 	<mailto:linux-lvm-request@sistina.com?subject=subscribe>
-> List-Id: linux-lvm general discussion <linux-lvm.sistina.com>
-> List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
-> 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
-> List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-> Date: Tue, 13 Mar 2001 08:41:02 +0100
-> X-Mailfolder: mail/archives/linux/lvm-2001.gz
+> chris
+> charwell@digitalpulp.com
 > 
-> On Mon, Mar 12, 2001 at 05:59:54PM -0700, Andreas Dilger wrote:
-> > Daniel Whiker writes:
-> > > Thanks for helping.  I did in fact have devfs compiled in and mounted to an
-> > > alternative path.
-> > 
-> > Currently devfs and LVM don't work well together, especially if it is not
-> > mounted on /dev.  My patch fixes a small part of this, but it is still
-> > safer to simply configure devfs out of the kernel when using LVM, until
-> > your system is working properly.
-> > 
-> I believe the big problem is that when lvm is compiled in /proc/partitions
-> contains device names in devfs format, if devfs is not mounted the lvm dir
-> cache will get filled with devfs names, which do not exist.
-> Another problem with devfs is symlinks (eg: /dev/sda), the lvm dircache will
-> contain only the long name (/dev/scsi/....).
 > 
-> i have a couple of ideas, but no time to code (sorry)
-> 1) using realpath in the tools to solve issue 2
-> 2) checking if the devices mentioned in /proc/partition do really exist, else
->   switch the cache to "scan the dev directory mode"
-> 
-> 	but better than the above 
-> 3) add another structure to the cache which contains aliases to the device
->  we have in the cache, aliases are added dynamically when found on the command
->  line or in the VGDA of a PV. We use 
-> 	alias[c].name=possible alias;
-> 	lstat(possible alias, &statbuf)
-> 	if (S_ISLNK(statbuf.st_mode)) {
-> 		alias[c].target=lvm_dir_cache_find(realpath(possible alias));
-> 		if !(alias[c].target) stat(realptah(possible alias), &statbuf)
-> 	}
-> 	if (S_ISBLK(statbuf.st_mode)) {
-> 		alias[c].target=lvm_dir_cache_find_dev(statbuf.st_dev>>8,statbuf.st_mode&((1<<8)-1));
-> 		/* the above function has to be written*/
-> 	}
-> 	if (!alias[c].target) complain(loudly);
-> 	c++;
-> 
->   then we modify lvm_dir_cache_find to loop also on alias[], before it starts searching th
->   cache.
-> 
-> regards,
-> L.
-> 	
-> P.S. in case you did not notice the above is not real code :)
-> 		
-> 		
-> 		
-> 
-> -- 
-> Luca Berra -- bluca@comedia.it
->         Communication Media & Services S.r.l.
->  /"\
->  \ /     ASCII RIBBON CAMPAIGN
->   X        AGAINST HTML MAIL
->  / \
 > _______________________________________________
 > linux-lvm mailing list
 > linux-lvm@sistina.com
 > http://lists.sistina.com/mailman/listinfo/linux-lvm
-
-> Return-Path: <linux-lvm-admin@sistina.com>
-> Delivered-To: bluca@comedia.it
-> Received: from sistina.com (hermes.sistina.com [208.210.145.141])
-> 	by colombina.comedia.it (Postfix) with SMTP id B2C40506D
-> 	for <bluca@comedia.it>; Tue, 13 Mar 2001 17:44:19 +0000 ()
-> Received: (qmail 7493 invoked from network); 13 Mar 2001 17:41:08 -0000
-> Received: from localhost (HELO hermes.sistina.com) (127.0.0.1)
->   by localhost with SMTP; 13 Mar 2001 17:41:08 -0000
-> Delivered-To: linux-lvm@sistina.com
-> Received: (qmail 7385 invoked from network); 13 Mar 2001 17:40:03 -0000
-> Received: from fry.sistina.com (HELO antimony.sistina.com) (208.210.145.138)
->   by hermes.sistina.com with SMTP; 13 Mar 2001 17:40:03 -0000
-> Received: by antimony.sistina.com (sSMTP sendmail emulation); Tue, 13 Mar 2001 11:40:54 -0600
-> From: AJ Lewis <lewis@sistina.com>
-> To: linux-lvm@sistina.com
-> Subject: Re: [linux-lvm] Problem with vgscan/ vgcfgrestore
-> Message-ID: <20010313114054.E15679@sistina.com>
-> References: <GIEGKMCLIJBKBNBCCHEACEJACAAA.heimdall@mail.org> <200103130059.f2D0xsJ01176@webber.adilger.int> <20010313084102.A28227@colombina.comedia.it>
-> Mime-Version: 1.0
-> Content-Type: multipart/signed; micalg=pgp-sha1;
-> 	protocol="application/pgp-signature"; boundary="KuLpqunXa7jZSBt+"
-> Content-Disposition: inline
-> User-Agent: Mutt/1.3.15i
-> In-Reply-To: <20010313084102.A28227@colombina.comedia.it>; from bluca@comedia.it on Tue, Mar 13, 2001 at 08:41:02AM +0100
-> Sender: linux-lvm-admin@sistina.com
-> Errors-To: linux-lvm-admin@sistina.com
-> X-BeenThere: linux-lvm@sistina.com
-> X-Mailman-Version: 2.0
-> Precedence: bulk
-> Reply-To: linux-lvm@sistina.com
-> List-Help: <mailto:linux-lvm-request@sistina.com?subject=help>
-> List-Post: <mailto:linux-lvm@sistina.com>
-> List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
-> 	<mailto:linux-lvm-request@sistina.com?subject=subscribe>
-> List-Id: linux-lvm general discussion <linux-lvm.sistina.com>
-> List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
-> 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
-> List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-> Date: Tue, 13 Mar 2001 11:40:54 -0600
-> X-Mailfolder: mail/archives/linux/lvm-2001.gz
-> 
-> On Tue, Mar 13, 2001 at 08:41:02AM +0100, Luca Berra wrote:
-> > i have a couple of ideas, but no time to code (sorry)
-> > 1) using realpath in the tools to solve issue 2
-> 
-> This should be done no matter what.  I can't think of any good reason not to
-> have the tools follow sym-links.
-> 
-> > 2) checking if the devices mentioned in /proc/partition do really exist, else
-> >   switch the cache to "scan the dev directory mode"
-> 
-> I believe this is the way it works at present
-> 
-> > 	but better than the above 
-> > 3) add another structure to the cache which contains aliases to the device
-> >  we have in the cache, aliases are added dynamically when found on the command
-> >  line or in the VGDA of a PV. We use 
-> > 	alias[c].name=possible alias;
-> > 	lstat(possible alias, &statbuf)
-> > 	if (S_ISLNK(statbuf.st_mode)) {
-> > 		alias[c].target=lvm_dir_cache_find(realpath(possible alias));
-> > 		if !(alias[c].target) stat(realptah(possible alias), &statbuf)
-> > 	}
-> > 	if (S_ISBLK(statbuf.st_mode)) {
-> > 		alias[c].target=lvm_dir_cache_find_dev(statbuf.st_dev>>8,statbuf.st_mode&((1<<8)-1));
-> > 		/* the above function has to be written*/
-> > 	}
-> > 	if (!alias[c].target) complain(loudly);
-> > 	c++;
-> > 
-> >   then we modify lvm_dir_cache_find to loop also on alias[], before it starts searching th
-> >   cache.
-> 
-> This looks interesting...and could possibly help a lot as well.
-> 
-> Regards,
-> -- 
-> AJ Lewis
-> Sistina Software Inc.                  Voice:  612-379-3951
-> 1313 5th St SE, Suite 111              Fax:    612-379-3952
-> Minneapolis, MN 55414                  E-Mail: lewis@sistina.com
-> http://www.sistina.com
-> 
-> Current GPG fingerprint = 3B5F 6011 5216 76A5 2F6B  52A0 941E 1261 0029 2648
-> Get my key at: http://www.sistina.com/~lewis/gpgkey
->  (Unfortunately, the PKS-type keyservers do not work with multiple sub-keys)
-> 
-> -----Begin Obligatory Humorous Quote----------------------------------------
-> Life's short and hard, kind of like a bodybuilding elf
-> -----End Obligatory Humorous Quote------------------------------------------
+> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
 
 *** Software bugs are stupid.
     Nevertheless it needs not so stupid people to solve them ***
