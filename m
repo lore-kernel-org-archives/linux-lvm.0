@@ -1,11 +1,9 @@
-From: Max Kalika <max+lists.lvm-dev@lsit.ucsb.edu>
-Subject: Re: [linux-lvm] LVM2 strangeness.
-Message-ID: <5610000.1054251328@valkyrie.lsit.ucsb.edu>
-In-Reply-To: <17160000.1054244981@valkyrie.lsit.ucsb.edu>
-References: <17160000.1054244981@valkyrie.lsit.ucsb.edu>
+From: "MRS. MARIAM ABACHA" <mariamahabacha@zwallet.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <E19LXFq-0006Kh-00@hermes.sistina.com>
+Subject: [linux-lvm] BUSINESS RELATIONSHIP
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -16,70 +14,33 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Thu May 29 18:34:01 2003
+Date: Thu May 29 18:57:03 2003
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
 
-Quick followup...
+DEAR SIR=2C
+IT IS WITH HEART FULL OF HOPE THAT I WRITE TO SEEK YOUR HELP IN THE CONTEXT BELOW=2E
+I AM MRS=2C MARIAM ABACHA =28WIDOW=29 THE WIFE OF FORMER HEAD OF STATE OF NIGERIA=2C GENERAL SANI ABACHA WHO'S SUDDEN DEATH OCCURRED ON THE 8TH OF JUNE=2C 1998=2E AS A RESULT OF CARDIAC ARREST WHILE STILL IN GOVERNMENT=2E
+I GOT YOUR EMAIL CONTACT FROM ONE OF THE MY FAMILY FRIEND A DIRECTOR=2C WITH THE NIGERIA CHEMBERS OF COMMERCE AND INDUSTRY=2E
+I HAVE NO DOUBT ABOUT YOUR CAPACITY AND GOODWILL TO ASSIST ME IN RECEIVING INTO YOUR PERSONAL BANK ACCOUNT =28FOR SAFETY=29 THE SUM OF US$ 32=2C800=2C000=2E00 =28THIRTY TWO MILLION=2C EIGTH HUNDRED THOUSAND US DOLLAS=29 =22WILLED=22 AND DEPOSITED IN MY LATE HUSBAND'S FAVOUR
+=2E
+THIS MONEY IS CURRENTLY DEPOSITED WITH A SECURITY COMPANY IN TWO TRUNK BOXES AS BELONGINGS AWAITING COLLECTION=2E AS IT IS LEGALLY REQUIRED=2C THE ADMINISTRATION OF MY LATE HUSBAND'S PROPERTIES IS UNDER THE AUTHORITY OF THE FAMILY'S LAWYER NAMED =28BARRISTER H
+OSSANA LUYA & ASSOCIATES=29=2E
+SINCE THE DEMISE OF MY HUSBAND=2C THE PRESENT REGIME =28GOVERNMENT=29 HAS BEEN PROBING MY LATE HUSBAND'S WEALTH=2E PRESENTLY=2C SOME CASH ASSETS WITHIN AND OUTSIDE NIGERIA HAVE BEEN FROZEN AND SEIZED=2E FORTUNATELY=2C OUR FAMILY LAWYER HAD SECRETLY PROTECTED THE PERSO
+NAL =22 WILL=22 OF MY LATE HUSBAND FROM THE NOTICE OF THE GOVERNMENT MEANWHILE=2C I AND EVERY MEMBER OF MY FAMILY ARE BEING MONITORED AND ALSO DENIAD ACCESS TO FINANCIAL DEALING WITHIN AND OUTSIDE NIGERIA=2E HENCE=2C I WAS ADVICE BY MY PERSONAL ASSISTANCE TO EMPL
+OYE THE ASSISTANCE OF A NEUTRAL INDIVIDUAL OUTSIDE NIGERIA AND WITH THE LEGAL BACKING OF MY FAMILY LAWYER TO POSE AS THE BENEFICIARY OF THE WILLED MONEY AND THEREFORE CLAIM THE CONSIGNMENT FROM THE SECURITY COMPANY FOR BENEFIT OF US ALL=2E
+THE GOVERNMENT HAD EARLIER PLACED FOREIGN EMBARGO ON ALL OUR FAMILY MEMBERS=2C SEIZED ALL KNOWN LOCAL AND INTERNATIONALOUTFITS OF OUR BUSINESS EMPIRE=2E THE SITUATION HAS BEEN SO TERRIBLE THAT WE ARE VIRTUALLY LIVING ON THE ASSISTANCE OF OUR WELL WISHERS=2E
+IN VIEW OF THIS PLIGHT THEREFORE=2C I EXPECT YOU TO BE TRUST WORTHY AND KIND ENOUGH TO RESPOND TO MAIL TO SAVE MY FAMILY AND I FROM A HOPELESS FUTURE=2E
+I HEREBY AGREE TO CONPENSATE YOUR SINCERE AND CANDID EFFORT IN THIS REGARD WITH 20% OF THE FUND WHEN FINALLY RECEIVED IN YOUR PERSONAL BANK ACCOUNT=2E 
+MY LAWYER WILL MAKE EVERY ARRENGMENTS TO EFFECT COMPLETE DISLODGMENT OF THIS MONEY WITHIN A WEEK OF THE RECEIPT OF YOUR RESPONSE THROUGH E-MAIL=2E 
+PLEASE=2C ALL CONTACT ON PHONE MUST BE THROUGH OUR FAMILY LAWYER- HOSSANA LUYA & ASSOCIATES OR MY PERSONAL ASSISTANCE WHILE YOU COMMUNICATE WITH ME ON EMAIL AS I AND MY FAMILY MEMBER IS BEEN HEAVELY MONITORED BY THE GOVERNMENT=2E
+I WILL ALSO FORWARD THE EMAIL AND PHONE NUMBER OF BARRISTER
+HOSSANA LUYA & ASSOCIATES OR THAT OF MY ASSISTANCE TO YOU AS SOON AS I RECIEVE YOUR RESPONSE=2E
+I LOOK FORWARD TO YOUR QUICK RESPONSE=2E MAY ALLAH BLESS YOU=2E 
+BEST WISHES=2C
+MRS=2E MARIAM ABACHA =28WIDOW=29=2E
 
-I blew away the snapshots and tried again.  The performance was much better
-(not surprisingly), but I still have lots of "busy buffer" messages in the
-kernel log.  Would anyone know what this is all about, and whether or not I
-should worry about it?  I'm considering putting LVM2 on a production mail
-server, primarily for the simple resize capabilities, but also to use
-snapshots during the rsync process (so as not to get many "file doesn't
-exist" errors).
-
-Quoting Max Kalika <max+lists.lvm-dev@lsit.ucsb.edu>:
-
-> Hello LVM devs and others,
-> 
-> I've been trying to use LVM2 on a backup server for the past few days and
-> I'm seeing some very strange things.
-> 
-> My configuration:
->   Dell PowerEdge 1300 (800Mhz)
->   512 MB RAM (2GB swap)
->   4 120GB IDE (8mb cache) disks in a RAID-5 configuration (on a 3ware
-> card)   Custom built vanilla kernel (2.4.20) with DM patches (0.96.08)
-> applied   LVM2 utilities version 1.95.15
-> 
-> I have a 300GB VG with a 150GB LV on it.  I also have a 50GB snapshot and
-> a 10GB snapshot.  I first rsync all remote server data (8 other machines)
-> to this "holding area" -- where I also hope to have 7 days of snapshot
-> information available on disk.  From here, the latest "current" data gets
-> pushed to tape.
-> 
-> Right now during an rsync of a huge mailstore (lots of small files) from
-> the mail server, the performance on the backup server degrades severly (up
-> to 12 1min load ave. and higher) and I'm seeing lots of the following in
-> the kernel log:
-> 
->   May 29 14:14:15 butters invalidate: busy buffer
->   May 29 14:14:15 butters invalidate: busy buffer
->   May 29 14:14:15 butters invalidate: busy buffer
->   May 29 14:14:15 butters invalidate: busy buffer
->   ... on and on and on ...
-> 
-> I'm guessing that most of the cpu is busy copying stuff from the original
-> LV to the snapshots.  Is this a valid assumption?  What can one do to help
-> the situation?  Or do I have a different misconfiguration?  Any light you
-> can shed on this is greatly appreciated.  TIA.
-> 
-> --
-> ---max kalika
-> --max@lsit.ucsb.edu
-> -lsit systems administrator
-> 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@sistina.com
-> http://lists.sistina.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
-
-
-
----max kalika
---max@lsit.ucsb.edu
--lsit systems administrator
+NB=3A PLEASE I WILL WANT YOU TO GO THROUGH THE FOLLOWING WEBSITE IN OTHER TO CONFIRM MORE ON THE ISSUES OF THE ABACHA AND THEFEDERAL GOVERNMENT SEIZURE AND FROZON ON THE ABACHA'S WEALTH=2E
+http=3A=2F=2Fnews=2Ebbc=2Eco=2Euk=2F1=2Fhi=2Fworld=2Fafrica=2F877113=2Estm
+http=3A=2F=2Fnews=2Ebbc=2Eco=2Euk=2F1=2Fhi=2Fworld=2Fafrica=2F909972=2Estm
+http=3A=2F=2Fwww=2Emarcosbillions=2Ecom=2Fmarcos=2FDictators%20Abacha=2Ehtm
