@@ -1,89 +1,50 @@
-From: Heinz Mauelshagen <mauelsha@ez-darmstadt.telekom.de>
-Message-Id: <200005032227.AAA21689@u9etz.ez-darmstadt.telekom.de>
-Subject: Re: [linux-lvm] reproducible segfault in vgscan
-In-Reply-To: <39108F9B.16FC50E0@msede.com> from Michael Marxmeier at "May 3, 2000 10:44:11 pm"
-Date: Thu, 4 May 2000 00:27:44 +0200 (MEST)
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+From: Andreas Dilger <adilger@turbolabs.com>
+Message-Id: <200005032350.e43NowH30788@webber.adilger.net>
+Subject: Re: [linux-lvm] SuSE/LVM boot problem
+Date: Wed, 3 May 2000 17:50:57 -0600 (MDT)
+MIME-Version: 1.0
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: Michael Marxmeier <mike@msede.com>
-Cc: mge@ez-darmstadt.telekom.de, linux-lvm@msede.com
+Content-Transfer-Encoding: 7bit
+To: Linux LVM mailing list <linux-lvm@msede.com>
 
+Eric M. Hopper writes:
+> 	One idea for making this happens is to have a way of locking
+> logical extents to physical extents so that you have to use a special
+> command to unlock them.  This kind of thing is already done in different
+> parts of LVM to make sure you don't delete logical volumes that are in
+> use, or remove physical volumes that still have extents allocated to
+> them.
 
-Could you provide your VG configuration ("vgdisplay -v") and
-a "vgscan -d" output to enable me to further dig into this one...
+> 	One this exists, altering lilo to detect LVM, and automatically
+> lock the necessary logical->physical extent mappings isn't too hard.
 
-Thankd,
-Heinz
+> 	Well, the problem is that moving a few physical extents does not
+> obviously suggest re-running lilo.  Many physical extents are fine to
+> move, and trying to keep track of which physical extents lilo cares
+> about, and which one's it doesn't isn't a task I think a sysadmin should
+> have to deal with.
 
-> Forwarded message form Paul Jakma <paulj@itg.ie>
-> 
-> -------- Original Message --------
-> Date: Wed, 3 May 2000 20:03:41 +0100 (IST)
-> From: Paul Jakma <paulj@itg.ie>
-> Subject: reproducible segfault in vgscan
-> Message-ID: <Pine.LNX.4.21.0005031928440.907-100000@rossi.itg.ie>
-> MIME-Version: 1.0
-> 
-> i have a reproducible segfault with vgscan.
-> 
-> i had pvmove'd several lv's. Then i rebooted. since then, vgscan
-> segfaults
-> the first 3 times  out of every 4 times i run it.
-> 
-> eg:
-> 
-> [root@rossi linux]# vgscan 
-> vgscan -- reading all physical volumes (this may take a while...)
-> vgscan -- found active volume group "Main_VG"
-> Segmentation fault
-> [root@rossi linux]# vgscan 
-> vgscan -- reading all physical volumes (this may take a while...)
-> vgscan -- found inactive volume group "Main_VG"
-> Segmentation fault
-> [root@rossi linux]# vgscan 
-> vgscan -- reading all physical volumes (this may take a while...)
-> vgscan -- found inactive volume group "Main_VG"
-> Segmentation fault
-> [root@rossi linux]# vgscan 
-> vgscan -- reading all physical volumes (this may take a while...)
-> vgscan -- found inactive volume group "Main_VG"
-> vgscan -- "/etc/lvmtab" and "/etc/lvmtab.d" successfully created
-> vgscan -- WARNING: you may not have an actual VGDA backup of your
-> volume
-> group
-> 
-> this means i have to call vgscan 4 times in a row from my initscripts
-> before i can run vgchange.. :(
-> 
-> vgcfgrestore also has the same behaviour. :( segfault, segfault,
-> segfault, ok, segfault, segfault segfault ok.. etc..
-> 
-> System is 2.3.99-pre6-pre7.
-> 
-> I've looked at the BUGS page but i don't see this problem listed.
-> 
-> Further info available on request..
-> 
-> regards,
-> 
-> Paul Jakma.
-> 
+I agree.  If it is possible/easy to already do this, I would say do it.
+I'm also saying that if it isn't possible (or if it is, but it's a lot
+of work), then it isn't really a show stopper.  People don't often move
+their kernels around, and if they do, there is no indication that LILO
+should be run either.  The /boot filesystem (or / if no /boot) is special
+in other ways as well, and I don't think many sysadmins will have a problem
+with remembering not to move it.
 
+> 	While I expected that /boot would have to be ext2fs, and
+> allocated a very generous 50M to it, I purposely compiled lvm into the
+> kernel in the hopes of one day having an lvm / parition.  Of course,
+> resizing an lvm / partition is a dicey affair.  :-)
 
+Why do you say that?  You can resize it while it is mounted:
+http://ext2resize.sourceforge.net/
+
+Cheers, Andreas
 -- 
-
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-
-Systemmanagement TS                              T-Nova
-                                                 Entwicklungszentrum Darmstadt
-Heinz Mauelshagen                                Otto-Roehm-Strasse 71c
-Senior Systems Engineer                          Postfach 10 05 41
-                                                 64205 Darmstadt
-mge@EZ-Darmstadt.Telekom.de                      Germany
-                                                 +49 6151 886-425
-                                                          FAX-386
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+Andreas Dilger  \ "If a man ate a pound of pasta and a pound of antipasto,
+                 \  would they cancel out, leaving him still hungry?"
+http://www-mddsp.enel.ucalgary.ca/People/adilger/               -- Dogbert
