@@ -1,8 +1,10 @@
-Return-Path: <Robert_Macaulay@Dell.com>
-Message-ID: <8F120FA493CAD743B30EEB8F356985B54FD90E@AUSXMBT102VS1.amer.dell.com>
-From: Robert_Macaulay@Dell.com
-Subject: RE: [linux-lvm] LVM kernel patch request
-Date: Mon, 2 Jul 2001 14:41:42 -0500 
+Return-Path: <jspies@maties.sun.ac.za>
+Subject: Re: [linux-lvm] RedHat 7.0?
+References: <001301c1032b$4da153e0$0300000a@pacbell.net>
+From: Johann Spies <jspies@maties.sun.ac.za>
+Date: 03 Jul 2001 11:13:49 +0000
+In-Reply-To: "Erick Calder"'s message of "Mon, 2 Jul 2001 12:15:06 -0700"
+Message-ID: <8766da2rki.fsf@#maties.sun.ac.za>
 MIME-Version: 1.0
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
@@ -19,81 +21,32 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-I have had success with the 2.4.3 kernel from RedHat. The difference is I
-didn't use RPMS, but went with the pure tarball. Following the INSTALL
-instructions worked perfectly for me. 
-Robert
+"Erick Calder" <e@arix.com> writes:
 
-> -----Original Message-----
-> From: AJ Lewis [mailto:lewis@sistina.com]
-> Sent: Monday, July 02, 2001 11:40 AM
-> To: linux-lvm@sistina.com
-> Subject: Re: [linux-lvm] LVM kernel patch request
+> I've searched through the archives but have not found anyone else
+> using Redhat 7.0 (Guiness) with LVM.  I've found a thread about 7.1
+> (Seawolf) but that uses the 2.4.2 kernel and I'm running the 2.2.19
+> kernel.
 > 
+> I found the RPMs on the site but they are for 6.2 (Zoot)... does
+> anyone know whether I can use the 6.2 RPMs on 7.0?  if not, are
+> there RPMs for 7.0 that I could use?
 > 
-> On Mon, Jul 02, 2001 at 01:48:39AM -0500, Tom Cosimano wrote:
-> > I'm running Redhat 7.1 kernel vmlinux-2.4.2-2smp.  I have 
-> tried a number
-> > of times and can only conclude that I'm missing some step(s).
-> > I have downloaded and installed the following RPMs from
-> > ftp://ftp.sistina.com/pub/LVM/binaries/redhat/0.9.1_beta in 
-> the order:
-> > 
-> > 1) lvm-base-1.1-1.i386.rpm
-> > rebooted
-> > 2a) lvm-iop10-0.9.1_beta7-1.i386.rpm
-> > 2b) lvm-iop10-lib-0.9.1_beta7-1.i386.rpm
-> > 3) lvm-iop10-man-0.9.1_beta7-1.i386.rpm
-> > 4) lvm-iop10-patchgen-0.9.1_beta7-1.i386.rpm
-> > rebooted
-> 
-> You need to build a kernel with LVM support built into it to 
-> use this.  The
-> default Redhat kernel does not have this.  The 
-> lvm-iop10-patchgen* packages
-> contain a stripped down version of the LVM source code made just for
-> patching a stock kernel (from ftp.kernel.org).  If you need a 
-> Redhat kernel
-> that supports LVM, you should talk to Redhat and let them know it is a
-> requirement of yours.
-> 
-> You should look at the LVM HowTo at 
-> http://sistina.com/lvm/Pages/howto.html
-> 
-> Regards,
-> -- 
-> AJ Lewis
-> Sistina Software Inc.                  Voice:  612-638-0500
-> 1313 5th St SE, Suite 111              Fax:    612-638-0500
-> Minneapolis, MN 55414                  E-Mail: lewis@sistina.com
-> http://www.sistina.com
-> 
-> Current GPG fingerprint = 3B5F 6011 5216 76A5 2F6B  52A0 941E 
-> 1261 0029 2648
-> Get my key at: http://www.sistina.com/~lewis/gpgkey
->  (Unfortunately, the PKS-type keyservers do not work with 
-> multiple sub-keys)
-> 
-> -----Begin Obligatory Humorous 
-> Quote----------------------------------------
-> File not found. Should I fake it? (Y/N)
-> -----End Obligatory Humorous 
-> Quote------------------------------------------
-> AJ Lewis
-> Sistina Software Inc.                  Voice:  612-638-0500
-> 1313 5th St SE, Suite 111              Fax:    612-638-0500
-> Minneapolis, MN 55414                  E-Mail: lewis@sistina.com
-> http://www.sistina.com
-> 
-> Current GPG fingerprint = 3B5F 6011 5216 76A5 2F6B  52A0 941E 
-> 1261 0029 2648
-> Get my key at: http://www.sistina.com/~lewis/gpgkey
->  (Unfortunately, the PKS-type keyservers do not work with 
-> multiple sub-keys)
-> 
-> -----Begin Obligatory Humorous 
-> Quote----------------------------------------
-> Bad command or file name. Bad, bad command! Sit! Stay! Staaaay...
-> -----End Obligatory Humorous 
-> Quote------------------------------------------
-> 
+> alternatively, has anyone compiled from the tarball and successfully
+> used LVM on my platform?
+
+I have compiled the tarball and a 2.4.5 kernel, patched with patches
+from LVM and installed it on Redhat 7.1 with success.
+
+Regards
+
+
+Johann
+-- 
+Johann Spies
+Informasietegnologie
+Universiteit van Stellenbosch
+
+     "I will say of the LORD, He is my refuge and my
+      fortress; my God, in him will I trust."               
+                                        Psalms 91:2
