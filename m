@@ -1,12 +1,9 @@
-Return-Path: <russell@coker.com.au>
-From: Russell Coker <russell@coker.com.au>
-Subject: Re: [linux-lvm] Do You Come Too Quickly in Bed??
-Date: Fri, 5 Jan 2001 13:56:47 +1100
-References: <01vr1bgvxf7c5p3qv.0f5lnmrr3o1d5@dns.hungrytiger.co.jp>
-In-Reply-To: <01vr1bgvxf7c5p3qv.0f5lnmrr3o1d5@dns.hungrytiger.co.jp>
+Return-Path: <narancs1@externet.hu>
+Date: Fri, 5 Jan 2001 12:21:07 +0100 (CET)
+From: Narancs 1 <narancs1@externet.hu>
+Message-ID: <Pine.LNX.4.02.10101051206550.5748-100000@prins.externet.hu>
 MIME-Version: 1.0
-Message-Id: <01010513564707.00874@lyta>
-Content-Transfer-Encoding: quoted-printable
+Subject: [linux-lvm] lvm: hw error or misconfig?
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -18,31 +15,113 @@ List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@sistina.com
+Content-Type: TEXT/PLAIN; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: linux-kernel@vger.kernel.org, linux-lvm@sistina.com
 
-On Friday 05 January 2001 02:57, you wrote:
-> Get your Sex Life Roaring with IMPULSE
-> http://216.144.198.242
+Dear developers!
 
-Does it extend your hard drive storage?
+(sorry for the long mail)
 
-Does it allow you to resize your hard drive without rebooting?
+We have a compaq proliant server with NO raid and 5 scsi discs:
+Host: scsi0 Channel: 00 Id: 04 Lun: 00
+  Vendor: COMPAQ   Model: BD00911934       Rev: 3B02
+  Type:   Direct-Access                    ANSI SCSI revision: 02
 
-I really think that LVM will do a lot more for my hard drive than IMPULSE=
-=20
-ever would.
+bounded together to a volume group vg00.
 
-LVM will allow your hard drive to stay online for months without a break=20
-while changing size to fit the requirements.  IMPULSE apparently can't of=
-fer=20
-this.  ;)
+This morning we received this strange message, and a file is not readable
+anymore. It is i/o error-ed. unfort. this caused loosing important data.
+
+Jan  5 11:30:21 matrix kernel: attempt to access beyond end of device
+Jan  5 11:30:21 matrix kernel: 08:31: rw=0, want=8883914, limit=8883913
+Jan  5 11:30:21 matrix kernel: dev 3a:00 blksize=1024 blocknr=8551735
+sector=17767820 size=4096 count=1
+
+Does it mean that some of the disks are hw errored or is it a
+misconfiguration, error in lvm or kernel code?
+
+How could I check the disks while they are in live work?
+It would be a big pain to stop the system and reformat the drives, so on.
+any idea?
+
+kernel 2.2.17, lvm 0.8i a la debian woody.
+
+thanks for your help, and hoping for fast answer
+Narancs v1
+---------------------------------------------------------
+ cat /proc/scsi/sym53c8xx/0
+General information:
+  Chip sym53c876, device id 0xf, revision id 0x14
+  IO port address 0x2000, IRQ number 23
+  Using memory mapped IO at virtual address 0xe0800f00
+  Synchronous period factor 12, max commands per lun 32
+
+vgdisplay -v
+--- Volume group ---
+VG Name               vg00
+VG Access             read/write
+VG Status             available/resizable
+VG #                  0
+MAX LV                256
+Cur LV                1
+Open LV               1
+MAX LV Size           255.99 GB
+Max PV                256
+Cur PV                5
+Act PV                5
+VG Size               41.1 GB
+PE Size               4 MB
+Total PE              10521
+Alloc PE / Size       10521 / 41.1 GB
+Free  PE / Size       0 / 0
+
+--- Logical volume ---
+LV Name               /dev/vg00/oracle
+VG Name               vg00
+LV Write Access       read/write
+LV Status             available
+LV #                  1
+# open                1
+LV Size               41.1 GB
+Current LE            10521
+Allocated LE          10521
+Allocation            next free
+Read ahead sectors    120
+Block device          58:0
 
 
-Sorry people, I couldn't resist.
+--- Physical volumes ---
+PV Name (#)           /dev/sda3 (1)
+PV Status             available / allocatable
+Total PE / Free PE    2061 / 0
 
---=20
-http://www.coker.com.au/bonnie++/     Bonnie++ hard drive benchmark
-http://www.coker.com.au/postal/       Postal SMTP/POP benchmark
-http://www.coker.com.au/projects.html Projects I am working on
-http://www.coker.com.au/~russell/     My home page
+PV Name (#)           /dev/sdb2 (2)
+PV Status             available / allocatable
+Total PE / Free PE    2061 / 0
+
+PV Name (#)           /dev/sdc2 (3)
+PV Status             available / allocatable
+Total PE / Free PE    2061 / 0
+
+PV Name (#)           /dev/sdd1 (4)
+PV Status             available / allocatable
+Total PE / Free PE    2169 / 0
+
+PV Name (#)           /dev/sde1 (5)
+PV Status             available / allocatable
+Total PE / Free PE    2169 / 0
+
+cat /etc/fstab 
+# /etc/fstab: static file system information.
+#
+# <file system> <mount point>   <type>  <options>
+<dump><pass>
+/dev/sda2       /               ext2    defaults,errors=remount-ro      01
+/dev/sda1       none            swap    sw                      0       0
+/dev/sdb1       none            swap    sw                      0       0
+/dev/sdc1       none            swap    sw                      0       0
+proc            /proc           proc    defaults                        00
+/dev/fd0        /floppy         auto    defaults,user,noauto            00
+/dev/cdrom      /cdrom          iso9660 defaults,ro,user,noauto         00
+/dev/vg00/oracle /u01           ext2    defaults                0       2
