@@ -1,10 +1,10 @@
-Return-Path: <guruju@erols.com>
-Message-ID: <3A9410F0.AE963191@erols.com>
-Date: Wed, 21 Feb 2001 14:03:12 -0500
-From: Subosu Guruju <guruju@erols.com>
+Return-Path: <lembark@wrkhors.com>
+Message-ID: <3A9413BA.FFE8501F@wrkhors.com>
+Date: Wed, 21 Feb 2001 13:15:06 -0600
+From: Steven Lembark <lembark@wrkhors.com>
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] lvm on a brand-new server
-References: <Pine.GSO.4.21.0102211227040.17882-100000@isis.visi.com>
+Subject: Re: [linux-lvm] online resize of ext2
+References: <200102211725.f1LHPPv31859@webber.adilger.net>
 Content-Transfer-Encoding: 7bit
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
@@ -20,10 +20,17 @@ List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@sistina.com
 
-Hi everyone,
+> > Will it go into the mainstream kernel anytime soon?
+> 
+> I haven't tried submitting it for 2.4.0 yet.  1.5 years ago when "the 2.4
+> kernel is going to be released very soon now", Linus, Alan, et. al. said
+> it would be added in 2.4 or 2.5.  Maybe it is time for me to try adding
+> the code to the 2.4 kernel again.
 
-  I am looking for cheap hardware to use LVM on linux (Redhat or SUSE). Any
-links or references really appreciated.
+2.4.1 is more-or-less stable enough to start with; you might
+take a shot at getting the patches into 2.4.2.
 
-regards,
-scg
+-- 
+ Steven Lembark                                   2930 W. Palmer St.
+                                                 Chicago, IL  60647
+ lembark@wrkhors.com                                   800-762-1582
