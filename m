@@ -1,9 +1,9 @@
-From: "kotaeji" <kotaeji@secui.com>
-Message-ID: <000901c21ceb$206bc060$8909040b@archteam6549>
-MIME-Version: 1.0
-Content-Type: multipart/alternative;
-	boundary="----=_NextPart_000_000A_01C21D36.90536860"
-Subject: [linux-lvm] unsubscribe
+From: "Heinz J . Mauelshagen" <mauelshagen@sistina.com>
+Subject: Re: [linux-lvm] Can't find LVM partition
+Message-ID: <20020626122427.A18125@sistina.com>
+References: <C394073E4521D411ABF10006293838D605158A70@cmh0401mai01.amr.stercomm.com>
+Mime-Version: 1.0
+In-Reply-To: <C394073E4521D411ABF10006293838D605158A70@cmh0401mai01.amr.stercomm.com>; from Darryl_Stauffer@stercomm.com on Tue, Jun 25, 2002 at 11:33:42AM -0400
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -14,185 +14,130 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Jun 26 03:26:02 2002
+Date: Wed Jun 26 05:32:01 2002
 List-Id: <linux-lvm.redhat.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-This is a multi-part message in MIME format.
+On Tue, Jun 25, 2002 at 11:33:42AM -0400, Stauffer, Darryl wrote:
+> Heinz,
+> 
+> When I type in pvdata /dev/sda5 I get the following output.
+> 
+> --- NEW Physical volume ---
+> PV Name               /dev/sda5
+> VG Name
+> PV Size               0 [0 secs]
+> PV#                   0
+> PV Status             NOT available
+> Allocatable           NO
+> Cur LV                0
+> PE Size (KByte)       0
+> Total PE              0
+> Free PE               0
+> Allocated PE          0
+> PV UUID               none
+> 
+> --- Volume group ---
+> VG Name
+> VG Access             error
+> VG Status             NOT available/NOT resizable
+> VG #                  0
+> MAX LV                0
+> Cur LV                0
+> Open LV               0
+> MAX LV Size           0
+> Max PV                0
+> Cur PV                0
+> Act PV                0
+> VG Size               0
+> PE Size               0
+> Total PE              0
+> Alloc PE / Size       0 / 0
+> Free  PE / Size       0 / 0
+> VG UUID               none
+> 
+> --- List of logical volumes ---
+> 
+> --- List of physical volume UUIDs ---
 
-------=_NextPart_000_000A_01C21D36.90536860
-Content-Type: text/plain;
-	charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Well, this looks like a whole lot of zeroes at the beginning of /dev/sda5 :(
+Not really recoverable.
 
-unsubscribe
+> 
+> I'm assuming that it cannot find the LVM partition information.
+> Unfortunately I do not have a backup copy of the /etc/lvmconf/* files.  If
+> you know of anything else I could try it would be greatly appreciated.
 
-------=_NextPart_000_000A_01C21D36.90536860
-Content-Type: text/html;
-	charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+Nope, sorry.
+At least you need LVM metadata archive backups (/etc/lvmconf/*) or backups
+of your data.
+Both would have been better though...
 
-<html xmlns:o=3D"urn:schemas-microsoft-com:office:office" =
-xmlns:w=3D"urn:schemas-microsoft-com:office:word" =
-xmlns=3D"http://www.w3.org/TR/REC-html40">
-
-<head>
-<META HTTP-EQUIV=3D"Content-Type" CONTENT=3D"text/html; =
-charset=3Dus-ascii">
+Regards,
+Heinz    -- The LVM Guy --
 
 
-<meta name=3DProgId content=3DWord.Document>
-<meta name=3DGenerator content=3D"Microsoft Word 10">
-<meta name=3DOriginator content=3D"Microsoft Word 10">
-<link rel=3DFile-List href=3D"cid:filelist.xml@01C21D36.902A3580">
-<!--[if gte mso 9]><xml>
- <o:OfficeDocumentSettings>
-  <o:DoNotRelyOnCSS/>
- </o:OfficeDocumentSettings>
-</xml><![endif]--><!--[if gte mso 9]><xml>
- <w:WordDocument>
-  <w:SpellingState>Clean</w:SpellingState>
-  <w:GrammarState>Clean</w:GrammarState>
-  <w:DocumentKind>DocumentEmail</w:DocumentKind>
-  <w:EnvelopeVis/>
-  =
-<w:DisplayHorizontalDrawingGridEvery>0</w:DisplayHorizontalDrawingGridEve=
-ry>
-  =
-<w:DisplayVerticalDrawingGridEvery>2</w:DisplayVerticalDrawingGridEvery>
-  <w:Compatibility>
-   <w:SpaceForUL/>
-   <w:BalanceSingleByteDoubleByteWidth/>
-   <w:DoNotLeaveBackslashAlone/>
-   <w:ULTrailSpace/>
-   <w:DoNotExpandShiftReturn/>
-   <w:AdjustLineHeightInTable/>
-   <w:BreakWrappedTables/>
-   <w:SnapToGridInCell/>
-   <w:WrapTextWithPunct/>
-   <w:UseAsianBreakRules/>
-   <w:UseFELayout/>
-  </w:Compatibility>
-  <w:BrowserLevel>MicrosoftInternetExplorer4</w:BrowserLevel>
- </w:WordDocument>
-</xml><![endif]-->
-<style>
-<!--
- /* Font Definitions */
- @font-face
-	{font-family:&#48148;&#53461;;
-	panose-1:2 3 6 0 0 1 1 1 1 1;
-	mso-font-alt:Batang;
-	mso-font-charset:129;
-	mso-generic-font-family:roman;
-	mso-font-pitch:variable;
-	mso-font-signature:-1342176593 1775729915 48 0 524447 0;}
-@font-face
-	{font-family:&#44404;&#47548;;
-	panose-1:2 11 6 0 0 1 1 1 1 1;
-	mso-font-alt:Gulim;
-	mso-font-charset:129;
-	mso-generic-font-family:modern;
-	mso-font-pitch:variable;
-	mso-font-signature:-1342176593 1775729915 48 0 524447 0;}
-@font-face
-	{font-family:"\@&#44404;&#47548;";
-	panose-1:2 11 6 0 0 1 1 1 1 1;
-	mso-font-charset:129;
-	mso-generic-font-family:modern;
-	mso-font-pitch:variable;
-	mso-font-signature:-1342176593 1775729915 48 0 524447 0;}
-@font-face
-	{font-family:"\@&#48148;&#53461;";
-	panose-1:2 3 6 0 0 1 1 1 1 1;
-	mso-font-charset:129;
-	mso-generic-font-family:roman;
-	mso-font-pitch:variable;
-	mso-font-signature:-1342176593 1775729915 48 0 524447 0;}
- /* Style Definitions */
- p.MsoNormal, li.MsoNormal, div.MsoNormal
-	{mso-style-parent:"";
-	margin:0cm;
-	margin-bottom:.0001pt;
-	text-align:justify;
-	text-justify:inter-ideograph;
-	mso-pagination:none;
-	text-autospace:none;
-	word-break:break-hangul;
-	font-size:10.0pt;
-	mso-bidi-font-size:12.0pt;
-	font-family:&#48148;&#53461;;
-	mso-hansi-font-family:"Times New Roman";
-	mso-bidi-font-family:"Times New Roman";
-	mso-font-kerning:1.0pt;}
-a:link, span.MsoHyperlink
-	{color:blue;
-	text-decoration:underline;
-	text-underline:single;}
-a:visited, span.MsoHyperlinkFollowed
-	{color:purple;
-	text-decoration:underline;
-	text-underline:single;}
-span.EmailStyle17
-	{mso-style-type:personal-compose;
-	mso-style-noshow:yes;
-	mso-ansi-font-size:10.0pt;
-	mso-bidi-font-size:10.0pt;
-	font-family:&#44404;&#47548;;
-	mso-ascii-font-family:&#44404;&#47548;;
-	mso-fareast-font-family:&#44404;&#47548;;
-	mso-hansi-font-family:Arial;
-	mso-bidi-font-family:Arial;
-	color:windowtext;}
- /* Page Definitions */
- @page
-	{mso-page-border-surround-header:no;
-	mso-page-border-surround-footer:no;}
-@page Section1
-	{size:595.3pt 841.9pt;
-	margin:99.25pt 3.0cm 3.0cm 3.0cm;
-	mso-header-margin:42.55pt;
-	mso-footer-margin:49.6pt;
-	mso-paper-source:0;
-	layout-grid:18.0pt;}
-div.Section1
-	{page:Section1;}
--->
-</style>
-<!--[if gte mso 10]>
-<style>
- /* Style Definitions */=20
- table.MsoNormalTable
-	{mso-style-name:"&#54364;&#51456; &#54364;";
-	mso-tstyle-rowband-size:0;
-	mso-tstyle-colband-size:0;
-	mso-style-noshow:yes;
-	mso-style-parent:"";
-	mso-padding-alt:0cm 5.4pt 0cm 5.4pt;
-	mso-para-margin:0cm;
-	mso-para-margin-bottom:.0001pt;
-	mso-pagination:widow-orphan;
-	font-size:10.0pt;
-	font-family:"Times New Roman";}
-</style>
-<![endif]-->
-</head>
+> 
+> Thanks,
+> Darryl
+> 
+> 
+> -----Original Message-----
+> From: Heinz J . Mauelshagen [mailto:mauelshagen@sistina.com]
+> Sent: Tuesday, June 18, 2002 6:32 AM
+> To: linux-lvm@sistina.com
+> Subject: Re: [linux-lvm] Can't find LVM partition
+> 
+> 
+> 
+> Darryl,
+> 
+> as Patrick said, vgscan should find your LVM partition fine unless it got
+> written over.
+> 
+> In case just the LVM metadata at the beginning of that partition (~ < 1MB)
+> got overwritten during install, backups of /etc/lvmconf/* and
+> vgcfgrestore(8)
+> are your friends as Sander metioned. If more is gone you probably wont't get
+> back a whole lot of useful data.
+> 
+> Any progress so far?
+> 
+> 
+> On Thu, Jun 13, 2002 at 11:36:38AM -0400, Stauffer, Darryl wrote:
+> > Hello,
+> > 
+> > I just got done upgrading from Redhat 7.2 to Redhat 7.3.  My home
+> directory
+> > was setup on its own partition using LVM and reiserFS.  The upgrade was
+> done
+> > by formatting the original root partition and reinstalling OS which means
+> > that all the LVM info is gone.  Is there any way to recover my LVM
+> > partition?
+> > 
+> > Thanks,
+> > Darryl
+> > 
+> > _______________________________________________
+> > linux-lvm mailing list
+> > linux-lvm@sistina.com
+> > http://lists.sistina.com/mailman/listinfo/linux-lvm
+> > read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
+> 
+> -- 
+> 
 
-<body lang=3DKO link=3Dblue vlink=3Dpurple =
-style=3D'tab-interval:40.0pt'>
+*** Software bugs are stupid.
+    Nevertheless it needs not so stupid people to solve them ***
 
-<div class=3DSection1 style=3D'layout-grid:18.0pt'>
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
-<p class=3DMsoNormal><font size=3D2 face=3D&#44404;&#47548;><span =
-lang=3DEN-US style=3D'font-size:10.0pt;
-mso-bidi-font-size:10.0pt;font-family:&#44404;&#47548;;mso-hansi-font-fam=
-ily:Arial;
-mso-bidi-font-family:Arial'>unsubscribe<o:p></o:p></span></font></p>
-
-</div>
-
-</body>
-
-</html>
-
-------=_NextPart_000_000A_01C21D36.90536860--
+Heinz Mauelshagen                                 Sistina Software Inc.
+Senior Consultant/Developer                       Am Sonnenhang 11
+                                                  56242 Marienrachdorf
+                                                  Germany
+Mauelshagen@Sistina.com                           +49 2626 141200
+                                                       FAX 924446
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
