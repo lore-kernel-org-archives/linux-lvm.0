@@ -1,20 +1,31 @@
-Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id i8QNnmr03231
-	for <linux-lvm@redhat.com>; Sun, 26 Sep 2004 19:49:48 -0400
-Received: from nexredback-216-168-119-94.nexicom.net
-	(nexredback-216-168-119-94.nexicom.net [216.168.119.94])
-	by mx3.redhat.com (8.12.11/8.12.10) with SMTP id i8QNneJs000492
-	for <linux-lvm@redhat.com>; Sun, 26 Sep 2004 19:49:42 -0400
-Message-ID: <4157558E.7030409@mikebabcock.ca>
-Date: Sun, 26 Sep 2004 19:49:34 -0400
-From: "Michael T. Babcock" <mtb@mikebabcock.ca>
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id i8R7wLr16802
+	for <linux-lvm@redhat.com>; Mon, 27 Sep 2004 03:58:21 -0400
+Received: from mail.myself.gen.nz (203-79-83-162.cable.paradise.net.nz
+	[203.79.83.162])
+	by mx1.redhat.com (8.12.11/8.12.10) with ESMTP id i8R7wHB5000318
+	for <linux-lvm@redhat.com>; Mon, 27 Sep 2004 03:58:19 -0400
+Received: from localhost (localhost [127.0.0.1])
+	by mail.myself.gen.nz (Postfix) with ESMTP id 346AC1800BB
+	for <linux-lvm@redhat.com>; Mon, 27 Sep 2004 20:02:01 +1200 (NZST)
+Received: from mail.myself.gen.nz ([127.0.0.1])
+	by localhost (guardian.cyber.god [127.0.0.1]) (amavisd-new, port 10025)
+	with LMTP id 03876-01 for <linux-lvm@redhat.com>;
+	Mon, 27 Sep 2004 20:02:00 +1200 (NZST)
+Received: from [127.0.0.1] (fosi.cyber.god [192.168.1.2])
+	by mail.myself.gen.nz (Postfix) with ESMTP id 613A7180095
+	for <linux-lvm@redhat.com>; Mon, 27 Sep 2004 20:02:00 +1200 (NZST)
+Message-ID: <4157C813.90401@myself.gen.nz>
+Date: Mon, 27 Sep 2004 19:58:11 +1200
+From: Steve Wray <steve@myself.gen.nz>
+MIME-Version: 1.0
 Subject: Re: [linux-lvm] which files, which physical volumes?
-References: <CB8795BC-0F0E-11D9-AF91-000A95730E92@spamaps.org>
-	<4155EBA2.7020609@myself.gen.nz>
-In-Reply-To: <4155EBA2.7020609@myself.gen.nz>
-Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
+References: <41538691.2040807@myself.gen.nz>	<20040924061754.GD13943@percy.comedia.it>	<4153BF33.6030008@myself.gen.nz>	<20040926202757.GG32455@omnifarious.org>
+	<20040927003042.GO11810@agk.surrey.redhat.com>
+In-Reply-To: <20040927003042.GO11810@agk.surrey.redhat.com>
+Content-Transfer-Encoding: 7bit
+Reply-To: steve@myself.gen.nz,
+	LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -25,34 +36,21 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: steve@myself.gen.nz, LVM general discussion and development <linux-lvm@redhat.com>
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-Steve Wray wrote:
+Alasdair G Kergon wrote:
+> On Sun, Sep 26, 2004 at 01:27:57PM -0700, Eric Hopper wrote:
+> 
+[snip]
+>   Test mode works a different way in LVM2 - it's designed for testing
+>   and simply disables all writes at the lowest level of the code 
+>   (to guarantee safety) - but reports success to the calling function.  
+>   Many code paths don't yet say 'stop here if this is test mode' so
+>   they stop instead with an error when they find an inconsistency
+>   because they thought they changed something, but it got read back
+>   unchanged.
 
-> Well then its bogus; the physical volume I am trying to pvmove has a 
-> capacity of around 9G whereas the volume group of which it is a part 
-> has a nice 42G free.
->
-> So how does that work out to not enough extents?
+wow it makes a lot more sense now.
 
-
-Does the Volume Group in question have 42GB of unallocated extents, or 
-42GB free on the allocated Logical Volumes?
-
-If you had VG main with 60GB total containing LVs lv1 and lv2 each 20GB 
-then you'd have 2GB unallocated on the VG.
-
-If you want more unallocated space on e.g. /dev/hdc1 (a member of VG 
-main) to move part of lv1 onto (from /dev/hda1), you'd have to do 
-something like:
-
-resize_filesystem /dev/main/lv2 (down to smaller size)
-lvresize -L (new size) /dev/main/lv2 # to resize the logical volume 
-using the space
-pvmove -n /dev/main/lv2 /dev/hdc1 # to move as much as possible of lv2 
-off this PV
-pvmove -n /dev/main/lv1 /dev/hda1 /dev/hdc1
-
-Does that make sense to you?
--- 
-Michael T. Babcock
+This could really do with going into the pvmove man page, which is a bit 
+sparse as it is...
