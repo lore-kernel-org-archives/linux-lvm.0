@@ -1,12 +1,11 @@
-Return-Path: <patrick@tykepenguin.cix.co.uk>
-Date: Mon, 9 Jul 2001 08:40:31 +0100
-From: Patrick Caulfield <caulfield@sistina.com>
-Subject: Re: [linux-lvm] lvm on sparc 20
-Message-ID: <20010709084031.A528@tykepenguin.com>
-References: <Pine.LNX.4.33.0107081335390.3853-100000@willow.nutstreet.net>
+Return-Path: <root@srv.sistina.com>
+Date: Mon, 9 Jul 2001 09:58:34 +0200
+From: "Heinz J. Mauelshagen" <Mauelshagen@sistina.com>
+Subject: Re: [linux-lvm] pvscan - - invalid i/o protocol version
+Message-ID: <20010709095834.A12405@sistina.com>
+References: <F2153oryKFRJrzdDW6l00000349@hotmail.com>
 Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <Pine.LNX.4.33.0107081335390.3853-100000@willow.nutstreet.net>; from eric@nutstreet.net on Sun, Jul 08, 2001 at 01:44:29PM -0500
+In-Reply-To: <F2153oryKFRJrzdDW6l00000349@hotmail.com>; from pascal_heger@hotmail.com on Sun, Jul 08, 2001 at 01:34:23PM +0200
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -22,31 +21,63 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Sun, Jul 08, 2001 at 01:44:29PM -0500, Eric Smith wrote:
-> Hola!
+On Sun, Jul 08, 2001 at 01:34:23PM +0200, Pascal Heger wrote:
+> Hi,
 > 
-> I've had great success using LVM with my x86 systems.  But I'm trying it
-> on my sparc 20 right now (RH 6.2, 2.2.19) and even though I've applied the
-> patches I don't see LVM in the block devices config page.  I used a clean
-> 2.2.19 kernel, _not_ the RH kernel.
+> I'm new to LVM, and desperate to get it working on a 3 disk linux box.
+> I'm running Kernel version 2.4.6, and installed the binary 'RedHat' version 
+> 8.1 of LVM.
+> I have compiled the kernel with LVM as a module, and everything seems to 
+> work fine at bootup (/proc/lvm is there).
+> The module is loaded at bootup, and i put the vgscan and vgchange scripts in 
+> rc.sysinit.
 > 
-> Any ideas?
+> I have changed the partition type of hdb, and hdc to 0x8e. But when i try to 
+> run pvcreate /dev/hdb1 i get:
 > 
+> pvcreate - - ERROR: "/etc/lvmtab" doesn't exist; please run vgscan.
+> 
+> And when i run vgscan:
+> 
+> vgscan - - invalid i/o protocol version
+> 
+> What did i do wrong? Did i install the wrong version of LVM?
+> Any help will be greatly appreciated.
 
-Try this patch:
+You don't have the driver in your kernel.
 
---- arch/sparc/config.in.orig   Mon Jul  9 08:36:13 2001
-+++ arch/sparc/config.in        Mon Jul  9 08:36:15 2001
-@@ -94,6 +94,8 @@
-   tristate '   RAID-4/RAID-5 mode' CONFIG_MD_RAID5
- fi
- 
-+tristate 'Logical volume manager (LVM) support' CONFIG_BLK_DEV_LVM N
-+
- tristate 'RAM disk support' CONFIG_BLK_DEV_RAM
- if [ "$CONFIG_BLK_DEV_RAM" = "y" -o "$CONFIG_BLK_DEV_RAM" = "m" ]; then
-   int '   Default RAM disk size' CONFIG_BLK_DEV_RAM_SIZE 4096
+Check in your kernel configuration if LVM is activated.
+
+In case you've got the driver as a module, you need to load it manually or
+preferably have it loaded by kmod. Maybe your modules.conf doesn't cover
+the LVM module load?
 
 
+> 
+> Pascal.
+> _________________________________________________________________________
+> Get Your Private, Free E-mail from MSN Hotmail at http://www.hotmail.com.
+> 
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@sistina.com
+> http://lists.sistina.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://www.sistina.com/lvm/Pages/howto.html
 
-patrick
+-- 
+
+Regards,
+Heinz    -- The LVM Guy --
+
+*** Software bugs are stupid.
+    Nevertheless it needs not so stupid people to solve them ***
+
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+Heinz Mauelshagen                                 Sistina Software Inc.
+Senior Consultant/Developer                       Am Sonnenhang 11
+                                                  56242 Marienrachdorf
+                                                  Germany
+Mauelshagen@Sistina.com                           +49 2626 141200
+                                                       FAX 924446
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
