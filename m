@@ -1,6 +1,7 @@
-From: Chris Danis <screechco@home.com>
-Message-Id: <E162MMe-0004br-00@brooks.homenet>
-Subject: [linux-lvm] Problems compiling userland LVM on sparc debian unstable
+Message-ID: <20011110224327.54616.qmail@web10406.mail.yahoo.com>
+From: BOIK MOON <mooasun@yahoo.com>
+MIME-Version: 1.0
+Subject: [linux-lvm] Help on LVM/SW-RAID build problems
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -11,84 +12,106 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Fri Nov  9 18:50:02 2001
+Date: Sat Nov 10 16:42:02 2001
 List-Id: <linux-lvm.redhat.com>
-MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-Hello all,
-
-I'm running Debian unstable on a Sparcstation 20. I've managed to
-patch the kernel (2.4.14) fine, but I can't seem to get the userspace
-tools to compile. There seems to be some kind of conflict with the
-headers, but not knowing much C, I'm a bit at a loss for what is going
-on.
-
-The build looks like this:
-
-gallagher% make
-make[1]: Entering directory `/home/danish/LVM/1.0.1-rc4/tools'
-make[2]: Entering directory `/home/danish/LVM/1.0.1-rc4/tools/lib'
-make[3]: Entering directory `/home/danish/LVM/1.0.1-rc4/tools/lib'
-gcc -c -pipe -g -O2 -Wall -pg -DDEBUG -I../../tools/lib -I../../tools -I/home/danish/LVM/1.0.1-rc4/tools/lib -o basename.o basename.c
-In file included from /usr/include/asm/signal.h:11,
-                 from /usr/include/asm-sparc/processor.h:21,
-                 from /usr/include/asm/processor.h:11,
-                 from /usr/include/linux/prefetch.h:13,
-                 from /usr/include/linux/list.h:6,
-                 from ../../tools/lib/lvm.h:115,
-                 from ../../tools/lib/liblvm.h:96,
-                 from basename.c:34:
-/usr/include/asm-sparc/signal.h:112: conflicting types for `sigset_t'
-/usr/include/sys/select.h:38: previous declaration of `sigset_t'
-make[3]: *** [basename.o] Error 1
-make[3]: Leaving directory `/home/danish/LVM/1.0.1-rc4/tools/lib'
-make[2]: *** [all] Error 2
-make[2]: Leaving directory `/home/danish/LVM/1.0.1-rc4/tools/lib'
-make[2]: Entering directory `/home/danish/LVM/1.0.1-rc4/tools/man8'
-make[3]: Entering directory `/home/danish/LVM/1.0.1-rc4/tools/man8'
-make[3]: Leaving directory `/home/danish/LVM/1.0.1-rc4/tools/man8'
-make[2]: Leaving directory `/home/danish/LVM/1.0.1-rc4/tools/man8'
-make[2]: Entering directory `/home/danish/LVM/1.0.1-rc4/tools'
-gcc -c -pipe -g -O2 -Wall -pg -DDEBUG -I../tools/lib -I../tools -I/home/danish/LVM/1.0.1-rc4/tools/lib -o e2fsadm.o e2fsadm.c
-In file included from /usr/include/asm/signal.h:11,
-                 from /usr/include/asm-sparc/processor.h:21,
-                 from /usr/include/asm/processor.h:11,
-                 from /usr/include/linux/prefetch.h:13,
-                 from /usr/include/linux/list.h:6,
-                 from ../tools/lib/lvm.h:115,
-                 from ../tools/lib/liblvm.h:96,
-                 from ../tools/lvm_user.h:41,
-                 from e2fsadm.c:53:
-/usr/include/asm-sparc/signal.h:112: conflicting types for `sigset_t'
-/usr/include/sys/select.h:38: previous declaration of `sigset_t'
-make[2]: *** [e2fsadm.o] Error 1
-make[2]: Leaving directory `/home/danish/LVM/1.0.1-rc4/tools'
-make[1]: *** [all] Error 2
-make[1]: Leaving directory `/home/danish/LVM/1.0.1-rc4/tools'
-make[1]: Entering directory `/home/danish/LVM/1.0.1-rc4'
-
-**********************************
-There were errors in your compile.
-**********************************
-
-make[1]: *** [.touchbuilt] Error 1
-make[1]: Leaving directory `/home/danish/LVM/1.0.1-rc4'
-make: *** [all] Error 2
-
-gallagher%
 
 
-Any advice, of course, would be greatly appreciated.
+Hello,
 
-thanks,
+I am totally in trouble after I changed the partition
+type to 0x8e. On SUSE7.2 I am trying to configure
+LVM on SW-RAID1 with two IDEs. 
 
--chris
---
-(I subscribe to all lists that I post to;
-please do not Cc me on list reply)
-Chris Danis
-screechco@home.com / danish@debian.org
-Debian GNU/Linux - www.debian.org
+I did not have any problem to configure md0, md1, md2
+and then create volume group and logical volume using
+the attached "raidtab" in the end.
+
+These problems are come after I changed the partition
+type to 0x8e. So I deleted all of patitions from two
+IDEs and re-partition them. I still have the same
+problems as follow;
+
+1) fdisk error
+
+Disk /dev/hdb: 255 heads, 63 sectors, 2434 cylinders
+Units = cylinders of 16065 * 512 bytes
+ 
+   Device Boot    Start       End    Blocks   Id 
+System
+/dev/hdb1             1        64    514048+  8e 
+Linux LVM
+/dev/hdb2            65       702   5124735   8e 
+Linux LVM
+/dev/hdb3           703      1340   5124735   8e 
+Linux LVM
+ 
+Command (m for help): w
+The partition table has been altered!
+ 
+Calling ioctl() to re-read partition table.
+Re-read table failed with error 16: Device or resource
+busy.
+
+
+2) No such file error
+ 
+root@bo:~ > raidstop --all
+cannot determine md version: No such file or directory
+ 
+kingate@bo:~ > /sbin/mkraid
+cannot determine md version: No such file or directory
+ 
+kingate@bo:~ > /sbin/mkraid --really-force /dev/md1
+cannot determine md version: No such file or directory
+
+3) Partiton type
+
+ Is it OK to use the partition type "0x8e" for
+LVM/SW-RAID?  How about "0xfd"?
+
+Thanks in advance,
+
+Bo
+
+-----------------raidtab------------
+raiddev /dev/md0
+        raid-level 0
+        nr-raid-disks 2
+        nr-spare-disks 0
+        chunk-size 4
+        persistent-superblock 1
+        device     /dev/hdb1
+        raid-disk 0
+        device     /dev/hdc1
+        raid-disk 1
+ 
+raiddev /dev/md1
+        raid-level 1
+        nr-raid-disks 2
+        nr-spare-disks 0
+        chunk-size 4
+        persistent-superblock 1
+        device     /dev/hdb2
+        raid-disk 0
+        device     /dev/hdc2
+        raid-disk 1
+
+raiddev /dev/md2
+        raid-level 1
+        nr-raid-disks 2
+        nr-spare-disks 0
+        chunk-size 4
+        persistent-superblock 1
+        device     /dev/hdb3
+        raid-disk 0
+        device     /dev/hdc3
+        raid-disk 1
+
+__________________________________________________
+Do You Yahoo!?
+Find a job, post your resume.
+http://careers.yahoo.com
