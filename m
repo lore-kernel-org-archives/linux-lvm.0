@@ -1,13 +1,13 @@
-Date: Mon, 27 Aug 2001 12:39:39 -0500
+Date: Mon, 27 Aug 2001 12:42:12 -0500
 From: AJ Lewis <lewis@sistina.com>
-Subject: Re: [linux-lvm] vgcfgbackup
-Message-ID: <20010827123939.B1308@sistina.com>
-References: <20010821004315.B5358@sky.net> <20010821125448.C402@sky.net>
+Subject: Re: [linux-lvm] extending striped lv
+Message-ID: <20010827124212.C1308@sistina.com>
+References: <20010823232349.9882.qmail@web20306.mail.yahoo.com> <20010824112859.A10992@dragon.blacknet.de>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-md5;
-	protocol="application/pgp-signature"; boundary="wzJLGUyc3ArbnUjN"
+	protocol="application/pgp-signature"; boundary="Izn7cH1Com+I3R9J"
 Content-Disposition: inline
-In-Reply-To: <20010821125448.C402@sky.net>; from U.Wiederhold@gmx.net on Tue, Aug 21, 2001 at 12:54:48PM +0200
+In-Reply-To: <20010824112859.A10992@dragon.blacknet.de>; from bock@blacknet.de on Fri, Aug 24, 2001 at 11:28:59AM +0200
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -21,18 +21,25 @@ List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
 List-Id: <linux-lvm.redhat.com>
 To: linux-lvm@sistina.com
 
---wzJLGUyc3ArbnUjN
+--Izn7cH1Com+I3R9J
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Aug 21, 2001 at 12:54:48PM +0200, Ulrich Wiederhold wrote:
-> Hi,
-> once again...
-> Fixed the problem using uuid_fixer.
+On Fri, Aug 24, 2001 at 11:28:59AM +0200, Goetz Bock wrote:
+> On Thu, Aug 23 '01 at 16:23, Brad Langhorst wrote:
+> > [ ... extending a (striped) LV ... ]
+> I'm not 100% positive, but AFAIK you can extend striped LV, but if you
+> do the extened LV is only partially striped.
 
-Yeah!  uuid_fixer strikes again!
+Nope, you can only extend a striped LV on the PV's it is currently on.
+After that you either have to pvmove it to larger PVs or rebuild with more
+disks.
 
+If you want to be able to extend LVs and need software striping, you might
+want to consider using MD striping underneath LVM.
+
+Regards,
 --=20
 AJ Lewis
 Sistina Software Inc.                  Voice:  612-638-0500
@@ -46,10 +53,11 @@ Get my key at: http://www.sistina.com/~lewis/gpgkey
  (Unfortunately, the PKS-type keyservers do not work with multiple sub-keys)
 
 -----Begin Obligatory Humorous Quote----------------------------------------
-Behind every good computer -- is a jumble of wires 'n stuff.
+Hope is NOT a thing with feathers, the thing with feathers is my nephew,
+and I have to take him to a specialist in Zurich. - Woody Allen
 -----End Obligatory Humorous Quote------------------------------------------
 
---wzJLGUyc3ArbnUjN
+--Izn7cH1Com+I3R9J
 Content-Type: application/pgp-signature
 Content-Disposition: inline
 
@@ -57,9 +65,9 @@ Content-Disposition: inline
 Version: GnuPG v1.0.6 (GNU/Linux)
 Comment: For info see http://www.gnupg.org
 
-iD8DBQE7ioXbpE6/iGtdjLERAhKrAJ9jzzPFcpuiYucz8pLbZSh4P9fbkQCfb3BJ
-3Y/CXNmrQ2OhilAJWL89rls=
-=q5hK
+iD8DBQE7ioZ0pE6/iGtdjLERAgDzAJ91gGvqv/VM0eDksrmhvKXf6wOqUQCgjwNA
+c9qgpkH0kV86oGYjTWBwAUk=
+=Sq9F
 -----END PGP SIGNATURE-----
 
---wzJLGUyc3ArbnUjN--
+--Izn7cH1Com+I3R9J--
