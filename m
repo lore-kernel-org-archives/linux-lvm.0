@@ -1,8 +1,10 @@
-From: Eddahbi Karim <installation_fault_association@yahoo.fr>
-Message-Id: <1063981844.1127.3.camel@super.gamux.chezmoi>
-Mime-Version: 1.0
+Message-ID: <3F6B186C.9020107@webhackande.se>
+From: Rickard Olsson <richie@webhackande.se>
+MIME-Version: 1.0
+Subject: Re: [linux-lvm] Migrate from LVM1 to LVM2...
+References: <1063917231.1786.13.camel@super.gamux.chezmoi> <3F6B0E0F.5080807@webhackande.se> <1063980916.3f6b0f740b738@secure.st-peter.stw.uni-erlangen.de> <3F6B1281.8080300@webhackande.se> <1063982920.3f6b1748a8029@secure.st-peter.stw.uni-erlangen.de>
+In-Reply-To: <1063982920.3f6b1748a8029@secure.st-peter.stw.uni-erlangen.de>
 Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] Mirroring with LVM...
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -13,19 +15,27 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Fri Sep 19 09:52:02 2003
+Date: Fri Sep 19 09:54:01 2003
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: linux-lvm@sistina.com
 
-Hi,
+Svetoslav Slavtchev wrote:
 
-I heard there was a system to do mirroring with LVM.
-So one LE points to 2 differents PE.
+> should this be really bad ?
 
-Is it really possible ?
+It works fine, it's just a pain to type those long paths when doing a 
+pvmove or somesuch operation.
 
-Thanks
+/dev/ide/host0/bus0/target0/lun0/disc
 
--- 
-The_TemPLaR
+vs
+
+/dev/hda
+
+Fortunately, the paths are firmly embedded in the character cache in my 
+fingers by now. :-)
+
+    / Rickard Olsson,IT-Konsult/
+   / Telefon: +46 70 635 01 42/
+  / http://www.webhackande.se/
