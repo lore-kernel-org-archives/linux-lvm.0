@@ -1,9 +1,9 @@
 From: "Karol Pietrzak" <noodlez84@earthlink.net>
-Date: Sun, 30 Sep 2001 21:41:01 -0400
+Date: Sun, 30 Sep 2001 22:10:10 -0400
 MIME-Version: 1.0
 Content-transfer-encoding: 7BIT
-Message-ID: <3BB7916D.8216.388145@localhost>
-Subject: [linux-lvm] lvm1.0.1rc2 with kernel 2.4.10
+Message-ID: <3BB79842.19367.155911@localhost>
+Subject: [linux-lvm] rc2-patched linux 2.4.10
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
