@@ -1,32 +1,38 @@
-From: paul@clubi.ie
-Message-Id: <200001212321.XAA01797@tribble.medianet.ie>
-Subject: [linux-lvm] 0.8i pvcreate doesn't recognise Mylex RAID
-Date: Fri, 21 Jan 2000 23:21:46 GMT
+Message-ID: <388B00FB.A20AEEB0@msede.com>
+Date: Sun, 23 Jan 2000 14:24:11 +0100
+From: Michael Marxmeier <mike@msede.com>
+Reply-To: francis-souyri@altavista.net
+MIME-Version: 1.0
+Subject: [linux-lvm] lvm.c-2.3.39 modif. for kernel 2.3.40 (fwd)
+Content-Transfer-Encoding: 7bit
 Sender: owner-linux-lvm
 Errors-To: owner-linux-lvm
 List-Id: <linux-lvm.redhat.com>
-MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@msede.com
 
-OK, I've compiled and installed 2.2.14+0.8i+devfs 99.10, but still
-pvcreate returns an error in pv_get_size when trying to init a
-Mylex /dev/rd/.../partX device:
+-------- Original Message --------
+Sender: francis@mailhub5.libertysurf.fr
+Date: Sun, 23 Jan 2000 14:00:54 +0100
+From: Francis SOUYRI <francis.souyri@libertysurf.fr>
+Reply-To: francis-souyri@altavista.net
+Subject: lvm.c-2.3.39 modif. for kernel 2.3.40.
 
-pvcreate  /dev/rd/disc0/part3
-pvcreate -- ERROR -241 getting size of physical volume "/dev/rd/disc0/part3"
+Hi,
 
-ls -l /dev/rd/disc0/part3
-brw-------   1 root     root      48,   3 Jan  1  1970 /dev/rd/disc0/part3
+I recently installed the lvm patch for the 2.3.39 kernel (lvm.c-2.3.39
+file) on a 2.3.40 kernel, the system hangs with a null pointer
+because the "struct gendisk' changed.
+To bypass the problem I comment in the file driver/block/lvm.c the
+lines
+(line 312...):
 
-Any solution to this problem? Where can i teach pv_get_size about
-Mylex /dev/rd? Also does it matter that I'm using devfs and hence
-have long nested /dev/ path names?
+//      MAX_LV,                 /* maximum number of real devices */
+//      lvm_geninit,            /* initialization called before we
+//                                 do other things */
 
-thanks,
+in the initialisation of the 'static struct gendisk  lvm_gendisk'.
 
-Paul Jakma
-paul@clubi.ie
+Best regards.
 
----------------------------------------------
+Francis
