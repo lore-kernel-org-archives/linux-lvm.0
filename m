@@ -1,21 +1,17 @@
-Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id iA8Drpr23207
-	for <linux-lvm@redhat.com>; Mon, 8 Nov 2004 08:53:51 -0500
-Received: from ramoth.dragonhold.org (ramoth.dragonhold.org [80.229.192.20])
-	by mx3.redhat.com (8.12.11/8.12.11) with ESMTP id iA8DrjBB027389
-	for <linux-lvm@redhat.com>; Mon, 8 Nov 2004 08:53:45 -0500
-Date: Mon, 8 Nov 2004 13:53:39 +0000
-From: linux-lvm@spam.dragonhold.org
-Subject: Re: [linux-lvm] VGs not detected at startup
-Message-ID: <20041108135339.GA5797@dragonhold.org>
-References: <88707567.20041108091624@stud.fhbb.ch>
-	<20041108094008.GA26201@goldfinger.local>
-	<1489446547.20041108144631@stud.fhbb.ch>
+Received: from o.ww.redhat.com (vpnuser1.stuttgart.redhat.com [172.16.4.1])
+	by pobox.stuttgart.redhat.com (8.12.8/8.12.8) with ESMTP id
+	iA8HXFGX026479
+	for <linux-lvm@redhat.com>; Mon, 8 Nov 2004 18:33:15 +0100
+Date: Mon, 8 Nov 2004 18:33:15 +0100
+From: Heinz Mauelshagen <mauelshagen@redhat.com>
+Subject: Re: [linux-lvm] Backup/Recovery Strategies
+Message-ID: <20041108173315.GA21451@redhat.com>
+References: <20041106221645.0AFFA97930@snark.apl.washington.edu>
 Mime-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <1489446547.20041108144631@stud.fhbb.ch>
-Sender: <gwood@dragonhold.org>
-Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
+In-Reply-To: <20041106221645.0AFFA97930@snark.apl.washington.edu>
+Reply-To: mauelshagen@redhat.com,
+	LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -27,23 +23,71 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: Markus Wiedmer - FHBB <markus.wiedmer@stud.fhbb.ch>, LVM general discussion and development <linux-lvm@redhat.com>
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-On Mon, Nov 08, 2004 at 02:46:31PM +0100, Markus Wiedmer - FHBB wrote:
-> I now found a work-around that seems to work so far. In the
-> LVM-Start-Script I just put "mount /dev/sda5 || true" before the vgscan. it
-> looks like after a mount-command the system suddenly finds the VG.
-> strange...
+On Sat, Nov 06, 2004 at 02:16:46PM -0800, Axel Schweiger wrote:
+> Can anyon  suggest backup/recovery strategies for filesystems under LVM.
+> (Version 1 and 2)
+>  
+> 1) If I loose the data in the /etc/lvm directory (or lvm.d) do I loose the
+> filesystems controlled by lvm?
 
-Apologies if this is something that's already been discussed (if so I missed it), and also
-for saying something that you've almost definitely covered but......
+No, those are work files which can be recreated running vgscan
+for LVM1. LVM1 keeps metadata archive files in /etc/lvmconf/ which
+needs to be covered by your backup.
 
-Check to see if there's any autoloading of modules, or anything, going on as a result of the
-mount/fdisk?
+By default, /etc/lvm/ contains subdirectory for metadata archive in
+the case of LVM2.
 
-Also (instead of the mount) does a 'dd' work?  E.g. dd if=/dev/sda of=/dev/null bs=512
-count=1?
+Best practice therefore is to backup /etc/lvm*
 
-That's going to be faster & probably less intrusive.
+> 2) How do I recover from a loss or corrpution of the LVM data.
 
-Graham
+vgcfgrestore the recent metadata archive (from /etc/lvmconf/ for LVM1
+or from /etc/lvm/backup/ for LVM2.
+
+> 3) What happens if the LVM filesystems have changed since the last backup of
+> the metadata?
+
+You are refering to VGs and LVs here.
+
+If you don't have an actual backup of /etc/lvm* *and*
+corrupt your LVM metadata on the defices after a change, you can
+restore the most recent archive from your last /etc/lvmconf/ backup (LVM1)
+or from /etc/lvm/backup/ (LVM2) which might be ok still or not, depending
+on your changes.
+
+>  
+> Sorry if this shows a profound lack of understanding of LVM but I''m new to
+> this and haven't been able to find any recipes for doing 
+> backups?
+
+The only LVM related backup is about its metadata archives and covered
+in 'man lvm'.
+Of course all data stored in LVs should be subject to regular backups
+as with any block devices.
+
+> 
+> Thanks much
+> Axel
+
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@redhat.com
+> https://www.redhat.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+
+-- 
+
+Regards,
+Heinz    -- The LVM Guy --
+
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+Heinz Mauelshagen                                 Red Hat GmbH
+Consulting Development Engineer                   Am Sonnenhang 11
+                                                  56242 Marienrachdorf
+                                                  Germany
+Mauelshagen@RedHat.com                            +49 2626 141200
+                                                       FAX 924446
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
