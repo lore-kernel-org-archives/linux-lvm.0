@@ -1,10 +1,9 @@
-From: Luca Berra <bluca@comedia.it>
-Subject: Re: [linux-lvm] LVM/RAID again
-Message-Id: <20020307001623.GC8933@colombina.comedia.it>
-References: <20020306203532.GA622@human.galaxy>
+From: Denie Andriessen <D.Andriessen@pink.nl>
+Subject: Re: [linux-lvm] PV-Move fails, now at 127 Pe's...
+Message-Id: <018601c1c575$2bef40b0$f707a182@gimmie.tudelft.nl>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20020306203532.GA622@human.galaxy>
+Content-Transfer-Encoding: 7bit
+References: <Pine.LNX.4.33.0203061156070.5102-100000@blok14b.gimmie.tudelft.nl>
 Sender: linux-lvm-admin@sistina.com
 Errors-To: linux-lvm-admin@sistina.com
 Reply-To: linux-lvm@sistina.com
@@ -15,37 +14,34 @@ List-Subscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 List-Unsubscribe: <http://lists.sistina.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@sistina.com?subject=unsubscribe>
 List-Archive: <http://lists.sistina.com/pipermail/linux-lvm/>
-Date: Wed Mar  6 18:16:01 2002
+Date: Wed Mar  6 19:07:01 2002
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-On Wed, Mar 06, 2002 at 09:35:32PM +0100, Frank Lenaerts wrote:
-> take snapshot backups etc.. The problem I currently face however, is
-> the fact that both nodes autodetect the metadevices and start syncing
-> the mirrors, independently of each other (I do not have the LVM and
-...
-> - do not use LVM at all, just use the physical disks instead
-this is not an lvm problem but an md one
-list is linux-raid@vger.kernel.org
+Hi,
 
-> - have two separate raidtab files where each of them is only "owned"
->   by a single node (to prevent syncing problems) and only start the
->   raid for a certain metadevice when a logical volume is imported on a
->   node
-get rid of raidstart and raidtab and use
-mdctl from neil brown
-http://www.cse.unsw.edu.au/~neilb/source/mdctl/
-also be sure you are not using raid autodetection
+Yes, I know, it's late again, but that's just the burden of having a day
+job..
+Stiil I seem to be unable to get the volume back online/accesable still...
 
+The volume still doesn't 'want' (?) to becognised..  PVscan sees it, vgck
+does not agree to it, vgscan neither..
 
-L.
+Short:
+After the upgrade to LVM1.0.3. and before aplying the 'sig problem' patch..
+we tried to do some PV moves, from then onwards it seemed no to get any
+better.... SInce the reboot the volume was not accesible anymore...
 
--- 
-Luca Berra -- bluca@comedia.it
-        Communication Media & Services S.r.l.
- /"\
- \ /     ASCII RIBBON CAMPAIGN
-  X        AGAINST HTML MAIL
- / \
+Long, long, very long log on:
+http://blok14b.gimmie.tudelft.nl/~denie/LVM/log.txt
+
+Main question is, shoulld I stick to the the about 380Gb of data or reformat
+and start over new ?
+The data is not really 'that' improtant' as it's just what the student's
+overhere (about 120 of them) can grab together from the net for internal use
+only in our house only
+... But still there were quite a few good things there..
+
+Regards,
+Denie Andriessen
