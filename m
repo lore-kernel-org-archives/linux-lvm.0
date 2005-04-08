@@ -1,15 +1,15 @@
-Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j389lOO32075
-	for <linux-lvm@redhat.com>; Fri, 8 Apr 2005 05:47:24 -0400
-Received: from mxvip23.hichina.com ([218.30.103.115])
-	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id j389lBU6028512
-	for <linux-lvm@redhat.com>; Fri, 8 Apr 2005 05:47:12 -0400
-Message-Id: <200504080947.j389lBU6028512@mx1.redhat.com>
+Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j38B6kO16315
+	for <linux-lvm@redhat.com>; Fri, 8 Apr 2005 07:06:46 -0400
+Received: from beijing.plasmon.cn ([61.145.231.205])
+	by mx3.redhat.com (8.12.11/8.12.11) with ESMTP id j38B6ahu016195
+	for <linux-lvm@redhat.com>; Fri, 8 Apr 2005 07:06:37 -0400
 From: <cfeng@plasmon.cn>
-Date: Fri, 8 Apr 2005 17:20:19 +0800
+Date: Fri, 8 Apr 2005 17:01:12 +0800
 MIME-Version: 1.0
 Content-Type: multipart/alternative;
-	boundary="----=_NextPart_000_06DC_01C53C5F.3DBBE190"
+	boundary="----=_NextPart_000_06D5_01C53C5C.9A9E4A90"
+Message-Id: <20050408085933.1B9A648F2C@beijing.plasmon.cn>
 Subject: [linux-lvm] Cannot create more than 3 snapshots when system is busy
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
@@ -25,7 +25,7 @@ To: linux-lvm@redhat.com
 
 This is a multi-part message in MIME format.
 
-------=_NextPart_000_06DC_01C53C5F.3DBBE190
+------=_NextPart_000_06D5_01C53C5C.9A9E4A90
 Content-Type: text/plain;
 	charset="us-ascii"
 Content-Transfer-Encoding: 7bit
@@ -68,7 +68,7 @@ Regards.
 Charles
 
 
-------=_NextPart_000_06DC_01C53C5F.3DBBE190
+------=_NextPart_000_06D5_01C53C5C.9A9E4A90
 Content-Type: text/html;
 	charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
@@ -115,7 +115,8 @@ span.EmailStyle17
 	font-weight:normal;
 	font-style:normal;
 	text-decoration:none none;}
-@page Section1
+ /* Page Definitions */
+ @page Section1
 	{size:595.3pt 841.9pt;
 	margin:72.0pt 90.0pt 72.0pt 90.0pt;
 	layout-grid:15.6pt;}
@@ -153,10 +154,9 @@ also
 hangs. The system is still running though, and I can access the system =
 through
 ssh and do other things, but LVM subsystem is hung. The filesystem on =
-the logical
-volume is XFS and the physical volume underneath is a RAID5. The =
-following
-lines are from /proc/slabinfo which may be =
+the
+logical volume is XFS and the physical volume underneath is a RAID5. The
+following lines are from /proc/slabinfo which may be =
 useful:<o:p></o:p></span></font></p>
 
 <p class=3DMsoNormal><font size=3D2 face=3DTahoma><span lang=3DEN-US =
@@ -166,30 +166,31 @@ style=3D'font-size:
 <p class=3DMsoNormal><font size=3D2 face=3DTahoma><span lang=3DEN-US =
 style=3D'font-size:
 10.0pt;font-family:Tahoma'>dm-snapshot-in&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&n=
-bsp;
-128&nbsp;&nbsp;&nbsp; 140&nbsp;&nbsp;&nbsp;&nbsp; 56&nbsp;&nbsp;
-70&nbsp;&nbsp;&nbsp; 1 : tunables&nbsp; 120&nbsp;&nbsp; =
-60&nbsp;&nbsp;&nbsp; 0
-: slabdata&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0<o:p></o:p></span></font></p>
+bsp; 128&nbsp;&nbsp;&nbsp;
+140&nbsp;&nbsp;&nbsp;&nbsp; 56&nbsp;&nbsp; 70&nbsp;&nbsp;&nbsp; 1 : =
+tunables&nbsp;
+120&nbsp;&nbsp; 60&nbsp;&nbsp;&nbsp; 0 : =
+slabdata&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; =
+0<o:p></o:p></span></font></p>
 
 <p class=3DMsoNormal><font size=3D2 face=3DTahoma><span lang=3DEN-US =
 style=3D'font-size:
-10.0pt;font-family:Tahoma'>dm-snapshot-ex&nbsp;&nbsp;&nbsp; 498095
-498108&nbsp;&nbsp;&nbsp;&nbsp; 24&nbsp; 156&nbsp;&nbsp;&nbsp; 1 :
-tunables&nbsp; 120&nbsp;&nbsp; 60&nbsp;&nbsp;&nbsp; 0 : =
-slabdata&nbsp;&nbsp;
-3193&nbsp;&nbsp; 3193&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; =
-0<o:p></o:p></span></font></p>
+10.0pt;font-family:Tahoma'>dm-snapshot-ex&nbsp;&nbsp;&nbsp; 498095 =
+498108&nbsp;&nbsp;&nbsp;&nbsp;
+24&nbsp; 156&nbsp;&nbsp;&nbsp; 1 : tunables&nbsp; 120&nbsp;&nbsp; =
+60&nbsp;&nbsp;&nbsp;
+0 : slabdata&nbsp;&nbsp; 3193&nbsp;&nbsp; =
+3193&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0<o:p></o:p></span></font></p>
 
 <p class=3DMsoNormal><font size=3D2 face=3DTahoma><span lang=3DEN-US =
 style=3D'font-size:
 10.0pt;font-family:Tahoma'>dm_tio&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbs=
 p;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 23549&nbsp; 52206&nbsp;&nbsp;&nbsp;&nbsp; 16 &nbsp;226&nbsp;&nbsp;&nbsp; =
-1 :
-tunables&nbsp; 120&nbsp;&nbsp; 60&nbsp;&nbsp;&nbsp; 0 :
-slabdata&nbsp;&nbsp;&nbsp; 231&nbsp;&nbsp;&nbsp;
+1 : tunables&nbsp;
+120&nbsp;&nbsp; 60&nbsp;&nbsp;&nbsp; 0 : slabdata&nbsp;&nbsp;&nbsp; =
+231&nbsp;&nbsp;&nbsp;
 231&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0<o:p></o:p></span></font></p>
 
 <p class=3DMsoNormal><font size=3D2 face=3DTahoma><span lang=3DEN-US =
@@ -197,9 +198,9 @@ style=3D'font-size:
 10.0pt;font-family:Tahoma'>dm_io&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp=
 ;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 23548&nbsp; 51754&nbsp;&nbsp;&nbsp;&nbsp; 16&nbsp; 226&nbsp;&nbsp;&nbsp; =
-1 :
-tunables&nbsp; 120&nbsp;&nbsp; 60&nbsp;&nbsp;&nbsp; 0 :
-slabdata&nbsp;&nbsp;&nbsp; 229&nbsp;&nbsp;&nbsp;
+1 : tunables&nbsp;
+120&nbsp;&nbsp; 60&nbsp;&nbsp;&nbsp; 0 : slabdata&nbsp;&nbsp;&nbsp; =
+229&nbsp;&nbsp;&nbsp;
 229&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0<o:p></o:p></span></font></p>
 
 <p class=3DMsoNormal><font size=3D2 face=3DTahoma><span lang=3DEN-US =
@@ -231,4 +232,4 @@ style=3D'font-size:
 
 </html>
 
-------=_NextPart_000_06DC_01C53C5F.3DBBE190--
+------=_NextPart_000_06D5_01C53C5C.9A9E4A90--
