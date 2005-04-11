@@ -1,15 +1,14 @@
-Received: from o.ww.redhat.com (vpnuser1.stuttgart.redhat.com [172.16.4.1])
-	by pobox.stuttgart.redhat.com (8.12.8/8.12.8) with ESMTP id
-	j3BIEbcn001281
-	for <linux-lvm@redhat.com>; Mon, 11 Apr 2005 20:14:37 +0200
-Date: Mon, 11 Apr 2005 20:14:35 +0200
-From: Heinz Mauelshagen <mauelshagen@redhat.com>
-Message-ID: <20050411181435.GA12227@redhat.com>
-Mime-Version: 1.0
-Content-Disposition: inline
-Subject: [linux-lvm] *** Announcement: dmraid 1.0.0.rc7 ***
-Reply-To: mauelshagen@redhat.com,
-	LVM general discussion and development <linux-lvm@redhat.com>
+Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j3B77gO03323
+	for <linux-lvm@redhat.com>; Mon, 11 Apr 2005 03:07:42 -0400
+Date: Mon, 11 Apr 2005 09:07:27 +0200
+Message-Id: <614019203@web.de>
+MIME-Version: 1.0
+From: "Melanie Nettusch" <m.nettusch@web.de>
+Content-Transfer-Encoding: 8bit
+Subject: [linux-lvm] =?iso-8859-1?q?LVM2_und_Snapshots_f=FCr_mein_Abschlu?=
+	=?iso-8859-1?q?ssprojekt?=
+Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -19,102 +18,31 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: linux-lvm@redhat.com
+Content-Type: text/plain; charset="utf-8"
+To: linux-LVM@Sistina.com
 
+Hallo Herr Mauelshagen,
 
-               *** Announcement: dmraid 1.0.0.rc7 ***
+ich mache eine Ausbildung zur Fachinformatikerin Systemintergration und im Rahmen meines Abschlussprojekts soll ich einen Red Hat Linux Enterprise AS V3 aufsetzen.
+Da ich w�hrend meiner Ausbilung nur mit Windows gearbeitet habe, f�llt es mir schwer mit Linux umzugehen.
+Nun soll dieser Server mit hilfe von LVM, Snapshots von den /homes erstellen, die dann f�r die Benutzer als zus�tzliches Laufwerk zur Verf�gung stehen sollen (immer vom Vortag), desweiteren soll dieser Snapshot dann auf Magnetband geschrieben werden.
+Da ich immer noch nicht genau verstanden habe wie genau der Snapshot funktioniert (werden die Daten gespeichert oder nur der Verzeichnisbaum), auf was f�r besonderheiten ich achten muss und ob ich das was ich vor habe �berhaupt mit LVM und Snapshots realisieren kann, w�re ich um Tipps, Anregungen und Erkl�rungen sehr, sehr dankbar. 
+Ich habe mir schon sehr viele Dolumentationen, HOWTO�s  usw angesehen und bin immer noch nicht schlauer.
+Bitte helfen sie mir.
 
-dmraid 1.0.0.rc7 is available at
-http://people.redhat.com:/heinzm/sw/dmraid/ in source tarball,
-source rpm and i386 rpms (shared, static and dietlibc).
+MfG
 
-This release fixes size bugs with Highpoint and Promise RAID1 sets.
-
-dmraid (Device-Mapper Raid tool) discovers, [de]activates and displays
-properties of software RAID sets (i.e. ATARAID) and contained DOS
-partitions using the device-mapper runtime of the 2.6 kernel.
-
-The following ATARAID types are supported on Linux 2.6:
-
-Highpoint HPT37X
-Highpoint HPT45X
-Intel Software RAID
-LSI Logic MegaRAID
-NVidia NForce
-Promise FastTrack
-Silicon Image Medley
-VIA Software RAID
-
-Please provide insight to support those metadata formats completely.
-
-Thanks.
-
-
-See files README and CHANGELOG, which come with the source tarball for
-prerequisites to run this software, further instructions on installing
-and using dmraid!
-
-CHANGELOG is contained below for your convenience as well.
-
-
-Call for testers:
------------------
-
-I need testers with the above ATARAID types, to check that the mapping
-created by this tool is correct (see options "-t -ay") and access to the
-ATARAID data is proper.
-
-In case you have a different ATARAID solution from those listed above,
-please feel free to contact me about supporting it in dmraid.
-
-You can activate your ATARAID sets without danger of overwriting
-your metadata, because dmraid accesses it read-only unless you use
-option -E together with -r in order to erase ATARAID metadata
-(see 'man dmraid')!
-
-This is a release candidate version so you want to have backups of your valuable
-data *and* you want to test accessing your data read-only first in order to
-make sure that the mapping is correct before you go for read-write access.
-
-
-Contacts:
----------
-
-The author is reachable at <Mauelshagen@RedHat.com>.
-
-For test results, mapping information, discussions, questions, patches,
-enhancement requests and the like, please subscribe and mail to
-<ataraid-list@redhat.com>.
-
---
-
-Regards,
-Heinz    -- The LVM Guy --
-
-
-CHANGELOG:
----------
-
-Changelog from dmraid 1.0.0.rc6 to 1.0.0.rc7            2005.04.07
-
-FIXES:
-------
-o pdc.c, hpt37x.c, hpt45x.c: fixed size in sectors() for RAID1
-
-
-MISCELANIOUS:
-------------
-
-o sil_valid() displays the area number where the checksum is invalid now.
-
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-
-Heinz Mauelshagen                                 Red Hat GmbH
-Consulting Development Engineer                   Am Sonnenhang 11
-                                                  56242 Marienrachdorf
-                                                  Germany
-Mauelshagen@RedHat.com                            +49 2626 141200
-                                                       FAX 924446
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+Melanie
+-- 
+                   /^^^\
+                   ( o o )
+------oOOO---(_)---OOOo-----------------------------------------
+                                                     Melanie Nettusch
+                                                       0173 7042769
+        .oooO                                        m.nettusch@web.de
+         (     )    Oooo.                        
+ -------\   (-----(    )---------------------------------------------------------
+           \_)       )  /
+______________________________________________________________
+Verschicken Sie romantische, coole und witzige Bilder per SMS!
+Jetzt bei WEB.DE FreeMail: http://f.web.de/?mc=021193
