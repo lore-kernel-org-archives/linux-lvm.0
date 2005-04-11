@@ -1,18 +1,15 @@
-Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j38GGGO02243
-	for <linux-lvm@redhat.com>; Fri, 8 Apr 2005 12:16:16 -0400
-Received: from postfix3-1.free.fr (postfix3-1.free.fr [213.228.0.44])
-	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id j38GGFeF029126
-	for <linux-lvm@redhat.com>; Fri, 8 Apr 2005 12:16:15 -0400
-Message-ID: <4256AE5A.3010904@free.fr>
-Date: Fri, 08 Apr 2005 18:16:26 +0200
-From: Stephane Dupuis <Hoper@free.fr>
-MIME-Version: 1.0
-Subject: Re: [linux-lvm] Debian (Sarge) 2.6.8 lvm2 on software raid
-References: <11707185.1112814904249.JavaMail.root@wamui03.slb.atl.earthlink.net>
-In-Reply-To: <11707185.1112814904249.JavaMail.root@wamui03.slb.atl.earthlink.net>
-Content-Transfer-Encoding: 7bit
-Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
+Received: from o.ww.redhat.com (vpnuser1.stuttgart.redhat.com [172.16.4.1])
+	by pobox.stuttgart.redhat.com (8.12.8/8.12.8) with ESMTP id
+	j3BIEbcn001281
+	for <linux-lvm@redhat.com>; Mon, 11 Apr 2005 20:14:37 +0200
+Date: Mon, 11 Apr 2005 20:14:35 +0200
+From: Heinz Mauelshagen <mauelshagen@redhat.com>
+Message-ID: <20050411181435.GA12227@redhat.com>
+Mime-Version: 1.0
+Content-Disposition: inline
+Subject: [linux-lvm] *** Announcement: dmraid 1.0.0.rc7 ***
+Reply-To: mauelshagen@redhat.com,
+	LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -22,21 +19,102 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: "linuxboy123@mindspring.com" <linuxboy123@mindspring.com>, LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: linux-lvm@redhat.com
 
 
-Hi,
+               *** Announcement: dmraid 1.0.0.rc7 ***
 
- > # lvcreate -L 500 /dev/vg00
- >   Volume group "vg00" doesn't exist
+dmraid 1.0.0.rc7 is available at
+http://people.redhat.com:/heinzm/sw/dmraid/ in source tarball,
+source rpm and i386 rpms (shared, static and dietlibc).
 
-Did you try : lvcreate -L 500 vg00
-I think you don't need the /dev
+This release fixes size bugs with Highpoint and Promise RAID1 sets.
 
-About the change in lvm.conf, I had to do it once,
-for using LVM over a /dev/mapper device.
-Anyway it's just a filter you can change to tell LVM
-what device it can or canot use for creating VG.
-I'm quite sure you don't need to change anything to
-be abble to use LVM over a software raid device.
+dmraid (Device-Mapper Raid tool) discovers, [de]activates and displays
+properties of software RAID sets (i.e. ATARAID) and contained DOS
+partitions using the device-mapper runtime of the 2.6 kernel.
+
+The following ATARAID types are supported on Linux 2.6:
+
+Highpoint HPT37X
+Highpoint HPT45X
+Intel Software RAID
+LSI Logic MegaRAID
+NVidia NForce
+Promise FastTrack
+Silicon Image Medley
+VIA Software RAID
+
+Please provide insight to support those metadata formats completely.
+
+Thanks.
+
+
+See files README and CHANGELOG, which come with the source tarball for
+prerequisites to run this software, further instructions on installing
+and using dmraid!
+
+CHANGELOG is contained below for your convenience as well.
+
+
+Call for testers:
+-----------------
+
+I need testers with the above ATARAID types, to check that the mapping
+created by this tool is correct (see options "-t -ay") and access to the
+ATARAID data is proper.
+
+In case you have a different ATARAID solution from those listed above,
+please feel free to contact me about supporting it in dmraid.
+
+You can activate your ATARAID sets without danger of overwriting
+your metadata, because dmraid accesses it read-only unless you use
+option -E together with -r in order to erase ATARAID metadata
+(see 'man dmraid')!
+
+This is a release candidate version so you want to have backups of your valuable
+data *and* you want to test accessing your data read-only first in order to
+make sure that the mapping is correct before you go for read-write access.
+
+
+Contacts:
+---------
+
+The author is reachable at <Mauelshagen@RedHat.com>.
+
+For test results, mapping information, discussions, questions, patches,
+enhancement requests and the like, please subscribe and mail to
+<ataraid-list@redhat.com>.
+
+--
+
+Regards,
+Heinz    -- The LVM Guy --
+
+
+CHANGELOG:
+---------
+
+Changelog from dmraid 1.0.0.rc6 to 1.0.0.rc7            2005.04.07
+
+FIXES:
+------
+o pdc.c, hpt37x.c, hpt45x.c: fixed size in sectors() for RAID1
+
+
+MISCELANIOUS:
+------------
+
+o sil_valid() displays the area number where the checksum is invalid now.
+
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+Heinz Mauelshagen                                 Red Hat GmbH
+Consulting Development Engineer                   Am Sonnenhang 11
+                                                  56242 Marienrachdorf
+                                                  Germany
+Mauelshagen@RedHat.com                            +49 2626 141200
+                                                       FAX 924446
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
