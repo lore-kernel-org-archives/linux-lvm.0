@@ -1,24 +1,20 @@
-Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j3CFe8O12046
-	for <linux-lvm@redhat.com>; Tue, 12 Apr 2005 11:40:08 -0400
-Received: from server1048.123servers.com (server1048.123servers.com
-	[66.78.4.141])
-	by mx3.redhat.com (8.12.11/8.12.11) with ESMTP id j3CFe30J007617
-	for <linux-lvm@redhat.com>; Tue, 12 Apr 2005 11:40:03 -0400
-Received: from cpe00600863401c-cm0012256e76ac.cpe.net.cable.rogers.com
-	([70.27.19.22] helo=[192.168.2.204])
-	by server1048.123servers.com with esmtp (Exim 4.50)
-	id 1DLNUf-0007pI-KN
-	for linux-lvm@redhat.com; Tue, 12 Apr 2005 11:40:01 -0400
-From: Ulf Kellermann <ulf.kellermann@exaecon.com>
-Subject: Re: [linux-lvm] LVM2 und Snapshots =?iso-8859-1?q?f=FCr_mein?=
-	Abschlussprojekt
-Date: Tue, 12 Apr 2005 11:39:59 -0400
-References: <614019203@web.de>
-In-Reply-To: <614019203@web.de>
+Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j3CFljO14723
+	for <linux-lvm@redhat.com>; Tue, 12 Apr 2005 11:47:45 -0400
+Received: from vscan3.vignette.com (vscan3.vignette.com [12.161.72.104])
+	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id j3CFljVE020591
+	for <linux-lvm@redhat.com>; Tue, 12 Apr 2005 11:47:45 -0400
+Received: from [10.18.201.1] (digdug.vignette.com [10.18.201.1])
+	by omail1.vignette.com (8.12.9/8.11.2) with ESMTP id j3CFlb8u025843
+	for <linux-lvm@redhat.com>; Tue, 12 Apr 2005 10:47:37 -0500 (CDT)
+Message-ID: <425BED9A.6010304@cjs226.com>
+Date: Tue, 12 Apr 2005 10:47:38 -0500
+From: Clif Smith <cjs@cjs226.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-Message-Id: <200504121140.00117.ulf.kellermann@exaecon.com>
+Subject: Re: [linux-lvm] invalid physical volume
+References: <425B37D8.7060801@cjs226.com>	<20050412082844.M43465@pk25.com>	<425BE068.6050106@cjs226.com>	<20050412151937.M53113@pk25.com>
+	<425BE8C5.4030502@cjs226.com> <20050412153719.M45202@pk25.com>
+In-Reply-To: <20050412153719.M45202@pk25.com>
 Content-Transfer-Encoding: 8bit
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
@@ -30,42 +26,285 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset="utf-8"; format="flowed"
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-Hallo Melanie,
+I don't understand what to try as I'm already running lvm-1.0.8-9?  Yes, 
+that's my comment #37.  Any idea what "U5" is in comment #38?
 
-ich glaube um eine Antwort zu bekommen solttest Du in englisch schreiben.
-Mein Tip an Dich:
-	Installiere Red Hat, u.U. auch SuSE 9.x (ich finde die LVM konfiguration als 
-ser gelungen) und wenn Du ein bisschen das Gefuehl bekommst, stelle Deine 
-Fragen an die Mailinglist, aber in Englisch.
+Diaz Rodriguez, Eduardo wrote:
 
-Meines Wissen lebt Heinz Mauelshagen in den USA und es mir nicht bewusst, dass 
-er Deutsch kann.
-
-
-
-Gruesse aus Kanada
-Ulf
-On Monday 11 April 2005 03:07, Melanie Nettusch wrote:
-> Hallo Herr Mauelshagen,
+>try this:
 >
-> ich mache eine Ausbildung zur Fachinformatikerin Systemintergration und im
-> Rahmen meines Abschlussprojekts soll ich einen Red Hat Linux Enterprise AS
-> V3 aufsetzen. Da ich w�hrend meiner Ausbilung nur mit Windows gearbeitet
-> habe, f�llt es mir schwer mit Linux umzugehen. Nun soll dieser Server mit
-> hilfe von LVM, Snapshots von den /homes erstellen, die dann f�r die
-> Benutzer als zus�tzliches Laufwerk zur Verf�gung stehen sollen (immer vom
-> Vortag), desweiteren soll dieser Snapshot dann auf Magnetband geschrieben
-> werden. Da ich immer noch nicht genau verstanden habe wie genau der
-> Snapshot funktioniert (werden die Daten gespeichert oder nur der
-> Verzeichnisbaum), auf was f�r besonderheiten ich achten muss und ob ich das
-> was ich vor habe �berhaupt mit LVM und Snapshots realisieren kann, w�re ich
-> um Tipps, Anregungen und Erkl�rungen sehr, sehr dankbar. Ich habe mir schon
-> sehr viele Dolumentationen, HOWTO�s  usw angesehen und bin immer noch nicht
-> schlauer. Bitte helfen sie mir.
+>https://bugzilla.redhat.com/bugzilla/show_bug.cgi?id=124647
 >
-> MfG
+>are you the last comment?.
 >
-> Melanie
+>regards!
+>
+>On Tue, 12 Apr 2005 10:27:01 -0500, Clif Smith wrote
+>  
+>
+>>I receive the same for all commands you requested, for example:
+>># pvcreate /dev/emcpowera1
+>>pvcreate -- invalid physical volume "/dev/emcpowera1"
+>>
+>>Diaz Rodriguez, Eduardo wrote:
+>>
+>>    
+>>
+>>>try pvcreate /dev/emcpowera1 is for the partition not for the disk...
+>>>
+>>>please summarize
+>>>
+>>>regards!
+>>>
+>>>On Tue, 12 Apr 2005 09:51:20 -0500, Clif Smith wrote
+>>> 
+>>>
+>>>      
+>>>
+>>>>Responses in line.
+>>>>
+>>>>Thanks, Clif
+>>>>
+>>>>Diaz Rodriguez, Eduardo wrote:
+>>>>
+>>>>   
+>>>>
+>>>>        
+>>>>
+>>>>>Clif try to make a partition type linux lvm.. (8e) and after try pvcreate
+>>>>>     
+>>>>>
+>>>>>          
+>>>>>
+>>>over it
+>>> 
+>>>
+>>>      
+>>>
+>>>>>     
+>>>>>
+>>>>>          
+>>>>>
+>>>># fdisk -l /dev/emcpowera
+>>>>Disk /dev/emcpowera: 10.7 GB, 10737418240 bytes
+>>>>255 heads, 63 sectors/track, 1305 cylinders
+>>>>Units = cylinders of 16065 * 512 = 8225280 bytes
+>>>>        Device Boot    Start       End    Blocks   Id  System
+>>>>/dev/emcpowera1             1      1305  10482381   8e  Linux LVM
+>>>>
+>>>># pvcreate /dev/emcpowera
+>>>>pvcreate -- invalid physical volume "/dev/emcpowera"
+>>>>
+>>>>   
+>>>>
+>>>>        
+>>>>
+>>>>>send a output of pvcreate -v /dev/emcpowera
+>>>>>
+>>>>>
+>>>>>     
+>>>>>
+>>>>>          
+>>>>>
+>>>># pvcreate -v /dev/emcpowera
+>>>>pvcreate -- locking logical volume manager
+>>>>pvcreate -- checking physical volume name "/dev/emcpowera"
+>>>>pvcreate -- getting physical volume size
+>>>>pvcreate -- checking maximum physical volume size
+>>>>pvcreate -- checking partition type
+>>>>pvcreate -- invalid physical volume "/dev/emcpowera"
+>>>>
+>>>>   
+>>>>
+>>>>        
+>>>>
+>>>>>if you complile with debug use pvcreate -dv /dev/emcpowera
+>>>>>
+>>>>>
+>>>>>
+>>>>>     
+>>>>>
+>>>>>          
+>>>>>
+>>>># pvcreate -dv /dev/emcpowera
+>>>><1> lvm_get_iop_version -- CALLED
+>>>><22> lvm_check_special -- CALLED
+>>>><22> lvm_check_special -- LEAVING
+>>>><1> lvm_get_iop_version -- AFTER ioctl ret: 0
+>>>><1> lvm_get_iop_version -- LEAVING with ret: 10
+>>>>pvcreate -- locking logical volume manager
+>>>><1> lvm_lock -- CALLED
+>>>><22> lvm_check_special -- CALLED
+>>>><22> lvm_check_special -- LEAVING
+>>>><1> lvm_lock -- LEAVING with ret: 0
+>>>>pvcreate -- checking physical volume name "/dev/emcpowera"
+>>>><1> pv_check_name -- CALLED with "/dev/emcpowera"
+>>>><22> lvm_check_chars -- CALLED with name: "/dev/emcpowera"
+>>>><22> lvm_check_chars -- LEAVING with ret: 0
+>>>><1> pv_check_name -- LEAVING with ret: 0
+>>>>pvcreate -- getting physical volume size
+>>>><1> _pv_get_dev_size -- CALLED with /dev/emcpowera and 0xbfffa650
+>>>><1> _pv_get_dev_size -- LEAVING with ret: 20971520
+>>>>pvcreate -- checking maximum physical volume size
+>>>><1> pv_create_kdev_t -- CALLED with "/dev/emcpowera"
+>>>><22> pv_check_name -- CALLED with "/dev/emcpowera"
+>>>><333> lvm_check_chars -- CALLED with name: "/dev/emcpowera"
+>>>><333> lvm_check_chars -- LEAVING with ret: 0
+>>>><22> pv_check_name -- LEAVING with ret: 0
+>>>><1> pv_create_kdev_t -- LEAVING with ret: E800
+>>>><1> lvm_check_partitioned_dev -- CALLED
+>>>><22> lvm_get_device_type called
+>>>><22> lvm_get_device_type leaving with -1
+>>>><1> lvm_check_partitioned_dev -- LEAVING with ret: FALSE
+>>>>pvcreate -- checking partition type
+>>>><1> pv_read -- CALLED with /dev/emcpowera
+>>>><22> pv_check_name -- CALLED with "/dev/emcpowera"
+>>>><333> lvm_check_chars -- CALLED with name: "/dev/emcpowera"
+>>>><333> lvm_check_chars -- LEAVING with ret: 0
+>>>><22> pv_check_name -- LEAVING with ret: 0
+>>>><1> pv_read -- going to read /dev/emcpowera
+>>>><22> lvm_check_dev -- CALLED
+>>>><333> lvm_check_partitioned_dev -- CALLED
+>>>><4444> lvm_get_device_type called
+>>>><4444> lvm_get_device_type leaving with -1
+>>>><333> lvm_check_partitioned_dev -- LEAVING with ret: FALSE
+>>>><22> lvm_check_dev -- LEAVING with ret: 0
+>>>><1> pv_read -- LEAVING with ret: -270
+>>>>pvcreate -- invalid physical volume "/dev/emcpowera"
+>>>>
+>>>><1> lvm_unlock -- CALLED
+>>>><1> lvm_unlock -- LEAVING with ret: 0
+>>>>
+>>>>   
+>>>>
+>>>>        
+>>>>
+>>>>>send the error leve returns echo $?
+>>>>>
+>>>>>regards!
+>>>>>
+>>>>>
+>>>>>
+>>>>>On Mon, 11 Apr 2005 21:52:08 -0500, Clif Smith wrote
+>>>>>
+>>>>>
+>>>>>     
+>>>>>
+>>>>>          
+>>>>>
+>>>>>>I'm running lvm-1.0.8-9 on RHES3 and am receiving the following when 
+>>>>>>I try to utilize a volume from an EMC array:
+>>>>>># pvcreate /dev/emcpowera
+>>>>>>pvcreate -- invalid physical volume "/dev/emcpowera"
+>>>>>>
+>>>>>>The OS sees the volume fine:
+>>>>>># fdisk -l /dev/emcpowera
+>>>>>>Disk /dev/emcpowera: 10.7 GB, 10737418240 bytes
+>>>>>>255 heads, 63 sectors/track, 1305 cylinders
+>>>>>>Units = cylinders of 16065 * 512 = 8225280 bytes
+>>>>>>
+>>>>>>I can create a partition and then a filesystem without issue, but I 
+>>>>>>really need to use it within LVM.
+>>>>>>
+>>>>>>Any ideas?
+>>>>>>
+>>>>>>_______________________________________________
+>>>>>>linux-lvm mailing list
+>>>>>>linux-lvm@redhat.com
+>>>>>>https://www.redhat.com/mailman/listinfo/linux-lvm
+>>>>>>read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+>>>>>>  
+>>>>>>
+>>>>>>       
+>>>>>>
+>>>>>>            
+>>>>>>
+>>>>>     
+>>>>>
+>>>>>          
+>>>>>
+>>>=======================================================================================
+>>>      
+>>>
+>>>>   
+>>>>
+>>>>        
+>>>>
+>>>>>La teta que la mano no cubre, no es teta sino ubre.
+>>>>>		-- An�nim. 
+>>>>>     
+>>>>>
+>>>>>          
+>>>>>
+>>>=======================================================================================
+>>>      
+>>>
+>>>>   
+>>>>
+>>>>        
+>>>>
+>>>>>_______________________________________________
+>>>>>linux-lvm mailing list
+>>>>>linux-lvm@redhat.com
+>>>>>https://www.redhat.com/mailman/listinfo/linux-lvm
+>>>>>read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+>>>>>
+>>>>>
+>>>>>     
+>>>>>
+>>>>>          
+>>>>>
+>>>>_______________________________________________
+>>>>linux-lvm mailing list
+>>>>linux-lvm@redhat.com
+>>>>https://www.redhat.com/mailman/listinfo/linux-lvm
+>>>>read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+>>>>   
+>>>>
+>>>>        
+>>>>
+>>>      
+>>>
+>>=======================================================================================
+>>    
+>>
+>>>La teta que la mano no cubre, no es teta sino ubre.
+>>>		-- An�nim. 
+>>>      
+>>>
+>>=======================================================================================
+>>    
+>>
+>>>_______________________________________________
+>>>linux-lvm mailing list
+>>>linux-lvm@redhat.com
+>>>https://www.redhat.com/mailman/listinfo/linux-lvm
+>>>read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+>>> 
+>>>
+>>>      
+>>>
+>>_______________________________________________
+>>linux-lvm mailing list
+>>linux-lvm@redhat.com
+>>https://www.redhat.com/mailman/listinfo/linux-lvm
+>>read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+>>    
+>>
+>
+>
+>=======================================================================================
+>La teta que la mano no cubre, no es teta sino ubre.
+>		-- An�nim. 
+>=======================================================================================
+>
+>_______________________________________________
+>linux-lvm mailing list
+>linux-lvm@redhat.com
+>https://www.redhat.com/mailman/listinfo/linux-lvm
+>read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+>  
+>
