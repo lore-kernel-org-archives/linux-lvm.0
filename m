@@ -1,17 +1,33 @@
-Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j3CKjfO18528
-	for <linux-lvm@redhat.com>; Tue, 12 Apr 2005 16:45:41 -0400
-Received: from servidor.isea-ing.com (171.Red-217-127-207.pooles.rima-tde.net
-	[217.127.207.171])
-	by mx3.redhat.com (8.12.11/8.12.11) with ESMTP id j3CKjYGi004531
-	for <linux-lvm@redhat.com>; Tue, 12 Apr 2005 16:45:35 -0400
-From: "Diaz Rodriguez, Eduardo" <ediaz@pk25.com>
-Subject: SUMMARY: Re: [linux-lvm] VGs not detected at startup
-Date: Tue, 12 Apr 2005 22:45:10 +0200
-Message-Id: <20050412203848.M26761@pk25.com>
-In-Reply-To: <20050406091824.M19941@pk25.com>
-References: <20050406091824.M19941@pk25.com>
-MIME-Version: 1.0
+Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j3D7wHO01674
+	for <linux-lvm@redhat.com>; Wed, 13 Apr 2005 03:58:17 -0400
+Received: from pd2mo3so.prod.shaw.ca (shawidc-mo1.cg.shawcable.net
+	[24.71.223.10])
+	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id j3D7wFUG001284
+	for <linux-lvm@redhat.com>; Wed, 13 Apr 2005 03:58:16 -0400
+Received: from pd5mr3so.prod.shaw.ca
+	(pd5mr3so-qfe3.prod.shaw.ca [10.0.141.144]) by l-daemon
+	(Sun ONE Messaging Server 6.0 HotFix 1.01 (built Mar 15 2004))
+	with ESMTP id <0IEV006R1KRCGAD0@l-daemon> for linux-lvm@redhat.com; Wed,
+	13 Apr 2005 01:57:12 -0600 (MDT)
+Received: from pn2ml6so.prod.shaw.ca ([10.0.121.150])
+	by pd5mr3so.prod.shaw.ca (Sun ONE Messaging Server 6.0 HotFix 1.01
+	(built Mar
+	15 2004)) with ESMTP id <0IEV0038RKRCFU30@pd5mr3so.prod.shaw.ca> for
+	linux-lvm@redhat.com; Wed, 13 Apr 2005 01:57:12 -0600 (MDT)
+Received: from [192.168.1.124]
+	(S01060050ba84447c.vc.shawcable.net [24.86.200.241])
+	by l-daemon (iPlanet Messaging Server 5.2 HotFix 1.18 (built Jul 28
+	2003))
+	with ESMTP id <0IEV00AJPKRBA0@l-daemon> for linux-lvm@redhat.com; Wed,
+	13 Apr 2005 01:57:12 -0600 (MDT)
+Date: Wed, 13 Apr 2005 00:57:22 -0700
+From: Terry Rigby <t-rigby@shaw.ca>
+Message-id: <200504130057.22236.t-rigby@shaw.ca>
+MIME-version: 1.0
+Content-transfer-encoding: 7bit
+Content-disposition: inline
+Subject: [linux-lvm] Can not write to volume
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -22,87 +38,99 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-To: LVM general discussion and development <linux-lvm@redhat.com>
-Cc: markus.wiedmer@stud.fhbb.ch
+Content-Type: text/plain; charset="us-ascii"
+To: linux-lvm@redhat.com
 
-Hi finally I find the problem.
+Tonight I noticed an inability to write to my LVM volume.  I see the following 
+errors in syslog
 
-In one of my night delete checkroot.sh, I resolve using from the other linux
-but it was some diferent, finally the script don't mount /proc and the system
-was unable to mount and detect the VG's.
+Apr 13 00:45:18 localhost kernel: ReiserFS: warning: is_tree_node: node level 
+65535 does not match to the expected one 1
+Apr 13 00:45:18 localhost kernel: ReiserFS: dm-0: warning: vs-5150: 
+search_by_key: invalid format found in block 43843584. Fsck?
 
-I download the pakage from debian and get the correct version, now all runs ok.
+I am unsure as to what info might be relevant here so I will paste some 
+hopefully without being too long winded.  Is it recommended to run a fsck on 
+this?  How might I fix the issue?  
 
-Thank you for nothing, nobody to answer me. :-).
+fileserver:/storage/tv/recordings# df -h |grep storage
+/dev/mapper/4474-storage
+                      242G  210G   33G  87% /storage
 
-On Wed, 6 Apr 2005 12:02:34 +0200, Diaz Rodriguez, Eduardo wrote
-> Hi, I�m running lvm 1.0.8, on kernel 2.4.30, but I have problems with
-> detecting the VGs. Immediately after bootup, vgscan returns: no 
-> volume groups found I find very similar same problem that:
-> 
-> https://www.redhat.com/archives/linux-lvm/2004-November/msg00028.html
-> https://www.redhat.com/archives/linux-lvm/2004-November/msg00033.html
-> 
-> I am running lvm10 in debian linux with kernel 2.4.30
-> 
-> The problem are that boot process, (the rcS.d S27lvm) don't detect 
-> any vgs but, after of some trys I must create a workarround and 
-> startup the script after of
-> 
-> S35mountall.sh
-> cat S36lvm_ayuda
-> /sbin/vgscan
-> /sbin/vgchange -a y
-> /bin/mount �a
-> 
-> Yesterday the lvm script runs well but I think that the problem can 
-> be change the kernel version (I change from 2.4.28 to 2.4.30)..
-> 
-> The problem was, I change the kernel version, after of boot, for 
-> accident I write the checkroot.sh with checkfs.sh, a reboot, (many 
-> fails) I use a knoppix for start the disk a recover from a very 
-> similar system (debian stable too with lvm too).
-> 
-> After of this, lvm startup script never see any vgs but I exec the 
-> lvm script too after of S35mountall.sh the script runs well.
-> 
-> I change some information of SCSI modules (for my usb-disk  �but 
-> this disk don�t run in lvm only have ATA disk /dev/hdb1 and 
-> /dev/hdd1� ) for start as modules. But I don�t remember that,
->  because I think that this can bee easy. The kernel version was 
-> compiling well. But after the reboot I see the problem. I try exec 
-> vgscan �v, (putting in the scripts) but in boot process for any 
-> information but nothing
-> 
-> A very fanny night working at 4:00 AM :-)
-> 
-> If anypeople need more data don�t dude said me I sent the output of 
-> the commands
-> 
-> mounts
-> /dev/hda2 on / type ext3 (rw,errors=remount-ro)
-> /dev/hdc1 on /datos type reiserfs (rw)
-> /dev/hda3 on /backup/disco1 type reiserfs (rw)
-> proc on /proc type proc (rw)
-> /dev/vgdatos/vlortofotos on /datos_ortofotos type xfs (rw)
-> 
-> I any want's can contact with me in messenger at ediaz NOSPAM AT 
-> pk25 dot com
-> 
-> Any help is very appreciate
-> 
-> P.D Sorry for my English, I am from spain
-> 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+fileserver:/storage/tv/recordings# pvscan
+  PV /dev/hda2   VG 4474   lvm2 [18.18 GB / 0    free]
+  PV /dev/hdc    VG 4474   lvm2 [74.53 GB / 0    free]
+  PV /dev/hdb    VG 4474   lvm2 [74.53 GB / 0    free]
+  PV /dev/hdd    VG 4474   lvm2 [74.53 GB / 0    free]
+  Total: 4 [241.77 GB] / in use: 4 [241.77 GB] / in no VG: 0 [0   ]
 
+fileserver:/storage/tv/recordings# pvdisplay
+  --- Physical volume ---
+  PV Name               /dev/hda2
+  VG Name               4474
+  PV Size               18.18 GB / not usable 0
+  Allocatable           yes (but full)
+  PE Size (KByte)       4096
+  Total PE              4655
+  Free PE               0
+  Allocated PE          4655
+  PV UUID               hxeJjE-AgPR-letG-U0rH-FlDP-hOu9-o7UH7e
 
-=======================================================================================
-La teta que la mano no cubre, no es teta sino ubre.
-		-- An�nim. 
-=======================================================================================
+  --- Physical volume ---
+  PV Name               /dev/hdc
+  VG Name               4474
+  PV Size               74.53 GB / not usable 0
+  Allocatable           yes (but full)
+  PE Size (KByte)       4096
+  Total PE              19079
+  Free PE               0
+  Allocated PE          19079
+  PV UUID               KMzdEO-aigL-KoHL-2ZED-SgWf-CsoW-7qEWQP
+
+  --- Physical volume ---
+  PV Name               /dev/hdb
+  VG Name               4474
+  PV Size               74.53 GB / not usable 0
+  Allocatable           yes (but full)
+  PE Size (KByte)       4096
+  Total PE              19079
+  Free PE               0
+  Allocated PE          19079
+  PV UUID               2MKTrn-jv8Y-hUPU-8W6m-Uur1-ItpE-Abq3w4
+
+  --- Physical volume ---
+  PV Name               /dev/hdd
+  VG Name               4474
+  PV Size               74.53 GB / not usable 0
+  Allocatable           yes (but full)
+  PE Size (KByte)       4096
+  Total PE              19079
+  Free PE               0
+  Allocated PE          19079
+  PV UUID               ISBKAD-7SQt-B9Bo-ppng-G5Q6-Iu3D-uABjz7
+
+fileserver:/storage/tv/recordings# vgscan
+  Reading all physical volumes.  This may take a while...
+  Found volume group "4474" using metadata type lvm2
+
+fileserver:/storage/tv/recordings# vgdisplay
+  --- Volume group ---
+  VG Name               4474
+  System ID
+  Format                lvm2
+  Metadata Areas        4
+  Metadata Sequence No  3
+  VG Access             read/write
+  VG Status             resizable
+  MAX LV                0
+  Cur LV                1
+  Open LV               1
+  Max PV                0
+  Cur PV                4
+  Act PV                4
+  VG Size               241.77 GB
+  PE Size               4.00 MB
+  Total PE              61892
+  Alloc PE / Size       61892 / 241.77 GB
+  Free  PE / Size       0 / 0
+  VG UUID               lIoGSW-jLzj-HDN6-1mdY-0yqV-bily-BU9xzF
