@@ -1,21 +1,20 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j3DJuUO15031
-	for <linux-lvm@redhat.com>; Wed, 13 Apr 2005 15:56:30 -0400
-Received: from dcs.nac.uci.edu (root@dcs.nac.uci.edu [128.200.34.32])
-	by mx3.redhat.com (8.12.11/8.12.11) with ESMTP id j3DJuOl8013657
-	for <linux-lvm@redhat.com>; Wed, 13 Apr 2005 15:56:24 -0400
-Subject: Re: [linux-lvm] LVM2 und Snapshots =?ISO-8859-1?Q?f=FCr?= mein
-	Abschlussprojekt
-From: Dan Stromberg <strombrg@dcs.nac.uci.edu>
-In-Reply-To: <425D3399.5050307@online.de>
-References: <614019203@web.de> <200504121140.00117.ulf.kellermann@exaecon.com>
-	<425D3399.5050307@online.de>
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature";
-	boundary="=-VArDtWgH6yQoy7/57GmW"
-Date: Wed, 13 Apr 2005 12:55:49 -0700
-Message-Id: <1113422149.4707.118.camel@seki.nac.uci.edu>
-Mime-Version: 1.0
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j3E35UO13746
+	for <linux-lvm@redhat.com>; Wed, 13 Apr 2005 23:05:30 -0400
+Received: from nexus.stevens.edu (nexus.stevens.edu [155.246.14.12])
+	by mx3.redhat.com (8.12.11/8.12.11) with ESMTP id j3E35Odm012487
+	for <linux-lvm@redhat.com>; Wed, 13 Apr 2005 23:05:25 -0400
+Received: from greglaptop (gdeangel.u05.stevens-tech.edu [155.246.221.26])
+	by nexus.stevens.edu
+	(iPlanet Messaging Server 5.2 HotFix 1.26 (built Mar 31 2004))
+	with ESMTP id <0IEX00EMW1WYSL@nexus.stevens.edu> for
+	linux-lvm@redhat.com; Wed, 13 Apr 2005 23:05:24 -0400 (EDT)
+Date: Wed, 13 Apr 2005 23:04:44 -0400
+From: Greg DeAngelis <gdeangel@stevens.edu>
+Message-id: <0IEX00EMY1X0SL@nexus.stevens.edu>
+MIME-version: 1.0
+Content-transfer-encoding: 7BIT
+Subject: [linux-lvm] lvm volume corruption
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -26,87 +25,52 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: klaus.strebel@gmx.net, LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="us-ascii"
+To: linux-lvm@redhat.com
 
+I am having some trouble installing gentoo on a striped lvm setup. The
+architecture is AMD64 and it is Gentoo 2005.0.
 
---=-VArDtWgH6yQoy7/57GmW
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
+The system specs are: 
+Athlon 64 3500+ 
+MSI K8T Neo2-FIR 
+1 gig ddr400 ram 
+FastTrak 150 sx4-m 
+3x Maxtor 120 gig sata drives 
+Geforce 6800 
+Soundblaster Audigy 
+DVD-RW DL 
+Mouse + Keyboard 
 
+The 3 sata 120 gig hard drives are attached to the FastTrak 150 sx4-m raid
+card. There is no array configured. I was gonna use hardware (apparently not
+possible with this card) or software raid 5 but ive heard of some problems
+with reliability. This setup was previously running Windows XP with no
+stability issues. 
 
-IMO, Mail programs should not only have a translation facility built in,
-but also should allow a two-paned view - one in a language you know
-well, and the other in the language you're translating from.  It'd also
-be cool if the program could auto-recognize a language, and translate it
-for you without even waiting for you to ask for it.
+The disk structure as reported by fdisk looks like this: 
+/dev/sda 
+/dev/sda1 100 mbs /boot 
+/dev/sda2 2.5 gigs swap 
+/dev/sda3 2 gigs / 
+/dev/sda4 extended 
+/dev/sda5 112 gigs approx Linux LVM 
 
-On Wed, 2005-04-13 at 16:58 +0200, Klaus Strebel wrote:
-> Ulf Kellermann wrote:
-> > Hallo Melanie,
-> >=20
-> > ich glaube um eine Antwort zu bekommen solttest Du in englisch schreibe=
-n.
-> ... the rest of list can read your messages too, without using a=20
-> bablefish and the chance of getting a rood answer is bigger ;-) ...
->=20
-> > Mein Tip an Dich:
-> > 	Installiere Red Hat, u.U. auch SuSE 9.x (ich finde die LVM konfigurati=
-on als=20
-> > User gelungen) und wenn Du ein bisschen das Gefuehl bekommst, stelle De=
-ine=20
-> > Fragen an die Mailinglist, aber in Englisch.
->=20
-> Neither the 'data' nor the 'directory-tree' is saved, the changed blocks=20
-> on the lowest access level are stored in the snapshot. So, your snapshot=20
->   has to be big enough to save all changed blocks of the day ( at max,=20
-> the full volume size ! ).
->=20
-> >=20
-> > Meines Wissen lebt Heinz Mauelshagen in den USA und es mir nicht bewuss=
-t, dass=20
-> > er Deutsch kann.
-> I remembered the beginning of LVM just 'some' years ago, Heinz's email=20
-> signature was (found it in the LVM-mail archives):
->=20
-> =3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=
-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D=
--=3D-=3D-
->=20
-> Systemmanagement C/S                             Deutsche Telekom AG
->                                                   Entwicklungszentrum=20
-> Darmstadt
-> Heinz Mauelshagen                                Otto-Roehm-Strasse 71c
-> Senior Systems Engineer                          Postfach 10 05 41
->                                                   64205 Darmstadt
-> mge ez-darmstadt telekom de                      Germany
->                                                   +49 6151 886-425
->                                                            FAX-386
-> =3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=
-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D=
--=3D-=3D-
->=20
-> so, i'd expect him to speak german quite fluently ;-).
->=20
-> Ciao
-> Klaus
->=20
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
->=20
+/dev/sdb 
+/dev/sdb1 117 gigs approx Linux LVM 
 
---=-VArDtWgH6yQoy7/57GmW
-Content-Type: application/pgp-signature; name=signature.asc
-Content-Description: This is a digitally signed message part
+/dev/sdac 
+*this disk was gonna primarily be used for back up only purposes by doing
+snapshots 
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.2.6 (GNU/Linux)
-
-iD8DBQBCXXlFo0feVm00f/8RAtmwAJ0RBKEzEfNyTKw2q1V2BuPXvOm8rQCdGrF3
-3aLou0YvRnb7bhV1Aw8KfJ4=
-=EXKR
------END PGP SIGNATURE-----
-
---=-VArDtWgH6yQoy7/57GmW--
+After creating the lvm volumes according to the gentoo lvm guide (i am
+striping across the first 2 drives using 4k blocks) and formatting them with
+ext3, I encountered an error while installing some packages where one volume
+suddenly became read only. I ran e2fsck on the resulting volume devices and
+found several inode errors including imagic flag, dtime and linked list
+corruption errors. I tried multiple times to create these stripes, format
+them with ext3, and then run e2fsck without success. I recreated the volumes
+without striping and noticed no problems with e2fsck. Id like to use
+striping and don't see what i am doing wrong. Can lvm stripe across
+different sized partitions and if so, how are the stripes determined once
+one partition is used up?
