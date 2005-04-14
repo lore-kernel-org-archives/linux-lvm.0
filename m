@@ -1,23 +1,12 @@
-Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j3ENZIO14803
-	for <linux-lvm@redhat.com>; Thu, 14 Apr 2005 19:35:18 -0400
-Received: from wproxy.gmail.com (wproxy.gmail.com [64.233.184.206])
-	by mx3.redhat.com (8.12.11/8.12.11) with ESMTP id j3ENZBUl027677
-	for <linux-lvm@redhat.com>; Thu, 14 Apr 2005 19:35:12 -0400
-Received: by wproxy.gmail.com with SMTP id 68so686434wra
-	for <linux-lvm@redhat.com>; Thu, 14 Apr 2005 16:35:03 -0700 (PDT)
-Message-ID: <87f94c3705041416357039a4a5@mail.gmail.com>
-Date: Thu, 14 Apr 2005 19:35:03 -0400
-From: Greg Freemyer <greg.freemyer@gmail.com>
-Subject: Re: [linux-lvm] How to mirror or Replicate a primary server's data to
-	a secondarymachine
-In-Reply-To: <1113495234.25261.28.camel@grma-lap>
-Mime-Version: 1.0
-Content-Disposition: inline
-References: <1113495234.25261.28.camel@grma-lap>
+content-class: urn:content-classes:message
+MIME-Version: 1.0
+Date: Thu, 14 Apr 2005 10:20:28 -0700
+Message-ID: <FF83FA30299A76448B4AC6026257A884036605@exchangemv.quova.com>
+From: "Tobias Speckbacher" <TSpeckbacher@quova.com>
 Content-Transfer-Encoding: 8bit
-Reply-To: Greg Freemyer <greg.freemyer@gmail.com>,
-	LVM general discussion and development <linux-lvm@redhat.com>
+Subject: [linux-lvm] RE: How to mirror or Replicate a primary server's data
+	to asecondarymachine
+Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -28,40 +17,70 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: Gary.Mansell@ricardo.com, LVM general discussion and development <linux-lvm@redhat.com>
-Cc: nahant-list@redhat.com, taroon-list@redhat.com, linux-poweredge@dell.com
+To: Gary.Mansell@ricardo.com, "Discussion of Red Hat Enterprise Linux 3 (Taroon)" <taroon-list@redhat.com>, nahant-list@redhat.com, linux-lvm@redhat.comtaroon-list@redhat.com, linux-poweredge@dell.com
 
-On 4/14/05, Gary Mansell <Gary.Mansell@ricardo.com> wrote:
-> Hi,
-> 
-> I am considering whether to go down the path of a dual server, manual
-> failover solution for one of my RHEL fileservers.
-> 
-> I would have two identical servers in two different machine rooms on our
-> site and if the main server failed then I would manually reconfigure the
-> secondary server with the primary server's IP address so that the client
-> machines can carry on working.
-> 
-> Can anyone recommend to me what I need to do to mirror the data across
-> the two servers so that updates to the primary server are also made to
-> the secondary server
-> 
-> Thanks in advance for any help
-> 
-> Regards
-> 
-> Gary Mansell
+ 
+To facilitate automatic failover you could take a look at heartbeat which is part of the Linux-HA project
+http://www.linux-ha.org/download/
 
-If you need ordered writes (as a database would), the only solution
-I'm sure works is DRBD.  I then MD layered above NBD can also be used,
-but I'm not positive it supports ordered writes.
+	-----Original Message----- 
+	From: taroon-list-bounces@redhat.com on behalf of Gary Mansell 
+	Sent: Thu 4/14/2005 9:13 AM 
+	To: nahant-list@redhat.com; linux-lvm@redhat.com; taroon-list@redhat.com; linux-poweredge@dell.com 
+	Cc: 
+	Subject: How to mirror or Replicate a primary server's data to asecondarymachine
+	
+	
 
-If you choose DRBD, then Linux-HA (heartbeat) can be added to the mix
-to get rid of the manual failover aspect.  SLES (SuSE Linux Enterprise
-Server) comes with both of these and Novell's support.
+	Hi,
+	
+	I am considering whether to go down the path of a dual server, manual
+	failover solution for one of my RHEL fileservers.
+	
+	I would have two identical servers in two different machine rooms on our
+	site and if the main server failed then I would manually reconfigure the
+	secondary server with the primary server's IP address so that the client
+	machines can carry on working.
+	
+	Can anyone recommend to me what I need to do to mirror the data across
+	the two servers so that updates to the primary server are also made to
+	the secondary server
 
-Or all of the above are GPL and you can use yourself and the community
-for support.
-
-HTH
-Greg
+	
+	
+	Thanks in advance for any help
+	
+	Regards
+	
+	Gary Mansell
+	--
+	
+	This e-mail and any files transmitted with it are confidential and intended
+	solely for the use of the individual or entity to whom they are addressed.
+	If you have received this e-mail in error please notify the sender immediately
+	and delete this e-mail from your system.  Please note that any views or opinions
+	presented in this e-mail are solely those of the author and do not necessarily
+	represent those of Ricardo (save for reports and other documentation formally
+	approved and signed for release to the intended recipient).  Only Directors
+	or Duly Authorised Officers are authorised to enter into legally binding
+	obligations on behalf of Ricardo unless the obligation is contained within
+	a Ricardo Purchase Order.
+	
+	Ricardo may monitor outgoing and incoming e-mails and other telecommunications
+	on its e-mail and telecommunications systems.  By replying to this e-mail you
+	give consent to such monitoring.  The recipient should check this e-mail and
+	any attachments for the presence of viruses.  Ricardo accepts no liability for
+	any damage caused by any virus transmitted by this e-mail.  "Ricardo" means
+	Ricardo plc and its subsidiary companies.
+	
+	Ricardo plc is a public limited company registered in England with registered
+	number 00222915.
+	The registered office of Ricardo plc is Bridge Works, Shoreham-by Sea,
+	West Sussex, BN43 5FG.
+	
+	
+	--
+	Taroon-list mailing list
+	Taroon-list@redhat.com
+	http://www.redhat.com/mailman/listinfo/taroon-list
+	
