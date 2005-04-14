@@ -1,21 +1,13 @@
-Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j3E35UO13746
-	for <linux-lvm@redhat.com>; Wed, 13 Apr 2005 23:05:30 -0400
-Received: from nexus.stevens.edu (nexus.stevens.edu [155.246.14.12])
-	by mx3.redhat.com (8.12.11/8.12.11) with ESMTP id j3E35Odm012487
-	for <linux-lvm@redhat.com>; Wed, 13 Apr 2005 23:05:25 -0400
-Received: from greglaptop (gdeangel.u05.stevens-tech.edu [155.246.221.26])
-	by nexus.stevens.edu
-	(iPlanet Messaging Server 5.2 HotFix 1.26 (built Mar 31 2004))
-	with ESMTP id <0IEX00EMW1WYSL@nexus.stevens.edu> for
-	linux-lvm@redhat.com; Wed, 13 Apr 2005 23:05:24 -0400 (EDT)
-Date: Wed, 13 Apr 2005 23:04:44 -0400
-From: Greg DeAngelis <gdeangel@stevens.edu>
-Message-id: <0IEX00EMY1X0SL@nexus.stevens.edu>
-MIME-version: 1.0
-Content-transfer-encoding: 7BIT
-Subject: [linux-lvm] lvm volume corruption
-Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
+From: "Gary Mansell" <Gary.Mansell@ricardo.com>
+Content-Class: urn:content-classes:message
+Date: Thu, 14 Apr 2005 17:13:54 +0100
+Message-ID: <1113495234.25261.28.camel@grma-lap>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Subject: [linux-lvm] How to mirror or Replicate a primary server's data to a
+	secondarymachine
+Reply-To: Gary.Mansell@ricardo.com,
+	LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -26,51 +18,49 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@redhat.com
+To: nahant-list@redhat.com, linux-lvm@redhat.com, taroon-list@redhat.com, linux-poweredge@dell.com
 
-I am having some trouble installing gentoo on a striped lvm setup. The
-architecture is AMD64 and it is Gentoo 2005.0.
+Hi,
 
-The system specs are: 
-Athlon 64 3500+ 
-MSI K8T Neo2-FIR 
-1 gig ddr400 ram 
-FastTrak 150 sx4-m 
-3x Maxtor 120 gig sata drives 
-Geforce 6800 
-Soundblaster Audigy 
-DVD-RW DL 
-Mouse + Keyboard 
+I am considering whether to go down the path of a dual server, manual
+failover solution for one of my RHEL fileservers.
 
-The 3 sata 120 gig hard drives are attached to the FastTrak 150 sx4-m raid
-card. There is no array configured. I was gonna use hardware (apparently not
-possible with this card) or software raid 5 but ive heard of some problems
-with reliability. This setup was previously running Windows XP with no
-stability issues. 
+I would have two identical servers in two different machine rooms on our
+site and if the main server failed then I would manually reconfigure the
+secondary server with the primary server's IP address so that the client
+machines can carry on working.
 
-The disk structure as reported by fdisk looks like this: 
-/dev/sda 
-/dev/sda1 100 mbs /boot 
-/dev/sda2 2.5 gigs swap 
-/dev/sda3 2 gigs / 
-/dev/sda4 extended 
-/dev/sda5 112 gigs approx Linux LVM 
+Can anyone recommend to me what I need to do to mirror the data across
+the two servers so that updates to the primary server are also made to
+the secondary server
 
-/dev/sdb 
-/dev/sdb1 117 gigs approx Linux LVM 
+Thanks in advance for any help
 
-/dev/sdac 
-*this disk was gonna primarily be used for back up only purposes by doing
-snapshots 
+Regards
 
-After creating the lvm volumes according to the gentoo lvm guide (i am
-striping across the first 2 drives using 4k blocks) and formatting them with
-ext3, I encountered an error while installing some packages where one volume
-suddenly became read only. I ran e2fsck on the resulting volume devices and
-found several inode errors including imagic flag, dtime and linked list
-corruption errors. I tried multiple times to create these stripes, format
-them with ext3, and then run e2fsck without success. I recreated the volumes
-without striping and noticed no problems with e2fsck. Id like to use
-striping and don't see what i am doing wrong. Can lvm stripe across
-different sized partitions and if so, how are the stripes determined once
-one partition is used up?
+Gary Mansell
+-- 
+
+This e-mail and any files transmitted with it are confidential and intended
+solely for the use of the individual or entity to whom they are addressed.
+If you have received this e-mail in error please notify the sender immediately
+and delete this e-mail from your system.  Please note that any views or opinions
+presented in this e-mail are solely those of the author and do not necessarily
+represent those of Ricardo (save for reports and other documentation formally
+approved and signed for release to the intended recipient).  Only Directors
+or Duly Authorised Officers are authorised to enter into legally binding
+obligations on behalf of Ricardo unless the obligation is contained within
+a Ricardo Purchase Order.
+
+Ricardo may monitor outgoing and incoming e-mails and other telecommunications
+on its e-mail and telecommunications systems.  By replying to this e-mail you
+give consent to such monitoring.  The recipient should check this e-mail and
+any attachments for the presence of viruses.  Ricardo accepts no liability for
+any damage caused by any virus transmitted by this e-mail.  "Ricardo" means
+Ricardo plc and its subsidiary companies.
+
+Ricardo plc is a public limited company registered in England with registered
+number 00222915.
+The registered office of Ricardo plc is Bridge Works, Shoreham-by Sea,
+West Sussex, BN43 5FG.
+ 
