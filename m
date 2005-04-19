@@ -1,17 +1,18 @@
-Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j3J8HhO28286
-	for <linux-lvm@redhat.com>; Tue, 19 Apr 2005 04:17:43 -0400
-Received: from mail.ukfsn.org (s2.ukfsn.org [217.158.120.143])
-	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id j3J8HgVv004505
-	for <linux-lvm@redhat.com>; Tue, 19 Apr 2005 04:17:42 -0400
-Message-ID: <4264BE9F.1030509@dgreaves.com>
-Date: Tue, 19 Apr 2005 09:17:35 +0100
-From: David Greaves <david@dgreaves.com>
+Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j3JAh5O21549
+	for <linux-lvm@redhat.com>; Tue, 19 Apr 2005 06:43:05 -0400
+Received: from ptb-relay02.plus.net (ptb-relay02.plus.net [212.159.14.213])
+	by mx3.redhat.com (8.12.11/8.12.11) with ESMTP id j3JAgw7n013602
+	for <linux-lvm@redhat.com>; Tue, 19 Apr 2005 06:42:59 -0400
+Message-Id: <200504191042.j3JAgw7n013602@mx3.redhat.com>
+Received: from [212.159.74.68] (helo=Office)
+	by ptb-relay02.plus.net with esmtp (Exim) id 1DNqBs-0001lV-BV
+	for linux-lvm@redhat.com; Tue, 19 Apr 2005 10:42:48 +0000
+From: "Robert Jenkins" <raj@jrw.co.uk>
+Date: Tue, 19 Apr 2005 11:42:41 +0100
 MIME-Version: 1.0
-References: <426464F9.5040301@advocap.org>
-In-Reply-To: <426464F9.5040301@advocap.org>
 Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] Re: optimum blockdev --setra settings
+Subject: [linux-lvm] Help with Resize please?
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -22,91 +23,61 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: John McMonagle <johnm@advocap.org>
-Cc: linux-raid@vger.kernel.org, linux-lvm@redhat.com
+Content-Type: text/plain; charset="us-ascii"
+To: linux-lvm@redhat.com
 
-John McMonagle wrote:
+Hi,
 
-> Anyone establish optimum blockdev --setra settings for raid on a 2.6 
-> kernel?
+I have a 200GB Raid 1 drive (md0)
+On this I set up a group vg00 and two volumes, approx 80G (/dev/vg00/rhome)
+& 120G (/dev/vg00/raid) 
+These can be dismounted as required.
 
-yep.
-I found 0 at all levels except the topmost.
-ie
-/dev/hdx -> ra=0
-/dev/mdx -> ra=0
-/dev/lvm/ -> ra=xxxx
+I've about run out of space on the larger volume and have plenty on the
+smaller, so I resized the 80GB volume using
+e2fsadm -L -20G /dev/vg00/rhome
+This appears to have worked fine, the free space on that volume has reduced
+by 20gb.
 
->
-> There has been some discussions on the lvm mailing list.
 
-must have missed it...
-Here's the message I cc'ed the lvm group *last* time this came up (12 
-Dec '04) ;)
+The problem is that I cannot now extend the other volume; both e2fsadm &
+lvextend say there is no free space..
+lvextend -- no free physical extents in volume group "vg00"
 
-I hacked up a quick script to test permutations of readahead - it's not 
-exactly bonnie+++ but it may be useful.
-I wish I'd bothered with mdadm stripe sizes too - but the array is 
-pretty full now and I'll live with what it delivers.
+Vgck shows an apparent problem, but I'm not sure how to fix it:
 
-Essentially I found the best performance on *my* system with all low 
-level devices and the md device set to a 0 readahead and the lvm device 
-set to 4096.
-I'm only interested in video streaming big (1+Gb) files. Your needs (and 
-hence test) may differ.
+vgck -- VGDA of "vg00" in lvmtab is consistent
+vgck -- only found 30720 of 35840 LEs for LV /dev/vg00/raid (0)
+vgck -- ERROR "vg_read_with_pv_and_lv(): allocated LE of LV" reading data of
+volume group "vg00" from physical volume(s)
+vgck -- please DON'T run vgscan prior to vgcfgrestore
 
-my system is 2.6.10-rc2, xfs, lvm2, raid5, sata disks.
+Vgdisplay shows:
 
-cc'ed the lvm group since this often seems to come up in conjunction 
-with you guys :)
+VG Name               vg00
+VG Access             read/write
+VG Status             available/resizable
+VG #                  0
+MAX LV                256
+Cur LV                2
+Open LV               2
+MAX LV Size           255.99 GB
+Max PV                256
+Cur PV                1
+Act PV                1
+VG Size               186.30 GB
+PE Size               4 MB
+Total PE              47694
+Alloc PE / Size       47694 / 186.30 GB
+Free  PE / Size       0 / 0
+VG UUID               xrNX8E-Is0c-Jvub-tGrB-OWUr-DMmw-M2aAXp
 
-For your entertainment...
+According to fdisk, md0 has 195,360,896 blocks.
+I've seen a message with one command (I can't remember which) along the
+lines of md0 not being associated with vg00 ???
+System is EL3 with all updates to date via yum.
 
-#!/bin/bash
-RAW_DEVS="/dev/sda /dev/sdb /dev/sdc /dev/sdd /dev/sde /dev/sdf /dev/hdb"
-MD_DEVS=/dev/md0
-LV_DEVS=/dev/huge_vg/huge_lv
+Any help greatly appreciated!
 
-LV_RAS="0 128 256 1024 4096 8192"
-MD_RAS="0 128 256 1024 4096 8192"
-RAW_RAS="0 128 256 1024 4096 8192"
-
-function show_ra()
-{
-for i in $RAW_DEVS $MD_DEVS $LV_DEVS
-do echo -n "$i `blockdev --getra $i`  ::  "
-done
-echo
-}
-
-function set_ra()
-{
- RA=$1
- shift
- for dev in $@
- do
-   blockdev --setra $RA $dev
- done
-}
-
-function show_performance()
-{
- COUNT=4000000
- dd if=/dev/huge_vg/huge_lv of=/dev/null count=$COUNT 2>&1 | grep seconds
-}
-
-for RAW_RA in $RAW_RAS
- do
- set_ra $RAW_RA $RAW_DEVS
- for MD_RA in $MD_RAS
-   do
-   set_ra $MD_RA $MD_DEVS
-   for LV_RA in $LV_RAS
-     do
-     set_ra $LV_RA $LV_DEVS
-     show_ra
-     show_performance
-     done
-   done
- done
+Thanks,
+Robert Jenkins.
