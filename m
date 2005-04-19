@@ -1,18 +1,15 @@
-Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j3JAh5O21549
-	for <linux-lvm@redhat.com>; Tue, 19 Apr 2005 06:43:05 -0400
-Received: from ptb-relay02.plus.net (ptb-relay02.plus.net [212.159.14.213])
-	by mx3.redhat.com (8.12.11/8.12.11) with ESMTP id j3JAgw7n013602
-	for <linux-lvm@redhat.com>; Tue, 19 Apr 2005 06:42:59 -0400
-Message-Id: <200504191042.j3JAgw7n013602@mx3.redhat.com>
-Received: from [212.159.74.68] (helo=Office)
-	by ptb-relay02.plus.net with esmtp (Exim) id 1DNqBs-0001lV-BV
-	for linux-lvm@redhat.com; Tue, 19 Apr 2005 10:42:48 +0000
-From: "Robert Jenkins" <raj@jrw.co.uk>
-Date: Tue, 19 Apr 2005 11:42:41 +0100
+Received: from mx2.redhat.com (mx2.redhat.com [10.255.15.25])
+	by int-mx2.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j3JCN9P05969
+	for <linux-lvm@redhat.com>; Tue, 19 Apr 2005 08:23:09 -0400
+Received: from mail2.it.atosorigin.com ([151.12.57.13])
+	by mx2.redhat.com (8.12.11/8.12.11) with ESMTP id j3JCm6En032711
+	for <linux-lvm@redhat.com>; Tue, 19 Apr 2005 08:48:06 -0400
+From: Rao Davide <davide.rao@atosorigin.com>
+Message-ID: <4264F027.7040306@atosorigin.com>
+Date: Tue, 19 Apr 2005 13:48:55 +0200
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] Help with Resize please?
+Subject: [linux-lvm] FWD: Re: Linux Alpha port: LVM
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -23,61 +20,128 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@redhat.com
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+Cc: linux-lvm@redhat.com
 
-Hi,
+>>Is LVM working on the alpha port 2.6 kernel series ?
+>  
+> works fine for me.
 
-I have a 200GB Raid 1 drive (md0)
-On this I set up a group vg00 and two volumes, approx 80G (/dev/vg00/rhome)
-& 120G (/dev/vg00/raid) 
-These can be dismounted as required.
-
-I've about run out of space on the larger volume and have plenty on the
-smaller, so I resized the 80GB volume using
-e2fsadm -L -20G /dev/vg00/rhome
-This appears to have worked fine, the free space on that volume has reduced
-by 20gb.
+Are you using a redhat based distro (like suse, mandrake, alpha core or
+indeed redhat )?
+Are you using stock kernel, libraries and tools or did you haveto build
+them yourself ?
+Debian comes with LVM1 tools that do not work with 2.6 kernels so I need
+to compile them myself or install some ready build binary package for
+alpha processor and compatible with the libraries that come with debian3.
+What alpha architecture are you running on ?
 
 
-The problem is that I cannot now extend the other volume; both e2fsadm &
-lvextend say there is no free space..
-lvextend -- no free physical extents in volume group "vg00"
+>>If so where do I get libdevmapper so that I can build the userspace LVM 
+>>utils ?
+>>
+>>I tryied downloading 
+>>ftp://sources.redhat.com/pub/dm/multipath-toolsmultipath-tools-0.4.3.tar.bz2
+> 
+> what do you think the 'dm' in that url stands for, hm?
+> 
+> 
+>>But I fail to compile it so I'm also unable tu build the userspace lvm 
+>>utils.
+> 
+> 
+> 'userspace lvm utils' can be found here:
+> 
+> ftp://sources.redhat.com/pub/lvm2
+> 
+> multipath tools might be something different ... :)
 
-Vgck shows an apparent problem, but I'm not sure how to fix it:
+It may also have something more but it has libdevmapper in it ...
+In any case I also tried downloading and compiling
+device-mapper.1.00.07.tgz from the link in the LVM2.
+It builds and installe fine but I still get compilation errore when I
+build LVM2.
+Configute is fine, here are a few lines concerning libdevmapper
 
-vgck -- VGDA of "vg00" in lvmtab is consistent
-vgck -- only found 30720 of 35840 LEs for LV /dev/vg00/raid (0)
-vgck -- ERROR "vg_read_with_pv_and_lv(): allocated LE of LV" reading data of
-volume group "vg00" from physical volume(s)
-vgck -- please DON'T run vgscan prior to vgcfgrestore
+checking libdevmapper.h usability... yes
+checking libdevmapper.h presence... yes
+checking for libdevmapper.h... yes
 
-Vgdisplay shows:
+but when I try to compile:
 
-VG Name               vg00
-VG Access             read/write
-VG Status             available/resizable
-VG #                  0
-MAX LV                256
-Cur LV                2
-Open LV               2
-MAX LV Size           255.99 GB
-Max PV                256
-Cur PV                1
-Act PV                1
-VG Size               186.30 GB
-PE Size               4 MB
-Total PE              47694
-Alloc PE / Size       47694 / 186.30 GB
-Free  PE / Size       0 / 0
-VG UUID               xrNX8E-Is0c-Jvub-tGrB-OWUr-DMmw-M2aAXp
+gcc -c -I. -I../include -DLVM1_INTERNAL -DPOOL_INTERNAL
+-DCLUSTER_LOCKING_INTERNAL -DSNAPSHOT_INTERNAL -DMIRRORED_INTERNAL
+-DDEVMAPPER_SUPPORT -DO_DIRECT_SUPPORT -DHAVE_LIBDL -DHAVE_GETOPTLONG
+-fPIC -Wall -Wundef -Wshadow -Wcast-align -Wwrite-strings
+-Wmissing-prototypes -Wmissing-declarations -Wnested-externs -Winline
+-O2 cache/lvmcache.c -o cache/lvmcache.o
+activate/activate.c: In function `target_present':
+activate/activate.c:303: error: `DM_DEVICE_LIST_VERSIONS' undeclared
+(first use in this function)
+activate/activate.c:303: error: (Each undeclared identifier is reported
+only once
+activate/activate.c:303: error: for each function it appears in.)
+activate/activate.c:314: warning: implicit declaration of function
+`dm_task_get_versions'
+activate/activate.c:314: warning: nested extern declaration of
+`dm_task_get_versions'
+activate/activate.c:314: warning: assignment makes pointer from integer
+without a cast
+activate/activate.c:319: error: dereferencing pointer to incomplete type
+...
+same message repeated many times
+...
+make[1]: *** [activate/activate.o] Error 1
+make[1]: *** Waiting for unfinished jobs....
+make[1]: Leaving directory `/usr/src/LVM2.2.01.09/lib'
+make: *** [lib] Error 2
 
-According to fdisk, md0 has 195,360,896 blocks.
-I've seen a message with one command (I can't remember which) along the
-lines of md0 not being associated with vg00 ???
-System is EL3 with all updates to date via yum.
+I'm using kernel 2.6.11.7 downloaded from kernel.org.
+Here's the relevent section for raid/lvm in config:
+# Multi-device support (RAID and LVM)
+#
+CONFIG_MD=y
+CONFIG_BLK_DEV_MD=y
+CONFIG_MD_LINEAR=y
+CONFIG_MD_RAID0=y
+CONFIG_MD_RAID1=y
+# CONFIG_MD_RAID10 is not set
+CONFIG_MD_RAID5=y
+# CONFIG_MD_RAID6 is not set
+CONFIG_MD_MULTIPATH=y
+CONFIG_MD_FAULTY=y
+CONFIG_BLK_DEV_DM=y
+# CONFIG_DM_CRYPT is not set
+# CONFIG_DM_SNAPSHOT is not set
+# CONFIG_DM_MIRROR is not set
+# CONFIG_DM_ZERO is not set
 
-Any help greatly appreciated!
+Do I need to patch kernel ?
 
-Thanks,
-Robert Jenkins.
+> 
+> 
+>>--
+>>Regards
+>>Davide Rao
+>>  Client/server Unix
+>>  Atos Origin
+>>  Via C.Viola - Pont St. Martin (AO) Italy
+>>  Cell :  +39 3357599151
+>>  Tel  :  +39 125810433
+>>  Email:  davide.rao@atosorigin.com
+> 
+> 
+> 
+> 73 Thorsten
+> 
+
+-- 
+--
+Saluti
+Davide Rao
+   Client/server Unix
+   Atos Origin
+   Via C.Viola - Pont St. Martin (AO) Italy
+   Cell :  +39 3357599151
+   Tel  :  +39 125810433
+   Email:  davide.rao@atosorigin.com
