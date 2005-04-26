@@ -1,28 +1,22 @@
 Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j3P8oKO15937
-	for <linux-lvm@redhat.com>; Mon, 25 Apr 2005 04:50:20 -0400
-Received: from twoflower.innovation.uni-bremen.de
-	(twoflower.innovation.uni-bremen.de [134.102.108.175])
-	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id j3P8oJZe003463
-	for <linux-lvm@redhat.com>; Mon, 25 Apr 2005 04:50:19 -0400
-Received: from localhost (localhost [127.0.0.1])
-	by twoflower.innovation.uni-bremen.de (Postfix) with ESMTP id
-	DC0872EB78
-	for <linux-lvm@redhat.com>; Mon, 25 Apr 2005 10:50:27 +0200 (CEST)
-Received: from twoflower.innovation.uni-bremen.de ([127.0.0.1])
-	by localhost (twoflower [127.0.0.1]) (amavisd-new,
-	port 10024) with ESMTP id 30416-02 for <linux-lvm@redhat.com>;
-	Mon, 25 Apr 2005 10:50:18 +0200 (CEST)
-Received: from fawkes (fawkes.innovation.uni-bremen.de [134.102.108.198])
-	by twoflower.innovation.uni-bremen.de (Postfix) with ESMTP id
-	18E172EB77
-	for <linux-lvm@redhat.com>; Mon, 25 Apr 2005 10:50:18 +0200 (CEST)
-From: "Jens Potthast" <Jens.Potthast@innovation.uni-bremen.de>
-Date: Mon, 25 Apr 2005 10:50:05 +0200
-Message-ID: <OFEDJAPNAKOPGMNGCONBAEJCEKAA.Jens.Potthast@innovation.uni-bremen.de>
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j3Q38fO00551
+	for <linux-lvm@redhat.com>; Mon, 25 Apr 2005 23:08:42 -0400
+Received: from w3f.coventive.coms.coventive.com (202-145-53-92.adsl.ttn.net
+	[202.145.53.92])
+	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id j3Q38cD1030216
+	for <linux-lvm@redhat.com>; Mon, 25 Apr 2005 23:08:39 -0400
+Received: from [192.168.20.46] (pc46.sa.coventive.com [192.168.20.46])
+	by w3f.coventive.coms.coventive.com (8.11.6/8.11.6) with ESMTP id
+	j3Q38RB13353
+	for <linux-lvm@redhat.com>; Tue, 26 Apr 2005 11:08:30 +0800
+Message-ID: <426DB214.4080009@coventive.com>
+Date: Tue, 26 Apr 2005 11:14:28 +0800
+From: Chung Hsien Hu <mozo@coventive.com>
 MIME-Version: 1.0
+Subject: Re: [linux-lvm] How to resize a PV partition
+References: <d4dq72$an3$1@sea.gmane.org>
+In-Reply-To: <d4dq72$an3$1@sea.gmane.org>
 Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] snapshot creation fails (in some cases)
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -33,52 +27,46 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@redhat.com
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-Dear list,
-Since I couldn't find any clue to what is wrong with my system (or
-lvcreate?) [searched list archives, Google, how-to] someone reading this
-list might be able to help me or give me a hint.
-The Problem: Creating snapshots will fail under certain circumstances: a)
-the snapshot is > 512MB (fails in aprox. 99.9%), b) the snapshots is < 512MB
-(fails in aprox. 0.1%). I can't figure out, why creating of >512MB snapshots
-in rare cases does not fail.
-# lvcreate -L516M -s -n mysnap /dev/system/lv_home
-  LV system/mysnap in use: not removing
-  Couldn't deactivate new snapshot.
+I think the possible ways is:
+1. Reduce the filesystem(resize2fs) to some minimal capacity a bit 
+larger than the used size.
+2. Do vgcfgbackup. Rename the backup file (for later use)
+3. Recreate a smaller partition(larger than the filesystem capacity), 
+and the new non-LVM
+regular partition next to it.
+4. Recreate an new PV on the partition(pvcreate -ff), and than create a 
+VG with the orignal name.
+5. Do vgcfgbackup again, use this PV information of Size and UUID to 
+modify the old backup.
+6. Restore LVM with the modified old backup file.
 
-/dev/sysem/ shows mysnap. But I can't mount it (mount: filesystem unknown).
+Erik Meitner wrote:
 
-# lvdisplay
-  --- Logical volume ---
-  LV Name                /dev/system/mysnap
-  VG Name                system
-  LV UUID                LUVE4M-wC4g-YqhI-2gw4-wgfq-P2G0-2k82Ih
-  LV Write Access        read/write
-  LV Status              available
-  # open                 0
-  LV Size                516,00 MB
-  Current LE             129
-  Segments               1
-  Allocation             inherit
-  Read ahead sectors     0
-  Block device           253:7
-
-Executing lvcreate -vvv does not help. Syslog might be of help: if creation
-fails, I only get one entry:
-/etc/hotplug.d/block/50-hwscan.hotplug[16398]: new block device /block/dm-7
-
-If creation does not fail, it will show up four entries:
-/etc/hotplug.d/block/50-hwscan.hotplug[16540]: new block device /block/dm-7
-/etc/hotplug.d/block/50-hwscan.hotplug[16582]: new block device /block/dm-8
-/etc/hotplug.d/block/50-hwscan.hotplug[16621]: new block device /block/dm-7
-/etc/hotplug.d/block/50-hwscan.hotplug[16611]: new block device /block/dm-9
+>Hello,
+>I have a disk partition(type 0x8e) that is the single PV for the VG
+>where my other partitions reside. I would like to recover the unused PEs
+>from this PV and use them to create a non-LVM regular parition at the
+>end of the disk. How do I:
+>B) move used PEs from the 'end' of the PV so that it can be resized?
+>A) resize the PV (previous messages suggest vgcfgbackup, edit backup
+>file, vgcfgrestore)
+>C) resize the type 0x8e partition?(parted won't do it)
+>
+>Thanks.
+>
+>_______________________________________________
+>linux-lvm mailing list
+>linux-lvm@redhat.com
+>https://www.redhat.com/mailman/listinfo/linux-lvm
+>read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+>
+>  
+>
 
 
-My distribution: SuSE 9.3 on two S-ATA drives.
-If I can give any further information, please let me know.
-
-Thanks in advance.
-
-	Jens Potthast
+-- 
+Mozo Hu. mozo@coventive
+R&D Assistant Manager, Coventive Advance Technologies
