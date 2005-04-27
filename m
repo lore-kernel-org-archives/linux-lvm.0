@@ -1,27 +1,29 @@
 Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j3QDUeO08143
-	for <linux-lvm@redhat.com>; Tue, 26 Apr 2005 09:30:40 -0400
-Received: from servidor.isea-ing.com (171.Red-217-127-207.pooles.rima-tde.net
-	[217.127.207.171])
-	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id j3QDUcsS012378
-	for <linux-lvm@redhat.com>; Tue, 26 Apr 2005 09:30:39 -0400
-Received: from 212.red-83-43-199.pooles.rima-tde.net ([83.43.199.212]
-	helo=servidor1.pk25.com)
-	by servidor.isea-ing.com with asmtp (Exim 3.35 #1 (Debian))
-	id 1DQQ8u-0007id-00
-	for <linux-lvm@redhat.com>; Tue, 26 Apr 2005 15:30:24 +0200
-Received: from servidor1.pk25.com ([192.168.0.3] helo=pk25.com)
-	by servidor1.pk25.com with esmtp (sendmail 9.99 #1 (Solaris))
-	id 1DQQ8h-0002S1-00
-	for <linux-lvm@redhat.com>; Tue, 26 Apr 2005 15:30:11 +0200
-From: "Diaz Rodriguez, Eduardo" <ediaz@pk25.com>
-Subject: Re: [linux-lvm] pvmove hangs
-Date: Tue, 26 Apr 2005 15:30:09 +0200
-Message-Id: <20050426132910.M98025@pk25.com>
-In-Reply-To: <426E07BE.6030606@nextra.ro>
-References: <426E07BE.6030606@nextra.ro>
-MIME-Version: 1.0
-Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j3R4cWO06221
+	for <linux-lvm@redhat.com>; Wed, 27 Apr 2005 00:38:32 -0400
+Received: from mailhost.curriculum.edu.au (mailhost.curriculum.edu.au
+	[203.24.26.74])
+	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id j3R4cVnU012388
+	for <linux-lvm@redhat.com>; Wed, 27 Apr 2005 00:38:31 -0400
+Received: from localhost (localhost [127.0.0.1])
+	by mailhost.curriculum.edu.au (Postfix) with ESMTP id B0B8B1A0D3D
+	for <linux-lvm@redhat.com>; Wed, 27 Apr 2005 14:38:25 +1000 (EST)
+Received: from mailhost.curriculum.edu.au ([127.0.0.1])
+	by localhost (mailhost [127.0.0.1]) (amavisd-new, port 10024) with LMTP
+	id 03779-01-5 for <linux-lvm@redhat.com>;
+	Wed, 27 Apr 2005 14:38:23 +1000 (EST)
+Received: from monhost.curriculum.edu.au (monhost.curriculum.edu.au
+	[192.168.10.13])
+	by mailhost.curriculum.edu.au (Postfix) with ESMTP id E9BC71A0D3C
+	for <linux-lvm@redhat.com>; Wed, 27 Apr 2005 14:38:22 +1000 (EST)
+Date: Wed, 27 Apr 2005 14:38:22 +1000
+Message-ID: <20050427043822.GI15110@monhost.curriculum.edu.au>
+Mime-Version: 1.0
+Content-Disposition: inline
+From: Christian Purnomo <cpurn@cpurn.net>
+Subject: [linux-lvm] LVM2 on RAID
+Reply-To: cpurn@cpurn.net,
+	LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -31,76 +33,19 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-To: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: linux-lvm@redhat.com
 
-Hi, try with pvmove -t or pvmove -v,
+Hi All
 
-Send the panics output, I think that we need more information.
+I use gentoo, lvm2, raid (lvm on top of raid-1).  My problem is that the
+kernel doesn't automatically detect my /dev/md[2-8] as the partitions are set
+to 8e (LVM2) instead of 0xFD ... the solution I have at the moment is to append
+md=2,/dev/sdXY,/dev/sdAB and so forth to my grub.conf. 
 
-regards!
+Is it safe to change the partition types from 8e to 0xFD? will I break my lvm?
 
+Many thanks
 
-On Tue, 26 Apr 2005 12:19:58 +0300, Gergely Imre wrote
-> hi
-> 
-> i have a LV with two PVs in it, like this:
-> 
->  --- Logical volume ---
->   LV Name                /dev/watchdog/watchdog_var
->   VG Name                watchdog
->   LV UUID                v6U2JY-PBMf-snpJ-IXX5-ZzcV-y4fk-PchoQg
->   LV Write Access        read/write
->   LV Status              available
->   # open                 1
->   LV Size                72.22 GB
->   Current LE             2311
->   Segments               1
->   Allocation             next free (default)
->   Read ahead sectors     0
->   Block device           254:6
-> 
->   --- Physical volumes ---
->   PV Name               /dev/sdb2
->   PV UUID               5v23aD-mkO0-I9Ur-zUKG-sGd2-8iCP-zhgfJe
->   PV Status             allocatable
->   Total PE / Free PE    2500 / 189
-> 
->   PV Name               /dev/sda1
->   PV UUID               7mzLEZ-Va0c-sdiW-8KAV-lyjo-a5yI-GBORGS
->   PV Status             allocatable
->   Total PE / Free PE    2941 / 2753
-> 
-> i want to remove sdb2, so i wanted to make a pvmove /dev/sdb2, so it
-> would move everything to sda1. the strange thing is, pvmove starts, and
-> after, say, 20% (about an hour or so) the whole system hangs 
-> somehow. i can ping the box, but any command i try to run, fails. 
-> it's like it's waiting for the disk to read/write, or something like 
-> that. the distrib is Fedora Core 2.
-> 
-> lvm> version
->   LVM version:     2.00.15 (2004-04-19)
->   Library version: 1.00.14-ioctl (2004-04-06)
->   Driver version:  4.4.0
-> 
-> filesystem is ext3.
-> the system has 2GB RAM, dual Intel Xeon 3GHz.
-> 
-> i tried with kernel 2.6.11.7, after a while it gives me kernel panic
-> during pvmove. then i tried with 2.6.9, it didn't panic, but it hung,
-> and i had to reboot.
-> 
-> it's kinda urgent, thanks.
-> 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
-
-
-=======================================================================================
-Este d�a que tanto temes por ser el �ltimo, es la aurora del d�a eterno.
-		-- S�neca. (2 a.C-65) Fil�sofo latino. 
-=======================================================================================
+Christian.
