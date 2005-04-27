@@ -1,29 +1,24 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j3RD6mO10118
-	for <linux-lvm@redhat.com>; Wed, 27 Apr 2005 09:06:48 -0400
-Received: from ciao.gmane.org (main.gmane.org [80.91.229.2])
-	by mx3.redhat.com (8.12.11/8.12.11) with ESMTP id j3RD6Z66018088
-	for <linux-lvm@redhat.com>; Wed, 27 Apr 2005 09:06:36 -0400
-Received: from list by ciao.gmane.org with local (Exim 4.43)
-	id 1DQm8q-0002Dh-Mi
-	for linux-lvm@redhat.com; Wed, 27 Apr 2005 14:59:48 +0200
-Received: from 76.80-203-227.nextgentel.com ([80.203.227.76])
-	by main.gmane.org with esmtp (Gmexim 0.1 (Debian))
-	id 1AlnuQ-0007hv-00
-	for <linux-lvm@redhat.com>; Wed, 27 Apr 2005 14:59:48 +0200
-Received: from mru by 76.80-203-227.nextgentel.com with local (Gmexim 0.1
-	(Debian)) id 1AlnuQ-0007hv-00
-	for <linux-lvm@redhat.com>; Wed, 27 Apr 2005 14:59:48 +0200
-From: =?iso-8859-1?q?M=E5ns_Rullg=E5rd?= <mru@inprovide.com>
-Date: Wed, 27 Apr 2005 15:03:47 +0200
-Message-ID: <yw1xwtqoqslo.fsf@ford.inprovide.com>
-References: <20050427043822.GI15110@monhost.curriculum.edu.au>
-	<yw1xacnkseqo.fsf@ford.inprovide.com>
-	<20050427124027.GP15110@monhost.curriculum.edu.au>
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Sender: news <news@sea.gmane.org>
-Subject: [linux-lvm] Re: LVM2 on RAID
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j3RG1RO19683
+	for <linux-lvm@redhat.com>; Wed, 27 Apr 2005 12:01:27 -0400
+Received: from ahmler4.mail.eds.com (ahmler4.mail.eds.com [192.85.154.77])
+	by mx3.redhat.com (8.12.11/8.12.11) with ESMTP id j3RG1C8R025355
+	for <linux-lvm@redhat.com>; Wed, 27 Apr 2005 12:01:14 -0400
+Received: from ahmlir5.mail.eds.com (ahmlir5-2.mail.eds.com [192.85.154.135])
+	by ahmler4.mail.eds.com (8.13.2/8.12.10) with ESMTP id j3RG13nV002354
+	for <linux-lvm@redhat.com>; Wed, 27 Apr 2005 12:01:03 -0400
+Received: from ahmlir5.mail.eds.com (localhost [127.0.0.1])
+	by ahmlir5.mail.eds.com (8.13.2/8.12.10) with ESMTP id j3RG0jkr027883
+	for <linux-lvm@redhat.com>; Wed, 27 Apr 2005 12:00:45 -0400
+Received: from USAHM101.amer.corp.eds.com (usahm101.exmi01.exch.eds.com
+	[207.37.138.189])
+	by ahmlir5.mail.eds.com (8.13.2/8.12.10) with ESMTP id j3RG0jnc027878
+	for <linux-lvm@redhat.com>; Wed, 27 Apr 2005 12:00:45 -0400
+Message-ID: <5A14AF34CFF8AD44A44891F7C9FF410503ADFBFA@usahm236.amer.corp.eds.com>
+From: "Post, Mark K" <mark.post@eds.com>
+Date: Wed, 27 Apr 2005 12:00:38 -0400
+MIME-Version: 1.0
+Subject: [linux-lvm] LVM VG keeps disappearing
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -34,70 +29,36 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="utf-8"
-To: linux-lvm@redhat.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: "'linux-lvm@redhat.com'" <linux-lvm@redhat.com>
 
-cpurn@cpurn.net (Christian Purnomo) writes:
+Twice now, I've had a VG "disappear" on me when I reboot my system.  These
+two instances were widely separated in time, with several reboots in
+between.
 
-> Thanks,
->
-> I have tried changing the partitions type to 0xFD and the auto
-> detects kicked in and LVM still worked like a charm.
->
-> However I found this from mailling list archive
->
-> /* start quote */
->
-> From: Luca Berra <bluca comedia it> 
-> To: linux-lvm redhat com 
-> Subject: Re: [linux-lvm] Re: putting lvm autodetect into the kernel ala md 
-> Date: Fri, 1 Apr 2005 19:41:22 +0200 
->
-> quote Neil Brown back in july 2001
->
-> "autorun/autodetect just doesn't belong in the kernel.  It should be
-> done in user space.  The only time the kernel should assemble a raid
-> array itself is for the root device, and this is best done with
-> md=0,/dev/whatever,etc
->
-> If I could start with a clean slate, I would rip out the autodetect
-> stuff completely.  But lots of people are depending on it so I cannot."
->
-> anyway the major issues are:
-> 1) raid autodetect uses only the minor number stored in the superblock
-> to identify the array components, move a disk from a different machine
-> to yours and reboot it to enjoy the show
+When the system comes up vgscan runs, but I get this error:
+vgscan -- reading all physical volumes (this may take a while...)
 
-Is this really true?  My kernel log has messages like these:
+vgscan -- ERROR "vg_read_with_pv_and_lv(): current PV" can't get data of
+volume 
+group "vg01" from physical volume(s)
 
-md: Autodetecting RAID arrays.
-md: autorun ...
-md: considering sdb3 ...
-md:  adding sdb3 ...
-md: sdb1 has different UUID to sdb3
-md:  adding sda3 ...
-md: sda1 has different UUID to sdb3
-md: created md2
+vgscan -- "/etc/lvmtab" and "/etc/lvmtab.d" successfully created
 
-If it uses the UUID, there should be little risk of misdetection.
+vgscan -- WARNING: This program does not do a VGDA backup of your volume
+group  
 
-A problem I have run into with LVM, was disks from different machines,
-using the same VG names.
+The first time this happened, I wound up just restoring all my logical
+volumes from backup.  This time I would like to try to figure out:
+1. How to recover from this without restoring everything from backup.
+2. Why this happens so that a fix can be created.
 
-> 2) raid autodetect will try to start everything it finds, it will not
-> scale with shared storage, or other complex configurations
->
-> /* end quote */
->
-> Can anyone conclude that passing the parameter md=0,/dev/* to kernel
-> parameter is a better approach than using auto detect? I don't have
-> a problem with having a rather long parameters in my
-> grub.conf/lilo.conf.
+So, tell me what I need to provide in the way of diagnostic information, and
+I'll collect that.  To start with, this system is a slack/390 operating
+system, 64-bit, running a 2.4.26 kernel.  I'm running LVM 1.0.8.
 
-As usual, both ways have their own advantages and disadvantages.  What
-I like about autodetection, is that things just work, even if I
-shuffle my disks for some reason.  
 
--- 
-M�ns Rullg�rd
-mru@inprovide.com
+Thanks,
+
+Mark Post
