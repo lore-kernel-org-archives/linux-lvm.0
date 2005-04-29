@@ -1,18 +1,17 @@
-Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j3SJQrO10266
-	for <linux-lvm@redhat.com>; Thu, 28 Apr 2005 15:26:53 -0400
-Received: from bristol.phunnypharm.org ([206.246.247.150])
-	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id j3SJQpcU014615
-	for <linux-lvm@redhat.com>; Thu, 28 Apr 2005 15:26:51 -0400
-Received: from bcollins by bristol.phunnypharm.org with local (Exim 4.50)
-	id 1DRE9h-0000wr-Gj
-	for linux-lvm@redhat.com; Thu, 28 Apr 2005 14:54:33 -0400
-Date: Thu, 28 Apr 2005 14:54:33 -0400
-From: Ben Collins <bcollins@debian.org>
-Message-ID: <20050428185433.GH18051@phunnypharm.org>
+Received: from agk.surrey.redhat.com (agk.surrey.redhat.com [172.16.10.74])
+	by pobox.surrey.redhat.com (8.12.8/8.12.8) with ESMTP id j3TEOfkk013502
+	for <linux-lvm@redhat.com>; Fri, 29 Apr 2005 15:24:41 +0100
+Received: from agk by agk.surrey.redhat.com with local (Exim 4.34)
+	id 1DRWQ5-0000xu-4G
+	for linux-lvm@redhat.com; Fri, 29 Apr 2005 15:24:41 +0100
+Date: Fri, 29 Apr 2005 15:24:41 +0100
+From: Alasdair G Kergon <agk@redhat.com>
+Subject: Re: [linux-lvm] LVM wedged after stopping some pvmove's
+Message-ID: <20050429142441.GZ9049@agk.surrey.redhat.com>
+References: <20050428185433.GH18051@phunnypharm.org>
 Mime-Version: 1.0
 Content-Disposition: inline
-Subject: [linux-lvm] LVM wedged after stopping some pvmove's
+In-Reply-To: <20050428185433.GH18051@phunnypharm.org>
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -25,27 +24,28 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: linux-lvm@redhat.com
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-I was in the middle of doing pvmove for all my lv's which resided on two
-disks, that were being moved to a newly created raid5 pv.
+On Thu, Apr 28, 2005 at 02:54:33PM -0400, Ben Collins wrote:
+>   VG swissdisk_1 metadata too large for circular buffer
 
-Things got all crappy, and now I get this:
+1.  Check if the metadata is genuinely too large for the metadata area.
+(eg vgcfgbackup into a file)
 
-~# pvmove --abort -v
-    Finding all volume groups
-    Finding volume group "swissdisk_1"
-  VG swissdisk_1 metadata too large for circular buffer
-  ABORTING: Failed to write new data locations to disk.
-  VG swissdisk_1 metadata too large for circular buffer
-  ABORTING: Failed to write new data locations to disk.
+2.  If so, see if there's anything you can change to make it smaller
+eg by changing LVs that are not involved in the pvmove.
 
+We haven't written tools to resize the metadata area yet: you have
+to ask for more space when you ran the original pvcreates.
 
-I'm unable to recover from this. Is there any way to forcefully remove the
-failed pv's? Perhaps clean this up? I can do nothing with this vg until
-this is resolved, and I cannot lose the data on the volumes.
+If you really can't shrink it, there are workarounds involving
+storing the metadata elsewhere: either on a new PV created with a 
+larger metadata area that you add to the VG, or else in the filesystem.
 
+Alternatively, depending what changes you've been making, you might be 
+able to restore to a metadata backup - may lose changes if you've been 
+updating the data in the areas moved though during the pvmove.
+
+Alasdair
 -- 
-Debian     - http://www.debian.org/
-Linux 1394 - http://www.linux1394.org/
-Subversion - http://subversion.tigris.org/
+agk@redhat.com
