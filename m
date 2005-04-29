@@ -1,16 +1,18 @@
-Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j3SGrJO01887
-	for <linux-lvm@redhat.com>; Thu, 28 Apr 2005 12:53:19 -0400
-Received: from breemxgw3s01.ras (relay1.rasnet.it [213.156.34.249])
-	by mx3.redhat.com (8.12.11/8.12.11) with ESMTP id j3SGrDce023610
-	for <linux-lvm@redhat.com>; Thu, 28 Apr 2005 12:53:13 -0400
-Content-class: urn:content-classes:message
-MIME-Version: 1.0
-Date: Thu, 28 Apr 2005 18:53:12 +0200
-Message-ID: <BFCF159FFD14F444B205968F32DBD5BB01700347@MAILEX01.rasgroup.ita.localnet>
-From: "Magni Fabrizio" <Fabrizio.Magni@rasnet.it>
+Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j3T1a5O12703
+	for <linux-lvm@redhat.com>; Thu, 28 Apr 2005 21:36:05 -0400
+Received: from mail.usish.com ([61.152.162.129])
+	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id j3T1a2Oo005403
+	for <linux-lvm@redhat.com>; Thu, 28 Apr 2005 21:36:03 -0400
+Received: from usish001640 ([192.168.57.185])
+	by mail.usish.com (8.12.8/8.12.8) with SMTP id j3T1biGk018474
+	for <linux-lvm@redhat.com>; Fri, 29 Apr 2005 09:37:45 +0800
+Message-Id: <200504290137.j3T1biGk018474@mail.usish.com>
+Date: Fri, 29 Apr 2005 09:35:45 +0800
+From: "louis_fang" <louis_fang@usish.com>
+Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: [linux-lvm] duplicated PVs
+Subject: [linux-lvm] Who can tell me what is the mean of Active in LVM?
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -21,65 +23,526 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@redhat.com
+Content-Type: text/plain; charset="utf-8"
+To: "linux-lvm@redhat.com " <linux-lvm@redhat.com>
 
-Hello,
-recently I switched from an old SLES7 to a brand new SLES9 adding a
-qlogic card.
-Now my system see duplicated PVs.
+linux-lvm@redhat.com��:
+This is the active.c ,and i want to know what  functions it act?
+                      #include "lib.h"
+#include "metadata.h"
+#include "activate.h"
+#include "memlock.h"
+#include "display.h"
+#include "fs.h"
+#include "lvm-string.h"
+#include "pool.h"
+#include "toolcontext.h"
+#include "dev_manager.h"
 
-I tried to follow the adive on multipath faq inserting this line 
+#include <limits.h>
+#include <fcntl.h>
+#include <unistd.h>
 
-filter = [ "r/sd.*/", "a/.*/" ]
+#define _skip(fmt, args...) log_very_verbose("Skipping: " fmt , ## args)
 
-in my /etc/lvm/lvm.conf.
+#ifndef DEVMAPPER_SUPPORT
+void set_activation(int act)
+{
+	if (act)
+		log_error("Compiled without libdevmapper support. "
+			  "Can't enable activation.");
+}
+int activation(void)
+{
+	return 0;
+}
+int library_version(char *version, size_t size)
+{
+	return 0;
+}
+int driver_version(char *version, size_t size)
+{
+	return 0;
+}
+int lv_info(const struct logical_volume *lv, struct lvinfo *info)
+{
+	return 0;
+}
+int lv_snapshot_percent(struct logical_volume *lv, float *percent)
+{
+	return 0;
+}
+int lv_mirror_percent(struct logical_volume *lv, int wait, float *percent,
+		      uint32_t *event_nr)
+{
+	return 0;
+}
+int lvs_in_vg_activated(struct volume_group *vg)
+{
+	return 0;
+}
+int lvs_in_vg_opened(struct volume_group *vg)
+{
+	return 0;
+}
+int lv_suspend_if_active(struct cmd_context *cmd, const char *lvid_s)
+{
+	return 1;
+}
+int lv_resume_if_active(struct cmd_context *cmd, const char *lvid_s)
+{
+	return 1;
+}
+int lv_deactivate(struct cmd_context *cmd, const char *lvid_s)
+{
+	return 1;
+}
+int lv_activate(struct cmd_context *cmd, const char *lvid_s)
+{
+	return 1;
+}
 
-No luck.
+int lv_mknodes(struct cmd_context *cmd, const struct logical_volume *lv)
+{
+	return 1;
+}
 
-I'm still getting:
+void activation_exit(void)
+{
+	return;
+}
 
-# pvscan
-  Found duplicate PV gvIlwNObhtjL6LM3frAHzanQM51ChpJI: using /dev/sde1
-not /dev/sdq1
-  Found duplicate PV Q3mHMG3rzT0Klr6neMsWxwMXmJX5v7dC: using /dev/sdf1
-not /dev/sdr1
-  Found duplicate PV vrwuiYGd1oQ5wLIdYEX2YXwvbhJLZfkK: using /dev/sdg1
-not /dev/sds1
-  Found duplicate PV oXp36gSyE0QvLCS1PF26xpknoA0HJlkN: using /dev/sdh1
-not /dev/sdt1
-  Found duplicate PV 53GzwRqPmFGWtPBB3NvsvZzlVLXsQS3q: using /dev/sdi1
-not /dev/sdu1
-  Found duplicate PV nostyfnXrf7HiCPb5CZBUTjmmOuWXpbX: using /dev/sdj1
-not /dev/sdv1
-  Found duplicate PV DROdioaS5eWp3x6S0m3nOH7J7MjOTEL8: using /dev/sdk1
-not /dev/sdw1
-  Found duplicate PV OLHFaKOhDCTi2F4Wr7JV7GWPpQ8KINtq: using /dev/sdl1
-not /dev/sdx1
-  Found duplicate PV N9gwQytO9eb1jnd3SUKsGPKqbUt8xBMq: using /dev/sdm1
-not /dev/sda1
-  Found duplicate PV AqbigkFpgnqCypskZpW5AUdaEi0GHi6r: using /dev/sdn1
-not /dev/sdb1
-  Found duplicate PV t08y1Tbr3ltk5h7Gaxmf8eyG60Tv3M17: using /dev/sdo1
-not /dev/sdc1
-  Found duplicate PV 9lsZWyLqrb3nWSY1F8nH3MzccOUH6VsQ: using /dev/sdp1
-not /dev/sdd1
-  PV /dev/sdx1   VG oradata3_f   lvm2 [37.25 GB / 384.00 MB free]
-  PV /dev/sdw1   VG oradata4_h   lvm2 [37.25 GB / 888.00 MB free]
-  PV /dev/sdv1   VG oradata4_g   lvm2 [37.25 GB / 384.00 MB free]
-  PV /dev/sdu1   VG oradata8_r   lvm2 [37.25 GB / 2.06 GB free]
-  PV /dev/sdt1   VG oradata2_d   lvm2 [37.25 GB / 192.00 MB free]
-  PV /dev/sdd1   VG oradata6_l   lvm2 [37.25 GB / 2.06 GB free]
-  PV /dev/sds1   VG oradata3_e   lvm2 [37.25 GB / 88.00 MB free]
-  PV /dev/sdc1   VG oradata1_a   lvm2 [37.25 GB / 188.00 MB free]
-  PV /dev/sdr1   VG oradata2_c   lvm2 [37.25 GB / 284.00 MB free]
-  PV /dev/sdb1   VG oradata5_i   lvm2 [37.25 GB / 2.06 GB free]
-  PV /dev/sdq1   VG oradata1_b   lvm2 [37.25 GB / 88.00 MB free]
-  PV /dev/sda1   VG oradata5_j   lvm2 [37.25 GB / 2.06 GB free]
-  Total: 12 [447.00 GB] / in use: 12 [447.00 GB] / in no VG: 0 [0   ]
+#else				/* DEVMAPPER_SUPPORT */
 
+static int _activation = 1;
 
-Any idea?
+void set_activation(int act)
+{
+	if (act == _activation)
+		return;
 
-Many thanks
-Fabrizio
+	_activation = act;
+	if (_activation)
+		log_verbose("Activation enabled. Device-mapper kernel "
+			    "driver will be used.");
+	else
+		log_verbose("Activation disabled. No device-mapper "
+			    "interaction will be attempted.");
+}
+
+int activation(void)
+{
+	return _activation;
+}
+
+int library_version(char *version, size_t size)
+{
+	if (!activation())
+		return 0;
+
+	if (!dm_get_library_version(version, size))
+		return 0;
+	return 1;
+}
+
+int driver_version(char *version, size_t size)
+{
+	int r = 0;
+	struct dm_task *dmt;
+
+	if (!activation())
+		return 0;
+
+	log_very_verbose("Getting driver version");
+	if (!(dmt = dm_task_create(DM_DEVICE_VERSION))) {
+		stack;
+		return 0;
+	}
+
+	if (!dm_task_run(dmt))
+		log_error("Failed to get driver version");
+
+	if (!dm_task_get_driver_version(dmt, version, size))
+		goto out;
+
+	r = 1;
+
+      out:
+	dm_task_destroy(dmt);
+
+	return r;
+}
+
+/*
+ * Returns 1 if info structure populated, else 0 on failure.
+ */
+static int _lv_info(const struct logical_volume *lv, int mknodes,
+		    struct lvinfo *info)
+{
+	int r;
+	struct dev_manager *dm;
+	struct dm_info dminfo;
+
+	if (!activation())
+		return 0;
+
+	if (!(dm = dev_manager_create(lv->vg->name, lv->vg->cmd->cf))) {
+		stack;
+		return 0;
+	}
+
+	if (!(r = dev_manager_info(dm, lv, mknodes, &dminfo)))
+		stack;
+
+	info->exists = dminfo.exists;
+	info->suspended = dminfo.suspended;
+	info->open_count = dminfo.open_count;
+	info->major = dminfo.major;
+	info->minor = dminfo.minor;
+	info->read_only = dminfo.read_only;
+
+	dev_manager_destroy(dm);
+	return r;
+}
+
+int lv_info(const struct logical_volume *lv, struct lvinfo *info)
+{
+	return _lv_info(lv, 0, info);
+}
+
+/*
+ * Returns 1 if percent set, else 0 on failure.
+ */
+int lv_snapshot_percent(struct logical_volume *lv, float *percent)
+{
+	int r;
+	struct dev_manager *dm;
+
+	if (!activation())
+		return 0;
+
+	if (!(dm = dev_manager_create(lv->vg->name, lv->vg->cmd->cf))) {
+		stack;
+		return 0;
+	}
+
+	if (!(r = dev_manager_snapshot_percent(dm, lv, percent)))
+		stack;
+
+	dev_manager_destroy(dm);
+
+	return r;
+}
+
+/* FIXME Merge with snapshot_percent */
+int lv_mirror_percent(struct logical_volume *lv, int wait, float *percent,
+		      uint32_t *event_nr)
+{
+	int r;
+	struct dev_manager *dm;
+
+	if (!activation())
+		return 0;
+
+	if (!(dm = dev_manager_create(lv->vg->name, lv->vg->cmd->cf))) {
+		stack;
+		return 0;
+	}
+
+	if (!(r = dev_manager_mirror_percent(dm, lv, wait, percent, event_nr)))
+		stack;
+
+	dev_manager_destroy(dm);
+
+	return r;
+}
+
+static int _lv_active(struct logical_volume *lv)
+{
+	struct lvinfo info;
+
+	if (!lv_info(lv, &info)) {
+		stack;
+		return -1;
+	}
+
+	return info.exists;
+}
+
+static int _lv_open_count(struct logical_volume *lv)
+{
+	struct lvinfo info;
+
+	if (!lv_info(lv, &info)) {
+		stack;
+		return -1;
+	}
+
+	return info.open_count;
+}
+
+/* FIXME Need to detect and handle an lv rename */
+static int _lv_activate(struct logical_volume *lv)
+{
+	int r;
+	struct dev_manager *dm;
+
+	if (!(dm = dev_manager_create(lv->vg->name, lv->vg->cmd->cf))) {
+		stack;
+		return 0;
+	}
+
+	if (!(r = dev_manager_activate(dm, lv)))
+		stack;
+
+	dev_manager_destroy(dm);
+	return r;
+}
+
+static int _lv_deactivate(struct logical_volume *lv)
+{
+	int r;
+	struct dev_manager *dm;
+
+	if (!(dm = dev_manager_create(lv->vg->name, lv->vg->cmd->cf))) {
+		stack;
+		return 0;
+	}
+
+	if (!(r = dev_manager_deactivate(dm, lv)))
+		stack;
+
+	dev_manager_destroy(dm);
+	return r;
+}
+
+static int _lv_suspend(struct logical_volume *lv)
+{
+	int r;
+	struct dev_manager *dm;
+
+	if (!(dm = dev_manager_create(lv->vg->name, lv->vg->cmd->cf))) {
+		stack;
+		return 0;
+	}
+
+	if (!(r = dev_manager_suspend(dm, lv)))
+		stack;
+
+	dev_manager_destroy(dm);
+	return r;
+}
+
+/*
+ * These two functions return the number of LVs in the state,
+ * or -1 on error.
+ */
+int lvs_in_vg_activated(struct volume_group *vg)
+{
+	struct list *lvh;
+	struct logical_volume *lv;
+	int count = 0;
+
+	if (!activation())
+		return 0;
+
+	list_iterate(lvh, &vg->lvs) {
+		lv = list_item(lvh, struct lv_list)->lv;
+		count += (_lv_active(lv) == 1);
+	}
+
+	return count;
+}
+
+int lvs_in_vg_opened(struct volume_group *vg)
+{
+	struct list *lvh;
+	struct logical_volume *lv;
+	int count = 0;
+
+	if (!activation())
+		return 0;
+
+	list_iterate(lvh, &vg->lvs) {
+		lv = list_item(lvh, struct lv_list)->lv;
+		count += (_lv_open_count(lv) == 1);
+	}
+
+	return count;
+}
+
+/* These return success if the device is not active */
+int lv_suspend_if_active(struct cmd_context *cmd, const char *lvid_s)
+{
+	struct logical_volume *lv;
+	struct lvinfo info;
+
+	if (!activation())
+		return 1;
+
+	if (!(lv = lv_from_lvid(cmd, lvid_s)))
+		return 0;
+
+	if (test_mode()) {
+		_skip("Suspending '%s'.", lv->name);
+		return 1;
+	}
+
+	if (!lv_info(lv, &info)) {
+		stack;
+		return 0;
+	}
+
+	if (!info.exists || info.suspended)
+		return 1;
+
+	memlock_inc();
+	if (!_lv_suspend(lv)) {
+		memlock_dec();
+		fs_unlock();
+		return 0;
+	}
+
+	return 1;
+}
+
+int lv_resume_if_active(struct cmd_context *cmd, const char *lvid_s)
+{
+	struct logical_volume *lv;
+	struct lvinfo info;
+
+	if (!activation())
+		return 1;
+
+	if (!(lv = lv_from_lvid(cmd, lvid_s)))
+		return 0;
+
+	if (test_mode()) {
+		_skip("Resuming '%s'.", lv->name);
+		return 1;
+	}
+
+	if (!lv_info(lv, &info)) {
+		stack;
+		return 0;
+	}
+
+	if (!info.exists || !info.suspended)
+		return 1;
+
+	if (!_lv_activate(lv))
+		return 0;
+
+	memlock_dec();
+	fs_unlock();
+
+	return 1;
+}
+
+int lv_deactivate(struct cmd_context *cmd, const char *lvid_s)
+{
+	struct logical_volume *lv;
+	struct lvinfo info;
+	int r;
+
+	if (!activation())
+		return 1;
+
+	if (!(lv = lv_from_lvid(cmd, lvid_s)))
+		return 0;
+
+	if (test_mode()) {
+		_skip("Deactivating '%s'.", lv->name);
+		return 1;
+	}
+
+	if (!lv_info(lv, &info)) {
+		stack;
+		return 0;
+	}
+
+	if (!info.exists)
+		return 1;
+
+	if (info.open_count) {
+		log_error("LV %s/%s in use: not removing", lv->vg->name,
+			  lv->name);
+		return 0;
+	}
+
+	memlock_inc();
+	r = _lv_deactivate(lv);
+	memlock_dec();
+	fs_unlock();
+
+	return r;
+}
+
+int lv_activate(struct cmd_context *cmd, const char *lvid_s)
+{
+	struct logical_volume *lv;
+	struct lvinfo info;
+	int r;
+
+	if (!activation())
+		return 1;
+
+	if (!(lv = lv_from_lvid(cmd, lvid_s)))
+		return 0;
+
+	if (test_mode()) {
+		_skip("Activating '%s'.", lv->name);
+		return 1;
+	}
+
+	if (!lv_info(lv, &info)) {
+		stack;
+		return 0;
+	}
+
+	if (info.exists && !info.suspended)
+		return 1;
+
+	memlock_inc();
+	r = _lv_activate(lv);
+	memlock_dec();
+	fs_unlock();
+
+	return r;
+}
+
+int lv_mknodes(struct cmd_context *cmd, const struct logical_volume *lv)
+{
+	struct lvinfo info;
+	int r = 1;
+
+	if (!_lv_info(lv, 1, &info)) {
+		stack;
+		return 0;
+	}
+
+	if (info.exists)
+		r = dev_manager_mknodes(lv);
+	else
+		r = dev_manager_rmnodes(lv);
+
+	fs_unlock();
+
+	return r;
+}
+
+void activation_exit(void)
+{
+	dev_manager_exit();
+}
+#endif
+
+	
+
+������������������
+��
+ 				
+
+����������������louis_fang
+����������������louis_fang@usish.com
+��������������������2005-04-29
