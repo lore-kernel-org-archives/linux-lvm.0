@@ -1,19 +1,23 @@
 Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j2VHQWO03462
-	for <linux-lvm@redhat.com>; Thu, 31 Mar 2005 12:26:32 -0500
-Received: from parcelfarce.linux.theplanet.co.uk
-	(IDENT:93@parcelfarce.linux.theplanet.co.uk [195.92.249.252])
-	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id j2VHQVGh027530
-	for <linux-lvm@redhat.com>; Thu, 31 Mar 2005 12:26:31 -0500
-Date: Thu, 31 Mar 2005 09:23:46 -0300
-From: Marcelo Tosatti <marcelo.tosatti@cyclades.com>
-Message-ID: <20050331122346.GD7969@logos.cnet>
-References: <Pine.LNX.4.62.0503171716050.20670@twinlark.arctic.org>
-	<Pine.LNX.4.62.0503301550220.30657@twinlark.arctic.org>
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j412DeO03342
+	for <linux-lvm@redhat.com>; Sat, 30 Apr 2005 22:13:40 -0400
+Received: from bedevere.spamaps.org (ip-65-77-168-70-muca.aerosurf.net
+	[65.77.168.70])
+	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id j412Ddnv004124
+	for <linux-lvm@redhat.com>; Sat, 30 Apr 2005 22:13:39 -0400
+Received: from [172.16.128.10] (helo=[172.16.128.10])
+	by bedevere.spamaps.org with esmtp (Exim 3.36 #1 (Debian))
+	id 1DS3xi-0002J5-00
+	for <linux-lvm@redhat.com>; Sat, 30 Apr 2005 19:13:38 -0700
+Subject: Re: [linux-lvm] swap on LVM
+From: Clint Byrum <cbyrum@spamaps.org>
+In-Reply-To: <20050430154315.GB806@bobby.schwinge.homeip.net>
+References: <4270E3C4.1090408@nextra.ro> <4270ED4E.8090500@mikebabcock.ca>
+	<20050430154315.GB806@bobby.schwinge.homeip.net>
+Date: Sat, 30 Apr 2005 19:13:48 -0700
+Message-Id: <1114913629.10456.4.camel@localhost.localdomain>
 Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <Pine.LNX.4.62.0503301550220.30657@twinlark.arctic.org>
-Subject: [linux-lvm] Re: [patch] oops with snapshot / 2.4.29
+Content-Transfer-Encoding: 7bit
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -25,85 +29,18 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: dean gaudet <dean-list-linux-lvm@arctic.org>
-Cc: LVM general discussion and development <linux-lvm@redhat.com>
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-On Wed, Mar 30, 2005 at 03:56:19PM -0800, dean gaudet wrote:
-> having looked at the oops below and studied the code a bit more i think 
-> that the safest thing to do for 2.4.x to fix this race condition is to get 
-> rid of the unsafe promote-to-front hash list traversal.  i considered 
-> other fixes (such as a separate spinlock for just the hash list, or a 
-> small array of them to give some amount of concurrency) ... but in the 
-> interests of stability the following patch seems the most appropriate.
+On Sat, 2005-04-30 at 17:43 +0200, Thomas Schwinge wrote:
+> On Thu, Apr 28, 2005 at 10:03:36AM -0400, Michael T. Babcock wrote:
+
+> I can't confirm that, as I've been using swap partitions on LVs on
+> several systems with both LVM1 and LVM2 for some years without problems.
 > 
-> besides... nobody has responded to my mail, so perhaps proposing this 
-> patch to marcelo will cause folks to wake up and object :)
-> 
-> -dean
-> 
-> Signed-off-by: dean gaudet <dean@arctic.org>
-> 
-> --- linux-2.4.29/drivers/md/lvm-snap.c.orig	2005-03-25 22:03:43.000000000 -0800
-> +++ linux-2.4.29/drivers/md/lvm-snap.c	2005-03-30 01:46:17.000000000 -0800
-> @@ -119,7 +119,6 @@ static inline lv_block_exception_t *lvm_
->  	unsigned long mask = lv->lv_snapshot_hash_mask;
->  	int chunk_size = lv->lv_chunk_size;
->  	lv_block_exception_t *ret;
-> -	int i = 0;
->  
->  	hash_table =
->  	    &hash_table[hashfn(org_dev, org_start, mask, chunk_size)];
-> @@ -132,15 +131,9 @@ static inline lv_block_exception_t *lvm_
->  		exception = list_entry(next, lv_block_exception_t, hash);
->  		if (exception->rsector_org == org_start &&
->  		    exception->rdev_org == org_dev) {
-> -			if (i) {
-> -				/* fun, isn't it? :) */
-> -				list_del(next);
-> -				list_add(next, hash_table);
-> -			}
->  			ret = exception;
->  			break;
->  		}
-> -		i++;
->  	}
->  	return ret;
->  }
 
-Hi dean, 
-
-The hash table write is not performed anymore (ie your suggestion is already in).
-
-D 1.15 05/01/26 13:01:33-02:00 mauelshagen@redhat.com[marcelo] 16 15 0/7/750
-P drivers/md/lvm-snap.c
-C fix panics while backing up LVM snapshots
-
-
-===== lvm-snap.c 1.14 vs 1.15 =====
---- 1.14/drivers/md/lvm-snap.c	2004-03-13 02:25:25 -03:00
-+++ 1.15/drivers/md/lvm-snap.c	2005-01-26 13:01:33 -02:00
-@@ -119,7 +119,6 @@
- 	unsigned long mask = lv->lv_snapshot_hash_mask;
- 	int chunk_size = lv->lv_chunk_size;
- 	lv_block_exception_t *ret;
--	int i = 0;
- 
- 	hash_table =
- 	    &hash_table[hashfn(org_dev, org_start, mask, chunk_size)];
-@@ -132,15 +131,9 @@
- 		exception = list_entry(next, lv_block_exception_t, hash);
- 		if (exception->rsector_org == org_start &&
- 		    exception->rdev_org == org_dev) {
--			if (i) {
--				/* fun, isn't it? :) */
--				list_del(next);
--				list_add(next, hash_table);
--			}
- 			ret = exception;
- 			break;
- 		}
--		i++;
- 	}
- 	return ret;
- }
+I also have used swap on LVM for over a year. The only problem I've ever
+had was with LVM1 not allowing me to swapoff any lvm-based swap
+partitions. For that reason, on lvm1 boxes I make a big ext2 partition
+and put a swap file on that. Slightly lower performance.. but I don't
+mind. For me swap on servers is just there to prevent the box from OOM
+killing stuff before I can get on and shut things down gracefully.
