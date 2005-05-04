@@ -1,20 +1,16 @@
-Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j45CYAO15329
-	for <linux-lvm@redhat.com>; Thu, 5 May 2005 08:34:10 -0400
-Received: from mail.uni-bamberg.de (urz52.uni-bamberg.de [141.13.240.52])
-	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id j45CY7d1023989
-	for <linux-lvm@redhat.com>; Thu, 5 May 2005 08:34:08 -0400
-From: Martin Eisenhardt <martin.eisenhardt@wiai.uni-bamberg.de>
-Subject: Re: [linux-lvm] help
-Date: Thu, 5 May 2005 14:33:53 +0200
-References: <427A1103.7030207@ucd.ie>
-In-Reply-To: <427A1103.7030207@ucd.ie>
+Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j444G9O06071
+	for <linux-lvm@redhat.com>; Wed, 4 May 2005 00:16:09 -0400
+Received: from corpeumxic2.corp.emc.com (corpeumxic2.corp.emc.com
+	[152.62.121.26])
+	by mx3.redhat.com (8.12.11/8.12.11) with ESMTP id j444G3CE004793
+	for <linux-lvm@redhat.com>; Wed, 4 May 2005 00:16:04 -0400
+Message-ID: <50C05B7AA7D6924FB5E384EF14BC647B67697C@inba1mx2.corp.emc.com>
+From: Sreedharan_Vinod@emc.com
+Date: Wed, 4 May 2005 05:15:53 +0100 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-Message-Id: <200505051433.53748.martin.eisenhardt@wiai.uni-bamberg.de>
-Reply-To: martin.eisenhardt@wiai.uni-bamberg.de,
-	LVM general discussion and development <linux-lvm@redhat.com>
+Subject: [linux-lvm] "Close failed: Bad file descriptor" messages on pvcreate
+Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -25,39 +21,54 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@redhat.com
 
-Hello Colm,
+Hi,
 
-On Thursday 05 May 2005 14:26, Colm G. Connolly wrote:
-> I've just got a new 250G hard drive and have been trying to add it to an
-> [...]
->    482  mount
->    483  df -h
->
-> At this point I got a bit concerned that I had added 250G to the logical
-> volume but pvdisplay only reported a capicity of 232.88G even though hdd
-> is a 250G hard drive. So I started to try to remove the
+When I do pvcreate, I get deluged with "pvcreate  /dev/sdf: close failed:
+Bad file descriptor" messages.
 
-I know that this is *not* your main concern but I think it worth noting that 
-the size of your 250G harddisk was correctly reported as being 232.88G. The 
-reason being that harddisk vendors use 1G = 1000^3 while computer science 
-defines 1G = 1024^3. (Note: I think there are some standard definition by the 
-IEEE(?) but I don't have a URL for that.)
+I need to explicity open another session to kill the previous pvcreate
+instance to get out of this situation.
 
-So 250*1000^3 = 250.000.000.000 ~ 232.8*1024^3
+On the same system, pvcreate another device succeeds.
 
-Wish you all the luck for the problems remaining!
+Distro:  RHEL 4.0 GA version
+version  LVM version:     2.00.31 (2004-12-12)
+version  Library version: 1.00.19-ioctl (2004-07-03)
+version  Driver version:  4.3.0
 
-Kind regards
-Martin Eisenhardt
+:~ # dd if=/dev/sdf of=/dev/null bs=1k count=2
+2+0 records in
+2+0 records out
+:~ # dd if=/dev/sde of=/dev/null bs=1k count=2
+2+0 records in
+2+0 records out
 
--- 
-Dipl.Wirtsch.Inf.(Univ.) Martin Eisenhardt
+# pvcreate /dev/sde
+pvcreate  Physical volume "/dev/sde" successfully created
 
-Bamberg University
-Media Informatics
-D - 96045 Bamberg
+# pvcreate /dev/sdf
+pvcreate  /dev/sdf: close failed: Bad file descriptor
+pvcreate  /dev/sdf: close failed: Bad file descriptor
+pvcreate  /dev/sdf: close failed: Bad file descriptor
+pvcreate  /dev/sdf: close failed: Bad file descriptor
 
-fon: +49 (951) 863 - 2856
-fax: +49 (951) 863 - 2852
+
+Same messages till I kill pvcreate explicitly.
+
+I see that lvmdiskscan does NOT list /dev/sdf but does list /dev/sde
+
+Note: I did a vgscan/pvscan explicitly after doing a "make install" of the
+built 2.00.31 sources.
+
+When I downgrade the lvm version (say: 2.00.15), make and make install --
+everything seems to work find
+and I am able to do a PV on both sde and sdf.  And I am able to see both
+devices in lvmdiskscan output.
+
+Any idea on what's happening here?
+
+Thanks,
+Vinod
