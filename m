@@ -1,16 +1,25 @@
 Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j458OEO26944
-	for <linux-lvm@redhat.com>; Thu, 5 May 2005 04:24:14 -0400
-Received: from corpeumxic1.corp.emc.com (corpeumxic1.corp.emc.com
-	[152.62.121.25])
-	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id j458ODon026804
-	for <linux-lvm@redhat.com>; Thu, 5 May 2005 04:24:13 -0400
-Message-ID: <50C05B7AA7D6924FB5E384EF14BC647B676988@inba1mx2.corp.emc.com>
-From: Sreedharan_Vinod@emc.com
-Subject: Re: [linux-lvm] "Close failed: Bad file descriptor" messages on p
-	vcreate
-Date: Thu, 5 May 2005 09:24:02 +0100 
-MIME-Version: 1.0
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j459tWO13924
+	for <linux-lvm@redhat.com>; Thu, 5 May 2005 05:55:32 -0400
+Received: from orb.pobox.com (orb.pobox.com [207.8.226.5])
+	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id j459tQ5Y015166
+	for <linux-lvm@redhat.com>; Thu, 5 May 2005 05:55:26 -0400
+Received: from orb (localhost [127.0.0.1])
+	by orb.pobox.com (Postfix) with ESMTP id 969C19FF
+	for <linux-lvm@redhat.com>; Thu,  5 May 2005 05:55:22 -0400 (EDT)
+Received: from emit.nirmalvihar.info (nirmalvihar.info [61.17.90.7])
+	(using TLSv1 with cipher RC4-MD5 (128/128 bits))
+	(No client certificate requested)
+	by orb.sasl.smtp.pobox.com (Postfix) with ESMTP id 24D538C
+	for <linux-lvm@redhat.com>; Thu,  5 May 2005 05:55:20 -0400 (EDT)
+From: Joshua N Pritikin <jpritikin@pobox.com>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature";
+	boundary="=-L/YCe4VNuc0tHM5mzBZD"
+Date: Thu, 05 May 2005 15:25:14 +0530
+Message-Id: <1115286916.3236.12.camel@emit.nirmalvihar.info>
+Mime-Version: 1.0
+Subject: [linux-lvm] snapshot is a stable feature?
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -21,30 +30,32 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@redhat.com
 
 
+--=-L/YCe4VNuc0tHM5mzBZD
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, May 04, 2005 at 10:49:00AM +0100, Sreedharan_Vinod emc com wrote:
-> > > When I do pvcreate, I get deluged with "pvcreate  /dev/sdf: close
-failed:
-> > > Bad file descriptor" messages.
+The snapshot thing sounds great for taking backups.  However, it's
+marked experimental in kernel 2.6.11.  I don't want to use anything
+risky on a production server.  So what does experimental mean in this
+case?
 
-> > > On the same system, pvcreate another device succeeds.
+--=20
+If you are an American then support http://fairtax.org
+ (Permanently replace 50,000+ pages of tax law with about 200 pages.)
 
-> What architecture is this?
+--=-L/YCe4VNuc0tHM5mzBZD
+Content-Type: application/pgp-signature; name=signature.asc
+Content-Description: This is a digitally signed message part
 
-> It sounds similar to a known bug that is fixed in the RHEL4 Update 1
-package.
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.2.4 (GNU/Linux)
 
-I have seen this on i386. I have not tried it on other architectures as yet.
+iD8DBQBCee2CqcqnlKSmC70RArpEAKDFWDgakW1oYTBO9EjAdKHoutOdRACePgnR
+uVlKfsJB6As2bdOav3ZGdEE=
+=OWyC
+-----END PGP SIGNATURE-----
 
-Can you point me to the bugzilla # that lists this symptom for my reference?
-
-I will try it out with RHEL4 U1 and let you know.
-
-Thanks.....
-
-- Vinod
+--=-L/YCe4VNuc0tHM5mzBZD--
