@@ -1,19 +1,18 @@
-Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j47FLNO23383
-	for <linux-lvm@redhat.com>; Sat, 7 May 2005 11:21:23 -0400
-Received: from defender.int.cjs226.com (cpe-70-113-64-6.austin.res.rr.com
-	[70.113.64.6])
-	by mx3.redhat.com (8.12.11/8.12.11) with ESMTP id j47FLHHL018454
-	for <linux-lvm@redhat.com>; Sat, 7 May 2005 11:21:17 -0400
-Received: from [192.168.1.21] ([192.168.1.1])
-	by defender.int.cjs226.com (8.12.8/8.12.8) with ESMTP id j47Ef910020336
-	for <linux-lvm@redhat.com>; Sat, 7 May 2005 09:41:10 -0500
-Message-ID: <427CDD98.6090401@cjs226.com>
-Date: Sat, 07 May 2005 10:24:08 -0500
-From: Clif Smith <redhat@cjs226.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] Slightly Off Topic - Filesystems
+Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j481jVO13001
+	for <linux-lvm@redhat.com>; Sat, 7 May 2005 21:45:32 -0400
+Received: from ms.usish.com ([61.152.162.129])
+	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id j481jT0s005762
+	for <linux-lvm@redhat.com>; Sat, 7 May 2005 21:45:30 -0400
+Received: from usish001640 ([192.168.57.185])
+	by ms.usish.com (8.12.8/8.12.8) with SMTP id j480p4nd030629
+	for <linux-lvm@redhat.com>; Sun, 8 May 2005 08:51:05 +0800
+Message-Id: <200505080051.j480p4nd030629@ms.usish.com>
+Date: Sun, 8 May 2005 08:50:00 +0800
+From: "louis_fang" <louis_fang@usish.com>
+Subject: Re: [linux-lvm] snapshot is a stable feature?
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -24,10 +23,36 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="utf-8"
+To: LVM general discussion and devel <linux-lvm@redhat.com>
 
-Which filesystem do you normally use?  I prefer jfs as you can extend it 
-online and it's been pretty stable for me.  However, it gets complicated 
-if I have a problem and need to boot from a CD as the Red Hat cds don't 
-support jfs.
+Joshua N Pritikin,���ã�
+
+	I have the same question.
+
+======= 2005-05-05 18:25:14 ����������д����=======
+
+>The snapshot thing sounds great for taking backups.  However, it's
+>marked experimental in kernel 2.6.11.  I don't want to use anything
+>risky on a production server.  So what does experimental mean in this
+>case?
+>
+>-- 
+>If you are an American then support http://fairtax.org
+> (Permanently replace 50,000+ pages of tax law with about 200 pages.)
+>_______________________________________________
+>linux-lvm mailing list
+>linux-lvm@redhat.com
+>https://www.redhat.com/mailman/listinfo/linux-lvm
+>read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+
+= = = = = = = = = = = = = = = = = = = =
+			
+
+������������������
+��
+ 
+				 
+����������������louis_fang
+����������������louis_fang@usish.com
+��������������������2005-05-08
