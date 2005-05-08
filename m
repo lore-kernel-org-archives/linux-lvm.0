@@ -1,21 +1,22 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j479emO10288
-	for <linux-lvm@redhat.com>; Sat, 7 May 2005 05:40:48 -0400
-Received: from mx-00.sil.at (mx-00.sil.at [62.116.68.196])
-	by mx3.redhat.com (8.12.11/8.12.11) with ESMTP id j479ef15005636
-	for <linux-lvm@redhat.com>; Sat, 7 May 2005 05:40:42 -0400
-Received: from unknown (HELO OOPS2) ([213.129.238.225])
-	(envelope-sender <monitor@oops.co.at>)
-	by mx-00.sil.at (qmail-ldap-1.03) with SMTP
-	for <linux-lvm@redhat.com>; 7 May 2005 09:40:39 -0000
-Date: Sat, 7 May 2005 11:40:26 +0200
-From: "Stefan G. Weichinger" <monitor@oops.co.at>
-Message-ID: <1524354177.20050507114026@oops.co.at>
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j48IoNO13190
+	for <linux-lvm@redhat.com>; Sun, 8 May 2005 14:50:23 -0400
+Received: from opensolutions.ws (bookz.modestus.org [72.21.44.74] (may be
+	forged))
+	by mx3.redhat.com (8.12.11/8.12.11) with ESMTP id j48IoHro017428
+	for <linux-lvm@redhat.com>; Sun, 8 May 2005 14:50:17 -0400
+Received: from 000c41bd6f7a.click-network.com ([131.191.22.146]
+	helo=[192.168.1.108])
+	by opensolutions.ws with esmtpsa (TLSv1:AES256-SHA:256) (Exim 4.50)
+	id 1DUqrL-000HzT-QX
+	for linux-lvm@redhat.com; Sun, 08 May 2005 11:50:36 -0700
+Message-ID: <427E5FC2.6070900@opensolutions.ws>
+Date: Sun, 08 May 2005 11:51:46 -0700
+From: Alex Matviychuk <alex@opensolutions.ws>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] Logical volume contains an incomplete mapping table
-Reply-To: "Stefan G. Weichinger" <monitor@oops.co.at>,
-	LVM general discussion and development <linux-lvm@redhat.com>
+Subject: [linux-lvm] LVM metadata recovery
+Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -25,95 +26,105 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: linux-lvm@redhat.com
 
+Hello,
 
-Hello, linux-lvm-list,
+I've been searching the net and this mailing list for quite some time 
+for a way to recover metadata without having access to any backups. I 
+completely screwed up and forgot to backup or export my lvm settings 
+when I reinstalled my operating system. Now I can see my volume group, 
+but when I try to activate it I get:
 
-I write to you because I couldn't yet find a solution to the given
-situation yet:
+  Volume group vg00 metadata is inconsistent
+  Volume group for uuid not found: 
+fhRVK5ZTwTOdTQpgF8oyAESEj8LYNRJy1P1jjdkNCV1WhYwfv9rxpnExXvNu13T6
+  0 logical volume(s) in volume group "vg00" now active
 
-Suse 9.3 Pro, 3 IDE-disks with various partitions ...
+If I run pvscan I get:
+  PV /dev/hda3   VG vg00   lvm2 [128.54 GB / 0    free]
+  PV /dev/hdd1   VG vg00   lvm2 [74.52 GB / 0    free]
+  PV /dev/hdb1   VG vg00   lvm2 [186.30 GB / 29.36 GB free]
+  Total: 3 [389.36 GB] / in use: 3 [389.36 GB] / in no VG: 0 [0   ]
 
-Yesterday I decided to reorganize things, moved data and freed up some
-partitions. Changed their ID to 8e with fdisk, rebooted.
+and vgscan returns:
+  Reading all physical volumes.  This may take a while...
+  Found volume group "vg00" using metadata type lvm2
 
-fdisk -l displayed them fine, so I went on to create a Volume Group.
-Added three PVs, created an LV with xfs on it, worked great.
+What are my options if any?
 
-Moved data back to this new LV, cleared up two more partitions.
-Changed their ID, rebooted, added them to the Group.
+Thanks for your time,
+Alex Matviychuk
 
-Somehow one of these partitions weren't listed in pvscan as member of
-the group.
+p.s. Here is some more debug output:
 
-And it started telling me
+vgdisplay:
+  --- Volume group ---
+  VG Name               vg00
+  System ID            
+  Format                lvm2
+  Metadata Areas        2
+  Metadata Sequence No  13
+  VG Access             read/write
+  VG Status             resizable
+  MAX LV                255
+  Cur LV                1
+  Open LV               0
+  Max PV                255
+  Cur PV                3
+  Act PV                3
+  VG Size               389.36 GB
+  PE Size               4.00 MB
+  Total PE              99676
+  Alloc PE / Size       92160 / 360.00 GB
+  Free  PE / Size       7516 / 29.36 GB
+  VG UUID               fhRVK5-ZTwT-OdTQ-pgF8-oyAE-SEj8-LYNRJy
 
-3 PV(s) found for VG Gruppe1: expected 5
+lvdisaply: 
+--- Logical volume ---
+  LV Name                /dev/vg00/home
+  VG Name                vg00
+  LV UUID                1P1jjd-kNCV-1WhY-wfv9-rxpn-ExXv-Nu13T6
+  LV Write Access        read/write
+  LV Status              NOT available
+  LV Size                360.00 GB
+  Current LE             92160
+  Segments               3
+  Allocation             contiguous
+  Read ahead sectors     0
 
-Hmmm...
 
-Much fiddling from then ... trying to get things working again,
-web-research ...
-
-"vgreduce --removemissing" sounded good, but didn't get me back ...
-
-Right now I have:
-
-root@oops1:~ # pvdisplay
-  Found duplicate PV bmKfBpNQfkiKBMli7WfG9fXP4aWR6huV: using /dev/hdc2 not /dev/hda1
-  Found duplicate PV bmKfBpNQfkiKBMli7WfG9fXP4aWR6huV: using /dev/hdc2 not /dev/hda1
-  2 PV(s) found for VG Gruppe1: expected 5
-  Logical volume (LV01) contains an incomplete mapping table.
+pvdisplay:
   --- Physical volume ---
-  PV Name               /dev/hda1
-  VG Name               Gruppe1
-  PV Size               9.77 GB / not usable 5.37 MB
+  PV Name               /dev/hda3
+  VG Name               vg00
+  PV Size               128.54 GB / not usable 0  
   Allocatable           yes (but full)
   PE Size (KByte)       4096
-  Total PE              2499
+  Total PE              32905
   Free PE               0
-  Allocated PE          2499
-  PV UUID               bmKfBp-NQfk-iKBM-li7W-fG9f-XP4a-WR6huV
+  Allocated PE          32905
+  PV UUID               Ivsdja-iGRK-RJhK-CODr-XaEB-tlag-tEcVOv
 
   --- Physical volume ---
+  PV Name               /dev/hdd1
+  VG Name               vg00
+  PV Size               74.52 GB / not usable 0  
+  Allocatable           yes (but full)
+  PE Size (KByte)       4096
+  Total PE              19077
+  Free PE               0
+  Allocated PE          19077
+  PV UUID               SY7qDO-YtlS-mZBw-5Pi2-53nF-vXOu-9mZI7t
+  
+  --- Physical volume ---
   PV Name               /dev/hdb1
-  VG Name               Gruppe1
-  PV Size               16.77 GB / not usable 7.01 MB
+  VG Name               vg00
+  PV Size               186.30 GB / not usable 0  
   Allocatable           yes
   PE Size (KByte)       4096
-  Total PE              4291
-  Free PE               16
-  Allocated PE          4275
-  PV UUID               DUwDDw-mKkp-7atr-A6cP-m5Ej-dAOD-O7TwEA
-
-
-root@oops1:~ # vgdisplay
-  Found duplicate PV bmKfBpNQfkiKBMli7WfG9fXP4aWR6huV: using /dev/hdc2 not /dev/hda1
-  Found duplicate PV bmKfBpNQfkiKBMli7WfG9fXP4aWR6huV: using /dev/hdc2 not /dev/hda1
-  2 PV(s) found for VG Gruppe1: expected 5
-  Volume group "Gruppe1" doesn't exist  
-
-
-No clue about that duplicate PV ...
-
-Is there any way out of this without losing the data? I assume it is
-still valid, but I don't know how to access it properly.
-
-No problem to recreate the LVM if I can pull off the data before doing
-that ...
-
---
-
-Please let me know any pointers or hints, I'll also provide more
-information if needed.
-
-Please also CC: your replies to me as I am not (yet) a subscriber to
-this list.
-
-Thanks a lot.
-
--- 
-Regards,
-Stefan
+  Total PE              47694
+  Free PE               7516
+  Allocated PE          40178
+  PV UUID               5GBueV-Rmxu-thR6-jaoU-00Yg-49gs-A0slTr
