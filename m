@@ -1,20 +1,12 @@
-Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j4A6r8O16791
-	for <linux-lvm@redhat.com>; Tue, 10 May 2005 02:53:08 -0400
-Received: from wproxy.gmail.com (wproxy.gmail.com [64.233.184.196])
-	by mx3.redhat.com (8.12.11/8.12.11) with ESMTP id j4A6r2FY030099
-	for <linux-lvm@redhat.com>; Tue, 10 May 2005 02:53:02 -0400
-Received: by wproxy.gmail.com with SMTP id 68so1498083wri
-	for <linux-lvm@redhat.com>; Mon, 09 May 2005 23:53:02 -0700 (PDT)
-Message-ID: <e4fec31a05050923534f3bdaea@mail.gmail.com>
-Date: Tue, 10 May 2005 12:23:02 +0530
-From: Aditya Kulkarni <aditya.r.kulkarni@gmail.com>
+Date: Tue, 10 May 2005 13:50:02 +0100
+From: Alasdair G Kergon <agk@redhat.com>
+Subject: Re: [linux-lvm] LVM minor number allocation policy
+Message-ID: <20050510125002.GM20004@agk.surrey.redhat.com>
+References: <e4fec31a05050923534f3bdaea@mail.gmail.com>
 Mime-Version: 1.0
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-Subject: [linux-lvm] LVM minor number allocation policy
-Reply-To: Aditya Kulkarni <aditya.r.kulkarni@gmail.com>,
-	LVM general discussion and development <linux-lvm@redhat.com>
+In-Reply-To: <e4fec31a05050923534f3bdaea@mail.gmail.com>
+Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -25,40 +17,47 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@redhat.com
+Content-Transfer-Encoding: 7bit
+To: Aditya Kulkarni <aditya.r.kulkarni@gmail.com>
+Cc: LVM general discussion and development <linux-lvm@redhat.com>
 
-Hi all,
+These answers are for lvm2 not lvm1.
 
-Here are a few questions that I had related to minor numbers of
-logical volumes (LVs). First the questions, and then I will explain
-the reason why I ask these questions -
+On Tue, May 10, 2005 at 12:23:02PM +0530, Aditya Kulkarni wrote:
+> [1] Suppose I create two LVs named vol1 and vol2. They have the
+> following (major, minor) no.s. vol1 = (major=X, minor=0) and vol2 =
+> (major=X, minor=1). Now I reboot the system. Is it guaranteed that
+> vol1 and vol2 will retain their minor no.s?
+ 
+No.
 
-[1] Suppose I create two LVs named vol1 and vol2. They have the
-following (major, minor) no.s. vol1 = (major=X, minor=0) and vol2 =
-(major=X, minor=1). Now I reboot the system. Is it guaranteed that
-vol1 and vol2 will retain their minor no.s?
+> [2] Are there some options while creating LVs that we can use so that
+> LVs are created with a particular minor number?
+ 
+Yes.  lvcreate/lvchange -My --major 254 --minor 200
 
-[2] Are there some options while creating LVs that we can use so that
-LVs are created with a particular minor number?
+Minor numbers normally allocated lowest first, so best to choose
+higher numbers for persistent ones.  [2.6 kernel currently ignores 
+the --major option]
 
-[3] Suppose it is not guaranteed that LVs retain their minor numbers
-across system reboots. When the system is coming up, what policy it
-uses to assign minor numbers to LVs. For example, it could be based on
-any one of the following -
-    1. sort order of names of LVs.
-    2. Timestamp of creation of LVs.
-    3. Random
+> The issue of minor number remaining same is relevant to services being
+> "highly available". In my case, it happens to be the NFS exported file
+> system. The NFS file handle includes, among other things, the minor
+> no. of the device on which the exported file system resides. 
 
-Why I ask these:
-The issue of minor number remaining same is relevant to services being
-"highly available". In my case, it happens to be the NFS exported file
-system. The NFS file handle includes, among other things, the minor
-no. of the device on which the exported file system resides. In case
-the minor no. of LV is different on the failed-over-to system, we get
-the problem of stale file handles.
+These days, that's configurable.
+See 'man exports' fsid=num.
 
-Hence, I wanted to know how minor numbers are treated by LVM.
++ This option forces the filesystem identification portion of the file handle
++ and file attributes  used  on the  wire  to  be  num instead of a number
++ derived from the major and minor number of the block device on which the
++ filesystem is mounted.  Any 32 bit number can be used, but it must be unique
++ amongst  all  the exported filesystems.
 
++ This  can  be  useful for NFS failover, to ensure that both
++ servers of the failover pair use the same NFS file handles for the shared
++ filesystem thus avoiding stale file handles after failover.
+
+Alasdair
 -- 
-Best Wishes,
-Aditya Kulkarni
+agk@redhat.com
