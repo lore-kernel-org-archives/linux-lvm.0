@@ -1,27 +1,18 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j4AFDFO09594
-	for <linux-lvm@redhat.com>; Tue, 10 May 2005 11:13:15 -0400
-Received: from mxout2.cac.washington.edu (mxout2.cac.washington.edu
-	[140.142.33.4])
-	by mx3.redhat.com (8.12.11/8.12.11) with ESMTP id j4AFD9Gr015733
-	for <linux-lvm@redhat.com>; Tue, 10 May 2005 11:13:09 -0400
-Received: from mead12.u.washington.edu (mead12.u.washington.edu
-	[140.142.12.176])
-	by mxout2.cac.washington.edu (8.13.4+UW05.04/8.13.4+UW05.04) with ESMTP
-	id j4AFD8br002254
-	for <linux-lvm@redhat.com>; Tue, 10 May 2005 08:13:08 -0700
-Received: from localhost (mcrawfor@localhost)
-	by mead12.u.washington.edu (8.13.4+UW05.03/8.13.4+UW05.04) with ESMTP
-	id j4AFD8EX1335490
-	for <linux-lvm@redhat.com>; Tue, 10 May 2005 08:13:08 -0700
-Date: Tue, 10 May 2005 08:13:08 -0700 (PDT)
-From: Miles Crawford <mcrawfor@u.washington.edu>
-Subject: Re: [linux-lvm] lvm2 tools can't locate pvs on entire disks
-In-Reply-To: <42804FE7.6000906@gmx.net>
-Message-ID: <Pine.A41.4.61b.0505100810490.3018850@mead12.u.washington.edu>
-References: <Pine.A41.4.61b.0505091803260.4722918@mead11.u.washington.edu>
-	<42804FE7.6000906@gmx.net>
-MIME-Version: 1.0
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j4AHSRO27304
+	for <linux-lvm@redhat.com>; Tue, 10 May 2005 13:28:27 -0400
+Received: from snefru.openlib.org (netec.wustl.edu [128.252.177.195])
+	by mx3.redhat.com (8.12.11/8.12.11) with ESMTP id j4AHSLCf009307
+	for <linux-lvm@redhat.com>; Tue, 10 May 2005 13:28:21 -0400
+Received: from krichel by snefru.openlib.org with local (Exim 4.50)
+	id 1DVYbB-0006mj-6w
+	for linux-lvm@redhat.com; Tue, 10 May 2005 12:32:49 -0500
+Date: Tue, 10 May 2005 12:32:49 -0500
+From: Thomas Krichel <krichel@openlib.org>
+Message-ID: <20050510173249.GJ2445@openlib.org>
+Mime-Version: 1.0
+Content-Disposition: inline
+Subject: [linux-lvm] ide / debian
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -32,60 +23,50 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"; format="flowed"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: LVM general discussion and development <linux-lvm@redhat.com>
+To: Linux LVM <linux-lvm@redhat.com>
 
 
-On Tue, 10 May 2005, Klaus Strebel wrote:
 
-> Miles Crawford schrieb:
->> 
->> I'm running into trouble here, getting the lvm scanning tools to notice PVs 
->> I have created on entire disks, like this:
->> 
->> pvcreate /dev/hdd
->> 
->> Some output:
->> 
->> root@end root # lvm version
->>   LVM version:     2.01.04 (2005-02-09)
->>   Library version: 1.01.00-ioctl (2005-01-17)
->>   Driver version:  4.1.0
->> root@end root # uname -a
->> Linux end.snip.net 2.6.8 #6 Sat Oct 9 20:59:02 PDT 2004 i686 GNU/Linux
->> root@end root # lvmdiskscan
->>   /dev/hda1  [      111.79 GB]
->>   /dev/hdb1  [       18.63 GB]
->>   /dev/hdd1  [      186.31 GB]
->>   /dev/hdb2  [      127.59 GB]
->>   /dev/hdb3  [        2.83 GB]
->>   0 disks
->>   5 partitions
->>   0 LVM physical volume whole disks
->>   0 LVM physical volumes
->> root@end root # pvscan
->>   No matching physical volumes found
->> 
->> Well that's odd, I know they're there.  Lets try this:
->> 
->> root@end root # losetup /dev/loop0 /dev/hda
->> root@end root # losetup /dev/loop1 /dev/hdd
->> root@end root # pvscan
->>   PV /dev/loop0   VG media_vg   lvm2 [111.79 GB / 0    free]
->>   PV /dev/loop1   VG media_vg   lvm2 [186.31 GB / 0    free]
->>   Total: 2 [298.10 GB] / in use: 2 [298.10 GB] / in no VG: 0 [0   ]
-> Hi Miles,
->
-> the disks hda and hdb obviously are partitioned (they are shown as /dev/hda1 
-> and /dev/hdb1), so don't trying to detroy these partitions, he doesn't know 
-> what the contents of, is good behaviour of lvm, isn't it ;-).
->
-> Ciao
-> Klaus
+  I want to combine hdb hdc and hdd to one logical volume.
+  Each is 80G. All had a single partition. I have a 2.6.8 kernel. 
+  I  run the latest Debian testing version of lvm2.
 
-So, you're saying that although the lvm PVs are _not_ on partitions, 
-the disklabel still describes some partition on the disk, so lvm is 
-ignoring the disk as a whole as a possible PV?
+  The first attempt only got me only 149G for the vg. 
+  So I followed the route suggested in the howto
+  to delete the partition tables on every disk 
+  and use the devices. This give me a 220G vg. But
+  there were some error messages about not opening
+  /dev/hdb1 etc, which I ignored. I create an lv
+  to fill the volume group and make an ext2 file
+  system on it.
 
--miles
+  After the first reboot, the lv was not found. Inconsistent
+  metaadata was reported, which I fixed with the suggested
+  syntax, then tried to create the vg again, but got a 
+  much smaller size.
+
+  I want to start from scratch for the third time.
+
+fafner:~# vgremove /dev/vg1
+  Volume group "vg1" not found or inconsistent.
+  Consider vgreduce --removemissing if metadata is inconsistent.
+fafner:~# vgreduce --removemissing vg1
+  Volume group "vg1" not found
+fafner:~# vgscan 
+  Reading all physical volumes.  This may take a while...
+fafner:~# vgcreate vg1 /dev/hdb /dev/hdc /dev/hdd
+  /dev/vg1: already exists in filesystem
+
+  My general impression is that maybe with ide or Debian,
+  this technology is not quite mature. If anyone wants
+  to check out this problem, I will be happy to allow
+  access to the machine. 
+
+
+  Cheers,
+
+  Thomas Krichel                      mailto:krichel@openlib.org
+                                 http://openlib.org/home/krichel
+                             RePEc:per:1965-06-05:thomas_krichel
