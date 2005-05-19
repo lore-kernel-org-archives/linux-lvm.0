@@ -1,23 +1,17 @@
-Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j4J5tFO25584
-	for <linux-lvm@redhat.com>; Thu, 19 May 2005 01:55:15 -0400
-Received: from wproxy.gmail.com (wproxy.gmail.com [64.233.184.199])
-	by mx3.redhat.com (8.12.11/8.12.11) with ESMTP id j4J5t9MF001694
-	for <linux-lvm@redhat.com>; Thu, 19 May 2005 01:55:09 -0400
-Received: by wproxy.gmail.com with SMTP id 68so588319wri
-	for <linux-lvm@redhat.com>; Wed, 18 May 2005 22:55:04 -0700 (PDT)
-Message-ID: <e4fec31a05051822557d206341@mail.gmail.com>
-Date: Thu, 19 May 2005 11:25:04 +0530
-From: Aditya Kulkarni <aditya.r.kulkarni@gmail.com>
-Subject: Re: [linux-lvm] query regarding lvm testing..
-In-Reply-To: <002f01c55aaf$46c8f980$26051aac@pcp40963english>
-Mime-Version: 1.0
-Content-Disposition: inline
-References: <mailman.4776.1116311444.734.linux-lvm@redhat.com>
-	<002f01c55aaf$46c8f980$26051aac@pcp40963english>
+Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j4J9xZO06061
+	for <linux-lvm@redhat.com>; Thu, 19 May 2005 05:59:35 -0400
+Received: from breemxgw3s01.ras (relay1.rasnet.it [213.156.34.249])
+	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id j4J9xXRx015531
+	for <linux-lvm@redhat.com>; Thu, 19 May 2005 05:59:34 -0400
+Content-class: urn:content-classes:message
+MIME-Version: 1.0
+Date: Thu, 19 May 2005 11:58:09 +0200
+Message-ID: <BFCF159FFD14F444B205968F32DBD5BB01700405@MAILEX01.rasgroup.ita.localnet>
+From: "Magni Fabrizio" <Fabrizio.Magni@rasnet.it>
 Content-Transfer-Encoding: 8bit
-Reply-To: Aditya Kulkarni <aditya.r.kulkarni@gmail.com>,
-	LVM general discussion and development <linux-lvm@redhat.com>
+Subject: [linux-lvm] same LV UUID after vgmerge
+Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -28,65 +22,55 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: saurabh.grade@patni.com, LVM general discussion and development <linux-lvm@redhat.com>
+To: linux-lvm@redhat.com
 
-Its not clear as to what you want to test -
-[1] Your block driver OR
-[2] Linux LVM OR
-[3] Just want to check out the I/O performance with your block driver
+Hello,
+I recently tested vgmerge on a SLES9 trying to merge 12 volume groups
+into a single one.
 
-Anyways - 
+Everything seemed fine but the I discovered that in my /dev/mapper I had
+the devices for the logical volumes only for the target volume group.
 
-Check out the LVM2 page at - http://sourceware.org/lvm2/
+The other appear using lvscan and lvdisplay.
 
-Also see LVM2 cvs web interface -
-http://sources.redhat.com/cgi-bin/cvsweb.cgi/LVM2/?cvsroot=lvm2
+I tried to generate the missing devices with vgmknodes without luck.
 
-You can find test scripts in the cvs repository. 
+Now the strange part: all the logical volumes have duplicated LV UUID.
 
-Best Wishes,
-Aditya Kulkarni
+Here is an example:
 
+  --- Logical volume ---
+  LV Name                /dev/oradata1_a/oraredo1_1_2
+  VG Name                oradata1_a
+  LV UUID                000000-0000-0000-0000-0000-0000-000001
+  LV Write Access        read/write
+  LV Status              available
+  # open                 0
+  LV Size                104.00 MB
+  Current LE             26
+  Segments               1
+  Allocation             next free
+  Read ahead sectors     120
+  Block device           253:0
 
-On 5/17/05, Saurabh Grade <saurabh.grade@patni.com> wrote:
-> 
->     hi,
->           i have a block driver for san on scsi devices and i'm looking for
-> lvm testing scripts which will be used in linux 2.6.
->     so, just suggest me the location from where i can get those scripts for
-> linux 2.6.
-> 
->   with regards
->   saurabh
-> 
-> 
-> 
-> 
-> http://www.patni.com
-> World-Wide Partnerships. World-Class Solutions.
-> _____________________________________________________________________
-> 
-> This e-mail message may contain proprietary, confidential or legally
-> privileged information for the sole use of the person or entity to
-> whom this message was originally addressed. Any review, e-transmission
-> dissemination or other use of or taking of any action in reliance upon
-> this information by persons or entities other than the intended
-> recipient is prohibited. If you have received this e-mail in error
-> kindly delete  this e-mail from your records. If it appears that this
-> mail has been forwarded to you without proper authority, please notify
-> us immediately at netadmin@patni.com and delete this mail.
-> _____________________________________________________________________
-> 
-> 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
-> 
-> 
+  --- Logical volume ---
+  LV Name                /dev/oradata1_a/orablob102
+  VG Name                oradata1_a
+  LV UUID                000000-0000-0000-0000-0000-0000-000001
+  LV Write Access        read/write
+  LV Status              available
+  # open                 0
+  LV Size                3.91 GB
+  Current LE             1001
+  Segments               1
+  Allocation             next free
+  Read ahead sectors     120
+  Block device           253:0
 
+(volumes are 141 so I'm not pasting the complete result lvdiplay
+output).
 
--- 
-Best Wishes,
-Aditya Kulkarni
+Any idea how to solve this issue?
+
+Thanks
+Fabrizio
