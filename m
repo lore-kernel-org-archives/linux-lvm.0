@@ -1,16 +1,17 @@
-Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j4J9xZO06061
-	for <linux-lvm@redhat.com>; Thu, 19 May 2005 05:59:35 -0400
-Received: from breemxgw3s01.ras (relay1.rasnet.it [213.156.34.249])
-	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id j4J9xXRx015531
-	for <linux-lvm@redhat.com>; Thu, 19 May 2005 05:59:34 -0400
-Content-class: urn:content-classes:message
-MIME-Version: 1.0
-Date: Thu, 19 May 2005 11:58:09 +0200
-Message-ID: <BFCF159FFD14F444B205968F32DBD5BB01700405@MAILEX01.rasgroup.ita.localnet>
-From: "Magni Fabrizio" <Fabrizio.Magni@rasnet.it>
-Content-Transfer-Encoding: 8bit
-Subject: [linux-lvm] same LV UUID after vgmerge
+Received: from agk.surrey.redhat.com (agk.surrey.redhat.com [172.16.10.74])
+	by pobox.surrey.redhat.com (8.12.8/8.12.8) with ESMTP id j4JE3JMO006231
+	for <linux-lvm@redhat.com>; Thu, 19 May 2005 15:03:19 +0100
+Received: from agk by agk.surrey.redhat.com with local (Exim 4.34)
+	id 1DYlcN-0008I0-GT
+	for linux-lvm@redhat.com; Thu, 19 May 2005 15:03:19 +0100
+Date: Thu, 19 May 2005 15:03:19 +0100
+From: Alasdair G Kergon <agk@redhat.com>
+Subject: Re: [linux-lvm] same LV UUID after vgmerge
+Message-ID: <20050519140319.GT15809@agk.surrey.redhat.com>
+References: <BFCF159FFD14F444B205968F32DBD5BB01700405@MAILEX01.rasgroup.ita.localnet>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <BFCF159FFD14F444B205968F32DBD5BB01700405@MAILEX01.rasgroup.ita.localnet>
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -22,55 +23,37 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@redhat.com
+Content-Transfer-Encoding: 7bit
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-Hello,
-I recently tested vgmerge on a SLES9 trying to merge 12 volume groups
-into a single one.
+On Thu, May 19, 2005 at 11:58:09AM +0200, Magni Fabrizio wrote:
+> Now the strange part: all the logical volumes have duplicated LV UUID.
+ 
+What version of lvm?   (Run 'lvm version')
 
-Everything seemed fine but the I discovered that in my /dev/mapper I had
-the devices for the logical volumes only for the target volume group.
+Looks like a bug: the vgmerge code checks for duplicate LV names 
+but not duplicate UUIDs.
 
-The other appear using lvscan and lvdisplay.
+Is this still lvm1 metadata? (You didn't run 'vgconvert')
 
-I tried to generate the missing devices with vgmknodes without luck.
+> Any idea how to solve this issue?
 
-Now the strange part: all the logical volumes have duplicated LV UUID.
+You're going to have to edit the UUIDs by hand:
+  vgchange -an oradata1_a
+  vgcfgbackup oradata1_a
+Edit the UUIDs in /etc/lvm/backup/oradata1_a uuid making them all
+different:
 
-Here is an example:
+                lvol1 {
+                        id = "000000-0000-0000-0000-0000-0000-000001"
+becomes
+                lvol1 {
+                        id = "000000-0000-0000-0000-0000-0000-000002"
+etc.
 
-  --- Logical volume ---
-  LV Name                /dev/oradata1_a/oraredo1_1_2
-  VG Name                oradata1_a
-  LV UUID                000000-0000-0000-0000-0000-0000-000001
-  LV Write Access        read/write
-  LV Status              available
-  # open                 0
-  LV Size                104.00 MB
-  Current LE             26
-  Segments               1
-  Allocation             next free
-  Read ahead sectors     120
-  Block device           253:0
-
-  --- Logical volume ---
-  LV Name                /dev/oradata1_a/orablob102
-  VG Name                oradata1_a
-  LV UUID                000000-0000-0000-0000-0000-0000-000001
-  LV Write Access        read/write
-  LV Status              available
-  # open                 0
-  LV Size                3.91 GB
-  Current LE             1001
-  Segments               1
-  Allocation             next free
-  Read ahead sectors     120
-  Block device           253:0
-
-(volumes are 141 so I'm not pasting the complete result lvdiplay
-output).
-
-Any idea how to solve this issue?
-
-Thanks
-Fabrizio
+Then:
+  vgcfgrestore oradata1_a
+ 
+Alasdair
+-- 
+agk@redhat.com
