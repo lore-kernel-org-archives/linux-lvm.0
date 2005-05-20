@@ -1,16 +1,16 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j4JErgO15636
-	for <linux-lvm@redhat.com>; Thu, 19 May 2005 10:53:42 -0400
-Received: from breemxgw3s01.ras (relay1.rasnet.it [213.156.34.249])
-	by mx3.redhat.com (8.12.11/8.12.11) with ESMTP id j4JEra0A008558
-	for <linux-lvm@redhat.com>; Thu, 19 May 2005 10:53:36 -0400
-Content-class: urn:content-classes:message
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j4KF1TO18987
+	for <linux-lvm@redhat.com>; Fri, 20 May 2005 11:01:29 -0400
+Received: from smtpout01-04.mesa1.secureserver.net
+	(smtpout01-04.mesa1.secureserver.net [64.202.165.79])
+	by mx3.redhat.com (8.12.11/8.12.11) with SMTP id j4KF1MDe001564
+	for <linux-lvm@redhat.com>; Fri, 20 May 2005 11:01:23 -0400
+Message-ID: <428DFBC0.3010003@starnetworks.us>
+Date: Fri, 20 May 2005 08:01:20 -0700
+From: "Kevin P. Fleming" <kpfleming@starnetworks.us>
 MIME-Version: 1.0
-Subject: RE: [linux-lvm] same LV UUID after vgmerge
-Date: Thu, 19 May 2005 16:53:35 +0200
-Message-ID: <BFCF159FFD14F444B205968F32DBD5BB01700409@MAILEX01.rasgroup.ita.localnet>
-From: "Magni Fabrizio" <Fabrizio.Magni@rasnet.it>
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] Import LVM2 config from existing disk array?
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -21,22 +21,25 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+To: linux-lvm@redhat.com
 
+(I know this is slightly off-topic for this list, but I figured since 
+there are lots of SuSE experts here too it was worth a shot <G>)
 
-> > Is it safe to edit the UUID by hand?
->  
-> Yes, as long as the LVs are not active (the vgchange -an step).
-> 
-> I've reproduced the bug here.
-> 
+I just converted a server over to SLES9 from another distro. This server 
+has a QLogic FC card, attached to an external array.
 
-Tried again and obtained the same result.
+I had created a single PV on the array (no partition table, the whole 
+disk), and a VG using that PV.
 
-Switched to change the LV UUID manually and everything worked.
+When I attach the array to the SLES9 server, and go into the YaST2 LVM 
+tool, it shows the volume group and it's volumes, but only partially. It 
+has no idea what PVs the VG consists of, what the size is, etc. and the 
+VG is not started automatically on boot. This may be because nothing was 
+setup in the YaST2 Partitioner for this VG/PV, but I don't want to do 
+anything there for fear that it will be destructive.
 
-Even oracle could be opened on the newly-merged volume group.
-
-Thanks
-Fabrizio
+How can I get the YaST2 LVM tool to "import" the configuration of the 
+existing PV/VG/LVs, so that it can be managed normally from that point 
+forward?
