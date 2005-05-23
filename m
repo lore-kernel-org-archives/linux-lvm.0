@@ -1,28 +1,22 @@
-Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j4MKs8O16295
-	for <linux-lvm@redhat.com>; Sun, 22 May 2005 16:54:08 -0400
-Received: from ciao.gmane.org (main.gmane.org [80.91.229.2])
-	by mx3.redhat.com (8.12.11/8.12.11) with ESMTP id j4MKs2Jb021721
-	for <linux-lvm@redhat.com>; Sun, 22 May 2005 16:54:02 -0400
-Received: from list by ciao.gmane.org with local (Exim 4.43)
-	id 1DZxQS-000689-O3
-	for linux-lvm@redhat.com; Sun, 22 May 2005 22:51:56 +0200
-Received: from pd90234a7.dip.t-dialin.net ([217.2.52.167])
-	by main.gmane.org with esmtp (Gmexim 0.1 (Debian))
-	id 1AlnuQ-0007hv-00
-	for <linux-lvm@redhat.com>; Sun, 22 May 2005 22:51:56 +0200
-Received: from bill.mair by pd90234a7.dip.t-dialin.net with local (Gmexim 0.1
-	(Debian)) id 1AlnuQ-0007hv-00
-	for <linux-lvm@redhat.com>; Sun, 22 May 2005 22:51:56 +0200
-From: Bill Mair <bill.mair@web.de>
-Date: Mon, 23 May 2005 00:52:41 +0200
-Message-ID: <d6qrbv$f5k$1@sea.gmane.org>
-References: <d6pnof$irl$1@sea.gmane.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
-In-Reply-To: <d6pnof$irl$1@sea.gmane.org>
-Sender: news <news@sea.gmane.org>
-Subject: [linux-lvm] Re: HELP: LVM1 not starting automatically
+Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j4NCIkO21402
+	for <linux-lvm@redhat.com>; Mon, 23 May 2005 08:18:46 -0400
+Received: from zdemail04.zdem.compaq.com (zdemail04.zdem.compaq.com
+	[161.114.112.28])
+	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id j4NCIiqS006042
+	for <linux-lvm@redhat.com>; Mon, 23 May 2005 08:18:44 -0400
+Received: from demexg11.emea.cpqcorp.net (demexg11.emea.cpqcorp.net
+	[16.41.86.138])
+	by zdemail04.zdem.compaq.com (Postfix) with ESMTP id E5E61E1C
+	for <linux-lvm@redhat.com>; Mon, 23 May 2005 14:18:38 +0200 (CEST)
+Content-class: urn:content-classes:message
+MIME-Version: 1.0
+Content-Type: multipart/alternative;
+	boundary="----_=_NextPart_001_01C55F91.8C03201F"
+Date: Mon, 23 May 2005 15:18:36 +0300
+Message-ID: <FE96E870EF38CE4392DDA5B46EC593010500176C@tisexc01.emea.cpqcorp.net>
+From: "Girgin, Nilufer" <nilufer.girgin@hp.com>
+Subject: [linux-lvm] root partition extend within lvm
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -33,67 +27,120 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: linux-lvm@redhat.com
 
-Bill Mair wrote:
-> Hi all,
-> 
-> After a HD failure "mid-pvmove" no less, my LVM won't start 
-> automatically :(
-> 
-> System: Debian sarge with LVM1.
+This is a multi-part message in MIME format.
 
-<snip/>
+------_=_NextPart_001_01C55F91.8C03201F
+Content-Type: text/plain;
+	charset="US-ASCII"
+Content-Transfer-Encoding: quoted-printable
 
-Many thanks to Robot101 (Robert McQueen) for his help on IRC (irc.freenode.net
-on the #lvm channel).
+Hello all,
 
-It back up and running now, I had to upgrade to LVM2, and it was happy with 
-the situation.
+=20
 
-Because my kernel already had device-mapper support compiled in, it wasn't a
-problem to move to LVM2.
+We have a problem concerning the root filesystem extend at RH AS 3.0. Is
+it possible to extend the root logical volume and filesystem?=20
 
-What I did (under Robert's instruction) was the following:
+If so, I would be glad if someone can provide  me a basic procedure.
 
-1) Grabbed the lvm2 package (without installing)
-  apt-get -d install lvms
+=20
 
-2) Unpacked it to access the tools
-   mkdir lvm2
-   cd lvm2
-   dpkg -x /var/cache/apt/archives/lvm2 .... .deb
+Thanks and regards,
 
-3) Rebooted to single user mode
+Nilufer Girgin
 
-4) cd lvm2/lib/lvm-200
 
-** USE LOCAL LVM2 TOOLS !
+------_=_NextPart_001_01C55F91.8C03201F
+Content-Type: text/html;
+	charset="US-ASCII"
+Content-Transfer-Encoding: quoted-printable
 
-5) ./vgscan
+<html xmlns:o=3D"urn:schemas-microsoft-com:office:office" =
+xmlns:w=3D"urn:schemas-microsoft-com:office:word" =
+xmlns=3D"http://www.w3.org/TR/REC-html40">
 
--- LVM2 found rootvg without a problem
+<head>
+<META HTTP-EQUIV=3D"Content-Type" CONTENT=3D"text/html; =
+charset=3Dus-ascii">
+<meta name=3DGenerator content=3D"Microsoft Word 11 (filtered medium)">
+<style>
+<!--
+ /* Style Definitions */
+ p.MsoNormal, li.MsoNormal, div.MsoNormal
+	{margin:0cm;
+	margin-bottom:.0001pt;
+	font-size:12.0pt;
+	font-family:"Times New Roman";}
+a:link, span.MsoHyperlink
+	{color:blue;
+	text-decoration:underline;}
+a:visited, span.MsoHyperlinkFollowed
+	{color:#606420;
+	text-decoration:underline;}
+p
+	{mso-margin-top-alt:auto;
+	margin-right:0cm;
+	mso-margin-bottom-alt:auto;
+	margin-left:0cm;
+	font-size:12.0pt;
+	font-family:"Times New Roman";}
+span.EmailStyle17
+	{mso-style-type:personal-compose;
+	font-family:Arial;
+	color:windowtext;}
+@page Section1
+	{size:612.0pt 792.0pt;
+	margin:72.0pt 90.0pt 72.0pt 90.0pt;}
+div.Section1
+	{page:Section1;}
+-->
+</style>
 
-** USE LOCAL LVM2 TOOLS !
+</head>
 
-6) ./vgchange -a y
+<body lang=3DEN-US link=3Dblue vlink=3D"#606420">
 
--- LVM2 activated rootvg without a problem
+<div class=3DSection1>
 
-7) Installed lvm2
+<p class=3DMsoNormal><font size=3D2 face=3DArial><span =
+style=3D'font-size:10.0pt;
+font-family:Arial'>Hello all,<o:p></o:p></span></font></p>
 
-   dpkg -i /var/cache/apt/archives/lvm2 .... .deb
+<p class=3DMsoNormal><font size=3D2 face=3DArial><span =
+style=3D'font-size:10.0pt;
+font-family:Arial'><o:p>&nbsp;</o:p></span></font></p>
 
-8) reboot
+<p class=3DMsoNormal><font size=3D2 face=3DArial><span =
+style=3D'font-size:10.0pt;
+font-family:Arial'>We have a problem concerning the root filesystem =
+extend at
+RH AS 3.0. Is it possible to extend the root logical volume and =
+filesystem? <o:p></o:p></span></font></p>
 
-Voila, no more LVM problems.
+<p class=3DMsoNormal><font size=3D2 face=3DArial><span =
+style=3D'font-size:10.0pt;
+font-family:Arial'>If so, I would be glad if someone can provide&nbsp; =
+me a basic
+procedure.<o:p></o:p></span></font></p>
 
-After that I unitsalled lvm10 and adjusted /etc/lvm/lvm.conf so that it
-wasn't looking for LVM devices on the loop back interface or /dev/hd.*
+<p class=3DMsoNormal><font size=3D2 face=3DArial><span =
+style=3D'font-size:10.0pt;
+font-family:Arial'><o:p>&nbsp;</o:p></span></font></p>
 
-Everythings working now as I wanted, so once again many thanks to
-Robot101 :)
+<p class=3DMsoNormal><font size=3D2 face=3DArial><span =
+style=3D'font-size:10.0pt;
+font-family:Arial'>Thanks and regards,<o:p></o:p></span></font></p>
 
---
-Bill
+<p class=3DMsoNormal><font size=3D2 face=3DArial><span =
+style=3D'font-size:10.0pt;
+font-family:Arial'>Nilufer Girgin<o:p></o:p></span></font></p>
+
+</div>
+
+</body>
+
+</html>
+
+------_=_NextPart_001_01C55F91.8C03201F--
