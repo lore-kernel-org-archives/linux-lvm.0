@@ -1,23 +1,15 @@
-Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j4NCIkO21402
-	for <linux-lvm@redhat.com>; Mon, 23 May 2005 08:18:46 -0400
-Received: from zdemail04.zdem.compaq.com (zdemail04.zdem.compaq.com
-	[161.114.112.28])
-	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id j4NCIiqS006042
-	for <linux-lvm@redhat.com>; Mon, 23 May 2005 08:18:44 -0400
-Received: from demexg11.emea.cpqcorp.net (demexg11.emea.cpqcorp.net
-	[16.41.86.138])
-	by zdemail04.zdem.compaq.com (Postfix) with ESMTP id E5E61E1C
-	for <linux-lvm@redhat.com>; Mon, 23 May 2005 14:18:38 +0200 (CEST)
-Content-class: urn:content-classes:message
-MIME-Version: 1.0
-Content-Type: multipart/alternative;
-	boundary="----_=_NextPart_001_01C55F91.8C03201F"
-Date: Mon, 23 May 2005 15:18:36 +0300
-Message-ID: <FE96E870EF38CE4392DDA5B46EC593010500176C@tisexc01.emea.cpqcorp.net>
-From: "Girgin, Nilufer" <nilufer.girgin@hp.com>
-Subject: [linux-lvm] root partition extend within lvm
-Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
+Received: from o.ww.redhat.com (vpnuser1.stuttgart.redhat.com [172.16.4.1])
+	by pobox.stuttgart.redhat.com (8.12.8/8.12.8) with ESMTP id
+	j4NDPP1e017280
+	for <linux-lvm@redhat.com>; Mon, 23 May 2005 15:25:26 +0200
+Date: Mon, 23 May 2005 15:25:25 +0200
+From: Heinz Mauelshagen <mauelshagen@redhat.com>
+Message-ID: <20050523132525.GA30779@redhat.com>
+Mime-Version: 1.0
+Content-Disposition: inline
+Subject: [linux-lvm] *** Announcement: dmraid 1.0.0.rc8 ***
+Reply-To: mauelshagen@redhat.com,
+	LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -27,120 +19,89 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@redhat.com
 
-This is a multi-part message in MIME format.
 
-------_=_NextPart_001_01C55F91.8C03201F
-Content-Type: text/plain;
-	charset="US-ASCII"
-Content-Transfer-Encoding: quoted-printable
+               *** Announcement: dmraid 1.0.0.rc8 ***
 
-Hello all,
+dmraid 1.0.0.rc8 is available at
+http://people.redhat.com:/heinzm/sw/dmraid/ in source tarball,
+source rpm and i386 rpm (with shared and static dietlibc binary).
 
-=20
-
-We have a problem concerning the root filesystem extend at RH AS 3.0. Is
-it possible to extend the root logical volume and filesystem?=20
-
-If so, I would be glad if someone can provide  me a basic procedure.
-
-=20
-
-Thanks and regards,
-
-Nilufer Girgin
+This release fixes a stripe size bug in NVidia and avoids using
+the Silicon Image incarnation number for RAID name creation
+(should avoid some sets not grouping properly).
+It adds an '--ignorelocking' in order to allow dmraid to run in
+early boot where no read/write access to /var is given.
 
 
-------_=_NextPart_001_01C55F91.8C03201F
-Content-Type: text/html;
-	charset="US-ASCII"
-Content-Transfer-Encoding: quoted-printable
+dmraid (Device-Mapper RAID tool) discovers, [de]activates and displays
+properties of software RAID sets (i.e. ATARAID) and contained DOS
+partitions using the device-mapper runtime of the 2.6 kernel.
 
-<html xmlns:o=3D"urn:schemas-microsoft-com:office:office" =
-xmlns:w=3D"urn:schemas-microsoft-com:office:word" =
-xmlns=3D"http://www.w3.org/TR/REC-html40">
+The following ATARAID types are supported on Linux 2.6:
 
-<head>
-<META HTTP-EQUIV=3D"Content-Type" CONTENT=3D"text/html; =
-charset=3Dus-ascii">
-<meta name=3DGenerator content=3D"Microsoft Word 11 (filtered medium)">
-<style>
-<!--
- /* Style Definitions */
- p.MsoNormal, li.MsoNormal, div.MsoNormal
-	{margin:0cm;
-	margin-bottom:.0001pt;
-	font-size:12.0pt;
-	font-family:"Times New Roman";}
-a:link, span.MsoHyperlink
-	{color:blue;
-	text-decoration:underline;}
-a:visited, span.MsoHyperlinkFollowed
-	{color:#606420;
-	text-decoration:underline;}
-p
-	{mso-margin-top-alt:auto;
-	margin-right:0cm;
-	mso-margin-bottom-alt:auto;
-	margin-left:0cm;
-	font-size:12.0pt;
-	font-family:"Times New Roman";}
-span.EmailStyle17
-	{mso-style-type:personal-compose;
-	font-family:Arial;
-	color:windowtext;}
-@page Section1
-	{size:612.0pt 792.0pt;
-	margin:72.0pt 90.0pt 72.0pt 90.0pt;}
-div.Section1
-	{page:Section1;}
--->
-</style>
+Highpoint HPT37X
+Highpoint HPT45X
+Intel Software RAID
+LSI Logic MegaRAID
+NVidia NForce
+Promise FastTrack
+Silicon Image Medley
+VIA Software RAID
 
-</head>
+Please provide insight to support those metadata formats completely.
 
-<body lang=3DEN-US link=3Dblue vlink=3D"#606420">
+Thanks.
 
-<div class=3DSection1>
 
-<p class=3DMsoNormal><font size=3D2 face=3DArial><span =
-style=3D'font-size:10.0pt;
-font-family:Arial'>Hello all,<o:p></o:p></span></font></p>
+See files README and CHANGELOG, which come with the source tarball for
+prerequisites to run this software, further instructions on installing
+and using dmraid!
 
-<p class=3DMsoNormal><font size=3D2 face=3DArial><span =
-style=3D'font-size:10.0pt;
-font-family:Arial'><o:p>&nbsp;</o:p></span></font></p>
 
-<p class=3DMsoNormal><font size=3D2 face=3DArial><span =
-style=3D'font-size:10.0pt;
-font-family:Arial'>We have a problem concerning the root filesystem =
-extend at
-RH AS 3.0. Is it possible to extend the root logical volume and =
-filesystem? <o:p></o:p></span></font></p>
+Call for testers:
+-----------------
 
-<p class=3DMsoNormal><font size=3D2 face=3DArial><span =
-style=3D'font-size:10.0pt;
-font-family:Arial'>If so, I would be glad if someone can provide&nbsp; =
-me a basic
-procedure.<o:p></o:p></span></font></p>
+I need testers with the above ATARAID types, to check that the mapping
+created by this tool is correct (see options "-t -ay") and access to the
+ATARAID data is proper.
 
-<p class=3DMsoNormal><font size=3D2 face=3DArial><span =
-style=3D'font-size:10.0pt;
-font-family:Arial'><o:p>&nbsp;</o:p></span></font></p>
+In case you have a different ATARAID solution from those listed above,
+please feel free to contact me about supporting it in dmraid.
 
-<p class=3DMsoNormal><font size=3D2 face=3DArial><span =
-style=3D'font-size:10.0pt;
-font-family:Arial'>Thanks and regards,<o:p></o:p></span></font></p>
+You can activate your ATARAID sets without danger of overwriting
+your metadata, because dmraid accesses it read-only unless you use
+option -E together with -r in order to erase ATARAID metadata
+(see 'man dmraid')!
 
-<p class=3DMsoNormal><font size=3D2 face=3DArial><span =
-style=3D'font-size:10.0pt;
-font-family:Arial'>Nilufer Girgin<o:p></o:p></span></font></p>
+This is a release candidate version so you want to have backups of your valuable
+data *and* you want to test accessing your data read-only first in order to
+make sure that the mapping is correct before you go for read-write access.
 
-</div>
 
-</body>
+Contacts:
+---------
 
-</html>
+The author is reachable at <Mauelshagen@RedHat.com>.
 
-------_=_NextPart_001_01C55F91.8C03201F--
+For test results, mapping information, discussions, questions, patches,
+enhancement requests and the like, please subscribe and mail to
+<ataraid-list@redhat.com>.
+
+--
+
+Regards,
+Heinz    -- The LVM Guy --
+
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+Heinz Mauelshagen                                 Red Hat GmbH
+Consulting Development Engineer                   Am Sonnenhang 11
+                                                  56242 Marienrachdorf
+                                                  Germany
+Mauelshagen@RedHat.com                            +49 2626 141200
+                                                       FAX 924446
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
