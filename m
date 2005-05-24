@@ -1,26 +1,22 @@
 Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j4OCTTO14240
-	for <linux-lvm@redhat.com>; Tue, 24 May 2005 08:29:29 -0400
-Received: from tyo201.gate.nec.co.jp (TYO201.gate.nec.co.jp [202.32.8.214])
-	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id j4OCTQqg032612
-	for <linux-lvm@redhat.com>; Tue, 24 May 2005 08:29:27 -0400
-Received: from mailgate3.nec.co.jp (mailgate99.nec.co.jp [10.7.69.186])
-	by tyo201.gate.nec.co.jp (8.11.7/3.7W01080315) with ESMTP id
-	j4OCTKw20010
-	for <linux-lvm@redhat.com>; Tue, 24 May 2005 21:29:20 +0900 (JST)
-Received: (from root@localhost) by mailgate3.nec.co.jp
-	(8.11.7/3.7W-MAILGATE-NEC) id j4OCTKj17790 for linux-lvm@redhat.com;
-	Tue, 24 May 2005 21:29:20 +0900 (JST)
-Received: from genzui.jp.nec.com (genzui.jp.nec.com [10.26.220.13]) by
-	mailsv4.nec.co.jp (8.11.7/3.7W-MAILSV4-NEC) with ESMTP
-	id j4OCTJc02367 for <linux-lvm@redhat.com>;
-	Tue, 24 May 2005 21:29:19 +0900 (JST)
-Message-Id: <42931ECB.4000806@vx.cnt.dnes.jp.nec.com>
-Date: Tue, 24 May 2005 21:32:11 +0900
-From: "Shinn'ya Hoshino" <s-hoshino@vx.cnt.dnes.jp.nec.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] "pvchange --uuid" failed when PV is in use
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j4OD8RO26620
+	for <linux-lvm@redhat.com>; Tue, 24 May 2005 09:08:27 -0400
+Received: from caduceus2.gmu.edu (caduceus2.gmu.edu [129.174.0.41])
+	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id j4OD8PZJ013272
+	for <linux-lvm@redhat.com>; Tue, 24 May 2005 09:08:25 -0400
+Received: from localhost ([129.174.245.143])
+	by caduceus2.gmu.edu (Sun Java System Messaging Server 6.2-2.05 (built
+	Apr 28
+	2005)) with ESMTPSA id <0IGZ00BWKWHW00B0@caduceus2.gmu.edu> for
+	linux-lvm@redhat.com; Tue, 24 May 2005 09:08:20 -0400 (EDT)
+Date: Tue, 24 May 2005 09:08:19 -0400
+From: Jozsef Bakosi <jbakosi@gmu.edu>
+Message-id: <20050524130819.GA10277@debian>
+MIME-version: 1.0
+Content-type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary=NzB8fVQJ5HfG6fxh
+Content-disposition: inline
+Subject: [linux-lvm] No volume groups found at boot
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -31,38 +27,59 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: linux-lvm@redhat.com
+
+
+--NzB8fVQJ5HfG6fxh
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
 Hello,
 
-I tried to "pvchange --uuid /dev/sdc1" to change of PV UUID.
-But FAILED to change PV UUID on PV metadata, only changed on VG
-metadata. I'm trying to correct source code, please help.
+I have
 
-When PV is orphan, "pvchange --uuid /dev/sdc1" changes PV UUID
-successfully. At this time, pvchange calls pv_write(). But when
-PV is in use by VG, pvchange only calls vg_write(), pv_write()
-is not called.
+LVM version:     2.01.04 (2005-02-09)
+Library version: 1.01.00-ioctl (2005-01-17)
+Driver version:  4.1.0
 
-vg_write() does not have function to change PV metadata.
-Therefore, probably pvchange needs to call pv_write() to write
-UUID into PV metadata. But pv_write() is forbidden to call when
-PV is in use by VG. LV is not mounted... Even if there was no
-LV, it failed.
+with two working volume groups on an AMD64 Athlon running kernel version
+2.6.8 (root@backup) (gcc version 3.3.5 (Debian 1:3.3.5-12)) #1 Fri May 13
+08:54:18 EDT 2005 with Debian sarge.
 
-Please teach me why it is forbidden.
-If there is a method of allowing pv_write(), I want to try it.
+The problem is that /etc/init.d/lvm doesn't find the volume groups at
+boot, thus /etc/init.d/checkfs.sh (the next script) stops for
+maintenance because it can't find the volumes.
 
-BTW, I want to activate VG on raw-level duplicated PV. I look
-for this ML. When edit lvm.conf and "pvchange --uuid" and
-vgrename, it turned out that it is possible. However, if
-pvchange does not function correctly, there is no how to adopt a
-measure.
+The disks are SATA and all nicely recongized before the init-lvm script
+starts (by enforcing the loading of their drivers in /etc/modules).
 
-Best Regards,
+After boot, I can do "vgscan" and "vgchange -a y", finding the volumes no
+problem and can mount them as well.
 
--- 
-/* -------------------------------------------------------------
-   Shinn'ya Hoshino     mailto:s-hoshino@vx.cnt.dnes.jp.nec.com
-------------------------------------------------------------- */
+The strangest thing is when I insert a "/sbin/sulogin $CONSOLE" right
+before
+
+/sbin/vgscan $IGNORELOCKINGFAILURES $MKNODES || true
+/sbin/vgchange -a y $IGNORELOCKINGFAILURES
+
+in /etc/init.d/lvm and do vgscan and vgchange manually, it works fine.
+
+So what is the difference in between running a command from a script in
+/etc/rcS.d/ and mannually from command line?
+
+Jozsef
+
+--NzB8fVQJ5HfG6fxh
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+Content-Disposition: inline
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.2.5 (GNU/Linux)
+
+iD8DBQFCkydDwu2S2Awqe+MRAmehAJ0WKwBsSi3eFj5FJbvFPMTOCSyi9gCfXf4G
+ebPSwhoeVCGkfjcOmOs0Ano=
+=Ouop
+-----END PGP SIGNATURE-----
+
+--NzB8fVQJ5HfG6fxh--
