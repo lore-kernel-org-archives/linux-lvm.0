@@ -1,17 +1,25 @@
-Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j4PIsGO23765
-	for <linux-lvm@redhat.com>; Wed, 25 May 2005 14:54:16 -0400
-Received: from ctg-msnexc01.staff.berbee.com (msn-office-flr2.binc.net
-	[64.73.12.254])
-	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id j4PIsF6E031696
-	for <linux-lvm@redhat.com>; Wed, 25 May 2005 14:54:15 -0400
-Message-ID: <4294C9CD.8080107@berbee.com>
-Date: Wed, 25 May 2005 13:54:05 -0500
-From: Alan Jurgensen <jurgensen@berbee.com>
+Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j4QBoXO25563
+	for <linux-lvm@redhat.com>; Thu, 26 May 2005 07:50:33 -0400
+Received: from palrel10.hp.com (palrel10.hp.com [156.153.255.245])
+	by mx3.redhat.com (8.12.11/8.12.11) with ESMTP id j4QBoRtM027405
+	for <linux-lvm@redhat.com>; Thu, 26 May 2005 07:50:27 -0400
+Received: from power.usa.hp.com (amps.usa.hp.com [16.119.180.11])
+	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by palrel10.hp.com (Postfix) with ESMTP id 9D404106E
+	for <linux-lvm@redhat.com>; Thu, 26 May 2005 04:50:21 -0700 (PDT)
+Received: from [127.0.0.1] ([15.228.168.250])
+	by power.usa.hp.com (8.12.11/) with ESMTP id j4QBoGr7691555
+	for <linux-lvm@redhat.com>; Thu, 26 May 2005 07:50:19 -0400 (EDT)
+Message-ID: <4295B7F7.9060802@hp.com>
+Date: Thu, 26 May 2005 07:50:15 -0400
+From: Howard Rifkin <howard.rifkin@hp.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] PV unknown after vgexport
-Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
+Subject: [linux-lvm] Daemon or Thread with 5 minute interval
+Reply-To: howard.rifkin@hp.com,
+	LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -24,94 +32,19 @@ List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: linux-lvm@redhat.com
 
-I intended to move a 4 disk VG to another box... So I did a vgexport.
-It complained about cant find uuid such and such...
-Put the disks back in original box, and have same problem!
-Suggestions on howto get this lvm2 VG back on-line?!
+I have been working on a project that analyzes "noise" in Linux clusters 
+running large parallel jobs. Where noise is caused by daemons or kernel 
+threads periodically waking up and slowing down a process of a parallel 
+job enough so that is misses a rendezvous with the other processes and 
+so slows down the entire job. Using an internal tool I have been able to 
+track down several daemons that have been a large source of noise but, 
+after turning them all off I am left with a large noise spike that 
+occurs every 5 minutes. I have tried turning off most of the most common 
+daemons such as cron, ntp, syslog, ect. but, I am still left with this 
+spike. Not being a kernel expert myself I have not been able to 
+experiment with kernel threads. So, my question is does anyone know of a 
+kernel thread or daemon in the 2.4 kernel that wakes up every 5 minutes?
 
-root@arch: pvscan
-  Couldn't find device with uuid 'eEnVHA-L0Ac-hjLq-boW4-KNjT-QS5K-ZNX1nY'.
-  Couldn't find device with uuid 'F9eOFx-rSYZ-0qfk-D5r0-xxv2-eB60-GlFGx5'.
-  PV /dev/sda3        VG vg0   lvm2 [11.16 GB / 0    free]
-  PV unknown device   VG vg0   lvm2 [16.95 GB / 0    free]
-  PV /dev/sdc1        VG vg0   lvm2 [16.95 GB / 0    free]
-  PV unknown device   VG vg0   lvm2 [33.89 GB / 968.00 MB free]
-  PV /dev/sdd1                 lvm2 [16.95 GB]
-  PV /dev/sde1                 lvm2 [16.95 GB]
-  Total: 6 [112.84 GB] / in use: 4 [78.95 GB] / in no VG: 2 [33.90 GB]
-root@arch: pvdisplay
-  Couldn't find device with uuid 'eEnVHA-L0Ac-hjLq-boW4-KNjT-QS5K-ZNX1nY'.
-  Couldn't find device with uuid 'F9eOFx-rSYZ-0qfk-D5r0-xxv2-eB60-GlFGx5'.
-  --- Physical volume ---
-  PV Name               /dev/sda3
-  VG Name               vg0
-  PV Size               11.16 GB / not usable 0   
-  Allocatable           yes (but full)
-  PE Size (KByte)       4096
-  Total PE              2857
-  Free PE               0
-  Allocated PE          2857
-  PV UUID               juNpRy-aBAc-1no7-67L2-xj3H-3qga-ZsYOxG
-   
-  --- Physical volume ---
-  PV Name               unknown device
-  VG Name               vg0
-  PV Size               16.95 GB / not usable 0   
-  Allocatable           yes (but full)
-  PE Size (KByte)       4096
-  Total PE              4338
-  Free PE               0
-  Allocated PE          4338
-  PV UUID               eEnVHA-L0Ac-hjLq-boW4-KNjT-QS5K-ZNX1nY
-   
-  --- Physical volume ---
-  PV Name               /dev/sdc1
-  VG Name               vg0
-  PV Size               16.95 GB / not usable 0   
-  Allocatable           yes (but full)
-  PE Size (KByte)       4096
-  Total PE              4339
-  Free PE               0
-  Allocated PE          4339
-  PV UUID               OOPH4q-Z324-eD9t-10Tr-NevF-vOVL-kynkJ1
-   
-  --- Physical volume ---
-  PV Name               unknown device
-  VG Name               vg0
-  PV Size               33.89 GB / not usable 0   
-  Allocatable           yes 
-  PE Size (KByte)       4096
-  Total PE              8676
-  Free PE               242
-  Allocated PE          8434
-  PV UUID               F9eOFx-rSYZ-0qfk-D5r0-xxv2-eB60-GlFGx5
-   
-  --- NEW Physical volume ---
-  PV Name               /dev/sdd1
-  VG Name               
-  PV Size               16.95 GB
-  Allocatable           NO
-  PE Size (KByte)       0
-  Total PE              0
-  Free PE               0
-  Allocated PE          0
-  PV UUID               ECh4uk-x6FN-f0Ay-QP03-XrT3-U3wH-qEe0bE
-   
-  --- NEW Physical volume ---
-  PV Name               /dev/sde1
-  VG Name               
-  PV Size               16.95 GB
-  Allocatable           NO
-  PE Size (KByte)       0
-  Total PE              0
-  Free PE               0
-  Allocated PE          0
-  PV UUID               F5DXKv-lIt8-IaC7-qG3w-jpM2-6aOk-4jNSdI
-   
+Thanks
 
-
-
--- 
-
-----------------------------------------------------------------------
-Alan W. Jurgensen - Berbee Information Networks - jurgensen@berbee.com 
+Howard
