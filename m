@@ -1,18 +1,19 @@
-Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j4RD0GO05866
-	for <linux-lvm@redhat.com>; Fri, 27 May 2005 09:00:16 -0400
-Received: from percy.comedia.it (percy.comedia.it [212.97.59.71])
-	by mx3.redhat.com (8.12.11/8.12.11) with ESMTP id j4RD0AuT029566
-	for <linux-lvm@redhat.com>; Fri, 27 May 2005 09:00:10 -0400
-Date: Fri, 27 May 2005 15:00:03 +0200
-From: Luca Berra <bluca@comedia.it>
-Subject: Re: [linux-lvm] LVM with Powerpath - incompatibility
-Message-ID: <20050527130003.GA19921@percy.comedia.it>
-References: <4296C82C.6090502@telecomplus.net>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <4296C82C.6090502@telecomplus.net>
-Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
+Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j4R5ebO25441
+	for <linux-lvm@redhat.com>; Fri, 27 May 2005 01:40:37 -0400
+Received: from bsd.morsing.cc (dsl-80-46-110-1.access.as9105.com [80.46.110.1])
+	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id j4R5eU4d028169
+	for <linux-lvm@redhat.com>; Fri, 27 May 2005 01:40:36 -0400
+Message-ID: <42296.195.190.132.207.1117172724.squirrel@webmail.morsing.org>
+In-Reply-To: <4295DCD7.6000404@m-cam.com>
+References: <4292256B.7060509@m-cam.com><20050523200358.GJ6097@null.msp.redhat.com
+	> <4295DCD7.6000404@m-cam.com>
+Date: Fri, 27 May 2005 06:45:24 +0100 (BST)
+Subject: Re: [linux-lvm] pvcreate issues
+From: "Henrik Morsing" <henrik@morsing.cc>
+MIME-Version: 1.0
+Reply-To: henrik@morsing.cc,
+	LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -22,23 +23,30 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: Hantzley Tauckoor <hantzley@telecomplus.net>
-Cc: linux-lvm@redhat.com
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-On Fri, May 27, 2005 at 11:11:40AM +0400, Hantzley Tauckoor wrote:
->Is there someone who had the same type of problem? Any tip on how to 
->make LVM run with PowerPath devices?
+
+> AJ Lewis wrote:
+>> On Mon, May 23, 2005 at 02:48:11PM -0400, Arshavir Grigorian wrote:
+>>
+>>
+>> You're sure sd[c-f] is not the same device on multiple paths?
+>>
 >
-https://bugzilla.redhat.com/bugzilla/show_bug.cgi?id=124647
-which is the first hit on google with keywords "lvm powerpath redhat
-3.0"
+> How can I be sure? How do I check?
+>
+> This SAN exports another set of 4 LUNs to a different server and they
+> work just fine.
+
+It does look like you're seing the same disk through four different paths.
+What OS is the other server running? The people that setup the SAN should
+know if it is multi pathed or not.
 
 -- 
-Luca Berra -- bluca@comedia.it
-        Communication Media & Services S.r.l.
- /"\
- \ /     ASCII RIBBON CAMPAIGN
-  X        AGAINST HTML MAIL
- / \
+---
+Henrik Morsing
+henrik@morsing.cc
+www.morsing.cc
+---
