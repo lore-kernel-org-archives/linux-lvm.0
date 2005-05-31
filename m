@@ -1,21 +1,21 @@
-Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j4VAxqO23509
-	for <linux-lvm@redhat.com>; Tue, 31 May 2005 06:59:52 -0400
-Received: from hermesnew.ex.ac.uk (dot.ex.ac.uk [144.173.6.11])
-	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id j4VAxq8b009531
-	for <linux-lvm@redhat.com>; Tue, 31 May 2005 06:59:52 -0400
-Received: from volt.ex.ac.uk ([144.173.228.65] helo=volt)
-	by hermesnew.ex.ac.uk with esmtp (Exim 4.50/mail) id 1Dd4TD-0004p8-Jr
-	for linux-lvm@redhat.com; Tue, 31 May 2005 11:59:39 +0100
-Received: from rowe by volt with local (Exim 4.43) id 1Dd4Sb-0002Gq-Ch
-	for linux-lvm@redhat.com; Tue, 31 May 2005 11:59:01 +0100
-From: John Rowe <rowe@excc.ex.ac.uk>
-Content-Transfer-Encoding: 7bit
-Date: Tue, 31 May 2005 11:59:01 +0100
-Message-Id: <1117537141.4018.177.camel@volt>
+Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j4VB4MO24385
+	for <linux-lvm@redhat.com>; Tue, 31 May 2005 07:04:22 -0400
+Received: from strugglers.net (strugglers.net [212.13.198.70])
+	by mx3.redhat.com (8.12.11/8.12.11) with ESMTP id j4VB4GYJ007576
+	for <linux-lvm@redhat.com>; Tue, 31 May 2005 07:04:16 -0400
+Received: from andy by strugglers.net with local (Exim 4.50)
+	id 1Dd4Xe-0007rZ-NP
+	for linux-lvm@redhat.com; Tue, 31 May 2005 11:04:15 +0000
+Date: Tue, 31 May 2005 11:04:14 +0000
+From: Andy Smith <andy@strugglers.net>
+Message-ID: <20050531110414.GP686@strugglers.net>
 Mime-Version: 1.0
-Sender: John Rowe <rowe@excc.ex.ac.uk>
-Subject: [linux-lvm] Lost Volume Group!
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="xXygN3QAmJYWdGtb"
+Content-Disposition: inline
+Subject: [linux-lvm] deadlock on snapshot creation;
+	any way out without a reboot?
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -26,40 +26,62 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@redhat.com
 
-After upgrading a system from RedHat 9 to Scientific Linux 4 (a RedHat
-EL clone) the system can no longer see my Volume Group! This isn't a
-system partition but a "user" one. Also, if it's relevant it was an
-'upgrade' not a new install.
 
-pvscan gives me:
-  /dev/cdrom: open failed: No medium found
-  PV /dev/hda4         lvm2 [126.39 GB]
-  Total: 1 [126.39 GB] / in use: 0 [0   ] / in no VG: 1 [126.39 GB]
+--xXygN3QAmJYWdGtb
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-/dev/hda4 was the only PV in volume group Volume00.
+Hello,
 
-vgcfgrestore -n Volume00 /dev/hda4 gives:
-  /etc/lvm/backup/hda4: stat failed: No such file or directory
-  Couldn't read volume group metadata.
-  Restore failed.
+One of my LVs has just become unusable and I am hoping there is a
+way to fix it without rebooting.
 
-The file /etc/lvmtab.d/Volume00 exists, is several months old and
-contains optimistic strings like: 
+I am not sure exactly what happened, but it is possible that an
+attempt was made to create a snapshot of the LV while in another
+window someone had an lvremove of the same-named snapshot LV waiting
+at the 'y/n' prompt.
 
-/dev/hda4
-Volume00
-/dev/Volume00/LogVol00
+Anyway the end result is no snapshot LV, and a source LV that
+deadlocks whenever there is any attempt made to access it.
 
-The directory /etc/lvm/ contains three empty subdirectories:
+An fsck looks like this:
 
-archive  backup  lvm.conf
+$ sudo e2fsck -f /dev/mainvg/admindata
+e2fsck 1.37 (21-Mar-2005)
 
+and then nothing, the e2fsck is now in state D, and has been for
+half an hour or so.  top shows machine in 100% iowait, and the
+e2fsck process is unkillable.
 
-Surely, if I have the Physical Volume I must be able to access the data?
+My question really is, is there any known way to get out of this
+sort of situation without having to reboot?  If I reboot it means
+downtime and it's not guranteed that the server will actually
+complete a reboot since it may hang due to this very problem.  I may
+then not be able to do anything even over serial, and there is no
+remote power switch.
 
-Thanks in advance.
+I'm more concerned about getting out of the 100% iowait situation
+than preserving the contents of the LV, since I have backups.
 
-John
+debian sarge, LVM2, kernel 2.6.11.  And yes I am aware that snapshots
+are experimental. :)
+
+Thanks,
+Andy
+
+--xXygN3QAmJYWdGtb
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+Content-Disposition: inline
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.2.5 (GNU/Linux)
+
+iD8DBQFCnESuIJm2TL8VSQsRAmM4AKCJOSzCq/3S10cGCMTwSy66TyUqggCdFNMV
+jqvnj+oQ/V8fMNNfe3LE/lk=
+=4eq8
+-----END PGP SIGNATURE-----
+
+--xXygN3QAmJYWdGtb--
