@@ -1,17 +1,15 @@
-Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j4U8bjO00519
-	for <linux-lvm@redhat.com>; Mon, 30 May 2005 04:37:45 -0400
-Received: from dgate2.fujitsu-siemens.com (dgate2.fujitsu-siemens.com
-	[217.115.66.36])
-	by mx3.redhat.com (8.12.11/8.12.11) with ESMTP id j4U8bcTS005144
-	for <linux-lvm@redhat.com>; Mon, 30 May 2005 04:37:39 -0400
-Content-class: urn:content-classes:message
+Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j4V7k6O16424
+	for <linux-lvm@redhat.com>; Tue, 31 May 2005 03:46:06 -0400
+Received: from debruin.org (meaculpa.demon.nl [82.161.5.152])
+	by mx1.redhat.com (8.12.11/8.12.11) with SMTP id j4V7k58J021917
+	for <linux-lvm@redhat.com>; Tue, 31 May 2005 03:46:05 -0400
+Message-ID: <429C163B.80303@debruin.org>
+Date: Tue, 31 May 2005 09:46:03 +0200
+From: "Marc L. de Bruin" <marc@debruin.org>
 MIME-Version: 1.0
-Date: Mon, 30 May 2005 10:36:42 +0200
-Message-ID: <ADC8F7AA316AF74EBEC87590CCDA6162051489DB@PDBEX02E.pdb.fsc.net>
-From: <Dirk.Laurenz@fujitsu-siemens.com>
-Content-Transfer-Encoding: quoted-printable
-Subject: [linux-lvm] Problems with lvm2 / devive mapper
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] Snapshot of /; what's the latest story?
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -22,117 +20,154 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="iso-8859-1"
-To: suse-linux-e@lists.suse.com, linux-lvm@redhat.com
-Cc: Mathias.Lutz@fujitsu-siemens.com, Christopher.Schnirch@fujitsu-siemens.com, Dieter.Speckels@fujitsu-siemens.com
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+To: linux-lvm@redhat.com
 
-Hello everbody,
+Lo,
 
-i'm having problems setting up lvm2.
+There are numerous reports about problems with LVM2 combined with a 
+snapshot of /. Google provides access to all those reports. ;-)
 
-creating a a new vg works fine:
+I'm on Debian, and there is a outstanding bug already reported some 150 
+days ago about this. Please take a look, 
+http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=288354, titled "lvm2: 
+Machine freezes on snapshot creation for root LV.".
 
-	pvcreate /dev/sdb1 /dev/sdc1
-	vgcreate -s 64M vgEQ51fs /dev/sdc1 /dev/sdb1
+The package maintainers replied quickly: "Snapshots of the root 
+filesystem are not currently supported in LVM2. There have been a number 
+of emails about this on the linux-lvm mailing list. I don't see a quick 
+resolution to the problem I'm afraid."
 
-but lvcreate=20
+I myself also ran into problems, which repeats in a hang of the system. 
+[Please see paste below]
 
-	lvcreate -n lvsapdbQ51sapdata -L 100G vgEQ51fs
+What is the current status of this? I'm not on the latest kernel (2.6.8 
+versus 2.6.11) and I'm wondering if it has already been fixed somewhere.
 
-rises this dmesg output:
+If not, what are the alternatives?
 
-	hgesst40:~ # dmesg | tail -n 10
-	eth0: no IPv6 routers present
-	bond0: no IPv6 routers present
-	mtrr: type mismatch for d0000000,1000000 old: uncachable new: write-combin=
-ing
-	device-mapper: : dm-linear: Device lookup failed
-	device-mapper: error adding target to table
-	device-mapper: : dm-linear: Device lookup failed
-	device-mapper: error adding target to table
+Thanks,
+-- Marc.
 
-doing an mkfs.xfs produces this failure:
+[my problem]
 
-	hgesst40:~ # mkfs.xfs /dev/vgEQ51fs/lvsapdbQ51sapdata
-	can't get size of data subvolume
-	Usage: mkfs.xfs
-	/* blocksize */         [-b log=3Dn|size=3Dnum]
-	/* data subvol */       [-d agcount=3Dn,agsize=3Dn,file,name=3Dxxx,size=3D=
-num,
-                            (sunit=3Dvalue,swidth=3Dvalue|su=3Dnum,sw=3Dnum=
-),=09
-	[...]
++ /sbin/lvcreate -v -v -v --size 200M --snapshot --name lvm-snapshot 
+/dev/vg/root
+       Setting global/locking_type to 1
+       Setting global/locking_dir to /var/lock/lvm
+       File-based locking enabled.
+     Setting chunksize to 16 sectors.
+       Getting target version for snapshot
+         dm version
+         dm versions
+       Getting target version for snapshot-origin
+         dm versions
+       Locking /var/lock/lvm/V_vg WB
+     Finding volume group "vg"
+         Opened /dev/hda
+       /dev/hda: No label detected
+         Opened /dev/md0
+       /dev/md0: lvm2 label detected
+         Opened /dev/hdc
+       /dev/hdc: No label detected
+         Opened /dev/hde
+       /dev/hde: No label detected
+         Opened /dev/hda1
+       /dev/hda1: No label detected
+         Opened /dev/md1
+       /dev/md1: No label detected
+         Opened /dev/hdc1
+       /dev/hdc1: No label detected
+         Opened /dev/hde1
+       /dev/hde1: No label detected
+         Opened /dev/hda2
+       /dev/hda2: lvm2 label detected
+       Ignoring duplicate PV SUjIQw3AwXqDVMKCILlyssQ9a3IBVCDG on 
+/dev/hda2 - using md /dev/md0
+         Opened /dev/md2
+       /dev/md2: No label detected
+         Opened /dev/hdc2
+       /dev/hdc2: No label detected
+         Opened /dev/md3
+       /dev/md3: No label detected
+         Opened /dev/hdc3
+       /dev/hdc3: No label detected
+         Opened /dev/md4
+       /dev/md4: No label detected
+         Opened /dev/hdc4
+       /dev/hdc4: No label detected
+         Opened /dev/md5
+         /dev/md5: Failed to read label area
+         Opened /dev/md6
+         /dev/md6: Failed to read label area
+         Opened /dev/md7
+         /dev/md7: Failed to read label area
+         Opened /dev/md8
+         /dev/md8: Failed to read label area
+         Opened /dev/md9
+         /dev/md9: Failed to read label area
+         Opened /dev/md10
+         /dev/md10: Failed to read label area
+         Opened /dev/md11
+         /dev/md11: Failed to read label area
+         Opened /dev/md12
+         /dev/md12: Failed to read label area
+         Opened /dev/md13
+         /dev/md13: Failed to read label area
+         Opened /dev/md14
+         /dev/md14: Failed to read label area
+         Opened /dev/md15
+         /dev/md15: Failed to read label area
+         Opened /dev/hdb
+       /dev/hdb: No label detected
+         Opened /dev/hdd
+       /dev/hdd: No label detected
+         Opened /dev/hdb1
+       /dev/hdb1: No label detected
+         Opened /dev/hdd1
+       /dev/hdd1: No label detected
+         Opened /dev/hdb2
+       /dev/hdb2: lvm2 label detected
+       Ignoring duplicate PV SUjIQw3AwXqDVMKCILlyssQ9a3IBVCDG on 
+/dev/hdb2 - using md /dev/md0
+         Opened /dev/hdd2
+       /dev/hdd2: No label detected
+         Opened /dev/hdd3
+       /dev/hdd3: No label detected
+         Opened /dev/hdd4
+       /dev/hdd4: No label detected
+       /dev/md0: lvm2 label detected
+         Read vg metadata (15) from /dev/md0 at 23040 size 1052
+     Creating logical volume lvm-snapshot
+         Allowing allocation on /dev/md0 start PE 1452 length 50
+     Archiving volume group "vg" metadata.
+         Writing vg metadata to /dev/md0 at 24576 len 1292
+     Creating volume group backup "/etc/lvm/backup/vg"
+         Writing vg metadata to /etc/lvm/backup/.lvm_frodo_6662_999506660
+         Committing vg metadata (16)
+         Renaming /etc/lvm/backup/vg.tmp to /etc/lvm/backup/vg
+         Committing vg metadata (16) to /dev/md0 header at 2048
+         Locking LV 
+0c61d4SdqxoFe04Nux8Y9tt4yn9QstyezWicpMlX9SqsbuqzVV44Y8u3DtZfi
+v1g (R)
+       Finding volume group for uuid 
+0c61d4SdqxoFe04Nux8Y9tt4yn9QstyezWicpMlX9Sqs
+buqzVV44Y8u3DtZfiv1g
+       /dev/md0: lvm2 label detected
+         Read vg metadata (16) from /dev/md0 at 24576 size 1292
+     Found volume group "vg"
+       Setting activation/missing_stripe_filler to /dev/ioerror
+         Getting device info for vg-lvm--snapshot
+         dm info 
+0c61d4SdqxoFe04Nux8Y9tt4yn9QstyezWicpMlX9SqsbuqzVV44Y8u3DtZfiv1
+g
+         dm info vg-lvm--snapshot
+       Locking memory
+         memlock_count inc to 1
+         dm names
+         Found existing layer 'vg-root'
+         Getting device info for vg-root
+         dm info vg-root
+         Found existing layer 'vg-home'
 
-but lvscan find's the volume:
-	hgesst40:~ # lvscan
-  		ACTIVE            '/dev/vgEQ51fs/lvsapdbQ51sapdata' [100.00 GB] next fr=
-ee (default)
-  		ACTIVE            '/dev/vgOS/lvusrfs' [3.00 GB] next free (default)
-	[...]
-
-Here're some info's on the system:
-=09
-	SuSE Linux Enterprise Server 9 (x86_64)
-	Service Pack 1
-	device-mapper-1.00.19-2.2
-	lvm2-2.00.15-0.8
-	kernel-smp-2.6.5-7.139
-	kernel-smp-2.6.5-7.147
-	Linux hgesst40 2.6.5-7.139-smp #1 SMP Fri Jan 14 15:41:33 UTC 2005 x86_64 =
-x86_64 x86_64 GNU/Linux
-
-The kernel -139 is running because it's the latest sap certified kernel.
-
-However, creating an ext2 fs on /dev/sdb1 works fine.
-
-	hgesst40:~ # mke2fs /dev/sdb1
-	mke2fs 1.34 (25-Jul-2003)
-	Filesystem label=3D
-	OS type: Linux
-	Block size=3D4096 (log=3D2)
-	Fragment size=3D4096 (log=3D2)
-	26214400 inodes, 52428119 blocks
-	2621405 blocks (5.00%) reserved for the super user
-	First data block=3D0
-	1600 block groups
-	32768 blocks per group, 32768 fragments per group
-	16384 inodes per group
-	Superblock backups stored on blocks:
-        32768, 98304, 163840, 229376, 294912, 819200, 884736, 1605632, 2654=
-208,
-        4096000, 7962624, 11239424, 20480000, 23887872
-
-	Writing inode tables: done
-	Writing superblocks and filesystem accounting information:=20
-	done
-
-	This filesystem will be automatically checked every 27 mounts or
-	180 days, whichever comes first.  Use tune2fs -c or -i to override.
-
-has anyone an idea, how to solve this issue?
-
-Mit freundlichem Gru=EF=BF=BD,
-
-
-
-Dirk Laurenz
-Systems Engineer=09
-
-Fujitsu Siemens Computers
-S CE DE SE PS N/O
-Sales Central Europe Deutschland=20
-Professional Service Nord / Ost
-
-Hildesheimer Strasse 25
-30880 Laatzen
-Germany
-
-Telephone:	+49 (511) 84 89 - 18 08
-Telefax:	+49 (511) 84 89 - 25 18 08
-Mobile:	+49 (170) 22 10 781
-Email:	mailto:dirk.laurenz@fujitsu-siemens.com
-Internet:	http://www.fujitsu-siemens.com
-            http://www.fujitsu-siemens.de/services/index.html
-***************************************************************************=
-****************************************
-=20
+   [... and that's it. After this, the system hangs ...]
