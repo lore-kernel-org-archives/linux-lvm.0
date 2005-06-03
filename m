@@ -1,20 +1,16 @@
-Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j51506O28010
-	for <linux-lvm@redhat.com>; Wed, 1 Jun 2005 01:00:06 -0400
-Received: from wproxy.gmail.com (wproxy.gmail.com [64.233.184.192])
-	by mx3.redhat.com (8.12.11/8.12.11) with ESMTP id j51501Gu026057
-	for <linux-lvm@redhat.com>; Wed, 1 Jun 2005 01:00:01 -0400
-Received: by wproxy.gmail.com with SMTP id 69so3082839wri
-	for <linux-lvm@redhat.com>; Tue, 31 May 2005 22:00:01 -0700 (PDT)
-Message-ID: <9411d45b05053122007204d7c4@mail.gmail.com>
-Date: Wed, 1 Jun 2005 01:00:00 -0400
-From: pedro pedrinson <pedrinson@gmail.com>
+Received: from agk.surrey.redhat.com (agk.surrey.redhat.com [172.16.10.74])
+	by pobox.surrey.redhat.com (8.12.8/8.12.8) with ESMTP id j53MRuhf010599
+	for <linux-lvm@redhat.com>; Fri, 3 Jun 2005 23:27:56 +0100
+Received: from agk by agk.surrey.redhat.com with local (Exim 4.34)
+	id 1DeKdw-0004wI-Fz
+	for linux-lvm@redhat.com; Fri, 03 Jun 2005 23:27:56 +0100
+Date: Fri, 3 Jun 2005 23:27:56 +0100
+From: Alasdair G Kergon <agk@redhat.com>
+Message-ID: <20050603222756.GM15809@agk.surrey.redhat.com>
 Mime-Version: 1.0
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-Subject: [linux-lvm] How do I configure ownership of an LVM volume?
-Reply-To: pedro pedrinson <pedrinson@gmail.com>,
-	LVM general discussion and development <linux-lvm@redhat.com>
+Subject: [linux-lvm] Update on LVM2 mirror support
+Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -25,11 +21,25 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@redhat.com
 
-How do I configure ownership of the device for an LVM volume. Is this
-LVM's job or udev's job?
+LVM2 CVS now contains the first version of mirroring support.
+This is *not* production-ready!
 
-This is on RHEL4 systems.
+So far: use -m with lvcreate to make new mirrored volumes.
+Default is -m0 (no mirrors); -m1 gives you 2 identical images.
 
-Please don't tell me I have to stick a bunch of chowns in an init script...
+Use lvs -a to list all lvs, including the internal ones.
+
+NB xxchange -an doesn't work yet: you have to remove the internal
+LVs separately afterwards with 'dmsetup remove'.
+
+
+I'm particularly interested in hearing about any existing features
+that the recent changes have broken:-)
+
+
+Alasdair
+-- 
+agk@redhat.com
