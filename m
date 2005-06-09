@@ -1,22 +1,20 @@
-Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j59AjEO23502
-	for <linux-lvm@redhat.com>; Thu, 9 Jun 2005 06:45:14 -0400
-Received: from baghus1.baghus.net (mail@ns.baghus.net [62.245.167.30])
-	by mx3.redhat.com (8.12.11/8.12.11) with ESMTP id j59Aj6qs010076
-	for <linux-lvm@redhat.com>; Thu, 9 Jun 2005 06:45:06 -0400
-Received: from [192.168.1.254] (helo=bagex01.BAGHUS-LAN.NET)
-	by baghus1.baghus.net with esmtp (Exim 3.35 #1 (Debian))
-	id 1DgKX3-0007QF-00
-	for <linux-lvm@redhat.com>; Thu, 09 Jun 2005 12:45:05 +0200
-Content-class: urn:content-classes:message
+Received: from mx2.redhat.com (mx2.redhat.com [10.255.15.25])
+	by int-mx2.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j59CtEP09484
+	for <linux-lvm@redhat.com>; Thu, 9 Jun 2005 08:55:14 -0400
+Received: from mail.funsoft.com ([71.129.27.18])
+	by mx2.redhat.com (8.12.11/8.12.11) with ESMTP id j59DQdHm019505
+	for <linux-lvm@redhat.com>; Thu, 9 Jun 2005 09:26:40 -0400
+Received: from [192.168.5.27] (funsoft.funsoft.com [192.168.11.1])
+	by mail.funsoft.com (8.11.6/8.11.0) with ESMTP id j59Csqf14426
+	for <linux-lvm@redhat.com>; Thu, 9 Jun 2005 05:54:53 -0700
+Message-ID: <42A83B85.6060208@funsoft.com>
+Date: Thu, 09 Jun 2005 08:52:21 -0400
+From: Gary Eheman <eheman@funsoft.com>
 MIME-Version: 1.0
-Subject: RE: [linux-lvm] lvcreate goes into deep-sleep while creating an
-	xfssnapshot
-Date: Thu, 9 Jun 2005 12:41:22 +0200
-Message-ID: <6A58CFF91886D54BBDA1FE988C4DF79D025069@bagex01.baghus-lan.net>
-From: "Sven Riedel" <sr@baghus.net>
-Content-Transfer-Encoding: 8bit
-Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] Raw device usage with LVM2 question
+Reply-To: eheman@funsoft.com,
+	LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -26,30 +24,24 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+To: Linux-lvm <linux-lvm@redhat.com>
 
-Hi,
+I am moving some LVM1 use to a system with LVM2.
 
-> The HOWTO is way old, 
-I wouldn't consider 10/2004 way old. If it's way old, I'm 
-ancient ;)
+Under LVM1, I was creating my own  /dev/raw  device nodes with mknod and 
+would use the raw command to point my raw devices at a logical volume. 
+The raw command would be issued to link each of my created /dev/raw/ 
+devices to  "/dev/volume-group-name/logical-volume-name"
 
-But seriously, that part of the howto should be updated then.
-I'm not the first nor will I be the last to run into that
-snag.
+With LVM2, it appears that "/dev/volume-group-name/logical-volume-name" 
+is a symbolic link to /dev/mapper/volumegroupname-logical-volume-name.
+Should my raw device be pointing to the same thing (now a symlink under 
+LVM2) as under LVM1?  Or should I change the raw command to point my 
+/dev/raw device to the /dev/mapper/ device?
 
-> with LVM2 the XFS filesystem is 'frozen' 
-> automaticly on the mount -onouuid,ro ( not quite sure, but 
-> probably also 
-> for LVM1 ..., think it's in the XFS code ).
-> So, forget xfs_freeze. 
-Yes, after posting I found a corresponding entry in debians
-bug tracking system. Issueing xfs_freeze -u /filesystem 
-will make everything to back to normal.
-
-> It's freezing your box, not your filesystems.
-Freezing the lvm processes, the box itself was still responsive.
-
-Regs,
-Sven
+I am using SuSE 9.3 Pro, if it matters.
+-- 
+Gary Eheman
+Fundamental Software, Inc.
+http://www.funsoft.com
