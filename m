@@ -1,20 +1,21 @@
-Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j5F3A3u23706
-	for <linux-lvm@redhat.com>; Tue, 14 Jun 2005 23:10:03 -0400
-Received: from wproxy.gmail.com (wproxy.gmail.com [64.233.184.204])
-	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id j5F3A11l028089
-	for <linux-lvm@redhat.com>; Tue, 14 Jun 2005 23:10:01 -0400
-Received: by wproxy.gmail.com with SMTP id 69so1590040wra
-	for <linux-lvm@redhat.com>; Tue, 14 Jun 2005 20:09:56 -0700 (PDT)
-Message-ID: <40b6d52e050614200924204dcd@mail.gmail.com>
-Date: Wed, 15 Jun 2005 11:09:56 +0800
-From: huang mingyou <therods@gmail.com>
-Mime-Version: 1.0
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-Subject: [linux-lvm] lvm lost one pv.
-Reply-To: huang mingyou <therods@gmail.com>,
-	LVM general discussion and development <linux-lvm@redhat.com>
+Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j5DLBou27715
+	for <linux-lvm@redhat.com>; Mon, 13 Jun 2005 17:11:50 -0400
+Received: from mail03.malor.com (host.malor.com [69.93.140.74] (may be forged))
+	by mx3.redhat.com (8.12.11/8.12.11) with ESMTP id j5DLBhlo024791
+	for <linux-lvm@redhat.com>; Mon, 13 Jun 2005 17:11:43 -0400
+Received: from [127.0.0.1] (mail02.malor.com [127.0.0.1])
+	by mail03.malor.com (Postfix) with ESMTP id 4CF3D4A1A0
+	for <linux-lvm@redhat.com>; Mon, 13 Jun 2005 16:11:53 -0500 (CDT)
+Message-ID: <42ADF685.7090802@malor.com>
+Date: Mon, 13 Jun 2005 17:11:33 -0400
+From: Ron Watkins <linux-lvm@malor.com>
+MIME-Version: 1.0
+References: <20050613111141.9498.qmail@web50301.mail.yahoo.com>
+In-Reply-To: <20050613111141.9498.qmail@web50301.mail.yahoo.com>
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] trying again -- list being harvested for spam
+Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -24,11 +25,13 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@redhat.com
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-hello,all.
-       I have a vg named mirror.include 3 pv,/dev/sdb,/dev/sdc,/dev/sdd.
-and have a lv on the vg named mirror1.I haved format the mirror1 into ext3.
-but now I lose the /dev/sdc.how can I restore the data on the /dev/sdb
-and /dev/sdd?
+This is my third try on sending this to the list... haven't seen my 
+other warnings get through.... just warning folks that this list is 
+being harvested by spammers.  I suggest using a special-purpose email 
+address that you can toss later.
+
+Admins: if there's any way to obfuscate and/or lock down the list 
+senders and recpients better, that would be a very good idea.
