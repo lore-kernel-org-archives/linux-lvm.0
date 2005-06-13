@@ -1,22 +1,16 @@
-Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j5C0DYu28587
-	for <linux-lvm@redhat.com>; Sat, 11 Jun 2005 20:13:34 -0400
-Received: from mxsf34.cluster1.charter.net (mxsf34.cluster1.charter.net
-	[209.225.28.159])
-	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id j5C0DXlL030873
-	for <linux-lvm@redhat.com>; Sat, 11 Jun 2005 20:13:33 -0400
-Received: from mxip02a.cluster1.charter.net (mxip02a.cluster1.charter.net
-	[209.225.28.132])
-	by mxsf34.cluster1.charter.net (8.12.11/8.12.11) with ESMTP id
-	j5C0DN65005249
-	for <linux-lvm@redhat.com>; Sat, 11 Jun 2005 20:13:23 -0400
-From: jayz <jayz1@charter.net>
-Date: Sat, 11 Jun 2005 18:13:25 -0400
+Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j5D2qwu15804
+	for <linux-lvm@redhat.com>; Sun, 12 Jun 2005 22:53:00 -0400
+Received: from mail.lnnu.edu.cn (mail.lnnu.edu.cn [218.25.162.219])
+	by mx3.redhat.com (8.12.11/8.12.11) with SMTP id j5D2qdVZ029650
+	for <linux-lvm@redhat.com>; Sun, 12 Jun 2005 22:52:43 -0400
+Message-Id: <200506130252.j5D2qdVZ029650@mx3.redhat.com>
+From: "cwinl" <cwinl-linux-lvm@lnnu.edu.cn>
+Date: Mon, 13 Jun 2005 10:51:58 +0800
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-Message-Id: <200506111813.25975.jayz1@charter.net>
-Subject: [linux-lvm] LVM problem with LV
+Content-Type: multipart/alternative;
+	boundary="----=_NextPart_000_000A_01C57005.EBFDBFB0"
+Subject: [linux-lvm] how to move data from one PV to other PV automaticly?
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -27,113 +21,256 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@redhat.com
 
-I am having trouble with accessing the logical volume. I was starting to  add 
-a forth drive to the lvm group. I went through the steps outlined in the How 
-To document. Everything seemed fine the only thing that I had left to do is 
-extend the file system on to the added drive. I walked away from my machine 
-for a day or so and when I came back my motherboard was having trouble (would 
-not even boot). I replaced the mb and reinstalled Linux on a non-LVM drive. I 
-believe where my mistake was when I reformated the forth drive that I was 
-adding to the system to a non LVM format with out doing a lvreduce (or is it 
-vgreduce). It looks as if the volume group is intact but I'm not sure how to 
-get it to a state where lvdisplay recognizes it so that it can be mounted. 
-Any suggestions??
+This is a multi-part message in MIME format.
 
-lvmdiskscan -- reading all disks / partitions (this may take a while...)
-lvmdiskscan -- /dev/ide/host2/bus1/target0/lun0/part1 [      93.16 GB] Primary  
-LVM partition [0x8E]
-lvmdiskscan -- /dev/ide/host2/bus0/target0/lun0/part1 [     114.50 GB] Primary  
-LVM partition [0x8E]
-lvmdiskscan -- /dev/ide/host2/bus0/target1/lun0/part1 [     114.50 GB] Primary  
-LVM partition [0x8E]
-lvmdiskscan -- /dev/ide/host0/bus1/target0/lun0/part1 [     189.92 GB] Primary  
-LINUX native partition [0x83]
-lvmdiskscan -- /dev/ide/host0/bus0/target0/lun0/part1 [       5.85 GB] Primary  
-LINUX native partition [0x83]
-lvmdiskscan -- /dev/ide/host0/bus0/target0/lun0/part2 [      12.79 GB] DOS 
-extended partition [0x05]
-lvmdiskscan -- /dev/ide/host0/bus0/target0/lun0/part5 [     494.16 MB] 
-Extended  [0x82]
-lvmdiskscan -- /dev/ide/host0/bus0/target0/lun0/part6 [      12.31 GB] 
-Extended LINUX native partition [0x83]
-lvmdiskscan -- 5 disks
-lvmdiskscan -- 0 whole disks
-lvmdiskscan -- 0 loop devices
-lvmdiskscan -- 0 multiple devices
-lvmdiskscan -- 0 network block devices
-lvmdiskscan -- 8 partitions
-lvmdiskscan -- 3 LVM physical volume partitions
+------=_NextPart_000_000A_01C57005.EBFDBFB0
+Content-Type: text/plain;
+	charset="gb2312"
+Content-Transfer-Encoding: 7bit
 
-lvscan -- no volume groups found
+hi,all:
+    i have a VG with 3 PV.
+here is 'pvdisplay' information:
+ 
+------------------------------------------------
+ 
+ftp:~# pvdisplay -v
+    Scanning for physical volume names
+  --- Physical volume ---
+  PV Name               /dev/sdb1
+  VG Name               nicvg
+  PV Size               838.09 GB / not usable 0   
+  Allocatable           yes (but full)
+  PE Size (KByte)       32768
+  Total PE              26819
+  Free PE               0
+  Allocated PE          26819
+  PV UUID               IyahCr-NwPt-dUsC-UuVa-ki1y-5X4X-NRReLA
+   
+  --- Physical volume ---
+  PV Name               /dev/sdc1
+  VG Name               nicvg
+  PV Size               558.72 GB / not usable 0   
+  Allocatable           yes (but full)
+  PE Size (KByte)       32768
+  Total PE              17879
+  Free PE               0
+  Allocated PE          17879
+  PV UUID               NG6cMz-I12Q-6X8T-58gn-Fvov-gYs9-HCvYyw
+   
+  --- Physical volume ---
+  PV Name               /dev/sdd1
+  VG Name               nicvg
+  PV Size               558.72 GB / not usable 0   
+  Allocatable           yes (but full)
+  PE Size (KByte)       32768
+  Total PE              17879
+  Free PE               0
+  Allocated PE          17879
+  PV UUID               qqm9Ua-5owd-ZhVM-nU5D-wZeL-klu1-t0Ij68
+ 
+-----------------------------------------------------------------------
+ 
+i want to move all data from /dev/sdb1 to another two PV (/dev/sdc1 and
+/dev/sdd1) automaticly.
+so i can remove the unstable PV /dev/sdb1 and repair it.
+then i will restore a new /dev/sdb1 device.
+ 
+the disk space is all right.
+here is 'df' information:
+ 
+---------------------------------
+ 
+ftp:~# df
+Filesystem            Size  Used Avail Use% Mounted on
+/dev/sda5             1.9G  545M  1.4G  29% /
+tmpfs                1014M  4.0K 1014M   1% /dev/shm
+/dev/sda1              95M   39M   56M  42% /boot
+/dev/sda6              14G  444M   14G   4% /var
+/dev/mapper/nicvg-niclv
+                      2.0T  774G  1.2T  40% /ftproot
+ 
+---------------------------------
+ 
+the volumn '/dev/mapper/nicvg-niclv' is on the VG above.
+ 
+how can finish it?
+ 
+any suggestion is regarded!
 
-vgscan -- reading all physical volumes (this may take a while...)
-vgscan -- ERROR "vg_read_with_pv_and_lv(): current PV" can't get data of 
-volume group "Public-Lan" from physical volume(s)
-vgscan -- "/etc/lvmtab" and "/etc/lvmtab.d" successfully created
-vgscan -- WARNING: This program does not do a VGDA backup of your volume group
+------=_NextPart_000_000A_01C57005.EBFDBFB0
+Content-Type: text/html;
+	charset="gb2312"
+Content-Transfer-Encoding: quoted-printable
 
-pvscan -- reading all physical volumes (this may take a while...)
-pvscan -- inactive PV "/dev/ide/host2/bus1/target0/lun0/disc"  is in no VG  
-[12 GB]
-pvscan -- inactive PV "/dev/ide/host2/bus1/target0/lun0/part1"  is associated 
-to unknown VG "Public-Lan" (run vgscan)
-pvscan -- inactive PV "/dev/ide/host2/bus0/target0/lun0/disc"  is in no VG  
-[12.03 GB]
-pvscan -- inactive PV "/dev/ide/host2/bus0/target0/lun0/part1"  is associated 
-to unknown VG "Public-Lan" (run vgscan)
-pvscan -- inactive PV "/dev/ide/host2/bus0/target1/lun0/disc"  is in no VG  
-[12.03 GB]
-pvscan -- inactive PV "/dev/ide/host2/bus0/target1/lun0/part1"  is associated 
-to unknown VG "Public-Lan" (run vgscan)
-pvscan -- total: 6 [358.22 GB] / in use: 3 [322.16 GB] / in no VG: 3 [36.06 
-GB]
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML><HEAD>
+<META http-equiv=3DContent-Type content=3D"text/html; charset=3Dgb2312">
+<META content=3D"MSHTML 6.00.2900.2627" name=3DGENERATOR></HEAD>
+<BODY>
+<DIV><FONT size=3D2>
+<DIV><SPAN class=3D395053902-13062005><FONT =
+size=3D2>hi,all:</FONT></SPAN></DIV>
+<DIV><SPAN class=3D395053902-13062005>&nbsp;&nbsp;&nbsp; <FONT =
+size=3D2>i have a VG=20
+with 3 PV.</FONT></SPAN></DIV>
+<DIV><SPAN class=3D395053902-13062005><FONT size=3D2>here is 'pvdisplay' =
 
---- Physical volume ---
-PV Name               /dev/ide/host2/bus1/target0/lun0/part1
-VG Name               Public-Lan
-PV Size               93.16 GB [195371505 secs] / NOT usable 16.18 MB [LVM: 
-147 KB]
-PV#                   3
-PV Status             NOT available
-Allocatable           yes (but full)
-Cur LV                1
-PE Size (KByte)       16384
-Total PE              5961
-Free PE               0
-Allocated PE          5961
-PV UUID               REJhOK-Nz1F-uYib-VIaT-GW0W-OhAp-ox8Epq
+information:</FONT></SPAN></DIV>
+<DIV><SPAN class=3D395053902-13062005><FONT =
+size=3D2></FONT></SPAN>&nbsp;</DIV>
+<DIV><SPAN class=3D395053902-13062005><FONT=20
+size=3D2>------------------------------------------------</FONT></SPAN></=
+DIV>
+<DIV><SPAN class=3D395053902-13062005><FONT =
+size=3D2></FONT></SPAN>&nbsp;</DIV>
+<DIV><SPAN class=3D395053902-13062005><FONT size=3D2>ftp:~# pvdisplay=20
+-v<BR>&nbsp;&nbsp;&nbsp; Scanning for physical volume names<BR>&nbsp; =
+---=20
+Physical volume ---<BR>&nbsp; PV=20
+Name&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nb=
+sp;&nbsp;&nbsp;=20
+/dev/sdb1<BR>&nbsp; VG=20
+Name&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nb=
+sp;&nbsp;&nbsp;=20
+nicvg<BR>&nbsp; PV=20
+Size&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nb=
+sp;&nbsp;&nbsp;=20
+838.09 GB / not usable 0&nbsp;&nbsp; <BR>&nbsp;=20
+Allocatable&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; =
+yes (but=20
+full)<BR>&nbsp; PE Size (KByte)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=20
+32768<BR>&nbsp; Total=20
+PE&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp=
+;&nbsp;=20
+26819<BR>&nbsp; Free=20
+PE&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp=
+;&nbsp;&nbsp;=20
+0<BR>&nbsp; Allocated =
+PE&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=20
+26819<BR>&nbsp; PV=20
+UUID&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nb=
+sp;&nbsp;&nbsp;=20
+IyahCr-NwPt-dUsC-UuVa-ki1y-5X4X-NRReLA<BR>&nbsp;&nbsp; <BR>&nbsp; --- =
+Physical=20
+volume ---<BR>&nbsp; PV=20
+Name&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nb=
+sp;&nbsp;&nbsp;=20
+/dev/sdc1<BR>&nbsp; VG=20
+Name&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nb=
+sp;&nbsp;&nbsp;=20
+nicvg<BR>&nbsp; PV=20
+Size&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nb=
+sp;&nbsp;&nbsp;=20
+558.72 GB / not usable 0&nbsp;&nbsp; <BR>&nbsp;=20
+Allocatable&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; =
+yes (but=20
+full)<BR>&nbsp; PE Size (KByte)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=20
+32768<BR>&nbsp; Total=20
+PE&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp=
+;&nbsp;=20
+17879<BR>&nbsp; Free=20
+PE&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp=
+;&nbsp;&nbsp;=20
+0<BR>&nbsp; Allocated =
+PE&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=20
+17879<BR>&nbsp; PV=20
+UUID&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nb=
+sp;&nbsp;&nbsp;=20
+NG6cMz-I12Q-6X8T-58gn-Fvov-gYs9-HCvYyw<BR>&nbsp;&nbsp; <BR>&nbsp; --- =
+Physical=20
+volume ---<BR>&nbsp; PV=20
+Name&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nb=
+sp;&nbsp;&nbsp;=20
+/dev/sdd1<BR>&nbsp; VG=20
+Name&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nb=
+sp;&nbsp;&nbsp;=20
+nicvg<BR>&nbsp; PV=20
+Size&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nb=
+sp;&nbsp;&nbsp;=20
+558.72 GB / not usable 0&nbsp;&nbsp; <BR>&nbsp;=20
+Allocatable&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; =
+yes (but=20
+full)<BR>&nbsp; PE Size (KByte)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=20
+32768<BR>&nbsp; Total=20
+PE&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp=
+;&nbsp;=20
+17879<BR>&nbsp; Free=20
+PE&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp=
+;&nbsp;&nbsp;=20
+0<BR>&nbsp; Allocated =
+PE&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=20
+17879<BR>&nbsp; PV=20
+UUID&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nb=
+sp;&nbsp;&nbsp;=20
+qqm9Ua-5owd-ZhVM-nU5D-wZeL-klu1-t0Ij68</FONT></SPAN></DIV>
+<DIV><SPAN class=3D395053902-13062005><FONT =
+size=3D2></FONT></SPAN>&nbsp;</DIV>
+<DIV><SPAN class=3D395053902-13062005><FONT=20
+size=3D2>----------------------------------------------------------------=
+-------</FONT></SPAN></DIV>
+<DIV><SPAN class=3D395053902-13062005><FONT =
+size=3D2></FONT></SPAN>&nbsp;</DIV>
+<DIV><SPAN class=3D395053902-13062005><FONT size=3D2>i want to move all =
+data from=20
+/dev/sdb1 to another two PV (/dev/sdc1 and /dev/sdd1)=20
+automaticly.</FONT></SPAN></DIV>
+<DIV><SPAN class=3D395053902-13062005><FONT size=3D2>so i can remove the =
+unstable=20
+PV&nbsp;/dev/sdb1 and repair it.</FONT></SPAN></DIV>
+<DIV><SPAN class=3D395053902-13062005><FONT size=3D2>then i will restore =
+a new=20
+/dev/sdb1 device.</FONT></SPAN></DIV>
+<DIV><SPAN class=3D395053902-13062005><FONT =
+size=3D2></FONT></SPAN>&nbsp;</DIV>
+<DIV><SPAN class=3D395053902-13062005><FONT size=3D2>the disk space is =
+all=20
+right.</FONT></SPAN></DIV>
+<DIV><SPAN class=3D395053902-13062005><FONT size=3D2>here is 'df'=20
+information:</FONT></SPAN></DIV>
+<DIV><SPAN class=3D395053902-13062005><FONT =
+size=3D2></FONT></SPAN>&nbsp;</DIV>
+<DIV><SPAN class=3D395053902-13062005><FONT=20
+size=3D2>---------------------------------</FONT></SPAN></DIV>
+<DIV><SPAN class=3D395053902-13062005><FONT =
+size=3D2></FONT></SPAN>&nbsp;</DIV>
+<DIV><SPAN class=3D395053902-13062005><FONT size=3D2>ftp:~#=20
+df<BR>Filesystem&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nb=
+sp;&nbsp;=20
+Size&nbsp; Used Avail Use% Mounted=20
+on<BR>/dev/sda5&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbs=
+p;&nbsp;&nbsp;=20
+1.9G&nbsp; 545M&nbsp; 1.4G&nbsp; 29%=20
+/<BR>tmpfs&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nb=
+sp;&nbsp;&nbsp;&nbsp;&nbsp;=20
+1014M&nbsp; 4.0K 1014M&nbsp;&nbsp; 1%=20
+/dev/shm<BR>/dev/sda1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbs=
+p;&nbsp;&nbsp;&nbsp;&nbsp;=20
+95M&nbsp;&nbsp; 39M&nbsp;&nbsp; 56M&nbsp; 42%=20
+/boot<BR>/dev/sda6&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&=
+nbsp;&nbsp;&nbsp;&nbsp;=20
+14G&nbsp; 444M&nbsp;&nbsp; 14G&nbsp;&nbsp; 4%=20
+/var<BR>/dev/mapper/nicvg-niclv<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&n=
+bsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nb=
+sp;&nbsp;&nbsp;=20
+2.0T&nbsp; 774G&nbsp; 1.2T&nbsp; 40% /ftproot</FONT></SPAN></DIV>
+<DIV><SPAN class=3D395053902-13062005><FONT =
+size=3D2></FONT></SPAN>&nbsp;</DIV>
+<DIV><SPAN class=3D395053902-13062005><FONT=20
+size=3D2>---------------------------------</FONT></SPAN></DIV>
+<DIV><SPAN class=3D395053902-13062005><FONT =
+size=3D2></FONT></SPAN>&nbsp;</DIV>
+<DIV><SPAN class=3D395053902-13062005><FONT size=3D2>the volumn=20
+'/dev/mapper/nicvg-niclv' is on the VG above.</FONT></SPAN></DIV>
+<DIV><SPAN class=3D395053902-13062005><FONT =
+size=3D2></FONT></SPAN>&nbsp;</DIV>
+<DIV><SPAN class=3D395053902-13062005><FONT size=3D2>how can finish=20
+it?</FONT></SPAN></DIV>
+<DIV><SPAN class=3D395053902-13062005><FONT =
+size=3D2></FONT></SPAN>&nbsp;</DIV>
+<DIV><SPAN class=3D395053902-13062005><FONT size=3D2>any suggestion is=20
+regarded!</FONT></SPAN></DIV></FONT></DIV></BODY></HTML>
 
-
---- Physical volume ---
-PV Name               /dev/ide/host2/bus0/target0/lun0/part1
-VG Name               Public-Lan
-PV Size               114.50 GB [240121665 secs] / NOT usable 16.18 MB [LVM: 
-152 KB]
-PV#                   1
-PV Status             NOT available
-Allocatable           yes (but full)
-Cur LV                1
-PE Size (KByte)       16384
-Total PE              7326
-Free PE               0
-Allocated PE          7326
-PV UUID               xfRQNU-dw1X-Dmic-JQIx-tI6X-Qe9w-KeIcfk
-
-
---- Physical volume ---
-PV Name               /dev/ide/host2/bus0/target1/lun0/part1
-VG Name               Public-Lan
-PV Size               114.50 GB [240121665 secs] / NOT usable 16.18 MB [LVM: 
-152 KB]
-PV#                   2
-PV Status             NOT available
-Allocatable           yes (but full)
-Cur LV                1
-PE Size (KByte)       16384
-Total PE              7326
-Free PE               0
-Allocated PE          7326
-PV UUID               Kd9Y5q-TnDo-LB1v-Jphw-LFyY-TP2P-dqK9k3
+------=_NextPart_000_000A_01C57005.EBFDBFB0--
