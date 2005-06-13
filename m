@@ -1,13 +1,13 @@
-Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j5D6lSu15918
-	for <linux-lvm@redhat.com>; Mon, 13 Jun 2005 02:47:28 -0400
+Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j5D7Xku23443
+	for <linux-lvm@redhat.com>; Mon, 13 Jun 2005 03:33:46 -0400
 Received: from mail.lnnu.edu.cn (mail.lnnu.edu.cn [218.25.162.219])
-	by mx3.redhat.com (8.12.11/8.12.11) with SMTP id j5D6lG9s031447
-	for <linux-lvm@redhat.com>; Mon, 13 Jun 2005 02:47:17 -0400
-Message-Id: <200506130647.j5D6lG9s031447@mx3.redhat.com>
+	by mx1.redhat.com (8.12.11/8.12.11) with SMTP id j5D7Xfh0023642
+	for <linux-lvm@redhat.com>; Mon, 13 Jun 2005 03:33:44 -0400
+Message-Id: <200506130733.j5D7Xfh0023642@mx1.redhat.com>
 From: "Steven Law" <cwinl-linux-lvm@lnnu.edu.cn>
 Subject: RE: [linux-lvm] how to move data from one PV to other PV automaticly?
-Date: Mon, 13 Jun 2005 14:47:08 +0800
+Date: Mon, 13 Jun 2005 15:33:35 +0800
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
 In-Reply-To: <20050613051331.GX2244@polop.usc.edu>
@@ -73,16 +73,22 @@ To: 'LVM general discussion and development' <linux-lvm@redhat.com>
 > The first step would be to shrink the filesystem using the 
 > correct utility for the filesystem (you didn't mention the 
 > filesystem type).  Fortunately you have 1.2TB free on the 
-
-my FS is reiserfs.
-please tell me in detail.
-
 > filesystem so this shouldn't be a problem.
+
+my kernel is 2.6.10
+
 > 
 > Then reduce the size of niclv and you'll be able to move the 
 > PEs off of sdb1.
 > 
 > 
+
+i have add 10 disks on that server and there is no space to add in even one
+new disk.
+data is too huge , no space on any other server to backup them.
+so what i want to do is to move data from PV to PV automaticly.
+i have got enough space on the VG(disk usage is 40%).
+
 > --
 > Garrick Staples, Linux/HPCC Administrator University of 
 > Southern California
