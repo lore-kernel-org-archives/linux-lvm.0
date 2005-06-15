@@ -1,24 +1,17 @@
-Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j5FGjeu31330
-	for <linux-lvm@redhat.com>; Wed, 15 Jun 2005 12:45:40 -0400
-Received: from osl1smout1.broadpark.no (osl1smout1.broadpark.no [80.202.4.58])
-	by mx3.redhat.com (8.12.11/8.12.11) with ESMTP id j5FGjYG2022381
-	for <linux-lvm@redhat.com>; Wed, 15 Jun 2005 12:45:35 -0400
-Received: from osl1sminn1.broadpark.no ([80.202.4.59])
-	by osl1smout1.broadpark.no
-	(Sun Java System Messaging Server 6.1 HotFix 0.05 (built Oct 21 2004))
-	with ESMTP id <0II400MH0X85TR20@osl1smout1.broadpark.no> for
-	linux-lvm@redhat.com; Wed, 15 Jun 2005 18:45:41 +0200 (CEST)
-Received: from [10.0.0.7] ([80.203.83.189]) by osl1sminn1.broadpark.no
-	(Sun Java System Messaging Server 6.1 HotFix 0.05 (built Oct 21 2004))
-	with ESMTP id <0II400ALZXDQYV01@osl1sminn1.broadpark.no> for
-	linux-lvm@redhat.com; Wed, 15 Jun 2005 18:49:03 +0200 (CEST)
-Date: Wed, 15 Jun 2005 18:45:25 +0200
-From: =?windows-1252?Q?Bj=F8rn?= <bjjorgen@broadpark.no>
-Message-id: <42B05B25.3030406@broadpark.no>
-MIME-version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: [linux-lvm] Problems with LVM after updating from FC 3 to FC4.
+Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j5FGWmu26870
+	for <linux-lvm@redhat.com>; Wed, 15 Jun 2005 12:32:48 -0400
+Received: from zrtps0kn.nortelnetworks.com (zrtps0kn.nortelnetworks.com
+	[47.140.192.55])
+	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id j5FGWjP4019201
+	for <linux-lvm@redhat.com>; Wed, 15 Jun 2005 12:32:45 -0400
+Message-ID: <B06940B80A03814CAB09CDC85B9A987B21AED2@zctfhxm0.corp.nortel.com>
+From: "David Plainfosse" <plaindav@nortel.com>
+Date: Wed, 15 Jun 2005 12:31:38 -0400
+MIME-Version: 1.0
+Content-Type: multipart/alternative;
+	boundary="----_=_NextPart_001_01C571C7.B3F052C7"
+Subject: [linux-lvm] Does LVM2 support mirrored volumes
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -29,189 +22,109 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="utf-8"; format="flowed"
-To: linux-lvm@redhat.com
-
-Hi, I have one LVM volume of 3 hard disks. The box did have Fedora Core 
-3, I did upgrade it to Fedora Core 4.
-Now I can�t mount my LVM.
-I�m new to LVM, but here is what I have tried to do.
-
-# /usr/sbin/lvmdiskscan -v
-
-Wiping cache of LVM-capable devices
-
-/dev/hda1 [ 101.94 MB]
-
-/dev/hda2 [ 4.77 GB]
-
-/dev/hda3 [ 1.17 GB]
-
-/dev/hdd [ 57.27 GB] LVM physical volume
-
-/dev/hdb1 [ 57.25 GB] LVM physical volume
-
-0 disks
-
-3 partitions
-
-1 LVM physical volume whole disk
-
-1 LVM physical volume
-
-#/usr/sbin/vgchange -ay
-
-Couldn't find device with uuid 'b0cIJv-QXRU-H7AC-TOjN-6S25-CCqc-dQMATu'.
-
-Couldn't find all physical volumes for volume group vg.
-
-Couldn't find device with uuid 'b0cIJv-QXRU-H7AC-TOjN-6S25-CCqc-dQMATu'.
-
-Couldn't find all physical volumes for volume group vg.
-
-Couldn't find device with uuid 'b0cIJv-QXRU-H7AC-TOjN-6S25-CCqc-dQMATu'.
-
-Couldn't find all physical volumes for volume group vg.
-
-Couldn't find device with uuid 'b0cIJv-QXRU-H7AC-TOjN-6S25-CCqc-dQMATu'.
-
-Couldn't find all physical volumes for volume group vg.
-
-Unable to find volume group "vg"
-
-#/usr/sbin/vgscan -P
-
-Partial mode. Incomplete volume groups will be activated read-only.
-
-Reading all physical volumes. This may take a while...
-
-Couldn't find device with uuid 'b0cIJv-QXRU-H7AC-TOjN-6S25-CCqc-dQMATu'.
-
-Couldn't find device with uuid 'b0cIJv-QXRU-H7AC-TOjN-6S25-CCqc-dQMATu'.
-
-Found volume group "vg" using metadata type lvm2
-
-
-#/usr/sbin/vgchange -ay -P
-
-Partial mode. Incomplete volume groups will be activated read-only.
-
-Couldn't find device with uuid 'b0cIJv-QXRU-H7AC-TOjN-6S25-CCqc-dQMATu'.
-
-Couldn't find device with uuid 'b0cIJv-QXRU-H7AC-TOjN-6S25-CCqc-dQMATu'.
-
-Couldn't find device with uuid 'b0cIJv-QXRU-H7AC-TOjN-6S25-CCqc-dQMATu'.
-
-Couldn't find device with uuid 'b0cIJv-QXRU-H7AC-TOjN-6S25-CCqc-dQMATu'.
-
-1 logical volume(s) in volume group "vg" now active
-
-
-#/usr/sbin/pvdisplay
-
-Couldn't find device with uuid 'b0cIJv-QXRU-H7AC-TOjN-6S25-CCqc-dQMATu'.
-
-Couldn't find device with uuid 'b0cIJv-QXRU-H7AC-TOjN-6S25-CCqc-dQMATu'.
-
---- Physical volume ---
-
-PV Name unknown device
-
-VG Name vg
-
-PV Size 186.31 GB / not usable 0
-
-Allocatable yes (but full)
-
-PE Size (KByte) 4096
-
-Total PE 47695
-
-Free PE 0
-
-Allocated PE 47695
-
-PV UUID b0cIJv-QXRU-H7AC-TOjN-6S25-CCqc-dQMATu
-
---- Physical volume ---
-
-PV Name /dev/hdd
-
-VG Name vg
-
-PV Size 57.27 GB / not usable 0
-
-Allocatable yes (but full)
-
-PE Size (KByte) 4096
-
-Total PE 14660
-
-Free PE 0
-
-Allocated PE 14660
-
-PV UUID Gf1g9B-STFy-N4CG-z52b-S8fd-tKUE-7ShFeq
-
---- Physical volume ---
-
-PV Name /dev/hdb1
-
-VG Name vg
-
-PV Size 57.25 GB / not usable 0
-
-Allocatable yes (but full)
-
-PE Size (KByte) 4096
-
-Total PE 14656
-
-Free PE 0
-
-Allocated PE 14656
-
-PV UUID Y5uNb3-WpX9-4frk-D0Q2-XaJ4-RDyK-EU5KoA
-
-
-
-# mount -t reiserfs /dev/vg/vg /var/58m/
-
-mount: special device /dev/vg/vg does not exist
-
-#ls /dev/vg
-
-ls: /dev/vg: No such file or directory
-
-# /sbin/fdisk -l /dev/hdc
-
-Warning: ignoring extra data in partition table 5
-
-Warning: ignoring extra data in partition table 5
-
-Warning: ignoring extra data in partition table 5
-
-Warning: invalid flag 0x01e1 of partition table 5 will be corrected by 
-w(rite)
-
-Disk /dev/hdc: 200.0 GB, 200049647616 bytes
-
-16 heads, 63 sectors/track, 387621 cylinders
-
-Units = cylinders of 1008 * 512 = 516096 bytes
-
-Device Boot Start End Blocks Id System
-
-/dev/hdc1 2 387621 195360480 f W95 Ext'd (LBA)
-
-/dev/hdc5 ? 128214 256491 64651632+ e1 DOS access
-
-Well, I don�t know what to do now? Have I lost all my data on the LVM 
-or? Or what is it with /dev/hdc ?
-
-
-I have found one that might have the same problem.
-
-http://www.lugod.org/mailinglists/archives/vox-tech/2005-03/msg00301.html
-
-Bj�rn J�rgensen.
+To: "'linux-lvm@redhat.com'" <linux-lvm@redhat.com>
+Cc: "Gameiro, Philippe" <Philippe.Gameiro@windriver.com>, Rachid Koucha <koucha@nortel.com>, "Giorgi,
+	Alexandra" <Alexandra.Giorgi@windriver.com>
+
+This message is in MIME format. Since your mail reader does not understand
+this format, some or all of this message may not be legible.
+
+------_=_NextPart_001_01C571C7.B3F052C7
+Content-Type: text/plain;
+	charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+
+Hi,
+
+I am looking for a corresponding Linux LVM2 option of the AIX LVM mklv  =
+that
+enables
+mirrored copies when creating a Logical Volume=20
+
+The mklv AIX option is :
+
+-w MirrorWriteConsistency=20
+y	Turns on mirror write consistency which insures data consistency
+among mirrored copies of a logical volume during normal I/O processing.
+
+
+
+
+I have read in archived emails that the lvcreate  -m1 option enables
+mirrored copies but it is not officially
+supported. Do you know if a particular LVM2 release support mirrored =
+volumes
+?
+We plan to use lvm2-2.00.32 release.
+
+
+
+David Plainfoss=E9
+Architect GSM/UMTS Platform
+Tel. : (33) 1 69 55 59 13 / ESN : 574 5913=20
+Email: plaindav@nortel.com
+
+
+
+------_=_NextPart_001_01C571C7.B3F052C7
+Content-Type: text/html;
+	charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<META HTTP-EQUIV=3D"Content-Type" CONTENT=3D"text/html; =
+charset=3Diso-8859-1">
+<META NAME=3D"Generator" CONTENT=3D"MS Exchange Server version =
+5.5.2658.2">
+<TITLE>Does LVM2 support mirrored volumes</TITLE>
+</HEAD>
+<BODY>
+
+<P><FONT SIZE=3D2 FACE=3D"Arial">Hi,</FONT>
+</P>
+
+<P><FONT SIZE=3D2 FACE=3D"Arial">I am looking for a corresponding Linux =
+LVM2 option of the AIX LVM mklv&nbsp; that enables</FONT>
+<BR><FONT SIZE=3D2 FACE=3D"Arial">mirrored copies when creating a =
+Logical Volume </FONT>
+</P>
+
+<P><FONT SIZE=3D2 FACE=3D"Arial">The mklv AIX option is :</FONT>
+</P>
+
+<P><B><FONT FACE=3D"Times New Roman">-w</FONT></B><I> <FONT =
+FACE=3D"Times New Roman">MirrorWriteConsistency</FONT></I><FONT =
+FACE=3D"Times New Roman"> </FONT>
+<BR><B><FONT FACE=3D"Times New =
+Roman">y</FONT></B>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <FONT =
+FACE=3D"Times New Roman">Turns on mirror write consistency which =
+insures data consistency among mirrored copies of a logical volume =
+during normal I/O processing. &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<BR>
+</FONT>
+</P>
+<BR>
+
+<P><FONT SIZE=3D2 FACE=3D"Arial">I have read in archived emails that =
+the lvcreate&nbsp; -m1 option enables mirrored copies but it is not =
+officially</FONT>
+<BR><FONT SIZE=3D2 FACE=3D"Arial">supported. Do you know if a =
+particular LVM2 release support mirrored volumes ?</FONT>
+<BR><FONT SIZE=3D2 FACE=3D"Arial">We plan to use</FONT> <FONT SIZE=3D2 =
+FACE=3D"Palatino-Roman">lvm2-2.00.32 release.</FONT>
+</P>
+<BR>
+<BR>
+
+<P><B><FONT FACE=3D"Times New Roman">David Plainfoss=E9<BR>
+</FONT></B><FONT FACE=3D"Times New Roman">Architect GSM/UMTS =
+Platform<BR>
+Tel. : (33) 1 69 55 59 13 / ESN : 574 5913<BR>
+Email: plaindav@nortel.com</FONT>
+</P>
+<BR>
+
+</BODY>
+</HTML>
+------_=_NextPart_001_01C571C7.B3F052C7--
