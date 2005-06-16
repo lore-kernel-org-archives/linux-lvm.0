@@ -1,11 +1,21 @@
-Date: Wed, 15 Jun 2005 21:08:29 +0100
-From: Alasdair G Kergon <agk@redhat.com>
-Subject: Re: [linux-lvm] Does LVM2 support mirrored volumes
-Message-ID: <20050615200829.GX4195@agk.surrey.redhat.com>
-References: <B06940B80A03814CAB09CDC85B9A987B21AED2@zctfhxm0.corp.nortel.com>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <B06940B80A03814CAB09CDC85B9A987B21AED2@zctfhxm0.corp.nortel.com>
+Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j5GEKQu24974
+	for <linux-lvm@redhat.com>; Thu, 16 Jun 2005 10:20:26 -0400
+Received: from gort.hpl.hp.com (gort.hpl.hp.com [192.6.10.17])
+	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id j5GEKNAg029364
+	for <linux-lvm@redhat.com>; Thu, 16 Jun 2005 10:20:23 -0400
+Received: from timmay.hpl.hp.com (timmay-hb.hpl.hp.com [15.144.59.39])
+	by gort.hpl.hp.com (8.12.10/8.12.10) with ESMTP id j5GEJpBn023052
+	for <linux-lvm@redhat.com>; Thu, 16 Jun 2005 15:19:52 +0100 (BST)
+Received: from [127.0.0.1] (dhcp-28-108.hpl.hp.com [15.144.28.108])
+	by timmay.hpl.hp.com (8.13.2/8.13.2) with ESMTP id j5GEJgG7019841
+	for <linux-lvm@redhat.com>; Thu, 16 Jun 2005 15:19:43 +0100 (BST)
+Message-ID: <42B18A7E.9090809@hp.com>
+Date: Thu, 16 Jun 2005 15:19:42 +0100
+From: Alistair Coles <alistair.coles@hp.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] snapshot cow volume location?
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -16,30 +26,18 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: LVM general discussion and development <linux-lvm@redhat.com>
-Cc: "Gameiro, Philippe" <Philippe.Gameiro@windriver.com>, Rachid Koucha <koucha@nortel.com>, "Giorgi,
-	Alexandra" <Alexandra.Giorgi@windriver.com>
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+To: linux-lvm@redhat.com
 
-On Wed, Jun 15, 2005 at 12:31:38PM -0400, David Plainfosse wrote:
-> y	Turns on mirror write consistency which insures data consistency
-> among mirrored copies of a logical volume during normal I/O processing.
 
-That comes as default with device-mapper - there's no option to turn it off.
- 
-> I have read in archived emails that the lvcreate  -m1 option enables
-> mirrored copies but it is not officially
-> supported. Do you know if a particular LVM2 release support mirrored volumes
-> ?
+As far as I can tell (using 2.2.01.09) , using lvcreate to create a 
+snapshot results in the snapshot being in the same VG as the source. If 
+that is correct, is there any way to force the snapshot to use different 
+PV's than the source?
 
-Work is progressing on this - some limited mirror features are available 
-in 2.01.12:
-  Can create new volumes as mirrors, and remove them when not active.
-  lvchange -an doesn't work properly yet and must be followed with some 
-  dmsetup remove.  Device failure is not handled.  Power cut / reset button 
-  is handled OK, keeping the mirror images in sync with each other.
+Also, is there a reason why snapshot cow volumes cannot be in a 
+different VG than the source volume?
 
-Alasdair
--- 
-agk@redhat.com
+Thanks
+
+Alistair Coles
