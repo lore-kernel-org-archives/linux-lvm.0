@@ -1,22 +1,25 @@
-Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j5HBM9u06770
-	for <linux-lvm@redhat.com>; Fri, 17 Jun 2005 07:22:09 -0400
-Received: from mxsf32.cluster1.charter.net (mxsf32.cluster1.charter.net
-	[209.225.28.156])
-	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id j5HBM85E005020
-	for <linux-lvm@redhat.com>; Fri, 17 Jun 2005 07:22:08 -0400
-Received: from mxip16a.cluster1.charter.net (mxip16a.cluster1.charter.net
-	[209.225.28.146])
-	by mxsf32.cluster1.charter.net (8.12.11/8.12.11) with ESMTP id
-	j5HBLwLB005657
-	for <linux-lvm@redhat.com>; Fri, 17 Jun 2005 07:21:58 -0400
-From: jayz <jayz1@charter.net>
-Date: Fri, 17 Jun 2005 07:21:58 -0400
+Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j5HIRFu31430
+	for <linux-lvm@redhat.com>; Fri, 17 Jun 2005 14:27:15 -0400
+Received: from ahmler8.mail.eds.com (ahmler8.mail.eds.com [192.85.154.82])
+	by mx3.redhat.com (8.12.11/8.12.11) with ESMTP id j5HIR9Be022420
+	for <linux-lvm@redhat.com>; Fri, 17 Jun 2005 14:27:09 -0400
+Received: from ahmlir1.mail.eds.com (ahmlir1-2.mail.eds.com [192.85.154.131])
+	by ahmler8.mail.eds.com (8.13.4/8.12.10) with ESMTP id j5HIR35H002278
+	for <linux-lvm@redhat.com>; Fri, 17 Jun 2005 14:27:04 -0400
+Received: from ahmlir1.mail.eds.com (localhost [127.0.0.1])
+	by ahmlir1.mail.eds.com (8.13.2/8.12.10) with ESMTP id j5HIQ9m5031733
+	for <linux-lvm@redhat.com>; Fri, 17 Jun 2005 14:26:09 -0400
+Received: from USAHM013.amer.corp.eds.com ([130.175.214.154])
+	by ahmlir1.mail.eds.com (8.13.2/8.12.10) with ESMTP id j5HIQ9T9031728
+	for <linux-lvm@redhat.com>; Fri, 17 Jun 2005 14:26:09 -0400
+Content-class: urn:content-classes:message
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-Message-Id: <200506170721.58515.jayz1@charter.net>
-Subject: [linux-lvm] Problem with Logical Volume
+Date: Fri, 17 Jun 2005 14:26:08 -0400
+Message-ID: <5A14AF34CFF8AD44A44891F7C9FF41050428E14F@usahm236.amer.corp.eds.com>
+From: "Post, Mark K" <mark.post@eds.com>
+Content-Transfer-Encoding: 8bit
+Subject: [linux-lvm] RE: LVM VG keeps disappearing
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -30,110 +33,64 @@ List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@redhat.com
 
-I am having trouble with accessing the logical volume. I was starting to  add 
-a forth drive to the lvm group. I went through the steps outlined in the How 
-To document. Everything seemed fine the only thing that I had left to do is 
-extend the file system on to the added drive. I walked away from my machine 
-for a day or so and when I came back my motherboard was having trouble (would 
-not even boot). I replaced the mb and reinstalled Linux on a non-LVM drive. I 
-believe where my mistake was when I reformated the forth drive that I was 
-adding to the system to a non LVM format with out doing a lvreduce (or is it 
-vgreduce). It looks as if the volume group is intact but I'm not sure how to 
-get it to a state where lvdisplay recognizes it so that it can be mounted. 
-Any suggestions??
+I'm still trying to figure out this problem.  When I run an "strace -f
+-F vgscan" the only thing that looks odd to me is this:
+open("/dev/vg01/group", O_RDONLY)       = 4
+ioctl(4, 0xc004fe05, 0x800095b0)        = -1 ENXIO (No such device or
+address)
+close(4)                                = 0
+open("/dev/vg01/group", O_RDONLY)       = 4
+ioctl(4, 0xc004fe05, 0x800095b0)        = -1 ENXIO (No such device or
+address)
+close(4)                                = 0
 
-lvmdiskscan -- reading all disks / partitions (this may take a while...)
-lvmdiskscan -- /dev/ide/host2/bus1/target0/lun0/part1 [      93.16 GB] Primary  
-LVM partition [0x8E]
-lvmdiskscan -- /dev/ide/host2/bus0/target0/lun0/part1 [     114.50 GB] Primary  
-LVM partition [0x8E]
-lvmdiskscan -- /dev/ide/host2/bus0/target1/lun0/part1 [     114.50 GB] Primary  
-LVM partition [0x8E]
-lvmdiskscan -- /dev/ide/host0/bus1/target0/lun0/part1 [     189.92 GB] Primary  
-LINUX native partition [0x83]
-lvmdiskscan -- /dev/ide/host0/bus0/target0/lun0/part1 [       5.85 GB] Primary  
-LINUX native partition [0x83]
-lvmdiskscan -- /dev/ide/host0/bus0/target0/lun0/part2 [      12.79 GB] DOS 
-extended partition [0x05]
-lvmdiskscan -- /dev/ide/host0/bus0/target0/lun0/part5 [     494.16 MB] 
-Extended  [0x82]
-lvmdiskscan -- /dev/ide/host0/bus0/target0/lun0/part6 [      12.31 GB] 
-Extended LINUX native partition [0x83]
-lvmdiskscan -- 5 disks
-lvmdiskscan -- 0 whole disks
-lvmdiskscan -- 0 loop devices
-lvmdiskscan -- 0 multiple devices
-lvmdiskscan -- 0 network block devices
-lvmdiskscan -- 8 partitions
-lvmdiskscan -- 3 LVM physical volume partitions
 
-lvscan -- no volume groups found
+Now, that device node does exist, so I don't understand what the error
+means:
+# ls -l /dev/vg01/group                                       
+crw-r-----  1 root disk 109, 0 Feb 17 02:15 /dev/vg01/group 
 
+
+When I compare the output to another system where LVM is working, I get
+this:
+open("/dev/vg01/group", O_RDONLY)       = 4
+ioctl(4, 0xc004fe05, 0x406600)          = 0
+close(4)                                = 0                  
+
+
+Does this suggest anything to anyone?  Can anyone help me?  Thanks,
+
+Mark Post
+
+-----Original Message-----
+From: Post, Mark K 
+Sent: Tuesday, May 31, 2005 6:24 PM
+To: 'linux-lvm@redhat.com'
+Subject: LVM VG keeps disappearing
+
+
+Twice now, I've had a VG "disappear" on me when I reboot my system.
+These two instances were widely separated in time, with several reboots
+in between.
+
+When the system comes up vgscan runs, but I get this error:
 vgscan -- reading all physical volumes (this may take a while...)
-vgscan -- ERROR "vg_read_with_pv_and_lv(): current PV" can't get data of 
-volume group "Public-Lan" from physical volume(s)
+
+vgscan -- ERROR "vg_read_with_pv_and_lv(): current PV" can't get data of
+volume 
+group "vg01" from physical volume(s)
+
 vgscan -- "/etc/lvmtab" and "/etc/lvmtab.d" successfully created
-vgscan -- WARNING: This program does not do a VGDA backup of your volume group
 
-pvscan -- reading all physical volumes (this may take a while...)
-pvscan -- inactive PV "/dev/ide/host2/bus1/target0/lun0/disc"  is in no VG  
-[12 GB]
-pvscan -- inactive PV "/dev/ide/host2/bus1/target0/lun0/part1"  is associated 
-to unknown VG "Public-Lan" (run vgscan)
-pvscan -- inactive PV "/dev/ide/host2/bus0/target0/lun0/disc"  is in no VG  
-[12.03 GB]
-pvscan -- inactive PV "/dev/ide/host2/bus0/target0/lun0/part1"  is associated 
-to unknown VG "Public-Lan" (run vgscan)
-pvscan -- inactive PV "/dev/ide/host2/bus0/target1/lun0/disc"  is in no VG  
-[12.03 GB]
-pvscan -- inactive PV "/dev/ide/host2/bus0/target1/lun0/part1"  is associated 
-to unknown VG "Public-Lan" (run vgscan)
-pvscan -- total: 6 [358.22 GB] / in use: 3 [322.16 GB] / in no VG: 3 [36.06 
-GB]
+vgscan -- WARNING: This program does not do a VGDA backup of your volume
+group  
 
---- Physical volume ---
-PV Name               /dev/ide/host2/bus1/target0/lun0/part1
-VG Name               Public-Lan
-PV Size               93.16 GB [195371505 secs] / NOT usable 16.18 MB [LVM: 
-147 KB]
-PV#                   3
-PV Status             NOT available
-Allocatable           yes (but full)
-Cur LV                1
-PE Size (KByte)       16384
-Total PE              5961
-Free PE               0
-Allocated PE          5961
-PV UUID               REJhOK-Nz1F-uYib-VIaT-GW0W-OhAp-ox8Epq
+The first time this happened, I wound up just restoring all my logical
+volumes from backup.  This time I would like to try to figure out: 1.
+How to recover from this without restoring everything from backup. 2.
+Why this happens so that a fix can be created.
 
+This system is a slack/390 operating system, 64-bit, running a 2.4.26
+kernel.
 
---- Physical volume ---
-PV Name               /dev/ide/host2/bus0/target0/lun0/part1
-VG Name               Public-Lan
-PV Size               114.50 GB [240121665 secs] / NOT usable 16.18 MB [LVM: 
-152 KB]
-PV#                   1
-PV Status             NOT available
-Allocatable           yes (but full)
-Cur LV                1
-PE Size (KByte)       16384
-Total PE              7326
-Free PE               0
-Allocated PE          7326
-PV UUID               xfRQNU-dw1X-Dmic-JQIx-tI6X-Qe9w-KeIcfk
-
-
---- Physical volume ---
-PV Name               /dev/ide/host2/bus0/target1/lun0/part1
-VG Name               Public-Lan
-PV Size               114.50 GB [240121665 secs] / NOT usable 16.18 MB [LVM: 
-152 KB]
-PV#                   2
-PV Status             NOT available
-Allocatable           yes (but full)
-Cur LV                1
-PE Size (KByte)       16384
-Total PE              7326
-Free PE               0
-Allocated PE          7326
-PV UUID               Kd9Y5q-TnDo-LB1v-Jphw-LFyY-TP2P-dqK9k3
+The LVM version I'm running is 1.0.8.
