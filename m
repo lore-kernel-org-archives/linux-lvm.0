@@ -1,11 +1,11 @@
-Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j5KGYqu04964
-	for <linux-lvm@redhat.com>; Mon, 20 Jun 2005 12:34:52 -0400
+Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j5KGcHu06149
+	for <linux-lvm@redhat.com>; Mon, 20 Jun 2005 12:38:17 -0400
 Received: from redshift.com (mail-pop.redshift.com [216.228.2.14])
-	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id j5KGYmt6009873
-	for <linux-lvm@redhat.com>; Mon, 20 Jun 2005 12:34:48 -0400
-Message-ID: <42B6EF41.2060302@redshift.com>
-Date: Mon, 20 Jun 2005 09:30:57 -0700
+	by mx3.redhat.com (8.12.11/8.12.11) with ESMTP id j5KGc9dg024761
+	for <linux-lvm@redhat.com>; Mon, 20 Jun 2005 12:38:10 -0400
+Message-ID: <42B6F00D.3060801@redshift.com>
+Date: Mon, 20 Jun 2005 09:34:21 -0700
 From: Sam Rogers <srogers@redshift.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
