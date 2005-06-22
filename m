@@ -1,17 +1,20 @@
-Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j5MALJu30801
-	for <linux-lvm@redhat.com>; Wed, 22 Jun 2005 06:21:19 -0400
-Received: from percy.comedia.it (percy.comedia.it [212.97.59.71])
-	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id j5MALIIT003744
-	for <linux-lvm@redhat.com>; Wed, 22 Jun 2005 06:21:18 -0400
-Date: Wed, 22 Jun 2005 12:21:17 +0200
-From: Luca Berra <bluca@comedia.it>
-Subject: [cseoqs002@sneakemail.com: Re: Re: [linux-lvm] LVM2 Volume and Volume
-	group naming nomenclature]
-Message-ID: <20050622102117.GE8175@percy.comedia.it>
+Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j5MBbPu13492
+	for <linux-lvm@redhat.com>; Wed, 22 Jun 2005 07:37:25 -0400
+Received: from zproxy.gmail.com (zproxy.gmail.com [64.233.162.197])
+	by mx3.redhat.com (8.12.11/8.12.11) with ESMTP id j5MBbJmI026399
+	for <linux-lvm@redhat.com>; Wed, 22 Jun 2005 07:37:19 -0400
+Received: by zproxy.gmail.com with SMTP id 18so289736nzp
+	for <linux-lvm@redhat.com>; Wed, 22 Jun 2005 04:37:13 -0700 (PDT)
+Message-ID: <3cd4d99305062204374db9549@mail.gmail.com>
+Date: Wed, 22 Jun 2005 21:37:13 +1000
+From: Jeff Ewing <jeffiewing@gmail.com>
 Mime-Version: 1.0
 Content-Disposition: inline
-Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Transfer-Encoding: 8bit
+Subject: [linux-lvm] PV segments corrupted in vg1 : LVM corrupted
+Reply-To: Jeff Ewing <jeffiewing@gmail.com>,
+	LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -21,43 +24,43 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@redhat.com
 
-can someone unsubscribe this jerk, please?
+After removing some logical volumes (backup,etc) and extending home
+logical volume, data in the whole volume group (vg1) has become
+corrupted: Root logical volume is mounted at boot time, but am unable
+to mount any other logical volumes in that volume group (var,home etc)
+after reboot.
 
-L.
------ Forwarded message from Andrew Hilborne <cseoqs002@sneakemail.com> -----
+pvscan displays :  PV segment VG free_count mismatch: 0 != 4294966485
+  Internal error: PV segments corrupted in vg1.
+  No matching physical volumes found
 
-From: Andrew Hilborne <cseoqs002@sneakemail.com>
-Subject: Re: Re: [linux-lvm] LVM2 Volume and Volume group naming nomenclature
-To: bluca@comedia.it
-Date: Wed, 22 Jun 2005 11:11:14 +0100
+vgdisplay, vgchange,vgscan display similiar message.
 
-Thank you for your mail (Re: [linux-lvm] LVM2 Volume and Volume group naming nomenclature)
+Using 2 IDE drives, with 2 meta disks on each (mirrored across the drives).
+1 meta disk contains boot
+1 meta disk contains  LVM - 1 volume group, logical volumes for
+root,swap,var,usr,home
 
-Please excuse this intrusion. In order to combat high
-levels of spam we have had to take drastic measures.
-To confirm that your mail is legitimate, please click
-on this URL:   https://www.gradwell.com/u/?c=33fe27715630ed9d68a48f3b
-and your mail will be delivered within a few minutes.
+vgcfgrestore fails.
 
-Once you have verified this mail you will never
-have to verify any more mail from your address
-(...) to this address (fwd-gmail@hilborne.com)
+/etc/lvm/backup/vg1 contains (english) description of last known state of the 
+logical volumes.  
+/etc/lvmconf/vg1.conf  is a binary file (may be out of date)
+/etc/lvmtab.d/vg1 appears to be the same binary file above (may be out of date)
 
-You must confirm your mail within one week or else it
-will be deleted with no further notice to you.
+System is Debian Unstable, running lvm2,udev,device mapper, kernel
+2.6.8 compiled from Debian source. System appeared stable for 1 week
+after lvm changes, but failed on reboot.
 
-Thank you.
+1. What command can be used to recreate the vg1.conf binary file from
+the english description backup? (vg1.conf modification date is older
+than changes)
 
------ End forwarded message -----
+2. What is the VG free count and how can it be reset to 0?
 
--- 
-Luca Berra -- bluca@comedia.it
-        Communication Media & Services S.r.l.
- /"\
- \ /     ASCII RIBBON CAMPAIGN
-  X        AGAINST HTML MAIL
- / \
+3. What other tools available to fix broken lvm.
+
+Thank you
