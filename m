@@ -1,20 +1,23 @@
 Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j5MHUmu25884
-	for <linux-lvm@redhat.com>; Wed, 22 Jun 2005 13:30:48 -0400
-Received: from dcs.nac.uci.edu (dcs.nac.uci.edu [128.200.34.32])
-	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id j5MHUi5D023628
-	for <linux-lvm@redhat.com>; Wed, 22 Jun 2005 13:30:45 -0400
-Subject: Re: [linux-lvm] LVM is low
-From: Dan Stromberg <strombrg@dcs.nac.uci.edu>
-In-Reply-To: <42B96CFF.9050505@adsis.fr>
-References: <42B6ECDB.8050100@adsis.fr> <42B95A45.1080308@adsis.fr>
-	<42B96078.8090504@dsvr.net>  <42B96CFF.9050505@adsis.fr>
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature";
-	boundary="=-Apan8KDynQ+5LKtSO3RU"
-Date: Wed, 22 Jun 2005 10:30:37 -0700
-Message-Id: <1119461437.22853.171.camel@seki.nac.uci.edu>
-Mime-Version: 1.0
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j5MKniu24246
+	for <linux-lvm@redhat.com>; Wed, 22 Jun 2005 16:49:44 -0400
+Received: from omx3.sgi.com (omx3-ext.sgi.com [192.48.171.20])
+	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id j5MKngA8022495
+	for <linux-lvm@redhat.com>; Wed, 22 Jun 2005 16:49:42 -0400
+Received: from nodin.corp.sgi.com (nodin.corp.sgi.com [192.26.51.193])
+	by omx3.sgi.com (8.12.11/8.12.9/linux-outbound_gateway-1.1) with ESMTP
+	id j5MLNCg0009586
+	for <linux-lvm@redhat.com>; Wed, 22 Jun 2005 14:23:12 -0700
+Received: from [192.26.74.95] (janus.corp.sgi.com [192.26.74.95])
+	by nodin.corp.sgi.com (SGI-8.12.5/8.12.10/SGI_generic_relay-1.2) with
+	ESMTP id j5MKncbT87084781
+	for <linux-lvm@redhat.com>; Wed, 22 Jun 2005 13:49:39 -0700 (PDT)
+Message-ID: <42B9CEE2.5010200@deadhookers.org>
+Date: Wed, 22 Jun 2005 13:49:38 -0700
+From: Eric Wagar <eric@deadhookers.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] metadata inconsistancy
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -25,52 +28,23 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
+I am trying to create a lv with two pv's of about 750G.  After doing a 
+pvcreate, I am able to see both pv's but both are showing:
+  Allocatable           NO
 
---=-Apan8KDynQ+5LKtSO3RU
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: quoted-printable
+Afterwards, I try doing a vgcreate, and there are no errors, though when 
+doing a vgdisplay I see no vg's, and doing a pvdisplay shows the pv's as 
+not being allocated to any vg.
 
-On Wed, 2005-06-22 at 15:51 +0200, Gr=E9gory Duchatelet wrote:
-> Jonathan Sambrook a =E9crit :
->=20
-> >Gr=E9gory Duchatelet wrote:
-> > =20
-> >
-> >>Gr=E9gory Duchatelet a =E9crit :
-> >>
-> >>   =20
-> >>
-> >>>Hi list,
-> >>>
-> >>>I install a server with LVM partitions with ReiserFS, server runs
-> >>>OpenLDAP, Tomcat5, Apache2, Samba, etc....
-> >>>
-> >>>Comparing with native ReiserFS, LVM is really low
-> >>>     =20
-> >>>
-> >
-> >Could you try explaining "really low" some more?
-> > =20
-> >
-> I copy lots of files with scp, from an old server to this new one with=20
-> LVM. The system is unsuable during the copy, but not with a server with=20
-> standards partitions...
+The history of these drives is that they were in a vg of 1.5T, but I 
+removed it so I could learn the lvm commands and configs.  Now, I can't 
+get it back together.  I did read in TLDP (and pvcreate man page) that I 
+could dd the volume header, but that is not proving any additional progress.
 
-http://dcs.nac.uci.edu/~strombrg/slowdown/
+Am I missing some step that would let me progress to recreate the volume?
 
-
---=-Apan8KDynQ+5LKtSO3RU
-Content-Type: application/pgp-signature; name=signature.asc
-Content-Description: This is a digitally signed message part
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.1 (GNU/Linux)
-
-iD8DBQBCuaA9o0feVm00f/8RAsMnAJ93ZK2UoKLPIqvrJe++/swc77k6RQCeOhsM
-B96yaS4PUyMTuikBCKd8VmM=
-=k+F7
------END PGP SIGNATURE-----
-
---=-Apan8KDynQ+5LKtSO3RU--
+Thanks
+eric
