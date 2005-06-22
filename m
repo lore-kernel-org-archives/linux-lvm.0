@@ -1,18 +1,20 @@
-Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j5MCY4u27209
-	for <linux-lvm@redhat.com>; Wed, 22 Jun 2005 08:34:04 -0400
-Received: from lon-mail-3.gradwell.net (lon-mail-3.gradwell.net
-	[193.111.201.127])
-	by mx3.redhat.com (8.12.11/8.12.11) with ESMTP id j5MCXwtL004214
-	for <linux-lvm@redhat.com>; Wed, 22 Jun 2005 08:33:58 -0400
-Date: Wed, 22 Jun 2005 13:30:31 +0100
-From: Andrew Hilborne <cseoqs002@sneakemail.com>
-Subject: Re: [cseoqs002@sneakemail.com: Re: Re: [linux-lvm] LVM2 Volume and
-	Volume	group naming nomenclature]
-Message-ID: <58DBF05DE904F6B038A5C990@[192.168.101.2]>
+Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j5MCvWu00858
+	for <linux-lvm@redhat.com>; Wed, 22 Jun 2005 08:57:32 -0400
+Received: from pih-relay05.plus.net (pih-relay05.plus.net [212.159.14.132])
+	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id j5MCvK06018963
+	for <linux-lvm@redhat.com>; Wed, 22 Jun 2005 08:57:25 -0400
+Received: from [80.229.143.166] (helo=[172.20.10.219])
+	by pih-relay05.plus.net with esmtp (Exim) id 1Dl4n0-0008Bj-Cl
+	for linux-lvm@redhat.com; Wed, 22 Jun 2005 13:57:10 +0100
+Message-ID: <42B96078.8090504@dsvr.net>
+Date: Wed, 22 Jun 2005 13:58:32 +0100
+From: Jonathan Sambrook <jonathan@dsvr.net>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
+Subject: Re: [linux-lvm] LVM is low
+References: <42B6ECDB.8050100@adsis.fr> <42B95A45.1080308@adsis.fr>
+In-Reply-To: <42B95A45.1080308@adsis.fr>
+Content-Transfer-Encoding: 8bit
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -23,35 +25,30 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: linux-lvm@redhat.com, bluca@comedia.it
+Content-Type: text/plain; charset="utf-8"
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
---On 22 June 2005 12:21 +0200 "Luca Berra <bluca@comedia.it>" wrote:
->
-> can someone unsubscribe this jerk, please?
->
-> L.
+Gr�gory Duchatelet wrote:
+> Gr�gory Duchatelet a �crit :
+> 
+>> Hi list,
+>>
+>> I install a server with LVM partitions with ReiserFS, server runs
+>> OpenLDAP, Tomcat5, Apache2, Samba, etc....
+>>
+>> Comparing with native ReiserFS, LVM is really low
 
-My apologies. This was a result of an embarrassing mis-configuration on my 
-part. It's fixed now.
+Could you try explaining "really low" some more?
 
---
-Andrew Hilborne
---
+Regards,
+Jonathan
 
-> ----- Forwarded message from Andrew Hilborne <cseoqs002@sneakemail.com>
->
-> From: Andrew Hilborne <cseoqs002@sneakemail.com>
-> Subject: Re: Re: [linux-lvm] LVM2 Volume and Volume group naming
-> nomenclature
-> To: bluca@comedia.it
-> Date: Wed, 22 Jun 2005 11:11:14 +0100
->
-> Thank you for your mail (Re: [linux-lvm] LVM2 Volume and Volume group
-> naming nomenclature)
->
-> Please excuse this intrusion. In order to combat high
-> levels of spam we have had to take drastic measures.
-> To confirm that your mail is legitimate, please click
-> on this URL:   https://www.gradwell.com/u/?c=33fe27715630ed9d68a48f3b
-> and your mail will be delivered within a few minutes.
+>> .... how to tune it
+>> for best performance ?
+>>
+>> Thanks
+>>
+> please, help !
+> 
+> or any links to howtos or wiki or documentations ...
+> 
