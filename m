@@ -1,20 +1,16 @@
 Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j5NDqSu15276
-	for <linux-lvm@redhat.com>; Thu, 23 Jun 2005 09:52:28 -0400
-Received: from webmail.kaist.ac.kr (webmail.kaist.ac.kr [143.248.5.130])
-	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id j5NDqQ1f009451
-	for <linux-lvm@redhat.com>; Thu, 23 Jun 2005 09:52:27 -0400
-Received: from winxp (143.248.30.232 [143.248.30.232])
-	by webmail (WBlock.pst 3.4.89.1)
-	with ESMTP id <003801c577fa$c27abc40$e81ef88f@winxp>
-	for <linux-lvm@redhat.com>; Thu, 23 Jun 2005 22:55:35 +0900
-Message-ID: <003801c577fa$c27abc40$e81ef88f@winxp>
-From: "HYUN-CHUL KIM" <sundol@kaist.ac.kr>
-Date: Thu, 23 Jun 2005 22:52:13 +0900
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j5N0Uru08044
+	for <linux-lvm@redhat.com>; Wed, 22 Jun 2005 20:30:53 -0400
+Received: from twinlark.arctic.org (twinlark.arctic.org [207.7.145.18])
+	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id j5N0UpN6010816
+	for <linux-lvm@redhat.com>; Wed, 22 Jun 2005 20:30:52 -0400
+Date: Wed, 22 Jun 2005 17:30:49 -0700 (PDT)
+From: dean gaudet <dean@arctic.org>
+Subject: Re: [linux-lvm] lvextend
+In-Reply-To: <200506221716.00221.t-rigby@shaw.ca>
+Message-ID: <Pine.LNX.4.62.0506221728580.12395@twinlark.arctic.org>
+References: <200506221716.00221.t-rigby@shaw.ca>
 MIME-Version: 1.0
-Content-Type: multipart/alternative;
-	boundary="----=_NextPart_000_0035_01C57846.32567D60"
-Subject: [linux-lvm] how to change uuid of a PV?
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -25,75 +21,33 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: linux-lvm@redhat.com
+Content-Type: TEXT/PLAIN; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-This is a multi-part message in MIME format.
+you could do "pvdisplay /dev/hde" to find the number of extents... then 
+use "lvextend -l" instead of -L ...
 
-------=_NextPart_000_0035_01C57846.32567D60
-Content-Type: text/plain;
-	charset="ks_c_5601-1987"
-Content-Transfer-Encoding: base64
+-dean
 
-SG93IHRvIGNoYW5nZSBhIFBWIHV1aWQgaW4gTFZNPw0KDQpPbmUgYW1vbmcgdGhyZWUgaGFyZCBk
-aXNrcyBjb25zdGl0dXRpbmcgYSBMVk0gbG9naWNhbCB2b2x1bWUgaGFzIGZhaWxlZC4NCldoZW4g
-dHJ5aW5nIGJvb3Qgd2l0aG91dCB0aGUgYnJva2VuIGhhcmQgZGlzaywgZm9sbG93aW5nIGVycm9y
-IG1lc3NhZ2UgY29tZSBvdXQuDQpDb3VsZG4ndCBmaW5kIHV1aWQgd2l0aCAnYzNyN1N4LWFUcGQt
-SkhGcC1pVDNjLUZPaUstZzdKQy11ajEwVksnDQoNCkFuZCBJIGZvdW5kIGFub3RoZXIgUFYgdXVp
-ZCAnN0k3RjRTLXB6emUtZGdqci0wSEtQLWNjWDQtcUcxZC1TT3Uya2knIGZyb20gYSBuZXcgaGFy
-ZCBkaXNrLg0KDQpJIHRoaW5rIHRoZSBQViB1dWlkIGlzIHJlY29yZGVkIGluIHNvbWV3aGVyZSBv
-ZiBMVk0gY29uZmlnIHNvIHRoYXQgd2UgdHlwZWQgcHZkaXNwbGF5LCBpdCBjb21lcyBvdXQuDQpO
-b3csIEkgdGhpbmsgaWYgSSBjYW4gY2hhbmdlIHRoZSBQViB1dWlkIGZyb20gJ2MzcjdTeC0uLi4n
-IGludG8gJzdJN0Y0Uy0uLi4nIGluIExWTSwgSSBjYW4gbWFuYWdlIHRvIGJvb3QgYW5kIHRvIHJl
-Y292ZXIgZGF0YSBmcm9tIHRoZSB0d28gc3RpbGwtaGVhbHRoeSBoYXJkIGRpc2tzLg0KDQpIb3cg
-Y2FuIEkgY2hhbmdlIHRoZSBQViB1dWlkIGluZm9ybWF0aW9uIHJlY29yZGVkIGluIHRoZSBMVk0/
-IG9yIFdoZXJlIGFyZSB0aGUgUFYgdXVpZHMgcmVjb3JkZWQ/DQoNClNpbmNlcmVseSwNCg0KSHl1
-bi1DaHVsIEtpbQ0KDQpDb21wdXRhdGlvbmFsIENlbGwgQmlvbG9neSBMYWJvcmF0b3J5DQpEZXBh
-cnRtZW50IG9mIEJpb3N5c3RlbXMNCktvcmVhIEFkdmFuY2VkIEluc3RpdHV0ZSBvZiBTY2llbmNl
-IGFuZCBUZWNobm9sb2d5DQpZdXN1bmctR3UsIFRhZWpvbiAzMDUtMzMzDQpSZXB1YmxpYyBvZiBL
-b3JlYQ0KDQo=
+On Wed, 22 Jun 2005, Terry Rigby wrote:
 
-------=_NextPart_000_0035_01C57846.32567D60
-Content-Type: text/html;
-	charset="ks_c_5601-1987"
-Content-Transfer-Encoding: base64
-
-PCFET0NUWVBFIEhUTUwgUFVCTElDICItLy9XM0MvL0RURCBIVE1MIDQuMCBUcmFuc2l0aW9uYWwv
-L0VOIj4NCjxIVE1MPjxIRUFEPg0KPE1FVEEgaHR0cC1lcXVpdj1Db250ZW50LVR5cGUgY29udGVu
-dD0idGV4dC9odG1sOyBjaGFyc2V0PWtzX2NfNTYwMS0xOTg3Ij4NCjxNRVRBIGNvbnRlbnQ9Ik1T
-SFRNTCA2LjAwLjI5MDAuMjY2OCIgbmFtZT1HRU5FUkFUT1I+DQo8U1RZTEU+PC9TVFlMRT4NCjwv
-SEVBRD4NCjxCT0RZIGJnQ29sb3I9I2ZmZmZmZj4NCjxESVY+PEZPTlQgZmFjZT0iVGltZXMgTmV3
-IFJvbWFuIj48Rk9OVCBjb2xvcj0jMDAwMGZmPkhvdyB0byBjaGFuZ2UgYSBQViANCnV1aWQ8L0ZP
-TlQ+IGluIExWTT88L0ZPTlQ+PC9ESVY+DQo8RElWPjxGT05UIGZhY2U9IlRpbWVzIE5ldyBSb21h
-biI+PC9GT05UPiZuYnNwOzwvRElWPg0KPERJVj48Rk9OVCBmYWNlPSJUaW1lcyBOZXcgUm9tYW4i
-Pk9uZSBhbW9uZyB0aHJlZSBoYXJkIGRpc2tzIGNvbnN0aXR1dGluZyBhIExWTSANCmxvZ2ljYWwg
-dm9sdW1lIGhhcyBmYWlsZWQuPEJSPldoZW4gdHJ5aW5nIGJvb3Qgd2l0aG91dCB0aGUgYnJva2Vu
-IGhhcmQgZGlzaywgDQpmb2xsb3dpbmcgZXJyb3IgbWVzc2FnZSBjb21lIG91dC48QlI+Q291bGRu
-J3QgZmluZCB1dWlkIHdpdGggDQonYzNyN1N4LWFUcGQtSkhGcC1pVDNjLUZPaUstZzdKQy11ajEw
-VksnPC9GT05UPjwvRElWPg0KPERJVj48Rk9OVCBmYWNlPSJUaW1lcyBOZXcgUm9tYW4iPjwvRk9O
-VD4mbmJzcDs8L0RJVj4NCjxESVY+PEZPTlQgZmFjZT0iVGltZXMgTmV3IFJvbWFuIj5BbmQgSSBm
-b3VuZCBhbm90aGVyIFBWIHV1aWQgDQonN0k3RjRTLXB6emUtZGdqci0wSEtQLWNjWDQtcUcxZC1T
-T3Uya2knIGZyb20gYSBuZXcgaGFyZCBkaXNrLjwvRk9OVD48L0RJVj4NCjxESVY+PEZPTlQgZmFj
-ZT0iVGltZXMgTmV3IFJvbWFuIj48L0ZPTlQ+Jm5ic3A7PC9ESVY+DQo8RElWPjxGT05UIGZhY2U9
-IlRpbWVzIE5ldyBSb21hbiI+SSB0aGluayB0aGUgUFYgdXVpZCBpcyByZWNvcmRlZCBpbiBzb21l
-d2hlcmUgDQpvZiBMVk0gY29uZmlnIHNvIHRoYXQgd2UgdHlwZWQgcHZkaXNwbGF5LCBpdCBjb21l
-cyBvdXQuPEJSPk5vdywgSSB0aGluayBpZiBJIGNhbiANCmNoYW5nZSB0aGUgUFYgdXVpZCBmcm9t
-ICdjM3I3U3gtLi4uJyBpbnRvICc3STdGNFMtLi4uJyBpbiBMVk0sIEkgY2FuIG1hbmFnZSB0byAN
-CmJvb3QgYW5kIHRvIHJlY292ZXIgZGF0YSBmcm9tIHRoZSB0d28gc3RpbGwtaGVhbHRoeSBoYXJk
-IGRpc2tzLjwvRk9OVD48L0RJVj4NCjxESVY+PEZPTlQgZmFjZT0iVGltZXMgTmV3IFJvbWFuIj48
-L0ZPTlQ+Jm5ic3A7PC9ESVY+DQo8RElWPjxGT05UIGZhY2U9IlRpbWVzIE5ldyBSb21hbiI+SG93
-IGNhbiBJIGNoYW5nZSB0aGUgUFYgdXVpZCBpbmZvcm1hdGlvbiANCnJlY29yZGVkIGluIHRoZSBM
-Vk0/IG9yIFdoZXJlIGFyZSB0aGUgUFYgdXVpZHMgcmVjb3JkZWQ/PC9GT05UPjwvRElWPg0KPERJ
-Vj48Rk9OVCBmYWNlPSJUaW1lcyBOZXcgUm9tYW4iPjwvRk9OVD4mbmJzcDs8L0RJVj4NCjxESVY+
-PEZPTlQgZmFjZT0iVGltZXMgTmV3IFJvbWFuIj5TaW5jZXJlbHksPC9GT05UPjwvRElWPg0KPERJ
-Vj48Rk9OVCBmYWNlPSJUaW1lcyBOZXcgUm9tYW4iPjwvRk9OVD4mbmJzcDs8L0RJVj4NCjxESVY+
-PEZPTlQgZmFjZT0iVGltZXMgTmV3IFJvbWFuIj5IeXVuLUNodWwgS2ltPC9GT05UPjwvRElWPg0K
-PERJVj48Rk9OVCBmYWNlPSJUaW1lcyBOZXcgUm9tYW4iPjwvRk9OVD4mbmJzcDs8L0RJVj4NCjxE
-SVY+PEZPTlQgZmFjZT0iVGltZXMgTmV3IFJvbWFuIj5Db21wdXRhdGlvbmFsIENlbGwgQmlvbG9n
-eSANCkxhYm9yYXRvcnk8QlI+RGVwYXJ0bWVudCBvZiBCaW9zeXN0ZW1zPEJSPktvcmVhIEFkdmFu
-Y2VkIEluc3RpdHV0ZSBvZiBTY2llbmNlIA0KYW5kIFRlY2hub2xvZ3k8QlI+WXVzdW5nLUd1LCBU
-YWVqb24gMzA1LTMzMzxCUj5SZXB1YmxpYyBvZiBLb3JlYTwvRk9OVD48L0RJVj4NCjxESVY+PEZP
-TlQgZmFjZT0iVGltZXMgTmV3IFJvbWFuIj48L0ZPTlQ+Jm5ic3A7PC9ESVY+DQo8RElWPjxGT05U
-IGZhY2U9IlRpbWVzIE5ldyBSb21hbiI+PC9GT05UPiZuYnNwOzwvRElWPjwvQk9EWT48L0hUTUw+
-DQo=
-
-------=_NextPart_000_0035_01C57846.32567D60--
+> I am trying to add a full hard drive to my LV by following the directions at 
+> TLDP.org.  It says there to use lvextend -L +XXG where XX is the size in GB 
+> you want to add to the LV.  Is there a more simple way to just add a whole 
+> hard drive ie: /dev/hde
+> 
+> It seems like a pain to have to manually figure out the size of the hard drive 
+> then add it using lvextend -L +200GB for a 200GB hard drive especially since 
+> we all know its not actually 200GB.
+> 
+> Thanks for your response.
+> 
+> Terry Rigby
+> 
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@redhat.com
+> https://www.redhat.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+> 
