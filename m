@@ -1,22 +1,18 @@
-Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j5N138u14270
-	for <linux-lvm@redhat.com>; Wed, 22 Jun 2005 21:03:08 -0400
-Received: from zproxy.gmail.com (zproxy.gmail.com [64.233.162.206])
-	by mx3.redhat.com (8.12.11/8.12.11) with ESMTP id j5N1339r008570
-	for <linux-lvm@redhat.com>; Wed, 22 Jun 2005 21:03:03 -0400
-Received: by zproxy.gmail.com with SMTP id 9so710926nzo
-	for <linux-lvm@redhat.com>; Wed, 22 Jun 2005 18:02:53 -0700 (PDT)
-Message-ID: <3cd4d99305062218025d6c3059@mail.gmail.com>
-Date: Thu, 23 Jun 2005 11:02:52 +1000
-From: Jeff Ewing <jeffiewing@gmail.com>
-In-Reply-To: <20050622141522.GD22056@null.msp.redhat.com>
+Received: from sboyd.brisbane.redhat.com
+	(IDENT:U2FsdGVkX1+yVdrK65JtZukOwLTpnsJzULHZwr5mtyw@sboyd.brisbane.redhat.com
+	[172.16.44.120])
+	by pobox.brisbane.redhat.com (8.12.8/8.12.8) with ESMTP id
+	j5N18LwU008250
+	for <linux-lvm@redhat.com>; Thu, 23 Jun 2005 11:08:21 +1000
+Subject: Re: [linux-lvm] lvextend
+From: Sean Boyd <sboyd@redhat.com>
+In-Reply-To: <200506221716.00221.t-rigby@shaw.ca>
+References: <200506221716.00221.t-rigby@shaw.ca>
+Date: Thu, 23 Jun 2005 11:08:21 +1000
+Message-Id: <1119488901.4305.27.camel@sboyd.brisbane.redhat.com>
 Mime-Version: 1.0
-Content-Disposition: inline
-References: <3cd4d99305062204374db9549@mail.gmail.com>
-	<20050622141522.GD22056@null.msp.redhat.com>
-Content-Transfer-Encoding: 8bit
-Subject: [linux-lvm] Re: PV segments corrupted in vg1 : LVM corrupted
-Reply-To: Jeff Ewing <jeffiewing@gmail.com>,
+Content-Transfer-Encoding: 7bit
+Reply-To: sboyd@redhat.com,
 	LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -29,25 +25,31 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 To: LVM general discussion and development <linux-lvm@redhat.com>
-Cc: AJ Lewis <alewis@redhat.com>
 
-The server was running kernel 2.4.27+lvm1 until one month ago. Was upgraded
-to 2.6.8+lvm2 and running and rebooted several times since.
+On Wed, 2005-06-22 at 17:16 -0700, Terry Rigby wrote:
+> I am trying to add a full hard drive to my LV by following the directions at 
+> TLDP.org.  It says there to use lvextend -L +XXG where XX is the size in GB 
+> you want to add to the LV.  Is there a more simple way to just add a whole 
+> hard drive ie: /dev/hde
 > 
-> This is an lvm1 file - all lvm2 files are in /etc/lvm/
->  
-The output from "vgcfgrestore vg1" is 
-  PV /dev/md1 is a different format (seqno lvm1)
-  Restore failed.
+> It seems like a pain to have to manually figure out the size of the hard drive 
+> then add it using lvextend -L +200GB for a 200GB hard drive especially since 
+> we all know its not actually 200GB.
 
-> > 2. What is the VG free count and how can it be reset to 0?
-> > 
-> > 3. What other tools available to fix broken lvm.
-> 
-> You could try going back to an older version of the lvm2 tools and see if
-> it fixes things.
-Without /var it is a little tricky to downgrade the packages(package
-lists etc are missing). Perhaps install on another server and copy
-over (ssh fails but nfs is working).
+You could increase the LV by using the remaining free physical extents
+(PE).
 
-Thank you
+To check how many PE's are available after extending the VG run
+vgdisplay and check "Free  PE / Size". The first value will give you the
+total number of PE's available.
+
+Then extend your LV using the -l switch to specify PE's rather than
+having to determine a size using the -L switch.
+
+For example "lvextend -l +25 /dev/volGroup00/myLVM" will extend myLVM by
+25 PE's.
+
+Of course you then need to extend to file system to be able to use this
+extra space :)
+
+--Sean
