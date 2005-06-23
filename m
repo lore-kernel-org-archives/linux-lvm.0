@@ -1,21 +1,21 @@
 Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j5NCYAu19742
-	for <linux-lvm@redhat.com>; Thu, 23 Jun 2005 08:34:10 -0400
-Received: from leviathan.ele.uri.edu (leviathan.ele.uri.edu [131.128.51.64])
-	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id j5NCY94j010037
-	for <linux-lvm@redhat.com>; Thu, 23 Jun 2005 08:34:10 -0400
-Subject: Re: [linux-lvm] Logical volume > 2TB question
-From: Ming Zhang <mingz@ele.uri.edu>
-In-Reply-To: <200506230338.j5N3cAsI002588@mx3.redhat.com>
-References: <200506230338.j5N3cAsI002588@mx3.redhat.com>
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature";
-	boundary="=-WpPdixn73EEVPv32XH+/"
-Date: Thu, 23 Jun 2005 08:34:03 -0400
-Message-Id: <1119530043.5503.4.camel@localhost.localdomain>
-Mime-Version: 1.0
-Reply-To: mingz@ele.uri.edu,
-	LVM general discussion and development <linux-lvm@redhat.com>
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j5NDqSu15276
+	for <linux-lvm@redhat.com>; Thu, 23 Jun 2005 09:52:28 -0400
+Received: from webmail.kaist.ac.kr (webmail.kaist.ac.kr [143.248.5.130])
+	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id j5NDqQ1f009451
+	for <linux-lvm@redhat.com>; Thu, 23 Jun 2005 09:52:27 -0400
+Received: from winxp (143.248.30.232 [143.248.30.232])
+	by webmail (WBlock.pst 3.4.89.1)
+	with ESMTP id <003801c577fa$c27abc40$e81ef88f@winxp>
+	for <linux-lvm@redhat.com>; Thu, 23 Jun 2005 22:55:35 +0900
+Message-ID: <003801c577fa$c27abc40$e81ef88f@winxp>
+From: "HYUN-CHUL KIM" <sundol@kaist.ac.kr>
+Date: Thu, 23 Jun 2005 22:52:13 +0900
+MIME-Version: 1.0
+Content-Type: multipart/alternative;
+	boundary="----=_NextPart_000_0035_01C57846.32567D60"
+Subject: [linux-lvm] how to change uuid of a PV?
+Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -25,55 +25,75 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: LVM general discussion and development <linux-lvm@redhat.com>
+To: linux-lvm@redhat.com
 
+This is a multi-part message in MIME format.
 
---=-WpPdixn73EEVPv32XH+/
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
+------=_NextPart_000_0035_01C57846.32567D60
+Content-Type: text/plain;
+	charset="ks_c_5601-1987"
+Content-Transfer-Encoding: base64
 
-On Thu, 2005-06-23 at 11:38 +0800, Felix Chu wrote:
-> Hi all,
->=20
-assumed u use iet as target. it support >2TB device.
+SG93IHRvIGNoYW5nZSBhIFBWIHV1aWQgaW4gTFZNPw0KDQpPbmUgYW1vbmcgdGhyZWUgaGFyZCBk
+aXNrcyBjb25zdGl0dXRpbmcgYSBMVk0gbG9naWNhbCB2b2x1bWUgaGFzIGZhaWxlZC4NCldoZW4g
+dHJ5aW5nIGJvb3Qgd2l0aG91dCB0aGUgYnJva2VuIGhhcmQgZGlzaywgZm9sbG93aW5nIGVycm9y
+IG1lc3NhZ2UgY29tZSBvdXQuDQpDb3VsZG4ndCBmaW5kIHV1aWQgd2l0aCAnYzNyN1N4LWFUcGQt
+SkhGcC1pVDNjLUZPaUstZzdKQy11ajEwVksnDQoNCkFuZCBJIGZvdW5kIGFub3RoZXIgUFYgdXVp
+ZCAnN0k3RjRTLXB6emUtZGdqci0wSEtQLWNjWDQtcUcxZC1TT3Uya2knIGZyb20gYSBuZXcgaGFy
+ZCBkaXNrLg0KDQpJIHRoaW5rIHRoZSBQViB1dWlkIGlzIHJlY29yZGVkIGluIHNvbWV3aGVyZSBv
+ZiBMVk0gY29uZmlnIHNvIHRoYXQgd2UgdHlwZWQgcHZkaXNwbGF5LCBpdCBjb21lcyBvdXQuDQpO
+b3csIEkgdGhpbmsgaWYgSSBjYW4gY2hhbmdlIHRoZSBQViB1dWlkIGZyb20gJ2MzcjdTeC0uLi4n
+IGludG8gJzdJN0Y0Uy0uLi4nIGluIExWTSwgSSBjYW4gbWFuYWdlIHRvIGJvb3QgYW5kIHRvIHJl
+Y292ZXIgZGF0YSBmcm9tIHRoZSB0d28gc3RpbGwtaGVhbHRoeSBoYXJkIGRpc2tzLg0KDQpIb3cg
+Y2FuIEkgY2hhbmdlIHRoZSBQViB1dWlkIGluZm9ybWF0aW9uIHJlY29yZGVkIGluIHRoZSBMVk0/
+IG9yIFdoZXJlIGFyZSB0aGUgUFYgdXVpZHMgcmVjb3JkZWQ/DQoNClNpbmNlcmVseSwNCg0KSHl1
+bi1DaHVsIEtpbQ0KDQpDb21wdXRhdGlvbmFsIENlbGwgQmlvbG9neSBMYWJvcmF0b3J5DQpEZXBh
+cnRtZW50IG9mIEJpb3N5c3RlbXMNCktvcmVhIEFkdmFuY2VkIEluc3RpdHV0ZSBvZiBTY2llbmNl
+IGFuZCBUZWNobm9sb2d5DQpZdXN1bmctR3UsIFRhZWpvbiAzMDUtMzMzDQpSZXB1YmxpYyBvZiBL
+b3JlYQ0KDQo=
 
-> I have a 4TB storage on iscsi target(Linux). Volume group can show 4TB. W=
-hen
-> I create a 3TB logical volume, I find that Windows initiator cannot use t=
-his
-for windows, that is windows problem.
+------=_NextPart_000_0035_01C57846.32567D60
+Content-Type: text/html;
+	charset="ks_c_5601-1987"
+Content-Transfer-Encoding: base64
 
-> 3TB storage. If I use Linux initiator, it can connect but only 2TB is
-> available.=20
-for linux, which iscsi initiator u use? check the source code and change
-the max cdb len to 16 instead of 12, which is default.
+PCFET0NUWVBFIEhUTUwgUFVCTElDICItLy9XM0MvL0RURCBIVE1MIDQuMCBUcmFuc2l0aW9uYWwv
+L0VOIj4NCjxIVE1MPjxIRUFEPg0KPE1FVEEgaHR0cC1lcXVpdj1Db250ZW50LVR5cGUgY29udGVu
+dD0idGV4dC9odG1sOyBjaGFyc2V0PWtzX2NfNTYwMS0xOTg3Ij4NCjxNRVRBIGNvbnRlbnQ9Ik1T
+SFRNTCA2LjAwLjI5MDAuMjY2OCIgbmFtZT1HRU5FUkFUT1I+DQo8U1RZTEU+PC9TVFlMRT4NCjwv
+SEVBRD4NCjxCT0RZIGJnQ29sb3I9I2ZmZmZmZj4NCjxESVY+PEZPTlQgZmFjZT0iVGltZXMgTmV3
+IFJvbWFuIj48Rk9OVCBjb2xvcj0jMDAwMGZmPkhvdyB0byBjaGFuZ2UgYSBQViANCnV1aWQ8L0ZP
+TlQ+IGluIExWTT88L0ZPTlQ+PC9ESVY+DQo8RElWPjxGT05UIGZhY2U9IlRpbWVzIE5ldyBSb21h
+biI+PC9GT05UPiZuYnNwOzwvRElWPg0KPERJVj48Rk9OVCBmYWNlPSJUaW1lcyBOZXcgUm9tYW4i
+Pk9uZSBhbW9uZyB0aHJlZSBoYXJkIGRpc2tzIGNvbnN0aXR1dGluZyBhIExWTSANCmxvZ2ljYWwg
+dm9sdW1lIGhhcyBmYWlsZWQuPEJSPldoZW4gdHJ5aW5nIGJvb3Qgd2l0aG91dCB0aGUgYnJva2Vu
+IGhhcmQgZGlzaywgDQpmb2xsb3dpbmcgZXJyb3IgbWVzc2FnZSBjb21lIG91dC48QlI+Q291bGRu
+J3QgZmluZCB1dWlkIHdpdGggDQonYzNyN1N4LWFUcGQtSkhGcC1pVDNjLUZPaUstZzdKQy11ajEw
+VksnPC9GT05UPjwvRElWPg0KPERJVj48Rk9OVCBmYWNlPSJUaW1lcyBOZXcgUm9tYW4iPjwvRk9O
+VD4mbmJzcDs8L0RJVj4NCjxESVY+PEZPTlQgZmFjZT0iVGltZXMgTmV3IFJvbWFuIj5BbmQgSSBm
+b3VuZCBhbm90aGVyIFBWIHV1aWQgDQonN0k3RjRTLXB6emUtZGdqci0wSEtQLWNjWDQtcUcxZC1T
+T3Uya2knIGZyb20gYSBuZXcgaGFyZCBkaXNrLjwvRk9OVD48L0RJVj4NCjxESVY+PEZPTlQgZmFj
+ZT0iVGltZXMgTmV3IFJvbWFuIj48L0ZPTlQ+Jm5ic3A7PC9ESVY+DQo8RElWPjxGT05UIGZhY2U9
+IlRpbWVzIE5ldyBSb21hbiI+SSB0aGluayB0aGUgUFYgdXVpZCBpcyByZWNvcmRlZCBpbiBzb21l
+d2hlcmUgDQpvZiBMVk0gY29uZmlnIHNvIHRoYXQgd2UgdHlwZWQgcHZkaXNwbGF5LCBpdCBjb21l
+cyBvdXQuPEJSPk5vdywgSSB0aGluayBpZiBJIGNhbiANCmNoYW5nZSB0aGUgUFYgdXVpZCBmcm9t
+ICdjM3I3U3gtLi4uJyBpbnRvICc3STdGNFMtLi4uJyBpbiBMVk0sIEkgY2FuIG1hbmFnZSB0byAN
+CmJvb3QgYW5kIHRvIHJlY292ZXIgZGF0YSBmcm9tIHRoZSB0d28gc3RpbGwtaGVhbHRoeSBoYXJk
+IGRpc2tzLjwvRk9OVD48L0RJVj4NCjxESVY+PEZPTlQgZmFjZT0iVGltZXMgTmV3IFJvbWFuIj48
+L0ZPTlQ+Jm5ic3A7PC9ESVY+DQo8RElWPjxGT05UIGZhY2U9IlRpbWVzIE5ldyBSb21hbiI+SG93
+IGNhbiBJIGNoYW5nZSB0aGUgUFYgdXVpZCBpbmZvcm1hdGlvbiANCnJlY29yZGVkIGluIHRoZSBM
+Vk0/IG9yIFdoZXJlIGFyZSB0aGUgUFYgdXVpZHMgcmVjb3JkZWQ/PC9GT05UPjwvRElWPg0KPERJ
+Vj48Rk9OVCBmYWNlPSJUaW1lcyBOZXcgUm9tYW4iPjwvRk9OVD4mbmJzcDs8L0RJVj4NCjxESVY+
+PEZPTlQgZmFjZT0iVGltZXMgTmV3IFJvbWFuIj5TaW5jZXJlbHksPC9GT05UPjwvRElWPg0KPERJ
+Vj48Rk9OVCBmYWNlPSJUaW1lcyBOZXcgUm9tYW4iPjwvRk9OVD4mbmJzcDs8L0RJVj4NCjxESVY+
+PEZPTlQgZmFjZT0iVGltZXMgTmV3IFJvbWFuIj5IeXVuLUNodWwgS2ltPC9GT05UPjwvRElWPg0K
+PERJVj48Rk9OVCBmYWNlPSJUaW1lcyBOZXcgUm9tYW4iPjwvRk9OVD4mbmJzcDs8L0RJVj4NCjxE
+SVY+PEZPTlQgZmFjZT0iVGltZXMgTmV3IFJvbWFuIj5Db21wdXRhdGlvbmFsIENlbGwgQmlvbG9n
+eSANCkxhYm9yYXRvcnk8QlI+RGVwYXJ0bWVudCBvZiBCaW9zeXN0ZW1zPEJSPktvcmVhIEFkdmFu
+Y2VkIEluc3RpdHV0ZSBvZiBTY2llbmNlIA0KYW5kIFRlY2hub2xvZ3k8QlI+WXVzdW5nLUd1LCBU
+YWVqb24gMzA1LTMzMzxCUj5SZXB1YmxpYyBvZiBLb3JlYTwvRk9OVD48L0RJVj4NCjxESVY+PEZP
+TlQgZmFjZT0iVGltZXMgTmV3IFJvbWFuIj48L0ZPTlQ+Jm5ic3A7PC9ESVY+DQo8RElWPjxGT05U
+IGZhY2U9IlRpbWVzIE5ldyBSb21hbiI+PC9GT05UPiZuYnNwOzwvRElWPjwvQk9EWT48L0hUTUw+
+DQo=
 
->=20
-> I know that there is limitation of LV with 2TB max. Any method to solve i=
-t?
-what u mean? u already create a 3TB lv...
-
-> I am using Fedora core 3 with kernel 2.6.11.12.
->=20
-> Thanks,
-> Felix
->=20
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
-
---=-WpPdixn73EEVPv32XH+/
-Content-Type: application/pgp-signature; name=signature.asc
-Content-Description: This is a digitally signed message part
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.2.6 (GNU/Linux)
-
-iD8DBQBCuqw7SYbkL5BnVYoRAquBAJ0d+gzRgrbJ7bHSoaCM7Q1B6Zbv/wCfU+Gx
-TitRq8eBFOwbWncU9Nrr32E=
-=+hNe
------END PGP SIGNATURE-----
-
---=-WpPdixn73EEVPv32XH+/--
+------=_NextPart_000_0035_01C57846.32567D60--
