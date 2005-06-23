@@ -1,20 +1,18 @@
-Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j5NHqcu02723
-	for <linux-lvm@redhat.com>; Thu, 23 Jun 2005 13:52:38 -0400
-Received: from leviathan.ele.uri.edu (leviathan.ele.uri.edu [131.128.51.64])
-	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id j5NHqbsJ003562
-	for <linux-lvm@redhat.com>; Thu, 23 Jun 2005 13:52:37 -0400
-Subject: RE: [linux-lvm] Logical volume > 2TB question
-From: Ming Zhang <mingz@ele.uri.edu>
-In-Reply-To: <200506231716.j5NHG49e012592@leviathan.ele.uri.edu>
-References: <200506231716.j5NHG49e012592@leviathan.ele.uri.edu>
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature";
-	boundary="=-7Y3aETuFkseftEjBm35J"
-Date: Thu, 23 Jun 2005 13:52:30 -0400
-Message-Id: <1119549150.5503.70.camel@localhost.localdomain>
+Received: from sboyd.brisbane.redhat.com
+	(IDENT:U2FsdGVkX1/g4/IWmEYTMc16LlfpaWXFp0qPd1jSNBo@sboyd.brisbane.redhat.com
+	[172.16.44.120])
+	by pobox.brisbane.redhat.com (8.12.8/8.12.8) with ESMTP id
+	j5NMnhmG028810
+	for <linux-lvm@redhat.com>; Fri, 24 Jun 2005 08:49:43 +1000
+Subject: Re: [linux-lvm] how to change uuid of a PV?
+From: Sean Boyd <sboyd@redhat.com>
+In-Reply-To: <003801c577fa$c27abc40$e81ef88f@winxp>
+References: <003801c577fa$c27abc40$e81ef88f@winxp>
+Date: Fri, 24 Jun 2005 08:49:43 +1000
+Message-Id: <1119566983.4305.66.camel@sboyd.brisbane.redhat.com>
 Mime-Version: 1.0
-Reply-To: mingz@ele.uri.edu,
+Content-Transfer-Encoding: 7bit
+Reply-To: sboyd@redhat.com,
 	LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -25,83 +23,44 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: Felix Chu <felixchu@powernetix.com>
-Cc: 'LVM general discussion and development' <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="us-ascii"
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
+On Thu, 2005-06-23 at 22:52 +0900, HYUN-CHUL KIM wrote:
+> How to change a PV uuid in LVM?
+>  
+> One among three hard disks constituting a LVM logical volume has
+> failed.
+> When trying boot without the broken hard disk, following error message
+> come out.
+> Couldn't find uuid with 'c3r7Sx-aTpd-JHFp-iT3c-FOiK-g7JC-uj10VK'
+>  
+> And I found another PV uuid '7I7F4S-pzze-dgjr-0HKP-ccX4-qG1d-SOu2ki'
+> from a new hard disk.
+>  
+> I think the PV uuid is recorded in somewhere of LVM config so that we
+> typed pvdisplay, it comes out.
+> Now, I think if I can change the PV uuid from 'c3r7Sx-...' into
+> '7I7F4S-...' in LVM, I can manage to boot and to recover data from the
+> two still-healthy hard disks.
+>  
+> How can I change the PV uuid information recorded in the LVM? or Where
+> are the PV uuids recorded?
 
---=-7Y3aETuFkseftEjBm35J
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
+The man pages explain what needs to be done.
 
-On Fri, 2005-06-24 at 01:16 +0800, Felix Chu wrote:
-> I am using IETD, linux-iscsi initiator.
->=20
-> By "lvdisplay" , it shows that LV 3TB was created successfully. Is that m=
-ean
-> the LVM can support 3TB?
->=20
-yes
+You need to make sure you have a backup file of your VG config prior to
+the disk failure. eg: /etc/lvm/backup/volGroup00
 
-> By the way, what is the mean of "max cdb len" ? also what is the meaning =
-of
-> "12"? Which file I should change if I use "linux-iscsi" initiator?
->=20
-linux-iscsi code version ?
+"vgdisplay --partial --verbose" to show the UUID's of PV's that are no
+longer preset
 
+"pvcreate --restorefile filename --uuid uuid <device>" to restore the
+PV.
 
-> Thanks.
->=20
-> -----Original Message-----
-> From: linux-lvm-bounces@redhat.com [mailto:linux-lvm-bounces@redhat.com] =
-On
-> Behalf Of Ming Zhang
-> Sent: Thursday, June 23, 2005 8:34 PM
-> To: LVM general discussion and development
-> Subject: Re: [linux-lvm] Logical volume > 2TB question
->=20
-> On Thu, 2005-06-23 at 11:38 +0800, Felix Chu wrote:
-> > Hi all,
-> >=20
-> assumed u use iet as target. it support >2TB device.
->=20
-> > I have a 4TB storage on iscsi target(Linux). Volume group can show 4TB.
-> When
-> > I create a 3TB logical volume, I find that Windows initiator cannot use
-> this
-> for windows, that is windows problem.
->=20
-> > 3TB storage. If I use Linux initiator, it can connect but only 2TB is
-> > available.=20
-> for linux, which iscsi initiator u use? check the source code and change
-> the max cdb len to 16 instead of 12, which is default.
->=20
-> >=20
-> > I know that there is limitation of LV with 2TB max. Any method to solve
-> it?
-> what u mean? u already create a 3TB lv...
->=20
-> > I am using Fedora core 3 with kernel 2.6.11.12.
-> >=20
-> > Thanks,
-> > Felix
-> >=20
-> > _______________________________________________
-> > linux-lvm mailing list
-> > linux-lvm@redhat.com
-> > https://www.redhat.com/mailman/listinfo/linux-lvm
-> > read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
->=20
+filename = /etc/lvm/backup/volGroup00
+uuid = the uuid of the PV that failed
 
---=-7Y3aETuFkseftEjBm35J
-Content-Type: application/pgp-signature; name=signature.asc
-Content-Description: This is a digitally signed message part
+"vgcfgrestore --file filename <volGroupName>" to restore the VG metadata
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.2.6 (GNU/Linux)
-
-iD8DBQBCuvbeSYbkL5BnVYoRAngFAKCBPwtPysYaNashqavPkwYLG+8jVQCffqmm
-Mp8e4wkBcwrxJSmttlAxbE4=
-=3HvD
------END PGP SIGNATURE-----
-
---=-7Y3aETuFkseftEjBm35J--
+--Sean
