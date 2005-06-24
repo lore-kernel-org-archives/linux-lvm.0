@@ -1,18 +1,24 @@
-Received: from sboyd.brisbane.redhat.com
-	(IDENT:U2FsdGVkX1/g4/IWmEYTMc16LlfpaWXFp0qPd1jSNBo@sboyd.brisbane.redhat.com
-	[172.16.44.120])
-	by pobox.brisbane.redhat.com (8.12.8/8.12.8) with ESMTP id
-	j5NMnhmG028810
-	for <linux-lvm@redhat.com>; Fri, 24 Jun 2005 08:49:43 +1000
-Subject: Re: [linux-lvm] how to change uuid of a PV?
-From: Sean Boyd <sboyd@redhat.com>
-In-Reply-To: <003801c577fa$c27abc40$e81ef88f@winxp>
-References: <003801c577fa$c27abc40$e81ef88f@winxp>
-Date: Fri, 24 Jun 2005 08:49:43 +1000
-Message-Id: <1119566983.4305.66.camel@sboyd.brisbane.redhat.com>
+Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j5O22Gu28585
+	for <linux-lvm@redhat.com>; Thu, 23 Jun 2005 22:02:16 -0400
+Received: from zproxy.gmail.com (zproxy.gmail.com [64.233.162.192])
+	by mx3.redhat.com (8.12.11/8.12.11) with ESMTP id j5O228hq026530
+	for <linux-lvm@redhat.com>; Thu, 23 Jun 2005 22:02:08 -0400
+Received: by zproxy.gmail.com with SMTP id 16so77464nzp
+	for <linux-lvm@redhat.com>; Thu, 23 Jun 2005 19:02:03 -0700 (PDT)
+Message-ID: <3cd4d9930506231902692daa15@mail.gmail.com>
+Date: Fri, 24 Jun 2005 12:02:03 +1000
+From: Jeff Ewing <jeffiewing@gmail.com>
+In-Reply-To: <20050623081125.GB4195@agk.surrey.redhat.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Reply-To: sboyd@redhat.com,
+Content-Disposition: inline
+References: <3cd4d99305062204374db9549@mail.gmail.com>
+	<20050622141522.GD22056@null.msp.redhat.com>
+	<3cd4d99305062218025d6c3059@mail.gmail.com>
+	<20050623081125.GB4195@agk.surrey.redhat.com>
+Content-Transfer-Encoding: 8bit
+Subject: [linux-lvm] Re: PV segments corrupted in vg1 : LVM corrupted
+Reply-To: Jeff Ewing <jeffiewing@gmail.com>,
 	LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -26,41 +32,32 @@ List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-On Thu, 2005-06-23 at 22:52 +0900, HYUN-CHUL KIM wrote:
-> How to change a PV uuid in LVM?
->  
-> One among three hard disks constituting a LVM logical volume has
-> failed.
-> When trying boot without the broken hard disk, following error message
-> come out.
-> Couldn't find uuid with 'c3r7Sx-aTpd-JHFp-iT3c-FOiK-g7JC-uj10VK'
->  
-> And I found another PV uuid '7I7F4S-pzze-dgjr-0HKP-ccX4-qG1d-SOu2ki'
-> from a new hard disk.
->  
-> I think the PV uuid is recorded in somewhere of LVM config so that we
-> typed pvdisplay, it comes out.
-> Now, I think if I can change the PV uuid from 'c3r7Sx-...' into
-> '7I7F4S-...' in LVM, I can manage to boot and to recover data from the
-> two still-healthy hard disks.
->  
-> How can I change the PV uuid information recorded in the LVM? or Where
-> are the PV uuids recorded?
+Solved. Thankyou to Aj, Alasdair (and Redhat).
 
-The man pages explain what needs to be done.
+vgcfgrestore -M1 vg1
+vgconvert -M2 vg1 
+reboot
 
-You need to make sure you have a backup file of your VG config prior to
-the disk failure. eg: /etc/lvm/backup/volGroup00
+1. I do not know how I missed this, it is clearly in the FAQ
+2. This only appeared after reconfiguring logical volumes, several
+weeks/reboots after "converting" to lvm2 (clearly not complete converion,
+was using lvm2inird but must have been reading the lvm1 formats. 
 
-"vgdisplay --partial --verbose" to show the UUID's of PV's that are no
-longer preset
-
-"pvcreate --restorefile filename --uuid uuid <device>" to restore the
-PV.
-
-filename = /etc/lvm/backup/volGroup00
-uuid = the uuid of the PV that failed
-
-"vgcfgrestore --file filename <volGroupName>" to restore the VG metadata
-
---Sean
+On 6/23/05, Alasdair G Kergon <agk@redhat.com> wrote:
+> On Thu, Jun 23, 2005 at 11:02:52AM +1000, Jeff Ewing wrote:
+> > The output from "vgcfgrestore vg1" is 
+> >   PV /dev/md1 is a different format (seqno lvm1)
+> 
+> Add -M1 to force it to use lvm1 metadata format (default
+> is new format - or change default globally in lvm.conf).
+> 
+> Alasdair
+> -- 
+> agk@redhat.com
+> 
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@redhat.com
+> https://www.redhat.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+>
