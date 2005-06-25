@@ -1,25 +1,18 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j5O22Gu28585
-	for <linux-lvm@redhat.com>; Thu, 23 Jun 2005 22:02:16 -0400
-Received: from zproxy.gmail.com (zproxy.gmail.com [64.233.162.192])
-	by mx3.redhat.com (8.12.11/8.12.11) with ESMTP id j5O228hq026530
-	for <linux-lvm@redhat.com>; Thu, 23 Jun 2005 22:02:08 -0400
-Received: by zproxy.gmail.com with SMTP id 16so77464nzp
-	for <linux-lvm@redhat.com>; Thu, 23 Jun 2005 19:02:03 -0700 (PDT)
-Message-ID: <3cd4d9930506231902692daa15@mail.gmail.com>
-Date: Fri, 24 Jun 2005 12:02:03 +1000
-From: Jeff Ewing <jeffiewing@gmail.com>
-In-Reply-To: <20050623081125.GB4195@agk.surrey.redhat.com>
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j5P5P6u01669
+	for <linux-lvm@redhat.com>; Sat, 25 Jun 2005 01:25:06 -0400
+Received: from ofb3.ofb.net (h34-aclarke.sv.meer.net [205.217.153.34])
+	by mx3.redhat.com (8.12.11/8.12.11) with ESMTP id j5P5OrL9011323
+	for <linux-lvm@redhat.com>; Sat, 25 Jun 2005 01:24:58 -0400
+Date: Fri, 24 Jun 2005 22:24:47 -0700
+From: jheiss-lvm@ofb.net
+Message-ID: <20050625052447.GA28915@ofb.net>
 Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="ibTvN161/egqYuK8"
 Content-Disposition: inline
-References: <3cd4d99305062204374db9549@mail.gmail.com>
-	<20050622141522.GD22056@null.msp.redhat.com>
-	<3cd4d99305062218025d6c3059@mail.gmail.com>
-	<20050623081125.GB4195@agk.surrey.redhat.com>
-Content-Transfer-Encoding: 8bit
-Subject: [linux-lvm] Re: PV segments corrupted in vg1 : LVM corrupted
-Reply-To: Jeff Ewing <jeffiewing@gmail.com>,
-	LVM general discussion and development <linux-lvm@redhat.com>
+Subject: [linux-lvm] vgreduce --removemissing
+Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -29,35 +22,137 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: LVM general discussion and development <linux-lvm@redhat.com>
+To: linux-lvm@redhat.com
 
-Solved. Thankyou to Aj, Alasdair (and Redhat).
 
-vgcfgrestore -M1 vg1
-vgconvert -M2 vg1 
-reboot
+--ibTvN161/egqYuK8
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-1. I do not know how I missed this, it is clearly in the FAQ
-2. This only appeared after reconfiguring logical volumes, several
-weeks/reboots after "converting" to lvm2 (clearly not complete converion,
-was using lvm2inird but must have been reading the lvm1 formats. 
+I have a VG which had two LVs.  I removed the drives for the second LV
+=66rom the system without disabling the LV or otherwise letting LVM know.
+Now LVM refuses to start the VG back up (which is reasonable behavior).
+However, I wish to inform LVM that the two drives I removed are not
+going to reappear, and I would like it to start up and just give me the
+remaining LV.  The --removemissing flag to vgreduce seems like it should
+be exactly what I'm looking for, and when run indicates that it is doing
+the right thing.  But it doesn't seem to actually make any changes.
+Anyone know what's going on?
 
-On 6/23/05, Alasdair G Kergon <agk@redhat.com> wrote:
-> On Thu, Jun 23, 2005 at 11:02:52AM +1000, Jeff Ewing wrote:
-> > The output from "vgcfgrestore vg1" is 
-> >   PV /dev/md1 is a different format (seqno lvm1)
-> 
-> Add -M1 to force it to use lvm1 metadata format (default
-> is new format - or change default globally in lvm.conf).
-> 
-> Alasdair
-> -- 
-> agk@redhat.com
-> 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
->
+[root@typhoon ~]# pvdisplay
+  Couldn't find device with uuid '5Ztw2o-Ooa8-AYX3-XE56-HR9T-uRQI-75YTuA'.
+  Couldn't find device with uuid 'O4kqGt-VEKo-yavU-R8yN-PGjF-mWjF-a9tdWt'.
+  --- Physical volume ---
+  PV Name               /dev/sda1
+  VG Name               typhoon
+  PV Size               186.28 GB / not usable 0  =20
+  Allocatable           yes (but full)
+  PE Size (KByte)       32768
+  Total PE              5961
+  Free PE               0
+  Allocated PE          5961
+  PV UUID               tVs73X-iCjn-JkPe-uakW-teze-yCXX-LegeRB
+  =20
+  --- Physical volume ---
+  PV Name               unknown device
+  VG Name               typhoon
+  PV Size               186.28 GB / not usable 0  =20
+  Allocatable           yes (but full)
+  PE Size (KByte)       32768
+  Total PE              5961
+  Free PE               0
+  Allocated PE          5961
+  PV UUID               5Ztw2o-Ooa8-AYX3-XE56-HR9T-uRQI-75YTuA
+  =20
+  --- Physical volume ---
+  PV Name               unknown device
+  VG Name               typhoon
+  PV Size               111.78 GB / not usable 0  =20
+  Allocatable           yes (but full)
+  PE Size (KByte)       32768
+  Total PE              3577
+  Free PE               0
+  Allocated PE          3577
+  PV UUID               O4kqGt-VEKo-yavU-R8yN-PGjF-mWjF-a9tdWt
+  =20
+[root@typhoon ~]# vgreduce --removemissing --verbose typhoon
+    Finding volume group "typhoon"
+  Couldn't find device with uuid '5Ztw2o-Ooa8-AYX3-XE56-HR9T-uRQI-75YTuA'.
+  Couldn't find all physical volumes for volume group typhoon.
+  Couldn't find device with uuid '5Ztw2o-Ooa8-AYX3-XE56-HR9T-uRQI-75YTuA'.
+  Couldn't find device with uuid 'O4kqGt-VEKo-yavU-R8yN-PGjF-mWjF-a9tdWt'.
+    Archiving volume group "typhoon" metadata.
+    typhoon/backups has missing extents: removing (including dependencies)
+    Deactivating (if active) logical volume backups
+  Couldn't find device with uuid '5Ztw2o-Ooa8-AYX3-XE56-HR9T-uRQI-75YTuA'.
+  Couldn't find device with uuid 'O4kqGt-VEKo-yavU-R8yN-PGjF-mWjF-a9tdWt'.
+    Found volume group "typhoon"
+  Couldn't find device with uuid '5Ztw2o-Ooa8-AYX3-XE56-HR9T-uRQI-75YTuA'.
+  Couldn't find device with uuid 'O4kqGt-VEKo-yavU-R8yN-PGjF-mWjF-a9tdWt'.
+    Found volume group "typhoon"
+    Removing LV backups from VG typhoon
+    typhoon/backups has missing extents: removing (including dependencies)
+    Deactivating (if active) logical volume backups
+  Couldn't find device with uuid '5Ztw2o-Ooa8-AYX3-XE56-HR9T-uRQI-75YTuA'.
+  Couldn't find device with uuid 'O4kqGt-VEKo-yavU-R8yN-PGjF-mWjF-a9tdWt'.
+    Found volume group "typhoon"
+  Couldn't find device with uuid '5Ztw2o-Ooa8-AYX3-XE56-HR9T-uRQI-75YTuA'.
+  Couldn't find device with uuid 'O4kqGt-VEKo-yavU-R8yN-PGjF-mWjF-a9tdWt'.
+    Found volume group "typhoon"
+    Removing LV backups from VG typhoon
+[root@typhoon ~]# pvdisplay
+  Couldn't find device with uuid '5Ztw2o-Ooa8-AYX3-XE56-HR9T-uRQI-75YTuA'.
+  Couldn't find device with uuid 'O4kqGt-VEKo-yavU-R8yN-PGjF-mWjF-a9tdWt'.
+  --- Physical volume ---
+  PV Name               /dev/sda1
+  VG Name               typhoon
+  PV Size               186.28 GB / not usable 0  =20
+  Allocatable           yes (but full)
+  PE Size (KByte)       32768
+  Total PE              5961
+  Free PE               0
+  Allocated PE          5961
+  PV UUID               tVs73X-iCjn-JkPe-uakW-teze-yCXX-LegeRB
+  =20
+  --- Physical volume ---
+  PV Name               unknown device
+  VG Name               typhoon
+  PV Size               186.28 GB / not usable 0  =20
+  Allocatable           yes (but full)
+  PE Size (KByte)       32768
+  Total PE              5961
+  Free PE               0
+  Allocated PE          5961
+  PV UUID               5Ztw2o-Ooa8-AYX3-XE56-HR9T-uRQI-75YTuA
+  =20
+  --- Physical volume ---
+  PV Name               unknown device
+  VG Name               typhoon
+  PV Size               111.78 GB / not usable 0  =20
+  Allocatable           yes (but full)
+  PE Size (KByte)       32768
+  Total PE              3577
+  Free PE               0
+  Allocated PE          3577
+  PV UUID               O4kqGt-VEKo-yavU-R8yN-PGjF-mWjF-a9tdWt
+
+--=20
+Jason Heiss
+PGP key:  http://ofb.net/~jheiss/jheiss.pgp.txt
+
+
+--ibTvN161/egqYuK8
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+Content-Disposition: inline
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.1 (GNU/Linux)
+
+iD8DBQFCvOqfmyNX8sTTeO0RAuJrAKCakgYry+UELqQS9mBl06TOvXCM6gCeIorH
+w8xvztEpTlIolS2GPSGyYFg=
+=1dhx
+-----END PGP SIGNATURE-----
+
+--ibTvN161/egqYuK8--
