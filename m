@@ -1,17 +1,17 @@
-Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j5RDubu02818
-	for <linux-lvm@redhat.com>; Mon, 27 Jun 2005 09:56:37 -0400
-Received: from mail.gmx.net (imap.gmx.net [213.165.64.20])
-	by mx3.redhat.com (8.12.11/8.12.11) with SMTP id j5RDuV9u024936
-	for <linux-lvm@redhat.com>; Mon, 27 Jun 2005 09:56:32 -0400
-Date: Mon, 27 Jun 2005 15:56:21 +0200 (MEST)
-From: "Markus Jeckeln" <Markus.Jeckeln@gmx.de>
-MIME-Version: 1.0
-References: <20050627130803.GA27078@agk.surrey.redhat.com>
-Subject: Re: [linux-lvm] Problem with locking_type 2 lvm/cluster/gfs
-Message-ID: <428.1119880581@www77.gmx.net>
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j5RNxAu06832
+	for <linux-lvm@redhat.com>; Mon, 27 Jun 2005 19:59:10 -0400
+Received: from ofb3.ofb.net (h34-aclarke.sv.meer.net [205.217.153.34])
+	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id j5RNx5Il003630
+	for <linux-lvm@redhat.com>; Mon, 27 Jun 2005 19:59:09 -0400
+Date: Mon, 27 Jun 2005 16:59:04 -0700
+From: Jason Heiss <jheiss-lvm@ofb.net>
+Message-ID: <20050627235904.GA16989@ofb.net>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="VS++wcV0S1rZb1Fb"
+Content-Disposition: inline
+Subject: [linux-lvm] Export an LV?
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -22,41 +22,48 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: LVM general discussion and development <linux-lvm@redhat.com>
+To: linux-lvm@redhat.com
 
-> --- Urspr=EF=BF=BDngliche Nachricht ---
-> Von: Alasdair G Kergon <agk@redhat.com>
-> An: LVM general discussion and development <linux-lvm@redhat.com>
-> Betreff: Re: [linux-lvm] Problem with locking_type 2 lvm/cluster/gfs
-> Datum: Mon, 27 Jun 2005 14:08:03 +0100
->=20
-> On Mon, Jun 27, 2005 at 02:56:38PM +0200, Markus Jeckeln wrote:
-> > as soon as i put up the locking_type =3D 2 and set the locking_library
-> then i
-> > can't run any lvm commands (vgdisplay/vgchange) ... returning with=20
-> > connect() failed on local socket: Connection refused
-> > Locking type 2 initialisation failed.
->=20
-> Is root filesystem on LVM? - if so, check your initrd got updated.
-> Check *exactly* what lvm commands are getting run in initrd and
-> initscripts.
 
-No the root filesystem is not on LVM.=20
+--VS++wcV0S1rZb1Fb
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-=20
-> vgdisplay output for a clustered VG:
-> Clustered             yes
->=20
-> Cluster Suite packages are available on RH Network.
+OK, having looked through the code for vgreduce it's clear that the
+important parts of the --removemissing code aren't getting called for
+some reason.  Probably some sort of bug, I'll try to look at it later if
+I get a chance.
 
-Wohoooow.. yes.. right the cluster channel is there.. great. But i am
-missing lvm2-cluster and the gfs packages :(
-=20
-> Alasdair
-> --=20
-> agk@redhat.com
->=20
+In the meantime, I've put the two drives for the LV I'm trying to move
+back into my server.  Now I'd like to find out if there is a right way
+to move an LV to another machine.  As before I've got a VG with two
+LVs.  One LV is on one physical drive, the other LV is spread over two
+drives.  I'd like to move the second LV to another system.  I don't see
+an obvious way to do that.  vgexport/vgimport would allow me to move the
+entire VG, but I don't want to do that.  I could use vgreduce to kick
+the two associated physical volumes out of the VG, but I don't see any
+way to reconstruct the volume on the new machine with my data intact.
+Is there a way to do this?  (I'm guessing no, but thought I'd check.)
+
+Jason
 
 --=20
-Weitersagen: GMX DSL-Flatrates mit Tempo-Garantie!
-Ab 4,99 Euro/Monat: http://www.gmx.net/de/go/dsl
+Jason Heiss
+PGP key:  http://ofb.net/~jheiss/jheiss.pgp.txt
+
+
+--VS++wcV0S1rZb1Fb
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+Content-Disposition: inline
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.1 (GNU/Linux)
+
+iD8DBQFCwJLHmyNX8sTTeO0RArE4AJ4htl8WN7eIVXxZ8OU25PgPCsgvbgCaA6Gt
+zSQGkgi7qRjcfxCkXc73Ux4=
+=3rq9
+-----END PGP SIGNATURE-----
+
+--VS++wcV0S1rZb1Fb--
