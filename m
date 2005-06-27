@@ -1,17 +1,17 @@
-Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j5RCuou12639
-	for <linux-lvm@redhat.com>; Mon, 27 Jun 2005 08:56:50 -0400
-Received: from mail.gmx.net (pop.gmx.de [213.165.64.20])
-	by mx3.redhat.com (8.12.11/8.12.11) with SMTP id j5RCuiJ1011669
-	for <linux-lvm@redhat.com>; Mon, 27 Jun 2005 08:56:44 -0400
-Date: Mon, 27 Jun 2005 14:56:38 +0200 (MEST)
-From: "Markus Jeckeln" <Markus.Jeckeln@gmx.de>
-MIME-Version: 1.0
-References: <27640.1119868518@www77.gmx.net>
-Message-ID: <8794.1119876998@www77.gmx.net>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] Problem with locking_type 2 lvm/cluster/gfs
+Received: from agk.surrey.redhat.com (agk.surrey.redhat.com [172.16.10.74])
+	by pobox.surrey.redhat.com (8.12.8/8.12.8) with ESMTP id j5RD843N017180
+	for <linux-lvm@redhat.com>; Mon, 27 Jun 2005 14:08:04 +0100
+Received: from agk by agk.surrey.redhat.com with local (Exim 4.34)
+	id 1DmtLH-00074i-Uk
+	for linux-lvm@redhat.com; Mon, 27 Jun 2005 14:08:03 +0100
+Date: Mon, 27 Jun 2005 14:08:03 +0100
+From: Alasdair G Kergon <agk@redhat.com>
+Subject: Re: [linux-lvm] Problem with locking_type 2 lvm/cluster/gfs
+Message-ID: <20050627130803.GA27078@agk.surrey.redhat.com>
+References: <27640.1119868518@www77.gmx.net> <8794.1119876998@www77.gmx.net>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <8794.1119876998@www77.gmx.net>
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -22,47 +22,24 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: linux-lvm@redhat.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
+On Mon, Jun 27, 2005 at 02:56:38PM +0200, Markus Jeckeln wrote:
+> as soon as i put up the locking_type = 2 and set the locking_library then i
+> can't run any lvm commands (vgdisplay/vgchange) ... returning with 
+> connect() failed on local socket: Connection refused
+> Locking type 2 initialisation failed.
 
-Hi There,
+Is root filesystem on LVM? - if so, check your initrd got updated.
+Check *exactly* what lvm commands are getting run in initrd and initscripts.
 
-i am trying to build up a setup with several servers accessing one SAN. 
+vgdisplay output for a clustered VG:
+Clustered             yes
 
-I use a RedHat Enterprise Linux 4 with RHEL4U1 packages
-(lvm2-2.01.08-1.0.RHEL4.i386.rpm) and the lvm2-cluster srpm from fedora 4 
+Cluster Suite packages are available on RH Network.
 
-as soon as i put up the locking_type = 2 and set the locking_library then i
-can't run any lvm commands (vgdisplay/vgchange) ... returning with 
-connect() failed on local socket: Connection refused
-Locking type 2 initialisation failed.
-
-
-only when the clvmd is running.. but i can not boot up my machine anymore
-because clvmd is not running when mounting my local lvm filesystems.
-
-any help is higly apreciated!!!
-
-#lvmcmdline.c:836         Processing: vgchange -vvvvv -ay VolGroup00
-#lvmcmdline.c:839         O_DIRECT will be used
-#config/config.c:773       Setting global/locking_type to 2
-#config/config.c:758       Setting global/locking_library to
-/usr/lib/liblvm2clusterlock.so
-#misc/sharedlib.c:41       Opening shared locking library
-/usr/lib/liblvm2clusterlock.so
-#locking/external_locking.c:92     Loaded external locking library
-/usr/lib/liblvm2clusterlock.so
-#cluster_locking.c:83   connect() failed on local socket: Connection refused
-#lvmcmdline.c:853   Locking type 2 initialisation failed.
-
-
-
-Greeeetings Markus Jeckeln
-
+Alasdair
 -- 
-Geschenkt: 3 Monate GMX ProMail gratis + 3 Ausgaben stern gratis
-++ Jetzt anmelden & testen ++ http://www.gmx.net/de/go/promail ++
-
--- 
-Geschenkt: 3 Monate GMX ProMail gratis + 3 Ausgaben stern gratis
-++ Jetzt anmelden & testen ++ http://www.gmx.net/de/go/promail ++
+agk@redhat.com
