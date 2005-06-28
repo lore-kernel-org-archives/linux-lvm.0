@@ -1,18 +1,20 @@
-Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j5RJ0pu14676
-	for <linux-lvm@redhat.com>; Mon, 27 Jun 2005 15:00:51 -0400
-Received: from usbb-lacimss1.unisys.com (usbb-lacimss1.unisys.com
-	[192.63.108.51])
-	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id j5RJ0mf2013031
-	for <linux-lvm@redhat.com>; Mon, 27 Jun 2005 15:00:48 -0400
-Content-class: urn:content-classes:message
-MIME-Version: 1.0
-Date: Mon, 27 Jun 2005 14:00:23 -0500
-Message-ID: <19D0D50E9B1D0A40A9F0323DBFA04ACCE04C16@USRV-EXCH4.na.uis.unisys.com>
-From: "Protasevich, Natalie" <Natalie.Protasevich@UNISYS.com>
-Content-Transfer-Encoding: 8bit
-Subject: [linux-lvm] Boot failure with roof file system under LVM
-	(2.6.12-mm*)
+Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j5SAMMu24082
+	for <linux-lvm@redhat.com>; Tue, 28 Jun 2005 06:22:22 -0400
+Received: from postman.arcor.de (postman2.arcor-online.net [151.189.20.157])
+	by mx3.redhat.com (8.12.11/8.12.11) with ESMTP id j5SAM7GS019010
+	for <linux-lvm@redhat.com>; Tue, 28 Jun 2005 06:22:12 -0400
+Received: from bongo.freakout.de (freakout.homeip.net [217.173.146.67])
+	(authenticated bits=0)
+	by postman.arcor.de (8.13.4/8.13.4) with ESMTP id j5SAM6Px020666
+	for <linux-lvm@redhat.com>; Tue, 28 Jun 2005 12:22:06 +0200 (MEST)
+Received: from smtphost (bongo.freakout.de [192.168.7.68])
+	by bongo.freakout.de (8.13.4/8.13.3) with ESMTP id j5SAHboW019307
+	for linux-lvm@redhat.com; Tue, 28 Jun 2005 12:17:37 +0200
+Date: Tue, 28 Jun 2005 12:17:37 +0200
+Message-Id: <200506281017.j5SAHboW019307@bongo.freakout.de>
+From: Axel Reinhold <lvm@freakout.de>
+Subject: [linux-lvm] enlarge a physical partition
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -23,48 +25,36 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-To: linux-kernel@vger.kernel.org
-Cc: "E.Gryaznova" <grev@namesys.com>, linux-lvm@redhat.com
+Content-Transfer-Encoding: 7bit
+To: linux-lvm@redhat.com
 
-Hi,
-I cannot boot -mm kernel on my system since 2.6.12-rc5-mm1. The system
-is a partition on ES7000 and has a dual boot for SuSE/RH, which is set
-up using two LVM volumes. 
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA1
 
-le020-p2:~ # pvs
-PV         VG         Fmt  Attr PSize  PFree
-/dev/sda2  stash      lvm2 a-   16.50G  3.50G
-/dev/sdb2  rhel4stash lvm2 a-   16.50G 16.00M
+Hello,
 
-The other partition on that system set up for dual boot also, but uses 2
-disks directly without LVM, and boots just fine.
+when i create a lvm1-metadata volume group with lvm2-tools/dm-mod
+lvm-mod with lvm1-tools cannot vgscan this volume group - it complains
+about inconsistencies - the vg was created with options:
 
-Last thing I see on the console during failed boot:
-...
-device-mapper: 4.4.0-ioctl (2005-01-12) initialised: dm-devel@redhat.com
-ReiserFS: dm-0: found reiserfs format "3.6" with standard journal
+devices {
 
+    # Where do you want your volume groups to appear ?
+    dir = "/tmp/lvm"
 
-I put little debug in and it turned out that the boot hangs while
-waiting on a buffer in fs/reiserfs/super.c read_bitmaps() routine, on
-second iteration of the following loop:
+because while creating the volume group i must boot with
+read-only root filesystem. It seams the lvm1 sees the original
+device files! Even exporting the vg and importing doesn't help.
 
-    for (i = 0; i < SB_BMAP_NR(s); i++) {
-        wait_on_buffer(SB_AP_BITMAP (s)[i].bh);  <========waiting here
-indefinitely
-        if (!buffer_uptodate(SB_AP_BITMAP(s)[i].bh)) {
-            reiserfs_warning(s,"sh-2029: reiserfs read_bitmaps: "
-                         "bitmap block (#%lu) reading failed",
-                         SB_AP_BITMAP(s)[i].bh->b_blocknr);
-            for (i = 0; i < SB_BMAP_NR(s); i++)
-                brelse(SB_AP_BITMAP(s)[i].bh);
-            vfree(SB_AP_BITMAP(s));
-            SB_AP_BITMAP(s) = NULL;
-            return 1;
-        }
-        load_bitmap_info_data (s, SB_AP_BITMAP (s) + i);
-    }
+Any idea out there?
 
-Thanks,
---Natalie 
+Axel
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.1-PB (GNU/Linux)
+
+iD8DBQFCwSPBHQ9JwE2bDw0RAlc9AKCrlmXXqEvEL+IIPJ2Kfi3GmdK26wCg9Jpd
+ord21DH5DtifdFMqc+FiDss=
+=NsZ1
+-----END PGP SIGNATURE-----
