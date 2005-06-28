@@ -1,18 +1,20 @@
-Received: from agk.surrey.redhat.com (agk.surrey.redhat.com [172.16.10.74])
-	by pobox.surrey.redhat.com (8.12.8/8.12.8) with ESMTP id j5SLen3N031403
-	for <linux-lvm@redhat.com>; Tue, 28 Jun 2005 22:40:49 +0100
-Received: from agk by agk.surrey.redhat.com with local (Exim 4.34)
-	id 1DnNp3-0000hU-Nf
-	for linux-lvm@redhat.com; Tue, 28 Jun 2005 22:40:49 +0100
-Date: Tue, 28 Jun 2005 22:40:49 +0100
-From: Alasdair G Kergon <agk@redhat.com>
-Subject: Re: [linux-lvm] pv resize from dve
-Message-ID: <20050628214049.GO27078@agk.surrey.redhat.com>
-References: <OF2C29465B.24F55B4D-ON8725702E.0074297E-8825702E.007667C9@us.ibm.com>
+Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j5SNPIu14932
+	for <linux-lvm@redhat.com>; Tue, 28 Jun 2005 19:25:18 -0400
+Received: from leviathan.ele.uri.edu (leviathan.ele.uri.edu [131.128.51.64])
+	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id j5SNPGaw009284
+	for <linux-lvm@redhat.com>; Tue, 28 Jun 2005 19:25:16 -0400
+From: Ming Zhang <mingz@ele.uri.edu>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature";
+	boundary="=-ZqppH459mSBagCp5N09c"
+Date: Tue, 28 Jun 2005 19:25:10 -0400
+Message-Id: <1120001110.5484.105.camel@localhost.localdomain>
 Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <OF2C29465B.24F55B4D-ON8725702E.0074297E-8825702E.007667C9@us.ibm.com>
-Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
+Subject: [linux-lvm] how to recover data on other PV if one PV fails in same
+	group
+Reply-To: mingz@ele.uri.edu,
+	LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -22,21 +24,44 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-On Tue, Jun 28, 2005 at 02:34:28PM -0700, Jim Schisler wrote:
-> Is there a way to rescan the physical volume so that the new volume size 
-> is seen and can be used?
 
-pvresize is not implemented yet.
+--=-ZqppH459mSBagCp5N09c
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 
-Workaround involves vgcfgbackup, edit appropriate pe_count in backup file to
-new number of extents, pvcreate --restorefile on the changed PV, vgcfgrestore.
+Hi, folks
 
-Suggest you test it first with a temp. VG.
+I know this is a question that must be asked many times, but that lvm
+list search function is not user friendly to me.
 
-Alasdair
--- 
-agk@redhat.com
+How to recover data on other PV if only one PV fails in same volume
+group?
+
+And a might more complex question is what if that PV comes back from 1
+days. for example, this is a PV from iscsi and thus it can be broken for
+a while. Then how I rejoin the PV and begin to access it again?
+
+
+Thanks!
+
+
+Ming
+
+
+
+
+--=-ZqppH459mSBagCp5N09c
+Content-Type: application/pgp-signature; name=signature.asc
+Content-Description: This is a digitally signed message part
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.2.6 (GNU/Linux)
+
+iD8DBQBCwdxWSYbkL5BnVYoRAtHsAJ4l2ozv0NoFIG38xmclPs7/qsWXDwCeKAfH
+svYvrlwPdFusUB0b3l7PRBk=
+=l8U8
+-----END PGP SIGNATURE-----
+
+--=-ZqppH459mSBagCp5N09c--
