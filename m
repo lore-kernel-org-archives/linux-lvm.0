@@ -1,17 +1,34 @@
-Received: from agk.surrey.redhat.com (agk.surrey.redhat.com [172.16.10.74])
-	by pobox.surrey.redhat.com (8.12.8/8.12.8) with ESMTP id j5SElU3N007423
-	for <linux-lvm@redhat.com>; Tue, 28 Jun 2005 15:47:30 +0100
-Received: from agk by agk.surrey.redhat.com with local (Exim 4.34)
-	id 1DnHN4-0000GS-S7
-	for linux-lvm@redhat.com; Tue, 28 Jun 2005 15:47:30 +0100
-Date: Tue, 28 Jun 2005 15:47:30 +0100
-From: Alasdair G Kergon <agk@redhat.com>
-Subject: Re: [linux-lvm] Export an LV?
-Message-ID: <20050628144730.GL27078@agk.surrey.redhat.com>
-References: <20050627235904.GA16989@ofb.net>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20050627235904.GA16989@ofb.net>
+Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j5SLYbu17157
+	for <linux-lvm@redhat.com>; Tue, 28 Jun 2005 17:34:37 -0400
+Received: from e33.co.us.ibm.com (e33.co.us.ibm.com [32.97.110.131])
+	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id j5SLYahW012814
+	for <linux-lvm@redhat.com>; Tue, 28 Jun 2005 17:34:36 -0400
+Received: from westrelay02.boulder.ibm.com (westrelay02.boulder.ibm.com
+	[9.17.195.11])
+	by e33.co.us.ibm.com (8.12.10/8.12.9) with ESMTP id j5SLYUvN440238
+	for <linux-lvm@redhat.com>; Tue, 28 Jun 2005 17:34:30 -0400
+Received: from d03av03.boulder.ibm.com (d03av03.boulder.ibm.com [9.17.195.169])
+	by westrelay02.boulder.ibm.com (8.12.10/NCO/VER6.6) with ESMTP id
+	j5SLYTj4313560
+	for <linux-lvm@redhat.com>; Tue, 28 Jun 2005 15:34:29 -0600
+Received: from d03av03.boulder.ibm.com (loopback [127.0.0.1])
+	by d03av03.boulder.ibm.com (8.12.11/8.13.3) with ESMTP id
+	j5SLYT6h025116
+	for <linux-lvm@redhat.com>; Tue, 28 Jun 2005 15:34:29 -0600
+Received: from d03nm114.boulder.ibm.com (d03nm114.boulder.ibm.com
+	[9.17.195.140])
+	by d03av03.boulder.ibm.com (8.12.11/8.12.11) with ESMTP id
+	j5SLYTud025105
+	for <linux-lvm@redhat.com>; Tue, 28 Jun 2005 15:34:29 -0600
+From: Jim Schisler <jschis@us.ibm.com>
+MIME-Version: 1.0
+Message-ID: <OF2C29465B.24F55B4D-ON8725702E.0074297E-8825702E.007667C9@us.ibm.com>
+Sender: Jim Schisler <jschis@us.ibm.com>
+Date: Tue, 28 Jun 2005 14:34:28 -0700
+Content-Type: multipart/alternative;
+	boundary="=_alternative 007667C58825702E_="
+Subject: [linux-lvm] pv resize from dve
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -22,18 +39,42 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: LVM general discussion and development <linux-lvm@redhat.com>
+To: linux-lvm@redhat.com
 
-On Mon, Jun 27, 2005 at 04:59:04PM -0700, Jason Heiss wrote:
-> Now I'd like to find out if there is a right way
-> to move an LV to another machine.  As before I've got a VG with two
-> LVs.  One LV is on one physical drive, the other LV is spread over two
-> drives.  I'd like to move the second LV to another system.  
+This is a multipart message in MIME format.
+--=_alternative 007667C58825702E_=
+Content-Type: text/plain; charset="US-ASCII"
 
-(pvmove + ) vgsplit + vgexport + vgimport ?
+Is it possible to dynamically resize a physical volume with the 2.6 
+kernel?
+I am using DVE(dynamic volume expansion) on a storage product to increase 
+the size of a volume which I am using in LVM and can see the volume size 
+increase in /sys/block devices and other utilities(fdisk) after doing a 
+rescan of the device but cannot see the new size in pvdisplay on that 
+device. 
+Is there a way to rescan the physical volume so that the new volume size 
+is seen and can be used?
+I am using RHEL4-U1 with lvm2-2.00.15-0.8
 
-Alasdair
--- 
-agk@redhat.com
+Thanks,
+_____
+Jim Schisler
+--=_alternative 007667C58825702E_=
+Content-Type: text/html; charset="US-ASCII"
+
+
+<br><font size=2 face="sans-serif">Is it possible to dynamically resize
+a physical volume with the 2.6 kernel?</font>
+<br><font size=2 face="sans-serif">I am using DVE(dynamic volume expansion)
+on a storage product to increase the size of a volume which I am using
+in LVM and can see the volume size increase in /sys/block devices and other
+utilities(fdisk) after doing a rescan of the device but cannot see the
+new size in pvdisplay on that device. &nbsp;</font>
+<br><font size=2 face="sans-serif">Is there a way to rescan the physical
+volume so that the new volume size is seen and can be used?</font>
+<br><font size=2 face="sans-serif">I am using RHEL4-U1 with lvm2-2.00.15-0.8</font>
+<br>
+<br><font size=2 face="sans-serif">Thanks,</font>
+<br><font size=2 face="sans-serif">_____<br>
+Jim Schisler</font>
+--=_alternative 007667C58825702E_=--
