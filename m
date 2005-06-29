@@ -1,30 +1,29 @@
 Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j5THxNu28960
-	for <linux-lvm@redhat.com>; Wed, 29 Jun 2005 13:59:23 -0400
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j5TIvZu21533
+	for <linux-lvm@redhat.com>; Wed, 29 Jun 2005 14:57:35 -0400
 Received: from cs.columbia.edu (cs.columbia.edu [128.59.16.20])
-	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id j5THxLdP014026
-	for <linux-lvm@redhat.com>; Wed, 29 Jun 2005 13:59:21 -0400
+	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id j5TIvXeC001597
+	for <linux-lvm@redhat.com>; Wed, 29 Jun 2005 14:57:33 -0400
 Received: from algiers.clic.cs.columbia.edu
-	(IDENT:NKHq6O2VE/s/OKq7fBfhuR2NcfdAWhTG@algiers.clic.cs.columbia.edu
+	(IDENT:jEA+2AlLI/ogM4f+kJ0Fuw0a64UnldzJ@algiers.clic.cs.columbia.edu
 	[128.59.15.63])
-	by cs.columbia.edu (8.12.10/8.12.10) with ESMTP id j5THxGSa022172
+	by cs.columbia.edu (8.12.10/8.12.10) with ESMTP id j5TIvMSa006804
 	(version=TLSv1/SSLv3 cipher=EDH-RSA-DES-CBC3-SHA bits=168 verify=NOT)
-	for <linux-lvm@redhat.com>; Wed, 29 Jun 2005 13:59:17 -0400 (EDT)
+	for <linux-lvm@redhat.com>; Wed, 29 Jun 2005 14:57:27 -0400 (EDT)
 Received: from algiers.clic.cs.columbia.edu
-	(IDENT:VeM3+8dWvOn4UZLvoBBY81gQGTnLs/yT@localhost [127.0.0.1])
+	(IDENT:ssP6vQ8aamCI3tv+Z63uWGxlKziFuGOg@localhost [127.0.0.1])
 	by algiers.clic.cs.columbia.edu (8.12.10/8.12.10) with ESMTP id
-	j5THxGMl017796
-	for <linux-lvm@redhat.com>; Wed, 29 Jun 2005 13:59:16 -0400
+	j5TIvMMl017921
+	for <linux-lvm@redhat.com>; Wed, 29 Jun 2005 14:57:22 -0400
 Received: from localhost (phung@localhost)
 	by algiers.clic.cs.columbia.edu (8.12.10/8.12.10/Submit) with ESMTP id
-	j5THxG5D017792
-	for <linux-lvm@redhat.com>; Wed, 29 Jun 2005 13:59:16 -0400
-Date: Wed, 29 Jun 2005 13:59:16 -0400 (EDT)
+	j5TIvMOF017917
+	for <linux-lvm@redhat.com>; Wed, 29 Jun 2005 14:57:22 -0400
+Date: Wed, 29 Jun 2005 14:57:22 -0400 (EDT)
 From: "Dan B. Phung" <phung@cs.columbia.edu>
-Subject: Re: [linux-lvm] my volume group disappeared!
-In-Reply-To: <20050629163338.GS27078@agk.surrey.redhat.com>
-Message-ID: <Pine.LNX.4.44.0506291358280.17754-100000@algiers.clic.cs.columbia.edu>
+Message-ID: <Pine.LNX.4.44.0506291450320.17754-100000@algiers.clic.cs.columbia.edu>
 MIME-Version: 1.0
+Subject: [linux-lvm] error trying to vgcfgrestore
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -39,38 +38,33 @@ Content-Type: TEXT/PLAIN; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-On 29, Jun, 2005, Alasdair G Kergon declared:
+this is related to my earlier post of:
+  [linux-lvm] my volume group disappeared!
 
-> On Wed, Jun 29, 2005 at 12:17:15PM -0400, Dan B. Phung wrote:
-> > configured, and I do see the /dev/sda where the data lives, 
-> > and I can fdisk that device to see my array, but the physical
-> > volume also seems to be missing!
->  
-> check for partition table
+I'm trying to restore the vg, which I backed up before with:
+  vgcfgbackup -f big_cheese_VG.2005.5.12 big_cheese
 
-I assume you mean the partitions from the array?  I seem
-to still have those:
+now, when I try to restore, I get these errors:
 
-blade01:root # ls /dev/sda*
-/dev/sda  /dev/sda1  /dev/sda2
+blade01:root # vgcfgrestore -d -v -f big_cheese_VG.2005.5.12 -l -n 
+big_cheese big_cheese
+    Loaded external locking library liblvm2clusterlock.so
 
-blade01:root # fdisk /dev/sda
+  File:         /etc/lvm/archive/big_cheese_00000.vg
+    Wiping cache of LVM-capable devices
+  Couldn't find device with uuid '6uBYm4-WiAQ-eZib-t6hK-IH2c-fmAQ-0a9K9i'.
+  VG name:      big_cheese
+  Description:  Created *before* executing 'vgchange -aly'
+  Backup Time:  Mon Jun  6 00:50:26 2005
 
-Command (m for help): p
 
-Disk /dev/sda: 513.5 GB, 513557829120 bytes
-255 heads, 63 sectors/track, 62436 cylinders
-Units = cylinders of 16065 * 512 = 8225280 bytes
+  File:         /etc/lvm/backup/big_cheese
+  Couldn't find device with uuid '6uBYm4-WiAQ-eZib-t6hK-IH2c-fmAQ-0a9K9i'.
+  VG name:      big_cheese
+  Description:  Created *after* executing 'vgchange -aly'
+  Backup Time:  Mon Jun  6 00:50:26 2005
 
-   Device Boot      Start         End      Blocks   Id  System
-/dev/sda1               1         548     4401778+  82  Linux swap / 
-Solaris
-/dev/sda2   *         549       62436   497115360   83  Linux
- 
-> 
 
--- 
-email:  phung@cs.columbia.edu
-www:    http://www.cs.columbia.edu/~phung
-phone:  646-775-6090
-office: CS Dept. 520, 1214 Amsterdam Ave., MC 0401, New York, NY 10027
+..and I've tried this after doing vgchange -aln
+
+-dan
