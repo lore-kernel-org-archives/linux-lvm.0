@@ -1,26 +1,17 @@
-Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j5T8SFu20574
-	for <linux-lvm@redhat.com>; Wed, 29 Jun 2005 04:28:15 -0400
-Received: from ciao.gmane.org (main.gmane.org [80.91.229.2])
-	by mx3.redhat.com (8.12.11/8.12.11) with ESMTP id j5T8S9rC019210
-	for <linux-lvm@redhat.com>; Wed, 29 Jun 2005 04:28:10 -0400
-Received: from root by ciao.gmane.org with local (Exim 4.43)
-	id 1DnXoJ-0005E3-Dx
-	for linux-lvm@redhat.com; Wed, 29 Jun 2005 10:20:43 +0200
-Received: from althur.gotadsl.co.uk ([84.12.135.175])
-	by main.gmane.org with esmtp (Gmexim 0.1 (Debian))
-	id 1AlnuQ-0007hv-00
-	for <linux-lvm@redhat.com>; Wed, 29 Jun 2005 10:20:43 +0200
-Received: from ross by althur.gotadsl.co.uk with local (Gmexim 0.1 (Debian))
-	id 1AlnuQ-0007hv-00
-	for <linux-lvm@redhat.com>; Wed, 29 Jun 2005 10:20:43 +0200
-From: Ross Burton <ross@burtonini.com>
-Date: Wed, 29 Jun 2005 08:14:09 +0000 (UTC)
-Message-ID: <loom.20050629T100626-96@post.gmane.org>
+Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j5TGH1u25835
+	for <linux-lvm@redhat.com>; Wed, 29 Jun 2005 12:17:01 -0400
+Received: from ofb3.ofb.net (h34-aclarke.sv.meer.net [205.217.153.34])
+	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id j5TGGuT0011238
+	for <linux-lvm@redhat.com>; Wed, 29 Jun 2005 12:17:00 -0400
+Date: Wed, 29 Jun 2005 09:16:52 -0700
+From: Jason Heiss <jheiss-lvm@ofb.net>
+Subject: Re: [linux-lvm] Export an LV?
+Message-ID: <20050629161652.GB16989@ofb.net>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Sender: news <news@sea.gmane.org>
-Subject: [linux-lvm] Dual booting with LVM
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="LyciRD1jyfeSSjG0"
+Content-Disposition: inline
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -31,31 +22,42 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@redhat.com
 
-Hi,
 
-I'm trying to dual boot my new laptop with both WinXP, Ubuntu Hoary, and Debian
-Sid, and am getting stuck.  This is not strictly a LVM problem, but LVM is the
-main cause of my situation.  This is what I have so far:
+--LyciRD1jyfeSSjG0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-hda1 is NTFS, is WinXP
-hda2 is ext3, is /boot
-hda3 is a LVM2 PV
+Stefan Paletta wrote:
+>=20
+> Jason Heiss wrote:
+> > Is there a way to do this?  (I'm guessing no, but thought I'd check.)
+>=20
+> vgsplit
+>=20
 
-The PV is split into four LVs: "ubuntu", "debian", "home", and "swap". 
-Currently ubuntu has a fresh Hoary install in, and home is obviously my home
-directory.  My plan is to put Debian Sid into the debian LV.
+Thanks, that worked perfectly.
 
-However, I'm getting confused about how LVM, grub, and the boot sequence will
-work.  At the moment the MBA contains grub, which reads configuration and
-Ubuntu's kernel from hda2 as grub can't read kernels from a LVM partition.  If I
-install Debian into the debian LV, what do I do with it's /boot?  Would I need
-to create a new partition outside the LVM for it, or is there a way I can share
-hda2 with both Debian and Ubuntu as /boot?
+Jason
 
-If anyone has done this before, some advise would be much appreciated.
+--=20
+Jason Heiss
+PGP key:  http://ofb.net/~jheiss/jheiss.pgp.txt
 
-Thanks,
-Ross
+
+--LyciRD1jyfeSSjG0
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+Content-Disposition: inline
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.1 (GNU/Linux)
+
+iD8DBQFCwsl0myNX8sTTeO0RAmElAJ47aPenkF3k1GGT2y1SYq4CrQKvQwCcCECb
+jhLQr9TLfIeooGtxe4qwv6E=
+=w6XI
+-----END PGP SIGNATURE-----
+
+--LyciRD1jyfeSSjG0--
