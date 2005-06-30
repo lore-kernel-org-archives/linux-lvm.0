@@ -1,19 +1,31 @@
-Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j5ULgdu08494
-	for <linux-lvm@redhat.com>; Thu, 30 Jun 2005 17:42:39 -0400
-Received: from leviathan.ele.uri.edu (leviathan.ele.uri.edu [131.128.51.64])
-	by mx3.redhat.com (8.12.11/8.12.11) with ESMTP id j5ULgX8V025468
-	for <linux-lvm@redhat.com>; Thu, 30 Jun 2005 17:42:33 -0400
-From: Ming Zhang <mingz@ele.uri.edu>
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature";
-	boundary="=-VXFLraSonSyjmwnY+63V"
-Date: Thu, 30 Jun 2005 17:42:27 -0400
-Message-Id: <1120167747.5505.37.camel@localhost.localdomain>
-Mime-Version: 1.0
-Subject: [linux-lvm] live lock?
-Reply-To: mingz@ele.uri.edu,
-	LVM general discussion and development <linux-lvm@redhat.com>
+Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j5ULoZu11195
+	for <linux-lvm@redhat.com>; Thu, 30 Jun 2005 17:50:35 -0400
+Received: from cs.columbia.edu (cs.columbia.edu [128.59.16.20])
+	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id j5ULoY0M017271
+	for <linux-lvm@redhat.com>; Thu, 30 Jun 2005 17:50:34 -0400
+Received: from algiers.clic.cs.columbia.edu
+	(IDENT:pZUhOjZAI4Joih30IXbNCBNhlm9SjfOw@algiers.clic.cs.columbia.edu
+	[128.59.15.63])
+	by cs.columbia.edu (8.12.10/8.12.10) with ESMTP id j5ULoPSa008817
+	(version=TLSv1/SSLv3 cipher=EDH-RSA-DES-CBC3-SHA bits=168 verify=NOT)
+	for <linux-lvm@redhat.com>; Thu, 30 Jun 2005 17:50:26 -0400 (EDT)
+Received: from algiers.clic.cs.columbia.edu
+	(IDENT:3CWzBeuzWCZOj69/KtvflGlrbHTYSM2R@localhost [127.0.0.1])
+	by algiers.clic.cs.columbia.edu (8.12.10/8.12.10) with ESMTP id
+	j5ULoPMl022629
+	for <linux-lvm@redhat.com>; Thu, 30 Jun 2005 17:50:25 -0400
+Received: from localhost (phung@localhost)
+	by algiers.clic.cs.columbia.edu (8.12.10/8.12.10/Submit) with ESMTP id
+	j5ULoP9o022625
+	for <linux-lvm@redhat.com>; Thu, 30 Jun 2005 17:50:25 -0400
+Date: Thu, 30 Jun 2005 17:50:25 -0400 (EDT)
+From: "Dan B. Phung" <phung@cs.columbia.edu>
+Subject: Re: [linux-lvm] LV Status: NOT available?
+In-Reply-To: <Pine.LNX.4.44.0506301735180.21204-100000@algiers.clic.cs.columbia.edu>
+Message-ID: <Pine.LNX.4.44.0506301749510.21204-100000@algiers.clic.cs.columbia.edu>
+MIME-Version: 1.0
+Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -23,48 +35,70 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
+Content-Type: TEXT/PLAIN; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
+sorry, stupid mistake, simply didn't activate it with 
+  vgchange -a y big_cheese
 
---=-VXFLraSonSyjmwnY+63V
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
+On 30, Jun, 2005, Dan B. Phung declared:
 
-i now met a PV that can not add or remove from a VG. i now do not know
-if it belongs to vg1 at all.
-
-
-[root@gs_lan root]# pvscan
-pvscan -- reading all physical volumes (this may take a while...)
-pvscan -- ACTIVE   PV "/dev/sda3" of VG "vg1" [102.64 GB / 60.28 GB
-free]
-pvscan -- inactive PV "/dev/sdb1" of VG "vg1" [137.78 GB / 129.97 GB
-free]
-pvscan -- total: 2 [240.44 GB] / in use: 2 [240.44 GB] / in no VG: 0 [0]
-
-[root@gs_lan root]# vgreduce vg1 /dev/sdb1
-vgreduce -- physical volume "/dev/sdb1" doesn't belong to volume group
-"vg1"
-
-[root@gs_lan root]# vgcreate vg2 /dev/sdb1
-vgcreate -- "/dev/sdb1" is not a new physical volume
-vgcreate -- physical volume "/dev/sdb1" already belongs to volume group
-"vg1"
-
-
-Ming
-
-
---=-VXFLraSonSyjmwnY+63V
-Content-Type: application/pgp-signature; name=signature.asc
-Content-Description: This is a digitally signed message part
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.2.6 (GNU/Linux)
-
-iD8DBQBCxGdDSYbkL5BnVYoRAhGqAJ49JZoQ9Z7yDEVH6kE1jA3ZPQgb+QCfZEf3
-JY1iSzJUulI23p2apm+3U7g=
-=fMf3
------END PGP SIGNATURE-----
-
---=-VXFLraSonSyjmwnY+63V--
+> I'm trying to recover my file system, and I was able to recreate the PV
+> and run vgcfgrestore succesfully, but the LV status is 'NOT available'.
+> Why would this be?  
+> 
+> blade01:root # lvs
+>   LV      VG         Attr   LSize   Origin Snap%  Move Log Copy%
+>   home_lv big_cheese -wi--- 195.31G
+>   proj_lv big_cheese -wi--- 195.31G
+>   zap_lv  big_cheese -wi---  78.12G
+> 
+> blade01:root # lvdisplay
+>   --- Logical volume ---
+>   LV Name                /dev/big_cheese/proj_lv
+>   VG Name                big_cheese
+>   LV UUID                lIuJg1-ktEe-02A1-6VtC-uW5n-qIA4-wX4edP
+>   LV Write Access        read/write
+>   LV Status              NOT available
+>   LV Size                195.31 GB
+>   Current LE             50000
+>   Segments               1
+>   Allocation             inherit
+>   Read ahead sectors     0
+> 
+>   --- Logical volume ---
+>   LV Name                /dev/big_cheese/home_lv
+>   VG Name                big_cheese
+>   LV UUID                NJH2DO-wn2A-Xxs7-P3DV-skEf-v4ly-s1LVbw
+>   LV Write Access        read/write
+>   LV Status              NOT available
+>   LV Size                195.31 GB
+>   Current LE             50000
+>   Segments               1
+>   Allocation             inherit
+>   Read ahead sectors     0
+> 
+>   --- Logical volume ---
+>   LV Name                /dev/big_cheese/zap_lv
+>   VG Name                big_cheese
+>   LV UUID                wqAlDs-HwGs-vAY0-CL5n-G9zW-5i4x-ux8wXk
+>   LV Write Access        read/write
+>   LV Status              NOT available
+>   LV Size                78.12 GB
+>   Current LE             20000
+>   Segments               2
+>   Allocation             inherit
+>   Read ahead sectors     0
+> 
+> 
+> 
+> regards,
+> dan
+> 
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@redhat.com
+> https://www.redhat.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+> 
