@@ -1,30 +1,20 @@
 Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j5ULoZu11195
-	for <linux-lvm@redhat.com>; Thu, 30 Jun 2005 17:50:35 -0400
-Received: from cs.columbia.edu (cs.columbia.edu [128.59.16.20])
-	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id j5ULoY0M017271
-	for <linux-lvm@redhat.com>; Thu, 30 Jun 2005 17:50:34 -0400
-Received: from algiers.clic.cs.columbia.edu
-	(IDENT:pZUhOjZAI4Joih30IXbNCBNhlm9SjfOw@algiers.clic.cs.columbia.edu
-	[128.59.15.63])
-	by cs.columbia.edu (8.12.10/8.12.10) with ESMTP id j5ULoPSa008817
-	(version=TLSv1/SSLv3 cipher=EDH-RSA-DES-CBC3-SHA bits=168 verify=NOT)
-	for <linux-lvm@redhat.com>; Thu, 30 Jun 2005 17:50:26 -0400 (EDT)
-Received: from algiers.clic.cs.columbia.edu
-	(IDENT:3CWzBeuzWCZOj69/KtvflGlrbHTYSM2R@localhost [127.0.0.1])
-	by algiers.clic.cs.columbia.edu (8.12.10/8.12.10) with ESMTP id
-	j5ULoPMl022629
-	for <linux-lvm@redhat.com>; Thu, 30 Jun 2005 17:50:25 -0400
-Received: from localhost (phung@localhost)
-	by algiers.clic.cs.columbia.edu (8.12.10/8.12.10/Submit) with ESMTP id
-	j5ULoP9o022625
-	for <linux-lvm@redhat.com>; Thu, 30 Jun 2005 17:50:25 -0400
-Date: Thu, 30 Jun 2005 17:50:25 -0400 (EDT)
-From: "Dan B. Phung" <phung@cs.columbia.edu>
-Subject: Re: [linux-lvm] LV Status: NOT available?
-In-Reply-To: <Pine.LNX.4.44.0506301735180.21204-100000@algiers.clic.cs.columbia.edu>
-Message-ID: <Pine.LNX.4.44.0506301749510.21204-100000@algiers.clic.cs.columbia.edu>
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j6178ku05676
+	for <linux-lvm@redhat.com>; Fri, 1 Jul 2005 03:08:46 -0400
+Received: from baghus1.baghus.net (mail@ns.baghus.net [62.245.167.30])
+	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id j6178jlM004043
+	for <linux-lvm@redhat.com>; Fri, 1 Jul 2005 03:08:46 -0400
+Received: from [192.168.1.254] (helo=bagex01.BAGHUS-LAN.NET)
+	by baghus1.baghus.net with esmtp (Exim 3.35 #1 (Debian))
+	id 1DoFdc-0007Tn-00
+	for <linux-lvm@redhat.com>; Fri, 01 Jul 2005 09:08:36 +0200
+Content-class: urn:content-classes:message
 MIME-Version: 1.0
+Subject: RE: [linux-lvm] lvremove -- ERROR:
+Date: Fri, 1 Jul 2005 09:04:15 +0200
+Message-ID: <6A58CFF91886D54BBDA1FE988C4DF79D0250E0@bagex01.baghus-lan.net>
+From: "Sven Riedel" <sr@baghus.net>
+Content-Transfer-Encoding: 8bit
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -35,70 +25,18 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-sorry, stupid mistake, simply didn't activate it with 
-  vgchange -a y big_cheese
+Hi,
 
-On 30, Jun, 2005, Dan B. Phung declared:
+> pvscan -- inactive PV "/dev/cciss/c0d1" is in no VG 
+> lvremove -f /dev/cciss/c0d1
 
-> I'm trying to recover my file system, and I was able to recreate the PV
-> and run vgcfgrestore succesfully, but the LV status is 'NOT available'.
-> Why would this be?  
-> 
-> blade01:root # lvs
->   LV      VG         Attr   LSize   Origin Snap%  Move Log Copy%
->   home_lv big_cheese -wi--- 195.31G
->   proj_lv big_cheese -wi--- 195.31G
->   zap_lv  big_cheese -wi---  78.12G
-> 
-> blade01:root # lvdisplay
->   --- Logical volume ---
->   LV Name                /dev/big_cheese/proj_lv
->   VG Name                big_cheese
->   LV UUID                lIuJg1-ktEe-02A1-6VtC-uW5n-qIA4-wX4edP
->   LV Write Access        read/write
->   LV Status              NOT available
->   LV Size                195.31 GB
->   Current LE             50000
->   Segments               1
->   Allocation             inherit
->   Read ahead sectors     0
-> 
->   --- Logical volume ---
->   LV Name                /dev/big_cheese/home_lv
->   VG Name                big_cheese
->   LV UUID                NJH2DO-wn2A-Xxs7-P3DV-skEf-v4ly-s1LVbw
->   LV Write Access        read/write
->   LV Status              NOT available
->   LV Size                195.31 GB
->   Current LE             50000
->   Segments               1
->   Allocation             inherit
->   Read ahead sectors     0
-> 
->   --- Logical volume ---
->   LV Name                /dev/big_cheese/zap_lv
->   VG Name                big_cheese
->   LV UUID                wqAlDs-HwGs-vAY0-CL5n-G9zW-5i4x-ux8wXk
->   LV Write Access        read/write
->   LV Status              NOT available
->   LV Size                78.12 GB
->   Current LE             20000
->   Segments               2
->   Allocation             inherit
->   Read ahead sectors     0
-> 
-> 
-> 
-> regards,
-> dan
-> 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
-> 
+PV != LV. Use lvscan (better: use lvdisplay) to see
+what LVs you have. What you're trying to do above is
+akin to saying to your CD player: Eject track 7.
+
+
+Regs,
+Sven
