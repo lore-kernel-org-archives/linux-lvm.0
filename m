@@ -1,30 +1,16 @@
 Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j65KiMV30876
-	for <linux-lvm@redhat.com>; Tue, 5 Jul 2005 16:44:22 -0400
-Received: from cs.columbia.edu (cs.columbia.edu [128.59.16.20])
-	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id j65KiKZ8017821
-	for <linux-lvm@redhat.com>; Tue, 5 Jul 2005 16:44:20 -0400
-Received: from algiers.clic.cs.columbia.edu
-	(IDENT:9ckzCxhb/IUuEQurXVn8bFRMq/CmZtku@algiers.clic.cs.columbia.edu
-	[128.59.15.63])
-	by cs.columbia.edu (8.12.10/8.12.10) with ESMTP id j65KiISa006565
-	(version=TLSv1/SSLv3 cipher=EDH-RSA-DES-CBC3-SHA bits=168 verify=NOT)
-	for <linux-lvm@redhat.com>; Tue, 5 Jul 2005 16:44:19 -0400 (EDT)
-Received: from algiers.clic.cs.columbia.edu
-	(IDENT:n7tM5mgx+QFXGoEAcW1mgjXguHZVXNgc@localhost [127.0.0.1])
-	by algiers.clic.cs.columbia.edu (8.12.10/8.12.10) with ESMTP id
-	j65KiIMl021643
-	for <linux-lvm@redhat.com>; Tue, 5 Jul 2005 16:44:18 -0400
-Received: from localhost (phung@localhost)
-	by algiers.clic.cs.columbia.edu (8.12.10/8.12.10/Submit) with ESMTP id
-	j65KiIUH021639
-	for <linux-lvm@redhat.com>; Tue, 5 Jul 2005 16:44:18 -0400
-Date: Tue, 5 Jul 2005 16:44:18 -0400 (EDT)
-From: "Dan B. Phung" <phung@cs.columbia.edu>
-Subject: Re: [linux-lvm] Segfault in lvcreate?
-In-Reply-To: <20050705203425.GC12337@agk.surrey.redhat.com>
-Message-ID: <Pine.LNX.4.44.0507051644020.21204-100000@algiers.clic.cs.columbia.edu>
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j62M9wu25655
+	for <linux-lvm@redhat.com>; Sat, 2 Jul 2005 18:09:58 -0400
+Received: from web51609.mail.yahoo.com (web51609.mail.yahoo.com
+	[206.190.38.214])
+	by mx1.redhat.com (8.12.11/8.12.11) with SMTP id j62M9vHc008117
+	for <linux-lvm@redhat.com>; Sat, 2 Jul 2005 18:09:57 -0400
+Message-ID: <20050702220951.93942.qmail@web51609.mail.yahoo.com>
+Date: Sat, 2 Jul 2005 15:09:51 -0700 (PDT)
+From: Igor Feoktistov <ifeoktistov@yahoo.com>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Subject: [linux-lvm] iSCSI lun resize
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -35,30 +21,47 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="us-ascii"
+To: linux-lvm@redhat.com
 
-oooh, ah, that worked, cvs updated, and things are good now, thanks!
+Has anybody succeeded in fs resizing on iscsi lun?
+I've created vg on iscsi disk /dev/sdb and lv using
+all available space.
+When I resized the lun on iscsi target and did "echo 1
+>
+sys/devices/platform/host0/target0:0:0/0:0:0:1/rescan",
+I could see the message from kernel showing correct
+new size:
+--
+Jul  2 14:28:42 iscsi-rh4u1 kernel: SCSI device sdb:
+73400320 512-byte hdwr sectors (37581 MB)
+Jul  2 14:28:42 iscsi-rh4u1 kernel: SCSI device sdb:
+drive cache: write through
+--
+However, it's not visible from lvm. 
+fdisk and parted also show old disk geometry.
+When I tried "blockdev --rereadpt /dev/sdb, I got next
+error:
+--
+BLKRRPART: Device or resource busy
+--
+Is there any way to make new space visible for lvm?
+Also is there any plans to implement pvresize in
+RH4/lvm2?
+I understand that vgcfgbackup/restore with pe_count
+editing can do the trick.
+However, I don't think it's safe to extend volume if
+pe_count is not calculated right.
 
-On 5, Jul, 2005, Alasdair G Kergon declared:
+The platform is x86 RHEL4U1, kernel 2.6.9-11.ELsmp,
+linux-iscsi-4.0.2
 
-> On Tue, Jul 05, 2005 at 04:27:45PM -0400, Dan B. Phung wrote:
-> > I used an old version from a build I cvs updated from
-> > earlier this year:
->  
-> If you're using CVS, you're always taking a chance as to whether or
-> not it'll work.  Update to the current CVS and try again.
-> 
-> If it still fails, post a backup of your metadata here.
-> Add -vvvv to the cmd to get diagnostic output, and post the last few 
-> lines of it here.
-> 
-> Alasdair
-> 
+PS: I really hoped on using ext2online. Any help how
+to make it work on iscsi disks will be very
+appreciated.
 
--- 
-email:  phung@cs.columbia.edu
-www:    http://www.cs.columbia.edu/~phung
-phone:  646-775-6090
-office: CS Dept. 520, 1214 Amsterdam Ave., MC 0401, New York, NY 10027
+
+__________________________________________________
+Do You Yahoo!?
+Tired of spam?  Yahoo! Mail has the best spam protection around 
+http://mail.yahoo.com 
