@@ -1,36 +1,17 @@
-Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j63HbVV00429
-	for <linux-lvm@redhat.com>; Sun, 3 Jul 2005 13:37:31 -0400
-Received: from smtp11.wanadoo.fr (smtp11.wanadoo.fr [193.252.22.31])
-	by mx3.redhat.com (8.12.11/8.12.11) with ESMTP id j63HbJLe006983
-	for <linux-lvm@redhat.com>; Sun, 3 Jul 2005 13:37:19 -0400
-Received: from smtp11.wanadoo.fr (mwinf1108 [172.22.142.38])
-	by mwinf1110.wanadoo.fr (SMTP Server) with ESMTP id 6A48C1C01C1E
-	for <linux-lvm@redhat.com>; Sun,  3 Jul 2005 18:52:18 +0200 (CEST)
-Received: from me-wanadoo.net (unknown [127.0.0.1])
-	by mwinf1108.wanadoo.fr (SMTP Server) with ESMTP id F26331C000BC
-	for <linux-lvm@redhat.com>; Sun,  3 Jul 2005 18:52:03 +0200 (CEST)
-Received: from tangerine.coulon.evette
-	(ADijon-151-1-7-1.w83-194.abo.wanadoo.fr [83.194.115.1])
-	by mwinf1108.wanadoo.fr (SMTP Server) with ESMTP id C48AB1C000AA
-	for <linux-lvm@redhat.com>; Sun,  3 Jul 2005 18:52:03 +0200 (CEST)
-Received: from localhost ([127.0.0.1])
-	by tangerine.coulon.evette with esmtp (Exim 4.52) id 1Dp7hL-0002T4-DN
-	for linux-lvm@redhat.com; Sun, 03 Jul 2005 18:52:03 +0200
-Received: from tangerine.coulon.evette ([127.0.0.1])
-	by localhost (tangerine [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id 06883-07 for <linux-lvm@redhat.com>;
-	Sun, 3 Jul 2005 18:51:55 +0200 (CEST)
-Received: from localhost ([127.0.0.1] helo=tangerine)
-	by tangerine.coulon.evette with esmtp (Exim 4.52) id 1Dp7hD-0002Ss-4i
-	for linux-lvm@redhat.com; Sun, 03 Jul 2005 18:51:55 +0200
-Date: Sun, 03 Jul 2005 16:51:50 +0000
-From: "Jean-Luc Coulon (f5ibh)" <jean.luc.coulon@gmail.com>
-Message-Id: <1120409514l.9263l.0l@tangerine>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=PGP-SHA1;
-	protocol="application/pgp-signature"; boundary="=-3oQGU7p5XyG4ghGQUSpU"
-Subject: [linux-lvm] Converting from LVM to LVM on RAID1
+Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j63M9CV06974
+	for <linux-lvm@redhat.com>; Sun, 3 Jul 2005 18:09:12 -0400
+Received: from percy.comedia.it (percy.comedia.it [212.97.59.71])
+	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id j63M9A7b002456
+	for <linux-lvm@redhat.com>; Sun, 3 Jul 2005 18:09:11 -0400
+Date: Mon, 4 Jul 2005 00:09:00 +0200
+From: Luca Berra <bluca@comedia.it>
+Subject: Re: [linux-lvm] (no subject)
+Message-ID: <20050703220859.GA11388@percy.comedia.it>
+References: <1120417012l.9327l.0l@tangerine>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <1120417012l.9327l.0l@tangerine>
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -41,31 +22,39 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+Content-Transfer-Encoding: 7bit
 To: LVM Discussions <linux-lvm@redhat.com>
 
---=-3oQGU7p5XyG4ghGQUSpU
-Content-Type: text/plain; charset=us-ascii; DelSp=Yes; Format=Flowed
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Sun, Jul 03, 2005 at 06:56:45PM +0000, Jean-Luc Coulon (f5ibh) wrote:
+>Hi,
+>
+>Is there a safe way to convert from a working LVM (with root on LVM) to  
+>a software RAID1 including the device where is the existing LVM ?
+>
+>Regards
+>
+>Jean-Luc
 
-Hi,
+create a degraded raid1 array with only the other disk
 
-Is there a safe way to convert from a working LVM (with root on LVM) to =20
-a software RAID1 including the device where is the existing LVM ?
+add the new md to the existing vg
 
-Regards
+pvmove all lv on the new pv
 
-Jean-Luc
+remove the old (now empty pv)
 
---=-3oQGU7p5XyG4ghGQUSpU
-Content-Type: application/pgp-signature
+use dd to make it forget it was a pv
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.1 (GNU/Linux)
+hotadd this disk to the array
 
-iD8DBQBCyBeqNv61Ho2INJ8RAoKIAKCLG+EB6uRZOWkG5a+wTz7wbTwU8wCeOlbh
-6WzmvdWWDpX3Cs5r76oYz0k=
-=y1z+
------END PGP SIGNATURE-----
+L.
 
---=-3oQGU7p5XyG4ghGQUSpU--
+
+-- 
+Luca Berra -- bluca@comedia.it
+        Communication Media & Services S.r.l.
+ /"\
+ \ /     ASCII RIBBON CAMPAIGN
+  X        AGAINST HTML MAIL
+ / \
