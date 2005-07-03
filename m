@@ -1,16 +1,36 @@
-Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j62M9wu25655
-	for <linux-lvm@redhat.com>; Sat, 2 Jul 2005 18:09:58 -0400
-Received: from web51609.mail.yahoo.com (web51609.mail.yahoo.com
-	[206.190.38.214])
-	by mx1.redhat.com (8.12.11/8.12.11) with SMTP id j62M9vHc008117
-	for <linux-lvm@redhat.com>; Sat, 2 Jul 2005 18:09:57 -0400
-Message-ID: <20050702220951.93942.qmail@web51609.mail.yahoo.com>
-Date: Sat, 2 Jul 2005 15:09:51 -0700 (PDT)
-From: Igor Feoktistov <ifeoktistov@yahoo.com>
+Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j63HbVV00429
+	for <linux-lvm@redhat.com>; Sun, 3 Jul 2005 13:37:31 -0400
+Received: from smtp11.wanadoo.fr (smtp11.wanadoo.fr [193.252.22.31])
+	by mx3.redhat.com (8.12.11/8.12.11) with ESMTP id j63HbJLe006983
+	for <linux-lvm@redhat.com>; Sun, 3 Jul 2005 13:37:19 -0400
+Received: from smtp11.wanadoo.fr (mwinf1108 [172.22.142.38])
+	by mwinf1110.wanadoo.fr (SMTP Server) with ESMTP id 6A48C1C01C1E
+	for <linux-lvm@redhat.com>; Sun,  3 Jul 2005 18:52:18 +0200 (CEST)
+Received: from me-wanadoo.net (unknown [127.0.0.1])
+	by mwinf1108.wanadoo.fr (SMTP Server) with ESMTP id F26331C000BC
+	for <linux-lvm@redhat.com>; Sun,  3 Jul 2005 18:52:03 +0200 (CEST)
+Received: from tangerine.coulon.evette
+	(ADijon-151-1-7-1.w83-194.abo.wanadoo.fr [83.194.115.1])
+	by mwinf1108.wanadoo.fr (SMTP Server) with ESMTP id C48AB1C000AA
+	for <linux-lvm@redhat.com>; Sun,  3 Jul 2005 18:52:03 +0200 (CEST)
+Received: from localhost ([127.0.0.1])
+	by tangerine.coulon.evette with esmtp (Exim 4.52) id 1Dp7hL-0002T4-DN
+	for linux-lvm@redhat.com; Sun, 03 Jul 2005 18:52:03 +0200
+Received: from tangerine.coulon.evette ([127.0.0.1])
+	by localhost (tangerine [127.0.0.1]) (amavisd-new, port 10024)
+	with ESMTP id 06883-07 for <linux-lvm@redhat.com>;
+	Sun, 3 Jul 2005 18:51:55 +0200 (CEST)
+Received: from localhost ([127.0.0.1] helo=tangerine)
+	by tangerine.coulon.evette with esmtp (Exim 4.52) id 1Dp7hD-0002Ss-4i
+	for linux-lvm@redhat.com; Sun, 03 Jul 2005 18:51:55 +0200
+Date: Sun, 03 Jul 2005 16:51:50 +0000
+From: "Jean-Luc Coulon (f5ibh)" <jean.luc.coulon@gmail.com>
+Message-Id: <1120409514l.9263l.0l@tangerine>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: [linux-lvm] iSCSI lun resize
+Content-Type: multipart/signed; micalg=PGP-SHA1;
+	protocol="application/pgp-signature"; boundary="=-3oQGU7p5XyG4ghGQUSpU"
+Subject: [linux-lvm] Converting from LVM to LVM on RAID1
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -21,47 +41,31 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@redhat.com
+To: LVM Discussions <linux-lvm@redhat.com>
 
-Has anybody succeeded in fs resizing on iscsi lun?
-I've created vg on iscsi disk /dev/sdb and lv using
-all available space.
-When I resized the lun on iscsi target and did "echo 1
->
-sys/devices/platform/host0/target0:0:0/0:0:0:1/rescan",
-I could see the message from kernel showing correct
-new size:
---
-Jul  2 14:28:42 iscsi-rh4u1 kernel: SCSI device sdb:
-73400320 512-byte hdwr sectors (37581 MB)
-Jul  2 14:28:42 iscsi-rh4u1 kernel: SCSI device sdb:
-drive cache: write through
---
-However, it's not visible from lvm. 
-fdisk and parted also show old disk geometry.
-When I tried "blockdev --rereadpt /dev/sdb, I got next
-error:
---
-BLKRRPART: Device or resource busy
---
-Is there any way to make new space visible for lvm?
-Also is there any plans to implement pvresize in
-RH4/lvm2?
-I understand that vgcfgbackup/restore with pe_count
-editing can do the trick.
-However, I don't think it's safe to extend volume if
-pe_count is not calculated right.
+--=-3oQGU7p5XyG4ghGQUSpU
+Content-Type: text/plain; charset=us-ascii; DelSp=Yes; Format=Flowed
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-The platform is x86 RHEL4U1, kernel 2.6.9-11.ELsmp,
-linux-iscsi-4.0.2
+Hi,
 
-PS: I really hoped on using ext2online. Any help how
-to make it work on iscsi disks will be very
-appreciated.
+Is there a safe way to convert from a working LVM (with root on LVM) to =20
+a software RAID1 including the device where is the existing LVM ?
 
+Regards
 
-__________________________________________________
-Do You Yahoo!?
-Tired of spam?  Yahoo! Mail has the best spam protection around 
-http://mail.yahoo.com 
+Jean-Luc
+
+--=-3oQGU7p5XyG4ghGQUSpU
+Content-Type: application/pgp-signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.1 (GNU/Linux)
+
+iD8DBQBCyBeqNv61Ho2INJ8RAoKIAKCLG+EB6uRZOWkG5a+wTz7wbTwU8wCeOlbh
+6WzmvdWWDpX3Cs5r76oYz0k=
+=y1z+
+-----END PGP SIGNATURE-----
+
+--=-3oQGU7p5XyG4ghGQUSpU--
