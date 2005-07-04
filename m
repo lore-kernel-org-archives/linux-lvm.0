@@ -1,17 +1,16 @@
 Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j63M9CV06974
-	for <linux-lvm@redhat.com>; Sun, 3 Jul 2005 18:09:12 -0400
-Received: from percy.comedia.it (percy.comedia.it [212.97.59.71])
-	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id j63M9A7b002456
-	for <linux-lvm@redhat.com>; Sun, 3 Jul 2005 18:09:11 -0400
-Date: Mon, 4 Jul 2005 00:09:00 +0200
-From: Luca Berra <bluca@comedia.it>
-Subject: Re: [linux-lvm] (no subject)
-Message-ID: <20050703220859.GA11388@percy.comedia.it>
-References: <1120417012l.9327l.0l@tangerine>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <1120417012l.9327l.0l@tangerine>
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j64HCpV00435
+	for <linux-lvm@redhat.com>; Mon, 4 Jul 2005 13:12:51 -0400
+Received: from twinlark.arctic.org (twinlark.arctic.org [207.7.145.18])
+	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id j64HCmqa024823
+	for <linux-lvm@redhat.com>; Mon, 4 Jul 2005 13:12:49 -0400
+Date: Mon, 4 Jul 2005 10:12:43 -0700 (PDT)
+From: dean gaudet <dean-list-linux-lvm@arctic.org>
+Subject: Re: [linux-lvm] Converting from LVM to LVM on RAID1 (WAS: no subject)
+In-Reply-To: <1120421879l.9327l.2l@tangerine>
+Message-ID: <Pine.LNX.4.63.0507041005510.26084@twinlark.arctic.org>
+References: <1120421879l.9327l.2l@tangerine>
+MIME-Version: 1.0
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -22,39 +21,30 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
+Content-Type: TEXT/PLAIN; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: LVM Discussions <linux-lvm@redhat.com>
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-On Sun, Jul 03, 2005 at 06:56:45PM +0000, Jean-Luc Coulon (f5ibh) wrote:
->Hi,
->
->Is there a safe way to convert from a working LVM (with root on LVM) to  
->a software RAID1 including the device where is the existing LVM ?
->
->Regards
->
->Jean-Luc
+it's not a good idea, but you could use raid1 without a superblock... did 
+i mention it's not a good idea?
 
-create a degraded raid1 array with only the other disk
+normally you want the raid1 superblock... which lives at the end of the 
+partition.  you can't blindly convert an LVM pv to a raid1 device without 
+ensuring the physical extent at the end of the pv isn't in use.  i don't 
+see any way to shrink a pv -- so i don't think you'll be able to convert 
+an existing lvm pv to a raid1 device.
 
-add the new md to the existing vg
+however there's nothing stopping you from creating a raid1 device on a 
+second disk (and specify "missing" for the other raid device(s)... see 
+mdadm man page), creating a pv/vg/lv on top of that raid1, then copying 
+the filesystems over... doing grub/lilo/whatever magic... and trying to 
+boot it.
 
-pvmove all lv on the new pv
+if it works, you can convert the old disk into the second component of the 
+raid.
 
-remove the old (now empty pv)
+there's probably several docs already explaining this sort of procedure 
+without lvm involved... (for example there's one supplied with debian 
+mdadm at /usr/share/doc/mdadm/rootraiddoc.97.html)
 
-use dd to make it forget it was a pv
-
-hotadd this disk to the array
-
-L.
-
-
--- 
-Luca Berra -- bluca@comedia.it
-        Communication Media & Services S.r.l.
- /"\
- \ /     ASCII RIBBON CAMPAIGN
-  X        AGAINST HTML MAIL
- / \
+-dean
