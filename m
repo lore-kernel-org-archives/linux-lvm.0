@@ -1,25 +1,29 @@
 Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j64JbIV01153
-	for <linux-lvm@redhat.com>; Mon, 4 Jul 2005 15:37:18 -0400
-Received: from ms-dienst.rz.rwth-aachen.de (ms-2.rz.RWTH-Aachen.DE
-	[134.130.3.131])
-	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id j64JbDNE023509
-	for <linux-lvm@redhat.com>; Mon, 4 Jul 2005 15:37:14 -0400
-Received: from r220-1 (r220-1.rz.RWTH-Aachen.DE [134.130.3.31])
-	by ms-dienst.rz.rwth-aachen.de
-	(iPlanet Messaging Server 5.2 Patch 2 (built Jul 14 2004))
-	with ESMTP id <0IJ400MP3BTWE3@ms-dienst.rz.rwth-aachen.de> for
-	linux-lvm@redhat.com; Mon, 04 Jul 2005 21:37:09 +0200 (MEST)
-Received: from hak-nam.dyndns.org
-	(pc-68-055.ram.RWTH-Aachen.DE [137.226.68.55])	by relay.rwth-aachen.de
-	(8.13.3/8.13.3/1) with ESMTP id j64Jb8XO010857	for
-	<linux-lvm@redhat.com>; Mon, 04 Jul 2005 21:37:08 +0200 (MEST)
-Date: Mon, 04 Jul 2005 21:37:07 +0200
-From: Dirk Meul <dirk.meul@rwth-aachen.de>
-Message-id: <1120505828.9114.5.camel@hak-nam.dyndns.org>
-MIME-version: 1.0
-Content-transfer-encoding: 7BIT
-Subject: [linux-lvm] LBA sector to VG sector?
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j65GfVV19447
+	for <linux-lvm@redhat.com>; Tue, 5 Jul 2005 12:41:31 -0400
+Received: from cs.columbia.edu (cs.columbia.edu [128.59.16.20])
+	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id j65GfT9q001705
+	for <linux-lvm@redhat.com>; Tue, 5 Jul 2005 12:41:29 -0400
+Received: from algiers.clic.cs.columbia.edu
+	(IDENT:3BNf4pdsJhwWg1j3nhT7U5aeJ8bAPyvF@algiers.clic.cs.columbia.edu
+	[128.59.15.63])
+	by cs.columbia.edu (8.12.10/8.12.10) with ESMTP id j65GfPSa027830
+	(version=TLSv1/SSLv3 cipher=EDH-RSA-DES-CBC3-SHA bits=168 verify=NOT)
+	for <linux-lvm@redhat.com>; Tue, 5 Jul 2005 12:41:26 -0400 (EDT)
+Received: from algiers.clic.cs.columbia.edu
+	(IDENT:+z63pBA6xsPX4/t2AIGR6Vu0ggTO/FeK@localhost [127.0.0.1])
+	by algiers.clic.cs.columbia.edu (8.12.10/8.12.10) with ESMTP id
+	j65GfPMl020821
+	for <linux-lvm@redhat.com>; Tue, 5 Jul 2005 12:41:25 -0400
+Received: from localhost (phung@localhost)
+	by algiers.clic.cs.columbia.edu (8.12.10/8.12.10/Submit) with ESMTP id
+	j65GfPfU020817
+	for <linux-lvm@redhat.com>; Tue, 5 Jul 2005 12:41:25 -0400
+Date: Tue, 5 Jul 2005 12:41:25 -0400 (EDT)
+From: "Dan B. Phung" <phung@cs.columbia.edu>
+Message-ID: <Pine.LNX.4.44.0507051240100.21204-100000@algiers.clic.cs.columbia.edu>
+MIME-Version: 1.0
+Subject: [linux-lvm] Segfault in lvcreate?
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -30,13 +34,26 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@redhat.com
+Content-Type: TEXT/PLAIN; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-Hello list,
+am I doing something wrong? 
 
-is there an easy way to calculate the logical sector within a VG from a
-given LBA sector?
+blade01:phung # pvdisplay
+  --- Physical volume ---
+  PV Name               /dev/sdb
+  VG Name               lil_cheesy1
+  PV Size               68.32 GB / not usable 0
+  Allocatable           yes
+  PE Size (KByte)       4096
+  Total PE              17491
+  Free PE               17491
+  Allocated PE          0
+  PV UUID               LXHvR8-IrQ0-SGV9-wkL2-a0bE-GsQG-vLG6Mg
 
-Best regards
-Dirk
+blade01:phung #  lvcreate  -L68G -n lil_cheesy1_lv lil_cheesy1
+Segmentation fault
+
+
+-dan
