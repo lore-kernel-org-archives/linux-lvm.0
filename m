@@ -1,16 +1,22 @@
-Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j64HCpV00435
-	for <linux-lvm@redhat.com>; Mon, 4 Jul 2005 13:12:51 -0400
-Received: from twinlark.arctic.org (twinlark.arctic.org [207.7.145.18])
-	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id j64HCmqa024823
-	for <linux-lvm@redhat.com>; Mon, 4 Jul 2005 13:12:49 -0400
-Date: Mon, 4 Jul 2005 10:12:43 -0700 (PDT)
-From: dean gaudet <dean-list-linux-lvm@arctic.org>
-Subject: Re: [linux-lvm] Converting from LVM to LVM on RAID1 (WAS: no subject)
-In-Reply-To: <1120421879l.9327l.2l@tangerine>
-Message-ID: <Pine.LNX.4.63.0507041005510.26084@twinlark.arctic.org>
-References: <1120421879l.9327l.2l@tangerine>
-MIME-Version: 1.0
+Received: from null.msp.redhat.com (null.msp.redhat.com [10.15.80.136])
+	by pobox.corp.redhat.com (8.12.8/8.12.8) with ESMTP id j67EEo7j001347
+	for <linux-lvm@redhat.com>; Thu, 7 Jul 2005 10:14:50 -0400
+Received: from null.msp.redhat.com (localhost.localdomain [127.0.0.1])
+	by null.msp.redhat.com (8.13.4/8.12.11) with ESMTP id j67EEoVZ011143
+	for <linux-lvm@redhat.com>; Thu, 7 Jul 2005 09:14:50 -0500
+Received: (from alewis@localhost)
+	by null.msp.redhat.com (8.13.4/8.13.4/Submit) id j67EEofL011142
+	for linux-lvm@redhat.com; Thu, 7 Jul 2005 09:14:50 -0500
+Date: Thu, 7 Jul 2005 09:14:48 -0500
+From: AJ Lewis <alewis@redhat.com>
+Subject: Re: [linux-lvm] Converting from LVM to LVM on RAID1
+Message-ID: <20050707141448.GC15005@null.msp.redhat.com>
+References: <1120409514l.9263l.0l@tangerine>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="0vzXIDBeUiKkjNJl"
+Content-Disposition: inline
+In-Reply-To: <1120409514l.9263l.0l@tangerine>
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -21,30 +27,44 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-it's not a good idea, but you could use raid1 without a superblock... did 
-i mention it's not a good idea?
 
-normally you want the raid1 superblock... which lives at the end of the 
-partition.  you can't blindly convert an LVM pv to a raid1 device without 
-ensuring the physical extent at the end of the pv isn't in use.  i don't 
-see any way to shrink a pv -- so i don't think you'll be able to convert 
-an existing lvm pv to a raid1 device.
+--0vzXIDBeUiKkjNJl
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-however there's nothing stopping you from creating a raid1 device on a 
-second disk (and specify "missing" for the other raid device(s)... see 
-mdadm man page), creating a pv/vg/lv on top of that raid1, then copying 
-the filesystems over... doing grub/lilo/whatever magic... and trying to 
-boot it.
+On Sun, Jul 03, 2005 at 04:51:50PM +0000, Jean-Luc Coulon (f5ibh) wrote:
+> Is there a safe way to convert from a working LVM (with root on LVM) to =
+=20
+> a software RAID1 including the device where is the existing LVM ?
 
-if it works, you can convert the old disk into the second component of the 
-raid.
+Not yet, but I'm working on it ATM - hopefully I'll have something in CVS
+tomorrow or early next week.
 
-there's probably several docs already explaining this sort of procedure 
-without lvm involved... (for example there's one supplied with debian 
-mdadm at /usr/share/doc/mdadm/rootraiddoc.97.html)
+--=20
+AJ Lewis                                   Voice:  612-638-0500
+Red Hat                                    E-Mail: alewis@redhat.com
+One Main Street SE, Suite 209
+Minneapolis, MN 55414
+  =20
+Current GPG fingerprint =3D D9F8 EDCE 4242 855F A03D  9B63 F50C 54A8 578C 8=
+715
+Grab the key at: http://people.redhat.com/alewis/gpg.html or one of the
+many keyservers out there...
 
--dean
+
+--0vzXIDBeUiKkjNJl
+Content-Type: application/pgp-signature
+Content-Disposition: inline
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.1 (GNU/Linux)
+
+iD8DBQFCzTjY9QxUqFeMhxURAmeJAKC7podDgr+25Eb4F7nt+AJtQhY8hACgkCZH
+B5nfkAdOZ4+7qZtX5kHLT9I=
+=rlBo
+-----END PGP SIGNATURE-----
+
+--0vzXIDBeUiKkjNJl--
