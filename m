@@ -1,22 +1,26 @@
-Received: from null.msp.redhat.com (null.msp.redhat.com [10.15.80.136])
-	by pobox.corp.redhat.com (8.12.8/8.12.8) with ESMTP id j67EEo7j001347
-	for <linux-lvm@redhat.com>; Thu, 7 Jul 2005 10:14:50 -0400
-Received: from null.msp.redhat.com (localhost.localdomain [127.0.0.1])
-	by null.msp.redhat.com (8.13.4/8.12.11) with ESMTP id j67EEoVZ011143
-	for <linux-lvm@redhat.com>; Thu, 7 Jul 2005 09:14:50 -0500
-Received: (from alewis@localhost)
-	by null.msp.redhat.com (8.13.4/8.13.4/Submit) id j67EEofL011142
-	for linux-lvm@redhat.com; Thu, 7 Jul 2005 09:14:50 -0500
-Date: Thu, 7 Jul 2005 09:14:48 -0500
-From: AJ Lewis <alewis@redhat.com>
-Subject: Re: [linux-lvm] Converting from LVM to LVM on RAID1
-Message-ID: <20050707141448.GC15005@null.msp.redhat.com>
-References: <1120409514l.9263l.0l@tangerine>
+Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j684APV08404
+	for <linux-lvm@redhat.com>; Fri, 8 Jul 2005 00:10:25 -0400
+Received: from ciao.gmane.org (main.gmane.org [80.91.229.2])
+	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id j684AN8V025499
+	for <linux-lvm@redhat.com>; Fri, 8 Jul 2005 00:10:23 -0400
+Received: from root by ciao.gmane.org with local (Exim 4.43)
+	id 1DqkBw-0004dT-DM
+	for linux-lvm@redhat.com; Fri, 08 Jul 2005 06:10:20 +0200
+Received: from dyn129-100-6-14.onemeg.uwo.ca ([129.100.6.14])
+	by main.gmane.org with esmtp (Gmexim 0.1 (Debian))
+	id 1AlnuQ-0007hv-00
+	for <linux-lvm@redhat.com>; Fri, 08 Jul 2005 06:10:20 +0200
+Received: from jdc by dyn129-100-6-14.onemeg.uwo.ca with local (Gmexim 0.1
+	(Debian)) id 1AlnuQ-0007hv-00
+	for <linux-lvm@redhat.com>; Fri, 08 Jul 2005 06:10:20 +0200
+From: Dan Christensen <jdc@uwo.ca>
+Date: Thu, 07 Jul 2005 23:54:52 -0400
+Message-ID: <8764vmc7xm.fsf@uwo.ca>
+References: <4226C7C8.10406@theserrs.net> <422CB890.4050003@vilain.net>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="0vzXIDBeUiKkjNJl"
-Content-Disposition: inline
-In-Reply-To: <1120409514l.9263l.0l@tangerine>
+Sender: news <news@sea.gmane.org>
+Subject: [linux-lvm] Re: lvm2 on raid5 speed, not so bad
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -27,44 +31,53 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: linux-lvm@redhat.com
 
+[Sorry for following up to a message from March.  I'm just scanning
+the old postings...]
 
---0vzXIDBeUiKkjNJl
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Sam Vilain <sam@vilain.net> writes:
 
-On Sun, Jul 03, 2005 at 04:51:50PM +0000, Jean-Luc Coulon (f5ibh) wrote:
-> Is there a safe way to convert from a working LVM (with root on LVM) to =
-=20
-> a software RAID1 including the device where is the existing LVM ?
+> Firstly, you'll notice that the write performance of the RAID 5 array is
+> lower than for an individual disk.  This is expected, as for RAID 5 updates
+> the system needs to first read two sectors (real + parity), perform a little
+> calculation that modern processors can do quickly enough, and write the two
+> blocks out again.  A large cache can help sometimes, but usually only in
+> Benchmarks ;-).
 
-Not yet, but I'm working on it ATM - hopefully I'll have something in CVS
-tomorrow or early next week.
+This explanation makes sense.  Just to elaborate, for my own
+understanding, the situation where you can get better raid-5 write
+speeds than single device write speeds is when you are doing long
+sequential writes.  It's true that raid has to write twice as many
+blocks out, but my bus bandwidth is about 3 times my individual disk
+write speed, so I should still be able to get 1.5 times the write
+speed, and that's in fact what I observe.  (Because I'm considering
+long sequential writes, the sectors that need to be read to compute
+parity should be in cache.)
 
---=20
-AJ Lewis                                   Voice:  612-638-0500
-Red Hat                                    E-Mail: alewis@redhat.com
-One Main Street SE, Suite 209
-Minneapolis, MN 55414
-  =20
-Current GPG fingerprint =3D D9F8 EDCE 4242 855F A03D  9B63 F50C 54A8 578C 8=
-715
-Grab the key at: http://people.redhat.com/alewis/gpg.html or one of the
-many keyservers out there...
+Idle thinking...If the raid layer was smart enough to notice that
+consecutive writes were being done and group them together, only
+writing the parity once, it would only have to do 33% more writes if
+there are four disks.  This would require the raid layer to do some
+caching.  Has this been thought about?  Or does this happen
+automatically because of the write caching done by lower layers?
 
+> The read access is of comparable speed - this is also expected.
 
---0vzXIDBeUiKkjNJl
-Content-Type: application/pgp-signature
-Content-Disposition: inline
+This surprises me, but is also what I observe in practice.  If I'm
+doing a long sequential read, shouldn't the kernel be able to read in
+parallel from the drives?
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.1 (GNU/Linux)
+On my system, I can get about 59MB/s from each component drive, and
+I also get about 59MB/s from the raid device.  If I read in parallel
+directly from the four drives, I get around 25-30MB/s from each one,
+over 100MB/s in total.  Shouldn't the kernel take advantage of that?
 
-iD8DBQFCzTjY9QxUqFeMhxURAmeJAKC7podDgr+25Eb4F7nt+AJtQhY8hACgkCZH
-B5nfkAdOZ4+7qZtX5kHLT9I=
-=rlBo
------END PGP SIGNATURE-----
+> I'm slightly surprised that the random seek performance is quite poor.
 
---0vzXIDBeUiKkjNJl--
+My seek performance is also only about twice as good as on a single
+device.  Not sure why.
+
+Dan
