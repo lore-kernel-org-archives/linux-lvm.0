@@ -1,18 +1,17 @@
-Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j68EXoV09413
-	for <linux-lvm@redhat.com>; Fri, 8 Jul 2005 10:33:50 -0400
-Received: from wavehammer.waldi.eu.org (postfix@wavehammer.waldi.eu.org
-	[82.139.196.55])
-	by mx3.redhat.com (8.12.11/8.12.11) with ESMTP id j68EXcp9023562
-	for <linux-lvm@redhat.com>; Fri, 8 Jul 2005 10:33:39 -0400
-Date: Fri, 8 Jul 2005 16:33:31 +0200
-From: Bastian Blank <bastian@waldi.eu.org>
-Message-ID: <20050708143331.GA15561@wavehammer.waldi.eu.org>
+Received: from agk.surrey.redhat.com (agk.surrey.redhat.com [172.16.10.74])
+	by pobox.surrey.redhat.com (8.12.8/8.12.8) with ESMTP id j68Ee63N002101
+	for <linux-lvm@redhat.com>; Fri, 8 Jul 2005 15:40:06 +0100
+Received: from agk by agk.surrey.redhat.com with local (Exim 4.34)
+	id 1Dqu1O-0000VB-AD
+	for linux-lvm@redhat.com; Fri, 08 Jul 2005 15:40:06 +0100
+Date: Fri, 8 Jul 2005 15:40:06 +0100
+From: Alasdair G Kergon <agk@redhat.com>
+Subject: Re: [linux-lvm] Moving PEs within a PV for defragmentation
+Message-ID: <20050708144006.GR12337@agk.surrey.redhat.com>
+References: <20050708143331.GA15561@wavehammer.waldi.eu.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="oyUTqETQ0mS9luUI"
 Content-Disposition: inline
-Subject: [linux-lvm] Moving PEs within a PV for defragmentation
+In-Reply-To: <20050708143331.GA15561@wavehammer.waldi.eu.org>
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -23,35 +22,16 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@redhat.com
 
+On Fri, Jul 08, 2005 at 04:33:31PM +0200, Bastian Blank wrote:
+> Is their a reason why pvmove refuses to move PEs within one PV?
 
---oyUTqETQ0mS9luUI
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Does --alloc anywhere help?
+(see an old Debian bug report)
 
-Hi folks
-
-Is their a reason why pvmove refuses to move PEs within one PV?
-
-Bastian
-
---=20
-Where there's no emotion, there's no motive for violence.
-		-- Spock, "Dagger of the Mind", stardate 2715.1
-
---oyUTqETQ0mS9luUI
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-Content-Disposition: inline
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.1 (GNU/Linux)
-
-iEYEARECAAYFAkLOjrsACgkQnw66O/MvCNFIVACgoAmt/Ds4a4V3jHqPeLsZmr1M
-DyoAn2PYYhyacXCbGWF4O1wMY5qNDJzB
-=NP/Q
------END PGP SIGNATURE-----
-
---oyUTqETQ0mS9luUI--
+Alasdair
+-- 
+agk@redhat.com
