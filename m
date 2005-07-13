@@ -1,21 +1,21 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j6DDvfV00489
-	for <linux-lvm@redhat.com>; Wed, 13 Jul 2005 09:57:41 -0400
-Received: from jason.comodo.net (firewall2.comodogroup.com [195.92.253.138])
-	by mx3.redhat.com (8.12.11/8.12.11) with ESMTP id j6DDvZ65004435
-	for <linux-lvm@redhat.com>; Wed, 13 Jul 2005 09:57:35 -0400
-Subject: Re: [linux-lvm] pvcreate prblem
-From: susmitha <sushmitha@comodo.com>
-In-Reply-To: <20050713134942.GB14421@null.msp.redhat.com>
-References: <1121258369.13309.29.camel@fortocent.comodo.net>
-	<42D51683.7060106@berbee.com>
-	<1121262411.14004.1.camel@fortocent.comodo.net>
-	<20050713134942.GB14421@null.msp.redhat.com>
-Message-Id: <1121263678.3206.5.camel@fortocent.comodo.net>
-Mime-Version: 1.0
-Date: Wed, 13 Jul 2005 19:37:58 +0530
-Content-Transfer-Encoding: 7bit
-Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j6DFWBV01623
+	for <linux-lvm@redhat.com>; Wed, 13 Jul 2005 11:32:11 -0400
+Received: from mx2.netapp.com (mx2.netapp.com [216.240.18.37])
+	by mx3.redhat.com (8.12.11/8.12.11) with ESMTP id j6DFW6Am026069
+	for <linux-lvm@redhat.com>; Wed, 13 Jul 2005 11:32:06 -0400
+Received: from baby ([10.42.16.16])
+	by smtp2.corp.netapp.com (8.13.1/8.13.1/NTAP-1.6) with SMTP id
+	j6DFW0sC017528
+	for <linux-lvm@redhat.com>; Wed, 13 Jul 2005 08:32:00 -0700 (PDT)
+Message-Id: <200507131532.j6DFW0sC017528@smtp2.corp.netapp.com>
+Date: Wed, 13 Jul 2005 08:33:01 -0700 (PDT)
+From: Igor Feoktistov <igorf@netapp.com>
+Subject: Re: [linux-lvm] iSCSI lun resize
+MIME-Version: 1.0
+Content-MD5: RAlywRzJ4qvnZhi434zskA==
+Reply-To: Igor Feoktistov <igorf@netapp.com>,
+	LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -25,39 +25,53 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: TEXT/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@redhat.com
-Cc: alewis@redhat.com
 
-Hi,
+I've heard there is the plan to implement pvresize.
+The sequence below works. However, it requires reboot.
+--
+vgcfgbackup
+edit file
+pvcreate --restorefile --uuid
+vgcfgrestore
+--
+Not sure if new pvresize will do it on fly.
+May be somebody from lvm development team can answer this.
+Yes, I know that partitioning works.
+However, there is a restriction on the number of partitions.
 
-After rebooting now its working.
-But I am using EVMS for creating partitions.
-so if I am using "pvcreate /dev/evms/hda5" same error is coming
-but if I use "pvcreate /dev/hda5" it is working after reboot.
+Thanks,
+Igor.
 
-I had doubt whether I can use EVMS volumes for LVM tools.
-But it is not working.Is there any way to work on EVMS volumes?
-
-I am creating RAID1 using EVMS and I want to create LVM on that
-RAID1.But in EVMS, LVM on RAID1 had some problem.So I thought to use LVM
-tools for that situation means LVM on RAID1.
-
-How to proceed in this situation?
-
-
-Thanks for help
-Susmitha
-
-
-> > "fdisk -l " is showing correctly
-> > I mean showing those partitions.
-> > But I didn't get why it came.
-> > Ok I will try by rebooting.
-> > 
-> > Thanks for immediate reply :)
-> 
-> If the partitin table went into effect, you probably just needed a vgscan to
-> pick up the new partitions.  Rebooting works too though.  ;)
-> 
-> Regards, 
+>From: Alex Owen <r.alex.owen@gmail.com>
+>To: linux-lvm@redhat.com
+>Content-Disposition: inline
+>Subject: [linux-lvm] iSCSI lun resize
+>
+>Igor, the trick is to partition the iSCSI device. I have not done this
+>with iSCSI but have with a Fibre Channel SAN.
+>
+>You made sdb  a PV. LVM cannot resize a PV.
+>If you partitioned sdb and made sdb1 a PV then you could using iSCSI
+>resize sdb, then make a new partition from the new free space on
+>sdb... lets call this sdb5 (logical partition). Then pvcreate
+>/dev/sdb5 then vgextend your VG onto /dev/sdb5 then resize the LV then
+>grow the filesystem.
+>
+>The problem may be that you need to reboot to get the kernel to
+>re-read the partition table...
+>
+>Alternativly present a new iSCSI LUN lets call this sdc. Make a PV on
+>that and add that PV to the VG... then resize the LV then grow the
+>filesystem.
+>
+>Regards
+>Alex Owen
+>
+>_______________________________________________
+>linux-lvm mailing list
+>linux-lvm@redhat.com
+>https://www.redhat.com/mailman/listinfo/linux-lvm
+>read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
