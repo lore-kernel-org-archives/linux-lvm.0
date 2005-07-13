@@ -1,18 +1,24 @@
-Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j6DDaPV25908
-	for <linux-lvm@redhat.com>; Wed, 13 Jul 2005 09:36:25 -0400
-Received: from jason.comodo.net (firewall2.comodogroup.com [195.92.253.138])
-	by mx3.redhat.com (8.12.11/8.12.11) with ESMTP id j6DDaEZ9032219
-	for <linux-lvm@redhat.com>; Wed, 13 Jul 2005 09:36:18 -0400
+Received: from null.msp.redhat.com (null.msp.redhat.com [10.15.80.136])
+	by pobox.corp.redhat.com (8.12.8/8.12.8) with ESMTP id j6DDngsC012649
+	for <linux-lvm@redhat.com>; Wed, 13 Jul 2005 09:49:42 -0400
+Received: from null.msp.redhat.com (localhost.localdomain [127.0.0.1])
+	by null.msp.redhat.com (8.13.4/8.12.11) with ESMTP id j6DDng3B015218
+	for <linux-lvm@redhat.com>; Wed, 13 Jul 2005 08:49:42 -0500
+Received: (from alewis@localhost)
+	by null.msp.redhat.com (8.13.4/8.13.4/Submit) id j6DDngwi015217
+	for linux-lvm@redhat.com; Wed, 13 Jul 2005 08:49:42 -0500
+Date: Wed, 13 Jul 2005 08:49:42 -0500
+From: AJ Lewis <alewis@redhat.com>
 Subject: Re: [linux-lvm] pvcreate prblem
-From: susmitha <sushmitha@comodo.com>
-In-Reply-To: <42D51683.7060106@berbee.com>
+Message-ID: <20050713134942.GB14421@null.msp.redhat.com>
 References: <1121258369.13309.29.camel@fortocent.comodo.net>
 	<42D51683.7060106@berbee.com>
-Message-Id: <1121262411.14004.1.camel@fortocent.comodo.net>
+	<1121262411.14004.1.camel@fortocent.comodo.net>
 Mime-Version: 1.0
-Date: Wed, 13 Jul 2005 19:16:51 +0530
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="PmA2V3Z32TCmWXqI"
+Content-Disposition: inline
+In-Reply-To: <1121262411.14004.1.camel@fortocent.comodo.net>
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -23,41 +29,50 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@redhat.com
-
-Hi,
-
-"fdisk -l " is showing correctly
-I mean showing those partitions.
-But I didn't get why it came.
-Ok I will try by rebooting.
-
-Thanks for immediate reply :)
-
-On Wed, 2005-07-13 at 18:56, Alan Jurgensen wrote:
-> sometimes you have to reboot for partition changes to take effect.
-> what does this show:   fdisk -l
-> 
-> susmitha wrote:
-> 
-> >Hi,
-> >
-> >I am new to LVM.
-> >I want t o create LVM volume group.
-> >So first I created a partition and then runned "pvcreate"
-> >root@localhost ~# pvcreate /dev/hda5
-> >  Device /dev/hda5 not found.
-> >
-> >
-> >But that is present.I didn't get why it is showing "Device not found"
-> >Can anyone help me.It is urgent for me.
-> >
-> >Can I create volume group on EVMS volumes?
-> >
-> >
-> >Thanks,
-> >susmitha
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
 
-Susmitha
+--PmA2V3Z32TCmWXqI
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Wed, Jul 13, 2005 at 07:16:51PM +0530, susmitha wrote:
+> Hi,
+>=20
+> "fdisk -l " is showing correctly
+> I mean showing those partitions.
+> But I didn't get why it came.
+> Ok I will try by rebooting.
+>=20
+> Thanks for immediate reply :)
+
+If the partitin table went into effect, you probably just needed a vgscan to
+pick up the new partitions.  Rebooting works too though.  ;)
+
+Regards,=20
+--=20
+AJ Lewis                                   Voice:  612-638-0500
+Red Hat                                    E-Mail: alewis@redhat.com
+One Main Street SE, Suite 209
+Minneapolis, MN 55414
+  =20
+Current GPG fingerprint =3D D9F8 EDCE 4242 855F A03D  9B63 F50C 54A8 578C 8=
+715
+Grab the key at: http://people.redhat.com/alewis/gpg.html or one of the
+many keyservers out there...
+
+
+--PmA2V3Z32TCmWXqI
+Content-Type: application/pgp-signature
+Content-Disposition: inline
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.1 (GNU/Linux)
+
+iD8DBQFC1Rv29QxUqFeMhxURAgucAKCGjew2C3t8eU8o4B3HLE5WgKGkdwCfTU1C
+qKgaA55VW+lX3+iYGeuDuYw=
+=Ydiz
+-----END PGP SIGNATURE-----
+
+--PmA2V3Z32TCmWXqI--
