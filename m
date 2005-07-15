@@ -1,20 +1,9 @@
-Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j6I9TSV15512
-	for <linux-lvm@redhat.com>; Mon, 18 Jul 2005 05:29:28 -0400
-Received: from sklave3.rackland.de (sklave3.rackland.de [213.133.101.23])
-	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id j6I9TRjM024704
-	for <linux-lvm@redhat.com>; Mon, 18 Jul 2005 05:29:27 -0400
-Received: (from hadmut@localhost)
-	by sklave3.rackland.de (8.13.2/8.13.2/Debian-1) id j6I9TQUK005198
-	for linux-lvm@redhat.com; Mon, 18 Jul 2005 11:29:26 +0200
-From: Hadmut Danisch <hadmut@danisch.de>
-Date: Mon, 18 Jul 2005 11:29:26 +0200
-Subject: Re: [linux-lvm] LVM can't detect raid-1 mirrors?
-Message-ID: <20050718092926.GA4911@danisch.de>
-References: <20050718090226.GA4083@danisch.de>
+Date: Fri, 15 Jul 2005 19:13:49 +0200
+From: maximilian attems <maks@sternwelten.at>
+Message-ID: <20050715171349.GF17328@sputnik.stro.at>
 Mime-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20050718090226.GA4083@danisch.de>
+Subject: [linux-lvm] [patch] lvm document how to recover pv metadata
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -27,17 +16,54 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: linux-lvm@redhat.com
+To: alewis@redhat.com
+Cc: linux-lvm@redhat.com
 
-BTW, lvm version is 2.01.12-2 (debian).
+thanks a lot to roadrunner on #lvm.
+belows cmd recovered a partition of mine that i had nuked with mkswap.
+not much sleep helps to do such nonesense.
 
-I just saw that this problem was already mentioned on the mailing 
-list in February with the subject 
+added relevant pvcreate to the recipe section with a big fat warning.
 
-  Having duplicate PV problems, think there's a bug in LVM2 md component
-  detection
+--
+maks
 
-but there wasn't any solution.
-
-regards
-Hadmut
+--- a/LVM-HOWTO.xml.old	2005-07-15 18:57:05.000000000 +0200
++++ b/LVM-HOWTO.xml	2005-07-15 19:02:52.000000000 +0200
+@@ -4372,6 +4372,36 @@ default=lvm
+         </para>
+       </sect2>
+     </sect1>
++    <sect1 id="recovermetadata"><title>Recover physical volume metadata</title>
++      <title>Restore physical volume:</title>
++      <para>
++        If you get the warning "incorrect metadata area header checksum"
++	you probably toasted the volume group descriptor area and lvm
++	startup can't occur. 
++      </para>
++    <warning><title>Warning</title>
++      <para>
++        Don't do this on a properly working lvm.
++        First you need to specify the correct physical volume to 
++	<command>pvcreate</command> or you may lose your data.
++      </para>
++    </warning>
++      <para>
++	Then you need to extract the exact uuid for the relevant partition 
++	(PhysicalVolume of course) from the file 
++	<filename>/etc/lvm/archive/VolumeGroupName_XXXXX.vg</filename>.
++	(Where XXXXX represents the number of the last known good archived lvm
++	metadata). <command>pvcreate</command> can restore the metadata:
++	<command>pvcreate --uuid ".." --restorefile /etc/lvm/archive/VolumeGroupName_XXXXX.vg PhysicalVolume</command>
++      </para>
++      <para>
++	If you are lucky you'll find that the lvm metadata takes on disk 
++	at least so much space than a swap signature. So aboves command
++	can recover a physical volume from an accidental mkswap.
++	<command>pvcreate</command> only overwrites the lvm metadata areas
++	on disk and doesn't touch the data areas (the logical volumes).
++      </para>
++    </sect1>
+   </chapter>
+ 
+   <appendix id="dangerousops"><title>Dangerous Operations</title>
