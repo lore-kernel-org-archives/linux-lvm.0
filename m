@@ -1,15 +1,21 @@
-Received: from [10.15.80.209] (dhcp80-209.msp.redhat.com [10.15.80.209])
-	by pobox.corp.redhat.com (8.12.8/8.12.8) with ESMTP id j6IFiDFE013414
-	for <linux-lvm@redhat.com>; Mon, 18 Jul 2005 11:44:14 -0400
-Mime-Version: 1.0 (Apple Message framework v622)
-In-Reply-To: <20050718092926.GA4911@danisch.de>
-References: <20050718090226.GA4083@danisch.de>
-	<20050718092926.GA4911@danisch.de>
-Message-Id: <5bd7d4014a8e197164c3ed203dace6ef@redhat.com>
+Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j6IG4aV19320
+	for <linux-lvm@redhat.com>; Mon, 18 Jul 2005 12:04:36 -0400
+Received: from server193.fourx.de (server193-fourx.de [81.169.177.193])
+	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id j6IG4ZTY002023
+	for <linux-lvm@redhat.com>; Mon, 18 Jul 2005 12:04:35 -0400
+Received: from [192.168.1.100] (e178126179.adsl.alicedsl.de [85.178.126.179])
+	by server193.fourx.de (Postfix) with ESMTP id F2A535EC0FB
+	for <linux-lvm@redhat.com>; Mon, 18 Jul 2005 18:04:20 +0200 (CEST)
+Mime-Version: 1.0 (Apple Message framework v733)
+In-Reply-To: <42DBCC8A.1070000@berbee.com>
+References: <E53A3797-0C45-494C-BFC3-852900BBE149@kitchhiking.org>
+	<42DBCC8A.1070000@berbee.com>
+Message-Id: <9372D58F-F175-4461-9F61-CAB3DE767861@kitchhiking.org>
 Content-Transfer-Encoding: 7bit
-From: Jonathan E Brassow <jbrassow@redhat.com>
-Subject: Re: [linux-lvm] LVM can't detect raid-1 mirrors?
-Date: Mon, 18 Jul 2005 09:56:30 -0500
+From: "kitchhiking.org" <admin@kitchhiking.org>
+Subject: Re: [linux-lvm] lvm lost after reboot !? how to recover UUID?
+Date: Mon, 18 Jul 2005 18:05:44 +0200
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -20,32 +26,41 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
+Content-Type: text/plain; charset="us-ascii"; delsp="yes"; format="flowed"
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-Have you tried using the filters?
+Hi Alan,
 
-  brassow
+first of all thx for the quick response.
 
-On Jul 18, 2005, at 4:29 AM, Hadmut Danisch wrote:
+I already checked for the physical presence and function of the  
+disks, also checked SMART parameters with
+smartctl -> everything is fine.
 
-> BTW, lvm version is 2.01.12-2 (debian).
->
-> I just saw that this problem was already mentioned on the mailing
-> list in February with the subject
->
->   Having duplicate PV problems, think there's a bug in LVM2 md 
-> component
->   detection
->
-> but there wasn't any solution.
->
-> regards
-> Hadmut
->
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
->
+I changed nothing to the installed system. No new kernel, nothing.
+
+devfs was enabled already before.
+
+pvdisplay/vgdisplay didn't find anything (see my previous post).
+
+vgchange -a y can't find a VG, too.
+
+I have absolutely no clue what happened. I already thought maybe  
+there were still some filesystem writes cached
+and non flushed, when I rebooted but that would be really strange...
+
+Any more ideas?
+
+Regards,
+Constantin
+
+Am 18.07.2005 um 17:36 schrieb Alan Jurgensen:
+
+> First figure out if your disks are there:   dmesg|grep [sh]d
+> Check for partitions:   fdisk -l
+> then see whether LVM stuff is there:  pvscan ; vgscan
+> Look at your distro's boot-up process.... maybe you installed a new  
+> kernel and forgot to include the initrd that activates the VGs  
+> (via:   vgchange -a y)
+> Or maybe you enabled devfs or something, and the discs now show up  
+> with a different device path.
