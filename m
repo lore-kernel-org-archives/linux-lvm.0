@@ -1,22 +1,20 @@
 Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j6IG4aV19320
-	for <linux-lvm@redhat.com>; Mon, 18 Jul 2005 12:04:36 -0400
-Received: from server193.fourx.de (server193-fourx.de [81.169.177.193])
-	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id j6IG4ZTY002023
-	for <linux-lvm@redhat.com>; Mon, 18 Jul 2005 12:04:35 -0400
-Received: from [192.168.1.100] (e178126179.adsl.alicedsl.de [85.178.126.179])
-	by server193.fourx.de (Postfix) with ESMTP id F2A535EC0FB
-	for <linux-lvm@redhat.com>; Mon, 18 Jul 2005 18:04:20 +0200 (CEST)
-Mime-Version: 1.0 (Apple Message framework v733)
-In-Reply-To: <42DBCC8A.1070000@berbee.com>
-References: <E53A3797-0C45-494C-BFC3-852900BBE149@kitchhiking.org>
-	<42DBCC8A.1070000@berbee.com>
-Message-Id: <9372D58F-F175-4461-9F61-CAB3DE767861@kitchhiking.org>
-Content-Transfer-Encoding: 7bit
-From: "kitchhiking.org" <admin@kitchhiking.org>
-Subject: Re: [linux-lvm] lvm lost after reboot !? how to recover UUID?
-Date: Mon, 18 Jul 2005 18:05:44 +0200
-Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j6IKbNV06948
+	for <linux-lvm@redhat.com>; Mon, 18 Jul 2005 16:37:23 -0400
+Received: from wproxy.gmail.com (wproxy.gmail.com [64.233.184.192])
+	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id j6IKbNVI020019
+	for <linux-lvm@redhat.com>; Mon, 18 Jul 2005 16:37:23 -0400
+Received: by wproxy.gmail.com with SMTP id i11so1087204wra
+	for <linux-lvm@redhat.com>; Mon, 18 Jul 2005 13:37:18 -0700 (PDT)
+Message-ID: <e073f91205071813364917ac84@mail.gmail.com>
+Date: Mon, 18 Jul 2005 14:36:27 -0600
+From: Nick I <clusterbuilder@gmail.com>
+Mime-Version: 1.0
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+Subject: [linux-lvm] LVM links
+Reply-To: Nick I <clusterbuilder@gmail.com>,
+	LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -26,41 +24,26 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; delsp="yes"; format="flowed"
-To: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="us-ascii"
+To: linux-lvm@redhat.com
 
-Hi Alan,
+Hi,
 
-first of all thx for the quick response.
+I work on a Web site at www.clusterbuilder.org.  The site highlights a
+broad spectrum of high performance computing related technologies.  It
+has links to reviews, comparisons, pricing and other information
+related to the many HPC solutions available. The site also allows for
+you to complete one request-for-quote form and have multiple hardware
+vendors of your choice provide pricing quotes to you.
 
-I already checked for the physical presence and function of the  
-disks, also checked SMART parameters with
-smartctl -> everything is fine.
+We need knowledgeable cluster users to submit sites that have proved a
+valuable resources to them.  One particular area that we want to make
+sure is complete is communications platforms, which LVM is listed
+under. Please take a minute and submit additional links associated
+with  LVM,Communications or other areas that will benefit the HPC
+community. (To submit content for the site, click on the Submit
+Content section on www.clusterbuilder.org).
 
-I changed nothing to the installed system. No new kernel, nothing.
+Thank you for your help.
 
-devfs was enabled already before.
-
-pvdisplay/vgdisplay didn't find anything (see my previous post).
-
-vgchange -a y can't find a VG, too.
-
-I have absolutely no clue what happened. I already thought maybe  
-there were still some filesystem writes cached
-and non flushed, when I rebooted but that would be really strange...
-
-Any more ideas?
-
-Regards,
-Constantin
-
-Am 18.07.2005 um 17:36 schrieb Alan Jurgensen:
-
-> First figure out if your disks are there:   dmesg|grep [sh]d
-> Check for partitions:   fdisk -l
-> then see whether LVM stuff is there:  pvscan ; vgscan
-> Look at your distro's boot-up process.... maybe you installed a new  
-> kernel and forgot to include the initrd that activates the VGs  
-> (via:   vgchange -a y)
-> Or maybe you enabled devfs or something, and the discs now show up  
-> with a different device path.
+Nick
