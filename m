@@ -1,21 +1,17 @@
 Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j6LEaYV05372
-	for <linux-lvm@redhat.com>; Thu, 21 Jul 2005 10:36:34 -0400
-Received: from strugglers.net (strugglers.net [212.13.198.70])
-	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id j6LEaX4f021411
-	for <linux-lvm@redhat.com>; Thu, 21 Jul 2005 10:36:33 -0400
-Received: from andy by strugglers.net with local (Exim 4.50)
-	id 1Dvc9u-0008Fg-BL
-	for linux-lvm@redhat.com; Thu, 21 Jul 2005 14:36:22 +0000
-Date: Thu, 21 Jul 2005 14:36:22 +0000
-From: Andy Smith <andy@strugglers.net>
-Message-ID: <20050721143622.GC8874@strugglers.net>
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j6MLq4V03450
+	for <linux-lvm@redhat.com>; Fri, 22 Jul 2005 17:52:04 -0400
+Received: from leviathan.ele.uri.edu (leviathan.ele.uri.edu [131.128.51.64])
+	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id j6MLq4Fp029796
+	for <linux-lvm@redhat.com>; Fri, 22 Jul 2005 17:52:04 -0400
+From: Ming Zhang <mingz@ele.uri.edu>
+Date: Fri, 22 Jul 2005 17:51:57 -0400
+Message-Id: <1122069117.24620.51.camel@localhost.localdomain>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="JuvCcU5w0Coraqvt"
-Content-Disposition: inline
-Subject: [linux-lvm] Unusable LV, how to unlock it?
-Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] lvextend impact on io activity
+Reply-To: mingz@ele.uri.edu,
+	LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -25,106 +21,180 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: linux-lvm <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="us-ascii"
+To: LVM <linux-lvm@redhat.com>
+
+Hi folks
+
+I read the code a bit while still can not understand this. Assume there
+are some IO activity to a certain LV while the lvextend is underway, I
+wonder how large this impact will be. And from code point of view,
+during the extend, in which period, the io is blocked or held?
 
 
---JuvCcU5w0Coraqvt
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Thanks!
 
-Hi there,
+This is the lvextend activity. could anybody tell me where is the
+blocked range? 
 
-Just now one of my LVs became unusable, as in every operation done
-on its mounted filesystem just blocks forever.
 
-I believe it is still mounted however that is inside a Xen domain
-that no longer exists so I don't know how to confirm that.
-
-Based on previous advice I tried to run "dmsetup info -c" and "lvs
--v" to compare results, but "lvs -v" also gets stuck here:
-
-[andy@curacao andy]$ sudo lvs -v
-    Finding all logical volumes
-
-I believe the "stuck" LV is /dev/mapper/mainvg-adminroot.
-
-Anyone have any suggestions how I can get use of this LV again
-without rebooting?  Here is the output from "dmsetup info -c":
-
-[andy@curacao andy]$ sudo dmsetup info -c
-Name             Maj Min Stat Open Targ Event  UUID
-mainvg-snapoutpostlonthlroot 254  18 L--w    0    1      0 PqzqVKCpoXCXe6QAIW4C32bS66OoLnW43KIFDMhuc66kGoKopCggfSa4ijWQCF1B
-mainvg-snapcholetroot 254  28 L--w    0    1      0 PqzqVKCpoXCXe6QAIW4C32bS66OoLnW48TFpObhJOO6dcjNdwBMNL1IxV5AvbUaK
-mainvg-snaphomelv-cow 254   3 L--w    1    1      0 PqzqVKCpoXCXe6QAIW4C32bS66OoLnW4ft5n3X4Wesr501vvlHBdydbx31jkfKMV-cow
-mainvg-saffronswap 254  50 L--w    1    1      0 PqzqVKCpoXCXe6QAIW4C32bS66OoLnW4zSKpfytAZ9EUG4rqIvZABneBhuWRkxht
-mainvg-saffronroot 254  49 L--w    1    1      0 PqzqVKCpoXCXe6QAIW4C32bS66OoLnW40HQxP1U2QHGJ7cYPF7rtRD0sLiLYFucm
-mainvg-ruminantswap 254  45 L--w    1    1      0 PqzqVKCpoXCXe6QAIW4C32bS66OoLnW4YLA67yfx2jRo4tylP31c127lFMxVKXqB
-mainvg-ruminantroot 254  44 L--w    1    1      0 PqzqVKCpoXCXe6QAIW4C32bS66OoLnW4NolJn0Zj9cLM4kMcNIW1nGAE6LWbphJz
-mainvg-usrlv     254   0 L--w    1    1      0 PqzqVKCpoXCXe6QAIW4C32bS66OoLnW4mT2ApHrAfpAnDCWjRGAzyrY145rJMmcD
-mainvg-snapoutpostlonthlroot-cow 254  17 L--w    1    1      0 PqzqVKCpoXCXe6QAIW4C32bS66OoLnW43KIFDMhuc66kGoKopCggfSa4ijWQCF1B-cow
-mainvg-snapcholetroot-cow 254  26 L--w    1    1      0 PqzqVKCpoXCXe6QAIW4C32bS66OoLnW48TFpObhJOO6dcjNdwBMNL1IxV5AvbUaK-cow
-mainvg-ruminantdata 254  46 L--w    1    1      0 PqzqVKCpoXCXe6QAIW4C32bS66OoLnW4hbYSoa2T5XuNRw73bU5BOXmTBDv6ibVX
-mainvg-strugglersroot-real 254  12 L--w    2    1      0 PqzqVKCpoXCXe6QAIW4C32bS66OoLnW43jwledji1nh8rtcbheq8MUU1vi937zDK-real
-mainvg-blueswap  254  48 L--w    1    1      0 PqzqVKCpoXCXe6QAIW4C32bS66OoLnW4RjnFTRybYJqK8drln4HzMYWnbfk33aSu
-mainvg-seinfeldswap 254  25 L--w    1    1      0 PqzqVKCpoXCXe6QAIW4C32bS66OoLnW4XScAry8eVwasTOLeIh6HfGSHim3fIuv9
-mainvg-snapseinfeldroot-cow 254  22 L--w    1    1      0 PqzqVKCpoXCXe6QAIW4C32bS66OoLnW4yh6e80ZEQafHKSe4jo6ydJWe1T0A1lkj-cow
-mainvg-blueroot  254  47 L--w    1    1      0 PqzqVKCpoXCXe6QAIW4C32bS66OoLnW4Xx1o20L4fpev6EU5wMB6mHhayQsnRLQg
-mainvg-adminswap 254  43 L--w    0    1      0 PqzqVKCpoXCXe6QAIW4C32bS66OoLnW48Q2Z20jIewK2Vdt47Kn4IO6KBI28PIAm
-mainvg-seinfeldroot 254  24 L--w    1    1      0 PqzqVKCpoXCXe6QAIW4C32bS66OoLnW43BT9T40cl5HYYg3j1QIwfp5hc0LIqUsI
-mainvg-adminroot 254  38 L--w    1    1      0 PqzqVKCpoXCXe6QAIW4C32bS66OoLnW4CjHGy8QpGKoH35P5U58Di1NKeYspeIR2
-mainvg-admindata 254  42 L--w    0    1      0 PqzqVKCpoXCXe6QAIW4C32bS66OoLnW4cCHdlPbllQNt50aJANhLrqbjUkK7jCsP
-mainvg-tmplv     254   2 L--w    1    1      0 PqzqVKCpoXCXe6QAIW4C32bS66OoLnW4tfVsPETP9bimi535hqeX6Ch1yhYGePxS
-mainvg-admindata-real 254  39 L--w    2    1      0 PqzqVKCpoXCXe6QAIW4C32bS66OoLnW4cCHdlPbllQNt50aJANhLrqbjUkK7jCsP-real
-mainvg-snapstrugglersroot 254  13 L--w    0    1      0 PqzqVKCpoXCXe6QAIW4C32bS66OoLnW41yOu8xefQnL6FK69xAojAvXYqLcAlI0g
-mainvg-snaphomelv 254   5 L--w    0    1      0 PqzqVKCpoXCXe6QAIW4C32bS66OoLnW4ft5n3X4Wesr501vvlHBdydbx31jkfKMV
-mainvg-outpostlonthlroot-real 254  16 L--w    2    1      0 PqzqVKCpoXCXe6QAIW4C32bS66OoLnW4oTAjSEuyiaawrNF6iUbSrZqzWCHqOW1P-real
-mainvg-snapstrugglersdata 254  33 L--w    0    1      0 PqzqVKCpoXCXe6QAIW4C32bS66OoLnW4gKZfk2xyEo6749X1uLWyPhxF3tP8sfvM
-mainvg-choletroot-real 254  27 L--w    2    1      0 PqzqVKCpoXCXe6QAIW4C32bS66OoLnW4ZlGfn0e2THSlmotbck1bJBEPr12ngi7r-real
-mainvg-seinfeldroot-real 254  21 L--w    2    1      0 PqzqVKCpoXCXe6QAIW4C32bS66OoLnW43BT9T40cl5HYYg3j1QIwfp5hc0LIqUsI-real
-mainvg-strugglersswap 254  15 L--w    1    1      0 PqzqVKCpoXCXe6QAIW4C32bS66OoLnW43CcBI91LrT914eNMDyzhdYjym0rVQTsF
-mainvg-outpostlonthlswap 254  20 L--w    1    1      0 PqzqVKCpoXCXe6QAIW4C32bS66OoLnW4BR8eDYVYzQJXlGPplq1YKB27p7h3HtZV
-mainvg-strugglersroot 254  14 L--w    1    1      0 PqzqVKCpoXCXe6QAIW4C32bS66OoLnW43jwledji1nh8rtcbheq8MUU1vi937zDK
-mainvg-outpostlonthlroot 254  19 L--w    1    1      0 PqzqVKCpoXCXe6QAIW4C32bS66OoLnW4oTAjSEuyiaawrNF6iUbSrZqzWCHqOW1P
-mainvg-homelv    254   6 L--w    1    1      0 PqzqVKCpoXCXe6QAIW4C32bS66OoLnW4cd3BqQaBDxmVgo7X37SYp33yQBeOA0n0
-mainvg-strugglersdata 254  34 L--w    1    1      0 PqzqVKCpoXCXe6QAIW4C32bS66OoLnW4gp5msGLmNEROJHmToKkpBxe8SC8I7xQ6
-mainvg-varlv     254   1 L--w    1    1      0 PqzqVKCpoXCXe6QAIW4C32bS66OoLnW4z0sYK4fz3qSmLuXYIvjR3y0Nt22DgsCB
-mainvg-snapdatalv 254   9 L--w    0    1      0 PqzqVKCpoXCXe6QAIW4C32bS66OoLnW4HAJcH84mtd6DzqhjIxPsZGM0fhFKIp9B
-mainvg-adminroot-real 254  36 L--w    2    1      0 PqzqVKCpoXCXe6QAIW4C32bS66OoLnW4CjHGy8QpGKoH35P5U58Di1NKeYspeIR2-real
-mainvg-choletswap 254  30 L--w    1    1      0 PqzqVKCpoXCXe6QAIW4C32bS66OoLnW47YXxUIkZdkdioRs7QxsBBJXFa0jslAWS
-mainvg-choletroot 254  29 L--w    1    1      0 PqzqVKCpoXCXe6QAIW4C32bS66OoLnW4ZlGfn0e2THSlmotbck1bJBEPr12ngi7r
-mainvg-homelv-real 254   4 L--w    2    1      0 PqzqVKCpoXCXe6QAIW4C32bS66OoLnW4cd3BqQaBDxmVgo7X37SYp33yQBeOA0n0-real
-mainvg-snapstrugglersroot-cow 254  11 L--w    1    1      0 PqzqVKCpoXCXe6QAIW4C32bS66OoLnW41yOu8xefQnL6FK69xAojAvXYqLcAlI0g-cow
-mainvg-datalv    254  10 L--w    1    1      0 PqzqVKCpoXCXe6QAIW4C32bS66OoLnW4OesUvyDaFU9O4jKDhPlChy4LpwYAMoe4
-mainvg-snapadminroot 254  37 L--w    0    1      0 PqzqVKCpoXCXe6QAIW4C32bS66OoLnW46RYghmBICie3mZ3GbWDWt4L2rziM1iuc
-mainvg-snapstrugglersdata-cow 254  32 L--w    1    1      0 PqzqVKCpoXCXe6QAIW4C32bS66OoLnW4gKZfk2xyEo6749X1uLWyPhxF3tP8sfvM-cow
-mainvg-snapseinfeldroot 254  23 L--w    0    1      0 PqzqVKCpoXCXe6QAIW4C32bS66OoLnW4yh6e80ZEQafHKSe4jo6ydJWe1T0A1lkj
-mainvg-snapadmindata 254  41 L--w    0    1      0 PqzqVKCpoXCXe6QAIW4C32bS66OoLnW4MifVzYFYKQGTZDyn3ZxjL7CLyh70DrxK
-mainvg-strugglersdata-real 254  31 L--w    2    1      0 PqzqVKCpoXCXe6QAIW4C32bS66OoLnW4gp5msGLmNEROJHmToKkpBxe8SC8I7xQ6-real
-mainvg-snapadminroot-cow 254  35 L--w    1    1      0 PqzqVKCpoXCXe6QAIW4C32bS66OoLnW46RYghmBICie3mZ3GbWDWt4L2rziM1iuc-cow
-mainvg-datalv-real 254   7 L--w    2    1      0 PqzqVKCpoXCXe6QAIW4C32bS66OoLnW4OesUvyDaFU9O4jKDhPlChy4LpwYAMoe4-real
-mainvg-snapdatalv-cow 254   8 L--w    1    1      0 PqzqVKCpoXCXe6QAIW4C32bS66OoLnW4HAJcH84mtd6DzqhjIxPsZGM0fhFKIp9B-cow
-mainvg-snapadmindata-cow 254  40 L--w    1    1      0 PqzqVKCpoXCXe6QAIW4C32bS66OoLnW4MifVzYFYKQGTZDyn3ZxjL7CLyh70DrxK-cow
-
-It seems odd to me that any of the LVs above with "snap" in their
-name show an open count since I don't have any of them mounted
-currently.
-
-Kernel 2.6.11 with Xen patches (2.0.6).
-
-Thanks,
-Andy
-
---JuvCcU5w0Coraqvt
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-Content-Disposition: inline
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.1 (GNU/Linux)
-
-iD8DBQFC37LmIJm2TL8VSQsRAgGvAJ9oBTeaiJxLaOmQac8ET+x25WvQvACghV6b
-5d57J32PL7n1hPCVTDh4UWE=
-=vs2T
------END PGP SIGNATURE-----
-
---JuvCcU5w0Coraqvt--
+#lvmcmdline.c:836         Processing: lvextend -vvvvvvvv -L
++1G /dev/vgtest/test
+#lvmcmdline.c:839         O_DIRECT will be used
+#config/config.c:773       Setting global/locking_type to 1
+#config/config.c:758       Setting global/locking_dir to /var/lock/lvm
+#locking/locking.c:139       File-based locking enabled.
+#lvresize.c:519     Finding volume group vgtest
+#locking/file_locking.c:164       Locking /var/lock/lvm/V_vgtest WB
+#device/dev-io.c:425         Opened /dev/md0 RW O_DIRECT
+#device/dev-io.c:134         /dev/md0: block size is 4096 bytes
+#device/dev-io.c:204         <backtrace>
+#label/label.c:135         /dev/md0: Failed to read label area
+#label/label.c:194       /dev/md0: No label detected
+#label/label.c:286         <backtrace>
+#device/dev-io.c:425         Opened /dev/hda1 RW O_DIRECT
+#device/dev-io.c:134         /dev/hda1: block size is 1024 bytes
+#label/label.c:194       /dev/hda1: No label detected
+#label/label.c:286         <backtrace>
+#device/dev-io.c:425         Opened /dev/sda1 RW O_DIRECT
+#device/dev-io.c:134         /dev/sda1: block size is 512 bytes
+#label/label.c:173       /dev/sda1: lvm2 label detected
+#cache/lvmcache.c:427         lvmcache: /dev/sda1 now orphaned
+#cache/lvmcache.c:427         lvmcache: /dev/sda1 now in VG vgtest
+#device/dev-io.c:425         Opened /dev/hda2 RW O_DIRECT
+#device/dev-io.c:134         /dev/hda2: block size is 4096 bytes
+#label/label.c:194       /dev/hda2: No label detected
+#label/label.c:286         <backtrace>
+#device/dev-io.c:425         Opened /dev/hda3 RW O_DIRECT
+#device/dev-io.c:134         /dev/hda3: block size is 4096 bytes
+#label/label.c:194       /dev/hda3: No label detected
+#label/label.c:286         <backtrace>
+#device/dev-io.c:425         Opened /dev/sdb1 RW O_DIRECT
+#device/dev-io.c:134         /dev/sdb1: block size is 512 bytes
+#label/label.c:173       /dev/sdb1: lvm2 label detected
+#cache/lvmcache.c:427         lvmcache: /dev/sdb1 now orphaned
+#cache/lvmcache.c:427         lvmcache: /dev/sdb1 now in VG vgtest
+#label/label.c:173       /dev/sda1: lvm2 label detected
+#label/label.c:173       /dev/sdb1: lvm2 label detected
+#label/label.c:173       /dev/sda1: lvm2 label detected
+#label/label.c:173       /dev/sdb1: lvm2 label detected
+#format_text/format-text.c:311         Read vgtest metadata (1135)
+from /dev/sda1 at 93184 size 978
+#label/label.c:173       /dev/sda1: lvm2 label detected
+#label/label.c:173       /dev/sdb1: lvm2 label detected
+#format_text/format-text.c:311         Read vgtest metadata (1135)
+from /dev/sdb1 at 9216 size 978
+#archiver.c:109     Archiving volume group "vgtest" metadata.
+#metadata/pv_map.c:177         Allowing allocation on /dev/sda1 start PE
+0 length 25
+#metadata/pv_map.c:177         Allowing allocation on /dev/sda1 start PE
+1305 length 3813
+#metadata/pv_map.c:177         Allowing allocation on /dev/sdb1 start PE
+0 length 1023
+#metadata/pv_manip.c:231         /dev/sda1 0:      0     25: test
+(1280:0)
+#metadata/pv_manip.c:231         /dev/sda1 1:     25   1280: test(0:0)
+#metadata/pv_manip.c:231         /dev/sda1 2:   1305    231: test
+(1305:0)
+#metadata/pv_manip.c:231         /dev/sda1 3:   1536   3582: NULL(0:0)
+#metadata/pv_manip.c:231         /dev/sdb1 0:      0   1023: NULL(0:0)
+#format_text/format-text.c:401         Writing vgtest metadata
+to /dev/sda1 at 94208 len 1230
+#format_text/format-text.c:401         Writing vgtest metadata
+to /dev/sdb1 at 10240 len 1230
+#format_text/format-text.c:487         Pre-Committing vgtest metadata
+(1136) to /dev/sda1 header at 2048
+#format_text/format-text.c:487         Pre-Committing vgtest metadata
+(1136) to /dev/sdb1 header at 2048
+#archiver.c:333     Creating volume group backup
+"/etc/lvm/backup/vgtest"
+#format_text/format-text.c:667         Writing vgtest metadata
+to /etc/lvm/backup/.lvm_centos4.localdomain_3967_582226307
+#format_text/format-text.c:711         Committing vgtest metadata (1136)
+#format_text/format-text.c:712
+Renaming /etc/lvm/backup/vgtest.tmp to /etc/lvm/backup/vgtest
+#locking/file_locking.c:250         Locking LV
+CLvaUmVA006uC6Nr1pXXOad2nN1ldecty23Be3lof5n4v6CxFykmOs5Ndv5uC8NB (W)
+#metadata/metadata.c:1153       Finding volume group for uuid
+CLvaUmVA006uC6Nr1pXXOad2nN1ldecty23Be3lof5n4v6CxFykmOs5Ndv5uC8NB
+#label/label.c:173       /dev/sda1: lvm2 label detected
+#label/label.c:173       /dev/sdb1: lvm2 label detected
+#label/label.c:173       /dev/sda1: lvm2 label detected
+#label/label.c:173       /dev/sdb1: lvm2 label detected
+#format_text/format-text.c:311         Read vgtest metadata (1135)
+from /dev/sda1 at 93184 size 978
+#label/label.c:173       /dev/sda1: lvm2 label detected
+#label/label.c:173       /dev/sdb1: lvm2 label detected
+#format_text/format-text.c:311         Read vgtest metadata (1135)
+from /dev/sdb1 at 9216 size 978
+#metadata/metadata.c:1159     Found volume group "vgtest"
+#config/config.c:758       Setting activation/missing_stripe_filler
+to /dev/ioerror
+#activate/dev_manager.c:1040         Getting device info for vgtest-test
+#ioctl/libdm-iface.c:1326         dm version   O  
+#ioctl/libdm-iface.c:1326         dm info
+CLvaUmVA006uC6Nr1pXXOad2nN1ldecty23Be3lof5n4v6CxFykmOs5Ndv5uC8NB N  
+#mm/memlock.c:100       Locking memory
+#mm/memlock.c:131         memlock_count inc to 1
+#ioctl/libdm-iface.c:1326         dm names   O  
+#activate/dev_manager.c:1877         Found existing layer 'vgtest-test'
+#activate/dev_manager.c:1120         Getting device info for vgtest-test
+#ioctl/libdm-iface.c:1326         dm info vgtest-test  N  
+#activate/dev_manager.c:2125         Found active lv test
+#activate/dev_manager.c:502       Suspending vgtest-test
+#ioctl/libdm-iface.c:1326         dm suspend vgtest-test  N  
+#format_text/format-text.c:487         Committing vgtest metadata (1136)
+to /dev/sda1 header at 2048
+#format_text/format-text.c:487         Committing vgtest metadata (1136)
+to /dev/sdb1 header at 2048
+#locking/file_locking.c:235         Unlocking LV
+CLvaUmVA006uC6Nr1pXXOad2nN1ldecty23Be3lof5n4v6CxFykmOs5Ndv5uC8NB
+#metadata/metadata.c:1153       Finding volume group for uuid
+CLvaUmVA006uC6Nr1pXXOad2nN1ldecty23Be3lof5n4v6CxFykmOs5Ndv5uC8NB
+#label/label.c:173       /dev/sda1: lvm2 label detected
+#label/label.c:173       /dev/sdb1: lvm2 label detected
+#label/label.c:173       /dev/sda1: lvm2 label detected
+#label/label.c:173       /dev/sdb1: lvm2 label detected
+#format_text/format-text.c:311         Read vgtest metadata (1136)
+from /dev/sda1 at 94208 size 1230
+#label/label.c:173       /dev/sda1: lvm2 label detected
+#label/label.c:173       /dev/sdb1: lvm2 label detected
+#format_text/format-text.c:311         Read vgtest metadata (1136)
+from /dev/sdb1 at 10240 size 1230
+#metadata/metadata.c:1159     Found volume group "vgtest"
+#activate/dev_manager.c:1040         Getting device info for vgtest-test
+#ioctl/libdm-iface.c:1326         dm info
+CLvaUmVA006uC6Nr1pXXOad2nN1ldecty23Be3lof5n4v6CxFykmOs5Ndv5uC8NB N  
+#ioctl/libdm-iface.c:1326         dm names   O  
+#activate/dev_manager.c:1877         Found existing layer 'vgtest-test'
+#activate/dev_manager.c:1120         Getting device info for vgtest-test
+#ioctl/libdm-iface.c:1326         dm info vgtest-test  N  
+#activate/dev_manager.c:2125         Found active lv test (suspended)
+#activate/dev_manager.c:552     Loading vgtest-test
+#activate/dev_manager.c:719         Adding target: 0 10485760
+linear /dev/sda1 205184
+#activate/dev_manager.c:719         Adding target: 10485760 204800
+linear /dev/sda1 384
+#activate/dev_manager.c:719         Adding target: 10690560 1892352
+linear /dev/sda1 10690944
+#ioctl/libdm-iface.c:1326         dm reload
+CLvaUmVA006uC6Nr1pXXOad2nN1ldecty23Be3lof5n4v6CxFykmOs5Ndv5uC8NB N  
+#activate/dev_manager.c:634       Activated vgtest-test
+CLvaUmVA006uC6Nr1pXXOad2nN1ldecty23Be3lof5n4v6CxFykmOs5Ndv5uC8NB 253:000
+#activate/dev_manager.c:502       Resuming vgtest-test
+#ioctl/libdm-iface.c:1326         dm resume vgtest-test  N  
+#mm/memlock.c:119       Unlocking memory
+#mm/memlock.c:138         memlock_count dec to 0
+#activate/fs.c:169       Removing /dev/vgtest/test
+#activate/fs.c:176       Linking /dev/vgtest/test -> /dev/mapper/vgtest-
+test
+#misc/selinux.c:25       Setting SELinux context for /dev/vgtest/test
+#locking/file_locking.c:59       Unlocking /var/lock/lvm/V_vgtest
+#device/dev-io.c:456         Closed /dev/md0
+#device/dev-io.c:456         Closed /dev/hda1
+#device/dev-io.c:456         Closed /dev/sda1
+#device/dev-io.c:456         Closed /dev/hda2
+#device/dev-io.c:456         Closed /dev/hda3
+#device/dev-io.c:456         Closed /dev/sdb1
+  Extending logical volume test to 6.00 GB
+  Logical volume test successfully resized
