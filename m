@@ -1,18 +1,12 @@
-Received: from aeon.coker.com.au (sebastian-int.corp.redhat.com
-	[172.16.52.221])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j6PCjFV21820
-	for <linux-lvm@redhat.com>; Mon, 25 Jul 2005 08:45:15 -0400
-From: Russell Coker <russell@coker.com.au>
-Date: Mon, 25 Jul 2005 22:45:09 +1000
-References: <42E4B322.6070600@dsvr.co.uk>
-In-Reply-To: <42E4B322.6070600@dsvr.co.uk>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Date: Tue, 26 Jul 2005 14:52:50 -0500
+From: AJ Lewis <alewis@redhat.com>
+Message-ID: <20050726195250.GX4954@null.msp.redhat.com>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="Tw5XVHq4jmAOFG53"
 Content-Disposition: inline
-Message-Id: <200507252245.13317.russell@coker.com.au>
-Subject: [linux-lvm] Re: Linux LVM snmp MIB.
-Reply-To: russell@coker.com.au,
-	LVM general discussion and development <linux-lvm@redhat.com>
+Subject: [linux-lvm] [PATCH] fix pool format handler to work with pvseg code
+Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -22,28 +16,69 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: Ceri Storey <ceri.storey@dsvr.co.uk>
-Cc: linux-lvm@redhat.com
+To: linux-lvm@redhat.com
+Cc: agk@redhat.com
 
-On Monday 25 July 2005 19:38, Ceri Storey <ceri.storey@dsvr.co.uk> wrote:
-> My company is looking at doing per logical volume I/O statistics
-> gathering via SNMP for our hosting platform, and was wondering if there
-> was any pre-defined MIB for this purpose?
->
-> I've found
-> https://www.redhat.com/archives/linux-lvm/2001-November/msg00140.html
-> which references
-> http://people.debian.org/~wakkerma/iana/oid.html#asgn-debian.project ,
 
-It's been ages since I looked at that.  Nothing that I devised became 
-official.  It would be best if someone else took over that, I'm sure that 
-Wichert would be happy to delegate it to someone else instead of me.
+--Tw5XVHq4jmAOFG53
+Content-Type: multipart/mixed; boundary="D85EWoRcDXv1uhH1"
+Content-Disposition: inline
 
-Any volunteers?  Ceri, maybe you should do this.
 
--- 
-http://www.coker.com.au/selinux/   My NSA Security Enhanced Linux packages
-http://www.coker.com.au/bonnie++/  Bonnie++ hard drive benchmark
-http://www.coker.com.au/postal/    Postal SMTP/POP benchmark
-http://www.coker.com.au/~russell/  My home page
+--D85EWoRcDXv1uhH1
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+Here's a very small patch that allows the pool format handler to work prope=
+rly
+with the pv segment code.  It's a similar fix to the one that was necessary
+for the format1 handler.
+
+--=20
+AJ Lewis                                   Voice:  612-638-0500
+Red Hat                                    E-Mail: alewis@redhat.com
+One Main Street SE, Suite 209
+Minneapolis, MN 55414
+  =20
+Current GPG fingerprint =3D D9F8 EDCE 4242 855F A03D  9B63 F50C 54A8 578C 8=
+715
+Grab the key at: http://people.redhat.com/alewis/gpg.html or one of the
+many keyservers out there...
+
+
+--D85EWoRcDXv1uhH1
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: attachment; filename="fix_format_pool.patch"
+
+Tue Jul 26 14:27:36 CDT 2005  alewis@redhat.com
+  * Fix format pool handler to work with new pv segment code
+diff -rN -u old-LVM2-cvs-testing/lib/format_pool/import_export.c new-LVM2-cvs-testing/lib/format_pool/import_export.c
+--- old-LVM2-cvs-testing/lib/format_pool/import_export.c	2005-07-26 14:51:40.000000000 -0500
++++ new-LVM2-cvs-testing/lib/format_pool/import_export.c	2005-07-26 14:27:27.000000000 -0500
+@@ -45,7 +45,7 @@
+ 		get_pool_vg_uuid(&vg->id, &pl->pd);
+ 		vg->extent_size = POOL_PE_SIZE;
+ 		vg->status |= LVM_READ | LVM_WRITE | CLUSTERED | SHARED;
+-		vg->free_count = 0;
++		vg->free_count = vg->extent_count;
+ 		vg->max_lv = 1;
+ 		vg->max_pv = POOL_MAX_DEVICES;
+ 		vg->alloc = ALLOC_NORMAL;
+
+
+--D85EWoRcDXv1uhH1--
+
+--Tw5XVHq4jmAOFG53
+Content-Type: application/pgp-signature
+Content-Disposition: inline
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.1 (GNU/Linux)
+
+iD8DBQFC5pSS9QxUqFeMhxURAs5hAKCOqE5f8klH7nwj9gpJcUZLR9TINACgrIBC
+9svTjY8JYhQ44UdqeqYA338=
+=5yjR
+-----END PGP SIGNATURE-----
+
+--Tw5XVHq4jmAOFG53--
