@@ -1,33 +1,22 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j6P8JPV28508
-	for <linux-lvm@redhat.com>; Mon, 25 Jul 2005 04:19:25 -0400
-Received: from moutng.kundenserver.de (moutng.kundenserver.de
-	[212.227.126.186])
-	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id j6P8JHZu014432
-	for <linux-lvm@redhat.com>; Mon, 25 Jul 2005 04:19:18 -0400
-Received: from localhost (localhost.vollmer.home [127.0.0.1])
-	by joergli.vollmer.home (Postfix) with ESMTP id 545B66A446
-	for <linux-lvm@redhat.com>; Mon, 25 Jul 2005 10:19:16 +0200 (CEST)
-Received: from joergli.vollmer.home ([127.0.0.1])
-	by localhost (joergli [127.0.0.1]) (amavisd-new, port 10024) with ESMTP
-	id 15132-02 for <linux-lvm@redhat.com>;
-	Mon, 25 Jul 2005 10:19:13 +0200 (CEST)
-Received: from joergli.vollmer.home (joergli.vollmer.home [127.0.0.2])
-	by joergli.vollmer.home (Postfix) with ESMTP id 808F96A444
-	for <linux-lvm@redhat.com>; Mon, 25 Jul 2005 10:19:13 +0200 (CEST)
-From: "=?iso-8859-1?q?Dr. J=FCrgen Vollmer?="
-	<Juergen.Vollmer@informatik-vollmer.de>
-Subject: Re: [linux-lvm] LVM / File descriptor .. left open / Snapshot-Problems
-Date: Mon, 25 Jul 2005 10:19:09 +0200
-References: <200507231644.26202.Juergen.Vollmer@informatik-vollmer.de>
-	<200507242001.46066.Juergen.Vollmer@informatik-vollmer.de>
-	<20050725023732.GP23710@agk.surrey.redhat.com>
-In-Reply-To: <20050725023732.GP23710@agk.surrey.redhat.com>
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j6Q8ABV01779
+	for <linux-lvm@redhat.com>; Tue, 26 Jul 2005 04:10:11 -0400
+Received: from mail.x-cellent.com (www.x-cellent.com [212.121.145.100])
+	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id j6Q8A4aQ009571
+	for <linux-lvm@redhat.com>; Tue, 26 Jul 2005 04:10:04 -0400
+Received: from localhost (localhost [127.0.0.1])
+	by mail.x-cellent.com (Postfix) with ESMTP id F423A879DB
+	for <linux-lvm@redhat.com>; Tue, 26 Jul 2005 10:10:03 +0200 (CEST)
+Received: from mail.x-cellent.com ([127.0.0.1])
+	by localhost (torre [127.0.0.1]) (amavisd-new, port 10024) with ESMTP
+	id 17901-01 for <linux-lvm@redhat.com>;
+	Tue, 26 Jul 2005 10:09:59 +0200 (CEST)
+Message-ID: <42E5EFD6.5020102@x-cellent.com>
+Date: Tue, 26 Jul 2005 10:09:58 +0200
+From: Sven Landtrachtinger <sven.landtrachtinger@x-cellent.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="nextPart4725114.8huQr14BYg";
-	protocol="application/pgp-signature"; micalg=pgp-sha1
 Content-Transfer-Encoding: 7bit
-Message-Id: <200507251019.10078.Juergen.Vollmer@informatik-vollmer.de>
+Subject: [linux-lvm] LVM-DRBD problem
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -38,43 +27,211 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="us-ascii"
+To: linux-lvm@redhat.com
 
---nextPart4725114.8huQr14BYg
-Content-Type: text/plain;
-  charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Content-Disposition: inline
+Hi,
 
-Am Montag, 25. Juli 2005 04:37 schrieb Alasdair G Kergon:
+we tried to create a new lv with lvcreate -L 440G vg00 -n lv_datenarchiv.
+The lvcreate failed. It seems that lvm can't handle a second drdb device.
+It allocates space on nb0 and nb1, but the lvcreate fails with an error
+and it is not possible to make a mkreiserfs.
 
-> Would you retest with the latest lvm2 source code release from
-> sources.redhat.com/lvm2 ?
+Is this problem fixed in a newer version of lvm?
 
-yes, but I'm leaving into vacation this week, so this has to wait 'til
-mid of August.
+Thanks in advance
+Sven Landtrachtinger
+
+lxf2s:/tmp # lvm version
+  LVM version:     2.00.08 (2003-11-14)
+  Library version: 1.00.07-ioctl (2003-11-21)
+  Driver version:  4.0.5
+
+lxf2s:~ # uname -a
+Linux lxf2s 2.4.23 #4 SMP Tue Dec 16 16:44:35 CET 2003 i686 i686 i386
+GNU/Linux
 
 
-Bye
-J=FCrgen
+Before lvscreate:
+
+lxf2s:/tmp # vgs
+VG   #PV #LV #SN Attr VSize VFree
+vg00   2   2   0 wz-- 1.19T 760.60G
+
+lxf2s:/tmp # pvs
+PV         VG   Fmt  Attr PSize   PFree
+/dev/nb0   vg00 lvm2 a-   815.71G 360.22G
+/dev/nb1   vg00 lvm2 a-   400.38G 400.38G
+
+After lvscreate:
+
+lxf2s:/dev # lvcreate -L 440G vg00 -n lv_datenarchiv
+
+dmesg:
+drbd0: blksize=1024 B
+drbd0: blksize=4096 B
+device-mapper: device /dev/nb0 too small for target
+device-mapper: dm-linear: Device lookup failed
+device-mapper: error adding target to table
+device-mapper: device /dev/nb0 too small for target
+device-mapper: dm-linear: Device lookup failed
+device-mapper: error adding target to table
+device-mapper: device /dev/nb0 too small for target
+device-mapper: dm-linear: Device lookup failed
+device-mapper: error adding target to table
+device-mapper: device /dev/nb0 too small for target
+device-mapper: dm-linear: Device lookup failed
+device-mapper: error adding target to table
+device-mapper: device /dev/nb0 too small for target
+device-mapper: dm-linear: Device lookup failed
+device-mapper: error adding target to table
 
 
-=2D-=20
-Dr.rer.nat. Juergen Vollmer, Viktoriastrasse 15, D-76133 Karlsruhe
-Tel: +49(721) 9204871 Fax: +49(721) 24874
-Juergen.Vollmer@informatik-vollmer.de
-www.informatik-vollmer.de
-Internet-Telefonie: www.skype.com Benutzer: juergen.vollmer
+lxf2s:/dev # pvs
+PV         VG   Fmt  Attr PSize   PFree
+/dev/nb0   vg00 lvm2 a-   815.71G      0
+/dev/nb1   vg00 lvm2 a-   400.38G 320.60G
 
---nextPart4725114.8huQr14BYg
-Content-Type: application/pgp-signature
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.0 (GNU/Linux)
+lxf2s:/dev # vgdisplay
+  --- Logical volume ---
+  LV Name                /dev/vg00/lv_datenarchiv
+  VG Name                vg00
+  LV UUID                bv56rP-1rEv-cnou-9JrJ-iCPq-peuM-4dfoZ3
+  LV Write Access        read/write
+  LV Status              available
+  # open                 0
+  LV Size                440.00 GB
+  Current LE             112640
+  Segments               4
+  Allocation             next free (default)
+  Read ahead sectors     0
+  Block device           254:0
 
-iD8DBQBC5KB+n1Xi7IT+kG0RAp58AJ9rxrgStH1JHKZcZxusxdT7gXO0pQCaAtfh
-Qtr7E7krDjyqhdKmzAW/CgY=
-=P2Gd
------END PGP SIGNATURE-----
 
---nextPart4725114.8huQr14BYg--
+
+
+lxf2s:/tmp # cat /etc/lvm/lvm.conf
+devices {
+    dir = "/dev"
+    scan = [ "/dev" ]
+    filter = [ "a/nb.*/" ,"r/.*/" ]
+    cache = "/etc/lvm/.cache"
+    write_cache_state = 1
+    types = [ "drbd", 16 ]
+
+}
+
+log {
+    verbose = 0
+    syslog = 1
+    overwrite = 0
+    level = 0
+    indent = 1
+    command_names = 0
+    prefix = "  "
+}
+backup {
+    backup = 1
+    backup_dir = "/etc/lvm/backup"
+    archive = 1
+    archive_dir = "/etc/lvm/archive"
+    retain_min = 10
+    retain_days = 30
+}
+shell {
+    history_size = 100
+}
+global {
+    umask = 077
+    test = 0
+    activation = 1
+    proc = "/proc"
+    locking_type = 1
+    locking_dir = "/var/lock/lvm"
+}
+
+activation {
+    missing_stripe_filler = "/dev/ioerror"
+    mirror_region_size = 512
+    reserved_stack = 256
+    reserved_memory = 8192
+    process_priority = -18
+}
+
+
+lxf2s:/tmp # cat /etc/drbd.conf
+resource drbd0 {
+
+  protocol = C
+  fsckcmd  = /bin/true
+  inittimeout = -10
+  skip-wait
+  disk {
+    do-panic
+    disk-size = 855330000
+  }
+
+  net {
+    sync-nice   = -3
+    sync-min    = 500k
+    sync-max    = 200M    # maximal average syncer bandwidth
+    tl-size     = 5000  # transfer log size, ensures strict write ordering
+    timeout     = 60    # 0.1 seconds
+    connect-int = 10    # seconds
+    ping-int    = 10    # seconds
+  }
+
+  on lxf2p {
+    device  = /dev/nb0
+    disk    = /dev/sda
+    address = lxf2p-drbd
+    port    = 7788
+  }
+
+  on lxf2s {
+    device  = /dev/nb0
+    disk    = /dev/sda
+    address = lxf2s-drbd
+    port    = 7788
+  }
+
+}
+
+resource drbd1 {
+
+  protocol = C
+  fsckcmd  = /bin/true
+  inittimeout = -10
+  skip-wait
+
+  disk {
+    do-panic
+    disk-size = 419830000
+  }
+
+  net {
+    sync-nice   = -3
+    sync-min    = 500k
+    sync-max    = 200M    # maximal average syncer bandwidth
+    tl-size     = 5000  # transfer log size, ensures strict write ordering
+    timeout     = 60    # 0.1 seconds
+    connect-int = 10    # seconds
+    ping-int    = 10    # seconds
+  }
+
+  on lxf2p {
+    device  = /dev/nb1
+    disk    = /dev/sdb
+    address = lxf2p-drbd
+    port    = 7789
+  }
+
+  on lxf2s {
+    device  = /dev/nb1
+    disk    = /dev/sdb
+    address = lxf2s-drbd
+    port    = 7789
+  }
+
+}
