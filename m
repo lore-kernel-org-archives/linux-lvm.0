@@ -1,14 +1,19 @@
-Date: Wed, 27 Jul 2005 09:24:40 -0500
-From: AJ Lewis <alewis@redhat.com>
-Subject: Re: [linux-lvm] Mirroring a Drive for load-balancing AND failover
-Message-ID: <20050727142440.GA4954@null.msp.redhat.com>
-References: <ca4f7e300507270144720cef7b@mail.gmail.com>
-	<42E786B9.2080400@mattgillen.net>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="dngyMJhgXGAL5Gb8"
-Content-Disposition: inline
-In-Reply-To: <42E786B9.2080400@mattgillen.net>
+Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j6QGfPV24176
+	for <linux-lvm@redhat.com>; Tue, 26 Jul 2005 12:41:25 -0400
+Received: from msr61.hinet.net (msr61.hinet.net [168.95.4.161])
+	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id j6QGfIEC005850
+	for <linux-lvm@redhat.com>; Tue, 26 Jul 2005 12:41:19 -0400
+Received: from asuspc (61-230-202-133.dynamic.hinet.net [61.230.202.133])
+	by msr61.hinet.net (8.9.3/8.9.3) with SMTP id AAA01800
+	for <linux-lvm@redhat.com>; Wed, 27 Jul 2005 00:41:14 +0800 (CST)
+Message-ID: <008001c59203$1553fc70$7e01a8c0@asuspc>
+From: =?big5?B?sWmnyqZ7?= <ctc1230@ms67.hinet.net>
+Date: Wed, 27 Jul 2005 00:57:16 +0800
+MIME-Version: 1.0
+Content-Type: multipart/alternative;
+	boundary="----=_NextPart_000_007D_01C59246.21F02740"
+Subject: [linux-lvm] How to recover data corrupted by vgcreate
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -19,66 +24,76 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: LVM general discussion and development <linux-lvm@redhat.com>
+To: linux-lvm@redhat.com
 
+This is a multi-part message in MIME format.
 
---dngyMJhgXGAL5Gb8
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+------=_NextPart_000_007D_01C59246.21F02740
+Content-Type: text/plain;
+	charset="big5"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Jul 27, 2005 at 09:06:01AM -0400, Matthew Gillen wrote:
-> Fury wrote:
-> > I've racked my brain on this one, so hopefully someone will be of some =
-help.
-> >=20
-> > I'm trying to set up two servers which share a drive and do not have a
-> > Single Point of Failure.  They are on a local network with each other.
-> >  The best solution would be to have /dev/sda1 on one server mirrored
-> > with /dev/sda1 on the second server.
-> > ...
-> > A second solution was to use GFS/GNBD.  I can export each drive to the
-> > other server, and do RAID 1 (on both servers) between the local
-> > /dev/sda1 and the remote gnbd device.  I then format the raid device
-> > with GFS so both servers can mount it.
-> >=20
-> > Surprisingly, this last system works.  Both systems can mount the
-> > drive and read-write to it.  However, if either server in this
-> > configuration drops dead, the other server cannot deal with the dead
-> > gnbd device, and the raid device and mount point are no longer usable.
-> >  I'm sure there are numerous other problems with this setup, also.
-> >=20
-> > So I'm looking for ideas.  With two servers, how can I mirror a drive
-> > in real-time, and allow for failover?
->=20
-> You might want to use something more like iSCSI + RAID:
-> http://linux-iscsi.sourceforge.net/
+Hi,
 
-How is that different than GNBD + RAID?  The issue isn't the network
-transport, it's recovery of a RAID on two nodes simultaneously.
+I have a Linux PC with Fedora C3 installed.
+The disk was partitioned automatically when Linux was installed.
+So, LVM2 partition was created.
+The CPU is damaged today and I move the disk to another Linux PC and try =
+to read data out.
+The disk is connected to device /dev/hdd. /dev/hdd2 is the LVM2 =
+partition.
+But, I do a stupid thing. I invoke vgcreate command on /dev/hdd2.
 
---=20
-AJ Lewis                                   Voice:  612-638-0500
-Red Hat                                    E-Mail: alewis@redhat.com
-One Main Street SE, Suite 209
-Minneapolis, MN 55414
-  =20
-Current GPG fingerprint =3D D9F8 EDCE 4242 855F A03D  9B63 F50C 54A8 578C 8=
-715
-Grab the key at: http://people.redhat.com/alewis/gpg.html or one of the
-many keyservers out there...
+    vgcreate vg_name /dev/hdd2
 
+The partition seems to be lost.
+How can I recover the data in /dev/hdd2?
+It's very important data to me.
+Thanks for any help.
 
---dngyMJhgXGAL5Gb8
-Content-Type: application/pgp-signature
-Content-Disposition: inline
+Davis
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.1 (GNU/Linux)
+------=_NextPart_000_007D_01C59246.21F02740
+Content-Type: text/html;
+	charset="big5"
+Content-Transfer-Encoding: quoted-printable
 
-iD8DBQFC55ko9QxUqFeMhxURAnA5AKCOiPNtJy1JSawgdrDf4WL5NSFORQCgpfF4
-aOgBi61NWRmoup8WM/crPjs=
-=ifFE
------END PGP SIGNATURE-----
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML><HEAD>
+<META http-equiv=3DContent-Type content=3D"text/html; charset=3Dbig5">
+<META content=3D"MSHTML 6.00.2800.1400" name=3DGENERATOR>
+<STYLE></STYLE>
+</HEAD>
+<BODY bgColor=3D#ffffff>
+<DIV><FONT face=3D=B2=D3=A9=FA=C5=E9 size=3D2>
+<DIV><FONT size=3D2>Hi,</FONT></DIV>
+<DIV><FONT size=3D2></FONT>&nbsp;</DIV>
+<DIV><FONT size=3D2>I have a Linux PC with Fedora C3 =
+installed.</FONT></DIV>
+<DIV><FONT size=3D2>The disk was partitioned automatically when =
+Linux&nbsp;was=20
+installed.</FONT></DIV>
+<DIV><FONT size=3D2>So, LVM2 partition&nbsp;was created.</FONT></DIV>
+<DIV><FONT size=3D2>The CPU is damaged today and I move the disk to =
+another Linux=20
+PC and try to read data out.</FONT></DIV>
+<DIV><FONT size=3D2>The disk is connected to device /dev/hdd. /dev/hdd2 =
+is the=20
+LVM2 partition.</FONT></DIV>
+<DIV><FONT size=3D2>But, I do a stupid thing. I invoke vgcreate command =
+on=20
+/dev/hdd2.</FONT></DIV>
+<DIV><FONT size=3D2></FONT>&nbsp;</DIV>
+<DIV><FONT size=3D2>&nbsp;&nbsp;&nbsp; vgcreate vg_name =
+/dev/hdd2</FONT></DIV>
+<DIV><FONT size=3D2></FONT>&nbsp;</DIV>
+<DIV><FONT size=3D2>The partition seems to be lost.</FONT></DIV>
+<DIV><FONT size=3D2>How can I recover the data in =
+/dev/hdd2?</FONT></DIV>
+<DIV><FONT size=3D2>It's very important data to me.</FONT></DIV>
+<DIV><FONT size=3D2>Thanks for any help.</FONT></DIV>
+<DIV><FONT size=3D2></FONT>&nbsp;</DIV>
+<DIV><FONT size=3D2>Davis</FONT></DIV>
+<DIV>&nbsp;</DIV></FONT></DIV></BODY></HTML>
 
---dngyMJhgXGAL5Gb8--
+------=_NextPart_000_007D_01C59246.21F02740--
