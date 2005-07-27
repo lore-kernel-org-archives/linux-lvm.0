@@ -1,21 +1,23 @@
-Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j6RHKrV00539
-	for <linux-lvm@redhat.com>; Wed, 27 Jul 2005 13:20:53 -0400
-Received: from aragorn.bbn.com (aragorn.bbn.com [128.33.0.62])
-	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id j6RHKfWC026428
-	for <linux-lvm@redhat.com>; Wed, 27 Jul 2005 13:20:46 -0400
-Received: from [128.89.72.74] (mgillen2.dsl.bbn.com [128.89.72.74])
-	by aragorn.bbn.com (8.12.7/8.12.7) with ESMTP id j6RHKUDc002319
-	for <linux-lvm@redhat.com>; Wed, 27 Jul 2005 13:20:30 -0400 (EDT)
-Message-ID: <42E7C25E.10606@mattgillen.net>
-Date: Wed, 27 Jul 2005 13:20:30 -0400
-From: Matthew Gillen <me@mattgillen.net>
-MIME-Version: 1.0
-Subject: Re: [linux-lvm] Mirroring a Drive for load-balancing AND failover
-References: <ca4f7e300507270144720cef7b@mail.gmail.com>	<42E786B9.2080400@mattgillen.net>
-	<20050727142440.GA4954@null.msp.redhat.com>
-In-Reply-To: <20050727142440.GA4954@null.msp.redhat.com>
-Content-Transfer-Encoding: 7bit
+Received: from null.msp.redhat.com (null.msp.redhat.com [10.15.80.136])
+	by pobox.corp.redhat.com (8.12.8/8.12.8) with ESMTP id j6RHOiaA025330
+	for <linux-lvm@redhat.com>; Wed, 27 Jul 2005 13:24:44 -0400
+Received: from null.msp.redhat.com (localhost.localdomain [127.0.0.1])
+	by null.msp.redhat.com (8.13.4/8.12.11) with ESMTP id j6RHOhfV015949
+	for <linux-lvm@redhat.com>; Wed, 27 Jul 2005 12:24:43 -0500
+Received: (from alewis@localhost)
+	by null.msp.redhat.com (8.13.4/8.13.4/Submit) id j6RHOhXb015948
+	for linux-lvm@redhat.com; Wed, 27 Jul 2005 12:24:43 -0500
+Date: Wed, 27 Jul 2005 12:24:43 -0500
+From: AJ Lewis <alewis@redhat.com>
+Subject: Re: [linux-lvm] How to recover data corrupted by vgcreate
+Message-ID: <20050727172443.GC4954@null.msp.redhat.com>
+References: <008001c59203$1553fc70$7e01a8c0@asuspc>
+	<ef523605066ee0d0a6b20345a70677dd@redhat.com>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="0WzQiIesntPPsVaS"
+Content-Disposition: inline
+In-Reply-To: <ef523605066ee0d0a6b20345a70677dd@redhat.com>
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -26,55 +28,82 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-AJ Lewis wrote:
-> On Wed, Jul 27, 2005 at 09:06:01AM -0400, Matthew Gillen wrote:
-> 
->>Fury wrote:
->>
->>>I've racked my brain on this one, so hopefully someone will be of some help.
->>>
->>>I'm trying to set up two servers which share a drive and do not have a
->>>Single Point of Failure.  They are on a local network with each other.
->>> The best solution would be to have /dev/sda1 on one server mirrored
->>>with /dev/sda1 on the second server.
->>>...
->>>A second solution was to use GFS/GNBD.  I can export each drive to the
->>>other server, and do RAID 1 (on both servers) between the local
->>>/dev/sda1 and the remote gnbd device.  I then format the raid device
->>>with GFS so both servers can mount it.
->>>
->>>Surprisingly, this last system works.  Both systems can mount the
->>>drive and read-write to it.  However, if either server in this
->>>configuration drops dead, the other server cannot deal with the dead
->>>gnbd device, and the raid device and mount point are no longer usable.
->>> I'm sure there are numerous other problems with this setup, also.
->>>
->>>So I'm looking for ideas.  With two servers, how can I mirror a drive
->>>in real-time, and allow for failover?
->>
->>You might want to use something more like iSCSI + RAID:
->>http://linux-iscsi.sourceforge.net/
-> 
-> 
-> How is that different than GNBD + RAID?  The issue isn't the network
-> transport, it's recovery of a RAID on two nodes simultaneously.
-I don't think he was even worried about recovery, although you're right
-and that's another problem.  I read that he couldn't access anything
-after a failure of one server, which is what I was addressing.
 
-Honestly, I don't know how GNBD works.  But if it makes makes the remote
-volume look local and doesn't report problems in a way that RAID
-understands (or at all), I can see how things would hang (just like a
-client system would hang if an NFS server for a mounted filesystem went
-down).  I imagine (but I don't know from personal experience) that iSCSI
-(with the ConnFailTimeout=x sec) would report a failed write and RAID
-knows how to handle that.
+--0WzQiIesntPPsVaS
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-But, like I said, I don't know for sure about any of this, since I
-haven't tried it.  However, the page:
-http://linas.org/linux/raid.html
-mentions iSCSI, so it appears that some people have gotten it to work.
---Matt
+On Wed, Jul 27, 2005 at 11:33:05AM -0500, Jonathan E Brassow wrote:
+> I'm not familiar exactly with how the metadata gets laid on disk, but=20
+> I would think you could just 'vgcreate vg_name /dev/hdd2' (you did this=
+=20
+> already) then 'lvcreate -n <lvname> -l <max size> vg_name'...  This of=20
+> course assumes that the previous lv resided wholly on /dev/hdd2.  Then=20
+> try mounting the new lv and see what happens.=20
+
+Before you do that, try vgcfgrestore.
+=20
+> On Jul 26, 2005, at 11:57 AM, =E5=BC=B5=E5=BB=B7=E5=B7=9E wrote:=20
+>=20
+>=20
+> > Hi,=20
+> >  =20
+> > I have a Linux PC with Fedora C3 installed.=20
+> > The disk was partitioned automatically when Linux was installed.=20
+> > So, LVM2 partition was created.=20
+> > The CPU is damaged today and I move the disk to another Linux PC=20
+> > and try to read data out.=20
+> > The disk is connected to device /dev/hdd. /dev/hdd2 is the LVM2=20
+> > partition.=20
+> > But, I do a stupid thing. I invoke vgcreate command on /dev/hdd2.=20
+> >  =20
+> >     vgcreate vg_name /dev/hdd2=20
+> >  =20
+> > The partition seems to be lost.=20
+> > How can I recover the data in /dev/hdd2?=20
+> > It's very important data to me.=20
+> > Thanks for any help.=20
+> >  =20
+> > Davis=20
+> >  _______________________________________________=20
+> > linux-lvm mailing list=20
+> > linux-lvm@redhat.com=20
+> > https://www.redhat.com/mailman/listinfo/linux-lvm=20
+> > read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+>=20
+>=20
+
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@redhat.com
+> https://www.redhat.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+
+--=20
+AJ Lewis                                   Voice:  612-638-0500
+Red Hat                                    E-Mail: alewis@redhat.com
+One Main Street SE, Suite 209
+Minneapolis, MN 55414
+  =20
+Current GPG fingerprint =3D D9F8 EDCE 4242 855F A03D  9B63 F50C 54A8 578C 8=
+715
+Grab the key at: http://people.redhat.com/alewis/gpg.html or one of the
+many keyservers out there...
+
+
+--0WzQiIesntPPsVaS
+Content-Type: application/pgp-signature
+Content-Disposition: inline
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.1 (GNU/Linux)
+
+iD8DBQFC58Nb9QxUqFeMhxURAle2AKDDw3B3vQMgt25WPj2rlpJOvmurNwCcDTE0
+uuYdlhJpKoZ0rTnf4Esm6WM=
+=3ZvH
+-----END PGP SIGNATURE-----
+
+--0WzQiIesntPPsVaS--
