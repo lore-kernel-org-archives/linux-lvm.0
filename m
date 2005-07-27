@@ -1,24 +1,14 @@
-Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j6RFCkV19243
-	for <linux-lvm@redhat.com>; Wed, 27 Jul 2005 11:12:46 -0400
-Received: from imf19aec.mail.bellsouth.net (imf19aec.mail.bellsouth.net
-	[205.152.59.67])
-	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id j6RFCjd5011650
-	for <linux-lvm@redhat.com>; Wed, 27 Jul 2005 11:12:45 -0400
-Received: from ibm60aec.bellsouth.net ([205.152.59.155])
-	by imf19aec.mail.bellsouth.net with ESMTP id
-	<20050727151233.YKAX27112.imf19aec.mail.bellsouth.net@ibm60aec.bellsouth.net>
-	for <linux-lvm@redhat.com>; Wed, 27 Jul 2005 11:12:33 -0400
-Received: from mail.bellsouth.net ([205.152.59.155])
-	by ibm60aec.bellsouth.net with SMTP
-	id <20050727151221.VARN3347.ibm60aec.bellsouth.net@mail.bellsouth.net>
-	for <linux-lvm@redhat.com>; Wed, 27 Jul 2005 11:12:21 -0400
-From: Philip Wright <pvwrght@bellsouth.net>
-Subject: Re: [linux-lvm] Reduce physical volume size?
-Date: Wed, 27 Jul 2005 11:12:17 -0400
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Message-Id: <20050727151221.VARN3347.ibm60aec.bellsouth.net@mail.bellsouth.net>
+Received: from [10.15.80.209] (dhcp80-209.msp.redhat.com [10.15.80.209])
+	by pobox.corp.redhat.com (8.12.8/8.12.8) with ESMTP id j6RGWIaA016323
+	for <linux-lvm@redhat.com>; Wed, 27 Jul 2005 12:32:19 -0400
+Mime-Version: 1.0 (Apple Message framework v622)
+In-Reply-To: <008001c59203$1553fc70$7e01a8c0@asuspc>
+References: <008001c59203$1553fc70$7e01a8c0@asuspc>
+Content-Type: multipart/alternative; boundary=Apple-Mail-3-293381347
+Message-Id: <ef523605066ee0d0a6b20345a70677dd@redhat.com>
+From: Jonathan E Brassow <jbrassow@redhat.com>
+Subject: Re: [linux-lvm] How to recover data corrupted by vgcreate
+Date: Wed, 27 Jul 2005 11:33:05 -0500
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -29,29 +19,116 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-> From: Lucille Wright <lpwrght@bellsouth.net>
-> Date: 2005/07/26 Tue PM 07:16:01 EDT
-> To: linux-lvm@redhat.com
-> Subject: [linux-lvm] Reduce physical volume size?
-> 
-> I have a 114 Gb physical volume that has one 40 Gb logical volume on it
-> and I would like to reduce the physical volume size and return the free
-> 74 Gb to freespace for use by another operating system. Is there an
-> LVM method to do this?
-> 
-> 
-> 
-> Thanks,
-> Philip
-> 
 
-Sorry about the multiple posts. We were having all kinds of problems
-with our mail server yesterday. Must be the heat...
+--Apple-Mail-3-293381347
+Content-Transfer-Encoding: 7bit
+Content-Type: text/plain;
+	charset=ISO-2022-JP;
+	format=flowed
 
-I think I have found the answer to my problem. Will post if successful.
+I'm not familiar exactly with how the metadata gets laid on disk, but I 
+would think you could just 'vgcreate vg_name /dev/hdd2' (you did this 
+already) then 'lvcreate -n <lvname> -l <max size> vg_name'...  This of 
+course assumes that the previous lv resided wholly on /dev/hdd2.  Then 
+try mounting the new lv and see what happens.
 
-Thanks,
-Philip Wright
+  brassow
+
+
+On Jul 26, 2005, at 11:57 AM, 張廷州 wrote:
+
+> Hi,
+>  
+> I have a Linux PC with Fedora C3 installed.
+> The disk was partitioned automatically when Linux was installed.
+> So, LVM2 partition was created.
+> The CPU is damaged today and I move the disk to another Linux PC and 
+> try to read data out.
+> The disk is connected to device /dev/hdd. /dev/hdd2 is the LVM2 
+> partition.
+> But, I do a stupid thing. I invoke vgcreate command on /dev/hdd2.
+>  
+>     vgcreate vg_name /dev/hdd2
+>  
+> The partition seems to be lost.
+> How can I recover the data in /dev/hdd2?
+> It's very important data to me.
+> Thanks for any help.
+>  
+> Davis
+>  _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@redhat.com
+> https://www.redhat.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+--Apple-Mail-3-293381347
+Content-Transfer-Encoding: 7bit
+Content-Type: text/enriched;
+	charset=ISO-2022-JP
+
+I'm not familiar exactly with how the metadata gets laid on disk, but
+I would think you could just 'vgcreate vg_name /dev/hdd2' (you did
+this already) then 'lvcreate -n <<lvname> -l <<max size> vg_name'... 
+This of course assumes that the previous lv resided wholly on
+/dev/hdd2.  Then try mounting the new lv and see what happens.
+
+
+ brassow
+
+
+
+On Jul 26, 2005, at 11:57 AM,
+<fontfamily><param>Hiragino Kaku Gothic Pro</param>張廷州</fontfamily>
+wrote:
+
+
+<excerpt><smaller>Hi,</smaller>
+
+<smaller> </smaller>
+
+<smaller>I have a Linux PC with Fedora C3 installed.</smaller>
+
+<smaller>The disk was partitioned automatically when Linux was
+installed.</smaller>
+
+<smaller>So, LVM2 partition was created.</smaller>
+
+<smaller>The CPU is damaged today and I move the disk to another Linux
+PC and try to read data out.</smaller>
+
+<smaller>The disk is connected to device /dev/hdd. /dev/hdd2 is the
+LVM2 partition.</smaller>
+
+<smaller>But, I do a stupid thing. I invoke vgcreate command on
+/dev/hdd2.</smaller>
+
+<smaller> </smaller>
+
+<smaller>    vgcreate vg_name /dev/hdd2</smaller>
+
+<smaller> </smaller>
+
+<smaller>The partition seems to be lost.</smaller>
+
+<smaller>How can I recover the data in /dev/hdd2?</smaller>
+
+<smaller>It's very important data to me.</smaller>
+
+<smaller>Thanks for any help.</smaller>
+
+<smaller> </smaller>
+
+<smaller>Davis</smaller>
+
+<smaller> </smaller>_______________________________________________
+
+linux-lvm mailing list
+
+linux-lvm@redhat.com
+
+https://www.redhat.com/mailman/listinfo/linux-lvm
+
+read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/</excerpt>
+--Apple-Mail-3-293381347--
