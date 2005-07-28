@@ -1,15 +1,14 @@
-Subject: Re: [linux-lvm] Progress on LVM2 snapshots
-From: Ming Zhang <mingz@ele.uri.edu>
-In-Reply-To: <4abcc002bdbba2935bc93443c3beec65@redhat.com>
-References: <1119267914.21477.3.camel@dilbert>
-	<1122572640.9888.27.camel@localhost.localdomain>
-	<4abcc002bdbba2935bc93443c3beec65@redhat.com>
-Date: Thu, 28 Jul 2005 16:26:30 -0400
-Message-Id: <1122582390.9888.54.camel@localhost.localdomain>
-Mime-Version: 1.0
+Mime-Version: 1.0 (Apple Message framework v622)
+In-Reply-To: <1122578286.9888.47.camel@localhost.localdomain>
+References: <42E92D7E.5090900@levanta.com>
+	<1122578286.9888.47.camel@localhost.localdomain>
+Message-Id: <511428deb4d089c0e0d213b7e81a9fe7@redhat.com>
 Content-Transfer-Encoding: 7bit
-Reply-To: mingz@ele.uri.edu,
-	LVM general discussion and development <linux-lvm@redhat.com>
+From: Jonathan E Brassow <jbrassow@redhat.com>
+Subject: Re: [linux-lvm] How do you create large numbers of LVs? (In the
+	1000s) Is it even possible?
+Date: Thu, 28 Jul 2005 15:32:46 -0500
+Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -19,69 +18,66 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: Jonathan E Brassow <jbrassow@redhat.com>
-Cc: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+To: LVM general discussion and development <linux-lvm@redhat.com>, mingz@ele.uri.edu
 
-Thanks a lot for this information.
+I think the problem you are seeing is similar to the one found in 
+bugzilla (164198).  Would you be willing to add some notes there?  It 
+will give you a place to track the progress...
 
-Is there anything external people like us can do to speed up this? There
-are many people waiting for this snapshot feature since it is so useful
-and essential. frankly, i know there are plan to replace md with dm, but
-since md is already stable and this snapshot is very unstable, why not
-do this first? :P
+https://bugzilla.redhat.com/bugzilla/show_bug.cgi?id=164198
 
-Ming
+  brassow
 
-On Thu, 2005-07-28 at 15:06 -0500, Jonathan E Brassow wrote:
-> #2
-> 
-> I know agk had some plans for cleaning up single machine snapshots, but 
-> he is backed up behind reviewing/working on multipath and mirroring (in 
-> addition to traveling all over for conferences:).
-> 
->   brassow
-> 
-> On Jul 28, 2005, at 12:44 PM, Ming Zhang wrote:
-> 
-> > yes, i believe now a lot of people has this question now.
-> >
-> > is this question
-> >
-> > 1) very hard to solve technically. or
-> > 2) not so easy but doable, just no time and human resource?
-> >
-> > thanks!
-> >
-> > Ming
-> >
-> >
-> > On Mon, 2005-06-20 at 12:45 +0100, Mukund wrote:
-> >> Dear all,
-> >>
-> >> 	Please can anyone -authoritative- tell me about the current state of
-> >> snapshots support in LVM2? It was broken a while ago and I want to 
-> >> know
-> >> if it has been fixed now. I am the author of a storage management
-> >> project (www.openfiler.org), and we are currently stuck with LVM1 (and
-> >> the RHEL3 2.4 kernel and hence smaller device sizes) due to 
-> >> non-working
-> >> snapshots. Can LVM2 snapshots now be created and used reliably?
-> >>
-> >> 				Mukund
-> >>
-> >>
-> >>
-> >> _______________________________________________
-> >> linux-lvm mailing list
-> >> linux-lvm@redhat.com
-> >> https://www.redhat.com/mailman/listinfo/linux-lvm
-> >> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
-> >
-> > _______________________________________________
-> > linux-lvm mailing list
-> > linux-lvm@redhat.com
-> > https://www.redhat.com/mailman/listinfo/linux-lvm
-> > read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
-> >
-> 
+On Jul 28, 2005, at 2:18 PM, Ming Zhang wrote:
+
+> On Thu, 2005-07-28 at 12:09 -0700, Nathaniel Stahl wrote:
+>> We'd like to be able to create a large number of LVs (potentially
+>> numbering in the low thousands).  I get failure after LV 226 or so,
+>> though - "VG VolGroup01 metadata writing failed".
+>>
+>> RedHat claims this should be possible with LVM2 on the following web 
+>> page:
+>>
+>> http://www.redhat.com/magazine/009jul05/features/lvm2/
+>>
+>> I admit to being a little suprised at the 2^32 max LV claim - I was
+>> figuring 2^20 as the theoretical max given 2.6's 32 bit device 
+>> numbering
+>> scheme (20 bits for minor, 12 bits for major).
+>>
+>> The LVM2 code, at least version 2.00.25 as distributed in FC3, appears
+>> to have a check that the minor number is strictly less than 256.
+>> Removing this check allows for the creation of working LVs using 
+>> minors
+>> greater than 256, but LV creation fails with the error "VG VolGroup01
+>> metadata writing failed" creating the 227th LV.  Even with the minor
+>> limit in place - I can't create more than 226 LVs.
+>
+> i asked this question before. there is a hard coded limitation in lvm
+> metadata, so the real number is like this, limited around 2xx. the
+> limitation will be removed in near future. how near? i do not know. :)
+>
+>
+>>
+>> Is there a patch that allows this limit to be broken?  Should I be 
+>> using
+>> a newer version of the tools?  If not currently possible, is this
+>> something that will be in the near future?
+>>
+>> Thanks for any help/advice you can give.
+>>
+>> -Nate Stahl
+>>
+>> _______________________________________________
+>> linux-lvm mailing list
+>> linux-lvm@redhat.com
+>> https://www.redhat.com/mailman/listinfo/linux-lvm
+>> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+>
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@redhat.com
+> https://www.redhat.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+>
