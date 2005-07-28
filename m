@@ -1,12 +1,15 @@
-Subject: Re: [linux-lvm] how to access the partition on LV?
+Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j6SHi5V26112
+	for <linux-lvm@redhat.com>; Thu, 28 Jul 2005 13:44:05 -0400
+Received: from leviathan.ele.uri.edu (leviathan.ele.uri.edu [131.128.51.64])
+	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id j6SHi4qJ016605
+	for <linux-lvm@redhat.com>; Thu, 28 Jul 2005 13:44:04 -0400
+Subject: Re: [linux-lvm] Progress on LVM2 snapshots
 From: Ming Zhang <mingz@ele.uri.edu>
-In-Reply-To: <20050728173218.GH4954@null.msp.redhat.com>
-References: <1122563861.9888.1.camel@localhost.localdomain>
-	<20050728164523.GF4954@null.msp.redhat.com>
-	<1122570830.9888.10.camel@localhost.localdomain>
-	<20050728173218.GH4954@null.msp.redhat.com>
-Date: Thu, 28 Jul 2005 13:42:10 -0400
-Message-Id: <1122572530.9888.26.camel@localhost.localdomain>
+In-Reply-To: <1119267914.21477.3.camel@dilbert>
+References: <1119267914.21477.3.camel@dilbert>
+Date: Thu, 28 Jul 2005 13:44:00 -0400
+Message-Id: <1122572640.9888.27.camel@localhost.localdomain>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 7bit
 Reply-To: mingz@ele.uri.edu,
@@ -21,56 +24,36 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: AJ Lewis <alewis@redhat.com>
-Cc: LVM general discussion and development <linux-lvm@redhat.com>
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-On Thu, 2005-07-28 at 12:32 -0500, AJ Lewis wrote:
-> On Thu, Jul 28, 2005 at 01:13:50PM -0400, Ming Zhang wrote:
-> > On Thu, 2005-07-28 at 11:45 -0500, AJ Lewis wrote:
-> > > On Thu, Jul 28, 2005 at 11:17:41AM -0400, Ming Zhang wrote:
-> > > > I think this is a very common question but i can not find the answer.
-> > > > any idea on how to access the partition on these lv since no device
-> > > > node?
-> > > > 
-> > > > 
-> > > > [root@fc3-i386-2 ~]# fdisk /dev/vg1/v1 -l
-> > > > 
-> > > > Disk /dev/vg1/v1: 469 MB, 469762048 bytes
-> > > > 255 heads, 63 sectors/track, 57 cylinders
-> > > > Units = cylinders of 16065 * 512 = 8225280 bytes
-> > > > 
-> > > >        Device Boot      Start         End      Blocks   Id  System
-> > > > /dev/vg1/v1p1               1          13      104391   83  Linux
-> > > > /dev/vg1/v1p2              14          57      353430   83  Linux
-> > > 
-> > 
-> > the problem is that we export a LV via iscsi to a remote box and become
-> > a scsi disk. so it is partitioned and utilized. then it does have
-> > partition on it. even it is exported to a linux box, u possibly will
-> > use /dev/sdx1 instead of directly use /dev/sdx, rite?
+yes, i believe now a lot of people has this question now.
+
+is this question
+
+1) very hard to solve technically. or
+2) not so easy but doable, just no time and human resource?
+
+thanks!
+
+Ming
+
+
+On Mon, 2005-06-20 at 12:45 +0100, Mukund wrote:
+> Dear all,
 > 
-> Ahh - I see.  Well, on the node exporting the LVs, you don't access it.  I
-> dunno if kpartx or some other partitioning tool could do it - it might.  But
-> as far as the standard partion handling code goes, LVs don't exist.  I know
-> why you're doing it this way - I don't know why you want to access the
-> partitions on the exporting (target) node.  Do you really need to?
-yes, i guess that is the only solution. we have end users want that
-feature. so i think a work around is to run a iscsi initiator at local
-site and access via iscsi again.
-
-
->  
-> > > You don't.  Don't put partition tables on LVs.  The whole point of using
-> > > LVM is you don't need to partition anymore, and your block devices can be
-> > > dynamic.  If you another block devices, you lvcreate it.  If you don't
-> > > have enough space in your VG, you add a PV to it, then lvcreate the new
-> > > block device.  Have you read through the HOWTO referenced below?
-> > 
-> > i can not see this HOWTO, where u referenced it?
+> 	Please can anyone -authoritative- tell me about the current state of
+> snapshots support in LVM2? It was broken a while ago and I want to know
+> if it has been fixed now. I am the author of a storage management
+> project (www.openfiler.org), and we are currently stuck with LVM1 (and
+> the RHEL3 2.4 kernel and hence smaller device sizes) due to non-working
+> snapshots. Can LVM2 snapshots now be created and used reliably?
 > 
-> It's at the bottom of all messages that go to the linux-lvm ML -
-> http://tldp.org/HOWTO/LVM-HOWTO/ 
-
-i guess this is because i got the email from u directly. so lvm list
-will not send to me again. and only email via it will have that link. i
-checked my archival and all emails via lvm list has that.
+> 				Mukund
+> 
+> 
+> 
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@redhat.com
+> https://www.redhat.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
