@@ -1,19 +1,18 @@
-Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j6SHi5V26112
-	for <linux-lvm@redhat.com>; Thu, 28 Jul 2005 13:44:05 -0400
-Received: from leviathan.ele.uri.edu (leviathan.ele.uri.edu [131.128.51.64])
-	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id j6SHi4qJ016605
-	for <linux-lvm@redhat.com>; Thu, 28 Jul 2005 13:44:04 -0400
-Subject: Re: [linux-lvm] Progress on LVM2 snapshots
-From: Ming Zhang <mingz@ele.uri.edu>
-In-Reply-To: <1119267914.21477.3.camel@dilbert>
-References: <1119267914.21477.3.camel@dilbert>
-Date: Thu, 28 Jul 2005 13:44:00 -0400
-Message-Id: <1122572640.9888.27.camel@localhost.localdomain>
+Date: Thu, 28 Jul 2005 13:03:46 -0500
+From: AJ Lewis <alewis@redhat.com>
+Subject: Re: [linux-lvm] how to access the partition on LV?
+Message-ID: <20050728180346.GI4954@null.msp.redhat.com>
+References: <1122563861.9888.1.camel@localhost.localdomain>
+	<20050728164523.GF4954@null.msp.redhat.com>
+	<1122570830.9888.10.camel@localhost.localdomain>
+	<20050728173218.GH4954@null.msp.redhat.com>
+	<1122572530.9888.26.camel@localhost.localdomain>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Reply-To: mingz@ele.uri.edu,
-	LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="V8Y3+xXnhQGsvjWT"
+Content-Disposition: inline
+In-Reply-To: <1122572530.9888.26.camel@localhost.localdomain>
+Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -23,37 +22,73 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: LVM general discussion and development <linux-lvm@redhat.com>
-
-yes, i believe now a lot of people has this question now.
-
-is this question
-
-1) very hard to solve technically. or
-2) not so easy but doable, just no time and human resource?
-
-thanks!
-
-Ming
+To: Ming Zhang <mingz@ele.uri.edu>
+Cc: LVM general discussion and development <linux-lvm@redhat.com>
 
 
-On Mon, 2005-06-20 at 12:45 +0100, Mukund wrote:
-> Dear all,
-> 
-> 	Please can anyone -authoritative- tell me about the current state of
-> snapshots support in LVM2? It was broken a while ago and I want to know
-> if it has been fixed now. I am the author of a storage management
-> project (www.openfiler.org), and we are currently stuck with LVM1 (and
-> the RHEL3 2.4 kernel and hence smaller device sizes) due to non-working
-> snapshots. Can LVM2 snapshots now be created and used reliably?
-> 
-> 				Mukund
-> 
-> 
-> 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+--V8Y3+xXnhQGsvjWT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Thu, Jul 28, 2005 at 01:42:10PM -0400, Ming Zhang wrote:
+> On Thu, 2005-07-28 at 12:32 -0500, AJ Lewis wrote:
+> > On Thu, Jul 28, 2005 at 01:13:50PM -0400, Ming Zhang wrote:
+> > > the problem is that we export a LV via iscsi to a remote box and beco=
+me
+> > > a scsi disk. so it is partitioned and utilized. then it does have
+> > > partition on it. even it is exported to a linux box, u possibly will
+> > > use /dev/sdx1 instead of directly use /dev/sdx, rite?
+> >=20
+> > Ahh - I see.  Well, on the node exporting the LVs, you don't access it.=
+  I
+> > dunno if kpartx or some other partitioning tool could do it - it might.=
+  But
+> > as far as the standard partion handling code goes, LVs don't exist.  I =
+know
+> > why you're doing it this way - I don't know why you want to access the
+> > partitions on the exporting (target) node.  Do you really need to?
+> yes, i guess that is the only solution. we have end users want that
+> feature. so i think a work around is to run a iscsi initiator at local
+> site and access via iscsi again.
+
+Could play with loopback devices too if you need to do it on the target - t=
+hat
+might get nasty quickly though.
+=20
+> > > i can not see this HOWTO, where u referenced it?
+> >=20
+> > It's at the bottom of all messages that go to the linux-lvm ML -
+> > http://tldp.org/HOWTO/LVM-HOWTO/=20
+>=20
+> i guess this is because i got the email from u directly. so lvm list
+> will not send to me again. and only email via it will have that link. i
+> checked my archival and all emails via lvm list has that.
+
+Heh - yep, that'd do it ;)=20
+
+--=20
+AJ Lewis                                   Voice:  612-638-0500
+Red Hat                                    E-Mail: alewis@redhat.com
+One Main Street SE, Suite 209
+Minneapolis, MN 55414
+  =20
+Current GPG fingerprint =3D D9F8 EDCE 4242 855F A03D  9B63 F50C 54A8 578C 8=
+715
+Grab the key at: http://people.redhat.com/alewis/gpg.html or one of the
+many keyservers out there...
+
+
+--V8Y3+xXnhQGsvjWT
+Content-Type: application/pgp-signature
+Content-Disposition: inline
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.1 (GNU/Linux)
+
+iD8DBQFC6R4C9QxUqFeMhxURAnsTAKCA7hIHLamvFrvQVnt+7OWkQh4GhwCfetYj
+nYRMQI3O7uWEnQiiqL2J67g=
+=pnj6
+-----END PGP SIGNATURE-----
+
+--V8Y3+xXnhQGsvjWT--
