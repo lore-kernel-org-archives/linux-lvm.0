@@ -1,23 +1,24 @@
-Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j6TLEHV27842
-	for <linux-lvm@redhat.com>; Fri, 29 Jul 2005 17:14:17 -0400
-Received: from leviathan.ele.uri.edu (leviathan.ele.uri.edu [131.128.51.64])
-	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id j6TLEBre004213
-	for <linux-lvm@redhat.com>; Fri, 29 Jul 2005 17:14:11 -0400
-Subject: Re: [linux-lvm] how to access the partition on LV?
-From: Ming Zhang <mingz@ele.uri.edu>
-In-Reply-To: <20050729205658.GQ23710@agk.surrey.redhat.com>
-References: <1122563861.9888.1.camel@localhost.localdomain>
-	<20050728164523.GF4954@null.msp.redhat.com>
-	<1122570830.9888.10.camel@localhost.localdomain>
-	<20050728173218.GH4954@null.msp.redhat.com>
-	<20050729205658.GQ23710@agk.surrey.redhat.com>
-Date: Fri, 29 Jul 2005 17:14:07 -0400
-Message-Id: <1122671647.5558.68.camel@localhost.localdomain>
-Mime-Version: 1.0
+Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j6TLR8V31761
+	for <linux-lvm@redhat.com>; Fri, 29 Jul 2005 17:27:08 -0400
+Received: from omx3.sgi.com (omx3-ext.sgi.com [192.48.171.20])
+	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id j6TLR5MW013886
+	for <linux-lvm@redhat.com>; Fri, 29 Jul 2005 17:27:05 -0400
+Received: from nodin.corp.sgi.com (fddi-nodin.corp.sgi.com [198.29.75.193])
+	by omx3.sgi.com (8.12.11/8.12.9/linux-outbound_gateway-1.1) with ESMTP
+	id j6TM6AvR032224
+	for <linux-lvm@redhat.com>; Fri, 29 Jul 2005 15:06:10 -0700
+Received: from [192.26.74.95] (janus.corp.sgi.com [192.26.74.95])
+	by nodin.corp.sgi.com (SGI-8.12.5/8.12.10/SGI_generic_relay-1.2) with
+	ESMTP id j6TLR1bT97061940
+	for <linux-lvm@redhat.com>; Fri, 29 Jul 2005 14:27:01 -0700 (PDT)
+Message-ID: <42EA9F25.20608@deadhookers.org>
+Date: Fri, 29 Jul 2005 14:27:01 -0700
+From: Eric Wagar <eric@deadhookers.org>
+MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
-Reply-To: mingz@ele.uri.edu,
-	LVM general discussion and development <linux-lvm@redhat.com>
+Subject: [linux-lvm] best way to make lv with 3 500G luns
+Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -27,25 +28,17 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+To: LVM <linux-lvm@redhat.com>
 
-thx.
+What are the steps to create a volume comprised of 3 500G SGI TP9500 
+LUNS on SLES9?
 
-ming
+I'm only able to get as far as pvcreate.  Afterwards, I am unable to 
+create a visible vg.  By that I mean, I receive no error when I issue 
+vgcreate, but I am unable to vgdisplay the new vg.
 
-On Fri, 2005-07-29 at 21:56 +0100, Alasdair G Kergon wrote:
-> > > the problem is that we export a LV via iscsi to a remote box and become
-> > > a scsi disk. so it is partitioned and utilized. then it does have
-> > > partition on it. even it is exported to a linux box, u possibly will
-> > > use /dev/sdx1 instead of directly use /dev/sdx, rite?
->  
-> > dunno if kpartx or some other partitioning tool could do it
-> 
-> Give kpartx a try. It reads a dos partition table and creates partitions
-> using device-mapper.
-> 
-> You'll find kpartx in multipath-tools (device-mapper-multipath package on Red Hat).
->   ftp://sources.redhat.com/pub/dm/multipath-tools/multipath-tools-0.4.5.48.tgz
-> 
-> Alasdair
+This is on SLES9/SN2 with two module SGI A350 and using two FC paths.
+
+thanks
+eric
