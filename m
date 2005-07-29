@@ -1,18 +1,20 @@
 Received: from agk.surrey.redhat.com (agk.surrey.redhat.com [172.16.10.74])
-	by pobox.surrey.redhat.com (8.12.8/8.12.8) with ESMTP id j6TKlvRm021386
-	for <linux-lvm@redhat.com>; Fri, 29 Jul 2005 21:47:57 +0100
+	by pobox.surrey.redhat.com (8.12.8/8.12.8) with ESMTP id j6TKuwRm021805
+	for <linux-lvm@redhat.com>; Fri, 29 Jul 2005 21:56:58 +0100
 Received: from agk by agk.surrey.redhat.com with local (Exim 4.34)
-	id 1Dyblt-0003VM-DO
-	for linux-lvm@redhat.com; Fri, 29 Jul 2005 21:47:57 +0100
-Date: Fri, 29 Jul 2005 21:47:57 +0100
+	id 1Dybuc-0003Vu-1P
+	for linux-lvm@redhat.com; Fri, 29 Jul 2005 21:56:58 +0100
+Date: Fri, 29 Jul 2005 21:56:58 +0100
 From: Alasdair G Kergon <agk@redhat.com>
-Subject: Re: [linux-lvm] Progress on LVM2 snapshots
-Message-ID: <20050729204757.GP23710@agk.surrey.redhat.com>
-References: <1119267914.21477.3.camel@dilbert>
-	<1122572640.9888.27.camel@localhost.localdomain>
+Subject: Re: [linux-lvm] how to access the partition on LV?
+Message-ID: <20050729205658.GQ23710@agk.surrey.redhat.com>
+References: <1122563861.9888.1.camel@localhost.localdomain>
+	<20050728164523.GF4954@null.msp.redhat.com>
+	<1122570830.9888.10.camel@localhost.localdomain>
+	<20050728173218.GH4954@null.msp.redhat.com>
 Mime-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <1122572640.9888.27.camel@localhost.localdomain>
+In-Reply-To: <20050728173218.GH4954@null.msp.redhat.com>
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -27,22 +29,18 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-On Thu, Jul 28, 2005 at 01:44:00PM -0400, Ming Zhang wrote:
-> 1) very hard to solve technically. or
-> 2) not so easy but doable, just no time and human resource?
+> > the problem is that we export a LV via iscsi to a remote box and become
+> > a scsi disk. so it is partitioned and utilized. then it does have
+> > partition on it. even it is exported to a linux box, u possibly will
+> > use /dev/sdx1 instead of directly use /dev/sdx, rite?
  
-The hardest part of the fix involves changing the sequence of 
-device-mapper ioctls that LVM2 uses, and that's a couple of weeks' 
-development work, now pencilled into the RHEL4 Update 3 timescale.
+> dunno if kpartx or some other partitioning tool could do it
 
-In the meantime, you can apply the snapshot patches in the -udm
-tree and use 'dmsetup' manually to activate and deactivate snapshots
-when lvm2 fails.
+Give kpartx a try. It reads a dos partition table and creates partitions
+using device-mapper.
 
-Patches 8 and 9 at:
-  ftp://sources.redhat.com/pub/dm/patches/2.6-unstable/2.6.12-rc2/2.6.12-rc2-udm1/
-(Further patches are needed, but those two plus correct dmsetup use
-should avoid machine lockups.)
+You'll find kpartx in multipath-tools (device-mapper-multipath package on Red Hat).
+  ftp://sources.redhat.com/pub/dm/multipath-tools/multipath-tools-0.4.5.48.tgz
 
 Alasdair
 -- 
