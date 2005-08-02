@@ -1,11 +1,18 @@
-Message-ID: <42EF3177.409@gmx.net>
-Date: Tue, 02 Aug 2005 10:40:23 +0200
-From: Klaus Strebel <klaus.strebel@gmx.net>
+Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j728gkV29130
+	for <linux-lvm@redhat.com>; Tue, 2 Aug 2005 04:42:46 -0400
+Received: from wproxy.gmail.com (wproxy.gmail.com [64.233.184.198])
+	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id j728gd34009974
+	for <linux-lvm@redhat.com>; Tue, 2 Aug 2005 04:42:40 -0400
+Received: by wproxy.gmail.com with SMTP id i13so1617505wra
+	for <linux-lvm@redhat.com>; Tue, 02 Aug 2005 01:42:34 -0700 (PDT)
+Message-ID: <42EF31F7.9070404@gmail.com>
+Date: Tue, 02 Aug 2005 10:42:31 +0200
+From: ddaasd <ddaasd@gmail.com>
 MIME-Version: 1.0
-Subject: [Fwd: Re: [linux-lvm] Progress on LVM2 snapshots]]
-Content-Transfer-Encoding: 8bit
-Reply-To: hubgor@poczta.fm,
-	LVM general discussion and development <linux-lvm@redhat.com>
+Subject: [linux-lvm] e2fsck - Block bitmap differences - lvm1
+Content-Transfer-Encoding: 7bit
+Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -15,79 +22,13 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="utf-8"; format="flowed"
-To: linux-lvm@redhat.com, agk@redhat.com
-Cc: hubgor@poczta.fm
+Content-Type: text/plain; charset="us-ascii"
+To: linux-lvm@redhat.com
 
-
-
--------- Original-Nachricht --------
-Betreff: Re: [linux-lvm] Progress on LVM2 snapshots]
-Datum: Tue, 02 Aug 2005 10:39:47 +0200
-Von: Hubert <hubgor@poczta.fm>
-An: Klaus Strebel <klaus.strebel@gmx.net>
-Referenzen: <42EDD9A3.5060602@gmx.net>
-
-Hello Klaus ;-)
-
-Could you ask Alasdair wich dm devel patches should be added with kernel
-2.6.12-rc5 ?
-
-I noticed that in this kerenel release are added many dm devel patches.
-
-Best regards and many thanks ;-)
-
-Have a nice day
-
-Hubert
-
-Klaus Strebel napisa�(a):
-
-> FYI
->
-> -------- Original-Nachricht --------
-> Betreff: Re: [linux-lvm] Progress on LVM2 snapshots
-> Datum: Fri, 29 Jul 2005 21:47:57 +0100
-> Von: Alasdair G Kergon <agk@redhat.com>
-> Antwort an: LVM general discussion and development <linux-lvm@redhat.com>
-> An: LVM general discussion and development <linux-lvm@redhat.com>
-> Referenzen: <1119267914.21477.3.camel@dilbert> 
-> <1122572640.9888.27.camel@localhost.localdomain>
->
-> On Thu, Jul 28, 2005 at 01:44:00PM -0400, Ming Zhang wrote:
->
->> 1) very hard to solve technically. or
->> 2) not so easy but doable, just no time and human resource?
->
->
-> The hardest part of the fix involves changing the sequence of
-> device-mapper ioctls that LVM2 uses, and that's a couple of weeks'
-> development work, now pencilled into the RHEL4 Update 3 timescale.
->
-> In the meantime, you can apply the snapshot patches in the -udm
-> tree and use 'dmsetup' manually to activate and deactivate snapshots
-> when lvm2 fails.
->
-> Patches 8 and 9 at:
->
-> ftp://sources.redhat.com/pub/dm/patches/2.6-unstable/2.6.12-rc2/2.6.12-rc2-udm1/ 
->
-> (Further patches are needed, but those two plus correct dmsetup use
-> should avoid machine lockups.)
->
-> Alasdair
-
-
-----------------------------------------------------------------------
-Najlepszy serwis MOTO w Polsce! >>> http://link.interia.pl/f18a8
-
+So no one knows what is with those "block bitmap differences" returned
+by e2fsck?
+I would need some help.
+Thanks
 
 -- 
-Mit freundlichen Gr�ssen / best regards
-
-Klaus Strebel, Dipl.-Inform. (FH), mailto:klaus.strebel@gmx.net
-
-/"\
-\ /     ASCII RIBBON CAMPAIGN
-  X        AGAINST HTML MAIL
-/ \
+ddaas
