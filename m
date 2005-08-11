@@ -1,25 +1,43 @@
 Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j7BGDTV08582
-	for <linux-lvm@redhat.com>; Thu, 11 Aug 2005 12:13:29 -0400
-Received: from basie.internet2.edu (basie.internet2.edu [207.75.164.22])
-	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id j7BGDTlE004008
-	for <linux-lvm@redhat.com>; Thu, 11 Aug 2005 12:13:29 -0400
-Received: from localhost (unknown [127.0.0.1])
-	by basie.internet2.edu (Postfix) with ESMTP id B10321CD605
-	for <linux-lvm@redhat.com>; Thu, 11 Aug 2005 12:13:28 -0400 (EDT)
-Received: from basie.internet2.edu ([127.0.0.1])
-	by localhost (basie.internet2.edu [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id 03197-04 for <linux-lvm@redhat.com>;
-	Thu, 11 Aug 2005 12:13:28 -0400 (EDT)
-Date: Thu, 11 Aug 2005 12:13:28 -0400
-From: Dan Pritts <danno@internet2.edu>
-Subject: Re: [linux-lvm] Mirroring on LVM2
-Message-ID: <20050811161328.GB30915@internet2.edu>
-References: <38F73029B7ECB644A43CCA6D986DF70902DC261E@SHUSH.partnergsm.co.il>
-Mime-Version: 1.0
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j7BH4mV22640
+	for <linux-lvm@redhat.com>; Thu, 11 Aug 2005 13:04:48 -0400
+Received: from gateway.kindergarten (ppp-06.au1.fn.td-fn.de [217.24.197.6])
+	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id j7BH4bRX019353
+	for <linux-lvm@redhat.com>; Thu, 11 Aug 2005 13:04:38 -0400
+Received: from localhost (localhost [127.0.0.1])
+	by gateway.kindergarten (Postfix) with ESMTP id 37B404301
+	for <linux-lvm@redhat.com>; Thu, 11 Aug 2005 17:06:37 +0000 (UTC)
+Received: from gateway.kindergarten ([127.0.0.1])
+	by localhost (gateway [127.0.0.1]) (amavisd-new, port 10024) with ESMTP
+	id 05608-01 for <linux-lvm@redhat.com>;
+	Thu, 11 Aug 2005 17:06:24 +0000 (UTC)
+Received: from huepfburg.kindergarten (imap.huepfburg.kindergarten
+	[172.16.74.101])
+	by gateway.kindergarten (Postfix) with ESMTP id E0CDC423D
+	for <linux-lvm@redhat.com>; Thu, 11 Aug 2005 17:06:21 +0000 (UTC)
+Received: from localhost (localhost [127.0.0.1])
+	by huepfburg.kindergarten (Postfix) with ESMTP id A235236707
+	for <linux-lvm@redhat.com>; Thu, 11 Aug 2005 19:06:20 +0200 (CEST)
+Received: from huepfburg.kindergarten ([127.0.0.1])
+	by localhost (huepfburg [127.0.0.1]) (amavisd-new,
+	port 10024) with ESMTP id 09826-05 for <linux-lvm@redhat.com>;
+	Thu, 11 Aug 2005 19:06:19 +0200 (CEST)
+Received: from seifenkiste.kindergarten (seifenkiste.kindergarten
+	[172.16.74.100])
+	by huepfburg.kindergarten (Postfix) with ESMTP id 6A27B32DD6
+	for <linux-lvm@redhat.com>; Thu, 11 Aug 2005 19:06:19 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+	by seifenkiste.kindergarten (Postfix) with ESMTP id D8E5D3127E
+	for <linux-lvm@redhat.com>; Thu, 11 Aug 2005 19:06:15 +0200 (CEST)
+From: Dirk Jakobsmeier <dirk.jakobsmeier@web.de>
+Date: Thu, 11 Aug 2005 19:06:10 +0200
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Content-Disposition: inline
-In-Reply-To: <38F73029B7ECB644A43CCA6D986DF70902DC261E@SHUSH.partnergsm.co.il>
-Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
+Message-Id: <200508111906.11974.dirk.jakobsmeier@web.de>
+Subject: [linux-lvm] ghostlike error on logical volume on raid1
+Reply-To: dirk.jakobsmeier@web.de,
+	LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -30,67 +48,52 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: LVM general discussion and development <linux-lvm@redhat.com>
+To: linux-lvm@redhat.com
 
-I don't know if you can do LVM2 on release 3 - i think it needs a 2.6
-kernel.
+Hello 
 
-you could use software RAID (md), or for a non-realtime backup you could
-rsync to the second disk.  
+i have a really "nice" problem with my logical volume on an really small raid1 
+(only about 4G).
 
-On Wed, Aug 10, 2005 at 09:10:54PM +0200, Oren Lalush wrote:
-> Hi,
-> 
-> My name is Oren Lalush, and I work for Partner Communications Company in
-> Israel (A cellular company).
-> 
-> I'm running Red Hat Enterprise Linux AS release 3 (Taroon Update 2), and
-> I would like to know if can install LVM2 on this version ? and if LVM2
-> got a feature to do mirror between disks ? If not, can you suggest on
-> other ways to synchronize between disks ?
-> 
->  
-> 
-> Regards,
-> 
-> Oren Lalush
-> 
-> Storage Administrator 
-> Partner Communications Company Ltd.
-> 
-> Phon e: +972 54 7815487
-> Mobile: +972 54 5619997
-> Fax    : +972 54 7814714
-> E-mail: oren.lalush@orange.co.il
-> 
->  
-> 
->  
-> 
-> 
-> 
-> ---------------------------------------------------------------------------------------------------------------
-> 
-> orange mail - Connect to your e-mail anywhere with any handset
-> http://www.orange.co.il/web/corporate/app/omailadviser/webform1.aspx
-> 
-> ---------------------------------------------------------------------------------------------------------------
-> This message contains information that may be confidential or privileged.
-> If you are not the intended recipient, you may not use, copy or disclose
-> to anyone any of the information in this message. If you have received
-> this message and are not the intended recipient, kindly notify the sender
-> and delete this message from your computer.
-> 
+I use a kernel.org kernel 2.6.12 on a SuSE 9.2. 
 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+  LVM version:     2.00.25 (2004-09-29)
+  Library version: 1.00.19-ioctl (2004-07-03)
+  Driver version:  4.4.0
+  reiser 3.6.18
 
+and here is whats wondering me.
 
-danno
---
-dan pritts - systems administrator - internet2
-734/352-4953 office        734/834-7224 mobile
+If i'm taring a larger archiv on a non lvm filesystem (linux sources) 
+everythink works really smooth. Tar archiv is about 280 mb. After that i'm 
+moving it to the lvm located filesystem (this is exported via nfs), logging 
+into a client, untaring works perfect.
+
+md5sum ist always:
+
+host: md5sum linux-2.6.12.tar
+8145881b9d63dcc10419eb69137d6641  linux-2.6.12.tar
+host: md5sum linux-2.6.12.tar
+8145881b9d63dcc10419eb69137d6641  linux-2.6.12.tar
+
+That's fine. But now !!!
+
+Taring the same source directly to the lvm located filesystem
+
+host: md5sum linux-2.6.12.tar
+f9bfdc9ad446adf9db9e54d80723bd9c  linux-2.6.12.tar
+host: md5sum linux-2.6.12.tar
+58b2e962e9b7c8739d61ff033cd85130  linux-2.6.12.tar
+host: md5sum linux-2.6.12.tar
+6442fbabecfbbeba7c91c578c95df7c3  linux-2.6.12.tar
+
+For sure it's allways the same tar archiv. Untaring is not possible anymore. I 
+got errors, tar archiv is broken. Doing it using a smaller source (5 mb) 
+everythink is ok.
+
+Has anyone got those problems too?
+
+Any hints are appreciated.
+
+Dirk
+-- 
