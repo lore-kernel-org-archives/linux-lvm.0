@@ -1,18 +1,23 @@
-Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j7A7iRV17752
-	for <linux-lvm@redhat.com>; Wed, 10 Aug 2005 03:44:27 -0400
-Received: from rproxy.gmail.com (rproxy.gmail.com [64.233.170.206])
-	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id j7A7iLE9012908
-	for <linux-lvm@redhat.com>; Wed, 10 Aug 2005 03:44:21 -0400
-Received: by rproxy.gmail.com with SMTP id 1so49297rny
-	for <linux-lvm@redhat.com>; Wed, 10 Aug 2005 00:44:21 -0700 (PDT)
-Message-ID: <5055b5c005081000441e03379@mail.gmail.com>
-Date: Wed, 10 Aug 2005 00:44:21 -0700
-From: Abhishek Gupta <abhishekgupt@gmail.com>
+Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j7B6wKV26709
+	for <linux-lvm@redhat.com>; Thu, 11 Aug 2005 02:58:20 -0400
+Received: from linux.interlinx.bc.ca (linux.interlinx.bc.ca [66.11.173.224])
+	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id j7B6wJYu002006
+	for <linux-lvm@redhat.com>; Thu, 11 Aug 2005 02:58:19 -0400
+Received: from pc.ilinx (pc.ilinx [10.75.22.1])
+	(using TLSv1 with cipher RC4-MD5 (128/128 bits))
+	(No client certificate requested)
+	by linux.interlinx.bc.ca (Postfix) with ESMTP id 87A267E3B3
+	for <linux-lvm@redhat.com>; Thu, 11 Aug 2005 02:58:14 -0400 (EDT)
+From: "Brian J. Murrell" <brian@interlinx.bc.ca>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature";
+	boundary="=-uJ8fnNhZ3MQirmeG4tW0"
+Date: Thu, 11 Aug 2005 02:57:41 -0400
+Message-Id: <1123743470.31680.174.camel@pc.ilinx>
 Mime-Version: 1.0
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-Subject: [linux-lvm] Question Regarding Snapshots.
+Subject: [linux-lvm] how to "ignore" a volume group created elsehwere on a
+	shared device
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -23,22 +28,52 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@redhat.com
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-Hi,
 
-I am new to LVM and was wondering if it is possible to safely snapshot
-the snapshot of a logical volume.
+--=-uJ8fnNhZ3MQirmeG4tW0
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 
-The scenario I am considering is this:
+I have two machines connected to a shared storage device that I am
+trying to use LVM2 with.
 
-There is a logical volume A. A snapshot of a logical volume results in
-another logical volume A*. Now, is it possible to modify A* and then
-snapshot it to create a new logical volume A**.
+On one machine, /dev/sda1 is the same device (i.e. LUN on the shared
+storage device) as /dev/sda2 on the other machine and vice versa.  To be
+pedantically clear, machine one writes into /dev/sda1 and machine two
+can see what was written by machine one in it's /dev/sda2.
 
-Has anyone tried this before? Any answers/comments will be appreciated.
+The problem is that on machine one, if I add /dev/sda1 as a PV and then
+create a VG on it, "automagically" machine two sees this same VG and a
+PV in /dev/sda2.
 
-Thanks
+Now while this has some very interesting "failover" benefits going for
+it, it's lousing me up right now.
 
-Abhishek
+I want to be able to add /dev/sda1 as a PV on machine two and create VG
+there of the same name as I used on machine one.  Of course LVM2 gets
+upset that the VG exists already.
+
+I have tried adding the device name I don't want to see the PV (and the
+VG on it) on to the /etc/lvm/lvm.conf filter and while that prevents a
+vgscan from scanning it, it still does not prevent pvdisplay from
+listing it and the volume group on it from being visible.
+
+Is there any way to do what I want?
+
+b.
+
+
+--=-uJ8fnNhZ3MQirmeG4tW0
+Content-Type: application/pgp-signature; name=signature.asc
+Content-Description: This is a digitally signed message part
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.0 (GNU/Linux)
+
+iD8DBQBC+vbkl3EQlGLyuXARArSSAKCc8yQ7rKfkZmXNz8+a6OF/OHweCgCggRTf
+XqycmOvOWau8JxnsA1x/fvM=
+=oOi+
+-----END PGP SIGNATURE-----
+
+--=-uJ8fnNhZ3MQirmeG4tW0--
