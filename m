@@ -1,23 +1,18 @@
-Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j7FG3WV30416
-	for <linux-lvm@redhat.com>; Mon, 15 Aug 2005 12:03:32 -0400
-Received: from mail.advocap.org (cfondy.advocap.org [24.196.120.30])
-	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id j7FG3Qvd031073
-	for <linux-lvm@redhat.com>; Mon, 15 Aug 2005 12:03:27 -0400
-Received: from [192.168.1.19] (johnm.advocap.org [192.168.1.19])
-	(authenticated bits=0)
-	by mail.advocap.org (8.13.4/8.13.4/Debian-3) with ESMTP id
-	j7FG1Im8015935
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NOT)
-	for <linux-lvm@redhat.com>; Mon, 15 Aug 2005 11:01:23 -0500
-Message-ID: <4300BCAE.7090007@advocap.org>
-Date: Mon, 15 Aug 2005 11:02:54 -0500
-From: John McMonagle <johnm@advocap.org>
-MIME-Version: 1.0
-Subject: Re: [linux-lvm] pvmove won't start
-References: <43003501.9050301@conterra.de>
-In-Reply-To: <43003501.9050301@conterra.de>
-Content-Type: multipart/mixed; boundary="------------020200060705030909060508"
+Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j7FL05V21116
+	for <linux-lvm@redhat.com>; Mon, 15 Aug 2005 17:00:05 -0400
+Received: from wproxy.gmail.com (wproxy.gmail.com [64.233.184.192])
+	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id j7FKxwhw012600
+	for <linux-lvm@redhat.com>; Mon, 15 Aug 2005 16:59:59 -0400
+Received: by wproxy.gmail.com with SMTP id i7so1089902wra
+	for <linux-lvm@redhat.com>; Mon, 15 Aug 2005 13:59:53 -0700 (PDT)
+Message-ID: <e073f912050815135950ba06f4@mail.gmail.com>
+Date: Mon, 15 Aug 2005 14:59:53 -0600
+From: Nick I <clusterbuilder@gmail.com>
+Mime-Version: 1.0
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+Subject: [linux-lvm] Thanks for the help
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -28,64 +23,25 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="us-ascii"
+To: linux-lvm@redhat.com
 
-This is a multi-part message in MIME format.
---------------020200060705030909060508
-Content-Type: text/plain; charset="iso-8859-1"; format="flowed"
-Content-Transfer-Encoding: quoted-printable
+Hi,
 
-Dieter
+Thanks you everyone for submitting links about HPC related projects
+and sites to Cluster Builder (http://www.clusterbuilder.org). Upon
+suggestions sent by the HPC community, I added sections for Grid
+middleware and end-user applications under the "Software" category.
 
-I don't know what the odds of getting your distro to fix it but if you=20
-have any plans to use pvmove or make snapshots I highly recommend you=20
-load  dm_snapshot and dm_mirror in your initrd or build into the kernel.
+I want to continue making Cluster Builder a helpful research tool for
+HPC related information. So I'd like to know, based upon your
+experience, if there are any other important components you run on
+your cluster that I failed to note, or are there changes you would
+make in how I listed the applications.
 
-I found the hard way that I couldn't  boot with the snapshot even if not=20
-mounted with out these loaded.
+Please go ahead and respond to this email in the user list so that
+others can give their opinions as well. Links that you mention in the
+user list I will be sure to include on Cluster Builder.
 
-In debian sarge I put
-dm_snapshot
-dm_mirror
- in /etc/mkinitrd/modules
-and ran mkinitrd.
-
-John
-
-Dieter St=EF=BF=BDken wrote:
-
-> I'm using LVM2 on kernel 2.6.12.2 and tried to perform a pvmove.
-> Unfortunately I got the message:
->
-> mirror: Required device-mapper target(s) not detected in your kernel
->
-> I found, dm-mirror was compiled as a module, but it was not loaded.
-> After a "modprobe dm-mirror" it seems to work now. Can someone tell
-> me, why the module is not loaded automatically?
->
-> Dieter.
-
-
-
---------------020200060705030909060508
-Content-Type: text/x-vcard; charset=utf-8;
- name="johnm.vcf"
-Content-Transfer-Encoding: 7bit
-Content-Disposition: attachment;
- filename="johnm.vcf"
-
-begin:vcard
-fn:John McMonagle
-n:McMonagle;John
-org:Advocap Inc
-adr;dom:;;2929 Harrison St;Oshkosh;WI;54936
-email;internet:johnm@advocap.org
-title:IT Manager
-tel;work:920-426-0150
-x-mozilla-html:FALSE
-url:http://www.advocap.org
-version:2.1
-end:vcard
-
-
---------------020200060705030909060508--
+Thanks for the help,
+Nick
