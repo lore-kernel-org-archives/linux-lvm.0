@@ -1,27 +1,21 @@
 Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j7GCupV15994
-	for <linux-lvm@redhat.com>; Tue, 16 Aug 2005 08:56:51 -0400
-Received: from itspmx1.state.ms.us (e3000a.state.ms.us [205.144.224.140])
-	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id j7GCumMc018191
-	for <linux-lvm@redhat.com>; Tue, 16 Aug 2005 08:56:48 -0400
-Received: from tcmail.mstc.state.ms.us (tcmail.mstc.state.ms.us [10.3.60.220])
-	by itspmx1.state.ms.us (8.12.11/8.12.11) with ESMTP id j7GCufwe029746
-	for <linux-lvm@redhat.com>; Tue, 16 Aug 2005 07:56:41 -0500 (CDT)
-	(envelope-from rray@mstc.state.ms.us)
-Received: from rray.drdc.mstc.ms.gov (localhost.localdomain [127.0.0.1])
-	by rray.drdc.mstc.ms.gov (8.13.1/8.13.1) with ESMTP id j7GCsCh7021396
-	for <linux-lvm@redhat.com>; Tue, 16 Aug 2005 07:54:12 -0500
-Received: from localhost (rray@localhost)
-	by rray.drdc.mstc.ms.gov (8.13.1/8.13.1/Submit) with ESMTP id
-	j7GCsCDj021393
-	for <linux-lvm@redhat.com>; Tue, 16 Aug 2005 07:54:12 -0500
-Date: Tue, 16 Aug 2005 07:54:11 -0500 (CDT)
-From: Richard Ray <rray@mstc.state.ms.us>
-Subject: Re: [linux-lvm] vg works fine under FC3, but not FC4
-In-Reply-To: <20050816072600.26570.qmail@web52205.mail.yahoo.com>
-Message-ID: <Pine.LNX.4.62.0508160752340.29127@rray.drdc.mstc.ms.gov>
-References: <20050816072600.26570.qmail@web52205.mail.yahoo.com>
-MIME-Version: 1.0
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j7GHNkV05435
+	for <linux-lvm@redhat.com>; Tue, 16 Aug 2005 13:23:46 -0400
+Received: from eastrmmtao01.cox.net (eastrmmtao01.cox.net [68.230.240.38])
+	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id j7GHNfgH012416
+	for <linux-lvm@redhat.com>; Tue, 16 Aug 2005 13:23:41 -0400
+Received: from localhost ([24.250.31.7]) by eastrmmtao01.cox.net
+	(InterMail vM.6.01.04.00 201-2131-118-20041027) with ESMTP
+	id <20050816172334.IHHL21289.eastrmmtao01.cox.net@localhost>
+	for <linux-lvm@redhat.com>; Tue, 16 Aug 2005 13:23:34 -0400
+Received: from chris by localhost with local (Exim 4.43) id 1E55Bx-0004XC-5v
+	for linux-lvm@redhat.com; Tue, 16 Aug 2005 13:25:37 -0400
+Date: Tue, 16 Aug 2005 13:25:37 -0400
+From: Chris Shoemaker <c.shoemaker@cox.net>
+Message-ID: <20050816172537.GA17428@pe.Belkin>
+Mime-Version: 1.0
+Content-Disposition: inline
+Subject: [linux-lvm] 2.00 TB of PV "not usable"?
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -32,36 +26,26 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"; format="flowed"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: LVM general discussion and development <linux-lvm@redhat.com>
+To: linux-lvm@redhat.com
 
-I had a similar problem with FC4.
-lvm2-2.01 has problems.
-Downgrade to lvm2-2.00 from FC3.
+[Resending now that I've subscribed.]
+[I've searched google and the list archives for the answer to this
+question, but without success.]
 
-Richard
+I've got a 3.18 TB PV member of a VG, and everything seems to be
+working fine.  But, I noticed that the output of pvdisplay for my PV shows:
 
-On Tue, 16 Aug 2005 john_gore@yahoo.com wrote:
+...
+PVSize        3.18 TB / not usable 2.00 TB
+Allocatable   yes (but full)
+...
 
-> My vg mounts fine under fc3, but when i installed fc4 on a new drive, I cant bring in the vg. I get errors for hdc like "Couldn't find device with uuid..." and PV unknown device (from pvscan).
->
-> I can plug back in the old boot drive and run under fc3 and things work well.
->
-> The vg consists of 1 lv and 2 pv drives configured as:
->
-> my_vg:
->  my_lv1:
->     hdc2 (ext2)
->     hdd (single partition as ext2)
->
-> The old hda boot disk is ext3 running FC3 and the new hda boot disk is running the dafault lvm partitions under FC4.
->
-> hdc is formatted with boot and swap on hdc1 and hdc5 - probably this was from an earlier install (although I did have these disks plugged in while installing FC4 - when the installer started asking about reformatting hdc and hdd, I powered down, unplugged these drives, and redid the install)
->
-> Any ideas to try?
->
-> - John
->
->
->
+My question is: should I be concerned about the "not usable 2.00 TB" part?
+
+Thanks,
+
+-chris
+
+p.s. kernel is 2.6.9
