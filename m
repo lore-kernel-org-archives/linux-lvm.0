@@ -1,17 +1,23 @@
 Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j7G8GfV20947
-	for <linux-lvm@redhat.com>; Tue, 16 Aug 2005 04:16:41 -0400
-Received: from mail.vianova.fi (herkules.vianova.fi [194.100.28.129])
-	by mx1.redhat.com (8.12.11/8.12.11) with SMTP id j7G8GYeD007126
-	for <linux-lvm@redhat.com>; Tue, 16 Aug 2005 04:16:35 -0400
-From: "Ville Herva" <vherva@ENIGMA.viasys.com>
-Date: Tue, 16 Aug 2005 11:16:17 +0300
-Message-ID: <20050816081617.GB3172@vianova.fi>
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j7GEFpV06829
+	for <linux-lvm@redhat.com>; Tue, 16 Aug 2005 10:15:51 -0400
+Received: from centrmmtao06.cox.net (centrmmtao06vip.cox.net [68.1.16.144]
+	(may be forged))
+	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id j7GEFoCk011766
+	for <linux-lvm@redhat.com>; Tue, 16 Aug 2005 10:15:50 -0400
+Received: from localhost ([24.250.31.7]) by centrmmtao06.cox.net
+	(InterMail vM.6.01.04.00 201-2131-118-20041027) with ESMTP
+	id <20050816141544.GLBX1571.centrmmtao06.cox.net@localhost>
+	for <linux-lvm@redhat.com>; Tue, 16 Aug 2005 10:15:44 -0400
+Received: from chris by localhost with local (Exim 4.43) id 1E52G9-0004SH-US
+	for linux-lvm@redhat.com; Tue, 16 Aug 2005 10:17:45 -0400
+Date: Tue, 16 Aug 2005 10:17:45 -0400
+From: Chris Shoemaker <c.shoemaker@cox.net>
+Message-ID: <20050816141745.GA17120@pe.Belkin>
 Mime-Version: 1.0
 Content-Disposition: inline
-Subject: [linux-lvm] Upgrade from 2.6.10-ac8 to 2.6.12.5 broke lvm rootfs
-Reply-To: vherva@vianova.fi,
-	LVM general discussion and development <linux-lvm@redhat.com>
+Subject: [linux-lvm] 2.00 TB of PV "not usable"?
+Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -23,56 +29,23 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: linux-kernel@vger.kernel.org, linux-lvm@redhat.com
+To: linux-lvm@redhat.com
 
-After upgrading the kernel from 2.6.10-ac8 to 2.6.12.5 the initramfs was no
-longer able to mount rootfs.
+[I've searched google and the list archives for the answer to this
+question, but without success.]
 
-  mount: error 6 mounting ext3
+I've got a 3.18 TB PV member of a VG, and everything seems to be
+working fine.  But, I noticed that the output of pvdisplay for my PV shows:
 
-All the configuration options are identical, and upgrading lvm2 package:
-  lvm2-2.00.25-1.01       -> lvm2-2.01.14-1.0
-  device-mapper-1.00.19-2 -> device-mapper-1.01.04-1.0
+...
+PVSize        3.18 TB / not usable 2.00 TB
+Allocatable   yes (but full)
+...
 
-Did not change anything.
+My question is: should I be concerned about the "not usable 2.00 TB" part?
 
-Dm, ext3 and the relevant block device drivers statically compiled in.
+Thanks,
 
-The vg has lvm1 format, fwiw.
+-chris
 
-I enabled all the debug options I could think of in the nash-based initramfs
-init script. That did not appear to tell much: all I was able to tell was
-that lvm was succesfully called by the init script:
-
-mount -t proc /proc /proc
-mount -t sysfs none /sys
-insmod /lib/dm-snapshot.ko 
-mkdevices /dev
-mkdmnod
-lvm vgscan -v
-# sleep 5
-lvm vgchange -ay
-# sleep 5
-lvm vgmknodes
-# sleep 5
-mkrootdev /dev/root
-umount /sys
-# sleep 5
-mount -o defaults --ro -t ext3 /dev/root /sysroot
-switchroot /sysroot
-
-but those didn't give any meaningful output (other than notices about
-setting log indentation level).
-
-Finally, I added "sleep 5" after each lvm command (commented out above),
-which appeared "solve" the problem. 
-
-Apparently the lvm scripts somehow do their initialization asynchronously
-and the init script tries to mount root before it is available. I'm not sure
-why this is affected by the kernel version, though.
-
-
-
--- v --
-
-v@iki.fi
+p.s. kernel is 2.6.9
