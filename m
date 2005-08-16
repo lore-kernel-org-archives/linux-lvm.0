@@ -1,21 +1,17 @@
-Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j7GHNkV05435
-	for <linux-lvm@redhat.com>; Tue, 16 Aug 2005 13:23:46 -0400
-Received: from eastrmmtao01.cox.net (eastrmmtao01.cox.net [68.230.240.38])
-	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id j7GHNfgH012416
-	for <linux-lvm@redhat.com>; Tue, 16 Aug 2005 13:23:41 -0400
-Received: from localhost ([24.250.31.7]) by eastrmmtao01.cox.net
-	(InterMail vM.6.01.04.00 201-2131-118-20041027) with ESMTP
-	id <20050816172334.IHHL21289.eastrmmtao01.cox.net@localhost>
-	for <linux-lvm@redhat.com>; Tue, 16 Aug 2005 13:23:34 -0400
-Received: from chris by localhost with local (Exim 4.43) id 1E55Bx-0004XC-5v
-	for linux-lvm@redhat.com; Tue, 16 Aug 2005 13:25:37 -0400
-Date: Tue, 16 Aug 2005 13:25:37 -0400
-From: Chris Shoemaker <c.shoemaker@cox.net>
-Message-ID: <20050816172537.GA17428@pe.Belkin>
+Received: from agk.surrey.redhat.com (agk.surrey.redhat.com [172.16.10.74])
+	by pobox.surrey.redhat.com (8.12.8/8.12.8) with ESMTP id j7GHVT0l016683
+	for <linux-lvm@redhat.com>; Tue, 16 Aug 2005 18:31:29 +0100
+Received: from agk by agk.surrey.redhat.com with local (Exim 4.34)
+	id 1E55Hd-0006eP-DM
+	for linux-lvm@redhat.com; Tue, 16 Aug 2005 18:31:29 +0100
+Date: Tue, 16 Aug 2005 18:31:29 +0100
+From: Alasdair G Kergon <agk@redhat.com>
+Subject: Re: [linux-lvm] 2.00 TB of PV "not usable"?
+Message-ID: <20050816173129.GI29587@agk.surrey.redhat.com>
+References: <20050816172537.GA17428@pe.Belkin>
 Mime-Version: 1.0
 Content-Disposition: inline
-Subject: [linux-lvm] 2.00 TB of PV "not usable"?
+In-Reply-To: <20050816172537.GA17428@pe.Belkin>
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -28,24 +24,16 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: linux-lvm@redhat.com
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-[Resending now that I've subscribed.]
-[I've searched google and the list archives for the answer to this
-question, but without success.]
+On Tue, Aug 16, 2005 at 01:25:37PM -0400, Chris Shoemaker wrote:
+> My question is: should I be concerned about the "not usable 2.00 TB" part?
 
-I've got a 3.18 TB PV member of a VG, and everything seems to be
-working fine.  But, I noticed that the output of pvdisplay for my PV shows:
+Yes.
+It's probably an indication you're using an old version of the lvm tools
+that doesn't support large devices properly: upgrade!
+IIRC unpatched 2.6.9 also has data corruption issues with large devices.
 
-...
-PVSize        3.18 TB / not usable 2.00 TB
-Allocatable   yes (but full)
-...
-
-My question is: should I be concerned about the "not usable 2.00 TB" part?
-
-Thanks,
-
--chris
-
-p.s. kernel is 2.6.9
+Alasdair
+-- 
+agk@redhat.com
