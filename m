@@ -1,18 +1,25 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j7FL05V21116
-	for <linux-lvm@redhat.com>; Mon, 15 Aug 2005 17:00:05 -0400
-Received: from wproxy.gmail.com (wproxy.gmail.com [64.233.184.192])
-	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id j7FKxwhw012600
-	for <linux-lvm@redhat.com>; Mon, 15 Aug 2005 16:59:59 -0400
-Received: by wproxy.gmail.com with SMTP id i7so1089902wra
-	for <linux-lvm@redhat.com>; Mon, 15 Aug 2005 13:59:53 -0700 (PDT)
-Message-ID: <e073f912050815135950ba06f4@mail.gmail.com>
-Date: Mon, 15 Aug 2005 14:59:53 -0600
-From: Nick I <clusterbuilder@gmail.com>
-Mime-Version: 1.0
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-Subject: [linux-lvm] Thanks for the help
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j7G6cEV31743
+	for <linux-lvm@redhat.com>; Tue, 16 Aug 2005 02:38:14 -0400
+Received: from mail.astral.ro (mail.astral.ro [193.230.240.11])
+	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id j7G6c5Qn023469
+	for <linux-lvm@redhat.com>; Tue, 16 Aug 2005 02:38:06 -0400
+Received: from 127.0.0.1 (localhost.localdomain [127.0.0.1])
+	by dummy.domain.name (Postfix) with SMTP id 9B64C305FB
+	for <linux-lvm@redhat.com>; Tue, 16 Aug 2005 09:37:53 +0300 (EEST)
+Received: from [192.168.25.222] (dummy.cluj.astral.ro [193.230.240.25])
+	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by mail.astral.ro (Postfix) with ESMTP id 95167305EF
+	for <linux-lvm@redhat.com>; Tue, 16 Aug 2005 09:37:53 +0300 (EEST)
+Message-ID: <430189C1.8030000@astral.ro>
+Date: Tue, 16 Aug 2005 09:37:53 +0300
+From: Imre Gergely <imre.gergely@astral.ro>
+MIME-Version: 1.0
+Subject: Re: [linux-lvm] multiple snapshots
+References: <4300816B.8060208@astral.ro>
+In-Reply-To: <4300816B.8060208@astral.ro>
+Content-Transfer-Encoding: 7bit
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -24,24 +31,48 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@redhat.com
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-Hi,
 
-Thanks you everyone for submitting links about HPC related projects
-and sites to Cluster Builder (http://www.clusterbuilder.org). Upon
-suggestions sent by the HPC community, I added sections for Grid
-middleware and end-user applications under the "Software" category.
+mmm, i forgot:
 
-I want to continue making Cluster Builder a helpful research tool for
-HPC related information. So I'd like to know, based upon your
-experience, if there are any other important components you run on
-your cluster that I failed to note, or are there changes you would
-make in how I listed the applications.
+[root@fc2 root]# uname -r
+2.6.12.5
 
-Please go ahead and respond to this email in the user list so that
-others can give their opinions as well. Links that you mention in the
-user list I will be sure to include on Cluster Builder.
+lvm> version
+  LVM version:     2.01.13-cvs (2005-06-14)
+  Library version: 1.01.01 (2005-03-29)
+  Driver version:  4.4.0
 
-Thanks for the help,
-Nick
+
+Imre Gergely wrote:
+> hi
+> 
+> i tried to create 2 snapshots of a LV, and i got in trouble ;) with one
+> snapshot there are apparently no problems, with two the kernel gives me
+> random oops-es and hangs. first, i tried with the root LV, then i tried
+> with a simple partition, the result were the same. i created the two
+> snapshots, after that i did a vgdisplay, there was everything alright, i
+> mounted the origin LV, i copied some files, i watched the percentage
+> increasing on the snapshots, then i did a 'ls -la' on the mounted
+> directory and then the kernel said bye-bye... i don't see any kernel
+> panic, just the usual register and memory dump, and the hang.
+> 
+> any ideas? don't tell me i cannot have more than one snapshot on one
+> given LV.
+> 
+> thx.
+> 
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@redhat.com
+> https://www.redhat.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+> 
+
+-- 
+Gergely Imre
+SysAdmin
+Astral Telecom
+http://www.nextra.ro/gimre
+GPG key: 0x34525305 (www.keyserver.net)
