@@ -1,19 +1,22 @@
 Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j7K7MJV26302
-	for <linux-lvm@redhat.com>; Sat, 20 Aug 2005 03:22:19 -0400
-Received: from wproxy.gmail.com (wproxy.gmail.com [64.233.184.200])
-	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id j7K7MGtN004170
-	for <linux-lvm@redhat.com>; Sat, 20 Aug 2005 03:22:16 -0400
-Received: by wproxy.gmail.com with SMTP id i12so929078wra
-	for <linux-lvm@redhat.com>; Sat, 20 Aug 2005 00:22:11 -0700 (PDT)
-Message-ID: <fa61edfd0508200022235af787@mail.gmail.com>
-Date: Sat, 20 Aug 2005 17:22:11 +1000
-From: Chris Jensen <cjensen@gmail.com>
-Mime-Version: 1.0
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-Subject: [linux-lvm] Saving files from full failing volume
-Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j7KIHSV08676
+	for <linux-lvm@redhat.com>; Sat, 20 Aug 2005 14:17:28 -0400
+Received: from natsmtp00.rzone.de (natsmtp00.rzone.de [81.169.145.165])
+	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id j7KIHJ8A014282
+	for <linux-lvm@redhat.com>; Sat, 20 Aug 2005 14:17:23 -0400
+Received: from micha-mobile (p5086EB21.dip.t-dialin.net [80.134.235.33])
+	by post.webmailer.de (8.13.1/8.13.1) with ESMTP id j7KIH82q001689
+	for <linux-lvm@redhat.com>; Sat, 20 Aug 2005 20:17:15 +0200 (MEST)
+From: mailinglist@krausam.de
+Date: Sat, 20 Aug 2005 21:16:56 +0200
+MIME-Version: 1.0
+Content-Type: multipart/signed; boundary="nextPart6511520.qVuvnAe1oB";
+	protocol="application/pgp-signature"; micalg=pgp-sha1
+Content-Transfer-Encoding: 7bit
+Message-Id: <200508202117.05941.mailinglist@krausam.de>
+Subject: [linux-lvm] Onbord-raid problem
+Reply-To: micha@krausam.de,
+	LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -23,31 +26,66 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@redhat.com
 
-Hi,
-I've just had a disk die, and when I replace it I'm thinking of
-setting up LVM, however I'm wondering how the same scenario would pan
-out under LVM:
+--nextPart6511520.qVuvnAe1oB
+Content-Type: text/plain;
+  charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+Content-Disposition: inline
 
-The disk was 160GB and completely full. On thursday the disk reported
-a smart error, so I started transferring data off the disk, but seeing
-as how I didn't have another 160GB handy, I had to simply copy
-directory by directory to vairous bits of scattered space that I was
-able to find, starting with the most important data. (the disk then
-completely died after getting about half the data off :-( )
+I try to install Gentoo on my Asus A7N8X, I used this:=20
+http://tienstra4.flatnet.tudelft.nl/~gerte/gen2dmraid/
+for help, because I want to use my on-bord "Bios Raid".
 
-If this disk had been setup with LVM, the filesystem on it would've
-spanned that disk and an 80G disk (also close to full). Under LVM
-would it have been possible to determine which files were being stored
-on the 160G so I could use filesystem tools to move them off before
-shrinking the volume and moving it entirely to the 80G disk?
+Problem:
 
-(I've read up about LVM and understand I can replace failed
-blocks/disks with /dev/zero, so the shrinking and moving part doesn't
-worry me to much, it's just the identifying of where files live that
-I'm curious about.)
+# fdisk -l /dev/mapper/sil_afaidcaafaci
 
-Thanks for any responses
-Chris
+Disk /dev/mapper/sil_afaidcaafaci: 240.0 GB, 240065101824 bytes
+255 heads, 63 sectors/track, 29186 cylinders
+Units =3D cylinders of 16065 * 512 =3D 8225280 bytes
+
+                       Device Boot      Start         End      Blocks   Id =
+ System
+/dev/mapper/sil_afaidcaafaci1   *           1        1305    10482381    7 =
+HPFS/NTFS
+/dev/mapper/sil_afaidcaafaci2            1306       27426   209816932+   f =
+ W95 Ext'd (LBA)
+/dev/mapper/sil_afaidcaafaci3           27427       29186    14137200   8e =
+ Linux LVM
+/dev/mapper/sil_afaidcaafaci5            1306       27413   209712478+   7 =
+ HPFS/NTFS
+/dev/mapper/sil_afaidcaafaci6           27414       27426      104391   83 =
+ Linux
+
+# pvcreate /dev/mapper/sil_afaidcaafaci3 -vv
+      Setting global/locking_type to 1
+      Setting global/locking_dir to /var/lock/lvm
+      File-based locking enabled.
+      Locking /var/lock/lvm/P_orphans WB
+      Unlocking /var/lock/lvm/P_orphans
+    Wiping cache of LVM-capable devices
+    Wiping internal VG cache
+      Locking /var/lock/lvm/P_orphans WB
+  Device /dev/mapper/sil_afaidcaafaci3 not found.
+      Unlocking /var/lock/lvm/P_orphans
+
+=2D-=20
+Micha Krause
+
+Jabber:	SMS-King@jabber.org
+Email:	Micha@krausam.de
+
+--nextPart6511520.qVuvnAe1oB
+Content-Type: application/pgp-signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.1 (GNU/Linux)
+
+iD8DBQBDB4GxfAR45tA28LgRAoMPAJ4kheUPMu/W4eyjd0VLQ6adwnZ91ACcCVqk
+3BcMeEXS6Mem3Go4Uj59F7w=
+=zx9g
+-----END PGP SIGNATURE-----
+
+--nextPart6511520.qVuvnAe1oB--
