@@ -1,22 +1,17 @@
 Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j7KIHSV08676
-	for <linux-lvm@redhat.com>; Sat, 20 Aug 2005 14:17:28 -0400
-Received: from natsmtp00.rzone.de (natsmtp00.rzone.de [81.169.145.165])
-	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id j7KIHJ8A014282
-	for <linux-lvm@redhat.com>; Sat, 20 Aug 2005 14:17:23 -0400
-Received: from micha-mobile (p5086EB21.dip.t-dialin.net [80.134.235.33])
-	by post.webmailer.de (8.13.1/8.13.1) with ESMTP id j7KIH82q001689
-	for <linux-lvm@redhat.com>; Sat, 20 Aug 2005 20:17:15 +0200 (MEST)
-From: mailinglist@krausam.de
-Date: Sat, 20 Aug 2005 21:16:56 +0200
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j7L8hwV07362
+	for <linux-lvm@redhat.com>; Sun, 21 Aug 2005 04:43:58 -0400
+Received: from web31114.mail.mud.yahoo.com (web31114.mail.mud.yahoo.com
+	[68.142.201.76])
+	by mx1.redhat.com (8.12.11/8.12.11) with SMTP id j7L8hw0A021282
+	for <linux-lvm@redhat.com>; Sun, 21 Aug 2005 04:43:58 -0400
+Message-ID: <20050821084352.447.qmail@web31114.mail.mud.yahoo.com>
+Date: Sun, 21 Aug 2005 01:43:52 -0700 (PDT)
+From: Hale India <hale_india@yahoo.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="nextPart6511520.qVuvnAe1oB";
-	protocol="application/pgp-signature"; micalg=pgp-sha1
-Content-Transfer-Encoding: 7bit
-Message-Id: <200508202117.05941.mailinglist@krausam.de>
-Subject: [linux-lvm] Onbord-raid problem
-Reply-To: micha@krausam.de,
-	LVM general discussion and development <linux-lvm@redhat.com>
+Content-Transfer-Encoding: 8bit
+Subject: [linux-lvm] hard disk recovery using usb box
+Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -26,66 +21,119 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
+Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@redhat.com
 
---nextPart6511520.qVuvnAe1oB
-Content-Type: text/plain;
-  charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-Content-Disposition: inline
+Hi
 
-I try to install Gentoo on my Asus A7N8X, I used this:=20
-http://tienstra4.flatnet.tudelft.nl/~gerte/gen2dmraid/
-for help, because I want to use my on-bord "Bios Raid".
+I am using fedora 4 on a hp laptop.
+My motherboard burned out..
 
-Problem:
+When I had installed fedora on this machine I took the
+automatic partition option. I kept windows in a
+smaller partition and fedora used the rest.
 
-# fdisk -l /dev/mapper/sil_afaidcaafaci
+I wanted to get bak my data's puting my hard disk in
+an USB box and connecting it to another machine.
 
-Disk /dev/mapper/sil_afaidcaafaci: 240.0 GB, 240065101824 bytes
-255 heads, 63 sectors/track, 29186 cylinders
-Units =3D cylinders of 16065 * 512 =3D 8225280 bytes
+I get 3 devices /dev/sda1 /dev/sda2 /dev/sda3
+I can acce boot partition from the hard disk but not
+windows and not main fedora patition.
+(VolGroup00-LogVol00)
 
-                       Device Boot      Start         End      Blocks   Id =
+{venus:root} mount /dev/sda1
+mount: unknown filesystem type 'ntfs'
+{venus:root} mount /dev/sda2
+{venus:root} mount /dev/sda3
+mount: can't find /dev/sda3 in /etc/fstab or /etc/mtab
+
+I get boot partion in sda2
+From suse I can access windows partition in sda1 :
+ntfs filesystem type seems to be reconised
+I cannot access main partition (which is in sda3)
+using suse or fedora.
+
+In /var/log/messages I get 
+
+Aug 21 09:37:47 venus kernel: USB Mass Storage support
+registered.
+Aug 21 09:37:52 venus kernel:   Vendor: FUJITSU  
+Model: MHS2040AT  D      Rev: 0811
+Aug 21 09:37:52 venus kernel:   Type:   Direct-Access 
+                    ANSI SCSI revision: 00
+Aug 21 09:37:52 venus scsi.agent[9086]: disk at
+/devices/pci0000:00/0000:00:13.2/usb1/1-8/1-8:1.0/host0/target0:0:0/0:0:0:0
+Aug 21 09:37:52 venus kernel: SCSI device sda:
+78140160 512-byte hdwr sectors (40008 MB)
+Aug 21 09:37:52 venus kernel: sda: assuming drive
+cache: write through
+Aug 21 09:37:52 venus kernel: SCSI device sda:
+78140160 512-byte hdwr sectors (40008 MB)
+Aug 21 09:37:52 venus kernel: sda: assuming drive
+cache: write through
+Aug 21 09:37:52 venus kernel:  sda: sda1 sda2 sda3
+Aug 21 09:37:52 venus kernel: Attached scsi disk sda
+at scsi0, channel 0, id 0, lun 0
+Aug 21 09:37:54 venus fstab-sync[9134]: added mount
+point /media/usbdisk for /dev/sda1
+Aug 21 09:37:54 venus fstab-sync[9137]: added mount
+point /media/usbdisk1 for /dev/sda2
+Aug 21 09:47:41 venus su(pam_unix)[9253]: session
+opened for user root by (uid=1000)
+Aug 21 09:50:00 venus kernel: kjournald starting. 
+Commit interval 5 seconds
+Aug 21 09:50:00 venus kernel: EXT3 FS on sda2,
+internal journal
+Aug 21 09:50:00 venus kernel: EXT3-fs: recovery
+complete.
+Aug 21 09:50:00 venus kernel: EXT3-fs: mounted
+filesystem with ordered data mode.
+Aug 21 09:50:00 venus kernel: SELinux: initialized
+(dev sda2, type ext3), uses xattr
+Aug 21 09:57:49 venus su(pam_unix)[9427]: session
+opened for user root by (uid=1000)
+Aug 21 09:59:52 venus kernel: kjournald starting. 
+Commit interval 5 seconds
+Aug 21 09:59:52 venus kernel: EXT3 FS on sda2,
+internal journal
+Aug 21 09:59:52 venus kernel: EXT3-fs: mounted
+filesystem with ordered data mode.
+Aug 21 09:59:52 venus kernel: SELinux: initialized
+(dev sda2, type ext3), uses xattr
+
+Using fdisk I get :
+
+{venus:root} fdisk -l
+
+Disk /dev/hda: 60.0 GB, 60011642880 bytes
+255 heads, 63 sectors/track, 7296 cylinders
+Units = cylinders of 16065 * 512 = 8225280 bytes
+
+   Device Boot      Start         End      Blocks   Id
  System
-/dev/mapper/sil_afaidcaafaci1   *           1        1305    10482381    7 =
-HPFS/NTFS
-/dev/mapper/sil_afaidcaafaci2            1306       27426   209816932+   f =
- W95 Ext'd (LBA)
-/dev/mapper/sil_afaidcaafaci3           27427       29186    14137200   8e =
- Linux LVM
-/dev/mapper/sil_afaidcaafaci5            1306       27413   209712478+   7 =
+/dev/hda1               1        3206    25744131+   7
  HPFS/NTFS
-/dev/mapper/sil_afaidcaafaci6           27414       27426      104391   83 =
+/dev/hda2   *        3207        3218       96390   83
  Linux
+/dev/hda3            3219        7296    32756535   8e
+ Linux LVM
 
-# pvcreate /dev/mapper/sil_afaidcaafaci3 -vv
-      Setting global/locking_type to 1
-      Setting global/locking_dir to /var/lock/lvm
-      File-based locking enabled.
-      Locking /var/lock/lvm/P_orphans WB
-      Unlocking /var/lock/lvm/P_orphans
-    Wiping cache of LVM-capable devices
-    Wiping internal VG cache
-      Locking /var/lock/lvm/P_orphans WB
-  Device /dev/mapper/sil_afaidcaafaci3 not found.
-      Unlocking /var/lock/lvm/P_orphans
+Disk /dev/sda: 40.0 GB, 40007761920 bytes
+255 heads, 63 sectors/track, 4864 cylinders
+Units = cylinders of 16065 * 512 = 8225280 bytes
 
-=2D-=20
-Micha Krause
+   Device Boot      Start         End      Blocks   Id
+ System
+/dev/sda1   *           1        2313    18579141    7
+ HPFS/NTFS
+Partition 1 does not end on cylinder boundary.
+/dev/sda2            2314        2326      104422+  83
+ Linux
+/dev/sda3            2327        4864    20386485   8e
+ Linux LVM
 
-Jabber:	SMS-King@jabber.org
-Email:	Micha@krausam.de
+I need to access main partition.
 
---nextPart6511520.qVuvnAe1oB
-Content-Type: application/pgp-signature
+Any help welcome.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.1 (GNU/Linux)
-
-iD8DBQBDB4GxfAR45tA28LgRAoMPAJ4kheUPMu/W4eyjd0VLQ6adwnZ91ACcCVqk
-3BcMeEXS6Mem3Go4Uj59F7w=
-=zx9g
------END PGP SIGNATURE-----
-
---nextPart6511520.qVuvnAe1oB--
+Andre
