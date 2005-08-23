@@ -1,25 +1,18 @@
 Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j7NEISV14367
-	for <linux-lvm@redhat.com>; Tue, 23 Aug 2005 10:18:30 -0400
-Received: from clown.omnifarious.org (dsl254-016-017.sea1.dsl.speakeasy.net
-	[216.254.16.17])
-	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id j7NEIRMD019481
-	for <linux-lvm@redhat.com>; Tue, 23 Aug 2005 10:18:27 -0400
-Received: from bats.omnifarious.org (unknown
-	[IPv6:2002:d8fe:1010:1:2e0:81ff:fe2c:b6e2])
-	by clown.omnifarious.org (Postfix) with ESMTP id 1994284CCD
-	for <linux-lvm@redhat.com>; Tue, 23 Aug 2005 07:18:16 -0700 (PDT)
-Subject: Re: [linux-lvm] Saving files from full failing volume
-From: "Eric M. Hopper" <hopper@omnifarious.org>
-In-Reply-To: <fa61edfd0508200022235af787@mail.gmail.com>
-References: <fa61edfd0508200022235af787@mail.gmail.com>
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature";
-	boundary="=-ea+pkv60u4neDJvITDl8"
-Date: Tue, 23 Aug 2005 07:18:15 -0700
-Message-Id: <1124806695.17889.22.camel@bats.omnifarious.org>
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j7NJjqV25999
+	for <linux-lvm@redhat.com>; Tue, 23 Aug 2005 15:45:52 -0400
+Received: from leviathan.ele.uri.edu (leviathan.ele.uri.edu [131.128.51.64])
+	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id j7NJjnhC029685
+	for <linux-lvm@redhat.com>; Tue, 23 Aug 2005 15:45:49 -0400
+From: Ming Zhang <mingz@ele.uri.edu>
+Date: Tue, 23 Aug 2005 15:45:40 -0400
+Message-Id: <1124826340.5544.116.camel@localhost.localdomain>
 Mime-Version: 1.0
-Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] [Fwd: Re: [Iscsitarget-devel] RE:local mounting of a
+	drive formated byan initiator]
+Reply-To: mingz@ele.uri.edu,
+	LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -29,45 +22,120 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="us-ascii"
+To: LVM <linux-lvm@redhat.com>
+
+previously i asked about how to access a partition in LV.
+
+this is a nice solution from IET user.
+
+Ming
 
 
---=-ea+pkv60u4neDJvITDl8
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
-
-On Sat, 2005-08-20 at 17:22 +1000, Chris Jensen wrote:
-> (I've read up about LVM and understand I can replace failed
-> blocks/disks with /dev/zero, so the shrinking and moving part doesn't
-> worry me to much, it's just the identifying of where files live that
-> I'm curious about.)
-
-The only way to really identify where files live in LVM is to identify
-which filesystem they're on.  Then they might end up being on any random
-block of that filesystem.  You can identify which physical extents a
-particular filesystem is using easily, but not which physical extents a
-particular file is using.
-
-Perhaps someone else can correct me if I'm wrong about this, but as I
-understand things this is how it works.
-
-Have fun (if at all possible),
---=20
-The best we can hope for concerning the people at large is that they
-be properly armed.  -- Alexander Hamilton
--- Eric Hopper (hopper@omnifarious.org  http://www.omnifarious.org/~hopper)=
- --
-
---=-ea+pkv60u4neDJvITDl8
-Content-Type: application/pgp-signature; name=signature.asc
-Content-Description: This is a digitally signed message part
-
------BEGIN PGP MESSAGE-----
-Version: GnuPG v1.2.6 (GNU/Linux)
-
-iD8DBQBDCzAnjtsvlOwvazYRAps3AJ0dRC+BLl7n8FcyycZKVvfzeFkzGgCeKjBx
-v5sEe6c33p3/msPDV+UtnJw=
-=U6ql
------END PGP MESSAGE-----
-
---=-ea+pkv60u4neDJvITDl8--
+-------- Forwarded Message --------
+> From: Dr. Net! - Eugen Rieck <eugen@drnet.at>
+> To: iscsitarget-devel@lists.sourceforge.net
+> Subject: Re: [Iscsitarget-devel] RE:local mounting of a drive formated
+> byan initiator
+> Date: Tue, 23 Aug 2005 21:36:41 +0200
+> Hi all - solution found.
+> 
+> > >so u export /dev/sda3 to ini side as a DISK, which is not a partition
+> > >any more. then partition it, use it, and disconnect from it.
+> > >
+> > >but at local side, u can not access a partition in a partition. :P
+> 
+> Exporting the whole disk sda is not the perfect solution - when you export a 
+> raid (mdX) you have the same problem, BUT:
+> 
+> No need for kpartx. There is an easy solution to this - use a loop device!
+> 
+> A Partition is nothing else than a continuous part of the underlying block 
+> device - so you can touch it with a loop device with offset and size limit.
+> 
+> I assume you exported /dev/sda3 via IET
+> 
+> So you:
+> 1.) Get the partition geometry - You only need to do this once
+> 
+> fdisk -lu /dev/sda3
+> You see something like
+> 
+> Disk /dev/sda3: 180.0 GB, 180034928640 bytes
+> 255 heads, 63 sectors/track, 21888 cylinders
+> Units = cylinders of 16065 * 512 = 8225280 bytes
+> 
+>      Device Boot      Start         End      Blocks   Id  System
+> /dev/sda3p1              63   351614654   175807296    7  HPFS/NTFS
+> 
+> Note the Start (63) and End (351614654 ) Values - they tell you, that inside 
+> sda3 your "partition in a partition" starts at sector 63 and ends at sector 
+> 351614654
+> So:
+> Offset=63 Blocks=63*512=32256
+> Length=351614654 -63+1=351614592 Blocks=180026671104 Bytes
+> 
+> If you use the last partition up to the end of the disk, you don't need the 
+> length, but I'll take it here for clarity
+> 
+> 2.) Get a free loop device - you have to do this for every boot (I'll fix up 
+> a script to automate it and follow up later)
+> 
+> Variante 1 (New versions of losetup):
+> losetup -a
+> You see something like
+> /dev/loop0: [0805]:1740 (/var/install/suse93.dvd)
+> /dev/loop7: [0805]:2065 (/var/tmp/aoe/volume)
+> 
+> You now know, that loop devices 0 and 7 are in use, making 1-6 free.
+> No output means all loop devices are free
+> 
+> Variante 2 (if 1 fails on older versions):
+> If losetup -a complains, you have an older version that dosesn't understand 
+> the -a flag. in this case do
+> losetup /dev/loop0
+> losetup /dev/loop1
+> ...
+> until you get "no such device or address" - again you have found a free loop 
+> device.
+> 
+> I now assume that loop1 is free
+> 
+> 3.) set up the loop device
+> 
+> losetup -o 32256 -s 180026671104  /dev/loop1 /dev/sdc3
+> 
+> -o 32256 is offset from 1.)
+> -s 180026671104 is length from 1.)
+> /dev/loop1 is free loop device from 2.)
+> /dev/sdc3 is your exported volume
+> 
+> 4.) mount the loop device
+> 
+> mount /dev/loop1 /your/mount/point
+> 
+> Done!
+> 
+> I just tried this with my box - this is where the numbers come from
+> 
+> Have fun!
+> 
+> Regards, Eugen
+> 
+> :-) Eugen Rieck (-:
+> eugen@drnet.at
+> 
+> Programmer: Biological device,
+> designed to convert coffee into code
+> 
+> 
+> 
+> -------------------------------------------------------
+> SF.Net email is Sponsored by the Better Software Conference & EXPO
+> September 19-22, 2005 * San Francisco, CA * Development Lifecycle Practices
+> Agile & Plan-Driven Development * Managing Projects & Teams * Testing & QA
+> Security * Process Improvement & Measurement * http://www.sqe.com/bsce5sf
+> _______________________________________________
+> Iscsitarget-devel mailing list
+> Iscsitarget-devel@lists.sourceforge.net
+> https://lists.sourceforge.net/lists/listinfo/iscsitarget-devel
