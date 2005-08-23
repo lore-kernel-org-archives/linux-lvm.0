@@ -1,26 +1,24 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j7O2XpV23870
-	for <linux-lvm@redhat.com>; Tue, 23 Aug 2005 22:33:51 -0400
-Received: from luce.ui.ac.id (luce.ui.ac.id [152.118.24.22])
-	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id j7O2Xec2012833
-	for <linux-lvm@redhat.com>; Tue, 23 Aug 2005 22:33:44 -0400
-Received: from luce.ui.ac.id (morpheus.cso.ui.ac.id [152.118.24.28])
-	by luce.ui.ac.id (Postfix) with ESMTP id 0738B2A4067
-	for <linux-lvm@redhat.com>; Wed, 24 Aug 2005 09:34:37 +0700 (WIT)
-Received: from phoenix.ui.edu (phoenix.ui.ac.id [152.118.24.99])
-	by luce.ui.ac.id (Postfix) with ESMTP id EFCED2A4064
-	for <linux-lvm@redhat.com>; Wed, 24 Aug 2005 09:34:35 +0700 (WIT)
-Received: from [152.118.37.61] (athena.staf.cso.ui.ac.id [152.118.37.61])
-	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by phoenix.ui.edu (Postfix) with ESMTP id 7035043024
-	for <linux-lvm@redhat.com>; Wed, 24 Aug 2005 09:37:35 +0700 (WIT)
-Message-ID: <430BDC79.9000407@ui.edu>
-Date: Wed, 24 Aug 2005 09:33:29 +0700
-From: Arianto C Nugroho <arianto.nugroho@ui.edu>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] creating snapshot
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j7NHDMV08717
+	for <linux-lvm@redhat.com>; Tue, 23 Aug 2005 13:13:22 -0400
+Received: from natnoddy.rzone.de (natnoddy.rzone.de [81.169.145.166])
+	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id j7NHD7lk021455
+	for <linux-lvm@redhat.com>; Tue, 23 Aug 2005 13:13:16 -0400
+Received: from mail.mhnet.de (p54A33221.dip0.t-ipconnect.de [84.163.50.33])
+	by post.webmailer.de (8.13.1/8.13.1) with ESMTP id j7NHD1w8020180
+	for <linux-lvm@redhat.com>; Tue, 23 Aug 2005 19:13:02 +0200 (MEST)
+Received: from mail.mhnet.de (localhost [127.0.0.1])
+	by mail.mhnet.de (Postfix) with ESMTP id CC8E363DB86
+	for <linux-lvm@redhat.com>; Tue, 23 Aug 2005 19:13:01 +0200 (CEST)
+Date: Tue, 23 Aug 2005 19:13:01 +0200
+From: Micha Holzmann <holzmann@mhnet.de>
+Subject: Re: [linux-lvm] multiple snapshots
+Message-ID: <20050823171301.GA8612@kaliba.pf.mhnet.de>
+References: <4300816B.8060208@astral.ro> <430189C1.8030000@astral.ro>
+	<430192F7.5010801@astral.ro> <430B25B9.8060207@astral.ro>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <430B25B9.8060207@astral.ro>
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -31,21 +29,25 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@redhat.com
 
-Hi ...
+Imre Gergely wrote:
+> 
+> anybody anything? i still have this problem... the main question is: can
+> one have multiple snapshots of the same LV, without problems? with one
+> snapshot e ok, but as soon as i create another snapshot, and try to do
+> something on the origin LV, it hangs, it oops-es.
 
-I'm trying to create a read-only snapshot for backup purpose, but i'm 
-getting this error :
+Same on my machines, if more than one snapshot the system freezes after
+a little time totally. Even the shutdown command does not work. I can
+login via ssh an can see as many shutdown processes in ps list as i
+issued. At the moment i assume that snapshots are not working as
+expected or announced in the doku. These are my observations.
 
-snapshot: Required device-mapper target(s) not detected in your kernel
+Best regards,
+Micha Holzmann
 
-problem is i already compiled the device-mapper inside the kernel (not 
-as module).
-
-I'm using a debian sarge and linux-2.6.12 kernel.
-
-What seems to be the problem ??
-
-Thanks before for any help.
+-- 
+Programmers don't die, they just GOSUB without RETURN.
