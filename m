@@ -1,21 +1,26 @@
-Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j7ODumV27265
-	for <linux-lvm@redhat.com>; Wed, 24 Aug 2005 09:56:48 -0400
-Received: from leviathan.ele.uri.edu (leviathan.ele.uri.edu [131.128.51.64])
-	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id j7ODulRH019664
-	for <linux-lvm@redhat.com>; Wed, 24 Aug 2005 09:56:47 -0400
-Subject: Re: [linux-lvm] multiple snapshots
-From: Ming Zhang <mingz@ele.uri.edu>
-In-Reply-To: <430C7AA0.4010000@astral.ro>
-References: <4300816B.8060208@astral.ro> <430189C1.8030000@astral.ro>
-	<430192F7.5010801@astral.ro> <430B25B9.8060207@astral.ro>
-	<20050823171301.GA8612@kaliba.pf.mhnet.de> <430C7AA0.4010000@astral.ro>
-Date: Wed, 24 Aug 2005 09:56:43 -0400
-Message-Id: <1124891803.5550.50.camel@localhost.localdomain>
+Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j7OMJjV04071
+	for <linux-lvm@redhat.com>; Wed, 24 Aug 2005 18:19:45 -0400
+Received: from moutng.kundenserver.de (moutng.kundenserver.de
+	[212.227.126.187])
+	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id j7OMJbKG031779
+	for <linux-lvm@redhat.com>; Wed, 24 Aug 2005 18:19:37 -0400
+Received: from localhost (localhost [127.0.0.1])
+	by nic-nac-project.de (Postfix) with ESMTP id 8620B1124002
+	for <linux-lvm@redhat.com>; Thu, 25 Aug 2005 00:19:33 +0200 (CEST)
+Received: from nic-nac-project.de ([127.0.0.1])
+	by localhost (nic-nac-project.de [127.0.0.1]) (amavisd-new, port 10024)
+	with ESMTP id 12318-08 for <linux-lvm@redhat.com>;
+	Thu, 25 Aug 2005 00:18:18 +0200 (CEST)
+Date: Thu, 25 Aug 2005 00:18:12 +0200
+From: Thomas Schwinge <schwinge-lists-redhat.com-linux-lvm@nic-nac-project.de>
+Subject: Re: [linux-lvm] using LVM PV as single disk ?
+Message-ID: <20050824221811.GA4004@nic-nac-project.de>
+References: <7AAD212492598A4A92463C3F5D34C54F0218C0@ccd3.CC.de>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Reply-To: mingz@ele.uri.edu,
-	LVM general discussion and development <linux-lvm@redhat.com>
+Content-Disposition: inline
+In-Reply-To: <7AAD212492598A4A92463C3F5D34C54F0218C0@ccd3.CC.de>
+Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -26,41 +31,16 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-lvm snapshot is known to be unstable so far. if u have interest to
-search the archival, there are many discussion on this.
+On Tue, Aug 23, 2005 at 02:45:58PM +0200, Heinzmann, Robert wrote:
+> we are using LVM2. We have one PV configured with one VG and one LV on top. We now want to migrate back to "non LVM" configuration. Is it possible to convert a LVM PV back to a regular disk that can be used like a normal disk ? 
 
-lvm people has plan to stabilize it but with a lower priority than other
-tasks. so we can only wait and hope it can be done soon or we can
-petition to get it faster. :P
+Save the data, partition the disk, create filesystems, restore the data?
 
-ming
+Converting directly is not possible AFAIK.
 
 
-
-On Wed, 2005-08-24 at 16:48 +0300, Imre Gergely wrote:
-> Micha Holzmann wrote:
-> > Imre Gergely wrote:
-> > 
-> >>anybody anything? i still have this problem... the main question is: can
-> >>one have multiple snapshots of the same LV, without problems? with one
-> >>snapshot e ok, but as soon as i create another snapshot, and try to do
-> >>something on the origin LV, it hangs, it oops-es.
-> > 
-> > 
-> > Same on my machines, if more than one snapshot the system freezes after
-> > a little time totally. Even the shutdown command does not work. I can
-> > login via ssh an can see as many shutdown processes in ps list as i
-> > issued. At the moment i assume that snapshots are not working as
-> > expected or announced in the doku. These are my observations.
-> 
-> i tried on a real machine, the same thing happened. the only thing
-> different is that i don't see any oopses, or any error messages
-> indicating that something is wrong...
-> 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+Regards,
+ Thomas
