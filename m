@@ -1,18 +1,27 @@
-Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j7NJjqV25999
-	for <linux-lvm@redhat.com>; Tue, 23 Aug 2005 15:45:52 -0400
-Received: from leviathan.ele.uri.edu (leviathan.ele.uri.edu [131.128.51.64])
-	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id j7NJjnhC029685
-	for <linux-lvm@redhat.com>; Tue, 23 Aug 2005 15:45:49 -0400
-From: Ming Zhang <mingz@ele.uri.edu>
-Date: Tue, 23 Aug 2005 15:45:40 -0400
-Message-Id: <1124826340.5544.116.camel@localhost.localdomain>
-Mime-Version: 1.0
+Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j7O2XpV23870
+	for <linux-lvm@redhat.com>; Tue, 23 Aug 2005 22:33:51 -0400
+Received: from luce.ui.ac.id (luce.ui.ac.id [152.118.24.22])
+	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id j7O2Xec2012833
+	for <linux-lvm@redhat.com>; Tue, 23 Aug 2005 22:33:44 -0400
+Received: from luce.ui.ac.id (morpheus.cso.ui.ac.id [152.118.24.28])
+	by luce.ui.ac.id (Postfix) with ESMTP id 0738B2A4067
+	for <linux-lvm@redhat.com>; Wed, 24 Aug 2005 09:34:37 +0700 (WIT)
+Received: from phoenix.ui.edu (phoenix.ui.ac.id [152.118.24.99])
+	by luce.ui.ac.id (Postfix) with ESMTP id EFCED2A4064
+	for <linux-lvm@redhat.com>; Wed, 24 Aug 2005 09:34:35 +0700 (WIT)
+Received: from [152.118.37.61] (athena.staf.cso.ui.ac.id [152.118.37.61])
+	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by phoenix.ui.edu (Postfix) with ESMTP id 7035043024
+	for <linux-lvm@redhat.com>; Wed, 24 Aug 2005 09:37:35 +0700 (WIT)
+Message-ID: <430BDC79.9000407@ui.edu>
+Date: Wed, 24 Aug 2005 09:33:29 +0700
+From: Arianto C Nugroho <arianto.nugroho@ui.edu>
+MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] [Fwd: Re: [Iscsitarget-devel] RE:local mounting of a
-	drive formated byan initiator]
-Reply-To: mingz@ele.uri.edu,
-	LVM general discussion and development <linux-lvm@redhat.com>
+Subject: [linux-lvm] creating snapshot
+Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -22,120 +31,21 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: LVM <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+To: linux-lvm@redhat.com
 
-previously i asked about how to access a partition in LV.
+Hi ...
 
-this is a nice solution from IET user.
+I'm trying to create a read-only snapshot for backup purpose, but i'm 
+getting this error :
 
-Ming
+snapshot: Required device-mapper target(s) not detected in your kernel
 
+problem is i already compiled the device-mapper inside the kernel (not 
+as module).
 
--------- Forwarded Message --------
-> From: Dr. Net! - Eugen Rieck <eugen@drnet.at>
-> To: iscsitarget-devel@lists.sourceforge.net
-> Subject: Re: [Iscsitarget-devel] RE:local mounting of a drive formated
-> byan initiator
-> Date: Tue, 23 Aug 2005 21:36:41 +0200
-> Hi all - solution found.
-> 
-> > >so u export /dev/sda3 to ini side as a DISK, which is not a partition
-> > >any more. then partition it, use it, and disconnect from it.
-> > >
-> > >but at local side, u can not access a partition in a partition. :P
-> 
-> Exporting the whole disk sda is not the perfect solution - when you export a 
-> raid (mdX) you have the same problem, BUT:
-> 
-> No need for kpartx. There is an easy solution to this - use a loop device!
-> 
-> A Partition is nothing else than a continuous part of the underlying block 
-> device - so you can touch it with a loop device with offset and size limit.
-> 
-> I assume you exported /dev/sda3 via IET
-> 
-> So you:
-> 1.) Get the partition geometry - You only need to do this once
-> 
-> fdisk -lu /dev/sda3
-> You see something like
-> 
-> Disk /dev/sda3: 180.0 GB, 180034928640 bytes
-> 255 heads, 63 sectors/track, 21888 cylinders
-> Units = cylinders of 16065 * 512 = 8225280 bytes
-> 
->      Device Boot      Start         End      Blocks   Id  System
-> /dev/sda3p1              63   351614654   175807296    7  HPFS/NTFS
-> 
-> Note the Start (63) and End (351614654 ) Values - they tell you, that inside 
-> sda3 your "partition in a partition" starts at sector 63 and ends at sector 
-> 351614654
-> So:
-> Offset=63 Blocks=63*512=32256
-> Length=351614654 -63+1=351614592 Blocks=180026671104 Bytes
-> 
-> If you use the last partition up to the end of the disk, you don't need the 
-> length, but I'll take it here for clarity
-> 
-> 2.) Get a free loop device - you have to do this for every boot (I'll fix up 
-> a script to automate it and follow up later)
-> 
-> Variante 1 (New versions of losetup):
-> losetup -a
-> You see something like
-> /dev/loop0: [0805]:1740 (/var/install/suse93.dvd)
-> /dev/loop7: [0805]:2065 (/var/tmp/aoe/volume)
-> 
-> You now know, that loop devices 0 and 7 are in use, making 1-6 free.
-> No output means all loop devices are free
-> 
-> Variante 2 (if 1 fails on older versions):
-> If losetup -a complains, you have an older version that dosesn't understand 
-> the -a flag. in this case do
-> losetup /dev/loop0
-> losetup /dev/loop1
-> ...
-> until you get "no such device or address" - again you have found a free loop 
-> device.
-> 
-> I now assume that loop1 is free
-> 
-> 3.) set up the loop device
-> 
-> losetup -o 32256 -s 180026671104  /dev/loop1 /dev/sdc3
-> 
-> -o 32256 is offset from 1.)
-> -s 180026671104 is length from 1.)
-> /dev/loop1 is free loop device from 2.)
-> /dev/sdc3 is your exported volume
-> 
-> 4.) mount the loop device
-> 
-> mount /dev/loop1 /your/mount/point
-> 
-> Done!
-> 
-> I just tried this with my box - this is where the numbers come from
-> 
-> Have fun!
-> 
-> Regards, Eugen
-> 
-> :-) Eugen Rieck (-:
-> eugen@drnet.at
-> 
-> Programmer: Biological device,
-> designed to convert coffee into code
-> 
-> 
-> 
-> -------------------------------------------------------
-> SF.Net email is Sponsored by the Better Software Conference & EXPO
-> September 19-22, 2005 * San Francisco, CA * Development Lifecycle Practices
-> Agile & Plan-Driven Development * Managing Projects & Teams * Testing & QA
-> Security * Process Improvement & Measurement * http://www.sqe.com/bsce5sf
-> _______________________________________________
-> Iscsitarget-devel mailing list
-> Iscsitarget-devel@lists.sourceforge.net
-> https://lists.sourceforge.net/lists/listinfo/iscsitarget-devel
+I'm using a debian sarge and linux-2.6.12 kernel.
+
+What seems to be the problem ??
+
+Thanks before for any help.
