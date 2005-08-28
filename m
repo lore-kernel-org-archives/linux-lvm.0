@@ -1,27 +1,23 @@
-Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j7RGfEV19777
-	for <linux-lvm@redhat.com>; Sat, 27 Aug 2005 12:41:14 -0400
-Received: from basie.internet2.edu (basie.internet2.edu [207.75.164.22])
-	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id j7RGfBOv020625
-	for <linux-lvm@redhat.com>; Sat, 27 Aug 2005 12:41:11 -0400
-Received: from localhost (unknown [127.0.0.1])
-	by basie.internet2.edu (Postfix) with ESMTP id 580781CDAD0
-	for <linux-lvm@redhat.com>; Sat, 27 Aug 2005 12:41:11 -0400 (EDT)
-Received: from basie.internet2.edu ([127.0.0.1])
-	by localhost (basie.internet2.edu [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id 29210-08 for <linux-lvm@redhat.com>;
-	Sat, 27 Aug 2005 12:41:11 -0400 (EDT)
-Date: Sat, 27 Aug 2005 12:41:11 -0400
-From: Dan Pritts <danno@internet2.edu>
+Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j7S0lTV13864
+	for <linux-lvm@redhat.com>; Sat, 27 Aug 2005 20:47:29 -0400
+Received: from wproxy.gmail.com (wproxy.gmail.com [64.233.184.192])
+	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id j7S0lM1c031116
+	for <linux-lvm@redhat.com>; Sat, 27 Aug 2005 20:47:22 -0400
+Received: by wproxy.gmail.com with SMTP id i2so565488wra
+	for <linux-lvm@redhat.com>; Sat, 27 Aug 2005 17:47:16 -0700 (PDT)
+Message-ID: <fa61edfd050827174765d2f3ae@mail.gmail.com>
+Date: Sun, 28 Aug 2005 10:47:16 +1000
+From: Chris Jensen <cjensen@gmail.com>
 Subject: Re: [linux-lvm] Saving files from full failing volume
-Message-ID: <20050827164111.GD28472@internet2.edu>
+In-Reply-To: <1125154737.2225.54.camel@pc7.dolda2000.com>
+Mime-Version: 1.0
+Content-Disposition: inline
 References: <fa61edfd0508200022235af787@mail.gmail.com>
 	<1124806695.17889.22.camel@bats.omnifarious.org>
 	<fa61edfd05082706007d36d221@mail.gmail.com>
 	<1125154737.2225.54.camel@pc7.dolda2000.com>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <1125154737.2225.54.camel@pc7.dolda2000.com>
+Content-Transfer-Encoding: 8bit
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -33,18 +29,19 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-On Sat, Aug 27, 2005 at 04:58:57PM +0200, Fredrik Tolf wrote:
-> > Thanks for the response Eric. Let me check that I understand this correctly:
-> >  If I were to use LVM to create a file system that spans 2 hard disks,
-> > of capacity 80G each (for simplicities sake), giving a total capacity
-> > of 160G, if that filesystem grows to (say) 100G and then one of the
-> > disks begins to fail, there is no way for me to backup the files that
-> > would be endangered, short of backing up the entire 100G, to another
-> > disk entirely.
+> With a larger budget, you could buy double disk space and mirror the
+> volume (similar to RAID10). Depending on your budget, though, I guess
+> that may well not be possible.
 
-effectively, all the files in the filesystem are "endangered" - i'd hate
-to try to recover the data from the half of the filesystem that was on
-the good disk.
+It's for personal use, so I don't have that budget - if I did, then I
+wouldn't be scrounging for recovery space in the first place :-)
+
+So it seems, unless the data on the partition is without value, or you
+can afford enough disks to setup mirroring, I'd be better off just
+paritioning the two disks sepeartely and using a sym link farm!
+
+Damn, I was looking forward to playing with LVM.
+
+Chris
