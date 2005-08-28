@@ -1,21 +1,21 @@
-Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j7SIaWV24724
-	for <linux-lvm@redhat.com>; Sun, 28 Aug 2005 14:36:33 -0400
-Received: from percy.comedia.it (percy.comedia.it [212.97.59.71])
-	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id j7SIaPaW009437
-	for <linux-lvm@redhat.com>; Sun, 28 Aug 2005 14:36:31 -0400
-Date: Sun, 28 Aug 2005 20:36:14 +0200
-From: Luca Berra <bluca@comedia.it>
-Subject: Re: [linux-lvm] vgscan & CDROM
-Message-ID: <20050828183614.GD13825@percy.comedia.it>
-References: <20050828101721.GB26065@gutek>
-	<200508281324.56314.mailinglist@krausam.de>
-	<20050828104730.GC26065@gutek>
-	<200508281354.40370.mailinglist@krausam.de>
-	<20050828115618.GE26065@gutek>
-Mime-Version: 1.0
+Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j7SIwkV27626
+	for <linux-lvm@redhat.com>; Sun, 28 Aug 2005 14:58:46 -0400
+Received: from shell.wgops.com (postfix@free.wgops.com [69.51.116.66])
+	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id j7SIwahd032652
+	for <linux-lvm@redhat.com>; Sun, 28 Aug 2005 14:58:37 -0400
+Received: from [10.1.2.206] (localhost [127.0.0.1])
+	by shell.wgops.com (Postfix) with ESMTP id 80EB025875
+	for <linux-lvm@redhat.com>; Sun, 28 Aug 2005 12:58:13 -0600 (MDT)
+Date: Sun, 28 Aug 2005 12:58:13 -0600
+From: Michael Loftis <mloftis@wgops.com>
+Subject: Re: [linux-lvm] shared scsi, external storage, vtrack
+Message-ID: <9EE5CE8EBD6DA92F6D7F10DA@dhcp-2-206.wgops.com>
+In-Reply-To: <4311BBDD.3070105@tpway.com>
+References: <4311BBDD.3070105@tpway.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Content-Disposition: inline
-In-Reply-To: <20050828115618.GE26065@gutek>
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -27,37 +27,54 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"; format="flowed"
-Content-Transfer-Encoding: 7bit
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-On Sun, Aug 28, 2005 at 01:56:18PM +0200, Chris Osicki wrote:
->OK, that are my filters now:
+
+
+--On August 28, 2005 4:27:57 PM +0300 Andrew Kornilov <hiddenman@tpway.com> 
+wrote:
+
+> Hi all.
 >
->    filter = [ "r|/dev/hdb|" ]
->    filter = [ "r|/dev/hdc|" ]
->    filter = [ "r|/dev/cdrom|" ]
->    filter = [ "r|/dev/cdrom1|" ]
->    filter = [ "r|/dev/cdrom*|" ]
->    filter = [ "r|/dev/cdrom.*|" ]
+> I have two identical servers with CentOS (aka RHEL4.1) and one external
+> data storage Vtrak 8110
+> (http://www.promise.com/product/product_detail_eng.asp?segment=VTrak&prod
+> uct_id=135) which connected by two scsi cables to this servers. I need to
+> setup something called "shared scsi" but i haven't any experience with
+> such things. My main task is build HA system (Vtrak used for postgresql
+> databases). Can anybody help me with docs, HOWTOs and other?
+
+You'll need to do this one of two ways.  First (simplest, most catastrophic 
+error-prone) either make *CERTAIN* the systems NEVER, EVER, simultaneously 
+mount the storage volumes, or, use a multi-host disk filesystem such as 
+Sistina's GFS.
+
+outside of that there's nothing special to be done.  one host has to be 
+passive/inactive at all times in the first option, the second option means 
+you can't use LVM, since, unless I'm mistaken, LVM has *no* capability for 
+shared storage mediums.
+
+Now most of these products can also be setup so that each host has their 
+own storage space, and therefore they work like any other disk subsystem, 
+each host only sees what they can access, but it sounds like you're not 
+interested in that.
+
+In any case, with postgresql, you're not going to be able to share their 
+backend storage, so you'll have to have two totally separate storage areas 
+if you want two live servers, or, you have one live, and one passive 
+standby.
+
 >
-i tought the syntax was:
-filter = [ "r|/dev/hdb|", "r|/dev/hdc|", "r|/dev/cdrom|" ]
-
-you should not need the last 3, since "r|/dev/cdrom|" being a regexp
-matches all of them.
-
-
-btw, i believed "sysfs_scan = 1" was enough to skip cdroms
-
-L.
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@redhat.com
+> https://www.redhat.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+>
 
 
 
-
--- 
-Luca Berra -- bluca@comedia.it
-        Communication Media & Services S.r.l.
- /"\
- \ /     ASCII RIBBON CAMPAIGN
-  X        AGAINST HTML MAIL
- / \
+--
+"Genius might be described as a supreme capacity for getting its possessors
+into trouble of all kinds."
+-- Samuel Butler
