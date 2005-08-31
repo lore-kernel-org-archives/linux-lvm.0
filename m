@@ -1,17 +1,17 @@
 Received: from agk.surrey.redhat.com (agk.surrey.redhat.com [172.16.10.74])
-	by pobox.surrey.redhat.com (8.12.8/8.12.8) with ESMTP id j7VG8WHQ006851
-	for <linux-lvm@redhat.com>; Wed, 31 Aug 2005 17:08:32 +0100
+	by pobox.surrey.redhat.com (8.12.8/8.12.8) with ESMTP id j7VHaGHQ012304
+	for <linux-lvm@redhat.com>; Wed, 31 Aug 2005 18:36:16 +0100
 Received: from agk by agk.surrey.redhat.com with local (Exim 4.34)
-	id 1EAV8a-0004K9-3a
-	for linux-lvm@redhat.com; Wed, 31 Aug 2005 17:08:32 +0100
-Date: Wed, 31 Aug 2005 17:08:32 +0100
+	id 1EAWVU-0004NM-BV
+	for linux-lvm@redhat.com; Wed, 31 Aug 2005 18:36:16 +0100
+Date: Wed, 31 Aug 2005 18:36:16 +0100
 From: Alasdair G Kergon <agk@redhat.com>
-Subject: Re: [linux-lvm] segmentation fault with snapshot creation
-Message-ID: <20050831160832.GE15141@agk.surrey.redhat.com>
-References: <20050826152252.1zxn5dw8fwg0ossg@servius.hivos.nl>
+Subject: Re: [linux-lvm] Mirror Capabilities on LVM2
+Message-ID: <20050831173616.GF15141@agk.surrey.redhat.com>
+References: <430F7668.6060500@fastenal.com>
 Mime-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20050826152252.1zxn5dw8fwg0ossg@servius.hivos.nl>
+In-Reply-To: <430F7668.6060500@fastenal.com>
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -26,13 +26,18 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-On Fri, Aug 26, 2005 at 03:22:52PM +0200, Jeroen Vriesman wrote:
-> The following error occured with kernel 2.6.12-rc5, lvm2 2.01.04-5 on debian,
+So far, you can just create a new mirror LV with (e.g.) lvcreate -m1.
+(needs at least 3 PVs in the VG)
 
-> Segmentation fault
- 
-Before losing time trying to debug it, try upgrading to the newest 
-version (2.01.14) and check whether it already got fixed.
+Eventually you'll be able to use lvconvert to convert an existing 
+LV into a mirror.  Kernel-side improvements are on they way too
+(device error-handling/read balancing).
+
+> whether the ability to attach one lv to another and form a mirror and then split
+> the mirrored lv into two distinct lvs that are both mountable (similar to a
+> snapshot only a completely separate lv).  
+
+We're planning to support that, yes.
 
 Alasdair
 -- 
