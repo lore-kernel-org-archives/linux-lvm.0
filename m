@@ -1,17 +1,17 @@
 Received: from agk.surrey.redhat.com (agk.surrey.redhat.com [172.16.10.74])
-	by pobox.surrey.redhat.com (8.12.8/8.12.8) with ESMTP id j7VFkpHQ005296
-	for <linux-lvm@redhat.com>; Wed, 31 Aug 2005 16:46:51 +0100
+	by pobox.surrey.redhat.com (8.12.8/8.12.8) with ESMTP id j7VG8WHQ006851
+	for <linux-lvm@redhat.com>; Wed, 31 Aug 2005 17:08:32 +0100
 Received: from agk by agk.surrey.redhat.com with local (Exim 4.34)
-	id 1EAUnb-0004J8-F7
-	for linux-lvm@redhat.com; Wed, 31 Aug 2005 16:46:51 +0100
-Date: Wed, 31 Aug 2005 16:46:51 +0100
+	id 1EAV8a-0004K9-3a
+	for linux-lvm@redhat.com; Wed, 31 Aug 2005 17:08:32 +0100
+Date: Wed, 31 Aug 2005 17:08:32 +0100
 From: Alasdair G Kergon <agk@redhat.com>
-Subject: Re: [linux-lvm] vgscan & CDROM Solved
-Message-ID: <20050831154651.GD15141@agk.surrey.redhat.com>
-References: <20050829200548.GB11271@gutek.swissptt.ch>
+Subject: Re: [linux-lvm] segmentation fault with snapshot creation
+Message-ID: <20050831160832.GE15141@agk.surrey.redhat.com>
+References: <20050826152252.1zxn5dw8fwg0ossg@servius.hivos.nl>
 Mime-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20050829200548.GB11271@gutek.swissptt.ch>
+In-Reply-To: <20050826152252.1zxn5dw8fwg0ossg@servius.hivos.nl>
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -26,19 +26,13 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-And only *the first* 'filter=' setting gets used - others
-are ignored.  
+On Fri, Aug 26, 2005 at 03:22:52PM +0200, Jeroen Vriesman wrote:
+> The following error occured with kernel 2.6.12-rc5, lvm2 2.01.04-5 on debian,
 
-For now, I've added a warning to the example.conf comments.
-
-We'll update the code to handle this better some day,
-probably by concatenating items with identical names into
-lists as we load them in.  
-
-[If anyone wants to offer a patch, it starts with _file() 
-in lib/config/config.c: before the parser adds each new node 
-to the tree, check for a duplicate identifier within the
-same section and append/convert the entries as appropriate.]
+> Segmentation fault
+ 
+Before losing time trying to debug it, try upgrading to the newest 
+version (2.01.14) and check whether it already got fixed.
 
 Alasdair
 -- 
