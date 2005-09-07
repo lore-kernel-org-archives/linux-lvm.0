@@ -1,24 +1,15 @@
-Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j86LLvV14286
-	for <linux-lvm@redhat.com>; Tue, 6 Sep 2005 17:21:57 -0400
-Received: from host1.appws.com (host1.appws.com [216.136.72.3])
-	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id j86LLkW4007279
-	for <linux-lvm@redhat.com>; Tue, 6 Sep 2005 17:21:51 -0400
-Received: from grandmother.littlebald.com (localhost.localdomain [127.0.0.1])
-	by grandmother.littlebald.com (8.13.1/8.13.1) with ESMTP id
-	j86LL1Lu022636
-	for <linux-lvm@redhat.com>; Tue, 6 Sep 2005 17:21:02 -0400
-Received: (from david@localhost)
-	by grandmother.littlebald.com (8.13.1/8.13.1/Submit) id j86LL0ot022634
-	for linux-lvm@redhat.com; Tue, 6 Sep 2005 17:21:01 -0400
-Subject: RE: [linux-lvm] Moving space between logical volumes?
-From: David Johnston <david@littlebald.com>
-In-Reply-To: <3BED18D345FC9245B8B26F4273CFFBAF033FBADA@IOWAEVS02.iowa.uiowa.edu>
-References: <3BED18D345FC9245B8B26F4273CFFBAF033FBADA@IOWAEVS02.iowa.uiowa.edu>
-Content-Transfer-Encoding: 7bit
-Date: Tue, 06 Sep 2005 17:20:56 -0400
-Message-Id: <1126041656.21583.112.camel@grandmother.littlebald.com>
+Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j875NhV12046
+	for <linux-lvm@redhat.com>; Wed, 7 Sep 2005 01:23:43 -0400
+Received: from isp.becroft.co.nz (isp.becroft.co.nz [202.89.33.33])
+	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id j875Ne4E013753
+	for <linux-lvm@redhat.com>; Wed, 7 Sep 2005 01:23:41 -0400
+From: Mario Becroft <mb@gem.win.co.nz>
+Message-Id: <1126070609.23525.40.camel@server.ak.quickcircuit.co.nz>
 Mime-Version: 1.0
+Date: Wed, 07 Sep 2005 17:23:29 +1200
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] XFS and snapshot with external log problem
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -30,85 +21,148 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: LVM general discussion and development <linux-lvm@redhat.com>
+To: linux-lvm@redhat.com
+Cc: mb@gem.win.co.nz
 
-On Tue, 2005-09-06 at 10:18 -0500, Meadows, Howard T wrote:
-> On Tue, 2005-09-06 at 9:22 AM, David Johnston wrote:
-> >e2fsadm is a front end for the LVM tools.  It simplifies things by doing
-> >the math for you, and by doing the steps in the correct order (which
-> >changes depending on whether you are growing or shrinking).
-*snip*
+Hello,
 
-> Thanks very much for the information. 
-> To clarify my present configuration, I'm including data from fdisk,
-> vgdisplay and lvdisplay for the two logical volumes I want to resize.
+I am using XFS on LVM2 and I have a problem creating snapshots.
 
-Output from "df" is also useful, particularly for lv's you plan to
-shrink.
+I will only be mounting the snapshot read-only, and when the XFS
+filesystem is frozen, the log is flushed (is this true?), so I believe I
+should not need to snapshot the log, only the data device.
 
-> From what I see, it sounds like I can use the commands you specified and
-> all should be well (with no loss of data). If I could take advantage of
-> your kindness just a little more, could you look at my information below
-> and confirm that those commands are correct?
-> Thanks VERY much
+Problem: if I try to mount the filesystem without specifying a logdev=
+option, even with ro,norecovery, mount complains with error 990.
 
-I'm glad to try to help.  
+So I created a dummy log filled with 0's to use when mounting read-only
+snapshots. Strange thing: if the dummy log device is read only, mount
+complains, even though I am specifying the ro option. So I had to make
+the dummy log device writable--but I note that XFS never actually writes
+anything to it.
 
-Step one: make sure you've got backups.  This is general advice, not
-just for this.  What happens if the dog knocks the computer off the
-table and out the window?  It's not likely, but things can and do go
-wrong sometimes.  MAKE BACKUPS ;-)
+This approach sort of works, but if files are being modified when the
+snapshot is made, they can be corrupt in the snapshot. So I guess the
+filesystem is not being frozen properly, or else freezing does not
+completely flush the log, and so I would need to snapshot the log too
+(but that seems silly).
 
-> Data reported with fdisk p command:
->    Device Boot    Start       End    Blocks   Id  System
-> /dev/sda5           515       770   2048224+  8e  Linux LVM
-> /dev/sda6           771     32767 256007965+  8e  Linux LVM
-This is less than optimal unless sda5 and sda6 belong to different
-volume groups.  It's fine to play around, but on a production server you
-should only have one LVM partition per disk.
+Anyway, I cannot snapshot the log, because there is no way to atomically
+freeze the filesystem, create two snapshots (log and data device) and
+then unfreeze. I tried using xfs_freeze to do this, but then lvcreate
+hangs, as described elsewhere on linux-lvm.
 
-> Output from vgdisplay command:
-> # vgdisplay /dev/storagevg
-> --- Volume group ---
-> VG Name               storagevg
-> Cur PV                2
-This tells me that you've got two physical volumes in storagevg. 
+Can anyone shed some light on these problems? Any suggestions will be
+much appreciated.
 
-> VG Size               585.88 GB
-> Alloc PE / Size       18208 / 569 GB
-> Free  PE / Size       540 / 16.88 GB
-This tells me that your volume group has 585GB of total space, of which
-569GB is allocated logical volumes and 16GB is unallocated.
+For reference, I am using kernel 2.6.12.5 on AMD64, device-mapper
+1.01.04. and LVM2 2.01.09, which I believe are the latest stable
+versions. I am about to try kernel 2.6.13.
 
-> Output from lvdisplay for the lv I want to reduce by 100 GB:
-> --- Logical volume ---
-> LV Name                /dev/storagevg/atdevel
+The commands I use to create and mount the snapshot are, for example:
 
-I'd be interested to see "df -h | grep atdevel" as well; that will tell
-us how much of the 505GB allocated to this lv is actually used.  You
-will get something like this:
-/dev/mapper/storagevg-atdevel   505.0G  100.5G  404.5G  20% /atdevel
+mkdir -p /export/home_backup
+lvcreate -L4G -s -pr -nhome_backup /dev/vg0/home
+mount -t xfs -o nouuid,ro,norecovery,logdev=/dev/log0/dummy_log /dev/vg0/home_backup /export/home_backup
 
-Make certain that you've got at least 110GB of free space in that
-filesystem.  Once you're sure, shrink it:
-	# umount /dev/storagevg/atdevel
-	# e2fsadm -L -100G /dev/storagevg/atdevel
+The original filesystem that I am trying to make a snapshot of is
+mounted like this:
 
-> Output from lvdisplay for lv I want to increase by 100 GB:
-> --- Logical volume ---
-> LV Name                /dev/storagevg/gcg
+mount -t xfs -o logbufs=8,logdev=/dev/log0/homelog /dev/vg0/home /export/home
 
-Now, expand gcg.
-	# umount /dev/storagevg/gcg
-	# e2fsadm -L +100G /dev/storagevg/gvg
+Further information:
 
-In both cases, e2fsadm should stop and complain if you've asked it to do
-something that might loose data, but again, make sure you've got good
-backups of anthing important.  If you get an error, STOP AND ASK FOR
-HELP.  It's a lot easier to fix one problem than it is to fix 6 or 7
-compounded errors.
+# lvdisplay /dev/vg0/home
+  --- Logical volume ---
+  LV Name                /dev/vg0/home
+  VG Name                vg0
+  LV UUID                hegvc2-MIwz-iSmN-m2af-LObQ-pfVp-A3UlWy
+  LV Write Access        read/write
+  LV Status              available
+  # open                 1
+  LV Size                32.00 GB
+  Current LE             8192
+  Segments               2
+  Allocation             inherit
+  Read ahead sectors     0
+  Block device           253:0
 
-You've still got 16GB of free space.  That's not necessarily a bad
-thing, you never know when or where you might need it.
+# xfs_info /export/home
+meta-data=/export/home           isize=256    agcount=18, agsize=491520
+blks
+         =                       sectsz=512
+data     =                       bsize=4096   blocks=8388608, imaxpct=25
+         =                       sunit=0      swidth=0 blks, unwritten=1
+naming   =version 2              bsize=4096
+log      =external               bsize=4096   blocks=32768, version=1
+         =                       sectsz=512   sunit=0 blks
+realtime =none                   extsz=65536  blocks=0, rtextents=0
 
-Good luck!
+# vgdisplay
+  --- Volume group ---
+  VG Name               vg0
+  System ID
+  Format                lvm2
+  Metadata Areas        1
+  Metadata Sequence No  124
+  VG Access             read/write
+  VG Status             resizable
+  MAX LV                0
+  Cur LV                5
+  Open LV               4
+  Max PV                0
+  Cur PV                1
+  Act PV                1
+  VG Size               223.52 GB
+  PE Size               4.00 MB
+  Total PE              57221
+  Alloc PE / Size       29440 / 115.00 GB
+  Free  PE / Size       27781 / 108.52 GB
+  VG UUID               N0Vkgh-i7Zn-ohXQ-M64S-GQxa-bncH-JWPxGG
+
+  --- Volume group ---
+  VG Name               log0
+  System ID
+  Format                lvm2
+  Metadata Areas        1
+  Metadata Sequence No  15
+  VG Access             read/write
+  VG Status             resizable
+  MAX LV                0
+  Cur LV                4
+  Open LV               3
+  Max PV                0
+  Cur PV                1
+  Act PV                1
+  VG Size               16.85 GB
+  PE Size               4.00 MB
+  Total PE              4314
+  Alloc PE / Size       128 / 512.00 MB
+  Free  PE / Size       4186 / 16.35 GB
+  VG UUID               vDyLlP-dwfW-9Nj5-dmHh-Ya7O-zUAo-81rUf9
+
+# pvdisplay
+  --- Physical volume ---
+  PV Name               /dev/md20
+  VG Name               vg0
+  PV Size               223.52 GB / not usable 0
+  Allocatable           yes
+  PE Size (KByte)       4096
+  Total PE              57221
+  Free PE               27781
+  Allocated PE          29440
+  PV UUID               f47Jdk-arEl-RpRL-MI7f-E6H4-sVSL-xVK4CC
+
+  --- Physical volume ---
+  PV Name               /dev/md11
+  VG Name               log0
+  PV Size               16.85 GB / not usable 0
+  Allocatable           yes
+  PE Size (KByte)       4096
+  Total PE              4314
+  Free PE               4186
+  Allocated PE          128
+  PV UUID               pFQgKc-RrM1-M5Ui-ChnC-t3Md-Qo0E-nqu9oW
+
+-- 
+Mario Becroft <mb@gem.win.co.nz>
