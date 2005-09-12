@@ -1,24 +1,19 @@
-Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j8C8gQV17202
-	for <linux-lvm@redhat.com>; Mon, 12 Sep 2005 04:42:26 -0400
-Received: from wproxy.gmail.com (wproxy.gmail.com [64.233.184.207])
-	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id j8C8gJvE005059
-	for <linux-lvm@redhat.com>; Mon, 12 Sep 2005 04:42:19 -0400
-Received: by wproxy.gmail.com with SMTP id i25so1703533wra
-	for <linux-lvm@redhat.com>; Mon, 12 Sep 2005 01:42:14 -0700 (PDT)
-Message-ID: <95bbd19050912014220e457b@mail.gmail.com>
-Date: Mon, 12 Sep 2005 16:42:13 +0800
-From: Bear Wolf <sportbear@gmail.com>
-Subject: Re: [linux-lvm] new process dead after create multiple snapshot
-	volumes
-In-Reply-To: <20050912080543.GD25756@barkeeper1.linbit>
-Mime-Version: 1.0
-Content-Disposition: inline
-References: <95bbd190509111934b306235@mail.gmail.com>
-	<20050912080543.GD25756@barkeeper1.linbit>
+Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j8CENKV06089
+	for <linux-lvm@redhat.com>; Mon, 12 Sep 2005 10:23:20 -0400
+Received: from conterra.de (vvv.conterra.de [212.124.44.162])
+	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id j8CENInK020488
+	for <linux-lvm@redhat.com>; Mon, 12 Sep 2005 10:23:19 -0400
+Received: from localhost (unknown [127.0.0.1])
+	by conterra.de (-) with ESMTP id B7A0C1F41B0
+	for <linux-lvm@redhat.com>; Mon, 12 Sep 2005 16:23:02 +0200 (CEST)
+Message-ID: <43258F43.2000107@conterra.de>
+Date: Mon, 12 Sep 2005 16:22:59 +0200
+From: =?ISO-8859-1?Q?Dieter_St=FCken?= <stueken@conterra.de>
+MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Reply-To: sportbear@gmail.com,
-	LVM general discussion and development <linux-lvm@redhat.com>
+Subject: [linux-lvm] metadata format processing
+Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -28,80 +23,88 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="utf-8"; format="flowed"
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-Dear Lars
+I want to develop a tool to get a graphical representation of my LVM configuration.
+I thought about parsing the output of lvm commands, or even using the C-API directly.
+Unfortunately I did not found a way to enforce read only access when using the API.
+All user space tools have to run as root and may modify/destroy my LVM. So I think
+they are a bad choice to build any CGI-scripts upon. Finally I discovered the external
+metadata format, which describes any aspects of my LVM in detail. After I even found
+a parser for this syntax within the LVM libs, I was able to convert the metadata
+into XML. Once having XML it should be possible to transfer any informations towards
+HTML or SVG.
 
-I tried but not work,
-the process is still hang when I trying to copy some data in source
-volume or do sync command after create the 4rd snapshot volume.
+My very first try looks like this:
 
-should I patch the 8 and 9 of dm module?
-ftp://sources.redhat.com/pub/dm/patches/2.6-unstable/2.6.12-rc2/2.6.12-rc2-udm1/
 
-I saw that some discuss in previous mail-list
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<lvm>
+   <contents>Text Format Volume Group</contents>
+   <version>1</version>
+   <description>Created *after* executing &apos;lvextend /dev/raster/eglv -l 7452 /dev/sdg1&apos;</description>
+   <creation_host>linux2</creation_host>
+   <creation_time>1124130973</creation_time>
+   <group name="raster">
+     <id>6FmvZu-mLHD-AIQV-jnFu-hMUN-oTwe-X2zCRm</id>
+     <seqno>54</seqno>
+     <status>RESIZEABLE</status>
+     <status>READ</status>
+     <status>WRITE</status>
+     <extent_size>65536</extent_size>
+     <max_lv>255</max_lv>
+     <max_pv>255</max_pv>
+     <group name="physical_volumes">
+       <group name="pv0">
+         <id>ruo3gO-jHR7-QV3Z-rUa4-jYnF-GyAn-uUR3vA</id>
+         <device>/dev/sde1</device>
+         <status>ALLOCATABLE</status>
+         <pe_start>384</pe_start>
+         <pe_count>7452</pe_count>
+       </group>
+       <group name="pv1">
+         <id>ARjpMz-A6iP-8x3t-7aCg-CCSH-kZpo-vt1KPD</id>
+         <device>/dev/sdd1</device>
+         <status>ALLOCATABLE</status>
+         <pe_start>384</pe_start>
+         <pe_count>7452</pe_count>
+       </group>
+     </group>
+     <group name="logical_volumes">
+       <group name="eglv">
+         <id>ylp7ol-r6wT-e2Py-4KZ9-cgjU-6fU0-luciPx</id>
+         <status>READ</status>
+         <status>WRITE</status>
+         <status>VISIBLE</status>
+         <segment_count>1</segment_count>
+         <group name="segment1">
+           <start_extent>0</start_extent>
+           <extent_count>7452</extent_count>
+           <type>striped</type>
+           <stripe_count>1</stripe_count>
+           <stripes>pv0</stripes>
+           <stripes>0</stripes>
+         </group>
+       </group>
+     </group>
+   </group>
+</lvm>
 
-SportBear
+I manually shortened it, just as an example...
 
-2005/9/12, Lars Ellenberg <Lars.Ellenberg@linbit.com>:
-> / 2005-09-12 10:34:15 +0800
-> \ Bear Wolf:
-> > Dear all
-> >
-> > I test snapshot function on my system.
-> > when I create the first snapshot, everything works fine.
-> > then I create more snapshot, everything works fine too.
-> > but when I access the source volume and do sync
-> > the sync command will be dead.
-> >
-> > and I test with a script file
-> >
-> > I=0
-> > for I in 1 2 3 4 5 6 7 8 9
-> > do
-> > cp -af /etc /mnt/volume1
-> > lvcreate -s -L 64 -n snaplv${I} /dev/VG01/volume1
-> > sleep 1
-> > done
-> >
-> > after create the 4th sn apshot volume, the system process hang without
-> > any error message.
-> 
-> lvcreate calls into device mapper.
-> it suspends the affected targets, changes "tables", creates new targets,
-> and resumes the targets again.
-> 
-> if it fails to create the new targets, or fails to adjust the "tables",
-> 
-> then it unfortunately aborts, leaving the existing targets in suspended
-> state. I think that is a bug.
-> 
-> to get the system working (sort of) again, you could try to
-> for d in /dev/mapper/* ; do
->        [[ $d == control ]] && continue
->        dmsetup resume $d &
->                       # ^^^ important! background it!
-> done
-> 
-> background it, because if you "resume" some target that depends on some
-> other target in suspended state, it will hang and wait for that other
-> target to be resumed... doh.
-> 
-> worked for me... (well, to get the system back, at least).
-> 
-> see also dmsetup ls, dmsetup info, dmsetp table etc.
-> 
-> cheers,
-> 
-> --
-> : Lars Ellenberg                                  Tel +43-1-8178292-0  :
-> : LINBIT Information Technologies GmbH            Fax +43-1-8178292-82 :
-> : Schoenbrunner Str. 244, A-1120 Vienna/Europe   http://www.linbit.com :
-> 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
->
+I used the parser to get it into a "struct config_tree" and developed
+some procedure to dump it out as XML. There are some aspects that can be
+discussed (why are all nesting elements simply called <group> whereas
+arrays are not grouped ...)
+
+I'm just about to learn XSLT to get this processed further.
+
+Is some one interested to participate?
+
+Dieter.
+-- 
+Dieter St�ken, con terra GmbH, M�nster
+     stueken@conterra.de
+     http://www.conterra.de/
+     (0)251-7474-501
