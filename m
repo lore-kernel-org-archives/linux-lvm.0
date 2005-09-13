@@ -1,18 +1,13 @@
-Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j8DElRV02356
-	for <linux-lvm@redhat.com>; Tue, 13 Sep 2005 10:47:27 -0400
-Received: from moutng.kundenserver.de (moutng.kundenserver.de
-	[212.227.126.171])
-	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id j8DElKW3018957
-	for <linux-lvm@redhat.com>; Tue, 13 Sep 2005 10:47:21 -0400
-Message-ID: <4326E677.3090006@gmx.net>
-Date: Tue, 13 Sep 2005 16:47:19 +0200
-From: Klaus Strebel <klaus.strebel@gmx.net>
-MIME-Version: 1.0
+Date: Tue, 13 Sep 2005 09:58:59 -0500
+From: AJ Lewis <alewis@redhat.com>
 Subject: Re: [linux-lvm] Resizing the root LVM partition
+Message-ID: <20050913145858.GO11956@null.msp.redhat.com>
 References: <cd21de0e05091214103bfe89ac@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="6yHiY5vv/BiPjcMt"
+Content-Disposition: inline
 In-Reply-To: <cd21de0e05091214103bfe89ac@mail.gmail.com>
-Content-Transfer-Encoding: quoted-printable
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -23,10 +18,15 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="iso-8859-1"; format="flowed"
 To: jonathan@awaken.com, LVM general discussion and development <linux-lvm@redhat.com>
 
-Jonathan Morace schrieb:
+
+--6yHiY5vv/BiPjcMt
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Mon, Sep 12, 2005 at 02:10:20PM -0700, Jonathan Morace wrote:
 > I'm having a problem adding disks to my root partition, which is using
 > LVM.  The quick summary is that I think I need to run resize2fs on the
 > root partition, but I can't figure out how to unmount the root
@@ -48,21 +48,32 @@ Jonathan Morace schrieb:
 >=20
 > Any ideas on how I can get the root partition resized to include the new =
 disks?
-Hi Jonathan,
 
-if you take a look to the list-archive, you'll find more detailed answer.
-
-In short, boot from a recovery media / Live-CD ( you can't umount root=20
-to resize the fs! ), resize your rootfs, reboot.
-
-Ciao
-Klaus
+Run 'lvm vgchange -ay' after the vgscan command and your devices should be
+there.=20
+=20
 --=20
-Mit freundlichen Gr=EF=BF=BDssen / best regards
+AJ Lewis                                   Voice:  612-638-0500
+Red Hat                                    E-Mail: alewis@redhat.com
+One Main Street SE, Suite 209
+Minneapolis, MN 55414
+  =20
+Current GPG fingerprint =3D D9F8 EDCE 4242 855F A03D  9B63 F50C 54A8 578C 8=
+715
+Grab the key at: http://people.redhat.com/alewis/gpg.html or one of the
+many keyservers out there...
 
-Klaus Strebel, Dipl.-Inform. (FH), mailto:klaus.strebel@gmx.net
 
-/"\
-\ /     ASCII RIBBON CAMPAIGN
-  X        AGAINST HTML MAIL
-/ \
+--6yHiY5vv/BiPjcMt
+Content-Type: application/pgp-signature
+Content-Disposition: inline
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.1 (GNU/Linux)
+
+iD8DBQFDJuky9QxUqFeMhxURAhm9AJ9VQjK16FEFgdAWT3puDqHylKkU6gCgoNlm
+sOhJvxlqlDF4OQoixqqfqg8=
+=cuPT
+-----END PGP SIGNATURE-----
+
+--6yHiY5vv/BiPjcMt--
