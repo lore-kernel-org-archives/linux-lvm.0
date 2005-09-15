@@ -1,19 +1,18 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j8ENLpV22707
-	for <linux-lvm@redhat.com>; Wed, 14 Sep 2005 19:21:51 -0400
-Received: from server14.dayanadns.com (server14.dayanadns.com [204.50.18.143])
-	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id j8ENLURo020767
-	for <linux-lvm@redhat.com>; Wed, 14 Sep 2005 19:21:35 -0400
-Received: from ssoria by server14.dayanadns.com with local (Exim 4.43)
-	id 1EFgZ7-00076e-2U
-	for linux-lvm@redhat.com; Wed, 14 Sep 2005 16:21:21 -0700
-Message-ID: <8245.156.153.255.195.1126740081.squirrel@www.seansoria.com>
-Date: Wed, 14 Sep 2005 16:21:21 -0700 (PDT)
-From: lvm2@seansoria.com
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j8FEaeV03831
+	for <linux-lvm@redhat.com>; Thu, 15 Sep 2005 10:36:40 -0400
+Received: from xproxy.gmail.com (xproxy.gmail.com [66.249.82.196])
+	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id j8FEaVC2021588
+	for <linux-lvm@redhat.com>; Thu, 15 Sep 2005 10:36:31 -0400
+Received: by xproxy.gmail.com with SMTP id h26so106126wxd
+	for <linux-lvm@redhat.com>; Thu, 15 Sep 2005 07:36:26 -0700 (PDT)
+Message-ID: <432986DA.50107@gmail.com>
+Date: Thu, 15 Sep 2005 17:36:10 +0300
+From: Suleyman Kutlu <suleyman.kutlu@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: [linux-lvm] LVM2 Spec
-Reply-To: lvm2@seansoria.com,
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] Device mapper problems..
+Reply-To: suleyman.kutlu@gmail.com,
 	LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -24,14 +23,46 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: linux-lvm@redhat.com
 
-I've read over the LVM HowTo and searched previous mailing lists and the
-source code for lvm, but I can't seem to find any specification for lvm. 
-It would be nice to know what exactly is written to the disk(s) and where.
- Perhaps is is not as common to make these available as it is for network
-protocols.  Does anyone know where I can find such a low level detailed
-spec of lvm2?
+Hello all,
 
-Sean
+
+I have an AMD-64 machine running SuSE 9.2. I have one SATA disk (for 
+now, will add another later on) and a VG on it. I have created some LVs.
+
+Sometimes later, I realized that when I mount an LV (say lv_a) I see the 
+directory structure of another LV (say lv_b). If I issue a df -k, I see 
+a wrong size for lv_a, it is the size of lv_b. But in lvdisplay output, 
+the size for lv_a is correct.
+
+The file systems on lv_a and lv_b is JFS.
+
+/mnt is mounted as lv_b
+/mnt2 is mounted as lv_a but has contents of lv_b
+
+
+I thought that, filesystem structure is corrupted and started to work
+on some filesystem level utilities, but later I see that,
+another filesystem pair also got the same problem.
+
+
+So I think it is a problem in device-mapper level, not the filesystem level.
+
+What can be the possible works to get what is wrong and how to fix ?
+If the corruption is at filesystem level, do you have any experience on 
+JFS-utils ? I just want to see what was stored in lv_a, what I lost in 
+lv_a...
+
+
+I am new at device-mapper, I don't have enough experience on it and I
+do not want to loose everything while there is something that can be
+recovered...
+
+Any help is appreciated.
+
+Thanks and regards..
+
+* Suleyman Kutlu
+* mailto: suleyman.kutlu@gmail.com
