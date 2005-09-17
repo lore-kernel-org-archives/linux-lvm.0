@@ -1,22 +1,23 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j8H6RNV23718
-	for <linux-lvm@redhat.com>; Sat, 17 Sep 2005 02:27:23 -0400
-Received: from zproxy.gmail.com (zproxy.gmail.com [64.233.162.195])
-	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id j8H6RFon031887
-	for <linux-lvm@redhat.com>; Sat, 17 Sep 2005 02:27:15 -0400
-Received: by zproxy.gmail.com with SMTP id m7so462207nzf
-	for <linux-lvm@redhat.com>; Fri, 16 Sep 2005 23:27:10 -0700 (PDT)
-Message-ID: <95bbd1905091623272f7455ec@mail.gmail.com>
-Date: Sat, 17 Sep 2005 14:27:10 +0800
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j8H8NLV05972
+	for <linux-lvm@redhat.com>; Sat, 17 Sep 2005 04:23:21 -0400
+Received: from zproxy.gmail.com (zproxy.gmail.com [64.233.162.199])
+	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id j8H8NDD7018710
+	for <linux-lvm@redhat.com>; Sat, 17 Sep 2005 04:23:14 -0400
+Received: by zproxy.gmail.com with SMTP id m7so480246nzf
+	for <linux-lvm@redhat.com>; Sat, 17 Sep 2005 01:23:08 -0700 (PDT)
+Message-ID: <95bbd190509170123538ba44a@mail.gmail.com>
+Date: Sat, 17 Sep 2005 16:23:08 +0800
 From: Bear Wolf <sportbear@gmail.com>
 Subject: Re: [linux-lvm] new process dead after create multiple snapshot
 	volumes
-In-Reply-To: <95bbd19050912014220e457b@mail.gmail.com>
+In-Reply-To: <95bbd1905091623272f7455ec@mail.gmail.com>
 Mime-Version: 1.0
 Content-Disposition: inline
 References: <95bbd190509111934b306235@mail.gmail.com>
 	<20050912080543.GD25756@barkeeper1.linbit>
 	<95bbd19050912014220e457b@mail.gmail.com>
+	<95bbd1905091623272f7455ec@mail.gmail.com>
 Content-Transfer-Encoding: 8bit
 Reply-To: sportbear@gmail.com,
 	LVM general discussion and development <linux-lvm@redhat.com>
@@ -32,124 +33,510 @@ List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-I also found the process dead, that is "pdflush"
-there're 2 "pdflush" always running on my system,
-but one is dead after I create the 3rd snapshot volumes and access the
-source volume then sync
+here's the verbose log of successful and failed after created snapshot volumes 
 
--bash-3.00# ps x
-  PID TTY      STAT   TIME COMMAND
-    1 ?        S      0:01 init [2]
-    2 ?        S      0:00 [migration/0]
-    3 ?        SN     0:00 [ksoftirqd/0]
-    4 ?        S<     0:00 [events/0]
-    5 ?        S<     0:00 [khelper]
-    6 ?        S<     0:00 [kthread]
-    8 ?        S<     0:00 [kacpid]
-   70 ?        S<     0:00 [kblockd/0]
-   73 ?        S<     0:00 [khubd]
-  129 ?        S      0:00 [pdflush]
-  130 ?        D      0:00 [pdflush]
-  132 ?        S<     0:00 [aio/0]
-  131 ?        S      0:00 [kswapd0]
-  134 ?        S<     0:00 [xfslogd/0]
-  133 ?        S      0:00 [cifsoplockd]
-  135 ?        S<     0:00 [xfsdatad/0]
-  136 ?        S      0:00 [xfsbufd]
-  723 ?        S<     0:00 [kseriod]
-  773 ?        S      0:00 [scsi_eh_0]
-  777 ?        S<     0:00 [ata/0]
-  801 ?        S<     0:00 [kcryptd/0]
-  934 ?        S<     0:00 [kcopyd]
- 1330 ?        Ss     0:00 syslogd -m 0
- 1334 ?        Ss     0:00 klogd -x
- 1343 ?        Ss     0:00 /usr/httpd/bin/httpd
- 1353 ?        Ss     0:00 crond
- 1359 ?        Ss     0:00 /bin/profamd
- 1479 tty1     Ss     0:00 -bash
- 1481 tty2     Ss+    0:00 -bash
- 1483 tty3     Ss+    0:00 /sbin/mingetty tty3
- 1485 tty4     Ss+    0:00 /sbin/mingetty tty4
- 1487 tty5     Ss+    0:00 /sbin/mingetty tty5
- 1903 ?        S      0:00 [xfssyncd]
- 1915 tty1     D+     0:00 sync
- 2037 pts/0    R+     0:00 ps x
+verbose log of successful after created snapshot volumes 
+*************************************************************************
+config/config.c:778   log/activation not found in config: defaulting to 0
+commands/toolcontext.c:146   Logging initialised at Sun Sep 18 00:12:57 2005
 
-Rocky
+config/config.c:773   Setting global/umask to 63
+commands/toolcontext.c:165   Set umask to 0077
+config/config.c:758   Setting devices/dir to /dev
+config/config.c:758   Setting global/proc to /proc
+config/config.c:773   Setting global/activation to 1
+config/config.c:778   global/suffix not found in config: defaulting to 1
+config/config.c:764   global/units not found in config: defaulting to h
+regex/matcher.c:267   Matcher built with 5 dfa states
+config/config.c:758   Setting devices/cache to /etc/lvm/.cache
+config/config.c:773   Setting devices/write_cache_state to 1
+device/dev-io.c:425   Opened /etc/lvm/.cache RO
+device/dev-io.c:456   Closed /etc/lvm/.cache
+device/dev-cache.c:228   /dev/sda: Added to device cache
+filters/filter-persistent.c:127   Loaded persistent filter cache from /etc/lvm/.
+cache
+config/config.c:773   Setting activation/reserved_stack to 256
+config/config.c:773   Setting activation/reserved_memory to 8192
+config/config.c:773   Setting activation/process_priority to -18
+format1/format1.c:588   Initialised format: lvm1
+format_pool/format_pool.c:355   Initialised format: pool
+format_text/format-text.c:1706   Initialised format: lvm2
+config/config.c:764   global/format not found in config: defaulting to lvm2
+striped/striped.c:231   Initialised segtype: striped
+zero/zero.c:100   Initialised segtype: zero
+error/errseg.c:100   Initialised segtype: error
+snapshot/snapshot.c:165   Initialised segtype: snapshot
+mirror/mirrored.c:315   Initialised segtype: mirror
+config/config.c:773   Setting backup/retain_days to 30
+config/config.c:773   Setting backup/retain_min to 10
+config/config.c:758   Setting backup/archive_dir to /etc/lvm/archive
+config/config.c:758   Setting backup/backup_dir to /etc/lvm/backup
+config/config.c:778   global/fallback_to_lvm1 not found in config: defaulting to
+ 0
+lvmcmdline.c:812   Parsing: lvcreate -s -L64 -n s5 /dev/VG01/lv1
+lvmcmdline.c:836   Processing: lvcreate -s -L64 -n s5 /dev/VG01/lv1
+lvmcmdline.c:839   O_DIRECT will be used
+config/config.c:773   Setting global/locking_type to 1
+config/config.c:758   Setting global/locking_dir to /var/lock/lvm
+locking/locking.c:139   File-based locking enabled.
+lvcreate.c:306   Setting chunksize to 16 sectors.
+activate/activate.c:302   Getting target version for snapshot
+ioctl/libdm-iface.c:1326   dm version   O
+ioctl/libdm-iface.c:1326   dm versions   O
+activate/activate.c:302   Getting target version for snapshot-origin
+ioctl/libdm-iface.c:1326   dm versions   O
+config/config.c:773   Setting activation/mirror_region_size to 512
+locking/file_locking.c:164   Locking /var/lock/lvm/V_VG01 WB
+lvcreate.c:435   Finding volume group "VG01"
+device/dev-io.c:425   Opened /dev/sda RW O_DIRECT
+device/dev-io.c:134   /dev/sda: block size is 4096 bytes
+label/label.c:168   /dev/sda: lvm2 label detected
+cache/lvmcache.c:426   lvmcache: /dev/sda now orphaned
+cache/lvmcache.c:426   lvmcache: /dev/sda now in VG VG01
+label/label.c:168   /dev/sda: lvm2 label detected
+label/label.c:168   /dev/sda: lvm2 label detected
+config/config.c:758   Setting cow_store to s1
+config/config.c:758   Setting origin to lv1
+config/config.c:758   Setting cow_store to s2
+config/config.c:758   Setting origin to lv1
+config/config.c:758   Setting cow_store to s3
+config/config.c:758   Setting origin to lv1
+config/config.c:758   Setting cow_store to s4
+config/config.c:758   Setting origin to lv1
+format_text/format-text.c:311   Read VG01 metadata (10) from /dev/sda at 20480 s
+ize 2600
+metadata/pv_manip.c:242   /dev/sda 0:      0      2: lv1(0:0)
+metadata/pv_manip.c:242   /dev/sda 1:      2      1: s1(0:0)
+metadata/pv_manip.c:242   /dev/sda 2:      3      1: s2(0:0)
+metadata/pv_manip.c:242   /dev/sda 3:      4      1: s3(0:0)
+metadata/pv_manip.c:242   /dev/sda 4:      5      1: s4(0:0)
+metadata/pv_manip.c:242   /dev/sda 5:      6    146: NULL(0:0)
+metadata/lv_manip.c:1153   Creating logical volume s5
+metadata/pv_map.c:47   Allowing allocation on /dev/sda start PE 6 length 146
+metadata/pv_manip.c:242   /dev/sda 0:      0      2: lv1(0:0)
+metadata/pv_manip.c:242   /dev/sda 1:      2      1: s1(0:0)
+metadata/pv_manip.c:242   /dev/sda 2:      3      1: s2(0:0)
+metadata/pv_manip.c:242   /dev/sda 3:      4      1: s3(0:0)
+metadata/pv_manip.c:242   /dev/sda 4:      5      1: s4(0:0)
+metadata/pv_manip.c:242   /dev/sda 5:      6      1: s5(0:0)
+metadata/pv_manip.c:242   /dev/sda 6:      7    145: NULL(0:0)
+format_text/format-text.c:397   Writing VG01 metadata to /dev/sda at 23552 len 2
+826
+format_text/format-text.c:483   Pre-Committing VG01 metadata (11) to /dev/sda he
+ader at 4096
+format_text/archiver.c:364   Creating volume group backup "/etc/lvm/backup/VG01"
+ (seqno 11).
+format_text/format-text.c:661   Writing VG01 metadata to /etc/lvm/backup/.lvm_pr
+oNAS_2497_686647911
+format_text/format-text.c:705   Committing VG01 metadata (11)
+format_text/format-text.c:706   Renaming /etc/lvm/backup/VG01.tmp to /etc/lvm/ba
+ckup/VG01
+format_text/format-text.c:483   Committing VG01 metadata (11) to /dev/sda header
+ at 4096
+locking/file_locking.c:245   Locking LV mGsdNLkAeP8eWiFjBTybhs35PB8xBwsqsGoa5JEG
+pk4nXxhxd75lDLjzMXKs1nD7 (R)
+metadata/metadata.c:1158   Finding volume group for uuid mGsdNLkAeP8eWiFjBTybhs3
+5PB8xBwsqsGoa5JEGpk4nXxhxd75lDLjzMXKs1nD7
+label/label.c:168   /dev/sda: lvm2 label detected
+label/label.c:168   /dev/sda: lvm2 label detected
+config/config.c:758   Setting cow_store to s1
+config/config.c:758   Setting origin to lv1
+config/config.c:758   Setting cow_store to s2
+config/config.c:758   Setting origin to lv1
+config/config.c:758   Setting cow_store to s3
+config/config.c:758   Setting origin to lv1
+config/config.c:758   Setting cow_store to s4
+config/config.c:758   Setting origin to lv1
+format_text/format-text.c:311   Read VG01 metadata (11) from /dev/sda at 23552 s
+ize 2826
+metadata/pv_manip.c:242   /dev/sda 0:      0      2: lv1(0:0)
+metadata/pv_manip.c:242   /dev/sda 1:      2      1: s1(0:0)
+metadata/pv_manip.c:242   /dev/sda 2:      3      1: s2(0:0)
+metadata/pv_manip.c:242   /dev/sda 3:      4      1: s3(0:0)
+metadata/pv_manip.c:242   /dev/sda 4:      5      1: s4(0:0)
+metadata/pv_manip.c:242   /dev/sda 5:      6      1: s5(0:0)
+metadata/pv_manip.c:242   /dev/sda 6:      7    145: NULL(0:0)
+metadata/metadata.c:1164   Found volume group "VG01"
+config/config.c:758   Setting activation/missing_stripe_filler to /dev/ioerror
+activate/dev_manager.c:1048   Getting device info for VG01-s5
+ioctl/libdm-iface.c:1326   dm info  mGsdNLkAeP8eWiFjBTybhs35PB8xBwsqsGoa5JEGpk4n
+Xxhxd75lDLjzMXKs1nD7 N
+ioctl/libdm-iface.c:1326   dm info VG01-s5  N
+mm/memlock.c:119   Unlocking memory
+mm/memlock.c:138   memlock_count dec to 0
+activate/fs.c:176   Linking /dev/VG01/s5 -> /dev/mapper/VG01-s5
+toollib.c:1087   Zeroing start of logical volume "s5"
+device/dev-cache.c:228   /dev/VG01/s5: Added to device cache
+device/dev-io.c:425   Opened /dev/VG01/s5 RW O_DIRECT
+device/dev-io.c:584   Wiping /dev/VG01/s5 at sector 0 length 8 sectors
+device/dev-io.c:134   /dev/VG01/s5: block size is 4096 bytes
+device/dev-io.c:456   Closed /dev/VG01/s5
+locking/file_locking.c:240   Locking LV mGsdNLkAeP8eWiFjBTybhs35PB8xBwsqsGoa5JEG
+pk4nXxhxd75lDLjzMXKs1nD7 (NL)
+metadata/metadata.c:1158   Finding volume group for uuid mGsdNLkAeP8eWiFjBTybhs3
+5PB8xBwsqsGoa5JEGpk4nXxhxd75lDLjzMXKs1nD7
+label/label.c:168   /dev/sda: lvm2 label detected
+label/label.c:168   /dev/sda: lvm2 label detected
+config/config.c:758   Setting cow_store to s1
+config/config.c:758   Setting origin to lv1
+config/config.c:758   Setting cow_store to s2
+config/config.c:758   Setting origin to lv1
+config/config.c:758   Setting cow_store to s3
+config/config.c:758   Setting origin to lv1
+config/config.c:758   Setting cow_store to s4
+config/config.c:758   Setting origin to lv1
+format_text/format-text.c:311   Read VG01 metadata (11) from /dev/sda at 23552 s
+ize 2826
+metadata/pv_manip.c:242   /dev/sda 0:      0      2: lv1(0:0)
+metadata/pv_manip.c:242   /dev/sda 1:      2      1: s1(0:0)
+metadata/pv_manip.c:242   /dev/sda 2:      3      1: s2(0:0)
+metadata/pv_manip.c:242   /dev/sda 3:      4      1: s3(0:0)
+metadata/pv_manip.c:242   /dev/sda 4:      5      1: s4(0:0)
+metadata/pv_manip.c:242   /dev/sda 5:      6      1: s5(0:0)
+metadata/pv_manip.c:242   /dev/sda 6:      7    145: NULL(0:0)
+metadata/metadata.c:1164   Found volume group "VG01"
+activate/dev_manager.c:1048   Getting device info for VG01-s5
+ioctl/libdm-iface.c:1326   dm info  mGsdNLkAeP8eWiFjBTybhs35PB8xBwsqsGoa5JEGpk4n
+Xxhxd75lDLjzMXKs1nD7 O
+mm/memlock.c:119   Unlocking memory
+mm/memlock.c:138   memlock_count dec to 0
+activate/fs.c:211   Removing link /dev/VG01/s5
+locking/file_locking.c:235   Unlocking LV mGsdNLkAeP8eWiFjBTybhs35PB8xBwsqsGoa5J
+EGpk4nXxhxd75lDLjzMXKs1nD7
+metadata/metadata.c:1158   Finding volume group for uuid mGsdNLkAeP8eWiFjBTybhs3
+5PB8xBwsqsGoa5JEGpk4nXxhxd75lDLjzMXKs1nD7
+label/label.c:168   /dev/sda: lvm2 label detected
+label/label.c:168   /dev/sda: lvm2 label detected
+config/config.c:758   Setting cow_store to s1
+config/config.c:758   Setting origin to lv1
+config/config.c:758   Setting cow_store to s2
+config/config.c:758   Setting origin to lv1
+config/config.c:758   Setting cow_store to s3
+config/config.c:758   Setting origin to lv1
+config/config.c:758   Setting cow_store to s4
+config/config.c:758   Setting origin to lv1
+format_text/format-text.c:311   Read VG01 metadata (11) from /dev/sda at 23552 s
+ize 2826
+metadata/pv_manip.c:242   /dev/sda 0:      0      2: lv1(0:0)
+metadata/pv_manip.c:242   /dev/sda 1:      2      1: s1(0:0)
+metadata/pv_manip.c:242   /dev/sda 2:      3      1: s2(0:0)
+metadata/pv_manip.c:242   /dev/sda 3:      4      1: s3(0:0)
+metadata/pv_manip.c:242   /dev/sda 4:      5      1: s4(0:0)
+metadata/pv_manip.c:242   /dev/sda 5:      6      1: s5(0:0)
+metadata/pv_manip.c:242   /dev/sda 6:      7    145: NULL(0:0)
+metadata/metadata.c:1164   Found volume group "VG01"
+activate/dev_manager.c:1048   Getting device info for VG01-s5
+ioctl/libdm-iface.c:1326   dm info  mGsdNLkAeP8eWiFjBTybhs35PB8xBwsqsGoa5JEGpk4n
+Xxhxd75lDLjzMXKs1nD7 N
+ioctl/libdm-iface.c:1326   dm info VG01-s5  N
+locking/file_locking.c:250   Locking LV mGsdNLkAeP8eWiFjBTybhs35PB8xBwsqmUxJX5Qi
+e6tyA0ztVEJcQvJi9CvcngrT (W)
+metadata/metadata.c:1158   Finding volume group for uuid mGsdNLkAeP8eWiFjBTybhs3
+5PB8xBwsqmUxJX5Qie6tyA0ztVEJcQvJi9CvcngrT
+label/label.c:168   /dev/sda: lvm2 label detected
+label/label.c:168   /dev/sda: lvm2 label detected
+config/config.c:758   Setting cow_store to s1
+config/config.c:758   Setting origin to lv1
+config/config.c:758   Setting cow_store to s2
+config/config.c:758   Setting origin to lv1
+config/config.c:758   Setting cow_store to s3
+config/config.c:758   Setting origin to lv1
+config/config.c:758   Setting cow_store to s4
+config/config.c:758   Setting origin to lv1
+format_text/format-text.c:311   Read VG01 metadata (11) from /dev/sda at 23552 s
+ize 2826
+metadata/pv_manip.c:242   /dev/sda 0:      0      2: lv1(0:0)
+metadata/pv_manip.c:242   /dev/sda 1:      2      1: s1(0:0)
+metadata/pv_manip.c:242   /dev/sda 2:      3      1: s2(0:0)
+metadata/pv_manip.c:242   /dev/sda 3:      4      1: s3(0:0)
+metadata/pv_manip.c:242   /dev/sda 4:      5      1: s4(0:0)
+metadata/pv_manip.c:242   /dev/sda 5:      6      1: s5(0:0)
+metadata/pv_manip.c:242   /dev/sda 6:      7    145: NULL(0:0)
+metadata/metadata.c:1164   Found volume group "VG01"
+activate/dev_manager.c:1048   Getting device info for VG01-lv1
+ioctl/libdm-iface.c:1326   dm info  mGsdNLkAeP8eWiFjBTybhs35PB8xBwsqmUxJX5Qie6ty
+A0ztVEJcQvJi9CvcngrT N
+mm/memlock.c:119   Unlocking memory
+mm/memlock.c:138   memlock_count dec to 0
+activate/fs.c:169   Removing /dev/VG01/s3
+activate/fs.c:176   Linking /dev/VG01/s3 -> /dev/mapper/VG01-s3
+activate/fs.c:176   Linking /dev/VG01/s5 -> /dev/mapper/VG01-s5
+activate/fs.c:169   Removing /dev/VG01/s1
+activate/fs.c:176   Linking /dev/VG01/s1 -> /dev/mapper/VG01-s1
+activate/fs.c:169   Removing /dev/VG01/s4
+activate/fs.c:176   Linking /dev/VG01/s4 -> /dev/mapper/VG01-s4
+activate/fs.c:169   Removing /dev/VG01/s2
+activate/fs.c:176   Linking /dev/VG01/s2 -> /dev/mapper/VG01-s2
+activate/fs.c:169   Removing /dev/VG01/lv1
+activate/fs.c:176   Linking /dev/VG01/lv1 -> /dev/mapper/VG01-lv1
+format_text/archiver.c:364   Creating volume group backup "/etc/lvm/backup/VG01"
+ (seqno 12).
+format_text/format-text.c:661   Writing VG01 metadata to /etc/lvm/backup/.lvm_pr
+oNAS_2497_1510734533
+format_text/format-text.c:705   Committing VG01 metadata (12)
+format_text/format-text.c:706   Renaming /etc/lvm/backup/VG01.tmp to /etc/lvm/ba
+ckup/VG01
+lvcreate.c:783   Logical volume "s5" created
+locking/file_locking.c:59   Unlocking /var/lock/lvm/V_VG01
+device/dev-io.c:456   Closed /dev/sda
+filters/filter-persistent.c:181   Dumping persistent device cache to /etc/lvm/.c
+ache
+cache/lvmcache.c:574   Wiping internal VG cache
 
-2005/9/12, Bear Wolf <sportbear@gmail.com>:
-> Dear Lars
-> 
-> I tried but not work,
-> the process is still hang when I trying to copy some data in source
-> volume or do sync command after create the 4rd snapshot volume.
-> 
-> should I patch the 8 and 9 of dm module?
-> ftp://sources.redhat.com/pub/dm/patches/2.6-unstable/2.6.12-rc2/2.6.12-rc2-udm1/
-> 
-> I saw that some discuss in previous mail-list
-> 
-> SportBear
-> 
-> 2005/9/12, Lars Ellenberg <Lars.Ellenberg@linbit.com>:
-> > / 2005-09-12 10:34:15 +0800
-> > \ Bear Wolf:
-> > > Dear all
-> > >
-> > > I test snapshot function on my system.
-> > > when I create the first snapshot, everything works fine.
-> > > then I create more snapshot, everything works fine too.
-> > > but when I access the source volume and do sync
-> > > the sync command will be dead.
-> > >
-> > > and I test with a script file
-> > >
-> > > I=0
-> > > for I in 1 2 3 4 5 6 7 8 9
-> > > do
-> > > cp -af /etc /mnt/volume1
-> > > lvcreate -s -L 64 -n snaplv${I} /dev/VG01/volume1
-> > > sleep 1
-> > > done
-> > >
-> > > after create the 4th sn apshot volume, the system process hang without
-> > > any error message.
-> >
-> > lvcreate calls into device mapper.
-> > it suspends the affected targets, changes "tables", creates new targets,
-> > and resumes the targets again.
-> >
-> > if it fails to create the new targets, or fails to adjust the "tables",
-> >
-> > then it unfortunately aborts, leaving the existing targets in suspended
-> > state. I think that is a bug.
-> >
-> > to get the system working (sort of) again, you could try to
-> > for d in /dev/mapper/* ; do
-> >        [[ $d == control ]] && continue
-> >        dmsetup resume $d &
-> >                       # ^^^ important! background it!
-> > done
-> >
-> > background it, because if you "resume" some target that depends on some
-> > other target in suspended state, it will hang and wait for that other
-> > target to be resumed... doh.
-> >
-> > worked for me... (well, to get the system back, at least).
-> >
-> > see also dmsetup ls, dmsetup info, dmsetp table etc.
-> >
-> > cheers,
-> >
-> > --
-> > : Lars Ellenberg                                  Tel +43-1-8178292-0  :
-> > : LINBIT Information Technologies GmbH            Fax +43-1-8178292-82 :
-> > : Schoenbrunner Str. 244, A-1120 Vienna/Europe   http://www.linbit.com :
-> >
-> > _______________________________________________
-> > linux-lvm mailing list
-> > linux-lvm@redhat.com
-> > https://www.redhat.com/mailman/listinfo/linux-lvm
-> > read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
-> >
->
+
+
+
+
+
+
+
+
+
+
+
+
+
+here is the verbose log of create snapshot volume but hang
+**************************************************************************
+config/config.c:778   log/activation not found in config: defaulting to 0
+commands/toolcontext.c:146   Logging initialised at Sun Sep 18 00:13:12 2005
+
+config/config.c:773   Setting global/umask to 63
+commands/toolcontext.c:165   Set umask to 0077
+config/config.c:758   Setting devices/dir to /dev
+config/config.c:758   Setting global/proc to /proc
+config/config.c:773   Setting global/activation to 1
+config/config.c:778   global/suffix not found in config: defaulting to 1
+config/config.c:764   global/units not found in config: defaulting to h
+regex/matcher.c:267   Matcher built with 5 dfa states
+config/config.c:758   Setting devices/cache to /etc/lvm/.cache
+config/config.c:773   Setting devices/write_cache_state to 1
+device/dev-io.c:425   Opened /etc/lvm/.cache RO
+device/dev-io.c:456   Closed /etc/lvm/.cache
+device/dev-cache.c:228   /dev/sda: Added to device cache
+filters/filter-persistent.c:127   Loaded persistent filter cache from /etc/lvm/.
+cache
+config/config.c:773   Setting activation/reserved_stack to 256
+config/config.c:773   Setting activation/reserved_memory to 8192
+config/config.c:773   Setting activation/process_priority to -18
+format1/format1.c:588   Initialised format: lvm1
+format_pool/format_pool.c:355   Initialised format: pool
+format_text/format-text.c:1706   Initialised format: lvm2
+config/config.c:764   global/format not found in config: defaulting to lvm2
+striped/striped.c:231   Initialised segtype: striped
+zero/zero.c:100   Initialised segtype: zero
+error/errseg.c:100   Initialised segtype: error
+snapshot/snapshot.c:165   Initialised segtype: snapshot
+mirror/mirrored.c:315   Initialised segtype: mirror
+config/config.c:773   Setting backup/retain_days to 30
+config/config.c:773   Setting backup/retain_min to 10
+config/config.c:758   Setting backup/archive_dir to /etc/lvm/archive
+config/config.c:758   Setting backup/backup_dir to /etc/lvm/backup
+config/config.c:778   global/fallback_to_lvm1 not found in config: defaulting to
+ 0
+lvmcmdline.c:812   Parsing: lvcreate -s -L64 -n s6 /dev/VG01/lv1
+lvmcmdline.c:836   Processing: lvcreate -s -L64 -n s6 /dev/VG01/lv1
+lvmcmdline.c:839   O_DIRECT will be used
+config/config.c:773   Setting global/locking_type to 1
+config/config.c:758   Setting global/locking_dir to /var/lock/lvm
+locking/locking.c:139   File-based locking enabled.
+lvcreate.c:306   Setting chunksize to 16 sectors.
+activate/activate.c:302   Getting target version for snapshot
+ioctl/libdm-iface.c:1326   dm version   O
+ioctl/libdm-iface.c:1326   dm versions   O
+activate/activate.c:302   Getting target version for snapshot-origin
+ioctl/libdm-iface.c:1326   dm versions   O
+config/config.c:773   Setting activation/mirror_region_size to 512
+locking/file_locking.c:164   Locking /var/lock/lvm/V_VG01 WB
+lvcreate.c:435   Finding volume group "VG01"
+device/dev-io.c:425   Opened /dev/sda RW O_DIRECT
+device/dev-io.c:134   /dev/sda: block size is 4096 bytes
+label/label.c:168   /dev/sda: lvm2 label detected
+cache/lvmcache.c:426   lvmcache: /dev/sda now orphaned
+cache/lvmcache.c:426   lvmcache: /dev/sda now in VG VG01
+label/label.c:168   /dev/sda: lvm2 label detected
+label/label.c:168   /dev/sda: lvm2 label detected
+config/config.c:758   Setting cow_store to s1
+config/config.c:758   Setting origin to lv1
+config/config.c:758   Setting cow_store to s2
+config/config.c:758   Setting origin to lv1
+config/config.c:758   Setting cow_store to s3
+config/config.c:758   Setting origin to lv1
+config/config.c:758   Setting cow_store to s4
+config/config.c:758   Setting origin to lv1
+config/config.c:758   Setting cow_store to s5
+config/config.c:758   Setting origin to lv1
+format_text/format-text.c:311   Read VG01 metadata (12) from /dev/sda at 26624 s
+ize 3047
+metadata/pv_manip.c:242   /dev/sda 0:      0      2: lv1(0:0)
+metadata/pv_manip.c:242   /dev/sda 1:      2      1: s1(0:0)
+metadata/pv_manip.c:242   /dev/sda 2:      3      1: s2(0:0)
+metadata/pv_manip.c:242   /dev/sda 3:      4      1: s3(0:0)
+metadata/pv_manip.c:242   /dev/sda 4:      5      1: s4(0:0)
+metadata/pv_manip.c:242   /dev/sda 5:      6      1: s5(0:0)
+metadata/pv_manip.c:242   /dev/sda 6:      7    145: NULL(0:0)
+metadata/lv_manip.c:1153   Creating logical volume s6
+metadata/pv_map.c:47   Allowing allocation on /dev/sda start PE 7 length 145
+metadata/pv_manip.c:242   /dev/sda 0:      0      2: lv1(0:0)
+metadata/pv_manip.c:242   /dev/sda 1:      2      1: s1(0:0)
+metadata/pv_manip.c:242   /dev/sda 2:      3      1: s2(0:0)
+metadata/pv_manip.c:242   /dev/sda 3:      4      1: s3(0:0)
+metadata/pv_manip.c:242   /dev/sda 4:      5      1: s4(0:0)
+metadata/pv_manip.c:242   /dev/sda 5:      6      1: s5(0:0)
+metadata/pv_manip.c:242   /dev/sda 6:      7      1: s6(0:0)
+metadata/pv_manip.c:242   /dev/sda 7:      8    144: NULL(0:0)
+format_text/format-text.c:397   Writing VG01 metadata to /dev/sda at 29696 len 3
+273
+format_text/format-text.c:483   Pre-Committing VG01 metadata (13) to /dev/sda he
+ader at 4096
+format_text/archiver.c:364   Creating volume group backup "/etc/lvm/backup/VG01"
+ (seqno 13).
+format_text/format-text.c:661   Writing VG01 metadata to /etc/lvm/backup/.lvm_pr
+oNAS_2516_4686790
+format_text/format-text.c:705   Committing VG01 metadata (13)
+format_text/format-text.c:706   Renaming /etc/lvm/backup/VG01.tmp to /etc/lvm/ba
+ckup/VG01
+format_text/format-text.c:483   Committing VG01 metadata (13) to /dev/sda header
+ at 4096
+locking/file_locking.c:245   Locking LV mGsdNLkAeP8eWiFjBTybhs35PB8xBwsqkryMnURZ
+K7A5JOgpUBnciRrm1UQPLpjP (R)
+metadata/metadata.c:1158   Finding volume group for uuid mGsdNLkAeP8eWiFjBTybhs3
+5PB8xBwsqkryMnURZK7A5JOgpUBnciRrm1UQPLpjP
+label/label.c:168   /dev/sda: lvm2 label detected
+label/label.c:168   /dev/sda: lvm2 label detected
+config/config.c:758   Setting cow_store to s1
+config/config.c:758   Setting origin to lv1
+config/config.c:758   Setting cow_store to s2
+config/config.c:758   Setting origin to lv1
+config/config.c:758   Setting cow_store to s3
+config/config.c:758   Setting origin to lv1
+config/config.c:758   Setting cow_store to s4
+config/config.c:758   Setting origin to lv1
+config/config.c:758   Setting cow_store to s5
+config/config.c:758   Setting origin to lv1
+format_text/format-text.c:311   Read VG01 metadata (13) from /dev/sda at 29696 s
+ize 3273
+metadata/pv_manip.c:242   /dev/sda 0:      0      2: lv1(0:0)
+metadata/pv_manip.c:242   /dev/sda 1:      2      1: s1(0:0)
+metadata/pv_manip.c:242   /dev/sda 2:      3      1: s2(0:0)
+metadata/pv_manip.c:242   /dev/sda 3:      4      1: s3(0:0)
+metadata/pv_manip.c:242   /dev/sda 4:      5      1: s4(0:0)
+metadata/pv_manip.c:242   /dev/sda 5:      6      1: s5(0:0)
+metadata/pv_manip.c:242   /dev/sda 6:      7      1: s6(0:0)
+metadata/pv_manip.c:242   /dev/sda 7:      8    144: NULL(0:0)
+metadata/metadata.c:1164   Found volume group "VG01"
+config/config.c:758   Setting activation/missing_stripe_filler to /dev/ioerror
+activate/dev_manager.c:1048   Getting device info for VG01-s6
+ioctl/libdm-iface.c:1326   dm info  mGsdNLkAeP8eWiFjBTybhs35PB8xBwsqkryMnURZK7A5
+JOgpUBnciRrm1UQPLpjP N
+ioctl/libdm-iface.c:1326   dm info VG01-s6  N
+mm/memlock.c:119   Unlocking memory
+mm/memlock.c:138   memlock_count dec to 0
+activate/fs.c:176   Linking /dev/VG01/s6 -> /dev/mapper/VG01-s6
+toollib.c:1087   Zeroing start of logical volume "s6"
+device/dev-cache.c:228   /dev/VG01/s6: Added to device cache
+device/dev-io.c:425   Opened /dev/VG01/s6 RW O_DIRECT
+device/dev-io.c:584   Wiping /dev/VG01/s6 at sector 0 length 8 sectors
+device/dev-io.c:134   /dev/VG01/s6: block size is 4096 bytes
+device/dev-io.c:456   Closed /dev/VG01/s6
+locking/file_locking.c:240   Locking LV mGsdNLkAeP8eWiFjBTybhs35PB8xBwsqkryMnURZ
+K7A5JOgpUBnciRrm1UQPLpjP (NL)
+metadata/metadata.c:1158   Finding volume group for uuid mGsdNLkAeP8eWiFjBTybhs3
+5PB8xBwsqkryMnURZK7A5JOgpUBnciRrm1UQPLpjP
+label/label.c:168   /dev/sda: lvm2 label detected
+label/label.c:168   /dev/sda: lvm2 label detected
+config/config.c:758   Setting cow_store to s1
+config/config.c:758   Setting origin to lv1
+config/config.c:758   Setting cow_store to s2
+config/config.c:758   Setting origin to lv1
+config/config.c:758   Setting cow_store to s3
+config/config.c:758   Setting origin to lv1
+config/config.c:758   Setting cow_store to s4
+config/config.c:758   Setting origin to lv1
+config/config.c:758   Setting cow_store to s5
+config/config.c:758   Setting origin to lv1
+format_text/format-text.c:311   Read VG01 metadata (13) from /dev/sda at 29696 s
+ize 3273
+metadata/pv_manip.c:242   /dev/sda 0:      0      2: lv1(0:0)
+metadata/pv_manip.c:242   /dev/sda 1:      2      1: s1(0:0)
+metadata/pv_manip.c:242   /dev/sda 2:      3      1: s2(0:0)
+metadata/pv_manip.c:242   /dev/sda 3:      4      1: s3(0:0)
+metadata/pv_manip.c:242   /dev/sda 4:      5      1: s4(0:0)
+metadata/pv_manip.c:242   /dev/sda 5:      6      1: s5(0:0)
+metadata/pv_manip.c:242   /dev/sda 6:      7      1: s6(0:0)
+metadata/pv_manip.c:242   /dev/sda 7:      8    144: NULL(0:0)
+metadata/metadata.c:1164   Found volume group "VG01"
+activate/dev_manager.c:1048   Getting device info for VG01-s6
+ioctl/libdm-iface.c:1326   dm info  mGsdNLkAeP8eWiFjBTybhs35PB8xBwsqkryMnURZK7A5
+JOgpUBnciRrm1UQPLpjP O
+mm/memlock.c:119   Unlocking memory
+mm/memlock.c:138   memlock_count dec to 0
+activate/fs.c:211   Removing link /dev/VG01/s6
+locking/file_locking.c:235   Unlocking LV mGsdNLkAeP8eWiFjBTybhs35PB8xBwsqkryMnU
+RZK7A5JOgpUBnciRrm1UQPLpjP
+metadata/metadata.c:1158   Finding volume group for uuid mGsdNLkAeP8eWiFjBTybhs3
+5PB8xBwsqkryMnURZK7A5JOgpUBnciRrm1UQPLpjP
+label/label.c:168   /dev/sda: lvm2 label detected
+label/label.c:168   /dev/sda: lvm2 label detected
+config/config.c:758   Setting cow_store to s1
+config/config.c:758   Setting origin to lv1
+config/config.c:758   Setting cow_store to s2
+config/config.c:758   Setting origin to lv1
+config/config.c:758   Setting cow_store to s3
+config/config.c:758   Setting origin to lv1
+config/config.c:758   Setting cow_store to s4
+config/config.c:758   Setting origin to lv1
+config/config.c:758   Setting cow_store to s5
+config/config.c:758   Setting origin to lv1
+format_text/format-text.c:311   Read VG01 metadata (13) from /dev/sda at 29696 s
+ize 3273
+metadata/pv_manip.c:242   /dev/sda 0:      0      2: lv1(0:0)
+metadata/pv_manip.c:242   /dev/sda 1:      2      1: s1(0:0)
+metadata/pv_manip.c:242   /dev/sda 2:      3      1: s2(0:0)
+metadata/pv_manip.c:242   /dev/sda 3:      4      1: s3(0:0)
+metadata/pv_manip.c:242   /dev/sda 4:      5      1: s4(0:0)
+metadata/pv_manip.c:242   /dev/sda 5:      6      1: s5(0:0)
+metadata/pv_manip.c:242   /dev/sda 6:      7      1: s6(0:0)
+metadata/pv_manip.c:242   /dev/sda 7:      8    144: NULL(0:0)
+metadata/metadata.c:1164   Found volume group "VG01"
+activate/dev_manager.c:1048   Getting device info for VG01-s6
+ioctl/libdm-iface.c:1326   dm info  mGsdNLkAeP8eWiFjBTybhs35PB8xBwsqkryMnURZK7A5
+JOgpUBnciRrm1UQPLpjP N
+ioctl/libdm-iface.c:1326   dm info VG01-s6  N
+locking/file_locking.c:250   Locking LV mGsdNLkAeP8eWiFjBTybhs35PB8xBwsqmUxJX5Qi
+e6tyA0ztVEJcQvJi9CvcngrT (W)
+metadata/metadata.c:1158   Finding volume group for uuid mGsdNLkAeP8eWiFjBTybhs3
+5PB8xBwsqmUxJX5Qie6tyA0ztVEJcQvJi9CvcngrT
+label/label.c:168   /dev/sda: lvm2 label detected
+label/label.c:168   /dev/sda: lvm2 label detected
+config/config.c:758   Setting cow_store to s1
+config/config.c:758   Setting origin to lv1
+config/config.c:758   Setting cow_store to s2
+config/config.c:758   Setting origin to lv1
+config/config.c:758   Setting cow_store to s3
+config/config.c:758   Setting origin to lv1
+config/config.c:758   Setting cow_store to s4
+config/config.c:758   Setting origin to lv1
+config/config.c:758   Setting cow_store to s5
+config/config.c:758   Setting origin to lv1
+format_text/format-text.c:311   Read VG01 metadata (13) from /dev/sda at 29696 s
+ize 3273
+metadata/pv_manip.c:242   /dev/sda 0:      0      2: lv1(0:0)
+metadata/pv_manip.c:242   /dev/sda 1:      2      1: s1(0:0)
+metadata/pv_manip.c:242   /dev/sda 2:      3      1: s2(0:0)
+metadata/pv_manip.c:242   /dev/sda 3:      4      1: s3(0:0)
+metadata/pv_manip.c:242   /dev/sda 4:      5      1: s4(0:0)
+metadata/pv_manip.c:242   /dev/sda 5:      6      1: s5(0:0)
+metadata/pv_manip.c:242   /dev/sda 6:      7      1: s6(0:0)
+metadata/pv_manip.c:242   /dev/sda 7:      8    144: NULL(0:0)
+metadata/metadata.c:1164   Found volume group "VG01"
+activate/dev_manager.c:1048   Getting device info for VG01-lv1
+ioctl/libdm-iface.c:1326   dm info  mGsdNLkAeP8eWiFjBTybhs35PB8xBwsqmUxJX5Qie6ty
+A0ztVEJcQvJi9CvcngrT N
+
+
+
+
+
+hand when get device mapper info ID,
+and no Unlocking memory log found.....
