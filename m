@@ -1,14 +1,14 @@
 Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j8JCfnV07889
-	for <linux-lvm@redhat.com>; Mon, 19 Sep 2005 08:41:49 -0400
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j8JCjEV09010
+	for <linux-lvm@redhat.com>; Mon, 19 Sep 2005 08:45:14 -0400
 Received: from www.geoinf.fu-berlin.de (www.geoinf.fu-berlin.de [160.45.89.23])
-	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id j8JCfjYO017896
-	for <linux-lvm@redhat.com>; Mon, 19 Sep 2005 08:41:46 -0400
+	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id j8JCjDZM020236
+	for <linux-lvm@redhat.com>; Mon, 19 Sep 2005 08:45:13 -0400
 Received: from [160.45.89.15] (callisto.geoinf.fu-berlin.de [160.45.89.15])
-	by www.geoinf.fu-berlin.de (Postfix) with ESMTP id D8F9DA1E03
-	for <linux-lvm@redhat.com>; Mon, 19 Sep 2005 14:41:50 +0200 (CEST)
-Message-ID: <432EB1FE.7030108@alice-it.net>
-Date: Mon, 19 Sep 2005 14:41:34 +0200
+	by www.geoinf.fu-berlin.de (Postfix) with ESMTP id 71785A1E03
+	for <linux-lvm@redhat.com>; Mon, 19 Sep 2005 14:44:48 +0200 (CEST)
+Message-ID: <432EB2AF.9050500@alice-it.net>
+Date: Mon, 19 Sep 2005 14:44:31 +0200
 From: Sebastian <sebastian@alice-it.net>
 MIME-Version: 1.0
 Subject: [Fwd: [linux-lvm] EMERGENCY: killing pvmove]
@@ -26,11 +26,22 @@ List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: linux-lvm@redhat.com
 
-What does happen if I do a kill -9 <PID>?
+And, more important, what is worse: to put the sane data on an insane pv 
+using pvmove, or
+to kill the pvmove command leaving a few unreadable sectors?
 
-I have about one hour time left... ;)
+I'm prefering version #2 at the moment, I will apply it shortly before 
+the new pv will be used.
 
 -------- Original Message --------
+
+
+After that -- everything went ok, even resizing the ext3 partition -- I
+got Input/Output errors while writing to the newly resized partition
+(writing to the extended part of the partition). As realising this, I
+put all the data off this partition, deleted it and was then trying to
+remove the Raid subsystem with pvmove. While doing "pvmove /dev/sdg" I
+just got an "segmentation fault".
 
 How to stop it? Is a SIGTERM or SIGKILL allowed? Pleas help, I'm running
 out of time!
