@@ -1,16 +1,16 @@
-Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j8JNMJV17969
-	for <linux-lvm@redhat.com>; Mon, 19 Sep 2005 19:22:19 -0400
-Received: from florence.buici.com (qmailr@florence.buici.com [206.124.142.26])
-	by mx3.redhat.com (8.13.1/8.13.1) with SMTP id j8JNMCO6012681
-	for <linux-lvm@redhat.com>; Mon, 19 Sep 2005 19:22:13 -0400
-Date: Mon, 19 Sep 2005 16:22:12 -0700
-From: Marc Singer <elf@buici.com>
-Message-ID: <20050919232212.GB12742@buici.com>
-Mime-Version: 1.0
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-Subject: [linux-lvm] Two physical volumes disappeared
+Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j8KKDtV19991
+	for <linux-lvm@redhat.com>; Tue, 20 Sep 2005 16:13:55 -0400
+Received: from mail4.mckesson.com (mail4.mckesson.com [143.112.129.39])
+	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id j8KKDqxi020585
+	for <linux-lvm@redhat.com>; Tue, 20 Sep 2005 16:13:52 -0400
+From: "Allen, Jack" <Jack.Allen@McKesson.com>
+Message-ID: <C28DB247D333BC47BBAAFDC914DE39010261F5D6@atlexc07ntms.mckesson.com>
+Date: Tue, 20 Sep 2005 16:14:25 -0400
+MIME-Version: 1.0
+Content-Type: multipart/alternative;
+	boundary="----_=_NextPart_001_01C5BE1F.E58077B4"
+Subject: [linux-lvm] Directly using a logical volume
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -21,42 +21,58 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="utf-8"
-To: linux-lvm@redhat.com
+To: "'linux-lvm@redhat.com'" <linux-lvm@redhat.com>
 
-On reboot, I've found that two physical volumes, the only two volumes
-in a volume group, are no longer recognized.  Is there something I can
-do to recover aside from rebuilding the VG?
+This message is in MIME format. Since your mail reader does not understand
+this format, some or all of this message may not be legible.
 
-There are two IDE drives, hdb and hdd, that were in the VG.  Here's a
-dump of the start of hdb:
+------_=_NextPart_001_01C5BE1F.E58077B4
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
 
-  000000  00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  ................
-  *
-  0001b0  00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 01  ................
-  0001c0  01 00 8e fe ff ff 3f 00  00 00 82 e4 50 09 00 00  ...���?....�P...
-  0001d0  00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  ................
-  *
-  0001f0  00 00 00 00 00 00 00 00  00 00 00 00 00 00 55 aa  ..............U�
-  000200  4c 41 42 45 4c 4f 4e 45  01 00 00 00 00 00 00 00  LABELONE........
-  000210  ce 01 f0 6f 20 00 00 00  4c 56 4d 32 20 30 30 31  �.�o ...LVM2 001
-  000220  55 61 6b 63 33 45 56 31  6d 47 30 45 66 70 4b 64  Uakc3EV1mG0EfpKd
-  000230  4d 65 69 62 36 57 6b 4e  51 37 53 42 30 33 56 30  Meib6WkNQ7SB03V0
-  000240  00 60 ee a1 12 00 00 00  00 00 03 00 00 00 00 00  .`�............
-  000250  00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  ................
-  000260  00 00 00 00 00 00 00 00  00 08 00 00 00 00 00 00  ................
-  000270  00 f8 02 00 00 00 00 00  00 00 00 00 00 00 00 00  .�..............
-  000280  00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  ................
-  *
-  000800  37 e1 0e 18 20 4c 56 4d  32 20 78 5b 35 41 25 72  7�.. LVM2 x[5A%r
-  000810  30 4e 2a 3e 01 00 00 00  00 08 00 00 00 00 00 00  0N*>............
-  000820  00 f8 02 00 00 00 00 00  00 34 00 00 00 00 00 00  .�.......4......
-  000830  a4 05 00 00 00 00 00 00  fd dd 68 4f 00 00 00 00  �.......��hO....
-  000840  00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  ................
-  *
-  000a00  63 61 63 68 65 20 7b 0a  69 64 20 3d 20 22 78 46  cache {.id = "xF
-  000a10  53 4b 50 64 2d 76 4b 48  79 2d 64 36 48 51 2d 77  SKPd-vKHy-d6HQ-w
+        I have a system connected to a SAN via Fibre Channel interface.
+The system sees 3 disk sdb, sdc and sdd. I put them in a volume group
+and then allocated some logical volumes. If I use the logical volume to
+read and write to directly for my application, if there is an error on a
+write, I assume the write system call will return an error. Or does the
+write give a good return value after putting the data in some system
+buffer to be written later? Then is the write of the system buffer fails
+later, my program would not know.
 
-It looks like the right data is there, but pvdisplay says that it
-doesn't recognize it.  Is there something I can do to diagnose the
-failure?
+Thanks: 
+        Jack Allen 
+
+
+------_=_NextPart_001_01C5BE1F.E58077B4
+Content-Type: text/html
+Content-Transfer-Encoding: quoted-printable
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML>
+<HEAD>
+
+<META NAME=3D"Generator" CONTENT=3D"MS Exchange Server version =
+5.5.2658.2">
+<TITLE>Directly using a logical volume</TITLE>
+</HEAD>
+<BODY>
+
+<P>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <FONT SIZE=3D2 =
+FACE=3D"Arial">I have a system connected to a SAN via Fibre Channel =
+interface. The system sees 3 disk sdb, sdc and sdd. I put them in a =
+volume group and then allocated some logical volumes. If I use the =
+logical volume to read and write to directly for my application, if =
+there is an error on a write, I assume the write system call will =
+return an error. Or does the write give a good return value after =
+putting the data in some system buffer to be written later? Then is the =
+write of the system buffer fails later, my program would not =
+know.</FONT></P>
+
+<P><FONT SIZE=3D2 FACE=3D"Arial">Thanks:</FONT>
+<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <FONT SIZE=3D2 =
+FACE=3D"Arial">Jack Allen</FONT>
+</P>
+
+</BODY>
+</HTML>
+------_=_NextPart_001_01C5BE1F.E58077B4--
