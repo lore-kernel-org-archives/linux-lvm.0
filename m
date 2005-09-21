@@ -1,31 +1,15 @@
-Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j8LDUPV13336
-	for <linux-lvm@redhat.com>; Wed, 21 Sep 2005 09:30:25 -0400
-Received: from mailout11.sul.t-online.com (mailout11.sul.t-online.com
-	[194.25.134.85])
-	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id j8LDUKOY030806
-	for <linux-lvm@redhat.com>; Wed, 21 Sep 2005 09:30:24 -0400
-Received: from grandcentral.hilarenhaus.hilaritas.de (unknown [192.168.1.252])
-	by nexus.hilarenhaus.hilaritas.de (Postfix) with ESMTP id DC879270107
-	for <linux-lvm@redhat.com>; Wed, 21 Sep 2005 15:29:44 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-	by grandcentral.hilarenhaus.hilaritas.de (Postfix) with ESMTP id
-	980E584E2
-	for <linux-lvm@redhat.com>; Wed, 21 Sep 2005 15:29:44 +0200 (CEST)
-Received: from grandcentral.hilarenhaus.hilaritas.de ([127.0.0.1])
-	by localhost (grandcentral [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id 18052-04 for <linux-lvm@redhat.com>;
-	Wed, 21 Sep 2005 15:29:42 +0200 (CEST)
-Received: from simba (simba.hilarenhaus.hilaritas.de [192.168.1.132])
-	by grandcentral.hilarenhaus.hilaritas.de (Postfix) with ESMTP id
-	96F6D823C
-	for <linux-lvm@redhat.com>; Wed, 21 Sep 2005 15:29:42 +0200 (CEST)
-From: "Fabian Aichele" <faichele@hilarenhaus.hilaritas.de>
-Date: Wed, 21 Sep 2005 15:29:42 +0200
-Message-ID: <000001c5beb0$8668e4f0$0109a8c0@hilarenhaus.hilaritas.de>
+Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j8LHN8V29598
+	for <linux-lvm@redhat.com>; Wed, 21 Sep 2005 13:23:08 -0400
+Received: from mail4.mckesson.com (mail4.mckesson.com [143.112.129.39])
+	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id j8LHMxlM005846
+	for <linux-lvm@redhat.com>; Wed, 21 Sep 2005 13:23:00 -0400
+From: "Allen, Jack" <Jack.Allen@McKesson.com>
+Message-ID: <C28DB247D333BC47BBAAFDC914DE39010261F5DE@atlexc07ntms.mckesson.com>
+Subject: RE: [linux-lvm] Directly using a logical volume
+Date: Wed, 21 Sep 2005 13:23:40 -0400
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: [linux-lvm] Lvm utility programs failure
+Content-Transfer-Encoding: 7bit
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -37,76 +21,49 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
+To: 'LVM general discussion and development' <linux-lvm@redhat.com>
+
+
+
+-----Original Message-----
+From: Lars Ellenberg [mailto:Lars.Ellenberg@linbit.com] 
+Sent: Wednesday, September 21, 2005 8:58 AM
 To: linux-lvm@redhat.com
-
-Hello!
-
-On two Debian machines with a custom-built kernel (version 2.6.5, patched
-with the WOLK patch set from http://wolk.sourceforge.net) all LVM2 commands
-fail with an identical error message. The LVM kernel code is compiled as a
-module and loads correctly.
-
-lvm version output:
-  LVM version: 2.01.04 (2005-02-09)
-  Library version: 1.01.00-ioctl (2005-01-17)
-  Driver version: 4.1.0
-
-The LVM2 utilities Debian package version is 2.0.1.04-5 from Debian testing.
-
-For example, this is what a "lvscan" command results in:
+Subject: Re: [linux-lvm] Directly using a logical volume
 
 
-  /dev/hda: open failed: Unbekannter Fehler 530
-  /dev/loop0: open failed: Unbekannter Fehler 530
-  /dev/hde: open failed: Unbekannter Fehler 530
-  /dev/hda1: open failed: Unbekannter Fehler 530
-  /dev/loop1: open failed: Unbekannter Fehler 530
-  /dev/hde1: open failed: Unbekannter Fehler 530
-  /dev/hda2: open failed: Unbekannter Fehler 530
-  /dev/loop2: open failed: Unbekannter Fehler 530
-  /dev/hda3: open failed: Unbekannter Fehler 530
-  /dev/loop3: open failed: Unbekannter Fehler 530
-  /dev/loop4: open failed: Unbekannter Fehler 530
-  /dev/loop5: open failed: Unbekannter Fehler 530
-  /dev/loop6: open failed: Unbekannter Fehler 530
-  /dev/loop7: open failed: Unbekannter Fehler 530
-  /dev/loop8: open failed: Unbekannter Fehler 530
-  /dev/loop9: open failed: Unbekannter Fehler 530
-  /dev/loop10: open failed: Unbekannter Fehler 530
-  /dev/loop11: open failed: Unbekannter Fehler 530
-  /dev/loop12: open failed: Unbekannter Fehler 530
-  /dev/loop13: open failed: Unbekannter Fehler 530
-  /dev/loop14: open failed: Unbekannter Fehler 530
-  /dev/loop15: open failed: Unbekannter Fehler 530
-  /dev/hdb: open failed: Unbekannter Fehler 530
-  No volume groups found
+/ 2005-09-20 16:14:25 -0400
+\ Allen, Jack:
+>         I have a system connected to a SAN via Fibre Channel interface.
+> The system sees 3 disk sdb, sdc and sdd. I put them in a volume group
+> and then allocated some logical volumes. If I use the logical volume to
+> read and write to directly for my application, if there is an error on a
+> write, I assume the write system call will return an error. Or does the
+> write give a good return value after putting the data in some system
+> buffer to be written later? Then is the write of the system buffer fails
+> later, my program would not know.
 
+not exactly a linux-lvm question, is it?
 
-German locale is set; "Unbekannter Fehler" translates to "Unknown error" 
+man 2 write
+man 2 fsync
+man 3 open       (O_SYNC)
 
-A (hopefully) relevant excerpt from "strace lvscan" shows an "open" system
-call failing with an error number -530.
+-- 
+: Lars Ellenberg                                  Tel +43-1-8178292-0  :
+: LINBIT Information Technologies GmbH            Fax +43-1-8178292-82 :
+: Schoenbrunner Str. 244, A-1120 Vienna/Europe   http://www.linbit.com :
 
+_______________________________________________
 
-stat64("/dev/hde1", {st_mode=S_IFBLK|0660, st_rdev=makedev(33, 1), ...}) = 0
-stat64("/dev/hde1", {st_mode=S_IFBLK|0660, st_rdev=makedev(33, 1), ...}) = 0
-open("/dev/hde1", O_RDONLY|O_LARGEFILE|0x40000) = -530
-write(2, "  ", 2  )                       = 2
-write(2, "/dev/hde1: open failed: Unbekann"..., 46/dev/hde1: open failed:
-Unbekannter Fehle
-r 530) = 46
-write(2, "\n", 1
-)                       = 1
+I have read the man pages and that would be "man 2 open". The O_SYNC seems
+to only work for a regular file not a block device as the logical volume is.
+This was part of the reason for my questions. On UNIX systems we use the
+character device name and the O_SYNC does what you think it would there. I
+know this is Linux and some things are different. Again the reason for my
+questions. And yes it could be a linux-lvm question if the block device
+presented by LVM works differently than a true SCSI block device. Again the
+reason for the questions.
 
-
-On another host with a more recent kernel 2.6.12 the LVM2 commands work
-without any errors.
-
-My question: Is this due my kernel image being too old or misconfigured, or
-did the LVM utilities change between kernel 2.6.5 and 2.6.12 in any way that
-makes older 2.6 kernel releases malfunction?
-
-I'd be grateful for suggestions.
-
-Regards,
-Fabian Aichele
+Thanks:
+	Jack Allen
