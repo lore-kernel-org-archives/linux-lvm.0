@@ -1,20 +1,19 @@
-Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j8L3AcV15686
-	for <linux-lvm@redhat.com>; Tue, 20 Sep 2005 23:10:38 -0400
-Received: from xproxy.gmail.com (xproxy.gmail.com [66.249.82.202])
-	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id j8L3AW17019918
-	for <linux-lvm@redhat.com>; Tue, 20 Sep 2005 23:10:32 -0400
-Received: by xproxy.gmail.com with SMTP id s6so94462wxc
-	for <linux-lvm@redhat.com>; Tue, 20 Sep 2005 20:10:27 -0700 (PDT)
-Message-ID: <de78cd7e0509202010398788bf@mail.gmail.com>
-Date: Tue, 20 Sep 2005 22:10:26 -0500
-From: Nathan Brown <agent2x0r@gmail.com>
+Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j8L4W6V29046
+	for <linux-lvm@redhat.com>; Wed, 21 Sep 2005 00:32:06 -0400
+Received: from florence.buici.com (qmailr@florence.buici.com [206.124.142.26])
+	by mx1.redhat.com (8.12.11/8.12.11) with SMTP id j8L4W4sI027844
+	for <linux-lvm@redhat.com>; Wed, 21 Sep 2005 00:32:05 -0400
+Date: Tue, 20 Sep 2005 21:31:53 -0700
+From: Marc Singer <elf@buici.com>
+Subject: Re: [linux-lvm] Two physical volumes disappeared
+Message-ID: <20050921043153.GA5815@buici.com>
+References: <20050919232212.GB12742@buici.com>
 Mime-Version: 1.0
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-Subject: [linux-lvm] Switched Distro's. No more LVM; uuid issue
-Reply-To: agent2x0r@gmail.com,
-	LVM general discussion and development <linux-lvm@redhat.com>
+In-Reply-To: <20050919232212.GB12742@buici.com>
+Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -24,178 +23,66 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="utf-8"
 To: linux-lvm@redhat.com
 
-I was running Slackware 10.1 and I was required to switch over to
-Fedora Core 4. I backed up my /etc/lvm folder because I knew I'd run
-into problems. Well, I ran into problems as expected....
+I believe I figured out what the problem was, though I cannot say I
+understand it.
 
-Just about any LVM related command will give me the error:
-     "Couldn't find device with uuid 'k4Px6F-wwSG-mDY6-tne2-RNVx-G3fI-mWUw4r"
-Now, according to my volume group (homevg) backup, it is refering to
-my second partition in the strip: /dev/sdb1.
+On Mon, Sep 19, 2005 at 04:22:12PM -0700, Marc Singer wrote:
+> On reboot, I've found that two physical volumes, the only two volumes
+> in a volume group, are no longer recognized.  Is there something I can
+> do to recover aside from rebuilding the VG?
+> 
+> There are two IDE drives, hdb and hdd, that were in the VG.  Here's a
+> dump of the start of hdb:
+> 
+>   000000  00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  ................
+>   *
+>   0001b0  00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 01  ................
+>   0001c0  01 00 8e fe ff ff 3f 00  00 00 82 e4 50 09 00 00  ...���?....�P...
+>   0001d0  00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  ................
+>   *
+>   0001f0  00 00 00 00 00 00 00 00  00 00 00 00 00 00 55 aa  ..............U�
 
-Here is the output from pvdisplay.
+This partition table is bogus.  I'm not sure what put it here as this
+PV was working fine recently.
 
-# pvdisplay /dev/hdc4
-pvdisplay  Warning: Volume group homevg is not consistent
-pvdisplay  --- Physical volume ---
-pvdisplay  PV Name               /dev/sdc4
-pvdisplay  VG Name               homevg
-pvdisplay  PV Size               92.11 GB / not usable 0
-pvdisplay  Allocatable           yes (but full)
-pvdisplay  PE Size (KByte)       4096
-pvdisplay  Total PE              23581
-pvdisplay  Free PE               0
-pvdisplay  Allocated PE          23581
-pvdisplay  PV UUID               F0YSMA-brB8-gQOJ-qqV9-Lxzf-lnUe-sLgRCd
+I had to reboot the machine to a rescue CD in order to repair an MD
+device.  I suspect that the rescue cd, Knoppix, decided to write a
+partition table for me.  Seems wierd, but I cannot explain it any
+other way.
 
-# pvdisplay /dev/hdb1   *THIS IS THE DEVICE IN QUESTION*
-[...]
-pvdisplay    Using physical volume(s) on command line
-pvdisplay        Opened /dev/sdb1 RO
-pvdisplay        /dev/sdb1: block size is 1024 bytes
-pvdisplay      /dev/sdb1: lvm1 label detected
-pvdisplay        Closed /dev/sdb1
-pvdisplay        lvmcache: /dev/sdb1 now in VG homevg
-pvdisplay      Reading physical volume data /dev/sdb1 from disk
-pvdisplay        Opened /dev/sdb1 RO
-pvdisplay        /dev/sdb1: block size is 1024 bytes
-pvdisplay      Found /dev/sdb1 in VG homevg
-pvdisplay        Closed /dev/sdb1
-pvdisplay  --- Physical volume ---
-pvdisplay  PV Name               /dev/sdb1
-pvdisplay  VG Name               homevg
-pvdisplay  PV Size               111.79 GB / not usable 38.94 MB
-pvdisplay  Allocatable           yes (but full)
-pvdisplay  PE Size (KByte)       32768
-pvdisplay  Total PE              3576
-pvdisplay  Free PE               0
-pvdisplay  Allocated PE          3576
-pvdisplay  PV UUID               kGdagE-JBqu-WX3Z-sdm1-rJlv-FMS3-HbZ6r5
-pvdisplay
-pvdisplay      Dumping persistent device cache to /etc/lvm/.cache
-pvdisplay    Wiping internal VG cache
+Once I cleared the first block of this device and the second one in
+the VG, I was able to reenable the VG and reactivate the LVs.
 
-# pvdisplay /dev/sda1
-pvdisplay  Warning: Volume group homevg is not consistent
-pvdisplay  --- NEW Physical volume ---
-pvdisplay  PV Name               /dev/sda1
-pvdisplay  VG Name
-pvdisplay  PV Size               186.31 GB
-pvdisplay  Allocatable           NO
-pvdisplay  PE Size (KByte)       0
-pvdisplay  Total PE              0
-pvdisplay  Free PE               0
-pvdisplay  Allocated PE          0
-pvdisplay  PV UUID               ytCX8B-ntz8-ORnO-GZwx-xwts-baEQ-3Cce2t
+Happy ending.  :-)
 
-OK now that I have that out of the way, here is  my backup volume
-group file I made just before reinstalling.
-
-/etc/lvm/backup/homevg:
-----------------------------------------------------------------------------------
- Generated by LVM2: Mon Sep 19 23:07:13 2005
-
-contents = "Text Format Volume Group"
-version = 1
-
-description = "Created *after* executing 'vgcfgbackup'"
-
-creation_host = "localhost"	# Linux localhost 2.6.7 #15 SMP Sun Sep 11
-15:49:42 EDT 2005 i686
-creation_time = 1127185633	# Mon Sep 19 23:07:13 2005
-
-homevg {
-	id = "HdvlZ1-G66R-V4BR-Xx4d-6ghu-eejx-tWJmt6"
-	seqno = 11
-	status = ["RESIZEABLE", "READ", "WRITE"]
-	extent_size = 8192		# 4 Megabytes
-	max_lv = 0
-	max_pv = 0
-
-	physical_volumes {
-
-		pv0 {
-			id = "F0YSMA-brB8-gQOJ-qqV9-Lxzf-lnUe-sLgRCd"
-			device = "/dev/hdg4"	# Hint only
-
-			status = ["ALLOCATABLE"]
-			pe_start = 384
-			pe_count = 23581	# 92.1133 Gigabytes
-		}
-
-		pv1 {
-			id = "k4Px6F-wwSG-mDY6-tne2-RNVx-G3fI-mWUw4r"
-			device = "/dev/hde"	# Hint only
-
-			status = ["ALLOCATABLE"]
-			pe_start = 384
-			pe_count = 28618	# 111.789 Gigabytes
-		}
-
-		pv2 {
-			id = "ytCX8B-ntz8-ORnO-GZwx-xwts-baEQ-3Cce2t"
-			device = "/dev/sdb1"	# Hint only
-
-			status = ["ALLOCATABLE"]
-			pe_start = 384
-			pe_count = 47694	# 186.305 Gigabytes
-		}
-	}
-
-	logical_volumes {
-
-		homelv {
-			id = "tNfaTb-xv86-a2IF-VqKZ-sfn6-MSEv-F4RcdP"
-			status = ["READ", "WRITE", "VISIBLE"]
-			segment_count = 3
-
-			segment1 {
-				start_extent = 0
-				extent_count = 23581	# 92.1133 Gigabytes
-
-				type = "striped"
-				stripe_count = 1	# linear
-
-				stripes = [
-					"pv0", 0
-				]
-			}
-			segment2 {
-				start_extent = 23581
-				extent_count = 28618	# 111.789 Gigabytes
-
-				type = "striped"
-				stripe_count = 1	# linear
-
-				stripes = [
-					"pv1", 0
-				]
-			}
-			segment3 {
-				start_extent = 52199
-				extent_count = 46575	# 181.934 Gigabytes
-
-				type = "striped"
-				stripe_count = 1	# linear
-
-				stripes = [
-					"pv2", 0
-				]
-			}
-		}
-	}
-}
------------------------------------------------------------------------------------------------------
-
-FINALLY:
-
-Notice the UUID for PV2. Thats the UUID that LVM is complaining about,
-but according to pvdisplay, that UUID doesnt exist.
-
-What do I do!?
-
-
--- Nathan Brown
+>   000200  4c 41 42 45 4c 4f 4e 45  01 00 00 00 00 00 00 00  LABELONE........
+>   000210  ce 01 f0 6f 20 00 00 00  4c 56 4d 32 20 30 30 31  �.�o ...LVM2 001
+>   000220  55 61 6b 63 33 45 56 31  6d 47 30 45 66 70 4b 64  Uakc3EV1mG0EfpKd
+>   000230  4d 65 69 62 36 57 6b 4e  51 37 53 42 30 33 56 30  Meib6WkNQ7SB03V0
+>   000240  00 60 ee a1 12 00 00 00  00 00 03 00 00 00 00 00  .`�............
+>   000250  00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  ................
+>   000260  00 00 00 00 00 00 00 00  00 08 00 00 00 00 00 00  ................
+>   000270  00 f8 02 00 00 00 00 00  00 00 00 00 00 00 00 00  .�..............
+>   000280  00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  ................
+>   *
+>   000800  37 e1 0e 18 20 4c 56 4d  32 20 78 5b 35 41 25 72  7�.. LVM2 x[5A%r
+>   000810  30 4e 2a 3e 01 00 00 00  00 08 00 00 00 00 00 00  0N*>............
+>   000820  00 f8 02 00 00 00 00 00  00 34 00 00 00 00 00 00  .�.......4......
+>   000830  a4 05 00 00 00 00 00 00  fd dd 68 4f 00 00 00 00  �.......��hO....
+>   000840  00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  ................
+>   *
+>   000a00  63 61 63 68 65 20 7b 0a  69 64 20 3d 20 22 78 46  cache {.id = "xF
+>   000a10  53 4b 50 64 2d 76 4b 48  79 2d 64 36 48 51 2d 77  SKPd-vKHy-d6HQ-w
+> 
+> It looks like the right data is there, but pvdisplay says that it
+> doesn't recognize it.  Is there something I can do to diagnose the
+> failure?
+> 
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@redhat.com
+> https://www.redhat.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
