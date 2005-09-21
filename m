@@ -1,19 +1,23 @@
-Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j8L4W6V29046
-	for <linux-lvm@redhat.com>; Wed, 21 Sep 2005 00:32:06 -0400
-Received: from florence.buici.com (qmailr@florence.buici.com [206.124.142.26])
-	by mx1.redhat.com (8.12.11/8.12.11) with SMTP id j8L4W4sI027844
-	for <linux-lvm@redhat.com>; Wed, 21 Sep 2005 00:32:05 -0400
-Date: Tue, 20 Sep 2005 21:31:53 -0700
-From: Marc Singer <elf@buici.com>
-Subject: Re: [linux-lvm] Two physical volumes disappeared
-Message-ID: <20050921043153.GA5815@buici.com>
-References: <20050919232212.GB12742@buici.com>
-Mime-Version: 1.0
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20050919232212.GB12742@buici.com>
-Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
+Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j8LA26V26597
+	for <linux-lvm@redhat.com>; Wed, 21 Sep 2005 06:02:06 -0400
+Received: from xproxy.gmail.com (xproxy.gmail.com [66.249.82.192])
+	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id j8LA208d029853
+	for <linux-lvm@redhat.com>; Wed, 21 Sep 2005 06:02:00 -0400
+Received: by xproxy.gmail.com with SMTP id h29so148922wxd
+	for <linux-lvm@redhat.com>; Wed, 21 Sep 2005 03:01:55 -0700 (PDT)
+Message-ID: <43312F8F.1060208@gmail.com>
+Date: Wed, 21 Sep 2005 13:01:51 +0300
+From: Suleyman Kutlu <suleyman.kutlu@gmail.com>
+MIME-Version: 1.0
+Subject: Re: [linux-lvm] Device mapper problems..
+References: <432986DA.50107@gmail.com>
+	<43299B1A.3090200@novell.com>	<432A0282.5020905@gmail.com>	<20050916200833.GA2453@barkeeper1.linbit>	<432C02E2.5090807@gmail.com>
+	<20050917191034.GD12882@barkeeper1.linbit>
+In-Reply-To: <20050917191034.GD12882@barkeeper1.linbit>
+Content-Transfer-Encoding: 7bit
+Reply-To: suleyman.kutlu@gmail.com,
+	LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -23,66 +27,62 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="utf-8"
-To: linux-lvm@redhat.com
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-I believe I figured out what the problem was, though I cannot say I
-understand it.
+Lars Ellenberg wrote:
 
-On Mon, Sep 19, 2005 at 04:22:12PM -0700, Marc Singer wrote:
-> On reboot, I've found that two physical volumes, the only two volumes
-> in a volume group, are no longer recognized.  Is there something I can
-> do to recover aside from rebuilding the VG?
-> 
-> There are two IDE drives, hdb and hdd, that were in the VG.  Here's a
-> dump of the start of hdb:
-> 
->   000000  00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  ................
->   *
->   0001b0  00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 01  ................
->   0001c0  01 00 8e fe ff ff 3f 00  00 00 82 e4 50 09 00 00  ...���?....�P...
->   0001d0  00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  ................
->   *
->   0001f0  00 00 00 00 00 00 00 00  00 00 00 00 00 00 55 aa  ..............U�
+>>You are right,  datavg seems OK from the device-mapper point of view.
+>>But at filesystem level, the filesystem on datavg-snk2lv seems to be
+>>4.0 GB but  in fact it is 80 GB. My opinion is at a point in past,
+>>device-mapper again scramled the major and minor numbers and
+>>systemvg-usrlv overwrited datavg-snk2lv.
+>>    
+>>
+>
+>unlikely. it would not have changed the file system layout.
+>
+>more likely, the mapping is wrong.
+>
+>what do you find in /etc/lvm/backup and /etc/lvm/archive ?
+>those are plain text files, which store the mapping at that point in
+>time. compare it with the current mapping.
+>maybe there is something obvious in the difference...
+>
+>btw, what did you find on the 253,5
+>which was missing from your previous device node list?
+>
+>  
+>
+>>From dmsetup table output, datavg-snk2lv seems OK. How can I recover
+>>the filesystem on it ? Or more basic question, is it possible to
+>>recover ???
+>>    
+>>
+>
+>well, everything is possible :->
+>its more a question of time and effort...
+>
+>  
+>
 
-This partition table is bogus.  I'm not sure what put it here as this
-PV was working fine recently.
+After issuing the commands you recommended, 253,5 appeared and the 
+systemvg is now OK. Thanks..
 
-I had to reboot the machine to a rescue CD in order to repair an MD
-device.  I suspect that the rescue cd, Knoppix, decided to write a
-partition table for me.  Seems wierd, but I cannot explain it any
-other way.
+Now the problem appeared to be a JFS problem. For datavg, mapping seems 
+to be correct, LV information and the info from dmsetup seems to be equal.
 
-Once I cleared the first block of this device and the second one in
-the VG, I was able to reenable the VG and reactivate the LVs.
+If anybody in this list have experience and can lead me
 
-Happy ending.  :-)
+     - to view the contents of the raw device (/dev/datavg/snk2lv) with 
+jfs-utils
+     - to get the filenames on the device (again with jfs-utils)
 
->   000200  4c 41 42 45 4c 4f 4e 45  01 00 00 00 00 00 00 00  LABELONE........
->   000210  ce 01 f0 6f 20 00 00 00  4c 56 4d 32 20 30 30 31  �.�o ...LVM2 001
->   000220  55 61 6b 63 33 45 56 31  6d 47 30 45 66 70 4b 64  Uakc3EV1mG0EfpKd
->   000230  4d 65 69 62 36 57 6b 4e  51 37 53 42 30 33 56 30  Meib6WkNQ7SB03V0
->   000240  00 60 ee a1 12 00 00 00  00 00 03 00 00 00 00 00  .`�............
->   000250  00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  ................
->   000260  00 00 00 00 00 00 00 00  00 08 00 00 00 00 00 00  ................
->   000270  00 f8 02 00 00 00 00 00  00 00 00 00 00 00 00 00  .�..............
->   000280  00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  ................
->   *
->   000800  37 e1 0e 18 20 4c 56 4d  32 20 78 5b 35 41 25 72  7�.. LVM2 x[5A%r
->   000810  30 4e 2a 3e 01 00 00 00  00 08 00 00 00 00 00 00  0N*>............
->   000820  00 f8 02 00 00 00 00 00  00 34 00 00 00 00 00 00  .�.......4......
->   000830  a4 05 00 00 00 00 00 00  fd dd 68 4f 00 00 00 00  �.......��hO....
->   000840  00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  ................
->   *
->   000a00  63 61 63 68 65 20 7b 0a  69 64 20 3d 20 22 78 46  cache {.id = "xF
->   000a10  53 4b 50 64 2d 76 4b 48  79 2d 64 36 48 51 2d 77  SKPd-vKHy-d6HQ-w
-> 
-> It looks like the right data is there, but pvdisplay says that it
-> doesn't recognize it.  Is there something I can do to diagnose the
-> failure?
-> 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+I will really appreciate..
+
+Thank you for all your help....
+
+*
+* Suleyman Nazif Kutlu (a.k.a SNK)
+* mailto: suleyman.kutlu@gmail.com
+*
