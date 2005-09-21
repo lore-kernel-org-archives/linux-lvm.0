@@ -1,17 +1,20 @@
-Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j8KKDtV19991
-	for <linux-lvm@redhat.com>; Tue, 20 Sep 2005 16:13:55 -0400
-Received: from mail4.mckesson.com (mail4.mckesson.com [143.112.129.39])
-	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id j8KKDqxi020585
-	for <linux-lvm@redhat.com>; Tue, 20 Sep 2005 16:13:52 -0400
-From: "Allen, Jack" <Jack.Allen@McKesson.com>
-Message-ID: <C28DB247D333BC47BBAAFDC914DE39010261F5D6@atlexc07ntms.mckesson.com>
-Date: Tue, 20 Sep 2005 16:14:25 -0400
-MIME-Version: 1.0
-Content-Type: multipart/alternative;
-	boundary="----_=_NextPart_001_01C5BE1F.E58077B4"
-Subject: [linux-lvm] Directly using a logical volume
-Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
+Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j8L3AcV15686
+	for <linux-lvm@redhat.com>; Tue, 20 Sep 2005 23:10:38 -0400
+Received: from xproxy.gmail.com (xproxy.gmail.com [66.249.82.202])
+	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id j8L3AW17019918
+	for <linux-lvm@redhat.com>; Tue, 20 Sep 2005 23:10:32 -0400
+Received: by xproxy.gmail.com with SMTP id s6so94462wxc
+	for <linux-lvm@redhat.com>; Tue, 20 Sep 2005 20:10:27 -0700 (PDT)
+Message-ID: <de78cd7e0509202010398788bf@mail.gmail.com>
+Date: Tue, 20 Sep 2005 22:10:26 -0500
+From: Nathan Brown <agent2x0r@gmail.com>
+Mime-Version: 1.0
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+Subject: [linux-lvm] Switched Distro's. No more LVM; uuid issue
+Reply-To: agent2x0r@gmail.com,
+	LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -21,58 +24,178 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: "'linux-lvm@redhat.com'" <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="us-ascii"
+To: linux-lvm@redhat.com
 
-This message is in MIME format. Since your mail reader does not understand
-this format, some or all of this message may not be legible.
+I was running Slackware 10.1 and I was required to switch over to
+Fedora Core 4. I backed up my /etc/lvm folder because I knew I'd run
+into problems. Well, I ran into problems as expected....
 
-------_=_NextPart_001_01C5BE1F.E58077B4
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
+Just about any LVM related command will give me the error:
+     "Couldn't find device with uuid 'k4Px6F-wwSG-mDY6-tne2-RNVx-G3fI-mWUw4r"
+Now, according to my volume group (homevg) backup, it is refering to
+my second partition in the strip: /dev/sdb1.
 
-        I have a system connected to a SAN via Fibre Channel interface.
-The system sees 3 disk sdb, sdc and sdd. I put them in a volume group
-and then allocated some logical volumes. If I use the logical volume to
-read and write to directly for my application, if there is an error on a
-write, I assume the write system call will return an error. Or does the
-write give a good return value after putting the data in some system
-buffer to be written later? Then is the write of the system buffer fails
-later, my program would not know.
+Here is the output from pvdisplay.
 
-Thanks: 
-        Jack Allen 
+# pvdisplay /dev/hdc4
+pvdisplay  Warning: Volume group homevg is not consistent
+pvdisplay  --- Physical volume ---
+pvdisplay  PV Name               /dev/sdc4
+pvdisplay  VG Name               homevg
+pvdisplay  PV Size               92.11 GB / not usable 0
+pvdisplay  Allocatable           yes (but full)
+pvdisplay  PE Size (KByte)       4096
+pvdisplay  Total PE              23581
+pvdisplay  Free PE               0
+pvdisplay  Allocated PE          23581
+pvdisplay  PV UUID               F0YSMA-brB8-gQOJ-qqV9-Lxzf-lnUe-sLgRCd
+
+# pvdisplay /dev/hdb1   *THIS IS THE DEVICE IN QUESTION*
+[...]
+pvdisplay    Using physical volume(s) on command line
+pvdisplay        Opened /dev/sdb1 RO
+pvdisplay        /dev/sdb1: block size is 1024 bytes
+pvdisplay      /dev/sdb1: lvm1 label detected
+pvdisplay        Closed /dev/sdb1
+pvdisplay        lvmcache: /dev/sdb1 now in VG homevg
+pvdisplay      Reading physical volume data /dev/sdb1 from disk
+pvdisplay        Opened /dev/sdb1 RO
+pvdisplay        /dev/sdb1: block size is 1024 bytes
+pvdisplay      Found /dev/sdb1 in VG homevg
+pvdisplay        Closed /dev/sdb1
+pvdisplay  --- Physical volume ---
+pvdisplay  PV Name               /dev/sdb1
+pvdisplay  VG Name               homevg
+pvdisplay  PV Size               111.79 GB / not usable 38.94 MB
+pvdisplay  Allocatable           yes (but full)
+pvdisplay  PE Size (KByte)       32768
+pvdisplay  Total PE              3576
+pvdisplay  Free PE               0
+pvdisplay  Allocated PE          3576
+pvdisplay  PV UUID               kGdagE-JBqu-WX3Z-sdm1-rJlv-FMS3-HbZ6r5
+pvdisplay
+pvdisplay      Dumping persistent device cache to /etc/lvm/.cache
+pvdisplay    Wiping internal VG cache
+
+# pvdisplay /dev/sda1
+pvdisplay  Warning: Volume group homevg is not consistent
+pvdisplay  --- NEW Physical volume ---
+pvdisplay  PV Name               /dev/sda1
+pvdisplay  VG Name
+pvdisplay  PV Size               186.31 GB
+pvdisplay  Allocatable           NO
+pvdisplay  PE Size (KByte)       0
+pvdisplay  Total PE              0
+pvdisplay  Free PE               0
+pvdisplay  Allocated PE          0
+pvdisplay  PV UUID               ytCX8B-ntz8-ORnO-GZwx-xwts-baEQ-3Cce2t
+
+OK now that I have that out of the way, here is  my backup volume
+group file I made just before reinstalling.
+
+/etc/lvm/backup/homevg:
+----------------------------------------------------------------------------------
+ Generated by LVM2: Mon Sep 19 23:07:13 2005
+
+contents = "Text Format Volume Group"
+version = 1
+
+description = "Created *after* executing 'vgcfgbackup'"
+
+creation_host = "localhost"	# Linux localhost 2.6.7 #15 SMP Sun Sep 11
+15:49:42 EDT 2005 i686
+creation_time = 1127185633	# Mon Sep 19 23:07:13 2005
+
+homevg {
+	id = "HdvlZ1-G66R-V4BR-Xx4d-6ghu-eejx-tWJmt6"
+	seqno = 11
+	status = ["RESIZEABLE", "READ", "WRITE"]
+	extent_size = 8192		# 4 Megabytes
+	max_lv = 0
+	max_pv = 0
+
+	physical_volumes {
+
+		pv0 {
+			id = "F0YSMA-brB8-gQOJ-qqV9-Lxzf-lnUe-sLgRCd"
+			device = "/dev/hdg4"	# Hint only
+
+			status = ["ALLOCATABLE"]
+			pe_start = 384
+			pe_count = 23581	# 92.1133 Gigabytes
+		}
+
+		pv1 {
+			id = "k4Px6F-wwSG-mDY6-tne2-RNVx-G3fI-mWUw4r"
+			device = "/dev/hde"	# Hint only
+
+			status = ["ALLOCATABLE"]
+			pe_start = 384
+			pe_count = 28618	# 111.789 Gigabytes
+		}
+
+		pv2 {
+			id = "ytCX8B-ntz8-ORnO-GZwx-xwts-baEQ-3Cce2t"
+			device = "/dev/sdb1"	# Hint only
+
+			status = ["ALLOCATABLE"]
+			pe_start = 384
+			pe_count = 47694	# 186.305 Gigabytes
+		}
+	}
+
+	logical_volumes {
+
+		homelv {
+			id = "tNfaTb-xv86-a2IF-VqKZ-sfn6-MSEv-F4RcdP"
+			status = ["READ", "WRITE", "VISIBLE"]
+			segment_count = 3
+
+			segment1 {
+				start_extent = 0
+				extent_count = 23581	# 92.1133 Gigabytes
+
+				type = "striped"
+				stripe_count = 1	# linear
+
+				stripes = [
+					"pv0", 0
+				]
+			}
+			segment2 {
+				start_extent = 23581
+				extent_count = 28618	# 111.789 Gigabytes
+
+				type = "striped"
+				stripe_count = 1	# linear
+
+				stripes = [
+					"pv1", 0
+				]
+			}
+			segment3 {
+				start_extent = 52199
+				extent_count = 46575	# 181.934 Gigabytes
+
+				type = "striped"
+				stripe_count = 1	# linear
+
+				stripes = [
+					"pv2", 0
+				]
+			}
+		}
+	}
+}
+-----------------------------------------------------------------------------------------------------
+
+FINALLY:
+
+Notice the UUID for PV2. Thats the UUID that LVM is complaining about,
+but according to pvdisplay, that UUID doesnt exist.
+
+What do I do!?
 
 
-------_=_NextPart_001_01C5BE1F.E58077B4
-Content-Type: text/html
-Content-Transfer-Encoding: quoted-printable
-
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
-<HTML>
-<HEAD>
-
-<META NAME=3D"Generator" CONTENT=3D"MS Exchange Server version =
-5.5.2658.2">
-<TITLE>Directly using a logical volume</TITLE>
-</HEAD>
-<BODY>
-
-<P>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <FONT SIZE=3D2 =
-FACE=3D"Arial">I have a system connected to a SAN via Fibre Channel =
-interface. The system sees 3 disk sdb, sdc and sdd. I put them in a =
-volume group and then allocated some logical volumes. If I use the =
-logical volume to read and write to directly for my application, if =
-there is an error on a write, I assume the write system call will =
-return an error. Or does the write give a good return value after =
-putting the data in some system buffer to be written later? Then is the =
-write of the system buffer fails later, my program would not =
-know.</FONT></P>
-
-<P><FONT SIZE=3D2 FACE=3D"Arial">Thanks:</FONT>
-<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <FONT SIZE=3D2 =
-FACE=3D"Arial">Jack Allen</FONT>
-</P>
-
-</BODY>
-</HTML>
-------_=_NextPart_001_01C5BE1F.E58077B4--
+-- Nathan Brown
