@@ -1,14 +1,11 @@
-Received: from o.ww.redhat.com (vpn50-3.rdu.redhat.com [172.16.50.3])
-	by pobox.stuttgart.redhat.com (8.12.8/8.12.8) with ESMTP id
-	j8NEjoBv011174
-	for <linux-lvm@redhat.com>; Fri, 23 Sep 2005 16:45:51 +0200
-Date: Fri, 23 Sep 2005 16:45:44 +0200
-From: Heinz Mauelshagen <mauelshagen@redhat.com>
-Message-ID: <20050923144544.GA17690@redhat.com>
-Mime-Version: 1.0
-Content-Disposition: inline
-Subject: [linux-lvm] *** Announcement: dmraid 1.0.0.rc9 ***
-Reply-To: mauelshagen@redhat.com,
+From: "Gary Mansell" <Gary.Mansell@ricardo.com>
+Content-Class: urn:content-classes:message
+Date: Fri, 23 Sep 2005 15:46:03 +0100
+Message-ID: <1127486763.18453.11.camel@grma-lap>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Subject: [linux-lvm] Recovering data from LVM partitions....
+Reply-To: Gary.Mansell@ricardo.com,
 	LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -20,149 +17,55 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: linux-lvm@redhat.com
+To: nahant-list@redhat.com, linux-lvm@redhat.com
+Cc: Gary Mansell <Gary.Mansell@ricardo.com>
 
+Hi,
 
-               *** Announcement: dmraid 1.0.0.rc9 ***
+Since RHEL 4 I have been creating my new machines with LVM partitioning
+as this is now the default. Hence I have two partitions on my disk
+- /boot and an lvm partiton containing /, swap, and two other data
+logical volumes.
 
-dmraid 1.0.0.rc9 is available at
-http://people.redhat.com/heinzm/sw/dmraid/ in source tarball,
-source rpm and i386 rpm (with shared and static dietlibc binary).
+Today I have had a filesystem failure on a machine and the / partition
+is very corrupted and will not boot. Is there anyway that I can access
+and recover the data from the logical volumes?
 
-This release fixes a stripe size bug on VIA and adds RAID10 support
-on Promise (see CHANGELOG below for more).
+It strikes me that this is the downside of LV's - if you cannot boot off
+of slash then it is not possible to access the data on the other logical
+volumes.
 
+Perhaps, if filesystem sizes are not likely to change it is better to
+use standard partitions because if the / filesystem gets corrupted, at
+least the other partitions are rescuable.
 
-dmraid (Device-Mapper RAID tool) discovers, [de]activates and displays
-properties of software RAID sets (i.e. ATARAID) and contained DOS
-partitions using the device-mapper runtime of the 2.6 kernel.
+Please can someone advise. 
 
-The following ATARAID types are supported on Linux 2.6:
+Regards
 
-Highpoint HPT37X
-Highpoint HPT45X
-Intel Software RAID
-LSI Logic MegaRAID
-NVidia NForce
-Promise FastTrack
-Silicon Image Medley
-VIA Software RAID
+Gary Mansell
+-- 
 
-Please provide insight to support those metadata formats completely.
+This e-mail and any files transmitted with it are confidential and intended
+solely for the use of the individual or entity to whom they are addressed.
+If you have received this e-mail in error please notify the sender immediately
+and delete this e-mail from your system.  Please note that any views or opinions
+presented in this e-mail are solely those of the author and do not necessarily
+represent those of Ricardo (save for reports and other documentation formally
+approved and signed for release to the intended recipient).  Only Directors
+or Duly Authorised Officers are authorised to enter into legally binding
+obligations on behalf of Ricardo unless the obligation is contained within
+a Ricardo Purchase Order.
 
-Thanks.
+Ricardo may monitor outgoing and incoming e-mails and other telecommunications
+on its e-mail and telecommunications systems.  By replying to this e-mail you
+give consent to such monitoring.  The recipient should check this e-mail and
+any attachments for the presence of viruses.  Ricardo accepts no liability for
+any damage caused by any virus transmitted by this e-mail.  "Ricardo" means
+Ricardo plc and its subsidiary companies.
 
-
-See files README, which comes with the source tarball for
-prerequisites to run this software, further instructions on installing
-and using dmraid!
-
-
-Call for testers:
------------------
-
-I need testers with the above ATARAID types, to check that the mapping
-created by this tool is correct (see options "-t -ay") and access to the
-ATARAID data is proper.
-
-In case you have a different ATARAID solution from those listed above,
-please feel free to contact me about supporting it in dmraid.
-
-You can activate your ATARAID sets without danger of overwriting
-your metadata, because dmraid accesses it read-only unless you use
-option -E together with -r in order to erase ATARAID metadata
-(see 'man dmraid')!
-
-This is a release candidate version so you want to have backups of your valuable
-data *and* you want to test accessing your data read-only first in order to
-make sure that the mapping is correct before you go for read-write access.
-
-
-Contacts:
----------
-
-The author is reachable at <Mauelshagen@RedHat.com>.
-
-For test results, mapping information, discussions, questions, patches,
-enhancement requests and the like, please subscribe and mail to
-<ataraid-list@redhat.com>.
-
---
-
-Regards,
-Heinz    -- The LVM Guy --
-
-
-CHANGELOG from dmraid 1.0.0.rc8 to 1.0.0.rc9		2005.09.23
-------------------------------------------------------------------
-
-FIXES:
-------
-o via.c: checksum() calculation;
-	 stride size
-
-o toollib.c:  memory leak in _valid_format()
-
-o isw.c: avoid endianess conversion bug in to_cpu();
-         disk status check;
-	 version check to cover 1.2.02;
-	 isw_write() to store metadata in correct sequence
-
-o hpt37x.c, lsi.c, nv.c, pdc.c, sil.c via.c: streamlined grouping switch()
-
-o hpt45x.c: added missing RAID10 to capability string
-
-o sil.c: streamlined quorate()
-
-o misc.c: p_fmt() missed a free_string()
-
-
-FEATURES:
----------
-o pdc.c: support RAID10
-
-o commands.c: added --separator option for selectable string
-	      separator character (used with --format etc.)
-
-o display.c: support customizable column output through field
-	     identifiers with -c option
-
-
-MISCELANIOUS:
-------------
-o metadata.c: use log_alloc_err()
-
-o format.h: introduced caps (RAID capabilities) member
-
-o format.c: introduced get_format_caps() and free_format_caps()
-	    to ease library use in installers (pjones@redhat.com)
-
-o display.c: streamlined log_devices()
-
-o toollib.c: stremalined collapse_delimiters()
-
-o isw.c: streamlined isw_read_extended() and setup_rd()
-
-o file.c: cleanup
-
-o add /var/lock/dmraid to rpm
-
-o avoid global variable format_names:
-  - change discover_raid_devices() interface
-  - saves code in toollib
-
-o added more info to format_error output
-
-o activate.c: display RAID string with unsupported mapping
-
-
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-
-Heinz Mauelshagen                                 Red Hat GmbH
-Consulting Development Engineer                   Am Sonnenhang 11
-                                                  56242 Marienrachdorf
-                                                  Germany
-Mauelshagen@RedHat.com                            +49 2626 141200
-                                                       FAX 924446
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+Ricardo plc is a public limited company registered in England with registered
+number 00222915.
+The registered office of Ricardo plc is Bridge Works, Shoreham-by Sea,
+West Sussex, BN43 5FG.
+ 
