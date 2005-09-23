@@ -1,26 +1,13 @@
-Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j8HEBgV20462
-	for <linux-lvm@redhat.com>; Sat, 17 Sep 2005 10:11:42 -0400
-Received: from ciao.gmane.org (main.gmane.org [80.91.229.2])
-	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id j8HEBb1a017995
-	for <linux-lvm@redhat.com>; Sat, 17 Sep 2005 10:11:37 -0400
-Received: from root by ciao.gmane.org with local (Exim 4.43)
-	id 1EGdOn-0002wV-GM
-	for linux-lvm@redhat.com; Sat, 17 Sep 2005 16:10:37 +0200
-Received: from ip68-224-126-226.lv.lv.cox.net ([68.224.126.226])
-	by main.gmane.org with esmtp (Gmexim 0.1 (Debian))
-	id 1AlnuQ-0007hv-00
-	for <linux-lvm@redhat.com>; Sat, 17 Sep 2005 16:10:37 +0200
-Received: from m2ca by ip68-224-126-226.lv.lv.cox.net with local (Gmexim 0.1
-	(Debian)) id 1AlnuQ-0007hv-00
-	for <linux-lvm@redhat.com>; Sat, 17 Sep 2005 16:10:37 +0200
-From: hacim llih <m2ca@boxpop.com>
-Date: Fri, 16 Sep 2005 13:39:55 -0700
-Message-ID: <dgfait$4uc$1@sea.gmane.org>
+Date: Fri, 23 Sep 2005 13:42:04 -0400
+From: David Mackintosh <David.Mackintosh@xdroop.com>
+Message-ID: <20050923174204.GA30821@xdroop.com>
+References: <1127486763.18453.11.camel@grma-lap>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Sender: news <news@sea.gmane.org>
-Subject: [linux-lvm] fedoraCore4 on ext3/lvm; suse9.3pro on ext3 fstab probs
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="3V7upXqbjpZ4EhLz"
+Content-Disposition: inline
+In-Reply-To: <1127486763.18453.11.camel@grma-lap>
+Subject: [linux-lvm] Re: Recovering data from LVM partitions....
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -31,29 +18,45 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: linux-lvm@redhat.com
+To: Gary Mansell <Gary.Mansell@ricardo.com>
+Cc: nahant-list@redhat.com, linux-lvm@redhat.com
 
-hello all.. just found the list gladly.. [#lvm on freenode irc NOT 4 
-endusers community support obviously lol.. bit spoiled to #fedora 
-community ;]]
 
-have recently fell in love with suse9.3pro [soon to switch to its OSS 
-sister opensuse stable release] and want to cautiously switch to it for 
-my main workstation personal / biz os..
+--3V7upXqbjpZ4EhLz
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-sadly ive spent last 2 wks attempting to get s93pro to mount my fc4' 
-hda2 partition on /data1 via fstab upon boot?..
+On Fri, Sep 23, 2005 at 03:46:03PM +0100, Gary Mansell wrote:
+=20
+> Today I have had a filesystem failure on a machine and the / partition
+> is very corrupted and will not boot. Is there anyway that I can access
+> and recover the data from the logical volumes?
 
-fc4 boots see and mount s93pro's partition without any complaints..
+Memo for the archives: I had a disk in a LVM volume set die on me.  I
+made some notes on pseudo-recovery at:
 
-the the reverse has been quite the challenge.. have had few gurus try 
-several syntax attempts in s93pro's fstab.. all to no avail..
+  http://xdroop.dhs.org/space/Linux/LVM+Volume+Failure
 
-some manual mount attempts imply with no output that it works.. but 
-konqueror still sees nada in /data1 folder fstab points to?..
+Note the "go back in time" step.
 
-so.. howto get fc4's ext3 on lvm on my main 80g hdd master.. to be seen 
-/ mounted on my 8g slaved hdd running s93pro on ext3 ?
+--=20
+ /\oo/\
+/ /()\ \ David Mackintosh | Public Key:=20
+         dave@xdroop.com  | http://www.xdroop.com/dave/gpg.html
+         $ gpg --recv-keys --keyserver subkeys.pgp.net 4C032504
+         Mystery attachment?  http://xdroop.dhs.org/space/GPG
 
-thanks thanks for any / all feedback chums..
+--3V7upXqbjpZ4EhLz
+Content-Type: application/pgp-signature
+Content-Disposition: inline
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.2.7 (GNU/Linux)
+
+iD8DBQFDND5scwUBd0wDJQQRArDuAJ9r73ZtOCXynlWMOafHyJMPdCA7XACdFfwI
+du3MoUv5wnSyMU6YPLGiwuE=
+=8ari
+-----END PGP SIGNATURE-----
+
+--3V7upXqbjpZ4EhLz--
