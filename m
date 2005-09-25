@@ -1,13 +1,17 @@
-Date: Fri, 23 Sep 2005 13:42:04 -0400
-From: David Mackintosh <David.Mackintosh@xdroop.com>
-Message-ID: <20050923174204.GA30821@xdroop.com>
-References: <1127486763.18453.11.camel@grma-lap>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="3V7upXqbjpZ4EhLz"
-Content-Disposition: inline
-In-Reply-To: <1127486763.18453.11.camel@grma-lap>
-Subject: [linux-lvm] Re: Recovering data from LVM partitions....
+Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j8PFGCV27110
+	for <linux-lvm@redhat.com>; Sun, 25 Sep 2005 11:16:12 -0400
+Received: from out002.atlarge.net (exchsvc-01.atlarge.net [129.41.63.60] (may
+	be forged))
+	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id j8PFG7rC014037
+	for <linux-lvm@redhat.com>; Sun, 25 Sep 2005 11:16:11 -0400
+Content-class: urn:content-classes:message
+MIME-Version: 1.0
+Date: Sun, 25 Sep 2005 10:15:57 -0500
+Message-ID: <D3DC8F9206F0D24085E459720ECDF3ED693EFF@mail-18ps.atlarge.net>
+From: "Don Shesnicky" <don.shesnicky@liquidcomputing.com>
+Content-Transfer-Encoding: 8bit
+Subject: [linux-lvm] LVM Status?
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -18,45 +22,28 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: Gary Mansell <Gary.Mansell@ricardo.com>
-Cc: nahant-list@redhat.com, linux-lvm@redhat.com
+Content-Type: text/plain; charset="us-ascii"
+To: linux-lvm@redhat.com
 
 
---3V7upXqbjpZ4EhLz
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+How do you check the status of an LVM set of disks in RHEL3 and 4?
+The LVM FAQ mentions that you should have a /proc/lvm but my default
+RHEL3 and 4 systems do not have this directory in /proc and doing a
+Modprobe for lvm-mod does not create one. On an RHEL4 test system I
+do see an lvm tool but it doesn't show the status. 
 
-On Fri, Sep 23, 2005 at 03:46:03PM +0100, Gary Mansell wrote:
-=20
-> Today I have had a filesystem failure on a machine and the / partition
-> is very corrupted and will not boot. Is there anyway that I can access
-> and recover the data from the logical volumes?
+Is there a page for the redhat archives?
 
-Memo for the archives: I had a disk in a LVM volume set die on me.  I
-made some notes on pseudo-recovery at:
+Don
 
-  http://xdroop.dhs.org/space/Linux/LVM+Volume+Failure
 
-Note the "go back in time" step.
+From the LVM FAQ:
 
---=20
- /\oo/\
-/ /()\ \ David Mackintosh | Public Key:=20
-         dave@xdroop.com  | http://www.xdroop.com/dave/gpg.html
-         $ gpg --recv-keys --keyserver subkeys.pgp.net 4C032504
-         Mystery attachment?  http://xdroop.dhs.org/space/GPG
+"If your kernel was compiled with the /proc file system (most are) then
+you
+can verify that LVM is present by looking for a /proc/lvm directory. If
+this
+doesn't exist then you may have to load the module with the command
+ # modprobe lvm-mod 
 
---3V7upXqbjpZ4EhLz
-Content-Type: application/pgp-signature
-Content-Disposition: inline
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.2.7 (GNU/Linux)
-
-iD8DBQFDND5scwUBd0wDJQQRArDuAJ9r73ZtOCXynlWMOafHyJMPdCA7XACdFfwI
-du3MoUv5wnSyMU6YPLGiwuE=
-=8ari
------END PGP SIGNATURE-----
-
---3V7upXqbjpZ4EhLz--
+<snip>
