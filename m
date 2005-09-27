@@ -1,18 +1,20 @@
-Received: from o.ww.redhat.com (vpn50-6.rdu.redhat.com [172.16.50.6])
-	by pobox.stuttgart.redhat.com (8.12.8/8.12.8) with ESMTP id
-	j8QAlPBv029111
-	for <linux-lvm@redhat.com>; Mon, 26 Sep 2005 12:47:25 +0200
-Date: Mon, 26 Sep 2005 12:47:24 +0200
-From: Heinz Mauelshagen <mauelshagen@redhat.com>
-Subject: Re: [linux-lvm] LVM Status?
-Message-ID: <20050926104724.GA3517@redhat.com>
-References: <D3DC8F9206F0D24085E459720ECDF3ED693EFF@mail-18ps.atlarge.net>
-	<1127693099.15029.1.camel@pc7.dolda2000.com>
+Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j8RARjV02666
+	for <linux-lvm@redhat.com>; Tue, 27 Sep 2005 06:27:45 -0400
+Received: from junior.physik.fu-berlin.de (junior.physik.fu-berlin.de
+	[160.45.32.227])
+	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id j8RARXms007466
+	for <linux-lvm@redhat.com>; Tue, 27 Sep 2005 06:27:34 -0400
+Date: Tue, 27 Sep 2005 12:27:48 +0200
+From: Axel Thimm <Axel.Thimm@ATrpms.net>
+Message-ID: <20050927102748.GU27884@neu.nirvana>
 Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="/Rh48Y0bnrojh5Wm"
 Content-Disposition: inline
-In-Reply-To: <1127693099.15029.1.camel@pc7.dolda2000.com>
-Reply-To: mauelshagen@redhat.com,
-	LVM general discussion and development <linux-lvm@redhat.com>
+Subject: [linux-lvm] pvresize not implemented,
+	any way to use pvcreate instead?
+Reply-To: linux-lvm@redhat.com
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -22,61 +24,52 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: LVM general discussion and development <linux-lvm@redhat.com>
+To: linux-lvm@redhat.com
 
-On Mon, Sep 26, 2005 at 02:04:58AM +0200, Fredrik Tolf wrote:
-> On Sun, 2005-09-25 at 10:15 -0500, Don Shesnicky wrote:
-> > How do you check the status of an LVM set of disks in RHEL3 and 4?
-> > The LVM FAQ mentions that you should have a /proc/lvm but my default
-> > RHEL3 and 4 systems do not have this directory in /proc and doing a
-> > Modprobe for lvm-mod does not create one. On an RHEL4 test system I
-> > do see an lvm tool but it doesn't show the status. 
-> 
-> I'm not *sure* about this, but I believe that /proc/lvm was only used
-> for LVM 1.0,
 
-True.
+--/Rh48Y0bnrojh5Wm
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> while device-mapper doesn't have such a thing.
+pvresize on RHEL4U1 returns with
 
-True.
+> # pvresize --help
+>   pvresize: Resize a physical volume in use by a volume group
+>=20
+> Not implemented.  Use pvcreate options.
 
-> RHEL3 is
-> based on a 2.6 kernel, right?
+Does this imply that I can use pvcreate to resize a pv? Or is there
+any other non-destructive way not involving creating new pvs?
 
-No, RHEL3 is 2.4 based, RHEL4 is based on 2.6.
+My setup is as follows, I have a SAN exported lun that is EFI
+partitioned and has only one partition which is used by LVM as a
+pv. We will be adding new disks and I would like to extend this one
+exported lun, instead of having several luns/pv in one vg later. I
+understand that this does not matter for LVM (and is a problem that
+LVM solves), but I'd like to keep the management on the SAN side
+simple for the adminstrative staff.
 
-> 
-> How about the userspace tools instead? Try pvdisplay, vgdisplay or
-> lvdisplay, depending on what info you want. Or is there some other info
-> that you're hunting for?
+AFAIU this was possible with LVM1, and perhaps is also possible with
+LVM2 with a workaround until pvresize is written.
 
-If you're using LVM2 (ie, running RHEL4), you might want to look
-at the output formatable tools pvs, vgs, lvs.
+And as a side question: Would parted be able to autodetect the new
+disk's size and properly resize partition table and partition?
 
-> 
-> Fredrik Tolf
-> 
-> 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+Thanks!
+--=20
+Axel.Thimm at ATrpms.net
 
--- 
+--/Rh48Y0bnrojh5Wm
+Content-Type: application/pgp-signature
+Content-Disposition: inline
 
-Regards,
-Heinz    -- The LVM Guy --
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.1 (GNU/Linux)
 
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+iD8DBQFDOR6kQBVS1GOamfERAkZpAJ0UNduD4GIUjljoBybtBwjOkKttRgCfYHHO
+ICg6caWndCm0KmCxlUKWMGo=
+=VIWM
+-----END PGP SIGNATURE-----
 
-Heinz Mauelshagen                                 Red Hat GmbH
-Consulting Development Engineer                   Am Sonnenhang 11
-Cluster and Storage Development                   56242 Marienrachdorf
-                                                  Germany
-Mauelshagen@RedHat.com                            +49 2626 141200
-                                                       FAX 924446
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+--/Rh48Y0bnrojh5Wm--
