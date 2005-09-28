@@ -1,15 +1,8 @@
-Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j8RFAIV05485
-	for <linux-lvm@redhat.com>; Tue, 27 Sep 2005 11:10:18 -0400
-Received: from minotaur.hekimian.com (host-64-47-34-180.masergy.com
-	[64.47.34.180] (may be forged))
-	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id j8RFABFE014246
-	for <linux-lvm@redhat.com>; Tue, 27 Sep 2005 11:10:11 -0400
-Message-ID: <A61771BC4AE2DD41B460E8D73082E6E304F99E60@olympus.hekimian.com>
-From: "Musard, Kris" <Kris.Musard@spirentcom.com>
-Date: Tue, 27 Sep 2005 11:10:04 -0400
-MIME-Version: 1.0
-Subject: [linux-lvm] Help - cant bring Volume Group online!!!!!!
+Message-Id: <6.2.3.4.0.20050928141506.0be81a50@imap.nersc.gov>
+Date: Wed, 28 Sep 2005 15:02:22 -0700
+From: Jed Donnelley <jed@nersc.gov>
+Mime-Version: 1.0
+Subject: [linux-lvm] LVM(2) bug in RH ES 4.1 /etc/rc.d/sysinit.rc, RAID-1+0
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -20,72 +13,85 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
 Content-Transfer-Encoding: 7bit
-To: "'linux-lvm@redhat.com'" <linux-lvm@redhat.com>
+To: linux-lvm@redhat.com, rhn-users@redhat.com
 
-I had a temporary disk failure on a software RAID5 device yesterday
-containing a volume group "hekvg".  I was able to bring my RAID5 online
-using mdadm --assemble /dev/md0 --force, but now my LVM volume group refuses
-to vary on.  Here are my errors:
+Redhat, LVM users,
 
-lnxsrv2:root> vgscan
-vgscan -- reading all physical volumes (this may take a while...)
-vgscan -- found active volume group "vg00"
-vgscan -- ERROR "pv_read_pe(): read" can't get data of volume group "hekvg"
-from physical volume(s)
-vgscan -- "/etc/lvmtab" and "/etc/lvmtab.d" successfully created
-vgscan -- WARNING: This program does not do a VGDA backup of your volume
-groups
+I recently set up a software RAID-1+0 array with mdadm on a Redhat ES 4.1
+system where the array contained a single logical volume (LVM2).  What I
+noticed is that when the system booted it wouldn't see this volume or of course
+any of the file systems in it.
 
-lnxsrv2:root> vgimport /dev/hekvg /dev/md0
-vgimport -- ERROR "pv_read(): multiple device" reading physical volume
-"/dev/md0"
+I did some poking around and I found this clause in /etc/rc.d/sysinit.rc:
 
-lnxsrv2:root> pvcreate -ff /dev/md0
-pvcreate -- really INITIALIZE physical volume "/dev/md0" of volume group
-"hekvg" [y/n]? y
-pvcreate -- WARNING: forcing physical volume creation on "/dev/md0" of
-volume group "hekvg"
-pvcreate -- physical volume "/dev/md0" successfully created
+if [ -f /etc/raidtab ]; then
+     # Add raid devices
+     [ -f /proc/mdstat ] || modprobe md >/dev/null 2>&1
 
-lnxsrv2:root> vgcfgrestore -n hekvg -f /etc/lvmconf/hekvg.conf /dev/md0
-vgcfgrestore -- ERROR "pv_write_pe(): write" storing VGDA of "hekvg" on
-disks
+     if [ -f /proc/mdstat ]; then
+         echo -n $"Starting up RAID devices: "
+...
+         # LVM2 initialization, take 2
+         if [ -c /dev/mapper/control -a -x /sbin/lvm.static ]; then
+                 if /sbin/lvm.static vgscan > /dev/null 2>&1 ; then
+                         action $"Setting up Logical Volume 
+Management:" /sbin/lvm.static vgscan --mknodes --ignorelockingfailure 
+&& /sbin/lvm.static vgchange -a y --ignorelockingfailure
+                 fi
+         fi
+         # LVM initialization, take 2 (it could be on top of RAID)
+         if [ -e /proc/lvm -a -x /sbin/vgchange -a -f /etc/lvmtab ]; then
+                 action $"Setting up Logical Volume Management:" 
+/sbin/vgscan && /sbin/vgchange -a y
+         fi
+     fi
+fi
 
-lnxsrv2:root> vgchange -a y /dev/hekvg
-vgchange -- volume group "hekvg" does not exist
+Of course with the new mdam RAID arrays in RH ES 4.1 there is no 
+/etc/raidtab, so the first
+then clause above is never entered.  This means that the logical 
+volume on my RAID-1+0 array is
+never found as the array isn't available when the first check for 
+logical volumes is done in /etc/rc.d/sysinit.rc.
 
-lnxsrv2:root> pvdisplay -v /dev/md0
---- Physical volume ---
-PV Name               /dev/md0
-VG Name               hekvg
-PV Size               949.58 GB [1991416320 secs] / NOT usable 5.06 MB [LVM:
-1.05 MB]
-PV#                   1
-PV Status             available
-Allocatable           yes (but full)
-Cur LV                8
-PE Size (KByte)       4096
-Total PE              243091
-Free PE               0
-Allocated PE          243091
-PV UUID               MAfau0-qK8F-oNAg-gfH9-dw7s-lU3a-PftQTo
-pvdisplay -- ERROR "pv_read_pe(): read" reading physical extent information
+This looks like a bug to me.  My solution was to force a check for 
+logical volumes after the
+above clause by adding this to /etc/rc.d/sysinit.rc:
 
-This is a production server which I need to get back online ASAP.  If anyone
-can provide any assistance I would greatly appreciate it.
+if /sbin/lvm.static vgscan > /dev/null 2>&1 ; then
+     action $"Jed's Logical Volume Management setup:" 
+/sbin/lvm.static vgchange -a y --ignorelockingfailure
+fi
 
-Thank You,
+That seems to work and I believe it is otherwise harmless, though it 
+might be a bit brute force.
 
-Kris Musard
-Senior Software Analyst
-Service Assurance - Broadband
-SPIRENT COMMUNICATIONS
-15200 Omega Drive, 2nd Floor
-Rockville, MD 20850-3240 USA
-Office: +1 301.417.6464
-Fax: +1 301.590.3662
-Pager:  +1 800.SKY8888 PIN#1266930
-kris.musard@spirentcom.com
-www.spirentcom.com
+I just wondered if anybody else has run into this problem or heard of 
+any other solutions.
+
+
+Incidentally, while working on this problem I noticed that if after a 
+reboot if I executed:
+
+#/sbin/lvm.static vgchange -a y --ignorelockingfailure
+
+the volume still was not visible or set active.  However, if I did
+
+#/sbin/lvm.static vgscan
+
+first and then
+
+#/sbin/lvm.static vgchange -a y --ignorelockingfailure
+
+the volume and its file systems show up.  That seems to me like a 
+failure in vgchange.
+I would think it should effectively do a vgscan before setting all 
+the volumes active if
+it is run on all volumes.  Perhaps this doesn't reach the level of a 
+bug, but it was
+counter intuitive to me.
+
+--Jed http://www.nersc.gov/~jed/
+--Jed http://www.nersc.gov/~jed/
