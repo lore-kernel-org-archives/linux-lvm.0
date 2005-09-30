@@ -1,16 +1,19 @@
-Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j8TD1ZV25385
-	for <linux-lvm@redhat.com>; Thu, 29 Sep 2005 09:01:35 -0400
-Received: from web31701.mail.mud.yahoo.com (web31701.mail.mud.yahoo.com
-	[68.142.201.181])
-	by mx3.redhat.com (8.13.1/8.13.1) with SMTP id j8TD1OEI019239
-	for <linux-lvm@redhat.com>; Thu, 29 Sep 2005 09:01:24 -0400
-Message-ID: <20050929130119.78085.qmail@web31701.mail.mud.yahoo.com>
-Date: Thu, 29 Sep 2005 06:01:18 -0700 (PDT)
-From: Nivrutti Kesarkar <nskesarkar@yahoo.com>
+Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j8U5VxV28326
+	for <linux-lvm@redhat.com>; Fri, 30 Sep 2005 01:31:59 -0400
+Received: from smtpauth.net4india.com ([202.71.129.247])
+	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id j8U5Vp9o024010
+	for <linux-lvm@redhat.com>; Fri, 30 Sep 2005 01:31:52 -0400
+Received: from [202.71.133.41] (helo=[202.71.133.41])
+	by smtpauth.net4india.com with esmtpa (Exim 4.43 #1)
+	id 1ELCor-0007wR-Jj by authid <h5967097-667> with plain
+	for <linux-lvm@redhat.com>; Fri, 30 Sep 2005 10:18:25 +0530
+Message-ID: <433CC684.4060002@net4.in>
+Date: Fri, 30 Sep 2005 10:30:52 +0530
+From: Arabinda Patra <arabinda.p@net4.in>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: [linux-lvm] tg3:eth0:error
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] LVM cration problem .
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -21,25 +24,15 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@redhat.com, rhn-users@redhat.com
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+To: linux-lvm@redhat.com
 
-Dear All,
+Hi ,
+I have 11 hrad disk of 32 GB each . I want to craetre 1 LVM with 
+stripping . But facing problem .
+I am able to craete LVB taking 10 hard dives but not able to craete take 
+11 . Is there any limitation in LVM2 .
+Please help me .
 
-I have installed Red Hat Linux 8.0 on IBM X-Series 225
-server(Type:8647-I2S).When user takes back on TANDBERG
-SLR 7 tape drive following message continuously flash
-up on screen because of what user can't do there work
-on server. message "tg3:eth0:error,poll already
-scheduled. Pls. give me solution.
-
-Regards,
-Nivrutti
-
-
-
-
-		
-__________________________________ 
-Yahoo! Mail - PC Magazine Editors' Choice 2005 
-http://mail.yahoo.com
+Regards
+Arabinda
