@@ -1,20 +1,18 @@
-Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j92EjeV22371
-	for <linux-lvm@redhat.com>; Sun, 2 Oct 2005 10:45:40 -0400
-Received: from sccimhc91.asp.att.net (sccimhc91.asp.att.net [63.240.76.165])
-	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id j92EjXWA024561
-	for <linux-lvm@redhat.com>; Sun, 2 Oct 2005 10:45:33 -0400
-Received: from randy.randyperkins.com (randy.randyperkins.com [192.168.0.200])
-	by fileserver.randyperkins.com (8.12.10/8.12.10) with ESMTP id
-	j92EjRQs019818
-	for <linux-lvm@redhat.com>; Sun, 2 Oct 2005 09:45:27 -0500
-From: Randy Perkins <randyperkins@randyperkins.com>
-Date: Sun, 02 Oct 2005 09:45:26 -0500
-Message-Id: <1128264326.13721.39.camel@localhost.localdomain>
-Mime-Version: 1.0
+Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j92ErkV23275
+	for <linux-lvm@redhat.com>; Sun, 2 Oct 2005 10:53:46 -0400
+Received: from kosh.cyd.liu.se (kosh.cyd.liu.se [130.236.245.8])
+	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id j92EriTF016078
+	for <linux-lvm@redhat.com>; Sun, 2 Oct 2005 10:53:45 -0400
+Received: from [130.236.245.142] (cyd14.cyd.liu.se [130.236.245.142])
+	by kosh.cyd.liu.se (Postfix) with ESMTP id 1A3A03E78
+	for <linux-lvm@redhat.com>; Sun,  2 Oct 2005 16:53:43 +0200 (CEST)
+Message-ID: <433FF47A.4020906@cyd.liu.se>
+Date: Sun, 02 Oct 2005 16:53:46 +0200
+From: Elmir Jagudin <boris@cyd.liu.se>
+MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] what is the proper procedure to remove a disk from a LV
-	using lvm1?
+Subject: [linux-lvm] problems using all space in a VG
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -25,161 +23,80 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: linux-lvm@redhat.com
 
-Hello,
-I wish to remove a disk from my logical volume.  I have moved data from
-the LV in order to have enough free space to remove a PV.  I have
-checked around and think i know the tools i need to use, but am not sure
-of the order.
+Hi,
 
-i have read this:
-http://www.tldp.org/HOWTO/LVM-HOWTO/removeadisk.html
-but it does not cover reducing the LV.
-my LV is formatted as ext3
-I'm pretty sure i need to use e2fsadm to reduce the LV.
+I have a system with 2.73 TB partition on witch a VG group was created:
 
-So my questions are:
+# pvdisplay
+  --- Physical volume ---
+  PV Name               /dev/sdc1
+  VG Name               storage0
+  PV Size               2.73 TB / not usable 2.00 TB
+  Allocatable           yes
+  PE Size (KByte)       65536
+  Total PE              44701
+  Free PE               32803
+  Allocated PE          11898
+  PV UUID               n1wiZE-PmlM-sAaH-I8cl-ORUZ-GReQ-54xlf7
 
-1 Do I need to use e2fsadm to resize the LV if I am removing a PV ?
-2. If yes, which do i do first, e2fsadm or pvmove/vgreduce ?
-3. should i umount the LV before using e2fsadm ?
+Notice that it says that 2 TB is not usable, which according to 
+https://www.redhat.com/archives/linux-lvm/2005-August/msg00033.html
+is a sign of lvm tools is not able to handle devices this large.
 
-thanks in advance and if you need more information, let me know
+After upgrading lvm tools the pvdisplay says that all the space is 
+usable. However creating LVs that total in size over 0.73 TB (2.73 - 2) 
+is not possible and fails with following error messages:
 
-Randy Perkins
+# lvcreate -L 65g -n export storage0
+  device-mapper ioctl cmd 9 failed: Invalid argument
+  Couldn't load device 'storage0-export'.
+  Failed to activate new LV.
 
+following errors are logged in /var/log/messages:
 
-info about my config:
-OS fedora core 1  2.4.22-1.2199.5.legacy.nptl
-lvm lvm-1.0.3-13.1.legacy
-PV 4 disks, PV fills entire disk( see pvdisplay below)
-VG 1 VG /dev/my_vg ,uses 4 PV ( see vgdisplay below )
-LV 1 LV  /dev/my_vg/my_lv fills entire VG (see lvdisplay below)
-430G of 587G is available ( see df -h  below)
-LV is formatted as ext3 ( see mount below )
-
-
-what i think i need to do is:
-e2fsadm -L 200G	/dev/my_vg/my_lv   (to reduce the LV)
-pvmove /dev/hde	(reallocate all PE on this disk to other PV's)
-pvreduce /dev/hde     (to remove PV from the VG)
-
-
-------------output of pvdisplay ---------------------------
-
-[root@fileserver root]# pvdisplay /dev/hd[e,g,i,k]
---- Physical volume ---
-PV Name               /dev/hde
-VG Name               my_vg
-PV Size               149.05 GB [312581808 secs] / NOT usable 16.19 MB
-[LVM: 165 KB]
-PV#                   1
-PV Status             NOT available
-Allocatable           yes (but full)
-Cur LV                1
-PE Size (KByte)       16384
-Total PE              9538
-Free PE               0
-Allocated PE          9538
-PV UUID               KeWFeh-VH6C-psRt-FLi9-xoEe-PVrG-bT86Ow
-
---- Physical volume ---
-PV Name               /dev/hdg
-VG Name               my_vg
-PV Size               149.05 GB [312581808 secs] / NOT usable 16.19 MB
-[LVM: 165 KB]
-PV#                   2
-PV Status             NOT available
-Allocatable           yes (but full)
-Cur LV                1
-PE Size (KByte)       16384
-Total PE              9538
-Free PE               0
-Allocated PE          9538
-PV UUID               NrI9L9-bPLr-hJhs-e54y-SWsd-aYgR-EHQgDe
-
---- Physical volume ---
-PV Name               /dev/hdi
-VG Name               my_vg
-PV Size               149.05 GB [312581808 secs] / NOT usable 16.19 MB
-[LVM: 165 KB]
-PV#                   3
-PV Status             NOT available
-Allocatable           yes (but full)
-Cur LV                1
-PE Size (KByte)       16384
-Total PE              9538
-Free PE               0
-Allocated PE          9538
-PV UUID               tf70Hd-13P3-1i1b-GSwd-JEs2-E8Bm-N9Dhwk
-
---- Physical volume ---
-PV Name               /dev/hdk
-VG Name               my_vg
-PV Size               149.05 GB [312581808 secs] / NOT usable 16.19 MB
-[LVM: 165 KB]
-PV#                   4
-PV Status             NOT available
-Allocatable           yes (but full)
-Cur LV                1
-PE Size (KByte)       16384
-Total PE              9538
-Free PE               0
-Allocated PE          9538
-PV UUID               UaPjnP-NIM7-TMzA-46Yf-Onyh-wKju-I2Ad7H
+Oct  2 17:48:35 sinclair kernel: device-mapper: device /dev/sdc1 too 
+small for target
+Oct  2 17:48:35 sinclair kernel: device-mapper: dm-linear: Device lookup 
+failed
+Oct  2 17:48:35 sinclair kernel: device-mapper: error adding target to table
 
 
-
---------------output of vgdisplay -------------------------------
-
-[root@fileserver root]# vgdisplay /dev/my_vg
---- Volume group ---
-VG Name               my_vg
-VG Access             read/write
-VG Status             available/resizable
-VG #                  0
-MAX LV                256
-Cur LV                1
-Open LV               1
-MAX LV Size           1023.97 GB
-Max PV                256
-Cur PV                4
-Act PV                4
-VG Size               596.12 GB
-PE Size               16 MB
-Total PE              38152
-Alloc PE / Size       38152 / 596.12 GB
-Free  PE / Size       0 / 0
-VG UUID               2IBFij-7ujy-3d2V-wDD3-nWE9-EhKk-8P0Zkm
+Anyone knows what's going on ? How can i reclaim this 2TB of storage ?
 
 
------------ output of lvdisplay -------------------
+Here follows some version details:
 
-[root@fileserver root]# lvdisplay /dev/my_vg/my_lv
---- Logical volume ---
-LV Name                /dev/my_vg/my_lv
-VG Name                my_vg
-LV Write Access        read/write
-LV Status              available
-LV #                   1
-# open                 1
-LV Size                596.12 GB
-Current LE             38152
-Allocated LE           38152
-Allocation             next free
-Read ahead sectors     1024
-Block device           58:0
+The VG was originaly created with following tools:
 
------------ output of df -h -----------------------
+# lvm version
+  LVM version:     2.00.31 (2004-12-12)
+  Library version: 1.00.19-ioctl (2004-07-03)
+  Driver version:  4.1.0
 
-[root@fileserver root]# df -h /dev/my_vg/my_lv
-Filesystem            Size  Used Avail Use% Mounted on
-/dev/my_vg/my_lv      587G  158G  430G  27% /pub
+Since then the tools have been upgraded to following versions:
+
+# lvm version
+  LVM version:     2.01.08 (2005-03-22)
+  Library version: 1.01.01 (2005-03-29)
+  Driver version:  4.4.0
+
+The upgraded pvdisplay then says:
+
+# pvdisplay
+  --- Physical volume ---
+  PV Name               /dev/sdc1
+  VG Name               storage0
+  PV Size               2.73 TB / not usable 0
+  Allocatable           yes
+  PE Size (KByte)       65536
+  Total PE              44701
+  Free PE               32803
+  Allocated PE          11898
+  PV UUID               n1wiZE-PmlM-sAaH-I8cl-ORUZ-GReQ-54xlf7
 
 
------------- output of mount command ----------------
-[root@fileserver root]# mount
-... snip ...
-/dev/my_vg/my_lv on /pub type ext3 (rw)
+T.i.a,
+Elmir Jagudin
