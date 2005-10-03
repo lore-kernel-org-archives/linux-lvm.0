@@ -1,18 +1,21 @@
-Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j92ErkV23275
-	for <linux-lvm@redhat.com>; Sun, 2 Oct 2005 10:53:46 -0400
-Received: from kosh.cyd.liu.se (kosh.cyd.liu.se [130.236.245.8])
-	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id j92EriTF016078
-	for <linux-lvm@redhat.com>; Sun, 2 Oct 2005 10:53:45 -0400
-Received: from [130.236.245.142] (cyd14.cyd.liu.se [130.236.245.142])
-	by kosh.cyd.liu.se (Postfix) with ESMTP id 1A3A03E78
-	for <linux-lvm@redhat.com>; Sun,  2 Oct 2005 16:53:43 +0200 (CEST)
-Message-ID: <433FF47A.4020906@cyd.liu.se>
-Date: Sun, 02 Oct 2005 16:53:46 +0200
-From: Elmir Jagudin <boris@cyd.liu.se>
+Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j939eqV25044
+	for <linux-lvm@redhat.com>; Mon, 3 Oct 2005 05:40:52 -0400
+Received: from wavehammer.waldi.eu.org (postfix@wavehammer.waldi.eu.org
+	[82.139.196.55])
+	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id j939ejrw000388
+	for <linux-lvm@redhat.com>; Mon, 3 Oct 2005 05:40:45 -0400
+Date: Mon, 3 Oct 2005 11:40:23 +0200
+From: Bastian Blank <waldi@debian.org>
+Message-ID: <20051003094023.GA15082@wavehammer.waldi.eu.org>
+References: <E1EMFoR-0008MU-48@karp.cs.elte.hu>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] problems using all space in a VG
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="yrj/dFKFPuw6o+aM"
+Content-Disposition: inline
+In-Reply-To: <E1EMFoR-0008MU-48@karp.cs.elte.hu>
+Subject: [linux-lvm] Re: Bug#331342: lvm2: lvs fails to display snapshot
+	volumes
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -23,80 +26,78 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: linux-lvm@redhat.com
-
-Hi,
-
-I have a system with 2.73 TB partition on witch a VG group was created:
-
-# pvdisplay
-  --- Physical volume ---
-  PV Name               /dev/sdc1
-  VG Name               storage0
-  PV Size               2.73 TB / not usable 2.00 TB
-  Allocatable           yes
-  PE Size (KByte)       65536
-  Total PE              44701
-  Free PE               32803
-  Allocated PE          11898
-  PV UUID               n1wiZE-PmlM-sAaH-I8cl-ORUZ-GReQ-54xlf7
-
-Notice that it says that 2 TB is not usable, which according to 
-https://www.redhat.com/archives/linux-lvm/2005-August/msg00033.html
-is a sign of lvm tools is not able to handle devices this large.
-
-After upgrading lvm tools the pvdisplay says that all the space is 
-usable. However creating LVs that total in size over 0.73 TB (2.73 - 2) 
-is not possible and fails with following error messages:
-
-# lvcreate -L 65g -n export storage0
-  device-mapper ioctl cmd 9 failed: Invalid argument
-  Couldn't load device 'storage0-export'.
-  Failed to activate new LV.
-
-following errors are logged in /var/log/messages:
-
-Oct  2 17:48:35 sinclair kernel: device-mapper: device /dev/sdc1 too 
-small for target
-Oct  2 17:48:35 sinclair kernel: device-mapper: dm-linear: Device lookup 
-failed
-Oct  2 17:48:35 sinclair kernel: device-mapper: error adding target to table
+To: Barasz Mihaly <klao@cs.elte.hu>, 331342@bugs.debian.org
+Cc: linux-lvm@redhat.com
 
 
-Anyone knows what's going on ? How can i reclaim this 2TB of storage ?
+--yrj/dFKFPuw6o+aM
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
+tags 331342 upstream
+forwarded 331342 linux-lvm@redhat.com
+thanks
 
-Here follows some version details:
+On Mon, Oct 03, 2005 at 04:12:19AM +0200, Barasz Mihaly wrote:
+> After a recent upgrade lvs and lvdisplay stopped to display snapshot
+> volumes. Example:
+>=20
+> # lvs
+>   LV   VG   Attr   LSize  Origin Snap%  Move Log Copy%=20
+>   data vg0  -wi-ao 84.00G                             =20
+>   home vg0  owi-ao 50.00G                             =20
+> #
+>=20
+> One can see that "home" is an origin for some snapshot, but can't see
+> the snapshot volume.
+>=20
+> It may be interesting, that the snapshot can be used, it appears in
+> /dev/vg0:
+>=20
+> # ls -l /dev/vg0
+> total 0
+> lrwxrwxrwx  1 root root 20 Oct  3 03:32 data -> /dev/mapper/vg0-data
+> lrwxrwxrwx  1 root root 20 Oct  3 03:32 home -> /dev/mapper/vg0-home
+> lrwxrwxrwx  1 root root 22 Oct  3 03:32 tegnap -> /dev/mapper/vg0-tegnap
+> #=20
+> (the one named "tegnap" is the snapshot.)
+>=20
+> Snapshots still can be created/removed/used, the only problem that they a=
+re
+> "invisible" now.
 
-The VG was originaly created with following tools:
+Seems that I found the problem. The code which iterates over the LVs
+explicitely ignores snapshot volumes.
 
-# lvm version
-  LVM version:     2.00.31 (2004-12-12)
-  Library version: 1.00.19-ioctl (2004-07-03)
-  Driver version:  4.1.0
+tools/toollib.c:
+| 62         list_iterate_items(lvl, &vg->lvs) {
+| 63                if (lvl->lv->status & SNAPSHOT)
+| 64                        continue;
 
-Since then the tools have been upgraded to following versions:
+> I've checked the vanilla versions from
+> ftp://sources.redhat.com/pub/lvm2/  and neither 2.01.13 nor 2.01.14
+> works, so the bug is probably in the upstream.
+> The last version that works for me is 2.01.09.
 
-# lvm version
-  LVM version:     2.01.08 (2005-03-22)
-  Library version: 1.01.01 (2005-03-29)
-  Driver version:  4.4.0
+This code is new in 2.01.10 or 2.01.11.
 
-The upgraded pvdisplay then says:
+Bastian
 
-# pvdisplay
-  --- Physical volume ---
-  PV Name               /dev/sdc1
-  VG Name               storage0
-  PV Size               2.73 TB / not usable 0
-  Allocatable           yes
-  PE Size (KByte)       65536
-  Total PE              44701
-  Free PE               32803
-  Allocated PE          11898
-  PV UUID               n1wiZE-PmlM-sAaH-I8cl-ORUZ-GReQ-54xlf7
+--=20
+Well, Jim, I'm not much of an actor either.
 
+--yrj/dFKFPuw6o+aM
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+Content-Disposition: inline
 
-T.i.a,
-Elmir Jagudin
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.2 (GNU/Linux)
+
+iEYEARECAAYFAkNA/IcACgkQnw66O/MvCNEYUQCgn+2yHOsSzhlgoCyKD1vKuweT
+c3cAn2p0i4mI5n620n0H3nm4cZOGt9wM
+=Mplf
+-----END PGP SIGNATURE-----
+
+--yrj/dFKFPuw6o+aM--
