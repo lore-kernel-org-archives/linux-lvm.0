@@ -1,18 +1,16 @@
 Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j955EYV23655
-	for <linux-lvm@redhat.com>; Wed, 5 Oct 2005 01:14:34 -0400
-Received: from mi.npn ([206.58.200.39])
-	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id j955EWmR017785
-	for <linux-lvm@redhat.com>; Wed, 5 Oct 2005 01:14:33 -0400
-Received: from [10.32.70.91] (unknown [10.32.70.91])
-	by mi.npn (Postfix) with ESMTP id ACF53D415B
-	for <linux-lvm@redhat.com>; Tue,  4 Oct 2005 22:14:26 -0700 (PDT)
-Message-ID: <4343612C.6050105@neatech.com>
-Date: Tue, 04 Oct 2005 22:14:20 -0700
-From: Patrick Nelson <pnelson@neatech.com>
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j958vfV31240
+	for <linux-lvm@redhat.com>; Wed, 5 Oct 2005 04:57:41 -0400
+Received: from technoserv.ru (rampart.technoserv.ru [212.45.1.210])
+	by mx1.redhat.com (8.12.11/8.12.11) with SMTP id j958vdHM012311
+	for <linux-lvm@redhat.com>; Wed, 5 Oct 2005 04:57:40 -0400
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] Problem making the file system
+Message-ID: <OFBC85B583.C37E7FA3-ONC3257091.0030BD40-C3257091.0030F6F9@technoserv.ru>
+From: Pavel A Tsvetkov <paul@technoserv.ru>
+Date: Wed, 5 Oct 2005 12:54:51 +0400
+Content-Type: multipart/alternative;
+	boundary="=_alternative 0030F6F5C3257091_="
+Subject: [linux-lvm] LVM multipathing?
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -23,29 +21,27 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: linux-lvm@redhat.com
 
-FC4 Updated
+]rn qnnayemhe hg meqjnk|jhu w`qrei b tnpl`re MIME.
+--=_alternative 0030F6F5C3257091_=
+Content-Type: text/plain; charset="US-ASCII"
 
-Trying to setup a LV on a FC4 setup for home and opts.  Here is the 
-process:
+Hello all!
 
-pvcreate /dev/hda1
+Does anybody know  about RedHat plan's to support multipathing (failover & 
+loadbalancing) in AS 4.x LVM2 ?
 
-vgcreate homeVG /dev/hda1
+Thanks a lot ! Pavel
+--=_alternative 0030F6F5C3257091_=
+Content-Type: text/html; charset="US-ASCII"
 
-lvcreate -L4G -mhomeLV homeVG
 
-mkfs.ext3 /dev/homeVG/homeLV
-
-but when I do the step of mkfs.ext3 I get an error of :
-mke2ffs 1.37 (21-Mar-2005)
-Could not stat /dev/homeVG/homeLV --- permission denied
-
-ls -la /dev/homeVG/ shows that a link of homeLV -> 
-/dev/mapper/homeVG-homeLV which has permissions of:
-
-brw-rw---- root disk 253, 2 Oct 4 17:25
-
-Anyone have an idea on what is going wrong?
+<br><font size=2 face="sans-serif">Hello all!</font>
+<br>
+<br><font size=2 face="sans-serif">Does anybody know &nbsp;about RedHat
+plan's to support multipathing (failover &amp; loadbalancing) in AS 4.x
+LVM2 ?</font>
+<br>
+<br><font size=2 face="sans-serif">Thanks a lot ! Pavel</font>
+--=_alternative 0030F6F5C3257091_=--
