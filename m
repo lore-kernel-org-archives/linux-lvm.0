@@ -1,17 +1,18 @@
-Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j958vfV31240
-	for <linux-lvm@redhat.com>; Wed, 5 Oct 2005 04:57:41 -0400
-Received: from technoserv.ru (rampart.technoserv.ru [212.45.1.210])
-	by mx1.redhat.com (8.12.11/8.12.11) with SMTP id j958vdHM012311
-	for <linux-lvm@redhat.com>; Wed, 5 Oct 2005 04:57:40 -0400
+Received: from [172.16.80.166]
+	(IDENT:U2FsdGVkX1+KF4sMukIlnP8gNumJdH2Do9Pl/qn7bvI@rkenna-laptop.boston.redhat.com
+	[172.16.80.166])
+	by mail.boston.redhat.com (8.12.8/8.12.8) with ESMTP id j95DDOSr024020
+	for <linux-lvm@redhat.com>; Wed, 5 Oct 2005 09:13:24 -0400
+Message-ID: <4343D1B4.800@redhat.com>
+Date: Wed, 05 Oct 2005 09:14:28 -0400
+From: Rob Kenna <rkenna@redhat.com>
 MIME-Version: 1.0
-Message-ID: <OFBC85B583.C37E7FA3-ONC3257091.0030BD40-C3257091.0030F6F9@technoserv.ru>
-From: Pavel A Tsvetkov <paul@technoserv.ru>
-Date: Wed, 5 Oct 2005 12:54:51 +0400
-Content-Type: multipart/alternative;
-	boundary="=_alternative 0030F6F5C3257091_="
-Subject: [linux-lvm] LVM multipathing?
-Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
+Subject: Re: [linux-lvm] LVM multipathing?
+References: <OFBC85B583.C37E7FA3-ONC3257091.0030BD40-C3257091.0030F6F9@technoserv.ru>
+In-Reply-To: <OFBC85B583.C37E7FA3-ONC3257091.0030BD40-C3257091.0030F6F9@technoserv.ru>
+Content-Transfer-Encoding: 7bit
+Reply-To: rkenna@redhat.com,
+	LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -21,27 +22,37 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: linux-lvm@redhat.com
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-]rn qnnayemhe hg meqjnk|jhu w`qrei b tnpl`re MIME.
---=_alternative 0030F6F5C3257091_=
-Content-Type: text/plain; charset="US-ASCII"
+Coming in Update2 of RHEL 4.  Release is imminent.
 
-Hello all!
+- rob
 
-Does anybody know  about RedHat plan's to support multipathing (failover & 
-loadbalancing) in AS 4.x LVM2 ?
+Pavel A Tsvetkov wrote:
+> 
+> Hello all!
+> 
+> Does anybody know  about RedHat plan's to support multipathing (failover 
+> & loadbalancing) in AS 4.x LVM2 ?
+> 
+> Thanks a lot ! Pavel
+> 
+> 
+> ------------------------------------------------------------------------
+> 
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@redhat.com
+> https://www.redhat.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
 
-Thanks a lot ! Pavel
---=_alternative 0030F6F5C3257091_=
-Content-Type: text/html; charset="US-ASCII"
-
-
-<br><font size=2 face="sans-serif">Hello all!</font>
-<br>
-<br><font size=2 face="sans-serif">Does anybody know &nbsp;about RedHat
-plan's to support multipathing (failover &amp; loadbalancing) in AS 4.x
-LVM2 ?</font>
-<br>
-<br><font size=2 face="sans-serif">Thanks a lot ! Pavel</font>
---=_alternative 0030F6F5C3257091_=--
+-- 
+Robert Kenna / Red Hat
+Sr Product Mgr - Storage
+10 Technology Park Drive
+Westford, MA 01886
+o: (978) 392-2410 (x22410)
+f: (978) 392-1001
+c: (978) 771-6314
+rkenna@redhat.com
