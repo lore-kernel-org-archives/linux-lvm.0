@@ -1,24 +1,17 @@
 Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j9DBICV21555
-	for <linux-lvm@redhat.com>; Thu, 13 Oct 2005 07:18:12 -0400
-Received: from lcoyle1.ucd.ie (lcoyle1.ucd.ie [193.1.134.79])
-	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id j9DBIB8J027357
-	for <linux-lvm@redhat.com>; Thu, 13 Oct 2005 07:18:12 -0400
-Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by lcoyle1.ucd.ie (8.13.4/8.13.4) with ESMTP id j9DBIZOJ023724
-	for <linux-lvm@redhat.com>; Thu, 13 Oct 2005 12:18:35 +0100
-Received: from localhost (localhost [[UNIX: localhost]])
-	by localhost.localdomain (8.13.4/8.13.4/Submit) id j9DBIZ7G023723
-	for linux-lvm@redhat.com; Thu, 13 Oct 2005 11:18:35 GMT
-From: Robin Green <greenrd@greenrd.org>
-Subject: Re: [linux-lvm] Linux LVM - half baked?
-Date: Thu, 13 Oct 2005 11:18:34 +0000
-References: <6.2.5.6.0.20051012165544.08ef32a0@nersc.gov>
-In-Reply-To: <6.2.5.6.0.20051012165544.08ef32a0@nersc.gov>
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j9CHxcV19773
+	for <linux-lvm@redhat.com>; Wed, 12 Oct 2005 13:59:38 -0400
+Received: from slcexch.CYBERKINETICSINC.COM (67-42-21-33.slkc.qwest.net
+	[67.42.21.33] (may be forged))
+	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id j9CHxZID024394
+	for <linux-lvm@redhat.com>; Wed, 12 Oct 2005 13:59:35 -0400
+content-class: urn:content-classes:message
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-Message-Id: <200510131118.35087.greenrd@greenrd.org>
+Date: Wed, 12 Oct 2005 11:59:19 -0600
+Message-ID: <26F201282709AA4895C203A194DA57DB4ED8EE@slcexch.cyberkineticsinc.com>
+From: "Kirk Korver" <kkorver@CYBERKINETICSINC.com>
+Content-Transfer-Encoding: 8bit
+Subject: [linux-lvm] How to turn LVM off 
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -30,65 +23,78 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: LVM general discussion and development <linux-lvm@redhat.com>
+To: linux-lvm@redhat.com
 
-On Thursday 13 October 2005 01:30, Jed Donnelley wrote:
-> Redhat LVM users,
->
-> Since I mentioned a minor bug in Redhat/LVM (9/28 LVM(2) bug in RH ES
-> 4.1 /etc/rc.d/sysinit.rc, RAID-1+0) I've done quite a number of
-> additional installs using LVM.  I've now had my second system that
-> got into an essentially unrecoverable state.  That's enough for me
-> and LVM.  I very much like the facilities that LVM provides, but if I
-> am going to lose production file systems with it - well, I will have to
-> wait.
->
-> Below are descriptions of the two problems I've run into.  I have run
-> linux rescue from a CD for both systems.  The difficulty of course is
-> that since the problem seems to be in the LVM layer, there are no
-> file systems to work on (e.g. with fsck).
+Hello,
 
-There should be. If the rescue CD supports LVM (like e.g. Fedora Core 4 CD 1)
-then the LVM layer should at least be brought up, I would have thought. Did
-you run fsck /dev/VolGroup00/LogVolxx after choosing to have the filesystems 
-auto-mounted? If so, what happened when you tried that?
+I'm using FC4 as a base for an embedded instrument. When the instrument
+goes out the door, it has a 256 MB flash card for the hard drive, and a
+Pentium 4M motherboard. Also, there will never be a keyboard, nor a
+monitor.
 
-> In the other system (an x86 system) I had a disk failure in a software
-> RAID-1 file system for the system file system (/boot /).  I replaced the
-> disk and resynced it apparently successfully.  However, after
-> a short time that replacement disk apparently failed (wouldn't
-> spin up on boot).  I removed the second disk and restarted
-> the system.  Here is how that went:
-> ...
-> Your System appears to have shut down uncleanly
-> fsck.ext3 -a /dev/VolGroup00/LogVol02 contains a file system with
-> errors, check forced
-> /dev/VolGroup00/LogVol02 Inodes that were part of a corrupted orphan
-> linked list found.
-> /dev/VolGroup00/LogVol02 UNEXPECTED INCONSISTENCY; RUN fsck MANUALLY
-> (i.e. without -a or -p options)
-> [FAILED]
-> *** An error occurred during the file system check.
-> *** Dropping you to a shell;  The system will reboot when you leave the
-> shell.
->
-> Give root password for maintenance (or type Control-D to continue)
->
-> ---------------------
->
-> All stuff very familiar to those who've worked on corrupted file
-> systems.  However, in this
-> case if I type Control-D or enter the root password the system goes
-> through a sequence
-> like:
->
-> unmounting ...
-> automatic reboot
->
-> and reboots.  This starts the problem all over again.
+During development, there is a SATA hard drive with all of FC4 on it,
+and it is currently using LVM.
 
-Did you file a bug about this? It's rather hard to fix bugs if people don't 
-file reproducable test cases in the relevant bug database.
+My task is to prepare a bootable, flash card. Next remove the hard drive
+and have the system work.
 
--- 
-Robin
+Here is what I do:
+1) fdisk /dev/hdc (the flash card is hdc)
+2) In fdisk, create a single large linux partition (don't need any swap
+space) and active this partition.
+
+Create the file system
+3) mke2fs /dev/hdc1
+4) tune2fs -c 0 /dev/hdc1
+
+5)Copy over the files I need (I'll give a set if you want, but its
+enough to make linux happy).
+6)copy over my custom  rc.sysinit, since I want to have exact control
+over how the system boots
+
+7) Install grub. I'll give the details:
+	grup --no-floppy
+	   device (hd0) /dev/hdc
+	   root (hd0,0)
+         setup (hd0)
+
+8) Grup is happy. And says so
+9) Edit grub.conf so the kernel is at /boot/.....
+10) Edit the fstab to mount /dev/hdc1  on /
+
+Turn the power off, and remove the SATA hard drive:
+
+Now the problem
+Grub starts, and finds my kernel
+The kernel starts.
+Redhat nash starts. Then I get the following messages.
+ Reading all physical volumes. This may take a while...
+ Aborting - please provide new pathname for what used to be /dev/hdc1
+ No volume groups found
+ Unable to find volume group "VolGroup00"
+ERROR: /bin/lvm exited abnormally with value 5
+ext3: No journal on filesystem on hdc1
+Mount: error 22 mounting ext3
+ERROR opening /dev/console!!!!: 2
+error dup2'ing fc of 0 to 0
+error dup2'ing fc of 0 to 1
+error dup2'ing fc of 0 to 2
+Switchroot: mount failed:22
+Kernel panic - not syncing: Attempted to kill init!
+
+
+
+I see it is asking about VolGroup00. This is LVM stuff. I don't want LVM
+on the card. What is really weird is that all of this is happening
+before the rc.sysinit is started. I don't find any command line options
+to the kernel to turn LVM off. All of the LVM options are "modules" when
+I built my kernel.
+
+So my question is quite simply,
+What do I have to do so that LVM is NOT used?? Any other options?
+
+--Kirk
+
+
+Kirk Korver
+email: kkorver cyberkineticsinc com
