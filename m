@@ -1,16 +1,23 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j9E1tRV28179
-	for <linux-lvm@redhat.com>; Thu, 13 Oct 2005 21:55:28 -0400
-Received: from PET-MSTRUZAK (63-197-247-13.turinnetworks.com [63.197.247.13])
-	by mx3.redhat.com (8.13.1/8.13.1) with SMTP id j9E1tD4X021421
-	for <linux-lvm@redhat.com>; Thu, 13 Oct 2005 21:55:21 -0400
-Message-ID: <06d201c5d062$4c0474a0$7b02010a@turin.turinnetworks.com>
-From: "Marcin Struzak" <marcin-list@struzak.com>
-Date: Thu, 13 Oct 2005 18:55:04 -0700
-MIME-Version: 1.0
-Content-Type: multipart/alternative;
-	boundary="----=_NextPart_000_06CF_01C5D027.9F81E800"
-Subject: [linux-lvm] renaming vg and lvs
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j9DNC4V03996
+	for <linux-lvm@redhat.com>; Thu, 13 Oct 2005 19:12:04 -0400
+Received: from pc18.dolda2000.com (1-1-3-7a.rny.sth.bostream.se
+	[82.182.133.20])
+	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id j9DNBrsu026778
+	for <linux-lvm@redhat.com>; Thu, 13 Oct 2005 19:11:58 -0400
+Received: from pc7.dolda2000.com (pc7.dolda2000.com
+	[IPv6:2002:52b6:8514:200:20c:76ff:fe3b:a3f4] (may be forged))
+	(authenticated bits=0)
+	by pc18.dolda2000.com (8.13.4/8.13.3) with ESMTP id j9DNBjY7013465
+	for <linux-lvm@redhat.com>; Fri, 14 Oct 2005 01:11:46 +0200
+Subject: Re: [linux-lvm] How to turn LVM off
+From: Fredrik Tolf <fredrik@dolda2000.com>
+In-Reply-To: <26F201282709AA4895C203A194DA57DB4ED8EE@slcexch.cyberkineticsinc.com>
+References: <26F201282709AA4895C203A194DA57DB4ED8EE@slcexch.cyberkineticsinc.com>
+Date: Fri, 14 Oct 2005 01:11:44 +0200
+Message-Id: <1129245104.28482.15.camel@pc7.dolda2000.com>
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -21,67 +28,40 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: linux-lvm@redhat.com
+Content-Type: text/plain; charset="us-ascii"
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-This is a multi-part message in MIME format.
+On Wed, 2005-10-12 at 11:59 -0600, Kirk Korver wrote:
+> Hello,
 
-------=_NextPart_000_06CF_01C5D027.9F81E800
-Content-Type: text/plain;
-	charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Hi!
 
-Hi --
+[...]
+> I see it is asking about VolGroup00. This is LVM stuff. I don't want LVM
+> on the card. What is really weird is that all of this is happening
+> before the rc.sysinit is started.
 
-I am running FC3, LVM2, and GRUB, and would like to change the names of =
-the installed by default VGs and LVs.  I have a total of 1 VG containing =
-3 LVs; one of the LVs is mounted as /.  I am assuming that I can use =
-lvrename and vgrename to accomplish this.  Do I need to do it in a =
-certain sequence (e.g., VG first, reboot, followed by the LVs)?  I am =
-assuming that /etc/fstab is all I need to modify after the rename.  =
-Since the VG and one of the LVs are related to /, I guess I will have to =
-also edit /boot/grub/grub.conf; do I need to reinstall the bootstrap =
-(e.g., with grub-install)?=20
+As you can see from the fact that nash is running, it is the initrd
+running at this point. That's why rc.sysinit hasn't started running yet.
 
-Thanks in advance for any and all comments. =20
+> I don't find any command line options
+> to the kernel to turn LVM off. All of the LVM options are "modules" when
+> I built my kernel.
 
---Marcin
-------=_NextPart_000_06CF_01C5D027.9F81E800
-Content-Type: text/html;
-	charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Indeed, but they are probably on the initrd image and loaded by the nash
+script.
 
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
-<HTML><HEAD>
-<META http-equiv=3DContent-Type content=3D"text/html; =
-charset=3Diso-8859-1">
-<META content=3D"MSHTML 6.00.2800.1498" name=3DGENERATOR>
-<STYLE></STYLE>
-</HEAD>
-<BODY bgColor=3D#ffffff>
-<DIV><FONT face=3DArial size=3D2>Hi --</FONT></DIV>
-<DIV><FONT face=3DArial size=3D2></FONT>&nbsp;</DIV>
-<DIV><FONT face=3DArial size=3D2>I am running FC3, LVM2,&nbsp;and GRUB, =
-and would=20
-like to change the names of the installed by default VGs and LVs.&nbsp; =
-I have a=20
-total of 1 VG containing 3 LVs; one of the LVs is mounted as /.&nbsp; I =
-am=20
-assuming that I can use lvrename and vgrename to accomplish this.&nbsp; =
-Do I=20
-need to do it in a certain sequence (e.g., VG first, reboot, followed by =
-the=20
-LVs)?&nbsp; I am assuming that /etc/fstab is all I need to modify after =
-the=20
-rename.&nbsp; Since the VG and one of the LVs are related to /, I guess =
-I will=20
-have to also edit /boot/grub/grub.conf; do I need to reinstall the =
-bootstrap=20
-(e.g., with grub-install)?&nbsp;</FONT></DIV>
-<DIV><FONT face=3DArial size=3D2></FONT>&nbsp;</DIV>
-<DIV><FONT face=3DArial size=3D2>Thanks in advance for any and all =
-comments.&nbsp;=20
-</FONT></DIV>
-<DIV><FONT face=3DArial size=3D2></FONT>&nbsp;</DIV>
-<DIV><FONT face=3DArial size=3D2>--Marcin</FONT></DIV></BODY></HTML>
+> So my question is quite simply,
+> What do I have to do so that LVM is NOT used?? Any other options?
 
-------=_NextPart_000_06CF_01C5D027.9F81E800--
+You'd probably have to rebuild the initrd to fit your liking. There is a
+script that comes with FC called "mkinitrd" that builds an initrd with
+the modules and programs necessary to mount to root filesystem. Probably
+that script detected that you're using LVM, and it is thus trying to
+recreate that environment. I don't know if it's possible to configure
+mkinitrd to an environment different from the one currently running. If
+I were you, I'd unzip the initrd image, mount it, and edit it manually.
+
+Hope it helps.
+
+Fredrik Tolf
