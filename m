@@ -1,33 +1,26 @@
-Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j9ELniV27852
-	for <linux-lvm@redhat.com>; Fri, 14 Oct 2005 17:49:44 -0400
-Received: from e35.co.us.ibm.com (e35.co.us.ibm.com [32.97.110.153])
-	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id j9ELnhSX030257
-	for <linux-lvm@redhat.com>; Fri, 14 Oct 2005 17:49:43 -0400
-Received: from westrelay02.boulder.ibm.com (westrelay02.boulder.ibm.com
-	[9.17.195.11])
-	by e35.co.us.ibm.com (8.12.11/8.12.11) with ESMTP id j9ELkPHG023962
-	for <linux-lvm@redhat.com>; Fri, 14 Oct 2005 17:46:25 -0400
-Received: from d03av02.boulder.ibm.com (d03av02.boulder.ibm.com [9.17.195.168])
-	by westrelay02.boulder.ibm.com (8.12.10/NCO/VERS6.7) with ESMTP id
-	j9ELnbkF527054
-	for <linux-lvm@redhat.com>; Fri, 14 Oct 2005 15:49:38 -0600
-Received: from d03av02.boulder.ibm.com (loopback [127.0.0.1])
-	by d03av02.boulder.ibm.com (8.12.11/8.13.3) with ESMTP id
-	j9ELnb1V016754
-	for <linux-lvm@redhat.com>; Fri, 14 Oct 2005 15:49:37 -0600
-Received: from [9.49.217.1] ([9.49.217.1])
-	by d03av02.boulder.ibm.com (8.12.11/8.12.11) with ESMTP id
-	j9ELnaVj016702
-	for <linux-lvm@redhat.com>; Fri, 14 Oct 2005 15:49:37 -0600
-Subject: Re: [linux-lvm] How to turn LVM off
-From: Luciano Chavez <lnx1138@us.ibm.com>
-In-Reply-To: <26F201282709AA4895C203A194DA57DB4ED8EE@slcexch.cyberkineticsinc.com>
-References: <26F201282709AA4895C203A194DA57DB4ED8EE@slcexch.cyberkineticsinc.com>
-Date: Fri, 14 Oct 2005 16:50:15 -0500
-Message-Id: <1129326615.9593.2.camel@localhost>
-Mime-Version: 1.0
+Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j9FHewV27695
+	for <linux-lvm@redhat.com>; Sat, 15 Oct 2005 13:40:58 -0400
+Received: from redweb.harvee.org (dsl093-191-107.nyc2.dsl.speakeasy.net
+	[66.93.191.107])
+	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id j9FHeleD022100
+	for <linux-lvm@redhat.com>; Sat, 15 Oct 2005 13:40:52 -0400
+Received: from localhost.localdomain (localhost [127.0.0.1])
+	by redweb.harvee.org (Postfix) with ESMTP id 960E176D47
+	for <linux-lvm@redhat.com>; Sat, 15 Oct 2005 13:40:46 -0400 (EDT)
+Received: from harvee.harvee.org (harvee-xeno.harvee.org [192.168.25.100])
+	by redweb.harvee.org (Postfix) with ESMTP id 92B6D76D47
+	for <linux-lvm@redhat.com>; Sat, 15 Oct 2005 13:40:10 -0400 (EDT)
+Received: from [192.168.0.30] (unknown [192.168.0.30])
+	by harvee.harvee.org (Postfix) with ESMTP id 558D63C03B
+	for <linux-lvm@redhat.com>; Sat, 15 Oct 2005 13:40:10 -0400 (EDT)
+Message-ID: <43513EFB.9030502@harvee.org>
+Date: Sat, 15 Oct 2005 13:40:11 -0400
+From: "Eric S. Johansson" <esj@harvee.org>
+MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] couple questions about metadata checksum errors and
+	storage
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -38,86 +31,33 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+To: linux-lvm@redhat.com
 
-On Wed, 2005-10-12 at 11:59 -0600, Kirk Korver wrote:
-> Hello,
-> 
-> I'm using FC4 as a base for an embedded instrument. When the instrument
-> goes out the door, it has a 256 MB flash card for the hard drive, and a
-> Pentium 4M motherboard. Also, there will never be a keyboard, nor a
-> monitor.
-> 
-> During development, there is a SATA hard drive with all of FC4 on it,
-> and it is currently using LVM.
-> 
-> My task is to prepare a bootable, flash card. Next remove the hard drive
-> and have the system work.
-> 
-> Here is what I do:
-> 1) fdisk /dev/hdc (the flash card is hdc)
-> 2) In fdisk, create a single large linux partition (don't need any swap
-> space) and active this partition.
-> 
-> Create the file system
-> 3) mke2fs /dev/hdc1
-> 4) tune2fs -c 0 /dev/hdc1
-> 
-> 5)Copy over the files I need (I'll give a set if you want, but its
-> enough to make linux happy).
-> 6)copy over my custom  rc.sysinit, since I want to have exact control
-> over how the system boots
-> 
-> 7) Install grub. I'll give the details:
-> 	grup --no-floppy
-> 	   device (hd0) /dev/hdc
-> 	   root (hd0,0)
->          setup (hd0)
-> 
-> 8) Grup is happy. And says so
-> 9) Edit grub.conf so the kernel is at /boot/.....
-> 10) Edit the fstab to mount /dev/hdc1  on /
-> 
-> Turn the power off, and remove the SATA hard drive:
-> 
-> Now the problem
-> Grub starts, and finds my kernel
-> The kernel starts.
-> Redhat nash starts. Then I get the following messages.
->  Reading all physical volumes. This may take a while...
->  Aborting - please provide new pathname for what used to be /dev/hdc1
->  No volume groups found
->  Unable to find volume group "VolGroup00"
-> ERROR: /bin/lvm exited abnormally with value 5
-> ext3: No journal on filesystem on hdc1
-> Mount: error 22 mounting ext3
-> ERROR opening /dev/console!!!!: 2
-> error dup2'ing fc of 0 to 0
-> error dup2'ing fc of 0 to 1
-> error dup2'ing fc of 0 to 2
-> Switchroot: mount failed:22
-> Kernel panic - not syncing: Attempted to kill init!
-> 
-> 
-> 
-> I see it is asking about VolGroup00. This is LVM stuff. I don't want LVM
-> on the card. What is really weird is that all of this is happening
-> before the rc.sysinit is started. I don't find any command line options
-> to the kernel to turn LVM off. All of the LVM options are "modules" when
-> I built my kernel.
-> 
-> So my question is quite simply,
-> What do I have to do so that LVM is NOT used?? Any other options?
-> 
-> --Kirk
-> 
-> 
-> Kirk Korver
+** resend gmane gateway either didn't work or was very slow.  Apologies 
+for the duplication if it ever shows up
 
-Sounds like it's executing the init script that runs vgscan on the
-initrd. If you don't need lvm then edit the script and remove it.
+system: Ubuntu 5.10
 
+first mistake was trying to use Ubuntus installer to set up LVM and raid.
+second mistake was trying to use EVMS to set up LVM and raid.
 
--- 
-Luciano Chavez <lnx1138@us.ibm.com>
+resorting to what works (mdadm and LVM2 commands)I found myself getting 
+this error message with every LVM command
+
+  Incorrect metadata area header checksum
+
+I deleted the first five or 10 MB of each disk in the raid set but it 
+persists.  Everything seems to operate, storage has been allocated, 
+filesystems have been built, everything is detected on reboo and I have 
+even resized one of the logical volumes and expanded the disk.
+
+however, what I have read says that this warning message about incorrect 
+metadata is something to be concerned about.  My question is, how do I fix?
+
+second, this is probably a "RTFWP" question but how do you determine the 
+free space on a physical volume.  For example, if I have two logical 
+volumes created and I want to know how much space is left on the 
+physical?  (apologies if I got the vocabulary wrong)
+
+--- eric
