@@ -1,25 +1,27 @@
 Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j9ICNxV29527
-	for <linux-lvm@redhat.com>; Tue, 18 Oct 2005 08:23:59 -0400
-Received: from redweb.harvee.org (dsl093-191-107.nyc2.dsl.speakeasy.net
-	[66.93.191.107])
-	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id j9ICNuKf021131
-	for <linux-lvm@redhat.com>; Tue, 18 Oct 2005 08:23:56 -0400
-Received: from localhost.localdomain (localhost [127.0.0.1])
-	by redweb.harvee.org (Postfix) with ESMTP id E0EFD76D44
-	for <linux-lvm@redhat.com>; Tue, 18 Oct 2005 08:23:55 -0400 (EDT)
-Received: from harvee.harvee.org (harvee-xeno.harvee.org [192.168.25.100])
-	by redweb.harvee.org (Postfix) with ESMTP id 9049476D44
-	for <linux-lvm@redhat.com>; Tue, 18 Oct 2005 08:23:55 -0400 (EDT)
-Received: from [192.168.0.30] (unknown [192.168.0.30])
-	by harvee.harvee.org (Postfix) with ESMTP id 2B99F3C03B
-	for <linux-lvm@redhat.com>; Tue, 18 Oct 2005 08:23:55 -0400 (EDT)
-Message-ID: <4354E961.4040906@harvee.org>
-Date: Tue, 18 Oct 2005 08:24:01 -0400
-From: "Eric S. Johansson" <esj@harvee.org>
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j9I61SV16979
+	for <linux-lvm@redhat.com>; Tue, 18 Oct 2005 02:01:28 -0400
+Received: from mail-svr1.cs.utah.edu (mail-svr1.cs.utah.edu [155.98.64.200])
+	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id j9I61O5K003428
+	for <linux-lvm@redhat.com>; Tue, 18 Oct 2005 02:01:25 -0400
+Received: from localhost (localhost [127.0.0.1])
+	by mail-svr1.cs.utah.edu (Postfix) with ESMTP id 797E6346EC
+	for <linux-lvm@redhat.com>; Tue, 18 Oct 2005 00:01:14 -0600 (MDT)
+Received: from mail-svr1.cs.utah.edu ([127.0.0.1])
+	by localhost (mail-svr1.cs.utah.edu [127.0.0.1]) (amavisd-new,
+	port 10024) with ESMTP id 11538-05 for <linux-lvm@redhat.com>;
+	Tue, 18 Oct 2005 00:01:13 -0600 (MDT)
+Received: from coal12.cs.utah.edu (coal12.cs.utah.edu [155.98.67.42])
+	by mail-svr1.cs.utah.edu (Postfix) with ESMTP id CADA9346D3
+	for <linux-lvm@redhat.com>; Tue, 18 Oct 2005 00:01:13 -0600 (MDT)
+Received: from localhost (localhost [127.0.0.1])
+	by coal12.cs.utah.edu (Postfix) with ESMTP id 4E8AC8A1C4
+	for <linux-lvm@redhat.com>; Tue, 18 Oct 2005 00:01:13 -0600 (MDT)
+Date: Tue, 18 Oct 2005 00:01:13 -0600 (MDT)
+From: Prashanth Radhakrishnan <shanth@cs.utah.edu>
+Message-ID: <Pine.LNX.4.61.0510172356470.18476@coal12.cs.utah.edu>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] Incorrect metadata area header checksum
+Subject: [linux-lvm] Getting copied blocks listing from LVM2 Snapshots
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -30,38 +32,19 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: TEXT/PLAIN; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: linux-lvm@redhat.com
 
-I could really use some advice here.  Is this something to worry about 
-something I can fix?
+Hi,
 
-  pvdisplay
-   Incorrect metadata area header checksum
-   Incorrect metadata area header checksum
-   Incorrect metadata area header checksum
-   Incorrect metadata area header checksum
-   --- Physical volume ---
-   PV Name               /dev/md0
-   VG Name               raid_vg
-   PV Size               232.88 GB / not usable 0
-   Allocatable           yes
-   PE Size (KByte)       4096
-   Total PE              59618
-   Free PE               1960
-   Allocated PE          57658
-   PV UUID               5o1utA-eN0O-yJqx-4N0Q-NrjT-EpRn-dxyAyT
+Do LVM2 CoW snapshots provide some interface through which one can fetch 
+the list of blocks which have been copied off from its parent ?
 
-   --- NEW Physical volume ---
-   PV Name               /dev/sda1
-   VG Name
-   PV Size               232.88 GB
-   Allocatable           NO
-   PE Size (KByte)       0
-   Total PE              0
-   Free PE               0
-   Allocated PE          0
-   PV UUID               Q2UgM6-QG6D-Lrdi-KnAT-Uw7w-6j75-kAO0l3
+I tried looking on the web around but could not find it. Just wanted to 
+check before I started to look at the source..
 
+Appreciate any help.
 
-   Incorrect metadata area header checksum
+thanks,
+prashanth
