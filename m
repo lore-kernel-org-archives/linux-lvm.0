@@ -1,27 +1,21 @@
-Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j9I61SV16979
-	for <linux-lvm@redhat.com>; Tue, 18 Oct 2005 02:01:28 -0400
-Received: from mail-svr1.cs.utah.edu (mail-svr1.cs.utah.edu [155.98.64.200])
-	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id j9I61O5K003428
-	for <linux-lvm@redhat.com>; Tue, 18 Oct 2005 02:01:25 -0400
-Received: from localhost (localhost [127.0.0.1])
-	by mail-svr1.cs.utah.edu (Postfix) with ESMTP id 797E6346EC
-	for <linux-lvm@redhat.com>; Tue, 18 Oct 2005 00:01:14 -0600 (MDT)
-Received: from mail-svr1.cs.utah.edu ([127.0.0.1])
-	by localhost (mail-svr1.cs.utah.edu [127.0.0.1]) (amavisd-new,
-	port 10024) with ESMTP id 11538-05 for <linux-lvm@redhat.com>;
-	Tue, 18 Oct 2005 00:01:13 -0600 (MDT)
-Received: from coal12.cs.utah.edu (coal12.cs.utah.edu [155.98.67.42])
-	by mail-svr1.cs.utah.edu (Postfix) with ESMTP id CADA9346D3
-	for <linux-lvm@redhat.com>; Tue, 18 Oct 2005 00:01:13 -0600 (MDT)
-Received: from localhost (localhost [127.0.0.1])
-	by coal12.cs.utah.edu (Postfix) with ESMTP id 4E8AC8A1C4
-	for <linux-lvm@redhat.com>; Tue, 18 Oct 2005 00:01:13 -0600 (MDT)
-Date: Tue, 18 Oct 2005 00:01:13 -0600 (MDT)
-From: Prashanth Radhakrishnan <shanth@cs.utah.edu>
-Message-ID: <Pine.LNX.4.61.0510172356470.18476@coal12.cs.utah.edu>
-MIME-Version: 1.0
-Subject: [linux-lvm] Getting copied blocks listing from LVM2 Snapshots
+Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j9IJptV11356
+	for <linux-lvm@redhat.com>; Tue, 18 Oct 2005 15:51:55 -0400
+Received: from hetfield.patsoffice.com (092.106-113-64.ftth.swbr.surewest.net
+	[64.113.106.92])
+	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id j9IJpmwZ026363
+	for <linux-lvm@redhat.com>; Tue, 18 Oct 2005 15:51:48 -0400
+Received: from [192.168.0.11] (unknown [192.168.0.11])
+	(using TLSv1 with cipher RC4-MD5 (128/128 bits))
+	(No client certificate requested)
+	by hetfield.patsoffice.com (Postfix) with ESMTP id 78E08CB37B
+	for <linux-lvm@redhat.com>; Tue, 18 Oct 2005 12:51:11 -0700 (PDT)
+From: "Patrick Lawrence (LVM List)" <5e67ea4d1e39ed0d23e6@patsoffice.com>
+Date: Tue, 18 Oct 2005 12:50:57 -0700
+Message-Id: <1129665057.4262.7.camel@cantrell.patsoffice.com>
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] Problem with LVM2 and device-mapper
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -32,19 +26,41 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@redhat.com
 
-Hi,
+Hello,
 
-Do LVM2 CoW snapshots provide some interface through which one can fetch 
-the list of blocks which have been copied off from its parent ?
+I am using CentOS 4 and just did an upgrade from 4.1 to 4.2 on my x86_64
+home server.  After a reboot, one of my vol groups stopped working.
+It's a volume group spread across 2 disks and when I try to activate
+that volgroup I get the following:
 
-I tried looking on the web around but could not find it. Just wanted to 
-check before I started to look at the source..
+<snip>
+[root@hetfield mapper]# vgchange -ay VolGroup02
+   device-mapper ioctl cmd 9 failed: Invalid argument
+   Couldn't load device 'VolGroup02-DVD'.
+   1 logical volume(s) in volume group "VolGroup02" now active
+<snip>
 
-Appreciate any help.
+and the relevant portion of the /var/log/messages has:
 
-thanks,
-prashanth
+<snip>
+Oct 17 08:45:07 hetfield kernel: device-mapper: dm-linear: Device lookup
+failed
+Oct 17 08:45:07 hetfield kernel: device-mapper: error adding target to
+table
+<snip>
+
+My other two volgroups are working fine.  It's just this third one that 
+has problems.
+
+I did quite a bit of googling yesterday, but I didn't come up with much 
+although I have to confess that I know jack about the device mapper...
+
+Is there anything I can provide to diagnose the problem further?  Since
+CentOS tracks RHEL4 very closely, I suspect this affects RHEL4 as well.
+
+Regards,
+
+Pat
