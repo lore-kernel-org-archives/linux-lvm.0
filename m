@@ -1,17 +1,21 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j9K9mHV11349
-	for <linux-lvm@redhat.com>; Thu, 20 Oct 2005 05:48:17 -0400
-Received: from e2kintsmtp01a.tim.it (e2kintsmtp01a.tim.it [194.243.137.91])
-	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id j9K9m2vV016793
-	for <linux-lvm@redhat.com>; Thu, 20 Oct 2005 05:48:03 -0400
-content-class: urn:content-classes:message
-Content-Transfer-Encoding: 7bit
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j9KA4eV15422
+	for <linux-lvm@redhat.com>; Thu, 20 Oct 2005 06:04:40 -0400
+Received: from qproxy.gmail.com (qproxy.gmail.com [72.14.204.207])
+	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id j9KA4Rhd021026
+	for <linux-lvm@redhat.com>; Thu, 20 Oct 2005 06:04:32 -0400
+Received: by qproxy.gmail.com with SMTP id c12so324339qbc
+	for <linux-lvm@redhat.com>; Thu, 20 Oct 2005 03:04:26 -0700 (PDT)
+Message-ID: <80d985600510200257x1bf60c71o505ebff40c2ed7a2@mail.gmail.com>
+Date: Thu, 20 Oct 2005 18:57:45 +0900
+From: Craig Hagerman <craighagerman@gmail.com>
+Subject: Re: [linux-lvm] setting up LVM, lost everything with a typo
+In-Reply-To: <43576233.8030605@gmx.net>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="----_=_NextPart_001_01C5D55B.4B1DFC66"
-Subject: RIF: [linux-lvm] LVM2 problems!!
-Date: Thu, 20 Oct 2005 11:47:32 +0200
-Message-ID: <DE77E2FB6E674A40B1B661B4D91F1FE501AAA526@E2KMBX20VS.intranet.tim.it>
-From: "Caligiuri, Marco Ernesto" <mcaligiuri.c@mail.tim.it>
+Content-Type: multipart/alternative; 
+	boundary="----=_Part_307_5603331.1129802265031"
+References: <80d985600510191907na711430v24a1fe95264ebd48@mail.gmail.com>
+	<43576233.8030605@gmx.net>
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -24,172 +28,46 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 List-Id: <linux-lvm.redhat.com>
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-This is a multi-part message in MIME format.
-
-------_=_NextPart_001_01C5D55B.4B1DFC66
-Content-Type: text/plain;
-	charset="iso-8859-1"
+------=_Part_307_5603331.1129802265031
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: quoted-printable
+Content-Disposition: inline
 
-On this machine ... i can't use redhat cluster suite , because we use a =
-different cluster software.... the daemon clvmd is necessary ? is =
-necessary configure redhat cluster for work with LVM2?
-Sorry i haven't a great experience ...about this   can you explain to me =
-in simple words...what i need for create a volume....
-thank you
-Marco
+On 10/20/05, Klaus Strebel <klaus.strebel@gmx.net> wrote:
+>
+> What says vgscan in debug mode (you need vgscan before doing a vgchange).
 
-	-----Messaggio originale-----=20
-	Da: linux-lvm-bounces@redhat.com per conto di Patrick Caulfield=20
-	Inviato: gio 20/10/2005 11.36=20
-	A: LVM general discussion and development=20
-	Cc:=20
-	Oggetto: Re: [linux-lvm] LVM2 problems!!
-=09
-=09
+  vgscan gives the same results as vgdisplay and lvdisplay...
 
-	Caligiuri, Marco Ernesto wrote:
-	> Hi to all....,
-	> I'm Marco an italian user of RedHat Enterprise 4 , i have this kind =
-of problems:
-	> I must install GFS on a disk partition, non root-partition, it is =
-/dev/sdc1 . Before to make a GFS filesystem...i need to create a volume =
-with LVM2.
-	> Id of partition is 8e (linux LVM)  but when i excute the command :
-	> pvcreate /dev/sdc or pvcreate /dev/sdc1 and any other command of lvm =
-(vgcreate...lvcreate....) i receive always the same error:
-	>=20
-	> connect() failed on local socket: Connection refused
-	>  Locking type 2 initialisation failed.
-	>
-	> why?? Anyone can help me?
-=09
-	That indicates that you have cluster locking enabled but that the =
-cluster LVM
-	daemon (clvmd) is not running.
-=09
-	--
-=09
-	patrick
-=09
-	_______________________________________________
-	linux-lvm mailing list
-	linux-lvm@redhat.com
-	https://www.redhat.com/mailman/listinfo/linux-lvm
-	read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
-=09
+vgscan
+Couldn't find device with uuid 'ZHl4Ak-mGS4-wFlF-4neF-G1Ed-GxWB-C4Smj6'.
+Couldn't find all physical volumes for volume group media_vg.
+Couldn't find device with uuid 'ZHl4Ak-mGS4-wFlF-4neF-G1Ed-GxWB-C4Smj6'.
+Couldn't find all physical volumes for volume group media_vg.
+Volume group "media_vg" doesn't exist
 
+:(
 
-This message is for the designated recipient only and may contain =
-privileged or confidential information. If you have received it in =
-error, please notify the sender immediately and delete the original. Any =
-other use of the email by you is prohibited.
+------=_Part_307_5603331.1129802265031
+Content-Type: text/html; charset=ISO-8859-1
+Content-Transfer-Encoding: quoted-printable
+Content-Disposition: inline
 
+<div><span class=3D"gmail_quote">On 10/20/05, <b class=3D"gmail_sendername"=
+>Klaus Strebel</b> &lt;<a href=3D"mailto:klaus.strebel@gmx.net">klaus.streb=
+el@gmx.net</a>&gt; wrote:</span>
+<blockquote class=3D"gmail_quote" style=3D"PADDING-LEFT: 1ex; MARGIN: 0px 0=
+px 0px 0.8ex; BORDER-LEFT: #ccc 1px solid">What says vgscan in debug mode (=
+you need vgscan before doing a vgchange).</blockquote>
+<div>&nbsp;</div>
+<div>&nbsp;</div>
+<div>vgscan gives the same results as vgdisplay&nbsp;and lvdisplay...<br><b=
+r>vgscan<br>&nbsp;Couldn't find device with uuid 'ZHl4Ak-mGS4-wFlF-4neF-G1E=
+d-GxWB-C4Smj6'.<br>&nbsp;Couldn't find all physical volumes for volume grou=
+p media_vg.
+<br>&nbsp;Couldn't find device with uuid 'ZHl4Ak-mGS4-wFlF-4neF-G1Ed-GxWB-C=
+4Smj6'.<br>&nbsp;Couldn't find all physical volumes for volume group media_=
+vg.<br>&nbsp;Volume group &quot;media_vg&quot; doesn't exist</div><br>:(</d=
+iv>
 
-=B0=B0=B0=B0=B0=B0=B0=B0=B0=B0=B0=B0=B0=B0=B0=B0=B0=B0=B0=B0=B0=B0=B0=B0=B0=
-=B0=B0=B0=B0=B0=B0=B0=B0=B0=B0=B0=B0=B0=B0=B0=B0=B0=B0=B0=B0=B0=B0=B0=B0=B0=
-=B0=B0=B0=B0=B0=B0=B0=B0=B0=B0=B0=B0=B0=B0=B0=B0=B0=B0=B0=B0=B0=B0=B0=B0=B0=
-=B0
-su www.tim.it - Clienti Privati -, Puoi votare la tua MMS SuperSTAR =
-preferita e vincere un telefonino Nokia 3220.
-=B0=B0=B0=B0=B0=B0=B0=B0=B0=B0=B0=B0=B0=B0=B0=B0=B0=B0=B0=B0=B0=B0=B0=B0=B0=
-=B0=B0=B0=B0=B0=B0=B0=B0=B0=B0=B0=B0=B0=B0=B0=B0=B0=B0=B0=B0=B0=B0=B0=B0=B0=
-=B0=B0=B0=B0=B0=B0=B0=B0=B0=B0=B0=B0=B0=B0=B0=B0=B0=B0=B0=B0=B0=B0=B0=B0=B0=
-=B0
-
-
-------_=_NextPart_001_01C5D55B.4B1DFC66
-Content-Type: application/ms-tnef;
-	name="winmail.dat"
-Content-Transfer-Encoding: base64
-
-eJ8+IiEJAQaQCAAEAAAAAAABAAEAAQeQBgAIAAAA5AQAAAAAAADoAAENgAQAAgAAAAIAAgABBYAD
-AA4AAADVBwoAFAALAC8AIAAEAFgBASCAAwAOAAAA1QcKABQACwAvACAABABYAQEJgAEAIQAAAERD
-RTZGNjhFM0EyNUQxNEE4MUE5NEJDNzRFRTUyRTUyAGQHAQOQBgDoEgAAOAAAAB8AGgABAAAAEgAA
-AEkAUABNAC4ATgBvAHQAZQAAAAAAAwA2AAAAAAAfADcAAQAAAEIAAABSAEkARgA6ACAAWwBsAGkA
-bgB1AHgALQBsAHYAbQBdACAATABWAE0AMgAgAHAAcgBvAGIAbABlAG0AcwAhACEAAAAAAEAAOQBm
-/B1LW9XFAR8APQABAAAADAAAAFIASQBGADoAIAAAAAIBRwABAAAALwAAAGM9SVQ7YT0gO3A9VElN
-O2w9RTJLTUJYMjBWUy0wNTEwMjAwOTQ3MzJaLTMyMzcAAB8ASQABAAAAQAAAAFIAZQA6ACAAWwBs
-AGkAbgB1AHgALQBsAHYAbQBdACAATABWAE0AMgAgAHAAcgBvAGIAbABlAG0AcwAhACEAAABAAE4A
-AO87u1nVxQEfAFoAAQAAADoAAABsAGkAbgB1AHgALQBsAHYAbQAtAGIAbwB1AG4AYwBlAHMAQABy
-AGUAZABoAGEAdAAuAGMAbwBtAAAAAAACAVsAAQAAAFcAAAAAAAAAgSsfpL6jEBmdbgDdAQ9UAgAA
-AABsaW51eC1sdm0tYm91bmNlc0ByZWRoYXQuY29tAFNNVFAAbGludXgtbHZtLWJvdW5jZXNAcmVk
-aGF0LmNvbQAAAgFcAAEAAAAiAAAAU01UUDpMSU5VWC1MVk0tQk9VTkNFU0BSRURIQVQuQ09NAAAA
-HwBdAAEAAAAkAAAAUABhAHQAcgBpAGMAawAgAEMAYQB1AGwAZgBpAGUAbABkAAAAAgFeAAEAAABD
-AAAAAAAAAIErH6S+oxAZnW4A3QEPVAIAAAAAUGF0cmljayBDYXVsZmllbGQAU01UUABwY2F1bGZp
-ZUByZWRoYXQuY29tAAACAV8AAQAAABkAAABTTVRQOlBDQVVMRklFQFJFREhBVC5DT00AAAAAHwBm
-AAEAAAAKAAAAUwBNAFQAUAAAAAAAHwBnAAEAAAA6AAAAbABpAG4AdQB4AC0AbAB2AG0ALQBiAG8A
-dQBuAGMAZQBzAEAAcgBlAGQAaABhAHQALgBjAG8AbQAAAAAAHwBoAAEAAAAKAAAAUwBNAFQAUAAA
-AAAAHwBpAAEAAAAoAAAAcABjAGEAdQBsAGYAaQBlAEAAcgBlAGQAaABhAHQALgBjAG8AbQAAAB8A
-cAABAAAAOAAAAFsAbABpAG4AdQB4AC0AbAB2AG0AXQAgAEwAVgBNADIAIABwAHIAbwBiAGwAZQBt
-AHMAIQAhAAAAAgFxAAEAAAAbAAAAAcXVWhe755zoefhORdOdvSQRPy74uwAAITptAB8AdAABAAAA
-TgAAAEwAVgBNACAAZwBlAG4AZQByAGEAbAAgAGQAaQBzAGMAdQBzAHMAaQBvAG4AIABhAG4AZAAg
-AGQAZQB2AGUAbABvAHAAbQBlAG4AdAAAAAAAHwAaDAEAAAAyAAAAQwBhAGwAaQBnAGkAdQByAGkA
-LAAgAE0AYQByAGMAbwAgAEUAcgBuAGUAcwB0AG8AAAAAAB8AHQ4BAAAAOAAAAFsAbABpAG4AdQB4
-AC0AbAB2AG0AXQAgAEwAVgBNADIAIABwAHIAbwBiAGwAZQBtAHMAIQAhAAAAAgEJEAEAAACWCQAA
-kgkAAGweAABMWkZ1B0uDNwMACgByY3BnMTI1gjIDQ2h0bWwxAzA/AQMB9wqAAqQD4wIAY2jBCsBz
-ZXQwIAcTAoD/EAMAUARWCFUHshHVDlEDAd0Q1zIGAAbDEdUzBEYQ2W8S6xHjCO8J9zsYzw4wNTsR
-0gxgYwBQCwkBZDM2kxFgC6U0IBACKlwOsr0BkGcU8AqjEeMd6DQU8AA8IURPQ1RZUABFIEhUTUwg
-UABVQkxJQyAiLSAvL1czQyGARFQiRCCUMy4yIYBFTpwiPh7tHo8jwTE4H/BvIKIjDyQfJpAzHYAl
-cEV8QUQlzQ7xJu8pbyT0NkEO8DxNRVRBB7BBMSxgPSJHCfAEkGF0RQWwIhLQT05UItBUEyzwBeFF
-eBDxbmdlPQZSdhMxL0EAkAIgIDawLjAuNhzgIoAwIv4TKs8lAzc3H/BUSVQUTEUlzjQO8FJlOggg
-W2wLgHV4LWyAdm1dIExWTRTwBnADYAJgZW1zISH1JG41H/AvM08xfyZFNJEvN9AoTyafO6Q1EWA8
-QgBPRFkgZGlyPX07wHI7EDuDACEDMD4hZM5vAOA+IQqxXHEYsD4hfxDwAzA+hRFgOzsc8Tw/Z8Q5
-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
-j+GaQbLQsZ+yr7O8QaE/FYCqH6svOqiJYQhQT1f4LVRPJsDSbbVvtnTBgZJ0urBwLkKQZy/OYfXO
-oC+JYS3SBLmvur+7yv/RT9Jav2/AftXv0lnFj8Vf/8Zvx3/Ij8mf3Z/u79zv+4f/8n76D+Hf8YT0
-cfnR83/0gABCTE9DS1FVT3xURePP5+/2/+0/98c14/4x6qBPRFnfPd7g7v+F+DE39HFIVE1M4JAC
-ffOwAAAfADUQAQAAAIwAAAA8AEQARQA3ADcARQAyAEYAQgA2AEUANgA3ADQAQQA0ADAAQgAxAEIA
-NgA2ADEAQgA0AEQAOQAxAEYAMQBGAEUANQAwADEAQQBBAEEANQAyADYAQABFADIASwBNAEIAWAAy
-ADAAVgBTAC4AaQBuAHQAcgBhAG4AZQB0AC4AdABpAG0ALgBpAHQAPgAAAB8ARxABAAAAHgAAAG0A
-ZQBzAHMAYQBnAGUALwByAGYAYwA4ADIAMgAAAAAACwDyEAEAAAAfAPMQAQAAAE4AAABSAEkARgAl
-ADMAQQAgAFsAbABpAG4AdQB4AC0AbAB2AG0AXQAgAEwAVgBNADIAIABwAHIAbwBiAGwAZQBtAHMA
-IQAhAC4ARQBNAEwAAAAAAAsA9hAAAAAAQAAHMDqmpJxa1cUBQAAIMBrBIktb1cUBAwDeP+n9AAAD
-APE/EAQAAB8A+D8BAAAAMgAAAEMAYQBsAGkAZwBpAHUAcgBpACwAIABNAGEAcgBjAG8AIABFAHIA
-bgBlAHMAdABvAAAAAAACAfk/AQAAAE4AAAAAAAAA3KdAyMBCEBq0uQgAKy/hggEAAAAAAAAAL089
-VElNL09VPUVYQ0gxL0NOPVJFQ0lQSUVOVFMvQ049MTYwMDY1MDkzMjEyNTM1NgAAAB8A+j8BAAAA
-KgAAAFMAeQBzAHQAZQBtACAAQQBkAG0AaQBuAGkAcwB0AHIAYQB0AG8AcgAAAAAAAgH7PwEAAAAe
-AAAAAAAAANynQMjAQhAatLkIACsv4YIBAAAAAAAAAC4AAAADAP0/5AQAAAMAGUAAAAAAAwAaQAAA
-AAADAB1AAAAAAAMAHkAAAAAAHwAwQAEAAAAiAAAAMQA2ADAAMAA2ADUAMAA5ADMAMgAxADIANQAz
-ADUANgAAAAAAHwAxQAEAAAAiAAAAMQA2ADAAMAA2ADUAMAA5ADMAMgAxADIANQAzADUANgAAAAAA
-HwAyQAEAAAA6AAAAbABpAG4AdQB4AC0AbAB2AG0ALQBiAG8AdQBuAGMAZQBzAEAAcgBlAGQAaABh
-AHQALgBjAG8AbQAAAAAAHwAzQAEAAAAoAAAAcABjAGEAdQBsAGYAaQBlAEAAcgBlAGQAaABhAHQA
-LgBjAG8AbQAAAB8AOEABAAAAIgAAADEANgAwADAANgA1ADAAOQAzADIAMQAyADUAMwA1ADYAAAAA
-AB8AOUABAAAABAAAAC4AAAALACkAAAAAAAsAIwAAAAAAAwAGEKuxP5kDAAcQdgQAAAMAEBAAAAAA
-AwAREAAAAAAeAAgQAQAAAGUAAABPTlRISVNNQUNISU5FSUNBTlRVU0VSRURIQVRDTFVTVEVSU1VJ
-VEUsQkVDQVVTRVdFVVNFQURJRkZFUkVOVENMVVNURVJTT0ZUV0FSRVRIRURBRU1PTkNMVk1ESVNO
-RUNFU1NBAAAAAAIBfwABAAAARgAAADxERTc3RTJGQjZFNjc0QTQwQjFCNjYxQjREOTFGMUZFNTAx
-QUFBNTI2QEUyS01CWDIwVlMuaW50cmFuZXQudGltLml0PgAAAAG8
-
-------_=_NextPart_001_01C5D55B.4B1DFC66--
+------=_Part_307_5603331.1129802265031--
