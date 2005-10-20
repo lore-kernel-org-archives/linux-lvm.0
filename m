@@ -1,17 +1,18 @@
-Received: from fentible.pjc.net (vpn-4-31.stuttgart.redhat.com [10.32.4.31])
-	by pobox.surrey.redhat.com (8.12.8/8.12.8) with ESMTP id j9K9aNM0000535
-	for <linux-lvm@redhat.com>; Thu, 20 Oct 2005 10:36:23 +0100
-Received: from jeltz.pjc.net ([192.168.1.2])
-	by fentible.pjc.net with esmtp (Exim 4.50) id 1ESWqV-00089p-Oh
-	for linux-lvm@redhat.com; Thu, 20 Oct 2005 10:36:23 +0100
-Message-ID: <43576516.2050606@redhat.com>
-Date: Thu, 20 Oct 2005 10:36:22 +0100
-From: Patrick Caulfield <pcaulfie@redhat.com>
-MIME-Version: 1.0
-Subject: Re: [linux-lvm] LVM2 problems!!
-References: <DE77E2FB6E674A40B1B661B4D91F1FE501AAA523@E2KMBX20VS.intranet.tim.it>
-In-Reply-To: <DE77E2FB6E674A40B1B661B4D91F1FE501AAA523@E2KMBX20VS.intranet.tim.it>
+Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j9K9fRV10012
+	for <linux-lvm@redhat.com>; Thu, 20 Oct 2005 05:41:27 -0400
+Received: from e2kintsmtp01c.mail.tim.it (e2kintsmtp01c.mail.tim.it
+	[194.243.137.102])
+	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id j9K9fPLp027025
+	for <linux-lvm@redhat.com>; Thu, 20 Oct 2005 05:41:26 -0400
+Content-Class: urn:content-classes:message
 Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Type: multipart/mixed; boundary="----_=_NextPart_001_01C5D55A.6381AB64"
+Subject: RIF: [linux-lvm] LVM2 problems!!
+Date: Thu, 20 Oct 2005 11:41:04 +0200
+Message-ID: <DE77E2FB6E674A40B1B661B4D91F1FE501AAA525@E2KMBX20VS.intranet.tim.it>
+From: "Caligiuri, Marco Ernesto" <mcaligiuri.c@mail.tim.it>
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -22,24 +23,183 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-Caligiuri, Marco Ernesto wrote:
-> Hi to all....,
-> I'm Marco an italian user of RedHat Enterprise 4 , i have this kind of problems:
-> I must install GFS on a disk partition, non root-partition, it is /dev/sdc1 . Before to make a GFS filesystem...i need to create a volume with LVM2.
-> Id of partition is 8e (linux LVM)  but when i excute the command :
-> pvcreate /dev/sdc or pvcreate /dev/sdc1 and any other command of lvm (vgcreate...lvcreate....) i receive always the same error:
->  
-> connect() failed on local socket: Connection refused
->  Locking type 2 initialisation failed.
-> 
-> why?? Anyone can help me?
+This is a multi-part message in MIME format.
 
-That indicates that you have cluster locking enabled but that the cluster LVM
-daemon (clvmd) is not running.
+------_=_NextPart_001_01C5D55A.6381AB64
+Content-Type: text/plain;
+	charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 
--- 
+My root partition is :
+=20
+/dev/sda3 on / type ext3 (rw)
+=20
+/dev/sda8 on /var type ext3 (rw,nodev)
+=20
+they aren't read-only.....??
+I don't know..... the storage is Hitachi external... can be a =
+compatibility problem?
+=20
+Ciao
+Marco
 
-patrick
+	-----Messaggio originale-----=20
+	Da: linux-lvm-bounces@redhat.com per conto di Klaus Strebel=20
+	Inviato: gio 20/10/2005 11.21=20
+	A: LVM general discussion and development=20
+	Cc:=20
+	Oggetto: Re: [linux-lvm] LVM2 problems!!
+=09
+=09
+
+	Caligiuri, Marco Ernesto schrieb:
+	> Hi to all....,
+	> pvcreate /dev/sdc or pvcreate /dev/sdc1 and any other command of lvm =
+(vgcreate...lvcreate....) i receive always the same error:
+	>=20
+	> connect() failed on local socket: Connection refused
+	>  Locking type 2 initialisation failed.
+	>
+	> why?? Anyone can help me?
+	Is your root or var read-only ( this message usually happens in that =
+case )?
+=09
+	Ciao
+	Klaus
+=09
+	Klaus Strebel, Dipl.-Inform. (FH), mailto:klaus.strebel@gmx.net
+=09
+	/"\
+	\ /     ASCII RIBBON CAMPAIGN
+	  X        AGAINST HTML MAIL
+	/ \
+=09
+=09
+	_______________________________________________
+	linux-lvm mailing list
+	linux-lvm@redhat.com
+	https://www.redhat.com/mailman/listinfo/linux-lvm
+	read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+=09
+
+
+This message is for the designated recipient only and may contain =
+privileged or confidential information. If you have received it in =
+error, please notify the sender immediately and delete the original. Any =
+other use of the email by you is prohibited.
+
+
+=B0=B0=B0=B0=B0=B0=B0=B0=B0=B0=B0=B0=B0=B0=B0=B0=B0=B0=B0=B0=B0=B0=B0=B0=B0=
+=B0=B0=B0=B0=B0=B0=B0=B0=B0=B0=B0=B0=B0=B0=B0=B0=B0=B0=B0=B0=B0=B0=B0=B0=B0=
+=B0=B0=B0=B0=B0=B0=B0=B0=B0=B0=B0=B0=B0=B0=B0=B0=B0=B0=B0=B0=B0=B0=B0=B0=B0=
+=B0
+su www.tim.it - Clienti Privati -, Puoi votare la tua MMS SuperSTAR =
+preferita e vincere un telefonino Nokia 3220.
+=B0=B0=B0=B0=B0=B0=B0=B0=B0=B0=B0=B0=B0=B0=B0=B0=B0=B0=B0=B0=B0=B0=B0=B0=B0=
+=B0=B0=B0=B0=B0=B0=B0=B0=B0=B0=B0=B0=B0=B0=B0=B0=B0=B0=B0=B0=B0=B0=B0=B0=B0=
+=B0=B0=B0=B0=B0=B0=B0=B0=B0=B0=B0=B0=B0=B0=B0=B0=B0=B0=B0=B0=B0=B0=B0=B0=B0=
+=B0
+
+
+------_=_NextPart_001_01C5D55A.6381AB64
+Content-Type: application/ms-tnef;
+	name="winmail.dat"
+Content-Transfer-Encoding: base64
+
+eJ8+IgUJAQaQCAAEAAAAAAABAAEAAQeQBgAIAAAA5AQAAAAAAADoAAENgAQAAgAAAAIAAgABBYAD
+AA4AAADVBwoAFAALACkABAAEADYBASCAAwAOAAAA1QcKABQACwApAAQABAA2AQEJgAEAIQAAADI5
+MUJGM0RCRUU4MDg3NEJBQjBEMkI4ODVCRTQwQ0QxAGcHAQOQBgAQFAAAOAAAAB8AGgABAAAAEgAA
+AEkAUABNAC4ATgBvAHQAZQAAAAAAAwA2AAAAAAAfADcAAQAAAEIAAABSAEkARgA6ACAAWwBsAGkA
+bgB1AHgALQBsAHYAbQBdACAATABWAE0AMgAgAHAAcgBvAGIAbABlAG0AcwAhACEAAAAAAEAAOQBk
+q4FjWtXFAR8APQABAAAADAAAAFIASQBGADoAIAAAAAIBRwABAAAALwAAAGM9SVQ7YT0gO3A9VElN
+O2w9RTJLTUJYMjBWUy0wNTEwMjAwOTQxMDRaLTMyMDcAAB8ASQABAAAAQAAAAFIAZQA6ACAAWwBs
+AGkAbgB1AHgALQBsAHYAbQBdACAATABWAE0AMgAgAHAAcgBvAGIAbABlAG0AcwAhACEAAABAAE4A
+AImPp1fVxQEfAFoAAQAAADoAAABsAGkAbgB1AHgALQBsAHYAbQAtAGIAbwB1AG4AYwBlAHMAQABy
+AGUAZABoAGEAdAAuAGMAbwBtAAAAAAACAVsAAQAAAFcAAAAAAAAAgSsfpL6jEBmdbgDdAQ9UAgAA
+AABsaW51eC1sdm0tYm91bmNlc0ByZWRoYXQuY29tAFNNVFAAbGludXgtbHZtLWJvdW5jZXNAcmVk
+aGF0LmNvbQAAAgFcAAEAAAAiAAAAU01UUDpMSU5VWC1MVk0tQk9VTkNFU0BSRURIQVQuQ09NAAAA
+HwBdAAEAAAAcAAAASwBsAGEAdQBzACAAUwB0AHIAZQBiAGUAbAAAAAIBXgABAAAAQQAAAAAAAACB
+Kx+kvqMQGZ1uAN0BD1QCAAAAAEtsYXVzIFN0cmViZWwAU01UUABrbGF1cy5zdHJlYmVsQGdteC5u
+ZXQAAAAAAgFfAAEAAAAbAAAAU01UUDpLTEFVUy5TVFJFQkVMQEdNWC5ORVQAAB8AZgABAAAACgAA
+AFMATQBUAFAAAAAAAB8AZwABAAAAOgAAAGwAaQBuAHUAeAAtAGwAdgBtAC0AYgBvAHUAbgBjAGUA
+cwBAAHIAZQBkAGgAYQB0AC4AYwBvAG0AAAAAAB8AaAABAAAACgAAAFMATQBUAFAAAAAAAB8AaQAB
+AAAALAAAAGsAbABhAHUAcwAuAHMAdAByAGUAYgBlAGwAQABnAG0AeAAuAG4AZQB0AAAAHwBwAAEA
+AAA4AAAAWwBsAGkAbgB1AHgALQBsAHYAbQBdACAATABWAE0AMgAgAHAAcgBvAGIAbABlAG0AcwAh
+ACEAAAACAXEAAQAAABsAAAABxdVYC5P0OLejBZZOJII8Er3h2Ln+AABiXLQAHwB0AAEAAABOAAAA
+TABWAE0AIABnAGUAbgBlAHIAYQBsACAAZABpAHMAYwB1AHMAcwBpAG8AbgAgAGEAbgBkACAAZABl
+AHYAZQBsAG8AcABtAGUAbgB0AAAAAAAfABoMAQAAADIAAABDAGEAbABpAGcAaQB1AHIAaQAsACAA
+TQBhAHIAYwBvACAARQByAG4AZQBzAHQAbwAAAAAAHwAdDgEAAAA4AAAAWwBsAGkAbgB1AHgALQBs
+AHYAbQBdACAATABWAE0AMgAgAHAAcgBvAGIAbABlAG0AcwAhACEAAAACAQkQAQAAAMAKAAC8CgAA
+8SkAAExaRnW6cOPzAwAKAHJjcGcxMjWCMgNDaHRtbDEDMD8BAwH3CoACpAPjAgBjaMEKwHNldDAg
+BxMCgP8QAwBQBFYIVQeyEdUOUQMB3RDXMgYABsMR1TMERhDZ+RLvZjQQbxF2EeMI7wn3tjsavw4w
+NRHSDGBjAFAzCwkBZDM2EWALpTQg2RACKlwOsgGQZxTwCqMLEeMf2DQU8DwhRE8AQ1RZUEUgSFQA
+TUwgUFVCTEkAQyAiLS8vVzMiQyNwRFREIoQzLsIyI3BFTiI+IN0gf/klsTE4IeAikiT/Jg8ogMYz
+H3AnYEVBRCe9DvEXKN8rXybkNg7wPE1FFFRBB7BBLlA9IkdTCfAEkGF0BbAiFxBPNE5UJMBULuAF
+4UV40RDxbmdlBlJ2EzExMQMAkAIgIDYuMC42Ox7QJHAwJO4svybzNzdBIeBUSVRMRSe+NIEO8FJl
+OiBbbAuAAHV4LWx2bV0gaExWTRTwcANgAmBlUG1zISEmXjUh4C//NT8zbyg1NoE5wCo/KI89lAI1
+EWA8Qk9EWSDQZGlyPT2wcj0APXPnACEDMEARZG8A4EARCrH8XHEaoEAREPADMEB1EWBHPSse4T4v
+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
+L+G/1P/CPyLPfyPfJO8l/ycPKB8pL9XtQRBTQ0lJf9BJQkIDmoD4kEFNUEFJR/5OHL8dzxifK08s
+X+O/IF/9Sn5YMl8zbypfOC85PzpP/ztfPG89fz6PP59Ar0G/Qs+fQ99E70X/Rw80P0FHLxCETlOa
+oEhUTUydgP0vEEwvXzBvG501PzZPs4X/HJ9ODzFfUu9T/1UPVh9XL/1YOF9b31zvXbpY31nvV/x/
+gDdQL1E/s4UQ4tcS2CF0r17PX99g74BkQK3AZPHx/i6w8WWvZr9X/wcfCCpKkIB0cHM6Ly93b2Da
+LmlILxDisSEvZWJr8P8GIHDBYeUKrwu/DMZu72///3EODx8QKnSfda9xDRPvE7//bI8V32pfa29+
+peyiYl9jbyOzhbcSTFZNpIBPV/gtVE+2kPIQbO9t/3mgJXnRdHMAcC4GMGcv64axhvAvhnEtilRx
+/3MP/3QaiZ+Kqne/eM6OP4qpfd9/fa9+v3/PgN+B75XvmEI16ZiRL0YuoFSLaZRv3dC/hKKVqJno
+hJOZ74QGN5cyClCXjjCIMS9CTE+AQ0tRVU9URZwfPaA/Zx+RhL+lz4QzNTjxotJPRFmXjdegp0+p
+0S43l0FMgotgfawAHwA1EAEAAACMAAAAPABEAEUANwA3AEUAMgBGAEIANgBFADYANwA0AEEANAAw
+AEIAMQBCADYANgAxAEIANABEADkAMQBGADEARgBFADUAMAAxAEEAQQBBADUAMgA1AEAARQAyAEsA
+TQBCAFgAMgAwAFYAUwAuAGkAbgB0AHIAYQBuAGUAdAAuAHQAaQBtAC4AaQB0AD4AAAAfAEcQAQAA
+AB4AAABtAGUAcwBzAGEAZwBlAC8AcgBmAGMAOAAyADIAAAAAAAsA8hABAAAAHwDzEAEAAABOAAAA
+UgBJAEYAJQAzAEEAIABbAGwAaQBuAHUAeAAtAGwAdgBtAF0AIABMAFYATQAyACAAcAByAG8AYgBs
+AGUAbQBzACEAIQAuAEUATQBMAAAAAAALAPYQAAAAAEAABzAyHgGVWdXFAUAACDAml41jWtXFAQMA
+3j/p/QAAAwDxPxAEAAAfAPg/AQAAADIAAABDAGEAbABpAGcAaQB1AHIAaQAsACAATQBhAHIAYwBv
+ACAARQByAG4AZQBzAHQAbwAAAAAAAgH5PwEAAABOAAAAAAAAANynQMjAQhAatLkIACsv4YIBAAAA
+AAAAAC9PPVRJTS9PVT1FWENIMS9DTj1SRUNJUElFTlRTL0NOPTE2MDA2NTA5MzIxMjUzNTYAAAAf
+APo/AQAAACoAAABTAHkAcwB0AGUAbQAgAEEAZABtAGkAbgBpAHMAdAByAGEAdABvAHIAAAAAAAIB
++z8BAAAAHgAAAAAAAADcp0DIwEIQGrS5CAArL+GCAQAAAAAAAAAuAAAAAwD9P+QEAAADABlAAAAA
+AAMAGkAAAAAAAwAdQAAAAAADAB5AAAAAAB8AMEABAAAAIgAAADEANgAwADAANgA1ADAAOQAzADIA
+MQAyADUAMwA1ADYAAAAAAB8AMUABAAAAIgAAADEANgAwADAANgA1ADAAOQAzADIAMQAyADUAMwA1
+ADYAAAAAAB8AMkABAAAAOgAAAGwAaQBuAHUAeAAtAGwAdgBtAC0AYgBvAHUAbgBjAGUAcwBAAHIA
+ZQBkAGgAYQB0AC4AYwBvAG0AAAAAAB8AM0ABAAAALAAAAGsAbABhAHUAcwAuAHMAdAByAGUAYgBl
+AGwAQABnAG0AeAAuAG4AZQB0AAAAHwA4QAEAAAAiAAAAMQA2ADAAMAA2ADUAMAA5ADMAMgAxADIA
+NQAzADUANgAAAAAAHwA5QAEAAAAEAAAALgAAAAsAKQAAAAAACwAjAAAAAAADAAYQPQEZkAMABxBz
+AwAAAwAQEAAAAAADABEQAAAAAB4ACBABAAAAZQAAAE1ZUk9PVFBBUlRJVElPTklTOi9ERVYvU0RB
+M09OL1RZUEVFWFQzKFJXKS9ERVYvU0RBOE9OL1ZBUlRZUEVFWFQzKFJXLE5PREVWKVRIRVlBUkVO
+VFJFQUQtT05MWT8/SURPTlQAAAAAAgF/AAEAAABGAAAAPERFNzdFMkZCNkU2NzRBNDBCMUI2NjFC
+NEQ5MUYxRkU1MDFBQUE1MjVARTJLTUJYMjBWUy5pbnRyYW5ldC50aW0uaXQ+AAAAdlU=
+
+------_=_NextPart_001_01C5D55A.6381AB64--
