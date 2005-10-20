@@ -1,17 +1,16 @@
-Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j9K9OFV05577
-	for <linux-lvm@redhat.com>; Thu, 20 Oct 2005 05:24:15 -0400
-Received: from moutng.kundenserver.de (moutng.kundenserver.de
-	[212.227.126.186])
-	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id j9K9O8Tv011289
-	for <linux-lvm@redhat.com>; Thu, 20 Oct 2005 05:24:09 -0400
-Message-ID: <43576233.8030605@gmx.net>
-Date: Thu, 20 Oct 2005 11:24:03 +0200
-From: Klaus Strebel <klaus.strebel@gmx.net>
+Received: from fentible.pjc.net (vpn-4-31.stuttgart.redhat.com [10.32.4.31])
+	by pobox.surrey.redhat.com (8.12.8/8.12.8) with ESMTP id j9K9aNM0000535
+	for <linux-lvm@redhat.com>; Thu, 20 Oct 2005 10:36:23 +0100
+Received: from jeltz.pjc.net ([192.168.1.2])
+	by fentible.pjc.net with esmtp (Exim 4.50) id 1ESWqV-00089p-Oh
+	for linux-lvm@redhat.com; Thu, 20 Oct 2005 10:36:23 +0100
+Message-ID: <43576516.2050606@redhat.com>
+Date: Thu, 20 Oct 2005 10:36:22 +0100
+From: Patrick Caulfield <pcaulfie@redhat.com>
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] setting up LVM, lost everything with a typo
-References: <80d985600510191907na711430v24a1fe95264ebd48@mail.gmail.com>
-In-Reply-To: <80d985600510191907na711430v24a1fe95264ebd48@mail.gmail.com>
+Subject: Re: [linux-lvm] LVM2 problems!!
+References: <DE77E2FB6E674A40B1B661B4D91F1FE501AAA523@E2KMBX20VS.intranet.tim.it>
+In-Reply-To: <DE77E2FB6E674A40B1B661B4D91F1FE501AAA523@E2KMBX20VS.intranet.tim.it>
 Content-Transfer-Encoding: 7bit
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
@@ -23,52 +22,24 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
+Content-Type: text/plain; charset="us-ascii"
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-Craig Hagerman schrieb:
-> ... vgchange can't help out....
+Caligiuri, Marco Ernesto wrote:
+> Hi to all....,
+> I'm Marco an italian user of RedHat Enterprise 4 , i have this kind of problems:
+> I must install GFS on a disk partition, non root-partition, it is /dev/sdc1 . Before to make a GFS filesystem...i need to create a volume with LVM2.
+> Id of partition is 8e (linux LVM)  but when i excute the command :
+> pvcreate /dev/sdc or pvcreate /dev/sdc1 and any other command of lvm (vgcreate...lvcreate....) i receive always the same error:
+>  
+> connect() failed on local socket: Connection refused
+>  Locking type 2 initialisation failed.
 > 
-> % vgchange -a y media_vg
->   Couldn't find device with uuid 'ZHl4Ak-mGS4-wFlF-4neF-G1Ed-GxWB-C4Smj6'.
->   Couldn't find all physical volumes for volume group media_vg.
->   Couldn't find device with uuid 'ZHl4Ak-mGS4-wFlF-4neF-G1Ed-GxWB-C4Smj6'.
->   Couldn't find all physical volumes for volume group media_vg.
->   Unable to find volume group "media_vg"
-> 
-> ....vgdisplay can't see either disc (exact same story with lvdisplay)...
-> 
-> vgdisplay
->   Couldn't find device with uuid 'ZHl4Ak-mGS4-wFlF-4neF-G1Ed-GxWB-C4Smj6'.
->   Couldn't find all physical volumes for volume group media_vg.
->   Couldn't find device with uuid 'ZHl4Ak-mGS4-wFlF-4neF-G1Ed-GxWB-C4Smj6'.
->   Couldn't find all physical volumes for volume group media_vg.
->   Volume group "media_vg" doesn't exist
-> 
-> ... and pvdisplay gives me...
-> 
-> % pvdisplay
->   Couldn't find device with uuid 'ZHl4Ak-mGS4-wFlF-4neF-G1Ed-GxWB-C4Smj6'.
->   --- Physical volume ---
->   PV Name               /dev/sdb1
->   VG Name               media_vg
->   PV Size               233.75 GB / not usable 0
->   Allocatable           yes
->   PE Size (KByte)       4096
->   Total PE              59841
->   Free PE               193
->   Allocated PE          59648
->   PV UUID               rlnV4y-B4eJ-Pyc0-RLJm-2Zbv-t04C-dxzU1A
- > ...
+> why?? Anyone can help me?
 
-What says vgscan in debug mode (you need vgscan before doing a vgchange).
+That indicates that you have cluster locking enabled but that the cluster LVM
+daemon (clvmd) is not running.
 
-Ciao
-Klaus
---
-Klaus Strebel, Dipl.-Inform. (FH), mailto:klaus.strebel@gmx.net
+-- 
 
-/"\
-\ /     ASCII RIBBON CAMPAIGN
-  X        AGAINST HTML MAIL
-/ \
+patrick
