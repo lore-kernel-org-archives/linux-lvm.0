@@ -1,20 +1,22 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j9KLb2V16099
-	for <linux-lvm@redhat.com>; Thu, 20 Oct 2005 17:37:02 -0400
-Received: from sccimhc92.asp.att.net (sccimhc92.asp.att.net [63.240.76.166])
-	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id j9KLaqHp014182
-	for <linux-lvm@redhat.com>; Thu, 20 Oct 2005 17:36:56 -0400
-Received: from randy.randyperkins.com ([192.168.0.200])
-	by localhost.localdomain with esmtp (Exim 4.52) id 1ESi5Y-000540-SV
-	for linux-lvm@redhat.com; Thu, 20 Oct 2005 16:36:40 -0500
-Subject: Re: [linux-lvm] Reducing ext3 LV
-From: Randy Perkins <randyperkins@randyperkins.com>
-In-Reply-To: <43572E5D.1010803@snow.email.ne.jp>
-References: <43572E5D.1010803@snow.email.ne.jp>
-Date: Thu, 20 Oct 2005 16:36:46 -0500
-Message-Id: <1129844206.25448.4.camel@localhost.localdomain>
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j9KN4LV04129
+	for <linux-lvm@redhat.com>; Thu, 20 Oct 2005 19:04:21 -0400
+Received: from qproxy.gmail.com (qproxy.gmail.com [72.14.204.207])
+	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id j9KN4FhL000662
+	for <linux-lvm@redhat.com>; Thu, 20 Oct 2005 19:04:15 -0400
+Received: by qproxy.gmail.com with SMTP id q10so11375qbq
+	for <linux-lvm@redhat.com>; Thu, 20 Oct 2005 16:04:14 -0700 (PDT)
+Message-ID: <80d985600510201557ibdc20d1w8b6105c2142d5cb9@mail.gmail.com>
+Date: Fri, 21 Oct 2005 07:57:31 +0900
+From: Craig Hagerman <craighagerman@gmail.com>
+Subject: Re: [linux-lvm] setting up LVM, lost everything with a typo
+In-Reply-To: <170fa0d20510201256q2f6abdd5tf507720ae2e9aa16@mail.gmail.com>
+MIME-Version: 1.0
+Content-Disposition: inline
+References: <80d985600510191907na711430v24a1fe95264ebd48@mail.gmail.com>
+	<170fa0d20510201254t60dbd4d6r510c41149ff5487b@mail.gmail.com>
+	<170fa0d20510201256q2f6abdd5tf507720ae2e9aa16@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -28,29 +30,47 @@ List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-On Thu, 2005-10-20 at 14:42 +0900, Mark Sargent wrote:
-> Hi All,
-> 
-> new here. I'm using ext3 LVM and want to resize a 75GB LV to 20GB. How 
-> is this done.? Current data = 5GB. Cheers.
-> 
-> Mark Sargent.
+On 10/21/05, Mike Snitzer <snitzer@gmail.com> wrote:
+> Last line should've been:
+>  vgcfgrestore -f /etc/lvm/backup/media_vg media_vg
+>
+>
+>
+> ---------- Forwarded message ----------
+> From: Mike Snitzer <snitzer@gmail.com>
+> Date: Oct 20, 2005 3:54 PM
+> Subject: Re: [linux-lvm] setting up LVM, lost everything with a typo
+> To: LVM general discussion and development <linux-lvm@redhat.com>
+>
+>
+>  On 10/19/05, Craig Hagerman <craighagerman@gmail.com > wrote:
+> > Hi,
+> >
+> > I recently got a new HD and thought it was about time I started using
+> > LVM. Unfortunatly, I think I have ended up loosing all of my data due
+> > to a typo. I would like to know if my data is lost forever. If not,
+> > what can I do now to recover. Here is the whole story...
+>
+>  You've changed the partition table of /dev/sdb but the data itself _should_
+> still be intact (changing the type shouldn't adversely affect the offsets of
+> your sdb1 partition).  You might try the type change on /dev/sda2 and then
+> restore the backup of the media_vg's VGDA from /etc/lvm/backup/media_vg
+> using pvcreate and vgcfgrestore, something like:
+>
+>  pvcreate --restorefile /etc/lvm/backup/media_vg --uuid
+> rlnV4y-B4eJ-Pyc0-RLJm-2Zbv-t04C-dxzU1A /dev/sdb1
+>  pvcreate --restorefile /etc/lvm/backup/media_vg --uuid
+> ZHl4Ak-mGS4-wFlF-4neF-G1Ed-GxWB-C4Smj6 /dev/sda2
+>  vgcfgrestore -f /etc/lvm/backup/media_vg test_vg
+>
+>  That said, its unclear to me why /dev/sda2 is unknown...  so take my advise
+> at your own risk ;)
+>
+>
 
-i asked a similar question a couple weeks ago but got no response.
-this is how i did it
 
-umount /dev/path/to/lv
-e2fsadm -L 20G /dev/path/to/lv
+Thank you Mike - that did it. I am SO happy! I can mount the vg and
+everything is there. I think I will backup everything onto DVD (about
+180GB) before I do another reboot.
 
-additionally i wanted to remove a disk from the LV so:
-
-pvmove /dev/hdx
-vgreduce /dev/hdx
-
-i am by no means an lvm expert.  i joined the list to get help with my
-situation, and have been hanging out. maybe this will get you pointed in
-the right direction.
-
-good luck
-
-randy
+Craig
