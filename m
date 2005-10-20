@@ -1,17 +1,17 @@
-Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j9K9LbV05068
-	for <linux-lvm@redhat.com>; Thu, 20 Oct 2005 05:21:37 -0400
+Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j9K9OFV05577
+	for <linux-lvm@redhat.com>; Thu, 20 Oct 2005 05:24:15 -0400
 Received: from moutng.kundenserver.de (moutng.kundenserver.de
-	[212.227.126.177])
-	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id j9K9LZNN020712
-	for <linux-lvm@redhat.com>; Thu, 20 Oct 2005 05:21:35 -0400
-Message-ID: <4357619A.50903@gmx.net>
-Date: Thu, 20 Oct 2005 11:21:30 +0200
+	[212.227.126.186])
+	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id j9K9O8Tv011289
+	for <linux-lvm@redhat.com>; Thu, 20 Oct 2005 05:24:09 -0400
+Message-ID: <43576233.8030605@gmx.net>
+Date: Thu, 20 Oct 2005 11:24:03 +0200
 From: Klaus Strebel <klaus.strebel@gmx.net>
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] LVM2 problems!!
-References: <DE77E2FB6E674A40B1B661B4D91F1FE501AAA523@E2KMBX20VS.intranet.tim.it>
-In-Reply-To: <DE77E2FB6E674A40B1B661B4D91F1FE501AAA523@E2KMBX20VS.intranet.tim.it>
+Subject: Re: [linux-lvm] setting up LVM, lost everything with a typo
+References: <80d985600510191907na711430v24a1fe95264ebd48@mail.gmail.com>
+In-Reply-To: <80d985600510191907na711430v24a1fe95264ebd48@mail.gmail.com>
 Content-Transfer-Encoding: 7bit
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
@@ -26,19 +26,46 @@ List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-Caligiuri, Marco Ernesto schrieb:
-> Hi to all....,
-> pvcreate /dev/sdc or pvcreate /dev/sdc1 and any other command of lvm (vgcreate...lvcreate....) i receive always the same error:
->  
-> connect() failed on local socket: Connection refused
->  Locking type 2 initialisation failed.
+Craig Hagerman schrieb:
+> ... vgchange can't help out....
 > 
-> why?? Anyone can help me?
-Is your root or var read-only ( this message usually happens in that case )?
+> % vgchange -a y media_vg
+>   Couldn't find device with uuid 'ZHl4Ak-mGS4-wFlF-4neF-G1Ed-GxWB-C4Smj6'.
+>   Couldn't find all physical volumes for volume group media_vg.
+>   Couldn't find device with uuid 'ZHl4Ak-mGS4-wFlF-4neF-G1Ed-GxWB-C4Smj6'.
+>   Couldn't find all physical volumes for volume group media_vg.
+>   Unable to find volume group "media_vg"
+> 
+> ....vgdisplay can't see either disc (exact same story with lvdisplay)...
+> 
+> vgdisplay
+>   Couldn't find device with uuid 'ZHl4Ak-mGS4-wFlF-4neF-G1Ed-GxWB-C4Smj6'.
+>   Couldn't find all physical volumes for volume group media_vg.
+>   Couldn't find device with uuid 'ZHl4Ak-mGS4-wFlF-4neF-G1Ed-GxWB-C4Smj6'.
+>   Couldn't find all physical volumes for volume group media_vg.
+>   Volume group "media_vg" doesn't exist
+> 
+> ... and pvdisplay gives me...
+> 
+> % pvdisplay
+>   Couldn't find device with uuid 'ZHl4Ak-mGS4-wFlF-4neF-G1Ed-GxWB-C4Smj6'.
+>   --- Physical volume ---
+>   PV Name               /dev/sdb1
+>   VG Name               media_vg
+>   PV Size               233.75 GB / not usable 0
+>   Allocatable           yes
+>   PE Size (KByte)       4096
+>   Total PE              59841
+>   Free PE               193
+>   Allocated PE          59648
+>   PV UUID               rlnV4y-B4eJ-Pyc0-RLJm-2Zbv-t04C-dxzU1A
+ > ...
+
+What says vgscan in debug mode (you need vgscan before doing a vgchange).
 
 Ciao
 Klaus
-
+--
 Klaus Strebel, Dipl.-Inform. (FH), mailto:klaus.strebel@gmx.net
 
 /"\
