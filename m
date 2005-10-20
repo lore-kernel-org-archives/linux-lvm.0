@@ -1,22 +1,22 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j9KN4LV04129
-	for <linux-lvm@redhat.com>; Thu, 20 Oct 2005 19:04:21 -0400
-Received: from qproxy.gmail.com (qproxy.gmail.com [72.14.204.207])
-	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id j9KN4FhL000662
-	for <linux-lvm@redhat.com>; Thu, 20 Oct 2005 19:04:15 -0400
-Received: by qproxy.gmail.com with SMTP id q10so11375qbq
-	for <linux-lvm@redhat.com>; Thu, 20 Oct 2005 16:04:14 -0700 (PDT)
-Message-ID: <80d985600510201557ibdc20d1w8b6105c2142d5cb9@mail.gmail.com>
-Date: Fri, 21 Oct 2005 07:57:31 +0900
-From: Craig Hagerman <craighagerman@gmail.com>
-Subject: Re: [linux-lvm] setting up LVM, lost everything with a typo
-In-Reply-To: <170fa0d20510201256q2f6abdd5tf507720ae2e9aa16@mail.gmail.com>
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j9KNKWV07621
+	for <linux-lvm@redhat.com>; Thu, 20 Oct 2005 19:20:32 -0400
+Received: from mammoth.jinr.ru (mammoth.jinr.ru [159.93.44.107])
+	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id j9KNKMwH003949
+	for <linux-lvm@redhat.com>; Thu, 20 Oct 2005 19:20:23 -0400
+Received: from mammoth.jinr.ru (localhost.localdomain [127.0.0.1])
+	by mammoth.jinr.ru (8.13.1/8.13.1) with ESMTP id j9KNKL4d018053
+	for <linux-lvm@redhat.com>; Fri, 21 Oct 2005 03:20:21 +0400
+Received: from localhost (vvm@localhost)
+	by mammoth.jinr.ru (8.13.1/8.13.1/Submit) with ESMTP id j9KNKLar018048
+	for <linux-lvm@redhat.com>; Fri, 21 Oct 2005 03:20:21 +0400
+Date: Fri, 21 Oct 2005 03:20:21 +0400 (MSD)
+From: Valery Mitsyn <vvm@mammoth.jinr.ru>
+Subject: Re: [linux-lvm] Problem with LVM2 and device-mapper
+In-Reply-To: <1129665057.4262.7.camel@cantrell.patsoffice.com>
+Message-ID: <Pine.LNX.4.63.0510210311020.15833@mammoth.jinr.ru>
+References: <1129665057.4262.7.camel@cantrell.patsoffice.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-References: <80d985600510191907na711430v24a1fe95264ebd48@mail.gmail.com>
-	<170fa0d20510201254t60dbd4d6r510c41149ff5487b@mail.gmail.com>
-	<170fa0d20510201256q2f6abdd5tf507720ae2e9aa16@mail.gmail.com>
-Content-Transfer-Encoding: 8bit
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -27,50 +27,68 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: TEXT/PLAIN; charset="us-ascii"; format="flowed"
+Content-Transfer-Encoding: 7bit
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-On 10/21/05, Mike Snitzer <snitzer@gmail.com> wrote:
-> Last line should've been:
->  vgcfgrestore -f /etc/lvm/backup/media_vg media_vg
->
->
->
-> ---------- Forwarded message ----------
-> From: Mike Snitzer <snitzer@gmail.com>
-> Date: Oct 20, 2005 3:54 PM
-> Subject: Re: [linux-lvm] setting up LVM, lost everything with a typo
-> To: LVM general discussion and development <linux-lvm@redhat.com>
->
->
->  On 10/19/05, Craig Hagerman <craighagerman@gmail.com > wrote:
-> > Hi,
-> >
-> > I recently got a new HD and thought it was about time I started using
-> > LVM. Unfortunatly, I think I have ended up loosing all of my data due
-> > to a typo. I would like to know if my data is lost forever. If not,
-> > what can I do now to recover. Here is the whole story...
->
->  You've changed the partition table of /dev/sdb but the data itself _should_
-> still be intact (changing the type shouldn't adversely affect the offsets of
-> your sdb1 partition).  You might try the type change on /dev/sda2 and then
-> restore the backup of the media_vg's VGDA from /etc/lvm/backup/media_vg
-> using pvcreate and vgcfgrestore, something like:
->
->  pvcreate --restorefile /etc/lvm/backup/media_vg --uuid
-> rlnV4y-B4eJ-Pyc0-RLJm-2Zbv-t04C-dxzU1A /dev/sdb1
->  pvcreate --restorefile /etc/lvm/backup/media_vg --uuid
-> ZHl4Ak-mGS4-wFlF-4neF-G1Ed-GxWB-C4Smj6 /dev/sda2
->  vgcfgrestore -f /etc/lvm/backup/media_vg test_vg
->
->  That said, its unclear to me why /dev/sda2 is unknown...  so take my advise
-> at your own risk ;)
->
->
+Patrick,
+
+I am using Scientific Linux CERN SLC release 4.1.
+got the some problem after upgrade too.
 
 
-Thank you Mike - that did it. I am SO happy! I can mount the vg and
-everything is there. I think I will backup everything onto DVD (about
-180GB) before I do another reboot.
+On Tue, 18 Oct 2005, Patrick Lawrence (LVM List) wrote:
 
-Craig
+> Hello,
+>
+> I am using CentOS 4 and just did an upgrade from 4.1 to 4.2 on my x86_64
+> home server.  After a reboot, one of my vol groups stopped working.
+> It's a volume group spread across 2 disks and when I try to activate
+> that volgroup I get the following:
+>
+> <snip>
+> [root@hetfield mapper]# vgchange -ay VolGroup02
+>   device-mapper ioctl cmd 9 failed: Invalid argument
+>   Couldn't load device 'VolGroup02-DVD'.
+>   1 logical volume(s) in volume group "VolGroup02" now active
+
+  Got the some problem after upgrade too.
+For me it was "/sbin/dmraid -i -a y" in /etc/rc.d/rc.sysinit
+which grab and lock somehow PV on PDC (hmmm. RAID card).
+I don't know how it happend in details but looks like
+"rpm -e dmraid" should help.
+
+> <snip>
+>
+> and the relevant portion of the /var/log/messages has:
+>
+> <snip>
+> Oct 17 08:45:07 hetfield kernel: device-mapper: dm-linear: Device lookup
+> failed
+> Oct 17 08:45:07 hetfield kernel: device-mapper: error adding target to
+> table
+> <snip>
+>
+> My other two volgroups are working fine.  It's just this third one that
+> has problems.
+>
+> I did quite a bit of googling yesterday, but I didn't come up with much
+> although I have to confess that I know jack about the device mapper...
+>
+> Is there anything I can provide to diagnose the problem further?  Since
+> CentOS tracks RHEL4 very closely, I suspect this affects RHEL4 as well.
+>
+> Regards,
+>
+> Pat
+>
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@redhat.com
+> https://www.redhat.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+>
+
+-- 
+Best regards,
+  Valery Mitsyn
