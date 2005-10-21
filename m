@@ -1,15 +1,28 @@
 Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j9KCKSV19943
-	for <linux-lvm@redhat.com>; Thu, 20 Oct 2005 08:20:28 -0400
-Received: from eproxy.vsaa.lv (eproxy.vsaa.lv [81.198.191.140])
-	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id j9KCKQ9V019864
-	for <linux-lvm@redhat.com>; Thu, 20 Oct 2005 08:20:26 -0400
-Message-ID: <43578B7E.7060805@hq.vsaa.lv>
-Date: Thu, 20 Oct 2005 15:20:14 +0300
-From: Rich <rich@hq.vsaa.lv>
-MIME-Version: 1.0
-Subject: Re: [linux-lvm] xfs_freeze & lvm2
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j9LEqlV19177
+	for <linux-lvm@redhat.com>; Fri, 21 Oct 2005 10:52:47 -0400
+Received: from ibox-server.openwired.net
+	(77.Red-213-97-52.staticIP.rima-tde.net [213.97.52.77])
+	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id j9LEqgTW001651
+	for <linux-lvm@redhat.com>; Fri, 21 Oct 2005 10:52:47 -0400
+Received: from localhost (localhost [127.0.0.1])
+	by ibox-server.openwired.net (Postfix) with ESMTP id 2E59A2E01D2
+	for <linux-lvm@redhat.com>; Fri, 21 Oct 2005 16:50:22 +0100 (BST)
+Received: from ibox-server.openwired.net ([127.0.0.1])
+	by localhost (ibox-server.openwired.net [127.0.0.1]) (amavisd-new,
+	port 10024) with ESMTP id 19898-01 for <linux-lvm@redhat.com>;
+	Fri, 21 Oct 2005 16:50:20 +0100 (BST)
+Received: from [10.0.0.85] (unknown [10.0.0.85])
+	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by ibox-server.openwired.net (Postfix) with ESMTP id 585D12E01D1
+	for <linux-lvm@redhat.com>; Fri, 21 Oct 2005 16:50:20 +0100 (BST)
+From: Carlos Gomez <carlos.gomez@openwired.net>
+Message-Id: <1129906766.3012.3.camel@localhost.localdomain>
+Mime-Version: 1.0
+Date: Fri, 21 Oct 2005 16:59:27 +0200
 Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] lvm
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -20,61 +33,11 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
+Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@redhat.com
 
-i'm sorry for breaking the thread, but i am reading responses through 
-web archive ;)
-
-..
-
- >> as i understand it, consistent copy is created when lvcreate is
- >> issued, not when snapshot volume is mounted - is this right ?
-
- > As i understood things, no. Mounttime matters ;-) see
- > <http://www.tldp.org/HOWTO/LVM-HOWTO/snapshotintro.html> and as 
-example <http://www.tldp.org/HOWTO/LVM-HOWTO/snapshots_backup.html>.
-
-well, supposedly there is no way to see wether changes are propogated to 
-snapshot between lvcreate and mount because you must mount it to see 
-(reminds about cats & boxes) ;)
-
-but there are two things that lead me to believe it is lvcreate that 
-matters :
-
-1. "You should remove snapshot volume when you have finished with them 
-because they take a copy of all data written to the original volume and 
-this can hurt performance."
-
-note, it says "remove", not unmount. additionally, you can easily mount 
-and unmount snapshot several times - it would be pretty hard to have a 
-consistent copy in such a case;
-
-2. i did some testing before : created a snapshot (but did not mount 
-it), made some modifications to original data and checked wether used 
-space would increase for snapshot volume (with lvdisplay). well, it did 
-  - so i assumed snapshot is created, well, when it is created :)
-
-..
-
- >> if it actually is done together with snapshot, does this mean that i
- >> really can forget about xfs_freeze and just create snapshots ?
-
-well, what about this part ?
-from what i have read here and also in other places, xfs filesystem 
-should be consistent, but i would like to be sure (though i might try to 
-test this by simulating activity during lvcreate, i would prefer not to)
-
- >> must i specify ro in mount options or is this optional ?
- > Well, if i'm wrong ( and to be honest, i didn't play around with all
- > the stuff for 1 1/2 years now :-( ) somebody might correct me, but if
- > i remember postings from linux-xfs mailing list, rw-snapshots with XFS
- > is not quite unstable ...
-
-well, as i don't need r/w anyway, i'll stick with ro, just to be sure 
-then :)
-
- > Cheers
- > Klaus
--- 
-  Rich
+Hi, I'm Carlos, student of UPC and I have one question for you. I have
+lvm2 installed on my computer, i installed a new kernel-2.6, and lvm2
+run correctly, But now, when I do vgscan, my computer says " Reading all
+physical volumes.  This may take a while..." but after many time, it
+respons. Vgscan is to slow. Can you help me?
