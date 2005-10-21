@@ -1,17 +1,21 @@
-Received: from o.ww.redhat.com (vpn50-3.rdu.redhat.com [172.16.50.3])
-	by pobox.stuttgart.redhat.com (8.12.8/8.12.8) with ESMTP id
-	j9LFJMJE018089
-	for <linux-lvm@redhat.com>; Fri, 21 Oct 2005 17:19:23 +0200
-Date: Fri, 21 Oct 2005 17:19:21 +0200
-From: Heinz Mauelshagen <mauelshagen@redhat.com>
-Subject: Re: [linux-lvm] Correct way to add disc to LVM
-Message-ID: <20051021151921.GC3517@redhat.com>
-References: <80d985600510210514h29edd384n65d4d14dc0492399@mail.gmail.com>
+Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j9LFhRV11036
+	for <linux-lvm@redhat.com>; Fri, 21 Oct 2005 11:43:27 -0400
+Received: from vger.nix.hu (norbi.axelero.com [195.228.243.93])
+	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id j9LFhLIm025932
+	for <linux-lvm@redhat.com>; Fri, 21 Oct 2005 11:43:21 -0400
+Received: from vger.nix.hu (localhost [127.0.0.1])
+	by vger.nix.hu (Postfix) with SMTP id BE58F1C0AE
+	for <linux-lvm@redhat.com>; Fri, 21 Oct 2005 17:42:57 +0200 (CEST)
+Date: Fri, 21 Oct 2005 17:42:57 +0200
+From: BUCHMULLER Norbert <norbi.lists@nix.hu>
+Subject: Re: [linux-lvm] LVM1 -> LVM2 with failed disk
+Message-Id: <20051021174257.5a9042dc.norbi.lists@nix.hu>
+In-Reply-To: <20051020204341.GZ13606@beazk.net>
+References: <20051020204341.GZ13606@beazk.net>
 Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <80d985600510210514h29edd384n65d4d14dc0492399@mail.gmail.com>
-Reply-To: mauelshagen@redhat.com,
-	LVM general discussion and development <linux-lvm@redhat.com>
+Content-Transfer-Encoding: 7bit
+Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -22,71 +26,44 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-On Fri, Oct 21, 2005 at 09:14:44PM +0900, Craig Hagerman wrote:
-> Hi all,
-> 
-> I want to make sure I understand the correct way to add more disc
-> space under LVM. If you have LVM set up on one single HD, and then
-> want to extend that to cover a second HD what is the correct way to
-> proceed?
-> 
-> >From reading the HOWTO I think this is how it is done. Am I missing
-> anything essential here?
+Hi All!
 
-Run pvcreate on your new drive before vgextend.
+On Thu, 20 Oct 2005 16:43:41 -0400
+Erik Karlin <e_karlin@yahoo.com> wrote:
 
+> Of course, one of my disks died. In the past, I used the -P partial flag
+> to get the lvm to start so I could copy off my data from the "good" pv,
+> but under lvm10, I don't see that option.
 > 
-> ---------------------------------------------------------------------
-> Add physical volumes to a volume group:
-> ---------------------------------------------------------------------
-> Use 'vgextend' to add an initialized physical volume to an existing
-> volume group.
-> # vgextend my_volume_group /dev/hdc1
->                                     ^^^^^^^^^ new physical volume
+> What are my options. Can I upgrade from lvm10 to lvm2 with a failed
+> disk. The lvm doesn't start and while I can pvdisplay /dev/hda4 I cannot
+> vgdisplay or lvdisplay (obviously) since the vg isn't starting.
 > 
-> ---------------------------------------------------------------------
-> Extend logical volume:
-> ---------------------------------------------------------------------
-> 
-> # lvextend -L12G /dev/myvg/homevol
-> 
->          will extend /dev/myvg/homevol to 12 Gigabytes.
-> 
-> -----------------------------------------------------------------------------------------------------------
-> Increase size of file system to match the logical volume (assuming ext2 / 3):
-> -----------------------------------------------------------------------------------------------------------
->    # umount /dev/myvg/homevol/dev/myvg/homevol
->    # resize2fs /dev/myvg/homevol
->    # mount /dev/myvg/homevol /home
-> 
-> 
-> Is this correct? Is this all you have to do?
-> 
-> Craig
-> 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+> Can I put in a dummy drive, somehow tell lvm to pvcreate a pv on the new
+> drive with the same ID and then get the vg to come up?
 
--- 
+This latter option worked for me once. The VG's name is "vg0", the died PV
+was /dev/hdc1.
 
-Regards,
-Heinz    -- The LVM Guy --
+* Read the exact size of the died PV:
 
-*** Software bugs are stupid.
-    Nevertheless it needs not so stupid people to solve them ***
+vgcfgrestore -ll -n vg0
 
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+* Add a new disk to the system, create a partition with _exactly_ the same
+size as the died PV. (It need not be on the same device as the old PV, eg.
+I'll call it /dev/hdb2.)
 
-Heinz Mauelshagen                                 Red Hat GmbH
-Consulting Development Engineer                   Am Sonnenhang 11
-Cluster and Storage Development                   56242 Marienrachdorf
-                                                  Germany
-Mauelshagen@RedHat.com                            +49 2626 141200
-                                                       FAX 924446
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+* Restore the LVM headers of the died PV onto the new disk:
+
+vgcfgrestore -n vg0 -o /dev/hdb2 /dev/hdc1
+
+* Rescan, activate the VG:
+
+vgscan; vgchange -a y vg0
+
+Hope it will help.
+
+
+norbi
