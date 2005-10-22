@@ -1,28 +1,17 @@
-Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j9LEqlV19177
-	for <linux-lvm@redhat.com>; Fri, 21 Oct 2005 10:52:47 -0400
-Received: from ibox-server.openwired.net
-	(77.Red-213-97-52.staticIP.rima-tde.net [213.97.52.77])
-	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id j9LEqgTW001651
-	for <linux-lvm@redhat.com>; Fri, 21 Oct 2005 10:52:47 -0400
-Received: from localhost (localhost [127.0.0.1])
-	by ibox-server.openwired.net (Postfix) with ESMTP id 2E59A2E01D2
-	for <linux-lvm@redhat.com>; Fri, 21 Oct 2005 16:50:22 +0100 (BST)
-Received: from ibox-server.openwired.net ([127.0.0.1])
-	by localhost (ibox-server.openwired.net [127.0.0.1]) (amavisd-new,
-	port 10024) with ESMTP id 19898-01 for <linux-lvm@redhat.com>;
-	Fri, 21 Oct 2005 16:50:20 +0100 (BST)
-Received: from [10.0.0.85] (unknown [10.0.0.85])
-	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by ibox-server.openwired.net (Postfix) with ESMTP id 585D12E01D1
-	for <linux-lvm@redhat.com>; Fri, 21 Oct 2005 16:50:20 +0100 (BST)
-From: Carlos Gomez <carlos.gomez@openwired.net>
-Message-Id: <1129906766.3012.3.camel@localhost.localdomain>
-Mime-Version: 1.0
-Date: Fri, 21 Oct 2005 16:59:27 +0200
-Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] lvm
+Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j9M93PV01579
+	for <linux-lvm@redhat.com>; Sat, 22 Oct 2005 05:03:25 -0400
+Received: from server4.bfc.net (mail.bfc.net [83.220.131.8])
+	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id j9M93IMw002593
+	for <linux-lvm@redhat.com>; Sat, 22 Oct 2005 05:03:19 -0400
+Content-class: urn:content-classes:message
+MIME-Version: 1.0
+Content-Type: multipart/alternative;
+	boundary="----_=_NextPart_001_01C5D6E7.67310A9D"
+Subject: Re: [linux-lvm] error on extending ext3
+Date: Sat, 22 Oct 2005 11:03:00 +0200
+Message-ID: <ED9BF0756A45484AB3EAB2E20D1AD49C7D9E03@server4.bfc.net>
+From: "Durnin, Robert" <robert.durnin@bfc.net>
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -33,11 +22,53 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@redhat.com
 
-Hi, I'm Carlos, student of UPC and I have one question for you. I have
-lvm2 installed on my computer, i installed a new kernel-2.6, and lvm2
-run correctly, But now, when I do vgscan, my computer says " Reading all
-physical volumes.  This may take a while..." but after many time, it
-respons. Vgscan is to slow. Can you help me?
+This is a multi-part message in MIME format.
+
+------_=_NextPart_001_01C5D6E7.67310A9D
+Content-Type: text/plain;
+	charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+
+
+Wow. That ext2online works without a hitch. Can you tell me what the =
+output means?=20
+
+cache direct hits: 604, indirect hits: 5, misses: 8
+
+Are there any consequences to extending in this manor?
+
+Thanks again, Robert
+
+------_=_NextPart_001_01C5D6E7.67310A9D
+Content-Type: text/html;
+	charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<META HTTP-EQUIV=3D"Content-Type" CONTENT=3D"text/html; =
+charset=3Diso-8859-1">
+<META NAME=3D"Generator" CONTENT=3D"MS Exchange Server version =
+6.5.7233.28">
+<TITLE>Re: [linux-lvm] error on extending ext3</TITLE>
+</HEAD>
+<BODY>
+<!-- Converted from text/plain format -->
+<BR>
+
+<P><FONT SIZE=3D2>Wow. That ext2online works without a hitch. Can you =
+tell me what the output means?<BR>
+<BR>
+cache direct hits: 604, indirect hits: 5, misses: 8<BR>
+<BR>
+Are there any consequences to extending in this manor?<BR>
+<BR>
+Thanks again, Robert</FONT>
+</P>
+
+</BODY>
+</HTML>
+------_=_NextPart_001_01C5D6E7.67310A9D--
