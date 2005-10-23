@@ -1,18 +1,18 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j9NHt5V07681
-	for <linux-lvm@redhat.com>; Sun, 23 Oct 2005 13:55:05 -0400
-Received: from xproxy.gmail.com (xproxy.gmail.com [66.249.82.198])
-	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id j9NHsxdP010197
-	for <linux-lvm@redhat.com>; Sun, 23 Oct 2005 13:54:59 -0400
-Received: by xproxy.gmail.com with SMTP id h30so127454wxd
-	for <linux-lvm@redhat.com>; Sun, 23 Oct 2005 10:54:59 -0700 (PDT)
-Message-ID: <abe3cc840510231054y749bb92fv@mail.gmail.com>
-Date: Sun, 23 Oct 2005 19:54:59 +0200
-From: Nicolas CERISIER <nicolas.cerisier@gmail.com>
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j9NI7iV09386
+	for <linux-lvm@redhat.com>; Sun, 23 Oct 2005 14:07:44 -0400
+Received: from qproxy.gmail.com (qproxy.gmail.com [72.14.204.193])
+	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id j9NI7crO012519
+	for <linux-lvm@redhat.com>; Sun, 23 Oct 2005 14:07:38 -0400
+Received: by qproxy.gmail.com with SMTP id o38so225859qbe
+	for <linux-lvm@redhat.com>; Sun, 23 Oct 2005 11:07:37 -0700 (PDT)
+Message-ID: <e92a1b70510231101x5a0c08d2p@mail.gmail.com>
+Date: Sun, 23 Oct 2005 20:01:35 +0200
+From: Tobias <t.bjorndal@gmail.com>
 MIME-Version: 1.0
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-Subject: [linux-lvm] loose partition... loose lvm ?
+Subject: [linux-lvm] How does LVM2 handle disc error?
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -26,27 +26,16 @@ List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@redhat.com
 
-Hello,
+Hi I'm about to set up a file server. How does lvm2 handle disc
+crashes in a logic volume? The thing is we don't care if the data on
+just the disc which crashes is gone, we have all data offline on tape
+and dvds. But we don't want the whole group to crash because of one
+disc. We would like to not use raid5 and such because one disc is
+lost.
 
-I have a problem with my LVM (on Fedora Core 3 / 64 Bits).
-The LVM is setup on 2 disks:
-/dev/sda, with swap partition and first Lvm Partition (sda1)
-/dev/sdb, with partition sdb1
+Its for internal use so there will be no heavy load. About 10-20 ppl
+will use the server for online central storage. Storage size at least
+1Tb but we hope for 2Tb or more without any expensive hardware. Only
+cheap sata expansion cards and discs.
 
-Yesterday, the server crashed and when it tried to reboot, it has not
-found the system.
-Using the Fedora Rescue Disk, I get some informations:
-- both partitions on sda have disappeared,
-- /dev/sdb1 seems to be always here
-
-Lvscan and other LVM informations tools can obtain the LVM parameters
-(uuid, volume name, size, ...)
-
-As I'm not really confident with LVM (my LVM knowledge is very poor),
-I need your help ..
-In your opinion, it is possible to rescover the LVM and Datas ?  and
-how can I do ?
-
-Thanks for your help,
-
- Nicolas.
+/Tobias
