@@ -1,18 +1,18 @@
-Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j9PGftV02936
-	for <linux-lvm@redhat.com>; Tue, 25 Oct 2005 12:41:55 -0400
-Received: from mail.datatronics.es ([213.4.125.73])
-	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id j9PGfn6v005005
-	for <linux-lvm@redhat.com>; Tue, 25 Oct 2005 12:41:51 -0400
-Received: from jmm (jmm.datatronics.es [10.6.0.6])
-	by mail.datatronics.es (DATATRONICS MAIL) with ESMTP id 0441D17C03B
-	for <linux-lvm@redhat.com>; Tue, 25 Oct 2005 18:09:46 +0200 (CEST)
-Date: Tue, 25 Oct 2005 18:11:32 +0200
-From: =?utf-8?Q?Jaime_Mart=C3=ADnez?= <jaime.martinez@datatronics.es>
+Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j9PHJ7V14595
+	for <linux-lvm@redhat.com>; Tue, 25 Oct 2005 13:19:07 -0400
+Received: from xproxy.gmail.com (xproxy.gmail.com [66.249.82.198])
+	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id j9PHJ0qQ004776
+	for <linux-lvm@redhat.com>; Tue, 25 Oct 2005 13:19:00 -0400
+Received: by xproxy.gmail.com with SMTP id s9so308270wxc
+	for <linux-lvm@redhat.com>; Tue, 25 Oct 2005 10:19:00 -0700 (PDT)
+Message-ID: <e073f9120510251018r6c024b51u4c33a5fc78c0f853@mail.gmail.com>
+Date: Tue, 25 Oct 2005 11:18:59 -0600
+From: Nick I <clusterbuilder@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Message-ID: <opsy7lxii9tusfut@mail.datatronics.es>
-Subject: [linux-lvm] Mounting LVM  partitions issue.
+Content-Type: multipart/alternative; 
+	boundary="----=_Part_42252_1920411.1130260739019"
+Subject: [linux-lvm] Ask the Cluster Expert
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -23,60 +23,91 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; format="flowed"; charset="utf-8"
 To: linux-lvm@redhat.com
 
-Hi all,
+------=_Part_42252_1920411.1130260739019
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: quoted-printable
+Content-Disposition: inline
 
-I'm new with LVM, but i know what a Volume Manager is. ... I have a small 
-problem and I need someone help me to solve it (or determine it's 
-unsolveable).
+ Hi.
 
-I had a machine running redhat, ... with 1 disk and 2 partitions:
+Thanks to the response from many in the community I have added sections
+about diskless clusters and information on 32-bit and 64-bit processors at
+the site I help run,
+www.ClusterBuilder.org.<http://www.clusterbuilder.org/>I also added a
+section called Ask the Cluster Expert (
+http://www.clusterbuilder.org/pages/ask-the-expert.php) for people to submi=
+t
+questions they have about cluster and grid computing. I post the questions
+at an FAQ page (http://www.clusterbuilder.org/pages/ask-the-expert/faq.php)
+and then research the answer as well as allow those knowledgeable in the
+community to submit a response to the question. I want to build a valuable
+knowledgebase of high performance computing information.
 
-/dev/hda1 -> boot partition.
-/dev/hda2 -> LVM partition.
+I need you to share your knowledge by adding to the question responses and
+also submitting questions/answers to common problems you've experienced in
+the past and are experiencing now.
 
-I made one change on one /etc/sysconfig ... file. And after rebooting I 
-only get kernel pannic. I have started several live cd's (knoppix, ubuntu 
-... ) and tryed to mount the LVM partition, so I can undo the changes. But 
-I can´t mount it.
+Thanks,
+Nick
 
-No lvm related command retunrs usefull information.
-
-¿Is there any way to rescue a LVM partition?
-
-On normal booting I get the error:
-
-Scanning logical volumes
-File descriptor 3 left open
-	Reading Physical volumes ....
-	Incorrect  metadata area header checksum
-Activating logical volumes
-File descriptor 3 left open
-	Incorrect  metadata area header checksum
-	Unable to find volume grou "VolGroup00"
-ERROR: /bin/lvm exited abnormally !
-Creating root device
-Mounting root filesuystem
-mount: error 6 mounting ext3
-mount: error 2 mounting none
-.
-.
-.
-kernel panic - not syncing ...
+------=_Part_42252_1920411.1130260739019
+Content-Type: text/html; charset=ISO-8859-1
+Content-Transfer-Encoding: quoted-printable
+Content-Disposition: inline
 
 
-Any idea about how to recover de disk ??
+
+Hi.
+<p style=3D"margin-bottom: 0in; text-decoration: none;">Thanks to the
+response from many in the community I have added sections about
+diskless clusters and information on 32-bit and 64-bit processors at
+the site I help run, <a href=3D"http://www.clusterbuilder.org/">www.Cluster=
+Builder.org.</a>
+I also added a section called Ask the Cluster Expert (<a href=3D"http://www=
+.clusterbuilder.org/pages/ask-the-expert.php">http://www.clusterbuilder.org=
+/pages/ask-the-expert.php</a>) for people
+to submit questions they have about cluster and grid computing.  I
+post the questions at an FAQ page
+(<a href=3D"http://www.clusterbuilder.org/pages/ask-the-expert/faq.php">htt=
+p://www.clusterbuilder.org/pages/ask-the-expert/faq.php</a>)
+and then research the answer as well as allow those knowledgeable in
+the community to submit a response to the question.  I want to build
+a valuable knowledgebase of high performance computing information.=20
+</p>
 
 
-Thanks a lot.
 
 
-__________________________________
-Jaime Martínez Muñoz
-Grupo de Soporte e Integración
-de Plataformas y Servicios.
-Ingeniero de Soporte.
-__________________________________
-DATATRONICS,S.A
+
+
+<p style=3D"margin-bottom: 0in; text-decoration: none;">I need you to
+share your knowledge by adding to the question responses and also
+submitting questions/answers to common problems you've experienced in
+the past and are experiencing now.=20
+</p>
+
+
+
+
+
+
+
+
+
+
+<br>
+
+
+
+
+Thanks,<br>
+
+
+
+
+
+Nick
+
+------=_Part_42252_1920411.1130260739019--
