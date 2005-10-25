@@ -1,19 +1,18 @@
-Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j9OHSnV06117
-	for <linux-lvm@redhat.com>; Mon, 24 Oct 2005 13:28:49 -0400
-Received: from guru.unisinos.br (guru.unisinos.br [200.188.161.88])
-	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id j9OHSfaN023388
-	for <linux-lvm@redhat.com>; Mon, 24 Oct 2005 13:28:42 -0400
-Received: from pascal.unisinos.br (pascal.unisinos.br [10.16.163.2])
-	by guru.unisinos.br (8.12.10/8.12.10/SuSE Linux 0.7) with ESMTP id
-	j9OHSWfj009295
-	for <linux-lvm@redhat.com>; Mon, 24 Oct 2005 15:28:33 -0200
-Mime-Version: 1.0 (Apple Message framework v734)
-Content-Transfer-Encoding: 7bit
-Message-Id: <AFA2305A-CC3E-4E66-8702-2C047466CB0C@exatas.unisinos.br>
-From: Fernando Costa <fcaprio@exatas.unisinos.br>
-Date: Mon, 24 Oct 2005 15:28:13 -0200
-Subject: [linux-lvm] Recover Help Needed
+Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j9PGftV02936
+	for <linux-lvm@redhat.com>; Tue, 25 Oct 2005 12:41:55 -0400
+Received: from mail.datatronics.es ([213.4.125.73])
+	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id j9PGfn6v005005
+	for <linux-lvm@redhat.com>; Tue, 25 Oct 2005 12:41:51 -0400
+Received: from jmm (jmm.datatronics.es [10.6.0.6])
+	by mail.datatronics.es (DATATRONICS MAIL) with ESMTP id 0441D17C03B
+	for <linux-lvm@redhat.com>; Tue, 25 Oct 2005 18:09:46 +0200 (CEST)
+Date: Tue, 25 Oct 2005 18:11:32 +0200
+From: =?utf-8?Q?Jaime_Mart=C3=ADnez?= <jaime.martinez@datatronics.es>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Message-ID: <opsy7lxii9tusfut@mail.datatronics.es>
+Subject: [linux-lvm] Mounting LVM  partitions issue.
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -24,148 +23,60 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; delsp="yes"; format="flowed"
+Content-Type: text/plain; format="flowed"; charset="utf-8"
 To: linux-lvm@redhat.com
 
-Hello all,
+Hi all,
 
-I have a computer running Debian which I had some partitions under  
-LVM. Mostly my Home and Work folder. After a power loss my lvm  
-stopped working and I can't seen to find a way to recover data. I've  
-tried lots of FAQs, tutorials, etc. Nothing seens to work.
+I'm new with LVM, but i know what a Volume Manager is. ... I have a small 
+problem and I need someone help me to solve it (or determine it's 
+unsolveable).
 
-Here is what it looks like:
+I had a machine running redhat, ... with 1 disk and 2 partitions:
 
-:~# uname -a
-Linux freemmg 2.4.25-1-386 #2 Wed Apr 14 19:38:08 EST 2004 i686 GNU/ 
-Linux
-:~#
+/dev/hda1 -> boot partition.
+/dev/hda2 -> LVM partition.
 
-:~# dpkg -l |grep lvm
-ii  lvm-common                  1.5.17                         The  
-Logical Volume Manager for Linux (common
-ii  lvm10                       1.0.8-10                       The  
-Logical Volume Manager for Linux
-:~#
+I made one change on one /etc/sysconfig ... file. And after rebooting I 
+only get kernel pannic. I have started several live cd's (knoppix, ubuntu 
+... ) and tryed to mount the LVM partition, so I can undo the changes. But 
+I can´t mount it.
 
-]:~# pvscan
-pvscan -- reading all physical volumes (this may take a while...)
-pvscan -- no valid physical volumes found
-:~#
+No lvm related command retunrs usefull information.
 
-:~# vgscan
-vgscan -- reading all physical volumes (this may take a while...)
-vgscan -- "/etc/lvmtab" and "/etc/lvmtab.d" successfully created
-vgscan -- WARNING: This program does not do a VGDA backup of your  
-volume group
-:~#
+¿Is there any way to rescue a LVM partition?
 
-Ok, what I tried to do:
+On normal booting I get the error:
 
-:~# pvcreate -ff /dev/hda3
-pvcreate -- WARNING: forcing physical volume creation on "/dev/hda3"
-pvcreate -- physical volume "/dev/hda3" successfully created
-:~#
+Scanning logical volumes
+File descriptor 3 left open
+	Reading Physical volumes ....
+	Incorrect  metadata area header checksum
+Activating logical volumes
+File descriptor 3 left open
+	Incorrect  metadata area header checksum
+	Unable to find volume grou "VolGroup00"
+ERROR: /bin/lvm exited abnormally !
+Creating root device
+Mounting root filesuystem
+mount: error 6 mounting ext3
+mount: error 2 mounting none
+.
+.
+.
+kernel panic - not syncing ...
 
-:~# pvscan
-pvscan -- reading all physical volumes (this may take a while...)
-pvscan -- no valid physical volumes found
-:~#
 
-No idea why it wont work.
+Any idea about how to recover de disk ??
 
-:~# vgcfgrestore -v -n freemmg -b 1 /dev/hda3
-vgcfgrestore -- INFO: using backup file "/etc/lvmconf/freemmg.conf. 
-1.old"
-vgcfgrestore -- locking logical volume manager
-vgcfgrestore -- restoring volume group "freemmg" from "/etc/lvmconf/ 
-freemmg.conf.1.old"
-vgcfgrestore -- checking existence of "/etc/lvmconf/freemmg.conf.1.old"
-vgcfgrestore -- reading volume group data for "freemmg" from "/etc/ 
-lvmconf/freemmg.conf.1.old"
-vgcfgrestore -- reading physical volume data for "freemmg" from "/etc/ 
-lvmconf/freemmg.conf.1.old"
-vgcfgrestore -- reading logical volume data for "freemmg" from "/etc/ 
-lvmconf/freemmg.conf.1.old"
-vgcfgrestore -- checking volume group consistency of "freemmg"
-vgcfgrestore -- checking volume group consistency of "freemmg"
-vgcfgrestore -- reading physical volume "/dev/hda3"
-vgcfgrestore -- ERROR "pv_read(): pv_create_name_from_kdev_t" reading  
-physical volume "/dev/hda3"
-:~#
 
-:~# pvdata /dev/hda3
---- NEW Physical volume ---
-PV Name               /dev/hda3
-VG Name
-PV Size               66.06 GB [138544560 secs]
-PV#                   0
-PV Status             NOT available
-Allocatable           NO
-Cur LV                0
-PE Size (KByte)       0
-Total PE              0
-Free PE               0
-Allocated PE          0
-PV UUID               TonPmb-gO77-WiEE-8Tqp-nwCd-zi04-9Dv4ly
+Thanks a lot.
 
---- Volume group ---
-VG Name
-VG Access             read/write
-VG Status             NOT available/resizable
-VG #                  0
-MAX LV                256
-Cur LV                2
-Open LV               0
-MAX LV Size           2 TB
-Max PV                256
-Cur PV                1
-Act PV                1
-VG Size               66.03 GB
-PE Size               32 MB
-Total PE              2113
-Alloc PE / Size       2113 / 66.03 GB
-Free  PE / Size       0 / 0
-VG UUID               sFMAaS-slYD-HGtk-rnh2-TbjY-Z0xy-lx0ICs
 
---- List of logical volumes ---
-
-pvdata -- logical volume struct at offset   0 is inconsistent
-pvdata -- logical volume struct at offset   1 is empty
-pvdata -- logical volume struct at offset   2 is empty
-pvdata -- logical volume struct at offset   3 is empty
-pvdata -- logical volume struct at offset   4 is empty
-pvdata -- logical volume struct at offset   5 is empty
-pvdata -- logical volume struct at offset   6 is empty
-pvdata -- logical volume struct at offset   7 is empty
-pvdata -- logical volume struct at offset   8 is empty
-pvdata -- logical volume struct at offset   9 is empty
-pvdata -- logical volume struct at offset  10 is empty
-pvdata -- logical volume struct at offset  11 is empty
-pvdata -- logical volume struct at offset  12 is empty
-pvdata -- logical volume struct at offset  13 is inconsistent
-pvdata -- logical volume struct at offset  14 is inconsistent
-pvdata -- logical volume struct at offset  15 is inconsistent
-pvdata -- logical volume struct at offset  16 is inconsistent
-pvdata -- logical volume struct at offset  17 is inconsistent
-pvdata -- logical volume struct at offset  18 is inconsistent
-pvdata -- logical volume struct at offset  19 is inconsistent
-pvdata -- logical volume struct at offset  20 is inconsistent
-pvdata -- logical volume struct at offset  21 is inconsistent
-pvdata -- logical volume struct at offset  22 is inconsistent
-pvdata -- logical volume struct at offset  23 is inconsistent
-pvdata -- logical volume struct at offset  24 is inconsistent
-pvdata -- logical volume struct at offset  25 is inconsistent
-pvdata -- logical volume struct at offset  26 is empty
-pvdata -- logical volume struct at offset  27 is empty
-... list goes on until
---- List of physical volume UUIDs ---
-
-Segmentation fault
-:~#
-
-So, any ideas? Any help would be apreciated.
-
-Thanks
-
-Fernando Costa
+__________________________________
+Jaime Martínez Muñoz
+Grupo de Soporte e Integración
+de Plataformas y Servicios.
+Ingeniero de Soporte.
+__________________________________
+DATATRONICS,S.A
