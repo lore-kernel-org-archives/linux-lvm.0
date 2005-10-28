@@ -1,20 +1,26 @@
 Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j9SE5eV18264
-	for <linux-lvm@redhat.com>; Fri, 28 Oct 2005 10:05:40 -0400
-Received: from voodoo1.evva.com (2-21-164-213.customer.coltnet.at
-	[213.164.21.2] (may be forged))
-	by mx1.redhat.com (8.12.11/8.12.11) with SMTP id j9SE5Vi4014771
-	for <linux-lvm@redhat.com>; Fri, 28 Oct 2005 10:05:37 -0400
-Received: from [172.16.16.1] ([172.16.16.1])
-	by localhost (mail1 [172.16.0.4]) (amavisd-new, port 10024)
-	with ESMTP id 06598-12 for <linux-lvm@redhat.com>;
-	Fri, 28 Oct 2005 16:05:11 +0200 (CEST)
-Message-ID: <43623017.7080906@evva.com>
-Date: Fri, 28 Oct 2005 16:05:11 +0200
-From: Johannes Ullmann <j.ullmann@evva.com>
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j9SHI7V21714
+	for <linux-lvm@redhat.com>; Fri, 28 Oct 2005 13:18:07 -0400
+Received: from volumehost.com
+	(IDENT:JNxFJIcPZCtsMFbcnrUNjMDwG/ApWl8p@adsl-69-154-123-201.dsl.fyvlar.swbell.net
+	[69.154.123.201])
+	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id j9SHI1Po016158
+	for <linux-lvm@redhat.com>; Fri, 28 Oct 2005 13:18:05 -0400
+Received: from volumehost.com (localhost.localdomain [127.0.0.1])
+	by volumehost.com (8.12.8/8.12.5) with ESMTP id j9SHHsUN008181
+	for <linux-lvm@redhat.com>; Fri, 28 Oct 2005 12:17:54 -0500
+Received: (from apache@localhost)
+	by volumehost.com (8.12.8/8.12.8/Submit) id j9SHHsCm008179
+	for linux-lvm@redhat.com; Fri, 28 Oct 2005 12:17:54 -0500
+Message-ID: <1130519874.43625d4253324@webmail.volumehost.com>
+Date: Fri, 28 Oct 2005 12:17:54 -0500
+From: Zac Slade <krakrjak@volumehost.com>
+Subject: Re: [linux-lvm] pvresize patch pending
+References: <1130518796.4362590c75cf0@webmail.volumehost.com>
+	<20051028170130.GH11086@agk.surrey.redhat.com>
+In-Reply-To: <20051028170130.GH11086@agk.surrey.redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Subject: [linux-lvm] Problem with lvm2 and softwareraid
+Content-Transfer-Encoding: 8bit
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -25,58 +31,30 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="iso-8859-1"; format="flowed"
-To: linux-lvm@redhat.com
+Content-Type: text/plain; charset="us-ascii"
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-Hello!
+Quoting Alasdair G Kergon <agk@redhat.com>:
 
-I'm building a backup to disk system and i have strange problem with lvm=20
-on top of 2 software raid 5 devices.
-Each SW Raid-5 has 7x400GB HDDs (=3D2,4TB). On top of these two SW Raid=20
-devices I created one big LV with 4,8TB.
-I use Reiserfs as filesystem. I worked fine while the disk usage was=20
-below 1,5TB, above that, the Filesystem was destroyed. I tried the same=20
-with ext3 and had the same results.  So I't not the Filesystem. I also=20
-checked the Softwareraid and the LV for any Problems but i haven't found=20
-anything.
-After reading many Mails/howtos/man-pages I quess that LVM can't handle=20
-PV's which are larger than 2TB is this correct?
-I haven't found anything in the documentation about the maximum PV size.
+> On Fri, Oct 28, 2005 at 11:59:56AM -0500, Zac Slade wrote:
+> > Is this the right venue to distribute this patch 
+> 
+> Yes!
 
-thanks for any help.
+Well alright.  Attached is a unified diff I validated that it merges
+successfully against LVM2.2.01.13.tar.gz and LVM2.2.01.14.tar.gz.  Those files I
+obtained through gentoo's portage system.  I also checked out the cvs and the
+patch does apply successfully.  To integrate the patch just enter the
+distribution directory where the LVM2 sources are and execute, patch -p1 <
+path-to.patch.
 
-My setup looks like this:
-Debian testing 2.6.12-1-686-smp
-lvm2  2.01.04-5
-mdadm  1.12.0-1
+For testing we used an lv that was mounted on a loopback device.  The only
+option that pvresize will take is a pv pathname.
 
-14x400GB SATA Hdds on two 3-Ware controllers.
-mdadm --create /dev/md0 --chunk=3D64 --level=3Draid5 --raid-devices=3D7=20
-/dev/sd[bcdefgh]1
-mdadm --create /dev/md1 --chunk=3D64 --level=3Draid5 --raid-devices=3D7=20
-/dev/sd[ijklmno]1
+Here's your patch!
+Zac Slade
+krakrjak@volumehost.com
 
-pvcreate /dev/md0 (Softwareraid controller1)
-pvcreate /dev/md1 (Softwareraid controller2)
-vgcreate vg0 --physicalextentsize 16M /dev/md0 /dev/md1
-lvcreate --stripes 2 --stripesize 64 -l <extends> --name backup vg0
 
-I get this Filesystem errors:
-Oct 21 15:30:02 backup1 kernel: ReiserFS: warning: is_tree_node: node=20
-level 42225 does not match to the expected one 2
-Oct 21 15:30:02 backup1 kernel: ReiserFS: dm-0: warning: vs-5150:=20
-search_by_key: invalid format found in block 73668. Fsck?
-Oct 21 15:30:02 backup1 kernel: ReiserFS: dm-0: warning: zam-7001: io=20
-error in reiserfs_find_entry
-
---=20
-Johannes Ullmann
-IT-Services
-
-EVVA-Werk Gesellschaft m.b.H. & Co. KG
-Wienerbergstra=EF=BF=BDe 59-65
-A-1120 Wien
-Tel.: +43-1-811 65 / 505
-Fax: +43-1-811 65 / 16
-e-mail: j.ullmann@evva.com
-homepage: http://www.evva.com
+-------------------------------------------------
+This mail sent through IMP: http://horde.org/imp/
