@@ -1,23 +1,22 @@
-Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j9S3CWV07972
-	for <linux-lvm@redhat.com>; Thu, 27 Oct 2005 23:12:32 -0400
-Received: from feel.to (sv.digitalhouse.co.jp [211.10.15.172])
-	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id j9S3CTj2006897
-	for <linux-lvm@redhat.com>; Thu, 27 Oct 2005 23:12:29 -0400
-Received: from [192.168.0.10] (172.pool5.dsltokyo.att.ne.jp [165.76.172.172])
-	by feel.to (8.11.6/3.7W/POP-auth(00031322)) with ESMTP id
-	j9S3CS606964
-	for <linux-lvm@redhat.com>; Fri, 28 Oct 2005 12:12:28 +0900
-Message-ID: <436197DA.800@snow.email.ne.jp>
-Date: Fri, 28 Oct 2005 12:15:38 +0900
-From: Mark Sargent <powderkeg@snow.email.ne.jp>
+Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j9S4HPV31877
+	for <linux-lvm@redhat.com>; Fri, 28 Oct 2005 00:17:25 -0400
+Received: from mail.interlix.com (interlix.com [64.22.224.125])
+	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id j9S4HIAR020873
+	for <linux-lvm@redhat.com>; Fri, 28 Oct 2005 00:17:18 -0400
+Received: from localhost ([127.0.0.1])
+	by mail.interlix.com with esmtp (Exim 4.50) id 1EVLfr-0003HS-Jb
+	for linux-lvm@redhat.com; Thu, 27 Oct 2005 23:17:06 -0500
+From: Edward Muller <edwardam@interlix.com>
+Date: Thu, 27 Oct 2005 23:17:02 -0500
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] Resizing LVM Revisited
-References: <43609147.7090205@snow.email.ne.jp>
-	<71EF4685E87CEDB097D1851A@dhcp-2-206.wgops.com>
-In-Reply-To: <71EF4685E87CEDB097D1851A@dhcp-2-206.wgops.com>
+Content-Type: multipart/signed; boundary="nextPart5196445.pARXGxEhGW";
+	protocol="application/pgp-signature"; micalg=pgp-sha1
 Content-Transfer-Encoding: 7bit
-Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
+Message-Id: <200510272317.02488.edwardam@interlix.com>
+Subject: [linux-lvm] Can LVM2 and CLVM co-exist
+Reply-To: edwardam@interlix.com,
+	LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -27,20 +26,39 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-Michael Loftis wrote:
+--nextPart5196445.pARXGxEhGW
+Content-Type: text/plain;
+  charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+Content-Disposition: inline
 
-> For 2.4 kernels (2.4.20 and later) we've always used ReiserFS and had 
-> extremely good results with online/hot expansion on top of LVMs.  We 
-> use ext3 for our static os/boot areas but all of our data areas, and 
-> since we're using debian, that's just /var, and maybe /home, reside on 
-> LVM + ReiserFS.
->
-Hi All,
+I have a system using LVM2 and recently setup a CORAID (www.coraid.com)=20
+device. I'd like to use CLVM to manage the volumes on the device. But someo=
+ne=20
+mentioned that LVM2 and CLVM may be incompatible.=20
 
-whilst not a direct solution to my current situation I'll keep your 
-ideas in mind for future deployment. Cheers.
+I didn't want to trash my test machine at the moment so I was wondering if=
+=20
+they are compatible or not.
 
-Mark Sargent.
+Thx
+=2D-=20
+Edward Muller - Interlix
+edwardam@interlix.com
+417-862-0573
+PGP Key: http://interlix.com/Members/edwardam/pgpkeys
+
+--nextPart5196445.pARXGxEhGW
+Content-Type: application/pgp-signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.1 (GNU/Linux)
+
+iD8DBQBDYaY+6NYdR1GOdLkRAtRbAKCtgOBjgMwpEyhakq3Tkwjs4t/YuwCfRneu
+FlO+gKU6+M5dOg6PvbD0ynE=
+=XZXG
+-----END PGP SIGNATURE-----
+
+--nextPart5196445.pARXGxEhGW--
