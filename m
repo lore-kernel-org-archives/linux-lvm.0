@@ -1,24 +1,19 @@
-Received: from agk.surrey.redhat.com (agk.surrey.redhat.com [172.16.10.74])
-	by pobox.surrey.redhat.com (8.12.8/8.12.8) with ESMTP id j9T12Hvl019426
-	for <linux-lvm@redhat.com>; Sat, 29 Oct 2005 02:02:17 +0100
-Received: from agk by agk.surrey.redhat.com with local (Exim 4.34)
-	id 1EVf6v-0005yo-Af
-	for linux-lvm@redhat.com; Sat, 29 Oct 2005 02:02:17 +0100
-Date: Sat, 29 Oct 2005 02:02:17 +0100
-From: Alasdair G Kergon <agk@redhat.com>
-Subject: Re: [linux-lvm] pvresize patch pending
-Message-ID: <20051029010217.GA22575@agk.surrey.redhat.com>
-References: <1130518796.4362590c75cf0@webmail.volumehost.com>
-	<20051028170130.GH11086@agk.surrey.redhat.com>
-	<1130519874.43625d4253324@webmail.volumehost.com>
-	<1130522152.436266287429e@webmail.volumehost.com>
-	<20051028192752.GJ11086@agk.surrey.redhat.com>
-	<436286B3.80604@cantab.net>
-	<20051028212102.GK11086@agk.surrey.redhat.com>
-	<1130546247.4362c447c3718@webmail.volumehost.com>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <1130546247.4362c447c3718@webmail.volumehost.com>
+Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j9TDhVV11899
+	for <linux-lvm@redhat.com>; Sat, 29 Oct 2005 09:43:31 -0400
+Received: from smtp1.golden.net (smtp.golden.net [199.166.210.31])
+	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id j9TDhKNd030196
+	for <linux-lvm@redhat.com>; Sat, 29 Oct 2005 09:43:25 -0400
+Received: from node-202.tor.pppoe.execulink.com ([216.59.240.202]
+	helo=[192.168.1.100]) by smtp1.golden.net with esmtp (Exim 4.50)
+	id 1EVqzJ-000277-LV
+	for linux-lvm@redhat.com; Sat, 29 Oct 2005 09:43:13 -0400
+Message-ID: <43637D84.2000209@golden.net>
+Date: Sat, 29 Oct 2005 09:47:48 -0400
+From: German Trejo <germant@golden.net>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] No Volume name
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -29,45 +24,73 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+To: linux-lvm@redhat.com
 
-On Fri, Oct 28, 2005 at 07:37:27PM -0500, Zac Slade wrote:
-> I think that to get this part write might take a fundemental shift in the way
-> pv_write() and _pv_write() behave.  What would be nice is to make pv_write()
-> distinguish between a pv_create calling it and a pv_resize.  Then have _pv_write
-> only write the pv mda to the disk.  By doing this _pv_write becomes generic and
-> allows for further extension.  Also then we can probably implement atomicity for
-> pv updates (though updating a pv was not initially engineered into lvm it can
-> become very handy).
-  
-I'm reluctant to extend pv_write - long term I want to get rid of it
-(and pv_read also) as PV operations are always awkward and getting in the way.
-Everything should be done with (new-style) VGs and LVs.
+I am getting warning message "Incorrect metadata area header checksum" 
+LVM How to ask for a file on /etc/lvm/archive,  I don't have any 
+VolumeGroupName_XXXXX.vg file;  seems like my system works fine, but I 
+have the concern about this warning message. Do any of you have some 
+idea how to fix this problem? Following are some outputs to fdisk and 
+LVM commands
 
-pvcreate is also superfluous - I want to absorb it into vgcreate/vgextend etc.
-So every labelled volume will always belong to a VG - with enhanced
-vgsplit/vgmerge & allocation facilities.
-CVS now lets you create PVs on LVs - another step towards eliminating
-PVs. 
+[root@localhost ~]# fdisk -l
+Disk /dev/hda: 40.0 GB, 40020664320 bytes
+255 heads, 63 sectors/track, 4865 cylinders
+Units = cylinders of 16065 * 512 = 8225280 bytes
 
+   Device Boot      Start         End      Blocks   Id  System
+/dev/hda1   *           1        4864    39070048+   7  HPFS/NTFS
 
-> Actually there is no need to use process_each_pv
+Disk /dev/hdb: 40.0 GB, 40020664320 bytes
+255 heads, 63 sectors/track, 4865 cylinders
+Units = cylinders of 16065 * 512 = 8225280 bytes
 
-If you don't use it, you have to duplicate the logic in it as you have
-already done - incompletely (e.g. tag support is missing).
+   Device Boot      Start         End      Blocks   Id  System
+/dev/hdb1   *           1          13      104391   83  Linux
+/dev/hdb2              14         242     1839442+  82  Linux swap / Solaris
+/dev/hdb3             243        4865    37134247+  83  Linux
+[root@localhost ~]# lvmdiskscan
+  /dev/hda1 [       37.26 GB]
+  /dev/hdb1 [      101.94 MB]
+  Incorrect metadata area header checksum
+  /dev/hdb2 [        1.75 GB] LVM physical volume
+  /dev/hdb3 [       35.41 GB]
+  0 disks
+  3 partitions
+  0 LVM physical volume whole disks
+  1 LVM physical volume
+[root@localhost ~]# pvdisplay
+  Incorrect metadata area header checksum
+  Incorrect metadata area header checksum
+  Incorrect metadata area header checksum
+  Incorrect metadata area header checksum
+  --- NEW Physical volume ---
+  PV Name               /dev/hdb2
+  VG Name
+  PV Size               37.17 GB
+  Allocatable           NO
+  PE Size (KByte)       0
+  Total PE              0
+  Free PE               0
+  Allocated PE          0
+  PV UUID               0SmZ7P-44BI-Ls4s-lR2V-Q4Bo-Ah0p-CxWUYe
 
-> necessary or even wise to support resizing more than one pv at a time.  
-
-If ppl want to do that, why stop them?
-
-
-> Can't we just borrow the code from pvcreate to manipulate the metadatacopies? 
-
-Not yet.  That problem needs solving as part of a general mda-manipulating  
-feature.  No point in doing it first for a rarely-used case.
-
-Alasdair
--- 
-agk@redhat.com
+[root@localhost ~]# lvs
+  Incorrect metadata area header checksum
+[root@localhost ~]# lvscan
+  Incorrect metadata area header checksum
+[root@localhost ~]# pvscan
+  Incorrect metadata area header checksum
+  Incorrect metadata area header checksum
+  Incorrect metadata area header checksum
+  PV /dev/hdb2         lvm2 [37.17 GB]
+  Total: 1 [37.17 GB] / in use: 0 [0   ] / in no VG: 1 [37.17 GB]
+[root@localhost ~]# vgck
+  Incorrect metadata area header checksum
+[root@localhost ~]# vgdisplay
+  Incorrect metadata area header checksum
+[root@localhost ~]# vgscan
+  Reading all physical volumes.  This may take a while...
+  Incorrect metadata area header checksum
+[root@localhost ~]#
