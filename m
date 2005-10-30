@@ -1,26 +1,27 @@
-Received: from agk.surrey.redhat.com (agk.surrey.redhat.com [172.16.10.74])
-	by pobox.surrey.redhat.com (8.12.8/8.12.8) with ESMTP id j9TK8hvl005251
-	for <linux-lvm@redhat.com>; Sat, 29 Oct 2005 21:08:43 +0100
-Received: from agk by agk.surrey.redhat.com with local (Exim 4.34)
-	id 1EVx0N-0006qf-72
-	for linux-lvm@redhat.com; Sat, 29 Oct 2005 21:08:43 +0100
-Date: Sat, 29 Oct 2005 21:08:43 +0100
-From: Alasdair G Kergon <agk@redhat.com>
-Subject: Re: [linux-lvm] pvresize patch pending
-Message-ID: <20051029200843.GB22575@agk.surrey.redhat.com>
-References: <1130518796.4362590c75cf0@webmail.volumehost.com>
-	<20051028170130.GH11086@agk.surrey.redhat.com>
-	<1130519874.43625d4253324@webmail.volumehost.com>
-	<1130522152.436266287429e@webmail.volumehost.com>
-	<20051028192752.GJ11086@agk.surrey.redhat.com>
-	<436286B3.80604@cantab.net>
-	<20051028212102.GK11086@agk.surrey.redhat.com>
-	<1130546247.4362c447c3718@webmail.volumehost.com>
-	<20051029010217.GA22575@agk.surrey.redhat.com>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20051029010217.GA22575@agk.surrey.redhat.com>
-Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
+Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j9UJVnV31685
+	for <linux-lvm@redhat.com>; Sun, 30 Oct 2005 14:31:49 -0500
+Received: from mx1.ventigo.net (node2.ventigo.net [194.112.245.132])
+	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id j9UJVlwH011003
+	for <linux-lvm@redhat.com>; Sun, 30 Oct 2005 14:31:47 -0500
+Received: from localhost (localhost [127.0.0.1])
+	by mx1.ventigo.net (Postfix) with ESMTP id DDE5829D143
+	for <linux-lvm@redhat.com>; Sun, 30 Oct 2005 20:31:46 +0100 (CET)
+Received: from mx1.ventigo.net ([127.0.0.1])
+	by localhost (mx1.ventigo.net [127.0.0.1]) (amavisd-new, port 10024)
+	with ESMTP id 23105-10 for <linux-lvm@redhat.com>;
+	Sun, 30 Oct 2005 20:31:42 +0100 (CET)
+Received: from danielhp (N938P031.adsl.highway.telekom.at [62.47.61.63])
+	by mx1.ventigo.net (Postfix) with ESMTP id 11FF729D178
+	for <linux-lvm@redhat.com>; Sun, 30 Oct 2005 20:31:42 +0100 (CET)
+From: "Daniel Khan" <d.khan@ventigo.com>
+Date: Sun, 30 Oct 2005 20:31:41 +0100
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Message-Id: <20051030193142.11FF729D178@mx1.ventigo.net>
+Subject: [linux-lvm] Rescuing  LVM Partition
+Reply-To: d.khan@ventigo.com,
+	LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -31,46 +32,23 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: LVM general discussion and development <linux-lvm@redhat.com>
+To: linux-lvm@redhat.com
 
-Are any of you are interested in working on something else in
-a related area of the code?
+Hello,
+ 
+one of my disks went broke and I don't have a backup for everything.
+I was using LVM and /dev/vg/home with ReiserFS on it is damaged.
+ 
+Currently I am creating an image of /dev/vg/home using dd_rescue.
+ 
+The only thing I need to know is, if this is supposed to work with a LVM
+partition.
+Is the dump of /dev/vg/home a normal (pure) ReiserFS image like if I would
+dump a regular /dev/hdaX or does it contain some kind of LVM metadata?
+Should I better dump the whole LVM partition (/dev/hda3) or is my way of
+accessing the vg the way to go?
+ 
+Thanks in advance for your help.
 
-New tool:
-  lvimport - Bring an existing filesystem on a partition under LVM control
-
-e.g. you have an ext3 filesystem on /dev/hda3 and you want to turn it
-into an LV without moving it.
-
-Requires an existing VG with at least one pre-existing mda.
- (could be from metadata/dirs of course)
-Involves (equivalent of) running pvcreate -Zn --metadatacopies 0 
-on the partition,
-probably with --labelsector 1 (may depend on fs),
-changing pe_start to 0,
-getting the last sector used by the filesystem (add a new helper 
-function to fsadm to give this info based on filesystem type?),
-vgchange --physicalextentsize if necessary so that the entire 
-filesystem is enclosed by PEs,
-adding the new PV to the VG,
-creating an LV enclosing the filesystem.
-
-Now the PV label is within the new LV - but stored in a sector
-that the filesystem doesn't use.
-
-There might be a case for reducing the size of the filesystem
-slightly before doing this if it's close to the end of the
-partition, so that the pe size isn't too small.  
-[The number of PEs is 32-bits, so tiny PEs put constraints
-on the VG size - need to make sure the code detects problems here,
-or consider implications of switching to 64 bits.]
-
-Ensure none of the tools can leave you with a VG with no mdas
-(eg split off the new PV with vgsplit)
-
-Require filesystem to be unmounted first.
-
-Alasdair
 -- 
-agk@redhat.com
+Daniel Khan
