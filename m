@@ -1,23 +1,18 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j9V3rxV20873
-	for <linux-lvm@redhat.com>; Sun, 30 Oct 2005 22:53:59 -0500
-Received: from karen.nerdshack.com (karen.nerdshack.com [209.189.235.41])
-	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id j9V3rqrE012529
-	for <linux-lvm@redhat.com>; Sun, 30 Oct 2005 22:53:53 -0500
-Received: from dispatchd.nerdshack.com (julie.nerdshack.com [209.189.235.39])
-	by karen.nerdshack.com (Postfix) with SMTP id 075571E3DE3
-	for <linux-lvm@redhat.com>; Sun, 30 Oct 2005 21:49:20 -0600 (CST)
-Date: Mon, 31 Oct 2005 07:50:09 +0300
-From: Dmitry Comoda <asterius@nerdshack.com>
-Subject: Re: [linux-lvm] Possible probings of my CDROM?
-Message-Id: <20051031075009.3510e27d.asterius@nerdshack.com>
-In-Reply-To: <20051022170233.1977d524.norbi@nix.hu>
-References: <20051020172654.3b938fd0.asterius@nerdshack.com>
-	<20051021175115.0f7769dd.norbi.lists@nix.hu>
-	<20051021230804.003d8d8d.asterius@nerdshack.com>
-	<20051022170233.1977d524.norbi@nix.hu>
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j9V4BsV23984
+	for <linux-lvm@redhat.com>; Sun, 30 Oct 2005 23:11:54 -0500
+Received: from xproxy.gmail.com (xproxy.gmail.com [66.249.82.194])
+	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id j9V4BmII015795
+	for <linux-lvm@redhat.com>; Sun, 30 Oct 2005 23:11:48 -0500
+Received: by xproxy.gmail.com with SMTP id s14so699043wxc
+	for <linux-lvm@redhat.com>; Sun, 30 Oct 2005 20:11:48 -0800 (PST)
+Message-ID: <e92a1b70510302011x1b93ed46m@mail.gmail.com>
+Date: Mon, 31 Oct 2005 05:11:47 +0100
+From: Tobias <t.bjorndal@gmail.com>
+Subject: [linux-lvm] How does LVM2 handle disc error?
+MIME-Version: 1.0
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -29,43 +24,18 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: LVM general discussion and development <linux-lvm@redhat.com>
+To: linux-lvm@redhat.com
 
-yes, it is:
+Hi I'm about to set up a file server. How does lvm2 handle disc
+crashes in a logic volume? The thing is we don't care if the data on
+just the disc which crashes is gone, we have all data offline on tape
+and dvds. But we don't want the whole group to crash because of one
+disc. We would like to not use raid5 and such because one disc is
+lost.
 
-ls -l /dev/cdrom
-lrwxrwxrwx  1 root root 3 Oct 31 06:39 /dev/cdrom -> hdb
+Its for internal use so there will be no heavy load. About 10-20 ppl
+will use the server for online central storage. Storage size at least
+1Tb but we hope for 2Tb or more without any expensive hardware. Only
+cheap sata expansion cards and discs.
 
-any ideas? I don't remember exactly, but I was playing with
-couple of lvm tools, and I have always has some sort of wornings about
-CDROM, so it might be likely that I have this problem because of LVM.
-Thanks again.
-
-Dmitry.
-
-
-On Sat, 22 Oct 2005 17:02:33 +0200
-BUCHMULLER Norbert <norbi@nix.hu> wrote:
-
-> On Fri, 21 Oct 2005 23:08:04 +0400
-> Dmitry Comoda <asterius@nerdshack.com> wrote:
-> 
-> > I would be greatful to find out how I can determine that.
-> > Thanks fot the reply.
-> 
-> Type in a shell command line:
-> 
-> ls -l /dev/cdrom
-> 
-> If the symlink exists, it looks similar to this:
-> 
-> lrwxrwxrwx  1 root root 3 Oct  9 21:17 /dev/cdrom -> hdc
-> 
-> 
-> norbi
-> 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+/Tobias
