@@ -1,16 +1,15 @@
 Received: from fentible.pjc.net (vpn-4-2.stuttgart.redhat.com [10.32.4.2])
-	by pobox.surrey.redhat.com (8.12.8/8.12.8) with ESMTP id j9V8KBvl008240
-	for <linux-lvm@redhat.com>; Mon, 31 Oct 2005 08:20:11 GMT
-Received: from jeltz.pjc.net ([192.168.1.2])
-	by fentible.pjc.net with esmtp (Exim 4.50) id 1EWUtn-0002M4-44
-	for linux-lvm@redhat.com; Mon, 31 Oct 2005 08:20:11 +0000
-Message-ID: <4365D3BA.5060208@redhat.com>
-Date: Mon, 31 Oct 2005 08:20:10 +0000
+	by pobox.surrey.redhat.com (8.12.8/8.12.8) with ESMTP id j9V9xwvl013993
+	for <linux-lvm@redhat.com>; Mon, 31 Oct 2005 09:59:59 GMT
+Message-ID: <4365EB1C.5050405@redhat.com>
+Date: Mon, 31 Oct 2005 09:59:56 +0000
 From: Patrick Caulfield <pcaulfie@redhat.com>
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] LVM 2.01.15  Internal lvm error, check syslog
-References: <20051023224004.76D5A3ACF8@webd.globtel.pl>
-In-Reply-To: <20051023224004.76D5A3ACF8@webd.globtel.pl>
+Subject: Re: [linux-lvm] Can LVM2 and CLVM co-exist
+References: <200510272317.02488.edwardam@interlix.com>
+	<4361D0EC.3050004@redhat.com>
+	<200510281131.28632.edwardam@interlix.com>
+In-Reply-To: <200510281131.28632.edwardam@interlix.com>
 Content-Transfer-Encoding: 7bit
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
@@ -23,24 +22,38 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: LVM general discussion and development <linux-lvm@redhat.com>
+To: edwardam@interlix.com
+Cc: linux-lvm@redhat.com
 
-szym@globtel.pl wrote:
-> ccHI,
+Edward Muller wrote:
+> On Friday 28 October 2005 02:19 am, Patrick Caulfield wrote:
 > 
-> I try to use clustered lvm, change locking_type to 2, 
-> use library /lib/liblvm2clusterlock.so lunch clvmd 
-> but something is wrong
-> Every time i put 'vgchange -ay' on gfs node i see
-> Error locking on node node1: Internal lvm error, check syslog
-> Error locking on node node2: Internal lvm error, check syslog
-> Error locking on node node3: Internal lvm error, check syslog
+>>Edward Muller wrote:
+>>
+>>>I have a system using LVM2 and recently setup a CORAID (www.coraid.com)
+>>>device. I'd like to use CLVM to manage the volumes on the device. But
+>>>someone mentioned that LVM2 and CLVM may be incompatible.
+>>
+>>What exactly are you trying to do?
+>>
+>>LVM2 & CLVM can't be incompatible - they are the same thing! installing the
+>>lvm2-cluster RPM doesn't replace any LVM2 components, it provides a new
+>>locking method for clustered VGs and a daemon to distribute the commands
+>>across the cluster.
 > 
 > 
+> What's an RPM? :-)
+> j/k - This is on gentoo linux and it's a separate package and doesn't depend 
+> on the lvm package.
+> 
+> But on investigating further I see that they compile lvm with clvm in that 
+> package. Presumably so you can have different versions of clvm and lvm 
+> installed. Why you would want to do that I don't know. 
 
-Is there anything in syslog ??
+That sounds more like a dangerous idea than a feature !
+clvmd & lvm2 really ought to be kept in sync.
 
-If not you might have to enable some logging in /etc/lvm/lvm.conf
+
 -- 
 
 patrick
