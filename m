@@ -1,27 +1,23 @@
-Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id j9UJVnV31685
-	for <linux-lvm@redhat.com>; Sun, 30 Oct 2005 14:31:49 -0500
-Received: from mx1.ventigo.net (node2.ventigo.net [194.112.245.132])
-	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id j9UJVlwH011003
-	for <linux-lvm@redhat.com>; Sun, 30 Oct 2005 14:31:47 -0500
-Received: from localhost (localhost [127.0.0.1])
-	by mx1.ventigo.net (Postfix) with ESMTP id DDE5829D143
-	for <linux-lvm@redhat.com>; Sun, 30 Oct 2005 20:31:46 +0100 (CET)
-Received: from mx1.ventigo.net ([127.0.0.1])
-	by localhost (mx1.ventigo.net [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id 23105-10 for <linux-lvm@redhat.com>;
-	Sun, 30 Oct 2005 20:31:42 +0100 (CET)
-Received: from danielhp (N938P031.adsl.highway.telekom.at [62.47.61.63])
-	by mx1.ventigo.net (Postfix) with ESMTP id 11FF729D178
-	for <linux-lvm@redhat.com>; Sun, 30 Oct 2005 20:31:42 +0100 (CET)
-From: "Daniel Khan" <d.khan@ventigo.com>
-Date: Sun, 30 Oct 2005 20:31:41 +0100
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Message-Id: <20051030193142.11FF729D178@mx1.ventigo.net>
-Subject: [linux-lvm] Rescuing  LVM Partition
-Reply-To: d.khan@ventigo.com,
-	LVM general discussion and development <linux-lvm@redhat.com>
+Received: from agk.surrey.redhat.com (agk.surrey.redhat.com [172.16.10.74])
+	by pobox.surrey.redhat.com (8.12.8/8.12.8) with ESMTP id j9V2gLvl024939
+	for <linux-lvm@redhat.com>; Mon, 31 Oct 2005 02:42:21 GMT
+Received: from agk by agk.surrey.redhat.com with local (Exim 4.34)
+	id 1EWPcr-0002Va-RI
+	for linux-lvm@redhat.com; Mon, 31 Oct 2005 02:42:21 +0000
+Date: Mon, 31 Oct 2005 02:42:21 +0000
+From: Alasdair G Kergon <agk@redhat.com>
+Subject: Re: [linux-lvm] pvresize patch pending
+Message-ID: <20051031024221.GA26394@agk.surrey.redhat.com>
+References: <1130518796.4362590c75cf0@webmail.volumehost.com>
+	<20051028170130.GH11086@agk.surrey.redhat.com>
+	<1130519874.43625d4253324@webmail.volumehost.com>
+	<1130522152.436266287429e@webmail.volumehost.com>
+	<20051028192752.GJ11086@agk.surrey.redhat.com>
+	<436286B3.80604@cantab.net>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <436286B3.80604@cantab.net>
+Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -32,23 +28,18 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@redhat.com
+Content-Transfer-Encoding: 7bit
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-Hello,
+On Fri, Oct 28, 2005 at 09:14:43PM +0100, Zak Kipling wrote:
+> Indeed. I've recently been working on an implementation myself 
+> (primarily because I wanted to grow a live PV on my own system), which 
+> I've attached in its current (somewhat rough, but seemingly working) 
+> state as a patch against CVS HEAD.
  
-one of my disks went broke and I don't have a backup for everything.
-I was using LVM and /dev/vg/home with ReiserFS on it is damaged.
- 
-Currently I am creating an image of /dev/vg/home using dd_rescue.
- 
-The only thing I need to know is, if this is supposed to work with a LVM
-partition.
-Is the dump of /dev/vg/home a normal (pure) ReiserFS image like if I would
-dump a regular /dev/hdaX or does it contain some kind of LVM metadata?
-Should I better dump the whole LVM partition (/dev/hda3) or is my way of
-accessing the vg the way to go?
- 
-Thanks in advance for your help.
+I've merged this into CVS - we can finish testing it there alongside
+the other development going on at the moment.
 
+Alasdair
 -- 
-Daniel Khan
+agk@redhat.com
