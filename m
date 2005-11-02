@@ -1,17 +1,18 @@
-Received: from agk.surrey.redhat.com (agk.surrey.redhat.com [172.16.10.74])
-	by pobox.surrey.redhat.com (8.12.8/8.12.8) with ESMTP id jA203rvl026378
-	for <linux-lvm@redhat.com>; Wed, 2 Nov 2005 00:03:53 GMT
-Received: from agk by agk.surrey.redhat.com with local (Exim 4.34)
-	id 1EX66b-0004M3-OY
-	for linux-lvm@redhat.com; Wed, 02 Nov 2005 00:03:53 +0000
-Date: Wed, 2 Nov 2005 00:03:53 +0000
-From: Alasdair G Kergon <agk@redhat.com>
-Subject: Re: [linux-lvm] lvm2 snapshot BREAKS on 2nd snapshot
-Message-ID: <20051102000353.GH26394@agk.surrey.redhat.com>
-References: <1130861002.4970.3.camel@jgs4.ino.pvt>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <1130861002.4970.3.camel@jgs4.ino.pvt>
+Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id jA24CbV31374
+	for <linux-lvm@redhat.com>; Tue, 1 Nov 2005 23:12:37 -0500
+Received: from svs.gsfc.nasa.gov (svsmail.gsfc.nasa.gov [128.183.34.28])
+	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id jA24CUBY025882
+	for <linux-lvm@redhat.com>; Tue, 1 Nov 2005 23:12:30 -0500
+Received: from [128.183.34.47] (nu.gsfc.nasa.gov [128.183.34.47])
+	by svs.gsfc.nasa.gov (Postfix) with ESMTP id 2FD1A10000A9
+	for <linux-lvm@redhat.com>; Tue,  1 Nov 2005 23:12:25 -0500 (EST)
+Message-ID: <43683CA4.4090406@svs.gsfc.nasa.gov>
+Date: Tue, 01 Nov 2005 23:12:20 -0500
+From: "Randall A. Jones" <rajones@svs.gsfc.nasa.gov>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] aborted pvmove; how to remove locked LV "pvmove0"
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -22,86 +23,23 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: linux-lvm@redhat.com
-
-On Tue, Nov 01, 2005 at 08:03:21AM -0800, James G. Sack (jim) wrote:
-> I get this kcopyd BUG (and consequent Oops)
-
-Here's a related patch to try from Jan Blunck.
-  [The fix still needs moving into bio_list_merge() not its caller.]
-
-If things keep to schedule, there'll be new userspace activation
-code around the end of this week aimed at avoiding
-snapshot failures locking up machines, and I'll be back dealing
-with the outstanding kernel patches (including this one) by the 
-middle of next week.
-
-Alasdair
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
 
-Index: linux-2.6/drivers/md/dm-snap.c
-===================================================================
---- linux-2.6.orig/drivers/md/dm-snap.c
-+++ linux-2.6/drivers/md/dm-snap.c
-@@ -588,7 +588,13 @@ static struct bio *__flush_bios(struct p
- 	/* This is fine as long as kcopyd is single-threaded. If kcopyd
- 	 * becomes multi-threaded, we'll need some locking here.
- 	 */
--	bio_list_merge(&sibling->origin_bios, &pe->origin_bios);
-+	if (pe->origin_bios.head)
-+		bio_list_merge(&sibling->origin_bios, &pe->origin_bios);
-+	else {
-+		printk(KERN_ERR "%s(%s,%d): exception with NULL origin bio\n",
-+		       __FUNCTION__, current->comm, current->pid);
-+		dump_stack();
-+	}
- 
- 	return NULL;
- }
-@@ -927,7 +933,7 @@ static void list_merge(struct list_head 
- 
- static int __origin_write(struct list_head *snapshots, struct bio *bio)
- {
--	int r = 1, first = 1;
-+	int r = 1;
- 	struct dm_snapshot *snap;
- 	struct exception *e;
- 	struct pending_exception *pe, *last = NULL;
-@@ -981,6 +987,8 @@ static int __origin_write(struct list_he
- 	 * Now that we have a complete pe list we can start the copying.
- 	 */
- 	if (last) {
-+		int first = 1;
-+
- 		pe = last;
- 		do {
- 			down_write(&pe->snap->lock);
-Index: linux-2.6/drivers/md/dm-bio-list.h
-===================================================================
---- linux-2.6.orig/drivers/md/dm-bio-list.h
-+++ linux-2.6/drivers/md/dm-bio-list.h
-@@ -21,6 +21,8 @@ static inline void bio_list_init(struct 
- 
- static inline void bio_list_add(struct bio_list *bl, struct bio *bio)
- {
-+	BUG_ON(!bio);
-+
- 	bio->bi_next = NULL;
- 
- 	if (bl->tail)
-@@ -33,6 +35,10 @@ static inline void bio_list_add(struct b
- 
- static inline void bio_list_merge(struct bio_list *bl, struct bio_list *bl2)
- {
-+	BUG_ON(!bl2);
-+	BUG_ON(!bl2->head);
-+	BUG_ON(!bl2->tail);
-+
- 	if (bl->tail)
- 		bl->tail->bi_next = bl2->head;
- 	else
+I started a pvmove that was interrupted before it was finished. 
+lvdisplay reports that the pvmove0 LV is still there.  Looking in 
+/etc/lvm/backup/vg0 shows that pvmove0 is locked.  If I try to use 
+lvremove pvmove0, it fails stating that it is locked.
 
+Is there a way to unlock a locked LV?  Or is there a way to tell LVM 
+that the pvmove operation is no longer needed so it will clean up?
 
------ End forwarded message -----
+Thank you,
+Randall
+-- 
+..:.::::
+Randall Jones     GST      NASA Goddard Space Flight Center
+HPC Visualization Support       http://hpcvis.gsfc.nasa.gov
+Scientific Visualization Studio    http://svs.gsfc.nasa.gov
+rajones@svs.gsfc.nasa.gov      Code 610.3      301-286-2239
