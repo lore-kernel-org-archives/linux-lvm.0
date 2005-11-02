@@ -1,21 +1,17 @@
-Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id jA1NKXV01894
-	for <linux-lvm@redhat.com>; Tue, 1 Nov 2005 18:20:33 -0500
-Received: from mail.inostor.com (w130.z209220038.sjc-ca.dsl.cnc.net
-	[209.220.38.130])
-	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id jA1NKUix030611
-	for <linux-lvm@redhat.com>; Tue, 1 Nov 2005 18:20:30 -0500
-Received: from jgs4.ino.pvt (unknown [172.16.1.75])
-	by mail.inostor.com (Postfix) with ESMTP id 9C61E2B515
-	for <linux-lvm@redhat.com>; Tue,  1 Nov 2005 15:16:01 -0800 (PST)
-Subject: Re: [linux-lvm] Creating snapshot causes processes hang?
-From: "James G. Sack (jim)" <jsack@tandbergdatacorp.com>
-In-Reply-To: <20051101220316.6F44973980@hormel.redhat.com>
-References: <20051101220316.6F44973980@hormel.redhat.com>
-Date: Tue, 01 Nov 2005 15:20:21 -0800
-Message-Id: <1130887221.16627.2.camel@jgs4.ino.pvt>
+Received: from agk.surrey.redhat.com (agk.surrey.redhat.com [172.16.10.74])
+	by pobox.surrey.redhat.com (8.12.8/8.12.8) with ESMTP id jA203rvl026378
+	for <linux-lvm@redhat.com>; Wed, 2 Nov 2005 00:03:53 GMT
+Received: from agk by agk.surrey.redhat.com with local (Exim 4.34)
+	id 1EX66b-0004M3-OY
+	for linux-lvm@redhat.com; Wed, 02 Nov 2005 00:03:53 +0000
+Date: Wed, 2 Nov 2005 00:03:53 +0000
+From: Alasdair G Kergon <agk@redhat.com>
+Subject: Re: [linux-lvm] lvm2 snapshot BREAKS on 2nd snapshot
+Message-ID: <20051102000353.GH26394@agk.surrey.redhat.com>
+References: <1130861002.4970.3.camel@jgs4.ino.pvt>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+In-Reply-To: <1130861002.4970.3.camel@jgs4.ino.pvt>
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -27,50 +23,85 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: "LVM LIST linux-lvm@redhat.com" <linux-lvm@redhat.com>
+Content-Transfer-Encoding: 7bit
+To: linux-lvm@redhat.com
 
-> Date: Tue, 01 Nov 2005 16:02:55 -0600
-> From: Kelly Sauke <ksauke@fastenal.com>
-> Subject: Re: [linux-lvm] Creating snapshot causes processes hang?
-> To: LVM general discussion and development <linux-lvm@redhat.com>
-> Message-ID: <4367E60F.8020004@fastenal.com>
-> Content-Type: text/plain; charset=ISO-8859-1
-> 
-> http://www.redhat.com/archives/linux-lvm/2005-July/msg00117.html
-> 
+On Tue, Nov 01, 2005 at 08:03:21AM -0800, James G. Sack (jim) wrote:
+> I get this kcopyd BUG (and consequent Oops)
 
-AHA! -- could this be a confirmation of what I have seen where lvremove
-triggers the kcopyd BUG and consequent system deadlock?
+Here's a related patch to try from Jan Blunck.
+  [The fix still needs moving into bio_list_merge() not its caller.]
 
-(ref: my recent posting --  https://www.redhat.com/archives/linux-
-lvm/2005-November/msg00002.html, where I report breakage upon lvremove
-when there are 2 snapshots and i/o is occurring)
+If things keep to schedule, there'll be new userspace activation
+code around the end of this week aimed at avoiding
+snapshot failures locking up machines, and I'll be back dealing
+with the outstanding kernel patches (including this one) by the 
+middle of next week.
+
+Alasdair
 
 
-If so, do I also understand correctly that using unreleased patches and
-some manual dmsetup commands might constitute a workaround?
+Index: linux-2.6/drivers/md/dm-snap.c
+===================================================================
+--- linux-2.6.orig/drivers/md/dm-snap.c
++++ linux-2.6/drivers/md/dm-snap.c
+@@ -588,7 +588,13 @@ static struct bio *__flush_bios(struct p
+ 	/* This is fine as long as kcopyd is single-threaded. If kcopyd
+ 	 * becomes multi-threaded, we'll need some locking here.
+ 	 */
+-	bio_list_merge(&sibling->origin_bios, &pe->origin_bios);
++	if (pe->origin_bios.head)
++		bio_list_merge(&sibling->origin_bios, &pe->origin_bios);
++	else {
++		printk(KERN_ERR "%s(%s,%d): exception with NULL origin bio\n",
++		       __FUNCTION__, current->comm, current->pid);
++		dump_stack();
++	}
+ 
+ 	return NULL;
+ }
+@@ -927,7 +933,7 @@ static void list_merge(struct list_head 
+ 
+ static int __origin_write(struct list_head *snapshots, struct bio *bio)
+ {
+-	int r = 1, first = 1;
++	int r = 1;
+ 	struct dm_snapshot *snap;
+ 	struct exception *e;
+ 	struct pending_exception *pe, *last = NULL;
+@@ -981,6 +987,8 @@ static int __origin_write(struct list_he
+ 	 * Now that we have a complete pe list we can start the copying.
+ 	 */
+ 	if (last) {
++		int first = 1;
++
+ 		pe = last;
+ 		do {
+ 			down_write(&pe->snap->lock);
+Index: linux-2.6/drivers/md/dm-bio-list.h
+===================================================================
+--- linux-2.6.orig/drivers/md/dm-bio-list.h
++++ linux-2.6/drivers/md/dm-bio-list.h
+@@ -21,6 +21,8 @@ static inline void bio_list_init(struct 
+ 
+ static inline void bio_list_add(struct bio_list *bl, struct bio *bio)
+ {
++	BUG_ON(!bio);
++
+ 	bio->bi_next = NULL;
+ 
+ 	if (bl->tail)
+@@ -33,6 +35,10 @@ static inline void bio_list_add(struct b
+ 
+ static inline void bio_list_merge(struct bio_list *bl, struct bio_list *bl2)
+ {
++	BUG_ON(!bl2);
++	BUG_ON(!bl2->head);
++	BUG_ON(!bl2->tail);
++
+ 	if (bl->tail)
+ 		bl->tail->bi_next = bl2->head;
+ 	else
 
-I don't mind living with manual workarounds until snapshots is fixed,
-but it would be wonderful to see an explicit recipe [for dummies, please
-<grin>] for following the suggestions in the AGK july posting referenced
-by ksauke, above), namely:
 
-  "Further patches are needed, but those two plus correct dmsetup use
-should avoid machine lockups."
-
-In particular:
-have any of the 18 patches shown at 
-  ftp://sources.redhat.com/pub/dm/patches/2.6-unstable/2.6.12-
-rc2/2.6.12-rc2-udm1/
-gotten into 2.6.13 or 2.6.14, or into kernels blessed by Fedora? (eg,
-FC4-1526, maybe)
-
-And, could someone give me an example of "correct dmsetup" use? I
-presume it involves suspend and resume -- but what else?
-
-.. and in my case, what if there is an existing snapshot when I need to
-create/remove a second one?
-
-
-
-..jim
+----- End forwarded message -----
