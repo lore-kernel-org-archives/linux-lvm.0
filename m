@@ -1,18 +1,18 @@
 Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id jA3DiFV17026
-	for <linux-lvm@redhat.com>; Thu, 3 Nov 2005 08:44:15 -0500
-Received: from storm.itahost.com (storm.itahost.com [83.148.74.3])
-	by mx1.redhat.com (8.12.11/8.12.11) with SMTP id jA3DiEnw004093
-	for <linux-lvm@redhat.com>; Thu, 3 Nov 2005 08:44:15 -0500
-From: Delian Krustev <linux-lvm@krustev.net>
-Subject: Re: [linux-lvm] Unable to remove a pvmove LV
-Date: Thu, 3 Nov 2005 15:44:08 +0200
-References: <200511012135.50701.krustev@krustev.net>
-	<20051102233722.GK26394@agk.surrey.redhat.com>
-In-Reply-To: <20051102233722.GK26394@agk.surrey.redhat.com>
-MIME-Version: 1.0
-Message-Id: <200511031544.08827.linux-lvm@krustev.net>
-Content-Transfer-Encoding: 8bit
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id jA3JHiV12911
+	for <linux-lvm@redhat.com>; Thu, 3 Nov 2005 14:17:44 -0500
+Received: from mail.inostor.com (w130.z209220038.sjc-ca.dsl.cnc.net
+	[209.220.38.130])
+	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id jA3JHd33019904
+	for <linux-lvm@redhat.com>; Thu, 3 Nov 2005 14:17:43 -0500
+Subject: Re: [linux-lvm] lvm2 snapshot BREAKS on 2nd snapshot
+From: "James G. Sack (jim)" <jsack@tandbergdatacorp.com>
+In-Reply-To: <20051103134422.54741734E9@hormel.redhat.com>
+References: <20051103134422.54741734E9@hormel.redhat.com>
+Date: Thu, 03 Nov 2005 11:17:38 -0800
+Message-Id: <1131045458.10339.59.camel@jgs4.ino.pvt>
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -24,28 +24,42 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: LVM general discussion and development <linux-lvm@redhat.com>
+To: "LVM LIST linux-lvm@redhat.com" <linux-lvm@redhat.com>
 
-On Thursday 03 November 2005 01:37, Alasdair G Kergon wrote:
-> On Wed, Nov 02, 2005 at 10:28:20PM +0200, Delian Krustev wrote:
-> > Surprisingly after trying to resume some minutes
-> > later I've found the move had completed successfully.
->
-> The userspace process just manage and monitor the pvmove - the actual
-> work is done by a kernel thread.
->
-> So killing the userspace processes doesn't stop the pvmove.
-> Only pvmove --abort is capable of telling the kernel to
-> abandon it.
+>..(from digest)..
+> Message: 2
+> Date: Wed, 2 Nov 2005 00:03:53 +0000
+> From: Alasdair G Kergon <agk@redhat.com>
+> Subject: Re: [linux-lvm] lvm2 snapshot BREAKS on 2nd snapshot
+> To: linux-lvm@redhat.com
+> Message-ID: <20051102000353.GH26394@agk.surrey.redhat.com>
+> Content-Type: text/plain; charset=us-ascii
+> 
+> On Tue, Nov 01, 2005 at 08:03:21AM -0800, James G. Sack (jim) wrote:
+> > I get this kcopyd BUG (and consequent Oops)
+> 
+> Here's a related patch to try from Jan Blunck.
+>   [The fix still needs moving into bio_list_merge() not its caller.]
+> 
+> If things keep to schedule, there'll be new userspace activation
+> code around the end of this week aimed at avoiding
+> snapshot failures locking up machines, and I'll be back dealing
+> with the outstanding kernel patches (including this one) by the 
+> middle of next week.
+> 
+> Alasdair
 
-The bug in the userspace is quite nasty though. Has it been reported and/or
-fixed in the recent versions ?
+I tried the patch on the latest FC4 kernel (2.6.13-1.1532_FC4), and it
+still triggers the kcopyd.c BUG at line 145.
 
-Additionally, would you suggest a way to remove the stale LV ? Ofcourse
-as a last step I might go creating a new VG and moving the data to it,
-but moving a terrabyte is not s.t. I would like to do often.
+The behavior I get, may actually be a consequence of (or worsened by) a
+simultaneous loop running dmsetup info -- so maybe there's some other
+lock error involved, too?
 
-On the other side, the stale LV is not causing any problems ..
+Anyway, I look forward to the upcoming improvements -- thanks, agk.
 
-Cheers,
-Delian
+For now, I am living with the constraint that lvm2 snapshots work ok as
+long as there is not more than one snapshot on any given origin volume.
+
+
+..jim
