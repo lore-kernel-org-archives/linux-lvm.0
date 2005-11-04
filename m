@@ -1,18 +1,17 @@
-Received: from agk.surrey.redhat.com (agk.surrey.redhat.com [172.16.10.74])
-	by pobox.surrey.redhat.com (8.12.8/8.12.8) with ESMTP id jA4JGhm1012750
-	for <linux-lvm@redhat.com>; Fri, 4 Nov 2005 19:16:43 GMT
-Received: from agk by agk.surrey.redhat.com with local (Exim 4.34)
-	id 1EY73L-0007bX-6J
-	for linux-lvm@redhat.com; Fri, 04 Nov 2005 19:16:43 +0000
-Date: Fri, 4 Nov 2005 19:16:43 +0000
-From: Alasdair G Kergon <agk@redhat.com>
+Received: from o.ww.redhat.com (vpn50-27.rdu.redhat.com [172.16.50.27])
+	by pobox.stuttgart.redhat.com (8.12.8/8.12.8) with ESMTP id
+	jA4JOWTu002238
+	for <linux-lvm@redhat.com>; Fri, 4 Nov 2005 20:24:32 +0100
+Date: Fri, 4 Nov 2005 20:24:31 +0100
+From: Heinz Mauelshagen <mauelshagen@redhat.com>
 Subject: Re: [linux-lvm] pvcreate on a dmraid device
-Message-ID: <20051104191643.GT26394@agk.surrey.redhat.com>
+Message-ID: <20051104192431.GD3517@redhat.com>
 References: <200511042005.17392.Dan.Johansson@dmj.nu>
 Mime-Version: 1.0
 Content-Disposition: inline
 In-Reply-To: <200511042005.17392.Dan.Johansson@dmj.nu>
-Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
+Reply-To: mauelshagen@redhat.com,
+	LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -26,16 +25,74 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
+
+Dan,
+
+change your lvm2 "devices" configuration in /etc/lvm/lvm.conf to include:
+
+types = [ "device-mapper", 254 ]
+
+Regards,
+Heinz    -- The LVM Guy --
+
+
+
 On Fri, Nov 04, 2005 at 08:05:08PM +0100, Dan Johansson wrote:
+> Hi,
+> 
+> I'm new to this list, but not to Linux and LVM.
+> I'm trying to setup a new Linux-server with an on board RAID-controller 
+> (Promise PDC20265 FastTrak100 Lite/Ultra100). Now everything goes well until 
+> I try to do a pvcreate on one of the raid-partitions, this is the output I 
+> get:
 > # pvcreate /dev/mapper/pdc_edcfibbf4
 >   Device /dev/mapper/pdc_edcfibbf4 not found.
- 
-Look for (commented out) types line in lvm.conf
-and enable it saying:
-  types = [ "device-mapper", 1 ]
+> 
+> But the device-file is there (along with the other partitions).
+> 
+> # ll /dev/mapper/pdc_edcfibbf*
+> brw-------  1 root root 253,  7 Nov  4 18:22 /dev/mapper/pdc_edcfibbf
+> brw-------  1 root root 253,  8 Nov  4 18:22 /dev/mapper/pdc_edcfibbf1
+> brw-------  1 root root 253,  9 Nov  4 18:22 /dev/mapper/pdc_edcfibbf2
+> brw-------  1 root root 253, 10 Nov  4 18:22 /dev/mapper/pdc_edcfibbf3
+> brw-------  1 root root 253, 11 Nov  4 18:22 /dev/mapper/pdc_edcfibbf4
+> 
+> and dmraid shows the raidgroup OK:
+> # dmraid -s
+> *** Active Set
+> name   : pdc_edcfibbf
+> size   : 160086465
+> stride : 128
+> type   : mirror
+> status : ok
+> subsets: 0
+> devs   : 2
+> spares : 0
+> 
+> Any suggestions on how I can solve this issue and move on with my 
+> installation.
+> 
+> Regards,
+> -- 
+> Dan Johansson, <http://www.dmj.nu>
+> ***************************************************
+> This message is printed on 100% recycled electrons!
+> ***************************************************
 
-(This will happen by default in the next release.)
 
-Alasdair
--- 
-agk@redhat.com
+
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@redhat.com
+> https://www.redhat.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+Heinz Mauelshagen                                 Red Hat GmbH
+Consulting Development Engineer                   Am Sonnenhang 11
+Cluster and Storage Development                   56242 Marienrachdorf
+                                                  Germany
+Mauelshagen@RedHat.com                            +49 2626 141200
+                                                       FAX 924446
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
