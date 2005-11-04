@@ -1,33 +1,22 @@
-Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id jA41roV29526
-	for <linux-lvm@redhat.com>; Thu, 3 Nov 2005 20:53:50 -0500
-Received: from volumehost.com
-	(IDENT:11dp5T1dFlLS1GBTHLm7HutkD5/E1RIu@adsl-69-154-123-201.dsl.fyvlar.swbell.net
-	[69.154.123.201])
-	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id jA41rjA7031371
-	for <linux-lvm@redhat.com>; Thu, 3 Nov 2005 20:53:50 -0500
-Received: from volumehost.com (localhost.localdomain [127.0.0.1])
-	by volumehost.com (8.12.8/8.12.5) with ESMTP id jA41rZUN020842
-	for <linux-lvm@redhat.com>; Thu, 3 Nov 2005 19:53:35 -0600
-Received: (from apache@localhost)
-	by volumehost.com (8.12.8/8.12.8/Submit) id jA41rYP1020840
-	for linux-lvm@redhat.com; Thu, 3 Nov 2005 19:53:34 -0600
-Message-ID: <1131069214.436abf1e38004@webmail.volumehost.com>
-Date: Thu,  3 Nov 2005 19:53:34 -0600
-From: Zac Slade <krakrjak@volumehost.com>
-Subject: Re: [linux-lvm] pvresize patch pending
-References: <1130518796.4362590c75cf0@webmail.volumehost.com>
-	<20051028170130.GH11086@agk.surrey.redhat.com>
-	<1130519874.43625d4253324@webmail.volumehost.com>
-	<1130522152.436266287429e@webmail.volumehost.com>
-	<20051028192752.GJ11086@agk.surrey.redhat.com>
-	<436286B3.80604@cantab.net>
-	<20051028212102.GK11086@agk.surrey.redhat.com>
-	<1130546247.4362c447c3718@webmail.volumehost.com>
-	<20051029010217.GA22575@agk.surrey.redhat.com>
-In-Reply-To: <20051029010217.GA22575@agk.surrey.redhat.com>
+Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id jA477vV18832
+	for <linux-lvm@redhat.com>; Fri, 4 Nov 2005 02:07:57 -0500
+Received: from fed1rmmtao08.cox.net (fed1rmmtao08.cox.net [68.230.241.31])
+	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id jA477nlQ010800
+	for <linux-lvm@redhat.com>; Fri, 4 Nov 2005 02:07:49 -0500
+Received: from [70.181.66.125] by fed1rmmtao08.cox.net
+	(InterMail vM.6.01.05.02 201-2131-123-102-20050715) with ESMTP
+	id <20051104070658.RQLR776.fed1rmmtao08.cox.net@[70.181.66.125]>
+	for <linux-lvm@redhat.com>; Fri, 4 Nov 2005 02:06:58 -0500
+Message-ID: <436B08BF.5080903@tsss.org>
+Date: Thu, 03 Nov 2005 23:07:43 -0800
+From: kelsey hudson <khudson@tsss.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Subject: Re: [linux-lvm] Snapshot weirdness
+References: <436AA2DF.8030002@tsss.org>
+	<1131067235.4032.175.camel@seki.nac.uci.edu>
+In-Reply-To: <1131067235.4032.175.camel@seki.nac.uci.edu>
+Content-Transfer-Encoding: 7bit
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -38,54 +27,81 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-Quoting Alasdair G Kergon <agk@redhat.com>:
+Dan Stromberg wrote:
+> Is disk to disk to tape cost effective compared to disk to disk?
 
-> On Fri, Oct 28, 2005 at 07:37:27PM -0500, Zac Slade wrote:
-> > I think that to get this part write might take a fundemental shift in the
-> way
-> > pv_write() and _pv_write() behave.  What would be nice is to make
-> pv_write()
-> > distinguish between a pv_create calling it and a pv_resize.  Then have
-> _pv_write
-> > only write the pv mda to the disk.  By doing this _pv_write becomes generic
-> and
-> > allows for further extension.  Also then we can probably implement
-> atomicity for
-> > pv updates (though updating a pv was not initially engineered into lvm it
-> can
-> > become very handy).
->   
-> I'm reluctant to extend pv_write - long term I want to get rid of it
-> (and pv_read also) as PV operations are always awkward and getting in the
-> way.
-> Everything should be done with (new-style) VGs and LVs.
-> 
-> pvcreate is also superfluous - I want to absorb it into vgcreate/vgextend
-> etc.
-> So every labelled volume will always belong to a VG - with enhanced
-> vgsplit/vgmerge & allocation facilities.
-> CVS now lets you create PVs on LVs - another step towards eliminating
-> PVs. 
+It is. We have need for both online and archival backups. The online 
+backups in case we need to hot-restore a file or to quickly go back to 
+an old snapshot of a database or something, and an archive in case 
+things go terribly wrong, and for (as the name implies) an archive.
 
-So instead of using pv_read and pv_write (except for backward compatibility)
-this functionality should then be migrated into vgcreate?  Okay, I can see that.
- Doing away with the pv* methods will subtract some abstraction.  However with
-this fundamental shift how do you reconcile the pv/vg structures?  Just do away
-with the notion of pvs all together or instead have them, but they only exists
-as an internal structure not visible to the user?
+> I don't mean to assert that disk to disk to tape is more or less
+> expensive than disk to disk, but it seems worth comparing.
 
-I'm still learning the codebase and I'm not sure there is an obvious way to
-start this.  I'm assuming that you don't want pvcreate reinvented inside
-vgcreate, but instead have vgcreate do something new to abstract the underlying
-devices by only utilizing a vg structure not having seperate pv structures. 
-This code may already exist.  A few hints in the right direction would be nice.
- I'll keep poking around.
+It's always important to weigh the options. :)
 
-Zac Slade
-krakrjak@volumehost.com
+> I'm thinking disk to disk to tape'd be faster in some sense than disk to
+> tape, in fact that's what we use here at UCI for a lot of our backups,
+> but if you're starting over from scratch, how about comparing the cost
+> of something like:
 
--------------------------------------------------
-This mail sent through IMP: http://horde.org/imp/
+Funny you mention that -- I work on the UCI campus, in the research park 
+near the corner of Bison and California. Small world ...
+
+Anyhow, yes. Disk to disk to tape is much faster. Most everything I'm 
+backing up is over the network, mainly on large NAS volumes mounted over 
+100MBit ethernet (yes, our network admin needs his head examined). So, 
+in order to keep the tape buffer from under-running and causing the tape 
+head to back up and retrain (costly), I cache the information locally. 
+But, in the case that a sync is still in progress, I take a snapshot 
+when the sync is over. The tape process goes and backs up that snapshot, 
+while the original volume is (again) being synchronized.
+
+At least, this is how it works in *concept*. Then again, Itanium looked 
+good on paper, too :)
+
+> 1) A bunch of opterons with RAID 5 volumes built via md, tacked together
+> with Ibrix, or perhaps just a bunch of gnbd's md'd together into a huge
+> xfs
+
+If only money were no object. :) I had a $500 budget, and some old 
+hardware to munge together in order to achieve a working solution. You'd 
+absolutely cringe if you found out what I ended up doing. Fortunately, 
+the LTO autoloader is new, though.
+
+> 2) One of those many rsync front-ends that stores only one copy of a
+> given file?  backuppc seems to have the most sophisticated user
+> interface, but honorable mention goes to rdiff-backup for using rdiff
+> (binary diff based on the rsync algorithm) and reverse deltas (which
+> ISTR was the big plus of CVS over prior source code control systems, so
+> the diff'ing gets deeper as you go back in time, not forward in time,
+> and since you're more likely to need contemporary files...).
+
+I'm in the process of writing my own front-ends and processes to do most 
+of this; what I need to do is largely custom (but when I'm done you can 
+bet I'll release what I've done in case someone else may find it useful)
+:D
+
+> Before you decide that the hashing involved in rsync would cause too
+> many collisions, bear in mind that with a sufficiently strong hash, you
+> can have a lower probability of a collision than the probability of a
+> tape failure...
+
+eh, rsync is great, I use it all over the place. And, for sufficiently 
+different files, the hashing doesn't cause too many collisions, 
+especially when using a strong hash like MD5 (which is what IIRC rsync 
+uses). I actually use rsync internally to do most of the network (and 
+local!) copying.
+
+
+Anyways, I managed to get the kernel to panic twice today when removing 
+snapshot volumes which had been corrupted by the phantom metadata eater. 
+I'll see what I can do about reproducing it tomorrow.
+
+Anyhow, off to sleep for me.
+
+Cheers,
+-Kelsey
