@@ -1,20 +1,17 @@
-Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id jA4J5YV11879
-	for <linux-lvm@redhat.com>; Fri, 4 Nov 2005 14:05:34 -0500
-Received: from mail14.bluewin.ch (mail14.bluewin.ch [195.186.19.62])
-	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id jA4J5PEP007384
-	for <linux-lvm@redhat.com>; Fri, 4 Nov 2005 14:05:26 -0500
-Received: from vangelis (81.62.238.235) by mail14.bluewin.ch (Bluewin
-	7.2.068.1) id 435DFE560001B683 for linux-lvm@redhat.com;
-	Fri, 4 Nov 2005 19:05:20 +0000
-From: Dan Johansson <Dan.Johansson@dmj.nu>
-Date: Fri, 4 Nov 2005 20:05:08 +0100
-MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="nextPart1288334.Ly0NbfSxZj";
-	protocol="application/pgp-signature"; micalg=pgp-sha1
-Content-Transfer-Encoding: 7bit
-Message-Id: <200511042005.17392.Dan.Johansson@dmj.nu>
-Subject: [linux-lvm] pvcreate on a dmraid device
+Received: from agk.surrey.redhat.com (agk.surrey.redhat.com [172.16.10.74])
+	by pobox.surrey.redhat.com (8.12.8/8.12.8) with ESMTP id jA4JGhm1012750
+	for <linux-lvm@redhat.com>; Fri, 4 Nov 2005 19:16:43 GMT
+Received: from agk by agk.surrey.redhat.com with local (Exim 4.34)
+	id 1EY73L-0007bX-6J
+	for linux-lvm@redhat.com; Fri, 04 Nov 2005 19:16:43 +0000
+Date: Fri, 4 Nov 2005 19:16:43 +0000
+From: Alasdair G Kergon <agk@redhat.com>
+Subject: Re: [linux-lvm] pvcreate on a dmraid device
+Message-ID: <20051104191643.GT26394@agk.surrey.redhat.com>
+References: <200511042005.17392.Dan.Johansson@dmj.nu>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <200511042005.17392.Dan.Johansson@dmj.nu>
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -25,66 +22,20 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: linux-lvm@redhat.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
---nextPart1288334.Ly0NbfSxZj
-Content-Type: text/plain;
-  charset="iso-8859-15"
-Content-Transfer-Encoding: quoted-printable
-Content-Disposition: inline
+On Fri, Nov 04, 2005 at 08:05:08PM +0100, Dan Johansson wrote:
+> # pvcreate /dev/mapper/pdc_edcfibbf4
+>   Device /dev/mapper/pdc_edcfibbf4 not found.
+ 
+Look for (commented out) types line in lvm.conf
+and enable it saying:
+  types = [ "device-mapper", 1 ]
 
-Hi,
+(This will happen by default in the next release.)
 
-I'm new to this list, but not to Linux and LVM.
-I'm trying to setup a new Linux-server with an on board RAID-controller=20
-(Promise PDC20265 FastTrak100 Lite/Ultra100). Now everything goes well unti=
-l=20
-I try to do a pvcreate on one of the raid-partitions, this is the output I=
-=20
-get:
-# pvcreate /dev/mapper/pdc_edcfibbf4
-  Device /dev/mapper/pdc_edcfibbf4 not found.
-
-But the device-file is there (along with the other partitions).
-
-# ll /dev/mapper/pdc_edcfibbf*
-brw-------  1 root root 253,  7 Nov  4 18:22 /dev/mapper/pdc_edcfibbf
-brw-------  1 root root 253,  8 Nov  4 18:22 /dev/mapper/pdc_edcfibbf1
-brw-------  1 root root 253,  9 Nov  4 18:22 /dev/mapper/pdc_edcfibbf2
-brw-------  1 root root 253, 10 Nov  4 18:22 /dev/mapper/pdc_edcfibbf3
-brw-------  1 root root 253, 11 Nov  4 18:22 /dev/mapper/pdc_edcfibbf4
-
-and dmraid shows the raidgroup OK:
-# dmraid -s
-*** Active Set
-name   : pdc_edcfibbf
-size   : 160086465
-stride : 128
-type   : mirror
-status : ok
-subsets: 0
-devs   : 2
-spares : 0
-
-Any suggestions on how I can solve this issue and move on with my=20
-installation.
-
-Regards,
-=2D-=20
-Dan Johansson, <http://www.dmj.nu>
-***************************************************
-This message is printed on 100% recycled electrons!
-***************************************************
-
---nextPart1288334.Ly0NbfSxZj
-Content-Type: application/pgp-signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.1 (GNU/Linux)
-
-iD8DBQBDa7DtF+s3Ki+4lK0RAiYWAJ9wY8urVDV8Dv8dgD7vNfjZ5hlg6wCgxldw
-+T3h9aK342zxIGwB8Aq8wuQ=
-=t7Lo
------END PGP SIGNATURE-----
-
---nextPart1288334.Ly0NbfSxZj--
+Alasdair
+-- 
+agk@redhat.com
