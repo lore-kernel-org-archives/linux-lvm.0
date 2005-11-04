@@ -1,13 +1,13 @@
 Received: from agk.surrey.redhat.com (agk.surrey.redhat.com [172.16.10.74])
-	by pobox.surrey.redhat.com (8.12.8/8.12.8) with ESMTP id jA4Mgnm1024601
-	for <linux-lvm@redhat.com>; Fri, 4 Nov 2005 22:42:49 GMT
+	by pobox.surrey.redhat.com (8.12.8/8.12.8) with ESMTP id jA4Mj1m1024733
+	for <linux-lvm@redhat.com>; Fri, 4 Nov 2005 22:45:01 GMT
 Received: from agk by agk.surrey.redhat.com with local (Exim 4.34)
-	id 1EYAGn-0007kS-3p
-	for linux-lvm@redhat.com; Fri, 04 Nov 2005 22:42:49 +0000
-Date: Fri, 4 Nov 2005 22:42:49 +0000
+	id 1EYAIv-0007kZ-K8
+	for linux-lvm@redhat.com; Fri, 04 Nov 2005 22:45:01 +0000
+Date: Fri, 4 Nov 2005 22:45:01 +0000
 From: Alasdair G Kergon <agk@redhat.com>
 Subject: Re: [linux-lvm] building LVM2 static fails
-Message-ID: <20051104224249.GU26394@agk.surrey.redhat.com>
+Message-ID: <20051104224501.GV26394@agk.surrey.redhat.com>
 References: <436BB40C.6020601@mvista.com>
 Mime-Version: 1.0
 Content-Disposition: inline
@@ -27,10 +27,9 @@ Content-Transfer-Encoding: 7bit
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
 On Fri, Nov 04, 2005 at 12:18:36PM -0700, Dave Jiang wrote:
-> Why is autoconf still attempting dynamic linking while with -static? I 
-> can build successfully without --enable-static_link.
- 
-That flag builds both dynamic and static versions.
+> /usr/bin/ld: cannot find -ldevmapper
+
+You installed a static libdevmapper first?
 
 Alasdair
 -- 
