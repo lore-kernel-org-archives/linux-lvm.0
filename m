@@ -1,17 +1,33 @@
 Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id jA41KuV23697
-	for <linux-lvm@redhat.com>; Thu, 3 Nov 2005 20:20:56 -0500
-Received: from dcs.nac.uci.edu (dcs.nac.uci.edu [128.200.34.32])
-	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id jA41KnAJ024020
-	for <linux-lvm@redhat.com>; Thu, 3 Nov 2005 20:20:49 -0500
-Subject: Re: [linux-lvm] Snapshot weirdness
-From: Dan Stromberg <strombrg@dcs.nac.uci.edu>
-In-Reply-To: <436AA2DF.8030002@tsss.org>
-References: <436AA2DF.8030002@tsss.org>
-Date: Thu, 03 Nov 2005 17:20:35 -0800
-Message-Id: <1131067235.4032.175.camel@seki.nac.uci.edu>
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id jA41roV29526
+	for <linux-lvm@redhat.com>; Thu, 3 Nov 2005 20:53:50 -0500
+Received: from volumehost.com
+	(IDENT:11dp5T1dFlLS1GBTHLm7HutkD5/E1RIu@adsl-69-154-123-201.dsl.fyvlar.swbell.net
+	[69.154.123.201])
+	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id jA41rjA7031371
+	for <linux-lvm@redhat.com>; Thu, 3 Nov 2005 20:53:50 -0500
+Received: from volumehost.com (localhost.localdomain [127.0.0.1])
+	by volumehost.com (8.12.8/8.12.5) with ESMTP id jA41rZUN020842
+	for <linux-lvm@redhat.com>; Thu, 3 Nov 2005 19:53:35 -0600
+Received: (from apache@localhost)
+	by volumehost.com (8.12.8/8.12.8/Submit) id jA41rYP1020840
+	for linux-lvm@redhat.com; Thu, 3 Nov 2005 19:53:34 -0600
+Message-ID: <1131069214.436abf1e38004@webmail.volumehost.com>
+Date: Thu,  3 Nov 2005 19:53:34 -0600
+From: Zac Slade <krakrjak@volumehost.com>
+Subject: Re: [linux-lvm] pvresize patch pending
+References: <1130518796.4362590c75cf0@webmail.volumehost.com>
+	<20051028170130.GH11086@agk.surrey.redhat.com>
+	<1130519874.43625d4253324@webmail.volumehost.com>
+	<1130522152.436266287429e@webmail.volumehost.com>
+	<20051028192752.GJ11086@agk.surrey.redhat.com>
+	<436286B3.80604@cantab.net>
+	<20051028212102.GK11086@agk.surrey.redhat.com>
+	<1130546247.4362c447c3718@webmail.volumehost.com>
+	<20051029010217.GA22575@agk.surrey.redhat.com>
+In-Reply-To: <20051029010217.GA22575@agk.surrey.redhat.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -25,65 +41,51 @@ List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
+Quoting Alasdair G Kergon <agk@redhat.com>:
 
-Is disk to disk to tape cost effective compared to disk to disk?
+> On Fri, Oct 28, 2005 at 07:37:27PM -0500, Zac Slade wrote:
+> > I think that to get this part write might take a fundemental shift in the
+> way
+> > pv_write() and _pv_write() behave.  What would be nice is to make
+> pv_write()
+> > distinguish between a pv_create calling it and a pv_resize.  Then have
+> _pv_write
+> > only write the pv mda to the disk.  By doing this _pv_write becomes generic
+> and
+> > allows for further extension.  Also then we can probably implement
+> atomicity for
+> > pv updates (though updating a pv was not initially engineered into lvm it
+> can
+> > become very handy).
+>   
+> I'm reluctant to extend pv_write - long term I want to get rid of it
+> (and pv_read also) as PV operations are always awkward and getting in the
+> way.
+> Everything should be done with (new-style) VGs and LVs.
+> 
+> pvcreate is also superfluous - I want to absorb it into vgcreate/vgextend
+> etc.
+> So every labelled volume will always belong to a VG - with enhanced
+> vgsplit/vgmerge & allocation facilities.
+> CVS now lets you create PVs on LVs - another step towards eliminating
+> PVs. 
 
-I don't mean to assert that disk to disk to tape is more or less
-expensive than disk to disk, but it seems worth comparing.
+So instead of using pv_read and pv_write (except for backward compatibility)
+this functionality should then be migrated into vgcreate?  Okay, I can see that.
+ Doing away with the pv* methods will subtract some abstraction.  However with
+this fundamental shift how do you reconcile the pv/vg structures?  Just do away
+with the notion of pvs all together or instead have them, but they only exists
+as an internal structure not visible to the user?
 
-I'm thinking disk to disk to tape'd be faster in some sense than disk to
-tape, in fact that's what we use here at UCI for a lot of our backups,
-but if you're starting over from scratch, how about comparing the cost
-of something like:
+I'm still learning the codebase and I'm not sure there is an obvious way to
+start this.  I'm assuming that you don't want pvcreate reinvented inside
+vgcreate, but instead have vgcreate do something new to abstract the underlying
+devices by only utilizing a vg structure not having seperate pv structures. 
+This code may already exist.  A few hints in the right direction would be nice.
+ I'll keep poking around.
 
-1) A bunch of opterons with RAID 5 volumes built via md, tacked together
-with Ibrix, or perhaps just a bunch of gnbd's md'd together into a huge
-xfs
+Zac Slade
+krakrjak@volumehost.com
 
-2) One of those many rsync front-ends that stores only one copy of a
-given file?  backuppc seems to have the most sophisticated user
-interface, but honorable mention goes to rdiff-backup for using rdiff
-(binary diff based on the rsync algorithm) and reverse deltas (which
-ISTR was the big plus of CVS over prior source code control systems, so
-the diff'ing gets deeper as you go back in time, not forward in time,
-and since you're more likely to need contemporary files...).
-
-Before you decide that the hashing involved in rsync would cause too
-many collisions, bear in mind that with a sufficiently strong hash, you
-can have a lower probability of a collision than the probability of a
-tape failure...
-
-On Thu, 2005-11-03 at 15:53 -0800, kelsey hudson wrote:
-> Hello.
-> 
-> I'm building a disk-to-disk-to-tape backup appliance here, and decided 
-> that for maximum flexibility I'd use LVM2 (mainly because of its 
-> snapshot feature and the ability to hot-add disks and extend volumes 
-> seamlessly. Good stuff.)
-> 
-> Anyhow, I have a 600GB primary physical volume configured with a single 
-> logical volume utilizing 99% of the extents. I have the system set to 
-> take a snapshot every night so there's always a live copy of the data 
-> available for backup. Three such snapshots are used in rotation (the 
-> oldest snapshot is deleted and recreated as the newest); each occupy 25 
-> extents. The problem is, after some time, I'll have a bunch of errors 
-> regarding the snapshot volumes spewed to the system logs and console. If 
-> I subsequently try and read from the filesystem, the kernel shuts the 
-> filesystem down (XFS feature).
-> 
-> This makes it rather inconvenient to back up a snapshot -- if I can't 
-> read it, it doesn't do me much good to have it. I'm basically using the 
-> snapshots read-only, and the filesystems are mounted as such, as well.
-> 
-> So, can anyone shed some insight on why I have self-corrupting 
-> filesystems on my snapshot volumes?
-> 
-> Thanks in advance.
-> -Kelsey
-> 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
-> 
+-------------------------------------------------
+This mail sent through IMP: http://horde.org/imp/
