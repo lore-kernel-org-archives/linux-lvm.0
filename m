@@ -1,21 +1,39 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id jA7FuwV16334
-	for <linux-lvm@redhat.com>; Mon, 7 Nov 2005 10:56:58 -0500
-Received: from svs.gsfc.nasa.gov (svsmail.gsfc.nasa.gov [128.183.34.28])
-	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id jA7FukIA019119
-	for <linux-lvm@redhat.com>; Mon, 7 Nov 2005 10:56:47 -0500
-Received: from [128.183.34.47] (nu.gsfc.nasa.gov [128.183.34.47])
-	by svs.gsfc.nasa.gov (Postfix) with ESMTP id A305B10000A9
-	for <linux-lvm@redhat.com>; Mon,  7 Nov 2005 10:56:39 -0500 (EST)
-Message-ID: <436F7927.5080404@svs.gsfc.nasa.gov>
-Date: Mon, 07 Nov 2005 10:56:23 -0500
-From: "Randall A. Jones" <rajones@svs.gsfc.nasa.gov>
-MIME-Version: 1.0
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id jA7J4YV16180
+	for <linux-lvm@redhat.com>; Mon, 7 Nov 2005 14:04:34 -0500
+Received: from omx3.sgi.com (omx3-ext.sgi.com [192.48.171.20])
+	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id jA7J4SsL004568
+	for <linux-lvm@redhat.com>; Mon, 7 Nov 2005 14:04:28 -0500
+Received: from larry.melbourne.sgi.com (larry.melbourne.sgi.com
+	[134.14.52.130])
+	by omx3.sgi.com (8.12.11/8.12.9/linux-outbound_gateway-1.1) with SMTP
+	id jA7JwdDY005932
+	for <@external-mail-relay.sgi.com:linux-lvm@redhat.com>;
+	Mon, 7 Nov 2005 11:58:40 -0800
+Received: from wobbly.melbourne.sgi.com (wobbly.melbourne.sgi.com
+	[134.14.55.135]) by larry.melbourne.sgi.com
+	(950413.SGI.8.6.12/950213.SGI.AUTOCF) via ESMTP id GAA20424 for
+	<linux-lvm@redhat.com>; Tue, 8 Nov 2005 06:04:20 +1100
+Received: from wobbly.melbourne.sgi.com (localhost [127.0.0.1])
+	by wobbly.melbourne.sgi.com (SGI-8.12.5/8.12.5) with ESMTP id
+	jA7J4Xkt6425848
+	for <linux-lvm@redhat.com>; Tue, 8 Nov 2005 06:04:34 +1100 (EST)
+Received: (from nathans@localhost)
+	by wobbly.melbourne.sgi.com (SGI-8.12.5/8.12.5/Submit) id
+	jA7J4VLP6431745
+	for linux-lvm@redhat.com; Tue, 8 Nov 2005 06:04:31 +1100 (EST)
+Date: Tue, 8 Nov 2005 06:04:31 +1100
+From: Nathan Scott <nathans@sgi.com>
 Subject: Re: [linux-lvm] Failed xfs_growfs after lvextend
+Message-ID: <20051108060431.B6400775@wobbly.melbourne.sgi.com>
 References: <436CFA6E.5000607@svs.gsfc.nasa.gov>
 	<20051107085843.B6401970@wobbly.melbourne.sgi.com>
-In-Reply-To: <20051107085843.B6401970@wobbly.melbourne.sgi.com>
-Content-Transfer-Encoding: 7bit
+	<436F7927.5080404@svs.gsfc.nasa.gov>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <436F7927.5080404@svs.gsfc.nasa.gov>;
+	from rajones@svs.gsfc.nasa.gov on Mon, Nov 07, 2005 at 10:56:23AM
+	-0500
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -26,63 +44,49 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-Nathan Scott wrote:
-> On Sat, Nov 05, 2005 at 01:31:10PM -0500, Randall A. Jones wrote:
+On Mon, Nov 07, 2005 at 10:56:23AM -0500, Randall A. Jones wrote:
 > 
->>I extended an LV to 12.28TB and ran xfs_growfs on the mount point, lv0.
->>This appeared to work fine except that after this, the filesystem didn't 
->>appear any larger.
-> 
-> 
-> I looked into this problem awhile back now.  I believe what you're
-> seeing here is an inconsistency in the kernels block layer - at least,
-> when I last looked at this, this was the problem - the size increase
-> was indeed done inside the driver, and /sys/block/xxx/size confirmed
-> that, but the interfaces which use /dev/xxx to get the device size do
-> not see the increase (i.e. lseek(SEEK_END) or a BLKGETSIZE64 ioctl).
-> 
-> I wrote the attached program to show the issue, and sent mail to LKML
-> to let folks know of the issue, I guess noone has got around to trying
-> to address the problem yet though.  The core of the problem was that
-> the /dev/xxx inode size (i_size) had not been updated to reflect the
-> change in device size, IIRC.
+> Ok.  I looked at the things you suggested.  It seems that everything is 
+> in order with the device mapper and it sees the 12.28TB device size. 
+> Your getdevicesize.c code verified this with a BLKGETSIZE64 ioctl call.
 
-Ok.  I looked at the things you suggested.  It seems that everything is 
-in order with the device mapper and it sees the 12.28TB device size. 
-Your getdevicesize.c code verified this with a BLKGETSIZE64 ioctl call.
+Ah, excellent, sounds like that issue I had seen has been resolved.
 
-root@mapdata<~>$ cat /sys/block/dm-0/size
-26367492096
+> So, back to xfs.  Is it possible xfs_growfs is not working properly? 
 
-root@mapdata<~>$ ~rajones/getdevicesize /dev/mapper/vg0-lv0
-26367492096 512 byte blocks (BLKGETSIZE64)
+Anythings possible, its unlikely though as we run it through
+regression tests every day - the core functionality is sound,
+its usually the interaction with drivers that gets fun.
 
-26367492096 512 byte blocks is approx. 12.28TB.
+> The result after running xfs_growfs was that the primary superblock on 
+> the LV filesystem was corrupt or missing.
 
+Do you know for sure that it wasn't corrupt/missing before running
+xfs_growfs (iow, did you run repair vefore and after the extend)?
 
-So, back to xfs.  Is it possible xfs_growfs is not working properly? 
-The result after running xfs_growfs was that the primary superblock on 
-the LV filesystem was corrupt or missing.
+> Is there a workaround? 
 
+Hard to say, without knowing what the problem is.
 
-Is there a workaround?   A 12.28TB LV with xfs filesystem should work, yes?
+> A 12.28TB LV with xfs filesystem should work, yes?
 
-One idea for a workaround is to relocate the data on the misbehaving 
-LV/filesystem and recreate the LV and filesystem from scratch to avoid 
-using xfs_growfs.
-I have enough free PVs to create a temp space to move my existing data.
+Oh, definately.
 
-Are there any possibilities for fixing the problem "in place".
+> One idea for a workaround is to relocate the data on the misbehaving 
+> LV/filesystem and recreate the LV and filesystem from scratch to avoid 
+> using xfs_growfs.
 
-Thank you,
-Randall
+It's not clear that growfs did anything wrong yet.  That approach will
+also avoid use of lvextend, fwiw, and I'd expect recreate-from-scratch
+will work as thats a commonly used scenario... so I guess thats your
+best approach, unless you want to diagnose the problem more closely
+(please do, for those who come after you...)
+
+cheers.
 
 -- 
-..:.::::
-Randall Jones     GST      NASA Goddard Space Flight Center
-HPC Visualization Support       http://hpcvis.gsfc.nasa.gov
-Scientific Visualization Studio    http://svs.gsfc.nasa.gov
-rajones@svs.gsfc.nasa.gov      Code 610.3      301-286-2239
+Nathan
