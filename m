@@ -1,21 +1,16 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id jA9855V31723
-	for <linux-lvm@redhat.com>; Wed, 9 Nov 2005 03:05:05 -0500
-Received: from dgate1.fujitsu-siemens.com (dgate1.fujitsu-siemens.com
-	[217.115.66.35])
-	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id jA984trZ021325
-	for <linux-lvm@redhat.com>; Wed, 9 Nov 2005 03:04:56 -0500
-Received: from [172.25.76.98] (hvr0011m.hvr.fsc.net [172.25.76.98])
-	by plam.pdb.fsc.net (8.12.6/8.12.6/SuSE Linux 0.6) with ESMTP id
-	jA984qZk004768
-	for <linux-lvm@redhat.com>; Wed, 9 Nov 2005 09:04:55 +0100
-Message-Id: <200511090804.jA984qZk004768@plam.pdb.fsc.net>
-From: "Diedrich Ehlerding" <diedrich.ehlerding@fujitsu-siemens.com>
-Date: Wed, 09 Nov 2005 09:04:52 +0100
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id jA7MroV01021
+	for <linux-lvm@redhat.com>; Mon, 7 Nov 2005 17:53:50 -0500
+Received: from NAMESPRO-EMAIL.mailroot.namespro.ca (mailroot.namespro.ca
+	[70.85.153.146])
+	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id jA7MreXf032474
+	for <linux-lvm@redhat.com>; Mon, 7 Nov 2005 17:53:43 -0500
+Message-ID: <436FDADF.80805@picardconsulting.ca>
+Date: Mon, 07 Nov 2005 17:53:19 -0500
+From: Patrick Picard <ppicard@picardconsulting.ca>
 MIME-Version: 1.0
-Content-transfer-encoding: 7BIT
-Content-description: Mail message body
-Subject: [linux-lvm] boot sequence of lvm and dm_multipath
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] RAID 5 + LVM Planning help needed
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -26,72 +21,113 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/html; charset="us-ascii"
 To: linux-lvm@redhat.com
 
-Hello. 
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+  <meta content="text/html;charset=ISO-8859-1" http-equiv="Content-Type">
+  <title></title>
+</head>
+<body bgcolor="#ffffff" text="#000000">
+Hi Everyone,<br>
+<br>
+I am planning to have a raid 5 array (software based) with LVM riding
+atop.<br>
+<br>
+I have a few questions regarding the setup.<br>
+<br>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="Generator" content="Kate, the KDE Advanced Text Editor">
+1-
+<b>From Suse 10.0 Reference Manual: </b>The
+physical extent size defines the size of a physical block in the volume
+group. All the
+disk space in a volume group is handled in chunks of this size. This
+value is normally
+set to 4 MB and allows for a maximum size of 256 GB for physical and
+logical volumes.
+The physical extent size should only be increased, for example, to 8,
+16, or 32 MB, if
+you need logical volumes larger than 256 GB.<br>
+<br>
+Is this a linear function, meaning??<br>
+PE&nbsp;&nbsp; &nbsp;&nbsp; Max Size<br>
+8mb&nbsp;&nbsp; 512GB<br>
+16mb 1TB<br>
+32mb 2TB<br>
+<br>
+2- Raid setup: In the following config extract, do the hard drives have
+to be formatted first, or could I do like in extract 2:<br>
+I assume extract 1 has the drives partitionned with type fd ( raid
+autodetect)...which one is the right one!!!<br>
+<b>Extract 1:</b><br>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="Generator" content="Kate, the KDE Advanced Text Editor">
+<pre>raiddev /dev/md0
+        raid-level      5
+        nr-raid-disks   6
+        nr-spare-disks  0
+        persistent-superblock 1
+        parity-algorithm        left-symmetric
+        chunk-size      32
+        device          /dev/sdb1
+        raid-disk       0
+        device          /dev/sdc1
+        raid-disk       1
+        device          /dev/sdd1
+        raid-disk       2
+        device          /dev/sde1
+        raid-disk       3
+        device          /dev/sdf1
+        raid-disk       4
+        device          /dev/sdg1
+        raid-disk  	5</pre>
+<b>Extract 2: (using raw disk)</b><br>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="Generator" content="Kate, the KDE Advanced Text Editor">
+<pre>raiddev /dev/md0
+        raid-level      5
+        nr-raid-disks   6
+        nr-spare-disks  0
+        persistent-superblock 1
+        parity-algorithm        left-symmetric
+        chunk-size      32
+        device          /dev/sdb
+        raid-disk       0
+        device          /dev/sdc
+        raid-disk       1
+        device          /dev/sdd
+        raid-disk       2
+        device          /dev/sde
+        raid-disk       3
+        device          /dev/sdf
+        raid-disk       4
+        device          /dev/sdg
+        raid-disk  	5
 
-I am trying to run dm_multipath (mpio) against an EMC Clariion array on 
-a SuSE SLES) system. According to 
-http://portal.suse.com/sdb/en/2005/04/sles_multipathing.html 
-this should work, and it does to a certain degree, but I have problem 
-with lvm integration on a system which has an lvm boot disk 
-configuration.
 
-This  is the environment:
+Then mkraid /dev/md0
 
-hges3302:~ # rpm -q multipath-tools
-multipath-tools-0.4.4-0.22
-hges3302:~ # uname -a
-Linux hges3302 2.6.5-7.201-bigsmp #1 SMP Thu Aug 25 06:20:45 UTC 2005 
-i686 i686
-i386 GNU/Linux
-hges3302:~ # cat /etc/SuSE-release
-SUSE LINUX Enterprise Server 9 (i586)
-PATCHLEVEL = 2
-VERSION = 9
 
-The server is a Fujitsu Siemens Primergy with an internal raid 
-controller and two Emulex lp9802 HBAs; driver is lpfc 8.0.16.  
+<b>3- Once the raid is setup, </b>
+pvcreate /dev/md0
+vgcreate -s16 data /dev/md0
+lvcreate  ( a bunch of lv's are created here)
 
-Everything works fine if I start SuSE's /etc/init.d/boot.multipath 
-(which simply loads dm-multiptah) and /etc/init.d/multipathd manually, 
-having booted the server without multipath. Once starting 
-boot.multipath and multipathd manually, I can pvscan the Clariion, 
-vgchange -ay the volumegroups etc.; and the path failover works fine.
+I plan to partition the lv's with reiserfs
 
-However, I would like to detect the volume groups at boot time; not 
-manually. But if I put boot.multpath and multipathd (wich SuSE 
-delivers) into the boot sequence (insserv boot.multipath / multipathd), 
-I run into problems with lvm. My server has its root file system on an 
-internal disk, and this disk is under lvm control too. I tried booting 
-lvm after boot.multipath as well as loading first multipath, then lvm. 
-I dont get any boot time error messages.
+Some lv's will have lots of small files, where another will have tons of 700MB files.... does the PE size affect this ?
 
-Having booted the server in this way, multipath detects the disks 
-properly, i.e it cretes /dev/disk/by-name/<UID> etc - but lvm is not 
-willing to detect these disks; i.e. pvscan shows only the internal 
-disks sda and sdb.
+If you have any suggestion to make this setup optimal, it would be greatly appreciated. The HD's will be SATA and PATA ( mixed, but on different busses)
 
-Here is the relevant part of my lvm.conf in both cases:
-######  accept  mpioDevices and the boot disks, but nothing else
-    filter=[ "a|/dev/disk/by-name/.*|","a|/dev/sda.*|","a|/dev/sdb|"
-,"r|.*|" ]
-    types = [ "device-mapper",253 ]
 
-If I create a rc-script by myself (containing nothing but "/etc/init.d 
-boot.multipath start; /etc/init.d/multipathd start") and run it later 
-at the end of rc5.d, then again everything is fine and pvscan detects 
-the disks.
+Thanks to everyone who will help.
 
-Is there anybody who can give me some recommendation conderning the 
-sequence to start dm_multipath and lvm at bot time? Should I try to 
-"sleep 10" or something the like after booting multipath and before 
-booting lvm?
+Patrick Picard
+Picard Consulting
 
-TIA, 
--- 
-Diedrich Ehlerding, Fujitsu Siemens Computers, S DE SE PS N/O
-Hildesheimer Str 25, D-30880 Laatzen
-diedrich.ehlerding@fujitsu-siemens.com
-Fon +49 511 8489-1806, Fax -251806, Mobil +49 173 2464758
+</pre>
+</body>
+</html>
