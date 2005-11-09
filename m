@@ -1,21 +1,18 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id jA99KbV14859
-	for <linux-lvm@redhat.com>; Wed, 9 Nov 2005 04:20:37 -0500
-Received: from dgate2.fujitsu-siemens.com (dgate2.fujitsu-siemens.com
-	[217.115.66.36])
-	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id jA99KScK007529
-	for <linux-lvm@redhat.com>; Wed, 9 Nov 2005 04:20:29 -0500
-Received: from pdbzex1e.pdb.fsc.net (pdbzex1e.pdb.fsc.net [172.25.96.71])
-	by plim.pdb.fsc.net (8.12.6/8.12.6/SuSE Linux 0.6) with ESMTP id
-	jA99KPlF023668
-	for <linux-lvm@redhat.com>; Wed, 9 Nov 2005 10:20:27 +0100
-Content-class: urn:content-classes:message
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id jA9HbBV21851
+	for <linux-lvm@redhat.com>; Wed, 9 Nov 2005 12:37:11 -0500
+Received: from xproxy.gmail.com (xproxy.gmail.com [66.249.82.201])
+	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id jA9HaSob025550
+	for <linux-lvm@redhat.com>; Wed, 9 Nov 2005 12:37:02 -0500
+Received: by xproxy.gmail.com with SMTP id r21so548401wxc
+	for <linux-lvm@redhat.com>; Wed, 09 Nov 2005 09:37:02 -0800 (PST)
+Message-ID: <ddaf98bd0511090937k1fd05f5ep20cc5a643955d916@mail.gmail.com>
+Date: Wed, 9 Nov 2005 11:37:02 -0600
+From: Cory Zerwas <gannas@gmail.com>
 MIME-Version: 1.0
-Date: Wed, 9 Nov 2005 10:20:21 +0100
-Message-ID: <ADC8F7AA316AF74EBEC87590CCDA61620671EC2F@PDBEX02E.pdb.fsc.net>
-From: "Laurenz, Dirk" <Dirk.Laurenz@fujitsu-siemens.com>
-Content-Transfer-Encoding: 8bit
-Subject: [linux-lvm] FW: boot sequence of lvm and dm_multipath
+Content-Type: multipart/alternative; 
+	boundary="----=_Part_4314_8609806.1131557822424"
+Subject: [linux-lvm] Missing 1 of 3 PVs and all partition tables are good
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -26,127 +23,128 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@redhat.com
-Cc: "Ehlerding, Diedrich" <Diedrich.Ehlerding@fujitsu-siemens.com>
 
+------=_Part_4314_8609806.1131557822424
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: quoted-printable
+Content-Disposition: inline
 
+Hi all,
 
-Mit freundlichem Gruss,
+I'm in a pinch. I've got about 500Gb of data trapped in a non-functioning
+VG... Here's the deal:
 
+I upgraded from FC3 to FC4, or tried to. The whole update bombed out but
+during this time the LVM disks were unplugged from the system. When I got
+the new system up on the old FS my LVM conf still appears to be in place. I
+powered up the 3 drives and reset the system and I found the VG won't
+activate.
+I did not export the volume first. I realize now that this was a mistake.
 
+I have 3 whole disks for this VG, each with 1 partition, type 8e, occupying
+the entire disk. These are hdb1, hdc1, hdd1.
 
-Dirk Laurenz
-Systems Engineer	
+I'm noticing that an "fdisk -l" lists hdb, hdc, and hdd as all having
+partitions of type 8e from beginning to end of disk. However, when I go int=
+o
+LVM and run "pvscan" I only see two PVs belonging to my VG "bloaty" and it
+shows:
 
-Fujitsu Siemens Computers
-S CE DE SE PS N/O
-Sales Central Europe Deutschland 
-Professional Service Nord/Ost
+PV /dev/hdc1 VG bloaty lvm2 [111.78 GB / 0 free]
+PV /dev/hdd1 VG bloaty lvm2 [115.03 GB / 64.00 MB free]
+Total: 2 [266.81 GB] / in use: 2 [226.81 GB] / in no VG: 0 [0 ]
 
-Hildesheimer Strasse 25
-30880 Laatzen
-Germany
+LVM doesn't seem to notice /dev/hdb1? It's a 232.88 Gb PV, how can this be?
+And why isn't PVSCAN complaining about a missing PV? It should be, shouldn'=
+t
+it?
 
-Telephone:	+49 (511) 84 89 - 18 08
-Telefax:	+49 (511) 84 89 - 25 18 08
-Mobile:	+49 (170) 22 10 781
-Email:	mailto:dirk.laurenz@fujitsu-siemens.com
-Internet:	http://www.fujitsu-siemens.com
-            http://www.fujitsu-siemens.de/services/index.html
-*******************************************************************************************************************
-  
+When I perform a "lvmdiskscan" I get (the parenthesis outline my input):
 
--|  -----Original Message-----
--|  From: Diedrich Ehlerding 
--|  [mailto:diedrich.ehlerding@fujitsu-siemens.com] 
--|  Sent: Wednesday, November 09, 2005 9:05 AM
--|  To: linux-lvm@redhat.com
--|  Subject: boot sequence of lvm and dm_multipath
--|  
--|  Hello. 
--|  
--|  I am trying to run dm_multipath (mpio) against an EMC 
--|  Clariion array on 
--|  a SuSE SLES) system. According to 
--|  http://portal.suse.com/sdb/en/2005/04/sles_multipathing.html 
--|  this should work, and it does to a certain degree, but I 
--|  have problem 
--|  with lvm integration on a system which has an lvm boot disk 
--|  configuration.
--|  
--|  This  is the environment:
--|  
--|  hges3302:~ # rpm -q multipath-tools
--|  multipath-tools-0.4.4-0.22
--|  hges3302:~ # uname -a
--|  Linux hges3302 2.6.5-7.201-bigsmp #1 SMP Thu Aug 25 
--|  06:20:45 UTC 2005 
--|  i686 i686
--|  i386 GNU/Linux
--|  hges3302:~ # cat /etc/SuSE-release
--|  SUSE LINUX Enterprise Server 9 (i586)
--|  PATCHLEVEL = 2
--|  VERSION = 9
--|  
--|  The server is a Fujitsu Siemens Primergy with an internal raid 
--|  controller and two Emulex lp9802 HBAs; driver is lpfc 8.0.16.  
--|  
--|  Everything works fine if I start SuSE's /etc/init.d/boot.multipath 
--|  (which simply loads dm-multiptah) and 
--|  /etc/init.d/multipathd manually, 
--|  having booted the server without multipath. Once starting 
--|  boot.multipath and multipathd manually, I can pvscan the Clariion, 
--|  vgchange -ay the volumegroups etc.; and the path failover 
--|  works fine.
--|  
--|  However, I would like to detect the volume groups at boot time; not 
--|  manually. But if I put boot.multpath and multipathd (wich SuSE 
--|  delivers) into the boot sequence (insserv boot.multipath / 
--|  multipathd), 
--|  I run into problems with lvm. My server has its root file 
--|  system on an 
--|  internal disk, and this disk is under lvm control too. I 
--|  tried booting 
--|  lvm after boot.multipath as well as loading first 
--|  multipath, then lvm. 
--|  I dont get any boot time error messages.
--|  
--|  Having booted the server in this way, multipath detects the disks 
--|  properly, i.e it cretes /dev/disk/by-name/<UID> etc - but 
--|  lvm is not 
--|  willing to detect these disks; i.e. pvscan shows only the internal 
--|  disks sda and sdb.
--|  
--|  Here is the relevant part of my lvm.conf in both cases:
--|  ######  accept  mpioDevices and the boot disks, but nothing else
--|      filter=[ "a|/dev/disk/by-name/.*|","a|/dev/sda.*|","a|/dev/sdb|"
--|  ,"r|.*|" ]
--|      types = [ "device-mapper",253 ]
--|  
--|  If I create a rc-script by myself (containing nothing but 
--|  "/etc/init.d 
--|  boot.multipath start; /etc/init.d/multipathd start") and 
--|  run it later 
--|  at the end of rc5.d, then again everything is fine and 
--|  pvscan detects 
--|  the disks.
--|  
--|  Is there anybody who can give me some recommendation conderning the 
--|  sequence to start dm_multipath and lvm at bot time? Should I try to 
--|  "sleep 10" or something the like after booting multipath and before 
--|  booting lvm?
--|  
--|  TIA, 
--|  -- 
--|  Diedrich Ehlerding, Fujitsu Siemens Computers, S DE SE PS N/O
--|  Hildesheimer Str 25, D-30880 Laatzen
--|  diedrich.ehlerding@fujitsu-siemens.com
--|  Fon +49 511 8489-1806, Fax -251806, Mobil +49 173 2464758
--|  -- 
--|  Diedrich Ehlerding, Fujitsu Siemens Computers, S DE SE PS N/O
--|  Hildesheimer Str 25, D-30880 Laatzen
--|  diedrich.ehlerding@fujitsu-siemens.com
--|  Fon +49 511 8489-1806, Fax -251806, Mobil +49 173 2464758
--|  
--|  
+/dev/hda1 [ 101.94 MB]
+(^^this is the /boot partition)
+/dev/hdc1 [ 111.79 GB] LVM physical volume
+/dev/hda2 [ 17.54 GB]
+(^^this is the / partition)
+/dev/hda3 [ 1.00 GB]
+(^^this is the swap partition)
+/dev/hdb1 [ 232.88 GB]
+(^^THIS SHOULD BE A PV)
+/dev/hdd1 [ 115.04 GB] LVM physical volume
+
+Is there some trick here I don't know about? Do I have to restore the LVM
+conf?
+
+I am stumped. I'm pretty sure I'm not a newb, but I am definately not a
+wizard. I've got my LPIC Level 1 cert if that means anything.
+
+Heh, thanks for any help,
+Cory
+
+------=_Part_4314_8609806.1131557822424
+Content-Type: text/html; charset=ISO-8859-1
+Content-Transfer-Encoding: quoted-printable
+Content-Disposition: inline
+
+Hi all,<br>
+<br>
+I'm in a pinch.&nbsp; I've got about 500Gb of data trapped in a non-functio=
+ning VG...&nbsp; Here's the deal:<br>
+<br>
+I upgraded from FC3 to FC4, or tried to.&nbsp; The whole update bombed
+out but during this time the LVM disks were unplugged from the
+system.&nbsp; When I got the new system up on the old FS my LVM conf
+still appears to be in place.&nbsp; I powered up the 3 drives and reset
+the system and I found the VG won't activate.<br>
+I did not export the volume first.&nbsp; I realize now that this was a mist=
+ake.<br>
+<br>
+I have 3 whole disks for this VG, each with 1 partition, type 8e, occupying=
+ the entire disk.&nbsp; These are hdb1, hdc1, hdd1.<br>
+<br>
+I'm noticing that an &quot;fdisk -l&quot; lists hdb, hdc, and hdd as all ha=
+ving
+partitions of type 8e from beginning to end of disk.&nbsp; However,
+when I go into LVM and run &quot;pvscan&quot; I only see two PVs belonging =
+to my
+VG &quot;bloaty&quot; and it shows:<br>
+<br>
+PV /dev/hdc1&nbsp;&nbsp; VG bloaty&nbsp;&nbsp; lvm2 [111.78 GB / 0&nbsp;&nb=
+sp;&nbsp; free]<br>
+PV /dev/hdd1&nbsp;&nbsp; VG bloaty&nbsp;&nbsp; lvm2 [115.03 GB / 64.00 MB f=
+ree]<br>
+Total: 2 [266.81 GB] / in use: 2 [226.81 GB] / in no VG: 0 [0&nbsp;&nbsp; ]=
+<br>
+<br>
+LVM doesn't seem to notice /dev/hdb1?&nbsp; It's a 232.88 Gb PV, how
+can this be?&nbsp; And why isn't PVSCAN complaining about a missing
+PV?&nbsp; It should be, shouldn't it?<br>
+<br>
+When I perform a &quot;lvmdiskscan&quot; I get (the parenthesis outline my =
+input):<br>
+<br>
+/dev/hda1 [&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 101.94 MB]<br>
+(^^this is the /boot partition)<br>
+/dev/hdc1 [&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 111.79 GB] LVM physical volume<br=
+>
+/dev/hda2 [&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 17.54 GB]<br>
+(^^this is the / partition)<br>
+/dev/hda3 [&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1.00 GB]<br>
+(^^this is the swap partition)<br>
+/dev/hdb1 [&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 232.88 GB]<br>
+(^^THIS SHOULD BE A PV)<br>
+/dev/hdd1 [&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 115.04 GB] LVM physical volume<br=
+>
+<br>
+Is there some trick here I don't know about?&nbsp; Do I have to restore the=
+ LVM conf?<br>
+<br>
+I am stumped.&nbsp; I'm pretty sure I'm not a newb, but I am definately
+not a wizard.&nbsp; I've got my LPIC Level 1 cert if that means
+anything.<br>
+<br>
+Heh, thanks for any help,<br>
+Cory<br>
+
+------=_Part_4314_8609806.1131557822424--
