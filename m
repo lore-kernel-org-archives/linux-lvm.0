@@ -1,13 +1,14 @@
-Date: Sat, 12 Nov 2005 22:03:21 +0000
+Date: Sat, 12 Nov 2005 22:49:41 +0000
 From: Alasdair G Kergon <agk@redhat.com>
 Subject: Re: [linux-lvm] Sorry, dm:1.02, lvm2:2.02 did not work for me
-Message-ID: <20051112220320.GO26394@agk.surrey.redhat.com>
+Message-ID: <20051112224941.GP26394@agk.surrey.redhat.com>
 References: <20051111163525.18AE1734B1@hormel.redhat.com>
 	<1131758026.4975.77.camel@jgs4.ino.pvt>
 	<20051112020710.GN26394@agk.surrey.redhat.com>
+	<20051112220320.GO26394@agk.surrey.redhat.com>
 Mime-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20051112020710.GN26394@agk.surrey.redhat.com>
+In-Reply-To: <20051112220320.GO26394@agk.surrey.redhat.com>
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -23,14 +24,13 @@ Content-Transfer-Encoding: 7bit
 To: "James G. Sack (jim)" <jsack@tandbergdatacorp.com>
 Cc: "LVM LIST linux-lvm@redhat.com" <linux-lvm@redhat.com>
 
-On Sat, Nov 12, 2005 at 02:07:10AM +0000, Alasdair G Kergon wrote:
-> Is the original LV activated with the old or new code?
+On Sat, Nov 12, 2005 at 10:03:21PM +0000, Alasdair G Kergon wrote:
+> I've reproduced this if the LV is activated with an old release but
+> the snapshot is created with the new code.  Should be easy to fix.
  
-I've reproduced this if the LV is activated with an old release but
-the snapshot is created with the new code.  Should be easy to fix.
-
-Meanwhile, try lvchange -an before using the new code to activate
-the LV again and create the snapshot.
+Try the current CVS versions.
+[A device-mapper fix to stop it issuing an incorrect 'dm create';
+an LVM2 fix to avoid the 'device left open' messages.]
 
 Alasdair
 -- 
