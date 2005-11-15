@@ -1,7 +1,7 @@
-Date: Tue, 15 Nov 2005 23:46:28 +0000
+Date: Tue, 15 Nov 2005 23:50:16 +0000
 From: Alasdair G Kergon <agk@redhat.com>
 Subject: Re: [linux-lvm] Sorry, dm:1.02, lvm2:2.02 did not work for me
-Message-ID: <20051115234628.GC26394@agk.surrey.redhat.com>
+Message-ID: <20051115235016.GD26394@agk.surrey.redhat.com>
 References: <20051111163525.18AE1734B1@hormel.redhat.com>
 	<1131758026.4975.77.camel@jgs4.ino.pvt>
 	<20051112020710.GN26394@agk.surrey.redhat.com>
@@ -27,14 +27,9 @@ Content-Transfer-Encoding: 7bit
 To: "James G. Sack (jim)" <jsack@tandbergdatacorp.com>
 Cc: "LVM LIST linux-lvm@redhat.com" <linux-lvm@redhat.com>
 
-On Tue, Nov 15, 2005 at 02:23:16PM -0800, James G. Sack (jim) wrote:
-> dmesg/syslog output. There *is* console screen output, ending with what
-> looks like the trailing part of the oops calltrace. Is it worth
-> configuring a serial console in order to capture this? (Or can someone
-> tell me how to capture it otherwise?)
- 
-If you have a digital camera, posting images on the web sometimes
-works.  [And see if you can scroll up to capture the earlier parts.]
+Note also that a data corruption bug has been reported if you create *two*
+(or more) snapshots of the same devices.  [I think this can be fixed
+in userspace but I may not get time to do this for a few days.]
 
 Alasdair
 -- 
