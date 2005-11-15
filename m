@@ -1,7 +1,7 @@
-Date: Tue, 15 Nov 2005 22:33:58 +0000
+Date: Tue, 15 Nov 2005 23:46:28 +0000
 From: Alasdair G Kergon <agk@redhat.com>
 Subject: Re: [linux-lvm] Sorry, dm:1.02, lvm2:2.02 did not work for me
-Message-ID: <20051115223358.GY26394@agk.surrey.redhat.com>
+Message-ID: <20051115234628.GC26394@agk.surrey.redhat.com>
 References: <20051111163525.18AE1734B1@hormel.redhat.com>
 	<1131758026.4975.77.camel@jgs4.ino.pvt>
 	<20051112020710.GN26394@agk.surrey.redhat.com>
@@ -27,19 +27,14 @@ Content-Transfer-Encoding: 7bit
 To: "James G. Sack (jim)" <jsack@tandbergdatacorp.com>
 Cc: "LVM LIST linux-lvm@redhat.com" <linux-lvm@redhat.com>
 
-> > The kcopyd.c BUG at line 145 is triggered by the first lvremove
-> > following start of the i/o (copy loop).
-
-Try some kernel patches.
-
-  http://www.kernel.org/pub/linux/kernel/people/agk/patches/2.6/editing/
-
-in particular these four:
-
-  dm-snapshot-bio_list-fix.patch
-  dm-snapshot-metadata-reading-separation.patch
-  dm-snapshot-load-metadata-on-creation.patch
-  dm-ioctl-reduce-pf-memalloc-usage.patch
+On Tue, Nov 15, 2005 at 02:23:16PM -0800, James G. Sack (jim) wrote:
+> dmesg/syslog output. There *is* console screen output, ending with what
+> looks like the trailing part of the oops calltrace. Is it worth
+> configuring a serial console in order to capture this? (Or can someone
+> tell me how to capture it otherwise?)
+ 
+If you have a digital camera, posting images on the web sometimes
+works.  [And see if you can scroll up to capture the earlier parts.]
 
 Alasdair
 -- 
