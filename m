@@ -1,21 +1,17 @@
-Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id jAHHkGV24998
-	for <linux-lvm@redhat.com>; Thu, 17 Nov 2005 12:46:16 -0500
-Received: from palrel12.hp.com (palrel12.hp.com [156.153.255.237])
-	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id jAHHkF0f031053
-	for <linux-lvm@redhat.com>; Thu, 17 Nov 2005 12:46:15 -0500
-Received: from smtp1.ptp.hp.com (smtp.cup.hp.com [15.1.28.250])
-	by palrel12.hp.com (Postfix) with ESMTP id AA40540311D
-	for <linux-lvm@redhat.com>; Thu, 17 Nov 2005 09:46:14 -0800 (PST)
-Received: from [15.244.57.26] (airwolf.cup.hp.com [15.244.57.26])
-	by smtp1.ptp.hp.com (Postfix) with ESMTP id 84DD136BB7F
-	for <linux-lvm@redhat.com>; Thu, 17 Nov 2005 17:46:14 +0000 (UTC)
-Message-ID: <437CC1DF.7060306@cup.hp.com>
-Date: Thu, 17 Nov 2005 09:46:07 -0800
-From: John DeFranco <defranco@cup.hp.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] clvmd interface question
+Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id jAHI7CV31559
+	for <linux-lvm@redhat.com>; Thu, 17 Nov 2005 13:07:12 -0500
+Received: from cichlid.com (dsl3-63-249-91-37.cruzio.com [63.249.91.37])
+	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id jAHI71Dn010573
+	for <linux-lvm@redhat.com>; Thu, 17 Nov 2005 13:07:06 -0500
+Received: from cichlid.com (cichlid.com [127.0.0.1])
+	by cichlid.com (8.13.1/8.12.5) with ESMTP id jAHI6w8s011293
+	for <linux-lvm@redhat.com>; Thu, 17 Nov 2005 10:06:58 -0800
+Date: Thu, 17 Nov 2005 10:06:58 -0800
+From: Andrew Burgess <aab@cichlid.com>
+Message-Id: <200511171806.jAHI6wMg011274@cichlid.com>
+References: <1_0511170840028921@cichlid.com>
+Subject: [linux-lvm] Re: Not allowed to fill filesystem to 100%??? 
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -26,26 +22,21 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@redhat.com
 
-Hi, I'm looking for some information. I'm interested in learning more 
-about the clvmd daemon. I've search and found various pieces of info in 
-addition to looking at the code. Specifically I looking to for 
-information (a spec) on how one might be able to add a new cluster 
-manager plugin if you will (if that is even possible). I know that clvmd 
-interfaces with a couple of different cluster managers now but I'd like 
-to expland this if possible.
+>> We have created some 300 GB lvm2 (RH 4.0 AS)  filesystems for our
+>> PostgreSQL databases.  However, we tried to copy one of the larger
+>> filesystems over to the new lvm filesystem and the copy abended due to
+>> being.  The system was reporting that the file system was 100% full
+>> with 0 blocks free.  However, a df reported almost 16GB free.
+>> 
+>If it's an ext2/3 filesystem, the default reserved space is 5%.  Check
+>the man pages for mke2fs and tune2fs.
 
-Thanks
+Also, you might have run out of inodes, try "df -i", though that only
+happens with lots of little files and databases tend to be the opposite.
 
--- 
-==========
-
-John DeFranco
-Hewlett-Packard Company
-Availability Clusters Solution Division
-19111 Pruneridge Ave, M/S 4101
-Cupertino, CA 95014 
-phone: 408-447-7543
-mailto: john.defranco@hp.com
+HTH
