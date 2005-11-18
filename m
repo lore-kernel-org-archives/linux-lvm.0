@@ -1,17 +1,17 @@
-Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id jAHI7CV31559
-	for <linux-lvm@redhat.com>; Thu, 17 Nov 2005 13:07:12 -0500
-Received: from cichlid.com (dsl3-63-249-91-37.cruzio.com [63.249.91.37])
-	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id jAHI71Dn010573
-	for <linux-lvm@redhat.com>; Thu, 17 Nov 2005 13:07:06 -0500
-Received: from cichlid.com (cichlid.com [127.0.0.1])
-	by cichlid.com (8.13.1/8.12.5) with ESMTP id jAHI6w8s011293
-	for <linux-lvm@redhat.com>; Thu, 17 Nov 2005 10:06:58 -0800
-Date: Thu, 17 Nov 2005 10:06:58 -0800
-From: Andrew Burgess <aab@cichlid.com>
-Message-Id: <200511171806.jAHI6wMg011274@cichlid.com>
-References: <1_0511170840028921@cichlid.com>
-Subject: [linux-lvm] Re: Not allowed to fill filesystem to 100%??? 
+Received: from fentible.pjc.net (vpn-68-1.surrey.redhat.com [10.32.68.1])
+	by pobox.surrey.redhat.com (8.12.8/8.12.8) with ESMTP id jAI8EhEj016139
+	for <linux-lvm@redhat.com>; Fri, 18 Nov 2005 08:14:43 GMT
+Received: from jeltz.pjc.net ([192.168.1.2])
+	by fentible.pjc.net with esmtp (Exim 4.50) id 1Ed1ON-0004uz-JJ
+	for linux-lvm@redhat.com; Fri, 18 Nov 2005 08:14:43 +0000
+Message-ID: <437D8D72.4050909@redhat.com>
+Date: Fri, 18 Nov 2005 08:14:42 +0000
+From: Patrick Caulfield <pcaulfie@redhat.com>
+MIME-Version: 1.0
+Subject: Re: [linux-lvm] clvmd interface question
+References: <437CC1DF.7060306@cup.hp.com>
+In-Reply-To: <437CC1DF.7060306@cup.hp.com>
+Content-Transfer-Encoding: 7bit
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -22,21 +22,37 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: linux-lvm@redhat.com
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
->> We have created some 300 GB lvm2 (RH 4.0 AS)  filesystems for our
->> PostgreSQL databases.  However, we tried to copy one of the larger
->> filesystems over to the new lvm filesystem and the copy abended due to
->> being.  The system was reporting that the file system was 100% full
->> with 0 blocks free.  However, a df reported almost 16GB free.
->> 
->If it's an ext2/3 filesystem, the default reserved space is 5%.  Check
->the man pages for mke2fs and tune2fs.
+John DeFranco wrote:
+> Hi, I'm looking for some information. I'm interested in learning more
+> about the clvmd daemon. I've search and found various pieces of info in
+> addition to looking at the code. Specifically I looking to for
+> information (a spec) on how one might be able to add a new cluster
+> manager plugin if you will (if that is even possible). I know that clvmd
+> interfaces with a couple of different cluster managers now but I'd like
+> to expland this if possible.
 
-Also, you might have run out of inodes, try "df -i", though that only
-happens with lots of little files and databases tend to be the opposite.
+clvmd supports cman and gulm, it has it's own internal function switch that
+determines what to do for each cluster manager.
 
-HTH
+To be honest it's not a good API as it was originally only designed to work with
+cman and the gulm support was bolted on later - so adding a new cluster manager
+might be a bit of work.
+
+Have a look at the bottom of LVM2/daemons/clvmd/clvmd-cman for the function switch.
+
+You'll also need to be aware that CMAN provides its own messaging system, which
+gulm does not. If your cluster manager provides a messaging system then I
+recommend you use it - otherwise you should be able to use the tcp-comms.c file
+with clvmd (that gulm support uses).
+
+Another way, that might be easier, is to patch clvmd with the libcman patch in
+head of cluster CVS (cluster/cman/lib/clvmd-libcman.diff) and write a library
+for your cluster manager that emulates libcman - that one is a nice simple API
+and it will be supported by future versions of cman too.
+
+-- 
+
+patrick
