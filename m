@@ -1,18 +1,20 @@
-Received: from fentible.pjc.net (vpn-68-1.surrey.redhat.com [10.32.68.1])
-	by pobox.surrey.redhat.com (8.12.8/8.12.8) with ESMTP id jAL8kTEj007383
-	for <linux-lvm@redhat.com>; Mon, 21 Nov 2005 08:46:29 GMT
-Received: from jeltz.pjc.net ([192.168.1.2])
-	by fentible.pjc.net with esmtp (Exim 4.50) id 1Ee7Jl-0007qO-Sm
-	for linux-lvm@redhat.com; Mon, 21 Nov 2005 08:46:29 +0000
-Message-ID: <43818964.806@redhat.com>
-Date: Mon, 21 Nov 2005 08:46:28 +0000
-From: Patrick Caulfield <pcaulfie@redhat.com>
+Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id jALIYPV03245
+	for <linux-lvm@redhat.com>; Mon, 21 Nov 2005 13:34:25 -0500
+Received: from viefep13-int.chello.at (viefep13-int.chello.at [213.46.255.15])
+	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id jALIYKGp008262
+	for <linux-lvm@redhat.com>; Mon, 21 Nov 2005 13:34:20 -0500
+Received: from AthLux.PrivateLAN.at ([84.114.151.31]) by viefep13-int.chello.at
+	(InterMail vM.6.01.04.04 201-2131-118-104-20050224) with ESMTP id
+	<20051121183412.XHAO11640.viefep13-int.chello.at@AthLux.PrivateLAN.at>
+	for <linux-lvm@redhat.com>; Mon, 21 Nov 2005 19:34:12 +0100
+From: Matthias Meyer <Matthias.Meyer@gmx.li>
+Date: Mon, 21 Nov 2005 19:34:13 +0100
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] clvmd interface question
-References: <437CC1DF.7060306@cup.hp.com> <437D8D72.4050909@redhat.com>
-	<ff57449f1c9444ba3e70a4c6cde5cea8@redhat.com>
-In-Reply-To: <ff57449f1c9444ba3e70a4c6cde5cea8@redhat.com>
 Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+Message-Id: <200511211934.13943.Matthias.Meyer@gmx.li>
+Subject: [linux-lvm] can't resize my lvm
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -24,30 +26,78 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: LVM general discussion and development <linux-lvm@redhat.com>
+To: linux-lvm@redhat.com
 
-Jonathan E Brassow wrote:
-> Also, there is a package called 'magma' that lives in the cluster tree.
->  This is an abstraction layer to different cluster managers and lock
-> managers.  It has the ability to accept plugins for different cluster
-> managers.  I wonder if it would be useful for clvm to use magma, then
-> writing plugins is easy and you never have to touch code that makes use
-> of the cluster managers.
-> 
-> Patrick would know if this is a worthwhile goal.
+Hello,
 
-clvmd uses several cluster manager features that magma doesn't provide - off the
-top of my head I can't actually remember what these are as it's been ages since
-I did it!
+I have a Volume Group with one pysical volume. I try to add another physical 
+volume (which was in another Volume group before).
+All seems to work fine but e2fsadm do not change the size of the filesystem.
+What is wrong?
 
-Of course, it's quite probable that magma could be extended to provide these
-features.  The main reason it is the way it is is that quite a lot of rewriting
-of clvmd would have been necessary for it to fit into magma's model due to the
-short-sighted way it (clvmd) was written. In effect the abstraction layer (such
-as it is) tries to make gulm look like cman/dlm.
+vdr:~# vgdisplay LVM2
+--- Volume group ---
+VG Name               LVM2
+VG Access             read/write
+VG Status             available/resizable
+VG #                  1
+MAX LV                256
+Cur LV                1
+Open LV               0
+MAX LV Size           2 TB
+Max PV                256
+Cur PV                1
+Act PV                1
+VG Size               186 GB
+PE Size               256 MB
+Total PE              744
+Alloc PE / Size       744 / 186 GB
+Free  PE / Size       0 / 0
+VG UUID               a4BzYX-fkun-VZuG-jnFA-kgLK-dmLz-eUe79w
 
-I'm sure it could be done...but it's all time...
+vdr:~# vgextend LVM2 /dev/hdc1
+vgextend -- INFO: maximum logical volume size is 2 Terabyte
+vgextend -- doing automatic backup of volume group "LVM2"
+vgextend -- volume group "LVM2" successfully extended
+
+vdr:~# pvdisplay /dev/hdc1
+--- Physical volume ---
+PV Name               /dev/hdc1
+VG Name               LVM2
+PV Size               93.13 GB [195318207 secs] / NOT usable 256.19 MB [LVM: 
+129 KB]
+PV#                   2
+PV Status             NOT available
+Allocatable           yes
+Cur LV                0
+PE Size (KByte)       262144
+Total PE              371
+Free PE               371
+Allocated PE          0
+PV UUID               HfCAkU-DEmn-4FE0-8OyR-E9Vw-eJV9-KTNTer
+
+vdr:~# lvextend -l+371 /dev/LVM2/Media /dev/hdc1
+lvextend -- extending logical volume "/dev/LVM2/Media" to 278.75 GB
+lvextend -- doing automatic backup of volume group "LVM2"
+lvextend -- logical volume "/dev/LVM2/Media" successfully extended
+
+vdr:~# lvdisplay /dev/LVM2/Media
+--- Logical volume ---
+LV Name                /dev/LVM2/Media
+VG Name                LVM2
+LV Write Access        read/write
+LV Status              available
+LV #                   1
+# open                 0
+LV Size                278.75 GB
+Current LE             1115
+Allocated LE           1115
+Allocation             next free
+Read ahead sectors     1024
+Block device           58:1
+
+vdr:~# e2fsadm -l 1115 /dev/LVM2/Media
+e2fsadm -- size of "/dev/LVM2/Media" would not change
 
 -- 
-
-patrick
+Don't Panic
