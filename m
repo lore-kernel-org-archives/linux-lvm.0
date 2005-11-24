@@ -1,18 +1,17 @@
 Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id jAUKhUV20840
-	for <linux-lvm@redhat.com>; Wed, 30 Nov 2005 15:43:30 -0500
-Received: from wproxy.gmail.com (wproxy.gmail.com [64.233.184.196])
-	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id jAUKhRLQ002072
-	for <linux-lvm@redhat.com>; Wed, 30 Nov 2005 15:43:27 -0500
-Received: by wproxy.gmail.com with SMTP id i22so80602wra
-	for <linux-lvm@redhat.com>; Wed, 30 Nov 2005 12:43:27 -0800 (PST)
-Message-ID: <479b70ed0511301243v1138c05drda62bb29cbf0f89e@mail.gmail.com>
-Date: Wed, 30 Nov 2005 14:43:27 -0600
-From: Ben Beuchler <insyte@gmail.com>
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id jAOEgHV23226
+	for <linux-lvm@redhat.com>; Thu, 24 Nov 2005 09:42:17 -0500
+Received: from mail1004.centrum.cz (mail1004.centrum.cz [213.29.7.171])
+	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id jAOEgFJl014894
+	for <linux-lvm@redhat.com>; Thu, 24 Nov 2005 09:42:15 -0500
+Received: by mail255.centrum.cz id S56099344AbVKXOln (ORCPT
+	<rfc822;linux-lvm@redhat.com>); Thu, 24 Nov 2005 15:41:43 +0100
+Date: Thu, 24 Nov 2005 15:41:43 +0100
+From: <drtyc@centrum.cz>
 MIME-Version: 1.0
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-Subject: [linux-lvm] Re-sizing a PV
+Message-ID: <200511241541.20025@centrum.cz>
+Content-Transfer-Encoding: 7BIT
+Subject: [linux-lvm] lvm realrootdev group/volume
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -26,23 +25,15 @@ List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@redhat.com
 
-I found in the archives a reference to using this series of commands
-to grow a PV to fill a disk that has grown (in this case, a hardware
-RAID volume that has had disks added to it):
+Hello.
 
-vgcfgbackup
-edit file
-pvcreate --restorefile --uuid
-vgcfgrestore
+If i am not busy this would be already in form of patch. So first I want to apologize for this not being one.
 
-I would appreciate a little clarification on step #3:
+How about adding new command to the set. This one will set correct /proc/sys/kernel/real_root_dev. It's for use in initrd.
+Scenario:
+initrd
+pivot or change root
 
-I assume I need to specify the name of the backup file as the value to
-the --restorefile option.  Do I specify the id of the vg or the pv as
-the option to --uid?
+BTW: And also way of updating /new_root/dev/{mapper,vg_names*}/ entries would be nice.
 
-Thanks!
-
-Oh, and do the filesystems have to be unmounted while this is happening?
-
--Ben
+Or maybe somebody can point me to some mapperfs patches?
