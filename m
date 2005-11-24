@@ -1,21 +1,17 @@
-Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id jAN6TBV08934
-	for <linux-lvm@redhat.com>; Wed, 23 Nov 2005 01:29:11 -0500
-Received: from xproxy.gmail.com (xproxy.gmail.com [66.249.82.194])
-	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id jAN6TBhl021860
-	for <linux-lvm@redhat.com>; Wed, 23 Nov 2005 01:29:11 -0500
-Received: by xproxy.gmail.com with SMTP id r21so2315006wxc
-	for <linux-lvm@redhat.com>; Tue, 22 Nov 2005 22:29:10 -0800 (PST)
-Message-ID: <64c763540511222229i6cf15cf0xbed9c9396af5689c@mail.gmail.com>
-Date: Wed, 23 Nov 2005 11:59:10 +0530
-From: Block Device <blockdevice@gmail.com>
-Subject: Re: [linux-lvm] Standard Linux Framework for Snapshot Notification
-In-Reply-To: <20051118215648.GW26394@agk.surrey.redhat.com>
+Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id jAOJG9V15890
+	for <linux-lvm@redhat.com>; Thu, 24 Nov 2005 14:16:09 -0500
+Received: from pilchuck.reedmedia.net (pilchuck.reedmedia.net [209.166.74.74])
+	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id jAOJG2bW010969
+	for <linux-lvm@redhat.com>; Thu, 24 Nov 2005 14:16:02 -0500
+Date: Thu, 24 Nov 2005 11:16:01 -0800 (PST)
+From: "Jeremy C. Reed" <reed@reedmedia.net>
+Subject: Re: [linux-lvm] lvm corruption...
+In-Reply-To: <Pine.NEB.4.62.0511231418090.11217@pilchuck.reedmedia.net>
+Message-ID: <Pine.NEB.4.62.0511241114500.11217@pilchuck.reedmedia.net>
+References: <Pine.NEB.4.62.0511231418090.11217@pilchuck.reedmedia.net>
 MIME-Version: 1.0
-Content-Disposition: inline
-References: <64c763540511140550t4de2bbc8scdc58e4d38717a15@mail.gmail.com>
-	<20051118215648.GW26394@agk.surrey.redhat.com>
-Content-Transfer-Encoding: 8bit
+Sender: "Jeremy C. Reed" <reed@pilchuck.reedmedia.net>
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -26,16 +22,43 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: TEXT/PLAIN; charset="us-ascii"; format="flowed"
+Content-Transfer-Encoding: 7bit
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
- Hi Alasdair,
+On Wed, 23 Nov 2005, Jeremy C. Reed wrote:
 
-> There already exists an in-kernel filesystem hook so that mounted filesystems
-> get the notifications automatically so they can sync their metadata, and
-> the block devices get flushed.
+> I saw your posting from March 2005 to linux-lvm list.
+>
+> You said you fixed your "Group descriptors corrupted" issue by accessing the 
+> vg.
+>
+> How did you do this?
+>
+> I also am troubleshooting this LVM "Group descriptors corrupted" problem.
+>
+> It can boot rescue disk which has lvm tools. pvdisplay and lvscan appear to 
+> work. I don't see any /dev/VolGroup00 directory though.
 
-What hook is that ? Could you please elaborate and explain how it works :) ?
+For the archives, I ended up solving it like the following:
 
-Thanks
-BD :)
+Booted with rescue mode on fedora DVD. Do not select to find local
+filesystems.
+
+lvm vgscan -mknodes
+
+lvm vgchange -ay
+
+mkswap -c /dev/VolGroup00/LogVol01
+
+fsck -a /dev/VolGroup00/LogVol00 # took a long time
+
+Had to redo the swap, because Fedora boot hung at the enabling swap step.
+
+I don't know how the corruption all happened in the first place.
+
+
+  Jeremy C. Reed
+
+  	  	 	 BSD News, BSD tutorials, BSD links
+ 	  	 	 http://www.bsdnewsletter.com/
