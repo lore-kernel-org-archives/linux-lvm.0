@@ -1,23 +1,22 @@
 Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id jAPK6aV13662
-	for <linux-lvm@redhat.com>; Fri, 25 Nov 2005 15:06:36 -0500
-Received: from viefep18-int.chello.at (viefep18-int.chello.at [213.46.255.21])
-	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id jAPK6OeI020796
-	for <linux-lvm@redhat.com>; Fri, 25 Nov 2005 15:06:30 -0500
-Received: from AthLux.PrivateLAN.at ([84.114.151.31]) by viefep18-int.chello.at
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id jAPKRPV17028
+	for <linux-lvm@redhat.com>; Fri, 25 Nov 2005 15:27:25 -0500
+Received: from viefep15-int.chello.at (viefep15-int.chello.at [213.46.255.19])
+	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id jAPKROtH026952
+	for <linux-lvm@redhat.com>; Fri, 25 Nov 2005 15:27:24 -0500
+Received: from AthLux.PrivateLAN.at ([84.114.151.31]) by viefep15-int.chello.at
 	(InterMail vM.6.01.04.04 201-2131-118-104-20050224) with ESMTP id
-	<20051125200049.VULS15626.viefep18-int.chello.at@AthLux.PrivateLAN.at>
-	for <linux-lvm@redhat.com>; Fri, 25 Nov 2005 21:00:49 +0100
+	<20051125202127.CMSU10553.viefep15-int.chello.at@AthLux.PrivateLAN.at>
+	for <linux-lvm@redhat.com>; Fri, 25 Nov 2005 21:21:27 +0100
 From: Matthias Meyer <Matthias.Meyer@gmx.li>
-Subject: Re: [linux-lvm] Volume group not accessible
-Date: Fri, 25 Nov 2005 21:00:49 +0100
-References: <200511242342.03081.Matthias.Meyer@gmx.li>
-	<43864398.1040402@redhat.com>
-In-Reply-To: <43864398.1040402@redhat.com>
+Subject: Re: [linux-lvm] can t resize my lvm
+Date: Fri, 25 Nov 2005 21:21:26 +0100
+References: <200511211934.13943.Matthias.Meyer@gmx.li>
+In-Reply-To: <200511211934.13943.Matthias.Meyer@gmx.li>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
 Content-Disposition: inline
-Message-Id: <200511252100.51121.Matthias.Meyer@gmx.li>
+Message-Id: <200511252121.26572.Matthias.Meyer@gmx.li>
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -31,36 +30,35 @@ List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@redhat.com
 
-Am Donnerstag 24 November 2005 23:50 schrieb Josef Whiter:
-> Matthias Meyer wrote:
-> >And now I'm not sure how to gain access again.
-> >
-> >Should I try to restore metadata with vgcfgrestore?
-> >Is it possible that I lost my data if I try vgcfgrestore?
-> >
-> >Or should I create a new Volume group and include the device /dev/hdd1
-> > to this VG? If I do this, what the way to delete volume group LVM2?
-> >
-> >Thanks in advance
-> >Matthias
->
-> Hello,
->
-> I'm not sure what the best way to go about fixing this problem is, but a
-> vgcfgrestore shouldn't harm your data, it basically just writes over a
-> section of your disk that was already being used by the LVM data
-> anyway.  Hope that helps.
->
-> Josef
-vdr:~# vgcfgrestore -n LVM2 /dev/hdd1 -b 2
-vdr:~# vgchange -ay
-vgchange -- volume group "LVM" already active
-vgchange -- volume group "LVM2" successfully activated
-vdr:~# mount /dev/LVM2/Media /Media
+... ok.
+After all my troubles with this not accessible volume group
+my logical volume is running again.
 
-and my logical volume is online again.
+But again I can't growth the size of it:
+Thats what I do:
 
-Thanks for making me courage ;-)
+vdr:~# vgcreate -v LVM3 /dev/hdd1 -s 256M
+vdr:~# mke2fs -m 0 -O sparse_super -T largefile4 /dev/LVM2/Media
+vdr:~# lvcreate I do not remeber the paramters :-(
 
+vdr:~# pvcreate -v /dev/hdc1
+vdr:~# vgextend LVM2 /dev/hdc1
+vdr:~# lvextend -l 1115 /dev/LVM2/Media /dev/hdc1
+vdr:~# e2fsadm -v -l 1115 /dev/LVM2/Media
+e2fsadm -- checking logical volume name
+e2fsadm -- checking existance of logical volume /dev/LVM2/Media
+e2fsadm -- checking for relative/absolute size change
+e2fsadm -- reading VGDA of volume group "LVM2" from lvmtab
+e2fsadm -- calculating absolute logical volume size
+e2fsadm -- size of "/dev/LVM2/Media" would not change
+vdr:~# echo $?
+6
+
+Why e2fsadm do not change the size?
+
+Please help me !
+
+Thanks in advance
+Matthias
 -- 
 Don't Panic
