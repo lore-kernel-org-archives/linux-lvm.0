@@ -1,21 +1,25 @@
-Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id jARHnKV24565
-	for <linux-lvm@redhat.com>; Sun, 27 Nov 2005 12:49:20 -0500
-Received: from smtp.kliff.de (smtp.kliff.de [80.239.136.89])
-	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id jARHn7Un030448
-	for <linux-lvm@redhat.com>; Sun, 27 Nov 2005 12:49:11 -0500
-Received: from DC-EX-001.evendi.local ([85.183.128.34])
-	by smtp.kliff.de (8.11.6/8.11.6) with ESMTP id jARHmoP17122
-	for <linux-lvm@redhat.com>; Sun, 27 Nov 2005 18:48:50 +0100
-Content-class: urn:content-classes:message
+Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id jARKITV13326
+	for <linux-lvm@redhat.com>; Sun, 27 Nov 2005 15:18:29 -0500
+Received: from romy.inter.net.il (romy.inter.net.il [192.114.186.66])
+	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id jARKINVw013984
+	for <linux-lvm@redhat.com>; Sun, 27 Nov 2005 15:18:28 -0500
+Received: from localhost (localhost [127.0.0.1])
+	by firefang.net (Postfix) with ESMTP id 5D7773917B
+	for <linux-lvm@redhat.com>; Sun, 27 Nov 2005 22:18:06 +0200 (IST)
+Received: from firefang.net ([127.0.0.1])
+	by localhost (tv.firefang.net [127.0.0.1]) (amavisd-new, port 10024)
+	with ESMTP id 20659-03 for <linux-lvm@redhat.com>;
+	Sun, 27 Nov 2005 22:17:49 +0200 (IST)
+Received: from [10.0.0.1] (main.firefang.net [10.0.0.1])
+	by firefang.net (Postfix) with ESMTP id BFE673E51
+	for <linux-lvm@redhat.com>; Sun, 27 Nov 2005 22:17:48 +0200 (IST)
+Message-ID: <438A1461.2000809@firefang.net>
+Date: Sun, 27 Nov 2005 22:17:37 +0200
+From: Omry Yadan <omry@firefang.net>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="----_=_NextPart_001_01C5F37A.D08F3B03"
-Subject: AW: AW: [linux-lvm] Activation problem with vgremove
-Date: Sun, 27 Nov 2005 18:47:01 +0100
-Message-ID: <AE41C3C123D61B45B457F3037275842F151FFD@DC-EX-001.evendi.local>
-References: <AE41C3C123D61B45B457F3037275842F1E03E2@DC-EX-001.evendi.local><AE41C3C123D61B45B457F3037275842F151FFC@DC-EX-001.evendi.local>
-	<200511261151.27572.Matthias.Meyer@gmx.li>
-From: "Marcus Franke" <MFranke@evendi.de>
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] lv became unmountable - "bad blocks" appeared.
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -26,111 +30,66 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+To: linux-lvm@redhat.com
 
-This is a multi-part message in MIME format.
+some background:
 
-------_=_NextPart_001_01C5F37A.D08F3B03
-Content-Type: text/plain;
-	charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+I have a volume group that spans on two drives.
 
-Ahh, this was the missing information
+one drive has a partition table, and one partion is LVM, and it contain 
+one lv.
 
-Thanks!
+the other has two lv's which overs it all (no partition table).
 
------Urspr=FCngliche Nachricht-----
-Von: linux-lvm-bounces@redhat.com im Auftrag von Matthias Meyer
-Gesendet: Sa 26.11.2005 11:51
-An: linux-lvm@redhat.com
-Betreff: Re: AW: [linux-lvm] Activation problem with vgremove
-=20
-Am Samstag 26 November 2005 09:13 schrieb Marcus Franke:
-> Hello,
->
-> Ok, had my timeframe, rebooted the server but still the volumegroup
-> is marked as active. I cannot remove it :(
->
-> How can this be and how can I change this? I need to remove the lvm
-> from the drive. And I want it to happen the clean way.
->
-> Not just fdisking it from the drive and let the informations of the =
-lvm
-> remain somewhere in the config..
->
->
-> Marcus
-Did you try "vgchange -an <volumegroup>"?
---=20
-Don't Panic
+each lv sits on a single drive.
 
-_______________________________________________
-linux-lvm mailing list
-linux-lvm@redhat.com
-https://www.redhat.com/mailman/listinfo/linux-lvm
-read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+I started with a single huge lv, but decided to change things to this way
+
+to minimize the damage in an event of a drive failure).
 
 
-------_=_NextPart_001_01C5F37A.D08F3B03
-Content-Type: application/ms-tnef;
-	name="winmail.dat"
-Content-Transfer-Encoding: base64
+I started to get io errors from the lv on the first disk (the one which 
+is on the drive with the partition table).
 
-eJ8+IjQRAQaQCAAEAAAAAAABAAEAAQeQBgAIAAAA5AQAAAAAAADoAAEIgAcAGAAAAElQTS5NaWNy
-b3NvZnQgTWFpbC5Ob3RlADEIAQ2ABAACAAAAAgACAAEEgAEANQAAAEFXOiBBVzogW2xpbnV4LWx2
-bV0gQWN0aXZhdGlvbiBwcm9ibGVtIHdpdGggdmdyZW1vdmUA8hIBBYADAA4AAADVBwsAGwASAC8A
-AQAAAEQBASCAAwAOAAAA1QcLABsAEgAwAC4AAAByAQEJgAEAIQAAADBDQTFEQjEyOTFFNkI0NEY5
-QzZGRDdBOEU1MEZENzEzAF4HAQOQBgBwCwAAOQAAAAMAJgAAAAAAAwA2AAAAAABAADkAX+piknrz
-xQEeAD0AAQAAAAUAAABBVzogAAAAAAIBRwABAAAAMAAAAGM9REU7YT0gO3A9ZVZlbmRpO2w9REMt
-RVgtMDAxLTA1MTEyNzE3NDg0NlotODA1AB4ASQABAAAANQAAAFJlOiBBVzogW2xpbnV4LWx2bV0g
-QWN0aXZhdGlvbiBwcm9ibGVtIHdpdGggdmdyZW1vdmUAAAAAQABOAIAhtVl38sUBHgBaAAEAAAAd
-AAAAbGludXgtbHZtLWJvdW5jZXNAcmVkaGF0LmNvbQAAAAACAVsAAQAAAFcAAAAAAAAAgSsfpL6j
-EBmdbgDdAQ9UAgAAAABsaW51eC1sdm0tYm91bmNlc0ByZWRoYXQuY29tAFNNVFAAbGludXgtbHZt
-LWJvdW5jZXNAcmVkaGF0LmNvbQAAAgFcAAEAAAAiAAAAU01UUDpMSU5VWC1MVk0tQk9VTkNFU0BS
-RURIQVQuQ09NAAAAHgBdAAEAAAAPAAAATWF0dGhpYXMgTWV5ZXIAAAIBXgABAAAAQgAAAAAAAACB
-Kx+kvqMQGZ1uAN0BD1QCAAAAAE1hdHRoaWFzIE1leWVyAFNNVFAATWF0dGhpYXMuTWV5ZXJAZ214
-LmxpAAAAAgFfAAEAAAAbAAAAU01UUDpNQVRUSElBUy5NRVlFUkBHTVguTEkAAB4AZgABAAAABQAA
-AFNNVFAAAAAAHgBnAAEAAAAdAAAAbGludXgtbHZtLWJvdW5jZXNAcmVkaGF0LmNvbQAAAAAeAGgA
-AQAAAAUAAABTTVRQAAAAAB4AaQABAAAAFgAAAE1hdHRoaWFzLk1leWVyQGdteC5saQAAAB4AcAAB
-AAAAMQAAAEFXOiBbbGludXgtbHZtXSBBY3RpdmF0aW9uIHByb2JsZW0gd2l0aCB2Z3JlbW92ZQAA
-AAACAXEAAQAAABsAAAABxfJ3xdIe/lPYW7dGGa2iYIrLSxeoAECzJPYAHgB0AAEAAAAVAAAAbGlu
-dXgtbHZtQHJlZGhhdC5jb20AAAAAHgAaDAEAAAAOAAAATWFyY3VzIEZyYW5rZQAAAB4AHQ4BAAAA
-MQAAAEFXOiBbbGludXgtbHZtXSBBY3RpdmF0aW9uIHByb2JsZW0gd2l0aCB2Z3JlbW92ZQAAAAAC
-AQkQAQAAAHkDAAB1AwAAdwUAAExaRnVKpNFdAwAKAHJjcGcxMjXiMgNDdGV4BUEBAwH3TwqAAqQD
-4wIAY2gKwHPwZXQwIAcTAoAP8wBQfwRWCFUHshHFDlEDARDHMvcGAAbDEcUzBEYQyRLbEdPbCO8J
-9zsYvw4wNRHCDGDOYwBQCwkBZDM2EVALpoERYGhoLCB0aAQAGCB3YQQgHeBlIG2zBAELgGcgC4AC
-EHIAwLx0aQIgCqIKhAqAVBDwUG5rcyEf6i0h0lVhERBwclwnENAfAGxrDeAegU4A0GgFEBDgdEsh
-0x/kVgIgOiAi0G6AdXgtbHZtLQbgaHVuYweQQBjBEPB0mi4FoG0fICZwQXUBgPRyYR8QdgIgBdAf
-kB3hsR5BTWV5BJAf5EcHkBsJ8AEAdCSgBhAgMjYQLjExLgHQMDUg2SnAOjUbkwqAQSSaJdk9H+RC
-ETAYwAEgJKBSZakkoEFXJKBbJMddEWCqYx+gdh+TICJQbwJgfmUmcAPwHeAnMAnBBGB2PmUf5Arj
-KtEmcAYQbXP/AZAfECmQB7AwcQbQEyEp88AwOToxMyAE8CNhRGViJ3FyY3UEIEYPJwAg0C1wH+Q+
-IEhlmmwYUCw09TT2T2sdwPUQ8GQeoHkd0AdxA1AxsO5lHcAYwAbgbw6wNyAecs0RIHIwgAXAYnUF
-QDHQ/wMQAyAecidACkAHgAnACGDucDT2HgEAwHI0wDcgHkEDANAuwWUuIEkgY30AcG44YDgRMGIf
-IAVAOvIoNd1IbwfgPOEd1DKgvzwAKQA28D8VPMEgsWcekLUd4j88sW4J4DiRbz1G3x5yJSE09gNS
-HmNkBRA8gv8q8DcgPMAeMAIwPbJCIRDw7HBwCfAeY2MvkAORHjDceS413TJQBUBqNFAFQPsFcAQA
-ax7zSHFDyz/zL5DPRXEegR85BCBvZkK+MEH/C3EzgANwB9AegBjAHyFGJOECIGZpZy5HDTT2NBRp
-H+REaTcgeQhgHdByrTdQIjAgQOUtA5E8OklYPiI/IXYxBUQCICfdBUBQAHAN4B/qX1YPVx//V+of
-5CTHO5EDEB7yItAx0AdY/SvPI6B0cHM6L9Qvd10wLiXoL1nyA4H+L1pyHzJekSTlH+QYwDcRER5y
-TFZNNWBPVy08VE88AAVAXLJdAXRsyGRwLgWwZy9g8WEwWi9gsS1ilB/qfWRgAAAAHgA1EAEAAABA
-AAAAPEFFNDFDM0MxMjNENjFCNDVCNDU3RjMwMzcyNzU4NDJGMTUxRkZEQERDLUVYLTAwMS5ldmVu
-ZGkubG9jYWw+AB4AORABAAAAqgAAADxBRTQxQzNDMTIzRDYxQjQ1QjQ1N0YzMDM3Mjc1ODQyRjFF
-MDNFMkBEQy1FWC0wMDEuZXZlbmRpLmxvY2FsPjxBRTQxQzNDMTIzRDYxQjQ1QjQ1N0YzMDM3Mjc1
-ODQyRjE1MUZGQ0BEQy1FWC0wMDEuZXZlbmRpLmxvY2FsPiA8MjAwNTExMjYxMTUxLjI3NTcyLk1h
-dHRoaWFzLk1leWVyQGdteC5saT4AAAAeAEcQAQAAAA8AAABtZXNzYWdlL3JmYzgyMgAACwDyEAEA
-AAAfAPMQAQAAAHoAAABBAFcAJQAzAEEAIABBAFcAJQAzAEEAIABbAGwAaQBuAHUAeAAtAGwAdgBt
-AF0AIABBAGMAdABpAHYAYQB0AGkAbwBuACAAcAByAG8AYgBsAGUAbQAgAHcAaQB0AGgAIAB2AGcA
-cgBlAG0AbwB2AGUALgBFAE0ATAAAAAAACwD2EAAAAABAAAcwX+piknrzxQFAAAgwrCab0HrzxQED
-AN4/r28AAAMA8T8HBAAAHgD4PwEAAAAOAAAATWFyY3VzIEZyYW5rZQAAAAIB+T8BAAAAXgAAAAAA
-AADcp0DIwEIQGrS5CAArL+GCAQAAAAAAAAAvTz1FVkVOREkvT1U9RVJTVEUgQURNSU5JU1RSQVRJ
-VkUgR1JVUFBFL0NOPVJFQ0lQSUVOVFMvQ049TUZSQU5LRQAAAB4A+j8BAAAAFQAAAFN5c3RlbSBB
-ZG1pbmlzdHJhdG9yAAAAAAIB+z8BAAAAHgAAAAAAAADcp0DIwEIQGrS5CAArL+GCAQAAAAAAAAAu
-AAAAAwD9P+QEAAADABlAAAAAAAMAGkAAAAAAAwAdQAAAAAADAB5AAAAAAB4AMEABAAAACAAAAE1G
-UkFOS0UAHgAxQAEAAAAIAAAATUZSQU5LRQAeADJAAQAAAB0AAABsaW51eC1sdm0tYm91bmNlc0By
-ZWRoYXQuY29tAAAAAB4AM0ABAAAAFgAAAE1hdHRoaWFzLk1leWVyQGdteC5saQAAAB4AOEABAAAA
-CAAAAE1GUkFOS0UAHgA5QAEAAAACAAAALgAAAAMAdkD/////CwApAAAAAAALACMAAAAAAAMABhBc
-aG5dAwAHENwCAAADABAQAAAAAAMAERAAAAAAHgAIEAEAAABlAAAAQUhILFRISVNXQVNUSEVNSVNT
-SU5HSU5GT1JNQVRJT05USEFOS1MtLS0tLVVSU1BS/E5HTElDSEVOQUNIUklDSFQtLS0tLVZPTjpM
-SU5VWC1MVk0tQk9VTkNFU0BSRURIQVRDTwAAAAACAX8AAQAAAEAAAAA8QUU0MUMzQzEyM0Q2MUI0
-NUI0NTdGMzAzNzI3NTg0MkYxNTFGRkRAREMtRVgtMDAxLmV2ZW5kaS5sb2NhbD4A8vg=
+just as I decided to backup the stuff, the lv became unmountable.
 
-------_=_NextPart_001_01C5F37A.D08F3B03--
+I suspected bad blocks in the drive, so I ran badblocks in non 
+destructable mode on the drive.
+
+it didn't find anything.
+
+I tried to run badblocks on the partition itself (badblocks /dev/hde3), 
+just to be sure.
+
+still nothing.
+
+this convinced me that the problem is not physical.
+
+I decided to have badblocks access the blocks via lvm, meaning badblocks 
+/dev/data_vg/data
+
+this found about 40K bad blocks.
+
+I am now in the stage before I attemp to fix the file system (reiserfs) 
+using the bad blocks list. to recover whatever can be recovered.
+
+do you guys have any better idea, because this will surely cost me some 
+data - and I am not convinced that
+
+there is nothing else at lvm level that can make things more optimistic.
+
+
+another thing:
+
+this is a very serious problem, which looks like its originating from LVM.
+
+I would be glad to share whatever info (lvm metadata etc) you guys will 
+need to identify it, in hope this problem will be eliminated, for the
+
+sake of future victims.
+
+
+Thanks,
+
+    Omry.
