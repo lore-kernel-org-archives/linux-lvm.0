@@ -1,16 +1,26 @@
-Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id jASK9RV09853
-	for <linux-lvm@redhat.com>; Mon, 28 Nov 2005 15:09:27 -0500
-Received: from cichlid.com (dsl3-63-249-91-37.cruzio.com [63.249.91.37])
-	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id jASK93Pu030791
-	for <linux-lvm@redhat.com>; Mon, 28 Nov 2005 15:09:09 -0500
-Received: from cichlid.com (cichlid.com [127.0.0.1])
-	by cichlid.com (8.13.1/8.12.5) with ESMTP id jASK8ktp002770
-	for <linux-lvm@redhat.com>; Mon, 28 Nov 2005 12:08:52 -0800
-Date: Mon, 28 Nov 2005 12:08:43 -0800
-From: Andrew Burgess <aab@cichlid.com>
-Message-Id: <200511282008.jASK8hgF002611@cichlid.com>
-Subject: [linux-lvm] Re: One of 8 PVs dead - Trying to rescue data from
+Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id jATIP4V15881
+	for <linux-lvm@redhat.com>; Tue, 29 Nov 2005 13:25:04 -0500
+Received: from ciao.gmane.org (main.gmane.org [80.91.229.2])
+	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id jATIP1Jq010461
+	for <linux-lvm@redhat.com>; Tue, 29 Nov 2005 13:25:01 -0500
+Received: from root by ciao.gmane.org with local (Exim 4.43)
+	id 1EhA6H-0002yt-65
+	for linux-lvm@redhat.com; Tue, 29 Nov 2005 19:21:09 +0100
+Received: from 128.158.123.221 ([128.158.123.221])
+	by main.gmane.org with esmtp (Gmexim 0.1 (Debian))
+	id 1AlnuQ-0007hv-00
+	for <linux-lvm@redhat.com>; Tue, 29 Nov 2005 19:21:09 +0100
+Received: from mfaine by 128.158.123.221 with local (Gmexim 0.1 (Debian))
+	id 1AlnuQ-0007hv-00
+	for <linux-lvm@redhat.com>; Tue, 29 Nov 2005 19:21:09 +0100
+From: Mark F <mfaine@knology.net>
+Date: Tue, 29 Nov 2005 12:03:39 -0600
+Message-ID: <dmi544$ckg$1@sea.gmane.org>
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Sender: news <news@sea.gmane.org>
+Subject: [linux-lvm] Enterprise Backup Software with good support for LVM
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -21,26 +31,13 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: linux-lvm@redhat.com
 
-..
->the general
->question about recovering data from a single LVM drive. In my 2 drive
->system it wouldn't work. Any other ideas? I would assume that if one
->drive failed it should be trivial to be able to access the information
->on the remaining drive. If not, then I would be a lot safer going back
->to a non-LVM system using the two drives as distinct partitions.
+Could someone suggest an Enterprise Backup package that has good support 
+for LVM (LVM2 in this case) on Linux (Specifically Suse Linux Enterprise 
+9) Most products I've seen say they support block level backups but 
+don't specifically say they support LVM.
 
-The only way I can think of to do it automatically is to use the repair tool
-for the filesystem. You would probably have to create another PV to replace the
-failed one, (zero it first) give it the same UID and recreate the volume with
-the new PV in the correct place. Then let e2fsck (if an ext2 filesystem) find
-whatever it can. It would be nice to make copies of the good PVs in case this
-doesn't work satisfactorily if you have the space. Or would a snapshot help here?
-
-You might ask on the filesystem specific mailing list if this has any chance.
-
-HTH
+Thanks,
+-Mark
