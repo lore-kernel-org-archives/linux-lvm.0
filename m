@@ -1,16 +1,24 @@
-Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id jATIhOV22138
-	for <linux-lvm@redhat.com>; Tue, 29 Nov 2005 13:43:24 -0500
-Received: from facstaff.amherst.edu (mailf2.amherst.edu [148.85.136.79])
-	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id jATIhJ9G016986
-	for <linux-lvm@redhat.com>; Tue, 29 Nov 2005 13:43:19 -0500
-Content-class: urn:content-classes:message
-MIME-Version: 1.0
-Subject: RE: [linux-lvm] Enterprise Backup Software with good support for LVM
-Date: Tue, 29 Nov 2005 13:43:17 -0500
-Message-ID: <0456A130F613AD459887FF012652963F33EB75@mail7.amherst.edu>
-From: "Steffen Plotner" <swplotner@amherst.edu>
-Content-Transfer-Encoding: 8bit
+Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id jATIjhV23126
+	for <linux-lvm@redhat.com>; Tue, 29 Nov 2005 13:45:43 -0500
+Received: from ramoth.dragonhold.org (ramoth.dragonhold.org [80.229.192.20])
+	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id jATIjbRn006077
+	for <linux-lvm@redhat.com>; Tue, 29 Nov 2005 13:45:37 -0500
+Received: from gwood by ramoth.dragonhold.org with local (Exim 4.50)
+	id 1EhATs-0000ZF-1u
+	for linux-lvm@redhat.com; Tue, 29 Nov 2005 18:45:32 +0000
+Date: Tue, 29 Nov 2005 18:45:32 +0000
+From: Graham Wood <clvm@spam.dragonhold.org>
+Subject: Re: [linux-lvm] Re: Enterprise Backup Software with good support for
+	LVM
+Message-ID: <20051129184532.GD29763@dragonhold.org>
+References: <dmi544$ckg$1@sea.gmane.org>
+	<5493D77C6E101BAEDC2747FF@dhcp-2-206.wgops.com>
+	<438CA082.8050004@knology.net>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <438CA082.8050004@knology.net>
+Sender: <gwood@dragonhold.org>
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -22,48 +30,18 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-Hello,
+On Tue, Nov 29, 2005 at 12:40:02PM -0600, Mark F wrote:
+> Michael Loftis wrote:
+> Is anyone using it?  Or does anyone have any reason to believe it 
+> will/won't work?
+Netbackup does a file level backup, rather than block level.  This means 
+that the filesystem used is not relevant, and the underlying structure
+even more so.
 
-I would like to add that creating backups of LVM snapshots is sensible,
-as the data is in a crash-consistent state. Today's operating systems
-can definitely handle this type of state. I have developed scripts that
-effectively netcat contents from LVM snapshots to a remote machine
-(either into another logical volume or simply a file). 
+E.g. it works at the directory/file level - so it backs up the files
+that it finds and doesn't care what sort of block device is under that.
 
-Steffen 
-
------Original Message-----
-From: linux-lvm-bounces@redhat.com [mailto:linux-lvm-bounces@redhat.com]
-On Behalf Of Michael Loftis
-Sent: Tuesday, November 29, 2005 1:29 PM
-To: LVM general discussion and development
-Subject: Re: [linux-lvm] Enterprise Backup Software with good support
-for LVM
-
-
-
---On November 29, 2005 12:03:39 PM -0600 Mark F <mfaine@knology.net>
-wrote:
-
-> Could someone suggest an Enterprise Backup package that has good 
-> support for LVM (LVM2 in this case) on Linux (Specifically Suse Linux 
-> Enterprise
-> 9) Most products I've seen say they support block level backups but 
-> don't specifically say they support LVM.
-
-LVM provides a block level device.  However you don't want to back up
-there anyway, you'll just end up with corrupt garbage.  You need to back
-up at the filesystem level unless you're using your LVM LVs for Oracle
-or something similar in which case the backup software needs to support
-that by putting Oracle or the related application into the correct hot
-backup mode before attempting to directly read the LVM data, as well as
-backing up the transaction/redo logs.
-
-
-_______________________________________________
-linux-lvm mailing list
-linux-lvm@redhat.com
-https://www.redhat.com/mailman/listinfo/linux-lvm
-read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+(That's assuming you're doing file backups, and not raw devices for DBs)
