@@ -1,20 +1,18 @@
-Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id jAU98NV12122
-	for <linux-lvm@redhat.com>; Wed, 30 Nov 2005 04:08:23 -0500
-Received: from zproxy.gmail.com (zproxy.gmail.com [64.233.162.203])
-	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id jAU98HvV011189
-	for <linux-lvm@redhat.com>; Wed, 30 Nov 2005 04:08:17 -0500
-Received: by zproxy.gmail.com with SMTP id x3so21740nzd
-	for <linux-lvm@redhat.com>; Wed, 30 Nov 2005 01:08:17 -0800 (PST)
-Message-ID: <efef33d20511300108y4f6c441vff876085f80f816b@mail.gmail.com>
-Date: Wed, 30 Nov 2005 10:08:17 +0100
-From: Wallace Wadge <wwadge@gmail.com>
-In-Reply-To: <efef33d20511292301s1fe5cf0dp90180833f51e2360@mail.gmail.com>
+Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id jAUKhUV20840
+	for <linux-lvm@redhat.com>; Wed, 30 Nov 2005 15:43:30 -0500
+Received: from wproxy.gmail.com (wproxy.gmail.com [64.233.184.196])
+	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id jAUKhRLQ002072
+	for <linux-lvm@redhat.com>; Wed, 30 Nov 2005 15:43:27 -0500
+Received: by wproxy.gmail.com with SMTP id i22so80602wra
+	for <linux-lvm@redhat.com>; Wed, 30 Nov 2005 12:43:27 -0800 (PST)
+Message-ID: <479b70ed0511301243v1138c05drda62bb29cbf0f89e@mail.gmail.com>
+Date: Wed, 30 Nov 2005 14:43:27 -0600
+From: Ben Beuchler <insyte@gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/alternative; 
-	boundary="----=_Part_3733_12478536.1133341697186"
-References: <efef33d20511292301s1fe5cf0dp90180833f51e2360@mail.gmail.com>
-Subject: [linux-lvm] Re: lvm + raid (confused)
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+Subject: [linux-lvm] Re-sizing a PV
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -25,38 +23,26 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
+Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@redhat.com
 
-------=_Part_3733_12478536.1133341697186
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: quoted-printable
-Content-Disposition: inline
+I found in the archives a reference to using this series of commands
+to grow a PV to fill a disk that has grown (in this case, a hardware
+RAID volume that has had disks added to it):
 
-Perfect! Thanks!
+vgcfgbackup
+edit file
+pvcreate --restorefile --uuid
+vgcfgrestore
 
-Sadly I cannot extend the filesystem anyway thanks to the installer
-defaulting to ext3 so I'm using lvm for almost nothing except snapshots (i.=
-e.
-I shouldn't be needing lvcreate/lvextend).
+I would appreciate a little clarification on step #3:
 
-What I was worried was: my fs is definetely on the HW raid (logically), but
-I wasn't sure if free blocks would have come from somewhere else.
+I assume I need to specify the name of the backup file as the value to
+the --restorefile option.  Do I specify the id of the vg or the pv as
+the option to --uid?
 
-Anyway this seems to do the trick. Thanks once again.
+Thanks!
 
-Wallace
+Oh, and do the filesystems have to be unmounted while this is happening?
 
-------=_Part_3733_12478536.1133341697186
-Content-Type: text/html; charset=ISO-8859-1
-Content-Transfer-Encoding: quoted-printable
-Content-Disposition: inline
-
-Perfect! Thanks!<br><br>Sadly I cannot extend the filesystem anyway thanks =
-to the installer defaulting to ext3 so I'm using lvm for almost nothing exc=
-ept snapshots (i.e. I shouldn't be needing lvcreate/lvextend).<br><br>What =
-I was worried was: my fs is definetely on the HW raid (logically), but I wa=
-sn't sure if free blocks would have come from somewhere else.
-<br><br>Anyway this seems to do the trick. Thanks once again.<br><br>Wallac=
-e<br>
-
-------=_Part_3733_12478536.1133341697186--
+-Ben
