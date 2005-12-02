@@ -1,23 +1,32 @@
-Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id jB20FKV07954
-	for <linux-lvm@redhat.com>; Thu, 1 Dec 2005 19:15:20 -0500
-Received: from palrel13.hp.com (palrel13.hp.com [156.153.255.238])
-	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id jB20FEJr006018
-	for <linux-lvm@redhat.com>; Thu, 1 Dec 2005 19:15:14 -0500
-Received: from smtp2.ptp.hp.com (smtp2.ptp.hp.com [15.1.28.240])
-	by palrel13.hp.com (Postfix) with ESMTP id D548536FB3
-	for <linux-lvm@redhat.com>; Thu,  1 Dec 2005 16:15:13 -0800 (PST)
-Received: from [15.244.57.26] (airwolf.cup.hp.com [15.244.57.26])
-	by smtp2.ptp.hp.com (Postfix) with ESMTP id 72F8C1CCEFC
-	for <linux-lvm@redhat.com>; Fri,  2 Dec 2005 00:15:13 +0000 (UTC)
-Message-ID: <438F9210.3000900@cup.hp.com>
-Date: Thu, 01 Dec 2005 16:15:12 -0800
-From: John DeFranco <defranco@cup.hp.com>
-MIME-Version: 1.0
-Subject: Re: [linux-lvm] clvmd interface question
-References: <437CC1DF.7060306@cup.hp.com> <437D8D72.4050909@redhat.com>
-In-Reply-To: <437D8D72.4050909@redhat.com>
-Content-Transfer-Encoding: 7bit
+Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id jB2H7jV18980
+	for <linux-lvm@redhat.com>; Fri, 2 Dec 2005 12:07:45 -0500
+Received: from pd3mo1so.prod.shaw.ca (shawidc-mo1.cg.shawcable.net
+	[24.71.223.10])
+	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id jB2H7aqe030935
+	for <linux-lvm@redhat.com>; Fri, 2 Dec 2005 12:07:37 -0500
+Received: from pd2mr8so.prod.shaw.ca (pd2mr8so-qfe3.prod.shaw.ca [10.0.141.11])
+	by l-daemon (Sun ONE Messaging Server 6.0 HotFix 1.01 (built Mar 15
+	2004))
+	with ESMTP id <0IQV00JRORKOEZC0@l-daemon> for linux-lvm@redhat.com; Fri,
+	02 Dec 2005 10:07:36 -0700 (MST)
+Received: from pn2ml6so.prod.shaw.ca ([10.0.121.150])
+	by pd2mr8so.prod.shaw.ca (Sun ONE Messaging Server 6.0 HotFix 1.01
+	(built Mar
+	15 2004)) with ESMTP id <0IQV00F0GRKOA210@pd2mr8so.prod.shaw.ca> for
+	linux-lvm@redhat.com; Fri, 02 Dec 2005 10:07:36 -0700 (MST)
+Received: from [192.168.1.123] ([24.85.82.146])
+	by l-daemon (Sun ONE Messaging Server 6.0 HotFix 1.01 (built Mar 15
+	2004))
+	with ESMTP id <0IQV004AARKNV1A0@l-daemon> for linux-lvm@redhat.com; Fri,
+	02 Dec 2005 10:07:35 -0700 (MST)
+Date: Fri, 02 Dec 2005 09:07:52 -0800
+From: Terry Rigby <t-rigby@shaw.ca>
+Message-id: <200512020907.52315.t-rigby@shaw.ca>
+MIME-version: 1.0
+Content-transfer-encoding: 7bit
+Content-disposition: inline
+Subject: [linux-lvm] Need to keep running fsck on LVM
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -28,48 +37,13 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="us-ascii"
+To: linux-lvm@redhat.com
 
-Patrick Caulfield wrote:
+Once a week or so I am getting an issue with my volume where I can no longer 
+write to it  and I get "read only filesystem" errors.  I need to unmount it 
+and run an fsck.ext3 on it and it will fix errors and then will be fine for 
+awhile.  I assume that there is a drive that is dying in the array.  Is there 
+any way or telling which drive this might be?
 
->John DeFranco wrote:
->  
->
->>Hi, I'm looking for some information. I'm interested in learning more
->>about the clvmd daemon. I've search and found various pieces of info in
->>addition to looking at the code. Specifically I looking to for
->>information (a spec) on how one might be able to add a new cluster
->>manager plugin if you will (if that is even possible). I know that clvmd
->>interfaces with a couple of different cluster managers now but I'd like
->>to expland this if possible.
->>    
->>
->
->clvmd supports cman and gulm, it has it's own internal function switch that
->determines what to do for each cluster manager.
->
->To be honest it's not a good API as it was originally only designed to work with
->cman and the gulm support was bolted on later - so adding a new cluster manager
->might be a bit of work.
->
->Have a look at the bottom of LVM2/daemons/clvmd/clvmd-cman for the function switch.
->
->You'll also need to be aware that CMAN provides its own messaging system, which
->gulm does not. If your cluster manager provides a messaging system then I
->recommend you use it - otherwise you should be able to use the tcp-comms.c file
->with clvmd (that gulm support uses).
->
->Another way, that might be easier, is to patch clvmd with the libcman patch in
->head of cluster CVS (cluster/cman/lib/clvmd-libcman.diff) and write a library
->for your cluster manager that emulates libcman - that one is a nice simple API
->and it will be supported by future versions of cman too.
->
->  
->
-Thanks for the info. I'll be looking into this.
-
--- 
-==========
-Cheers
-   -jdf
+Gumby
