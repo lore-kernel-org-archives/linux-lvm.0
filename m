@@ -1,17 +1,17 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id jB51LwV18339
-	for <linux-lvm@redhat.com>; Sun, 4 Dec 2005 20:21:58 -0500
-Received: from wproxy.gmail.com (wproxy.gmail.com [64.233.184.199])
-	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id jB51LpQU027478
-	for <linux-lvm@redhat.com>; Sun, 4 Dec 2005 20:21:51 -0500
-Received: by wproxy.gmail.com with SMTP id i5so933264wra
-	for <linux-lvm@redhat.com>; Sun, 04 Dec 2005 17:21:51 -0800 (PST)
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id jB4ITVV28542
+	for <linux-lvm@redhat.com>; Sun, 4 Dec 2005 13:29:31 -0500
+Received: from wproxy.gmail.com (wproxy.gmail.com [64.233.184.205])
+	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id jB4ITOxL003217
+	for <linux-lvm@redhat.com>; Sun, 4 Dec 2005 13:29:24 -0500
+Received: by wproxy.gmail.com with SMTP id i5so883427wra
+	for <linux-lvm@redhat.com>; Sun, 04 Dec 2005 10:29:24 -0800 (PST)
 Mime-Version: 1.0 (Apple Message framework v746.2)
-Message-Id: <45CF68C3-8E43-493E-B9DF-2BD0A51D09F4@gmail.com>
-Content-Type: multipart/alternative; boundary=Apple-Mail-4-819682574
+Message-Id: <27F4FD6C-9A75-4036-823D-11B62C745D1D@gmail.com>
+Content-Type: multipart/alternative; boundary=Apple-Mail-1-794936166
 From: William Strathearn <billythekid@gmail.com>
-Date: Sun, 4 Dec 2005 17:21:45 -0800
-Subject: [linux-lvm] Can't Boot Cleaned JFS VG after System Crash
+Date: Sun, 4 Dec 2005 10:29:18 -0800
+Subject: [linux-lvm] Can't Mount Cleaned Disks after Crash
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -25,7 +25,7 @@ List-Id: <linux-lvm.redhat.com>
 To: linux-lvm@redhat.com
 
 
---Apple-Mail-4-819682574
+--Apple-Mail-1-794936166
 Content-Transfer-Encoding: 7bit
 Content-Type: text/plain;
 	charset=US-ASCII;
@@ -157,264 +157,118 @@ pvr ~ # vgscan
 Bill
 
 
-
---Apple-Mail-4-819682574
+--Apple-Mail-1-794936166
 Content-Transfer-Encoding: quoted-printable
 Content-Type: text/html;
 	charset=ISO-8859-1
 
 <HTML><BODY style=3D"word-wrap: break-word; -khtml-nbsp-mode: space; =
--khtml-line-break: after-white-space; "><DIV style=3D"margin-top: 0px; =
-margin-right: 0px; margin-bottom: 0px; margin-left: 0px; font: normal =
-normal normal 12px/normal Helvetica; min-height: 14px; "><BR></DIV><DIV =
-style=3D"margin-top: 0px; margin-right: 0px; margin-bottom: 0px; =
-margin-left: 0px; ">=A0 After a forced reboot while my 2.6.12 system was =
-frozen, the JFS formatted LVM2 VG I have created will not mount upon =
-startup.=A0 When I use the following command to mount it by hand, I get =
-a generic bad superblock message:=A0</DIV><DIV style=3D"margin-top: 0px; =
-margin-right: 0px; margin-bottom: 0px; margin-left: 0px; font: normal =
-normal normal 12px/normal Helvetica; min-height: 14px; "><BR></DIV><DIV =
-style=3D"margin-top: 0px; margin-right: 0px; margin-bottom: 0px; =
-margin-left: 0px; ">pvr ~ # mount -t jfs /dev/myth-video-vg/myth-video =
-/video</DIV><DIV style=3D"margin-top: 0px; margin-right: 0px; =
-margin-bottom: 0px; margin-left: 0px; ">mount: wrong fs type, bad =
-option, bad superblock on /dev/myth-video-vg/myth-video,</DIV><DIV =
-style=3D"margin-top: 0px; margin-right: 0px; margin-bottom: 0px; =
-margin-left: 0px; ">=A0 =A0 =A0=A0 missing codepage or other =
-error</DIV><DIV style=3D"margin-top: 0px; margin-right: 0px; =
-margin-bottom: 0px; margin-left: 0px; ">=A0 =A0 =A0=A0 In some cases =
-useful info is found in syslog - try</DIV><DIV style=3D"margin-top: 0px; =
-margin-right: 0px; margin-bottom: 0px; margin-left: 0px; ">=A0 =A0 =A0=A0 =
-dmesg | tail=A0 or so</DIV><DIV style=3D"margin-top: 0px; margin-right: =
-0px; margin-bottom: 0px; margin-left: 0px; font: normal normal normal =
-12px/normal Helvetica; min-height: 14px; "><BR></DIV><DIV =
-style=3D"margin-top: 0px; margin-right: 0px; margin-bottom: 0px; =
-margin-left: 0px; ">=A0 I ran jfs_fsck on both physical volumes that are =
-part of the VG and one partition had a=A0detectable=A0error that was =
-fixed by replaying the log.=A0 Now jfs_fsk reports two clean =
-filesystems.=A0</DIV><DIV style=3D"margin-top: 0px; margin-right: 0px; =
-margin-bottom: 0px; margin-left: 0px; font: normal normal normal =
-12px/normal Helvetica; min-height: 14px; "><BR></DIV><DIV =
-style=3D"margin-top: 0px; margin-right: 0px; margin-bottom: 0px; =
-margin-left: 0px; ">pvr ~ # jfs_fsck /dev/sdb=A0=A0</DIV><DIV =
-style=3D"margin-top: 0px; margin-right: 0px; margin-bottom: 0px; =
-margin-left: 0px; ">jfs_fsck version 1.1.8, 03-May-2005</DIV><DIV =
-style=3D"margin-top: 0px; margin-right: 0px; margin-bottom: 0px; =
-margin-left: 0px; ">processing started: 12/4/2005 10.1.24</DIV><DIV =
-style=3D"margin-top: 0px; margin-right: 0px; margin-bottom: 0px; =
-margin-left: 0px; ">Using default parameter: -p</DIV><DIV =
-style=3D"margin-top: 0px; margin-right: 0px; margin-bottom: 0px; =
-margin-left: 0px; ">The current device is:=A0 /dev/sdb</DIV><DIV =
-style=3D"margin-top: 0px; margin-right: 0px; margin-bottom: 0px; =
-margin-left: 0px; ">Block size in bytes:=A0 4096</DIV><DIV =
-style=3D"margin-top: 0px; margin-right: 0px; margin-bottom: 0px; =
-margin-left: 0px; ">Filesystem size in blocks:=A0 61049646</DIV><DIV =
-style=3D"margin-top: 0px; margin-right: 0px; margin-bottom: 0px; =
-margin-left: 0px; ">**Phase 0 - Replay Journal Log</DIV><DIV =
-style=3D"margin-top: 0px; margin-right: 0px; margin-bottom: 0px; =
-margin-left: 0px; ">Filesystem is clean.</DIV><DIV style=3D"margin-top: =
-0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; font: =
-normal normal normal 12px/normal Helvetica; min-height: 14px; =
-"><BR></DIV><DIV style=3D"margin-top: 0px; margin-right: 0px; =
-margin-bottom: 0px; margin-left: 0px; ">pvr ~ # jfs_fsck =
-/dev/sda4</DIV><DIV style=3D"margin-top: 0px; margin-right: 0px; =
-margin-bottom: 0px; margin-left: 0px; ">jfs_fsck version 1.1.8, =
-03-May-2005</DIV><DIV style=3D"margin-top: 0px; margin-right: 0px; =
-margin-bottom: 0px; margin-left: 0px; ">processing started: 12/4/2005 =
-10.1.31</DIV><DIV style=3D"margin-top: 0px; margin-right: 0px; =
-margin-bottom: 0px; margin-left: 0px; ">Using default parameter: =
--p</DIV><DIV style=3D"margin-top: 0px; margin-right: 0px; margin-bottom: =
-0px; margin-left: 0px; ">The current device is:=A0 /dev/sda4</DIV><DIV =
-style=3D"margin-top: 0px; margin-right: 0px; margin-bottom: 0px; =
-margin-left: 0px; ">Block size in bytes:=A0 4096</DIV><DIV =
-style=3D"margin-top: 0px; margin-right: 0px; margin-bottom: 0px; =
-margin-left: 0px; ">Filesystem size in blocks:=A0 16844152</DIV><DIV =
-style=3D"margin-top: 0px; margin-right: 0px; margin-bottom: 0px; =
-margin-left: 0px; ">**Phase 0 - Replay Journal Log</DIV><DIV =
-style=3D"margin-top: 0px; margin-right: 0px; margin-bottom: 0px; =
-margin-left: 0px; ">Filesystem is clean.</DIV><DIV style=3D"margin-top: =
-0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; font: =
-normal normal normal 12px/normal Helvetica; min-height: 14px; =
-"><BR></DIV><DIV style=3D"margin-top: 0px; margin-right: 0px; =
-margin-bottom: 0px; margin-left: 0px; ">=A0 Despite=A0their cleanliness, =
-they still won't mount.=A0 Do I need to go about restoring anything in =
-LVM2 meta data in order to mount?=A0 I've read=A0</DIV><DIV =
-style=3D"margin-top: 0px; margin-right: 0px; margin-bottom: 0px; =
-margin-left: 0px; "><A =
+-khtml-line-break: after-white-space; "><DIV><BR =
+class=3D"khtml-block-placeholder"></DIV><DIV>=A0 After a forced reboot =
+while my 2.6.12 system was frozen, the JFS formatted LVM2 VG I have =
+created will not mount upon startup.=A0 When I use the following command =
+to mount it by hand, I get a generic bad superblock =
+message:=A0</DIV><DIV><BR class=3D"khtml-block-placeholder"></DIV><DIV>pvr=
+ ~ # mount -t jfs /dev/myth-video-vg/myth-video /video</DIV><DIV>mount: =
+wrong fs type, bad option, bad superblock on =
+/dev/myth-video-vg/myth-video,</DIV><DIV>=A0 =A0 =A0=A0 missing codepage =
+or other error</DIV><DIV>=A0 =A0 =A0=A0 In some cases useful info is =
+found in syslog - try</DIV><DIV>=A0 =A0 =A0=A0 dmesg | tail=A0 or =
+so</DIV><DIV><BR class=3D"khtml-block-placeholder"></DIV><DIV>=A0 I ran =
+jfs_fsck on both physical volumes that are part of the VG and one =
+partition had a=A0detectable=A0error that was fixed by replaying the =
+log.=A0 Now jfs_fsk reports two clean filesystems.=A0</DIV><DIV><BR =
+class=3D"khtml-block-placeholder"></DIV><DIV>pvr ~ # jfs_fsck /dev/sdb=A0=A0=
+ </DIV><DIV>jfs_fsck version 1.1.8, 03-May-2005</DIV><DIV>processing =
+started: 12/4/2005 10.1.24</DIV><DIV>Using default parameter: =
+-p</DIV><DIV>The current device is:=A0 /dev/sdb</DIV><DIV>Block size in =
+bytes:=A0 4096</DIV><DIV>Filesystem size in blocks:=A0 =
+61049646</DIV><DIV>**Phase 0 - Replay Journal Log</DIV><DIV>Filesystem =
+is clean.</DIV><DIV><BR class=3D"khtml-block-placeholder"></DIV><DIV>pvr =
+~ # jfs_fsck /dev/sda4</DIV><DIV>jfs_fsck version 1.1.8, =
+03-May-2005</DIV><DIV>processing started: 12/4/2005 =
+10.1.31</DIV><DIV>Using default parameter: -p</DIV><DIV>The current =
+device is:=A0 /dev/sda4</DIV><DIV>Block size in bytes:=A0 =
+4096</DIV><DIV>Filesystem size in blocks:=A0 16844152</DIV><DIV>**Phase =
+0 - Replay Journal Log</DIV><DIV>Filesystem is clean.</DIV><DIV><BR =
+class=3D"khtml-block-placeholder"></DIV><DIV>=A0 Despite=A0their =
+cleanliness, they still won't mount.=A0 Do I need to go about restoring =
+anything in LVM2 meta data in order to mount?=A0 I've read=A0</DIV><DIV><A=
+ =
 href=3D"https://www.redhat.com/archives/linux-lvm/2004-December/msg00048.h=
 tml">this previous post</A>=A0about using=A0<FONT =
 class=3D"Apple-style-span" face=3D"Courier" size=3D"3"><SPAN =
 class=3D"Apple-style-span" style=3D"font-size: 13px;">vgcfgrestore =
-</SPAN></FONT>and tried it with the newest file in /etc/lvm/archive/, =
-but it had not effect after completing sucessfully.=A0</DIV><DIV =
-style=3D"margin-top: 0px; margin-right: 0px; margin-bottom: 0px; =
-margin-left: 0px; font: normal normal normal 12px/normal Helvetica; =
-min-height: 14px; "><BR></DIV><DIV style=3D"margin-top: 0px; =
-margin-right: 0px; margin-bottom: 0px; margin-left: 0px; ">pvr ~ # =
-vgcfgrestore --file /etc/lvm/archive/myth-video-vg_00003.vg =
-myth-video-vg</DIV><DIV style=3D"margin-top: 0px; margin-right: 0px; =
-margin-bottom: 0px; margin-left: 0px; ">=A0 Restored volume group =
-myth-video-vg</DIV><DIV style=3D"margin-top: 0px; margin-right: 0px; =
-margin-bottom: 0px; margin-left: 0px; font: normal normal normal =
-12px/normal Helvetica; min-height: 14px; "><BR></DIV><DIV =
-style=3D"margin-top: 0px; margin-right: 0px; margin-bottom: 0px; =
-margin-left: 0px; ">pvr ~ # mount -t jfs /dev/myth-video-vg/myth-video =
-/video</DIV><DIV style=3D"margin-top: 0px; margin-right: 0px; =
-margin-bottom: 0px; margin-left: 0px; ">mount: wrong fs type, bad =
-option, bad superblock on /dev/myth-video-vg/myth-video,</DIV><DIV =
-style=3D"margin-top: 0px; margin-right: 0px; margin-bottom: 0px; =
-margin-left: 0px; ">=A0 =A0 =A0=A0 missing codepage or other =
-error</DIV><DIV style=3D"margin-top: 0px; margin-right: 0px; =
-margin-bottom: 0px; margin-left: 0px; ">=A0 =A0 =A0=A0 In some cases =
-useful info is found in syslog - try</DIV><DIV style=3D"margin-top: 0px; =
-margin-right: 0px; margin-bottom: 0px; margin-left: 0px; ">=A0 =A0 =A0=A0 =
-dmesg | tail=A0 or so</DIV><DIV style=3D"margin-top: 0px; margin-right: =
-0px; margin-bottom: 0px; margin-left: 0px; font: normal normal normal =
-12px/normal Helvetica; min-height: 14px; "><BR></DIV><DIV =
-style=3D"margin-top: 0px; margin-right: 0px; margin-bottom: 0px; =
-margin-left: 0px; font: normal normal normal 12px/normal Helvetica; =
-min-height: 14px; "><BR></DIV><DIV style=3D"margin-top: 0px; =
-margin-right: 0px; margin-bottom: 0px; margin-left: 0px; ">=A0 I'm =
-really not sure what I need to do in order to get this VG mounted.=A0 =
-Any hints would be greatly appreciated.=A0</DIV><DIV style=3D"margin-top: =
-0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; font: =
-normal normal normal 12px/normal Helvetica; min-height: 14px; =
-"><BR></DIV><DIV style=3D"margin-top: 0px; margin-right: 0px; =
-margin-bottom: 0px; margin-left: 0px; ">=A0 =A0Here are some =
-diagnostics:=A0</DIV><DIV style=3D"margin-top: 0px; margin-right: 0px; =
-margin-bottom: 0px; margin-left: 0px; font: normal normal normal =
-12px/normal Helvetica; min-height: 14px; "><BR></DIV><DIV =
-style=3D"margin-top: 0px; margin-right: 0px; margin-bottom: 0px; =
-margin-left: 0px; ">pvr ~ # lvscan</DIV><DIV style=3D"margin-top: 0px; =
-margin-right: 0px; margin-bottom: 0px; margin-left: 0px; ">=A0 ACTIVE=A0 =
-=A0 =A0 =A0 =A0 =A0 '/dev/myth-video-vg/myth-video' [297.14 GB] =
-inherit</DIV><DIV style=3D"margin-top: 0px; margin-right: 0px; =
-margin-bottom: 0px; margin-left: 0px; ">pvr ~ # lvmdiskscan</DIV><DIV =
-style=3D"margin-top: 0px; margin-right: 0px; margin-bottom: 0px; =
-margin-left: 0px; ">=A0 /dev/sda1 [=A0 =A0 =A0=A0 39.19 MB]</DIV><DIV =
-style=3D"margin-top: 0px; margin-right: 0px; margin-bottom: 0px; =
-margin-left: 0px; ">=A0 /dev/sda2 [=A0 =A0 =A0 964.84 MB]</DIV><DIV =
-style=3D"margin-top: 0px; margin-right: 0px; margin-bottom: 0px; =
-margin-left: 0px; ">=A0 /dev/sda3 [=A0 =A0 =A0 =A0 9.32 GB]</DIV><DIV =
-style=3D"margin-top: 0px; margin-right: 0px; margin-bottom: 0px; =
-margin-left: 0px; ">=A0 /dev/sda4 [=A0 =A0 =A0=A0 64.26 GB] LVM physical =
-volume</DIV><DIV style=3D"margin-top: 0px; margin-right: 0px; =
-margin-bottom: 0px; margin-left: 0px; ">=A0 /dev/sdb=A0 [=A0 =A0 =A0 =
-232.89 GB] LVM physical volume</DIV><DIV style=3D"margin-top: 0px; =
-margin-right: 0px; margin-bottom: 0px; margin-left: 0px; ">=A0 0 =
-disks</DIV><DIV style=3D"margin-top: 0px; margin-right: 0px; =
-margin-bottom: 0px; margin-left: 0px; ">=A0 3 partitions</DIV><DIV =
-style=3D"margin-top: 0px; margin-right: 0px; margin-bottom: 0px; =
-margin-left: 0px; ">=A0 1 LVM physical volume whole disk</DIV><DIV =
-style=3D"margin-top: 0px; margin-right: 0px; margin-bottom: 0px; =
-margin-left: 0px; ">=A0 1 LVM physical volume</DIV><DIV =
-style=3D"margin-top: 0px; margin-right: 0px; margin-bottom: 0px; =
-margin-left: 0px; ">pvr ~ # lvdisplay</DIV><DIV style=3D"margin-top: =
-0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; ">=A0 --- =
-Logical volume ---</DIV><DIV style=3D"margin-top: 0px; margin-right: =
-0px; margin-bottom: 0px; margin-left: 0px; ">=A0 LV Name=A0 =A0 =A0 =A0 =
-=A0 =A0 =A0 =A0 /dev/myth-video-vg/myth-video</DIV><DIV =
-style=3D"margin-top: 0px; margin-right: 0px; margin-bottom: 0px; =
-margin-left: 0px; ">=A0 VG Name=A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =
-myth-video-vg</DIV><DIV style=3D"margin-top: 0px; margin-right: 0px; =
-margin-bottom: 0px; margin-left: 0px; ">=A0 LV UUID=A0 =A0 =A0 =A0 =A0 =A0=
- =A0 =A0 4gV513-mE25-gEkf-gCLp-LqWE-XvG8-CXziEv</DIV><DIV =
-style=3D"margin-top: 0px; margin-right: 0px; margin-bottom: 0px; =
-margin-left: 0px; ">=A0 LV Write Access=A0 =A0 =A0 =A0 =
-read/write</DIV><DIV style=3D"margin-top: 0px; margin-right: 0px; =
-margin-bottom: 0px; margin-left: 0px; ">=A0 LV Status=A0 =A0 =A0 =A0 =A0 =
-=A0 =A0 available</DIV><DIV style=3D"margin-top: 0px; margin-right: 0px; =
-margin-bottom: 0px; margin-left: 0px; ">=A0 # open=A0 =A0 =A0 =A0 =A0 =A0 =
-=A0 =A0=A0 0</DIV><DIV style=3D"margin-top: 0px; margin-right: 0px; =
-margin-bottom: 0px; margin-left: 0px; ">=A0 LV Size=A0 =A0 =A0 =A0 =A0 =A0=
- =A0 =A0 297.14 GB</DIV><DIV style=3D"margin-top: 0px; margin-right: =
-0px; margin-bottom: 0px; margin-left: 0px; ">=A0 Current LE=A0 =A0 =A0 =A0=
- =A0 =A0=A0 76067</DIV><DIV style=3D"margin-top: 0px; margin-right: 0px; =
-margin-bottom: 0px; margin-left: 0px; ">=A0 Segments=A0 =A0 =A0 =A0 =A0 =
-=A0 =A0=A0 2</DIV><DIV style=3D"margin-top: 0px; margin-right: 0px; =
-margin-bottom: 0px; margin-left: 0px; ">=A0 Allocation=A0 =A0 =A0 =A0 =A0 =
-=A0=A0 inherit</DIV><DIV style=3D"margin-top: 0px; margin-right: 0px; =
-margin-bottom: 0px; margin-left: 0px; ">=A0 Read ahead sectors=A0 =A0=A0 =
-0</DIV><DIV style=3D"margin-top: 0px; margin-right: 0px; margin-bottom: =
-0px; margin-left: 0px; ">=A0 Block device=A0 =A0 =A0 =A0 =A0=A0 =
-253:0</DIV><P style=3D"margin: 0.0px 0.0px 0.0px 0.0px">=A0=A0</P><DIV =
-style=3D"margin-top: 0px; margin-right: 0px; margin-bottom: 0px; =
-margin-left: 0px; ">pvr ~ # pvdisplay</DIV><DIV style=3D"margin-top: =
-0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; ">=A0 --- =
-Physical volume ---</DIV><DIV style=3D"margin-top: 0px; margin-right: =
-0px; margin-bottom: 0px; margin-left: 0px; ">=A0 PV Name=A0 =A0 =A0 =A0 =
-=A0 =A0 =A0=A0 /dev/sdb</DIV><DIV style=3D"margin-top: 0px; =
-margin-right: 0px; margin-bottom: 0px; margin-left: 0px; ">=A0 VG Name=A0 =
-=A0 =A0 =A0 =A0 =A0 =A0=A0 myth-video-vg</DIV><DIV style=3D"margin-top: =
-0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; ">=A0 PV =
-Size=A0 =A0 =A0 =A0 =A0 =A0 =A0=A0 232.88 GB / not usable 0=A0=A0</DIV><DI=
-V style=3D"margin-top: 0px; margin-right: 0px; margin-bottom: 0px; =
-margin-left: 0px; ">=A0 Allocatable=A0 =A0 =A0 =A0 =A0=A0 yes (but =
-full)</DIV><DIV style=3D"margin-top: 0px; margin-right: 0px; =
-margin-bottom: 0px; margin-left: 0px; ">=A0 PE Size (KByte)=A0 =A0 =A0=A0 =
-4096</DIV><DIV style=3D"margin-top: 0px; margin-right: 0px; =
-margin-bottom: 0px; margin-left: 0px; ">=A0 Total PE=A0 =A0 =A0 =A0 =A0 =
-=A0 =A0 59618</DIV><DIV style=3D"margin-top: 0px; margin-right: 0px; =
-margin-bottom: 0px; margin-left: 0px; ">=A0 Free PE=A0 =A0 =A0 =A0 =A0 =A0=
- =A0=A0 0</DIV><DIV style=3D"margin-top: 0px; margin-right: 0px; =
-margin-bottom: 0px; margin-left: 0px; ">=A0 Allocated PE=A0 =A0 =A0 =A0 =
-=A0 59618</DIV><DIV style=3D"margin-top: 0px; margin-right: 0px; =
-margin-bottom: 0px; margin-left: 0px; ">=A0 PV UUID=A0 =A0 =A0 =A0 =A0 =A0=
- =A0=A0 0SUUxX-EVWj-Mquv-qCnR-NNHb-qMfp-v4uOnZ</DIV><P style=3D"margin: =
-0.0px 0.0px 0.0px 0.0px">=A0=A0</P><DIV style=3D"margin-top: 0px; =
-margin-right: 0px; margin-bottom: 0px; margin-left: 0px; ">=A0 --- =
-Physical volume ---</DIV><DIV style=3D"margin-top: 0px; margin-right: =
-0px; margin-bottom: 0px; margin-left: 0px; ">=A0 PV Name=A0 =A0 =A0 =A0 =
-=A0 =A0 =A0=A0 /dev/sda4</DIV><DIV style=3D"margin-top: 0px; =
-margin-right: 0px; margin-bottom: 0px; margin-left: 0px; ">=A0 VG Name=A0 =
-=A0 =A0 =A0 =A0 =A0 =A0=A0 myth-video-vg</DIV><DIV style=3D"margin-top: =
-0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; ">=A0 PV =
-Size=A0 =A0 =A0 =A0 =A0 =A0 =A0=A0 64.25 GB / not usable 0=A0=A0</DIV><DIV=
- style=3D"margin-top: 0px; margin-right: 0px; margin-bottom: 0px; =
-margin-left: 0px; ">=A0 Allocatable=A0 =A0 =A0 =A0 =A0=A0 yes (but =
-full)</DIV><DIV style=3D"margin-top: 0px; margin-right: 0px; =
-margin-bottom: 0px; margin-left: 0px; ">=A0 PE Size (KByte)=A0 =A0 =A0=A0 =
-4096</DIV><DIV style=3D"margin-top: 0px; margin-right: 0px; =
-margin-bottom: 0px; margin-left: 0px; ">=A0 Total PE=A0 =A0 =A0 =A0 =A0 =
-=A0 =A0 16449</DIV><DIV style=3D"margin-top: 0px; margin-right: 0px; =
-margin-bottom: 0px; margin-left: 0px; ">=A0 Free PE=A0 =A0 =A0 =A0 =A0 =A0=
- =A0=A0 0</DIV><DIV style=3D"margin-top: 0px; margin-right: 0px; =
-margin-bottom: 0px; margin-left: 0px; ">=A0 Allocated PE=A0 =A0 =A0 =A0 =
-=A0 16449</DIV><DIV style=3D"margin-top: 0px; margin-right: 0px; =
-margin-bottom: 0px; margin-left: 0px; ">=A0 PV UUID=A0 =A0 =A0 =A0 =A0 =A0=
- =A0=A0 Bo4us4-JNx7-T71m-H7M6-AxFN-eH4m-1m0zvB</DIV><P style=3D"margin: =
-0.0px 0.0px 0.0px 0.0px">=A0=A0</P><DIV style=3D"margin-top: 0px; =
-margin-right: 0px; margin-bottom: 0px; margin-left: 0px; ">pvr ~ # =
-pvscan</DIV><DIV style=3D"margin-top: 0px; margin-right: 0px; =
-margin-bottom: 0px; margin-left: 0px; ">=A0 PV /dev/sdb=A0 =A0 VG =
-myth-video-vg=A0=A0 lvm2 [232.88 GB / 0=A0 =A0 free]</DIV><DIV =
-style=3D"margin-top: 0px; margin-right: 0px; margin-bottom: 0px; =
-margin-left: 0px; ">=A0 PV /dev/sda4=A0=A0 VG myth-video-vg=A0=A0 lvm2 =
-[64.25 GB / 0=A0 =A0 free]</DIV><DIV style=3D"margin-top: 0px; =
-margin-right: 0px; margin-bottom: 0px; margin-left: 0px; ">=A0 Total: 2 =
-[297.14 GB] / in use: 2 [297.14 GB] / in no VG: 0 [0=A0=A0 ]</DIV><DIV =
-style=3D"margin-top: 0px; margin-right: 0px; margin-bottom: 0px; =
-margin-left: 0px; ">pvr ~ # vgscan</DIV><DIV style=3D"margin-top: 0px; =
-margin-right: 0px; margin-bottom: 0px; margin-left: 0px; ">=A0 Reading =
-all physical volumes.=A0 This may take a while...</DIV><DIV =
-style=3D"margin-top: 0px; margin-right: 0px; margin-bottom: 0px; =
-margin-left: 0px; ">=A0 Found volume group "myth-video-vg" using =
-metadata type lvm2</DIV><DIV style=3D"margin-top: 0px; margin-right: =
-0px; margin-bottom: 0px; margin-left: 0px; font: normal normal normal =
-12px/normal Helvetica; min-height: 14px; "><BR></DIV><DIV =
-style=3D"margin-top: 0px; margin-right: 0px; margin-bottom: 0px; =
-margin-left: 0px; font: normal normal normal 12px/normal Helvetica; =
-min-height: 14px; "><BR></DIV><DIV style=3D"margin-top: 0px; =
-margin-right: 0px; margin-bottom: 0px; margin-left: 0px; font: normal =
-normal normal 12px/normal Helvetica; min-height: 14px; "><BR></DIV><DIV =
-style=3D"margin-top: 0px; margin-right: 0px; margin-bottom: 0px; =
-margin-left: 0px; ">--</DIV><DIV style=3D"margin-top: 0px; margin-right: =
-0px; margin-bottom: 0px; margin-left: 0px; ">Bill</DIV><DIV =
-style=3D"margin-top: 0px; margin-right: 0px; margin-bottom: 0px; =
-margin-left: 0px; font: normal normal normal 12px/normal Helvetica; =
-min-height: 14px; "><BR></DIV><DIV style=3D"margin-top: 0px; =
-margin-right: 0px; margin-bottom: 0px; margin-left: 0px; font: normal =
-normal normal 12px/normal Helvetica; min-height: 14px; "><BR =
-class=3D"khtml-block-placeholder"></DIV></BODY></HTML>=
+</SPAN><FONT class=3D"Apple-style-span" face=3D"Helvetica">and tried it =
+with the newest file in /etc/lvm/archive/, but it had not effect after =
+completing sucessfully.=A0</FONT></FONT></DIV><DIV><BR =
+class=3D"khtml-block-placeholder"></DIV><DIV>pvr ~ # vgcfgrestore --file =
+/etc/lvm/archive/myth-video-vg_00003.vg myth-video-vg</DIV><DIV>=A0 =
+Restored volume group myth-video-vg</DIV><DIV><BR =
+class=3D"khtml-block-placeholder"></DIV><DIV>pvr ~ # mount -t jfs =
+/dev/myth-video-vg/myth-video /video</DIV><DIV>mount: wrong fs type, bad =
+option, bad superblock on /dev/myth-video-vg/myth-video,</DIV><DIV>=A0 =A0=
+ =A0=A0 missing codepage or other error</DIV><DIV>=A0 =A0 =A0=A0 In some =
+cases useful info is found in syslog - try</DIV><DIV>=A0 =A0 =A0=A0 =
+dmesg | tail=A0 or so</DIV><DIV><BR =
+class=3D"khtml-block-placeholder"></DIV><DIV><BR =
+class=3D"khtml-block-placeholder"></DIV><DIV>=A0 I'm really not sure =
+what I need to do in order to get this VG mounted.=A0 Any hints would be =
+greatly appreciated.=A0</DIV><DIV><BR =
+class=3D"khtml-block-placeholder"></DIV><DIV>=A0 =A0Here are some =
+diagnostics:=A0</DIV><DIV><BR =
+class=3D"khtml-block-placeholder"></DIV><DIV>pvr ~ # lvscan</DIV><DIV>=A0 =
+ACTIVE=A0 =A0 =A0 =A0 =A0 =A0 '/dev/myth-video-vg/myth-video' [297.14 =
+GB] inherit</DIV><DIV>pvr ~ # lvmdiskscan</DIV><DIV>=A0 /dev/sda1 [=A0 =A0=
+ =A0=A0 39.19 MB] </DIV><DIV>=A0 /dev/sda2 [=A0 =A0 =A0 964.84 MB] =
+</DIV><DIV>=A0 /dev/sda3 [=A0 =A0 =A0 =A0 9.32 GB] </DIV><DIV>=A0 =
+/dev/sda4 [=A0 =A0 =A0=A0 64.26 GB] LVM physical volume</DIV><DIV>=A0 =
+/dev/sdb=A0 [=A0 =A0 =A0 232.89 GB] LVM physical volume</DIV><DIV>=A0 0 =
+disks</DIV><DIV>=A0 3 partitions</DIV><DIV>=A0 1 LVM physical volume =
+whole disk</DIV><DIV>=A0 1 LVM physical volume</DIV><DIV>pvr ~ # =
+lvdisplay</DIV><DIV>=A0 --- Logical volume ---</DIV><DIV>=A0 LV Name=A0 =
+=A0 =A0 =A0 =A0 =A0 =A0 =A0 /dev/myth-video-vg/myth-video</DIV><DIV>=A0 =
+VG Name=A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 myth-video-vg</DIV><DIV>=A0 LV =
+UUID=A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =
+4gV513-mE25-gEkf-gCLp-LqWE-XvG8-CXziEv</DIV><DIV>=A0 LV Write Access=A0 =
+=A0 =A0 =A0 read/write</DIV><DIV>=A0 LV Status=A0 =A0 =A0 =A0 =A0 =A0 =A0 =
+available</DIV><DIV>=A0 # open=A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0=A0 =
+0</DIV><DIV>=A0 LV Size=A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 297.14 =
+GB</DIV><DIV>=A0 Current LE=A0 =A0 =A0 =A0 =A0 =A0=A0 76067</DIV><DIV>=A0 =
+Segments=A0 =A0 =A0 =A0 =A0 =A0 =A0=A0 2</DIV><DIV>=A0 Allocation=A0 =A0 =
+=A0 =A0 =A0 =A0=A0 inherit</DIV><DIV>=A0 Read ahead sectors=A0 =A0=A0 =
+0</DIV><DIV>=A0 Block device=A0 =A0 =A0 =A0 =A0=A0 253:0</DIV><DIV>=A0=A0 =
+</DIV><DIV>pvr ~ # pvdisplay</DIV><DIV>=A0 --- Physical volume =
+---</DIV><DIV>=A0 PV Name=A0 =A0 =A0 =A0 =A0 =A0 =A0=A0 =
+/dev/sdb</DIV><DIV>=A0 VG Name=A0 =A0 =A0 =A0 =A0 =A0 =A0=A0 =
+myth-video-vg</DIV><DIV>=A0 PV Size=A0 =A0 =A0 =A0 =A0 =A0 =A0=A0 232.88 =
+GB / not usable 0=A0=A0 </DIV><DIV>=A0 Allocatable=A0 =A0 =A0 =A0 =A0=A0 =
+yes (but full)</DIV><DIV>=A0 PE Size (KByte)=A0 =A0 =A0=A0 =
+4096</DIV><DIV>=A0 Total PE=A0 =A0 =A0 =A0 =A0 =A0 =A0 59618</DIV><DIV>=A0=
+ Free PE=A0 =A0 =A0 =A0 =A0 =A0 =A0=A0 0</DIV><DIV>=A0 Allocated PE=A0 =A0=
+ =A0 =A0 =A0 59618</DIV><DIV>=A0 PV UUID=A0 =A0 =A0 =A0 =A0 =A0 =A0=A0 =
+0SUUxX-EVWj-Mquv-qCnR-NNHb-qMfp-v4uOnZ</DIV><DIV>=A0=A0 </DIV><DIV>=A0 =
+--- Physical volume ---</DIV><DIV>=A0 PV Name=A0 =A0 =A0 =A0 =A0 =A0 =A0=A0=
+ /dev/sda4</DIV><DIV>=A0 VG Name=A0 =A0 =A0 =A0 =A0 =A0 =A0=A0 =
+myth-video-vg</DIV><DIV>=A0 PV Size=A0 =A0 =A0 =A0 =A0 =A0 =A0=A0 64.25 =
+GB / not usable 0=A0=A0 </DIV><DIV>=A0 Allocatable=A0 =A0 =A0 =A0 =A0=A0 =
+yes (but full)</DIV><DIV>=A0 PE Size (KByte)=A0 =A0 =A0=A0 =
+4096</DIV><DIV>=A0 Total PE=A0 =A0 =A0 =A0 =A0 =A0 =A0 16449</DIV><DIV>=A0=
+ Free PE=A0 =A0 =A0 =A0 =A0 =A0 =A0=A0 0</DIV><DIV>=A0 Allocated PE=A0 =A0=
+ =A0 =A0 =A0 16449</DIV><DIV>=A0 PV UUID=A0 =A0 =A0 =A0 =A0 =A0 =A0=A0 =
+Bo4us4-JNx7-T71m-H7M6-AxFN-eH4m-1m0zvB</DIV><DIV>=A0=A0 </DIV><DIV>pvr ~ =
+# pvscan</DIV><DIV>=A0 PV /dev/sdb=A0 =A0 VG myth-video-vg=A0=A0 lvm2 =
+[232.88 GB / 0=A0 =A0 free]</DIV><DIV>=A0 PV /dev/sda4=A0=A0 VG =
+myth-video-vg=A0=A0 lvm2 [64.25 GB / 0=A0 =A0 free]</DIV><DIV>=A0 Total: =
+2 [297.14 GB] / in use: 2 [297.14 GB] / in no VG: 0 [0=A0=A0 =
+]</DIV><DIV>pvr ~ # vgscan</DIV><DIV>=A0 Reading all physical volumes.=A0 =
+This may take a while...</DIV><DIV>=A0 Found volume group =
+"myth-video-vg" using metadata type lvm2</DIV><DIV><BR =
+class=3D"khtml-block-placeholder"></DIV><DIV><BR =
+class=3D"khtml-block-placeholder"></DIV><BR><DIV> <P style=3D"margin: =
+0.0px 0.0px 0.0px 0.0px"><FONT face=3D"Helvetica" size=3D"3" =
+style=3D"font: 12.0px Helvetica">--</FONT></P> <P style=3D"margin: 0.0px =
+0.0px 0.0px 0.0px"><FONT face=3D"Helvetica" size=3D"3" style=3D"font: =
+12.0px Helvetica">Bill</FONT></P>  </DIV><BR></BODY></HTML>=
 
---Apple-Mail-4-819682574--
+--Apple-Mail-1-794936166--
