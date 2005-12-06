@@ -1,14 +1,22 @@
-Date: Tue, 6 Dec 2005 11:56:00 +0100
-From: Heinz Mauelshagen <mauelshagen@redhat.com>
-Subject: Re: [linux-lvm] Dumb LVM question
-Message-ID: <20051206105600.GB2778@redhat.com>
-References: <87f94c370512010752n6f4b311eqe8ff0b2c8bd92f4f@mail.gmail.com>
-	<87f94c370512051029uc354fadw1921ec2ff72cbbe5@mail.gmail.com>
+Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id jB6BajV04264
+	for <linux-lvm@redhat.com>; Tue, 6 Dec 2005 06:36:45 -0500
+Received: from mail.gmx.net (mail.gmx.net [213.165.64.20])
+	by mx3.redhat.com (8.13.1/8.13.1) with SMTP id jB6BaaHf011115
+	for <linux-lvm@redhat.com>; Tue, 6 Dec 2005 06:36:37 -0500
+Received: from pc8.trash.bin (pc8.trash.bin [192.168.4.8])
+	by pc1.trash.bin (Postfix) with ESMTP id BA1D142D9
+	for <linux-lvm@redhat.com>; Tue,  6 Dec 2005 12:36:29 +0100 (CET)
+Date: Tue, 6 Dec 2005 12:36:29 +0100
+From: Marc-Jano Knopp <pub_ml_lvm@marc-jano.de>
+Subject: Re: [linux-lvm] Which size for snapshot volume for a *safe* backup?
+Message-ID: <20051206113629.GB2867@mjk.myfqdn.de>
+References: <20051205223911.GE3123@mjk.myfqdn.de>
+	<20051206011017.GG3647@agk.surrey.redhat.com>
 Mime-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <87f94c370512051029uc354fadw1921ec2ff72cbbe5@mail.gmail.com>
-Reply-To: mauelshagen@redhat.com,
-	LVM general discussion and development <linux-lvm@redhat.com>
+In-Reply-To: <20051206011017.GG3647@agk.surrey.redhat.com>
+Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -21,59 +29,39 @@ List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: LVM general discussion and development <linux-lvm@redhat.com>
-Cc: hjm@redhat.com
 
-On Mon, Dec 05, 2005 at 01:29:23PM -0500, Greg Freemyer wrote:
-> All,
-> 
-> With LVM 2, how do I kill any and all snapshots.
-> 
-> With LVM 1 it was "vgscan -r".
-> 
-> I need to be able to do this with a script, so I'm hoping lvm 2 has a
-> way to kill all snapshots without knowing their names, etc.  If not, I
-> guess I can script up something to do the job.
+On Tue, 06 Dec 2005 at 01:10 (+0000), Alasdair G Kergon wrote:
+> On Mon, Dec 05, 2005 at 11:39:11PM +0100, Marc-Jano Knopp wrote:
+> > So, obviously,
+> >   snapshot volume size = original volume size
+> > is not sufficient to hold a complete change of the original volume.
+>  
+> Correct - there's a little bit of metadata required too to 
+> map each piece of data back into the right location.
 
-Yes, you could use something like:
-
-<quick_hacking_mode>
-lvs|perl -ne '@a = split /\s+/,$_;if ($a[3] =~ /^s/) {print "/dev/$a[2]/$a[1]\n";}'|xargs lvremove -f
-</quick_hacking_mode>
+Thought so, just wasn't sure if it gets stored inside the volume or in
+an extra file or device.
 
 
-> 
-> Greg
-> --
-> Greg Freemyer
-> The Norcross Group
-> Forensics for the 21st Century
-> 
-> 
-> --
-> Greg Freemyer
-> The Norcross Group
-> Forensics for the 21st Century
-> 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+I have noticed that lvdisplay <snapshot volume> prints:
 
--- 
+  Allocated to snapshot:   5.00%
 
-Regards,
-Heinz    -- The LVM Guy --
+But as I don't know the inner workings of LVM, I preferred not to take
+this value for all variants of logical volumes for granted, but instead
+ask here in this list for exact numbers.
 
-*** Software bugs are stupid.
-    Nevertheless it needs not so stupid people to solve them ***
 
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+[lvscan displays inactive snapshot volume as active]
 
-Heinz Mauelshagen                                 Red Hat GmbH
-Consulting Development Engineer                   Am Sonnenhang 11
-Cluster and Storage Development                   56242 Marienrachdorf
-                                                  Germany
-Mauelshagen@RedHat.com                            +49 2626 141200
-                                                       FAX 924446
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+> The 'lvs' attributes should be accurate (and lvdisplay too I think).
+> lvscan doesn't check properly and needs fixing, thanks.
+
+http://www.gotfuturama.com/Multimedia/EpisodeSounds/2ACV14/10.mp3
+
+:-)
+
+
+Best regards
+
+  Marc-Jano
