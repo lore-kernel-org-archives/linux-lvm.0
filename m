@@ -1,13 +1,13 @@
 Received: from agk.surrey.redhat.com (agk.surrey.redhat.com [172.16.10.74])
-	by pobox.surrey.redhat.com (8.12.8/8.12.8) with ESMTP id jB613wOo002865
-	for <linux-lvm@redhat.com>; Tue, 6 Dec 2005 01:03:58 GMT
+	by pobox.surrey.redhat.com (8.12.8/8.12.8) with ESMTP id jB61AHOo003223
+	for <linux-lvm@redhat.com>; Tue, 6 Dec 2005 01:10:17 GMT
 Received: from agk by agk.surrey.redhat.com with local (Exim 4.34)
-	id 1EjRFO-0001YY-4L
-	for linux-lvm@redhat.com; Tue, 06 Dec 2005 01:03:58 +0000
-Date: Tue, 6 Dec 2005 01:03:58 +0000
+	id 1EjRLV-0001Yl-CK
+	for linux-lvm@redhat.com; Tue, 06 Dec 2005 01:10:17 +0000
+Date: Tue, 6 Dec 2005 01:10:17 +0000
 From: Alasdair G Kergon <agk@redhat.com>
 Subject: Re: [linux-lvm] Which size for snapshot volume for a *safe* backup?
-Message-ID: <20051206010357.GF3647@agk.surrey.redhat.com>
+Message-ID: <20051206011017.GG3647@agk.surrey.redhat.com>
 References: <20051205223911.GE3123@mjk.myfqdn.de>
 Mime-Version: 1.0
 Content-Disposition: inline
@@ -27,21 +27,19 @@ Content-Transfer-Encoding: 7bit
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
 On Mon, Dec 05, 2005 at 11:39:11PM +0100, Marc-Jano Knopp wrote:
->   But for files smaller than that (like 512 bytes), it erronously
->   prints:
-> 
->     Device /dev/loop/0 not found
+> So, obviously,
+>   snapshot volume size = original volume size
+> is not sufficient to hold a complete change of the original volume.
+ 
+Correct - there's a little bit of metadata required too to 
+map each piece of data back into the right location.
 
-Maybe should be changed to:
-  Device /dev/loop/0 not found (or ignored by filters).
+> Btw.: There's a bug in "lvscan", it still displayed the snapshot
+> as being "ACTIVE", while in fact (at least that's what I concluded),
+> it was "INACTIVE" due to the lack of space, as shown using "lvdisplay".
 
-Tiny devices are filtered out at a low level in the code as
-it is never valid for lvm2 to scan them to see if they
-are PVs.
-
-This was added for devices with extended partitions.
-# blockdev --getsize /dev/hda4
-2
+The 'lvs' attributes should be accurate (and lvdisplay too I think).
+lvscan doesn't check properly and needs fixing, thanks.
  
 Alasdair
 -- 
