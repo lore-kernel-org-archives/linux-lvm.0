@@ -1,18 +1,17 @@
-Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id jB5MdaV15054
-	for <linux-lvm@redhat.com>; Mon, 5 Dec 2005 17:39:36 -0500
-Received: from mail.gmx.net (mail.gmx.net [213.165.64.20])
-	by mx1.redhat.com (8.12.11/8.12.11) with SMTP id jB5MdVfk030169
-	for <linux-lvm@redhat.com>; Mon, 5 Dec 2005 17:39:31 -0500
-Received: from pc8.trash.bin (pc8.trash.bin [192.168.4.8])
-	by pc1.trash.bin (Postfix) with ESMTP id A17A042D9
-	for <linux-lvm@redhat.com>; Mon,  5 Dec 2005 23:39:11 +0100 (CET)
-Date: Mon, 5 Dec 2005 23:39:11 +0100
-From: Marc-Jano Knopp <pub_ml_lvm@marc-jano.de>
-Message-ID: <20051205223911.GE3123@mjk.myfqdn.de>
+Received: from agk.surrey.redhat.com (agk.surrey.redhat.com [172.16.10.74])
+	by pobox.surrey.redhat.com (8.12.8/8.12.8) with ESMTP id jB613wOo002865
+	for <linux-lvm@redhat.com>; Tue, 6 Dec 2005 01:03:58 GMT
+Received: from agk by agk.surrey.redhat.com with local (Exim 4.34)
+	id 1EjRFO-0001YY-4L
+	for linux-lvm@redhat.com; Tue, 06 Dec 2005 01:03:58 +0000
+Date: Tue, 6 Dec 2005 01:03:58 +0000
+From: Alasdair G Kergon <agk@redhat.com>
+Subject: Re: [linux-lvm] Which size for snapshot volume for a *safe* backup?
+Message-ID: <20051206010357.GF3647@agk.surrey.redhat.com>
+References: <20051205223911.GE3123@mjk.myfqdn.de>
 Mime-Version: 1.0
 Content-Disposition: inline
-Subject: [linux-lvm] Which size for snapshot volume for a *safe* backup?
+In-Reply-To: <20051205223911.GE3123@mjk.myfqdn.de>
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -25,54 +24,25 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: linux-lvm@redhat.com
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-Hi!
+On Mon, Dec 05, 2005 at 11:39:11PM +0100, Marc-Jano Knopp wrote:
+>   But for files smaller than that (like 512 bytes), it erronously
+>   prints:
+> 
+>     Device /dev/loop/0 not found
 
-I want to use LVM snapshots to create consistent backups.
+Maybe should be changed to:
+  Device /dev/loop/0 not found (or ignored by filters).
 
-Given an original logical volume of size "n" Bytes (or chunks or extents
-or whatever you need for calculating it), how large in
-Bytes/chunks/extents must the appropriate snapshot volume be in order to
-retain the complete original logical volume in case the latter gets
-completely overwritten?
+Tiny devices are filtered out at a low level in the code as
+it is never valid for lvm2 to scan them to see if they
+are PVs.
 
-For testing, I used a 320 k logical volume on a VG on a PV comprising of
-a 1 MiB loop-back file of and created an equally sized snapshot volume.
-
-While the snapshot worked perfectly with only overwriting half the
-original volume, it bailed out when overwriting the whole original
-volume; accessing the snapshot volume with "dd" after that
-overwrite produced the following:
-
-  Buffer I/O error on device dm-6, logical block 0
-  (blocks 0-15)
-
-So, obviously,
-
-  snapshot volume size = original volume size
-
-is not sufficient to hold a complete change of the original volume.
-
-
-Btw.: There's a bug in "lvscan", it still displayed the snapshot
-as being "ACTIVE", while in fact (at least that's what I concluded),
-it was "INACTIVE" due to the lack of space, as shown using "lvdisplay".
-
-Oh, and another small bug:
-
-  For a file with 256 kiB bound to a loop device, pvcreate says
-  correctly:
-
-    /dev/loop/0: Size must exceed minimum of 1024 sectors.
-    Failed to setup physical volume "/dev/loop/0"
-
-  But for files smaller than that (like 512 bytes), it erronously
-  prints:
-
-    Device /dev/loop/0 not found
-
-
-Best regards
-
-  Marc-Jano
+This was added for devices with extended partitions.
+# blockdev --getsize /dev/hda4
+2
+ 
+Alasdair
+-- 
+agk@redhat.com
