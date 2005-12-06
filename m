@@ -1,21 +1,18 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id jB6BajV04264
-	for <linux-lvm@redhat.com>; Tue, 6 Dec 2005 06:36:45 -0500
-Received: from mail.gmx.net (mail.gmx.net [213.165.64.20])
-	by mx3.redhat.com (8.13.1/8.13.1) with SMTP id jB6BaaHf011115
-	for <linux-lvm@redhat.com>; Tue, 6 Dec 2005 06:36:37 -0500
-Received: from pc8.trash.bin (pc8.trash.bin [192.168.4.8])
-	by pc1.trash.bin (Postfix) with ESMTP id BA1D142D9
-	for <linux-lvm@redhat.com>; Tue,  6 Dec 2005 12:36:29 +0100 (CET)
-Date: Tue, 6 Dec 2005 12:36:29 +0100
-From: Marc-Jano Knopp <pub_ml_lvm@marc-jano.de>
-Subject: Re: [linux-lvm] Which size for snapshot volume for a *safe* backup?
-Message-ID: <20051206113629.GB2867@mjk.myfqdn.de>
-References: <20051205223911.GE3123@mjk.myfqdn.de>
-	<20051206011017.GG3647@agk.surrey.redhat.com>
-Mime-Version: 1.0
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id jB6MejV28406
+	for <linux-lvm@redhat.com>; Tue, 6 Dec 2005 17:40:45 -0500
+Received: from zproxy.gmail.com (zproxy.gmail.com [64.233.162.207])
+	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id jB6MebOK005834
+	for <linux-lvm@redhat.com>; Tue, 6 Dec 2005 17:40:37 -0500
+Received: by zproxy.gmail.com with SMTP id f1so185831nzc
+	for <linux-lvm@redhat.com>; Tue, 06 Dec 2005 14:40:37 -0800 (PST)
+Message-ID: <87f94c370512061440s6b1b7ca0rffad7f53503309e4@mail.gmail.com>
+Date: Tue, 6 Dec 2005 17:40:36 -0500
+From: Greg Freemyer <greg.freemyer@gmail.com>
+MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20051206011017.GG3647@agk.surrey.redhat.com>
+Content-Transfer-Encoding: 8bit
+Subject: [linux-lvm] invalid lv in extent map
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -27,41 +24,35 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-On Tue, 06 Dec 2005 at 01:10 (+0000), Alasdair G Kergon wrote:
-> On Mon, Dec 05, 2005 at 11:39:11PM +0100, Marc-Jano Knopp wrote:
-> > So, obviously,
-> >   snapshot volume size = original volume size
-> > is not sufficient to hold a complete change of the original volume.
->  
-> Correct - there's a little bit of metadata required too to 
-> map each piece of data back into the right location.
+I have recently upgraded a test server from 2.4.x with LVM 1 to 2.6.13
+with LVM 2.
 
-Thought so, just wasn't sure if it gets stored inside the volume or in
-an extra file or device.
+I can mount my 3 LVs, but when I try to do basic lvm commands I get
+"invalid lv in extent map".
 
+# pvscan
+  invalid lv in extent map
+  Couldn't fill logical volume maps.
+  invalid lv in extent map
+  Couldn't fill logical volume maps.
+  No matching physical volumes found
 
-I have noticed that lvdisplay <snapshot volume> prints:
+# pvscan --version
+  LVM version:     2.01.14 (2005-08-04)
+  Library version: 1.01.04 (2005-08-02)
+  Driver version:  4.4.0
 
-  Allocated to snapshot:   5.00%
+I did not run vgconvert manually, so I assume I still have LVM1 metadata.
 
-But as I don't know the inner workings of LVM, I preferred not to take
-this value for all variants of logical volumes for granted, but instead
-ask here in this list for exact numbers.
+This is a test server, so none of the data in the LVs is important,
+but I hope to be upgrading my live file server soon, so I would like
+to figure out how to not lose any data.
 
-
-[lvscan displays inactive snapshot volume as active]
-
-> The 'lvs' attributes should be accurate (and lvdisplay too I think).
-> lvscan doesn't check properly and needs fixing, thanks.
-
-http://www.gotfuturama.com/Multimedia/EpisodeSounds/2ACV14/10.mp3
-
-:-)
-
-
-Best regards
-
-  Marc-Jano
+Thanks
+Greg
+--
+Greg Freemyer
+The Norcross Group
+Forensics for the 21st Century
