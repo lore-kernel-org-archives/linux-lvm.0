@@ -1,20 +1,21 @@
-Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id jB726RV07381
-	for <linux-lvm@redhat.com>; Tue, 6 Dec 2005 21:06:27 -0500
-Received: from mta09-winn.ispmail.ntl.com (mta09-winn.ispmail.ntl.com
-	[81.103.221.49])
-	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id jB726Pjl021746
-	for <linux-lvm@redhat.com>; Tue, 6 Dec 2005 21:06:25 -0500
-Message-ID: <4396439A.7080500@ntlworld.com>
-Date: Wed, 07 Dec 2005 02:06:18 +0000
-From: Kelly Harding <kelly.harding@ntlworld.com>
-MIME-Version: 1.0
+Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id jB7873V05259
+	for <linux-lvm@redhat.com>; Wed, 7 Dec 2005 03:07:03 -0500
+Received: from zproxy.gmail.com (zproxy.gmail.com [64.233.162.203])
+	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id jB786v9x002208
+	for <linux-lvm@redhat.com>; Wed, 7 Dec 2005 03:06:57 -0500
+Received: by zproxy.gmail.com with SMTP id x7so279839nzc
+	for <linux-lvm@redhat.com>; Wed, 07 Dec 2005 00:06:57 -0800 (PST)
+Message-ID: <52fe6b680512070006i7578827av304946cd51d37313@mail.gmail.com>
+Date: Wed, 7 Dec 2005 13:36:57 +0530
+From: Anil Kumar Sharma <xplusaks@gmail.com>
 Subject: Re: [linux-lvm] LVM problems
-References: <43963F45.5060104@ntlworld.com>
-In-Reply-To: <43963F45.5060104@ntlworld.com>
-Content-Type: multipart/mixed; boundary="------------070403000902050209040908"
-Reply-To: kelly.harding@ntlworld.com,
-	LVM general discussion and development <linux-lvm@redhat.com>
+In-Reply-To: <4396439A.7080500@ntlworld.com>
+MIME-Version: 1.0
+Content-Type: multipart/alternative; 
+	boundary="----=_Part_28685_164975.1133942817038"
+References: <43963F45.5060104@ntlworld.com> <4396439A.7080500@ntlworld.com>
+Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -26,54 +27,80 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 List-Id: <linux-lvm.redhat.com>
 To: kelly.harding@ntlworld.com, LVM general discussion and development <linux-lvm@redhat.com>
 
-This is a multi-part message in MIME format.
---------------070403000902050209040908
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
+------=_Part_28685_164975.1133942817038
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: quoted-printable
+Content-Disposition: inline
 
-Hi again,
+Recently I also suffered problems with LVM(2)
 
-Forgot to add details:
+These are very basic things I presume U might have already done but just in
+case if not ...
 
-PC: dual PII/350mhz (p/pro overdrive), 512mb ram, SCSI LVD 80mb/s.
+imho pl boot with rescue disk (or mode)
+As a precaution select read-only mount of file system
+if required chroot to /mnt/sysimage
+# mount  ! look for lvm things specifically a word - mapper
+# pvdisplay
+# vgdisplay
+# lvdisplay
+# pvscan
+# vgscan
+# lvscan
 
-The VG is across 3 36gb scsi drives attached to an adaptect 2940U2W card.
+thiese will tell status of lvm things
+ Then check /etc/fstab (carefully)
 
-I'm running kernel version 2.4.27 (2.6 doesn't seem to like this system).
+U may then "very very carefully" use e2fsck or fsck [{("after dismounting
+the volumes")}] as you may you deem fit.
+"very very carefully"  means, as a minimum, first read both manpages, try
+these commands in read-only mode + do not modify anything + verbose.
 
-I noticed from the dmesg output the following:
+### use vgck with caution and also checkout /etc/lvm/lvm.conf
 
-device-mapper: one of name or uuid must be supplied, cmd(11)
+U may try in init 1 mode also but more caution requested.
 
-This appears when the previously mentioned command is run.
+good luck & Pl post if U get it right this way or anyway.
 
-I've no idea what this means or if it isa case of a re-install of the 
-base system might fix this? maybe something with the
-base system has gone a bit fubar?
+--
+Anil Kumar Shrama
 
-any help or advice on this would be greatly appreciated.
+------=_Part_28685_164975.1133942817038
+Content-Type: text/html; charset=ISO-8859-1
+Content-Transfer-Encoding: quoted-printable
+Content-Disposition: inline
 
-If it comes ot it that I lose the data and have to format and star the 
-LVM VG over again it won't be ideal but it won't
-be losing anything vital either (just video files, etc).
+<div>Recently I also suffered problems with LVM(2)</div>
+<div>&nbsp;</div>
+<div>These are very basic things I presume U might have already done but ju=
+st in case if not ...</div>
+<div>&nbsp;</div>
+<div>imho pl boot with rescue disk (or mode)</div>
+<div>As a precaution select read-only mount of file system</div>
+<div>if required chroot to /mnt/sysimage </div>
+<div># mount&nbsp; ! look for lvm things specifically a word - mapper</div>
+<div># pvdisplay</div>
+<div># vgdisplay</div>
+<div># lvdisplay</div>
+<div># pvscan<br># vgscan</div>
+<div># lvscan</div>
+<div>&nbsp;</div>
+<div>thiese will tell status of lvm things</div>
+<div>
+<div>Then check /etc/fstab (carefully)</div>
+<div>&nbsp;</div></div>
+<div>U may then &quot;very very carefully&quot; use e2fsck or fsck [{(&quot=
+;after dismounting the volumes&quot;)}] as you may you deem fit. </div>
+<div>&quot;very very carefully&quot; &nbsp;means, as a minimum, first read =
+both manpages, try these commands in read-only mode + do not modify anythin=
+g + verbose. </div>
+<div>&nbsp;</div>
+<div>### use vgck with caution and also checkout /etc/lvm/lvm.conf </div>
+<div>&nbsp;</div>
+<div>U may try in init 1 mode also but more caution requested.</div>
+<div>&nbsp;</div>
+<div>good luck &amp; Pl post if U get it right this way or anyway.</div>
+<div>&nbsp;</div>
+<div>-- <br>Anil Kumar Shrama </div>
 
-Kelly
-
---------------070403000902050209040908
-Content-Type: text/x-vcard; charset=utf-8;
- name="kelly.harding.vcf"
-Content-Transfer-Encoding: 7bit
-Content-Disposition: attachment;
- filename="kelly.harding.vcf"
-
-begin:vcard
-fn:Miss Kelly Harding
-n:Harding;Kelly
-adr:;;;;;;UK
-email;internet:kelly.harding@ntlworld.com
-x-mozilla-html:FALSE
-version:2.1
-end:vcard
-
-
---------------070403000902050209040908--
+------=_Part_28685_164975.1133942817038--
