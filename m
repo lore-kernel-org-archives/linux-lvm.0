@@ -1,21 +1,20 @@
-Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id jB71qSV04745
-	for <linux-lvm@redhat.com>; Tue, 6 Dec 2005 20:52:28 -0500
-Received: from wproxy.gmail.com (wproxy.gmail.com [64.233.184.196])
-	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id jB71qMR4017176
-	for <linux-lvm@redhat.com>; Tue, 6 Dec 2005 20:52:22 -0500
-Received: by wproxy.gmail.com with SMTP id i22so222769wra
-	for <linux-lvm@redhat.com>; Tue, 06 Dec 2005 17:52:22 -0800 (PST)
-Message-ID: <87f94c370512061752g3d948e01t15b17902a130da63@mail.gmail.com>
-Date: Tue, 6 Dec 2005 20:52:21 -0500
-From: Greg Freemyer <greg.freemyer@gmail.com>
-In-Reply-To: <87f94c370512061440s6b1b7ca0rffad7f53503309e4@mail.gmail.com>
+Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id jB726RV07381
+	for <linux-lvm@redhat.com>; Tue, 6 Dec 2005 21:06:27 -0500
+Received: from mta09-winn.ispmail.ntl.com (mta09-winn.ispmail.ntl.com
+	[81.103.221.49])
+	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id jB726Pjl021746
+	for <linux-lvm@redhat.com>; Tue, 6 Dec 2005 21:06:25 -0500
+Message-ID: <4396439A.7080500@ntlworld.com>
+Date: Wed, 07 Dec 2005 02:06:18 +0000
+From: Kelly Harding <kelly.harding@ntlworld.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-References: <87f94c370512061440s6b1b7ca0rffad7f53503309e4@mail.gmail.com>
-Content-Transfer-Encoding: 8bit
-Subject: [linux-lvm] Re: invalid lv in extent map
-Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
+Subject: Re: [linux-lvm] LVM problems
+References: <43963F45.5060104@ntlworld.com>
+In-Reply-To: <43963F45.5060104@ntlworld.com>
+Content-Type: multipart/mixed; boundary="------------070403000902050209040908"
+Reply-To: kelly.harding@ntlworld.com,
+	LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -25,51 +24,56 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: LVM general discussion and development <linux-lvm@redhat.com>
+To: kelly.harding@ntlworld.com, LVM general discussion and development <linux-lvm@redhat.com>
 
-Not sure how I caused the below, but after a reboot I was unable to
-use my VG at all.
+This is a multi-part message in MIME format.
+--------------070403000902050209040908
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
 
-I wiped it out and rebuilt it.  Hopefully it does not happen again.
+Hi again,
 
-Greg
+Forgot to add details:
 
-On 12/6/05, Greg Freemyer <greg.freemyer@gmail.com> wrote:
-> I have recently upgraded a test server from 2.4.x with LVM 1 to 2.6.13
-> with LVM 2.
->
-> I can mount my 3 LVs, but when I try to do basic lvm commands I get
-> "invalid lv in extent map".
->
-> # pvscan
->   invalid lv in extent map
->   Couldn't fill logical volume maps.
->   invalid lv in extent map
->   Couldn't fill logical volume maps.
->   No matching physical volumes found
->
-> # pvscan --version
->   LVM version:     2.01.14 (2005-08-04)
->   Library version: 1.01.04 (2005-08-02)
->   Driver version:  4.4.0
->
-> I did not run vgconvert manually, so I assume I still have LVM1 metadata.
->
-> This is a test server, so none of the data in the LVs is important,
-> but I hope to be upgrading my live file server soon, so I would like
-> to figure out how to not lose any data.
->
-> Thanks
-> Greg
-> --
-> Greg Freemyer
-> The Norcross Group
-> Forensics for the 21st Century
->
+PC: dual PII/350mhz (p/pro overdrive), 512mb ram, SCSI LVD 80mb/s.
+
+The VG is across 3 36gb scsi drives attached to an adaptect 2940U2W card.
+
+I'm running kernel version 2.4.27 (2.6 doesn't seem to like this system).
+
+I noticed from the dmesg output the following:
+
+device-mapper: one of name or uuid must be supplied, cmd(11)
+
+This appears when the previously mentioned command is run.
+
+I've no idea what this means or if it isa case of a re-install of the 
+base system might fix this? maybe something with the
+base system has gone a bit fubar?
+
+any help or advice on this would be greatly appreciated.
+
+If it comes ot it that I lose the data and have to format and star the 
+LVM VG over again it won't be ideal but it won't
+be losing anything vital either (just video files, etc).
+
+Kelly
+
+--------------070403000902050209040908
+Content-Type: text/x-vcard; charset=utf-8;
+ name="kelly.harding.vcf"
+Content-Transfer-Encoding: 7bit
+Content-Disposition: attachment;
+ filename="kelly.harding.vcf"
+
+begin:vcard
+fn:Miss Kelly Harding
+n:Harding;Kelly
+adr:;;;;;;UK
+email;internet:kelly.harding@ntlworld.com
+x-mozilla-html:FALSE
+version:2.1
+end:vcard
 
 
---
-Greg Freemyer
-The Norcross Group
-Forensics for the 21st Century
+--------------070403000902050209040908--
