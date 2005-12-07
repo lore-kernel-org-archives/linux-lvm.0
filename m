@@ -1,10 +1,11 @@
-From: "James G. Sack (jim)" <jsack@tandbergdatacorp.com>
-Date: Wed, 07 Dec 2005 11:34:05 -0800
-Message-Id: <1133984046.4964.43.camel@jgs4.ino.pvt>
+Date: Wed, 7 Dec 2005 22:13:54 +0000
+From: Alasdair G Kergon <agk@redhat.com>
+Subject: Re: [linux-lvm] LVM problems
+Message-ID: <20051207221354.GL3647@agk.surrey.redhat.com>
+References: <43963F45.5060104@ntlworld.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] Found: workaround for crash on snapshot removal,
-	and hopefully a good clue to the underlying bug
+Content-Disposition: inline
+In-Reply-To: <43963F45.5060104@ntlworld.com>
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -16,79 +17,30 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: "LVM LIST linux-lvm@redhat.com" <linux-lvm@redhat.com>
-Cc: Alasdair G Kergon <agk@redhat.com>
+Content-Transfer-Encoding: 7bit
+To: kelly.harding@ntlworld.com
+Cc: LVM general discussion and development <linux-lvm@redhat.com>
 
-Hooray! 
+On Wed, Dec 07, 2005 at 01:47:49AM +0000, Kelly Harding wrote:
+> I've just brought my Debian Linux box back up after a power failure and 
+> now my LVM set up seems to be non-functional.
+ 
+> device-mapper ioctl cmd 11 failed: Invalid argument
+>   _deps: task run failed for (254:0)
+>   Failed to add device (254:0) to dtree
+>   1 logical volume(s) in volume group "3diskvolume" now active
+ 
+This development version of LVM2 requires a 2.6 kernel - it relies
+on patches added to 2.6 upstream about a year ago.
 
-I think I've found a definitive clue to a crash during lvremove of a
-snapshot. I have a reliably repeatable failure test and a workaround
-that seems to be passing.
+Either upgrade to a 2.6 kernel or downgrade your lvm2 & device-mapper 
+packages.
 
-Here's the regression test:
---------------------------
+It would be straightforward to backport the changes to 2.4 but
+nobody's done it yet.  Patches welcome!
 
-1. arrange to have some continuous i/o on an lvm volume
- I do it with a simple shell loop that copies a 1GB file to another name
-and then back (essentially: 'while :;do cp abcd wxyz;cp wxyz abcd;done')
+  ftp://sources.redhat.com/pub/dm/patches/2.6-unstable/2.6.9-rc3/2.6.9-rc3-udm1/00004.patch
 
-2. while that's running, start a snapshot create/remove loop
- Such as 'while :;do lvcreate -snSnap -L10G LVorigin;
-  lvremove -f /dev/VG/Snap;done
-
-My experience is that a system crash always occurs upon executing the
-lvremove call. The first one! 
-
-  (On my most recent experiments, the system is locking hard, 
-   although earlier I was able to see a kcopyd oops and the 
-   keyboard scollback worked.)
-
-
-Here's the workaround
----------------------
-
-In the snap-cycle test surround the lvremove command with suspend/resume
-  dmsetup suspend VG-LVorigin
-  lvremove -f /dev/VGorigin/Snap
-  dmsetup resume VG-LVorigin
-
-I am currently testing this workaround on a patched 2.6.14-1.1637_FC4
-kernel 
-  (using 4 patches suggested by agk on Tue, 15 Nov 2005 22:33:58 +0000)
-
-<excerpt from that prior message>
----------------------------------
-> > The kcopyd.c BUG at line 145 is triggered by the first lvremove
-> > following start of the i/o (copy loop).
-
-Try some kernel patches.
-
-  http://www.kernel.org/pub/linux/kernel/people/agk/patches/2.6/editing/
-
-in particular these four:
-
-  dm-snapshot-bio_list-fix.patch
-  dm-snapshot-metadata-reading-separation.patch
-  dm-snapshot-load-metadata-on-creation.patch
-  dm-ioctl-reduce-pf-memalloc-usage.patch
-</excerpt>
-  
-
-==> BUT I suspect the lvremove problem is independent of those patches,
-as I was getting the same symptom before putting in the suspend/resume.
-
-
-I thought I had tried suspend/resume previously and found that they were
-unnecessary because the create automatically performed a suspend/resume
--- so my current workaround is the result of a desperation-experiment of
-applying the suspend/resume wrapper ONLY to the lvremove step. 
-
-==> SO MAYBE this current success points to a bug in the lvremove code,
-eh?
-
-
-I plan on repeating my test on a vanilla kernel. In the meantime, I hope
-someone can look at the lvremove code (agk?..).
-
-Regards,
-..jim
+Alasdair
+-- 
+agk@redhat.com
