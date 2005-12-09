@@ -1,20 +1,16 @@
 Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id jB6NbwV10010
-	for <linux-lvm@redhat.com>; Tue, 6 Dec 2005 18:37:58 -0500
-Received: from mail.duth.gr (mail.duth.gr [192.108.114.110])
-	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id jB6NbsEH015414
-	for <linux-lvm@redhat.com>; Tue, 6 Dec 2005 18:37:55 -0500
-Received: from [192.168.1.7] (r-esties.xan.duth.gr [193.92.238.254])
-	(authenticated bits=0)
-	by mail.duth.gr (8.13.1/8.13.1) with ESMTP id jB6NbitD056417
-	for <linux-lvm@redhat.com>; Wed, 7 Dec 2005 01:37:49 +0200 (EET)
-	(envelope-from kkyriak@ee.duth.gr)
-Message-ID: <439620CE.1030902@ee.duth.gr>
-Date: Wed, 07 Dec 2005 01:37:50 +0200
-From: kyr <kkyriak@ee.duth.gr>
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id jB93dbV07852
+	for <linux-lvm@redhat.com>; Thu, 8 Dec 2005 22:39:37 -0500
+Received: from web32605.mail.mud.yahoo.com (web32605.mail.mud.yahoo.com
+	[68.142.207.232])
+	by mx1.redhat.com (8.12.11/8.12.11) with SMTP id jB93dPEP024016
+	for <linux-lvm@redhat.com>; Thu, 8 Dec 2005 22:39:25 -0500
+Message-ID: <20051209033914.33441.qmail@web32605.mail.mud.yahoo.com>
+Date: Fri, 9 Dec 2005 11:39:14 +0800 (CST)
+From: Way Loss <lossway@yahoo.com.hk>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] If one disk fails i loose everything?
+Content-Transfer-Encoding: 8bit
+Subject: [linux-lvm] Newbie of LVM
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -25,35 +21,32 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
+Content-Type: text/plain; charset="utf-8"
 To: linux-lvm@redhat.com
 
+Hi all,
 
-  I have tree simple questions about LVM that just could not be answered
-  after 4 hours of search in LVM howto, Google, Linux questions and
-  linux-lvm Archives.
+   I am very new to LVM. Here is the detail of my
+current fs.
+Filesystem            Size  Used Avail Use% Mounted on
+/dev/md1              9.4G  2.5G  6.5G  28% /
+/dev/md2              9.4G  7.6G  1.4G  85% /home
+/dev/md3              9.4G  6.6G  2.4G  74% /var
+/dev/md4              958M   18M  892M   2% /tmp
+/dev/md5              153G  119G   27G  82% /www
 
+    My md5 is almost full and I wanna use LVM to merge
+my md5 with a new partition from a new hdd. I wanna
+ask if this possible for LVM to merge 2 partition
+together while one of them have data on it? I can't
+suffer any data loss and want to make sure that LVM
+works perfectly to what I want.
+   Thanks all.
 
-  I have a small file server with 600Gbytes in one liner volume group
-  consisting of 3 200 Gbyte Hard disk. My questions are:
+Best Regards,
+Sing
 
-
-  1. If one hard disk fails (hardware) do I loose all the data stored on
-  the VG?
-
-
-  2. Can I add a new hard disk in the VG without having to format it
-  before? (I mean if it is full of data can I just add it?)
-
-
-  3. In case of failure can I recover the data from a single disk on
-  another box?
-
-
-  Thanks in advance
-
-
-  Kyriakos
-
-
-  Greece
+_______________________________________
+ �x��ӍϢ - Yahoo! Messenger
+ ������]���ϾW����������Կ�������ӍϢ�o�㣬�����ϾW�r���������������κ��fԒ������ʧ��
+  http://messenger.yahoo.com.hk 
