@@ -1,17 +1,23 @@
-Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id jB93dbV07852
-	for <linux-lvm@redhat.com>; Thu, 8 Dec 2005 22:39:37 -0500
-Received: from web32605.mail.mud.yahoo.com (web32605.mail.mud.yahoo.com
-	[68.142.207.232])
-	by mx1.redhat.com (8.12.11/8.12.11) with SMTP id jB93dPEP024016
-	for <linux-lvm@redhat.com>; Thu, 8 Dec 2005 22:39:25 -0500
-Message-ID: <20051209033914.33441.qmail@web32605.mail.mud.yahoo.com>
-Date: Fri, 9 Dec 2005 11:39:14 +0800 (CST)
-From: Way Loss <lossway@yahoo.com.hk>
+Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id jB9GYvV15989
+	for <linux-lvm@redhat.com>; Fri, 9 Dec 2005 11:34:57 -0500
+Received: from echohome.org (s233-64-196-242.try.wideopenwest.com
+	[64.233.242.196])
+	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id jB9GYmp6010131
+	for <linux-lvm@redhat.com>; Fri, 9 Dec 2005 11:34:48 -0500
+Received: from www.echohome.org (localhost.localdomain [127.0.0.1])
+	by echohome.org (8.12.8/8.12.8) with ESMTP id jB9GYe5Y015678
+	for <linux-lvm@redhat.com>; Fri, 9 Dec 2005 11:34:41 -0500
+Message-ID: <47679.69.49.99.19.1134146081.squirrel@www.echohome.org>
+In-Reply-To: <439620CE.1030902@ee.duth.gr>
+References: <439620CE.1030902@ee.duth.gr>
+Date: Fri, 9 Dec 2005 11:34:41 -0500 (EST)
+Subject: Re: [linux-lvm] If one disk fails i loose everything?
+From: "Erik Ohrnberger" <Erik@echohome.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: [linux-lvm] Newbie of LVM
-Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
+Reply-To: Erik@echohome.org,
+	LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -21,32 +27,50 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@redhat.com
 
-Hi all,
+On Tue, December 6, 2005 18:37, kyr wrote:
+>
+>   I have tree simple questions about LVM that just could not be answered
+>   after 4 hours of search in LVM howto, Google, Linux questions and
+>   linux-lvm Archives.
+>
+>
+>   I have a small file server with 600Gbytes in one liner volume group
+>   consisting of 3 200 Gbyte Hard disk. My questions are:
+>
+>
+>   1. If one hard disk fails (hardware) do I loose all the data stored on
+>   the VG?
 
-   I am very new to LVM. Here is the detail of my
-current fs.
-Filesystem            Size  Used Avail Use% Mounted on
-/dev/md1              9.4G  2.5G  6.5G  28% /
-/dev/md2              9.4G  7.6G  1.4G  85% /home
-/dev/md3              9.4G  6.6G  2.4G  74% /var
-/dev/md4              958M   18M  892M   2% /tmp
-/dev/md5              153G  119G   27G  82% /www
+    Yup.  That's how it works.  There are programs that can scavange
+partial data from the hard disks that make up the VG.  r-studio being
+one of them.
 
-    My md5 is almost full and I wanna use LVM to merge
-my md5 with a new partition from a new hdd. I wanna
-ask if this possible for LVM to merge 2 partition
-together while one of them have data on it? I can't
-suffer any data loss and want to make sure that LVM
-works perfectly to what I want.
-   Thanks all.
+>   2. Can I add a new hard disk in the VG without having to format it
+>   before? (I mean if it is full of data can I just add it?)
 
-Best Regards,
-Sing
+    You'll have to create an LVM data partition for the data that you want
+to store on the drive, and this will wipe out the currently existing
+data on the drive.
 
-_______________________________________
- �x��ӍϢ - Yahoo! Messenger
- ������]���ϾW����������Կ�������ӍϢ�o�㣬�����ϾW�r���������������κ��fԒ������ʧ��
-  http://messenger.yahoo.com.hk 
+>   3. In case of failure can I recover the data from a single disk on
+>   another box?
+
+    Possibly, but I've never done this.  Seems rather doubtful to me.
+
+>   Thanks in advance
+>
+>
+>   Kyriakos
+>
+>
+>   Greece
+>
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@redhat.com
+> https://www.redhat.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+>
