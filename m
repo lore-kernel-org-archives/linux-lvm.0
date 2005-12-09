@@ -1,21 +1,21 @@
-Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id jB9JcwV16040
-	for <linux-lvm@redhat.com>; Fri, 9 Dec 2005 14:38:58 -0500
-Received: from wproxy.gmail.com (wproxy.gmail.com [64.233.184.199])
-	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id jB9Jcore030223
-	for <linux-lvm@redhat.com>; Fri, 9 Dec 2005 14:38:50 -0500
-Received: by wproxy.gmail.com with SMTP id i22so977868wra
-	for <linux-lvm@redhat.com>; Fri, 09 Dec 2005 11:38:49 -0800 (PST)
-Message-ID: <7119d52b0512091138s5615a650q5bad1a566cbde72b@mail.gmail.com>
-Date: Fri, 9 Dec 2005 14:38:49 -0500
-From: Jeff Cousino <jcousin3@gmail.com>
-Subject: Re: [linux-lvm] Newbie of LVM
-In-Reply-To: <4399D72B.80408@mattgillen.net>
+Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id jB9JgLV16950
+	for <linux-lvm@redhat.com>; Fri, 9 Dec 2005 14:42:21 -0500
+Received: from rwcrmhc11.comcast.net (rwcrmhc11.comcast.net [204.127.198.35])
+	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id jB9JgJta030239
+	for <linux-lvm@redhat.com>; Fri, 9 Dec 2005 14:42:19 -0500
+Received: from [192.168.1.3] (silvio.localnet [192.168.1.3])
+	by furio.localnet (8.13.4/8.13.4) with ESMTP id jB9JgD5r009602
+	for <linux-lvm@redhat.com>; Fri, 9 Dec 2005 14:42:13 -0500
+Message-ID: <4399DE13.7020903@mattgillen.net>
+Date: Fri, 09 Dec 2005 14:42:11 -0500
+From: Matthew Gillen <me@mattgillen.net>
 MIME-Version: 1.0
-Content-Disposition: inline
+Subject: Re: [linux-lvm] Newbie of LVM
 References: <20051209033914.33441.qmail@web32605.mail.mud.yahoo.com>
 	<4399D72B.80408@mattgillen.net>
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <4399D72B.80408@mattgillen.net>
+Content-Transfer-Encoding: 7bit
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -29,12 +29,43 @@ List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
+Matthew Gillen wrote:
+> Way Loss wrote:
+> 
+>>Hi all,
+>>
+>>   I am very new to LVM. Here is the detail of my
+>>current fs.
+>>Filesystem            Size  Used Avail Use% Mounted on
+>>/dev/md1              9.4G  2.5G  6.5G  28% /
+>>/dev/md2              9.4G  7.6G  1.4G  85% /home
+>>/dev/md3              9.4G  6.6G  2.4G  74% /var
+>>/dev/md4              958M   18M  892M   2% /tmp
+>>/dev/md5              153G  119G   27G  82% /www
+>>
+>>    My md5 is almost full and I wanna use LVM to merge
+>>my md5 with a new partition from a new hdd. I wanna
+>>ask if this possible for LVM to merge 2 partition
+>>together while one of them have data on it? I can't
+>>suffer any data loss and want to make sure that LVM
+>>works perfectly to what I want.
+>>   Thanks all.
+> 
+> 
 > You're out of luck.  You can't take an existing partition and keep the
 > data yet switch it over to LVM.  It's like RAID that way: you need to
 > set up the lower level stuff *before* you format the disk/partition with
 > your filesystem and start putting data on it.
->
+> 
+> To do what you want is possible, provided that you created an LVM from
+> the beginning that had md5 as a PhysicalVolume, then created your
+> filesystem on the Logical Volume.  But it seems clear from your fstab
+> that you didn't do that.
 
-But couldn't he set up his new drive with LVM copy the data from the
-old drive to it, provided it's large enough and then add the old drive
-to the group?
+Well, you're not totally out of luck, assuming the other disk is as big
+or bigger than /dev/md5:
+You could create an LVM with the new disk, create your filesystem, copy
+the contents of md5 to the new LVM filesystem (via tar/cpio or something
+that will preserve symlinks etc), then add md5 to the LVM setup (thereby
+destroying the data on md5) and resize your filesystem.
+--Matt
