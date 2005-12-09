@@ -1,23 +1,26 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id jB9K45V23153
-	for <linux-lvm@redhat.com>; Fri, 9 Dec 2005 15:04:05 -0500
-Received: from wproxy.gmail.com (wproxy.gmail.com [64.233.184.199])
-	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id jB9K3xvQ003697
-	for <linux-lvm@redhat.com>; Fri, 9 Dec 2005 15:04:00 -0500
-Received: by wproxy.gmail.com with SMTP id i5so1244037wra
-	for <linux-lvm@redhat.com>; Fri, 09 Dec 2005 12:03:59 -0800 (PST)
-Message-ID: <52fe6b680512091203v451e17b1m81491000c0077b41@mail.gmail.com>
-Date: Sat, 10 Dec 2005 01:33:59 +0530
-From: Anil Kumar Sharma <xplusaks@gmail.com>
-Subject: Re: [linux-lvm] Newbie of LVM
-In-Reply-To: <52fe6b680512091157j2cec853ey557d0bb3133d298e@mail.gmail.com>
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id jB9MJLV31842
+	for <linux-lvm@redhat.com>; Fri, 9 Dec 2005 17:19:21 -0500
+Received: from mta09-winn.ispmail.ntl.com (mta09-winn.ispmail.ntl.com
+	[81.103.221.49])
+	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id jB9MJELP002933
+	for <linux-lvm@redhat.com>; Fri, 9 Dec 2005 17:19:15 -0500
+Received: from aamta10-winn.ispmail.ntl.com ([81.103.221.35])
+	by mta09-winn.ispmail.ntl.com with ESMTP id
+	<20051209221909.USEU8609.mta09-winn.ispmail.ntl.com@aamta10-winn.ispmail.ntl.com>
+	for <linux-lvm@redhat.com>; Fri, 9 Dec 2005 22:19:09 +0000
+Received: from [192.168.0.9] (really [80.4.95.190])
+	by aamta10-winn.ispmail.ntl.com with ESMTP id
+	<20051209221909.KMTM11396.aamta10-winn.ispmail.ntl.com@[192.168.0.9]>
+	for <linux-lvm@redhat.com>; Fri, 9 Dec 2005 22:19:09 +0000
+Message-ID: <439A02D9.2070207@ntlworld.com>
+Date: Fri, 09 Dec 2005 22:19:05 +0000
+From: Kelly Harding <kelly.harding@ntlworld.com>
 MIME-Version: 1.0
-Content-Type: multipart/alternative; 
-	boundary="----=_Part_11896_5549826.1134158639360"
-References: <20051209033914.33441.qmail@web32605.mail.mud.yahoo.com>
-	<4399D72B.80408@mattgillen.net>
-	<52fe6b680512091157j2cec853ey557d0bb3133d298e@mail.gmail.com>
-Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: multipart/mixed; boundary="------------000702070805060100030009"
+Subject: [linux-lvm] back to lvm problems
+Reply-To: kelly.harding@ntlworld.com,
+	LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -29,27 +32,42 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 List-Id: <linux-lvm.redhat.com>
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-------=_Part_11896_5549826.1134158639360
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: quoted-printable
-Content-Disposition: inline
+This is a multi-part message in MIME format.
+--------------000702070805060100030009
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
 
-This list moves fast....4 hits  before a send button hit.... brief  is a
-word..
+Hi again,
 
---
-Anil Kumar Shrama
+Having spoken to people on SGI's XFS mailing list, it appears the 
+problem with lack of
+ability of mounting isn't due to XFS after all.
 
-------=_Part_11896_5549826.1134158639360
-Content-Type: text/html; charset=ISO-8859-1
-Content-Transfer-Encoding: quoted-printable
-Content-Disposition: inline
+But a lack of ability to read anything from /dev/3diskvolume/3diskvolume
 
-This list moves fast....4 hits &nbsp;before a send button hit.... brief&nbs=
-p; is a word..<br>
-<div>
-<div>&nbsp;</div>
-<div>-- </div>
-<div>Anil Kumar Shrama </div></div>
+Seems the device isn't set up right or something?
 
-------=_Part_11896_5549826.1134158639360--
+Ideas? suggestions?
+
+Thanks once again in advance,
+
+Kelly
+
+--------------000702070805060100030009
+Content-Type: text/x-vcard; charset=utf-8;
+ name="kelly.harding.vcf"
+Content-Transfer-Encoding: 7bit
+Content-Disposition: attachment;
+ filename="kelly.harding.vcf"
+
+begin:vcard
+fn:Miss Kelly Harding
+n:Harding;Kelly
+adr:;;;;;;UK
+email;internet:kelly.harding@ntlworld.com
+x-mozilla-html:FALSE
+version:2.1
+end:vcard
+
+
+--------------000702070805060100030009--
