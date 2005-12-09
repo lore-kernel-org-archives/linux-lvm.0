@@ -1,24 +1,21 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id jB9IXsV28277
-	for <linux-lvm@redhat.com>; Fri, 9 Dec 2005 13:33:54 -0500
-Received: from eastrmmtao02.cox.net (eastrmmtao02.cox.net [68.230.240.37])
-	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id jB9IXhv7013637
-	for <linux-lvm@redhat.com>; Fri, 9 Dec 2005 13:33:43 -0500
-Received: from [192.168.0.9] (really [70.179.95.46]) by eastrmmtao02.cox.net
-	(InterMail vM.6.01.05.02 201-2131-123-102-20050715) with ESMTP
-	id <20051209183214.OQBW8508.eastrmmtao02.cox.net@[192.168.0.9]>
-	for <linux-lvm@redhat.com>; Fri, 9 Dec 2005 13:32:14 -0500
-Message-ID: <4399CE19.80601@cox.net>
-Date: Fri, 09 Dec 2005 13:34:01 -0500
-From: Old Fart <rascal.jumper-747@cox.net>
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id jB9IocV02031
+	for <linux-lvm@redhat.com>; Fri, 9 Dec 2005 13:50:38 -0500
+Received: from wproxy.gmail.com (wproxy.gmail.com [64.233.184.206])
+	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id jB9IoUtk018353
+	for <linux-lvm@redhat.com>; Fri, 9 Dec 2005 13:50:31 -0500
+Received: by wproxy.gmail.com with SMTP id 50so964170wri
+	for <linux-lvm@redhat.com>; Fri, 09 Dec 2005 10:50:30 -0800 (PST)
+Message-ID: <52fe6b680512091050y3327cf66j51ad14d37b468fd6@mail.gmail.com>
+Date: Sat, 10 Dec 2005 00:20:28 +0530
+From: Anil Kumar Sharma <xplusaks@gmail.com>
+Subject: Re: [linux-lvm] Newbie of LVM
+In-Reply-To: <20051209033914.33441.qmail@web32605.mail.mud.yahoo.com>
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] If one disk fails i loose everything?
-References: <439620CE.1030902@ee.duth.gr>
-	<8777.208.178.77.200.1134146221.squirrel@mnementh.dragonhold.org>
-In-Reply-To: <8777.208.178.77.200.1134146221.squirrel@mnementh.dragonhold.org>
-Content-Transfer-Encoding: 7bit
-Reply-To: rascal.jumper-747@cox.net.spamorama.redhat.com,
-	LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: multipart/alternative; 
+	boundary="----=_Part_10419_29430494.1134154228254"
+References: <20051209033914.33441.qmail@web32605.mail.mud.yahoo.com>
+Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -28,63 +25,53 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-gwood@dragonhold.org wrote:
-> In the answers below I've taken 'one linear volume group' to actually mean
-> 'one linear volume using all the space in the volume group'.  If this is
-> not what you meant, can you please describe your setup?
->
->   
->>   1. If one hard disk fails (hardware) do I loose all the data stored on
->>   the VG?
->>     
-> I'm not sure where you searched, but the answer to this is a fundamental
-> characteristic of RAID0 - there is no redundancy.  If you have a concat
-> (rather than a stripe), then you /might/ be able to salvage /some/ data -
-> but the chances are pretty slim that you'll get anything sane back out of
-> it, and you're going to have to do some relatively low level stuff to do
-> even that I would have thought.
->
->   
->>   2. Can I add a new hard disk in the VG without having to format it
->>   before? (I mean if it is full of data can I just add it?)
->>     
-> Not easily using LVM on linux, no.  If it already has partitions on it,
-> then the layout of the data on the drive is incorrect for LVM.  There may
-> be tools out there to overlay the required metadata, but the underlying
-> partitions will have to reduce in size, so this would require the
-> filesystems to support being shrunk.
->
->   
->>   3. In case of failure can I recover the data from a single disk on
->>   another box?
->>     
-> What sort of failure?  Any VG that has enough drives to provide you with a
-> working volume group/volume can be imported to another machine and read. 
-> So if you have 3 volumes over the VG, and only one of them doesn't have a
-> complete set of blocks on it - the other 2 can be salvaged.  In the case
-> of the arrangement you're talking about, no.
->
-> If you need to be able to recover the data, then a simple linear volume
-> (with no redundancy) is not a good idea.
->
-> (In answer to the subject line, 'with the arrangement you're talking
-> about' - YES')
->
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
->
->   
-Good discussion....the need to protect data under various contingencies 
-is why I use raid5 sets as the PVs.  You can lose up to two and keep 
-your data, hot add, have spares, etc.
+------=_Part_10419_29430494.1134154228254
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: quoted-printable
+Content-Disposition: inline
 
--- 
-Regards,
+U should confirm this before going ahead,
 
-Old Fart
+I believe that's what LVM is good for, or else why use it in the first
+place?
+
+{
+Logical volume management is traditionally associated with large
+installations containing many disks but it is equally suited to small
+systems with a single disk or maybe two.
+}   <- this is from Why would I want
+it?<http://tldp.org/HOWTO/LVM-HOWTO/whywouldiwantit.html>
+
+
+and this will take U home -> Benefits of Logical Volume Management on a
+Small System <http://tldp.org/HOWTO/LVM-HOWTO/benefitsoflvmsmall.html>
+
+HTH
+--
+Anil Kumar Shrama
+
+------=_Part_10419_29430494.1134154228254
+Content-Type: text/html; charset=ISO-8859-1
+Content-Transfer-Encoding: quoted-printable
+Content-Disposition: inline
+
+<div>U should confirm this before going ahead,</div>
+<div>&nbsp;</div>
+<div>I believe that's what LVM is good for, or else why use it in the first=
+ place?</div>
+<div>&nbsp;</div>
+<div>{</div>
+<div>Logical volume management is traditionally associated with large insta=
+llations containing many disks but it is equally suited to small systems wi=
+th a single disk or maybe two.</div>
+<div>}&nbsp;&nbsp; &lt;- this is from <a href=3D"http://tldp.org/HOWTO/LVM-=
+HOWTO/whywouldiwantit.html">Why would I want it?</a>&nbsp;</div>
+<div>&nbsp;</div>
+<div>and this will take U home <font color=3D"#800080">-&gt; </font><a href=
+=3D"http://tldp.org/HOWTO/LVM-HOWTO/benefitsoflvmsmall.html">Benefits of Lo=
+gical Volume Management on a Small System</a><br>&nbsp;</div>HTH<br>-- <br>=
+Anil Kumar Shrama=20
+
+------=_Part_10419_29430494.1134154228254--
