@@ -1,29 +1,23 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id jBBFX6107201
-	for <linux-lvm@redhat.com>; Sun, 11 Dec 2005 10:33:06 -0500
-Received: from wproxy.gmail.com (wproxy.gmail.com [64.233.184.203])
-	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id jBBFWxHF010211
-	for <linux-lvm@redhat.com>; Sun, 11 Dec 2005 10:32:59 -0500
-Received: by wproxy.gmail.com with SMTP id i1so1519305wra
-	for <linux-lvm@redhat.com>; Sun, 11 Dec 2005 07:32:59 -0800 (PST)
-Message-ID: <1cbd6f830512110732h3e5a666du881f6c4fad593924@mail.gmail.com>
-Date: Sun, 11 Dec 2005 10:32:59 -0500
-From: Mag Gam <magawake@gmail.com>
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id jBBMHa105229
+	for <linux-lvm@redhat.com>; Sun, 11 Dec 2005 17:17:36 -0500
+Received: from omx3.sgi.com (omx3-ext.sgi.com [192.48.171.20])
+	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id jBBMHSpN027504
+	for <linux-lvm@redhat.com>; Sun, 11 Dec 2005 17:17:29 -0500
+Date: Mon, 12 Dec 2005 09:15:39 +1100
+From: Nathan Scott <nathans@sgi.com>
 Subject: Re: [linux-lvm] LVM onFly features
-In-Reply-To: <1134310136.26999.4.camel@pc7.dolda2000.com>
-MIME-Version: 1.0
-Content-Disposition: inline
+Message-ID: <20051211221539.GA872@frodo>
 References: <1cbd6f830512101138t10ec4f77j217ee8830a60a97b@mail.gmail.com>
+	<20051210194827.GE3103@mjk.myfqdn.de>
+	<CB9E5AC681BF4CD0966C6872@dhcp-2-206.wgops.com>
+	<20051210200646.GF3103@mjk.myfqdn.de>
 	<A8AB02E392149E55AC45BF7A@dhcp-2-206.wgops.com>
 	<20051210202232.GG3103@mjk.myfqdn.de>
 	<64AE95D76D81F71989D42E79@dhcp-2-206.wgops.com>
-	<20051210223139.GI3103@mjk.myfqdn.de>
-	<B3E2561C8D66866DCF5FD2D8@dhcp-2-206.wgops.com>
-	<208D3DC6840704A034151D63@dhcp-2-206.wgops.com>
-	<20051210230341.GJ3103@mjk.myfqdn.de>
-	<1cbd6f830512101938g4ec7d36dq4fd9a081658edf47@mail.gmail.com>
-	<1134310136.26999.4.camel@pc7.dolda2000.com>
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <64AE95D76D81F71989D42E79@dhcp-2-206.wgops.com>
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -35,37 +29,71 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Transfer-Encoding: 7bit
+To: Michael Loftis <mloftis@wgops.com>
+Cc: linux-xfs@oss.sgi.com, linux-lvm@redhat.com
 
-I know AIX LVM and FS act usually as one. Thats where I was going at....
+On Sat, Dec 10, 2005 at 03:10:05PM -0700, Michael Loftis wrote:
+> 
+> >Thanks for the detailled explanation!
+> 
+> I try not to say something without actual experience and technical details 
+> to back it up. :)
 
-But, thats everyone for their replies!
+Hmm, you seem to be doing a pretty good job of that here...
 
-On 12/11/05, Fredrik Tolf <fredrik@dolda2000.com> wrote:
-> On Sat, 2005-12-10 at 22:38 -0500, Mag Gam wrote:
-> > thanks everyone for their kind replies.
+> >Yes, I would *love* to use a totally new file system with a new,
+> >dynamic, good design, but - just as many others - had my experiences
+> >with ReiserFS and it will take a *lot* of time for ReiserFS to restore
+> >confidence. So for now, I'll probably stay with ext3, with which I had
+> >no problems so far.
 > >
-> > So, will LVM and FS (ext2/3 in particular )ever be considered as 1?
-> > This would be nice for ease of devt.
->
-> If they would be considered as one, it wouldn't be LVM anymore. LVM is a
-> pure block device layer, and as such will always have to FS layered
-> above.
->
-> However, stuff like Solaris ZFS does make sense, too, if you ask me.
-> Having a filesystem managing several block devices allows for pretty
-> neat stuff, such as per-file replication or striping, which would be
-> really sweet.
->
-> That said, such a thing would, of course, be completely unrelated to
-> LVM.
->
-> Fredrik Tolf
->
->
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
->
+> >JFS/XFS should also both be capable of growing, XFS of online-growth,
+> >IIRC.
+> 
+> XFS has terrible unpredictable performance in production.  Also it has very 
+
+What on earth does that mean?  Whatever it means, it doesn't
+sound right - can you back that up with some data please?
+
+> bad behavior when recovering from crashes,
+
+Details?  Are you talking about this post of yours:
+http://oss.sgi.com/archives/linux-xfs/2003-06/msg00032.html
+
+There have been several fixes in this area since that post.
+
+> often times it's tools totally fail to clean the filesystem.
+
+In what way?  Did you open a bug report?
+
+> It also needs larger kernel stacks because 
+> of some of the really deep call trees,
+
+Those have been long since fixed as far as we are aware.  Do you
+have an actual example where things can fail?
+
+> so when you use it with LVM or MD it 
+> can oops unless you use the larger kernel stacks.
+
+Anything can oops in combination with enough stacked device drivers
+(although there has been block layer work to resolve this recently,
+so you should try again with a current kernel...).  If you have an
+actual example of this still happening, please open a bug or at least
+let the XFS developers know of your test case.  Thanks.
+
+> We also have had 
+> problems with the quota system but the details on that have faded.
+
+Seems like details of all the problems you described have faded.
+Your mail seems to me like a bit of a troll ... I guess you had a
+problem or two a couple of years ago (from searching the lists)
+and are still sore.  Can you point me to mailing list reports of
+the problems you're refering to here or bug reports you've opened
+for these issues?  I'll let you know if any of them are still
+relevent.
+
+cheers.
+
+-- 
+Nathan
