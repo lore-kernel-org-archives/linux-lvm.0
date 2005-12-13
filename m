@@ -1,17 +1,29 @@
-Received: from agk.surrey.redhat.com (agk.surrey.redhat.com [172.16.10.74])
-	by pobox.surrey.redhat.com (8.12.8/8.12.8) with ESMTP id jBDD4KBM029603
-	for <linux-lvm@redhat.com>; Tue, 13 Dec 2005 13:04:20 GMT
-Received: from agk by agk.surrey.redhat.com with local (Exim 4.34)
-	id 1Em9pM-0004MP-0A
-	for linux-lvm@redhat.com; Tue, 13 Dec 2005 13:04:20 +0000
-Date: Tue, 13 Dec 2005 13:04:19 +0000
-From: Alasdair G Kergon <agk@redhat.com>
-Subject: Re: [linux-lvm] Meta-flag: don't activate on boot
-Message-ID: <20051213130419.GH25866@agk.surrey.redhat.com>
-References: <15tbqzlmegk.fsf@surveyor.uio.no>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <15tbqzlmegk.fsf@surveyor.uio.no>
+Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id jBDDpp129550
+	for <linux-lvm@redhat.com>; Tue, 13 Dec 2005 08:51:51 -0500
+Received: from pr.selfip.biz (pr.selfip.biz [80.72.255.98])
+	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id jBDDpjaP005841
+	for <linux-lvm@redhat.com>; Tue, 13 Dec 2005 08:51:45 -0500
+Received: from localhost (localhost [127.0.0.1])
+	by pr.selfip.biz (Postfix) with ESMTP id 9D29A8B8096
+	for <linux-lvm@redhat.com>; Tue, 13 Dec 2005 14:51:44 +0100 (CET)
+Received: from pr.selfip.biz ([127.0.0.1])
+	by localhost (delta [127.0.0.1]) (amavisd-new, port 10024) with ESMTP
+	id 07150-04 for <linux-lvm@redhat.com>;
+	Tue, 13 Dec 2005 14:51:38 +0100 (CET)
+Received: from [192.168.1.6] (unknown [192.168.1.6])
+	by pr.selfip.biz (Postfix) with ESMTP id 7CEA38B8095
+	for <linux-lvm@redhat.com>; Tue, 13 Dec 2005 14:51:38 +0100 (CET)
+Message-ID: <439ED1E3.8020607@web.de>
+Date: Tue, 13 Dec 2005 14:51:31 +0100
+From: Patrick Reinhardt <patrick-reinhardt@web.de>
+MIME-Version: 1.0
+Subject: Re: [linux-lvm] multiple lvm2-snapshots on the same origin
+	->	device-mapper error
+References: <439EB4BB.2070009@web.de>
+	<20051213122545.GF25866@agk.surrey.redhat.com>
+In-Reply-To: <20051213122545.GF25866@agk.surrey.redhat.com>
+Content-Transfer-Encoding: 7bit
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -23,28 +35,23 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: linux-lvm@redhat.com
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-On Tue, Dec 13, 2005 at 12:19:39PM +0100, Trond Hasle Amundsen wrote:
-> It would be neat if there was a way to flag that a particular volume
-> group should not be activated by default, typically at boot time,
-> i.e. running 'vgchange -ay' shouldn't activate it. This is especially
-> useful in clustering environments, when you want to "share" a volume
-> group across several nodes for redundancy, but only activate it on one
-> node at a time.
- 
-You can already do this using tagging.
+Hi!
+Thank you for the hints.
 
-Documentation:
-  Man pages for lvm, lvm.conf, vgchange, lvchange & lvcreate.
+Alasdair G Kergon schrieb:
 
-  http://people.redhat.com/agk/talks/LVM2-LinuxTag2005/
-    Tagging, Slide 30 onwards
+> We don't have a solution for that particular problem yet, but we do
+have code
+>changes that should avoid the risk of the system locking up when it
+happens.
 
-  http://sources.redhat.com/cgi-bin/cvsweb.cgi/~checkout~/LVM2/doc/tagging.txt?rev=1.1&content-type=text/plain&cvsroot=lvm2
-    original specification
 
-Alasdair
--- 
-agk@redhat.com
+In fact I need about 40 snapshots of a single filesystem for xen. Do you
+have any idea how to circumvent the problem? Maybe by creating 3
+identical origin filesystems and distribute the snapshots?
+
+Thank you in advance.
+
+Patrick Reinhardt
