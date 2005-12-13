@@ -1,21 +1,23 @@
-Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id jBDH3o101177
-	for <linux-lvm@redhat.com>; Tue, 13 Dec 2005 12:03:50 -0500
-Received: from moutng.kundenserver.de (moutng.kundenserver.de
-	[212.227.126.177])
-	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id jBDH3hVq031053
-	for <linux-lvm@redhat.com>; Tue, 13 Dec 2005 12:03:44 -0500
-Message-ID: <439EFF3A.8060301@gmx.net>
-Date: Tue, 13 Dec 2005 18:04:58 +0100
-From: Klaus Strebel <klaus.strebel@gmx.net>
+Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id jBDHfR113194
+	for <linux-lvm@redhat.com>; Tue, 13 Dec 2005 12:41:27 -0500
+Received: from eastrmmtao06.cox.net (eastrmmtao06.cox.net [68.230.240.33])
+	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id jBDHfJ9A004695
+	for <linux-lvm@redhat.com>; Tue, 13 Dec 2005 12:41:19 -0500
+Received: from [192.168.0.5] (really [70.179.95.46]) by eastrmmtao06.cox.net
+	(InterMail vM.6.01.05.02 201-2131-123-102-20050715) with ESMTP
+	id <20051213173918.QLUO9108.eastrmmtao06.cox.net@[192.168.0.5]>
+	for <linux-lvm@redhat.com>; Tue, 13 Dec 2005 12:39:18 -0500
+Message-ID: <439F07E3.80804@cox.net>
+Date: Tue, 13 Dec 2005 12:41:55 -0500
+From: Old Fart <rascal.jumper-747@cox.net>
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] multiple lvm2-snapshots on the same
-	origin	->	device-mapper error
-References: <439EB4BB.2070009@web.de>	<20051213122545.GF25866@agk.surrey.redhat.com>
-	<439ED1E3.8020607@web.de>
-In-Reply-To: <439ED1E3.8020607@web.de>
-Content-Transfer-Encoding: quoted-printable
-Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
+Subject: Re: [linux-lvm] Re: If one disk fails i loose everything?
+References: <200512131624.jBDGO5ui009897@cichlid.com>
+In-Reply-To: <200512131624.jBDGO5ui009897@cichlid.com>
+Content-Transfer-Encoding: 7bit
+Reply-To: rascal.jumper-747@cox.netmunged.redhat.com,
+	LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -25,38 +27,24 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="iso-8859-1"; format="flowed"
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-Patrick Reinhardt schrieb:
-> Hi!
-> Thank you for the hints.
->=20
-> Alasdair G Kergon schrieb:
->=20
->=20
->>We don't have a solution for that particular problem yet, but we do
->=20
-> have code
->=20
->>changes that should avoid the risk of the system locking up when it
->=20
-> happens.
->=20
->=20
-> In fact I need about 40 snapshots of a single filesystem for xen. Do you
-> have any idea how to circumvent the problem? Maybe by creating 3
-> identical origin filesystems and distribute the snapshots?
-Looks to me like you really want a kind of cluster filesystem ...
-
-Ciao
-Klaus
---=20
-Mit freundlichen Gr=EF=BF=BDssen / best regards
-
-Klaus Strebel, Dipl.-Inform. (FH), mailto:klaus.strebel@gmx.net
-
-/"\
-\ /     ASCII RIBBON CAMPAIGN
-  X        AGAINST HTML MAIL
-/ \
+Andrew Burgess wrote:
+>> Good discussion....the need to protect data under various contingencies 
+>> is why I use raid5 sets as the PVs.  You can lose up to two and keep 
+>> your data, hot add, have spares, etc.
+>>     
+>
+> You mean raid6
+>
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@redhat.com
+> https://www.redhat.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+>
+>   
+Actually I meant raid 5 based on actual 2 disk dropouts experienced on 
+test systems and the LVM data was still available.  Probably lucky.  
+Thanks for the note.
