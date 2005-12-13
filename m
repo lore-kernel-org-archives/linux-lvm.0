@@ -1,29 +1,16 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id jBDDpp129550
-	for <linux-lvm@redhat.com>; Tue, 13 Dec 2005 08:51:51 -0500
-Received: from pr.selfip.biz (pr.selfip.biz [80.72.255.98])
-	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id jBDDpjaP005841
-	for <linux-lvm@redhat.com>; Tue, 13 Dec 2005 08:51:45 -0500
-Received: from localhost (localhost [127.0.0.1])
-	by pr.selfip.biz (Postfix) with ESMTP id 9D29A8B8096
-	for <linux-lvm@redhat.com>; Tue, 13 Dec 2005 14:51:44 +0100 (CET)
-Received: from pr.selfip.biz ([127.0.0.1])
-	by localhost (delta [127.0.0.1]) (amavisd-new, port 10024) with ESMTP
-	id 07150-04 for <linux-lvm@redhat.com>;
-	Tue, 13 Dec 2005 14:51:38 +0100 (CET)
-Received: from [192.168.1.6] (unknown [192.168.1.6])
-	by pr.selfip.biz (Postfix) with ESMTP id 7CEA38B8095
-	for <linux-lvm@redhat.com>; Tue, 13 Dec 2005 14:51:38 +0100 (CET)
-Message-ID: <439ED1E3.8020607@web.de>
-Date: Tue, 13 Dec 2005 14:51:31 +0100
-From: Patrick Reinhardt <patrick-reinhardt@web.de>
-MIME-Version: 1.0
-Subject: Re: [linux-lvm] multiple lvm2-snapshots on the same origin
-	->	device-mapper error
-References: <439EB4BB.2070009@web.de>
-	<20051213122545.GF25866@agk.surrey.redhat.com>
-In-Reply-To: <20051213122545.GF25866@agk.surrey.redhat.com>
-Content-Transfer-Encoding: 7bit
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id jBDGOF118044
+	for <linux-lvm@redhat.com>; Tue, 13 Dec 2005 11:24:15 -0500
+Received: from cichlid.com (dsl3-63-249-91-140.cruzio.com [63.249.91.140])
+	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id jBDGO9wS018726
+	for <linux-lvm@redhat.com>; Tue, 13 Dec 2005 11:24:09 -0500
+Received: from cichlid.com (cichlid.com [127.0.0.1])
+	by cichlid.com (8.13.1/8.12.5) with ESMTP id jBDGO571009988
+	for <linux-lvm@redhat.com>; Tue, 13 Dec 2005 08:24:05 -0800
+Date: Tue, 13 Dec 2005 08:24:05 -0800
+From: Andrew Burgess <aab@cichlid.com>
+Message-Id: <200512131624.jBDGO5ui009897@cichlid.com>
+Subject: [linux-lvm] Re: If one disk fails i loose everything?
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -34,24 +21,13 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-To: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Transfer-Encoding: 7bit
+To: linux-lvm@redhat.com
 
-Hi!
-Thank you for the hints.
+>Good discussion....the need to protect data under various contingencies 
+>is why I use raid5 sets as the PVs.  You can lose up to two and keep 
+>your data, hot add, have spares, etc.
 
-Alasdair G Kergon schrieb:
-
-> We don't have a solution for that particular problem yet, but we do
-have code
->changes that should avoid the risk of the system locking up when it
-happens.
-
-
-In fact I need about 40 snapshots of a single filesystem for xen. Do you
-have any idea how to circumvent the problem? Maybe by creating 3
-identical origin filesystems and distribute the snapshots?
-
-Thank you in advance.
-
-Patrick Reinhardt
+You mean raid6
