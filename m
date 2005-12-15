@@ -1,22 +1,34 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id jBF6PV125374
-	for <linux-lvm@redhat.com>; Thu, 15 Dec 2005 01:25:31 -0500
-Received: from wproxy.gmail.com (wproxy.gmail.com [64.233.184.203])
-	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id jBF6PL8n020987
-	for <linux-lvm@redhat.com>; Thu, 15 Dec 2005 01:25:21 -0500
-Received: by wproxy.gmail.com with SMTP id i4so571777wra
-	for <linux-lvm@redhat.com>; Wed, 14 Dec 2005 22:25:21 -0800 (PST)
-Message-ID: <539807300512142219y34ac70c1t@mail.gmail.com>
-Date: Thu, 15 Dec 2005 14:19:01 +0800
-From: Lee Rocky <rocky366@gmail.com>
-Subject: Re: [linux-lvm] Invalid new snapshot
-In-Reply-To: <539807300512141902w3cfa6ecdk@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: multipart/alternative; 
-	boundary="----=_Part_1854_18998550.1134627541729"
-References: <539807300512131937s72661636h@mail.gmail.com>
-	<20051214145144.GO25866@agk.surrey.redhat.com>
-	<539807300512141902w3cfa6ecdk@mail.gmail.com>
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id jBGGC0130188
+	for <linux-lvm@redhat.com>; Fri, 16 Dec 2005 11:12:00 -0500
+Received: from host1.appws.com (host1.appws.com [216.136.72.3])
+	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id jBGGBdhD008498
+	for <linux-lvm@redhat.com>; Fri, 16 Dec 2005 11:11:43 -0500
+Received: from grandmother.littlebald.com (localhost.localdomain [127.0.0.1])
+	by grandmother.littlebald.com (8.13.1/8.13.1) with ESMTP id
+	jBGGIuO8027898
+	for <linux-lvm@redhat.com>; Fri, 16 Dec 2005 11:18:56 -0500
+Received: (from david@localhost)
+	by grandmother.littlebald.com (8.13.1/8.13.1/Submit) id jBGGIuQ7027897
+	for linux-lvm@redhat.com; Fri, 16 Dec 2005 11:18:56 -0500
+Subject: Re: [linux-lvm] LVM onFly features
+From: David Johnston <david@littlebald.com>
+In-Reply-To: <1cbd6f830512110732h3e5a666du881f6c4fad593924@mail.gmail.com>
+References: <1cbd6f830512101138t10ec4f77j217ee8830a60a97b@mail.gmail.com>
+	<A8AB02E392149E55AC45BF7A@dhcp-2-206.wgops.com>
+	<20051210202232.GG3103@mjk.myfqdn.de>
+	<64AE95D76D81F71989D42E79@dhcp-2-206.wgops.com>
+	<20051210223139.GI3103@mjk.myfqdn.de>
+	<B3E2561C8D66866DCF5FD2D8@dhcp-2-206.wgops.com>
+	<208D3DC6840704A034151D63@dhcp-2-206.wgops.com>
+	<20051210230341.GJ3103@mjk.myfqdn.de>
+	<1cbd6f830512101938g4ec7d36dq4fd9a081658edf47@mail.gmail.com>
+	<1134310136.26999.4.camel@pc7.dolda2000.com>
+	<1cbd6f830512110732h3e5a666du881f6c4fad593924@mail.gmail.com>
+Content-Transfer-Encoding: 7bit
+Date: Thu, 15 Dec 2005 15:44:15 -0500
+Message-Id: <1134679455.24282.18.camel@grandmother.littlebald.com>
+Mime-Version: 1.0
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -27,42 +39,21 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
+Content-Type: text/plain; charset="us-ascii"
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-------=_Part_1854_18998550.1134627541729
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: quoted-printable
-Content-Disposition: inline
+On Sun, 2005-12-11 at 10:32 -0500, Mag Gam wrote:
+> I know AIX LVM and FS act usually as one. Thats where I was going at....
+> 
+> But, thats everyone for their replies!
 
-if volume with jounal file system (xfs,ext3) is mounted  (no I/O)
-the invalid error sometime happens when create snapshot. (sometimes but eas=
-y
-to reproduce)
+Not really.  The AIX configuration tools simplify things for you to the
+point that you might think that they are acting as one, but they work
+exactly the same way under AIX and Linux.  Look at the config tool's
+logs, and you will see that to expand a filesystem, it first calls lvm
+to expand the logical volume, then calls the jfs utility to expand the
+filesystem.  There are internal differences in the two implementations,
+but the division between logical block devices and filesystems is there
+under both AIX and Linux.
 
-create snapshot has no invalid error if volume is not mounted.
-
-
-hope this information helps.
-
-Rocky
-
-------=_Part_1854_18998550.1134627541729
-Content-Type: text/html; charset=ISO-8859-1
-Content-Transfer-Encoding: quoted-printable
-Content-Disposition: inline
-
-<br>
-if volume with jounal file system (xfs,ext3) is mounted&nbsp; (no I/O)<br>
-the invalid error sometime happens when create snapshot. (sometimes but eas=
-y to reproduce)<br>
-<br>
-create snapshot has no invalid error if volume is not mounted.<br>
-<br>
-<br>
-hope this information helps.<br>
-<br>
-Rocky<br>
-<br>
-<br>
-
-------=_Part_1854_18998550.1134627541729--
+-David
