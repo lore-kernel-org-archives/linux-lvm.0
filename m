@@ -1,29 +1,23 @@
-Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id jBI0R9113722
-	for <linux-lvm@redhat.com>; Sat, 17 Dec 2005 19:27:09 -0500
-Received: from wproxy.gmail.com (wproxy.gmail.com [64.233.184.199])
-	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id jBI0R2dE027140
-	for <linux-lvm@redhat.com>; Sat, 17 Dec 2005 19:27:02 -0500
-Received: by wproxy.gmail.com with SMTP id i11so1237712wra
-	for <linux-lvm@redhat.com>; Sat, 17 Dec 2005 16:27:01 -0800 (PST)
-Message-ID: <1cbd6f830512171627u1f823f97l83075e8ee41fbd0b@mail.gmail.com>
-Date: Sat, 17 Dec 2005 19:27:01 -0500
-From: Mag Gam <magawake@gmail.com>
-Subject: Re: [linux-lvm] LVM onFly features
-In-Reply-To: <1134679455.24282.18.camel@grandmother.littlebald.com>
+Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id jBIBjQ125193
+	for <linux-lvm@redhat.com>; Sun, 18 Dec 2005 06:45:26 -0500
+Received: from skippy.fini.net (skippy.fini.net [205.166.143.75])
+	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id jBIBjFcB013447
+	for <linux-lvm@redhat.com>; Sun, 18 Dec 2005 06:45:20 -0500
+Received: from skippy.fini.net (localhost.localdomain [127.0.0.1])
+	by skippy.fini.net (8.13.4/8.13.4) with ESMTP id jBIBirDY021457
+	for <linux-lvm@redhat.com>; Sun, 18 Dec 2005 06:44:58 -0500
+Received: from localhost (chicks@localhost)
+	by skippy.fini.net (8.13.4/8.13.4/Submit) with ESMTP id jBIBir0k021453
+	for <linux-lvm@redhat.com>; Sun, 18 Dec 2005 06:44:53 -0500
+Date: Sun, 18 Dec 2005 06:44:53 -0500 (EST)
+From: Christopher Hicks <chicks@chicks.net>
+Subject: Re: [linux-lvm] Re: If one disk fails i loose everything?
+In-Reply-To: <1134502870.14744.51.camel@seki.nac.uci.edu>
+Message-ID: <Pine.LNX.4.63.0512180641350.20680@skippy.fini.net>
+References: <200512131624.jBDGO5ui009897@cichlid.com> <439F07E3.80804@cox.net>
+	<1134502870.14744.51.camel@seki.nac.uci.edu>
 MIME-Version: 1.0
-Content-Disposition: inline
-References: <1cbd6f830512101138t10ec4f77j217ee8830a60a97b@mail.gmail.com>
-	<64AE95D76D81F71989D42E79@dhcp-2-206.wgops.com>
-	<20051210223139.GI3103@mjk.myfqdn.de>
-	<B3E2561C8D66866DCF5FD2D8@dhcp-2-206.wgops.com>
-	<208D3DC6840704A034151D63@dhcp-2-206.wgops.com>
-	<20051210230341.GJ3103@mjk.myfqdn.de>
-	<1cbd6f830512101938g4ec7d36dq4fd9a081658edf47@mail.gmail.com>
-	<1134310136.26999.4.camel@pc7.dolda2000.com>
-	<1cbd6f830512110732h3e5a666du881f6c4fad593924@mail.gmail.com>
-	<1134679455.24282.18.camel@grandmother.littlebald.com>
-Content-Transfer-Encoding: 8bit
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -34,37 +28,32 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: TEXT/PLAIN; charset="us-ascii"; format="flowed"
+Content-Transfer-Encoding: 7bit
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-David:
-
-You are right. On AIX, it first runs, extendlv, and then a chfs...
-
-
-
-
-
-On 12/15/05, David Johnston <david@littlebald.com> wrote:
-> On Sun, 2005-12-11 at 10:32 -0500, Mag Gam wrote:
-> > I know AIX LVM and FS act usually as one. Thats where I was going at....
-> >
-> > But, thats everyone for their replies!
+On Tue, 13 Dec 2005, Dan Stromberg wrote:
+> It really shouldn't work that way.  RAID 5 is based on XOR, and I'm 
+> pretty sure XOR can only recover from a single-number failure.
 >
-> Not really.  The AIX configuration tools simplify things for you to the
-> point that you might think that they are acting as one, but they work
-> exactly the same way under AIX and Linux.  Look at the config tool's
-> logs, and you will see that to expand a filesystem, it first calls lvm
-> to expand the logical volume, then calls the jfs utility to expand the
-> filesystem.  There are internal differences in the two implementations,
-> but the division between logical block devices and filesystems is there
-> under both AIX and Linux.
->
-> -David
->
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
->
+> -But-, if you had a hot spare or warm spare configured, then it would've 
+> been possible for one drive to die, the RAID 5 to be resync'd, another 
+> drive to die, and then still be OK.
+
+Correct.  One thing to keep in mind when doing these sort of things is 
+that drives from the same manufacturer and lot are more like to fail 
+around the same time than random drives.  We've had two drives fail within 
+a week of each other in the same raid array multiple times.  I've had a 
+couple of raid arrays where it felt like I spent every other week for six 
+months doing some part of a drive replacement and ending up replacing the 
+whole array my the time its done.  Now if I have two drives fail in an 
+array in short I proactively replace the entire thing.  Don't forget the I 
+in raid means you're trying to make cheap sh*t reliable.
+
+-- 
+</chris>
+
+The significant problems we face cannot be solved by the same level of
+thinking that created them.
+
+-- Albert Einstein
