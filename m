@@ -1,27 +1,17 @@
-Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id jBIJWg109246
-	for <linux-lvm@redhat.com>; Sun, 18 Dec 2005 14:32:42 -0500
-Received: from ciao.gmane.org (main.gmane.org [80.91.229.2])
-	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id jBIJWYI4005430
-	for <linux-lvm@redhat.com>; Sun, 18 Dec 2005 14:32:35 -0500
-Received: from list by ciao.gmane.org with local (Exim 4.43)
-	id 1Eo4FR-0003or-GG
-	for linux-lvm@redhat.com; Sun, 18 Dec 2005 20:31:09 +0100
-Received: from 82.153.166.94 ([82.153.166.94])
-	by main.gmane.org with esmtp (Gmexim 0.1 (Debian))
-	id 1AlnuQ-0007hv-00
-	for <linux-lvm@redhat.com>; Sun, 18 Dec 2005 20:31:09 +0100
-Received: from mru by 82.153.166.94 with local (Gmexim 0.1 (Debian))
-	id 1AlnuQ-0007hv-00
-	for <linux-lvm@redhat.com>; Sun, 18 Dec 2005 20:31:09 +0100
-From: =?iso-8859-1?q?M=E5ns_Rullg=E5rd?= <mru@inprovide.com>
-Date: Sun, 18 Dec 2005 19:30:21 +0000
-Message-ID: <yw1xmziyfbjm.fsf@inprovide.com>
-References: <Pine.LNX.4.63.0512180645020.20680@skippy.fini.net>
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Sender: news <news@sea.gmane.org>
-Subject: [linux-lvm] Re: LVM corruption on rocketraid 1540 in AMD64 CentOS
+Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id jBJDYP115939
+	for <linux-lvm@redhat.com>; Mon, 19 Dec 2005 08:34:25 -0500
+Received: from s1.ckr-solutions.com (s1.ckr-solutions.com [82.97.10.19])
+	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id jBJDYNp7002387
+	for <linux-lvm@redhat.com>; Mon, 19 Dec 2005 08:34:23 -0500
+Received: from localhost (s1.ckr-solutions.com [82.97.10.19])
+	by s1.ckr-solutions.com (Postfix) with ESMTP id 44D4C4118
+	for <linux-lvm@redhat.com>; Mon, 19 Dec 2005 14:33:55 +0100 (CET)
+Date: Mon, 19 Dec 2005 14:33:55 +0100 (CET)
+From: Olivier Kaloudoff <kalou@kalou.net>
+Message-ID: <Pine.LNX.4.63.0512191419400.23209@s1.ckr-solutions.com>
+MIME-Version: 1.0
+Subject: [linux-lvm] meaning of -L for snapshots ?
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -32,26 +22,46 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="utf-8"
+Content-Type: TEXT/PLAIN; charset="us-ascii"; format="flowed"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@redhat.com
 
-Christopher Hicks <chicks@chicks.net> writes:
+Hello,
 
-> I've got a pair of RocketRaid 1540's based on the HPT374 chip.  Every
-> time I setup an LVM which includes drives on the RR1540 and reboot,
-> the LVM becomes corrupt.  I'm able before reboot to read and write
-> files to my heart's content, but then I reboot and its toast.  I was
-> able to reboot fine with LVM partitions on the same box as long as
-> none of the PV's were on the HPT374.  My experiments where on an AMD64
-> machine running CentOS 4 and I'm not sure what to try next.  I figured
-> trying FC4 on x86 32-bit hardware should be the next step to see if
-> its an architecture issue.  Is this a known issue?  Any suggestions
-> for why?  Or any suggestions for what to try?  I'd really like to get
-> these controllers back in the server they belong in.  :)
+ 	I'm playing with lvm snapshots for the first time,
+and wondering the meaning of -L when creating a snapshot. Indeed,
+the following example shows a snapshot done with -L10M, on a
+volume that's already 156M used for a total of 2G;
 
-FWIW, I've been running LVM on such a controller in an Alpha machine
-(64-bit) for several years without a glitch.
 
--- 
-M�ns Rullg�rd
-mru@inprovide.com
+[root@shinwey root]# df /vservers/skel/ -h
+Filesystem            Size  Used Avail Use% Mounted on
+/dev/nr_180/skel      2.0G  156M  1.8G   9% /vservers/skel
+
+[root@shinwey root]# lvcreate  -L10M --snapshot --name snaptest 
+/dev/nr_180/skel
+lvcreate -- rounding size up to physical extent boundary
+lvcreate -- WARNING: the snapshot will be automatically disabled once it 
+gets full
+lvcreate -- INFO: using default snapshot chunk size of 64 KB for 
+"/dev/nr_180/snaptest"
+lvcreate -- doing automatic backup of "nr_180"
+lvcreate -- logical volume "/dev/nr_180/snaptest" successfully created
+
+[root@shinwey root]# mount /dev/nr_180/snaptest  /mnt/snaptest/
+mount: block device /dev/nr_180/snaptest is write-protected, mounting 
+read-only
+
+[root@shinwey root]# df -h /mnt/snaptest/
+Filesystem            Size  Used Avail Use% Mounted on
+/dev/nr_180/snaptest  2.0G  156M  1.8G   9% /mnt/snaptest
+
+
+
+ 	Who can explain the usage of -L10M for my snapshot ?
+
+
+Best Regards,
+
+
+Olivier Kaloudoff
