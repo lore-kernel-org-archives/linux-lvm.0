@@ -1,16 +1,30 @@
-Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id jBRJ7D106523
-	for <linux-lvm@redhat.com>; Tue, 27 Dec 2005 14:07:13 -0500
-Received: from mail.cira.colostate.edu (mail.cira.colostate.edu
-	[129.82.108.252])
-	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id jBRJ7DWb025561
-	for <linux-lvm@redhat.com>; Tue, 27 Dec 2005 14:07:13 -0500
-Message-ID: <43B190D9.9020805@cira.colostate.edu>
-Date: Tue, 27 Dec 2005 12:07:05 -0700
-From: Adam Carheden <carheden@cira.colostate.edu>
+Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id jBSHIb117708
+	for <linux-lvm@redhat.com>; Wed, 28 Dec 2005 12:18:37 -0500
+Received: from mta09-winn.ispmail.ntl.com (mta09-winn.ispmail.ntl.com
+	[81.103.221.49])
+	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id jBSHI6pJ018651
+	for <linux-lvm@redhat.com>; Wed, 28 Dec 2005 12:18:11 -0500
+Received: from aamta11-winn.ispmail.ntl.com ([81.103.221.35])
+	by mta09-winn.ispmail.ntl.com with ESMTP id
+	<20051228171759.HJLJ8609.mta09-winn.ispmail.ntl.com@aamta11-winn.ispmail.ntl.com>
+	for <linux-lvm@redhat.com>; Wed, 28 Dec 2005 17:17:59 +0000
+Received: from remain.afraid.org ([213.107.104.166])
+	by aamta11-winn.ispmail.ntl.com with ESMTP id
+	<20051228171759.PNGQ29634.aamta11-winn.ispmail.ntl.com@remain.afraid.org>
+	for <linux-lvm@redhat.com>; Wed, 28 Dec 2005 17:17:59 +0000
+Received: from pandora.local ([192.168.178.3])
+	by remain.afraid.org with esmtps (TLSv1:AES256-SHA:256) (Exim 4.54)
+	id 1Erew0-0001s8-P8
+	for linux-lvm@redhat.com; Wed, 28 Dec 2005 17:17:56 +0000
+Message-ID: <43B2C8BE.2010401@cantab.net>
+Date: Wed, 28 Dec 2005 17:17:50 +0000
+From: Zak Kipling <zak.kipling@cantab.net>
 MIME-Version: 1.0
+Subject: Re: [linux-lvm] Error in "lvcreate" in LVM2
+References: <20051226193622.71516.qmail@web32505.mail.mud.yahoo.com>
+In-Reply-To: <20051226193622.71516.qmail@web32505.mail.mud.yahoo.com>
 Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] Snapshot not resized after lvresize
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -22,91 +36,26 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: linux-lvm@redhat.com
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-I'm having trouble resizing an lvm snapshot. I do the following:
+natasha patil wrote:
 
-linux-util3 ~ # lvdisplay /dev/vg2/backup1
-   --- Logical volume ---
-   LV Name                /dev/vg2/backup1
-   VG Name                vg2
-   LV UUID                qVH4Dm-OWX7-QpCL-u1rk-lnWj-PysQ-GFk0VF
-   LV Write Access        read/write
-   LV Status              available
-   # open                 0
-   LV Size                10.00 GB
-   Current LE             2560
-   Segments               1
-   Allocation             inherit
-   Read ahead sectors     0
-   Block device           253:0
+> then  created volume group  using                         :         vgcreate
+>     /proc/misc: No entry for device-mapper found
+>     Is device-mapper driver missing from kernel?
+>     Failure to communicate with kernel device-mapper driver.
 
-linux-util3 ~ # lvcreate -s -L 10G  -n mysnapshot1 /dev/vg2/backup1
-   Logical volume "mysnapshot1" created
-linux-util3 ~ # lvdisplay /dev/vg2/mysnapshot1
-   --- Logical volume ---
-   LV Name                /dev/vg2/mysnapshot1
-   VG Name                vg2
-   LV UUID                HXKS1i-JDbx-oIes-TcS6-vuud-WT7G-snJpcM
-   LV Write Access        read/write
-   LV snapshot status     active destination for /dev/vg2/backup1
-   LV Status              available
-   # open                 0
-   LV Size                10.00 GB
-   Current LE             2560
-   Segments               1
-   Snapshot chunk size    8.00 KB
-   Allocated to snapshot  0.00%
-   Allocation             inherit
-   Read ahead sectors     0
-   Block device           253:16
+I'm not familiar with Mandrake at all, but it looks like the 
+device-mapper is neither compiled into your kernel or loaded as a 
+module. Try "modprobe dm-mod", which should load the module if it exists 
+on your system.
 
-linux-util3 ~ # lvextend -L 20G /dev/vg2/mysnapshot1
-   Extending logical volume mysnapshot1 to 20.00 GB
-   Logical volume mysnapshot1 successfully resized
-linux-util3 ~ # lvdisplay /dev/vg2/mysnapshot1
-   --- Logical volume ---
-   LV Name                /dev/vg2/mysnapshot1
-   VG Name                vg2
-   LV UUID                HXKS1i-JDbx-oIes-TcS6-vuud-WT7G-snJpcM
-   LV Write Access        read/write
-   LV snapshot status     active destination for /dev/vg2/backup1
-   LV Status              available
-   # open                 0
-   LV Size                10.00 GB
-   Current LE             2560
-   Segments               1
-   Snapshot chunk size    8.00 KB
-   Allocated to snapshot  0.00%
-   Allocation             inherit
-   Read ahead sectors     0
-   Block device           253:16
+(I'd expect it to be built as a module on most distros' stock kernels -- 
+if you've built your own kernel then you need to make sure that you have 
+included the device mapper either in the main kernel or as a module -- 
+the option is under "Device drivers" -> "Multi-device support (RAID and 
+LVM)" -> "Device mapper support".)
 
-linux-util3 ~ # lvscan
-   ...snip...
-   ACTIVE   Original '/dev/vg2/backup1' [10.00 GB] inherit
-   ACTIVE   Snapshot '/dev/vg2/mysnapshot1' [20.00 GB] inherit
-   ...snip...
-linux-util3 ~ # lvresize -L 20G /dev/vg2/mysnapshot1
-   New size (5120 extents) matches existing size (5120 extents)
-...snip (lvresize help)...
-linux-util3 ~ #
+Hope this helps,
 
-Note that lvdisplay report 10G before and after lvextend, but lvscan 
-reports 20G after lvextend. The same things happens when I use the -l or 
--L to resize when creating the snapshot. resize_reiserfs also refuses to 
-accept the 20G size, so the OS sees the block device the same way 
-lvdisplay does (probably a good thing).
-
-I'm using a Xen Linux 2.6.12.6 kernel with the devicemapper built in but 
-dm_snapshot compiled as a module and LVM2 2.01.09 (Gentoo Linux). 
-Everything is AMD64.
-
-I can successfully resize non-snpshot volumes. I can't, of course, 
-resize my origins, as LVM doesn't support that yet according to lvresize.
-
-Any ideas?
-
-Thanks
--- 
-Adam Carheden
+Zak.
