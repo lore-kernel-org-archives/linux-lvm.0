@@ -1,15 +1,19 @@
-Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id jBT837109930
-	for <linux-lvm@redhat.com>; Thu, 29 Dec 2005 03:03:07 -0500
-Received: from mail.laferspa.com (host106-231.pool82188.interbusiness.it
-	[82.188.231.106])
-	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id jBT82rax012138
-	for <linux-lvm@redhat.com>; Thu, 29 Dec 2005 03:02:54 -0500
-Message-ID: <43B39A85.7060107@email.it>
-Date: Thu, 29 Dec 2005 09:12:53 +0100
-From: Massimiliano <max.fontana@email.it>
+Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id jBTICB111692
+	for <linux-lvm@redhat.com>; Thu, 29 Dec 2005 13:12:11 -0500
+Received: from rwcrmhc12.comcast.net (rwcrmhc13.comcast.net [204.127.198.39])
+	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id jBTIC1SC030997
+	for <linux-lvm@redhat.com>; Thu, 29 Dec 2005 13:12:05 -0500
+Received: from [192.168.1.3] (silvio.localnet [192.168.1.3])
+	by furio.localnet (8.13.4/8.13.4) with ESMTP id jBTIC6IX011058
+	for <linux-lvm@redhat.com>; Thu, 29 Dec 2005 13:12:06 -0500
+Message-ID: <43B426E9.7080400@mattgillen.net>
+Date: Thu, 29 Dec 2005 13:11:53 -0500
+From: Matthew Gillen <me@mattgillen.net>
 MIME-Version: 1.0
-Subject: [linux-lvm] How can I expand a physical volume ?
+Subject: Re: [linux-lvm] How can I expand a physical volume ?
+References: <43B39A85.7060107@email.it>
+In-Reply-To: <43B39A85.7060107@email.it>
 Content-Transfer-Encoding: 7bit
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
@@ -21,203 +25,44 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: linux-lvm@redhat.com
+Content-Type: text/plain; charset="us-ascii"
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-Hi !
-My first post here !
-I've recently added a fourth Scsi Hard disk to my
-Proliant ML350 configured as follow :
-SmartArray Controller 641 with 3 72Gb Scsi h.disks.(raid5)
-I installed on my Centos 4.2 the HP Array configuration Utility and did 
-the following steps:
-1) Expanded my array
-2) Expanded my logical Volume
-Everything ok . Now I can see 4 physical drives
-and a new total space increased of 72gb(obviously..)
-The problem is that the operating doesen't seem to recognize the new 
-free space .
-Here is the output of various command I tried :
---LVDISPLAY
-LV Name /dev/VolGroup00/LogVol00
-VG Name VolGroup00
-LV UUID 0QlVVm-W4ZY-tSLv-syu6-qS6J-b2u9-2Ed13l
-LV Write Access read/write
-LV Status available
-# open 1
-LV Size 133,56 GB
-Current LE 4274
-Segments 1
-Allocation inherit
-Read ahead sectors 0
-Block device 253:0
-********************
-FDISK -l
-Disk /dev/cciss/c0d0: 218.5 GB, 218501038080 bytes
-255 heads, 63 sectors/track, 26564 cylinders
-Units = cilindri of 16065 * 512 = 8225280 bytes
+Massimiliano wrote:
+> Hi !
+> My first post here !
+> I've recently added a fourth Scsi Hard disk to my
+> Proliant ML350 configured as follow :
+> SmartArray Controller 641 with 3 72Gb Scsi h.disks.(raid5)
+> I installed on my Centos 4.2 the HP Array configuration Utility and did
+> the following steps:
+> 1) Expanded my array
+> 2) Expanded my logical Volume
+> Everything ok . Now I can see 4 physical drives
+> and a new total space increased of 72gb(obviously..)
+> The problem is that the operating doesen't seem to recognize the new
+> free space .
 
-Dispositivo Boot Start End Blocks Id System
-/dev/cciss/c0d0p1 * 1 13 104391 83 Linux
-/dev/cciss/c0d0p2 14 17709 142143120 8e Linux LVM
-**********************************
-root@mail init.d]# pvdisplay
---- Physical volume ---
-PV Name /dev/cciss/c0d0p2
-VG Name VolGroup00
-PV Size 135,53 GB / not usable 0
-Allocatable yes
-PE Size (KByte) 32768
-Total PE 4337
-Free PE 1
-Allocated PE 4336
-PV UUID XAEWQR-s1qj-Cj5K-gv0W-9ndt-lroN-35ZvNE
-..........
-[root@mail init.d]# vgdisplay -v
-Finding all volume groups
-Finding volume group "VolGroup00"
---- Volume group ---
-VG Name VolGroup00
-System ID
-Format lvm2
-Metadata Areas 1
-Metadata Sequence No 3
-VG Access read/write
-VG Status resizable
-MAX LV 0
-Cur LV 2
-Open LV 2
-Max PV 0
-Cur PV 1
-Act PV 1
-VG Size 135,53 GB
-PE Size 32,00 MB
-Total PE 4337
-Alloc PE / Size 4336 / 135,50 GB
-Free PE / Size 1 / 32,00 MB
-VG UUID hVHrwV-Dt53-wbGa-ZwHQ-ZWcX-t5Tm-vQIVUu
+If by "operating system", you mean that the filesystem isn't any bigger,
+then all you need to do is re-size the filesystem (using 'resize2fs') to
+take advantage of the new space.
 
---- Logical volume ---
-LV Name /dev/VolGroup00/LogVol00
-VG Name VolGroup00
-LV UUID 0QlVVm-W4ZY-tSLv-syu6-qS6J-b2u9-2Ed13l
-LV Write Access read/write
-LV Status available
-# open 1
-LV Size 133,56 GB
-Current LE 4274
-Segments 1
-Allocation inherit
-Read ahead sectors 0
-Block device 253:0
+> **********************************
+> root@mail init.d]# pvdisplay
+> --- Physical volume ---
+> PV Name /dev/cciss/c0d0p2
+> VG Name VolGroup00
+> PV Size 135,53 GB / not usable 0
+Ok.
 
---- Logical volume ---
-LV Name /dev/VolGroup00/LogVol01
-VG Name VolGroup00
-LV UUID Apww83-TFLq-KqM9-zwEt-zPAW-a3J8-EPP8j7
-LV Write Access read/write
-LV Status available
-# open 1
-LV Size 1,94 GB
-Current LE 62
-Segments 1
-Allocation inherit
-Read ahead sectors 0
-Block device 253:1
+> [root@mail init.d]# vgdisplay -v
+> Finding all volume groups
+> Finding volume group "VolGroup00"
+> --- Volume group ---
+> VG Name VolGroup00
+> Alloc PE / Size 4336 / 135,50 GB
+> Free PE / Size 1 / 32,00 MB
+So all your PE's are allocated, and I think you're all set to do the
+filesystem re-size.  I don't think you want to be messing with pvresize.
 
---- Physical volumes ---
-PV Name /dev/cciss/c0d0p2
-PV UUID XAEWQR-s1qj-Cj5K-gv0W-9ndt-lroN-35ZvNE
-PV Status allocatable
-Total PE / Free PE 4337 / 1
-
-It's clear that I have to expand the physical space but the only command 
-I know ,PVRESIZE,
-is not yet implemented but I know there is a workaround for it .
-My last idea is to backup data and reinstall everything but , honestly , 
-I'd prefer an alternative
-solution . Consider that this server is already working in a production 
-environment......
-The workaround is based on using vgcfgbackup , edit the config file and 
-vgcfgrestore . I know it's
-a very dangerous operation and since I'm a very newbie to linux , I 
-couldn't understand how
-to modify the parameter pe_count (as indicated by the workaround) of the 
-backed up
-/etc/lvm/backup/VolGroup00 file . Here below u'll find the content of 
-the above mentioned file.
-How should I modify the pe_count value in order to use these added 72Gbs 
-of new free space ?
-Many many thanks in advance .
-Max ( Italy )
-*******************
-# Generated by LVM2: Wed Dec 21 11:50:55 2005
-
-contents = "Text Format Volume Group"
-version = 1
-
-description = "Created *after* executing 'vgcfgbackup'"
-
-creation_host = "mail.laferspa.com"    # Linux mail.laferspa.com 
-2.6.9-22.0.1.ELsmp #1 SMP Thu Oct 27 13:14:25 CDT 2005 i686
-creation_time = 1135162255    # Wed Dec 21 11:50:55 2005
-
-VolGroup00 {
-  id = "hVHrwV-Dt53-wbGa-ZwHQ-ZWcX-t5Tm-vQIVUu"
-  seqno = 3
-  status = ["RESIZEABLE", "READ", "WRITE"]
-  extent_size = 65536        # 32 Megabytes
-  max_lv = 0
-  max_pv = 0
-
-  physical_volumes {
-
-      pv0 {
-          id = "XAEWQR-s1qj-Cj5K-gv0W-9ndt-lroN-35ZvNE"
-          device = "/dev/cciss/c0d0p2"    # Hint only
-
-          status = ["ALLOCATABLE"]
-          pe_start = 384
-          pe_count = 4337    # 135,531 Gigabytes
-      }
-  }
-
-  logical_volumes {
-
-      LogVol00 {
-          id = "0QlVVm-W4ZY-tSLv-syu6-qS6J-b2u9-2Ed13l"
-          status = ["READ", "WRITE", "VISIBLE"]
-          segment_count = 1
-
-          segment1 {
-              start_extent = 0
-              extent_count = 4274    # 133,562 Gigabytes
-
-              type = "striped"
-              stripe_count = 1    # linear
-
-              stripes = [
-                  "pv0", 0
-              ]
-          }
-      }
-
-      LogVol01 {
-          id = "Apww83-TFLq-KqM9-zwEt-zPAW-a3J8-EPP8j7"
-          status = ["READ", "WRITE", "VISIBLE"]
-          segment_count = 1
-
-          segment1 {
-              start_extent = 0
-              extent_count = 62    # 1,9375 Gigabytes
-
-              type = "striped"
-              stripe_count = 1    # linear
-
-              stripes = [
-                  "pv0", 4274
-              ]
-          }
-      }
-  }
-}
+--Matt
