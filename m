@@ -1,20 +1,17 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id jBTICB111692
-	for <linux-lvm@redhat.com>; Thu, 29 Dec 2005 13:12:11 -0500
-Received: from rwcrmhc12.comcast.net (rwcrmhc13.comcast.net [204.127.198.39])
-	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id jBTIC1SC030997
-	for <linux-lvm@redhat.com>; Thu, 29 Dec 2005 13:12:05 -0500
-Received: from [192.168.1.3] (silvio.localnet [192.168.1.3])
-	by furio.localnet (8.13.4/8.13.4) with ESMTP id jBTIC6IX011058
-	for <linux-lvm@redhat.com>; Thu, 29 Dec 2005 13:12:06 -0500
-Message-ID: <43B426E9.7080400@mattgillen.net>
-Date: Thu, 29 Dec 2005 13:11:53 -0500
-From: Matthew Gillen <me@mattgillen.net>
-MIME-Version: 1.0
-Subject: Re: [linux-lvm] How can I expand a physical volume ?
-References: <43B39A85.7060107@email.it>
-In-Reply-To: <43B39A85.7060107@email.it>
-Content-Transfer-Encoding: 7bit
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id jBTLT5112161
+	for <linux-lvm@redhat.com>; Thu, 29 Dec 2005 16:29:06 -0500
+Received: from percy.comedia.it (percy.comedia.it [212.97.59.71])
+	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id jBTLSsvx007255
+	for <linux-lvm@redhat.com>; Thu, 29 Dec 2005 16:29:00 -0500
+Date: Thu, 29 Dec 2005 22:28:38 +0100
+From: Luca Berra <bluca@comedia.it>
+Subject: Re: [linux-lvm] Error in "lvcreate" in LVM2
+Message-ID: <20051229212838.GA6629@percy.comedia.it>
+References: <20051226193622.71516.qmail@web32505.mail.mud.yahoo.com>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20051226193622.71516.qmail@web32505.mail.mud.yahoo.com>
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -25,44 +22,26 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+Content-Transfer-Encoding: 7bit
+To: linux-lvm@redhat.com
 
-Massimiliano wrote:
-> Hi !
-> My first post here !
-> I've recently added a fourth Scsi Hard disk to my
-> Proliant ML350 configured as follow :
-> SmartArray Controller 641 with 3 72Gb Scsi h.disks.(raid5)
-> I installed on my Centos 4.2 the HP Array configuration Utility and did
-> the following steps:
-> 1) Expanded my array
-> 2) Expanded my logical Volume
-> Everything ok . Now I can see 4 physical drives
-> and a new total space increased of 72gb(obviously..)
-> The problem is that the operating doesen't seem to recognize the new
-> free space .
+On Mon, Dec 26, 2005 at 11:36:21AM -0800, natasha patil wrote:
+>   Hi,
+>      I am using mandrake 10.2 , and have installed
+>      1)device-mapper.1.01.05.tgz
+>      2)LVM2.2.01.15.tgz
+>      and have untar the patches in "/usr/src/linux-2.6.11-6mdk"
+>  
+is there any particular reason you need to rebuild lvm from source
+and not use the packages provided for your distribution?
 
-If by "operating system", you mean that the filesystem isn't any bigger,
-then all you need to do is re-size the filesystem (using 'resize2fs') to
-take advantage of the new space.
+L.
 
-> **********************************
-> root@mail init.d]# pvdisplay
-> --- Physical volume ---
-> PV Name /dev/cciss/c0d0p2
-> VG Name VolGroup00
-> PV Size 135,53 GB / not usable 0
-Ok.
-
-> [root@mail init.d]# vgdisplay -v
-> Finding all volume groups
-> Finding volume group "VolGroup00"
-> --- Volume group ---
-> VG Name VolGroup00
-> Alloc PE / Size 4336 / 135,50 GB
-> Free PE / Size 1 / 32,00 MB
-So all your PE's are allocated, and I think you're all set to do the
-filesystem re-size.  I don't think you want to be messing with pvresize.
-
---Matt
+-- 
+Luca Berra -- bluca@comedia.it
+        Communication Media & Services S.r.l.
+ /"\
+ \ /     ASCII RIBBON CAMPAIGN
+  X        AGAINST HTML MAIL
+ / \
