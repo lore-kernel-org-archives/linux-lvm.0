@@ -1,25 +1,19 @@
-Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id k03CMX104341
-	for <linux-lvm@redhat.com>; Tue, 3 Jan 2006 07:22:33 -0500
-Received: from hermesnew.ex.ac.uk (dot.ex.ac.uk [144.173.6.11])
-	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id k03CMTTQ031864
-	for <linux-lvm@redhat.com>; Tue, 3 Jan 2006 07:22:31 -0500
-Received: from dogbert.ex.ac.uk ([144.173.228.2] helo=dogbert)
-	by hermesnew.ex.ac.uk with esmtps (Exim 4.50/mail)
-	id 1EtlBI-0007pB-22
-	for linux-lvm@redhat.com; Tue, 03 Jan 2006 12:22:24 +0000
-Received: from localhost ([127.0.0.1]) by dogbert with esmtp (Exim 4.43)
-	id 1EtlEl-0005jx-7F
-	for linux-lvm@redhat.com; Tue, 03 Jan 2006 12:25:59 +0000
-Subject: Re: [linux-lvm] RAID 5 recovery?
-From: John Rowe <rowe@excc.ex.ac.uk>
-In-Reply-To: <71AA34433C5F2753DDABE7D0@dhcp-2-206.wgops.com>
-References: <1136226503.2785.9.camel@dogbert>
-	<71AA34433C5F2753DDABE7D0@dhcp-2-206.wgops.com>
-Date: Tue, 03 Jan 2006 12:25:59 +0000
-Message-Id: <1136291159.2785.12.camel@dogbert>
+Received: from agk.surrey.redhat.com (agk.surrey.redhat.com [172.16.10.74])
+	by pobox.surrey.redhat.com (8.12.8/8.12.8) with ESMTP id k03EF3ws029073
+	for <linux-lvm@redhat.com>; Tue, 3 Jan 2006 14:15:03 GMT
+Received: from agk by agk.surrey.redhat.com with local (Exim 4.34)
+	id 1EtmwJ-0001FH-Dv
+	for linux-lvm@redhat.com; Tue, 03 Jan 2006 14:15:03 +0000
+Date: Tue, 3 Jan 2006 14:15:03 +0000
+From: Alasdair G Kergon <agk@redhat.com>
+Subject: Re: [linux-lvm] vg not intact after other disks are exchanged
+Message-ID: <20060103141503.GA4346@agk.surrey.redhat.com>
+References: <20051230181808.GA15333@openlib.org>
+	<20051231144230.GA8019@openlib.org>
+	<20051231170056.GB8049@openlib.org>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+In-Reply-To: <20051231170056.GB8049@openlib.org>
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -31,16 +25,21 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
+> > It is strange that the scan does not find the /dev/hdd volume,
+> > but the display manually finds the same data.
+>   Actually, I found that using lvm.conf, I can tell it to 
+>   scan for the disk, and then the disk is found, and the 
+>   vg1 is created. This closes my problem. But it is still
+>   bad that pvscan can't find the disk after other disks
+>   have been exchanged. Maybe this is a bios problem.
+ 
+Debian users in particular often report problems like this because 
+of an incorrect symlink connecting /dev/cdrom to /dev/hdd and an 
+lvm.conf filter ignoring cdrom.
 
-> 
-> 
-> I suggest you talk to/find the MD people.  LVM != RAID/MD.  However, yes, 
-> this is the only thing that might help you AFAIK.
-
-Insert brain..
-
-Thanks, I'll try them!
-
-John
+Alasdair
+-- 
+agk@redhat.com
