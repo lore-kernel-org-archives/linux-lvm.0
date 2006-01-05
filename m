@@ -1,12 +1,9 @@
-Message-ID: <43BC82A8.2060408@redhat.com>
-Date: Thu, 05 Jan 2006 10:21:28 +0800
+Message-ID: <43BC8CF9.1080901@redhat.com>
+Date: Thu, 05 Jan 2006 11:05:29 +0800
 From: "Fang,Dongyu" <dfang@redhat.com>
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] how to add a mirror to an existing logical volume
-References: <43BBA46E.20409@redhat.com>
-	<1136399042.20562.43.camel@hydrogen.msp.redhat.com>
-In-Reply-To: <1136399042.20562.43.camel@hydrogen.msp.redhat.com>
-Content-Type: multipart/mixed; boundary="------------030900050600010008010506"
+Content-Type: multipart/mixed; boundary="------------050606030809030006090008"
+Subject: [linux-lvm] Use lvcreart -m to make a mirror
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -21,50 +18,23 @@ To: LVM general discussion and development <linux-lvm@redhat.com>
 Cc: yshao@redhat.com
 
 This is a multi-part message in MIME format.
---------------030900050600010008010506
+--------------050606030809030006090008
 Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
 
-Oh,thanks.
-But when I use `lvconvert -m 1 vg1/lv1a`, it responsed "Adding mirror 
-images is not supported yet."
-Is there another way to do it?
+When I use `lvcreate -l 4 --mirrors 1 -n mirror1 /dev/vg1` want to 
+create  mirror LV, I got four LV:
+  ACTIVE            '/dev/vg1/mirror1' [16.00 MB] inherit
+  ACTIVE            '/dev/vg1/mirror1_mlog' [4.00 MB] inherit
+  ACTIVE            '/dev/vg1/mirror1_mimage_0' [16.00 MB] inherit
+  ACTIVE            '/dev/vg1/mirror1_mimage_1' [16.00 MB] inherit
+I think the LV mirror1 is the origin LV, mirror1_mlog is log, the two 
+others should be images LV, so why there are two images(in my opinion, 
+it should be only one), and I how to use then? Can I mount it?
 Thanks.
     Fang,Dongyu
 
-Jonathan Brassow wrote:
-
->When it's ready, it will be 'lvconvert'.
->
-> brassow
->
->On Wed, 2006-01-04 at 18:33 +0800, dfang wrote:
->  
->
->>How to add a mirror to an existing logical volume?
->>Use lvcreate or lvextend?
->>Thanks.
->>                                                                         
->>      Fang,Dongyu
->>
->>_______________________________________________
->>linux-lvm mailing list
->>linux-lvm@redhat.com
->>https://www.redhat.com/mailman/listinfo/linux-lvm
->>read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
->>    
->>
->
->_______________________________________________
->linux-lvm mailing list
->linux-lvm@redhat.com
->https://www.redhat.com/mailman/listinfo/linux-lvm
->read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
->  
->
-
-
---------------030900050600010008010506
+--------------050606030809030006090008
 Content-Type: text/x-vcard; charset=utf-8;
  name="dfang.vcf"
 Content-Transfer-Encoding: 7bit
@@ -78,4 +48,4 @@ version:2.1
 end:vcard
 
 
---------------030900050600010008010506--
+--------------050606030809030006090008--
