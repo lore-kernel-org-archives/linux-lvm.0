@@ -1,18 +1,21 @@
-Received: from fentible.pjc.net (vpn-68-1.surrey.redhat.com [10.32.68.1])
-	by pobox.surrey.redhat.com (8.12.8/8.12.8) with ESMTP id k059lhV3028162
-	for <linux-lvm@redhat.com>; Thu, 5 Jan 2006 09:47:43 GMT
-Received: from jeltz.pjc.net ([192.168.1.2])
-	by fentible.pjc.net with esmtp (Exim 4.50) id 1EuRih-0004Hk-RX
-	for linux-lvm@redhat.com; Thu, 05 Jan 2006 09:47:43 +0000
-Message-ID: <43BCEB3D.5090400@redhat.com>
-Date: Thu, 05 Jan 2006 09:47:41 +0000
-From: Patrick Caulfield <pcaulfie@redhat.com>
+Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id k05I8I109223
+	for <linux-lvm@redhat.com>; Thu, 5 Jan 2006 13:08:18 -0500
+Received: from desktopmusicindustry.desktopmusicindustry.com
+	(desktopmusicindustry.desktopmusicindustry.com [66.70.153.192])
+	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id k05I8BxX010539
+	for <linux-lvm@redhat.com>; Thu, 5 Jan 2006 13:08:15 -0500
+Received: from support (adsl-69-227-240-142.dsl.pltn13.pacbell.net
+	[69.227.240.142]) (authenticated bits=0)
+	by desktopmusicindustry.desktopmusicindustry.com (8.12.10/8.12.10) with
+	ESMTP id k05I5j2D020000
+	for <linux-lvm@redhat.com>; Thu, 5 Jan 2006 10:05:46 -0800
+From: "Dan Elder" <dan@absolutelynew.com>
+Date: Thu, 5 Jan 2006 10:08:01 -0800
+Message-ID: <POEPJKKIACNHGGMFNPNPGEIFGLAA.dan@absolutelynew.com>
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] Use lvcreart -m to make a mirror
-References: <43BC8CF9.1080901@redhat.com> <43BCDC23.9010100@redhat.com>
-	<43BCE669.8050702@redhat.com>
-In-Reply-To: <43BCE669.8050702@redhat.com>
 Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] Any way to recover "logical volumes"
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -24,22 +27,22 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: LVM general discussion and development <linux-lvm@redhat.com>
+To: linux-lvm@redhat.com
 
-Fang,Dongyu wrote:
-> Thanks your replay.
-> How can I mount the "original" (mimage_0) or the "mirror" (mimage_1)
-> single?
-> Because I want to verify it write/read data in both LV indeed.
+Hi All, yesterday my main system drive crashed, leaving me with two 400GB
+LVM drives with data on them that I need to access. When I run pvscan I get
+the following info on a brand new system install with the LVM drives
+attached:
 
-Because of internal cacheing I don't know whether that's a sensible thing to do.
+ PV /dev/sda1   VG VolGroup00   lvm2 [372.59 GB / 372.59 GB free]
+ PV /dev/sdb1   VG VolGroup00   lvm2 [372.59 GB / 372.59 GB free]
+ Total: 2 [745.19 GB] / in use: 2 [745.19 GB] / in no VG: 0 [0   ]
 
-> And how can I remove the mirror relation between the two LV(let the
-> "original" and "mirror" become two singe LV)?   (I use `lvconvert -m 0
-> vg1/mirror1`  then LVs become one.)
 
-With current RPMs you currently can't. The code is in CVS but it needs lots of
-testing.
--- 
+so I'm guessing(and hoping) that the data is still there, but I can't figure
+out the proper way to access or mount this. The VG says there are 0 logical
+volumes, is there a way to add the existing disks to this VG as logical
+volumes? I've been reading all of the howto's & forums & haven't found
+anything that works yet.
 
-patrick
+Thanks in advance
