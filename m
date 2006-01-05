@@ -1,15 +1,12 @@
-Received: from [172.31.0.169] (vpn83-174.boston.redhat.com [172.16.83.174])
-	by pobox.corp.redhat.com (8.12.8/8.12.8) with ESMTP id k0522wor015519
-	for <linux-lvm@redhat.com>; Wed, 4 Jan 2006 21:03:00 -0500
-Message-ID: <43BC8208.90408@redhat.com>
-Date: Thu, 05 Jan 2006 10:18:48 +0800
+Message-ID: <43BC82A8.2060408@redhat.com>
+Date: Thu, 05 Jan 2006 10:21:28 +0800
 From: "Fang,Dongyu" <dfang@redhat.com>
 MIME-Version: 1.0
 Subject: Re: [linux-lvm] how to add a mirror to an existing logical volume
 References: <43BBA46E.20409@redhat.com>
 	<1136399042.20562.43.camel@hydrogen.msp.redhat.com>
 In-Reply-To: <1136399042.20562.43.camel@hydrogen.msp.redhat.com>
-Content-Type: multipart/mixed; boundary="------------020300000503040105080806"
+Content-Type: multipart/mixed; boundary="------------030900050600010008010506"
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -21,15 +18,19 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 To: LVM general discussion and development <linux-lvm@redhat.com>
+Cc: yshao@redhat.com
 
 This is a multi-part message in MIME format.
---------------020300000503040105080806
+--------------030900050600010008010506
 Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
 
 Oh,thanks.
 But when I use `lvconvert -m 1 vg1/lv1a`, it responsed "Adding mirror 
 images is not supported yet."
+Is there another way to do it?
+Thanks.
+    Fang,Dongyu
 
 Jonathan Brassow wrote:
 
@@ -63,7 +64,7 @@ Jonathan Brassow wrote:
 >
 
 
---------------020300000503040105080806
+--------------030900050600010008010506
 Content-Type: text/x-vcard; charset=utf-8;
  name="dfang.vcf"
 Content-Transfer-Encoding: 7bit
@@ -77,4 +78,4 @@ version:2.1
 end:vcard
 
 
---------------020300000503040105080806--
+--------------030900050600010008010506--
