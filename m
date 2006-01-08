@@ -1,20 +1,17 @@
-Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id k0DEsE114626
-	for <linux-lvm@redhat.com>; Fri, 13 Jan 2006 09:54:14 -0500
-Received: from will.fastenal.com (will.fastenal.com [205.243.112.23])
-	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id k0DEsBKo030672
-	for <linux-lvm@redhat.com>; Fri, 13 Jan 2006 09:54:11 -0500
-Received: from [172.17.4.44] (unknown [172.17.4.44])
-	by will.fastenal.com (Postfix) with ESMTP id D030834021
-	for <linux-lvm@redhat.com>; Fri, 13 Jan 2006 08:54:01 -0600 (CST)
-Message-ID: <43C7BF09.3000003@fastenal.com>
-Date: Fri, 13 Jan 2006 08:54:01 -0600
-From: Kelly Sauke <ksauke@fastenal.com>
+Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id k08IFQ117959
+	for <linux-lvm@redhat.com>; Sun, 8 Jan 2006 13:15:26 -0500
+Received: from gaimboi.tmr.com (mail.tmr.com [64.65.253.246])
+	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id k08IFJmA027589
+	for <linux-lvm@redhat.com>; Sun, 8 Jan 2006 13:15:20 -0500
+Message-ID: <43C1580B.9020609@tmr.com>
+Date: Sun, 08 Jan 2006 13:20:59 -0500
+From: Bill Davidsen <davidsen@tmr.com>
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] And  another hdd to my LVM
-References: <BAY103-F154BBF27416921A9C1ACBAD2260@phx.gbl>
-In-Reply-To: <BAY103-F154BBF27416921A9C1ACBAD2260@phx.gbl>
+References: <E1EpIfb-0001e2-GR@highlab.com>
+In-Reply-To: <E1EpIfb-0001e2-GR@highlab.com>
 Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] Re: more info on the hang with 2.6.15-rc5
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -26,21 +23,42 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: LVM general discussion and development <linux-lvm@redhat.com>
+To: Sebastian Kuzminsky <seb@highlab.com>
+Cc: linux-raid@vger.kernel.org, linux-lvm@redhat.com
 
-Use lvextend to extend the logical volume.  Then use ext2online (assuming you 
-are using the ext2 or ext3 filesystem) to extend the filesystem.
+Sebastian Kuzminsky wrote:
 
-Crazyguy78 Anderton wrote:
-> When I Frist install fedora 4 I made a Lvm on  one of my harddrive 
-> /dev/sdb5 and mount it to /video  and now I want to  add another hdd. 
-> well now I got to where I set up the drive in Logical volume Management 
-> and show both drive under Volgroup00. But I cannot figure out how to get 
-> the other drive Show up to /video mount so I can Have more space.
-> 
-> 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+>Now it works, but I dont trust it one bit.
+>
+>I had been seeing almost immediate, perfectly repeatable hard lockups
+>in 2.6.15-rc5 and 2.6.15-rc5-mm3, when using sata_mv, RAID, and LVM
+>together.  Nothing in the syslog or on the console, and the system is
+>totally unresponsive to the keyboard & network.
+>
+>My hardware setup is: four Seagate Barracuda 500 GB disks, on a Marvell
+>MV88SX6081 8-port SATA-II PCI-X controller, on a PCI-X bus (64/66).
+>
+>The disks work great when accessed directly.  They work great when used
+>as four PVs for LVM, and when assembled into a 4-disk RAID-6.
+>
+>But when I make a RAID-6 array out of them, and use the array as a PV,
+>the system would hang completely, within seconds.  (This is with LVM
+>2.02.01, libdevicemapper 1.02.02, and dm-driver 4.5.0.)
+>
+>I turned on all the debugging options in the kernel config hoping to get
+>some insight, but this "debug" kernel doesnt crash.  It's running fine,
+>and I'm pounding on it.  A timing problem in the interaction between
+>LVM and RAID?  Some kind of wierd heisenbug....
+>
+>
+>I'd be happy to do any debugging tests people suggest.
+>
+>
+>  
+>
+I've been waiting for more info on this, did it get fixed? 2.6.15?
+
+-- 
+bill davidsen <davidsen@tmr.com>
+  CTO TMR Associates, Inc
+  Doing interesting things with small computers since 1979
