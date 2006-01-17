@@ -1,28 +1,18 @@
-Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id k0HKf3121719
-	for <linux-lvm@redhat.com>; Tue, 17 Jan 2006 15:41:03 -0500
-Received: from sabre-wulf.nvg.ntnu.no (sabre-wulf.nvg.ntnu.no [129.241.210.67])
-	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id k0HKf2jQ019305
-	for <linux-lvm@redhat.com>; Tue, 17 Jan 2006 15:41:02 -0500
-Received: from hagbart.nvg.ntnu.no (hagbart.nvg.ntnu.no [129.241.210.68])
-	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by sabre-wulf.nvg.ntnu.no (Postfix) with ESMTP id 6954C94781
-	for <linux-lvm@redhat.com>; Tue, 17 Jan 2006 21:40:51 +0100 (CET)
-Received: from hagbart.nvg.ntnu.no (localhost.localdomain [127.0.0.1])
-	by hagbart.nvg.ntnu.no (8.13.1/8.12.8) with ESMTP id k0HKepCK031825
-	for <linux-lvm@redhat.com>; Tue, 17 Jan 2006 21:40:51 +0100
-Received: from localhost (philos@localhost)
-	by hagbart.nvg.ntnu.no (8.13.1/8.12.10/Submit) with ESMTP id
-	k0HKepjs031822
-	for <linux-lvm@redhat.com>; Tue, 17 Jan 2006 21:40:51 +0100
-Date: Tue, 17 Jan 2006 21:40:51 +0100 (CET)
-From: Asgeir Ingebrigtsen <philos@nvg.ntnu.no>
-Subject: Re: [linux-lvm] Replace defective disc from non RAID LVM
-In-Reply-To: <Pine.LNX.4.58.0601102216260.10838@philos.nvg.ntnu.no>
-Message-ID: <Pine.LNX.4.64.0601172123480.31368@hagbart.nvg.ntnu.no>
-References: <Pine.LNX.4.58.0601102216260.10838@philos.nvg.ntnu.no>
-MIME-Version: 1.0
+Received: from agk.surrey.redhat.com (agk.surrey.redhat.com [172.16.10.74])
+	by pobox.surrey.redhat.com (8.12.8/8.12.8) with ESMTP id k0HM8KDK003415
+	for <linux-lvm@redhat.com>; Tue, 17 Jan 2006 22:08:20 GMT
+Received: from agk by agk.surrey.redhat.com with local (Exim 4.34)
+	id 1Eyz00-0000um-6t
+	for linux-lvm@redhat.com; Tue, 17 Jan 2006 22:08:20 +0000
+Date: Tue, 17 Jan 2006 22:08:20 +0000
+From: Alasdair G Kergon <agk@redhat.com>
+Subject: Re: [linux-lvm] Strange reduction in Total PE upon multiple
+	vgreduce+vgextend
+Message-ID: <20060117220820.GV4346@agk.surrey.redhat.com>
+References: <D486606E7AD20947BDB7E56862E04C390185A285@cvo1.cvo.roguewave.com>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <D486606E7AD20947BDB7E56862E04C390185A285@cvo1.cvo.roguewave.com>
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -33,382 +23,26 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"; format="flowed"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
+On Tue, Jan 17, 2006 at 10:38:11AM -0800, Poul Petersen wrote:
+> 	Notice that sdp1 now only has 468 PEs. I lose one PE everytime I
+> vgreduce/vgextend:
+    
+> # vgdisplay --version
+>   LVM version:     2.01.08 (2005-03-22)
+>   Library version: 1.01.02 (2005-05-17)
+>   Driver version:  4.4.0
 
-Made it, but it sereously should say somwhere that the procedure is quite 
-simple.
+WHATS_NEW:
+  Version 2.01.10 - 3rd May 2005
+  ==============================
+...
+    Reinstate full PV size when removing from VG.
 
-When old disc dies _DO NOT TOUCH LVM_ before new disc arrives.
-(This means do not attempt to reduce the lvm to match the disc thats lost 
-or do anything to LVM metadata)
-Note ID on old disc.
-Remove old defective disc.
-Add new disc of same size or larger. (i had same size here)
-pvcreate --uuid (same ID as old disc) --restorefile 
-/location.of.last.metadata.backup.
-vgchange -a y
-Run reiserfsck --rebuild-tree on the vg
 
-After some time, the LVM is then fixed, and comes up with most of the data 
-intact, except the data that were lost on the defective disc. And there 
-will be some cleaning up to do in the lost+found directory. I lost 125G 
-when the disc was 120G.
-
-Then mount the LVM and be happy, i am :)
-
-Asgeir
-
-On Tue, 10 Jan 2006, Asgeir Ingebrigtsen wrote:
-
->
-> Hi!
->
-> This question has probably been answered a few times, but it's prooving
-> difficult to get a definitive answer from google, the howto or the mailing
-> lists.
->
-> Anyone want to help me?
->
-> The situation:
->
-> I've got a 2T LVM consisting of 14 individual IDE discs of varying sizes.
-> There is no raid or mirroring.
-> I'm not sure of the configuration (striped or other) but will include the
-> "metadata" later in this email. I just set it up, and have been forced to
-> fill it up everytime a disc died on me (something allways went wrong
-> trying to restore). Not a big problem, but a bit tidious ;)
->
-> Now, a disc have died on me again, a 120G disc, and the question is:
->
-> How can i restore the whole LVM minus the data on the 120G disc?
->
-> I'll loose 120G or more, but would like to keep whatever
-> possible.
->
-> The file system used is reiserfs, the files are mainly large 300mb+ files,
-> i have not run any filesystem checks after the disk failed, i would like a
-> step by step guide if possible :)
->
-> METADATA:
->
-> # Generated by LVM2: Mon Oct  3 19:01:03 2005
->
-> contents = "Text Format Volume Group"
-> version = 1
->
-> description = "Created *after* executing 'lvextend -L+672G /dev/vg1/lv1'"
->
-> creation_host = "philos"	# Linux philos 2.4.26-1-686-smp #1 SMP Tue Aug 24 13:53:22 JST 2004 i686
-> creation_time = 1128358863	# Mon Oct  3 19:01:03 2005
->
-> vg1 {
-> 	id = "6t7WDD-LNua-VKM4-L0xS-Sr5J-snmU-DGozOI"
-> 	seqno = 8
-> 	status = ["RESIZEABLE", "READ", "WRITE"]
-> 	extent_size = 33554432		# 16 Gigabytes
-> 	max_lv = 0
-> 	max_pv = 0
->
-> 	physical_volumes {
->
-> 		pv0 {
-> 			id = "X1ZHJP-Su7u-8De3-JmA5-cIkT-sw5H-7oDU0G"
-> 			device = "/dev/hdb"	# Hint only
->
-> 			status = ["ALLOCATABLE"]
-> 			pe_start = 384
-> 			pe_count = 7	# 112 Gigabytes
-> 		}
->
-> 		pv1 {
-> 			id = "G8w4tV-sPzm-b42d-QSfY-0RJ5-04wx-Y00BBo"
-> 			device = "/dev/hdc"	# Hint only
->
-> 			status = ["ALLOCATABLE"]
-> 			pe_start = 384
-> 			pe_count = 5	# 80 Gigabytes
-> 		}
->
-> 		pv2 {
-> 			id = "2OS2Du-RxsO-fPtK-Khtx-yc9M-McIt-eKMIFD"
-> 			device = "/dev/hdd"	# Hint only
->
-> 			status = ["ALLOCATABLE"]
-> 			pe_start = 384
-> 			pe_count = 4	# 64 Gigabytes
-> 		}
->
-> 		pv3 {
-> 			id = "DTmd0o-vxQm-LwGX-VgtF-ntOX-Nw4j-sMdz20"
-> 			device = "/dev/hdh"	# Hint only
->
-> 			status = ["ALLOCATABLE"]
-> 			pe_start = 384
-> 			pe_count = 9	# 144 Gigabytes
-> 		}
->
-> 		pv4 {
-> 			id = "rvt9Tm-36Hq-NLZ7-FLwR-3Hxc-9sZZ-sLxt53"
-> 			device = "/dev/hdf"	# Hint only
->
-> 			status = ["ALLOCATABLE"]
-> 			pe_start = 384
-> 			pe_count = 9	# 144 Gigabytes
-> 		}
->
-> 		pv5 {
-> 			id = "rAmS3s-yD0F-WZF5-Wi9Z-ejbe-edTF-CUhdvU"
-> 			device = "/dev/hdg"	# Hint only
->
-> 			status = ["ALLOCATABLE"]
-> 			pe_start = 384
-> 			pe_count = 9	# 144 Gigabytes
-> 		}
->
-> 		pv6 {
-> 			id = "6vd1kF-O2CH-Zrmb-O19b-7T9L-jHXi-rmYMxB"
-> 			device = "/dev/hdi"	# Hint only
->
-> 			status = ["ALLOCATABLE"]
-> 			pe_start = 384
-> 			pe_count = 6	# 96 Gigabytes
-> 		}
->
-> 		pv7 {
-> 			id = "DFVJxw-mAvr-B0Gx-Ck5w-90db-ZWiS-vaK5Au"
-> 			device = "/dev/hdj"	# Hint only
->
-> 			status = ["ALLOCATABLE"]
-> 			pe_start = 384
-> 			pe_count = 6	# 96 Gigabytes
-> 		}
->
-> 		pv8 {
-> 			id = "Cokdd5-LEN9-DZUr-Mmk6-Q0jF-nZCn-eSonf8"
-> 			device = "/dev/hdk"	# Hint only
->
-> 			status = ["ALLOCATABLE"]
-> 			pe_start = 384
-> 			pe_count = 6	# 96 Gigabytes
-> 		}
->
-> 		pv9 {
-> 			id = "41fnQg-jitr-qJ6z-4Aes-4gd9-oTZL-X8ujZF"
-> 			device = "/dev/hdl"	# Hint only
->
-> 			status = ["ALLOCATABLE"]
-> 			pe_start = 384
-> 			pe_count = 9	# 144 Gigabytes
-> 		}
->
-> 		pv10 {
-> 			id = "2r7VTJ-dXWv-33U4-rv2j-71ib-bGV2-0g4Y1q"
-> 			device = "/dev/cdrom"	# Hint only
->
-> 			status = ["ALLOCATABLE"]
-> 			pe_start = 384
-> 			pe_count = 11	# 176 Gigabytes
-> 		}
->
-> 		pv11 {
-> 			id = "XIZ6Ch-0rw4-4OIy-8IzW-0lko-k5ea-psWYhO"
-> 			device = "/dev/hdm"	# Hint only
->
-> 			status = ["ALLOCATABLE"]
-> 			pe_start = 384
-> 			pe_count = 14	# 224 Gigabytes
-> 		}
->
-> 		pv12 {
-> 			id = "T1taAR-qp0L-Ao26-k9cK-UUfu-yLZB-EbLBOP"
-> 			device = "/dev/hdn"	# Hint only
->
-> 			status = ["ALLOCATABLE"]
-> 			pe_start = 384
-> 			pe_count = 14	# 224 Gigabytes
-> 		}
->
-> 		pv13 {
-> 			id = "ifZOsO-3va6-LNgl-oH42-OOdr-75Nz-E5h5HJ"
-> 			device = "/dev/hdo"	# Hint only
->
-> 			status = ["ALLOCATABLE"]
-> 			pe_start = 384
-> 			pe_count = 14	# 224 Gigabytes
-> 		}
-> 	}
->
-> 	logical_volumes {
->
-> 		lv1 {
-> 			id = "a6tDgq-JBDo-MuIx-20n8-6h5o-mgCF-rDt2bW"
-> 			status = ["READ", "WRITE", "VISIBLE"]
-> 			segment_count = 14
->
-> 			segment1 {
-> 				start_extent = 0
-> 				extent_count = 7	# 112 Gigabytes
->
-> 				type = "striped"
-> 				stripe_count = 1	# linear
->
-> 				stripes = [
-> 					"pv0", 0
-> 				]
-> 			}
-> 			segment2 {
-> 				start_extent = 7
-> 				extent_count = 5	# 80 Gigabytes
->
-> 				type = "striped"
-> 				stripe_count = 1	# linear
->
-> 				stripes = [
-> 					"pv1", 0
-> 				]
-> 			}
-> 			segment3 {
-> 				start_extent = 12
-> 				extent_count = 4	# 64 Gigabytes
->
-> 				type = "striped"
-> 				stripe_count = 1	# linear
->
-> 				stripes = [
-> 					"pv2", 0
-> 				]
-> 			}
-> 			segment4 {
-> 				start_extent = 16
-> 				extent_count = 9	# 144 Gigabytes
->
-> 				type = "striped"
-> 				stripe_count = 1	# linear
->
-> 				stripes = [
-> 					"pv3", 0
-> 				]
-> 			}
-> 			segment5 {
-> 				start_extent = 25
-> 				extent_count = 9	# 144 Gigabytes
->
-> 				type = "striped"
-> 				stripe_count = 1	# linear
->
-> 				stripes = [
-> 					"pv4", 0
-> 				]
-> 			}
-> 			segment6 {
-> 				start_extent = 34
-> 				extent_count = 9	# 144 Gigabytes
->
-> 				type = "striped"
-> 				stripe_count = 1	# linear
->
-> 				stripes = [
-> 					"pv5", 0
-> 				]
-> 			}
-> 			segment7 {
-> 				start_extent = 43
-> 				extent_count = 6	# 96 Gigabytes
->
-> 				type = "striped"
-> 				stripe_count = 1	# linear
->
-> 				stripes = [
-> 					"pv6", 0
-> 				]
-> 			}
-> 			segment8 {
-> 				start_extent = 49
-> 				extent_count = 6	# 96 Gigabytes
->
-> 				type = "striped"
-> 				stripe_count = 1	# linear
->
-> 				stripes = [
-> 					"pv7", 0
-> 				]
-> 			}
-> 			segment9 {
-> 				start_extent = 55
-> 				extent_count = 6	# 96 Gigabytes
->
-> 				type = "striped"
-> 				stripe_count = 1	# linear
->
-> 				stripes = [
-> 					"pv8", 0
-> 				]
-> 			}
-> 			segment10 {
-> 				start_extent = 61
-> 				extent_count = 9	# 144 Gigabytes
->
-> 				type = "striped"
-> 				stripe_count = 1	# linear
->
-> 				stripes = [
-> 					"pv9", 0
-> 				]
-> 			}
-> 			segment11 {
-> 				start_extent = 70
-> 				extent_count = 11	# 176 Gigabytes
->
-> 				type = "striped"
-> 				stripe_count = 1	# linear
->
-> 				stripes = [
-> 					"pv10", 0
-> 				]
-> 			}
-> 			segment12 {
-> 				start_extent = 81
-> 				extent_count = 14	# 224 Gigabytes
->
-> 				type = "striped"
-> 				stripe_count = 1	# linear
->
-> 				stripes = [
-> 					"pv11", 0
-> 				]
-> 			}
-> 			segment13 {
-> 				start_extent = 95
-> 				extent_count = 14	# 224 Gigabytes
->
-> 				type = "striped"
-> 				stripe_count = 1	# linear
->
-> 				stripes = [
-> 					"pv12", 0
-> 				]
-> 			}
-> 			segment14 {
-> 				start_extent = 109
-> 				extent_count = 14	# 224 Gigabytes
->
-> 				type = "striped"
-> 				stripe_count = 1	# linear
->
-> 				stripes = [
-> 					"pv13", 0
-> 				]
-> 			}
-> 		}
-> 	}
-> }
->
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
->
+Alasdair
+-- 
+agk@redhat.com
