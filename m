@@ -1,25 +1,21 @@
-Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id k0I0Bx104262
-	for <linux-lvm@redhat.com>; Tue, 17 Jan 2006 19:11:59 -0500
-Received: from av9-2-sn2.hy.skanova.net (av9-2-sn2.hy.skanova.net
-	[81.228.8.180])
-	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id k0I0BnxX004455
-	for <linux-lvm@redhat.com>; Tue, 17 Jan 2006 19:11:50 -0500
-Received: from smtp4-1-sn2.hy.skanova.net (smtp4-1-sn2.hy.skanova.net
-	[81.228.8.92])
-	by av9-2-sn2.hy.skanova.net (Postfix) with ESMTP id 5362537F3F
-	for <linux-lvm@redhat.com>; Wed, 18 Jan 2006 01:11:44 +0100 (CET)
-Received: from knuth (h128n1-m-sp-gr100.ias.bredband.telia.com
-	[81.236.184.128])
-	by smtp4-1-sn2.hy.skanova.net (Postfix) with SMTP id 3E55E37E69
-	for <linux-lvm@redhat.com>; Wed, 18 Jan 2006 01:11:44 +0100 (CET)
-Message-ID: <115501c61bc3$c4afb520$0a01000a@knuth>
-From: "Jimisola Laursen" <public@jimisola.com>
-References: <00bb01c606e3$a29f75a0$0a01000a@knuth>
-Subject: Re: [linux-lvm] Lost all logical volumes in two volume groups?
-Date: Wed, 18 Jan 2006 01:11:45 +0100
+Received: from mx2.redhat.com (mx2.redhat.com [10.255.15.25])
+	by int-mx2.corp.redhat.com (8.11.6/8.11.6) with ESMTP id k0IBWiQ27014
+	for <linux-lvm@redhat.com>; Wed, 18 Jan 2006 06:32:44 -0500
+Received: from rarr.org.uk (213-228-241-254.dsl.prodigynet.co.uk
+	[213.228.241.254])
+	by mx2.redhat.com (8.12.11/8.12.11) with ESMTP id k0ICW81U032299
+	for <linux-lvm@redhat.com>; Wed, 18 Jan 2006 07:32:09 -0500
+Received: from host217-46-230-193.in-addr.btopenworld.com ([217.46.230.193]
+	helo=[192.168.0.2])
+	by rarr.org.uk with esmtpsa (TLSv1:AES256-SHA:256) (Exim 4.54)
+	id 1EzBYF-0006Af-CK
+	for linux-lvm@redhat.com; Wed, 18 Jan 2006 11:32:31 +0000
+Message-ID: <43CE271C.4090308@rarr.org.uk>
+Date: Wed, 18 Jan 2006 11:31:40 +0000
+From: Chris bolton <cbolton@rarr.org.uk>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] Disk space reporting inconsistencies
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -30,121 +26,35 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; format="flowed"; charset="us-ascii"; reply-type="response"
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: linux-lvm@redhat.com
 
-Hi!
+Hi,
 
-I made the post below a almost a month ago, but I never received any replies.
+just added a new PV to my VG but to me there seems to be an 
+inconsistency between what lvm says is the disk space and what df says.
 
-I would really appreciate some help on this matter since I haven't been able to 
-solve it.
+pvscan
+  PV /dev/sda2   VG VolGroup00   lvm2 [68.38 GB / 0    free]
+  PV /dev/sdb    VG VolGroup00   lvm2 [68.50 GB / 0    free]
+  PV /dev/hdc2   VG VolGroup00   lvm2 [37.12 GB / 0    free]
+  PV /dev/hdb1   VG VolGroup00   lvm2 [37.22 GB / 0    free]
+  PV /dev/hdd1   VG VolGroup00   lvm2 [37.22 GB / 0    free]
+  PV /dev/hde1   VG VolGroup00   lvm2 [37.25 GB / 0    free]
+  Total: 6 [285.69 GB] / in use: 6 [285.69 GB] / in no VG: 0 [0   ]
 
-Kindly,
-Jimisola
+df -h
+/dev/mapper/VolGroup00-LogVol00   265G  227G   28G  90% /
 
------ Original Message ----- 
-From: "Jimisola Laursen" <public@jimisola.com>
-To: <linux-lvm@redhat.com>
-Sent: Thursday, December 22, 2005 11:36 AM
-Subject: [linux-lvm] Lost all logical volumes in two volume groups?
+I tried resizing the filesystem but it just says this..
 
+ext2online  /dev/VolGroup00/LogVol00
+    ext2online v1.1.18 - 2001/03/18 for EXT2FS 0.5b
+    ext2online: ext2_ioctl: No space left on device
 
-> Hi!
->
-> After a failed Mandriva upgrade I can no longer use my two LVM (vg01 and 
-> vg02).
-> When the upgrade failed I unplugged my disks after two-three boots where 
-> ReiserFS found errors until I had reinstalled my system (with OpenSuse).
->
-> I just plugged in my disks again and the LVM partitions are recognized, but 
-> there are no LVs!
-> Is there anyway for me to fix this?
->
-> I have an old copy of /etc/lvm with archive and backup directories including 
-> vg01_00000.vg and vg01_00001.vg.
-> No .vg files for vg02 though, but that VG is less important than the vg01 one.
->
-> VG system: current OpenSuse system
-> VG vg01: shows no LV (have .vg files)
-> VG vg02: shows no LV (have no .vg files)
->
-> All partitions are ReiserFS.
->
-> Regards,
-> Jimisola
->
-> fermat:/scratch # vgchange -ay
->  0 logical volume(s) in volume group "vg02" now active
->  5 logical volume(s) in volume group "system" now active
->  0 logical volume(s) in volume group "vg01" now active
-> fermat:/scratch # vgdisplay
->  --- Volume group ---
->  VG Name               vg02
->  System ID
->  Format                lvm2
->  Metadata Areas        1
->  Metadata Sequence No  3
->  VG Access             read/write
->  VG Status             resizable
->  MAX LV                255
->  Cur LV                0
->  Open LV               0
->  Max PV                255
->  Cur PV                1
->  Act PV                1
->  VG Size               45.90 GB
->  PE Size               4.00 MB
->  Total PE              11750
->  Alloc PE / Size       0 / 0
->  Free  PE / Size       11750 / 45.90 GB
->  VG UUID               crHchE-236z-G24u-AGhW-MgDd-nTxD-1MnxHn
->
->  --- Volume group ---
->  VG Name               system
->  System ID
->  Format                lvm2
->  Metadata Areas        1
->  Metadata Sequence No  7
->  VG Access             read/write
->  VG Status             resizable
->  MAX LV                0
->  Cur LV                5
->  Open LV               5
->  Max PV                0
->  Cur PV                1
->  Act PV                1
->  VG Size               97.66 GB
->  PE Size               4.00 MB
->  Total PE              25001
->  Alloc PE / Size       11506 / 44.95 GB
->  Free  PE / Size       13495 / 52.71 GB
->  VG UUID               qMe8jO-4Qyl-Weno-k09t-n2Pd-Jo5G-Co7kpn
->
->  --- Volume group ---
->  VG Name               vg01
->  System ID
->  Format                lvm2
->  Metadata Areas        1
->  Metadata Sequence No  12
->  VG Access             read/write
->  VG Status             resizable
->  MAX LV                255
->  Cur LV                0
->  Open LV               0
->  Max PV                255
->  Cur PV                1
->  Act PV                1
->  VG Size               232.88 GB
->  PE Size               4.00 MB
->  Total PE              59618
->  Alloc PE / Size       0 / 0
->  Free  PE / Size       59618 / 232.88 GB
->  VG UUID               YowUTE-awQj-OyKP-0UGH-nwkD-MZzt-e8P0kK
->
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
-> 
+ext2online: unable to resize /dev/mapper/VolGroup00-LogVol00
+
+Am I missing something obvious here? or have I ballsed it up along the way?
+
+Cheers,
+Chris.
