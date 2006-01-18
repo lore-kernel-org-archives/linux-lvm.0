@@ -1,15 +1,15 @@
-Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id k0HMdT116499
-	for <linux-lvm@redhat.com>; Tue, 17 Jan 2006 17:39:29 -0500
-Received: from netlx050.vf.utwente.nl (netlx050.vf.utwente.nl [192.87.17.19])
-	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id k0HMdLoh016082
-	for <linux-lvm@redhat.com>; Tue, 17 Jan 2006 17:39:22 -0500
-From: Martijn Brouwer <e.a.m.brouwer@alumnus.utwente.nl>
-Content-Type: multipart/mixed; boundary="=-6uNzd32vPJYj1Rl+euMY"
-Date: Tue, 17 Jan 2006 23:39:09 +0100
-Message-Id: <1137537549.8998.53.camel@martijn.jeruzalem>
-Mime-Version: 1.0
-Subject: [linux-lvm] restore lvm root filesystem
+Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id k0I0qq122699
+	for <linux-lvm@redhat.com>; Tue, 17 Jan 2006 19:52:52 -0500
+Received: from cvo1.cvo.roguewave.com (cvo-ext.roguewave.com [12.22.36.198])
+	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id k0I0qndw014482
+	for <linux-lvm@redhat.com>; Tue, 17 Jan 2006 19:52:49 -0500
+Message-ID: <D486606E7AD20947BDB7E56862E04C390185A28E@cvo1.cvo.roguewave.com>
+From: Poul Petersen <petersp@roguewave.com>
+Subject: RE: [linux-lvm] Strange reduction in Total PE upon multiple vgred
+	uce+vgextend
+Date: Tue, 17 Jan 2006 16:52:43 -0800
+MIME-Version: 1.0
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -20,196 +20,56 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: linux-lvm@redhat.com
-Cc: rutger@direct-control.nl
-
-
---=-6uNzd32vPJYj1Rl+euMY
-Content-Type: text/plain
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
+To: 'LVM general discussion and development' <linux-lvm@redhat.com>
 
-Hi,
-A situation: Somebody configured a computer with fedora core. The root
-filesystem is on a lvm, that used a software raid 1 array as physical
-volume. The system crashed and afterwards, the lvm did not come up
-anymore. The administrator used one disk to install an new system (the
-other should be identical) but wants to get some data from the other
-disk. I am by no means a lvm expert and tried to following to recover
-the volume group:
+> WHATS_NEW:
+>   Version 2.01.10 - 3rd May 2005
+>   ==============================
+> ...
+>     Reinstate full PV size when removing from VG.
 
-vgscan -v
-    Wiping cache of LVM-capable devices
-    Wiping internal cache
-  Reading all physical volumes.  This may take a while...
-    Finding all volume groups
-    Finding volume group "VolGroup00"
-  Couldn't find device with uuid 'nIS7N6-h9Oo-6WNC-SSCY-LxA0-pJRG-oWDYIt'.
-  Couldn't find all physical volumes for volume group VolGroup00.
-  Volume group "VolGroup00" not found
+	Ah, fair enough. I upgraded to LVM-2.01.15 but now I have a related
+problem. If I force the physical volume size using --setphysicalvolumesize,
+then doing vgreduce/vgextend resets it to the maximum size: 
 
-This basically says. "Hey, one device is missing"
-Then I tried to restore the original configurartion. I copied sda2 (the
-more or less unaffected disk), to sdb (the bad disk) and tried to adept
-the lvm configuration:
+# pvcreate -f -M2 --setphysicalvolumesize=10000 /dev/sd[pq]1
+  Physical volume "/dev/sdp1" successfully created
+  Physical volume "/dev/sdq1" successfully created
 
-save the config to a file
-lvm vgcfgbackup -P
+# vgcreate vg20 -s32M -M2 /dev/sdp1 /dev/sdq1
+  Volume group "vg20" successfully created
 
-creat a new pv with the missing uuid:
+# vgdisplay -v vg20
+<cut>
+  --- Physical volumes ---
+  PV Name               /dev/sdp1     
+  PV UUID               8H24mH-k5TA-n3O0-sQUF-e8sB-dteF-luHLJF
+  PV Status             allocatable
+  Total PE / Free PE    312 / 312
+   
+  PV Name               /dev/sdq1     
+  PV UUID               M13ArL-7b9d-SvLJ-ik6H-pRYO-hqgg-WWaPRP
+  PV Status             allocatable
+  Total PE / Free PE    312 / 312
+   
+# vgreduce vg20 /dev/sdp1 ; vgextend vg20 /dev/sdp1
+  Removed "/dev/sdp1" from volume group "vg20"
+  Volume group "vg20" successfully extended
 
-pvcreate -u nIS7N6-h9Oo-6WNC-SSCY-LxA0-pJRG-oWDYIt /dev/sdb2
+# vgdisplay -v vg20
+<cut>
+  --- Physical volumes ---
+  PV Name               /dev/sdq1     
+  PV UUID               M13ArL-7b9d-SvLJ-ik6H-pRYO-hqgg-WWaPRP
+  PV Status             allocatable
+  Total PE / Free PE    312 / 312
+   
+  PV Name               /dev/sdp1     
+  PV UUID               8H24mH-k5TA-n3O0-sQUF-e8sB-dteF-luHLJF
+  PV Status             allocatable
+  Total PE / Free PE    469 / 469
 
-replaced a "device unknown" line in /etc/lvm/backup/VolGroup00
-with /dev/sdb2. Then I tried to restore the lvm using the changed config
-file, which failed:
-
- lvm vgcfgrestore -v -t -f /etc/lvm/backup/VolGroup00 VolGroup00
-  Test mode: Metadata will NOT be updated.
-  Cannot change metadata for partial volume group VolGroup00
-  Restore failed.
-    Test mode: Wiping internal 
-
-================================================================
-
-Then I did a second attempt:
-
-I made a zero device:
-
-echo '0 16000000 zero' | dmsetup create zeros
-
-Changed lvm.conf in order to make the zero device a fall back option:
-
-    # missing_stripe_filler = "/dev/ioerror"
-    missing_stripe_filler = "/dev/mapper/zeros"
-
-And tried to bring the vg up after I removed the pv that I created above
-(sdb2):
-
-lvm pvscan
-  Couldn't find device with uuid
-'nIS7N6-h9Oo-6WNC-SSCY-LxA0-pJRG-oWDYIt'.
-  PV unknown device   VG VolGroup00   lvm2 [74.53 GB / 0    free]
-  PV /dev/sda2        VG VolGroup00   lvm2 [74.41 GB / 64.00 MB free]
-  Total: 2 [148.94 GB] / in use: 2 [148.94 GB] / in no VG: 0 [0   ]
-
-Now we have only the unaffected partition als pv.
-
-lvchange -a y -P VolGroup00
-  Partial mode. Incomplete volume groups will be activated read-only.
-  Couldn't find device with uuid
-'nIS7N6-h9Oo-6WNC-SSCY-LxA0-pJRG-oWDYIt'.
-  Couldn't find device with uuid
-'nIS7N6-h9Oo-6WNC-SSCY-LxA0-pJRG-oWDYIt'.
-  device-mapper ioctl cmd 9 failed: Invalid argument
-  Couldn't load device 'VolGroup00-LogVol00'.
-  Couldn't find device with uuid
-'nIS7N6-h9Oo-6WNC-SSCY-LxA0-pJRG-oWDYIt'.
-
-This failed again. As I said, I am no expert and cannot solve this. For
-these attempts were suggested by a kind soul in the irc channel. I hope
-somebody can give me some more suggestions.
-These operations I did from a ubuntu live cd with a 2.6.12 kernel and
-lvm2. I send the partial backup of the configuration as attachment. 
-
-Bye,
-
-Martijn
-
-
-
---=-6uNzd32vPJYj1Rl+euMY
-Content-Disposition: attachment; filename=VolGroup00
-Content-Type: text/plain; name=VolGroup00; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-
-# Generated by LVM2: Tue Jan 17 12:34:18 2006
-
-contents = "Text Format Volume Group"
-version = 1
-
-description = "Created *after* executing 'vgcfgbackup -P'"
-
-creation_host = "ubuntu"	# Linux ubuntu 2.6.12-9-386 #1 Mon Oct 10 13:14:36 BST 2005 i686
-creation_time = 1137501258	# Tue Jan 17 12:34:18 2006
-
-VolGroup00 {
-	id = "1AX2QH-tM3T-lPsp-pt59-o0Rd-6cAl-MhICnT"
-	seqno = 3
-	status = ["RESIZEABLE", "PARTIAL", "READ"]
-	extent_size = 65536		# 32 Megabytes
-	max_lv = 0
-	max_pv = 0
-
-	physical_volumes {
-
-		pv0 {
-			id = "nIS7N6-h9Oo-6WNC-SSCY-LxA0-pJRG-oWDYIt"
-			device = "unknown device"	# Hint only
-
-			status = ["ALLOCATABLE"]
-			pe_start = 384
-			pe_count = 2385	# 74.5312 Gigabytes
-		}
-
-		pv1 {
-			id = "aUxDE1-AstI-goWu-q8mC-GlN9-RzBl-XH2pgh"
-			device = "/dev/sda2"	# Hint only
-
-			status = ["ALLOCATABLE"]
-			pe_start = 384
-			pe_count = 2381	# 74.4062 Gigabytes
-		}
-	}
-
-	logical_volumes {
-
-		LogVol00 {
-			id = "gAOFuC-QMYe-Lyi8-RlCH-4uBL-T1TX-OEnayn"
-			status = ["READ", "WRITE", "VISIBLE"]
-			segment_count = 2
-
-			segment1 {
-				start_extent = 0
-				extent_count = 2385	# 74.5312 Gigabytes
-
-				type = "striped"
-				stripe_count = 1	# linear
-
-				stripes = [
-					"pv0", 0
-				]
-			}
-			segment2 {
-				start_extent = 2385
-				extent_count = 2347	# 73.3438 Gigabytes
-
-				type = "striped"
-				stripe_count = 1	# linear
-
-				stripes = [
-					"pv1", 0
-				]
-			}
-		}
-
-		LogVol01 {
-			id = "oj9dm4-8DTK-GQgf-Omdy-kcUS-yp4V-pfyxmT"
-			status = ["READ", "WRITE", "VISIBLE"]
-			segment_count = 1
-
-			segment1 {
-				start_extent = 0
-				extent_count = 32	# 1024 Megabytes
-
-				type = "striped"
-				stripe_count = 1	# linear
-
-				stripes = [
-					"pv1", 2347
-				]
-			}
-		}
-	}
-}
-
---=-6uNzd32vPJYj1Rl+euMY--
+	   
+-poul
