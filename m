@@ -1,18 +1,16 @@
-Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id k0I2xN103298
-	for <linux-lvm@redhat.com>; Tue, 17 Jan 2006 21:59:23 -0500
-Received: from mail.frii.com (phobos02.frii.net [216.17.128.162])
-	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id k0I2xK0F015253
-	for <linux-lvm@redhat.com>; Tue, 17 Jan 2006 21:59:21 -0500
-Received: from dad (host206-57.lpbroadband.net [66.54.206.57])
-	by mail.frii.com (FRII) with ESMTP id 62C43A397D
-	for <linux-lvm@redhat.com>; Tue, 17 Jan 2006 19:59:15 -0700 (MST)
-From: "Bret Mckee" <bretm@boneheads.us>
-Date: Tue, 17 Jan 2006 19:59:11 -0700
+Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id k0IEQ4122284
+	for <linux-lvm@redhat.com>; Wed, 18 Jan 2006 09:26:04 -0500
+Received: from moutng.kundenserver.de (moutng.kundenserver.de
+	[212.227.126.183])
+	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id k0IEPqI4014614
+	for <linux-lvm@redhat.com>; Wed, 18 Jan 2006 09:25:57 -0500
+Message-ID: <43CE4CF8.8090709@schembach.de>
+Date: Wed, 18 Jan 2006 15:13:12 +0100
+From: Oliver Schembach <oliver@schembach.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
-Message-Id: <20060118025915.62C43A397D@mail.frii.com>
-Subject: [linux-lvm] LVM Performance effects?
+Subject: [linux-lvm] Recovering LVM configuration on crashed RAID partition
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -23,67 +21,55 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: linux-lvm@redhat.com
 
-I have set up a file server with LVM on top of RAID 5, and seem to be
-having LVM related performance issue.
+Hi,
 
-Interesting details:
--Processor:  Intel(R) Pentium(R) 4 CPU 2.80GHz with hyperthreading
--disks - 4 X Seagate 300 GB
-  - 2 are SATA, connected to MB SATA connectors
-  - 2 are PATA, connected to Promise add in card
-- OS is centos 4.2
-- uname -a -> Linux localhost.localdomain 2.6.9-22.ELsmp #1 SMP Sat
-Oct 8 19:11:43 CDT 2005 i686 i686 i386 GNU/Linux
-- all perf numbers obtained using time dd, and were ran 3 times.  Run
-to run variance was within 1 second/run
-- raid chunk size is 256k, file system block size is 4k, mke2fs was
-done with stripe=64
+I'm running 4 IDE disks in my home server using software raid with the 
+following partition layout:
 
-I ran three tests, one to the raid device, one to the lvm device, one
-through the file system.
+hd[abcd]1   /boot (RAID 1)
+hd[abcd]2   swap (RAID 5)
+hd[abcd]3   / (RAID 5)
+hd[abcd]4   (RAID 5) LVM with logical volumes /data and /business
 
-raid device: 118.2 MB/s
-lvm device: 49.43 MB/s
-file system: 40.83 MB/s
+Now hdb crashed and while trying to recover the root partition (before I 
+replaced the faulty disk) I lost all data in the root partition 
+(including the whole /etc directory tree). So after replacing the defect 
+drive I installed a linux on hda3 (with swap partion on hda2) for 
+recovering purposes. I actually left the LVM RAID partition untouched 
+until I replaced the defect drive. After resyncing the new drive into 
+the LVM partition I tried to get access to the data in the logical 
+volumes, but without success. There are no PVs, no VGs, or LVs listed.
 
-I don't understand the LVM performance effect - I thougt LVM was a
-pretty straight forward block remapper with negligible performance
-impact. I'm stunned by the 58% performance penalty.
+GPART did not give any positive results, but listed four primary 
+partitions with all 00s in it:
+* Warning: strange partition table magic 0x0000.
+Primary partition(1)
+   type: 000(0x00)(unused)
+   size: 0mb #s(0) s(0-0)
+   chs:  (0/0/0)-(0/0/0)d (0/0/0)-(0/0/0)r
+   hex:  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 
+00 00 00
 
-Any thoughts?  Any more data that would be helpful?
+Primary partition(2)
+...
 
-Thanks in advance,
+vgscan gives:
+  Reading all physical volumes.  This may take a while...
 
-Bret
----------------------
+pvscan gives:
+  No matching physical volumes found
 
-[root@localhost test]# time dd if=/dev/md1 of=/dev/null bs=1M
-count=4096       
-4096+0 records in
-4096+0 records out
+lvdisplay gives:
+  No volume groups found
 
-real    0m34.634s
-user    0m0.021s
-sys     0m13.467s
+Since I didn't do anything with the LVM RAID partition the logical 
+volumes and the data must still be there!!!
 
+Is there any other way to get access to the LVM partitions?
 
-[root@localhost test]# time dd if=/dev/raid/mirror2 of=/dev/null bs=1M
-count=4096
-4096+0 records in
-4096+0 records out
+Thanks in advance!
 
-real    1m22.863s
-user    0m0.021s
-sys     0m14.384s
-
-[root@localhost test]# time dd if=testfile of=/dev/null bs=1M
-count=4096       
-4096+0 records in
-4096+0 records out
-
-real    1m40.310s
-user    0m0.020s
-sys     0m9.996s
+Oliver 
