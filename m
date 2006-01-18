@@ -1,15 +1,18 @@
 Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id k0I0qq122699
-	for <linux-lvm@redhat.com>; Tue, 17 Jan 2006 19:52:52 -0500
-Received: from cvo1.cvo.roguewave.com (cvo-ext.roguewave.com [12.22.36.198])
-	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id k0I0qndw014482
-	for <linux-lvm@redhat.com>; Tue, 17 Jan 2006 19:52:49 -0500
-Message-ID: <D486606E7AD20947BDB7E56862E04C390185A28E@cvo1.cvo.roguewave.com>
-From: Poul Petersen <petersp@roguewave.com>
-Subject: RE: [linux-lvm] Strange reduction in Total PE upon multiple vgred
-	uce+vgextend
-Date: Tue, 17 Jan 2006 16:52:43 -0800
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id k0I2xN103298
+	for <linux-lvm@redhat.com>; Tue, 17 Jan 2006 21:59:23 -0500
+Received: from mail.frii.com (phobos02.frii.net [216.17.128.162])
+	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id k0I2xK0F015253
+	for <linux-lvm@redhat.com>; Tue, 17 Jan 2006 21:59:21 -0500
+Received: from dad (host206-57.lpbroadband.net [66.54.206.57])
+	by mail.frii.com (FRII) with ESMTP id 62C43A397D
+	for <linux-lvm@redhat.com>; Tue, 17 Jan 2006 19:59:15 -0700 (MST)
+From: "Bret Mckee" <bretm@boneheads.us>
+Date: Tue, 17 Jan 2006 19:59:11 -0700
 MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Message-Id: <20060118025915.62C43A397D@mail.frii.com>
+Subject: [linux-lvm] LVM Performance effects?
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -21,55 +24,66 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: 'LVM general discussion and development' <linux-lvm@redhat.com>
+To: linux-lvm@redhat.com
 
-> WHATS_NEW:
->   Version 2.01.10 - 3rd May 2005
->   ==============================
-> ...
->     Reinstate full PV size when removing from VG.
+I have set up a file server with LVM on top of RAID 5, and seem to be
+having LVM related performance issue.
 
-	Ah, fair enough. I upgraded to LVM-2.01.15 but now I have a related
-problem. If I force the physical volume size using --setphysicalvolumesize,
-then doing vgreduce/vgextend resets it to the maximum size: 
+Interesting details:
+-Processor:  Intel(R) Pentium(R) 4 CPU 2.80GHz with hyperthreading
+-disks - 4 X Seagate 300 GB
+  - 2 are SATA, connected to MB SATA connectors
+  - 2 are PATA, connected to Promise add in card
+- OS is centos 4.2
+- uname -a -> Linux localhost.localdomain 2.6.9-22.ELsmp #1 SMP Sat
+Oct 8 19:11:43 CDT 2005 i686 i686 i386 GNU/Linux
+- all perf numbers obtained using time dd, and were ran 3 times.  Run
+to run variance was within 1 second/run
+- raid chunk size is 256k, file system block size is 4k, mke2fs was
+done with stripe=64
 
-# pvcreate -f -M2 --setphysicalvolumesize=10000 /dev/sd[pq]1
-  Physical volume "/dev/sdp1" successfully created
-  Physical volume "/dev/sdq1" successfully created
+I ran three tests, one to the raid device, one to the lvm device, one
+through the file system.
 
-# vgcreate vg20 -s32M -M2 /dev/sdp1 /dev/sdq1
-  Volume group "vg20" successfully created
+raid device: 118.2 MB/s
+lvm device: 49.43 MB/s
+file system: 40.83 MB/s
 
-# vgdisplay -v vg20
-<cut>
-  --- Physical volumes ---
-  PV Name               /dev/sdp1     
-  PV UUID               8H24mH-k5TA-n3O0-sQUF-e8sB-dteF-luHLJF
-  PV Status             allocatable
-  Total PE / Free PE    312 / 312
-   
-  PV Name               /dev/sdq1     
-  PV UUID               M13ArL-7b9d-SvLJ-ik6H-pRYO-hqgg-WWaPRP
-  PV Status             allocatable
-  Total PE / Free PE    312 / 312
-   
-# vgreduce vg20 /dev/sdp1 ; vgextend vg20 /dev/sdp1
-  Removed "/dev/sdp1" from volume group "vg20"
-  Volume group "vg20" successfully extended
+I don't understand the LVM performance effect - I thougt LVM was a
+pretty straight forward block remapper with negligible performance
+impact. I'm stunned by the 58% performance penalty.
 
-# vgdisplay -v vg20
-<cut>
-  --- Physical volumes ---
-  PV Name               /dev/sdq1     
-  PV UUID               M13ArL-7b9d-SvLJ-ik6H-pRYO-hqgg-WWaPRP
-  PV Status             allocatable
-  Total PE / Free PE    312 / 312
-   
-  PV Name               /dev/sdp1     
-  PV UUID               8H24mH-k5TA-n3O0-sQUF-e8sB-dteF-luHLJF
-  PV Status             allocatable
-  Total PE / Free PE    469 / 469
+Any thoughts?  Any more data that would be helpful?
 
-	   
--poul
+Thanks in advance,
+
+Bret
+---------------------
+
+[root@localhost test]# time dd if=/dev/md1 of=/dev/null bs=1M
+count=4096       
+4096+0 records in
+4096+0 records out
+
+real    0m34.634s
+user    0m0.021s
+sys     0m13.467s
+
+
+[root@localhost test]# time dd if=/dev/raid/mirror2 of=/dev/null bs=1M
+count=4096
+4096+0 records in
+4096+0 records out
+
+real    1m22.863s
+user    0m0.021s
+sys     0m14.384s
+
+[root@localhost test]# time dd if=testfile of=/dev/null bs=1M
+count=4096       
+4096+0 records in
+4096+0 records out
+
+real    1m40.310s
+user    0m0.020s
+sys     0m9.996s
