@@ -1,10 +1,20 @@
-Message-Id: <6.2.5.6.0.20060119113158.041e9360@nersc.gov>
-Date: Thu, 19 Jan 2006 11:50:57 -0800
-From: Jed Donnelley <jed@nersc.gov>
-Subject: Re: [linux-lvm] Disk space reporting inconsistencies - lvm half baked
-In-Reply-To: <43CE271C.4090308@rarr.org.uk>
-References: <43CE271C.4090308@rarr.org.uk>
-Mime-Version: 1.0
+Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id k0JK0N101010
+	for <linux-lvm@redhat.com>; Thu, 19 Jan 2006 15:00:23 -0500
+Received: from wproxy.gmail.com (wproxy.gmail.com [64.233.184.197])
+	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id k0JK0FWU002774
+	for <linux-lvm@redhat.com>; Thu, 19 Jan 2006 15:00:16 -0500
+Received: by wproxy.gmail.com with SMTP id i23so382084wra
+	for <linux-lvm@redhat.com>; Thu, 19 Jan 2006 12:00:15 -0800 (PST)
+Message-ID: <859a78260601191200i37cc682qf4aebca78f4c0dc@mail.gmail.com>
+Date: Thu, 19 Jan 2006 14:00:15 -0600
+From: Matt P <slarty.tj@gmail.com>
+Subject: Re: [linux-lvm] Disk space reporting inconsistencies
+In-Reply-To: <43CF4607.70703@rarr.org.uk>
+MIME-Version: 1.0
+Content-Disposition: inline
+References: <43CE271C.4090308@rarr.org.uk> <43CF4607.70703@rarr.org.uk>
+Content-Transfer-Encoding: 8bit
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -15,149 +25,60 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
 To: LVM general discussion and development <linux-lvm@redhat.com>
-Cc: rhn-users@redhat.com
 
-At 03:31 AM 1/18/2006, Chris bolton wrote:
->Hi,
+Actually df is telling you the space available within the Filesystem
+while pvscan is telling you the space available on the logical volume.
+
+Try df -H and see if it matches your pvscan, the capital "H" tells df
+to use powers of 1000 instead of 1024.
+
+On 1/19/06, Chris bolton <cbolton@rarr.org.uk> wrote:
+> nevermind got it sussed, lvm is using 10^9 for a gigabyte while df is
+> using 1024^3
 >
->just added a new PV to my VG but to me there seems to be an 
->inconsistency between what lvm says is the disk space and what df says.
+> well it would appear that way anyway.
+> > Hi,
+> >
+> > just added a new PV to my VG but to me there seems to be an
+> > inconsistency between what lvm says is the disk space and what df says.
+> >
+> > pvscan
+> >  PV /dev/sda2   VG VolGroup00   lvm2 [68.38 GB / 0    free]
+> >  PV /dev/sdb    VG VolGroup00   lvm2 [68.50 GB / 0    free]
+> >  PV /dev/hdc2   VG VolGroup00   lvm2 [37.12 GB / 0    free]
+> >  PV /dev/hdb1   VG VolGroup00   lvm2 [37.22 GB / 0    free]
+> >  PV /dev/hdd1   VG VolGroup00   lvm2 [37.22 GB / 0    free]
+> >  PV /dev/hde1   VG VolGroup00   lvm2 [37.25 GB / 0    free]
+> >  Total: 6 [285.69 GB] / in use: 6 [285.69 GB] / in no VG: 0 [0   ]
+> >
+> > df -h
+> > /dev/mapper/VolGroup00-LogVol00   265G  227G   28G  90% /
+> >
+> > I tried resizing the filesystem but it just says this..
+> >
+> > ext2online  /dev/VolGroup00/LogVol00
+> >    ext2online v1.1.18 - 2001/03/18 for EXT2FS 0.5b
+> >    ext2online: ext2_ioctl: No space left on device
+> >
+> > ext2online: unable to resize /dev/mapper/VolGroup00-LogVol00
+> >
+> > Am I missing something obvious here? or have I ballsed it up along the
+> > way?
+> >
+> > Cheers,
+> > Chris.
+> >
+> > _______________________________________________
+> > linux-lvm mailing list
+> > linux-lvm@redhat.com
+> > https://www.redhat.com/mailman/listinfo/linux-lvm
+> > read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
 >
->pvscan
->  PV /dev/sda2   VG VolGroup00   lvm2 [68.38 GB / 0    free]
->  PV /dev/sdb    VG VolGroup00   lvm2 [68.50 GB / 0    free]
->  PV /dev/hdc2   VG VolGroup00   lvm2 [37.12 GB / 0    free]
->  PV /dev/hdb1   VG VolGroup00   lvm2 [37.22 GB / 0    free]
->  PV /dev/hdd1   VG VolGroup00   lvm2 [37.22 GB / 0    free]
->  PV /dev/hde1   VG VolGroup00   lvm2 [37.25 GB / 0    free]
->  Total: 6 [285.69 GB] / in use: 6 [285.69 GB] / in no VG: 0 [0   ]
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@redhat.com
+> https://www.redhat.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
 >
->df -h
->/dev/mapper/VolGroup00-LogVol00   265G  227G   28G  90% /
->
->I tried resizing the filesystem but it just says this..
->
->ext2online  /dev/VolGroup00/LogVol00
->    ext2online v1.1.18 - 2001/03/18 for EXT2FS 0.5b
->    ext2online: ext2_ioctl: No space left on device
->
->ext2online: unable to resize /dev/mapper/VolGroup00-LogVol00
->
->Am I missing something obvious here? or have I ballsed it up along the way?
->
->Cheers,
->Chris.
-
-Chris,
-
-I believe the above is an example similar to the second of the two 
-situations that I
-ran into when I came to the conclusion that LVM was "half baked" and not
-(yet?) suitable for production use on server systems (below).
-
-I repeat my message below for your information and in case there might
-have been any changes that might allow recovery from the problems I
-ran into.  I will be interested to see if you find any way to recover from
-the problem you ran into:
-________________________________________________________
-Date: Wed, 12 Oct 2005 18:30:18 -0700
-To: linux-lvm@redhat.com, rhn-users@redhat.com
-From: Jed Donnelley <jed@nersc.gov>
-Subject: Linux LVM - half baked?
-
-Redhat LVM users,
-
-Since I mentioned a minor bug in Redhat/LVM (9/28 LVM(2) bug in RH ES 
-4.1 /etc/rc.d/sysinit.rc, RAID-1+0) I've done quite a number of 
-additional installs using LVM.  I've now had my second system that 
-got into an essentially unrecoverable state.  That's enough for me 
-and LVM.  I very much like the facilities that LVM provides, but if 
-I'm going to lose production file systems with it - well, I will have to wait.
-
-Below are descriptions of the two problems I've run into.  I have run 
-linux rescue from a CD for both systems.  The difficulty of course is 
-that since the problem seems to be in the LVM layer, there are no 
-file systems to work on (e.g. with fsck).  Perhaps there are some 
-tools that I'm not yet familiar with to recover logical volumes in 
-some way?  These are test/development systems, but if anybody has any 
-thoughts on how to recover their file systems (e.g. to get more 
-confidence in LVM) I'd be quite interested to hear them - just for 
-the experience and perhaps to regain some confidence in LVM.  Thanks!
-
-<I've since recycled the disks from these systems and the problems 
-might now be difficult to recreate, though if there are suggestions 
-on how to recover from them that seem workable I'd be willing to give it a try>
-
-In one system after doing nothing more than an up2date on a x86_64 
-system and rebooting I see:
-...
-4 logical volume(s) in volume group "VolGroup00" now active
-ERROR: failed in exec of defaults
-ERROR: failed in exec of ext3
-mount: error 2 mounting none
-switchroot: mount failed: 23
-ERROR: ext3 exited abnormally! (pid 284)
-...  <three more similar to the above>
-kernel panic - not syncing: Attempted to kill init!
-
-When I look at the above disks (this is a 6 disk system,
-one RAID-1 pair for /boot - not LVM - and a 4 disk RAID-10
-system for /data) the partitions all look fine.  I'm not sure
-what else to look for.
-______________________
-
-In the other system (an x86 system) I had a disk failure in a software RAID-1
-file system for the system file system (/boot /).  I replaced the
-disk and resynced it apparently successfully.  However, after
-a short time that replacement disk apparently failed (wouldn't
-spin up on boot).  I removed the second disk and restarted
-the system.  Here is how that went:
-...
-Your System appears to have shut down uncleanly
-fsck.ext3 -a /dev/VolGroup00/LogVol02 contains a file system with 
-errors, check forced
-/dev/VolGroup00/LogVol02 Inodes that were part of a corrupted orphan 
-linked list found.
-/dev/VolGroup00/LogVol02 UNEXPECTED INCONSISTENCY; RUN fsck MANUALLY 
-(i.e. without -a or -p options)
-[FAILED]
-*** An error occurred during the file system check.
-*** Dropping you to a shell;  The system will reboot when you leave the shell.
-
-Give root password for maintenance (or type Control-D to continue)
-
----------------------
-
-All stuff very familiar to those who've worked on corrupted file 
-systems.  However, in this
-case if I type Control-D or enter the root password the system goes 
-through a sequence
-like:
-
-unmounting ...
-automatic reboot
-
-and reboots.  This starts the problem all over again.  As with the 
-first system above
-if I use a rescue disk there is no file system to run fsck on.
-
-At this point, despite the value I see in LVM, I plan to back off on 
-production deployment.
-I'd be interested to hear the experiences of others.
-_____________________________________________________________________
-
-I did back off LVM.  We don't use LVM on any of our many (50+, though 
-not so many Linux) production server systems.
-We use RAID on all those systems.  I still don't trust LVM for 
-production use.  I'd be quite interested to hear any
-defense of LVM for application to production servers.
-
-In my current opinion anybody using LVM for production servers over 
-RAID (at least for the /boot and / partitions)
-is walking on shaky ground.  I'd be quite interested to be shown to 
-be wrong in that opinion.
-
---Jed http://www.webstart.com/jed/ 
