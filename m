@@ -1,11 +1,18 @@
-Mime-Version: 1.0 (Apple Message framework v623)
-In-Reply-To: <ac8rs15d9td9ke80r4mt1d2i294n99id4k@4ax.com>
-References: <ac8rs15d9td9ke80r4mt1d2i294n99id4k@4ax.com>
-Message-Id: <19be7debf29ebfd90339976d288dce0d@redhat.com>
-Content-Transfer-Encoding: 7bit
-From: Jonathan E Brassow <jbrassow@redhat.com>
-Subject: Re: [linux-lvm] "vg doesn't exist" after removing a pv
-Date: Fri, 20 Jan 2006 11:40:42 -0600
+Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id k0KHui109325
+	for <linux-lvm@redhat.com>; Fri, 20 Jan 2006 12:56:44 -0500
+Received: from moutng.kundenserver.de (moutng.kundenserver.de
+	[212.227.126.187])
+	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id k0KHubFH012371
+	for <linux-lvm@redhat.com>; Fri, 20 Jan 2006 12:56:37 -0500
+Message-ID: <43D124BD.6060200@gmx.net>
+Date: Fri, 20 Jan 2006 18:58:21 +0100
+From: Klaus Strebel <klaus.strebel@gmx.net>
+MIME-Version: 1.0
+Subject: Re: [linux-lvm] pv resize problem
+References: <79af7a390601191600v36f7bfccuee8643f2c3adc4bd@mail.gmail.com>
+In-Reply-To: <79af7a390601191600v36f7bfccuee8643f2c3adc4bd@mail.gmail.com>
+Content-Transfer-Encoding: quoted-printable
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -16,51 +23,33 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: lists@tnotd.net, LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="iso-8859-1"; format="flowed"
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-There may be a better way, but here is what I did...
+Tiago Freitas schrieb:
+> I used pvresize now but it's the same. It resized the pv but I can't=20
+> resize the /dev/hda3  lvm partition.
+>=20
+> I tried parted and fdisk and I get errors like:
+>=20
+> "Error: Unable to open /dev/hda3 - unrecognised disk label."
+>=20
+> "Device contains neither a valid DOS partition table, nor Sun, SGI or=20
+> OSF disklabel".
+Hi Tiago,
 
- > vgcfgrestore <VG>
+honestly, you don't have a clue what your are doing there, he ;-).
+You have to point fdisk to the device of your whole disk (which is=20
+/dev/hda) ...
 
-Errors out, but gives you the uuid of the PV that is missing.
+Ciao
+Klaus
+--=20
+Mit freundlichen Gr=EF=BF=BDssen / best regards
 
- > pvcreate -u <uuid given by failed command> <device>
- > vgcfgrestore <VG>
+Klaus Strebel, Dipl.-Inform. (FH), mailto:klaus.strebel@gmx.net
 
-All should be good now.
-
-  brassow
-On Jan 18, 2006, at 4:37 PM, Alan Wise wrote:
-
->
-> I just attempted to remove two physical volumes from one of my volume
-> groups.  Since I very recently added them, I knew (or thought I knew)
-> that there was no data on them so I attempted to to remove them using
-> "pvremove /dev/hda8 /dev/hdb1".
->
-> The program complained, but suggested I try using the "-ff" option,
-> which I promptly did, without considering the consequences of my
-> actions (or backing up the data).
->
-> Now I'm getting the following errors:
->
-> Couldn't find device with uuid "..."
-> Couldn't find all physical volumes for volume group my_vg
-> Volume group "my_vg" doesn't exist
->
-> Unfortunately, being rather new to LVM, I didn't know about
-> vgcfgbackup until I started researching how to fix my problem, so I
-> can't go that route.
->
-> Is there any way I can recover my data.  Any help would be MUCH
-> appreciated.
->
-> Alan
->
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
->
+/"\
+\ /     ASCII RIBBON CAMPAIGN
+  X        AGAINST HTML MAIL
+/ \
