@@ -1,27 +1,11 @@
-Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id k0KFMY125046
-	for <linux-lvm@redhat.com>; Fri, 20 Jan 2006 10:22:34 -0500
-Received: from smtp2.rz.tu-harburg.de (smtp2.rz.tu-harburg.de [134.28.205.13])
-	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id k0KFMUNN031114
-	for <linux-lvm@redhat.com>; Fri, 20 Jan 2006 10:22:31 -0500
-Received: from mail2.rz.tu-harburg.de (mail2.rz.tu-harburg.de [134.28.202.179])
-	by smtp2.rz.tu-harburg.de (8.13.1/8.13.1) with ESMTP id k0KFMS5g030564
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=OK)
-	for <linux-lvm@redhat.com>; Fri, 20 Jan 2006 16:22:28 +0100
-Received: from [134.28.41.43] (copenhagen.ti1.tu-harburg.de [134.28.41.43])
-	(user=ti1fw mech=PLAIN bits=0)
-	by mail2.rz.tu-harburg.de (8.13.1/8.13.1) with ESMTP id k0KFMQED031115
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO)
-	for <linux-lvm@redhat.com>; Fri, 20 Jan 2006 16:22:26 +0100
-Message-ID: <43D10036.7050404@gmx.net>
-Date: Fri, 20 Jan 2006 16:22:30 +0100
-From: Fabian Wenzel <f.wenzel@gmx.net>
-MIME-Version: 1.0
-Subject: Re: [linux-lvm] LVM on Raid-5 woes...
-References: <43D0C66C.3040609@gmx.net>
-	<53D60533C1E27D68FBAF212F@dhcp-2-206.wgops.com>
-In-Reply-To: <53D60533C1E27D68FBAF212F@dhcp-2-206.wgops.com>
+Mime-Version: 1.0 (Apple Message framework v623)
+In-Reply-To: <ac8rs15d9td9ke80r4mt1d2i294n99id4k@4ax.com>
+References: <ac8rs15d9td9ke80r4mt1d2i294n99id4k@4ax.com>
+Message-Id: <19be7debf29ebfd90339976d288dce0d@redhat.com>
 Content-Transfer-Encoding: 7bit
+From: Jonathan E Brassow <jbrassow@redhat.com>
+Subject: Re: [linux-lvm] "vg doesn't exist" after removing a pv
+Date: Fri, 20 Jan 2006 11:40:42 -0600
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -32,43 +16,51 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+To: lists@tnotd.net, LVM general discussion and development <linux-lvm@redhat.com>
 
------BEGIN PGP SIGNED MESSAGE-----
-Hash: SHA1
+There may be a better way, but here is what I did...
 
-> Oh also, do the drives work fine by themselves?  IE remove MD RAID fromt
-> eh picture completely temporarily, can you pvcreate directly on the
-> devices?
+ > vgcfgrestore <VG>
 
-Will try tomorrow if the solution below is wrong. The raid is running
-fine, all devices are up.
+Errors out, but gives you the uuid of the PV that is missing.
 
-Meanwhile, I googled over and over again and found an two important bug
-reports related to the same issue (Debian bug report #247896 and, more
-important, #267157 - can be found on bugs.debian.org)
+ > pvcreate -u <uuid given by failed command> <device>
+ > vgcfgrestore <VG>
 
-I think the problem is that I have to rebuild lvm2 using
-"--disable-o_direct". I don't know why there is some trouble on an ARM,
-and (of course) it would be good if "o_direct" can eventually be used
-(whatever it is), but I'm positive that this will do the trick.
+All should be good now.
 
-Otherwise, I will send another message to this thread.
+  brassow
+On Jan 18, 2006, at 4:37 PM, Alan Wise wrote:
 
-Thanks anyway,
-
-       Fabian
-
-
-
-
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.1 (GNU/Linux)
-Comment: Using GnuPG with Thunderbird - http://enigmail.mozdev.org
-
-iD8DBQFD0QA2bJzYO4mghQIRAjrzAJ0YYElKKVpjiXJ/d0/5ZZah+pbYMQCfTDOY
-QJNta7QiLT+HIaph9kk3s00=
-=aXQE
------END PGP SIGNATURE-----
+>
+> I just attempted to remove two physical volumes from one of my volume
+> groups.  Since I very recently added them, I knew (or thought I knew)
+> that there was no data on them so I attempted to to remove them using
+> "pvremove /dev/hda8 /dev/hdb1".
+>
+> The program complained, but suggested I try using the "-ff" option,
+> which I promptly did, without considering the consequences of my
+> actions (or backing up the data).
+>
+> Now I'm getting the following errors:
+>
+> Couldn't find device with uuid "..."
+> Couldn't find all physical volumes for volume group my_vg
+> Volume group "my_vg" doesn't exist
+>
+> Unfortunately, being rather new to LVM, I didn't know about
+> vgcfgbackup until I started researching how to fix my problem, so I
+> can't go that route.
+>
+> Is there any way I can recover my data.  Any help would be MUCH
+> appreciated.
+>
+> Alan
+>
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@redhat.com
+> https://www.redhat.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+>
