@@ -1,16 +1,16 @@
 Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id k0KESN129137
-	for <linux-lvm@redhat.com>; Fri, 20 Jan 2006 09:28:23 -0500
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id k0KETM129613
+	for <linux-lvm@redhat.com>; Fri, 20 Jan 2006 09:29:22 -0500
 Received: from shell.wgops.com (postfix@free.wgops.com [69.51.116.66])
-	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id k0KESMKG009875
-	for <linux-lvm@redhat.com>; Fri, 20 Jan 2006 09:28:22 -0500
+	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id k0KETLnQ010195
+	for <linux-lvm@redhat.com>; Fri, 20 Jan 2006 09:29:22 -0500
 Received: from [10.1.2.206] (localhost [127.0.0.1])
-	by shell.wgops.com (Postfix) with ESMTP id 2D38D250EF
-	for <linux-lvm@redhat.com>; Fri, 20 Jan 2006 07:28:13 -0700 (MST)
-Date: Fri, 20 Jan 2006 07:28:12 -0700
+	by shell.wgops.com (Postfix) with ESMTP id E5B7924FB0
+	for <linux-lvm@redhat.com>; Fri, 20 Jan 2006 07:29:15 -0700 (MST)
+Date: Fri, 20 Jan 2006 07:29:14 -0700
 From: Michael Loftis <mloftis@wgops.com>
 Subject: Re: [linux-lvm] LVM on Raid-5 woes...
-Message-ID: <E27595AA90023446E22E485A@dhcp-2-206.wgops.com>
+Message-ID: <53D60533C1E27D68FBAF212F@dhcp-2-206.wgops.com>
 In-Reply-To: <43D0C66C.3040609@gmx.net>
 References: <43D0C66C.3040609@gmx.net>
 MIME-Version: 1.0
@@ -46,8 +46,5 @@ wrote:
 > My problem is that I cannot create any volume groups; even physical
 > volumes cause trouble: After typing
 
-<...>
-
-cat /proc/mdstat ?  what state is MD in during all of this?  sounds more 
-like an MD RAID problem than a LVM problem...IE MD isn't able to operate 
-reliably.  Verify the proper operation of MD first.
+Oh also, do the drives work fine by themselves?  IE remove MD RAID fromt eh 
+picture completely temporarily, can you pvcreate directly on the devices?
