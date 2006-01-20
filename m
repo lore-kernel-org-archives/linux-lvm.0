@@ -1,18 +1,14 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id k0K00n114503
-	for <linux-lvm@redhat.com>; Thu, 19 Jan 2006 19:00:49 -0500
-Received: from uproxy.gmail.com (uproxy.gmail.com [66.249.92.204])
-	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id k0K00hkm024863
-	for <linux-lvm@redhat.com>; Thu, 19 Jan 2006 19:00:43 -0500
-Received: by uproxy.gmail.com with SMTP id q2so17066uge
-	for <linux-lvm@redhat.com>; Thu, 19 Jan 2006 16:00:43 -0800 (PST)
-Message-ID: <79af7a390601191600v36f7bfccuee8643f2c3adc4bd@mail.gmail.com>
-Date: Fri, 20 Jan 2006 00:00:42 +0000
-From: Tiago Freitas <coolkcah@gmail.com>
-Subject: Re: [linux-lvm] pv resize problem
-MIME-Version: 1.0
-Content-Type: multipart/alternative; 
-	boundary="----=_Part_24242_12262115.1137715242754"
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id k0KB3d115037
+	for <linux-lvm@redhat.com>; Fri, 20 Jan 2006 06:03:39 -0500
+Date: Fri, 20 Jan 2006 13:03:26 +0200
+From: Ville Herva <vherva@twilight.cs.hut.fi>
+Message-ID: <20060120110326.GA23499@niksula.cs.hut.fi>
+References: <20050817133011.GA35602@niksula.cs.hut.fi>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20050817133011.GA35602@niksula.cs.hut.fi>
+Subject: [linux-lvm] Re: Upgrade from 2.6.10-ac8 to 2.6.12.5 broke lvm rootfs
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -23,38 +19,71 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: linux-lvm@redhat.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: Linux-LVM@Sistina.com
 
-------=_Part_24242_12262115.1137715242754
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: quoted-printable
-Content-Disposition: inline
+On Wed, Aug 17, 2005 at 04:30:11PM +0300, you [Ville Herva] wrote:
+> [repost: first post did not show up. sorry for the possible dupe]
+> 
+> After upgrading the kernel from 2.6.10-ac8 to 2.6.12.5 the initramfs was no     
+> longer able to mount rootfs.                                                    
+>                                                                                 
+>   mount: error 6 mounting ext3                                                  
+>                                                                                 
+> All the configuration options are identical, and upgrading lvm2 package:        
+>   lvm2-2.00.25-1.01       -> lvm2-2.01.14-1.0                                   
+>   device-mapper-1.00.19-2 -> device-mapper-1.01.04-1.0                          
+>                                                                                 
+> Did not change anything.                                                        
+>                                                                                 
+> Dm, ext3 and the relevant block device drivers statically compiled in.          
+>                                                                                 
+> The vg has lvm1 format, fwiw.                                                   
+>                                                                                 
+> I enabled all the debug options I could think of in the nash-based initramfs    
+> init script. That did not appear to tell much: all I was able to tell was       
+> that lvm was succesfully called by the init script:                             
+>                                                                                 
+> mount -t proc /proc /proc                                                       
+> mount -t sysfs none /sys                                                        
+> insmod /lib/dm-snapshot.ko                                                      
+> mkdevices /dev                                                                  
+> mkdmnod                                                                         
+> lvm vgscan -v                                                                   
+> # sleep 5                                                                       
+> lvm vgchange -ay                                                                
+> # sleep 5                                                                       
+> lvm vgmknodes                                                                   
+> # sleep 5                                                                       
+> mkrootdev /dev/root                                                             
+> umount /sys                                                                     
+> # sleep 5                                                                       
+> mount -o defaults --ro -t ext3 /dev/root /sysroot                               
+> switchroot /sysroot                                                             
+>                                                                                 
+> but those didn't give any meaningful output (other than notices about           
+> setting log indentation level).                                                 
+>                                                                                 
+> Finally, I added "sleep 5" after each lvm command (commented out above),        
+> which appeared "solve" the problem.                                             
+>                                                                                 
+> Apparently the lvm scripts somehow do their initialization asynchronously
+> and the init script tries to mount root before it is available. I'm not sure
+> why this is affected by the kernel version, though.
 
-I used pvresize now but it's the same. It resized the pv but I can't resize
-the /dev/hda3  lvm partition.
+This happens with linux-2.6.15.1, lvm2-2.01.14-1.0 and mkinitrd-4.1.18-2.
 
-I tried parted and fdisk and I get errors like:
+I must manually patch the init script inside the initrd image to have those 
+  sleep 5 
+lines after each and every lvm command, otherwise I get the 
+  mount: error 6 mounting ext3
+error.
 
-"Error: Unable to open /dev/hda3 - unrecognised disk label."
+Any ideas?
 
-"Device contains neither a valid DOS partition table, nor Sun, SGI or OSF
-disklabel".
 
-------=_Part_24242_12262115.1137715242754
-Content-Type: text/html; charset=ISO-8859-1
-Content-Transfer-Encoding: quoted-printable
-Content-Disposition: inline
 
-I used pvresize now but it's the same. It resized the pv but I can't resize=
- the /dev/hda3&nbsp; lvm partition.<br>
-<br>
-I tried parted and fdisk and I get errors like:<br>
-<br>
-&quot;Error: Unable to open /dev/hda3 - unrecognised disk label.&quot;<br>
-<br>
-&quot;Device contains neither a valid DOS partition table, nor Sun, SGI or =
-OSF disklabel&quot;.<br>
-<br>
-<br>
+-- v --
 
-------=_Part_24242_12262115.1137715242754--
+v@iki.fi
