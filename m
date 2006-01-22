@@ -1,18 +1,15 @@
 Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id k0LI2c107612
-	for <linux-lvm@redhat.com>; Sat, 21 Jan 2006 13:02:38 -0500
-Received: from mail.davidb.org (mail.davidb.org [66.93.32.219])
-	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id k0LI2cSl032203
-	for <linux-lvm@redhat.com>; Sat, 21 Jan 2006 13:02:38 -0500
-Received: from davidb by mail.davidb.org with local (Exim 4.54 #1 (Debian))
-	id 1F0N4P-00058p-RU
-	for <linux-lvm@redhat.com>; Sat, 21 Jan 2006 10:02:37 -0800
-Date: Sat, 21 Jan 2006 10:02:37 -0800
-From: David Brown <lvm@davidb.org>
-Message-ID: <20060121180237.GA19642@old.davidb.org>
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id k0MCRR128939
+	for <linux-lvm@redhat.com>; Sun, 22 Jan 2006 07:27:27 -0500
+Received: from crusaders.powertech.no (www2.gathering.org [195.159.31.10])
+	by mx1.redhat.com (8.12.11/8.12.11) with SMTP id k0MCRPvq013722
+	for <linux-lvm@redhat.com>; Sun, 22 Jan 2006 07:27:26 -0500
+Date: Sun, 22 Jan 2006 13:27:06 +0100
+From: Per Kristiansen <per@gathering.org>
+Message-ID: <20060122122706.GA24243@gathering.org>
 Mime-Version: 1.0
 Content-Disposition: inline
-Subject: [linux-lvm] Additional snapshot issue.
+Subject: [linux-lvm] System slow down , weird partition info
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -25,26 +22,116 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: LVM general discussion and development <linux-lvm@redhat.com>
+To: linux-lvm@redhat.com
 
-One other snapshot issue...
+I'm running LVM 2 on Fedora Core 3 on an Intel P4 w 1GB ram.
+I have 2 A16U-G2421 (http://www.infortrend.com/main/2_product/a16u-g2421-1.asp) hooked up to it.
 
-I'm having an interesting issue with snapshots.  I'm running the following:
+2 LVM's made, both seems to be working, but very slowly.
 
-  linux 2.6.14 (gentoo-r5)
-    (which I believe contains the DM in the stock 2.6.14 kernel).
-  lvm2 2.01.14
+Today I noticed that the server was VERY slow. After checking around I find that the exported disks on one of the 
+raid boxes has weird partition info.
 
-Backup is of the snapshot.
+I have exported 3 disks from this box.
 
-The problem: I'm finding that if I backup the snapshot, and certain files
-are modified, usually database-type files (cyrus-imapd's databases and the
-likes), they files on the snapshots see some modifications.  I have not
-been able to reproduce this with my own databases, so I don't know what is
-going on.
+I'm going insane trying to resolve this without loosing this weekends jobs.
 
-Again the question I would ask is if this is part of the known issue, or
-should I investigate further.
+I'm a bit leery about just changing things in the partition befor I can get a dump of the file system thou :)
 
-Thanks,
-David Brown
+anyone got any tips?
+
+--- Volume group ---
+  VG Name               main_vg
+  System ID             
+  Format                lvm2
+  Metadata Areas        3
+  Metadata Sequence No  3
+  VG Access             read/write
+  VG Status             resizable
+  MAX LV                255
+  Cur LV                1
+      Setting activation/missing_stripe_filler to /dev/ioerror
+  Open LV               1
+  Max PV                255
+  Cur PV                3
+  Act PV                3
+  VG Size               3.18 TB
+  PE Size               128.00 MB
+  Total PE              26053
+  Alloc PE / Size       26051 / 3.18 TB
+  Free  PE / Size       2 / 256.00 MB
+  VG UUID               dlnHW9-oyLJ-iys5-d7Q5-dotC-TL58-9j3ZQH
+   
+  --- Logical volume ---
+  LV Name                /dev/main_vg/lv_work
+  VG Name                main_vg
+  LV UUID                r7JgCs-t2KY-3s8f-2ntP-Um1P-b411-opy2hG
+  LV Write Access        read/write
+  LV Status              available
+  # open                 2
+  LV Size                3.18 TB
+  Current LE             26051
+  Segments               3
+  Allocation             inherit
+  Read ahead sectors     0
+  Block device           253:0
+   
+  --- Physical volumes ---
+  PV Name               /dev/sdi     
+  PV UUID               S4bjCg-bJDO-y8bC-y5Es-zvn1-lboB-p6tIAI
+  PV Status             allocatable
+  Total PE / Free PE    11718 / 0
+   
+  PV Name               /dev/sdj     
+  PV UUID               x2FoJO-Jg0l-OMLS-8XSW-4F0g-r6tF-IXJ1jr
+  PV Status             allocatable
+  Total PE / Free PE    11718 / 0
+   
+  PV Name               /dev/sdk     
+  PV UUID               VVLXFm-UhPt-SFct-3i74-bB2B-7Li5-C3SOgm
+  PV Status             allocatable
+  Total PE / Free PE    2617 / 2
+
+and doing an fdisk on the 3 devices shows this:
+
+sdi:
+
+Disk /dev/sdi: 1572.8 GB, 1572864000000 bytes
+255 heads, 63 sectors/track, 191223 cylinders
+Units = cylinders of 16065 * 512 = 8225280 bytes
+
+   Device Boot      Start         End      Blocks   Id  System
+/dev/sdi1   *           1      203971  1638397026    6  FAT16
+
+
+sdj:
+
+Warning: invalid flag 0x0000 of partition table 4 will be corrected by w(rite)
+
+Command (m for help): p
+
+Disk /dev/sdj: 1572.8 GB, 1572864000000 bytes
+255 heads, 63 sectors/track, 191223 cylinders
+Units = cylinders of 16065 * 512 = 8225280 bytes
+
+   Device Boot      Start         End      Blocks   Id  System
+
+sdk:
+Warning: invalid flag 0x0000 of partition table 4 will be corrected by w(rite)
+
+Command (m for help): p
+
+Disk /dev/sdk: 351.2 GB, 351268765696 bytes
+255 heads, 63 sectors/track, 42705 cylinders
+Units = cylinders of 16065 * 512 = 8225280 bytes
+
+   Device Boot      Start         End      Blocks   Id  System
+
+
+
+
+
+
+-- 
+Per Kristiansen
+per@gathering.org
