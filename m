@@ -1,15 +1,17 @@
-Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id k0MCRR128939
-	for <linux-lvm@redhat.com>; Sun, 22 Jan 2006 07:27:27 -0500
-Received: from crusaders.powertech.no (www2.gathering.org [195.159.31.10])
-	by mx1.redhat.com (8.12.11/8.12.11) with SMTP id k0MCRPvq013722
-	for <linux-lvm@redhat.com>; Sun, 22 Jan 2006 07:27:26 -0500
-Date: Sun, 22 Jan 2006 13:27:06 +0100
-From: Per Kristiansen <per@gathering.org>
-Message-ID: <20060122122706.GA24243@gathering.org>
+Received: from agk.surrey.redhat.com (agk.surrey.redhat.com [172.16.10.74])
+	by pobox.surrey.redhat.com (8.12.8/8.12.8) with ESMTP id k0MHuoRq010807
+	for <linux-lvm@redhat.com>; Sun, 22 Jan 2006 17:56:50 GMT
+Received: from agk by agk.surrey.redhat.com with local (Exim 4.34)
+	id 1F0jSM-0007ur-NV
+	for linux-lvm@redhat.com; Sun, 22 Jan 2006 17:56:50 +0000
+Date: Sun, 22 Jan 2006 17:56:50 +0000
+From: Alasdair G Kergon <agk@redhat.com>
+Subject: Re: [linux-lvm] random occasional filesystem corruption
+Message-ID: <20060122175650.GE4280@agk.surrey.redhat.com>
+References: <bde36b470601210921x3116aa4bs1afcecf35eac084a@mail.gmail.com>
 Mime-Version: 1.0
 Content-Disposition: inline
-Subject: [linux-lvm] System slow down , weird partition info
+In-Reply-To: <bde36b470601210921x3116aa4bs1afcecf35eac084a@mail.gmail.com>
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -22,116 +24,22 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: linux-lvm@redhat.com
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-I'm running LVM 2 on Fedora Core 3 on an Intel P4 w 1GB ram.
-I have 2 A16U-G2421 (http://www.infortrend.com/main/2_product/a16u-g2421-1.asp) hooked up to it.
+On Sat, Jan 21, 2006 at 11:21:51AM -0600, Jeff McClure wrote:
+> System is Debian testing, kernel 2.6.15 (but the problem was also seen
+> on a 2.6.14 kernel).
+> lvm2 package is 2.01.04-5 (with lvm-common version 1.5.20).
 
-2 LVM's made, both seems to be working, but very slowly.
+1. Update your kernel to include the patches I sent to dm-devel and 
+linux-kernel mailing lists in the last couple of weeks.
 
-Today I noticed that the server was VERY slow. After checking around I find that the exported disks on one of the 
-raid boxes has weird partition info.
+2. Update your userspace device-mapper and linux-lvm packages to the
+latest ones (as referenced in the linux-kernel emails).
 
-I have exported 3 disks from this box.
+3. Then see if you can reproduce the problems.  If you can, look out for
+the next set of snapshot patches following in the next week or two...
 
-I'm going insane trying to resolve this without loosing this weekends jobs.
-
-I'm a bit leery about just changing things in the partition befor I can get a dump of the file system thou :)
-
-anyone got any tips?
-
---- Volume group ---
-  VG Name               main_vg
-  System ID             
-  Format                lvm2
-  Metadata Areas        3
-  Metadata Sequence No  3
-  VG Access             read/write
-  VG Status             resizable
-  MAX LV                255
-  Cur LV                1
-      Setting activation/missing_stripe_filler to /dev/ioerror
-  Open LV               1
-  Max PV                255
-  Cur PV                3
-  Act PV                3
-  VG Size               3.18 TB
-  PE Size               128.00 MB
-  Total PE              26053
-  Alloc PE / Size       26051 / 3.18 TB
-  Free  PE / Size       2 / 256.00 MB
-  VG UUID               dlnHW9-oyLJ-iys5-d7Q5-dotC-TL58-9j3ZQH
-   
-  --- Logical volume ---
-  LV Name                /dev/main_vg/lv_work
-  VG Name                main_vg
-  LV UUID                r7JgCs-t2KY-3s8f-2ntP-Um1P-b411-opy2hG
-  LV Write Access        read/write
-  LV Status              available
-  # open                 2
-  LV Size                3.18 TB
-  Current LE             26051
-  Segments               3
-  Allocation             inherit
-  Read ahead sectors     0
-  Block device           253:0
-   
-  --- Physical volumes ---
-  PV Name               /dev/sdi     
-  PV UUID               S4bjCg-bJDO-y8bC-y5Es-zvn1-lboB-p6tIAI
-  PV Status             allocatable
-  Total PE / Free PE    11718 / 0
-   
-  PV Name               /dev/sdj     
-  PV UUID               x2FoJO-Jg0l-OMLS-8XSW-4F0g-r6tF-IXJ1jr
-  PV Status             allocatable
-  Total PE / Free PE    11718 / 0
-   
-  PV Name               /dev/sdk     
-  PV UUID               VVLXFm-UhPt-SFct-3i74-bB2B-7Li5-C3SOgm
-  PV Status             allocatable
-  Total PE / Free PE    2617 / 2
-
-and doing an fdisk on the 3 devices shows this:
-
-sdi:
-
-Disk /dev/sdi: 1572.8 GB, 1572864000000 bytes
-255 heads, 63 sectors/track, 191223 cylinders
-Units = cylinders of 16065 * 512 = 8225280 bytes
-
-   Device Boot      Start         End      Blocks   Id  System
-/dev/sdi1   *           1      203971  1638397026    6  FAT16
-
-
-sdj:
-
-Warning: invalid flag 0x0000 of partition table 4 will be corrected by w(rite)
-
-Command (m for help): p
-
-Disk /dev/sdj: 1572.8 GB, 1572864000000 bytes
-255 heads, 63 sectors/track, 191223 cylinders
-Units = cylinders of 16065 * 512 = 8225280 bytes
-
-   Device Boot      Start         End      Blocks   Id  System
-
-sdk:
-Warning: invalid flag 0x0000 of partition table 4 will be corrected by w(rite)
-
-Command (m for help): p
-
-Disk /dev/sdk: 351.2 GB, 351268765696 bytes
-255 heads, 63 sectors/track, 42705 cylinders
-Units = cylinders of 16065 * 512 = 8225280 bytes
-
-   Device Boot      Start         End      Blocks   Id  System
-
-
-
-
-
-
+Alasdair
 -- 
-Per Kristiansen
-per@gathering.org
+agk@redhat.com
