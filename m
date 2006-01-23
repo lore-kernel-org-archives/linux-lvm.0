@@ -1,22 +1,13 @@
-Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id k0N4JD110846
-	for <linux-lvm@redhat.com>; Sun, 22 Jan 2006 23:19:13 -0500
-Received: from xproxy.gmail.com (xproxy.gmail.com [66.249.82.201])
-	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id k0N4JDIf024992
-	for <linux-lvm@redhat.com>; Sun, 22 Jan 2006 23:19:13 -0500
-Received: by xproxy.gmail.com with SMTP id h28so1178429wxd
-	for <linux-lvm@redhat.com>; Sun, 22 Jan 2006 20:19:12 -0800 (PST)
-Message-ID: <bde36b470601222019o37874870o5e2dde4e72901a5f@mail.gmail.com>
-Date: Sun, 22 Jan 2006 22:19:12 -0600
-From: Jeff McClure <jeff.mcclure@gmail.com>
-Subject: Re: [linux-lvm] random occasional filesystem corruption
-In-Reply-To: <20060122175650.GE4280@agk.surrey.redhat.com>
-MIME-Version: 1.0
+Date: Mon, 23 Jan 2006 10:40:51 +0100
+From: Heinz Mauelshagen <mauelshagen@redhat.com>
+Subject: Re: [linux-lvm] Difference in LVM and LVM2 and their strength/weakness
+Message-ID: <20060123094051.GW2801@redhat.com>
+References: <E8AFFEFDBE97C94E9297963F0527A07B07AC77@pmi00exf00.us.packetmotion.com>
+Mime-Version: 1.0
 Content-Disposition: inline
-References: <bde36b470601210921x3116aa4bs1afcecf35eac084a@mail.gmail.com>
-	<20060122175650.GE4280@agk.surrey.redhat.com>
-Content-Transfer-Encoding: 8bit
-Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
+In-Reply-To: <E8AFFEFDBE97C94E9297963F0527A07B07AC77@pmi00exf00.us.packetmotion.com>
+Reply-To: mauelshagen@redhat.com,
+	LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -27,47 +18,157 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Transfer-Encoding: 7bit
+To: Alex Chen <achen@packetmotion.com>
+Cc: LVM general discussion and development <linux-lvm@redhat.com>, mauelshagen@redhat.com
 
-On 1/22/06, Alasdair G Kergon <agk@redhat.com> wrote:
-> On Sat, Jan 21, 2006 at 11:21:51AM -0600, Jeff McClure wrote:
-> > System is Debian testing, kernel 2.6.15 (but the problem was also seen
-> > on a 2.6.14 kernel).
-> > lvm2 package is 2.01.04-5 (with lvm-common version 1.5.20).
->
-> 1. Update your kernel to include the patches I sent to dm-devel and
-> linux-kernel mailing lists in the last couple of weeks.
->
-> 2. Update your userspace device-mapper and linux-lvm packages to the
-> latest ones (as referenced in the linux-kernel emails).
->
-> 3. Then see if you can reproduce the problems.  If you can, look out for
-> the next set of snapshot patches following in the next week or two...
->
-> Alasdair
+On Sun, Jan 22, 2006 at 06:16:33PM -0800, Alex Chen wrote:
+> Heinz, thanks for the information/
+>  
+> The main intention of our interest of LIME to use it for snapshots.
+> I am told that it is a very quick way to make backups.  Is that true? Is there any measuring number for this?
 
-Thanks for the suggestions, Alasdair. I've already figured out it's
-not in LVM (or RAID). I decided to go ahead and pull out the LVM layer
-to see if it still happened. It did. In fact, during the various large
-file copies I did, I learned that it would happen on a filesystem
-directly on one of the hard drives in question (no RAID, no LVM).
+Hi Alex,
 
-Another interesting data point... if I booted into an old 2.4
-kernel/root filesystem I had lying around, it worked beautifully (even
-with LVM2 in place).
+yes, using logical volume snapshots for backups is one of their main purposes.
 
-I picked up a Belkin (Silicon Image SI860-based) ATA133 card to
-replace the Promise Ultra66 that was running the two drives. I have
-had absolutely no problems since. So... my current hypotheses are:
+The creation of a snapshot happens instantly (ie. just some allocation for
+snapshot internal store and some lvm metadata updates which is *fast*).
 
-1) The pd202xx_old driver in 2.6 is buggy.
+The performance of accessing logical voluems (aka origins) with snapshots
+largely depends on your io patterns to the origin (ie. heavy writes to the
+origin slow access to the snapshot down). See remarks below as well.
 
-OR
 
-2) The Ultra66 didn't get along well with the Maxtor 200GB ATA133
-drives (6L200R0). Why I didn't see this in 2.4, I don't know. However,
-the problem seems to be more frequent during heavy disk access. I
-could be convinced that the 2.6 kernel is sufficiently more efficient
-so as to create the access rate necessary to reveal the problem.
+>  
+> >From the recent discussion on snapshots, it seems there are still some issues, and even a kernel patch.
+> Does RHEL 4 contain such patch?  Or is there a downloadable patch if we buy one?
 
---Jeff
+We're working on fixes and they'll show up ASAP.
+
+>  
+> >From what I've read from the Web regarding LIME is that LVM1 is a read/only while LVM2 is read/write.
+
+Correct.
+
+> The read/only mode, if I understand correctly, is that the PE where the data resides is first copied to an exception table, (is this the COW table?)
+> before the destination PE is changed.  Is this correct?  If so, does the copy involves actual data movement or only a manipulation of
+> of the FAT table?  
+
+The exception table holds the information about which chunks (smaller than PEs)
+have been read off the origin and stored in the exception store before a write
+to the origin was allowed.
+
+That happens at the block devive level and therefore below any filesystem
+or arbitrary application on top.
+
+> The LVM2's read/write mode seems to simply mark the PE in the snapshot but the change is not copied from the changed PE to the snapshot, right?
+
+No, any change to the origin leads to a copy *before* the change happens.
+That's why lots of writes to the origin lead to lots of exceptions and slow
+down access.
+If a change to the snapshot is carried out, no copy from the origin is needed,
+just the expcetion table is updated.
+
+>  
+> In either way, the snapshot seems to be keeping tracks of only the changes, i.e. delta.
+
+Yes.
+
+> Do we need to first create a full copy of the file system as the base, or we only need to keep the deltas, if we want to use snapshot for system backups?
+
+The snapshot covers that for you. No user initated copy or anything needed,
+just create a snapshot, mount (or let your arbitrary application access)
+it and run your backup on it.
+
+>  
+> Sorry of all the questions, some of them may be pretty basic or ignorant.  If you feel I should get the answers from other sources, I would really apprecaite it if you can give me the pointer.
+
+NP.
+
+Heinz
+
+>  
+> Alex 
+> 
+> ________________________________
+> 
+> From: linux-lvm-bounces@redhat.com on behalf of Heinz Mauelshagen
+> Sent: Sat 1/21/2006 09:08
+> To: LVM general discussion and development
+> Subject: Re: [linux-lvm] Difference in LVM and LVM2 and their strength/weakness
+> 
+> 
+> 
+> On Fri, Jan 20, 2006 at 05:54:12PM -0800, Alex Chen wrote:
+> > Greetings,
+> 
+> Hi.
+> 
+> >
+> >   I am tasked to investigate the differences between LVM and LVM2.  I am
+> > new to LVM so it would be greatly appreciated if someone can explain or
+> > point me to the right direction for the following questions:
+> >
+> > 
+> >
+> > 1.    What does LVM2 have that is not available in LVM?
+> 
+> It has command line extensions beyond lvm (eg, vgs, lvs, pvs commands).
+> 
+> It's configurable in various regards (eg, device name filters)
+> 
+> The limits of 256 grand total logical volumes and ~64k extents per logical
+> volume are gone.
+> 
+> Logical volume snapshots are asynchronous rather than synchronuous
+> and gain better performance.
+> 
+> pvmove (online data relocation) is based on temporary, restartable mirrors
+> which wasn't the case in LVM1.
+> 
+> 
+> > Or is it a
+> > only better architectured implementation of LVM?
+> 
+> I'ld not say 'only', but yes, it is :)
+> 
+> 
+> > 2.    Which version of Red Hat enterprise system uses which LVM?  And
+> > does the user need to do any configuration during installation?
+> 
+> RHEL3 comes with LVM, RHEL4 with LVM2.
+> 
+> > 3.    If LVM2 is definitely better than LVM, how stable is it?
+> 
+> It is stable with the exception of rare snapshot issues,
+> we're fixing right now.
+> 
+> >
+> > 
+> >
+> > Thanks.
+> >
+> > Alex
+> >
+> 
+> > _______________________________________________
+> > linux-lvm mailing list
+> > linux-lvm@redhat.com
+> > https://www.redhat.com/mailman/listinfo/linux-lvm
+> > read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+> 
+> --
+> 
+> Regards,
+> Heinz    -- The LVM Guy --
+
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+Heinz Mauelshagen                                 Red Hat GmbH
+Consulting Development Engineer                   Am Sonnenhang 11
+Cluster and Storage Development                   56242 Marienrachdorf
+                                                  Germany
+Mauelshagen@RedHat.com                            +49 2626 141200
+                                                       FAX 924446
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
