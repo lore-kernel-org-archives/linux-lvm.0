@@ -1,25 +1,20 @@
-Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id k0OBpN120517
-	for <linux-lvm@redhat.com>; Tue, 24 Jan 2006 06:51:23 -0500
-Received: from ciao.gmane.org (main.gmane.org [80.91.229.2])
-	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id k0OBpLBn005102
-	for <linux-lvm@redhat.com>; Tue, 24 Jan 2006 06:51:22 -0500
-Received: from root by ciao.gmane.org with local (Exim 4.43)
-	id 1F1Mhd-0007XY-3u
-	for linux-lvm@redhat.com; Tue, 24 Jan 2006 12:51:13 +0100
-Received: from empire.tau.ac.il ([132.66.152.50])
-	by main.gmane.org with esmtp (Gmexim 0.1 (Debian))
-	id 1AlnuQ-0007hv-00
-	for <linux-lvm@redhat.com>; Tue, 24 Jan 2006 12:51:13 +0100
-Received: from romm by empire.tau.ac.il with local (Gmexim 0.1 (Debian))
-	id 1AlnuQ-0007hv-00
-	for <linux-lvm@redhat.com>; Tue, 24 Jan 2006 12:51:13 +0100
-From: "Roman M. Parparov" <romm@empire.tau.ac.il>
-Message-ID: <dr53tf$acg$1@sea.gmane.org>
-Sender: news <news@sea.gmane.org>
-Subject: [linux-lvm] Volume Group lost
-Reply-To: romm@empire.tau.ac.il,
-	LVM general discussion and development <linux-lvm@redhat.com>
+Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id k0OEtx131645
+	for <linux-lvm@redhat.com>; Tue, 24 Jan 2006 09:55:59 -0500
+Received: from mail.terrascale.net (modemcable010.32-70-69.static.videotron.ca
+	[69.70.32.10])
+	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id k0OEtkWc030978
+	for <linux-lvm@redhat.com>; Tue, 24 Jan 2006 09:55:51 -0500
+In-Reply-To: <200601232302.SAA22735@out-of-band.media.mit.edu>
+References: <200601232302.SAA22735@out-of-band.media.mit.edu>
+Mime-Version: 1.0 (Apple Message framework v746.2)
+Content-Type: multipart/signed; protocol="application/pgp-signature";
+	micalg=pgp-sha1; boundary="Apple-Mail-2-893552236"
+Message-Id: <3CBC4C64-B672-4468-A493-7192234BA001@terrascale.net>
+Content-Transfer-Encoding: 7bit
+From: AJ Lewis <aj@terrascale.net>
+Subject: Re: [linux-lvm] pvcreate can't use entire disk?
+Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -28,70 +23,66 @@ List-Post: <mailto:linux-lvm@redhat.com>
 List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
-Date: Tue, 24 Jan 2006 11:51:24 -0000
+Date: Tue, 24 Jan 2006 14:55:59 -0000
 List-Id: <linux-lvm.redhat.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+To: f-lvm@media.mit.edu
+Cc: linux-lvm@redhat.com
+
+This is an OpenPGP/MIME signed message (RFC 2440 and 3156)
+--Apple-Mail-2-893552236
 Content-Transfer-Encoding: 7bit
-To: linux-lvm@redhat.com
+Content-Type: text/plain; charset=US-ASCII; delsp=yes; format=flowed
 
-Dear community,
 
-I had the following problem with my lvm raid:
-Jan 22 10:51:08 sky kernel: jfs_lookup: iget returned bad inode, inum = 249888
-Jan 22 10:51:08 sky kernel: jfs_lookup: iget returned bad inode, inum = 229376
-Jan 22 10:51:08 sky kernel:  I/O error: dev 08:41, sector 40845696
-Jan 22 10:51:08 sky kernel:  I/O error: dev 08:41, sector 19874184
+On Jan 23, 2006, at 5:02 PM, f-lvm@media.mit.edu wrote:
 
-The LVM (LVM 1) consists of six SCSI disks, each one 36Gb size.
+>     Date: Mon, 23 Jan 2006 22:35:16 +0000
+>     From: Alasdair G Kergon <agk@redhat.com>
+>
+>     On Mon, Jan 23, 2006 at 05:26:00PM -0500, f-lvm@media.mit.edu  
+> wrote:
+>> "Device /dev/hdd not found."  The disk is surely online:  I can
+>
+>> I would have -expected- pvcreate to complain about a partition table
+>> existing
+>
+>     The currrent internal structure of LVM2 makes that difficult.
+>     Add -vvvv to commands for more information like that.
+>
+>     Invalid devices are filtered out at a low level in the libraries
+>     so tools such as 'pvcreate' never see them.
+>
+>     If your disk has a partition table, then LVM2 insists you use  
+> those
+>     partitions to reduce the risk of accidents.
+>
+> Ah.  That's directly contrary to the LVM2 howto at
+> http://www.tldp.org/HOWTO/LVM-HOWTO/initdisks.html,
+> which says, "If you get an error that LVM can't initialize
+> a disk with a partition table on it, ..." etc.
 
-I decided to reboot the machine and see what happens. The reboot was the
-first one since I configured the LVM a few _months_ ago.
+Well, LVM1 would complain about the partition table.  I guess lvm2  
+does not, but that doesn't change the fact that neither would let you  
+write to a whole disk with a partition table on it.  I can update the  
+howto to say that is the error to expect for lvm2 when trying to use  
+a whole disk with a partition table on it.
 
-After the reboot the system can't bring the LVM back online and reports:
+Regards,
+AJ
 
-[root]sky: ~>pvscan
-pvscan -- reading all physical volumes (this may take a while...)
-pvscan -- inactive PV "/dev/sdb1"  is associated to unknown VG "softraid" (run
-vgscan)
-pvscan -- inactive PV "/dev/sdc1"  is associated to unknown VG "softraid" (run
-vgscan)
-pvscan -- inactive PV "/dev/sdd1"  is associated to unknown VG "softraid" (run
-vgscan)
-pvscan -- inactive PV "/dev/sde1"  is associated to unknown VG "softraid" (run
-vgscan)
-pvscan -- inactive PV "/dev/sdf1"  is associated to unknown VG "softraid" (run
-vgscan)
-pvscan -- inactive PV "/dev/sdg1"  is associated to unknown VG "softraid" (run
-vgscan)
-pvscan -- total: 6 [205.09 GB] / in use: 6 [205.09 GB] / in no VG: 0 [0]
+--Apple-Mail-2-893552236
+content-type: application/pgp-signature; x-mac-type=70674453;
+	name=PGP.sig
+content-description: This is a digitally signed message part
+content-disposition: inline; filename=PGP.sig
+content-transfer-encoding: 7bit
 
-and
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.1 (Darwin)
 
-[root]sky: ~>vgscan
-vgscan -- reading all physical volumes (this may take a while...)
-vgscan -- ERROR "vg_read_with_pv_and_lv(): current PV" can't get data of volume
-group "softraid" from physical volume(s)
-vgscan -- "/etc/lvmtab" and "/etc/lvmtab.d" successfully created
-vgscan -- WARNING: This program does not do a VGDA backup of your volume group
+iD8DBQFD1j/xn95okVnkz6cRAoFsAJ9q2dBmxDN914/Z5xCP8+iMddQeLQCdGrby
+gE7CylwFTBYupPCMnvtlv0w=
+=HMUu
+-----END PGP SIGNATURE-----
 
-vgcfgrestore reported success, but no change to pvscan and vgscan .
-
-/dev/softraid/ disappeared after the reboot 
-
-/etc/lvmconf/softraid exists and has size of 1375404 bytes .
-/etc/lvmtab and /etc/lvmtab.d are empty.
-
-I have valuable data on the raid I do not want to go through restoring
-from a backup again.
-
-Any advice how to recover and reconfigure the volume group?
-
-Thanks in advance,
-
-Roman.
-
--- 
-Roman M. Parparov - NASA EOSDIS project node at TAU technical manager.
-Email: romm@empire.tau.ac.il		   http://www.nasa.proj.ac.il/
-Phone/Fax: +972-(0)3-6405205 (work),        +972-(0)50-734-18-34 (home)
+--Apple-Mail-2-893552236--
