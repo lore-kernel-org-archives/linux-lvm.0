@@ -1,17 +1,14 @@
-Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id k0OLwL110295
-	for <linux-lvm@redhat.com>; Tue, 24 Jan 2006 16:58:21 -0500
-Received: from oxhp.com (mx2.oxhp.com [199.97.64.17])
-	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id k0OLwEhA009044
-	for <linux-lvm@redhat.com>; Tue, 24 Jan 2006 16:58:15 -0500
-Content-class: urn:content-classes:message
-MIME-Version: 1.0
-Content-Type: multipart/alternative;
-	boundary="----_=_NextPart_001_01C62130.EFB940FB"
-Date: Tue, 24 Jan 2006 16:55:48 -0500
-Message-ID: <CF88E297901EB040B49935FE71B99A2D01F49E12@CTTRBEXVS01.oxhp.com>
-From: "Kapadia, Nayan U." <nkapadia@oxhp.com>
-Subject: [linux-lvm] file descriptor 3 left open
+Received: from [10.15.80.229] (dhcp80-229.msp.redhat.com [10.15.80.229])
+	by pobox.corp.redhat.com (8.12.8/8.12.8) with ESMTP id k0OMmvao022672
+	for <linux-lvm@redhat.com>; Tue, 24 Jan 2006 17:48:58 -0500
+Mime-Version: 1.0 (Apple Message framework v623)
+In-Reply-To: <CF88E297901EB040B49935FE71B99A2D01F49E12@CTTRBEXVS01.oxhp.com>
+References: <CF88E297901EB040B49935FE71B99A2D01F49E12@CTTRBEXVS01.oxhp.com>
+Content-Type: multipart/alternative; boundary=Apple-Mail-1-921945061
+Message-Id: <a748b5eda735d5fda0e77b266ea94402@redhat.com>
+From: Jonathan E Brassow <jbrassow@redhat.com>
+Subject: Re: [linux-lvm] file descriptor 3 left open
+Date: Tue, 24 Jan 2006 16:48:54 -0600
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -22,108 +19,194 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: linux-lvm@redhat.com
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-This is a multi-part message in MIME format.
 
-------_=_NextPart_001_01C62130.EFB940FB
+--Apple-Mail-1-921945061
+Content-Transfer-Encoding: quoted-printable
 Content-Type: text/plain;
-	charset="us-ascii"
+	charset=ISO-8859-1;
+	format=flowed
+
+IIRC, these are merely informative messages saying that, "Hey, the=20
+person who called me forgot to close some of their file descriptors,=20
+like they were suppose to.  But don't worry, I'll close them for you."
+
+That would have been too long though, so I think they chose a more=20
+cryptic message.
+
+As far as your kernel installation problem, I'm not sure what's wrong=20
+there...
+
+You could 'rpm -q kernel' (or rpm -qa | grep kernel) to see if it is=20
+installed.  If it is, you could 'rpm -ql kernel-<the version> | grep=20
+boot' to see if the image was correctly installed...
+
+  brassow
+
+On Jan 24, 2006, at 3:55 PM, Kapadia, Nayan U. wrote:
+
+> I keep seeing "file descriptor 3 left open" at boot after the initrd=20=
+
+> is loaded.=A0 The systems boots to the 2.6.9-22.0.1 kernel and works=20=
+
+> fine.=A0 I have ran fsck against all filesystems however the error=20
+> messages still appears.=A0 I noticed that when I run system-config-lvm=20=
+
+> these errors are more predominant.=A0
+> =A0
+> File descriptor 13 left open
+> File descriptor 3 left open
+> File descriptor 4 left open
+> File descriptor 8 left open
+> File descriptor 9 left open
+> File descriptor 10 left open
+> File descriptor 11 left open
+> File descriptor 12 left open
+> File descriptor 13 left open
+> File descriptor 3 left open
+> File descriptor 4 left open
+> File descriptor 8 left open
+> File descriptor 9 left open
+> File descriptor 10 left open
+> File descriptor 11 left open
+> File descriptor 12 left open
+> File descriptor 13 left open
+> =A0
+> I recently installed the new kernel 2.6.9-22.0.2 but the system does=20=
+
+> not find kernel at boot.=A0 I think the file descriptor messages are a=20=
+
+> symptom to some greater problem.=A0 Please help.
+> =A0
+> thank you!
+> =A0
+> Nayan
+> =A0
+> =A0
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@redhat.com
+> https://www.redhat.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/=
+
+--Apple-Mail-1-921945061
 Content-Transfer-Encoding: quoted-printable
+Content-Type: text/enriched;
+	charset=ISO-8859-1
 
-I keep seeing "file descriptor 3 left open" at boot after the initrd is
-loaded.  The systems boots to the 2.6.9-22.0.1 kernel and works fine.  I
-have ran fsck against all filesystems however the error messages still
-appears.  I noticed that when I run system-config-lvm these errors are
-more predominant. =20
-=20
-File descriptor 13 left open
-File descriptor 3 left open
-File descriptor 4 left open
-File descriptor 8 left open
-File descriptor 9 left open
-File descriptor 10 left open
-File descriptor 11 left open
-File descriptor 12 left open
-File descriptor 13 left open
-File descriptor 3 left open
-File descriptor 4 left open
-File descriptor 8 left open
-File descriptor 9 left open
-File descriptor 10 left open
-File descriptor 11 left open
-File descriptor 12 left open
-File descriptor 13 left open
+IIRC, these are merely informative messages saying that, "Hey, the
+person who called me forgot to close some of their file descriptors,
+like they were suppose to.  But don't worry, I'll close them for you."
 
-=20
-I recently installed the new kernel 2.6.9-22.0.2 but the system does not
-find kernel at boot.  I think the file descriptor messages are a symptom
-to some greater problem.  Please help.
-=20
-thank you!
-=20
-Nayan
-=20
-=20
 
-------_=_NextPart_001_01C62130.EFB940FB
-Content-Type: text/html;
-	charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+That would have been too long though, so I think they chose a more
+cryptic message.
 
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
-<HTML><HEAD>
-<META http-equiv=3DContent-Type content=3D"text/html; =
-charset=3Dus-ascii">
-<META content=3D"MSHTML 6.00.2900.2180" name=3DGENERATOR></HEAD>
-<BODY>
-<DIV><SPAN class=3D575134921-24012006><FONT face=3DArial size=3D2>I keep =
-seeing "file=20
-descriptor 3 left open" at boot after the initrd is loaded.&nbsp; The =
-systems=20
-boots to the 2.6.9-22.0.1 kernel and works fine.&nbsp; I have ran fsck =
-against=20
-all filesystems however the error messages still appears.&nbsp; I =
-noticed that=20
-when I run system-config-lvm these errors are more predominant.&nbsp;=20
-</FONT></SPAN></DIV>
-<DIV><SPAN class=3D575134921-24012006><FONT face=3DArial=20
-size=3D2></FONT></SPAN>&nbsp;</DIV>
-<DIV><SPAN class=3D575134921-24012006><FONT face=3DArial size=3D2>File =
-descriptor 13=20
-left open<BR>File descriptor 3 left open<BR>File descriptor 4 left =
-open<BR>File=20
-descriptor 8 left open<BR>File descriptor 9 left open<BR>File descriptor =
-10 left=20
-open<BR>File descriptor 11 left open<BR>File descriptor 12 left =
-open<BR>File=20
-descriptor 13 left open<BR>File descriptor 3 left open<BR>File =
-descriptor 4 left=20
-open<BR>File descriptor 8 left open<BR>File descriptor 9 left =
-open<BR>File=20
-descriptor 10 left open<BR>File descriptor 11 left open<BR>File =
-descriptor 12=20
-left open<BR>File descriptor 13 left open<BR></FONT></SPAN></DIV>
-<DIV><SPAN class=3D575134921-24012006><FONT face=3DArial=20
-size=3D2></FONT></SPAN>&nbsp;</DIV>
-<DIV><SPAN class=3D575134921-24012006><FONT face=3DArial size=3D2>I =
-recently installed=20
-the new kernel 2.6.9-22.0.2 but the system does not find kernel at =
-boot.&nbsp; I=20
-think the file descriptor messages are a symptom to some greater =
-problem.&nbsp;=20
-Please help.</FONT></SPAN></DIV>
-<DIV><SPAN class=3D575134921-24012006><FONT face=3DArial=20
-size=3D2></FONT></SPAN>&nbsp;</DIV>
-<DIV><SPAN class=3D575134921-24012006><FONT face=3DArial size=3D2>thank=20
-you!</FONT></SPAN></DIV>
-<DIV><SPAN class=3D575134921-24012006><FONT face=3DArial=20
-size=3D2></FONT></SPAN>&nbsp;</DIV>
-<DIV><SPAN class=3D575134921-24012006><FONT face=3DArial=20
-size=3D2>Nayan</FONT></SPAN></DIV>
-<DIV><SPAN class=3D575134921-24012006><FONT face=3DArial=20
-size=3D2></FONT></SPAN>&nbsp;</DIV>
-<DIV><SPAN class=3D575134921-24012006><FONT face=3DArial=20
-size=3D2>&nbsp;</DIV></FONT></SPAN></BODY></HTML>
 
-------_=_NextPart_001_01C62130.EFB940FB--
+As far as your kernel installation problem, I'm not sure what's wrong
+there...
+
+
+You could 'rpm -q kernel' (or rpm -qa | grep kernel) to see if it is
+installed.  If it is, you could 'rpm -ql kernel-<<the version> | grep
+boot' to see if the image was correctly installed...
+
+
+ brassow
+
+
+On Jan 24, 2006, at 3:55 PM, Kapadia, Nayan U. wrote:
+
+
+<excerpt><fontfamily><param>Arial</param><smaller>I keep seeing "file
+descriptor 3 left open" at boot after the initrd is loaded.=A0 The
+systems boots to the 2.6.9-22.0.1 kernel and works fine.=A0 I have ran
+fsck against all filesystems however the error messages still
+appears.=A0 I noticed that when I run system-config-lvm these errors are
+more predominant.=A0</smaller></fontfamily>
+
+=A0
+
+<fontfamily><param>Arial</param><smaller>File descriptor 13 left =
+open</smaller></fontfamily>
+
+<fontfamily><param>Arial</param><smaller>File descriptor 3 left =
+open</smaller></fontfamily>
+
+<fontfamily><param>Arial</param><smaller>File descriptor 4 left =
+open</smaller></fontfamily>
+
+<fontfamily><param>Arial</param><smaller>File descriptor 8 left =
+open</smaller></fontfamily>
+
+<fontfamily><param>Arial</param><smaller>File descriptor 9 left =
+open</smaller></fontfamily>
+
+<fontfamily><param>Arial</param><smaller>File descriptor 10 left =
+open</smaller></fontfamily>
+
+<fontfamily><param>Arial</param><smaller>File descriptor 11 left =
+open</smaller></fontfamily>
+
+<fontfamily><param>Arial</param><smaller>File descriptor 12 left =
+open</smaller></fontfamily>
+
+<fontfamily><param>Arial</param><smaller>File descriptor 13 left =
+open</smaller></fontfamily>
+
+<fontfamily><param>Arial</param><smaller>File descriptor 3 left =
+open</smaller></fontfamily>
+
+<fontfamily><param>Arial</param><smaller>File descriptor 4 left =
+open</smaller></fontfamily>
+
+<fontfamily><param>Arial</param><smaller>File descriptor 8 left =
+open</smaller></fontfamily>
+
+<fontfamily><param>Arial</param><smaller>File descriptor 9 left =
+open</smaller></fontfamily>
+
+<fontfamily><param>Arial</param><smaller>File descriptor 10 left =
+open</smaller></fontfamily>
+
+<fontfamily><param>Arial</param><smaller>File descriptor 11 left =
+open</smaller></fontfamily>
+
+<fontfamily><param>Arial</param><smaller>File descriptor 12 left =
+open</smaller></fontfamily>
+
+<fontfamily><param>Arial</param><smaller>File descriptor 13 left =
+open</smaller></fontfamily>
+
+=A0
+
+<fontfamily><param>Arial</param><smaller>I recently installed the new
+kernel 2.6.9-22.0.2 but the system does not find kernel at boot.=A0 I
+think the file descriptor messages are a symptom to some greater
+problem.=A0 Please help.</smaller></fontfamily>
+
+=A0
+
+<fontfamily><param>Arial</param><smaller>thank =
+you!</smaller></fontfamily>
+
+=A0
+
+<fontfamily><param>Arial</param><smaller>Nayan</smaller></fontfamily>
+
+=A0
+
+<fontfamily><param>Arial</param><smaller>=A0</smaller></fontfamily>
+
+_______________________________________________
+
+linux-lvm mailing list
+
+linux-lvm@redhat.com
+
+https://www.redhat.com/mailman/listinfo/linux-lvm
+
+read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/</excerpt>=
+
+--Apple-Mail-1-921945061--
