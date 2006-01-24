@@ -1,19 +1,16 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id k0OITI107615
-	for <linux-lvm@redhat.com>; Tue, 24 Jan 2006 13:29:18 -0500
-Received: from shell.wgops.com (postfix@free.wgops.com [69.51.116.66])
-	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id k0OITC56022357
-	for <linux-lvm@redhat.com>; Tue, 24 Jan 2006 13:29:12 -0500
-Received: from [10.1.2.206] (localhost [127.0.0.1])
-	by shell.wgops.com (Postfix) with ESMTP id D7A5924FB0
-	for <linux-lvm@redhat.com>; Tue, 24 Jan 2006 11:28:52 -0700 (MST)
-Date: Tue, 24 Jan 2006 11:28:51 -0700
-From: Michael Loftis <mloftis@wgops.com>
-Message-ID: <15B770F7AE82DAADD9A7C9D6@dhcp-2-206.wgops.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-Subject: [linux-lvm] State of LVM Snapshotting?
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id k0OIj9114740
+	for <linux-lvm@redhat.com>; Tue, 24 Jan 2006 13:45:09 -0500
+Received: from out-of-band.media.mit.edu (out-of-band.media.mit.edu
+	[18.85.16.22])
+	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id k0OIj2S7026434
+	for <linux-lvm@redhat.com>; Tue, 24 Jan 2006 13:45:02 -0500
+Date: Tue, 24 Jan 2006 13:45:00 -0500 (EST)
+Message-Id: <200601241845.NAA24824@out-of-band.media.mit.edu>
+From: f-lvm@media.mit.edu
+In-reply-to: <3CBC4C64-B672-4468-A493-7192234BA001@terrascale.net> (message
+	from AJ Lewis on Tue, 24 Jan 2006 08:55:41 -0600)
+Subject: [linux-lvm] pvcreate can't use entire disk?
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -24,23 +21,28 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: linux-lvm@redhat.com
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: aj@terrascale.net
+Cc: linux-lvm@redhat.com, f-lvm@media.mit.edu
 
-In 2.4 atleast snapshots aren't very useful to me because they require huge 
-chunks of contiguous kernel memory for the COW bitmap table.  I was 
-wondering if 2.6 improves this situation any.  currently we use a 64M PE on 
-volumes ranging in size from 30Gb up to and over 300Gb.  The smaller 
-volumes we can usually take snapshots of, but anything up over 100Gb we've 
-never been able to reliably take any snapshots, much less have more than 
-one because of this limitation.
+    Date: Tue, 24 Jan 2006 08:55:41 -0600
+    From: AJ Lewis <aj@terrascale.net>
 
-Any feedback would be welcome, if you need specifics on the versions we 
-were using I c cna provide them.  Currently starting to (try) to migrate to 
-2.6.  Though that's proving difficult and might be impossible because of 
-reasons discussed on LKML.
+    Well, LVM1 would complain about the partition table.  I guess lvm2  
+    does not, but that doesn't change the fact that neither would let you  
+    write to a whole disk with a partition table on it.  I can update the  
+    howto to say that is the error to expect for lvm2 when trying to use  
+    a whole disk with a partition table on it.
 
---
-"Genius might be described as a supreme capacity for getting its possessors
-into trouble of all kinds."
--- Samuel Butler
+Thanks.  I've also filed a bug report with Ubuntu (since that's the
+distribution I tested this under) asking if the error message can be
+made less misleading; we'll see if they fix it, push it upstream, or
+whatever.  (After all, running pvcreate on a disk with a partition
+table on it---whether by accident or not---has to be the single most
+common non-succeeding case; it'd be nice if the error message didn't
+lie about it.  If I hadn't been so cautious [and if I hadn't realized
+that pvcreate's error message is wrong in LVM2] I've had just wiped
+the partition table to begin with and never been mislead in the first
+place.)
