@@ -1,16 +1,21 @@
-Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id k0OIj9114740
-	for <linux-lvm@redhat.com>; Tue, 24 Jan 2006 13:45:09 -0500
-Received: from out-of-band.media.mit.edu (out-of-band.media.mit.edu
-	[18.85.16.22])
-	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id k0OIj2S7026434
-	for <linux-lvm@redhat.com>; Tue, 24 Jan 2006 13:45:02 -0500
-Date: Tue, 24 Jan 2006 13:45:00 -0500 (EST)
-Message-Id: <200601241845.NAA24824@out-of-band.media.mit.edu>
-From: f-lvm@media.mit.edu
-In-reply-to: <3CBC4C64-B672-4468-A493-7192234BA001@terrascale.net> (message
-	from AJ Lewis on Tue, 24 Jan 2006 08:55:41 -0600)
-Subject: [linux-lvm] pvcreate can't use entire disk?
+Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id k0OIqE118003
+	for <linux-lvm@redhat.com>; Tue, 24 Jan 2006 13:52:14 -0500
+Received: from bud.tessco.com (bud.tessco.com [63.160.135.12])
+	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id k0OIqAgD015388
+	for <linux-lvm@redhat.com>; Tue, 24 Jan 2006 13:52:10 -0500
+Received: from [10.30.11.17] (callahan_lt.tessco.com [10.30.11.17])
+	by tessco.com (PMDF V6.2-1x9 #31130)
+	with ESMTP id <01LY59FKL33Q8WX3MO@tessco.com> for linux-lvm@redhat.com;
+	Tue, 24 Jan 2006 13:51:58 -0500 (EST)
+Date: Tue, 24 Jan 2006 13:53:31 -0500
+From: Tom Callahan <callahant@tessco.com>
+Subject: [linux-lvm] how to use mirror function of lvcreate?
+In-reply-to: <200601241845.NAA24824@out-of-band.media.mit.edu>
+Message-id: <43D677AB.1040203@tessco.com>
+MIME-version: 1.0
+Content-transfer-encoding: 7bit
+References: <200601241845.NAA24824@out-of-band.media.mit.edu>
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -21,28 +26,20 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: aj@terrascale.net
-Cc: linux-lvm@redhat.com, f-lvm@media.mit.edu
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-    Date: Tue, 24 Jan 2006 08:55:41 -0600
-    From: AJ Lewis <aj@terrascale.net>
+There is a mirror flag that can be thrown during lvcreate. Anyone have
+any documentation on how to do this?
 
-    Well, LVM1 would complain about the partition table.  I guess lvm2  
-    does not, but that doesn't change the fact that neither would let you  
-    write to a whole disk with a partition table on it.  I can update the  
-    howto to say that is the error to expect for lvm2 when trying to use  
-    a whole disk with a partition table on it.
+I'd like to mirror an LV as I've read you can do.
 
-Thanks.  I've also filed a bug report with Ubuntu (since that's the
-distribution I tested this under) asking if the error message can be
-made less misleading; we'll see if they fix it, push it upstream, or
-whatever.  (After all, running pvcreate on a disk with a partition
-table on it---whether by accident or not---has to be the single most
-common non-succeeding case; it'd be nice if the error message didn't
-lie about it.  If I hadn't been so cautious [and if I hadn't realized
-that pvcreate's error message is wrong in LVM2] I've had just wiped
-the partition table to begin with and never been mislead in the first
-place.)
+Thanks,
+
+Tom Callahan
+TESSCO Technologies
+Desk: (410)-229-1361
+Cell: (443)-506-6216
+Email: callahant@tessco.com
+
+A real engineer only resorts to documentation when the keyboard dents on the forehead get too noticeable.
