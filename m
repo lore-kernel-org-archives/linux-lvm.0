@@ -1,14 +1,25 @@
-Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id k0NM2M114088
-	for <linux-lvm@redhat.com>; Mon, 23 Jan 2006 17:02:22 -0500
-Received: from out-of-band.media.mit.edu (out-of-band.media.mit.edu
-	[18.85.16.22])
-	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id k0NM2G2v002459
-	for <linux-lvm@redhat.com>; Mon, 23 Jan 2006 17:02:16 -0500
-Message-Id: <200601232202.RAA22420@out-of-band.media.mit.edu>
-From: f-lvm@media.mit.edu
-Subject: [linux-lvm] pvcreate can't use entire disk?
-Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
+Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id k0OBpN120517
+	for <linux-lvm@redhat.com>; Tue, 24 Jan 2006 06:51:23 -0500
+Received: from ciao.gmane.org (main.gmane.org [80.91.229.2])
+	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id k0OBpLBn005102
+	for <linux-lvm@redhat.com>; Tue, 24 Jan 2006 06:51:22 -0500
+Received: from root by ciao.gmane.org with local (Exim 4.43)
+	id 1F1Mhd-0007XY-3u
+	for linux-lvm@redhat.com; Tue, 24 Jan 2006 12:51:13 +0100
+Received: from empire.tau.ac.il ([132.66.152.50])
+	by main.gmane.org with esmtp (Gmexim 0.1 (Debian))
+	id 1AlnuQ-0007hv-00
+	for <linux-lvm@redhat.com>; Tue, 24 Jan 2006 12:51:13 +0100
+Received: from romm by empire.tau.ac.il with local (Gmexim 0.1 (Debian))
+	id 1AlnuQ-0007hv-00
+	for <linux-lvm@redhat.com>; Tue, 24 Jan 2006 12:51:13 +0100
+From: "Roman M. Parparov" <romm@empire.tau.ac.il>
+Message-ID: <dr53tf$acg$1@sea.gmane.org>
+Sender: news <news@sea.gmane.org>
+Subject: [linux-lvm] Volume Group lost
+Reply-To: romm@empire.tau.ac.il,
+	LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -17,39 +28,70 @@ List-Post: <mailto:linux-lvm@redhat.com>
 List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
-Date: Mon, 23 Jan 2006 22:02:23 -0000
+Date: Tue, 24 Jan 2006 11:51:24 -0000
 List-Id: <linux-lvm.redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@redhat.com
-Cc: f-lvm@media.mit.edu
 
-[Please keep me CC'ed.  Tnx.]
+Dear community,
 
-I've been using LVM2 under Ubuntu Breezy for several months now; the
-original partitioning & volume groups were created by its installer.
-I've just decided to add a second disk, and I'm having problems with
-what should have been the simplest step, namely pvcreate.
+I had the following problem with my lvm raid:
+Jan 22 10:51:08 sky kernel: jfs_lookup: iget returned bad inode, inum = 249888
+Jan 22 10:51:08 sky kernel: jfs_lookup: iget returned bad inode, inum = 229376
+Jan 22 10:51:08 sky kernel:  I/O error: dev 08:41, sector 40845696
+Jan 22 10:51:08 sky kernel:  I/O error: dev 08:41, sector 19874184
 
-My new disk is /dev/hdd.  But doing "pvcreate /dev/hdd" complains
-"Device /dev/hdd not found."  The disk is surely online:  I can
-do, e.g., "strings /dev/hdd | head -1" and get "LILO" because this
-disk was originally a random non-LVM'ed disk from another machine.
-I would have -expected- pvcreate to complain about a partition table
-existing (at which point I would have zeroed it and tried again), but
-not to complain that the entire disk doesn't exist.
+The LVM (LVM 1) consists of six SCSI disks, each one 36Gb size.
 
-What's the problem here?  I'd rather not have to repartition the
-(several) partions on the device into one, and then use just that
-single partition, when I logically wanted the entire disk to just be
-part of my VG.  (Though if that's the only way to get pvcreate to
-behave, I can do so.)  But the howto at tldp.org very clearly states
-that this should just work (it uses /dev/hdb as its example; but that
-shouldn't matter :), and the manpage for pvcreate both talks about
-whole disks, and includes whole disks in its example at the end.
+I decided to reboot the machine and see what happens. The reboot was the
+first one since I configured the LVM a few _months_ ago.
 
-What's the problem here?  What should I do?  Thanks!
+After the reboot the system can't bring the LVM back online and reports:
 
-P.S.  pvcreate --version claims LVM version 2.01.04 (2005-02-09),
-library version 1.01.03 (2005-06-13), and driver version 4.4.0.
+[root]sky: ~>pvscan
+pvscan -- reading all physical volumes (this may take a while...)
+pvscan -- inactive PV "/dev/sdb1"  is associated to unknown VG "softraid" (run
+vgscan)
+pvscan -- inactive PV "/dev/sdc1"  is associated to unknown VG "softraid" (run
+vgscan)
+pvscan -- inactive PV "/dev/sdd1"  is associated to unknown VG "softraid" (run
+vgscan)
+pvscan -- inactive PV "/dev/sde1"  is associated to unknown VG "softraid" (run
+vgscan)
+pvscan -- inactive PV "/dev/sdf1"  is associated to unknown VG "softraid" (run
+vgscan)
+pvscan -- inactive PV "/dev/sdg1"  is associated to unknown VG "softraid" (run
+vgscan)
+pvscan -- total: 6 [205.09 GB] / in use: 6 [205.09 GB] / in no VG: 0 [0]
+
+and
+
+[root]sky: ~>vgscan
+vgscan -- reading all physical volumes (this may take a while...)
+vgscan -- ERROR "vg_read_with_pv_and_lv(): current PV" can't get data of volume
+group "softraid" from physical volume(s)
+vgscan -- "/etc/lvmtab" and "/etc/lvmtab.d" successfully created
+vgscan -- WARNING: This program does not do a VGDA backup of your volume group
+
+vgcfgrestore reported success, but no change to pvscan and vgscan .
+
+/dev/softraid/ disappeared after the reboot 
+
+/etc/lvmconf/softraid exists and has size of 1375404 bytes .
+/etc/lvmtab and /etc/lvmtab.d are empty.
+
+I have valuable data on the raid I do not want to go through restoring
+from a backup again.
+
+Any advice how to recover and reconfigure the volume group?
+
+Thanks in advance,
+
+Roman.
+
+-- 
+Roman M. Parparov - NASA EOSDIS project node at TAU technical manager.
+Email: romm@empire.tau.ac.il		   http://www.nasa.proj.ac.il/
+Phone/Fax: +972-(0)3-6405205 (work),        +972-(0)50-734-18-34 (home)
