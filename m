@@ -1,16 +1,17 @@
-Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id k0PEXw126212
-	for <linux-lvm@redhat.com>; Wed, 25 Jan 2006 09:33:58 -0500
-Received: from oxhp.com (mx2.oxhp.com [199.97.64.17])
-	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id k0PEXvsP001056
-	for <linux-lvm@redhat.com>; Wed, 25 Jan 2006 09:33:57 -0500
-Content-class: urn:content-classes:message
-MIME-Version: 1.0
-Subject: RE: [linux-lvm] file descriptor 3 left open
-Date: Wed, 25 Jan 2006 09:33:35 -0500
-Message-ID: <CF88E297901EB040B49935FE71B99A2D01F4A1F7@CTTRBEXVS01.oxhp.com>
-From: "Kapadia, Nayan U." <nkapadia@oxhp.com>
-Content-Transfer-Encoding: 8bit
+Received: from agk.surrey.redhat.com (agk.surrey.redhat.com [172.16.10.74])
+	by pobox.surrey.redhat.com (8.12.8/8.12.8) with ESMTP id k0PEZnRq009939
+	for <linux-lvm@redhat.com>; Wed, 25 Jan 2006 14:35:49 GMT
+Received: from agk by agk.surrey.redhat.com with local (Exim 4.34)
+	id 1F1lkT-0003gH-ON
+	for linux-lvm@redhat.com; Wed, 25 Jan 2006 14:35:49 +0000
+Date: Wed, 25 Jan 2006 14:35:49 +0000
+From: Alasdair G Kergon <agk@redhat.com>
+Subject: Re: [linux-lvm] file descriptor 3 left open
+Message-ID: <20060125143549.GU4280@agk.surrey.redhat.com>
+References: <CF88E297901EB040B49935FE71B99A2D01F4A1F7@CTTRBEXVS01.oxhp.com>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <CF88E297901EB040B49935FE71B99A2D01F4A1F7@CTTRBEXVS01.oxhp.com>
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -22,36 +23,14 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-How do I fix this bug in nash ? 
-
------Original Message-----
-From: linux-lvm-bounces@redhat.com [mailto:linux-lvm-bounces@redhat.com]
-On Behalf Of Alasdair G Kergon
-Sent: Wednesday, January 25, 2006 9:27 AM
-To: LVM general discussion and development
-Subject: Re: [linux-lvm] file descriptor 3 left open
-
-On Wed, Jan 25, 2006 at 09:11:22AM -0500, Kapadia, Nayan U. wrote:
-> Uncompressing Linux booting the kernel Redhat Nash 4.1.18 starting 
-> File descriptor 3 left open
-
-> The file descriptor left open messages are just indications of files 
-> being left in open state?
-
-Yes.  LVM2 commands are run as root so they do have to concern
-themselves with potential security problems like that.
-
-This particular message was caused a bug in nash that got fixed a while
-ago (and was not considered to affect security).
+On Wed, Jan 25, 2006 at 09:33:35AM -0500, Kapadia, Nayan U. wrote:
+> How do I fix this bug in nash ? 
+ 
+Upgrade your mkinitrd package and rebuild your initrd.
 
 Alasdair
---
+-- 
 agk@redhat.com
-
-_______________________________________________
-linux-lvm mailing list
-linux-lvm@redhat.com
-https://www.redhat.com/mailman/listinfo/linux-lvm
-read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
