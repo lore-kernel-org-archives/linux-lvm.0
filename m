@@ -1,24 +1,17 @@
-Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id k0RMML110968
-	for <linux-lvm@redhat.com>; Fri, 27 Jan 2006 17:22:21 -0500
-Received: from mail.funsoft.com (funsoft.funsoft.com [71.129.27.18])
-	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id k0RMMJSo009570
-	for <linux-lvm@redhat.com>; Fri, 27 Jan 2006 17:22:19 -0500
-Received: from [192.168.5.27] (funsoft.funsoft.com [192.168.11.1])
-	by mail.funsoft.com (8.11.6/8.11.0) with ESMTP id k0RMMDY23379
-	for <linux-lvm@redhat.com>; Fri, 27 Jan 2006 14:22:13 -0800
-Message-ID: <43DA9D01.5050602@funsoft.com>
-Date: Fri, 27 Jan 2006 17:21:53 -0500
-From: Gary Eheman <eheman@funsoft.com>
-MIME-Version: 1.0
-Subject: Re: [linux-lvm] error msg: VG vgc1 metadata too large for circular
-	buffer
-References: <43DA841D.3080208@funsoft.com>
-	<20060127213314.GF4280@agk.surrey.redhat.com>
-In-Reply-To: <20060127213314.GF4280@agk.surrey.redhat.com>
-Content-Transfer-Encoding: 7bit
-Reply-To: eheman@funsoft.com,
-	LVM general discussion and development <linux-lvm@redhat.com>
+Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id k0UJdm126125
+	for <linux-lvm@redhat.com>; Mon, 30 Jan 2006 14:39:48 -0500
+Received: from rwcrmhc11.comcast.net (rwcrmhc11.comcast.net [204.127.192.81])
+	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id k0UJdVGj016456
+	for <linux-lvm@redhat.com>; Mon, 30 Jan 2006 14:39:36 -0500
+Received: from seb (helo=highlab.com)
+	by highlab.com with local-esmtp (Exim 4.50) id 1F3esb-0001Wr-7x
+	for linux-lvm@redhat.com; Mon, 30 Jan 2006 12:40:01 -0700
+Date: Mon, 30 Jan 2006 12:40:01 -0700
+From: Sebastian Kuzminsky <seb@highlab.com>
+Message-Id: <E1F3esb-0001Wr-7x@highlab.com>
+Subject: [linux-lvm] while file system?
+Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -28,39 +21,25 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: LVM general discussion and development <linux-lvm@redhat.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: linux-lvm@redhat.com
 
-Alasdair:
-Many thanks.  I blew away the pv with your suggested pvremove and 
-recreated specifying a large metadatasize (16M, since  am experimenting) 
-and all worked as desired this time around.
+I'm building a disk server for a small company.  I'm using the standard
+"RAID-array-as-PV" setup, and planning to grow the filesystem as needs
+demand.  I'd like to use a filesystem that supports online grow and
+online shrink.
 
+XFS, JFS, and Reiser3 all support unlimited online grow but no shrink
+at all.
 
-Alasdair G Kergon wrote:
-> On Fri, Jan 27, 2006 at 03:35:41PM -0500, Gary Eheman wrote:
->> I can destroy the data. In fact, that is what I would like to do, but 
->> softly using lvremove, vgremove, pvremove if possible. But I can't get 
->> around the current error.
->>
->> Advice,please?  Are there parameters I can give during the creation of 
->> the group or volume to avoid this?
-> 
-> As you realised, you need to recreate the PV with a much larger 
-> metadatasize.
-> 
-> There are no tools yet to manipulate it after it's been created.
-> 
-> If you can throw it away, do that: vgchange -an to deactivate everything
-> then pvremove -ff to destroy it.
-> 
-> [If you weren't able to do that, there are workarounds involving making
-> lvm2 stop using that metadata area and using a new larger one somewhere
-> else instead.]
-> 
-> Alasdair
+Looks like Ext3 supports online grow, but only up to +16 GB, which
+makes it useless on modern disks, much less arrays of modern disks....
+Looks like offline grow & shrink are unlimited, which is good.  Lots of
+old (unmaintained?) tools and kernel patches here, but lots of recent
+activity too.  What's the current status?
+
 
 -- 
-Gary Eheman
-Fundamental Software, Inc.
-http://www.funsoft.com
+Sebastian Kuzminsky
