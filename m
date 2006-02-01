@@ -1,16 +1,17 @@
-Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id k11I7f130827
-	for <linux-lvm@redhat.com>; Wed, 1 Feb 2006 13:07:41 -0500
-Received: from mail7.amherst.edu (mail7.amherst.edu [148.85.136.41])
-	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id k11I7L9E009587
-	for <linux-lvm@redhat.com>; Wed, 1 Feb 2006 13:07:26 -0500
-Content-class: urn:content-classes:message
-MIME-Version: 1.0
-Subject: RE: [linux-lvm] 'snapshot' target still experimental :-(
-Date: Wed, 1 Feb 2006 13:07:20 -0500
-Message-ID: <0456A130F613AD459887FF012652963F33ED0B@mail7.amherst.edu>
-From: "Steffen Plotner" <swplotner@amherst.edu>
-Content-Transfer-Encoding: 8bit
+Received: from agk.surrey.redhat.com (agk.surrey.redhat.com [172.16.10.74])
+	by pobox.surrey.redhat.com (8.12.8/8.12.8) with ESMTP id k11IUZED016708
+	for <linux-lvm@redhat.com>; Wed, 1 Feb 2006 18:30:35 GMT
+Received: from agk by agk.surrey.redhat.com with local (Exim 4.34)
+	id 1F4MkV-0005mV-4d
+	for linux-lvm@redhat.com; Wed, 01 Feb 2006 18:30:35 +0000
+Date: Wed, 1 Feb 2006 18:30:35 +0000
+From: Alasdair G Kergon <agk@redhat.com>
+Subject: Re: [linux-lvm] 'snapshot' target still experimental :-(
+Message-ID: <20060201183034.GM4280@agk.surrey.redhat.com>
+References: <0456A130F613AD459887FF012652963F33ED0B@mail7.amherst.edu>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <0456A130F613AD459887FF012652963F33ED0B@mail7.amherst.edu>
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -22,47 +23,19 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-Hi,
+On Wed, Feb 01, 2006 at 01:07:20PM -0500, Steffen Plotner wrote:
+> cd to a directory on an lv that has an active snapshot
+> dd if=/dev/zero of=test bs=1M count=10000
+ 
+> And see how hard it is to remove a live active snapshot. 
 
-Ah, I see, reading is never the problem. Do a simple
+Strange - I don't recall anyone reporting that problem before.
 
-cd to a directory on an lv that has an active snapshot
+I've just tried it here and the machine locked up:-(
 
-dd if=/dev/zero of=test bs=1M count=10000
-
-And see how hard it is to remove a live active snapshot. You will find
-that lvremove hangs, you can press Ctrl-C, then try lvscan and it hangs
-- maybe 2.6.15.1 has fixed this?  Would you let us know?
-
-Thanks.
-
-Steffen
-
------Original Message-----
-From: linux-lvm-bounces@redhat.com [mailto:linux-lvm-bounces@redhat.com]
-On Behalf Of Kevin P. Fleming
-Sent: Wednesday, February 01, 2006 12:56 PM
-To: LVM general discussion and development
-Subject: Re: [linux-lvm] 'snapshot' target still experimental :-(
-
-Steffen Plotner wrote:
-
-> With FC4 for example I cannot remove a snapshot while the underlying 
-> logical volume is under heavy I/O.  Once all I/O stops I can remove 
-> the snapshot. Doing a lvremove will hang.
-
-Interesting.
-
-I am using this on a Gentoo system using vanilla kernel 2.6.15.1, and my
-volumes don't experience 'heavy I/O' at the times I make backups, so it
-shouldn't be too bad.
-
-Thanks for the info :-)
-
-_______________________________________________
-linux-lvm mailing list
-linux-lvm@redhat.com
-https://www.redhat.com/mailman/listinfo/linux-lvm
-read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+Alasdair
+-- 
+agk@redhat.com
