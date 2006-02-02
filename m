@@ -1,22 +1,21 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id k12H46113108
-	for <linux-lvm@redhat.com>; Thu, 2 Feb 2006 12:04:06 -0500
-Received: from strugglers.net (strugglers.net [212.13.198.70])
-	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id k12H3s6H016580
-	for <linux-lvm@redhat.com>; Thu, 2 Feb 2006 12:03:54 -0500
-Received: from andy by strugglers.net with local (Exim 4.50)
-	id 1F4hs2-0001vK-4M
-	for linux-lvm@redhat.com; Thu, 02 Feb 2006 17:03:46 +0000
-Date: Thu, 2 Feb 2006 17:03:46 +0000
-From: Andy Smith <andy@strugglers.net>
-Message-ID: <20060202170346.GV7017@strugglers.net>
-References: <D3DC8F9206F0D24085E459720ECDF3EDC3FC34@mail-18ps.atlarge.net>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="I6qaxAmZPl8kCtac"
-Content-Disposition: inline
-In-Reply-To: <D3DC8F9206F0D24085E459720ECDF3EDC3FC34@mail-18ps.atlarge.net>
-Subject: Re: [linux-lvm] raidtools/mdadm stability
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id k12I72114706
+	for <linux-lvm@redhat.com>; Thu, 2 Feb 2006 13:07:02 -0500
+Received: from palrel10.hp.com (palrel10.hp.com [156.153.255.245])
+	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id k12I6rTp000703
+	for <linux-lvm@redhat.com>; Thu, 2 Feb 2006 13:06:54 -0500
+Received: from smtp1.ptp.hp.com (smtp.cup.hp.com [15.1.28.250])
+	by palrel10.hp.com (Postfix) with ESMTP id A003634131
+	for <linux-lvm@redhat.com>; Thu,  2 Feb 2006 10:06:48 -0800 (PST)
+Received: from [15.244.57.26] (airwolf.cup.hp.com [15.244.57.26])
+	by smtp1.ptp.hp.com (Postfix) with ESMTP id 58CF03B0A65
+	for <linux-lvm@redhat.com>; Thu,  2 Feb 2006 18:06:48 +0000 (UTC)
+Message-ID: <43E24A37.6010801@cup.hp.com>
+Date: Thu, 02 Feb 2006 10:06:47 -0800
+From: John DeFranco <defranco@cup.hp.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] vgchange -an question with disconnected disks
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -27,57 +26,53 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: linux-lvm@redhat.com
 
+I have a question regarding the behavior of vgchange -a n on lvm2 when 
+there are disk failures. Specifically the following:
 
---I6qaxAmZPl8kCtac
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+1. vgchange -a y vg00
+2. disconnect the disks
+3. vgchange -a n vg00
 
-On Thu, Feb 02, 2006 at 10:15:52AM -0600, Don Shesnicky wrote:
-> Couple of quick questions on raidtools/mdadm if anyone cares to comment:
->=20
-> 1. In the raid faq it states "However, if you find raidtools cumbersome=
-=20
-> or limited, mdadm (multiple devices admin) is an extremely useful tool=20
-> for running RAID systems. It can be used as a replacement for the=20
-> raidtools, or as a supplement." I want to mirror the root drives of a=20
-> RHEL4 ES U2 system, what's the prefered method for stability -
-> raidtools,=20
-> mdadm or mdadm with raidtools.=20
+Now this fails with many messages, such as:
+[root@harris ~]# vgchange -a n vg00
+   /dev/sda1: read failed after 0 of 4096 at 0: Input/output error
+   /dev/sdb1: read failed after 0 of 4096 at 0: Input/output error
+   /dev/sdb2: read failed after 0 of 4096 at 0: Input/output error
+   /dev/sdc1: read failed after 0 of 4096 at 0: Input/output error
+   /dev/sda: read failed after 0 of 1024 at 0: Input/output error
+   /dev/sda: read failed after 0 of 1024 at 312475648: Input/output error
+   /dev/sda: read failed after 0 of 2048 at 0: Input/output error
+   /dev/sda1: read failed after 0 of 4096 at 1966080: Input/output error
+   /dev/sda1: read failed after 0 of 4096 at 0: Input/output error
+   /dev/sda2: read failed after 0 of 4096 at 310312960: Input/output error
+   /dev/sda2: read failed after 0 of 4096 at 0: Input/output error
+   /dev/sdb: read failed after 0 of 1024 at 0: Input/output error
+   /dev/sdb: read failed after 0 of 1024 at 312475648: Input/output error
+   /dev/sdb: read failed after 0 of 2048 at 0: Input/output error
+   /dev/sdb1: read failed after 0 of 4096 at 1966080: Input/output error
+   /dev/sdb1: read failed after 0 of 4096 at 0: Input/output error
+   /dev/sdb2: read failed after 0 of 4096 at 310312960: Input/output error
+   /dev/sdb2: read failed after 0 of 4096 at 0: Input/output error
+   /dev/sdc: read failed after 0 of 1024 at 0: Input/output error
+   /dev/sdc: read failed after 0 of 1024 at 16384000: Input/output error
+   /dev/sdc: read failed after 0 of 2048 at 0: Input/output error
+   /dev/sdc1: read failed after 0 of 4096 at 16318464: Input/output error
+   /dev/sdc1: read failed after 0 of 4096 at 0: Input/output error
+   Unable to find volume group "vg00"
+[root@harris ~]#
 
-raidtools is obsolete, so mdadm.
+This the vg is not deactivated. Now this is different behavior that with 
+lvm1 which would just proceed as normal. My question is that is there a 
+way to force the deactivation to occur in this case?
 
-> 2. I take it from a previous posting I can mirror my two root drives,=20
-> installed the MBRs and be good to go to boot off either drive, that=20
-> the mirror is not at the bit level and does not include the MBR?
+Thanks!
 
-The mirror is at the block device level, e.g. if your root fs is
-/dev/sda1 then that's what you mirror.  So you could install an MBR
-on sda and sdb for example.
-
-> 3. Is RHEL4 ES Update2 generally stable or is there something that=20
-> could burn us here?
-
-I have had no issues whatsoever with LVM or mdadm in RHEL3 or 4.
-Apart from LVM snapshots, of course.
-
---=20
-http://strugglers.net/wiki/Xen_hosting -- A Xen VPS hosting hobby
-Encrypted mail welcome - keyid 0x604DE5DB
-
---I6qaxAmZPl8kCtac
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-Content-Disposition: inline
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.1 (GNU/Linux)
-
-iD8DBQFD4jtyIJm2TL8VSQsRAs6VAKDORrJDG4W2WEJUGGrybfxWN5mcKACfYG4O
-Nzvqih7HEQ3B4QDQUbXMeeo=
-=nfrf
------END PGP SIGNATURE-----
-
---I6qaxAmZPl8kCtac--
+-- 
+===========
+John DeFranco                  Hewlett Packard Company
+john.defranco@hp.com           Availability Clusters Solution Lab
+phone: 408 447-7543            19111 Pruneridge Ave., M/S 4101
+fax:   408 447-0056            Cupertino, CA 95014
