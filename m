@@ -1,19 +1,19 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id k12M1p108210
-	for <linux-lvm@redhat.com>; Thu, 2 Feb 2006 17:01:51 -0500
-Received: from orca.ele.uri.edu (orca.ele.uri.edu [131.128.51.63])
-	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id k12M1gR2027543
-	for <linux-lvm@redhat.com>; Thu, 2 Feb 2006 17:01:42 -0500
-Subject: Re: [linux-lvm] Question about hardware LVM
-From: Ming Zhang <mingz@ele.uri.edu>
-In-Reply-To: <7cce3190602021308n184bcc43m@mail.gmail.com>
-References: <7cce3190602021308n184bcc43m@mail.gmail.com>
-Date: Thu, 02 Feb 2006 17:01:18 -0500
-Message-Id: <1138917679.7774.148.camel@localhost.localdomain>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Reply-To: mingz@ele.uri.edu,
-	LVM general discussion and development <linux-lvm@redhat.com>
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id k12N6k125894
+	for <linux-lvm@redhat.com>; Thu, 2 Feb 2006 18:06:46 -0500
+Received: from mail.silentmedia.com (fire.silentmedia.com [216.254.19.118])
+	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id k12N6bX1010278
+	for <linux-lvm@redhat.com>; Thu, 2 Feb 2006 18:06:37 -0500
+Received: from unknown (HELO babylon) (bench.silentmedia@[10.5.5.254])
+	(envelope-sender <bench@silentmedia.com>)
+	by 0 (qmail-ldap-1.03) with SMTP
+	for <linux-lvm@redhat.com>; 2 Feb 2006 23:06:32 -0000
+Date: Thu, 2 Feb 2006 15:06:31 -0800 (PST)
+From: Ben <bench@silentmedia.com>
+Message-ID: <Pine.LNX.4.64.0602021457070.1276@localhost.localdomain>
+MIME-Version: 1.0
+Subject: [linux-lvm] Expanding volume groups to fill a growing disk
+Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -23,41 +23,19 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="iso-8859-1"
-To: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: TEXT/PLAIN; charset="us-ascii"; format="flowed"
+Content-Transfer-Encoding: 7bit
+To: linux-lvm@redhat.com
 
-i guess u can get that information from manual.
+I'm new to LVM, so maybe I'm missing something basic, but it seems like LVM2 
+makes it difficult to expand a VG. Or rather, it's easy if you want to just add 
+another disk to the group, but I have a hardware RAID card that supports online 
+expansion, and I'd like to use it.
 
-the hardware probably can grow the size dynamically. but it might still
-depends on host to grow the fs.
+Basically, I'm looking for a way to tell LVM "I know I partioned you on 
+/dev/sda2 to be 500GB; now that I've expanded the disk with the raid card, I 
+want to expand that volume group to fill the new space."
 
-linux seems can not handle the read_capacity data changed msg from san.
-so probably u will need to grow it, reconnect from linux, find the
-changed size, then run fs tools to grow it.
-
-still, check manual is the way to go.
-
-ming
-
-On Thu, 2006-02-02 at 22:08 +0100, Javier de Miguel Rodr=C3=ADguez wrote:
-> Hello
->=20
-> I have been successfully using LVM on RedHat Linux Server with no
-> hassle. We are now deploying a $BIGVENDOR expensive FiberChannel SAN.
-> One of the main features of this SAN is that is able to grow a
-> filesystem
->=20
-> How does Linux handle this? Do I still have to use LVM? If I still
-> have to use LVM I do NOT see the point of "hardware base growing".
-> Simply, create a new LUN in the SAN and I can join to our LVM setup.
->=20
-> Maybe this is a "Storage 101" questio, but I do not fully understand
-> expensive SAN "hardware based"  filesystem grow.
->=20
-> Thank you in advance
->=20
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+Do I have to use fdisk to make a new partition, and then use pvcreate followed 
+by vgextend? That sounds like it would work, but it seems like there should be a 
+cleaner way.
