@@ -1,24 +1,18 @@
-Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id k13H9M103289
-	for <linux-lvm@redhat.com>; Fri, 3 Feb 2006 12:09:22 -0500
-Received: from mta07-winn.ispmail.ntl.com (mta07-winn.ispmail.ntl.com
-	[81.103.221.47])
-	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id k13H9JPW027543
-	for <linux-lvm@redhat.com>; Fri, 3 Feb 2006 12:09:20 -0500
-Received: from aamta12-winn.ispmail.ntl.com ([81.103.221.35])
-	by mta07-winn.ispmail.ntl.com with ESMTP id
-	<20060203170910.SMMG19933.mta07-winn.ispmail.ntl.com@aamta12-winn.ispmail.ntl.com>
-	for <linux-lvm@redhat.com>; Fri, 3 Feb 2006 17:09:10 +0000
-Received: from [192.168.11.10] (really [62.253.210.226])
-	by aamta12-winn.ispmail.ntl.com with ESMTP id
-	<20060203170910.XLOL12811.aamta12-winn.ispmail.ntl.com@[192.168.11.10]>
-	for <linux-lvm@redhat.com>; Fri, 3 Feb 2006 17:09:10 +0000
-Message-ID: <43E38E34.7080502@watford53.freeserve.co.uk>
-Date: Fri, 03 Feb 2006 17:09:08 +0000
-From: Jim Ford <jaford@watford53.freeserve.co.uk>
+Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id k13IOL102804
+	for <linux-lvm@redhat.com>; Fri, 3 Feb 2006 13:24:21 -0500
+Received: from smtp9.poczta.onet.pl (smtp9.poczta.onet.pl [213.180.130.49])
+	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id k13INeD0026007
+	for <linux-lvm@redhat.com>; Fri, 3 Feb 2006 13:23:40 -0500
+Message-ID: <43E39F50.6000106@poczta.onet.pl>
+Date: Fri, 03 Feb 2006 19:22:08 +0100
+From: =?UTF-8?B?TWFjaWVqIFPFgm9qZXdza2k=?= <mslonik@poczta.onet.pl>
 MIME-Version: 1.0
+Subject: Re: [linux-lvm] Ubuntu distro with lvm2, raid 1, not booting anymore.
+References: <43E254B5.5080107@poczta.onet.pl>
+	<20060203073127.GD5971@percy.comedia.it>
+In-Reply-To: <20060203073127.GD5971@percy.comedia.it>
 Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] Adding another disk to Kubuntu/Ubuntu.
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -30,45 +24,70 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: linux-lvm <linux-lvm@redhat.com>
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-I'm using LVM  on a Kubuntu setup that I now want to add another disk 
-to.  I've used software RAID before, but am new to LVM and am aware that 
-one false move can render the whole lot unusable. I therefore feel the 
-need for a bit of handholding! I've had a look at the docs and there 
-seems to be a whole slew of utilities concerning LVM, some seem to be 
-applicable to LVM1 and some LVM2 - which does little for my confidence 
-in getting it right first time. (Perhaps I should have gone down the 
-plain vanilla disk system route during the initial installation, but I 
-was seduced by the hype concerning LVM!)
+Luca Berra wrote:
 
-I _think_ I've created a new physical volume, ready to add to my 
-filesystem, but am not certain what to do next. Output from pvscan is:
+> On Thu, Feb 02, 2006 at 07:51:33PM +0100, Maciej S?ojewski wrote:
+>
+>> Welcome!
+>>
+>> I have the serious problem with booting of my machine. It is run on 
+>> Ubuntu distro (5.10), with lvm2 raid 1 on two identical sata hard 
+>> disks. Lilo bootloader. The problem is that after small change in 
+>> lilo.conf and running /sbin/lilo my system is no longer bootable. I 
+>> see 'kernel panic' message. When I try to run lilo again (from Ubuntu 
+>> Live! cd) I see some comments somehow related to dev-mapper:
+>>
+>
+> what is exactly that you are doing to reinstall lilo?
+> i don't use ubuntu, but generally:
+> you should mount your original root fs on, say, /root
+> mount --bind /dev /root/dev
+> mount --bind /proc /root/proc
+> mount --bind /sys /root/sys
+> chroot /root /sbin/lilo
 
-  PV /dev/hda5   VG Ubuntu   lvm2 [18.77 GB / 0    free]
-  PV /dev/hdb1   VG Ubuntu   lvm2 [7.86 GB / 7.86 GB free]
-  Total: 2 [26.64 GB] / in use: 2 [26.64 GB] / in no VG: 0 [0   ]
+Dear Luka,
 
-and output from lvmdiskscan:
+Thanks a lot for your answer and a clue. Unfortunately it doesn't help 
+me :-(
 
-  /dev/hda1 [      243.14 MB]
-  /dev/hda5 [       18.78 GB] LVM physical volume
-  /dev/hdb1 [        7.87 GB] LVM physical volume
-  0 disks
-  1 partition
-  0 LVM physical volume whole disks
-  2 LVM physical volumes
+Here you go, what am I doing after system start:
 
-Output from DF is:
-/dev/mapper/Ubuntu-root
-                      18715076   6466152  11298244  37% /
-tmpfs                   112264         0    112264   0% /dev/shm
-tmpfs                   112264     12588     99676  12% 
-/lib/modules/2.6.12-10-386/volatile
-/dev/hda1               233335     19166    201721   9% /boot
+* Ubuntu Live! CD is booting, I hit <ener> key
+* system is starting in graphical mode
+* I open terminal window
 
+# sudo su
+# cd /mnt
+# mkdir dev proc boot sys
+# mount -v -t ext3 /dev/PV/boot /mnt/boot
+dev/mapper/PV-boot on /mnt/boot type ext3 (rw)
+# mount -v -t ext3 /dev/PV/root /mnt/root
+dev/mapper/PV-root on /mnt/root type ext3 (rw)
+#mount -v -t proc none /mnt/proc
+none on /mnt/proc type proc (rw)
+#mount -v -t sysfs none /mnt/sys
+none on /mnt/sys type sysfs (rw)
 
-I want to add the 7.87GB /dev/hdb1 to the 18.78GB Ubuntu /dev/hda5 and 
-would be grateful for any advice.
+#chroot /mnt /bin/bash
+#lilo
 
-Jim Ford
+Warning: '/proc/partitions' does not match '/dev' directory structure
+Name changes '/dev/cloop0' -> '/tmp/dev.0'
+Warning: '/dev' directory structure is incomplete; device (240,0) is missing
+Warning: '/dev' directory structure is incomplete; device (254,0) is missing
+Warning: '/dev' directory structure is incomplete; device (254,1) is missing
+Warning: '/dev' directory structure is incomplete; device (254,2) is missing
+Warning: '/dev' directory structure is incomplete; device (254,3) is missing
+Warning: '/dev' directory structure is incomplete; device (254,4) is missing
+Warning: '/dev' directory structure is incomplete; device (254,5) is missing
+Warning: '/dev' directory structure is incomplete; device (254,6) is missing
+Fatal: is_primary: Not a valid device 0xFE07
+
+:-((( Please help me, what can I do now?
+I have regenerated initrd, (update-initrd command). It did not help too.
+
+Kind regards,
+Maciej (mslonik)
