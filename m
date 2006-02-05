@@ -1,26 +1,20 @@
-Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id k15GGC120514
-	for <linux-lvm@redhat.com>; Sun, 5 Feb 2006 11:16:12 -0500
-Received: from hetzner.email-server.info (new.email-server.info
-	[213.133.109.44])
-	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id k15GG774021002
-	for <linux-lvm@redhat.com>; Sun, 5 Feb 2006 11:16:09 -0500
-Received: from hd.bei.digitalprojects.com (e182061167.adsl.alicedsl.de
-	[85.182.61.167])
-	by hetzner.email-server.info (Postfix) with ESMTP id 48D6B274006
-	for <linux-lvm@redhat.com>; Sun,  5 Feb 2006 17:16:09 +0100 (CET)
-Received: from [192.168.1.10] (blatt.bei.digitalprojects.com [192.168.1.10])
-	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by hd.bei.digitalprojects.com (Postfix) with ESMTP id B31EBB8C09A
-	for <linux-lvm@redhat.com>; Sun,  5 Feb 2006 17:15:59 +0100 (CET)
-Message-ID: <43E624B1.30805@mid.email-server.info>
-Date: Sun, 05 Feb 2006 17:15:45 +0100
-From: Alexander Skwar <listen@alexander.skwar.name>
+Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id k15Hs4106388
+	for <linux-lvm@redhat.com>; Sun, 5 Feb 2006 12:54:04 -0500
+Received: from uproxy.gmail.com (uproxy.gmail.com [66.249.92.206])
+	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id k15Hrpjb012204
+	for <linux-lvm@redhat.com>; Sun, 5 Feb 2006 12:53:51 -0500
+Received: by uproxy.gmail.com with SMTP id c2so528699ugf
+	for <linux-lvm@redhat.com>; Sun, 05 Feb 2006 09:53:46 -0800 (PST)
+Message-ID: <77ec93690602050953r6ada49aat@mail.gmail.com>
+Date: Sun, 5 Feb 2006 18:53:45 +0100
+From: Martin Lindquist <black.ant@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] Defragmenting a VG
-Reply-To: linux-lvm@redhat.com
+Content-Type: multipart/alternative; 
+	boundary="----=_Part_19820_31654027.1139162025401"
+Subject: [linux-lvm] Accidental removal of logical volume - any way to
+	salvage?
+Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -30,19 +24,60 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@redhat.com
 
-Hello!
+------=_Part_19820_31654027.1139162025401
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: quoted-printable
+Content-Disposition: inline
 
-Does anyone know of a tool for LVM2 which defragments a VG, so
-that the PEs of the LVs are consecutive?
+Ok, here's the situation:
 
-Thanks,
+I have a volume group consisting of two whole disk partitions, on top of
+which I used to have a full size logical volume containing data of system
+non-critical but nevertheless important nature. After deciding to replace a
+lot of the hardware in the machine (and to reinstall the system) I realized
+that I would first need to export the volume group or I could be in for a
+lot of trouble (lesson learned from previous experience). To make a long an=
+d
+stupid story (for which I have no defense) a lot shorter; I did 'lvremove
+main' ("main" being the name of the lv in question), ran 'vgexport rajd'
+("rajd" being the vg), backed up a lot of files (including /etc and most of
+/var), replaced the hardware, reinstalled the system, ran 'vgimport rajd'
+and only then realized what 'lvremove' really did.
 
-Alexander Skwar
--- 
-At some point, bits have to go into packets and routers need to make
-decisions on them. Changes at that level is what I want to hear about, not
-strategic company relationships.
-        -- John Carmack
+Now, instead of getting questions like "what did you think 'lvremove main'
+would do?" or "are you the result of several generations of inbreeding?",
+could anyone first of all tell me if there is any way at all to salvage the
+data from the logical volume "main"? If there is I would love to find out
+how.
+
+
+Regards,
+Martin
+
+------=_Part_19820_31654027.1139162025401
+Content-Type: text/html; charset=ISO-8859-1
+Content-Transfer-Encoding: quoted-printable
+Content-Disposition: inline
+
+Ok, here's the situation:<br><br>I have a volume group consisting of two wh=
+ole disk partitions, on top of which I used to have a full size logical vol=
+ume containing data of system non-critical but nevertheless important natur=
+e. After deciding to replace a lot of the hardware in the machine (and to r=
+einstall the system) I realized that I would first need to export the volum=
+e group or I could be in for a lot of trouble (lesson learned from previous=
+ experience). To make a long and stupid story (for which I have no defense)=
+ a lot shorter; I did 'lvremove main' (&quot;main&quot; being the name of t=
+he lv in question), ran 'vgexport rajd' (&quot;rajd&quot; being the vg), ba=
+cked up a lot of files (including /etc and most of /var), replaced the hard=
+ware, reinstalled the system, ran 'vgimport rajd' and only then realized wh=
+at 'lvremove' really did.
+<br><br>Now, instead of getting questions like &quot;what did you think 'lv=
+remove main' would do?&quot; or &quot;are you the result of several generat=
+ions of inbreeding?&quot;, could anyone first of all tell me if there is an=
+y way at all to salvage the data from the logical volume &quot;main&quot;? =
+If there is I would love to find out how.
+<br><br><br>Regards,<br>Martin<br>
+
+------=_Part_19820_31654027.1139162025401--
