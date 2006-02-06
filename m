@@ -1,24 +1,25 @@
 Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id k1699H128062
-	for <linux-lvm@redhat.com>; Mon, 6 Feb 2006 04:09:17 -0500
-Received: from uproxy.gmail.com (uproxy.gmail.com [66.249.92.197])
-	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id k1699GqP028989
-	for <linux-lvm@redhat.com>; Mon, 6 Feb 2006 04:09:16 -0500
-Received: by uproxy.gmail.com with SMTP id q2so776607uge
-	for <linux-lvm@redhat.com>; Mon, 06 Feb 2006 01:09:16 -0800 (PST)
-Message-ID: <77ec93690602060109g179f3622r@mail.gmail.com>
-Date: Mon, 6 Feb 2006 10:09:15 +0100
-From: Martin Lindquist <black.ant@gmail.com>
-Subject: Re: [linux-lvm] Accidental removal of logical volume - any way to
-	salvage?
-In-Reply-To: <20060205205445.GD22481@agk.surrey.redhat.com>
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id k16EQN107265
+	for <linux-lvm@redhat.com>; Mon, 6 Feb 2006 09:26:23 -0500
+Received: from hetzner.email-server.info (new.email-server.info
+	[213.133.109.44])
+	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id k16EQLtS016944
+	for <linux-lvm@redhat.com>; Mon, 6 Feb 2006 09:26:21 -0500
+Received: from hd.bei.digitalprojects.com (e182052015.adsl.alicedsl.de
+	[85.182.52.15])
+	by hetzner.email-server.info (Postfix) with ESMTP id 56667274006
+	for <linux-lvm@redhat.com>; Mon,  6 Feb 2006 15:26:23 +0100 (CET)
+Received: from [192.168.1.10] (blatt.bei.digitalprojects.com [192.168.1.10])
+	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by hd.bei.digitalprojects.com (Postfix) with ESMTP id 67099B8C09A
+	for <linux-lvm@redhat.com>; Mon,  6 Feb 2006 15:26:12 +0100 (CET)
+Message-ID: <43E75C4E.4080805@mid.email-server.info>
+Date: Mon, 06 Feb 2006 15:25:18 +0100
+From: Alexander Skwar <listen@alexander.skwar.name>
 MIME-Version: 1.0
-Content-Type: multipart/alternative; 
-	boundary="----=_Part_25347_12581636.1139216955808"
-References: <77ec93690602050953r6ada49aat@mail.gmail.com>
-	<20060205175808.GA22481@agk.surrey.redhat.com>
-	<77ec93690602051005k3c4d8cbah@mail.gmail.com>
-	<20060205205445.GD22481@agk.surrey.redhat.com>
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] Mirror - How To Create?
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -29,65 +30,17 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
+Content-Type: text/plain; charset="us-ascii"
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-------=_Part_25347_12581636.1139216955808
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: quoted-printable
-Content-Disposition: inline
+Hello!
 
-Many, many, many thanks. After sleeping for a few hours and eating a proper
-breakfast I managed to restore all of the lost data thanks to your hints.
+How do I setup a mirror of a VG or LV on Linux 2.6.15 with
+DM_MIRROR loaded and lvm2?
 
-Eternally thankful,
-Martin
+Thanks,
 
-2006/2/5, Alasdair G Kergon <agk@redhat.com>:
->
-> On Sun, Feb 05, 2006 at 07:05:10PM +0100, Martin Lindquist wrote:
-> > The backup of /etc was done after running 'lvremove' and 'vgexport' so
-> if I
-> > understand you correctly that won't do any good.
->
-> Take a look at your backup and check the comments in the files
-> in /etc/lvm/archive/<vgname>*
->
-> Alasdair
-> --
-> agk@redhat.com
->
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
->
-
-------=_Part_25347_12581636.1139216955808
-Content-Type: text/html; charset=ISO-8859-1
-Content-Transfer-Encoding: quoted-printable
-Content-Disposition: inline
-
-Many, many, many thanks. After sleeping for a few hours and eating a proper=
- breakfast I managed to restore all of the lost data thanks to your hints.<=
-br><br>Eternally thankful,<br>Martin<br><br><div><span class=3D"gmail_quote=
-">
-2006/2/5, Alasdair G Kergon &lt;<a href=3D"mailto:agk@redhat.com">agk@redha=
-t.com</a>&gt;:</span><blockquote class=3D"gmail_quote" style=3D"border-left=
-: 1px solid rgb(204, 204, 204); margin: 0pt 0pt 0pt 0.8ex; padding-left: 1e=
-x;">
-On Sun, Feb 05, 2006 at 07:05:10PM +0100, Martin Lindquist wrote:<br>&gt; T=
-he backup of /etc was done after running 'lvremove' and 'vgexport' so if I<=
-br>&gt; understand you correctly that won't do any good.<br><br>Take a look=
- at your backup and check the comments in the files
-<br>in /etc/lvm/archive/&lt;vgname&gt;*<br><br>Alasdair<br>--<br><a href=3D=
-"mailto:agk@redhat.com">agk@redhat.com</a><br><br>_________________________=
-______________________<br>linux-lvm mailing list<br><a href=3D"mailto:linux=
--lvm@redhat.com">
-linux-lvm@redhat.com</a><br><a href=3D"https://www.redhat.com/mailman/listi=
-nfo/linux-lvm">https://www.redhat.com/mailman/listinfo/linux-lvm</a><br>rea=
-d the LVM HOW-TO at <a href=3D"http://tldp.org/HOWTO/LVM-HOWTO/">http://tld=
-p.org/HOWTO/LVM-HOWTO/
-</a><br></blockquote></div>
-
-------=_Part_25347_12581636.1139216955808--
+Alexander Skwar
+-- 
+You have all eternity to be cautious in when you're dead.
+		-- Lois Platford
