@@ -1,16 +1,14 @@
-Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id k16LpA100834
-	for <linux-lvm@redhat.com>; Mon, 6 Feb 2006 16:51:10 -0500
-Received: from smtp804.mail.ukl.yahoo.com (smtp804.mail.ukl.yahoo.com
-	[217.12.12.141])
-	by mx1.redhat.com (8.12.11/8.12.11) with SMTP id k16Lp4e2001437
-	for <linux-lvm@redhat.com>; Mon, 6 Feb 2006 16:51:04 -0500
-Date: Mon, 6 Feb 2006 21:51:41 +0000
-From: Gunther Clasen <gunther_clasen@arcor.de>
-Message-ID: <20060206215141.GB7492@tui.site>
-Mime-Version: 1.0
-Content-Disposition: inline
-Subject: [linux-lvm] can't create a PV
+Received: from [10.15.80.229] (dhcp80-229.msp.redhat.com [10.15.80.229])
+	by pobox.corp.redhat.com (8.12.8/8.12.8) with ESMTP id k16M4h0B001193
+	for <linux-lvm@redhat.com>; Mon, 6 Feb 2006 17:04:43 -0500
+Mime-Version: 1.0 (Apple Message framework v623)
+In-Reply-To: <43E75C4E.4080805@mid.email-server.info>
+References: <43E75C4E.4080805@mid.email-server.info>
+Message-Id: <433283643dc4f5ced7aa55f173d07eb0@redhat.com>
+Content-Transfer-Encoding: 7bit
+From: Jonathan E Brassow <jbrassow@redhat.com>
+Subject: Re: [linux-lvm] Mirror - How To Create?
+Date: Mon, 6 Feb 2006 16:05:12 -0600
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -21,43 +19,36 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: linux-lvm@redhat.com
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-Hi,
+1) grab the latest device-mapper and LVM2 sources from cvs, compile, 
+and install
+2) grab kernel patches (http://www.brassow.com/mirroring/), compile, 
+install, reboot
+3) be aware that mirroring still has issues (doesn't handle log device 
+failure yet) and that it requires more testing before being put into 
+production.
 
-I have the following problem: I have a VG which sits on two partitions.
-This VG has been created with SuSE 7.2, that is version 1 of LVM. (I
-don't know exactly which one.) I wish to extend that VG and I have tried
-to do that from SuSE 9.2, which runs
-  LVM version:     2.00.25 (2004-09-29)
-  Library version: 1.00.19-ioctl (2004-07-03)
-  Driver version:  4.1.0
+  brassow
 
-The type of the partition is set to Linux LVM, like the others, but it
-does not work. I get this error:
+On Feb 6, 2006, at 8:25 AM, Alexander Skwar wrote:
 
-# pvcreate -vv /dev/hdg9
-      Setting global/locking_type to 1
-      Setting global/locking_dir to /var/lock/lvm
-      File-based locking enabled.
-      Locking /var/lock/lvm/P_orphans WB
-      Getting size of /dev/hdg9
-      metadata/pvmetadatasize not found in config: defaulting to 255
-      metadata/pvmetadatacopies not found in config: defaulting to 1
-  /dev/hdg9: Couldn't find device.  Check your filters?
-      Unlocking /var/lock/lvm/P_orphans
-
-I can't see that the filters are a problem. The entry in
-/etc/lvm/lvm.conf is:
-    filter = [ "r|/dev/.*/by-path/.*|", "r|/dev/.*/by-id/.*|", "a/.*/" ]
-
-I understand now that I should use -M1 to add this PV to an old V1 VG,
-but that is not the problem. I still get the same error.
-
-What am I doing wrong?
-
-Any help would be appreciated.
-
-Gunther
+> Hello!
+>
+> How do I setup a mirror of a VG or LV on Linux 2.6.15 with
+> DM_MIRROR loaded and lvm2?
+>
+> Thanks,
+>
+> Alexander Skwar
+> -- 
+> You have all eternity to be cautious in when you're dead.
+> 		-- Lois Platford
+>
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@redhat.com
+> https://www.redhat.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+>
