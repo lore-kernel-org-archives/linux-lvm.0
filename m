@@ -1,14 +1,18 @@
-Received: from [10.15.80.229] (dhcp80-229.msp.redhat.com [10.15.80.229])
-	by pobox.corp.redhat.com (8.12.8/8.12.8) with ESMTP id k16M4h0B001193
-	for <linux-lvm@redhat.com>; Mon, 6 Feb 2006 17:04:43 -0500
-Mime-Version: 1.0 (Apple Message framework v623)
-In-Reply-To: <43E75C4E.4080805@mid.email-server.info>
-References: <43E75C4E.4080805@mid.email-server.info>
-Message-Id: <433283643dc4f5ced7aa55f173d07eb0@redhat.com>
-Content-Transfer-Encoding: 7bit
-From: Jonathan E Brassow <jbrassow@redhat.com>
-Subject: Re: [linux-lvm] Mirror - How To Create?
-Date: Mon, 6 Feb 2006 16:05:12 -0600
+Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id k18BYc115243
+	for <linux-lvm@redhat.com>; Wed, 8 Feb 2006 06:34:38 -0500
+Received: from smtp801.mail.ukl.yahoo.com (smtp801.mail.ukl.yahoo.com
+	[217.12.12.138])
+	by mx1.redhat.com (8.12.11/8.12.11) with SMTP id k18BYb3g006268
+	for <linux-lvm@redhat.com>; Wed, 8 Feb 2006 06:34:37 -0500
+Date: Wed, 8 Feb 2006 09:33:04 +0000
+From: Gunther Clasen <gunther_clasen@arcor.de>
+Subject: Re: [linux-lvm] can't create a PV
+Message-ID: <20060208093304.GA9374@tui.site>
+References: <20060206215141.GB7492@tui.site>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20060206215141.GB7492@tui.site>
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -19,36 +23,79 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-1) grab the latest device-mapper and LVM2 sources from cvs, compile, 
-and install
-2) grab kernel patches (http://www.brassow.com/mirroring/), compile, 
-install, reboot
-3) be aware that mirroring still has issues (doesn't handle log device 
-failure yet) and that it requires more testing before being put into 
-production.
+On Mon, Feb 06, 2006, Gunther Clasen wrote:
+> Hi,
+> 
+> I have the following problem: I have a VG which sits on two partitions.
+> This VG has been created with SuSE 7.2, that is version 1 of LVM. (I
+> don't know exactly which one.) I wish to extend that VG and I have tried
+> to do that from SuSE 9.2, which runs
+>   LVM version:     2.00.25 (2004-09-29)
+>   Library version: 1.00.19-ioctl (2004-07-03)
+>   Driver version:  4.1.0
+> 
+> The type of the partition is set to Linux LVM, like the others, but it
+> does not work. I get this error:
+> 
+> # pvcreate -vv /dev/hdg9
+>       Setting global/locking_type to 1
+>       Setting global/locking_dir to /var/lock/lvm
+>       File-based locking enabled.
+>       Locking /var/lock/lvm/P_orphans WB
+>       Getting size of /dev/hdg9
+>       metadata/pvmetadatasize not found in config: defaulting to 255
+>       metadata/pvmetadatacopies not found in config: defaulting to 1
+>   /dev/hdg9: Couldn't find device.  Check your filters?
+>       Unlocking /var/lock/lvm/P_orphans
+> 
+> I can't see that the filters are a problem. The entry in
+> /etc/lvm/lvm.conf is:
+>     filter = [ "r|/dev/.*/by-path/.*|", "r|/dev/.*/by-id/.*|", "a/.*/" ]
+> 
+> I understand now that I should use -M1 to add this PV to an old V1 VG,
+> but that is not the problem. I still get the same error.
+> 
+> What am I doing wrong?
+> 
+> Any help would be appreciated.
+> 
+> Gunther
 
-  brassow
+I have investigated this a bit further. I have booted SuSE 9.0 and done
+a pvcreate /dev/hdg9 from there. It worked fine. I have then added this
+PV to VG vg7, which worked fine, too.
 
-On Feb 6, 2006, at 8:25 AM, Alexander Skwar wrote:
+When I then boot SuSE 9.2 again, I get the following in
+/var/log/boot.msg:
 
-> Hello!
->
-> How do I setup a mirror of a VG or LV on Linux 2.6.15 with
-> DM_MIRROR loaded and lvm2?
->
-> Thanks,
->
-> Alexander Skwar
-> -- 
-> You have all eternity to be cautious in when you're dead.
-> 		-- Lois Platford
->
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
->
+<notice>run boot scripts (boot.lvm)
+Scanning for LVM volume groups...
+  Reading all physical volumes.  This may take a while...
+  1 PV(s) found for VG vg1: expected 2
+  Volume group "vg1" not found
+  Found volume group "vg0" using metadata type lvm1
+  2 PV(s) found for VG vg7: expected 3
+  Volume group "vg7" not found
+  Found volume group "vg4" using metadata type lvm1
+Activating LVM volume groups...
+  1 PV(s) found for VG vg1: expected 2
+  Unable to find volume group "vg1"
+  11 logical volume(s) in volume group "vg0" now active
+  2 PV(s) found for VG vg7: expected 3
+  Unable to find volume group "vg7"
+
+VG vg1 is dead. I have no clue why it still finds traces of it on the
+system. VG vg0 and vg4 are up and running. The problem is vg7, to which
+I have just added /dev/hdg9. Why can't lvm find it??? /dev/hdg9 has
+previously been used as part of an md device (soft raid).
+
+Is this a bug in lvm? Or is my harddisk dying? Or what could it be?
+
+I hope I haven't actually killed my vg7 yet... (All I did was adding the
+PV, no data on it yet.)
+
+Gunther
