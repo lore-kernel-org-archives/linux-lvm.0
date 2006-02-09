@@ -1,20 +1,19 @@
 Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id k195QK111301
-	for <linux-lvm@redhat.com>; Thu, 9 Feb 2006 00:26:20 -0500
-Received: from smtpauth01.mail.atl.earthlink.net
-	(smtpauth01.mail.atl.earthlink.net [209.86.89.61])
-	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id k195QD3r013030
-	for <linux-lvm@redhat.com>; Thu, 9 Feb 2006 00:26:13 -0500
-Received: from [66.218.36.163] (helo=[192.168.1.17])
-	by smtpauth01.mail.atl.earthlink.net with asmtp (Exim 4.34)
-	id 1F74Jk-0008FE-7B
-	for linux-lvm@redhat.com; Thu, 09 Feb 2006 00:26:08 -0500
-Message-ID: <43EAD26F.7060303@earthlink.net>
-Date: Wed, 08 Feb 2006 21:26:07 -0800
-From: Richard Blumel <revslowmo@earthlink.net>
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id k19BsK122997
+	for <linux-lvm@redhat.com>; Thu, 9 Feb 2006 06:54:20 -0500
+Received: from jhb4.mx.isp.org.za (jhb4.mx.isp.org.za [196.23.181.89])
+	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id k19Brn4h012523
+	for <linux-lvm@redhat.com>; Thu, 9 Feb 2006 06:54:09 -0500
+Received: from support.metroweb.co.za (ns2.isp.org.za [196.23.178.205])
+	by jhb4.mx.isp.org.za (8.13.2/8.13.2) with SMTP id k19BqIq0016792
+	for <linux-lvm@redhat.com>; Thu, 9 Feb 2006 13:52:26 +0200
+Message-ID: <47668.196.23.181.50.1139485793.squirrel@support.metroweb.co.za>
+Date: Thu, 9 Feb 2006 13:49:53 +0200 (SAST)
+From: henka@cityweb.co.za
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] Freeing space on a LVM for other partitions
+Content-Transfer-Encoding: 8bit
+Subject: [linux-lvm] LVM2: problem accessing volume after raidreconf to add
+	hd to raid5
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -28,119 +27,125 @@ List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@redhat.com
 
------BEGIN PGP SIGNED MESSAGE-----
-Hash: SHA1
+Hello,
 
-I currently have this setup on a hw raid 0+1
+Hopefully someone can shed some light on what feels like a hopeless
+situation.  I've googled and tried a few things and got to a certain point,
+but fear increasing the risk of losing data.
 
-[root@cranium][pts/2]:~# fdisk -l
+OK, first the original logical volume setup on raid5 which worked fine.
+Here's the setup I followed:
 
-Disk /dev/sda: 320.0 GB, 320073629696 bytes
-255 heads, 63 sectors/track, 38913 cylinders
-Units = cylinders of 16065 * 512 = 8225280 bytes
+mdadm --create /dev/md0 --level=5 --force --raid-devices=3 \
+     /dev/hdc1 /dev/sda1 /dev/sdb1
+pvcreate /dev/md0
+vgcreate lvm-raid /dev/md0
+vgdisplay lvm-raid  (and copy Free PE / Size for use in next command)
+lvcreate -l 23845 lvm-raid -n lvm0
+mkfs -t ext3 /dev/lvm-raid/lvm0
+...and mount.
 
-   Device Boot      Start         End      Blocks   Id  System
-/dev/sda1   *           1        3732    29977258+   7  HPFS/NTFS
-/dev/sda2            3860        5076     9775552+  83  Linux
-/dev/sda3            5077       38913   271795702+  83  Linux
-/dev/sda4            3733        3859     1020127+   5  Extended
-/dev/sda5            3733        3859     1020096   82  Linux swap /
-Solaris
- 
+Everything worked perfectly, etc.  Weeks later (present miserable week),
+we then needed to add a disk to this RAID5 array.
 
-[root@cranium][pts/2]:~# vgdisplay
+So, unmounted the volume, and:
+mdadm -S /dev/md0
+vgchange -an lvm-raid
+
+then created new raidtab file with extra device, then:
+raidreconf -o /etc/raidtab -n /etc/raidtabnew -m /dev/md0
+...reconf takes several days, but is successful...
+...raid auto-rebuild currently running..
+
+[this is where the problems start]
+
+vgcfgrestore lvm-raid - errors with:
+Couldn't find device with uuid 's7XzWQ-3J9O-yaYj-anJG-hhMn-mloL-mPkl1F'.
+  Couldn't find all physical volumes for volume group lvm-raid.
+  Restore failed.
+
+To get uuid (this is possibly where I'm losing the plot due to ignorance):
+pvdisplay  /dev/md0
+  --- NEW Physical volume ---
+  PV Name               /dev/md0
+  VG Name
+  PV Size               1.09 TB
+  Allocatable           NO
+  PE Size (KByte)       0
+  Total PE              0
+  Free PE               0
+  Allocated PE          0
+  PV UUID               6LGvgt-fLSV-xyfL-ItNc-YIiN-9Dhl-mYefsA
+
+Then:
+pvcreate -u s7XzWQ-3J9O-yaYj-anJG-hhMn-mloL-mPkl1F /dev/md0
+  Physical volume "/dev/md0" successfully created
+
+vgcfgrestore lvm-raid
+  Restored volume group lvm-raid
+
+lvdisplay
+  --- Logical volume ---
+  LV Name                /dev/lvm-raid/lvm0
+  VG Name                lvm-raid
+  LV UUID                000000-0000-0000-0000-0000-0000-000000
+  LV Write Access        read/write
+  LV Status              NOT available
+  LV Size                745.16 GB  (this is supposed to be 1TB+)
+  Current LE             23845
+  Segments               1
+  Allocation             normal
+  Read ahead sectors     1024
+
+vgchange -ay
+  1 logical volume(s) in volume group "lvm-raid" now active
+
+vgdisplay lvm-raid
   --- Volume group ---
-  VG Name               raid01
-  System ID
+  VG Name               lvm-raid
+  System ID             baksrv01138783727
   Format                lvm2
   Metadata Areas        1
-  Metadata Sequence No  6
+  Metadata Sequence No  1
   VG Access             read/write
   VG Status             resizable
-  MAX LV                0
-  Cur LV                4
-  Open LV               4
-  Max PV                0
+  MAX LV                256
+  Cur LV                1
+  Open LV               0
+  Max PV                256
   Cur PV                1
   Act PV                1
-  VG Size               259.20 GB
-  PE Size               4.00 MB
-  Total PE              66356[root@cranium][pts/2]:~# lvdisplay
-  --- Logical volume ---
-  LV Name                /dev/raid01/usr
-  VG Name                raid01
-  LV UUID                khBZSv-3q6S-OKeX-NHJz-PdC5-FK9C-or6BDb
-  LV Write Access        read/write
-  LV Status              available
-  # open                 1
-  LV Size                15.00 GB
-  Current LE             3840
-  Segments               1
-  Allocation             inherit
-  Read ahead sectors     0
-  Block device           254:0
+  VG Size               745.16 GB
+  PE Size               32.00 MB
+  Total PE              23845
+  Alloc PE / Size       23845 / 745.16 GB
+  Free  PE / Size       0 / 0
+  VG UUID               6JaxpJ-MmTj-Ve9X-WiT6-THcg-SOjV-9uO8Mv
 
-  --- Logical volume ---
-  LV Name                /dev/raid01/var
-  VG Name                raid01
-  LV UUID                gxbp4O-pL6I-Ye5o-Yvqp-nrmB-7Q51-8psyn2
-  LV Write Access        read/write
-  LV Status              available
-  # open                 1
-  LV Size                5.00 GB
-  Current LE             1280
-  Segments               1
-  Allocation             inherit
-  Read ahead sectors     0
-  Block device           254:1
+------------
 
-  --- Logical volume ---
-  LV Name                /dev/raid01/tmp
-  VG Name                raid01
-  LV UUID                awX51K-guHb-oAbZ-mvnd-SBg0-YM87-IR5BXQ
-  LV Write Access        read/write
-  LV Status              available
-  # open                 1
-  LV Size                1.00 GB
-  Current LE             256
-  Segments               1
-  Allocation             inherit
-  Read ahead sectors     0
-  Block device           254:2
+Before proceeding to try and lvextend to use the extra 400GB (of new dev),
+I decided to check if things were still happy, and tried to mount:
 
-  --- Logical volume ---
-  LV Name                /dev/raid01/home
-  VG Name                raid01
-  LV UUID                R6ZBTP-y7LF-1pGl-u1be-lFx4-G31b-qZuCLU
-  LV Write Access        read/write
-  LV Status              available
-  # open                 1
-  LV Size                208.20 GB
-  Current LE             53300
-  Segments               1
-  Allocation             inherit
-  Read ahead sectors     0
-  Block device           254:3
+mount -a
 
-  Alloc PE / Size       58676 / 229.20 GB
-  Free  PE / Size       7680 / 30.00 GB
-  VG UUID               Md0gWC-47Kj-CAft-W9D8-G420-tzQl-34sMBk
+dmesg:
+VFS: Can't find ext3 filesystem on dev dm-0.
+
+It's clear from above that my knowledge of lvm/2 is dangerous.
+I have a gut feeling that either:
+a) I've screwed the data, and/or,
+b) I'm missing something glaringly obvious due to acute ignorance.
+
+Any help would be appreciated.
+
+Regards
+Henka
 
 
-What I want to do is shrink the /dev/sda3 partition which is lvm, not
-sure why is says just link but eh. Once shrunk I am going to grow the
-ntfs partition which  I know how todo. My problem is most of the howto
-talk about moving pv to remove pv so forth. I saw one post that said
-what I am trying todo is voodoo and dangerous but recommend that to
-move the PE towards one edge of the disk us --alloc anywhere however I
-have seen other documents that say that is not implemented yet. I hope
-I haven't lost you guys but if you know what I should I would be
-greatly in your debt.
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.2 (GNU/Linux)
-Comment: Using GnuPG with Thunderbird - http://enigmail.mozdev.org
-
-iD8DBQFD6tJL48JsCLyRVlARAiMuAJ4i3mOV0QkQaFs1axWDZOpRXfFVAgCfbJjp
-GDdeXvoG0Lcs/gzgwm1Gprk=
-=24e7
------END PGP SIGNATURE-----
+--------------------------------------------------------
+This message was sent using MetroWEB's AirMail service.
+http://www.metroweb.co.za/ - full access for only R73.
+Free Web Accelerator, WebMail, Calendar, Anti-Virus,
+Anti-Spam, 10 emails, 100MB personal webspace, and more!
+Phone Now!  086 11 11 440
