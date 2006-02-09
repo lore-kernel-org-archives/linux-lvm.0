@@ -1,9 +1,18 @@
-Date: Thu, 9 Feb 2006 20:14:29 +0000
-From: Alasdair G Kergon <agk@redhat.com>
-Message-ID: <20060209201429.GQ12169@agk.surrey.redhat.com>
-Mime-Version: 1.0
-Content-Disposition: inline
-Subject: [linux-lvm] Mailing list administrivia
+Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id k19NQe131465
+	for <linux-lvm@redhat.com>; Thu, 9 Feb 2006 18:26:40 -0500
+Received: from host24.host24-server.com (host24.host24-server.com
+	[67.55.33.97] (may be forged))
+	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id k19NQdgb015167
+	for <linux-lvm@redhat.com>; Thu, 9 Feb 2006 18:26:39 -0500
+Message-ID: <43EBCF85.8060605@struzak.com>
+Date: Thu, 09 Feb 2006 15:25:57 -0800
+From: Marcin Struzak <marcin-list@struzak.com>
+MIME-Version: 1.0
+Subject: Re: [linux-lvm] removing bad PVs
+References: <NNEEKMEDALGMPDKHFPJHOEKPDHAA.maplante@iol.unh.edu>
+In-Reply-To: <NNEEKMEDALGMPDKHFPJHOEKPDHAA.maplante@iol.unh.edu>
+Content-Transfer-Encoding: 7bit
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -14,25 +23,13 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: linux-lvm@redhat.com, dm-devel@redhat.com, linux-cluster@redhat.com
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+To: maplante@iol.unh.edu, LVM general discussion and development <linux-lvm@redhat.com>
 
-I have just caught up with the backlog of spam sent to these lists.
+Matthew Plante wrote:
+> actually, nevermind, I figured it out :-)
 
-To reduce the risk of genuine messages you post going astray:
+Could you share with the list what you did?
+Thanks!
 
-  Please send your messages from an email address that is subscribed 
-  to the list.  Messages from unsubscribed addresses get caught up
-  with the spam.  If they have a sensible subject line, they'll 
-  stand out from the spam and then the email addresses are added to 
-  a whitelist and allowed to post to the list directly in future.
-
-  Please do not send large messages, HTML email or messages with 
-  attachments.  Such messages will sometimes get through; other times 
-  they won't.  Instead, put the data on the web somewhere and send the 
-  URL to the list.
-
-Alasdair
--- 
-agk@redhat.com
+--Marcin
