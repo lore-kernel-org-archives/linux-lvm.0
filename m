@@ -1,13 +1,13 @@
-Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id k1EEct101849
-	for <linux-lvm@redhat.com>; Tue, 14 Feb 2006 09:38:55 -0500
-Received: from percy.comedia.it (percy.comedia.it [212.97.59.71])
-	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id k1EEcros005579
-	for <linux-lvm@redhat.com>; Tue, 14 Feb 2006 09:38:54 -0500
-Date: Tue, 14 Feb 2006 15:38:52 +0100
-From: Luca Berra <bluca@comedia.it>
+Received: from agk.surrey.redhat.com (agk.surrey.redhat.com [172.16.10.74])
+	by pobox.surrey.redhat.com (8.12.8/8.12.8) with ESMTP id k1EEkf3E022038
+	for <linux-lvm@redhat.com>; Tue, 14 Feb 2006 14:46:41 GMT
+Received: from agk by agk.surrey.redhat.com with local (Exim 4.34)
+	id 1F91Rx-0005L3-GC
+	for linux-lvm@redhat.com; Tue, 14 Feb 2006 14:46:41 +0000
+Date: Tue, 14 Feb 2006 14:46:41 +0000
+From: Alasdair G Kergon <agk@redhat.com>
 Subject: Re: [linux-lvm] can't create a PV
-Message-ID: <20060214143852.GB21794@percy.comedia.it>
+Message-ID: <20060214144641.GB12169@agk.surrey.redhat.com>
 References: <20060206215141.GB7492@tui.site> <20060214091946.GA8977@tui.site>
 Mime-Version: 1.0
 Content-Disposition: inline
@@ -22,31 +22,23 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-On Tue, Feb 14, 2006 at 09:19:46AM +0000, Gunther Clasen wrote:
->
->Curiously, these 4 partitions had all been used in a software-RAID
->volume. So I reckon that lvm somehow picked up the metadata of the
->MD-device and refused to work.
+> >   LVM version:     2.00.25 (2004-09-29)
+> >   Library version: 1.00.19-ioctl (2004-07-03)
 
-this is documented in the manpage for lvm.conf
+Not a good version to use.
+The md/partition detection was improved in 2.00.32.
 
-- snip -
-md_component_detection (If set to 1, LVM2 will ignore devices
-used as components of software RAID (md) devices by looking  for
-md  superblocks. This doesn't always work satisfactorily e.g. if
-a device has been  reused  without  wiping  the  md  superblocks
-first.
-- end snip -
+Remember to run 'vgscan' after adding partitions;
+and to reboot if fdisk fails to reload the partition table.
 
+Newer versions let you add -vvvv and see exactly why any
+device was ignored.  For older versions like your you
+need to turn on debug logging to a file to get that information.
 
+Alasdair
 -- 
-Luca Berra -- bluca@comedia.it
-        Communication Media & Services S.r.l.
- /"\
- \ /     ASCII RIBBON CAMPAIGN
-  X        AGAINST HTML MAIL
- / \
+agk@redhat.com
