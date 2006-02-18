@@ -1,15 +1,21 @@
-Received: from o.ww.redhat.com (vpn-4-16.stuttgart.redhat.com [10.32.4.16])
-	by pobox.stuttgart.redhat.com (8.12.8/8.12.8) with ESMTP id
-	k1HL6bCb019974
-	for <linux-lvm@redhat.com>; Fri, 17 Feb 2006 22:06:37 +0100
-Date: Fri, 17 Feb 2006 22:06:34 +0100
-From: Heinz Mauelshagen <mauelshagen@redhat.com>
-Message-ID: <20060217210634.GA13062@redhat.com>
-Mime-Version: 1.0
-Content-Disposition: inline
-Subject: [linux-lvm] *** Announcement: dmraid 1.0.0.rc10 ***
-Reply-To: mauelshagen@redhat.com,
-	LVM general discussion and development <linux-lvm@redhat.com>
+Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id k1IEHQ128963
+	for <linux-lvm@redhat.com>; Sat, 18 Feb 2006 09:17:26 -0500
+Received: from bluewhale.planbit.co.uk (82-71-36-240.dsl.in-addr.zen.co.uk
+	[82.71.36.240])
+	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id k1IEHPwQ021013
+	for <linux-lvm@redhat.com>; Sat, 18 Feb 2006 09:17:25 -0500
+Received: from wolverine (wolverine.planbit.co.uk [192.168.0.104])
+	by bluewhale.planbit.co.uk (Postfix) with ESMTP id 650BF12EC9
+	for <linux-lvm@redhat.com>; Sat, 18 Feb 2006 14:16:58 +0000 (GMT)
+From: "Roger Lucas" <roger@planbit.co.uk>
+Subject: RE: [linux-lvm] Booting into LVM - RESOLVED
+Date: Sat, 18 Feb 2006 14:17:20 -0000
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+In-Reply-To: 
+Message-Id: <20060218141658.650BF12EC9@bluewhale.planbit.co.uk>
+Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -20,126 +26,66 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: linux-lvm@redhat.com
+To: 'LVM general discussion and development' <linux-lvm@redhat.com>
 
+Thought I'd post my solution.  Well, it isn't mine at all really.  Thanks go
+to Miguel Cabeca and Jeffrey Layton for it.
 
-               *** Announcement: dmraid 1.0.0.rc10 ***
+http://poochiereds.net/svn/lvm2/lvm2create_initrd
 
-dmraid 1.0.0.rc10 is available at
-http://people.redhat.com/heinzm/sw/dmraid/ in source tarball,
-source rpm and i386 rpm (with shared and static binary).
+The above link is to an "initrd" creation script that worked perfectly on my
+Debian box.  This resolves the whole "no devfs" problem.
 
-This release adds support for Adaptec HostRAID and JMicron JMB36X
-(see CHANGELOG below for more information).
+Thanks also to the people on the LVM mailing list for their very quick help
+which directed me to the above solution.
 
-
-dmraid (Device-Mapper RAID tool) discovers, [de]activates and displays
-properties of software RAID sets (i.e. ATARAID) and contained DOS
-partitions using the device-mapper runtime of the 2.6 kernel.
-
-The following ATARAID types are supported on Linux 2.6:
-
-Adaptec HostRAID ASR
-Highpoint HPT37X
-Highpoint HPT45X
-Intel Software RAID
-JMicron JMB36X
-LSI Logic MegaRAID
-NVidia NForce
-Promise FastTrack
-Silicon Image Medley
-VIA Software RAID
-
-Please provide insight to support those metadata formats completely.
-
-Thanks.
-
-
-See files README, which comes with the source tarball for
-prerequisites to run this software, further instructions on installing
-and using dmraid!
-
-
-Call for testers:
------------------
-
-I need testers with the above ATARAID types, to check that the mapping
-created by this tool is correct (see options "-t -ay") and access to the
-ATARAID data is proper.
-
-In case you have a different ATARAID solution from those listed above,
-please feel free to contact me about supporting it in dmraid.
-
-You can activate your ATARAID sets without danger of overwriting
-your metadata, because dmraid accesses it read-only unless you use
-option -E together with -r in order to erase ATARAID metadata
-(see 'man dmraid')!
-
-This is a release candidate version so you want to have backups of your valuable
-data *and* you want to test accessing your data read-only first in order to
-make sure that the mapping is correct before you go for read-write access.
-
-
-Contacts:
----------
-
-The author is reachable at <Mauelshagen@RedHat.com>.
-
-For test results, mapping information, discussions, questions, patches,
-enhancement requests and the like, please subscribe and mail to
-<ataraid-list@redhat.com>.
-
---
-
-Regards,
-Heinz    -- The LVM Guy --
-
-
-Changelog from dmraid 1.0.0.rc9 to 1.0.0.rc10		2006.02.17
-
-FIXES:
-------
-o metadata.c: want_set() didn't drop sets properly
-              (eg, jmicron_raid10 wanted and jmicron_raid1 not dropped)
-
-o scsi.c: avoid retrieving too much data (Al Viro)
-
-o sil.h: magic number fix (some arrays were not recognized)
-
-FEATURES:
----------
-o added libdmraid_make_table() to activate.c to be used by installer
-
-o asr.[ch]: added Adaptec HostRAID support
-
-o jm.[ch]: added JMicron JMB36x support
-
-o added '--enable-libselinux' to configure for those who want
-  to build without it
-
-o bytorder.h: enhanced to support big endian conversion
-              on little endian arch
-
-o nv.c: support RAID5 with dm-raid45 target
-
-o pdc.h: support additional metadata offset
-
-o metadata.c: enhanced to support RAID4 and RAID5 mappings with dm-raid45 target
-
-
-MISCELANIOUS:
--------------
-o misc.c: streamlined remove_white_space() (Al Viro)
-
-
-
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-
-Heinz Mauelshagen                                 Red Hat GmbH
-Consulting Development Engineer                   Am Sonnenhang 11
-                                                  56242 Marienrachdorf
-                                                  Germany
-Mauelshagen@RedHat.com                            +49 2626 141200
-                                                       FAX 924446
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+> -----Original Message-----
+> From: Roger Lucas [mailto:roger@planbit.co.uk]
+> Sent: 17 February 2006 14:51
+> To: 'LVM general discussion and development'
+> Subject: RE: [linux-lvm] Booting into LVM
+> 
+> Hi Graham,
+> 
+> Thanks for the quick reply.  I had missed the whole "no devfs if >=
+> 2.6.14" problem, although significant Google-ing had already been done :-)
+> 
+> I'm following through everything now.
+> 
+> Thanks again,
+> 
+> Roger
+> 
+> > -----Original Message-----
+> > From: linux-lvm-bounces@redhat.com [mailto:linux-lvm-bounces@redhat.com]
+> > On Behalf Of Graham Wood
+> > Sent: 17 February 2006 14:12
+> > To: LVM general discussion and development
+> > Subject: Re: [linux-lvm] Booting into LVM
+> >
+> > Roger Lucas wrote:
+> > > My guess is that LVM isn't being loaded/started/configured correctly
+> at
+> > boot
+> > > time or that there is some problem with "/dev"...
+> > >
+> > > Can anyone shed any light on this?
+> > >
+> > I believe that 2.6.14 is after devfs stopped being supported, so you're
+> > going to have to go with udev instead - which also means that mkinitrd
+> > isn't going to work either.  (I think there's lvm2 compatability issues
+> > as well, but I just went for Sid instead of trying to get sarge working
+> > with a new kernel)
+> >
+> > If you google for 'debian sarge udev' there are quite a few pages that
+> > give details about what needs to be done - although they may not be
+> > exactly what you're after...
+> >
+> > If that isn't the answer then I'm sure we can help you work through it
+> :)
+> >
+> > _______________________________________________
+> > linux-lvm mailing list
+> > linux-lvm@redhat.com
+> > https://www.redhat.com/mailman/listinfo/linux-lvm
+> > read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
