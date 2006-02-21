@@ -1,20 +1,14 @@
 Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id k1LI17110773
-	for <linux-lvm@redhat.com>; Tue, 21 Feb 2006 13:01:07 -0500
-Received: from bluewhale.planbit.co.uk (82-71-36-240.dsl.in-addr.zen.co.uk
-	[82.71.36.240])
-	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id k1LI0tR2005577
-	for <linux-lvm@redhat.com>; Tue, 21 Feb 2006 13:00:56 -0500
-Received: from wolverine (unknown [192.168.0.5])
-	by bluewhale.planbit.co.uk (Postfix) with ESMTP id B14FF12ECC
-	for <linux-lvm@redhat.com>; Tue, 21 Feb 2006 18:00:29 +0000 (GMT)
-From: "Roger Lucas" <roger@planbit.co.uk>
-Date: Tue, 21 Feb 2006 18:00:54 -0000
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-In-Reply-To: <20060220221114.GB16484@percy.comedia.it>
-Message-Id: <20060221180029.B14FF12ECC@bluewhale.planbit.co.uk>
-Subject: [linux-lvm] Situation with PVRESIZE command
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id k1LIX9122073
+	for <linux-lvm@redhat.com>; Tue, 21 Feb 2006 13:33:09 -0500
+Received: from hotmail.com (bay101-f36.bay101.hotmail.com [64.4.56.46])
+	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id k1LIX7j7022599
+	for <linux-lvm@redhat.com>; Tue, 21 Feb 2006 13:33:07 -0500
+Message-ID: <BAY101-F36B95A665C96EE64901F3CC1FC0@phx.gbl>
+From: "Dave Schile" <daveschile@hotmail.com>
+Date: Tue, 21 Feb 2006 17:14:41 +0000
+Mime-Version: 1.0
+Subject: [linux-lvm] LVM - help replacing a drive.
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -25,66 +19,34 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: 'LVM general discussion and development' <linux-lvm@redhat.com>
+Content-Type: text/plain; format=flowed; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: linux-lvm@redhat.com
 
 Hi,
 
-I am running LVM on top of a large RAID controller with a 16-drive
-capability (of which just 4 disks are currently active).  The RAID array
-appears as a single SCSI disk, "/dev/sda".  A quick summary of the LVM
-information is below.
+This is a simple question, but I really don't want to lose any data, so I'd 
+really appreciate it if someone could give me a quick rundown on how this is 
+done. I've searched around and read the LVM Howto but Im still not 
+comfortable with this specific scenario:
 
-tiger:~# lvm version
-  LVM version:     2.01.04 (2005-02-09)
-  Library version: 1.01.00-ioctl (2005-01-17)
-  Driver version:  4.4.0
-tiger:~# pvs
-  PV         VG      Fmt  Attr PSize   PFree
-  /dev/sda   storage lvm2 a-   745.05G 39.05G
-tiger:~# vgs
-  VG      #PV #LV #SN Attr  VSize   VFree
-  storage   1   3   0 wz--n 745.05G 39.05G
-tiger:~# lvs
-  LV   VG      Attr   LSize Origin Snap%  Move Copy%
-  home storage -wi-ao 2.00G
-  root storage -wi-ao 2.00G
-  var  storage -wi-ao 2.00G
-  main storage -wi-ao 700.0G
-tiger:~# mount
-/dev/mapper/storage-root on / type reiserfs (rw)
-proc on /proc type proc (rw)
-sysfs on /sys type sysfs (rw)
-devpts on /dev/pts type devpts (rw,gid=5,mode=620)
-tmpfs on /dev/shm type tmpfs (rw)
-/dev/hda1 on /boot type ext3 (rw,noatime)
-/dev/mapper/storage-home on /home type reiserfs (rw)
-/dev/mapper/storage-var on /var type reiserfs (rw)
-/dev/mapper/storage-main on /main type reiserfs (rw)
-usbfs on /proc/bus/usb type usbfs (rw)
-tmpfs on /dev type tmpfs (rw,size=10M,mode=0755)
-tiger:~#
+I have a simple implementation of LVM that creates logical volume from 
+/dev/hda3 and /dev/hdc1. /dev/hda is a 250G drive that holds the filesystem 
+on /dev/hda1, but only /dev/hda3 is part of the volume group. /dev/hdc1 is a 
+100G drive with only one partition and its part of the volume group.
 
-I now need to increase my RAID capacity.  I can increase the physical RAID
-capacity by adding another disk to the controller and getting it to re-build
-the array in the background, thus increasing the size of "/dev/sda", but I
-am not clear as to how I can increase the PV size in LVM.  
+I want to replace /dev/hdc1 with a 250G drive I just bought. Right now the 
+whole logical volume is 334G. All of that is allocated and none is free as 
+far as physical extens go. However, I only have 119G of data on the whole 
+logical volume. Is there any way to tell where physically that data resides? 
+I cannot do a pvmove (as I understand it) because I have no free extens on 
+/dev/hda3. Is it better to make extens available somehow on /dev/hda3 and do 
+a pvmove? or should I install the new drive somewhere else, like /dev/hdb, 
+then add it to the volume group and do a pvmove? If that's the case, then 
+will it screw up the volume group when I move the new drive into its 
+permanent location at /dev/hdc?
 
-I have seen some references to a "pvresize" command, but it isn't in the
-latest 2.01.15 stable release (although it does appear in the 2.02.02
-development release).
+I know that's a lotta questions, but I really need some clarification. If 
+anyone can help I'll be very thankfull.
 
-Hence, my questions are:
-
-- Is it possible to re-size a PV whilst the system is online using the
-2.01.15 tools?
-
-- Is it possible to re-size a PV whilst the system is online using the
-2.02.02 tools?
-
-- How "stable" are the 2.02.02 tools, and are there any specific bugs in
-them that may cause problems during typical usage.
-
-Thanks,
-
-Roger
+Dave Schile
