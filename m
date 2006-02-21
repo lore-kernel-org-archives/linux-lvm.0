@@ -1,18 +1,15 @@
 Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id k1L5Hl130125
-	for <linux-lvm@redhat.com>; Tue, 21 Feb 2006 00:17:47 -0500
-Received: from zproxy.gmail.com (zproxy.gmail.com [64.233.162.196])
-	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id k1L5HkZe018778
-	for <linux-lvm@redhat.com>; Tue, 21 Feb 2006 00:17:46 -0500
-Received: by zproxy.gmail.com with SMTP id 14so1139097nzn
-	for <linux-lvm@redhat.com>; Mon, 20 Feb 2006 21:17:46 -0800 (PST)
-Message-ID: <abe3dd8f0602202117r13749f4bu578cc61613b5ee10@mail.gmail.com>
-Date: Tue, 21 Feb 2006 10:47:45 +0530
-From: "Gaurab Paul" <gaurab.paul@gmail.com>
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id k1LGxW120133
+	for <linux-lvm@redhat.com>; Tue, 21 Feb 2006 11:59:32 -0500
+Received: from mail.gmx.net (mail.gmx.de [213.165.64.20])
+	by mx1.redhat.com (8.12.11/8.12.11) with SMTP id k1LGxTeR004689
+	for <linux-lvm@redhat.com>; Tue, 21 Feb 2006 11:59:29 -0500
+Date: Tue, 21 Feb 2006 17:59:18 +0100 (MET)
+From: "Markus Schreier" <mdschreier@gmx.net>
 MIME-Version: 1.0
-Content-Type: multipart/alternative; 
-	boundary="----=_Part_10154_28659035.1140499065955"
-Subject: [linux-lvm] How to reset the vg uuid before doing a vgimport?
+Message-ID: <12705.1140541158@www081.gmx.net>
+Content-Transfer-Encoding: quoted-printable
+Subject: [linux-lvm] vgcfgbackup and vgcfgrestore
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -23,40 +20,42 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
+Content-Type: text/plain; charset="iso-8859-1"
 To: linux-lvm@redhat.com
 
-------=_Part_10154_28659035.1140499065955
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: quoted-printable
-Content-Disposition: inline
+Hello,
 
-Is there a way that before we do vgimport, on the exported volume we
-can reset the vg uuid? If so what is the process?
+i'm new to your list and would like to introduce myself. I'm markus. I've
+worked with linux for quit a while as administrator also using lvm.  Now i
+try to get some desaster-recovery-strategie working.
 
-HP-UX lvm provied vgchgid. Any equivalent in lvm2?
+I've quit a couple of linux-systems. I use vgcfgbackup (lvm1) to bachkup the
+configuration of volumegroups into a file normal backup-software to backup
+files..
 
-In summary, i want to know how to do step 2 below in linux lvm:
+Wenn system crashes i would like to=20
+* start with some (new) rescue-cd, recover vg-configuration file, recreate
+volumegroups (with recoverd config-file),  restore data and reboot
+This works fine with new systems running lvm2 and some rescue-cd with lvm2.
 
-1.vgexport vgname
-2. Reset the vg uuid
-3. vgimport vgname
+Now there are old lvm1-systems as well. I would like to use the same
+recover-CD, but it has lvm2-commands and i can't get it to recover old
+config-files.
 
+In short:
+I would like to get the following things working:
+vgcfgbackup (lvm1-binary, 2.4 kernel) backing up lvm1-Volume and creating
+metadata-file (in lvm1 format)
+vgcfgrestore (lvm2-binary, 2.6 kernel) restoring lvm1-Volume from above.
+working with restored vg with lvm1, 2.4 kernel.
 
---
-Thanks and Regards,
+Does this work?
+Can someone give me example commands?
 
-Gaurab
+Please excuse my poor english,=20
+thanks in advance for your help
+Markus
 
-------=_Part_10154_28659035.1140499065955
-Content-Type: text/html; charset=ISO-8859-1
-Content-Transfer-Encoding: quoted-printable
-Content-Disposition: inline
-
-Is there a way that before we do vgimport, on the exported volume we<br>can=
- reset the vg uuid? If so what is the process?<br><br>HP-UX lvm provied vgc=
-hgid. Any equivalent in lvm2?<br><br>In summary, i want to know how to do s=
-tep 2 below in linux lvm:
-<br><br>1.vgexport vgname<br>2. Reset the vg uuid<br>3. vgimport vgname<br>=
-<br clear=3D"all"><br>-- <br>Thanks and Regards,<br><br>Gaurab
-
-------=_Part_10154_28659035.1140499065955--
+--=20
+10 GB Mailbox, 100 FreeSMS/Monat http://www.gmx.net/de/go/topmail
++++ GMX - die erste Adresse f=EF=BF=BDr Mail, Message, More +++
