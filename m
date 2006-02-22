@@ -1,15 +1,16 @@
 Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id k1LGxW120133
-	for <linux-lvm@redhat.com>; Tue, 21 Feb 2006 11:59:32 -0500
-Received: from mail.gmx.net (mail.gmx.de [213.165.64.20])
-	by mx1.redhat.com (8.12.11/8.12.11) with SMTP id k1LGxTeR004689
-	for <linux-lvm@redhat.com>; Tue, 21 Feb 2006 11:59:29 -0500
-Date: Tue, 21 Feb 2006 17:59:18 +0100 (MET)
-From: "Markus Schreier" <mdschreier@gmx.net>
-MIME-Version: 1.0
-Message-ID: <12705.1140541158@www081.gmx.net>
-Content-Transfer-Encoding: quoted-printable
-Subject: [linux-lvm] vgcfgbackup and vgcfgrestore
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id k1MGAH108476
+	for <linux-lvm@redhat.com>; Wed, 22 Feb 2006 11:10:17 -0500
+Received: from smtp802.mail.ukl.yahoo.com (smtp802.mail.ukl.yahoo.com
+	[217.12.12.139])
+	by mx1.redhat.com (8.12.11/8.12.11) with SMTP id k1MGAEKZ031588
+	for <linux-lvm@redhat.com>; Wed, 22 Feb 2006 11:10:15 -0500
+Date: Wed, 22 Feb 2006 15:01:04 +0000
+From: Gunther Clasen <gunther_clasen@arcor.de>
+Message-ID: <20060222150104.GA17161@tui.site>
+Mime-Version: 1.0
+Content-Disposition: inline
+Subject: [linux-lvm] PV Status NOT available
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -20,42 +21,57 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="iso-8859-1"
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@redhat.com
 
-Hello,
+Hi,
 
-i'm new to your list and would like to introduce myself. I'm markus. I've
-worked with linux for quit a while as administrator also using lvm.  Now i
-try to get some desaster-recovery-strategie working.
+I have used "pvcreate: Logical Volume Manager 1.0.7(mp-v6)" to create a
+PV and then added it to an LVM1 VG. A pvdisplay on the old partition
+shows this:
 
-I've quit a couple of linux-systems. I use vgcfgbackup (lvm1) to bachkup the
-configuration of volumegroups into a file normal backup-software to backup
-files..
+--- Physical volume ---
+PV Name               /dev/hdg8
+VG Name               vg7
+PV Size               16.01 GB [33566337 secs] / NOT usable 5.81 MB [LVM: 123 KB]
+PV#                   1
+PV Status             available
+Allocatable           yes (but full)
+Cur LV                9
+PE Size (KByte)       32768
+Total PE              512
+Free PE               0
+Allocated PE          512
+PV UUID               0AIqms-2VVA-Ced6-Nmz1-KOja-qmjN-XaXhjk
 
-Wenn system crashes i would like to=20
-* start with some (new) rescue-cd, recover vg-configuration file, recreate
-volumegroups (with recoverd config-file),  restore data and reboot
-This works fine with new systems running lvm2 and some rescue-cd with lvm2.
+whereas the newly added one looks like this:
 
-Now there are old lvm1-systems as well. I would like to use the same
-recover-CD, but it has lvm2-commands and i can't get it to recover old
-config-files.
+--- Physical volume ---
+PV Name               /dev/hdg9
+VG Name               vg7
+PV Size               16.01 GB [33566337 secs] / NOT usable 32.18 MB [LVM: 125 KB]
+PV#                   3
+PV Status             NOT available
+Allocatable           yes
+Cur LV                0
+PE Size (KByte)       32768
+Total PE              511
+Free PE               511
+Allocated PE          0
+PV UUID               nI9z7g-oPfz-hSFw-ks0S-abNJ-raMI-dyLP2d
 
-In short:
-I would like to get the following things working:
-vgcfgbackup (lvm1-binary, 2.4 kernel) backing up lvm1-Volume and creating
-metadata-file (in lvm1 format)
-vgcfgrestore (lvm2-binary, 2.6 kernel) restoring lvm1-Volume from above.
-working with restored vg with lvm1, 2.4 kernel.
+I have two questions:
 
-Does this work?
-Can someone give me example commands?
+1) Do I need to worry about the "NOT available"?
 
-Please excuse my poor english,=20
-thanks in advance for your help
-Markus
+2) Why do I have "NOT usable 32.18 MB" on the latter and "NOT usable
+5.81 MB" on the former, when they are both exactly the same size
+(according to cfdisk) and both have PE size of 32 MB?
 
---=20
-10 GB Mailbox, 100 FreeSMS/Monat http://www.gmx.net/de/go/topmail
-+++ GMX - die erste Adresse f=EF=BF=BDr Mail, Message, More +++
+I have several versions of Linux running, and all should be able to
+access the LVMs.
+
+Regards,
+
+Gunther
