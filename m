@@ -1,16 +1,16 @@
 Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id k1MGAH108476
-	for <linux-lvm@redhat.com>; Wed, 22 Feb 2006 11:10:17 -0500
-Received: from smtp802.mail.ukl.yahoo.com (smtp802.mail.ukl.yahoo.com
-	[217.12.12.139])
-	by mx1.redhat.com (8.12.11/8.12.11) with SMTP id k1MGAEKZ031588
-	for <linux-lvm@redhat.com>; Wed, 22 Feb 2006 11:10:15 -0500
-Date: Wed, 22 Feb 2006 15:01:04 +0000
-From: Gunther Clasen <gunther_clasen@arcor.de>
-Message-ID: <20060222150104.GA17161@tui.site>
-Mime-Version: 1.0
-Content-Disposition: inline
-Subject: [linux-lvm] PV Status NOT available
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id k1NGtQ108801
+	for <linux-lvm@redhat.com>; Thu, 23 Feb 2006 11:55:26 -0500
+Received: from colossus.clanbiotech.it (host-84-235-131-214.satlynx.net
+	[84.235.131.214])
+	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id k1NGtGiE025948
+	for <linux-lvm@redhat.com>; Thu, 23 Feb 2006 11:55:21 -0500
+Message-ID: <43FDE8BD.2050904@tiscali.co.uk>
+Date: Thu, 23 Feb 2006 17:54:21 +0100
+From: justin <clancyj@tiscali.co.uk>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] Persistence of disk-based LVM data after rebuild
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -22,56 +22,46 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@redhat.com
 
-Hi,
+Hi guys,
 
-I have used "pvcreate: Logical Volume Manager 1.0.7(mp-v6)" to create a
-PV and then added it to an LVM1 VG. A pvdisplay on the old partition
-shows this:
+I came across a weird problem with LVM after a server rebuild.  I
+thought you might like to know about it.
 
---- Physical volume ---
-PV Name               /dev/hdg8
-VG Name               vg7
-PV Size               16.01 GB [33566337 secs] / NOT usable 5.81 MB [LVM: 123 KB]
-PV#                   1
-PV Status             available
-Allocatable           yes (but full)
-Cur LV                9
-PE Size (KByte)       32768
-Total PE              512
-Free PE               0
-Allocated PE          512
-PV UUID               0AIqms-2VVA-Ced6-Nmz1-KOja-qmjN-XaXhjk
+Details:
 
-whereas the newly added one looks like this:
+  LVM version:     2.01.14 (2005-08-04)
+  Library version: 1.01.04 (2005-08-02)
+  Driver version:  4.4.0
 
---- Physical volume ---
-PV Name               /dev/hdg9
-VG Name               vg7
-PV Size               16.01 GB [33566337 secs] / NOT usable 32.18 MB [LVM: 125 KB]
-PV#                   3
-PV Status             NOT available
-Allocatable           yes
-Cur LV                0
-PE Size (KByte)       32768
-Total PE              511
-Free PE               511
-Allocated PE          0
-PV UUID               nI9z7g-oPfz-hSFw-ks0S-abNJ-raMI-dyLP2d
+  SUSE 10 with 2.6.13-15-default kernel.
 
-I have two questions:
+I had two PVs (/dev/hdc2 and /dev/hdd2) in a VG called vg01 on the
+original system.  After the rebuild I assigned the first partition of
+each disk to swap (as before) and the other two partitions to a raid
+mirror and an LV.
 
-1) Do I need to worry about the "NOT available"?
+Everything worked well until I tried to issue commands like vgdisplay,
+when I got messages like the following:
 
-2) Why do I have "NOT usable 32.18 MB" on the latter and "NOT usable
-5.81 MB" on the former, when they are both exactly the same size
-(according to cfdisk) and both have PE size of 32 MB?
+  LV work: inconsistent LE count 16 != 32
 
-I have several versions of Linux running, and all should be able to
-access the LVMs.
+  Internal error: LV segments corrupted in work.
 
-Regards,
+  Volume group "vg01" doesn't exist
 
-Gunther
+
+...which, of course, it didn't anymore.  I did an strace on vgdisplay to
+see where the data came from and saw that it was the first partition of
+each disk.  I took the swap offline and issued the command:
+
+dd if=/dev/zero of=/dev/hdc1 count=10
+
+...on each disk to zap out any metadata on those partitions.  Now it's fine.
+
+Any comments?
+
+  Regards,
+
+    Justin.
