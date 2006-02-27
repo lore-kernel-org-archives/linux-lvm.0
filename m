@@ -1,20 +1,21 @@
 Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id k1REZf113982
-	for <linux-lvm@redhat.com>; Mon, 27 Feb 2006 09:35:41 -0500
-Received: from aragorn.bbn.com (aragorn.bbn.com [128.33.0.62])
-	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id k1REZest014806
-	for <linux-lvm@redhat.com>; Mon, 27 Feb 2006 09:35:40 -0500
-Received: from [128.89.72.74] (mgillen2.dsl.bbn.com [128.89.72.74])
-	by aragorn.bbn.com (8.12.7/8.12.7) with ESMTP id k1REZYWT009006
-	for <linux-lvm@redhat.com>; Mon, 27 Feb 2006 09:35:34 -0500 (EST)
-Message-ID: <44030E36.5020902@mattgillen.net>
-Date: Mon, 27 Feb 2006 09:35:34 -0500
-From: Matthew Gillen <me@mattgillen.net>
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id k1RH4H108084
+	for <linux-lvm@redhat.com>; Mon, 27 Feb 2006 12:04:17 -0500
+Received: from fed1rmmtao05.cox.net (fed1rmmtao05.cox.net [68.230.241.34])
+	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id k1RH4G9H002183
+	for <linux-lvm@redhat.com>; Mon, 27 Feb 2006 12:04:16 -0500
+Received: from [70.187.180.140] by fed1rmmtao05.cox.net
+	(InterMail vM.6.01.05.02 201-2131-123-102-20050715) with ESMTP
+	id <20060227170118.RGCR17838.fed1rmmtao05.cox.net@[70.187.180.140]>
+	for <linux-lvm@redhat.com>; Mon, 27 Feb 2006 12:01:18 -0500
+Message-ID: <44033100.6010600@tsss.org>
+Date: Mon, 27 Feb 2006 09:04:00 -0800
+From: kelsey hudson <khudson@tsss.org>
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] Disk size reporting.
-References: <4402E842.9070509@watford53.freeserve.co.uk>
-	<4402EBFE.3080807@gmx.net>
-In-Reply-To: <4402EBFE.3080807@gmx.net>
+Subject: Re: [linux-lvm] LVM drive changed from USB to Firewire
+References: <1d4c059f0602250659u54eeaa7bldce33e389430b1d6@mail.gmail.com>
+	<20060225191211.GB31720@old.davidb.org>
+In-Reply-To: <20060225191211.GB31720@old.davidb.org>
 Content-Transfer-Encoding: 7bit
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
@@ -26,40 +27,39 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-Klaus Strebel wrote:
-> Hi Jim,
+David Brown wrote:
+>>The problem is that the drive is not found at boot anymore, and an
+>>error is raised because it can't be mounted. But if I do a vgscan,
+>>then a vgchage -ay, then mount -a, all is well and my volumes are
+>>mounted.
+>>
+>>How do I tell LVM to look at the firewire card instead of the usb controller?
 > 
-> Jim Ford schrieb:
->> I think I've extended a logical volume correctly, but DF shows no change.
->>
->> lvs output:
->>  LV     VG     Attr   LSize   Origin Snap%  Move Copy%
->>  root   Ubuntu -wi-ao  25.13G
->>  swap_1 Ubuntu -wi-ao 656.00M
->>
->> df output:
->> Filesystem           1K-blocks      Used Available Use% Mounted on
->> /dev/mapper/Ubuntu-root
->>                      18715076   2909852  14854544  17% /
->> tmpfs                   112264         0    112264   0% /dev/shm
->> tmpfs                   112264     12588     99676  12%
->> /lib/modules/2.6.12-10-386/volatile
->> /dev/hda1               233335     19166    201721   9% /boot
->>
->> Have I extended my Ubuntu volume correctly, please?
->>
->> <sigh> Life was _so_ much simpler without lvm and udev! </sigh>
-> You just extended your volume, not your filesystem, don't you ;-). I
-> don't know, which filesystem Ubunto uses for root and if it's ext2/ext3,
-> if they use the online-resize patches.
+> LVM should look at all of the devices.
 > 
-> So, seak for into how to resize/extend the filesystem you use.
+> Most likely the firewire interface/driver takes longer to startup than the
+> USB does, and the drive isn't visible when the startup scripts do their
+> vgscan.
 
-The LVM FAQ entry for "Extending a Logical Volume" even covers this issue, and
-tells you how to do it for several filesystems:
-http://tldp.org/HOWTO/LVM-HOWTO/extendlv.html
+i've had a bunch of success with one machine on which I run LVM by 
+simply adding a 5-second wait period between the time the kernel calls 
+/sbin/init and it begins executing the contents of whatever rc script 
+init starts at your desired runlevel (add 'sleep 5' to the beginning of 
+this script). kernel threads are great in some circumstances (like 
+improving boot speed), but sometimes i guess you could say it boots too 
+fast for its own good!
 
-Matt
+just a side note though: my experience with ieee1394 under linux has 
+been less-than-satisfactory: i can't seem to get a decent aggregate raw 
+transfer rate of >11MByte/sec, no matter what hardware i use. i've since 
+  switched back to usb2.0, even though usb is completely and wholly the 
+wrong transport to use for mass storage devices :(
+
+if you can get your disks working faster than this, please let me know 
+how you did it. :)
+
+thanks
+-kelsey
