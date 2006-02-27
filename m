@@ -1,17 +1,18 @@
 Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id k1RIGg131134
-	for <linux-lvm@redhat.com>; Mon, 27 Feb 2006 13:16:42 -0500
-Received: from smtp804.mail.ukl.yahoo.com (smtp804.mail.ukl.yahoo.com
-	[217.12.12.141])
-	by mx1.redhat.com (8.12.11/8.12.11) with SMTP id k1RIGeVT003418
-	for <linux-lvm@redhat.com>; Mon, 27 Feb 2006 13:16:41 -0500
-Date: Mon, 27 Feb 2006 08:09:54 +0000
-From: Gunther Clasen <gunther_clasen@arcor.de>
-Message-ID: <20060227080954.GA9811@tui.site>
-Mime-Version: 1.0
-Content-Disposition: inline
-Subject: [linux-lvm] PV Status NOT available
-Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id k1RJ3G114611
+	for <linux-lvm@redhat.com>; Mon, 27 Feb 2006 14:03:16 -0500
+Received: from excite.com (nn2.excitenetwork.com [207.159.120.56])
+	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id k1RJ3G0m025717
+	for <linux-lvm@redhat.com>; Mon, 27 Feb 2006 14:03:16 -0500
+Subject: RE: [linux-lvm] LVM2 + Pair GNBD on FC4
+From: "binky123@excite.com" <binky123@excite.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20060227180812.B22C391FDA@xprdmxin.myway.com>
+Date: Mon, 27 Feb 2006 13:08:12 -0500 (EST)
+Reply-To: binky123@excite.com,
+	LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -21,59 +22,58 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@redhat.com
 
-Hi,
 
-I have used "pvcreate: Logical Volume Manager 1.0.7(mp-v6)" to create a
-PV and then added it to an LVM1 VG. A pvdisplay on the old partition
-shows this:
+Does anybody have any suggestions on what I can use to coalesce partitions together from 3 PC's?  I didn't have much luck over
+the weekend on my tests.
 
---- Physical volume ---
-PV Name               /dev/hdg8
-VG Name               vg7
-PV Size               16.01 GB [33566337 secs] / NOT usable 5.81 MB [LVM: 123
-+KB]
-PV#                   1
-PV Status             available
-Allocatable           yes (but full)
-Cur LV                9
-PE Size (KByte)       32768
-Total PE              512
-Free PE               0
-Allocated PE          512
-PV UUID               0AIqms-2VVA-Ced6-Nmz1-KOja-qmjN-XaXhjk
+Testing Summary on 3 PCs with 2 2TB real partitions each:
+local 2TB                   + LVM(2 devices)     : OK
+GNBD 2TB(4 imports 2 PCs)   + LVM(6 devices)     : FAIL(mkfs xfs)
+GNBD 2TB(2 imports 2 PCs)   + LVM(2 devices)     : FAIL(dd ok,
+                                                   mkfs xfs fails)
+GNBD 2TB(2 imports 2 PCs)   + MD(2 devices)      : FAIL(dd ok,
+                                                   mkfs xfs fails)
+GNBD 2TB(2 imports same PC) + LVM(2 devices)     : FAIL(mkfs xfs)
+GNBD 2TB(2 imports same PC) + MD(2 devices)      : FAIL(dd 100000 ct ok,
+                                                   mkfs xfs fails,
+                                                   mkfs ext3 fails)
+GNBD 4TB(1 import linear array) + LVM(1 device)  : FAIL(mkfs xfs)
+GNBD 4TB(1 import linear array)                  : FAIL(dd 5000 ct ok,
+                                                   mkfs xfs fails)
+GNBD 2TB(1 import)    + LVM(1 device)  : OK(dd,mkfs xfs on LVM device)
+GNBD 2TB(1 import)                     : OK(dd,mkfs xfs on gnbd device)
 
-whereas the newly added one looks like this:
+Testing Summary on 1 PC with 2 2TB partitions and 1 PC with 4 .37GB partitions:
+local 2TB                   + LVM(2 devices)     : OK
+GNBD .37GB(4 imports 2 PCs) + LVM(6 devices)     : not tested
+GNBD .37GB(2 imports same PC) + LVM(2 devices)   : FAIL(dd ok, mkfs xfs fails,
+                                                   mkfs xfs waiting for fsync(),
+                                                   mkfs reiserfs ok,
+                                                   mount reiserfs fails)
+GNBD .37GB(2 imports same PC) + MD(2 devices)    : OK(dd,mkfs xfs on MD device,
+                                                   mkfs reiserfs ok,
+                                                   mount reiserfs fails)
+GNBD .74GB(1 import linear array) + LVM(1 device): FAIL(mkfs xfs fails,
+                                        dd ok)
+GNBD .74GB(1 import linear array)      : OK(dd,mkfs xfs on gnbd device)
+GNBD .37GB(1 import)  + LVM(1 device)  : OK(dd,mkfs xfs on LVM device)
+GNBD .37GB(1 import)                   : OK(dd,mkfs xfs on gnbd device)
 
---- Physical volume ---
-PV Name               /dev/hdg9
-VG Name               vg7
-PV Size               16.01 GB [33566337 secs] / NOT usable 32.18 MB [LVM: 125
-+KB]
-PV#                   3
-PV Status             NOT available
-Allocatable           yes
-Cur LV                0
-PE Size (KByte)       32768
-Total PE              511
-Free PE               511
-Allocated PE          0
-PV UUID               nI9z7g-oPfz-hSFw-ks0S-abNJ-raMI-dyLP2d
 
-I have two questions:
 
-1) Do I need to worry about the "NOT available"?
 
-2) Why do I have "NOT usable 32.18 MB" on the latter and "NOT usable
-5.81 MB" on the former, when they are both exactly the same size
-(according to cfdisk) and both have PE size of 32 MB?
+ --- On Sat 02/25, binky123@excite.com < binky123@excite.com > wrote:
+From: binky123@excite.com [mailto: binky123@excite.com]
+To: linux-lvm@redhat.com
+Date: Sat, 25 Feb 2006 13:01:35 -0500 (EST)
+Subject: [linux-lvm] LVM2 + Pair GNBD on FC4
 
-I have several versions of Linux running, and all should be able to
-access the LVMs.
+<br>On a standard FC4 2.6.15-1.1831_FC4smp build, I'm trying to get<br>LVM2(lvm2-2.01.08-2.1) to work on a pair of gnbd(gnbd-1.0.2) imported devices.  I'm able to create a volume group and logical volume<br>from one gnbd device and I'm able to create an XFS filesystem on it.<br>I then extend the volume group with another gnbd device and recreate the logical volume to use the full # of extents.  This works.  I now<br>try to create an XFS or an EXT3 filesystem on top of the logical<br>volume and the mkfs process seems to go into a disk wait mode.  ssh access to the machine is still ok, any LVM2 command will hang, sync command will hang.<br><br>Any suggestions on what is happening, debug suggestions or if anyone else has done something similar to this? Thanks.<br><br><br><br><br>_______________________________________________<br>Join Excite! - http://www.excite.com<br>The most personalized portal on the Web!<br><br><br>_______________________________________________<br>linux-lv!
+m 
+mailing list<br>linux-lvm@redhat.com<br>https://www.redhat.com/mailman/listinfo/linux-lvm<br>read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/<br>
 
-Regards,
-
-Gunther
+_______________________________________________
+Join Excite! - http://www.excite.com
+The most personalized portal on the Web!
