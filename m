@@ -1,19 +1,16 @@
 Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id k1RIC2129894
-	for <linux-lvm@redhat.com>; Mon, 27 Feb 2006 13:12:02 -0500
-Received: from lennier.cc.vt.edu (lennier.cc.vt.edu [198.82.162.213])
-	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id k1RIC0R6001356
-	for <linux-lvm@redhat.com>; Mon, 27 Feb 2006 13:12:00 -0500
-Received: from zidane.cc.vt.edu (IDENT:mirapoint@evil-zidane.cc.vt.edu
-	[10.1.1.13])
-	by lennier.cc.vt.edu (8.12.11/8.12.11) with ESMTP id k1RIBsUV002655
-	for <linux-lvm@redhat.com>; Mon, 27 Feb 2006 13:11:54 -0500
-From: Bill Ranck <ranck@vt.edu>
-Date: Mon, 27 Feb 2006 13:05:42 -0500
-Message-Id: <1141063543.4364.32.camel@joesgrill.cc.vt.edu>
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id k1RIGg131134
+	for <linux-lvm@redhat.com>; Mon, 27 Feb 2006 13:16:42 -0500
+Received: from smtp804.mail.ukl.yahoo.com (smtp804.mail.ukl.yahoo.com
+	[217.12.12.141])
+	by mx1.redhat.com (8.12.11/8.12.11) with SMTP id k1RIGeVT003418
+	for <linux-lvm@redhat.com>; Mon, 27 Feb 2006 13:16:41 -0500
+Date: Mon, 27 Feb 2006 08:09:54 +0000
+From: Gunther Clasen <gunther_clasen@arcor.de>
+Message-ID: <20060227080954.GA9811@tui.site>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] lvcreate exit code 5?
+Content-Disposition: inline
+Subject: [linux-lvm] PV Status NOT available
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -25,23 +22,58 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: LVM discussion list <linux-lvm@redhat.com>
+Content-Transfer-Encoding: 7bit
+To: linux-lvm@redhat.com
 
-Hello folks,
-   I have a script which issues an lvcreate to create a snapshot.  The
-command returns with an exit code 5.  The snapshot works, and seems to
-be fine otherwise, but what is the exitcode trying to tell me?  I found
-documentation saying, "error getting status of logical volume" is the
-cause, but what does the really mean in this context?
-Here is the actual command being issued by the script:
+Hi,
 
-/usr/sbin/lvcreate -L 5G --snapshot -n /dev/USRAPPS/snap03
- /dev/USRAPPS/db03
+I have used "pvcreate: Logical Volume Manager 1.0.7(mp-v6)" to create a
+PV and then added it to an LVM1 VG. A pvdisplay on the old partition
+shows this:
 
-   Any suggestions?  I don't like to ignore non-zero exit codes.
-Yes, the source volume is mounted and active.  
+--- Physical volume ---
+PV Name               /dev/hdg8
+VG Name               vg7
+PV Size               16.01 GB [33566337 secs] / NOT usable 5.81 MB [LVM: 123
++KB]
+PV#                   1
+PV Status             available
+Allocatable           yes (but full)
+Cur LV                9
+PE Size (KByte)       32768
+Total PE              512
+Free PE               0
+Allocated PE          512
+PV UUID               0AIqms-2VVA-Ced6-Nmz1-KOja-qmjN-XaXhjk
 
--- 
-Bill Ranck
-Blacksburg, Va.
-540-231-3951
+whereas the newly added one looks like this:
+
+--- Physical volume ---
+PV Name               /dev/hdg9
+VG Name               vg7
+PV Size               16.01 GB [33566337 secs] / NOT usable 32.18 MB [LVM: 125
++KB]
+PV#                   3
+PV Status             NOT available
+Allocatable           yes
+Cur LV                0
+PE Size (KByte)       32768
+Total PE              511
+Free PE               511
+Allocated PE          0
+PV UUID               nI9z7g-oPfz-hSFw-ks0S-abNJ-raMI-dyLP2d
+
+I have two questions:
+
+1) Do I need to worry about the "NOT available"?
+
+2) Why do I have "NOT usable 32.18 MB" on the latter and "NOT usable
+5.81 MB" on the former, when they are both exactly the same size
+(according to cfdisk) and both have PE size of 32 MB?
+
+I have several versions of Linux running, and all should be able to
+access the LVMs.
+
+Regards,
+
+Gunther
