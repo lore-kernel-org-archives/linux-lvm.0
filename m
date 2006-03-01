@@ -1,16 +1,26 @@
 Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id k1NGtQ108801
-	for <linux-lvm@redhat.com>; Thu, 23 Feb 2006 11:55:26 -0500
-Received: from colossus.clanbiotech.it (host-84-235-131-214.satlynx.net
-	[84.235.131.214])
-	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id k1NGtGiE025948
-	for <linux-lvm@redhat.com>; Thu, 23 Feb 2006 11:55:21 -0500
-Message-ID: <43FDE8BD.2050904@tiscali.co.uk>
-Date: Thu, 23 Feb 2006 17:54:21 +0100
-From: justin <clancyj@tiscali.co.uk>
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id k21CHG116945
+	for <linux-lvm@redhat.com>; Wed, 1 Mar 2006 07:17:16 -0500
+Received: from mail.internode.on.net (bld-mail02.adl2.internode.on.net
+	[203.16.214.66])
+	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id k21CHDrJ026371
+	for <linux-lvm@redhat.com>; Wed, 1 Mar 2006 07:17:14 -0500
+Received: from frog.local (unverified [59.167.56.137]) 
+	by mail.internode.on.net (SurgeMail 3.2f) with ESMTP id 206001876 
+	for <linux-lvm@redhat.com>; Wed, 01 Mar 2006 22:47:06 +1030 (CDT)
+From: Daniel <dragonheart@gentoo.org>
+Subject: Re: [linux-lvm] lvextend - device-mapper: create ioctl failed: Device
+	or resource busy\nFailed to suspend
+Date: Wed, 1 Mar 2006 23:25:02 +1100
+References: <200602232345.46437.dragonheart@gentoo.org>
+	<200602282202.52038.dragonheart@gentoo.org>
+	<200602281450.08563.krakrjak@volumehost.net>
+In-Reply-To: <200602281450.08563.krakrjak@volumehost.net>
 MIME-Version: 1.0
+Content-Type: multipart/signed; boundary="nextPart1433741.QzrUMZznsl";
+	protocol="application/pgp-signature"; micalg=pgp-sha1
 Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] Persistence of disk-based LVM data after rebuild
+Message-Id: <200603012325.12089.dragonheart@gentoo.org>
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -21,47 +31,75 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@redhat.com
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-Hi guys,
+--nextPart1433741.QzrUMZznsl
+Content-Type: text/plain;
+  charset="iso-8859-6"
+Content-Transfer-Encoding: quoted-printable
+Content-Disposition: inline
 
-I came across a weird problem with LVM after a server rebuild.  I
-thought you might like to know about it.
+On Wed, 1 Mar 2006 07:50 am, Zac Slade wrote:
+> On Tuesday 28 February 2006 05:02, Daniel wrote:
+> > Guessing the additional info didn't help and there is no easy way to
+> > reset the state.
+>
+> Not really unfortunately.
 
-Details:
+=46eature request :-)
 
-  LVM version:     2.01.14 (2005-08-04)
-  Library version: 1.01.04 (2005-08-02)
-  Driver version:  4.4.0
+> I have been thinking about this a lot though. =20
+> I've never seen it and I'm not sure what the next move really is.
 
-  SUSE 10 with 2.6.13-15-default kernel.
+Tough ones.
 
-I had two PVs (/dev/hdc2 and /dev/hdd2) in a VG called vg01 on the
-original system.  After the rebuild I assigned the first partition of
-each disk to swap (as before) and the other two partitions to a raid
-mirror and an LV.
+> Someone=20
+> did suggest (and sorry for not posting sooner) that you should run lsof
+> against /dev/mapper/control and see if something is keeping it open.
 
-Everything worked well until I tried to issue commands like vgdisplay,
-when I got messages like the following:
+nothing open.
 
-  LV work: inconsistent LE count 16 != 32
+> Hopefully this will work.  I guess you were able to remove an lv previous=
+ly
+> so you shouldn't have an issue doing this.=20
 
-  Internal error: LV segments corrupted in work.
+Can't remember how I did exactly. I'm sure it was just a lvm learning=20
+experience. I should have less problems this time (I'm jinking myself here=
+=20
+I'm sure)
 
-  Volume group "vg01" doesn't exist
+> One thing you didn't answer=20
+> (and I didn't ask) is if you had problems extending any other lvs.=20
 
+Didn't try that until just then. Arg  - same error.
 
-...which, of course, it didn't anymore.  I did an strace on vgdisplay to
-see where the data came from and saw that it was the first partition of
-each disk.  I took the swap offline and issued the command:
+> The=20
+> output of all the tools show the devices in a good state, so to me it just
+> doesn't make sense.=20
 
-dd if=/dev/zero of=/dev/hdc1 count=10
+Other suggestions welcome. I'm almost considering a vanilla kernel just to=
+=20
+try.
 
-...on each disk to zap out any metadata on those partitions.  Now it's fine.
+Won't be today though. Need to get an alternate going - filesystem full is =
+a=20
+bad error for a backup program. At least I've got twice the space even if I=
+=20
+can't extend.
 
-Any comments?
+=2D-=20
+Daniel Black <dragonheart@gentoo.org>
+Gentoo Crypto/dev-embedded/Forensics/NetMon
 
-  Regards,
+--nextPart1433741.QzrUMZznsl
+Content-Type: application/pgp-signature
 
-    Justin.
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.9.18 (GNU/Linux)
+
+iD8DBQBEBZKohhpKunZncJcRAkpBAJ9Ga9PmBYy2UNxM7WCtaJJHvKH7hgCgg3y1
+FONtuy2SBSYLo+F5qSaCt+0=
+=iXdj
+-----END PGP SIGNATURE-----
+
+--nextPart1433741.QzrUMZznsl--
