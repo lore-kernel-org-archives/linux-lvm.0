@@ -1,15 +1,21 @@
-Received: from [192.168.1.2] (vpn-68-1.surrey.redhat.com [10.32.68.1])
-	by pobox.surrey.redhat.com (8.12.8/8.12.8) with ESMTP id k21DLcOO009945
-	for <linux-lvm@redhat.com>; Wed, 1 Mar 2006 13:21:38 GMT
-Message-ID: <44059FE3.9020205@redhat.com>
-Date: Wed, 01 Mar 2006 13:21:39 +0000
-From: Patrick Caulfield <pcaulfie@redhat.com>
+Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id k21Eee126249
+	for <linux-lvm@redhat.com>; Wed, 1 Mar 2006 09:40:40 -0500
+Received: from emx.vniitf.ru (emx.vniitf.ru [212.57.149.10])
+	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id k21EeZhW024317
+	for <linux-lvm@redhat.com>; Wed, 1 Mar 2006 09:40:36 -0500
+Received: from exim by emx.vniitf.ru with antivirus-scanned (Exim 3.33 #1)
+	id 1FESVh-0001QI-00
+	for linux-lvm@redhat.com; Wed, 01 Mar 2006 19:41:01 +0500
+Received: from c-212-57-149-57.dialup.snz.ru ([212.57.149.57])
+	by emx.vniitf.ru with esmtp (Exim 3.33 #1) id 1FESVh-0001QA-00
+	for linux-lvm@redhat.com; Wed, 01 Mar 2006 19:41:01 +0500
+Message-ID: <4405B25F.5090001@mail.snz.ru>
+Date: Wed, 01 Mar 2006 19:40:31 +0500
+From: Sid <sid@mail.snz.ru>
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] Create a Logical volume with 100% of Volume groups
-	size?
-References: <44059BAB.6020307@telecyl.com>
-In-Reply-To: <44059BAB.6020307@telecyl.com>
 Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] LVM metadata recovery test
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -21,37 +27,11 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: LVM general discussion and development <linux-lvm@redhat.com>
+To: linux-lvm@redhat.com
 
-Alejandro Alfonso wrote:
-> Hi everybody!
-> 
-> we only want to use LVM with one Logical volume, and want to use the
-> 100% of available space.
-> is there any way to create it? Look:
-> 
-> acrol ~ # vgdisplay
->   --- Volume group ---
->   VG Name               mirror
-> [...]
->   VG Size               232.88 GB
->   PE Size               32.00 MB
->   Total PE              7452
->   Alloc PE / Size       7452 / 232.88 GB
->   Free  PE / Size       0 / 0
-> [...]
-> 
-> acrol ~ # lvcreate -L232.88G -nlv00 mirrorPoe
->   Rounding up size to full physical extent 232.91 GB
->   Insufficient free extents (7452) in volume group mirrorPoe: 7453 required
-> 
-> How to use all the 7452 PE? Thanks in advance
+Hi all,
 
-lvcreate -l7452 -nlv00 mirrorPoe
+Does anybody know how to artificially injure VG metadatata ?
+The purpose is to prove LVM recovery capabilities.
 
-see man lvcreate
-
-
--- 
-
-patrick
+IDima
