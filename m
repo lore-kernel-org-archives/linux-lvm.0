@@ -1,19 +1,20 @@
-Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id k21FWB112267
-	for <linux-lvm@redhat.com>; Wed, 1 Mar 2006 10:32:11 -0500
-Received: from mail.telecyl.com (www.comarcasdeinterior.com [212.22.34.136])
-	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id k21FW742018458
-	for <linux-lvm@redhat.com>; Wed, 1 Mar 2006 10:32:07 -0500
-Message-ID: <4405BE75.5040401@telecyl.com>
-Date: Wed, 01 Mar 2006 16:32:05 +0100
-From: Alejandro Alfonso <alejandro.alfonso@telecyl.com>
+Received: from mx2.redhat.com (mx2.redhat.com [10.255.15.25])
+	by int-mx2.corp.redhat.com (8.11.6/8.11.6) with ESMTP id k22HxeQ22405
+	for <linux-lvm@redhat.com>; Thu, 2 Mar 2006 12:59:40 -0500
+Received: from bluewhale.planbit.co.uk (82-71-36-240.dsl.in-addr.zen.co.uk
+	[82.71.36.240])
+	by mx2.redhat.com (8.12.11/8.12.11) with ESMTP id k22Hxcl0015405
+	for <linux-lvm@redhat.com>; Thu, 2 Mar 2006 12:59:38 -0500
+Received: from wolverine (unknown [192.168.0.5])
+	by bluewhale.planbit.co.uk (Postfix) with ESMTP id D241F12ED4
+	for <linux-lvm@redhat.com>; Thu,  2 Mar 2006 17:58:20 +0000 (GMT)
+From: "Roger Lucas" <roger@planbit.co.uk>
+Date: Thu, 2 Mar 2006 17:58:20 -0000
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] Create a Logical volume with 100% of Volume groups
-	size?
-References: <44059BAB.6020307@telecyl.com> <44059FE3.9020205@redhat.com>
-In-Reply-To: <44059FE3.9020205@redhat.com>
-Content-Type: multipart/alternative;
-	boundary="------------080508070701060101040902"
+Content-Transfer-Encoding: 7bit
+In-Reply-To: <4405BE75.5040401@telecyl.com>
+Message-Id: <20060302175820.D241F12ED4@bluewhale.planbit.co.uk>
+Subject: [linux-lvm] Flushing a device
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -24,419 +25,35 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="us-ascii"
+To: 'LVM general discussion and development' <linux-lvm@redhat.com>
 
-This is a multi-part message in MIME format.
---------------080508070701060101040902
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Hi,
 
-Thanks Patrick!
+I have a question regarding how to ensure that all data is flushed to a
+logical volume before a snapshot is taken.  The exact scenario is as
+follows:
 
-promise i've read the man but dosen't understand Logical Extents concept :)
+I have the logical volume "/dev/mapper/userfiles" which is formatted with
+Reiser3.  The volume has been created using "dmsetup ... crypt ..." on top
+of a logical volume "/dev/storage/cryptdisk".
 
-Best regards!
->> we only want to use LVM with one Logical volume, and want to use the
->> 100% of available space.
->> is there any way to create it? Look:
->>
->> acrol ~ # vgdisplay
->>   --- Volume group ---
->>   VG Name               mirror
->> [...]
->>   VG Size               232.88 GB
->>   PE Size               32.00 MB
->>   Total PE              7452
->>   Alloc PE / Size       7452 / 232.88 GB
->>   Free  PE / Size       0 / 0
->> [...]
->>
->> acrol ~ # lvcreate -L232.88G -nlv00 mirrorPoe
->>   Rounding up size to full physical extent 232.91 GB
->>   Insufficient free extents (7452) in volume group mirrorPoe: 7453 requi=
-red
->>
->> How to use all the 7452 PE? Thanks in advance
->>    =20
->
-> lvcreate -l7452 -nlv00 mirrorPoe
->
-> see man lvcreate
->  =20
+My aim is to be able to write a set of files to the "/dev/mapper/userfiles"
+volume, then take a snapshot of the "/dev/storage/cryptdisk" as a backup,
+knowing that the contents of the backup are encrypted.
 
---=20
-------------------------------------------------------------------------
-=20
-*       Alejandro Alfonso Fern=EF=BF=BDndez
-      Dpto de Sistemas. =EF=BF=BDrea Corporativa *
-alejandro.alfonso@telecyl.com <mailto:alejandro.alfonso@telecyl.com>
-http://www.telecyl.com/
-=20
-Proci=EF=BF=BDn 7, Portales 1-2 Edificio Am=EF=BF=BDrica II
-28023 Madrid
-Tfn: 91 452 18 00 - Fax: 91 452 18 08 	Juan Garc=EF=BF=BDa Hortelano, 43
-Edificio Telecyl
-47014 Valladolid
-Tfn: 983 428 200 - Fax: 983 428 223
+I don't have a problem setting up the above scenario or creating the
+snapshot volume, but I want to be sure that the files I have written will be
+in the backup.  My concern is that if all file writes have not been flushed
+through all the layers of LVM then I will not get all the files in the
+snapshot of then encrypted volume.  I have tried issuing the "sync" command,
+but I am not confident that this has worked.
 
-------------------------------------------------------------------------
+Is it necessary to forcibly flush the data through each layer of the above
+volume "stack" so that I know it is all on the snapshot, or is this taken
+care of automatically when the snapshot command is issued and I am just
+being paranoid...
 
---------------080508070701060101040902
-Content-Type: multipart/related;
-	boundary="------------000809030707070809050100"
+Thanks,
 
-
---------------000809030707070809050100
-Content-Type: text/html; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
-<html>
-<head>
-  <meta content="text/html;charset=ISO-8859-1" http-equiv="Content-Type">
-</head>
-<body bgcolor="#ffffff" text="#333333">
-Thanks Patrick!<br>
-<br>
-promise i've read the man but dosen't understand Logical Extents
-concept :)<br>
-<br>
-Best regards!<br>
-<blockquote cite="mid44059FE3.9020205@redhat.com" type="cite">
-  <blockquote type="cite">
-    <pre wrap="">we only want to use LVM with one Logical volume, and want to use the
-100% of available space.
-is there any way to create it? Look:
-
-acrol ~ # vgdisplay
-  --- Volume group ---
-  VG Name               mirror
-[...]
-  VG Size               232.88 GB
-  PE Size               32.00 MB
-  Total PE              7452
-  Alloc PE / Size       7452 / 232.88 GB
-  Free  PE / Size       0 / 0
-[...]
-
-acrol ~ # lvcreate -L232.88G -nlv00 mirrorPoe
-  Rounding up size to full physical extent 232.91 GB
-  Insufficient free extents (7452) in volume group mirrorPoe: 7453 required
-
-How to use all the 7452 PE? Thanks in advance
-    </pre>
-  </blockquote>
-  <pre wrap=""><!---->
-lvcreate -l7452 -nlv00 mirrorPoe
-
-see man lvcreate
-  </pre>
-</blockquote>
-<br>
-<div class="moz-signature">-- <br>
-<hr><img src="cid:part1.07070802.05000204@telecyl.com">
-<table>
-  <tbody>
-    <tr>
-      <td style="font-size: 10px;">&nbsp;</td>
-    </tr>
-    <tr>
-      <td style="font-size: 12px; font-family: Trebuchet MS;"
- width="50%"> <b> &nbsp; &nbsp; &nbsp; Alejandro Alfonso Fern&aacute;ndez <br>
-&nbsp; &nbsp; &nbsp; Dpto de Sistemas. &Aacute;rea Corporativa </b>
-      </td>
-      <td style="font-size: 12px; font-family: Trebuchet MS;"
- width="50%"> <a href="mailto:alejandro.alfonso@telecyl.com">alejandro.alfonso@telecyl.com</a>
-      <br>
-      <a href="http://www.telecyl.com/">http://www.telecyl.com/</a>
-      </td>
-    </tr>
-    <tr>
-      <td style="font-size: 10px;">&nbsp;</td>
-    </tr>
-    <tr>
-      <td style="font-size: 12px; font-family: Trebuchet MS;"
- width="50%"> Proci&oacute;n 7, Portales 1-2 Edificio Am&eacute;rica II <br>
-28023 Madrid <br>
-Tfn: 91 452 18 00 - Fax: 91 452 18 08
-      </td>
-      <td style="font-size: 12px; font-family: Trebuchet MS;"
- width="50%"> Juan Garc&iacute;a Hortelano, 43 Edificio Telecyl <br>
-47014 Valladolid <br>
-Tfn: 983 428 200 - Fax: 983 428 223
-      </td>
-    </tr>
-  </tbody>
-</table>
-<hr>
-</div>
-</body>
-</html>
-
---------------000809030707070809050100
-Content-Type: image/jpeg;
- name="logo.jpg"
-Content-Transfer-Encoding: base64
-Content-ID: <part1.07070802.05000204@telecyl.com>
-Content-Disposition: inline;
- filename="logo.jpg"
-
-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
-66bd77ca679P6dX6TGyLbMhn+DfjBc76w2/Wdmc3plTry9rgxjGPo2xuk54bs9Rv/cz+e3+z
-/gl48klzV+3i4t+LTh+av67e+FXx8xw8H80eL3eL/m8P/OfdPqL0n6w/tHqfWet0Mwh1AiMV
-tdbHFzXus9R3pbnsrbPp/pX+rlfz13+ks6rqfSsLqeOaMutr4B9O0ta59ZI2+pQ61lnp2fy1
-8wpKXLxe50vSuDbwc6NcPh1t+nul9KwulYlWJhs211MFYc47nlrdxb6ljvc/3Peh39A6Nd67
-jh013ZTLK7cmutrLiLWmu532hjfV3va76e5fMqSZ67O/F1XaV0p+msX6v9ExMZ2NRg47arGN
-qtHpM/SNb9EX+39N/bVnEwcLBrNWFj1YtbjuLKWNraXHTdtrDW7tF8uJJHi1u/G1CulP1KzG
-x2epsqY313F10NA3uIDC+3/SO2N2e5Vf2D0OI/Z2LHEejX/5BfMiSQ4ulqNdafp2zonRrXus
-swMZ73mXudSwkk/nOcWe5Tu6V0vIeH5GHRc9rQwOfUxxDR9Fkub9Fsr5fSS9fir0+D9O/sXo
-+z0/sON6e7fs9Fkbo2b9u36ez2omP0zpuLYbcXFposI2l9VbWO2kg7dzGt9vtXy8kl6vFXp8
-H6mbj0NFjW1sDbiXWgNADy4bXOs/f3NH5yrVdF6NS9llOBjV2VkFj2UsaWkcFjmt9q+YkkBd
-aX9Ey39W/i//2f/tDdhQaG90b3Nob3AgMy4wADhCSU0EJQAAAAAAEAAAAAAAAAAAAAAAAAAA
-AAA4QklNA+0AAAAAABAASAAAAAEAAgBIAAAAAQACOEJJTQQmAAAAAAAOAAAAAAAAAAAAAD+A
-AAA4QklNBA0AAAAAAAQAAAAeOEJJTQQZAAAAAAAEAAAAHjhCSU0D8wAAAAAACQAAAAAAAAAA
-AQA4QklNBAoAAAAAAAEAADhCSU0nEAAAAAAACgABAAAAAAAAAAI4QklNA/UAAAAAAEgAL2Zm
-AAEAbGZmAAYAAAAAAAEAL2ZmAAEAoZmaAAYAAAAAAAEAMgAAAAEAWgAAAAYAAAAAAAEANQAA
-AAEALQAAAAYAAAAAAAE4QklNA/gAAAAAAHAAAP////////////////////////////8D6AAA
-AAD/////////////////////////////A+gAAAAA/////////////////////////////wPo
-AAAAAP////////////////////////////8D6AAAOEJJTQQIAAAAAAAQAAAAAQAAAkAAAAJA
-AAAAADhCSU0EHgAAAAAABAAAAAA4QklNBBoAAAAAA0kAAAAGAAAAAAAAAAAAAAAiAAAAuAAA
-AAoATABvAGcAbwBfAGcAcgB1AHAAbwAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAA
-AAAAuAAAACIAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAQAAAAAA
-AG51bGwAAAACAAAABmJvdW5kc09iamMAAAABAAAAAAAAUmN0MQAAAAQAAAAAVG9wIGxvbmcA
-AAAAAAAAAExlZnRsb25nAAAAAAAAAABCdG9tbG9uZwAAACIAAAAAUmdodGxvbmcAAAC4AAAA
-BnNsaWNlc1ZsTHMAAAABT2JqYwAAAAEAAAAAAAVzbGljZQAAABIAAAAHc2xpY2VJRGxvbmcA
-AAAAAAAAB2dyb3VwSURsb25nAAAAAAAAAAZvcmlnaW5lbnVtAAAADEVTbGljZU9yaWdpbgAA
-AA1hdXRvR2VuZXJhdGVkAAAAAFR5cGVlbnVtAAAACkVTbGljZVR5cGUAAAAASW1nIAAAAAZi
-b3VuZHNPYmpjAAAAAQAAAAAAAFJjdDEAAAAEAAAAAFRvcCBsb25nAAAAAAAAAABMZWZ0bG9u
-ZwAAAAAAAAAAQnRvbWxvbmcAAAAiAAAAAFJnaHRsb25nAAAAuAAAAAN1cmxURVhUAAAAAQAA
-AAAAAG51bGxURVhUAAAAAQAAAAAAAE1zZ2VURVhUAAAAAQAAAAAABmFsdFRhZ1RFWFQAAAAB
-AAAAAAAOY2VsbFRleHRJc0hUTUxib29sAQAAAAhjZWxsVGV4dFRFWFQAAAABAAAAAAAJaG9y
-ekFsaWduZW51bQAAAA9FU2xpY2VIb3J6QWxpZ24AAAAHZGVmYXVsdAAAAAl2ZXJ0QWxpZ25l
-bnVtAAAAD0VTbGljZVZlcnRBbGlnbgAAAAdkZWZhdWx0AAAAC2JnQ29sb3JUeXBlZW51bQAA
-ABFFU2xpY2VCR0NvbG9yVHlwZQAAAABOb25lAAAACXRvcE91dHNldGxvbmcAAAAAAAAACmxl
-ZnRPdXRzZXRsb25nAAAAAAAAAAxib3R0b21PdXRzZXRsb25nAAAAAAAAAAtyaWdodE91dHNl
-dGxvbmcAAAAAADhCSU0EEQAAAAAAAQEAOEJJTQQUAAAAAAAEAAAAAThCSU0EDAAAAAAIKgAA
-AAEAAACAAAAAGAAAAYAAACQAAAAIDgAYAAH/2P/gABBKRklGAAECAQBIAEgAAP/tAAxBZG9i
-ZV9DTQAC/+4ADkFkb2JlAGSAAAAAAf/bAIQADAgICAkIDAkJDBELCgsRFQ8MDA8VGBMTFRMT
-GBEMDAwMDAwRDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAENCwsNDg0QDg4QFA4ODhQU
-Dg4ODhQRDAwMDAwREQwMDAwMDBEMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwM/8AAEQgA
-GACAAwEiAAIRAQMRAf/dAAQACP/EAT8AAAEFAQEBAQEBAAAAAAAAAAMAAQIEBQYHCAkKCwEA
-AQUBAQEBAQEAAAAAAAAAAQACAwQFBgcICQoLEAABBAEDAgQCBQcGCAUDDDMBAAIRAwQhEjEF
-QVFhEyJxgTIGFJGhsUIjJBVSwWIzNHKC0UMHJZJT8OHxY3M1FqKygyZEk1RkRcKjdDYX0lXi
-ZfKzhMPTdePzRieUpIW0lcTU5PSltcXV5fVWZnaGlqa2xtbm9jdHV2d3h5ent8fX5/cRAAIC
-AQIEBAMEBQYHBwYFNQEAAhEDITESBEFRYXEiEwUygZEUobFCI8FS0fAzJGLhcoKSQ1MVY3M0
-8SUGFqKygwcmNcLSRJNUoxdkRVU2dGXi8rOEw9N14/NGlKSFtJXE1OT0pbXF1eX1VmZ2hpam
-tsbW5vYnN0dXZ3eHl6e3x//aAAwDAQACEQMRAD8A3frJ9Z3ZGRfh0ZlnT+mYdhoy8rGAdl5F
-7QHX4XTt3tx68Rj/ANbzX/Qu9Omv/hc71fqCzqTQcbMtggO6q7IyfU38btL25W3d9Paz6f8A
-gVhdV61bgUdDrtx6siypt+ZlnIBLbLrsq9uZi2M0btpvo/8APX/XNOzrbnfWcdS+wVNe28N+
-yur90h+3c9s/8of8Lt9lyXMyy4eEiQhCRqPD80uH5zN0fh3LctzMZAwnky44mU7lHHjE5/zM
-Mf8Agx+eb0f1f+sNVbm1V5d+d019jKg/MH61jPuPp4rb7W/0vDyrv0NV/wDP493p+vZbVZ+r
-dgvKvqn1g9T6/wBYx3YNdFedjXuayppBoFZ0Yfzfe97fVfsZ+t/zfpru+s9SzcfqGDg4+Ti4
-X2mm+6y/LYbBNLsWttNTG5GH7n/a3P8A5z/BJ5x5IkRyVx9eH5WhknhlMywcQxGuEZPnif0o
-/wCM7SS5HpPXfrN1hhdhuwW2UUY9tlT67Itda+9r/TyGZB+zV+nj/ov0GWi2fW24dOovqdQ/
-KfkZtdlGu4V41fUbaD6Qs9Rj3OwMf1f69iXtyuuzHxDd6lJcW/61dXoZjh+Z07IdmUVWiyut
-zW47rMjBwnHIZ9su9aprOous/nMX+jq7R1L6wdRx+s9PwcnCs6jhmpmJnVtcyn9MxtrnWVep
-1D9JR+k2e+zf+j/RJe3Lf+X7qeIPTpLg+jdGvdb1PJu631W79i5hZXW7KPp2tpqoytuSza7c
-22x9jLNuz9CuXx+r9TzsduZk9Uu9fIBseK+vY+G1pd7tjMB9NjsXZ/onPTxhu6kNPoji8H2R
-Jch9W/rN03G/a9XV+rUstq6nktpryshoe2luwVNqba/f6P0vT2LD+s/1mv6l1TEbg5luL0yz
-CblUtGYzpT7HPtuo9R9+XU99jNlP6Ojb/wB2E0YpGXD26q4tLfS0l5dR1LIGHi4VvWrcHGz8
-415ee7qdWc+uqqn1/Tpz62VVYHr2+z/Sf9a/RrapwMV1OU36u/WbJ6v1I1NNeNb1BtzQ1ttN
-tj2tq2ure5rPQ9R3s/Ten/hEJ4+GJN3V0AN1+Mcc4xJEBIiJlL5YcX6Unt0lwuC7qfqdRux8
-a3Cory8nJ6lacv1YuGO9v2emtraf0LX202fn/wDgLFodJ+ufQMb6tdOuzep1X5bcXHF9TbRd
-kutcytj2mhjn5Nl/rO/Se3f/AKRNiOIXGyL4dqX5cUsUhGfDxVxERlHJw/4UOL+8/wD/0NL6
-7dA+sGJk0dU6JWM3Fxr7MsYZrbe+q+8tdkPrpt3vtxrrv0/p1fpMbItsyGf4N+MFzvrDb9Z2
-ZzemVOvL2uDGMY+jbG6Tnhuz1G/9zP57f7P+CXjySXNX7eLi34tOH5q/rt74VfHzHDwfzR4v
-d4v+bw/8590+ovSfrD+0ep9Z63QzCHUCIxW11scXNe6z1Helueyts+n+lf6uV/PXf6Szqup9
-Kwup45oy62vgH07S1rn1kjb6lDrWWenZ/LXzCkpcvF7nS9K4NvBzo1w+HW36e6X0rC6ViVYm
-GzbXUwVhzjueWt3FvqWO9z/c96Hf0Do13ruOHTXdlMsrtya62suItaa7nfaGN9Xe9rvp7l8y
-pJnrs78XVdpXSn6axfq/0TExnY1GDjtqsY2q0ekz9I1v0Rf7f039tWcTBwsGs1YWPVi1uO4s
-pY2tpcdN22sNbu0Xy4kkeLW78bUK6U/UrMbHZ6mypjfXcXXQ0De4gML7f9I7Y3Z7lV/YPQ4j
-9nYscR6Nf/kF8yJJDi6Wo11p+nbOidGte6yzAxnveZe51LCST+c5xZ7lO7pXS8h4fkYdFz2t
-DA59THENH0WS5v0Wyvl9JL1+KvT4P07+xej7PT+w43p7t+z0WRujZv27fp7PaiY/TOm4thtx
-cWmiwjaX1VtY7aSDt3Ma32+1fLySXq8VenwfqZuPQ0WNbWwNuJdaA0APLhtc6z9/c0fnKtV0
-Xo1L2WU4GNXZWQWPZSxpaRwWOa32r5iSQF1pf0TLf1b+L//ZOEJJTQQhAAAAAABVAAAAAQEA
-AAAPAEEAZABvAGIAZQAgAFAAaABvAHQAbwBzAGgAbwBwAAAAEwBBAGQAbwBiAGUAIABQAGgA
-bwB0AG8AcwBoAG8AcAAgADcALgAwAAAAAQA4QklNBAYAAAAAAAcABAEBAAEBAP/hEkhodHRw
-Oi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvADw/eHBhY2tldCBiZWdpbj0n77u/JyBpZD0nVzVN
-ME1wQ2VoaUh6cmVTek5UY3prYzlkJz8+Cjw/YWRvYmUteGFwLWZpbHRlcnMgZXNjPSJDUiI/
-Pgo8eDp4YXBtZXRhIHhtbG5zOng9J2Fkb2JlOm5zOm1ldGEvJyB4OnhhcHRrPSdYTVAgdG9v
-bGtpdCAyLjguMi0zMywgZnJhbWV3b3JrIDEuNSc+CjxyZGY6UkRGIHhtbG5zOnJkZj0naHR0
-cDovL3d3dy53My5vcmcvMTk5OS8wMi8yMi1yZGYtc3ludGF4LW5zIycgeG1sbnM6aVg9J2h0
-dHA6Ly9ucy5hZG9iZS5jb20vaVgvMS4wLyc+CgogPHJkZjpEZXNjcmlwdGlvbiBhYm91dD0n
-dXVpZDowMTAwZGVlMy03NjVkLTExZDgtODdkYy1mMGUzY2Q5NTY3NTEnCiAgeG1sbnM6eGFw
-TU09J2h0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9tbS8nPgogIDx4YXBNTTpEb2N1bWVu
-dElEPmFkb2JlOmRvY2lkOnBob3Rvc2hvcDowMTAwZGVlMC03NjVkLTExZDgtODdkYy1mMGUz
-Y2Q5NTY3NTE8L3hhcE1NOkRvY3VtZW50SUQ+CiA8L3JkZjpEZXNjcmlwdGlvbj4KCjwvcmRm
-OlJERj4KPC94OnhhcG1ldGE+CiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-CiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAog
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgIAo8P3hwYWNrZXQgZW5kPSd3Jz8+/+4AIUFkb2JlAGQAAAAAAQMAEAMCAwYA
-AAAAAAAAAAAAAAD/2wCEAAYEBAQFBAYFBQYJBgUGCQsIBgYICwwKCgsKCgwQDAwMDAwMEAwM
-DAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwBBwcHDQwNGBAQGBQODg4UFA4ODg4UEQwMDAwM
-EREMDAwMDAwRDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDP/CABEIACIAuAMBEQACEQED
-EQH/xADUAAEAAgIDAQAAAAAAAAAAAAAABQYEBwECCAMBAQACAwEBAAAAAAAAAAAAAAADBAEC
-BQYHEAAABgIBAwQCAgMAAAAAAAABAgMEBQYABxESEwgQQCEzMDEyFxQVNREAAgIBAwIEAgUK
-BwEAAAAAAQIDBAUAERITBjEiMkIhFEFikiMzEEBRcYFSchU1B2GRoYLCQzRFEgABAgIGBQcE
-EwAAAAAAAAABAAIREiEiMkJSAxAxQYITQPBRYnKSwiMzQwQgMGFxkcHxotLi8lNjc4PD0zSE
-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
-p8P/AKX1/wDjq1/4PUP6d+38XS+Hh7fD9n5p/9k=
---------------000809030707070809050100--
-
---------------080508070701060101040902--
+Roger.
