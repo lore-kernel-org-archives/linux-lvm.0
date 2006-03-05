@@ -1,29 +1,18 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id k25Egi105097
-	for <linux-lvm@redhat.com>; Sun, 5 Mar 2006 09:42:44 -0500
-Received: from mail.volved.com (c-71-192-139-98.hsd1.ma.comcast.net
-	[71.192.139.98])
-	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id k25EgcdQ030561
-	for <linux-lvm@redhat.com>; Sun, 5 Mar 2006 09:42:38 -0500
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.volved.com (Postfix) with ESMTP id 1F0671B8D
-	for <linux-lvm@redhat.com>; Sun,  5 Mar 2006 08:51:58 -0500 (EST)
-Received: from mail.volved.com ([127.0.0.1])
-	by localhost (monolith [127.0.0.1]) (amavisd-new, port 10024) with ESMTP
-	id 20605-06 for <linux-lvm@redhat.com>;
-	Sun,  5 Mar 2006 08:51:50 -0500 (EST)
-Received: from [192.168.0.210] (unknown [192.168.0.210])
-	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by mail.volved.com (Postfix) with ESMTP id A5FA41B8C
-	for <linux-lvm@redhat.com>; Sun,  5 Mar 2006 08:51:50 -0500 (EST)
-Message-ID: <440AECFD.5070305@volved.com>
-Date: Sun, 05 Mar 2006 08:51:57 -0500
-From: Barnaby Claydon <bclaydon@volved.com>
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id k25Gkp124169
+	for <linux-lvm@redhat.com>; Sun, 5 Mar 2006 11:46:51 -0500
+Received: from wproxy.gmail.com (wproxy.gmail.com [64.233.184.203])
+	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id k25GkjTf020096
+	for <linux-lvm@redhat.com>; Sun, 5 Mar 2006 11:46:45 -0500
+Received: by wproxy.gmail.com with SMTP id 70so984173wra
+	for <linux-lvm@redhat.com>; Sun, 05 Mar 2006 08:46:45 -0800 (PST)
+Message-ID: <6dcf0dbc0603050846k2b8bb546r1a3b6f30f541e473@mail.gmail.com>
+Date: Sun, 5 Mar 2006 17:46:45 +0100
+From: "John Smith" <lbalbalba@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] New disk;
-	"Couldn't find uuid" after successful pvcreate&vgextend
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+Subject: [linux-lvm] Boot Mgr support for '/boot' on LVM2 volumes ?
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -34,52 +23,30 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
+Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@redhat.com
 
-Hi all,
+Hi.
 
-I've been successfully running LVM2 (2.01.04) on Debian Sarge 
-(2.6.8-2-686) for months.
 
-As I've done many times before, I added a new disk yesterday. I 
-successfully ran the following, both without error:
+I was wondering if booting from an LVM2 volume group is supposed to be
+supported with lilo (preferred) or GRUB. For example, is it supported
+to use a '/boot' device, when that is a LVM2 volume residing in an
+LVM2 volume group ?
 
-pvcreate -v /dev/hdc
-and
-vgextend -v mono_media /dev/hdc
+Last time I checked, having /boot on a LVM2 device using lilo was
+still considered 'unsupported', or at least considered to be "not a
+very good idea". If I recall correctly, this had something to do with
+the fact that "/boot" had to be located on a linear, contiguous volume
+for bootloaders like lilo and grub to be able to read it.  And that
+with something like LVM, it's on very easy for a volume to be
+non-contiguous.
 
-As standard practice to make sure everything was ok, I then ran:
+Is this still the case with the current release of LVM2, or has this
+been worked-around in current releases ?
 
-vgscan -v
 
-At this point I got several references to "Couldn't find uuid..." 
-repeated with the same uuid several times. At this point it seemed 
-logical to back-out my changes, so I tried to run the following:
+Sincerely,
 
-vgreduce -v mono_media /dev/hdc
 
-Unfortunately this gave the same "Couldn't find uuid..." errors as 
-'vgscan'. As it seemed somewhat logical, I tried running the same 
-'pvcreate' command, again without error:
-
-pvcreate -v /dev/hdc
-
-After 'pvcreate' had finished, I was THEN able to run 'vgreduce' and 
-restore my 'mono_media' VG to working order.
-
-At this point I was a bit baffled, running 'lvmdiskscan' after the 
-initial 'pvcreate' shows the disk as present, but if I reboot after just 
-that first 'pvcreate' step and run 'lvmdisksacn' after the reboot, 
-/dev/hdc isn't shown.
-
-To rule-out a hardware problem I successfully ran 'mkfs.ext3 /dev/hdc' 
-and was able to mount and navigate the volume without errors. Last night 
-I also left 'badblocks -svw /dev/hdc' running which is almost complete 
-and hasn't found any errors yet.
-
-I will reply with full command output once 'badblocks' has finished, but 
-I hope this brief synopsis makes sense.
-
-Thanks everyone!
--Barnaby
+John Smith.
