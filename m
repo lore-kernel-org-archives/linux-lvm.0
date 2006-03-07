@@ -1,20 +1,21 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id k27LDg130783
-	for <linux-lvm@redhat.com>; Tue, 7 Mar 2006 16:13:42 -0500
-Received: from mta4.srv.hcvlny.cv.net (mta4.srv.hcvlny.cv.net [167.206.4.199])
-	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id k27LDaKk010678
-	for <linux-lvm@redhat.com>; Tue, 7 Mar 2006 16:13:36 -0500
-Received: from [127.0.0.1] (ool-182e627d.dyn.optonline.net [24.46.98.125])
-	by mta4.srv.hcvlny.cv.net
-	(Sun Java System Messaging Server 6.2-4.03 (built Sep 22 2005))
-	with ESMTP id <0IVS00GAD0AEAHZ3@mta4.srv.hcvlny.cv.net> for
-	linux-lvm@redhat.com; Tue, 07 Mar 2006 16:13:27 -0500 (EST)
-Date: Tue, 07 Mar 2006 16:13:21 -0500
-From: Brian Weck <bweck@weck.net>
-Message-id: <440DF771.1050506@weck.net>
-MIME-version: 1.0
-Content-transfer-encoding: 7BIT
-Subject: [linux-lvm] snapshot, machine hang and physical memory required
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id k27LLu101506
+	for <linux-lvm@redhat.com>; Tue, 7 Mar 2006 16:21:56 -0500
+Received: from wproxy.gmail.com (wproxy.gmail.com [64.233.184.193])
+	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id k27LLott012560
+	for <linux-lvm@redhat.com>; Tue, 7 Mar 2006 16:21:50 -0500
+Received: by wproxy.gmail.com with SMTP id i24so24361wra
+	for <linux-lvm@redhat.com>; Tue, 07 Mar 2006 13:21:50 -0800 (PST)
+Message-ID: <6dcf0dbc0603071321x5fdaac9dr711212e600c8b8dc@mail.gmail.com>
+Date: Tue, 7 Mar 2006 22:21:49 +0100
+From: "John Smith" <lbalbalba@gmail.com>
+Subject: Re: [linux-lvm] Boot Mgr support for '/boot' on LVM2 volumes ?
+In-Reply-To: <20060307190636.GA12504@percy.comedia.it>
+MIME-Version: 1.0
+Content-Disposition: inline
+References: <6dcf0dbc0603050846k2b8bb546r1a3b6f30f541e473@mail.gmail.com>
+	<20060307190636.GA12504@percy.comedia.it>
+Content-Transfer-Encoding: 8bit
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -25,30 +26,27 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: linux-lvm@redhat.com
+Content-Type: text/plain; charset="us-ascii"
+To: LVM general discussion and development <linux-lvm@redhat.com>
+
+On 3/7/06, Luca Berra <bluca@comedia.it> wrote:
+>
+> Christophe Saout made some patches to lilo to be able to boot from a
+> lvm2 /boot (http://www.saout.de/misc/), this patch has been adopted into
+> major distributions.
+>
+Cool, I didnt know that.
+
+>
+> this is correct, the lv for /boot is to be linear and contiguus, it is
+> user responsability to ensure this.
+>
+UUhhmm...Ok, now im confused. If 'the user' still has to make sure
+that /boot is linear and contiguous, then :
+1.) Exactly, what, does the patch *do* then ?
+2.) How does 'the user' (me, in this case) ensure this ?
 
 
-I seem to be encountering a problem when attempting to create a 
-snapshot. Sometimes the snapshot goes through fine and at other times 
-while executing a 'lvcreate --snapshot ...' it subsequently causes my 
-box to hang completely.
+Sincerely,
 
- From what I've read, this problem seems to be related to having 
-insufficient physical memory.
-
-I can not seem to find where/how to estimate how much memory is required 
-to successfully perform the snapshot. Is the memory required relative to 
-the snapshot size, the size of the target LVM device or both?
-
-I'm running with a 2.6.12 kernel:
-lvm2-2.01.14-2.0.RHEL4
-device-mapper-1.01.04-1.0.RHEL4
-
-As the machine seems to hang when creating a snapshot on "/" (rather the 
-logical volume upon which "/" resides), upon a reboot I do not see 
-anything in my logs related to the problem which further makes the 
-problem harder to debug.
-
-Any help would be greatly appreciated-
-Brian
+John Smith.
