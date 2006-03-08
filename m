@@ -1,21 +1,21 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id k27LLu101506
-	for <linux-lvm@redhat.com>; Tue, 7 Mar 2006 16:21:56 -0500
-Received: from wproxy.gmail.com (wproxy.gmail.com [64.233.184.193])
-	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id k27LLott012560
-	for <linux-lvm@redhat.com>; Tue, 7 Mar 2006 16:21:50 -0500
-Received: by wproxy.gmail.com with SMTP id i24so24361wra
-	for <linux-lvm@redhat.com>; Tue, 07 Mar 2006 13:21:50 -0800 (PST)
-Message-ID: <6dcf0dbc0603071321x5fdaac9dr711212e600c8b8dc@mail.gmail.com>
-Date: Tue, 7 Mar 2006 22:21:49 +0100
-From: "John Smith" <lbalbalba@gmail.com>
-Subject: Re: [linux-lvm] Boot Mgr support for '/boot' on LVM2 volumes ?
-In-Reply-To: <20060307190636.GA12504@percy.comedia.it>
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id k28GMw109853
+	for <linux-lvm@redhat.com>; Wed, 8 Mar 2006 11:22:58 -0500
+Received: from tungsten.msp.technicality.org (tungsten.msp.technicality.org
+	[216.250.164.46])
+	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id k28GMi40016470
+	for <linux-lvm@redhat.com>; Wed, 8 Mar 2006 11:22:49 -0500
+Received: from tungsten.msp.technicality.org (tungsten.msp.technicality.org
+	[216.250.164.46])
+	by tungsten.msp.technicality.org (8.13.4/8.13.4/Debian-3) with ESMTP id
+	k28GMaK1005270
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NOT)
+	for <linux-lvm@redhat.com>; Wed, 8 Mar 2006 10:22:37 -0600
+Date: Wed, 8 Mar 2006 10:22:36 -0600 (CST)
+From: Nate Carlson <natecars@natecarlson.com>
+Message-ID: <Pine.LNX.4.63.0603081020340.848@tungsten.msp.technicality.org>
 MIME-Version: 1.0
-Content-Disposition: inline
-References: <6dcf0dbc0603050846k2b8bb546r1a3b6f30f541e473@mail.gmail.com>
-	<20060307190636.GA12504@percy.comedia.it>
-Content-Transfer-Encoding: 8bit
+Subject: [linux-lvm] Problem creating snapshot with 2.6.15, lvm2
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -26,27 +26,30 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: TEXT/PLAIN; charset="us-ascii"; format="flowed"
+Content-Transfer-Encoding: 7bit
+To: linux-lvm@redhat.com
 
-On 3/7/06, Luca Berra <bluca@comedia.it> wrote:
->
-> Christophe Saout made some patches to lilo to be able to boot from a
-> lvm2 /boot (http://www.saout.de/misc/), this patch has been adopted into
-> major distributions.
->
-Cool, I didnt know that.
+Hey all,
 
->
-> this is correct, the lv for /boot is to be linear and contiguus, it is
-> user responsability to ensure this.
->
-UUhhmm...Ok, now im confused. If 'the user' still has to make sure
-that /boot is linear and contiguous, then :
-1.) Exactly, what, does the patch *do* then ?
-2.) How does 'the user' (me, in this case) ensure this ?
+I'm running lvm2 on a Debian box; LVM utilities version 2.01.04-5 and 
+kernel version 2.6.15. I'm trying to create a snapshot, and get the 
+following error:
 
+fs:~# lvcreate -L1G -s -n Documents-backup /dev/HomeVG/Documents
+   LV HomeVG/Documents-backup in use: not removing
+   Couldn't deactivate new snapshot.
+fs:~# lvscan
+   ACTIVE            '/dev/HomeVG/Documents' [10.00 GB] inherit
+   ACTIVE            '/dev/HomeVG/Documents-backup' [1.00 GB] inherit
 
-Sincerely,
+Any idea what I can do to debug the above error? Documents-backup does not 
+have a valid filesystem structure on it, but I can kill it with a 
+lvremove.
 
-John Smith.
+Thanks!
+
+------------------------------------------------------------------------
+| nate carlson | natecars@natecarlson.com | http://www.natecarlson.com |
+|       depriving some poor village of its idiot since 1981            |
+------------------------------------------------------------------------
