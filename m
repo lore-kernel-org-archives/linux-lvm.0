@@ -1,19 +1,37 @@
-Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id k28Kh6110446
-	for <linux-lvm@redhat.com>; Wed, 8 Mar 2006 15:43:06 -0500
-Received: from percy.comedia.it (percy.comedia.it [212.97.59.71])
-	by mx1.redhat.com (8.12.11/8.12.11) with ESMTP id k28Kh4L9016448
-	for <linux-lvm@redhat.com>; Wed, 8 Mar 2006 15:43:04 -0500
-Date: Wed, 8 Mar 2006 21:43:03 +0100
-From: Luca Berra <bluca@comedia.it>
-Subject: Re: [linux-lvm] Boot Mgr support for '/boot' on LVM2 volumes ?
-Message-ID: <20060308204302.GA25789@percy.comedia.it>
-References: <6dcf0dbc0603050846k2b8bb546r1a3b6f30f541e473@mail.gmail.com>
-	<20060307190636.GA12504@percy.comedia.it>
-	<6dcf0dbc0603071321x5fdaac9dr711212e600c8b8dc@mail.gmail.com>
+Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id k28LFd123008
+	for <linux-lvm@redhat.com>; Wed, 8 Mar 2006 16:15:39 -0500
+Received: from monster.flashfabrik.hu (postfix@flashfabrik.hu [195.70.36.192])
+	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id k28LFVLV029272
+	for <linux-lvm@redhat.com>; Wed, 8 Mar 2006 16:15:32 -0500
+Received: from localhost (localhost [127.0.0.1])
+	by monster.flashfabrik.hu (Postfix) with ESMTP id 27CB9276FF4
+	for <linux-lvm@redhat.com>; Wed,  8 Mar 2006 22:15:30 +0100 (CET)
+Received: from monster.flashfabrik.hu ([127.0.0.1])
+	by localhost (monster.flashfabrik.hu [127.0.0.1]) (amavisd-new,
+	port 10024) with ESMTP id 22901-01 for <linux-lvm@redhat.com>;
+	Wed, 8 Mar 2006 22:15:28 +0100 (CET)
+Received: from mir.fatav.hu (host-87-242-14-86.prtelecom.hu [87.242.14.86])
+	by monster.flashfabrik.hu (Postfix) with ESMTP
+	for <linux-lvm@redhat.com>; Wed,  8 Mar 2006 22:15:28 +0100 (CET)
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mir.fatav.hu (Postfix) with ESMTP id 1692A37194
+	for <linux-lvm@redhat.com>; Wed,  8 Mar 2006 22:15:28 +0100 (CET)
+Received: from mir.fatav.hu ([127.0.0.1])
+	by localhost (mir.fatav.hu [127.0.0.1]) (amavisd-new,
+	port 10024) with ESMTP id 20653-05 for <linux-lvm@redhat.com>;
+	Wed,  8 Mar 2006 22:15:14 +0100 (CET)
+Received: from loon.fatav.hu (loon.fatav.hu [192.168.31.14])
+	by mir.fatav.hu (Postfix) with ESMTP
+	for <linux-lvm@redhat.com>; Wed,  8 Mar 2006 22:15:14 +0100 (CET)
+Subject: Re: [linux-lvm] Problem creating snapshot with 2.6.15, lvm2
+From: Szabo Akos <fonya@fatav.hu>
+In-Reply-To: <Pine.LNX.4.63.0603081020340.848@tungsten.msp.technicality.org>
+References: <Pine.LNX.4.63.0603081020340.848@tungsten.msp.technicality.org>
+Date: Wed, 08 Mar 2006 22:15:14 +0100
+Message-Id: <1141852514.11075.12.camel@loon.fatav.hu>
 Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <6dcf0dbc0603071321x5fdaac9dr711212e600c8b8dc@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -24,39 +42,30 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-On Tue, Mar 07, 2006 at 10:21:49PM +0100, John Smith wrote:
->On 3/7/06, Luca Berra <bluca@comedia.it> wrote:
->>
->> Christophe Saout made some patches to lilo to be able to boot from a
->> lvm2 /boot (http://www.saout.de/misc/), this patch has been adopted into
->> major distributions.
->>
->Cool, I didnt know that.
->
->>
->> this is correct, the lv for /boot is to be linear and contiguus, it is
->> user responsability to ensure this.
->>
->UUhhmm...Ok, now im confused. If 'the user' still has to make sure
->that /boot is linear and contiguous, then :
->1.) Exactly, what, does the patch *do* then ?
-it allows lilo to query device mapper and map a dm device to physical
-sectors on the disk.
->2.) How does 'the user' (me, in this case) ensure this ?
->
-make /boot a separate logical volume than /
-do not extend it.
+On Wed, 2006-03-08 at 10:22 -0600, Nate Carlson wrote:
 
-L.
+> I'm running lvm2 on a Debian box; LVM utilities version 2.01.04-5 and 
+> kernel version 2.6.15. I'm trying to create a snapshot, and get the 
+> following error:
+> 
+> fs:~# lvcreate -L1G -s -n Documents-backup /dev/HomeVG/Documents
+>    LV HomeVG/Documents-backup in use: not removing
+>    Couldn't deactivate new snapshot.
+>
+> Any idea what I can do to debug the above error? Documents-backup does not 
+> have a valid filesystem structure on it, but I can kill it with a 
+> lvremove.
+
+I've this error too, and I update to lvm2-2.02.01-1.2.1 /Fedora version,
+it's meaning 2.02.01/ and usually it's working now for me. I don't dare
+to use it with a productive environment.
 
 -- 
-Luca Berra -- bluca@comedia.it
-        Communication Media & Services S.r.l.
- /"\
- \ /     ASCII RIBBON CAMPAIGN
-  X        AGAINST HTML MAIL
- / \
+Ciao:
+        Fonya
+
+     Ami�ta NT-t install�ltam a porsz�v�mra, semmi sziv�s nincs vele.
+                PGP key ID F86614E5, GPG key ID 83AD9365
