@@ -1,17 +1,14 @@
-Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id k29Cth122954
-	for <linux-lvm@redhat.com>; Thu, 9 Mar 2006 07:55:43 -0500
-Received: from mail.gmx.net (mail.gmx.de [213.165.64.20])
-	by mx1.redhat.com (8.12.11/8.12.11) with SMTP id k29Ctf4Z020644
-	for <linux-lvm@redhat.com>; Thu, 9 Mar 2006 07:55:42 -0500
-Date: Thu, 9 Mar 2006 13:55:36 +0100 (MET)
-From: "Axel Braun" <Axel.Braun@gmx.de>
-MIME-Version: 1.0
-References: <20060309094605.GA3222@redhat.com>
+Date: Thu, 9 Mar 2006 14:31:01 +0100
+From: Heinz Mauelshagen <mauelshagen@redhat.com>
 Subject: Re: [linux-lvm] LVM2 on a USB-disk/ same VG name
-Message-ID: <21543.1141908936@www029.gmx.net>
-Content-Transfer-Encoding: quoted-printable
-Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
+Message-ID: <20060309133101.GB16@redhat.com>
+References: <20060309094605.GA3222@redhat.com>
+	<21543.1141908936@www029.gmx.net>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <21543.1141908936@www029.gmx.net>
+Reply-To: mauelshagen@redhat.com,
+	LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -21,24 +18,42 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="iso-8859-1"
-To: mauelshagen@redhat.com, LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: Axel Braun <Axel.Braun@gmx.de>
+Cc: LVM general discussion and development <linux-lvm@redhat.com>, mauelshagen@redhat.com
 
-Hello Heinz,
+On Thu, Mar 09, 2006 at 01:55:36PM +0100, Axel Braun wrote:
+> Hello Heinz,
+> 
+> > vgrename the active one and adjust /etc/fstab appropriately.
+> > 'vgscan;vgchange -ay' should gain you access to the USB one then.
+> 
+> After deactivation I could change the name, but after the reboot the
+> dm-mapper was still looking for the old volume group 'system'. I tried to
+> boot the rescue system, maybe the inittab needed a refresh - but that did
+> not work.
 
-> vgrename the active one and adjust /etc/fstab appropriately.
-> 'vgscan;vgchange -ay' should gain you access to the USB one then.
+Did you change /etc/fstab ?
 
-After deactivation I could change the name, but after the reboot the
-dm-mapper was still looking for the old volume group 'system'. I tried to
-boot the rescue system, maybe the inittab needed a refresh - but that did
-not work.
-unfortunately Suse's system repair cant deal with LVM, so my best idea was
-to  change everything back.=20
+Heinz
 
-Cheers
-Axel
+> unfortunately Suse's system repair cant deal with LVM, so my best idea was
+> to  change everything back. 
+> 
+> Cheers
+> Axel
+> 
+> -- 
+> Echte DSL-Flatrate dauerhaft f?r 0,- Euro*!
+> "Feel free" mit GMX DSL! http://www.gmx.net/de/go/dsl
 
---=20
-Echte DSL-Flatrate dauerhaft f=EF=BF=BDr 0,- Euro*!
-"Feel free" mit GMX DSL! http://www.gmx.net/de/go/dsl
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+Heinz Mauelshagen                                 Red Hat GmbH
+Consulting Development Engineer                   Am Sonnenhang 11
+Cluster and Storage Development                   56242 Marienrachdorf
+                                                  Germany
+Mauelshagen@RedHat.com                            +49 2626 141200
+                                                       FAX 924446
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
