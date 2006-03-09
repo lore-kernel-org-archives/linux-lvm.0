@@ -1,16 +1,16 @@
 Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id k29Ax1126643
-	for <linux-lvm@redhat.com>; Thu, 9 Mar 2006 05:59:01 -0500
-Received: from web52909.mail.yahoo.com (web52909.mail.yahoo.com
-	[206.190.49.19])
-	by mx1.redhat.com (8.12.11/8.12.11) with SMTP id k29Ax0rV014841
-	for <linux-lvm@redhat.com>; Thu, 9 Mar 2006 05:59:00 -0500
-Message-ID: <20060309105854.80119.qmail@web52909.mail.yahoo.com>
-Date: Thu, 9 Mar 2006 02:58:54 -0800 (PST)
-From: Rik Herrin <rikherrin@yahoo.com>
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id k29Cth122954
+	for <linux-lvm@redhat.com>; Thu, 9 Mar 2006 07:55:43 -0500
+Received: from mail.gmx.net (mail.gmx.de [213.165.64.20])
+	by mx1.redhat.com (8.12.11/8.12.11) with SMTP id k29Ctf4Z020644
+	for <linux-lvm@redhat.com>; Thu, 9 Mar 2006 07:55:42 -0500
+Date: Thu, 9 Mar 2006 13:55:36 +0100 (MET)
+From: "Axel Braun" <Axel.Braun@gmx.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: [linux-lvm] Real-time Snapshot Support Planned?
+References: <20060309094605.GA3222@redhat.com>
+Subject: Re: [linux-lvm] LVM2 on a USB-disk/ same VG name
+Message-ID: <21543.1141908936@www029.gmx.net>
+Content-Transfer-Encoding: quoted-printable
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -21,19 +21,24 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@redhat.com
+Content-Type: text/plain; charset="iso-8859-1"
+To: mauelshagen@redhat.com, LVM general discussion and development <linux-lvm@redhat.com>
 
-Hi,
-   I was wondering if real-time snapshots are planned
-for LVM2.  If so, any idea when they will be
-implemented?  Also, what other features are planned
-for LVM2?  I had read an article some time ago but
-can't recall where I read it.  I checked the LVM2 page
-(http://sources.redhat.com/lvm2/).  Unfortunately, it
-doesn't provide much information.  Thanks for your time.
+Hello Heinz,
 
-__________________________________________________
-Do You Yahoo!?
-Tired of spam?  Yahoo! Mail has the best spam protection around 
-http://mail.yahoo.com 
+> vgrename the active one and adjust /etc/fstab appropriately.
+> 'vgscan;vgchange -ay' should gain you access to the USB one then.
+
+After deactivation I could change the name, but after the reboot the
+dm-mapper was still looking for the old volume group 'system'. I tried to
+boot the rescue system, maybe the inittab needed a refresh - but that did
+not work.
+unfortunately Suse's system repair cant deal with LVM, so my best idea was
+to  change everything back.=20
+
+Cheers
+Axel
+
+--=20
+Echte DSL-Flatrate dauerhaft f=EF=BF=BDr 0,- Euro*!
+"Feel free" mit GMX DSL! http://www.gmx.net/de/go/dsl
