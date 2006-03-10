@@ -1,23 +1,12 @@
-Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id k2ALjS105533
-	for <linux-lvm@redhat.com>; Fri, 10 Mar 2006 16:45:28 -0500
-Received: from rarr.org.uk (213-228-241-254.dsl.prodigynet.co.uk
-	[213.228.241.254])
-	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id k2ALjIem001634
-	for <linux-lvm@redhat.com>; Fri, 10 Mar 2006 16:45:18 -0500
-Received: from rarr.org.uk ([127.0.0.1] helo=192.168.0.6)
-	by rarr.org.uk with esmtp (Exim 4.54) id 1FHpQa-0000z7-Kz
-	for linux-lvm@redhat.com; Fri, 10 Mar 2006 21:45:40 +0000
-Message-ID: <32988.192.168.0.2.1142027140.squirrel@192.168.0.6>
-In-Reply-To: <6c3e3c670603101323s6ccb11f2kfeea93718cfd162a@mail.gmail.com>
-References: <43CE271C.4090308@rarr.org.uk> <43CF4607.70703@rarr.org.uk> 
-	<54841.192.168.0.2.1142022376.squirrel@192.168.0.6>
-	<6c3e3c670603101323s6ccb11f2kfeea93718cfd162a@mail.gmail.com>
-Date: Fri, 10 Mar 2006 21:45:40 -0000 (GMT)
-Subject: Re: [linux-lvm] Disk space reporting inconsistencies
-From: cbolton@rarr.org.uk
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0 (Apple Message framework v746.2)
+Message-Id: <D7950931-6BB6-4FC5-A7E4-3ED09EC2FDA3@terrascale.net>
+Content-Type: multipart/signed; protocol="application/pgp-signature";
+	micalg=pgp-sha1; boundary="Apple-Mail-16-516942532"
+From: AJ Lewis <aj@terrascale.net>
+Date: Fri, 10 Mar 2006 17:21:39 -0600
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] Patch to increase the valid stripe sizes for a striped
+	volume
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -28,142 +17,83 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@redhat.com
+Cc: Alasdair Kergon <agk@redhat.com>
+
+This is an OpenPGP/MIME signed message (RFC 2440 and 3156)
+--Apple-Mail-16-516942532
+Content-Type: multipart/mixed; boundary=Apple-Mail-15-516942093
 
 
-hmm yeah, but this machine doesnt have space for a cdrom to be attached
-nor a floppy drive so how could I resize offline? would there be away?
+--Apple-Mail-15-516942093
+Content-Transfer-Encoding: 7bit
+Content-Type: text/plain;
+	charset=US-ASCII;
+	delsp=yes;
+	format=flowed
 
-On Fri, March 10, 2006 9:23 pm, Chad Rebuck wrote:
-> I am just trying to fix my own problems here so don't expect what I
-> say will fix your troubles...but try running ext2online with -d and -v to
-> get more information.
->
-> have you looked at resize2fs?
->
-> http://www.2robots.com/static/man/index.php/resize2fs
->
->
-> On 3/10/06, cbolton@rarr.org.uk <cbolton@rarr.org.uk> wrote:
->
->> Repling to my own mail here but its on subject.
->>
->>
->> Just added a new drive to the machine, added it to the volume group,
->> moved everything from /dev/hde1 to /dev/hda, removed hde1 from the VG
->> and removed in physicaly from the machine.
->>
->> Great everything went fine, only the new drive is 60gigs so in moving
->> its only used 40gigs.  Not a problem I thought, I'll just extend the
->> logical volume, so I did lvextend and extended it by 20gigs.
->>
->> This seemed to work as well..
->>
->>
->> PV /dev/sda2   VG VolGroup00   lvm2 [68.38 GB / 0    free]
->> PV /dev/sdb    VG VolGroup00   lvm2 [68.50 GB / 0    free]
->> PV /dev/hdc2   VG VolGroup00   lvm2 [37.12 GB / 0    free]
->> PV /dev/hdb1   VG VolGroup00   lvm2 [37.22 GB / 0    free]
->> PV /dev/hdd1   VG VolGroup00   lvm2 [37.22 GB / 0    free]
->> PV /dev/hda    VG VolGroup00   lvm2 [57.25 GB / 0    free]
->> Total: 6 [305.69 GB] / in use: 6 [305.69 GB] / in no VG: 0 [0   ]
->>
->>
->> but df -h says...
->>
->> Filesystem            Size  Used Avail Use% Mounted on
->> /dev/mapper/VolGroup00-LogVol00
->> 265G  248G  6.8G  98% /
->> /dev/sda1              99M   73M   22M  78% /boot
->> /dev/shm              252M     0  252M   0% /dev/shm
->>
->>
->> I thought I'd need to extend the file system so i did ext2online
->> /dev/VolGroup00/LogVol00 but its says...
->>
->>
->> ext2online v1.1.18 - 2001/03/18 for EXT2FS 0.5b ext2online: ext2_ioctl:
->> No space left on device
->>
->>
->> ext2online: unable to resize /dev/mapper/VolGroup00-LogVol00
->>
->>
->>
->> Any ideas? I'm plain out.
->>
->>
->> Cheers,
->> Chris
->>
->>
->> On Thu, January 19, 2006 7:55 am, Chris bolton wrote:
->>
->>> nevermind got it sussed, lvm is using 10^9 for a gigabyte while df is
->>>  using 1024^3
->>>
->>> well it would appear that way anyway.
->>>> Hi,
->>>>
->>>>
->>>>
->>>> just added a new PV to my VG but to me there seems to be an
->>>> inconsistency between what lvm says is the disk space and what df
->>>> says.
->>>>
->>>>
->>>> pvscan PV /dev/sda2   VG VolGroup00   lvm2 [68.38 GB / 0    free] PV
->>>> /dev/sdb    VG VolGroup00   lvm2 [68.50 GB / 0    free]
->>>> PV /dev/hdc2   VG VolGroup00   lvm2 [37.12 GB / 0    free]
->>>> PV /dev/hdb1   VG VolGroup00   lvm2 [37.22 GB / 0    free]
->>>> PV /dev/hdd1   VG VolGroup00   lvm2 [37.22 GB / 0    free]
->>>> PV /dev/hde1   VG VolGroup00   lvm2 [37.25 GB / 0    free]
->>>> Total: 6 [285.69 GB] / in use: 6 [285.69 GB] / in no VG: 0 [0   ]
->>>>
->>>>
->>>>
->>>> df -h /dev/mapper/VolGroup00-LogVol00   265G  227G   28G  90% /
->>>>
->>>>
->>>> I tried resizing the filesystem but it just says this..
->>>>
->>>>
->>>>
->>>> ext2online  /dev/VolGroup00/LogVol00 ext2online v1.1.18 -
->>>> 2001/03/18 for
->>>> EXT2FS 0.5b
->>>> ext2online: ext2_ioctl: No space left on device
->>>>
->>>>
->>>>
->>>> ext2online: unable to resize /dev/mapper/VolGroup00-LogVol00
->>>>
->>>>
->>>>
->>>> Am I missing something obvious here? or have I ballsed it up along
->>>> the way?
->>>>
->>>> Cheers,
->>>> Chris.
->>>>
->>>>
->>>>
->>>> _______________________________________________
->>>> linux-lvm mailing list linux-lvm@redhat.com
->>>> https://www.redhat.com/mailman/listinfo/linux-lvm
->>>> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
->>>
->>> _______________________________________________
->>> linux-lvm mailing list linux-lvm@redhat.com
->>> https://www.redhat.com/mailman/listinfo/linux-lvm
->>> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
->>>
->>
->>
->> _______________________________________________
->> linux-lvm mailing list linux-lvm@redhat.com
->> https://www.redhat.com/mailman/listinfo/linux-lvm
->> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
->>
->
+Hey all,
+
+The following patch increases the maximum stripe size that an LV can  
+have from 512k to 128MB.  Would it be possible to apply this to the  
+tree (or something like this)?
+
+128MB is fairly arbitrary, but for the application I'm using this  
+for, I'd like to be able to have the stripe size at least that big.    
+If there is a reason we can't have the stripe size that large, it  
+would be helpful to know why - it doesn't appear to be a device- 
+mapper limitation - at least not an obvious one.
+
+Thanks,
+AJ Lewis
+
+--Apple-Mail-15-516942093
+Content-Transfer-Encoding: 7bit
+Content-Type: application/octet-stream; x-unix-mode=0644;
+	name="increase_stripe_size.patch"
+Content-Disposition: attachment;
+	filename=increase_stripe_size.patch
+
+diff -Nurp --exclude '*~' LVM2.2.01.15/lib/metadata/metadata.h LVM2.2.01.15.new/lib/metadata/metadata.h
+--- LVM2.2.01.15/lib/metadata/metadata.h	2005-08-14 18:18:28.000000000 -0500
++++ LVM2.2.01.15.new/lib/metadata/metadata.h	2006-03-10 17:18:52.000000000 -0600
+@@ -30,7 +30,7 @@
+ #define SECTOR_SHIFT 9L
+ #define SECTOR_SIZE ( 1L << SECTOR_SHIFT )
+ #define STRIPE_SIZE_MIN ( getpagesize() >> SECTOR_SHIFT)	/* PAGESIZE in sectors */
+-#define STRIPE_SIZE_MAX ( 512L * 1024L >> SECTOR_SHIFT)	/* 512 KB in sectors */
++#define STRIPE_SIZE_MAX ( 131072L * 1024L >> SECTOR_SHIFT)	/* 128 MB in sectors */
+ #define PV_MIN_SIZE ( 512L * 1024L >> SECTOR_SHIFT)	/* 512 KB in sectors */
+ #define PE_ALIGN (65536UL >> SECTOR_SHIFT)	/* PE alignment */
+ #define MAX_RESTRICTED_LVS 255	/* Used by FMT_RESTRICTED_LVIDS */
+diff -Nurp --exclude '*~' LVM2.2.01.15/man/lvcreate.8 LVM2.2.01.15.new/man/lvcreate.8
+--- LVM2.2.01.15/man/lvcreate.8	2005-09-29 10:50:51.000000000 -0500
++++ LVM2.2.01.15.new/man/lvcreate.8	2006-03-10 17:05:38.000000000 -0600
+@@ -57,7 +57,7 @@ the logical volume.
+ .I \-I, \-\-stripesize StripeSize
+ Gives the number of kilobytes for the granularity of the stripes.
+ .br
+-StripeSize must be 2^n (n = 2 to 9)
++StripeSize must be 2^n (n = 2 to 17)
+ .TP
+ .I \-l, \-\-extents LogicalExtentsNumber
+ Gives the number of logical extents to allocate for the new
+
+--Apple-Mail-15-516942093--
+
+--Apple-Mail-16-516942532
+content-type: application/pgp-signature; x-mac-type=70674453;
+	name=PGP.sig
+content-description: This is a digitally signed message part
+content-disposition: inline; filename=PGP.sig
+content-transfer-encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.1 (Darwin)
+
+iD8DBQFEEgoDn95okVnkz6cRAmt3AKCE7vl0h8emxdMxE0L//trTRsNMogCfZAEM
+R7xhHEGBjSYMdb6mHTDuKig=
+=NIjE
+-----END PGP SIGNATURE-----
+
+--Apple-Mail-16-516942532--
