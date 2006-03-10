@@ -1,20 +1,21 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id k2AKYJ115978
-	for <linux-lvm@redhat.com>; Fri, 10 Mar 2006 15:34:19 -0500
-Received: from wproxy.gmail.com (wproxy.gmail.com [64.233.184.206])
-	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id k2AKYD0k017487
-	for <linux-lvm@redhat.com>; Fri, 10 Mar 2006 15:34:13 -0500
-Received: by wproxy.gmail.com with SMTP id 71so159037wri
-	for <linux-lvm@redhat.com>; Fri, 10 Mar 2006 12:34:13 -0800 (PST)
-Message-ID: <e9fa0e520603101234g70c8fc37yb1beadafccf3e6d3@mail.gmail.com>
-Date: Fri, 10 Mar 2006 15:34:10 -0500
-From: "David Chin" <david.w.h.chin@gmail.com>
-In-Reply-To: <e9fa0e520603101209y3e0e6aa5y2dedde8bafa7f968@mail.gmail.com>
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id k2AL9g127158
+	for <linux-lvm@redhat.com>; Fri, 10 Mar 2006 16:09:42 -0500
+Received: from rarr.org.uk (213-228-241-254.dsl.prodigynet.co.uk
+	[213.228.241.254])
+	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id k2AL9YBi025485
+	for <linux-lvm@redhat.com>; Fri, 10 Mar 2006 16:09:35 -0500
+Received: from rarr.org.uk ([127.0.0.1] helo=192.168.0.6)
+	by rarr.org.uk with esmtp (Exim 4.54) id 1FHoBk-0000mk-4g
+	for linux-lvm@redhat.com; Fri, 10 Mar 2006 20:26:16 +0000
+Message-ID: <54841.192.168.0.2.1142022376.squirrel@192.168.0.6>
+In-Reply-To: <43CF4607.70703@rarr.org.uk>
+References: <43CE271C.4090308@rarr.org.uk> <43CF4607.70703@rarr.org.uk>
+Date: Fri, 10 Mar 2006 20:26:16 -0000 (GMT)
+Subject: Re: [linux-lvm] Disk space reporting inconsistencies
+From: cbolton@rarr.org.uk
 MIME-Version: 1.0
-Content-Disposition: inline
-References: <e9fa0e520603101209y3e0e6aa5y2dedde8bafa7f968@mail.gmail.com>
 Content-Transfer-Encoding: 8bit
-Subject: [linux-lvm] Re: Getting (non-root) LV to be mounted at boot
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -26,13 +27,99 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@redhat.com
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-Oops. Missed some crucial info.
+Repling to my own mail here but its on subject.
 
-OS: RHEL 4AS
-Kernel version: kernel-smp-2.6.9-34.EL
-LVM version: lvm2-2.02.01-1.3.RHEL4
+Just added a new drive to the machine, added it to the volume group, moved
+everything from /dev/hde1 to /dev/hda, removed hde1 from the VG and
+removed in physicaly from the machine.
+
+Great everything went fine, only the new drive is 60gigs so in moving its
+only used 40gigs.  Not a problem I thought, I'll just extend the logical
+volume, so I did lvextend and extended it by 20gigs.
+
+This seemed to work as well..
+
+  PV /dev/sda2   VG VolGroup00   lvm2 [68.38 GB / 0    free]
+  PV /dev/sdb    VG VolGroup00   lvm2 [68.50 GB / 0    free]
+  PV /dev/hdc2   VG VolGroup00   lvm2 [37.12 GB / 0    free]
+  PV /dev/hdb1   VG VolGroup00   lvm2 [37.22 GB / 0    free]
+  PV /dev/hdd1   VG VolGroup00   lvm2 [37.22 GB / 0    free]
+  PV /dev/hda    VG VolGroup00   lvm2 [57.25 GB / 0    free]
+  Total: 6 [305.69 GB] / in use: 6 [305.69 GB] / in no VG: 0 [0   ]
+
+but df -h says...
+
+Filesystem            Size  Used Avail Use% Mounted on
+/dev/mapper/VolGroup00-LogVol00
+                      265G  248G  6.8G  98% /
+/dev/sda1              99M   73M   22M  78% /boot
+/dev/shm              252M     0  252M   0% /dev/shm
+
+I thought I'd need to extend the file system so i did ext2online
+/dev/VolGroup00/LogVol00 but its says...
+
+ext2online v1.1.18 - 2001/03/18 for EXT2FS 0.5b
+ext2online: ext2_ioctl: No space left on device
+
+ext2online: unable to resize /dev/mapper/VolGroup00-LogVol00
+
+
+Any ideas? I'm plain out.
 
 Cheers,
---Dave
+Chris
+
+On Thu, January 19, 2006 7:55 am, Chris bolton wrote:
+> nevermind got it sussed, lvm is using 10^9 for a gigabyte while df is
+> using 1024^3
+>
+> well it would appear that way anyway.
+>> Hi,
+>>
+>>
+>> just added a new PV to my VG but to me there seems to be an
+>> inconsistency between what lvm says is the disk space and what df says.
+>>
+>>
+>> pvscan PV /dev/sda2   VG VolGroup00   lvm2 [68.38 GB / 0    free]
+>> PV /dev/sdb    VG VolGroup00   lvm2 [68.50 GB / 0    free]
+>> PV /dev/hdc2   VG VolGroup00   lvm2 [37.12 GB / 0    free]
+>> PV /dev/hdb1   VG VolGroup00   lvm2 [37.22 GB / 0    free]
+>> PV /dev/hdd1   VG VolGroup00   lvm2 [37.22 GB / 0    free]
+>> PV /dev/hde1   VG VolGroup00   lvm2 [37.25 GB / 0    free]
+>> Total: 6 [285.69 GB] / in use: 6 [285.69 GB] / in no VG: 0 [0   ]
+>>
+>>
+>> df -h /dev/mapper/VolGroup00-LogVol00   265G  227G   28G  90% /
+>>
+>>
+>> I tried resizing the filesystem but it just says this..
+>>
+>>
+>> ext2online  /dev/VolGroup00/LogVol00 ext2online v1.1.18 - 2001/03/18 for
+>> EXT2FS 0.5b
+>> ext2online: ext2_ioctl: No space left on device
+>>
+>>
+>> ext2online: unable to resize /dev/mapper/VolGroup00-LogVol00
+>>
+>>
+>> Am I missing something obvious here? or have I ballsed it up along the
+>> way?
+>>
+>> Cheers,
+>> Chris.
+>>
+>>
+>> _______________________________________________
+>> linux-lvm mailing list linux-lvm@redhat.com
+>> https://www.redhat.com/mailman/listinfo/linux-lvm
+>> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+>
+> _______________________________________________
+> linux-lvm mailing list linux-lvm@redhat.com
+> https://www.redhat.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+>
