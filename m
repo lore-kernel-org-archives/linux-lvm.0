@@ -1,13 +1,13 @@
-Received: from agk.surrey.redhat.com (agk.surrey.redhat.com [172.16.10.74])
-	by pobox.surrey.redhat.com (8.12.8/8.12.8) with ESMTP id k2GFYfVJ006876
-	for <linux-lvm@redhat.com>; Thu, 16 Mar 2006 15:34:41 GMT
-Received: from agk by agk.surrey.redhat.com with local (Exim 4.34)
-	id 1FJuUr-0005ql-4k
-	for linux-lvm@redhat.com; Thu, 16 Mar 2006 15:34:41 +0000
-Date: Thu, 16 Mar 2006 15:34:41 +0000
-From: Alasdair G Kergon <agk@redhat.com>
-Subject: Re: [linux-lvm] How to use hardware snapshots [was (no subject)]
-Message-ID: <20060316153441.GU25317@agk.surrey.redhat.com>
+Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id k2GHs3121668
+	for <linux-lvm@redhat.com>; Thu, 16 Mar 2006 12:54:03 -0500
+Received: from percy.comedia.it (percy.comedia.it [212.97.59.71])
+	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id k2GHrvwP012264
+	for <linux-lvm@redhat.com>; Thu, 16 Mar 2006 12:53:57 -0500
+Date: Thu, 16 Mar 2006 18:53:56 +0100
+From: Luca Berra <bluca@comedia.it>
+Subject: Re: [linux-lvm] (no subject)
+Message-ID: <20060316175356.GA20437@percy.comedia.it>
 References: <H000007200bf1fff.1142521692.fsu50.nll.se@MHS>
 Mime-Version: 1.0
 Content-Disposition: inline
@@ -22,35 +22,27 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
 Content-Transfer-Encoding: 7bit
-To: LVM general discussion and development <linux-lvm@redhat.com>
+To: linux-lvm@redhat.com
 
 On Thu, Mar 16, 2006 at 04:08:12PM +0100, fredrik.backman@nll.se wrote:
-> Im doing a snapshot (hardware-based in EVA5000) of a LV (lvm2) and i 
-> wonder what is the correct way to use this snapshot? Problem is that 
-> this snapshot has the same ID as the original one. In HP-UX a would do a 
-> vgchgid on this snapshot-LV. Any help would be aprreciated.
+>Hi
+>
+>Im doing a snapshot (hardware-based in EVA5000) of a LV (lvm2) and i 
+>wonder what is the correct way to use this snapshot? Problem is that 
+>this snapshot has the same ID as the original one. In HP-UX a would do a 
+>vgchgid on this snapshot-LV. Any help would be aprreciated.
+>
 
-Firstly your snapshot will be at the PV level not the LV level.
-You must take a hardware snapshot of a complete VG i.e. every PV
-within that VG.   [If that's too much data, use pvmove and vgsplit first.]
+maybe use vgcfgbackup, change the uid and vgcfgrestore?
 
-Current lvm tools can't handle two cloned VGs on the same machine,
-so you have to hide the old one before you can manipulate the new one.
+L.
 
-Make a temporary copy of /etc/lvm/ somewhere.
-Edit lvm.conf there so it filters out everything except your cloned PVs.
-Set the environment variable LVM_SYSTEM_DIR to point to your temporary
-copy of /etc/lvm.  
-
-Run pvchange --uuid on each of the new PVs.
-Run vgchange --uuid on the VG.  Run vgrename to give it a unique name.
-Then remove the LVM_SYSTEM_DIR environment variable and run vgscan
-and you should be able to use both old and new VGs.
-
-[I'm hoping to enhance the tools to simplify this process late next month.]
-
-Alasdair
 -- 
-agk@redhat.com
+Luca Berra -- bluca@comedia.it
+        Communication Media & Services S.r.l.
+ /"\
+ \ /     ASCII RIBBON CAMPAIGN
+  X        AGAINST HTML MAIL
+ / \
