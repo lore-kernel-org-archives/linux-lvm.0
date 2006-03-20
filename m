@@ -1,11 +1,12 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id k2KAeU105207
-	for <linux-lvm@redhat.com>; Mon, 20 Mar 2006 05:40:30 -0500
-From: Urs Thuermann <urs@isnogud.escape.de>
-Date: 20 Mar 2006 11:39:03 +0100
-Message-ID: <m2wtepcse0.fsf@janus.isnogud.escape.de>
-MIME-Version: 1.0
-Subject: [linux-lvm] Reducing size of user space lvm binary
+	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id k2KArp108347
+	for <linux-lvm@redhat.com>; Mon, 20 Mar 2006 05:53:51 -0500
+Date: Mon, 20 Mar 2006 11:52:01 +0100
+From: Per Kristiansen <per@gathering.org>
+Message-ID: <20060320105201.GI17426@gathering.org>
+Mime-Version: 1.0
+Content-Disposition: inline
+Subject: [linux-lvm] Fun with powersurges
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -20,27 +21,35 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-I am currently converting from LVM1 to DM + LVM2.  I have my root fs
-on LVM so I need to load the kernel modules and scan for VGs in initrd
-before mounting the real root device.
+Last night a powersupply in a storage system managed to crash EVERYTHING that was hooked up to
+the same UPS, and all the non-ups'd stuff stayed up.
 
-With LVM1, I had copied liblvm-10.so, vgscan and vgchange to my initrd
-file system.  With LVM2, everything is in one large binary, which
-consumes considerably more space on my initrd, which I'd like to
-reduce.
+the ONLY item that did not survive was a infortrend A16U-G2421 (SATA to SCSI chassi) with 16
+400GB disks (15 in raid5+1 hotspare)
 
-I changed tools/commands.h to only contain vgscan and vgchange, and
-then relinked the lvm binary with
+The G4321 seems to have gotten it's config badly garbled, as it was more or less non existant
+on boot.
 
-    gcc -s -o lvm lvm.o lvmcmdline.o vgchange.o vgscan.o vgmknodes.o \
-        pvmove.o toollib.o polldaemon.o -Wl,--export-dynamic         \
-        -L../lib -L/lib -llvm -ldevmapper -ldl  -rdynamic
+the config was all disks in on large Logical Disk, then split up into 4 smaller logical volumes (we are
+NOT talking LVM yet stay with me)
 
-The size is still 300 kB.  Is there a way to further reduce its size?
+The box then exported these Logical Volumes as normal scsi devices, that I mounted on the fileserver
+and used LVM2 to pull together into on large happy ReiserFS volume. (3.8TB)
 
-Is vgscan required in the initrd?  The man page for vgscan says that
-in LVM2, vgscans take place automatically.  What does this mean?  When
-is the scan done automatically?  Is it done as part of other commands
-like vgchange?
+Now we've just finished a lot of material so I wanted to take a backeup, but it was running at the same time
+everything else crashed..whippy!
 
-urs
+So now I'm trying to find a way to rebuild the config of this box, ive been recommended to just mount the 
+Logical disk and see if I can find any partition data.
+
+I have a vgbackup of the VG that resides on the box.
+
+I have the sizes of the esported Logical Disks.
+
+I NEED a wizard that knows filesystems in and out
+
+And I will pay!
+ 
+-- 
+Per Kristiansen
+per@gathering.org
