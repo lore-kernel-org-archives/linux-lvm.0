@@ -1,17 +1,21 @@
-Received: from agk.surrey.redhat.com (agk.surrey.redhat.com [172.16.10.74])
-	by pobox.surrey.redhat.com (8.12.8/8.12.8) with ESMTP id k2LJORLu023681
-	for <linux-lvm@redhat.com>; Tue, 21 Mar 2006 19:24:27 GMT
-Received: from agk by agk.surrey.redhat.com with local (Exim 4.34)
-	id 1FLmSx-0006oY-Ps
-	for linux-lvm@redhat.com; Tue, 21 Mar 2006 19:24:27 +0000
-Date: Tue, 21 Mar 2006 19:24:27 +0000
-From: Alasdair G Kergon <agk@redhat.com>
-Subject: Re: [linux-lvm] snapshots filling and hanging up processes
-Message-ID: <20060321192427.GO26428@agk.surrey.redhat.com>
-References: <1142966004.18275.35.camel@pc>
-Mime-Version: 1.0
+Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
+	by int-mx1.corp.redhat.com (8.12.11.20060308/8.11.6) with ESMTP id
+	k2LKrMgS007851
+	for <linux-lvm@redhat.com>; Tue, 21 Mar 2006 15:53:22 -0500
+Received: from pproxy.gmail.com (pproxy.gmail.com [64.233.166.183])
+	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id k2LKrG7A026099
+	for <linux-lvm@redhat.com>; Tue, 21 Mar 2006 15:53:17 -0500
+Received: by pproxy.gmail.com with SMTP id 57so2090812pya
+	for <linux-lvm@redhat.com>; Tue, 21 Mar 2006 12:53:16 -0800 (PST)
+Message-ID: <87f94c370603211253l378cae32y1764a3d254afe742@mail.gmail.com>
+Date: Tue, 21 Mar 2006 15:53:16 -0500
+From: "Greg Freemyer" <greg.freemyer@gmail.com>
+Subject: Re: [linux-lvm] Hardware snapshots and LVM2?
+In-Reply-To: <H000007200c27f69.1142968273.fsu50.nll.se@MHS>
+MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <1142966004.18275.35.camel@pc>
+References: <H000007200c27f69.1142968273.fsu50.nll.se@MHS>
+Content-Transfer-Encoding: 8bit
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -23,18 +27,30 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-On Tue, Mar 21, 2006 at 01:33:24PM -0500, Brian J. Murrell wrote:
-> later FC kernel like kernel-2.6.15-1.1833_FC4.x86_64.rpm  or
-> kernel-2.6.15-1.2054_FC5.x86_64.rpm?
- 
-Relevant kernel patches should be going into 2.6.17.
+On 3/21/06, fredrik.backman@nll.se <fredrik.backman@nll.se> wrote:
+> Hi
+>
+> Im doing a snapshot (hardware-based in EVA5000) of a LV
+> (lvm2) and i
+> wonder what is the correct way to use this snapshot?
+> Problem is that
+> this snapshot has the same ID as the original one. In HP-UX
+> a would do a
+> vgchgid on this snapshot-LV. Any help would be aprreciated.
+>
+> Regards Fredrik
 
-Or download from 
-  http://www.kernel.org/pub/linux/kernel/people/agk/patches/2.6/editing/
+I think that is filesystem dependent.
 
-Alasdair
--- 
-agk@redhat.com
+If you happen to be using XFS I believe they have a mount option like
+"-o nouuid".
+
+Do a man mount.xfs to double check.
+
+Greg
+--
+Greg Freemyer
+The Norcross Group
+Forensics for the 21st Century
