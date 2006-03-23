@@ -1,26 +1,22 @@
-Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
+Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
 	by int-mx1.corp.redhat.com (8.12.11.20060308/8.11.6) with ESMTP id
-	k2MJWsUl019065
-	for <linux-lvm@redhat.com>; Wed, 22 Mar 2006 14:32:54 -0500
-Received: from tungsten.msp.technicality.org (tungsten.msp.technicality.org
-	[216.250.164.46])
-	by mx1.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
-	k2MJWrSS021498
-	for <linux-lvm@redhat.com>; Wed, 22 Mar 2006 14:32:53 -0500
-Received: from tungsten.msp.technicality.org (tungsten.msp.technicality.org
-	[216.250.164.46])
-	by tungsten.msp.technicality.org (8.13.4/8.13.4/Debian-3) with ESMTP id
-	k2MJWiEU016473
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NOT)
-	for <linux-lvm@redhat.com>; Wed, 22 Mar 2006 13:32:44 -0600
-Date: Wed, 22 Mar 2006 13:32:44 -0600 (CST)
-From: Nate Carlson <natecars@natecarlson.com>
-Subject: Re: [linux-lvm] Problem creating snapshot with 2.6.15, lvm2
-In-Reply-To: <1141852514.11075.12.camel@loon.fatav.hu>
-Message-ID: <Pine.LNX.4.63.0603221330390.8625@tungsten.msp.technicality.org>
-References: <Pine.LNX.4.63.0603081020340.848@tungsten.msp.technicality.org>
-	<1141852514.11075.12.camel@loon.fatav.hu>
+	k2NGUm4D012596
+	for <linux-lvm@redhat.com>; Thu, 23 Mar 2006 11:30:48 -0500
+Received: from zproxy.gmail.com (zproxy.gmail.com [64.233.162.193])
+	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id k2NGUgQr023173
+	for <linux-lvm@redhat.com>; Thu, 23 Mar 2006 11:30:42 -0500
+Received: by zproxy.gmail.com with SMTP id 8so508551nzo
+	for <linux-lvm@redhat.com>; Thu, 23 Mar 2006 08:30:42 -0800 (PST)
+Message-ID: <170fa0d20603230829n50943ffcr716d480e7a4b3beb@mail.gmail.com>
+Date: Thu, 23 Mar 2006 11:29:11 -0500
+From: "Mike Snitzer" <snitzer@gmail.com>
+Subject: Re: [linux-lvm] snapshots filling and hanging up processes
+In-Reply-To: <20060321192427.GO26428@agk.surrey.redhat.com>
 MIME-Version: 1.0
+Content-Disposition: inline
+References: <1142966004.18275.35.camel@pc>
+	<20060321192427.GO26428@agk.surrey.redhat.com>
+Content-Transfer-Encoding: 8bit
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -31,33 +27,21 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"; format="flowed"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-On Wed, 8 Mar 2006, Szabo Akos wrote:
-> I've this error too, and I update to lvm2-2.02.01-1.2.1 /Fedora version, 
-> it's meaning 2.02.01/ and usually it's working now for me. I don't dare 
-> to use it with a productive environment.
+On 3/21/06, Alasdair G Kergon <agk@redhat.com> wrote:
+> On Tue, Mar 21, 2006 at 01:33:24PM -0500, Brian J. Murrell wrote:
+> > later FC kernel like kernel-2.6.15-1.1833_FC4.x86_64.rpm  or
+> > kernel-2.6.15-1.2054_FC5.x86_64.rpm?
+>
+> Relevant kernel patches should be going into 2.6.17.
+>
+> Or download from
+>   http://www.kernel.org/pub/linux/kernel/people/agk/patches/2.6/editing/
 
-[sorry; been going like crazy lately, and hadn't had time to get back to 
-this.]
+Have these patches gone in to the RHEL4 U3 kernel?  Is RHEL4 U3's lvm
+snapshot support considered "officially supported by RedHat"?
 
-I tried upgrading to a 2.6.16 kernel, and LVM tools version (debian 
-package) 2.02.02-1.. still get the exact same error:
-
-fs:~# lvcreate -L1G -s -n Documents-backup /dev/HomeVG/Documents
-   LV HomeVG/Documents-backup in use: not deactivating
-   Couldn't deactivate new snapshot.
-fs:~# lvscan | grep Documents
-   ACTIVE            '/dev/HomeVG/Documents' [10.00 GB] inherit
-   ACTIVE            '/dev/HomeVG/Documents-backup' [1.00 GB] inherit
-
-Any other ideas?
-
-Thanks!
-
-------------------------------------------------------------------------
-| nate carlson | natecars@natecarlson.com | http://www.natecarlson.com |
-|       depriving some poor village of its idiot since 1981            |
-------------------------------------------------------------------------
+Thanks for all your hard work on lvm snapshot!
+Mike
