@@ -1,22 +1,19 @@
-Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
+Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
 	by int-mx1.corp.redhat.com (8.12.11.20060308/8.11.6) with ESMTP id
-	k2NGd8BE014791
-	for <linux-lvm@redhat.com>; Thu, 23 Mar 2006 11:39:08 -0500
-Received: from wproxy.gmail.com (wproxy.gmail.com [64.233.184.204])
-	by mx1.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
-	k2NGd8NW030698
-	for <linux-lvm@redhat.com>; Thu, 23 Mar 2006 11:39:08 -0500
-Received: by wproxy.gmail.com with SMTP id i28so536022wra
-	for <linux-lvm@redhat.com>; Thu, 23 Mar 2006 08:39:08 -0800 (PST)
-Message-ID: <170fa0d20603230838y173d14f5ib2692c87ab6b20ea@mail.gmail.com>
-Date: Thu, 23 Mar 2006 11:38:45 -0500
-From: "Mike Snitzer" <snitzer@gmail.com>
-Subject: Re: [linux-lvm] Hardware snapshots and LVM2?
-In-Reply-To: <H000007200c27f69.1142968273.fsu50.nll.se@MHS>
+	k2OEQRko016262
+	for <linux-lvm@redhat.com>; Fri, 24 Mar 2006 09:26:27 -0500
+Received: from zproxy.gmail.com (zproxy.gmail.com [64.233.162.200])
+	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id k2OEQLkI013027
+	for <linux-lvm@redhat.com>; Fri, 24 Mar 2006 09:26:21 -0500
+Received: by zproxy.gmail.com with SMTP id m7so822953nzf
+	for <linux-lvm@redhat.com>; Fri, 24 Mar 2006 06:26:20 -0800 (PST)
+Message-ID: <2c51ecee0603240626m5c118d17h63bb9a66ef906fc1@mail.gmail.com>
+Date: Fri, 24 Mar 2006 09:26:19 -0500
+From: "Raghuram Devarakonda" <draghuram@gmail.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-References: <H000007200c27f69.1142968273.fsu50.nll.se@MHS>
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/alternative; 
+	boundary="----=_Part_12524_11031534.1143210379803"
+Subject: [linux-lvm] Problem in reading snapshots....
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -27,25 +24,62 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: LVM general discussion and development <linux-lvm@redhat.com>
+To: linux-lvm@redhat.com
 
-On 3/21/06, fredrik.backman@nll.se <fredrik.backman@nll.se> wrote:
-> Hi
->
-> Im doing a snapshot (hardware-based in EVA5000) of a LV
-> (lvm2) and i
-> wonder what is the correct way to use this snapshot?
-> Problem is that
-> this snapshot has the same ID as the original one. In HP-UX
-> a would do a
-> vgchgid on this snapshot-LV. Any help would be aprreciated.
+------=_Part_12524_11031534.1143210379803
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: quoted-printable
+Content-Disposition: inline
 
-You're creating snapshots of the entire block device.  As such the
-snapshot device has identical LVM2 metadata as the origin device.  You
-need to generate new PV, VG, LV UUIDs, modify the metadata and then
-restore that modified metadata to the snapshot device (via
-vgcfgbackup, vgcfgrestore).  EVMS has a decent random lvm2 UUID
-generator function that can be pulled out and made to run standalone.
+Hi,
 
-Mike
+I am able to create LVM snapshot but reading it is failing most of the
+times. The failure occurs at random offsets. Occassionally, the read
+completes. Whenever the read fails, I see messages similar to following in
+/var/log/messages:
+
+"Buffer I/O error on device dm-6, logical block 1938043"
+
+There are other messages:
+
+"/etc/hotplug/block.agent[16978]: try 1 while waiting for /block/dm-4's
+bus_id"
+
+The system is a SLES9 SP3.
+
+# uname -a
+Linux raaga 2.6.5-7.244-default #1 Mon Dec 12 18:32:25 UTC 2005 i686 i686
+i386 GNU/Linux
+
+# rpm -qa | grep -i lvm
+lvm2-2.01.14-3.6
+
+I tested reads with "dd" command.
+
+I would appreciate it if someone can help me in resolving this problem.
+Please let me know if more details are needed.
+
+Thanks in advance,
+Raghu.
+
+------=_Part_12524_11031534.1143210379803
+Content-Type: text/html; charset=ISO-8859-1
+Content-Transfer-Encoding: quoted-printable
+Content-Disposition: inline
+
+<br>Hi,<br><br>I am able to create LVM snapshot but reading it is failing m=
+ost of the times. The failure occurs at random offsets. Occassionally, the =
+read completes. Whenever the read fails, I see messages similar to followin=
+g in /var/log/messages:
+<br><br>&quot;Buffer I/O error on device dm-6, logical block 1938043&quot;<=
+br><br>There are other messages:<br><br>&quot;/etc/hotplug/block.agent[1697=
+8]: try 1 while waiting for /block/dm-4's bus_id&quot;<br><br>The system is=
+ a SLES9 SP3.
+<br><br># uname -a<br>Linux raaga 2.6.5-7.244-default #1 Mon Dec 12 18:32:2=
+5 UTC 2005 i686 i686 i386 GNU/Linux<br><br># rpm -qa | grep -i lvm<br>lvm2-=
+2.01.14-3.6<br><br>I tested reads with &quot;dd&quot; command. <br><br>
+I would appreciate it if someone can help me in resolving this problem. Ple=
+ase let me know if more details are needed.<br><br>Thanks in advance,<br>Ra=
+ghu.<br><br><br><br><br><br><br><br><br>
+
+------=_Part_12524_11031534.1143210379803--
