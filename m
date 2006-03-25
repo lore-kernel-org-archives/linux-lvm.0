@@ -1,20 +1,31 @@
-Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.11.6/8.11.6) with ESMTP id k2HKJt122913
-	for <linux-lvm@redhat.com>; Fri, 17 Mar 2006 15:19:55 -0500
-Received: from mitchell.tmdg.co.uk (drizzle.tmdg.co.uk [82.69.226.33])
-	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id k2HKJfwL020444
-	for <linux-lvm@redhat.com>; Fri, 17 Mar 2006 15:19:47 -0500
-Received: from hurricane.tmdg.co.uk (hurricane.tmdg.co.uk [192.168.48.59])
-	by mitchell.tmdg.co.uk (8.12.11/8.12.11) with ESMTP id k2HKJZ2S023321
-	for <linux-lvm@redhat.com>; Fri, 17 Mar 2006 20:19:35 GMT
-From: Tom Dawes-Gamble <tmdg@weardale.cl>
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature";
-	boundary="=-NM3nIjGGbKI9i3fTXEvl"
-Date: Fri, 17 Mar 2006 20:19:35 +0000
-Message-Id: <1142626775.9377.85.camel@hurricane.tmdg.co.uk>
+Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
+	by int-mx1.corp.redhat.com (8.12.11.20060308/8.11.6) with ESMTP id
+	k2PJAUdY014583
+	for <linux-lvm@redhat.com>; Sat, 25 Mar 2006 14:10:30 -0500
+Received: from ciao.gmane.org (main.gmane.org [80.91.229.2])
+	by mx1.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
+	k2PJATX2004250
+	for <linux-lvm@redhat.com>; Sat, 25 Mar 2006 14:10:29 -0500
+Received: from root by ciao.gmane.org with local (Exim 4.43)
+	id 1FNE9P-0000ZZ-Eq
+	for linux-lvm@redhat.com; Sat, 25 Mar 2006 20:10:15 +0100
+Received: from p54971fcb.dip0.t-ipconnect.de ([84.151.31.203])
+	by main.gmane.org with esmtp (Gmexim 0.1 (Debian))
+	id 1AlnuQ-0007hv-00
+	for <linux-lvm@redhat.com>; Sat, 25 Mar 2006 20:10:15 +0100
+Received: from claus by p54971fcb.dip0.t-ipconnect.de with local (Gmexim 0.1
+	(Debian)) id 1AlnuQ-0007hv-00
+	for <linux-lvm@redhat.com>; Sat, 25 Mar 2006 20:10:15 +0100
+From: =?ISO-8859-1?Q?Claus_F=E4rber?= <claus@faerber.muc.de>
+Date: Sat, 25 Mar 2006 18:31:41 +0100
+Message-ID: <e03uq2$aa1$1@sea.gmane.org>
+References: <6dcf0dbc0603050846k2b8bb546r1a3b6f30f541e473@mail.gmail.com>
+	<20060307190636.GA12504@percy.comedia.it>
 Mime-Version: 1.0
-Subject: [linux-lvm] Renaming Volume Groups.
+Content-Transfer-Encoding: 7bit
+In-Reply-To: <20060307190636.GA12504@percy.comedia.it>
+Sender: news <news@sea.gmane.org>
+Subject: [linux-lvm] Re: Boot Mgr support for '/boot' on LVM2 volumes ?
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -25,75 +36,21 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: linux-lvm@redhat.com
 
+Luca Berra schrieb:
+> this is correct, the lv for /boot is to be linear and contiguus, it is
+> user responsability to ensure this.
 
---=-NM3nIjGGbKI9i3fTXEvl
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
+What about adding a "boot" flag to LVs? It set, it could have the 
+following effect:
 
-Hi,
+. Tools will ensure that the LV remains linear and contiguus and at the 
+beginning of a PV.
+. (Later) the LV is mirrored into every PV marked "bootable".
 
-I come from an HPUX lvm background.  In my time I've had to recover all
-sorts of LVM foul ups.  =20
+With these features, an OS could be booted from any disk. With mirroring 
+(RAID-on-LVM) you could boot a system even if your primary disk fails.
 
-I'm a bit surprised at the way LVM on linux appears to work.=20
-
-I read the post from Axel Braun with the =20
-Subject: [linux-lvm] LVM2 on a USB-disk/ same VG name=20
-on Thu, 9 Mar 2006 09:59:22 +0100 (MET)
-
-If I read things correctly. To rescue data from dead system in his case
-a laptop.  He encountered the problem that both his current disk Volume
-Group is called VolGroup00 and the Lap Top disk is also called
-VolGroup00. =20
-
-The solution appears to be rename VolGroup00 the working system
-VolGroup00 then you can import the laptop VolGroup00.
-
-With my HPUX lvm hat on this seems really bad.  I just had a quick go at
-doing something similar on a Fedora Core 4 system.  i.e. rename
-VolGroup00.  I changed /etc/fstab and /etc/grub.conf replacing
-VolGroup00 with vg00 (that makes an HPUX person very happy :-)
-Booted the rescue disk but alas it doesn't appear to know about LVM. =20
-So I can't vgrename. <sigh>
-
-Now my disk it hosed.  It won't boot.
-
-Using the rescue disk I edited /boot/grub/grub.conf then when I booted I
-was thown a rescue shell that allowed me to remount the / filesystem
-read/write I fixed /etc/fstab and now the system is bootable again.
-
-However, I still can't activate the other VolGroup00 disk.
-
-Are there any plans for a tool that can do a vgrename given a list of
-devices?
-
-When I connect my Laptop drive via USB as Axel did is is /dev/sdf and
-and VolGroup00 is /dev/sdf2.  So what I'd like to be able to do is :-
-
-#  vgfixname /dev/sdf2 VolGroup01
-#  vgscan
-#  vgchange -a y=20
-
-Regards,
-Tom.
-
-
---=20
-There are 10 types of people in the world.
-Those that understand Binary and those that don't.
-
---=-NM3nIjGGbKI9i3fTXEvl
-Content-Type: application/pgp-signature; name=signature.asc
-Content-Description: This is a digitally signed message part
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.2.1 (GNU/Linux)
-
-iD8DBQBEGxnXYIWjhkOmiWoRAgcUAJ0aQqiIEN20ZauqFwJXeXKIPdjepwCfcs5o
-Rhj4e/3eGXRcBXMgrlWzjhk=
-=3N1R
------END PGP SIGNATURE-----
-
---=-NM3nIjGGbKI9i3fTXEvl--
+Claus
