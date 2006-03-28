@@ -1,17 +1,17 @@
 Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
 	by int-mx1.corp.redhat.com (8.12.11.20060308/8.11.6) with ESMTP id
-	k2SJnosY000636
-	for <linux-lvm@redhat.com>; Tue, 28 Mar 2006 14:49:50 -0500
-Received: from ms-smtp-03.nyroc.rr.com (ms-smtp-03.nyroc.rr.com [24.24.2.57])
+	k2SLOs1n025373
+	for <linux-lvm@redhat.com>; Tue, 28 Mar 2006 16:24:54 -0500
+Received: from ms-smtp-01.nyroc.rr.com (ms-smtp-01.nyroc.rr.com [24.24.2.55])
 	by mx1.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
-	k2SJnnu4012885
-	for <linux-lvm@redhat.com>; Tue, 28 Mar 2006 14:49:49 -0500
+	k2SLOrV7011409
+	for <linux-lvm@redhat.com>; Tue, 28 Mar 2006 16:24:54 -0500
 Received: from dancampbell.org (cpe-24-195-214-80.nycap.res.rr.com
 	[24.195.214.80])
-	by ms-smtp-03.nyroc.rr.com (8.13.4/8.13.4) with ESMTP id k2SJnmIo003541
-	for <linux-lvm@redhat.com>; Tue, 28 Mar 2006 14:49:48 -0500 (EST)
-Message-ID: <44299358.3020609@the-rusty-nail.com>
-Date: Tue, 28 Mar 2006 14:49:44 -0500
+	by ms-smtp-01.nyroc.rr.com (8.13.4/8.13.4) with ESMTP id k2SLOqhv028471
+	for <linux-lvm@redhat.com>; Tue, 28 Mar 2006 16:24:53 -0500 (EST)
+Message-ID: <4429A9A2.6040907@the-rusty-nail.com>
+Date: Tue, 28 Mar 2006 16:24:50 -0500
 From: Dan <lvm@the-rusty-nail.com>
 MIME-Version: 1.0
 Subject: Re: [linux-lvm] LVM2 with disks greater than 2TB
@@ -33,11 +33,17 @@ List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-I was just reading up on some things from 3ware which is who makes the 
-cards I am using.  They say to use gnu parted instead of fdisk because 
-fdisk doesn't support > 2TB disks.  I am not sure if this still holds 
-true since the article was from June 2004 but I will try it and let 
-everyone know how I make out.
+It was indeed a partition problem.  Thanks.  fdisk does not support 
+partitions over 2TB so I had to use GNU Parted to setup the partition 
+with a GPT label that supports over 2TB.  I could then create reiserfs 
+filesystems and got two 4.6TB partitions.  Unfortunately Parted and GPT 
+do not support LVM so I could not raid the two partitions into one giant 
+one unless I am missing something.  But the 2 partitions will work fine 
+for what I need.  For anyone who might be interested I found the info I 
+needed at the links below:
+http://www.coraid.com/support/linux/contrib/chernow/gpt.html
+http://www.gnu.org/software/parted/manual/html_chapter/
+http://www.wlug.org.nz/GPT
 
 Judd Tracy wrote:
 > I recall having a similar problem when I setup a large array a long 
