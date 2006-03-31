@@ -1,24 +1,25 @@
 Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
 	by int-mx1.corp.redhat.com (8.12.11.20060308/8.11.6) with ESMTP id
-	k2V2pTiu030807
-	for <linux-lvm@redhat.com>; Thu, 30 Mar 2006 21:51:29 -0500
-Received: from linux.interlinx.bc.ca (linux.interlinx.bc.ca [66.11.173.224])
+	k2VEMNNV024842
+	for <linux-lvm@redhat.com>; Fri, 31 Mar 2006 09:22:23 -0500
+Received: from mailgateway.unetix.nl (a213-84-10-61.adsl.xs4all.nl
+	[213.84.10.61])
 	by mx1.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
-	k2V2pSIa004333
-	for <linux-lvm@redhat.com>; Thu, 30 Mar 2006 21:51:28 -0500
-Received: from pc.ilinx (pc.ilinx [10.75.22.1])
-	(using TLSv1 with cipher RC4-MD5 (128/128 bits))
-	(No client certificate requested)
-	by linux.interlinx.bc.ca (Postfix) with ESMTP id 1E5A9D7478
-	for <linux-lvm@redhat.com>; Thu, 30 Mar 2006 21:51:27 -0500 (EST)
-From: "Brian J. Murrell" <brian@interlinx.bc.ca>
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature";
-	boundary="=-E4Iw+LFQoZzRKdFm+DWK"
-Date: Thu, 30 Mar 2006 21:09:50 -0500
-Message-Id: <1143770990.23716.4.camel@pc>
-Mime-Version: 1.0
-Subject: [linux-lvm] device-mapper: Could not create kcopyd client
+	k2VEMLI2024539
+	for <linux-lvm@redhat.com>; Fri, 31 Mar 2006 09:22:22 -0500
+Received: from mailgateway.unetix.nl (localhost [127.0.0.1])
+	by mailgateway.unetix.nl (Postfix) with SMTP id 46AC01EF168
+	for <linux-lvm@redhat.com>; Fri, 31 Mar 2006 16:22:16 +0200 (CEST)
+Received: from knoflook.unetix.nl (unknown [192.168.253.129])
+	by mailgateway.unetix.nl (Postfix) with ESMTP id 360F51EF168
+	for <linux-lvm@redhat.com>; Fri, 31 Mar 2006 16:22:16 +0200 (CEST)
+From: Wim Bakker <wim@unetix.nl>
+Subject: Re: [linux-lvm] snapshot error with xfs and disk I/O
+Date: Fri, 31 Mar 2006 15:21:22 +0100
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+Message-Id: <200603311621.23093.wim@unetix.nl>
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -29,59 +30,77 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="us-ascii"
+To: linux-lvm@redhat.com
 
 
---=-E4Iw+LFQoZzRKdFm+DWK
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
+>On Thu, Mar 30, 2006 at 09:09:22AM +0100, Wim Bakker wrote:
+>> There seem to be serious problems with snapshots , lvm2 and xfs.
+> >As soon as there is a slight amount of disk I/O during snapshotting
+> >a logical volume with xfs , the following kind of kernel panic occurs:
 
-I'm trying to add a number of simultaneous snapshots of a single origin
-and getting the following from the kernel log:
+>You don't say what kernel.
+>
+>Make sure it contains the dm snapshot patches from -mm (and probably
+>in Linus's git tree by now - I haven't checked).
+>
+>Alasdair
 
-device-mapper: Could not create kcopyd client
-device-mapper: error adding target to table
-device-mapper: Could not create kcopyd client
-device-mapper: error adding target to table
+On the original server 2.6.15 was used, on the test server I installed
+2.6.16 with pending patches :
+--------------
+dm-snapshot-fix-kcopyd-destructor.patch
+dm-flush-queue-eintr.patch
+device-mapper-snapshot-fix-origin_write-pending_exception-submission.patch
+device-mapper-snapshot-replace-sibling-list.patch
+device-mapper-snapshot-fix-invalidation.patch
+drivers-md-dm-raid1c-fix-inconsistent-mirroring-after-interrupted.patch
+dm-remove-sector_format.patch
+sem2mutex-misc-static-one-file-mutexes.patch
+sem2mutex-drivers-md.patch
+dm-make-sure-queue_flag_cluster-is-set-properly.patch
+#Thisonestillneedspropertesting
+#md-dm-reduce-stack-usage-with-stacked-block-devices.patch
+#Submittedto-mmbymerecently
+dm-snapshot-fix-pending-pe-ref.patch
+dm-store-md-name.patch
+dm-tidy-mdptr.patch
+dm-table-store-md.patch
+dm-store-geometry.patch
+dm-stripe-fix-bounds.patch
+#Submittedto-mmbyothersrecently
+dm-md-dependency-tree-in-sysfs-kobject_add_dir.patch
+dm-md-dependency-tree-in-sysfs-add_subdirs.patch
+dm-md-dependency-tree-in-sysfs-bd_claim_by_kobj.patch
+dm-md-dependency-tree-in-sysfs-md_deptree.patch
+dm-md-dependency-tree-in-sysfs-dm_deptree.patch
+#Newbugfixtopushto-mmnexttime
+dm-bio-split-bvec.patch
+-------------------------------
+as found in 
+ftp.kernel.org/pub/linux/kernel/people/agk/patches/2.6/2.6.16-rc1/2.6.16-rc1-dm1/
+and conform a recommendation I read in the mail archives regarding the 
+problems with snapshots (and xfs?).
+Version of lvm is : LVM2.2.02.02 
+Version of dm is : device-mapper.1.02.03
 
-I was able to create 4 then I got:
 
-  device-mapper ioctl cmd 9 failed: Cannot allocate memory
-  Couldn't load device 'vg0-centos4.2--x86_64--boulder--client10'.
-  Problem reactivating origin centos4.2-x86_64-boulder-pristine
+The snapshot is mounted under backup , the original LV is mounted under data
+and the files that give I/O errors under backup are perfectly accessable on 
+the original LV. There is a script in the background running that randomly 
+creates files test-* and testfile-* on the data partition.
+Meanwhile I have going on with some testing , to that end I installed kernel 
+2.4.32 with the dm and lock patches , reinstalled the latest lvm2 stable and 
+dm stable. And ran under 2.4.32 the same tests as under 2.6.16 with the
+extra pending patches.
+I restarted the system with 2.4.32 and ran the same tests as with 2.6.16
+and no problems occurred at all.
+Then I restarted the system again with kernel 2.6.16 , and lvremove locked up 
+again with the resulting kernel panic when forcefully removing the snapshot
+volume , like before. I than restarted again with kernel 2.4.32 and all tests
+and snapshots run smoothly, so it seems definitely related to kernel 2.6.x.
+For the production machine we need definitely 2.6 though because of the areca 
+controller.
 
-and then another attempt produced:
-
-  device-mapper ioctl cmd 6 failed: Invalid argument
-  Couldn't resume device 'vg0-centos4.2--x86_64--boulder--client10'
-  Aborting. Failed to activate snapshot exception store. Remove new LV and =
-retry.
-
-This one seems to have created a target though.  Not sure if it's
-functional or not though.
-
-I am trying to do all of this on Fedora Core 4 with kernel
-2.6.15-1.1833_FC4smp.
-
-Any ideas?
-
-b.
-
---=20
-My other computer is your Microsoft Windows server.
-
-Brian J. Murrell
-
---=-E4Iw+LFQoZzRKdFm+DWK
-Content-Type: application/pgp-signature; name=signature.asc
-Content-Description: This is a digitally signed message part
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.2.2 (GNU/Linux)
-
-iD8DBQBELI9tl3EQlGLyuXARAnBCAJ49iN3u5flFP5M7B6Mv9AdjtPJiYQCdHWZG
-Wz/fyQJNeaRbaZDUoysAimI=
-=gKoZ
------END PGP SIGNATURE-----
-
---=-E4Iw+LFQoZzRKdFm+DWK--
+sincerely
+Wim Bakker
