@@ -1,18 +1,28 @@
-Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
+Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
 	by int-mx1.corp.redhat.com (8.12.11.20060308/8.11.6) with ESMTP id
-	k2VN4fVq026031
-	for <linux-lvm@redhat.com>; Fri, 31 Mar 2006 18:04:41 -0500
-Received: from dristor.dazoot.ro (dristor.dazoot.ro [82.76.80.33])
-	by mx3.redhat.com (8.13.1/8.13.1) with SMTP id k2VN4Zo5000642
-	for <linux-lvm@redhat.com>; Fri, 31 Mar 2006 18:04:35 -0500
-Date: Sat, 1 Apr 2006 02:04:25 +0300
-From: Catalin Constantin <catalin@bounce-software.com>
-Message-ID: <1079461495.20060401020425@bounce-software.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] lvm2 recovery issue
-Reply-To: Catalin Constantin <catalin@bounce-software.com>,
-	LVM general discussion and development <linux-lvm@redhat.com>
+	k323E0YJ016040
+	for <linux-lvm@redhat.com>; Sat, 1 Apr 2006 22:14:00 -0500
+Received: from ciao.gmane.org (main.gmane.org [80.91.229.2])
+	by mx1.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
+	k323DwDE001832
+	for <linux-lvm@redhat.com>; Sat, 1 Apr 2006 22:13:59 -0500
+Received: from list by ciao.gmane.org with local (Exim 4.43)
+	id 1FPt2L-0007GO-Mp
+	for linux-lvm@redhat.com; Sun, 02 Apr 2006 05:13:57 +0200
+Received: from 221.125.22.76 ([221.125.22.76])
+	by main.gmane.org with esmtp (Gmexim 0.1 (Debian))
+	id 1AlnuQ-0007hv-00
+	for <linux-lvm@redhat.com>; Sun, 02 Apr 2006 05:13:57 +0200
+Received: from thomas by 221.125.22.76 with local (Gmexim 0.1 (Debian))
+	id 1AlnuQ-0007hv-00
+	for <linux-lvm@redhat.com>; Sun, 02 Apr 2006 05:13:57 +0200
+From: "Thomas" <thomas@meiwing.com>
+Date: Sun, 2 Apr 2006 11:13:42 +0800
+Message-ID: <e0nfh9$22d$1@sea.gmane.org>
+References: <e0f2dq$eck$1@sea.gmane.org>
+Sender: news <news@sea.gmane.org>
+Subject: [linux-lvm] Re: Data recover on error deleted PV/VG
+Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -22,88 +32,51 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 To: linux-lvm@redhat.com
 
-Hi there,
+Finally, I use RIP (R)ecovery (I)s (P)ossible! (v15.2).
+And command hexdump /dev/hda2 and /dev/hdb1 to collect the old LVM config
+information.
+They are nearly 1200.
+Use the information to create a metadata file.
+Use cfgrestore to recover.
+Then mount back the lost LogVol00.
 
-I am using lvm2 on debian.
-The lvm was build on top of 2 software raid partitions:
-/dev/md2 and /dev/md3
+Just my two cents.
 
-/dev/md3 was a raid 1 partition built from
-/dev/sdc1 and /dev/sdd1
-
-The partition type is xfs. (both raids /dev/md2, /dev/md3 and lvm
-storage).
-
-Now, the problem i have.
-
-Somehow the /dev/md3 partition got messed up (out of sync) and between
-reboots the lvm partition uses alternatively either
-/dev/sdc1 or /dev/sdd1
-
-eg:
-pvdisplay
-  Found duplicate PV VxRU9BoOAwLDxJ8yifZT2fJGEn8CeLvs: using /dev/sdd1 not /dev/sdc1
-  --- Physical volume ---
-  PV Name               /dev/md2
-  VG Name               vg
-  PV Size               100.50 GB / not usable 0
-  Allocatable           yes (but full)
-  PE Size (KByte)       4096
-  Total PE              25727
-  Free PE               0
-  Allocated PE          25727
-  PV UUID               1vtRnR-jmjP-zbgG-JZJs-1WJu-3ZyV-Vik6wH
-
-  --- Physical volume ---
-  PV Name               /dev/sdc1
-  VG Name               vg
-  PV Size               130.39 GB / not usable 0
-  Allocatable           yes (but full)
-  PE Size (KByte)       4096
-  Total PE              33381
-  Free PE               0
-  Allocated PE          33381
-  PV UUID               VxRU9B-oOAw-LDxJ-8yif-ZT2f-JGEn-8CeLvs
-
-The bad thing is that some files ended up on /dev/sdd1 and some others
-on /dev/sdc1.
-
-I've unmounted the storage lvm drive and tryed to do a /dev/md3
-Assemble but it looks like it won't come up !
-
-mdadm --detail /dev/md3
-mdadm: md device /dev/md3 does not appear to be active.
-
-mdadm -A /dev/md3
-mdadm: no devices found for /dev/md3
-
-mdadm -A /dev/md3 /dev/sdd1
-mdadm: /dev/md3 assembled from 1 drive - need all 2 to start it (use --run to insist).
-
-mdadm -A /dev/md3 /dev/sdd1 /dev/sdc1
-mdadm: failed to add /dev/sdc1 to /dev/md3: Device or resource busy
-mdadm: /dev/md3 assembled from 1 drive - need all 2 to start it (use --run to insist).
-
-I've already did a backup of what i can mount now.
-
-Some files are still on the "other lvm".
-
-What i need to know are some advices from you guys of how to recover
-the most of the data from the "mess" i ended up with !
-
-Eg:
-- start lvm with /dev/sdd1 and do another backup (how do i do it in
-order to make the damage minimum)
-- start the md3 (repair or some) and not to loose data
-
-Anything you can come up will be highly appreciated.
-
-Thank you for your time and sorry if the post is too big!
-
-
--- 
-Catalin Constantin
-Bounce Software
+"Thomas" <thomas@meiwing.com> �b�l�� news:e0f2dq$eck$1@sea.gmane.org �����g
+...
+> Hi all,
+>
+> My story is:
+>
+> 1 x 20G (hda) + 1 x 40G (hdb) running more than half year.
+> The two hard disk formed with a LVM2, (100M swap) on hda1 and 19.9G
+> (hda2) + 40G (hdb1).
+> All LVM mounted as / (root). Yesterday, I add a 40G (hdd).
+> Used fdisk with 8e type to format the new 40g (hdd)
+> Used lvm extend command to add +20G /dev/VolGroup00/VolLog00 and +10G
+> /dev/VolGroup00/VolLog01
+> After that, I wanted to remove the VolLog01 but failed and said it is
+using.
+> Then I tried to use fdisk again to format the 40g (hdd).
+> After reboot the server, kernel panic even un-plug 40g (hdd).
+>
+> Should I just try to re-create hda2+hdb1's LV with command "lvcreate -n
+> VolLog00 -l <max size> VolGroup00" ?
+>
+> I can provide more information if needed.
+>
+> Thanks in advance.
+>
+> Lion
+>
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@redhat.com
+> https://www.redhat.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+>
