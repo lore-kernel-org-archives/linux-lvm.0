@@ -1,26 +1,15 @@
-Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
+Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
 	by int-mx1.corp.redhat.com (8.12.11.20060308/8.11.6) with ESMTP id
-	k33DmkWc029745
-	for <linux-lvm@redhat.com>; Mon, 3 Apr 2006 09:48:46 -0400
-Received: from strugglers.net (strugglers.net [212.13.198.70])
-	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id k33Dmd8k004187
-	for <linux-lvm@redhat.com>; Mon, 3 Apr 2006 09:48:39 -0400
-Received: from andy by strugglers.net with local (Exim 4.50)
-	id 1FQPQ1-0004hu-KP
-	for linux-lvm@redhat.com; Mon, 03 Apr 2006 13:48:34 +0000
-Date: Mon, 3 Apr 2006 13:48:33 +0000
-From: Andy Smith <andy@strugglers.net>
-Message-ID: <20060403134833.GL4663@strugglers.net>
-References: <443115F0.8030503@watford53.freeserve.co.uk>
-	<20060403124112.GP19029@fencepost>
-	<20060403124601.GR1259@lug-owl.de>
-	<443125FE.9020501@watford53.freeserve.co.uk>
+	k33Dq5uw030610
+	for <linux-lvm@redhat.com>; Mon, 3 Apr 2006 09:52:05 -0400
+Date: Mon, 3 Apr 2006 14:52:04 +0100
+From: Alasdair G Kergon <agk@redhat.com>
+Subject: Re: [linux-lvm] dmsetup works, but LVM2 fails
+Message-ID: <20060403135204.GB4197@agk.surrey.redhat.com>
+References: <m2psk0i1vs.fsf@janus.isnogud.escape.de>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="KL3QEYG9ENUUBx0X"
 Content-Disposition: inline
-In-Reply-To: <443125FE.9020501@watford53.freeserve.co.uk>
-Subject: Re: [linux-lvm] LVM NOT scary!
+In-Reply-To: <m2psk0i1vs.fsf@janus.isnogud.escape.de>
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -31,38 +20,24 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: linux-lvm@redhat.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: Urs Thuermann <urs@isnogud.escape.de>
+Cc: linux-lvm@sistina.com
 
+On Sun, Apr 02, 2006 at 02:43:35PM +0200, Urs Thuermann wrote:
+> I installed dmsetup from device-mapper.1.02.03 from source and patched
+> the linux-2.4.32 with linux-2.4.28-pre4-devmapper-ioctl.patch which
+> worked also with the 2.4.32 sources.  I renamed all LVM1 tools by
+> appending .lvm1 and installed LVM2.2.02.02, also from source.
+ 
+Some of the patches that the latest lvm2 tools now rely upon have not
+been backported to 2.4 kernels, and we didn't put workarounds into
+libdevmapper.
 
---KL3QEYG9ENUUBx0X
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+For now, you're limited to using older versions of the the tools 
+(device-mapper 1.01 and lvm2 2.01).
 
-On Mon, Apr 03, 2006 at 02:41:18PM +0100, Jim Ford wrote:
-> Jan-Benedict Glaw wrote:
-> >Hey, LVM on MD really is a nice thing, even dm-crypt ontop, works
-> >flawlessly :)
-> >
-> What, you mean Mini Disk - the little magneto optical disks used for=20
-> personal audio players? What's the advantage in that, aren't they only=20
-> about a 1 gig storage?
-
-Assuming you are two days late for an april fools joke, he means the
-md driver as in
-http://www.google.co.uk/search?q=3Dlinux+md
-
---KL3QEYG9ENUUBx0X
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-Content-Disposition: inline
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.1 (GNU/Linux)
-
-iD8DBQFEMSexIJm2TL8VSQsRApVMAKCrle/nAFfRHRuQgw5AE3UfbhldcwCeNRos
-rUNiSYrIO3Z3PgSkHLOetaQ=
-=CLA9
------END PGP SIGNATURE-----
-
---KL3QEYG9ENUUBx0X--
+Alasdair
+-- 
+agk@redhat.com
