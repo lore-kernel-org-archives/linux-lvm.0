@@ -1,20 +1,25 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
 	by int-mx1.corp.redhat.com (8.12.11.20060308/8.11.6) with ESMTP id
-	k33CFp2e007747
-	for <linux-lvm@redhat.com>; Mon, 3 Apr 2006 08:15:51 -0400
-Received: from lists.geoinf.fu-berlin.de (www.geoinf.fu-berlin.de
-	[160.45.89.23])
-	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id k33CFjKs015513
-	for <linux-lvm@redhat.com>; Mon, 3 Apr 2006 08:15:45 -0400
-Received: from [160.45.89.15] (callisto.geoinf.fu-berlin.de [160.45.89.15])
-	by lists.geoinf.fu-berlin.de (Postfix) with ESMTP id 056454482D
-	for <linux-lvm@redhat.com>; Mon,  3 Apr 2006 14:16:57 +0200 (CEST)
-Message-ID: <443111EF.5040103@zedat.fu-berlin.de>
-Date: Mon, 03 Apr 2006 14:15:43 +0200
-From: Sebastian Walter <swalter@zedat.fu-berlin.de>
+	k33CXNBK011405
+	for <linux-lvm@redhat.com>; Mon, 3 Apr 2006 08:33:23 -0400
+Received: from mtaout01-winn.ispmail.ntl.com (mta07-winn.ispmail.ntl.com
+	[81.103.221.47])
+	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id k33CWxH7019283
+	for <linux-lvm@redhat.com>; Mon, 3 Apr 2006 08:33:00 -0400
+Received: from aamtaout04-winn.ispmail.ntl.com ([81.103.221.35])
+	by mtaout01-winn.ispmail.ntl.com with ESMTP id
+	<20060403123250.JHGP29343.mtaout01-winn.ispmail.ntl.com@aamtaout04-winn.ispmail.ntl.com>
+	for <linux-lvm@redhat.com>; Mon, 3 Apr 2006 13:32:50 +0100
+Received: from [192.168.11.10] (really [62.253.210.226])
+	by aamtaout04-winn.ispmail.ntl.com with ESMTP id
+	<20060403123249.BZHQ16086.aamtaout04-winn.ispmail.ntl.com@[192.168.11.10]>
+	for <linux-lvm@redhat.com>; Mon, 3 Apr 2006 13:32:49 +0100
+Message-ID: <443115F0.8030503@watford53.freeserve.co.uk>
+Date: Mon, 03 Apr 2006 13:32:48 +0100
+From: Jim Ford <jaford@watford53.freeserve.co.uk>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] LVM Down After Disk Failure
+Subject: [linux-lvm] LVM scary!
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -25,61 +30,14 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@redhat.com
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+To: linux-lvm <linux-lvm@redhat.com>
 
-Dear list,
+Hmm, there are so many horror stories on this forum that I'm beginning 
+to wish that I hadn't chosen the LVM option when I installed my Kubuntu 
+system! Mind you, having said that, I never had problems with 5 years of 
+software raid on a Slackware box. 
 
-after a power failure we had troubles with a hard drive, it went down
-unrecoverably. So I removed the LV's wich had PE's on this disk by
-executing, and I got this error:
+Just though I'd mention it!
 
-[root@xxx root]# lvremove /dev/xxx/data5
-lvremove -- do you really want to remove "/dev/vghrsc/data5"? [y/n]: y
-lvremove -- ERROR "vg_write(): write" storing data of volume group
-"vghrsc" on disks
-
-then I got another strange error:
-
-Message from syslogd@xxx at Mon Apr  3 12:14:39 2006 ...
-xxx kernel: journal commit I/O error
-
-therefore I decided to reboot the system. After the reboot, I couldn't
-manage to get the system up and running again, I got error messages
-about vgchange not finding any VG's.
-
-I even ran vgcfgrestore, but it succeeded without giving me a hint about
-errors.
-
-vgscan now gives me:
-
-[root@xxx root]# vgscan
-vgscan -- reading all physical volumes (this may take a while...)
-vgscan -- ERROR "vg_read_with_pv_and_lv(): current PV" can't get data of
-volume group "vghrsc" from physical volume(s)
-vgscan -- "/etc/lvmtab" and "/etc/lvmtab.d" successfully created
-vgscan -- WARNING: This program does not do a VGDA backup of your volume
-group
-
-pvscan gives me (I had to remove the scsi disk, before I got some sense
-key errors here):
-
-[root@mex root]# pvscan
-pvscan -- reading all physical volumes (this may take a while...)
-pvscan -- inactive PV "/dev/sdb1"  is associated to unknown VG "vghrsc"
-(run vgscan)
-pvscan -- inactive PV "/dev/sdc1"  is associated to unknown VG "vghrsc"
-(run vgscan)
-pvscan -- inactive PV "/dev/sdd1"  is associated to unknown VG "vghrsc"
-(run vgscan)
-pvscan -- inactive PV "/dev/sde1"  is associated to unknown VG "vghrsc"
-(run vgscan)
-pvscan -- inactive PV "/dev/sdf1"  is associated to unknown VG "vghrsc"
-(run vgscan)
-pvscan -- total: 5 [6.84 TB] / in use: 5 [6.84 TB] / in no VG: 0 [0]
-
-/dev/sdf1 is the scsi drive I removed in the meanwhile and which is not
-present anymore.
-
-I would really appreciate any help! Thanks in advance,
-Sebastian
+Jim Ford
