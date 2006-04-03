@@ -1,22 +1,22 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
 	by int-mx1.corp.redhat.com (8.12.11.20060308/8.11.6) with ESMTP id
-	k33CwRdl017413
-	for <linux-lvm@redhat.com>; Mon, 3 Apr 2006 08:58:27 -0400
-Received: from zproxy.gmail.com (zproxy.gmail.com [64.233.162.206])
-	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id k33CwF71025250
-	for <linux-lvm@redhat.com>; Mon, 3 Apr 2006 08:58:16 -0400
-Received: by zproxy.gmail.com with SMTP id n1so4481869nzf
-	for <linux-lvm@redhat.com>; Mon, 03 Apr 2006 05:58:15 -0700 (PDT)
-Message-ID: <52fe6b680604030558q4a13e02dy65d6f7bdf69361f1@mail.gmail.com>
-Date: Mon, 3 Apr 2006 18:28:14 +0530
-From: "Anil Kumar Sharma" <xplusaks@gmail.com>
-Subject: Re: [linux-lvm] LVM NOT scary! (was: LVM scary!)
-In-Reply-To: <20060403124112.GP19029@fencepost>
+	k33DAoF1020560
+	for <linux-lvm@redhat.com>; Mon, 3 Apr 2006 09:10:50 -0400
+Received: from lists.geoinf.fu-berlin.de (www.geoinf.fu-berlin.de
+	[160.45.89.23])
+	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id k33DAhHm028098
+	for <linux-lvm@redhat.com>; Mon, 3 Apr 2006 09:10:43 -0400
+Received: from [160.45.89.15] (callisto.geoinf.fu-berlin.de [160.45.89.15])
+	by lists.geoinf.fu-berlin.de (Postfix) with ESMTP id 4577B4482D
+	for <linux-lvm@redhat.com>; Mon,  3 Apr 2006 15:11:55 +0200 (CEST)
+Message-ID: <44311ED1.9020800@zedat.fu-berlin.de>
+Date: Mon, 03 Apr 2006 15:10:41 +0200
+From: Sebastian Walter <swalter@zedat.fu-berlin.de>
 MIME-Version: 1.0
-Content-Type: multipart/alternative; 
-	boundary="----=_Part_303_8229140.1144069094075"
-References: <443115F0.8030503@watford53.freeserve.co.uk>
-	<20060403124112.GP19029@fencepost>
+Subject: Re: [linux-lvm] LVM Down After Disk Failure
+References: <443111EF.5040103@zedat.fu-berlin.de>
+In-Reply-To: <443111EF.5040103@zedat.fu-berlin.de>
+Content-Transfer-Encoding: 7bit
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -27,86 +27,75 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
+Content-Type: text/plain; charset="us-ascii"
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-------=_Part_303_8229140.1144069094075
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: quoted-printable
-Content-Disposition: inline
+Does anybody know how to force lvm to remove a PV or a LV from a PV
+(even if the VG is not accessible)? Probably it still is present somehow
+in the  vgda and lvm tries to access it.... thanks!
 
-On 4/3/06, Thomas Schwinge <tschwinge@gnu.org > wrote:
+
+Sebastian Walter wrote:
+> Dear list,
 >
-> On Mon, Apr 03, 2006 at 01:32:48PM +0100, Jim Ford wrote:
-> > Hmm, there are so many horror stories on this forum that I'm beginning
-> > to wish that I hadn't chosen the LVM option when I installed my Kubuntu
-> > system! Mind you, having said that, I never had problems with 5 years o=
-f
+> after a power failure we had troubles with a hard drive, it went down
+> unrecoverably. So I removed the LV's wich had PE's on this disk by
+> executing, and I got this error:
 >
-> > software raid on a Slackware box.
+> [root@xxx root]# lvremove /dev/xxx/data5
+> lvremove -- do you really want to remove "/dev/vghrsc/data5"? [y/n]: y
+> lvremove -- ERROR "vg_write(): write" storing data of volume group
+> "vghrsc" on disks
 >
-> Well, it's commonly know that mostly the horror stories are what people
-> tell each other and remember.  And especially in this very place, as it's
-> main purpose (apart from developing the software further) is to be a
-> contact point for people encountering such issues.
+> then I got another strange error:
 >
-> I'm quite sure that there are (ten- / hundred-)thousands of LVM
-> installations that just work; like those I did on a number of systems.
-
-
-Lists move too fast, what I wrote in other thread should have appeared here=
-.
-
-
-P.S . Next project for me: make GRUB2 read LVM volumes.  Anyone who wants
-> to help or has already done something, please speak up now.
+> Message from syslogd@xxx at Mon Apr  3 12:14:39 2006 ...
+> xxx kernel: journal commit I/O error
+>
+> therefore I decided to reboot the system. After the reboot, I couldn't
+> manage to get the system up and running again, I got error messages
+> about vgchange not finding any VG's.
+>
+> I even ran vgcfgrestore, but it succeeded without giving me a hint about
+> errors.
+>
+> vgscan now gives me:
+>
+> [root@xxx root]# vgscan
+> vgscan -- reading all physical volumes (this may take a while...)
+> vgscan -- ERROR "vg_read_with_pv_and_lv(): current PV" can't get data of
+> volume group "vghrsc" from physical volume(s)
+> vgscan -- "/etc/lvmtab" and "/etc/lvmtab.d" successfully created
+> vgscan -- WARNING: This program does not do a VGDA backup of your volume
+> group
+>
+> pvscan gives me (I had to remove the scsi disk, before I got some sense
+> key errors here):
+>
+> [root@mex root]# pvscan
+> pvscan -- reading all physical volumes (this may take a while...)
+> pvscan -- inactive PV "/dev/sdb1"  is associated to unknown VG "vghrsc"
+> (run vgscan)
+> pvscan -- inactive PV "/dev/sdc1"  is associated to unknown VG "vghrsc"
+> (run vgscan)
+> pvscan -- inactive PV "/dev/sdd1"  is associated to unknown VG "vghrsc"
+> (run vgscan)
+> pvscan -- inactive PV "/dev/sde1"  is associated to unknown VG "vghrsc"
+> (run vgscan)
+> pvscan -- inactive PV "/dev/sdf1"  is associated to unknown VG "vghrsc"
+> (run vgscan)
+> pvscan -- total: 5 [6.84 TB] / in use: 5 [6.84 TB] / in no VG: 0 [0]
+>
+> /dev/sdf1 is the scsi drive I removed in the meanwhile and which is not
+> present anymore.
+>
+> I would really appreciate any help! Thanks in advance,
+> Sebastian
 >
 >
-Can contribute in testing, please intimate pointer to test versions.
-Meanwhile wish you all the best for making GRUB2.
-
-
---
-Anil Kumar Shrama
-
-------=_Part_303_8229140.1144069094075
-Content-Type: text/html; charset=ISO-8859-1
-Content-Transfer-Encoding: quoted-printable
-Content-Disposition: inline
-
-<br><br><div><span class=3D"gmail_quote">On 4/3/06, <b class=3D"gmail_sende=
-rname">Thomas Schwinge</b> &lt;<a href=3D"mailto:tschwinge@gnu.org" target=
-=3D"_blank" onclick=3D"return top.js.OpenExtLink(window,event,this)">tschwi=
-nge@gnu.org
-</a>&gt; wrote:</span><blockquote class=3D"gmail_quote" style=3D"border-lef=
-t: 1px solid rgb(204, 204, 204); margin: 0pt 0pt 0pt 0.8ex; padding-left: 1=
-ex;">
-On Mon, Apr 03, 2006 at 01:32:48PM +0100, Jim Ford wrote:<br>&gt; Hmm, ther=
-e are so many horror stories on this forum that I'm beginning<br>&gt; to wi=
-sh that I hadn't chosen the LVM option when I installed my Kubuntu<br>
-
-&gt; system! Mind you, having said that, I never had problems with 5 years =
-of
-<br>&gt; software raid on a Slackware box.<br><br>Well, it's commonly know =
-that mostly the horror stories are what people<br>tell each other and remem=
-ber.&nbsp;&nbsp;And especially in this very place, as it's<br>main purpose =
-(apart from developing the software further) is to be a
-<br>contact point for people encountering such issues.<br><br>I'm quite sur=
-e that there are (ten- / hundred-)thousands of LVM<br>installations that ju=
-st work; like those I did on a number of systems.</blockquote><div><br>
-
-
-Lists move too fast, what I wrote in other thread should have appeared here=
-. <br></div><br><blockquote class=3D"gmail_quote" style=3D"border-left: 1px=
- solid rgb(204, 204, 204); margin: 0pt 0pt 0pt 0.8ex; padding-left: 1ex;">
-
-P.S
-. Next project for me: make GRUB2 read LVM volumes.&nbsp;&nbsp;Anyone who w=
-ants<br>to help or has already done something, please speak up now.<br><br>=
-</blockquote></div><br>Can contribute in testing, please intimate pointer t=
-o test versions. Meanwhile wish you all the best for making GRUB2.
-<br><br clear=3D"all">
-<br>-- <br>Anil Kumar Shrama
-
-
-
-------=_Part_303_8229140.1144069094075--
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@redhat.com
+> https://www.redhat.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+>   
