@@ -1,25 +1,21 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
 	by int-mx1.corp.redhat.com (8.12.11.20060308/8.11.6) with ESMTP id
-	k33CXNBK011405
-	for <linux-lvm@redhat.com>; Mon, 3 Apr 2006 08:33:23 -0400
-Received: from mtaout01-winn.ispmail.ntl.com (mta07-winn.ispmail.ntl.com
-	[81.103.221.47])
-	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id k33CWxH7019283
-	for <linux-lvm@redhat.com>; Mon, 3 Apr 2006 08:33:00 -0400
-Received: from aamtaout04-winn.ispmail.ntl.com ([81.103.221.35])
-	by mtaout01-winn.ispmail.ntl.com with ESMTP id
-	<20060403123250.JHGP29343.mtaout01-winn.ispmail.ntl.com@aamtaout04-winn.ispmail.ntl.com>
-	for <linux-lvm@redhat.com>; Mon, 3 Apr 2006 13:32:50 +0100
-Received: from [192.168.11.10] (really [62.253.210.226])
-	by aamtaout04-winn.ispmail.ntl.com with ESMTP id
-	<20060403123249.BZHQ16086.aamtaout04-winn.ispmail.ntl.com@[192.168.11.10]>
-	for <linux-lvm@redhat.com>; Mon, 3 Apr 2006 13:32:49 +0100
-Message-ID: <443115F0.8030503@watford53.freeserve.co.uk>
-Date: Mon, 03 Apr 2006 13:32:48 +0100
-From: Jim Ford <jaford@watford53.freeserve.co.uk>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] LVM scary!
+	k33CfPdS013169
+	for <linux-lvm@redhat.com>; Mon, 3 Apr 2006 08:41:25 -0400
+Received: from fencepost.gnu.org (fencepost.gnu.org [199.232.76.164])
+	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id k33CfHEc020997
+	for <linux-lvm@redhat.com>; Mon, 3 Apr 2006 08:41:17 -0400
+Received: from tschwinge by fencepost.gnu.org with local (Exim 4.34)
+	id 1FQOMq-0001E9-4M
+	for linux-lvm@redhat.com; Mon, 03 Apr 2006 08:41:12 -0400
+Date: Mon, 3 Apr 2006 08:41:12 -0400
+From: Thomas Schwinge <tschwinge@gnu.org>
+Message-ID: <20060403124112.GP19029@fencepost>
+References: <443115F0.8030503@watford53.freeserve.co.uk>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <443115F0.8030503@watford53.freeserve.co.uk>
+Subject: [linux-lvm] LVM NOT scary! (was: LVM scary!)
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -30,14 +26,33 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: linux-lvm <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-Hmm, there are so many horror stories on this forum that I'm beginning 
-to wish that I hadn't chosen the LVM option when I installed my Kubuntu 
-system! Mind you, having said that, I never had problems with 5 years of 
-software raid on a Slackware box. 
+On Mon, Apr 03, 2006 at 01:32:48PM +0100, Jim Ford wrote:
+> Hmm, there are so many horror stories on this forum that I'm beginning 
+> to wish that I hadn't chosen the LVM option when I installed my Kubuntu 
+> system! Mind you, having said that, I never had problems with 5 years of 
+> software raid on a Slackware box. 
 
-Just though I'd mention it!
+Well, it's commonly know that mostly the horror stories are what people
+tell each other and remember.  And especially in this very place, as it's
+main purpose (apart from developing the software further) is to be a
+contact point for people encountering such issues.
 
-Jim Ford
+I'm quite sure that there are (ten- / hundred-)thousands of LVM
+installations that just work; like those I did on a number of systems.
+
+
+> Just though I'd mention it!
+
+Me too.
+
+
+Regards,
+ Thomas
+
+
+P.S. Next project for me: make GRUB2 read LVM volumes.  Anyone who wants
+to help or has already done something, please speak up now.
