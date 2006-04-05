@@ -1,31 +1,16 @@
-Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
+Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
 	by int-mx1.corp.redhat.com (8.12.11.20060308/8.11.6) with ESMTP id
-	k358n4uO028825
-	for <linux-lvm@redhat.com>; Wed, 5 Apr 2006 04:49:04 -0400
-Received: from fs.bj-ig.de (tower.bj-ig.de [194.127.182.2])
-	by mx1.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
-	k358n3FV030130
-	for <linux-lvm@redhat.com>; Wed, 5 Apr 2006 04:49:03 -0400
-Received: from localhost (localhost [127.0.0.1])
-	by fs.bj-ig.de (Postfix) with ESMTP id A70238517
-	for <linux-lvm@redhat.com>; Wed,  5 Apr 2006 10:49:02 +0200 (CEST)
-Received: from fs.bj-ig.de ([127.0.0.1])
-	by localhost (fs [127.0.0.1]) (amavisd-new, port 10024) with ESMTP
-	id 27762-06 for <linux-lvm@redhat.com>;
-	Wed,  5 Apr 2006 10:48:59 +0200 (CEST)
-Received: from ralf.bj-ig.de (ralf.bj-ig.de [192.168.182.13])
-	by fs.bj-ig.de (Postfix) with ESMTP id A122588AB
-	for <linux-lvm@redhat.com>; Wed,  5 Apr 2006 10:48:59 +0200 (CEST)
-From: Ralf =?iso-8859-1?q?M=FCller?= <ralf@bj-ig.de>
+	k35Ee2jE013619
+	for <linux-lvm@redhat.com>; Wed, 5 Apr 2006 10:40:02 -0400
+Received: from hotmail.com (bay102-f16.bay102.hotmail.com [64.4.61.26])
+	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id k35EdtCC002744
+	for <linux-lvm@redhat.com>; Wed, 5 Apr 2006 10:39:55 -0400
+Message-ID: <BAY102-F1695A745E2F1701B4A34F0EFCB0@phx.gbl>
+In-Reply-To: <200604051048.59100@bj-ig.de>
+From: "Christopher Probst" <probst_christopher@hotmail.com>
 Subject: Re: [linux-lvm] pvmove on a root partition
-Date: Wed, 5 Apr 2006 10:48:54 +0200
-References: <BAY102-F8BC0F278803728236BD67EFCA0@phx.gbl>
-In-Reply-To: <BAY102-F8BC0F278803728236BD67EFCA0@phx.gbl>
-MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="nextPart1750922.x9CVf6o94l";
-	protocol="application/pgp-signature"; micalg=pgp-sha1
-Content-Transfer-Encoding: 7bit
-Message-Id: <200604051048.59100@bj-ig.de>
+Date: Wed, 05 Apr 2006 13:51:35 +0000
+Mime-Version: 1.0
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -36,42 +21,54 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: LVM general discussion and development <linux-lvm@redhat.com>
-
---nextPart1750922.x9CVf6o94l
-Content-Type: text/plain;
-  charset="iso-8859-1"
+Content-Type: text/plain; charset="iso-8859-1"; format="flowed"
 Content-Transfer-Encoding: quoted-printable
-Content-Disposition: inline
+To: linux-lvm@redhat.com
 
-On Tuesday 04 April 2006 20:58, Christopher Probst wrote:
+Hello Ralf,
 
-> pvmove /dev/hdb1 /dev/hdb2 where /dev/hdb1 is mounted on "/"
+Thank you very much for the info. I guess I won't pvmove on a root partitio=
+n=20
+for a while ;)
+
+Christopher
+
+
+
+
+>From: Ralf M=EF=BF=BDller <ralf@bj-ig.de>
+>Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
+>To: LVM general discussion and development <linux-lvm@redhat.com>
+>Subject: Re: [linux-lvm] pvmove on a root partition
+>Date: Wed, 5 Apr 2006 10:48:54 +0200
 >
-> makes my system unuseable. I can't log into my machine even in a text
-> console. Has anybody tried this before?
+>On Tuesday 04 April 2006 20:58, Christopher Probst wrote:
+>
+> > pvmove /dev/hdb1 /dev/hdb2 where /dev/hdb1 is mounted on "/"
+> >
+> > makes my system unuseable. I can't log into my machine even in a text
+> > console. Has anybody tried this before?
+>
+>Yes - about a year before. And I failed. After asking I have been told
+>there is some locking problem somewhere and there have to be major
+>changes before this would work - if I remember correctly. The answer
+>gave not the impression that this is rated a high priority problem.
+>
+>Regards
+>Ralf
+>
+>--
+>Van Roy's Law: -------------------------------------------------------
+>        An unbreakable toy is useful for breaking other toys.
 
-Yes - about a year before. And I failed. After asking I have been told=20
-there is some locking problem somewhere and there have to be major=20
-changes before this would work - if I remember correctly. The answer=20
-gave not the impression that this is rated a high priority problem.
 
-Regards
-Ralf
+><< attach4 >>
 
-=2D-=20
-Van Roy's Law: -------------------------------------------------------
-       An unbreakable toy is useful for breaking other toys.
 
---nextPart1750922.x9CVf6o94l
-Content-Type: application/pgp-signature
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.2 (GNU/Linux)
 
-iD8DBQBEM4R7ZcF+4X5mWz8RAotxAKCFPw96AqXJpJiVYvckiR1ojtiI3wCfYDc1
-t9/rQzt9KcpAH41jFwhcG2g=
-=TcFD
------END PGP SIGNATURE-----
-
---nextPart1750922.x9CVf6o94l--
+>_______________________________________________
+>linux-lvm mailing list
+>linux-lvm@redhat.com
+>https://www.redhat.com/mailman/listinfo/linux-lvm
+>read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
