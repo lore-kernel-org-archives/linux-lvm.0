@@ -1,29 +1,17 @@
-Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
+Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
 	by int-mx1.corp.redhat.com (8.12.11.20060308/8.11.6) with ESMTP id
-	k35JYWcH027473
-	for <linux-lvm@redhat.com>; Wed, 5 Apr 2006 15:34:32 -0400
-Received: from mail.volved.com (c-71-192-139-98.hsd1.ma.comcast.net
-	[71.192.139.98])
-	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id k35JYQEV021211
-	for <linux-lvm@redhat.com>; Wed, 5 Apr 2006 15:34:26 -0400
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.volved.com (Postfix) with ESMTP id E25D81B7F
-	for <linux-lvm@redhat.com>; Wed,  5 Apr 2006 14:41:11 -0400 (EDT)
-Received: from mail.volved.com ([127.0.0.1])
-	by localhost (monolith [127.0.0.1]) (amavisd-new, port 10024) with ESMTP
-	id 10658-12 for <linux-lvm@redhat.com>;
-	Wed,  5 Apr 2006 14:41:09 -0400 (EDT)
-Received: from [192.168.0.210] (unknown [192.168.0.210])
-	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by mail.volved.com (Postfix) with ESMTP id 0CC1C1B7E
-	for <linux-lvm@redhat.com>; Wed,  5 Apr 2006 14:41:09 -0400 (EDT)
-Message-ID: <44340F46.5040000@volved.com>
-Date: Wed, 05 Apr 2006 14:41:10 -0400
-From: Barnaby Claydon <bclaydon@volved.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] Bad disk removal
+	k35NQTrV022101
+	for <linux-lvm@redhat.com>; Wed, 5 Apr 2006 19:26:29 -0400
+Received: from canturbury.faction42.com (s1-19.iglou.com [64.253.106.27])
+	by mx1.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
+	k35NQSLU004345
+	for <linux-lvm@redhat.com>; Wed, 5 Apr 2006 19:26:28 -0400
+Date: Wed, 5 Apr 2006 19:26:27 -0400
+From: Uk1ah Sm1th <ukiah@faction42.com>
+Message-ID: <20060405232627.GA437@canterbury.faction42.com>
+Mime-Version: 1.0
+Content-Disposition: inline
+Subject: [linux-lvm] lvm2 pv failure
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -34,31 +22,18 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: linux-lvm@redhat.com
 
-Hey all,
+Hello-
 
-So after lots of scans and log review, turns out 1 of the 8 IDE disks in 
-my LVM is bad. (I know, IDE, yeahyeah...)
+I had one of the two drives in my LVM2 array fail. It was the first
+drive. Is it possiable that any data on the second drive could be
+recovered? Or have I lost all my data on both drives?
 
-I currently have the affected volume group online, and it's mounted in 
-XFS readonly,norecovery mode. XFS can't attempt repair because one of 
-the bad sectors is the superblock so xfs_repair bombs.
+.Ukiah Smith
 
-Unfortunately I don't have 1.2TB of free space available to try and pull 
-all the data off the VG before rebuilding it and replacing the failed 
-drive. If I get a replacement for the bad drive and extend the VG, my 
-question would be:
-
-How fault tolerant is pvmove if it encounters unreadable/bad sectors on 
-a disk? Will I hose the entire VG if pvmove bombs? Will pvmove skip the 
-bad sectors after a few attempts and move on? Will pvmove refuse to even 
-try?
-
-I'm sure someone's had experience with this before. :) (Obviously I 
-don't have RAID underneath the LVM, otherwise I'm sure this would be 
-moot... lesson learned.)
-
-Thanks all,
--Barnaby
+-- 
+"Well done is better than well said."
+             - Benjamin Franklin (1706-1790)
