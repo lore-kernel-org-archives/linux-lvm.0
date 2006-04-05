@@ -1,16 +1,23 @@
-Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
+Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
 	by int-mx1.corp.redhat.com (8.12.11.20060308/8.11.6) with ESMTP id
-	k35Ee2jE013619
-	for <linux-lvm@redhat.com>; Wed, 5 Apr 2006 10:40:02 -0400
-Received: from hotmail.com (bay102-f16.bay102.hotmail.com [64.4.61.26])
-	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id k35EdtCC002744
-	for <linux-lvm@redhat.com>; Wed, 5 Apr 2006 10:39:55 -0400
-Message-ID: <BAY102-F1695A745E2F1701B4A34F0EFCB0@phx.gbl>
-In-Reply-To: <200604051048.59100@bj-ig.de>
-From: "Christopher Probst" <probst_christopher@hotmail.com>
-Subject: Re: [linux-lvm] pvmove on a root partition
-Date: Wed, 05 Apr 2006 13:51:35 +0000
+	k35HYPUs029991
+	for <linux-lvm@redhat.com>; Wed, 5 Apr 2006 13:34:25 -0400
+Received: from pc18.dolda2000.com (1-1-3-7a.rny.sth.bostream.se
+	[82.182.133.20])
+	by mx1.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
+	k35HYNKX007751
+	for <linux-lvm@redhat.com>; Wed, 5 Apr 2006 13:34:23 -0400
+Received: from pc7.dolda2000.com (pc7.dolda2000.com
+	[IPv6:2002:52b6:8514:200:20c:76ff:fe3b:a3f4] (may be forged))
+	(authenticated bits=0)
+	by pc18.dolda2000.com (8.13.6/8.13.3) with ESMTP id k35HYHUm009537
+	for <linux-lvm@redhat.com>; Wed, 5 Apr 2006 19:34:18 +0200
+From: Fredrik Tolf <fredrik@dolda2000.com>
+Date: Wed, 05 Apr 2006 19:34:18 +0200
+Message-Id: <1144258458.32119.8.camel@pc7.dolda2000.com>
 Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] pvmove to smaller PVs
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -21,54 +28,30 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="iso-8859-1"; format="flowed"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@redhat.com
 
-Hello Ralf,
+I'm trying to use pvmove to move data from a 300 GB S-ATA disk onto
+four, smaller 120 GB IDE disks. However, pvmove tells me that it cannot
+allocate enough contiguous PEs to fit 300 GB, like this:
 
-Thank you very much for the info. I guess I won't pvmove on a root partitio=
-n=20
-for a while ;)
+# pvmove /dev/sde1
+  Insufficient contiguous allocatable extents (28617) for logical volume
+pvmove0: 71541 required
+  Unable to allocate temporary LV for pvmove.
 
-Christopher
+I can, of course, understand that it can't find contiguous PEs
+corresponding to 300 GB, but I don't understand why it should need it to
+be contiguous. Can pvmove not just divide that storage into three
+"partitions", each fitting on one 120 GB disk, and move them? Is there a
+way for me to tell it to do so?
 
+I seem to be able to use something like "pvmove /dev/sde1:0-28616" to
+tell pvmove manually to do this for me, but this poses a small problem
+for me, as not all of the data on the disks I want to move from are
+allocated where I know them to be. This particular disk is fully
+allocated, so that I know what I could do with that syntax, but is there
+really no way to tell pvmove to do this automatically? It just seems
+kind of strange to me.
 
-
-
->From: Ralf M=EF=BF=BDller <ralf@bj-ig.de>
->Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
->To: LVM general discussion and development <linux-lvm@redhat.com>
->Subject: Re: [linux-lvm] pvmove on a root partition
->Date: Wed, 5 Apr 2006 10:48:54 +0200
->
->On Tuesday 04 April 2006 20:58, Christopher Probst wrote:
->
-> > pvmove /dev/hdb1 /dev/hdb2 where /dev/hdb1 is mounted on "/"
-> >
-> > makes my system unuseable. I can't log into my machine even in a text
-> > console. Has anybody tried this before?
->
->Yes - about a year before. And I failed. After asking I have been told
->there is some locking problem somewhere and there have to be major
->changes before this would work - if I remember correctly. The answer
->gave not the impression that this is rated a high priority problem.
->
->Regards
->Ralf
->
->--
->Van Roy's Law: -------------------------------------------------------
->        An unbreakable toy is useful for breaking other toys.
-
-
-><< attach4 >>
-
-
-
-
->_______________________________________________
->linux-lvm mailing list
->linux-lvm@redhat.com
->https://www.redhat.com/mailman/listinfo/linux-lvm
->read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+Fredrik Tolf
