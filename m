@@ -1,21 +1,38 @@
 Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
 	by int-mx1.corp.redhat.com (8.12.11.20060308/8.11.6) with ESMTP id
-	k36L5b2r016854
-	for <linux-lvm@redhat.com>; Thu, 6 Apr 2006 17:05:37 -0400
-Received: from orca.ele.uri.edu (orca.ele.uri.edu [131.128.51.63])
+	k36Lj7VP025450
+	for <linux-lvm@redhat.com>; Thu, 6 Apr 2006 17:45:07 -0400
+Received: from e35.co.us.ibm.com (e35.co.us.ibm.com [32.97.110.153])
 	by mx1.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
-	k36L5aCK008881
-	for <linux-lvm@redhat.com>; Thu, 6 Apr 2006 17:05:36 -0400
-Subject: Re: [linux-lvm] Problem enquiry
-From: Ming Zhang <mingz@ele.uri.edu>
-In-Reply-To: <55382.10.0.0.1.1144312231.squirrel@10.0.0.2>
-References: <55382.10.0.0.1.1144312231.squirrel@10.0.0.2>
-Date: Thu, 06 Apr 2006 17:05:23 -0400
-Message-Id: <1144357523.2643.104.camel@localhost.localdomain>
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Reply-To: mingz@ele.uri.edu,
-	LVM general discussion and development <linux-lvm@redhat.com>
+	k36Lj52V019485
+	for <linux-lvm@redhat.com>; Thu, 6 Apr 2006 17:45:05 -0400
+Received: from westrelay02.boulder.ibm.com (westrelay02.boulder.ibm.com
+	[9.17.195.11])
+	by e35.co.us.ibm.com (8.12.11.20060308/8.12.11) with ESMTP id
+	k36LixZN026227
+	for <linux-lvm@redhat.com>; Thu, 6 Apr 2006 17:44:59 -0400
+Received: from d03av02.boulder.ibm.com (d03av02.boulder.ibm.com [9.17.195.168])
+	by westrelay02.boulder.ibm.com (8.12.10/NCO/VER6.8) with ESMTP id
+	k36LfbTA249810
+	for <linux-lvm@redhat.com>; Thu, 6 Apr 2006 15:41:37 -0600
+Received: from d03av02.boulder.ibm.com (loopback [127.0.0.1])
+	by d03av02.boulder.ibm.com (8.12.11/8.13.3) with ESMTP id
+	k36LixUj006094
+	for <linux-lvm@redhat.com>; Thu, 6 Apr 2006 15:44:59 -0600
+Received: from d03nm118.boulder.ibm.com (d03nm118.boulder.ibm.com
+	[9.17.195.144])
+	by d03av02.boulder.ibm.com (8.12.11/8.12.11) with ESMTP id
+	k36Lix6c006086
+	for <linux-lvm@redhat.com>; Thu, 6 Apr 2006 15:44:59 -0600
+Message-ID: <OF3B16C5BB.0FB8E06C-ON88257148.007618A5-88257148.0077796C@us.ibm.com>
+From: Graham Norris <norrisg@us.ibm.com>
+Date: Thu, 6 Apr 2006 14:44:58 -0700
+MIME-Version: 1.0
+Content-type: multipart/alternative; 
+	Boundary="0__=07BBFBDBDFE59E358f9e8a93df938690918c07BBFBDBDFE59E35"
+Content-Disposition: inline
+Subject: [linux-lvm] fsck for LVM?
+Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -25,45 +42,68 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: LVM general discussion and development <linux-lvm@redhat.com>
+To: linux-lvm@redhat.com
 
-this is not a LVM problem at all. u send off-list email here.
+--0__=07BBFBDBDFE59E358f9e8a93df938690918c07BBFBDBDFE59E35
+Content-type: text/plain; charset=US-ASCII
+Content-transfer-encoding: quoted-printable
 
-the proper way for you is to copy old data to a partitioned and
-formatted HD instead of using ghost.
 
-ming
 
-On Thu, 2006-04-06 at 14:00 +0530, Sreevidya@tsm.ac.in wrote:
-> 
-> Respected Sir/Madam,
-> 
-> I am working as a lecturer in TSM,Madurai. We have a problem in our linux
-> system and we are unable to resolve the same.I request you to kindly help
-> me to resolve this.
-> 
-> We had an 18GB HDD previously in our institution on which the mail server
-> for our institution was configured. Due to the increased strength of mail
-> usage we had to extend the HDD to a larger one. We have a scussi HDD. We
-> then bought another HDD of 40GB capacity and with the ghost process we
-> transferred to the newer HDD.But still in that 40GB HDD we were able to
-> use only that 18GB  partition the rest of 22GB is still unusable.
-> Kindly tell us the way in which we can extend that 22GB with that of 18GB
-> so that the entire HDD can be used for this purpose.
-> 
-> Awaiting your response.
-> 
-> Thanking you,
-> 
-> Yours faithfully,
-> Sreevidya S
-> Faculty MCA
-> Thiagarajar School of Management,
-> Madurai
-> 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+
+
+
+I've got a user complaining that his filesystem in an lv is being
+corrupted. It's not clear whether it is the lv that is corrupted or the=
+
+filesystem, I've not actually seen it in this state. I have seen a fsck=
+ log
+from when it is formatted with reiserfs failing though.
+
+The user says he's tried both reiserfs and ext3 in this lv, and both en=
+d up
+corrupted after a period of time (days). Since this user obviously has =
+root
+(or they couldn't format the lv), I have to suspect they're breaking th=
+eir
+own filesystem. They, OTOH, seem to think it is LVM's fault and want me=
+ to
+fix it.
+
+Is there something which can be run on an LVM setup to verify its integ=
+rity
+in much the same way as fsck is used on file systems? I've used vgck,
+vgscan, vgdisplay, lvscan, lvdisplay, pvscan and pvdisplay on the vario=
+us
+pieces, and can see no problems. I've also scanned the physical disk th=
+e pv
+lives on and that shows no problems either.
+
+Graham.=
+
+--0__=07BBFBDBDFE59E358f9e8a93df938690918c07BBFBDBDFE59E35
+Content-type: text/html; charset=US-ASCII
+Content-Disposition: inline
+Content-transfer-encoding: quoted-printable
+
+<html><body>
+<p>I've got a user complaining that his filesystem in an lv is being co=
+rrupted. It's not clear whether it is the lv that is corrupted or the f=
+ilesystem, I've not actually seen it in this state. I have seen a fsck =
+log from when it is formatted with reiserfs failing though.<br>
+<br>
+The user says he's tried both reiserfs and ext3 in this lv, and both en=
+d up corrupted after a period of time (days). Since this user obviously=
+ has root (or they couldn't format the lv), I have to suspect they're b=
+reaking their own filesystem. They, OTOH, seem to think it is LVM's fau=
+lt and want me to fix it.<br>
+<br>
+Is there something which can be run on an LVM setup to verify its integ=
+rity in much the same way as fsck is used on file systems? I've used vg=
+ck, vgscan, vgdisplay, lvscan, lvdisplay, pvscan and pvdisplay on the v=
+arious pieces, and can see no problems. I've also scanned the physical =
+disk the pv lives on and that shows no problems either.<br>
+<br>
+Graham.</body></html>=
+
+--0__=07BBFBDBDFE59E358f9e8a93df938690918c07BBFBDBDFE59E35--
