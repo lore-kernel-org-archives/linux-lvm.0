@@ -1,37 +1,30 @@
-Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
+Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
 	by int-mx1.corp.redhat.com (8.12.11.20060308/8.11.6) with ESMTP id
-	k36Lj7VP025450
-	for <linux-lvm@redhat.com>; Thu, 6 Apr 2006 17:45:07 -0400
-Received: from e35.co.us.ibm.com (e35.co.us.ibm.com [32.97.110.153])
-	by mx1.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
-	k36Lj52V019485
-	for <linux-lvm@redhat.com>; Thu, 6 Apr 2006 17:45:05 -0400
-Received: from westrelay02.boulder.ibm.com (westrelay02.boulder.ibm.com
-	[9.17.195.11])
-	by e35.co.us.ibm.com (8.12.11.20060308/8.12.11) with ESMTP id
-	k36LixZN026227
-	for <linux-lvm@redhat.com>; Thu, 6 Apr 2006 17:44:59 -0400
-Received: from d03av02.boulder.ibm.com (d03av02.boulder.ibm.com [9.17.195.168])
-	by westrelay02.boulder.ibm.com (8.12.10/NCO/VER6.8) with ESMTP id
-	k36LfbTA249810
-	for <linux-lvm@redhat.com>; Thu, 6 Apr 2006 15:41:37 -0600
-Received: from d03av02.boulder.ibm.com (loopback [127.0.0.1])
-	by d03av02.boulder.ibm.com (8.12.11/8.13.3) with ESMTP id
-	k36LixUj006094
-	for <linux-lvm@redhat.com>; Thu, 6 Apr 2006 15:44:59 -0600
-Received: from d03nm118.boulder.ibm.com (d03nm118.boulder.ibm.com
-	[9.17.195.144])
-	by d03av02.boulder.ibm.com (8.12.11/8.12.11) with ESMTP id
-	k36Lix6c006086
-	for <linux-lvm@redhat.com>; Thu, 6 Apr 2006 15:44:59 -0600
-Message-ID: <OF3B16C5BB.0FB8E06C-ON88257148.007618A5-88257148.0077796C@us.ibm.com>
-From: Graham Norris <norrisg@us.ibm.com>
-Date: Thu, 6 Apr 2006 14:44:58 -0700
+	k36Mlw21005244
+	for <linux-lvm@redhat.com>; Thu, 6 Apr 2006 18:47:58 -0400
+Received: from black.open2space.com ([68.144.188.211])
+	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id k36MljjJ029445
+	for <linux-lvm@redhat.com>; Thu, 6 Apr 2006 18:47:46 -0400
+Received: from localhost (localhost [127.0.0.1])
+	by black.open2space.com (Postfix) with ESMTP id 98FF449AD2
+	for <linux-lvm@redhat.com>; Thu,  6 Apr 2006 21:45:03 -0600 (MDT)
+Received: from localhost (localhost [127.0.0.1])
+	by black.open2space.com (Postfix) with ESMTP id 5FB4348CC1
+	for <linux-lvm@redhat.com>; Thu,  6 Apr 2006 21:45:03 -0600 (MDT)
+Received: from black.open2space.com ([127.0.0.1])
+	by localhost (black [127.0.0.1]) (amavisd-new, port 10024) with ESMTP
+	id 06632-07 for <linux-lvm@redhat.com>;
+	Thu,  6 Apr 2006 21:45:02 -0600 (MDT)
+Received: from [192.168.0.20] (unknown [192.168.0.20])
+	by black.open2space.com (Postfix) with ESMTP id 2CFED488C4
+	for <linux-lvm@redhat.com>; Thu,  6 Apr 2006 21:45:01 -0600 (MDT)
+From: Shawn <sgrover@open2space.com>
+Date: Thu, 6 Apr 2006 15:45:08 -0600
 MIME-Version: 1.0
-Content-type: multipart/alternative; 
-	Boundary="0__=07BBFBDBDFE59E358f9e8a93df938690918c07BBFBDBDFE59E35"
+Content-Transfer-Encoding: 7bit
 Content-Disposition: inline
-Subject: [linux-lvm] fsck for LVM?
+Message-Id: <200604061545.09082.sgrover@open2space.com>
+Subject: [linux-lvm] Recovering data from a damaged LVM partition?
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -42,68 +35,36 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
+Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@redhat.com
 
---0__=07BBFBDBDFE59E358f9e8a93df938690918c07BBFBDBDFE59E35
-Content-type: text/plain; charset=US-ASCII
-Content-transfer-encoding: quoted-printable
+First post to this list, so please forgive me if I'm not on topic, or 
+repeating a common issue.
 
+I have been asked to try to get data from a drive with a damaged partition.  
+In the past I've done this with ddrescue, and then mounted the resulting 
+image file.  That's not working in this case because the partition in 
+question was part of an LVM volume.
 
+My experience with LVM is not that great, as I've never seen a need for it on 
+my systems.  But, I've installed the LVM tools, and modified my kernel for 
+LVM support, and can at least see the volume on the damaged drive now.  But I 
+want to focus on the image file, not the drive.
 
+So, the question is how to mount an image file of an LVM partition?  Anytime I 
+try the mount command, it's complaining about the file system type.  I've 
+tried the different options for the -t argument, (and am using the -o loop as 
+well).
 
+I'm hesitant to run any of the LVM commands to create a volume set, or 
+intialize a partition, for fear of loosing the data.  (though I could run 
+ddrescue again I suppose, as long as I don't touch the source drive).
 
+Does anyone have any experience here they'd care to share?  Thanks.
 
-I've got a user complaining that his filesystem in an lv is being
-corrupted. It's not clear whether it is the lv that is corrupted or the=
+BTW, the disk in question is from a default install of Fedora Core 4, and the 
+system only had a single drive.  So LVM probably wasn't needed in this case, 
+but the person that installed the system is not comfortable with the file 
+system details.
 
-filesystem, I've not actually seen it in this state. I have seen a fsck=
- log
-from when it is formatted with reiserfs failing though.
-
-The user says he's tried both reiserfs and ext3 in this lv, and both en=
-d up
-corrupted after a period of time (days). Since this user obviously has =
-root
-(or they couldn't format the lv), I have to suspect they're breaking th=
-eir
-own filesystem. They, OTOH, seem to think it is LVM's fault and want me=
- to
-fix it.
-
-Is there something which can be run on an LVM setup to verify its integ=
-rity
-in much the same way as fsck is used on file systems? I've used vgck,
-vgscan, vgdisplay, lvscan, lvdisplay, pvscan and pvdisplay on the vario=
-us
-pieces, and can see no problems. I've also scanned the physical disk th=
-e pv
-lives on and that shows no problems either.
-
-Graham.=
-
---0__=07BBFBDBDFE59E358f9e8a93df938690918c07BBFBDBDFE59E35
-Content-type: text/html; charset=US-ASCII
-Content-Disposition: inline
-Content-transfer-encoding: quoted-printable
-
-<html><body>
-<p>I've got a user complaining that his filesystem in an lv is being co=
-rrupted. It's not clear whether it is the lv that is corrupted or the f=
-ilesystem, I've not actually seen it in this state. I have seen a fsck =
-log from when it is formatted with reiserfs failing though.<br>
-<br>
-The user says he's tried both reiserfs and ext3 in this lv, and both en=
-d up corrupted after a period of time (days). Since this user obviously=
- has root (or they couldn't format the lv), I have to suspect they're b=
-reaking their own filesystem. They, OTOH, seem to think it is LVM's fau=
-lt and want me to fix it.<br>
-<br>
-Is there something which can be run on an LVM setup to verify its integ=
-rity in much the same way as fsck is used on file systems? I've used vg=
-ck, vgscan, vgdisplay, lvscan, lvdisplay, pvscan and pvdisplay on the v=
-arious pieces, and can see no problems. I've also scanned the physical =
-disk the pv lives on and that shows no problems either.<br>
-<br>
-Graham.</body></html>=
-
---0__=07BBFBDBDFE59E358f9e8a93df938690918c07BBFBDBDFE59E35--
+Shawn
