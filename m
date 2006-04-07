@@ -1,18 +1,24 @@
-Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
+Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
 	by int-mx1.corp.redhat.com (8.12.11.20060308/8.11.6) with ESMTP id
-	k37CTgO6023901
-	for <linux-lvm@redhat.com>; Fri, 7 Apr 2006 08:29:42 -0400
-Received: from sifyr3.maa.sify.net (sifyr3.maa.sify.net [202.144.76.26])
-	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id k37CTUDF031529
-	for <linux-lvm@redhat.com>; Fri, 7 Apr 2006 08:29:31 -0400
-Message-ID: <1144412972.44365b2c36361@mail.sify.com>
-Date: Fri, 07 Apr 2006 17:59:32 +0500 (IST)
-From: rarulselvan@sify.com
-MIME-Version: 1.0
-Content-Type: multipart/alternative;
-	boundary="-MOQ1144412972f62aa747f4bf0a45cf66d9dbc2fe96ae"
-Subject: [linux-lvm] LVM over IP network
-Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
+	k37I9jxH022172
+	for <linux-lvm@redhat.com>; Fri, 7 Apr 2006 14:09:45 -0400
+Received: from smtprelay03.ispgateway.de (smtprelay03.ispgateway.de
+	[80.67.18.15])
+	by mx1.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
+	k37I9iWX022253
+	for <linux-lvm@redhat.com>; Fri, 7 Apr 2006 14:09:44 -0400
+Received: from unknown (HELO tokyoo.hero.de) (846475@[84.171.154.58])
+	(envelope-sender <oliver@hoerold.de>)
+	by smtprelay03.ispgateway.de (qmail-ldap-1.03) with SMTP
+	for <linux-lvm@redhat.com>; 7 Apr 2006 18:09:43 -0000
+From: Oliver =?ISO-8859-1?Q?H=F6rold?= <oliver@hoerold.de>
+Date: Fri, 07 Apr 2006 20:09:42 +0200
+Message-Id: <1144433382.3692.279.camel@tokyoo.hero.de>
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Subject: [linux-lvm] logical extent (630) already mapped
+Reply-To: oliver@hoerold.de,
+	LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -22,46 +28,99 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: linux-lvm@redhat.com
+Content-Type: text/plain; charset="iso-8859-1"
+To: lvm mailinglist <linux-lvm@redhat.com>
 
-This message is in MIME format.
+hi,
 
----MOQ1144412972f62aa747f4bf0a45cf66d9dbc2fe96ae
-Content-Type: text/plain
-Content-Transfer-Encoding: 8bit
+after using for some time lvm without any problems, my lvm system
+generates after rebooting some strang errors.
 
-Hello, 
+the problems look like these:=20
+http://www.copilotconsulting.com/mail-archives/linux-lvm.2005/msg00025.html
 
-I have 10 Dell workstation on a LAN. Each  workstation has 80 GB hard drive. Two workstations consumed most of the disk space and remaining eight workstations still has plenty of disk space unused.
- 
-I am trying to find an optimized way to use the excess space on the those harddrives (about 80 GB x 8 = 800GB) that are scattered over 8 different workstations connected in the LAN.
- 
-I do understand that LVM and EVMS are quite useful for managing the disk space in given work station. So I am wondering if there is such thing as LVM over IP network ? so that I can maximize my disk usage. If not, what is my other choice ? 
- 
-What I want basically, if I could just collect those 800 GB excess space (not utilized) and assign it to the work stations starving for disk space. Is this achievable through LVM or EVMS?
- 
-Thanks for any thoughts or info. 
- 
-Arul
----MOQ1144412972f62aa747f4bf0a45cf66d9dbc2fe96ae
-Content-Type: text/html
-Content-Transfer-Encoding: 8bit
+but the solution doesnt work for me.
 
-<pre>Hello, 
+summery:
 
-I have 10 Dell workstation on a LAN. Each  workstation has 80<br>GB hard drive. Two workstations consumed most of the disk space and<br>remaining eight workstations still has plenty of disk space unused.
-<br>
-I am trying to find an optimized way to use the excess space on the<br>those harddrives (about 80 GB x 8 = 800GB) that are scattered over 8<br>different workstations connected in the LAN.
- 
-I do understand that<br>LVM and EVMS are quite useful for managing the disk space in given work<br>station. So I am wondering if there is such thing as LVM over IP network<br>? so that I can maximize my disk usage. If not, what is my other choice<br>? 
- 
-What I want basically, if I could just collect those 800 GB<br>excess space (not utilized) and assign it to the work stations starving<br>for disk space. Is this achievable through LVM or EVMS?
- 
-Thanks for<br>any thoughts or info. 
- 
-Arul</pre>
+system suse 10.1, boot drive sata /dev/sda (no lvm)
+lvm composed of 8 ide drives (/dev/hda to /dev/hdh)
 
-<A HREF="http://ads.sify.com/RealMedia/ads/click_nx.ads/mail.sify.com/sentmail@Bottom" target=_new>
-<IMG SRC="http://ads.sify.com/RealMedia/ads/adstream_nx.ads/mail.sify.com/sentmail@Bottom"  width=300 height=40 border=0></a>
+worked for some time, but i think the auto-update of suse screwed the
+lvm.=20
 
----MOQ1144412972f62aa747f4bf0a45cf66d9dbc2fe96ae--
+pvscan, pvdisplay, lvsvan and vgscan all generate errors. i have no idea
+where the "logic extend" is already mapped. i cant diagnose the error.=20
+
+i think the pv are still intact, but i dont knwo how to put em back
+together.
+
+here are some of the errors:
+
+tokyoo:/tmp # pvscan
+  /dev/sdb: open failed: Kein Medium gefunden (No Media found)
+  /dev/sdc: open failed: Kein Medium gefunden
+  /dev/sdd: open failed: Kein Medium gefunden
+  /dev/sde: open failed: Kein Medium gefunden
+  logical extent (630) already mapped.
+  Couldn't fill logical volume maps.
+  logical extent (630) already mapped.
+  Couldn't fill logical volume maps.
+  No matching physical volumes found
+tokyoo:/tmp # pvdisplay
+  logical extent (630) already mapped.
+  Couldn't fill logical volume maps.
+  logical extent (630) already mapped.
+  Couldn't fill logical volume maps.
+
+remark: with every commad that generates an error i get the "No Media
+found" error block f=EF=BF=BDr the /dev/sdx devices. i removed them to save
+space.
+
+but strangely the single drives are recognised as proper PV:
+
+tokyoo:/tmp # pvdisplay /dev/hda1
+  --- Physical volume ---
+  PV Name               /dev/hda1
+  VG Name               system
+  PV Size               111,78 GB / not usable 0
+  Allocatable           yes
+  PE Size (KByte)       16384
+  Total PE              7154
+  Free PE               7154
+  Allocated PE          0
+  PV UUID               afdGTQ-95Qv-f3oL-anWh-V2LO-PKIf-eXTbRb
+
+[...]
+
+some other things i tried:
+
+tokyoo:/tmp # lvscan
+  logical extent (630) already mapped.
+  Couldn't fill logical volume maps.
+  logical extent (630) already mapped.
+  Couldn't fill logical volume maps.
+  Volume group "system" not found
+tokyoo:/tmp # lvdisplay
+  logical extent (630) already mapped.
+  Couldn't fill logical volume maps.
+  logical extent (630) already mapped.
+  Couldn't fill logical volume maps.
+  Volume group "system" not found
+tokyoo:/tmp # lvdisplay system
+  logical extent (630) already mapped.
+  Couldn't fill logical volume maps.
+  logical extent (630) already mapped.
+  Couldn't fill logical volume maps.
+  Volume group "system" not found
+tokyoo:/tmp # vgscan
+  Reading all physical volumes.  This may take a while...
+  logical extent (630) already mapped.
+  Couldn't fill logical volume maps.
+  logical extent (630) already mapped.
+  Couldn't fill logical volume maps.
+  Volume group "system" not found
+tokyoo:/tmp # vgcreate
+erwin /dev/hda1 /dev/hdc1 /dev/hdd1 /dev/hde1 /dev/hdf1 /dev/hdg1 /dev/hdh1
+  Physical volume '/dev/hda1' is already in volume group 'system'
+  Unable to add physical volume '/dev/hda1' to volume group 'erwin'.
