@@ -1,33 +1,17 @@
-Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
+Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
 	by int-mx1.corp.redhat.com (8.12.11.20060308/8.11.6) with ESMTP id
-	k383GMLe029128
-	for <linux-lvm@redhat.com>; Fri, 7 Apr 2006 23:16:22 -0400
-Received: from ender.volumehost.net (adsl-69-154-123-202.dsl.fyvlar.swbell.net
-	[69.154.123.202])
-	by mx1.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
-	k383GLx0025879
-	for <linux-lvm@redhat.com>; Fri, 7 Apr 2006 23:16:21 -0400
-Received: from localhost (localhost [127.0.0.1])
-	by ender.volumehost.net (Postfix) with ESMTP id D7270B65E
-	for <linux-lvm@redhat.com>; Sat,  8 Apr 2006 03:16:20 +0000 (UTC)
-Received: from ender.volumehost.net ([127.0.0.1])
-	by localhost (ender.volumehost.net [127.0.0.1]) (amavisd-new,
-	port 10024) with LMTP id 14271-05 for <linux-lvm@redhat.com>;
-	Sat,  8 Apr 2006 03:16:17 +0000 (UTC)
-Received: from ath600 (ip70-178-219-238.ks.ks.cox.net [70.178.219.238])
-	(using SSLv3 with cipher DHE-RSA-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by ender.volumehost.net (Postfix) with ESMTP id 7991DB60F
-	for <linux-lvm@redhat.com>; Sat,  8 Apr 2006 03:16:17 +0000 (UTC)
-From: Zac Slade <krakrjak@volumehost.net>
-Subject: Re: [linux-lvm] LVM over IP network
-Date: Fri, 7 Apr 2006 22:16:14 -0500
-References: <1144412972.44365b2c36361@mail.sify.com>
-In-Reply-To: <1144412972.44365b2c36361@mail.sify.com>
+	k38MCAEk022734
+	for <linux-lvm@redhat.com>; Sat, 8 Apr 2006 18:12:10 -0400
+Received: from web60411.mail.yahoo.com (web60411.mail.yahoo.com
+	[209.73.178.154])
+	by mx3.redhat.com (8.13.1/8.13.1) with SMTP id k38MC4CO008933
+	for <linux-lvm@redhat.com>; Sat, 8 Apr 2006 18:12:04 -0400
+Message-ID: <20060408211158.56899.qmail@web60411.mail.yahoo.com>
+Date: Sat, 8 Apr 2006 14:11:58 -0700 (PDT)
+From: <linux_user98765@yahoo.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-Message-Id: <200604072216.14803.krakrjak@volumehost.net>
+Content-Transfer-Encoding: 8bit
+Subject: [linux-lvm] Concise LVM Summary
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -39,21 +23,44 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: LVM general discussion and development <linux-lvm@redhat.com>
+To: linux-lvm@redhat.com
 
-On Friday 07 April 2006 07:59, rarulselvan@sify.com wrote:
-> I do understand that LVM and EVMS are quite useful for managing the disk
-> space in given work station. So I am wondering if there is such thing as
-> LVM over IP network ? so that I can maximize my disk usage. If not, what is
-> my other choice ?
-Why not?  Using iSCSI or ATAoE you can export the extra space from each of the 
-system as devices that will appear to be block devices.  From there you can 
-add them to a vg anytime you want.  Just be careful how you do it because if 
-one of the systems goes off the network you will not have access to the data 
-from that drive.  Also I'm not so sure how well LVM deals with having a drive 
-dissappear out from underneath it.
+I'm trying to write a perl script to give concise output of 
+pvs, vgs, lvs, pvdisplay, vgdisplay, lvdisplay and df -- something
+like:
 
--- 
-Zac Slade
-krakrjak@volumehost.net
-ICQ:1415282 YM:krakrjak AIM:ttyp99
+
+VG home [PE (4MB): 0 (0 b) / 52205 (203.93 GB)]
+LV /dev/home/lvol0 /home [LE: 52205 (203.93 GB); DF: 64G/201G (129G)
+34%]
+PV /dev/sdb [PE (4096KB): 0 (0 b) / 38156 (149.05 GB); DF: ??/149G (??)
+??%]
+PV /dev/hdb4 [PE (4096KB): 0 (0 b) / 14049 (54.88 GB); DF: ??/55G (??)
+??%]
+
+
+however, there are a few things I have yet to figure out:
+
+- determine the actual disk usage of a particular PV in a given LV
+- the lvs column option which produces the heading "Log"
+- the nature of the pvs,vgs,lvs separator inconsistencies:
+
+lvs - Headers and LV lines are separator terminated
+vgs - Headers not separator terminated, VG lines are
+pvs - Headers not separator terminated, PV lines are
+
+- The unabreviated names of the column headings
+  (a website detailing each would be nice)
+- whether pvdisplay,vgdisplay,lvdisplay offer anything more than
+  pvs, vgs, lvs with all columns displayed
+- Why the majority of pvs,vgs,lvs columns lack data
+
+I'm still working on the code, but the above are the major stumbling
+blocks I've come across so far...
+
+TIA!
+
+__________________________________________________
+Do You Yahoo!?
+Tired of spam?  Yahoo! Mail has the best spam protection around 
+http://mail.yahoo.com 
