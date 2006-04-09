@@ -1,29 +1,32 @@
-Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
+Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
 	by int-mx1.corp.redhat.com (8.12.11.20060308/8.11.6) with ESMTP id
-	k38NHC0p031247
-	for <linux-lvm@redhat.com>; Sat, 8 Apr 2006 19:17:12 -0400
-Received: from mail.nederland.net (mail.nederland.net [83.137.20.15])
-	by mx1.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
-	k38NHAWT015436
-	for <linux-lvm@redhat.com>; Sat, 8 Apr 2006 19:17:11 -0400
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by romeo.computel.nl (Postfix) with ESMTP id 5A5D614027
-	for <linux-lvm@redhat.com>; Sun,  9 Apr 2006 01:17:09 +0200 (CEST)
-Received: from mail.nederland.net ([127.0.0.1])
-	by localhost (romeo.computel.nl [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id 29972-18 for <linux-lvm@redhat.com>;
-	Sun,  9 Apr 2006 01:17:03 +0200 (CEST)
-Received: from balefirehome (balefire.demon.nl [212.238.240.59])
-	by romeo.computel.nl (Postfix) with ESMTP id B7DE914007
-	for <linux-lvm@redhat.com>; Sun,  9 Apr 2006 01:17:03 +0200 (CEST)
-Message-ID: <00a001c65b62$e7e624a0$64c8a8c0@balefirehome>
-From: "Sander Steffann" <s.steffann@computel.nl>
-References: <1144412972.44365b2c36361@mail.sify.com>
-Subject: Re: [linux-lvm] LVM over IP network
-Date: Sun, 9 Apr 2006 01:19:37 +0200
+	k392xuVq024106
+	for <linux-lvm@redhat.com>; Sat, 8 Apr 2006 22:59:56 -0400
+Received: from black.open2space.com ([68.144.188.211])
+	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id k392xk4H021214
+	for <linux-lvm@redhat.com>; Sat, 8 Apr 2006 22:59:47 -0400
+Received: from localhost (localhost [127.0.0.1])
+	by black.open2space.com (Postfix) with ESMTP id 689B431A61
+	for <linux-lvm@redhat.com>; Sun,  9 Apr 2006 02:59:41 -0600 (MDT)
+Received: from localhost (localhost [127.0.0.1])
+	by black.open2space.com (Postfix) with ESMTP id 45C0E31BA5
+	for <linux-lvm@redhat.com>; Sun,  9 Apr 2006 02:59:40 -0600 (MDT)
+Received: from black.open2space.com ([127.0.0.1])
+	by localhost (black [127.0.0.1]) (amavisd-new, port 10024) with ESMTP
+	id 00312-10 for <linux-lvm@redhat.com>;
+	Sun,  9 Apr 2006 02:59:37 -0600 (MDT)
+Received: from [192.168.0.20] (unknown [192.168.0.20])
+	by black.open2space.com (Postfix) with ESMTP id CA864319B3
+	for <linux-lvm@redhat.com>; Sun,  9 Apr 2006 02:59:36 -0600 (MDT)
+From: Shawn <sgrover@open2space.com>
+Subject: Re: [linux-lvm] Recovering data from a damaged LVM partition?
+Date: Sat, 8 Apr 2006 20:59:40 -0600
+References: <200604061545.09082.sgrover@open2space.com>
+In-Reply-To: <200604061545.09082.sgrover@open2space.com>
 MIME-Version: 1.0
-Content-Type: multipart/alternative;
-	boundary="----=_NextPart_000_009D_01C65B73.AB382D30"
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+Message-Id: <200604082059.40457.sgrover@open2space.com>
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -34,79 +37,47 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
+Content-Type: text/plain; charset="us-ascii"
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-This is a multi-part message in MIME format.
+I managed to work out a method to recover the lost data.  I've documented this 
+on my blog (http://grover.open2space.com/node/17), for anyone who may be 
+facing a similar problem.
 
-------=_NextPart_000_009D_01C65B73.AB382D30
-Content-Type: text/plain;
-	charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Of course, I'm sure those more experienced with LVM may have suggestions, and 
+I'd be happy to hear them.  The solution basically meant learning more about 
+LVM in general.
 
-Hi,
-  I have 10 Dell workstation on a LAN. Each  workstation has 80
-  GB hard drive. Two workstations consumed most of the disk space and
-  remaining eight workstations still has plenty of disk space unused.
+Shawn
 
-  ...
-
-  What I want basically, if I could just collect those 800 GB
-  excess space (not utilized) and assign it to the work stations =
-starving
-  for disk space. Is this achievable through LVM or EVMS?
-I would never do something like this. You make each workstation =
-dependent on all the other workstations. If one of them is turned off, =
-crashes, dies, etc. your other workstations lose their data. Disks are =
-cheap these days. Just buy an extra drive for the workstations that need =
-it.
-
-Good luck,
-Sander
-
-------=_NextPart_000_009D_01C65B73.AB382D30
-Content-Type: text/html;
-	charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
-<HTML><HEAD>
-<META http-equiv=3DContent-Type content=3D"text/html; =
-charset=3Diso-8859-1">
-<META content=3D"MSHTML 6.00.2900.2802" name=3DGENERATOR>
-<STYLE></STYLE>
-</HEAD>
-<BODY bgColor=3D#ffffff>
-<DIV><FONT face=3DArial size=3D2>Hi,</FONT></DIV>
-<BLOCKQUOTE=20
-style=3D"PADDING-RIGHT: 0px; PADDING-LEFT: 5px; MARGIN-LEFT: 5px; =
-BORDER-LEFT: #000000 2px solid; MARGIN-RIGHT: 0px">
-  <DIV style=3D"FONT: 10pt arial">I have 10 Dell workstation on a LAN. =
-Each&nbsp;=20
-  workstation has 80<BR>GB hard drive. Two workstations consumed most of =
-the=20
-  disk space and<BR>remaining eight workstations still has plenty of =
-disk space=20
-  unused.</DIV>
-  <DIV style=3D"FONT: 10pt arial"><BR>...</DIV>
-  <DIV style=3D"FONT: 10pt arial">&nbsp;</DIV>
-  <DIV style=3D"FONT: 10pt arial">What I want basically, if I could just =
-collect=20
-  those 800 GB<BR>excess space (not utilized) and assign it to the work =
-stations=20
-  starving<BR>for disk space. Is this achievable through LVM or=20
-EVMS?</DIV></BLOCKQUOTE>
-<DIV style=3D"FONT: 10pt arial">I would never do something like this. =
-You make=20
-each workstation dependent on all the other workstations. If one of them =
-is=20
-turned off, crashes, dies, etc. your other workstations lose their data. =
-Disks=20
-are cheap these days. Just buy an extra drive for the workstations that =
-need=20
-it.</DIV>
-<DIV style=3D"FONT: 10pt arial">&nbsp;</DIV>
-<DIV style=3D"FONT: 10pt arial">Good luck,</DIV>
-<DIV style=3D"FONT: 10pt arial">Sander</DIV>
-<DIV style=3D"FONT: 10pt arial">&nbsp;</DIV></BODY></HTML>
-
-------=_NextPart_000_009D_01C65B73.AB382D30--
+On Thursday 06 April 2006 15:45, Shawn wrote:
+> First post to this list, so please forgive me if I'm not on topic, or
+> repeating a common issue.
+>
+> I have been asked to try to get data from a drive with a damaged partition.
+> In the past I've done this with ddrescue, and then mounted the resulting
+> image file.  That's not working in this case because the partition in
+> question was part of an LVM volume.
+>
+> My experience with LVM is not that great, as I've never seen a need for it
+> on my systems.  But, I've installed the LVM tools, and modified my kernel
+> for LVM support, and can at least see the volume on the damaged drive now. 
+> But I want to focus on the image file, not the drive.
+>
+> So, the question is how to mount an image file of an LVM partition? 
+> Anytime I try the mount command, it's complaining about the file system
+> type.  I've tried the different options for the -t argument, (and am using
+> the -o loop as well).
+>
+> I'm hesitant to run any of the LVM commands to create a volume set, or
+> intialize a partition, for fear of loosing the data.  (though I could run
+> ddrescue again I suppose, as long as I don't touch the source drive).
+>
+> Does anyone have any experience here they'd care to share?  Thanks.
+>
+> BTW, the disk in question is from a default install of Fedora Core 4, and
+> the system only had a single drive.  So LVM probably wasn't needed in this
+> case, but the person that installed the system is not comfortable with the
+> file system details.
+>
+> Shawn
