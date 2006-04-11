@@ -1,11 +1,14 @@
+Received: from [10.15.80.229] (dhcp80-229.msp.redhat.com [10.15.80.229])
+	by pobox.corp.redhat.com (8.12.8/8.12.8) with ESMTP id k3BExQ0P023156
+	for <linux-lvm@redhat.com>; Tue, 11 Apr 2006 10:59:26 -0400
 Mime-Version: 1.0 (Apple Message framework v623)
-In-Reply-To: <1144644580.3783.35.camel@halifax>
-References: <1144644580.3783.35.camel@halifax>
-Message-Id: <a86187fc9ecdf80643a8bc47229f48d4@redhat.com>
+In-Reply-To: <20060408211158.56899.qmail@web60411.mail.yahoo.com>
+References: <20060408211158.56899.qmail@web60411.mail.yahoo.com>
+Message-Id: <0aa81d30ea28716535a28bd942327f3a@redhat.com>
 Content-Transfer-Encoding: 7bit
 From: Jonathan E Brassow <jbrassow@redhat.com>
-Subject: Re: [linux-lvm] lost volume group
-Date: Tue, 11 Apr 2006 09:53:38 -0500
+Subject: Re: [linux-lvm] Concise LVM Summary
+Date: Tue, 11 Apr 2006 10:00:46 -0500
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -17,59 +20,65 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: crap.central@gmail.com, LVM general discussion and development <linux-lvm@redhat.com>
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-I'll assume you had one disk (hdb4)  to start with, and you wanted to 
-extend the VG by adding (hdb2).
+You can pretty much print things how you want by specifying the right 
+things on the command line.  'lvs' and friends will default to printing 
+out certain columns, but you can change that.
 
-When you did the mkfs, you destroyed the LVM label on the newly added 
-disk. You are probably now getting something like:
-Couldn't find device with uuid...
-Couldn't find all physical volumes...
+prompt> lvs --noheadings # print things out without the headings
+prompt> lvs --noheadings -o lv_name  #print just the lv names
+prompt> lvs --noheadings -o lv_name, uuid  #print the lv names and 
+their uuid
+etc
 
-You need to do the vgcfgrestore, as you said, but doing:
-prompt> vgcfgrestore swampvg
-will give you:
-Couldn't find device with uuid '<your uuid>'
-...
-
-You can easily recreate that uuid on that device and restore by doing:
-prompt> pvcreate -u <your uuid> /dev/hdb4
-prompt> vgcfgrestore swampvg
-
-You should be good to go now.
+for a more complete list, see the various man pages
 
   brassow
 
-On Apr 9, 2006, at 11:49 PM, Petes Junk wrote:
 
-> When i was extending a group to include another PV somehow the Group
-> disappeared from the devices list after a reboot.
+
+On Apr 8, 2006, at 4:11 PM, <linux_user98765@yahoo.com> wrote:
+
+> I'm trying to write a perl script to give concise output of
+> pvs, vgs, lvs, pvdisplay, vgdisplay, lvdisplay and df -- something
+> like:
 >
-> The last entry in /dev/lvm/backup shows me executing
-> /usr/sbin/vgextend swampvg /dev/hdb2
-> to an already working /dev/swampvg/swamplv with a non striped /dev/hdb4
-> in it.
 >
-> I then did a mkfs -t ext3 /dev/hdb2 (the new disk) which was probably
-> how i got into trouble. I really need the image from /dev/hdb4 and im
-> afraid to do anything with it without knowing exactly what im doing. Im
-> thinking all i need is to recreate the VG and LV with only /dev/hdb4. I
-> have several archives in the /dev/lvm/archive but docs are not clear 
-> how
-> to approach this. I backed up the partition to another with dd so i
-> could try work on it safely, but the LVM tools didnt like the fact that
-> it had two uuid labels the same and always picked /dev/hdb4 to work on.
+> VG home [PE (4MB): 0 (0 b) / 52205 (203.93 GB)]
+> LV /dev/home/lvol0 /home [LE: 52205 (203.93 GB); DF: 64G/201G (129G)
+> 34%]
+> PV /dev/sdb [PE (4096KB): 0 (0 b) / 38156 (149.05 GB); DF: ??/149G (??)
+> ??%]
+> PV /dev/hdb4 [PE (4096KB): 0 (0 b) / 14049 (54.88 GB); DF: ??/55G (??)
+> ??%]
 >
-> Since then Ive been reading what little there is on LVM. Cant even find
-> a sysadmin book with more than 3 pages on the subject. Im very 
-> surprised
-> at the man page for vgcfgrestore where its options are not even
-> explained.
 >
-> Any help is greatly appreciated.
+> however, there are a few things I have yet to figure out:
 >
-> Pete
+> - determine the actual disk usage of a particular PV in a given LV
+> - the lvs column option which produces the heading "Log"
+> - the nature of the pvs,vgs,lvs separator inconsistencies:
+>
+> lvs - Headers and LV lines are separator terminated
+> vgs - Headers not separator terminated, VG lines are
+> pvs - Headers not separator terminated, PV lines are
+>
+> - The unabreviated names of the column headings
+>   (a website detailing each would be nice)
+> - whether pvdisplay,vgdisplay,lvdisplay offer anything more than
+>   pvs, vgs, lvs with all columns displayed
+> - Why the majority of pvs,vgs,lvs columns lack data
+>
+> I'm still working on the code, but the above are the major stumbling
+> blocks I've come across so far...
+>
+> TIA!
+>
+> __________________________________________________
+> Do You Yahoo!?
+> Tired of spam?  Yahoo! Mail has the best spam protection around
+> http://mail.yahoo.com
 >
 > _______________________________________________
 > linux-lvm mailing list
