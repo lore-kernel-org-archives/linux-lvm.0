@@ -1,23 +1,12 @@
-Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.12.11.20060308/8.11.6) with ESMTP id
-	k3BD8QhE018055
-	for <linux-lvm@redhat.com>; Tue, 11 Apr 2006 09:08:26 -0400
-Received: from orca.ele.uri.edu (orca.ele.uri.edu [131.128.51.63])
-	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id k3BD8KRv016276
-	for <linux-lvm@redhat.com>; Tue, 11 Apr 2006 09:08:20 -0400
-Subject: Re: [linux-lvm] LVM over IP network
-From: Ming Zhang <mingz@ele.uri.edu>
-In-Reply-To: <200604110129.57029.krakrjak@volumehost.net>
-References: <1144412972.44365b2c36361@mail.sify.com>
-	<00a001c65b62$e7e624a0$64c8a8c0@balefirehome>
-	<1144686838.8591.100.camel@localhost.localdomain>
-	<200604110129.57029.krakrjak@volumehost.net>
-Date: Tue, 11 Apr 2006 09:08:05 -0400
-Message-Id: <1144760886.26235.21.camel@localhost.localdomain>
-Mime-Version: 1.0
+Mime-Version: 1.0 (Apple Message framework v623)
+In-Reply-To: <1144644580.3783.35.camel@halifax>
+References: <1144644580.3783.35.camel@halifax>
+Message-Id: <a86187fc9ecdf80643a8bc47229f48d4@redhat.com>
 Content-Transfer-Encoding: 7bit
-Reply-To: mingz@ele.uri.edu,
-	LVM general discussion and development <linux-lvm@redhat.com>
+From: Jonathan E Brassow <jbrassow@redhat.com>
+Subject: Re: [linux-lvm] lost volume group
+Date: Tue, 11 Apr 2006 09:53:38 -0500
+Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -27,26 +16,64 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: Zac Slade <krakrjak@volumehost.net>
-Cc: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+To: crap.central@gmail.com, LVM general discussion and development <linux-lvm@redhat.com>
 
-On Tue, 2006-04-11 at 01:29 -0500, Zac Slade wrote:
-> On Monday 10 April 2006 11:33, Ming Zhang wrote:
-> > or put all these disks in one box and let other boxes boot from iscsi
-> > and use centralized ip storage.
-> This is the most sensible thought.  It's almost like nfs root only a little 
-> bit better.  They might need a CD burned that has a kernel and initramfs that 
-> loads the kernel and modules then loads their rootfs via iSCSI.
+I'll assume you had one disk (hdb4)  to start with, and you wanted to 
+extend the VG by adding (hdb2).
 
-no, u do not need a cd at all. 
+When you did the mkfs, you destroyed the LVM label on the newly added 
+disk. You are probably now getting something like:
+Couldn't find device with uuid...
+Couldn't find all physical volumes...
 
-http://sourceforge.net/mailarchive/message.php?msg_id=14610082
-http://groups.google.com/group/open-iscsi/browse_thread/thread/714c8d822df99285/fae407856ec7e744%23fae407856ec7e744
+You need to do the vgcfgrestore, as you said, but doing:
+prompt> vgcfgrestore swampvg
+will give you:
+Couldn't find device with uuid '<your uuid>'
+...
 
-google it or check those iscsi lists, there are such info available.
+You can easily recreate that uuid on that device and restore by doing:
+prompt> pvcreate -u <your uuid> /dev/hdb4
+prompt> vgcfgrestore swampvg
 
+You should be good to go now.
 
+  brassow
 
-> 
-> Good idea Ming!
+On Apr 9, 2006, at 11:49 PM, Petes Junk wrote:
+
+> When i was extending a group to include another PV somehow the Group
+> disappeared from the devices list after a reboot.
+>
+> The last entry in /dev/lvm/backup shows me executing
+> /usr/sbin/vgextend swampvg /dev/hdb2
+> to an already working /dev/swampvg/swamplv with a non striped /dev/hdb4
+> in it.
+>
+> I then did a mkfs -t ext3 /dev/hdb2 (the new disk) which was probably
+> how i got into trouble. I really need the image from /dev/hdb4 and im
+> afraid to do anything with it without knowing exactly what im doing. Im
+> thinking all i need is to recreate the VG and LV with only /dev/hdb4. I
+> have several archives in the /dev/lvm/archive but docs are not clear 
+> how
+> to approach this. I backed up the partition to another with dd so i
+> could try work on it safely, but the LVM tools didnt like the fact that
+> it had two uuid labels the same and always picked /dev/hdb4 to work on.
+>
+> Since then Ive been reading what little there is on LVM. Cant even find
+> a sysadmin book with more than 3 pages on the subject. Im very 
+> surprised
+> at the man page for vgcfgrestore where its options are not even
+> explained.
+>
+> Any help is greatly appreciated.
+>
+> Pete
+>
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@redhat.com
+> https://www.redhat.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+>
