@@ -1,10 +1,18 @@
-Date: Fri, 14 Apr 2006 17:22:20 -0400 (EDT)
-From: Paul Raines <raines@nmr.mgh.harvard.edu>
+Received: from agk.surrey.redhat.com (agk.surrey.redhat.com [172.16.10.74])
+	by pobox.surrey.redhat.com (8.12.8/8.12.8) with ESMTP id k3ELWpgI014198
+	for <linux-lvm@redhat.com>; Fri, 14 Apr 2006 22:32:51 +0100
+Received: from agk by agk.surrey.redhat.com with local (Exim 4.34)
+	id 1FUVuN-0004Ay-3T
+	for linux-lvm@redhat.com; Fri, 14 Apr 2006 22:32:51 +0100
+Date: Fri, 14 Apr 2006 22:32:51 +0100
+From: Alasdair G Kergon <agk@redhat.com>
 Subject: Re: [linux-lvm] LVM2, NFS and random device (major:minor) numbers
-In-Reply-To: <20060414145052.GD10725@agk.surrey.redhat.com>
-Message-ID: <Pine.LNX.4.62.0604141708370.4454@gate.nmr.mgh.harvard.edu>
+Message-ID: <20060414213251.GH10725@agk.surrey.redhat.com>
 References: <20060414145052.GD10725@agk.surrey.redhat.com>
-MIME-Version: 1.0
+	<Pine.LNX.4.62.0604141708370.4454@gate.nmr.mgh.harvard.edu>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <Pine.LNX.4.62.0604141708370.4454@gate.nmr.mgh.harvard.edu>
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -15,26 +23,31 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"; format="flowed"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: Alasdair G Kergon <agk@redhat.com>
-Cc: LVM general discussion and development <linux-lvm@redhat.com>
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-On Fri, 14 Apr 2006, Alasdair G Kergon wrote:
+On Fri, Apr 14, 2006 at 05:22:20PM -0400, Paul Raines wrote:
+> that depend on a persistent device id.
 
-> On Fri, Apr 14, 2006 at 10:08:40AM -0400, Paul Raines wrote:
->> I have a NFS server still running CentOS 4.0 (kernel 2.6.9-5.0.5.ELsmp,
->> lvm2-2.00.31-1.0.RHEL4).
->
-> man exports
-> /fsid
+2.4 kernel supported both persistent major and persistent minor
 
-Yes, I mentioned in my email I did not considered this a viable solution
-as for one it only solves the issue for NFS and not for other programs
-like incremental backup that depend on a persistent device id.
+But the changes to do that came after 2.6 forked off and they have
+never been ported to 2.6.
 
-Your quick short response seems to imply to me this is a common issue
-and so should really be in the HOWTO and FAQ so new admins putting
-up NFS servers using LVM should be pre-informed.  Especially since
-is the kind of thing that will seem to work fine at the start and
-then bite them in the ass later on.
+So the tools pretend to let you specify the major - on 2.4 this
+works - but on 2.6 it's ignored by the kernel.  I expect someone 
+will fix the kernel side of this some day so it works like
+the 2.4 version in which device-mapper can use different major
+numbers for different devices.
+
+You should be able to specify the device-mapper major number 
+at boot/module load time though, as the 'major' parameter, instead
+of having a dynamic one.
+
+Persistent minors, as you discovered, should be allocated from
+the top of the range.
+ 
+Alasdair
+-- 
+agk@redhat.com
