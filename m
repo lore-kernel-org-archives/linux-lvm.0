@@ -1,22 +1,28 @@
 Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
 	by int-mx1.corp.redhat.com (8.12.11.20060308/8.11.6) with ESMTP id
-	k3D1o7dX028608
-	for <linux-lvm@redhat.com>; Wed, 12 Apr 2006 21:50:07 -0400
-Received: from priv-edtnes46.telusplanet.net (defout.telus.net
-	[199.185.220.240])
+	k3EKpebO005441
+	for <linux-lvm@redhat.com>; Fri, 14 Apr 2006 16:51:40 -0400
+Received: from mail.nederland.net (mail.nederland.net [83.137.20.15])
 	by mx1.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
-	k3D1o3tI007569
-	for <linux-lvm@redhat.com>; Wed, 12 Apr 2006 21:50:03 -0400
-Received: from localhost ([199.185.220.240]) by priv-edtnes56.telusplanet.net
-	(InterMail vM.6.01.05.04 201-2131-123-105-20051025) with ESMTP
-	id <20060413012236.DYXF5889.priv-edtnes56.telusplanet.net@localhost>
-	for <linux-lvm@redhat.com>; Wed, 12 Apr 2006 19:22:36 -0600
-Message-ID: <1144902347.443dd2cb12d49@webmail.telus.net>
-Date: Wed, 12 Apr 2006 21:25:47 -0700
-From: faryalb@telus.net
+	k3EKpcK9004578
+	for <linux-lvm@redhat.com>; Fri, 14 Apr 2006 16:51:39 -0400
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by romeo.computel.nl (Postfix) with ESMTP id E4BB514039
+	for <linux-lvm@redhat.com>; Fri, 14 Apr 2006 22:51:37 +0200 (CEST)
+Received: from mail.nederland.net ([127.0.0.1])
+	by localhost (romeo.computel.nl [127.0.0.1]) (amavisd-new, port 10024)
+	with ESMTP id 08181-01 for <linux-lvm@redhat.com>;
+	Fri, 14 Apr 2006 22:51:36 +0200 (CEST)
+Received: from balefirehome (balefire.demon.nl [212.238.240.59])
+	by romeo.computel.nl (Postfix) with ESMTP id B048914004
+	for <linux-lvm@redhat.com>; Fri, 14 Apr 2006 22:51:35 +0200 (CEST)
+Message-ID: <000801c66005$979d28c0$64c8a8c0@balefirehome>
+From: "Sander Steffann" <s.steffann@computel.nl>
+References: <Pine.LNX.4.62.0604131143270.21727@gate.nmr.mgh.harvard.edu>
+Subject: Re: [linux-lvm] LVM2, NFS and random device (major:minor) numbers
+Date: Fri, 14 Apr 2006 22:54:14 +0200
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: [linux-lvm] Creating a new partition /dev/hda5 
+Content-Transfer-Encoding: 7bit
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -27,66 +33,32 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@redhat.com
+Content-Type: text/plain; format="flowed"; charset="us-ascii"; reply-type="response"
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
+Hi Paul,
 
+> NFS depends on what the server says the underlying device id is of the 
+> exported volume and if that changes, then NFS mounts are going to change 
+> out from under themselves.  And everytime I add a volume and reboot the 
+> device ids change.
 
-I have Fedora Core4 installed on my machine and trying to make mythtv work for
-me. I understand I need to create a new partition /dev/hda5 and mount /video
-file system. I've done some reading on LVM and come up with following commands
-to install the new partition on my machine. I need to have them verified by
-experts as I don't want to risk losing any data on my hard. 
+Unfortunate, but true. One of the side-effects of having dynamic volumes. 
+Also note that you would get similar trouble if, for example, you added a 
+SCSI device with a lower SCSI-id than an existing SCSI device. /dev/sdb1 
+would become /dev/sdc1, etc.
 
-#pvcreate /dev/hda5
-#vgcreate VolGroup00 /dev/hda5
-#lvcreate -L50G -name video VolGroup00
-#mount /dev/hda5/video
-#mount -0 remount,resize /video
+> I finally come upon this old post to this list:
+> http://www.redhat.com/archives/linux-lvm/2005-May/msg00029.html
 
+The part that can solve everything for you is:
+>> These days, that's configurable.
+>> See 'man exports' fsid=num.
 
-Below is the information on my machine: 
+With an explicit fsid=n for every export, you tell the NFS server to ignore 
+the device-id, and use the specified fsid instead. That way you get 
+consistent NFS exports, without being dependent on the underlying 
+device-ids.
 
-[root@localhost mytv]# /sbin/lvm.static vgscan
-  Reading all physical volumes.  This may take a while...
-  Found volume group "VolGroup00" using metadata type lvm2
-[root@localhost mytv]# /sbin/lvm.static vgdisplay
-  --- Volume group ---
-  VG Name               VolGroup00
-  System ID
-  Format                lvm2
-  Metadata Areas        1
-  Metadata Sequence No  3
-  VG Access             read/write
-  VG Status             resizable
-  MAX LV                0
-  Cur LV                2
-  Open LV               2
-  Max PV                0
-  Cur PV                1
-  Act PV                1
-  VG Size               111.69 GB
-  PE Size               32.00 MB
-  Total PE              3574
-  Alloc PE / Size       3573 / 111.66 GB
-  Free  PE / Size       1 / 32.00 MB
-  VG UUID               xdWgpi-74QQ-jgfK-EAzc-ojid-Geuo-HsyGA4
-
-[root@localhost mytv]# /sbin/fdisk -l
-
-Disk /dev/hda: 120.0 GB, 120034123776 bytes
-255 heads, 63 sectors/track, 14593 cylinders
-Units = cylinders of 16065 * 512 = 8225280 bytes
-
-   Device Boot      Start         End      Blocks   Id  System
-/dev/hda1   *           1          13      104391   83  Linux
-/dev/hda2              14       14593   117113850   8e  Linux LVM
-
-
-
-Please let me know if the above commands are correct or not.
-
-
-Thanks,
-
-Bita
+I have had the same trouble as you have, and this solution works great.
+Sander.
