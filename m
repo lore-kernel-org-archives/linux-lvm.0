@@ -1,26 +1,20 @@
-Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
+Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
 	by int-mx1.corp.redhat.com (8.12.11.20060308/8.11.6) with ESMTP id
-	k3IBbti1003190
-	for <linux-lvm@redhat.com>; Tue, 18 Apr 2006 07:37:55 -0400
-Received: from conterra.de (vvv.conterra.de [212.124.44.162])
-	by mx1.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
-	k3IBbpQt015018
-	for <linux-lvm@redhat.com>; Tue, 18 Apr 2006 07:37:52 -0400
-Received: from localhost (unknown [127.0.0.1])
-	by conterra.de (-) with ESMTP id D45C21F4206
-	for <linux-lvm@redhat.com>; Tue, 18 Apr 2006 13:37:36 +0200 (CEST)
-Received: from conterra.de ([127.0.0.1])
-	by localhost (vvv.conterra.de [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id 27468-05 for <linux-lvm@redhat.com>;
-	Tue, 18 Apr 2006 13:37:30 +0200 (CEST)
-Message-ID: <4444CF78.6090003@conterra.de>
-Date: Tue, 18 Apr 2006 13:37:28 +0200
-From: =?ISO-8859-1?Q?Dieter_St=FCken?= <stueken@conterra.de>
-MIME-Version: 1.0
-Subject: Re: [linux-lvm] Creating a new partition /dev/hda5
-References: <1144902347.443dd2cb12d49@webmail.telus.net>
-In-Reply-To: <1144902347.443dd2cb12d49@webmail.telus.net>
+	k3ICioJu017424
+	for <linux-lvm@redhat.com>; Tue, 18 Apr 2006 08:44:50 -0400
+Received: from smtp-out2.email.it (smtp-out2.email.it [80.247.70.37])
+	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id k3ICiUjf030919
+	for <linux-lvm@redhat.com>; Tue, 18 Apr 2006 08:44:37 -0400
+Received: from [10.253.12.196] (host96-52.pool8711.interbusiness.it
+	[87.11.52.96])by smtp-out2.email.it (Email.it) with ESMTP id
+	D5A5B1BCE6Bfor <linux-lvm@redhat.com>;
+	Tue, 18 Apr 2006 14:40:33 +0200 (CEST)
+From: Simone Gotti <simone.gotti@email.it>
+Date: Tue, 18 Apr 2006 14:40:34 +0200
+Message-Id: <1145364034.3003.55.camel@localhost>
+Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Subject: [linux-lvm] dmeventd_mirror problem and some questions.
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -31,47 +25,48 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="utf-8"; format="flowed"
+Content-Type: text/plain; charset="utf-8"
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-faryalb@telus.net wrote:
-> 
-> I have Fedora Core4 installed on my machine and trying to make mythtv work for
-> me. I understand I need to create a new partition /dev/hda5 and mount /video
-> file system. I've done some reading on LVM and come up with following commands
-> to install the new partition on my machine. I need to have them verified by
-> experts as I don't want to risk losing any data on my hard. 
-> 
-> #pvcreate /dev/hda5
-> #vgcreate VolGroup00 /dev/hda5
-> #lvcreate -L50G -name video VolGroup00
-> #mount /dev/hda5/video
-> #mount -0 remount,resize /video
+Hi All,
 
-Seems your understanding of logical volumes and partitions is a bit 
-confused. First you have a physical disk (/dev/hda). Your "fdisk -l" 
-shows me, that you have divided (partitioned) your disk into two 
-partitions hda1 and hda2, where hda2 contains your LVM data.
+I was curious to try the experimental dmeventd + the mirror checking
+dso.
+Everytime I created a mirror volume, dmeventd was crashing when the
+mirror finished the syncing process. 
+I tracked it down to _get_mirror_event that is expeting a return string
+from the status ioctl to dm like "2 253:4 253:5 400/400 1 AA 3 cluster
+253:3 A" but it gets only "2 253:4 253:5 400/400" so it SIGSEGV when is
+going to read over the number of returned arguments in the "args" array
+from split_words.
 
-So, you won't think about any additional partitions, because there is no 
-space left next to hda1 and hda2. But you want to distribute the disk 
-space within your volume group (named VolGroup00, located within hda2). 
-This has nothing to do with "partitions" any more. Instead you create a 
-"logical volume" (lv) named "video", which is a part of your volume 
-group. Thus its device path becomes "/dev/VolGroup00/video". Before you 
-can mount it, you have to "format" this volume (see mkfs).
+The same string is returned by "dmsetup status".
 
-However, your "vgdisplay" shows me, that you already used all space of 
-your volume grop (Free  PE / Size 1 / 32.00 MB), too. So it seems you 
-already performed some "vgcreate" and "lvcreate".
-Can you please do a "lvdisplay" or "lvs" to show us the current content 
-of your VolGroup00.
+Do these informations aren't already implemented in the ioctl, or are
+there some patches around that I can try? (my kernel is the latest
+available in fedora rawhide: 2.6.16-1.2131_FC6)
 
-What do you intend using "-O remount,resize"?
+Another question, If I understand it correctly, the mirror library for
+dmeventd will look to possible problems (eg the lost of a PV containing
+a mirror), and it will call the right lvm command to fix it?
+For example, if a PV containing a side of a 2 way mirrored volume is
+lost, what are the various actions that it will do (I noticed an
+lvreduce --removemissing, but my fear is that this command will also
+remove unmirrored volumes)?
 
-Dieter.
--- 
-Dieter St�ken, con terra GmbH, M�nster
-     stueken@conterra.de
-     http://www.conterra.de/
-     (0)251-7474-501
+Thanks!
+
+Bye!
+
+Simone Gotti.
+
+
+ 
+ 
+ --
+ Email.it, the professional e-mail, gratis per te: http://www.email.it/f
+ 
+ Sponsor:
+ Problemi di Liquidit�? Con Logos Finanziaria 30.000 � in 24 ore a dipendenti e lavoratori autonomi con rimborsi fino a 120 mesi, clicca qui
+* 
+ Clicca qui: http://adv.email.it/cgi-bin/foclick.cgi?mid=2911&d=18-4
