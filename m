@@ -1,20 +1,26 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
 	by int-mx1.corp.redhat.com (8.12.11.20060308/8.11.6) with ESMTP id
-	k3ICioJu017424
-	for <linux-lvm@redhat.com>; Tue, 18 Apr 2006 08:44:50 -0400
-Received: from smtp-out2.email.it (smtp-out2.email.it [80.247.70.37])
-	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id k3ICiUjf030919
-	for <linux-lvm@redhat.com>; Tue, 18 Apr 2006 08:44:37 -0400
-Received: from [10.253.12.196] (host96-52.pool8711.interbusiness.it
-	[87.11.52.96])by smtp-out2.email.it (Email.it) with ESMTP id
-	D5A5B1BCE6Bfor <linux-lvm@redhat.com>;
-	Tue, 18 Apr 2006 14:40:33 +0200 (CEST)
-From: Simone Gotti <simone.gotti@email.it>
-Date: Tue, 18 Apr 2006 14:40:34 +0200
-Message-Id: <1145364034.3003.55.camel@localhost>
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: [linux-lvm] dmeventd_mirror problem and some questions.
+	k3IFCaU0027546
+	for <linux-lvm@redhat.com>; Tue, 18 Apr 2006 11:12:36 -0400
+Received: from virt.isg.si (virt.isg.si [213.157.224.197])
+	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id k3IFCOLU005980
+	for <linux-lvm@redhat.com>; Tue, 18 Apr 2006 11:12:30 -0400
+Received: from localhost (gosak [127.0.0.1])
+	by virt.isg.si (Postfix) with ESMTP id 79A60C12EA
+	for <linux-lvm@redhat.com>; Tue, 18 Apr 2006 17:12:23 +0200 (CEST)
+Received: from virt.isg.si ([127.0.0.1])
+	by localhost (virt.isg.si [127.0.0.1]) (amavisd-new,
+	port 10024) with ESMTP id 15659-12 for <linux-lvm@redhat.com>;
+	Tue, 18 Apr 2006 17:12:22 +0200 (CEST)
+Received: from [10.30.0.234] (fwCluster.isg.si [213.157.224.200])
+	by virt.isg.si (Postfix) with ESMTP id ADCF9A3DBD
+	for <linux-lvm@redhat.com>; Tue, 18 Apr 2006 17:12:22 +0200 (CEST)
+Mime-Version: 1.0 (Apple Message framework v749.3)
+Content-Transfer-Encoding: 7bit
+Message-Id: <AAB83747-D6F3-4148-9836-7E22B8AD9ABF@isg.si>
+From: Martin Gombac <martin@isg.si>
+Date: Tue, 18 Apr 2006 17:12:21 +0200
+Subject: [linux-lvm] physical volume smaller than partition?
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -25,48 +31,33 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="utf-8"
-To: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="us-ascii"; delsp="yes"; format="flowed"
+To: linux-lvm@redhat.com
 
-Hi All,
+Hi there.
 
-I was curious to try the experimental dmeventd + the mirror checking
-dso.
-Everytime I created a mirror volume, dmeventd was crashing when the
-mirror finished the syncing process. 
-I tracked it down to _get_mirror_event that is expeting a return string
-from the status ioctl to dm like "2 253:4 253:5 400/400 1 AA 3 cluster
-253:3 A" but it gets only "2 253:4 253:5 400/400" so it SIGSEGV when is
-going to read over the number of returned arguments in the "args" array
-from split_words.
+i just did pvcreate on this partition:
+sda4	Primary	Linux LVM 	298067.70MB=291.08..GB (from cfdisk)
 
-The same string is returned by "dmsetup status".
+like this:
+levinja ~ # pvcreate /dev/sda4
+   Physical volume "/dev/sda4" successfully created
 
-Do these informations aren't already implemented in the ioctl, or are
-there some patches around that I can try? (my kernel is the latest
-available in fedora rawhide: 2.6.16-1.2131_FC6)
+then i took a look at it's size:
+levinja ~ # pvdisplay
+   --- NEW Physical volume ---
+   PV Name               /dev/sda4
+   VG Name
+   PV Size               277.60 GB
+   Allocatable           NO
+   PE Size (KByte)       0
+   Total PE              0
+   Free PE               0
+   Allocated PE          0
+   PV UUID               Sek0cg-xmPI-xQml-9JE1-19VQ-Ht8I-P4PSEk
 
-Another question, If I understand it correctly, the mirror library for
-dmeventd will look to possible problems (eg the lost of a PV containing
-a mirror), and it will call the right lvm command to fix it?
-For example, if a PV containing a side of a 2 way mirrored volume is
-lost, what are the various actions that it will do (I noticed an
-lvreduce --removemissing, but my fear is that this command will also
-remove unmirrored volumes)?
+and noticed 277.60 GB != 291.08..GB. So my question is where did the  
+rest of disk space went to?
 
-Thanks!
-
-Bye!
-
-Simone Gotti.
-
-
- 
- 
- --
- Email.it, the professional e-mail, gratis per te: http://www.email.it/f
- 
- Sponsor:
- Problemi di Liquidit�? Con Logos Finanziaria 30.000 � in 24 ore a dipendenti e lavoratori autonomi con rimborsi fino a 120 mesi, clicca qui
-* 
- Clicca qui: http://adv.email.it/cgi-bin/foclick.cgi?mid=2911&d=18-4
+Thanx for reply.
+Martin
