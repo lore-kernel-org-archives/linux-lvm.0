@@ -1,21 +1,14 @@
-Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.12.11.20060308/8.11.6) with ESMTP id
-	k3INI8U2030778
-	for <linux-lvm@redhat.com>; Tue, 18 Apr 2006 19:18:08 -0400
-Received: from mail.davidb.org (mail.davidb.org [66.93.32.219])
-	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id k3INI1ij009458
-	for <linux-lvm@redhat.com>; Tue, 18 Apr 2006 19:18:02 -0400
-Date: Tue, 18 Apr 2006 16:18:00 -0700
-From: David Brown <lvm@davidb.org>
-Subject: Re: [linux-lvm] physical volume smaller than partition?
-Message-ID: <20060418231800.GA32309@old.davidb.org>
-References: <AAB83747-D6F3-4148-9836-7E22B8AD9ABF@isg.si>
-	<4445294D.6050500@conterra.de>
-	<CDF11F32-D2D3-47EB-8B00-E91614CEA795@isg.si>
-	<44454E8E.70800@hathawaymix.org>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <44454E8E.70800@hathawaymix.org>
+Received: from [10.15.80.229] (dhcp80-229.msp.redhat.com [10.15.80.229])
+	by pobox.corp.redhat.com (8.12.8/8.12.8) with ESMTP id k3JDwuVP009807
+	for <linux-lvm@redhat.com>; Wed, 19 Apr 2006 09:58:57 -0400
+Mime-Version: 1.0 (Apple Message framework v623)
+In-Reply-To: <1145364034.3003.55.camel@localhost>
+References: <1145364034.3003.55.camel@localhost>
+Message-Id: <c05cb1b2cd4b2d1ca1fb7b62b0ee6e5e@redhat.com>
+From: Jonathan E Brassow <jbrassow@redhat.com>
+Subject: Re: [linux-lvm] dmeventd_mirror problem and some questions.
+Date: Wed, 19 Apr 2006 09:00:39 -0500
+Content-Transfer-Encoding: 8bit
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -26,19 +19,69 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"; format="flowed"
 To: LVM general discussion and development <linux-lvm@redhat.com>
-Cc: Dieter =?iso-8859-1?Q?St=FCken?= <stueken@conterra.de>
 
-On Tue, Apr 18, 2006 at 02:39:42PM -0600, Shane Hathaway wrote:
+There are some kernel patches that you need.  Either way, the DSO 
+shouldn't be crashing, so I'll look into that.
 
-> Interestingly, this means drive manufacturers are not misleading 
-> consumers after all.
+Kernel patches are located at http://www.brassow.com/mirroring.  Last 
+updated on April 3rd... I'll be updating those either today or tomorrow 
+as well.
 
-It is still common to round and even just blatantly exaggerate.
+  brassow
 
-I used to have a "640MB" MO drive from Fujitsu.  Total capacity was about
-635 million bytes, or about 605 MiB.
+On Apr 18, 2006, at 7:40 AM, Simone Gotti wrote:
 
-Dave
+> Hi All,
+>
+> I was curious to try the experimental dmeventd + the mirror checking
+> dso.
+> Everytime I created a mirror volume, dmeventd was crashing when the
+> mirror finished the syncing process.
+> I tracked it down to _get_mirror_event that is expeting a return string
+> from the status ioctl to dm like "2 253:4 253:5 400/400 1 AA 3 cluster
+> 253:3 A" but it gets only "2 253:4 253:5 400/400" so it SIGSEGV when is
+> going to read over the number of returned arguments in the "args" array
+> from split_words.
+>
+> The same string is returned by "dmsetup status".
+>
+> Do these informations aren't already implemented in the ioctl, or are
+> there some patches around that I can try? (my kernel is the latest
+> available in fedora rawhide: 2.6.16-1.2131_FC6)
+>
+> Another question, If I understand it correctly, the mirror library for
+> dmeventd will look to possible problems (eg the lost of a PV containing
+> a mirror), and it will call the right lvm command to fix it?
+> For example, if a PV containing a side of a 2 way mirrored volume is
+> lost, what are the various actions that it will do (I noticed an
+> lvreduce --removemissing, but my fear is that this command will also
+> remove unmirrored volumes)?
+>
+> Thanks!
+>
+> Bye!
+>
+> Simone Gotti.
+>
+>
+>
+>
+>  --
+>  Email.it, the professional e-mail, gratis per te: 
+> http://www.email.it/f
+>
+>  Sponsor:
+>  Problemi di Liquidit�? Con Logos Finanziaria 30.000 � in 24 ore a 
+> dipendenti e lavoratori autonomi con rimborsi fino a 120 mesi, clicca 
+> qui
+> *
+>  Clicca qui: http://adv.email.it/cgi-bin/foclick.cgi?mid=2911&d=18-4
+>
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@redhat.com
+> https://www.redhat.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+>
