@@ -1,21 +1,22 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
 	by int-mx1.corp.redhat.com (8.12.11.20060308/8.11.6) with ESMTP id
-	k3GMeQ7t010134
-	for <linux-lvm@redhat.com>; Sun, 16 Apr 2006 18:40:26 -0400
-Received: from mail.duth.gr (mail.duth.gr [192.108.114.110])
-	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id k3GMeJBw016165
-	for <linux-lvm@redhat.com>; Sun, 16 Apr 2006 18:40:20 -0400
-Received: from [192.168.1.7] (r-esties.xan.duth.gr [193.92.238.254])
-	(authenticated bits=0)
-	by mail.duth.gr (8.13.1/8.13.1) with ESMTP id k3GMeGTR064198
-	for <linux-lvm@redhat.com>; Mon, 17 Apr 2006 01:40:18 +0300 (EEST)
-	(envelope-from kkyriak@ee.duth.gr)
-Message-ID: <4442C7D0.40206@ee.duth.gr>
-Date: Mon, 17 Apr 2006 01:40:16 +0300
-From: kyr <kkyriak@ee.duth.gr>
+	k3J8FI4V009688
+	for <linux-lvm@redhat.com>; Wed, 19 Apr 2006 04:15:18 -0400
+Received: from sgprelbas01.asiapac.hp.net (sgprelbas01.asiapac.hp.net
+	[15.211.153.135])
+	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id k3J8FAbG017927
+	for <linux-lvm@redhat.com>; Wed, 19 Apr 2006 04:15:10 -0400
+Received: from sgpexg11.asiapacific.cpqcorp.net
+	(sgpexg11.asiapacific.cpqcorp.net [16.149.1.7])
+	by sgprelbas01.asiapac.hp.net (Postfix) with ESMTP id D46BF333EA
+	for <linux-lvm@redhat.com>; Wed, 19 Apr 2006 16:14:43 +0800 (SGT)
+Content-class: urn:content-classes:message
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] LVM. Do i loose everything?
+Date: Wed, 19 Apr 2006 16:14:38 +0800
+Message-ID: <F93C940F3C7EB940845AE558C21444190267F1B9@SGPEXC06.asiapacific.cpqcorp.net>
+From: "Giridharan, Prabhu" <prabhu.g@hp.com>
+Content-Transfer-Encoding: 8bit
+Subject: [linux-lvm] Re: RHAS 3U4 and LVM , alternate path
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -26,18 +27,22 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
+Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@redhat.com
 
-Hello,
+Hello Team,
 
-     I wound be thankful if you can answer one simple question that I 
-haven't found the answer in all the LVM manuals, FAQ, howtos.
+I have an HP-Itanium server model rx4640 with RHAS 3 update 4 IA64 with
+two Qlogic FC (A6862A- HP part number)and Qlogic 7.07 driver version
+connected to an XP array , We had tried to use the failover capability
+of Qlogic FC card however it seems not to be working even after enabling
+the failover, So we are thinking of opting to the alternate path concept
+in LVM, So kindly let me know whether alternate path are supported in
+above mentioned RH linux version if so please provide the steps for the
+same.
 
-I have a continuous (not stiped) VG consisting of 3 PV (Hard Disks) with 
-one LV on EXT3.
+Waiting for reply,
 
-If one hard disk fails (hardware) will i loose everything on all disks?
+Warm Regards
 
-
-I thank you in advance.
+G.Prabhu
