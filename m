@@ -1,20 +1,19 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
 	by int-mx1.corp.redhat.com (8.12.11.20060308/8.11.6) with ESMTP id
-	k3LIowWN008359
-	for <linux-lvm@redhat.com>; Fri, 21 Apr 2006 14:50:58 -0400
-Received: from igor.wag.caltech.edu (igor.wag.caltech.edu [131.215.26.3])
-	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id k3LIopmu002521
-	for <linux-lvm@redhat.com>; Fri, 21 Apr 2006 14:50:52 -0400
-Received: from welison.com (dell7 [131.215.26.46])
-	by igor.wag.caltech.edu (8.9.3/8.9.3) with ESMTP id LAA720716
-	for <linux-lvm@redhat.com>; Fri, 21 Apr 2006 11:50:48 -0700 (PDT)
-Message-ID: <44492997.1040402@welison.com>
-Date: Fri, 21 Apr 2006 11:51:03 -0700
-From: "Welison B. Floriano" <caltech@welison.com>
-MIME-Version: 1.0
+	k3LKYKBm000968
+	for <linux-lvm@redhat.com>; Fri, 21 Apr 2006 16:34:20 -0400
+Received: from orca.ele.uri.edu (orca.ele.uri.edu [131.128.51.63])
+	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id k3LKY97i027975
+	for <linux-lvm@redhat.com>; Fri, 21 Apr 2006 16:34:14 -0400
+Subject: Re: [linux-lvm] LVM. Do i loose everything?
+From: Ming Zhang <mingz@ele.uri.edu>
+In-Reply-To: <4442C7D0.40206@ee.duth.gr>
+References: <4442C7D0.40206@ee.duth.gr>
+Date: Fri, 21 Apr 2006 16:33:55 -0400
+Message-Id: <1145651636.8556.200.camel@localhost.localdomain>
+Mime-Version: 1.0
 Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] How to mount a volume group that was not exported
-Reply-To: linux-lvm@pbda.us,
+Reply-To: mingz@ele.uri.edu,
 	LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -25,24 +24,36 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: linux-lvm@redhat.com
+Content-Type: text/plain; charset="us-ascii"
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-Hi,
+On Mon, 2006-04-17 at 01:40 +0300, kyr wrote:
+> Hello,
+> 
+>      I wound be thankful if you can answer one simple question that I 
+> haven't found the answer in all the LVM manuals, FAQ, howtos.
+> 
+> I have a continuous (not stiped) VG consisting of 3 PV (Hard Disks) with 
+> one LV on EXT3.
+> 
+> If one hard disk fails (hardware) will i loose everything on all disks?
 
-  We had Red Hat Enterprise 3 AS and we tried to upgrade to Red Hat 
-Enterprise 4 AS, but it did
-not work, so we decide to do a fresh install. The previous OS had one 
-Volume Group (home)  with two
-PVs:
+depends on how u define everything. if u have 3 disk and 1 disk fail,
+then u lose the data bytes on that disk only. but since u run ext3 on
+it. ext3 will not be able to run properly with that. then u will not be
+able to read u file out. so u lose u "files".
 
-home /dev/sda1 /dev/sdb1
+try not do that with u important data.
 
-  We forgot to do a vgexport and now vgscan or vgchange can't find the 
-old Volume Group. Is there
-a way to mount it? It was LVM1.
+ming
 
 
-Thanks,
-
-Welison.
+> 
+> 
+> I thank you in advance.
+> 
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@redhat.com
+> https://www.redhat.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
