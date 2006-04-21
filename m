@@ -1,22 +1,24 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
 	by int-mx1.corp.redhat.com (8.12.11.20060308/8.11.6) with ESMTP id
-	k3KKo91o006734
-	for <linux-lvm@redhat.com>; Thu, 20 Apr 2006 16:50:09 -0400
-Received: from smtp-out2.email.it (smtp-out2.email.it [80.247.70.37])
-	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id k3KKo3Fw014347
-	for <linux-lvm@redhat.com>; Thu, 20 Apr 2006 16:50:03 -0400
-Received: from [192.168.2.2] (host210-57.pool8711.interbusiness.it
-	[87.11.57.210])by smtp-out2.email.it (Email.it) with ESMTP id
-	877BE1BC5F5for <linux-lvm@redhat.com>;
-	Thu, 20 Apr 2006 22:50:04 +0200 (CEST)
-Subject: Re: [linux-lvm] dmeventd_mirror problem and some questions.
-From: Simone Gotti <simone.gotti@email.it>
-In-Reply-To: <c05cb1b2cd4b2d1ca1fb7b62b0ee6e5e@redhat.com>
-References: <1145364034.3003.55.camel@localhost><c05cb1b2cd4b2d1ca1fb7b62b0ee6e5e@redhat.com>
-Date: Thu, 20 Apr 2006 22:50:06 +0200
-Message-Id: <1145566206.2658.23.camel@localhost>
+	k3LEQ1FL006068
+	for <linux-lvm@redhat.com>; Fri, 21 Apr 2006 10:26:01 -0400
+Received: from smtp.gentoo.org (smtp.gentoo.org [134.68.220.30])
+	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id k3LEPpWh001187
+	for <linux-lvm@redhat.com>; Fri, 21 Apr 2006 10:25:52 -0400
+Received: from rocket by smtp.gentoo.org with local (Exim 4.54)
+	id 1FWwZu-0006Ap-IX
+	for linux-lvm@redhat.com; Fri, 21 Apr 2006 14:25:46 +0000
+Date: Fri, 21 Apr 2006 14:25:46 +0000
+Subject: Re: [linux-lvm] LVM2 release 2.02.03 / device-mapper 1.02.04
+Message-ID: <20060421142546.GA32359@toucan.gentoo.org>
+References: <20060414214357.GE4521@agk.surrey.redhat.com>
+	<1145564732.2658.15.camel@localhost>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="RnlQjJ0d97Da+TV1"
+Content-Disposition: inline
+In-Reply-To: <1145564732.2658.15.camel@localhost>
+From: Eric Edgar <rocket@gentoo.org>
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -27,159 +29,211 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="utf-8"
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-On Wed, 2006-04-19 at 09:00 -0500, Jonathan E Brassow wrote: 
 
-> Kernel patches are located at http://www.brassow.com/mirroring.  Last 
-> updated on April 3rd... I'll be updating those either today or tomorrow 
-> as well.
+--RnlQjJ0d97Da+TV1
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Thanks, 
-I tried the version of the 3 April and the new version of yesterday.
-I applied the patches in the order provided by the "series" file, used
-the standard fedora .config, but on both the versions I got this
-compilation error:
+I just wanted to add that I am seeing this issue as well.  2.02.03 and
+2.02.04 both seem to suffer the same problem.  Downgrading to 2.02.02
+  seems to fix this issue.
 
-  CC [M]  drivers/md/dm-log.o
-drivers/md/dm-log.c: In function ‘dm_register_dirty_log_type’:
-drivers/md/dm-log.c:19: error: ‘_lock’ undeclared (first use in this
-function)
-drivers/md/dm-log.c:19: error: (Each undeclared identifier is reported
-only once
-drivers/md/dm-log.c:19: error: for each function it appears in.)
-drivers/md/dm-log.c: In function ‘dm_unregister_dirty_log_type’:
-drivers/md/dm-log.c:29: error: ‘_lock’ undeclared (first use in this
-function)
-drivers/md/dm-log.c: In function ‘get_type’:
-drivers/md/dm-log.c:46: error: ‘_lock’ undeclared (first use in this
-function)
-drivers/md/dm-log.c: In function ‘put_type’:
-drivers/md/dm-log.c:64: error: ‘_lock’ undeclared (first use in this
-function)
-make[2]: *** [drivers/md/dm-log.o] Error 1
-make[1]: *** [drivers/md] Error 2
-make: *** [drivers] Error 2
-
-I am missing something?
+   vgscan --version
+     LVM version:     2.02.02 (2006-02-07)
+	  Library version: 1.02.05 (2006-04-19)
+	  Driver version:  4.4.0
+  vgscan
+  Reading all physical volumes.  This may take a while...
+    Found volume group "vg01" using metadata type lvm2
+      Found volume group "vg02" using metadata type lvm2
 
 
-> There are some kernel patches that you need.  Either way, the DSO 
-> shouldn't be crashing, so I'll look into that.
 
-My temporary workaround was to check the number of returned arguments:
-
-Index: dmeventd_mirror.c
-===================================================================
-RCS file: /cvs/lvm2/LVM2/dmeventd/mirror/dmeventd_mirror.c,v
-retrieving revision 1.5
-diff -u -b -B -p -r1.5 dmeventd_mirror.c
---- dmeventd_mirror.c   6 Feb 2006 19:34:45 -0000       1.5
-+++ dmeventd_mirror.c   20 Apr 2006 20:42:18 -0000
-@@ -39,6 +39,7 @@ static int _get_mirror_event(char *param
- {
-        int i, rtn = ME_INSYNC;
-        int max_args = 30;  /* should support at least 8-way mirrors */
-+       int output_args;
-        char *args[max_args];
-        char *dev_status_str;
-        char *log_status_str;
-@@ -46,11 +47,17 @@ static int _get_mirror_event(char *param
-        char *p;
-        int log_argc, num_devs, num_failures=0;
-
--       if (max_args <= split_words(params, max_args, args)) {
-+       output_args = split_words(params, max_args, args);
-+       if (max_args <= output_args) {
-                syslog(LOG_ERR, "Unable to split mirror parameters: Arg
-list too long");
-                return -E2BIG;
-        }
-
-+       if (output_args <= 4) {
-+               syslog(LOG_ERR, "Mirror status not provided by the
-kernel module");
-+               return ME_IGNORE;
-+       };
-+
-        /*
-         * Unused:  0 409600 mirror
-         * Used  :  2 253:4 253:5 400/400 1 AA 3 cluster 253:3 A
+ with 2.02.03 or 2.02.04 I get this
+ vgscan
+   Reading all physical volumes.  This may take a while...
+     WARNING: Duplicate VG name vg01: Existing
+     xqKVwB-P68M-GG6h-iGpn-eOaw-09Nv-jp8Ddp (created here) takes
+     precedence over xqKVwB-P68M-GG6h-iGpn-eOaw-09Nv-jp8Ddp
+       WARNING: Duplicate VG name vg01: Existing
+       xqKVwB-P68M-GG6h-iGpn-eOaw-09Nv-jp8Ddp (created here) takes
+       precedence over xqKVwB-P68M-GG6h-iGpn-eOaw-09Nv-jp8Ddp
+         Found volume group "vg01" using metadata type lvm2
+	   Found volume group "vg02" using metadata type lvm2
+	  =20
+I have not rebooted between these upgrades I am not sure if that would
+matter.  However, it appears that there are other people who have seen
+this issue as well as noted in gentoo's bug reports and forums system.
 
 
-Thanks!
 
-Bye!
->   brassow
-> 
-> On Apr 18, 2006, at 7:40 AM, Simone Gotti wrote:
-> 
-> > Hi All,
-> >
-> > I was curious to try the experimental dmeventd + the mirror checking
-> > dso.
-> > Everytime I created a mirror volume, dmeventd was crashing when the
-> > mirror finished the syncing process.
-> > I tracked it down to _get_mirror_event that is expeting a return string
-> > from the status ioctl to dm like "2 253:4 253:5 400/400 1 AA 3 cluster
-> > 253:3 A" but it gets only "2 253:4 253:5 400/400" so it SIGSEGV when is
-> > going to read over the number of returned arguments in the "args" array
-> > from split_words.
-> >
-> > The same string is returned by "dmsetup status".
-> >
-> > Do these informations aren't already implemented in the ioctl, or are
-> > there some patches around that I can try? (my kernel is the latest
-> > available in fedora rawhide: 2.6.16-1.2131_FC6)
-> >
-> > Another question, If I understand it correctly, the mirror library for
-> > dmeventd will look to possible problems (eg the lost of a PV containing
-> > a mirror), and it will call the right lvm command to fix it?
-> > For example, if a PV containing a side of a 2 way mirrored volume is
-> > lost, what are the various actions that it will do (I noticed an
-> > lvreduce --removemissing, but my fear is that this command will also
-> > remove unmirrored volumes)?
-> >
-> > Thanks!
-> >
-> > Bye!
-> >
-> > Simone Gotti.
-> >
-> >
-> >
-> >
-> >  --
-> >  Email.it, the professional e-mail, gratis per te: 
-> > http://www.email.it/f
-> >
-> >  Sponsor:
-> >  Problemi di Liquidità? Con Logos Finanziaria 30.000 € in 24 ore a 
-> > dipendenti e lavoratori autonomi con rimborsi fino a 120 mesi, clicca 
-> > qui
-> > *
-> >  Clicca qui: http://adv.email.it/cgi-bin/foclick.cgi?mid=2911&d=18-4
-> >
-> > _______________________________________________
-> > linux-lvm mailing list
-> > linux-lvm@redhat.com
-> > https://www.redhat.com/mailman/listinfo/linux-lvm
-> > read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
-> >
-> 
-> 
+	  =20
+On 22:25 Thu 20 Apr     , Simone Gotti wrote:
+> On Fri, 2006-04-14 at 22:43 +0100, Alasdair G Kergon wrote:
+> > Some bug fixes and minor enhancements. (See the WHATS_NEW files.)
+> >=20
+> >   ftp://sources.redhat.com/pub/dm/device-mapper.1.02.04.tgz
+> >   ftp://sources.redhat.com/pub/lvm2/LVM2.2.02.03.tgz
+> >=20
+> > The tools should cope better now if faced with multiple distinct
+> > VGs with the same name.  'pvs -P /dev/whatever -o+vg_uuid' output
+> > should be reliable, and vgrename accepts a VG uuid as first
+> > argument.
+> >=20
+> > And libdevmapper has support again for older 2.6 kernels that=20
+> > can't handle mapped device referencing by device number.
+> >=20
+> > Alasdair
+>=20
+> Hi All,
+>=20
+> Last day I tried out these new versions but the new lvm2 release gave me
+> some issues. I was thinking that it was a my compilation mistake but
+> today I updated my fedora rawhide and the latest version of lvm2
+> (2.02.04) was installed and I had the same problems.
+> Here's the list of actions I did to create the pv, vg and lv and some
+> tries to activate them:
+>=20
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D
+> [root@localhost ~]# pvcreate /dev/hda10
+>   Physical volume "/dev/hda10" successfully created
+>=20
+> [root@localhost ~]# vgcreate vg_test01 /dev/hda10
+>   Volume group "vg_test01" successfully created
+>=20
+> [root@localhost ~]# lvcreate -L 500m -n lv_test01 vg_test01
+>   Volume group for uuid not found:
+> gqq5eaIEAauBYPjLXWZ51b38BRXjYKbNTQVtf2rw5RkX7KIvU4d3bGfHZGhF6QVk
+>   Failed to activate new LV.
+>=20
+> [root@localhost ~]# lvdisplay
+>   --- Logical volume ---
+>   LV Name                /dev/vg_test01/lv_test01
+>   VG Name                vg_test01
+>   LV UUID                TQVtf2-rw5R-kX7K-IvU4-d3bG-fHZG-hF6QVk
+>   LV Write Access        read/write
+>   LV Status              NOT available
+>   LV Size                500.00 MB
+>   Current LE             125
+>   Segments               1
+>   Allocation             inherit
+>   Read ahead sectors     0
+>=20
+> [root@localhost ~]# lvchange -ay /dev/vg_test01/lv_test01
+>   Volume group for uuid not found:
+> gqq5eaIEAauBYPjLXWZ51b38BRXjYKbNTQVtf2rw5RkX7KIvU4d3bGfHZGhF6QVk
+>=20
+> [root@localhost ~]# lvremove /dev/vg_test01/lv_test01
+>   Volume group for uuid not found:
+> gqq5eaIEAauBYPjLXWZ51b38BRXjYKbNTQVtf2rw5RkX7KIvU4d3bGfHZGhF6QVk
+>   Unable to deactivate logical volume "lv_test01"
+>=20
+> [root@localhost ~]# vgchange -ay vg_test01
+>   Volume group for uuid not found:
+> SJoVm40jn03BxZ8KWAOLIp9QyWH3RBRKQElo5tpSIeGayuMmV56DHxzSdBC94hkY
+>   0 logical volume(s) in volume group "vg_test01" now active
+>=20
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D
+>=20
+> The volume and also the volume group cannot be activated or removed.
+>=20
+> Some more informations:
+>=20
+> [root@localhost ~]# pvdisplay
+>   --- Physical volume ---
+>   PV Name               /dev/hda10
+>   VG Name               vg_test01
+>   PV Size               964.00 MB / not usable 0
+>   Allocatable           yes
+>   PE Size (KByte)       4096
+>   Total PE              241
+>   Free PE               116
+>   Allocated PE          125
+>   PV UUID               hWTMJb-d8C7-85R2-eikX-u91F-4gAk-EU3hUV
+>=20
+> [root@localhost ~]# vgdisplay
+>   --- Volume group ---
+>   VG Name               vg_test01
+>   System ID
+>   Format                lvm2
+>   Metadata Areas        1
+>   Metadata Sequence No  2
+>   VG Access             read/write
+>   VG Status             resizable
+>   MAX LV                0
+>   Cur LV                1
+>   Open LV               0
+>   Max PV                0
+>   Cur PV                1
+>   Act PV                1
+>   VG Size               964.00 MB
+>   PE Size               4.00 MB
+>   Total PE              241
+>   Alloc PE / Size       125 / 500.00 MB
+>   Free  PE / Size       116 / 464.00 MB
+>   VG UUID               SJoVm4-0jn0-3BxZ-8KWA-OLIp-9QyW-H3RBRK
+>=20
+> [root@localhost ~]# lvdisplay
+>   --- Logical volume ---
+>   LV Name                /dev/vg_test01/lv_test01
+>   VG Name                vg_test01
+>   LV UUID                QElo5t-pSIe-Gayu-MmV5-6DHx-zSdB-C94hkY
+>   LV Write Access        read/write
+>   LV Status              NOT available
+>   LV Size                500.00 MB
+>   Current LE             125
+>   Segments               1
+>   Allocation             inherit
+>   Read ahead sectors     0
+>=20
+>=20
+> Going back to a previous version of lvm (a CVS snapshot previous to the
+> cache changes) everything worked again.
+>=20
+> Let me know if this is a my mistake or how can help you debugging the
+> problem.
+>=20
+> Thanks!
+>=20
+> Bye!
+>=20
+>=20
+>=20
+> =20
+> =20
+>  --
+>  Email.it, the professional e-mail, gratis per te: http://www.email.it/f
+> =20
+>  Sponsor:
+>  Conto Arancio, il migliore amico dei tuoi risparmi.Prova la differenza!
+>  Clicca qui: http://adv.email.it/cgi-bin/foclick.cgi?mid=3D5040&d=3D20-4
+>=20
 > _______________________________________________
 > linux-lvm mailing list
 > linux-lvm@redhat.com
 > https://www.redhat.com/mailman/listinfo/linux-lvm
 > read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+>=20
 
- 
- 
- --
- Email.it, the professional e-mail, gratis per te: http://www.email.it/f
- 
- Sponsor:
- Telefonare all'estero risparmiando fino all'80%? Con Email.it Phone Card puoi, clicca e scopri tutti i vantaggi
- Clicca qui: http://adv.email.it/cgi-bin/foclick.cgi?mid=2683&d=20-4
+--RnlQjJ0d97Da+TV1
+Content-Type: application/pgp-signature
+Content-Disposition: inline
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.2.2 (GNU/Linux)
+
+iD8DBQFESOtqG1H288hHbuMRArS5AKC0vQ1t2rdNK+npQS+mViWo4R4+2QCgxyu9
+Mlk9T6W/mwqOQ1vOE+g68O4=
+=meXR
+-----END PGP SIGNATURE-----
+
+--RnlQjJ0d97Da+TV1--
