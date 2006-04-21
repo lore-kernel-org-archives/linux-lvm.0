@@ -1,23 +1,21 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
 	by int-mx1.corp.redhat.com (8.12.11.20060308/8.11.6) with ESMTP id
-	k3J8FI4V009688
-	for <linux-lvm@redhat.com>; Wed, 19 Apr 2006 04:15:18 -0400
-Received: from sgprelbas01.asiapac.hp.net (sgprelbas01.asiapac.hp.net
-	[15.211.153.135])
-	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id k3J8FAbG017927
-	for <linux-lvm@redhat.com>; Wed, 19 Apr 2006 04:15:10 -0400
-Received: from sgpexg11.asiapacific.cpqcorp.net
-	(sgpexg11.asiapacific.cpqcorp.net [16.149.1.7])
-	by sgprelbas01.asiapac.hp.net (Postfix) with ESMTP id D46BF333EA
-	for <linux-lvm@redhat.com>; Wed, 19 Apr 2006 16:14:43 +0800 (SGT)
-Content-class: urn:content-classes:message
+	k3LIowWN008359
+	for <linux-lvm@redhat.com>; Fri, 21 Apr 2006 14:50:58 -0400
+Received: from igor.wag.caltech.edu (igor.wag.caltech.edu [131.215.26.3])
+	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id k3LIopmu002521
+	for <linux-lvm@redhat.com>; Fri, 21 Apr 2006 14:50:52 -0400
+Received: from welison.com (dell7 [131.215.26.46])
+	by igor.wag.caltech.edu (8.9.3/8.9.3) with ESMTP id LAA720716
+	for <linux-lvm@redhat.com>; Fri, 21 Apr 2006 11:50:48 -0700 (PDT)
+Message-ID: <44492997.1040402@welison.com>
+Date: Fri, 21 Apr 2006 11:51:03 -0700
+From: "Welison B. Floriano" <caltech@welison.com>
 MIME-Version: 1.0
-Date: Wed, 19 Apr 2006 16:14:38 +0800
-Message-ID: <F93C940F3C7EB940845AE558C21444190267F1B9@SGPEXC06.asiapacific.cpqcorp.net>
-From: "Giridharan, Prabhu" <prabhu.g@hp.com>
-Content-Transfer-Encoding: 8bit
-Subject: [linux-lvm] Re: RHAS 3U4 and LVM , alternate path
-Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] How to mount a volume group that was not exported
+Reply-To: linux-lvm@pbda.us,
+	LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -27,22 +25,24 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: linux-lvm@redhat.com
 
-Hello Team,
+Hi,
 
-I have an HP-Itanium server model rx4640 with RHAS 3 update 4 IA64 with
-two Qlogic FC (A6862A- HP part number)and Qlogic 7.07 driver version
-connected to an XP array , We had tried to use the failover capability
-of Qlogic FC card however it seems not to be working even after enabling
-the failover, So we are thinking of opting to the alternate path concept
-in LVM, So kindly let me know whether alternate path are supported in
-above mentioned RH linux version if so please provide the steps for the
-same.
+  We had Red Hat Enterprise 3 AS and we tried to upgrade to Red Hat 
+Enterprise 4 AS, but it did
+not work, so we decide to do a fresh install. The previous OS had one 
+Volume Group (home)  with two
+PVs:
 
-Waiting for reply,
+home /dev/sda1 /dev/sdb1
 
-Warm Regards
+  We forgot to do a vgexport and now vgscan or vgchange can't find the 
+old Volume Group. Is there
+a way to mount it? It was LVM1.
 
-G.Prabhu
+
+Thanks,
+
+Welison.
