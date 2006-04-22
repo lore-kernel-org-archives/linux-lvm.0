@@ -1,18 +1,19 @@
-Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
+Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
 	by int-mx1.corp.redhat.com (8.12.11.20060308/8.11.6) with ESMTP id
-	k3M7nhVH029367
-	for <linux-lvm@redhat.com>; Sat, 22 Apr 2006 03:49:43 -0400
+	k3M86PsG031785
+	for <linux-lvm@redhat.com>; Sat, 22 Apr 2006 04:06:25 -0400
 Received: from percy.comedia.it (percy.comedia.it [212.97.59.71])
-	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id k3M7nErS013905
-	for <linux-lvm@redhat.com>; Sat, 22 Apr 2006 03:49:21 -0400
-Date: Sat, 22 Apr 2006 09:49:11 +0200
-From: Luca Berra <luca.berra@comedia.it>
-Subject: Re: [linux-lvm] Re: RHAS 3U4 and LVM , alternate path
-Message-ID: <20060422074910.GA15564@percy.comedia.it>
-References: <F93C940F3C7EB940845AE558C21444190267F1B9@SGPEXC06.asiapacific.cpqcorp.net>
+	by mx1.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
+	k3M86NQm008697
+	for <linux-lvm@redhat.com>; Sat, 22 Apr 2006 04:06:23 -0400
+Date: Sat, 22 Apr 2006 10:06:22 +0200
+From: Luca Berra <bluca@comedia.it>
+Subject: Re: [linux-lvm] restoring my lvm
+Message-ID: <20060422080622.GB15564@percy.comedia.it>
+References: <2996.192.168.0.15.1145660815.squirrel@192.168.0.15>
 Mime-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <F93C940F3C7EB940845AE558C21444190267F1B9@SGPEXC06.asiapacific.cpqcorp.net>
+In-Reply-To: <2996.192.168.0.15.1145660815.squirrel@192.168.0.15>
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -25,24 +26,28 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"; format="flowed"
 Content-Transfer-Encoding: 7bit
-To: "Giridharan, Prabhu" <prabhu.g@hp.com>
-Cc: linux-lvm@redhat.com
+To: linux-lvm@redhat.com
 
-On Wed, Apr 19, 2006 at 04:14:38PM +0800, Giridharan, Prabhu wrote:
->Hello Team,
->
->I have an HP-Itanium server model rx4640 with RHAS 3 update 4 IA64 with
->two Qlogic FC (A6862A- HP part number)and Qlogic 7.07 driver version
->connected to an XP array , We had tried to use the failover capability
->of Qlogic FC card however it seems not to be working even after enabling
->the failover, So we are thinking of opting to the alternate path concept
->in LVM, So kindly let me know whether alternate path are supported in
->above mentioned RH linux version if so please provide the steps for the
->same.
+On Sat, Apr 22, 2006 at 12:06:55AM +0100, Jannetta S Steyn wrote:
+>My problem was that the new system (also FC4 and also a vanilla install)
+>already had VolGroup00. I then did a 'vgcreate VolGroup01 /dev/hdb2'. I
+vgcreate = msdos format
+you just wiped your disk
 
-http://h20000.www2.hp.com/bizsupport/TechSupport/DocumentIndex.jsp?contentType=SupportManual&locale=en_US&docIndexId=179911&taskId=120&prodTypeId=12169&prodSeriesId=421487
+>PV /dev/hdb2 VG VolGroup01 lvm2 [2.93 GB / 2.93 GB free]
+>PV /dev/hda2 VG VolGroup02 lvm2 [3.91 GB / 32.00 MB free]
+>Total: 2 [6.83 GB] / in use: 2 [6.83 GB] / in no VG: 0 [0 ]
+if you are certain that the previous logical volume spanned the whole
+disk, you can:
+# vgdisplay /dev/VolGroup01
+and look at the "Total PE" value, then
+# lvcreate -Z n -l TOTAL_PE -n LogVol01 /dev/VolGroup01
+
+but i'd rater first try with http://www.cgsecurity.org/wiki/TestDisk
+which might be able to recover the damage you did.
 
 L.
+
 -- 
 Luca Berra -- bluca@comedia.it
         Communication Media & Services S.r.l.
