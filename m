@@ -1,21 +1,18 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
 	by int-mx1.corp.redhat.com (8.12.11.20060308/8.11.6) with ESMTP id
-	k3MCxk25027767
-	for <linux-lvm@redhat.com>; Sat, 22 Apr 2006 08:59:46 -0400
-Received: from mail1.cc.huji.ac.il (mail1.cc.huji.ac.il [132.64.1.17])
-	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id k3MCxeXi030145
-	for <linux-lvm@redhat.com>; Sat, 22 Apr 2006 08:59:40 -0400
-Received: from kaminsky.dyndns.org (di8-32047.dialin.huji.ac.il [132.64.32.47])
-	by mail1.cc.huji.ac.il (8.12.11.20060308/8.12.11) with ESMTP id
-	k3MCxc7T014416
-	for <linux-lvm@redhat.com>; Sat, 22 Apr 2006 15:59:38 +0300
-Date: Sat, 22 Apr 2006 15:59:54 +0300
-From: Moshe Kaminsky <kaminsky@math.huji.ac.il>
-Message-ID: <20060422125954.GA5908@kaminsky>
+	k3MEDFlE002484
+	for <linux-lvm@redhat.com>; Sat, 22 Apr 2006 10:13:15 -0400
+Received: from mail.reagi.com (mail.reagi.com [195.60.188.80])
+	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id k3MED3g1009523
+	for <linux-lvm@redhat.com>; Sat, 22 Apr 2006 10:13:09 -0400
+Message-ID: <003f01c66616$de010400$0100a8c0@inspiron>
+From: "Gabriel Barazer" <gabriel@oxeva.fr>
+Date: Sat, 22 Apr 2006 16:13:01 +0200
 MIME-Version: 1.0
-Content-Disposition: inline
-Subject: [linux-lvm] volume group uuid not found
-Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] Another XFS + LVM2 snapshots problems
+Reply-To: Gabriel Barazer <gabriel@oxeva.fr>,
+	LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -25,59 +22,71 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: lvm <linux-lvm@redhat.com>
+Content-Type: text/plain; format="flowed"; charset="us-ascii"; reply-type="original"
+To: linux-lvm@redhat.com
 
-Hi,
+Hello,
 
-I have the following problem: when running
+Although I often read in the mailing archive that XFS and snapshots aren't 
+good friends, this filesystem is the best for my use (a file server with 
+~2.5M files and files > 2GB). Now is the time to do snapshots. Here many 
+problems occurs :
 
-vgchange -a y vg
+[hardware detail & software versions on the bottom]
 
-I get errors of the following type:
+- creating a snapshot with lvcreate -L 10G -n my_backup -s 
+/dev/myvg/xfs_storage is OK without using xfs_freeze.
 
-Volume group uuid not found: ...
+- BUT lvremove the "my_backup" LV (snapshot LV) freeze completely the 
+snapshotted LV (xfs_storage in this case). Some days after testing this, i 
+found that a simple "dmsetup resume myvg-my_backup" unlock the whole thing 
+and lvremove completes.
 
-The ... stands for the concatenation of the VG uuid and the LV uuid for 
-that volume (this is repeated for each logical volume.) The result is 
-that the group is not activated. This happens also with a new test VG 
-and LV I created, and for any operation with the LV (though sometimes 
-the operation succeeds despite the message, eg when creating a new LV.)
+At this point I was happy to add/remove snapshots freely (but have not tried 
+to make multiple snapshot, which kills performances), but now i have a 
+snapshot, i can't mount it... here is the scenario :
 
-Here are some other diagnostics that may be relevant:
-When I run pvs I get the message
+- lvcreate as shown above
+- mount -o nouuid /dev/myvg/my_backup /backups/snapshot
 
-Can't read vg: skipping
+syslog says :
+Apr 22 15:14:47 filer1 kernel: XFS mounting filesystem dm-2
+Apr 22 15:14:48 filer1 kernel: Starting XFS recovery on filesystem: dm-2 
+(logdev: internal)
 
-When I run
+and nothing else. The I/O activity shown by iostat is the same (no increase 
+due to a real XFS recovery)
+trying mount -o nouuid,ro does the same. when strace-ing the mount command, 
+the last lines are :
+open("/dev/myvg/my_backup", O_RDONLY) = 3
+lseek(3, 0, SEEK_SET) = 0
+read(3, "XFSB\0\0\20\0\0\0\0\0\4\260\0\0\0\0\0\0\0\0\0\0\0\0\0\0"..., 576) = 
+576
+close(3) = 0
+mount("/dev/myvg/my_backup", "/backups/snapshot/", "xfs", 
+MS_RDONLY|0xc0ed0000, 0x517b60 <unfinished ...>
 
-lvdisplay -v /dev/vg/home
+now, i can't kill the mount command initiated neither soft reboot the 
+server. I only want to create a snapshot to xfsdump - it , xfsrestore it on 
+another backup server, then delete the snapshot.
 
-I get (among other things)
+Does someone here get the same problems ?
 
-LV status: NOT available
+Hardware detail:
+RAID 10 with 64K stripe on a
+3ware 9500S-12 controller and 12x250GB
+system is not installed on the LVM (separate RAID 1)
 
-I tried running 'vgcfgbackup' and 'vgcfgrestore', it didn't help.
+Software versions:
+Linux kernel 2.6.16.1
+LVM & mapper version 2.01.15 (library 1.01.15, driver version 4.5.0)
+XFS utils version 2.7.11
+no patches applied, all tools compiled from the official sources
 
-The whole thing used to work, so this may be a result of some upgrade. 
-This is all happening on a Gentoo system, with kernel version 2.6.16. 
-The output of lvm version is:
-
-LVM version: 2.02.03
-Library version: 1.02.03
-Driver version: 4.5.0
-
-I can't try too many things there since almost all partitions on the 
-machine are managed by lvm.
-
-Any help is greatly appreciated,
-Thanks,
-Moshe
+LVM config :
+1 VG created from 1 PV (the RAID array is known to the system by /dev/sdb)
+some LVs. the LV sizes i want to snapshot are ~200GB each.
 
 -- 
-I love deadlines. I like the whooshing sound they make as they fly by. 
-                                        -- Douglas Adams
-    
-    Moshe Kaminsky <kaminsky@math.huji.ac.il>
-    Home: 08-9456841
+Gabriel Barazer <gabriel@oxeva.fr>
+OXEVA 
