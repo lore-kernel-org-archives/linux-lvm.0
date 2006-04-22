@@ -1,21 +1,23 @@
-Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
+Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
 	by int-mx1.corp.redhat.com (8.12.11.20060308/8.11.6) with ESMTP id
-	k3MG3elG015221
-	for <linux-lvm@redhat.com>; Sat, 22 Apr 2006 12:03:40 -0400
-Received: from orca.ele.uri.edu (orca.ele.uri.edu [131.128.51.63])
-	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id k3MG3XTl028212
-	for <linux-lvm@redhat.com>; Sat, 22 Apr 2006 12:03:33 -0400
-Subject: Re: [linux-lvm] LVM. Do i loose everything?
-From: Ming Zhang <mingz@ele.uri.edu>
-In-Reply-To: <200604211712.42503.sgrover@open2space.com>
-References: <4442C7D0.40206@ee.duth.gr>
-	<200604211712.42503.sgrover@open2space.com>
-Date: Sat, 22 Apr 2006 12:03:14 -0400
-Message-Id: <1145721795.22776.36.camel@localhost.localdomain>
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Reply-To: mingz@ele.uri.edu,
-	LVM general discussion and development <linux-lvm@redhat.com>
+	k3MHMEEh024599
+	for <linux-lvm@redhat.com>; Sat, 22 Apr 2006 13:22:14 -0400
+Received: from admin-box.com (admin-box.com [81.169.166.147])
+	by mx1.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
+	k3MHMDPj030881
+	for <linux-lvm@redhat.com>; Sat, 22 Apr 2006 13:22:13 -0400
+Message-ID: <444A6634.5050406@admin-box.com>
+Date: Sat, 22 Apr 2006 19:21:56 +0200
+From: Daniel Troeder <daniel@admin-box.com>
+MIME-Version: 1.0
+Subject: Re: [linux-lvm] Existing VG (created here) takes precedence over
+ VG
+References: <4449E411.7050505@admin-box.com>
+In-Reply-To: <4449E411.7050505@admin-box.com>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature";
+	boundary="------------enig55521948DC15D2006BF2C9F8"
+Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -25,58 +27,46 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-On Fri, 2006-04-21 at 17:12 -0600, Shawn wrote:
-> On Sunday 16 April 2006 16:40, kyr wrote:
-> > Hello,
-> >
-> >      I wound be thankful if you can answer one simple question that I
-> > haven't found the answer in all the LVM manuals, FAQ, howtos.
-> >
-> > I have a continuous (not stiped) VG consisting of 3 PV (Hard Disks) with
-> > one LV on EXT3.
-> >
-> > If one hard disk fails (hardware) will i loose everything on all disks?
+This is an OpenPGP/MIME signed message (RFC 2440 and 3156)
+--------------enig55521948DC15D2006BF2C9F8
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-depends on how we define "disk fails" then.
+Hi :)
 
-> 
-> I'm far from an expert with LVM, but I think the answer is a safe No.  And 
-> even further, you could possibly recover the data on the damaged drive (see 
-> http://grover.open2space.com/node/17).
+It seems, that the unstable version of lvm2 caused the problem. Maybe
+that's also the case for Moshe (also running gentoo).
 
-if disk has some bad sectors but most other places are readable, then
-dd_rescue will be more than enough and follow this link should be ok.
-thanks for pointing out this link.
+I was running 2.01.09 and later 2.02.02, and that seems OK, but when
+upgrading to 2.02.04 I got the problem (see posting "[linux-lvm]
+Existing VG (created here) takes precedence over VG").
 
+I downgraded to 2.01.09, and everything's fine now :)
 
-> 
-> The data stored on that particular drive might become in accessible (without 
-> any recovery efforts), but the data sitting on the other drives should still 
-> be there.  
+If somebody wants me to debug something, or wants to know further info
+about my setup, feel free to mail me.
 
-yes, data is there.
+Bye,
+the-happy-Daniel :)
 
-> 
-> I'm taking a guess based on what I saw during a data recovery process, but...  
-> It looks like the drive/partition is tagged as being part of a volume, and 
-> then the appropriate file system is applied.  If this is the case, then 
-> loosing a drive should not corrupt your filesystem on the remaining drives.  
-
-if it is single file system over all 3 HDs, then will the file system
-runs ok? i do not think so.
+--=20
+use PGP key @ http://www.pgp.net/wwwkeys.html
+gpg --recv-keys --keyserver hkp://subkeys.pgp.net 0xBB9D4887
 
 
-> 
-> I am not comfortable enough with my knowledge to say this is anywhere near 
-> authoritative.  But I do hope I helped...
-> 
-> Shawn
-> 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+--------------enig55521948DC15D2006BF2C9F8
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.2.2 (GNU/Linux)
+
+iD8DBQFESmY4g3+4tbudSIcRAi6OAJ9MNCD0J4QqAMGbNOJ642V3e75x4QCfVE42
+9d3tYT/da/oWITGawRJfUic=
+=Kc0W
+-----END PGP SIGNATURE-----
+
+--------------enig55521948DC15D2006BF2C9F8--
