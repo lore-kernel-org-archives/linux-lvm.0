@@ -1,22 +1,20 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
 	by int-mx1.corp.redhat.com (8.12.11.20060308/8.11.6) with ESMTP id
-	k3MIn2lq005451
-	for <linux-lvm@redhat.com>; Sat, 22 Apr 2006 14:49:02 -0400
-Received: from astro.systems.pipex.net (astro.systems.pipex.net [62.241.163.6])
-	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id k3MImtdS025405
-	for <linux-lvm@redhat.com>; Sat, 22 Apr 2006 14:48:56 -0400
-Message-ID: <2036.192.168.0.15.1145731741.squirrel@192.168.0.15>
-In-Reply-To: <1775.192.168.0.15.1145727636.squirrel@192.168.0.15>
-References: <2996.192.168.0.15.1145660815.squirrel@192.168.0.15>
-	<20060422080622.GB15564@percy.comedia.it>
-	<1775.192.168.0.15.1145727636.squirrel@192.168.0.15>
-Date: Sat, 22 Apr 2006 19:49:01 +0100 (BST)
-Subject: Re: [linux-lvm] restoring my lvm
-From: "Jannetta S Steyn" <jannetta@henning.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Reply-To: jannetta@henning.org,
-	LVM general discussion and development <linux-lvm@redhat.com>
+	k3MJuwsT014654
+	for <linux-lvm@redhat.com>; Sat, 22 Apr 2006 15:56:58 -0400
+Received: from percy.comedia.it (percy.comedia.it [212.97.59.71])
+	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id k3MJuiHf005299
+	for <linux-lvm@redhat.com>; Sat, 22 Apr 2006 15:56:50 -0400
+Date: Sat, 22 Apr 2006 21:56:44 +0200
+From: Luca Berra <bluca@comedia.it>
+Subject: Re: [linux-lvm] Another XFS + LVM2 snapshots problems
+Message-ID: <20060422195644.GF15564@percy.comedia.it>
+References: <003f01c66616$de010400$0100a8c0@inspiron>
+	<20060422180104.GD4809@agk.surrey.redhat.com>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20060422180104.GD4809@agk.surrey.redhat.com>
+Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -26,23 +24,30 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: jannetta@henning.org, LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+Content-Transfer-Encoding: 7bit
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-Hi Luca
-
-I made an error in my previous post. I wrote:
-
-> /dev/hdb2 has two physical volumes, the first a swap and the second data.
-
-It should be:
-/dev/hdb2 has two logical volumes, the first a swap and the second data.
-
-Regards
-Jannetta
+On Sat, Apr 22, 2006 at 07:01:04PM +0100, Alasdair G Kergon wrote:
+>On Sat, Apr 22, 2006 at 04:13:01PM +0200, Gabriel Barazer wrote:
+>> Linux kernel 2.6.16.1
+>> LVM & mapper version 2.01.15 (library 1.01.15, driver version 4.5.0)
 >
+>As you discovered, those versions are not compatible.
+>You upgraded your kernel to a recent one: you need to upgrade your 
+>dm & lvm2 packages to correspond with that kernel.  (1.02.* & 2.02.*)
+>
+sorry,
+is there a documented compatibility matrix between dm driver version and
+device-mapper library version?
 
+Regards,
+L.
 
-Random Thought:
----------------
-Klein bottle for rent -- inquire within.
+-- 
+Luca Berra -- bluca@comedia.it
+        Communication Media & Services S.r.l.
+ /"\
+ \ /     ASCII RIBBON CAMPAIGN
+  X        AGAINST HTML MAIL
+ / \
