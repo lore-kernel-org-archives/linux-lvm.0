@@ -1,24 +1,18 @@
-Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.12.11.20060308/8.11.6) with ESMTP id
-	k3MHq5om028405
-	for <linux-lvm@redhat.com>; Sat, 22 Apr 2006 13:52:05 -0400
-Received: from mail1.cc.huji.ac.il (real-outmail.cc.huji.ac.il [132.64.1.17])
-	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id k3MHpwLK015075
-	for <linux-lvm@redhat.com>; Sat, 22 Apr 2006 13:51:59 -0400
-Received: from kaminsky.dyndns.org (di8-32047.dialin.huji.ac.il [132.64.32.47])
-	by mail1.cc.huji.ac.il (8.12.11.20060308/8.12.11) with ESMTP id
-	k3MHptkC019869
-	for <linux-lvm@redhat.com>; Sat, 22 Apr 2006 20:51:56 +0300
-Date: Sat, 22 Apr 2006 20:52:18 +0300
-From: Moshe Kaminsky <kaminsky@math.huji.ac.il>
-Subject: Re: [linux-lvm] volume group uuid not found
-Message-ID: <20060422175217.GA439@kaminsky>
-References: <20060422125954.GA5908@kaminsky>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="6c2NcOVqGQ03X4Wi"
+Received: from agk.surrey.redhat.com (agk.surrey.redhat.com [172.16.10.74])
+	by pobox.surrey.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
+	k3MI14st005279
+	for <linux-lvm@redhat.com>; Sat, 22 Apr 2006 19:01:05 +0100
+Received: from agk by agk.surrey.redhat.com with local (Exim 4.34)
+	id 1FXMPo-0002Iq-9Q
+	for linux-lvm@redhat.com; Sat, 22 Apr 2006 19:01:04 +0100
+Date: Sat, 22 Apr 2006 19:01:04 +0100
+From: Alasdair G Kergon <agk@redhat.com>
+Subject: Re: [linux-lvm] Another XFS + LVM2 snapshots problems
+Message-ID: <20060422180104.GD4809@agk.surrey.redhat.com>
+References: <003f01c66616$de010400$0100a8c0@inspiron>
+Mime-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20060422125954.GA5908@kaminsky>
+In-Reply-To: <003f01c66616$de010400$0100a8c0@inspiron>
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -29,42 +23,18 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: linux-lvm@redhat.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
+On Sat, Apr 22, 2006 at 04:13:01PM +0200, Gabriel Barazer wrote:
+> Linux kernel 2.6.16.1
+> LVM & mapper version 2.01.15 (library 1.01.15, driver version 4.5.0)
 
---6c2NcOVqGQ03X4Wi
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+As you discovered, those versions are not compatible.
+You upgraded your kernel to a recent one: you need to upgrade your 
+dm & lvm2 packages to correspond with that kernel.  (1.02.* & 2.02.*)
 
-* Moshe Kaminsky <kaminsky@math.huji.ac.il> [22/04/06 16:15]:
-> Hi,
->=20
-> I have the following problem: when running
->=20
-> vgchange -a y vg
->=20
-> I get errors of the following type:
->=20
-> Volume group uuid not found: ...
->=20
-
-Turned out to be a problem in the specific version I used (2.02.03). I=20
-managed to upgrade from a boot cd and it solved the problem.
-
-Moshe
-
-
---6c2NcOVqGQ03X4Wi
-Content-Type: application/pgp-signature
-Content-Disposition: inline
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.2.2-ecc0.1.6 (GNU/Linux)
-
-iD8DBQFESm1RkBjmVsKMBeMRAuVKAJ0Q5ou67e2YtQegDNpnIJKvjArC6wCgu7jo
-f2QBB1atKyZ5NowVh/ufIMc=
-=PMFY
------END PGP SIGNATURE-----
-
---6c2NcOVqGQ03X4Wi--
+Alasdair
+-- 
+agk@redhat.com
