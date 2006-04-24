@@ -1,20 +1,20 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
 	by int-mx1.corp.redhat.com (8.12.11.20060308/8.11.6) with ESMTP id
-	k3OML76N003653
-	for <linux-lvm@redhat.com>; Mon, 24 Apr 2006 18:21:07 -0400
-Received: from orca.ele.uri.edu (orca.ele.uri.edu [131.128.51.63])
-	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id k3OML04v019396
-	for <linux-lvm@redhat.com>; Mon, 24 Apr 2006 18:21:00 -0400
-Subject: Re: [linux-lvm] LVM Best Practices
-From: Ming Zhang <mingz@ele.uri.edu>
-In-Reply-To: <1cbd6f830604241430l4cdfb592k39e574426fa11629@mail.gmail.com>
-References: <1cbd6f830604241430l4cdfb592k39e574426fa11629@mail.gmail.com>
-Date: Mon, 24 Apr 2006 18:20:42 -0400
-Message-Id: <1145917242.8585.325.camel@localhost.localdomain>
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Reply-To: mingz@ele.uri.edu,
-	LVM general discussion and development <linux-lvm@redhat.com>
+	k3ON6mgR010908
+	for <linux-lvm@redhat.com>; Mon, 24 Apr 2006 19:06:48 -0400
+Received: from nz-out-0102.google.com (nz-out-0102.google.com [64.233.162.206])
+	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id k3ON6gA9029043
+	for <linux-lvm@redhat.com>; Mon, 24 Apr 2006 19:06:42 -0400
+Received: by nz-out-0102.google.com with SMTP id x7so1213636nzc
+	for <linux-lvm@redhat.com>; Mon, 24 Apr 2006 16:06:42 -0700 (PDT)
+Message-ID: <1cbd6f830604241606r46abdafaxedaaccc9bff15a0f@mail.gmail.com>
+Date: Mon, 24 Apr 2006 19:06:41 -0400
+From: "Mag Gam" <magawake@gmail.com>
+MIME-Version: 1.0
+Content-Type: multipart/alternative; 
+	boundary="----=_Part_37827_18668732.1145920001229"
+Subject: [linux-lvm] Could not find device errors
+Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -24,24 +24,64 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-start from http://www.tldp.org/HOWTO/LVM-HOWTO/
+------=_Part_37827_18668732.1145920001229
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: base64
+Content-Disposition: inline
 
-ming
+ZGViaWFuOi8jIGx2c2NhbgogIENvdWxkbid0IGZpbmQgZGV2aWNlIHdpdGggdXVpZCAnUHZtd2Ns
+LVo5WmctclZKdi1RNVNpLXBQMGctMnM3dS1odmVEV1MnLgogIENvdWxkbid0IGZpbmQgYWxsIHBo
+eXNpY2FsIHZvbHVtZXMgZm9yIHZvbHVtZSBncm91cCB0ZXN0dmcuCiAgQ291bGRuJ3QgZmluZCBk
+ZXZpY2Ugd2l0aCB1dWlkICdQdm13Y2wtWjlaZy1yVkp2LVE1U2ktcFAwZy0yczd1LWh2ZURXUycu
+CiAgQ291bGRuJ3QgZmluZCBhbGwgcGh5c2ljYWwgdm9sdW1lcyBmb3Igdm9sdW1lIGdyb3VwIHRl
+c3R2Zy4KICBDb3VsZG4ndCBmaW5kIGRldmljZSB3aXRoIHV1aWQgJ1B2bXdjbC1aOVpnLXJWSnYt
+UTVTaS1wUDBnLTJzN3UtaHZlRFdTJy4KICBDb3VsZG4ndCBmaW5kIGFsbCBwaHlzaWNhbCB2b2x1
+bWVzIGZvciB2b2x1bWUgZ3JvdXAgdGVzdHZnLgogIFZvbHVtZSBncm91cCAidGVzdHZnIiBub3Qg
+Zm91bmQKCmRlYmlhbjovIyBwdnNjYW4KICBDb3VsZG4ndCBmaW5kIGRldmljZSB3aXRoIHV1aWQg
+J1B2bXdjbC1aOVpnLXJWSnYtUTVTaS1wUDBnLTJzN3UtaHZlRFdTJy4KICBDb3VsZG4ndCBmaW5k
+IGRldmljZSB3aXRoIHV1aWQgJ1B2bXdjbC1aOVpnLXJWSnYtUTVTaS1wUDBnLTJzN3UtaHZlRFdT
+Jy4KICBDb3VsZG4ndCBmaW5kIGRldmljZSB3aXRoIHV1aWQgJ1B2bXdjbC1aOVpnLXJWSnYtUTVT
+aS1wUDBnLTJzN3UtaHZlRFdTJy4KICBQViB1bmtub3duIGRldmljZSAgIFZHIHRlc3R2ZyAgIGx2
+bTIgWzkuMzEgR0IgLyAwICAgIGZyZWVdCiAgUFYgL2Rldi9oZGUyICAgICAgICBWRyB0ZXN0dmcg
+ICBsdm0yIFs5LjMxIEdCIC8gMCAgICBmcmVlXQogIFBWIC9kZXYvaGRlMyAgICAgICAgVkcgdGVz
+dHZnICAgbHZtMiBbOS4zMSBHQiAvIDMuNTIgR0IgZnJlZV0KICBQViAvZGV2L2hkZTQgICAgICAg
+IFZHIHRlc3R2ZyAgIGx2bTIgWzkuMzIgR0IgLyA5LjMyIEdCIGZyZWVdCiAgUFYgL2Rldi9oZGUx
+ICAgICAgICAgICAgICAgICAgICBsdm0yIFs5LjMxIEdCXQogIFRvdGFsOiA1IFs0Ni41NyBHQl0g
+LyBpbiB1c2U6IDQgWzM3LjI2IEdCXSAvIGluIG5vIFZHOiAxIFs5LjMxIEdCXQoKCkFueXdheSB0
+byBnZXQgYmFjayB0aGlzIFZHIG9yIFBWcz8KClRJQQo=
+------=_Part_37827_18668732.1145920001229
+Content-Type: text/html; charset=UTF-8
+Content-Transfer-Encoding: base64
+Content-Disposition: inline
 
-On Mon, 2006-04-24 at 17:30 -0400, Mag Gam wrote:
-> Are there any Best Linux LVM practices? I am coming from a strong AIX
-> background, and I am planning to convert some of our Linux servers
-> from static to LVM.  How does LVM compare to AIX's LVM? I am not
-> planning to mirror any data, just have 10 disks, and would like to use
-> them more efficiently with LVM. 
-> 
-> TIA!
-> 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+ZGViaWFuOi8jIGx2c2Nhbjxicj4mbmJzcDsgQ291bGRuJ3QgZmluZCBkZXZpY2Ugd2l0aCB1dWlk
+ICdQdm13Y2wtWjlaZy1yVkp2LVE1U2ktcFAwZy0yczd1LWh2ZURXUycuPGJyPiZuYnNwOyBDb3Vs
+ZG4ndCBmaW5kIGFsbCBwaHlzaWNhbCB2b2x1bWVzIGZvciB2b2x1bWUgZ3JvdXAgdGVzdHZnLjxi
+cj4mbmJzcDsgQ291bGRuJ3QgZmluZCBkZXZpY2Ugd2l0aCB1dWlkICdQdm13Y2wtWjlaZy1yVkp2
+LVE1U2ktcFAwZy0yczd1LWh2ZURXUycuCjxicj4mbmJzcDsgQ291bGRuJ3QgZmluZCBhbGwgcGh5
+c2ljYWwgdm9sdW1lcyBmb3Igdm9sdW1lIGdyb3VwIHRlc3R2Zy48YnI+Jm5ic3A7IENvdWxkbid0
+IGZpbmQgZGV2aWNlIHdpdGggdXVpZCAnUHZtd2NsLVo5WmctclZKdi1RNVNpLXBQMGctMnM3dS1o
+dmVEV1MnLjxicj4mbmJzcDsgQ291bGRuJ3QgZmluZCBhbGwgcGh5c2ljYWwgdm9sdW1lcyBmb3Ig
+dm9sdW1lIGdyb3VwIHRlc3R2Zy48YnI+Jm5ic3A7IFZvbHVtZSBncm91cCAmcXVvdDt0ZXN0dmcm
+cXVvdDsgbm90IGZvdW5kCjxicj48YnI+ZGViaWFuOi8jIHB2c2Nhbjxicj4mbmJzcDsgQ291bGRu
+J3QgZmluZCBkZXZpY2Ugd2l0aCB1dWlkICdQdm13Y2wtWjlaZy1yVkp2LVE1U2ktcFAwZy0yczd1
+LWh2ZURXUycuPGJyPiZuYnNwOyBDb3VsZG4ndCBmaW5kIGRldmljZSB3aXRoIHV1aWQgJ1B2bXdj
+bC1aOVpnLXJWSnYtUTVTaS1wUDBnLTJzN3UtaHZlRFdTJy48YnI+Jm5ic3A7IENvdWxkbid0IGZp
+bmQgZGV2aWNlIHdpdGggdXVpZCAnUHZtd2NsLVo5WmctclZKdi1RNVNpLXBQMGctMnM3dS1odmVE
+V1MnLgo8YnI+Jm5ic3A7IFBWIHVua25vd24gZGV2aWNlJm5ic3A7Jm5ic3A7IFZHIHRlc3R2ZyZu
+YnNwOyZuYnNwOyBsdm0yIFs5LjMxIEdCIC8gMCZuYnNwOyZuYnNwOyZuYnNwOyBmcmVlXTxicj4m
+bmJzcDsgUFYgL2Rldi9oZGUyJm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5i
+c3A7IFZHIHRlc3R2ZyZuYnNwOyZuYnNwOyBsdm0yIFs5LjMxIEdCIC8gMCZuYnNwOyZuYnNwOyZu
+YnNwOyBmcmVlXTxicj4mbmJzcDsgUFYgL2Rldi9oZGUzJm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7
+Jm5ic3A7Jm5ic3A7Jm5ic3A7IFZHIHRlc3R2ZyZuYnNwOyZuYnNwOyBsdm0yIFs5LjMxIEdCIC8g
+My41MiBHQiBmcmVlXTxicj4mbmJzcDsgUFYgL2Rldi9oZGU0Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5i
+c3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7IFZHIHRlc3R2ZyZuYnNwOyZuYnNwOyBsdm0yIFsKOS4zMiBH
+QiAvIDkuMzIgR0IgZnJlZV08YnI+Jm5ic3A7IFBWIC9kZXYvaGRlMSZuYnNwOyZuYnNwOyZuYnNw
+OyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZu
+YnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyBsdm0yIFs5LjMxIEdCXTxi
+cj4mbmJzcDsgVG90YWw6IDUgWzQ2LjU3IEdCXSAvIGluIHVzZTogNCBbMzcuMjYgR0JdIC8gaW4g
+bm8gVkc6IDEgWzkuMzEgR0JdPGJyPjxicj48YnI+QW55d2F5IHRvIGdldCBiYWNrIHRoaXMgVkcg
+b3IgUFZzPzxicj48YnI+VElBPGJyPjxicj4K
+------=_Part_37827_18668732.1145920001229--
