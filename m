@@ -1,20 +1,9 @@
-Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.12.11.20060308/8.11.6) with ESMTP id
-	k3NH7Sk3020746
-	for <linux-lvm@redhat.com>; Sun, 23 Apr 2006 13:07:28 -0400
-Received: from cody.kdinet.com (ns1.kdinet.com [69.56.133.250])
-	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id k3NH7MEM029006
-	for <linux-lvm@redhat.com>; Sun, 23 Apr 2006 13:07:23 -0400
-Received: from 71-81-217-205.dhcp.stls.mo.charter.com ([71.81.217.205]
-	helo=kdi03xp) by cody.kdinet.com with esmtpa (Exim 4.52)
-	id 1FXi3L-0006F9-5Z
-	for linux-lvm@redhat.com; Sun, 23 Apr 2006 12:07:19 -0500
-From: "Diane Rolland" <drolland@kdinet.com>
-Date: Sun, 23 Apr 2006 12:07:19 -0500
-Message-ID: <000301c666f8$62cfb5a0$6500a8c0@kdinet.local>
+In-Reply-To: <20060422074910.GA15564@percy.comedia.it>
+Subject: Re: [linux-lvm] Re: RHAS 3U4 and LVM , alternate path
+Message-ID: <OFC5005815.70648774-ONC125715A.0039E2C1-C125715A.003BEE20@schering.de>
+From: Christian.Rohrmeier@SCHERING.DE
+Date: Mon, 24 Apr 2006 12:54:33 +0200
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] help after unsuccessful reduce using e2fsadmin
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -26,77 +15,139 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@redhat.com
-
-Hi all,
- 
-I have a development box I am playing around with lvm on.  I had
-successfully extended a VG using e2fsadm.  
- 
-Command was:
-e2fsadm -L+24G /dev/vg1/lvol1
- 
-I then wanted to reduce it by the same amount:
-drsvr02:/root# e2fsadm -L-24G /dev/vg1/lvol1
-e2fsck 1.32 (09-Nov-2002)
-Pass 1: Checking inodes, blocks, and sizes
-Pass 2: Checking directory structure
-Pass 3: Checking directory connectivity
-Pass 4: Checking reference counts
-Pass 5: Checking group summary information
-/dev/vg1/lvol1: 818050/11960320 files (13.1% non-contiguous),
-15412825/23920640 blocks
-resize2fs 1.32 (09-Nov-2002)
-Begin pass 2 (max = 49740)
-Relocating blocks             XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-Begin pass 3 (max = 730)
-Scanning inode table          XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-Begin pass 4 (max = 37732)
-Updating inode references     XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXThe
-filesystem on /dev/vg1/lvol1 is now 17629184 blocks long.
- 
-lvreduce -- WARNING: reducing active logical volume to 67.25 GB
-lvreduce -- THIS MAY DESTROY YOUR DATA (filesystem etc.)
-lvreduce -- ERROR "No such device or address" reducing logical volume
-"/dev/vg1/lvol1" in kernel
- 
- 
-After the error, I tried to e2fsck and even mount, but:
- 
-drsvr02:/root# e2fsck /dev/vg1/lvol1
-e2fsck 1.32 (09-Nov-2002)
-e2fsck: Attempt to read block from filesystem resulted in short read while
-trying to open /dev/vg1/lvol1
-Could this be a zero-length partition?
-drsvr02:/root# mount /mail
-mount: wrong fs type, bad option, bad superblock on /dev/vg1/lvol1,
-       or too many mounted file systems
-
-Vgdisplay still gives me the following:
-
-drsvr02:/root# vgdisplay
---- Volume group ---
-VG Name               vg1
-VG Access             read/write
-VG Status             available/resizable
-VG #                  0
-MAX LV                256
-Cur LV                1
-Open LV               0
-MAX LV Size           2 TB
-Max PV                256
-Cur PV                2
-Act PV                2
-VG Size               92.19 GB
-PE Size               32 MB
-Total PE              2950
-Alloc PE / Size       2152 / 67.25 GB
-Free  PE / Size       798 / 24.94 GB
-VG UUID               g4xXEb-TpOU-TNBM-TZSc-fbIm-NPw4-wHKrkM
+Content-Transfer-Encoding: 7bit
+To: LVM general discussion and development <linux-lvm@redhat.com>
+Cc: "Giridharan, Prabhu" <prabhu.g@hp.com>, linux-lvm-bounces@redhat.com
 
 
-Is there any recovery possibility?  Or how do I go about blowing everything
-away and starting over?
+HI,
 
-Thanks for any help,
-Diane
+what those guides don't tell you is what you need to do to your XP in order
+for DMP to work. If you use the device mapper driver (although it seems if
+using Veritas you'll need this as well) then you'll need to keep a few
+things in mind:
+- You can't use an XP512, 1024 only.
+- System modes 140 and 293 need to be enabled on the XP.
+
+"The E-COPY Response to the Inquiry command is changed, and the volume can
+be used from VeritasNetBackUP in heterogeneous OS configuration, such as
+Solaris and HP-UX.
+
+Addendum
+This mode works in conjuction with System Mode 140. Inquiry page83 for the
+XP1024/XP128 has been updated as follows:
+
+If System Mode 140 is ON and System Mode 293 is ON, a descriptor of
+Identifier Type = 3 will be added
+If System Mode 140 is ON and System Mode 293 is OFF, a descriptor of
+Identifier Type = 3,1,2 will be added
+If System Mode 140 is OFF and System Mode 293 is ON, there is no change
+If System Mode 140 is OFF and System Mode 293 is OFF, there is no change"
+
+ergo the response to a SCSI inquiry on page0x83 will be changed.
+
+- Device mapper atleast only works with RHEL 4 Update 3.
+- And keep in mind: mode changes take effect on ALL ports!
+
+As an example:
+
+Device File                 ALPA Tgt Lun Port  CU:LDev Type
+Serial#
+================================================================================
+
+
+/dev/sda                     cc  00  01  CL2A  05:ab  OPEN-L*4
+0004012x
+/dev/sdb                     cd  01  01  CL2A  01:99  OPEN-L*4
+0006305x
+/dev/sdc                     e8  00  01  CL1A  05:ab  OPEN-L*4
+0004012x
+/dev/sdd                     ef  01  01  CL1A  01:99  OPEN-L*4
+0006305x
+
+I've got 2 Open-Ls on two XP 1024s, and I've got two paths going to each
+(sda = sdc, sdb = sdd).
+
+The device mapper sees the following:
+
+[root@bes013 dev]# scsi_id -g -u -s /block/sda
+0HP______OPEN-L*4________50060e80039cbe1000010000000000000000cc00
+[root@bes013 dev]# scsi_id -g -u -s /block/sdb
+0HP______OPEN-L*4________50060e8003f6531000010000000000000000cd00
+[root@bes013 dev]# scsi_id -g -u -s /block/sdc
+0HP______OPEN-L*4________50060e80039cbe0000010000000000000000e800
+[root@bes013 dev]# scsi_id -g -u -s /block/sdd
+0HP______OPEN-L*4________50060e8003f6530000010000000000000000ef00
+
+And that is the problem. It can't tell that those four LUNs are actually
+only two LUNs. Thats what modes 140 and 293 do: changes the way the SCSI ID
+descriptors of the LUNs is given by the XP.
+
+I'd be interested in hearing from anyone else thats working on this.
+
+Cheers,
+
+Christian
+
+_________________
+Christian Rohrmeier
+Schering AG
+Corporate IT - Infrastructure and Services
+Computer Systems and Operations
+System Administration - Research and Development
+
+
+
+                                                                           
+             Luca Berra                                                    
+             <luca.berra@comed                                             
+             ia.it>                                                     To 
+             Sent by:                  "Giridharan, Prabhu"                
+             linux-lvm-bounces         <prabhu.g@hp.com>                   
+             @redhat.com                                                cc 
+                                       linux-lvm@redhat.com                
+                                                                   Subject 
+             22.04.2006 09:49          Re: [linux-lvm] Re: RHAS 3U4 and    
+                                       LVM , alternate path                
+                                                                           
+             Please respond to                                             
+                LVM general                                                
+              discussion and                                               
+                development                                                
+             <linux-lvm@redhat                                             
+                   .com>                                                   
+                                                                           
+                                                                           
+
+
+
+
+On Wed, Apr 19, 2006 at 04:14:38PM +0800, Giridharan, Prabhu wrote:
+>Hello Team,
+>
+>I have an HP-Itanium server model rx4640 with RHAS 3 update 4 IA64 with
+>two Qlogic FC (A6862A- HP part number)and Qlogic 7.07 driver version
+>connected to an XP array , We had tried to use the failover capability
+>of Qlogic FC card however it seems not to be working even after enabling
+>the failover, So we are thinking of opting to the alternate path concept
+>in LVM, So kindly let me know whether alternate path are supported in
+>above mentioned RH linux version if so please provide the steps for the
+>same.
+
+http://h20000.www2.hp.com/bizsupport/TechSupport/DocumentIndex.jsp?contentType=SupportManual&locale=en_US&docIndexId=179911&taskId=120&prodTypeId=12169&prodSeriesId=421487
+
+
+L.
+--
+Luca Berra -- bluca@comedia.it
+        Communication Media & Services S.r.l.
+ /"\
+ \ /     ASCII RIBBON CAMPAIGN
+  X        AGAINST HTML MAIL
+ / \
+
+_______________________________________________
+linux-lvm mailing list
+linux-lvm@redhat.com
+https://www.redhat.com/mailman/listinfo/linux-lvm
+read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
