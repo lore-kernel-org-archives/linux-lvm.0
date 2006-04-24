@@ -1,21 +1,20 @@
-Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
+Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
 	by int-mx1.corp.redhat.com (8.12.11.20060308/8.11.6) with ESMTP id
-	k3OFxWkw000987
-	for <linux-lvm@redhat.com>; Mon, 24 Apr 2006 11:59:32 -0400
-Received: from orca.ele.uri.edu (orca.ele.uri.edu [131.128.51.63])
-	by mx1.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
-	k3OFxTZs010087
-	for <linux-lvm@redhat.com>; Mon, 24 Apr 2006 11:59:29 -0400
-Subject: Re: [linux-lvm] different drive speeds in the same volume group
-From: Ming Zhang <mingz@ele.uri.edu>
-In-Reply-To: <444CC1A6.7050802@juhui.ch>
-References: <444CC1A6.7050802@juhui.ch>
-Date: Mon, 24 Apr 2006 11:59:05 -0400
-Message-Id: <1145894345.8585.96.camel@localhost.localdomain>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Reply-To: mingz@ele.uri.edu,
-	LVM general discussion and development <linux-lvm@redhat.com>
+	k3OLUnKZ026529
+	for <linux-lvm@redhat.com>; Mon, 24 Apr 2006 17:30:49 -0400
+Received: from nz-out-0102.google.com (nz-out-0102.google.com [64.233.162.201])
+	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id k3OLUhnO008282
+	for <linux-lvm@redhat.com>; Mon, 24 Apr 2006 17:30:43 -0400
+Received: by nz-out-0102.google.com with SMTP id x7so1194825nzc
+	for <linux-lvm@redhat.com>; Mon, 24 Apr 2006 14:30:43 -0700 (PDT)
+Message-ID: <1cbd6f830604241430l4cdfb592k39e574426fa11629@mail.gmail.com>
+Date: Mon, 24 Apr 2006 17:30:43 -0400
+From: "Mag Gam" <magawake@gmail.com>
+MIME-Version: 1.0
+Content-Type: multipart/alternative; 
+	boundary="----=_Part_36674_9696799.1145914242999"
+Subject: [linux-lvm] LVM Best Practices
+Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -25,26 +24,28 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="iso-8859-1"
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-My 2 cents, I do not think there will be any problem on this. There is
-no assumption on speed in DM.
+------=_Part_36674_9696799.1145914242999
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: base64
+Content-Disposition: inline
 
-On Mon, 2006-04-24 at 14:16 +0200, Gregor Reich wrote:
-> Hi
->=20
-> As I couldn't search the archives as a whole, I mailing my rather thumb=20
-> question to the mailing list:
->=20
-> May there be any problem using disks of different drive speed (10k and=20
-> 15k) in the same volume group (i.e. using the different speeded disks=20
-> for the same logical volume)?
->=20
-> Thanks a lot.
->=20
-> Greg
->=20
-> Mit freundlichen Gr=C3=BCssen
-> Gregor Reich
->=20
+QXJlIHRoZXJlIGFueSBCZXN0IExpbnV4IExWTSBwcmFjdGljZXM/IEkgYW0gY29taW5nIGZyb20g
+YSBzdHJvbmcgQUlYCmJhY2tncm91bmQsIGFuZCBJIGFtIHBsYW5uaW5nIHRvIGNvbnZlcnQgc29t
+ZSBvZiBvdXIgTGludXggc2VydmVycyBmcm9tCnN0YXRpYyB0byBMVk0uICBIb3cgZG9lcyBMVk0g
+Y29tcGFyZSB0byBBSVgncyBMVk0/IEkgYW0gbm90IHBsYW5uaW5nIHRvCm1pcnJvciBhbnkgZGF0
+YSwganVzdCBoYXZlIDEwIGRpc2tzLCBhbmQgd291bGQgbGlrZSB0byB1c2UgdGhlbSBtb3JlCmVm
+ZmljaWVudGx5IHdpdGggTFZNLgoKVElBIQo=
+------=_Part_36674_9696799.1145914242999
+Content-Type: text/html; charset=UTF-8
+Content-Transfer-Encoding: base64
+Content-Disposition: inline
+
+QXJlIHRoZXJlIGFueSBCZXN0IExpbnV4IExWTSBwcmFjdGljZXM/IEkgYW0gY29taW5nIGZyb20g
+YSBzdHJvbmcgQUlYIGJhY2tncm91bmQsIGFuZCBJIGFtIHBsYW5uaW5nIHRvIGNvbnZlcnQgc29t
+ZSBvZiBvdXIgTGludXggc2VydmVycyBmcm9tIHN0YXRpYyB0byBMVk0uJm5ic3A7IEhvdyBkb2Vz
+IExWTSBjb21wYXJlIHRvIEFJWCdzIExWTT8gSSBhbSBub3QgcGxhbm5pbmcgdG8gbWlycm9yIGFu
+eSBkYXRhLCBqdXN0IGhhdmUgMTAgZGlza3MsIGFuZCB3b3VsZCBsaWtlIHRvIHVzZSB0aGVtIG1v
+cmUgZWZmaWNpZW50bHkgd2l0aCBMVk0uCjxicj48YnI+VElBITxicj48YnI+Cg==
+------=_Part_36674_9696799.1145914242999--
