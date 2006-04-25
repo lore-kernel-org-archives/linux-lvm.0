@@ -1,16 +1,27 @@
-Received: from [10.15.80.229] (dhcp80-229.msp.redhat.com [10.15.80.229])
-	by pobox.corp.redhat.com (8.12.8/8.12.8) with ESMTP id k3PGU0IC022559
-	for <linux-lvm@redhat.com>; Tue, 25 Apr 2006 12:30:00 -0400
-Mime-Version: 1.0 (Apple Message framework v623)
-In-Reply-To: <1cbd6f830604241436r22860bq709e1f496b41490e@mail.gmail.com>
-References: <20060405232627.GA437@canterbury.faction42.com>
-	<6738c87e4c4c4c50c5117ff7ad60e3d8@redhat.com>
-	<1cbd6f830604241436r22860bq709e1f496b41490e@mail.gmail.com>
-Content-Type: multipart/alternative; boundary=Apple-Mail-2-171784874
-Message-Id: <f09683d3fd351ee27efbb35846856033@redhat.com>
-From: Jonathan E Brassow <jbrassow@redhat.com>
-Subject: Re: [linux-lvm] lvm2 pv failure
-Date: Tue, 25 Apr 2006 11:31:49 -0500
+Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
+	by int-mx1.corp.redhat.com (8.12.11.20060308/8.11.6) with ESMTP id
+	k3PJ947P022817
+	for <linux-lvm@redhat.com>; Tue, 25 Apr 2006 15:09:05 -0400
+Received: from mail.cnr.colostate.edu (clavin1.cnr.colostate.edu
+	[129.82.112.67])
+	by mx1.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
+	k3PJ93bH000408
+	for <linux-lvm@redhat.com>; Tue, 25 Apr 2006 15:09:04 -0400
+Received: from newman.nrel.colostate.edu (newman [129.82.112.30])
+	by mail.cnr.colostate.edu (8.12.11/8.12.11) with ESMTP id
+	k3PJ8qrY025221
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=FAIL)
+	for <linux-lvm@redhat.com>; Tue, 25 Apr 2006 13:08:53 -0600 (MDT)
+Received: from [129.82.104.126] (donbot [129.82.104.126])
+	by newman.nrel.colostate.edu (8.12.11/8.12.11) with ESMTP id
+	k3PJ8qPX025209
+	for <linux-lvm@redhat.com>; Tue, 25 Apr 2006 13:08:52 -0600 (MDT)
+Message-ID: <444E73C3.7040305@nrel.colostate.edu>
+Date: Tue, 25 Apr 2006 13:08:51 -0600
+From: "Ty! Boyack" <ty@nrel.colostate.edu>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] lvm2 *TEMPORARY* PV failure - what happens?
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -21,192 +32,46 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+To: linux-lvm@redhat.com
 
+I've been intrigued by the discussion of what happens when a PV fails, 
+and have begun to wonder what would happen in the case of a transient 
+failure of a PV.
 
---Apple-Mail-2-171784874
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain;
-	charset=ISO-8859-1;
-	format=flowed
+The design I'm thinking of is a SAN environment with several 
+multi-terabyte iSCSI arrays as PVs, being grouped together into a single 
+VG, and then carving LVs out of that.  We plan on using the CLVM tools 
+to fit into a clustered environment. 
 
-You could stuff in a new drive and 'dd' the contents of the failed=20
-drive to the new drive (if the drive hasn't completely failed) using=20
-the "noerror" option.
+The arrays themselves are robust (RAID 5/6, redundant power supplies, 
+etc.) and I grant that if we lose the actual array (for example, if 
+multiple disks fail), then we are in the situation of a true and 
+possibly total failure of the PV and loss of it's data blocks.
 
-Now you might be able to (shutdown) pull the bad drive and reboot.
+But there is always the possiblity that we could lose the CPU, memory, 
+bus, etc. in the iSCSI controller portion of the array, which will cause 
+downtime, but no true loss of data.  Or someone may hit the wrong power 
+switch and just reboot the thing, taking it offline for a short time.  
+Yes, that someone would probably be me.  Shame on me.
 
-So far, you've risked nothing.  I'd see how this goes before trying=20
-other things (like editing the lvm labels directly).
+The key point is that the iSCSI disk will come back in a few 
+minutes/hours/days depending on the failure type, and all blocks will be 
+intact when it comes back up.  I suppose the analagous situation would 
+be using LVM on a group of hot swap drives and pulling one of the disks, 
+waiting a while, and then re-inserting it.
 
-  brassow
+Can someone please walk me through the resulting steps that would happen 
+within LVM2 (or a GFS filesystem on top of that LV) in this situation?
 
-On Apr 24, 2006, at 4:36 PM, Mag Gam wrote:
+Thanks,
 
-> Jon:
->
-> How would you recover this? Just curious....
->
->
-> On 4/6/06, Jonathan E Brassow <jbrassow@redhat.com > wrote:All the=20
-> logical volumes on the remaining drive should be recoverable.
->> If you striped the two devices, you'll probably be hurting.=A0=A0If =
-the=20
->> 1st
->> hard drive is only partially failed (some sectors fail, others =
-don't),
->> then you should be able to retrieve most of that data too.
->>
->> =A0=A0brassow
->>
->> On Apr 5, 2006, at 6:26 PM, Uk1ah Sm1th wrote:
->>
->> > Hello-
->> >
->> > I had one of the two drives in my LVM2 array fail. It was the first
->> > drive. Is it possiable that any data on the second drive could be
->> > recovered? Or have I lost all my data on both drives?
->>  >
->> > .Ukiah Smith
->> >
->> > --
->> > "Well done is better than well said."
->> >=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0- Benjamin Franklin =
-(1706-1790)
->> >
->> > _______________________________________________
->>  > linux-lvm mailing list
->> > linux-lvm@redhat.com
->> > https://www.redhat.com/mailman/listinfo/linux-lvm
->>  > read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
->> >
->>
->> _______________________________________________
->> linux-lvm mailing list
->>  linux-lvm@redhat.com
->> https://www.redhat.com/mailman/listinfo/linux-lvm
->> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/=
+-Ty!
 
---Apple-Mail-2-171784874
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/enriched;
-	charset=ISO-8859-1
-
-You could stuff in a new drive and 'dd' the contents of the failed
-drive to the new drive (if the drive hasn't completely failed) using
-the "noerror" option.
-
-
-Now you might be able to (shutdown) pull the bad drive and reboot.
-
-
-So far, you've risked nothing.  I'd see how this goes before trying
-other things (like editing the lvm labels directly).
-
-
- brassow
-
-
-On Apr 24, 2006, at 4:36 PM, Mag Gam wrote:
-
-
-<excerpt>Jon:
-
-
-How would you recover this? Just curious....
-
-
-
-On 4/6/06, <bold>Jonathan E Brassow</bold>
-<<<color><param>0000,0000,EEEE</param>jbrassow@redhat.com</color> >
-wrote:All the logical volumes on the remaining drive should be
-recoverable.
-
-<excerpt>If you striped the two devices, you'll probably be
-hurting.=A0=A0If the 1st=20
-
-hard drive is only partially failed (some sectors fail, others don't),
-
-then you should be able to retrieve most of that data too.
-
-
-=A0=A0brassow
-
-
-On Apr 5, 2006, at 6:26 PM, Uk1ah Sm1th wrote:
-
-
-> Hello-=20
-
->
-
-> I had one of the two drives in my LVM2 array fail. It was the first
-
-> drive. Is it possiable that any data on the second drive could be
-
-> recovered? Or have I lost all my data on both drives?
-
- >
-
-> .Ukiah Smith
-
->
-
-> --
-
-> "Well done is better than well said."
-
->=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0- Benjamin Franklin =
-(1706-1790)
-
->
-
-> _______________________________________________
-
- > linux-lvm mailing list
-
-> <color><param>0000,0000,EEEE</param>linux-lvm@redhat.com</color>
-
->
-=
-<color><param>0000,0000,EEEE</param>https://www.redhat.com/mailman/listinf=
-o/linux-lvm</color>
-
- > read the LVM HOW-TO at
-=
-<color><param>0000,0000,EEEE</param>http://tldp.org/HOWTO/LVM-HOWTO/</colo=
-r>
-
->
-
-
-_______________________________________________
-
-linux-lvm mailing list
-
-<color><param>0000,0000,EEEE</param> linux-lvm@redhat.com</color>
-
-=
-<color><param>0000,0000,EEEE</param>https://www.redhat.com/mailman/listinf=
-o/linux-lvm</color>
-
-read the LVM HOW-TO at
-<color><param>0000,0000,EEEE</param>http://tldp.org/HOWTO/LVM-HOWTO/ =
-</color>
-
-</excerpt>_______________________________________________
-
-linux-lvm mailing list
-
-linux-lvm@redhat.com
-
-https://www.redhat.com/mailman/listinfo/linux-lvm
-
-read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/</excerpt>=
-
---Apple-Mail-2-171784874--
+-- 
+-===========================-
+  Ty! Boyack
+  NREL Unix Network Manager
+  ty@nrel.colostate.edu
+  (970) 491-1186
+-===========================-
