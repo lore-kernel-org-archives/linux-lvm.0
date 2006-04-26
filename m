@@ -1,19 +1,18 @@
-Received: from [10.15.80.229] (dhcp80-229.msp.redhat.com [10.15.80.229])
-	by pobox.corp.redhat.com (8.12.8/8.12.8) with ESMTP id k3QG6PBt021138
-	for <linux-lvm@redhat.com>; Wed, 26 Apr 2006 12:06:25 -0400
-Mime-Version: 1.0 (Apple Message framework v623)
-In-Reply-To: <1146005699.26842.166.camel@localhost.localdomain>
-References: <444E73C3.7040305@nrel.colostate.edu>
-	<1145995049.26842.103.camel@localhost.localdomain>
-	<f9361e496ca792ff924de60979c1bbb9@redhat.com>
-	<1145997578.26842.119.camel@localhost.localdomain>
-	<444E9F0E.1010303@nrel.colostate.edu>
-	<1146005699.26842.166.camel@localhost.localdomain>
-Message-Id: <8bfc154a0fd2cf17f26b10f32c9194e0@redhat.com>
-Content-Transfer-Encoding: 7bit
-From: Jonathan E Brassow <jbrassow@redhat.com>
-Subject: Re: [linux-lvm] lvm2 *TEMPORARY* PV failure - what happens?
-Date: Wed, 26 Apr 2006 11:08:18 -0500
+Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
+	by int-mx1.corp.redhat.com (8.12.11.20060308/8.11.6) with ESMTP id
+	k3QMtNxv008606
+	for <linux-lvm@redhat.com>; Wed, 26 Apr 2006 18:55:23 -0400
+Received: from sccrmhc11.comcast.net (sccrmhc11.comcast.net [63.240.77.81])
+	by mx1.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
+	k3QMtGG1029328
+	for <linux-lvm@redhat.com>; Wed, 26 Apr 2006 18:55:16 -0400
+From: "Greg Hartzog" <glhartzog@comcast.net>
+Date: Wed, 26 Apr 2006 18:55:08 -0400
+Message-ID: <000601c66984$779e7230$640a0a0a@laptopoptimus>
+MIME-Version: 1.0
+Content-Type: multipart/alternative;
+	boundary="----=_NextPart_000_0007_01C66962.F08CD230"
+Subject: [linux-lvm] Cloning Logical Volumes
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -24,19 +23,154 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: LVM general discussion and development <linux-lvm@redhat.com>
+To: linux-lvm@redhat.com
+
+This is a multi-part message in MIME format.
+
+------=_NextPart_000_0007_01C66962.F08CD230
+Content-Type: text/plain;
+	charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+
+Hello there folks.  I have a question.
+
+ 
+
+I am looking for a better way of cloning logical volumes then creating a new
+logical volume, identical to a source logical volume, and using "dd" to copy
+data between the two logical volumes.
+
+ 
+
+I would love to use dm-mirror to do this, but I do not think any interface
+has been provided to do this yet.
+
+ 
+
+All suggestions and ideas appreciated.
+
+ 
+
+I am running lvm2-2.02.04-r1 & 2.6.15 kernel.
+
+ 
+
+Thanks!
+
+ 
 
 
-On Apr 25, 2006, at 5:54 PM, Ming Zhang wrote:
->> I'm still wondering if the disk comes back if the LV will be available
->> again, or if LVM will mark it as failed, and assume that all blocks on
->
-> it will not automatically available i think, but with that "echo ...", 
-> u
-> might be able to see it again.
->
+------=_NextPart_000_0007_01C66962.F08CD230
+Content-Type: text/html;
+	charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 
-Actually, I think it is available once the dev comes back.
+<html xmlns:o=3D"urn:schemas-microsoft-com:office:office" =
+xmlns:w=3D"urn:schemas-microsoft-com:office:word" =
+xmlns=3D"http://www.w3.org/TR/REC-html40">
 
-  brassow
+<head>
+<meta http-equiv=3DContent-Type content=3D"text/html; =
+charset=3Dus-ascii">
+<meta name=3DGenerator content=3D"Microsoft Word 11 (filtered medium)">
+<style>
+<!--
+ /* Style Definitions */
+ p.MsoNormal, li.MsoNormal, div.MsoNormal
+	{margin:0in;
+	margin-bottom:.0001pt;
+	font-size:12.0pt;
+	font-family:"Times New Roman";}
+a:link, span.MsoHyperlink
+	{color:blue;
+	text-decoration:underline;}
+a:visited, span.MsoHyperlinkFollowed
+	{color:purple;
+	text-decoration:underline;}
+span.EmailStyle17
+	{mso-style-type:personal-compose;
+	font-family:Arial;
+	color:windowtext;
+	font-weight:normal;
+	font-style:normal;
+	text-decoration:none none;}
+@page Section1
+	{size:8.5in 11.0in;
+	margin:1.0in 1.25in 1.0in 1.25in;}
+div.Section1
+	{page:Section1;}
+-->
+</style>
+
+</head>
+
+<body lang=3DEN-US link=3Dblue vlink=3Dpurple>
+
+<div class=3DSection1>
+
+<p class=3DMsoNormal><font size=3D3 face=3DArial><span =
+style=3D'font-size:12.0pt;
+font-family:Arial'>Hello there folks.&nbsp; I have a =
+question.<o:p></o:p></span></font></p>
+
+<p class=3DMsoNormal><font size=3D3 face=3DArial><span =
+style=3D'font-size:12.0pt;
+font-family:Arial'><o:p>&nbsp;</o:p></span></font></p>
+
+<p class=3DMsoNormal><font size=3D3 face=3DArial><span =
+style=3D'font-size:12.0pt;
+font-family:Arial'>I am looking for a better way of cloning logical =
+volumes
+then creating a new logical volume, identical to a source logical =
+volume, and
+using &#8220;dd&#8221; to copy data between the two logical =
+volumes.<o:p></o:p></span></font></p>
+
+<p class=3DMsoNormal><font size=3D3 face=3DArial><span =
+style=3D'font-size:12.0pt;
+font-family:Arial'><o:p>&nbsp;</o:p></span></font></p>
+
+<p class=3DMsoNormal><font size=3D3 face=3DArial><span =
+style=3D'font-size:12.0pt;
+font-family:Arial'>I would love to use dm-mirror to do this, but I do =
+not think
+any interface has been provided to do this =
+yet.<o:p></o:p></span></font></p>
+
+<p class=3DMsoNormal><font size=3D3 face=3DArial><span =
+style=3D'font-size:12.0pt;
+font-family:Arial'><o:p>&nbsp;</o:p></span></font></p>
+
+<p class=3DMsoNormal><font size=3D3 face=3DArial><span =
+style=3D'font-size:12.0pt;
+font-family:Arial'>All suggestions and ideas =
+appreciated.<o:p></o:p></span></font></p>
+
+<p class=3DMsoNormal><font size=3D3 face=3DArial><span =
+style=3D'font-size:12.0pt;
+font-family:Arial'><o:p>&nbsp;</o:p></span></font></p>
+
+<p class=3DMsoNormal><font size=3D3 face=3DArial><span =
+style=3D'font-size:12.0pt;
+font-family:Arial'>I am running lvm2-2.02.04-r1 &amp; 2.6.15 =
+kernel.<o:p></o:p></span></font></p>
+
+<p class=3DMsoNormal><font size=3D3 face=3DArial><span =
+style=3D'font-size:12.0pt;
+font-family:Arial'><o:p>&nbsp;</o:p></span></font></p>
+
+<p class=3DMsoNormal><font size=3D3 face=3DArial><span =
+style=3D'font-size:12.0pt;
+font-family:Arial'>Thanks!<o:p></o:p></span></font></p>
+
+<p class=3DMsoNormal><font size=3D3 face=3DArial><span =
+style=3D'font-size:12.0pt;
+font-family:Arial'><o:p>&nbsp;</o:p></span></font></p>
+
+</div>
+
+</body>
+
+</html>
+
+------=_NextPart_000_0007_01C66962.F08CD230--
