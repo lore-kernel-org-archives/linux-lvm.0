@@ -1,20 +1,14 @@
-Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.12.11.20060308/8.11.6) with ESMTP id
-	k3SIpTnN030097
-	for <linux-lvm@redhat.com>; Fri, 28 Apr 2006 14:51:29 -0400
-Received: from palrel12.hp.com (palrel12.hp.com [156.153.255.237])
-	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id k3SIpL9q018636
-	for <linux-lvm@redhat.com>; Fri, 28 Apr 2006 14:51:21 -0400
-Received: from cacexg13.americas.cpqcorp.net (cacexg13.americas.cpqcorp.net
-	[16.92.1.76]) by palrel12.hp.com (Postfix) with ESMTP id D19D3354CC
-	for <linux-lvm@redhat.com>; Fri, 28 Apr 2006 11:51:10 -0700 (PDT)
-Content-class: urn:content-classes:message
-MIME-Version: 1.0
-Date: Fri, 28 Apr 2006 11:51:09 -0700
-Message-ID: <1C4766A743ADF74FAEDF2AAD0679BAA207EF5D59@cacexc03.americas.cpqcorp.net>
-From: "Stern, Rick (Serviceguard Linux)" <rick.stern@hp.com>
-Content-Transfer-Encoding: 8bit
-Subject: [linux-lvm] Running LVM commands in parallel
+Received: from [10.15.80.229] (dhcp80-229.msp.redhat.com [10.15.80.229])
+	by pobox.corp.redhat.com (8.12.8/8.12.8) with ESMTP id k3SK3ZeA004383
+	for <linux-lvm@redhat.com>; Fri, 28 Apr 2006 16:03:35 -0400
+Mime-Version: 1.0 (Apple Message framework v623)
+In-Reply-To: <b2ace7f20604280326t1814bc7ex709b539942b85dc7@mail.gmail.com>
+References: <b2ace7f20604280326t1814bc7ex709b539942b85dc7@mail.gmail.com>
+Message-Id: <1a432ac79973c135c73d61ad9cd2080a@redhat.com>
+Content-Transfer-Encoding: 7bit
+From: Jonathan E Brassow <jbrassow@redhat.com>
+Subject: Re: [linux-lvm] LVM2 coverity report
+Date: Fri, 28 Apr 2006 15:05:37 -0500
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -25,32 +19,26 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@redhat.com
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-Will the following work?  This is to test a function that uses LVM
-command.
+hmmm, tried to sign up... haven't received log in yet...
 
-I have multiple scripts that are running in parallel.
-Each script is associated with one volume group.
-In the script are vgchange commands to activate the VG, 
-file system mounts, file writes, and unmounts and then a 
-deactivate of the VG.
+On Apr 28, 2006, at 5:26 AM, Gildas wrote:
 
-So it is possible to have a 2 instances of vgchange running at the same
-time (on different VGs).
-
-The reason I'm asking is that I am getting a failure where a deactivate
-does not work on
-a VG after running these scripts for about 12 hours.
-
-Thanks,
-Rick
-
-
-
-Rick Stern
-Serviceguard for Linux Program Manager and Architect
-Hewlett-Packard
-Availability Clusters Solutions Lab
-408-873-5252 
+> Hello,
+>
+>  The page http://scan.coverity.com/ shows 33 "Uninspected and Pending" 
+> bugs for LVM2.
+>
+>  Access seems to be granted to mainteners only and I wondered out of 
+> pure curiosity if LVM2 developpers were aware of this scan and of its 
+> results.
+>
+>  Cheers,
+>  Gildas
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@redhat.com
+> https://www.redhat.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
