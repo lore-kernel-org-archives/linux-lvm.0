@@ -1,14 +1,11 @@
-Received: from [10.15.80.229] (dhcp80-229.msp.redhat.com [10.15.80.229])
-	by pobox.corp.redhat.com (8.12.8/8.12.8) with ESMTP id k3SK3ZeA004383
-	for <linux-lvm@redhat.com>; Fri, 28 Apr 2006 16:03:35 -0400
 Mime-Version: 1.0 (Apple Message framework v623)
-In-Reply-To: <b2ace7f20604280326t1814bc7ex709b539942b85dc7@mail.gmail.com>
-References: <b2ace7f20604280326t1814bc7ex709b539942b85dc7@mail.gmail.com>
-Message-Id: <1a432ac79973c135c73d61ad9cd2080a@redhat.com>
+In-Reply-To: <1146240603.23548.106.camel@localhost.localdomain>
+References: <1146240603.23548.106.camel@localhost.localdomain>
+Message-Id: <01309aa0302de7b36b75ce2612b38706@redhat.com>
 Content-Transfer-Encoding: 7bit
 From: Jonathan E Brassow <jbrassow@redhat.com>
-Subject: Re: [linux-lvm] LVM2 coverity report
-Date: Fri, 28 Apr 2006 15:05:37 -0500
+Subject: Re: [linux-lvm] vgchange -ay Killed
+Date: Fri, 28 Apr 2006 17:09:31 -0500
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -20,25 +17,83 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: LVM general discussion and development <linux-lvm@redhat.com>
+To: LVM general discussion and development <linux-lvm@redhat.com>, mingz@ele.uri.edu
 
-hmmm, tried to sign up... haven't received log in yet...
+You mean:
+1) lvcreate -L 3k -n lv vg
+2) vgchange -an vg
+3) vgchange -ay vg
 
-On Apr 28, 2006, at 5:26 AM, Gildas wrote:
+or do you mean something else?
 
-> Hello,
+  brassow
+
+On Apr 28, 2006, at 11:10 AM, Ming Zhang wrote:
+
+> This is what i get when try to active a VG with 3K LVs. repeatable.
 >
->  The page http://scan.coverity.com/ shows 33 "Uninspected and Pending" 
-> bugs for LVM2.
+>   LVM version:     2.02.01 (2005-11-23)
+>   Library version: 1.02.02 (2006-01-04)
+>   Driver version:  4.4.0
 >
->  Access seems to be granted to mainteners only and I wondered out of 
-> pure curiosity if LVM2 developpers were aware of this scan and of its 
-> results.
 >
->  Cheers,
->  Gildas
+> [root@dualxeon ~]# vgchange -ay
+> Killed
+>
+>
+> seem that "Locking memory" only appear once, and then stuck till 
+> killed.
+>
+> --------some debug output if i use vgchang -ay -vvv--------------
+>     Found volume group "vg1"
+>         Getting device info for vg1-v678
+>         dm info
+> LVM-8ZZaL55BvKV1b8qj3z60KZBVJOrnHyCejSzi1SuM3uO3NWrpDB2Fle5A3Uv6i367 N
+> [16384]
+>         Locking LV
+> 8ZZaL55BvKV1b8qj3z60KZBVJOrnHyCeL0DcqwlzsZSb0p6eIhXnV2uyE8KNAZG2 (R)
+>       Finding volume group for uuid
+> 8ZZaL55BvKV1b8qj3z60KZBVJOrnHyCeL0DcqwlzsZSb0p6eIhXnV2uyE8KNAZG2
+>       /dev/md0: lvm2 label detected
+>       /dev/md1: lvm2 label detected
+>       /dev/md0: lvm2 label detected
+>       /dev/md1: lvm2 label detected
+>         Read vg1 metadata (3001) from /dev/md0 at 272384 size 706783
+>       /dev/md0: lvm2 label detected
+>       /dev/md1: lvm2 label detected
+>         Read vg1 metadata (3001) from /dev/md1 at 272384 size 706783
+>     Found volume group "vg1"
+>         Getting device info for vg1-v679
+>         dm info
+> LVM-8ZZaL55BvKV1b8qj3z60KZBVJOrnHyCeL0DcqwlzsZSb0p6eIhXnV2uyE8KNAZG2 N
+> [16384]
+>         Locking LV
+> 8ZZaL55BvKV1b8qj3z60KZBVJOrnHyCeccjyapQkKwo75je1cFLyZ84RO4LWQnk5 (R)
+>       Finding volume group for uuid
+> 8ZZaL55BvKV1b8qj3z60KZBVJOrnHyCeccjyapQkKwo75je1cFLyZ84RO4LWQnk5
+>       /dev/md0: lvm2 label detected
+>       /dev/md1: lvm2 label detected
+>       /dev/md0: lvm2 label detected
+>       /dev/md1: lvm2 label detected
+>         Read vg1 metadata (3001) from /dev/md0 at 272384 size 706783
+>       /dev/md0: lvm2 label detected
+>       /dev/md1: lvm2 label detected
+>         Read vg1 metadata (3001) from /dev/md1 at 272384 size 706783
+>     Found volume group "vg1"
+>         Getting device info for vg1-v680
+>         dm info
+> LVM-8ZZaL55BvKV1b8qj3z60KZBVJOrnHyCeccjyapQkKwo75je1cFLyZ84RO4LWQnk5 N
+> [16384]
+>         dm info
+> 8ZZaL55BvKV1b8qj3z60KZBVJOrnHyCeccjyapQkKwo75je1cFLyZ84RO4LWQnk5 N
+> [16384]
+>         dm info vg1-v680  N   [16384]
+>       Locking memory
+>
+>
 > _______________________________________________
 > linux-lvm mailing list
 > linux-lvm@redhat.com
 > https://www.redhat.com/mailman/listinfo/linux-lvm
 > read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+>
