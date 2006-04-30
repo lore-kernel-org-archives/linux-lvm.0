@@ -1,24 +1,17 @@
-Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
+Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
 	by int-mx1.corp.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
-	k3TMxAlA024503
-	for <linux-lvm@redhat.com>; Sat, 29 Apr 2006 18:59:10 -0400
-Received: from orca.ele.uri.edu (orca.ele.uri.edu [131.128.51.63])
-	by mx1.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
-	k3TMxAZi015726
-	for <linux-lvm@redhat.com>; Sat, 29 Apr 2006 18:59:10 -0400
-Subject: Re: [linux-lvm] vgchange -ay Killed
-From: Ming Zhang <mingz@ele.uri.edu>
-In-Reply-To: <20060429222453.GC16180@agk.surrey.redhat.com>
-References: <1146240603.23548.106.camel@localhost.localdomain>
-	<01309aa0302de7b36b75ce2612b38706@redhat.com>
-	<1146262242.23548.207.camel@localhost.localdomain>
-	<445394B9.6040104@volved.com>
-	<20060429222453.GC16180@agk.surrey.redhat.com>
-Date: Sat, 29 Apr 2006 18:58:56 -0400
-Message-Id: <1146351537.22360.13.camel@localhost.localdomain>
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Reply-To: mingz@ele.uri.edu,
+	k3U7U8Xp002709
+	for <linux-lvm@redhat.com>; Sun, 30 Apr 2006 03:30:08 -0400
+Received: from ns1.ballihost.com (ns1.ballihost.com [69.57.158.65])
+	by mx3.redhat.com (8.13.1/8.13.1) with SMTP id k3U7U0MW015007
+	for <linux-lvm@redhat.com>; Sun, 30 Apr 2006 03:30:01 -0400
+Message-ID: <1282.85.107.14.146.1146382053.squirrel@85.107.14.146>
+Date: Sun, 30 Apr 2006 10:27:33 +0300 (EEST)
+From: "Omer Faruk Sen" <omer@faruk.net>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Subject: [linux-lvm] realtime snapshot or ?
+Reply-To: omer@faruk.net,
 	LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -30,47 +23,45 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: LVM general discussion and development <linux-lvm@redhat.com>
-
-On Sat, 2006-04-29 at 23:24 +0100, Alasdair G Kergon wrote:
-> The code has not been optimised for large numbers of LVs.
-
-guess so
-
-> 
-> Use the latest dm/lvm2 versions for a start as there's a memory
-> leak in your libdevmapper.
-
-ic. it come with centos 4.3
-
-> 
-> Each device device uses up a fixed amount of (unswappable) kernel 
-> memory, and when all your memory is used out you can't have any 
-> more devices.
-> 
-> Use standard diagnostic tools to work out which limit you're hitting.
-> (top; ps; slabtop; sysreq; strace etc.)
-
-that box has 2GB ram. and before lvm process is killed, top shows
-
-top - 11:27:24 up 10 min,  4 users,  load average: 0.99, 0.71, 0.34
-Tasks:  91 total,   1 running,  90 sleeping,   0 stopped,   0 zombie
-Cpu(s): 18.7% us,  5.9% sy,  0.0% ni, 67.3% id,  8.0% wa,  0.0% hi,
-0.0% si
-Mem:   2055388k total,  2041136k used,    14252k free,      192k buffers
-Swap:  4192956k total,     2304k used,  4190652k free,    58236k cached
-
-  PID USER      PR  NI  VIRT  RES  SHR S %CPU %MEM    TIME+  COMMAND
- 4550 root      18   0 1927m 1.9g  48m D 94.9 95.6   5:00.00 lvm
-
-if that is kernel memory, why lvm shows a RES of 1.9GB?
+To: linux-lvm@redhat.com
 
 
-> 
-> Alasdair
-> 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+Hi,
+
+I am looking for a solution that I can use as a realtime snapshot or maybe
+it should be called realtime raid or whatever.
+
+What I want is like this:
+
+Say I have a VG1 and VG2. I use VG2 as a backup VG2  and some machines
+will mount it as read-only( I mean LV2 on VG2) My main server (which runs
+mysql and all write operations will go to LV1) will run mysql and use 
+/sql as its --data-dir. /sql uses /dev/VG1/LV1. But every write operations
+on LV1 that resides on VG1 should go to VG2 thus to LV2 too.
+
+I have found that nbd ord drbd does similar things. But nbd just exports a
+block device (JUST ONE block device) so other machines can mount it. DRBD
+is closer to what I want but I can't mount drbd on secondary (backup
+machine) even as read-only
+
+
+
+To depict what I want
+                            rw
+|SERVER1| ----> MYSQL DATA ---->    | REMOTE STORAGE | VG1/LV1
+                           |
+                           |--->    | REMOTE STORAGE | VG2/LV2 --|
+                             rw                                  |
+                                                                 |
+                                                                 |
+                                                             ro  |
+                                   /backupsql/--- |SERVER2|   <--|
+
+
+
+
+
+
+-- 
+Omer Faruk Sen
+http://www.faruk.net
