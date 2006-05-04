@@ -1,23 +1,23 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
 	by int-mx1.corp.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
-	k441dloe012363
-	for <linux-lvm@redhat.com>; Wed, 3 May 2006 21:39:47 -0400
-Received: from linux.interlinx.bc.ca (linux.interlinx.bc.ca [66.11.173.224])
-	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id k441de0s021029
-	for <linux-lvm@redhat.com>; Wed, 3 May 2006 21:39:41 -0400
-Received: from pc.local (pc.ilinx [10.75.22.1])
-	(using TLSv1 with cipher RC4-MD5 (128/128 bits))
-	(No client certificate requested)
-	by linux.interlinx.bc.ca (Postfix) with ESMTP id F2E6ADBBD6
-	for <linux-lvm@redhat.com>; Wed,  3 May 2006 21:39:38 -0400 (EDT)
-From: "Brian J. Murrell" <brian@interlinx.bc.ca>
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature";
-	boundary="=-gASFiyM2RtZ/BOwFfH3O"
-Date: Wed, 03 May 2006 21:39:36 -0400
-Message-Id: <1146706776.31003.136.camel@pc.local>
+	k44IoReY029764
+	for <linux-lvm@redhat.com>; Thu, 4 May 2006 14:50:27 -0400
+Received: from rs19.luxsci.com (rs19.luxsci.com [65.61.136.23])
+	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id k44IoFZR019639
+	for <linux-lvm@redhat.com>; Thu, 4 May 2006 14:50:15 -0400
+Received: from dsl-201-153-94-139.prod-infinitum.com.mx
+	(dsl-201-153-94-139.prod-infinitum.com.mx [201.153.94.139] (may
+	be forged)) (authenticated bits=0)
+	by rs19.luxsci.com (8.13.6/8.13.6) with ESMTP id k44Io8rs022928
+	(version=TLSv1/SSLv3 cipher=RC4-MD5 bits=128 verify=NOT)
+	for <linux-lvm@redhat.com>; Thu, 4 May 2006 13:50:09 -0500
+From: Edgar Luna <eald@linuxuanl.org>
+Date: Thu, 04 May 2006 13:50:06 -0500
+Message-Id: <1146768607.10908.21.camel@ip6-localhost>
 Mime-Version: 1.0
-Subject: [linux-lvm] VG defragmenting and backing up the extent map
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] Two Plorilant servers (Redhat) trying to access a HP
+	MSA1000
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -28,60 +28,32 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
+Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@redhat.com
 
+Hi everyone,
 
---=-gASFiyM2RtZ/BOwFfH3O
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
+I have two servers with RedHat EL3 connected to an HP MSA1000. What I
+want with this servers write/read the disks from the MSA1000.
 
-It has often occurred to me that the fact that a logical volume is not
-contiguous will make recovery in the face of a partial disaster more
-difficult.
+I know that LVM is unaware of simultaneous access to one device, so I
+tried to divide the storage of MSA1000 in two units (created via the ACU
+application), that are seen by the RedHat servers as /dev/sda
+and /dev/sdb. Then I created a Physical Volume for each one a Logical
+Group and finally a Logical Volume for each of this.
 
-For example, if I happen to lose the logical->physical extent map in the
-LVM superblock (the single only place this information is kept AFAIK)
-then I am pretty screwed with respect to getting my filesystems back off
-the disk.
+I want an advice about this.
+What would you do in my situation?
+This works? I mean with this I can workaround the LVM 'problem' of
+unaware of simultaneous access?
+Is possible to access the Hard Drives in the MSA1000 directly from Linux
+so I can make the LVM directly on disks?
 
-Compared with just losing the partition table from a traditionally
-partitioned disk, I could use a tool like findsuper and losetup the
-whole disk with offsets (losetup -o <offset> to retrieve the individual
-filesystems.
+I can't use GFS or that like because I can't afford to have only one
+point of failure.
 
-This technique would even work with LVM given that I had lost the part
-of the disk with the extent mapping except that my filesystems are not
-contiguous if I have extended any of them.
+Thanks anyway.
 
-So, the question is, has anyone developed a tool to "defragment" a
-Volume Group so that all of the logical volumes in it are contiguous?
-
-On a somewhat related note, what provisions can I take to mitigate the
-loss of the extent map?  I am correct in that only one copy of it exists
-at the head of a Physical Volume?  Can I make a backup of it in any way
-so that it could be used at a later date to reconstruct logical volumes?
-
-As you might have guessed, I have lost a small portion of a 160GB disk,
-the portion which has the extent mapping for the whole PV and I want to
-mitigate this problem in the future.
-
-b.
-
---=20
-My other computer is your Microsoft Windows server.
-
-Brian J. Murrell
-
---=-gASFiyM2RtZ/BOwFfH3O
-Content-Type: application/pgp-signature; name=signature.asc
-Content-Description: This is a digitally signed message part
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.2.2 (GNU/Linux)
-
-iD8DBQBEWVtYl3EQlGLyuXARAi8JAJ9fXpj4Wiek7cXZnyeAt4OZOEBX3gCgsr2s
-d4LrGINbJwIY0cVWIo3Ll24=
-=TRoA
------END PGP SIGNATURE-----
-
---=-gASFiyM2RtZ/BOwFfH3O--
+-- 
+Edgar Luna <eald@linuxuanl.org>
+Linux UANL
