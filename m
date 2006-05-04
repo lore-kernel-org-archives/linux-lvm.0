@@ -1,19 +1,23 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
 	by int-mx1.corp.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
-	k43I2l7u031763
-	for <linux-lvm@redhat.com>; Wed, 3 May 2006 14:02:47 -0400
-Received: from nz-out-0102.google.com (nz-out-0102.google.com [64.233.162.206])
-	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id k43I2e7E022970
-	for <linux-lvm@redhat.com>; Wed, 3 May 2006 14:02:40 -0400
-Received: by nz-out-0102.google.com with SMTP id m7so264798nzf
-	for <linux-lvm@redhat.com>; Wed, 03 May 2006 11:02:40 -0700 (PDT)
-Message-ID: <64b6db970605031102m8dd3db9s8444cbfc868f73d6@mail.gmail.com>
-Date: Wed, 3 May 2006 19:02:38 +0100
-From: "Nick Gushlow" <nick.gushlow@gmail.com>
-MIME-Version: 1.0
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-Subject: [linux-lvm] LVM Volumes No Longer Mount
+	k441dloe012363
+	for <linux-lvm@redhat.com>; Wed, 3 May 2006 21:39:47 -0400
+Received: from linux.interlinx.bc.ca (linux.interlinx.bc.ca [66.11.173.224])
+	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id k441de0s021029
+	for <linux-lvm@redhat.com>; Wed, 3 May 2006 21:39:41 -0400
+Received: from pc.local (pc.ilinx [10.75.22.1])
+	(using TLSv1 with cipher RC4-MD5 (128/128 bits))
+	(No client certificate requested)
+	by linux.interlinx.bc.ca (Postfix) with ESMTP id F2E6ADBBD6
+	for <linux-lvm@redhat.com>; Wed,  3 May 2006 21:39:38 -0400 (EDT)
+From: "Brian J. Murrell" <brian@interlinx.bc.ca>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature";
+	boundary="=-gASFiyM2RtZ/BOwFfH3O"
+Date: Wed, 03 May 2006 21:39:36 -0400
+Message-Id: <1146706776.31003.136.camel@pc.local>
+Mime-Version: 1.0
+Subject: [linux-lvm] VG defragmenting and backing up the extent map
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -24,56 +28,60 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: linux-lvm@redhat.com
 
-I'm having problems with all the LVM volumes on my system after a
-forced reset (complete system hang forced the reset).  I want to give
-as much info as possible so I'll use pastebin to keep the email
-shorter, if you want me to add the pastebin entries to an email I can.
 
-I spent some time on the irc channel earlier and despite pjc's efforts
-(thanks) a resolution was not found.
+--=-gASFiyM2RtZ/BOwFfH3O
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 
-----------------------------------------------------------------------------------------------
+It has often occurred to me that the fact that a logical volume is not
+contiguous will make recovery in the face of a partial disaster more
+difficult.
 
-After the forced reset attempts at mounting any of the LVs give the
-following error:
+For example, if I happen to lose the logical->physical extent map in the
+LVM superblock (the single only place this information is kept AFAIK)
+then I am pretty screwed with respect to getting my filesystems back off
+the disk.
 
-[root@cattlewash ~]# mount /home
-mount: special device /dev/vg1/Home does not exist
+Compared with just losing the partition table from a traditionally
+partitioned disk, I could use a tool like findsuper and losetup the
+whole disk with offsets (losetup -o <offset> to retrieve the individual
+filesystems.
 
-My initial diagnosis of the problem was that 2 disks (yes I know
-unlikely!) had failed and lost labels and partition tables -
-http://guswrk.pastebin.com/696211.
+This technique would even work with LVM given that I had lost the part
+of the disk with the extent mapping except that my filesystems are not
+contiguous if I have extended any of them.
 
-I now realise that it's not just the one VG & LV covering those disks
-but all LVs - one VG/LV covering two disks, and one VG with several
-LVs on a partition on another disk; and that those disks were setup
-without partitions.  It should be noted that this was done years ago
-following instructions off a site so I've no idea what I did when
-setting things up.
+So, the question is, has anyone developed a tool to "defragment" a
+Volume Group so that all of the logical volumes in it are contiguous?
 
-An fdisk of the disk with the an LVM partition and several LVs reports
-right, but gpart doesn't - http://guswrk.pastebin.com/696208
+On a somewhat related note, what provisions can I take to mitigate the
+loss of the extent map?  I am correct in that only one copy of it exists
+at the head of a Physical Volume?  Can I make a backup of it in any way
+so that it could be used at a later date to reconstruct logical volumes?
 
-The odd thing about this all is that pvscan, vgscan & lvscan seem to
-report things ok. - http://guswrk.pastebin.com/696212
+As you might have guessed, I have lost a small portion of a 160GB disk,
+the portion which has the extent mapping for the whole PV and I want to
+mitigate this problem in the future.
 
-I tried using vgmknodes but then after running it attempts at mounting LVs gave:
+b.
 
-mount: /dev/vg2/ftp: can't read superblock
+--=20
+My other computer is your Microsoft Windows server.
 
-The original mounting error message returns after a reboot of the system.
+Brian J. Murrell
 
-And lvm dumpconfig gives - http://guswrk.pastebin.com/696195
+--=-gASFiyM2RtZ/BOwFfH3O
+Content-Type: application/pgp-signature; name=signature.asc
+Content-Description: This is a digitally signed message part
 
-I'm really at a loss as to what to do to recover the LVs. If I can at
-least recover the LVs in  vg1 I'd be happy. I thought about doing an
-export then importing again, but I guess if it's the metadata that's
-hosed then this won't help.
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.2.2 (GNU/Linux)
 
-Anyone got any ideas that could help me?
+iD8DBQBEWVtYl3EQlGLyuXARAi8JAJ9fXpj4Wiek7cXZnyeAt4OZOEBX3gCgsr2s
+d4LrGINbJwIY0cVWIo3Ll24=
+=TRoA
+-----END PGP SIGNATURE-----
 
---
-Nick
+--=-gASFiyM2RtZ/BOwFfH3O--
