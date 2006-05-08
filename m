@@ -1,19 +1,20 @@
 Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
 	by int-mx1.corp.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
-	k48IxqIJ017538
-	for <linux-lvm@redhat.com>; Mon, 8 May 2006 14:59:52 -0400
-Received: from mail0.rawbw.com (mail0.rawbw.com [198.144.192.41])
-	by mx1.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
-	k48IxpZJ015514
-	for <linux-lvm@redhat.com>; Mon, 8 May 2006 14:59:51 -0400
-Received: from bicho.synchrodesign.com (m208-176.dsl.rawbw.com
-	[198.144.208.176])
-	by mail0.rawbw.com (8.11.6p2/8.11.6) with ESMTP id k48Ixq793315
-	for <linux-lvm@redhat.com>; Mon, 8 May 2006 11:59:52 -0700 (PDT)
-Date: Mon, 8 May 2006 12:01:33 -0700 (PDT)
-From: Daniel Senderowicz <daniel@bicho.synchrodesign.com>
-Message-Id: <200605081901.k48J1X123308@bicho.synchrodesign.com>
-Subject: [linux-lvm] recovering the root partition under lvm
+	k48MJFIx002187
+	for <linux-lvm@redhat.com>; Mon, 8 May 2006 18:19:15 -0400
+Received: from batmobile.robinbowes.com
+	(84-51-160-76.pambow882.adsl.metronet.co.uk [84.51.160.76])
+	by mx1.redhat.com (8.12.11.20060308/8.12.11) with SMTP id
+	k48MJDd8023507
+	for <linux-lvm@redhat.com>; Mon, 8 May 2006 18:19:14 -0400
+Message-ID: <445FC3D8.3000406@robinbowes.com>
+Date: Mon, 08 May 2006 23:19:04 +0100
+From: Robin Bowes <robin-lists@robinbowes.com>
+MIME-Version: 1.0
+References: <01b701c66dcb$5176d9d0$0101000a@jack>
+In-Reply-To: <01b701c66dcb$5176d9d0$0101000a@jack>
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] Re: Snapshot segfaults lvremove + bug kernel
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -24,51 +25,63 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@redhat.com
 
-Hi,
+Gabriel Barazer wrote:
+> > Hello,
+> >
+> > I recently posted a LVM freeze while deleting snapshot, which could
+> > be workaround-ed by issuing a dmsetup resume command.
+> >
+> > I was replied on the list that my tools weren't up to date (i had the
+> > stable versions, the up to date are devel), so I retried the whole
+> > thing (adding/deleting snapshot) with the new tools
+> >
+> > Versions are :
+> > Kernel 2.6.16.1
+> > LVM 2.02.05
+> > Livdevmapper 1.02.05
+> > Driver 4.5.0
+> >
+> > The lvcreate has been successfully created , but the lvremove after
+> > gave me a segfault. Then the whole LVM system froze. After
+> > hard-rebooting, the snapshot is still here. Anyone got the same , or
+> > found a solution ?
 
-I'm new to the list and also "very" new to lvm. I need some help
-badly.
+I'm seeing a similar thing.
 
-I installed FC5 on a VMware machine with the host being XP. The
-installation went OK and as I said I didn't realize what the
-installation was offering me in terms of the disk configuration.
-Unfortunately at one point I stopped the virtual machine without
-going through the proper linux shutdown sequence. So now the system
-refuses the boot with a "kernel panic" message. After poking around
-a bit I realised that the root partition was installed under an
-LVM volume which I cannot access now. I booted the system with a
-live-cd (gentoo) which has all the lvm tools. I need help in the
-form of a recipe sequence on how I can fix the problem without
-wiping it irreversibly.  Below is the output from running "lvdisplay".
-Many thanks in advance.
+I've just started using snapshots as part of my backup process. I create
+a snapshot, mount it, and take the backup from the snapshot then umount
+and lvremove the snapshot when the backup has finished.
 
-Daniel
+This seemed to be working but the server hung and required rebooting.
+Now when I try and use lvremove to remove the snapshots the server hangs.
 
-  --- Logical volume ---
-  LV Name                /dev/VolGroup00/LogVol00
-  VG Name                VolGroup00
-  LV UUID                BUx6ZG-QsMx-26hz-5iCv-0YF2-qm4B-ee0Mkw
-  LV Write Access        read/write
-  LV Status              NOT available
-  LV Size                95.00 GB
-  Current LE             3040
-  Segments               1
-  Allocation             inherit
-  Read ahead sectors     0
-   
-  --- Logical volume ---
-  LV Name                /dev/VolGroup00/LogVol01
-  VG Name                VolGroup00
-  LV UUID                R8uiEo-pCFO-MZd9-VTrr-To12-ZbGv-x5Pmbn
-  LV Write Access        read/write
-  LV Status              NOT available
-  LV Size                1.94 GB
-  Current LE             62
-  Segments               1
-  Allocation             inherit
-  Read ahead sectors     0
+This is the output of lvs:
+
+  LV           VG         Attr   LSize   Origin  Snap%  Move Copy%
+  lv_home      VolGroup00 owi-ao   5.00G
+  lv_home.snap VolGroup00 swi-a- 512.00M lv_home   5.35
+  lv_root      VolGroup00 owi-ao   1.00G
+  lv_root.snap VolGroup00 swi-a- 512.00M lv_root   9.14
+  lv_scratch   VolGroup00 -wi-ao  50.00G
+  lv_swap_01   VolGroup00 -wi-ao   4.00G
+  lv_usr       VolGroup00 owi-ao   5.00G
+  lv_usr.snap  VolGroup00 swi-a- 512.00M lv_usr    5.86
+  lv_var       VolGroup00 owi-ao  54.09G
+  lv_var.snap  VolGroup00 swi-a- 512.00M lv_var   40.77
+
+This is on an x86_64 Fedora Core 4 system:
+
+  Kernel:          kernel-2.6.16-1.2096_FC4
+  LVM version:     2.01.08 (2005-03-22)
+  Library version: 1.01.02 (2005-05-17)
+  Driver version:  4.5.0
+
+Any idea what might be causing this?
+
+Any idea how to clean up the system, i.e. remove the
+snapshots?
+
+R.
