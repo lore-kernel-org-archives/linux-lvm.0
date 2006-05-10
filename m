@@ -1,19 +1,14 @@
-Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
-	k4AKtNiJ015700
-	for <linux-lvm@redhat.com>; Wed, 10 May 2006 16:55:23 -0400
-Received: from smtp-01.arnet.com.ar (smtp-01.arnet.com.ar [200.45.191.24])
-	by mx1.redhat.com (8.12.11.20060308/8.12.11) with SMTP id
-	k4AKtIXP012143
-	for <linux-lvm@redhat.com>; Wed, 10 May 2006 16:55:19 -0400
-Message-ID: <446252DE.2070702@arnet.net.ar>
-Date: Wed, 10 May 2006 17:53:50 -0300
-From: German Staltari <gstaltari@arnet.net.ar>
+From: Kevin Corry <kevcorry@us.ibm.com>
+Subject: Re: [Evms-devel] Re: [linux-lvm] [BUG] Spaces in LVM1 LV names =>
+	*deep trouble* when converting to LVM2
+Date: Wed, 10 May 2006 16:20:28 -0500
+References: <44624C66.4050600@idealx.com>
+	<20060510203626.GW16180@agk.surrey.redhat.com>
+In-Reply-To: <20060510203626.GW16180@agk.surrey.redhat.com>
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] lot of scsi devices bug
-References: <44623B1C.2040108@arnet.net.ar>
-In-Reply-To: <44623B1C.2040108@arnet.net.ar>
 Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+Message-Id: <200605101620.29326.kevcorry@us.ibm.com>
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -24,42 +19,33 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="us-ascii"
+To: evms-devel@lists.sourceforge.net
+Cc: pierre.machard@idealx.com, Benoit Picaud <benoit@idealx.com>, 'Mathias BROSSARD' <mbrossard@idealx.com>, Alasdair G Kergon <agk@redhat.com>, LVM general discussion and development <linux-lvm@redhat.com>
 
-German Staltari wrote:
-> Hi, this is maybe a udev bug, but it affected me when I was creating a 
-> lv in a cluster, so it could help some with this configuration.
-> When I added some scsi disk (SAN) to the cluster nodes (more than 64 
-> SCSI devices),  udev created the device node for capi20 instead of 
-> sdbm. This produced  a bad behavior in lvm when I was trying to create 
-> the vg's and lv's, it started to give errors like:
+On Wed May 10 2006 3:36 pm, Alasdair G Kergon wrote:
+> On Wed, May 10, 2006 at 10:26:14PM +0200, Dominique Quatravaux wrote:
+> > Hi, I encountered a very serious bug with LVM today. I'm using
+> > lvm2-2.01.04-5 from Debian stable, kernel 2.6.17-rc3
+> > # lvm version
+> >   LVM version:     2.01.04 (2005-02-09)
+> >   Library version: 1.01.00-ioctl (2005-01-17)
+> >   Driver version:  4.6.0
+> > What I did:
+> >     * created a LV in an LVM1 VG using EVMS (yeah, I know) with a
+> >       space in the name (yeah, yeah, I know, I know :-));
 >
-> Error locking on node node-06: Internal lvm error, check syslog
-> Error locking on node node-05: Internal lvm error, check syslog
-> Error locking on node node-04: Internal lvm error, check syslog
-> Error locking on node node-01: Internal lvm error, check syslog
-> Error locking on node node-02: Internal lvm error, check syslog
-> Error locking on node node-03: Internal lvm error, check syslog
-> Failed to activate new LV.
->
-> When I commented out this lines
->
-> SYSFS{dev}="68:0",              NAME="capi20"
-> SYSFS{dev}="191:[0-9]*",        NAME="capi/%n"
-> KERNEL=="capi*",                MODE="0660"
->
-> in /etc/udev/rules.d/50-udev.rules, everything worked again.
->
-> I hope this could help,
-> German Staltari
->
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
->
->
-Forgot to add:
-FC4 system totally updated
+> LVs are not permitted to have spaces in their names.
+> EVMS should have prevented you from doing that!
+
+Hmm...looks like the lvm2 format plugin in EVMS does check for spaces when 
+creating a new VG or LV, but the lvm1 format plugin does not. I've added a 
+patch to fix the lvm1 plugin. Sorry for the trouble. :(  I guess this case is 
+sufficiently unusual that no one has hit before, or at least not mentioned it 
+to me before.
+
+-- 
+Kevin Corry
+kevcorry@us.ibm.com
+http://www.ibm.com/linux/
+http://evms.sourceforge.net/
