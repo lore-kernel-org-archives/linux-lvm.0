@@ -1,23 +1,19 @@
-Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
+Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
 	by int-mx1.corp.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
-	k4ABAfrZ026403
-	for <linux-lvm@redhat.com>; Wed, 10 May 2006 07:10:41 -0400
-Received: from batmobile.robinbowes.com
-	(84-51-160-76.pambow882.adsl.metronet.co.uk [84.51.160.76])
-	by mx1.redhat.com (8.12.11.20060308/8.12.11) with SMTP id
-	k4ABAbT4019359
-	for <linux-lvm@redhat.com>; Wed, 10 May 2006 07:10:38 -0400
-Message-ID: <4461CA20.2050305@robinbowes.com>
-Date: Wed, 10 May 2006 12:10:24 +0100
-From: Robin Bowes <robin-lists@robinbowes.com>
+	k4ABJBhH027754
+	for <linux-lvm@redhat.com>; Wed, 10 May 2006 07:19:11 -0400
+Received: from s1.ckr-solutions.com (s1.ckr-solutions.com [82.97.10.19])
+	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id k4ABJ4Ru023742
+	for <linux-lvm@redhat.com>; Wed, 10 May 2006 07:19:05 -0400
+Received: from localhost (localhost [127.0.0.1])
+	by s1.ckr-solutions.com (Postfix) with ESMTP id 21F371D093
+	for <linux-lvm@redhat.com>; Wed, 10 May 2006 13:24:29 +0200 (CEST)
+Date: Wed, 10 May 2006 13:24:29 +0200 (CEST)
+From: Olivier Kaloudoff <kalou@kalou.net>
+Message-ID: <Pine.LNX.4.64.0605101319450.21802@s1.ckr-solutions.com>
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] Snapshot segfaults lvremove + bug kernel
-References: <01b701c66dcb$5176d9d0$0101000a@jack>
-	<20060509094146.GA2708@redhat.com>
-	<4460DC3D.3090008@robinbowes.com>
-	<20060510104844.GR31579@redhat.com>
-In-Reply-To: <20060510104844.GR31579@redhat.com>
-Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] unable to remove lvm1 volume (can't remove open logical
+	volume)
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -28,33 +24,53 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: TEXT/PLAIN; charset="us-ascii"; format="flowed"
+Content-Transfer-Encoding: 7bit
+To: linux-lvm@redhat.com
 
-Heinz Mauelshagen wrote:
-> On Tue, May 09, 2006 at 07:15:25PM +0100, Robin Bowes wrote:
->> Do you have any idea when we might see a fix for this? Is the bug
->> present in later versions?
-> 
-> A fix has been provided ~2 weeks ago to lkml and was tested ok.
-> It is in the recent stable kernels.
+Hello List,
 
-Can you define "recent" so I know which to install.
+ 	I'm facing a weird problem with lvm on 2.4.21-40 and
+lvm tools 1.0.8-13;
 
->> For example, I've got a box running FC4 that has this problem. If I
->> upgrade to FC5 am I likely to still see the problem?
-> 
-> Yes.
+[root@shinwey root]# lvremove /dev/nr_180/B_FDB
+lvremove -- can't remove open  logical volume "/dev/nr_180/B_FDB"
 
-So, the FC5 kernels don't have the fix? Even in the Testing repos?
+[root@shinwey root]# lvchange  -a n /dev/nr_180/B_FDB
+lvchange -- operation not permitted for (open) logical volume 
+"/dev/nr_180/B_FDB"
 
->> Also, what's the best way to get rid of the snapshot volumes? I'm
->> currently planning to boot from a recovery disk that supports lvm and
->> run lvremove from there.
-> 
-> That or using a n actual stable kernel *should* work,
-> because tearing down kcopyd jobs dies with the bug under load.
+ 	After looking into list archives, I tried the two things
+below without success;
 
-OK, thanks.
+[root@shinwey root]# vgscan -f
+vgscan -- reading all physical volumes (this may take a while...)
+vgscan -- found active volume group "nr_300"
+vgscan -- found active volume group "nr_180"
+vgscan -- found active volume group "nr_120"
+vgscan -- "/etc/lvmtab" and "/etc/lvmtab.d" successfully created
+vgscan -- WARNING: This program does not do a VGDA backup of your volume 
+groups
 
-R.
+[root@shinwey root]# ls /dev/*/group | sed 's!/group!!' | xargs rm -r ; 
+vgmknodes
+vgmknodes -- successfully made all nodes of volume group "nr_120"
+vgmknodes -- successfully made all nodes of volume group "nr_180"
+vgmknodes -- successfully made all nodes of volume group "nr_300"
+
+[root@shinwey root]# lvremove /dev/nr_180/B_FDB
+lvremove -- can't remove open  logical volume "/dev/nr_180/B_FDB"
+
+[root@shinwey root]# lvchange  -a n /dev/nr_180/B_FDB
+lvchange -- operation not permitted for (open) logical volume 
+"/dev/nr_180/B_FDB"
+
+
+
+Can someone help me with this ?
+
+
+Best Regards,
+
+
+Olivier Kaloudoff
