@@ -1,29 +1,19 @@
-Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
+Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
 	by int-mx1.corp.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
-	k4B80RAk032756
-	for <linux-lvm@redhat.com>; Thu, 11 May 2006 04:00:27 -0400
-Received: from sarajevo.idealx.com (sarajevo.idealx.com [213.41.87.90])
-	by mx1.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
-	k4B80PjX027327
-	for <linux-lvm@redhat.com>; Thu, 11 May 2006 04:00:25 -0400
-Received: from localhost (sarajevo [127.0.0.1])
-	by sarajevo.idealx.com (IDEALX S.A.S Mail Daemon) with ESMTP id
-	160EB11DFF7
-	for <linux-lvm@redhat.com>; Thu, 11 May 2006 10:00:34 +0200 (CEST)
-Received: from sarajevo.idealx.com ([127.0.0.1])
-	by localhost (sarajevo.idealx.com [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id 16999-26 for <linux-lvm@redhat.com>;
-	Thu, 11 May 2006 10:00:29 +0200 (CEST)
-Message-ID: <4462EDD7.8060409@idealx.com>
-Date: Thu, 11 May 2006 09:55:03 +0200
-From: Dominique Quatravaux <dom@idealx.com>
+	k4BBcl49003032
+	for <linux-lvm@redhat.com>; Thu, 11 May 2006 07:38:47 -0400
+Received: from ug-out-1314.google.com (ug-out-1314.google.com [66.249.92.172])
+	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id k4BBccsd012938
+	for <linux-lvm@redhat.com>; Thu, 11 May 2006 07:38:39 -0400
+Received: by ug-out-1314.google.com with SMTP id c2so127577ugf
+	for <linux-lvm@redhat.com>; Thu, 11 May 2006 04:38:38 -0700 (PDT)
+Message-ID: <539807300605110438i446c188bke97598d6e3105ebe@mail.gmail.com>
+Date: Thu, 11 May 2006 19:38:38 +0800
+From: "Lee Rocky" <rocky366@gmail.com>
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] [BUG] Spaces in LVM1 LV names => *deep trouble* when
-	converting to LVM2
-References: <44624C66.4050600@idealx.com>	<20060510203626.GW16180@agk.surrey.redhat.com>
-	<20060510204038.GX16180@agk.surrey.redhat.com>
-In-Reply-To: <20060510204038.GX16180@agk.surrey.redhat.com>
-Content-Transfer-Encoding: quoted-printable
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+Subject: [linux-lvm] Incorrect metadata are header checksum
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -34,55 +24,68 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="iso-8859-1"
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: LVM general discussion and development <linux-lvm@redhat.com>
-Cc: pierre.machard@idealx.com, Benoit Picaud <benoit@idealx.com>, 'Mathias BROSSARD' <mbrossard@idealx.com>
 
------BEGIN PGP SIGNED MESSAGE-----
-Hash: SHA1
+Dear all
 
-Alasdair G Kergon wrote:
+I tried to craete pv on my xscale system but failed.
+create pv command is successful,
+but I got the "Incorrect metadata error when scan pvs.
+I'm not sure it's a compilation problem or hard disk problem?
 
->
-> I should add that what you should do is extract the metadata you've
-> retrieved off disk directly into a file, fix it in the file
-> (differences in whitespace & comments don't matter) then use
-> vgcfgrestore -f.
+does anyone create pv on arm system before?
 
-I tried that and it works - strange, I tried vgcfgrestore yesterday to
-no avail... But then I was using Ubuntu 5.10's lvm2 package as a
-rescue so apparently it's a different (and solved) issue. Thanks!
-
-Knowing this, and still for the record: after any LVM operation it
-seems wise to try a vgchange -a y *before* rebooting to see if
-everything went well. Reverting a pickled LVM situation is much easier
-with the original toolset handy (same LVM binary and metadata backups
-in /etc/lvm/) than using a rescue CD!
+best regard and have a nice day
+Rocky
 
 
-I wrote, and you replied:
+output log
+------------------------------------------------------------------------------------------------------------------
+-bash-3.00# pvcreate /dev/sda2 -vv
+      Setting global/locking_type to 1
+      Setting global/locking_dir to /var/lock/lvm
+      File-based locking enabled.
+      Locking /var/lock/lvm/P_orphans WB
+      /dev/sda2: No label detected
+      /dev/sda2: size is 12048750 sectors
+      Setting metadata/pvmetadatasize to 1024
+      metadata/pvmetadatacopies not found in config: defaulting to 1
+      /dev/sda2: size is 12048750 sectors
+    Set up physical volume for "/dev/sda2" with 12047598 available sectors
+      Scanning for labels to wipe from /dev/sda2
+    Zeroing start of device /dev/sda2
+      Writing physical volume data to disk "/dev/sda2"
+      /dev/sda2: Writing label to sector 1
+  Physical volume "/dev/sda2" successfully created
+      Unlocking /var/lock/lvm/P_orphans
 
->> * there should be a mechanism for dealing with corrupt LVM
->> metadata, at the minimum a global command-line switch to
->> temporarily disable checksum verifications.
->
-> Nope.
->
+-bash-3.00# pvscan
+  No matching physical volumes found
 
-I seem to have pushed your button, apologies for doing so. I was
-trying to be humorous, not disparaging: *of course* I concur that
-checksums are a good idea! I guess it means that humor is too slippery
-for us non-native speakers, oh well...
+-bash-3.00# pvscan -vv
+      Setting global/locking_type to 1
+      Setting global/locking_dir to /var/lock/lvm
+      File-based locking enabled.
+    Wiping cache of LVM-capable devices
+    Wiping internal VG cache
+    Walking through all physical volumes
+      /dev/sda: size is 17942584 sectors
+      /dev/sda1: size is 5879727 sectors
+      /dev/sda1: No label detected
+      /dev/sda2: size is 12048750 sectors
+      /dev/sda2: lvm2 label detected
+  Incorrect metadata area header checksum
+      /dev/sda2: lvm2 label detected
+  Incorrect metadata area header checksum
+      /dev/sda2: lvm2 label detected
+  Incorrect metadata area header checksum
+  PV /dev/sda2         lvm2 [5.74 GB]
+  Total: 1 [5.74 GB] / in use: 0 [0   ] / in no VG: 1 [5.74 GB]
 
-- --
-Dominique QUATRAVAUX                           Ing=EF=BF=BDnieur senior
-01 44 42 00 08                                 IDEALX
+-bash-3.00# pvscan --version
+  LVM version:     2.02.01 (2005-11-23)
+  Library version: 1.02.02 (2005-12-02)
+  Driver version:  4.4.0
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.1 (GNU/Linux)
-Comment: Using GnuPG with Thunderbird - http://enigmail.mozdev.org
-
-iD8DBQFEYu3XMJAKAU3mjcsRAugqAKC2KK88j/+w30xd6pxcn/5Juu7tuACdExXi
-R2b4HLcvmPmWHl+uxhbvGi0=3D
-=3DtWX0
------END PGP SIGNATURE-----
+linux Kernel 2.6.15.4
