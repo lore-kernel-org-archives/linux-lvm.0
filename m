@@ -1,15 +1,26 @@
-Received: from [192.168.1.2] (vpn-68-1.surrey.redhat.com [10.32.68.1])
-	by pobox.surrey.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
-	k4CCGXfA013547
-	for <linux-lvm@redhat.com>; Fri, 12 May 2006 13:16:33 +0100
-Message-ID: <44647CA0.3010509@redhat.com>
-Date: Fri, 12 May 2006 13:16:32 +0100
-From: Patrick Caulfield <pcaulfie@redhat.com>
+Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
+	by int-mx1.corp.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
+	k4CEoJp1012275
+	for <linux-lvm@redhat.com>; Fri, 12 May 2006 10:50:19 -0400
+Received: from amsfep18-int.chello.nl (amsfep17-int.chello.nl [213.46.243.15])
+	by mx1.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
+	k4CEoH7Y000576
+	for <linux-lvm@redhat.com>; Fri, 12 May 2006 10:50:18 -0400
+Received: from laguna.nwhq.nl ([213.46.145.128]) by amsfep17-int.chello.nl
+	(InterMail vM.6.01.04.04 201-2131-118-104-20050224) with ESMTP
+	id <20060512144850.CVPS19426.amsfep17-int.chello.nl@laguna.nwhq.nl>
+	for <linux-lvm@redhat.com>; Fri, 12 May 2006 16:48:50 +0200
+Received: from [127.0.0.1] (velsatis.nwhq.nl [192.168.100.33])
+	by laguna.nwhq.nl (8.13.6/8.13.4) with ESMTP id k4CEmnx9000840
+	for <linux-lvm@redhat.com>; Fri, 12 May 2006 16:48:50 +0200
+Message-ID: <4464A0BE.7070509@neuroweave.nl>
+Date: Fri, 12 May 2006 16:50:38 +0200
+From: Joep Blom <jlblom@neuroweave.nl>
 MIME-Version: 1.0
 Subject: Re: [linux-lvm] problem when creating a volumegroup on an external
 	drive
-References: <44647168.3030205@neuroweave.nl>
-In-Reply-To: <44647168.3030205@neuroweave.nl>
+References: <44647168.3030205@neuroweave.nl> <44647CA0.3010509@redhat.com>
+In-Reply-To: <44647CA0.3010509@redhat.com>
 Content-Transfer-Encoding: 7bit
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
@@ -21,34 +32,50 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-Joep Blom wrote:
-> Hi,
-> I'm new to the list and new to the use of LVM. I have read the manuals
-> (which mainly are for LVM1) and am using LVM2.
-> I have one question. I just created a new volumegroup on an USB external
-> disk.
-> As the manual says I did : pvcreate /dev/sda but that did't work but
-> pvcreate /dev/sda1 worked.
-> I then did a vgcreate VG01, expecting to get one volume group for the
-> whole disk (250 GB). However, it created 2 volumegroups, one named
-> VolGroup00  of 46.6 GB and one VG01 (as expected) of 232.8 GB. The
-> problem is I have on another 2 disks already a VolGroup00 so I cannot do
-> an lvcreate VolGroup00 as this will try to access the earlier created one.
-> Can anybody explain why an unrequested volumegroup is created and how
-> can I solve this.
-> I cannot do a vgdelete VolGroup00 as this will destroy my current -
-> working - system.
-> Hope somebody knows the answers.
+Patrick Caulfield wrote:
 
-
-It's fantastically unlikely that a single 'vgcreate VG0' command would create
-two VGs.
-
-What is much more likely is that VolGroup00 already existed and you just
-didn't notice it. That's the default name for a volume group created by a
-Fedora install BTW
-
-patrick
+>Joep Blom wrote:
+>  
+>
+>>Hi,
+>>I'm new to the list and new to the use of LVM. I have read the manuals
+>>(which mainly are for LVM1) and am using LVM2.
+>>I have one question. I just created a new volumegroup on an USB external
+>>disk.
+>>
+>>    
+>>
+>
+>
+>It's fantastically unlikely that a single 'vgcreate VG0' command would create
+>two VGs.
+>
+>What is much more likely is that VolGroup00 already existed and you just
+>didn't notice it. That's the default name for a volume group created by a
+>Fedora install BTW
+>
+>patrick
+>
+>_______________________________________________
+>linux-lvm mailing list
+>linux-lvm@redhat.com
+>https://www.redhat.com/mailman/listinfo/linux-lvm
+>read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+>
+>  
+>
+Patrick,
+Thanks for the quick reply. However, this is external USB disk (250Gb 
+and I just added it to the system as a backup disk. FC5 was running and 
+before I did anything the disk was formatted as a FAT32 disk I then did 
+a pvcreate. When I checked the disk was empty (as was expected). The 
+vgcreate did the strange thing, which is a problem as I cant remove this 
+VolGroup00 as there exists one on the other (2) disks and when I asses 
+VolGroup00 it rightly goes to the original VolGroup00, which I cannot 
+delete.
+I think the only solution is fdisk and see if it will free the whole 
+disk. But any other ideas?
+Joep
