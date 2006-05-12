@@ -1,23 +1,24 @@
-Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
+Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
 	by int-mx1.corp.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
-	k4CExNZY015020
-	for <linux-lvm@redhat.com>; Fri, 12 May 2006 10:59:23 -0400
-Received: from moutng.kundenserver.de (moutng.kundenserver.de
-	[212.227.126.186])
-	by mx1.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
-	k4CExMTm004476
-	for <linux-lvm@redhat.com>; Fri, 12 May 2006 10:59:22 -0400
-Message-ID: <4464A274.3090808@gmx.net>
-Date: Fri, 12 May 2006 16:57:56 +0200
-From: Klaus Strebel <klaus.strebel@gmx.net>
-MIME-Version: 1.0
-Subject: Re: [linux-lvm] problem when creating a volumegroup on an external
-	drive
-References: <44647168.3030205@neuroweave.nl> <44647CA0.3010509@redhat.com>
-	<4464A0BE.7070509@neuroweave.nl>
-In-Reply-To: <4464A0BE.7070509@neuroweave.nl>
-Content-Transfer-Encoding: quoted-printable
-Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
+	k4CGJ9rx006044
+	for <linux-lvm@redhat.com>; Fri, 12 May 2006 12:19:09 -0400
+Received: from mail3.ucc.ie (mail3.ucc.ie [143.239.128.103])
+	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id k4CGJ2Zd008251
+	for <linux-lvm@redhat.com>; Fri, 12 May 2006 12:19:03 -0400
+Received: from morpheus.ucc.ie
+	(IDENT:U2FsdGVkX1+73Z+PWifT/maSs9oHOIMSAntJtAh6dic@morpheus.ucc.ie
+	[143.239.183.39])
+	by mail3.ucc.ie (8.13.6/8.13.6) with ESMTP id k4CGIlXF020049
+	for <linux-lvm@redhat.com>; Fri, 12 May 2006 17:18:53 +0100
+From: Marcus Claesson <m.claesson@student.ucc.ie>
+Date: Fri, 12 May 2006 17:18:48 +0100
+Message-Id: <1147450728.8248.127.camel@morpheus.ucc.ie>
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] Can't reduce lvm2 volume. I get "Volume group mapper
+	doesn't exist"
+Reply-To: m.claesson@student.ucc.ie,
+	LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -27,74 +28,75 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="iso-8859-1"
-To: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="us-ascii"
+To: linux-lvm@redhat.com
 
-Joep Blom schrieb:
-> Patrick Caulfield wrote:
->=20
->> Joep Blom wrote:
->> =20
->>
->>> Hi,
->>> I'm new to the list and new to the use of LVM. I have read the manuals
->>> (which mainly are for LVM1) and am using LVM2.
->>> I have one question. I just created a new volumegroup on an USB external
->>> disk.
->>>
->>>  =20
->>
->>
->> It's fantastically unlikely that a single 'vgcreate VG0' command would
->> create
->> two VGs.
->>
->> What is much more likely is that VolGroup00 already existed and you just
->> didn't notice it. That's the default name for a volume group created by a
->> Fedora install BTW
->>
->> patrick
->>
->> _______________________________________________
->> linux-lvm mailing list
->> linux-lvm@redhat.com
->> https://www.redhat.com/mailman/listinfo/linux-lvm
->> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
->>
->> =20
->>
-> Patrick,
-> Thanks for the quick reply. However, this is external USB disk (250Gb
-> and I just added it to the system as a backup disk. FC5 was running and
-> before I did anything the disk was formatted as a FAT32 disk I then did
-> a pvcreate. When I checked the disk was empty (as was expected). The
-> vgcreate did the strange thing, which is a problem as I cant remove this
-> VolGroup00 as there exists one on the other (2) disks and when I asses
-> VolGroup00 it rightly goes to the original VolGroup00, which I cannot
-> delete.
-> I think the only solution is fdisk and see if it will free the whole
-> disk. But any other ideas?
-> Joep
-Hi Joep,
+Hi!
 
-well, what Patrick meant is, that your system (forget that USB drive in
-this moment) already has a VG called VolGroup00 on your internal disk.
-The modern FC distros use it as default (i think, i'm using SuSE ;-) ).
-Before messing up more using fdisk, just provide us with the output of a
-vgdisplay -a ;-) get an impression of the 'disaster' :-).
+I have a problem reducing a logical volume and I'm sure it's just some
+silly error, but I can't get my head around it.
 
-Btw. the volume group your wanted to create has the name VG0, not
-VolGroup00 ;-) ..
+I've got lvm2-2.02.01-1.3.RHEL4 installed on kernel-2.6.9-34.ELsmp.
 
-Ciao
-Klaus
+This is what I got mounted:
 
---=20
-Mit freundlichen Gr=EF=BF=BDssen / best regards
+# df -h
+Filesystem            Size  Used Avail Use% Mounted on
+/dev/cciss/c0d0p2      49G   20G   27G  42% /
+/dev/cciss/c0d0p1      99M  9.8M   84M  11% /boot
+/dev/mapper/Volume00-LogVol00
+                       97G   84G  8.1G  92% /home
+none                  2.9G     0  2.9G   0% /dev/shm
+/dev/mapper/Volume00-LogVol02
+                       97G   11G   81G  12% /usr/local
+/dev/mapper/Volume00-LogVol01
+                       97G   84G  8.3G  91% /var
 
-Klaus Strebel, Dipl.-Inform. (FH), mailto:klaus.strebel@gmx.net
+I want to shrink /dev/mapper/Volume00-LogVol02 from 97G to 20G, and this
+is what I tried.
 
-/"\
-\ /     ASCII RIBBON CAMPAIGN
- X        AGAINST HTML MAIL
-/ \
+# umount /dev/mapper/Volume00-LogVol02
+
+# e2fsck -f /dev/mapper/Volume00-LogVol02
+e2fsck 1.35 (28-Feb-2004)
+Pass 1: Checking inodes, blocks, and sizes
+Pass 2: Checking directory structure
+Pass 3: Checking directory connectivity
+Pass 4: Checking reference counts
+Pass 5: Checking group summary information
+/dev/mapper/Volume00-LogVol02: 56614/12812288 files (1.5% non-
+contiguous), 3099826/25600000 blocks
+
+# resize2fs -p /dev/mapper/Volume00-LogVol02 20G
+resize2fs 1.35 (28-Feb-2004)
+Resizing the filesystem on /dev/mapper/Volume00-LogVol02 to 5242880 (4k)
+blocks.
+Begin pass 2 (max = 1787074)
+Relocating blocks             XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+Begin pass 3 (max = 782)
+Scanning inode table          XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+Begin pass 4 (max = 2690)
+Updating inode references     XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXThe
+filesystem on /dev/mapper/Volume00-LogVol02 is now 5242880 blocks long.
+
+But here I get error messages:
+# lvreduce -L 20G -v /dev/mapper/Volume00-LogVol02
+    Finding volume group mapper
+    Wiping cache of LVM-capable devices
+  Volume group mapper doesn't exist
+
+I also tried:
+# lvresize -L 20G -v /dev/mapper/Volume00-LogVol02
+    Finding volume group mapper
+    Wiping cache of LVM-capable devices
+  Volume group mapper doesn't exist
+
+I then mounted the device again and saw it was 20G big. But no more
+extra size had been added to the volume group...
+
+What am I doing wrong???
+
+Really appreciate any help!
+
+Regards,
+Marcus
