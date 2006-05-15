@@ -1,29 +1,20 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
 	by int-mx1.corp.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
-	k4F9GLPb032303
-	for <linux-lvm@redhat.com>; Mon, 15 May 2006 05:16:21 -0400
-Received: from amsfep11-int.chello.nl (amsfep17-int.chello.nl [213.46.243.15])
-	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id k4F9GBkk004627
-	for <linux-lvm@redhat.com>; Mon, 15 May 2006 05:16:12 -0400
-Received: from laguna.nwhq.nl ([213.46.145.128]) by amsfep17-int.chello.nl
-	(InterMail vM.6.01.04.04 201-2131-118-104-20050224) with ESMTP
-	id <20060515091547.CQTW19426.amsfep17-int.chello.nl@laguna.nwhq.nl>
-	for <linux-lvm@redhat.com>; Mon, 15 May 2006 11:15:47 +0200
-Received: from [127.0.0.1] (velsatis.nwhq.nl [192.168.100.33])
-	by laguna.nwhq.nl (8.13.6/8.13.4) with ESMTP id k4F9Fk3M015317
-	for <linux-lvm@redhat.com>; Mon, 15 May 2006 11:15:47 +0200
-Message-ID: <4468465F.4000805@neuroweave.nl>
-Date: Mon, 15 May 2006 11:14:07 +0200
-From: Joep Blom <jlblom@neuroweave.nl>
+	k4FI2TaA007067
+	for <linux-lvm@redhat.com>; Mon, 15 May 2006 14:02:29 -0400
+Received: from dingo.dogpad.net (ppp-70-251-132-112.dsl.rcsntx.swbell.net
+	[70.251.132.112])
+	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id k4FI2K12028214
+	for <linux-lvm@redhat.com>; Mon, 15 May 2006 14:02:20 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+	by dingo.dogpad.net (Postfix) with ESMTP id 5827C4C2B6
+	for <linux-lvm@redhat.com>; Mon, 15 May 2006 13:02:20 -0500 (CDT)
+Message-ID: <4468C22C.4050908@dogpad.net>
+Date: Mon, 15 May 2006 13:02:20 -0500
+From: Joe Harvell <jharvell@dogpad.net>
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] problem when creating a volumegroup on an external
-	drive
-References: <44647168.3030205@neuroweave.nl>
-	<44647CA0.3010509@redhat.com>	<4464A0BE.7070509@neuroweave.nl>
-	<4464A274.3090808@gmx.net>	<44650B76.6070604@neuroweave.nl>	<1147484968.7783.12.camel@localhost.localdomain>	<4465967E.6090206@neuroweave.nl>	<67d53e40605130320t50e4e912lcb2a2ea3d6773bc@mail.gmail.com>	<4467A42B.2020805@neuroweave.nl>
-	<67d53e40605150142t6bf71023gab90d82c0eaa4a8a@mail.gmail.com>
-In-Reply-To: <67d53e40605150142t6bf71023gab90d82c0eaa4a8a@mail.gmail.com>
 Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] LVM2 tools<-->library<-->driver compatibility
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -35,34 +26,99 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: LVM general discussion and development <linux-lvm@redhat.com>
+To: linux-lvm@redhat.com
 
-Markus Laire wrote:
+I am installing Gentoo Linux on my machine and I'm running into LVM 
+problems.  The installer CD is 2.6 kernel based, but I am installing a 
+2.4 kernel based system.  Gentoo has an install profile for this to 
+prevent programs and libraries that have a dependency on 2.6 kernel 
+headers from being installed when a 2.4 profile is being used.
 
-> On 5/15/06, Joep Blom <jlblom@neuroweave.nl> wrote:
->
->> Markus Laire wrote:
->> > pvcreate man-page says that:
->> > <quote>
->> > For *whole disk devices only* the partition table must be erased,
->> > which will effectively destroy all data on that disk. This can be done
->> > by zeroing the first sector with:
->> >  dd if=/dev/zero of=PhysicalVolume bs=512 count=1
->> > </quote>
->> >
->> Thanks, Marcus,
->> I have read that also but pvcreate (lvm2) worked nevertheless. I only
->> have the warning with fdisk that it encounters an "invalid flag 0x000 in
->> partition table 4 which will be corrected with write". So I simply don't
->> use fdisk on that disk and I don't know if this is harmful. But thanks
->> for reminding me.
->
->
-> Well, since fdisk is "Partition table manipulator for Linux", you
-> clearly shouldn't use it on disks which don't have a partition-table.
-> And if you use whole disk for LVM, you don't have any partitions there
-> (and shouldn't have partition-table either), and so fdisk is of no use
-> for such a disk.
->
-I agree.
-Joep
+As part of the install process, I created an LVM2 volume group 
+containing LVs for /, /usr, /var, /opt, and /home.  I created 
+filesystems on these LVs and performed the installation no problem.  I 
+also configured and compiled the kernel, which is a 2.4.32 based kernel 
+with LVM2 backported into it by the Gentoo developer team.
+
+I created the initrd which is based on an initrd I created myself and 
+have been using successfully on 2.4 and 2.6 based kernels.  It contains 
+the LVM tools and libraries, along with disk drivers and the 
+device-mapper driver.
+
+When I run vgscan, it finds the volume group no problem.  However, when 
+I run 'vgchange -ay <vgname>', I see three problems.
+
+1.  There are entries in /dev/mapper/<vgname>-<lvname>, but no symlinks
+in the form /dev/<vgname>/<lvname> --> /dev/mapper/<vgname>/<lvname>.  I
+run 'lvm vgmknodes' and it remedies this.
+
+2. I see five complaints from 'vgchange -ay <vgname>' (one for each LV)
+as follows:
+
+on stderr:   device-mapper: table ioctl failed: Invalid argument
+on console (from dm-mod driver): device-mapper: one of name or uuid must
+be supplied, cmd (12)
+
+I ran vgchange under strace and here is the following snippet:
+
+open("/dev/mapper/control", O_RDWR|O_LARGEFILE) = 9
+ioctl(9, DM_DEV_STATUS, 0x8109958)      = -1 ENXIO (No such device or
+address)
+ioctl(9, DM_DEV_STATUS, 0x8109958)      = -1 ENXIO (No such device or
+address)
+ioctl(9, DM_DEV_STATUS, 0x8109958)      = -1 ENXIO (No such device or
+address)
+mlockall(MCL_CURRENT|MCL_FUTURE)        = 0
+brk(0x8936000)                          = 0x8936000
+brk(0x8b1e000)                          = 0x8b1e000
+getpriority(PRIO_PROCESS, 0)            = 20
+setpriority(PRIO_PROCESS, 0, -18)       = 0
+ioctl(9, DM_DEV_STATUS, 0x8109958)      = -1 ENXIO (No such device or
+address)
+ioctl(9, DM_DEV_STATUS, 0x8109958)      = -1 ENXIO (No such device or
+address)
+ioctl(9, DM_DEV_STATUS, 0x8109958)      = -1 ENXIO (No such device or
+address)
+ioctl(9, DM_DEV_STATUS, 0x8109958)      = -1 ENXIO (No such device or
+address)
+ioctl(9, DM_DEV_STATUS, 0x8109958)      = -1 ENXIO (No such device or
+address)
+ioctl(9, DM_DEV_STATUS, 0x8109958)      = -1 ENXIO (No such device or
+address)
+ioctl(9, DM_DEV_STATUS, 0x8109958)      = -1 ENXIO (No such device or
+address)
+ioctl(9, DM_DEV_STATUS, 0x8109958)      = -1 ENXIO (No such device or
+address)
+ioctl(9, DM_DEV_STATUS, 0x8109958)      = -1 ENXIO (No such device or
+address)
+stat64("/dev/ide/host0/bus0/target0/lun0/part10", {st_mode=S_IFBLK|0600,
+st_rdev=makedev(3, 10), ...}) = 0
+stat64("/dev/ide/host0/bus0/target0/lun0/part11", {st_mode=S_IFBLK|0600,
+st_rdev=makedev(3, 11), ...}) = 0
+stat64("/dev/ide/host0/bus0/target0/lun0/part12", {st_mode=S_IFBLK|0600,
+st_rdev=makedev(3, 12), ...}) = 0
+ioctl(9, DM_DEV_CREATE, 0x8109958)      = 0
+ioctl(9, DM_TABLE_STATUS, 0x8109958)    = -1 EINVAL (Invalid argument)
+write(2, "  ", 2)                       = 2
+write(2, "device-mapper: table ioctl faile"..., 51) = 51
+write(2, "\n", 1)                       = 1
+
+3.  When I try to mount the filesystem in that LV, it fails.  I tried
+with different filesystem types and it's the same result.  From within
+the 2.4 kernel based initrd, it fails.  If I reboot into the 2.6 kernel
+based installer environment, no problem.
+
+This looks like an incompatibility between the lvm2 and/or device-mapper
+library code and the kernel device-mapper code.  Here are the versions
+installed in the install environment (the one that works):
+
+lvm> version
+   LVM version:     2.02.05 (2006-04-21)
+   Library version: 1.02.03 (2006-02-08)
+   Driver version:  4.4.0
+
+In the initrd, the only thing different would be the driver version. 
+Later today I will have access to the machine again and I can run the 
+lvm version command there to see what the driver version is.  In the 
+meantime, I am looking at the kernel sources and I don't see anything 
+obvious in the driver/md directory.
