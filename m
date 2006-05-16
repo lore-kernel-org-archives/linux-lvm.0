@@ -1,18 +1,21 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
 	by int-mx1.corp.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
-	k4HIgs3P020663
-	for <linux-lvm@redhat.com>; Wed, 17 May 2006 14:42:54 -0400
-Received: from percy.comedia.it (percy.comedia.it [212.97.59.71])
-	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id k4HIgXCI024120
-	for <linux-lvm@redhat.com>; Wed, 17 May 2006 14:42:34 -0400
-Date: Wed, 17 May 2006 20:42:32 +0200
-From: Luca Berra <bluca@comedia.it>
-Subject: Re: [linux-lvm] Problem with creation of dev entries on SL (RHEL) 4
-Message-ID: <20060517184232.GC16774@percy.comedia.it>
-References: <446B0DE9.6010004@cs.tcd.ie>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <446B0DE9.6010004@cs.tcd.ie>
+	k4G5xCgX015815
+	for <linux-lvm@redhat.com>; Tue, 16 May 2006 01:59:12 -0400
+Received: from smtp.andrew.cmu.edu (smtp.andrew.cmu.edu [128.2.10.82])
+	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id k4G5x4fp003895
+	for <linux-lvm@redhat.com>; Tue, 16 May 2006 01:59:04 -0400
+Received: from [192.168.0.235] (c-24-61-19-11.hsd1.ma.comcast.net
+	[24.61.19.11]) (user=jluxenbe mech=PLAIN (0 bits))
+	by smtp.andrew.cmu.edu (8.13.5/8.13.6) with ESMTP id k4G5x49r008892
+	(version=TLSv1/SSLv3 cipher=RC4-MD5 bits=128 verify=NOT)
+	for <linux-lvm@redhat.com>; Tue, 16 May 2006 01:59:04 -0400
+Message-ID: <44696A27.5050500@andrew.cmu.edu>
+Date: Tue, 16 May 2006 01:59:03 -0400
+From: Jared Luxenberg <jluxenbe@andrew.cmu.edu>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] Forgot to export my volume group...
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -24,37 +27,16 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"; format="flowed"
-Content-Transfer-Encoding: 7bit
-To: Stephen.Childs@cs.tcd.ie, LVM general discussion and development <linux-lvm@redhat.com>
+To: linux-lvm@redhat.com
 
-On Wed, May 17, 2006 at 12:50:01PM +0100, Stephen Childs wrote:
->When I create a new LVM volume on Scientific Linux 4 (RHEL4-compatible), a 
->new entry isn't created in /dev, meaning that I can't access the volume 
->although it exists.
->
->Creation succeeds:
->
->[root@tg23 mapper]# /usr/sbin//lvcreate -s '-L1024M' -n 
->'/dev/xenvg/gridmon_gridmon023__1147860249' /dev/xenvg/gridmon
->   Logical volume "gridmon_gridmon023__1147860249" created
->
->Mount fails:
-....
->Any ideas?
->
-Weird, but your command line is also weird could you try without
-prefixing the vg name to -the -n parameter?
+I forgot to run export on my volume group before disconnecting it from 
+my system.  Is there any way to mount the volume group without access to 
+the original machine?
 
-lvcreate -s -L1024M -n gridmon_gridmon023__1147860249 /dev/xenvg/gridmon
+If I could get the machine back up, but without this volume group 
+attached, is there any way to get the metadata I need from some system 
+files somewhere on the drive?  Or do I have to physically bring the 
+volume group to the machine (not possible)?
 
-else look into the log section of /etc/lvm.conf and provide some logs.
-
-L.
-
--- 
-Luca Berra -- bluca@comedia.it
-        Communication Media & Services S.r.l.
- /"\
- \ /     ASCII RIBBON CAMPAIGN
-  X        AGAINST HTML MAIL
- / \
+Thanks,
+Jared
