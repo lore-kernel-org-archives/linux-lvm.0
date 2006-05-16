@@ -1,21 +1,25 @@
-Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
+Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
 	by int-mx1.corp.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
-	k4FI2TaA007067
-	for <linux-lvm@redhat.com>; Mon, 15 May 2006 14:02:29 -0400
-Received: from dingo.dogpad.net (ppp-70-251-132-112.dsl.rcsntx.swbell.net
-	[70.251.132.112])
-	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id k4FI2K12028214
-	for <linux-lvm@redhat.com>; Mon, 15 May 2006 14:02:20 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-	by dingo.dogpad.net (Postfix) with ESMTP id 5827C4C2B6
-	for <linux-lvm@redhat.com>; Mon, 15 May 2006 13:02:20 -0500 (CDT)
-Message-ID: <4468C22C.4050908@dogpad.net>
-Date: Mon, 15 May 2006 13:02:20 -0500
-From: Joe Harvell <jharvell@dogpad.net>
-MIME-Version: 1.0
+	k4GCKORe021609
+	for <linux-lvm@redhat.com>; Tue, 16 May 2006 08:20:24 -0400
+Received: from mail3.ucc.ie (mail3.ucc.ie [143.239.128.103])
+	by mx1.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
+	k4GCKL7Y012586
+	for <linux-lvm@redhat.com>; Tue, 16 May 2006 08:20:22 -0400
+Received: from morpheus.ucc.ie
+	(IDENT:U2FsdGVkX1/lnckAItEeCbcfpZzapUB7cEPgZcCywSE@morpheus.ucc.ie
+	[143.239.183.39])
+	by mail3.ucc.ie (8.13.6/8.13.6) with ESMTP id k4GCJKxm028113
+	for <linux-lvm@redhat.com>; Tue, 16 May 2006 13:20:05 +0100
+From: Marcus Claesson <m.claesson@student.ucc.ie>
+Date: Tue, 16 May 2006 13:18:41 +0100
+Message-Id: <1147781921.24056.64.camel@morpheus.ucc.ie>
+Mime-Version: 1.0
 Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] LVM2 tools<-->library<-->driver compatibility
-Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
+Subject: [linux-lvm] Why didn't the lv extension go through even if
+	lvdisplay says so?
+Reply-To: m.claesson@student.ucc.ie,
+	LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -25,100 +29,209 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
+Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@redhat.com
 
-I am installing Gentoo Linux on my machine and I'm running into LVM 
-problems.  The installer CD is 2.6 kernel based, but I am installing a 
-2.4 kernel based system.  Gentoo has an install profile for this to 
-prevent programs and libraries that have a dependency on 2.6 kernel 
-headers from being installed when a 2.4 profile is being used.
+Hi all,
 
-As part of the install process, I created an LVM2 volume group 
-containing LVs for /, /usr, /var, /opt, and /home.  I created 
-filesystems on these LVs and performed the installation no problem.  I 
-also configured and compiled the kernel, which is a 2.4.32 based kernel 
-with LVM2 backported into it by the Gentoo developer team.
+I want to allocate 140G of the free space in my VG and use it to
+extend /var (/dev/Volume00/LogVol01) from 97G to 240G. After I
+unmounted /var (which was impossible until I used a lazy 'umount -
+l /var'), I ran
 
-I created the initrd which is based on an initrd I created myself and 
-have been using successfully on 2.4 and 2.6 based kernels.  It contains 
-the LVM tools and libraries, along with disk drivers and the 
-device-mapper driver.
+# lvextend -L 240G /dev/Volume00/LogVol01
+(unfortunately I was in single-user mode and wasn't able to save the
+output, but it basically said 'extension successful). I then re-
+mounted /var:
 
-When I run vgscan, it finds the volume group no problem.  However, when 
-I run 'vgchange -ay <vgname>', I see three problems.
+# mount /dev/mapper/Volume00-LogVol01 /var/
+kjournald starting.  Commit interval 5 seconds
+EXT3 FS on dm-2, internal journal
+EXT3-fs: mounted filesystem with ordered data mode.
 
-1.  There are entries in /dev/mapper/<vgname>-<lvname>, but no symlinks
-in the form /dev/<vgname>/<lvname> --> /dev/mapper/<vgname>/<lvname>.  I
-run 'lvm vgmknodes' and it remedies this.
+and ran a df to check:
 
-2. I see five complaints from 'vgchange -ay <vgname>' (one for each LV)
-as follows:
+# df -h
+Filesystem            Size  Used Avail Use% Mounted on
+/dev/cciss/c0d0p2      49G   19G   27G  42% /
+/dev/cciss/c0d0p1      99M  9.8M   84M  11% /boot
+/dev/mapper/Volume00-LogVol00
+                       97G   84G  8.1G  92% /home
+none                  2.9G     0  2.9G   0% /dev/shm
+/dev/mapper/Volume00-LogVol02
+                       20G   11G  8.4G  56% /usr/local
+sunrpc                 97G   88G  3.6G  97% /var/lib/nfs/rpc_pipefs
+/dev/mapper/Volume00-LogVol01
+                       97G   88G  3.6G  97% /var
 
-on stderr:   device-mapper: table ioctl failed: Invalid argument
-on console (from dm-mod driver): device-mapper: one of name or uuid must
-be supplied, cmd (12)
+To my surprise /var hadn't been extended at all and a new sunrpc device
+had also been mounted! The lvm info is now:
 
-I ran vgchange under strace and here is the following snippet:
+# vgdisplay
+  --- Volume group ---
+  VG Name               Volume00
+  System ID             localhost.localdomain1077884666
+  Format                lvm1
+  VG Access             read/write
+  VG Status             resizable
+  MAX LV                256
+  Cur LV                3
+  Open LV               3
+  Max PV                256
+  Cur PV                1
+  Act PV                1
+  VG Size               496.02 GB
+  PE Size               4.00 MB
+  Total PE              126981
+  Alloc PE / Size       91560 / 357.66 GB
+  Free  PE / Size       35421 / 138.36 GB
+  VG UUID               H0hRDH-Ud2L-fYSG-j1mE-3QfB-5xMo-3Sb6Mf
 
-open("/dev/mapper/control", O_RDWR|O_LARGEFILE) = 9
-ioctl(9, DM_DEV_STATUS, 0x8109958)      = -1 ENXIO (No such device or
-address)
-ioctl(9, DM_DEV_STATUS, 0x8109958)      = -1 ENXIO (No such device or
-address)
-ioctl(9, DM_DEV_STATUS, 0x8109958)      = -1 ENXIO (No such device or
-address)
-mlockall(MCL_CURRENT|MCL_FUTURE)        = 0
-brk(0x8936000)                          = 0x8936000
-brk(0x8b1e000)                          = 0x8b1e000
-getpriority(PRIO_PROCESS, 0)            = 20
-setpriority(PRIO_PROCESS, 0, -18)       = 0
-ioctl(9, DM_DEV_STATUS, 0x8109958)      = -1 ENXIO (No such device or
-address)
-ioctl(9, DM_DEV_STATUS, 0x8109958)      = -1 ENXIO (No such device or
-address)
-ioctl(9, DM_DEV_STATUS, 0x8109958)      = -1 ENXIO (No such device or
-address)
-ioctl(9, DM_DEV_STATUS, 0x8109958)      = -1 ENXIO (No such device or
-address)
-ioctl(9, DM_DEV_STATUS, 0x8109958)      = -1 ENXIO (No such device or
-address)
-ioctl(9, DM_DEV_STATUS, 0x8109958)      = -1 ENXIO (No such device or
-address)
-ioctl(9, DM_DEV_STATUS, 0x8109958)      = -1 ENXIO (No such device or
-address)
-ioctl(9, DM_DEV_STATUS, 0x8109958)      = -1 ENXIO (No such device or
-address)
-ioctl(9, DM_DEV_STATUS, 0x8109958)      = -1 ENXIO (No such device or
-address)
-stat64("/dev/ide/host0/bus0/target0/lun0/part10", {st_mode=S_IFBLK|0600,
-st_rdev=makedev(3, 10), ...}) = 0
-stat64("/dev/ide/host0/bus0/target0/lun0/part11", {st_mode=S_IFBLK|0600,
-st_rdev=makedev(3, 11), ...}) = 0
-stat64("/dev/ide/host0/bus0/target0/lun0/part12", {st_mode=S_IFBLK|0600,
-st_rdev=makedev(3, 12), ...}) = 0
-ioctl(9, DM_DEV_CREATE, 0x8109958)      = 0
-ioctl(9, DM_TABLE_STATUS, 0x8109958)    = -1 EINVAL (Invalid argument)
-write(2, "  ", 2)                       = 2
-write(2, "device-mapper: table ioctl faile"..., 51) = 51
-write(2, "\n", 1)                       = 1
+Thus 240G has been used up.
 
-3.  When I try to mount the filesystem in that LV, it fails.  I tried
-with different filesystem types and it's the same result.  From within
-the 2.4 kernel based initrd, it fails.  If I reboot into the 2.6 kernel
-based installer environment, no problem.
+# lvdisplay
+  --- Logical volume ---
+  LV Name                /dev/Volume00/LogVol01
+  VG Name                Volume00
+  LV UUID                000000-0000-0000-0000-0000-0000-000002
+  LV Write Access        read/write
+  LV Status              available
+  # open                 1
+  LV Size                240.00 GB
+  Current LE             61440
+  Segments               1
+  Allocation             normal
+  Read ahead sectors     10000
+  Block device           253:2
 
-This looks like an incompatibility between the lvm2 and/or device-mapper
-library code and the kernel device-mapper code.  Here are the versions
-installed in the install environment (the one that works):
+Thus new size as it should be.
 
-lvm> version
-   LVM version:     2.02.05 (2006-04-21)
-   Library version: 1.02.03 (2006-02-08)
-   Driver version:  4.4.0
+Also, the difference between the current and old VG is:
+# diff /etc/lvm/backup/Volume00 /etc/lvm/archive/Volume00_00004.vg
+1c1
+< # Generated by LVM2: Tue May 16 12:27:42 2006
+---
+> # Generated by LVM2: Tue May 16 12:24:15 2006
+6c6
+< description = "Created *after* executing 'vgdisplay'"
+---
+> description = "Created *before* executing 'lvextend -L 240G -
+v /dev/Volume00/LogVol01'"
+9c9
+< creation_time = 1147778862    # Tue May 16 12:27:42 2006
+---
+> creation_time = 1147778655    # Tue May 16 12:24:15 2006
+83c83
+<                               extent_count = 61440    # 240 Gigabytes
+---
+>                               extent_count = 25000    # 97.6562
+Gigabytes
 
-In the initrd, the only thing different would be the driver version. 
-Later today I will have access to the machine again and I can run the 
-lvm version command there to see what the driver version is.  In the 
-meantime, I am looking at the kernel sources and I don't see anything 
-obvious in the driver/md directory.
+The whole new /etc/lvm/backup/Volume00 is
+
+# cat /etc/lvm/backup/Volume00
+# Generated by LVM2: Tue May 16 12:27:42 2006
+
+contents = "Text Format Volume Group"
+version = 1
+
+description = "Created *after* executing 'vgdisplay'"
+
+creation_host = "neo.ucc.ie"    # Linux neo.ucc.ie 2.6.9-34.ELsmp #1 SMP
+Fri Feb 24 16:54:53 EST 2006 i686
+creation_time = 1147778862      # Tue May 16 12:27:42 2006
+
+Volume00 {
+        id = "H0hRDH-Ud2L-fYSG-j1mE-3QfB-5xMo-3Sb6Mf"
+        seqno = 0
+        status = ["RESIZEABLE", "READ", "WRITE"]
+        system_id = "localhost.localdomain1077884666"
+        extent_size = 8192              # 4 Megabytes
+        max_lv = 256
+        max_pv = 256
+
+        physical_volumes {
+
+                pv0 {
+                        id = "xXbxiu-uog2-xSRe-dI2z-y2ZQ-9weE-ftY6YL"
+                        device = "/dev/cciss/c0d0p5"    # Hint only
+
+                        status = ["ALLOCATABLE"]
+                        pe_start = 9472
+                        pe_count = 126981       # 496.02 Gigabytes
+                }
+        }
+
+        logical_volumes {
+
+                LogVol00 {
+                        id = "000000-0000-0000-0000-0000-0000-000000"
+                        status = ["READ", "WRITE", "VISIBLE"]
+                        allocation_policy = "normal"
+                        read_ahead = 10000
+                        segment_count = 1
+
+                        segment1 {
+                                start_extent = 0
+                                extent_count = 25000    # 97.6562
+Gigabytes
+
+                                type = "striped"
+                                stripe_count = 1        # linear
+
+                                stripes = [
+                                        "pv0", 0
+                                ]
+                        }
+                }
+
+                LogVol02 {
+                        id = "000000-0000-0000-0000-0000-0000-000001"
+                        status = ["READ", "WRITE", "VISIBLE"]
+                        allocation_policy = "normal"
+                        read_ahead = 10000
+                        segment_count = 1
+
+                        segment1 {
+                                start_extent = 0
+                                extent_count = 5120     # 20 Gigabytes
+
+                                type = "striped"
+                                stripe_count = 1        # linear
+
+                                stripes = [
+                                        "pv0", 25000
+                                ]
+                        }
+                }
+
+                LogVol01 {
+                        id = "000000-0000-0000-0000-0000-0000-000002"
+                        status = ["READ", "WRITE", "VISIBLE"]
+                        allocation_policy = "normal"
+                        read_ahead = 10000
+                        segment_count = 1
+
+                        segment1 {
+                                start_extent = 0
+                                extent_count = 61440    # 240 Gigabytes
+
+                                type = "striped"
+                                stripe_count = 1        # linear
+
+                                stripes = [
+                                        "pv0", 50000
+                                ]
+                        }
+                }
+        }
+}
+
+
+
+How come the size extension didn't go through?
+
+Any hints are much appreciated!
+
+Regards,
+Marcus
