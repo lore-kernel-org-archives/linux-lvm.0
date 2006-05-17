@@ -1,25 +1,24 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
 	by int-mx1.corp.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
-	k4HJdCwb004350
-	for <linux-lvm@redhat.com>; Wed, 17 May 2006 15:39:12 -0400
-Received: from conterra.de (vvv.conterra.de [212.124.44.162])
-	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id k4HJd5Jw009233
-	for <linux-lvm@redhat.com>; Wed, 17 May 2006 15:39:06 -0400
-Received: from localhost (unknown [127.0.0.1])
-	by conterra.de (-) with ESMTP id D80851F404B
-	for <linux-lvm@redhat.com>; Wed, 17 May 2006 21:38:59 +0200 (CEST)
-Received: from conterra.de ([127.0.0.1])
-	by localhost (vvv.conterra.de [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id 16364-09 for <linux-lvm@redhat.com>;
-	Wed, 17 May 2006 21:38:54 +0200 (CEST)
-Message-ID: <446B7BCD.2020406@conterra.de>
-Date: Wed, 17 May 2006 21:38:53 +0200
-From: =?ISO-8859-1?Q?Dieter_St=FCken?= <stueken@conterra.de>
-MIME-Version: 1.0
-Subject: Re: [linux-lvm] Forgot to export my volume group...
-References: <44696A27.5050500@andrew.cmu.edu>
-In-Reply-To: <44696A27.5050500@andrew.cmu.edu>
-Content-Transfer-Encoding: 7bit
+	k4HKcDI1020224
+	for <linux-lvm@redhat.com>; Wed, 17 May 2006 16:38:13 -0400
+Received: from willy.net1.nerim.net (willy.net1.nerim.net [62.212.114.60])
+	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id k4HKc3Lp027270
+	for <linux-lvm@redhat.com>; Wed, 17 May 2006 16:38:05 -0400
+Date: Wed, 17 May 2006 22:37:52 +0200
+From: Willy Tarreau <willy@w.ods.org>
+Message-ID: <20060517203752.GA28707@w.ods.org>
+References: <446A36B8.1060707@cmu.edu> <20060516203917.GQ11191@w.ods.org>
+	<446A418E.3070307@cmu.edu> <20060517034814.GA25818@w.ods.org>
+	<446B2523.1040800@cmu.edu>
+	<20060517133456.GD23933@csclub.uwaterloo.ca>
+	<446B27E4.7040509@cmu.edu>
+	<20060517155335.GF23933@csclub.uwaterloo.ca>
+	<446B5DAA.8020004@cmu.edu>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <446B5DAA.8020004@cmu.edu>
+Subject: [linux-lvm] Re: need help booting from SATA in 2.4.32 / LVM
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -30,19 +29,52 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: George Nychis <gnychis@cmu.edu>
+Cc: linux-lvm@redhat.com, linux-kernel@vger.kernel.org, Lennart Sorensen <lsorense@csclub.uwaterloo.ca>
 
-Jared Luxenberg wrote:
-> I forgot to run export on my volume group before disconnecting it from 
-> my system.  Is there any way to mount the volume group without access to 
-> the original machine?
+On Wed, May 17, 2006 at 01:30:18PM -0400, George Nychis wrote:
+> 
+> 
+> Lennart Sorensen wrote:
+> > On Wed, May 17, 2006 at 09:40:52AM -0400, George Nychis wrote:
+> >> Because it does......
+> >>
+> >> on bootup the *same* exact drive in 2.4.32 shows up as /dev/hda
+> >>
+> >> It has the exact same volume information as my drive that shows up in
+> >> 2.6.9 as /dev/sda
+> > 
+> > Yes I do remember a few sata controllers had some support in 2.4, which
+> > was dropped from 2.6 early on when libata came in.
+> > 
+> > It is very unlikely you will ever see that again in the future.
+> > 
+> > Len Sorensen
+> > 
+> 
+> I see... well I am finally getting it to boot, i did not have initrd
+> support built into the 2.4.32 kernel, but now i'm getting LVM errors:
 
-Isn't it recognized by the target machine even if it was not properly
-exported? I once had similar problems when trying to migrate a VG to
-an other system which already had a VG. In this case I had to "import"
-the new VG properly, to arrange it with the already running VG.
-If you are using LVM2, all necessary informations to get it running
-again are saved on each PV, regardless of beeing exported or not.
+Cool, that's fine !
 
-Dieter.
+> Scanning logical volumes
+>    /bin/vgscan.lvm1: execvp failed: No such file or directory
+> ERROR: /bin/vgscan exited abnormally!
+> Activating logical volumes
+>    /bin/vgchange.lvm1: execvp failed: No such file or directory
+> ERROR: /bin/vgchange exited abnormally!
+> 
+> I know nothing about LVM so... i'm pretty clueless for now
+
+It's pretty clear to me that /bin/vgscan is a wrapper to either vgscan.lvm1
+or vgscan.lvm2 depending on what it supported in the kernel. 2.4 only
+supports LVM1 in mainline. There are patches to support LVM2 on 2.4,
+but to be honnest, I'm not sure about the exhaustive list. All I know
+is that you have to start with the device mapper :
+
+   http://w.ods.org/linux/kernel/2.4/lkup/device-mapper.html
+
+I hope it will help you
+Willy
