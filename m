@@ -1,17 +1,20 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
 	by int-mx1.corp.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
-	k4HE8uQ4007235
-	for <linux-lvm@redhat.com>; Wed, 17 May 2006 10:08:56 -0400
-Received: from rwcrmhc11.comcast.net (rwcrmhc11.comcast.net [204.127.192.81])
-	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id k4HE8lJN006407
-	for <linux-lvm@redhat.com>; Wed, 17 May 2006 10:08:47 -0400
-From: "Greg Hartzog" <glhartzog@comcast.net>
-Date: Wed, 17 May 2006 10:08:45 -0400
-Message-ID: <000001c679bb$6946ca10$640a0a0a@laptopoptimus>
+	k4HEJg2F010237
+	for <linux-lvm@redhat.com>; Wed, 17 May 2006 10:19:42 -0400
+Received: from mta1.adelphia.net (mta1.adelphia.net [68.168.78.175])
+	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id k4HEJWbd009606
+	for <linux-lvm@redhat.com>; Wed, 17 May 2006 10:19:32 -0400
+Received: from web28 ([68.168.75.72]) by mta13.adelphia.net
+	(InterMail vM.6.01.05.02 201-2131-123-102-20050715) with ESMTP
+	id <20060517141916.KVXV9479.mta13.adelphia.net@web28>
+	for <linux-lvm@redhat.com>; Wed, 17 May 2006 10:19:16 -0400
+Message-ID: <29290460.1147875556256.JavaMail.root@web28>
+Date: Wed, 17 May 2006 10:19:16 -0400
+From: tkb9@adelphia.net
+Subject: Re: [linux-lvm] Problem doing basic LVM functions
 MIME-Version: 1.0
-Content-Type: multipart/alternative;
-	boundary="----=_NextPart_000_0001_01C67999.E2352A10"
-Subject: [linux-lvm] "/boot" under LVM2 support in lilo or grub
+Content-Transfer-Encoding: 7bit
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -22,118 +25,32 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: linux-lvm@redhat.com
+Content-Type: text/plain; charset="us-ascii"
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-This is a multi-part message in MIME format.
+---- Ricardo Sanchez <sanchez.ricardo@gmail.com> wrote: 
+> I created a basic volume group named "uservg" and added two PVs to it
+> successfully.
+> 
+> After doing this, I deleted the partitions to the disks...
+> Every time I try to do a vgscan or vgremove it gives the following output:
+> 
+> nbd0: Attempted send on closed socket
+> end_request: I/O Error, dev nbd0, sector 0
+> printk: 7 messages suppressed.
+> Buffer  I/O Error on device nbd0, logical block 0
+> Buffer  I/O Error on device nbd0, logical block 1
+> Buffer  I/O Error on device nbd0, logical block 2
+> nbd0: Attempted send on closed socket
+> /dev/nb0: read failed after 0 of 4096 at 0: Input/output error
+>  /dev/nb0: read failed after 0 of 4096 at 2199022141440: Input/output error
+>   /dev/nb0: read failed after 0 of 4096 at 0: Input/output error
+>   /dev/nb1: read failed after 0 of 4096 at 2199022141440: Input/output error
 
-------=_NextPart_000_0001_01C67999.E2352A10
-Content-Type: text/plain;
-	charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Are you trying to use nbd nodes in LVM?
 
-Hello there everyone.
+I had the same problem using nbd & LVM. I first had to destroy & recreate the nbd nodes.  I put each nbd node into a single disk md, & used the md nodes in my pv & vg. 
 
- 
+Been working fine that way for several months now, although running locate to find a file would crash the system, so I removed the slocate rpm.
 
-I found from poking around the web that lilo, in theory, supports having
-"/boot" under LVM2 control rather then existing as its own partition.
-
- 
-
-I was wondering if anyone can confirm or deny this.  And if anyone has any
-docs on how to configure or setup this up.
-
- 
-
-Thanks!
-
- 
-
-
-------=_NextPart_000_0001_01C67999.E2352A10
-Content-Type: text/html;
-	charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-
-<html xmlns:o=3D"urn:schemas-microsoft-com:office:office" =
-xmlns:w=3D"urn:schemas-microsoft-com:office:word" =
-xmlns=3D"http://www.w3.org/TR/REC-html40">
-
-<head>
-<META HTTP-EQUIV=3D"Content-Type" CONTENT=3D"text/html; =
-charset=3Dus-ascii">
-<meta name=3DGenerator content=3D"Microsoft Word 11 (filtered medium)">
-<style>
-<!--
- /* Style Definitions */
- p.MsoNormal, li.MsoNormal, div.MsoNormal
-	{margin:0in;
-	margin-bottom:.0001pt;
-	font-size:12.0pt;
-	font-family:Arial;}
-a:link, span.MsoHyperlink
-	{color:blue;
-	text-decoration:underline;}
-a:visited, span.MsoHyperlinkFollowed
-	{color:purple;
-	text-decoration:underline;}
-span.EmailStyle17
-	{mso-style-type:personal-compose;
-	font-family:Arial;
-	color:windowtext;
-	font-weight:normal;
-	font-style:normal;
-	text-decoration:none none;}
-@page Section1
-	{size:8.5in 11.0in;
-	margin:1.0in 1.25in 1.0in 1.25in;}
-div.Section1
-	{page:Section1;}
--->
-</style>
-
-</head>
-
-<body lang=3DEN-US link=3Dblue vlink=3Dpurple>
-
-<div class=3DSection1>
-
-<p class=3DMsoNormal><font size=3D3 face=3DArial><span =
-style=3D'font-size:12.0pt'>Hello
-there everyone.<o:p></o:p></span></font></p>
-
-<p class=3DMsoNormal><font size=3D3 face=3DArial><span =
-style=3D'font-size:12.0pt'><o:p>&nbsp;</o:p></span></font></p>
-
-<p class=3DMsoNormal><font size=3D3 face=3DArial><span =
-style=3D'font-size:12.0pt'>I
-found from poking around the web that lilo, in theory, supports having =
-&#8220;/boot&#8221;
-under LVM2 control rather then existing as its own =
-partition.<o:p></o:p></span></font></p>
-
-<p class=3DMsoNormal><font size=3D3 face=3DArial><span =
-style=3D'font-size:12.0pt'><o:p>&nbsp;</o:p></span></font></p>
-
-<p class=3DMsoNormal><font size=3D3 face=3DArial><span =
-style=3D'font-size:12.0pt'>I was
-wondering if anyone can confirm or deny this.&nbsp; And if anyone has =
-any docs on
-how to configure or setup this up.<o:p></o:p></span></font></p>
-
-<p class=3DMsoNormal><font size=3D3 face=3DArial><span =
-style=3D'font-size:12.0pt'><o:p>&nbsp;</o:p></span></font></p>
-
-<p class=3DMsoNormal><font size=3D3 face=3DArial><span =
-style=3D'font-size:12.0pt'>Thanks!<o:p></o:p></span></font></p>
-
-<p class=3DMsoNormal><font size=3D3 face=3DArial><span =
-style=3D'font-size:12.0pt'><o:p>&nbsp;</o:p></span></font></p>
-
-</div>
-
-</body>
-
-</html>
-
-------=_NextPart_000_0001_01C67999.E2352A10--
+-Toby
