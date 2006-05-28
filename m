@@ -1,14 +1,14 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
 	by int-mx1.corp.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
-	k4S1vOkA013309
-	for <linux-lvm@redhat.com>; Sat, 27 May 2006 21:57:24 -0400
-Received: from nf-out-0910.google.com (nf-out-0910.google.com [64.233.182.184])
-	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id k4S1vIrU022266
-	for <linux-lvm@redhat.com>; Sat, 27 May 2006 21:57:18 -0400
-Received: by nf-out-0910.google.com with SMTP id o25so32152nfa
-	for <linux-lvm@redhat.com>; Sat, 27 May 2006 18:57:17 -0700 (PDT)
-Message-ID: <5485940d0605271850n30ac0eeg6be49037f12d26cf@mail.gmail.com>
-Date: Sun, 28 May 2006 02:50:24 +0100
+	k4S26kL9014528
+	for <linux-lvm@redhat.com>; Sat, 27 May 2006 22:06:46 -0400
+Received: from nf-out-0910.google.com (nf-out-0910.google.com [64.233.182.188])
+	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id k4S26d5L023722
+	for <linux-lvm@redhat.com>; Sat, 27 May 2006 22:06:40 -0400
+Received: by nf-out-0910.google.com with SMTP id l36so102019nfa
+	for <linux-lvm@redhat.com>; Sat, 27 May 2006 19:06:39 -0700 (PDT)
+Message-ID: <5485940d0605271900r60918863yfe7d8992ea710125@mail.gmail.com>
+Date: Sun, 28 May 2006 03:00:39 +0100
 From: "C'est Pierre" <cestpierre@gmail.com>
 In-Reply-To: <5485940d0605271711g6d372400s3ab56c79e0488338@mail.gmail.com>
 MIME-Version: 1.0
@@ -29,17 +29,30 @@ List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: linux-lvm@redhat.com
 
-Nevermind about my previous question! I just made my way into this
-page: http://www.redhat.com/docs/manuals/enterprise/RHEL-4-Manual/s390-multi-install-guide/s1-s390info-raid.html
-and have setup the multipathing nicely.
+Again, this time I am looking for some clues. I was trying to make a
+test, so I created a logical volume called 'lv01', mounted it under a
+directory and created a file on it, but somehow, when I am trying to
+unmount it, the umount command stops responding and all I get is these
+messages when I run dmesg:
 
-However, I went into the second node (this is 2 nodes failover cluster
-environment) and I noticed that the vg and the md0 appeared there
-there automatically! is this normal? is there anything I should do?
+multipath: sdb: redirecting sector 4480 to another IO path
+multipath: only one IO path left and IO error.
+multipath: sdb1: rescheduling sector 4489
+multipath: sdb: redirecting sector 4480 to another IO path
+multipath: only one IO path left and IO error.
+multipath: sdb1: rescheduling sector 4489
+multipath: sdb: redirecting sector 4480 to another IO path
+multipath: only one IO path left and IO error.
+multipath: sdb1: rescheduling sector 4489
+multipath: sdb: redirecting sector 4480 to another IO path
+multipath: only one IO path left and IO error.
+
+
+Any hints? the load average is going pretty crazy too: load average:
+7.22, 5.00, 2.24
 
 Thanks,
 Pierre
-
 
 
 On 5/28/06, C'est Pierre <cestpierre@gmail.com> wrote:
