@@ -1,23 +1,21 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
 	by int-mx1.corp.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
-	k4SFWErA030205
-	for <linux-lvm@redhat.com>; Sun, 28 May 2006 11:32:14 -0400
-Received: from nf-out-0910.google.com (nf-out-0910.google.com [64.233.182.187])
-	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id k4SFW69q016346
-	for <linux-lvm@redhat.com>; Sun, 28 May 2006 11:32:07 -0400
-Received: by nf-out-0910.google.com with SMTP id n15so118997nfc
-	for <linux-lvm@redhat.com>; Sun, 28 May 2006 08:32:06 -0700 (PDT)
-Message-ID: <5485940d0605280735j4aba6709qb601484cd457452e@mail.gmail.com>
-Date: Sun, 28 May 2006 15:35:38 +0100
-From: "C'est Pierre" <cestpierre@gmail.com>
+	k4SFopuF032047
+	for <linux-lvm@redhat.com>; Sun, 28 May 2006 11:50:51 -0400
+Received: from percy.comedia.it (percy.comedia.it [212.97.59.71])
+	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id k4SFoi6I019286
+	for <linux-lvm@redhat.com>; Sun, 28 May 2006 11:50:44 -0400
+Date: Sun, 28 May 2006 17:50:43 +0200
+From: Luca Berra <bluca@comedia.it>
 Subject: Re: [linux-lvm] Re: alternate link / multi-pathing
-In-Reply-To: <20060528091024.GY8203@percy.comedia.it>
-MIME-Version: 1.0
-Content-Disposition: inline
+Message-ID: <20060528155043.GG8203@percy.comedia.it>
 References: <5485940d0605271711g6d372400s3ab56c79e0488338@mail.gmail.com>
 	<5485940d0605271850n30ac0eeg6be49037f12d26cf@mail.gmail.com>
 	<20060528091024.GY8203@percy.comedia.it>
-Content-Transfer-Encoding: quoted-printable
+	<5485940d0605280735j4aba6709qb601484cd457452e@mail.gmail.com>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <5485940d0605280735j4aba6709qb601484cd457452e@mail.gmail.com>
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -28,76 +26,39 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="iso-8859-1"; format="flowed"
-To: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+Content-Transfer-Encoding: 7bit
+To: linux-lvm@redhat.com
 
-Hello Luca,
+On Sun, May 28, 2006 at 03:35:38PM +0100, C'est Pierre wrote:
+>Hello Luca,
+>
+>Thanks for pointing me that out, too bad it's a bit late, since the
+>server is now crashed and only tomorrow I will be able to reset it.
+>Meanwhile, I've got a few questions for you:
+>
+>1. How do I disable raid autodetect ?
+/usr/src/linux/Documentation/md.txt
 
-Thanks for pointing me that out, too bad it's a bit late, since the
-server is now crashed and only tomorrow I will be able to reset it.
-Meanwhile, I've got a few questions for you:
+>2. Where can I read about device-mapper-multipath ?
+http://christophe.varoqui.free.fr/
+Redhat has a device-mapper-multipath rpm ensure you are running RHEL4-U3
 
-1. How do I disable raid autodetect ?
-2. Where can I read about device-mapper-multipath ?
-3. To deactivate the vg, I suppose I should use vgchange -a n, correct
-me if I am wrong
+>3. To deactivate the vg, I suppose I should use vgchange -a n, correct
+>me if I am wrong
+yes, but i do not get the connection with your first question.
 
-Thank you for your reply!
-Gon=EF=BF=BDalo
+>Thank you for your reply!
+you are welcome,
+but please do not top post
+
+L.
 
 
-On 5/28/06, Luca Berra <bluca@comedia.it> wrote:
-> On Sun, May 28, 2006 at 02:50:24AM +0100, C'est Pierre wrote:
-> >Nevermind about my previous question! I just made my way into this
-> >page:
-> >http://www.redhat.com/docs/manuals/enterprise/RHEL-4-Manual/s390-multi-i=
-nstall-guide/s1-s390info-raid.html
-> >and have setup the multipathing nicely.
->
-> actually the device-mapper-multipath would a better approach than
-> md-multipath
->
-> >However, I went into the second node (this is 2 nodes failover cluster
-> >environment) and I noticed that the vg and the md0 appeared there
-> >there automatically! is this normal? is there anything I should do?
->
-> it is not normal
-> it should not happen
->
-> if you insist in using md multipath, ensure raid autodetect won't pick
-> it up.
-> i.e. disable damned autodetect on kernel command line or
-> change the partition type to something different than 'Linux Raid'
->
-> then you'll have to ensure that your distribution  init scripts do not
-> automatically start it.
-> best way is omitting this set entries from /etc/mdadm.conf
-> and putting it somewhere else, then invoking
-> "mdadm -Asc /some/where/else/mdadm.conf" in your cluster script
->
-> if you use device-mapper-multipath (which might also solve the issue in
-> your next post :)
-> there is no problem if multipath finds the devices on the failover node,
-> but you must prevent lvm from activating the vg
->
-> to do this either add cluster locking or use tags, as explained in the
-> doc/tagging.txt files in the lvm distribution
->
-> Regards,
-> L.
->
->
-> --
-> Luca Berra -- bluca@comedia.it
->         Communication Media & Services S.r.l.
->  /"\
->  \ /     ASCII RIBBON CAMPAIGN
->   X        AGAINST HTML MAIL
->  / \
->
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
->
+-- 
+Luca Berra -- bluca@comedia.it
+        Communication Media & Services S.r.l.
+ /"\
+ \ /     ASCII RIBBON CAMPAIGN
+  X        AGAINST HTML MAIL
+ / \
