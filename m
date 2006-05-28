@@ -1,21 +1,19 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
 	by int-mx1.corp.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
-	k4S26kL9014528
-	for <linux-lvm@redhat.com>; Sat, 27 May 2006 22:06:46 -0400
-Received: from nf-out-0910.google.com (nf-out-0910.google.com [64.233.182.188])
-	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id k4S26d5L023722
-	for <linux-lvm@redhat.com>; Sat, 27 May 2006 22:06:40 -0400
-Received: by nf-out-0910.google.com with SMTP id l36so102019nfa
-	for <linux-lvm@redhat.com>; Sat, 27 May 2006 19:06:39 -0700 (PDT)
-Message-ID: <5485940d0605271900r60918863yfe7d8992ea710125@mail.gmail.com>
-Date: Sun, 28 May 2006 03:00:39 +0100
-From: "C'est Pierre" <cestpierre@gmail.com>
-In-Reply-To: <5485940d0605271711g6d372400s3ab56c79e0488338@mail.gmail.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
+	k4S9Aea1022877
+	for <linux-lvm@redhat.com>; Sun, 28 May 2006 05:10:40 -0400
+Received: from percy.comedia.it (percy.comedia.it [212.97.59.71])
+	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id k4S9AVla011110
+	for <linux-lvm@redhat.com>; Sun, 28 May 2006 05:10:32 -0400
+Date: Sun, 28 May 2006 11:10:25 +0200
+From: Luca Berra <bluca@comedia.it>
+Subject: Re: [linux-lvm] Re: alternate link / multi-pathing
+Message-ID: <20060528091024.GY8203@percy.comedia.it>
 References: <5485940d0605271711g6d372400s3ab56c79e0488338@mail.gmail.com>
-Subject: [linux-lvm] Re: alternate link / multi-pathing
+	<5485940d0605271850n30ac0eeg6be49037f12d26cf@mail.gmail.com>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <5485940d0605271850n30ac0eeg6be49037f12d26cf@mail.gmail.com>
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -27,45 +25,52 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"; format="flowed"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@redhat.com
 
-Again, this time I am looking for some clues. I was trying to make a
-test, so I created a logical volume called 'lv01', mounted it under a
-directory and created a file on it, but somehow, when I am trying to
-unmount it, the umount command stops responding and all I get is these
-messages when I run dmesg:
+On Sun, May 28, 2006 at 02:50:24AM +0100, C'est Pierre wrote:
+>Nevermind about my previous question! I just made my way into this
+>page: 
+>http://www.redhat.com/docs/manuals/enterprise/RHEL-4-Manual/s390-multi-install-guide/s1-s390info-raid.html
+>and have setup the multipathing nicely.
 
-multipath: sdb: redirecting sector 4480 to another IO path
-multipath: only one IO path left and IO error.
-multipath: sdb1: rescheduling sector 4489
-multipath: sdb: redirecting sector 4480 to another IO path
-multipath: only one IO path left and IO error.
-multipath: sdb1: rescheduling sector 4489
-multipath: sdb: redirecting sector 4480 to another IO path
-multipath: only one IO path left and IO error.
-multipath: sdb1: rescheduling sector 4489
-multipath: sdb: redirecting sector 4480 to another IO path
-multipath: only one IO path left and IO error.
+actually the device-mapper-multipath would a better approach than
+md-multipath
+
+>However, I went into the second node (this is 2 nodes failover cluster
+>environment) and I noticed that the vg and the md0 appeared there
+>there automatically! is this normal? is there anything I should do?
+
+it is not normal
+it should not happen
+
+if you insist in using md multipath, ensure raid autodetect won't pick
+it up.
+i.e. disable damned autodetect on kernel command line or
+change the partition type to something different than 'Linux Raid'
+
+then you'll have to ensure that your distribution  init scripts do not
+automatically start it.
+best way is omitting this set entries from /etc/mdadm.conf
+and putting it somewhere else, then invoking
+"mdadm -Asc /some/where/else/mdadm.conf" in your cluster script
+
+if you use device-mapper-multipath (which might also solve the issue in
+your next post :)
+there is no problem if multipath finds the devices on the failover node,
+but you must prevent lvm from activating the vg
+
+to do this either add cluster locking or use tags, as explained in the 
+doc/tagging.txt files in the lvm distribution
+
+Regards,
+L.
 
 
-Any hints? the load average is going pretty crazy too: load average:
-7.22, 5.00, 2.24
-
-Thanks,
-Pierre
-
-
-On 5/28/06, C'est Pierre <cestpierre@gmail.com> wrote:
-> Hello,
->
-> How can I setup multi-pathing so that I can create a vg with a
-> physical device over two different fibre-channel links, so if one link
-> fails, LVM uses the other?
->
-> I am using the term alternate link but its origins are in hp-ux.
->
-> If you could point me to some documentation on it, I would appreciate it!
->
-> Thanks,
-> Pierre
->
+-- 
+Luca Berra -- bluca@comedia.it
+        Communication Media & Services S.r.l.
+ /"\
+ \ /     ASCII RIBBON CAMPAIGN
+  X        AGAINST HTML MAIL
+ / \
