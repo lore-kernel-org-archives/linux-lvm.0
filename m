@@ -1,17 +1,8 @@
-Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
-	k4V02anA003903
-	for <linux-lvm@redhat.com>; Tue, 30 May 2006 20:02:36 -0400
-Received: from mail.gmx.net (mail.gmx.net [213.165.64.20])
-	by mx1.redhat.com (8.12.11.20060308/8.12.11) with SMTP id
-	k4V02X1k021135
-	for <linux-lvm@redhat.com>; Tue, 30 May 2006 20:02:34 -0400
-Date: Wed, 31 May 2006 01:02:04 +0200
-From: chris <cspot@gmx.at>
+Date: Wed, 31 May 2006 14:04:14 +0200 (CEST)
+From: Oliver Tennert <O.Tennert@science-computing.de>
+Message-ID: <Pine.LNX.4.58.0605311353400.6195@picard.science-computing.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Message-ID: <optadzlqi851dxvh@notebook_chl.intern>
-Subject: [linux-lvm] rescue data after hd crash
+Subject: [linux-lvm] FS labels and LVM2
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -22,29 +13,41 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; format="flowed"; delsp="yes"; charset="us-ascii"
+Content-Type: TEXT/PLAIN; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@redhat.com
+Cc: agk@redhat.com
 
-hi!
+Hi together,
 
-I have create a volume group with 4 250GByte harddisks with an ext3 file  
-system.
+am I wrong or does mount per FS label not work when the filesystem in 
+question is located on a logical volume? We're using a 2.6.11 kernel and a 
+SUSE 9.3 distro, so it might be just a question of using the most current 
+kernel.
 
-now the third harddisk failed and the volume group is "dead", obviously.
+At least, a "mount -a" when a "LABEL=test" entry is in fstab, leads to the 
+error:
 
-lvscan tells me:
-   Couldn't find device with uuid 'A57CS6-SFlw-1ROR-uIvO-cX2o-OE2g-N3SVZN'.
-   Couldn't find all physical volumes for volume group media_volgrp.
+mount: special device LABEL=test does not exist
 
-in my understanding many of the files are still intact (those on the first  
-two disks), and I would like to rescue these files.
+But it exists:
 
-i found no hints about such a crash recovery.
-(checked http://www.tldp.org/HOWTO/LVM-HOWTO/)
+localhost:/var/log # xfs_admin -l /dev/mapper/vucf0002vg-fs2
+label = "test"
 
-my approach would be to "fake" the third disk, as see what the filesystem  
-makes out of it.
+Any idea?
 
-any help is welcome.
+Best regards
 
-cheers, chris
+Oliver Tennert
+
+__
+________________________________________creating IT solutions
+
+Dr. Oliver Tennert
+Senior Solutions Engineer
+CAx Professional Services
+                                        science + computing ag
+phone   +49(0)7071 9457-598             Hagellocher Weg 71-75	
+fax     +49(0)7071 9457-411             D-72070 Tuebingen, Germany
+O.Tennert@science-computing.de          www.science-computing.de
