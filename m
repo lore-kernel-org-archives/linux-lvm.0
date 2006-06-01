@@ -1,16 +1,26 @@
-Received: from agk.surrey.redhat.com (agk.surrey.redhat.com [172.16.10.74])
-	by pobox.surrey.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
-	k51Demt1023706
-	for <linux-lvm@redhat.com>; Thu, 1 Jun 2006 14:40:48 +0100
-Received: from agk by agk.surrey.redhat.com with local (Exim 4.34)
-	id 1FlnPs-0007NB-Np
-	for linux-lvm@redhat.com; Thu, 01 Jun 2006 14:40:48 +0100
-Date: Thu, 1 Jun 2006 14:40:48 +0100
-From: Alasdair G Kergon <agk@redhat.com>
-Subject: [linux-lvm] Bringing an existing filesystem under LVM2 control
-Message-ID: <20060601134048.GJ10603@agk.surrey.redhat.com>
-Mime-Version: 1.0
-Content-Disposition: inline
+Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
+	by int-mx1.corp.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
+	k51HJPUb007093
+	for <linux-lvm@redhat.com>; Thu, 1 Jun 2006 13:19:25 -0400
+Received: from conterra.de (vvv.conterra.de [212.124.44.162])
+	by mx1.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
+	k51HJN7R000464
+	for <linux-lvm@redhat.com>; Thu, 1 Jun 2006 13:19:23 -0400
+Received: from localhost (unknown [127.0.0.1])
+	by conterra.de (-) with ESMTP id F28541F41F0
+	for <linux-lvm@redhat.com>; Thu,  1 Jun 2006 19:19:14 +0200 (CEST)
+Received: from conterra.de ([127.0.0.1])
+	by localhost (vvv.conterra.de [127.0.0.1]) (amavisd-new, port 10024)
+	with ESMTP id 29414-06 for <linux-lvm@redhat.com>;
+	Thu,  1 Jun 2006 19:19:05 +0200 (CEST)
+Message-ID: <447F2188.2030700@conterra.de>
+Date: Thu, 01 Jun 2006 19:19:04 +0200
+From: =?ISO-8859-1?Q?Dieter_St=FCken?= <stueken@conterra.de>
+MIME-Version: 1.0
+Subject: Re: [linux-lvm] FS labels and LVM2
+References: <Pine.LNX.4.58.0605311353400.6195@picard.science-computing.de>
+In-Reply-To: <Pine.LNX.4.58.0605311353400.6195@picard.science-computing.de>
+Content-Transfer-Encoding: 7bit
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -21,108 +31,34 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-A question which came up again on irc last night was whether an existing
-filesystem on a non-LVM partition can be turned into an LVM logical volume
-without having to wipe the disk.
+Oliver Tennert wrote:
+> am I wrong or does mount per FS label not work when the filesystem in 
+> question is located on a logical volume? We're using a 2.6.11 kernel and a 
+> SUSE 9.3 distro, so it might be just a question of using the most current 
+> kernel.
+> 
+> At least, a "mount -a" when a "LABEL=test" entry is in fstab, leads to the 
+> error:
+> 
+> mount: special device LABEL=test does not exist
+> 
+> But it exists:
+> 
+> localhost:/var/log # xfs_admin -l /dev/mapper/vucf0002vg-fs2
+> label = "test"
+> 
+> Any idea?
 
-With LVM2, I think the answer is often 'Yes'.
+It does not work any more :-(
 
+mount looks into /dev/partition to find the names of the
+devices to scan. Unfortunately the LV names listed here can't
+be found under /dev, as they are simply enumerated like "dm-12".
 
-N.B.  These instructions are untested.
+On the other hand: once you have LVM, you don't need no disk
+labels any more, as your LVs have expressive names already!
 
-Perhaps someone would be interested in trying them out and turning them 
-into a script?
-
-
-LVM2 needs to use for itself just one sector on the device (for a label).
-By default this is the second sector - ext2 and ext3, for example, don't 
-use this sector.  But some bootloaders might - check first.
-
-You'll also need at least one other normal physical volume in your volume
-group to hold the LVM2 metadata.  Not a problem if the reason for the
-exercise is to expand the filesystem!  But it could be quite small.
-
-
-Say the existing filesystem is on /dev/sda1.
-
-1. Run:  pvcreate -M2 --metadatacopies 0 -Zn /dev/sda1
-
-Do *not* miss the '-Zn' or you will wipe some of your data!
-  -M2 is unnecessary if it's the default.
-
-This command generates an LVM2 label and writes it into the second sector.
-
-
-2.   If you're using an existing volume group, skip this step. 
-Otherwise create the second PV in the normal way.  Say it's /dev/sdb (not
-partitioned).
-
-  Run:  pvcreate -M2 --metadatacopies 1 /dev/sdb
-  -M2 is unnecessary if it's the default.
-  --metadatacopies 1 is unnecessary if it's the default.
-  (You can also use 2 but not 0.)
-
-
-3. Determine the actual size of your existing filesystem, the actual size of
-the disk or partition holding your filesystem and choose a suitable physical
-extent size for the volume group.
-
-The size of your new LV will be an exact multiple of this physical extent
-size and needs to be at least as large as the filesystem.  
-
-The size of your new LV needs to be no larger than the actual size of the
-disk or partition that holds the filesystem.
-
-  Disk/partition size >= New LV size >= filesystem size
-
-In the example here, I'm going to use 4k, but normally you'll be able to use
-a much larger size and you should do so.
-
-You can use 'pvs -o+dev_size' to display the device size and use --units to
-do divisions for you (see man page).
-
-If you're using an existing volume group, use vgchange -s to reduce the
-physical extent size if necessary and then run vgextend to add /dev/sda1 to
-it.
-
-Otherwise create a new volume group.
-Let's say the volume group is called vg0.
-
-  vgcreate -M2 -s 4k vg0 /dev/sdb /dev/sda1
-  -M2 is unnecessary if it's the default.
-
-Let's say you've calculated that the number of PEs in your new LV will be
-2000.
-
-
-4. Now the part we don't yet have a tool option for.  [This should be
-handled with a new vgcreate/vgextend parameter that sets pe_start to 0 and
-does the necessary calculations.] 
-
-Edit /etc/lvm/backup/vg0 (generated by the vgcreate or the vgextend).
-
-Find the physical volume section for /dev/sda1 and reduce pe_start to 0 and
-increase pe_count to the number of physical extents you decided you needed
-for your new LV in step 3, 2000 in this example.  (Typically you'll need to
-add the original value of pe_start divided by pe_size expressed in 512 byte
-sectors).
-
-Apply your revised backup file with 'vgcfgrestore vg0'.
-
-
-5. Create your new logical volume.
-Important: don't forget -Zn or you'll wipe the start of your filesystem!
-
-lvcreate -Zn -l2000 vg0 /dev/sda1
-
-
-6. Finally run fsck on your new logical volume and check everything worked.
-
-
-Alasdair
--- 
-agk@redhat.com
+Dieter.
