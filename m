@@ -1,28 +1,20 @@
 Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
 	by int-mx1.corp.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
-	k57DDqgk002991
-	for <linux-lvm@redhat.com>; Wed, 7 Jun 2006 09:13:52 -0400
-Received: from mail6.postech.ac.kr (mail6.postech.ac.kr [141.223.1.112])
+	k57EAXSo019554
+	for <linux-lvm@redhat.com>; Wed, 7 Jun 2006 10:10:34 -0400
+Received: from conterra.de (vvv.conterra.de [212.124.44.162])
 	by mx1.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
-	k57DDo4C017721
-	for <linux-lvm@redhat.com>; Wed, 7 Jun 2006 09:13:51 -0400
-Received: from [141.223.1.111] ([141.223.1.111]) 
-	by mail6.postech.ac.kr ([141.223.1.112]) 
-	with ESMTP id 2006060722:11:20:503631.2453.128379824
-	for <linux-lvm@redhat.com>; Wed, 07 Jun 2006 22:11:20 +0900 (KST) 
-Received: from [141.223.1.21] ([141.223.1.21]) 
-	by mail1.postech.ac.kr ([141.223.1.21]) 
-	with ESMTP id 2006060722:13:39:059661.2001.89279408
-	for <linux-lvm@redhat.com>; Wed, 07 Jun 2006 22:13:39 +0900 (KST) 
-Message-ID: <16630672.1149686019060.JavaMail.root@mail1>
-Date: Wed, 7 Jun 2006 22:13:39 +0900 (KST)
-From: =?EUC-KR?B?wba/z7HZ?= <jowkju@postech.ac.kr>
-Mime-Version: 1.0
-Content-Type: multipart/alternative; 
-	boundary="----=_Part_41507_11506564.1149686019055"
-Subject: [linux-lvm] How Can I modify the mapping PE to LE??
-Reply-To: jowkju@postech.ac.kr,
-	LVM general discussion and development <linux-lvm@redhat.com>
+	k57EAVrH013381
+	for <linux-lvm@redhat.com>; Wed, 7 Jun 2006 10:10:32 -0400
+Message-ID: <4486DE48.9060603@conterra.de>
+Date: Wed, 07 Jun 2006 16:10:16 +0200
+From: =?UTF-8?B?RGlldGVyIFN0w7xrZW4=?= <stueken@conterra.de>
+MIME-Version: 1.0
+Subject: Re: [linux-lvm] How Can I modify the mapping PE to LE??
+References: <16630672.1149686019060.JavaMail.root@mail1>
+In-Reply-To: <16630672.1149686019060.JavaMail.root@mail1>
+Content-Transfer-Encoding: 8bit
+Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -32,75 +24,28 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: linux-lvm@redhat.com
+Content-Type: text/plain; charset="utf-8"; format="flowed"
+To: jowkju@postech.ac.kr, LVM general discussion and development <linux-lvm@redhat.com>
 
-------=_Part_41507_11506564.1149686019055
-Content-Type: text/plain; charset=EUC-KR
-Content-Transfer-Encoding: base64
+조완근 wrote:
+> Hello, I'm at the beginning to use LVM in my machine.
+>
+> Could you give any information on the implementation details of LVM and 
+> device mapper?? More specifically, I want to change the "mapping between 
+> PE and LE" for some purposes, however I'm just finished to read the 
+> manual of LVM-HowTO. This means that I'm totally a newbie in LVM and 
+> device-mapper. I just read some codes on data 
+> ...
+> I'll use LVM for this purpose - I would like to make a program to change the 
+> mapping relationship between PE and LE in my own. In fact, the program's goal
+> is to move an extent in a bad disk to a disk with good performance. The movement 
+> is done by the extent. In order to do it, I definitely, have to know how I can 
+> modify the mapping and maybe, the entire structure of LVM and device mapper.
 
-DQoKDQoKSGVsbG8sIEknbSBhdCB0aGUgYmVnaW5uaW5nIHRvIHVzZSBMVk0gaW4gbXkgbWFjaGlu
-ZS4KDQoKJm5ic3A7Cg0KCkNvdWxkIHlvdSBnaXZlIGFueSBpbmZvcm1hdGlvbiBvbiB0aGUgaW1w
-bGVtZW50YXRpb24gZGV0YWlscyBvZiBMVk0gYW5kIA0KZGV2aWNlIG1hcHBlcj8/IE1vcmUgc3Bl
-Y2lmaWNhbGx5LCBJIHdhbnQgdG8gY2hhbmdlIHRoZSAibWFwcGluZyBiZXR3ZWVuIFBFIGFuZCAN
-CkxFIiBmb3Igc29tZSBwdXJwb3NlcywgaG93ZXZlciBJJ20ganVzdCBmaW5pc2hlZCB0byByZWFk
-IHRoZSBtYW51YWwgb2YgDQpMVk0tSG93VE8uIFRoaXMgbWVhbnMgdGhhdCBJJ20gdG90YWxseSBh
-Jm5ic3A7bmV3YmllIGluIExWTSBhbmQgZGV2aWNlLW1hcHBlci4gSSANCmp1c3QgcmVhZCBzb21l
-IGNvZGVzIG9uIGRhdGEgDQpzdHJ1Y3R1cmVzJm5ic3A7aW4mbmJzcDtMVk0yL2xpYi9tZXRhZGF0
-YS9tZXRhZGF0YS5oLCBidXQgSSBjYW4ndCBnZXQgbW9yZSANCmluZm9ybWF0aW9uIGFueW1vcmUg
-b24gaG93IHRoZXkgYXJlIG1hcHBlZC4KDQoKJm5ic3A7Cg0KCkkgd2FzJm5ic3A7aGFuZ2luZyBh
-cm91bmQgdGhlIGNvZGVzIGluIExWTTIgc291cmNlIHRvIGZpbmQgdGhlIHBhcnQgcmVsYXRlZCAN
-CndpdGggdGhlICJtYXBwaW5nIiwgSSBqdXN0IGdvdCB0byBrbm93IHRoZSBtYXBwaW5nIGluZm9y
-bWF0aW9uIGlzIHN0b3JlZCBpbiANCmRldmljZSBtYXBwZXIsIG5vdCBpbiB0aGUgTFZNLiAKDQoK
-Jm5ic3A7Cg0KCkknbGwgdXNlIExWTSBmb3ImbmJzcDt0aGlzIHB1cnBvc2UgLSZuYnNwO0kgd291
-bGQgbGlrZSB0byBtYWtlJm5ic3A7YSBwcm9ncmFtIA0KdG8gY2hhbmdlIHRoZSBtYXBwaW5nIHJl
-bGF0aW9uc2hpcCBiZXR3ZWVuIFBFIGFuZCBMRSBpbiBteSBvd24uIEluIA0KZmFjdCwmbmJzcDt0
-aGUgcHJvZ3JhbSdzIGdvYWwgaXMgdG8gbW92ZSBhbiBleHRlbnQgaW4gYSBiYWQgZGlzayB0byBh
-IGRpc2sgd2l0aCANCmdvb2QgcGVyZm9ybWFuY2UuJm5ic3A7VGhlIG1vdmVtZW50IGlzIGRvbmUg
-YnkgdGhlIGV4dGVudC4gSW4gb3JkZXIgdG8gZG8gaXQsIEkgDQpkZWZpbml0ZWx5LCBoYXZlIHRv
-IGtub3cgaG93IEkgY2FuIG1vZGlmeSB0aGUgbWFwcGluZyBhbmQgbWF5YmUsIHRoZSBlbnRpcmUg
-DQpzdHJ1Y3R1cmUgb2YgTFZNIGFuZCBkZXZpY2UgbWFwcGVyLgoNCgombmJzcDsKDQoKQ291bGQg
-eW91IGdpdmUgbWUgc29tZSBpbmZvcm1hdGlvbiBvbiBMVk0gJmFtcDsgZGV2aWNlLW1hcHBlciBk
-ZXRhaWxzIHRoYXQgDQpoZWxwIG1lPz8KDQoKLSZuYnNwO2V4YWN0bHkgYWxsIGFib3V0IHRoZSZu
-YnNwO21hcHBpbmcgYmV0d2VlbiBMRSAmYW1wOyBQRS4uCg0KCkknbSB0b3RhbGx5IGF0IHRoZSBi
-ZWdpbm5pbmcsIEknbSB3ZWxsIHByZXBhcmVkIHRvIGRpZyBpbiB0aGUgY29kZXMgZnJvbSBub3cg
-DQpvbiwgZG9lcyBhbnlvbmUgY2FuIGhlbHAgbWUgdG8gcnVuIGZhc3Rlcj8/Cg0KDQoNCgoK
-------=_Part_41507_11506564.1149686019055
-Content-Type: text/html; charset=EUC-KR
-Content-Transfer-Encoding: base64
+Hmm, are you realy finished to read the manual :-)
 
-PHN0eWxlPjwhLS0gDQpCT0RZe0ZPTlQtRkFNSUxZOiCxvLiyO0ZPTlQtU0laRTogMTBwdDt9DQpE
-SVYsIFAge0ZPTlQtU0laRTogMTBwdDttYXJnaW4tdG9wOjJweDttYXJnaW4tYm90dG9tOjJweDt9
-DQpURCB7Rk9OVC1TSVpFOiAxMHB0fQ0KLy8tLT48L3N0eWxlPg0KPGJvZHkgbGVmdG1hcmdpbj0x
-IHRvcG1hcmdpbj0xPg0KPFA+SGVsbG8sIEknbSBhdCB0aGUgYmVnaW5uaW5nIHRvIHVzZSBMVk0g
-aW4gbXkgbWFjaGluZS48L1A+DQo8UD4mbmJzcDs8L1A+DQo8UD5Db3VsZCB5b3UgZ2l2ZSBhbnkg
-aW5mb3JtYXRpb24gb24gdGhlIGltcGxlbWVudGF0aW9uIGRldGFpbHMgb2YgTFZNIGFuZCANCmRl
-dmljZSBtYXBwZXI/PyBNb3JlIHNwZWNpZmljYWxseSwgSSB3YW50IHRvIGNoYW5nZSB0aGUgIm1h
-cHBpbmcgYmV0d2VlbiBQRSBhbmQgDQpMRSIgZm9yIHNvbWUgcHVycG9zZXMsIGhvd2V2ZXIgSSdt
-IGp1c3QgZmluaXNoZWQgdG8gcmVhZCB0aGUgbWFudWFsIG9mIA0KTFZNLUhvd1RPLiBUaGlzIG1l
-YW5zIHRoYXQgSSdtIHRvdGFsbHkgYSZuYnNwO25ld2JpZSBpbiBMVk0gYW5kIGRldmljZS1tYXBw
-ZXIuIEkgDQpqdXN0IHJlYWQgc29tZSBjb2RlcyBvbiBkYXRhIA0Kc3RydWN0dXJlcyZuYnNwO2lu
-Jm5ic3A7TFZNMi9saWIvbWV0YWRhdGEvbWV0YWRhdGEuaCwgYnV0IEkgY2FuJ3QgZ2V0IG1vcmUg
-DQppbmZvcm1hdGlvbiBhbnltb3JlIG9uIGhvdyB0aGV5IGFyZSBtYXBwZWQuPC9QPg0KPFA+Jm5i
-c3A7PC9QPg0KPFA+SSB3YXMmbmJzcDtoYW5naW5nIGFyb3VuZCB0aGUgY29kZXMgaW4gTFZNMiBz
-b3VyY2UgdG8gZmluZCB0aGUgcGFydCByZWxhdGVkIA0Kd2l0aCB0aGUgIm1hcHBpbmciLCBJIGp1
-c3QgZ290IHRvIGtub3cgdGhlIG1hcHBpbmcgaW5mb3JtYXRpb24gaXMgc3RvcmVkIGluIA0KZGV2
-aWNlIG1hcHBlciwgbm90IGluIHRoZSBMVk0uIDwvUD4NCjxQPiZuYnNwOzwvUD4NCjxQPkknbGwg
-dXNlIExWTSBmb3ImbmJzcDt0aGlzIHB1cnBvc2UgLSZuYnNwO0kgd291bGQgbGlrZSB0byBtYWtl
-Jm5ic3A7YSBwcm9ncmFtIA0KdG8gY2hhbmdlIHRoZSBtYXBwaW5nIHJlbGF0aW9uc2hpcCBiZXR3
-ZWVuIFBFIGFuZCBMRSBpbiBteSBvd24uIEluIA0KZmFjdCwmbmJzcDt0aGUgcHJvZ3JhbSdzIGdv
-YWwgaXMgdG8gbW92ZSBhbiBleHRlbnQgaW4gYSBiYWQgZGlzayB0byBhIGRpc2sgd2l0aCANCmdv
-b2QgcGVyZm9ybWFuY2UuJm5ic3A7VGhlIG1vdmVtZW50IGlzIGRvbmUgYnkgdGhlIGV4dGVudC4g
-SW4gb3JkZXIgdG8gZG8gaXQsIEkgDQpkZWZpbml0ZWx5LCBoYXZlIHRvIGtub3cgaG93IEkgY2Fu
-IG1vZGlmeSB0aGUgbWFwcGluZyBhbmQgbWF5YmUsIHRoZSBlbnRpcmUgDQpzdHJ1Y3R1cmUgb2Yg
-TFZNIGFuZCBkZXZpY2UgbWFwcGVyLjwvUD4NCjxQPiZuYnNwOzwvUD4NCjxQPkNvdWxkIHlvdSBn
-aXZlIG1lIHNvbWUgaW5mb3JtYXRpb24gb24gTFZNICZhbXA7IGRldmljZS1tYXBwZXIgZGV0YWls
-cyB0aGF0IA0KaGVscCBtZT8/PC9QPg0KPFA+LSZuYnNwO2V4YWN0bHkgYWxsIGFib3V0IHRoZSZu
-YnNwO21hcHBpbmcgYmV0d2VlbiBMRSAmYW1wOyBQRS4uPC9QPg0KPFA+SSdtIHRvdGFsbHkgYXQg
-dGhlIGJlZ2lubmluZywgSSdtIHdlbGwgcHJlcGFyZWQgdG8gZGlnIGluIHRoZSBjb2RlcyBmcm9t
-IG5vdyANCm9uLCBkb2VzIGFueW9uZSBjYW4gaGVscCBtZSB0byBydW4gZmFzdGVyPz88L1A+DQoN
-Cg0KPC9ib2R5Pgo8aW1nIHNyYz0iaHR0cDovL21haWwucG9zdGVjaC5hYy5rcjo4MC9yZWNlaXZl
-TUROUmVzcG9uc2UuZG8/ZnJvbT1qb3dranVAcG9zdGVjaC5hYy5rciZ0bz1saW51eC1sdm1AcmVk
-aGF0LmNvbSZtaWQ9MTQ2Njg2NDUuMTE0OTY4NjAxOTA1NS5KYXZhTWFpbC5yb290JTQwbWFpbDEm
-c3RvcmU9JTJGc3RvcmUwMSUyRm1pbmRleCUyRjgzNyUyRmpvd2tqdSZob3N0PW1haWwucG9zdGVj
-aC5hYy5rciIgaGVpZ2h0PTEgd2lkdGg9MT4=
-------=_Part_41507_11506564.1149686019055--
+Sounds to me like you reinvent the "pvmove" command.
+This is not "some purpose" but a central task
+LVM performs for you on demand!
+
+regards, Dieter.
