@@ -1,23 +1,23 @@
-Received: from o.ww.redhat.com (vpn-4-13.stuttgart.redhat.com [10.32.4.13])
+Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
 	by int-mx1.corp.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
-	k589gm9C028139
-	for <linux-lvm@redhat.com>; Thu, 8 Jun 2006 05:42:49 -0400
-Received: from o.ww.redhat.com (localhost.localdomain [127.0.0.1])
-	by o.ww.redhat.com (8.13.6/8.13.6) with ESMTP id k589gkeE021536
-	for <linux-lvm@redhat.com>; Thu, 8 Jun 2006 11:42:47 +0200
-Received: (from mauelsha@localhost)
-	by o.ww.redhat.com (8.13.6/8.13.6/Submit) id k589gk6h021535
-	for linux-lvm@redhat.com; Thu, 8 Jun 2006 11:42:46 +0200
-Date: Thu, 8 Jun 2006 11:42:46 +0200
-From: Heinz Mauelshagen <mauelshagen@redhat.com>
-Subject: Re: [linux-lvm] Right way to resize LVM Volume on SAN?
-Message-ID: <20060608094246.GA2775@redhat.com>
-References: <4487E578.2060202@alienworld.org>
-Mime-Version: 1.0
+	k589mltA028987
+	for <linux-lvm@redhat.com>; Thu, 8 Jun 2006 05:48:47 -0400
+Received: from wr-out-0506.google.com (wr-out-0506.google.com [64.233.184.229])
+	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id k589meSn011959
+	for <linux-lvm@redhat.com>; Thu, 8 Jun 2006 05:48:40 -0400
+Received: by wr-out-0506.google.com with SMTP id i28so364446wra
+	for <linux-lvm@redhat.com>; Thu, 08 Jun 2006 02:48:40 -0700 (PDT)
+Message-ID: <5485940d0606080248m7302a044n2c3a8440d5dfc28e@mail.gmail.com>
+Date: Thu, 8 Jun 2006 10:48:40 +0100
+From: "C'est Pierre" <cestpierre@gmail.com>
+Subject: Re: [linux-lvm] lvm and duplicates...
+In-Reply-To: <20060608055232.GD18061@percy.comedia.it>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Content-Disposition: inline
-In-Reply-To: <4487E578.2060202@alienworld.org>
-Reply-To: mauelshagen@redhat.com,
-	LVM general discussion and development <linux-lvm@redhat.com>
+References: <5485940d0606071038h7c823b7do58e95a486618d643@mail.gmail.com>
+	<20060608055232.GD18061@percy.comedia.it>
+Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -27,58 +27,34 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-On Thu, Jun 08, 2006 at 10:53:12AM +0200, Alen Salamun wrote:
-> Hello All!
-> 
-> I have read all the archives, HOWTO etc. but I don't seem to find the 
-> definitive guide to do it correctly.
-> 
-> My diskspace in Linux is on SAN. The last partition (/dev/sda3) is LVM, 
-> ext3 and it represents my /home. Now I expanded the SAN volume and I 
-> would like to add this additional space to this last LVM partition.
-> 
-> I already see larger disk space with fdisk. AFAIK I have now two 
-> options. Either I create new partition (for example /dev/sda4) and 
-> pvcreate it and add it to Logical Volume or I can resize existing 
-> /dev/sda3 since it is the last partition and I can resize it to new end 
-> sector.
-> 
-> I would prefer resizing existing partition. So I should make backup, 
-> delete existing partition /dev/sda3. make new partition with new end 
-> sector and same start sector and do pvresize, lvresize on it right?
-> 
-> Is there any other way to do it? It is after all quite something to 
-> delete existing live partiton and hope it still work after resize :)
+Hello Luca
 
-man pvresize
+On 6/8/06, Luca Berra <bluca@comedia.it> wrote:
+> On Wed, Jun 07, 2006 at 06:38:49PM +0100, C'est Pierre wrote:
+> >Greetings,
+> >
+> >I'm trying to setup a cluster with ServiceGuard but I am going through
+> >a lot of hassles doing so. I did a mistake initially by trying to
+> >pvcreate the 2 luns of the same physical disk from our storage (fiber
+> >channel) and now, while trying to create a new logical volume, I get
+> >this weird error, for the record the sda and sdb are the 2 luns coming
+> >from different paths (cards):
+> >
+> you posted before about multipathing,
+> and you got one answer.
+> what did you do for the multipathing issue you had?
 
-> 
-> Thank you!
-> 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
 
--- 
+You're right about that. We tried the multipathing, but suddenly one
+of the nodes fc card, stopped working and we need to make a couple of
+tests before our trial version of the clustering software expires, as
+such, we need to fix the LVM problem before we get into the multipath
+subject, which will only happen once HP replaces our FC card
 
-Regards,
-Heinz    -- The LVM Guy --
 
-*** Software bugs are stupid.
-    Nevertheless it needs not so stupid people to solve them ***
 
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-
-Heinz Mauelshagen                                 Red Hat GmbH
-Consulting Development Engineer                   Am Sonnenhang 11
-Storage Development                               56242 Marienrachdorf
-                                                  Germany
-Mauelshagen@RedHat.com                            PHONE +49  171 7803392
-                                                  FAX   +49 2626 924446
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+> L.
+>
