@@ -1,18 +1,23 @@
-Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
+Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
 	by int-mx1.corp.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
-	k585qke9023129
-	for <linux-lvm@redhat.com>; Thu, 8 Jun 2006 01:52:46 -0400
-Received: from percy.comedia.it (percy.comedia.it [212.97.59.71])
-	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id k585qdMY010125
-	for <linux-lvm@redhat.com>; Thu, 8 Jun 2006 01:52:39 -0400
-Date: Thu, 8 Jun 2006 07:52:33 +0200
-From: Luca Berra <bluca@comedia.it>
-Subject: Re: [linux-lvm] lvm and duplicates...
-Message-ID: <20060608055232.GD18061@percy.comedia.it>
-References: <5485940d0606071038h7c823b7do58e95a486618d643@mail.gmail.com>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <5485940d0606071038h7c823b7do58e95a486618d643@mail.gmail.com>
+	k588qRsW019508
+	for <linux-lvm@redhat.com>; Thu, 8 Jun 2006 04:52:27 -0400
+Received: from smtp.real-sec.com (keeper.real-sec.com [213.161.20.70])
+	by mx1.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
+	k588qPnC010826
+	for <linux-lvm@redhat.com>; Thu, 8 Jun 2006 04:52:26 -0400
+Received: from smtp.real-sec.com (localhost.localdomain [127.0.0.1])
+	by localhost.localdomain (Postfix) with ESMTP id DA988C7DAE
+	for <linux-lvm@redhat.com>; Thu,  8 Jun 2006 10:52:24 +0200 (CEST)
+Received: from [192.168.10.100] (hal9000.real-sec.com [192.168.10.100])by 
+	smtp.real-sec.com (Postfix) with ESMTP id C203DC7CF0for 
+	<linux-lvm@redhat.com>; Thu,  8 Jun 2006 10:52:24 +0200 (CEST)
+Message-ID: <4487E578.2060202@alienworld.org>
+Date: Thu, 08 Jun 2006 10:53:12 +0200
+From: Alen Salamun <alien@alienworld.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] Right way to resize LVM Volume on SAN?
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -24,29 +29,28 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"; format="flowed"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@redhat.com
 
-On Wed, Jun 07, 2006 at 06:38:49PM +0100, C'est Pierre wrote:
->Greetings,
->
->I'm trying to setup a cluster with ServiceGuard but I am going through
->a lot of hassles doing so. I did a mistake initially by trying to
->pvcreate the 2 luns of the same physical disk from our storage (fiber
->channel) and now, while trying to create a new logical volume, I get
->this weird error, for the record the sda and sdb are the 2 luns coming
->from different paths (cards):
->
-you posted before about multipathing,
-and you got one answer.
-what did you do for the multipathing issue you had?
+Hello All!
 
-L.
+I have read all the archives, HOWTO etc. but I don't seem to find the 
+definitive guide to do it correctly.
 
--- 
-Luca Berra -- bluca@comedia.it
-        Communication Media & Services S.r.l.
- /"\
- \ /     ASCII RIBBON CAMPAIGN
-  X        AGAINST HTML MAIL
- / \
+My diskspace in Linux is on SAN. The last partition (/dev/sda3) is LVM, 
+ext3 and it represents my /home. Now I expanded the SAN volume and I 
+would like to add this additional space to this last LVM partition.
+
+I already see larger disk space with fdisk. AFAIK I have now two 
+options. Either I create new partition (for example /dev/sda4) and 
+pvcreate it and add it to Logical Volume or I can resize existing 
+/dev/sda3 since it is the last partition and I can resize it to new end 
+sector.
+
+I would prefer resizing existing partition. So I should make backup, 
+delete existing partition /dev/sda3. make new partition with new end 
+sector and same start sector and do pvresize, lvresize on it right?
+
+Is there any other way to do it? It is after all quite something to 
+delete existing live partiton and hope it still work after resize :)
+
+Thank you!
