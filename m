@@ -1,18 +1,36 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
 	by int-mx1.corp.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
-	k59GfO3n023060
-	for <linux-lvm@redhat.com>; Fri, 9 Jun 2006 12:41:24 -0400
-Received: from bob.fastenal.com (bob.fastenal.com [205.243.112.24])
-	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id k59GfFeB025385
-	for <linux-lvm@redhat.com>; Fri, 9 Jun 2006 12:41:16 -0400
-Message-ID: <4489A4A6.6030305@fastenal.com>
-Date: Fri, 09 Jun 2006 11:41:10 -0500
-From: Kelly Sauke <ksauke@fastenal.com>
+	k58GuhLl031964
+	for <linux-lvm@redhat.com>; Thu, 8 Jun 2006 12:56:43 -0400
+Received: from mtagate6.uk.ibm.com (mtagate6.uk.ibm.com [195.212.29.139])
+	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id k58GuZvS017152
+	for <linux-lvm@redhat.com>; Thu, 8 Jun 2006 12:56:35 -0400
+Received: from d06nrmr1407.portsmouth.uk.ibm.com
+	(d06nrmr1407.portsmouth.uk.ibm.com [9.149.38.185])
+	by mtagate6.uk.ibm.com (8.13.6/8.13.6) with ESMTP id k58GuT9F127640
+	for <linux-lvm@redhat.com>; Thu, 8 Jun 2006 16:56:29 GMT
+Received: from d06av02.portsmouth.uk.ibm.com (d06av02.portsmouth.uk.ibm.com
+	[9.149.37.228])
+	by d06nrmr1407.portsmouth.uk.ibm.com (8.12.10/NCO/VER6.8) with ESMTP id
+	k58GveVc038306
+	for <linux-lvm@redhat.com>; Thu, 8 Jun 2006 17:57:40 +0100
+Received: from d06av02.portsmouth.uk.ibm.com (loopback [127.0.0.1])
+	by d06av02.portsmouth.uk.ibm.com (8.12.11.20060308/8.13.3) with ESMTP
+	id k58GuPYq001632
+	for <linux-lvm@redhat.com>; Thu, 8 Jun 2006 17:56:25 +0100
+Received: from dyn-9-152-216-82.boeblingen.de.ibm.com
+	(dyn-9-152-216-82.boeblingen.de.ibm.com [9.152.216.82])
+	by d06av02.portsmouth.uk.ibm.com (8.12.11.20060308/8.12.11) with ESMTP
+	id k58GuPjI001625
+	for <linux-lvm@redhat.com>; Thu, 8 Jun 2006 17:56:25 +0100
+From: Jens Wilke <jens.wilke@de.ibm.com>
+Date: Thu, 8 Jun 2006 18:55:37 +0200
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] Using LVM with EMC Powerpath...
-References: <4905EFD192EEDF4A9A19EEE98C32B7F7D9E0A6@DBQV3005.na.corp.mckesson.com>
-In-Reply-To: <4905EFD192EEDF4A9A19EEE98C32B7F7D9E0A6@DBQV3005.na.corp.mckesson.com>
 Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+Message-Id: <200606081855.37415.jens.wilke@de.ibm.com>
+Subject: [linux-lvm] [PATCH] lvm metadata handling,
+	warn only once about missing PV
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -24,89 +42,106 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: LVM general discussion and development <linux-lvm@redhat.com>
-Cc: Gary.Mansell@ricardo.com
+To: linux-lvm@redhat.com
 
-Change the /etc/lvm/lvm.conf to filter out all the sd* devices and only see the
-/dev/emcpower* devices.  Then when running the lvmdiskscan and pvscan it should
-only see the emcpower devices.
+Hi,
 
-Allen, Jack wrote:
-> -----Original Message-----
-> From: linux-lvm-bounces@redhat.com [mailto:linux-lvm-bounces@redhat.com]
-> On Behalf Of Gary Mansell
-> Sent: Friday, June 09, 2006 9:20 AM
-> To: linux-lvm@redhat.com
-> Subject: [linux-lvm] Using LVM with EMC Powerpath...
-> 
-> Hi,
-> 
-> I have a powerpath device that I want to encapsulate in LVM so that I
-> can grow it in the future but when I try and create the physical volume,
-> I get an error:
-> 
-> [root@ricserver ~]# powermt display dev=emcpowera
-> Pseudo name=emcpowera
-> CLARiiON ID=29R231J [Ricardo]
-> Logical device ID=600601604EC01000E0FC2ED6AAF5DA11 [5FCALRAID5]
-> state=alive; policy=CLAROpt; priority=0; queued-IOs=0
-> Owner: default=SP B, current=SP B
-> ========================================================================
-> ======
-> ---------------- Host ---------------   - Stor -   -- I/O Path -  --
-> Stats ---
-> ### HW Path                 I/O Paths    Interf.   Mode    State  Q-IOs
-> Errors
-> ========================================================================
-> ======
->    1 lpfc                      sde       SP B0     active  alive      0
-> 0
->    2 lpfc                      sdi       SP A1     active  alive      0
-> 0
->    3 lpfc                      sdm       SP A0     active  alive      0
-> 0
->    4 lpfc                      sdq       SP B1     active  alive      0
-> 0
-> 
-> 
-> When I try to create the physical volume:
-> 
-> [root@ricserver ~]# pvcreate /dev/emcpowera1
->   Physical volume "/dev/emcpowera1" successfully created
-> 
-> 
-> [root@ricserver ~]# pvscan
->   Found duplicate PV QwbwqAi02sELEsEpefW6PNZ53XY8Wgo0:
-> using /dev/emcpowera1 not /dev/sdq1
->   Found duplicate PV QwbwqAi02sELEsEpefW6PNZ53XY8Wgo0: using /dev/sde1
-> not /dev/sdq1
->   Found duplicate PV QwbwqAi02sELEsEpefW6PNZ53XY8Wgo0: using /dev/sdi1
-> not /dev/sdq1
->   Found duplicate PV QwbwqAi02sELEsEpefW6PNZ53XY8Wgo0: using /dev/sdm1
-> not /dev/sdq1
->   PV /dev/sda2   VG VolGroup00   lvm2 [33.75 GB / 32.00 MB free]
->   PV /dev/sdq1                   lvm2 [266.42 GB]
->   Total: 2 [300.17 GB] / in use: 1 [33.75 GB] / in no VG: 1 [266.42 GB]
-> 
-> What am I doing wrong?
-> 
-> Any help gladly recieved
-> 
-> Regards
-> 
-> Gary Mansell
-> 
-> ====================
-> Depending on the Linux version you are using, look at /etc/lvm/lvm.conf
-> and do man on lvm.conf. Basically you need to exclude the /dev/sd*
-> entries so the various LVM commands will not look at them. They will
-> only look at the emcpower* names.
-> 
-> Jack Allen
-> 
-> 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+When a disk is missing the messages of the lvm tools are quite 
+verbose. Example output for a VG with a mirror LV:
+
+Without patch:
+# vgchange -ay -P
+  Partial mode. Incomplete volume groups will be activated read-only.
+  Couldn't find device with uuid 'egDxmo-sVp7-OQGB-6mgt-84mk-xioM-ahdzBw'.
+  Couldn't find device with uuid 'egDxmo-sVp7-OQGB-6mgt-84mk-xioM-ahdzBw'.
+  Couldn't find device with uuid 'egDxmo-sVp7-OQGB-6mgt-84mk-xioM-ahdzBw'.
+  Couldn't find device with uuid 'egDxmo-sVp7-OQGB-6mgt-84mk-xioM-ahdzBw'.
+  Couldn't find device with uuid 'egDxmo-sVp7-OQGB-6mgt-84mk-xioM-ahdzBw'.
+  Couldn't find device with uuid 'egDxmo-sVp7-OQGB-6mgt-84mk-xioM-ahdzBw'.
+  Couldn't find device with uuid 'egDxmo-sVp7-OQGB-6mgt-84mk-xioM-ahdzBw'.
+  Couldn't find device with uuid 'egDxmo-sVp7-OQGB-6mgt-84mk-xioM-ahdzBw'.
+  Couldn't find device with uuid 'egDxmo-sVp7-OQGB-6mgt-84mk-xioM-ahdzBw'.
+  Couldn't find device with uuid 'egDxmo-sVp7-OQGB-6mgt-84mk-xioM-ahdzBw'.
+  Couldn't find device with uuid 'egDxmo-sVp7-OQGB-6mgt-84mk-xioM-ahdzBw'.
+  Couldn't find device with uuid 'egDxmo-sVp7-OQGB-6mgt-84mk-xioM-ahdzBw'.
+  Couldn't find device with uuid 'egDxmo-sVp7-OQGB-6mgt-84mk-xioM-ahdzBw'.
+  Couldn't find device with uuid 'egDxmo-sVp7-OQGB-6mgt-84mk-xioM-ahdzBw'.
+  Couldn't find device with uuid 'egDxmo-sVp7-OQGB-6mgt-84mk-xioM-ahdzBw'.
+  Couldn't find device with uuid 'egDxmo-sVp7-OQGB-6mgt-84mk-xioM-ahdzBw'.
+  2 logical volume(s) in volume group "main" now active
+
+With patch:
+
+# vgchange -ay -P
+  Partial mode. Incomplete volume groups will be activated read-only.
+  Missing PV with uuid 'egDxmo-sVp7-OQGB-6mgt-84mk-xioM-ahdzBw' in VG main
+  2 logical volume(s) in volume group "main" now active
+
+Regards,
+
+Jens
+
+-- 
+  Jens Wilke
+  Linux on zSeries - Application Development Tools + GCC
+  phone +49-(0)7031-16-3936 - tl *120-3936 - email jens.wilke@de.ibm.com
+  IBM Germany Lab, Schoenaicher Str. 220, 71032 Boeblingen
+
+
+Signed-Off-By: Jens Wilke <jens.wilke@de.ibm.com>
+
+Index: lib/format_text/import_vsn1.c
+===================================================================
+--- lib/format_text/import_vsn1.c	9 May 2006 12:29:44 -0000	1.2
++++ lib/format_text/import_vsn1.c	8 Jun 2006 14:25:44 -0000
+@@ -151,9 +151,9 @@
+ 		char buffer[64];
+ 
+ 		if (!id_write_format(&pv->id, buffer, sizeof(buffer)))
+-			log_error("Couldn't find device.");
++			log_verbose("Couldn't find device.");
+ 		else
+-			log_error("Couldn't find device with uuid '%s'.",
++			log_verbose("Couldn't find device with uuid '%s'.",
+ 				  buffer);
+ 
+ 		if (partial_mode())
+Index: lib/metadata/metadata.c
+===================================================================
+--- lib/metadata/metadata.c	9 May 2006 12:29:45 -0000	1.2
++++ lib/metadata/metadata.c	8 Jun 2006 14:25:44 -0000
+@@ -1096,6 +1096,25 @@
+ 	return correct_vg;
+ }
+ 
++static void warn_pv_missing(struct volume_group *vg)
++{
++	struct physical_volume *pv;
++	struct pv_list *pvl;
++	char buffer[64];
++
++	list_iterate_items(pvl, &vg->pvs) {
++		pv = pvl->pv;
++		if (!pv->dev) {
++			if (!id_write_format(&pv->id, buffer, sizeof(buffer))) {
++				log_error("Volume group %s has missing PVs", vg->name);
++			} else {
++				log_error("Missing PV with uuid '%s' in VG %s",
++					  buffer, vg->name);
++			}
++		}
++	}
++}
++
+ struct volume_group *vg_read(struct cmd_context *cmd, const char *vgname,
+ 			     const char *vgid, int *consistent)
+ {
+@@ -1118,6 +1137,8 @@
+ 			return NULL;
+ 		}
+ 	}
++	
++	warn_pv_missing(vg);
+ 
+ 	return vg;
+ }
