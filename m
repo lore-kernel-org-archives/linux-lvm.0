@@ -1,21 +1,20 @@
-Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
+Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
 	by int-mx1.corp.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
-	k58JqLjZ012693
-	for <linux-lvm@redhat.com>; Thu, 8 Jun 2006 15:52:21 -0400
+	k58Jv0U0014076
+	for <linux-lvm@redhat.com>; Thu, 8 Jun 2006 15:57:00 -0400
 Received: from percy.comedia.it (percy.comedia.it [212.97.59.71])
-	by mx1.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
-	k58JqJh0027436
-	for <linux-lvm@redhat.com>; Thu, 8 Jun 2006 15:52:19 -0400
-Date: Thu, 8 Jun 2006 21:52:18 +0200
+	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id k58JupuB032587
+	for <linux-lvm@redhat.com>; Thu, 8 Jun 2006 15:56:52 -0400
+Date: Thu, 8 Jun 2006 21:56:51 +0200
 From: Luca Berra <bluca@comedia.it>
-Subject: Re: [linux-lvm] lvm and duplicates...
-Message-ID: <20060608195218.GE548@percy.comedia.it>
-References: <5485940d0606071038h7c823b7do58e95a486618d643@mail.gmail.com>
-	<20060608055232.GD18061@percy.comedia.it>
-	<5485940d0606080248m7302a044n2c3a8440d5dfc28e@mail.gmail.com>
+Subject: Re: [linux-lvm] Right way to resize LVM Volume on SAN?
+Message-ID: <20060608195651.GF548@percy.comedia.it>
+References: <4487E578.2060202@alienworld.org>
+	<20060608094246.GA2775@redhat.com>
+	<44882ED2.4050806@alienworld.org>
 Mime-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <5485940d0606080248m7302a044n2c3a8440d5dfc28e@mail.gmail.com>
+In-Reply-To: <44882ED2.4050806@alienworld.org>
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -30,33 +29,18 @@ Content-Type: text/plain; charset="us-ascii"; format="flowed"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@redhat.com
 
-On Thu, Jun 08, 2006 at 10:48:40AM +0100, C'est Pierre wrote:
->Hello Luca
+On Thu, Jun 08, 2006 at 04:06:10PM +0200, Alen Salamun wrote:
+>Thank you. I read that already. And since it only says:
 >
->On 6/8/06, Luca Berra <bluca@comedia.it> wrote:
->>On Wed, Jun 07, 2006 at 06:38:49PM +0100, C'est Pierre wrote:
->> >Greetings,
->> >
->> >I'm trying to setup a cluster with ServiceGuard but I am going through
->> >a lot of hassles doing so. I did a mistake initially by trying to
->> >pvcreate the 2 luns of the same physical disk from our storage (fiber
->> >channel) and now, while trying to create a new logical volume, I get
->> >this weird error, for the record the sda and sdb are the 2 luns coming
->> >from different paths (cards):
->> >
->>you posted before about multipathing,
->>and you got one answer.
->>what did you do for the multipathing issue you had?
+>"Expand the PV on /dev/sda1 AFTER enlarging the partition with fdisk"
 >
->
->You're right about that. We tried the multipathing, but suddenly one
->of the nodes fc card, stopped working and we need to make a couple of
->tests before our trial version of the clustering software expires, as
->such, we need to fix the LVM problem before we get into the multipath
->subject, which will only happen once HP replaces our FC card
+>my question is related on part of enlarging partition with fdisk. Do I 
+>have to do it in described way (delete, create new with extended last 
+>sector) to preserve data or is there any other "less destructive 
+>look-a-like" way?
 
-but you just said that sda and sdb are the same disk seen from two
-different paths?
+sfdisk for backing up your partition table
+parted to resize
 
 -- 
 Luca Berra -- bluca@comedia.it
