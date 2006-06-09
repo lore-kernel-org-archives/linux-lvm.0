@@ -1,19 +1,16 @@
 Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
 	by int-mx1.corp.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
-	k59GZ7pg021426
-	for <linux-lvm@redhat.com>; Fri, 9 Jun 2006 12:35:07 -0400
-Received: from mail3.mckesson.com (mail3.mckesson.com [143.112.129.38])
+	k59GfJcf022980
+	for <linux-lvm@redhat.com>; Fri, 9 Jun 2006 12:41:19 -0400
+Received: from mexforward.lss.emc.com (mexforward.lss.emc.com [128.222.32.20])
 	by mx1.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
-	k59GZ64Q003641
-	for <linux-lvm@redhat.com>; Fri, 9 Jun 2006 12:35:06 -0400
-From: "Allen, Jack" <Jack.Allen@McKesson.com>
-Content-class: urn:content-classes:message
-Content-class: urn:content-classes:message
-MIME-Version: 1.0
+	k59GfIun007100
+	for <linux-lvm@redhat.com>; Fri, 9 Jun 2006 12:41:18 -0400
+Message-ID: <4A8F680AC6EC43458BCAE06010D8E81B02A2FA2D@CORPUSMX40A.corp.emc.com>
+From: Kearnan_Keith@emc.com
 Subject: RE: [linux-lvm] Using LVM with EMC Powerpath...
-Date: Fri, 9 Jun 2006 11:34:42 -0500
-Message-ID: <4905EFD192EEDF4A9A19EEE98C32B7F7D9E0A6@DBQV3005.na.corp.mckesson.com>
-Content-Transfer-Encoding: 8bit
+Date: Fri, 9 Jun 2006 12:40:59 -0400 
+MIME-Version: 1.0
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -25,7 +22,23 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: Gary.Mansell@ricardo.com, LVM general discussion and development <linux-lvm@redhat.com>
+Content-Transfer-Encoding: 7bit
+To: linux-lvm@redhat.com, Gary.Mansell@ricardo.com
+
+
+Check the PowerPath installation guide and release notes.  One of them will
+have instructions for modifying the /etc/lvm/lvm.conf file to filter out the
+native names.  I'd be more specific but the location of the information
+depends on the version of PowerPath in use. 
+
+-Keith
+
+-----Original Message-----
+From: linux-lvm-bounces@redhat.com [mailto:linux-lvm-bounces@redhat.com] On
+Behalf Of Allen, Jack
+Sent: Friday, June 09, 2006 12:35 PM
+To: Gary.Mansell@ricardo.com; LVM general discussion and development
+Subject: RE: [linux-lvm] Using LVM with EMC Powerpath...
 
 -----Original Message-----
 From: linux-lvm-bounces@redhat.com [mailto:linux-lvm-bounces@redhat.com]
@@ -98,3 +111,10 @@ entries so the various LVM commands will not look at them. They will
 only look at the emcpower* names.
 
 Jack Allen
+
+
+_______________________________________________
+linux-lvm mailing list
+linux-lvm@redhat.com
+https://www.redhat.com/mailman/listinfo/linux-lvm
+read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
