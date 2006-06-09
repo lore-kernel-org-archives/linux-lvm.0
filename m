@@ -1,20 +1,22 @@
 Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
 	by int-mx1.corp.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
-	k59DL167032400
-	for <linux-lvm@redhat.com>; Fri, 9 Jun 2006 09:21:01 -0400
-Received: from stamper.stc.ricplc.com (smtp.ricardo.co.uk [195.162.98.110])
+	k59DhdWh005282
+	for <linux-lvm@redhat.com>; Fri, 9 Jun 2006 09:43:39 -0400
+Received: from bluewhale.planbit.co.uk (82-71-36-240.dsl.in-addr.zen.co.uk
+	[82.71.36.240])
 	by mx1.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
-	k59DKxfL016588
-	for <linux-lvm@redhat.com>; Fri, 9 Jun 2006 09:21:00 -0400
-From: "Gary Mansell" <Gary.Mansell@ricardo.com>
-Date: Fri, 09 Jun 2006 14:20:28 +0100
-Content-Class: urn:content-classes:message
-Message-ID: <1149859228.5433.96.camel@grma-lap>
+	k59Dhb6I024998
+	for <linux-lvm@redhat.com>; Fri, 9 Jun 2006 09:43:37 -0400
+Received: from wolverine (unknown [192.168.1.71])
+	by bluewhale.planbit.co.uk (Postfix) with ESMTP id B1AAE12EDD
+	for <linux-lvm@redhat.com>; Fri,  9 Jun 2006 14:43:26 +0100 (BST)
+From: "Roger Lucas" <roger@planbit.co.uk>
+Date: Fri, 9 Jun 2006 14:43:14 +0100
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: [linux-lvm] Using LVM with EMC Powerpath...
-Reply-To: Gary.Mansell@ricardo.com,
-	LVM general discussion and development <linux-lvm@redhat.com>
+Content-Transfer-Encoding: 7bit
+Message-Id: <20060609134326.B1AAE12EDD@bluewhale.planbit.co.uk>
+Subject: [linux-lvm] Problem creating snapshots with 2.6.16.9 and LVM 2.02.06
+Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -25,86 +27,76 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@redhat.com
+To: 'LVM general discussion and development' <linux-lvm@redhat.com>
 
 Hi,
 
-I have a powerpath device that I want to encapsulate in LVM so that I
-can grow it in the future but when I try and create the physical volume,
-I get an error:
+I am running what was Debian Sarge but has the new 2.6.16.9 kernel.  I have
+made a few patches to the kernel (to add an Areca RAID driver and a few
+hardware sensors) but nothing in the device-mapper areas.  I use the
+snapshots capability in LVM to snapshot the client's userdisk volume when
+backing it up.
 
-[root@ricserver ~]# powermt display dev=emcpowera
-Pseudo name=emcpowera
-CLARiiON ID=29R231J [Ricardo]
-Logical device ID=600601604EC01000E0FC2ED6AAF5DA11 [5FCALRAID5]
-state=alive; policy=CLAROpt; priority=0; queued-IOs=0
-Owner: default=SP B, current=SP B
-==============================================================================
----------------- Host ---------------   - Stor -   -- I/O Path -  --
-Stats ---
-### HW Path                 I/O Paths    Interf.   Mode    State  Q-IOs
-Errors
-==============================================================================
-   1 lpfc                      sde       SP B0     active  alive      0
-0
-   2 lpfc                      sdi       SP A1     active  alive      0
-0
-   3 lpfc                      sdm       SP A0     active  alive      0
-0
-   4 lpfc                      sdq       SP B1     active  alive      0
-0
+Until a couple days ago, I was running:
+
+Wombat:~# uname -a
+Linux Wombat 2.6.16.9.rwl7 #1 Tue May 16 20:25:14 BST 2006 i686 GNU/Linux
+Wombat:~# lvm version
+  LVM version:     2.01.04 (2005-02-09)
+  Library version: 1.01.00-ioctl (2005-01-17)
+  Driver version:  4.4.0
+Wombat:~#
+
+and everything ran fine.
+
+A few days ago, I saw an e-mail from Alasdair on this mailing list saying
+that kernels 2.6.16 onwards should be using the later userspace tools.
+Following this, I downloaded and compiled the latest device mapper library
+(libdevmapper 1.02) and LVM tools (2.02.06).  When I installed them on the
+machine and re-ran the backup script, I got an error from lvcreate when I
+tried to make the snapshot which I did not get before.  I saw that Patrick
+Honing also reported this error on 29/5/06 on this mailing list, but
+couldn't see any reply.
+
+For me, this failure is 100% repeatable.
+
+Can anyone help shed light on this?
+
+If you need any more information then please let me know and I will send it
+in.  My current option seems to be to drop back to the older 2.01.04 lvm and
+1.01 dmapper but given Alasdair's mail, this seems to be risky.
+
+The full shell trace is below.
+
+Wombat:~# uname -a
+Linux Wombat 2.6.16.9.rwl7 #1 Tue May 16 20:25:14 BST 2006 i686 GNU/Linux
+Wombat:~# lvm version
+  LVM version:     2.02.06 (2006-05-12)
+  Library version: 1.02.07 (2006-05-11)
+  Driver version:  4.5.0
+Wombat:~# lvs
+  LV          VG          Attr   LSize  Origin Snap%  Move Log Copy%
+  backupimage clientstore -ri-ao 60.00G
+  root        clientstore -wi-ao  5.00G
+  userdisk    clientstore -wi-ao 60.00G
+Wombat:~# vgs
+  VG          #PV #LV #SN Attr   VSize   VFree
+  clientstore   1   3   0 wz--n- 148.98G 23.98G
+Wombat:~# pvs
+  PV         VG          Fmt  Attr PSize   PFree
+  /dev/sda2  clientstore lvm2 a-   148.98G 23.98G
+Wombat:~# lvcreate -L10G -n snapdisk -s /dev/clientstore/userdisk
+  LV clientstore/snapdisk in use: not deactivating
+  Couldn't deactivate new snapshot.
+Wombat:~# lvs
+  LV          VG          Attr   LSize  Origin Snap%  Move Log Copy%
+  backupimage clientstore -ri-ao 60.00G
+  root        clientstore -wi-ao  5.00G
+  snapdisk    clientstore -wi-a- 10.00G
+  userdisk    clientstore -wi-ao 60.00G
+Wombat:~#
 
 
-When I try to create the physical volume:
+Many thanks in advance,
 
-[root@ricserver ~]# pvcreate /dev/emcpowera1
-  Physical volume "/dev/emcpowera1" successfully created
-
-
-[root@ricserver ~]# pvscan
-  Found duplicate PV QwbwqAi02sELEsEpefW6PNZ53XY8Wgo0:
-using /dev/emcpowera1 not /dev/sdq1
-  Found duplicate PV QwbwqAi02sELEsEpefW6PNZ53XY8Wgo0: using /dev/sde1
-not /dev/sdq1
-  Found duplicate PV QwbwqAi02sELEsEpefW6PNZ53XY8Wgo0: using /dev/sdi1
-not /dev/sdq1
-  Found duplicate PV QwbwqAi02sELEsEpefW6PNZ53XY8Wgo0: using /dev/sdm1
-not /dev/sdq1
-  PV /dev/sda2   VG VolGroup00   lvm2 [33.75 GB / 32.00 MB free]
-  PV /dev/sdq1                   lvm2 [266.42 GB]
-  Total: 2 [300.17 GB] / in use: 1 [33.75 GB] / in no VG: 1 [266.42 GB]
-
-What am I doing wrong?
-
-Any help gladly recieved
-
-Regards
-
-Gary Mansell
-
-
--- 
-
-This e-mail and any files transmitted with it are confidential and intended
-solely for the use of the individual or entity to whom they are addressed.
-If you have received this e-mail in error please notify the sender immediately
-and delete this e-mail from your system.  Please note that any views or opinions
-presented in this e-mail are solely those of the author and do not necessarily
-represent those of Ricardo (save for reports and other documentation formally
-approved and signed for release to the intended recipient).  Only Directors
-or Duly Authorised Officers are authorised to enter into legally binding
-obligations on behalf of Ricardo unless the obligation is contained within
-a Ricardo Purchase Order.
-
-Ricardo may monitor outgoing and incoming e-mails and other telecommunications
-on its e-mail and telecommunications systems.  By replying to this e-mail you
-give consent to such monitoring.  The recipient should check this e-mail and
-any attachments for the presence of viruses.  Ricardo accepts no liability for
-any damage caused by any virus transmitted by this e-mail.  "Ricardo" means
-Ricardo plc and its subsidiary companies.
-
-Ricardo plc is a public limited company registered in England with registered
-number 00222915.
-The registered office of Ricardo plc is Shoreham Technical Centre, Shoreham-by Sea,
-West Sussex, BN43 5FG.
- 
+Roger
