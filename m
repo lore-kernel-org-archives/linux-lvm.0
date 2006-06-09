@@ -1,20 +1,22 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
 	by int-mx1.corp.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
-	k59IirIK022699
-	for <linux-lvm@redhat.com>; Fri, 9 Jun 2006 14:44:53 -0400
-Received: from percy.comedia.it (percy.comedia.it [212.97.59.71])
-	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id k59IijMK031367
-	for <linux-lvm@redhat.com>; Fri, 9 Jun 2006 14:44:46 -0400
-Date: Fri, 9 Jun 2006 20:44:44 +0200
-From: Luca Berra <bluca@comedia.it>
-Subject: Re: [linux-lvm] Is it better to use partitions or entire disk for LVM?
-Message-ID: <20060609184444.GA11250@percy.comedia.it>
-References: <1cbd6f830606040746j5af7c102y75d13748e4d2c627@mail.gmail.com>
-	<20060605223153.GA21795@redhat.com> <44895D27.50107@conterra.de>
-Mime-Version: 1.0
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <44895D27.50107@conterra.de>
+	k59IqNqf024903
+	for <linux-lvm@redhat.com>; Fri, 9 Jun 2006 14:52:23 -0400
+Received: from bluewhale.planbit.co.uk (82-71-36-240.dsl.in-addr.zen.co.uk
+	[82.71.36.240])
+	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id k59IqGw5001175
+	for <linux-lvm@redhat.com>; Fri, 9 Jun 2006 14:52:16 -0400
+Received: from wolverine (unknown [192.168.1.71])
+	by bluewhale.planbit.co.uk (Postfix) with ESMTP id 08F2C12EDD
+	for <linux-lvm@redhat.com>; Fri,  9 Jun 2006 19:52:11 +0100 (BST)
+From: "Roger Lucas" <roger@planbit.co.uk>
+Subject: RE: [linux-lvm] Problem creating snapshots with 2.6.16.9 and
+	LVM2.02.06
+Date: Fri, 9 Jun 2006 19:51:58 +0100
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+In-Reply-To: <20060609145645.GC7606@agk.surrey.redhat.com>
+Message-Id: <20060609185211.08F2C12EDD@bluewhale.planbit.co.uk>
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -25,18 +27,61 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="iso-8859-1"; format="flowed"
-To: linux-lvm@redhat.com
+Content-Type: text/plain; charset="us-ascii"
+To: 'LVM general discussion and development' <linux-lvm@redhat.com>
 
-On Fri, Jun 09, 2006 at 01:36:07PM +0200, Dieter St=EF=BF=BDken wrote:
->does this make any sense?
+Hi Alasdair,
 
-A lot.
+Thanks for the quick response.
 
---=20
-Luca Berra -- bluca@comedia.it
-        Communication Media & Services S.r.l.
- /"\
- \ /     ASCII RIBBON CAMPAIGN
-  X        AGAINST HTML MAIL
- / \
+I killed the uDev process that was running and retried it.  The snapshot was
+created without any problems.  It looks like this is another example of the
+interaction of uDev and LVM.
+
+I followed the Debian bug reference that you gave.  The change in
+/etc/udev.rules that was recommended works for me too:
+
+Failing line:
+	KERNEL=="dm-[0-9]*",           NAME=""
+
+Working line:
+	KERNEL=="dm-[0-9]*",           OPTIONS+="ignore_device"
+
+This seems to keep uDev out of LVM's way, and LVM now works fine.
+
+There seemed to a bit of discussion on the Debian bug tracker regarding
+exactly where the problem is, so if there are any logs you would like or
+similar then let me know.
+
+Thanks and best regards,
+
+Roger
+
+
+> -----Original Message-----
+> From: linux-lvm-bounces@redhat.com [mailto:linux-lvm-bounces@redhat.com]
+> On Behalf Of Alasdair G Kergon
+> Sent: 09 June 2006 15:57
+> To: LVM general discussion and development
+> Subject: Re: [linux-lvm] Problem creating snapshots with 2.6.16.9 and
+> LVM2.02.06
+> 
+> > > Wombat:~# lvcreate -L10G -n snapdisk -s /dev/clientstore/userdisk
+> > >   LV clientstore/snapdisk in use: not deactivating
+> > >   Couldn't deactivate new snapshot.
+> 
+> Could be interaction (not yet understood) with udev - try disabling udev
+> while
+> running the command.
+> 
+> (Ref debian bug 343671)
+> 
+> Alasdair
+> --
+> agk@redhat.com
+> 
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@redhat.com
+> https://www.redhat.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
