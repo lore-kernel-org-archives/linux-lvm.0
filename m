@@ -1,27 +1,28 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
 	by int-mx1.corp.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
-	k5AFjE17030403
-	for <linux-lvm@redhat.com>; Sat, 10 Jun 2006 11:45:14 -0400
-Received: from ciao.gmane.org (main.gmane.org [80.91.229.2])
-	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id k5AFj7t4032590
-	for <linux-lvm@redhat.com>; Sat, 10 Jun 2006 11:45:08 -0400
-Received: from list by ciao.gmane.org with local (Exim 4.43)
-	id 1Fp5du-000270-QE
-	for linux-lvm@redhat.com; Sat, 10 Jun 2006 17:44:55 +0200
-Received: from 221.174.csx.com ([216.231.221.174])
-	by main.gmane.org with esmtp (Gmexim 0.1 (Debian))
-	id 1AlnuQ-0007hv-00
-	for <linux-lvm@redhat.com>; Sat, 10 Jun 2006 17:44:54 +0200
-Received: from thomas by 221.174.csx.com with local (Gmexim 0.1 (Debian))
-	id 1AlnuQ-0007hv-00
-	for <linux-lvm@redhat.com>; Sat, 10 Jun 2006 17:44:54 +0200
-From: Thomas <thomas@meiwing.com>
-Date: Sat, 10 Jun 2006 23:44:39 +0800
-Message-ID: <e6epd8$qi7$1@sea.gmane.org>
-Mime-Version: 1.0
+	k5AHVuvM011615
+	for <linux-lvm@redhat.com>; Sat, 10 Jun 2006 13:31:56 -0400
+Received: from mail.solid-soft.at (mail.solid-soft.at [193.83.215.58])
+	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id k5AHVou8021045
+	for <linux-lvm@redhat.com>; Sat, 10 Jun 2006 13:31:50 -0400
+Received: from localhost (localhost [127.0.0.1])
+	by mail.solid-soft.at (Postfix on SuSE Linux 8.0 (i386)) with ESMTP id
+	BEB2435D57
+	for <linux-lvm@redhat.com>; Sat, 10 Jun 2006 19:31:43 +0200 (CEST)
+Received: from mail.solid-soft.at ([127.0.0.1])
+	by localhost (gateway [127.0.0.1]) (amavisd-new, port 10024) with ESMTP
+	id 12189-04 for <linux-lvm@redhat.com>;
+	Sat, 10 Jun 2006 19:31:38 +0200 (CEST)
+Received: from [192.168.17.36] (pundit1.solid-soft.at [192.168.17.36])
+	by mail.solid-soft.at (Postfix on SuSE Linux 8.0 (i386)) with ESMTP id
+	F0513357A8
+	for <linux-lvm@redhat.com>; Sat, 10 Jun 2006 19:31:37 +0200 (CEST)
+Message-ID: <448B01F9.604@solid-soft.at>
+Date: Sat, 10 Jun 2006 19:31:37 +0200
+From: Robert Valentan <rov_200603@solid-soft.at>
+MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
-Sender: news <news@sea.gmane.org>
-Subject: [linux-lvm] How to format a new hard disk using in LVM2 ?
+Subject: [linux-lvm] lvcreate - race condition creating snapshots
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -32,34 +33,49 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
+Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@redhat.com
 
-Given:
-hdc is a 80G hard disk.
-Only use 20G and mount as backup
-===============================
-Steps:
-# Phyical Volume creation of hdc
-pvcreate /dev/hdc
+I think, there is a race condition in lvcreate while
+makeing a new snapshot.
 
-# Volume group creation as name VolGroup01
-vgcreate VolGroup01 /dev/hdc
+System: Tyan with 2 Opteron 246
+        xen 3.0.2-3
+        linux 2.6.16.13
+        lvm 2.02.07
+        3ware-Raid 9550 Raid5
 
-# Logical Volume Group creation as name LogVol00
-lvcreate -n LogVol00 --size 20G VolGroup01
+Under xen i was unable to create a snapshot, I got
+always "LV system/snap in use: not deactivating".
+Without xen, i got occasionally a snapshot.
 
-# Format as EXT3
-mke2fs -j /dev/VolGroup01/LogVol00
 
-# Mount as backup
-mkdir /backup
-mount /dev/VolGroup01/LogVol00 /backup
+After i make a "dirty hack":
+------ begin ----------
+*** old/lvcreate.c      2006-06-10 19:22:37.000000000 +0200
+--- lvcreate.c  2006-06-10 19:23:04.000000000 +0200
+***************
+*** 776,781 ****
+--- 776,787 ----
+                /* Reset permission after zeroing */
+                if (!(lp->permission & LVM_WRITE))
+                        lv->status &= ~LVM_WRITE;
++
++                 { struct timeval tv ;
++                   tv.tv_sec=10;
++                   tv.tv_usec=0;
++                   select(2, 0, 0, 0, &tv);
++                 }
+                if (!deactivate_lv(cmd, lv)) {
+                        log_err("Couldn't deactivate new snapshot.");
+                        return 0;
+------ end ---------
 
-# Check result with
-df -h
-pvdisplay
-vgdisplay
-lvdisplay
+i got always a snapshot (on all 3 systems!). I think, there is an
+other thread which is creating the new lv, and it will take longer as
+the lvcreate will "think". I have to less knowledge to make a patch,
+which is waiting for the correct event (creating lv complete).
 
-Just my two cents.
+-- 
+regards
+Robert Valentan
