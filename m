@@ -1,25 +1,20 @@
-Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
+Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
 	by int-mx1.corp.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
-	k5DI1c5C014727
-	for <linux-lvm@redhat.com>; Tue, 13 Jun 2006 14:01:38 -0400
-Received: from orko.netshadow.at (mail.netshadow.at [217.116.182.107])
-	by mx1.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
-	k5DI1Vk9028646
-	for <linux-lvm@redhat.com>; Tue, 13 Jun 2006 14:01:36 -0400
-Received: from [192.168.191.20] (kuecken.unki.net [192.168.191.20])
-	(authenticated bits=0)
-	by orko.netshadow.at (8.13.6/8.13.6/Debian-1) with ESMTP id
-	k5DI1Gv9005351
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NOT)
-	for <linux-lvm@redhat.com>; Tue, 13 Jun 2006 20:01:17 +0200
-Message-ID: <448EFD65.8090707@netshadow.at>
-Date: Tue, 13 Jun 2006 20:01:09 +0200
-From: Andreas Unterkircher <unki@netshadow.at>
+	k5EE7w44029049
+	for <linux-lvm@redhat.com>; Wed, 14 Jun 2006 10:07:58 -0400
+Received: from bluewhale.planbit.co.uk (82-71-36-240.dsl.in-addr.zen.co.uk
+	[82.71.36.240])
+	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id k5EE7pZw004232
+	for <linux-lvm@redhat.com>; Wed, 14 Jun 2006 10:07:52 -0400
+Received: from wolverine (unknown [192.168.1.71])
+	by bluewhale.planbit.co.uk (Postfix) with ESMTP id 616D712EDA
+	for <linux-lvm@redhat.com>; Wed, 14 Jun 2006 15:07:46 +0100 (BST)
+From: "Roger Lucas" <roger@planbit.co.uk>
+Date: Wed, 14 Jun 2006 15:09:38 +0100
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] Re: undelete logical volume
-References: <448EEF41.7000404@netshadow.at> <e6mt4v$nlp$1@sea.gmane.org>
-In-Reply-To: <e6mt4v$nlp$1@sea.gmane.org>
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+Message-Id: <20060614140746.616D712EDA@bluewhale.planbit.co.uk>
+Subject: [linux-lvm] Unexpected write access to LV
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -30,62 +25,97 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="utf-8"
-To: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="us-ascii"
+To: 'LVM general discussion and development' <linux-lvm@redhat.com>
 
-Thx for the hint. Also I found out that a metadata backup is created on
-a every command in /etc/lvm/archives.
-The lv has been recovered, but it looks like the first xxx bytes of the
-lv have changed. Luks doesn't accept it
-as luks partition anymore and so I can't mount the encrypted partition
-anymore. Data lost.... Backup is always
-a good idea...
+Hi,
 
-Andreas
+I have been testing my system and had expected to be able to use the
+"lvchange -pr" and "lvchange -prw" options to enable/disable the write
+access to a logical volume.  It seems that although "lvs" reports the
+read/write status according to the most recent command, this does not
+reflect the true read/write access to the logical volume.  It seems that you
+have to perform a "lvchange -an" then "lvchange -ay" to apply the read/write
+access rights to the logical volume.
 
-Thomas schrieb:
-> Use RIP (R)ecovery (I)s (P)ossible! (v15.2)  to boot up.
-> And use command hexdump /dev/hda1 to collect the old LVM config information.
-> They are nearly 1200.
-> Use the information to create a metadata file.
-> Use cfgrestore to recover.
-> Then mount back the lost LogVol00.
->
-> Just my two cents.
-> "Andreas Unterkircher" <unki@netshadow.at> �b�l��
-> news:448EEF41.7000404@netshadow.at �����g...
->   
->> Hi,
->>
->> I made a big mistake and deleted a logical volume with some still needed
->>     
-> data.
->   
->> It was the only active lv and no other write access happened on the
->>     
-> physical
->   
->> disks till yet. Also I have no backup of lvm's metadata.
->>
->> Is there any way to recover the lost logical volume? (lvm2)
->>
->> Andreas
->>
->>
->> _______________________________________________
->> linux-lvm mailing list
->> linux-lvm@redhat.com
->> https://www.redhat.com/mailman/listinfo/linux-lvm
->> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
->>
->>     
->
->
->
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
->
->   
+You can see an example below...
+
+This doesn't make sense and it doesn't match the man page for the lvchange
+command.
+
+Can anyone shed light on this ?
+
+Thanks,
+
+Roger
+
+NewWombat:~# uname -a
+Linux NewWombat 2.6.16.20.rwl1 #1 Fri Jun 9 15:23:04 BST 2006 i686 GNU/Linux
+NewWombat:~# lvm --version
+  No such command.  Try 'help'.
+NewWombat:~# lvs --version
+  LVM version:     2.02.06 (2006-05-12)
+  Library version: 1.02.07 (2006-05-11)
+  Driver version:  4.5.0
+NewWombat:~# lvs
+  LV          VG          Attr   LSize  Origin Snap%  Move Log Copy%
+  backupimage clientstore -ri-a- 60.00G
+  root        clientstore -wi-ao  5.00G
+  userdisk    clientstore -wi-ao 60.00G
+NewWombat:~# dd if=/dev/zero of=/dev/clientstore/backupimage bs=64K count=1
+dd: writing `/dev/clientstore/backupimage': Operation not permitted
+1+0 records in
+0+0 records out
+0 bytes transferred in 0.015371 seconds (0 bytes/sec)
+NewWombat:~# lvchange -prw /dev/clientstore/backupimage
+  Logical volume "backupimage" changed
+NewWombat:~# lvs
+  LV          VG          Attr   LSize  Origin Snap%  Move Log Copy%
+  backupimage clientstore -wi-a- 60.00G
+  root        clientstore -wi-ao  5.00G
+  userdisk    clientstore -wi-ao 60.00G
+NewWombat:~# dd if=/dev/zero of=/dev/clientstore/backupimage bs=64K count=1
+dd: writing `/dev/clientstore/backupimage': Operation not permitted
+1+0 records in
+0+0 records out
+0 bytes transferred in 0.004415 seconds (0 bytes/sec)
+NewWombat:~# lvchange -an /dev/clientstore/backupimage
+NewWombat:~# lvs
+  LV          VG          Attr   LSize  Origin Snap%  Move Log Copy%
+  backupimage clientstore -wi--- 60.00G
+  root        clientstore -wi-ao  5.00G
+  userdisk    clientstore -wi-ao 60.00G
+NewWombat:~# lvchange -ay /dev/clientstore/backupimage
+NewWombat:~# lvs
+  LV          VG          Attr   LSize  Origin Snap%  Move Log Copy%
+  backupimage clientstore -wi-a- 60.00G
+  root        clientstore -wi-ao  5.00G
+  userdisk    clientstore -wi-ao 60.00G
+NewWombat:~# dd if=/dev/zero of=/dev/clientstore/backupimage bs=64K count=1
+1+0 records in
+1+0 records out
+65536 bytes transferred in 0.000942 seconds (69568756 bytes/sec)
+NewWombat:~# lvchange -pr /dev/clientstore/backupimage
+  Logical volume "backupimage" changed
+NewWombat:~# dd if=/dev/zero of=/dev/clientstore/backupimage bs=64K count=1
+1+0 records in
+1+0 records out
+65536 bytes transferred in 0.000962 seconds (68118616 bytes/sec)
+NewWombat:~# lvchange -an /dev/clientstore/backupimage
+NewWombat:~# lvs
+  LV          VG          Attr   LSize  Origin Snap%  Move Log Copy%
+  backupimage clientstore -ri--- 60.00G
+  root        clientstore -wi-ao  5.00G
+  userdisk    clientstore -wi-ao 60.00G
+NewWombat:~# lvchange -ay /dev/clientstore/backupimage
+NewWombat:~# lvs
+  LV          VG          Attr   LSize  Origin Snap%  Move Log Copy%
+  backupimage clientstore -ri-a- 60.00G
+  root        clientstore -wi-ao  5.00G
+  userdisk    clientstore -wi-ao 60.00G
+NewWombat:~# dd if=/dev/zero of=/dev/clientstore/backupimage bs=64K count=1
+dd: writing `/dev/clientstore/backupimage': Operation not permitted
+1+0 records in
+0+0 records out
+0 bytes transferred in 0.004422 seconds (0 bytes/sec)
+NewWombat:~#
