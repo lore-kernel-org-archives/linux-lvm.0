@@ -1,25 +1,28 @@
-Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
+Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
 	by int-mx1.corp.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
-	k5FHug1Q029411
-	for <linux-lvm@redhat.com>; Thu, 15 Jun 2006 13:56:42 -0400
-Received: from conterra.de (vvv.conterra.de [212.124.44.162])
-	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id k5FHuaSu005963
-	for <linux-lvm@redhat.com>; Thu, 15 Jun 2006 13:56:36 -0400
-Received: from localhost (unknown [127.0.0.1])
-	by conterra.de (-) with ESMTP id D8EFE1F4017
-	for <linux-lvm@redhat.com>; Thu, 15 Jun 2006 19:56:29 +0200 (CEST)
-Received: from conterra.de ([127.0.0.1])
-	by localhost (vvv.conterra.de [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id 07645-07 for <linux-lvm@redhat.com>;
-	Thu, 15 Jun 2006 19:56:23 +0200 (CEST)
-Message-ID: <44919F46.1010305@conterra.de>
-Date: Thu, 15 Jun 2006 19:56:22 +0200
-From: =?ISO-8859-2?Q?Dieter_St=FCken?= <stueken@conterra.de>
-MIME-Version: 1.0
-Subject: Re: [linux-lvm] lvm -> "normal" system conversion
-References: <449194DD.6070801@poczta.onet.pl>
-In-Reply-To: <449194DD.6070801@poczta.onet.pl>
-Content-Transfer-Encoding: quoted-printable
+	k5FEAG21024482
+	for <linux-lvm@redhat.com>; Thu, 15 Jun 2006 10:10:16 -0400
+Received: from ciao.gmane.org (main.gmane.org [80.91.229.2])
+	by mx1.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
+	k5FEADja029459
+	for <linux-lvm@redhat.com>; Thu, 15 Jun 2006 10:10:14 -0400
+Received: from root by ciao.gmane.org with local (Exim 4.43)
+	id 1FqsXq-0000bp-Dt
+	for linux-lvm@redhat.com; Thu, 15 Jun 2006 16:10:02 +0200
+Received: from alcatraz.cendio.se ([193.12.253.67])
+	by main.gmane.org with esmtp (Gmexim 0.1 (Debian))
+	id 1AlnuQ-0007hv-00
+	for <linux-lvm@redhat.com>; Thu, 15 Jun 2006 16:10:02 +0200
+Received: from forsberg by alcatraz.cendio.se with local (Gmexim 0.1 (Debian))
+	id 1AlnuQ-0007hv-00
+	for <linux-lvm@redhat.com>; Thu, 15 Jun 2006 16:10:02 +0200
+From: Erik Forsberg <forsberg@cendio.se>
+Date: Thu, 15 Jun 2006 16:02:54 +0200
+Message-ID: <uoodwu7bzl.fsf@impertigo.lkpg.cendio.se>
+Mime-Version: 1.0
+Sender: news <news@sea.gmane.org>
+Subject: [linux-lvm] Change from one Linux Distro to another,
+	keeping data on LVM
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -30,38 +33,39 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="iso-8859-1"; format="flowed"
-To: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: linux-lvm@redhat.com
 
-Maciej S=EF=BF=BDojewski wrote:
-> I have Linux Kubuntu Breezy system running completely on software raid,=20
-> LVM2, including root and boot partitions (LILO boot loader). As for some =
+Hi!
 
-> reasons I found such a structure not very convenient I would like revert =
+I'm about to change Linux distribution on a NFS file server for a
+customer. They are currently running Fedora Core 3/2.6.12, and wants
+to run either Suse 9.3 or Suse 10.
 
-> it the following one:
-> - crucial data on software raid matrix (sda & sdb), so home partition etc=
-.;
-> - boot partition and  root partition on separate hard disk (hde).
+The filesystem served resides on an ext3 file system located on a LVM2
+LV, with the volume group having two PVs. 
 
-Hi Maciej,
+Are there anything special I need to think about when doing this? My
+plan is something like this:
 
-sorry, I don't exactly understand your current setting:
-do sda/sdb form your raid md0? In both cases?
-Does your LVM then resides on md0?
-Are root, boot home and zasoby1/2 logical volumes?
+1) Make sure I have an updated copy of /etc/lvm available somewhere
+   else. 
+2) Boot upp the installer for Suse and erase the partitions on the
+   first physical disk (well, actually on the first hardware RAID unit) that
+   are not used as a PV, and install Suse on that area of the disk. 
 
-I only see, you want to move off root and boot to an other disk hde.
+Hopefully, the suse partitioner will not do anything stupid with my
+PVs, my VG or my LV. It's probably best to create a new VG for the
+operating system, and then mount the old LV from the old VG once the
+OS is in place.
 
-So, what do you mean by "revert"?
+Any comments/experience on this kind of operation? 
 
-> I've already formatted and partitioned hde6. Now I think how to make a=20
-> copy of root and finally how to install GRUB so it will be able to see=20
-> LVM2 volumes...
-
-If you move off boot and root to a traditional partition,
-so why has grub to know anything about LVM any more?
-
-perhaps you should give us an output of "pvs" and "lvs" commands.
-
-regards, Dieter.
+Regards,
+\EF
+-- 
+Erik Forsberg                OpenSource-based Thin Client Technology
+Systems Analyst/Developer    Phone: +46-13-21 46 00    
+Cendio AB    	             Web: http://www.cendio.com
+		             
