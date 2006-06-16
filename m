@@ -1,28 +1,22 @@
-Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
+Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
 	by int-mx1.corp.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
-	k5G7a34D021338
-	for <linux-lvm@redhat.com>; Fri, 16 Jun 2006 03:36:03 -0400
-Received: from conterra.de (vvv.conterra.de [212.124.44.162])
-	by mx1.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
-	k5G7a15k020373
-	for <linux-lvm@redhat.com>; Fri, 16 Jun 2006 03:36:02 -0400
-Received: from localhost (unknown [127.0.0.1])
-	by conterra.de (-) with ESMTP id 7B8321F4017
-	for <linux-lvm@redhat.com>; Fri, 16 Jun 2006 09:35:50 +0200 (CEST)
-Received: from conterra.de ([127.0.0.1])
-	by localhost (vvv.conterra.de [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id 03057-10 for <linux-lvm@redhat.com>;
-	Fri, 16 Jun 2006 09:35:45 +0200 (CEST)
-Message-ID: <44925F50.2000108@conterra.de>
-Date: Fri, 16 Jun 2006 09:35:44 +0200
-From: =?ISO-8859-1?Q?Dieter_St=FCken?= <stueken@conterra.de>
+	k5GBYYG5029749
+	for <linux-lvm@redhat.com>; Fri, 16 Jun 2006 07:34:34 -0400
+Received: from mail.gmx.net (mail.gmx.net [213.165.64.21])
+	by mx3.redhat.com (8.13.1/8.13.1) with SMTP id k5GBYRIb012753
+	for <linux-lvm@redhat.com>; Fri, 16 Jun 2006 07:34:28 -0400
+Received: from pavian (pavian.at.ds9 [192.168.0.104])
+	by mailer.at.ds9 (Postfix) with ESMTP id DCB4275706
+	for <linux-lvm@redhat.com>; Fri, 16 Jun 2006 13:35:27 +0200 (CEST)
+From: "Cisco" <cisco66@gmx.de>
+Date: Fri, 16 Jun 2006 13:35:25 +0200
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] Change from one Linux Distro to another,	keeping
-	data on LVM
-References: <uoodwu7bzl.fsf@impertigo.lkpg.cendio.se>
-In-Reply-To: <uoodwu7bzl.fsf@impertigo.lkpg.cendio.se>
 Content-Transfer-Encoding: 7bit
-Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
+In-Reply-To: <449194DD.6070801@poczta.onet.pl>
+Message-Id: <20060616113527.DCB4275706@mailer.at.ds9>
+Subject: [linux-lvm] please help: unable to get rid of LV
+Reply-To: cisco66@gmx.de,
+	LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -32,50 +26,102 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="us-ascii"
+To: 'LVM general discussion and development' <linux-lvm@redhat.com>
 
-Erik Forsberg wrote:
-> I'm about to change Linux distribution on a NFS file server for a
-> customer. They are currently running Fedora Core 3/2.6.12, and wants
-> to run either Suse 9.3 or Suse 10.
-> 
-> The filesystem served resides on an ext3 file system located on a LVM2
-> LV, with the volume group having two PVs. 
-> 
-> Are there anything special I need to think about when doing this? My
-> plan is something like this:
-> 
-> 1) Make sure I have an updated copy of /etc/lvm available somewhere
->    else. 
-> 2) Boot upp the installer for Suse and erase the partitions on the
->    first physical disk (well, actually on the first hardware RAID unit) that
->    are not used as a PV, and install Suse on that area of the disk. 
-> 
-> Hopefully, the suse partitioner will not do anything stupid with my
-> PVs, my VG or my LV. It's probably best to create a new VG for the
-> operating system, and then mount the old LV from the old VG once the
-> OS is in place.
-> 
-> Any comments/experience on this kind of operation? 
+ Hi,
 
-I performed a similar procedure with SuSE 10.1 last week.
-The SuSE installer recognized all my LVM setups correctly.
-But I wanted to install even root and swap on LVM and only
-/boot on a tiny native partition. The SuSE installer
-disliked this by default and proposed to erase all the
-disk and to repartition it completely. But this was just
-a proposal. After I explicitly configured how to use
-my existing LVM configuration, the SuSE installer accepted
-this (with a warning about root on LVM) but it worked well.
+i have the following setup:
 
-So I think, the installer won't do any bad things without asking
-you. As I remember, this is true for 9.3, too. 
+/dev/md2 --RAID1 (2x250GB)
+/dev/md0 --RAID-5 (4x160GB)
 
-Apropos LVM: I suggest to use SuSE 10.1. With a SuSE 10.0 system
-I again run into problems with its 2.6.13-15.8 kernel.
-Under special conditions PVmove hung up. I had to reset/reboot and
-"pvmove --abort" to recover the data. I observed this with some
-SuSE 9.? last year, too.
+both md-devices are added to LVM (2)
+ 
+Library version:   1.02.03 (2006-02-08)
+Driver version:    4.3.0
 
-Dieter.
+There are 1 VG and 10 LV's created. VG00 and LV00-LV09
+Everything worked fine until i obviously did a mistake rezising the LV06.
+(I resized othe LV's without problem before but with LV06 i forgot something
+...)
+
+Now i moved all other LV's to /dev/md0 with pvmove -n ..., exept for LV06
+However i couldn't "lvremove" the LV06 (error: can't remove open lv or so)
+I wasn't also able to deactivate the lv nor the vg.
+
+So i tried to pvremove -ff the /dev/md2 PV (maybe the first big mistake)
+Then i did a pvcreate on /dev/md2 again.
+
+Now everything seems to be messed up:
+
+#pvdisplay
+  Couldn't find device with uuid 'faoJTZ-VDvh-Gqtd-V0jJ-qbMD-w8be-RvV4Dq'.
+  --- Physical volume ---
+  PV Name               unknown device
+  VG Name               vg00
+  PV Size               232,88 GB / not usable 0
+  Allocatable           yes
+  PE Size (KByte)       4096
+  Total PE              59618
+  Free PE               51938
+  Allocated PE          7680
+  PV UUID               faoJTZ-VDvh-Gqtd-V0jJ-qbMD-w8be-RvV4Dq
+
+  --- Physical volume ---
+  PV Name               /dev/md0
+  VG Name               vg00
+  PV Size               460,16 GB / not usable 0
+  Allocatable           yes
+  PE Size (KByte)       4096
+  Total PE              117800
+  Free PE               63272
+  Allocated PE          54528
+  PV UUID               eydC5O-MF3B-oysT-KvoA-pu1D-o54H-GpPmkL
+
+  --- NEW Physical volume ---
+  PV Name               /dev/md2
+  VG Name
+  PV Size               232,89 GB
+  Allocatable           NO
+  PE Size (KByte)       0
+  Total PE              0
+  Free PE               0
+  Allocated PE          0
+  PV UUID               L4624h-V1WS-AaXi-4leU-6QBD-9Cs6-4d3NBt
+
+
+The "unknown" device still contains the data of LV06. This data is not
+important so i just want consistency back.
+
+#lvremove vg00/lv06
+  Couldn't find device with uuid 'faoJTZ-VDvh-Gqtd-V0jJ-qbMD-w8be-RvV4Dq'.
+  Couldn't find all physical volumes for volume group vg00.
+  Couldn't find device with uuid 'faoJTZ-VDvh-Gqtd-V0jJ-qbMD-w8be-RvV4Dq'.
+  Couldn't find all physical volumes for volume group vg00.
+  Volume group "vg00" not found
+
+Also, my cryptsetup gives errors:
+ #/etc/init.d/cryptdisks start
+Starting crypto disks: clv00(starting)...
+Command failed: Es ist ein Block-Device notwendig (a block device is
+necessary)
+ clv01(starting)...
+Command failed: Es ist ein Block-Device notwendig
+ clv02(starting)...
+Command failed: Es ist ein Block-Device notwendig
+ clv04(starting)...
+Command failed: Es ist ein Block-Device notwendig
+ clv05(starting)...
+Command failed: Es ist ein Block-Device notwendig
+ clv07(starting)...
+Command failed: Es ist ein Block-Device notwendig
+ clv08(starting)...
+Command failed: Es ist ein Block-Device notwendig
+ clv09(starting)...
+Command failed: Es ist ein Block-Device notwendig
+ swap0(running) swap1(running).
+
+Any ideas what i can do now ?
+
+Thanks in advance,
