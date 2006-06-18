@@ -1,19 +1,26 @@
 Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
 	by int-mx1.corp.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
-	k5HIKbvp020688
-	for <linux-lvm@redhat.com>; Sat, 17 Jun 2006 14:20:37 -0400
-Received: from mailgw.aecom.yu.edu (mailgw.aecom.yu.edu [129.98.1.16])
+	k5I8t5S9011521
+	for <linux-lvm@redhat.com>; Sun, 18 Jun 2006 04:55:05 -0400
+Received: from ciao.gmane.org (main.gmane.org [80.91.229.2])
 	by mx1.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
-	k5HIKZMG014887
-	for <linux-lvm@redhat.com>; Sat, 17 Jun 2006 14:20:35 -0400
-Mime-Version: 1.0
-Message-Id: <a06230962c0b9f4072b54@[129.98.90.227]>
-In-Reply-To: <20060612100003.17AB22DF653D@mail.linbit.com>
-References: <20060612100003.17AB22DF653D@mail.linbit.com>
-Date: Sat, 17 Jun 2006 14:20:28 -0400
-From: Maurice Volaski <mvolaski@aecom.yu.edu>
-Subject: [linux-lvm] Re: Spontaneous access to the CDROM on two computers
- simultaneously
+	k5I8t3Xv004081
+	for <linux-lvm@redhat.com>; Sun, 18 Jun 2006 04:55:04 -0400
+Received: from root by ciao.gmane.org with local (Exim 4.43)
+	id 1Frt3e-0002CP-IK
+	for linux-lvm@redhat.com; Sun, 18 Jun 2006 10:55:02 +0200
+Received: from ip68-5-63-223.oc.oc.cox.net ([68.5.63.223])
+	by main.gmane.org with esmtp (Gmexim 0.1 (Debian))
+	id 1AlnuQ-0007hv-00
+	for <linux-lvm@redhat.com>; Sun, 18 Jun 2006 10:55:02 +0200
+Received: from mailinglists by ip68-5-63-223.oc.oc.cox.net with local (Gmexim
+	0.1 (Debian)) id 1AlnuQ-0007hv-00
+	for <linux-lvm@redhat.com>; Sun, 18 Jun 2006 10:55:02 +0200
+From: "Shaun" <mailinglists@unix-scripts.com>
+Date: Sun, 18 Jun 2006 01:51:56 -0700
+Message-ID: <e7347a$3te$1@sea.gmane.org>
+Sender: news <news@sea.gmane.org>
+Subject: [linux-lvm] snapshots and backups
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -24,57 +31,19 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: drbd-user@linbit.com
-Cc: gentoo-user@lists.gentoo.org, linux-kernel@vger.kernel.org, linux-lvm@redhat.com
+To: linux-lvm@redhat.com
 
-It happened again, but this time on just one of the two computers:
-
-[20770.844282] hda: tray open
-[20770.844288] end_request: I/O error, dev hda, sector 0
-[20770.844292] Buffer I/O error on device hda, logical block 0
-
-Since you think LVM may be misbehaving, I changed the filter on the 
-affected computer to read
-
-filter = [ "r|/dev/cdrom|", "r|/dev/hda|", "r|/dev/ide|" ]
-
-Ironically, that's on the computer that threw the error, so it could 
-be more evidence LVM has a problem if it is indeed the cause or 
-further evidence that it isn't involved.
-
-The kernel on this amd64-based computer is now 2.6.16.20. LVM is 
-version 2.02.05 (versions from Gentoo packages). Device mapper is 
-1.02.07 and udev is 090.) Since I'm shooting in the dark, cc'd to the 
-gentoo ml since this system is gentoo-based (2005.0 profile).
-
-
->/ 2006-06-12 01:06:30 -0400
->\ Maurice Volaski:
->>  Spontaneously and for no apparent reason, two computers displayed 
->>the following message in their logs several times at the same time:
->>
->  > [55419.446442] Buffer I/O error on device hda, logical block 0
->  > [55419.447381] hda: command error: status=0x51 { DriveReady 
->SeekComplete Error }
->>  [55419.447386] hda: command error: error=0x54 { AbortedCommand 
->>LastFailedSense=0x05 }
->>  [55419.447389] ide: failed opcode was: unknown
->>  [55419.447391] end_request: I/O error, dev hda, sector 0
->>
->...
->>  drbd could at least theoretically triggered this somehow.
->no.
->
->much more likely some program scanning ("discovering") devices.
->
->just a wild guess:
->man lvm.conf
->/filter
+I'm looking at using snapshots to take a full backup.  I've been search 
+around Google a bit and so far most of the how-to's I find are always 
+creating a snapshot, then mounting it, copying the data, unmounting it and 
+removing it.  My question is why are they doing this?  Is it because they 
+assume they only need data from one area of the drive or is there a better 
+reason for doing this?  I want to take a full backup and leave the snapshot 
+incase I need to restore it quickly.
 
 -- 
 
-Maurice Volaski, mvolaski@aecom.yu.edu
-Computing Support, Rose F. Kennedy Center
-Albert Einstein College of Medicine of Yeshiva University
+~Shaun 
