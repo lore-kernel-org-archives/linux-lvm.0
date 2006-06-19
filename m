@@ -1,20 +1,21 @@
-Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
+Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
 	by int-mx1.corp.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
-	k5LMPHtF031372
-	for <linux-lvm@redhat.com>; Wed, 21 Jun 2006 18:25:17 -0400
-Received: from smtp1.versatel.nl (smtp1.versatel.nl [62.58.50.88])
-	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id k5LMPBon016663
-	for <linux-lvm@redhat.com>; Wed, 21 Jun 2006 18:25:11 -0400
-From: Aad Rijnberg <Aad.Rijnberg@zonnet.nl>
-Subject: Re: [linux-lvm] Mounting two logical volumes to the same mount point
-Date: Thu, 22 Jun 2006 00:24:53 +0200
-References: <200606202107.29948.Aad.Rijnberg@zonnet.nl>
-	<20060621082434.GA4570@redhat.com>
-In-Reply-To: <20060621082434.GA4570@redhat.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+	k5J6XtYH003086
+	for <linux-lvm@redhat.com>; Mon, 19 Jun 2006 02:33:55 -0400
+Received: from mail.keya.com.tw (keya.com.tw [210.58.182.2])
+	by mx1.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
+	k5J6XpXo015280
+	for <linux-lvm@redhat.com>; Mon, 19 Jun 2006 02:33:51 -0400
+Received: from snow.keya.com.tw (snow [192.168.0.9])
+	by mail.keya.com.tw (Postfix) with ESMTP id 7C3B91A8042
+	for <linux-lvm@redhat.com>; Mon, 19 Jun 2006 14:33:40 +0800 (CST)
+Date: Mon, 19 Jun 2006 14:33:40 +0800
+From: Charles Jie <chjie@keya.com.tw>
+Message-ID: <20060619063340.GA1759@snow.keya.com.tw>
+Mime-Version: 1.0
 Content-Disposition: inline
-Message-Id: <200606220024.53715.Aad.Rijnberg@zonnet.nl>
+Content-Transfer-Encoding: 8bit
+Subject: [linux-lvm] Why snapshots are designed as independent of each other?
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -25,56 +26,63 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="utf-8"
 To: linux-lvm@redhat.com
 
-On Wednesday 21 June 2006 10:24, Heinz Mauelshagen wrote:
-> On Tue, Jun 20, 2006 at 09:07:29PM +0200, Aad Rijnberg wrote:
-> > Hi,
-> >
-> > my logical volume that contains /usr appears to be too small. I already
-> > removed some applications that I did not need, but it is still on the
-> > edge. Now that there are a lot of updates, I get the complaint of yum
-> > that there is not enough free space on /usr.
-> >
-> > I just bought an additional harddisk which I also needed for other
-> > purposes, and would like to reserve part of this new drive for extra LVM
-> > space. I have just created a new volume group (VolGroup01) on the new
-> > drive, and a logical volume (LogVol01) inside that physical volume group.
-> >
-> > Can I mount both /dev/mapper/VolGroup00-LogVol01 (which contains the /usr
-> > data on the "old" drive) and /dev/mapper/VolGroup01-LogVol01 to the /usr
-> > mount point? Or can only one logical volume be mounted to a mount point?
->
-> Aad,
->
-> you can only mount one device with a filesystem on the same mountpoint.
->
-> What needs doing in order to grow your logical volume containing the usr
-> filesystem, is to *add* the second drive to the existing volume group on
-> the first one and grow usr afterwards (LV and FS).
->
-> Carry out the follwoing steps (or use system-config-lvm):
->
-> lvremove VolGroup01/LogVol01
-> vgremove VolGroup01
-> vgextend VolGroup00 /dev/sdb # or whatever the drive is
->
-> # replace 5G with the capacity you want to add
-> lvextend -L+5G VolGroup00/LogVol01
->
-> How to grow the FS depends on the type; for ext2/3 you'ld run:
->
-> ext2online /dev/VolGroup00/LogVol00
->
-Hi Heinz and Georg,
+Hi,
 
-thanks for the clear descriptions.
+(With Mandriva 2006.0 and lvm2-2.01.09-1mdk)
 
-I performed the operations with the Logical Volume Management tool provided 
-with Fedora Core 5 (system-config-lvm), which has an intuitive GUI and now 
-my /usr "partition" has grown by 5G. It's as easy as ... ;-)
+In my recent evaluation, I found that lvm2 snapshots made on the same
+original volume will all be updated the same amount of data when we make
+change to the original volume.
 
-Thanks for the support!
+That means they are made completely independent of each other, only
+dependent on the original volume. Such design would cause serious
+performance impact if we increase the number of snapshots of a volume
+for the purpose of backup.
 
-Aad
+    e.g. If we create one snapshot every hour and remove the old
+    snapshots reaching 24-hour old, we'll keep about 24 snapshots and
+    every write to the original volume will make 24 copies to the
+    snapshots before the write. It would be a big burden to the use of
+    the original volume.
+
+Could anybody tell me why it's designed this way?
+
+* My thinking:
+
+    . A reasonable design should be that a snapshot depends on one
+      another according to their creation time. The COW work would
+      reduce to mininum, only once for the whole related snapshots set
+      based on the same original volume.
+
+    . Deleting any snapshot among the set is still very simple and
+      efficient - move its blocks to the next older snapshot (indeed,
+      only move those blocks (identified by some ID) not existent in the
+      destination snapshot, drop those blocks which exist.)
+
+    . In such design, we don't need to reserve too much space for a big
+      number of snapshots - they totally need only about the same space
+      as the original volume.
+
+    * Further, conventionally snapshot is called COW, copy-on-write. But
+      in my point of view, it's inefficient if it's really implemented
+      this way. It takes one read and two writes. With the spirit of
+      the virtualization of logical volume management, making one write
+      is enough (which is efficient). What we need to do is put the old
+      block under the management of the newest snapshot, and make a new
+      block (with new content) for the original volume.
+
+I'm newbie to this mailing list. Please feel free to comment, whether
+I'm right or wrong. Thanks.
+
+best regards,
+charlie
+
+--
+===============================================================
+Charles Jie (紀春興)               Keya Technologies (開雅科技)
+(O1) +886 2 8692 6060 ext 549      Skype: charles.jie
+(O2) +886 2 2938 2262              (Mobile) 0968 357 746
+===============================================================
