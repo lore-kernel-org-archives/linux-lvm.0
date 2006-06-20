@@ -1,19 +1,16 @@
-Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
+Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
 	by int-mx1.corp.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
-	k5KKEL8A007762
-	for <linux-lvm@redhat.com>; Tue, 20 Jun 2006 16:14:21 -0400
-Received: from mail.gmx.net (mail.gmx.de [213.165.64.21])
-	by mx1.redhat.com (8.12.11.20060308/8.12.11) with SMTP id
-	k5KKEIW9025560
-	for <linux-lvm@redhat.com>; Tue, 20 Jun 2006 16:14:19 -0400
-Date: Tue, 20 Jun 2006 22:14:11 +0200
-From: Georg Klein <georg.klein@gmx.info>
-Subject: Re: [linux-lvm] Mounting two logical volumes to the same mount point
-Message-Id: <20060620221411.6ca547c8.georg.klein@gmx.info>
-In-Reply-To: <200606202107.29948.Aad.Rijnberg@zonnet.nl>
-References: <200606202107.29948.Aad.Rijnberg@zonnet.nl>
-Mime-Version: 1.0
+	k5KKUxB8012284
+	for <linux-lvm@redhat.com>; Tue, 20 Jun 2006 16:30:59 -0400
+Received: from will.fastenal.com (will.fastenal.com [205.243.112.23])
+	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id k5KKUr0o029807
+	for <linux-lvm@redhat.com>; Tue, 20 Jun 2006 16:30:53 -0400
+Message-ID: <44985AF7.20704@fastenal.com>
+Date: Tue, 20 Jun 2006 15:30:47 -0500
+From: Kelly Sauke <ksauke@fastenal.com>
+MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] LVM2 Error when creating snapshot
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -27,41 +24,60 @@ List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@redhat.com
 
-Hi,
-
-On Tue, 20 Jun 2006 21:07:29 +0200
-Aad Rijnberg <Aad.Rijnberg@zonnet.nl> wrote:
-
-> Hi,
-> 
-> my logical volume that contains /usr appears to be too small. I
-> already removed some applications that I did not need, but it is
-> still on the edge. Now that there are a lot of updates, I get the
-> complaint of yum that there is not enough free space on /usr.
-
-is it a own lv or is it just a directory on a lv?
-
-> 
-> I just bought an additional harddisk which I also needed for other
-> purposes, and would like to reserve part of this new drive for extra
-> LVM space. I have just created a new volume group (VolGroup01) on the
-> new drive, and a logical volume (LogVol01) inside that physical
-> volume group.
-
-Extend the logical volume /usr is on. Partition your new hard disk,
-make a partition a physical volume (pvcreate), extend your volume
-group (vgextend) , extend your logical volume (lvextend) and resize the
-file system. Done. That's what LVM is good for ;-)
-
-> 
-> Can I mount both /dev/mapper/VolGroup00-LogVol01 (which contains
-> the /usr data on the "old" drive) and /dev/mapper/VolGroup01-LogVol01
-> to the /usr mount point? Or can only one logical volume be mounted to
-> a mount point?
-
-just one device to a mount point. However, xou can mount the new lv to
-a subdirectory of /usr - but the better (and LVM compliant) way is to
-extend your existing lv.
 
 
-Georg
+
+I get this error whenever I create a bunch of snapshots.  I have 36 filesystems
+in my vg.  If I walk through them creating a snapshot on each one, the last 4
+fail.  They fail with the below error.  I did the order backwards and got the
+same results so its not dependant on the lv I'm snapshotting, it appears to be
+dependant upon the number of snapshots I'm creating.
+
+
+/usr/sbin/lvcreate -L 1G -p r -s -n save_perpet2-20060619161740
+/dev/svg/save_perpet2lv
+  device-mapper: reload ioctl failed: Cannot allocate memory
+  Failed to suspend origin save_perpet2lv
+
+
+
+It creates the snapshot devices in /dev/mapper.
+
+ls -l /dev/mapper/svg-save_perpet2--20060619161740*
+brw-rw----  1 root disk 253, 159 Jun 20 15:19
+/dev/mapper/svg-save_perpet2--20060619161740
+brw-rw----  1 root disk 253, 158 Jun 20 15:19
+/dev/mapper/svg-save_perpet2--20060619161740-cow
+
+but it doesn't create any devices in /dev/svg.
+
+
+It also is available to query with lvdisplay.
+
+lvdisplay /dev/svg/save_perpet2-20060619161740
+  --- Logical volume ---
+  LV Name                /dev/svg/save_perpet2-20060619161740
+  VG Name                svg
+  LV UUID                oP2nDj-aa7p-dS3Q-4VdH-gk8r-x5C8-Akg78K
+  LV Write Access        read/write
+  LV Status              available
+  # open                 0
+  LV Size                1.00 GB
+  Current LE             256
+  Segments               1
+  Allocation             inherit
+  Read ahead sectors     0
+  Block device           253:159
+
+I can't do anything with that volume other than remove it though.
+
+
+
+I'm running RHEL 4 U 3 with the beta hugemem kernel installed.  I installed the
+beta kernel as the request of redhat support.
+
+device-mapper-1.02.02-3.0.RHEL4
+udev-039-10.12.EL4
+kernel-hugemem-2.6.9-39.EL
+
+Any insight would be appreciated.
