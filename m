@@ -1,25 +1,23 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
 	by int-mx1.corp.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
-	k5L8gaDj016123
-	for <linux-lvm@redhat.com>; Wed, 21 Jun 2006 04:42:36 -0400
+	k5LAqexE010562
+	for <linux-lvm@redhat.com>; Wed, 21 Jun 2006 06:52:40 -0400
 Received: from conterra.de (vvv.conterra.de [212.124.44.162])
-	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id k5L8gTLD011125
-	for <linux-lvm@redhat.com>; Wed, 21 Jun 2006 04:42:30 -0400
+	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id k5LAqSqD014421
+	for <linux-lvm@redhat.com>; Wed, 21 Jun 2006 06:52:34 -0400
 Received: from localhost (unknown [127.0.0.1])
-	by conterra.de (-) with ESMTP id 7DBFD1F4045
-	for <linux-lvm@redhat.com>; Wed, 21 Jun 2006 10:42:19 +0200 (CEST)
+	by conterra.de (-) with ESMTP id 3020F1F404E
+	for <linux-lvm@redhat.com>; Wed, 21 Jun 2006 12:52:22 +0200 (CEST)
 Received: from conterra.de ([127.0.0.1])
 	by localhost (vvv.conterra.de [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id 27795-02 for <linux-lvm@redhat.com>;
-	Wed, 21 Jun 2006 10:42:13 +0200 (CEST)
-Message-ID: <44990663.60400@conterra.de>
-Date: Wed, 21 Jun 2006 10:42:11 +0200
-From: =?UTF-8?B?RGlldGVyIFN0w7xrZW4=?= <stueken@conterra.de>
+	with ESMTP id 32438-01 for <linux-lvm@redhat.com>;
+	Wed, 21 Jun 2006 12:52:10 +0200 (CEST)
+Message-ID: <449924D9.9090007@conterra.de>
+Date: Wed, 21 Jun 2006 12:52:09 +0200
+From: =?ISO-8859-1?Q?Dieter_St=FCken?= <stueken@conterra.de>
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] vgchange doesn't activate the  logical volume
-References: <004001c69509$fa226440$713a14ac@iai.co.il>
-In-Reply-To: <004001c69509$fa226440$713a14ac@iai.co.il>
 Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] pvdisplay -m
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -33,35 +31,39 @@ List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-Daniel Loney wrote:
-> suse01:~ # vgdisplay -v vg02| more
->     Using volume group(s) on command line
->     Finding volume group "vg02"
->   /dev/sda: read failed after 0 of 4096 at 0: Input/output error
+is "pvdisplay -m" still unimplemented?
 
-looks like a bad sector/read error on /dev/sda.
-You may verify this either by a simple
+After I turned to a hardware raid5 system my PVs become
+quite HUGE (about 2-4 TB  each!). This huge PVs easily
+get fragmented. If I want to pvmove some LV it often does not
+work by default. The huge PV has space to hold the additional
+LV, but it is not contiguous, and "--alloc anywhere" won't
+split a contiguous chunk to fit into smaller gaps. (and the
+algorithm to do so is not trivial, even if it sounds easy).
 
-dd if=/dev/sda of=/dev/null bs=512 iflag=direct
+So I frequently end up with a desk calculator to analyze my
+/etc/lvm/backup/ metadata to extract a list of occupied and
+free ranges on my PV to express pvmove commands with explicit
+PE ranges.
 
-to find the bad sectors number. Or you may run 
-"badblocks -s /dev/sda", which does roughly the same.
+To make this easier, I would propose the following extensions:
 
-I strongly suggest to use smartctl to monitor the state of your
-disk (see http://smartmontools.sourceforge.net). Most problems
-show up here some time before your disk finally dies.
+Some command/option to print out the layout of a PV including
+the free gaps.
 
-Try "smartctl -d ata -a /dev/sda" to display the disks error log.
-If you did not use it before, you might have to enable it by:
-"smartctl -d ata -s on /dev/sda".
+Extend the --units option to display LE counts. (one could use "e",
+but I don't know, how long it takes until we need to express sizes
+as exabytes :-) 
 
-All disks have spare sectors they can use, if some sector gets broken
-But the sector is not automatically replaced, as most people believe.
-This does not happen until some new data is written to that sector.
-If your bad sector occurs within the LVM metadata description of /dev/sda
-you may recover it by using "vgcfgrestore" to repair the broken LVM header.
+Express LE ranges by a "+" like /dev/sda:1000+500 as a shortcut
+for /dev/sda:1000-1499.
 
-I did not use vgcfgrestore before, so I can't describe the necessary steps
-in detail. May be someone else can help here...
+btw: is there a more detailed description about how pvmove exactly
+behaves when giving multiple source and/or target ranges?
+--> can I explicitly express the splitting of source chunks into
+target fragments by a single pvmove command?
+
+If someone agrees that this is useful, I may start trying to
+implement this and propose some patches.
 
 Dieter.
