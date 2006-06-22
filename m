@@ -1,26 +1,27 @@
-Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
+Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
 	by int-mx1.corp.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
-	k5K0WCMQ026273
-	for <linux-lvm@redhat.com>; Mon, 19 Jun 2006 20:32:12 -0400
-Received: from ranger.electric.net (ranger.electric.net [216.129.90.29])
-	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id k5K0VvUI011263
-	for <linux-lvm@redhat.com>; Mon, 19 Jun 2006 20:32:02 -0400
-Received: from root by ranger.electric.net with emc1-ok (Exim 4.60)
-	(envelope-from <avasquez@storageengine.com>) id 1FsU9r-0006x9-Vo
-	for linux-lvm@redhat.com; Mon, 19 Jun 2006 17:31:55 -0700
-Received: from [65.90.203.39] (helo=ajvasquez)
-	by ranger.electric.net with esmtpa (Exim 4.60)
-	(envelope-from <avasquez@storageengine.com>) id 1FsU9r-0006u9-UK
-	for linux-lvm@redhat.com; Mon, 19 Jun 2006 17:31:55 -0700
-From: <avasquez@storageengine.com>
-Date: Mon, 19 Jun 2006 20:31:45 -0400
-Message-ID: <000001c69400$ecf507f0$4800c80a@ajvasquez>
-MIME-Version: 1.0
-Content-Type: multipart/alternative;
-	boundary="----=_NextPart_000_0001_01C693DF.65E367F0"
-Subject: [linux-lvm] lvm2 rpm
-Reply-To: avasquez@storageengine.com,
-	LVM general discussion and development <linux-lvm@redhat.com>
+	k5M07vSK016270
+	for <linux-lvm@redhat.com>; Wed, 21 Jun 2006 20:07:57 -0400
+Received: from linux.interlinx.bc.ca (linux.interlinx.bc.ca [66.11.173.224])
+	by mx1.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
+	k5M07t8k030521
+	for <linux-lvm@redhat.com>; Wed, 21 Jun 2006 20:07:56 -0400
+Received: from pc (pc.ilinx [10.75.22.1])
+	(using TLSv1 with cipher RC4-MD5 (128/128 bits))
+	(No client certificate requested)
+	by linux.interlinx.bc.ca (Postfix) with ESMTP id 5B022E1C31
+	for <linux-lvm@redhat.com>; Wed, 21 Jun 2006 20:07:54 -0400 (EDT)
+Subject: Re: [linux-lvm] LVM2 Error when creating snapshot
+From: "Brian J. Murrell" <brian@interlinx.bc.ca>
+In-Reply-To: <44985AF7.20704@fastenal.com>
+References: <44985AF7.20704@fastenal.com>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature";
+	boundary="=-Z9+OrGKxpclwyThztUcE"
+Date: Wed, 21 Jun 2006 20:07:51 -0400
+Message-Id: <1150934873.32034.107.camel@pc>
+Mime-Version: 1.0
+Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -32,191 +33,55 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 List-Id: <linux-lvm.redhat.com>
 To: linux-lvm@redhat.com
 
-This is a multi-part message in MIME format.
 
-------=_NextPart_000_0001_01C693DF.65E367F0
-Content-Type: text/plain;
-	charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-
-Hello every one,
- 
- 
-Is there a new lvm2 rpm that supports mirroring of disks?
- 
-I am working with a system that's running RedHat EL 4 update 3, kernel
-level 2.6.9-34.ELsmp. 
-I have tried using the command lvcreate to set up a mirror between two
-Logical volumes, but every time I get an error indicating that "adding
-mirror images is not supported yet".
- 
-Thanks for your help.
-AJ
- 
- 
-
-------=_NextPart_000_0001_01C693DF.65E367F0
-Content-Type: text/html;
-	charset="us-ascii"
+--=-Z9+OrGKxpclwyThztUcE
+Content-Type: text/plain
 Content-Transfer-Encoding: quoted-printable
 
-<html xmlns:o=3D"urn:schemas-microsoft-com:office:office" =
-xmlns:w=3D"urn:schemas-microsoft-com:office:word" =
-xmlns=3D"http://www.w3.org/TR/REC-html40">
+On Tue, 2006-06-20 at 15:30 -0500, Kelly Sauke wrote:
+>=20
+>=20
+> I get this error whenever I create a bunch of snapshots.  I have 36 files=
+ystems
+> in my vg.  If I walk through them creating a snapshot on each one, the la=
+st 4
+> fail.  They fail with the below error.  I did the order backwards and got=
+ the
+> same results so its not dependant on the lv I'm snapshotting, it appears =
+to be
+> dependant upon the number of snapshots I'm creating.
+>=20
+>=20
+> /usr/sbin/lvcreate -L 1G -p r -s -n save_perpet2-20060619161740
+> /dev/svg/save_perpet2lv
+>   device-mapper: reload ioctl failed: Cannot allocate memory
 
-<head>
-<META HTTP-EQUIV=3D"Content-Type" CONTENT=3D"text/html; =
-charset=3Dus-ascii">
+Sadly, you are getting about as much response as I got to both a posting
+here and a bug filed with redhat about this issue.
 
+This appears to be a "mis-use" of a particular kernel memory allocation
+function that is used to reallocate a pool until it reaches the maximum
+size that that particular function is capable of allocating.  I don't
+recall the details at the moment however.  The bug in redhat's bugzilla
+has a pretty good accounting IIRC.
 
-<meta name=3DProgId content=3DWord.Document>
-<meta name=3DGenerator content=3D"Microsoft Word 10">
-<meta name=3DOriginator content=3D"Microsoft Word 10">
-<link rel=3DFile-List href=3D"cid:filelist.xml@01C693DF.61664440">
-<!--[if gte mso 9]><xml>
- <o:OfficeDocumentSettings>
-  <o:DoNotRelyOnCSS/>
- </o:OfficeDocumentSettings>
-</xml><![endif]--><!--[if gte mso 9]><xml>
- <w:WordDocument>
-  <w:SpellingState>Clean</w:SpellingState>
-  <w:GrammarState>Clean</w:GrammarState>
-  <w:DocumentKind>DocumentEmail</w:DocumentKind>
-  <w:EnvelopeVis/>
-  <w:Compatibility>
-   <w:BreakWrappedTables/>
-   <w:SnapToGridInCell/>
-   <w:WrapTextWithPunct/>
-   <w:UseAsianBreakRules/>
-  </w:Compatibility>
-  <w:BrowserLevel>MicrosoftInternetExplorer4</w:BrowserLevel>
- </w:WordDocument>
-</xml><![endif]-->
-<style>
-<!--
- /* Style Definitions */
- p.MsoNormal, li.MsoNormal, div.MsoNormal
-	{mso-style-parent:"";
-	margin:0in;
-	margin-bottom:.0001pt;
-	mso-pagination:widow-orphan;
-	font-size:12.0pt;
-	font-family:"Times New Roman";
-	mso-fareast-font-family:"Times New Roman";}
-a:link, span.MsoHyperlink
-	{color:blue;
-	text-decoration:underline;
-	text-underline:single;}
-a:visited, span.MsoHyperlinkFollowed
-	{color:purple;
-	text-decoration:underline;
-	text-underline:single;}
-span.EmailStyle17
-	{mso-style-type:personal-compose;
-	mso-style-noshow:yes;
-	mso-ansi-font-size:10.0pt;
-	mso-bidi-font-size:10.0pt;
-	font-family:Arial;
-	mso-ascii-font-family:Arial;
-	mso-hansi-font-family:Arial;
-	mso-bidi-font-family:Arial;
-	color:windowtext;}
-span.SpellE
-	{mso-style-name:"";
-	mso-spl-e:yes;}
-@page Section1
-	{size:8.5in 11.0in;
-	margin:1.0in 1.25in 1.0in 1.25in;
-	mso-header-margin:.5in;
-	mso-footer-margin:.5in;
-	mso-paper-source:0;}
-div.Section1
-	{page:Section1;}
--->
-</style>
-<!--[if gte mso 10]>
-<style>
- /* Style Definitions */=20
- table.MsoNormalTable
-	{mso-style-name:"Table Normal";
-	mso-tstyle-rowband-size:0;
-	mso-tstyle-colband-size:0;
-	mso-style-noshow:yes;
-	mso-style-parent:"";
-	mso-padding-alt:0in 5.4pt 0in 5.4pt;
-	mso-para-margin:0in;
-	mso-para-margin-bottom:.0001pt;
-	mso-pagination:widow-orphan;
-	font-size:10.0pt;
-	font-family:"Times New Roman";}
-</style>
-<![endif]-->
-</head>
+b.
 
-<body lang=3DEN-US link=3Dblue vlink=3Dpurple =
-style=3D'tab-interval:.5in'>
+--=20
+My other computer is your Microsoft Windows server.
 
-<div class=3DSection1>
+Brian J. Murrell
 
-<p class=3DMsoNormal><font size=3D2 face=3DArial><span =
-style=3D'font-size:10.0pt;
-font-family:Arial'>Hello every one,<o:p></o:p></span></font></p>
+--=-Z9+OrGKxpclwyThztUcE
+Content-Type: application/pgp-signature; name=signature.asc
+Content-Description: This is a digitally signed message part
 
-<p class=3DMsoNormal><font size=3D2 face=3DArial><span =
-style=3D'font-size:10.0pt;
-font-family:Arial'><o:p>&nbsp;</o:p></span></font></p>
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.2.2 (GNU/Linux)
 
-<p class=3DMsoNormal><font size=3D2 face=3DArial><span =
-style=3D'font-size:10.0pt;
-font-family:Arial'><o:p>&nbsp;</o:p></span></font></p>
+iD8DBQBEmd9Xl3EQlGLyuXARAp3XAJ9NvN6sFO1CXbIne/fGHB48cVUcZACfYMU8
+36hAJE9MErO6tfYvkuBLXww=
+=HN7g
+-----END PGP SIGNATURE-----
 
-<p class=3DMsoNormal><font size=3D2 face=3DArial><span =
-style=3D'font-size:10.0pt;
-font-family:Arial'>Is there a new lvm2 rpm that supports mirroring of =
-disks?<o:p></o:p></span></font></p>
-
-<p class=3DMsoNormal><font size=3D2 face=3DArial><span =
-style=3D'font-size:10.0pt;
-font-family:Arial'><o:p>&nbsp;</o:p></span></font></p>
-
-<p class=3DMsoNormal><font size=3D2 face=3DArial><span =
-style=3D'font-size:10.0pt;
-font-family:Arial'>I am working with a system that&#8217;s running =
-RedHat EL 4
-update 3, kernel level 2.6.9-34.ELsmp. <o:p></o:p></span></font></p>
-
-<p class=3DMsoNormal><font size=3D2 face=3DArial><span =
-style=3D'font-size:10.0pt;
-font-family:Arial'>I have tried using the command lvcreate to set up a =
-mirror
-between two Logical volumes, but every time I get an error indicating =
-that &#8220;adding
-mirror images is not supported yet&#8221;.<o:p></o:p></span></font></p>
-
-<p class=3DMsoNormal><font size=3D2 face=3DArial><span =
-style=3D'font-size:10.0pt;
-font-family:Arial'><o:p>&nbsp;</o:p></span></font></p>
-
-<p class=3DMsoNormal><font size=3D2 face=3DArial><span =
-style=3D'font-size:10.0pt;
-font-family:Arial'>Thanks for your help.<o:p></o:p></span></font></p>
-
-<p class=3DMsoNormal><font size=3D2 face=3DArial><span =
-style=3D'font-size:10.0pt;
-font-family:Arial'>AJ<o:p></o:p></span></font></p>
-
-<p class=3DMsoNormal><font size=3D2 face=3DArial><span =
-style=3D'font-size:10.0pt;
-font-family:Arial'><o:p>&nbsp;</o:p></span></font></p>
-
-<p class=3DMsoNormal><font size=3D2 face=3DArial><span =
-style=3D'font-size:10.0pt;
-font-family:Arial'><o:p>&nbsp;</o:p></span></font></p>
-
-</div>
-
-</body>
-
-</html>
-
-------=_NextPart_000_0001_01C693DF.65E367F0--
+--=-Z9+OrGKxpclwyThztUcE--
