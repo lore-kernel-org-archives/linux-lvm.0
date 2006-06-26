@@ -1,27 +1,23 @@
-Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
+Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
 	by int-mx1.corp.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
-	k5OIC1oZ023456
-	for <linux-lvm@redhat.com>; Sat, 24 Jun 2006 14:12:01 -0400
-Received: from radio.skycom.se (mailut.nordiq.net [212.217.248.11])
-	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id k5OIBsOP018371
-	for <linux-lvm@redhat.com>; Sat, 24 Jun 2006 14:11:54 -0400
-Received: from localhost (localhost [127.0.0.1])
-	by radio.skycom.se (Postfix) with ESMTP id 0C40D6036184
-	for <linux-lvm@redhat.com>; Sat, 24 Jun 2006 20:11:48 +0200 (CEST)
-Received: from radio.skycom.se ([127.0.0.1])
-	by localhost (radio [127.0.0.1]) (amavisd-new, port 10024) with ESMTP
-	id 31537-02 for <linux-lvm@redhat.com>;
-	Sat, 24 Jun 2006 20:11:47 +0200 (CEST)
-Received: from antec (53dbd911.umea.cust.skycom.se [83.219.217.17])
-	by radio.skycom.se (Postfix) with SMTP id 21445603617B
-	for <linux-lvm@redhat.com>; Sat, 24 Jun 2006 20:11:43 +0200 (CEST)
-Message-ID: <000a01c697b9$aa6ef460$11d9db53@antec>
-From: "Fredrik Skog" <fredrik.skog@rodang.se>
-Date: Sat, 24 Jun 2006 20:11:47 +0200
+	k5Q2WnP2029814
+	for <linux-lvm@redhat.com>; Sun, 25 Jun 2006 22:32:49 -0400
+Received: from nf-out-0910.google.com (nf-out-0910.google.com [64.233.182.187])
+	by mx1.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
+	k5Q2WlPa011458
+	for <linux-lvm@redhat.com>; Sun, 25 Jun 2006 22:32:48 -0400
+Received: by nf-out-0910.google.com with SMTP id m19so524403nfc
+	for <linux-lvm@redhat.com>; Sun, 25 Jun 2006 19:32:47 -0700 (PDT)
+Message-ID: <9fcb471e0606251932ge7393b1s556d4361a11019c4@mail.gmail.com>
+Date: Sun, 25 Jun 2006 22:32:46 -0400
+From: "Argus Array" <argusarray2@gmail.com>
+In-Reply-To: <9fcb471e0606222354i6460bd02jf75fac7caebb3f2b@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/alternative;
-	boundary="----=_NextPart_000_0007_01C697CA.6BB6AE00"
-Subject: [linux-lvm] cant find lvm volumes at boot
+Content-Type: multipart/alternative; 
+	boundary="----=_Part_51105_12420031.1151289166598"
+References: <9fcb471e0606222346yf25f198ve73e877d24db257c@mail.gmail.com>
+	<9fcb471e0606222354i6460bd02jf75fac7caebb3f2b@mail.gmail.com>
+Subject: [linux-lvm] Re: newbie problem with LVM
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -34,387 +30,207 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 List-Id: <linux-lvm.redhat.com>
 To: linux-lvm@redhat.com
 
-This is a multi-part message in MIME format.
+------=_Part_51105_12420031.1151289166598
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
 
-------=_NextPart_000_0007_01C697CA.6BB6AE00
-Content-Type: text/plain;
-	charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+I've been digging around a bit and I found that /etc/lvm/archive has some
+information that might be useful for restoring my LVM data.
 
-hi all,
+I've attached the latest VGforMythTV_00008.vg data (before the versions for
+the new ones that I created).
 
-I've been running LVM2 for a while and never had any problems with it, =
-so my knowledge is a bit limited because i've never had to fiddle with =
-it.
-It started with me wanting to change my hda drive cuz the old one was =
-making alot of noice.
-It's partitioning sheme is as follows
+I read on this blog:
+http://codeworks.gnomedia.com/archives/2005/general/lvm_recovery/
 
-  /dev/hda1  [      101.94 MB]    /boot
-  /dev/hda2  [        1.87 GB]    /
-  /dev/hda3  [       23.00 GB]    LVM physical volume
-  /dev/hda4  [      533.90 MB]    SWAP
+that this information could be used to recreate my physical volumes using a
+command like this:
+[mythtv@localhost archive]# /usr/sbin/pvcreate -u
+J3hQY6-8yfK-pMPS-dGhN-WFig-ENnC-LSR2nn /dev/hdb1
+  Can't initialize physical volume "/dev/hdb1" of volume group "VGforMythTV"
+without -ff
 
-  --- Physical volume ---
-  PV Name               /dev/hda3
-  VG Name               vgsys
-  PV Size               23.00 GB / not usable 0  =20
-  Allocatable           yes (but full)
-  PE Size (KByte)       4096
-  Total PE              5888
-  Free PE               0
-  Allocated PE          5888
-  PV UUID               SegkSC-Thbb-DqRg-LSoA-tN0F-WmFp-K7CPCO
+I am hesitant to use the "-ff" (force) command without knowing what the
+impact will be.  Any advice?
 
-  --- Logical volume ---
-  LV Name                /dev/vgsys/usr
-  VG Name                vgsys
-  LV UUID                cYrDRH-neMm-PwCZ-2Dlo-njJm-mBHs-NPZlu4
-  LV Write Access        read/write
-  LV Status              available
-  # open                 1
-  LV Size                7.00 GB
-  Current LE             1792
-  Segments               1
-  Allocation             inherit
-  Read ahead sectors     0
-  Block device           254:0
-  =20
-  --- Logical volume ---
-  LV Name                /dev/vgsys/home
-  VG Name                vgsys
-  LV UUID                OX1Pkm-p6Vc-q6SB-9nxm-PRMl-TM1z-h5bcIc
-  LV Write Access        read/write
-  LV Status              available
-  # open                 1
-  LV Size                4.00 GB
-  Current LE             1024
-  Segments               1
-  Allocation             inherit
-  Read ahead sectors     0
-  Block device           254:1
-  =20
-  --- Logical volume ---
-  LV Name                /dev/vgsys/opt
-  VG Name                vgsys
-  LV UUID                GlQ5wV-ZzUu-51LW-okn6-82UV-9SFX-weiScV
-  LV Write Access        read/write
-  LV Status              available
-  # open                 1
-  LV Size                5.00 GB
-  Current LE             1280
-  Segments               1
-  Allocation             inherit
-  Read ahead sectors     0
-  Block device           254:2
-  =20
-  --- Logical volume ---
-  LV Name                /dev/vgsys/var
-  VG Name                vgsys
-  LV UUID                1VvzOf-DLz1-GMp5-Xj24-r9Mp-yaOy-0t2yLw
-  LV Write Access        read/write
-  LV Status              available
-  # open                 1
-  LV Size                5.00 GB
-  Current LE             1280
-  Segments               1
-  Allocation             inherit
-  Read ahead sectors     0
-  Block device           254:3
-  =20
-  --- Logical volume ---
-  LV Name                /dev/vgsys/tmp
-  VG Name                vgsys
-  LV UUID                BAIl2N-5gVg-RzUZ-3IqL-L0D5-JiAk-bO2smA
-  LV Write Access        read/write
-  LV Status              available
-  # open                 1
-  LV Size                2.00 GB
-  Current LE             512
-  Segments               1
-  Allocation             inherit
-  Read ahead sectors     0
-  Block device           254:4
+Thanks,
 
-Then i added a new 80GB drive at hdc and run
+-Argus
 
-dd if=3D/dev/hda of=3D/dev/hdc
+VGforMythTV_00008.vg
+---------------------------------------
 
-then halt -h
+# Generated by LVM2: Mon Apr 11 22:59:52 2005
 
-changed disks and booted with the new 80GB disk as hda...
-now the strange thing...it cant find the logical volumes at boot, so i =
-end up with a very crippled system. if i list the lvm volumes i see that =
-they are there, but inactive at boot. i can reactivate them and mount =
-them manually...but then at reboot the same thing again.
-what have happened?
-I even tried to change back to the old drive, and i was certain it would =
-boot right up...but the exact same thing occured. GAAAH! How can the =
-source drive be altered? I don't get it.
-Any ideas?
+contents = "Text Format Volume Group"
+version = 1
 
-thanks!
+description = "Created *before* executing '/usr/sbin/lvextend --size +160G
+/dev/VGforMythTV/video'"
 
-/Fredrik
+creation_host = "localhost.localdomain" # Linux localhost.localdomain
+2.6.10-1.737_FC3 #1 Mon Jan 10 13:50:10 EST 20
+05 i686
+creation_time = 1113274792      # Mon Apr 11 22:59:52 2005
+
+VGforMythTV {
+        id = "YKYYOd-PcmN-lGub-gllT-6d0j-IyGp-BweNJY"
+        seqno = 3
+        status = ["RESIZEABLE", "READ", "WRITE"]
+        extent_size = 131072            # 64 Megabytes
+        max_lv = 0
+        max_pv = 0
+
+        physical_volumes {
+
+                pv0 {
+                        id = "J3hQY6-8yfK-pMPS-dGhN-WFig-ENnC-LSR2nn"
+                        device = "/dev/hdb"     # Hint only
+
+                        status = ["ALLOCATABLE"]
+                        pe_start = 384
+                        pe_count = 3038 # 189.875 Gigabytes
+                }
+
+                pv1 {
+                        id = "5DR2ds-AXzi-Om4M-Mg1R-KpRQ-swOr-JHQTUa"
+                        device = "/dev/hdc"     # Hint only
+
+                        status = ["ALLOCATABLE"]
+                        pe_start = 384
+                        pe_count = 2442 # 152.625 Gigabytes
+                }
+        }
+ logical_volumes {
+
+                video {
+                        id = "gscBJa-pCAA-Yv25-kOHu-9U6z-K7iQ-1dpm42"
+                        status = ["READ", "WRITE", "VISIBLE"]
+                        segment_count = 1
+
+                        segment1 {
+                                start_extent = 0
+                                extent_count = 3024     # 189 Gigabytes
+
+                                type = "striped"
+                                stripe_count = 1        # linear
+
+                                stripes = [
+                                        "pv0", 0
+                                ]
+                        }
+                }
+        }
+}
 
 
-------=_NextPart_000_0007_01C697CA.6BB6AE00
-Content-Type: text/html;
-	charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+On 6/23/06, Argus Array <argusarray2@gmail.com> wrote:
+>
+> Terribly sorry for the double post to the mailing list, accidentally hit
+> the google shortcut.
+>
+> I have been using LVM for several months to record video files for my PVR
+> across a 200GB and 160GB disk (hdb and hdc).
+>
+> Recently I decided to upgrade my FC3 install to FC5.  After the install,
+> my LVM mount does not come up.  It appeared that all of the LVM information
+> in /dev/ was gone; however, only the non-LVM drive (/dev/hda) should have
+> been touched by the FC5 upgrade.
+>
+> This is my fstab entry:
+> /dev/VGforMythTV/video  /var/media              xfs     defaults        1
+> 1
+>
+> This is what fdisk shows:
+> /dev/hdb1               1       24792   199141708+  8e  Linux LVM
+>
+> /dev/hdc1               1       19929   160079661   8e  Linux LVM
+>
+> In my attempt to fix this, I think I may have totally fouled things up; I
+> tried to create a new volume group with the same name and more PVs for the
+> new drives, then combine them together into an PV with the old LV name.
+> However, this still does not allow it to mount.
+>
+> Any ideas?  Have I deleted all my data?
+>
+> Thanks for any help,
+>
+> Argus
+>
+> I've pasted my history commands below.
+>
+>   548  more /etc/fstab
+>   549  vgcreate VGforMythTV -s 64m /dev/hda1
+>   550  /usr/sbin/vgcreate VGforMythTV -s 64m /dev/hda1
+>   551*
+>   552  /usr/sbin/pvcreate /dev/hdb1
+>   553  /usr/sbin/pvcreate /dev/hdc1
+>   554  /usr/sbin/vgcreate VGforMythTV /dev/hdb1 /dev/hdc1
+>   555  mount /dev/VGforMythTV /var/media
+>   556  mount /dev/VGforMythTV/video /var/media
+>   557  mount /dev/VGforMythTV/media /var/media
+>   558  lvcreate --name video VGforMythTV
+>   559  /usr/sbin/lvcreate --name video VGforMythTV
+>   560  /usr/sbin/lvcreate --name video -l VGforMythTV
+>   561  /usr/sbin/lvcreate --name video -l ` VGforMythTV
+>   562  /usr/sbin/lvcreate --name video -l 1 VGforMythTV
+>   563  mount /dev/VGforMythTV/media /var/media
+>   564  mount /dev/VGforMythTV/video /var/media
+>   565  mount -t xfs /dev/VGforMythTV/video /var/media
+>   566  mount /dev/VGforMythTV/video /var/media
+>   567  /usr/sbin/lvcreate --name video -l 2 VGforMythTV
+>   568  ls
+>   569  /usr/sbin/pvdisplay
+>   570  /usr/sbin/lvmdiskscan
+>   571  mount /dev/VGforMythTV /var/media/
+>   572  mount /dev/VGforMythTV/video /var/media/
+>   573  mount /dev/VGforMythTV/media /var/media/
+>   574  mount /dev/VGforMythTV/video /var/media/
+>   575  /sbin/fdisk /dev/hdb
+>   576  /sbin/fdisk /dev/hdc
+>   577  /usr/sbin/vgextend
+>   578  more /etc/fstab
+>   579  /usr/sbin/vgextend VGforMythTV /dev/hdb1
+>   580  /usr/sbin/vgextend VGforMythTV /dev/hdb
+>
+>
 
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
-<HTML><HEAD>
-<META http-equiv=3DContent-Type content=3D"text/html; =
-charset=3Diso-8859-1">
-<META content=3D"MSHTML 6.00.2900.2912" name=3DGENERATOR>
-<STYLE></STYLE>
-</HEAD>
-<BODY bgColor=3D#ffffff>
-<DIV><FONT face=3DCourier size=3D2>hi all,</FONT></DIV>
-<DIV><FONT face=3DCourier size=3D2></FONT>&nbsp;</DIV>
-<DIV><FONT face=3DCourier size=3D2>I've been running LVM2 for a while =
-and never had=20
-any problems with it, so my knowledge is a bit limited because i've =
-never had to=20
-fiddle with it.</FONT></DIV>
-<DIV><FONT face=3DCourier size=3D2>It started with me wanting to change =
-my hda drive=20
-cuz the old one was making alot of noice.</FONT></DIV>
-<DIV><FONT face=3DCourier size=3D2>It's partitioning sheme is as=20
-follows</FONT></DIV>
-<DIV><FONT face=3DCourier size=3D2></FONT>&nbsp;</DIV>
-<DIV><FONT face=3DCourier size=3D2>&nbsp; /dev/hda1&nbsp;=20
-[&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 101.94=20
-MB]&nbsp;&nbsp;&nbsp;&nbsp;/boot<BR>&nbsp; /dev/hda2&nbsp;=20
-[&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1.87 GB]&nbsp;&nbsp;&nbsp;=20
-/<BR>&nbsp; /dev/hda3&nbsp; [&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 23.00=20
-GB]&nbsp;&nbsp;&nbsp;&nbsp;LVM physical volume</FONT></DIV>
-<DIV><FONT face=3DCourier size=3D2>&nbsp; /dev/hda4&nbsp;=20
-[&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 533.90 MB]&nbsp;&nbsp;&nbsp; =
-SWAP</FONT></DIV>
-<DIV><FONT face=3DCourier size=3D2></FONT>&nbsp;</DIV>
-<DIV><FONT face=3DCourier size=3D2>&nbsp; --- Physical volume =
----<BR>&nbsp; PV=20
-Name&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nb=
-sp;&nbsp;&nbsp;=20
-/dev/hda3<BR>&nbsp; VG=20
-Name&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nb=
-sp;&nbsp;&nbsp;=20
-vgsys<BR>&nbsp; PV=20
-Size&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nb=
-sp;&nbsp;&nbsp;=20
-23.00 GB / not usable 0&nbsp;&nbsp; <BR>&nbsp;=20
-Allocatable&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; =
-yes (but=20
-full)<BR>&nbsp; PE Size (KByte)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=20
-4096<BR>&nbsp; Total=20
-PE&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp=
-;&nbsp;=20
-5888<BR>&nbsp; Free=20
-PE&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp=
-;&nbsp;&nbsp;=20
-0<BR>&nbsp; Allocated =
-PE&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=20
-5888<BR>&nbsp; PV=20
-UUID&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nb=
-sp;&nbsp;&nbsp;=20
-SegkSC-Thbb-DqRg-LSoA-tN0F-WmFp-K7CPCO</FONT></DIV>
-<DIV><FONT size=3D2></FONT>&nbsp;</DIV>
-<DIV><FONT face=3DCourier size=3D2>&nbsp; --- Logical volume =
----<BR>&nbsp; LV=20
-Name&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nb=
-sp;&nbsp;&nbsp;&nbsp;=20
-/dev/vgsys/usr<BR>&nbsp; VG=20
-Name&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nb=
-sp;&nbsp;&nbsp;&nbsp;=20
-vgsys<BR>&nbsp; LV=20
-UUID&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nb=
-sp;&nbsp;&nbsp;&nbsp;=20
-cYrDRH-neMm-PwCZ-2Dlo-njJm-mBHs-NPZlu4<BR>&nbsp; LV Write=20
-Access&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; read/write<BR>&nbsp; LV =
+------=_Part_51105_12420031.1151289166598
+Content-Type: text/html; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
 
-Status&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&=
-nbsp;&nbsp;=20
-available<BR>&nbsp; #=20
-open&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nb=
-sp;&nbsp;&nbsp;&nbsp;&nbsp;=20
-1<BR>&nbsp; LV=20
-Size&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nb=
-sp;&nbsp;&nbsp;&nbsp;=20
-7.00 GB<BR>&nbsp; Current=20
-LE&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp=
-;=20
-1792<BR>&nbsp;=20
-Segments&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp=
-;&nbsp;&nbsp;&nbsp;=20
-1<BR>&nbsp;=20
-Allocation&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nb=
-sp;&nbsp;=20
-inherit<BR>&nbsp; Read ahead sectors&nbsp;&nbsp;&nbsp;&nbsp; 0<BR>&nbsp; =
-Block=20
-device&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=20
-254:0<BR>&nbsp;&nbsp; <BR>&nbsp; --- Logical volume ---<BR>&nbsp; LV=20
-Name&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nb=
-sp;&nbsp;&nbsp;&nbsp;=20
-/dev/vgsys/home<BR>&nbsp; VG=20
-Name&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nb=
-sp;&nbsp;&nbsp;&nbsp;=20
-vgsys<BR>&nbsp; LV=20
-UUID&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nb=
-sp;&nbsp;&nbsp;&nbsp;=20
-OX1Pkm-p6Vc-q6SB-9nxm-PRMl-TM1z-h5bcIc<BR>&nbsp; LV Write=20
-Access&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; read/write<BR>&nbsp; LV =
+I've been digging around a bit and I found that /etc/lvm/archive has some information that might be useful for restoring my LVM data.<br><br>I've attached the latest VGforMythTV_00008.vg data (before the versions for the new ones that I created).
+<br><br>I read on this blog:<br><a href="http://codeworks.gnomedia.com/archives/2005/general/lvm_recovery/">http://codeworks.gnomedia.com/archives/2005/general/lvm_recovery/</a><br><br>that this information could be used to recreate my physical volumes using a command like this:
+<br>[mythtv@localhost archive]# /usr/sbin/pvcreate -u J3hQY6-8yfK-pMPS-dGhN-WFig-ENnC-LSR2nn /dev/hdb1<br>&nbsp; Can't initialize physical volume &quot;/dev/hdb1&quot; of volume group &quot;VGforMythTV&quot; without -ff<br><br>
+I am hesitant to use the &quot;-ff&quot; (force) command without knowing what the impact will be.&nbsp; Any advice?<br><br>Thanks,<br><br>-Argus<br><br>VGforMythTV_00008.vg<br>---------------------------------------<br><br># Generated by LVM2: Mon Apr 11 22:59:52 2005
+<br><br>contents = &quot;Text Format Volume Group&quot;<br>version = 1<br><br>description = &quot;Created *before* executing '/usr/sbin/lvextend --size +160G /dev/VGforMythTV/video'&quot;<br><br>creation_host = &quot;localhost.localdomain
+&quot; # Linux localhost.localdomain 2.6.10-1.737_FC3 #1 Mon Jan 10 13:50:10 EST 20<br>05 i686<br>creation_time = 1113274792&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; # Mon Apr 11 22:59:52 2005<br><br>VGforMythTV {<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; id = &quot;YKYYOd-PcmN-lGub-gllT-6d0j-IyGp-BweNJY&quot;
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; seqno = 3<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; status = [&quot;RESIZEABLE&quot;, &quot;READ&quot;, &quot;WRITE&quot;]<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; extent_size = 131072&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; # 64 Megabytes<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; max_lv = 0<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; max_pv = 0<br><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; physical_volumes {
+<br><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; pv0 {<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; id = &quot;J3hQY6-8yfK-pMPS-dGhN-WFig-ENnC-LSR2nn&quot;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; device = &quot;/dev/hdb&quot;&nbsp;&nbsp;&nbsp;&nbsp; # Hint only<br><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; status = [&quot;ALLOCATABLE&quot;]
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; pe_start = 384<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; pe_count = 3038 # 189.875 Gigabytes<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }<br><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; pv1 {<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; id = &quot;5DR2ds-AXzi-Om4M-Mg1R-KpRQ-swOr-JHQTUa&quot;
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; device = &quot;/dev/hdc&quot;&nbsp;&nbsp;&nbsp;&nbsp; # Hint only<br><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; status = [&quot;ALLOCATABLE&quot;]<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; pe_start = 384<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; pe_count = 2442 # 
+152.625 Gigabytes<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }<br>&nbsp;logical_volumes {<br><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; video {<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; id = &quot;gscBJa-pCAA-Yv25-kOHu-9U6z-K7iQ-1dpm42&quot;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; status = [&quot;READ&quot;, &quot;WRITE&quot;, &quot;VISIBLE&quot;]
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; segment_count = 1<br><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; segment1 {<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; start_extent = 0<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; extent_count = 3024&nbsp;&nbsp;&nbsp;&nbsp; # 189 Gigabytes<br><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; type = &quot;striped&quot;<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; stripe_count = 1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; # linear<br><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; stripes = [<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &quot;pv0&quot;, 0
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ]<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }<br>}<br><br><br><div><span class="gmail_quote">On 6/23/06, <b class="gmail_sendername">Argus Array</b> &lt;<a href="mailto:argusarray2@gmail.com">
+argusarray2@gmail.com</a>&gt; wrote:</span><blockquote class="gmail_quote" style="border-left: 1px solid rgb(204, 204, 204); margin: 0pt 0pt 0pt 0.8ex; padding-left: 1ex;"><div>Terribly sorry for the double post to the mailing list, accidentally hit the google shortcut.
+<br><br>I have been using LVM for several months to record video files for my PVR across a 200GB and 160GB disk (hdb and hdc).<br>
+<br>Recently I decided to upgrade my FC3 install to FC5.&nbsp; After the install, my LVM mount does not come up.&nbsp; It appeared that all of the LVM information in /dev/ was gone; however, only the non-LVM drive (/dev/hda) should have been touched by the FC5 upgrade.
+<br><br>This is my fstab entry:<br>/dev/VGforMythTV/video&nbsp; /var/media&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; xfs&nbsp;&nbsp;&nbsp;&nbsp; defaults&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1 1<br><br>This is what fdisk shows:<br>/dev/hdb1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 24792&nbsp;&nbsp; 199141708+&nbsp; 8e&nbsp; Linux LVM<br><br>
+/dev/hdc1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 19929&nbsp;&nbsp; 160079661&nbsp;&nbsp; 8e&nbsp; Linux LVM
+<br><br>In my attempt to fix this, I think I may have totally fouled things up; I tried to create a new volume group with the same name and more PVs for the new drives, then combine them together into an PV with the old LV name.&nbsp; However, this still does not allow it to mount.&nbsp; 
+<br><br>Any ideas?&nbsp; Have I deleted all my data?<br><br>Thanks for any help,<br><br>Argus<br><br>I've pasted my history commands below.<br><br>&nbsp; 548&nbsp; more /etc/fstab<br>&nbsp; 549&nbsp; vgcreate VGforMythTV -s 64m /dev/hda1<br>&nbsp; 550&nbsp; /usr/sbin/vgcreate VGforMythTV -s 64m /dev/hda1
+<br>&nbsp; 551* <br>&nbsp; 552&nbsp; /usr/sbin/pvcreate /dev/hdb1<br>&nbsp; 553&nbsp; /usr/sbin/pvcreate /dev/hdc1<br>&nbsp; 554&nbsp; /usr/sbin/vgcreate VGforMythTV /dev/hdb1 /dev/hdc1<br>&nbsp; 555&nbsp; mount /dev/VGforMythTV /var/media<br>&nbsp; 556&nbsp; mount /dev/VGforMythTV/video /var/media
+<br>&nbsp; 557&nbsp; mount /dev/VGforMythTV/media /var/media<br>&nbsp; 558&nbsp; lvcreate --name video VGforMythTV<br>&nbsp; 559&nbsp; /usr/sbin/lvcreate --name video VGforMythTV<br>&nbsp; 560&nbsp; /usr/sbin/lvcreate --name video -l VGforMythTV<br>&nbsp; 561&nbsp; /usr/sbin/lvcreate --name video -l ` VGforMythTV
+<br>&nbsp; 562&nbsp; /usr/sbin/lvcreate --name video -l 1 VGforMythTV<br>&nbsp; 563&nbsp; mount /dev/VGforMythTV/media /var/media<br>&nbsp; 564&nbsp; mount /dev/VGforMythTV/video /var/media<br>&nbsp; 565&nbsp; mount -t xfs /dev/VGforMythTV/video /var/media<br>
+&nbsp; 566&nbsp; mount /dev/VGforMythTV/video /var/media
+<br>&nbsp; 567&nbsp; /usr/sbin/lvcreate --name video -l 2 VGforMythTV<br>&nbsp; 568&nbsp; ls<br>&nbsp; 569&nbsp; /usr/sbin/pvdisplay <br>&nbsp; 570&nbsp; /usr/sbin/lvmdiskscan <br>&nbsp; 571&nbsp; mount /dev/VGforMythTV /var/media/<br>&nbsp; 572&nbsp; mount /dev/VGforMythTV/video /var/media/
+<br>&nbsp; 573&nbsp; mount /dev/VGforMythTV/media /var/media/<br>&nbsp; 574&nbsp; mount /dev/VGforMythTV/video /var/media/<br>&nbsp; 575&nbsp; /sbin/fdisk /dev/hdb<br>&nbsp; 576&nbsp; /sbin/fdisk /dev/hdc<br>&nbsp; 577&nbsp; /usr/sbin/vgextend <br>&nbsp; 578&nbsp; more /etc/fstab
+<br>
+&nbsp; 579&nbsp; /usr/sbin/vgextend VGforMythTV /dev/hdb1<br>&nbsp; 580&nbsp; /usr/sbin/vgextend VGforMythTV /dev/hdb<br><br>
 
-Status&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&=
-nbsp;&nbsp;=20
-available<BR>&nbsp; #=20
-open&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nb=
-sp;&nbsp;&nbsp;&nbsp;&nbsp;=20
-1<BR>&nbsp; LV=20
-Size&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nb=
-sp;&nbsp;&nbsp;&nbsp;=20
-4.00 GB<BR>&nbsp; Current=20
-LE&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp=
-;=20
-1024<BR>&nbsp;=20
-Segments&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp=
-;&nbsp;&nbsp;&nbsp;=20
-1<BR>&nbsp;=20
-Allocation&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nb=
-sp;&nbsp;=20
-inherit<BR>&nbsp; Read ahead sectors&nbsp;&nbsp;&nbsp;&nbsp; 0<BR>&nbsp; =
-Block=20
-device&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=20
-254:1<BR>&nbsp;&nbsp; <BR>&nbsp; --- Logical volume ---<BR>&nbsp; LV=20
-Name&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nb=
-sp;&nbsp;&nbsp;&nbsp;=20
-/dev/vgsys/opt<BR>&nbsp; VG=20
-Name&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nb=
-sp;&nbsp;&nbsp;&nbsp;=20
-vgsys<BR>&nbsp; LV=20
-UUID&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nb=
-sp;&nbsp;&nbsp;&nbsp;=20
-GlQ5wV-ZzUu-51LW-okn6-82UV-9SFX-weiScV<BR>&nbsp; LV Write=20
-Access&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; read/write<BR>&nbsp; LV =
+</div></blockquote></div><br>
 
-Status&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&=
-nbsp;&nbsp;=20
-available<BR>&nbsp; #=20
-open&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nb=
-sp;&nbsp;&nbsp;&nbsp;&nbsp;=20
-1<BR>&nbsp; LV=20
-Size&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nb=
-sp;&nbsp;&nbsp;&nbsp;=20
-5.00 GB<BR>&nbsp; Current=20
-LE&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp=
-;=20
-1280<BR>&nbsp;=20
-Segments&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp=
-;&nbsp;&nbsp;&nbsp;=20
-1<BR>&nbsp;=20
-Allocation&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nb=
-sp;&nbsp;=20
-inherit<BR>&nbsp; Read ahead sectors&nbsp;&nbsp;&nbsp;&nbsp; 0<BR>&nbsp; =
-Block=20
-device&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=20
-254:2<BR>&nbsp;&nbsp; <BR>&nbsp; --- Logical volume ---<BR>&nbsp; LV=20
-Name&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nb=
-sp;&nbsp;&nbsp;&nbsp;=20
-/dev/vgsys/var<BR>&nbsp; VG=20
-Name&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nb=
-sp;&nbsp;&nbsp;&nbsp;=20
-vgsys<BR>&nbsp; LV=20
-UUID&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nb=
-sp;&nbsp;&nbsp;&nbsp;=20
-1VvzOf-DLz1-GMp5-Xj24-r9Mp-yaOy-0t2yLw<BR>&nbsp; LV Write=20
-Access&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; read/write<BR>&nbsp; LV =
-
-Status&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&=
-nbsp;&nbsp;=20
-available<BR>&nbsp; #=20
-open&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nb=
-sp;&nbsp;&nbsp;&nbsp;&nbsp;=20
-1<BR>&nbsp; LV=20
-Size&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nb=
-sp;&nbsp;&nbsp;&nbsp;=20
-5.00 GB<BR>&nbsp; Current=20
-LE&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp=
-;=20
-1280<BR>&nbsp;=20
-Segments&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp=
-;&nbsp;&nbsp;&nbsp;=20
-1<BR>&nbsp;=20
-Allocation&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nb=
-sp;&nbsp;=20
-inherit<BR>&nbsp; Read ahead sectors&nbsp;&nbsp;&nbsp;&nbsp; 0<BR>&nbsp; =
-Block=20
-device&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=20
-254:3<BR>&nbsp;&nbsp; <BR>&nbsp; --- Logical volume ---<BR>&nbsp; LV=20
-Name&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nb=
-sp;&nbsp;&nbsp;&nbsp;=20
-/dev/vgsys/tmp<BR>&nbsp; VG=20
-Name&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nb=
-sp;&nbsp;&nbsp;&nbsp;=20
-vgsys<BR>&nbsp; LV=20
-UUID&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nb=
-sp;&nbsp;&nbsp;&nbsp;=20
-BAIl2N-5gVg-RzUZ-3IqL-L0D5-JiAk-bO2smA<BR>&nbsp; LV Write=20
-Access&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; read/write<BR>&nbsp; LV =
-
-Status&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&=
-nbsp;&nbsp;=20
-available<BR>&nbsp; #=20
-open&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nb=
-sp;&nbsp;&nbsp;&nbsp;&nbsp;=20
-1<BR>&nbsp; LV=20
-Size&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nb=
-sp;&nbsp;&nbsp;&nbsp;=20
-2.00 GB<BR>&nbsp; Current=20
-LE&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp=
-;=20
-512<BR>&nbsp;=20
-Segments&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp=
-;&nbsp;&nbsp;&nbsp;=20
-1<BR>&nbsp;=20
-Allocation&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nb=
-sp;&nbsp;=20
-inherit<BR>&nbsp; Read ahead sectors&nbsp;&nbsp;&nbsp;&nbsp; 0<BR>&nbsp; =
-Block=20
-device&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=20
-254:4</FONT></DIV>
-<DIV><FONT size=3D2></FONT>&nbsp;</DIV>
-<DIV><FONT face=3DCourier size=3D2>Then i added a new 80GB drive at hdc =
-and=20
-run</FONT></DIV>
-<DIV><FONT face=3DCourier size=3D2></FONT>&nbsp;</DIV>
-<DIV><FONT face=3DCourier>dd if=3D/dev/hda of=3D/dev/hdc</FONT></DIV>
-<DIV><FONT face=3DCourier size=3D2></FONT>&nbsp;</DIV>
-<DIV><FONT face=3DCourier size=3D2>then halt -h</FONT></DIV>
-<DIV><FONT face=3DCourier size=3D2></FONT>&nbsp;</DIV>
-<DIV><FONT face=3DCourier size=3D2>changed disks and booted with the new =
-80GB disk=20
-as hda...</FONT></DIV>
-<DIV><FONT face=3DCourier size=3D2>now the strange thing...it cant find =
-the logical=20
-volumes at boot, so i end up with a very crippled system. if i list the =
-lvm=20
-volumes i see that they are there, but inactive at boot. i can =
-reactivate them=20
-and mount them manually...but then at reboot the same thing =
-again.</FONT></DIV>
-<DIV><FONT face=3DCourier size=3D2>what have happened?</FONT></DIV>
-<DIV><FONT face=3DCourier size=3D2>I even tried to change back to the =
-old drive, and=20
-i was certain it would boot right up...but the exact same thing occured. =
-GAAAH!=20
-How can the source drive be altered? I don't get it.</FONT></DIV>
-<DIV><FONT face=3DCourier size=3D2>Any ideas?</FONT></DIV>
-<DIV><FONT face=3DCourier size=3D2></FONT>&nbsp;</DIV>
-<DIV><FONT face=3DCourier size=3D2>thanks!</FONT></DIV>
-<DIV><FONT face=3DCourier size=3D2></FONT>&nbsp;</DIV>
-<DIV><FONT face=3DCourier size=3D2>/Fredrik</FONT></DIV>
-<DIV><FONT face=3DCourier size=3D2></FONT>&nbsp;</DIV>
-<DIV><FONT face=3DCourier size=3D2></FONT>&nbsp;</DIV></BODY></HTML>
-
-------=_NextPart_000_0007_01C697CA.6BB6AE00--
+------=_Part_51105_12420031.1151289166598--
