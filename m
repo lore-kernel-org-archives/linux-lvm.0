@@ -1,25 +1,17 @@
-Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
+Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
 	by int-mx1.corp.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
-	k5R94s4b012287
-	for <linux-lvm@redhat.com>; Tue, 27 Jun 2006 05:04:54 -0400
-Received: from conterra.de (vvv.conterra.de [212.124.44.162])
-	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id k5R94kgA018400
-	for <linux-lvm@redhat.com>; Tue, 27 Jun 2006 05:04:47 -0400
-Received: from localhost (unknown [127.0.0.1])
-	by conterra.de (-) with ESMTP id A0D9A1F4011
-	for <linux-lvm@redhat.com>; Tue, 27 Jun 2006 11:04:37 +0200 (CEST)
-Received: from conterra.de ([127.0.0.1])
-	by localhost (vvv.conterra.de [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id 02654-09 for <linux-lvm@redhat.com>;
-	Tue, 27 Jun 2006 11:04:24 +0200 (CEST)
-Message-ID: <44A0F496.3060008@conterra.de>
-Date: Tue, 27 Jun 2006 11:04:22 +0200
-From: =?ISO-8859-1?Q?Dieter_St=FCken?= <stueken@conterra.de>
+	k5S9OU9C001161
+	for <linux-lvm@redhat.com>; Wed, 28 Jun 2006 05:24:30 -0400
+Received: from vwclub.ro (lcx.at [213.239.193.148])
+	by mx1.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
+	k5S9OT8o009140
+	for <linux-lvm@redhat.com>; Wed, 28 Jun 2006 05:24:30 -0400
+Date: Wed, 28 Jun 2006 11:24:27 +0200
+From: Cristian Livadaru <drac3@vwclub.ro>
+Message-ID: <20060628092427.GI20554@vwclub.ro>
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] Setting up LVM with existing RAID 1 (Mirror)
-References: <20060626164657.79277.qmail@web33408.mail.mud.yahoo.com>
-In-Reply-To: <20060626164657.79277.qmail@web33408.mail.mud.yahoo.com>
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+Subject: [linux-lvm] LVM incredible slow with Kernel 2.6.11
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -31,69 +23,84 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Transfer-Encoding: 7bit
+To: linux-lvm@redhat.com
 
-Hi Rehan,
+I have built yesterday a 2.6.11 kernel with Xen.
+I wanted to move some old data to my LVM and the speed according to
+midnight commander was about 350kb/s ! about 2gig where copied in 4
+hours! I then rebooted with the original Debian Kernel 2.4.27-2-386 and
+the speed incresead to about 5mb/s that doesn't make me very happy
+either but was way better then 350kb!
+I have been searching the net all night and didn't come up with a
+solution. I have no clue what is wrong here.
+What did I do wrong and how can I increase the performance?
 
-If I have a look at your partition table
+The lvm is made out of 2x Seagate 300GB IDE HD not striped.
 
-> Disk /dev/sda: 73.2 GB, 73274490880 bytes
-> 255 heads, 63 sectors/track, 8908 cylinders
-> Units = cylinders of 16065 * 512 = 8225280 bytes
-> 
->    Device Boot Start    End      Blocks   Id System
-> /dev/sda1   *      1    784     6297448+  83 Linux
-> /dev/sda2        785   8907    65247997+   f W95 Ext'd (LBA)
-> /dev/sda5        785   1176     3148708+  82 Linux swap
-> /dev/sda6       1177   1960     6297448+  83 Linux
-> /dev/sda7       1961   2744     6297448+  83 Linux
-> /dev/sda8       2745   3528     6297448+  83 Linux
-> /dev/sda9       3529   3790     2104483+  83 Linux
-> /dev/sda10      3791   4052     2104483+  83 Linux
+esplendidos:~# lvm lvdisplay
+  --- Logical volume ---
+  LV Name                /dev/share/sharevg
+  VG Name                share
+  LV UUID                KdvcJ9-ZLMP-AJYA-soGK-qHfy-UtrX-PpV9Kv
+  LV Write Access        read/write
+  LV Status              available
+  # open                 1
+  LV Size                558.91 GB
+  Current LE             143082
+  Segments               2
+  Allocation             inherit
+  Read ahead sectors     0
+  Block device           254:0
 
-it seems /dev/sda2 is a container holding sda5-10 as logical 
-partitions. This concept is similar to a LVM layout, where sda2
-would be a physical volume (PV) containing several logical volumes
-(LV) like /opt /home swap etc. 
+esplendidos:~# lvm dumpconfig
+devices {
+        dir="/dev"
+        scan="/dev"
+        filter="r|/dev/cdrom|"
+        cache="/etc/lvm/.cache"
+        write_cache_state=1
+        sysfs_scan=1
+        md_component_detection=0
+}
+activation {
+        missing_stripe_filler="/dev/ioerror"
+        mirror_region_size=512
+        reserved_stack=256
+        reserved_memory=8192
+        process_priority=-18
+}
+global {
+        umask=63
+        test=0
+        activation=1
+        proc="/proc"
+        locking_type=1
+        locking_dir="/var/lock/lvm"
+}
+shell {
+        history_size=100
+}
+backup {
+        backup=1
+        backup_dir="/etc/lvm/backup"
+        archive=1
+        archive_dir="/etc/lvm/archive"
+        retain_min=10
+        retain_days=30
+}
+log {
+        verbose=0
+        syslog=1
+        overwrite=0
+        level=0
+        indent=1
+        command_names=0
+        prefix="  "
+}
 
-But even if you have a lot of free space within sda2, it does
-not help you, as long as the whole disk is occupied by sda2.
-You have to get rid of all the logical partitions :-(
+any tip for performance tuning?
 
-But you may keep your root partition :-)
-
-step 1: erase sda5-10
-
-You may copy /usr /var and /home into your root partition
-(use: cp -a). Swap can be disabled for a while. But you
-have to save /opt (may be /tmp) to an additional disk.
-Then you are able delete sda5-10.
-
-step 2: initialize LVM / create a logical volume
-
-Turn sda2 into a PV with "pvcreate /dev/sda2".
-Create a logical volume: "vgcreate volume1 /dev/sda2".
-You may choose any other name instead of "volume1".
-Now you create your LVs as needed:
-
-lvcreate volume1 -n swap -l 2G
-lvcreate volume1 -n usr -l 6G
-lvcreate volume1 -n opt -l 12G
-....
-
-mkswap /dev/volume1/swap
-mke2fs /dev/volume1/usr
-mke2fs /dev/volume1/opt
-...
-
-step 3: copy back the data to your newly created LVs.
-
-conclusion:
-
-Your new LVs have real names instead of just /dev/sda8.
-Any free space you have may be assigned to any of your
-LVs, as they don't have to be continuous any more.
-Anyway, dealing with additional disk space is MUCH
-easier once after you started using LVM. 
-
-Dieter.
+--
+Cristian Livadaru
+http://vwclub.ro/
