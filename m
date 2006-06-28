@@ -1,27 +1,19 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
 	by int-mx1.corp.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
-	k5UKf8Wr010346
-	for <linux-lvm@redhat.com>; Fri, 30 Jun 2006 16:41:08 -0400
-Received: from bulimba.hst.terra.com.br (bulimba.hst.terra.com.br
-	[200.176.10.194])
-	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id k5UKekm9013354
-	for <linux-lvm@redhat.com>; Fri, 30 Jun 2006 16:40:47 -0400
-Received: from calabona.hst.terra.com.br (calabona.hst.terra.com.br
-	[200.176.10.5])
-	by bulimba.hst.terra.com.br (Postfix) with ESMTP id 6D431130C09E
-	for <linux-lvm@redhat.com>; Fri, 30 Jun 2006 17:40:45 -0300 (BRT)
-Received: from [10.0.0.38] (unknown [200.168.58.218])
-	(authenticated user minicom024)
-	by calabona.hst.terra.com.br (Postfix) with ESMTP id EEB061BD40D3
-	for <linux-lvm@redhat.com>; Fri, 30 Jun 2006 17:40:44 -0300 (BRT)
-Message-ID: <44A58CB3.6080700@minicom.com.br>
-Date: Fri, 30 Jun 2006 17:42:27 -0300
-From: Du <eduardo@minicom.com.br>
+	k5SF315A019664
+	for <linux-lvm@redhat.com>; Wed, 28 Jun 2006 11:03:01 -0400
+Received: from mail.touchtunes.com (mail.touchtunes.com [207.96.182.162])
+	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id k5SF2pnX005456
+	for <linux-lvm@redhat.com>; Wed, 28 Jun 2006 11:02:52 -0400
+Received: from [192.168.0.138] (unknown [192.168.0.138])
+	by mail.touchtunes.com (Postfix) with ESMTP id 1A6D015AF4
+	for <linux-lvm@redhat.com>; Wed, 28 Jun 2006 11:02:47 -0400 (EDT)
+Message-ID: <44A29C60.8020709@gnome.org>
+Date: Wed, 28 Jun 2006 11:12:32 -0400
+From: Tristan Van Berkom <tvb@gnome.org>
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] 2 VG's in separated HD's
-References: <44A530AA.7040506@minicom.com.br> <44A5402F.8020903@conterra.de>
-In-Reply-To: <44A5402F.8020903@conterra.de>
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/mixed; boundary="------------030603000800000003010005"
+Subject: [linux-lvm] vgscan --force-all-update-reread-and-take-that-kernel
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -32,61 +24,139 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="utf-8"; format="flowed"
-To: LVM general discussion and development <linux-lvm@redhat.com>
+To: linux-lvm@redhat.com
 
-Dieter St�ken wrote:
-> Du wrote:
->   
->> I put another HD on my box to test with LVM, my primary HD is working
->> all with LVM and a VG called vg_root. When I initialize and create a VG
->> in the secondary HD, works well, I create a LV, perfectly...but when I
->> reboot...donno what happens but the sistem doesnt initialize INIT, and
->> send me a BusyBox (Debian).
->>
->> And then I must mount the root LV, chroot to it and fdisk to erase the
->> secondary HD, and reboot. Otherwise it doenst starts INIT.
->>
->> Does anybody knows what's happening?
->>     
->
-> what do you mean by "doenst starts INIT"? Is the kernel not found
-> (a LILO or GRUB problem) or does "init" not find the root partition?
-> Or was the LV-partition, you created, not found?
->   
+This is a multi-part message in MIME format.
+--------------030603000800000003010005
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
 
-The 'init' in root partition wasnt found.
-> Are both disks connected to the same controller?
->   
-The 2 disks are in the same controller yes!! Is this the problem?
-> Are they IDE or SATA disks?
->   
-IDE disks
-> If you have several disk controllers on board, you may be
-> surprised to find /dev/hda1 turning into /dev/hde1, as
-> the sequence of your different controllers is not necessary
-> stable, if you connect additional disks.
->
-> BTW: why do you want an new VG? Why not expanding your current
-> VG by a new disk?
->   
-Nothing but to learn, to make several tests on the second disk, that I 
-can do errors at will :)
-> Dieter.
->
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
->
-> E-mail classificado pelo Identificador de Spam Inteligente Terra.
-> Para alterar a categoria classificada, visite
-> http://mail.terra.com.br/protected_email/imail/imail.cgi?+_u=minicom024&_l=1,1151680591.250192.29668.arrino.hst.terra.com.br,4463,Des15,Des15
->
-> Esta mensagem foi verificada pelo E-mail Protegido Terra.
-> Scan engine: McAfee VirusScan / Atualizado em 29/06/2006 / Vers�o: 4.4.00/4796
-> Proteja o seu e-mail Terra: http://mail.terra.com.br/
->
->
->   
+Hello lvm folks,
+     Before I give you the whole shpiel... the issue I am having here
+is that vgscan is unable to find an existing volume group after
+a repartitioning of the disk using 'parted' (hence the subject line that
+implies that vgscan needs an option to slap the kernel a little harder
+in some cases).
+
+     I am using lvm to automaticly extend a logical partition
+to span the "rest of the harddisk", in the case that there are
+some unused gigs on the disk.
+
+I've written a little script (which I'll attach here) that
+basicly:
+     - Resizes the extended partition
+     - Creates a new logical partition in the newly allocated space
+       inside the extended partition
+     - Creates a new "physical volume" on the new partition
+     - Adds the new "physical volume" to the already existing "volume group"
+     - Extends the "logical volume" to span the entire "volume group"
+
+The script works fine it you type it all out by hand in the shell and
+wait a few secs and repeatedly check vgscan to see if its back up,
+when I run the script... I get:
+
+ From when I first issue a vgscan:
+=================================
+   Reading all physical volumes.  This may take a while...
+   No volume groups found
+
+ From my next call to pvcreate:
+==============================
+   Couldn't find device with uuid 'HAkK8E-D3CS-87kk-GtL0-6ZGC-1NKI-x65WQg'.
+   Couldn't find all physical volumes for volume group massgaol.
+   Couldn't find device with uuid 'HAkK8E-D3CS-87kk-GtL0-6ZGC-1NKI-x65WQg'.
+   Couldn't find all physical volumes for volume group massgaol.
+   get_pv_from_vg_by_id: vg_read failed to read VG massgaol
+   Physical volume "/dev/hdb7" successfully created
+
+Anyway, I guess at this point y'all know what I'm rambling on about...
+
+please let me know what I'm doing wrong or what I could be doing
+better :)
+
+Cheers,
+                             -Tristan
+
+
+
+--------------030603000800000003010005
+Content-Type: text/plain;
+ name="jukebox_resize"
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline;
+ filename="jukebox_resize"
+
+#!/bin/bash
+
+# This scrip makes some evil assumptions:
+#
+# o That the disk was partitioned as 120 Gigs
+# o That the real disk size will be reported as numGB (in Gigs)
+#   (i.e. this wont work if parted decides to display it in terabytes
+#   or megabytes on some disks)
+#
+
+OUTPATTERN="Disk /dev/hdb: "
+DISKOUT=`parted /dev/hdb print | grep "$OUTPATTERN"`
+
+DISKSIZE=${DISKOUT#$OUTPATTERN}
+
+echo "this disk size is $DISKSIZE"
+
+echo "that would be ${DISKSIZE%GB} Gigs I think"
+
+DISKGIGS=${DISKSIZE%GB}
+
+if [ $DISKGIGS -gt 120 ]; then
+	# Found a disk that is physically bigger than 120GB
+
+	# Resize the extended partition to span till the end of the disk
+	parted /dev/hdb resize 4 3208MB $DISKSIZE
+
+	# Create /dev/hdb7 with the remaining disk space
+	parted /dev/hdb mkpart logical 120GB $DISKSIZE
+
+	# XXX massgaol dissapears here for a few secs....
+	sleep 2
+	vgscan
+
+        # Give the system some time to create the fs nodes needed
+        # to proceed
+        sleep 5
+
+	# Create a physical volume for 
+	pvcreate -y -ff /dev/hdb7
+
+	# Adding more ...
+	sleep 2
+
+        # Scan volume groups... needed to make 'massgaol' recognized
+	# in the next step.
+        vgscan
+
+	# Add new physical volume to the volume group
+	vgextend massgaol /dev/hdb7
+
+	# Get the current size of the virtual group now...
+	# (get the 12'th field, separated by ':').
+	VGSIZE=`vgdisplay -c massgaol | cut -d : -f12`
+
+	# Activate the group -- this creates /dev/massgaol/massgaolLV
+	vgchange -ay 
+
+	# Extend the logical volume to span the entire volume group
+	lvextend /dev/massgaol/massgaolLV -L${VGSIZE}KB
+
+	# Resize sometimes wants an fsck first.
+	e2fsck -f /dev/massgaol/massgaolLV
+
+	# Resize the overlying filesystem
+	resize2fs /dev/massgaol/massgaolLV
+
+        # deactivate the group for now
+	vgchange -an
+
+fi
+
+
+--------------030603000800000003010005--
