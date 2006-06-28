@@ -1,33 +1,19 @@
 Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
 	by int-mx1.corp.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
-	k5SH2Lr8022979
-	for <linux-lvm@redhat.com>; Wed, 28 Jun 2006 13:02:21 -0400
-Received: from cst-systemhaus.de (cst-systemhaus.de [212.227.82.111])
-	by mx1.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
-	k5SH2KJA027874
-	for <linux-lvm@redhat.com>; Wed, 28 Jun 2006 13:02:21 -0400
-Received: from localhost (localhost [127.0.0.1])
-	by cst-systemhaus.de (Postfix) with ESMTP id 0BE6E7819286
-	for <linux-lvm@redhat.com>; Wed, 28 Jun 2006 19:00:54 +0200 (CEST)
-Received: from cst-systemhaus.de ([127.0.0.1])
-	by localhost (cst-systemhaus.de [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id 10445-03 for <linux-lvm@redhat.com>;
-	Wed, 28 Jun 2006 19:00:51 +0200 (CEST)
-Received: from cst-it.dyndns.org (p54A794BF.dip0.t-ipconnect.de
-	[84.167.148.191])
-	by cst-systemhaus.de (Postfix) with ESMTP id BB8107817367
-	for <linux-lvm@redhat.com>; Wed, 28 Jun 2006 19:00:50 +0200 (CEST)
-Received: from ubuntu (ubuntu [192.168.100.233])
-	by cst-it.dyndns.org (Postfix) with ESMTP id B6F2A1C0F516
-	for <linux-lvm@redhat.com>; Wed, 28 Jun 2006 18:59:30 +0200 (CEST)
-From: Denny Schierz <cuall@gmx.de>
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature";
-	boundary="=-XCIvm4dioZ5nco/RVx23"
-Date: Wed, 28 Jun 2006 19:02:11 +0200
-Message-Id: <1151514131.8712.20.camel@localhost.localdomain>
-Mime-Version: 1.0
-Subject: [linux-lvm] can't delete snapshot
+	k5SJ1j1k021086
+	for <linux-lvm@redhat.com>; Wed, 28 Jun 2006 15:01:45 -0400
+Received: from web31413.mail.mud.yahoo.com (web31413.mail.mud.yahoo.com
+	[68.142.198.125])
+	by mx1.redhat.com (8.12.11.20060308/8.12.11) with SMTP id
+	k5SJ1hh5012324
+	for <linux-lvm@redhat.com>; Wed, 28 Jun 2006 15:01:43 -0400
+Message-ID: <20060628190136.79139.qmail@web31413.mail.mud.yahoo.com>
+Date: Wed, 28 Jun 2006 12:01:36 -0700 (PDT)
+From: Teak Billard <teamwassily@yahoo.com>
+MIME-Version: 1.0
+Content-Type: multipart/alternative; boundary="0-1992713943-1151521296=:78666"
+Content-Transfer-Encoding: 8bit
+Subject: [linux-lvm] Uuid for unknown device blows up VolGroup00
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -40,55 +26,46 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 List-Id: <linux-lvm.redhat.com>
 To: linux-lvm@redhat.com
 
+--0-1992713943-1151521296=:78666
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
 
---=-XCIvm4dioZ5nco/RVx23
-Content-Type: text/plain; charset=ISO-8859-15
-Content-Transfer-Encoding: quoted-printable
+Dear all,
 
-hi,
+I recently tried to add an old 30 GB hard drive lying in my machine to my FC5 system.  I was trying to add the 30 GB to VolGroup00.  I failed somehow and now the entire VolGroup00 is inaccessible.  When booting I get a Kernel panic - not syncing: Attempted to kill init!  I think if I removed the offending Uuid from VolGroup00 things would go back to normal.
 
-i did a mistake and created a snapshot from a mounted lvm and break it,
-while it was creating the snapshot.
+Here's the output of some lvm commands from the FC Rescue Disk:
 
-my /dev/raid_daten/vhost6_root is definitely unusable so i want to
-delete it:
+ lvm> pvscan
+ Couldn't find device with uuid '8YsyEa-r5Rx-2LLI-Zz7n-xr8s-VksP-Mhs0Wi'
+ PV  /dev/hdb3             VG VolGroup00  lvm2  [47.81 GB / 32.00 MB free]
+ PV unknown device      VG VolGroup00  lvm2  [27.94 GB / 27.94 GB free]
+ Total: 2 / in use: 2 / in no VG: 0
+ 
+ lvm> vgscan
+ Couldn't find device with uuid: '8YsyEa-r5Rx-2LLI-Zz7n-xr8s-VksP-Mhs0Wi'.
+ Couldn't find all phsyical volumes for volume group VolGroup00
+ Couldn't find device with uuid: '8YsyEa-r5Rx-2LLI-Zz7n-xr8s-VksP-Mhs0Wi'.
+ Couldn't find all phsyical volumes for volume group VolGroup00
+ Volume Group "VolGroup00" not found
 
-(i had do to a ctrl +c to break lvs, cause: "Giving up waiting for
-lock, /var/lock/lvm/V_raid_daten: flock failed:
-Can't lock raid_daten:skipping, but than it shows the output )
+When I do an lvm pvdisplay, it reveals that VolGroup00 has two uuid's in it. One is /dev/hdb3 with uuid M3CWKv-a2yK-b5Qu-rLzq-Aj27-lXxE-WzvkWE and the other is unknown device with uuid 8YsyEa-r5RX-2LLI-Zz7n-Xr8s-VksP-Mhs0Wi.
 
-ACTIVE   Original '/dev/raid_daten/vhost1_root' [4,96 GB] inherit
-ACTIVE   Snapshot '/dev/raid_daten/vhost6_root' [4,96 GB] inherit
 
-root@xendom0:~# lvremove raid_daten/vhost6_root
-Do you really want to remove active logical volume "vhost6_root"? [y/n]:
-y
+I would greatly appreciate any help.  I'm currently unable to get at my data since it was all in VolGroup00.  Please help me if you can. :)
 
-i don't know, how i can delete these snapshot. It hangs and i can't do
-anything.
+Teak
 
-Kernel is 2.6.16-xen
+ 		
+---------------------------------
+Do you Yahoo!?
+ Get on board. You're invited to try the new Yahoo! Mail Beta.
+--0-1992713943-1151521296=:78666
+Content-Type: text/html; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
 
-any suggestions?
-
-cu denny
-
---=20
-Sicherheit verst=E4ndlich http://www.sides.de
-GnuPG Key
-http://pgpkeys.pca.dfn.de:11371/pks/lookup?op=3Dget&search=3D0x2A5CE192AB7D=
-3FE0
-
---=-XCIvm4dioZ5nco/RVx23
-Content-Type: application/pgp-signature; name=signature.asc
-Content-Description: Dies ist ein digital signierter Nachrichtenteil
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.1 (GNU/Linux)
-
-iD8DBQBEorYTKlzhkqt9P+ARAs4PAJ9EjMGvSNGYguOIwcVGLrXe4Z4MLACaAoFy
-1YXuIkx81QBdqNsiqvqQpnc=
-=jAy/
------END PGP SIGNATURE-----
-
---=-XCIvm4dioZ5nco/RVx23--
+Dear all,<br><br>I recently tried to add an old 30 GB hard drive lying in my machine to my FC5 system.&nbsp; I was trying to add the 30 GB to VolGroup00.&nbsp; I failed somehow and now the entire VolGroup00 is inaccessible.&nbsp; When booting I get a Kernel panic - not syncing: Attempted to kill init!&nbsp; I think if I removed the offending Uuid from VolGroup00 things would go back to normal.<br><br>Here's the output of some lvm commands from the FC Rescue Disk:<br><br> lvm&gt; pvscan<br> Couldn't find device with uuid '8YsyEa-r5Rx-2LLI-Zz7n-xr8s-VksP-Mhs0Wi'<br> PV  /dev/hdb3             VG VolGroup00  lvm2  [47.81 GB / 32.00 MB free]<br> PV unknown device      VG VolGroup00  lvm2  [27.94 GB / 27.94 GB free]<br> Total: 2 / in use: 2 / in no VG: 0<br> <br> lvm&gt; vgscan<br> Couldn't find device with uuid: '8YsyEa-r5Rx-2LLI-Zz7n-xr8s-VksP-Mhs0Wi'.<br> Couldn't find all phsyical volumes for volume group VolGroup00<br> Couldn't find device with uuid:
+ '8YsyEa-r5Rx-2LLI-Zz7n-xr8s-VksP-Mhs0Wi'.<br> Couldn't find all phsyical volumes for volume group VolGroup00<br> Volume Group "VolGroup00" not found<br><br>When I do an lvm pvdisplay, it reveals that VolGroup00 has two uuid's in it. One is /dev/hdb3 with uuid M3CWKv-a2yK-b5Qu-rLzq-Aj27-lXxE-WzvkWE and the other is unknown device with uuid 8YsyEa-r5RX-2LLI-Zz7n-Xr8s-VksP-Mhs0Wi.<br><br><br>I would greatly appreciate any help.&nbsp; I'm currently unable to get at my data since it was all in VolGroup00.&nbsp; Please help me if you can. :)<br><br>Teak<br><p>&#32;
+		<hr size=1>Do you Yahoo!?<br> 
+Get on board. <a href="http://us.rd.yahoo.com/evt=40791/*http://advision.webevents.yahoo.com/handraisers">You're invited</a> to try the new Yahoo! Mail Beta.
+--0-1992713943-1151521296=:78666--
