@@ -1,25 +1,25 @@
-Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
+Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
 	by int-mx1.corp.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
-	k5TFrnVO028259
-	for <linux-lvm@redhat.com>; Thu, 29 Jun 2006 11:53:49 -0400
+	k5TGFosN002525
+	for <linux-lvm@redhat.com>; Thu, 29 Jun 2006 12:15:50 -0400
 Received: from conterra.de (vvv.conterra.de [212.124.44.162])
-	by mx1.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
-	k5TFrksI026592
-	for <linux-lvm@redhat.com>; Thu, 29 Jun 2006 11:53:46 -0400
+	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id k5TGFhjn002990
+	for <linux-lvm@redhat.com>; Thu, 29 Jun 2006 12:15:44 -0400
 Received: from localhost (unknown [127.0.0.1])
-	by conterra.de (-) with ESMTP id 62CED1F4218
-	for <linux-lvm@redhat.com>; Thu, 29 Jun 2006 17:53:35 +0200 (CEST)
+	by conterra.de (-) with ESMTP id 85ECC1F4217
+	for <linux-lvm@redhat.com>; Thu, 29 Jun 2006 18:15:37 +0200 (CEST)
 Received: from conterra.de ([127.0.0.1])
 	by localhost (vvv.conterra.de [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id 24388-03 for <linux-lvm@redhat.com>;
-	Thu, 29 Jun 2006 17:53:26 +0200 (CEST)
-Message-ID: <44A3F773.5040800@conterra.de>
-Date: Thu, 29 Jun 2006 17:53:23 +0200
+	with ESMTP id 24965-10 for <linux-lvm@redhat.com>;
+	Thu, 29 Jun 2006 18:15:25 +0200 (CEST)
+Message-ID: <44A3FC9B.3070500@conterra.de>
+Date: Thu, 29 Jun 2006 18:15:23 +0200
 From: =?ISO-8859-1?Q?Dieter_St=FCken?= <stueken@conterra.de>
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] lvm and fstab
-References: <44A3DF57.4080003@gmail.com>
-In-Reply-To: <44A3DF57.4080003@gmail.com>
+Subject: Re: [linux-lvm] LVM incredible slow with Kernel 2.6.11
+References: <20060628092427.GI20554@vwclub.ro>
+	<20060629144606.GG20554@vwclub.ro>
+In-Reply-To: <20060629144606.GG20554@vwclub.ro>
 Content-Transfer-Encoding: 7bit
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
@@ -34,66 +34,35 @@ List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-ThomasC. wrote:
-> I am using RHEL3.
-> I have been reading the LVM howto and it is very clear but i am missing
-> something anyways.
-> During the setup with DiskDruid i created a Volume group and two logical
-> volumes.
-> One LV for /opt and another one for /stage.
-> After rebooting the OS i don't have any /stage partition.
+Cristian Livadaru wrote:
+> me again ... isn't there anybody that could give ANY hint on what's
+> wrong?
+> 
+> I did some test with dd and the result is terrible!
+> 
+> LVM
+> explendidos:/shared# dd if=/dev/zero of=test1.dd bs=64 count=1000
+> 1000+0 records in
+> 1000+0 records out
+> 64000 bytes transferred in 20.019969 seconds (3197 bytes/sec)
 
-initializing LVM is a multi stage process.
+seems the data gets written synchronously without any buffering.
+Thus each write is delayed until the data is really written to
+disk. For a 5400 RPM disk you get 90 transactions per seconds.
+This gives about 10 seconds for 1000 chunks. "bs=64" means
+64 bytes! so each sector will be written multiple times.
+So may be the system even reads in each sector again each time
+before writing it, thus it takes two turns which gives 20 seconds.
 
-1. create the volume
+Unfortunately I can't tell why this happens :-(
 
-2. create LVs within the volume.
+May be "direct IO" takes place (like for oflags=direct),
+or this is some configuration option of LVM, i don't know about.
+Try using "hdparm" to see, if DMA etc. is enabled. Have a look
+into /var/log/messages or use "dmesg" for nay hardware problems.
+I recently discovered the "blockdev" command. Do you use any special
+ext3 feature? You may try "tune2fs -o journal_data_writeback".
+If you don't have relevant data on the LV, you may try to write
+to the LV device directly. Is it slow for read, too? try "hdparm -t"
 
-3. format the LVs i.e. with "mke2fs"
-
-4. copy data to the LVs
-
-5. register the LVs with /etc/fstab to have them
-   available by default after each boot.
-
-Don't know what "DiskDruid" is, but it seems it did not
-perform steps 4 and 5 automatically. May be you have to
-perform them by hand.
-
-Todo:
-
-Verify step 2) by entering "lvs" to get a list of all your
-LVs created. Try to mount one of your LVs manually.
-i.E. try "mount /dev/Volume00/LogVol00 /mnt" (if your
-LV is named "LogVol00", else choose the name the "lvs"
-command told you). If you get an error, you should try to
-format the LV by "mke2fs". Else you may look into /mnt
-if there is already some data (you should find an empty
-lost+found directory).
-
-If there is no data, you may copy all your /opt to /mnt.
-Use: "cp -av /opt/* /mnt". Now you may umount /mnt.
-You may rename your current /opt into /opt-old and
-create a new empty /opt directory, then try:
-"mount /dev/Volume00/LogVol00 /opt".
-
-If all looks good, you should add a line to your /etc/fstab
-to get /opt mounted by default. Test the entry by umounting
-your /opt again ("umount /opt") and try a "mount -a", which
-mounts all entries from /etc/fstab. If all works well, you will
-find /opt mounted again without any error messages.
-
-Now you may try to reboot.
-
-Same for /stage...
-
-Tip:
-
-If your "DiskDruid" named your volumes /dev/Volume00/LogVol00
-this is OK, but a big feature of LVM is, that the LV may have
-expressive names. So it may find it useful to "rename" your 
-/dev/Volume00/LogVol00 into "/dev/Volume00/OPT".
-
-See: "man lvrename". 
-
-Dieter
+Dieter.
