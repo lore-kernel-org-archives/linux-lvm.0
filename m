@@ -1,26 +1,21 @@
 Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
 	by int-mx1.corp.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
-	k5UArxja024070
-	for <linux-lvm@redhat.com>; Fri, 30 Jun 2006 06:53:59 -0400
-Received: from conterra.de (vvv.conterra.de [212.124.44.162])
+	k5UCWQDn010362
+	for <linux-lvm@redhat.com>; Fri, 30 Jun 2006 08:32:26 -0400
+Received: from vwclub.ro (lcx.at [213.239.193.148])
 	by mx1.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
-	k5UArv6V007468
-	for <linux-lvm@redhat.com>; Fri, 30 Jun 2006 06:53:58 -0400
-Received: from localhost (unknown [127.0.0.1])
-	by conterra.de (-) with ESMTP id 162C91F421C
-	for <linux-lvm@redhat.com>; Fri, 30 Jun 2006 12:53:52 +0200 (CEST)
-Received: from conterra.de ([127.0.0.1])
-	by localhost (vvv.conterra.de [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id 00459-08 for <linux-lvm@redhat.com>;
-	Fri, 30 Jun 2006 12:53:38 +0200 (CEST)
-Message-ID: <44A502B0.7090708@conterra.de>
-Date: Fri, 30 Jun 2006 12:53:36 +0200
-From: =?ISO-8859-1?Q?Dieter_St=FCken?= <stueken@conterra.de>
+	k5UCWObd009258
+	for <linux-lvm@redhat.com>; Fri, 30 Jun 2006 08:32:25 -0400
+Date: Fri, 30 Jun 2006 14:32:22 +0200
+From: Cristian Livadaru <drac3@vwclub.ro>
+Subject: Re: [linux-lvm] LVM incredible slow with Kernel 2.6.11
+Message-ID: <20060630123222.GU20554@vwclub.ro>
+References: <20060628092427.GI20554@vwclub.ro>
+	<20060629144606.GG20554@vwclub.ro> <44A3FC9B.3070500@conterra.de>
+	<20060630073213.GI20554@vwclub.ro>
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] LV's have "disapeared"
-References: <20060630083916.GO20554@vwclub.ro>
-In-Reply-To: <20060630083916.GO20554@vwclub.ro>
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+In-Reply-To: <20060630073213.GI20554@vwclub.ro>
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -32,36 +27,277 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Transfer-Encoding: 7bit
+To: linux-lvm@redhat.com
 
-Cristian Livadaru wrote:
-> I have created some new lv's for some tests.
-> What I did was based on this howto:
+On Fri, Jun 30, 2006 at 09:32:13AM +0200, Cristian Livadaru wrote:
+> On Thu, Jun 29, 2006 at 06:15:23PM +0200, Dieter St?ken wrote:
+> > Cristian Livadaru wrote:
+> > > me again ... isn't there anybody that could give ANY hint on what's
+> > > wrong?
+> > > 
+> > > I did some test with dd and the result is terrible!
+> > > 
+> > > LVM
+> > > explendidos:/shared# dd if=/dev/zero of=test1.dd bs=64 count=1000
+> > > 1000+0 records in
+> > > 1000+0 records out
+> > > 64000 bytes transferred in 20.019969 seconds (3197 bytes/sec)
+> > 
+> > seems the data gets written synchronously without any buffering.
+> > Thus each write is delayed until the data is really written to
+> > disk. For a 5400 RPM disk you get 90 transactions per seconds.
+> > This gives about 10 seconds for 1000 chunks. "bs=64" means
+> > 64 bytes! so each sector will be written multiple times.
+> > So may be the system even reads in each sector again each time
+> > before writing it, thus it takes two turns which gives 20 seconds.
+> > 
+> > Unfortunately I can't tell why this happens :-(
+> > 
+> > May be "direct IO" takes place (like for oflags=direct),
 > 
-> http://www.tldp.org/HOWTO/LVM-HOWTO/recipethreescsi.html
+> where could I check this? 
 > 
-> pvcreate /dev/hdk 
-> pvcreate /dev/hdi
+> > or this is some configuration option of LVM, i don't know about.
+> > Try using "hdparm" to see, if DMA etc. is enabled. Have a look
 > 
-> vgcreate vhostvg /dev/hdk /dev/hdi
+> no matter how it's set, the result is always the same.
+> I could'nt find any usefull information in any logfiles, I enabled LVM
+> verbose mode and debug output but still nothing was found.
 > 
-> lvcreate -L1G -nvm01lv vhostvg 
-> ok and here I thinkg I made a big mistake!
-> since I had no partitions on my disks and I assumed that I needed one so
-> that it matches the LVM that was created by debian automaticaly I
-> created on both disks a partition and changed the type to 8e  Linux LVM.
-> I actualy worked with the lv's and everything is ok ( except my speed
-> problem but this is a other topic )
-> now after a rebbot, I only see the lv created by debian, not the one
-> that I kind of screwed up with my partitioning.
+> > into /var/log/messages or use "dmesg" for nay hardware problems.
+> > I recently discovered the "blockdev" command. Do you use any special
+> I have read in some posts on the mailinglist about blockdev but not
+> quite sure on how I could use it to solve my problem.
 > 
-> Is there a simple way to recover it? It's not that important that I
-> would wast to much time with it, it was just for testing anyway and I
-> could recreate them.
+> > ext3 feature? You may try "tune2fs -o journal_data_writeback".
+> > If you don't have relevant data on the LV, you may try to write
+> > to the LV device directly. Is it slow for read, too? try "hdparm -t"
+> 
+> hdparm -t /dev/share/sharevg
+> 
+> /dev/share/sharevg:
+>  Timing buffered disk reads:  146 MB in  3.01 seconds =  48.50 MB/sec
+>  HDIO_DRIVE_CMD(null) (wait for flush complete) failed: Inappropriate
+>  ioctl for device
+> 
+> I tried tune2fs but it didn't get any better.
+> I also dont understand why with kernel 2.4 I get about 5mb/s instead of
+> the 350kb/s 
+> not that 5mb would be great but still, much better then 350kb/s
+> 
+> Maybee I should mention that this is some "want-to-be" raid controler
+> that was on the mainboard.
+> 
+> 0000:00:0e.0 RAID bus controller: Triones Technologies, Inc. HPT374 (rev
+> 07)
+> 
+ 
+very strange, I just created a lvm on to other disks the size of this
+lvm is only 1gb and I did the dd test in there and it was way better.
 
-You created the partitions, but as long as you did not write any data
-to the created partition, nothing bad happened so far. Just delete
-the partition again. The partition table resides in the first sector
-of the disk, which is fortunately unused by LVM.
+here the config of my slow LVM, 2x 300GB 
 
-Dieter.
+cat /etc/lvm/backup/share
+# Generated by LVM2: Fri Jun  9 18:26:30 2006
+
+contents = "Text Format Volume Group"
+version = 1
+
+description = "Created *after* executing '/sbin/vgcfgbackup'"
+
+creation_host = "esplendidos"   # Linux esplendidos 2.4.27-2-386 #1 Thu
+Jan 20 10:55:08 JST 2005 i686
+creation_time = 1149877590      # Fri Jun  9 18:26:30 2006
+
+share {
+        id = "6szXKe-QPvJ-t14I-kF13-0JSc-bevq-dv4KBL"
+        seqno = 2
+        status = ["RESIZEABLE", "READ", "WRITE"]
+        extent_size = 8192              # 4 Megabytes
+        max_lv = 0
+        max_pv = 0
+
+        physical_volumes {
+
+                pv0 {
+                        id = "g3jfAR-Z2Ka-SCgr-08QB-8WBn-5g4h-jXLrn1"
+                        device = "/dev/hde1"    # Hint only
+
+                        status = ["ALLOCATABLE"]
+                        pe_start = 384
+                        pe_count = 71541        # 279.457 Gigabytes
+                }
+
+                pv1 {
+                        id = "kYQB4j-fYV9-3NUa-g0Sg-H4Bk-Kx5F-wRO9G1"
+                        device = "/dev/hdg1"    # Hint only
+
+                        status = ["ALLOCATABLE"]
+                        pe_start = 384
+                        pe_count = 71541        # 279.457 Gigabytes
+                }
+        }
+
+        logical_volumes {
+
+                sharevg {
+                        id = "KdvcJ9-ZLMP-AJYA-soGK-qHfy-UtrX-PpV9Kv"
+                        status = ["READ", "WRITE", "VISIBLE"]
+                        segment_count = 2
+
+                        segment1 {
+                                start_extent = 0
+                                extent_count = 71541    # 279.457
+Gigabytes
+
+                                type = "striped"
+                                stripe_count = 1        # linear
+
+                                stripes = [
+                                        "pv0", 0
+                                ]
+                        }
+                        segment2 {
+                                start_extent = 71541
+                                extent_count = 71541    # 279.457
+Gigabytes
+
+                                type = "striped"
+                                stripe_count = 1        # linear
+
+                                stripes = [
+                                        "pv1", 0
+                                ]
+                        }
+                }
+        }
+}
+
+
+and here the config of the new lvm on the other disks:
+
+
+cat /etc/lvm/backup/vhostvg
+# Generated by LVM2: Fri Jun 30 11:15:54 2006
+
+contents = "Text Format Volume Group"
+version = 1
+
+description = "Created *after* executing 'lvcreate -L200M -nvm02swaplv
+vhostvg'"
+
+creation_host = "esplendidos"   # Linux esplendidos 2.6.11.12-xen0 #3
+Thu Jun 29 15:47:52 CEST 2006 i686
+creation_time = 1151658954      # Fri Jun 30 11:15:54 2006
+
+vhostvg {
+        id = "bZljKZ-0k6u-kuo5-4tGM-MxF2-oft4-R2R9mf"
+        seqno = 5
+        status = ["RESIZEABLE", "READ", "WRITE"]
+        extent_size = 8192              # 4 Megabytes
+        max_lv = 0
+        max_pv = 0
+
+        physical_volumes {
+
+                pv0 {
+                        id = "6POjat-zX5c-q7g5-KeRm-2ZmG-CAv4-odYFrt"
+                        device = "/dev/hdi1"    # Hint only
+
+                        status = ["ALLOCATABLE"]
+                        pe_start = 384
+                        pe_count = 29311        # 114.496 Gigabytes
+                }
+
+                pv1 {
+                        id = "VaOcDQ-wyN5-5ahB-UF3y-zcTw-7e1U-PnJUnJ"
+                        device = "/dev/hdk1"    # Hint only
+
+                        status = ["ALLOCATABLE"]
+                        pe_start = 384
+                        pe_count = 29311        # 114.496 Gigabytes
+                }
+        }
+
+        logical_volumes {
+
+                vm01lv {
+                        id = "nfdL2Z-NzUL-K9Ci-EF4L-izCq-qbnl-ZI6foI"
+                        status = ["READ", "WRITE", "VISIBLE"]
+                        segment_count = 1
+
+                        segment1 {
+                                start_extent = 0
+                                extent_count = 256      # 1024 Megabytes
+
+                                type = "striped"
+                                stripe_count = 1        # linear
+
+                                stripes = [
+                                        "pv0", 0
+                                ]
+                        }
+                }
+
+                vm01swaplv {
+                        id = "byPo9V-48mm-lfts-HZ4a-D21I-Y7Qt-573te9"
+                        status = ["READ", "WRITE", "VISIBLE"]
+                        segment_count = 1
+
+                        segment1 {
+                                start_extent = 0
+                                extent_count = 125      # 500 Megabytes
+
+                                type = "striped"
+                                stripe_count = 1        # linear
+
+                                stripes = [
+                                        "pv0", 256
+                                ]
+                        }
+                }
+
+                vm02lv {
+                        id = "up70a7-RETo-RvPI-liCc-ptdc-1qjA-MXrnsG"
+                        status = ["READ", "WRITE", "VISIBLE"]
+                        segment_count = 1
+
+                        segment1 {
+                                start_extent = 0
+                                extent_count = 125      # 500 Megabytes
+
+                                type = "striped"
+                                stripe_count = 1        # linear
+
+                                stripes = [
+                                        "pv0", 381
+                                ]
+                        }
+                }
+
+                vm02swaplv {
+                        id = "RrkcHD-SjMW-q4iz-3gGB-kgqV-TPDj-k7Jrl5"
+                        status = ["READ", "WRITE", "VISIBLE"]
+                        segment_count = 1
+
+                        segment1 {
+                                start_extent = 0
+                                extent_count = 50       # 200 Megabytes
+
+                                type = "striped"
+                                stripe_count = 1        # linear
+
+                                stripes = [
+                                        "pv0", 506
+                                ]
+                        }
+                }
+        }
+}
+
+
+the 2 other disks are also on the HPT IDE Raid controller ( which is
+actualy not running as raid, I just use it for additional IDE ports )
+
+Cris
