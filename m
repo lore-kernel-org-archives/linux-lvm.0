@@ -1,23 +1,31 @@
-Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
+Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
 	by int-mx1.corp.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
-	k62EQsPZ032731
-	for <linux-lvm@redhat.com>; Sun, 2 Jul 2006 10:26:54 -0400
-Received: from shell.wgops.com (postfix@free.wgops.com [69.51.116.66])
-	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id k62EQkO0028313
-	for <linux-lvm@redhat.com>; Sun, 2 Jul 2006 10:26:47 -0400
-Received: from [10.1.2.206] (localhost [127.0.0.1])
-	by shell.wgops.com (Postfix) with ESMTP id 440E324FB0
-	for <linux-lvm@redhat.com>; Sun,  2 Jul 2006 08:26:28 -0600 (MDT)
-Date: Sun, 02 Jul 2006 08:26:27 -0600
-From: Michael Loftis <mloftis@wgops.com>
-Subject: Re: [linux-lvm] Re:
-	vgscan	--force-all-update-reread-and-take-that-kernel
-Message-ID: <25F9B6E00F76C3A7164345D5@dhcp-2-206.wgops.com>
-In-Reply-To: <44A2AD8C.9020300@gnome.org>
-References: <44A29C60.8020709@gnome.org> <44A2AD8C.9020300@gnome.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
+	k63CVkNK009951
+	for <linux-lvm@redhat.com>; Mon, 3 Jul 2006 08:31:46 -0400
+Received: from mail-in-04.arcor-online.net (mail-in-04.arcor-online.net
+	[151.189.21.44])
+	by mx1.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
+	k63CVixg008950
+	for <linux-lvm@redhat.com>; Mon, 3 Jul 2006 08:31:44 -0400
+Received: from mail-in-08-z2.arcor-online.net (mail-in-08-z2.arcor-online.net
+	[151.189.8.20])
+	by mail-in-04.arcor-online.net (Postfix) with ESMTP id DBAB5132486
+	for <linux-lvm@redhat.com>; Mon,  3 Jul 2006 14:31:43 +0200 (CEST)
+Received: from mail-in-03.arcor-online.net (mail-in-03.arcor-online.net
+	[151.189.21.43])
+	by mail-in-08-z2.arcor-online.net (Postfix) with ESMTP id CC2175452E
+	for <linux-lvm@redhat.com>; Mon,  3 Jul 2006 14:31:43 +0200 (CEST)
+Received: from bongo.freakout.de (freakout.homeip.net [217.173.146.67])
+	(Authenticated sender: hotrat@arcor.de)
+	by mail-in-03.arcor-online.net (Postfix) with ESMTP id 97F2B1F6148
+	for <linux-lvm@redhat.com>; Mon,  3 Jul 2006 14:31:43 +0200 (CEST)
+Received: from smtphost (bongo.freakout.de [192.168.7.68])
+	by bongo.freakout.de (8.13.7/8.13.6) with ESMTP id k63CVT2M018632
+	for linux-lvm@redhat.com; Mon, 3 Jul 2006 14:31:29 +0200
+Date: Mon, 3 Jul 2006 14:31:29 +0200
+Message-Id: <200607031231.k63CVT2M018632@bongo.freakout.de>
+From: Axel Reinhold <lvm@freakout.de>
+Subject: [linux-lvm] need pvresize (lvm1)
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -28,42 +36,25 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: LVM general discussion and development <linux-lvm@redhat.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA1
 
+Hello,
 
---On June 28, 2006 12:25:48 PM -0400 Tristan Van Berkom <tvb@gnome.org> 
-wrote:
+still using LVM1 / 2.4.x on servers - have user-space-tools 1.0.8 installed from source.
+In the distribution is a man-page for "pvresize" - but no such binary is produced by make!?
 
-> Tristan Van Berkom wrote:
->> Hello lvm folks,
->
-> Hi again...
->     seems I have found a way to make the script work, by making the
-> "volume group" active throughout the whole procedure.
->
-> So, before I commit that and close this book... is what I am doing
-> insane ? is it crazy to go and add a new physical volume to a volume
-> group that is living and breathing ? (i.e. "active" via `vgchange -ay')
+Would need that functionality on a server. How can i produce pvresive (lvm1)?
 
-Yes.  That's part of the whole point of LVM, it's operations can all be 
-done online.
+Axel
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.4-PB (GNU/Linux)
 
->
-> Cheers,
->              -Tristan
->
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
->
-
-
-
---
-"Genius might be described as a supreme capacity for getting its possessors
-into trouble of all kinds."
--- Samuel Butler
+iD8DBQFEqQ4gHQ9JwE2bDw0RAn1jAKC4W9ZiDLYyMcBxShlMAJ4oA/gqawCghFbR
+cS50ggf2HbIqtCAlwz34jjc=
+=K5qU
+-----END PGP SIGNATURE-----
