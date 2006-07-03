@@ -1,31 +1,26 @@
 Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
 	by int-mx1.corp.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
-	k63CVkNK009951
-	for <linux-lvm@redhat.com>; Mon, 3 Jul 2006 08:31:46 -0400
-Received: from mail-in-04.arcor-online.net (mail-in-04.arcor-online.net
-	[151.189.21.44])
+	k63JHCov014152
+	for <linux-lvm@redhat.com>; Mon, 3 Jul 2006 15:17:12 -0400
+Received: from buraja.hst.terra.com.br (buraja.hst.terra.com.br
+	[200.176.10.198])
 	by mx1.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
-	k63CVixg008950
-	for <linux-lvm@redhat.com>; Mon, 3 Jul 2006 08:31:44 -0400
-Received: from mail-in-08-z2.arcor-online.net (mail-in-08-z2.arcor-online.net
-	[151.189.8.20])
-	by mail-in-04.arcor-online.net (Postfix) with ESMTP id DBAB5132486
-	for <linux-lvm@redhat.com>; Mon,  3 Jul 2006 14:31:43 +0200 (CEST)
-Received: from mail-in-03.arcor-online.net (mail-in-03.arcor-online.net
-	[151.189.21.43])
-	by mail-in-08-z2.arcor-online.net (Postfix) with ESMTP id CC2175452E
-	for <linux-lvm@redhat.com>; Mon,  3 Jul 2006 14:31:43 +0200 (CEST)
-Received: from bongo.freakout.de (freakout.homeip.net [217.173.146.67])
-	(Authenticated sender: hotrat@arcor.de)
-	by mail-in-03.arcor-online.net (Postfix) with ESMTP id 97F2B1F6148
-	for <linux-lvm@redhat.com>; Mon,  3 Jul 2006 14:31:43 +0200 (CEST)
-Received: from smtphost (bongo.freakout.de [192.168.7.68])
-	by bongo.freakout.de (8.13.7/8.13.6) with ESMTP id k63CVT2M018632
-	for linux-lvm@redhat.com; Mon, 3 Jul 2006 14:31:29 +0200
-Date: Mon, 3 Jul 2006 14:31:29 +0200
-Message-Id: <200607031231.k63CVT2M018632@bongo.freakout.de>
-From: Axel Reinhold <lvm@freakout.de>
-Subject: [linux-lvm] need pvresize (lvm1)
+	k63JH9Qw026192
+	for <linux-lvm@redhat.com>; Mon, 3 Jul 2006 15:17:10 -0400
+Received: from caledonia.hst.terra.com.br (caledonia.hst.terra.com.br
+	[200.176.10.7])
+	by buraja.hst.terra.com.br (Postfix) with ESMTP id 4179622A418A
+	for <linux-lvm@redhat.com>; Mon,  3 Jul 2006 16:17:08 -0300 (BRT)
+Received: from [10.0.0.38] (unknown [200.168.58.218])
+	(authenticated user minicom024)
+	by caledonia.hst.terra.com.br (Postfix) with ESMTP id 05EFB2338168
+	for <linux-lvm@redhat.com>; Mon,  3 Jul 2006 16:17:05 -0300 (BRT)
+Message-ID: <44A96DAC.5090202@minicom.com.br>
+Date: Mon, 03 Jul 2006 16:19:08 -0300
+From: Du <eduardo@minicom.com.br>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] A problem (probably conceptual) with snapshot
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -36,25 +31,54 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+To: linux-lvm@redhat.com
 
------BEGIN PGP SIGNED MESSAGE-----
-Hash: SHA1
+Today I needed to install Oracle and some other things on my PC, but I 
+realize that it would be better to make a snapshot and then reboot Linux 
+with this snapshot mounted instead of root.
+Ok, I did that and changed fstab to mount my snapRoot instead root, 
+ok...I saw with 'df' command that it worked.
+And I've installed all what I wanted, some garbage too...by the way, 
+this snapRoot doesnt means nothing to me, just for testing. And then I 
+changed the fstab again to mount the root original. But after it, all 
+the changes I made on snapshot was made on my root LV too. And the 
+lvdisplay command shows something strange now, about these two LV's. The 
+output is:
 
-Hello,
+--- Logical volume ---
+  LV Name                /dev/dutcheVG/root
+  VG Name                dutcheVG
+  LV UUID                aAN6BH-GqW3-zhtr-KeIt-BW4m-qEyw-RypMit
+  LV Write Access        read/write
+  LV snapshot status     source of
+                         /dev/dutcheVG/snap_root [INACTIVE]
+  LV Status              available
+  # open                 0
+  LV Size                9.27 GB
+  Current LE             2372
+  Segments               1
+  Allocation             inherit
+  Read ahead sectors     0
+  Block device           254:5
 
-still using LVM1 / 2.4.x on servers - have user-space-tools 1.0.8 installed from source.
-In the distribution is a man-page for "pvresize" - but no such binary is produced by make!?
+  --- Logical volume ---
+  LV Name                /dev/dutcheVG/snap_root
+  VG Name                dutcheVG
+  LV UUID                cj2PD2-4OYX-eCzw-kG5y-r071-icK0-dq7FBr
+  LV Write Access        read/write
+  LV snapshot status     INACTIVE destination for /dev/dutcheVG/root
+  LV Status              NOT available
+  LV Size                9.27 GB
+  Current LE             2372
+  COW-table size         2.00 GB
+  COW-table LE           512
+  Snapshot chunk size    8.00 KB
+  Segments               1
+  Allocation             inherit
+  Read ahead sectors     0
 
-Would need that functionality on a server. How can i produce pvresive (lvm1)?
 
-Axel
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.4-PB (GNU/Linux)
+I donno what is really happening, does anybody can explain me? Plz!!
 
-iD8DBQFEqQ4gHQ9JwE2bDw0RAn1jAKC4W9ZiDLYyMcBxShlMAJ4oA/gqawCghFbR
-cS50ggf2HbIqtCAlwz34jjc=
-=K5qU
------END PGP SIGNATURE-----
+Thanks in advance
