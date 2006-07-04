@@ -1,18 +1,22 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
 	by int-mx1.corp.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
-	k642i4vX006031
-	for <linux-lvm@redhat.com>; Mon, 3 Jul 2006 22:44:04 -0400
-Received: from web50409.mail.yahoo.com (web50409.mail.yahoo.com
-	[206.190.38.244])
-	by mx3.redhat.com (8.13.1/8.13.1) with SMTP id k642hrxH029097
-	for <linux-lvm@redhat.com>; Mon, 3 Jul 2006 22:43:58 -0400
-Message-ID: <20060704024348.9787.qmail@web50409.mail.yahoo.com>
-Date: Mon, 3 Jul 2006 19:43:48 -0700 (PDT)
-From: Slava Mikerin <slava_mikerin@yahoo.com>
+	k648HTd1025398
+	for <linux-lvm@redhat.com>; Tue, 4 Jul 2006 04:17:29 -0400
+Received: from dgate2.fujitsu-siemens.com (dgate2.fujitsu-siemens.com
+	[217.115.66.36])
+	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id k648HLPr002250
+	for <linux-lvm@redhat.com>; Tue, 4 Jul 2006 04:17:21 -0400
+Received: from pdbzex1e.pdb.fsc.net (pdbzex1e.pdb.fsc.net [172.25.96.71])
+	by plim.pdb.fsc.net (8.12.6/8.12.6/SuSE Linux 0.6) with ESMTP id
+	k648HKmR025290
+	for <linux-lvm@redhat.com>; Tue, 4 Jul 2006 10:17:20 +0200
+Content-class: urn:content-classes:message
 MIME-Version: 1.0
-Content-Type: multipart/alternative; boundary="0-42045122-1151981028=:9498"
+Date: Tue, 4 Jul 2006 10:17:17 +0200
+Message-ID: <D81E5F9261AA644D90FF7B8E4005881731918A@PDBEX02E.pdb.fsc.net>
+From: "Laurenz, Dirk" <Dirk.Laurenz@fujitsu-siemens.com>
 Content-Transfer-Encoding: 8bit
-Subject: [linux-lvm] vm i/o error
+Subject: [linux-lvm] Mirror of LVs
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -23,41 +27,25 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
+Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@redhat.com
 
---0-42045122-1151981028=:9498
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
+Hi,
 
-  
----------------------------------
- hello,
- i am using lvm 2 with and having problems with home partition. when i try activating my vg group "playbox" i get an error:
-   Code:
-  
-vgchange -ay
-  /dev/evms/lvm2/playbox/home: read failed after 0 of 4096 at 0: Input/output error
-  /dev/playbox/home: read failed after 0 of 4096 at 0: Input/output error
-  7 logical volume(s) in volume group "playbox" now active
+ist it possible to mirror a lv or a pv with dm or lvm2 in sles9 sp3?
 
- 
- i tried 
-   Code:
-  
-e2fsck /dev/playbox/home
-e2fsck 1.38
- (30-Jun-2005)
-e2fsck: Attempt to read block from filesystem resulted in short read while trying to open /dev/playbox/home
-Could this be a zero-length partition?
+Mit freundlichem Gruss,
 
- 
- can anyone please help me recover my partition  
- thanks alot
- slava
---0-42045122-1151981028=:9498
-Content-Type: text/html; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
+Dirk Laurenz
+Systems Engineer
+S DE SE PS N/O
+Fujitsu Siemens Computers GmbH
+Hildesheimer Strasse 25
+30880 Laatzen
+Germany
 
-<em></em><em></em><!--X-Head-of-Message-End--> <!--X-Head-Body-Sep-Begin--> <hr> <!--X-Head-Body-Sep-End--><!--X-Body-of-Message-->hello,<br> i am using lvm 2 with and having problems with home partition. when i try activating my vg group "playbox" i get an error:<br> <div style="margin: 5px 20px 20px;">  <div class="smallfont" style="margin-bottom: 2px;">Code:</div>  <pre class="alt2" style="border: 1px inset ; margin: 0px; padding: 6px; overflow: auto; width: 640px; height: 82px;"><div dir="ltr" style="text-align: left;">vgchange -ay<br>  /dev/evms/lvm2/playbox/home: read failed after 0 of 4096 at 0: Input/output error<br>  /dev/playbox/home: read failed after 0 of 4096 at 0: Input/output error<br>  7 logical volume(s) in volume group "playbox" now active</div></pre> </div> i tried <br> <div style="margin: 5px 20px 20px;">  <div class="smallfont" style="margin-bottom: 2px;">Code:</div>  <pre class="alt2" style="border: 1px inset ; margin: 0px; padding: 6px; overflow:
- auto; width: 640px; height: 82px;"><div dir="ltr" style="text-align: left;">e2fsck /dev/playbox/home<br>e2fsck 1.38<br> (30-Jun-2005)<br>e2fsck: Attempt to read block from filesystem resulted in short read while trying to open /dev/playbox/home<br>Could this be a zero-length partition?</div></pre> </div> can anyone please help me recover my partition <img src="https://www.redhat.com/archives/linux-lvm/2006-June/msg00077.html" alt="" title="Confused" class="inlineimg" border="0"> <br> thanks alot<br> slava
---0-42045122-1151981028=:9498--
+Telephone:	+49 511 84 89 18 08
+Telefax:	+49 511 84 89 25 18 08
+Mobile:	+49 170 22 10 78 1 
+Email:	mailto: dirk.laurenz@fujitsu-siemens.com
+Internet:	http://www.fujitsu-siemens.com
