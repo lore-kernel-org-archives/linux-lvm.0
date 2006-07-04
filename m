@@ -1,26 +1,18 @@
-Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
+Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
 	by int-mx1.corp.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
-	k63JHCov014152
-	for <linux-lvm@redhat.com>; Mon, 3 Jul 2006 15:17:12 -0400
-Received: from buraja.hst.terra.com.br (buraja.hst.terra.com.br
-	[200.176.10.198])
-	by mx1.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
-	k63JH9Qw026192
-	for <linux-lvm@redhat.com>; Mon, 3 Jul 2006 15:17:10 -0400
-Received: from caledonia.hst.terra.com.br (caledonia.hst.terra.com.br
-	[200.176.10.7])
-	by buraja.hst.terra.com.br (Postfix) with ESMTP id 4179622A418A
-	for <linux-lvm@redhat.com>; Mon,  3 Jul 2006 16:17:08 -0300 (BRT)
-Received: from [10.0.0.38] (unknown [200.168.58.218])
-	(authenticated user minicom024)
-	by caledonia.hst.terra.com.br (Postfix) with ESMTP id 05EFB2338168
-	for <linux-lvm@redhat.com>; Mon,  3 Jul 2006 16:17:05 -0300 (BRT)
-Message-ID: <44A96DAC.5090202@minicom.com.br>
-Date: Mon, 03 Jul 2006 16:19:08 -0300
-From: Du <eduardo@minicom.com.br>
+	k642i4vX006031
+	for <linux-lvm@redhat.com>; Mon, 3 Jul 2006 22:44:04 -0400
+Received: from web50409.mail.yahoo.com (web50409.mail.yahoo.com
+	[206.190.38.244])
+	by mx3.redhat.com (8.13.1/8.13.1) with SMTP id k642hrxH029097
+	for <linux-lvm@redhat.com>; Mon, 3 Jul 2006 22:43:58 -0400
+Message-ID: <20060704024348.9787.qmail@web50409.mail.yahoo.com>
+Date: Mon, 3 Jul 2006 19:43:48 -0700 (PDT)
+From: Slava Mikerin <slava_mikerin@yahoo.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] A problem (probably conceptual) with snapshot
+Content-Type: multipart/alternative; boundary="0-42045122-1151981028=:9498"
+Content-Transfer-Encoding: 8bit
+Subject: [linux-lvm] vm i/o error
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -31,54 +23,41 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: linux-lvm@redhat.com
 
-Today I needed to install Oracle and some other things on my PC, but I 
-realize that it would be better to make a snapshot and then reboot Linux 
-with this snapshot mounted instead of root.
-Ok, I did that and changed fstab to mount my snapRoot instead root, 
-ok...I saw with 'df' command that it worked.
-And I've installed all what I wanted, some garbage too...by the way, 
-this snapRoot doesnt means nothing to me, just for testing. And then I 
-changed the fstab again to mount the root original. But after it, all 
-the changes I made on snapshot was made on my root LV too. And the 
-lvdisplay command shows something strange now, about these two LV's. The 
-output is:
+--0-42045122-1151981028=:9498
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
 
---- Logical volume ---
-  LV Name                /dev/dutcheVG/root
-  VG Name                dutcheVG
-  LV UUID                aAN6BH-GqW3-zhtr-KeIt-BW4m-qEyw-RypMit
-  LV Write Access        read/write
-  LV snapshot status     source of
-                         /dev/dutcheVG/snap_root [INACTIVE]
-  LV Status              available
-  # open                 0
-  LV Size                9.27 GB
-  Current LE             2372
-  Segments               1
-  Allocation             inherit
-  Read ahead sectors     0
-  Block device           254:5
+  
+---------------------------------
+ hello,
+ i am using lvm 2 with and having problems with home partition. when i try activating my vg group "playbox" i get an error:
+   Code:
+  
+vgchange -ay
+  /dev/evms/lvm2/playbox/home: read failed after 0 of 4096 at 0: Input/output error
+  /dev/playbox/home: read failed after 0 of 4096 at 0: Input/output error
+  7 logical volume(s) in volume group "playbox" now active
 
-  --- Logical volume ---
-  LV Name                /dev/dutcheVG/snap_root
-  VG Name                dutcheVG
-  LV UUID                cj2PD2-4OYX-eCzw-kG5y-r071-icK0-dq7FBr
-  LV Write Access        read/write
-  LV snapshot status     INACTIVE destination for /dev/dutcheVG/root
-  LV Status              NOT available
-  LV Size                9.27 GB
-  Current LE             2372
-  COW-table size         2.00 GB
-  COW-table LE           512
-  Snapshot chunk size    8.00 KB
-  Segments               1
-  Allocation             inherit
-  Read ahead sectors     0
+ 
+ i tried 
+   Code:
+  
+e2fsck /dev/playbox/home
+e2fsck 1.38
+ (30-Jun-2005)
+e2fsck: Attempt to read block from filesystem resulted in short read while trying to open /dev/playbox/home
+Could this be a zero-length partition?
 
+ 
+ can anyone please help me recover my partition  
+ thanks alot
+ slava
+--0-42045122-1151981028=:9498
+Content-Type: text/html; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
 
-I donno what is really happening, does anybody can explain me? Plz!!
-
-Thanks in advance
+<em></em><em></em><!--X-Head-of-Message-End--> <!--X-Head-Body-Sep-Begin--> <hr> <!--X-Head-Body-Sep-End--><!--X-Body-of-Message-->hello,<br> i am using lvm 2 with and having problems with home partition. when i try activating my vg group "playbox" i get an error:<br> <div style="margin: 5px 20px 20px;">  <div class="smallfont" style="margin-bottom: 2px;">Code:</div>  <pre class="alt2" style="border: 1px inset ; margin: 0px; padding: 6px; overflow: auto; width: 640px; height: 82px;"><div dir="ltr" style="text-align: left;">vgchange -ay<br>  /dev/evms/lvm2/playbox/home: read failed after 0 of 4096 at 0: Input/output error<br>  /dev/playbox/home: read failed after 0 of 4096 at 0: Input/output error<br>  7 logical volume(s) in volume group "playbox" now active</div></pre> </div> i tried <br> <div style="margin: 5px 20px 20px;">  <div class="smallfont" style="margin-bottom: 2px;">Code:</div>  <pre class="alt2" style="border: 1px inset ; margin: 0px; padding: 6px; overflow:
+ auto; width: 640px; height: 82px;"><div dir="ltr" style="text-align: left;">e2fsck /dev/playbox/home<br>e2fsck 1.38<br> (30-Jun-2005)<br>e2fsck: Attempt to read block from filesystem resulted in short read while trying to open /dev/playbox/home<br>Could this be a zero-length partition?</div></pre> </div> can anyone please help me recover my partition <img src="https://www.redhat.com/archives/linux-lvm/2006-June/msg00077.html" alt="" title="Confused" class="inlineimg" border="0"> <br> thanks alot<br> slava
+--0-42045122-1151981028=:9498--
