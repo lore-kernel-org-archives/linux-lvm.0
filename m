@@ -1,12 +1,26 @@
-Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
+Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
 	by int-mx1.corp.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
-	k6M5YBlW027731
-	for <linux-lvm@redhat.com>; Sat, 22 Jul 2006 01:34:11 -0400
-Message-ID: <3398.10.14.200.150.1153541456.squirrel@students.stttelkom.ac.id>
-From: "netzerospace" <613030025@students.stttelkom.ac.id>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: [linux-lvm] lvm eror
+	k69IFRRv009527
+	for <linux-lvm@redhat.com>; Sun, 9 Jul 2006 14:15:27 -0400
+Received: from ciao.gmane.org (main.gmane.org [80.91.229.2])
+	by mx1.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
+	k69IFP3g026833
+	for <linux-lvm@redhat.com>; Sun, 9 Jul 2006 14:15:25 -0400
+Received: from root by ciao.gmane.org with local (Exim 4.43)
+	id 1Fzdo6-0004nC-DM
+	for linux-lvm@redhat.com; Sun, 09 Jul 2006 20:15:02 +0200
+Received: from 216-15-125-177.c3-0.smr-ubr3.sbo-smr.ma.cable.rcn.com
+	([216.15.125.177]) by main.gmane.org with esmtp (Gmexim 0.1 (Debian))
+	id 1AlnuQ-0007hv-00
+	for <linux-lvm@redhat.com>; Sun, 09 Jul 2006 20:15:02 +0200
+Received: from dave by 216-15-125-177.c3-0.smr-ubr3.sbo-smr.ma.cable.rcn.com
+	with local (Gmexim 0.1 (Debian)) id 1AlnuQ-0007hv-00
+	for <linux-lvm@redhat.com>; Sun, 09 Jul 2006 20:15:02 +0200
+From: David Abrahams <dave@boost-consulting.com>
+Message-ID: <uu05q3b1r.fsf@boost-consulting.com>
+Mime-Version: 1.0
+Sender: news <news@sea.gmane.org>
+Subject: [linux-lvm] LVM2 on dmraid -- can't boot
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -16,22 +30,39 @@ List-Post: <mailto:linux-lvm@redhat.com>
 List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
-Date: Sat, 22 Jul 2006 05:34:12 -0000
+Date: Sun, 09 Jul 2006 18:15:27 -0000
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: Linux-LVM@Sistina.com
+Content-Transfer-Encoding: 7bit
+To: linux-lvm@redhat.com
 
-hai...
-can i ask about lvm...
-lvextend -L +40000 /dev/datavg/IardFileServer
 
-and i reboot the computer before i resize the file system..
-and an eror accrured...
+When building the new system installation from a liveCD, I can easily
+create an LVM2 filesystem on top of a dmraid (FakeRaid) 1 array, and
+the filesystem works great.  However, when booting from a primary
+physical (non-LVM) partition on the dmraid array, only that partition
+seems to mount properly; When I try to mount any of the LVM
+partitions, all I see in them is "lost+found."  Naturally, the boot
+process fails at that point.
 
-can you help me
+http://article.gmane.org/gmane.linux.ataraid/1989
+illustrates my situation.
 
-i tried to extend my volume group in my IDE hardisk
-by doing
+The two details not mentioned there:
+
+1. When mounting any partition (LVM or not), I get 'cramfs: wrong magic'
+
+2. I see the following when I do dmraid -ay
+
+    [ 2881.836361] attempt to access beyond end of device
+    [ 2881.836406] sda: rw=0, want=9767777280, limit=876773168
+    [ 2881.836361] attempt to access beyond end of device
+    [ 2881.836406] sdb: rw=0, want=9767777280, limit=876773168
+
+Can anyone offer help?
+Thanks!
+
 -- 
-<img
-src=http://linuxcult.com/gallery/.gallery_data/8/7/4/6/tirinha01A_original.jpg>
+Dave Abrahams
+Boost Consulting
+www.boost-consulting.com
