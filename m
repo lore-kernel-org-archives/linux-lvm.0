@@ -1,23 +1,19 @@
-Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
+Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
 	by int-mx1.corp.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
-	k6AJVuxB019598
-	for <linux-lvm@redhat.com>; Mon, 10 Jul 2006 15:31:56 -0400
-Received: from zcars04f.nortel.com (zcars04f.nortel.com [47.129.242.57])
-	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id k6AJVoYN012849
-	for <linux-lvm@redhat.com>; Mon, 10 Jul 2006 15:31:50 -0400
-Received: from zrtphxs1.corp.nortel.com
-	(zrtphxs1.corp.nort...s0.corp.nortel.com [47.140.202.46])
-	by zcars04f.nortel.com (Switch-2.2.6/Switch-2.2.0) with ESMTP id
-	k6AJVgY29966
-	for <linux-lvm@redhat.com>; Mon, 10 Jul 2006 15:31:43 -0400 (EDT)
-Message-ID: <44B2AAD4.70505@dogpad.net>
-Date: Mon, 10 Jul 2006 14:30:28 -0500
-From: Joe Harvell <jharvell@dogpad.net>
+	k6AJtDEb025581
+	for <linux-lvm@redhat.com>; Mon, 10 Jul 2006 15:55:13 -0400
+Received: from smtp.vzavenue.net (smtp.vzavenue.net [66.171.59.140])
+	by mx1.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
+	k6AJtB2q025958
+	for <linux-lvm@redhat.com>; Mon, 10 Jul 2006 15:55:12 -0400
+Message-ID: <012401c6a45a$c53bcb80$2901a8c0@robbie>
+From: "Robbie Coss" <robbie@vzavenue.net>
+Date: Mon, 10 Jul 2006 14:55:18 -0500
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] cannot create snapshot LV (unrecognised segment type
-	snapshot)
-Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
+Subject: [linux-lvm] LVM2 maximum logical volume size help
+Reply-To: Robbie Coss <robbie@vzavenue.net>,
+	LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -27,113 +23,26 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; format="flowed"; charset="us-ascii"; reply-type="original"
 To: linux-lvm@redhat.com
 
-In the past, I have been able to create snapshot LVs using LVM2.  I had
-a script that did this as part of a full backup.  I have upgraded LVM2
-several times and now I find I cannot create a snapshot LV anymore.  It
-seems to be related to an error message I get every time I enter an LVM2
-command'
+Hi,
 
-Version info:
+I am currently running RHEL4 update 3  (kernel 2.6.9-34.0.2.EL), and
+using LVM2 and the ext3 filesystem.
 
-dogboy ~ # lvm version
-  LVM version:     2.02.05 (2006-04-21)
-  Library version: 1.02.07 (2006-05-11)
-  Driver version:  4.1.0
+I need to know what is the maximum logical volume size I can create. From
+the LVM2 Howto, the max size is stated to be 8 exebytes. However, the
+Red Hat doc says that the max filesystem size for ext3 is 8 TB.
 
-Snapshot creation output:
+I am guessing that means I am limited to 8 TB if I want to use ext3 ???
 
-dogboy ~ # lvcreate -dddddd -s -L 256m -n test.snap /dev/paris/test
-  Unrecognised segment type snapshot
-  lvcreate: Create a logical volume
+If so, then are there other filesystems I can use to overcome this limit. I 
+want
+to be able to create volumes at least up to 100TB. Is there anything 
+included
+with the Red Hat release that would be a good choice? Or anything free not
+included with Red Hat? Or anything commercial?
 
-lvcreate
-        [-A|--autobackup {y|n}]
-        [--addtag Tag]
-        [--alloc AllocationPolicy]
-        [-C|--contiguous {y|n}]
-        [-d|--debug]
-        [-h|-?|--help]
-        [-i|--stripes Stripes [-I|--stripesize StripeSize]]
-        {-l|--extents LogicalExtentsNumber |
-         -L|--size LogicalVolumeSize[kKmMgGtT]}
-        [-M|--persistent {y|n}] [--major major] [--minor minor]
-        [-m|--mirrors Mirrors]
-        [-n|--name LogicalVolumeName]
-        [-p|--permission {r|rw}]
-        [-r|--readahead ReadAheadSectors]
-        [-R|--regionsize MirrorLogRegionSize]
-        [-t|--test]
-        [--type VolumeType]
-        [-v|--verbose]
-        [-Z|--zero {y|n}]
-        [--version]
-        VolumeGroupName [PhysicalVolumePath...]
-
-lvcreate -s|--snapshot
-        [-c|--chunksize]
-        [-A|--autobackup {y|n}]
-        [--addtag Tag]
-        [--alloc AllocationPolicy]
-        [-C|--contiguous {y|n}]
-        [-d|--debug]
-        [-h|-?|--help]
-        [-i|--stripes Stripes [-I|--stripesize StripeSize]]
-        {-l|--extents LogicalExtentsNumber |
-         -L|--size LogicalVolumeSize[kKmMgGtT]}
-        [-M|--persistent {y|n}] [--major major] [--minor minor]
-        [-n|--name LogicalVolumeName]
-        [-p|--permission {r|rw}]
-        [-r|--readahead ReadAheadSectors]
-        [-t|--test]
-        [-v|--verbose]
-        [--version]
-        OriginalLogicalVolume[Path] [PhysicalVolumePath...]
-
-Logs:
-
-Jul 10 14:28:44 [lvm] Setting global/locking_type to 1
-Jul 10 14:28:44 [lvm] Setting global/locking_dir to /var/lock/lvm
-Jul 10 14:28:44 [lvm] File-based locking enabled.
-Jul 10 14:28:44 [lvm] Setting chunksize to 16 sectors.
-Jul 10 14:28:44 [lvm] Unrecognised segment type snapshot
-
-
-Here is what I get when I try a standard LVM command:
-
-dogboy ~ # lvs
-  Unrecognised segment type mirror
-  Unrecognised segment type mirror
-  Unrecognised segment type mirror
-  Unrecognised segment type mirror
-  Unrecognised segment type mirror
-  Unrecognised segment type mirror
-  Unrecognised segment type mirror
-  Unrecognised segment type mirror
-  Unrecognised segment type mirror
-  Unrecognised segment type mirror
-  Unrecognised segment type mirror
-  Unrecognised segment type mirror
-  Unrecognised segment type mirror
-  Unrecognised segment type mirror
-  Unrecognised segment type mirror
-  Unrecognised segment type mirror
-  Unrecognised segment type mirror
-  Unrecognised segment type mirror
-  Unrecognised segment type mirror
-  Unrecognised segment type mirror
-  Unrecognised segment type mirror
-  Unrecognised segment type mirror
-  LV    VG    Attr   LSize   Origin Snap%  Move Log Copy%
-  home  paris -wi-ao   4.49G
-  opt   paris -wi-ao   6.20G
-  ora-0 paris -wi-a-  10.00G
-  ora-1 paris -wi-a-  10.00G
-  ora-2 paris -wi-a-  10.00G
-  pcsoe paris -wi-ao  12.00G
-  root  paris -wi-ao 200.00M
-  test  paris -wi-ao   1.00G
-  usr   paris -wi-ao   8.00G
-  var   paris -wi-ao   4.00G
+Thanks in advance for any help or opinions.
+Robbie
