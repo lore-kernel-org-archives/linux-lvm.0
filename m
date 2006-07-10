@@ -1,20 +1,24 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
 	by int-mx1.corp.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
-	k6AHJDDF015660
-	for <linux-lvm@redhat.com>; Mon, 10 Jul 2006 13:19:13 -0400
-Received: from orca.ele.uri.edu (orca.ele.uri.edu [131.128.51.63])
-	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id k6AHJ0bl005935
-	for <linux-lvm@redhat.com>; Mon, 10 Jul 2006 13:19:05 -0400
-Subject: Re: [linux-lvm] Copying LVM from one system to another
-From: Ming Zhang <mingz@ele.uri.edu>
-In-Reply-To: <32F72C4D4D0EC8458CA5BFD76A6D6C680ACF39D0@gimli.xb.local>
-References: <32F72C4D4D0EC8458CA5BFD76A6D6C680ACF39D0@gimli.xb.local>
-Date: Mon, 10 Jul 2006 13:18:45 -0400
-Message-Id: <1152551925.8360.52.camel@localhost.localdomain>
-Mime-Version: 1.0
+	k6AIZTnl004180
+	for <linux-lvm@redhat.com>; Mon, 10 Jul 2006 14:35:29 -0400
+Received: from zrtps0kn.nortel.com (zrtps0kn.nortel.com [47.140.192.55])
+	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id k6AIZFKO027574
+	for <linux-lvm@redhat.com>; Mon, 10 Jul 2006 14:35:20 -0400
+Received: from zrtphxs1.corp.nortel.com
+	(zrtphxs1.corp.nort...s0.corp.nortel.com [47.140.202.46])
+	by zrtps0kn.nortel.com (Switch-2.2.6/Switch-2.2.0) with ESMTP id
+	k6AIZ8r03577
+	for <linux-lvm@redhat.com>; Mon, 10 Jul 2006 14:35:08 -0400 (EDT)
+Message-ID: <44B29DA2.1010305@dogpad.net>
+Date: Mon, 10 Jul 2006 13:34:10 -0500
+From: Joe Harvell <jharvell@dogpad.net>
+MIME-Version: 1.0
+Subject: Re: [linux-lvm] errors using mkinitrd: cannot stat lvm2/vgwrapper
+References: <4469F5C1.7030603@cmu.edu>
+In-Reply-To: <4469F5C1.7030603@cmu.edu>
 Content-Transfer-Encoding: 7bit
-Reply-To: mingz@ele.uri.edu,
-	LVM general discussion and development <linux-lvm@redhat.com>
+Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -27,51 +31,46 @@ List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-if HW is the same, why not use ghost or alike software to do a clone?
+The stock 2.4 kernel has LVM1 support only (not LVM2).  I'm not sure
+about your RedHat kernel, but Gentoo has a 2.4 kernel with LVM2
+backported.  If your volumes are LVM2 format then you can only read them
+if you have LVM2 support in your kernel.  Even if you created the
+volumes in an LVM2 system, they may still be LVM1 format.
 
-Ming
+If you do have LVM2 support in your kernel, you need to install the lvm2
+tools and the device_mapper library  Then mkinitrd should find what it's
+looking for.  Although it's strange that my LVM2 tools don't have any
+file named lvm2 or vgwrapper.  Maybe these are added by RedHat and part
+of the RedHat LVM2 package.
 
-On Mon, 2006-07-10 at 16:01 +0200, Shaun Mccullagh wrote:
+If your kernel only supports LVM1 and your volumes are in LVM1 format,
+you need to generate an LVM1 based initrd.  Maybe mkinitrd has options
+for this?
+
+George Nychis wrote:
 > Hi,
-> 
-> I would like to copy an entire volume group to another PC with identical
-> hardware and the same disc config.
-> 
-> I would like to do this using a method like this:
-> 
-> Boot destination PC from a USB stick with a full copy of RH ES v4 on it.
-> 
-> Create a Volume Group and all necessary Logical Volumes etc on
-> destination hard discs so that they are the same sizes as on the source.
-> All the filesystems associated with these logical volumes will be mount
-> under /restore.
-> 
-> Restore all the data that was on the source to the destination to
-> /restore.
-> 
-> Note that /restore/boot is a small primary partition.
-> 
-> Once I have done this, do I copy /etc/lvm to /restore/etc/lvm, and then
-> chroot /restore, then do vgscan? Finally label the discs, exec grub,
-> then reboot
-> 
-> I guess the last bit is wrong?
-> 
-> TIA
-> 
-> Shaun
-> 
-> 
-> 
-> 
-> 
-> Op dit e-mailbericht is een disclaimer van toepassing, welke te vinden is op http://www.xb.nl/disclaimer.html
-> 
-> 
-> 
-> 
+>
+> I am having trouble booting a 2.4.32 kernel with fedora core 3, I can
+> successfully boot the partition with 2.6.9
+>
+> I built the 2.4.32 kernel with lvm support built in, and as a module,
+> and get the following errors when trying to mkinitrd:
+>
+> cannot stat lvm2: No such file or directory
+> cannot stat /sbin/vgwrapper: No such file or directory
+>
+> The initrd still gets created though, but I think these errors are the
+> sources of my problems.  /sbin/vgwrapper, as it says, does not exist
+>
+> Any ideas how to fix these errors?
+>
+> Thanks!
+> George
+>
 > _______________________________________________
 > linux-lvm mailing list
 > linux-lvm@redhat.com
 > https://www.redhat.com/mailman/listinfo/linux-lvm
 > read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+>
+>   
