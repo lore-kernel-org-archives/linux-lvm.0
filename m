@@ -1,23 +1,20 @@
-Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
+Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
 	by int-mx1.corp.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
-	k6BDfSL0003537
-	for <linux-lvm@redhat.com>; Tue, 11 Jul 2006 09:41:28 -0400
-Received: from bronze.cs.yorku.ca (bronze.cs.yorku.ca [130.63.90.34])
-	by mx1.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
-	k6BDfQkO026228
-	for <linux-lvm@redhat.com>; Tue, 11 Jul 2006 09:41:26 -0400
-Received: from [130.63.86.107] (ident=jas)
-	by bronze.cs.yorku.ca with esmtpsa (TLSv1:AES256-SHA:256) (Exim 4.62)
-	(envelope-from <jas@cse.yorku.ca>) id 1G0IUG-0007lj-9s
-	for linux-lvm@redhat.com; Tue, 11 Jul 2006 09:41:16 -0400
-Message-ID: <44B3AA7C.9000809@cse.yorku.ca>
-Date: Tue, 11 Jul 2006 09:41:16 -0400
-From: Jason Keltz <jas@cse.yorku.ca>
+	k6BEswfj028613
+	for <linux-lvm@redhat.com>; Tue, 11 Jul 2006 10:54:58 -0400
+Received: from smtp.vzavenue.net (smtp.vzavenue.net [66.171.59.140])
+	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id k6BEspW8007420
+	for <linux-lvm@redhat.com>; Tue, 11 Jul 2006 10:54:51 -0400
+Message-ID: <020001c6a4f9$f7ce9240$2901a8c0@robbie>
+From: "Robbie Coss" <robbie@vzavenue.net>
+References: <012401c6a45a$c53bcb80$2901a8c0@robbie>
+	<32F72C4D4D0EC8458CA5BFD76A6D6C68064E9D35@gimli.xb.local>
+Subject: Re: [linux-lvm] LVM2 maximum logical volume size help
+Date: Tue, 11 Jul 2006 09:54:52 -0500
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] question about pvresize not seeing newly added disk
-	space
-Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
+Reply-To: Robbie Coss <robbie@vzavenue.net>,
+	LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -27,46 +24,108 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
+Content-Type: text/plain; format="flowed"; charset="us-ascii"; reply-type="original"
 To: linux-lvm@redhat.com
 
-I am doing some work with lvm2 on our system with a 3ware 9550SX-12 card ...
+Hi Shaun,
 
-   LVM version:     2.02.01 (2005-11-23)
-   Library version: 1.02.02 (2006-01-04)
-   Driver version:  4.5.0
+"Kernel 2.6 supports ext3 filesystems up to 32TB, according to RH Support."
 
-In particular, I wanted to experiment with the ability to add disks to
-an existing RAID-5 lvm volume on the 3ware side, and then using
-"pvresize" to make the additional space available on the system.
+I was wondering where you got this information. According to their web site:
+http://www.redhat.com/rhel/details/limits/
+the limit is 8TB.
 
-After adding a 200 GB disk to the RAID-5 unit on the 3ware side (14
-hours!!!), I ran "pvresize" on the system, but it doesn't see the new
-disk space.  I'm pretty sure that if I reboot, it will see it, but this
-somewhat defeats the purpose because I'm trying to figure out how to add
-space to a live system without downtime.  Any suggestions on what to do
-to make pvresize see the new space?
-In addition, it is interesting to note that using the -v option of
-pvresize, it seems like LVM doesn't know about the additional disk space:
+I opened a support ticket and asked about this and this is what I was told:
 
-lead 34 # pvresize -v /dev/sdb
-     Using physical volume(s) on command line
-     Archiving volume group "scratch" metadata (seqno 8).
-     No change to size of physical volume /dev/sdb.
-     Resizing volume "/dev/sdb" to 781205120 sectors.
-     Updating physical volume "/dev/sdb"
-     Creating volume group backup "/etc/lvm/backup/scratch" (seqno 9).
-   Physical volume "/dev/sdb" changed
-   1 physical volume(s) resized / 0 physical volume(s) not resized
+Q: "The indicated web page (LVM2 Howto) gives a limit of 8 Exebytes for 
+LVM2. However, this web page (http://www.redhat.com/rhel/details/limits/) 
+gives a limit of 8TB for the ext3 filesystem. Which limit applies? And if 
+the 8TB limit applies, are there other options, for example, other supported 
+filesystem types I can use to increase the limit?"
 
-(In fact, the information "No change to size of physical volume"
-followed by "Physical volume "/dev/sdb" changed seems to me to be strange.)
+A: "The 8Exa limit is for a LVM2 i.e if the OS supports it. Hence the 2 TB 
+limit is applicable on Red Hat Enterprise Linux 4. You can possibly make use 
+of some other Filesystem by adding some third party modules, but it will not 
+be supported by red hat."
 
-Yet, running the "pvs" command, the lvm does indeed see the new storage:
-   PV         VG      Fmt  Attr PSize   PFree
-   /dev/sdb   scratch lvm2 a-   372.50G 172.50G
+I think he was reading the wrong column (V3 instead of V4), hence the 2TB 
+instead of 8TB.
+This paper seems to confirm the 8TB limit for the 2.6 kernel:
+http://ext2.sourceforge.net/2005-ols/2005-ext3-paper.pdf
 
-(my apologies if this is a repeat message -- I think I sent it the first 
-time before the subscribe request was processed...)
+"Assuming a 4 KB blocksize, a 32-bit block
+number limits the maximum size of the filesystem
+to 16 TB. However, because the superblock
+format currently stores the number of block
+groups as a 16-bit integer, and because (again
+on a 4 KB blocksize filesystem) the maximum
+number of blocks in a block group is 32,768
+(the number of bits in a single 4k block, for
+the block allocation bitmap), a combination of
+these constraints limits the maximum size of
+the filesystem to 8 TB."
 
-Jason.
+Robbie
+
+
+----- Original Message ----- 
+From: "Shaun Mccullagh" <Shaun.Mccullagh@xb.nl>
+To: "Robbie Coss" <robbie@vzavenue.net>; "LVM general discussion and 
+development" <linux-lvm@redhat.com>
+Sent: Tuesday, July 11, 2006 1:22 AM
+Subject: RE: [linux-lvm] LVM2 maximum logical volume size help
+
+
+Kernel 2.6 supports ext3 filesystems up to 32TB, according to RH Support.
+
+Do you want to store a lot of files? or a few thousand in which case look at 
+the mkfs.ext3 options to reduce the number of Inodes and speed up fsck after 
+a crash.
+
+HTH
+
+Shaun
+
+________________________________
+
+From: linux-lvm-bounces@redhat.com on behalf of Robbie Coss
+Sent: Mon 10/07/2006 21:55
+To: linux-lvm@redhat.com
+Subject: [linux-lvm] LVM2 maximum logical volume size help
+
+
+
+Hi,
+
+I am currently running RHEL4 update 3  (kernel 2.6.9-34.0.2.EL), and
+using LVM2 and the ext3 filesystem.
+
+I need to know what is the maximum logical volume size I can create. From
+the LVM2 Howto, the max size is stated to be 8 exebytes. However, the
+Red Hat doc says that the max filesystem size for ext3 is 8 TB.
+
+I am guessing that means I am limited to 8 TB if I want to use ext3 ???
+
+If so, then are there other filesystems I can use to overcome this limit. I
+want
+to be able to create volumes at least up to 100TB. Is there anything
+included
+with the Red Hat release that would be a good choice? Or anything free not
+included with Red Hat? Or anything commercial?
+
+Thanks in advance for any help or opinions.
+Robbie
+
+_______________________________________________
+linux-lvm mailing list
+linux-lvm@redhat.com
+https://www.redhat.com/mailman/listinfo/linux-lvm
+read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+
+
+
+
+
+
+Op dit e-mailbericht is een disclaimer van toepassing, welke te vinden is op 
+http://www.xb.nl/disclaimer.html
