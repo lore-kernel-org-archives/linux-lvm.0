@@ -1,20 +1,20 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
 	by int-mx1.corp.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
-	k6BEswfj028613
-	for <linux-lvm@redhat.com>; Tue, 11 Jul 2006 10:54:58 -0400
-Received: from smtp.vzavenue.net (smtp.vzavenue.net [66.171.59.140])
-	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id k6BEspW8007420
-	for <linux-lvm@redhat.com>; Tue, 11 Jul 2006 10:54:51 -0400
-Message-ID: <020001c6a4f9$f7ce9240$2901a8c0@robbie>
-From: "Robbie Coss" <robbie@vzavenue.net>
-References: <012401c6a45a$c53bcb80$2901a8c0@robbie>
-	<32F72C4D4D0EC8458CA5BFD76A6D6C68064E9D35@gimli.xb.local>
-Subject: Re: [linux-lvm] LVM2 maximum logical volume size help
-Date: Tue, 11 Jul 2006 09:54:52 -0500
+	k6BHmuUM021430
+	for <linux-lvm@redhat.com>; Tue, 11 Jul 2006 13:48:56 -0400
+Received: from conterra.de (vvv.conterra.de [212.124.44.162])
+	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id k6BHmnsY022729
+	for <linux-lvm@redhat.com>; Tue, 11 Jul 2006 13:48:50 -0400
+Message-ID: <44B3E470.90404@conterra.de>
+Date: Tue, 11 Jul 2006 19:48:32 +0200
+From: =?ISO-8859-1?Q?Dieter_St=FCken?= <stueken@conterra.de>
 MIME-Version: 1.0
+Subject: Re: [linux-lvm] Copying LVM from one system to another
+References: <32F72C4D4D0EC8458CA5BFD76A6D6C680ACF39D0@gimli.xb.local>
+	<1152551925.8360.52.camel@localhost.localdomain>
+In-Reply-To: <1152551925.8360.52.camel@localhost.localdomain>
 Content-Transfer-Encoding: 7bit
-Reply-To: Robbie Coss <robbie@vzavenue.net>,
-	LVM general discussion and development <linux-lvm@redhat.com>
+Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -24,108 +24,31 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; format="flowed"; charset="us-ascii"; reply-type="original"
-To: linux-lvm@redhat.com
+Content-Type: text/plain; charset="us-ascii"
+To: mingz@ele.uri.edu, LVM general discussion and development <linux-lvm@redhat.com>
 
-Hi Shaun,
+Ming Zhang wrote:
+> if HW is the same, why not use ghost or alike software to do a clone?
 
-"Kernel 2.6 supports ext3 filesystems up to 32TB, according to RH Support."
+Don't "clone" the LVM PVs if you ever want to connect both disks simultaneously.
+For normal partitions this is fine, as those are identified by the device
+name. So you can easily distinguish /dev/hda1 from /dev/hdc1.
 
-I was wondering where you got this information. According to their web site:
-http://www.redhat.com/rhel/details/limits/
-the limit is 8TB.
+LVM however identifies the different VG/LV/PV by its content, regardless of
+where the disks are connected. If you connect your LVM disk to a different
+cable or controller, don't worry, it will be found automatically. If two disks,
+however, look exactly the same, LVM gets confused. 
 
-I opened a support ticket and asked about this and this is what I was told:
+Instead you should connect both disk:
 
-Q: "The indicated web page (LVM2 Howto) gives a limit of 8 Exebytes for 
-LVM2. However, this web page (http://www.redhat.com/rhel/details/limits/) 
-gives a limit of 8TB for the ext3 filesystem. Which limit applies? And if 
-the 8TB limit applies, are there other options, for example, other supported 
-filesystem types I can use to increase the limit?"
+arrange booting from <newdisk>,
+lvm from <olddisk> should still work, even if connected differently.
 
-A: "The 8Exa limit is for a LVM2 i.e if the OS supports it. Hence the 2 TB 
-limit is applicable on Red Hat Enterprise Linux 4. You can possibly make use 
-of some other Filesystem by adding some third party modules, but it will not 
-be supported by red hat."
+pvcreate <new disk>
+vgextend <new disk>
+pvmove <olddisk>
+vgreduce <olddisk>
 
-I think he was reading the wrong column (V3 instead of V4), hence the 2TB 
-instead of 8TB.
-This paper seems to confirm the 8TB limit for the 2.6 kernel:
-http://ext2.sourceforge.net/2005-ols/2005-ext3-paper.pdf
+to migrate all LVM content to the new disk.
 
-"Assuming a 4 KB blocksize, a 32-bit block
-number limits the maximum size of the filesystem
-to 16 TB. However, because the superblock
-format currently stores the number of block
-groups as a 16-bit integer, and because (again
-on a 4 KB blocksize filesystem) the maximum
-number of blocks in a block group is 32,768
-(the number of bits in a single 4k block, for
-the block allocation bitmap), a combination of
-these constraints limits the maximum size of
-the filesystem to 8 TB."
-
-Robbie
-
-
------ Original Message ----- 
-From: "Shaun Mccullagh" <Shaun.Mccullagh@xb.nl>
-To: "Robbie Coss" <robbie@vzavenue.net>; "LVM general discussion and 
-development" <linux-lvm@redhat.com>
-Sent: Tuesday, July 11, 2006 1:22 AM
-Subject: RE: [linux-lvm] LVM2 maximum logical volume size help
-
-
-Kernel 2.6 supports ext3 filesystems up to 32TB, according to RH Support.
-
-Do you want to store a lot of files? or a few thousand in which case look at 
-the mkfs.ext3 options to reduce the number of Inodes and speed up fsck after 
-a crash.
-
-HTH
-
-Shaun
-
-________________________________
-
-From: linux-lvm-bounces@redhat.com on behalf of Robbie Coss
-Sent: Mon 10/07/2006 21:55
-To: linux-lvm@redhat.com
-Subject: [linux-lvm] LVM2 maximum logical volume size help
-
-
-
-Hi,
-
-I am currently running RHEL4 update 3  (kernel 2.6.9-34.0.2.EL), and
-using LVM2 and the ext3 filesystem.
-
-I need to know what is the maximum logical volume size I can create. From
-the LVM2 Howto, the max size is stated to be 8 exebytes. However, the
-Red Hat doc says that the max filesystem size for ext3 is 8 TB.
-
-I am guessing that means I am limited to 8 TB if I want to use ext3 ???
-
-If so, then are there other filesystems I can use to overcome this limit. I
-want
-to be able to create volumes at least up to 100TB. Is there anything
-included
-with the Red Hat release that would be a good choice? Or anything free not
-included with Red Hat? Or anything commercial?
-
-Thanks in advance for any help or opinions.
-Robbie
-
-_______________________________________________
-linux-lvm mailing list
-linux-lvm@redhat.com
-https://www.redhat.com/mailman/listinfo/linux-lvm
-read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
-
-
-
-
-
-
-Op dit e-mailbericht is een disclaimer van toepassing, welke te vinden is op 
-http://www.xb.nl/disclaimer.html
+Dieter.
