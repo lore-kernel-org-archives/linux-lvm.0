@@ -1,27 +1,38 @@
 Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
 	by int-mx1.corp.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
-	k6CC8o1D025870
-	for <linux-lvm@redhat.com>; Wed, 12 Jul 2006 08:08:50 -0400
-Received: from conterra.de (vvv.conterra.de [212.124.44.162])
+	k6CFqhJh027450
+	for <linux-lvm@redhat.com>; Wed, 12 Jul 2006 11:52:43 -0400
+Received: from cst-systemhaus.de (cst-systemhaus.de [212.227.82.111])
 	by mx1.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
-	k6CC8m8Q006522
-	for <linux-lvm@redhat.com>; Wed, 12 Jul 2006 08:08:49 -0400
-Received: from localhost (unknown [127.0.0.1])
-	by conterra.de (-) with ESMTP id 1FB5E1F4235
-	for <linux-lvm@redhat.com>; Wed, 12 Jul 2006 14:08:43 +0200 (CEST)
-Received: from conterra.de ([127.0.0.1])
-	by localhost (vvv.conterra.de [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id 18946-04 for <linux-lvm@redhat.com>;
-	Wed, 12 Jul 2006 14:08:29 +0200 (CEST)
-Message-ID: <44B4E63C.1000607@conterra.de>
-Date: Wed, 12 Jul 2006 14:08:28 +0200
-From: =?ISO-8859-15?Q?Dieter_St=FCken?= <stueken@conterra.de>
-MIME-Version: 1.0
+	k6CFqevr027053
+	for <linux-lvm@redhat.com>; Wed, 12 Jul 2006 11:52:40 -0400
+Received: from localhost (localhost [127.0.0.1])
+	by cst-systemhaus.de (Postfix) with ESMTP id 6A5A07819289
+	for <linux-lvm@redhat.com>; Wed, 12 Jul 2006 17:52:37 +0200 (CEST)
+Received: from cst-systemhaus.de ([127.0.0.1])
+	by localhost (cst-systemhaus.de [127.0.0.1]) (amavisd-new, port 10024)
+	with ESMTP id 24184-09 for <linux-lvm@redhat.com>;
+	Wed, 12 Jul 2006 17:52:34 +0200 (CEST)
+Received: from cst-it.dyndns.org (p54A78B29.dip0.t-ipconnect.de
+	[84.167.139.41])
+	by cst-systemhaus.de (Postfix) with ESMTP id 6EDF47817347
+	for <linux-lvm@redhat.com>; Wed, 12 Jul 2006 17:52:34 +0200 (CEST)
+Received: from ubuntu (ubuntu [192.168.100.233])
+	by cst-it.dyndns.org (Postfix) with ESMTP id 642724DD29
+	for <linux-lvm@redhat.com>; Wed, 12 Jul 2006 17:39:15 +0200 (CEST)
 Subject: Re: [linux-lvm] Whats happens? -> remove first phy disk from lvm
-References: <1152697054.5934.3.camel@localhost.localdomain>	<44B4C52B.7080000@redhat.com>
+From: Denny Schierz <cuall@gmx.de>
+In-Reply-To: <44B4E63C.1000607@conterra.de>
+References: <1152697054.5934.3.camel@localhost.localdomain>
+	<44B4C52B.7080000@redhat.com>
 	<1152698891.12966.4.camel@localhost.localdomain>
-In-Reply-To: <1152698891.12966.4.camel@localhost.localdomain>
-Content-Transfer-Encoding: 7bit
+	<44B4E63C.1000607@conterra.de>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature";
+	boundary="=-xBr3bxP6esKFULCmaoFp"
+Date: Wed, 12 Jul 2006 17:52:26 +0200
+Message-Id: <1152719546.12966.10.camel@localhost.localdomain>
+Mime-Version: 1.0
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -32,13 +43,50 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-Denny Schierz wrote:
-> But, keep in mind, is there a way, to reactivate the lvm without loosing
-> data on hdc8, if i adding hda8 to the lvm?
 
-adding hda8? you mean replacing hda8?
+--=-xBr3bxP6esKFULCmaoFp
+Content-Type: text/plain; charset=ISO-8859-15
+Content-Transfer-Encoding: quoted-printable
 
-Dieter.
+hi,
+
+Am Mittwoch, den 12.07.2006, 14:08 +0200 schrieb Dieter St=FCken:
+
+> Denny Schierz wrote:
+> > But, keep in mind, is there a way, to reactivate the lvm without loosin=
+g
+> > data on hdc8, if i adding hda8 to the lvm?
+>=20
+> adding hda8? you mean replacing hda8?
+
+thanks all for the reply. I replaced hda with a new disk. The System was
+on raid, but some data are not, cause of insufficient space.
+
+I deleted the references for the old /dev/daten and recreated the
+logical volumes.
+
+i expected first, that lvm create a stripe, but that is an extra option,
+to do that.
+
+
+--=20
+Sicherheit verst=E4ndlich http://www.sides.de
+GnuPG Key
+http://pgpkeys.pca.dfn.de:11371/pks/lookup?op=3Dget&search=3D0x2A5CE192AB7D=
+3FE0
+
+--=-xBr3bxP6esKFULCmaoFp
+Content-Type: application/pgp-signature; name=signature.asc
+Content-Description: Dies ist ein digital signierter Nachrichtenteil
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.2.2 (GNU/Linux)
+
+iD8DBQBEtRq6Klzhkqt9P+ARAqU/AJ4t0XjcdYMxTM0X4y9yQWkdScxVyACgmJOr
+qPcLlJYDUphpRhuUc448sZc=
+=jP7p
+-----END PGP SIGNATURE-----
+
+--=-xBr3bxP6esKFULCmaoFp--
