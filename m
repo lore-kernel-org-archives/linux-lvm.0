@@ -1,28 +1,31 @@
-Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
+Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
 	by int-mx1.corp.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
-	k6C969om023107
-	for <linux-lvm@redhat.com>; Wed, 12 Jul 2006 05:06:09 -0400
-Received: from ciao.gmane.org (main.gmane.org [80.91.229.2])
-	by mx1.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
-	k6C9662q014636
-	for <linux-lvm@redhat.com>; Wed, 12 Jul 2006 05:06:06 -0400
-Received: from list by ciao.gmane.org with local (Exim 4.43)
-	id 1G0afH-0001IE-W5
-	for linux-lvm@redhat.com; Wed, 12 Jul 2006 11:05:52 +0200
-Received: from servers.it.uni-wh.de ([62.206.172.225])
-	by main.gmane.org with esmtp (Gmexim 0.1 (Debian))
-	id 1AlnuQ-0007hv-00
-	for <linux-lvm@redhat.com>; Wed, 12 Jul 2006 11:05:51 +0200
-Received: from cp by servers.it.uni-wh.de with local (Gmexim 0.1 (Debian))
-	id 1AlnuQ-0007hv-00
-	for <linux-lvm@redhat.com>; Wed, 12 Jul 2006 11:05:51 +0200
-From: Christoph Peus <cp@uni-wh.de>
-Date: Wed, 12 Jul 2006 11:05:34 +0200
-Message-ID: <e92e0t$uit$1@sea.gmane.org>
+	k6C9bo90029716
+	for <linux-lvm@redhat.com>; Wed, 12 Jul 2006 05:37:50 -0400
+Received: from cst-systemhaus.de (cst-systemhaus.de [212.227.82.111])
+	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id k6C9bh1n015453
+	for <linux-lvm@redhat.com>; Wed, 12 Jul 2006 05:37:43 -0400
+Received: from localhost (localhost [127.0.0.1])
+	by cst-systemhaus.de (Postfix) with ESMTP id EA0997816A4B
+	for <linux-lvm@redhat.com>; Wed, 12 Jul 2006 11:37:45 +0200 (CEST)
+Received: from cst-systemhaus.de ([127.0.0.1])
+	by localhost (cst-systemhaus.de [127.0.0.1]) (amavisd-new, port 10024)
+	with ESMTP id 17096-09 for <linux-lvm@redhat.com>;
+	Wed, 12 Jul 2006 11:37:42 +0200 (CEST)
+Received: from cst-it.dyndns.org (p54A79109.dip0.t-ipconnect.de [84.167.145.9])
+	by cst-systemhaus.de (Postfix) with ESMTP id 6D87A7819289
+	for <linux-lvm@redhat.com>; Wed, 12 Jul 2006 11:37:42 +0200 (CEST)
+Received: from ubuntu (ubuntu [192.168.100.233])
+	by cst-it.dyndns.org (Postfix) with ESMTP id 77CDF4DE81
+	for <linux-lvm@redhat.com>; Wed, 12 Jul 2006 11:24:25 +0200 (CEST)
+From: Denny Schierz <cuall@gmx.de>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature";
+	boundary="=-sY7pieJEDIAu0427GLPc"
+Date: Wed, 12 Jul 2006 11:37:34 +0200
+Message-Id: <1152697054.5934.3.camel@localhost.localdomain>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Sender: news <news@sea.gmane.org>
-Subject: [linux-lvm] Cannot create more than one snapshot per origin
+Subject: [linux-lvm] Whats happens? -> remove first phy disk from lvm
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -33,52 +36,41 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: linux-lvm@redhat.com
 
-Hi,
 
-when I try to create more than one snapshot of the same origin, the 
-second and following snapshots are marked "inactive" and report 
-Input/output errors all the time:
+--=-sY7pieJEDIAu0427GLPc
+Content-Type: text/plain; charset=ISO-8859-15
+Content-Transfer-Encoding: quoted-printable
 
-Berfore the first snapshot:
+hi,
 
-lunkwill pri # lvscan
-   ACTIVE            '/dev/export/lvol0' [1.34 TB] inherit
-   ACTIVE            '/dev/export/lvol1' [800.00 GB] inherit
+i created a lvm volume over two partitions, hda8 and hdc8. Now hda8 is
+broken and have to replace the disk.=20
 
-lunkwill pri # lvcreate -s -L20G -n test /dev/export/lvol0
-   Logical volume "test" created
-lunkwill pri # lvscan
-   ACTIVE   Original '/dev/export/lvol0' [1.34 TB] inherit
-   ACTIVE            '/dev/export/lvol1' [800.00 GB] inherit
-   ACTIVE   Snapshot '/dev/export/test' [20.00 GB] inherit
+on the lvm where several files. My questions, if i create a volume over
+more than one partition, is that a stipe? Or does lvm use the first
+partition, than the second?
 
-Everything's fine so far. Now the trouble starts:
+cu denny
 
 
-lunkwill pri # lvcreate -s -L20G -n test2 /dev/export/lvol0
-   Logical volume "test2" created
-lunkwill pri # lvscan
-   /dev/export/test2: read failed after 0 of 4096 at 1473844805632: 
-Input/output error
-   /dev/export/test2: read failed after 0 of 4096 at 0: Input/output error
-   inactive Original '/dev/export/lvol0' [1.34 TB] inherit
-   ACTIVE            '/dev/export/lvol1' [800.00 GB] inherit
-   ACTIVE   Snapshot '/dev/export/test' [20.00 GB] inherit
-   inactive Snapshot '/dev/export/test2' [20.00 GB] inherit
+--=20
+Sicherheit verst=E4ndlich http://www.sides.de
+GnuPG Key
+http://pgpkeys.pca.dfn.de:11371/pks/lookup?op=3Dget&search=3D0x2A5CE192AB7D=
+3FE0
 
+--=-sY7pieJEDIAu0427GLPc
+Content-Type: application/pgp-signature; name=signature.asc
+Content-Description: Dies ist ein digital signierter Nachrichtenteil
 
-I'm using an xfs filesystem on /dev/export/lvol0 and the following 
-software versions:
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.2.2 (GNU/Linux)
 
-kernel: vanilla 2.6.15.1
-device-mapper: 1.02.07
-lvm2: 2.02.05
+iD8DBQBEtMLeKlzhkqt9P+ARAq13AJ0e5KV6FOxq7sHXEMGYnBnF4pfInQCfXenL
+VnAXqbyqsgTG9Z7Fe+dWB8U=
+=bvj1
+-----END PGP SIGNATURE-----
 
-
-Thanks for your help in advance!
-
-Regards
-Christoph
+--=-sY7pieJEDIAu0427GLPc--
