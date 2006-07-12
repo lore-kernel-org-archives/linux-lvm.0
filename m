@@ -1,10 +1,20 @@
-Received: from [192.168.1.2] (vpn-68-1.surrey.redhat.com [10.32.68.1])
-	by pobox.surrey.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
-	k6C9lO6C007610
-	for <linux-lvm@redhat.com>; Wed, 12 Jul 2006 10:47:24 +0100
-Message-ID: <44B4C52B.7080000@redhat.com>
-Date: Wed, 12 Jul 2006 10:47:23 +0100
-From: Patrick Caulfield <pcaulfie@redhat.com>
+Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
+	by int-mx1.corp.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
+	k6CA3KeX001783
+	for <linux-lvm@redhat.com>; Wed, 12 Jul 2006 06:03:20 -0400
+Received: from conterra.de (vvv.conterra.de [212.124.44.162])
+	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id k6CA3ELi021828
+	for <linux-lvm@redhat.com>; Wed, 12 Jul 2006 06:03:14 -0400
+Received: from localhost (unknown [127.0.0.1])
+	by conterra.de (-) with ESMTP id 2EC601F4045
+	for <linux-lvm@redhat.com>; Wed, 12 Jul 2006 12:03:08 +0200 (CEST)
+Received: from conterra.de ([127.0.0.1])
+	by localhost (vvv.conterra.de [127.0.0.1]) (amavisd-new, port 10024)
+	with ESMTP id 17273-08 for <linux-lvm@redhat.com>;
+	Wed, 12 Jul 2006 12:02:57 +0200 (CEST)
+Message-ID: <44B4C8D0.4050203@conterra.de>
+Date: Wed, 12 Jul 2006 12:02:56 +0200
+From: =?ISO-8859-15?Q?Dieter_St=FCken?= <stueken@conterra.de>
 MIME-Version: 1.0
 Subject: Re: [linux-lvm] Whats happens? -> remove first phy disk from lvm
 References: <1152697054.5934.3.camel@localhost.localdomain>
@@ -24,24 +34,23 @@ Content-Type: text/plain; charset="us-ascii"
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
 Denny Schierz wrote:
-> hi,
-> 
 > i created a lvm volume over two partitions, hda8 and hdc8. Now hda8 is
 > broken and have to replace the disk. 
 > 
 > on the lvm where several files. My questions, if i create a volume over
 > more than one partition, is that a stipe? Or does lvm use the first
 > partition, than the second?
-> 
 
+have a look into /etc/lvm/backup/ to see how your VG was organized.
 
-By default LVM will use the first PV, then the next. Striping has to be
-specified when you create the LV.
+> on the lvm where several files.
 
-Depending on the filesystem (and luck) you might get some files back off the
-remaining disk :)
+You mean several "LVs"? If you have one big LV spread over both disks
+it will be difficult to restore any files from the broke file system
+within that LV.
 
+Consider using smartmontools to monitor disk errors before it fails completely.
 
--- 
+http://smartmontools.sourceforge.net/
 
-patrick
+Dieter.
