@@ -1,18 +1,23 @@
-Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
+Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
 	by int-mx1.corp.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
-	k6D2OU1u012408
-	for <linux-lvm@redhat.com>; Wed, 12 Jul 2006 22:24:30 -0400
-Received: from web50705.mail.yahoo.com (web50705.mail.yahoo.com
-	[206.190.38.103])
-	by mx1.redhat.com (8.12.11.20060308/8.12.11) with SMTP id
-	k6D2OSlD003386
-	for <linux-lvm@redhat.com>; Wed, 12 Jul 2006 22:24:28 -0400
-Message-ID: <20060713012417.80370.qmail@web50705.mail.yahoo.com>
-Date: Wed, 12 Jul 2006 18:24:17 -0700 (PDT)
-From: John Koshi <jkoshi@yahoo.com>
+	k6D7pvem001927
+	for <linux-lvm@redhat.com>; Thu, 13 Jul 2006 03:51:57 -0400
+Received: from dgate2.fujitsu-siemens.com (dgate2.fujitsu-siemens.com
+	[217.115.66.36])
+	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id k6D7pmxO013010
+	for <linux-lvm@redhat.com>; Thu, 13 Jul 2006 03:51:49 -0400
+Received: from pdbzex0e.pdb.fsc.net (pdbzex0e.pdb.fsc.net [172.25.96.69])
+	by plim.pdb.fsc.net (8.12.6/8.12.6/SuSE Linux 0.6) with ESMTP id
+	k6D7plad004945
+	for <linux-lvm@redhat.com>; Thu, 13 Jul 2006 09:51:48 +0200
+Content-class: urn:content-classes:message
 MIME-Version: 1.0
+Subject: RE: [linux-lvm] Mirror of LVs
+Date: Thu, 13 Jul 2006 09:51:46 +0200
+Message-ID: <D81E5F9261AA644D90FF7B8E4005881737BE56@PDBEX02E.pdb.fsc.net>
+In-Reply-To: <1a525f41ad81a5a3e074f1cd9acaf6b6@redhat.com>
+From: "Laurenz, Dirk" <Dirk.Laurenz@fujitsu-siemens.com>
 Content-Transfer-Encoding: 8bit
-Subject: [linux-lvm] LVM question on move and resize
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -24,31 +29,73 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@redhat.com
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
+and how do i do this ?
 
-Hello,
+Mit freundlichem Gruss,
 
-I have the following setup:
+Dirk Laurenz
+Systems Engineer
+S DE SE PS N/O
+Fujitsu Siemens Computers GmbH
+Hildesheimer Strasse 25
+30880 Laatzen
+Germany
 
-HP dv1000 laptop with an 80G hard disk laid out as follows:
-1)70Gb NTFS, WinXP primary
-2)100Mb ext3 primary Fedora 4 /boot
-3)10Gb Extd primary, containing logical(8E) LVM Fedora 4 root
+Telephone:	+49 511 84 89 18 08
+Telefax:	+49 511 84 89 25 18 08
+Mobile:	+49 170 22 10 78 1 
+Email:	mailto: dirk.laurenz@fujitsu-siemens.com
+Internet:	http://www.fujitsu-siemens.com
+ 
 
-Since the Linux root is getting full, I want to expand it,
-by reducing the NTFS partition, and moving all the Linux
-partitions down, and then expand the LVM root outwards.
-
-With Partition Magic 8.0, I can resize the NTFS disk, and
-move the ext3 boot partition (after removing it's features
-resize_inode, dir_index, and ext_attr using e2fsprogs),
-and resize the Extended partition to the left as needed.
-
-The problem now is how to move and expand the LVM root as
-mentioned above. Partition Magic and Qtparted can't do it.
-
-Is it possible to do this? If so, what are the steps?
-
-regards,
-John
+>> -----Original Message-----
+>> From: linux-lvm-bounces@redhat.com 
+>> [mailto:linux-lvm-bounces@redhat.com] On Behalf Of Jonathan E Brassow
+>> Sent: Friday, July 07, 2006 3:50 PM
+>> To: LVM general discussion and development
+>> Subject: Re: [linux-lvm] Mirror of LVs
+>> 
+>> Although the code is largely out there, I haven't heard 
+>> anyone testing 
+>> it on SUSE.  (I have heard gentoo, debian, and red hat, I think.)
+>> 
+>>   brassow
+>> 
+>> On Jul 4, 2006, at 3:17 AM, Laurenz, Dirk wrote:
+>> 
+>> > Hi,
+>> >
+>> > ist it possible to mirror a lv or a pv with dm or lvm2 in 
+>> sles9 sp3?
+>> >
+>> > Mit freundlichem Gruss,
+>> >
+>> > Dirk Laurenz
+>> > Systems Engineer
+>> > S DE SE PS N/O
+>> > Fujitsu Siemens Computers GmbH
+>> > Hildesheimer Strasse 25
+>> > 30880 Laatzen
+>> > Germany
+>> >
+>> > Telephone:	+49 511 84 89 18 08
+>> > Telefax:	+49 511 84 89 25 18 08
+>> > Mobile:	+49 170 22 10 78 1
+>> > Email:	mailto: dirk.laurenz@fujitsu-siemens.com
+>> > Internet:	http://www.fujitsu-siemens.com
+>> >
+>> > _______________________________________________
+>> > linux-lvm mailing list
+>> > linux-lvm@redhat.com
+>> > https://www.redhat.com/mailman/listinfo/linux-lvm
+>> > read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+>> >
+>> 
+>> _______________________________________________
+>> linux-lvm mailing list
+>> linux-lvm@redhat.com
+>> https://www.redhat.com/mailman/listinfo/linux-lvm
+>> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+>> 
