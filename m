@@ -1,25 +1,25 @@
-Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
+Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
 	by int-mx1.corp.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
-	k6DJAeDi024821
-	for <linux-lvm@redhat.com>; Thu, 13 Jul 2006 15:10:40 -0400
-Received: from bronze.cs.yorku.ca (bronze.cs.yorku.ca [130.63.90.34])
-	by mx1.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
-	k6DJAb9g006282
-	for <linux-lvm@redhat.com>; Thu, 13 Jul 2006 15:10:37 -0400
-Received: from [130.63.86.107] (ident=jas)
-	by bronze.cs.yorku.ca with esmtpsa (TLSv1:AES256-SHA:256) (Exim 4.62)
-	(envelope-from <jas@cse.yorku.ca>) id 1G16Zz-0003Zo-UN
-	for linux-lvm@redhat.com; Thu, 13 Jul 2006 15:10:32 -0400
-Message-ID: <44B69AA7.9020500@cse.yorku.ca>
-Date: Thu, 13 Jul 2006 15:10:31 -0400
-From: Jason Keltz <jas@cse.yorku.ca>
+	k6EB0iFW002716
+	for <linux-lvm@redhat.com>; Fri, 14 Jul 2006 07:00:44 -0400
+Received: from conterra.de (vvv.conterra.de [212.124.44.162])
+	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id k6EB0UoG004303
+	for <linux-lvm@redhat.com>; Fri, 14 Jul 2006 07:00:36 -0400
+Received: from localhost (unknown [127.0.0.1])
+	by conterra.de (-) with ESMTP id EC1491F423E
+	for <linux-lvm@redhat.com>; Fri, 14 Jul 2006 13:00:23 +0200 (CEST)
+Received: from conterra.de ([127.0.0.1])
+	by localhost (vvv.conterra.de [127.0.0.1]) (amavisd-new, port 10024)
+	with ESMTP id 27425-06 for <linux-lvm@redhat.com>;
+	Fri, 14 Jul 2006 13:00:12 +0200 (CEST)
+Message-ID: <44B77938.9020601@conterra.de>
+Date: Fri, 14 Jul 2006 13:00:08 +0200
+From: =?ISO-8859-1?Q?Dieter_St=FCken?= <stueken@conterra.de>
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] lvm2 volumes not available on boot
-References: <44B66C49.90500@cse.yorku.ca>
-	<44B67177.4050404@conterra.de>	<44B676F2.2070602@cse.yorku.ca>
-	<44B68206.60306@conterra.de>
-In-Reply-To: <44B68206.60306@conterra.de>
-Content-Transfer-Encoding: quoted-printable
+Subject: Re: [linux-lvm] LVM question on move and resize
+References: <20060713182227.8697.qmail@web50714.mail.yahoo.com>
+In-Reply-To: <20060713182227.8697.qmail@web50714.mail.yahoo.com>
+Content-Transfer-Encoding: 7bit
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -30,49 +30,62 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="iso-8859-1"; format="flowed"
+Content-Type: text/plain; charset="us-ascii"
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-Dieter St=EF=BF=BDken wrote:
-> Jason Keltz wrote:
->> Before the vgscan is run, here are the loaded modules:
->>
->> Module                  Size  Used by
->> dm_mirror              28577  0
->> dm_mod                 59717  1 dm_mirror
->> joydev                 13953  0
->> button                 10449  0
->> battery                12741  0
->> ac                      8773  0
->> uhci_hcd               32729  0
->> ehci_hcd               31813  0
->> 3w_9xxx                35909  0
->> e1000                  99757  0
->> floppy                 57937  0
->> ext3                  118729  1
->> jbd                    60761  1 ext3
->> ata_piix               13381  1
->> libata                 57885  1 ata_piix
->> sd_mod                 20417  2
->> scsi_mod              116941  3 3w_9xxx,libata,sd_mod
->>
->> ... so "dm_mod" is actually loaded, and as far as I know, that's the
->> lvm2 module. =20
->=20
-> I also have two 3w_9xxx since a few weeks, works great!
->=20
-> If it becomes /dev/sdb, have a look into /sys/block/sdb and
-> /proc/partitions if it appears correctly. Also, certain devices
-> may be excluded from scanning via /etc/lvm/lvm.conf.
->=20
-> Does hotplug create /dev/sdb dynamically and in time during boot?
->=20
-> In the beginning I got problems, as the 3ware controller
-> and my SATA backplane both may be configured to delay the
-> disk spinup. This caused some timeout trouble.
+John Koshi wrote:
+> I assume the next steps will be (from a rescue CD):
+> 
+> 1) Use fdisk to format the unused 25 Gb space in the
+>    extended partition, to a new type 8E partition.
+> 2) Use pvcreate to create a new physical vol there.
+> 3) Use vgextend to extend VolGroup00 to include the
+>    new physical volume.
+> 4) Use lvextend to extend LogVol00 by the XX Gb.
+> 5) Do a file system check of LogVol00.
+> 
+> Does this look right? Am I missing any steps?
 
-/sys/block/sdb existed, but I think you're right re: disk spinup since I=20
-inserted a "sleep 5" into rc.sysinit before the call to vgscan and it=20
-works now!
+after you grow LogVol00 you also have to expand the
+ext2/ext2 filesystem inside (step 4a)
 
-Jason.
+resize2fs -p /dev/mapper/VolGroup00-LogVol00
+
+This actually does the real work. resize2fs recommends
+to perform an fsck before. If you are in doubt, do it,
+else you may skip this using "resize2fs -f -p".
+
+You don't have to supply a size, resize2fs will find
+the current size of the extended volume auomatically
+
+Will you perform this while booting from a rescue CD?
+If this is your root filesystem you have to, anyway.
+Else you possibly have to reboot, after changing the
+partition table, because it may be locked by the system
+while it is in use.
+
+Tip: you may rename your VG and your LVs to get expressive
+names like "/dev/mapper/Sonota-Root". Imo this is less 
+error prone than working with technical names like "LogVol42".
+
+> Disk /dev/hda: 80.0 GB, 80026361856 bytes
+> 255 heads, 63 sectors/track, 9729 cylinders
+> Units = cylinders of 16065 * 512 = 8225280 bytes
+>    Device Boot      Start         End      Blocks   Id  System
+> /dev/hda1   *           1        5201    41777001    7  HPFS/NTFS
+> /dev/hda2            9704        9729      208845   88  Linux plaintext
+> /dev/hda3            5202        5214      104422+  83  Linux
+> /dev/hda4            5215        9703    36057892+   f  W95 Ext'd (LBA)
+> /dev/hda5            8425        9703    10273536   8e  Linux LVM
+> Partition table entries are not in disk order
+
+So you end up with an extended partition containing your LVM.
+Even if this works, it is an ugly solution. This Win95 extended
+partition hack is something like a poor-mans LVM with partition
+magic as its management tool.
+ 
+It would be much better, to REPLACE the extended partition by LVM. Unfortunately I don't see any easy migration path without an external
+disk. If you have any spare disk, to temporary hold the 8.2Gb root
+volume, I may point out an other solution.
+
+Dieter.
