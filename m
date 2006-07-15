@@ -1,26 +1,20 @@
 Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
 	by int-mx1.corp.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
-	k6EGhRmd025750
-	for <linux-lvm@redhat.com>; Fri, 14 Jul 2006 12:43:27 -0400
-Received: from conterra.de (vvv.conterra.de [212.124.44.162])
+	k6F1IvdG008300
+	for <linux-lvm@redhat.com>; Fri, 14 Jul 2006 21:18:57 -0400
+Received: from www.fermi.mo.it (istemoj0.customer.nettuno.it [130.186.251.51])
 	by mx1.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
-	k6EGhQwt009486
-	for <linux-lvm@redhat.com>; Fri, 14 Jul 2006 12:43:26 -0400
-Received: from localhost (unknown [127.0.0.1])
-	by conterra.de (-) with ESMTP id 7885A1F4245
-	for <linux-lvm@redhat.com>; Fri, 14 Jul 2006 18:43:20 +0200 (CEST)
-Received: from conterra.de ([127.0.0.1])
-	by localhost (vvv.conterra.de [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id 32697-02 for <linux-lvm@redhat.com>;
-	Fri, 14 Jul 2006 18:43:02 +0200 (CEST)
-Message-ID: <44B7C996.8030307@conterra.de>
-Date: Fri, 14 Jul 2006 18:43:02 +0200
-From: =?ISO-8859-1?Q?Dieter_St=FCken?= <stueken@conterra.de>
+	k6F1Ir4s022657
+	for <linux-lvm@redhat.com>; Fri, 14 Jul 2006 21:18:54 -0400
+Received: from www.fermi.mo.it (localhost.localdomain [127.0.0.1])
+	by www.fermi.mo.it (8.12.11/8.12.11) with ESMTP id k6F1PBnb008865
+	for <linux-lvm@redhat.com>; Sat, 15 Jul 2006 03:25:12 +0200
+Message-ID: <4610.82.54.230.73.1152926709.squirrel@www.fermi.mo.it>
+Date: Sat, 15 Jul 2006 03:25:09 +0200 (CEST)
+From: "Paolo Santinelli" <p.santinelli@fermi.mo.it>
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] LVM question on move and resize
-References: <20060714151524.37351.qmail@web50702.mail.yahoo.com>
-In-Reply-To: <20060714151524.37351.qmail@web50702.mail.yahoo.com>
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Subject: [linux-lvm] lvm volumes not available on boot, after kernel update
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -31,38 +25,33 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="utf-8"
+To: linux-lvm@redhat.com
 
-John Koshi wrote:
-> Actually I do have a large USB disk (Seagate 160GB)
-> and had considered using it during this expansion of 
-> the Linux installation. I'm interested in seeing your
-> solution, in this case.
+I installed a Redhat enterprise AS 4 Update 3, kernel 2.6.9-34.ELsmp. on a
+Tyan Thunder K8SE with a dual core AMD opteron and a 3ware 9550SX SATA
+RAID controller.
+I build a 4 disk RAID 5 with the root partition (/) build on
+/dev/mapper/VolGroup00-LogVol00.
 
-Hi John,
+At the end of installation process All appear running OK, also after the
+first reboot all run fine.
 
-i frequently reorganized my data by extending my VG by 
-a new disk (vgextend) and moved all data off the unwanted
-disk using "vgmove". Afterwards I may unplug the unwanted disk
-from my VG (vgreduce). All this may be performed, while people
-are working on this server! But I'm using hot-plugable
-SATA disks on a raid controller.
+After the automatic update from RedHat network, with  new kernel:
+2.6.9-34.0.2.ELsmp at boot time the system hangup with these messages:
 
-But you talk about a laptop and an USB disk, and the device to
-replace is an extended partition, not a hot pluggable SATA disk.
-So I think there are too much traps in your case to fail.
+...
+..
+  No volume groups found
+  Unable to find volume group �VolGroup00�
+...
+...
+...
+Kernel panic ...
 
-Instead I would simply install a plain ext2 partition on the
-USB disk, mount it and copy all data using simple "cp -a" to
-the USB disk. Then erase hda4 and recreate it as a plain primary
-partition, install LVM again and copy the data back. This is
-not as fancy as using LVM, but much saver in your case.
+Can anyone  help  me ?
 
-After all I even think: it may be currently ugly, but it works. 
-So may be you should keep this setup until you really need
-to change it.
 
-regards, Dieter.
+Thanks in advance
 
- 
+Paolo Santinelli
