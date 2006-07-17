@@ -1,22 +1,39 @@
-Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
+Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
 	by int-mx1.corp.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
-	k6HHYXvu031080
-	for <linux-lvm@redhat.com>; Mon, 17 Jul 2006 13:34:33 -0400
-Received: from shell.wgops.com (postfix@free.wgops.com [69.51.116.66])
-	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id k6HHYQO9012672
-	for <linux-lvm@redhat.com>; Mon, 17 Jul 2006 13:34:26 -0400
-Received: from [10.1.2.206] (localhost [127.0.0.1])
-	by shell.wgops.com (Postfix) with ESMTP id 9068825528
-	for <linux-lvm@redhat.com>; Mon, 17 Jul 2006 11:34:03 -0600 (MDT)
-Date: Mon, 17 Jul 2006 11:34:03 -0600
-From: Michael Loftis <mloftis@wgops.com>
-Subject: Re: AW: [linux-lvm] SAN setup with host mirrored disks
-Message-ID: <F35681F3D3000136E018B70E@dhcp-2-206.wgops.com>
-In-Reply-To: <7CA7BBF7F95AA245ACAB8E28A6285EB905191DA7@s01edv50.warema.de>
-References: <7CA7BBF7F95AA245ACAB8E28A6285EB905191DA7@s01edv50.warema.de>
+	k6HI7YZh007260
+	for <linux-lvm@redhat.com>; Mon, 17 Jul 2006 14:07:34 -0400
+Received: from e32.co.us.ibm.com (e32.co.us.ibm.com [32.97.110.150])
+	by mx1.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
+	k6HI7WQV015676
+	for <linux-lvm@redhat.com>; Mon, 17 Jul 2006 14:07:32 -0400
+Received: from westrelay02.boulder.ibm.com (westrelay02.boulder.ibm.com
+	[9.17.195.11])
+	by e32.co.us.ibm.com (8.12.11.20060308/8.12.11) with ESMTP id
+	k6HI7Rb9028706
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=FAIL)
+	for <linux-lvm@redhat.com>; Mon, 17 Jul 2006 14:07:27 -0400
+Received: from d03av04.boulder.ibm.com (d03av04.boulder.ibm.com [9.17.195.170])
+	by westrelay02.boulder.ibm.com (8.13.6/NCO/VER7.0) with ESMTP id
+	k6HI7QIR206392
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO)
+	for <linux-lvm@redhat.com>; Mon, 17 Jul 2006 12:07:26 -0600
+Received: from d03av04.boulder.ibm.com (loopback [127.0.0.1])
+	by d03av04.boulder.ibm.com (8.12.11.20060308/8.13.3) with ESMTP id
+	k6HI7QJc030200
+	for <linux-lvm@redhat.com>; Mon, 17 Jul 2006 12:07:26 -0600
+Received: from d03nm131.boulder.ibm.com (d03nm131.boulder.ibm.com
+	[9.17.195.171])
+	by d03av04.boulder.ibm.com (8.12.11.20060308/8.12.11) with ESMTP id
+	k6HI7QZu030184
+	for <linux-lvm@redhat.com>; Mon, 17 Jul 2006 12:07:26 -0600
+From: Scott Denham <sdenham@us.ibm.com>
+Message-ID: <OF2423659D.FC38D706-ON872571AE.00638E5A-872571AE.00638E5A@us.ibm.com>
+Date: Mon, 17 Jul 2006 12:07:25 -0600
 MIME-Version: 1.0
+Content-type: multipart/alternative; 
+	Boundary="0__=08BBFB3DDFF008CA8f9e8a93df938690918c08BBFB3DDFF008CA"
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Subject: [linux-lvm] Away from Office
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -27,72 +44,23 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="iso-8859-1"; format="flowed"
-To: LVM general discussion and development <linux-lvm@redhat.com>
+To: linux-lvm@redhat.com
+
+--0__=08BBFB3DDFF008CA8f9e8a93df938690918c08BBFB3DDFF008CA
+Content-type: text/plain; charset=US-ASCII
 
 
+I will be out of the office starting  07/17/2006 and will not return until
+07/31/2006.
 
---On July 17, 2006 8:11:17 AM +0200 "Fiederling, Daniel"=20
-<daniel.fiederling@warema.de> wrote:
+On vacation with limited phonemail / email access. I will try to answer
+questions via email.
+--0__=08BBFB3DDFF008CA8f9e8a93df938690918c08BBFB3DDFF008CA
+Content-type: text/html; charset=US-ASCII
+Content-Disposition: inline
 
-> Hi,
->
-> thank you all for your answers. I currently test a setup with md for
-> failover. To clarify: we have two Clariions in two different locations
-> that are used for failover. Of course on each Clariion the disks are set
-> up as raid 5. My question was about setting up a mirror that "copies" the
-> data on each Clariion.
->
-> Currently I use OpenSuSE 10.1 as distribution so unfortunately I can't
-> use PowerPath because I only get rpms for sles or rhel that can't be
-> installed. I know it's the wrong place for this question but: had someone
-> success on installing PowerPath on non supported systems?
-
-Yeah, don't bother.  It's a kernel module.  No source.  I've tried to get=20
-them to do the sane thing (wrapper .c with binary lib, like nvidia) so they=
-=20
-could support other than the specific binary kernels in RedHat but they=20
-either refused or didn't get it.  When they say Linux they don't mean=20
-Linux, they mean RedHat.  YMMV but for us RedHat has been nothing but weird=
-=20
-problems.  Unless you're willing to install and run a RedHat kernel you're =
-
-SOL.
-
->
-> Kelly, I installed a package called multipath-tools version 0.4.6 which
-> contains multipath and multipathd by Christophe Varoqui. Is that the mpio
-> package you mentioned? Why do I have to expect io errors when using md?
-> What is special about the Clariion setup? I would expect that the san
-> disks are only "normal" scsi disks for linux...
->
-> Ciao
-> Daniel
->
->
->
-> -----Urspr=C3=BCngliche Nachricht-----
-> Von: linux-lvm-bounces@redhat.com [mailto:linux-lvm-bounces@redhat.com]
-> Im Auftrag von Kelly Sauke Gesendet: Donnerstag, 13. Juli 2006 20:04
-> An: LVM general discussion and development
-> Betreff: Re: [linux-lvm] SAN setup with host mirrored disks
->
-> Do the Raiding on the Clariion.  Then use either PowerPath or mpio (on
-> RHEL 4 U3 or newer) to do your failover.  If you use md for your
-> failover layer you may get IO errors on the non-active paths.  You need
-> something that is aware of the clariion setup and that would be
-> PowerPath or the shipped mpio.
->
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
->
-
-
-
---
-"Genius might be described as a supreme capacity for getting its possessors
-into trouble of all kinds."
--- Samuel Butler
+<html><body>
+<p>I will be out of the office starting  07/17/2006 and will not return until 07/31/2006.<br>
+<br>
+On vacation with limited phonemail / email access. I will try to answer questions via email. </body></html>
+--0__=08BBFB3DDFF008CA8f9e8a93df938690918c08BBFB3DDFF008CA--
