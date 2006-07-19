@@ -1,23 +1,35 @@
-Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
+Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
 	by int-mx1.corp.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
-	k6JAFG1h028622
-	for <linux-lvm@redhat.com>; Wed, 19 Jul 2006 06:15:16 -0400
-Received: from dgate1.fujitsu-siemens.com (dgate1.fujitsu-siemens.com
-	[217.115.66.35])
-	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id k6JAF5hQ013619
-	for <linux-lvm@redhat.com>; Wed, 19 Jul 2006 06:15:06 -0400
-Received: from pdbzex0e.pdb.fsc.net (pdbzex0e.pdb.fsc.net [172.25.96.69])
-	by plim.pdb.fsc.net (8.12.6/8.12.6/SuSE Linux 0.6) with ESMTP id
-	k6JAF4Uv013169
-	for <linux-lvm@redhat.com>; Wed, 19 Jul 2006 12:15:04 +0200
-Content-class: urn:content-classes:message
-MIME-Version: 1.0
+	k6JCPEfa022843
+	for <linux-lvm@redhat.com>; Wed, 19 Jul 2006 08:25:14 -0400
+Received: from cst-systemhaus.de (cst-systemhaus.de [212.227.82.111])
+	by mx1.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
+	k6JCPDMh008135
+	for <linux-lvm@redhat.com>; Wed, 19 Jul 2006 08:25:13 -0400
+Received: from localhost (localhost [127.0.0.1])
+	by cst-systemhaus.de (Postfix) with ESMTP id 7DA7C7819286
+	for <linux-lvm@redhat.com>; Wed, 19 Jul 2006 14:25:56 +0200 (CEST)
+Received: from cst-systemhaus.de ([127.0.0.1])
+	by localhost (cst-systemhaus.de [127.0.0.1]) (amavisd-new, port 10024)
+	with ESMTP id 26326-01 for <linux-lvm@redhat.com>;
+	Wed, 19 Jul 2006 14:25:53 +0200 (CEST)
+Received: from cst-it.dyndns.org (p54A7A756.dip0.t-ipconnect.de
+	[84.167.167.86])
+	by cst-systemhaus.de (Postfix) with ESMTP id 103377817347
+	for <linux-lvm@redhat.com>; Wed, 19 Jul 2006 14:25:53 +0200 (CEST)
+Received: from ubuntu (ubuntu [192.168.100.233])
+	by cst-it.dyndns.org (Postfix) with ESMTP id 04C651C40A2E
+	for <linux-lvm@redhat.com>; Wed, 19 Jul 2006 14:24:40 +0200 (CEST)
 Subject: RE: [linux-lvm] Error setting up a mirrored lv
-Date: Wed, 19 Jul 2006 12:15:03 +0200
-Message-ID: <D81E5F9261AA644D90FF7B8E400588173C6FB2@PDBEX02E.pdb.fsc.net>
-In-Reply-To: <20060718225144.GA28146@percy.comedia.it>
-From: "Laurenz, Dirk" <Dirk.Laurenz@fujitsu-siemens.com>
-Content-Transfer-Encoding: 8bit
+From: Denny Schierz <cuall@gmx.de>
+In-Reply-To: <D81E5F9261AA644D90FF7B8E400588173C6FB2@PDBEX02E.pdb.fsc.net>
+References: <D81E5F9261AA644D90FF7B8E400588173C6FB2@PDBEX02E.pdb.fsc.net>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature";
+	boundary="=-twaimw0q2RP55/K8n2VE"
+Date: Wed, 19 Jul 2006 14:25:04 +0200
+Message-Id: <1153311905.5156.11.camel@localhost.localdomain>
+Mime-Version: 1.0
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -28,61 +40,42 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-so, what is the best way to mirror storage?
 
-lvm ontop of multipath and mirrored lvs or
-lvm ontop of md ontop of multipath
+--=-twaimw0q2RP55/K8n2VE
+Content-Type: text/plain; charset=ISO-8859-15
+Content-Transfer-Encoding: quoted-printable
 
-Mit freundlichem Gruss,
+hi,
 
-Dirk Laurenz
-Systems Engineer
-S DE SE PS N/O
-Fujitsu Siemens Computers GmbH
-Hildesheimer Strasse 25
-30880 Laatzen
-Germany
+Am Mittwoch, den 19.07.2006, 12:15 +0200 schrieb Laurenz, Dirk:
+> so, what is the best way to mirror storage?
+>=20
+> lvm ontop of multipath and mirrored lvs or
+> lvm ontop of md ontop of multipath
 
-Telephone:	+49 511 84 89 18 08
-Telefax:	+49 511 84 89 25 18 08
-Mobile:	+49 170 22 10 78 1 
-Email:	mailto: dirk.laurenz@fujitsu-siemens.com
-Internet:	http://www.fujitsu-siemens.com
- 
+in most cases i prefer lvm ontop of md devices, cause for better
+handling and it works with every setup and distribution.
 
->> -----Original Message-----
->> From: linux-lvm-bounces@redhat.com 
->> [mailto:linux-lvm-bounces@redhat.com] On Behalf Of Luca Berra
->> Sent: Wednesday, July 19, 2006 12:52 AM
->> To: linux-lvm@redhat.com
->> Subject: Re: [linux-lvm] Error setting up a mirrored lv
->> 
->> On Tue, Jul 18, 2006 at 03:16:13PM -0400, Harik A'ttar wrote:
->> >As you noticed, you need a log partition.  dm-mirror is a 
->> bit smarter 
->> >then the basic MD raid1 in that it uses a log disk to keep track of 
->> >write completions for synchronization.  I've only recently 
->> got a kernel 
->> Just for fairness, modern md also supports bitmaps either on 
->> a different
->> device or inside the md components for this very purpose.
->> 
->> L.
->> 
->> -- 
->> Luca Berra -- bluca@comedia.it
->>         Communication Media & Services S.r.l.
->>  /"\
->>  \ /     ASCII RIBBON CAMPAIGN
->>   X        AGAINST HTML MAIL
->>  / \
->> 
->> _______________________________________________
->> linux-lvm mailing list
->> linux-lvm@redhat.com
->> https://www.redhat.com/mailman/listinfo/linux-lvm
->> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
->> 
+cu denny
+
+--=20
+Sicherheit verst=E4ndlich http://www.sides.de
+GnuPG Key
+http://pgpkeys.pca.dfn.de:11371/pks/lookup?op=3Dget&search=3D0x2A5CE192AB7D=
+3FE0
+
+--=-twaimw0q2RP55/K8n2VE
+Content-Type: application/pgp-signature; name=signature.asc
+Content-Description: Dies ist ein digital signierter Nachrichtenteil
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.2.2 (GNU/Linux)
+
+iD8DBQBEviSgKlzhkqt9P+ARAmcoAJ9IiDRcWOX6AioVIVAlKMubGnv+vQCfRW1P
+xJ78LyyLN8xviXKb8jNr7Zw=
+=r2a2
+-----END PGP SIGNATURE-----
+
+--=-twaimw0q2RP55/K8n2VE--
