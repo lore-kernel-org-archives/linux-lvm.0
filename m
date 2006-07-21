@@ -1,9 +1,14 @@
-Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
+Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
 	by int-mx1.corp.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
-	k6L7CXWk030211
-	for <linux-lvm@redhat.com>; Fri, 21 Jul 2006 03:12:33 -0400
-Message-ID: <20060721071221.59483.qmail@web26611.mail.ukl.yahoo.com>
-Date: Fri, 21 Jul 2006 07:12:21 +0000 (GMT)
+	k6L91BvO016860
+	for <linux-lvm@redhat.com>; Fri, 21 Jul 2006 05:01:11 -0400
+Received: from web26608.mail.ukl.yahoo.com (web26608.mail.ukl.yahoo.com
+	[217.146.176.58])
+	by mx1.redhat.com (8.12.11.20060308/8.12.11) with SMTP id
+	k6L918rl019316
+	for <linux-lvm@redhat.com>; Fri, 21 Jul 2006 05:01:09 -0400
+Message-ID: <20060721071308.25215.qmail@web26608.mail.ukl.yahoo.com>
+Date: Fri, 21 Jul 2006 07:13:08 +0000 (GMT)
 From: ramsis farhat <sismar2002@yahoo.fr>
 MIME-Version: 1.0
 Subject: [linux-lvm] failed to install lvm
@@ -20,7 +25,7 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: linux-lvm@sistina.com
+To: linux-lvm@redhat.com
 
 hello.
 I'm in a training and i have to install lvm on an existing system with 2 disks. For the moment i'm working on a virtual machine.
