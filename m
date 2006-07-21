@@ -1,20 +1,14 @@
-Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
+Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
 	by int-mx1.corp.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
-	k6KDnLUk018434
-	for <linux-lvm@redhat.com>; Thu, 20 Jul 2006 09:49:21 -0400
-Received: from will.fastenal.com (will.fastenal.com [205.243.112.23])
-	by mx1.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
-	k6KDnK78007868
-	for <linux-lvm@redhat.com>; Thu, 20 Jul 2006 09:49:21 -0400
-Message-ID: <44BF89DB.6010009@fastenal.com>
-Date: Thu, 20 Jul 2006 08:49:15 -0500
-From: Kelly Sauke <ksauke@fastenal.com>
+	k6L7CXWk030211
+	for <linux-lvm@redhat.com>; Fri, 21 Jul 2006 03:12:33 -0400
+Message-ID: <20060721071221.59483.qmail@web26611.mail.ukl.yahoo.com>
+Date: Fri, 21 Jul 2006 07:12:21 +0000 (GMT)
+From: ramsis farhat <sismar2002@yahoo.fr>
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] Error setting up a mirrored lv
-References: <D81E5F9261AA644D90FF7B8E400588173C77E0@PDBEX02E.pdb.fsc.net>
-In-Reply-To: <D81E5F9261AA644D90FF7B8E400588173C77E0@PDBEX02E.pdb.fsc.net>
-Content-Transfer-Encoding: 7bit
-Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
+Subject: [linux-lvm] failed to install lvm
+Reply-To: ramsis farhat <sismar2002@yahoo.fr>,
+	LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -24,26 +18,14 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: linux-lvm@sistina.com
 
-
-
-Laurenz, Dirk wrote:
-> Hi,
->
->   
->>> in most cases i prefer lvm ontop of md devices, cause for better
->>> handling and it works with every setup and distribution.
->>>
->>>       
-> does md work ontop of multipathd?=
->   
-
-yes.
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
->   
+hello.
+I'm in a training and i have to install lvm on an existing system with 2 disks. For the moment i'm working on a virtual machine.
+The first contains sda1 (boot) sda2 (/) and sda3 (swap)
+and the second sdb contains nothing.
+when i create a pv on sdb and a group with sda1, sda2, sda3 and sdb, the system falls down?
+What should I do?
+Think you for your help
