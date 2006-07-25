@@ -1,19 +1,21 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
 	by int-mx1.corp.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
-	k6PBYF7S016197
-	for <linux-lvm@redhat.com>; Tue, 25 Jul 2006 07:34:15 -0400
-Received: from nf-out-0910.google.com (nf-out-0910.google.com [64.233.182.184])
-	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id k6PBY3AM022651
-	for <linux-lvm@redhat.com>; Tue, 25 Jul 2006 07:34:09 -0400
-Received: by nf-out-0910.google.com with SMTP id l36so219875nfa
-	for <linux-lvm@redhat.com>; Tue, 25 Jul 2006 04:34:02 -0700 (PDT)
-Message-ID: <8e3c40600607250434p6ab2936er3986b6e9a4da4e29@mail.gmail.com>
-Date: Tue, 25 Jul 2006 13:34:02 +0200
-From: "Dennis Ortsen" <dortsen@gmail.com>
+	k6PM4MAR013728
+	for <linux-lvm@redhat.com>; Tue, 25 Jul 2006 18:04:22 -0400
+Received: from mail.linbit.com (aug.linbit.com [212.69.162.22])
+	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id k6PM4EVm025235
+	for <linux-lvm@redhat.com>; Tue, 25 Jul 2006 18:04:15 -0400
+Received: from soda (office.linbit [213.229.1.138])
+	by mail.linbit.com (LINBIT Mail Daemon) with ESMTP id 958EF2CDC60D
+	for <linux-lvm@redhat.com>; Wed, 26 Jul 2006 00:04:09 +0200 (CEST)
+Date: Wed, 26 Jul 2006 00:04:10 +0200
+From: linux-lvm@linbit.com
+Subject: Re: [linux-lvm] fc4 lvm2 snapshot problem
+Message-ID: <20060725220410.GE4633@soda.linbit>
+References: <8e3c40600607250434p6ab2936er3986b6e9a4da4e29@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
 Content-Disposition: inline
-Subject: [linux-lvm] fc4 lvm2 snapshot problem
+In-Reply-To: <8e3c40600607250434p6ab2936er3986b6e9a4da4e29@mail.gmail.com>
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -24,56 +26,39 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@redhat.com
 
-Hi All,
+/ 2006-07-25 13:34:02 +0200
+\ Dennis Ortsen:
+...
+> However when I shoot down udevd (udev-071-0.FC4.3) I can create as many snapshot
+> devices as I like. Until the udevd daemon has been respawned. Then it all stops
+> working (the creation of snapshot volumes). When I disable udev in
+> /etc/rc.sysinit (place comments before start_udev and udevsend) and reboot, I
+> can create snapshot volumes a dozen of times without problems. Until I manually
+> start udevd. Then the fun is over. When I kill udevd again, I can continue
+> creating snapshot volumes. Both servers (the one that works and the one that
+> doesn't) have the exact same versions of the kernel, lvm2,
+> device-mapper and udev.
+> 
+> My best guess is udev that is messing about. I don't know whether I can safely
+> disable udev on a production server. But more importantly: what can I
+> do to get this properly fixed? Am I missing an important update? Are
+> there any known conflicts with other packages or third party software
+> (such as roxen)? Is there anyone who has similar problems?
 
-After struggling for a while, I thought I'd try it on the list.
+maybe its the same problem?
+excerpt from my /etc/udev/udev.rules:
 
-I have filed a bugreport in Red Hat's Bugzilla (bug ID: 188013). There
-you can find the whole story. The shorter version (and latest added
-comment) is as follows:
+# device mapper creates its own device nodes, so ignore these
+#lge: see http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=343671
+#KERNEL=="dm-[0-9]*",           NAME=""
+KERNEL=="dm-[0-9]*",            OPTIONS+="ignore_device"
+KERNEL=="device-mapper",        NAME="mapper/control"
 
-When creating a snapshot volume you get a message saying the newly created
-snapshot volume is in use and will not be removed/not able to deactivate new
-snapshot:
-localhost.localdomain:~# lvcreate -s -n snap -L 512M /dev/vg/home
-   LV vg/snap in use: not removing
-   Couldn't deactivate new snapshot.
-When examining the attributes of the various volumes, the snapshot volume
-doesn't have the expected attributes or origin volume set:
-localhost.localdomain:~# lvs
-   LV         VG     Attr     LSize    Origin    Snap%   Move    Copy%
-   home       vg     -wi-ao   500.00M
-   snap       vg     -wi-a-   512M
-   log        vg     -wi-oa   500.00M
-
-I was told that I needed to update to kernel 2.6.16+ and update the
-userspace tools too. For FC5 these were released, but not for FC4.
-Until july 2. I have installed the updates
-(kernel-smp-2.6.17-1.2142_FC4, lvm2-2.02.06-1.0.fc4
-and device-mapper-1.02.07-2.0 from FC4 updates by AGK@redhat.com). I tested the
-updates a few times (about 50) with some reboots in between and it all seemed to
-be working like a charm again. Until I updated a (semi) production server...
-Luckily it isn't in production yet, but the problem remains on that server...
-
-However when I shoot down udevd (udev-071-0.FC4.3) I can create as many snapshot
-devices as I like. Until the udevd daemon has been respawned. Then it all stops
-working (the creation of snapshot volumes). When I disable udev in
-/etc/rc.sysinit (place comments before start_udev and udevsend) and reboot, I
-can create snapshot volumes a dozen of times without problems. Until I manually
-start udevd. Then the fun is over. When I kill udevd again, I can continue
-creating snapshot volumes. Both servers (the one that works and the one that
-doesn't) have the exact same versions of the kernel, lvm2,
-device-mapper and udev.
-
-My best guess is udev that is messing about. I don't know whether I can safely
-disable udev on a production server. But more importantly: what can I
-do to get this properly fixed? Am I missing an important update? Are
-there any known conflicts with other packages or third party software
-(such as roxen)? Is there anyone who has similar problems?
-
-Thanks in advance,
-
-Dennis
+-- 
+: Lars Ellenberg                                  Tel +43-1-8178292-55 :
+: LINBIT Information Technologies GmbH            Fax +43-1-8178292-82 :
+: Schoenbrunner Str. 244, A-1120 Vienna/Europe   http://www.linbit.com :
