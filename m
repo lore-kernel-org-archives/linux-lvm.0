@@ -1,24 +1,19 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
 	by int-mx1.corp.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
-	k6OI07Hd013995
-	for <linux-lvm@redhat.com>; Mon, 24 Jul 2006 14:00:07 -0400
-Received: from dark-templar.advansoft.us ([166.70.63.214])
-	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id k6OHxrBR001955
-	for <linux-lvm@redhat.com>; Mon, 24 Jul 2006 14:00:00 -0400
-Received: from corsair.lrp.advansoft.us (lrp.dsl.xmission.com [166.70.26.153])
-	by dark-templar.advansoft.us (Postfix) with ESMTP id 5F65A682E8
-	for <linux-lvm@redhat.com>; Mon, 24 Jul 2006 11:59:39 -0600 (MDT)
-From: "Lamont R. Peterson" <peregrine@openbrainstem.net>
-Subject: Re: [linux-lvm] Failed PV recovery
-Date: Mon, 24 Jul 2006 11:59:28 -0600
-References: <200607232019.52718.peregrine@openbrainstem.net>
-	<44C4BAC0.7090508@conterra.de>
-In-Reply-To: <44C4BAC0.7090508@conterra.de>
+	k6PBYF7S016197
+	for <linux-lvm@redhat.com>; Tue, 25 Jul 2006 07:34:15 -0400
+Received: from nf-out-0910.google.com (nf-out-0910.google.com [64.233.182.184])
+	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id k6PBY3AM022651
+	for <linux-lvm@redhat.com>; Tue, 25 Jul 2006 07:34:09 -0400
+Received: by nf-out-0910.google.com with SMTP id l36so219875nfa
+	for <linux-lvm@redhat.com>; Tue, 25 Jul 2006 04:34:02 -0700 (PDT)
+Message-ID: <8e3c40600607250434p6ab2936er3986b6e9a4da4e29@mail.gmail.com>
+Date: Tue, 25 Jul 2006 13:34:02 +0200
+From: "Dennis Ortsen" <dortsen@gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="nextPart1353173.iRCvB9OzhE";
-	protocol="application/pgp-signature"; micalg=pgp-sha1
 Content-Transfer-Encoding: 7bit
-Message-Id: <200607241159.32754.peregrine@openbrainstem.net>
+Content-Disposition: inline
+Subject: [linux-lvm] fc4 lvm2 snapshot problem
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -29,63 +24,56 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: LVM <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+To: linux-lvm@redhat.com
 
---nextPart1353173.iRCvB9OzhE
-Content-Type: text/plain;
-  charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Content-Disposition: inline
+Hi All,
 
-On Monday 24 July 2006 06:19am, Dieter St=FCken wrote:
-> Lamont R. Peterson wrote:
-> > 4.  Are there better ways I could have handled this (other than the
-> > obvious like RAID to start with, etc.)?
->
-> Hi Lamont,
->
-> I strongly suggest to use: http://smartmontools.sourceforge.net/
-> to monitor all disks. In most cases you get warnings about
-> problems with your disks weeks before they fail completely.
+After struggling for a while, I thought I'd try it on the list.
 
-Thanks :), I'll check it out.  Since my home file server is now growing,=20
-that's just the kind of monitoring I want for the future.
+I have filed a bugreport in Red Hat's Bugzilla (bug ID: 188013). There
+you can find the whole story. The shorter version (and latest added
+comment) is as follows:
 
-> > A few months ago, I started seeing some unreadable sectors on the 45GB
-> > drive.
->
-> ... but you have to take it seriously :-)
+When creating a snapshot volume you get a message saying the newly created
+snapshot volume is in use and will not be removed/not able to deactivate new
+snapshot:
+localhost.localdomain:~# lvcreate -s -n snap -L 512M /dev/vg/home
+   LV vg/snap in use: not removing
+   Couldn't deactivate new snapshot.
+When examining the attributes of the various volumes, the snapshot volume
+doesn't have the expected attributes or origin volume set:
+localhost.localdomain:~# lvs
+   LV         VG     Attr     LSize    Origin    Snap%   Move    Copy%
+   home       vg     -wi-ao   500.00M
+   snap       vg     -wi-a-   512M
+   log        vg     -wi-oa   500.00M
 
-Absolutely; and I did take the indications seriously.  Unfortunately, the=20
-accounting department (a.k.a. my wife & my bank account) couldn't help me o=
-ut=20
-fast enough.
+I was told that I needed to update to kernel 2.6.16+ and update the
+userspace tools too. For FC5 these were released, but not for FC4.
+Until july 2. I have installed the updates
+(kernel-smp-2.6.17-1.2142_FC4, lvm2-2.02.06-1.0.fc4
+and device-mapper-1.02.07-2.0 from FC4 updates by AGK@redhat.com). I tested the
+updates a few times (about 50) with some reboots in between and it all seemed to
+be working like a charm again. Until I updated a (semi) production server...
+Luckily it isn't in production yet, but the problem remains on that server...
 
-Of course, the good news is that she now knows first hand (well 1.5 hand, I=
-=20
-guess) what it's like to have a disk go bad with data on it.  That should=20
-help me get parts faster in the future :) .
-=2D-=20
-Lamont R. Peterson <peregrine@OpenBrainstem.net>
-=46ounder [ http://blog.OpenBrainstem.net/peregrine/ ]
-GPG Key fingerprint: 0E35 93C5 4249 49F0 EC7B  4DDD BE46 4732 6460 CCB5
-  ___                   ____            _           _
- / _ \ _ __   ___ _ __ | __ ) _ __ __ _(_)_ __  ___| |_ ___ _ __ ___
-| | | | '_ \ / _ \ '_ \|  _ \| '__/ _` | | '_ \/ __| __/ _ \ '_ ` _ \
-| |_| | |_) |  __/ | | | |_) | | | (_| | | | | \__ \ ||  __/ | | | | |
- \___/| .__/ \___|_| |_|____/|_|  \__,_|_|_| |_|___/\__\___|_| |_| |_|
-      |_|               Intelligent Open Source Software Engineering
-                              [ http://www.OpenBrainstem.net/ ]
+However when I shoot down udevd (udev-071-0.FC4.3) I can create as many snapshot
+devices as I like. Until the udevd daemon has been respawned. Then it all stops
+working (the creation of snapshot volumes). When I disable udev in
+/etc/rc.sysinit (place comments before start_udev and udevsend) and reboot, I
+can create snapshot volumes a dozen of times without problems. Until I manually
+start udevd. Then the fun is over. When I kill udevd again, I can continue
+creating snapshot volumes. Both servers (the one that works and the one that
+doesn't) have the exact same versions of the kernel, lvm2,
+device-mapper and udev.
 
---nextPart1353173.iRCvB9OzhE
-Content-Type: application/pgp-signature
+My best guess is udev that is messing about. I don't know whether I can safely
+disable udev on a production server. But more importantly: what can I
+do to get this properly fixed? Am I missing an important update? Are
+there any known conflicts with other packages or third party software
+(such as roxen)? Is there anyone who has similar problems?
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.4 (GNU/Linux)
+Thanks in advance,
 
-iD8DBQBExQqEvkZHMmRgzLURAm76AKC4IZaqKpYEx7PEdIcXsmxM/oKcnACffuh2
-YbpKZqtPo+Rn2qGodKw8sV8=
-=mrmq
------END PGP SIGNATURE-----
-
---nextPart1353173.iRCvB9OzhE--
+Dennis
