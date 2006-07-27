@@ -1,30 +1,26 @@
 Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
 	by int-mx1.corp.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
-	k6RFE17D012271
-	for <linux-lvm@redhat.com>; Thu, 27 Jul 2006 11:14:01 -0400
-Received: from ciao.gmane.org (main.gmane.org [80.91.229.2])
+	k6RFVO4j017897
+	for <linux-lvm@redhat.com>; Thu, 27 Jul 2006 11:31:24 -0400
+Received: from conterra.de (vvv.conterra.de [212.124.44.162])
 	by mx1.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
-	k6RFE0iH000520
-	for <linux-lvm@redhat.com>; Thu, 27 Jul 2006 11:14:00 -0400
-Received: from list by ciao.gmane.org with local (Exim 4.43)
-	id 1G67YX-0004Sb-0J
-	for linux-lvm@redhat.com; Thu, 27 Jul 2006 17:13:45 +0200
-Received: from servers.it.uni-wh.de ([62.206.172.225])
-	by main.gmane.org with esmtp (Gmexim 0.1 (Debian))
-	id 1AlnuQ-0007hv-00
-	for <linux-lvm@redhat.com>; Thu, 27 Jul 2006 17:13:44 +0200
-Received: from cp by servers.it.uni-wh.de with local (Gmexim 0.1 (Debian))
-	id 1AlnuQ-0007hv-00
-	for <linux-lvm@redhat.com>; Thu, 27 Jul 2006 17:13:44 +0200
-From: Christoph Peus <cp@uni-wh.de>
-Date: Thu, 27 Jul 2006 17:13:05 +0200
-Message-ID: <eaal5p$hk3$1@sea.gmane.org>
-References: <e92e0t$uit$1@sea.gmane.org>
-Mime-Version: 1.0
+	k6RFVN5D009521
+	for <linux-lvm@redhat.com>; Thu, 27 Jul 2006 11:31:24 -0400
+Received: from localhost (unknown [127.0.0.1])
+	by conterra.de (-) with ESMTP id 231AD1F41EF
+	for <linux-lvm@redhat.com>; Thu, 27 Jul 2006 17:31:12 +0200 (CEST)
+Received: from conterra.de ([127.0.0.1])
+	by localhost (vvv.conterra.de [127.0.0.1]) (amavisd-new, port 10024)
+	with ESMTP id 27270-07 for <linux-lvm@redhat.com>;
+	Thu, 27 Jul 2006 17:30:59 +0200 (CEST)
+Message-ID: <44C8DC2D.3000408@conterra.de>
+Date: Thu, 27 Jul 2006 17:30:53 +0200
+From: =?ISO-8859-1?Q?Dieter_St=FCken?= <stueken@conterra.de>
+MIME-Version: 1.0
+Subject: Re: [linux-lvm] Performance impact of LVM
+References: <20060727120250.GB17454@freshdot.net>
+In-Reply-To: <20060727120250.GB17454@freshdot.net>
 Content-Transfer-Encoding: 7bit
-In-Reply-To: <e92e0t$uit$1@sea.gmane.org>
-Sender: news <news@sea.gmane.org>
-Subject: [linux-lvm] Re: Cannot create more than one snapshot per origin
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -35,22 +31,31 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: linux-lvm@redhat.com
+Content-Type: text/plain; charset="us-ascii"
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-Christoph Peus wrote:
+Sander Smeenk wrote:
+> I've recently subscribed here as i have some questions about LVM,
+> particularly the performance impact of LVM on disk IO.
 
-> when I try to create more than one snapshot of the same origin, the 
-> second and following snapshots are marked "inactive" and report 
-> Input/output errors all the time:
+impact? no, I don't think so.
 
-[..]
+LVM does not interfere with the IO system too much.
+For an IO request LVM decides where (device/sector)
+to find the data. The transfer of the data itself,
+to or from the device, happens as before, without LVM.
+I think the delay for the lookup to find the data
+is negligible compared to the transfer time itself.
 
-> kernel: vanilla 2.6.15.1
-> device-mapper: 1.02.07
-> lvm2: 2.02.05
+But LVM may improve the performance indirectly, if
+you spread your data over several disk by using striping.
+But this is not guaranteed and depends on the structure
+of your data and the access pattern.
 
-To whom it may concern:
-This problem disappeared after I had upgraded the kernel to 2.6.17.
+there are several studies about this topic, i.E:
 
-Christoph
+http://www.suse.com/en/whitepapers/lvm/lvm1.html#perf
+
+.. although, its a bit outdated, as they still use LVM1... 
+
+Dieter.
