@@ -1,23 +1,22 @@
-Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
+Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
 	by int-mx1.corp.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
-	k6R9rtWx031829
-	for <linux-lvm@redhat.com>; Thu, 27 Jul 2006 05:53:55 -0400
-Received: from nf-out-0910.google.com (nf-out-0910.google.com [64.233.182.185])
-	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id k6R9rm58018268
-	for <linux-lvm@redhat.com>; Thu, 27 Jul 2006 05:53:48 -0400
-Received: by nf-out-0910.google.com with SMTP id x30so106261nfb
-	for <linux-lvm@redhat.com>; Thu, 27 Jul 2006 02:53:48 -0700 (PDT)
-Message-ID: <8e3c40600607270252rb63513enc8b024c73fb20728@mail.gmail.com>
-Date: Thu, 27 Jul 2006 11:52:15 +0200
-From: "Dennis Ortsen" <dortsen@gmail.com>
-Subject: Re: [linux-lvm] fc4 lvm2 snapshot problem
-In-Reply-To: <200607261603.k6QG3M9Y009452@beta.mvs.co.il>
+	k6RC315O025257
+	for <linux-lvm@redhat.com>; Thu, 27 Jul 2006 08:03:01 -0400
+Received: from dot.freshdot.net
+	(IDENT:1598613e6c5f4b34290479e1f770f539@dot.freshdot.net
+	[80.69.73.239])
+	by mx1.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
+	k6RC2u5e010040
+	for <linux-lvm@redhat.com>; Thu, 27 Jul 2006 08:02:58 -0400
+Received: from ssmeenk by dot.freshdot.net with local (Exim 4.62)
+	(envelope-from <ssm+lvm@freshdot.net>) id 1G64Zm-0004yS-5r
+	for linux-lvm@redhat.com; Thu, 27 Jul 2006 14:02:50 +0200
+Date: Thu, 27 Jul 2006 14:02:50 +0200
+From: Sander Smeenk <ssm+lvm@freshdot.net>
+Message-ID: <20060727120250.GB17454@freshdot.net>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
 Content-Disposition: inline
-References: <8e3c40600607250434p6ab2936er3986b6e9a4da4e29@mail.gmail.com>
-	<20060725220410.GE4633@soda.linbit>
-	<200607261603.k6QG3M9Y009452@beta.mvs.co.il>
+Subject: [linux-lvm] Performance impact of LVM
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -28,37 +27,49 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: ehud@unix.mvs.co.il, LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: linux-lvm@redhat.com
 
-On 7/26/06, Ehud Karni <ehud@unix.mvs.co.il> wrote:
-> On Wed, 26 Jul 2006 00:04:10 +0200, linux-lvm@linbit.com wrote:
-> > >
-> > > My best guess is udev that is messing about. I don't know whether I can safely
-> > > disable udev on a production server. But more importantly: what can I
-> > > do to get this properly fixed? Am I missing an important update? Are
-> > > there any known conflicts with other packages or third party software
-> > > (such as roxen)? Is there anyone who has similar problems?
-> >
-> > maybe its the same problem?
-> > excerpt from my /etc/udev/udev.rules:
-> >
-> > # device mapper creates its own device nodes, so ignore these
-> > #lge: see http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=343671
-> > #KERNEL=="dm-[0-9]*",           NAME=""
-> > KERNEL=="dm-[0-9]*",            OPTIONS+="ignore_device"
-> > KERNEL=="device-mapper",        NAME="mapper/control"
->
-> It must be this problem. And it is fixed by the line:
->     KERNEL=="dm-[0-9]*",            OPTIONS+="ignore_device"
-> but in FC4/FC5 it should be in /etc/udev/rules.d/50-udev.rules .
->
-> Ehud.
->
+Hello list!
 
-Thanks for pointing to that bug ID. After adding that line to the udev
-rules the problem was gone!
+I've recently subscribed here as i have some questions about LVM,
+particularly the performance impact of LVM on disk IO.
 
-Regards,
+I'm a happy LVM user, on my workstation at home i've used it for a long
+time. No special setups or anything, but it's nice to be able to resize
+partitions on the fly, or have a number of disks act as one huge disk...
 
-Dennis
+So, when I had to reinstall all servers for the company I work for, i
+decided to use LVM for the same reasons stated above. But now i wonder:
+Does LVM have any impact on disk IO? Are there any tests done on this
+subject?
+
+I couldn't really find any on the internet. Most of the things you find
+are implementation issues and 'how does it work' stuff ;-)
+
+I'm running LVM2 (2.02.06) on Debian 'sid' (unstable, but i hate that word)
+using linux kernels 2.6.17.xx.
+
+For example, one of my servers has 4x 34gb SCSI disks and 2x IDE disks.
+One of the IDE disks has a 250MB boot partition, the rest is LVM
+partition, the other IDE disk has one big LVM partition, same goes for
+the 4 SCSI disks.
+
+Then i made a scsi_vg01, with all the scsi disks and a ide_vg01 with all
+the ide disks, and started lvcreating "partitions" inside those vg's.
+That's basically how i set up LVM on all of my servers. Some servers
+have different disk-configurations though...
+
+Can anyone shed any light on this approach? Are there impacts on
+performance of read / write actions? Any information is welcomed.
+
+Hope to hear from you all!
+
+Kind regards,
+Sander.
+-- 
+| $ perl -e 'length q bless glob and print chr oct ord q mkdir m and print \
+| chr ord q xor x and print chr ord q q q and print chr ord uc q map m and \
+| print chr ord q qw q and print chr ord q each le and print chr ord q my \
+| alarm and print chr oct oct ord uc qw q for q'  -  Don't you LOVE perl?
