@@ -1,27 +1,26 @@
-Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
+Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
 	by int-mx1.corp.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
-	k6SF13e8031719
-	for <linux-lvm@redhat.com>; Fri, 28 Jul 2006 11:01:03 -0400
-Received: from conterra.de (vvv.conterra.de [212.124.44.162])
-	by mx1.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
-	k6SF119d006156
-	for <linux-lvm@redhat.com>; Fri, 28 Jul 2006 11:01:01 -0400
-Received: from localhost (unknown [127.0.0.1])
-	by conterra.de (-) with ESMTP id E55011F41B1
-	for <linux-lvm@redhat.com>; Fri, 28 Jul 2006 17:00:55 +0200 (CEST)
-Received: from conterra.de ([127.0.0.1])
-	by localhost (vvv.conterra.de [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id 16736-01 for <linux-lvm@redhat.com>;
-	Fri, 28 Jul 2006 17:00:46 +0200 (CEST)
-Message-ID: <44CA269C.6040802@conterra.de>
-Date: Fri, 28 Jul 2006 17:00:44 +0200
-From: =?ISO-8859-15?Q?Dieter_St=FCken?= <stueken@conterra.de>
+	k6SGLCFE024634
+	for <linux-lvm@redhat.com>; Fri, 28 Jul 2006 12:21:12 -0400
+Received: from mail.informatik.uni-luebeck.de (cs3.informatik.uni-luebeck.de
+	[141.83.143.73])
+	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id k6SGL6xr018512
+	for <linux-lvm@redhat.com>; Fri, 28 Jul 2006 12:21:06 -0400
+Received: from [85.233.18.124] (ip-124-18.travedsl.de [85.233.18.124])
+	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by mail.informatik.uni-luebeck.de (Postfix) with ESMTP id D1D6320150
+	for <linux-lvm@redhat.com>; Fri, 28 Jul 2006 18:21:00 +0200 (CEST)
+Message-ID: <44CA397A.8020209@forouher.de>
+Date: Fri, 28 Jul 2006 18:21:14 +0200
+From: Dariush Forouher <dariush@forouher.de>
 MIME-Version: 1.0
 Subject: Re: [linux-lvm] Strange pvmove problem
-References: <44C9E4BD.9070204@forouher.de> <44CA0D67.5000008@conterra.de>
-	<44CA1479.8080909@forouher.de>
-In-Reply-To: <44CA1479.8080909@forouher.de>
-Content-Transfer-Encoding: 7bit
+References: <44C9E4BD.9070204@forouher.de>
+	<44CA0D67.5000008@conterra.de>	<44CA1479.8080909@forouher.de>
+	<44CA269C.6040802@conterra.de>
+In-Reply-To: <44CA269C.6040802@conterra.de>
+Content-Transfer-Encoding: quoted-printable
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -32,21 +31,27 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="iso-8859-1"
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-Dariush Forouher wrote:
-> Uhm, this is the file created right before I started pvmove:
-....
+Dieter St=EF=BF=BDken wrote:
 
-seems the pvmove was not even started because of a problems
-with the underlaying device-mapper:
+> any  messages from syslog / dmesg?
 
->  device-mapper: reload ioctl failed: Invalid argument
+Jupp, these:
 
-sorry, no idea :-(
+device-mapper: unrecognised sync argument to mirror log: 2
+device-mapper: dm-mirror: Error creating mirror dirty log
+device-mapper: error adding target to table
+device-mapper: unrecognised sync argument to mirror log: 2
+device-mapper: dm-mirror: Error creating mirror dirty log
+device-mapper: error adding target to table
+device-mapper: device 253:1 too small for target
+device-mapper: error adding target to table
 
-any  messages from syslog / dmesg?
-does it work while LV not active (i.E. boot from rescue CD)?
+> does it work while LV not active (i.E. boot from rescue CD)?
 
-Dieter.
+Nope. :(
+
+ciao
+Dariush
