@@ -1,18 +1,26 @@
-Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
+Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
 	by int-mx1.corp.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
-	k6UBFmJx023922
-	for <linux-lvm@redhat.com>; Sun, 30 Jul 2006 07:15:48 -0400
-Received: from conterra.de (vvv.conterra.de [212.124.44.162])
-	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id k6UBFdSb031610
-	for <linux-lvm@redhat.com>; Sun, 30 Jul 2006 07:15:40 -0400
-Message-ID: <44CC94C8.1080306@conterra.de>
-Date: Sun, 30 Jul 2006 13:15:20 +0200
-From: =?ISO-8859-1?Q?Dieter_St=FCken?= <stueken@conterra.de>
+	k6V7wohG004011
+	for <linux-lvm@redhat.com>; Mon, 31 Jul 2006 03:58:50 -0400
+Received: from dot.freshdot.net
+	(IDENT:c7b4ea6b28ee7a1aae1060ccbc2b331b@dot.freshdot.net
+	[80.69.73.239])
+	by mx1.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
+	k6V7wlvc008048
+	for <linux-lvm@redhat.com>; Mon, 31 Jul 2006 03:58:49 -0400
+Received: from ssmeenk by dot.freshdot.net with local (Exim 4.62)
+	(envelope-from <ssm+lvm@freshdot.net>) id 1G7Sfm-0008N5-51
+	for linux-lvm@redhat.com; Mon, 31 Jul 2006 09:58:46 +0200
+Date: Mon, 31 Jul 2006 09:58:46 +0200
+From: Sander Smeenk <ssm+lvm@freshdot.net>
+Subject: Re: [linux-lvm] Performance impact of LVM
+Message-ID: <20060731075846.GA32150@freshdot.net>
+References: <20060727120250.GB17454@freshdot.net>
+	<44C8DC2D.3000408@conterra.de>
+	<Pine.LNX.4.64.0607280846060.6888@mhw.ulib.iupui.edu>
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] root partition
-References: <20060729081733.88249.qmail@web26602.mail.ukl.yahoo.com>
-In-Reply-To: <20060729081733.88249.qmail@web26602.mail.ukl.yahoo.com>
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+In-Reply-To: <Pine.LNX.4.64.0607280846060.6888@mhw.ulib.iupui.edu>
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -24,33 +32,26 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: ramsis farhat <sismar2002@yahoo.fr>, LVM general discussion and development <linux-lvm@redhat.com>
+Content-Transfer-Encoding: 7bit
+To: linux-lvm@redhat.com
 
-ramsis farhat wrote:
-> Hello every body. I'm student and I have training in a company that wants to put LVM partitions in its server.
-> The problem is that they do not want to format the hard disk.
-> For the moment, I'm working on a virtual machine with Red Hat Entreprise 3.
-> I'm working with 2 hard disks of 8GB. The first is partitioned like this
-> sda1 boot (101 MB)
-> sda2 /      (7400MB)
-> sda3 swap (573 MB)
->  
-> I followed exactly the steps in the LVM-HOWTO excepted that I added the second Hard disk sdb.
-> I made a lvm partion sdb1 and I put all the root data on it.
-> Then, I had 2 problems. The first is that the RAM disk can't be created because of the lack of space ( I'm not sure of that)
-> And the second is that the server is using GRUB and not LILO, so I don't know How rebooting on the new root file.
+Quoting Mark H. Wood (mwood@IUPUI.Edu):
 
-What do you mean by "RAM disk"? Is it a problem while preparing the
-ramdisk (initrd) by mkinited, or is it a problem to startup the
-ramdisk during boot?
+> Some uses of LVM *could* increase I/O wait time.  It's easy to paste new 
+> extents onto existing volumes, and the new extent probably won't be 
+> contiguous with the old one.  So you *could* see longer average seek 
+> delays due to additional arm travel distance between extents.  It's 
+> strongly dependent on access patterns.
 
-Both, grub and lilo need sda1 (/boot) to boot, load the kernel and
-the initrd (ram disk). There are two things you should verify:
-1) For the new root partition (more correct: root LV), be sure,
-/boot still comes from /dev/sda1 (should be, as it was before).
-2) the initrd (ram disk) created by mkinitrd, must know about
-using LVM. This may be achieved either via some configuration
-(my SuSE system looks into /etc/sysconfig/kernel) or by "-f lvm2".
-See "man mkinitrd".
+Hmm. Yeah, this setup i'm using was created and thereafter never changed
+(yet). So i guess it should all still be contiguous...
 
-Dieter.
+Thanks for the info though. I'll see if i can do some tests when i get
+my new hardware to play with. But as said before, it's probably not even
+measurable. The added latency that is...
+
+Thanks!
+Sander.
+-- 
+| The older you get, the better you realize you were.
+| 1024D/08CEC94D - 34B3 3314 B146 E13C 70C8  9BDB D463 7E41 08CE C94D
