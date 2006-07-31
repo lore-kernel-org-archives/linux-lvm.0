@@ -1,14 +1,13 @@
-Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
+Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
 	by int-mx1.corp.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
-	k6VFH9cF016148
-	for <linux-lvm@redhat.com>; Mon, 31 Jul 2006 11:17:09 -0400
-Received: from web51114.mail.yahoo.com (web51114.mail.yahoo.com
-	[206.190.39.91])
-	by mx1.redhat.com (8.12.11.20060308/8.12.11) with SMTP id
-	k6VFH0Cl029918
-	for <linux-lvm@redhat.com>; Mon, 31 Jul 2006 11:17:05 -0400
-Message-ID: <20060731151654.24449.qmail@web51114.mail.yahoo.com>
-Date: Mon, 31 Jul 2006 08:16:54 -0700 (PDT)
+	k6VGt9TF013948
+	for <linux-lvm@redhat.com>; Mon, 31 Jul 2006 12:55:09 -0400
+Received: from web51111.mail.yahoo.com (web51111.mail.yahoo.com
+	[206.190.39.88])
+	by mx3.redhat.com (8.13.1/8.13.1) with SMTP id k6VGt2W9001745
+	for <linux-lvm@redhat.com>; Mon, 31 Jul 2006 12:55:02 -0400
+Message-ID: <20060731165456.28513.qmail@web51111.mail.yahoo.com>
+Date: Mon, 31 Jul 2006 09:54:56 -0700 (PDT)
 From: Dave <davo_muc@yahoo.com>
 Subject: Re: [linux-lvm] LVM1 - "VGDA in kernel and lvmtab are NOT
 	consistent"error following lvm operations
@@ -29,22 +28,15 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: mauelshagen@redhat.com, LVM general discussion and development <linux-lvm@redhat.com>
 
-Hi Heinz,
+Hello Heinz and any others who might know the answer to this question,
 
-Thanks for your message.  To answer your questions...
+One other question...  As I mentioned in a separate message, I currently have a volume group which seen as "inactive" and "exported" by two separate systems, both of which have physical access to the volume group over fibre to a SAN.  In this two node cluster, one node should always have the volume group as "active".  In fact, currently one node does have the volume group in use, because they are visible using df and mounted.
 
-The root filesystem has over 50 GB available.  I ran vgscan but that did not improve the situation.  What we were able to do to get vgdisplay to not output an error was...
+I would like to make sure that the status displayed by pvscan is corrected to "active" on that node.  Is it safe to run "vgimport" and "vgchange -ay" on the volume that is active, even though pvscan shows it as "inactive" and "exported"???  Will this cause any problem to the file system that is running on top of that volume group???
 
-1)  modify the /etc/lvmtab file to include the filesystem which LVM claims is inactive and exported (even though it is in mounted and in use)
-
-2)  cp /etc/lvmconf/${vg}.conf /etc/lvmtab.d/${vg}
-
-3)  after steps 1 and 2, vgdisplay shows information regarding both volume groups defined;  however, pvscan still shows one volume group as inactive and exported;  we determined this must be due to a flag on the disks themselves, because /proc/lvm kernel info seems to show both volume groups as active
-
-Any other info on why volume group status is not kept accurate by LVM is appreciated!!  Is this perhaps a bug with LVM v 1.08
-
-Thanks!
+Thanks!!
 Dave
+
 
 ----- Original Message ----
 From: Heinz Mauelshagen <mauelshagen@redhat.com>
