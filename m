@@ -1,27 +1,20 @@
-Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
+Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
 	by int-mx1.corp.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
-	k6V7wohG004011
-	for <linux-lvm@redhat.com>; Mon, 31 Jul 2006 03:58:50 -0400
-Received: from dot.freshdot.net
-	(IDENT:c7b4ea6b28ee7a1aae1060ccbc2b331b@dot.freshdot.net
-	[80.69.73.239])
-	by mx1.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
-	k6V7wlvc008048
-	for <linux-lvm@redhat.com>; Mon, 31 Jul 2006 03:58:49 -0400
-Received: from ssmeenk by dot.freshdot.net with local (Exim 4.62)
-	(envelope-from <ssm+lvm@freshdot.net>) id 1G7Sfm-0008N5-51
-	for linux-lvm@redhat.com; Mon, 31 Jul 2006 09:58:46 +0200
-Date: Mon, 31 Jul 2006 09:58:46 +0200
-From: Sander Smeenk <ssm+lvm@freshdot.net>
-Subject: Re: [linux-lvm] Performance impact of LVM
-Message-ID: <20060731075846.GA32150@freshdot.net>
-References: <20060727120250.GB17454@freshdot.net>
-	<44C8DC2D.3000408@conterra.de>
-	<Pine.LNX.4.64.0607280846060.6888@mhw.ulib.iupui.edu>
+	k6V8oSI5015793
+	for <linux-lvm@redhat.com>; Mon, 31 Jul 2006 04:50:28 -0400
+Received: from web51107.mail.yahoo.com (web51107.mail.yahoo.com
+	[206.190.38.149])
+	by mx3.redhat.com (8.13.1/8.13.1) with SMTP id k6V8oLpW012428
+	for <linux-lvm@redhat.com>; Mon, 31 Jul 2006 04:50:22 -0400
+Message-ID: <20060731085016.37744.qmail@web51107.mail.yahoo.com>
+Date: Mon, 31 Jul 2006 01:50:16 -0700 (PDT)
+From: Dave <davo_muc@yahoo.com>
+Subject: Re: [linux-lvm] LVM1 - "VGDA in kernel and lvmtab are NOT
+	consistent"error following lvm operations
+In-Reply-To: <20060728103709.9701312EDE@bluewhale.planbit.co.uk>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <Pine.LNX.4.64.0607280846060.6888@mhw.ulib.iupui.edu>
-Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
+Reply-To: Dave <davo_muc@yahoo.com>,
+	LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -33,25 +26,24 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: linux-lvm@redhat.com
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-Quoting Mark H. Wood (mwood@IUPUI.Edu):
 
-> Some uses of LVM *could* increase I/O wait time.  It's easy to paste new 
-> extents onto existing volumes, and the new extent probably won't be 
-> contiguous with the old one.  So you *could* see longer average seek 
-> delays due to additional arm travel distance between extents.  It's 
-> strongly dependent on access patterns.
 
-Hmm. Yeah, this setup i'm using was created and thereafter never changed
-(yet). So i guess it should all still be contiguous...
+Hello,
 
-Thanks for the info though. I'll see if i can do some tests when i get
-my new hardware to play with. But as said before, it's probably not even
-measurable. The added latency that is...
+I have slightly more info re: this error message I'm seeing.  After running vgdisplay and getting the message:
+
+    VGDA in kernel and lvmtab are NOT consistent
+
+I issued an $? to see the exit code and it was 98, which is explained as:
+
+    invalid lvmtab (run vgscan(8))
+
+in the vgdisplay man page.  How does the lvmtab become invalid?  
+
+I do not want to have to reboot (because this will cause an outage for our customers), but I know from previous experience that the error message will disappear following a reboot.  I'm also hesitant to add new disks, vg's, lv's, and file systems until I can run vgdisplay without an error.  Should I be concerned re: this message???
+
 
 Thanks!
-Sander.
--- 
-| The older you get, the better you realize you were.
-| 1024D/08CEC94D - 34B3 3314 B146 E13C 70C8  9BDB D463 7E41 08CE C94D
+Dave
