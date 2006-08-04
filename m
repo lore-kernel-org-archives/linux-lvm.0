@@ -1,23 +1,19 @@
-Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
+Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
 	by int-mx1.corp.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
-	k745GWLU009899
-	for <linux-lvm@redhat.com>; Fri, 4 Aug 2006 01:16:32 -0400
-Received: from py-out-1112.google.com (py-out-1112.google.com [64.233.166.176])
-	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id k745GQYD029162
-	for <linux-lvm@redhat.com>; Fri, 4 Aug 2006 01:16:26 -0400
-Received: by py-out-1112.google.com with SMTP id o67so155558pye
-	for <linux-lvm@redhat.com>; Thu, 03 Aug 2006 22:16:21 -0700 (PDT)
-Message-ID: <ebf0fc470608032216o231ad8aeyb4279e2b670fad08@mail.gmail.com>
-Date: Fri, 4 Aug 2006 14:16:20 +0900
-From: "Stanislaw Senotrusov" <senotrusov@gmail.com>
-Subject: Re: [linux-lvm] pvresize, resize 8e Linux LVM partition
-In-Reply-To: <200608031154.32467.peregrine@openbrainstem.net>
+	k748U0b1008434
+	for <linux-lvm@redhat.com>; Fri, 4 Aug 2006 04:30:00 -0400
+Received: from web26613.mail.ukl.yahoo.com (web26613.mail.ukl.yahoo.com
+	[217.146.177.65])
+	by mx1.redhat.com (8.12.11.20060308/8.12.11) with SMTP id
+	k748TwSv028204
+	for <linux-lvm@redhat.com>; Fri, 4 Aug 2006 04:29:58 -0400
+Message-ID: <20060804082953.99543.qmail@web26613.mail.ukl.yahoo.com>
+Date: Fri, 4 Aug 2006 08:29:53 +0000 (GMT)
+From: ramsis farhat <sismar2002@yahoo.fr>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-References: <ebf0fc470608022227j23bbe62dkffd4df84e727edc9@mail.gmail.com>
-	<200608031154.32467.peregrine@openbrainstem.net>
-Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
+Subject: [linux-lvm] booting on a new root partition
+Reply-To: ramsis farhat <sismar2002@yahoo.fr>,
+	LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -27,42 +23,83 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: linux-lvm@redhat.com, linux-lvm@sistina.com
 
-On 8/4/06, Lamont R. Peterson <peregrine@openbrainstem.net> wrote:
-> Here is how I would do it:
->
-> 1.  Kickstart install of new box (sets up LVM, includes packages, etc.)
-> 2.  Run a script to install all of the needed configuration files for all the
-> services the new server needs (could be run as part of the Kickstart).
-> 3.  Copy the data the services will be "serving" to the new machine.
->
-> There are lots of ways to do step 3.  Personally, I like to avoid as much of
-> computational overhead as possible at this stage, so I like NFS mounting and
-> "cp -a".  Plain, simple, fast and comprehensive.  YMMV.
+hi everybody
+Dieter, here is what you asked me
+[root@localhost root]# ls -ltr /boot
+total 6138
+-rw-r--r--      1 root     root        21282      Sep 11  2003       message.ja
+-rw-r--r--      1 root     root        23108      Sep 11  2003       message
+-rw-r--r--      1 root     root        1236945   Oct  4  2003        vmlinuz-2.4.21-4.EL
+-rw-r--r--      1 root     root        570887    Oct  4  2003        System.map-2.4.21-4.EL
+-rwxr-xr-x    1 root     root        2900380  Oct  4  2003        vmlinux-2.4.21-4.EL
+-rw-r--r--      1 root     root        543         Jul   30 21:30       kernel.h
+-rw-r--r--      1 root     root        276990    Jul   30 21:30       initrd-2.4.21-4.EL.img
+drwxr-xr-x   2 root     root        1024       Jul   30 21:43        grub
+lrwxrwxrwx  1 root     root        22          Jul   30 21:43        System.map -> System.map-2.4.21-4.EL
+drwx------     2 root     root        12288     Jul   30 23:26        lost+found
+-rw-r--r--      1 root     root        48023      Aug  1 14:50         config-2.4.21-4.EL
+-rw-r--r--      1 root     root        1154607  Aug  1 14:50         initrd-lvm-2.4.21-4.EL.gz
+ 
+Her is my grub directory
+ 
+[root@localhost root]# ls -ltr /boot/grub
+total 185
+-rw-r--r--    1 root     root        11182 Sep 11  2003 splash.xpm.gz
+-rw-r--r--    1 root     root       106364 Jul 30 21:43 stage2
+-rw-r--r--    1 root     root          512 Jul 30 21:43 stage1
+lrwxr-xr-x    1 root     root           11 Jul 30 21:43 menu.lst -> ./grub.conf
+-rw-r--r--    1 root     root           82 Jul 30 21:43 device.map
+-rw-r--r--    1 root     root         9320 Jul 30 21:43 xfs_stage1_5
+-rw-r--r--    1 root     root         6528 Jul 30 21:43 vstafs_stage1_5
+-rw-r--r--    1 root     root         9408 Jul 30 21:43 reiserfs_stage1_5
+-rw-r--r--    1 root     root         7040 Jul 30 21:43 minix_stage1_5
+-rw-r--r--    1 root     root         8448 Jul 30 21:43 jfs_stage1_5
+-rw-r--r--    1 root     root         6880 Jul 30 21:43 ffs_stage1_5
+-rw-r--r--    1 root     root         7536 Jul 30 21:43 fat_stage1_5
+-rw-r--r--    1 root     root         7840 Jul 30 21:43 e2fs_stage1_5
+-rw-------    1 root     root          679 Aug  1 14:40 grub.conf
 
-Thank you for the letter, Lamont!
+And here my configuration
+ 
+[root@localhost root]# cat  /boot/grub/grub.conf
+# grub.conf generated by anaconda
+#
+# Note that you do not have to rerun grub after making changes to this file
+# NOTICE:  You have a /boot partition.  This means that
+#          all kernel and initrd paths are relative to /boot/, eg.
+#          root (hd0,0)
+#          kernel /vmlinuz-version ro root=/dev/sda2
+#          initrd /initrd-version.img
+#boot=/dev/sda
+default=0
+timeout=10
+splashimage=(hd0,0)/grub/splash.xpm.gz
+title Red Hat Enterprise Linux ES (2.4.21-4.EL)
+ root (hd0,0)
+ kernel /vmlinuz-2.4.21-4.EL ro root=LABEL=/
+ initrd /initrd-2.4.21-4.EL.img
+title Ramsis
+ root (hd0,0)
+ kernel /vmlinuz-2.4.21-4.EL ro root=/dev/vg00/root
+ initrd /initrd-lvm-2.4.21-4.EL.gz
 
-Procedure you described requires a so much time to complete.
+ 
+And I mounted my new root ' mount /dev/vg00/root /mnt/ '
+The new /etc/fstab contains : 
+ 
+/dev/vg00/root          /                       ext3    defaults        1 1
+LABEL=/boot             /boot                   ext3    defaults        1 2
+none                    /dev/pts                devpts  gid=5,mode=620  0 0
+none                    /proc                   proc    defaults        0 0
+none                    /dev/shm                tmpfs   defaults        0 0
+/dev/sda3               swap                    swap    defaults        0 0
+/dev/cdrom              /mnt/cdrom              udf,iso9660 noauto,owner,kudzu,ro 0 0
+/dev/fd0                /mnt/floppy             auto    noauto,owner,kudzu 0 0
 
-Tomorrow I end up the following pipeline:
-
-1. Create only one 4Gb plain root partition (no LVM) which holds a
-entire system and my application. It's used in a development and test
-environment. The actual stored data is about a 1.5 Gb. I am pretty
-sure the base system it never fills entire 4 Gb in my case.
-
-2. To build a production server I am bytecopy the root partition to a
-new box (only a few minutes), boot from it, create LVM in a free space
-and moves application from root to LVM.
-Production database now have space to grow. Also I get rid of equal
-UUID problem.
-
-Additionally there is no need for kickstart process is VM environment
-- I just need to setup OS one time, and then when I need another box I
-just clone initial setup - it takes a few second. For testing and
-development VM overhead is ok.
-
---
-Stas Senotrusov
+But i still think the problrm is coming from the instruction "lvmcreate_initrd" because if I do not use the "-D" flag, the instruction fail, and in the "LVM-HOWTO", it is used without that flag.
+If you have any suggestion :)
+thank you :)
