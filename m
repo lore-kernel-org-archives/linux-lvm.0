@@ -1,23 +1,15 @@
-Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
+Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
 	by int-mx1.corp.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
-	k77LxIJ6012521
-	for <linux-lvm@redhat.com>; Mon, 7 Aug 2006 17:59:18 -0400
-Received: from omner.org (www.omner.org [64.79.194.221])
-	by mx1.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
-	k77LxGoF004257
-	for <linux-lvm@redhat.com>; Mon, 7 Aug 2006 17:59:16 -0400
-Received: from omner.org (vps.omner.org [127.0.0.1])
-	by omner.org (Postfix) with ESMTP id 40A23163C031
-	for <linux-lvm@redhat.com>; Mon,  7 Aug 2006 21:59:15 +0000 (UTC)
-Received: from [192.168.80.173] (unknown [208.53.40.164])
-	by omner.org (Postfix) with ESMTP id D52E6163C02F
-	for <linux-lvm@redhat.com>; Mon,  7 Aug 2006 21:59:14 +0000 (UTC)
-From: Joshua Aune <luken@omner.org>
-Date: Mon, 07 Aug 2006 15:59:32 -0600
-Message-Id: <1154987972.16651.28.camel@localhost.localdomain>
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] Running LVM on shared lun's
+	k77Nqitl004751
+	for <linux-lvm@redhat.com>; Mon, 7 Aug 2006 19:52:44 -0400
+Received: from alopias.GreenKey.net (alopias.GreenKey.net [209.209.60.60])
+	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id k77NqbaH000899
+	for <linux-lvm@redhat.com>; Mon, 7 Aug 2006 19:52:38 -0400
+Message-Id: <200608072352.k77NqPZ7031383@alopias.GreenKey.net>
+Date: Mon, 7 Aug 2006 16:52:25 -0700 (PDT)
+From: Curtis Doty <Curtis@GreenKey.net>
+MIME-Version: 1.0
+Subject: [linux-lvm] duplicate names
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -28,26 +20,83 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: TEXT/PLAIN; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: linux-lvm@redhat.com
 
-I have two systems that are connected to a SAN.  The SAN is exporting
-the same 4 luns to each system (/dev/sd[b,c,d,e]).  Under normal
-operation system1 will combine sdb with sdc into a vg and system2 will
-combine sdd with sde into a vg with both vgs consisting of one large lv
-and one small lv.  After the system is configured there will be no
-modifications made to the LVM configuration.  LVM is configured on one
-node and then copied over to the second node.
+I stuck two drives in a recovery server. Each is a separate default Fedora 
+install; with a big monster VolGroup00/LogVol00 root filesystem. However, 
+since they were each separate systems the above VG/LV names collide.
 
-The million dollar question is, can system1 and system2 simultaneously
-have both of the VGs active without hosing any data?  
+I'd like to mount them up simultaneously and move data between them. But I 
+would also like to avoid modifying the labels/UUIDs so they will still 
+work back in their original systems. Is there a FAQ on this?
 
-I am not trying to have the same filesystem mounted simultaneously, just
-have the LVs available simultaneously for failover needs
+Also, to this n00b, the output below seems inconsistent:
 
-I know that this sort of config can be done with the GFS pool volume
-manger but I have been told that many other VMs don't support this
-behavior....
+# pvdisplay /dev/sdb2
+  --- Physical volume ---
+  PV Name               /dev/sdb2
+  VG Name               VolGroup00
+  PV Size               233.66 GB / not usable 0  
+  Allocatable           yes
+  PE Size (KByte)       32768
+  Total PE              7477
+  Free PE               1
+  Allocated PE          7476
+  PV UUID               6kTTcS-jTbH-XN4x-SqUg-fnlS-Et0k-qlmJAC
 
-Thanks,
-Josh
+# pvdisplay /dev/sdc2
+  --- Physical volume ---
+  PV Name               /dev/sdc2
+  VG Name               VolGroup00
+  PV Size               69.12 GB / not usable 0  
+  Allocatable           yes
+  PE Size (KByte)       32768
+  Total PE              2212
+  Free PE               1
+  Allocated PE          2211
+  PV UUID               jkBXwB-OpnB-IefX-LdBK-Hr0m-eDg8-uIIZJD
+
+Which is fine and clear. But look at this: ?!?
+
+# pvdisplay /dev/sd{b,c}2
+  --- Physical volume ---
+  PV Name               /dev/sdb2
+  VG Name               VolGroup00
+  PV Size               233.66 GB / not usable 0  
+  Allocatable           yes
+  PE Size (KByte)       32768
+  Total PE              7477
+  Free PE               1
+  Allocated PE          7476
+  PV UUID               6kTTcS-jTbH-XN4x-SqUg-fnlS-Et0k-qlmJAC
+  
+  --- NEW Physical volume ---
+  PV Name               /dev/sdc2
+  VG Name              
+  PV Size               69.14 GB
+  Allocatable           NO
+  PE Size (KByte)       0
+  Total PE              0
+  Free PE               0
+  Allocated PE          0
+  PV UUID               jkBXwB-OpnB-IefX-LdBK-Hr0m-eDg8-uIIZJD
+
+Obviously, only the first PV is the one associated with the VolGroup00 in 
+the kernel. But how does one address the second PV/VG/LV (possibly with 
+temporary names)?
+
+Lastly, pvscan is also annoyingly blind:
+
+# pvscan                          
+  PV /dev/sdb2   VG VolGroup00   lvm2 [233.66 GB / 32.00 MB free]
+  Total: 1 [233.66 GB] / in use: 1 [233.66 GB] / in no VG: 0 [0   ]
+
+Which is inconsistent with the man page: "scans all supported LVM block 
+devices in the system for physical volumes" Maybe it should say "scans 
+only those LVM block devices that can be address by the current kernel"?
+
+Or am I overlooking something in the documentation?
+
+../C
