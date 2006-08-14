@@ -1,19 +1,21 @@
-Received: from agk.surrey.redhat.com (agk.surrey.redhat.com [172.16.10.74])
-	by pobox.surrey.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
-	k7EMAYTX027271
-	for <linux-lvm@redhat.com>; Mon, 14 Aug 2006 23:10:34 +0100
-Received: from agk by agk.surrey.redhat.com with local (Exim 4.34)
-	id 1GCkdm-0002yN-SH
-	for linux-lvm@redhat.com; Mon, 14 Aug 2006 23:10:34 +0100
-Date: Mon, 14 Aug 2006 23:10:34 +0100
-From: Alasdair G Kergon <agk@redhat.com>
-Subject: Re: [linux-lvm] LVM on disk structures
-Message-ID: <20060814221034.GV18633@agk.surrey.redhat.com>
-References: <652016d30608140351y2b75332ah213fd01c2b919125@mail.gmail.com>
-	<20060814214249.GA11767@cobalt0.panici.net>
+Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
+	by int-mx1.corp.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
+	k7EMbQ3B016830
+	for <linux-lvm@redhat.com>; Mon, 14 Aug 2006 18:37:26 -0400
+Received: from cobalt0.panici.net (cobalt0.panici.net [207.234.248.139])
+	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id k7EMb4FW022830
+	for <linux-lvm@redhat.com>; Mon, 14 Aug 2006 18:37:04 -0400
+Received: (from padski@localhost)
+	by cobalt0.panici.net (8.10.2/8.10.2) id k7EMau418801
+	for linux-lvm@redhat.com; Mon, 14 Aug 2006 23:36:56 +0100
+Date: Mon, 14 Aug 2006 23:36:56 +0100
+From: paddy <paddy@panici.net>
+Subject: Re: RE: [linux-lvm] LVM2 on hardware RAID
+Message-ID: <20060814223654.GD11767@cobalt0.panici.net>
+References: <73A8ABE78537AE4E9DB1D70863B8275F0330CD7F@exchange2k.lims.com>
 Mime-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20060814214249.GA11767@cobalt0.panici.net>
+In-Reply-To: <73A8ABE78537AE4E9DB1D70863B8275F0330CD7F@exchange2k.lims.com>
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -26,20 +28,18 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: linux-lvm@redhat.com
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-On Mon, Aug 14, 2006 at 10:43:05PM +0100, paddy wrote:
-> On Mon, Aug 14, 2006 at 04:36:04PM +0545, Manish Regmi wrote:
-> > Hi all,
-> >  Where can i find the information on the internals of LVM. The
-> > how tos only have information on installing and using LVM tools. What i
-> > actually need is the internal representation on disks. Where can i get
-> > that info?
-> read the source ?
- 
-There's an overview half-way through this:
-  http://people.redhat.com/agk/talks/linuxtag_2006/LVM2-LinuxTag2006.html
+On Fri, Aug 11, 2006 at 03:37:29PM -0400, Musil, William wrote:
+> Thank you Greg, that was exactly what I needed. I was looking at pvextend. My
+> mistake.
+> I can now create another lv in the resized vg. Thanks again.
 
-Alasdair
+William, I'm really glad you got a result.
+
+I dont' have a pvresize or a pvextend, what version are you guys using ?
+
+Regards,
+Paddy
 -- 
-agk@redhat.com
+Perl 6 will give you the big knob. -- Larry Wall
