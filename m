@@ -1,25 +1,19 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
 	by int-mx1.corp.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
-	k7FGQjce005696
-	for <linux-lvm@redhat.com>; Tue, 15 Aug 2006 12:26:45 -0400
-Received: from qb-out-0506.google.com (qb-out-0506.google.com [72.14.204.227])
-	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id k7FGQdZb013248
-	for <linux-lvm@redhat.com>; Tue, 15 Aug 2006 12:26:39 -0400
-Received: by qb-out-0506.google.com with SMTP id b14so1198086qbc
-	for <linux-lvm@redhat.com>; Tue, 15 Aug 2006 09:26:38 -0700 (PDT)
-Message-ID: <652016d30608150926g7d1ad111mff6df6c2d6a68f88@mail.gmail.com>
-Date: Tue, 15 Aug 2006 22:11:36 +0545
-From: "Manish Regmi" <regmi.manish@gmail.com>
-Subject: Re: [linux-lvm] LVM on disk structures
-In-Reply-To: <20060815133700.GY18633@agk.surrey.redhat.com>
+	k7FImRjD015582
+	for <linux-lvm@redhat.com>; Tue, 15 Aug 2006 14:48:27 -0400
+Received: from smtp-01.arnet.com.ar (smtp-01.arnet.com.ar [200.45.191.24])
+	by mx3.redhat.com (8.13.1/8.13.1) with SMTP id k7FImKtI018430
+	for <linux-lvm@redhat.com>; Tue, 15 Aug 2006 14:48:21 -0400
+Message-ID: <44E21600.4070804@arnet.net.ar>
+Date: Tue, 15 Aug 2006 15:44:16 -0300
+From: German Staltari <gstaltari@arnet.net.ar>
 MIME-Version: 1.0
+Subject: Re: [linux-lvm] expanded volume
+References: <44E1AB70.8080702@arnet.net.ar>	<20060815114516.GA16285@cobalt0.panici.net>	<44E1B9DB.3030403@arnet.net.ar>
+	<20060815153034.GA4048@cobalt0.panici.net>
+In-Reply-To: <20060815153034.GA4048@cobalt0.panici.net>
 Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-References: <652016d30608140351y2b75332ah213fd01c2b919125@mail.gmail.com>
-	<20060814214249.GA11767@cobalt0.panici.net>
-	<20060814221034.GV18633@agk.surrey.redhat.com>
-	<652016d30608142035k2e840db6oe5137a51c716fdb8@mail.gmail.com>
-	<20060815133700.GY18633@agk.surrey.redhat.com>
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -33,27 +27,16 @@ List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-On 8/15/06, Alasdair G Kergon <agk@redhat.com> wrote:
-> On Tue, Aug 15, 2006 at 09:20:27AM +0545, Manish Regmi wrote:
->
-> To minimise maintenance problems then and maximise compatibility, as
-> far as possible, you should try to use the exact same code (and use
-> wrappers around it if, for example, you want a Windows GUI).
-
-ok. thanks.
-
-> You might have spotted that the userspace code already runs on darwin.
-> I'm happy to take patches for other platforms too.
->
-
-Ok thanks, i will notify you as soon i am finished with the codes.
-
-
--- 
----------------------------------------------------------------
-regards
-Manish Regmi
-
----------------------------------------------------------------
-UNIX without a C Compiler is like eating Spaghetti with your mouth
-sewn shut. It just doesn't make sense.
+paddy wrote:
+> Another possibility might be to move LEs from one disk to the
+> other.  can pvmove be used to do this ? Was your filesystem
+> formatted with a stripe-size option (and how much does it 
+> matter) ?
+>   
+I'll give that a try. Thanks.
+BTW, It's possible to move physical extents online (wihtout unmonting 
+the filesystem)?
+What it's faster? copy files at FS level? or move physical extents? 
+(It's a TB FS and would be great to do it as faster as we could)
+Thanks again
+German
