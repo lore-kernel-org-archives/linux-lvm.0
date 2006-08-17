@@ -1,22 +1,21 @@
-Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
+Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
 	by int-mx1.corp.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
-	k7H0Na5E025926
-	for <linux-lvm@redhat.com>; Wed, 16 Aug 2006 20:23:36 -0400
-Received: from ylpvm12.prodigy.net (ylpvm12-ext.prodigy.net [207.115.57.43])
-	by mx1.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
-	k7H0NTvg029328
-	for <linux-lvm@redhat.com>; Wed, 16 Aug 2006 20:23:29 -0400
-Received: from [68.125.219.169] (adsl-68-125-219-169.dsl.irvnca.pacbell.net
-	[68.125.219.169])
-	by ylpvm12.prodigy.net (8.13.7 out spool5000 dk/8.13.7) with ESMTP id
-	k7H0NSlu002598
-	for <linux-lvm@redhat.com>; Wed, 16 Aug 2006 20:23:29 -0400
-Message-ID: <44E3B6F8.3000207@pacbell.net>
-Date: Wed, 16 Aug 2006 17:23:20 -0700
-From: Duane Clark <duane_clark@pacbell.net>
+	k7HCxwY3024417
+	for <linux-lvm@redhat.com>; Thu, 17 Aug 2006 08:59:58 -0400
+Received: from bluewhale.planbit.co.uk (82-71-36-240.dsl.in-addr.zen.co.uk
+	[82.71.36.240])
+	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id k7HCxpxt018295
+	for <linux-lvm@redhat.com>; Thu, 17 Aug 2006 08:59:52 -0400
+Received: from wolverine (unknown [192.168.1.127])
+	by bluewhale.planbit.co.uk (Postfix) with ESMTP id BD37C12EDE
+	for <linux-lvm@redhat.com>; Thu, 17 Aug 2006 13:59:45 +0100 (BST)
+From: "Roger Lucas" <roger@planbit.co.uk>
+Date: Thu, 17 Aug 2006 13:59:32 +0100
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] Howto suggestion: Reducing a logical volume
+Message-Id: <20060817125945.BD37C12EDE@bluewhale.planbit.co.uk>
+Subject: [linux-lvm] Merging snapshots - does lvmerge or similar exist for
+	Linux
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -27,79 +26,54 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: linux-lvm@redhat.com
+Content-Type: text/plain; charset="us-ascii"
+To: 'LVM general discussion and development' <linux-lvm@redhat.com>
 
-I just recently finished reducing a logical volume, and thought I would 
-pass along some suggested steps. I had found the HOWTO and referred to 
-it, and it helped with a couple of critical steps. But it was not 
-sufficient because, well, I only have a single large root partition, and 
-that was the one I wanted to shrink. And fundamental to doing the 
-reduction is that one needs to be able to unmount the partition. If you 
-have another machine around to stick the disk in, that is easy. But it 
-turned out to not be terribly difficult without that.
+Hi,
 
-Of course it may be that I did things the hard way, and that would be 
-worth knowing too ;)
+I have seen a few questions about this but could not find any answers.
 
-Mainly, the reason for this was that I wanted to install another OS 
-version in a separate logical volume on an existing disk. The disk had 
-the (FC4) default layout of two volumes, one for / and one for swap, 
-occupying most of the disk in a single group. So without further ado, my 
-suggestions for the howto (Section 11.10.)...
+I am working with Debian, the 2.16.20 kernel and the latest LVM+DMAPPER
+releases.
 
-If the volume to be reduced is the root partition that you currently 
-have booted, then you won't be able to unmount, and a somewhat more 
-involved procedure is needed. If you already have another bootable 
-harddisk, then perhaps the easiest thing to do is boot that disk with 
-the disk to be modified as a secondary disk, and then just modify the 
-volume using the above mentioned steps.
+I have a logical volume that I want to be able to make changes to, but
+unroll these changes again if necessary.  When the operations are finished,
+I want to end up with just one LV and no additional snapshots.  The LV would
+either have its original contents or the updated contents, and this decision
+isn't made until all the changes have been done.
 
-If you don't have another bootable harddisk, presumably you have a 
-bootable OS installation cdrom/dvd, which can be booted in linux rescue 
-mode. That is, allow the CD to boot, and at the first prompt, type 
-"linux rescue". If that works, you are on your way. When a prompt is 
-given asking whether you want it to find and mount partitions, select 
-"skip". I found that if I allowed it to mount the root partition, I 
-could not unmount it. After a few more moments, it should finish and 
-drop you to a prompt.
+With LVM2, the snapshots are r/w so I could either:
 
-In rescue mode, the vgscan, etc commands are not directly present, but 
-the executable lvm is, which can do all those things. When you run lvm, 
-you will get a new prompt, where you type lvm commands. In the 
-following, the linux prompt is '#' and the lvm prompt is '>'. And I have 
-used the default group/volume names supplied by Fedora, since presumably 
-a newbie reading this will have used the defaults, and anyone else will 
-be able to figure out what to change.
+1) Snapshot the original LV and keep the snapshot safe, then make the
+changes to the original LV.  If I don't need to restore the LV after
+applying the changes, then I can just delete the snapshot.  If I do want to
+restore the original LV, however, what is the best way to flush the changes
+in the snapshot back onto the original LV ?
 
-When we skipped allowing linux rescue to find and mount the logical 
-volumes, it also did not create device files we will need to use. So the 
-first task to be accomplished is to use lvm to create those device files.
-# lvm
- > vgscan
-It should should show the existing group or groups. The first task 
-required is to activate the group.
- > vgchange -a y VolGroup00
-Then generate the device files.
- > vgmknodes
- > exit
-Now shrink the existing filesystem to something a bit smaller than what 
-you want the final filesystem size to be. You will first need to run 
-fsck on the filesystem. For example, I wanted a 36GByte final size, so I 
-used:
-# e2fsck -f /dev/mapper/VolGroup00-LogVol00
-# resize2fs /dev/mapper/VolGroup00-LogVol00 35G
-Now we can shrink the volume to the desired size. Yes, the lvreduce 
-command uses a different device file name.
-# lvm
- > lvreduce -L36G /dev/VolGroup00/LogVol00
- > exit
-Now expand the filesystem to the full size of the volume. Notice that no 
-size parameter is used in the resize command this time.
-# resize2fs /dev/mapper/VolGroup00-LogVol00
-Now you can try to mount and look at it.
-# mkdir /mnt/sysimage
-# mount /dev/mapper/VolGroup00-LogVol00 /mnt/sysimage
-# df
-# ls /mnt/sysimage
-It should show up with the right 36GByte size, and everything intact.
+I appreciate that I could just "dd" the snapshot onto the LV to restore its
+orignal state, but this will rewrite a lot of data that hasn't actually
+changed.  Apart from being slower than I would like, I don't know if writing
+exactly the same data to the LV will trigger the data to be written to the
+snapshot - if it does then the snapshot will grow in size to the original LV
+whilst the "dd" happens, and I do not have enough disk space for that.
+
+Or
+
+2) Snapshot the original LV and make the changes to the snapshot.  If I want
+to restore the original LV, then all I need to do is delete the snapshot.
+But, if I want to keep the changes (and not have to keep the snapshot), how
+can I flush the changes that have been made to the snapshot back onto the
+original LV.  
+
+I appreciate that I could just "dd" the snapshot onto the LV to update it to
+the new values, but I don't like this for the same reasons as in (1) above.
+
+Is there an "lvmerge" command or similar on Linux LVM.  There appears to be
+one for the HP-UX LVM but I couldn't see one for Linux.
+
+Alternatively, is the snapshot disk format easy enough to analyse so that a
+lvmerge utility could be written relatively easily ?
+
+Thanks,
+
+Roger
