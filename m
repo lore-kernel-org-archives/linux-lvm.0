@@ -1,25 +1,18 @@
-Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
+Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
 	by int-mx1.corp.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
-	k7IG6G1j001162
-	for <linux-lvm@redhat.com>; Fri, 18 Aug 2006 12:06:16 -0400
-Received: from mx2.studentuniverse.com (mx2.studentuniverse.com
-	[146.115.12.43])
-	by mx1.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
-	k7IG6CHt020080
-	for <linux-lvm@redhat.com>; Fri, 18 Aug 2006 12:06:12 -0400
-Received: from sumail03.studentuniverse.com (sumail03.studentuniverse.com
-	[192.168.1.7])
-	by mx2.studentuniverse.com (8.13.3/8.13.3/SuSE Linux 0.7) with ESMTP id
-	k7IG646d031619
-	for <linux-lvm@redhat.com>; Fri, 18 Aug 2006 12:06:06 -0400
-Content-class: urn:content-classes:message
-MIME-Version: 1.0
-Date: Fri, 18 Aug 2006 12:06:04 -0400
-Message-ID: <D2575519D6CA2840B6D3E26087EA71B6C9E2@sumail03.studentuniverse.com>
-From: "Marlier, Ian" <ian.marlier@studentuniverse.com>
-Content-Transfer-Encoding: 8bit
-Subject: [linux-lvm] "inactive Original" / "device-mapper: reload ioctl
-	failed: Invalid argument"
+	k7J3CSfB003272
+	for <linux-lvm@redhat.com>; Fri, 18 Aug 2006 23:12:28 -0400
+Received: from lennier.cc.vt.edu (lennier.cc.vt.edu [198.82.162.213])
+	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id k7J3CGwP032450
+	for <linux-lvm@redhat.com>; Fri, 18 Aug 2006 23:12:22 -0400
+Subject: Re: [linux-lvm] how to learn number of stripes on logical volume?
+From: Bill Ranck <ranck@vt.edu>
+In-Reply-To: <20060817201917.1EF8E1EB6B8@labrador.eecs.harvard.edu>
+References: <20060817201917.1EF8E1EB6B8@labrador.eecs.harvard.edu>
+Date: Thu, 17 Aug 2006 16:46:26 -0400
+Message-Id: <1155847586.12486.131.camel@joesgrill.cc.vt.edu>
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -31,54 +24,23 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@redhat.com
+To: LVM discussion list <linux-lvm@redhat.com>
 
-Hi there --
+On Thu, 2006-08-17 at 16:19 -0400, Norman Ramsey wrote:
+> I'm using LVM2 under Debian.  I have a logical volume 
+> created by the Debian installer, and I'd like to know if it
+> is striped.  How can I find out?
+> 
+> I tried 'lvdisplay -v' and 'vgdisplay -v', but neither
+> shows the number of stripes on a logical volume (I tried
+> with a newly created LV with two stripes, but the information
+> is not shown).
 
-I've googled around and found other folks reporting this problem, but
-haven't seen a solution.  I'm wondering if I'm missing something, or if
-it's still an open issue...
+Have you tried 'lvs -v' ?
+It has something called "segments" but since I don't have a striped
+volumes to test it with I can't be sure that's what you want.
 
-I've got LVM2 set up, and am using snapshots.  After a reboot, the
-master partition is listed with status "inactive Original", and the
-snapshots as "inactive Snapshot".
-
-/dev/mapper/volgrp-master exists, as does
-/dev/mapper/volgrp-master-real.
-
-Attempting to do anything with the master partition results in this
-message:
-"device-mapper: reload ioctl failed: Invalid argument"
-
-Anyone know
-1) What the problem might be?
-2) What further diagnostics might be useful to figure out what the
-problem is?
-3) How to fix this?
-
-Machine/version info:
-devxen0:~ # uname -a
-Linux devxen0 2.6.16.13-4-xen #1 SMP Wed May 3 04:53:23 UTC 2006 x86_64
-x86_64 x86_64 GNU/Linux
-devxen0:~ # lvm version
-  LVM version:     2.02.02 (2006-02-07)
-  Library version: 1.02.03 (2006-02-08)
-  Driver version:  4.5.0
-devxen0:~ # dmsetup version
-Library version:   1.02.03 (2006-02-08)
-Driver version:    4.5.0
-devxen0:~ # lvscan
-  inactive Original '/dev/xenmachines/master' [12.00 GB] inherit
-  ACTIVE            '/dev/xenmachines/master-swap' [1.00 GB] inherit
-  ACTIVE            '/dev/xenmachines/5-8-0-km-swap' [1.00 GB] inherit
-  ACTIVE            '/dev/xenmachines/UberTix-swap' [1.00 GB] inherit
-  ACTIVE            '/dev/xenmachines/FrancisTest-swap' [1.00 GB]
-inherit
-  inactive Snapshot '/dev/xenmachines/5-8-0-km' [10.00 GB] inherit
-  inactive Snapshot '/dev/xenmachines/UberTix' [10.00 GB] inherit
-  inactive Snapshot '/dev/xenmachines/FrancisTest' [10.00 GB] inherit
-devxen0:~ #
-
-Thanks!
-
-- Ian
+-- 
+Bill Ranck
+Blacksburg, Va.
+540-231-3951
