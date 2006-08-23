@@ -1,18 +1,20 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
 	by int-mx1.corp.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
-	k7NHGGPu010581
-	for <linux-lvm@redhat.com>; Wed, 23 Aug 2006 13:16:16 -0400
+	k7NHLdt8011938
+	for <linux-lvm@redhat.com>; Wed, 23 Aug 2006 13:21:39 -0400
 Received: from percy.comedia.it (percy.comedia.it [212.97.59.71])
-	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id k7NHG4go012869
-	for <linux-lvm@redhat.com>; Wed, 23 Aug 2006 13:16:05 -0400
-Date: Wed, 23 Aug 2006 19:15:59 +0200
+	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id k7NHLXLF014062
+	for <linux-lvm@redhat.com>; Wed, 23 Aug 2006 13:21:33 -0400
+Date: Wed, 23 Aug 2006 19:21:32 +0200
 From: Luca Berra <bluca@comedia.it>
-Subject: Re: [linux-lvm] Running LVM on shared lun's
-Message-ID: <20060823171559.GF20318@percy.comedia.it>
-References: <E1GDZE4-000PrC-00.sid_polak-mail-ru@f65.mail.ru>
+Subject: Re: [linux-lvm] Partitioning remotely
+Message-ID: <20060823172132.GG20318@percy.comedia.it>
+References: <1156095294.3778.5.camel@dividebyzero.somewhere.localtld>
+	<20060823142949.GA13859@agk.surrey.redhat.com>
+	<7.0.1.0.2.20060823231439.020a6c48@myrealbox.com>
 Mime-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <E1GDZE4-000PrC-00.sid_polak-mail-ru@f65.mail.ru>
+In-Reply-To: <7.0.1.0.2.20060823231439.020a6c48@myrealbox.com>
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -27,22 +29,18 @@ Content-Type: text/plain; charset="us-ascii"; format="flowed"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@redhat.com
 
-On Thu, Aug 17, 2006 at 08:11:24AM +0400, Sid Polak wrote:
->Luca Berra wrote:
->> On Tue, Aug 08, 2006 at 09:23:04AM -0700, David Chan wrote:
->> > 
->> >Don't think LVM is cluster aware.  Doing so can potentially cause loss
->> >of LV's/data due to metadata corruption on the LVM level.  
->> LVM2 supports cluster locking, either using internal locking which works
->> with CMAN or GULM, or by using an external locking library that can be
->> customized to work with every cluster software that supports locking of
->>resources.
->
->And what about tags? Could I use hostname tag to activate LVs on one host OR
->another host which hostname is equal to the tag? That is not failover but
->it could reduce recovery time after the failure of one of the hosts. Isn't it?
->
-yes.
+On Wed, Aug 23, 2006 at 11:18:03PM +0800, Jim Morgan wrote:
+>I've been reading around the internet to see if I can resize the 
+>partitions on the disk and/or in the LVM. There seems to be 
+>conflicting advice on the subject and I don't want to make a move 
+>before I'm absolutely sure. My choices seem to be
+
+you are not using LVM
+
+>d) You can't do anything. The partition you want to resize contains 
+>the OS, and you need to umount it first.
+
+d is the correct answer
 
 L.
 
