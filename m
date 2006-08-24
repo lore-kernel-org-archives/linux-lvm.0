@@ -1,9 +1,28 @@
-Message-ID: <44ECCE2D.5060002@ce.jp.nec.com>
-Date: Wed, 23 Aug 2006 17:52:45 -0400
-From: "Jun'ichi Nomura" <j-nomura@ce.jp.nec.com>
+Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
+	by int-mx1.corp.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
+	k7O6svV8007417
+	for <linux-lvm@redhat.com>; Thu, 24 Aug 2006 02:54:57 -0400
+Received: from mail-svr1.cs.utah.edu (mail-svr1.cs.utah.edu [155.98.64.241])
+	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id k7O6shwr014444
+	for <linux-lvm@redhat.com>; Thu, 24 Aug 2006 02:54:43 -0400
+Received: from localhost (localhost [127.0.0.1])
+	by mail-svr1.cs.utah.edu (Postfix) with ESMTP id A295565007F
+	for <linux-lvm@redhat.com>; Thu, 24 Aug 2006 00:54:37 -0600 (MDT)
+Received: from mail-svr1.cs.utah.edu ([127.0.0.1])
+	by localhost (mail-svr1.cs.utah.edu [127.0.0.1]) (amavisd-new,
+	port 10024) with ESMTP id 22322-04 for <linux-lvm@redhat.com>;
+	Thu, 24 Aug 2006 00:54:35 -0600 (MDT)
+Received: from trust.cs.utah.edu (trust.cs.utah.edu [155.98.65.28])
+	by mail-svr1.cs.utah.edu (Postfix) with ESMTP id E18A8650071
+	for <linux-lvm@redhat.com>; Thu, 24 Aug 2006 00:54:35 -0600 (MDT)
+Received: from localhost (localhost [127.0.0.1])
+	by trust.cs.utah.edu (Postfix) with ESMTP id B58FB3F71
+	for <linux-lvm@redhat.com>; Thu, 24 Aug 2006 00:54:35 -0600 (MDT)
+Date: Thu, 24 Aug 2006 00:54:35 -0600 (MDT)
+From: Prashanth Radhakrishnan <shanth@cs.utah.edu>
+Message-ID: <Pine.LNX.4.61.0608240026110.18183@trust.cs.utah.edu>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="------------010405030707050706020508"
-Subject: [linux-lvm] [PATCH] Fix lvextend spoiling redundancy of mirror LV
+Subject: [linux-lvm] Snapshot of an LVM snapshots?
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -14,112 +33,30 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: linux-lvm@redhat.com, Alasdair Kergon <agk@redhat.com>, Jonathan Brassow <jbrassow@redhat.com>
-
-This is a multi-part message in MIME format.
---------------010405030707050706020508
-Content-Type: text/plain; charset=ISO-2022-JP
+Content-Type: TEXT/PLAIN; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
+To: linux-lvm@redhat.com
 
-Hi,
+Hi LVM Gurus,
 
-lvextend doesn't allocate extents appropriately if the LV is mirrored.
-Attached patch fixes the problem.
-If this looks reasonable, please consider to include in LVM2.
+From what I've read around, it is not possible to take a snapshot of an 
+LVM snapshot. Is this something that is worked upon currently as a future 
+enhancement? If not, why not?
 
-Details of the problem:
+To give you a background, we're working on a periodic (xen) VM 
+checkpointing project, using LVM for VM disk checkpointing. As we take 
+several snapshots of the same volume, the write throughput reduces 
+drastically. I conjecture this is because, for each write to the (base)
+volume, each of the snapshots' mappings is checked to decide whether to 
+copy the blocks to the snapshot or not.
+It seems that this can be helped by:
+- taking a snapshot of the latest snapshot and having the writes go to 
+  the new snapshot
+or
+- making LVM use only the latest snapshot for CoW as writes go to the base 
+  volume.
 
-Suppose I have 4 PVs with sufficient free space and a 2-sided
-mirrored LV with size=4MB, I would expect the following LV
-as a result of "lvextend -L+4MB":
+Any suggestions/pointers greatly appreaciated.
 
-# lvs -a -olv_name,seg_size,devices vg4
-  LV             SSize Devices
-  lv0            8.00M lv0_mimage_0(0),lv0_mimage_1(0)
-  [lv0_mimage_0] 8.00M /dev/sda(0)
-  [lv0_mimage_1] 8.00M /dev/sdb(0)
-  [lv0_mlog]     4.00M /dev/sdc(0)
-
-However, actual result was following:
-
-# lvs -a -olv_name,seg_size,devices vg4
-  LV             SSize Devices
-  lv0            8.00M lv0_mimage_0(0),lv0_mimage_1(0)
-  [lv0_mimage_0] 4.00M /dev/sda(0)
-  [lv0_mimage_0] 4.00M /dev/sdd(0)
-  [lv0_mimage_1] 4.00M /dev/sdb(0)
-  [lv0_mimage_1] 4.00M /dev/sda(1)
-  [lv0_mlog]     4.00M /dev/sdc(0)
-
-In this case, failure of a PV (/dev/sda) would break whole LV (lv0),
-which is not what we expect from mirrored LV.
-
-The cause of the problem is that _check_contiguous() doesn't care
-layered LV and cannot find out contiguousness between PV areas.
-
-Thanks,
--- 
-Jun'ichi Nomura, NEC Corporation of America
-
-
---------------010405030707050706020508
-Content-Type: text/x-patch;
- name="fix-lvextend-spoiling-redundancy.patch"
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline; filename="fix-lvextend-spoiling-redundancy.patch"
-
-Finding contiguous PV segment for mirrored LV.
-Check areas[] boundary in _check_contiguous().
-
-Applicable to LVM2 2.02.09.
-
-Steps to reproduce the problem:
-  # pvcreate /dev/sd[abcd]
-  # vgcreate vg4 /dev/sd[abcd]
-  # lvcreate -l1 -m1 -nlv0 vg4
-  # lvchange -an vg4/lv0
-  # lvextend -l+1 vg4/lv0
-  # lvs -a -olv_name,seg_size,devices vg4
-
---- LVM2/lib/metadata/lv_manip.c        2006-08-23 04:26:43.000000000 -0400
-+++ LVM2.fix/lib/metadata/lv_manip.c    2006-08-23 04:29:37.000000000 -0400
-@@ -642,12 +642,24 @@ static int _comp_area(const void *l, con
-  */
- static int _check_contiguous(struct lv_segment *prev_lvseg,
- 			     struct physical_volume *pv, struct pv_area *pva,
--			     struct pv_area **areas)
-+			     struct pv_area **areas, uint32_t areas_size)
- {
- 	struct pv_segment *prev_pvseg;
- 	uint32_t s;
- 
--	for (s = 0; s < prev_lvseg->area_count; s++) {
-+	for (s = 0; s < prev_lvseg->area_count && s < areas_size; s++) {
-+		if (seg_type(prev_lvseg, s) == AREA_LV) {
-+			struct logical_volume *lv;
-+			struct lv_segment *lastseg;
-+			lv = seg_lv(prev_lvseg, s);
-+			lastseg = list_item(list_last(&lv->segments),
-+					    struct lv_segment);
-+			if (_check_contiguous(lastseg, pv, pva, &areas[s],
-+					      areas_size - s))
-+				return 1;
-+			continue;
-+		}
-+
- 		if (seg_type(prev_lvseg, s) != AREA_PV)
- 			continue;	/* FIXME Broken */
- 
-@@ -752,7 +764,8 @@ static int _find_parallel_space(struct a
- 					if (prev_lvseg &&
- 					    _check_contiguous(prev_lvseg,
- 							      pvm->pv,
--							      pva, areas)) {
-+							      pva, areas,
-+							      areas_size)) {
- 						contiguous_count++;
- 						goto next_pv;
- 					}
-
-
---------------010405030707050706020508--
+thanks,
+Prashanth
