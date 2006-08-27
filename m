@@ -1,23 +1,21 @@
-Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
+Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
 	by int-mx1.corp.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
-	k7RBpQ9A008773
-	for <linux-lvm@redhat.com>; Sun, 27 Aug 2006 07:51:26 -0400
-Received: from rwcrmhc15.comcast.net (rwcrmhc15.comcast.net [204.127.192.85]
-	(may be forged))
-	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id k7RBpIVE027260
-	for <linux-lvm@redhat.com>; Sun, 27 Aug 2006 07:51:18 -0400
-Received: from [192.168.1.3] (marvin.localnet [192.168.1.3])
-	by furio.localnet (8.13.7/8.13.6) with ESMTP id k7RBp9ng001588
-	for <linux-lvm@redhat.com>; Sun, 27 Aug 2006 07:51:10 -0400
-Message-ID: <44F1872D.9030408@mattgillen.net>
-Date: Sun, 27 Aug 2006 07:51:09 -0400
-From: Matthew Gillen <me@mattgillen.net>
+	k7RHvkdg015819
+	for <linux-lvm@redhat.com>; Sun, 27 Aug 2006 13:57:46 -0400
+Received: from mail.esperi.org.uk (user79519@41-052.adsl.zetnet.co.uk
+	[194.247.41.52])
+	by mx1.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
+	k7RHviWl027666
+	for <linux-lvm@redhat.com>; Sun, 27 Aug 2006 13:57:45 -0400
+Received: from esperi.org.uk (nix@hades.wkstn.nix [192.168.14.18])
+	by mail.esperi.org.uk (8.12.11.20060614/8.12.11) with ESMTP id
+	k7RHvbB2016287
+	for <linux-lvm@redhat.com>; Sun, 27 Aug 2006 18:57:37 +0100
+From: Nix <nix@esperi.org.uk>
+Date: Sun, 27 Aug 2006 18:57:37 +0100
+Message-ID: <87fyfirrhq.fsf@hades.wkstn.nix>
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] Best way to image devices in an LVM environment
-References: <20060827044208.GL1011@strugglers.net>	<7.0.1.0.2.20060827131640.00fdf818@myrealbox.com>
-	<20060827061642.GN1011@strugglers.net>
-In-Reply-To: <20060827061642.GN1011@strugglers.net>
-Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] Creation of snapshots failing with `in use' errors
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -29,42 +27,87 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Transfer-Encoding: 7bit
+To: linux-lvm@redhat.com
 
-Andy Smith wrote:
-> On Sun, Aug 27, 2006 at 01:20:26PM +0800, Jim Morgan wrote:
->> At 27/08/2006 12:42, you wrote:
->>> So how would you accomplish the task of replacing sda and sdb with
->>> larger disks in the least amount of effort?  Downtime is not a
->>> problem, taking backups of the data is not a problem, booting off a
->>> live cd is not a problem; the goal is to find the least
->>> labour-intensive way to do this.
->> As I understand it -- and as I've proved before in this list, my 
->> understanding is fundamentally flawed :-) -- there is a way to do this.
->>
->> Basically you have to force one disk to fail using the raid 
->> administration software. You then remove the disk, replace it with 
->> the bigger disk, and rebuild it from the first one. The partition 
->> sizes may need adjusting. Then you force the other disk to fail, and 
->> replace it with the larger one, and then rebuild it from the other large 
->> disk.
-> 
-> Well I would then be left with two large disks where sd[ab]5 (and
-> the sd[ab]4 primary partition that sd[ab]5 is the only logical
-> partition within) does not extend all the way to the end of the
-> disk.  I wasn't aware that you could resize RAID-1 md arrays though,
-> I thought it was restricted to RAID-5.  Is this not the case?
+(This is with kernel 2.6.17.11, device-mapper 1.02.09, and lvm 2.02.09.)
 
-To add another "I'm not an expert" opinion:
-Supposing you can get all 4 disks in the server at the same time, you could
-add your new disk's large partition to your existing logical volume, then do
-a pvmove.  The advantage over the previous suggestion is that you don't need
-to resize your RAID device when you're done (although you'd still want to
-resize your filesystem to take advantage of all the new space).
+I'm trying to create a snapshot-the-whole-visible-filesystem-tree script
+to use in backup scripts, which makes readonly[1] mounts of network
+filesystems and non-LVMed block devices, remounts pseudo-filesystems
+(other than /dev which gets bind-mounted), re-binds bind mounts, and
+creates and mounts snapshots of LVMed filesystems, before chrooting
+into the resulting tree, running some command in there, and then
+reversing all its work.
 
-Although now that I look at the instructions for doing this
-(http://tldp.org/HOWTO/LVM-HOWTO/removeadisk.html; section 13.5.1), it seems
-that is a dangerous operation.  If it worked though, it would probably be
-the least labor intensive.
+But the apparent asychronousness of LVM is throwing me off.
 
-Matt
+Specifically, snapshot creation randomly fails if you've recently done
+another LVM command. The command might be another snapshot creation
+(since they seem to be asynchronous): or it might be much simpler.  By
+its very nature this script creates (or removes) about a dozen snapshots
+in quick succession, first using lvs(8) to determine the size of the
+original filesystem, since LVM maintains a snapshot percentage counter
+but doesn't appear to expose it in the commands (at least if it does
+it's not documented) and I want these snapshots to have a fixed
+percentage of their source available for expansion.
+
+Here's an example:
+
+loki:~# lvs; lvcreate --size 600M --name snap-packages.bin-oKHOHQzu --snapshot /dev/raid/packages.bin
+  LV           VG    Attr   LSize   Origin Snap%  Move Log Copy%
+  music        disks -wi-ao  17.50G
+  news         disks -wn-ao 912.00M
+  news-bofh    disks -wn-ao   1.00G
+  spam         disks -wi-ao   1.00G
+  swap0        disks -wc-ao 592.00M
+  swap1        disks -wc-ao 608.00M
+  swap2        disks -wc-ao 608.00M
+  doc          raid  -wi-ao   1.00G
+  home         raid  -wi-ao   6.00G
+  mirror       raid  -wi-ao   1.00G
+  non-free     raid  -wi-ao   1.00G
+  packages     raid  -wi-ao  20.00G
+  packages.bin raid  -wi-ao   6.00G
+  root         raid  -wi-ao 200.00M
+  usr          raid  -wi-ao   6.00G
+  var          raid  -wi-ao   1.00G
+  LV raid/snap-packages.bin-oKHOHQzu in use: not deactivating
+  Couldn't deactivate new snapshot.
+
+This has not only not worked for no good reason (it's not in use! it's
+brand new!) but has then proceed to leave a sort of garbage LV behind,
+not marked as a snapshot but no good as anything else either:
+
+loki:~# lvs
+  LV                         VG    Attr   LSize   Origin Snap%  Move Log Copy%
+  music                      disks -wi-ao  17.50G
+  news                       disks -wn-ao 912.00M
+  news-bofh                  disks -wn-ao   1.00G
+  spam                       disks -wi-ao   1.00G
+  swap0                      disks -wc-ao 592.00M
+  swap1                      disks -wc-ao 608.00M
+  swap2                      disks -wc-ao 608.00M
+  doc                        raid  -wi-ao   1.00G
+  home                       raid  -wi-ao   6.00G
+  mirror                     raid  -wi-ao   1.00G
+  non-free                   raid  -wi-ao   1.00G
+  packages                   raid  -wi-ao  20.00G
+  packages.bin               raid  -wi-ao   6.00G
+  root                       raid  -wi-ao 200.00M
+  snap-packages.bin-oKHOHQzu raid  -wi-a- 600.00M
+  usr                        raid  -wi-ao   6.00G
+  var                        raid  -wi-ao   1.00G
+
+Is there any way I can arrange for lvcreate and lvremove to actually
+*work* consistently such that I can usefully use them in scripts like
+this? I'd have no objection to lvcreate/lvremove blocking until whatever
+it is that's locking the VG is completed, but dying and leaving debris
+behind seems a bit off.
+
+
+[1] when 2.6.18 comes out so readonly mounts work
+
+-- 
+`In typical emacs fashion, it is both absurdly ornate and
+ still not really what one wanted.' --- jdev
