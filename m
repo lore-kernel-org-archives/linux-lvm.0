@@ -1,19 +1,19 @@
-Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
+Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
 	by int-mx1.corp.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
-	k7TGLbWl002152
-	for <linux-lvm@redhat.com>; Tue, 29 Aug 2006 12:21:37 -0400
-Received: from swlx167.swmed.edu (swlx167.swmed.edu [199.165.152.167])
-	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id k7TGLSbL004641
-	for <linux-lvm@redhat.com>; Tue, 29 Aug 2006 12:21:28 -0400
-Received: from peters.swmed.org ([129.112.118.137])
-	by swlx167.swmed.edu with esmtp (Exim 4.44) id 1GI6Ky-0005la-Fc
-	for linux-lvm@redhat.com; Tue, 29 Aug 2006 11:21:17 -0500
-Message-ID: <44F4697C.3070908@utsouthwestern.edu>
-Date: Tue, 29 Aug 2006 11:21:16 -0500
-From: Peter Smith <peter.smith@utsouthwestern.edu>
+	k7TGgClL007916
+	for <linux-lvm@redhat.com>; Tue, 29 Aug 2006 12:42:12 -0400
+Received: from certmail.caregroup.org (tumbleweed1.caregroup.org
+	[134.174.120.81])
+	by mx1.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
+	k7TGgB9Z008245
+	for <linux-lvm@redhat.com>; Tue, 29 Aug 2006 12:42:11 -0400
+Content-class: urn:content-classes:message
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] Problem with vgreduce on LVM1
+Subject: RE: [linux-lvm] Problem with vgreduce on LVM1
+Date: Tue, 29 Aug 2006 12:41:54 -0400
+Message-ID: <EED09BB41EE72044BCEE8156094FCE8F0183821F@EVS4.its.caregroup.org>
+From: mghofran@caregroup.harvard.edu
+Content-Transfer-Encoding: 8bit
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -24,11 +24,22 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
+Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@redhat.com
 
+You show lv=4 so don't you need to check if any of those lvols were
+using that particular disk, remove the lvol and then proceed?
+
+-----Original Message-----
+From: linux-lvm-bounces@redhat.com [mailto:linux-lvm-bounces@redhat.com]
+On Behalf Of Peter Smith
+Sent: Tuesday, August 29, 2006 12:21 PM
+To: linux-lvm@redhat.com
+Subject: [linux-lvm] Problem with vgreduce on LVM1
+
 I can't seem to remove two physical volumes.  I've removed the LVs on 
-them.  I've deactivated the PVs.  But I can not remove the PVs from the VG.
+them.  I've deactivated the PVs.  But I can not remove the PVs from the
+VG.
 
 Here's an example of what I'm seeing:
 
@@ -72,3 +83,9 @@ Peter
 Note:
 Logical Volume Manager 1.0.8-13
 Heinz Mauelshagen, Red Hat  03/05/2005 (IOP 10)
+
+_______________________________________________
+linux-lvm mailing list
+linux-lvm@redhat.com
+https://www.redhat.com/mailman/listinfo/linux-lvm
+read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
