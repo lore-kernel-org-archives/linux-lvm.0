@@ -1,19 +1,10 @@
-Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
-	k7TGgClL007916
-	for <linux-lvm@redhat.com>; Tue, 29 Aug 2006 12:42:12 -0400
-Received: from certmail.caregroup.org (tumbleweed1.caregroup.org
-	[134.174.120.81])
-	by mx1.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
-	k7TGgB9Z008245
-	for <linux-lvm@redhat.com>; Tue, 29 Aug 2006 12:42:11 -0400
-Content-class: urn:content-classes:message
+Message-ID: <44F47575.6090006@ce.jp.nec.com>
+Date: Tue, 29 Aug 2006 13:12:21 -0400
+From: "Jun'ichi Nomura" <j-nomura@ce.jp.nec.com>
 MIME-Version: 1.0
-Subject: RE: [linux-lvm] Problem with vgreduce on LVM1
-Date: Tue, 29 Aug 2006 12:41:54 -0400
-Message-ID: <EED09BB41EE72044BCEE8156094FCE8F0183821F@EVS4.its.caregroup.org>
-From: mghofran@caregroup.harvard.edu
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/mixed; boundary="------------020008010807000406010106"
+Subject: [linux-lvm] [PATCH LVM2] Fix _for_each_pv() to return correct
+	segment end
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -24,68 +15,60 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@redhat.com
+To: linux-lvm@redhat.com, Alasdair Kergon <agk@redhat.com>, Jonathan Brassow <jbrassow@redhat.com>
 
-You show lv=4 so don't you need to check if any of those lvols were
-using that particular disk, remove the lvol and then proceed?
+This is a multi-part message in MIME format.
+--------------020008010807000406010106
+Content-Type: text/plain; charset=ISO-2022-JP
+Content-Transfer-Encoding: 7bit
 
------Original Message-----
-From: linux-lvm-bounces@redhat.com [mailto:linux-lvm-bounces@redhat.com]
-On Behalf Of Peter Smith
-Sent: Tuesday, August 29, 2006 12:21 PM
-To: linux-lvm@redhat.com
-Subject: [linux-lvm] Problem with vgreduce on LVM1
+Hi,
 
-I can't seem to remove two physical volumes.  I've removed the LVs on 
-them.  I've deactivated the PVs.  But I can not remove the PVs from the
-VG.
+_for_each_pv() is a function to walk through all PVs used by
+given part of LV. The function is expected to set smallest length
+of PV segment consists of the part of LV.
+However, current code doesn't work as expected.
 
-Here's an example of what I'm seeing:
+As a result, build_parallel_areas_from_lv() considers only the
+first segment of the LV and fails to build appropriate list of
+PVs to be avoided.
 
-[root@linux archive]# pvmove -v /dev/emcpowera
-pvmove -- checking name of source physical volume "/dev/emcpowera"
-pvmove -- locking logical volume manager
-pvmove -- reading data of source physical volume from "/dev/emcpowera"
-pvmove -- checking volume group existence
-pvmove -- reading data of volume group "data" from lvmtab
-pvmove -- checking volume group consistency of "data"
-pvmove -- searching for source physical volume "/dev/emcpowera" in 
-volume group "data"
-pvmove -- no logical volumes on empty source physical volume 
-"/dev/emcpowera"
-
-[root@linux archive]# vgreduce data /dev/emcpowera
-vgreduce -- ERROR: can't reduce volume group "data" by used physical 
-volume "/dev/emcpowera"
-
-[root@linux archive]# pvdisplay /dev/emcpowera
---- Physical volume ---
-PV Name               /dev/emcpowera
-VG Name               data
-PV Size               785.10 GB [1646481408 secs] / NOT usable 1 GB 
-[LVM: 127 KB]
-PV#                   1
-PV Status             available
-Allocatable           NO
-Cur LV                4
-PE Size (KByte)       1048576
-Total PE              784
-Free PE               784
-Allocated PE          0
-PV UUID               JpYFFb-NUqC-trBf-oFm7-tbdF-65If-GZ56fw
-
-Does anyone have any idea why I can't complete a reduce?
+Attached patch fixes this problem.
+Applicable to 2.02.09.
 
 Thanks,
-Peter
+-- 
+Jun'ichi Nomura, NEC Corporation of America
 
-Note:
-Logical Volume Manager 1.0.8-13
-Heinz Mauelshagen, Red Hat  03/05/2005 (IOP 10)
 
-_______________________________________________
-linux-lvm mailing list
-linux-lvm@redhat.com
-https://www.redhat.com/mailman/listinfo/linux-lvm
-read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+
+--------------020008010807000406010106
+Content-Type: text/x-patch;
+	name="01-fix-for_each_pv-to-return-correct-segment-end.patch"
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline;
+	filename*0="01-fix-for_each_pv-to-return-correct-segment-end.patch"
+
+_for_each_pv() is a function to walk through all PVs used by
+given part of LV. The function is expected to set smallest length
+of PV segment consists of the part of LV.
+However, current code doesn't work as expected.
+
+As a result, build_parallel_areas_from_lv() considers only the
+first segment of the LV and fails to build appropriate list of
+PVs to be avoided.
+
+diff -urp LVM2.00/lib/metadata/lv_manip.c LVM2.01/lib/metadata/lv_manip.c
+--- LVM2.00/lib/metadata/lv_manip.c	2006-08-25 03:50:56.000000000 -0400
++++ LVM2.01/lib/metadata/lv_manip.c	2006-08-26 00:06:29.000000000 -0400
+@@ -1358,7 +1358,7 @@ static int _for_each_pv(struct cmd_conte
+ 	/* Remaining logical length of segment */
+ 	remaining_seg_len = seg->len - (le - seg->le);
+ 
+-	if (len > remaining_seg_len)
++	if (remaining_seg_len > len)
+ 		remaining_seg_len = len;
+ 
+ 	if (spvs->len > remaining_seg_len)
+
+--------------020008010807000406010106--
