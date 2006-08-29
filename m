@@ -1,23 +1,19 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
 	by int-mx1.corp.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
-	k7SMjxgN029054
-	for <linux-lvm@redhat.com>; Mon, 28 Aug 2006 18:45:59 -0400
-Received: from mail.esperi.org.uk (user32443@41-052.adsl.zetnet.co.uk
-	[194.247.41.52])
-	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id k7SMjoWq011693
-	for <linux-lvm@redhat.com>; Mon, 28 Aug 2006 18:45:51 -0400
-Received: from esperi.org.uk (nix@hades.wkstn.nix [192.168.14.18])
-	by mail.esperi.org.uk (8.12.11.20060614/8.12.11) with ESMTP id
-	k7SMjmRt028121
-	for <linux-lvm@redhat.com>; Mon, 28 Aug 2006 23:45:48 +0100
-Subject: Re: [linux-lvm] Does LVM has something to backup like mbr??
-References: <44F33821.4040802@minicom.com.br>
-From: Nix <nix@esperi.org.uk>
-Date: Mon, 28 Aug 2006 23:45:48 +0100
-In-Reply-To: <44F33821.4040802@minicom.com.br> (Du's message of "Mon,
-	28 Aug 2006 15:38:25 -0300")
-Message-ID: <874pvwqy1v.fsf@hades.wkstn.nix>
+	k7TGLbWl002152
+	for <linux-lvm@redhat.com>; Tue, 29 Aug 2006 12:21:37 -0400
+Received: from swlx167.swmed.edu (swlx167.swmed.edu [199.165.152.167])
+	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id k7TGLSbL004641
+	for <linux-lvm@redhat.com>; Tue, 29 Aug 2006 12:21:28 -0400
+Received: from peters.swmed.org ([129.112.118.137])
+	by swlx167.swmed.edu with esmtp (Exim 4.44) id 1GI6Ky-0005la-Fc
+	for linux-lvm@redhat.com; Tue, 29 Aug 2006 11:21:17 -0500
+Message-ID: <44F4697C.3070908@utsouthwestern.edu>
+Date: Tue, 29 Aug 2006 11:21:16 -0500
+From: Peter Smith <peter.smith@utsouthwestern.edu>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] Problem with vgreduce on LVM1
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -28,39 +24,51 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+To: linux-lvm@redhat.com
 
-On Mon, 28 Aug 2006, Du wrote:
-> Hi, these days I was wondering if I do some crap in my LV's and I want
-> to recover it, can I keep some kind of mbr's backup?
+I can't seem to remove two physical volumes.  I've removed the LVs on 
+them.  I've deactivated the PVs.  But I can not remove the PVs from the VG.
 
-This should be automatically maintained in /etc/lvm/backup: both the
-directory to back up to and whether backups are maintained at all
-is customizable in /etc/lvm/lvm.conf, but it's a *really good idea*
-to leave it turned on.
+Here's an example of what I'm seeing:
 
-By default a backup is taken whenever the metadata changes (addition,
-removal, or reconfiguration of LVs and VGs, basically).
+[root@linux archive]# pvmove -v /dev/emcpowera
+pvmove -- checking name of source physical volume "/dev/emcpowera"
+pvmove -- locking logical volume manager
+pvmove -- reading data of source physical volume from "/dev/emcpowera"
+pvmove -- checking volume group existence
+pvmove -- reading data of volume group "data" from lvmtab
+pvmove -- checking volume group consistency of "data"
+pvmove -- searching for source physical volume "/dev/emcpowera" in 
+volume group "data"
+pvmove -- no logical volumes on empty source physical volume 
+"/dev/emcpowera"
 
-You can restore an old configuration with `vgcfgrestore' and back up the
-existing one on command with `vgcfgbackup'. (Obviously restoring an old
-configuration with LVs in different places is unlikely to work because
-the data isn't in the right places anymore, but re-restoring the new,
-correct configuration should repair things immediately.)
+[root@linux archive]# vgreduce data /dev/emcpowera
+vgreduce -- ERROR: can't reduce volume group "data" by used physical 
+volume "/dev/emcpowera"
 
-> Something that, when I put it in the right place, it recovers my LV's ??
+[root@linux archive]# pvdisplay /dev/emcpowera
+--- Physical volume ---
+PV Name               /dev/emcpowera
+VG Name               data
+PV Size               785.10 GB [1646481408 secs] / NOT usable 1 GB 
+[LVM: 127 KB]
+PV#                   1
+PV Status             available
+Allocatable           NO
+Cur LV                4
+PE Size (KByte)       1048576
+Total PE              784
+Free PE               784
+Allocated PE          0
+PV UUID               JpYFFb-NUqC-trBf-oFm7-tbdF-65If-GZ56fw
 
-That's exactly it.
+Does anyone have any idea why I can't complete a reduce?
 
-> Just like mbr. Cuz if I backup my mbr, it just recover my unique
-> partition with LVM.
+Thanks,
+Peter
 
-Your general system backup (you *do* have one, right? :) ) should be
-backing up /etc anyway, in which case the LVM metadata backups should
-be backed up with everything else.
-
--- 
-`In typical emacs fashion, it is both absurdly ornate and
- still not really what one wanted.' --- jdev
+Note:
+Logical Volume Manager 1.0.8-13
+Heinz Mauelshagen, Red Hat  03/05/2005 (IOP 10)
