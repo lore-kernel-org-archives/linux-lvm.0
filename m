@@ -1,9 +1,22 @@
-Message-ID: <44F47579.1040307@ce.jp.nec.com>
-Date: Tue, 29 Aug 2006 13:12:25 -0400
-From: "Jun'ichi Nomura" <j-nomura@ce.jp.nec.com>
+Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
+	by int-mx1.corp.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
+	k7TI1dKb001842
+	for <linux-lvm@redhat.com>; Tue, 29 Aug 2006 14:01:39 -0400
+Received: from swlx167.swmed.edu (swlx167.swmed.edu [199.165.152.167])
+	by mx1.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
+	k7TI1cCO011997
+	for <linux-lvm@redhat.com>; Tue, 29 Aug 2006 14:01:38 -0400
+Received: from peters.swmed.org ([129.112.118.137])
+	by swlx167.swmed.edu with esmtp (Exim 4.44) id 1GI7tq-0000HV-Ri
+	for linux-lvm@redhat.com; Tue, 29 Aug 2006 13:01:28 -0500
+Message-ID: <44F480F2.7070600@utsouthwestern.edu>
+Date: Tue, 29 Aug 2006 13:01:22 -0500
+From: Peter Smith <peter.smith@utsouthwestern.edu>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="------------030603070301060301070207"
-Subject: [linux-lvm] [PATCH LVM2] Fix max_parallel calculation
+References: <EED09BB41EE72044BCEE8156094FCE8F0183821F@EVS4.its.caregroup.org>
+In-Reply-To: <EED09BB41EE72044BCEE8156094FCE8F0183821F@EVS4.its.caregroup.org>
+Content-Transfer-Encoding: 7bit
+Subject: Re: [linux-lvm] Problem with vgreduce on LVM1
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -14,109 +27,149 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: linux-lvm@redhat.com, Alasdair Kergon <agk@redhat.com>, Jonathan Brassow <jbrassow@redhat.com>
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-This is a multi-part message in MIME format.
---------------030603070301060301070207
-Content-Type: text/plain; charset=ISO-2022-JP
-Content-Transfer-Encoding: 7bit
+Well, that is interesting. When I do a "pvdata", it does show an extent 
+in use, one for each of the other LVs, but that is true for all the PVs 
+for some reason. Any ideas on how to stop that? I've already tried a 
+"pvmove" and it says the disk is empty.
 
-Hi,
+[root@linux archive]# pvdata /dev/emcpowera
+--- Physical volume ---
+PV Name /dev/emcpowera
+VG Name data
+PV Size 785.10 GB [1646481408 secs] / NOT usable 1 GB [LVM: 127 KB]
+PV# 1
+PV Status available
+Allocatable NO
+Cur LV 4
+PE Size (KByte) 1048576
+Total PE 784
+Free PE 784
+Allocated PE 0
+PV UUID JpYFFb-NUqC-trBf-oFm7-tbdF-65If-GZ56fw
 
-In _find_parallel_space(), there is 2 mistakes in calculation of
-max_parallel (and *allocated).
+--- Volume group ---
+VG Name
+VG Access read/write
+VG Status NOT available/resizable
+VG # 0
+MAX LV 256
+Cur LV 5
+Open LV 0
+MAX LV Size 2 TB
+Max PV 256
+Cur PV 8
+Act PV 1
+VG Size 12.21 TB
+PE Size 1 GB
+Total PE 12507
+Alloc PE / Size 9078 / 886 GB
+Free PE / Size 3429 / 3.35 TB
+VG UUID 5Xw9D6-qqfu-0FTg-P9pD-40NH-wRgR-wN03ip
 
-  1. max_parallel and *allocated are number of extents multiplied by
-     ah->area_multiple.
-     So it needs to be divided by ah->area_multiple when it's used for
-     stripe length calculation
-  2. max_parallel specifies the total number of extents, not the newly
-     allocated one.
-     So it doesn't need to be offset by starting le.
+--- List of logical volumes ---
 
-As a result, allocation fails unexpectedly.
+pvdata -- logical volume struct at offset 0 is empty
+pvdata -- logical volume "/dev/data/data2" at offset 1
+pvdata -- logical volume "/dev/data/data3" at offset 2
+pvdata -- logical volume "/dev/data/data4" at offset 3
+pvdata -- logical volume "/dev/data/data5" at offset 4
+pvdata -- logical volume "/dev/data/data6" at offset 5
+pvdata -- logical volume struct at offset 6 is empty
+pvdata -- logical volume struct at offset 7 is empty
+pvdata -- logical volume struct at offset 8 is empty
+pvdata -- logical volume struct at offset 9 is empty
+<SNIP>
+pvdata -- logical volume struct at offset 254 is empty
+pvdata -- logical volume struct at offset 255 is empty
+--- List of physical volume UUIDs ---
 
-Typical failure cases:
-  1) lvcreate --alloc contiguous fails for striped LV
-     if requested LV size is larger than a PV size
-  2) lvconvert -m to add mirror to existing LV fails
-     if the existing LV has more than one segments
-
-Attached patch fixes them.
-Applicable to 2.02.09.
+001: JpYFFb-NUqC-trBf-oFm7-tbdF-65If-GZ56fw
+002: ABNwWZ-h4la-KTcv-VukV-T8vV-PIEP-mm38cy
+003: oyjw8S-B1gu-snoN-k54q-bCEy-daqn-BYdDmK
+004: URW9Kt-ZbOn-Ov3h-ZiT5-i7aC-8Lpq-c0fp4l
+005: y16lho-UgMJ-1lfJ-GNTi-VXWH-Pot1-iIsOc0
+006: WEC9g3-fTKD-k8pV-Nnxq-Kwn3-EkNd-qV3lUE
+007: TCxHIb-uvjC-6xap-bLaM-lVJU-N82x-XWd10g
+008: fZkmf8-jaYW-1gZ6-WBqp-eNu2-s1xr-IBLQTe
 
 Thanks,
--- 
-Jun'ichi Nomura, NEC Corporation of America
+Peter
 
 
---------------030603070301060301070207
-Content-Type: text/x-patch;
- name="02-fix-max_parallel-calculation.patch"
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline; filename="02-fix-max_parallel-calculation.patch"
+mghofran@caregroup.harvard.edu wrote:
 
-In _find_parallel_space(), there is 2 mistakes in calculation of
-max_parallel (and *allocated).
-
-  1. max_parallel and *allocated are number of extents multiplied by
-     ah->area_multiple.
-     So it needs to be divided by ah->area_multiple when it's used for
-     stripe length calculation
-  2. max_parallel specifies the total number of extents, not the newly
-     allocated one.
-     So it doesn't need to be offset by starting le.
-
-Attached patch fixes them.
-Otherwise, allocation fails unexpectedly.
-
-Typical failure cases:
-  1) lvcreate --alloc contiguous fails for striped LV
-     if requested LV size is larger than a PV size
-  2) lvconvert -m to add mirror to existing LV fails
-     if the existing LV has more than one segments
-
-diff -urp LVM2.01/lib/metadata/lv_manip.c LVM2.02/lib/metadata/lv_manip.c
---- LVM2.01/lib/metadata/lv_manip.c	2006-08-26 00:06:29.000000000 -0400
-+++ LVM2.02/lib/metadata/lv_manip.c	2006-08-29 03:14:57.000000000 -0400
-@@ -715,6 +715,12 @@ static int _find_parallel_space(struct a
- 	do {
- 		ix = 0;
- 
-+		/*
-+		 * max_parallel and *allocated are number of extents
-+		 * multiplied by ah->area_multiple.
-+		 * So they should be divided by ah->area_multiple before
-+		 * using for calcualtion of a stripe length.
-+		 */
- 		parallel_pvs = NULL;
- 		max_parallel = needed;
- 
-@@ -723,11 +729,12 @@ static int _find_parallel_space(struct a
- 		 * the maximum we can allocate in one go accordingly.
- 		 */
- 		if (ah->parallel_areas) {
-+			next_le = (prev_lvseg ? prev_lvseg->le + prev_lvseg->len : 0) + (*allocated / ah->area_multiple);
- 			list_iterate_items(spvs, ah->parallel_areas) {
--				next_le = (prev_lvseg ? prev_lvseg->le + prev_lvseg->len : 0) + *allocated;
--				if (next_le >= spvs->le) {
--					if (next_le + max_parallel > spvs->le + spvs->len)
--						max_parallel = (spvs->le + spvs->len - next_le) * ah->area_multiple;
-+				if (next_le >= spvs->le &&
-+				    next_le < spvs->le + spvs->len) {
-+					if (max_parallel / ah->area_multiple > spvs->le + spvs->len)
-+						max_parallel = (spvs->le + spvs->len) * ah->area_multiple;
- 					parallel_pvs = &spvs->pvs;
- 					break;
- 				}
-@@ -773,7 +780,7 @@ static int _find_parallel_space(struct a
- 				}
- 
- 				/* Is it big enough on its own? */
--				if ((pva->count < max_parallel - *allocated) &&
-+				if ((pva->count < (max_parallel - *allocated) / ah->area_multiple) &&
- 				    ((!can_split && !ah->log_count) ||
- 				     (already_found_one &&
- 				      !(alloc == ALLOC_ANYWHERE))))
-
---------------030603070301060301070207--
+>You show lv=4 so don't you need to check if any of those lvols were
+>using that particular disk, remove the lvol and then proceed?
+>
+>-----Original Message-----
+>From: linux-lvm-bounces@redhat.com [mailto:linux-lvm-bounces@redhat.com]
+>On Behalf Of Peter Smith
+>Sent: Tuesday, August 29, 2006 12:21 PM
+>To: linux-lvm@redhat.com
+>Subject: [linux-lvm] Problem with vgreduce on LVM1
+>
+>I can't seem to remove two physical volumes.  I've removed the LVs on 
+>them.  I've deactivated the PVs.  But I can not remove the PVs from the
+>VG.
+>
+>Here's an example of what I'm seeing:
+>
+>[root@linux archive]# pvmove -v /dev/emcpowera
+>pvmove -- checking name of source physical volume "/dev/emcpowera"
+>pvmove -- locking logical volume manager
+>pvmove -- reading data of source physical volume from "/dev/emcpowera"
+>pvmove -- checking volume group existence
+>pvmove -- reading data of volume group "data" from lvmtab
+>pvmove -- checking volume group consistency of "data"
+>pvmove -- searching for source physical volume "/dev/emcpowera" in 
+>volume group "data"
+>pvmove -- no logical volumes on empty source physical volume 
+>"/dev/emcpowera"
+>
+>[root@linux archive]# vgreduce data /dev/emcpowera
+>vgreduce -- ERROR: can't reduce volume group "data" by used physical 
+>volume "/dev/emcpowera"
+>
+>[root@linux archive]# pvdisplay /dev/emcpowera
+>--- Physical volume ---
+>PV Name               /dev/emcpowera
+>VG Name               data
+>PV Size               785.10 GB [1646481408 secs] / NOT usable 1 GB 
+>[LVM: 127 KB]
+>PV#                   1
+>PV Status             available
+>Allocatable           NO
+>Cur LV                4
+>PE Size (KByte)       1048576
+>Total PE              784
+>Free PE               784
+>Allocated PE          0
+>PV UUID               JpYFFb-NUqC-trBf-oFm7-tbdF-65If-GZ56fw
+>
+>Does anyone have any idea why I can't complete a reduce?
+>
+>Thanks,
+>Peter
+>
+>Note:
+>Logical Volume Manager 1.0.8-13
+>Heinz Mauelshagen, Red Hat  03/05/2005 (IOP 10)
+>
+>_______________________________________________
+>linux-lvm mailing list
+>linux-lvm@redhat.com
+>https://www.redhat.com/mailman/listinfo/linux-lvm
+>read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+>
+>
+>
+>_______________________________________________
+>linux-lvm mailing list
+>linux-lvm@redhat.com
+>https://www.redhat.com/mailman/listinfo/linux-lvm
+>read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+>  
+>
