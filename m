@@ -1,17 +1,18 @@
-Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
-	k7U62JOw009191
-	for <linux-lvm@redhat.com>; Wed, 30 Aug 2006 02:02:19 -0400
-Received: from milprog1.milprog.ch (milprog1.milprog.ch [157.161.104.194])
-	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id k7U62BF6026213
-	for <linux-lvm@redhat.com>; Wed, 30 Aug 2006 02:02:12 -0400
-Message-Id: <s4f54602.099@milprog1.milprog.ch>
-Date: Wed, 30 Aug 2006 08:01:50 +0200
-From: "Marcel Gsteiger" <Marcel.Gsteiger@milprog.ch>
+Received: from agk.surrey.redhat.com (agk.surrey.redhat.com [172.16.10.74])
+	by pobox.surrey.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
+	k7ULQUho028793
+	for <linux-lvm@redhat.com>; Wed, 30 Aug 2006 22:26:30 +0100
+Received: from agk by agk.surrey.redhat.com with local (Exim 4.34)
+	id 1GIXZu-0002fB-Rp
+	for linux-lvm@redhat.com; Wed, 30 Aug 2006 22:26:30 +0100
+Date: Wed, 30 Aug 2006 22:26:30 +0100
+From: Alasdair G Kergon <agk@redhat.com>
+Subject: Re: [linux-lvm] Problem with lvm2 snapshot filling up on fc4
+Message-ID: <20060830212630.GO13859@agk.surrey.redhat.com>
+References: <s4f54602.099@milprog1.milprog.ch>
 Mime-Version: 1.0
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-Subject: [linux-lvm] Problem with lvm2 snapshot filling up on fc4
+In-Reply-To: <s4f54602.099@milprog1.milprog.ch>
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -23,11 +24,24 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@redhat.com
+Content-Transfer-Encoding: 7bit
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-Hi all
+On Wed, Aug 30, 2006 at 08:01:50AM +0200, Marcel Gsteiger wrote:
+> I have a big problem. I did backups using LVM snapshots on my fc4 box
+> (2.6.15-1). Now a snapshot filled to 100%. Since then, I cannot do anything
+> anymore either with this snapshot nor with the original volume. lvremove always
+> hangs with a message waiting for /var/lock/lvm/V_vg00 . Rebooting does not help
+> either.
 
-I have a big problem. I did backups using LVM snapshots on my fc4 box (2.6.15-1). Now a snapshot filled to 100%. Since then, I cannot do anything anymore either with this snapshot nor with the original volume. lvremove always hangs with a message waiting for /var/lock/lvm/V_vg00 . Rebooting does not help either. How can I destroy just my snapshot? Any help would very much be appreciated.
+Fascinating.  I've reproduced something similar to this with an up-to-date
+kernel.
 
-Thanks
-Marcel
+To work around this while we sort out what the problem is, boot your machine
+*without* attempting to activate the logical volume concerned.
+Then perform the lvremove on the snapshot (while origin and snapshot are
+inactive).
+
+Alasdair
+-- 
+agk@redhat.com
