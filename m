@@ -1,23 +1,20 @@
 Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
 	by int-mx1.corp.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
-	k7UBtdHY017007
-	for <linux-lvm@redhat.com>; Wed, 30 Aug 2006 07:55:39 -0400
-Received: from mx12.bbn.com (mx12.bbn.com [128.33.0.81])
+	k7UKVQH1027872
+	for <linux-lvm@redhat.com>; Wed, 30 Aug 2006 16:31:26 -0400
+Received: from mail.platespin.com (mail.platespin.com [206.186.128.251])
 	by mx1.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
-	k7UBtap2028084
-	for <linux-lvm@redhat.com>; Wed, 30 Aug 2006 07:55:36 -0400
-Received: from mgillen2.dsl.bbn.com ([128.89.72.74])
-	by mx12.bbn.com with esmtp (Exim 4.60)
-	(envelope-from <me@mattgillen.net>) id 1GIOfJ-0003G3-3q
-	for linux-lvm@redhat.com; Wed, 30 Aug 2006 07:55:29 -0400
-Message-ID: <44F57CB0.2060400@mattgillen.net>
-Date: Wed, 30 Aug 2006 07:55:28 -0400
-From: Matthew Gillen <me@mattgillen.net>
+	k7UKVPgr021086
+	for <linux-lvm@redhat.com>; Wed, 30 Aug 2006 16:31:26 -0400
+Content-Class: urn:content-classes:message
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] Safeguarding LMV data?
-References: <80d985600608300116q2453135fua378dbf1138daa2d@mail.gmail.com>
-In-Reply-To: <80d985600608300116q2453135fua378dbf1138daa2d@mail.gmail.com>
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/alternative;
+	boundary="----_=_NextPart_001_01C6CC73.34D3F53A"
+Date: Wed, 30 Aug 2006 16:31:00 -0400
+Message-ID: <78C7CA2CCF881342BB178405827129CC04E35DDD@wired.platespin.com>
+From: "James Tan" <james.tan@platespin.com>
+Subject: [linux-lvm] How to calculate the smallest disk partition need by a
+	file system in LVM
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -28,49 +25,182 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: LVM general discussion and development <linux-lvm@redhat.com>
+To: linux-lvm@redhat.com
 
-Craig Hagerman wrote:
-> If I understand things correctly, if one of those drives fails I will
-> lose all the data spread across both drives. Is this correct?
+This is a multi-part message in MIME format.
 
-Essentially.
+------_=_NextPart_001_01C6CC73.34D3F53A
+Content-Type: text/plain;
+	charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 
-> When I
-> set this up (over a year ago) I guess I kind of assumed that if one
-> drive failed I could shrink the LV and still have access to the data
-> on the good drive.
+Hi, All
 
-I've heard of people that have been able to save data in that situation, but
-it's sort of black magic, and you never know what exactly you'll be able to
-recover.  From the filesystem's perspective, it's like half your blocks went
-bad.  Filesystems really aren't built to handle those situations gracefully.
+=20
 
-> I think I have read that the best way to safeguard my data would be to
-> set up the hard drives as RAID 5 (which would require an additional
-> drive - minimum 3, right). I didn't consider this when I first set up
-> the LVM.
+As we know, a file system reserved some space for itself. So if we need
+a 1G file system, I have to create a disk partition a little bigger than
+1G to contain this file system.=20
 
-Why not RAID 1?  RAID 5 requires 3 disks of the same size (with the RAID
-device having the capacity of 2 disks).  RAID 1 (mirror) requires two disks of
-the same size (with the RAID device having the capacity of one disk).
+=20
 
-> I am wondering if there is anything I can do now to mitigate the
-> chance of one drive failing and losing all data? I have thought about
-> buying another drive (say a 400GB), moving the data on there, setting
-> up LVM with RAID 5 and then moving the data back .... except that the
-> new drive would be intended to be used in that RAID 5 configuration. I
-> don't think I have a good enough understanding of either RAID 5 or LVM
-> and would really appreciate some advice for what I can do.
+I found the size of a physical volume is a little smaller than that of
+the disk partition where the PV related to. That because the PV might to
+store some metadata that occupy some space. So does the LV to the PV.
 
-Read the RAID howto first, and figure out what you want to do at the RAID
-level, taking into consideration how many drives you want to buy, the level of
-redundancy you need, etc:
-http://tldp.org/HOWTO/html_single/Software-RAID-HOWTO/
+=20
 
-Once you have the specifics of a particular setup, ask again what to do at the
-LVM layer (include at least how big your existing LV is, and how big your new
-drive(s) are).
+My problem is if I want a 1G size file system in a LV, what the smallest
+size of the disk partition. How to calculate it?
 
-Matt
+=20
+
+Thanks ahead.
+
+=20
+
+James
+
+=20
+
+=20
+
+
+------_=_NextPart_001_01C6CC73.34D3F53A
+Content-Type: text/html;
+	charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+
+<html xmlns:o=3D"urn:schemas-microsoft-com:office:office" =
+xmlns:w=3D"urn:schemas-microsoft-com:office:word" =
+xmlns:st1=3D"urn:schemas-microsoft-com:office:smarttags" =
+xmlns=3D"http://www.w3.org/TR/REC-html40">
+
+<head>
+<META HTTP-EQUIV=3D"Content-Type" CONTENT=3D"text/html; =
+charset=3Dus-ascii">
+<meta name=3DGenerator content=3D"Microsoft Word 11 (filtered medium)">
+<o:SmartTagType =
+namespaceuri=3D"urn:schemas-microsoft-com:office:smarttags"
+ name=3D"City"/>
+<o:SmartTagType =
+namespaceuri=3D"urn:schemas-microsoft-com:office:smarttags"
+ name=3D"place"/>
+<!--[if !mso]>
+<style>
+st1\:*{behavior:url(#default#ieooui) }
+</style>
+<![endif]-->
+<style>
+<!--
+ /* Font Definitions */
+ @font-face
+	{font-family:SimSun;
+	panose-1:2 1 6 0 3 1 1 1 1 1;}
+@font-face
+	{font-family:"\@SimSun";
+	panose-1:2 1 6 0 3 1 1 1 1 1;}
+ /* Style Definitions */
+ p.MsoNormal, li.MsoNormal, div.MsoNormal
+	{margin:0in;
+	margin-bottom:.0001pt;
+	font-size:12.0pt;
+	font-family:"Times New Roman";}
+a:link, span.MsoHyperlink
+	{color:blue;
+	text-decoration:underline;}
+a:visited, span.MsoHyperlinkFollowed
+	{color:purple;
+	text-decoration:underline;}
+span.EmailStyle17
+	{mso-style-type:personal-compose;
+	font-family:Arial;
+	color:windowtext;}
+@page Section1
+	{size:8.5in 11.0in;
+	margin:1.0in 1.25in 1.0in 1.25in;}
+div.Section1
+	{page:Section1;}
+-->
+</style>
+
+</head>
+
+<body lang=3DEN-US link=3Dblue vlink=3Dpurple>
+
+<div class=3DSection1>
+
+<p class=3DMsoNormal><font size=3D2 face=3DArial><span =
+style=3D'font-size:10.0pt;
+font-family:Arial'>Hi, All<o:p></o:p></span></font></p>
+
+<p class=3DMsoNormal><font size=3D2 face=3DArial><span =
+style=3D'font-size:10.0pt;
+font-family:Arial'><o:p>&nbsp;</o:p></span></font></p>
+
+<p class=3DMsoNormal><font size=3D2 face=3DArial><span =
+style=3D'font-size:10.0pt;
+font-family:Arial'>As we know, a file system reserved some space for =
+itself. So
+if we need a 1G file system, I have to create a disk partition a little =
+bigger
+than 1G to contain this file system. <o:p></o:p></span></font></p>
+
+<p class=3DMsoNormal><font size=3D2 face=3DArial><span =
+style=3D'font-size:10.0pt;
+font-family:Arial'><o:p>&nbsp;</o:p></span></font></p>
+
+<p class=3DMsoNormal><font size=3D2 face=3DArial><span =
+style=3D'font-size:10.0pt;
+font-family:Arial'>I found the size of a physical volume is a little =
+smaller
+than that of the disk partition where the PV related to. That because =
+the PV might
+to store some metadata that occupy some space. So does the <st1:City =
+w:st=3D"on"><st1:place
+ w:st=3D"on">LV</st1:place></st1:City> to the =
+PV.<o:p></o:p></span></font></p>
+
+<p class=3DMsoNormal><font size=3D2 face=3DArial><span =
+style=3D'font-size:10.0pt;
+font-family:Arial'><o:p>&nbsp;</o:p></span></font></p>
+
+<p class=3DMsoNormal><font size=3D2 face=3DArial><span =
+style=3D'font-size:10.0pt;
+font-family:Arial'>My problem is if I want a 1G size file system in a =
+<st1:place
+w:st=3D"on"><st1:City w:st=3D"on">LV</st1:City></st1:place>, what the =
+smallest size
+of the disk partition. How to calculate it?<o:p></o:p></span></font></p>
+
+<p class=3DMsoNormal><font size=3D2 face=3DArial><span =
+style=3D'font-size:10.0pt;
+font-family:Arial'><o:p>&nbsp;</o:p></span></font></p>
+
+<p class=3DMsoNormal><font size=3D2 face=3DArial><span =
+style=3D'font-size:10.0pt;
+font-family:Arial'>Thanks ahead.<o:p></o:p></span></font></p>
+
+<p class=3DMsoNormal><font size=3D2 face=3DArial><span =
+style=3D'font-size:10.0pt;
+font-family:Arial'><o:p>&nbsp;</o:p></span></font></p>
+
+<p class=3DMsoNormal><font size=3D2 face=3DArial><span =
+style=3D'font-size:10.0pt;
+font-family:Arial'>James<o:p></o:p></span></font></p>
+
+<p class=3DMsoNormal><font size=3D2 face=3DArial><span =
+style=3D'font-size:10.0pt;
+font-family:Arial'><o:p>&nbsp;</o:p></span></font></p>
+
+<p class=3DMsoNormal><font size=3D2 face=3DArial><span =
+style=3D'font-size:10.0pt;
+font-family:Arial'><o:p>&nbsp;</o:p></span></font></p>
+
+</div>
+
+</body>
+
+</html>
+
+------_=_NextPart_001_01C6CC73.34D3F53A--
