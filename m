@@ -1,18 +1,18 @@
-Received: from agk.surrey.redhat.com (agk.surrey.redhat.com [172.16.10.74])
-	by pobox.surrey.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
-	k7ULQUho028793
-	for <linux-lvm@redhat.com>; Wed, 30 Aug 2006 22:26:30 +0100
-Received: from agk by agk.surrey.redhat.com with local (Exim 4.34)
-	id 1GIXZu-0002fB-Rp
-	for linux-lvm@redhat.com; Wed, 30 Aug 2006 22:26:30 +0100
-Date: Wed, 30 Aug 2006 22:26:30 +0100
-From: Alasdair G Kergon <agk@redhat.com>
-Subject: Re: [linux-lvm] Problem with lvm2 snapshot filling up on fc4
-Message-ID: <20060830212630.GO13859@agk.surrey.redhat.com>
-References: <s4f54602.099@milprog1.milprog.ch>
+Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
+	by int-mx1.corp.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
+	k7V5vkfu010382
+	for <linux-lvm@redhat.com>; Thu, 31 Aug 2006 01:57:46 -0400
+Received: from percy.comedia.it (percy.comedia.it [212.97.59.71])
+	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id k7V5vdge031046
+	for <linux-lvm@redhat.com>; Thu, 31 Aug 2006 01:57:40 -0400
+Date: Thu, 31 Aug 2006 07:57:38 +0200
+From: Luca Berra <bluca@comedia.it>
+Subject: Re: [linux-lvm] LVM
+Message-ID: <20060831055737.GA19177@percy.comedia.it>
+References: <OF6580C8FD.ACE68AC6-ON652571D5.0026C5D4-652571D5.00277C8F@tcs.com>
 Mime-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <s4f54602.099@milprog1.milprog.ch>
+In-Reply-To: <OF6580C8FD.ACE68AC6-ON652571D5.0026C5D4-652571D5.00277C8F@tcs.com>
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -23,25 +23,24 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
 Content-Transfer-Encoding: 7bit
-To: LVM general discussion and development <linux-lvm@redhat.com>
+To: linux-lvm@redhat.com
 
-On Wed, Aug 30, 2006 at 08:01:50AM +0200, Marcel Gsteiger wrote:
-> I have a big problem. I did backups using LVM snapshots on my fc4 box
-> (2.6.15-1). Now a snapshot filled to 100%. Since then, I cannot do anything
-> anymore either with this snapshot nor with the original volume. lvremove always
-> hangs with a message waiting for /var/lock/lvm/V_vg00 . Rebooting does not help
-> either.
+On Fri, Aug 25, 2006 at 12:38:00PM +0530, shirish.rane@tcs.com wrote:
+>Hi  ,
+>This is Shirish Rane from TATA Consultancy Serveice Mumbai India, I want 
+>to know tha using LVM featuer in RHEL AS 4 is is possible to span system 
+>partion betwee Localdisk and SAN.
 
-Fascinating.  I've reproduced something similar to this with an up-to-date
-kernel.
+yes, it is possible, but IMHO it is a foul idea.
 
-To work around this while we sort out what the problem is, boot your machine
-*without* attempting to activate the logical volume concerned.
-Then perform the lvremove on the snapshot (while origin and snapshot are
-inactive).
+L.
 
-Alasdair
 -- 
-agk@redhat.com
+Luca Berra -- bluca@comedia.it
+        Communication Media & Services S.r.l.
+ /"\
+ \ /     ASCII RIBBON CAMPAIGN
+  X        AGAINST HTML MAIL
+ / \
