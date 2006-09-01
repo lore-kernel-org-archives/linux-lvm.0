@@ -1,10 +1,12 @@
-Date: Fri, 1 Sep 2006 11:18:18 -0400
-From: Matthew Galgoci <mgalgoci@redhat.com>
+Date: Fri, 01 Sep 2006 09:47:03 -0600
+From: Michael Loftis <mloftis@wgops.com>
+Subject: Re: [linux-lvm] Cleaning up stale handles in /etc/mtab
+Message-ID: <2149C51FF8A80730B2D442F1@d216-220-25-20.dynip.modwest.com>
 In-Reply-To: <5F08B160555AC946B5AB743B85FF406D05ABF277@ex2k.bankofamerica.com>
-Message-ID: <Pine.LNX.4.64.0609011115380.32322@acis.rdu.redhat.com>
-References: <5F08B160555AC946B5AB743B85FF406D05ABF277@ex2k.bankofamerica.com>
+References: <5F08B160555AC946B5AB743B85FF406D05ABF277@ex2k.bankofamerica.com >
 MIME-Version: 1.0
-Subject: [linux-lvm] Re: Cleaning up stale handles in /etc/mtab
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -15,32 +17,62 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: rodrick.r.brown@bofasecurities.com, redhat-sysadmin-list@redhat.com
-Cc: linux-lvm@redhat.com
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+To: LVM general discussion and development <linux-lvm@redhat.com>, redhat-sysadmin-list@redhat.com
 
-> Date: Fri, 01 Sep 2006 11:13:41 -0400
-> From: "Brown, Rodrick R" <rodrick.r.brown@bofasecurities.com>
-> Reply-To: redhat-sysadmin-list@redhat.com
-> To: redhat-sysadmin-list@redhat.com
-> Cc: linux-lvm@redhat.com
-> Subject: Cleaning up stale handles in /etc/mtab
->
+
+
+--On September 1, 2006 11:13:41 AM -0400 "Brown, Rodrick R" 
+<rodrick.r.brown@bofasecurities.com> wrote:
+
 > Not sure what exactly happened on this server but it looks like the LUNS
 > were pulled w/o removing the volumes correctly or something of that
 > sort.
 
-If you've got processes in D waiting on those volumes I think you might
-be hosed beyond recovery without reboot.
+Looks like you managed to hit fs.filemax actually.  What is the output of 
+"sysctl fs.file-max fs.file-nr"?
 
-Having said that, you could try bumping up /proc/sys/fs/file-max to something
-insanely high and then cat /proc/mounts > /etc/mtab
+>
+># df
+> df: `/vob/gcib/its': Too many open files in system
+> df: `/vob/lftech/artefacts': Too many open files in system
+> df: `/vob/rmt/mktrisk_portal': Too many open files in system
+> df: `/vob/gcib/gfx_fxpb_client_facing': Too many open files in system
+> df: `/vob/gcib/gfx_fxpb_workflow': Too many open files in system
+> df: `/vob/rmt/credittrend': Too many open files in system
+> df: `/vob/adv/re_reporting': Too many open files in system
+> df: `/vob/datamgmt/atlas_p2': Too many open files in system
+> df: `/vob/gcib/gfx_rad': Too many open files in system
+> ...
+> ...
+>
+> Does anyone know of a method to fix this without rebooting the box
+> thanks?
+>
+> Thanks.
+>
+> ---
+> Rodrick R. Brown
+> UNIX Platform Support (SME)
+> Banc of America Securities LLC.
+> Global Trading Infrastructure (GCIB)
+> 100 West 33rd ST. 3rd Flr.
+> New York, NY 10001
+> Mail Code: NY1-509-03-18
+> Office: 646 733 4473
+> Cell: 646-261-5286
+>
+>
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@redhat.com
+> https://www.redhat.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+>
 
-After that, I could only make wild guesses as to what needs to happen next.
 
--- 
-Matthew Galgoci
-IS Production Operations
-Red Hat, Inc
-919.754.3700 x44155
+
+--
+"Genius might be described as a supreme capacity for getting its possessors
+into trouble of all kinds."
+-- Samuel Butler
