@@ -1,17 +1,22 @@
-Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
+Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
 	by int-mx1.corp.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
-	k82LRkt6001732
-	for <linux-lvm@redhat.com>; Sat, 2 Sep 2006 17:27:46 -0400
-Received: from fmmailgate07.web.de (fmmailgate07.web.de [217.72.192.248])
-	by mx1.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
-	k82LRjqu018578
-	for <linux-lvm@redhat.com>; Sat, 2 Sep 2006 17:27:45 -0400
-Date: Sat, 02 Sep 2006 23:27:33 +0200
-Message-Id: <1225935486@web.de>
+	k830QrrY016954
+	for <linux-lvm@redhat.com>; Sat, 2 Sep 2006 20:26:53 -0400
+Received: from postfix2-g20.free.fr (postfix2-g20.free.fr [212.27.60.43])
+	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id k830QlUn004508
+	for <linux-lvm@redhat.com>; Sat, 2 Sep 2006 20:26:47 -0400
+Received: from smtp4-g19.free.fr (smtp4-g19.free.fr [212.27.42.30])
+	by postfix2-g20.free.fr (Postfix) with ESMTP id DD746B4E3C
+	for <linux-lvm@redhat.com>; Sun,  3 Sep 2006 02:26:46 +0200 (CEST)
+Received: from imp1-g19.free.fr (imp1-g19.free.fr [212.27.42.1])
+	by smtp4-g19.free.fr (Postfix) with ESMTP id 07B974F110
+	for <linux-lvm@redhat.com>; Sun,  3 Sep 2006 02:26:45 +0200 (CEST)
+Message-ID: <1157243204.44fa2144de2a0@imp1-g19.free.fr>
+Date: Sun, 03 Sep 2006 02:26:44 +0200
+From: fabsk@free.fr
 MIME-Version: 1.0
-From: Thomas Scheller <thomas.scheller@email.de>
-Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] Partitiontable destroyed with gentoo installer
+Content-Transfer-Encoding: 8bit
+Subject: [linux-lvm] Restore after lvmove crash
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -27,36 +32,30 @@ To: linux-lvm@redhat.com
 
 Hi,
 
-I have a 250GB harddisk. I used the whole disk as a PV.
+Today, I tried to "lvmove" a logical volume (my first one) to another I just
+created. But after a few percent, my computer crashed and now I can't use my
+LVM anymore. I am using Kubuntu 6.06 and LVM2. More details:
 
-# pvcreate /dev/hdb
+When I try to do an operation on the LVM (using a live CD), I get the following
+error:
 
-and did create a volume group
+  Couldn't find volume 'pvmove0' for segment 'start_extent'.
+  Couldn't read all logical volumes for volume group lvm2.
+  Volume group "lvm2" inconsistent
+  Couldn't find volume 'pvmove0' for segment 'start_extent'.
+  Couldn't read all logical volumes for volume group lvm2.
+  Inconsistent metadata copies found - updating to use version 39
 
-vgcreate vg_250GB /dev/hdb
+Then I tried to do "vgreduce --removemissing lvm2" ("lvm2" is the name of my VG)
+and it destroyed everything. I was able to restore the VG definition with
+"vgcfgrestore" by finding the CFG in the partitions, and now I am back to the
+previous state: the definitions of my PV and LV seem OK, but there is still
+this "pvmove0" around that prevent me to use my LVM.
+I don't understand where LVM2 can find this "pvmove0", I thought that if should
+only use the definitions in my restore file...
 
-and 2 logical volumes
+If anyone have any idea, it would be really nice, I am investigating for hours
+now and I'm stuck.
 
-lv_old_system with 50GB
-and
-lv_storage with the rest of the disk
-
-then I did copy all the data from the old harddisk to lv_old_system.
-
-With the Gentoo live CD I did then install gentoo linux to the old harddrive.
-The gentoo installer did delete the partitiontable on all connected harddrives :-(
-So my logicalvolumes are not available anymore.
-But vgchange shows that lv_old_system is somehow still available. Can you help me please, to recover that volume?
-As I did create the logical volume with the old SuSE 8 installation, which I did overwrite with the gentoo installation, I do not have the metadata backup in /etc :-(
-
-thinkpad ~ # vgchange -v -ay vg_250GB
-    Using volume group(s) on command line
-    Finding volume group "vg_250GB"
-  Logical volume (lv_old_system) contains an incomplete mapping table.
-    Wiping cache of LVM-capable devices
-  Logical volume (lv_old_system) contains an incomplete mapping table.
-  Volume group "vg_250GB" not found
-thinkpad ~ # 
-
-Thank you in advance
-    Thomas
+Thank you for your attention
+Fabien
