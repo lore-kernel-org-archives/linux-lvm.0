@@ -1,29 +1,17 @@
-Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
+Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
 	by int-mx1.corp.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
-	k846o9RU015377
-	for <linux-lvm@redhat.com>; Mon, 4 Sep 2006 02:50:09 -0400
-Received: from server.webcom.sk (server.webcom.sk [86.110.225.18])
-	by mx1.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
-	k846o8vl031062
-	for <linux-lvm@redhat.com>; Mon, 4 Sep 2006 02:50:08 -0400
-Received: from localhost (localhost.webcom.sk [127.0.0.1])
-	by server.webcom.sk (Postfix) with ESMTP id 94F1878C60
-	for <linux-lvm@redhat.com>; Mon,  4 Sep 2006 08:51:28 +0200 (CEST)
-Received: from server.webcom.sk ([127.0.0.1])
-	by localhost (mail.webcom.sk [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id RrMFyZI-MI37 for <linux-lvm@redhat.com>;
-	Mon,  4 Sep 2006 08:51:28 +0200 (CEST)
-Received: from [192.168.0.1] (chello082119103193.chello.sk [82.119.103.193])
-	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by server.webcom.sk (Postfix) with ESMTP id 06CFE78C49
-	for <linux-lvm@redhat.com>; Mon,  4 Sep 2006 08:51:27 +0200 (CEST)
-Message-ID: <44FBCC9E.2080801@webcom.sk>
-Date: Mon, 04 Sep 2006 08:50:06 +0200
-From: Roman Fordinal <aben@webcom.sk>
+	k857Mcr2018973
+	for <linux-lvm@redhat.com>; Tue, 5 Sep 2006 03:22:38 -0400
+Received: from mail.opendreams.net ([69.88.106.142])
+	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id k857MVWv008598
+	for <linux-lvm@redhat.com>; Tue, 5 Sep 2006 03:22:31 -0400
+Message-ID: <44FD25AA.8050502@opendreams.net>
+Date: Tue, 05 Sep 2006 00:22:18 -0700
+From: Jesse Molina <jesse@opendreams.net>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] Problem with mapping logical volumes
+Subject: [linux-lvm] Internal error: LV segments corrupted in MyLV. -- Can't
+ mount LVM1 VGs in new LVM2 kernel initramfs
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -37,93 +25,147 @@ List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: linux-lvm@redhat.com
 
-Hi all,
 
-I have specific problem after upgrading system packages on my Gentoo box.
-- baselayout-1.12.4-r7
-- lvm2-2.02.06
-- udev-087
+Hello
 
-The problem is what the block devices can't be created.
-vgdisplay don't show me any logical volume in volume group vg0.
+I have a Debian/Unstable system that has a few LVM1 LVs, the kernel is 
+2.4.  I decided that it was finally time to upgrade, so I started the 
+process.  Unfortunately, I've run into a bit of trouble.
 
-but vgscan read correctly metadata from physical volumes:
-...
-#device/dev-io.c:437         Opened /dev/sda6 RO
-#device/dev-io.c:264       /dev/sda6: size is 19534977 sectors
-#device/dev-io.c:483         Closed /dev/sda6
-#device/dev-io.c:264       /dev/sda6: size is 19534977 sectors
-#device/dev-io.c:437         Opened /dev/sda6 RO O_DIRECT
-#device/dev-io.c:134         /dev/sda6: block size is 512 bytes
-#device/dev-io.c:483         Closed /dev/sda6
-#filters/filter-composite.c:31         Using /dev/sda6
-#device/dev-io.c:437         Opened /dev/sda6 RO O_DIRECT
-#device/dev-io.c:134         /dev/sda6: block size is 512 bytes
-#label/label.c:158       /dev/sda6: lvm2 label detected
-#cache/lvmcache.c:651         lvmcache: /dev/sda6: now orphaned
-#format_text/format-text.c:954         /dev/sda6: Found metadata at 
-82432 size 6372 for vg0 (n0vfht-OPSK-FPiM-7JHp-EEDx-XVj3-iLmYZL)
-#cache/lvmcache.c:651         lvmcache: /dev/sda6: now in VG vg0
-#cache/lvmcache.c:465         lvmcache: /dev/sda6: setting vg0 VGID to 
-n0vfhtOPSKFPiM7JHpEEDxXVj3iLmYZL
-#cache/lvmcache.c:665         lvmcache: /dev/sda6: VG vg0 now exported
-#cache/lvmcache.c:686         lvmcache: /dev/sda6: VG vg0: Set creation 
-host to (none).
-#device/dev-io.c:483         Closed /dev/sda6
-...
-...
-#metadata/pv_manip.c:241         /dev/sda8 0:      0    680: downloads(0:0)
-#metadata/pv_manip.c:241         /dev/sda8 1:    680    512: 
-downloads(2048:0)
-#metadata/pv_manip.c:241         /dev/sda8 2:   1192    512: opt(1024:0)
-#metadata/pv_manip.c:241         /dev/sda8 3:   1704    567: usr(3072:0)
-#metadata/pv_manip.c:241         /dev/sda8 4:   2271   2462: media(5864:0)
-#metadata/pv_manip.c:241         /dev/sda8 5:   4733      8: opt(1016:0)
-#metadata/pv_manip.c:241         /dev/sda8 6:   4741     28: 
-downloads(2560:0)
-#metadata/pv_manip.c:241         /dev/sda9 0:      0   4571: media(10789:0)
-#metadata/pv_manip.c:241         /dev/sda9 1:   4571    198: 
-downloads(2588:0)
-#metadata/pv_manip.c:241         /dev/sda10 0:      0    201: usr(3639:0)
-#metadata/pv_manip.c:241         /dev/sda10 1:    201    512: 
-downloads(5120:0)
-#metadata/pv_manip.c:241         /dev/sda10 2:    713   1914: media(8326:0)
-#metadata/pv_manip.c:241         /dev/sda10 3:   2627   2142: 
-downloads(2786:0)
-#metadata/pv_manip.c:241         /dev/sda11 0:      0    549: media(10240:0)
-#metadata/pv_manip.c:241         /dev/sda11 1:    549    192: 
-downloads(4928:0)
-#metadata/pv_manip.c:241         /dev/sda11 2:    741    125: temp(0:0)
-#metadata/pv_manip.c:241         /dev/sda11 3:    866    256: cache(0:0)
-#metadata/pv_manip.c:241         /dev/sda11 4:   1122    512: 
-downloads(5632:0)
-#metadata/pv_manip.c:241         /dev/sda11 5:   1634   2560: usr(0:0)
-#metadata/pv_manip.c:241         /dev/sda11 6:   4194    575: opt(1536:0)
-#metadata/pv_manip.c:241         /dev/sda12 0:      0   1280: 
-downloads(6144:0)
-#metadata/pv_manip.c:241         /dev/sda12 1:   1280   3481: media(0:0)
-#metadata/pv_manip.c:241         /dev/sda12 2:   4761      8: opt(2111:0)
-#metadata/pv_manip.c:241         /dev/sda13 0:      0   1368: 
-downloads(680:0)
-#metadata/pv_manip.c:241         /dev/sda13 1:   1368   1016: opt(0:0)
-#metadata/pv_manip.c:241         /dev/sda13 2:   2384   2383: media(3481:0)
-#metadata/pv_manip.c:241         /dev/sda13 3:   4767      2: opt(2119:0)
-#metadata/pv_manip.c:241         /dev/sda14 0:      0    695: opt(2121:0)
-#metadata/pv_manip.c:241         /dev/sda14 1:    695    512: media(15360:0)
-#metadata/pv_manip.c:241         /dev/sda14 2:   1207    512: usr(2560:0)
-#metadata/pv_manip.c:241         /dev/sda14 3:   1719   2560: opt(2816:0)
-#metadata/pv_manip.c:241         /dev/sda14 4:   4279    490: temp(125:0)
-#metadata/pv_manip.c:241         /dev/sda6 0:      0   1945: temp(615:0)
-#metadata/pv_manip.c:241         /dev/sda6 1:   1945    256: 
-downloads(7424:0)
-#metadata/pv_manip.c:241         /dev/sda6 2:   2201    183: NULL(0:0)
-#locking/file_locking.c:59       Unlocking /var/lock/lvm/V_vg0
-#device/dev-io.c:483         Closed /dev/sda6
-#device/dev-io.c:483         Closed /dev/sda8
-#device/dev-io.c:483         Closed /dev/sda9
-#device/dev-io.c:483         Closed /dev/sda10
-#device/dev-io.c:483         Closed /dev/sda11
-#device/dev-io.c:483         Closed /dev/sda12
-#device/dev-io.c:483         Closed /dev/sda13
-#device/dev-io.c:483         Closed /dev/sda14
-     Wiping internal VG cache
+I have Googled and searched around for bug reports on the Debian system 
+for anything similar to this and did not find anything very useful.
+
+Because of a SATA adapter module that I need to load, I have a initramfs 
+image.  I believe that I created the initramfs correctly and the boot 
+process appears to run normally, until it's time to do the vgchange -ay 
+from the "/scripts/local-top/lvm" script.  At this point, I get an error 
+message and the boot process fails.
+
+My root is not on LVM, but /var and /tmp are on LVs.
+
+I'm not sure why the initramfs is dumping me at the BusyBox shell 
+instead of pivoting root, since it should be able to do that.  I am 
+thinking that it's some other problem with the initramfs that I built. 
+That being said, I'm able to mount my ext3 root from the BusyBox shell 
+without any trouble.  I need to read the docs more on initramfs.
+
+
+
+Here is what I see on the screen during bootup.  Shortly after this, I 
+end up at the BusyBox prompt;
+
+device-mapper: 4.6.0-ioctrl (2006-02-17) initialised: dm-devel@redhat.com
+	LV tmp: inconsistent LE count 32 != 64
+	Internal error: LV segments corrupted in tmp.
+	Volume group "vg0" no found
+	LV bak1: inconsistent LE count 6076 != 12152
+	Internal error: LV segments corrupted in bak1.
+	Volume group "vgbak1" not found
+Done.
+
+
+
+The troubling thing about this is that I just created the "vgbak1" VG 
+and "bak1" LV minutes before I rebooted into the new kernel.  I had been 
+troubleshooting and decided to wipe the disks that were the PVs for 
+vgbak1.  I used dd and /dev/zero to clear out the first 512B or so of 
+the disks, after doing the whole vgchange -an, then removing the LVs, 
+VGs and so on.  So, this freshly created VG/LV has the same problem as 
+my other VG.  I made the new PVs, made the VG, made the LV, and then 
+created an ext3 fs on top.  Under the 2.4 kernel, it mounts and 
+everything looks good.
+
+tmp is one of three LVs on the vg0 VG.  It is a small 2GB LV to mount 
+for /tmp.
+
+The 2.4 kernel is 2.4.31, custom built.  The 2.6 kernel is also custom 
+built, based on 2.6.17.11.
+
+I have run vgck and even did a vgcfgbackup/vgcfgrestore on the "vg0" 
+PVs, but nothing helped.  The fact that the new "vgbak1" VG also has 
+this problem is somewhat suspicious.
+
+Doing a "vgchange -ay -v" on the BusyBox shell simply gave the same errors.
+
+
+
+Any advice or RTFAs would be appreciated.  I'm stuck on this one.  If 
+you need additional info, I'll be happy to provide.
+
+
+
+
+
+--
+
+root@sorrows# dpkg -l |grep -i lvm
+ii  lvm-common                      1.5.20                The Logical 
+Volume Manager for Linux (common
+ii  lvm10                           1.0.8-12              The Logical 
+Volume Manager for Linux
+ii  lvm2                            2.02.06-2             The Linux 
+Logical Volume Manager
+
+--
+
+root@sorrows# pvscan
+pvscan -- reading all physical volumes (this may take a while...)
+pvscan -- ACTIVE   PV "/dev/sda3" of VG "vg0"    [180.56 GB / 2.28 GB free]
+pvscan -- ACTIVE   PV "/dev/sdb3" of VG "vg0"    [185.78 GB / 7.50 GB free]
+pvscan -- ACTIVE   PV "/dev/sdc1" of VG "vgbak1" [189.88 GB / 0 free]
+pvscan -- ACTIVE   PV "/dev/sdd1" of VG "vgbak1" [189.88 GB / 0 free]
+pvscan -- total: 4 [746.27 GB] / in use: 4 [746.27 GB] / in no VG: 0 [0]
+
+--
+
+root@sorrows# vgdisplay
+--- Volume group ---
+VG Name               vg0
+VG Access             read/write
+VG Status             available/resizable
+VG #                  1
+MAX LV                256
+Cur LV                3
+Open LV               3
+MAX LV Size           2 TB
+Max PV                256
+Cur PV                2
+Act PV                2
+VG Size               366.34 GB
+PE Size               32 MB
+Total PE              11723
+Alloc PE / Size       11410 / 356.56 GB
+Free  PE / Size       313 / 9.78 GB
+VG UUID               RpRpg4-bXW7-4FTF-pi3q-OI3i-jPv7-lBs17d
+
+--- Volume group ---
+VG Name               vgbak1
+VG Access             read/write
+VG Status             available/resizable
+VG #                  2
+MAX LV                256
+Cur LV                1
+Open LV               0
+MAX LV Size           2 TB
+Max PV                256
+Cur PV                2
+Act PV                2
+VG Size               379.75 GB
+PE Size               32 MB
+Total PE              12152
+Alloc PE / Size       12152 / 379.75 GB
+Free  PE / Size       0 / 0
+VG UUID               tYH829-eexE-trsb-42bR-bbRj-5hSI-7ydBF3
+
+--
+
+
+
+
+
+-- 
+# Jesse Molina
+# Mail = jesse@opendreams.net
+# Page = page-jesse@opendreams.net
+# Cell = 1.602.323.7608
+# Web  = http://www.opendreams.net/jesse/
