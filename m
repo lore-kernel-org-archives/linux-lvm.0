@@ -1,19 +1,16 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
 	by int-mx1.corp.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
-	k87ICGFB000468
-	for <linux-lvm@redhat.com>; Thu, 7 Sep 2006 14:12:16 -0400
-Received: from wx-out-0506.google.com (wx-out-0506.google.com [66.249.82.236])
-	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id k87IBxXW007557
-	for <linux-lvm@redhat.com>; Thu, 7 Sep 2006 14:11:59 -0400
-Received: by wx-out-0506.google.com with SMTP id i30so465948wxd
-	for <linux-lvm@redhat.com>; Thu, 07 Sep 2006 11:11:59 -0700 (PDT)
-Message-ID: <fd8dc0d20609071111i47351769va64fb77fd54ce1d4@mail.gmail.com>
-Date: Thu, 7 Sep 2006 14:11:58 -0400
-From: "Boris Ostrovsky" <baostr@gmail.com>
+	k87JPRA7025787
+	for <linux-lvm@redhat.com>; Thu, 7 Sep 2006 15:25:27 -0400
+Received: from fmmailgate07.web.de (fmmailgate07.web.de [217.72.192.248])
+	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id k87JOphw028400
+	for <linux-lvm@redhat.com>; Thu, 7 Sep 2006 15:24:52 -0400
+Date: Thu, 07 Sep 2006 21:24:45 +0200
+Message-Id: <1231942361@web.de>
 MIME-Version: 1.0
-Content-Type: multipart/alternative; 
-	boundary="----=_Part_154448_7645313.1157652718983"
-Subject: [linux-lvm] CLVM vs LVM
+From: Thomas Scheller <thomas.scheller@email.de>
+Subject: Re: [linux-lvm] Partitiontable destroyed with gentoo installer
+Content-Transfer-Encoding: quoted-printable
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -24,51 +21,67 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: linux-lvm@redhat.com
+Content-Type: text/plain; charset="iso-8859-1"
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-------=_Part_154448_7645313.1157652718983
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
+Hi,
 
-(This was somewhat covered in another thread, but I am still not clear,
-so I'll ask again)
+if someone is interested in the solution of this issue, have a look at:
+http://forums.gentoo.org/viewtopic-p-3562137.html#3562137
 
-I have a number of nodes that all have access to a set of LUNs. The
-nodes are managed by a dedicated management workstation that can talk
-to each node and ask it to execute LVM commands. The workstation will
-assure that at any given moment only one node is modifying LVM
-configuration (i.e.. creating/deleting/modifying/etc a PV, VG or LV)
-and that only one node is mounting a filesystem that resides on a
-particular LV.
+Best regards
+     Thomas
 
-My question is whether I need to have clvmd and, if yes, whether I
-have to to provide some additional locking (and perhaps something
-else). My very simple experiments without clvmd seem to suggest that I
-may not need it, but of course the fact that the setup worked for me
-in doesn't prove anything. (I did try using CMAN/GLM, but I would like
-to avoid having to deal with another package, if possible.)
-
-It is possible that I need to specify something in the configure script.
---with-cluster and --with-clvmd seem to be particularly relevant, but I
-don't
-really understand what the options are.
-
-Any help will be greatly appreciated.
+> -----Urspr=EF=BF=BDngliche Nachricht-----
+> Von: LVM general discussion and development <linux-lvm@redhat.com>
+> Gesendet: 02.09.06 23:27:59
+> An: linux-lvm@redhat.com
+> Betreff: [linux-lvm] Partitiontable destroyed with gentoo installer
 
 
-Thanks.
--boris
-
-------=_Part_154448_7645313.1157652718983
-Content-Type: text/html; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-(This was somewhat covered in another thread, but I am still not clear,<br>so I'll ask again)<br><br>I have a number of nodes that all have access to a set of LUNs. The<br>nodes are managed by a dedicated management workstation that can talk
-<br>to each node and ask it to execute LVM commands. The workstation will<br>assure that at any given moment only one node is modifying LVM<br>configuration (i.e.. creating/deleting/modifying/etc a PV, VG or LV)<br>and that only one node is mounting a filesystem that resides on a
-<br>particular LV.<br><br>My question is whether I need to have clvmd and, if yes, whether I<br>have to to provide some additional locking (and perhaps something<br>else). My very simple experiments without clvmd seem to suggest that I
-<br>may not need it, but of course the fact that the setup worked for me<br>in doesn't prove anything. (I did try using CMAN/GLM, but I would like<br>to avoid having to deal with another package, if possible.)<br><br>It is possible that I need to specify something in the configure script.
-<br>--with-cluster and --with-clvmd seem to be particularly relevant, but I don't<br>really understand what the options are.<br><br>Any help will be greatly appreciated.<br><br><br>Thanks.<br>-boris<br>
-
-------=_Part_154448_7645313.1157652718983--
+> Hi,
+>=20
+> I have a 250GB harddisk. I used the whole disk as a PV.
+>=20
+> # pvcreate /dev/hdb
+>=20
+> and did create a volume group
+>=20
+> vgcreate vg_250GB /dev/hdb
+>=20
+> and 2 logical volumes
+>=20
+> lv_old_system with 50GB
+> and
+> lv_storage with the rest of the disk
+>=20
+> then I did copy all the data from the old harddisk to lv_old_system.
+>=20
+> With the Gentoo live CD I did then install gentoo linux to the old harddr=
+ive.
+> The gentoo installer did delete the partitiontable on all connected hardd=
+rives :-(
+> So my logicalvolumes are not available anymore.
+> But vgchange shows that lv_old_system is somehow still available. Can you=
+ help me please, to recover that volume?
+> As I did create the logical volume with the old SuSE 8 installation, whic=
+h I did overwrite with the gentoo installation, I do not have the metadata =
+backup in /etc :-(
+>=20
+> thinkpad ~ # vgchange -v -ay vg_250GB
+>     Using volume group(s) on command line
+>     Finding volume group "vg_250GB"
+>   Logical volume (lv_old_system) contains an incomplete mapping table.
+>     Wiping cache of LVM-capable devices
+>   Logical volume (lv_old_system) contains an incomplete mapping table.
+>   Volume group "vg_250GB" not found
+> thinkpad ~ #=20
+>=20
+> Thank you in advance
+>     Thomas
+>=20
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@redhat.com
+> https://www.redhat.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
