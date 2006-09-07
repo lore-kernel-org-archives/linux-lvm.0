@@ -1,23 +1,23 @@
 Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
 	by int-mx1.corp.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
-	k87HBHBN015290
-	for <linux-lvm@redhat.com>; Thu, 7 Sep 2006 13:11:17 -0400
-Received: from swlx166.swmed.edu (swlx166.swmed.edu [199.165.152.166])
+	k87HJAp7017615
+	for <linux-lvm@redhat.com>; Thu, 7 Sep 2006 13:19:10 -0400
+Received: from swlx167.swmed.edu (swlx167.swmed.edu [199.165.152.167])
 	by mx1.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
-	k87HBDWa019250
-	for <linux-lvm@redhat.com>; Thu, 7 Sep 2006 13:11:14 -0400
+	k87HJ7Eb022599
+	for <linux-lvm@redhat.com>; Thu, 7 Sep 2006 13:19:07 -0400
 Received: from peters.swmed.org ([129.112.118.137])
-	by swlx166.swmed.edu with esmtp (Exim 4.44) id 1GLNP4-00069d-4p
-	for linux-lvm@redhat.com; Thu, 07 Sep 2006 12:11:03 -0500
-Message-ID: <450052A5.40401@utsouthwestern.edu>
-Date: Thu, 07 Sep 2006 12:11:01 -0500
+	by swlx167.swmed.edu with esmtp (Exim 4.44) id 1GLNWh-0004cL-EH
+	for linux-lvm@redhat.com; Thu, 07 Sep 2006 12:18:56 -0500
+Message-ID: <4500547F.6050503@utsouthwestern.edu>
+Date: Thu, 07 Sep 2006 12:18:55 -0500
 From: Peter Smith <peter.smith@utsouthwestern.edu>
 MIME-Version: 1.0
-References: <EED09BB41EE72044BCEE8156094FCE8F0183821F@EVS4.its.caregroup.org>	<44F480F2.7070600@utsouthwestern.edu>	<44F49A63.1010202@utsouthwestern.edu>	<44F4A63D.9080203@utsouthwestern.edu>
-	<44F4E627.9060801@utsouthwestern.edu>
-In-Reply-To: <44F4E627.9060801@utsouthwestern.edu>
-Content-Transfer-Encoding: 7bit
-Subject: Re: [linux-lvm] Problem with vgreduce on LVM1
+References: <20060904040917.25836.qmail@web30308.mail.mud.yahoo.com>
+In-Reply-To: <20060904040917.25836.qmail@web30308.mail.mud.yahoo.com>
+Content-Type: multipart/alternative;
+	boundary="------------030900030200060308000400"
+Subject: Re: [linux-lvm] Wrecked Logical Volume with vgreduce --removemissing
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -28,207 +28,183 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-I was actually able to remove one of the PVs from our VG after manually 
-altering the lv_cur count on the PV. What follows are the results of the 
-operation.
+This is a multi-part message in MIME format.
+--------------030900030200060308000400
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
 
-[root@linux /]# vgreduce data /dev/emcpowera
-vgreduce -- ERROR "Operation not permitted" reducing volume group "data" 
-by physical volume "/dev/emcpowera" in kernel
-[root@linux /]# pvdata /dev/emcpowera | grep Cur
-Cur LV 0
-[root@linux /]# perl -e 'open F, "+<", "/dev/emcpowerb";binmode F;seek 
-F,0x1c0,0;$a=getc(F);printf("Before: 0x%x\n",ord($a));seek 
-F,0x1c0,0;print F "\0";seek F,0x1c0,0;$a=getc(F);printf("After: 
-0x%x\n",ord($a));close F'
-Before: 0x4
-After: 0x0
---- reboot ---
-[root@linux /]# vgreduce data /dev/emcpowera
-vgreduce -- doing automatic backup of volume group "data"
-vgreduce -- volume group "data" successfully reduced by physical volume:
-vgreduce -- /dev/emcpowera
+Ok.  It sounds like the fix will have to involve finding a way to get 
+back to your installed-configuration.  The one that defines your VG as 
+containing *only* hda5 and hdb.  It sounds like you succeeded extending 
+the LV to include sda, but forgot to expand the filesystem after that.  
+Which, ultimately, may save you.  I don't have enough experience with 
+LVM (or just LVM2) to be able to tell you either how to edit your 
+current mangled config to force your LV to forget about sda (which it 
+sounds like you were successful accomplishing anyways) *or* to recover 
+the before-sda configuration.  I've looked at the config on my own 
+workstation and even though I'm using LVM2 I don't see any evidence of 
+backed-up or historical LVM2 configuration data.  So I *really* don't 
+know what to tell you there.  But I think it should be do-able.  There 
+may be someone out there capable of helping with this, but I'm afraid it 
+likely isn't me.  Although I might try and reproduce this on one of my 
+Fedora machines to see if I get stuck in the same box which you are in.
 
-However, for some odd reason which I haven't determined yet, the other 
-PV is still erroring out on a reduce after I alter its lv_cur count. It 
-is returning the following error.
-
-[root@linux root]# vgreduce data /dev/emcpowerb
-vgreduce -- ERROR "parameter error" reducing volume group "data" by 
-physical volume "/dev/emcpowerb" in kernel
-
-Is there anyone out there? Who owns LVM1 currently? The other PVs in 
-this system still suffer from an incorrect lv_cur count.
-
-Thanks,
 Peter
 
-Peter Smith wrote:
+Tom+Dale wrote:
 
-> To make matters worse, on a test system I set up a similar group of 
-> LVs. Then I removed the first LV and deactivated the VG. At that point 
-> I manually editted the disk structure to change the lv_cur on the PV 
-> from 0 to something greater than 0 (5 in this case.) Since that's what 
-> I think might be in error on my production VG. I expected it to 
-> produce the same error when trying to reduce the VG by this PV. It 
-> didn't. I'm stumped now.
+> I had a bad drive in my volume group, so I tried "vgreduce 
+> --removemissing VolGroup00" which seemed to work. Then, I tried 
+> "vgchange -ay --partial VolGroup00" which also appeared to complete 
+> successfully.  It seems like I was partly successful but I cannot get 
+> the logical volume to be recognized.  I don't know what else to do?  
+> Where can I learn more about LVM?  How does one utilize the LVM 
+> archive or backup files?  Can't seem to find an answer to this 
+> problem.  Is all of my data lost?
 >
-> Peter
+> [root[at]server ~]# lvchange -vvvay /dev/VolGroup00/LogVol00
+> Processing: lvchange -vvvay /dev/VolGroup00/LogVol00
+> O_DIRECT will be used
+> Setting global/locking_type to 1
+> Setting global/locking_dir to /var/lock/lvm
+> File-based locking enabled.
+> Using logical volume(s) on command line
+> Locking /var/lock/lvm/V_VolGroup00 WB
+> Opened /dev/sda RW
+> /dev/sda: block size is 4096 bytes
+> /dev/sda: No label detected
+> Opened /dev/hda1 RW
+> /dev/hda1: block size is 1024 bytes
+> /dev/hda1: No label detected
+> Opened /dev/hda2 RW
+> /dev/hda2: block size is 4096 bytes
+> /dev/hda2: No label detected
+> Opened /dev/hda3 RW
+> /dev/hda3: block size is 4096 bytes
+> /dev/hda3: No label detected
+> Opened /dev/hda5 RW
+> /dev/hda5: block size is 512 bytes
+> /dev/hda5: lvm2 label detected
+> lvmcache: /dev/hda5 now orphaned
+> lvmcache: /dev/hda5 now in VG VolGroup00
+> Opened /dev/hdb RW
+> /dev/hdb: block size is 4096 bytes
+> /dev/hdb: lvm2 label detected
+> lvmcache: /dev/hdb now orphaned
+> lvmcache: /dev/hdb now in VG VolGroup00
+> /dev/hda5: lvm2 label detected
+> /dev/hdb: lvm2 label detected
+> /dev/hda5: lvm2 label detected
+> /dev/hdb: lvm2 label detected
+> Read VolGroup00 metadata (11) from /dev/hda5 at 18944 size 720
+> /dev/hda5: lvm2 label detected
+> /dev/hdb: lvm2 label detected
+> Read VolGroup00 metadata (11) from /dev/hdb at 16896 size 720
+> One or more specified logical volume(s) not found.
+> Unlocking /var/lock/lvm/V_VolGroup00
+> Closed /dev/sda
+> Closed /dev/hda1
+> Closed /dev/hda2
+> Closed /dev/hda3
+> Closed /dev/hda5
+> Closed /dev/hdb
 >
-> Peter Smith wrote:
->
->> You are correct, this action is being barred by the fact that this PV 
->> thinks it still has LVs on it, which is not true. The "Cur LV 4" is 
->> not true. Now I have to figure out why the VG seems to think that 
->> this PV still has 4 LVs on it..
->>
->> Peter
->>
->> Peter Smith wrote:
->>
->>> I'm currently looking at the source code. Meanwhile, if anyone is 
->>> inclined to look, I've captured the output of a "vgreduce data 
->>> /dev/emcpowera -d" [1]...
->>>
->>> Thanks,
->>> Peter
->>>
->>> [1] http://swlxrpx1.swmed.edu/for-linux-lvm-list-001
->>>
->>>
->>> Peter Smith wrote:
->>>
->>>> Well, that is interesting. When I do a "pvdata", it does show an 
->>>> extent in use, one for each of the other LVs, but that is true for 
->>>> all the PVs for some reason. Any ideas on how to stop that? I've 
->>>> already tried a "pvmove" and it says the disk is empty.
->>>>
->>>> [root@linux archive]# pvdata /dev/emcpowera
->>>> --- Physical volume ---
->>>> PV Name /dev/emcpowera
->>>> VG Name data
->>>> PV Size 785.10 GB [1646481408 secs] / NOT usable 1 GB [LVM: 127 KB]
->>>> PV# 1
->>>> PV Status available
->>>> Allocatable NO
->>>> Cur LV 4
->>>> PE Size (KByte) 1048576
->>>> Total PE 784
->>>> Free PE 784
->>>> Allocated PE 0
->>>> PV UUID JpYFFb-NUqC-trBf-oFm7-tbdF-65If-GZ56fw
->>>>
->>>> --- Volume group ---
->>>> VG Name
->>>> VG Access read/write
->>>> VG Status NOT available/resizable
->>>> VG # 0
->>>> MAX LV 256
->>>> Cur LV 5
->>>> Open LV 0
->>>> MAX LV Size 2 TB
->>>> Max PV 256
->>>> Cur PV 8
->>>> Act PV 1
->>>> VG Size 12.21 TB
->>>> PE Size 1 GB
->>>> Total PE 12507
->>>> Alloc PE / Size 9078 / 886 GB
->>>> Free PE / Size 3429 / 3.35 TB
->>>> VG UUID 5Xw9D6-qqfu-0FTg-P9pD-40NH-wRgR-wN03ip
->>>>
->>>> --- List of logical volumes ---
->>>>
->>>> pvdata -- logical volume struct at offset 0 is empty
->>>> pvdata -- logical volume "/dev/data/data2" at offset 1
->>>> pvdata -- logical volume "/dev/data/data3" at offset 2
->>>> pvdata -- logical volume "/dev/data/data4" at offset 3
->>>> pvdata -- logical volume "/dev/data/data5" at offset 4
->>>> pvdata -- logical volume "/dev/data/data6" at offset 5
->>>> pvdata -- logical volume struct at offset 6 is empty
->>>> pvdata -- logical volume struct at offset 7 is empty
->>>> pvdata -- logical volume struct at offset 8 is empty
->>>> pvdata -- logical volume struct at offset 9 is empty
->>>> <SNIP>
->>>> pvdata -- logical volume struct at offset 254 is empty
->>>> pvdata -- logical volume struct at offset 255 is empty
->>>> --- List of physical volume UUIDs ---
->>>>
->>>> 001: JpYFFb-NUqC-trBf-oFm7-tbdF-65If-GZ56fw
->>>> 002: ABNwWZ-h4la-KTcv-VukV-T8vV-PIEP-mm38cy
->>>> 003: oyjw8S-B1gu-snoN-k54q-bCEy-daqn-BYdDmK
->>>> 004: URW9Kt-ZbOn-Ov3h-ZiT5-i7aC-8Lpq-c0fp4l
->>>> 005: y16lho-UgMJ-1lfJ-GNTi-VXWH-Pot1-iIsOc0
->>>> 006: WEC9g3-fTKD-k8pV-Nnxq-Kwn3-EkNd-qV3lUE
->>>> 007: TCxHIb-uvjC-6xap-bLaM-lVJU-N82x-XWd10g
->>>> 008: fZkmf8-jaYW-1gZ6-WBqp-eNu2-s1xr-IBLQTe
->>>>
->>>> Thanks,
->>>> Peter
->>>>
->>>>
->>>> mghofran@caregroup.harvard.edu wrote:
->>>>
->>>>> You show lv=4 so don't you need to check if any of those lvols were
->>>>> using that particular disk, remove the lvol and then proceed?
->>>>>
->>>>> -----Original Message-----
->>>>> From: linux-lvm-bounces@redhat.com 
->>>>> [mailto:linux-lvm-bounces@redhat.com]
->>>>> On Behalf Of Peter Smith
->>>>> Sent: Tuesday, August 29, 2006 12:21 PM
->>>>> To: linux-lvm@redhat.com
->>>>> Subject: [linux-lvm] Problem with vgreduce on LVM1
->>>>>
->>>>> I can't seem to remove two physical volumes. I've removed the LVs 
->>>>> on them. I've deactivated the PVs. But I can not remove the PVs 
->>>>> from the
->>>>> VG.
->>>>>
->>>>> Here's an example of what I'm seeing:
->>>>>
->>>>> [root@linux archive]# pvmove -v /dev/emcpowera
->>>>> pvmove -- checking name of source physical volume "/dev/emcpowera"
->>>>> pvmove -- locking logical volume manager
->>>>> pvmove -- reading data of source physical volume from 
->>>>> "/dev/emcpowera"
->>>>> pvmove -- checking volume group existence
->>>>> pvmove -- reading data of volume group "data" from lvmtab
->>>>> pvmove -- checking volume group consistency of "data"
->>>>> pvmove -- searching for source physical volume "/dev/emcpowera" in 
->>>>> volume group "data"
->>>>> pvmove -- no logical volumes on empty source physical volume 
->>>>> "/dev/emcpowera"
->>>>>
->>>>> [root@linux archive]# vgreduce data /dev/emcpowera
->>>>> vgreduce -- ERROR: can't reduce volume group "data" by used 
->>>>> physical volume "/dev/emcpowera"
->>>>>
->>>>> [root@linux archive]# pvdisplay /dev/emcpowera
->>>>> --- Physical volume ---
->>>>> PV Name /dev/emcpowera
->>>>> VG Name data
->>>>> PV Size 785.10 GB [1646481408 secs] / NOT usable 1 GB [LVM: 127 KB]
->>>>> PV# 1
->>>>> PV Status available
->>>>> Allocatable NO
->>>>> Cur LV 4
->>>>> PE Size (KByte) 1048576
->>>>> Total PE 784
->>>>> Free PE 784
->>>>> Allocated PE 0
->>>>> PV UUID JpYFFb-NUqC-trBf-oFm7-tbdF-65If-GZ56fw
->>>>>
->>>>> Does anyone have any idea why I can't complete a reduce?
->>>>>
->>>>> Thanks,
->>>>> Peter
->>>>>
->>>>> Note:
->>>>> Logical Volume Manager 1.0.8-13
->>>>> Heinz Mauelshagen, Red Hat 03/05/2005 (IOP 10)
->>>>
->
+
+--------------030900030200060308000400
+Content-Type: text/html; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+  <meta content="text/html;charset=ISO-8859-1" http-equiv="Content-Type">
+  <title></title>
+</head>
+<body bgcolor="#ffffff" text="#000000">
+Ok.&nbsp; It sounds like the fix will have to involve finding a way to get
+back to your installed-configuration.&nbsp; The one that defines your VG as
+containing *only* hda5 and hdb.&nbsp; It sounds like you succeeded extending
+the LV to include sda, but forgot to expand the filesystem after that.&nbsp;
+Which, ultimately, may save you.&nbsp; I don't have enough experience with
+LVM (or just LVM2) to be able to tell you either how to edit your
+current mangled config to force your LV to forget about sda (which it
+sounds like you were successful accomplishing anyways) *or* to recover
+the before-sda configuration.&nbsp; I've looked at the config on my own
+workstation and even though I'm using LVM2 I don't see any evidence of
+backed-up or historical LVM2 configuration data.&nbsp; So I *really* don't
+know what to tell you there.&nbsp; But I think it should be do-able.&nbsp; There
+may be someone out there capable of helping with this, but I'm afraid
+it likely isn't me.&nbsp; Although I might try and reproduce this on one of
+my Fedora machines to see if I get stuck in the same box which you are
+in.<br>
+<br>
+Peter<br>
+<br>
+Tom+Dale wrote:
+<blockquote
+ cite="mid20060904040917.25836.qmail@web30308.mail.mud.yahoo.com"
+ type="cite"><span style="color: black; font-family: Verdana;">I had a
+bad drive in my volume group, so I tried "vgreduce --removemissing
+VolGroup00" which seemed to work. Then, I tried "vgchange -ay --partial
+VolGroup00" which also appeared to complete successfully.<span style="">&nbsp;
+  </span>It seems like I was partly successful but I cannot get the
+logical volume to be recognized.<span style="">&nbsp; </span>I don't know
+what else to do?&nbsp; Where can I learn more about LVM?&nbsp; How does one
+utilize the LVM archive or backup files?&nbsp; Can't seem to find an answer
+to this problem.&nbsp; Is all of my data lost?<br>
+  <br>
+  </span><span style="color: black; font-family: Verdana;">[root[at]server
+~]# lvchange -vvvay /dev/VolGroup00/LogVol00 <br>
+Processing: lvchange -vvvay /dev/VolGroup00/LogVol00 <br>
+O_DIRECT will be used <br>
+Setting global/locking_type to 1 <br>
+Setting global/locking_dir to /var/lock/lvm <br>
+File-based locking enabled. <br>
+Using logical volume(s) on command line <br>
+Locking /var/lock/lvm/V_VolGroup00 WB <br>
+Opened /dev/sda RW <br>
+/dev/sda: block size is 4096 bytes <br>
+/dev/sda: No label detected <br>
+Opened /dev/hda1 RW <br>
+/dev/hda1: block size is 1024 bytes <br>
+/dev/hda1: No label detected <br>
+Opened /dev/hda2 RW <br>
+/dev/hda2: block size is 4096 bytes <br>
+/dev/hda2: No label detected <br>
+Opened /dev/hda3 RW <br>
+/dev/hda3: block size is 4096 bytes <br>
+/dev/hda3: No label detected <br>
+Opened /dev/hda5 RW <br>
+/dev/hda5: block size is 512 bytes <br>
+/dev/hda5: lvm2 label detected <br>
+lvmcache: /dev/hda5 now orphaned <br>
+lvmcache: /dev/hda5 now in VG VolGroup00 <br>
+Opened /dev/hdb RW <br>
+/dev/hdb: block size is 4096 bytes <br>
+/dev/hdb: lvm2 label detected <br>
+lvmcache: /dev/hdb now orphaned <br>
+lvmcache: /dev/hdb now in VG VolGroup00 <br>
+/dev/hda5: lvm2 label detected <br>
+/dev/hdb: lvm2 label detected <br>
+/dev/hda5: lvm2 label detected <br>
+/dev/hdb: lvm2 label detected <br>
+Read VolGroup00 metadata (11) from /dev/hda5 at 18944 size 720 <br>
+/dev/hda5: lvm2 label detected <br>
+/dev/hdb: lvm2 label detected <br>
+Read VolGroup00 metadata (11) from /dev/hdb at 16896 size 720 <br>
+One or more specified logical volume(s) not found. <br>
+Unlocking /var/lock/lvm/V_VolGroup00 <br>
+Closed /dev/sda <br>
+Closed /dev/hda1 <br>
+Closed /dev/hda2 <br>
+Closed /dev/hda3 <br>
+Closed /dev/hda5 <br>
+Closed /dev/hdb <br>
+  </span><br>
+</blockquote>
+</body>
+</html>
+
+--------------030900030200060308000400--
