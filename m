@@ -1,31 +1,14 @@
-Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
-	k87BnSoh013679
-	for <linux-lvm@redhat.com>; Thu, 7 Sep 2006 07:49:28 -0400
-Received: from osl1smout1.broadpark.no (osl1smout1.broadpark.no [80.202.4.58])
-	by mx1.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
-	k87BnQmx007923
-	for <linux-lvm@redhat.com>; Thu, 7 Sep 2006 07:49:27 -0400
-Received: from osl1sminn1.broadpark.no ([80.202.4.59])
-	by osl1smout1.broadpark.no
-	(Sun Java System Messaging Server 6.1 HotFix 0.05 (built Oct 21 2004))
-	with ESMTP id <0J57003TFY1MWF90@osl1smout1.broadpark.no> for
-	linux-lvm@redhat.com; Thu, 07 Sep 2006 12:48:58 +0200 (CEST)
-Received: from [192.168.94.233] ([195.212.29.179]) by osl1sminn1.broadpark.no
-	(Sun Java System Messaging Server 6.1 HotFix 0.05 (built Oct 21
-	2004)) with ESMTPA id <0J57003C1Y1LA430@osl1sminn1.broadpark.no> for
-	linux-lvm@redhat.com; Thu, 07 Sep 2006 12:48:58 +0200 (CEST)
-Date: Thu, 07 Sep 2006 12:47:38 +0200
-From: Morten Torstensen <morten@mortent.org>
+From: Jens Wilke <jens.wilke@de.ibm.com>
 Subject: Re: [linux-lvm] pvmove: moving a mirror logical volume not supported?
-In-reply-to: <20060906161917.GP13859@agk.surrey.redhat.com>
-Message-id: <44FFF8CA.5090906@mortent.org>
-MIME-version: 1.0
-Content-transfer-encoding: 7BIT
+Date: Thu, 7 Sep 2006 17:35:43 +0200
 References: <200609061114.13521.jens.wilke@de.ibm.com>
 	<20060906161917.GP13859@agk.surrey.redhat.com>
-Reply-To: morten@mortent.org,
-	LVM general discussion and development <linux-lvm@redhat.com>
+In-Reply-To: <20060906161917.GP13859@agk.surrey.redhat.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+Message-Id: <200609071735.43553.jens.wilke@de.ibm.com>
+Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -35,48 +18,33 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="us-ascii"
+To: linux-lvm@redhat.com
+Cc: Alasdair G Kergon <agk@redhat.com>
 
-Alasdair G Kergon wrote:
+On Wednesday 06 September 2006 18:19, Alasdair G Kergon wrote:
 > On Wed, Sep 06, 2006 at 11:14:13AM +0200, Jens Wilke wrote:
->> What is the reason for this?
-> 
+> > What is the reason for this?
+>
 > No code to do this has yet been written.
 > There should be no fundamental problems with doing it.
 
-pvmove is a wrong approach to the problem too, imo. PVs are just storage devices 
-for a VG. By moving LVs (or the PEs that the LV resides on), you accomplish the 
-same. When there are no PE in use on a PV, it is easy enough to reduce the VG to 
-remove the PV.
+pvmove does alreay something usefull if the skip on the mirror image
+is removed.
 
-Like in this scenario when you want to move a VG from an internal disk to, let's 
-say SAN volume (with pseudo-commands):
+Problem is, that this is not fool proof because the allocation contraints
+for a mirror need to be checked to maintain redundance.
 
-Assuming VG is pn /dev/scsi and new disk is /dev/sandisk.
+Looking on the allocator and looking on lvconvert, I think, doing it right
+will be a very ambitious task, or is my thinking wrong?
 
-# extendvg myvg /dev/sandisk
-# lvmirror myvg copies=1 strict=1
+Does it make sense to support "simple cases" of moving mirror images 
+for the case that we have a source and a target specified and the 
+target is empty or does not contain other images of the same mirror?
 
-(one mirror, allocate strict so copies are on different PVs)
+On the other hand it is also possible to do a 
+lvconvert -m0; pvmove; lvconvert -m1
 
-Now check that LVs are in sync and that all is OK with the new disk...
+Best,
 
-# lvmirror myvg copies=0 remove=/dev/scsi
-# reducevg myvg /dev/scsi
-
-This strategy would assume that mirroring is done in PE/LE mapping levels.
-
-I have no idea if Linux LVM mirroring supports this. If anyone have links to 
-good LVM docs for the mirroring features that will come with LVM in RHEL5 I 
-would appreciate it.
-
-
--- 
-
-//Morten Torstensen
-//Email: morten@mortent.org
-//IM: Cartoon@jabber.no morten.torstensen@gmail.com
-
-And if it turns out that there is a God, I don't believe that he is evil.
-The worst that can be said is that he's an underachiever.
+Jens
