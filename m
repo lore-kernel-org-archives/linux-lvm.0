@@ -1,16 +1,26 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
 	by int-mx1.corp.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
-	k87JPRA7025787
-	for <linux-lvm@redhat.com>; Thu, 7 Sep 2006 15:25:27 -0400
-Received: from fmmailgate07.web.de (fmmailgate07.web.de [217.72.192.248])
-	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id k87JOphw028400
-	for <linux-lvm@redhat.com>; Thu, 7 Sep 2006 15:24:52 -0400
-Date: Thu, 07 Sep 2006 21:24:45 +0200
-Message-Id: <1231942361@web.de>
+	k888dYkH019143
+	for <linux-lvm@redhat.com>; Fri, 8 Sep 2006 04:39:34 -0400
+Received: from mail.ambra.ro (mail1.ambra.ro [86.107.248.1])
+	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id k888dL4J032723
+	for <linux-lvm@redhat.com>; Fri, 8 Sep 2006 04:39:22 -0400
+Received: from localhost (localhost [127.0.0.1])
+	by mail.ambra.ro (Postfix) with ESMTP id F0CB375F4C
+	for <linux-lvm@redhat.com>; Fri,  8 Sep 2006 11:36:25 +0300 (EEST)
+Received: from mail.ambra.ro ([127.0.0.1])
+	by localhost (mail68 [127.0.0.1]) (amavisd-new, port 10024) with ESMTP
+	id 18073-08 for <linux-lvm@redhat.com>;
+	Fri,  8 Sep 2006 11:36:24 +0300 (EEST)
+Received: from [127.0.0.1] (ppp901058647.ambra.ro [86.105.90.47])
+	by mail.ambra.ro (Postfix) with ESMTP id 9DB4B75F48
+	for <linux-lvm@redhat.com>; Fri,  8 Sep 2006 11:36:23 +0300 (EEST)
+Message-ID: <45012C0E.9080509@ambra.ro>
+Date: Fri, 08 Sep 2006 11:38:38 +0300
+From: Sterpu Victor <victor@ambra.ro>
 MIME-Version: 1.0
-From: Thomas Scheller <thomas.scheller@email.de>
-Subject: Re: [linux-lvm] Partitiontable destroyed with gentoo installer
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] lvm on centos with raid1 and grub
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -21,67 +31,21 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="iso-8859-1"
-To: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+To: linux-lvm@redhat.com
 
-Hi,
+After a reboot I couldn't boot from none of my hdd's.
+I receive just a grub console. Now I must reinstall grub, but in order 
+to do this I need to know the name of the root partion in the LVM.
+To find out this I moved one of the hdd's in another computer and I 
+tried to mount the LVM partition.
 
-if someone is interested in the solution of this issue, have a look at:
-http://forums.gentoo.org/viewtopic-p-3562137.html#3562137
+I do "modprobe dm-mod" and when I do "vgchange -ay" I get the message:
+  File descriptor 3 left open
+  File descriptor 5 left open
+  File descriptor 7 left open
+  No volume groups found
+I have no LVM devices in /dev.
+The alternative is to reinstall the OS, but....
 
-Best regards
-     Thomas
-
-> -----Urspr=EF=BF=BDngliche Nachricht-----
-> Von: LVM general discussion and development <linux-lvm@redhat.com>
-> Gesendet: 02.09.06 23:27:59
-> An: linux-lvm@redhat.com
-> Betreff: [linux-lvm] Partitiontable destroyed with gentoo installer
-
-
-> Hi,
->=20
-> I have a 250GB harddisk. I used the whole disk as a PV.
->=20
-> # pvcreate /dev/hdb
->=20
-> and did create a volume group
->=20
-> vgcreate vg_250GB /dev/hdb
->=20
-> and 2 logical volumes
->=20
-> lv_old_system with 50GB
-> and
-> lv_storage with the rest of the disk
->=20
-> then I did copy all the data from the old harddisk to lv_old_system.
->=20
-> With the Gentoo live CD I did then install gentoo linux to the old harddr=
-ive.
-> The gentoo installer did delete the partitiontable on all connected hardd=
-rives :-(
-> So my logicalvolumes are not available anymore.
-> But vgchange shows that lv_old_system is somehow still available. Can you=
- help me please, to recover that volume?
-> As I did create the logical volume with the old SuSE 8 installation, whic=
-h I did overwrite with the gentoo installation, I do not have the metadata =
-backup in /etc :-(
->=20
-> thinkpad ~ # vgchange -v -ay vg_250GB
->     Using volume group(s) on command line
->     Finding volume group "vg_250GB"
->   Logical volume (lv_old_system) contains an incomplete mapping table.
->     Wiping cache of LVM-capable devices
->   Logical volume (lv_old_system) contains an incomplete mapping table.
->   Volume group "vg_250GB" not found
-> thinkpad ~ #=20
->=20
-> Thank you in advance
->     Thomas
->=20
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+Thank you.
