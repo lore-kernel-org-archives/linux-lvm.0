@@ -1,22 +1,36 @@
-Received: from agk.surrey.redhat.com (agk.surrey.redhat.com [172.16.10.74])
-	by pobox.surrey.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
-	k8ALUFu8008762
-	for <linux-lvm@redhat.com>; Sun, 10 Sep 2006 22:30:15 +0100
-Received: from agk by agk.surrey.redhat.com with local (Exim 4.34)
-	id 1GMWsZ-0002TZ-6n
-	for linux-lvm@redhat.com; Sun, 10 Sep 2006 22:30:15 +0100
-Date: Sun, 10 Sep 2006 22:30:15 +0100
-From: Alasdair G Kergon <agk@redhat.com>
-Subject: Re: [linux-lvm] Cannot get rid of root filesystem LVM snapshot
-Message-ID: <20060910213014.GD13859@agk.surrey.redhat.com>
-References: <b91808310609091349tf363c5dy57ced3b611523c18@mail.gmail.com>
-	<20060909231739.GB13859@agk.surrey.redhat.com>
-	<b91808310609091653o63dbdb0fi9f34848cb4479a1d@mail.gmail.com>
-	<20060910154107.GC13859@agk.surrey.redhat.com>
-	<878xkriq0r.fsf@hades.wkstn.nix>
+Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
+	by int-mx1.corp.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
+	k88AoTXI011502
+	for <linux-lvm@redhat.com>; Fri, 8 Sep 2006 06:50:29 -0400
+Received: from huixtocihuatl.xenguest.geekspirit.net (home.geekspirit.net
+	[81.56.52.126])
+	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id k88AoKlw030101
+	for <linux-lvm@redhat.com>; Fri, 8 Sep 2006 06:50:21 -0400
+Received: from localhost (mictecacihuatl.xenguest.geekspirit.net
+	[172.24.42.55])
+	by huixtocihuatl.xenguest.geekspirit.net (Postfix) with ESMTP id
+	32FF871503
+	for <linux-lvm@redhat.com>; Fri,  8 Sep 2006 12:51:26 +0200 (CEST)
+Received: from huixtocihuatl.xenguest.geekspirit.net ([172.24.42.53])
+	by localhost (mictecacihuatl.xenguest.geekspirit.net [172.24.42.55])
+	(amavisd-new, port 10024)
+	with ESMTP id vwd+v+kTbjga for <linux-lvm@redhat.com>;
+	Fri,  8 Sep 2006 12:49:01 +0200 (CEST)
+Received: from bounty.rider.geekspirit.net (bounty.rider.geekspirit.net
+	[172.24.42.200]) (Authenticated sender: rider)
+	by huixtocihuatl.xenguest.geekspirit.net (Postfix) with ESMTP id
+	071E9716CB
+	for <linux-lvm@redhat.com>; Fri,  8 Sep 2006 12:51:17 +0200 (CEST)
+Subject: Re: [linux-lvm] lvm on centos with raid1 and grub
+From: Fabien Jakimowicz <fabien@jakimowicz.com>
+In-Reply-To: <4501491E.90103@ambra.ro>
+References: <45012C0E.9080509@ambra.ro>  <4501491E.90103@ambra.ro>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature";
+	boundary="=-BL4/jT7qFYTSiiKeDW32"
+Date: Fri, 08 Sep 2006 12:50:00 +0200
+Message-Id: <1157712600.14015.4.camel@bounty.rider.geekspirit.net>
 Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <878xkriq0r.fsf@hades.wkstn.nix>
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -27,43 +41,56 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-On Sun, Sep 10, 2006 at 06:35:00PM +0100, Nix wrote:
-> I must admit I can't see what's so special about the root filesystem.
 
-The tools you are running may be stored on it and access files on it.
-Some operations the tools do temporarily suspend I/O to the LVs involved.
-If a tool suspends I/O to the root then does anything that causes an access
-to it the system can lock up.  Caches/flushing/scheduling can make this
-indeterminate.  Even the filesystem type matters (e.g. timing of journal
-transactions e.g. lazy inode time updates).
+--=-BL4/jT7qFYTSiiKeDW32
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 
-> The tools work for me: even doing things like pvmoving root filesystems in
-> active use works fine. I'd vaguely guess that only snapshot support is
-> broken?
- 
-pvmove also may fail.
+On Fri, 2006-09-08 at 13:42 +0300, Sterpu Victor wrote:
+> I do need a fast answer if possible.
+> So the quick question is "How can I mount a LVM partition, made on a=20
+> RAID partition on another computer?"
+> Thank you.
+>=20
+> Sterpu Victor wrote:
+>=20
+> > After a reboot I couldn't boot from none of my hdd's.
+> > I receive just a grub console. Now I must reinstall grub, but in order=20
+> > to do this I need to know the name of the root partion in the LVM.
+> > To find out this I moved one of the hdd's in another computer and I=20
+> > tried to mount the LVM partition.
+> >
+> > I do "modprobe dm-mod" and when I do "vgchange -ay" I get the message:
+> >  File descriptor 3 left open
+> >  File descriptor 5 left open
+> >  File descriptor 7 left open
+> >  No volume groups found
+> > I have no LVM devices in /dev.
+> > The alternative is to reinstall the OS, but....
+> >
+> > Thank you.
+> >
+> >
+> >
+If you are not using raid on the other computer, you should modify
+md_component_detection in /etc/lvm/lvm.conf
+You can also try to run : pvdisplay /dev/mdx where mdx is your raid
+device.
+--=20
+Fabien Jakimowicz <fabien@jakimowicz.com>
 
-Workaround is to copy required components into ramdisk and run from
-there.  I have never done a complete audit, but:
-  lvm binary (& libraries) should not be on root filesystem [use lvm.static
-in ramdisk] 
-  /dev must not be part of root filesystem being changed [ramdisk copy]
-  log/activation = 0 in lvm.conf (the default)
+--=-BL4/jT7qFYTSiiKeDW32
+Content-Type: application/pgp-signature; name=signature.asc
+Content-Description: This is a digitally signed message part
 
-Depending on the particular command and configuration there may be more
-restrictions.  (E.g. some commands may still require config files and lock
-files not to be in the root filesystem.)  dmeventd is also unsafe as
-currently implemented - one reason it is not enabled by default upstream.
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.5 (GNU/Linux)
 
-Upstream support entails a full review and changes to deal with as many
-problems as possible (regardless of the user's configuration and
-compile-time options) and then detecting the remaining problems and issuing
-warning messages or refusing to proceed as appropriate.
+iD8DBQBFAUrYzTD+AjVP2VIRAsPCAJ9dEFcEMXmgfMiWCXuw1CjkOoDMqQCcCZ+b
+c+TpGNMSAqYENerUa+x+B0A=
+=5u+x
+-----END PGP SIGNATURE-----
 
-Alasdair
--- 
-agk@redhat.com
+--=-BL4/jT7qFYTSiiKeDW32--
