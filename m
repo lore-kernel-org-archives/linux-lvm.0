@@ -1,16 +1,18 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
 	by int-mx1.corp.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
-	k88CwctN006313
-	for <linux-lvm@redhat.com>; Fri, 8 Sep 2006 08:58:38 -0400
-Received: from arvo.suso.org (mail.suso.org [216.9.132.134])
-	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id k88CwTKh026936
-	for <linux-lvm@redhat.com>; Fri, 8 Sep 2006 08:58:30 -0400
-Date: Fri, 8 Sep 2006 12:55:06 +0000
-From: Mark Krenz <mark@suso.org>
-Message-ID: <20060908125506.GA30379@arvo.suso.org>
+	k88CxT5C006477
+	for <linux-lvm@redhat.com>; Fri, 8 Sep 2006 08:59:29 -0400
+Received: from percy.comedia.it (percy.comedia.it [212.97.59.71])
+	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id k88CxMtm027148
+	for <linux-lvm@redhat.com>; Fri, 8 Sep 2006 08:59:23 -0400
+Date: Fri, 8 Sep 2006 14:59:21 +0200
+From: Luca Berra <bluca@comedia.it>
+Subject: Re: [linux-lvm] lvm on centos with raid1 and grub
+Message-ID: <20060908125920.GE19633@percy.comedia.it>
+References: <45012C0E.9080509@ambra.ro> <4501491E.90103@ambra.ro>
 Mime-Version: 1.0
 Content-Disposition: inline
-Subject: [linux-lvm] Altering a Physical Volume's UUID
+In-Reply-To: <4501491E.90103@ambra.ro>
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -21,36 +23,24 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@redhat.com
 
+On Fri, Sep 08, 2006 at 01:42:38PM +0300, Sterpu Victor wrote:
+>I do need a fast answer if possible.
+>So the quick question is "How can I mount a LVM partition, made on a 
+>RAID partition on another computer?"
+>Thank you.
+>
+Activate the raid
 
-  Hi,  I'm using LVM with Xen virtual machines by creating sparse image
-files with something like 
-
-  dd if=/dev/zero of=diskimage bs=1 count=1 seek=1073741824
-
- Then I use a loopback device to use the diskimage as a block device and
-create a physical volume, volume group and logical volumes on it.
-
-  This all works great, but when I copy the diskimage file to another
-file and try to setup a loopback device for it, I get complaints about
-there being multiple identifical UUIDs for physical volumes and volume
-groups.
-
-
-  So is there a way to change the UUID of a physical volume and volume
-group?
-
-
-  If you are wondering why I would need to copy the diskimage file, its
-because I'm setting up Xen template images for different OSes that I can
-then simply copy into place, make a few modifications and then be on my
-way.
+L.
 
 -- 
-Mark S. Krenz
-IT Director
-Suso Technology Services, Inc.
-http://suso.org/
+Luca Berra -- bluca@comedia.it
+        Communication Media & Services S.r.l.
+ /"\
+ \ /     ASCII RIBBON CAMPAIGN
+  X        AGAINST HTML MAIL
+ / \
