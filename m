@@ -1,36 +1,23 @@
-Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
+Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
 	by int-mx1.corp.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
-	k88D93UN009065
-	for <linux-lvm@redhat.com>; Fri, 8 Sep 2006 09:09:03 -0400
-Received: from huixtocihuatl.xenguest.geekspirit.net (home.geekspirit.net
-	[81.56.52.126])
-	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id k88D8tbh029352
-	for <linux-lvm@redhat.com>; Fri, 8 Sep 2006 09:08:55 -0400
-Received: from localhost (mictecacihuatl.xenguest.geekspirit.net
-	[172.24.42.55])
-	by huixtocihuatl.xenguest.geekspirit.net (Postfix) with ESMTP id
-	2CB96716CB
-	for <linux-lvm@redhat.com>; Fri,  8 Sep 2006 15:10:06 +0200 (CEST)
-Received: from huixtocihuatl.xenguest.geekspirit.net ([172.24.42.53])
-	by localhost (mictecacihuatl.xenguest.geekspirit.net [172.24.42.55])
-	(amavisd-new, port 10024)
-	with ESMTP id YqfavbOpGabI for <linux-lvm@redhat.com>;
-	Fri,  8 Sep 2006 15:07:42 +0200 (CEST)
-Received: from bounty.rider.geekspirit.net (bounty.rider.geekspirit.net
-	[172.24.42.200]) (Authenticated sender: rider)
-	by huixtocihuatl.xenguest.geekspirit.net (Postfix) with ESMTP id
-	026C471503
-	for <linux-lvm@redhat.com>; Fri,  8 Sep 2006 15:09:57 +0200 (CEST)
-Subject: Re: [linux-lvm] lvm on centos with raid1 and grub
-From: Fabien Jakimowicz <fabien@jakimowicz.com>
-In-Reply-To: <4501491E.90103@ambra.ro>
-References: <45012C0E.9080509@ambra.ro>  <4501491E.90103@ambra.ro>
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature";
-	boundary="=-S9T9qb1C//jGF7fTBA+x"
-Date: Fri, 08 Sep 2006 15:08:40 +0200
-Message-Id: <1157720920.14015.23.camel@bounty.rider.geekspirit.net>
-Mime-Version: 1.0
+	k88E7T6G026398
+	for <linux-lvm@redhat.com>; Fri, 8 Sep 2006 10:07:29 -0400
+Received: from mxsf06.cluster1.charter.net (mxsf06.cluster1.charter.net
+	[209.225.28.206])
+	by mx1.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
+	k88E7Rr8002620
+	for <linux-lvm@redhat.com>; Fri, 8 Sep 2006 10:07:27 -0400
+Received: from mxip16a.cluster1.charter.net (mxip16a.cluster1.charter.net
+	[209.225.28.146])
+	by mxsf06.cluster1.charter.net (8.12.11.20060308/8.12.11) with ESMTP id
+	k88E7HxN027408
+	for <linux-lvm@redhat.com>; Fri, 8 Sep 2006 10:07:18 -0400
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Message-ID: <17665.30996.679000.180156@smtp.charter.net>
+Date: Fri, 8 Sep 2006 10:07:16 -0400
+From: "John Stoffel" <john@stoffel.org>
+Subject: [linux-lvm] 2.6.18-rc5-mm1 - bd_claim_by_disk oops
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -41,56 +28,69 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="us-ascii"
+To: linux-kernel@vger.kernel.org, linux-lvm@redhat.com, linux-raid@vger.kernel.org
 
 
---=-S9T9qb1C//jGF7fTBA+x
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
+I got the following on 2.6.18-rc5-mm1 when trying to lvextend a test
+logical volume that I had just created.  This came about because I
+have been trying to expand some LVs on my system, which are based on a
+VG ontop of an MD mirror pair.  It's an SMP box too if that means
+anything.  
 
-On Fri, 2006-09-08 at 13:42 +0300, Sterpu Victor wrote:
-> I do need a fast answer if possible.
-> So the quick question is "How can I mount a LVM partition, made on a=20
-> RAID partition on another computer?"
-> Thank you.
->=20
-> Sterpu Victor wrote:
->=20
-> > After a reboot I couldn't boot from none of my hdd's.
-> > I receive just a grub console. Now I must reinstall grub, but in order=20
-> > to do this I need to know the name of the root partion in the LVM.
-> > To find out this I moved one of the hdd's in another computer and I=20
-> > tried to mount the LVM partition.
-> >
-> > I do "modprobe dm-mod" and when I do "vgchange -ay" I get the message:
-> >  File descriptor 3 left open
-> >  File descriptor 5 left open
-> >  File descriptor 7 left open
-> >  No volume groups found
-> > I have no LVM devices in /dev.
-> > The alternative is to reinstall the OS, but....
-> >
-> > Thank you.
-> >
-> >
-> >
-If you are not using raid on the other computer, you should modify
-md_component_detection in /etc/lvm/lvm.conf
-You can also try to run : pvdisplay /dev/mdx where mdx is your raid
-device.
---=20
-Fabien Jakimowicz <fabien@jakimowicz.com>
-
---=-S9T9qb1C//jGF7fTBA+x
-Content-Type: application/pgp-signature; name=signature.asc
-Content-Description: This is a digitally signed message part
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.5 (GNU/Linux)
-
-iD8DBQBFAWtYzTD+AjVP2VIRAi4cAJ43OihKrcBPXCK/sqxCHmR+EFmpOgCfZte8
-oTg3ATaMsF5Ir0WwlqgsJns=
-=aSYS
------END PGP SIGNATURE-----
-
---=-S9T9qb1C//jGF7fTBA+x--
+device-mapper: table: 253:3: linear: dm-linear: Device lookup failed
+device-mapper: ioctl: error adding target to table
+device-mapper: table: 253:3: linear: dm-linear: Device lookup failed
+device-mapper: ioctl: error adding target to table
+device-mapper: table: 253:2: linear: dm-linear: Device lookup failed
+device-mapper: ioctl: error adding target to table
+BUG: unable to handle kernel paging request at virtual address
+6f72702e
+ printing eip:
+c018505b
+*pde = 00000000
+Oops: 0000 [#1]
+4K_STACKS SMP 
+last sysfs file: /block/dm-2/removable
+Modules linked in: rfcomm l2cap bluetooth sbp2 i2c_piix4 ohci1394
+evdev snd_ens1
+371 snd_rawmidi snd_ac97_codec snd_ac97_bus i2c_core snd_pcm snd_timer
+snd sound
+core snd_page_alloc ieee1394 uhci_hcd ohci_hcd usb_storage
+CPU:    1
+EIP:    0060:[<c018505b>]    Not tainted VLI
+EFLAGS: 00010292   (2.6.18-rc5-mm1 #1) 
+EIP is at bd_claim_by_disk+0x9b/0x1c0
+eax: e6622ba0   ebx: 6f72702e   ecx: c16decbc   edx: 6f72702e
+esi: 00000000   edi: e4a11220   ebp: c16dec80   esp: c62e1ca4
+ds: 007b   es: 007b   ss: 0068
+Process lvextend (pid: 2926, ti=c62e1000 task=dccfa580
+task.ti=c62e1000)
+Stack: c047cefa c16dec8c c16dec80 e3e31920 d1130e80 c16dec80 c035f9c8
+fffffff4 
+       e128d160 00900000 e3e31920 c036040c f0a5915c c042bf66 c62e1d50
+c62e1d4c 
+       c0500f0c e128d160 f0a5915c f0a1b080 e128d0c0 00000000 00000001
+c0500f0c 
+Call Trace:
+ [<c035f9c8>] open_dev+0x48/0x80
+ [<c036040c>] dm_get_device+0x20c/0x480
+ [<c0243537>] vsscanf+0x447/0x490
+ [<c0360ca9>] linear_ctr+0x99/0x110
+ [<c035ff0d>] dm_table_add_target+0x17d/0x2e0
+ [<c0361e6a>] table_load+0xba/0x1d0
+ [<c0362b9d>] ctl_ioctl+0x22d/0x2a0
+ [<c028b594>] n_tty_receive_buf+0x324/0x1070
+ [<c0361db0>] table_load+0x0/0x1d0
+ [<c016c2d8>] do_ioctl+0x78/0x90
+ [<c016c34c>] vfs_ioctl+0x5c/0x2b0
+ [<c016c5dd>] sys_ioctl+0x3d/0x70
+ [<c0102f33>] syscall_call+0x7/0xb
+ =======================
+Code: 3c 8b 13 0f 18 02 90 8d 4d 3c 39 cb 0f 84 24 01 00 00 8b 47 0c
+3b 43 0c 75
+ 0f e9 ab 00 00 00 90 3b 43 0c 0f 84 a1 00 00 00 89 d3 <8b> 12 0f 18
+02 90 39 cb
+ 75 eb e8 d6 a9 0b 00 85 c0 89 47 0c 0f 
+EIP: [<c018505b>] bd_claim_by_disk+0x9b/0x1c0 SS:ESP 0068:c62e1ca4
+ 
