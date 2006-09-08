@@ -1,23 +1,16 @@
-Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
+Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
 	by int-mx1.corp.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
-	k88E7T6G026398
-	for <linux-lvm@redhat.com>; Fri, 8 Sep 2006 10:07:29 -0400
-Received: from mxsf06.cluster1.charter.net (mxsf06.cluster1.charter.net
-	[209.225.28.206])
-	by mx1.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
-	k88E7Rr8002620
-	for <linux-lvm@redhat.com>; Fri, 8 Sep 2006 10:07:27 -0400
-Received: from mxip16a.cluster1.charter.net (mxip16a.cluster1.charter.net
-	[209.225.28.146])
-	by mxsf06.cluster1.charter.net (8.12.11.20060308/8.12.11) with ESMTP id
-	k88E7HxN027408
-	for <linux-lvm@redhat.com>; Fri, 8 Sep 2006 10:07:18 -0400
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Message-ID: <17665.30996.679000.180156@smtp.charter.net>
-Date: Fri, 8 Sep 2006 10:07:16 -0400
-From: "John Stoffel" <john@stoffel.org>
-Subject: [linux-lvm] 2.6.18-rc5-mm1 - bd_claim_by_disk oops
+	k88EwsZ8009466
+	for <linux-lvm@redhat.com>; Fri, 8 Sep 2006 10:58:54 -0400
+Received: from arvo.suso.org (mail.suso.org [216.9.132.134])
+	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id k88EwkmQ029556
+	for <linux-lvm@redhat.com>; Fri, 8 Sep 2006 10:58:46 -0400
+Date: Fri, 8 Sep 2006 14:55:27 +0000
+From: Mark Krenz <mark@suso.org>
+Message-ID: <20060908145527.GA29217@arvo.suso.org>
+Mime-Version: 1.0
+Content-Disposition: inline
+Subject: [linux-lvm] LVM metadata checksums
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -29,68 +22,27 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: linux-kernel@vger.kernel.org, linux-lvm@redhat.com, linux-raid@vger.kernel.org
+Content-Transfer-Encoding: 7bit
+To: linux-lvm@redhat.com
 
 
-I got the following on 2.6.18-rc5-mm1 when trying to lvextend a test
-logical volume that I had just created.  This came about because I
-have been trying to expand some LVs on my system, which are based on a
-VG ontop of an MD mirror pair.  It's an SMP box too if that means
-anything.  
+  Before you say, DON'T DO IT THAT WAY, let me assure you that I have my
+reasons and I'm aware of the risks. This is mostly related to my
+question about changing UUIDs of physical volumes and volume groups.
+Anyways, I thought that perhaps I could try to use hexedit to modify the
+UUID within the image file.  However, after I did this I ran into all
+the lvm commands complaining about checksum errors in the metadata.  So
+my question is, where is the checksum stored and how is it calculated.
+I noticed that there is an "LVM header near the beginning of the disk
+followed by a long string:
 
-device-mapper: table: 253:3: linear: dm-linear: Device lookup failed
-device-mapper: ioctl: error adding target to table
-device-mapper: table: 253:3: linear: dm-linear: Device lookup failed
-device-mapper: ioctl: error adding target to table
-device-mapper: table: 253:2: linear: dm-linear: Device lookup failed
-device-mapper: ioctl: error adding target to table
-BUG: unable to handle kernel paging request at virtual address
-6f72702e
- printing eip:
-c018505b
-*pde = 00000000
-Oops: 0000 [#1]
-4K_STACKS SMP 
-last sysfs file: /block/dm-2/removable
-Modules linked in: rfcomm l2cap bluetooth sbp2 i2c_piix4 ohci1394
-evdev snd_ens1
-371 snd_rawmidi snd_ac97_codec snd_ac97_bus i2c_core snd_pcm snd_timer
-snd sound
-core snd_page_alloc ieee1394 uhci_hcd ohci_hcd usb_storage
-CPU:    1
-EIP:    0060:[<c018505b>]    Not tainted VLI
-EFLAGS: 00010292   (2.6.18-rc5-mm1 #1) 
-EIP is at bd_claim_by_disk+0x9b/0x1c0
-eax: e6622ba0   ebx: 6f72702e   ecx: c16decbc   edx: 6f72702e
-esi: 00000000   edi: e4a11220   ebp: c16dec80   esp: c62e1ca4
-ds: 007b   es: 007b   ss: 0068
-Process lvextend (pid: 2926, ti=c62e1000 task=dccfa580
-task.ti=c62e1000)
-Stack: c047cefa c16dec8c c16dec80 e3e31920 d1130e80 c16dec80 c035f9c8
-fffffff4 
-       e128d160 00900000 e3e31920 c036040c f0a5915c c042bf66 c62e1d50
-c62e1d4c 
-       c0500f0c e128d160 f0a5915c f0a1b080 e128d0c0 00000000 00000001
-c0500f0c 
-Call Trace:
- [<c035f9c8>] open_dev+0x48/0x80
- [<c036040c>] dm_get_device+0x20c/0x480
- [<c0243537>] vsscanf+0x447/0x490
- [<c0360ca9>] linear_ctr+0x99/0x110
- [<c035ff0d>] dm_table_add_target+0x17d/0x2e0
- [<c0361e6a>] table_load+0xba/0x1d0
- [<c0362b9d>] ctl_ioctl+0x22d/0x2a0
- [<c028b594>] n_tty_receive_buf+0x324/0x1070
- [<c0361db0>] table_load+0x0/0x1d0
- [<c016c2d8>] do_ioctl+0x78/0x90
- [<c016c34c>] vfs_ioctl+0x5c/0x2b0
- [<c016c5dd>] sys_ioctl+0x3d/0x70
- [<c0102f33>] syscall_call+0x7/0xb
- =======================
-Code: 3c 8b 13 0f 18 02 90 8d 4d 3c 39 cb 0f 84 24 01 00 00 8b 47 0c
-3b 43 0c 75
- 0f e9 ab 00 00 00 90 3b 43 0c 0f 84 a1 00 00 00 89 d3 <8b> 12 0f 18
-02 90 39 cb
- 75 eb e8 d6 a9 0b 00 85 c0 89 47 0c 0f 
-EIP: [<c018505b>] bd_claim_by_disk+0x9b/0x1c0 SS:ESP 0068:c62e1ca4
- 
+ LABELONE........?... ...LVM2  001M0U7CEZK8M7l2Z4KnOtI1uSVjAu0cCFd
+
+ Is that last part the checksum?  What kind is it?
+
+
+-- 
+Mark S. Krenz
+IT Director
+Suso Technology Services, Inc.
+http://suso.org/
