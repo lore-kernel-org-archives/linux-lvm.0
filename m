@@ -1,24 +1,16 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
 	by int-mx1.corp.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
-	k88Cj0KN002679
-	for <linux-lvm@redhat.com>; Fri, 8 Sep 2006 08:45:00 -0400
-Received: from mailmx.futuresource.com (mailmx.futuresource.com [208.10.26.74])
-	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id k88CisRs023802
-	for <linux-lvm@redhat.com>; Fri, 8 Sep 2006 08:44:54 -0400
-Received: from [192.168.0.2] (c-24-13-74-194.hsd1.il.comcast.net
-	[24.13.74.194]) (authenticated bits=0)
-	by mailmx.futuresource.com (8.12.11.20060308/8.12.11) with ESMTP id
-	k88CirIj000335
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO)
-	for <linux-lvm@redhat.com>; Fri, 8 Sep 2006 07:44:53 -0500
-Subject: Re: [linux-lvm] lvm on centos with raid1 and grub
-From: Les Mikesell <lesmikesell@gmail.com>
-In-Reply-To: <45012C0E.9080509@ambra.ro>
-References: <45012C0E.9080509@ambra.ro>
-Message-Id: <1157719492.27155.3.camel@les-home.futuresource.com>
+	k88CwctN006313
+	for <linux-lvm@redhat.com>; Fri, 8 Sep 2006 08:58:38 -0400
+Received: from arvo.suso.org (mail.suso.org [216.9.132.134])
+	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id k88CwTKh026936
+	for <linux-lvm@redhat.com>; Fri, 8 Sep 2006 08:58:30 -0400
+Date: Fri, 8 Sep 2006 12:55:06 +0000
+From: Mark Krenz <mark@suso.org>
+Message-ID: <20060908125506.GA30379@arvo.suso.org>
 Mime-Version: 1.0
-Date: Fri, 08 Sep 2006 07:44:53 -0500
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+Subject: [linux-lvm] Altering a Physical Volume's UUID
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -30,31 +22,35 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Transfer-Encoding: 7bit
+To: linux-lvm@redhat.com
 
-On Fri, 2006-09-08 at 03:38, Sterpu Victor wrote:
-> After a reboot I couldn't boot from none of my hdd's.
-> I receive just a grub console. Now I must reinstall grub, but in order 
-> to do this I need to know the name of the root partion in the LVM.
-> To find out this I moved one of the hdd's in another computer and I 
-> tried to mount the LVM partition.
-> 
-> I do "modprobe dm-mod" and when I do "vgchange -ay" I get the message:
->   File descriptor 3 left open
->   File descriptor 5 left open
->   File descriptor 7 left open
->   No volume groups found
-> I have no LVM devices in /dev.
-> The alternative is to reinstall the OS, but....
-> 
 
-The first thing to try is booting the Centos install
-CD with 'linux rescue' at the boot prompt.  If it
-detects the existing installation it will mount it and
-suggest that you 'chroot /mnt/sysinstall' after which
-you will be able to see your old /etc/grub.conf and
-have all the usual tools to reinstall grub.
+  Hi,  I'm using LVM with Xen virtual machines by creating sparse image
+files with something like 
+
+  dd if=/dev/zero of=diskimage bs=1 count=1 seek=1073741824
+
+ Then I use a loopback device to use the diskimage as a block device and
+create a physical volume, volume group and logical volumes on it.
+
+  This all works great, but when I copy the diskimage file to another
+file and try to setup a loopback device for it, I get complaints about
+there being multiple identifical UUIDs for physical volumes and volume
+groups.
+
+
+  So is there a way to change the UUID of a physical volume and volume
+group?
+
+
+  If you are wondering why I would need to copy the diskimage file, its
+because I'm setting up Xen template images for different OSes that I can
+then simply copy into place, make a few modifications and then be on my
+way.
 
 -- 
-  Les Mikesell
-   lesmikesell@gmail.com
+Mark S. Krenz
+IT Director
+Suso Technology Services, Inc.
+http://suso.org/
