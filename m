@@ -1,19 +1,19 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
 	by int-mx1.corp.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
-	k893JvIY000528
-	for <linux-lvm@redhat.com>; Fri, 8 Sep 2006 23:19:57 -0400
-Received: from wx-out-0506.google.com (wx-out-0506.google.com [66.249.82.239])
-	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id k893JmBd030700
-	for <linux-lvm@redhat.com>; Fri, 8 Sep 2006 23:19:49 -0400
-Received: by wx-out-0506.google.com with SMTP id i30so1430352wxd
-	for <linux-lvm@redhat.com>; Fri, 08 Sep 2006 20:19:48 -0700 (PDT)
-Message-ID: <5b0681910609082019p4e0d9a36xf62f374eba4a201b@mail.gmail.com>
-Date: Fri, 8 Sep 2006 23:19:48 -0400
-From: "Pradeep Kilambi" <superprad@gmail.com>
+	k89Kn8Ol014564
+	for <linux-lvm@redhat.com>; Sat, 9 Sep 2006 16:49:08 -0400
+Received: from wx-out-0506.google.com (wx-out-0506.google.com [66.249.82.224])
+	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id k89Kn2P9028027
+	for <linux-lvm@redhat.com>; Sat, 9 Sep 2006 16:49:02 -0400
+Received: by wx-out-0506.google.com with SMTP id i30so2532360wxd
+	for <linux-lvm@redhat.com>; Sat, 09 Sep 2006 13:49:02 -0700 (PDT)
+Message-ID: <b91808310609091349tf363c5dy57ced3b611523c18@mail.gmail.com>
+Date: Sat, 9 Sep 2006 22:49:02 +0200
+From: "=?ISO-8859-2?Q?Martin_Dvo=F8=E1k?=" <155144@gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/alternative; 
-	boundary="----=_Part_148286_21291366.1157771988423"
-Subject: [linux-lvm] resize an lvm partition
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+Subject: [linux-lvm] Cannot get rid of root filesystem LVM snapshot
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -24,36 +24,102 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: linux-lvm@redhat.com
 
-------=_Part_148286_21291366.1157771988423
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
+Hi all,
 
-OK I have a FC5 install on a full primary lym( not extended partition). I
-would ike to resize this(/dev/hda2) to shrink a little to install something
-else. Whats the best way to resize an lvm partition. Also my filesystem says
-unknow filesystem type. I tried using parted and GParted but none of these
-worked.
+I am writing here with hope somebody had already run and successfully
+resolved this issue. I am on CentOS 4.4 with kernel
+kernel-smp-2.6.9-200.0.2.EL.iworx.x86_64.rpm. I've been in the process
+of creating a backup script which uses LVM snapshoting feature to
+backup a snapshot of root filesystem instead of live filesystem.
 
-partition filesystem size used unused flags
-/dev/hda1 ext3 101.35MB 44.97MB 56.98MB boot
-/dev/hda2 unknown 74.43GB --- --- lvm
+During testing phase on testing CentOS installation, I've been able to
+successfully create, mount, unmount and remove root filesystem
+snapshots. On live production system, I've also successfully created,
+mounted and unmounted root filesystem snapshot, but I CANNOT REMOVE IT
+in any way.
 
-any help appreciated.
+lvremove -f gives following output:
+[CODE]File descriptor 3 left open
+File descriptor 5 left open
+File descriptor 7 left open
+  /dev/cdrom: open failed: Read-only file system
+  Can't remove open logical volume "SSsystem"[/CODE]
 
-Thanks.
+tried also to deactivate the snapshot using lvchange -an command:
+[CODE]File descriptor 3 left open
+File descriptor 5 left open
+File descriptor 7 left open
+  /dev/cdrom: open failed: Read-only file system
+  Can't change snapshot logical volume "SSsystem"[/CODE]
 
-------=_Part_148286_21291366.1157771988423
-Content-Type: text/html; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
+lvdisplay outputs this:
+[CODE]File descriptor 3 left open
+File descriptor 5 left open
+File descriptor 7 left open
+  --- Logical volume ---
+  LV Name                /dev/VGdb/LVdb
+  VG Name                VGdb
+  LV UUID                R4mtQ4-Idyo-SRiU-EfLg-TFM6-NZN2-Cd1kgv
+  LV Write Access        read/write
+  LV Status              available
+  # open                 1
+  LV Size                14.66 GB
+  Current LE             469
+  Segments               1
+  Allocation             inherit
+  Read ahead sectors     0
+  Block device           253:1
 
-OK I have a FC5 install on a full primary lym( not extended partition). I would ike to resize this(/dev/hda2) to shrink a little to install something else. Whats the best way to resize an lvm partition. Also my filesystem says unknow filesystem type. I tried using parted and GParted but none of these worked.
-<br><br>
-partition filesystem size used unused flags<br>
-/dev/hda1 ext3 101.35MB 44.97MB 56.98MB boot<br>
-/dev/hda2 unknown 74.43GB --- --- lvm<br><br>any help appreciated.<br><br>Thanks.<br> 
+  --- Logical volume ---
+  LV Name                /dev/VGsystem/LVsystem
+  VG Name                VGsystem
+  LV UUID                HusBAX-tbxn-6283-zap5-Cihe-K1AX-jKDbk7
+  LV Write Access        read/write
+  LV snapshot status     source of
+                         /dev/VGsystem/SSsystem [active]
+  LV Status              available
+  # open                 1
+  LV Size                31.25 GB
+  Current LE             1000
+  Segments               1
+  Allocation             inherit
+  Read ahead sectors     0
+  Block device           253:0
 
-------=_Part_148286_21291366.1157771988423--
+  --- Logical volume ---
+  LV Name                /dev/VGsystem/SSsystem
+  VG Name                VGsystem
+  LV UUID                qohvbp-yo1c-SFGv-suM1-9QC9-OwA3-TpX1i0
+  LV Write Access        read/write
+  LV snapshot status     active destination for /dev/VGsystem/LVsystem
+  LV Status              available
+  # open                 1
+  LV Size                31.25 GB
+  Current LE             1000
+  COW-table size         2.66 GB
+  COW-table LE           85
+  Allocated to snapshot  2.32%
+  Snapshot chunk size    8.00 KB
+  Segments               1
+  Allocation             inherit
+  Read ahead sectors     0
+  Block device           253:4[/CODE]
+
+At this very time I am in a situation when the snapshot space is
+slowly filling and I am afraid to reboot, manually fill the snapshot
+(with hope it will automatically deactivate) or try anything else,
+because this is live production system placed in data center and
+currently I have no physical access to it - only remote through SSH2.
+
+I'll be grateful for any ideas which might help to resolve this issue
+without loosing any data. Thanks very much.
+
+Martin
+
+
+Here is output of uname -a:
+[CODE]Linux xxxx.xxx.xxx 2.6.9-200.0.2.EL.iworxsmp #1 SMP Fri Aug 4
+15:25:06 EDT 2006 x86_64 x86_64 x86_64 GNU/Linux[/CODE]
