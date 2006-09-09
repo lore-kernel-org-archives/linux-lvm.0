@@ -1,36 +1,23 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
 	by int-mx1.corp.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
-	k88AoTXI011502
-	for <linux-lvm@redhat.com>; Fri, 8 Sep 2006 06:50:29 -0400
-Received: from huixtocihuatl.xenguest.geekspirit.net (home.geekspirit.net
-	[81.56.52.126])
-	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id k88AoKlw030101
-	for <linux-lvm@redhat.com>; Fri, 8 Sep 2006 06:50:21 -0400
-Received: from localhost (mictecacihuatl.xenguest.geekspirit.net
-	[172.24.42.55])
-	by huixtocihuatl.xenguest.geekspirit.net (Postfix) with ESMTP id
-	32FF871503
-	for <linux-lvm@redhat.com>; Fri,  8 Sep 2006 12:51:26 +0200 (CEST)
-Received: from huixtocihuatl.xenguest.geekspirit.net ([172.24.42.53])
-	by localhost (mictecacihuatl.xenguest.geekspirit.net [172.24.42.55])
-	(amavisd-new, port 10024)
-	with ESMTP id vwd+v+kTbjga for <linux-lvm@redhat.com>;
-	Fri,  8 Sep 2006 12:49:01 +0200 (CEST)
-Received: from bounty.rider.geekspirit.net (bounty.rider.geekspirit.net
-	[172.24.42.200]) (Authenticated sender: rider)
-	by huixtocihuatl.xenguest.geekspirit.net (Postfix) with ESMTP id
-	071E9716CB
-	for <linux-lvm@redhat.com>; Fri,  8 Sep 2006 12:51:17 +0200 (CEST)
-Subject: Re: [linux-lvm] lvm on centos with raid1 and grub
-From: Fabien Jakimowicz <fabien@jakimowicz.com>
-In-Reply-To: <4501491E.90103@ambra.ro>
-References: <45012C0E.9080509@ambra.ro>  <4501491E.90103@ambra.ro>
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature";
-	boundary="=-BL4/jT7qFYTSiiKeDW32"
-Date: Fri, 08 Sep 2006 12:50:00 +0200
-Message-Id: <1157712600.14015.4.camel@bounty.rider.geekspirit.net>
-Mime-Version: 1.0
+	k89Kfg2E013807
+	for <linux-lvm@redhat.com>; Sat, 9 Sep 2006 16:41:42 -0400
+Received: from ylpvm29.prodigy.net (ylpvm29-ext.prodigy.net [207.115.57.60])
+	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id k89KfUDt026644
+	for <linux-lvm@redhat.com>; Sat, 9 Sep 2006 16:41:36 -0400
+Received: from [69.105.169.202] (adsl-69-105-169-202.dsl.irvnca.pacbell.net
+	[69.105.169.202])
+	by ylpvm29.prodigy.net (8.13.7 out spool5000 dk/8.13.7) with ESMTP id
+	k89Kf4GD010728
+	for <linux-lvm@redhat.com>; Sat, 9 Sep 2006 16:41:04 -0400
+Message-ID: <450326F9.2080902@pacbell.net>
+Date: Sat, 09 Sep 2006 13:41:29 -0700
+From: Duane Clark <fpga@pacbell.net>
+MIME-Version: 1.0
+References: <5b0681910609082019p4e0d9a36xf62f374eba4a201b@mail.gmail.com>
+In-Reply-To: <5b0681910609082019p4e0d9a36xf62f374eba4a201b@mail.gmail.com>
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] Re: resize an lvm partition
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -41,56 +28,19 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+To: linux-lvm@redhat.com
 
+Pradeep Kilambi wrote:
+> OK I have a FC5 install on a full primary lym( not extended partition). 
+> I would ike to resize this(/dev/hda2) to shrink a little to install 
+> something else. Whats the best way to resize an lvm partition. Also my 
+> filesystem says unknow filesystem type. I tried using parted and GParted 
+> but none of these worked.
+> 
+> partition filesystem size used unused flags
+> /dev/hda1 ext3 101.35MB 44.97MB 56.98MB boot
+> /dev/hda2 unknown 74.43GB --- --- lvm
 
---=-BL4/jT7qFYTSiiKeDW32
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
-
-On Fri, 2006-09-08 at 13:42 +0300, Sterpu Victor wrote:
-> I do need a fast answer if possible.
-> So the quick question is "How can I mount a LVM partition, made on a=20
-> RAID partition on another computer?"
-> Thank you.
->=20
-> Sterpu Victor wrote:
->=20
-> > After a reboot I couldn't boot from none of my hdd's.
-> > I receive just a grub console. Now I must reinstall grub, but in order=20
-> > to do this I need to know the name of the root partion in the LVM.
-> > To find out this I moved one of the hdd's in another computer and I=20
-> > tried to mount the LVM partition.
-> >
-> > I do "modprobe dm-mod" and when I do "vgchange -ay" I get the message:
-> >  File descriptor 3 left open
-> >  File descriptor 5 left open
-> >  File descriptor 7 left open
-> >  No volume groups found
-> > I have no LVM devices in /dev.
-> > The alternative is to reinstall the OS, but....
-> >
-> > Thank you.
-> >
-> >
-> >
-If you are not using raid on the other computer, you should modify
-md_component_detection in /etc/lvm/lvm.conf
-You can also try to run : pvdisplay /dev/mdx where mdx is your raid
-device.
---=20
-Fabien Jakimowicz <fabien@jakimowicz.com>
-
---=-BL4/jT7qFYTSiiKeDW32
-Content-Type: application/pgp-signature; name=signature.asc
-Content-Description: This is a digitally signed message part
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.5 (GNU/Linux)
-
-iD8DBQBFAUrYzTD+AjVP2VIRAsPCAJ9dEFcEMXmgfMiWCXuw1CjkOoDMqQCcCZ+b
-c+TpGNMSAqYENerUa+x+B0A=
-=5u+x
------END PGP SIGNATURE-----
-
---=-BL4/jT7qFYTSiiKeDW32--
+I recently did this exact task, and posted the steps I used:
+https://www.redhat.com/archives/linux-lvm/2006-August/msg00081.html
