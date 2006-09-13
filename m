@@ -1,9 +1,23 @@
-Message-ID: <450716C9.1000505@ce.jp.nec.com>
-Date: Tue, 12 Sep 2006 16:21:29 -0400
-From: "Jun'ichi Nomura" <j-nomura@ce.jp.nec.com>
-MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="------------090407030308030004000901"
-Subject: [linux-lvm] [PATCH LVM2] Add mirror force resync option to lvchange
+Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
+	by int-mx1.corp.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
+	k8D6vVZs030463
+	for <linux-lvm@redhat.com>; Wed, 13 Sep 2006 02:57:31 -0400
+Received: from vwclub.ro (lcx.at [88.198.217.75])
+	by mx1.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
+	k8D6vUk7011521
+	for <linux-lvm@redhat.com>; Wed, 13 Sep 2006 02:57:30 -0400
+Received: from [192.168.0.208] (dtc2.mx2.lcx.at [213.143.120.142])
+	by vwclub.ro (Postfix) with ESMTP id A9593558382
+	for <linux-lvm@redhat.com>; Wed, 13 Sep 2006 08:58:13 +0200 (CEST)
+Mime-Version: 1.0 (Apple Message framework v752.2)
+In-Reply-To: <0C4C4916-D4B9-4C32-B21A-7B8E140558DE@livadaru.net>
+References: <9C7FE4B9-DDE4-4A85-A96D-4953E9F545A2@livadaru.net>
+	<0C4C4916-D4B9-4C32-B21A-7B8E140558DE@livadaru.net>
+Message-Id: <892185D7-D91C-4E5D-B709-BD570E753BB9@livadaru.net>
+Content-Transfer-Encoding: 7bit
+From: Cristian Livadaru <cristian@livadaru.net>
+Subject: Re: [linux-lvm] [SOLVED] huge performance problems 25kb/s write speed
+Date: Wed, 13 Sep 2006 08:57:14 +0200
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -14,249 +28,172 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: Alasdair Kergon <agk@redhat.com>, Jonathan Brassow <jbrassow@redhat.com>, linux-lvm@redhat.com
+Content-Type: text/plain; charset="us-ascii"; delsp="yes"; format="flowed"
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-This is a multi-part message in MIME format.
---------------090407030308030004000901
-Content-Type: text/plain; charset=ISO-2022-JP
-Content-Transfer-Encoding: 7bit
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA1
 
-Hi,
+I have found the problem, typical pebkac error!
+I had in the fstab these parameters: sync,user,rw,auto,errors=remount-ro
+the problem was the sync! that created me the big performance  
+problems! :( and I find out about this, AFTER moving all my data and  
+transforming the LVM to a raid0
+arggg.
 
-Attached is a patch implementing "--forcesync" option of lvchange
-to start resync regardless of current log status.
-If the LV is created with "--nosync" option, the volume type flag
-of lvs changes from "M" to "m".
 
-This is useful to ensure mirrors are resynced after failure in corner case.
+On Sep 10, 2006, at 5:14 PM, Cristian Livadaru wrote:
 
-Comments are welcome.
+> I just rebooted with kernel 2.4 instead of 2.6
+> Now I have a slightly better performance. 3.6mb/s but this still  
+> isn't optimal.
+>
+>
+> On Sep 10, 2006, at 4:25 PM, Cristian Livadaru wrote:
+>
+>> I have since yesterday huge performance problems on my LVM!
+>> I have 2x 300GB as 1 unstriped LVM.
+>>
+>> dd if=/dev/zero of=dd.txt count=500
+>> 500+0 records in
+>> 500+0 records out
+>> 256000 bytes transferred in 9.999764 seconds (25601 bytes/sec)
+>>
+>> dd if=/dev/zero of=dd.txt count=500 bs=4096
+>> 500+0 records in
+>> 500+0 records out
+>> 2048000 bytes transferred in 10.020213 seconds (204387 bytes/sec)
+>>
+>> After a reboot it worked normal again for a while, now I have the  
+>> same problem again.
+>>
+>> esplendidos:~# pvs
+>>   PV         VG      Fmt  Attr PSize   PFree
+>>   /dev/hde1  sharevg lvm2 a-   279.45G      0
+>>   /dev/hdg1  sharevg lvm2 a-   279.45G   4.00M
+>>
+>> esplendidos:~# lvs
+>>   LV         VG      Attr   LSize   Origin Snap%  Move Copy%
+>>   sharelv    sharevg -wi-ao 558.90G
+>>
+>> esplendidos:~# vgs
+>>   VG      #PV #LV #SN Attr  VSize   VFree
+>>   sharevg   2   1   0 wz--n 558.91G   4.00M
+>>
+>>
+>>   --- Volume group ---
+>>   VG Name               sharevg
+>>   System ID
+>>   Format                lvm2
+>>   Metadata Areas        2
+>>   Metadata Sequence No  2
+>>   VG Access             read/write
+>>   VG Status             resizable
+>>   MAX LV                0
+>>   Cur LV                1
+>>   Open LV               1
+>>   Max PV                0
+>>   Cur PV                2
+>>   Act PV                2
+>>   VG Size               558.91 GB
+>>   PE Size               4.00 MB
+>>   Total PE              143080
+>>   Alloc PE / Size       143079 / 558.90 GB
+>>   Free  PE / Size       1 / 4.00 MB
+>>   VG UUID               LaGWNF-9Ace-li4f-h8z2-SJYk-YeyB-joXznp
+>>
+>>
+>>   --- Logical volume ---
+>>   LV Name                /dev/sharevg/sharelv
+>>   VG Name                sharevg
+>>   LV UUID                zCe6sI-pglI-7yh1-EnL4-gsKo-FOEb-POyVoL
+>>   LV Write Access        read/write
+>>   LV Status              available
+>>   # open                 1
+>>   LV Size                558.90 GB
+>>   Current LE             143079
+>>   Segments               2
+>>   Allocation             inherit
+>>   Read ahead sectors     0
+>>   Block device           253:8
+>>
+>>   --- Physical volume ---
+>>   PV Name               /dev/hde1
+>>   VG Name               sharevg
+>>   PV Size               279.45 GB / not usable 0
+>>   Allocatable           yes (but full)
+>>   PE Size (KByte)       4096
+>>   Total PE              71540
+>>   Free PE               0
+>>   Allocated PE          71540
+>>   PV UUID               g3jfAR-Z2Ka-SCgr-08QB-8WBn-5g4h-jXLrn1
+>>
+>>   --- Physical volume ---
+>>   PV Name               /dev/hdg1
+>>   VG Name               sharevg
+>>   PV Size               279.45 GB / not usable 0
+>>   Allocatable           yes
+>>   PE Size (KByte)       4096
+>>   Total PE              71540
+>>   Free PE               1
+>>   Allocated PE          71539
+>>   PV UUID               kYQB4j-fYV9-3NUa-g0Sg-H4Bk-Kx5F-wRO9G1
+>>
+>>
+>> hdparm -tT /dev/hde
+>>
+>> /dev/hde:
+>> Timing cached reads:   952 MB in  2.00 seconds = 476.00 MB/sec
+>> Timing buffered disk reads:  130 MB in  3.00 seconds =  43.33 MB/sec
+>> esplendidos:/shared# hdparm -tT /dev/hdg
+>>
+>> /dev/hdg:
+>> Timing cached reads:   960 MB in  2.00 seconds = 480.00 MB/sec
+>> Timing buffered disk reads:  154 MB in  3.01 seconds =  51.16 MB/sec
+>>
+>>
+>> I don't have any errors in logfiles ( syslog/messages/lvm2.log )
+>> Any hints what else I can check or do to improve performance? I  
+>> mean 25kb/s on a local HD is more then just slow!
+>> Please please help.
+>>
+>>
+>> --
+>> Cristian Livadaru
+>> http://livadaru.net
+>>
+>>
+>>
+>> _______________________________________________
+>> linux-lvm mailing list
+>> linux-lvm@redhat.com
+>> https://www.redhat.com/mailman/listinfo/linux-lvm
+>> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+>>
+>
+> --
+> Cristian Livadaru
+> http://livadaru.net
+>
+>
+>
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@redhat.com
+> https://www.redhat.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+>
 
-Thanks,
--- 
-Jun'ichi Nomura, NEC Corporation of America
+- --
+Cristian Livadaru
+http://livadaru.net
 
---------------090407030308030004000901
-Content-Type: text/x-patch;
- name="lvchange-forcesync-1.patch"
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline;
- filename="lvchange-forcesync-1.patch"
 
-Add --forcesync option to lvchange to force resync mirror LV.
-It also turns 'M' (without initial sync) flag into 'm' (normal mirror)
-if the LV is created with --nosync.
 
-Applicable to LVM2 2.02.09.
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.1 (Darwin)
 
-diff -X dontdiff -urp LVM2/include/log.h LVM2.forcesync-global/include/log.h
---- LVM2/include/log.h	2006-08-17 23:42:36.000000000 -0400
-+++ LVM2.forcesync-global/include/log.h	2006-09-11 22:17:01.000000000 -0400
-@@ -75,6 +75,7 @@ void init_ignorelockingfailure(int level
- void init_lockingfailed(int level);
- void init_security_level(int level);
- void init_mirror_in_sync(int in_sync);
-+void init_mirror_force_sync(int force_sync);
- void init_dmeventd_register(int reg);
- 
- void set_cmd_name(const char *cmd_name);
-@@ -90,6 +91,7 @@ int ignorelockingfailure(void);
- int lockingfailed(void);
- int security_level(void);
- int mirror_in_sync(void);
-+int mirror_force_sync(void);
- int dmeventd_register_mode(void);
- 
- /* Suppress messages to stdout/stderr (1) or everywhere (2) */
-diff -X dontdiff -urp LVM2/lib/log/log.c LVM2.forcesync-global/lib/log/log.c
---- LVM2/lib/log/log.c	2006-08-23 04:18:58.000000000 -0400
-+++ LVM2.forcesync-global/lib/log/log.c	2006-09-11 21:22:23.000000000 -0400
-@@ -48,6 +48,7 @@ static char _cmd_name[30] = "";
- static char _msg_prefix[30] = "  ";
- static int _already_logging = 0;
- static int _mirror_in_sync = 0;
-+static int _mirror_force_sync = 0;
- static int _dmeventd_register = DEFAULT_DMEVENTD_MONITOR;
- 
- static lvm2_log_fn_t _lvm2_log_fn = NULL;
-@@ -189,6 +190,11 @@ void init_mirror_in_sync(int in_sync)
- 	_mirror_in_sync = in_sync;
- }
- 
-+void init_mirror_force_sync(int force_sync)
-+{
-+	_mirror_force_sync = force_sync;
-+}
-+
- void init_dmeventd_register(int reg)
- {
- 	_dmeventd_register = reg;
-@@ -268,6 +274,11 @@ int mirror_in_sync(void)
- 	return _mirror_in_sync;
- }
- 
-+int mirror_force_sync(void)
-+{
-+	return _mirror_force_sync;
-+}
-+
- int dmeventd_register_mode(void)
- {
- 	return _dmeventd_register;
-diff -X dontdiff -urp LVM2/lib/log/log.h LVM2.forcesync-global/lib/log/log.h
---- LVM2/lib/log/log.h	2006-08-17 23:42:36.000000000 -0400
-+++ LVM2.forcesync-global/lib/log/log.h	2006-09-11 22:17:01.000000000 -0400
-@@ -75,6 +75,7 @@ void init_ignorelockingfailure(int level
- void init_lockingfailed(int level);
- void init_security_level(int level);
- void init_mirror_in_sync(int in_sync);
-+void init_mirror_force_sync(int force_sync);
- void init_dmeventd_register(int reg);
- 
- void set_cmd_name(const char *cmd_name);
-@@ -90,6 +91,7 @@ int ignorelockingfailure(void);
- int lockingfailed(void);
- int security_level(void);
- int mirror_in_sync(void);
-+int mirror_force_sync(void);
- int dmeventd_register_mode(void);
- 
- /* Suppress messages to stdout/stderr (1) or everywhere (2) */
-diff -X dontdiff -urp LVM2/lib/mirror/mirrored.c LVM2.forcesync-global/lib/mirror/mirrored.c
---- LVM2/lib/mirror/mirrored.c	2006-07-29 00:46:10.000000000 -0400
-+++ LVM2.forcesync-global/lib/mirror/mirrored.c	2006-09-11 21:28:16.000000000 -0400
-@@ -255,7 +255,9 @@ static int _add_log(struct dev_manager *
- 		log_flags |= DM_CORELOG;
- 	}
- 
--	if (mirror_in_sync() && !(seg->status & PVMOVE))
-+	if (mirror_force_sync())
-+		log_flags |= DM_FORCESYNC;
-+	else if (mirror_in_sync() && !(seg->status & PVMOVE))
- 		log_flags |= DM_NOSYNC;
- 
- 	if (_block_on_error_available && !(seg->status & PVMOVE))
-diff -X dontdiff -urp LVM2/tools/args.h LVM2.forcesync-global/tools/args.h
---- LVM2/tools/args.h	2006-08-17 23:42:36.000000000 -0400
-+++ LVM2.forcesync-global/tools/args.h	2006-09-11 21:23:28.000000000 -0400
-@@ -46,6 +46,7 @@ arg(alloc_ARG, '\0', "alloc", alloc_arg)
- arg(separator_ARG, '\0', "separator", string_arg)
- arg(mirrorsonly_ARG, '\0', "mirrorsonly", NULL)
- arg(nosync_ARG, '\0', "nosync", NULL)
-+arg(forcesync_ARG, '\0', "forcesync", NULL)
- arg(corelog_ARG, '\0', "corelog", NULL)
- arg(monitor_ARG, '\0', "monitor", yes_no_arg)
- arg(config_ARG, '\0', "config", string_arg)
-diff -X dontdiff -urp LVM2/tools/commands.h LVM2.forcesync-global/tools/commands.h
---- LVM2/tools/commands.h	2006-08-17 23:42:36.000000000 -0400
-+++ LVM2.forcesync-global/tools/commands.h	2006-09-11 21:23:04.000000000 -0400
-@@ -61,6 +61,7 @@ xx(lvchange,
-    "\t[-d|--debug]\n"
-    "\t[--deltag Tag]\n"
-    "\t[-f|--force]\n"
-+   "\t[--forcesync]\n"
-    "\t[-h|--help]\n"
-    "\t[--ignorelockingfailure]\n"
-    "\t[--monitor {y|n}]\n"
-@@ -75,7 +76,7 @@ xx(lvchange,
-    "\tLogicalVolume[Path] [LogicalVolume[Path]...]\n",
- 
-    alloc_ARG, autobackup_ARG, available_ARG, contiguous_ARG, force_ARG,
--   ignorelockingfailure_ARG, major_ARG, minor_ARG, monitor_ARG,
-+   forcesync_ARG, ignorelockingfailure_ARG, major_ARG, minor_ARG, monitor_ARG,
-    partial_ARG, permission_ARG, persistent_ARG, readahead_ARG,
-    refresh_ARG, addtag_ARG, deltag_ARG, test_ARG)
- 
-diff -X dontdiff -urp LVM2/tools/lvchange.c LVM2.forcesync-global/tools/lvchange.c
---- LVM2/tools/lvchange.c	2006-07-29 02:20:07.000000000 -0400
-+++ LVM2.forcesync-global/tools/lvchange.c	2006-09-13 01:19:02.000000000 -0400
-@@ -175,6 +175,63 @@ static int lvchange_refresh(struct cmd_c
- 	return 1;
- }
- 
-+static int lvchange_syncstatus(struct cmd_context *cmd,
-+			       struct logical_volume *lv)
-+{
-+	struct lvinfo info;
-+
-+	if (!(lv->status & MIRRORED))
-+		return 1;
-+
-+	if (!lv_info(cmd, lv, &info, 0) || !info.exists) {
-+		log_error("Logical volume, %s, is not active", lv->name);
-+		return 0;
-+	}
-+
-+	init_mirror_force_sync(1);
-+
-+	if (!(lv->status & MIRROR_NOTSYNCED))
-+		return lvchange_refresh(cmd, lv);
-+
-+	/*
-+	 * We need to drop MIRROR_NOTSYNCED flag in metadata.
-+	 * We can do it only after the logical volume once has been
-+	 * activated with force sync to ensure disk log is updated by kernel.
-+	 */
-+	if (!lvchange_refresh(cmd, lv)) {
-+		log_error("Failed to unmark %s not-synced", lv->name);
-+		return 0;
-+	}
-+
-+	lv->status &= ~MIRROR_NOTSYNCED;
-+
-+	log_very_verbose("Updating logical volume \"%s\" on disk(s)", lv->name);
-+	if (!vg_write(lv->vg)) {
-+		stack;
-+		return 0;
-+	}
-+
-+	backup(lv->vg);
-+
-+	if (!suspend_lv(cmd, lv)) {
-+		log_error("Failed to lock %s", lv->name);
-+		vg_revert(lv->vg);
-+		return 0;
-+	}
-+
-+	if (!vg_commit(lv->vg)) {
-+		resume_lv(cmd, lv);
-+		return 0;
-+	}
-+
-+	if (!resume_lv(cmd, lv)) {
-+		log_error("Problem reactivating %s", lv->name);
-+		return 0;
-+	}
-+
-+	return 1;
-+}
-+
- static int lvchange_alloc(struct cmd_context *cmd, struct logical_volume *lv)
- {
- 	int want_contiguous = 0;
-@@ -502,6 +559,10 @@ static int lvchange_single(struct cmd_co
- 			return ECMD_FAILED;
- 	}
- 
-+	if (arg_count(cmd, forcesync_ARG))
-+		if (!lvchange_syncstatus(cmd, lv))
-+			return ECMD_FAILED;
-+
- 	if (arg_count(cmd, refresh_ARG))
- 		if (!lvchange_refresh(cmd, lv))
- 			return ECMD_FAILED;
-@@ -523,9 +584,10 @@ int lvchange(struct cmd_context *cmd, in
- 	    && !arg_count(cmd, minor_ARG) && !arg_count(cmd, major_ARG)
- 	    && !arg_count(cmd, persistent_ARG) && !arg_count(cmd, addtag_ARG)
- 	    && !arg_count(cmd, deltag_ARG) && !arg_count(cmd, refresh_ARG)
--	    && !arg_count(cmd, alloc_ARG) && !arg_count(cmd, monitor_ARG)) {
-+	    && !arg_count(cmd, alloc_ARG) && !arg_count(cmd, monitor_ARG)
-+	    && !arg_count(cmd, forcesync_ARG)) {
- 		log_error("Need 1 or more of -a, -C, -j, -m, -M, -p, -r, "
--			  "--refresh, --alloc, --addtag, --deltag "
-+			  "--forcesync, --refresh, --alloc, --addtag, --deltag "
- 			  "or --monitor");
- 		return EINVALID_CMD_LINE;
- 	}
-
---------------090407030308030004000901--
+iD8DBQFFB6vOJ3lv8BSSgqARAkPJAKDOZb06W5/HBSaT7QYymSnfCwlrcgCgzF5A
+AbjsnAXjHa9/bU/IhR3OKmk=
+=RuzK
+-----END PGP SIGNATURE-----
