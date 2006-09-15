@@ -1,22 +1,24 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
 	by int-mx1.corp.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
-	k8FGjdLR013906
-	for <linux-lvm@redhat.com>; Fri, 15 Sep 2006 12:45:39 -0400
-Received: from palrel12.hp.com (palrel12.hp.com [156.153.255.237])
-	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id k8FGjWD3008583
-	for <linux-lvm@redhat.com>; Fri, 15 Sep 2006 12:45:32 -0400
-Received: from smtp2.ptp.hp.com (smtp.cup.hp.com [15.1.28.240])
-	by palrel12.hp.com (Postfix) with ESMTP id D3E89364F6
-	for <linux-lvm@redhat.com>; Fri, 15 Sep 2006 09:45:26 -0700 (PDT)
-Received: from [15.244.57.26] (airwolf.cup.hp.com [15.244.57.26])
-	by smtp2.ptp.hp.com (Postfix) with ESMTP id 52D002AEAE9
-	for <linux-lvm@redhat.com>; Fri, 15 Sep 2006 16:45:24 +0000 (UTC)
-Message-ID: <450AD8A6.1040602@cup.hp.com>
-Date: Fri, 15 Sep 2006 09:45:26 -0700
-From: John DeFranco <defranco@cup.hp.com>
+	k8FKfnUO024114
+	for <linux-lvm@redhat.com>; Fri, 15 Sep 2006 16:41:49 -0400
+Received: from mxsf36.cluster1.charter.net (mxsf36.cluster1.charter.net
+	[209.225.28.161])
+	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id k8FKfces006458
+	for <linux-lvm@redhat.com>; Fri, 15 Sep 2006 16:41:38 -0400
+Received: from mxip20a.cluster1.charter.net (mxip20a.cluster1.charter.net
+	[209.225.28.150])
+	by mxsf36.cluster1.charter.net (8.12.11.20060308/8.12.11) with ESMTP id
+	k8FKfWwu025032
+	for <linux-lvm@redhat.com>; Fri, 15 Sep 2006 16:41:32 -0400
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: [linux-lvm] vgchange --deltag core dump
+Content-Transfer-Encoding: 7bit
+Message-ID: <17675.4091.70128.82346@smtp.charter.net>
+Date: Fri, 15 Sep 2006 16:41:31 -0400
+From: "John Stoffel" <john@stoffel.org>
+In-Reply-To: <17665.30996.679000.180156@smtp.charter.net>
+References: <17665.30996.679000.180156@smtp.charter.net>
+Subject: [linux-lvm] Re: 2.6.18-rc5-mm1 - bd_claim_by_disk oops
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -27,112 +29,97 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="utf-8"; format="flowed"
-To: linux-lvm@redhat.com
+Content-Type: text/plain; charset="us-ascii"
+To: John Stoffel <john@stoffel.org>
+Cc: linux-raid@vger.kernel.org, linux-kernel@vger.kernel.org, linux-lvm@redhat.com
 
-Hi all,
 
-During a test I am running I have vary rarely encountered the following 
-vgchange core dump. I see no other errors on the system. The dump seems
-pretty obvious we tried to do a strncpy from an illegal address (p->tb)
-but I don't know how that would have occured. The vg is not being 
-touched and we have run a vgchange set of command (--addtag,  -a y,
--a n, --deltag) many, many times prior to this and again after. Seems
-like something is going on that I don't quite understand.
 
-This is on rh4U2 ipf and the following lvm version
-(but have seen this same problem on other archs as well). I did build
-a debug version of the tools which were used in an attempt to get more
-data.
+John> I got the following on 2.6.18-rc5-mm1 when trying to lvextend a
+John> test logical volume that I had just created.  This came about
+John> because I have been trying to expand some LVs on my system,
+John> which are based on a VG ontop of an MD mirror pair.  It's an SMP
+John> box too if that means anything.
 
-[root@boil pkg-2346_6]# uname -a
-Linux boil.cup.hp.com 2.6.9-22.EL #1 SMP Mon Sep 19 17:54:55 EDT 2005 
-ia64 ia64 ia64 GNU/Linux
-[root@boil pkg-2346_6]# cat /etc/redhat-release
-Red Hat Enterprise Linux ES release 4 (Nahant Update 2)
-[root@boil pkg-2346_6]# lvm version
-   LVM version:     2.01.14 (2005-08-04)
-   Library version: 1.01.04 (2005-08-02)
-   Driver version:  4.4.0
-[root@boil pkg-2346_6]#
+John> device-mapper: table: 253:3: linear: dm-linear: Device lookup failed
+John> device-mapper: ioctl: error adding target to table
+John> device-mapper: table: 253:3: linear: dm-linear: Device lookup failed
+John> device-mapper: ioctl: error adding target to table
+John> device-mapper: table: 253:2: linear: dm-linear: Device lookup failed
+John> device-mapper: ioctl: error adding target to table
 
-[root@boil vgchange]# gdb vgchange core.1
-GNU gdb Red Hat Linux (6.3.0.0-1.63rh)
-Copyright 2004 Free Software Foundation, Inc.
-GDB is free software, covered by the GNU General Public License, and you are
-welcome to change it and/or distribute copies of it under certain 
-conditions.
-Type "show copying" to see the conditions.
-There is absolutely no warranty for GDB.  Type "show warranty" for details.
-This GDB was configured as "ia64-redhat-linux-gnu"...Using host 
-libthread_db lib
-rary "/lib/tls/libthread_db.so.1".
+There error I got was:
 
-Reading symbols from shared object read from target memory...done.
-Loaded system supplied DSO at 0xa000000000000000
-Core was generated by `vgchange --deltag boil.cup.hp.com vgsb4'.
-Program terminated with signal 7, Bus error.
+  # lvextend -v -L +1g /dev/data_vg/home_lv
+    Finding volume group data_vg
+    Archiving volume group "data_vg" metadata (seqno 16).
+    Extending logical volume home_lv to 52.00 GB
+    Creating volume group backup "/etc/lvm/backup/data_vg" (seqno 17).
+    Found volume group "data_vg"
+    Found volume group "data_vg"
+    Loading data_vg-home_lv table
+    device-mapper: reload ioctl failed: Invalid argument
+    Failed to suspend home_lv
 
-warning: svr4_current_sos: Can't read pathname for load map: 
-Input/output error
+I've found a solution to this problem of NOT being able to use
+'lvextend' on some LVM2 Logical Volumes (LV).  Basically, I had to
+apply the following patch to 2.6.18-rc6-mm2 to get it to work
+properly.  I don't know why this wasn't reported here to the kernel
+people.
 
-Reading symbols from /lib/libdevmapper.so.1.01...done.
-Loaded symbols for /lib/libdevmapper.so.1.01
-Reading symbols from /lib/libselinux.so.1...done.
-Loaded symbols for /lib/libselinux.so.1
-Reading symbols from /lib/libdl.so.2...done.
-Loaded symbols for /lib/libdl.so.2
-Reading symbols from /lib/tls/libc.so.6.1...done.
-Loaded symbols for /lib/tls/libc.so.6.1
-Reading symbols from /lib/ld-linux-ia64.so.2...done.
-Loaded symbols for /lib/ld-linux-ia64.so.2
-#0  0x2000000000196870 in strncpy () from /lib/tls/libc.so.6.1
-(gdb) bt
-#0  0x2000000000196870 in strncpy () from /lib/tls/libc.so.6.1
-#1  0x400000000006f420 in _dup_tok (p=0x600000000002c1f0)
-     at config/config.c:711
-#2  0x400000000006d8d0 in _type (p=0x600000000002c1f0) at 
-config/config.c:524
-#3  0x400000000006d150 in _value (p=0x600000000002c1f0) at 
-config/config.c:468
-#4  0x400000000006cf40 in _section (p=0x600000000002c1f0)
-     at config/config.c:452
-#5  0x400000000006ccb0 in _section (p=0x600000000002c1f0)
-     at config/config.c:438
-#6  0x400000000006c860 in _file (p=0x600000000002c1f0) at 
-config/config.c:405
-#7  0x400000000006b050 in read_config_fd (cft=0x600000000002c1a8,
-     dev=0x60000000000301d8, offset=0, size=629, offset2=0, size2=0,
-     checksum_fn=0, checksum=0) at config/config.c:191
-#8  0x400000000006b7f0 in read_config_file (cft=0x600000000002c1a8)
-     at config/config.c:248
-#9  0x4000000000084d30 in persistent_filter_load (f=0x600000000002c0b8)
-     at filters/filter-persistent.c:109
-#10 0x4000000000066be0 in _init_filters (cmd=0x6000000000011278)
-     at commands/toolcontext.c:609
-#11 0x4000000000068fd0 in create_toolcontext (the_args=0x6000000000000ff0)
-     at commands/toolcontext.c:951
-#12 0x4000000000023c70 in _init_lvm () at lvmcmdline.c:945
-#13 0x4000000000024c00 in lvm2_main (argc=4, argv=0x60000fffffffbaf8,
----Type <return> to continue, or q <return> to quit---
-     is_static=0) at lvmcmdline.c:1376
-#14 0x400000000005a580 in main ()
-(gdb) fr 1
-#1  0x400000000006f420 in _dup_tok (p=0x600000000002c1f0)
-     at config/config.c:711
-711             strncpy(str, p->tb, len);
-(gdb) print str
-$1 = 0x600000000002c390 
-"��������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������"...
-(gdb) print p->tb
-$2 = 0x200000000345409d <Address 0x200000000345409d out of bounds>
-(gdb) print len
-$3 = 9
-(gdb)
+Thanks,
+John
 
--- 
-===========
-John DeFranco                  Hewlett Packard Company
-john.defranco@hp.com           Availability Clusters Solution Lab
-phone: 408 447-7543            19111 Pruneridge Ave., M/S 4101
-fax:   408 447-0056            Cupertino, CA 95014
+----------------------------------------------------------------------
+
+If a matching bd_holder is found in bd_holder_list,
+add_bd_holder() completes its job by just incrementing the reference count.
+In this case, it should be considered as success but it used to return 'fail'
+to let the caller free temporary bd_holder.
+Fixed it to return success and free given object by itself.
+
+Also, if either one of symlinking fails, the bd_holder should not
+be added to the list so that it can be discarded later.
+Otherwise, the caller will free bd_holder which is in the list.
+
+This patch is neccessary only for -mm (later than 2.6.18-rc1-mm1).
+
+ fs/block_dev.c |   11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
+
+Signed-off-by: Jun'ichi Nomura <j-nomura@ce.jp.nec.com>
+
+diff -urp linux-2.6.18-rc5-mm1.orig/fs/block_dev.c linux-2.6.18-rc5-mm1/fs/block_dev.c
+--- linux-2.6.18-rc5-mm1.orig/fs/block_dev.c	2006-09-11 19:33:35.000000000 -0400
++++ linux-2.6.18-rc5-mm1/fs/block_dev.c	2006-09-11 19:21:46.000000000 -0400
+@@ -655,8 +655,8 @@ static void free_bd_holder(struct bd_hol
+  * If there is no matching entry with @bo in @bdev->bd_holder_list,
+  * add @bo to the list, create symlinks.
+  *
+- * Returns 0 if @bo was added to the list.
+- * Returns -ve if @bo wasn't used by any reason and should be freed.
++ * Returns 0 if symlinks are created or already there.
++ * Returns -ve if something fails and @bo can be freed.
+  */
+ static int add_bd_holder(struct block_device *bdev, struct bd_holder *bo)
+ {
+@@ -669,7 +669,9 @@ static int add_bd_holder(struct block_de
+ 	list_for_each_entry(tmp, &bdev->bd_holder_list, list) {
+ 		if (tmp->sdir == bo->sdir) {
+ 			tmp->count++;
+-			return -EEXIST;
++			/* We've already done what we need to do here. */
++			free_bd_holder(bo);
++			return 0;
+ 		}
+ 	}
+ 
+@@ -682,7 +684,8 @@ static int add_bd_holder(struct block_de
+ 		if (ret)
+ 			del_symlink(bo->sdir, bo->sdev);
+ 	}
+-	list_add_tail(&bo->list, &bdev->bd_holder_list);
++	if (ret == 0)
++		list_add_tail(&bo->list, &bdev->bd_holder_list);
+ 	return ret;
+ }
