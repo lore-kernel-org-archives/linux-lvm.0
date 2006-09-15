@@ -1,21 +1,22 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
 	by int-mx1.corp.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
-	k8E2ZI3o002968
-	for <linux-lvm@redhat.com>; Wed, 13 Sep 2006 22:35:18 -0400
-Received: from mail.thecus.com (mail.thecus.com [220.130.176.208])
-	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id k8E2Z8hF021004
-	for <linux-lvm@redhat.com>; Wed, 13 Sep 2006 22:35:09 -0400
-Received: from kevincheng (kevincheng.thecus.com [172.16.66.73])
-	(authenticated bits=0)
-	by mail.thecus.com (8.13.1/8.13.1) with ESMTP id k8E2aCa7024082
-	for <linux-lvm@redhat.com>; Thu, 14 Sep 2006 10:36:18 +0800
-Message-Id: <200609140236.k8E2aCa7024082@mail.thecus.com>
-From: "kevin Cheng" <kevin_cheng@thecus.com>
-Date: Thu, 14 Sep 2006 10:36:25 +0800
+	k8FGjdLR013906
+	for <linux-lvm@redhat.com>; Fri, 15 Sep 2006 12:45:39 -0400
+Received: from palrel12.hp.com (palrel12.hp.com [156.153.255.237])
+	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id k8FGjWD3008583
+	for <linux-lvm@redhat.com>; Fri, 15 Sep 2006 12:45:32 -0400
+Received: from smtp2.ptp.hp.com (smtp.cup.hp.com [15.1.28.240])
+	by palrel12.hp.com (Postfix) with ESMTP id D3E89364F6
+	for <linux-lvm@redhat.com>; Fri, 15 Sep 2006 09:45:26 -0700 (PDT)
+Received: from [15.244.57.26] (airwolf.cup.hp.com [15.244.57.26])
+	by smtp2.ptp.hp.com (Postfix) with ESMTP id 52D002AEAE9
+	for <linux-lvm@redhat.com>; Fri, 15 Sep 2006 16:45:24 +0000 (UTC)
+Message-ID: <450AD8A6.1040602@cup.hp.com>
+Date: Fri, 15 Sep 2006 09:45:26 -0700
+From: John DeFranco <defranco@cup.hp.com>
 MIME-Version: 1.0
-Content-Type: multipart/alternative;
-	boundary="----=_NextPart_000_0341_01C6D7E9.A23FF490"
-Subject: [linux-lvm] Out of memory happen in snapshot
+Content-Transfer-Encoding: 8bit
+Subject: [linux-lvm] vgchange --deltag core dump
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -26,496 +27,112 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
+Content-Type: text/plain; charset="utf-8"; format="flowed"
 To: linux-lvm@redhat.com
 
-This is a multi-part message in MIME format.
+Hi all,
 
-------=_NextPart_000_0341_01C6D7E9.A23FF490
-Content-Type: text/plain;
-	charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+During a test I am running I have vary rarely encountered the following 
+vgchange core dump. I see no other errors on the system. The dump seems
+pretty obvious we tried to do a strncpy from an illegal address (p->tb)
+but I don't know how that would have occured. The vg is not being 
+touched and we have run a vgchange set of command (--addtag,  -a y,
+-a n, --deltag) many, many times prior to this and again after. Seems
+like something is going on that I don't quite understand.
 
-Dear all:
-   We create the 8 snapshots in one volumn ,and copy a 4G file to the volumn
-,
-and system happen "out of memory" and oom-killer kill my processes. 
-Someone have happen this problem ,have any way to solve it ? Thanks!!
- 
-My PC info:
-celoron M 1,5GHz
-memory :256MB
-My volumn be created on RAID0
-kernel is 2.6.17
-Filesyetm is ext3
-swap memory have 1GB
- 
- 
-Out of memory Info :
--killer: gfp_mask=0x201d2, order=0
- <c012977a> out_of_memory+0x28/0x7a  <c012a603> __alloc_pages+0x1e5/0x26a
- <c012778b> page_cache_read+0x3d/0x91  <c0127972> filemap_nopage+0x193/0x2a8
- <c0130f17> do_no_page+0x6a/0x1c1  <c013118b> __handle_mm_fault+0xbc/0x15a
- <c010d87f> do_page_fault+0x239/0x561  <c010d646> do_page_fault+0x0/0x561
- <c0102e87> error_code+0x4f/0x54
-Mem-info:
-DMA per-cpu:
-cpu 0 hot: high 0, batch 1 used:0
-cpu 0 cold: high 0, batch 1 used:0
-DMA32 per-cpu: empty
-Normal per-cpu:
-cpu 0 hot: high 90, batch 15 used:18
-cpu 0 cold: high 30, batch 7 used:24
-HighMem per-cpu: empty
-Free pages:       24772kB (0kB HighMem)
-Active:1061 inactive:17650 dirty:3602 writeback:4502 unstable:0 free:6193
-slab:32454 mapped:66 pagetables:169
-DMA free:2880kB min:1928kB low:2408kB high:2892kB active:68kB
-inactive:4640kB present:16384kB pages_scanned:4506 all_unreclaimable? yes
-lowmem_reserve[]: 0 0 238 238
-DMA32 free:0kB min:0kB low:0kB high:0kB active:0kB inactive:0kB present:0kB
-pages_scanned:0 all_unreclaimable? no
-lowmem_reserve[]: 0 0 238 238
-Normal free:21892kB min:28788kB low:35984kB high:43180kB active:4176kB
-inactive:65960kB present:244672kB pages_scanned:73425 all_unreclaimable? yes
-lowmem_reserve[]: 0 0 0 0
-HighMem free:0kB min:128kB low:128kB high:128kB active:0kB inactive:0kB
-present:0kB pages_scanned:0 all_unreclaimable? no
-lowmem_reserve[]: 0 0 0 0
-DMA: 0*4kB 42*8kB 147*16kB 0*32kB 1*64kB 1*128kB 0*256kB 0*512kB 0*1024kB
-0*2048kB 0*4096kB = 2880kB
-DMA32: empty
-Normal: 1779*4kB 839*8kB 342*16kB 1*32kB 0*64kB 0*128kB 0*256kB 1*512kB
-0*1024kB 1*2048kB 0*4096kB = 21892kB
-HighMem: empty
-Swap cache: add 5930, delete 5875, find 21346/21816, race 0+0
-Free swap  = 975336kB
-Total swap = 987832kB
-Free swap:       975336kB
-65264 pages of RAM
-0 pages of HIGHMEM
-1324 reserved pages
-9298 pages shared
-55 pages swap cached
-3602 pages dirty
-4502 pages writeback
-66 pages mapped
-32454 pages slab
-169 pages pagetables
-oom-killer: gfp_mask=0x200d2, order=0
- <c012977a> out_of_memory+0x28/0x7a  <c012a603> __alloc_pages+0x1e5/0x26a
- <c0135cc7> read_swap_cache_async+0x2e/0x73  <c0130c1a>
-do_swap_page+0x62/0x1ec
- <c01311c1> __handle_mm_fault+0xf2/0x15a  <c010d87f>
-do_page_fault+0x239/0x561
- <c010d646> do_page_fault+0x0/0x561  <c0102e87> error_code+0x4f/0x54
-Mem-info:
-DMA per-cpu:
-cpu 0 hot: high 0, batch 1 used:0
-cpu 0 cold: high 0, batch 1 used:0
-DMA32 per-cpu: empty
-Normal per-cpu:
-cpu 0 hot: high 90, batch 15 used:18
-cpu 0 cold: high 30, batch 7 used:24
-HighMem per-cpu: empty
-Free pages:       24772kB (0kB HighMem)
-Active:1061 inactive:17650 dirty:3591 writeback:4513 unstable:0 free:6193
-slab:32454 mapped:66 pagetables:169
-DMA free:2880kB min:1928kB low:2408kB high:2892kB active:68kB
-inactive:4640kB present:16384kB pages_scanned:4538 all_unreclaimable? yes
-lowmem_reserve[]: 0 0 238 238
-DMA32 free:0kB min:0kB low:0kB high:0kB active:0kB inactive:0kB present:0kB
-pages_scanned:0 all_unreclaimable? no
-lowmem_reserve[]: 0 0 238 238
-Normal free:21892kB min:28788kB low:35984kB high:43180kB active:4176kB
-inactive:65960kB present:244672kB pages_scanned:73489 all_unreclaimable? yes
-lowmem_reserve[]: 0 0 0 0
-HighMem free:0kB min:128kB low:128kB high:128kB active:0kB inactive:0kB
-present:0kB pages_scanned:0 all_unreclaimable? no
-lowmem_reserve[]: 0 0 0 0
-DMA: 0*4kB 42*8kB 147*16kB 0*32kB 1*64kB 1*128kB 0*256kB 0*512kB 0*1024kB
-0*2048kB 0*4096kB = 2880kB
-DMA32: empty
-Normal: 1779*4kB 839*8kB 342*16kB 1*32kB 0*64kB 0*128kB 0*256kB 1*512kB
-0*1024kB 1*2048kB 0*4096kB = 21892kB
-HighMem: empty
-Swap cache: add 5930, delete 5875, find 21346/21816, race 0+0
-Free swap  = 975336kB
-Total swap = 987832kB
-Free swap:       975336kB
-65264 pages of RAM
-0 pages of HIGHMEM
-1324 reserved pages
-9298 pages shared
-55 pages swap cached
-3591 pages dirty
-4513 pages writeback
-66 pages mapped
-32454 pages slab
-169 pages pagetables
-oom-killer: gfp_mask=0x200d2, order=0
- <c012977a> out_of_memory+0x28/0x7a  <c012a603> __alloc_pages+0x1e5/0x26a
- <c0135cc7> read_swap_cache_async+0x2e/0x73  <c0130c1a>
-do_swap_page+0x62/0x1ec
- <c01311c1> __handle_mm_fault+0xf2/0x15a  <c010d87f>
-do_page_fault+0x239/0x561
- <c010d646> do_page_fault+0x0/0x561  <c0102e87> error_code+0x4f/0x54
-Mem-info:
-DMA per-cpu:
-cpu 0 hot: high 0, batch 1 used:0
-cpu 0 cold: high 0, batch 1 used:0
-DMA32 per-cpu: empty
-Normal per-cpu:
-cpu 0 hot: high 90, batch 15 used:18
-cpu 0 cold: high 30, batch 7 used:24
-HighMem per-cpu: empty
-Free pages:       24772kB (0kB HighMem)
-Active:1061 inactive:17650 dirty:3591 writeback:4513 unstable:0 free:6193
-slab:32454 mapped:66 pagetables:169
-DMA free:2880kB min:1928kB low:2408kB high:2892kB active:68kB
-inactive:4640kB present:16384kB pages_scanned:4538 all_unreclaimable? yes
-lowmem_reserve[]: 0 0 238 238
-DMA32 free:0kB min:0kB low:0kB high:0kB active:0kB inactive:0kB present:0kB
-pages_scanned:0 all_unreclaimable? no
-lowmem_reserve[]: 0 0 238 238
-Normal free:21892kB min:28788kB low:35984kB high:43180kB active:4176kB
-inactive:65960kB present:244672kB pages_scanned:73489 all_unreclaimable? yes
-lowmem_reserve[]: 0 0 0 0
-HighMem free:0kB min:128kB low:128kB high:128kB active:0kB inactive:0kB
-present:0kB pages_scanned:0 all_unreclaimable? no
-lowmem_reserve[]: 0 0 0 0
-DMA: 0*4kB 42*8kB 147*16kB 0*32kB 1*64kB 1*128kB 0*256kB 0*512kB 0*1024kB
-0*2048kB 0*4096kB = 2880kB
-DMA32: empty
-Normal: 1779*4kB 839*8kB 342*16kB 1*32kB 0*64kB 0*128kB 0*256kB 1*512kB
-0*1024kB 1*2048kB 0*4096kB = 21892kB
-HighMem: empty
-Swap cache: add 5930, delete 5875, find 21346/21816, race 0+0
-Free swap  = 975336kB
-Total swap = 987832kB
-Free swap:       975336kB
-65264 pages of RAM
-0 pages of HIGHMEM
-1324 reserved pages
-9298 pages shared
-55 pages swap cached
-3591 pages dirty
-4513 pages writeback
-66 pages mapped
-32454 pages slab
-169 pages pagetables
-oom-killer: gfp_mask=0x201d2, order=0
- <c012977a> out_of_memory+0x28/0x7a  <c012a603> __alloc_pages+0x1e5/0x26a
- <c012778b> page_cache_read+0x3d/0x91  <c0127972> filemap_nopage+0x193/0x2a8
- <c0130f17> do_no_page+0x6a/0x1c1  <c013118b> __handle_mm_fault+0xbc/0x15a
- <c010d87f> do_page_fault+0x239/0x561  <c010d646> do_page_fault+0x0/0x561
- <c0102e87> error_code+0x4f/0x54
-Mem-info:
-DMA per-cpu:
-cpu 0 hot: high 0, batch 1 used:0
-cpu 0 cold: high 0, batch 1 used:0
-DMA32 per-cpu: empty
-Normal per-cpu:
-cpu 0 hot: high 90, batch 15 used:18
-cpu 0 cold: high 30, batch 7 used:24
-HighMem per-cpu: empty
-Free pages:       24772kB (0kB HighMem)
-Active:1029 inactive:17682 dirty:3591 writeback:4513 unstable:0 free:6193
-slab:32454 mapped:66 pagetables:169
-DMA free:2880kB min:1928kB low:2408kB high:2892kB active:68kB
-inactive:4640kB present:16384kB pages_scanned:4538 all_unreclaimable? yes
-lowmem_reserve[]: 0 0 238 238
-DMA32 free:0kB min:0kB low:0kB high:0kB active:0kB inactive:0kB present:0kB
-pages_scanned:0 all_unreclaimable? no
-lowmem_reserve[]: 0 0 238 238
-Normal free:21892kB min:28788kB low:35984kB high:43180kB active:4048kB
-inactive:66088kB present:244672kB pages_scanned:73521 all_unreclaimable? yes
-lowmem_reserve[]: 0 0 0 0
-HighMem free:0kB min:128kB low:128kB high:128kB active:0kB inactive:0kB
-present:0kB pages_scanned:0 all_unreclaimable? no
-lowmem_reserve[]: 0 0 0 0
-DMA: 0*4kB 42*8kB 147*16kB 0*32kB 1*64kB 1*128kB 0*256kB 0*512kB 0*1024kB
-0*2048kB 0*4096kB = 2880kB
-DMA32: empty
-Normal: 1779*4kB 839*8kB 342*16kB 1*32kB 0*64kB 0*128kB 0*256kB 1*512kB
-0*1024kB 1*2048kB 0*4096kB = 21892kB
-HighMem: empty
-Swap cache: add 5930, delete 5875, find 21346/21816, race 0+0
-Free swap  = 975336kB
-Total swap = 987832kB
-Free swap:       975336kB
-65264 pages of RAM
-0 pages of HIGHMEM
-1324 reserved pages
-9298 pages shared
-55 pages swap cached
-3591 pages dirty
-4513 pages writeback
-66 pages mapped
-32454 pages slab
-169 pages pagetables
+This is on rh4U2 ipf and the following lvm version
+(but have seen this same problem on other archs as well). I did build
+a debug version of the tools which were used in an attempt to get more
+data.
 
- 
- 
- 
- 
-Thanks for all advice ,
- 
-Regards,
- 
-Kevin Cheng
- 
+[root@boil pkg-2346_6]# uname -a
+Linux boil.cup.hp.com 2.6.9-22.EL #1 SMP Mon Sep 19 17:54:55 EDT 2005 
+ia64 ia64 ia64 GNU/Linux
+[root@boil pkg-2346_6]# cat /etc/redhat-release
+Red Hat Enterprise Linux ES release 4 (Nahant Update 2)
+[root@boil pkg-2346_6]# lvm version
+   LVM version:     2.01.14 (2005-08-04)
+   Library version: 1.01.04 (2005-08-02)
+   Driver version:  4.4.0
+[root@boil pkg-2346_6]#
 
-------=_NextPart_000_0341_01C6D7E9.A23FF490
-Content-Type: text/html;
-	charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+[root@boil vgchange]# gdb vgchange core.1
+GNU gdb Red Hat Linux (6.3.0.0-1.63rh)
+Copyright 2004 Free Software Foundation, Inc.
+GDB is free software, covered by the GNU General Public License, and you are
+welcome to change it and/or distribute copies of it under certain 
+conditions.
+Type "show copying" to see the conditions.
+There is absolutely no warranty for GDB.  Type "show warranty" for details.
+This GDB was configured as "ia64-redhat-linux-gnu"...Using host 
+libthread_db lib
+rary "/lib/tls/libthread_db.so.1".
 
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
-<HTML><HEAD>
-<META http-equiv=3DContent-Type content=3D"text/html; =
-charset=3Dus-ascii">
-<META content=3D"MSHTML 6.00.2900.2802" name=3DGENERATOR></HEAD>
-<BODY>
-<DIV><FONT size=3D2>Dear all:</FONT></DIV>
-<DIV><FONT size=3D2>&nbsp;&nbsp; We create the 8 snapshots in one volumn =
-,and copy=20
-a 4G file to the volumn ,</FONT></DIV>
-<DIV><FONT size=3D2>and system happen "out of memory" and oom-killer =
-kill my=20
-processes. </FONT></DIV>
-<DIV><FONT size=3D2>Someone have happen this problem ,have any way to =
-solve it ?=20
-Thanks!!</FONT></DIV>
-<DIV><FONT size=3D2></FONT>&nbsp;</DIV>
-<DIV><FONT size=3D2>My PC info:</FONT></DIV>
-<DIV><FONT size=3D2>celoron M 1,5GHz</FONT></DIV>
-<DIV><FONT size=3D2>memory :256MB</FONT></DIV>
-<DIV><FONT size=3D2>My volumn be created on RAID0</FONT></DIV>
-<DIV><FONT face=3D&#26032;&#32048;&#26126;&#39636; size=3D2>kernel is =
-2.6.17</FONT></DIV>
-<DIV><FONT face=3D&#26032;&#32048;&#26126;&#39636; size=3D2>Filesyetm is =
-ext3</FONT></DIV>
-<DIV><FONT face=3D&#26032;&#32048;&#26126;&#39636; size=3D2>swap memory =
-have 1GB</FONT></DIV>
-<DIV><FONT face=3D&#26032;&#32048;&#26126;&#39636; =
-size=3D2></FONT>&nbsp;</DIV>
-<DIV><FONT face=3D&#26032;&#32048;&#26126;&#39636; =
-size=3D2></FONT>&nbsp;</DIV>
-<DIV><FONT face=3D&#26032;&#32048;&#26126;&#39636; size=3D2>Out of =
-memory Info :</FONT></DIV><FONT face=3D&#26032;&#32048;&#26126;&#39636;=20
-size=3D2>-killer: gfp_mask=3D0x201d2, =
-order=3D0<BR>&nbsp;&lt;c012977a&gt;=20
-out_of_memory+0x28/0x7a&nbsp; &lt;c012a603&gt;=20
-__alloc_pages+0x1e5/0x26a<BR>&nbsp;&lt;c012778b&gt;=20
-page_cache_read+0x3d/0x91&nbsp; &lt;c0127972&gt;=20
-filemap_nopage+0x193/0x2a8<BR>&nbsp;&lt;c0130f17&gt; =
-do_no_page+0x6a/0x1c1&nbsp;=20
-&lt;c013118b&gt; __handle_mm_fault+0xbc/0x15a<BR>&nbsp;&lt;c010d87f&gt;=20
-do_page_fault+0x239/0x561&nbsp; &lt;c010d646&gt;=20
-do_page_fault+0x0/0x561<BR>&nbsp;&lt;c0102e87&gt;=20
-error_code+0x4f/0x54<BR>Mem-info:<BR>DMA per-cpu:<BR>cpu 0 hot: high 0, =
-batch 1=20
-used:0<BR>cpu 0 cold: high 0, batch 1 used:0<BR>DMA32 per-cpu: =
-empty<BR>Normal=20
-per-cpu:<BR>cpu 0 hot: high 90, batch 15 used:18<BR>cpu 0 cold: high 30, =
-batch 7=20
-used:24<BR>HighMem per-cpu: empty<BR>Free=20
-pages:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 24772kB (0kB =
-HighMem)<BR>Active:1061=20
-inactive:17650 dirty:3602 writeback:4502 unstable:0 free:6193 slab:32454 =
+Reading symbols from shared object read from target memory...done.
+Loaded system supplied DSO at 0xa000000000000000
+Core was generated by `vgchange --deltag boil.cup.hp.com vgsb4'.
+Program terminated with signal 7, Bus error.
 
-mapped:66 pagetables:169<BR>DMA free:2880kB min:1928kB low:2408kB =
-high:2892kB=20
-active:68kB inactive:4640kB present:16384kB pages_scanned:4506=20
-all_unreclaimable? yes<BR>lowmem_reserve[]: 0 0 238 238<BR>DMA32 =
-free:0kB=20
-min:0kB low:0kB high:0kB active:0kB inactive:0kB present:0kB =
-pages_scanned:0=20
-all_unreclaimable? no<BR>lowmem_reserve[]: 0 0 238 238<BR>Normal =
-free:21892kB=20
-min:28788kB low:35984kB high:43180kB active:4176kB inactive:65960kB=20
-present:244672kB pages_scanned:73425 all_unreclaimable? =
-yes<BR>lowmem_reserve[]:=20
-0 0 0 0<BR>HighMem free:0kB min:128kB low:128kB high:128kB active:0kB=20
-inactive:0kB present:0kB pages_scanned:0 all_unreclaimable?=20
-no<BR>lowmem_reserve[]: 0 0 0 0<BR>DMA: 0*4kB 42*8kB 147*16kB 0*32kB =
-1*64kB=20
-1*128kB 0*256kB 0*512kB 0*1024kB 0*2048kB 0*4096kB =3D 2880kB<BR>DMA32:=20
-empty<BR>Normal: 1779*4kB 839*8kB 342*16kB 1*32kB 0*64kB 0*128kB 0*256kB =
-1*512kB=20
-0*1024kB 1*2048kB 0*4096kB =3D 21892kB<BR>HighMem: empty<BR>Swap cache: =
-add 5930,=20
-delete 5875, find 21346/21816, race 0+0<BR>Free swap&nbsp; =3D =
-975336kB<BR>Total=20
-swap =3D 987832kB<BR>Free swap:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=20
-975336kB<BR>65264 pages of RAM<BR>0 pages of HIGHMEM<BR>1324 reserved=20
-pages<BR>9298 pages shared<BR>55 pages swap cached<BR>3602 pages =
-dirty<BR>4502=20
-pages writeback<BR>66 pages mapped<BR>32454 pages slab<BR>169 pages=20
-pagetables<BR>oom-killer: gfp_mask=3D0x200d2, =
-order=3D0<BR>&nbsp;&lt;c012977a&gt;=20
-out_of_memory+0x28/0x7a&nbsp; &lt;c012a603&gt;=20
-__alloc_pages+0x1e5/0x26a<BR>&nbsp;&lt;c0135cc7&gt;=20
-read_swap_cache_async+0x2e/0x73&nbsp; &lt;c0130c1a&gt;=20
-do_swap_page+0x62/0x1ec<BR>&nbsp;&lt;c01311c1&gt;=20
-__handle_mm_fault+0xf2/0x15a&nbsp; &lt;c010d87f&gt;=20
-do_page_fault+0x239/0x561<BR>&nbsp;&lt;c010d646&gt;=20
-do_page_fault+0x0/0x561&nbsp; &lt;c0102e87&gt;=20
-error_code+0x4f/0x54<BR>Mem-info:<BR>DMA per-cpu:<BR>cpu 0 hot: high 0, =
-batch 1=20
-used:0<BR>cpu 0 cold: high 0, batch 1 used:0<BR>DMA32 per-cpu: =
-empty<BR>Normal=20
-per-cpu:<BR>cpu 0 hot: high 90, batch 15 used:18<BR>cpu 0 cold: high 30, =
-batch 7=20
-used:24<BR>HighMem per-cpu: empty<BR>Free=20
-pages:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 24772kB (0kB =
-HighMem)<BR>Active:1061=20
-inactive:17650 dirty:3591 writeback:4513 unstable:0 free:6193 slab:32454 =
+warning: svr4_current_sos: Can't read pathname for load map: 
+Input/output error
 
-mapped:66 pagetables:169<BR>DMA free:2880kB min:1928kB low:2408kB =
-high:2892kB=20
-active:68kB inactive:4640kB present:16384kB pages_scanned:4538=20
-all_unreclaimable? yes<BR>lowmem_reserve[]: 0 0 238 238<BR>DMA32 =
-free:0kB=20
-min:0kB low:0kB high:0kB active:0kB inactive:0kB present:0kB =
-pages_scanned:0=20
-all_unreclaimable? no<BR>lowmem_reserve[]: 0 0 238 238<BR>Normal =
-free:21892kB=20
-min:28788kB low:35984kB high:43180kB active:4176kB inactive:65960kB=20
-present:244672kB pages_scanned:73489 all_unreclaimable? =
-yes<BR>lowmem_reserve[]:=20
-0 0 0 0<BR>HighMem free:0kB min:128kB low:128kB high:128kB active:0kB=20
-inactive:0kB present:0kB pages_scanned:0 all_unreclaimable?=20
-no<BR>lowmem_reserve[]: 0 0 0 0<BR>DMA: 0*4kB 42*8kB 147*16kB 0*32kB =
-1*64kB=20
-1*128kB 0*256kB 0*512kB 0*1024kB 0*2048kB 0*4096kB =3D 2880kB<BR>DMA32:=20
-empty<BR>Normal: 1779*4kB 839*8kB 342*16kB 1*32kB 0*64kB 0*128kB 0*256kB =
-1*512kB=20
-0*1024kB 1*2048kB 0*4096kB =3D 21892kB<BR>HighMem: empty<BR>Swap cache: =
-add 5930,=20
-delete 5875, find 21346/21816, race 0+0<BR>Free swap&nbsp; =3D =
-975336kB<BR>Total=20
-swap =3D 987832kB<BR>Free swap:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=20
-975336kB<BR>65264 pages of RAM<BR>0 pages of HIGHMEM<BR>1324 reserved=20
-pages<BR>9298 pages shared<BR>55 pages swap cached<BR>3591 pages =
-dirty<BR>4513=20
-pages writeback<BR>66 pages mapped<BR>32454 pages slab<BR>169 pages=20
-pagetables<BR>oom-killer: gfp_mask=3D0x200d2, =
-order=3D0<BR>&nbsp;&lt;c012977a&gt;=20
-out_of_memory+0x28/0x7a&nbsp; &lt;c012a603&gt;=20
-__alloc_pages+0x1e5/0x26a<BR>&nbsp;&lt;c0135cc7&gt;=20
-read_swap_cache_async+0x2e/0x73&nbsp; &lt;c0130c1a&gt;=20
-do_swap_page+0x62/0x1ec<BR>&nbsp;&lt;c01311c1&gt;=20
-__handle_mm_fault+0xf2/0x15a&nbsp; &lt;c010d87f&gt;=20
-do_page_fault+0x239/0x561<BR>&nbsp;&lt;c010d646&gt;=20
-do_page_fault+0x0/0x561&nbsp; &lt;c0102e87&gt;=20
-error_code+0x4f/0x54<BR>Mem-info:<BR>DMA per-cpu:<BR>cpu 0 hot: high 0, =
-batch 1=20
-used:0<BR>cpu 0 cold: high 0, batch 1 used:0<BR>DMA32 per-cpu: =
-empty<BR>Normal=20
-per-cpu:<BR>cpu 0 hot: high 90, batch 15 used:18<BR>cpu 0 cold: high 30, =
-batch 7=20
-used:24<BR>HighMem per-cpu: empty<BR>Free=20
-pages:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 24772kB (0kB =
-HighMem)<BR>Active:1061=20
-inactive:17650 dirty:3591 writeback:4513 unstable:0 free:6193 slab:32454 =
+Reading symbols from /lib/libdevmapper.so.1.01...done.
+Loaded symbols for /lib/libdevmapper.so.1.01
+Reading symbols from /lib/libselinux.so.1...done.
+Loaded symbols for /lib/libselinux.so.1
+Reading symbols from /lib/libdl.so.2...done.
+Loaded symbols for /lib/libdl.so.2
+Reading symbols from /lib/tls/libc.so.6.1...done.
+Loaded symbols for /lib/tls/libc.so.6.1
+Reading symbols from /lib/ld-linux-ia64.so.2...done.
+Loaded symbols for /lib/ld-linux-ia64.so.2
+#0  0x2000000000196870 in strncpy () from /lib/tls/libc.so.6.1
+(gdb) bt
+#0  0x2000000000196870 in strncpy () from /lib/tls/libc.so.6.1
+#1  0x400000000006f420 in _dup_tok (p=0x600000000002c1f0)
+     at config/config.c:711
+#2  0x400000000006d8d0 in _type (p=0x600000000002c1f0) at 
+config/config.c:524
+#3  0x400000000006d150 in _value (p=0x600000000002c1f0) at 
+config/config.c:468
+#4  0x400000000006cf40 in _section (p=0x600000000002c1f0)
+     at config/config.c:452
+#5  0x400000000006ccb0 in _section (p=0x600000000002c1f0)
+     at config/config.c:438
+#6  0x400000000006c860 in _file (p=0x600000000002c1f0) at 
+config/config.c:405
+#7  0x400000000006b050 in read_config_fd (cft=0x600000000002c1a8,
+     dev=0x60000000000301d8, offset=0, size=629, offset2=0, size2=0,
+     checksum_fn=0, checksum=0) at config/config.c:191
+#8  0x400000000006b7f0 in read_config_file (cft=0x600000000002c1a8)
+     at config/config.c:248
+#9  0x4000000000084d30 in persistent_filter_load (f=0x600000000002c0b8)
+     at filters/filter-persistent.c:109
+#10 0x4000000000066be0 in _init_filters (cmd=0x6000000000011278)
+     at commands/toolcontext.c:609
+#11 0x4000000000068fd0 in create_toolcontext (the_args=0x6000000000000ff0)
+     at commands/toolcontext.c:951
+#12 0x4000000000023c70 in _init_lvm () at lvmcmdline.c:945
+#13 0x4000000000024c00 in lvm2_main (argc=4, argv=0x60000fffffffbaf8,
+---Type <return> to continue, or q <return> to quit---
+     is_static=0) at lvmcmdline.c:1376
+#14 0x400000000005a580 in main ()
+(gdb) fr 1
+#1  0x400000000006f420 in _dup_tok (p=0x600000000002c1f0)
+     at config/config.c:711
+711             strncpy(str, p->tb, len);
+(gdb) print str
+$1 = 0x600000000002c390 
+"��������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������������"...
+(gdb) print p->tb
+$2 = 0x200000000345409d <Address 0x200000000345409d out of bounds>
+(gdb) print len
+$3 = 9
+(gdb)
 
-mapped:66 pagetables:169<BR>DMA free:2880kB min:1928kB low:2408kB =
-high:2892kB=20
-active:68kB inactive:4640kB present:16384kB pages_scanned:4538=20
-all_unreclaimable? yes<BR>lowmem_reserve[]: 0 0 238 238<BR>DMA32 =
-free:0kB=20
-min:0kB low:0kB high:0kB active:0kB inactive:0kB present:0kB =
-pages_scanned:0=20
-all_unreclaimable? no<BR>lowmem_reserve[]: 0 0 238 238<BR>Normal =
-free:21892kB=20
-min:28788kB low:35984kB high:43180kB active:4176kB inactive:65960kB=20
-present:244672kB pages_scanned:73489 all_unreclaimable? =
-yes<BR>lowmem_reserve[]:=20
-0 0 0 0<BR>HighMem free:0kB min:128kB low:128kB high:128kB active:0kB=20
-inactive:0kB present:0kB pages_scanned:0 all_unreclaimable?=20
-no<BR>lowmem_reserve[]: 0 0 0 0<BR>DMA: 0*4kB 42*8kB 147*16kB 0*32kB =
-1*64kB=20
-1*128kB 0*256kB 0*512kB 0*1024kB 0*2048kB 0*4096kB =3D 2880kB<BR>DMA32:=20
-empty<BR>Normal: 1779*4kB 839*8kB 342*16kB 1*32kB 0*64kB 0*128kB 0*256kB =
-1*512kB=20
-0*1024kB 1*2048kB 0*4096kB =3D 21892kB<BR>HighMem: empty<BR>Swap cache: =
-add 5930,=20
-delete 5875, find 21346/21816, race 0+0<BR>Free swap&nbsp; =3D =
-975336kB<BR>Total=20
-swap =3D 987832kB<BR>Free swap:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=20
-975336kB<BR>65264 pages of RAM<BR>0 pages of HIGHMEM<BR>1324 reserved=20
-pages<BR>9298 pages shared<BR>55 pages swap cached<BR>3591 pages =
-dirty<BR>4513=20
-pages writeback<BR>66 pages mapped<BR>32454 pages slab<BR>169 pages=20
-pagetables<BR>oom-killer: gfp_mask=3D0x201d2, =
-order=3D0<BR>&nbsp;&lt;c012977a&gt;=20
-out_of_memory+0x28/0x7a&nbsp; &lt;c012a603&gt;=20
-__alloc_pages+0x1e5/0x26a<BR>&nbsp;&lt;c012778b&gt;=20
-page_cache_read+0x3d/0x91&nbsp; &lt;c0127972&gt;=20
-filemap_nopage+0x193/0x2a8<BR>&nbsp;&lt;c0130f17&gt; =
-do_no_page+0x6a/0x1c1&nbsp;=20
-&lt;c013118b&gt; __handle_mm_fault+0xbc/0x15a<BR>&nbsp;&lt;c010d87f&gt;=20
-do_page_fault+0x239/0x561&nbsp; &lt;c010d646&gt;=20
-do_page_fault+0x0/0x561<BR>&nbsp;&lt;c0102e87&gt;=20
-error_code+0x4f/0x54<BR>Mem-info:<BR>DMA per-cpu:<BR>cpu 0 hot: high 0, =
-batch 1=20
-used:0<BR>cpu 0 cold: high 0, batch 1 used:0<BR>DMA32 per-cpu: =
-empty<BR>Normal=20
-per-cpu:<BR>cpu 0 hot: high 90, batch 15 used:18<BR>cpu 0 cold: high 30, =
-batch 7=20
-used:24<BR>HighMem per-cpu: empty<BR>Free=20
-pages:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 24772kB (0kB =
-HighMem)<BR>Active:1029=20
-inactive:17682 dirty:3591 writeback:4513 unstable:0 free:6193 slab:32454 =
-
-mapped:66 pagetables:169<BR>DMA free:2880kB min:1928kB low:2408kB =
-high:2892kB=20
-active:68kB inactive:4640kB present:16384kB pages_scanned:4538=20
-all_unreclaimable? yes<BR>lowmem_reserve[]: 0 0 238 238<BR>DMA32 =
-free:0kB=20
-min:0kB low:0kB high:0kB active:0kB inactive:0kB present:0kB =
-pages_scanned:0=20
-all_unreclaimable? no<BR>lowmem_reserve[]: 0 0 238 238<BR>Normal =
-free:21892kB=20
-min:28788kB low:35984kB high:43180kB active:4048kB inactive:66088kB=20
-present:244672kB pages_scanned:73521 all_unreclaimable? =
-yes<BR>lowmem_reserve[]:=20
-0 0 0 0<BR>HighMem free:0kB min:128kB low:128kB high:128kB active:0kB=20
-inactive:0kB present:0kB pages_scanned:0 all_unreclaimable?=20
-no<BR>lowmem_reserve[]: 0 0 0 0<BR>DMA: 0*4kB 42*8kB 147*16kB 0*32kB =
-1*64kB=20
-1*128kB 0*256kB 0*512kB 0*1024kB 0*2048kB 0*4096kB =3D 2880kB<BR>DMA32:=20
-empty<BR>Normal: 1779*4kB 839*8kB 342*16kB 1*32kB 0*64kB 0*128kB 0*256kB =
-1*512kB=20
-0*1024kB 1*2048kB 0*4096kB =3D 21892kB<BR>HighMem: empty<BR>Swap cache: =
-add 5930,=20
-delete 5875, find 21346/21816, race 0+0<BR>Free swap&nbsp; =3D =
-975336kB<BR>Total=20
-swap =3D 987832kB<BR>Free swap:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=20
-975336kB<BR>65264 pages of RAM<BR>0 pages of HIGHMEM<BR>1324 reserved=20
-pages<BR>9298 pages shared<BR>55 pages swap cached<BR>3591 pages =
-dirty<BR>4513=20
-pages writeback<BR>66 pages mapped<BR>32454 pages slab<BR>169 pages=20
-pagetables<BR></FONT>
-<DIV><FONT face=3D&#26032;&#32048;&#26126;&#39636; =
-size=3D2></FONT>&nbsp;</DIV>
-<DIV><FONT face=3D&#26032;&#32048;&#26126;&#39636; =
-size=3D2></FONT>&nbsp;</DIV>
-<DIV><FONT face=3D&#26032;&#32048;&#26126;&#39636; =
-size=3D2></FONT>&nbsp;</DIV>
-<DIV><FONT face=3D&#26032;&#32048;&#26126;&#39636; =
-size=3D2></FONT>&nbsp;</DIV>
-<DIV><FONT face=3D&#26032;&#32048;&#26126;&#39636; size=3D2>Thanks for =
-all advice ,</FONT></DIV>
-<DIV><FONT face=3D&#26032;&#32048;&#26126;&#39636; =
-size=3D2></FONT>&nbsp;</DIV>
-<DIV><FONT face=3D&#26032;&#32048;&#26126;&#39636; =
-size=3D2>Regards,</FONT></DIV>
-<DIV><FONT face=3D&#26032;&#32048;&#26126;&#39636; =
-size=3D2></FONT>&nbsp;</DIV>
-<DIV><FONT face=3D&#26032;&#32048;&#26126;&#39636; size=3D2>Kevin =
-Cheng</FONT></DIV>
-<DIV><FONT size=3D2></FONT>&nbsp;</DIV></BODY></HTML>
-
-------=_NextPart_000_0341_01C6D7E9.A23FF490--
+-- 
+===========
+John DeFranco                  Hewlett Packard Company
+john.defranco@hp.com           Availability Clusters Solution Lab
+phone: 408 447-7543            19111 Pruneridge Ave., M/S 4101
+fax:   408 447-0056            Cupertino, CA 95014
