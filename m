@@ -1,16 +1,21 @@
-Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
+Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
 	by int-mx1.corp.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
-	k8GC5TKh010681
-	for <linux-lvm@redhat.com>; Sat, 16 Sep 2006 08:05:29 -0400
-Received: from iohazard.net (iohazard.net [193.64.31.48])
-	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id k8GC5NGu019491
-	for <linux-lvm@redhat.com>; Sat, 16 Sep 2006 08:05:23 -0400
-Message-ID: <450BE85F.3090604@iki.fi>
-Date: Sat, 16 Sep 2006 15:04:47 +0300
-From: Aleksandr Koltsoff <czr@iki.fi>
-MIME-Version: 1.0
+	k8IIAOhD010018
+	for <linux-lvm@redhat.com>; Mon, 18 Sep 2006 14:10:24 -0400
+Received: from nibiru.epicideas.net (nibiru.mogmail.net [213.208.82.181] (may
+	be forged))
+	by mx1.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
+	k8IIAMKJ006134
+	for <linux-lvm@redhat.com>; Mon, 18 Sep 2006 14:10:23 -0400
+Received: from [192.168.0.2] (unknown [192.168.0.2])
+	by nibiru.epicideas.net (Postfix) with ESMTP id DD750680C7
+	for <linux-lvm@redhat.com>; Mon, 18 Sep 2006 19:10:16 +0100 (BST)
+From: Nick <lists@mogmail.net>
+Date: Mon, 18 Sep 2006 19:10:16 +0100
+Message-Id: <1158603016.7182.12.camel@localhost.localdomain>
+Mime-Version: 1.0
 Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] lvm support for imaging software
+Subject: [linux-lvm] HDD Failure
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -24,49 +29,24 @@ List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@redhat.com
 
-Hello all, and sorry for the long email,
+Hello List,
 
-What would be the correct way to approach the following problem:
+I have a 3x 120GB HDD that are all lumped into one LVM volume. Recently,
+one died so I removed it using.
 
-I want to implement a filesystem imaging software (not block-based, dd
-is pretty good there already). Parsing the filesystem structures on disk
-is not really the problem (ext2/ext3 at the moment) but accessing data
-"behind" LVM2 is.
+# vgreduce --removemissing Vol1
 
-From the mailing list archives I found a link to agk's presentation
-slides on LVM2, which were very helpful, but don't contain enough
-information in order to do proper lvm structure parsing yet. Source code
-is the only place where this is documented, right?
+This worked fine but now I can't mount the volume group:
 
-Anyhow, the question is this:
-- should I used libdevmapper to access LVM2 data on disk or not? The aim
- for the imaging software is to be suitable in rescue disks which means
-that I cannot rely on the kernel having activated any volumes.
+root@nibiru:~# cat /etc/fstab | grep Vol
+/dev/mapper/Vol1-share /share          ext3    defaults        0       2
+root@nibiru:~# mount /share
+mount: special device /dev/mapper/Vol1-share does not exist
+root@nibiru:~#
 
-It is also my plan to support accessing data trough VMDK-layer, so that
-the actual reading would then be parseVDMK(parseLVM(parseExt())). On the
-other hand the reading layer would be generic enough to support
-replaceable mappings. On a related note, if anyone has information on
-the format of virtual disks that MS is using in virtual PC, it would
-also be helpful.
+I've no idea why it says it doesn't exist as I thought all I did was
+remove missing PE's from a VG - not remove the actual VG!
 
-Does this sound insane or doable? Question being really "how difficult
-is it to parse LVM2 on disk structures in order to locate blocks" and
-"how much will the structures change during the lifetime of LVM2"?
+Can anyone help me get my data back? Thanks for any advice.
 
-A related problem is implementing the restoring-portion of the software.
-  Should libdevmapper be used to create new LVM-structures or disk or is
-it even possible? Or should I just use exec with the existing LVM2
-command line tools in order to create the necessary structures?
-
-My aim is also to support the incremental backup scenario in which only
-new data will be stored in the image. In order for this work I'll need
-to parse the filesystem structures much further that is done in
-partimage (for example), which only parses fs-stuff enough to determine
-whether some block should be stored or not.
-
-Currently I'm mapping out the difficulty level of this project and might
-abandon it all-together if it appear to be too complex so additional
-information is greatly appreciated.
-
-ak.
+Nick
