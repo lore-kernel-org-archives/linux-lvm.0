@@ -1,18 +1,32 @@
-Subject: Re: [linux-lvm] Misleading documentation
-From: Les Mikesell <lesmikesell@gmail.com>
-In-Reply-To: <20060920114019.GA4796@redhat.com>
-References: <1158603016.7182.12.camel@localhost.localdomain>
-	<450EEEA0.7020703@mdmiller.com>
-	<1158606792.7182.15.camel@localhost.localdomain>
-	<1158607438.19905.30.camel@bounty.rider.geekspirit.net>
-	<1158608077.7182.18.camel@localhost.localdomain>
-	<20060918193728.GC28043@arvo.suso.org>
-	<4B875923-CB76-4792-837B-EDA3B9E53756@slamb.org>
-	<45111CDA.6080406@mortent.org>  <20060920114019.GA4796@redhat.com>
-Message-Id: <1158756105.31514.3.camel@les-home.futuresource.com>
-Mime-Version: 1.0
-Date: Wed, 20 Sep 2006 07:41:45 -0500
-Content-Transfer-Encoding: 7bit
+Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
+	by int-mx1.corp.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
+	k8KDOcWB027865
+	for <linux-lvm@redhat.com>; Wed, 20 Sep 2006 09:24:38 -0400
+Received: from gw-nam4.philips.com (gw-nam4.philips.com [161.88.253.58])
+	by mx1.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
+	k8KDOaI0013017
+	for <linux-lvm@redhat.com>; Wed, 20 Sep 2006 09:24:36 -0400
+Received: from smtpscan-nam4.philips.com (smtpscan-nam4.mail.philips.com
+	[167.81.103.7])
+	by gw-nam4.philips.com (Postfix) with ESMTP id DF84F96001
+	for <linux-lvm@redhat.com>; Wed, 20 Sep 2006 13:24:25 +0000 (UTC)
+Received: from smtpscan-nam4.philips.com (localhost [127.0.0.1])
+	by localhost.philips.com (Postfix) with ESMTP id 8854B57DF8
+	for <linux-lvm@redhat.com>; Wed, 20 Sep 2006 13:24:25 +0000 (GMT)
+Received: from smtprelay-nam2.philips.com (smtprelay-nam2.philips.com
+	[167.81.103.9])
+	by smtpscan-nam4.philips.com (Postfix) with ESMTP id 66BA357DF2
+	for <linux-lvm@redhat.com>; Wed, 20 Sep 2006 13:24:25 +0000 (GMT)
+Received: from anrrmh02.diamond.philips.com (anrrmh02-srv.diamond.philips.com
+	[167.81.112.96])
+	by smtprelay-nam2.philips.com (Postfix) with ESMTP id 1D4C130
+	for <linux-lvm@redhat.com>; Wed, 20 Sep 2006 13:24:25 +0000 (GMT)
+In-Reply-To: <4B875923-CB76-4792-837B-EDA3B9E53756@slamb.org>
+Subject: Re: [linux-lvm] Misleading documentation (was: HDD Failure)
+MIME-Version: 1.0
+From: Tobias Bluhm <tobias.bluhm@philips.com>
+Message-ID: <OF255DDD51.9A0BB030-ON852571EF.0048DBFE-852571EF.00498302@philips.com>
+Date: Wed, 20 Sep 2006 09:22:33 -0400
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -24,29 +38,24 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: mauelshagen@redhat.com, LVM general discussion and development <linux-lvm@redhat.com>
+Content-Transfer-Encoding: 7bit
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-On Wed, 2006-09-20 at 06:40, Heinz Mauelshagen wrote:
+Scott Lamb wrote on 09/19/2006 06:40:43 PM:
 
-> > >This is my biggest beef with LVM - why doesn't *any* of the 
-> > >documentation point this out? There are very few good reasons to use LVM 
-> > >without RAID, and "ignorance" certainly isn't among them. I don't see 
-> > >any mention of RAID or disk failures in the manual pages or in the HOWTO.
-> > 
-> > Mirroring should be dealt with in LVM itself, by mapping more PEs on 
-> > physical seperate PVs to each LE. From the little information I've seen 
-> > about the new LVM mirroring, it seems that the mirrors are defined on LV 
-> > level instead of LE/PE. But after some JFGI sessions nothing really 
-> > enlightening has shown up.
+> On Sep 18, 2006, at 12:37 PM, Mark Krenz wrote:
+> >   LVM != RAID
+> >
+> >   You should have been doing RAID if you wanted to be able to 
+> > handle the
+> > failure of one drive.
 > 
-> LVM2 does mirror by grouping multiple (hidden) logical volumes
-> into a mirror set.
+> This is my biggest beef with LVM - why doesn't *any* of the 
+> documentation point this out? There are very few good reasons to use 
+> LVM without RAID, and "ignorance" certainly isn't among them. I don't 
+> see any mention of RAID or disk failures in the manual pages or in 
+> the HOWTO.
 
-Where would I find example commands to add a mirror, check
-the mirroring status, break it, reuse the other half, etc.?
-Is it possible to mirror a snapshot instead of the changing
-volume?
-
--- 
-  Les Mikesell
-    lesmikesell@gmail.com
+Good point. So if the docs make no mention of RAID or fail-over or 
+redundency or spares, what made you assume that 
+LVM had such capabilities????
