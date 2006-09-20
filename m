@@ -1,14 +1,27 @@
-Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
+Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
 	by int-mx1.corp.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
-	k8K3MpRe026648
-	for <linux-lvm@redhat.com>; Tue, 19 Sep 2006 23:22:51 -0400
-Received: from arvo.suso.org (mail.suso.org [216.9.132.134])
-	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id k8K3MgbC022000
-	for <linux-lvm@redhat.com>; Tue, 19 Sep 2006 23:22:42 -0400
-Date: Wed, 20 Sep 2006 03:22:23 +0000
-From: Mark Krenz <mark@suso.org>
-Subject: Re: [linux-lvm] Misleading documentation (was: HDD Failure)
-Message-ID: <20060920032222.GF28043@arvo.suso.org>
+	k8KAnRCL008322
+	for <linux-lvm@redhat.com>; Wed, 20 Sep 2006 06:49:27 -0400
+Received: from osl1smout1.broadpark.no (osl1smout1.broadpark.no [80.202.4.58])
+	by mx1.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
+	k8KAnPR3021434
+	for <linux-lvm@redhat.com>; Wed, 20 Sep 2006 06:49:26 -0400
+Received: from osl1sminn1.broadpark.no ([80.202.4.59])
+	by osl1smout1.broadpark.no
+	(Sun Java System Messaging Server 6.1 HotFix 0.05 (built Oct 21 2004))
+	with ESMTP id <0J5W00NW00Q81JE0@osl1smout1.broadpark.no> for
+	linux-lvm@redhat.com; Wed, 20 Sep 2006 12:49:20 +0200 (CEST)
+Received: from [192.168.94.233] ([195.212.29.187]) by osl1sminn1.broadpark.no
+	(Sun Java System Messaging Server 6.1 HotFix 0.05 (built Oct 21
+	2004)) with ESMTPA id <0J5W00JIW0Q7Q111@osl1sminn1.broadpark.no> for
+	linux-lvm@redhat.com; Wed, 20 Sep 2006 12:49:20 +0200 (CEST)
+Date: Wed, 20 Sep 2006 12:50:02 +0200
+From: Morten Torstensen <morten@mortent.org>
+Subject: Re: [linux-lvm] Misleading documentation
+In-reply-to: <4B875923-CB76-4792-837B-EDA3B9E53756@slamb.org>
+Message-id: <45111CDA.6080406@mortent.org>
+MIME-version: 1.0
+Content-transfer-encoding: 7BIT
 References: <1158603016.7182.12.camel@localhost.localdomain>
 	<450EEEA0.7020703@mdmiller.com>
 	<1158606792.7182.15.camel@localhost.localdomain>
@@ -16,10 +29,8 @@ References: <1158603016.7182.12.camel@localhost.localdomain>
 	<1158608077.7182.18.camel@localhost.localdomain>
 	<20060918193728.GC28043@arvo.suso.org>
 	<4B875923-CB76-4792-837B-EDA3B9E53756@slamb.org>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <4B875923-CB76-4792-837B-EDA3B9E53756@slamb.org>
-Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
+Reply-To: morten@mortent.org,
+	LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -29,74 +40,25 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
+Scott Lamb wrote:
+> This is my biggest beef with LVM - why doesn't *any* of the 
+> documentation point this out? There are very few good reasons to use LVM 
+> without RAID, and "ignorance" certainly isn't among them. I don't see 
+> any mention of RAID or disk failures in the manual pages or in the HOWTO.
 
-  Personally I like it when documentation is kept simple and uses simple
-examples.  There is nothing worse than when you are trying to learn
-something and it tells you how to how to intantiate a variable, and then
-it immediately goes on to show you how to make some complicated reference
-to it using some code.
-
-  I agree with you though, its probably a good idea to steer newcomers
-in the right direction on disk management and a few notes about doing
-LVM ontop of RAID being a good idea couldn't hurt.  This is especially
-so since I've heard three mentions of people using LVM on a server
-without doing RAID this week alone. :-/
-
-  I suppose it could also be said that people who are causually doing
-LVM on their systems using something like a GUI are most likely not
-going to be referencing the man pages or LVM documentation until after
-their system is setup, at which point it is probably too late to put the
-physical volumes on a RAID array.  So I think its more the
-responsibility of the GUI/ncurses installer to alert you to be using
-RAID.
-
-Mark
-
-
-On Tue, Sep 19, 2006 at 10:40:43PM GMT, Scott Lamb [slamb@slamb.org] said the following:
-> On Sep 18, 2006, at 12:37 PM, Mark Krenz wrote:
-> >  LVM != RAID
-> >
-> >  You should have been doing RAID if you wanted to be able to  
-> >handle the
-> >failure of one drive.
-> 
-> This is my biggest beef with LVM - why doesn't *any* of the  
-> documentation point this out? There are very few good reasons to use  
-> LVM without RAID, and "ignorance" certainly isn't among them. I don't  
-> see any mention of RAID or disk failures in the manual pages or in  
-> the HOWTO.
-> 
-> For example, the recipes chapter [1] of the HOWTO shows a non-trivial  
-> setup with four volume groups split across seven physical drives.  
-> There's no mention of RAID. This is a ridiculously bad idea - if  
-> *any* of those seven drives are lost, at least one volume group will  
-> fail. In some cases, more than one. This document should be showing  
-> best practices, and it's instead showing how to throw away your data.
-> 
-> The "lvcreate" manual page is pretty bad, too. It mentions the  
-> ability to tune stripe size, which on casual read, might suggest that  
-> it uses real RAID. Instead, I think this is just RAID-0.
-> 
-> [1] - http://tldp.org/HOWTO/LVM-HOWTO/recipeadddisk.html
-> 
-> -- 
-> Scott Lamb <http://www.slamb.org/>
-> 
-> 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
-
+Mirroring should be dealt with in LVM itself, by mapping more PEs on physical 
+seperate PVs to each LE. From the little information I've seen about the new LVM 
+mirroring, it seems that the mirrors are defined on LV level instead of LE/PE. 
+But after some JFGI sessions nothing really enlightening has shown up.
 
 -- 
-Mark S. Krenz
-IT Director
-Suso Technology Services, Inc.
-http://suso.org/
+
+//Morten Torstensen
+//Email: morten@mortent.org
+//IM: Cartoon@jabber.no morten.torstensen@gmail.com
+
+And if it turns out that there is a God, I don't believe that he is evil.
+The worst that can be said is that he's an underachiever.
