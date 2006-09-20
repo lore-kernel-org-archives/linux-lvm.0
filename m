@@ -1,27 +1,45 @@
 Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
 	by int-mx1.corp.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
-	k8JMf2ao022278
-	for <linux-lvm@redhat.com>; Tue, 19 Sep 2006 18:41:02 -0400
-Received: from calvin.slamb.org (calvin.slamb.org [216.136.66.56])
+	k8K0UWS8021877
+	for <linux-lvm@redhat.com>; Tue, 19 Sep 2006 20:30:32 -0400
+Received: from huixtocihuatl.xenguest.geekspirit.net
+	(mictlantecuhtli.geekspirit.net [81.56.52.126])
 	by mx1.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
-	k8JMf1uU022744
-	for <linux-lvm@redhat.com>; Tue, 19 Sep 2006 18:41:01 -0400
-Received: from [IPv6:::1] (localhost.slamb.org [127.0.0.1])
-	by calvin.slamb.org (Postfix) with ESMTP id 7E3416FDE2
-	for <linux-lvm@redhat.com>; Tue, 19 Sep 2006 17:40:45 -0500 (CDT)
-Mime-Version: 1.0 (Apple Message framework v752.2)
-In-Reply-To: <20060918193728.GC28043@arvo.suso.org>
+	k8K0USau026124
+	for <linux-lvm@redhat.com>; Tue, 19 Sep 2006 20:30:28 -0400
+Received: from localhost (mictecacihuatl.xenguest.geekspirit.net
+	[172.24.42.55])
+	by huixtocihuatl.xenguest.geekspirit.net (Postfix) with ESMTP id
+	5233B71504
+	for <linux-lvm@redhat.com>; Wed, 20 Sep 2006 02:31:17 +0200 (CEST)
+Received: from huixtocihuatl.xenguest.geekspirit.net ([172.24.42.53])
+	by localhost (mictecacihuatl.xenguest.geekspirit.net [172.24.42.55])
+	(amavisd-new, port 10024)
+	with ESMTP id Uk259xz4+bTB for <linux-lvm@redhat.com>;
+	Wed, 20 Sep 2006 02:29:53 +0200 (CEST)
+Received: from bounty.rider.geekspirit.net (bounty.rider.geekspirit.net
+	[172.24.42.200]) (Authenticated sender: rider)
+	by huixtocihuatl.xenguest.geekspirit.net (Postfix) with ESMTP id
+	D8E2971502
+	for <linux-lvm@redhat.com>; Wed, 20 Sep 2006 02:31:12 +0200 (CEST)
+Subject: Re: [linux-lvm] LVM on RAID
+From: Fabien Jakimowicz <fabien@jakimowicz.com>
+In-Reply-To: <Pine.LNX.4.63.0609191650560.1397@zeus.itg.uiuc.edu>
 References: <1158603016.7182.12.camel@localhost.localdomain>
 	<450EEEA0.7020703@mdmiller.com>
 	<1158606792.7182.15.camel@localhost.localdomain>
 	<1158607438.19905.30.camel@bounty.rider.geekspirit.net>
 	<1158608077.7182.18.camel@localhost.localdomain>
-	<20060918193728.GC28043@arvo.suso.org>
-Message-Id: <4B875923-CB76-4792-837B-EDA3B9E53756@slamb.org>
-Content-Transfer-Encoding: 7bit
-From: Scott Lamb <slamb@slamb.org>
-Subject: Re: [linux-lvm] Misleading documentation (was: HDD Failure)
-Date: Tue, 19 Sep 2006 15:40:43 -0700
+	<1158608557.19905.37.camel@bounty.rider.geekspirit.net>
+	<1158609135.7182.21.camel@localhost.localdomain>
+	<1158609477.19905.38.camel@bounty.rider.geekspirit.net>
+	<Pine.LNX.4.63.0609191650560.1397@zeus.itg.uiuc.edu>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature";
+	boundary="=-oERl6zi8bnvRAzEWvOeD"
+Date: Wed, 20 Sep 2006 02:30:11 +0200
+Message-Id: <1158712211.5366.2.camel@bounty.rider.geekspirit.net>
+Mime-Version: 1.0
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -32,34 +50,45 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; delsp="yes"; format="flowed"
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-On Sep 18, 2006, at 12:37 PM, Mark Krenz wrote:
->   LVM != RAID
->
->   You should have been doing RAID if you wanted to be able to  
-> handle the
-> failure of one drive.
 
-This is my biggest beef with LVM - why doesn't *any* of the  
-documentation point this out? There are very few good reasons to use  
-LVM without RAID, and "ignorance" certainly isn't among them. I don't  
-see any mention of RAID or disk failures in the manual pages or in  
-the HOWTO.
+--=-oERl6zi8bnvRAzEWvOeD
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 
-For example, the recipes chapter [1] of the HOWTO shows a non-trivial  
-setup with four volume groups split across seven physical drives.  
-There's no mention of RAID. This is a ridiculously bad idea - if  
-*any* of those seven drives are lost, at least one volume group will  
-fail. In some cases, more than one. This document should be showing  
-best practices, and it's instead showing how to throw away your data.
+On Tue, 2006-09-19 at 16:53 -0500, Alexander Lazarevich wrote:
+> We have several RAID devices (16-24 drive Fiber/SCSI attached RAID) which=
+=20
+> are currently single devices on our 64bit linux servers (RHEL-4, core5).=20
+> We are considering LVM'ing 2 or more of the RAID's into a LVM group. I=20
+> don't doubt the reliability and robustness of LVM2 on single drives, but =
+I=20
+> worry about it on top of RAID devices.
+>=20
+> Does anyone have any experience with LVM on to of RAID volumes, positive=20
+> or negative?
+>=20
+> Thanks,
+>=20
+> Alex
+Works perfectly with severall machines, maybe having more interactions
+between raid and lvm could be a good thing (for example, while creating
+a new LV or extending existing one on mixed raid devices (degrated and
+not), it could be better if lvm don't use degrated devices first).
+--=20
+Fabien Jakimowicz <fabien@jakimowicz.com>
 
-The "lvcreate" manual page is pretty bad, too. It mentions the  
-ability to tune stripe size, which on casual read, might suggest that  
-it uses real RAID. Instead, I think this is just RAID-0.
+--=-oERl6zi8bnvRAzEWvOeD
+Content-Type: application/pgp-signature; name=signature.asc
+Content-Description: This is a digitally signed message part
 
-[1] - http://tldp.org/HOWTO/LVM-HOWTO/recipeadddisk.html
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.5 (GNU/Linux)
 
--- 
-Scott Lamb <http://www.slamb.org/>
+iD8DBQBFEIuTzTD+AjVP2VIRAooDAJ9sUa/89mJb4WLpVMToIh6Zr6S2MACeOQPD
+Srq+ygexmLFOrShUD5XNqtU=
+=ubrJ
+-----END PGP SIGNATURE-----
+
+--=-oERl6zi8bnvRAzEWvOeD--
