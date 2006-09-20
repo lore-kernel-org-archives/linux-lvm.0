@@ -1,33 +1,35 @@
 Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
 	by int-mx1.corp.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
-	k8KDOcWB027865
-	for <linux-lvm@redhat.com>; Wed, 20 Sep 2006 09:24:38 -0400
-Received: from gw-nam4.philips.com (gw-nam4.philips.com [161.88.253.58])
+	k8KDtXem008984
+	for <linux-lvm@redhat.com>; Wed, 20 Sep 2006 09:55:33 -0400
+Received: from incantation.Mines.EDU (incantation.Mines.EDU [138.67.130.6])
 	by mx1.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
-	k8KDOaI0013017
-	for <linux-lvm@redhat.com>; Wed, 20 Sep 2006 09:24:36 -0400
-Received: from smtpscan-nam4.philips.com (smtpscan-nam4.mail.philips.com
-	[167.81.103.7])
-	by gw-nam4.philips.com (Postfix) with ESMTP id DF84F96001
-	for <linux-lvm@redhat.com>; Wed, 20 Sep 2006 13:24:25 +0000 (UTC)
-Received: from smtpscan-nam4.philips.com (localhost [127.0.0.1])
-	by localhost.philips.com (Postfix) with ESMTP id 8854B57DF8
-	for <linux-lvm@redhat.com>; Wed, 20 Sep 2006 13:24:25 +0000 (GMT)
-Received: from smtprelay-nam2.philips.com (smtprelay-nam2.philips.com
-	[167.81.103.9])
-	by smtpscan-nam4.philips.com (Postfix) with ESMTP id 66BA357DF2
-	for <linux-lvm@redhat.com>; Wed, 20 Sep 2006 13:24:25 +0000 (GMT)
-Received: from anrrmh02.diamond.philips.com (anrrmh02-srv.diamond.philips.com
-	[167.81.112.96])
-	by smtprelay-nam2.philips.com (Postfix) with ESMTP id 1D4C130
-	for <linux-lvm@redhat.com>; Wed, 20 Sep 2006 13:24:25 +0000 (GMT)
-In-Reply-To: <4B875923-CB76-4792-837B-EDA3B9E53756@slamb.org>
-Subject: Re: [linux-lvm] Misleading documentation (was: HDD Failure)
-MIME-Version: 1.0
-From: Tobias Bluhm <tobias.bluhm@philips.com>
-Message-ID: <OF255DDD51.9A0BB030-ON852571EF.0048DBFE-852571EF.00498302@philips.com>
-Date: Wed, 20 Sep 2006 09:22:33 -0400
-Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
+	k8KDtWUn026714
+	for <linux-lvm@redhat.com>; Wed, 20 Sep 2006 09:55:33 -0400
+Received: from merlin.Mines.EDU (merlin.Mines.EDU [138.67.4.11])
+	(authenticated bits=0)
+	by incantation.Mines.EDU (8.12.11.20060308/8.12.11) with ESMTP id
+	k8KDtOep016282
+	(version=TLSv1/SSLv3 cipher=RC4-MD5 bits=128 verify=NO)
+	for <linux-lvm@redhat.com>; Wed, 20 Sep 2006 07:55:27 -0600
+Subject: Re: [linux-lvm] LVM on RAID
+From: "Matthew B. Brookover" <mbrookov@mines.edu>
+In-Reply-To: <Pine.LNX.4.63.0609191650560.1397@zeus.itg.uiuc.edu>
+References: <1158603016.7182.12.camel@localhost.localdomain>
+	<450EEEA0.7020703@mdmiller.com>
+	<1158606792.7182.15.camel@localhost.localdomain>
+	<1158607438.19905.30.camel@bounty.rider.geekspirit.net>
+	<1158608077.7182.18.camel@localhost.localdomain>
+	<1158608557.19905.37.camel@bounty.rider.geekspirit.net>
+	<1158609135.7182.21.camel@localhost.localdomain>
+	<1158609477.19905.38.camel@bounty.rider.geekspirit.net>
+	<Pine.LNX.4.63.0609191650560.1397@zeus.itg.uiuc.edu>
+Content-Type: multipart/alternative; boundary="=-j2Dm+xfVZCRVknBRErKg"
+Date: Wed, 20 Sep 2006 07:55:24 -0600
+Message-Id: <1158760524.26653.4.camel@merlin.Mines.EDU>
+Mime-Version: 1.0
+Reply-To: mbrookov@mines.edu,
+	LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -37,25 +39,80 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-Scott Lamb wrote on 09/19/2006 06:40:43 PM:
 
-> On Sep 18, 2006, at 12:37 PM, Mark Krenz wrote:
-> >   LVM != RAID
-> >
-> >   You should have been doing RAID if you wanted to be able to 
-> > handle the
-> > failure of one drive.
+--=-j2Dm+xfVZCRVknBRErKg
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
+
+I have used LVM on top of software raid and ISCSI.  It works well.  It
+also helps keep track of what device is where.  ISCSI does not export
+its targets in the same order, some times sdb shows up as sdc....   LVM
+will keep track of what is what.
+
+Matt
+
+On Tue, 2006-09-19 at 16:53 -0500, Alexander Lazarevich wrote:
+
+> We have several RAID devices (16-24 drive Fiber/SCSI attached RAID) which 
+> are currently single devices on our 64bit linux servers (RHEL-4, core5). 
+> We are considering LVM'ing 2 or more of the RAID's into a LVM group. I 
+> don't doubt the reliability and robustness of LVM2 on single drives, but I 
+> worry about it on top of RAID devices.
 > 
-> This is my biggest beef with LVM - why doesn't *any* of the 
-> documentation point this out? There are very few good reasons to use 
-> LVM without RAID, and "ignorance" certainly isn't among them. I don't 
-> see any mention of RAID or disk failures in the manual pages or in 
-> the HOWTO.
+> Does anyone have any experience with LVM on to of RAID volumes, positive 
+> or negative?
+> 
+> Thanks,
+> 
+> Alex
+> 
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@redhat.com
+> https://www.redhat.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
 
-Good point. So if the docs make no mention of RAID or fail-over or 
-redundency or spares, what made you assume that 
-LVM had such capabilities????
+--=-j2Dm+xfVZCRVknBRErKg
+Content-Type: text/html; charset=utf-8
+Content-Transfer-Encoding: 7bit
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 TRANSITIONAL//EN">
+<HTML>
+<HEAD>
+  <META HTTP-EQUIV="Content-Type" CONTENT="text/html; CHARSET=UTF-8">
+  <META NAME="GENERATOR" CONTENT="GtkHTML/3.6.2">
+</HEAD>
+<BODY>
+I have used LVM on top of software raid and ISCSI.&nbsp; It works well.&nbsp; It also helps keep track of what device is where.&nbsp; ISCSI does not export its targets in the same order, some times sdb shows up as sdc....&nbsp;&nbsp; LVM will keep track of what is what.<BR>
+<BR>
+Matt<BR>
+<BR>
+On Tue, 2006-09-19 at 16:53 -0500, Alexander Lazarevich wrote:
+<BLOCKQUOTE TYPE=CITE>
+<PRE>
+<FONT COLOR="#000000">We have several RAID devices (16-24 drive Fiber/SCSI attached RAID) which </FONT>
+<FONT COLOR="#000000">are currently single devices on our 64bit linux servers (RHEL-4, core5). </FONT>
+<FONT COLOR="#000000">We are considering LVM'ing 2 or more of the RAID's into a LVM group. I </FONT>
+<FONT COLOR="#000000">don't doubt the reliability and robustness of LVM2 on single drives, but I </FONT>
+<FONT COLOR="#000000">worry about it on top of RAID devices.</FONT>
+
+<FONT COLOR="#000000">Does anyone have any experience with LVM on to of RAID volumes, positive </FONT>
+<FONT COLOR="#000000">or negative?</FONT>
+
+<FONT COLOR="#000000">Thanks,</FONT>
+
+<FONT COLOR="#000000">Alex</FONT>
+
+<FONT COLOR="#000000">_______________________________________________</FONT>
+<FONT COLOR="#000000">linux-lvm mailing list</FONT>
+<FONT COLOR="#000000"><A HREF="mailto:linux-lvm@redhat.com">linux-lvm@redhat.com</A></FONT>
+<FONT COLOR="#000000"><A HREF="https://www.redhat.com/mailman/listinfo/linux-lvm">https://www.redhat.com/mailman/listinfo/linux-lvm</A></FONT>
+<FONT COLOR="#000000">read the LVM HOW-TO at <A HREF="http://tldp.org/HOWTO/LVM-HOWTO/">http://tldp.org/HOWTO/LVM-HOWTO/</A></FONT>
+</PRE>
+</BLOCKQUOTE>
+</BODY>
+</HTML>
+
+--=-j2Dm+xfVZCRVknBRErKg--
