@@ -1,19 +1,21 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
 	by int-mx1.corp.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
-	k8LJAA19030845
-	for <linux-lvm@redhat.com>; Thu, 21 Sep 2006 15:10:10 -0400
-Received: from percy.comedia.it (percy.comedia.it [212.97.59.71])
-	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id k8LJA3A1022933
-	for <linux-lvm@redhat.com>; Thu, 21 Sep 2006 15:10:04 -0400
-Date: Thu, 21 Sep 2006 21:09:54 +0200
-From: Luca Berra <bluca@comedia.it>
-Subject: Re: [linux-lvm] using LVM with SAN
-Message-ID: <20060921190954.GB7301@percy.comedia.it>
-References: <MNELLEMHKKBIPIBBIOKOOEHOFDAA.detoma.alessandro@sea-aeroportimilano.it>
-Mime-Version: 1.0
+	k8LDLtSg029305
+	for <linux-lvm@redhat.com>; Thu, 21 Sep 2006 09:21:55 -0400
+Received: from nz-out-0102.google.com (nz-out-0102.google.com [64.233.162.194])
+	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id k8LDLmHJ018828
+	for <linux-lvm@redhat.com>; Thu, 21 Sep 2006 09:21:48 -0400
+Received: by nz-out-0102.google.com with SMTP id n1so375184nzf
+	for <linux-lvm@redhat.com>; Thu, 21 Sep 2006 06:21:48 -0700 (PDT)
+Message-ID: <38a5faa90609210621h1626bc92k13e6f12a65e2b025@mail.gmail.com>
+Date: Thu, 21 Sep 2006 15:21:48 +0200
+From: "=?ISO-8859-1?Q?Erik_Starb=E4ck?=" <erik.starback@gmail.com>
+MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <MNELLEMHKKBIPIBBIOKOOEHOFDAA.detoma.alessandro@sea-aeroportimilano.it>
-Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Transfer-Encoding: 8bit
+Subject: [linux-lvm] How to rescue data from Fedora system "inside" lvm-disk?
+Reply-To: erik@starback.se,
+	LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -23,48 +25,68 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"; format="flowed"
 To: linux-lvm@redhat.com
 
-On Wed, Sep 20, 2006 at 05:08:53PM +0200, de Toma Alessandro wrote:
->Dear All,
->we have create a vg on a LINUX RH ES4 UP2.
->The storage is a CX500 and the multypath software is POWERPATH 4.5.
->
->During the creation of VG we are this worning:
-># vgcreate VolGroupSUN01 /dev/emcpowerb1
->Found duplicate PV fPxLqOcxkEO2Umku09icOn5oJ1IC5H84: using /dev/sdc1 not
->/dev/emcpowera1
-....
->Volume group "VolGroupSUN01" successfully created
->This is correct?
+Hi!
 
-no, please edit /etc/lvm/lvm.conf and set up filters so lvm will only
-use /dev/emcpower* devices.
+I have a half physically broken (shaky at least)  hard disk with
+Fedora Core 4 with default disk layout (which means lvm-system).
 
-note that if your root vg is on local scsi disks you will have to add
-those to the filter as well.
+I installed a new Fedora Core 5 on a new disk to rescue as much as
+possible of the data of the old disk.
 
-eg:
-   filter =[ "a|/dev/sda[1-9]*|", "a|/dev/sdb[1-9]*|", "a|/dev/emcpower.*|", "r|.*|" ]
+I was super confused about the LVM-stuff and was acting so very
+bad.... I started to fiddle with stuff I wasn't in control of... Damn!
 
+I think the only thing I actually did was this:
 
->When we umount the volume:
->[root@mezzicluslin02 ~]# umount /dev/VolGroupSUN00/LogVolSUN00
->/home/SUNstorage
->umount: /dev/mapper/VolGroupSUN00-LogVolSUN00: not mounted
->umount: /dev/mapper/VolGroupSUN00-LogVolSUN00: not mounted
->
->This is correct?
-no, umount takes only 1 parameter, either the device or the mount point.
+vgcreate temp /dev/hdd2
 
-L.
+and hdd2 was the only physical volume.
+
+I got super scared and I am now super afraid I have made it impossible
+to rescue anything. I stopped every kind of activity.
+
+Please. Can someone tell me if I can rescue the data?
+-------------
+I did a more controlled test after with two fresh disks. And with that
+setup I realized the only thing I should have done was this:
+
+lvchange -ay VolGroup00
+
+then everything should have worked like a charm.... but instead I
+started to fiddle.
+
+Please, please say that I can save the data!
+
+--------------
+I tried to simulate my situation (with another disk) after I got the
+above solution to work. I tried to  do:
+
+vgcreate temp /dev/hdd2
+
+but it didn't work.... so that confused me some, becuse I am almost
+sure that was the only thing I did with my broken disk.
+
+ ------------
+
+Perhaps something was fucked up bye the fact that I had the same
+volume configuration (and names) with hda and hdd when I did my first
+try.
+
+Thanks for every kind of input!
+
+Erik S
+
+erik@starback.se
+
 
 -- 
-Luca Berra -- bluca@comedia.it
-        Communication Media & Services S.r.l.
- /"\
- \ /     ASCII RIBBON CAMPAIGN
-  X        AGAINST HTML MAIL
- / \
+
+
+Erik Starb�ck
+Harpsund, Sl�nten
+640 31 Mell�sa
+0157-60066
+070-7653093
