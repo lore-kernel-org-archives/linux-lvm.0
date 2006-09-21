@@ -1,23 +1,18 @@
-Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
+Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
 	by int-mx1.corp.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
-	k8LELRkM024600
-	for <linux-lvm@redhat.com>; Thu, 21 Sep 2006 10:21:27 -0400
-Received: from ug-out-1314.google.com (ug-out-1314.google.com [66.249.92.172])
-	by mx1.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
-	k8LELQkn018166
-	for <linux-lvm@redhat.com>; Thu, 21 Sep 2006 10:21:26 -0400
-Received: by ug-out-1314.google.com with SMTP id 39so165958ugf
-	for <linux-lvm@redhat.com>; Thu, 21 Sep 2006 07:21:21 -0700 (PDT)
-Message-ID: <ab53550609210721n45754f87w91dd8d23400cf567@mail.gmail.com>
-Date: Thu, 21 Sep 2006 10:21:20 -0400
-From: "Bernard Fay" <bernard.fay@gmail.com>
-Subject: Re: [linux-lvm] pvs and pvscan does not show my PV's
-In-Reply-To: <20060921133843.GW17654@agk.surrey.redhat.com>
-MIME-Version: 1.0
-Content-Type: multipart/alternative; 
-	boundary="----=_Part_855_3853625.1158848480845"
-References: <ab53550609210628v3fbaf1a0sb9f569faf8542389@mail.gmail.com>
-	<20060921133843.GW17654@agk.surrey.redhat.com>
+	k8LJAA19030845
+	for <linux-lvm@redhat.com>; Thu, 21 Sep 2006 15:10:10 -0400
+Received: from percy.comedia.it (percy.comedia.it [212.97.59.71])
+	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id k8LJA3A1022933
+	for <linux-lvm@redhat.com>; Thu, 21 Sep 2006 15:10:04 -0400
+Date: Thu, 21 Sep 2006 21:09:54 +0200
+From: Luca Berra <bluca@comedia.it>
+Subject: Re: [linux-lvm] using LVM with SAN
+Message-ID: <20060921190954.GB7301@percy.comedia.it>
+References: <MNELLEMHKKBIPIBBIOKOOEHOFDAA.detoma.alessandro@sea-aeroportimilano.it>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <MNELLEMHKKBIPIBBIOKOOEHOFDAA.detoma.alessandro@sea-aeroportimilano.it>
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -28,48 +23,48 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: LVM general discussion and development <linux-lvm@redhat.com>
-
-------=_Part_855_3853625.1158848480845
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
 Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
+To: linux-lvm@redhat.com
 
-That's exactly it!   I have version 2.02.06 on my Debian Etch system.
-
-thanks
-
-On 9/21/06, Alasdair G Kergon <agk@redhat.com> wrote:
+On Wed, Sep 20, 2006 at 05:08:53PM +0200, de Toma Alessandro wrote:
+>Dear All,
+>we have create a vg on a LINUX RH ES4 UP2.
+>The storage is a CX500 and the multypath software is POWERPATH 4.5.
 >
-> On Thu, Sep 21, 2006 at 09:28:15AM -0400, Bernard Fay wrote:
-> > Does someone can tell my why on my actual system pvs or pvscan does not
-> list
-> > the PV's?
->
-> Check what version of lvm2 you're using - broken for a while; fixed in
-> 2.02.07.
->   Fix PV tools to include orphaned PVs in default output again.
->
-> Alasdair
-> --
-> agk@redhat.com
->
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
->
+>During the creation of VG we are this worning:
+># vgcreate VolGroupSUN01 /dev/emcpowerb1
+>Found duplicate PV fPxLqOcxkEO2Umku09icOn5oJ1IC5H84: using /dev/sdc1 not
+>/dev/emcpowera1
+....
+>Volume group "VolGroupSUN01" successfully created
+>This is correct?
 
-------=_Part_855_3853625.1158848480845
-Content-Type: text/html; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
+no, please edit /etc/lvm/lvm.conf and set up filters so lvm will only
+use /dev/emcpower* devices.
 
-That's exactly it!&nbsp;&nbsp; I have version 2.02.06 on my Debian Etch system.<br><br>thanks<br><br><div><span class="gmail_quote">On 9/21/06, <b class="gmail_sendername">Alasdair G Kergon</b> &lt;<a href="mailto:agk@redhat.com">agk@redhat.com
-</a>&gt; wrote:</span><blockquote class="gmail_quote" style="border-left: 1px solid rgb(204, 204, 204); margin: 0pt 0pt 0pt 0.8ex; padding-left: 1ex;">On Thu, Sep 21, 2006 at 09:28:15AM -0400, Bernard Fay wrote:<br>&gt; Does someone can tell my why on my actual system pvs or pvscan does not list
-<br>&gt; the PV's?<br><br>Check what version of lvm2 you're using - broken for a while; fixed in 2.02.07.<br>&nbsp;&nbsp;Fix PV tools to include orphaned PVs in default output again.<br><br>Alasdair<br>--<br><a href="mailto:agk@redhat.com">
-agk@redhat.com</a><br><br>_______________________________________________<br>linux-lvm mailing list<br><a href="mailto:linux-lvm@redhat.com">linux-lvm@redhat.com</a><br><a href="https://www.redhat.com/mailman/listinfo/linux-lvm">
-https://www.redhat.com/mailman/listinfo/linux-lvm</a><br>read the LVM HOW-TO at <a href="http://tldp.org/HOWTO/LVM-HOWTO/">http://tldp.org/HOWTO/LVM-HOWTO/</a><br></blockquote></div><br>
+note that if your root vg is on local scsi disks you will have to add
+those to the filter as well.
 
-------=_Part_855_3853625.1158848480845--
+eg:
+   filter =[ "a|/dev/sda[1-9]*|", "a|/dev/sdb[1-9]*|", "a|/dev/emcpower.*|", "r|.*|" ]
+
+
+>When we umount the volume:
+>[root@mezzicluslin02 ~]# umount /dev/VolGroupSUN00/LogVolSUN00
+>/home/SUNstorage
+>umount: /dev/mapper/VolGroupSUN00-LogVolSUN00: not mounted
+>umount: /dev/mapper/VolGroupSUN00-LogVolSUN00: not mounted
+>
+>This is correct?
+no, umount takes only 1 parameter, either the device or the mount point.
+
+L.
+
+-- 
+Luca Berra -- bluca@comedia.it
+        Communication Media & Services S.r.l.
+ /"\
+ \ /     ASCII RIBBON CAMPAIGN
+  X        AGAINST HTML MAIL
+ / \
