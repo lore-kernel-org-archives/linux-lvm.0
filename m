@@ -1,21 +1,16 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
 	by int-mx1.corp.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
-	k8KNLbBd018228
-	for <linux-lvm@redhat.com>; Wed, 20 Sep 2006 19:21:37 -0400
-Received: from calvin.slamb.org (calvin.slamb.org [216.136.66.56])
-	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id k8KNLTmQ003795
-	for <linux-lvm@redhat.com>; Wed, 20 Sep 2006 19:21:29 -0400
-Received: from [IPv6:::1] (localhost.slamb.org [127.0.0.1])
-	by calvin.slamb.org (Postfix) with ESMTP id 739CB6FECF
-	for <linux-lvm@redhat.com>; Wed, 20 Sep 2006 18:21:13 -0500 (CDT)
-Mime-Version: 1.0 (Apple Message framework v752.2)
-In-Reply-To: <OF255DDD51.9A0BB030-ON852571EF.0048DBFE-852571EF.00498302@philips.com>
-References: <OF255DDD51.9A0BB030-ON852571EF.0048DBFE-852571EF.00498302@philips.com>
-Message-Id: <A5E5AC70-BA07-4697-96A7-2A436A58B932@slamb.org>
+	k8L3ctDi031183
+	for <linux-lvm@redhat.com>; Wed, 20 Sep 2006 23:38:55 -0400
+Received: from sccrmhc13.comcast.net (sccrmhc13.comcast.net [204.127.200.83])
+	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id k8L3cnFg030535
+	for <linux-lvm@redhat.com>; Wed, 20 Sep 2006 23:38:49 -0400
+Message-ID: <4512093F.1050802@macfadden.org>
+Date: Wed, 20 Sep 2006 21:38:39 -0600
+From: Michael MacFadden <mike@macfadden.org>
+MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
-From: Scott Lamb <slamb@slamb.org>
-Subject: Re: [linux-lvm] Misleading documentation (was: HDD Failure)
-Date: Wed, 20 Sep 2006 16:21:12 -0700
+Subject: [linux-lvm] LVM Missing Space
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -26,37 +21,88 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; delsp="yes"; format="flowed"
-To: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="us-ascii"
+To: linux-lvm@redhat.com
+Cc: Derrick Hudson <dman@dman13.dyndns.org>
 
-On Sep 20, 2006, at 6:22 AM, Tobias Bluhm wrote:
-> Scott Lamb wrote on 09/19/2006 06:40:43 PM:
->> This is my biggest beef with LVM - why doesn't *any* of the
->> documentation point this out? There are very few good reasons to use
->> LVM without RAID, and "ignorance" certainly isn't among them. I don't
->> see any mention of RAID or disk failures in the manual pages or in
->> the HOWTO.
->
-> Good point. So if the docs make no mention of RAID or fail-over or
-> redundency or spares, what made you assume that
-> LVM had such capabilities????
+Hello,
 
-If that "you" is second-person singular, I didn't. I probed deep  
-enough to discover that it did not do RAID, but there were enough  
-suggestions that it could do redundancy that it took me a while to  
-come to that conclusion:
+I have been trying to setup LVM for the first time on an RAID 5 Array.
+The problem I have is that the raid array has 640Gb of usable space, but
+when I create the LVM Physical Volume and Volume group I wind up with
+596Gb.  I don't know where 44 gigs went to.  I am on Debian with a
+2.6.17 kernel.
 
-(1) the many-disk examples, which would be a horrible idea otherwise
-(2) the striping tuning options
-(3) some vague mention of mirroring...Heinz has mentioned it in this  
-thread, but I don't see any actual information about how it's done.
-(4) ...probably more I'm forgetting...
+When I do fdisk -l I get this:
 
-So I don't know why you are surprised that people are assuming this  
-and ending up without raid. (Did you see Mark Krenz's email? Three  
-people this week, one of whom actually lost data because of it.)
+ fdisk -l
 
-All is fixable. Fabien's suggested changes are a great improvement.
+Disk /dev/sda: 639.9 GB, 639977390080 bytes
+255 heads, 63 sectors/track, 77806 cylinders
+Units = cylinders of 16065 * 512 = 8225280 bytes
 
--- 
-Scott Lamb <http://www.slamb.org/>
+Disk /dev/sda doesn't contain a valid partition table
+
+Disk /dev/hda: 163.9 GB, 163928604672 bytes
+255 heads, 63 sectors/track, 19929 cylinders
+Units = cylinders of 16065 * 512 = 8225280 bytes
+
+   Device Boot      Start         End      Blocks   Id  System
+/dev/hda1   *           1       19740   158561518+  83  Linux
+/dev/hda2           19741       19929     1518142+   5  Extended
+/dev/hda5           19741       19929     1518111   82  Linux swap / Solaris
+
+
+Here you can see /dev/sda is 639.9GB.
+
+I then do:
+
+ $ pvcreate /dev/sda
+  Physical volume "/dev/sda" successfully created
+$ pvdisplay /dev/sda
+  --- NEW Physical volume ---
+  PV Name               /dev/sda
+  VG Name
+  PV Size               596.03 GB
+  Allocatable           NO
+  PE Size (KByte)       0
+  Total PE              0
+  Free PE               0
+  Allocated PE          0
+  PV UUID               po9rKd-gOKR-jfmx-yjUm-R5Wl-us2j-s6qZN1
+
+You see here I only get 596Gb.  Also if I run the lvmdiskscan utility I get:
+
+lvmdiskscan
+  /dev/ram0  [        8.00 MB]
+  /dev/sda   [      596.03 GB] LVM physical volume
+  /dev/ram1  [        8.00 MB]
+  /dev/hda1  [      151.22 GB]
+  /dev/ram2  [        8.00 MB]
+  /dev/ram3  [        8.00 MB]
+  /dev/ram4  [        8.00 MB]
+  /dev/ram5  [        8.00 MB]
+  /dev/hda5  [        1.45 GB]
+  /dev/ram6  [        8.00 MB]
+  /dev/ram7  [        8.00 MB]
+  /dev/ram8  [        8.00 MB]
+  /dev/ram9  [        8.00 MB]
+  /dev/ram10 [        8.00 MB]
+  /dev/ram11 [        8.00 MB]
+  /dev/ram12 [        8.00 MB]
+  /dev/ram13 [        8.00 MB]
+  /dev/ram14 [        8.00 MB]
+  /dev/ram15 [        8.00 MB]
+  0 disks
+  18 partitions
+  1 LVM physical volume whole disk
+  0 LVM physical volumes
+
+
+Again listing 596.03Gb.  What's going on here.  Why do I seem to be
+getting less capacity in the physical volume than actually on the drive.
+I really would like to use LVM but if I am going to lose 40Gigs then its
+not really worth it.  Any help or ideas would be appreciated.
+
+Regards,
+Michael MacFadden
