@@ -1,12 +1,19 @@
-Message-ID: <4514649E.2040403@ce.jp.nec.com>
-Date: Fri, 22 Sep 2006 18:33:02 -0400
-From: "Jun'ichi Nomura" <j-nomura@ce.jp.nec.com>
+Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
+	by int-mx1.corp.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
+	k8N82EbZ032315
+	for <linux-lvm@redhat.com>; Sat, 23 Sep 2006 04:02:16 -0400
+Received: from nf-out-0910.google.com (nf-out-0910.google.com [64.233.182.185])
+	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id k8N822xG021549
+	for <linux-lvm@redhat.com>; Sat, 23 Sep 2006 04:02:03 -0400
+Received: by nf-out-0910.google.com with SMTP id x30so1040679nfb
+	for <linux-lvm@redhat.com>; Sat, 23 Sep 2006 01:02:02 -0700 (PDT)
+Message-ID: <dac45060609230102k2d3e6c7fq512f27d265e24b8@mail.gmail.com>
+Date: Sat, 23 Sep 2006 11:02:02 +0300
+From: "Mark Ryden" <markryde@gmail.com>
 MIME-Version: 1.0
-References: <45146347.3070804@ce.jp.nec.com>
-In-Reply-To: <45146347.3070804@ce.jp.nec.com>
-Content-Type: multipart/mixed; boundary="------------080504010906090201030202"
-Subject: [linux-lvm] [PATCH LVM2 2/2] fix lvconvert to setup mirror
-	constraints
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+Subject: [linux-lvm] LVM partition and lvm commands in initrd
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -17,52 +24,105 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: linux-lvm@redhat.com, Alasdair Kergon <agk@redhat.com>, Jonathan Brassow <jbrassow@redhat.com>
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+To: linux-lvm@redhat.com
 
-This is a multi-part message in MIME format.
---------------080504010906090201030202
-Content-Type: text/plain; charset=ISO-2022-JP
-Content-Transfer-Encoding: 7bit
+Hello linux-lvm,
 
-This patch fixes this problem:
-  - 'lvconvert' from corelog allocates log from the same PV
-    with other image. It spoils redundancy.
+  First, I am not an expert on LVM neither on initram disk (created
+with mkinitrd).
 
-The patch depends on fix-mirror-alloc-anywhere.patch posted formerly.
+  There is one point which I want to understand and I hope I can get
+help here.
 
-Thanks,
--- 
-Jun'ichi Nomura, NEC Corporation of America
+  I have Fedora Core 4 (on x386).
+  fdisk -l shows that I have a Linux LVM partition.
 
---------------080504010906090201030202
-Content-Type: text/x-patch;
- name="fix-lvconvert-allocate-disklog.patch"
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline;
- filename="fix-lvconvert-allocate-disklog.patch"
+  I opened the init file of the initrd on my machine
+(initrd-2.6.11-1.1369_FC4.img).
 
-diff -X dontdiff -urp LVM2/tools/lvconvert.c LVM2.fixed/tools/lvconvert.c
---- LVM2/tools/lvconvert.c	2006-08-30 05:57:31.000000000 -0400
-+++ LVM2.fixed/tools/lvconvert.c	2006-09-15 00:00:33.000000000 -0400
-@@ -281,15 +281,10 @@ static int lvconvert_mirrors(struct cmd_
- 			if (lp->mirrors == existing_mirrors) {
- 				if (!seg->log_lv && !arg_count(cmd, corelog_ARG)) {
- 					/* No disk log present, add one. */
--					/* FIXME: Why doesn't this work?  Without
--					   it, we will probably put the log on the
--					   same device as a mirror leg.
--					  if (!(parallel_areas = build_parallel_areas_from_lv(cmd, lv))) {
--					  stack;
--					  return 0;
--					  }
--					*/
--					parallel_areas = NULL;
-+					if (!(parallel_areas = build_parallel_areas_from_lv(cmd, lv))) {
-+						stack;
-+						return 0;
-+					}
- 					if (!lv_mirror_percent(cmd, lv, 0, &sync_percent, NULL)) {
- 						log_error("Unable to determine mirror sync status.");
- 						return 0;
+  This script have some lvm commands , like:
 
---------------080504010906090201030202--
+  lvm vgscan --ignorelockingfailure
+  lvm vgchange -ay --ignorelockingfailure VolGroup00
+
+  It also has a call to mkdmnod (which creates  /dev/mapper/control ;
+see man nash).
+
+after boot, I see that I have the following (on: /):
+
+/dev/mapper/VolGroup00-LogVol00 on / type ext3 (rw)
+
+The point which I want to understand is this:
+Is existence of LVM partition is a MUST so that this script
+will run and not cause panic on boot ?
+Suppose I would NOT have an LVM partition.
+(change its type with fdisk for example).
+
+Will the calls to "lvm vgscan" and
+  "lvm vgchange" and "mkdmnod" and insmoding the dm* modules will not
+cause panic ?
+
+any help will be appreciated.
+
+Below here are the entry in grub.conf and the init script.
+
+
+
+The entry in grub.conf is :
+
+title Fedora Core (2.6.11-1.1369_FC4)
+	root (hd0,1)
+	kernel /vmlinuz-2.6.11-1.1369_FC4 ro root=/dev/VolGroup00/LogVol00
+rhgb quiet nodma
+	initrd /initrd-2.6.11-1.1369_FC4.img
+
+
+init script of initrd: (initrd-2.6.11-1.1369_FC4.img)
+
+#!/bin/nash
+
+mount -t proc /proc /proc
+setquiet
+echo Mounted /proc filesystem
+echo Mounting sysfs
+mount -t sysfs /sys /sys
+echo Creating /dev
+mount -o mode=0755 -t tmpfs /dev /dev
+mknod /dev/console c 5 1
+mknod /dev/null c 1 3
+mknod /dev/zero c 1 5
+mkdir /dev/pts
+mkdir /dev/shm
+echo Starting udev
+/sbin/udevstart
+echo -n "/sbin/hotplug" > /proc/sys/kernel/hotplug
+echo "Loading dm-mod.ko module"
+insmod /lib/dm-mod.ko
+echo "Loading jbd.ko module"
+insmod /lib/jbd.ko
+echo "Loading ext3.ko module"
+insmod /lib/ext3.ko
+echo "Loading dm-mirror.ko module"
+insmod /lib/dm-mirror.ko
+echo "Loading dm-zero.ko module"
+insmod /lib/dm-zero.ko
+echo "Loading dm-snapshot.ko module"
+insmod /lib/dm-snapshot.ko
+/sbin/udevstart
+echo Making device-mapper control node
+mkdmnod
+echo Scanning logical volumes
+lvm vgscan --ignorelockingfailure
+echo Activating logical volumes
+lvm vgchange -ay --ignorelockingfailure VolGroup00
+echo Creating root device
+mkrootdev /dev/root
+echo Mounting root filesystem
+mount -o defaults --ro -t ext3 /dev/root /sysroot
+echo Switching to new root
+switchroot --movedev /sysroot
+
+
+Regards,
+MR
