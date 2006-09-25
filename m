@@ -1,16 +1,16 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
 	by int-mx1.corp.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
-	k8PAmmRt014956
-	for <linux-lvm@redhat.com>; Mon, 25 Sep 2006 06:48:48 -0400
+	k8PBAWfR024915
+	for <linux-lvm@redhat.com>; Mon, 25 Sep 2006 07:10:32 -0400
 Received: from zh.plasmon.cn ([211.97.48.10])
-	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id k8PAmbCF012062
-	for <linux-lvm@redhat.com>; Mon, 25 Sep 2006 06:48:38 -0400
-Message-Id: <200609251048.k8PAmbCF012062@mx3.redhat.com>
+	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id k8PBAINQ017628
+	for <linux-lvm@redhat.com>; Mon, 25 Sep 2006 07:10:19 -0400
+Message-Id: <200609251110.k8PBAINQ017628@mx3.redhat.com>
 From: "more.zeng" <mzeng@plasmon.cn>
-Date: Mon, 25 Sep 2006 18:23:51 +0800
+Date: Mon, 25 Sep 2006 18:12:12 +0800
 MIME-Version: 1.0
 Content-Type: multipart/alternative;
-	boundary="----=_NextPart_000_0127_01C6E0CF.C0939F70"
+	boundary="----=_NextPart_000_0123_01C6E0CE.1FAB90A0"
 Subject: [linux-lvm] A problem in LVM1 kernel code lvm.c::lvm_do_vg_create()
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
@@ -22,11 +22,12 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: linux-lvm@redhat.com
+To: lvm-cvs@sources.redhat.com
+Cc: linux-lvm@redhat.com
 
 This is a multi-part message in MIME format.
 
-------=_NextPart_000_0127_01C6E0CF.C0939F70
+------=_NextPart_000_0123_01C6E0CE.1FAB90A0
 Content-Type: text/plain;
 	charset="utf-8"
 Content-Transfer-Encoding: quoted-printable
@@ -124,7 +125,7 @@ diff -c -r1.81 lvm.c
 --- 1872,1877 ----
 
 
-------=_NextPart_000_0127_01C6E0CF.C0939F70
+------=_NextPart_000_0123_01C6E0CE.1FAB90A0
 Content-Type: text/html;
 	charset="utf-8"
 Content-Transfer-Encoding: quoted-printable
@@ -193,259 +194,205 @@ style=3D'text-justify-trim:punctuation'>
 
 <div class=3DSection1 style=3D'layout-grid:15.6pt'>
 
-<p class=3DMsoNormal style=3D'layout-grid-mode:char'><font size=3D1 =
-face=3DArial><span
-lang=3DEN-US style=3D'font-size:9.0pt;font-family:Arial'>Dear LVM =
-guys,<o:p></o:p></span></font></p>
+<p class=3DMsoNormal><font size=3D1 face=3DArial><span lang=3DEN-US =
+style=3D'font-size:
+9.0pt;font-family:Arial'>Dear LVM guys,<o:p></o:p></span></font></p>
 
-<p class=3DMsoNormal style=3D'layout-grid-mode:char'><font size=3D1 =
-face=3DArial><span
-lang=3DEN-US =
-style=3D'font-size:9.0pt;font-family:Arial'><o:p>&nbsp;</o:p></span></fon=
-t></p>
+<p class=3DMsoNormal><font size=3D1 face=3DArial><span lang=3DEN-US =
+style=3D'font-size:
+9.0pt;font-family:Arial'><o:p>&nbsp;</o:p></span></font></p>
 
-<p class=3DMsoNormal style=3D'layout-grid-mode:char'><font size=3D1 =
-face=3DArial><span
-lang=3DEN-US style=3D'font-size:9.0pt;font-family:Arial'>I find an issue =
-in the
-LVM1 kernel code for function =
+<p class=3DMsoNormal><font size=3D1 face=3DArial><span lang=3DEN-US =
+style=3D'font-size:
+9.0pt;font-family:Arial'>I find an issue in the LVM1 kernel code for =
+function
 lvm.c::lvm_do_vg_create():<o:p></o:p></span></font></p>
 
-<p class=3DMsoNormal style=3D'layout-grid-mode:char'><font size=3D1 =
-face=3DArial><span
-lang=3DEN-US style=3D'font-size:9.0pt;font-family:Arial'>In the original =
-code, the
-vg_count will be increased only when this function is executed =
-successfully.
-But I think the vg_count should be increased after the variable
-vg[VG_CHR(minor)] is updated. Given the reason that after the variable
-vg[VG_CHR(minor)] is updated, for any failure case, lvm_do_vg_create() =
-will
-always call lvm_do_vg_remove() that will decrease the vg_count. So the =
+<p class=3DMsoNormal><font size=3D1 face=3DArial><span lang=3DEN-US =
+style=3D'font-size:
+9.0pt;font-family:Arial'>In the original code, the vg_count will be =
+increased
+only when this function is executed successfully. But I think the =
 vg_count
-should be increased first before any call for =
+should be increased after the variable vg[VG_CHR(minor)] is updated. =
+Given the
+reason that after the variable vg[VG_CHR(minor)] is updated, for any =
+failure
+case, lvm_do_vg_create() will always call lvm_do_vg_remove() that will =
+decrease
+the vg_count. So the vg_count should be increased first before any call =
+for
 lvm_do_vg_remove().<o:p></o:p></span></font></p>
 
-<p class=3DMsoNormal style=3D'layout-grid-mode:char'><font size=3D1 =
-face=3DArial><span
-lang=3DEN-US =
-style=3D'font-size:9.0pt;font-family:Arial'><o:p>&nbsp;</o:p></span></fon=
-t></p>
+<p class=3DMsoNormal><font size=3D1 face=3DArial><span lang=3DEN-US =
+style=3D'font-size:
+9.0pt;font-family:Arial'><o:p>&nbsp;</o:p></span></font></p>
 
-<p class=3DMsoNormal style=3D'layout-grid-mode:char'><font size=3D1 =
-face=3DArial><span
-lang=3DEN-US style=3D'font-size:9.0pt;font-family:Arial'>This issue did =
-exist for
-our product for our <st1:place w:st=3D"on"><st1:City =
-w:st=3D"on">LV</st1:City></st1:place>
-sometimes will fail to start (corrupt snapshot). Please give me the
-confirmation that the above is really an issue and the following diff =
-can
-resolve this issue (from the latest LVM1 CVS code), =
-thanks.<o:p></o:p></span></font></p>
+<p class=3DMsoNormal><font size=3D1 face=3DArial><span lang=3DEN-US =
+style=3D'font-size:
+9.0pt;font-family:Arial'>This issue did exist for our product for our =
+<st1:City
+w:st=3D"on"><st1:place w:st=3D"on">LV</st1:place></st1:City> sometimes =
+will fail to
+start (corrupt snapshot). Please give me the confirmation that the above =
+is
+really an issue and the following diff can resolve this issue (from the =
+latest
+LVM1 CVS code), thanks.<o:p></o:p></span></font></p>
 
-<p class=3DMsoNormal style=3D'layout-grid-mode:char'><font size=3D1 =
-face=3DArial><span
-lang=3DEN-US =
-style=3D'font-size:9.0pt;font-family:Arial'><o:p>&nbsp;</o:p></span></fon=
-t></p>
+<p class=3DMsoNormal><font size=3D1 face=3DArial><span lang=3DEN-US =
+style=3D'font-size:
+9.0pt;font-family:Arial'><o:p>&nbsp;</o:p></span></font></p>
 
-<p class=3DMsoNormal style=3D'layout-grid-mode:char'><font size=3D1 =
-face=3DArial><span
-lang=3DEN-US =
-style=3D'font-size:9.0pt;font-family:Arial'><o:p>&nbsp;</o:p></span></fon=
-t></p>
+<p class=3DMsoNormal><font size=3D1 face=3DArial><span lang=3DEN-US =
+style=3D'font-size:
+9.0pt;font-family:Arial'><o:p>&nbsp;</o:p></span></font></p>
 
-<p class=3DMsoNormal style=3D'layout-grid-mode:char'><font size=3D1 =
-face=3DArial><span
-lang=3DEN-US style=3D'font-size:9.0pt;font-family:Arial'>Best =
-regards,<o:p></o:p></span></font></p>
+<p class=3DMsoNormal><font size=3D1 face=3DArial><span lang=3DEN-US =
+style=3D'font-size:
+9.0pt;font-family:Arial'>Best regards,<o:p></o:p></span></font></p>
 
-<p class=3DMsoNormal style=3D'layout-grid-mode:char'><font size=3D1 =
-face=3DArial><span
-lang=3DEN-US =
-style=3D'font-size:9.0pt;font-family:Arial'>More<o:p></o:p></span></font>=
-</p>
+<p class=3DMsoNormal><font size=3D1 face=3DArial><span lang=3DEN-US =
+style=3D'font-size:
+9.0pt;font-family:Arial'>More<o:p></o:p></span></font></p>
 
-<p class=3DMsoNormal style=3D'layout-grid-mode:char'><font size=3D1 =
-face=3DArial><span
-lang=3DEN-US =
-style=3D'font-size:9.0pt;font-family:Arial'><o:p>&nbsp;</o:p></span></fon=
-t></p>
+<p class=3DMsoNormal><font size=3D1 face=3DArial><span lang=3DEN-US =
+style=3D'font-size:
+9.0pt;font-family:Arial'><o:p>&nbsp;</o:p></span></font></p>
 
-<p class=3DMsoNormal style=3D'layout-grid-mode:char'><font size=3D1 =
-face=3DArial><span
-lang=3DEN-US style=3D'font-size:9.0pt;font-family:Arial'>Index: =
-lvm.c<o:p></o:p></span></font></p>
+<p class=3DMsoNormal><font size=3D1 face=3DArial><span lang=3DEN-US =
+style=3D'font-size:
+9.0pt;font-family:Arial'>Index: lvm.c<o:p></o:p></span></font></p>
 
-<p class=3DMsoNormal style=3D'layout-grid-mode:char'><font size=3D1 =
-face=3DArial><span
-lang=3DEN-US =
-style=3D'font-size:9.0pt;font-family:Arial'>=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+<p class=3DMsoNormal><font size=3D1 face=3DArial><span lang=3DEN-US =
+style=3D'font-size:
+9.0pt;font-family:Arial'>=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
 =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
 =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D<o:p></o:p></span></font></p>
+=3D<o:p></o:p></span></font></p>
 
-<p class=3DMsoNormal style=3D'layout-grid-mode:char'><font size=3D1 =
-face=3DArial><span
-lang=3DEN-US style=3D'font-size:9.0pt;font-family:Arial'>RCS file:
+<p class=3DMsoNormal><font size=3D1 face=3DArial><span lang=3DEN-US =
+style=3D'font-size:
+9.0pt;font-family:Arial'>RCS file: =
 /cvs/lvm/LVM/kernel/lvm.c,v<o:p></o:p></span></font></p>
 
-<p class=3DMsoNormal style=3D'layout-grid-mode:char'><font size=3D1 =
-face=3DArial><span
-lang=3DEN-US style=3D'font-size:9.0pt;font-family:Arial'>retrieving =
-revision 1.81<o:p></o:p></span></font></p>
-
-<p class=3DMsoNormal style=3D'layout-grid-mode:char'><font size=3D1 =
-face=3DArial><span
-lang=3DEN-US style=3D'font-size:9.0pt;font-family:Arial'>diff -c -r1.81 =
-lvm.c<o:p></o:p></span></font></p>
-
-<p class=3DMsoNormal style=3D'layout-grid-mode:char'><font size=3D1 =
-face=3DArial><span
-lang=3DEN-US style=3D'font-size:9.0pt;font-family:Arial'>***
-lvm.c&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 5 Mar 2003 11:37:16
--0000&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; =
+<p class=3DMsoNormal><font size=3D1 face=3DArial><span lang=3DEN-US =
+style=3D'font-size:
+9.0pt;font-family:Arial'>retrieving revision =
 1.81<o:p></o:p></span></font></p>
 
-<p class=3DMsoNormal style=3D'layout-grid-mode:char'><font size=3D1 =
-face=3DArial><span
-lang=3DEN-US style=3D'font-size:9.0pt;font-family:Arial'>---
-lvm.c&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 25 Sep 2006 09:57:26 =
--0000<o:p></o:p></span></font></p>
+<p class=3DMsoNormal><font size=3D1 face=3DArial><span lang=3DEN-US =
+style=3D'font-size:
+9.0pt;font-family:Arial'>diff -c -r1.81 =
+lvm.c<o:p></o:p></span></font></p>
 
-<p class=3DMsoNormal style=3D'layout-grid-mode:char'><font size=3D1 =
-face=3DArial><span
-lang=3DEN-US =
-style=3D'font-size:9.0pt;font-family:Arial'>***************<o:p></o:p></s=
-pan></font></p>
+<p class=3DMsoNormal><font size=3D1 face=3DArial><span lang=3DEN-US =
+style=3D'font-size:
+9.0pt;font-family:Arial'>*** lvm.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 5 =
+Mar 2003 11:37:16 -0000=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 =
+1.81<o:p></o:p></span></font></p>
 
-<p class=3DMsoNormal style=3D'layout-grid-mode:char'><font size=3D1 =
-face=3DArial><span
-lang=3DEN-US style=3D'font-size:9.0pt;font-family:Arial'>*** 1802,1807 =
-****<o:p></o:p></span></font></p>
+<p class=3DMsoNormal><font size=3D1 face=3DArial><span lang=3DEN-US =
+style=3D'font-size:
+9.0pt;font-family:Arial'>--- lvm.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 =
+25 Sep 2006 09:57:26 -0000<o:p></o:p></span></font></p>
 
-<p class=3DMsoNormal style=3D'layout-grid-mode:char'><font size=3D1 =
-face=3DArial><span
-lang=3DEN-US style=3D'font-size:9.0pt;font-family:Arial'>--- 1802,1809 =
-----<o:p></o:p></span></font></p>
+<p class=3DMsoNormal><font size=3D1 face=3DArial><span lang=3DEN-US =
+style=3D'font-size:
+9.0pt;font-family:Arial'>***************<o:p></o:p></span></font></p>
 
-<p class=3DMsoNormal style=3D'layout-grid-mode:char'><font size=3D1 =
-face=3DArial><span
-lang=3DEN-US style=3D'font-size:9.0pt;font-family:Arial'>&nbsp; =
-<o:p></o:p></span></font></p>
+<p class=3DMsoNormal><font size=3D1 face=3DArial><span lang=3DEN-US =
+style=3D'font-size:
+9.0pt;font-family:Arial'>*** 1802,1807 ****<o:p></o:p></span></font></p>
 
-<p class=3DMsoNormal style=3D'layout-grid-mode:char'><font size=3D1 =
-face=3DArial><span
-lang=3DEN-US =
-style=3D'font-size:9.0pt;font-family:Arial'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp=
-;&nbsp;&nbsp;
+<p class=3DMsoNormal><font size=3D1 face=3DArial><span lang=3DEN-US =
+style=3D'font-size:
+9.0pt;font-family:Arial'>--- 1802,1809 ----<o:p></o:p></span></font></p>
+
+<p class=3DMsoNormal><font size=3D1 face=3DArial><span lang=3DEN-US =
+style=3D'font-size:
+9.0pt;font-family:Arial'>=C2=A0 <o:p></o:p></span></font></p>
+
+<p class=3DMsoNormal><font size=3D1 face=3DArial><span lang=3DEN-US =
+style=3D'font-size:
+9.0pt;font-family:Arial'>=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 =
 vg[VG_CHR(minor)] =3D vg_ptr;<o:p></o:p></span></font></p>
 
-<p class=3DMsoNormal style=3D'layout-grid-mode:char'><font size=3D1 =
-face=3DArial><span
-lang=3DEN-US style=3D'font-size:9.0pt;font-family:Arial'>&nbsp; =
-<o:p></o:p></span></font></p>
+<p class=3DMsoNormal><font size=3D1 face=3DArial><span lang=3DEN-US =
+style=3D'font-size:
+9.0pt;font-family:Arial'>=C2=A0 <o:p></o:p></span></font></p>
 
-<p class=3DMsoNormal style=3D'layout-grid-mode:char'><font size=3D1 =
-face=3DArial><span
-lang=3DEN-US =
-style=3D'font-size:9.0pt;font-family:Arial'>+&nbsp;&nbsp;&nbsp;&nbsp;&nbs=
-p;&nbsp;
+<p class=3DMsoNormal><font size=3D1 face=3DArial><span lang=3DEN-US =
+style=3D'font-size:
+9.0pt;font-family:Arial'>+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 =
 vg_count++;<o:p></o:p></span></font></p>
 
-<p class=3DMsoNormal style=3D'layout-grid-mode:char'><font size=3D1 =
-face=3DArial><span
-lang=3DEN-US style=3D'font-size:9.0pt;font-family:Arial'>+ =
-<o:p></o:p></span></font></p>
+<p class=3DMsoNormal><font size=3D1 face=3DArial><span lang=3DEN-US =
+style=3D'font-size:
+9.0pt;font-family:Arial'>+ <o:p></o:p></span></font></p>
 
-<p class=3DMsoNormal style=3D'layout-grid-mode:char'><font size=3D1 =
-face=3DArial><span
-lang=3DEN-US =
-style=3D'font-size:9.0pt;font-family:Arial'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp=
-;&nbsp;&nbsp;
-/* get the physical volume structures */<o:p></o:p></span></font></p>
+<p class=3DMsoNormal><font size=3D1 face=3DArial><span lang=3DEN-US =
+style=3D'font-size:
+9.0pt;font-family:Arial'>=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 /* =
+get the physical volume structures */<o:p></o:p></span></font></p>
 
-<p class=3DMsoNormal style=3D'layout-grid-mode:char'><font size=3D1 =
-face=3DArial><span
-lang=3DEN-US =
-style=3D'font-size:9.0pt;font-family:Arial'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp=
-;&nbsp;&nbsp;
+<p class=3DMsoNormal><font size=3D1 face=3DArial><span lang=3DEN-US =
+style=3D'font-size:
+9.0pt;font-family:Arial'>=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 =
 vg_ptr-&gt;pv_act =3D vg_ptr-&gt;pv_cur =3D =
 0;<o:p></o:p></span></font></p>
 
-<p class=3DMsoNormal style=3D'layout-grid-mode:char'><font size=3D1 =
-face=3DArial><span
-lang=3DEN-US =
-style=3D'font-size:9.0pt;font-family:Arial'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp=
-;&nbsp;&nbsp;
-for (p =3D 0; p &lt; vg_ptr-&gt;pv_max; p++) =
-{<o:p></o:p></span></font></p>
+<p class=3DMsoNormal><font size=3D1 face=3DArial><span lang=3DEN-US =
+style=3D'font-size:
+9.0pt;font-family:Arial'>=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 for =
+(p =3D 0; p &lt; vg_ptr-&gt;pv_max; p++) {<o:p></o:p></span></font></p>
 
-<p class=3DMsoNormal style=3D'layout-grid-mode:char'><font size=3D1 =
-face=3DArial><span
-lang=3DEN-US =
-style=3D'font-size:9.0pt;font-family:Arial'>***************<o:p></o:p></s=
-pan></font></p>
+<p class=3DMsoNormal><font size=3D1 face=3DArial><span lang=3DEN-US =
+style=3D'font-size:
+9.0pt;font-family:Arial'>***************<o:p></o:p></span></font></p>
 
-<p class=3DMsoNormal style=3D'layout-grid-mode:char'><font size=3D1 =
-face=3DArial><span
-lang=3DEN-US style=3D'font-size:9.0pt;font-family:Arial'>*** 1870,1877 =
-****<o:p></o:p></span></font></p>
+<p class=3DMsoNormal><font size=3D1 face=3DArial><span lang=3DEN-US =
+style=3D'font-size:
+9.0pt;font-family:Arial'>*** 1870,1877 ****<o:p></o:p></span></font></p>
 
-<p class=3DMsoNormal style=3D'layout-grid-mode:char'><font size=3D1 =
-face=3DArial><span
-lang=3DEN-US style=3D'font-size:9.0pt;font-family:Arial'>&nbsp; =
-<o:p></o:p></span></font></p>
+<p class=3DMsoNormal><font size=3D1 face=3DArial><span lang=3DEN-US =
+style=3D'font-size:
+9.0pt;font-family:Arial'>=C2=A0 <o:p></o:p></span></font></p>
 
-<p class=3DMsoNormal style=3D'layout-grid-mode:char'><font size=3D1 =
-face=3DArial><span
-lang=3DEN-US =
-style=3D'font-size:9.0pt;font-family:Arial'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp=
-;&nbsp;&nbsp;
+<p class=3DMsoNormal><font size=3D1 face=3DArial><span lang=3DEN-US =
+style=3D'font-size:
+9.0pt;font-family:Arial'>=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 =
 vfree(snap_lv_ptr);<o:p></o:p></span></font></p>
 
-<p class=3DMsoNormal style=3D'layout-grid-mode:char'><font size=3D1 =
-face=3DArial><span
-lang=3DEN-US style=3D'font-size:9.0pt;font-family:Arial'>&nbsp; =
-<o:p></o:p></span></font></p>
+<p class=3DMsoNormal><font size=3D1 face=3DArial><span lang=3DEN-US =
+style=3D'font-size:
+9.0pt;font-family:Arial'>=C2=A0 <o:p></o:p></span></font></p>
 
-<p class=3DMsoNormal style=3D'layout-grid-mode:char'><font size=3D1 =
-face=3DArial><span
-lang=3DEN-US =
-style=3D'font-size:9.0pt;font-family:Arial'>-&nbsp;&nbsp;&nbsp;&nbsp;&nbs=
-p;&nbsp;
+<p class=3DMsoNormal><font size=3D1 face=3DArial><span lang=3DEN-US =
+style=3D'font-size:
+9.0pt;font-family:Arial'>-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 =
 vg_count++;<o:p></o:p></span></font></p>
 
-<p class=3DMsoNormal style=3D'layout-grid-mode:char'><font size=3D1 =
-face=3DArial><span
-lang=3DEN-US style=3D'font-size:9.0pt;font-family:Arial'>- =
-<o:p></o:p></span></font></p>
+<p class=3DMsoNormal><font size=3D1 face=3DArial><span lang=3DEN-US =
+style=3D'font-size:
+9.0pt;font-family:Arial'>- <o:p></o:p></span></font></p>
 
-<p class=3DMsoNormal style=3D'layout-grid-mode:char'><font size=3D1 =
-face=3DArial><span
-lang=3DEN-US style=3D'font-size:9.0pt;font-family:Arial'>&nbsp; =
-<o:p></o:p></span></font></p>
+<p class=3DMsoNormal><font size=3D1 face=3DArial><span lang=3DEN-US =
+style=3D'font-size:
+9.0pt;font-family:Arial'>=C2=A0 <o:p></o:p></span></font></p>
 
-<p class=3DMsoNormal style=3D'layout-grid-mode:char'><font size=3D1 =
-face=3DArial><span
-lang=3DEN-US =
-style=3D'font-size:9.0pt;font-family:Arial'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp=
-;&nbsp;&nbsp;
+<p class=3DMsoNormal><font size=3D1 face=3DArial><span lang=3DEN-US =
+style=3D'font-size:
+9.0pt;font-family:Arial'>=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 =
 MOD_INC_USE_COUNT;<o:p></o:p></span></font></p>
 
-<p class=3DMsoNormal style=3D'layout-grid-mode:char'><font size=3D1 =
-face=3DArial><span
-lang=3DEN-US style=3D'font-size:9.0pt;font-family:Arial'>&nbsp; =
-<o:p></o:p></span></font></p>
+<p class=3DMsoNormal><font size=3D1 face=3DArial><span lang=3DEN-US =
+style=3D'font-size:
+9.0pt;font-family:Arial'>=C2=A0 <o:p></o:p></span></font></p>
 
-<p class=3DMsoNormal style=3D'layout-grid-mode:char'><font size=3D1 =
-face=3DArial><span
-lang=3DEN-US style=3D'font-size:9.0pt;font-family:Arial'>--- 1872,1877 =
-----</span></font><font
-size=3D1 face=3DArial><span lang=3DEN-US =
-style=3D'font-size:9.0pt;font-family:Arial'><o:p></o:p></span></font></p>=
-
+<p class=3DMsoNormal><font size=3D1 face=3DArial><span lang=3DEN-US =
+style=3D'font-size:
+9.0pt;font-family:Arial'>--- 1872,1877 ----<o:p></o:p></span></font></p>
 
 </div>
 
@@ -453,4 +400,4 @@ style=3D'font-size:9.0pt;font-family:Arial'><o:p></o:p></span></font></p>=
 
 </html>
 
-------=_NextPart_000_0127_01C6E0CF.C0939F70--
+------=_NextPart_000_0123_01C6E0CE.1FAB90A0--
