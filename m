@@ -1,20 +1,24 @@
-Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
+Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
 	by int-mx1.corp.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
-	k8R538C3025012
-	for <linux-lvm@redhat.com>; Wed, 27 Sep 2006 01:03:08 -0400
-Received: from wx-out-0506.google.com (wx-out-0506.google.com [66.249.82.234])
-	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id k8R532qC031536
-	for <linux-lvm@redhat.com>; Wed, 27 Sep 2006 01:03:02 -0400
-Received: by wx-out-0506.google.com with SMTP id i30so173783wxd
-	for <linux-lvm@redhat.com>; Tue, 26 Sep 2006 22:03:02 -0700 (PDT)
-Message-ID: <625ccb870609262203m400d149ax47ef5396dd96236@mail.gmail.com>
-Date: Wed, 27 Sep 2006 13:03:02 +0800
-From: "bowen zheng" <linuzboy@gmail.com>
+	k8R5WwMj030173
+	for <linux-lvm@redhat.com>; Wed, 27 Sep 2006 01:32:58 -0400
+Received: from mail.davidb.org (mail.davidb.org [66.93.32.219])
+	by mx1.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
+	k8R5WubA024726
+	for <linux-lvm@redhat.com>; Wed, 27 Sep 2006 01:32:57 -0400
+Received: from a64.davidb.org ([66.93.32.226])
+	by mail.davidb.org with esmtpa (Exim 4.60 #1 (Debian))
+	id 1GSS2N-0000kP-B3
+	for <linux-lvm@redhat.com>; Tue, 26 Sep 2006 22:32:51 -0700
+Message-ID: <451A0D03.9000204@davidb.org>
+Date: Tue, 26 Sep 2006 22:32:51 -0700
+From: David Brown <lvm@davidb.org>
 MIME-Version: 1.0
+Subject: Re: [linux-lvm] Help, lvm2 snapshot and XFS ,	using xfs_freeze to
+	do this, but then lvcreate hang.
+References: <625ccb870609262203m400d149ax47ef5396dd96236@mail.gmail.com>
+In-Reply-To: <625ccb870609262203m400d149ax47ef5396dd96236@mail.gmail.com>
 Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-Subject: [linux-lvm] Help, lvm2 snapshot and XFS ,
-	using xfs_freeze to do this, but then lvcreate hang.
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -25,20 +29,24 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: linux-lvm@redhat.com
+Content-Type: text/plain; charset="us-ascii"
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-Help, lvm2 snapshot and XFS , using xfs_freeze to do this, but then
-lvcreate hang.
+bowen zheng wrote:
 
-I use lvm2 and xfs both.  If I do not use xfs_freeze before, I can use
-lvcreate snapshot the lv. And it work fine for some static files or
-lv, but not for running system such as / (root) which will generate a
-log of I/O error.
+> Help, lvm2 snapshot and XFS , using xfs_freeze to do this, but then
+> lvcreate hang.
 
-So I heard that xfs should run xfs_freeze before create snapshot.
-However, after xfs_freeze -f, then lvcreate hang all the time. And I
-still can not kill (-9) the lvcreate process.
+The lvcreate does the xfs_freeze for you, so if you run xfs_freeze, then
+the lcreate will hang.  Running it with '-u' should allow the lvcreate to
+hang.
 
-Anyone know what can I do now ???
-And how to use snapshot under xfs,  is this a xfs or lvm bug ???
+> I use lvm2 and xfs both.  If I do not use xfs_freeze before, I can use
+> lvcreate snapshot the lv. And it work fine for some static files or
+> lv, but not for running system such as / (root) which will generate a
+> log of I/O error.
+
+What kind of errors are you getting.  I've done this on active filesystems
+for backup purposes, and not had any problems.
+
+Dave
