@@ -1,18 +1,20 @@
-Received: from agk.surrey.redhat.com (agk.surrey.redhat.com [172.16.10.74])
-	by pobox.surrey.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
-	k8R8ELrZ019339
-	for <linux-lvm@redhat.com>; Wed, 27 Sep 2006 09:14:21 +0100
-Received: from agk by agk.surrey.redhat.com with local (Exim 4.34)
-	id 1GSUYf-0006mo-As
-	for linux-lvm@redhat.com; Wed, 27 Sep 2006 09:14:21 +0100
-Date: Wed, 27 Sep 2006 09:14:21 +0100
-From: Alasdair G Kergon <agk@redhat.com>
-Subject: Re: [linux-lvm] Snapshot removal problem
-Message-ID: <20060927081421.GK17654@agk.surrey.redhat.com>
-References: <20060927025143.GA10619@highgate.net.nz>
-Mime-Version: 1.0
+Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
+	by int-mx1.corp.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
+	k8RDXePE024708
+	for <linux-lvm@redhat.com>; Wed, 27 Sep 2006 09:33:40 -0400
+Received: from stinky.boolecat.com (stinky.boolecat.com [65.99.223.208])
+	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id k8RDXXLw018471
+	for <linux-lvm@redhat.com>; Wed, 27 Sep 2006 09:33:34 -0400
+Date: Wed, 27 Sep 2006 09:33:28 -0400
+Subject: Re: [linux-lvm] Help, lvm2 snapshot and XFS ,
+	using xfs_freeze to do this, but then lvcreate hang.
+Message-ID: <20060927133328.GA30026@boolecat.com>
+References: <625ccb870609262203m400d149ax47ef5396dd96236@mail.gmail.com>
+	<451A0D03.9000204@davidb.org>
+MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20060927025143.GA10619@highgate.net.nz>
+In-Reply-To: <451A0D03.9000204@davidb.org>
+From: Steve Feehan <sfeehan@boolecat.com>
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -27,12 +29,54 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-On Wed, Sep 27, 2006 at 02:51:43PM +1200, Nick Wright wrote:
-> This is a Debian Sarge box, running a vanilla 2.6.17 kernel.
->   LVM version:     2.01.04 (2005-02-09)
+On Tue, Sep 26, 2006 at 10:32:51PM -0700, David Brown wrote:
+> bowen zheng wrote:
+> 
+> > Help, lvm2 snapshot and XFS , using xfs_freeze to do this, but then
+> > lvcreate hang.
+> 
+> The lvcreate does the xfs_freeze for you, so if you run xfs_freeze, then
+> the lcreate will hang.  Running it with '-u' should allow the lvcreate to
+> hang.
 
-You need 2.02.* with that kernel - see list archives.
+Are you saying that the lvcreate command literally executes xfs_freeze
+when used on a volume that happens to contain an XFS filesystem? Or
+that creating a snapshot is equivalent to using xfs_freeze?
 
-Alasdair
+I too had read that it was suggested to call xfs_freeze before creating
+a snapshot. This worked on a Debian system a year or two ago. And then
+it stopped. I'm not sure if it was a kernel, lvm2 or xfs utilities
+update that caused it to stop working. I did file a debian bug a while
+back but nothing ever came of it:
+
+http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=285979
+
+> > I use lvm2 and xfs both.  If I do not use xfs_freeze before, I can use
+> > lvcreate snapshot the lv. And it work fine for some static files or
+> > lv, but not for running system such as / (root) which will generate a
+> > log of I/O error.
+> 
+> What kind of errors are you getting.  I've done this on active filesystems
+> for backup purposes, and not had any problems.
+
+Running xfsdump on the snapshot I see many warnings like:
+
+debug: starting dump at Wed Sep 27 06:00:02 EDT 2006 ...
+/sbin/xfsdump: WARNING: failed to get bulkstat information for inode 3692873
+/sbin/xfsdump: WARNING: failed to get bulkstat information for inode 3692876
+/sbin/xfsdump: WARNING: failed to get bulkstat information for inode 3692873
+/sbin/xfsdump: WARNING: failed to get bulkstat information for inode 3692876
+/sbin/xfsdump: WARNING: could not stat dirent vg0_04875.vg ino 3692872: No such file or directory
+/sbin/xfsdump: WARNING: could not stat dirent vg0_04876.vg ino 3692875: No such file or directory
+/sbin/xfsdump: WARNING: failed to get bulkstat information for inode 3692873
+/sbin/xfsdump: WARNING: failed to get bulkstat information for inode 3692876
+/sbin/xfsdump: WARNING: could not stat dirent vg0_04875.vg ino 3692872: No such file or directory: using null generation count in directory entry
+/sbin/xfsdump: WARNING: could not stat dirent vg0_04876.vg ino 3692875: No such file or directory: using null generation count in directory entry
+/sbin/xfsdump: WARNING: failed to get bulkstat information for inode 3692873
+/sbin/xfsdump: WARNING: failed to get bulkstat information for inode 3692876
+/sbin/xfsdump: WARNING: failed to get bulkstat information for inode 3692873
+/sbin/xfsdump: WARNING: failed to get bulkstat information for inode 3692876
+debug: dump complete at Wed Sep 27 06:00:04 EDT 2006 ...
+
 -- 
-agk@redhat.com
+Steve Feehan
