@@ -1,21 +1,22 @@
-Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
+Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
 	by int-mx1.corp.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
-	k8RDXePE024708
-	for <linux-lvm@redhat.com>; Wed, 27 Sep 2006 09:33:40 -0400
-Received: from stinky.boolecat.com (stinky.boolecat.com [65.99.223.208])
-	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id k8RDXXLw018471
-	for <linux-lvm@redhat.com>; Wed, 27 Sep 2006 09:33:34 -0400
-Date: Wed, 27 Sep 2006 09:33:28 -0400
-Subject: Re: [linux-lvm] Help, lvm2 snapshot and XFS ,
-	using xfs_freeze to do this, but then lvcreate hang.
-Message-ID: <20060927133328.GA30026@boolecat.com>
-References: <625ccb870609262203m400d149ax47ef5396dd96236@mail.gmail.com>
-	<451A0D03.9000204@davidb.org>
-MIME-Version: 1.0
+	k8RDlUjU030827
+	for <linux-lvm@redhat.com>; Wed, 27 Sep 2006 09:47:30 -0400
+Received: from sv2.telemetry-investments.com (gw1a.telemetry-investments.com
+	[64.20.161.180])
+	by mx1.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
+	k8RDlSV1022874
+	for <linux-lvm@redhat.com>; Wed, 27 Sep 2006 09:47:28 -0400
+Date: Wed, 27 Sep 2006 09:47:22 -0400
+From: "Bill Rugolsky Jr." <brugolsky@telemetry-investments.com>
+Subject: Re: [linux-lvm] Examining a snapshot
+Message-ID: <20060927134722.GC20702@ti64.telemetry-investments.com>
+References: <20060927025716.GB10619@highgate.net.nz>
+Mime-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <451A0D03.9000204@davidb.org>
-From: Steve Feehan <sfeehan@boolecat.com>
-Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
+In-Reply-To: <20060927025716.GB10619@highgate.net.nz>
+Reply-To: "Bill Rugolsky Jr." <brugolsky@telemetry-investments.com>,
+	LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -29,54 +30,48 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-On Tue, Sep 26, 2006 at 10:32:51PM -0700, David Brown wrote:
-> bowen zheng wrote:
+On Wed, Sep 27, 2006 at 02:57:16PM +1200, Nick Wright wrote:
+> Hi all,
 > 
-> > Help, lvm2 snapshot and XFS , using xfs_freeze to do this, but then
-> > lvcreate hang.
+> I have a backup strategy in place where I use snapshots to determine
+> the difference between yesterday and today. I then copy those blocks
+> that have changed to a target machine and apply the difference to a
+> remote copy of the entire block device. 
 > 
-> The lvcreate does the xfs_freeze for you, so if you run xfs_freeze, then
-> the lcreate will hang.  Running it with '-u' should allow the lvcreate to
-> hang.
-
-Are you saying that the lvcreate command literally executes xfs_freeze
-when used on a volume that happens to contain an XFS filesystem? Or
-that creating a snapshot is equivalent to using xfs_freeze?
-
-I too had read that it was suggested to call xfs_freeze before creating
-a snapshot. This worked on a Debian system a year or two ago. And then
-it stopped. I'm not sure if it was a kernel, lvm2 or xfs utilities
-update that caused it to stop working. I did file a debian bug a while
-back but nothing ever came of it:
-
-http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=285979
-
-> > I use lvm2 and xfs both.  If I do not use xfs_freeze before, I can use
-> > lvcreate snapshot the lv. And it work fine for some static files or
-> > lv, but not for running system such as / (root) which will generate a
-> > log of I/O error.
+> Currently this involves doing a complete comparison between a logical
+> volume and its snapshot to find the blocks that have changed. I know
+> that internally, LVM already has the information about which blocks
+> have been altered -- these are what are stored in the snapshot after
+> all.
 > 
-> What kind of errors are you getting.  I've done this on active filesystems
-> for backup purposes, and not had any problems.
+> Is it possible for me to get that information somehow? Some pointers
+> getting me started on this would be of great help to me -- especially
+> if theres a simple way to do so already in place before I go delving
+> into source code etc...
+ 
+Have a look at:
 
-Running xfsdump on the snapshot I see many warnings like:
+   http://fedoraproject.org/wiki/StatelessLinuxCachedClient
 
-debug: starting dump at Wed Sep 27 06:00:02 EDT 2006 ...
-/sbin/xfsdump: WARNING: failed to get bulkstat information for inode 3692873
-/sbin/xfsdump: WARNING: failed to get bulkstat information for inode 3692876
-/sbin/xfsdump: WARNING: failed to get bulkstat information for inode 3692873
-/sbin/xfsdump: WARNING: failed to get bulkstat information for inode 3692876
-/sbin/xfsdump: WARNING: could not stat dirent vg0_04875.vg ino 3692872: No such file or directory
-/sbin/xfsdump: WARNING: could not stat dirent vg0_04876.vg ino 3692875: No such file or directory
-/sbin/xfsdump: WARNING: failed to get bulkstat information for inode 3692873
-/sbin/xfsdump: WARNING: failed to get bulkstat information for inode 3692876
-/sbin/xfsdump: WARNING: could not stat dirent vg0_04875.vg ino 3692872: No such file or directory: using null generation count in directory entry
-/sbin/xfsdump: WARNING: could not stat dirent vg0_04876.vg ino 3692875: No such file or directory: using null generation count in directory entry
-/sbin/xfsdump: WARNING: failed to get bulkstat information for inode 3692873
-/sbin/xfsdump: WARNING: failed to get bulkstat information for inode 3692876
-/sbin/xfsdump: WARNING: failed to get bulkstat information for inode 3692873
-/sbin/xfsdump: WARNING: failed to get bulkstat information for inode 3692876
-debug: dump complete at Wed Sep 27 06:00:04 EDT 2006 ...
+There are patches from Mark McLoughlin, not yet upstream, AFAIK, that
+allow a snapshot LV to be merged back into the origin using "lvmerge."
 
--- 
-Steve Feehan
+The other piece provided by the Stateless packages copies the snapshot
+backing store to another host and sets up the dm mappings so that the
+relationship on the remote machine is similar to the relationship on
+the local host.
+
+It would be nice to see this all merged upstream some time soon.
+
+A while ago I proposed a lightweight target that wouldn't copy the
+data, but would only record the blocks that were changed, which
+is precisely what you want:
+
+  http://linux.msede.com/lvm_mlist/archive/2003/08/0036.html
+
+Unfortunately, I've had no time to attempt implementing it, though
+it should be straightforward.
+
+Regards,
+
+	Bill Rugolsky
