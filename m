@@ -1,23 +1,24 @@
 Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
 	by int-mx1.corp.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
-	k94JNecx006059
-	for <linux-lvm@redhat.com>; Wed, 4 Oct 2006 15:23:40 -0400
-Received: from filesrv1.idealcorp.com (66-192-27-146.static.twtelecom.net
-	[66.192.27.146])
+	k94L6Ag0020119
+	for <linux-lvm@redhat.com>; Wed, 4 Oct 2006 17:06:10 -0400
+Received: from smtp.mail.service.medium.net (justchat.medium.net [83.120.2.52])
 	by mx1.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
-	k94JNdpb030309
-	for <linux-lvm@redhat.com>; Wed, 4 Oct 2006 15:23:39 -0400
-Received: from [192.168.1.18] (client08.idealcorp.com [192.168.1.18])
-	by filesrv1.idealcorp.com (Postfix) with ESMTP id 6101AF6819C
-	for <linux-lvm@redhat.com>; Wed,  4 Oct 2006 15:23:32 -0400 (EDT)
-Message-ID: <45240A4F.3020900@idealcorp.com>
-Date: Wed, 04 Oct 2006 15:23:59 -0400
-From: John Ward <jward@idealcorp.com>
+	k94L68PB010849
+	for <linux-lvm@redhat.com>; Wed, 4 Oct 2006 17:06:09 -0400
+Received: from notebook.local.baldauf.org
+	([2001:1b20:1008:2:202:3fff:fe1a:bfb0]
+	helo=[IPv6:2001:1b20:1008:2:202:3fff:fe1a:bfb0])
+	by smtp.mail.service.medium.net with esmtpsa (TLSv1:AES256-SHA:256)
+	(Exim 4.42) id 1GVDwE-0005lA-W0
+	for linux-lvm@redhat.com; Wed, 04 Oct 2006 23:06:02 +0200
+Message-ID: <4524222F.3060902@baldauf.org>
+Date: Wed, 04 Oct 2006 23:05:51 +0200
+From: =?ISO-8859-1?Q?Xu=E2n_Baldauf?=
+	<xuan--2006.10.04--linux-lvm--redhat.com@baldauf.org>
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] Serious LVM Problem
-References: <20061004191008.70E6A731BD@hormel.redhat.com>
-In-Reply-To: <20061004191008.70E6A731BD@hormel.redhat.com>
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
+Subject: [linux-lvm] Bug in LVM2 tools
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -28,30 +29,53 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
+Content-Type: text/plain; charset="iso-8859-1"
 To: linux-lvm@redhat.com
 
-I would suggest trying 'gpart' for recovery:
+Hello,
 
-	http://home.pages.de/~michab/gpart/
+I observed an obscure bug in the current LVM2 tools. Observe this:
 
 
-> Message: 1
-> Date: Wed, 4 Oct 2006 08:48:58 -0700 (PDT)
-> From: TNJazzGrass <tnjazzgrass@yahoo.com>
-> Subject: [linux-lvm] Serious LVM Problem
-> To: linux-lvm@redhat.com
-> Message-ID: <20061004154858.80196.qmail@web53005.mail.yahoo.com>
-> Content-Type: text/plain; charset=iso-8859-1
-> 
-> Hi all,
-> 
-> This is my first post here and I'm fairly
-> inexperienced with Linux, so please be gentle!
-> 
-...
-> Can anyone provide me some troubleshooting assistance
-> so I can determine what to do next?  I'm not afraid of
-> the command line, but I'm not all that skilled on it
-> either (so I'd need instructions that are fairly
-> straightforward).
+# dd if=3D/dev/zero of=3Dtestfile bs=3D1024k count=3D1
+1+0 records in
+1+0 records out
+1048576 bytes (1,0 MB) copied, 0,009037 seconds, 116 MB/s
+# losetup /dev/loop4 testfile
+# pvcreate /dev/loop4
+  Physical volume "/dev/loop4" successfully created
+# vgcreate --physicalextentsize=3D1k test.vg /dev/loop4
+  Volume group "test.vg" successfully created
+# lvcreate --name=3Dtest.lv --size=3D832k test.vg
+  Insufficient free extents (640) in volume group test.vg: 832 required
+# vgremove test.vg
+  Volume group "test.vg" successfully removed
+# vgcreate --physicalextentsize=3D1k test.vg /dev/loop4
+  Volume group "test.vg" successfully created
+# lvcreate --name=3Dtest.lv --size=3D832k test.vg
+  Logical volume "test.lv" created
+#
+
+I create a file "testfile" of 1024KiB size and view it as /dev/loop4.
+Then I create a physical volume on /dev/loop4 and a volume group
+"test.vg" covering that physical volume. The metadata needs the first
+192KiB. However, I cannot use the remaining 832KiB for a logical volume.
+This is the bug.
+
+However, if I remove the volume group "test.vg" and once more create it
+again, now the remaining 832KiB are fully usable. This behaviour is
+inconsistent.
+
+Analyzing the metadata after the first "vgcreate", one can see that the
+pe_count of the physical volume is too small. It seems that there is
+space reserved for a second metadata copy at the end of /dev/loop4,
+however, no second metadata copy is requrested at the invocation of
+"pvcreate".
+
+For me, it is in particuliar important that the first "vgcreate" does
+not use any extra space at the end of the block device the physical
+volume lives on, as, in my case, the physical volume contains already
+data (which is to be made available as a logical volume).
+
+ciao,
+Xu=EF=BF=BDn.
