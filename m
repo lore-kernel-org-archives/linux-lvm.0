@@ -1,20 +1,19 @@
-Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
+Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
 	by int-mx1.corp.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
-	k94JA4K8001241
-	for <linux-lvm@redhat.com>; Wed, 4 Oct 2006 15:10:04 -0400
-Received: from filesrv1.idealcorp.com (66-192-27-146.static.twtelecom.net
-	[66.192.27.146])
-	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id k94J9vjg002432
-	for <linux-lvm@redhat.com>; Wed, 4 Oct 2006 15:09:57 -0400
-Received: from [192.168.1.18] (client08.idealcorp.com [192.168.1.18])
-	by filesrv1.idealcorp.com (Postfix) with ESMTP id 05C28F6819C
-	for <linux-lvm@redhat.com>; Wed,  4 Oct 2006 15:09:51 -0400 (EDT)
-Message-ID: <4524071A.9000007@idealcorp.com>
-Date: Wed, 04 Oct 2006 15:10:18 -0400
-From: John Ward <jward@idealcorp.com>
+	k94JK1Yj004584
+	for <linux-lvm@redhat.com>; Wed, 4 Oct 2006 15:20:01 -0400
+Received: from web53014.mail.yahoo.com (web53014.mail.yahoo.com
+	[206.190.49.44])
+	by mx1.redhat.com (8.12.11.20060308/8.12.11) with SMTP id
+	k94JJwtE028389
+	for <linux-lvm@redhat.com>; Wed, 4 Oct 2006 15:19:58 -0400
+Message-ID: <20061004191947.95695.qmail@web53014.mail.yahoo.com>
+Date: Wed, 4 Oct 2006 12:19:47 -0700 (PDT)
+From: TNJazzGrass <tnjazzgrass@yahoo.com>
+In-Reply-To: <20061004191008.70E6A731BD@hormel.redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] Avoiding disk changes
+Content-Transfer-Encoding: 8bit
+Subject: [linux-lvm] Re: Serious LVM Problem
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -25,54 +24,61 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
+Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@redhat.com
 
-Question regarding disk changes for LVMs. Are there any known scenarios 
-where the on disk information will change (automatically) after the 
-device(s) are detected and probed by the system?
+Unfortunately, I don't have any idea what to do to
+accomplish this, or if I can even do it.
 
-My scenario is, I want to plug my LVM drive(s) into a different machine 
-(via external USB) for analysis. I want the drives to remain 100% 
-unmodified.
+I created them with Disk Druid on FC3 a couple of
+years ago and pretty much hadn't touched the machine
+at all since then.  When I "upgraded" to FC5 a couple
+of weeks ago, I unchecked all the boxes for the data
+drives (hdb, hdd, hde, hdf and hdg) so they should
+have been set to "do not format, keep existing data"
+but I can't remember exactly what I did with hda
+(which was also part of the array - at least some of
+it).  
 
-I would like to setup my configuration such that no disk changes will 
-occur.  Does anything within the LVM or DM realm modify the on-disk 
-metadata under normal circumstances, or if a corrupted/broken LVM scheme 
-is detected (partial or bad disk, etc.)?
+The box has been sitting in the corner for a month or
+so while I try to figure out if it's salvageable.  I
+have not done anything with it since FC5 was loaded,
+except attempt to attach the Physical Volumes to the
+LVM using the LVM Management GUI.
 
-In an attempt to gain absolute control over the detection and mounting 
-process, I've set the global configuration file to test mode:
+So I'm not sure what you mean by "restore the LV's
+back" or how I would go about doing it.
 
-/etc/lvm/lvm.conf:
-...
-global {
-...
-	test = 1
-...
+I *may* have destroyed part of the array by
+reinstalling the OS on /dev/hda...although I'm not
+sure how it was set up in the first place.
 
+If this is the case though, is the data that was on
+the other physical volumes still actually accessible
+in some way?  At this point I'm ready to start over,
+but not before I've exhausted all my options.
 
-After that, once I plug my device in, I set the LVM_SYSTEM_DIR env 
-variable to point to my own configuration (because I don't want to 
-twiddle with the system-wide one anymore than I have to).
+Thanks,
+Dirk
 
-I then use "vgchange --partial -a y" to access the new device, and 
-create the /dev nodes.
+--- Josef Whiter wrote:
+ 
+> Usually the best thing to do in this case is to try
+> and restore the LV's back
+> the way they were when you created them.  You
+> wouldn't happen to know exactly
+> how you created them in the first place would you? 
+> If you do you can try and
+> recreate the LV's exactly the way they were before
+> and it should show up, kind
+> of like if your partition table eats it and you have
+> the exact geometry of the
+> partition tables before they disappeared.  Thank
+> you,
+> 
+> Josef
 
-In my custom lvm.conf (located in the $LVM_SYSTEM_DIR) I've set a few 
-paranoid settings, including:
-
-	filter = ... (only accept /dev/sd* devices)
-	write_cache_state = 0
-	backup = 0
-	archive = 0
-	locking_type = 0
-
-	Setting test mode in this configuration wasn't allowing me to do the 
-vgchange, so I left that off.
-
-Hope this isn't too open ended of a question, short if diving into the 
-source code, I've tried to research to what extent LVM might 
-automatically twiddle bits on the drive.
-
-Thanks in advance.
+__________________________________________________
+Do You Yahoo!?
+Tired of spam?  Yahoo! Mail has the best spam protection around 
+http://mail.yahoo.com 
