@@ -1,31 +1,23 @@
-Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
+Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
 	by int-mx1.corp.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
-	k95AaEt9009092
-	for <linux-lvm@redhat.com>; Thu, 5 Oct 2006 06:36:14 -0400
-Received: from smtp2.enst.fr (revol2.enst.fr [137.194.2.14])
-	by mx1.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
-	k95AaDPd002939
-	for <linux-lvm@redhat.com>; Thu, 5 Oct 2006 06:36:13 -0400
-Received: from localhost (localhost.enst.fr [127.0.0.1])
-	by smtp2.enst.fr (Postfix) with ESMTP id 8FE9EB8293
-	for <linux-lvm@redhat.com>; Thu,  5 Oct 2006 12:36:12 +0200 (CEST)
-Received: from dhcp26-120.enst.fr (dhcp26-120.enst.fr [137.194.26.120])
-	(using TLSv1 with cipher RC4-MD5 (128/128 bits))
-	(Client did not present a certificate)
-	by smtp2.enst.fr (Postfix) with ESMTP id 61F60B8292
-	for <linux-lvm@redhat.com>; Thu,  5 Oct 2006 12:36:10 +0200 (CEST)
-Subject: Re: [linux-lvm] Avoiding disk changes
-From: Fabien Jakimowicz <fabien@jakimowicz.com>
-In-Reply-To: <4524071A.9000007@idealcorp.com>
-References: <4524071A.9000007@idealcorp.com>
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature";
-	boundary="=-LdpPW0aRuDqPys82TvYe"
-Date: Thu, 05 Oct 2006 12:36:09 +0200
-Message-Id: <1160044569.3850.2.camel@dhcp26-120.enst.fr>
+	k95C8Vfo003144
+	for <linux-lvm@redhat.com>; Thu, 5 Oct 2006 08:08:31 -0400
+Received: from cobalt0.panici.net (cobalt0.panici.net [207.234.248.139])
+	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id k95C8O53021666
+	for <linux-lvm@redhat.com>; Thu, 5 Oct 2006 08:08:24 -0400
+Received: (from padski@localhost)
+	by cobalt0.panici.net (8.10.2/8.10.2) id k95C8MR27337
+	for linux-lvm@redhat.com; Thu, 5 Oct 2006 13:08:22 +0100
+Date: Thu, 5 Oct 2006 13:08:22 +0100
+From: paddy <paddy@panici.net>
+Subject: Re: [linux-lvm] Re: Serious LVM Problem
+Message-ID: <20061005120810.GA25595@cobalt0.panici.net>
+References: <20061004191008.70E6A731BD@hormel.redhat.com>
+	<20061004191947.95695.qmail@web53014.mail.yahoo.com>
 Mime-Version: 1.0
-Reply-To: fabien@jakimowicz.com,
-	LVM general discussion and development <linux-lvm@redhat.com>
+Content-Disposition: inline
+In-Reply-To: <20061004191947.95695.qmail@web53014.mail.yahoo.com>
+Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -35,75 +27,60 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
+On Wed, Oct 04, 2006 at 12:19:47PM -0700, TNJazzGrass wrote:
+> Unfortunately, I don't have any idea what to do to
+> accomplish this, or if I can even do it.
+> 
+> I created them with Disk Druid on FC3 a couple of
+> years ago and pretty much hadn't touched the machine
+> at all since then.  When I "upgraded" to FC5 a couple
+> of weeks ago, I unchecked all the boxes for the data
+> drives (hdb, hdd, hde, hdf and hdg) so they should
+> have been set to "do not format, keep existing data"
+> but I can't remember exactly what I did with hda
+> (which was also part of the array - at least some of
+> it).  
+> 
+> The box has been sitting in the corner for a month or
+> so while I try to figure out if it's salvageable.  I
+> have not done anything with it since FC5 was loaded,
+> except attempt to attach the Physical Volumes to the
+> LVM using the LVM Management GUI.
+> 
+> So I'm not sure what you mean by "restore the LV's
+> back" or how I would go about doing it.
+> 
+> I *may* have destroyed part of the array by
+> reinstalling the OS on /dev/hda...although I'm not
+> sure how it was set up in the first place.
+> 
+> If this is the case though, is the data that was on
+> the other physical volumes still actually accessible
+> in some way?  At this point I'm ready to start over,
+> but not before I've exhausted all my options.
 
---=-LdpPW0aRuDqPys82TvYe
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
+next question is what were the PVs
 
-On Wed, 2006-10-04 at 15:10 -0400, John Ward wrote:
-> Question regarding disk changes for LVMs. Are there any known scenarios=20
-> where the on disk information will change (automatically) after the=20
-> device(s) are detected and probed by the system?
->=20
-> My scenario is, I want to plug my LVM drive(s) into a different machine=20
-> (via external USB) for analysis. I want the drives to remain 100%=20
-> unmodified.
->=20
-> I would like to setup my configuration such that no disk changes will=20
-> occur.  Does anything within the LVM or DM realm modify the on-disk=20
-> metadata under normal circumstances, or if a corrupted/broken LVM scheme=20
-> is detected (partial or bad disk, etc.)?
->=20
-> In an attempt to gain absolute control over the detection and mounting=20
-> process, I've set the global configuration file to test mode:
->=20
-> /etc/lvm/lvm.conf:
-> ...
-> global {
-> ...
-> 	test =3D 1
-> ...
->=20
->=20
-> After that, once I plug my device in, I set the LVM_SYSTEM_DIR env=20
-> variable to point to my own configuration (because I don't want to=20
-> twiddle with the system-wide one anymore than I have to).
->=20
-> I then use "vgchange --partial -a y" to access the new device, and=20
-> create the /dev nodes.
->=20
-> In my custom lvm.conf (located in the $LVM_SYSTEM_DIR) I've set a few=20
-> paranoid settings, including:
->=20
-> 	filter =3D ... (only accept /dev/sd* devices)
-> 	write_cache_state =3D 0
-> 	backup =3D 0
-> 	archive =3D 0
-> 	locking_type =3D 0
->=20
-> 	Setting test mode in this configuration wasn't allowing me to do the=20
-> vgchange, so I left that off.
->=20
-> Hope this isn't too open ended of a question, short if diving into the=20
-> source code, I've tried to research to what extent LVM might=20
-> automatically twiddle bits on the drive.
->=20
-> Thanks in advance.
+if the PVs were the whole drives hdb, hdd, hde, hdf and 
+hdg (and possibly also all or some of hda), then quite 
+a lot of metadata should be available there.
 
-Try to use hdparm to set your hard-drive in read-only mode.
+pvscan might help you here ?
 
---=-LdpPW0aRuDqPys82TvYe
-Content-Type: application/pgp-signature; name=signature.asc
-Content-Description: This is a digitally signed message part
+IIRC, if you have some PVs, then you should have a copy 
+of the table in those that will tell you what PVs there
+were in the VG.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.5 (GNU/Linux)
+supposing you have say 5 PVs out of 6 intact then there
+is a next step, but I'm not sure what it is off the top
+of my head.  I expect it will have been discussed before
+on this list, so take a look at the archives.
 
-iD8DBQBFJOAZzTD+AjVP2VIRAmXzAJ9PgQDqJthiGOKuYUxaEjizyj5PYwCgmW4p
-mOOvCJ1MP6gu34Why/GJVsE=
-=RkCH
------END PGP SIGNATURE-----
-
---=-LdpPW0aRuDqPys82TvYe--
+Regards,
+Paddy
+-- 
+Perl 6 will give you the big knob. -- Larry Wall
