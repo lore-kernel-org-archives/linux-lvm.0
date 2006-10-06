@@ -1,9 +1,9 @@
-Message-ID: <45262826.3050206@in.ibm.com>
-Date: Fri, 06 Oct 2006 15:25:50 +0530
-From: Srinivasa Ds <srinivasa@in.ibm.com>
+Message-ID: <4526D00E.5070309@ce.jp.nec.com>
+Date: Fri, 06 Oct 2006 17:52:14 -0400
+From: "Jun'ichi Nomura" <j-nomura@ce.jp.nec.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] [RFC] Reverting "bd_mount_mutex" to "bd_mount_sem"
+Content-Type: multipart/mixed; boundary="------------020708010009070402000007"
+Subject: [linux-lvm] [PATCH LVM2] fix description of lvcreate --regionsize
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -14,118 +14,71 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: LVM general discussion and development <linux-lvm@redhat.com>, agk@redhat.com, axboe@kernel.dk
+To: linux-lvm@redhat.com, Alasdair Kergon <agk@redhat.com>, Jonathan Brassow <jbrassow@redhat.com>
 
-Hi all
-  When I was executing "dmsetup resume <device-name>" command,I got the 
-error shown below. Which basically tells that, "bd_mount_mutex"  in 
-thaw_bdev() is not locked by "dmsetup resume" command and hence it is 
-not allowing it to unlock also.
-=========================================================
-Badness in debug_mutex_unlock at kernel/mutex-debug.c:80
+This is a multi-part message in MIME format.
+--------------020708010009070402000007
+Content-Type: text/plain; charset=ISO-2022-JP
+Content-Transfer-Encoding: 7bit
 
-Call Trace:
-[C0000000634DB260] [C000000000010948] .show_stack+0x68/0x1b0 (unreliable)
-[C0000000634DB300] [C0000000003376C4] .program_check_exception+0x1cc/0x5b0
-[C0000000634DB3D0] [C0000000000047EC] program_check_common+0xec/0x100
---- Exception: 700 at .debug_mutex_unlock+0x3c/0xc4
-    LR = .debug_mutex_unlock+0x30/0xc4
-[C0000000634DB6C0] [C0000000634DB750] 0xc0000000634db750 (unreliable)
-[C0000000634DB740] [C000000000335950] .__mutex_unlock_slowpath+0xd8/0x144
-[C0000000634DB7E0] [C0000000000E2370] .thaw_bdev+0x9c/0xb8
-[C0000000634DB870] [D000000000480830] .unlock_fs+0x34/0x70 [dm_mod]
-[C0000000634DB900] [D000000000481720] .dm_resume+0x110/0x1ac [dm_mod]
-[C0000000634DB9A0] [D000000000485C54] .dev_suspend+0x1b0/0x204 [dm_mod]
-[C0000000634DBA40] [D000000000486728] .ctl_ioctl+0x29c/0x318 [dm_mod]
-[C0000000634DBC30] [C0000000000F8310] .do_ioctl+0xbc/0xf0
-[C0000000634DBCD0] [C0000000000F879C] .vfs_ioctl+0x458/0x498
-[C0000000634DBD80] [C0000000000F8874] .sys_ioctl+0x98/0xe0
-[C0000000634DBE30] [C00000000000871C] syscall_exit+0x0/0x40
-======================================================================
+Hi,
 
-   On debugging I found out that,"dmsetup suspend <device name>" calls 
-"freeze_bdev()",which locks "bd_mount_mutex" to make sure that no new 
-mounts happen on bdev until thaw_bdev() is called.
-   This "thaw_bdev()" is getting called when we resume the device through
-"dmsetup resume <device-name>".
-   Hence we have 2 processes,one of which locks "bd_mount_mutex"(dmsetup
-suspend) and Another(dmsetup resume) unlocks it.
+While lvcreate man page says -R|--regionsize takes mirror region
+size in "KB", it actually takes the parameter as "MB".
+It's inconsistent.
 
-   Since this is not allowed in mutex,I reverted back to 
-bd_mount_sem(semaphore),It worked for me.
+This patch fixes man page to describe it as "MB".
 
-I posted the below patch to lkml also. So Please let me know your 
-comments on this.
-===================================================================
+Alternative fix could be change the line for regionsize_ARG in
+tools/args.h as follows:
+  arg(regionsize_ARG, 'R', "regionsize", size_kb_arg)
+Then the command takes the argument as "KB".
+This allows user to set smaller region size from command line
+but breaks compatibility with older versions.
 
-diff -Naurp linux-2.6.18-rc6-orig/fs/block_dev.c 
-linux-2.6.18-rc6-mod/fs/block_dev.c
---- linux-2.6.18-rc6-orig/fs/block_dev.c	2006-09-27 04:47:25.000000000 -0700
-+++ linux-2.6.18-rc6-mod/fs/block_dev.c	2006-09-27 04:53:29.000000000 -0700
-@@ -261,7 +261,7 @@ static void init_once(void * foo, kmem_c
-  	{
-  		memset(bdev, 0, sizeof(*bdev));
-  		mutex_init(&bdev->bd_mutex);
--		mutex_init(&bdev->bd_mount_mutex);
-+		sema_init(&bdev->bd_mount_sem, 1);
-  		INIT_LIST_HEAD(&bdev->bd_inodes);
-  		INIT_LIST_HEAD(&bdev->bd_list);
-  #ifdef CONFIG_SYSFS
-diff -Naurp linux-2.6.18-rc6-orig/fs/buffer.c 
-linux-2.6.18-rc6-mod/fs/buffer.c
---- linux-2.6.18-rc6-orig/fs/buffer.c	2006-09-27 04:46:14.000000000 -0700
-+++ linux-2.6.18-rc6-mod/fs/buffer.c	2006-09-27 04:49:55.000000000 -0700
-@@ -213,7 +213,7 @@ struct super_block *freeze_bdev(struct b
-  {
-  	struct super_block *sb;
+I'm not sure which one is better.
+If someone needs to choose region size smaller than 1MB, you can do it:
+# lvcreate --config "activation {mirror_region_size=4}" -m1 -L100M vg
 
--	mutex_lock(&bdev->bd_mount_mutex);
-+	down(&bdev->bd_mount_sem);
-  	sb = get_super(bdev);
-  	if (sb && !(sb->s_flags & MS_RDONLY)) {
-  		sb->s_frozen = SB_FREEZE_WRITE;
-@@ -255,7 +255,7 @@ void thaw_bdev(struct block_device *bdev
-  		drop_super(sb);
-  	}
+diffstat:
+ man/lvcreate.8 |    6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
--	mutex_unlock(&bdev->bd_mount_mutex);
-+	up(&bdev->bd_mount_sem);
-  }
-  EXPORT_SYMBOL(thaw_bdev);
+Thanks,
+-- 
+Jun'ichi Nomura, NEC Corporation of America
 
-diff -Naurp linux-2.6.18-rc6-orig/fs/super.c linux-2.6.18-rc6-mod/fs/super.c
---- linux-2.6.18-rc6-orig/fs/super.c	2006-09-27 04:46:51.000000000 -0700
-+++ linux-2.6.18-rc6-mod/fs/super.c	2006-09-27 04:50:56.000000000 -0700
-@@ -700,9 +700,9 @@ int get_sb_bdev(struct file_system_type
-  	 * will protect the lockfs code from trying to start a snapshot
-  	 * while we are mounting
-  	 */
--	mutex_lock(&bdev->bd_mount_mutex);
-+	down(&bdev->bd_mount_sem);
-  	s = sget(fs_type, test_bdev_super, set_bdev_super, bdev);
--	mutex_unlock(&bdev->bd_mount_mutex);
-+	up(&bdev->bd_mount_sem);
-  	if (IS_ERR(s))
-  		goto error_s;
+--------------020708010009070402000007
+Content-Type: text/x-patch;
+ name="03.1-lvcreate-regionsize-fix.patch"
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline;
+ filename="03.1-lvcreate-regionsize-fix.patch"
 
-diff -Naurp linux-2.6.18-rc6-orig/include/linux/fs.h 
-linux-2.6.18-rc6-mod/include/linux/fs.h
---- linux-2.6.18-rc6-orig/include/linux/fs.h	2006-09-27 
-04:45:31.000000000 -0700
-+++ linux-2.6.18-rc6-mod/include/linux/fs.h	2006-09-27 
-04:52:30.000000000 -0700
-@@ -414,7 +414,7 @@ struct block_device {
-  	struct inode *		bd_inode;	/* will die */
-  	int			bd_openers;
-  	struct mutex		bd_mutex;	/* open/close mutex */
--	struct mutex		bd_mount_mutex;	/* mount mutex */
-+	struct semaphore        bd_mount_sem;
-  	struct list_head	bd_inodes;
-  	void *			bd_holder;
-  	int			bd_holders;
-==============================================================================
+diff -X dontdiff -urp LVM2.02.alloclogspace/man/lvcreate.8 LVM2.03.regionsizefix/man/lvcreate.8
+--- LVM2.02.alloclogspace/man/lvcreate.8	2006-10-05 19:45:16.000000000 -0400
++++ LVM2.03.regionsizefix/man/lvcreate.8	2006-10-06 21:11:08.000000000 -0400
+@@ -11,10 +11,10 @@ lvcreate \- create a logical volume in a
+ {\-l/\-\-extents LogicalExtentsNumber[%{VG|FREE}] |
+  \-L/\-\-size LogicalVolumeSize[kKmMgGtT]}
+ [\-M/\-\-persistent y/n] [\-\-minor minor]
+-[\-m/\-\-mirrors Mirrors [\-\-nosync] [\-\-corelog]]
++[\-m/\-\-mirrors Mirrors [\-\-nosync] [\-\-corelog]
++[\-R/\-\-regionsize MirrorLogRegionSize]]
+ [\-n/\-\-name LogicalVolumeName]
+ [\-p/\-\-permission r/rw] [\-r/\-\-readahead ReadAheadSectors]
+-[-R|--regionsize MirrorLogRegionSize]
+ [\-t/\-\-test]
+ [\-v/\-\-verbose] [\-Z/\-\-zero y/n]
+ VolumeGroupName [PhysicalVolumePath...]
+@@ -116,7 +116,7 @@ Set read ahead sector count of this logi
+ Ignored by device-mapper.
+ .TP
+ .I \-R, \-\-regionsize MirrorLogRegionSize
+-A mirror is divided into regions of this size (in KB), and the mirror log 
++A mirror is divided into regions of this size (in MB), and the mirror log 
+ uses this granularity to track which regions are in sync.
+ .TP
+ .I \-s, \-\-snapshot
 
-Thanks
-  Srinivasa DS
-  Linux Technology Centre
+--------------020708010009070402000007--
