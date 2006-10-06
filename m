@@ -1,12 +1,11 @@
-Message-ID: <4526D0F6.7090406@ce.jp.nec.com>
-Date: Fri, 06 Oct 2006 17:56:06 -0400
+Message-ID: <4526D126.2060004@ce.jp.nec.com>
+Date: Fri, 06 Oct 2006 17:56:54 -0400
 From: "Jun'ichi Nomura" <j-nomura@ce.jp.nec.com>
 MIME-Version: 1.0
 References: <4526D08C.8010303@ce.jp.nec.com>
 In-Reply-To: <4526D08C.8010303@ce.jp.nec.com>
-Content-Type: multipart/mixed; boundary="------------060903050203040305040805"
-Subject: [linux-lvm] [PATCH LVM2] (2/3) use _for_each_pv() from
-	_check_contiguous()
+Content-Type: multipart/mixed; boundary="------------010509070904090003020101"
+Subject: [linux-lvm] [PATCH LVM2] (3/3) add 'cling' allocation policy
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -20,158 +19,209 @@ List-Id: <linux-lvm.redhat.com>
 To: linux-lvm@redhat.com, Alasdair Kergon <agk@redhat.com>
 
 This is a multi-part message in MIME format.
---------------060903050203040305040805
+--------------010509070904090003020101
 Content-Type: text/plain; charset=ISO-2022-JP
 Content-Transfer-Encoding: 7bit
 
-This patch rewrites _check_contiguous() to use _for_each_pv().
+This patch adds 'cling' allocation policy.
 
-_for_each_pv() is a generic iterator function to execute given
-function on each PV constituting the specified range of LV.
-Since _check_contiguous() tries to find contiguous PV segment from
-the end of the existing LV segment, I gave the last one LE as
-a iteration range of _for_each_pv().
+Currently there are 3 policies: 'contiguous', 'normal', 'anywhere'.
+LVM2 tries to apply from left to right until it succeeds allocation
+or it failed to allocate with specified policy.
 
-To pass necessary parameters to _for_each_pv callback (_match_pv()),
-this patch adds new struct pv_match_handle.
+With this patch, policies are applied in the order:
+'contiguous', 'cling', 'normal', 'anywhere'.
 
-The patch doesn't fix any bug but is a preparation for later patch.
-Also, the use like this is what _for_each_pv() is intended for, I think.
+From man page:
+ The contiguous policy requires  that
+ new extents are adjacent to existing extents. If there are sufficient
+ free extents to satisfy an allocation request but  normal doesn't use them,
+ anywhere will - even if that reduces performance by placing two stripes
+ on the same physical volume.
+
+'cling' policy requires that new extents are on the same physical
+volume with the existing extents.
 
 diffstat:
- lv_manip.c |   89 +++++++++++++++++++++++++++++++++++++++++++++----------------
- 1 file changed, 66 insertions(+), 23 deletions(-)
+ include/metadata.h      |    1
+ lib/display/display.c   |    1
+ lib/metadata/lv_manip.c |   49 ++++++++++++++++++++++++++++++++++++++++++++---- lib/metadata/metadata.h |    1
+ lib/report/report.c     |    2 +
+ man/lvm.8               |    4 ++-
+ 6 files changed, 53 insertions(+), 5 deletions(-)
 
 Thanks,
 -- 
 Jun'ichi Nomura, NEC Corporation of America
 
 
---------------060903050203040305040805
+--------------010509070904090003020101
 Content-Type: text/x-patch;
-	name="05-use-for_each_pv-from-check_contiguous.patch"
+ name="06-add-cling-allocation-policy.patch"
 Content-Transfer-Encoding: 7bit
 Content-Disposition: inline;
-	filename="05-use-for_each_pv-from-check_contiguous.patch"
+ filename="06-add-cling-allocation-policy.patch"
 
-diff -X ../dontdiff -urp LVM2.04-shrink-checkcontig-arg/lib/metadata/lv_manip.c LVM2.05.use_for_each_pv/lib/metadata/lv_manip.c
---- LVM2.04-shrink-checkcontig-arg/lib/metadata/lv_manip.c	2006-10-07 02:46:21.000000000 -0400
-+++ LVM2.05.use_for_each_pv/lib/metadata/lv_manip.c	2006-10-07 02:49:12.000000000 -0400
-@@ -24,6 +24,11 @@
- #include "display.h"
- #include "segtype.h"
- 
-+static int _for_each_pv(struct cmd_context *cmd, struct logical_volume *lv,
-+			uint32_t le, uint32_t len, uint32_t *max_seg_len,
-+			int (*fn)(struct cmd_context *cmd, struct pv_segment *peg, void *data),
-+			void *data);
-+
- /*
-  * PVs used by a segment of an LV
-  */
-@@ -680,42 +685,80 @@ static int _comp_area(const void *l, con
- 	return 0;
+diff -X ../dontdiff -urp LVM2.05.use_for_each_pv/include/metadata.h LVM2.06.alloc-cling/include/metadata.h
+--- LVM2.05.use_for_each_pv/include/metadata.h	2006-10-05 19:45:15.000000000 -0400
++++ LVM2.06.alloc-cling/include/metadata.h	2006-10-07 02:49:55.000000000 -0400
+@@ -82,6 +82,7 @@ typedef enum {
+ 	ALLOC_INVALID = 0,
+ 	ALLOC_INHERIT,
+ 	ALLOC_CONTIGUOUS,
++	ALLOC_CLING,
+ 	ALLOC_NORMAL,
+ 	ALLOC_ANYWHERE
+ } alloc_policy_t;
+diff -X ../dontdiff -urp LVM2.05.use_for_each_pv/lib/display/display.c LVM2.06.alloc-cling/lib/display/display.c
+--- LVM2.05.use_for_each_pv/lib/display/display.c	2006-07-29 00:46:08.000000000 -0400
++++ LVM2.06.alloc-cling/lib/display/display.c	2006-10-07 02:49:55.000000000 -0400
+@@ -30,6 +30,7 @@ static struct {
+ } _policies[] = {
+ 	{
+ 	ALLOC_CONTIGUOUS, "contiguous"}, {
++	ALLOC_CLING, "cling"}, {
+ 	ALLOC_NORMAL, "normal"}, {
+ 	ALLOC_ANYWHERE, "anywhere"}, {
+ 	ALLOC_INHERIT, "inherit"}
+diff -X ../dontdiff -urp LVM2.05.use_for_each_pv/lib/metadata/lv_manip.c LVM2.06.alloc-cling/lib/metadata/lv_manip.c
+--- LVM2.05.use_for_each_pv/lib/metadata/lv_manip.c	2006-10-07 02:49:12.000000000 -0400
++++ LVM2.06.alloc-cling/lib/metadata/lv_manip.c	2006-10-07 02:51:14.000000000 -0400
+@@ -757,6 +757,23 @@ static int _check_contiguous(struct lv_s
+ 				     is_contiguous);
  }
  
-+struct pv_match_handle {
-+	/* function to check if pv_segment fits for the pv_area */
-+	int (*cond)(struct pv_segment *, struct pv_area *);
-+
-+	struct pv_area *pva; /* pv_area to match */
-+	int index; /* index of pv in flattened lv segment */
-+	int matched; /* 1 if matching pv_segment is found */
-+};
-+
- /*
-- * Is pva contiguous to any existing areas or on the same PV?
-+ * (_for_each_pv callback)
-+ * Check if the pv_segment fits for the pv_match_handle
-  */
--static int _check_contiguous(struct lv_segment *prev_lvseg, struct pv_area *pva,
--			     struct pv_area **areas, uint32_t areas_size)
-+static int _match_pv(struct cmd_context *cmd, struct pv_segment *peg,
-+		     void *data)
- {
--	struct pv_segment *prev_pvseg;
--	struct lv_segment *lastseg;
--	uint32_t s;
-+	struct pv_match_handle *h = (struct pv_match_handle *)data;
- 
--	for (s = 0; s < prev_lvseg->area_count && s < areas_size; s++) {
--		if (seg_type(prev_lvseg, s) == AREA_LV) {
--			lastseg = list_item(list_last(&seg_lv(prev_lvseg, s)->segments), struct lv_segment);
--			/* FIXME For more areas supply flattened prev_lvseg to ensure consistency */
--			if (lastseg->area_count == 1 &&
--			    _check_contiguous(lastseg, pva, &areas[s], 1))
--				return 1;
--			continue;
--		}
-+	h->index++;
-+	if (h->cond && h->cond(peg, h->pva)) {
-+		h->matched = 1;
-+		return 0; /* to exit from for_each_pv loop */
-+	}
- 
--		if (!(prev_pvseg = seg_pvseg(prev_lvseg, s)))
--			continue; /* FIXME Broken */
-+	return 1;
-+}
- 
--		if ((prev_pvseg->pv != pva->map->pv))
--			continue;
-+static int _find_and_set_pv_area(struct lv_segment *prev_lvseg,
-+				 struct pv_area *pva,
-+				 struct pv_area **areas, uint32_t areas_size,
-+				 int (*cond)(struct pv_segment *,
-+					     struct pv_area *))
-+{
-+	struct pv_match_handle pmh;
-+
-+	pmh.cond = cond;
-+	pmh.pva = pva;
-+	pmh.index = -1;
-+	pmh.matched = 0;
-+
-+	/* search through all PVs in the last extent of the LV */
-+	_for_each_pv(NULL, prev_lvseg->lv,
-+		     prev_lvseg->le + prev_lvseg->len - 1, 1,
-+		     NULL, _match_pv, &pmh);
- 
--		if (prev_pvseg->pe + prev_pvseg->len == pva->start) {
--			areas[s] = pva;
--			return 1;
--		}
-+	if (pmh.matched && pmh.index >= 0 && pmh.index < areas_size) {
-+		areas[pmh.index] = pva;
-+		return 1;
- 	}
- 
- 	return 0;
- }
- 
- /*
-+ * Is pva contiguous to any existing areas or on the same PV?
++/*
++ * Is pva on the same PV with any existing areas?
 + */
-+static int is_contiguous(struct pv_segment *prev, struct pv_area *pva)
++static int is_same_pv(struct pv_segment *prev, struct pv_area *pva)
 +{
-+	if ((prev->pv == pva->map->pv) &&
-+	    (prev->pe + prev->len == pva->start))
++	if (prev->pv == pva->map->pv)
 +		return 1;
 +
 +	return 0;
 +}
 +
-+static int _check_contiguous(struct lv_segment *prev_lvseg, struct pv_area *pva,
-+			     struct pv_area **areas, uint32_t areas_size)
++static int _check_same_pv(struct lv_segment *prev_lvseg, struct pv_area *pva,
++			  struct pv_area **areas, uint32_t areas_size)
 +{
 +	return _find_and_set_pv_area(prev_lvseg, pva, areas, areas_size,
-+				     is_contiguous);
++				     is_same_pv);
 +}
-+
-+
-+/*
+ 
+ /*
   * Choose sets of parallel areas to use, respecting any constraints.
-  */
- static int _find_parallel_space(struct alloc_handle *ah, alloc_policy_t alloc,
+@@ -771,9 +788,9 @@ static int _find_parallel_space(struct a
+ 	struct pv_area *pva;
+ 	struct pv_list *pvl;
+ 	unsigned already_found_one = 0;
+-	unsigned contiguous = 0, contiguous_count = 0;
++	unsigned contiguous = 0, cling = 0, prefered_count = 0;
+ 	unsigned ix;
+-	unsigned ix_offset = 0;	/* Offset for non-contiguous allocations */
++	unsigned ix_offset = 0;	/* Offset for non-prioritized allocations */
+ 	uint32_t max_parallel;	/* Maximum extents to allocate */
+ 	uint32_t next_le;
+ 	struct seg_pvs *spvs;
+@@ -786,6 +803,9 @@ static int _find_parallel_space(struct a
+ 	if ((alloc == ALLOC_CONTIGUOUS) && prev_lvseg) {
+ 		contiguous = 1;
+ 		ix_offset = prev_lvseg->area_count;
++	} else if ((alloc == ALLOC_CLING) && prev_lvseg) {
++		cling = 1;
++		ix_offset = prev_lvseg->area_count;
+ 	}
+ 
+ 	/* FIXME This algorithm needs a lot of cleaning up! */
+@@ -846,7 +866,16 @@ static int _find_parallel_space(struct a
+ 					    _check_contiguous(prev_lvseg,
+ 							      pva, areas,
+ 							      areas_size)) {
+-						contiguous_count++;
++						prefered_count++;
++						goto next_pv;
++					}
++					continue;
++				} else if (cling) {
++					if (prev_lvseg &&
++					    _check_same_pv(prev_lvseg,
++							   pva, areas,
++							   areas_size)) {
++						prefered_count++;
+ 						goto next_pv;
+ 					}
+ 					continue;
+@@ -875,7 +904,7 @@ static int _find_parallel_space(struct a
+ 				break;
+ 		}
+ 
+-		if (contiguous && (contiguous_count < ix_offset))
++		if ((contiguous || cling) && (prefered_count < ix_offset))
+ 			break;
+ 
+ 		/* Only allocate log_area the first time around */
+@@ -985,6 +1014,18 @@ static int _allocate(struct alloc_handle
+ 		goto finished;
+ 
+ 	old_allocated = allocated;
++	if (!_find_parallel_space(ah, ALLOC_CLING, pvms, areas,
++				  areas_size, can_split,
++				  prev_lvseg, &allocated, new_extents)) {
++		stack;
++		goto out;
++	}
++
++	if ((allocated == new_extents) || (ah->alloc == ALLOC_CLING) ||
++	    (!can_split && (allocated != old_allocated)))
++		goto finished;
++
++	old_allocated = allocated;
+ 	if (!_find_parallel_space(ah, ALLOC_NORMAL, pvms, areas,
+ 				  areas_size, can_split,
+ 				  prev_lvseg, &allocated, new_extents)) {
+diff -X ../dontdiff -urp LVM2.05.use_for_each_pv/lib/metadata/metadata.h LVM2.06.alloc-cling/lib/metadata/metadata.h
+--- LVM2.05.use_for_each_pv/lib/metadata/metadata.h	2006-10-05 19:45:15.000000000 -0400
++++ LVM2.06.alloc-cling/lib/metadata/metadata.h	2006-10-07 02:49:55.000000000 -0400
+@@ -82,6 +82,7 @@ typedef enum {
+ 	ALLOC_INVALID = 0,
+ 	ALLOC_INHERIT,
+ 	ALLOC_CONTIGUOUS,
++	ALLOC_CLING,
+ 	ALLOC_NORMAL,
+ 	ALLOC_ANYWHERE
+ } alloc_policy_t;
+diff -X ../dontdiff -urp LVM2.05.use_for_each_pv/lib/report/report.c LVM2.06.alloc-cling/lib/report/report.c
+--- LVM2.05.use_for_each_pv/lib/report/report.c	2006-10-05 19:45:16.000000000 -0400
++++ LVM2.06.alloc-cling/lib/report/report.c	2006-10-07 02:49:55.000000000 -0400
+@@ -104,6 +104,8 @@ static char _alloc_policy_char(alloc_pol
+ 	switch (alloc) {
+ 	case ALLOC_CONTIGUOUS:
+ 		return 'c';
++	case ALLOC_CLING:
++		return 'C';
+ 	case ALLOC_NORMAL:
+ 		return 'n';
+ 	case ALLOC_ANYWHERE:
+diff -X ../dontdiff -urp LVM2.05.use_for_each_pv/man/lvm.8 LVM2.06.alloc-cling/man/lvm.8
+--- LVM2.05.use_for_each_pv/man/lvm.8	2006-08-23 04:18:58.000000000 -0400
++++ LVM2.06.alloc-cling/man/lvm.8	2006-10-07 02:49:55.000000000 -0400
+@@ -136,7 +136,7 @@ Characters allowed in tags are: A-Z a-z 
+ Delete the tag \fBtag\fP from a PV, VG or LV, if it's present.
+ .TP
+ \fB--alloc AllocationPolicy\fP
+-The allocation policy to use: \fBcontiguous\fP, \fBnormal\fP, \fBanywhere\fP or \fBinherit\fP.
++The allocation policy to use: \fBcontiguous\fP, \fBcling\fP, \fBnormal\fP, \fBanywhere\fP or \fBinherit\fP.
+ When a command needs to allocate physical extents from the volume group,
+ the allocation policy controls how they are chosen.  
+ Each volume group and logical volume has an allocation policy.
+@@ -151,6 +151,8 @@ existing extents. If there are sufficien
+ an allocation request but \fBnormal\fP doesn't use them,
+ \fBanywhere\fP will - even if that reduces performance by
+ placing two stripes on the same physical volume.
++The \fBcling\fP policy requires that new extents are on the same physical
++volume with existing extents.
+ .IP
+ N.B. The policies described above are not implemented fully yet.
+ In particular, \fBcontiguous\fP does not place new extents adjacent to existing
 
---------------060903050203040305040805--
+--------------010509070904090003020101--
