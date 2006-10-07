@@ -1,11 +1,12 @@
-Date: Sat, 7 Oct 2006 11:51:28 +0100
+Date: Sun, 8 Oct 2006 00:38:46 +0100
 From: Alasdair G Kergon <agk@redhat.com>
-Message-ID: <20061007105128.GY17654@agk.surrey.redhat.com>
-References: <4526D08C.8010303@ce.jp.nec.com>
+Message-ID: <20061007233846.GD17654@agk.surrey.redhat.com>
+References: <4526D08C.8010303@ce.jp.nec.com> <4526D0F6.7090406@ce.jp.nec.com>
 Mime-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <4526D08C.8010303@ce.jp.nec.com>
-Subject: [linux-lvm] Re: [PATCH LVM2] (0/3) 'cling' allocation policy
+In-Reply-To: <4526D0F6.7090406@ce.jp.nec.com>
+Subject: [linux-lvm] Re: [PATCH LVM2] (2/3) use _for_each_pv() from
+	_check_contiguous()
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -19,18 +20,16 @@ List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: Jun'ichi Nomura <j-nomura@ce.jp.nec.com>
-Cc: Alasdair Kergon <agk@redhat.com>, linux-lvm@redhat.com
+Cc: linux-lvm@redhat.com
 
-On Fri, Oct 06, 2006 at 05:54:20PM -0400, Jun'ichi Nomura wrote:
->   [lv0_mimage_0] /dev/sdb(0)
->   [lv0_mimage_1] /dev/sdb(2)
-
-> You see /dev/sda is used for both lv0_mimage_0 and lv0_mimage_1.
-> If this disk breaks, you lose the whole LV.
+On Fri, Oct 06, 2006 at 05:56:06PM -0400, Jun'ichi Nomura wrote:
+> This patch rewrites _check_contiguous() to use _for_each_pv().
  
-You still have a full copy of the data on sdb.
-It's just that the current implementation isn't clever enough to
-piece it back together yet.
+I think the existing FIXME got dropped and I suspect there are problems
+with multiple levels of recursion.  (h->index++ ?)
+ 
+I'm checking in something based on your patch, but I expect there'll still be
+things to fix up.
 
 Alasdair
 -- 
