@@ -1,12 +1,11 @@
-Date: Sat, 7 Oct 2006 11:39:16 +0100
+Date: Sat, 7 Oct 2006 11:51:28 +0100
 From: Alasdair G Kergon <agk@redhat.com>
-Message-ID: <20061007103916.GX17654@agk.surrey.redhat.com>
-References: <4526D00E.5070309@ce.jp.nec.com>
+Message-ID: <20061007105128.GY17654@agk.surrey.redhat.com>
+References: <4526D08C.8010303@ce.jp.nec.com>
 Mime-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <4526D00E.5070309@ce.jp.nec.com>
-Subject: [linux-lvm] Re: [PATCH LVM2] fix description of lvcreate
-	--regionsize
+In-Reply-To: <4526D08C.8010303@ce.jp.nec.com>
+Subject: [linux-lvm] Re: [PATCH LVM2] (0/3) 'cling' allocation policy
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -22,18 +21,16 @@ Content-Transfer-Encoding: 7bit
 To: Jun'ichi Nomura <j-nomura@ce.jp.nec.com>
 Cc: Alasdair Kergon <agk@redhat.com>, linux-lvm@redhat.com
 
-On Fri, Oct 06, 2006 at 05:52:14PM -0400, Jun'ichi Nomura wrote:
-> This patch fixes man page to describe it as "MB".
+On Fri, Oct 06, 2006 at 05:54:20PM -0400, Jun'ichi Nomura wrote:
+>   [lv0_mimage_0] /dev/sdb(0)
+>   [lv0_mimage_1] /dev/sdb(2)
 
-Applied.
-
-> I'm not sure which one is better.
-> If someone needs to choose region size smaller than 1MB, you can do it:
-> # lvcreate --config "activation {mirror_region_size=4}" -m1 -L100M vg
-
-Or simply lvcreate -R4k :-)
-
-MB is just the default assumed if no units are supplied.
+> You see /dev/sda is used for both lv0_mimage_0 and lv0_mimage_1.
+> If this disk breaks, you lose the whole LV.
+ 
+You still have a full copy of the data on sdb.
+It's just that the current implementation isn't clever enough to
+piece it back together yet.
 
 Alasdair
 -- 
