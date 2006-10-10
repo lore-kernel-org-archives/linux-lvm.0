@@ -1,16 +1,12 @@
-Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
-	k998Bhtm018963
-	for <linux-lvm@redhat.com>; Mon, 9 Oct 2006 04:11:43 -0400
-Received: from bay0-omc1-s31.bay0.hotmail.com (bay0-omc1-s31.bay0.hotmail.com
-	[65.54.246.103])
-	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id k998BbWO025101
-	for <linux-lvm@redhat.com>; Mon, 9 Oct 2006 04:11:37 -0400
-Message-ID: <BAY122-F341CBA1207CBA2BCB8EB090160@phx.gbl>
-From: "Sundeep Saini" <sundeep_saini@hotmail.com>
-Date: Mon, 09 Oct 2006 13:41:18 +0530
+From: Arjan van de Ven <arjan@infradead.org>
+In-Reply-To: <452BB67E.7000700@in.ibm.com>
+References: <451A78DF.1060901@in.ibm.com> <20060927135705.GA30311@elte.hu>
+	<4526C184.7070507@sandeen.net>  <452BB67E.7000700@in.ibm.com>
+Date: Tue, 10 Oct 2006 17:19:05 +0200
+Message-Id: <1160493546.3000.303.camel@laptopd505.fenrus.org>
 Mime-Version: 1.0
-Subject: [linux-lvm] Linux LVM Physical Layout Structure
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] Re: [RFC] Reverting "bd_mount_mutex" to "bd_mount_sem"
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -21,16 +17,47 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/html; format=flowed; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: linux-lvm@redhat.com
+Content-Type: text/plain; charset="us-ascii"
+To: Srinivasa Ds <srinivasa@in.ibm.com>
+Cc: Eric Sandeen <sandeen@sandeen.net>, linux-kernel@vger.kernel.org, dm-devel@redhat.com, linux-lvm@redhat.com, Ingo Molnar <mingo@elte.hu>, agk@redhat.com
 
-<html><div style='background-color:'><DIV class=RTE>
-<P><BR>HI,<BR>I have a query about the physical layout of the LVM. Using some hexeditor i tried to find out the VGDA structure. But i am not getting any specific structure at starting of PV.<BR>As The Volume Group Descriptor Area (VGDA) functions similar to the partition table for LVM. It is stored at the beginning at the beginning of each physical volume.&nbsp; </P>
-<P>Earlier i worked on HP-UX LVM and i read that i impementation of LVM is similar in both.</P>
-<P>I want to get the information of the PE map and if i extend some LV and create 2-3 segments then how i will be able to know the PE chain.</P>
-<P>I got some structure on HDD that contain some ASCII values as the output of #lvdisplay ot vgdisplay</P>
-<P>Please give some guidance to find the internal layout of LVM on HDD.</P>
-<P>Thanks in Advance<BR><BR></P>
-<DIV></DIV><FONT color=#000000></DIV>
-<DIV></DIV></FONT></div></html>
+On Tue, 2006-10-10 at 20:34 +0530, Srinivasa Ds wrote:
+> Eric Sandeen wrote:
+> > Ingo Molnar wrote:
+> >   
+> >> * Srinivasa Ds <srinivasa@in.ibm.com> wrote:
+> >>
+> >>     
+> >>>   On debugging I found out that,"dmsetup suspend <device name>" calls 
+> >>> "freeze_bdev()",which locks "bd_mount_mutex" to make sure that no new 
+> >>> mounts happen on bdev until thaw_bdev() is called.
+> >>>   This "thaw_bdev()" is getting called when we resume the device 
+> >>> through "dmsetup resume <device-name>".
+> >>>   Hence we have 2 processes,one of which locks 
+> >>> "bd_mount_mutex"(dmsetup suspend) and Another(dmsetup resume) unlocks 
+> >>> it.
+> >>>       
+> >> hm, to me this seems quite a fragile construct - even if the 
+> >> mutex-debugging warning is worked around by reverting to a semaphore.
+> >>
+> >> 	Ingo
+> >>     
+> >
+> > Ingo, what do you feel is fragile about this?  It seems like this is a
+> > reasonable way to go, except that maybe a down_trylock would be good if
+> > a 2nd process tries to freeze while it's already frozen...
+> >
+> > Thanks,
+> >
+> > -Eric
+> >   
+> Ingo, As per the discussion resending the patch with down_trylock.
+
+Hi,
+
+I still think that effectively exporting this semaphore to userspace is
+a big design mistake; but at least it can't be a mutex for this reason
+so the patch is sane in that regard...
+
+Greetings,
+   Arjan van de Ven
