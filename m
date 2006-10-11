@@ -1,12 +1,17 @@
-From: Arjan van de Ven <arjan@infradead.org>
-In-Reply-To: <452BB67E.7000700@in.ibm.com>
-References: <451A78DF.1060901@in.ibm.com> <20060927135705.GA30311@elte.hu>
-	<4526C184.7070507@sandeen.net>  <452BB67E.7000700@in.ibm.com>
-Date: Tue, 10 Oct 2006 17:19:05 +0200
-Message-Id: <1160493546.3000.303.camel@laptopd505.fenrus.org>
-Mime-Version: 1.0
+Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
+	by int-mx1.corp.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
+	k9B6aR3G032197
+	for <linux-lvm@redhat.com>; Wed, 11 Oct 2006 02:36:27 -0400
+Received: from alnrmhc14.comcast.net (alnrmhc14.comcast.net [206.18.177.54])
+	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id k9B6aLvb019439
+	for <linux-lvm@redhat.com>; Wed, 11 Oct 2006 02:36:21 -0400
+Message-ID: <452C90DC.1030409@Englisch.us>
+Date: Wed, 11 Oct 2006 02:36:12 -0400
+From: Volker Englisch <Volker@englisch.us>
+MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] Re: [RFC] Reverting "bd_mount_mutex" to "bd_mount_sem"
+Subject: [linux-lvm] Boot fails after change of motherboard: No volume
+	groups found
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -17,47 +22,43 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: Srinivasa Ds <srinivasa@in.ibm.com>
-Cc: Eric Sandeen <sandeen@sandeen.net>, linux-kernel@vger.kernel.org, dm-devel@redhat.com, linux-lvm@redhat.com, Ingo Molnar <mingo@elte.hu>, agk@redhat.com
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+To: linux-lvm@redhat.com
 
-On Tue, 2006-10-10 at 20:34 +0530, Srinivasa Ds wrote:
-> Eric Sandeen wrote:
-> > Ingo Molnar wrote:
-> >   
-> >> * Srinivasa Ds <srinivasa@in.ibm.com> wrote:
-> >>
-> >>     
-> >>>   On debugging I found out that,"dmsetup suspend <device name>" calls 
-> >>> "freeze_bdev()",which locks "bd_mount_mutex" to make sure that no new 
-> >>> mounts happen on bdev until thaw_bdev() is called.
-> >>>   This "thaw_bdev()" is getting called when we resume the device 
-> >>> through "dmsetup resume <device-name>".
-> >>>   Hence we have 2 processes,one of which locks 
-> >>> "bd_mount_mutex"(dmsetup suspend) and Another(dmsetup resume) unlocks 
-> >>> it.
-> >>>       
-> >> hm, to me this seems quite a fragile construct - even if the 
-> >> mutex-debugging warning is worked around by reverting to a semaphore.
-> >>
-> >> 	Ingo
-> >>     
-> >
-> > Ingo, what do you feel is fragile about this?  It seems like this is a
-> > reasonable way to go, except that maybe a down_trylock would be good if
-> > a 2nd process tries to freeze while it's already frozen...
-> >
-> > Thanks,
-> >
-> > -Eric
-> >   
-> Ingo, As per the discussion resending the patch with down_trylock.
+I have a problem I'm trying to solve but I haven't found a solution.
 
-Hi,
+I am running FC4 (with AMD64) and was able to boot the machine without 
+problems until Friday when I had to change my motherboard.
+Since then it appears that I'm unable to boot because the system can not 
+find my LVM.  I see this error message after grub selected the OS:
+   Red Hat nash version 4.2.15 starting
+      Reading all physical volumes. This may take a while ...
+      No volume groups found
+      Unable to find volume group "VolGroup00"
 
-I still think that effectively exporting this semaphore to userspace is
-a big design mistake; but at least it can't be a mutex for this reason
-so the patch is sane in that regard...
+and as a result a kernel panic.
+I can start the machine by using the installation disk and boot with 
+'linux rescue' and then I can see my volume and access the data.
 
-Greetings,
-   Arjan van de Ven
+I have two SATA hard drives with a /boot partition and the volume group 
+on the first one and the second HDD has just regular partitions:
+   Filesystem                       Size   Used  Avail Use%  Mounted on
+   /dev/mapper/VolGroup00-LogVol04   15G   7.2G   6.4G  54%  /var
+   /dev/mapper/VolGroup00-LogVol03   34G    12G    20G  37%  /backup
+   /dev/mapper/VolGroup00-LogVol00   24G   7.9G    15G  35%  /
+   /dev/sda1                         99M    29M    65M  31%  /boot
+   /dev/sdb3                        138G    18G   113G  14%  /free
+   /dev/mapper/VolGroup00-LogVol02   29G   3.4G    24G  13%  /home
+   /dev/sdb2                         46G   1.2G    43G   3%  /home/public
+   /dev/sdb1                         46G   706M    43G   2%  /home/mail
+
+
+Why would the boot process not find my volume group but does when I'm 
+starting the OS with the rescue disk (or Knoppix)?
+
+-- 
+Thanks
+
+     Volker Englisch
+
+mailto:Volker@Englisch.us    (h)
