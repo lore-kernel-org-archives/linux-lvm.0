@@ -1,9 +1,22 @@
-From: Jonathan Brassow <jbrassow@redhat.com>
-Date: Wed, 11 Oct 2006 10:20:40 -0500
-Message-Id: <1160580040.30654.18.camel@hydrogen.msp.redhat.com>
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] [LVM2 PATCH] mirror force resync option
+Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
+	by int-mx1.corp.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
+	k9BHYrno025511
+	for <linux-lvm@redhat.com>; Wed, 11 Oct 2006 13:34:53 -0400
+Received: from mx1.suse.de (ns1.suse.de [195.135.220.2])
+	by mx1.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
+	k9BHYVPC031625
+	for <linux-lvm@redhat.com>; Wed, 11 Oct 2006 13:34:31 -0400
+Received: from Relay1.suse.de (mail2.suse.de [195.135.221.8])
+	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by mx1.suse.de (Postfix) with ESMTP id 18B4410125
+	for <linux-lvm@redhat.com>; Wed, 11 Oct 2006 19:34:26 +0200 (CEST)
+Date: Wed, 11 Oct 2006 19:34:21 +0200
+From: Jan Blunck <jblunck@suse.de>
+Message-ID: <20061011173421.GC4636@hasse.suse.de>
+MIME-Version: 1.0
+Content-Disposition: inline
+Subject: [linux-lvm] [RFC] Let udev play with snapshots
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -15,215 +28,40 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@redhat.com, agk@redhat.com
+Content-Transfer-Encoding: 7bit
+To: linux-lvm@redhat.com
 
-Patch originally developed by Jun'ichi Nomura and altered to be cluster
-capable.
+Hi,
 
- brassow
+it seems that the snapshot problem isn't solved completely by our latest
+changes. I looked into it and found something:
 
-This patch adds the --forcesync option to lvchange, allowing users
-to force mirrors to resynchronize.
+The problem is that udev isn't able to differentiate between dm targets that
+aren't supposed to be opened by anything else than the lvm2 tools itself or
+not. When we are creating a snapshot, this is what we do:
 
-This operation is performed by clearing out the log device.  It
-requires that the mirror be deactivated to do this.  If the
-mirror is not currently active, the log device is activated, cleared,
-and deactivated.  If the mirror is currently active, the mirror
-is deactivated, the log device is activated and cleared, and the
-mirror is reactivated.
+- creating "vg-snapshot"
+- clearing the start of "vg-snapshot"
+- removing "vg-snapshot"                                                  (1)
+- creating "vg-origin-real"
+- creating "vg-snapshot-cow"
+- creating "vg-snapshot"
+- suspending "vg-origin" and "vg-origin-real"
+- reload tables
+- resuming "vg-origin-real", "vg-snapshot-cow", "vg-snapshot" and         (2)
+  "vg-origin"
 
-If the mirror is in use, it can not be deactivated; and therefore,
-can not be forcesynced.  This creates a particular anomaly in the
-cluster context.  If the mirror is active on some nodes in the cluster,
-but not the node where the command is issued, the command "succeeds" -
-even though the remote nodes maintain the same sync status.  I view
-this as a bug in the 'deactivate_lv' code, since it should fail if
-it is unable to deactivate the lv on all nodes.  Comments on this
-are welcome.
+At the point (1) udev already run vol_id on vg-snapshot. This LV is only
+created to clear the exception store of the snapshot to be created. So
+lvcreate tries to remove the still open vg-snapshot.
 
-Index: LVM2/man/lvchange.8
-===================================================================
---- LVM2.orig/man/lvchange.8	2006-10-10 17:02:49.000000000 -0500
-+++ LVM2/man/lvchange.8	2006-10-10 17:03:24.000000000 -0500
-@@ -7,6 +7,7 @@ lvchange \- change attributes of a logic
- [\-A/\-\-autobackup y/n] [\-a/\-\-available y/n/ey/en/ly/ln]
- [\-\-alloc AllocationPolicy]
- [\-C/\-\-contiguous y/n] [\-d/\-\-debug] [\-\-deltag Tag]
-+[\-\-forcesync]
- [\-h/\-?/\-\-help]
- [\-\-ignorelockingfailure]
- [\-\-monitor {y|n}]
-@@ -40,6 +41,9 @@ logical volumes. It's only possible to c
- logical volume's allocation policy to contiguous, if all of the
- allocated physical extents are already contiguous.
- .TP
-+.I \-\-forcesync
-+Enforce resynching the mirrored logical volumes.
-+.TP
- .I \-\-minor minor
- Set the minor number.
- .TP
-Index: LVM2/tools/args.h
-===================================================================
---- LVM2.orig/tools/args.h	2006-10-10 17:02:49.000000000 -0500
-+++ LVM2/tools/args.h	2006-10-10 17:03:24.000000000 -0500
-@@ -46,6 +46,7 @@ arg(alloc_ARG, '\0', "alloc", alloc_arg)
- arg(separator_ARG, '\0', "separator", string_arg)
- arg(mirrorsonly_ARG, '\0', "mirrorsonly", NULL)
- arg(nosync_ARG, '\0', "nosync", NULL)
-+arg(forcesync_ARG, '\0', "forcesync", NULL)
- arg(corelog_ARG, '\0', "corelog", NULL)
- arg(monitor_ARG, '\0', "monitor", yes_no_arg)
- arg(config_ARG, '\0', "config", string_arg)
-Index: LVM2/tools/commands.h
-===================================================================
---- LVM2.orig/tools/commands.h	2006-10-10 17:02:49.000000000 -0500
-+++ LVM2/tools/commands.h	2006-10-10 17:03:24.000000000 -0500
-@@ -61,6 +61,7 @@ xx(lvchange,
-    "\t[-d|--debug]\n"
-    "\t[--deltag Tag]\n"
-    "\t[-f|--force]\n"
-+   "\t[--forcesync]\n"
-    "\t[-h|--help]\n"
-    "\t[--ignorelockingfailure]\n"
-    "\t[--monitor {y|n}]\n"
-@@ -75,7 +76,7 @@ xx(lvchange,
-    "\tLogicalVolume[Path] [LogicalVolume[Path]...]\n",
- 
-    alloc_ARG, autobackup_ARG, available_ARG, contiguous_ARG, force_ARG,
--   ignorelockingfailure_ARG, major_ARG, minor_ARG, monitor_ARG,
-+   forcesync_ARG, ignorelockingfailure_ARG, major_ARG, minor_ARG, monitor_ARG,
-    partial_ARG, permission_ARG, persistent_ARG, readahead_ARG,
-    refresh_ARG, addtag_ARG, deltag_ARG, test_ARG)
- 
-Index: LVM2/tools/lvchange.c
-===================================================================
---- LVM2.orig/tools/lvchange.c	2006-10-10 17:02:49.000000000 -0500
-+++ LVM2/tools/lvchange.c	2006-10-10 17:19:44.000000000 -0500
-@@ -177,6 +177,102 @@ static int lvchange_refresh(struct cmd_c
- 	return 1;
- }
- 
-+static int lvchange_syncstatus(struct cmd_context *cmd,
-+			       struct logical_volume *lv)
-+{
-+	int active = 1;
-+	struct lvinfo info;
-+
-+	if (!(lv->status & MIRRORED))
-+		return 1;
-+
-+	if (lv->status & PVMOVE) {
-+		log_error("Unable to change sync status of pvmove volume, %s",
-+			  lv->name);
-+		return 0;
-+	}
-+
-+	if (!lv_info(cmd, lv, &info, 0) || !info.exists)
-+		active = 0;
-+
-+	if (active) {
-+		if (!deactivate_lv(cmd, lv)) {
-+			log_error("Unable to deactivate, %s, for sync status change", lv->name);
-+			log_error("Hint: %s may be in-use", lv->name);
-+			return 0;
-+		}
-+
-+		/* Must activate log, or we can't zero it */
-+		if (!activate_lv(cmd, first_seg(lv)->log_lv)) {
-+			log_error("Unable to activate, %s, for sync status change",
-+				  first_seg(lv)->log_lv->name);
-+			activate_lv(cmd, lv);
-+			return 0;
-+		}
-+
-+		/*
-+		 * Note: there is no need to deactivate the log before
-+		 * we activate the mirror
-+		 */
-+
-+		if (!set_lv(cmd, first_seg(lv)->log_lv, 0)) {
-+			log_error("Unable to reset sync status for %s", lv->name);
-+			activate_lv(cmd, lv);
-+			return 0;
-+		}
-+
-+		if (!activate_lv(cmd, lv)) {
-+			log_error("Failed to reactivate %s after sync status change", lv->name);
-+			return 0;
-+		}
-+	} else {
-+		/* Must activate log, or we can't zero it */
-+		if (!activate_lv(cmd, first_seg(lv)->log_lv)) {
-+			log_error("Unable to activate, %s, for sync status change",
-+				  first_seg(lv)->log_lv->name);
-+			return 0;
-+		}
-+
-+		if (!set_lv(cmd, first_seg(lv)->log_lv, 0)) {
-+			log_error("Unable to reset sync status for %s", lv->name);
-+			deactivate_lv(cmd, first_seg(lv)->log_lv);
-+			return 0;
-+		}
-+
-+		if (!deactivate_lv(cmd, first_seg(lv)->log_lv)) {
-+			log_error("Failed to deactivate %s after sync status change",
-+				  first_seg(lv)->log_lv->name);
-+			return 0;
-+		}
-+	}
-+
-+	if (!(lv->status & MIRROR_NOTSYNCED))
-+		return 1;
-+
-+	/*
-+	 * We need to drop MIRROR_NOTSYNCED flag in metadata.
-+	 * We can do it only after the logical volume has been
-+	 * activated with force sync to ensure disk log is updated.
-+	 */
-+
-+	lv->status &= ~MIRROR_NOTSYNCED;
-+
-+	log_very_verbose("Updating logical volume \"%s\" on disk(s)", lv->name);
-+	if (!vg_write(lv->vg)) {
-+		stack;
-+		return 0;
-+	}
-+
-+	backup(lv->vg);
-+
-+	if (!vg_commit(lv->vg)) {
-+		resume_lv(cmd, lv);
-+		return 0;
-+	}
-+
-+	return 1;
-+}
-+
- static int lvchange_alloc(struct cmd_context *cmd, struct logical_volume *lv)
- {
- 	int want_contiguous = 0;
-@@ -498,6 +594,10 @@ static int lvchange_single(struct cmd_co
- 	if (doit)
- 		log_print("Logical volume \"%s\" changed", lv->name);
- 
-+	if (arg_count(cmd, forcesync_ARG))
-+		if (!lvchange_syncstatus(cmd, lv))
-+			return ECMD_FAILED;
-+
- 	/* availability change */
- 	if (arg_count(cmd, available_ARG)) {
- 		if (!lvchange_availability(cmd, lv))
-@@ -525,9 +625,10 @@ int lvchange(struct cmd_context *cmd, in
- 	    && !arg_count(cmd, minor_ARG) && !arg_count(cmd, major_ARG)
- 	    && !arg_count(cmd, persistent_ARG) && !arg_count(cmd, addtag_ARG)
- 	    && !arg_count(cmd, deltag_ARG) && !arg_count(cmd, refresh_ARG)
--	    && !arg_count(cmd, alloc_ARG) && !arg_count(cmd, monitor_ARG)) {
-+	    && !arg_count(cmd, alloc_ARG) && !arg_count(cmd, monitor_ARG)
-+	    && !arg_count(cmd, forcesync_ARG)) {
- 		log_error("Need 1 or more of -a, -C, -j, -m, -M, -p, -r, "
--			  "--refresh, --alloc, --addtag, --deltag "
-+			  "--forcesync, --refresh, --alloc, --addtag, --deltag "
- 			  "or --monitor");
- 		return EINVALID_CMD_LINE;
- 	}
+What we need to do is to tell udev that it shouldn't open the intermediate
+vg-snapshot target but wait until (2) to open it.
+
+I'm not quite certain about how to do this. IIRC Heinz told me during the
+summit about the tagging possibilities. The problem is that tags are not
+supported by snapshots but as the first LV isn't a snapshot ... So I propose
+the tagging of all kind of intermediate LVs so that udev can easily
+differentiate by calling "dmsetup lstag" (or maybe lsattr ;)
+
+Comments?
