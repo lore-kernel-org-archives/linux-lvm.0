@@ -1,18 +1,21 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
 	by int-mx1.corp.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
-	k9B6aR3G032197
-	for <linux-lvm@redhat.com>; Wed, 11 Oct 2006 02:36:27 -0400
-Received: from alnrmhc14.comcast.net (alnrmhc14.comcast.net [206.18.177.54])
-	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id k9B6aLvb019439
-	for <linux-lvm@redhat.com>; Wed, 11 Oct 2006 02:36:21 -0400
-Message-ID: <452C90DC.1030409@Englisch.us>
-Date: Wed, 11 Oct 2006 02:36:12 -0400
-From: Volker Englisch <Volker@englisch.us>
+	k9BARSAQ030055
+	for <linux-lvm@redhat.com>; Wed, 11 Oct 2006 06:27:28 -0400
+Received: from mail1.lowvoice.nl (mail.lowvoice.nl [81.171.111.151])
+	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id k9BARIEH016746
+	for <linux-lvm@redhat.com>; Wed, 11 Oct 2006 06:27:19 -0400
+Message-ID: <452CC701.3010104@BudgetDedicated.com>
+Date: Wed, 11 Oct 2006 12:27:13 +0200
+From: "Erik de Bruijn - BudgetDedicated.com" <Erik@BudgetDedicated.com>
 MIME-Version: 1.0
+Subject: Re: [linux-lvm] LV open but not mounted ?
+References: <20061009185806.GA29486@cobalt0.panici.net>	<bae4416f49c8a46ad4f2b5232fec1986@redhat.com>
+	<20061010104649.GA2638@cobalt0.panici.net>
+In-Reply-To: <20061010104649.GA2638@cobalt0.panici.net>
 Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] Boot fails after change of motherboard: No volume
-	groups found
-Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
+Reply-To: Support@BudgetDedicated.com,
+	LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -23,42 +26,67 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: linux-lvm@redhat.com
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-I have a problem I'm trying to solve but I haven't found a solution.
+Hello Paddy,
 
-I am running FC4 (with AMD64) and was able to boot the machine without 
-problems until Friday when I had to change my motherboard.
-Since then it appears that I'm unable to boot because the system can not 
-find my LVM.  I see this error message after grub selected the OS:
-   Red Hat nash version 4.2.15 starting
-      Reading all physical volumes. This may take a while ...
-      No volume groups found
-      Unable to find volume group "VolGroup00"
-
-and as a result a kernel panic.
-I can start the machine by using the installation disk and boot with 
-'linux rescue' and then I can see my volume and access the data.
-
-I have two SATA hard drives with a /boot partition and the volume group 
-on the first one and the second HDD has just regular partitions:
-   Filesystem                       Size   Used  Avail Use%  Mounted on
-   /dev/mapper/VolGroup00-LogVol04   15G   7.2G   6.4G  54%  /var
-   /dev/mapper/VolGroup00-LogVol03   34G    12G    20G  37%  /backup
-   /dev/mapper/VolGroup00-LogVol00   24G   7.9G    15G  35%  /
-   /dev/sda1                         99M    29M    65M  31%  /boot
-   /dev/sdb3                        138G    18G   113G  14%  /free
-   /dev/mapper/VolGroup00-LogVol02   29G   3.4G    24G  13%  /home
-   /dev/sdb2                         46G   1.2G    43G   3%  /home/public
-   /dev/sdb1                         46G   706M    43G   2%  /home/mail
-
-
-Why would the boot process not find my volume group but does when I'm 
-starting the OS with the rescue disk (or Knoppix)?
+Only making a wild guess here, but perhaps you had it mounted with 
+"mount -o loop vg-foo/lv-bar /mnt"? This command will create a loopback 
+device which will then be mounted. The 'dirty part' is that 'umount' 
+will NOT reverse this process. It will unmount but not remove the 
+automatically created loopback device. This stays attached to the LV 
+which remains opened.
 
 -- 
-Thanks
+Kind regards,
 
-     Volker Englisch
+Erik de Bruijn
+BudgetDedicated
 
-mailto:Volker@Englisch.us    (h)
+http://www.BudgetDedicated.com | Tel. +31 13 4690625 | Fax. +31 84 2248796 | Adres: Adelaarshorst 9 | Zipcode NL-5042 XE
+
+paddy wrote:
+> On Mon, Oct 09, 2006 at 04:49:35PM -0500, Jonathan E Brassow wrote:
+>   
+>> Hmmm, I can see where it might be 'active', but if it's not in use, it 
+>> shouldn't be open.
+>>     
+>
+> It is open. lvchange -an says LV in use: not removing
+>
+> but I'm drawing a blank on finding anything that is actually using it.
+>
+> I'm kinda hoping someone can throw some light on what 'open' is here.
+>
+>   
+>> Some sub-lvs are marked as 'open', because they are used by the main LV 
+>> (such is the case with mirroring and snapshots).
+>>     
+>
+> no mirrors, no snapshots :-(
+>
+> I have looked through /etc/lvm/backups and can't see anything odd.
+>
+>   
+>> Have you tried 'lsof <path to LV>' ?
+>>     
+>
+> yup, tried lsof, tried fuser, there is no nfs, got nowhere.
+>  
+> It's one of those things where I fully expect to have to say "d'oh sorry!",
+> but until I can get deeper into it I am really stumped.
+>
+>   
+>> On Oct 9, 2006, at 1:58 PM, paddy wrote:
+>>
+>>     
+>>> I just noticed that I have a system where an LV appears to be open
+>>> (as given by lvs), but I can't see it mounted anywhere, or opened
+>>> by any process.
+>>>
+>>> Any insights, suggestions, explanations, etc gratefully received :-)
+>>>       
+>
+> Regards,
+> Paddy
+>   
