@@ -1,18 +1,15 @@
-Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
-	k9CLpA6A016404
-	for <linux-lvm@redhat.com>; Thu, 12 Oct 2006 17:51:10 -0400
-Received: from java-cup.de (h7339.serverkompetenz.net [81.169.183.84])
-	by mx1.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
-	k9CLp5BI010131
-	for <linux-lvm@redhat.com>; Thu, 12 Oct 2006 17:51:05 -0400
-From: Martin Wilmes <martin.wilmes@java-cup.de>
-Date: Thu, 12 Oct 2006 23:50:44 +0200
+Received: from [127.0.0.1] (sebastian-int.corp.redhat.com [172.16.52.221])
+	by pobox.surrey.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
+	k9CMq0OO024718
+	for <linux-lvm@redhat.com>; Thu, 12 Oct 2006 23:52:01 +0100
+Message-ID: <452EC755.1070603@redhat.com>
+Date: Thu, 12 Oct 2006 23:53:09 +0100
+From: "Bryn M. Reeves" <breeves@redhat.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-Message-Id: <200610122350.46609.martin.wilmes@java-cup.de>
+Subject: Re: [linux-lvm] Broken hard disk
+References: <200610122350.46609.martin.wilmes@java-cup.de>
+In-Reply-To: <200610122350.46609.martin.wilmes@java-cup.de>
 Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] Broken hard disk
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -26,31 +23,57 @@ List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-Hi,
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA1
 
-I had a standard Fedora Core 4 installation with the root fs and swap 
-on LVM. I upgraded to Core 5. Everything worked fine. No need to be an LVM 
-guru so far.
+Martin Wilmes wrote:
+> Now I installed the old, hopefully still working disk in a different computer 
+> and booted with Knoppix 5.0.1 to get some of my data back but vgscan -v comes 
+> back with nothing at all.
 
-Then I added a new hard disk to the computer and a partition of this new disk 
-to the root volume. The "new" hard disk then broke down so that I am unable 
-to access the data on the root volume.
+It's a bit strange that it outputs nothing at all. I'd expect to see
+something like:
 
-Now I installed the old, hopefully still working disk in a different computer 
-and booted with Knoppix 5.0.1 to get some of my data back but vgscan -v comes 
-back with nothing at all.
+$ sudo vgscan -v
+    Wiping cache of LVM-capable devices
+    Wiping internal VG cache
+  Reading all physical volumes.  This may take a while...
+    Finding all volume groups
+    Finding volume group "scratch0"
+  Couldn't find device with uuid 'ZpQI30-qpx3-Cm54-YcSR-5Ho4-rlUx-uCxGBi'.
+  Couldn't find all physical volumes for volume group scratch0.
+  Couldn't find device with uuid 'ZpQI30-qpx3-Cm54-YcSR-5Ho4-rlUx-uCxGBi'.
+  Couldn't find all physical volumes for volume group scratch0.
+  Volume group "scratch0" not found
 
-fdisk says
+If there's a PV missing from the volume group.
 
-Disk /dev/hda: 20.5 GB, 20525137920 bytes
-255 heads, 63 sectors/track, 2495 cylinders
-Units = cylinders of 16065 * 512 = 8225280 bytes
+You can add move 'v's to increase the verbosity of vgscan to see what
+it's scanning - do you have any device filters configured in /etc/lvm.conf?
 
-   Device Boot      Start         End      Blocks   Id  System
-/dev/hda1   *           1          13      104391   83  Linux
-/dev/hda2              14        2495    19936665   8e  Linux LVM
+It'd also be good to see what pvscan shows, for e.g.:
 
-Any suggestions how to recover that volume?
+$ sudo pvscan
+  Couldn't find device with uuid 'ZpQI30-qpx3-Cm54-YcSR-5Ho4-rlUx-uCxGBi'.
+  PV /dev/hda2        VG d800_vg0   lvm2 [34.18 GB / 760.00 MB free]
+  PV unknown device   VG scratch0   lvm2 [60.00 MB / 0    free]
+  PV /dev/loop1       VG scratch0   lvm2 [60.00 MB / 52.00 MB free]
+  Total: 3 [34.30 GB] / in use: 3 [34.30 GB] / in no VG: 0 [0   ]
 
-Thanks
-Martin
+Once you find the volume group, activate it without the missing PV using
+the --patial option, e.g:
+
+vgchange -ay --partial <vgname>
+
+
+Cheers,
+
+Bryn.
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.5 (GNU/Linux)
+Comment: Using GnuPG with Fedora - http://enigmail.mozdev.org
+
+iD8DBQFFLsdU6YSQoMYUY94RAuddAJ4rVU9uHR9njfB/WuYqRg/6bVJkNACgsfpi
+vgFdYK7lqpgZ6mJ3bo5VccQ=
+=D/8l
+-----END PGP SIGNATURE-----
