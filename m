@@ -1,21 +1,23 @@
-Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
+Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
 	by int-mx1.corp.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
-	k9BARSAQ030055
-	for <linux-lvm@redhat.com>; Wed, 11 Oct 2006 06:27:28 -0400
-Received: from mail1.lowvoice.nl (mail.lowvoice.nl [81.171.111.151])
-	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id k9BARIEH016746
-	for <linux-lvm@redhat.com>; Wed, 11 Oct 2006 06:27:19 -0400
-Message-ID: <452CC701.3010104@BudgetDedicated.com>
-Date: Wed, 11 Oct 2006 12:27:13 +0200
-From: "Erik de Bruijn - BudgetDedicated.com" <Erik@BudgetDedicated.com>
+	k9CJs05Z008853
+	for <linux-lvm@redhat.com>; Thu, 12 Oct 2006 15:54:00 -0400
+Received: from mail.cs.drexel.edu (cheshire.cs.drexel.edu [129.25.6.194])
+	by mx1.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
+	k9CJrvnJ021329
+	for <linux-lvm@redhat.com>; Thu, 12 Oct 2006 15:53:59 -0400
+Received: from [129.25.6.204] (mockturtle.cs.drexel.edu [129.25.6.204])
+	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by mail.cs.drexel.edu (Postfix) with ESMTP id 90BF920216C2
+	for <linux-lvm@redhat.com>; Thu, 12 Oct 2006 15:53:47 -0400 (EDT)
+Message-ID: <452E9D4B.8020104@cs.drexel.edu>
+Date: Thu, 12 Oct 2006 15:53:47 -0400
+From: Gaylord Holder <gholder@cs.drexel.edu>
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] LV open but not mounted ?
-References: <20061009185806.GA29486@cobalt0.panici.net>	<bae4416f49c8a46ad4f2b5232fec1986@redhat.com>
-	<20061010104649.GA2638@cobalt0.panici.net>
-In-Reply-To: <20061010104649.GA2638@cobalt0.panici.net>
 Content-Transfer-Encoding: 7bit
-Reply-To: Support@BudgetDedicated.com,
-	LVM general discussion and development <linux-lvm@redhat.com>
+Subject: [linux-lvm] How to force lvm2 to remove volume group?
+Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -25,68 +27,15 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="us-ascii"
+To: linux-lvm@redhat.com
 
-Hello Paddy,
+I created a volume group on a disk which was hot removed.
 
-Only making a wild guess here, but perhaps you had it mounted with 
-"mount -o loop vg-foo/lv-bar /mnt"? This command will create a loopback 
-device which will then be mounted. The 'dirty part' is that 'umount' 
-will NOT reverse this process. It will unmount but not remove the 
-automatically created loopback device. This stays attached to the LV 
-which remains opened.
+How can remove the volume group without replacing the drive or rebooting
+my machine?
 
--- 
-Kind regards,
+I've tried vgreduce --removemissing without any luck.
 
-Erik de Bruijn
-BudgetDedicated
-
-http://www.BudgetDedicated.com | Tel. +31 13 4690625 | Fax. +31 84 2248796 | Adres: Adelaarshorst 9 | Zipcode NL-5042 XE
-
-paddy wrote:
-> On Mon, Oct 09, 2006 at 04:49:35PM -0500, Jonathan E Brassow wrote:
->   
->> Hmmm, I can see where it might be 'active', but if it's not in use, it 
->> shouldn't be open.
->>     
->
-> It is open. lvchange -an says LV in use: not removing
->
-> but I'm drawing a blank on finding anything that is actually using it.
->
-> I'm kinda hoping someone can throw some light on what 'open' is here.
->
->   
->> Some sub-lvs are marked as 'open', because they are used by the main LV 
->> (such is the case with mirroring and snapshots).
->>     
->
-> no mirrors, no snapshots :-(
->
-> I have looked through /etc/lvm/backups and can't see anything odd.
->
->   
->> Have you tried 'lsof <path to LV>' ?
->>     
->
-> yup, tried lsof, tried fuser, there is no nfs, got nowhere.
->  
-> It's one of those things where I fully expect to have to say "d'oh sorry!",
-> but until I can get deeper into it I am really stumped.
->
->   
->> On Oct 9, 2006, at 1:58 PM, paddy wrote:
->>
->>     
->>> I just noticed that I have a system where an LV appears to be open
->>> (as given by lvs), but I can't see it mounted anywhere, or opened
->>> by any process.
->>>
->>> Any insights, suggestions, explanations, etc gratefully received :-)
->>>       
->
-> Regards,
-> Paddy
->   
+Thanks,
+-Gaylord
