@@ -1,15 +1,12 @@
-Received: from [127.0.0.1] (sebastian-int.corp.redhat.com [172.16.52.221])
-	by pobox.surrey.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
-	k9DGIilZ029691
-	for <linux-lvm@redhat.com>; Fri, 13 Oct 2006 17:18:45 +0100
-Message-ID: <452FBCAA.4080000@redhat.com>
-Date: Fri, 13 Oct 2006 17:19:54 +0100
+Message-ID: <452FBFCE.9030204@redhat.com>
+Date: Fri, 13 Oct 2006 17:33:18 +0100
 From: "Bryn M. Reeves" <breeves@redhat.com>
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] Unable to add new drive to LV
-References: <200610130827.42040.pwaldo@waldoware.com>
-	<452FB129.7020208@gmx.net>
-In-Reply-To: <452FB129.7020208@gmx.net>
+Subject: Re: [linux-lvm] Broken hard disk
+References: <200610122350.46609.martin.wilmes@java-cup.de>
+	<452EC755.1070603@redhat.com>
+	<200610130553.24145.martin.wilmes@java-cup.de>
+In-Reply-To: <200610130553.24145.martin.wilmes@java-cup.de>
 Content-Transfer-Encoding: 7bit
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
@@ -22,50 +19,55 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: LVM general discussion and development <linux-lvm@redhat.com>
+To: Martin Wilmes <martin.wilmes@java-cup.de>
+Cc: LVM general discussion and development <linux-lvm@redhat.com>
 
 -----BEGIN PGP SIGNED MESSAGE-----
 Hash: SHA1
 
-Klaus Strebel wrote:
-> Hi Paul,
+Martin Wilmes wrote:
+> On Friday, 13. October 2006 00:53, Bryn M. Reeves wrote:
+>> You can add move 'v's to increase the verbosity of vgscan to see what
+>> it's scanning - do you have any device filters configured in /etc/lvm.conf?
 > 
-> look's like you didn't get the LVM architecture :-(.
-> You can't add a drive to a LV, no matter how brand new and shiny it is
-> and no matter how deprerate you try.
-
-Hi Klaus,
-
-Looks like you didn't read the mail :-(.
-
-Paul has already added hdd1 as a PV to the ide_disks VG:
-
+> No filters, everything is commented out (unchanged).
 > 
->>>   --- Physical volume ---
->>>   PV Name               /dev/hdd1
->>>   VG Name               ide_disks <------------------
->>>   PV Size               149.03 GB / not usable 0
->>>   Allocatable           yes
->>>   PE Size (KByte)       4096
->>>   Total PE              38152
->>>   Free PE               38152
->>>   Allocated PE          0
->>>   PV UUID               XxOREs-3k4B-jhky-lhGD-zQx5-xhE3-HPqG0L
+> vgscan -vvv now generates ouput for hda:
+> 
+> ...
+>       /dev/hda1: size is 208782 sectors
+>         Closed /dev/hda1
+>       /dev/hda1: size is 208782 sectors
+>         Opened /dev/hda1 RO O_DIRECT
+>         /dev/hda1: block size is 1024 bytes
+>         Closed /dev/hda1
+>         Using /dev/hda1
+>         Opened /dev/hda1 RO O_DIRECT
+>         /dev/hda1: block size is 1024 bytes
+>       /dev/hda1: No label detected
+>         Closed /dev/hda1
+>         /dev/loop1: Skipping (sysfs)
+>         /dev/cloop1: Skipping: Unrecognised LVM device type 240
+> ...
 
-The problem here is that the LV is using striped allocation across 3 PVs:
+What about hda2? According to your fdisk output, that's the PV on this disk.
 
-> root@backup:~# lvextend --size +149G -t /dev/ide_disks/bacula
->   Test mode: Metadata will NOT be updated.
->   Incorrect metadata area header checksum
->   Using stripesize of last segment 4KB
->   Rounding size (147200 extents) down to stripe boundary size for segment 
-> (147198 extents)
->   Extending logical volume bacula to 574.99 GB
->   Insufficient allocatable extents suitable for parallel use for logical 
-> volume bacula: 147198 required
+Does hda2 appear in /proc/partitions?
 
-So, in order to extend it and maintain that allocation, you need to have
-3 PVs with sufficient space to allocate three parallel stripes.
+>> It'd also be good to see what pvscan shows, for e.g.:
+> 
+> pvscan -vvv outputs:
+> 
+
+Likewise - all I can see here is hda1 - that's a type 0x83 (Linux)
+partition, rather than the 0x8e (Linux LVM) partition that we're
+interested in here.
+
+Can you put the complete output of vgscan -vvv and pvscan -vvv somewhere
+on the web and post the links here?
+
+You can use a pastedump service like http://p.opsat.net/new if you don't
+have access to somewhere to host this.
 
 Cheers,
 
@@ -75,7 +77,7 @@ Bryn.
 Version: GnuPG v1.4.5 (GNU/Linux)
 Comment: Using GnuPG with Fedora - http://enigmail.mozdev.org
 
-iD8DBQFFL7yq6YSQoMYUY94RAlJ/AKDZaaaz+P6zQozq0mDfx5SRBxiUsQCgsVVb
-MCl5XVqXGsEH+ZrYFHEAdps=
-=mQWJ
+iD8DBQFFL7/O6YSQoMYUY94RAmxzAJkBGN5IDouPjSKCk44l8MCuN0XNjQCg2SB5
+J7s5pP0VJTRzpLtgRJ5Ylxs=
+=MwUj
 -----END PGP SIGNATURE-----
