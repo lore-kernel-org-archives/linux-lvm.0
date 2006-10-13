@@ -1,12 +1,25 @@
-Message-ID: <452FBFCE.9030204@redhat.com>
-Date: Fri, 13 Oct 2006 17:33:18 +0100
-From: "Bryn M. Reeves" <breeves@redhat.com>
+Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
+	by int-mx1.corp.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
+	k9DHkZqg005135
+	for <linux-lvm@redhat.com>; Fri, 13 Oct 2006 13:46:35 -0400
+Received: from mta4.adelphia.net (mta4.adelphia.net [68.168.78.184])
+	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id k9DHkOJx014012
+	for <linux-lvm@redhat.com>; Fri, 13 Oct 2006 13:46:25 -0400
+Received: from mail.waldo.home ([69.175.168.186]) by mta11.adelphia.net
+	(InterMail vM.6.01.05.02 201-2131-123-102-20050715) with ESMTP
+	id <20061013174608.KSPJ2152.mta11.adelphia.net@mail.waldo.home>
+	for <linux-lvm@redhat.com>; Fri, 13 Oct 2006 13:46:08 -0400
+Received: from [127.0.0.1] (mail.waldo.home [10.0.0.4])
+	by mail.waldo.home (Postfix) with ESMTP id 075F9EBC2C
+	for <linux-lvm@redhat.com>; Fri, 13 Oct 2006 13:46:03 -0400 (EDT)
+Message-ID: <452FD0DC.5030904@waldoware.com>
+Date: Fri, 13 Oct 2006 13:46:04 -0400
+From: Paul Waldo <pwaldo@waldoware.com>
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] Broken hard disk
-References: <200610122350.46609.martin.wilmes@java-cup.de>
-	<452EC755.1070603@redhat.com>
-	<200610130553.24145.martin.wilmes@java-cup.de>
-In-Reply-To: <200610130553.24145.martin.wilmes@java-cup.de>
+Subject: Re: [linux-lvm] Unable to add new drive to LV
+References: <200610130827.42040.pwaldo@waldoware.com>	<452FB129.7020208@gmx.net>
+	<452FBCAA.4080000@redhat.com>
+In-Reply-To: <452FBCAA.4080000@redhat.com>
 Content-Transfer-Encoding: 7bit
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
@@ -18,66 +31,35 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: Martin Wilmes <martin.wilmes@java-cup.de>
-Cc: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
------BEGIN PGP SIGNED MESSAGE-----
-Hash: SHA1
-
-Martin Wilmes wrote:
-> On Friday, 13. October 2006 00:53, Bryn M. Reeves wrote:
->> You can add move 'v's to increase the verbosity of vgscan to see what
->> it's scanning - do you have any device filters configured in /etc/lvm.conf?
+Bryn M. Reeves wrote:
+[snip]
 > 
-> No filters, everything is commented out (unchanged).
+> The problem here is that the LV is using striped allocation across 3 PVs:
+[snip]
 > 
-> vgscan -vvv now generates ouput for hda:
+> So, in order to extend it and maintain that allocation, you need to have
+> 3 PVs with sufficient space to allocate three parallel stripes.
 > 
-> ...
->       /dev/hda1: size is 208782 sectors
->         Closed /dev/hda1
->       /dev/hda1: size is 208782 sectors
->         Opened /dev/hda1 RO O_DIRECT
->         /dev/hda1: block size is 1024 bytes
->         Closed /dev/hda1
->         Using /dev/hda1
->         Opened /dev/hda1 RO O_DIRECT
->         /dev/hda1: block size is 1024 bytes
->       /dev/hda1: No label detected
->         Closed /dev/hda1
->         /dev/loop1: Skipping (sysfs)
->         /dev/cloop1: Skipping: Unrecognised LVM device type 240
-> ...
-
-What about hda2? According to your fdisk output, that's the PV on this disk.
-
-Does hda2 appear in /proc/partitions?
-
->> It'd also be good to see what pvscan shows, for e.g.:
+> Cheers,
 > 
-> pvscan -vvv outputs:
-> 
+> Bryn.
+Thanks for the reply, Bryn.
 
-Likewise - all I can see here is hda1 - that's a type 0x83 (Linux)
-partition, rather than the 0x8e (Linux LVM) partition that we're
-interested in here.
+OK, I'm confused.
 
-Can you put the complete output of vgscan -vvv and pvscan -vvv somewhere
-on the web and post the links here?
+The LVM Howto says "In LVM 2, striped LVs can be extended by concatenating 
+another set of devices onto the end of the first set. So you can get into a 
+situation where your LV is a 2 stripe set concatenated with a linear set 
+concatenated with a 4 stripe set. Are you confused yet?"
 
-You can use a pastedump service like http://p.opsat.net/new if you don't
-have access to somewhere to host this.
+I interpret the above to mean that I can concatenate the single drive after 
+the existing stripped array.  Is that an incorrect interpretation?
 
-Cheers,
+Being as this LV stores backups, I don't really care too much that it is 
+stripped--my goal is to have lots of disk space.  Is my only option trashing 
+the existing LV and making it contiguous (non-stripped)?  Thanks!
 
-Bryn.
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.5 (GNU/Linux)
-Comment: Using GnuPG with Fedora - http://enigmail.mozdev.org
-
-iD8DBQFFL7/O6YSQoMYUY94RAmxzAJkBGN5IDouPjSKCk44l8MCuN0XNjQCg2SB5
-J7s5pP0VJTRzpLtgRJ5Ylxs=
-=MwUj
------END PGP SIGNATURE-----
+Paul
