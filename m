@@ -1,20 +1,13 @@
-Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
-	k9D1RPEh028645
-	for <linux-lvm@redhat.com>; Thu, 12 Oct 2006 21:27:25 -0400
-Received: from pbr322.ceingebi.unam.mx (pbr322.ibt.unam.mx [132.248.32.1])
-	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id k9D1RNAB015131
-	for <linux-lvm@redhat.com>; Thu, 12 Oct 2006 21:27:24 -0400
-Received: from [132.248.32.28] (negra [132.248.32.28])
-	by pbr322.ceingebi.unam.mx (8.12.3/8.12.3/Debian-7.1) with ESMTP id
-	k9D1L0h1017578
-	for <linux-lvm@redhat.com>; Thu, 12 Oct 2006 20:21:01 -0500
-Message-ID: <452EEB6C.9040701@ibt.unam.mx>
-Date: Thu, 12 Oct 2006 20:27:08 -0500
-From: Jerome <jerome@ibt.unam.mx>
+From: Martin Wilmes <martin.wilmes@java-cup.de>
+Subject: Re: [linux-lvm] Broken hard disk
+Date: Fri, 13 Oct 2006 05:53:18 +0200
+References: <200610122350.46609.martin.wilmes@java-cup.de>
+	<452EC755.1070603@redhat.com>
+In-Reply-To: <452EC755.1070603@redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: [linux-lvm] How to restore a PV ??
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+Message-Id: <200610130553.24145.martin.wilmes@java-cup.de>
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -25,34 +18,52 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="utf-8"; format="flowed"
+Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@redhat.com
 
-Hi all,
-i've made a mistake on deleting the MBR of a disk who was included in a 
-Volume Group of three disks.
-Now, when i do a pvdisplay command, i have this result:
+On Friday, 13. October 2006 00:53, Bryn M. Reeves wrote:
+> You can add move 'v's to increase the verbosity of vgscan to see what
+> it's scanning - do you have any device filters configured in /etc/lvm.conf?
 
-  pvdisplay
-   2 PV(s) found for VG principal: expected 3
-   Logical volume (Database) contains an incomplete mapping table.
-   PV segment VG free_count mismatch: 0 != 3576
-   PV segment VG extent_count mismatch: 7152 != 10728
-   Internal error: PV segments corrupted in principal.
+No filters, everything is commented out (unchanged).
 
-And a vgdisplay show me this following:
-vgdisplay
-   2 PV(s) found for VG principal: expected 3
-   2 PV(s) found for VG principal: expected 3
-   Volume group "principal" not found
+vgscan -vvv now generates ouput for hda:
 
-I'm sure that the data on the hard disk are not erased. But i want to 
-restore this third disk, that it is part of the "principal" Volume 
-Group. (I have a fourth disk with the same physical caracteristics).
-So, how can i do to succeed in this?
+...
+      /dev/hda1: size is 208782 sectors
+        Closed /dev/hda1
+      /dev/hda1: size is 208782 sectors
+        Opened /dev/hda1 RO O_DIRECT
+        /dev/hda1: block size is 1024 bytes
+        Closed /dev/hda1
+        Using /dev/hda1
+        Opened /dev/hda1 RO O_DIRECT
+        /dev/hda1: block size is 1024 bytes
+      /dev/hda1: No label detected
+        Closed /dev/hda1
+        /dev/loop1: Skipping (sysfs)
+        /dev/cloop1: Skipping: Unrecognised LVM device type 240
+...
 
-Best regards.
--- 
--- J�r�me
-Si l'on peut trouver moins que rien, c'est que rien vaut d�j� quelque chose.
-	(Raymond Devos)
+> It'd also be good to see what pvscan shows, for e.g.:
+
+pvscan -vvv outputs:
+
+...
+      /dev/hda1: size is 208782 sectors
+        Closed /dev/hda1
+      /dev/hda1: size is 208782 sectors
+        Opened /dev/hda1 RO O_DIRECT
+        /dev/hda1: block size is 1024 bytes
+        Closed /dev/hda1
+        Using /dev/hda1
+        Opened /dev/hda1 RO O_DIRECT
+        /dev/hda1: block size is 1024 bytes
+      /dev/hda1: No label detected
+        Closed /dev/hda1
+        /dev/loop1: Skipping (sysfs)
+        /dev/cloop1: Skipping: Unrecognised LVM device type 240
+...
+
+Thanks
+Martin
