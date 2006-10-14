@@ -1,28 +1,17 @@
-Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
-	k9DJmpAg015777
-	for <linux-lvm@redhat.com>; Fri, 13 Oct 2006 15:48:51 -0400
-Received: from mta9.adelphia.net (mta9.adelphia.net [68.168.78.199])
-	by mx1.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
-	k9DJmm1u022472
-	for <linux-lvm@redhat.com>; Fri, 13 Oct 2006 15:48:48 -0400
-Received: from mail.waldo.home ([69.175.168.186]) by mta9.adelphia.net
-	(InterMail vM.6.01.05.02 201-2131-123-102-20050715) with ESMTP
-	id <20061013194834.EVDY18643.mta9.adelphia.net@mail.waldo.home>
-	for <linux-lvm@redhat.com>; Fri, 13 Oct 2006 15:48:34 -0400
-Received: from [127.0.0.1] (mail.waldo.home [10.0.0.4])
-	by mail.waldo.home (Postfix) with ESMTP id 5AB3FEBC2C
-	for <linux-lvm@redhat.com>; Fri, 13 Oct 2006 15:48:31 -0400 (EDT)
-Message-ID: <452FED8E.1050705@waldoware.com>
-Date: Fri, 13 Oct 2006 15:48:30 -0400
-From: Paul Waldo <pwaldo@waldoware.com>
-MIME-Version: 1.0
-Subject: Re: [linux-lvm] Unable to add new drive to LV
-References: <200610130827.42040.pwaldo@waldoware.com>	<452FB129.7020208@gmx.net>
-	<452FBCAA.4080000@redhat.com>	<452FD0DC.5030904@waldoware.com>
-	<20061013183720.GJ17654@agk.surrey.redhat.com>
-In-Reply-To: <20061013183720.GJ17654@agk.surrey.redhat.com>
-Content-Transfer-Encoding: 7bit
+Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id k9E7gM7J027123
+	for <linux-lvm@redhat.com>; Sat, 14 Oct 2006 03:42:22 -0400
+Received: from percy.comedia.it (percy.comedia.it [212.97.59.71])
+	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id k9E7gJZh020866
+	for <linux-lvm@redhat.com>; Sat, 14 Oct 2006 03:42:20 -0400
+Date: Sat, 14 Oct 2006 09:42:18 +0200
+From: Luca Berra <bluca@comedia.it>
+Subject: Re: [linux-lvm] Mounting hardware snapshots/clones on the same host ?
+Message-ID: <20061014074218.GC17336@percy.comedia.it>
+References: <88134f8b0610120207g4faaa0f2q27fc86f368a90fac@mail.gmail.com>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <88134f8b0610120207g4faaa0f2q27fc86f368a90fac@mail.gmail.com>
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -34,14 +23,35 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Transfer-Encoding: 7bit
+To: linux-lvm@redhat.com
 
-Alasdair G Kergon wrote:
-> On Fri, Oct 13, 2006 at 01:46:04PM -0400, Paul Waldo wrote:
->> I interpret the above to mean that I can concatenate the single drive after 
->> the existing stripped array.  
-> 
-> Add -i1 to extend in a single stripe. (man lvextend)
-> 
-> Alasdair
-That did the trick.  Thanks!
+On Thu, Oct 12, 2006 at 11:07:10AM +0200, Olivier Verloove wrote:
+>Hello,
+>
+>I've seen this question a few times in the archives but without any answer.
+>
+>Is there a way to activate/mount a copy of a volume group taken with a
+>disk-array based point-in-time copy on the same host ?
+>
+>The
+>issue is that the disk-array based software will copy all information on
+>the disk including PVID/VGID's which is confusing for Linux's LVM.
+>
+>Special tools are available on other platforms (vgchgid on HP-UX, recreatevg
+>on AIX) for this purpose.
+>
+>Thanks in advance.
+>
+Look for the thread called "Altering a Physical Volume's UUID" on the
+list archives
+
+L.
+
+-- 
+Luca Berra -- bluca@comedia.it
+        Communication Media & Services S.r.l.
+ /"\
+ \ /     ASCII RIBBON CAMPAIGN
+  X        AGAINST HTML MAIL
+ / \
