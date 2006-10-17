@@ -1,18 +1,22 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id k9HM0tSK032220
-	for <linux-lvm@redhat.com>; Tue, 17 Oct 2006 18:00:55 -0400
-Received: from nf-out-0910.google.com (nf-out-0910.google.com [64.233.182.185])
-	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id k9HM0rLA002963
-	for <linux-lvm@redhat.com>; Tue, 17 Oct 2006 18:00:54 -0400
-Received: by nf-out-0910.google.com with SMTP id l36so500159nfa
-	for <linux-lvm@redhat.com>; Tue, 17 Oct 2006 15:00:52 -0700 (PDT)
-Message-ID: <806e72ee0610171500i26f4fa8ek469fa7d02031ae1@mail.gmail.com>
-Date: Tue, 17 Oct 2006 19:00:52 -0300
-From: "Fabricio Candido" <fabricio.candido@gmail.com>
-MIME-Version: 1.0
-Content-Type: multipart/alternative; 
-	boundary="----=_Part_42051_23710470.1161122452227"
-Subject: [linux-lvm] Using lvm1 vg's in lvm2 systems (RHEL4)
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id k9HMG6VZ005028
+	for <linux-lvm@redhat.com>; Tue, 17 Oct 2006 18:16:07 -0400
+Received: from mail.bdmcc-us.com (bdmcc-us.com [209.42.230.180])
+	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id k9HMG5lv006698
+	for <linux-lvm@redhat.com>; Tue, 17 Oct 2006 18:16:05 -0400
+Received: from localhost (mail.bdmcc-us.com [192.168.1.133])
+	by mail.bdmcc-us.com (Postfix) with ESMTP id 6944E17F8EB
+	for <linux-lvm@redhat.com>; Tue, 17 Oct 2006 18:13:31 -0400 (EDT)
+Received: from mail.bdmcc-us.com ([127.0.0.1])
+	by localhost (mail.bdmcc-us.com [127.0.0.1]) (amavisd-new, port 10024)
+	with LMTP id 28437-02-2 for <linux-lvm@redhat.com>;
+	Tue, 17 Oct 2006 18:13:31 -0400 (EDT)
+Date: Tue, 17 Oct 2006 18:13:30 -0400
+From: Brian McCullough <bdmc@bdmcc-us.com>
+Subject: Re: [linux-lvm] Missing VGs?
+Message-ID: <20061017221330.GF28128@bdmcc-us.com>
+Mime-Version: 1.0
+Content-Disposition: inline
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -23,32 +27,45 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@redhat.com
 
-------=_Part_42051_23710470.1161122452227
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
 
-Hi everybody,
+A few days ago, I asked about an old drive that I have that has two
+partitions, typed as "fd" ( Linux RAID autodetect ).  Running vgscan and
+pvscan doesn't seem to produce anything that makes sense to me, because
+I expect to see VGs on these two partitions.
 
-  My production data is in RHEL3 system, using lvm1. I'll backup data
-using business
-continuous copy (BCV) from my production vg to a backup server with RHEL 4.
-Is it possible to my RHEL4 system use these lvm1 vgs without converting it ?
-What is necessary ?
+I then went on to "pvdisplay" and see the following, which seems to say
+that the "pvcreate" command was run on both partitions, but that nothing
+else was done.  Am I correct, and am I dealing with two basically unused
+LVM2 partitions?
 
-Regards,
 
-Fabricio
 
-------=_Part_42051_23710470.1161122452227
-Content-Type: text/html; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
+  --- NEW Physical volume ---
+  PV Name               /dev/md5
+  VG Name
+  PV Size               37.26 GB
+  Allocatable           NO
+  PE Size (KByte)       0
+  Total PE              0
+  Free PE               0
+  Allocated PE          0
+  PV UUID               62mYb1-sf0O-FA0J-D6TI-kUg6-R5og-mOZAB6
 
-<span style="font-family: verdana;"><span class="nw" id="_user_linux-lvm@redhat.com">Hi everybody,<br><br>&nbsp; My production data is in RHEL3 system, using lvm1. I'll </span></span><span style="font-family: verdana;"><span class="nw" id="_user_linux-lvm@redhat.com">
-backup data using </span></span><span style="font-family: verdana;"><span class="nw" id="_user_linux-lvm@redhat.com">business continuous copy (BCV) from my production vg to a backup server with RHEL 4. Is it possible to my RHEL4 system use these lvm1 vgs without converting it ? What is necessary ?
-<br><br></span></span><span style="font-family: verdana;"><span class="nw" id="_user_linux-lvm@redhat.com">Regards,<br><br>Fabricio<br></span></span>
+  --- NEW Physical volume ---
+  PV Name               /dev/md6
+  VG Name
+  PV Size               149.05 GB
+  Allocatable           NO
+  PE Size (KByte)       0
+  Total PE              0
+  Free PE               0
+  Allocated PE          0
+  PV UUID               uhilT7-33EQ-65Ml-ntFf-iDjJ-fhkn-lag1ev
 
-------=_Part_42051_23710470.1161122452227--
+
+Thanks,
+Brian
