@@ -1,21 +1,24 @@
-Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id k9HNLXVp023782
-	for <linux-lvm@redhat.com>; Tue, 17 Oct 2006 19:21:33 -0400
-Received: from hu-out-0506.google.com (hu-out-0506.google.com [72.14.214.229])
-	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id k9HNLSQh021386
-	for <linux-lvm@redhat.com>; Tue, 17 Oct 2006 19:21:29 -0400
-Received: by hu-out-0506.google.com with SMTP id 34so1908601hue
-	for <linux-lvm@redhat.com>; Tue, 17 Oct 2006 16:21:28 -0700 (PDT)
-Message-ID: <806e72ee0610171621p1cb6e9d2r795002ce70293177@mail.gmail.com>
-Date: Tue, 17 Oct 2006 20:21:28 -0300
-From: "Fabricio Candido" <fabricio.candido@gmail.com>
-Subject: Re: [linux-lvm] Using lvm1 vg's in lvm2 systems (RHEL4)
-In-Reply-To: <20061017223949.GP17654@agk.surrey.redhat.com>
-MIME-Version: 1.0
-Content-Type: multipart/alternative; 
-	boundary="----=_Part_42639_29192051.1161127288137"
-References: <806e72ee0610171500i26f4fa8ek469fa7d02031ae1@mail.gmail.com>
-	<20061017223949.GP17654@agk.surrey.redhat.com>
+Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id k9ICgN2Z013128
+	for <linux-lvm@redhat.com>; Wed, 18 Oct 2006 08:42:23 -0400
+Received: from svc.anykey.de (service.anykey.de [213.168.80.18])
+	by mx1.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
+	k9ICgLDJ008753
+	for <linux-lvm@redhat.com>; Wed, 18 Oct 2006 08:42:21 -0400
+Received: from eu.main.anykey (unknown [192.168.200.17])
+	by svc.anykey.de (anykey GmbH) with ESMTP id 330A95C99F
+	for <linux-lvm@redhat.com>; Wed, 18 Oct 2006 14:41:59 +0200 (CEST)
+Received: from eu.main.anykey (localhost [127.0.0.1])
+	by eu.main.anykey (Postfix) with ESMTP id 803011282F
+	for <linux-lvm@redhat.com>; Wed, 18 Oct 2006 14:42:20 +0200 (CEST)
+Message-ID: <3673884.1161175340523.OPEN-XCHANGE.WebMail.wwwrun@eu.main.anykey>
+Date: Wed, 18 Oct 2006 14:42:20 +0200 (CEST)
+From: Andreas Octav <Andreas.Octav@anykey.de>
+In-Reply-To: <1591887.1161167319269.OPEN-XCHANGE.WebMail.wwwrun@eu.main.anykey>
+Mime-Version: 1.0
+References: <1591887.1161167319269.OPEN-XCHANGE.WebMail.wwwrun@eu.main.anykey>
+Content-Transfer-Encoding: 8bit
+Subject: [linux-lvm] "System ID" entry missing in metadata (LVM2) ?!
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -26,73 +29,50 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="utf-8"
+To: linux-lvm@redhat.com
 
-------=_Part_42639_29192051.1161127288137
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
+Hi again,
 
-Alasdair,
+It seems that my Volume Groups are missing the "System ID" entry. Is
+this a known bug in my version? (lvm2-2.01.14-3.6)
+So all nodes have full access to the VG. Does not seem correct to me ...
 
-  Thanks for your helping.
 
-  I got these messages when I just execute vgdisplay, vgscan or pvscan:
+Best regards,
+Andreas Octav
 
-  LV lv_oracle_data012: inconsistent LE count 252 != 1008
-  Internal error: LV segments corrupted in lv_oracle_data012.
-  LV lv_oracle_redo003: inconsistent LE count 4 != 16
-  Internal error: LV segments corrupted in lv_oracle_redo003.
-  LV lv_oracle_data020: inconsistent LE count 252 != 1008
-  Internal error: LV segments corrupted in lv_oracle_data020.
+Am Mi 18.10.2006 12:28 schrieb Andreas Octav <Andreas.Octav@anykey.de>:
 
-  I just imported these volumes in another RHEL3 server without problems.
+> Hi,
+> 
+> i´m new to LVM2 and wondering if it´s possible to restrict access to a
+> Volume Group to a single server (e.g. like under vxvm (vxdg
+> import/deport)).
+> If I import a VG by using vgimport it is still possible to access the
+> VG
+> on another node in a shared SAN environment. Can I prevent this
+> somehow?
+> 
+> I´m using lvm2-2.01.14-3.6 on servers running SuSE SLES9 SP3 x86_64.
+> 
+> Kind regards,
+> Andreas Octav
+> Consultant
+> 
+> anykey GmbH
+> Koenigswinterer Strasse 418
+> D-53227 Bonn
+> http://www.anykey.de
+> 	
 
-Any ideas ?
 
-Regards,
 
-Fabricio
+Andreas Octav
+Consultant
 
-On 10/17/06, Alasdair G Kergon <agk@redhat.com> wrote:
->
-> On Tue, Oct 17, 2006 at 07:00:52PM -0300, Fabricio Candido wrote:
-> > Is it possible to my RHEL4 system use these lvm1 vgs without converting
-> it ?
-> > What is necessary ?
->
-> Yes, provided you can manage without snapshots and pvmove.
-> [Alternatively, you can run vgconvert to update your metadata in-situ to
-> the
-> new lvm2 format.]
->
-> Alasdair
-> --
-> agk@redhat.com
->
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
->
-
-------=_Part_42639_29192051.1161127288137
-Content-Type: text/html; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-<span style="font-family: verdana;">Alasdair, </span><br style="font-family: verdana;"><br style="font-family: verdana;"><span style="font-family: verdana;">&nbsp; Thanks for your helping. </span><br style="font-family: verdana;">
-<br style="font-family: verdana;"><span style="font-family: verdana;">&nbsp; I got these messages when I just execute vgdisplay, vgscan or pvscan:</span><br style="font-family: verdana;"><br style="font-family: verdana;"><span style="font-family: verdana;">
-&nbsp; LV lv_oracle_data012: inconsistent LE count 252 != 1008</span><br style="font-family: verdana;"><span style="font-family: verdana;">&nbsp; Internal error: LV segments corrupted in lv_oracle_data012.</span><br style="font-family: verdana;">
-<span style="font-family: verdana;">&nbsp; LV lv_oracle_redo003: inconsistent LE count 4 != 16</span><br style="font-family: verdana;"><span style="font-family: verdana;">&nbsp; Internal error: LV segments corrupted in lv_oracle_redo003.
-</span><br style="font-family: verdana;"><span style="font-family: verdana;">&nbsp; LV lv_oracle_data020: inconsistent LE count 252 != 1008</span><br style="font-family: verdana;"><span style="font-family: verdana;">&nbsp; Internal error: LV segments corrupted in lv_oracle_data020.
-</span><br style="font-family: verdana;"><br style="font-family: verdana;"><span style="font-family: verdana;">&nbsp; I just imported these volumes in another RHEL3 server without problems.</span><br style="font-family: verdana;">
-<br style="font-family: verdana;"><span style="font-family: verdana;">Any ideas ?<br><br>Regards,<br><br>Fabricio<br style="font-family: verdana;"></span><br style="font-family: verdana;"><div><span class="gmail_quote">On 10/17/06, 
-<b class="gmail_sendername">Alasdair G Kergon</b> &lt;<a href="mailto:agk@redhat.com">agk@redhat.com</a>&gt; wrote:</span><blockquote class="gmail_quote" style="border-left: 1px solid rgb(204, 204, 204); margin: 0pt 0pt 0pt 0.8ex; padding-left: 1ex;">
-On Tue, Oct 17, 2006 at 07:00:52PM -0300, Fabricio Candido wrote:<br>&gt; Is it possible to my RHEL4 system use these lvm1 vgs without converting it ?<br>&gt; What is necessary ?<br><br>Yes, provided you can manage without snapshots and pvmove.
-<br>[Alternatively, you can run vgconvert to update your metadata in-situ to the<br>new lvm2 format.]<br><br>Alasdair<br>--<br><a href="mailto:agk@redhat.com">agk@redhat.com</a><br><br>_______________________________________________
-<br>linux-lvm mailing list<br><a href="mailto:linux-lvm@redhat.com">linux-lvm@redhat.com</a><br><a href="https://www.redhat.com/mailman/listinfo/linux-lvm">https://www.redhat.com/mailman/listinfo/linux-lvm</a><br>read the LVM HOW-TO at 
-<a href="http://tldp.org/HOWTO/LVM-HOWTO/">http://tldp.org/HOWTO/LVM-HOWTO/</a><br></blockquote></div><br>
-
-------=_Part_42639_29192051.1161127288137--
+anykey GmbH
+Koenigswinterer Strasse 418
+D-53227 Bonn
+http://www.anykey.de
+	
