@@ -1,12 +1,24 @@
-Message-ID: <4538961F.2030902@redhat.com>
-Date: Fri, 20 Oct 2006 10:25:51 +0100
-From: "Bryn M. Reeves" <breeves@redhat.com>
+Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id k9KA8H8Z032531
+	for <linux-lvm@redhat.com>; Fri, 20 Oct 2006 06:08:17 -0400
+Received: from mail.nethinks.com (mail.nethinks.com [212.218.64.57])
+	by mx1.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
+	k9KA8FEt015091
+	for <linux-lvm@redhat.com>; Fri, 20 Oct 2006 06:08:16 -0400
+Received: from [172.16.3.16] (fw-fd-nat-235.nethinks.com [212.218.65.235] (may
+	be forged))
+	by mail.nethinks.com (8.13.6/8.12.10/) with ESMTP id k9KA9iEG028213
+	for <linux-lvm@redhat.com>; Fri, 20 Oct 2006 12:09:48 +0200
+Message-ID: <4538A004.6030502@nethinks.com>
+Date: Fri, 20 Oct 2006 12:08:04 +0200
+From: Thomas Marmetschke <thomas.marmetschke@nethinks.com>
 MIME-Version: 1.0
 Subject: Re: [linux-lvm] Question about Physical volume
-References: <45388202.7070305@nethinks.com>
-In-Reply-To: <45388202.7070305@nethinks.com>
+References: <45388202.7070305@nethinks.com> <4538961F.2030902@redhat.com>
+In-Reply-To: <4538961F.2030902@redhat.com>
 Content-Transfer-Encoding: 7bit
-Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
+Reply-To: tom@nethinks.com,
+	LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -17,44 +29,15 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: tom@nethinks.com, LVM general discussion and development <linux-lvm@redhat.com>
+To: linux-lvm@redhat.com
 
------BEGIN PGP SIGNED MESSAGE-----
-Hash: SHA1
+Hi,
 
-Thomas Marmetschke wrote:
-> Hi,
-> 
-> is it possible to extend a phyiscal volume?
-> 
-> I have a strange problem, i resized the /dev/sda4 partion (8e Linux LVM)
-> from 130GB to 220GB. so far so good.
-> 
+many thanks for your mail.
 
-Hi Thomas,
+Got Version 2.01.04-5 on debian stable.
+pvresize exist in the unstable tree of debian with Verson 2.02xx
 
-Depending on how recent your version of LVM2 is, you can use pvresize to
-do this:
+Is there any other chance to resize the pv without pvresize?
 
-# pvresize /dev/hda2
-
-This will autodetect the new size of the PV and grow it accordingly. One
-thing I noticed was that after fdisking the partition, a reboot was
-needed to get kernel to see the new size - partprobe does not seem to be
-sufficient.
-
-That might have been a quirk though - check the partition sizes in
-/proc/partitions to be sure.
-
-Thanks,
-
-Bryn.
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.5 (GNU/Linux)
-Comment: Using GnuPG with Fedora - http://enigmail.mozdev.org
-
-iD8DBQFFOJYf6YSQoMYUY94RAuw3AJ9WIBaHGASEcJiIentE+nTJ89nRzwCgh6PD
-Aw822Rs8DA7VsQGTaIms4z0=
-=80Uw
------END PGP SIGNATURE-----
+-tom
