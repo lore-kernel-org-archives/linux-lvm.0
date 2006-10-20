@@ -1,24 +1,13 @@
-Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id k9KA8H8Z032531
-	for <linux-lvm@redhat.com>; Fri, 20 Oct 2006 06:08:17 -0400
-Received: from mail.nethinks.com (mail.nethinks.com [212.218.64.57])
-	by mx1.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
-	k9KA8FEt015091
-	for <linux-lvm@redhat.com>; Fri, 20 Oct 2006 06:08:16 -0400
-Received: from [172.16.3.16] (fw-fd-nat-235.nethinks.com [212.218.65.235] (may
-	be forged))
-	by mail.nethinks.com (8.13.6/8.12.10/) with ESMTP id k9KA9iEG028213
-	for <linux-lvm@redhat.com>; Fri, 20 Oct 2006 12:09:48 +0200
-Message-ID: <4538A004.6030502@nethinks.com>
-Date: Fri, 20 Oct 2006 12:08:04 +0200
-From: Thomas Marmetschke <thomas.marmetschke@nethinks.com>
+Message-ID: <4538A48F.1050605@redhat.com>
+Date: Fri, 20 Oct 2006 11:27:27 +0100
+From: "Bryn M. Reeves" <breeves@redhat.com>
 MIME-Version: 1.0
 Subject: Re: [linux-lvm] Question about Physical volume
 References: <45388202.7070305@nethinks.com> <4538961F.2030902@redhat.com>
-In-Reply-To: <4538961F.2030902@redhat.com>
+	<4538A004.6030502@nethinks.com>
+In-Reply-To: <4538A004.6030502@nethinks.com>
 Content-Transfer-Encoding: 7bit
-Reply-To: tom@nethinks.com,
-	LVM general discussion and development <linux-lvm@redhat.com>
+Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -29,15 +18,37 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@redhat.com
+To: tom@nethinks.com, LVM general discussion and development <linux-lvm@redhat.com>
 
-Hi,
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA1
 
-many thanks for your mail.
+Thomas Marmetschke wrote:
+> Hi,
+> 
+> many thanks for your mail.
+> 
+> Got Version 2.01.04-5 on debian stable.
+> pvresize exist in the unstable tree of debian with Verson 2.02xx
+> 
+> Is there any other chance to resize the pv without pvresize?
+> 
+> -tom
+> 
 
-Got Version 2.01.04-5 on debian stable.
-pvresize exist in the unstable tree of debian with Verson 2.02xx
+The pvresize tool is the right way to do this. You'd need to hack the
+metadata by hand otherwise - updating your LVM2 tools even temporarily
+to allow you to do this is probably an easier path.
 
-Is there any other chance to resize the pv without pvresize?
+Cheers,
 
--tom
+Bryn.
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.5 (GNU/Linux)
+Comment: Using GnuPG with Fedora - http://enigmail.mozdev.org
+
+iD8DBQFFOKSO6YSQoMYUY94RAr1JAKDgFDzTD/QBe+b3BeqruUBuJNmSjwCdGL+O
+GPzpI/MPG+7DfX1VXdU/GiU=
+=OqfJ
+-----END PGP SIGNATURE-----
