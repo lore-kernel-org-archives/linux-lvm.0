@@ -1,18 +1,23 @@
-Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id k9PA1ZvH008985
-	for <linux-lvm@redhat.com>; Wed, 25 Oct 2006 06:01:35 -0400
-Received: from mail.reagi.com (mail.reagi.com [195.60.188.80])
-	by mx1.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
-	k9PA1W1c018670
-	for <linux-lvm@redhat.com>; Wed, 25 Oct 2006 06:01:32 -0400
-Message-ID: <453F35F3.9090505@oxeva.fr>
-Date: Wed, 25 Oct 2006 12:01:23 +0200
-From: Gabriel Barazer <gabriel@oxeva.fr>
+Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id k9PFiJtS006462
+	for <linux-lvm@redhat.com>; Wed, 25 Oct 2006 11:44:19 -0400
+Received: from ug-out-1314.google.com (ug-out-1314.google.com [66.249.92.169])
+	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id k9PFgqwq007791
+	for <linux-lvm@redhat.com>; Wed, 25 Oct 2006 11:43:57 -0400
+Received: by ug-out-1314.google.com with SMTP id 39so130810ugf
+	for <linux-lvm@redhat.com>; Wed, 25 Oct 2006 08:43:56 -0700 (PDT)
+Message-ID: <806e72ee0610250843k4e340b02s238835ce02626e9f@mail.gmail.com>
+Date: Wed, 25 Oct 2006 12:43:56 -0300
+From: "Fabricio Candido" <fabricio.candido@gmail.com>
+Subject: Re: [linux-lvm] Using lvm1 vg's in lvm2 systems (RHEL4)
+In-Reply-To: <806e72ee0610171621p1cb6e9d2r795002ce70293177@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] Yet another problem with snapshots
-Reply-To: gabriel@oxeva.fr,
-	LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: multipart/alternative; 
+	boundary="----=_Part_16577_29064533.1161791036110"
+References: <806e72ee0610171500i26f4fa8ek469fa7d02031ae1@mail.gmail.com>
+	<20061017223949.GP17654@agk.surrey.redhat.com>
+	<806e72ee0610171621p1cb6e9d2r795002ce70293177@mail.gmail.com>
+Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -22,126 +27,98 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@redhat.com
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-Hi,
+------=_Part_16577_29064533.1161791036110
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
 
-I have found another kernel bug related to LVM snapshots. This time it's
-better than previously : It doesn't freeze the LVM system, but segfaults
-anyway. Here is the scenario :
+Hi all.
 
-- Make a snapshot from an online volume.
-- Wait until the snapshot is full
-- Without deleting the first snapshot (say, I forgot it), create another
-from the online main volume.
-- Wait until the second snapshot becomes full
+   I've solved this problem downgrading the lvm version from RHEL4U2 to
+RHEL4U1 included version.
 
-Then try to remove any snapshot (I tried to remove the #2). lvremove ask
-me if I'm sure to remove the snapshot, I confirm and then the tool
-segfaults. When I retry the same command after, lvremove removes the
-snapshot without asking confirmation this time. (the first snapshot
-removal does the same).
+Thanks all.
 
-Here is the kernel debug :
------------ [cut here ] --------- [please bite here ] ---------
-Kernel BUG at mm/slab.c:595
-invalid opcode: 0000 [1] SMP
-CPU 1
-Modules linked in:
-Pid: 29422, comm: lvremove Not tainted 2.6.18 #1
-RIP: 0010:[<ffffffff802074cd>]  [<ffffffff802074cd>]
-kmem_cache_free+0x5e/0xba
-RSP: 0018:ffff8100101a1c48  EFLAGS: 00010246
-RAX: 000000000001086c RBX: ffffc200115beec0 RCX: ffff8100010f02c8
-RDX: ffff810001aa7788 RSI: ffff810030b47198 RDI: ffff81007eceb800
-RBP: 0000000000000000 R08: ffffffff80663388 R09: 0000000000000001
-R10: ffff81007ae72b40 R11: ffff810048e89660 R12: ffff810030b47198
-R13: 00000000000004ec R14: ffff81006df85828 R15: 0000000000004000
-FS:  00002afb962776e0(0000) GS:ffff810002f3a5c0(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 000000008005003b
-CR2: 0000000000451400 CR3: 0000000003b5b000 CR4: 00000000000006e0
-Process lvremove (pid: 29422, threadinfo ffff8100101a0000, task
-ffff81007f662ae0)
-Stack:  ffffc200115beec0 0000000000000000 ffff81007eceb800 ffffffff804d5f38
- 0000000000000000 ffff81006df857c0 ffffc20010ec3080 0000000000000000
- ffffc20010643000 ffffffff804cf725 ffffc20010643000 ffffffff804d659f
-Call Trace:
- [<ffffffff804d5f38>] exit_exception_table+0x45/0x77
- [<ffffffff804cf725>] dev_remove+0x0/0xbb
- [<ffffffff804d659f>] snapshot_dtr+0xaa/0xfb
- [<ffffffff804cd422>] dm_table_put+0x6e/0xd8
- [<ffffffff804ccb30>] dm_put+0x9a/0x132
- [<ffffffff804cf7ca>] dev_remove+0xa5/0xbb
- [<ffffffff804d066f>] ctl_ioctl+0x26f/0x2ae
- [<ffffffff8024004d>] do_ioctl+0x6d/0x82
- [<ffffffff8022de9e>] vfs_ioctl+0x28e/0x2b0
- [<ffffffff80214ff2>] vfs_write+0x122/0x160
- [<ffffffff8024a91c>] sys_ioctl+0x3c/0x60
- [<ffffffff8025aa0e>] system_call+0x7e/0x83
+Fabricio
 
+On 10/17/06, Fabricio Candido <fabricio.candido@gmail.com> wrote:
+>
+> Alasdair,
+>
+>   Thanks for your helping.
+>
+>   I got these messages when I just execute vgdisplay, vgscan or pvscan:
+>
+>   LV lv_oracle_data012: inconsistent LE count 252 != 1008
+>   Internal error: LV segments corrupted in lv_oracle_data012.
+>   LV lv_oracle_redo003: inconsistent LE count 4 != 16
+>   Internal error: LV segments corrupted in lv_oracle_redo003.
+>   LV lv_oracle_data020: inconsistent LE count 252 != 1008
+>   Internal error: LV segments corrupted in lv_oracle_data020.
+>
+>   I just imported these volumes in another RHEL3 server without problems.
+>
+> Any ideas ?
+>
+> Regards,
+>
+> Fabricio
+>
+> On 10/17/06, Alasdair G Kergon <agk@redhat.com> wrote:
+> >
+> > On Tue, Oct 17, 2006 at 07:00:52PM -0300, Fabricio Candido wrote:
+> > > Is it possible to my RHEL4 system use these lvm1 vgs without
+> > converting it ?
+> > > What is necessary ?
+> >
+> > Yes, provided you can manage without snapshots and pvmove.
+> > [Alternatively, you can run vgconvert to update your metadata in-situ to
+> > the
+> > new lvm2 format.]
+> >
+> > Alasdair
+> > --
+> > agk@redhat.com
+> >
+> > _______________________________________________
+> > linux-lvm mailing list
+> > linux-lvm@redhat.com
+> > https://www.redhat.com/mailman/listinfo/linux-lvm
+> > read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+> >
+>
+>
 
-Code: 0f 0b 68 72 dc 5e 80 c2 53 02 48 39 7a 28 3e 74 0a 0f 0b 68
-RIP  [<ffffffff802074cd>] kmem_cache_free+0x5e/0xba
- RSP <ffff8100101a1c48>
+------=_Part_16577_29064533.1161791036110
+Content-Type: text/html; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
 
-Then second lvremove :
+Hi all.<br><br>&nbsp;&nbsp; I've solved this problem downgrading the lvm version from RHEL4U2 to RHEL4U1 included version.<br><br>Thanks all.<br><br>Fabricio<br><br><div><span class="gmail_quote">On 10/17/06, <b class="gmail_sendername">
+Fabricio Candido</b> &lt;<a href="mailto:fabricio.candido@gmail.com">fabricio.candido@gmail.com</a>&gt; wrote:</span><blockquote class="gmail_quote" style="border-left: 1px solid rgb(204, 204, 204); margin: 0pt 0pt 0pt 0.8ex; padding-left: 1ex;">
+<span style="font-family: verdana;">Alasdair, </span><br style="font-family: verdana;"><br style="font-family: verdana;"><span style="font-family: verdana;">&nbsp; Thanks for your helping. </span><br style="font-family: verdana;">
 
- ----------- [cut here ] --------- [please bite here ] ---------
-Kernel BUG at mm/slab.c:595
-invalid opcode: 0000 [2] SMP
-CPU 3
-Modules linked in:
-Pid: 29423, comm: lvremove Not tainted 2.6.18 #1
-RIP: 0010:[<ffffffff802074cd>]  [<ffffffff802074cd>]
-kmem_cache_free+0x5e/0xba
-RSP: 0018:ffff81005150fc48  EFLAGS: 00010246
-RAX: 000000000001086c RBX: ffffc2001138fd40 RCX: ffff8100019812f0
-RDX: ffff8100012ebc50 RSI: ffff81000d5a6828 RDI: ffff81007eceb800
-RBP: 0000000000000000 R08: ffff81007ae72340 R09: ffff81007caf3540
-R10: ffff81007caf35e0 R11: ffff81007ae722c0 R12: ffff81000d5a6828
-R13: 00000000000017d4 R14: ffff810042063ce8 R15: 0000000000004000
-FS:  00002b28456376e0(0000) GS:ffff81007ff35840(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 000000008005003b
-CR2: 00007fff659b8db0 CR3: 000000004e4bc000 CR4: 00000000000006e0
-Process lvremove (pid: 29423, threadinfo ffff81005150e000, task
-ffff81007b067000)
-Stack:  ffffc2001138fd40 0000000000000000 ffff81007eceb800 ffffffff804d5f38
- 0000000000000000 ffff810042063c80 ffffc20010ebb080 0000000000000000
- ffffc20010648000 ffffffff804cf725 ffffc20010648000 ffffffff804d659f
-Call Trace:
- [<ffffffff804d5f38>] exit_exception_table+0x45/0x77
- [<ffffffff804cf725>] dev_remove+0x0/0xbb
- [<ffffffff804d659f>] snapshot_dtr+0xaa/0xfb
- [<ffffffff804cd422>] dm_table_put+0x6e/0xd8
- [<ffffffff804ccb30>] dm_put+0x9a/0x132
- [<ffffffff804cf7ca>] dev_remove+0xa5/0xbb
- [<ffffffff804d066f>] ctl_ioctl+0x26f/0x2ae
- [<ffffffff8024004d>] do_ioctl+0x6d/0x82
- [<ffffffff8022de9e>] vfs_ioctl+0x28e/0x2b0
- [<ffffffff80214ff2>] vfs_write+0x122/0x160
- [<ffffffff8024a91c>] sys_ioctl+0x3c/0x60
- [<ffffffff8025aa0e>] system_call+0x7e/0x83
+<br style="font-family: verdana;"><span style="font-family: verdana;">&nbsp; I got these messages when I just execute vgdisplay, vgscan or pvscan:</span><br style="font-family: verdana;"><br style="font-family: verdana;"><span style="font-family: verdana;">
 
+&nbsp; LV lv_oracle_data012: inconsistent LE count 252 != 1008</span><br style="font-family: verdana;"><span style="font-family: verdana;">&nbsp; Internal error: LV segments corrupted in lv_oracle_data012.</span><br style="font-family: verdana;">
 
-Code: 0f 0b 68 72 dc 5e 80 c2 53 02 48 39 7a 28 3e 74 0a 0f 0b 68
-RIP  [<ffffffff802074cd>] kmem_cache_free+0x5e/0xba
- RSP <ffff81005150fc48>
+<span style="font-family: verdana;">&nbsp; LV lv_oracle_redo003: inconsistent LE count 4 != 16</span><br style="font-family: verdana;"><span style="font-family: verdana;">&nbsp; Internal error: LV segments corrupted in lv_oracle_redo003.
+</span><br style="font-family: verdana;"><span style="font-family: verdana;">&nbsp; LV lv_oracle_data020: inconsistent LE count 252 != 1008</span><br style="font-family: verdana;"><span style="font-family: verdana;">&nbsp; Internal error: LV segments corrupted in lv_oracle_data020.
+</span><br style="font-family: verdana;"><br style="font-family: verdana;"><span style="font-family: verdana;">&nbsp; I just imported these volumes in another RHEL3 server without problems.</span><br style="font-family: verdana;">
 
-It looks like the same bug is hit on the 2 commands.
+<br style="font-family: verdana;"><span style="font-family: verdana;">Any ideas ?<br><br>Regards,<br><span class="sg"><br>Fabricio<br style="font-family: verdana;"></span></span><div><span class="e" id="q_10e58945cbcc1415_3">
+<br style="font-family: verdana;"><div><span class="gmail_quote">On 10/17/06, 
+<b class="gmail_sendername">Alasdair G Kergon</b> &lt;<a href="mailto:agk@redhat.com" target="_blank" onclick="return top.js.OpenExtLink(window,event,this)">agk@redhat.com</a>&gt; wrote:</span><blockquote class="gmail_quote" style="border-left: 1px solid rgb(204, 204, 204); margin: 0pt 0pt 0pt 0.8ex; padding-left: 1ex;">
 
-This is not as annoying as before, when lvm froze when lvremove-ing
-snapshot, but the tool segfaults anyway.
+On Tue, Oct 17, 2006 at 07:00:52PM -0300, Fabricio Candido wrote:<br>&gt; Is it possible to my RHEL4 system use these lvm1 vgs without converting it ?<br>&gt; What is necessary ?<br><br>Yes, provided you can manage without snapshots and pvmove.
+<br>[Alternatively, you can run vgconvert to update your metadata in-situ to the<br>new lvm2 format.]<br><br>Alasdair<br>--<br><a href="mailto:agk@redhat.com" target="_blank" onclick="return top.js.OpenExtLink(window,event,this)">
+agk@redhat.com</a><br><br>_______________________________________________
+<br>linux-lvm mailing list<br><a href="mailto:linux-lvm@redhat.com" target="_blank" onclick="return top.js.OpenExtLink(window,event,this)">linux-lvm@redhat.com</a><br><a href="https://www.redhat.com/mailman/listinfo/linux-lvm" target="_blank" onclick="return top.js.OpenExtLink(window,event,this)">
+https://www.redhat.com/mailman/listinfo/linux-lvm</a><br>read the LVM HOW-TO at 
+<a href="http://tldp.org/HOWTO/LVM-HOWTO/" target="_blank" onclick="return top.js.OpenExtLink(window,event,this)">http://tldp.org/HOWTO/LVM-HOWTO/</a><br></blockquote></div><br>
 
-Some plateform info :
-Kernel 2.6.18 SMP x86_64
-LVM version 2.02.10
-Library version : 1.02.10
-Driver version : 4.7.0
+</span></div></blockquote></div><br>
 
-Hardware is Dual Xeon EM64T and the storage array is 3ware (native scsi
-driver)
-
-Does this help anyone ?
-
-Gabriel
+------=_Part_16577_29064533.1161791036110--
