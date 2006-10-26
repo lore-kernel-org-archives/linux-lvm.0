@@ -1,14 +1,22 @@
-Received: from [10.15.80.229] (dhcp80-229.msp.redhat.com [10.15.80.229])
-	by pobox.corp.redhat.com (8.13.1/8.12.8) with ESMTP id k9QLBCvZ009514
-	for <linux-lvm@redhat.com>; Thu, 26 Oct 2006 17:11:12 -0400
-Mime-Version: 1.0 (Apple Message framework v624)
-In-Reply-To: <20061026211738.008da405@nim.leo>
-References: <20061026211738.008da405@nim.leo>
-Message-Id: <67e61b34aeae92681a278b5d3bde28e0@redhat.com>
-Content-Transfer-Encoding: 7bit
-From: Jonathan E Brassow <jbrassow@redhat.com>
+Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id k9QLGY7k029608
+	for <linux-lvm@redhat.com>; Thu, 26 Oct 2006 17:16:34 -0400
+Received: from cel.leo (cel.leonerd.org.uk [62.49.94.186])
+	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id k9QLGWu5018740
+	for <linux-lvm@redhat.com>; Thu, 26 Oct 2006 17:16:32 -0400
+Received: from nim.leo (nim.leo [192.168.42.3])
+	by cel.leo (Postfix) with ESMTP id F2D0022681
+	for <linux-lvm@redhat.com>; Thu, 26 Oct 2006 22:16:26 +0100 (BST)
+Date: Thu, 26 Oct 2006 22:16:23 +0100
+From: Paul LeoNerd Evans <leonerd-lvm@leonerd.org.uk>
 Subject: Re: [linux-lvm] Mirror resync direction
-Date: Thu, 26 Oct 2006 16:14:34 -0500
+Message-ID: <20061026221623.5d0e2e17@nim.leo>
+In-Reply-To: <67e61b34aeae92681a278b5d3bde28e0@redhat.com>
+References: <20061026211738.008da405@nim.leo>
+	<67e61b34aeae92681a278b5d3bde28e0@redhat.com>
+Mime-Version: 1.0
+Content-Type: multipart/signed; boundary="Sig_2Ky=lztsNf/p8tGtWeLWv.Z";
+	protocol="application/pgp-signature"; micalg=PGP-SHA1
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -19,68 +27,63 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: LVM general discussion and development <linux-lvm@redhat.com>
+To: linux-lvm@redhat.com
 
-On Oct 26, 2006, at 3:17 PM, Paul LeoNerd Evans wrote:
+--Sig_2Ky=lztsNf/p8tGtWeLWv.Z
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-> I'm running kernel 2.6.17 using the lvm2 package currently in debian
-> testing (2.02.06-3). I use it to set up a VG containing two
-> PVs, /dev/sda2 and /dev/sdb2. I create a mirror LV using corelog:
->
->   lvcreate --mirror 1 --corelog ...
->
-> I create a filesystem on it, and populate it with files. I then try
-> testing how it copes with drive failures, by simulating a replaced 
-> disk.
->
-> To do this, I zero out one of the sides using
->
->   dd if=/dev/zero of=/dev/sda2
+On Thu, 26 Oct 2006 16:14:34 -0500
+Jonathan E Brassow <jbrassow@redhat.com> wrote:
 
-This doesn't really reflect what would happen if you replaced a disk, I 
-don't think.  With this, you are simply going around mirror's back to 
-write data to a device which it controls.
+> This doesn't really reflect what would happen if you replaced a disk, I=20
+> don't think.  With this, you are simply going around mirror's back to=20
+> write data to a device which it controls.
 
-In real life, I think you would have a disk failure (which would force 
-you to run 'vgreduce --removemissing vg'), then you would insert a new 
-block device, pvcreate/vgextend/lvconvert.
+Well, I did it with the VG turned off; namely
 
-(When dmeventd is properly running, it should take care of the steps 
-that are currently manual.)
+  vgchange -a n
 
-> Having done that, I do the usual restore method
->
->   pvcreate --uuid 'whatever' /dev/sda2
->   vgcfgrestore vg
->   vgchange -a y
->
-> And I note that it starts to resync the mirror. But it goes in the
-> "wrong" direction - sda2's PV is the master, but that's been zeroed 
-> out.
-> sdb2's is the slave but contains the real data. The block copying goes 
-> in
-> the wrong direction here, copying the master's zeroes over the good 
-> data
-> in the slave.
+> In real life, I think you would have a disk failure (which would force=20
+> you to run 'vgreduce --removemissing vg'), then you would insert a new=20
+> block device, pvcreate/vgextend/lvconvert.
 
-Again, mirror has no idea that you did this.  The act of dd'ing to an 
-underlying device is like dd'ing to a device under a file system - it 
-doesn't know you are doing it and causes corruption.
+Yes, I wasn't aware of that procedure before, but Alasdair Kergon's mail
+has pointed that out to me - I've tried with that and it seems to work
+fine.
 
-> Is this a bug in the LVM2 tools, or the dm-mirror target, or what? Is 
-> it
-> perhaps a limitation of --corelog; in which case, how can I protect
-> against that?
->
+> LVM2 mirroring is still a work in progress (trying to get the right=20
+> pieces upstream).  Depending on the version of LVM2 and the kernel=20
+> patches you have, it may not work.
 
-LVM2 mirroring is still a work in progress (trying to get the right 
-pieces upstream).  Depending on the version of LVM2 and the kernel 
-patches you have, it may not work.
+Seems happy once I follow the correct procedure - see above :)
 
-The use of --corelog simply means that the mirror device will be 
-resynchronized every time the device is activated.  The persistent log 
-(disk log) tracks what resynchronization has been done and can avoid 
-all complete resyncs.
+> The use of --corelog simply means that the mirror device will be=20
+> resynchronized every time the device is activated.  The persistent log=20
+> (disk log) tracks what resynchronization has been done and can avoid=20
+> all complete resyncs.
 
-  brassow
+Yes, I'm aware of that bit, but I couldn't see any other way to achieve
+it with only two PVs. The "--alloc anywhere" as suggested in the error
+message doesn't have any effect for me.
+
+--=20
+Paul "LeoNerd" Evans
+
+leonerd@leonerd.org.uk
+ICQ# 4135350       |  Registered Linux# 179460
+http://www.leonerd.org.uk/
+
+--Sig_2Ky=lztsNf/p8tGtWeLWv.Z
+Content-Type: application/pgp-signature; name=signature.asc
+Content-Disposition: attachment; filename=signature.asc
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.5 (GNU/Linux)
+
+iD8DBQFFQSWqqRXzCRLr5iQRAm2jAJ4wa6vBXIiKgLrAdAvC1Kxqw/z1bACfSzzw
+XsmodIWdT4m1CP+YFCubT9U=
+=rdm+
+-----END PGP SIGNATURE-----
+
+--Sig_2Ky=lztsNf/p8tGtWeLWv.Z--
