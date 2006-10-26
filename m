@@ -1,22 +1,20 @@
-Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id k9PNItqi013754
-	for <linux-lvm@redhat.com>; Wed, 25 Oct 2006 19:18:55 -0400
-Received: from mail.opendreams.net (mail.opendreams.net [69.88.106.142])
-	by mx1.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
-	k9PNIskg007117
-	for <linux-lvm@redhat.com>; Wed, 25 Oct 2006 19:18:54 -0400
-Date: Wed, 25 Oct 2006 16:18:47 -0700
-From: Jesse Molina <jesse@opendreams.net>
-Subject: Re: [linux-lvm] Using lvm1 vg's in lvm2 systems (RHEL4)
-Message-ID: <20061025231847.GA17630@sorrows.opendreams.net>
-References: <806e72ee0610171500i26f4fa8ek469fa7d02031ae1@mail.gmail.com>
-	<20061017223949.GP17654@agk.surrey.redhat.com>
-	<806e72ee0610171621p1cb6e9d2r795002ce70293177@mail.gmail.com>
-	<806e72ee0610250843k4e340b02s238835ce02626e9f@mail.gmail.com>
+Received: from agk.surrey.redhat.com (agk.surrey.redhat.com [172.16.10.74])
+	by pobox.surrey.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
+	k9QIXvNn030973
+	for <linux-lvm@redhat.com>; Thu, 26 Oct 2006 19:33:57 +0100
+Received: from agk by agk.surrey.redhat.com with local (Exim 4.34)
+	id 1GdA3B-0001ca-KG
+	for linux-lvm@redhat.com; Thu, 26 Oct 2006 19:33:57 +0100
+Date: Thu, 26 Oct 2006 19:33:57 +0100
+From: Alasdair G Kergon <agk@redhat.com>
+Subject: Re: [linux-lvm] [RFC, 2nd try] Let udev play with snapshots
+Message-ID: <20061026183357.GC1319@agk.surrey.redhat.com>
+References: <20061011173421.GC4636@hasse.suse.de>
+	<20061023134100.GB4729@hasse.suse.de>
+	<20061024182158.GC29513@agk.surrey.redhat.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
 Content-Disposition: inline
-In-Reply-To: <806e72ee0610250843k4e340b02s238835ce02626e9f@mail.gmail.com>
+In-Reply-To: <20061024182158.GC29513@agk.surrey.redhat.com>
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -28,78 +26,20 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
+On Tue, Oct 24, 2006 at 07:21:58PM +0100, Alasdair G Kergon wrote:
+> As discussed on irc, let's try to optimise out the deactivate/activate.
 
-Thanks for indicating your solution.  I was having a very similar problem upgrading a Debian Unstable system a few months ago.  I still need to upgrade that system, so this might help me when that time comes around.
+I've checked in an attempt to do this: it turns out that the current
+structure of the code allows the simplest approach (skipping the cow
+deactivate) to work regardless of whether or not options like --persistent
+or --permission are supplied.  The 'snapshot' LV mapped device gets created
+with the correct properties for the snapshot, but pointing to the cow and it
+gets zeroed.  Then the cow is activated in a new mapped device and the old
+one gets reused for the proper snapshot.
 
-
-
-On Wed, Oct 25, 2006 at 12:43:56PM -0300, Fabricio Candido wrote:
->    Hi all.
-> 
->       I've solved this problem downgrading the lvm version from RHEL4U2 to
->    RHEL4U1 included version.
-> 
->    Thanks all.
-> 
->    Fabricio
-> 
->    On 10/17/06, Fabricio Candido <fabricio.candido@gmail.com> wrote:
-> 
->      Alasdair,
-> 
->        Thanks for your helping.
-> 
->        I got these messages when I just execute vgdisplay, vgscan or pvscan:
-> 
->        LV lv_oracle_data012: inconsistent LE count 252 != 1008
->        Internal error: LV segments corrupted in lv_oracle_data012.
->        LV lv_oracle_redo003: inconsistent LE count 4 != 16
->        Internal error: LV segments corrupted in lv_oracle_redo003.
->        LV lv_oracle_data020: inconsistent LE count 252 != 1008
->        Internal error: LV segments corrupted in lv_oracle_data020.
-> 
->        I just imported these volumes in another RHEL3 server without
->      problems.
-> 
->      Any ideas ?
-> 
->      Regards,
->      Fabricio
->      On 10/17/06, Alasdair G Kergon <agk@redhat.com> wrote:
-> 
->        On Tue, Oct 17, 2006 at 07:00:52PM -0300, Fabricio Candido wrote:
->        > Is it possible to my RHEL4 system use these lvm1 vgs without
->        converting it ?
->        > What is necessary ?
-> 
->        Yes, provided you can manage without snapshots and pvmove.
->        [Alternatively, you can run vgconvert to update your metadata in-situ
->        to the
->        new lvm2 format.]
-> 
->        Alasdair
->        --
->        agk@redhat.com
-> 
->        _______________________________________________
->        linux-lvm mailing list
->        linux-lvm@redhat.com
->        https://www.redhat.com/mailman/listinfo/linux-lvm
->        read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
-
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
-
+Alasdair
 -- 
-# Jesse Molina
-# Mail = jesse@opendreams.net
-# Page = page-jesse@opendreams.net
-# Cell = 1.602.323.7608
-# Web  = http://www.opendreams.net/jesse/
- 
- 
+agk@redhat.com
