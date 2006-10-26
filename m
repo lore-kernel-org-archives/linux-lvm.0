@@ -1,16 +1,23 @@
-Received: from [10.15.80.229] (dhcp80-229.msp.redhat.com [10.15.80.229])
-	by pobox.corp.redhat.com (8.13.1/8.12.8) with ESMTP id k9QLg3h2015923
-	for <linux-lvm@redhat.com>; Thu, 26 Oct 2006 17:42:03 -0400
-Mime-Version: 1.0 (Apple Message framework v624)
-In-Reply-To: <20061026221623.5d0e2e17@nim.leo>
-References: <20061026211738.008da405@nim.leo>
-	<67e61b34aeae92681a278b5d3bde28e0@redhat.com>
-	<20061026221623.5d0e2e17@nim.leo>
-Message-Id: <299b119df023e37355e52e74b9658379@redhat.com>
-Content-Transfer-Encoding: 7bit
-From: Jonathan E Brassow <jbrassow@redhat.com>
+Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id k9QM8StP013242
+	for <linux-lvm@redhat.com>; Thu, 26 Oct 2006 18:08:28 -0400
+Received: from cel.leo (cel.leonerd.org.uk [62.49.94.186])
+	by mx1.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
+	k9QM8Rt2021925
+	for <linux-lvm@redhat.com>; Thu, 26 Oct 2006 18:08:27 -0400
+Received: from nim.leo (nim.leo [192.168.42.3])
+	by cel.leo (Postfix) with ESMTP id 6C3F022681
+	for <linux-lvm@redhat.com>; Thu, 26 Oct 2006 23:08:16 +0100 (BST)
+Date: Thu, 26 Oct 2006 23:08:15 +0100
+From: Paul LeoNerd Evans <leonerd-lvm@leonerd.org.uk>
 Subject: Re: [linux-lvm] Mirror resync direction
-Date: Thu, 26 Oct 2006 16:45:26 -0500
+Message-ID: <20061026230815.5950da78@nim.leo>
+In-Reply-To: <20061026202702.GF1319@agk.surrey.redhat.com>
+References: <20061026211738.008da405@nim.leo>
+	<20061026202702.GF1319@agk.surrey.redhat.com>
+Mime-Version: 1.0
+Content-Type: multipart/signed; boundary=Sig_NEJ8ZPXWpBDunz.RTTO0wC_;
+	protocol="application/pgp-signature"; micalg=PGP-SHA1
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -21,32 +28,69 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
+--Sig_NEJ8ZPXWpBDunz.RTTO0wC_
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-On Oct 26, 2006, at 4:16 PM, Paul LeoNerd Evans wrote:
->> The use of --corelog simply means that the mirror device will be
->> resynchronized every time the device is activated.  The persistent log
->> (disk log) tracks what resynchronization has been done and can avoid
->> all complete resyncs.
->
-> Yes, I'm aware of that bit, but I couldn't see any other way to achieve
-> it with only two PVs. The "--alloc anywhere" as suggested in the error
-> message doesn't have any effect for me.
->
+On Thu, 26 Oct 2006 21:27:02 +0100
+Alasdair G Kergon <agk@redhat.com> wrote:
 
-Jun'ichi Nomura from NEC is working on the allocation issues - it's a 
-bit buggy WRT mirrors.
+> On Thu, Oct 26, 2006 at 09:17:38PM +0100, Paul LeoNerd Evans wrote:
+> > testing (2.02.06-3). I use it to set up a VG containing two
+>=20
+> > Is this a bug in the LVM2 tools, or the dm-mirror target, or what? Is it
+> > perhaps a limitation of --corelog; in which case, how can I protect
+> > against that?
+>=20
+> Firstly, this is work in progress, so you should be using newer
+> tools.  Secondly, with newer tools you should follow a different
+> procedure: use vgreduce --removemissing (carefully) to remove the
+> lost device, add the replacement disk to the VG in the normal
+> way, then use lvconvert to turn the LV back into a mirror.
 
-However, you could use a known bug to get around having to use 
---corelog when you only have two devices.
+Thanks for the quick reply :)
 
-1) lvcreate -m1 --corelog -L <don't use all the space> -n mirror vg
-2) lvconvert -m1 vg/mirror
+I've looked at my copy of vgreduce, and that has the option you named. I
+tried that and it did as I suspected, namely converted the mirror back to
+a plain linear LV, that I can mount as normal and use. Then running
+pvcreate / vgextend / lvconvert --mirror 1, and now that works fine.
 
-The convert doesn't currently honor the allocation schemes very well 
-right now either.  It will simply put the disk log on one of the two 
-devices.
+Thanks for the help.
 
-  brassow
+> And I should add, dmeventd will do these steps automatically on failure
+> if you configure it into the lvm2 and device-mapper packages and apply
+> the right kernel patches (they're nearly ready for upstream submission).
+
+Will that be a separate userland program? Presumably it'll appear in a
+debian package of the same name at some point.
+
+--=20
+Paul "LeoNerd" Evans
+
+leonerd@leonerd.org.uk
+ICQ# 4135350       |  Registered Linux# 179460
+http://www.leonerd.org.uk/
+
+
+--=20
+Paul "LeoNerd" Evans
+
+leonerd@leonerd.org.uk
+ICQ# 4135350       |  Registered Linux# 179460
+http://www.leonerd.org.uk/
+
+--Sig_NEJ8ZPXWpBDunz.RTTO0wC_
+Content-Type: application/pgp-signature; name=signature.asc
+Content-Disposition: attachment; filename=signature.asc
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.5 (GNU/Linux)
+
+iD8DBQFFQTHPqRXzCRLr5iQRAvEJAJ9OuqA0Xq28pbpcHwuSQYhh0f5MPgCgiWP1
+k8rGBuPGDm+pHN1ZnKUNO4o=
+=PZwG
+-----END PGP SIGNATURE-----
+
+--Sig_NEJ8ZPXWpBDunz.RTTO0wC_--
