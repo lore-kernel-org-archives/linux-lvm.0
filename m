@@ -1,24 +1,22 @@
-Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id k9ULnceB012630
-	for <linux-lvm@redhat.com>; Mon, 30 Oct 2006 16:49:38 -0500
-Received: from karakal.cosy.sbg.ac.at (karakal.cosy.sbg.ac.at [141.201.2.175])
-	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id k9ULnZal008754
-	for <linux-lvm@redhat.com>; Mon, 30 Oct 2006 16:49:36 -0500
-Received: from webmail.cosy.sbg.ac.at (localhost.localdomain [127.0.0.1])
-	by karakal.cosy.sbg.ac.at (Postfix) with ESMTP id C1DCE8D4786
-	for <linux-lvm@redhat.com>; Mon, 30 Oct 2006 22:49:44 +0100 (CET)
-Message-ID: <3999.62.99.165.114.1162244984.squirrel@webmail.cosy.sbg.ac.at>
-In-Reply-To: <20061030111339.GF7809@soda.linbit>
-References: <2813.62.99.165.114.1162122375.squirrel@webmail.cosy.sbg.ac.at>
-	<3377.62.99.165.114.1162134421.squirrel@webmail.cosy.sbg.ac.at>
-	<2813.62.99.165.114.1162122375.squirrel@webmail.cosy.sbg.ac.at>
-	<20061030111339.GF7809@soda.linbit>
-Date: Mon, 30 Oct 2006 22:49:44 +0100 (CET)
-Subject: Re: [linux-lvm] Lost partition table --> Lost 4th PV partition on 
-	disk - how to find the partition bounderies
-From: gklima@cosy.sbg.ac.at
+Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id k9UMbA7B031313
+	for <linux-lvm@redhat.com>; Mon, 30 Oct 2006 17:37:10 -0500
+Received: from hsb102.xlccorp.com (hsb102.xlccorp.com [66.37.197.102])
+	by mx1.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
+	k9UMauoW019730
+	for <linux-lvm@redhat.com>; Mon, 30 Oct 2006 17:36:59 -0500
+Received: from hsb102.xlccorp.com (localhost.localdomain [127.0.0.1])
+	by hsb102.xlccorp.com (8.12.5/8.12.5) with ESMTP id k9UMaqcT010252
+	for <linux-lvm@redhat.com>; Mon, 30 Oct 2006 17:36:52 -0500
+Received: (from nobody@localhost)
+	by hsb102.xlccorp.com (8.12.5/8.12.5/Submit) id k9UMapv3010250
+	for linux-lvm@redhat.com; Mon, 30 Oct 2006 17:36:51 -0500
+Message-ID: <1162247811.45467e83cae80@webmail.highstream.net>
+Date: Mon, 30 Oct 2006 17:36:51 -0500
+From: brianmas@highstream.net
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Subject: [linux-lvm] "cloning" from ide to sata drive, can't find root 
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -30,50 +28,27 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: LVM general discussion and development <linux-lvm@redhat.com>
+To: linux-lvm@redhat.com
 
-> /dev/hda4 : start= 51277968, size=144093600, Id=8e
+I did a straight up mirroring of a drive doing dd if=/dev/hda of=/dev/sda where
+the src is an ide drive and target a sata drive and not unexpectedly it can't
+find the root device on boot.
 
-I now found the correct starting sector: 51271920
+Typing out the error message ...
 
-The main clue I needed was the magic /^.{24}LVM2/, thanks for that!
+[snip]
+Reading all physical volumes this may take a while ...
+No volume groups found
+Unable to find Volume Group "VolGroup00"
+[snip]
 
-and a friend of me who rewrote your code in python:
+I used a rescue disc distro and used dd to extract info subtible for
+vgcfgrestore,
+after which I did some other finagaling with vgchange and I can mount the volume
+and view the data on it, so it's there, vgscan/pvscan and lvscan all show it ...
+but as mentioned boot it's just not picked up on boot so it can be mounted as
+'/'. I thought I fixed it with the vgcfgrestore (changing /dev/hda2 to
+/dev/sda2) but obviously not ... any guidance is appreciated.
 
-code by Michael Gschwanter:
-#!/usr/bin/python
-import re,sys
-
-isLVM = re.compile("^.{24}LVM2") # This is how the Sector should look like
-
-if __name__=="__main__":
-	args = sys.argv
-	device = args[1]
-	startSector = int(args[2])
-	howMuch = int(args[3])
-	endSector = startSector + howMuch
-	print "Searching for LVM2 on %s. From Sector %d to
-%d"%(device,startSector,endSector)
-
-	dev = file(device,"r") # Read only, just for Security
-	dev.seek(startSector * 512)
-	t = 0
-	while t < howMuch:
-		sectorData = dev.read(512)
-		m = isLVM.search(sectorData)
-		if m:
-			print "We found the Start sector of the pv@%d\n"%(startSector+t)
-			break
-		t = t + 1
-
-
-	dev.close()
-
-Usage:  ./findlvm.py  /dev/<deindevice>   startSector  maximumSectorsToTry
-
-just used the output sector minus one!
-
-Great thanks to all who tried and helped to save my data!!!
-
-
-Georg
+thank you,
+brian
