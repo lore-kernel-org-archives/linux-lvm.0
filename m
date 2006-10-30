@@ -1,24 +1,15 @@
-Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id k9UBDlvN029113
-	for <linux-lvm@redhat.com>; Mon, 30 Oct 2006 06:13:47 -0500
-Received: from mail.linbit.com (aug.linbit.com [212.69.162.22])
-	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id k9UBDiOK011547
-	for <linux-lvm@redhat.com>; Mon, 30 Oct 2006 06:13:44 -0500
-Received: from soda (office.linbit [213.229.1.138])
-	by mail.linbit.com (LINBIT Mail Daemon) with ESMTP id C4A932D9E069
-	for <linux-lvm@redhat.com>; Mon, 30 Oct 2006 12:13:38 +0100 (CET)
-Date: Mon, 30 Oct 2006 12:13:39 +0100
-From: Lars Ellenberg <linux-lvm@linbit.com>
-Subject: Re: [linux-lvm] Lost partition table --> Lost 4th PV partition on
-	disk - how to find the partition bounderies
-Message-ID: <20061030111339.GF7809@soda.linbit>
-References: <2813.62.99.165.114.1162122375.squirrel@webmail.cosy.sbg.ac.at>
-	<3377.62.99.165.114.1162134421.squirrel@webmail.cosy.sbg.ac.at>
-	<2813.62.99.165.114.1162122375.squirrel@webmail.cosy.sbg.ac.at>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <3377.62.99.165.114.1162134421.squirrel@webmail.cosy.sbg.ac.at>
-	<2813.62.99.165.114.1162122375.squirrel@webmail.cosy.sbg.ac.at>
+Received: from [10.15.80.229] (dhcp80-229.msp.redhat.com [10.15.80.229])
+	by pobox.corp.redhat.com (8.13.1/8.12.8) with ESMTP id k9UGaPpo001734
+	for <linux-lvm@redhat.com>; Mon, 30 Oct 2006 11:36:25 -0500
+Mime-Version: 1.0 (Apple Message framework v624)
+In-Reply-To: <Pine.LNX.4.64.0610281720370.9047@localhost>
+References: <Pine.LNX.4.64.0610281720370.9047@localhost>
+Message-Id: <2e9d2be4483db00be84afd0aca33e698@redhat.com>
+Content-Transfer-Encoding: 7bit
+From: Jonathan E Brassow <jbrassow@redhat.com>
+Subject: Re: [linux-lvm] lvcreate gives 'device-mapper: reload ioctl failed:
+	Invalid argument'
+Date: Mon, 30 Oct 2006 10:40:06 -0600
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -29,101 +20,181 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-/ 2006-10-29 12:46:15 +0100
-\ gklima@cosy.sbg.ac.at:
-> the layout of the disk was/is as follows:
-> 1) ntfs ~10G
-> 2) ntfs ~10G
-> 3) ext3 36mb linux-boot
-> 4) PV of lvm2 which had 72046800 blocks as of /proc/partition the last
-> time lvm2 worked
-> 
-> layout by fdisk after the win xp partitoning and ghost coping with a still
-> working lvm2 PV on partition 4
-> 
-> 1) 1-1703
-> 2) 1704-3186
-> 3) 3187-3192
-> 4) 3192-12161
+It appears to me that somehow the device-mapper device was created, but 
+the table has not yet been loaded.
 
-which is cylinders.
+While this is the case, you will not be able to create an LV of the 
+same name.  (It will always give you the "device-mapper: reload ioctl 
+failed:..." error.)
 
-> The VG is called "vg"
-> and the approximately layout is as follows:
-> 
-> root lv 500M (bin, sbin, etc, lib, ......)
-> swap lv 1500M encrypted
-> and then var usr opt distfiles portage and so on.....
+If you reboot the machine does the "maingroup-dvd:" still show up from 
+'dmsetup table'?
 
-> 255 heads, 63 sectors/track, 12161 cylinders, total 195371568 sectors
+Also, after a reboot, be sure to run 'pvmove --abort'.
 
-> Possible partition(Linux ext2), size(36mb), offset(24998mb)
->    type: 131(0x83)(Linux ext2 filesystem)
->    size: 36mb #s(75600) s(51196320-51271919)
->    chs:  (1023/254/63)-(1023/254/63)d (3186/210/1)-(3191/134/63)r
->    hex:  00 FE FF FF 83 FE FF FF A0 31 0D 03 50 27 01 00
+Once you've canceled the pvmove successfully, I would do a 'dmsetup 
+remove maingroup-dvd; and try the 'lvcreate -L 15G -n dvd maingroup' 
+again.
 
-so, here we are: this is obviously your "linux-boot".
-the next recognized sector appears to be from swap.
-so we know: 
-51271919 end sector of "linux-boot"
+  brassow
 
-which is consistent with your remembered cylinders above:
-> 4) 3192-12161
+On Oct 28, 2006, at 4:26 PM, Matt McHenry wrote:
 
-to find the exact sector offset of your pv,
-have a knoppix (or some other live-cd) handy.
-do
- perl -e '$s= 51271919; $o = 512*$s;
-	sysseek(STDIN,$o,0) = $o or die "seek: $!\n";
-	while(1) {
-		sysread STDIN,$_,512;
-		last if /^.{24}LVM2/;
-		last if ++$s > 1000000;
-	}
-	print "start sector of pv appears to be",$s-1,"\n";
-	'
-
-use
-	sfdisk -d /dev/hda > dummy
-	vi dummy
-	sfdisk -uS /dev/hda < dummy
-to put some partition table back in place.
-
-dummy would look similar to
------
-# partition table of /dev/hda
-unit: sectors
-
-/dev/hda1 : start=       63, size= 28675960, Id= 7, bootable
-/dev/hda2 : start= 31268160, size= 19928152, Id= 7
-/dev/hda3 : start= 51196320, size=    75600, Id=83
-/dev/hda4 : start= 51277968, size=144093600, Id=8e
------
-
-I inserted the values that your "big scan" found out,
-but decided slightly different what to discard because of overlap,
-and added the information you gave about
-> 4) PV of lvm2 which had 72046800 blocks as of /proc/partition the last
-> time lvm2 worked
-(total sectors 195371568 - 2*72046800 == 51277968), as it is consitent
-with the offsets of the 36mb partition and the swap signature found by
-the big scan as well as the additional context you provided.
-
-hda1 and hda2 are likely slightly wrong,
-as between those is some unused space.
-hda3 is most likely correct, and hda4 would be your pv,
-and my guess is that it is correct, too.
-if the perl snipplet above confirms that
-(start sector 51277968), go for it.
-
-cheers.
-
--- 
-: Lars Ellenberg                                  Tel +43-1-8178292-55 :
-: LINBIT Information Technologies GmbH            Fax +43-1-8178292-82 :
-: Schoenbrunner Str. 244, A-1120 Vienna/Europe   http://www.linbit.com :
+>
+> 	[2nd try sending; apologies if duplicate]
+>
+> 	I'm running lvm2 under gentoo, and I'm getting this error when I
+> try to create a new logical volume:
+>
+> # lvcreate -L 15G -n dvd maingroup
+>   /dev/cdrom: open failed: Read-only file system
+>   Attempt to close device '/dev/cdrom' which is not open.
+>   device-mapper: reload ioctl failed: Invalid argument
+>   Failed to activate new LV.
+>
+> The new vg shows up in only one of two places under /dev:
+>
+> # ls /dev/maingroup/
+> c-p  capture  gen-website  home  music  opt  swap1  swap2  tmp  usr  
+> var
+>
+> # ls /dev/mapper/
+> control            maingroup-gen--website  maingroup-swap1  
+> maingroup-var
+> maingroup-c--p     maingroup-home          maingroup-swap2
+> maingroup-capture  maingroup-music         maingroup-tmp
+> maingroup-dvd      maingroup-opt           maingroup-usr
+>
+> And I can't create a file system on it:
+>
+> # mke2fs -j /dev/mapper/maingroup-dvd
+> mke2fs 1.39 (29-May-2006)
+> mke2fs: Device size reported to be zero.  Invalid partition specified, 
+> or
+>         partition table wasn't reread after running fdisk, due to
+>         a modified partition being busy and in use.  You may need to 
+> reboot
+>         to re-read your partition table.
+>
+> 	I found this mailing list post 
+> [http://www.redhat.com/archives/linux-lvm/2006-April/msg00047.html] 
+> and thought that maybe one of my pvs was bad, so I tried to add a new 
+> pv (sda12) and migrate off of the most-recently-added one (sda11), but 
+> the 'pvmove' command gave a similar error and said to run 'pvmove 
+> --abort'. But that just hung.  I tried to shut down in order to abort 
+> it, but that hung 'unmounting local filesystems'.  When I forced a 
+> reboot, another of my volumes (named gen-website) seemed to have been 
+> lost.
+>
+> 	My first try sending this message included a level 7 log file as an 
+> attachment.  I think the mailing list may have rejected the message 
+> because it was too big (262k), so I'm excluding it for now.  Below are 
+> some more details on my setup.  Forgive me if there's extraneous stuff 
+> here, but I want to try to provide as much detail as necessary; if 
+> there's any more info that would be useful, please let me know.
+>
+> # uname -a
+> Linux localhost 2.6.14-gentoo-r5 #4 SMP PREEMPT Wed Sep 13 22:40:49 EDT
+> 2006 i686 Intel(R) Pentium(R) 4 CPU 3.00GHz GNU/Linux
+>
+> # lvm version
+>   LVM version:     2.02.06 (2006-05-12)
+>   Library version: 1.02.07 (2006-05-11)
+>   Driver version:  4.4.0
+>
+> # fdisk -l /dev/sda
+>
+> Disk /dev/sda: 320.0 GB, 320072933376 bytes
+> 255 heads, 63 sectors/track, 38913 cylinders
+> Units = cylinders of 16065 * 512 = 8225280 bytes
+>
+>    Device Boot      Start         End      Blocks   Id  System
+> /dev/sda1   *           1          17      136521   83  Linux
+> /dev/sda2              18          34      136552+  da  Non-FS data
+> /dev/sda3              35          66      257040   da  Non-FS data
+> /dev/sda4              67       38913   312038527+   5  Extended
+> /dev/sda5              67        1312    10008463+  83  Linux
+> /dev/sda6            1313        3803    20008926   8e  Linux LVM
+> /dev/sda7            3804        8784    40009851   8e  Linux LVM
+> /dev/sda8            8785       18745    80011701   8e  Linux LVM
+> /dev/sda9           18746       28706    80011701   8e  Linux LVM
+> /dev/sda10          28707       33687    40009851   8e  Linux LVM
+> /dev/sda11          33688       36178    20008926   8e  Linux LVM
+> /dev/sda12          36179       38668    20000893+  8e  Linux LVM
+> /dev/sda13          38669       38913     1967931   83  Linux
+>
+> # pvs
+>   /dev/cdrom: read failed after 0 of 4096 at 0: Input/output error
+>   PV         VG        Fmt  Attr PSize  PFree
+>   /dev/sda10 maingroup lvm2 a-   38.15G 516.00M
+>   /dev/sda11 maingroup lvm2 a-   38.15G  23.15G
+>   /dev/sda12 maingroup lvm2 a-   19.07G   4.07G
+>   /dev/sda6  maingroup lvm2 a-   19.08G      0
+>   /dev/sda7  maingroup lvm2 a-   38.15G      0
+>   /dev/sda8  maingroup lvm2 a-   76.30G      0
+>   /dev/sda9  maingroup lvm2 a-   76.30G      0
+>
+> # vgs
+>   /dev/cdrom: read failed after 0 of 4096 at 0: Input/output error
+>   VG        #PV #LV #SN Attr   VSize   VFree
+>   maingroup   7  12   0 wz--n- 305.21G 27.73G
+>
+> # lvs
+>   /dev/cdrom: read failed after 0 of 4096 at 0: Input/output error
+>   LV          VG        Attr   LSize   Origin Snap%  Move Log Copy%
+>   c-p         maingroup -wi-a-   4.00G
+>   capture     maingroup -wi-ao  68.00G
+>   gen-website maingroup -wI-d-  15.00G
+>   home        maingroup -wi-ao 110.00G
+>   music       maingroup -wi-ao  30.00G
+>   opt         maingroup -wi-ao   4.00G
+>   swap1       maingroup -wi-ao   1.00G
+>   swap2       maingroup -wi-ao   1.00G
+>   tmp         maingroup -wi-ao   2.00G
+>   usr         maingroup -wi-ao  20.00G
+>   var         maingroup -wi-ao   7.49G
+>
+> # dmsetup table
+> maingroup-tmp: 0 4194304 linear 8:8 154018176
+> maingroup-c--p: 0 8388608 linear 8:7 47980928
+> maingroup-capture: 0 23642112 linear 8:7 56369536
+> maingroup-capture: 23642112 40009728 linear 8:6 384
+> maingroup-capture: 63651840 78954496 linear 8:10 384
+> maingroup-usr: 0 19996672 linear 8:9 73400704
+> maingroup-usr: 19996672 974848 linear 8:8 150946176
+> maingroup-usr: 20971520 3891200 linear 8:8 48619904
+> maingroup-usr: 24862720 7708672 linear 8:8 384
+> maingroup-usr: 32571392 9371648 linear 8:8 52511104
+> maingroup-var: 0 10485760 linear 8:9 62914944
+> maingroup-var: 10485760 5218304 linear 8:8 145727872
+> maingroup-gen--website:
+> maingroup-music: 0 1810432 linear 8:8 158212480
+> maingroup-music: 1810432 17317888 linear 8:9 142705024
+> maingroup-music: 19128320 43786240 linear 8:7 384
+> maingroup-swap2: 0 2097152 linear 8:7 45883776
+> maingroup-opt: 0 2097152 linear 8:8 151921024
+> maingroup-opt: 2097152 6291456 linear 8:8 42328448
+> maingroup-dvd:
+> maingroup-swap1: 0 2097152 linear 8:7 43786624
+> maingroup-pvmove0:
+> maingroup-home: 0 62914560 linear 8:9 384
+> maingroup-home: 62914560 29310976 linear 8:9 113394048
+> maingroup-home: 92225536 19996672 linear 8:9 93397376
+> maingroup-home: 112222208 34619392 linear 8:8 7709056
+> maingroup-home: 146841600 83845120 linear 8:8 61882752
+>
+> ----------------------
+> Matt McHenry
+> http://www.speakeasy.org/~jerith/
+> jerith@speakeasy.org
+> be052@scn.org
+>
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@redhat.com
+> https://www.redhat.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+>
