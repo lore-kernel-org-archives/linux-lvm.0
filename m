@@ -1,24 +1,17 @@
 Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id k9V4KqMl014268
-	for <linux-lvm@redhat.com>; Mon, 30 Oct 2006 23:20:52 -0500
-Received: from mail5.sea5.speakeasy.net (mail5.sea5.speakeasy.net
-	[69.17.117.7])
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id k9VMuKc0003248
+	for <linux-lvm@redhat.com>; Tue, 31 Oct 2006 17:56:20 -0500
+Received: from rwcrmhc12.comcast.net (rwcrmhc12.comcast.net [216.148.227.152])
 	by mx1.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
-	k9V4KpFu018722
-	for <linux-lvm@redhat.com>; Mon, 30 Oct 2006 23:20:51 -0500
-Received: from dsl093-060-083.pit1.dsl.speakeasy.net (HELO [192.168.0.5])
-	([66.93.60.83]) (envelope-sender <jerith@speakeasy.org>)
-	by mail5.sea5.speakeasy.net (qmail-ldap-1.03) with AES256-SHA encrypted
-	SMTP for <linux-lvm@redhat.com>; 31 Oct 2006 04:20:45 -0000
-Date: Mon, 30 Oct 2006 23:20:43 -0500 (EST)
-From: Matt McHenry <jerith@speakeasy.org>
-Subject: Re: [linux-lvm] lvcreate gives 'device-mapper: reload ioctl failed:
-	Invalid argument'
-In-Reply-To: <2e9d2be4483db00be84afd0aca33e698@redhat.com>
-Message-ID: <Pine.LNX.4.64.0610302250450.19176@localhost>
-References: <Pine.LNX.4.64.0610281720370.9047@localhost>
-	<2e9d2be4483db00be84afd0aca33e698@redhat.com>
-MIME-Version: 1.0
+	k9VMuIdF030831
+	for <linux-lvm@redhat.com>; Tue, 31 Oct 2006 17:56:18 -0500
+Message-Id: <6.2.3.4.2.20061031144657.04515d00@postoffice.no-ip.com>
+Date: Tue, 31 Oct 2006 14:56:02 -0800
+From: Mache Creeger <mache@creeger.com>
+Mime-Version: 1.0
+Content-Type: multipart/alternative;
+	boundary="=====================_516327437==.ALT"
+Subject: [linux-lvm] 5 out of 6 Volumes Vanished!
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -29,91 +22,202 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"; format="flowed"
-Content-Transfer-Encoding: 7bit
-To: LVM general discussion and development <linux-lvm@redhat.com>
+To: linux-lvm@redhat.com
 
-On Mon, 30 Oct 2006, Jonathan E Brassow wrote:
+--=====================_516327437==.ALT
+Content-Type: text/plain; charset="us-ascii"; format=flowed
 
-> It appears to me that somehow the device-mapper device was created, but the 
-> table has not yet been loaded.
->
-> While this is the case, you will not be able to create an LV of the same 
-> name.  (It will always give you the "device-mapper: reload ioctl failed:..." 
-> error.)
+Most of my volumes have vanished, except for Vol0.  I had 6 volumes 
+set up with lvm.  Vol5 had 600 GB of data running over RAID5 using XFS.
 
- 	I know very little about LVM, but if the table hadn't been loaded, 
-shouldn't it be the case that none of my LVs would be usable?  All but the 
-'dvd' and 'gen-website' LVs are working fine.
+Can anyone help.
 
-> If you reboot the machine does the "maingroup-dvd:" still show up from 
-> 'dmsetup table'?
->
-> Also, after a reboot, be sure to run 'pvmove --abort'.
+Here are some diagnostics.
 
- 	I tried to run 'pvmove --abort' and got the same error about 
-'reload ioctl ...'.  But after reboot, the gen-website LV was back and 
-appears intact.  (And the pvmove temporary LV is gone.)  So we're making 
-progress ... :)
+-- Mache Creeger
 
-> Once you've canceled the pvmove successfully, I would do a 'dmsetup remove
-> maingroup-dvd; and try the 'lvcreate -L 15G -n dvd maingroup' again.
+# mdadm -A /dev/md0
+mdadm: device /dev/md0 already active - cannot assemble it
 
- 	I rebooted, ran 'dmsetup remove maingroup-dvd', rebooted again ... 
-and now the maingroup-dvd is back in the table.  Do I need to do the 
-'lvcreate' right after the 'dmsetup remove', without rebooting in between? 
-Or maybe do an 'lvremove' in addition to the 'dmsetup remove'?
+# cat /proc/mdstat
+Personalities : [raid6] [raid5] [raid4]
+md0 : inactive hdi1[5](S) hdb1[0] hdh1[4] hdg1[3] hdf1[2] hde1[1]
+       1172151808 blocks
 
- 	I am at least getting a different error from 'lvcreate' now.  I 
-seem to be in a slightly better state than when this started, so I'm 
-holding off on trying any of my suggestions above in case one of them 
-might make things worse.  :)
+unused devices: <none>
 
-# dmsetup table
-maingroup-tmp: 0 4194304 linear 8:8 154018176
-maingroup-c--p: 0 8388608 linear 8:7 47980928
-maingroup-capture: 0 23642112 linear 8:7 56369536
-maingroup-capture: 23642112 40009728 linear 8:6 384
-maingroup-capture: 63651840 78954496 linear 8:10 384
-maingroup-usr: 0 19996672 linear 8:9 73400704
-maingroup-usr: 19996672 974848 linear 8:8 150946176
-maingroup-usr: 20971520 3891200 linear 8:8 48619904
-maingroup-usr: 24862720 7708672 linear 8:8 384
-maingroup-usr: 32571392 9371648 linear 8:8 52511104
-maingroup-var: 0 10485760 linear 8:9 62914944
-maingroup-var: 10485760 5218304 linear 8:8 145727872
-maingroup-gen--website: 0 31457280 linear 8:11 384
-maingroup-music: 0 1810432 linear 8:8 158212480
-maingroup-music: 1810432 17317888 linear 8:9 142705024
-maingroup-music: 19128320 43786240 linear 8:7 384
-maingroup-swap2: 0 2097152 linear 8:7 45883776
-maingroup-opt: 0 2097152 linear 8:8 151921024
-maingroup-opt: 2097152 6291456 linear 8:8 42328448
-maingroup-dvd:
-maingroup-swap1: 0 2097152 linear 8:7 43786624
-maingroup-home: 0 62914560 linear 8:9 384
-maingroup-home: 62914560 29310976 linear 8:9 113394048
-maingroup-home: 92225536 19996672 linear 8:9 93397376
-maingroup-home: 112222208 34619392 linear 8:8 7709056
-maingroup-home: 146841600 83845120 linear 8:8 61882752
+# more /proc/mdstat
+Personalities : [raid6] [raid5] [raid4]
+md0 : inactive hdb1[0] hdh1[4] hdg1[3] hdf1[2] hde1[1]
+       976791040 blocks
 
-# lvcreate -L 15G -n dvd maingroup
-   /dev/cdrom: open failed: Read-only file system
-   Attempt to close device '/dev/cdrom' which is not open.
-   Logical volume "dvd" already exists in volume group "maingroup"
+# mdadm --detail /dev/md0
+/dev/md0:
+Version : 00.90.03
+Creation Time : Sat Apr  8 10:01:48 2006
+Raid Level : raid5
+Device Size : 195358208 (186.31 GiB 200.05 GB)
+Raid Devices : 6
+Total Devices : 5
+Preferred Minor : 0
+Persistence : Superblock is persistent
 
-# ls /dev/maingroup/
-c-p  capture  gen-website  home  music  opt  swap1  swap2  tmp  usr  var
+Update Time : Sat Oct 21 22:30:40 2006
+State : active, degraded
+Active Devices : 5
+Working Devices : 5
+Failed Devices : 0
+Spare Devices : 0
 
-# ls /dev/mapper/
-control            maingroup-gen--website  maingroup-swap1  maingroup-var
-maingroup-c--p     maingroup-home          maingroup-swap2
-maingroup-capture  maingroup-music         maingroup-tmp
-maingroup-dvd      maingroup-opt           maingroup-usr
+Layout : left-symmetric
+Chunk Size : 256K
+
+UUID : 0e3284f1:bf1053ea:e580013b:368be46b
+Events : 0.3090999
+
+Number   Major   Minor   RaidDevice State
+0       3       65        0      active sync   /dev/hdb1
+1      33        1        1      active sync   /dev/hde1
+2      33       65        2      active sync   /dev/hdf1
+3      34        1        3      active sync   /dev/hdg1
+4      34       65        4      active sync   /dev/hdh1
+0       0        0       0      removed
+
+# more /etc/fstab
+/dev/VolGroup00/LogVol00 /                       ext3    defaults        1 1
+LABEL=/boot             /boot                   ext3    defaults        1 2
+devpts                  /dev/pts                devpts  gid=5,mode=620  0 0
+tmpfs                   /dev/shm                tmpfs   defaults        0 0
+/dev/VolGroup04/LogVol04 /opt                    ext3    defaults        1 2
+/dev/VolGroup05/LogVol05 /opt/bigdisk            xfs     defaults        1 2
+proc                    /proc                   proc    defaults        0 0
+sysfs                   /sys                    sysfs   defaults        0 0
+/dev/VolGroup01/LogVol01 /usr                    ext3    defaults        1 2
+/dev/VolGroup02/LogVol02 /var                    ext3    defaults        1 2
+/dev/VolGroup03/LogVol03 swap                    swap    defaults        0 0
+
+# xfs_repair /dev/VolGroup05/LogVol05
+/dev/VolGroup05/LogVol05: No such file or directory
+
+fatal error -- couldn't initialize XFS library
 
 
-----------------------
-Matt McHenry
-http://www.speakeasy.org/~jerith/
-jerith@speakeasy.org
-be052@scn.org
+
+--=====================_516327437==.ALT
+Content-Type: text/html; charset="us-ascii"
+
+<html>
+<body>
+Most of my volumes have vanished, except for Vol0.&nbsp; I had 6 volumes
+set up with lvm.&nbsp; Vol5 had 600 GB of data running over RAID5 using
+XFS.&nbsp; <br><br>
+Can anyone help.&nbsp; <br><br>
+Here are some diagnostics.&nbsp; <br><br>
+-- Mache Creeger<br><br>
+<font size=3># mdadm -A /dev/md0<br>
+mdadm: device /dev/md0 already active - cannot assemble it<br><br>
+# cat /proc/mdstat<br>
+Personalities : [raid6] [raid5] [raid4]<br>
+md0 : inactive hdi1[5](S) hdb1[0] hdh1[4] hdg1[3] hdf1[2] hde1[1]<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1172151808 blocks<br><br>
+unused devices: &lt;none&gt;<br><br>
+# more /proc/mdstat<br>
+Personalities : [raid6] [raid5] [raid4]<br>
+md0 : inactive hdb1[0] hdh1[4] hdg1[3] hdf1[2] hde1[1]<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 976791040 blocks<br><br>
+# mdadm --detail /dev/md0<br>
+/dev/md0:<br>
+Version : 00.90.03<br>
+Creation Time : Sat Apr&nbsp; 8 10:01:48 2006<br>
+Raid Level : raid5<br>
+Device Size : 195358208 (186.31 GiB 200.05 GB)<br>
+Raid Devices : 6<br>
+Total Devices : 5<br>
+Preferred Minor : 0<br>
+Persistence : Superblock is persistent<br><br>
+Update Time : Sat Oct 21 22:30:40 2006<br>
+State : active, degraded<br>
+Active Devices : 5<br>
+Working Devices : 5<br>
+Failed Devices : 0<br>
+Spare Devices : 0<br><br>
+Layout : left-symmetric<br>
+Chunk Size : 256K<br><br>
+UUID : 0e3284f1:bf1053ea:e580013b:368be46b<br>
+Events : 0.3090999<br><br>
+Number&nbsp;&nbsp; Major&nbsp;&nbsp; Minor&nbsp;&nbsp; RaidDevice
+State<br>
+0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+3&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+65&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; active sync&nbsp;&nbsp; /dev/hdb1<br>
+1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+33&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; active sync&nbsp;&nbsp; /dev/hde1<br>
+2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 33&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+65&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; active sync&nbsp;&nbsp; /dev/hdf1<br>
+3&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+34&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+3&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; active sync&nbsp;&nbsp; /dev/hdg1<br>
+4&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 34&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+65&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+4&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; active sync&nbsp;&nbsp; /dev/hdh1<br>
+0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+removed<br><br>
+# more /etc/fstab<br>
+/dev/VolGroup00/LogVol00
+/&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ext3&nbsp;&nbsp;&nbsp; defaults&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+1 1<br>
+LABEL=/boot&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+/boot&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ext3&nbsp;&nbsp;&nbsp; defaults&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+1 2<br>
+devpts&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+/dev/pts&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+devpts&nbsp; gid=5,mode=620&nbsp; 0 0<br>
+tmpfs&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+/dev/shm&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+tmpfs&nbsp;&nbsp; defaults&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0
+0<br>
+/dev/VolGroup04/LogVol04
+/opt&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ext3&nbsp;&nbsp;&nbsp; defaults&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+1 2<br>
+/dev/VolGroup05/LogVol05
+/opt/bigdisk&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+xfs&nbsp;&nbsp;&nbsp;&nbsp;
+defaults&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1 2<br>
+proc&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+/proc&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+proc&nbsp;&nbsp;&nbsp; defaults&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+0 0<br>
+sysfs&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+/sys&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+sysfs&nbsp;&nbsp; defaults&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0
+0<br>
+/dev/VolGroup01/LogVol01
+/usr&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ext3&nbsp;&nbsp;&nbsp; defaults&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+1 2<br>
+/dev/VolGroup02/LogVol02
+/var&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ext3&nbsp;&nbsp;&nbsp; defaults&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+1 2<br>
+/dev/VolGroup03/LogVol03
+swap&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+swap&nbsp;&nbsp;&nbsp; defaults&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+0 0<br><br>
+# xfs_repair /dev/VolGroup05/LogVol05<br>
+/dev/VolGroup05/LogVol05: No such file or directory<br><br>
+fatal error -- couldn't initialize XFS library<br><br>
+<br>
+</font></body>
+</html>
+
+--=====================_516327437==.ALT--
