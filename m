@@ -1,20 +1,26 @@
 Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id kA1NX17G021692
-	for <linux-lvm@redhat.com>; Wed, 1 Nov 2006 18:33:01 -0500
-Received: from mail.mmtab.se ([212.209.150.85])
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id kA217KdI013698
+	for <linux-lvm@redhat.com>; Wed, 1 Nov 2006 20:07:20 -0500
+Received: from mail8.sea5.speakeasy.net (mail8.sea5.speakeasy.net
+	[69.17.117.10])
 	by mx1.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
-	kA1NWx9b027091
-	for <linux-lvm@redhat.com>; Wed, 1 Nov 2006 18:32:59 -0500
-Received: from [10.0.0.145] ([212.209.150.84]) (authenticated bits=0)
-	by mail.mmtab.se (8.13.7/8.13.7) with ESMTP id kA1MgK8D003292
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO)
-	for <linux-lvm@redhat.com>; Wed, 1 Nov 2006 23:42:20 +0100
-Message-ID: <454922C3.8060902@mmtab.se>
-Date: Wed, 01 Nov 2006 23:42:11 +0100
-From: Per Mellander <per.m@mmtab.se>
+	kA217HTI030852
+	for <linux-lvm@redhat.com>; Wed, 1 Nov 2006 20:07:17 -0500
+Received: from shell2.sea5.speakeasy.net ([69.17.116.3])
+	(envelope-sender <jerith@speakeasy.org>)
+	by mail8.sea5.speakeasy.net (qmail-ldap-1.03) with AES256-SHA encrypted
+	SMTP for <linux-lvm@redhat.com>; 2 Nov 2006 01:07:11 -0000
+Date: Wed, 1 Nov 2006 20:07:11 -0500 (EST)
+From: Matt McHenry <jerith@speakeasy.org>
+Subject: Re: [linux-lvm] lvcreate gives 'device-mapper: reload ioctl failed:
+	Invalid argument'
+In-Reply-To: <9a4fd1bc1dee8da54e868d07f107b3b3@redhat.com>
+Message-ID: <Pine.LNX.4.58.0611011953150.32134@shell2.speakeasy.net>
+References: <Pine.LNX.4.64.0610281720370.9047@localhost>
+	<2e9d2be4483db00be84afd0aca33e698@redhat.com>
+	<Pine.LNX.4.64.0610302250450.19176@localhost>
+	<9a4fd1bc1dee8da54e868d07f107b3b3@redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] xfs_growfs after lvextend don't increase mounted size.
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -25,67 +31,91 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: linux-lvm@redhat.com
+Content-Type: TEXT/PLAIN; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-Hi!
+On Wed, 1 Nov 2006, Jonathan E Brassow wrote:
 
-I've got a 6.5TB xfs filesystem on a LVM2 volume. I wanted to increase
-the size of the fs so I added another ~10TB to the volume. Every step
-taken was successfull, (ie no errors) but the filesystem size remained
-unchanged even after the xfs_growfs.
+> You can certainly try an 'lvremove maingroup/dvd'.  It seems to me that
+> the logical volume is in the metadata (you can look for it in
+> /etc/lvm/backup/maingroup), but for some reason it is not able to
+> complete the load of that device into device-mapper.  Because it only
+> partially succeeds, it is giving you a device with no table...  After
+> doing the 'lvremove' you may need to also do a 'dmsetup remove
+> maingroup-dvd'.  Once completely removed, you could try your 'lvcreate'
+> again.
 
-What I did was the following:
+	I took a look in /etc/lvm/backup/maingroup.  Again keeping in mind
+that I don't know much about LVM, it looks to me like the 'gen-website'
+and 'dvd' LVs are overlapping somehow.  Assuming that's correct, I'm still
+reluctant to try any 'remove' commands because I don't want to destroy the
+data on the gen-website LV.  So once again I'll await further replies.  :)
 
-I extended the lvm using pvcreate, vgextend and finally lvextend. pvscan
-gives:
+                gen-website {
+                        id = "GhsR38-lmVZ-5gyN-fbt3-RWJv-f9rF-25aqpy"
+                        status = ["READ", "WRITE", "VISIBLE"]
+                        segment_count = 1
 
-   PV /dev/sda1   VG vg01   lvm2 [1.59 TB / 0    free]
-   PV /dev/sdb1   VG vg01   lvm2 [1.59 TB / 0    free]
-   PV /dev/sdc1   VG vg01   lvm2 [1.59 TB / 0    free]
-   PV /dev/sdd1   VG vg01   lvm2 [1.59 TB / 0    free]
-   PV /dev/sde1   VG vg01   lvm2 [2.00 TB / 0    free]
-   PV /dev/sdf1   VG vg01   lvm2 [2.00 TB / 0    free]
-   PV /dev/sdg1   VG vg01   lvm2 [2.00 TB / 0    free]
-   PV /dev/sdh1   VG vg01   lvm2 [2.00 TB / 0    free]
-   PV /dev/sdi1   VG vg01   lvm2 [1.55 TB / 0    free]
-   Total: 9 [15.91 TB] / in use: 9 [15.91 TB] / in no VG: 0 [0   ]
+                        segment1 {
+                                start_extent = 0
+                                extent_count = 3840     # 15 Gigabytes
 
-and lvdisplay:
+                                type = "striped"
+                                stripe_count = 1        # linear
 
-   --- Logical volume ---
-   LV Name                /dev/vg01/lv01
-   VG Name                vg01
-   LV UUID                rDSEQ3-DdhV-oLci-nNYT-dMdX-cppA-7v1r3e
-   LV Write Access        read/write
-   LV Status              available
-   # open                 1
-   LV Size                15.91 TB
-   Current LE             4169996
-   Segments               9
-   Allocation             inherit
-   Read ahead sectors     0
-   Block device           253:0
+                                stripes = [
+                                        "pv5", 0
+                                ]
+                        }
+                }
 
-After xfs_growfs /vol1 ( mounted fs ) df -h gives:
+                dvd {
+                        id = "E2VpR0-rfCr-PA4r-Mrtz-50au-2s5T-kGTP5E"
+                        status = ["READ", "WRITE", "VISIBLE"]
+                        segment_count = 1
 
-/dev/mapper/vg01-lv01
-                       6.4T  6.4T   36G 100% /vol1
+                        segment1 {
+                                start_extent = 0
+                                extent_count = 3840     # 15 Gigabytes
 
-The fs remains in previous size!!
+                                type = "striped"
+                                stripe_count = 1        # linear
 
-# cat /sys/block/dm-0/size
-34160607232
+                                stripes = [
+                                        "pv5", 3840
+                                ]
+                        }
+                }
 
-which is equal to 15.91 TB
+> I talked to someone about this and they said that it could be a kernel
+> device-mapper/user-space device-mapper mismatch issue.  I'm not sure I
+> understand that logic, given that you are able to load other devices of
+> the same target type (i.e. linear).  Perhaps that person would like to
+> speak up here?
 
-Have I missed something when I extended the volume / growed the xfs fs?
+	Here's a repeat of the version info I posted earlier.  I'm not
+sure if this is reporting kernel or user-space info (or both), and I don't
+see any more version info under /proc/ ...
 
-The system running xfs is a Fedora Core 4, 2.6.15-1.1831_FC4smp,
-lvm2-2.01.08-2.1, xfsprogs-2.6.13-4
+# lvm version
+  LVM version:     2.02.06 (2006-05-12)
+  Library version: 1.02.07 (2006-05-11)
+  Driver version:  4.4.0
 
-Per
 
-_________________________________
-This email has been ClamScanned !
-          www.clamav.net
+> P.S.  Are you always getting the 'cdrom' error?  You may wish to change
+> the filter option to exclude the cdrom device.  To do that, change the
+> "filter" line in /etc/lvm/lvm.conf to:
+> filter = [ "r|/dev/cdrom|" ]
+
+	Yes, thanks for that (I recently added a new dvd burner and hadn't
+had a chance to make that change yet).  Speaking of, any chance that such
+a hardware change might have anything to do with this problem?  (It may
+have changed device names for some of the pvs; I don't remember for sure.)
+
+----------------------
+Matt McHenry
+http://www.speakeasy.org/~jerith/
+jerith@speakeasy.org
+be052@scn.org
