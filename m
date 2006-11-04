@@ -1,15 +1,28 @@
-Received: from [10.15.80.229] (dhcp80-229.msp.redhat.com [10.15.80.229])
-	by pobox.corp.redhat.com (8.13.1/8.12.8) with ESMTP id kA3KheOH004958
-	for <linux-lvm@redhat.com>; Fri, 3 Nov 2006 15:43:40 -0500
-Mime-Version: 1.0 (Apple Message framework v624)
-In-Reply-To: <454B8DBE.4070706@dealer.com>
-References: <454B8DBE.4070706@dealer.com>
-Message-Id: <dd18e946a26c6e6ca80dccf058d1f12f@redhat.com>
-Content-Transfer-Encoding: 7bit
-From: Jonathan E Brassow <jbrassow@redhat.com>
-Subject: Re: [linux-lvm] kernel oops when creating snapshots with names >= 17
-	characters
-Date: Fri, 3 Nov 2006 14:47:40 -0600
+Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id kA42RB18019336
+	for <linux-lvm@redhat.com>; Fri, 3 Nov 2006 21:27:11 -0500
+Received: from mail5.sea5.speakeasy.net (mail5.sea5.speakeasy.net
+	[69.17.117.7])
+	by mx1.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
+	kA42R9UM030979
+	for <linux-lvm@redhat.com>; Fri, 3 Nov 2006 21:27:09 -0500
+Received: from dsl093-060-083.pit1.dsl.speakeasy.net (HELO [192.168.0.5])
+	([66.93.60.83]) (envelope-sender <jerith@speakeasy.org>)
+	by mail5.sea5.speakeasy.net (qmail-ldap-1.03) with AES256-SHA encrypted
+	SMTP for <linux-lvm@redhat.com>; 4 Nov 2006 02:27:03 -0000
+Date: Fri, 3 Nov 2006 21:27:00 -0500 (EST)
+From: Matt McHenry <jerith@speakeasy.org>
+Subject: Re: [linux-lvm] lvcreate gives 'device-mapper: reload ioctl failed:
+	Invalid argument'
+In-Reply-To: <172c1cd542e581bc25f1bfb25e7b819a@redhat.com>
+Message-ID: <Pine.LNX.4.64.0611032113550.5594@localhost>
+References: <Pine.LNX.4.64.0610281720370.9047@localhost>
+	<2e9d2be4483db00be84afd0aca33e698@redhat.com>
+	<Pine.LNX.4.64.0610302250450.19176@localhost>
+	<9a4fd1bc1dee8da54e868d07f107b3b3@redhat.com>
+	<Pine.LNX.4.58.0611011953150.32134@shell2.speakeasy.net>
+	<172c1cd542e581bc25f1bfb25e7b819a@redhat.com>
+MIME-Version: 1.0
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -20,177 +33,165 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
+Content-Type: TEXT/PLAIN; charset="us-ascii"; format="flowed"
+Content-Transfer-Encoding: 7bit
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-I think this looks similar to some older bugs that have been fixed...
 
-Have you tried updating your kernel/packages ?
+ 	Thanks for your continued help.  It's still not working, though. 
+I ran 'dmsetup remove maingroup-dvd' and 'lvremove maingroup/dvd' and 
+rebooted.  It looks like it worked:
 
-  brassow
+# dmsetup table
+maingroup-tmp: 0 4194304 linear 8:8 154018176
+maingroup-c--p: 0 8388608 linear 8:7 47980928
+maingroup-capture: 0 23642112 linear 8:7 56369536
+maingroup-capture: 23642112 40009728 linear 8:6 384
+maingroup-capture: 63651840 78954496 linear 8:10 384
+maingroup-usr: 0 19996672 linear 8:9 73400704
+maingroup-usr: 19996672 974848 linear 8:8 150946176
+maingroup-usr: 20971520 3891200 linear 8:8 48619904
+maingroup-usr: 24862720 7708672 linear 8:8 384
+maingroup-usr: 32571392 9371648 linear 8:8 52511104
+maingroup-var: 0 10485760 linear 8:9 62914944
+maingroup-var: 10485760 5218304 linear 8:8 145727872
+maingroup-gen--website: 0 31457280 linear 8:11 384
+maingroup-music: 0 1810432 linear 8:8 158212480
+maingroup-music: 1810432 17317888 linear 8:9 142705024
+maingroup-music: 19128320 43786240 linear 8:7 384
+maingroup-swap2: 0 2097152 linear 8:7 45883776
+maingroup-opt: 0 2097152 linear 8:8 151921024
+maingroup-opt: 2097152 6291456 linear 8:8 42328448
+maingroup-swap1: 0 2097152 linear 8:7 43786624
+maingroup-home: 0 62914560 linear 8:9 384
+maingroup-home: 62914560 29310976 linear 8:9 113394048
+maingroup-home: 92225536 19996672 linear 8:9 93397376
+maingroup-home: 112222208 34619392 linear 8:8 7709056
+maingroup-home: 146841600 83845120 linear 8:8 61882752
 
-On Nov 3, 2006, at 12:43 PM, Rob Ostrander wrote:
+ 	But lvcreate still fails:
 
-> Running RHEL4 U4 EM64T, kernel 2.6.9-5.ELsmp, on a Dell PowerEdge 2950.
-> lvm2-2.02.06-6.0.RHEL4
-> device-mapper-1.02.07-4.0.RHEL4
+# lvcreate -L 15G -n dvd maingroup
+   /dev/cdrom: open failed: Read-only file system
+   Attempt to close device '/dev/cdrom' which is not open.
+   device-mapper: reload ioctl failed: Invalid argument
+   Failed to activate new LV.
+
+ 	(note that I have made the suggested change to /etc/lvm/lvm.conf 
+and am still getting those /dev/cdrom errors)
+
+On Thu, 2 Nov 2006, Jonathan E Brassow wrote:
+
+> If linux reorders your devices, it won't affect LVM.
 >
-> When I attempt to run lvcreate with a name containing 17 or more 
-> characters (resulting in 35 characters for volume name) I get the 
-> following error:
-> Nov  3 11:34:50 localhost kernel:  <1>Unable to handle kernel NULL 
-> pointer dereference at 0000000000000050 RIP:
-> Nov  3 11:34:50 localhost kernel: <ffffffff801dcabd>{rb_first+10}
-> Nov  3 11:34:50 localhost kernel: PML4 c0572067 PGD 10b474067 PMD 0
-> Nov  3 11:34:50 localhost kernel: Oops: 0000 [12] SMP
-> Nov  3 11:34:50 localhost kernel: CPU 2
-> Nov  3 11:34:50 localhost kernel: Modules linked in: parport_pc lp 
-> parport autofs4 i2c_dev i2c_core sunrpc ds yenta_socket pcmcia_core 
-> button battery ac sr_mod(U) usb_storage joydev uhci_hcd ehci_hcd 
-> hw_random shpchp bnx2(U) dm_snapshot dm_zero dm_mirror ext3 jbd(U) 
-> dm_mod megaraid_sas(U) sd_mod scsi_mod
-> Nov  3 11:34:50 localhost kernel: Pid: 27398, comm: lvcreate Not 
-> tainted 2.6.9-5.ELsmp
-> Nov  3 11:34:50 localhost kernel: RIP: 0010:[<ffffffff801dcabd>] 
-> <ffffffff801dcabd>{rb_first+10}
-> Nov  3 11:34:50 localhost kernel: RSP: 0018:00000100c7ea7ea0  EFLAGS: 
-> 00010202
-> Nov  3 11:34:50 localhost kernel: RAX: 0000000000000038 RBX: 
-> 0000010169d12ce8 RCX: 00000100cff47c00
-> Nov  3 11:34:50 localhost kernel: RDX: 0000000000000000 RSI: 
-> 000000000000006c RDI: 0000010169d12ce0
-> Nov  3 11:34:50 localhost kernel: RBP: 000001021924e000 R08: 
-> 0000000000000022 R09: 0000000000000000
-> Nov  3 11:34:50 localhost kernel: R10: 0000000000000000 R11: 
-> ffffffff801700f4 R12: 0000010169d12ce0
-> Nov  3 11:34:50 localhost kernel: R13: 000000000069d824 R14: 
-> 0000010169d12da0 R15: 0000007fbfffb480
-> Nov  3 11:34:50 localhost kernel: FS:  0000002a9557a540(0000) 
-> GS:ffffffff804bf400(0000) knlGS:0000000000000000
-> Nov  3 11:34:50 localhost kernel: CS:  0010 DS: 0000 ES: 0000 CR0: 
-> 000000008005003b
-> Nov  3 11:34:50 localhost kernel: CR2: 0000000000000050 CR3: 
-> 000000000e3ce000 CR4: 00000000000006e0
-> Nov  3 11:34:50 localhost kernel: Process lvcreate (pid: 27398, 
-> threadinfo 00000100c7ea6000, task 0000010203d557f0)
-> Nov  3 11:34:50 localhost kernel: Stack: ffffffff8016d534 
-> 0000010169d12cb8 000001021924e000 000001011a2a5cb8
-> Nov  3 11:34:50 localhost kernel:        ffffffff80170105 
-> 0000000000000000 ffffffff8018105f 000001022fb53b88
-> Nov  3 11:34:50 localhost kernel:        0000010037e58200 
-> 00000012f04487fc
-> Nov  3 11:34:50 localhost kernel: Call 
-> Trace:<ffffffff8016d534>{mpol_free_shared_policy+53} 
-> <ffffffff80170105>{shmem_destroy_inode+17}
-> Nov  3 11:34:50 localhost kernel:        
-> <ffffffff8018105f>{sys_unlink+261} <ffffffff8010ffd2>{system_call+126}
-> Nov  3 11:34:50 localhost kernel:
-> Nov  3 11:34:50 localhost kernel:
-> Nov  3 11:34:50 localhost kernel: Code: 48 83 78 18 00 74 06 48 8b 40 
-> 18 eb f3 48 89 c2 48 89 d0 c3
-> Nov  3 11:34:50 localhost kernel: RIP <ffffffff801dcabd>{rb_first+10} 
-> RSP <00000100c7ea7ea0>
-> Nov  3 11:34:50 localhost kernel: CR2: 0000000000000050
+> The two logical volumes you mentioned do not overlap.  The important thing to 
+> look at there is the "stripes" section.  You can see that 'gen-website' lives 
+> on 'pv5' (i.e. the 5th physical volume in the volume group) and that it 
+> starts at extent '0'.  'dvd' also lives on 'pv5', but it starts at extent 
+> 3840 - directly after 'gen-website'.
 >
-> I can reliably reproduce the issue with the following:
-> [root@wcmc10 ~]# cat lvtest.sh
-> x="1";
-> while [ 1 ]; do
-> snap_name=${snap_name}$x;
-> length=`echo /dev/VolGroup01/$snap_name |wc -c`;
-> echo "creating /dev/VolGroup01/$snap_name with $length characters";
-> lvcreate -L2g -s -n ${snap_name}  /dev/VolGroup01/db;
-> sleep 1;
-> echo "removing /dev/VolGroup01/$snap_name";
-> lvremove -f /dev/VolGroup01/${snap_name};
-> sleep 1;
-> inc=`expr $x + 1`;
-> x=`expr $inc % 10`;
-> done
+> So, you are ok to do the lvremove maingroup/dvd.
 >
-> Running the above I get the following results:
-> [root@wcmc10 ~]# ./lvtest.sh
-> creating /dev/VolGroup01/1 with 18 characters
->  Logical volume "1" created
-> removing /dev/VolGroup01/1
->  Logical volume "1" successfully removed
-> creating /dev/VolGroup01/12 with 19 characters
->  Logical volume "12" created
-> removing /dev/VolGroup01/12
->  Logical volume "12" successfully removed
-> creating /dev/VolGroup01/123 with 20 characters
->  Logical volume "123" created
-> removing /dev/VolGroup01/123
->  Logical volume "123" successfully removed
-> creating /dev/VolGroup01/1234 with 21 characters
->  Logical volume "1234" created
-> removing /dev/VolGroup01/1234
->  Logical volume "1234" successfully removed
-> creating /dev/VolGroup01/12345 with 22 characters
->  Logical volume "12345" created
-> removing /dev/VolGroup01/12345
->  Logical volume "12345" successfully removed
-> creating /dev/VolGroup01/123456 with 23 characters
->  Logical volume "123456" created
-> removing /dev/VolGroup01/123456
->  Logical volume "123456" successfully removed
-> creating /dev/VolGroup01/1234567 with 24 characters
->  Logical volume "1234567" created
-> removing /dev/VolGroup01/1234567
->  Logical volume "1234567" successfully removed
-> creating /dev/VolGroup01/12345678 with 25 characters
->  Logical volume "12345678" created
-> removing /dev/VolGroup01/12345678
->  Logical volume "12345678" successfully removed
-> creating /dev/VolGroup01/123456789 with 26 characters
->  Logical volume "123456789" created
-> removing /dev/VolGroup01/123456789
->  Logical volume "123456789" successfully removed
-> creating /dev/VolGroup01/1234567890 with 27 characters
->  Logical volume "1234567890" created
-> removing /dev/VolGroup01/1234567890
->  Logical volume "1234567890" successfully removed
-> creating /dev/VolGroup01/12345678901 with 28 characters
->  Logical volume "12345678901" created
-> removing /dev/VolGroup01/12345678901
->  Logical volume "12345678901" successfully removed
-> creating /dev/VolGroup01/123456789012 with 29 characters
->  Logical volume "123456789012" created
-> removing /dev/VolGroup01/123456789012
->  Logical volume "123456789012" successfully removed
-> creating /dev/VolGroup01/1234567890123 with 30 characters
->  Logical volume "1234567890123" created
-> removing /dev/VolGroup01/1234567890123
->  Logical volume "1234567890123" successfully removed
-> creating /dev/VolGroup01/12345678901234 with 31 characters
->  Logical volume "12345678901234" created
-> removing /dev/VolGroup01/12345678901234
->  Logical volume "12345678901234" successfully removed
-> creating /dev/VolGroup01/123456789012345 with 32 characters
->  Logical volume "123456789012345" created
-> removing /dev/VolGroup01/123456789012345
->  Logical volume "123456789012345" successfully removed
-> creating /dev/VolGroup01/1234567890123456 with 33 characters
->  Logical volume "1234567890123456" created
-> removing /dev/VolGroup01/1234567890123456
->  Logical volume "1234567890123456" successfully removed
-> creating /dev/VolGroup01/12345678901234567 with 34 characters
->  Logical volume "12345678901234567" created
-> removing /dev/VolGroup01/12345678901234567
->  Logical volume "12345678901234567" successfully removed
-> creating /dev/VolGroup01/123456789012345678 with 35 characters
-> ./lvtest.sh: line 13: 29111 Killed                  lvcreate -L2g -s 
-> -n ${snap_name} /dev/VolGroup01/db
+> brassow
 >
-> Message from syslogd@localhost at Fri Nov  3 11:53:27 2006 ...
-> localhost kernel: Oops: 0000 [13] SMP
+> P.S.  If you accidentally did a 'lvremove -ff <vg>' and wiped out all your 
+> volumes, there is no need to panic.  You can simply use 'vgcfgrestore' to 
+> bring them back.  Most mistakes in LVM2 are reversible, which is nice.  :)
 >
-> Message from syslogd@localhost at Fri Nov  3 11:53:27 2006 ...
-> localhost kernel: CR2: 0000000000000050
-> removing /dev/VolGroup01/123456789012345678
->  Logical volume "123456789012345678" successfully removed
+> On Nov 1, 2006, at 7:07 PM, Matt McHenry wrote:
 >
->
+>>  On Wed, 1 Nov 2006, Jonathan E Brassow wrote:
+>> 
+>> >  You can certainly try an 'lvremove maingroup/dvd'.  It seems to me that
+>> >  the logical volume is in the metadata (you can look for it in
+>> >  /etc/lvm/backup/maingroup), but for some reason it is not able to
+>> >  complete the load of that device into device-mapper.  Because it only
+>> >  partially succeeds, it is giving you a device with no table...  After
+>> >  doing the 'lvremove' you may need to also do a 'dmsetup remove
+>> >  maingroup-dvd'.  Once completely removed, you could try your 'lvcreate'
+>> >  again.
+>>
+>>  	I took a look in /etc/lvm/backup/maingroup.  Again keeping in mind
+>>  that I don't know much about LVM, it looks to me like the 'gen-website'
+>>  and 'dvd' LVs are overlapping somehow.  Assuming that's correct, I'm still
+>>  reluctant to try any 'remove' commands because I don't want to destroy the
+>>  data on the gen-website LV.  So once again I'll await further replies. 
+>> :) 
+>>
+>>                  gen-website {
+>>                          id = "GhsR38-lmVZ-5gyN-fbt3-RWJv-f9rF-25aqpy"
+>>                          status = ["READ", "WRITE", "VISIBLE"]
+>>                          segment_count = 1
+>>
+>>                          segment1 {
+>>                                  start_extent = 0
+>>                                  extent_count = 3840     # 15 Gigabytes
+>>
+>>                                  type = "striped"
+>>                                  stripe_count = 1        # linear
+>>
+>>                                  stripes = [
+>>                                          "pv5", 0
+>> ]
+>>                          }
+>>                  }
+>>
+>>                  dvd {
+>>                          id = "E2VpR0-rfCr-PA4r-Mrtz-50au-2s5T-kGTP5E"
+>>                          status = ["READ", "WRITE", "VISIBLE"]
+>>                          segment_count = 1
+>>
+>>                          segment1 {
+>>                                  start_extent = 0
+>>                                  extent_count = 3840     # 15 Gigabytes
+>>
+>>                                  type = "striped"
+>>                                  stripe_count = 1        # linear
+>>
+>>                                  stripes = [
+>>                                          "pv5", 3840
+>> ]
+>>                          }
+>>                  }
+>> 
+>> >  I talked to someone about this and they said that it could be a kernel
+>> >  device-mapper/user-space device-mapper mismatch issue.  I'm not sure I
+>> >  understand that logic, given that you are able to load other devices of
+>> >  the same target type (i.e. linear).  Perhaps that person would like to
+>> >  speak up here?
+>>
+>>  	Here's a repeat of the version info I posted earlier.  I'm not
+>>  sure if this is reporting kernel or user-space info (or both), and I don't
+>>  see any more version info under /proc/ ...
+>>
+>>  # lvm version
+>>    LVM version:     2.02.06 (2006-05-12)
+>>    Library version: 1.02.07 (2006-05-11)
+>>    Driver version:  4.4.0
+>> 
+>> 
+>> >  P.S.  Are you always getting the 'cdrom' error?  You may wish to change
+>> >  the filter option to exclude the cdrom device.  To do that, change the
+>> >  "filter" line in /etc/lvm/lvm.conf to:
+>> >  filter = [ "r|/dev/cdrom|" ]
+>>
+>>  	Yes, thanks for that (I recently added a new dvd burner and hadn't
+>>  had a chance to make that change yet).  Speaking of, any chance that such
+>>  a hardware change might have anything to do with this problem?  (It may
+>>  have changed device names for some of the pvs; I don't remember for sure.)
+>>
+>>  ----------------------
+>>  Matt McHenry
+>>  http://www.speakeasy.org/~jerith/
+>>  jerith@speakeasy.org
+>>  be052@scn.org
+>>
+>>  _______________________________________________
+>>  linux-lvm mailing list
+>>  linux-lvm@redhat.com
+>>  https://www.redhat.com/mailman/listinfo/linux-lvm
+>>  read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+>> 
 >
 > _______________________________________________
 > linux-lvm mailing list
@@ -198,3 +199,10 @@ On Nov 3, 2006, at 12:43 PM, Rob Ostrander wrote:
 > https://www.redhat.com/mailman/listinfo/linux-lvm
 > read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
 >
+>
+
+----------------------
+Matt McHenry
+http://www.speakeasy.org/~jerith/
+jerith@speakeasy.org
+be052@scn.org
