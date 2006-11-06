@@ -1,21 +1,22 @@
-Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id kA67dpSI014181
-	for <linux-lvm@redhat.com>; Mon, 6 Nov 2006 02:39:51 -0500
-Received: from smtp.indatcom.net
-	(IDENT:qmailr@ev1s-67-15-225-15.ev1servers.net [67.15.225.15]
-	(may be forged))
-	by mx1.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
-	kA67do0N020065
-	for <linux-lvm@redhat.com>; Mon, 6 Nov 2006 02:39:50 -0500
-From: "InDatcom" <linux@cosmostech.net>
-Date: Mon, 6 Nov 2006 01:39:44 -0600
-Message-ID: <002201c70176$bad15c40$6500a8c0@mayel>
-MIME-Version: 1.0
+Received: from [10.15.80.229] (dhcp80-229.msp.redhat.com [10.15.80.229])
+	by pobox.corp.redhat.com (8.13.1/8.12.8) with ESMTP id kA6FmTnj004458
+	for <linux-lvm@redhat.com>; Mon, 6 Nov 2006 10:48:31 -0500
+Mime-Version: 1.0 (Apple Message framework v624)
+In-Reply-To: <Pine.LNX.4.64.0611032113550.5594@localhost>
+References: <Pine.LNX.4.64.0610281720370.9047@localhost>
+	<2e9d2be4483db00be84afd0aca33e698@redhat.com>
+	<Pine.LNX.4.64.0610302250450.19176@localhost>
+	<9a4fd1bc1dee8da54e868d07f107b3b3@redhat.com>
+	<Pine.LNX.4.58.0611011953150.32134@shell2.speakeasy.net>
+	<172c1cd542e581bc25f1bfb25e7b819a@redhat.com>
+	<Pine.LNX.4.64.0611032113550.5594@localhost>
+Message-Id: <fd8cf572cedb06da504fb08eaf705d9b@redhat.com>
 Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] Lost 1 of 9 PVs and ext3 filesys needs recovery but
-	--partial activates read-only
-Reply-To: linux@cosmostech.net,
-	LVM general discussion and development <linux-lvm@redhat.com>
+From: Jonathan E Brassow <jbrassow@redhat.com>
+Subject: Re: [linux-lvm] lvcreate gives 'device-mapper: reload ioctl failed:
+	Invalid argument'
+Date: Mon, 6 Nov 2006 09:52:42 -0600
+Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -25,117 +26,71 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@redhat.com
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-Hello,
+Ok, at least maingroup-dvd isn't showing up anymore... so we know we 
+can get rid of it when things go wrong.
 
-We have a server which has 9 HDs, each of them is a PV on a single VG. A few
-days ago 1 of the HDs (/dev/hdk) died suddenly, hardware dead, bios won't
-detect it anymore so nothing more to do hardware-wise. Right now we don't
-have another disk to replace it with and do a pvcreate -u / vgcfgrestore
-process.
+I don't have an idea why the lvcreate is failing...  You could try to 
+interface with device-mapper directly and see what happens.  To do that 
+type:
 
-So we wanted to try a --partial mount, we were able to activate the VG and
-LV, but it seems the ext3 filesystem has inconsistency errors and the
-journal needs to be corrected but the VG is activated read-only so we can't
-do this.
+echo "0 31457280 linear 8:11 31457664" | dmsetup create maingroup-dvd
 
-The question is: 
+That should create the device /dev/mapper/maingroup-dvd; and it should 
+be useable.  (Make sure that 8:11 is the same device that 
+maingroup-gen--website is on.)  If that works, then the problem is in 
+LVM, if it doesn't, we know it is in device-mapper.
 
-Is there a way to activate a VG in --partial mode in read/write so we can
-run fsck.ext3 /dev/vg/lv ??
+Another simple thing to try is bumping up the verbosity; e.g. 'lvcreate 
+-vvvv -L 15G -n dvd maingroup'.  This will give alot of output, so you 
+may wish to redirect it to a file.  Having everything printed can often 
+give great clues as to the problem.
 
-I can't find any mention of this either on man pages, mailinglist, google,
-etc. Someone on the mailinglist even mentioned this, that he didn't
-understand why --partial is done read-only.
-
-We tried: lvchange -ay -P /dev/vg/lv and this is what we get:
-  Partial mode. Incomplete volume groups will be activated read-only.
-
-Either that or a way to remove that bad PV from the VG metadata, I've read a
-couple of mails about using vgreduce --removemissing, the man page is a
-little confusing, I almost ran that command but I tried it on a test box
-first and yes, what it does is REMOVE the LV that has a missing PV, if you
-read the man quickly it leads you to believe that it will remove the bad PVs
-from your VG and lets you activate/mount it back on, but NOO, it kills the
-LV to get the VG consistency back on. But that is exactly what I would like
-to do, remove the bad PV from the LV, knowing that I will have a big
-(300+gb) hole on the VG so I can backup and redo the filesystem.
-
-Here's our steps:
-
-root@localhost backup]# pvscan -P
-  Partial mode. Incomplete volume groups will be activated read-only.
-  /dev/ioerror: read failed after 0 of 4096 at 375809572864: Input/output
-error
-  /dev/ioerror: read failed after 0 of 4096 at 0: Input/output error
-  /dev/ioerror: read failed after 0 of 4096 at 0: Input/output error
-  Couldn't find device with uuid 'j05492-Dloo-RxMp-aIcJ-Y7dW-XA6L-mhuBtd'.
-  /dev/ioerror: read failed after 0 of 4096 at 0: Input/output error
-  Couldn't find device with uuid 'j05492-Dloo-RxMp-aIcJ-Y7dW-XA6L-mhuBtd'.
-  /dev/ioerror: read failed after 0 of 4096 at 0: Input/output error
-  Couldn't find device with uuid 'j05492-Dloo-RxMp-aIcJ-Y7dW-XA6L-mhuBtd'.
-  PV /dev/hda3        VG pop   lvm2 [225.92 GB / 0    free]
-  PV /dev/hdb1        VG pop   lvm2 [298.09 GB / 0    free]
-  PV /dev/hde1        VG pop   lvm2 [298.09 GB / 0    free]
-  PV /dev/hdf1        VG pop   lvm2 [298.09 GB / 0    free]
-  PV /dev/hdg1        VG pop   lvm2 [279.46 GB / 0    free]
-  PV /dev/hdh1        VG pop   lvm2 [279.46 GB / 0    free]
-  PV /dev/hdj1        VG pop   lvm2 [298.09 GB / 0    free]
-  PV unknown device   VG pop   lvm2 [298.09 GB / 0    free]
-  PV /dev/hdl1        VG pop   lvm2 [298.09 GB / 0    free]
-  Total: 9 [2.51 TB] / in use: 9 [2.51 TB] / in no VG: 0 [0   ]
+  brassow
 
 
-[root@localhost backup]# vgscan -P
-  Partial mode. Incomplete volume groups will be activated read-only.
-  Reading all physical volumes.  This may take a while...
-  /dev/ioerror: read failed after 0 of 4096 at 375809572864: Input/output
-error
-  /dev/ioerror: read failed after 0 of 4096 at 0: Input/output error
-  /dev/ioerror: read failed after 0 of 4096 at 0: Input/output error
-  Couldn't find device with uuid 'j05492-Dloo-RxMp-aIcJ-Y7dW-XA6L-mhuBtd'.
-  /dev/ioerror: read failed after 0 of 4096 at 0: Input/output error
-  Couldn't find device with uuid 'j05492-Dloo-RxMp-aIcJ-Y7dW-XA6L-mhuBtd'.
-  Found volume group "pop" using metadata type lvm2
+On Nov 3, 2006, at 8:27 PM, Matt McHenry wrote:
 
-
-
-
-[root@localhost backup]# vgchange -ay -P
-  Partial mode. Incomplete volume groups will be activated read-only.
-  /dev/ioerror: read failed after 0 of 4096 at 0: Input/output error
-  /dev/ioerror: read failed after 0 of 4096 at 375809572864: Input/output
-error
-  /dev/ioerror: read failed after 0 of 4096 at 0: Input/output error
-  Couldn't find device with uuid 'j05492-Dloo-RxMp-aIcJ-Y7dW-XA6L-mhuBtd'.
-  /dev/ioerror: read failed after 0 of 4096 at 0: Input/output error
-  Couldn't find device with uuid 'j05492-Dloo-RxMp-aIcJ-Y7dW-XA6L-mhuBtd'.
-  1 logical volume(s) in volume group "pop" now active
-
-
-After this LV is active and is mountable, BUT:
-
-[root@localhost /]# mount -t ext3 /dev/pop/data /backup/
-mount: block device /dev/pop/data is write-protected, mounting read-only
-mount: wrong fs type, bad option, bad superblock on /dev/pop/data,
-       missing codepage or other error
-       In some cases useful info is found in syslog - try
-       dmesg | tail  or so
-
-[root@localhost /]# dmesg|tail
-EXT3-fs: INFO: recovery required on readonly filesystem.
-EXT3-fs: write access unavailable, cannot proceed.
-
-[root@localhost /]# fsck.ext3 /dev/pop/data 
-e2fsck 1.38 (30-Jun-2005)
-/dev/pop/data: recovering journal
-fsck.ext3: unable to set superblock flags on /dev/pop/data
-
-Need read/write permissions to fix this and then possibly be able to recover
-some of the data.
-
-Any help appreciated.
-
-Ismael Sanchez
+> 	Thanks for your continued help.  It's still not working, though. I 
+> ran 'dmsetup remove maingroup-dvd' and 'lvremove maingroup/dvd' and 
+> rebooted.  It looks like it worked:
+>
+> # dmsetup table
+> maingroup-tmp: 0 4194304 linear 8:8 154018176
+> maingroup-c--p: 0 8388608 linear 8:7 47980928
+> maingroup-capture: 0 23642112 linear 8:7 56369536
+> maingroup-capture: 23642112 40009728 linear 8:6 384
+> maingroup-capture: 63651840 78954496 linear 8:10 384
+> maingroup-usr: 0 19996672 linear 8:9 73400704
+> maingroup-usr: 19996672 974848 linear 8:8 150946176
+> maingroup-usr: 20971520 3891200 linear 8:8 48619904
+> maingroup-usr: 24862720 7708672 linear 8:8 384
+> maingroup-usr: 32571392 9371648 linear 8:8 52511104
+> maingroup-var: 0 10485760 linear 8:9 62914944
+> maingroup-var: 10485760 5218304 linear 8:8 145727872
+> maingroup-gen--website: 0 31457280 linear 8:11 384
+> maingroup-music: 0 1810432 linear 8:8 158212480
+> maingroup-music: 1810432 17317888 linear 8:9 142705024
+> maingroup-music: 19128320 43786240 linear 8:7 384
+> maingroup-swap2: 0 2097152 linear 8:7 45883776
+> maingroup-opt: 0 2097152 linear 8:8 151921024
+> maingroup-opt: 2097152 6291456 linear 8:8 42328448
+> maingroup-swap1: 0 2097152 linear 8:7 43786624
+> maingroup-home: 0 62914560 linear 8:9 384
+> maingroup-home: 62914560 29310976 linear 8:9 113394048
+> maingroup-home: 92225536 19996672 linear 8:9 93397376
+> maingroup-home: 112222208 34619392 linear 8:8 7709056
+> maingroup-home: 146841600 83845120 linear 8:8 61882752
+>
+> 	But lvcreate still fails:
+>
+> # lvcreate -L 15G -n dvd maingroup
+>   /dev/cdrom: open failed: Read-only file system
+>   Attempt to close device '/dev/cdrom' which is not open.
+>   device-mapper: reload ioctl failed: Invalid argument
+>   Failed to activate new LV.
+>
+> 	(note that I have made the suggested change to /etc/lvm/lvm.conf and 
+> am still getting those /dev/cdrom errors)
