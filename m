@@ -1,9 +1,11 @@
-From: Jonathan Brassow <jbrassow@redhat.com>
-Date: Thu, 09 Nov 2006 12:28:41 -0600
-Message-Id: <1163096921.21967.7.camel@hydrogen.msp.redhat.com>
+Date: Thu, 9 Nov 2006 21:18:04 +0000
+From: Alasdair G Kergon <agk@redhat.com>
+Subject: Re: [linux-lvm] Proposal for the libLVM project
+Message-ID: <20061109211804.GL30653@agk.surrey.redhat.com>
+References: <455431FB.3070701@kix.in>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] [Patch 1/1] LVM additional size suffixes support
+Content-Disposition: inline
+In-Reply-To: <455431FB.3070701@kix.in>
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -15,131 +17,77 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@redhat.com, agk@redhat.com
+Content-Transfer-Encoding: 7bit
+To: Anant Narayanan <anant@kix.in>
+Cc: lvm-devel@redhat.com, parted-devel@lists.alioth.debian.org, linux-lvm@redhat.com
 
-...because only wimps use less than a Petabyte of storage.  :)
+Thanks for getting in touch.
 
-Add support for (P)etabyte and (E)xabyte endings.
+The only library supported for external applications at present is
+liblvm2cmd and this is basically a wrapper around the command line.
+This was a deliberate decision to force people to use the only stable interface
+we have, namely the command line.
 
-Example:
-[root@neo-04 ~]# lvcreate -L 3E -n lv vg
-  Logical volume "lv" created
-[root@neo-04 ~]# lvs
-  LV         VG           Attr   LSize   Origin Snap%  Move Log Copy%  Devices
-  lv         vg           -wi-a-   3.00E                               /dev/dm-2(0)
-  lv         vg           -wi-a-   3.00E                               /dev/dm-3(0)
-[root@neo-04 ~]# vgs
-  VG           #PV #LV #SN Attr   VSize  VFree
-  vg             3   1   0 wz--n-  6.00E  3.00E
-[root@neo-04 ~]# pvs
-  PV         VG           Fmt  Attr PSize  PFree
-  /dev/dm-2  vg           lvm2 a-    2.00E       0
-  /dev/dm-3  vg           lvm2 a-    2.00E 1024.00P
-  /dev/dm-4  vg           lvm2 a-    2.00E    2.00E
-  /dev/hda2  VolGroupKS00 lvm2 a-   37.16G   32.00M
-  /dev/sdd1               lvm2 --   17.15G   17.15G
-  /dev/sde1               lvm2 --   17.15G   17.15G
-  /dev/sdf1               lvm2 --   17.15G   17.15G
-  /dev/sdg1               lvm2 --   17.15G   17.15G
-[root@neo-04 ~]# cat /proc/partitions
-major minor  #blocks  name
-<snip>
- 253     2 2251799813685248 dm-2
- 253     3 2251799813685248 dm-3
- 253     4 2251799813685248 dm-4
- 253     5 3377699720527872 dm-5
+The lvm library that came with the original version of LVM had many problems
+and when we began LVM2 we made the decision not to offer a library until the
+code base and interfaces settled down.  We've had discussions (undocumented
+unfortunately - snippets on irc and face-to-face discussions) about what
+form the library API should take and reached a basic consensus.  Every
+change made to the code is done with these plans in mind.
+More recently, we've been moving some functions out of lvm and into
+libdevmapper - which is a supported library interface.
 
- brassow
+The current split between the 'lib' and 'tools' directory is not
+particularly well-defined at the moment, and there's some more code
+in 'lib' that should be in 'libdevmapper', behind a decent interface.
 
-Index: LVM2/lib/display/display.c
-===================================================================
---- LVM2.orig/lib/display/display.c	2006-10-08 07:01:12.000000000 -0500
-+++ LVM2/lib/display/display.c	2006-11-09 12:11:07.000000000 -0600
-@@ -82,6 +82,12 @@ uint64_t units_to_bytes(const char *unit
- 	case 't':
- 		v *= KILO * KILO * KILO * KILO;
- 		break;
-+	case 'p':
-+		v *= KILO * KILO * KILO * KILO * KILO;
-+		break;
-+	case 'e':
-+		v *= KILO * KILO * KILO * KILO * KILO * KILO;
-+		break;
- #undef KILO
- #define KILO UINT64_C(1000)
- 	case 'K':
-@@ -96,6 +102,12 @@ uint64_t units_to_bytes(const char *unit
- 	case 'T':
- 		v *= KILO * KILO * KILO * KILO;
- 		break;
-+	case 'P':
-+		v *= KILO * KILO * KILO * KILO * KILO;
-+		break;
-+	case 'E':
-+		v *= KILO * KILO * KILO * KILO * KILO * KILO;
-+		break;
- #undef KILO
- 	default:
- 		return 0;
-@@ -143,6 +155,8 @@ static const char *_display_size(struct 
- 	uint64_t units = UINT64_C(1024);
- 	char *size_buf = NULL;
- 	const char *size_str[][3] = {
-+		{" Exabyte", " EB", "E"},
-+		{" Petabyte", " PB", "P"},
- 		{" Terabyte", " TB", "T"},
- 		{" Gigabyte", " GB", "G"},
- 		{" Megabyte", " MB", "M"},
-@@ -161,7 +175,7 @@ static const char *_display_size(struct 
- 
- 	suffix = cmd->current_settings.suffix;
- 
--	for (s = 0; s < 8; s++)
-+	for (s = 0; s < 10; s++)
- 		if (toupper((int) cmd->current_settings.unit_type) ==
- 		    *size_str[s][2])
- 			break;
-@@ -171,7 +185,7 @@ static const char *_display_size(struct 
- 		return size_buf;
- 	}
- 
--	if (s < 8) {
-+	if (s < 10) {
- 		byte = cmd->current_settings.unit_factor;
- 		size *= UINT64_C(512);
- 	} else {
-@@ -181,7 +195,7 @@ static const char *_display_size(struct 
- 			units = UINT64_C(1000);
- 		else
- 			units = UINT64_C(1024);
--		byte = units * units * units;
-+		byte = units * units * units * units * units;
- 		s = 0;
- 		while (size_str[s] && size < byte)
- 			s++, byte /= units;
-Index: LVM2/lib/format_text/export.c
-===================================================================
---- LVM2.orig/lib/format_text/export.c	2006-10-07 18:17:17.000000000 -0500
-+++ LVM2/lib/format_text/export.c	2006-11-09 11:06:28.000000000 -0600
-@@ -221,6 +221,8 @@ static int _sectors_to_units(uint64_t se
- 		"Megabytes",
- 		"Gigabytes",
- 		"Terabytes",
-+		"Petabytes",
-+		"Exabytes",
- 		NULL
- 	};
- 
-Index: LVM2/tools/lvmcmdline.c
-===================================================================
---- LVM2.orig/tools/lvmcmdline.c	2006-10-02 11:15:03.000000000 -0500
-+++ LVM2/tools/lvmcmdline.c	2006-11-09 12:08:41.000000000 -0600
-@@ -186,7 +186,7 @@ static int _size_arg(struct cmd_context 
- {
- 	char *ptr;
- 	int i;
--	static const char *suffixes = "kmgt";
-+	static const char *suffixes = "kmgtpe";
- 	char *val;
- 	double v;
- 
+
+The end result should be:
+
+  a new lvm library API exists which is designed to be maintainable as the
+tools develop and not cause compatibility problems or inhibit anticipated
+future developments;
+
+  the tools directory uses only the published API;
+
+  everything available in the API is available directly through the lvm
+command line - there must be no 'hidden' features;
+
+  no internal structures are exposed through the library API so we retain
+complete freedom to change internal implementations and data structures.
+
+Note that last one carefully - structures in metadata.h are not to be
+exposed directly: the file is still very much a 'work in progress'.
+PV and LV structures are gradually merging; the VG concept is undergoing
+change - and this will all be done without breaking the existing
+command line interface, though there'll be extensions to it, and the
+library has to be similarly stable and maintainable.  The existing
+liblvm.a is not the right basis to base this work on - if anything,
+what's happening is a supportable wrapper library is being designed
+over the top of it.
+
+So yes, I'm anticipating something object-based: get a handle for a PV,
+create a VG by supplying handles for the PVs to go into it and getting a
+handle for the VG back.  Get properties of an object by supplying the
+appropriate method with the appropriate handle etc.
+
+
+The first job is to sketch out possible interfaces for some examples
+like that - 'create a PV', 'create/extend a VG' - based on what the tools
+do today.
+
+Further, if there are things that parted wants that are not available
+through the command line today, then put those on the table ASAP and
+we should try to get them implemented through the command line (in parallel
+with work on designing a library).
+
+
+There's a separate mailing list for LVM development (which I'll announce
+properly in another message), and further discussion should happen there:
+please remove linux-lvm from follow-ups about the details of the library.
+
+  https://www.redhat.com/mailman/listinfo/lvm-devel
+
+Alasdair
+-- 
+agk@redhat.com
