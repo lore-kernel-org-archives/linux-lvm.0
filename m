@@ -1,9 +1,9 @@
 From: Jonathan Brassow <jbrassow@redhat.com>
-Date: Thu, 09 Nov 2006 11:00:46 -0600
-Message-Id: <1163091646.19633.6.camel@hydrogen.msp.redhat.com>
+Date: Thu, 09 Nov 2006 12:28:41 -0600
+Message-Id: <1163096921.21967.7.camel@hydrogen.msp.redhat.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] [Patch 1/1] Fix mirror region_size calculation.
+Subject: [linux-lvm] [Patch 1/1] LVM additional size suffixes support
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -15,104 +15,131 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@redhat.com, jbrassow@redhat.com, agk@redhat.com
+To: linux-lvm@redhat.com, agk@redhat.com
 
-This patch fixes 214604 and 214302 (http://bugzilla.redhat.com).
+...because only wimps use less than a Petabyte of storage.  :)
+
+Add support for (P)etabyte and (E)xabyte endings.
+
+Example:
+[root@neo-04 ~]# lvcreate -L 3E -n lv vg
+  Logical volume "lv" created
+[root@neo-04 ~]# lvs
+  LV         VG           Attr   LSize   Origin Snap%  Move Log Copy%  Devices
+  lv         vg           -wi-a-   3.00E                               /dev/dm-2(0)
+  lv         vg           -wi-a-   3.00E                               /dev/dm-3(0)
+[root@neo-04 ~]# vgs
+  VG           #PV #LV #SN Attr   VSize  VFree
+  vg             3   1   0 wz--n-  6.00E  3.00E
+[root@neo-04 ~]# pvs
+  PV         VG           Fmt  Attr PSize  PFree
+  /dev/dm-2  vg           lvm2 a-    2.00E       0
+  /dev/dm-3  vg           lvm2 a-    2.00E 1024.00P
+  /dev/dm-4  vg           lvm2 a-    2.00E    2.00E
+  /dev/hda2  VolGroupKS00 lvm2 a-   37.16G   32.00M
+  /dev/sdd1               lvm2 --   17.15G   17.15G
+  /dev/sde1               lvm2 --   17.15G   17.15G
+  /dev/sdf1               lvm2 --   17.15G   17.15G
+  /dev/sdg1               lvm2 --   17.15G   17.15G
+[root@neo-04 ~]# cat /proc/partitions
+major minor  #blocks  name
+<snip>
+ 253     2 2251799813685248 dm-2
+ 253     3 2251799813685248 dm-3
+ 253     4 2251799813685248 dm-4
+ 253     5 3377699720527872 dm-5
 
  brassow
 
-region_size is a 32-bit value.  Sometimes, when computing the maximum
-possible region_size for large volumes, 32-bits can be exceeded.  We
-now cap the maximum region_size at 2^31 (the max power of 2 that can
-be held in a 32-bit number).
-
-Additionally, while waiting for a fix to allow for log devices
-greater than 1 extent, we also adjust the minimum region_size.
-By increasing the region_size, we can get by with log devices
-that maintain a size of 1 extent for now.
-
-Index: LVM2/lib/metadata/mirror.c
+Index: LVM2/lib/display/display.c
 ===================================================================
---- LVM2.orig/lib/metadata/mirror.c	2006-11-08 14:18:33.000000000 -0600
-+++ LVM2/lib/metadata/mirror.c	2006-11-09 10:51:11.000000000 -0600
-@@ -36,20 +36,44 @@ struct lv_segment *find_mirror_seg(struc
- }
+--- LVM2.orig/lib/display/display.c	2006-10-08 07:01:12.000000000 -0500
++++ LVM2/lib/display/display.c	2006-11-09 12:11:07.000000000 -0600
+@@ -82,6 +82,12 @@ uint64_t units_to_bytes(const char *unit
+ 	case 't':
+ 		v *= KILO * KILO * KILO * KILO;
+ 		break;
++	case 'p':
++		v *= KILO * KILO * KILO * KILO * KILO;
++		break;
++	case 'e':
++		v *= KILO * KILO * KILO * KILO * KILO * KILO;
++		break;
+ #undef KILO
+ #define KILO UINT64_C(1000)
+ 	case 'K':
+@@ -96,6 +102,12 @@ uint64_t units_to_bytes(const char *unit
+ 	case 'T':
+ 		v *= KILO * KILO * KILO * KILO;
+ 		break;
++	case 'P':
++		v *= KILO * KILO * KILO * KILO * KILO;
++		break;
++	case 'E':
++		v *= KILO * KILO * KILO * KILO * KILO * KILO;
++		break;
+ #undef KILO
+ 	default:
+ 		return 0;
+@@ -143,6 +155,8 @@ static const char *_display_size(struct 
+ 	uint64_t units = UINT64_C(1024);
+ 	char *size_buf = NULL;
+ 	const char *size_str[][3] = {
++		{" Exabyte", " EB", "E"},
++		{" Petabyte", " PB", "P"},
+ 		{" Terabyte", " TB", "T"},
+ 		{" Gigabyte", " GB", "G"},
+ 		{" Megabyte", " MB", "M"},
+@@ -161,7 +175,7 @@ static const char *_display_size(struct 
  
- /*
-- * Ensure region size is compatible with volume size.
-+ * adjusted_mirror_region_size
-+ * @extent_size: The size of an extent in sectors
-+ * @extents: The number of extents in the LV
-+ * @region_size: The current guess at an appropriate region size
-+ *
-+ * The maximum region size must be the largest power of 2 that
-+ * evenly divides into the total size given by extent_size * extents.
-+ *
-+ * The suggested minumum region size should be a number where the
-+ * number of regions is less than the number of bits in an extent.
-+ *
-+ * Returns: suggested region_size, or 0 on failure to find good region size
-  */
- uint32_t adjusted_mirror_region_size(uint32_t extent_size, uint32_t extents,
- 				     uint32_t region_size)
- {
--	uint32_t region_max;
-+	uint32_t region_max, region_min;
+ 	suffix = cmd->current_settings.suffix;
  
--	region_max = (1 << (ffs((int)extents) - 1)) * extent_size;
-+	region_max = ffs((int)extents) + ffs((int)extent_size) - 2;
-+	/* cap region_max@the max power of 2 that can be held in 32 bits */
-+	region_max = (region_max > 31) ? (1 << 31) : (1 << region_max);
-+
-+	/* Leave some extra room for the log header before the bits... */
-+	for (region_min = region_size;
-+	     (extents/region_min) > (1 << SECTOR_SHIFT);
-+	     region_min *= 2);
- 
- 	if (region_max < region_size) {
- 		region_size = region_max;
- 		log_print("Using reduced mirror region size of %" PRIu32
- 			  " sectors", region_max);
--		return region_max;
-+	} else if (region_min > region_size) {
-+		region_size = region_min;
-+		if (region_size <= region_max)
-+			log_print("Using minimum mirror region size of %" PRIu32
-+				  " sectors", region_min);
-+		else
-+			region_size = 0;
+-	for (s = 0; s < 8; s++)
++	for (s = 0; s < 10; s++)
+ 		if (toupper((int) cmd->current_settings.unit_type) ==
+ 		    *size_str[s][2])
+ 			break;
+@@ -171,7 +185,7 @@ static const char *_display_size(struct 
+ 		return size_buf;
  	}
  
- 	return region_size;
-Index: LVM2/tools/lvconvert.c
+-	if (s < 8) {
++	if (s < 10) {
+ 		byte = cmd->current_settings.unit_factor;
+ 		size *= UINT64_C(512);
+ 	} else {
+@@ -181,7 +195,7 @@ static const char *_display_size(struct 
+ 			units = UINT64_C(1000);
+ 		else
+ 			units = UINT64_C(1024);
+-		byte = units * units * units;
++		byte = units * units * units * units * units;
+ 		s = 0;
+ 		while (size_str[s] && size < byte)
+ 			s++, byte /= units;
+Index: LVM2/lib/format_text/export.c
 ===================================================================
---- LVM2.orig/tools/lvconvert.c	2006-10-24 13:50:29.000000000 -0500
-+++ LVM2/tools/lvconvert.c	2006-11-09 09:12:28.000000000 -0600
-@@ -388,6 +388,11 @@ static int lvconvert_mirrors(struct cmd_
- 								      lv->le_count,
- 								      lp->region_size);
+--- LVM2.orig/lib/format_text/export.c	2006-10-07 18:17:17.000000000 -0500
++++ LVM2/lib/format_text/export.c	2006-11-09 11:06:28.000000000 -0600
+@@ -221,6 +221,8 @@ static int _sectors_to_units(uint64_t se
+ 		"Megabytes",
+ 		"Gigabytes",
+ 		"Terabytes",
++		"Petabytes",
++		"Exabytes",
+ 		NULL
+ 	};
  
-+			if (!lp->region_size) {
-+				log_error("Failed to find valid region size");
-+				return 0;
-+			}
-+
- 			log_lv = NULL;
- 			if (!arg_count(cmd, corelog_ARG) &&
- 			    !(log_lv = create_mirror_log(cmd, lv->vg, ah,
-Index: LVM2/tools/lvcreate.c
+Index: LVM2/tools/lvmcmdline.c
 ===================================================================
---- LVM2.orig/tools/lvcreate.c	2006-10-18 13:01:53.000000000 -0500
-+++ LVM2/tools/lvcreate.c	2006-11-09 09:10:22.000000000 -0600
-@@ -678,6 +678,11 @@ static int _lvcreate(struct cmd_context 
- 							      lp->extents,
- 							      lp->region_size);
+--- LVM2.orig/tools/lvmcmdline.c	2006-10-02 11:15:03.000000000 -0500
++++ LVM2/tools/lvmcmdline.c	2006-11-09 12:08:41.000000000 -0600
+@@ -186,7 +186,7 @@ static int _size_arg(struct cmd_context 
+ {
+ 	char *ptr;
+ 	int i;
+-	static const char *suffixes = "kmgt";
++	static const char *suffixes = "kmgtpe";
+ 	char *val;
+ 	double v;
  
-+		if (!lp->region_size) {
-+			log_error("Failed to find valid region size");
-+			return 0;
-+		}
-+
- 		init_mirror_in_sync(lp->nosync);
- 
- 		if (lp->nosync) {
