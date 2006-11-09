@@ -1,18 +1,9 @@
-Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id kA980klE012382
-	for <linux-lvm@redhat.com>; Thu, 9 Nov 2006 03:00:46 -0500
-Received: from wx-out-0506.google.com (wx-out-0506.google.com [66.249.82.231])
-	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id kA980cch031465
-	for <linux-lvm@redhat.com>; Thu, 9 Nov 2006 03:00:38 -0500
-Received: by wx-out-0506.google.com with SMTP id s11so107038wxc
-	for <linux-lvm@redhat.com>; Thu, 09 Nov 2006 00:00:38 -0800 (PST)
-Message-ID: <455431FB.3070701@kix.in>
-Date: Fri, 10 Nov 2006 13:32:03 +0530
-From: Anant Narayanan <anant@kix.in>
-MIME-Version: 1.0
+From: Jonathan Brassow <jbrassow@redhat.com>
+Date: Thu, 09 Nov 2006 11:00:46 -0600
+Message-Id: <1163091646.19633.6.camel@hydrogen.msp.redhat.com>
+Mime-Version: 1.0
 Content-Transfer-Encoding: 7bit
-Sender: Anant Narayanan <tg.killerx@gmail.com>
-Subject: [linux-lvm] Proposal for the libLVM project
+Subject: [linux-lvm] [Patch 1/1] Fix mirror region_size calculation.
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -23,59 +14,105 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: linux-lvm@redhat.com
-Cc: parted-devel@lists.alioth.debian.org
+Content-Type: text/plain; charset="us-ascii"
+To: linux-lvm@redhat.com, jbrassow@redhat.com, agk@redhat.com
 
-Hi!
+This patch fixes 214604 and 214302 (http://bugzilla.redhat.com).
 
-This is regarding a proposal to improve the lvm-tools package currently 
-offered by Red Hat. Although your package is an excellent set of tools 
-for managing LVM systems, we have found that the codebase is too 
-specific to the several LVM Applications that are bundled with your 
-distributions.
+ brassow
 
-In the best interest of the community, we feel it would be best to take 
-the development of the lvm-tools package in the direction of a more 
-generic library - liblvm. The major driving force behind this reasoning 
-is the fact that managing LVM setups is a large enough task to warrant a 
-separate library. There are several advantages to this approach:
+region_size is a 32-bit value.  Sometimes, when computing the maximum
+possible region_size for large volumes, 32-bits can be exceeded.  We
+now cap the maximum region_size at 2^31 (the max power of 2 that can
+be held in a 32-bit number).
 
-1) Keeping the library and application parts separate. Needless to say, 
-this goes a long way in keeping code clean, by preventing the needs of 
-the application or library to interfere with each other.
+Additionally, while waiting for a fix to allow for log devices
+greater than 1 extent, we also adjust the minimum region_size.
+By increasing the region_size, we can get by with log devices
+that maintain a size of 1 extent for now.
 
-2) Providing a general library for use by other applications that deal 
-with LVM setups. This not only encourages alternate LVM-based 
-applications to spring, but also invites a larger part of the community 
-to contribute back to the development of liblvm (now lvm-tools).
-
-The 2nd point is what concerns us, the GNU Parted team. GNU Parted 
-currently deals with block devices only, and therefore cannot operate on 
-LVM setups. We concluded that the creation of a library such as liblvm 
-would help a lot in adding support for LVM setups.
-
-Here is a rough plan of our intentions:
-
-- Fork the lvm-tools project into liblvm
-   (If Red Hat expresses interest in the concept of liblvm, then the 
-project may be hosted by Red Hat, and we will provide developers to help 
-you. Else, we host the project ourselves)
-
-- Separate the command-line utilities and application-specific code from 
-the codebase.
-
-- Formulate (actually complete) a formal API that would be most useful 
-for applications that use the library.
-
-- Build the library to be generic as planned, and modify all 
-applications currently depending on it (the command-line utilities and 
-the Red Hat LVM Application) suitably.
-
-- Use the new library to add LVM support to GNU Parted.
-
-Do let us know what you think of this.
-
-Best Regards,
-
-The GNU Parted Team
+Index: LVM2/lib/metadata/mirror.c
+===================================================================
+--- LVM2.orig/lib/metadata/mirror.c	2006-11-08 14:18:33.000000000 -0600
++++ LVM2/lib/metadata/mirror.c	2006-11-09 10:51:11.000000000 -0600
+@@ -36,20 +36,44 @@ struct lv_segment *find_mirror_seg(struc
+ }
+ 
+ /*
+- * Ensure region size is compatible with volume size.
++ * adjusted_mirror_region_size
++ * @extent_size: The size of an extent in sectors
++ * @extents: The number of extents in the LV
++ * @region_size: The current guess at an appropriate region size
++ *
++ * The maximum region size must be the largest power of 2 that
++ * evenly divides into the total size given by extent_size * extents.
++ *
++ * The suggested minumum region size should be a number where the
++ * number of regions is less than the number of bits in an extent.
++ *
++ * Returns: suggested region_size, or 0 on failure to find good region size
+  */
+ uint32_t adjusted_mirror_region_size(uint32_t extent_size, uint32_t extents,
+ 				     uint32_t region_size)
+ {
+-	uint32_t region_max;
++	uint32_t region_max, region_min;
+ 
+-	region_max = (1 << (ffs((int)extents) - 1)) * extent_size;
++	region_max = ffs((int)extents) + ffs((int)extent_size) - 2;
++	/* cap region_max@the max power of 2 that can be held in 32 bits */
++	region_max = (region_max > 31) ? (1 << 31) : (1 << region_max);
++
++	/* Leave some extra room for the log header before the bits... */
++	for (region_min = region_size;
++	     (extents/region_min) > (1 << SECTOR_SHIFT);
++	     region_min *= 2);
+ 
+ 	if (region_max < region_size) {
+ 		region_size = region_max;
+ 		log_print("Using reduced mirror region size of %" PRIu32
+ 			  " sectors", region_max);
+-		return region_max;
++	} else if (region_min > region_size) {
++		region_size = region_min;
++		if (region_size <= region_max)
++			log_print("Using minimum mirror region size of %" PRIu32
++				  " sectors", region_min);
++		else
++			region_size = 0;
+ 	}
+ 
+ 	return region_size;
+Index: LVM2/tools/lvconvert.c
+===================================================================
+--- LVM2.orig/tools/lvconvert.c	2006-10-24 13:50:29.000000000 -0500
++++ LVM2/tools/lvconvert.c	2006-11-09 09:12:28.000000000 -0600
+@@ -388,6 +388,11 @@ static int lvconvert_mirrors(struct cmd_
+ 								      lv->le_count,
+ 								      lp->region_size);
+ 
++			if (!lp->region_size) {
++				log_error("Failed to find valid region size");
++				return 0;
++			}
++
+ 			log_lv = NULL;
+ 			if (!arg_count(cmd, corelog_ARG) &&
+ 			    !(log_lv = create_mirror_log(cmd, lv->vg, ah,
+Index: LVM2/tools/lvcreate.c
+===================================================================
+--- LVM2.orig/tools/lvcreate.c	2006-10-18 13:01:53.000000000 -0500
++++ LVM2/tools/lvcreate.c	2006-11-09 09:10:22.000000000 -0600
+@@ -678,6 +678,11 @@ static int _lvcreate(struct cmd_context 
+ 							      lp->extents,
+ 							      lp->region_size);
+ 
++		if (!lp->region_size) {
++			log_error("Failed to find valid region size");
++			return 0;
++		}
++
+ 		init_mirror_in_sync(lp->nosync);
+ 
+ 		if (lp->nosync) {
