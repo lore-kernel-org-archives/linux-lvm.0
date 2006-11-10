@@ -1,12 +1,14 @@
-Mime-Version: 1.0 (Apple Message framework v624)
-In-Reply-To: <1163152099.2961.68.camel@laguna.nwhq.nl>
-References: <1163152099.2961.68.camel@laguna.nwhq.nl>
-Message-Id: <02ac015d0526931d1024f1549d98a49c@redhat.com>
-Content-Transfer-Encoding: 7bit
-From: Jonathan E Brassow <jbrassow@redhat.com>
 Subject: Re: [linux-lvm] LVM groups not visible
-Date: Fri, 10 Nov 2006 09:27:21 -0600
-Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
+From: "J.L. Blom" <jlblom@neuroweave.nl>
+In-Reply-To: <02ac015d0526931d1024f1549d98a49c@redhat.com>
+References: <1163152099.2961.68.camel@laguna.nwhq.nl>
+	<02ac015d0526931d1024f1549d98a49c@redhat.com>
+Date: Fri, 10 Nov 2006 17:00:15 +0100
+Message-Id: <1163174415.2961.95.camel@laguna.nwhq.nl>
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Reply-To: jlblom@neuroweave.nl,
+	LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -16,39 +18,84 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: LVM general discussion and development <linux-lvm@redhat.com>, jlblom@neuroweave.nl
+Content-Type: text/plain; charset="us-ascii"
+To: Jonathan E Brassow <jbrassow@redhat.com>
+Cc: LVM general discussion and development <linux-lvm@redhat.com>
 
-I can't imagine putting LVM on a USB drive...  Are you sure LVM is even 
-involved here?
+On Fri, 2006-11-10 at 09:27 -0600, Jonathan E Brassow wrote:
+> I can't imagine putting LVM on a USB drive...  Are you sure LVM is even 
+> involved here?
+> 
+> You can type 'mount' or 'df' at the command prompt.  That will tell you 
+> how the usbdisk is mounted.  If it is mounted from /dev/sda1 - then 
+> there is no LVM in the mix.
+> 
+>   brassow
 
-You can type 'mount' or 'df' at the command prompt.  That will tell you 
-how the usbdisk is mounted.  If it is mounted from /dev/sda1 - then 
-there is no LVM in the mix.
+Jonathan,
+Thanks for your reply. 
+I didn't know that an USB disk couldn't be used for logical volumes as
+pvcreate and lvcreate did not complain.
+However, when I now do a lvscan it gives me:
+_______________________________________
+[root@laguna ~]# lvscan
+  Couldn't find device with uuid
+'G6vIxd-bp54-0zd0-PKzf-WI31-xPmr-qoeFAT'.
+  Couldn't find all physical volumes for volume group VolGroup00.
+  Couldn't find device with uuid
+'G6vIxd-bp54-0zd0-PKzf-WI31-xPmr-qoeFAT'.
+  Couldn't find all physical volumes for volume group VolGroup00.
+  Volume group "VolGroup00" not found
+  ACTIVE            '/dev/VolGroup01/LogVol00' [9.75 GB] inherit
+  ACTIVE            '/dev/VolGroup01/LogVol02' [9.75 GB] inherit
+  ACTIVE            '/dev/VolGroup01/LogVol03' [4.88 GB] inherit
+  ACTIVE            '/dev/VolGroup01/LogVol04' [9.75 GB] inherit
+  ACTIVE            '/dev/VolGroup01/LogVol05' [9.75 GB] inherit
+  ACTIVE            '/dev/VolGroup01/LogVol01' [9.75 GB] inherit
+_________________________________________________________________
+As VolGroup00 is on the USB disk which I just had connected.
 
-  brassow
+df gives:
+_____________________________________
+/dev/mapper/VolGroup01-LogVol00
+                       9903432   1035860   8356392  12% /
+/dev/hda1                99043     25640     68289  28% /boot
+tmpfs                   512492         0    512492   0% /dev/shm
+/dev/mapper/VolGroup01-LogVol02
+                       9903432   1789628   7602624  20% /home
+/dev/mapper/VolGroup01-LogVol03
+                       4951688   4137648    558452  89% /usr
+/dev/mapper/VolGroup01-LogVol04
+                       9903432    342224   9050028   4% /usr/local
+/dev/mapper/VolGroup01-LogVol05
+                       9903432    761312   8630940   9% /var
 
-On Nov 10, 2006, at 3:48 AM, J.L. Blom wrote:
+/dev/sda1            240362656  38037368 190115488  17% /media/disk
+___________________________________________________
 
-> Hi,
-> I'm rather new to LVM and I have a - I think - simple question.
-> I have a removable disk (USB) with several volumegroups on it created
-> with one system (linux 2.6.18-1.2200.fc5). I wanted to use it to backup
-> from another system (linux 2.6.14-386: ubuntu) the W2000 partition.
-> WHen I connect the disk it is seen as usbdisk on /dev/sda1 and the
-> content is displayed.
-> However, lvdisplay says: " no volume groups found"
-> lvscan says: " no volume groups found"
-> pvscan says: " no matching physical volumes found"
-> But the content is visible in nautilus and I can write and read.
-> Hope somebody can clarify and help me.
-> Joep
->
->
->
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
->
+and fdisk says:
+_____________________________________________________
+The number of cylinders for this disk is set to 30400.
+There is nothing wrong with that, but this is larger than 1024,
+and could in certain setups cause problems with:
+1) software that runs at boot time (e.g., old versions of LILO)
+2) booting and partitioning software from other OSs
+   (e.g., DOS FDISK, OS/2 FDISK)
+Warning: invalid flag 0x0000 of partition table 4 will be corrected by
+w(rite)
+
+Command (m for help): p
+
+Disk /dev/sda1: 250.0 GB, 250056705024 bytes
+255 heads, 63 sectors/track, 30400 cylinders
+Units = cylinders of 16065 * 512 = 8225280 bytes
+
+     Device Boot      Start         End      Blocks   Id  System
+
+Command (m for help): q
+______________________________________
+So I'm at a loss how this is possible. The disk can be reached but
+neither lvm nor fdisk can tell me what's on the disk,
+Can you perhaps shine some light on it?
+(sorry for the long mail).
+Joep
