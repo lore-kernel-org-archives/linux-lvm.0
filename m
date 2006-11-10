@@ -1,22 +1,24 @@
-Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id kAA0IwRQ027618
-	for <linux-lvm@redhat.com>; Thu, 9 Nov 2006 19:18:58 -0500
-Received: from rwcrmhc11.comcast.net (rwcrmhc11.comcast.net [204.127.192.81])
-	by mx1.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
-	kAA0IuVb007613
-	for <linux-lvm@redhat.com>; Thu, 9 Nov 2006 19:18:56 -0500
-Received: from [192.168.1.3] (marvin.localnet [192.168.1.3])
-	by furio.localnet (8.13.8/8.13.7) with ESMTP id kAA0Imw6018225
-	for <linux-lvm@redhat.com>; Thu, 9 Nov 2006 19:18:49 -0500
-Message-ID: <4553C568.1060207@mattgillen.net>
-Date: Thu, 09 Nov 2006 19:18:48 -0500
-From: Matthew Gillen <me@mattgillen.net>
-MIME-Version: 1.0
-Subject: Re: [linux-lvm] partition type question
-References: <277B4B9B-B884-448C-B8DD-BD1AA6412D32@jmarble.net>
-In-Reply-To: <277B4B9B-B884-448C-B8DD-BD1AA6412D32@jmarble.net>
+Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id kAA9mSeA013667
+	for <linux-lvm@redhat.com>; Fri, 10 Nov 2006 04:48:28 -0500
+Received: from amsfep12-int.chello.nl (amsfep17-int.chello.nl [213.46.243.15])
+	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id kAA9mPU8002684
+	for <linux-lvm@redhat.com>; Fri, 10 Nov 2006 04:48:26 -0500
+Received: from laguna.nwhq.nl ([24.132.125.161]) by amsfep12-int.chello.nl
+	(InterMail vM.6.01.04.04 201-2131-118-104-20050224) with ESMTP
+	id <20061110094819.QERA17906.amsfep12-int.chello.nl@laguna.nwhq.nl>
+	for <linux-lvm@redhat.com>; Fri, 10 Nov 2006 10:48:19 +0100
+Received: from laguna.nwhq.nl (laguna.nwhq.nl [127.0.0.1])
+	by laguna.nwhq.nl (8.13.8/8.12.11) with ESMTP id kAA9mJrw015319
+	for <linux-lvm@redhat.com>; Fri, 10 Nov 2006 10:48:19 +0100
+From: "J.L. Blom" <jlblom@neuroweave.nl>
+Date: Fri, 10 Nov 2006 10:48:19 +0100
+Message-Id: <1163152099.2961.68.camel@laguna.nwhq.nl>
+Mime-Version: 1.0
 Content-Transfer-Encoding: 7bit
-Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
+Subject: [linux-lvm] LVM groups not visible
+Reply-To: jlblom@neuroweave.nl,
+	LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -29,16 +31,16 @@ List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-Marble John wrote:
-> Hello,
-> I forgot to change the partition type to 8e from 83 before creating my
-> PVs and volumes and filesystems.  Is this going to screw anything up? 
-
-Nope.
-
-> Everything seems to be working fine.  Running the LVM 1 that comes with
-> RH3 U6.
-
-You might want to fix it so that on the next reboot the LVM autodetect finds it.
-
-Matt
+Hi,
+I'm rather new to LVM and I have a - I think - simple question.
+I have a removable disk (USB) with several volumegroups on it created
+with one system (linux 2.6.18-1.2200.fc5). I wanted to use it to backup
+from another system (linux 2.6.14-386: ubuntu) the W2000 partition.
+WHen I connect the disk it is seen as usbdisk on /dev/sda1 and the
+content is displayed.
+However, lvdisplay says: " no volume groups found"
+lvscan says: " no volume groups found"
+pvscan says: " no matching physical volumes found"
+But the content is visible in nautilus and I can write and read.
+Hope somebody can clarify and help me.
+Joep
