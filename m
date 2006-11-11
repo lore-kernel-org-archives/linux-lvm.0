@@ -1,15 +1,20 @@
-Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id kABBIqwT019921
-	for <linux-lvm@redhat.com>; Sat, 11 Nov 2006 06:18:52 -0500
-Received: from mayle.org (mail.mayle.org [82.242.109.112])
-	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id kABBIltM023154
-	for <linux-lvm@redhat.com>; Sat, 11 Nov 2006 06:18:48 -0500
-Mime-Version: 1.0 (Apple Message framework v752.3)
-Message-Id: <CA207AAA-711C-4AAD-911A-4301C61C165B@mayle.org>
-Content-Type: multipart/mixed; boundary=Apple-Mail-1-253126029
-From: Douglas Mayle <douglas@mayle.org>
-Date: Sat, 11 Nov 2006 12:18:39 +0100
-Subject: [linux-lvm] Update to lvm2create_initrd
+Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id kABD3sWW001994
+	for <linux-lvm@redhat.com>; Sat, 11 Nov 2006 08:03:54 -0500
+Received: from bluewhale.planbit.co.uk (82-71-36-240.dsl.in-addr.zen.co.uk
+	[82.71.36.240])
+	by mx1.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
+	kABD3p0R026470
+	for <linux-lvm@redhat.com>; Sat, 11 Nov 2006 08:03:52 -0500
+Received: from wolverine (unknown [192.168.1.127])
+	by bluewhale.planbit.co.uk (Postfix) with ESMTP id D3F6F12EE1
+	for <linux-lvm@redhat.com>; Sat, 11 Nov 2006 13:03:42 +0000 (GMT)
+From: "Roger Lucas" <roger@planbit.co.uk>
+Date: Sat, 11 Nov 2006 13:05:41 -0000
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Message-Id: <20061111130342.D3F6F12EE1@bluewhale.planbit.co.uk>
+Subject: [linux-lvm] Contents of read-only LVM snapshot change
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -20,61 +25,96 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: LVM <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="us-ascii"
+To: linux-lvm@redhat.com
 
+Hi,
 
---Apple-Mail-1-253126029
-Content-Transfer-Encoding: 7bit
-Content-Type: text/plain;
-	charset=US-ASCII;
-	delsp=yes;
-	format=flowed
+I am seeing the (very) unexpected behaviour where the contents of a read-only snapshot change.
 
-I've made an update to the lvm2create_initrd script that fixes some  
-problems with ldd output that were never addressed in the first  
-version (e.g. libraries linked with a static path).
-
-I also check for binaries in the path, rather than hardcoding their  
-location, and I've added support for the Gentoo style of MAKEDEV.
-
-
---Apple-Mail-1-253126029
-Content-Transfer-Encoding: 7bit
-Content-Type: application/octet-stream; x-unix-mode=0644;
-	name=lvm2create_initrd.patch
-Content-Disposition: attachment;
-	filename=lvm2create_initrd.patch
-
---- lvm2create_initrd.orig	2006-11-10 21:32:53.000000000 +0100
-+++ lvm2create_initrd	2006-11-10 21:35:42.000000000 +0100
-@@ -52,7 +52,7 @@
- DEVRAM=/tmp/initrd.$$
+I am running a Debian-based system, mostly Sarge, but with an updated Kernel and LVM as below:
  
- # set defaults
--BINFILES=${BINFILES:-"/lib/lvm-200/lvm /bin/bash /bin/busybox /sbin/pivot_root"}
-+BINFILES=${BINFILES:-"`which lvm` `which bash` `which busybox` `which pivot_root`"}
- BASICDEVICES=${BASICDEVICES:-"std consoleonly fd"}
- BLOCKDEVICES=${BLOCKDEVICES:-"md hda hdb hdc hdd sda sdb sdc sdd"}
- MAKEDEV=${MAKEDEV:-"debian"}
-@@ -269,7 +269,7 @@
- # Figure out which shared libraries we actually need in our initrd
- echo "$cmd -- finding required shared libraries"
- verbose "BINFILES: `echo $BINFILES`"
--LIBFILES=`ldd $BINFILES 2>/dev/null | awk '{if (/=>/) { print $3 }}' | sort -u`
-+LIBFILES=`ldd $BINFILES 2>/dev/null |grep -v linux-gate |grep -v : | awk '{if (/=>/) { print $3 } else if (/\//) { print $1 }}' | sort -u`
- if [ $? -ne 0 ]; then
-    echo "$cmd -- ERROR figuring out needed shared libraries"
-    exit 1
-@@ -356,6 +356,10 @@
-     (cd $TMPMNT/dev; /dev/MAKEDEV $OPT_Q -d $TMPMNT/dev -m 2)
-     RETCODE=$?
-     ;;
-+gentoo)
-+    (cd $TMPMNT/dev; /usr/sbin/MAKEDEV $OPT_Q $BASICDEVICES $BLOCKDEVICES)
-+    RETCODE=$?
-+    ;;
- *)
-     echo "$cmd -- ERROR: $MAKEDEV is not a known MAKEDEV style."
-     RETCODE=1
+dromedary:~# lvm version
+  LVM version:     2.02.07 (2006-07-17)
+  Library version: 1.02.08 (2006-07-17)
+  Driver version:  4.5.0
+dromedary:~# uname -a
+Linux dromedary 2.6.16.20.rwl2 #1 Wed Jul 26 12:52:43 BST 2006 i686 GNU/Linux
+dromedary:~#
 
---Apple-Mail-1-253126029--
+I am taking a snapshot of a LV (/dev/store/backupimage) on which is stacked dmcrypt (/dev/mapper/cryptdisk) and then reiser3.
+
+dromedary:~# mount
+<snip>
+/dev/mapper/cryptdisk on /mnt/cryptdisk type reiserfs (rw,noatime,acl)
+dromedary:~#
+
+I make a whole loads of writes to the Reiser3 mounted partition then I do the following:
+
+	mount -o remount,ro /mnt/cryptodisk
+	sync
+	dmsetup suspend /dev/mapper/cryptodisk 
+	dmsetup resume /dev/mapper/cryptodisk
+	lvchange -p r /dev/store/backupimage
+	lvcreate -L1G -p r -s -n snapdisk /dev/store/backupimage
+
+If I understand this correctly, this should remount the disk read-only so it cannot change any more, sync the Reiser disk contents
+to the device below, flush any changes through the dmcrypt device, make the LV itself read-only and finally create a read-only
+snapshot.
+
+At this point, everything should be locked down hard....
+
+BUT:
+
+I am seeing changes on the LV snapshot within a 64KB block at offset 313CA0000.
+
+After running the above commands, I then do:
+
+dromedary# dd if=/dev/store/backupimage bs=65536 skip=201674 count=1 | openssl sha1
+1+0 records in
+1+0 records out
+65536 bytes transferred in 0.074199 seconds (883248 bytes/sec)
+cc6f4e68d6f28513f22efcb4012af8165d0d9e2f
+
+dromedary# dd if=/dev/store/snapdisk bs=65536 skip=201674 count=1 | openssl sha1
+1+0 records in
+1+0 records out
+65536 bytes transferred in 0.017019 seconds (3850756 bytes/sec)
+2cb7aa5a75e823027bd2151951091e27f9b65e17
+
+dromedary# run_a_script_that_copies_the_disk_image_elsewhere.sh
+
+((We now copy the 20GB disk image elsewhere.  This is a lot of disk activity so I expect that it will flush any existing cached disk
+data as there will be >20GB of new disk read traffic))
+
+dromedary# dd if=/dev/store/backupimage bs=65536 skip=201674 count=1 | openssl sha1
+1+0 records in
+1+0 records out
+65536 bytes transferred in 0.015872 seconds (4129033 bytes/sec)
+cc6f4e68d6f28513f22efcb4012af8165d0d9e2f
+
+dromedary# dd if=/dev/store/snapdisk bs=65536 skip=201674 count=1 | openssl sha1
+1+0 records in
+1+0 records out
+65536 bytes transferred in 0.005131 seconds (12772596 bytes/sec)
+cc6f4e68d6f28513f22efcb4012af8165d0d9e2f
+
+
+?HUH?
+
+I don't mind if there is a slight difference between the disk and its snapshot images.  I don't know how it could be, given that I
+make the backupimage read-only *before* I take the snapshot, but I will let that pass for the moment...
+
+What I do *not* understand is how the contents of a read-only snapshot can change.  The first time I check the snapshot SHA1
+checksum, I get 2cb7..... but when I re-run the after lots of data copies elsewhere, I get cc6f.... which matches the image
+underneath it.
+
+Can anyone offer any help on this?
+
+At the moment, I have it consistently repeatable at this block offset on one machine. So I can run some more tests.  I haven't
+rebooted the machine to "try to make it go away" as I want to get to the bottom of the problem.  I haven't seen it on a different
+machine (yet) but this is a very small amount of data to see changing and it seems time dependent, so I am not surprised by that.
+
+Thanks,
+
+Roger
