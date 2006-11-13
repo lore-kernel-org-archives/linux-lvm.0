@@ -1,19 +1,18 @@
-Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id kADCJAHH025966
-	for <linux-lvm@redhat.com>; Mon, 13 Nov 2006 07:19:10 -0500
-Received: from enterprise.homenet (cust.12.220.adsl.cistron.nl [62.216.12.220])
-	by mx1.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
-	kADCJ7EP009723
-	for <linux-lvm@redhat.com>; Mon, 13 Nov 2006 07:19:07 -0500
-Received: from ferengi.homenet (unknown [172.16.16.11])
-	by enterprise.homenet (Postfix) with ESMTP id 7C0686D2
-	for <linux-lvm@redhat.com>; Mon, 13 Nov 2006 13:14:08 +0100 (CET)
-Date: Mon, 13 Nov 2006 13:19:00 +0100
-From: Fred Donck <fred@donck.com>
-Message-ID: <20061113121900.GK276@dogbert>
-Mime-Version: 1.0
-Content-Disposition: inline
-Subject: [linux-lvm] LVM upgrade
+Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id kADDlvmV020930
+	for <linux-lvm@redhat.com>; Mon, 13 Nov 2006 08:47:57 -0500
+Received: from web51102.mail.yahoo.com (web51102.mail.yahoo.com
+	[206.190.38.144])
+	by mx3.redhat.com (8.13.1/8.13.1) with SMTP id kADDl7t6007346
+	for <linux-lvm@redhat.com>; Mon, 13 Nov 2006 08:47:21 -0500
+Date: Mon, 13 Nov 2006 05:47:01 -0800 (PST)
+From: Dave <davo_muc@yahoo.com>
+Subject: Re: [linux-lvm] pvmove of lvs while filesystems mounted not
+	supported?!?
+In-Reply-To: <44E2327A.7020907@davidb.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Message-ID: <902218.58339.qm@web51102.mail.yahoo.com>
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -25,51 +24,57 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: linux-lvm@redhat.com
+To: LVM general discussion and development <linux-lvm@redhat.com>, ed@quillen.net, lvm@davidb.org
+
+Hi David & list readers,
+
+I am still stuck using LVM1 (1.0.8-14) on a RedHat AS3 system (kernel:
+2.4.21-47.ELsmp) and may need to move all data from the existing disks to a new set
+of disks.
+
+Can I safely use pvmove (under LVM1) to perform this action while the file systems
+are mounted or not?  If not, are there other ways LVM can help move all data to the
+new disks without having to unmount the file systems in use?  
+
+Thanks,
+Dave
+
+--- David Brown <lvm@davidb.org> wrote:
+
+> Edward Quillen wrote:
+> > Redhat support is telling me (see quote below) that pvmove is not supported when
+> there are mounted
+> > filesystems on top of the lvs that are being moved. Can this be true? Everyother
+> lvm that I have
+> > worked with allows this. I am currently experiencing device mapper hangs when I
+> run pvmove while
+> > there are filesystems mounted even if there is no processes using the
+> filesystems. 
+> > Is this supposed to work? If so, has anyone had similar issues? Any help would
+> be appreciated? 
+> 
+> Requiring an unmount of the filesystem would kind of defeat the purpose 
+> of pvmove.  In that case, just create a new volume and dd the data across.
+> 
+> pvmove creates a mirror for each segment it is moving.  That way updates 
+> will be written to both segments while the mirror is active.
+> 
+> I've done it numerous times, including moving very active filesystems 
+> off of a flaky drive so that I could replace it.
+> 
+> Dave Brown
+> 
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@redhat.com
+> https://www.redhat.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+> 
 
 
-*,
 
-I am in the process of upgrading my Gentoo system and all that is stgill
-to be done is LVM2
-
-My current install is the following
-
-host ~ # lvm version
-  LVM version:     2.01.09 (2005-04-04)
-  Library version: 1.01.00-ioctl (2005-01-17)
-  Driver version:  4.4.0
-host ~ # df -k
-Filesystem           1K-blocks      Used Available Use% Mounted on
-/dev/md2               1003932     64952    938980   7% /
-/dev/vg/usr           10485436   3729092   6756344  36% /usr
-/dev/vg/var           10485436    636380   9849056   7% /var
-/dev/vg/tmp            4194172    494092   3700080  12% /tmp
-/dev/vg/opt            4194172     35928   4158244   1% /opt
-/dev/vg/home           4194172   3041392   1152780  73% /home
-none                    248632         0    248632   0% /dev/shm
-host ~ # 
-
-
-The latest Gentoo version for LVM2 is
-
-host ~ # emerge -p lvm2
-
-These are the packages that would be merged, in order:
-
-Calculating dependencies... done!
-[ebuild     U ] sys-fs/device-mapper-1.02.10-r1 [1.01.00] USE="(-selinux)" 
-[ebuild     U ] sys-fs/lvm2-2.02.06 [2.01.09] USE="-clvm% -cman% -gulm% -nolvm1% -nomirrors% -nosnapshots% (-selinux)" 
-host ~ # 
-
-Are there any problems i could expect when upgrading? 
-Especially in the volume names or in the mapping of volume name to device
-name for /etc/fstab.
-
-Thanks in advance
--- 
-Fred
-
-Doubt is an uncomfortable situation, but certainty is an absurd one
-	-- Voltaire
+ 
+____________________________________________________________________________________
+Want to start your own business?
+Learn how on Yahoo! Small Business.
+http://smallbusiness.yahoo.com/r-index
