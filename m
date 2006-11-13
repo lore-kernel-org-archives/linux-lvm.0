@@ -1,18 +1,21 @@
-Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id kADDlvmV020930
-	for <linux-lvm@redhat.com>; Mon, 13 Nov 2006 08:47:57 -0500
-Received: from web51102.mail.yahoo.com (web51102.mail.yahoo.com
-	[206.190.38.144])
-	by mx3.redhat.com (8.13.1/8.13.1) with SMTP id kADDl7t6007346
-	for <linux-lvm@redhat.com>; Mon, 13 Nov 2006 08:47:21 -0500
-Date: Mon, 13 Nov 2006 05:47:01 -0800 (PST)
-From: Dave <davo_muc@yahoo.com>
-Subject: Re: [linux-lvm] pvmove of lvs while filesystems mounted not
-	supported?!?
-In-Reply-To: <44E2327A.7020907@davidb.org>
+Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id kADExpJP018693
+	for <linux-lvm@redhat.com>; Mon, 13 Nov 2006 09:59:51 -0500
+Received: from bluewhale.planbit.co.uk (82-71-36-240.dsl.in-addr.zen.co.uk
+	[82.71.36.240])
+	by mx1.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
+	kADExjce032497
+	for <linux-lvm@redhat.com>; Mon, 13 Nov 2006 09:59:49 -0500
+Received: from wolverine (unknown [192.168.1.127])
+	by bluewhale.planbit.co.uk (Postfix) with ESMTP id 2C1CA12EDE
+	for <linux-lvm@redhat.com>; Mon, 13 Nov 2006 14:59:16 +0000 (GMT)
+From: "Roger Lucas" <roger@planbit.co.uk>
+Subject: RE: [linux-lvm] Contents of read-only LVM snapshot change
+Date: Mon, 13 Nov 2006 15:01:11 -0000
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Message-ID: <902218.58339.qm@web51102.mail.yahoo.com>
+Content-Transfer-Encoding: 7bit
+In-Reply-To: <20061111130342.D3F6F12EE1@bluewhale.planbit.co.uk>
+Message-Id: <20061113145916.2C1CA12EDE@bluewhale.planbit.co.uk>
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -24,57 +27,37 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: LVM general discussion and development <linux-lvm@redhat.com>, ed@quillen.net, lvm@davidb.org
+To: 'LVM general discussion and development' <linux-lvm@redhat.com>
 
-Hi David & list readers,
+More information...
 
-I am still stuck using LVM1 (1.0.8-14) on a RedHat AS3 system (kernel:
-2.4.21-47.ELsmp) and may need to move all data from the existing disks to a new set
-of disks.
+> -----Original Message-----
+> From: linux-lvm-bounces@redhat.com [mailto:linux-lvm-bounces@redhat.com] On Behalf Of Roger Lucas
+> Sent: 11 November 2006 13:06
+> To: linux-lvm@redhat.com
+> Subject: [linux-lvm] Contents of read-only LVM snapshot change
+> 
+> Hi,
+> 
+> I am seeing the (very) unexpected behaviour where the contents of a read-only snapshot change.
+> 
+> I am running a Debian-based system, mostly Sarge, but with an updated Kernel and LVM as below:
+> 
+> dromedary:~# lvm version
+>   LVM version:     2.02.07 (2006-07-17)
+>   Library version: 1.02.08 (2006-07-17)
+>   Driver version:  4.5.0
+> dromedary:~# uname -a
+> Linux dromedary 2.6.16.20.rwl2 #1 Wed Jul 26 12:52:43 BST 2006 i686 GNU/Linux
+> dromedary:~#
+> 
 
-Can I safely use pvmove (under LVM1) to perform this action while the file systems
-are mounted or not?  If not, are there other ways LVM can help move all data to the
-new disks without having to unmount the file systems in use?  
+I have tried updating to the 2.02.14 LVM and the 1.02.12 device mapper (compiled from source from the FTP site).  The first couple
+of tests have run correctly so it looks like this may have resolved the issue, but I am continuing to run tests to confirm this.
+
+Can anyone shed some light on what may be going on?  I have checked the changelogs for the LVM/DM code and there doesn't seem to be
+any change that is a strong candidate as the fix of the problem.
 
 Thanks,
-Dave
 
---- David Brown <lvm@davidb.org> wrote:
-
-> Edward Quillen wrote:
-> > Redhat support is telling me (see quote below) that pvmove is not supported when
-> there are mounted
-> > filesystems on top of the lvs that are being moved. Can this be true? Everyother
-> lvm that I have
-> > worked with allows this. I am currently experiencing device mapper hangs when I
-> run pvmove while
-> > there are filesystems mounted even if there is no processes using the
-> filesystems. 
-> > Is this supposed to work? If so, has anyone had similar issues? Any help would
-> be appreciated? 
-> 
-> Requiring an unmount of the filesystem would kind of defeat the purpose 
-> of pvmove.  In that case, just create a new volume and dd the data across.
-> 
-> pvmove creates a mirror for each segment it is moving.  That way updates 
-> will be written to both segments while the mirror is active.
-> 
-> I've done it numerous times, including moving very active filesystems 
-> off of a flaky drive so that I could replace it.
-> 
-> Dave Brown
-> 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
-> 
-
-
-
- 
-____________________________________________________________________________________
-Want to start your own business?
-Learn how on Yahoo! Small Business.
-http://smallbusiness.yahoo.com/r-index
+Roger
