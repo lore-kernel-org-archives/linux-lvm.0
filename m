@@ -1,20 +1,19 @@
 Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id kABD3sWW001994
-	for <linux-lvm@redhat.com>; Sat, 11 Nov 2006 08:03:54 -0500
-Received: from bluewhale.planbit.co.uk (82-71-36-240.dsl.in-addr.zen.co.uk
-	[82.71.36.240])
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id kADCJAHH025966
+	for <linux-lvm@redhat.com>; Mon, 13 Nov 2006 07:19:10 -0500
+Received: from enterprise.homenet (cust.12.220.adsl.cistron.nl [62.216.12.220])
 	by mx1.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
-	kABD3p0R026470
-	for <linux-lvm@redhat.com>; Sat, 11 Nov 2006 08:03:52 -0500
-Received: from wolverine (unknown [192.168.1.127])
-	by bluewhale.planbit.co.uk (Postfix) with ESMTP id D3F6F12EE1
-	for <linux-lvm@redhat.com>; Sat, 11 Nov 2006 13:03:42 +0000 (GMT)
-From: "Roger Lucas" <roger@planbit.co.uk>
-Date: Sat, 11 Nov 2006 13:05:41 -0000
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Message-Id: <20061111130342.D3F6F12EE1@bluewhale.planbit.co.uk>
-Subject: [linux-lvm] Contents of read-only LVM snapshot change
+	kADCJ7EP009723
+	for <linux-lvm@redhat.com>; Mon, 13 Nov 2006 07:19:07 -0500
+Received: from ferengi.homenet (unknown [172.16.16.11])
+	by enterprise.homenet (Postfix) with ESMTP id 7C0686D2
+	for <linux-lvm@redhat.com>; Mon, 13 Nov 2006 13:14:08 +0100 (CET)
+Date: Mon, 13 Nov 2006 13:19:00 +0100
+From: Fred Donck <fred@donck.com>
+Message-ID: <20061113121900.GK276@dogbert>
+Mime-Version: 1.0
+Content-Disposition: inline
+Subject: [linux-lvm] LVM upgrade
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -26,95 +25,51 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@redhat.com
 
-Hi,
 
-I am seeing the (very) unexpected behaviour where the contents of a read-only snapshot change.
+*,
 
-I am running a Debian-based system, mostly Sarge, but with an updated Kernel and LVM as below:
- 
-dromedary:~# lvm version
-  LVM version:     2.02.07 (2006-07-17)
-  Library version: 1.02.08 (2006-07-17)
-  Driver version:  4.5.0
-dromedary:~# uname -a
-Linux dromedary 2.6.16.20.rwl2 #1 Wed Jul 26 12:52:43 BST 2006 i686 GNU/Linux
-dromedary:~#
+I am in the process of upgrading my Gentoo system and all that is stgill
+to be done is LVM2
 
-I am taking a snapshot of a LV (/dev/store/backupimage) on which is stacked dmcrypt (/dev/mapper/cryptdisk) and then reiser3.
+My current install is the following
 
-dromedary:~# mount
-<snip>
-/dev/mapper/cryptdisk on /mnt/cryptdisk type reiserfs (rw,noatime,acl)
-dromedary:~#
-
-I make a whole loads of writes to the Reiser3 mounted partition then I do the following:
-
-	mount -o remount,ro /mnt/cryptodisk
-	sync
-	dmsetup suspend /dev/mapper/cryptodisk 
-	dmsetup resume /dev/mapper/cryptodisk
-	lvchange -p r /dev/store/backupimage
-	lvcreate -L1G -p r -s -n snapdisk /dev/store/backupimage
-
-If I understand this correctly, this should remount the disk read-only so it cannot change any more, sync the Reiser disk contents
-to the device below, flush any changes through the dmcrypt device, make the LV itself read-only and finally create a read-only
-snapshot.
-
-At this point, everything should be locked down hard....
-
-BUT:
-
-I am seeing changes on the LV snapshot within a 64KB block at offset 313CA0000.
-
-After running the above commands, I then do:
-
-dromedary# dd if=/dev/store/backupimage bs=65536 skip=201674 count=1 | openssl sha1
-1+0 records in
-1+0 records out
-65536 bytes transferred in 0.074199 seconds (883248 bytes/sec)
-cc6f4e68d6f28513f22efcb4012af8165d0d9e2f
-
-dromedary# dd if=/dev/store/snapdisk bs=65536 skip=201674 count=1 | openssl sha1
-1+0 records in
-1+0 records out
-65536 bytes transferred in 0.017019 seconds (3850756 bytes/sec)
-2cb7aa5a75e823027bd2151951091e27f9b65e17
-
-dromedary# run_a_script_that_copies_the_disk_image_elsewhere.sh
-
-((We now copy the 20GB disk image elsewhere.  This is a lot of disk activity so I expect that it will flush any existing cached disk
-data as there will be >20GB of new disk read traffic))
-
-dromedary# dd if=/dev/store/backupimage bs=65536 skip=201674 count=1 | openssl sha1
-1+0 records in
-1+0 records out
-65536 bytes transferred in 0.015872 seconds (4129033 bytes/sec)
-cc6f4e68d6f28513f22efcb4012af8165d0d9e2f
-
-dromedary# dd if=/dev/store/snapdisk bs=65536 skip=201674 count=1 | openssl sha1
-1+0 records in
-1+0 records out
-65536 bytes transferred in 0.005131 seconds (12772596 bytes/sec)
-cc6f4e68d6f28513f22efcb4012af8165d0d9e2f
+host ~ # lvm version
+  LVM version:     2.01.09 (2005-04-04)
+  Library version: 1.01.00-ioctl (2005-01-17)
+  Driver version:  4.4.0
+host ~ # df -k
+Filesystem           1K-blocks      Used Available Use% Mounted on
+/dev/md2               1003932     64952    938980   7% /
+/dev/vg/usr           10485436   3729092   6756344  36% /usr
+/dev/vg/var           10485436    636380   9849056   7% /var
+/dev/vg/tmp            4194172    494092   3700080  12% /tmp
+/dev/vg/opt            4194172     35928   4158244   1% /opt
+/dev/vg/home           4194172   3041392   1152780  73% /home
+none                    248632         0    248632   0% /dev/shm
+host ~ # 
 
 
-?HUH?
+The latest Gentoo version for LVM2 is
 
-I don't mind if there is a slight difference between the disk and its snapshot images.  I don't know how it could be, given that I
-make the backupimage read-only *before* I take the snapshot, but I will let that pass for the moment...
+host ~ # emerge -p lvm2
 
-What I do *not* understand is how the contents of a read-only snapshot can change.  The first time I check the snapshot SHA1
-checksum, I get 2cb7..... but when I re-run the after lots of data copies elsewhere, I get cc6f.... which matches the image
-underneath it.
+These are the packages that would be merged, in order:
 
-Can anyone offer any help on this?
+Calculating dependencies... done!
+[ebuild     U ] sys-fs/device-mapper-1.02.10-r1 [1.01.00] USE="(-selinux)" 
+[ebuild     U ] sys-fs/lvm2-2.02.06 [2.01.09] USE="-clvm% -cman% -gulm% -nolvm1% -nomirrors% -nosnapshots% (-selinux)" 
+host ~ # 
 
-At the moment, I have it consistently repeatable at this block offset on one machine. So I can run some more tests.  I haven't
-rebooted the machine to "try to make it go away" as I want to get to the bottom of the problem.  I haven't seen it on a different
-machine (yet) but this is a very small amount of data to see changing and it seems time dependent, so I am not surprised by that.
+Are there any problems i could expect when upgrading? 
+Especially in the volume names or in the mapping of volume name to device
+name for /etc/fstab.
 
-Thanks,
+Thanks in advance
+-- 
+Fred
 
-Roger
+Doubt is an uncomfortable situation, but certainty is an absurd one
+	-- Voltaire
