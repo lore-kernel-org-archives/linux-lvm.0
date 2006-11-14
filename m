@@ -1,21 +1,21 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id kAE5B5Q0003670
-	for <linux-lvm@redhat.com>; Tue, 14 Nov 2006 00:11:05 -0500
-Received: from mail2.sea5.speakeasy.net (mail2.sea5.speakeasy.net
-	[69.17.117.4])
-	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id kAE5Avs9029012
-	for <linux-lvm@redhat.com>; Tue, 14 Nov 2006 00:10:57 -0500
-Received: from dsl093-060-083.pit1.dsl.speakeasy.net (HELO [192.168.0.5])
-	([66.93.60.83]) (envelope-sender <jerith@speakeasy.org>)
-	by mail2.sea5.speakeasy.net (qmail-ldap-1.03) with AES256-SHA encrypted
-	SMTP for <linux-lvm@redhat.com>; 14 Nov 2006 05:10:51 -0000
-Date: Tue, 14 Nov 2006 00:11:02 -0500 (EST)
-From: Matt McHenry <jerith@speakeasy.org>
-Subject: Re: [linux-lvm] lvcreate gives 'device-mapper: reload ioctl failed:
-	Invalid argument'
-Message-ID: <Pine.LNX.4.64.0611140009360.7393@localhost>
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id kAEBqrsv026747
+	for <linux-lvm@redhat.com>; Tue, 14 Nov 2006 06:52:53 -0500
+Received: from bluewhale.planbit.co.uk (82-71-36-240.dsl.in-addr.zen.co.uk
+	[82.71.36.240])
+	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id kAEBqCtP011258
+	for <linux-lvm@redhat.com>; Tue, 14 Nov 2006 06:52:12 -0500
+Received: from wolverine (unknown [192.168.1.127])
+	by bluewhale.planbit.co.uk (Postfix) with ESMTP id B155D12EDE
+	for <linux-lvm@redhat.com>; Tue, 14 Nov 2006 11:52:01 +0000 (GMT)
+From: "Roger Lucas" <roger@planbit.co.uk>
+Subject: RE: [linux-lvm] Contents of read-only LVM snapshot change - still
+	have the problem with latest LVM!
+Date: Tue, 14 Nov 2006 11:53:55 -0000
 MIME-Version: 1.0
-Content-ID: <Pine.LNX.4.64.0611140009362.7393@localhost>
+Content-Transfer-Encoding: 7bit
+In-Reply-To: <20061113145916.2C1CA12EDE@bluewhale.planbit.co.uk>
+Message-Id: <20061114115201.B155D12EDE@bluewhale.planbit.co.uk>
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -26,51 +26,30 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"; format="flowed"
-Content-Transfer-Encoding: 7bit
-To: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="us-ascii"
+To: 'LVM general discussion and development' <linux-lvm@redhat.com>
 
+> 
+> I have tried updating to the 2.02.14 LVM and the 1.02.12 device mapper (compiled from source from
+> the FTP site).  The first couple
+> of tests have run correctly so it looks like this may have resolved the issue, but I am continuing
+> to run tests to confirm this.
+> 
 
- 	As suggested in your other post, I upgraded my kernel and lvm tools. 
-Still no luck.  :(
+It's still not working reliably.  The first few attempts worked but after running more tests, the problem still occurs. 
 
-# uname -a
-Linux localhost 2.6.18-gentoo-r2 #1 SMP PREEMPT Sun Nov 12 18:00:54 EST 2006 
-i686 Intel(R) Pentium(R) 4 CPU 3.00GHz GNU/Linux
+My test reads the read-only snapshot multiple times.  All the data is consistent across the 20GB snapshot except for a single byte
+at offset 0x0313CAC6C0.  Sometimes it reads 0x48 and other times it reads 0x08.  I have run the tests multiple times over many days
+and, although the tests sometimes show the correct behaviour, about half the time I get this problem.
 
-# dmsetup version
-Library version:   1.02.10 (2006-09-19)
-Driver version:    4.7.0
+I cannot understand why repeated reads of a read-only snapshot would return data that changes.
 
->  I don't have an idea why the lvcreate is failing...  You could try to
->  interface with device-mapper directly and see what happens.  To do that
->  type:
+I am running the 2.6.16.20 kernel and have upgraded to the latest LVM 2.02.14 and DMapper library 1.02.12 but the problem still
+exists.
 
-# echo "0 31457280 linear 8:11 31457664" | dmsetup -vvvv create maingroup-dvd
-device-mapper: reload ioctl failed: Invalid argument
-Command failed
-dm version   O   [16384]
-dm create maingroup-dvd  O   [16384]
-dm reload maingroup-dvd  O   [16384]
-dm remove maingroup-dvd  O   [16384]
+Can anyone offer any help as to what may be going on or suggest how I can investigate the problem further?  I don't mind patching
+the LVM source code to obtain more debug information if this helps.
 
->  Another simple thing to try is bumping up the verbosity; e.g. 'lvcreate
->  -vvvv -L 15G -n dvd maingroup'.  This will give alot of output, so you may
->  wish to redirect it to a file.  Having everything printed can often give
->  great clues as to the problem.
+Thanks in advance,
 
- 	I think my first message got rejected because of the size of the 
-output, so instead it's at http://66.93.60.83/~matt/lvcreate.log.  To my 
-untrained eye, things look fine until this point:
-
-# libdm-deptree.c:1370         Adding target: 0 31457280 linear 8:11 31457664
-# ioctl/libdm-iface.c:1557         dm table   (254:11) O   [16384]
-# ioctl/libdm-iface.c:1557         dm reload   (254:11) N   [16384]
-# ioctl/libdm-iface.c:1574   device-mapper: reload ioctl failed: Invalid 
-# argument
-
-----------------------
-Matt McHenry
-http://www.speakeasy.org/~jerith/
-jerith@speakeasy.org
-be052@scn.org
+Roger
