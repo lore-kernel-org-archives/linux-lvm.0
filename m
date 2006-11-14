@@ -1,11 +1,18 @@
-Date: Tue, 14 Nov 2006 17:02:47 +0000
+Received: from agk.surrey.redhat.com (agk.surrey.redhat.com [172.16.10.74])
+	by pobox.surrey.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
+	kAEH7Ntg019701
+	for <linux-lvm@redhat.com>; Tue, 14 Nov 2006 17:07:23 GMT
+Received: from agk by agk.surrey.redhat.com with local (Exim 4.34)
+	id 1Gk1kp-0006TG-5s
+	for linux-lvm@redhat.com; Tue, 14 Nov 2006 17:07:23 +0000
+Date: Tue, 14 Nov 2006 17:07:23 +0000
 From: Alasdair G Kergon <agk@redhat.com>
-Subject: Re: [linux-lvm] Update to lvm2create_initrd
-Message-ID: <20061114170247.GD30653@agk.surrey.redhat.com>
-References: <CA207AAA-711C-4AAD-911A-4301C61C165B@mayle.org>
+Subject: Re: [linux-lvm] my PV's disappearing
+Message-ID: <20061114170723.GE30653@agk.surrey.redhat.com>
+References: <20061113174423.29268.qmail@web51001.mail.yahoo.com>
 Mime-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <CA207AAA-711C-4AAD-911A-4301C61C165B@mayle.org>
+In-Reply-To: <20061113174423.29268.qmail@web51001.mail.yahoo.com>
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -18,36 +25,18 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: Douglas Mayle <douglas@mayle.org>
-Cc: Jeff Layton <jtlayton@poochiereds.net>, LVM <linux-lvm@redhat.com>
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-On Sat, Nov 11, 2006 at 12:18:39PM +0100, Douglas Mayle wrote:
-> I've made an update to the lvm2create_initrd script that fixes some  
-> problems with ldd output that were never addressed in the first  
-> version (e.g. libraries linked with a static path).
- 
-> I also check for binaries in the path, rather than hardcoding their  
-> location, and I've added support for the Gentoo style of MAKEDEV.
+On Mon, Nov 13, 2006 at 09:44:22AM -0800, Richard Mollel wrote:
+> For some unknown reasons...my LVM PV's which have
+> worked for several years are dropping!
 
+A simple rule to follow when reporting a problem:
+  Tell people the precise version of the software you're using - and the
+  distro!
 
-Please update the changelog.
-
-Can someone confirm the updated script also still works on Debian?
-
-
--BINFILES=${BINFILES:-"/lib/lvm-200/lvm /bin/bash /bin/busybox /sbin/pivot_root"}
-+BINFILES=${BINFILES:-"`which lvm` `which bash` `which busybox` `which pivot_root`"}
-
-Will 'which lvm' always give the same answer as before on Debian,
-or, if not, does it matter?
-
-
--LIBFILES=`ldd $BINFILES 2>/dev/null | awk '{if (/=>/) { print $3 }}' | sort -u`
-+LIBFILES=`ldd $BINFILES 2>/dev/null |grep -v linux-gate |grep -v : | awk '{if (/=>/) { print $3 } else if (/\//) { print $1 }}' | sort -u`
-
-This needs a comment explaining what's going on (e.g. include sample 
-output in the comment).  What's special about linux-gate?
-And why not combine the two greps?  -E (linux-gate|:)
+And if things suddenly stopped working, tell people about anything possibly
+relevant that might have changed recently on the system.
 
 Alasdair
 -- 
