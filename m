@@ -1,17 +1,21 @@
-Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id kADHiVoi032275
-	for <linux-lvm@redhat.com>; Mon, 13 Nov 2006 12:44:31 -0500
-Received: from web51001.mail.yahoo.com (web51001.mail.yahoo.com
-	[206.190.38.132])
-	by mx1.redhat.com (8.12.11.20060308/8.12.11) with SMTP id
-	kADHiTfI013288
-	for <linux-lvm@redhat.com>; Mon, 13 Nov 2006 12:44:29 -0500
-Message-ID: <20061113174423.29268.qmail@web51001.mail.yahoo.com>
-Date: Mon, 13 Nov 2006 09:44:22 -0800 (PST)
-From: Richard Mollel <unixtipz@yahoo.com>
+Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id kAE5B5Q0003670
+	for <linux-lvm@redhat.com>; Tue, 14 Nov 2006 00:11:05 -0500
+Received: from mail2.sea5.speakeasy.net (mail2.sea5.speakeasy.net
+	[69.17.117.4])
+	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id kAE5Avs9029012
+	for <linux-lvm@redhat.com>; Tue, 14 Nov 2006 00:10:57 -0500
+Received: from dsl093-060-083.pit1.dsl.speakeasy.net (HELO [192.168.0.5])
+	([66.93.60.83]) (envelope-sender <jerith@speakeasy.org>)
+	by mail2.sea5.speakeasy.net (qmail-ldap-1.03) with AES256-SHA encrypted
+	SMTP for <linux-lvm@redhat.com>; 14 Nov 2006 05:10:51 -0000
+Date: Tue, 14 Nov 2006 00:11:02 -0500 (EST)
+From: Matt McHenry <jerith@speakeasy.org>
+Subject: Re: [linux-lvm] lvcreate gives 'device-mapper: reload ioctl failed:
+	Invalid argument'
+Message-ID: <Pine.LNX.4.64.0611140009360.7393@localhost>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: [linux-lvm] my PV's disappearing
+Content-ID: <Pine.LNX.4.64.0611140009362.7393@localhost>
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -22,49 +26,51 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@redhat.com
-
-For some unknown reasons...my LVM PV's which have
-worked for several years are dropping!
-Here is one example....the node is still up, the
-partition usable...but pvscan/pvdisplay don't display
-anything. 
-I know if i reboot, i wont be able to access this
-partition anymore! It has happened to one filesystem
-already. Any ideas what is going on here?
-
-/dev/sdb1: unknown volume type
-/dev/sdc1: unknown volume type
-/dev/sdd1: unknown volume type
-  No physical volume label read from /dev/sdb1
-  Failed to read physical volume "/dev/sdb1"
-  No physical volume label read from /dev/sdc1
-  Failed to read physical volume "/dev/sdc1"
-  No physical volume label read from /dev/sdd1
-  Failed to read physical volume "/dev/sdd1"
-
-Well, before i finished typing this message...the node
-locked up (un-related issue) and upon reboot...it does
-not find any PV's, thus VG's and LV's.
-
-I followed a recovery procedure from
-http://codeworks.gnomedia.com/archives/2005/general/lvm_recovery/
-on a 5TB reiserfs filesystem...and the FS is still
-hosed, with --rebuild-tree failing. I will post a
-separate email for that. Now i am wondering how to
-recover this one successfully...and also, why is it
-happening? i have another node, that is still up, with
-same symptoms..i know as soon as i reboot, it wont
-work.
-
-_Thanks
-
-Rick...
+Content-Type: TEXT/PLAIN; charset="us-ascii"; format="flowed"
+Content-Transfer-Encoding: 7bit
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
 
- 
-____________________________________________________________________________________
-Want to start your own business?
-Learn how on Yahoo! Small Business.
-http://smallbusiness.yahoo.com/r-index
+ 	As suggested in your other post, I upgraded my kernel and lvm tools. 
+Still no luck.  :(
+
+# uname -a
+Linux localhost 2.6.18-gentoo-r2 #1 SMP PREEMPT Sun Nov 12 18:00:54 EST 2006 
+i686 Intel(R) Pentium(R) 4 CPU 3.00GHz GNU/Linux
+
+# dmsetup version
+Library version:   1.02.10 (2006-09-19)
+Driver version:    4.7.0
+
+>  I don't have an idea why the lvcreate is failing...  You could try to
+>  interface with device-mapper directly and see what happens.  To do that
+>  type:
+
+# echo "0 31457280 linear 8:11 31457664" | dmsetup -vvvv create maingroup-dvd
+device-mapper: reload ioctl failed: Invalid argument
+Command failed
+dm version   O   [16384]
+dm create maingroup-dvd  O   [16384]
+dm reload maingroup-dvd  O   [16384]
+dm remove maingroup-dvd  O   [16384]
+
+>  Another simple thing to try is bumping up the verbosity; e.g. 'lvcreate
+>  -vvvv -L 15G -n dvd maingroup'.  This will give alot of output, so you may
+>  wish to redirect it to a file.  Having everything printed can often give
+>  great clues as to the problem.
+
+ 	I think my first message got rejected because of the size of the 
+output, so instead it's at http://66.93.60.83/~matt/lvcreate.log.  To my 
+untrained eye, things look fine until this point:
+
+# libdm-deptree.c:1370         Adding target: 0 31457280 linear 8:11 31457664
+# ioctl/libdm-iface.c:1557         dm table   (254:11) O   [16384]
+# ioctl/libdm-iface.c:1557         dm reload   (254:11) N   [16384]
+# ioctl/libdm-iface.c:1574   device-mapper: reload ioctl failed: Invalid 
+# argument
+
+----------------------
+Matt McHenry
+http://www.speakeasy.org/~jerith/
+jerith@speakeasy.org
+be052@scn.org
