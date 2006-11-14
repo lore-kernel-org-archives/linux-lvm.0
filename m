@@ -1,21 +1,11 @@
-Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id kAEBqrsv026747
-	for <linux-lvm@redhat.com>; Tue, 14 Nov 2006 06:52:53 -0500
-Received: from bluewhale.planbit.co.uk (82-71-36-240.dsl.in-addr.zen.co.uk
-	[82.71.36.240])
-	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id kAEBqCtP011258
-	for <linux-lvm@redhat.com>; Tue, 14 Nov 2006 06:52:12 -0500
-Received: from wolverine (unknown [192.168.1.127])
-	by bluewhale.planbit.co.uk (Postfix) with ESMTP id B155D12EDE
-	for <linux-lvm@redhat.com>; Tue, 14 Nov 2006 11:52:01 +0000 (GMT)
-From: "Roger Lucas" <roger@planbit.co.uk>
-Subject: RE: [linux-lvm] Contents of read-only LVM snapshot change - still
-	have the problem with latest LVM!
-Date: Tue, 14 Nov 2006 11:53:55 -0000
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-In-Reply-To: <20061113145916.2C1CA12EDE@bluewhale.planbit.co.uk>
-Message-Id: <20061114115201.B155D12EDE@bluewhale.planbit.co.uk>
+Date: Tue, 14 Nov 2006 17:02:47 +0000
+From: Alasdair G Kergon <agk@redhat.com>
+Subject: Re: [linux-lvm] Update to lvm2create_initrd
+Message-ID: <20061114170247.GD30653@agk.surrey.redhat.com>
+References: <CA207AAA-711C-4AAD-911A-4301C61C165B@mayle.org>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <CA207AAA-711C-4AAD-911A-4301C61C165B@mayle.org>
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -27,29 +17,38 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: 'LVM general discussion and development' <linux-lvm@redhat.com>
+Content-Transfer-Encoding: 7bit
+To: Douglas Mayle <douglas@mayle.org>
+Cc: Jeff Layton <jtlayton@poochiereds.net>, LVM <linux-lvm@redhat.com>
 
-> 
-> I have tried updating to the 2.02.14 LVM and the 1.02.12 device mapper (compiled from source from
-> the FTP site).  The first couple
-> of tests have run correctly so it looks like this may have resolved the issue, but I am continuing
-> to run tests to confirm this.
-> 
+On Sat, Nov 11, 2006 at 12:18:39PM +0100, Douglas Mayle wrote:
+> I've made an update to the lvm2create_initrd script that fixes some  
+> problems with ldd output that were never addressed in the first  
+> version (e.g. libraries linked with a static path).
+ 
+> I also check for binaries in the path, rather than hardcoding their  
+> location, and I've added support for the Gentoo style of MAKEDEV.
 
-It's still not working reliably.  The first few attempts worked but after running more tests, the problem still occurs. 
 
-My test reads the read-only snapshot multiple times.  All the data is consistent across the 20GB snapshot except for a single byte
-at offset 0x0313CAC6C0.  Sometimes it reads 0x48 and other times it reads 0x08.  I have run the tests multiple times over many days
-and, although the tests sometimes show the correct behaviour, about half the time I get this problem.
+Please update the changelog.
 
-I cannot understand why repeated reads of a read-only snapshot would return data that changes.
+Can someone confirm the updated script also still works on Debian?
 
-I am running the 2.6.16.20 kernel and have upgraded to the latest LVM 2.02.14 and DMapper library 1.02.12 but the problem still
-exists.
 
-Can anyone offer any help as to what may be going on or suggest how I can investigate the problem further?  I don't mind patching
-the LVM source code to obtain more debug information if this helps.
+-BINFILES=${BINFILES:-"/lib/lvm-200/lvm /bin/bash /bin/busybox /sbin/pivot_root"}
++BINFILES=${BINFILES:-"`which lvm` `which bash` `which busybox` `which pivot_root`"}
 
-Thanks in advance,
+Will 'which lvm' always give the same answer as before on Debian,
+or, if not, does it matter?
 
-Roger
+
+-LIBFILES=`ldd $BINFILES 2>/dev/null | awk '{if (/=>/) { print $3 }}' | sort -u`
++LIBFILES=`ldd $BINFILES 2>/dev/null |grep -v linux-gate |grep -v : | awk '{if (/=>/) { print $3 } else if (/\//) { print $1 }}' | sort -u`
+
+This needs a comment explaining what's going on (e.g. include sample 
+output in the comment).  What's special about linux-gate?
+And why not combine the two greps?  -E (linux-gate|:)
+
+Alasdair
+-- 
+agk@redhat.com
