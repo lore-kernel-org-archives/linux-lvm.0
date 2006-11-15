@@ -1,25 +1,17 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id kAF4Qu8q027721
-	for <linux-lvm@redhat.com>; Tue, 14 Nov 2006 23:26:56 -0500
-Received: from mail8.sea5.speakeasy.net (mail8.sea5.speakeasy.net
-	[69.17.117.10])
-	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id kAF4Qnu0028980
-	for <linux-lvm@redhat.com>; Tue, 14 Nov 2006 23:26:50 -0500
-Received: from dsl093-060-083.pit1.dsl.speakeasy.net (HELO [192.168.0.5])
-	([66.93.60.83]) (envelope-sender <jerith@speakeasy.org>)
-	by mail8.sea5.speakeasy.net (qmail-ldap-1.03) with AES256-SHA encrypted
-	SMTP for <linux-lvm@redhat.com>; 15 Nov 2006 04:26:44 -0000
-Date: Tue, 14 Nov 2006 23:26:55 -0500 (EST)
-From: Matt McHenry <jerith@speakeasy.org>
-Subject: Re: [linux-lvm] lvcreate gives 'device-mapper: reload ioctl failed:
-	Invalid argument'
-In-Reply-To: <20061114184712.GJ30653@agk.surrey.redhat.com>
-Message-ID: <Pine.LNX.4.64.0611142320560.8557@localhost>
-References: <Pine.LNX.4.64.0610281720370.9047@localhost>
-	<20061114183159.GI30653@agk.surrey.redhat.com>
-	<Pine.LNX.4.58.0611141334290.18875@shell3.speakeasy.net>
-	<20061114184712.GJ30653@agk.surrey.redhat.com>
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id kAFFGxnD025716
+	for <linux-lvm@redhat.com>; Wed, 15 Nov 2006 10:16:59 -0500
+Received: from web51015.mail.yahoo.com (web51015.mail.yahoo.com
+	[206.190.39.80])
+	by mx3.redhat.com (8.13.1/8.13.1) with SMTP id kAFFGnbu019192
+	for <linux-lvm@redhat.com>; Wed, 15 Nov 2006 10:16:49 -0500
+Date: Wed, 15 Nov 2006 07:16:43 -0800 (PST)
+From: Richard Mollel <unixtipz@yahoo.com>
+Subject: Re: [linux-lvm] No label detected
+In-Reply-To: <34984.18505.qm@web51015.mail.yahoo.com>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Message-ID: <168918.46162.qm@web51015.mail.yahoo.com>
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -30,28 +22,92 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"; format="flowed"
-Content-Transfer-Encoding: 7bit
-To: linux-lvm@redhat.com
+Content-Type: text/plain; charset="us-ascii"
+To: LVM general discussion and development <linux-lvm@redhat.com>
+
+I have an idea of what is going on...but no really how
+to correct it once and for all.
+The PV, VG, LV were created under Mandrake 10.0, in
+the days of LVM1. Then an upgrade install was done, to
+take it to Mandriva 2006.0, and thus the LVM1 was
+converted to LVM2 in the process.
+When i first created the LVM devices...i used whole
+device, sdb,sdc & sdd...even though there were
+partitions sdb1, sdc1 and sdd1 which comprise of whole
+disk. LVM1 it seems did not have an issue.
+Since i was adding disks, i believe it is the first
+time that i actually ran pvscan....which effectively
+dumped /etc/lvm/.cache and created a new one. 
+Under new one, since sdb1,sdc1 &sdd1 were of type
+LVM...it saw those, but not sdb, sdc and sdd.....which
+it says are unknown devices.
+Is there any way to correct it "online"...ie. without
+moving all data out, wipe out all info, rebuild the
+PVs, VG & LV?
+As a backup plan, i am mounting the whole devices,
+sdb, sdc & sdd as loop device using losetup...and that
+seems to work...though it is manual process....
+
+_thanks
+
+Rick
+--- Richard Mollel <unixtipz@yahoo.com> wrote:
+
+> Hi,
+> 
+> Mandriva 2006.0
+> Kernel 2.6.12-24
+> lvm2-2.01.09-1mdk
+> 
+> LVM installed on whole devices, /dev/sdb, sdc and
+> sdd.
+> It has worked for over 2 years. Not sure if
+> something
+> in Mandriva regular update changed anything
+> related....but now, upon reboot, the whole devices
+> are
+> seen as PV's. I have to run losetup (set them up as
+> loop devices basically) then
+> vgscan,pvscan,lvmdiskscan
+> can see them, and i can mount my VG. What actually
+> controls pvscan/vgscan commands?
+> 
+> /dev/sdb1: No label detected
+> /dev/sdc1: No label detected
+> /dev/sdd1: No label detected
+>       Locking /var/lock/lvm/V_ASSIM_VG RB
+> Finding volume group "ASSIM_VG"
+>   /dev/loop0: lvm2 label detected
+>   /dev/loop1: lvm2 label detected
+>   /dev/loop2: lvm2 label detected
+> 
+> _Thanks
+> 
+> Richard
+> 
+> 
+>  
+>
+____________________________________________________________________________________
+> Cheap talk?
+> Check out Yahoo! Messenger's low PC-to-Phone call
+> rates.
+> http://voice.yahoo.com
+> 
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@redhat.com
+> https://www.redhat.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at
+> http://tldp.org/HOWTO/LVM-HOWTO/
+> 
 
 
-> Use vgreduce to remove sda12 from the volume group.
-> Then edit the partition table to put things back i.e. delete 12 and
-> extend 11, then reboot.
-> (You may have some data corruption from what got written to sda12.)
 
- 	I was still a bit nervous about this suggestion.  As it happens, 
-the only LV that was using sda11 was 'gen-website', which (as the name 
-suggests) can be regenerated from other data.  So instead, I just deleted 
-the 'gen-website' LV.  That allowed me to delete and re-create both the 
-sda11 and sda12 PVs.  This seems to have fixed everything.  I was able to 
-recreate the 'gen-website' LV and create my long-awaited 'dvd' LV as well.
+ 
+____________________________________________________________________________________
+Sponsored Link
 
- 	Thanks again to Alasdair and Jonathan for all the help and 
-patience!
-
-----------------------
-Matt McHenry
-http://www.speakeasy.org/~jerith/
-jerith@speakeasy.org
-be052@scn.org
+Mortgage rates near 39yr lows. 
+$510k for $1,698/mo. Calculate new payment! 
+www.LowerMyBills.com/lre
