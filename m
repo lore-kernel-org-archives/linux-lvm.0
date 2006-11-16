@@ -1,18 +1,27 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id kAG2t2Ru020842
-	for <linux-lvm@redhat.com>; Wed, 15 Nov 2006 21:55:02 -0500
-Received: from nf-out-0910.google.com (nf-out-0910.google.com [64.233.182.191])
-	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id kAG2sYl3009837
-	for <linux-lvm@redhat.com>; Wed, 15 Nov 2006 21:54:54 -0500
-Received: by nf-out-0910.google.com with SMTP id l36so868006nfa
-	for <linux-lvm@redhat.com>; Wed, 15 Nov 2006 18:54:54 -0800 (PST)
-Message-ID: <170fa0d20611151854m4bc49ed6qc696e82f83417e7@mail.gmail.com>
-Date: Wed, 15 Nov 2006 21:54:54 -0500
-From: "Mike Snitzer" <snitzer@gmail.com>
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id kAG8vPM9008529
+	for <linux-lvm@redhat.com>; Thu, 16 Nov 2006 03:57:25 -0500
+Received: from gws-mail.gws-muenster.de (gws-mail.gws-muenster.de
+	[62.156.166.236])
+	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id kAG8vMTl011997
+	for <linux-lvm@redhat.com>; Thu, 16 Nov 2006 03:57:23 -0500
+Received: from [195.145.186.100] (helo=kenny.gws-muenster.de)
+	by gws-mail.gws-muenster.de with esmtp (Exim 4.50 #1 (Debian))
+	id 1Gkd3f-0003tI-G0
+	for <linux-lvm@redhat.com>; Thu, 16 Nov 2006 09:57:19 +0100
+Received: from kyle.gws-muenster.de ([217.6.136.6] helo=cards ident=balance)
+	by kenny.gws-muenster.de with esmtps (Exim 4.50 #1 (Debian))
+	id 1Gkd3g-0004GO-IF
+	for <linux-lvm@redhat.com>; Thu, 16 Nov 2006 09:57:20 +0100
+Received: from inside.gws-muenster.de
+	([195.145.186.81] helo=pelota.gws-muenster.de ident=balance)
+	by cards with esmtp (Exim 4.32 #1 (Debian)) id 1Gkd3e-0003fL-UO
+	for <linux-lvm@redhat.com>; Thu, 16 Nov 2006 09:57:18 +0100
+Message-ID: <C43D74B62BA19A45ADD74C1AB7AEE54202B7B184@nt-gws2.gws-muenster.de>
+From: "Steverding, Kai" <Kai.Steverding@gws.ms>
+Date: Thu, 16 Nov 2006 09:57:22 +0100
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-Subject: [linux-lvm] walltime of pvs vs pvdisplay with 256 PVs
+Subject: [linux-lvm] Changing the UUID of a VG and a LV
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -23,20 +32,22 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: linux-lvm@redhat.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: "'linux-lvm@redhat.com'" <linux-lvm@redhat.com>
 
-I have a testbed with 256 PVs.  Running 'pvdisplay -c' takes .672 sec.
- Running 'pvs' takes 43sec!  I've tried this on RHEL4U3
-(lvm2-2.02.01-1.3.RHEL4) and RHEL4U4 (lvm2-2.02.06-6.0.RHEL4).  lvm2
-from U4 is actually slower than U3 on this issue (1m vs 43s).
+Hi !
+I have the following problem : 
 
-With RHEL4U3, pvs -vvvvv shows that a single device gets opened 264
-times yet pvdisplay -c -vvvvv only opens a single device 8 times.
-With RHEL4U4, there are 261 opens for pvs and 5 opens for pvdisplay
--c.  Clearly there is something flawed in the pvs algorithm.  I can
-dig deeper but I wanted to put this info out there in case others
-might have some insight.
+For backup purposes, i take SAN-Snapshot Copies of my Linux machine. I
+deploy my new machines from those copies, too. This has the effect, that a
+clone of a machine has the exact same disk the original has including PV
+UUID, VG name, VG UUID, LV name and lv uuid. I found out that i can change
+the PV UUID with pvchange -u and the VG name with vgrename , but is there a
+way to change the UUID's of the VG and the LV's ? I need it, because i mount
+all those snapshots on a backup-server and this doesn't work because of the
+same UUIDs.
 
-please advise, thanks.
-Mike
+Thanks
+
+Kai
