@@ -1,19 +1,22 @@
 Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id kAHKkRsM002972
-	for <linux-lvm@redhat.com>; Fri, 17 Nov 2006 15:46:27 -0500
-Received: from certmail.caregroup.org (tumbleweed2.caregroup.org
-	[134.174.120.82])
-	by mx1.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
-	kAHKkNiT024971
-	for <linux-lvm@redhat.com>; Fri, 17 Nov 2006 15:46:26 -0500
-Content-class: urn:content-classes:message
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id kAHKpnaG004661
+	for <linux-lvm@redhat.com>; Fri, 17 Nov 2006 15:51:49 -0500
+Received: from mailgw2.homestead.com (mailgw2.homestead.com [209.157.70.22])
+	by mx1.redhat.com (8.12.11.20060308/8.12.11) with SMTP id
+	kAHKpl3t027681
+	for <linux-lvm@redhat.com>; Fri, 17 Nov 2006 15:51:48 -0500
+Received: from postal.ksi.homestead.com ([10.200.1.1])
+	by mailgw2.homestead.com (SMSSMTP 4.1.9.35) with SMTP id
+	M2006111712534914906
+	for <linux-lvm@redhat.com>; Fri, 17 Nov 2006 12:53:49 -0800
+content-class: urn:content-classes:message
 MIME-Version: 1.0
-Subject: RE: [linux-lvm] Rmove a faulty hard drive off LVM Group
-Date: Fri, 17 Nov 2006 15:45:52 -0500
-Message-ID: <EED09BB41EE72044BCEE8156094FCE8F01838534@EVS4.its.caregroup.org>
-From: mghofran@caregroup.harvard.edu
 Content-Type: multipart/alternative;
-	boundary="----_=_NextPart_001_01C70A89.5ED219FC"
+	boundary="----_=_NextPart_001_01C70A8A.2F4241B0"
+Subject: RE: [linux-lvm] Rmove a faulty hard drive off LVM Group
+Date: Fri, 17 Nov 2006 12:51:41 -0800
+Message-ID: <6AE6EBBB14415241A64613CEE97F550A02FEB895@postal.ksi.homestead-corp.com>
+From: "Joann Deng" <JDeng@homestead-inc.com>
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -24,14 +27,32 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: linux-lvm@redhat.com
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
 This is a multi-part message in MIME format.
 
-------_=_NextPart_001_01C70A89.5ED219FC
+------_=_NextPart_001_01C70A8A.2F4241B0
 Content-Type: text/plain;
- charset=us-ascii
+	charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
+
+Actually, what I want to do is to shrink the volume group such that it
+only contains one pv which is hdb1. Can you please tell me how to do
+that?
+
+=20
+
+Thanks
+
+  _____ =20
+
+From: linux-lvm-bounces@redhat.com [mailto:linux-lvm-bounces@redhat.com]
+On Behalf Of mghofran@caregroup.harvard.edu
+Sent: Friday, November 17, 2006 12:46 PM
+To: linux-lvm@redhat.com
+Subject: RE: [linux-lvm] Rmove a faulty hard drive off LVM Group
+
+=20
 
 You are confusing the 11% free with the "Free PE". They are not the same
 thing. The 11% is showing you "used / allocated" in your logical volume.
@@ -47,7 +68,7 @@ Hope that helped
 
 =20
 
-________________________________
+  _____ =20
 
 From: linux-lvm-bounces@redhat.com [mailto:linux-lvm-bounces@redhat.com]
 On Behalf Of Joann Deng
@@ -152,9 +173,9 @@ Joann
 =20
 
 
-------_=_NextPart_001_01C70A89.5ED219FC
+------_=_NextPart_001_01C70A8A.2F4241B0
 Content-Type: text/html;
- charset=us-ascii
+	charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
 
 <html xmlns:v=3D"urn:schemas-microsoft-com:vml" =
@@ -192,11 +213,11 @@ st1\:*{behavior:url(#default#ieooui) }
 <!--
  /* Font Definitions */
  @font-face
-	{font-family:Tahoma;
-	panose-1:2 11 6 4 3 5 4 4 2 4;}
-@font-face
 	{font-family:Times;
 	panose-1:2 2 6 3 5 4 5 2 3 4;}
+@font-face
+	{font-family:Tahoma;
+	panose-1:2 11 6 4 3 5 4 4 2 4;}
  /* Style Definitions */
  p.MsoNormal, li.MsoNormal, div.MsoNormal
 	{margin:0in;
@@ -214,6 +235,10 @@ span.EmailStyle17
 	font-family:Arial;
 	color:windowtext;}
 span.EmailStyle18
+	{mso-style-type:personal;
+	font-family:Arial;
+	color:navy;}
+span.EmailStyle19
 	{mso-style-type:personal-reply;
 	font-family:Arial;
 	color:navy;}
@@ -233,19 +258,73 @@ div.Section1
 
 <p class=3DMsoNormal><font size=3D2 color=3Dnavy face=3DArial><span =
 style=3D'font-size:
+10.0pt;font-family:Arial;color:navy'>Actually, what I want to do is to =
+shrink
+the volume group such that it only contains one pv which is hdb1. Can =
+you
+please tell me how to do that?<o:p></o:p></span></font></p>
+
+<p class=3DMsoNormal><font size=3D2 color=3Dnavy face=3DArial><span =
+style=3D'font-size:
+10.0pt;font-family:Arial;color:navy'><o:p>&nbsp;</o:p></span></font></p>
+
+<p class=3DMsoNormal><font size=3D2 color=3Dnavy face=3DArial><span =
+style=3D'font-size:
+10.0pt;font-family:Arial;color:navy'>Thanks<o:p></o:p></span></font></p>
+
+<div>
+
+<div class=3DMsoNormal align=3Dcenter style=3D'text-align:center'><font =
+size=3D3
+face=3D"Times New Roman"><span =
+style=3D'font-size:12.0pt;font-family:"Times New Roman"'>
+
+<hr size=3D2 width=3D"100%" align=3Dcenter tabindex=3D-1>
+
+</span></font></div>
+
+<p class=3DMsoNormal><b><font size=3D2 face=3DTahoma><span =
+style=3D'font-size:10.0pt;
+font-family:Tahoma;font-weight:bold'>From:</span></font></b><font =
+size=3D2
+face=3DTahoma><span style=3D'font-size:10.0pt;font-family:Tahoma'>
+linux-lvm-bounces@redhat.com [mailto:linux-lvm-bounces@redhat.com] =
+<b><span
+style=3D'font-weight:bold'>On Behalf Of =
+</span></b>mghofran@caregroup.harvard.edu<br>
+<b><span style=3D'font-weight:bold'>Sent:</span></b> Friday, November =
+17, 2006
+12:46 PM<br>
+<b><span style=3D'font-weight:bold'>To:</span></b> =
+linux-lvm@redhat.com<br>
+<b><span style=3D'font-weight:bold'>Subject:</span></b> RE: [linux-lvm] =
+Rmove a
+faulty hard drive off LVM Group</span></font><font face=3D"Times New =
+Roman"><span
+style=3D'font-family:"Times New Roman"'><o:p></o:p></span></font></p>
+
+</div>
+
+<p class=3DMsoNormal><font size=3D3 face=3DTimes><span =
+style=3D'font-size:12.0pt'><o:p>&nbsp;</o:p></span></font></p>
+
+<p class=3DMsoNormal><font size=3D2 color=3Dnavy face=3DArial><span =
+style=3D'font-size:
 10.0pt;font-family:Arial;color:navy'>You are confusing the 11% free with =
-the &#8220;<st1:place
-w:st=3D"on"><st1:City w:st=3D"on">Free</st1:City> <st1:State =
-w:st=3D"on">PE</st1:State></st1:place>&#8221;.
-They are not the same thing. The 11% is showing you &#8220;used / =
-allocated&#8221;
-in your logical volume. Another words &#8220;15281032 / 151527604 =3D =
-11% &#8220;
-however the free PE which is 160 MB, is the total unallocated space in =
-the free
-bank of the volume group. You could use that to extend the existing one =
-(151527604)
-or create a new one.<o:p></o:p></span></font></p>
+the
+&#8220;<st1:place w:st=3D"on"><st1:City w:st=3D"on">Free</st1:City> =
+<st1:State
+ w:st=3D"on">PE</st1:State></st1:place>&#8221;. They are not the same =
+thing. The
+11% is showing you &#8220;used / allocated&#8221; in your logical =
+volume.
+Another words &#8220;15281032 / 151527604 =3D 11% &#8220; however the =
+free PE
+which is 160 MB, is the total unallocated space in the free bank of the =
+volume
+group. You could use that to extend the existing one (151527604) or =
+create a
+new one.<o:p></o:p></span></font></p>
 
 <p class=3DMsoNormal><font size=3D2 color=3Dnavy face=3DArial><span =
 style=3D'font-size:
@@ -559,4 +638,4 @@ font-family:Arial'><o:p>&nbsp;</o:p></span></font></p>
 
 </html>
 
-------_=_NextPart_001_01C70A89.5ED219FC--
+------_=_NextPart_001_01C70A8A.2F4241B0--
