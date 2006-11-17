@@ -1,22 +1,22 @@
-Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id kAHEXLPF002105
-	for <linux-lvm@redhat.com>; Fri, 17 Nov 2006 09:33:21 -0500
-Received: from bluewhale.planbit.co.uk (82-71-36-240.dsl.in-addr.zen.co.uk
-	[82.71.36.240])
-	by mx1.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
-	kAHEXDJG007420
-	for <linux-lvm@redhat.com>; Fri, 17 Nov 2006 09:33:18 -0500
-Received: from wolverine (unknown [192.168.1.127])
-	by bluewhale.planbit.co.uk (Postfix) with ESMTP id 5138B12EE1
-	for <linux-lvm@redhat.com>; Fri, 17 Nov 2006 14:32:46 +0000 (GMT)
-From: "Roger Lucas" <roger@planbit.co.uk>
-Subject: RE: [linux-lvm] Contents of read-only LVM snapshot change when bothLV
-	and SNAP are Read-Only - SOLVED
-Date: Fri, 17 Nov 2006 14:34:35 -0000
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-In-Reply-To: <20061114220931.C3F1B12EDE@bluewhale.planbit.co.uk>
-Message-Id: <20061117143246.5138B12EE1@bluewhale.planbit.co.uk>
+Received: from agk.surrey.redhat.com (agk.surrey.redhat.com [172.16.10.74])
+	by pobox.surrey.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
+	kAHJLO0g010090
+	for <linux-lvm@redhat.com>; Fri, 17 Nov 2006 19:21:24 GMT
+Received: from agk by agk.surrey.redhat.com with local (Exim 4.34)
+	id 1Gl9HA-0001R9-9b
+	for linux-lvm@redhat.com; Fri, 17 Nov 2006 19:21:24 +0000
+Date: Fri, 17 Nov 2006 19:21:24 +0000
+From: Alasdair G Kergon <agk@redhat.com>
+Subject: Re: [linux-lvm] How to restore a PV ??
+Message-ID: <20061117192124.GA4409@agk.surrey.redhat.com>
+References: <452EEB6C.9040701@ibt.unam.mx> <4533ABCD.8030502@ibt.unam.mx>
+	<01dbd6887fd9d439599e31bda27f3883@redhat.com>
+	<20061114230003.GA3401@bdmcc-us.com>
+	<20061114230658.GP30653@agk.surrey.redhat.com>
+	<20061117134435.GA32647@bdmcc-us.com>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20061117134435.GA32647@bdmcc-us.com>
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -28,27 +28,22 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: 'LVM general discussion and development' <linux-lvm@redhat.com>
+Content-Transfer-Encoding: 7bit
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-Hi All,
+On Fri, Nov 17, 2006 at 08:44:35AM -0500, Brian McCullough wrote:
+> OK, as mentioned in previous messages, I have updated to the most recent
+> versions found on the FTP site ( lvm2 and dm )
 
-The problem was nothing to do with LVM but was a RAID error.  I moved the two disks in the RAID-1 array between three different
-machines - two were identical and one was a totally different motherboard.  The problem occurred on all of the machines so I tried
-removing one of the disks and brought the array up in degraded mode.  When I re-ran the test, I consistently received the first data
-sequence.  I powered off the machine and swapped the disks.  I then powered the machine up so that it was running off the other
-disk, again in degraded mode.  When I re-ran the test, I consistently received the other data sequence.
+If you see that with the latest (2.02.14) then we've still
+got a bug to fix there.
 
-What it looks like is happening is that, at some point in time, a write to the RAID array failed and wrote slightly different data
-to one of the disks or one of the disks generated a bit error.  Since I was running in RAID-1 and the disks were not failing with a
-hardware error, the MD driver seemed happy to return data from whichever disk completed the read first.  Since the disks were
-identical, it was pretty random which one would get the data back first, hence the apparent inconsistency.
+If you lost a partition table, look for something like 'gpart'
+to try to recreate it.  Then you'll need to recreate the PV
+and get the VG/LV back in place - the procedure depends on
+whether it's lvm1 or lvm2 metadata and how much info you still
+have (or can remember) about the layout.
 
-I don't know why it seemed that the main disk was stable but the snapshot wasn't, but I suspect that this is again down to the race
-condition or some caching somewhere.
-
-Thank you to everyone in the LVM team who has helped investigate this for me - I apologise for wasting your time with a false goose
-chase.
-
-BR,
-
-Roger
+Alasdair
+-- 
+agk@redhat.com
