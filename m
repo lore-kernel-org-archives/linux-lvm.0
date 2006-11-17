@@ -1,18 +1,21 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id kAHLBt6M011223
-	for <linux-lvm@redhat.com>; Fri, 17 Nov 2006 16:11:55 -0500
-Received: from certmail.caregroup.org (tumbleweed2.caregroup.org
-	[134.174.120.82])
-	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id kAHLBpGR009481
-	for <linux-lvm@redhat.com>; Fri, 17 Nov 2006 16:11:51 -0500
-Content-class: urn:content-classes:message
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id kAHLTJ5Q015822
+	for <linux-lvm@redhat.com>; Fri, 17 Nov 2006 16:29:19 -0500
+Received: from mailgw2.homestead.com (mailgw2.homestead.com [209.157.70.22])
+	by mx3.redhat.com (8.13.1/8.13.1) with SMTP id kAHLTA24013537
+	for <linux-lvm@redhat.com>; Fri, 17 Nov 2006 16:29:11 -0500
+Received: from postal.ksi.homestead.com ([10.200.1.1])
+	by mailgw2.homestead.com (SMSSMTP 4.1.9.35) with SMTP id
+	M2006111713311215549
+	for <linux-lvm@redhat.com>; Fri, 17 Nov 2006 13:31:12 -0800
+content-class: urn:content-classes:message
 MIME-Version: 1.0
-Subject: RE: [linux-lvm] Rmove a faulty hard drive off LVM Group
-Date: Fri, 17 Nov 2006 16:11:25 -0500
-Message-ID: <EED09BB41EE72044BCEE8156094FCE8F01838538@EVS4.its.caregroup.org>
-From: mghofran@caregroup.harvard.edu
 Content-Type: multipart/alternative;
-	boundary="----_=_NextPart_001_01C70A8C.F11568A7"
+	boundary="----_=_NextPart_001_01C70A8F.687BF6D4"
+Subject: RE: [linux-lvm] Rmove a faulty hard drive off LVM Group
+Date: Fri, 17 Nov 2006 13:29:05 -0800
+Message-ID: <6AE6EBBB14415241A64613CEE97F550A0278FE45@postal.ksi.homestead-corp.com>
+From: "Joann Deng" <JDeng@homestead-inc.com>
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -23,14 +26,37 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: linux-lvm@redhat.com
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
 This is a multi-part message in MIME format.
 
-------_=_NextPart_001_01C70A8C.F11568A7
+------_=_NextPart_001_01C70A8F.687BF6D4
 Content-Type: text/plain;
- charset=us-ascii
+	charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
+
+I am afraid it's striped. But is there a way that I can verify it.
+
+And I was thinking about backing all the data on the faulty drive to an
+external hard drive. But unfortunately, the faulty drive holds /boot and
+/.  I will try to copy the data to the external hard drive, but not sure
+if it works or not.
+
+=20
+
+Thanks
+
+=20
+
+  _____ =20
+
+From: linux-lvm-bounces@redhat.com [mailto:linux-lvm-bounces@redhat.com]
+On Behalf Of mghofran@caregroup.harvard.edu
+Sent: Friday, November 17, 2006 1:11 PM
+To: linux-lvm@redhat.com
+Subject: RE: [linux-lvm] Rmove a faulty hard drive off LVM Group
+
+=20
 
 It really depends on how your logical volume is using the disks in the
 volume group. If it is striped for using both disks, then your only
@@ -41,7 +67,7 @@ the disk from volume group.
 
 =20
 
-________________________________
+  _____ =20
 
 From: linux-lvm-bounces@redhat.com [mailto:linux-lvm-bounces@redhat.com]
 On Behalf Of Joann Deng
@@ -59,7 +85,7 @@ that?
 
 Thanks
 
-________________________________
+  _____ =20
 
 From: linux-lvm-bounces@redhat.com [mailto:linux-lvm-bounces@redhat.com]
 On Behalf Of mghofran@caregroup.harvard.edu
@@ -83,7 +109,7 @@ Hope that helped
 
 =20
 
-________________________________
+  _____ =20
 
 From: linux-lvm-bounces@redhat.com [mailto:linux-lvm-bounces@redhat.com]
 On Behalf Of Joann Deng
@@ -188,9 +214,9 @@ Joann
 =20
 
 
-------_=_NextPart_001_01C70A8C.F11568A7
+------_=_NextPart_001_01C70A8F.687BF6D4
 Content-Type: text/html;
- charset=us-ascii
+	charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
 
 <html xmlns:v=3D"urn:schemas-microsoft-com:vml" =
@@ -228,11 +254,11 @@ st1\:*{behavior:url(#default#ieooui) }
 <!--
  /* Font Definitions */
  @font-face
-	{font-family:Tahoma;
-	panose-1:2 11 6 4 3 5 4 4 2 4;}
-@font-face
 	{font-family:Times;
 	panose-1:2 2 6 3 5 4 5 2 3 4;}
+@font-face
+	{font-family:Tahoma;
+	panose-1:2 11 6 4 3 5 4 4 2 4;}
  /* Style Definitions */
  p.MsoNormal, li.MsoNormal, div.MsoNormal
 	{margin:0in;
@@ -258,6 +284,10 @@ span.EmailStyle19
 	font-family:Arial;
 	color:navy;}
 span.EmailStyle20
+	{mso-style-type:personal;
+	font-family:Arial;
+	color:navy;}
+span.EmailStyle21
 	{mso-style-type:personal-reply;
 	font-family:Arial;
 	color:navy;}
@@ -274,6 +304,70 @@ div.Section1
 <body lang=3DEN-US link=3Dblue vlink=3Dpurple>
 
 <div class=3DSection1>
+
+<p class=3DMsoNormal><font size=3D2 color=3Dnavy face=3DArial><span =
+style=3D'font-size:
+10.0pt;font-family:Arial;color:navy'>I am afraid it&#8217;s striped. But =
+is
+there a way that I can verify it.<o:p></o:p></span></font></p>
+
+<p class=3DMsoNormal><font size=3D2 color=3Dnavy face=3DArial><span =
+style=3D'font-size:
+10.0pt;font-family:Arial;color:navy'>And I was thinking about backing =
+all the
+data on the faulty drive to an external hard drive. But unfortunately, =
+the
+faulty drive holds /boot and /. &nbsp;I will try to copy the data to the
+external hard drive, but not sure if it works or =
+not.<o:p></o:p></span></font></p>
+
+<p class=3DMsoNormal><font size=3D2 color=3Dnavy face=3DArial><span =
+style=3D'font-size:
+10.0pt;font-family:Arial;color:navy'><o:p>&nbsp;</o:p></span></font></p>
+
+<p class=3DMsoNormal><font size=3D2 color=3Dnavy face=3DArial><span =
+style=3D'font-size:
+10.0pt;font-family:Arial;color:navy'>Thanks<o:p></o:p></span></font></p>
+
+<p class=3DMsoNormal><font size=3D2 color=3Dnavy face=3DArial><span =
+style=3D'font-size:
+10.0pt;font-family:Arial;color:navy'><o:p>&nbsp;</o:p></span></font></p>
+
+<div>
+
+<div class=3DMsoNormal align=3Dcenter style=3D'text-align:center'><font =
+size=3D3
+face=3D"Times New Roman"><span =
+style=3D'font-size:12.0pt;font-family:"Times New Roman"'>
+
+<hr size=3D2 width=3D"100%" align=3Dcenter tabindex=3D-1>
+
+</span></font></div>
+
+<p class=3DMsoNormal><b><font size=3D2 face=3DTahoma><span =
+style=3D'font-size:10.0pt;
+font-family:Tahoma;font-weight:bold'>From:</span></font></b><font =
+size=3D2
+face=3DTahoma><span style=3D'font-size:10.0pt;font-family:Tahoma'>
+linux-lvm-bounces@redhat.com [mailto:linux-lvm-bounces@redhat.com] =
+<b><span
+style=3D'font-weight:bold'>On Behalf Of =
+</span></b>mghofran@caregroup.harvard.edu<br>
+<b><span style=3D'font-weight:bold'>Sent:</span></b> Friday, November =
+17, 2006
+1:11 PM<br>
+<b><span style=3D'font-weight:bold'>To:</span></b> =
+linux-lvm@redhat.com<br>
+<b><span style=3D'font-weight:bold'>Subject:</span></b> RE: [linux-lvm] =
+Rmove a
+faulty hard drive off LVM Group</span></font><font face=3D"Times New =
+Roman"><span
+style=3D'font-family:"Times New Roman"'><o:p></o:p></span></font></p>
+
+</div>
+
+<p class=3DMsoNormal><font size=3D3 face=3DTimes><span =
+style=3D'font-size:12.0pt'><o:p>&nbsp;</o:p></span></font></p>
 
 <p class=3DMsoNormal><font size=3D2 color=3Dnavy face=3DArial><span =
 style=3D'font-size:
@@ -313,8 +407,8 @@ linux-lvm-bounces@redhat.com [mailto:linux-lvm-bounces@redhat.com] =
 <b><span
 style=3D'font-weight:bold'>On Behalf Of </span></b>Joann Deng<br>
 <b><span style=3D'font-weight:bold'>Sent:</span></b> Friday, November =
-17, 2006
-3:52 PM<br>
+17, 2006 3:52
+PM<br>
 <b><span style=3D'font-weight:bold'>To:</span></b> LVM general =
 discussion and
 development<br>
@@ -392,11 +486,10 @@ thing. The
 11% is showing you &#8220;used / allocated&#8221; in your logical =
 volume.
 Another words &#8220;15281032 / 151527604 =3D 11% &#8220; however the =
-free PE
-which is 160 MB, is the total unallocated space in the free bank of the =
-volume
-group. You could use that to extend the existing one (151527604) or =
-create a
+free PE which
+is 160 MB, is the total unallocated space in the free bank of the volume =
+group.
+You could use that to extend the existing one (151527604) or create a =
 new one.<o:p></o:p></span></font></p>
 
 <p class=3DMsoNormal><font size=3D2 color=3Dnavy face=3DArial><span =
@@ -570,7 +663,7 @@ read/write<o:p></o:p></span></font></p>
 
 <p class=3DMsoNormal><font size=3D2 face=3DArial><span =
 style=3D'font-size:10.0pt;
-font-family:Arial'>&nbsp; VG =
+font-family:Arial'>&nbsp; VG
 Status&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&=
 nbsp;
 resizable<o:p></o:p></span></font></p>
@@ -711,4 +804,4 @@ font-family:Arial'><o:p>&nbsp;</o:p></span></font></p>
 
 </html>
 
-------_=_NextPart_001_01C70A8C.F11568A7--
+------_=_NextPart_001_01C70A8F.687BF6D4--
