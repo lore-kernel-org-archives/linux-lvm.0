@@ -1,22 +1,15 @@
-Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id kAMM3iA2028557
-	for <linux-lvm@redhat.com>; Wed, 22 Nov 2006 17:03:44 -0500
-Received: from smtp02.nagra.com (smtp02.nagra.com [217.169.130.206])
-	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id kAMM3gDe012348
-	for <linux-lvm@redhat.com>; Wed, 22 Nov 2006 17:03:43 -0500
-Received: from smtp02.nagra.com (localhost.localdomain [127.0.0.1])
-	by localhost.nagra.com (Postfix) with ESMTP id CBADA59C058
-	for <linux-lvm@redhat.com>; Wed, 22 Nov 2006 23:03:36 +0100 (CET)
-Received: from aten2.hq.k.grp (unknown [172.31.239.43])
-	by smtp02.nagra.com (Postfix) with ESMTP id AC68559C053
-	for <linux-lvm@redhat.com>; Wed, 22 Nov 2006 23:03:36 +0100 (CET)
-From: Martial Paupe <martial.paupe@nagra.com>
-Date: Wed, 22 Nov 2006 23:04:27 +0100
+Received: from [127.0.0.1] (sebastian-int.corp.redhat.com [172.16.52.221])
+	by pobox.surrey.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
+	kAMMRmpo006887
+	for <linux-lvm@redhat.com>; Wed, 22 Nov 2006 22:27:49 GMT
+Message-ID: <4564CF3F.1060009@redhat.com>
+Date: Wed, 22 Nov 2006 22:29:19 +0000
+From: "Bryn M. Reeves" <breeves@redhat.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-Message-Id: <200611222304.28368.martial.paupe@nagra.com>
+Subject: Re: [linux-lvm] Big question ...
+References: <200611222304.28368.martial.paupe@nagra.com>
+In-Reply-To: <200611222304.28368.martial.paupe@nagra.com>
 Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] Big question ...
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -28,15 +21,70 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@redhat.com
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-Hello All,
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA1
 
-I put un wrong PV in a Volume Group and now the VG are not available in the 
-system.
+Martial Paupe wrote:
+> Hello All,
+> 
+> I put un wrong PV in a Volume Group and now the VG are not available in the 
+> system.
+> 
+> Howto remove the wrong PV from a inactive VG ?
+> 
+> Best regards
+> 
+> Martial
+> 
 
-Howto remove the wrong PV from a inactive VG ?
+Hello Martial,
 
-Best regards
+You should be able to remove a PV from a volume group with vgreduce even
+when it is inactive, as long as the PV is still present on the system:
 
-Martial
+[root ~]# vgchange -an s0
+  0 logical volume(s) in volume group "s0" now active
+[root ~]# vgreduce s0 /dev/loop1
+  Removed "/dev/loop1" from volume group "s0"
+
+If the PV is no longer present, this won't work though:
+
+[root ~]# losetup -d /dev/loop1
+[root ~]# vgreduce s0 /dev/loop1
+  Couldn't find device with uuid 'Tzx4n9-iA60-yu3U-9oRe-R0jh-RBb4-Sw8EmF'.
+  Couldn't find all physical volumes for volume group s0.
+  Couldn't find device with uuid 'Tzx4n9-iA60-yu3U-9oRe-R0jh-RBb4-Sw8EmF'.
+  Couldn't find all physical volumes for volume group s0.
+  Volume group "s0" doesn't exist
+
+In this case, you can make the volume group consistent again with
+"--removemissing":
+
+[root ~]# vgreduce --removemissing s0
+  Couldn't find device with uuid 'Tzx4n9-iA60-yu3U-9oRe-R0jh-RBb4-Sw8EmF'.
+  Couldn't find all physical volumes for volume group s0.
+  Couldn't find device with uuid 'Tzx4n9-iA60-yu3U-9oRe-R0jh-RBb4-Sw8EmF'.
+  Couldn't find all physical volumes for volume group s0.
+  Couldn't find device with uuid 'Tzx4n9-iA60-yu3U-9oRe-R0jh-RBb4-Sw8EmF'.
+  Wrote out consistent volume group s0
+
+Be aware though that if the PV you want to remove was actually in use
+you risk loosing whatever data was stored on it by this method - if
+possible get the PV back on the system and use the normal vgreduce.
+
+If this doesn't help then it would be useful to know what versions of
+LVM2 and device-mapper you are using and what distribution this is on.
+
+Regards,
+
+Bryn.
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.5 (GNU/Linux)
+Comment: Using GnuPG with Fedora - http://enigmail.mozdev.org
+
+iD8DBQFFZM8+6YSQoMYUY94RAp9pAKCgEdic3bWk9+kEefAifHaoTgTOswCfXlO4
+txQM7flkwstodOJmp2Ni1ME=
+=jwiV
+-----END PGP SIGNATURE-----
