@@ -1,19 +1,15 @@
-Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id kAO443st032531
-	for <linux-lvm@redhat.com>; Thu, 23 Nov 2006 23:04:03 -0500
-Received: from wx-out-0506.google.com (wx-out-0506.google.com [66.249.82.235])
-	by mx1.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
-	kAO442bl032683
-	for <linux-lvm@redhat.com>; Thu, 23 Nov 2006 23:04:02 -0500
-Received: by wx-out-0506.google.com with SMTP id s11so751245wxc
-	for <linux-lvm@redhat.com>; Thu, 23 Nov 2006 20:04:02 -0800 (PST)
-Message-ID: <be7468bb0611232004u12b36155j32773dc53e75513f@mail.gmail.com>
-Date: Fri, 24 Nov 2006 12:04:02 +0800
-From: "roderick tapang" <retapang@gmail.com>
+Received: from [127.0.0.1] (sebastian-int.corp.redhat.com [172.16.52.221])
+	by pobox.surrey.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
+	kAO9TmM6030233
+	for <linux-lvm@redhat.com>; Fri, 24 Nov 2006 09:29:49 GMT
+Message-ID: <4566BBE7.5080609@redhat.com>
+Date: Fri, 24 Nov 2006 09:31:19 +0000
+From: "Bryn M. Reeves" <breeves@redhat.com>
 MIME-Version: 1.0
+Subject: Re: [linux-lvm] how to extend an lvm partition?
+References: <5485940d0611231801o6391e2ccmcd827c7d2f44c5a5@mail.gmail.com>
+In-Reply-To: <5485940d0611231801o6391e2ccmcd827c7d2f44c5a5@mail.gmail.com>
 Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-Subject: [linux-lvm] Re: rhel4 u4 lvm2 changes (for PowerPath devices)
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -24,61 +20,53 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: linux-lvm@redhat.com
+Content-Type: text/plain; charset="us-ascii"
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-On 11/24/06, roderick tapang <retapang@gmail.com> wrote:
-> hi,
->
-> i installed RHEL4 update 4 (2.6.9-42.ELsmp) on an HP BL45p (AMD64). i
-> then added 4 EMC hosted disks on it:
->
-> /dev/emcpowerb    lx0060data00vg lvm2 a-   50.00G 24.00G
->   /dev/emcpowerc    lx0060data00vg lvm2 a-   50.00G 24.00G
->   /dev/emcpowerd    lx0060data00vg lvm2 a-   50.00G 24.00G
->   /dev/emcpowere    lx0060data00vg lvm2 a-   50.00G 24.00G
->
-> i've create a couple of ext3 FS on this VG (LV striped across the
-> disks). everytime  i restart the system, i end up with the file system
-> repair prompt - the tw FS can't be mounted as the
-> PVs can't be seen.
-> i removed the entries in /etc/fstab. it appears that the PVs are not
-> being activated automatically during reboot. i had to do a:
->
-> lvmdiskcan
-> vgchange lx0060data00vg -ay
->
-> only then i can mount the FS.
->
-> /dev/mapper/lx0060data00vg-lx0060lvdata00   99G   92M   94G   1% /staging
-> /dev/mapper/lx0060data00vg-lx0060lvdata01  4.0G  1.9G  1.9G  51% /apps
->
->
->  i have 6 other similar blade systems with  EMC disks allocated the
-> same way and they are all running RHEL4 update 3. but i never had this
-> kind of issue. are there any changes in the LVM2 activation during
-> bootup in update4?
-> i didn't find anything related to this in the release notes of update4
-> so i was hoping that someone could enlighten me on this. :)
->
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA1
 
-wooops - its also the same with update3. it appears that the new set
-of disks are ATA and not fiber (as to what the rest of our blades
-have).
-i had to run /etc/init.d/PowerPath start to make the PVs visible.
+C'est Pierre wrote:
+> Hello,
+> 
+> I just got curious, if I migrate the data from a lun to another one
+> which is bigger, with poor man's ghost such as 'dd if=sda of=sdb', how
+> am I going to be able to extend the lvm partition afterwards? is this
+> possible? I know I could add a new partition in the remaining space,
+> pvcreate/vgextend it into the existing VG, but are there other
+> alternatives?
+> 
+> Thanks
+> 
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@redhat.com
+> https://www.redhat.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
 
-now i have to figure out where should it go. that PowerPath command is
-already in /etc/rc.sysinit but still drops me to the maintenance mode
-during boot up if the FS is in /etc/fstab.
-i think i'll file this in bugzilla.
+Hi,
 
+If your version of the LVM2 tools is recent enough you can use the
+pvresize command to achieve this. It normally takes one argument - the
+physical volume path to resize:
 
-erik
+[root ~]# pvresize /dev/loop0
+  Physical volume "/dev/loop0" changed
+  1 physical volume(s) resized / 0 physical volume(s) not resized
 
--- 
-roderick e. tapang, nclp
-retapang at gmail dot com
+This was added in CVS around a year ago - I think it should have made it
+into releases from 2.02.00.
 
-(o_.'       http://counter.li.org/
-//\         ----------------------
-V_/_        Linux User   #  253842
+Without pvresize support, the easiest way to use the extra space is, as
+you said, to partition it as an additional PV.
+
+Regards,
+Bryn.
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.5 (GNU/Linux)
+Comment: Using GnuPG with Fedora - http://enigmail.mozdev.org
+
+iD8DBQFFZrvn6YSQoMYUY94RAjjPAKDCUlGMBkCG3ShhIy48cUwPYuSDLQCfeOVI
+ck5kC0LzecYyAZDBHd1Kgaw=
+=K3/+
+-----END PGP SIGNATURE-----
