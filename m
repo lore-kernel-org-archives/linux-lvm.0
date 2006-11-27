@@ -1,17 +1,15 @@
-Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id kARJPE5k031136
-	for <linux-lvm@redhat.com>; Mon, 27 Nov 2006 14:25:14 -0500
-Received: from web31804.mail.mud.yahoo.com (web31804.mail.mud.yahoo.com
-	[68.142.207.67])
-	by mx1.redhat.com (8.12.11.20060308/8.12.11) with SMTP id
-	kARJPDKJ016257
-	for <linux-lvm@redhat.com>; Mon, 27 Nov 2006 14:25:13 -0500
-Date: Mon, 27 Nov 2006 11:25:07 -0800 (PST)
-From: Gerry Reno <grenoml@yahoo.com>
+Received: from [127.0.0.1] (sebastian-int.corp.redhat.com [172.16.52.221])
+	by pobox.surrey.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
+	kARKGFCw014110
+	for <linux-lvm@redhat.com>; Mon, 27 Nov 2006 20:16:17 GMT
+Message-ID: <456B47EB.50905@redhat.com>
+Date: Mon, 27 Nov 2006 20:17:47 +0000
+From: "Bryn M. Reeves" <breeves@redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Message-ID: <279547.6944.qm@web31804.mail.mud.yahoo.com>
-Subject: [linux-lvm] LVM2: vgcfgrestore lvm behavior
+Subject: Re: [linux-lvm] LVM2: vgcfgrestore lvm behavior
+References: <889212.64055.qm@web31807.mail.mud.yahoo.com>
+In-Reply-To: <889212.64055.qm@web31807.mail.mud.yahoo.com>
+Content-Transfer-Encoding: 7bit
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -23,204 +21,40 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@redhat.com
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-I had originally posted this issue over on the Fedora Forums but it
-really belongs here.
----------------
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA1
 
-I have an LVM backup stored in a file that now I would like to list
-using vgcfgrestore. 
-================================================
-Under LVM1 all I needed was:
-# vgcfgrestore -ll -f /tmp/.mgwork/Volume00.conf
-vgcfgrestore -- this is a backup of volume group "Volume00"
---- Volume group ---
-VG Name Volume00
-VG Access read/write
-VG Status NOT available/resizable
-VG # 0
-MAX LV 256
-Cur LV 2
-Open LV 0
-MAX LV Size 255.99 GB
-Max PV 256
-Cur PV 1
-Act PV 1
-VG Size 50.77 GB
-PE Size 4 MB
-Total PE 12998
-Alloc PE / Size 2500 / 9.77 GB
-Free PE / Size 10498 / 41.01 GB
-VG UUID e8Z7pY-n4os-xpVe-L9V8-t13M-g6RC-xv65cy
+Gerry Reno wrote:
+> Is there some undocumented syntax change for vgcfgrestore under LVM2?
+> 
+> According to the man page it should work the way I am using it.
+> 
+> ??:(
+> 
+> 
 
---- Logical volume ---
-LV Name /dev/Volume00/LogVol00
-VG Name Volume00
-LV Write Access read/write
-LV Status available
-LV # 1
-# open 0
-LV Size 4.88 GB
-Current LE 1250
-Allocated LE 1250
-Allocation next free
-Read ahead sectors 10000
-Block device 58:1
+Hi Gerry,
 
---- Logical volume ---
-LV Name /dev/Volume00/LogVol01
-VG Name Volume00
-LV Write Access read/write
-LV Status available
-LV # 2
-# open 0
-LV Size 4.88 GB
-Current LE 1250
-Allocated LE 1250
-Allocation next free
-Read ahead sectors 10000
-Block device 58:6
+Under LVM2, the --file option is only used when you are actually
+restoring metadata. For example:
 
+vgcfgrestore --file /tmp/vg0_backup.vg vg0
 
---- Physical volume ---
-PV Name /dev/hdc5
-VG Name Volume00
-PV Size 50.78 GB [106494822 secs] / NOT usable 4.19 MB [LVM: 178 KB]
-PV# 1
-PV Status available
-Allocatable yes
-Cur LV 2
-PE Size (KByte) 4096
-Total PE 12998
-Free PE 10498
-Allocated PE 2500
-PV UUID vC0Rl6-A3u0-RhjN-2B4n-DQEx-llBB-lVTt19
+Would restore the vg0 volume group's metadata from /tmp/vg0_backup.vg.
 
-================================================
-Under LVM2 when I try this I get this output:
-# vgcfgrestore -ll -f /tmp/.mgwork/VolGroup00
-Please specify a *single* volume group to restore.
-# vgcfgrestore -ll -f /tmp/.mgwork/VolGroup00 -n VolGroup00
-Please specify a *single* volume group to restore.
-# vgcfgrestore -ll -f /tmp/.mgwork/VolGroup00 VolGroup00
+Currently, -l and -ll will only look at the backups in the
+/etc/lvm/archive directory.
 
-File: /etc/lvm/archive/VolGroup00_00000.vg
-VG name: VolGroup00
-Description: Created *before* executing 'vgdisplay
---ignorelockingfailure -v VolGroup00'
-Backup Time: Sat Oct 28 13:29:00 2006
+Regards,
+Bryn.
 
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.5 (GNU/Linux)
+Comment: Using GnuPG with Fedora - http://enigmail.mozdev.org
 
-File: /etc/lvm/backup/VolGroup00
-VG name: VolGroup00
-Description: Created *after* executing 'vgdisplay
---ignorelockingfailure -v VolGroup00'
-Backup Time: Sat Oct 28 13:29:00 2006
-
-Hmm... Ok, but I'm not interested in those files. I'm interested in the
-file I declared on the command line with the -f flag.
-
-================================================
-as you can see under LVM2 it does not dump the backup VolGroup00 stored
-in my backup file. I can 'cat' the file and it looks normal:
-# cat /tmp/.mgwork/VolGroup00
-# Generated by LVM2: Sat Oct 28 13:29:00 2006
-
-contents = "Text Format Volume Group"
-version = 1
-
-description = "Created *after* executing 'vgdisplay
---ignorelockingfailure -v VolGroup00'"
-
-creation_host = "localhost.localdomain" # Linux localhost.localdomain
-2.6.18-1.2798.fc6 #1 SMP Mon Oct 16 14:54:20 EDT 2
-006 i686
-creation_time = 1162056540 # Sat Oct 28 13:29:00 2006
-
-VolGroup00 {
-id = "RZOOeA-hKQ7-MCDq-7NH9-S8sE-g5ec-dlrHZE"
-seqno = 3
-status = ["RESIZEABLE", "READ", "WRITE"]
-extent_size = 65536 # 32 Megabytes
-max_lv = 0
-max_pv = 0
-
-physical_volumes {
-
-pv0 {
-id = "DWhnOR-emk3-dlHj-2QzW-V41j-pgoh-CdXRtf"
-device = "/dev/hdc3" # Hint only
-
-status = ["ALLOCATABLE"]
-pe_start = 384
-pe_count = 2434 # 76.0625 Gigabytes
-}
-
-pv1 {
-id = "NWfOu4-8kQC-D3uc-hw14-d5bi-Sa2o-JgVH4f"
-device = "/dev/hde1" # Hint only
-
-status = ["ALLOCATABLE"]
-pe_start = 384
-pe_count = 2454 # 76.6875 Gigabytes
-}
-}
-
-logical_volumes {
-
-LogVol00 {
-id = "skZ1EI-9lKu-2sWj-heaj-W41X-kyJh-tHtkvA"
-status = ["READ", "WRITE", "VISIBLE"]
-segment_count = 2
-
-segment1 {
-start_extent = 0
-extent_count = 2454 # 76.6875 Gigabytes
-
-type = "striped"
-stripe_count = 1 # linear
-
-stripes = [
-"pv1", 0
-]
-}
-segment2 {
-start_extent = 2454
-extent_count = 2400 # 75 Gigabytes
-
-type = "striped"
-stripe_count = 1 # linear
-
-stripes = [
-"pv0", 0
-]
-}
-}
-
-LogVol01 {
-id = "1JDMbX-qLqX-TIn6-MsPD-ErE5-mFwz-TAmBkH"
-status = ["READ", "WRITE", "VISIBLE"]
-segment_count = 1
-
-segment1 {
-start_extent = 0
-extent_count = 32 # 1024 Megabytes
-
-type = "striped"
-stripe_count = 1 # linear
-
-stripes = [
-"pv0", 2400
-]
-}
-}
-}
-}
-================================================
-
-Is there some undocumented syntax change for vgcfgrestore under LVM2?
-
-According to the man page it should work the way I am using it.
-
-??:(
+iD8DBQFFa0fq6YSQoMYUY94RAsPhAJ9xRBkcU5Z59zBBp7Vlk4F+9D/7KgCfb+0p
+5VIEC7yyu5pglNZJQBWip/w=
+=9L+j
+-----END PGP SIGNATURE-----
