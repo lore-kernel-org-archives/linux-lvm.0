@@ -1,15 +1,17 @@
-Received: from [127.0.0.1] (sebastian-int.corp.redhat.com [172.16.52.221])
-	by pobox.surrey.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
-	kARKGFCw014110
-	for <linux-lvm@redhat.com>; Mon, 27 Nov 2006 20:16:17 GMT
-Message-ID: <456B47EB.50905@redhat.com>
-Date: Mon, 27 Nov 2006 20:17:47 +0000
-From: "Bryn M. Reeves" <breeves@redhat.com>
-MIME-Version: 1.0
+Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id kARKYWKV022160
+	for <linux-lvm@redhat.com>; Mon, 27 Nov 2006 15:34:32 -0500
+Received: from web31808.mail.mud.yahoo.com (web31808.mail.mud.yahoo.com
+	[68.142.207.71])
+	by mx3.redhat.com (8.13.1/8.13.1) with SMTP id kARKXdPQ020099
+	for <linux-lvm@redhat.com>; Mon, 27 Nov 2006 15:33:39 -0500
+Date: Mon, 27 Nov 2006 12:33:33 -0800 (PST)
+From: Gerry Reno <grenoml@yahoo.com>
 Subject: Re: [linux-lvm] LVM2: vgcfgrestore lvm behavior
-References: <889212.64055.qm@web31807.mail.mud.yahoo.com>
-In-Reply-To: <889212.64055.qm@web31807.mail.mud.yahoo.com>
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <456B47EB.50905@redhat.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Message-ID: <300515.94662.qm@web31808.mail.mud.yahoo.com>
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -23,38 +25,31 @@ List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
------BEGIN PGP SIGNED MESSAGE-----
-Hash: SHA1
-
-Gerry Reno wrote:
-> Is there some undocumented syntax change for vgcfgrestore under LVM2?
+--- "Bryn M. Reeves" <breeves@redhat.com> wrote:
 > 
-> According to the man page it should work the way I am using it.
+> Hi Gerry,
 > 
-> ??:(
+> Under LVM2, the --file option is only used when you are actually
+> restoring metadata. For example:
 > 
+> vgcfgrestore --file /tmp/vg0_backup.vg vg0
+> 
+> Would restore the vg0 volume group's metadata from
+> /tmp/vg0_backup.vg.
+> 
+> Currently, -l and -ll will only look at the backups in the
+> /etc/lvm/archive directory.
+> 
+> Regards,
+> Bryn.
 > 
 
-Hi Gerry,
+Bryn,
+  The ability to use -l and -ll to review an LVM backup file is very
+useful when used with -f.  I'm sure I'm not the only one that keeps LVM
+backup files in locations other than /etc/lvm/archive.  What if you
+lose /etc and are booted from rescue?  Can RedHat please restore the
+lost functionality?  This was very useful under LVM1.
 
-Under LVM2, the --file option is only used when you are actually
-restoring metadata. For example:
-
-vgcfgrestore --file /tmp/vg0_backup.vg vg0
-
-Would restore the vg0 volume group's metadata from /tmp/vg0_backup.vg.
-
-Currently, -l and -ll will only look at the backups in the
-/etc/lvm/archive directory.
-
-Regards,
-Bryn.
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.5 (GNU/Linux)
-Comment: Using GnuPG with Fedora - http://enigmail.mozdev.org
-
-iD8DBQFFa0fq6YSQoMYUY94RAsPhAJ9xRBkcU5Z59zBBp7Vlk4F+9D/7KgCfb+0p
-5VIEC7yyu5pglNZJQBWip/w=
-=9L+j
------END PGP SIGNATURE-----
+thx,
+Gerry
