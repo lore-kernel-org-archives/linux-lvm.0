@@ -1,24 +1,17 @@
 Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id kAQFBS7Q001658
-	for <linux-lvm@redhat.com>; Sun, 26 Nov 2006 10:11:28 -0500
-Received: from ms-smtp-04.southeast.rr.com (ms-smtp-04.southeast.rr.com
-	[24.25.9.103])
-	by mx1.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
-	kAQFBRK2028389
-	for <linux-lvm@redhat.com>; Sun, 26 Nov 2006 10:11:28 -0500
-Message-ID: <4569AE95.3070201@poochiereds.net>
-Date: Sun, 26 Nov 2006 10:11:17 -0500
-From: Jeff Layton <jlayton@poochiereds.net>
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id kARJ89De025336
+	for <linux-lvm@redhat.com>; Mon, 27 Nov 2006 14:08:09 -0500
+Received: from web31807.mail.mud.yahoo.com (web31807.mail.mud.yahoo.com
+	[68.142.207.70])
+	by mx1.redhat.com (8.12.11.20060308/8.12.11) with SMTP id
+	kARJ87I1007278
+	for <linux-lvm@redhat.com>; Mon, 27 Nov 2006 14:08:08 -0500
+Date: Mon, 27 Nov 2006 11:08:01 -0800 (PST)
+From: Gerry Reno <grenoml@yahoo.com>
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] Update to lvm2create_initrd
-References: <CA207AAA-711C-4AAD-911A-4301C61C165B@mayle.org>
-	<20061114170247.GD30653@agk.surrey.redhat.com>
-	<20061114174907.GA15269@qube.mayle.org>
-	<A6195709-81DE-4F00-996F-6490A367593C@mayle.org>
-	<20061121223919.GZ4409@agk.surrey.redhat.com>
-	<20061121224454.GA4409@agk.surrey.redhat.com>
-In-Reply-To: <20061121224454.GA4409@agk.surrey.redhat.com>
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Message-ID: <889212.64055.qm@web31807.mail.mud.yahoo.com>
+Subject: [linux-lvm] LVM2: vgcfgrestore lvm behavior
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -29,24 +22,205 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: Douglas Mayle <douglas@mayle.org>, LVM general discussion and development <linux-lvm@redhat.com>, Jeff Layton <jtlayton@poochiereds.net>
+Content-Type: text/plain; charset="us-ascii"
+To: linux-lvm@redhat.com
 
-Alasdair G Kergon wrote:
-> On Tue, Nov 21, 2006 at 10:39:19PM +0000, Alasdair G Kergon wrote:
->> Well I was waiting for confirmation from someone using Debian that the changes
->> don't break anything.  But I think I've waited long enough now so I'll just
->> commit it, and if anything does break we'll fix it later.
->  
-> See http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=324162 :-)
-> 
-> Reported over a year ago.
-> 
-> Alasdair
+I had originally posted this issue over on the Fedora Forums but it
+really belongs here.
+---------------
 
-Sorry I haven't chimed in sooner. This patch seems reasonable to me. I 
-haven't used this script for some time as I don't have any Debian 
-machines at the moment. Doug, you're welcome to take over maintainership 
-of it if you're willing :-)
+I have an LVM backup stored in a file that now I would like to list
+using vgcfgrestore. 
+================================================
+Under LVM1 all I needed was:
+# vgcfgrestore -ll -f /tmp/.mgwork/Volume00.conf
+vgcfgrestore -- this is a backup of volume group "Volume00"
+--- Volume group ---
+VG Name Volume00
+VG Access read/write
+VG Status NOT available/resizable
+VG # 0
+MAX LV 256
+Cur LV 2
+Open LV 0
+MAX LV Size 255.99 GB
+Max PV 256
+Cur PV 1
+Act PV 1
+VG Size 50.77 GB
+PE Size 4 MB
+Total PE 12998
+Alloc PE / Size 2500 / 9.77 GB
+Free PE / Size 10498 / 41.01 GB
+VG UUID e8Z7pY-n4os-xpVe-L9V8-t13M-g6RC-xv65cy
 
--- Jeff
+--- Logical volume ---
+LV Name /dev/Volume00/LogVol00
+VG Name Volume00
+LV Write Access read/write
+LV Status available
+LV # 1
+# open 0
+LV Size 4.88 GB
+Current LE 1250
+Allocated LE 1250
+Allocation next free
+Read ahead sectors 10000
+Block device 58:1
+
+--- Logical volume ---
+LV Name /dev/Volume00/LogVol01
+VG Name Volume00
+LV Write Access read/write
+LV Status available
+LV # 2
+# open 0
+LV Size 4.88 GB
+Current LE 1250
+Allocated LE 1250
+Allocation next free
+Read ahead sectors 10000
+Block device 58:6
+
+
+--- Physical volume ---
+PV Name /dev/hdc5
+VG Name Volume00
+PV Size 50.78 GB [106494822 secs] / NOT usable 4.19 MB [LVM: 178 KB]
+PV# 1
+PV Status available
+Allocatable yes
+Cur LV 2
+PE Size (KByte) 4096
+Total PE 12998
+Free PE 10498
+Allocated PE 2500
+PV UUID vC0Rl6-A3u0-RhjN-2B4n-DQEx-llBB-lVTt19
+
+================================================
+Under LVM2 when I try this I get this output:
+# vgcfgrestore -ll -f /tmp/.mgwork/VolGroup00
+Please specify a *single* volume group to restore.
+# vgcfgrestore -ll -f /tmp/.mgwork/VolGroup00 -n VolGroup00
+Please specify a *single* volume group to restore.
+# vgcfgrestore -ll -f /tmp/.mgwork/VolGroup00 VolGroup00
+
+File: /etc/lvm/archive/VolGroup00_00000.vg
+VG name: VolGroup00
+Description: Created *before* executing 'vgdisplay
+--ignorelockingfailure -v VolGroup00'
+Backup Time: Sat Oct 28 13:29:00 2006
+
+
+File: /etc/lvm/backup/VolGroup00
+VG name: VolGroup00
+Description: Created *after* executing 'vgdisplay
+--ignorelockingfailure -v VolGroup00'
+Backup Time: Sat Oct 28 13:29:00 2006
+
+Hmm... Ok, but I'm not interested in those files. I'm interested in the
+file I declared on the command line with the -f flag.
+
+================================================
+as you can see under LVM2 it does not dump the backup VolGroup00 stored
+in my backup file. I can 'cat' the file and it looks normal:
+# cat /tmp/.mgwork/VolGroup00
+# Generated by LVM2: Sat Oct 28 13:29:00 2006
+
+contents = "Text Format Volume Group"
+version = 1
+
+description = "Created *after* executing 'vgdisplay
+--ignorelockingfailure -v VolGroup00'"
+
+creation_host = "localhost.localdomain" # Linux localhost.localdomain
+2.6.18-1.2798.fc6 #1 SMP Mon Oct 16 14:54:20 EDT 2
+006 i686
+creation_time = 1162056540 # Sat Oct 28 13:29:00 2006
+
+VolGroup00 {
+id = "RZOOeA-hKQ7-MCDq-7NH9-S8sE-g5ec-dlrHZE"
+seqno = 3
+status = ["RESIZEABLE", "READ", "WRITE"]
+extent_size = 65536 # 32 Megabytes
+max_lv = 0
+max_pv = 0
+
+physical_volumes {
+
+pv0 {
+id = "DWhnOR-emk3-dlHj-2QzW-V41j-pgoh-CdXRtf"
+device = "/dev/hdc3" # Hint only
+
+status = ["ALLOCATABLE"]
+pe_start = 384
+pe_count = 2434 # 76.0625 Gigabytes
+}
+
+pv1 {
+id = "NWfOu4-8kQC-D3uc-hw14-d5bi-Sa2o-JgVH4f"
+device = "/dev/hde1" # Hint only
+
+status = ["ALLOCATABLE"]
+pe_start = 384
+pe_count = 2454 # 76.6875 Gigabytes
+}
+}
+
+logical_volumes {
+
+LogVol00 {
+id = "skZ1EI-9lKu-2sWj-heaj-W41X-kyJh-tHtkvA"
+status = ["READ", "WRITE", "VISIBLE"]
+segment_count = 2
+
+segment1 {
+start_extent = 0
+extent_count = 2454 # 76.6875 Gigabytes
+
+type = "striped"
+stripe_count = 1 # linear
+
+stripes = [
+"pv1", 0
+]
+}
+segment2 {
+start_extent = 2454
+extent_count = 2400 # 75 Gigabytes
+
+type = "striped"
+stripe_count = 1 # linear
+
+stripes = [
+"pv0", 0
+]
+}
+}
+
+LogVol01 {
+id = "1JDMbX-qLqX-TIn6-MsPD-ErE5-mFwz-TAmBkH"
+status = ["READ", "WRITE", "VISIBLE"]
+segment_count = 1
+
+segment1 {
+start_extent = 0
+extent_count = 32 # 1024 Megabytes
+
+type = "striped"
+stripe_count = 1 # linear
+
+stripes = [
+"pv0", 2400
+]
+}
+}
+}
+}
+================================================
+
+Is there some undocumented syntax change for vgcfgrestore under LVM2?
+
+According to the man page it should work the way I am using it.
+
+??:(
