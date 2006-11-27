@@ -1,16 +1,16 @@
 Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id kARJ89De025336
-	for <linux-lvm@redhat.com>; Mon, 27 Nov 2006 14:08:09 -0500
-Received: from web31807.mail.mud.yahoo.com (web31807.mail.mud.yahoo.com
-	[68.142.207.70])
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id kARJPE5k031136
+	for <linux-lvm@redhat.com>; Mon, 27 Nov 2006 14:25:14 -0500
+Received: from web31804.mail.mud.yahoo.com (web31804.mail.mud.yahoo.com
+	[68.142.207.67])
 	by mx1.redhat.com (8.12.11.20060308/8.12.11) with SMTP id
-	kARJ87I1007278
-	for <linux-lvm@redhat.com>; Mon, 27 Nov 2006 14:08:08 -0500
-Date: Mon, 27 Nov 2006 11:08:01 -0800 (PST)
+	kARJPDKJ016257
+	for <linux-lvm@redhat.com>; Mon, 27 Nov 2006 14:25:13 -0500
+Date: Mon, 27 Nov 2006 11:25:07 -0800 (PST)
 From: Gerry Reno <grenoml@yahoo.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Message-ID: <889212.64055.qm@web31807.mail.mud.yahoo.com>
+Message-ID: <279547.6944.qm@web31804.mail.mud.yahoo.com>
 Subject: [linux-lvm] LVM2: vgcfgrestore lvm behavior
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
