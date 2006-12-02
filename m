@@ -1,16 +1,27 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id kB19xqL7017080
-	for <linux-lvm@redhat.com>; Fri, 1 Dec 2006 04:59:52 -0500
-Received: from web50709.mail.yahoo.com (web50709.mail.yahoo.com
-	[206.190.38.250])
-	by mx3.redhat.com (8.13.1/8.13.1) with SMTP id kB19xmTp002301
-	for <linux-lvm@redhat.com>; Fri, 1 Dec 2006 04:59:48 -0500
-Message-ID: <20061201095942.41985.qmail@web50709.mail.yahoo.com>
-Date: Fri, 1 Dec 2006 01:59:42 -0800 (PST)
-From: santhosh fernandes <santhosh_fernandes@yahoo.com>
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id kB2HN3CN012578
+	for <linux-lvm@redhat.com>; Sat, 2 Dec 2006 12:23:03 -0500
+Received: from smtp2.berklee.edu (smtp.berklee.edu [192.136.22.34])
+	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id kB2HMhkc014101
+	for <linux-lvm@redhat.com>; Sat, 2 Dec 2006 12:22:43 -0500
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by smtp2.berklee.edu (Postfix) with ESMTP id 807E82C00BD
+	for <linux-lvm@redhat.com>; Sat,  2 Dec 2006 12:22:33 -0500 (EST)
+Received: from smtp2.berklee.edu ([127.0.0.1])
+	by localhost (smtp2.berklee.edu [127.0.0.1]) (amavisd-new, port 10024)
+	with LMTP id U3u-eENfZB9Z for <linux-lvm@redhat.com>;
+	Sat,  2 Dec 2006 12:18:42 -0500 (EST)
+Received: from [192.168.1.202]
+	(216-15-121-70.c3-0.frm-ubr3.sbo-frm.ma.static.cable.rcn.com
+	[216.15.121.70])
+	by smtp2.berklee.edu (Postfix) with ESMTP id 1D82B2C000A
+	for <linux-lvm@redhat.com>; Sat,  2 Dec 2006 12:18:42 -0500 (EST)
+Message-ID: <4571B56F.9050506@berklee.edu>
+Date: Sat, 02 Dec 2006 12:18:39 -0500
+From: Louis Guillaume <lguillaume@berklee.edu>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: [linux-lvm] LV creation error
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] Stability of pvresize
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -21,73 +32,27 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@redhat.com
 
-Hi ,
+Hi,
 
-I am creating volume group on SLES 9 SP3 server. LV
-creation is failing with error message �device-mapper
-ioctl cmd 9 failed: Invalid argument�
+I've seen a couple messages recently about pvresize. Since I'm about to
+implement a system that might depend on this functionality, I'd like to
+know whether it works well!!!
 
-System configuration :
+Here's the scenario:
 
-OS: SLES9 SP3 
-Hardware: i386
-LVM version:     2.01.14 (2005-08-04)
-Library version: 1.01.01 (2005-03-29)
-Driver version:  4.4.0
-Kernel version: 2.6.5-7.244-smp
-Device mapper multipath version : 0.4.5-0.11
+  . Using an San.
+  . A meta-LUN is created consisting of 2 `real' LUNs.
+  . Meta-LUN is incorporated as a PV on the Linux Host.
+  . We add a third LUN to the meta-LUN on the SAN.
 
-Any body has come cross similar situation. ? Please
-help me to resolve this issue
+This is where pvresize is supposed to come in. Once the PV is resized,
+is the VG automatically aware of the new PEs? Are there any pitfalls in
+this scheme?
 
-The screen shot is
+The alternative is to not use meta-LUNs and just add a new PV as needed
+and vgextend. But this puts more work on the server's CPU. Opinions?
 
-
-HALIN02:~ # lvcreate -L1M -n rsm-part-disk-vg-lv
-rsm-part-disk-vg
-  Found duplicate PV g8R9DTRugiA5SmfXJ3QWXe3hJhz43GaG:
-using /dev/sdc not /dev/sda
-  Found duplicate PV YaPhu7JBspihkYXUSskLExtolxt82otV:
-using /dev/sdd1 not /dev/sdb1
-  Found duplicate PV g8R9DTRugiA5SmfXJ3QWXe3hJhz43GaG:
-using /dev/sde not /dev/sda
-  Found duplicate PV YaPhu7JBspihkYXUSskLExtolxt82otV:
-using /dev/sdf1 not /dev/sdb1
-  Found duplicate PV g8R9DTRugiA5SmfXJ3QWXe3hJhz43GaG:
-using /dev/sdg not /dev/sda
-  Found duplicate PV YaPhu7JBspihkYXUSskLExtolxt82otV:
-using /dev/sdh1 not /dev/sdb1
-  /dev/sdi: read failed after 0 of 4096 at 0:
-Input/output error
-  /dev/sdj: read failed after 0 of 4096 at 0:
-Input/output error
-  /dev/sdk: read failed after 0 of 4096 at 0:
-Input/output error
-  /dev/sdl: read failed after 0 of 4096 at 0:
-Input/output error
-  Rounding up size to full physical extent 4.00 MB
-  device-mapper ioctl cmd 9 failed: Invalid argument
-  Couldn't load device
-'rsm--part--disk--vg-rsm--part--disk--vg--lv'.
-  Failed to activate new LV.
-
-
-Thanks in advance.
-
-Regards
-Santhosh
-
-
-
-
-
-
-
- 
-____________________________________________________________________________________
-Want to start your own business?
-Learn how on Yahoo! Small Business.
-http://smallbusiness.yahoo.com/r-index
+Louis
