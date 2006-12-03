@@ -1,16 +1,28 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id kB3527tF003884
-	for <linux-lvm@redhat.com>; Sun, 3 Dec 2006 00:02:07 -0500
-Received: from mail-ihug.icp-qv1-irony1.iinet.net.au
-	(ihug-mail.icp-qv1-irony1.iinet.net.au [203.59.1.195])
-	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id kB351LjV012337
-	for <linux-lvm@redhat.com>; Sun, 3 Dec 2006 00:01:22 -0500
-From: "Tom" <trnews@bigpond.com>
-Date: Sun, 3 Dec 2006 16:04:18 +1100
-Message-ID: <000001c71698$7d270de0$c801a8c0@Laptop001>
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id kB3DPYdd024876
+	for <linux-lvm@redhat.com>; Sun, 3 Dec 2006 08:25:34 -0500
+Received: from mout2.freenet.de (mout2.freenet.de [194.97.50.155])
+	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id kB3DPWd3000921
+	for <linux-lvm@redhat.com>; Sun, 3 Dec 2006 08:25:32 -0500
+Received: from [194.97.50.135] (helo=mx2.freenet.de)
+	by mout2.freenet.de with esmtpa (Exim 4.62)
+	(envelope-from <Richard.Kampmann@freenet.de>) id 1GqrLX-0006eq-9D
+	for linux-lvm@redhat.com; Sun, 03 Dec 2006 14:25:31 +0100
+Received: from p54abd1d5.dip.t-dialin.net ([84.171.209.213]:6978
+	helo=mars.rkampmann.local)
+	by mx2.freenet.de with esmtpsa (ID Richard.Kampmann@freenet.de)
+	(TLSv1:AES256-SHA:256) (port 25) (Exim 4.62 #12) id 1GqrLX-0005I6-2g
+	for linux-lvm@redhat.com; Sun, 03 Dec 2006 14:25:31 +0100
+From: Richard Kampmann <Richard.Kampmann@freenet.de>
+Subject: Re: [linux-lvm] LVM problem - how to recover?
+Date: Sun, 3 Dec 2006 14:26:24 +0100
+References: <200611282115.15335.Richard.Kampmann@freenet.de>
+In-Reply-To: <200611282115.15335.Richard.Kampmann@freenet.de>
 MIME-Version: 1.0
+Content-Type: multipart/signed; boundary="nextPart1278660.hivsGq9S2Z";
+	protocol="application/pgp-signature"; micalg=pgp-sha1
 Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] Changed PV - How to Rebuild Linux LVM
+Message-Id: <200612031426.30561.Richard.Kampmann@freenet.de>
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -21,195 +33,84 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@redhat.com
 
-Hi,
+--nextPart1278660.hivsGq9S2Z
+Content-Type: text/plain;
+  charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+Content-Disposition: inline
 
-I have done something foolish and would like to know if my error is
-recoverable.
+Hi everybody,
 
-I have a locally connected hardware raid controller (Adaptec 2410SA) which
-running in Raid 5 with 3 x 500G drives and a total capacity of 935GB. The
-array is recognised in the OS [FC5] as /dev/sdd. I have LVM running on
-/dev/sdd with a Volume Group "NewVolGroup" and Logical Volume "NewLV"
+I'm a bit disappointed, because there was really no feedback to my mail.
 
-I intended to do the following:
+The situation is a real problem for me - is there anything missing? Or is=20
+there no way to recover (can't believe that ...)?
+Wrong way or place to ask? Then please tell me where to go ...
 
-1. Add another drive to the hardware array expanding its capacity from
-~936MB to ~1.36TB
-2. In the hardware raid controller keep the existing logical device
-[/dev/sdd] at 936MB and create a new logical device [dev/sde] to absorb the
-spare capacity. 
-3. Add a new PV /dev/sde to NewVolGroup 
-4. Expand the capacity of NewVolGroup hopefully all without data loss.
+I tried to find a solution myself (also with help of Google ...), but it di=
+d=20
+not help me.
 
-What I actually did (in error) was extend the logical device in the raid
-array to a total capacity of 1.36TB instead of adding the new capacity as a
-new logical device. Now LVM is all screwed up as it is expecting to find a
-PV of 936MB capacity not 1.36TB at /dev/sdd
+Bye
 
-My question is can I recover this LVM group or have I lost the data and need
-to start again (groan). The volume group in question is
-/dev/NewVolGroup/NewLV. The physical raid device is /dev/sdd. I am getting
-device mapper errors left right and centre. I assume I need to restore the
-PV metadata but maybe that is pointless given it is no longer pointing to a
-volume of the same size. Failing a solution my next step is to fry the
-partition and recreate the LVM.
+Richard Kampmann
 
-Some detail follows. I have limited raid and lvm experience so any thoughts
-welcome. Tom
+Am Dienstag, 28. November 2006 21:15 schrieb Richard Kampmann:
+> Hi everybody ...
+>
+> I recently had a lvm crash from which I now have to recover. So now I need
+> your help ...
+>
+> The system is a SUSE 10.1 system with actual patches.
+> # uname -rio
+> 2.6.16.21-0.25-default i386 GNU/Linux
+> # lvm version
+>   LVM version:     2.02.02 (2006-02-07)
+>   Library version: 1.02.03 (2006-02-08)
+>   Driver version:  4.5.0
+> #
+>
+> There was the unenlightened crash and before there was a volume goup
+> spanning two physical partitions (sda2, sdb2), each on one physical disk
+> (sda, sdb). The system froze (maybe in coincidence with some
+> snapshot-handling) and I had to press the reset button. When rebooting lvm
+> told me he could not open the volume group because one pv was missing. The
+> partition looked OK when checking the partition table. I tried several
+> things - and to do a vgcfgrestore but it did not help.
+>
+> The volume group (system_vg) contained the root partition, so I installed=
+ a
+> new system on a third disc and tried to recover the old volume group.
+> Unfortunately when doing the pvcreate for the two physical volumes I did
+> NOT choose the "--zero n" switch.
+>
+> Fact is: I now have the volume group containing two physical discs and two
+> physical volumes with the correct PV UUIDs. But the first sectors are
+> zeroed, aren't they?
+>
+> Any way to recover the LVs of the old volume group? A vgcfgrestore (YES,
+> there was a vgcfgbackup before!) does not work ... bad luck.
+>
+> Ah - and all logical volumes contain Reiser Filesystems V 3.6 - they MUST
+> still be there ...
+>
+> So - what could be my next steps?
+>
+> Bye
+>
+> Richard Kampmann
 
-##############################
+--nextPart1278660.hivsGq9S2Z
+Content-Type: application/pgp-signature
 
-[root ~]# mount /dev/NewVolGroup/NewLV /newdir
-mount: you must specify the filesystem type
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.2 (GNU/Linux)
 
-[root ~]# tail /var/log/messages
-Nov 29 15:59:41 syd001 kernel: Buffer I/O error on device dm-2, logical
-block 0
-Nov 29 15:59:41 syd001 kernel: Buffer I/O error on device dm-2, logical
-block 1
-Nov 29 15:59:41 syd001 kernel: Buffer I/O error on device dm-2, logical
-block 2
-Nov 29 15:59:41 syd001 kernel: Buffer I/O error on device dm-2, logical
-block 3
-Nov 29 15:59:41 syd001 kernel: scsi 2:0:0:0: rejecting I/O to dead device
-Nov 29 15:59:41 syd001 kernel: Buffer I/O error on device dm-2, logical
-block 0
-Nov 29 15:59:41 syd001 kernel: scsi 2:0:0:0: rejecting I/O to dead device
-Nov 29 15:59:41 syd001 kernel: Buffer I/O error on device dm-2, logical
-block 244173823
-Nov 29 15:59:41 syd001 kernel: scsi 2:0:0:0: rejecting I/O to dead device
-Nov 29 15:59:41 syd001 kernel: Buffer I/O error on device dm-2, logical
-block 244173823
-Nov 29 15:59:41 syd001 kernel: scsi 2:0:0:0: rejecting I/O to dead device
-Nov 29 15:59:41 syd001 kernel: Buffer I/O error on device dm-2, logical
-block 0
-Nov 29 15:59:41 syd001 kernel: scsi 2:0:0:0: rejecting I/O to dead device
-Nov 29 15:59:41 syd001 kernel: Buffer I/O error on device dm-2, logical
-block 1
-Nov 29 15:59:41 syd001 kernel: scsi 2:0:0:0: rejecting I/O to dead device
-Nov 29 15:59:41 syd001 kernel: Buffer I/O error on device dm-2, logical
-block 2
-Nov 29 15:59:41 syd001 kernel: scsi 2:0:0:0: rejecting I/O to dead device
+iD8DBQBFctCGyBq3/LsKGjcRAt/4AKCvxugooEewthDAFKqzca6xlWBUEACeKIZB
+sRuqHidPpS9xTWqz1CjL5iI=
+=R0Eo
+-----END PGP SIGNATURE-----
 
-
-[root ~]# pvscan
-/dev/dm-2: read failed after 0 of 4096 at 1000135917568: Input/output error
-/dev/dm-2: read failed after 0 of 4096 at 0: Input/output error
-PV /dev/sdd VG NewVolGroup lvm2 [931.45 GB / 0 free]
-PV /dev/hda2 VG VolGroup00 lvm2 [57.16 GB / 32.00 MB free]
-Total: 2 [988.61 GB] / in use: 2 [988.61 GB] / in no VG: 0 [0 ]
-
-
-[root ~]# df
-Filesystem 1K-blocks Used Available Use% Mounted on
-/dev/mapper/VolGroup00-LogVol00
-57008372 3856672 50209136 8% /
-/dev/hda1 102454 41016 56148 43% /boot
-/dev/shm 257400 0 257400 0% /dev/shm
-/dev/md0 153834788 92448004 53572372 64% /home
-
-
-[root ~]# /etc/fstab
-.
-/dev/NewVolGroup/NewLV /newdir ext3 rw,nosuid 0 0
-.
-
-[root ~]# pvs -a
-/dev/dm-2: read failed after 0 of 4096 at 1000135917568: Input/output error
-/dev/dm-2: read failed after 0 of 4096 at 0: Input/output error
-/dev/dm-2: read failed after 0 of 4096 at 0: Input/output error
-PV VG Fmt Attr PSize PFree
-/dev/dm-0 -- 0 0
-/dev/dm-1 -- 0 0
-/dev/dm-2 -- 0 0
-/dev/hda1 -- 0 0
-/dev/hda2 VolGroup00 lvm2 a- 57.16G 32.00M
-/dev/md0 -- 0 0
-.
-/dev/ramdisk -- 0 0
-/dev/sdd NewVolGroup lvm2 a- 931.45G 0
-
-
-[root ~]# lvs -a
-/dev/dm-2: read failed after 0 of 4096 at 0: Input/output error
-LV VG Attr LSize Origin Snap% Move Log Copy%
-NewLV NewVolGroup -wi-a- 931.45G
-LogVol00 VolGroup00 -wi-ao 56.12G
-LogVol01 VolGroup00 -wi-ao 1.00G
-
-
-[root ~]# fdisk /dev/sdd
-The number of cylinders for this disk is set to 182390.
-There is nothing wrong with that, but this is larger than 1024,
-and could in certain setups cause problems with:
-1) software that runs at boot time (e.g., old versions of LILO)
-2) booting and partitioning software from other OSs
-   (e.g., DOS FDISK, OS/2 FDISK)
-
-Command (m for help): p
-
-Disk /dev/sdd: 1500.2 GB, 1500216557568 bytes
-255 heads, 63 sectors/track, 182390 cylinders
-Units = cylinders of 16065 * 512 = 8225280 bytes
-
-   Device Boot      Start         End      Blocks   Id  System
-
-Command (m for help):  
-
-[root ~]# vi /etc/lvm/archive/NewVolGroup-00001.vg
-# Generated by LVM2: Mon Mar 13 10:50:27 2006
-
-contents = "Text Format Volume Group"
-version = 1
-
-description = "Created *before* executing 'lvcreate -l 238451 NewVolGroup -n
-NewLV'"
-
-creation_host = "<removed>"     # Linux <removed> 2.6.15-1.1833_FC4smp #1
-SMP Wed Mar 1 23:56:51 EST 2006 i686
-creation_time = 1142207427      # Mon Mar 13 10:50:27 2006
-
-NewVolGroup {
-        id = "<vol group id string>"
-        seqno = 1
-        status = ["RESIZEABLE", "READ", "WRITE"]
-        extent_size = 8192              # 4 Megabytes
-        max_lv = 0
-        max_pv = 0
-
-        physical_volumes {
-
-                pv0 {
-                        id = "<pv id string>"
-                        device = "/dev/sdd"    # Hint only
-
-                        status = ["ALLOCATABLE"]
-                        pe_start = 384
-                        pe_count = 238451       # 931.449 Gigabytes
-                }
-        }
-
-        logical_volumes {
-
-                NewLV {
-                        id = "<newlv id string>"
-                        status = ["READ", "WRITE", "VISIBLE"]
-                        segment_count = 1
-
-                        segment1 {
-                                start_extent = 0
-                                extent_count = 238451   # 931.449 Gigabytes
-
-                                type = "striped"
-                                stripe_count = 1        # linear
-
-                                stripes = [
-                                        "pv0", 0
-                                ]
-                        }
-                }
-        }
-}
+--nextPart1278660.hivsGq9S2Z--
