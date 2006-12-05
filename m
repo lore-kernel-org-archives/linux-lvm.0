@@ -1,20 +1,17 @@
-Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id kB55jUDR023102
-	for <linux-lvm@redhat.com>; Tue, 5 Dec 2006 00:45:30 -0500
-Received: from goliath.broudy.net (dsl093-123-200.den1.dsl.speakeasy.net
-	[66.93.123.200])
-	by mx1.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
-	kB55jTEU010256
-	for <linux-lvm@redhat.com>; Tue, 5 Dec 2006 00:45:29 -0500
-Received: from [10.222.3.226] (birtha.dyn.arl.broudy.net [10.222.3.226])
-	by goliath.broudy.net (Postfix) with ESMTP id 69AC81C69E
-	for <linux-lvm@redhat.com>; Mon,  4 Dec 2006 22:45:15 -0700 (MST)
-Message-ID: <4575076A.8010505@broudy.net>
-Date: Mon, 04 Dec 2006 22:45:14 -0700
-From: Dave Broudy <dave@broudy.net>
+Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id kB59ciSb007522
+	for <linux-lvm@redhat.com>; Tue, 5 Dec 2006 04:38:44 -0500
+Received: from web51113.mail.yahoo.com (web51113.mail.yahoo.com
+	[206.190.39.90])
+	by mx3.redhat.com (8.13.1/8.13.1) with SMTP id kB59cg30024638
+	for <linux-lvm@redhat.com>; Tue, 5 Dec 2006 04:38:42 -0500
+Date: Tue, 5 Dec 2006 01:38:36 -0800 (PST)
+From: Dave <davo_muc@yahoo.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] lvrename hanging on snapshots
+Content-Transfer-Encoding: 8bit
+Message-ID: <690999.71486.qm@web51113.mail.yahoo.com>
+Subject: [linux-lvm] vgimport/vgexport commands when logically moving disks
+	between systems
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -25,47 +22,81 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: linux-lvm@redhat.com
+Content-Type: text/plain; charset="us-ascii"
+To: Linux LVM <linux-lvm@redhat.com>
 
-When I try to run "lvrename vg00 usr_p0 usr_p1" the command hangs, the 
-CPU goes to 100% utilization in wait state, and the whole system pretty 
-much hangs (not completely, but enough that I can't do a clean shutdown 
-and have to power cycle).
+Hello,
 
-Prior to running this command vg00/usr_p0 exists and is a snapshot. 
-vg00/usr_p1 does not exist.
+I believe I might be misunderstanding whether vgimport and vgexport are needed in my
+particular situation.  It would be great to get some feedback for clarification.
 
-All the other LVM operations I try work fine, including creating and 
-removing snapshots. lvrename -t works, but obviously doesn't do anything.
+THE SETUP:
 
-I have managed to capture a strace as well as run lvm_dump.sh -a, and 
-the results are here: http://www.broudy.net/lvrename/. The lvm_dump is 
-not from when the system is hung.
+LVM1 (1.0.8-14) on two RedHat AS3 systems (kernel: 2.4.21-47.ELsmp).
+I think the same concept applies for LVM2 as well though.
+Machine A is primary and Machine B is backup in a two-node Linux heartbeat cluster.
+Both machines are connected to the same SAN via fiber, and see the same disks, where
+the volume groups reside.
 
-The last thing in the strace is a couple of ioctls on 
-/dev/mapper/control, DM_DEV_SUSPEND being the last.
+THE STRATEGY:
 
-Kernel is stock Debian Sarge 2.6.8-2-k7
+The idea is for A to have the LVM file systems mounted, and when a failure is
+detected, have the LVM file systems "moved" to (or seen by) system B.  The way this
+is currently accomplished is for A to do the following upon detection of a failure:
 
-LVM VERSION:
-  LVM version:     2.01.04 (2005-02-09)
-  Library version: 1.01.00-ioctl (2005-01-17)
-  Driver version:  4.1.0
-DEVICE MAPPER VERSION:
-Library version:   1.01.00-ioctl (2005-01-17)
-Driver version:    4.1.0
++ unmount file systems
++ deactivate (vgchange -an $vg)
++ export (vgexport $vg)
 
-I'm more that will to debug this problem, try patches, etc, I reproduced 
-this on a machine that isn't very critical. But I'm not sure what steps 
-to take.
+then, on system B:
 
-Thanks,
++ import & activate (vgimport $vg $disks)
++ mount file systems
+
+THE ISSUE:
+
+The export works as expected on A, but upon import on B, a return code of 4 is
+returned meaning "volume group already exists".  The mounting works properly, but
+all the disks are shown like this:
+
+"inactive PV /dev/sdx  is in EXPORTED VG $vg"  
+
+when inspected with pvscan.
+
+
+Does a vgimport and/or vgexport mark the disks themselves, or simply update the
+system on which the commands are run???  I suppose that is essentially the heart of
+this issue.
+
+I'm starting to believe that for our strategy the vgexport and vgimport commands are
+not necessary, and are actually causing the problem.  (The HOWTO mentions these
+commands are used to move disks between systems, but perhaps that is meant to refer
+to disks that are only physically moved?)
+
+Instead, the following strategy might be correct in case system A fails (Note: no
+vgimport or vgexport commands):
+
++ unmount fs
++ vgchange -an $vg
+
+then, on system B:
+
++ vgchange -ay $vg
++ mount fs
+
+
+IS THIS CORRECT???
+
+
+Thanks in advance for any helpful feedback.
+Cheers,
 Dave
 
--- 
-Dave Broudy
-dave@broudy.net
-Phone: 303.278.0908      Mobile: 703.401.5955        Fax: 303.674.6840
-http://www.broudy.net/
-AIM/YIM: dbroudy
+
+
+
+ 
+____________________________________________________________________________________
+Do you Yahoo!?
+Everyone is raving about the all-new Yahoo! Mail beta.
+http://new.mail.yahoo.com
