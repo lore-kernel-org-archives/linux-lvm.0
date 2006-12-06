@@ -1,24 +1,30 @@
 Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id kB5F0lBv026955
-	for <linux-lvm@redhat.com>; Tue, 5 Dec 2006 10:00:47 -0500
-Received: from mx2.studentuniverse.com (mx2.studentuniverse.com
-	[146.115.12.43])
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id kB6AmFfr025074
+	for <linux-lvm@redhat.com>; Wed, 6 Dec 2006 05:48:16 -0500
+Received: from mtagate5.de.ibm.com (mtagate5.de.ibm.com [195.212.29.154])
 	by mx1.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
-	kB5F0jwE009261
-	for <linux-lvm@redhat.com>; Tue, 5 Dec 2006 10:00:45 -0500
-Received: from sumail03.studentuniverse.com (sumail03.studentuniverse.com
-	[192.168.1.7])
-	by mx2.studentuniverse.com (8.13.6/8.13.6/SuSE Linux 0.8) with ESMTP id
-	kB5F0Wbu016848
-	for <linux-lvm@redhat.com>; Tue, 5 Dec 2006 10:00:34 -0500
-Content-class: urn:content-classes:message
+	kB6AmCR6028102
+	for <linux-lvm@redhat.com>; Wed, 6 Dec 2006 05:48:13 -0500
+Received: from d12nrmr1607.megacenter.de.ibm.com
+	(d12nrmr1607.megacenter.de.ibm.com [9.149.167.49])
+	by mtagate5.de.ibm.com (8.13.8/8.13.8) with ESMTP id kB6Am25e130476
+	for <linux-lvm@redhat.com>; Wed, 6 Dec 2006 10:48:03 GMT
+Received: from d12av03.megacenter.de.ibm.com (d12av03.megacenter.de.ibm.com
+	[9.149.165.213])
+	by d12nrmr1607.megacenter.de.ibm.com (8.13.6/8.13.6/NCO v8.1.1) with
+	ESMTP id kB6Am2341601746
+	for <linux-lvm@redhat.com>; Wed, 6 Dec 2006 11:48:02 +0100
+Received: from d12av03.megacenter.de.ibm.com (loopback [127.0.0.1])
+	by d12av03.megacenter.de.ibm.com (8.12.11.20060308/8.13.3) with ESMTP
+	id kB6Am2df005993
+	for <linux-lvm@redhat.com>; Wed, 6 Dec 2006 11:48:02 +0100
+From: Jens Wilke <jens.wilke@de.ibm.com>
+Date: Wed, 6 Dec 2006 11:48:00 +0100
 MIME-Version: 1.0
-Subject: RE: [linux-lvm] vgimport/vgexport commands when logically
-	movingdisks	between systems
-Date: Tue, 5 Dec 2006 10:00:31 -0500
-Message-ID: <D2575519D6CA2840B6D3E26087EA71B6011B5B@sumail03.studentuniverse.com>
-From: "Marlier, Ian" <ian.marlier@studentuniverse.com>
-Content-Transfer-Encoding: 8bit
+Content-Type: Multipart/Mixed;
+  boundary="Boundary-00=_h/pdFgGxnQOl7Lc"
+Message-Id: <200612061148.01266.jens.wilke@de.ibm.com>
+Subject: [linux-lvm] bug in CLING allocator on lv extend
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -29,41 +35,312 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: LVM general discussion and development <linux-lvm@redhat.com>
+To: Jun'ichi Nomura <j-nomura@ce.jp.nec.com>, linux-lvm@redhat.com
 
- 
+--Boundary-00=_h/pdFgGxnQOl7Lc
+Content-Type: text/plain;
+  charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
 
-> -----Original Message-----
-> From: linux-lvm-bounces@redhat.com 
-> [mailto:linux-lvm-bounces@redhat.com] On Behalf Of Patrick Caulfield
-> Sent: Tuesday, December 05, 2006 5:29 AM
-> To: LVM general discussion and development
-> Subject: Re: [linux-lvm] vgimport/vgexport commands when 
-> logically movingdisks between systems
-> 
-<snip>
-> 
-> 
-> Yes. IF YOU'RE VERY CAREFUL!
-> vgimport/vgexport are not the tools you want for this job.
-> 
-> 
-> -- 
-> 
-> patrick
+Hi,
 
-I ask this having gone back to Google a couple of times a week for
-months, trying to find a clear-and-simple doc...
+I did some extensive tests of the new CLING allocator algorithm which
+should allow proper mirror extension.
 
-Given the setup that Dave is talking about, what _are_ the tools that he
-(and, well, I) want for this job?
+Testing with CVS HEAD dated 1st december, this is the error I get on 
+lvextend in a specific test configuration:
+lvextend: metadata/pv_map.c:197: consume_pv_area: Assertion `to_go <= pva->count' failed.
 
-I've got the same basic set of requirements (using LVM2, though), and
-have had a devil of a time figuring out what I actually need to have
-installed and configured and running, and where I need them to be
-installed and configured and running, to get it to work right...
+The problem arises in case of an unbalanced amount of free space on the data disks,
+mimages twisted (mimage_1 on PV0), and a hole (or at least two areas, I suppose)
+that needs to be allocated.
 
-Thanks!
+The attached extendtest.sh is the generic code that leads to the error situation 
+(set environment varibales disk[0-2] and vg respectively).
 
-- Ian
+The attached extendtest.vg is the meta data backup before the lvextend
+with 3 PVs of 128MB each.
+
+Best,
+
+Jens
+
+--Boundary-00=_h/pdFgGxnQOl7Lc
+Content-Type: application/x-shellscript;
+  name="extendtest.sh"
+Content-Transfer-Encoding: 7bit
+Content-Disposition: attachment;
+	filename="extendtest.sh"
+
+#!/bin/sh
+
+pvcreate -ff $disk0 $disk1 $disk2
+vgcreate $vg $disk0 $disk1 $disk2;
+# we assume all PVs have the same amount of free space
+[ `pvs -o pv_free --noheadings $disk0 $disk1 | uniq | wc -l` = "1" ] || {
+	echo "identical PV sizes needed";
+	exit 1;
+}
+# capacity of one pv in MB
+formatted=`pvs -o pv_pe_count --noheading $disk0`
+# strip whitespace, so we can calculate
+capacity=$formatted;
+halfcapacity=$(( $capacity / 2 ));
+
+lvcreate -l 1 -n lx1 $vg $disk0
+lvcreate -l 1 -n lx2 $vg $disk1
+
+mirrorsize=$(( $halfcapacity - 6 ));
+# data will allocated now on disk2 and disk0
+lvcreate ${allocparm} -m1 -l ${mirrorsize} -n m1 $vg
+lvcreate -l 3 -n lx3 $vg $disk2
+
+# produce a 1 PE hole on the PVs holding the data
+lvcreate -l 1 -n l1 $vg $disk2
+lvcreate -l 1 -n l2 $vg $disk2
+lvcreate -l 1 -n l3 $vg $disk0
+lvcreate -l 1 -n l4 $vg $disk0
+lvremove -f $vg/l1
+lvremove -f $vg/l3
+
+# find minimum amount free space
+free=$(( `pvs -o pv_pe_count --noheading $disk0` - `pvs -o pv_pe_alloc_count --noheading $disk0` ));
+free1=$(( `pvs -o pv_pe_count --noheading $disk2` - `pvs -o pv_pe_alloc_count --noheading $disk2` ));
+if [ "$free1" -lt "$free" ]; then
+	free=$free1;
+fi
+
+lvchange -an $vg/m1
+
+lvextend -l +$free $vg/m1 $disk0 $disk2
+
+--Boundary-00=_h/pdFgGxnQOl7Lc
+Content-Type: text/plain;
+  charset="us-ascii";
+  name="extendtest.vg"
+Content-Transfer-Encoding: 7bit
+Content-Disposition: attachment;
+	filename="extendtest.vg"
+
+# Generated by LVM2: Wed Dec  6 11:41:23 2006
+
+contents = "Text Format Volume Group"
+version = 1
+
+description = "vgcfgbackup -f extend.vg dmtestvg"
+
+creation_host = "t6345027"	# Linux t6345027 2.6.9-prep #8 SMP Tue Jun 20 15:36:09 CEST 2006 s390x
+creation_time = 1165401683	# Wed Dec  6 11:41:23 2006
+
+dmtestvg {
+	id = "y4I28Z-YHvd-ZffY-f7Zw-515t-wB5U-dS5Hv2"
+	seqno = 12
+	status = ["RESIZEABLE", "READ", "WRITE"]
+	extent_size = 8192		# 4 Megabytes
+	max_lv = 0
+	max_pv = 0
+
+	physical_volumes {
+
+		pv0 {
+			id = "pdqOdr-j5sJ-RQeX-wfkd-DiJW-MeHt-Di4Izx"
+			device = "/dev/dm-0"	# Hint only
+
+			status = ["ALLOCATABLE"]
+			dev_size = 262144	# 128 Megabytes
+			pe_start = 384
+			pe_count = 31	# 124 Megabytes
+		}
+
+		pv1 {
+			id = "k7EULd-xRpN-tFtV-gAW9-4zZc-njst-RLwKxk"
+			device = "/dev/dm-1"	# Hint only
+
+			status = ["ALLOCATABLE"]
+			dev_size = 262144	# 128 Megabytes
+			pe_start = 384
+			pe_count = 31	# 124 Megabytes
+		}
+
+		pv2 {
+			id = "jNqEdU-ZWHf-kW7D-XFGG-ti9s-g0VQ-9hbdiL"
+			device = "/dev/dm-2"	# Hint only
+
+			status = ["ALLOCATABLE"]
+			dev_size = 262144	# 128 Megabytes
+			pe_start = 384
+			pe_count = 31	# 124 Megabytes
+		}
+	}
+
+	logical_volumes {
+
+		lx1 {
+			id = "ITQ4ue-FCs4-MCmm-RSYX-Vnjh-TbtQ-Myy3uo"
+			status = ["READ", "WRITE", "VISIBLE"]
+			segment_count = 1
+
+			segment1 {
+				start_extent = 0
+				extent_count = 1	# 4 Megabytes
+
+				type = "striped"
+				stripe_count = 1	# linear
+
+				stripes = [
+					"pv0", 0
+				]
+			}
+		}
+
+		lx2 {
+			id = "6Ola3N-lOJt-G6Dw-ItpA-T8Cx-wNyn-G8x0IM"
+			status = ["READ", "WRITE", "VISIBLE"]
+			segment_count = 1
+
+			segment1 {
+				start_extent = 0
+				extent_count = 1	# 4 Megabytes
+
+				type = "striped"
+				stripe_count = 1	# linear
+
+				stripes = [
+					"pv1", 0
+				]
+			}
+		}
+
+		m1 {
+			id = "FE1p7Y-Criz-mPWF-hJMJ-eY19-wjTM-uPocc0"
+			status = ["READ", "WRITE", "VISIBLE"]
+			segment_count = 1
+
+			segment1 {
+				start_extent = 0
+				extent_count = 9	# 36 Megabytes
+
+				type = "mirror"
+				mirror_count = 2
+				mirror_log = "m1_mlog"
+				region_size = 1024
+
+				mirrors = [
+					"m1_mimage_0", 0,
+					"m1_mimage_1", 0
+				]
+			}
+		}
+
+		lx3 {
+			id = "BpzPY5-E87r-VaeG-2FXV-uLId-P94j-5S17iu"
+			status = ["READ", "WRITE", "VISIBLE"]
+			segment_count = 1
+
+			segment1 {
+				start_extent = 0
+				extent_count = 3	# 12 Megabytes
+
+				type = "striped"
+				stripe_count = 1	# linear
+
+				stripes = [
+					"pv2", 9
+				]
+			}
+		}
+
+		l2 {
+			id = "1XrfVI-QBn6-CqOF-fxPN-ja8C-rgor-nkrMLI"
+			status = ["READ", "WRITE", "VISIBLE"]
+			segment_count = 1
+
+			segment1 {
+				start_extent = 0
+				extent_count = 1	# 4 Megabytes
+
+				type = "striped"
+				stripe_count = 1	# linear
+
+				stripes = [
+					"pv2", 13
+				]
+			}
+		}
+
+		l4 {
+			id = "R8CvQp-EDQx-Ui25-EGZM-i3Tf-zfSL-5Iv6AD"
+			status = ["READ", "WRITE", "VISIBLE"]
+			segment_count = 1
+
+			segment1 {
+				start_extent = 0
+				extent_count = 1	# 4 Megabytes
+
+				type = "striped"
+				stripe_count = 1	# linear
+
+				stripes = [
+					"pv0", 11
+				]
+			}
+		}
+
+		m1_mlog {
+			id = "q5XnM3-VtHZ-EoB9-VT52-2Zct-5oCM-UeWwSg"
+			status = ["READ", "WRITE"]
+			segment_count = 1
+
+			segment1 {
+				start_extent = 0
+				extent_count = 1	# 4 Megabytes
+
+				type = "striped"
+				stripe_count = 1	# linear
+
+				stripes = [
+					"pv1", 1
+				]
+			}
+		}
+
+		m1_mimage_0 {
+			id = "NZHdXZ-mzK3-eDj8-nLTn-auSY-tou0-xuaicM"
+			status = ["READ", "WRITE"]
+			segment_count = 1
+
+			segment1 {
+				start_extent = 0
+				extent_count = 9	# 36 Megabytes
+
+				type = "striped"
+				stripe_count = 1	# linear
+
+				stripes = [
+					"pv2", 0
+				]
+			}
+		}
+
+		m1_mimage_1 {
+			id = "lJphqJ-NebL-V9LD-0SVe-n4ud-sisi-rkE1vO"
+			status = ["READ", "WRITE"]
+			segment_count = 1
+
+			segment1 {
+				start_extent = 0
+				extent_count = 9	# 36 Megabytes
+
+				type = "striped"
+				stripe_count = 1	# linear
+
+				stripes = [
+					"pv0", 1
+				]
+			}
+		}
+	}
+}
+
+--Boundary-00=_h/pdFgGxnQOl7Lc--
