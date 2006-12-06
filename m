@@ -1,30 +1,19 @@
 Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id kB6AmFfr025074
-	for <linux-lvm@redhat.com>; Wed, 6 Dec 2006 05:48:16 -0500
-Received: from mtagate5.de.ibm.com (mtagate5.de.ibm.com [195.212.29.154])
-	by mx1.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
-	kB6AmCR6028102
-	for <linux-lvm@redhat.com>; Wed, 6 Dec 2006 05:48:13 -0500
-Received: from d12nrmr1607.megacenter.de.ibm.com
-	(d12nrmr1607.megacenter.de.ibm.com [9.149.167.49])
-	by mtagate5.de.ibm.com (8.13.8/8.13.8) with ESMTP id kB6Am25e130476
-	for <linux-lvm@redhat.com>; Wed, 6 Dec 2006 10:48:03 GMT
-Received: from d12av03.megacenter.de.ibm.com (d12av03.megacenter.de.ibm.com
-	[9.149.165.213])
-	by d12nrmr1607.megacenter.de.ibm.com (8.13.6/8.13.6/NCO v8.1.1) with
-	ESMTP id kB6Am2341601746
-	for <linux-lvm@redhat.com>; Wed, 6 Dec 2006 11:48:02 +0100
-Received: from d12av03.megacenter.de.ibm.com (loopback [127.0.0.1])
-	by d12av03.megacenter.de.ibm.com (8.12.11.20060308/8.13.3) with ESMTP
-	id kB6Am2df005993
-	for <linux-lvm@redhat.com>; Wed, 6 Dec 2006 11:48:02 +0100
-From: Jens Wilke <jens.wilke@de.ibm.com>
-Date: Wed, 6 Dec 2006 11:48:00 +0100
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id kB6FCeTJ026641
+	for <linux-lvm@redhat.com>; Wed, 6 Dec 2006 10:12:40 -0500
+Received: from web51109.mail.yahoo.com (web51109.mail.yahoo.com
+	[206.190.39.130])
+	by mx1.redhat.com (8.12.11.20060308/8.12.11) with SMTP id
+	kB6FCdOM029827
+	for <linux-lvm@redhat.com>; Wed, 6 Dec 2006 10:12:39 -0500
+Date: Wed, 6 Dec 2006 07:12:32 -0800 (PST)
+From: Dave <davo_muc@yahoo.com>
+Subject: Re: [linux-lvm] vgimport/vgexport commands when logically moving
+	disks between systems
+In-Reply-To: <457549DB.2080700@redhat.com>
 MIME-Version: 1.0
-Content-Type: Multipart/Mixed;
-  boundary="Boundary-00=_h/pdFgGxnQOl7Lc"
-Message-Id: <200612061148.01266.jens.wilke@de.ibm.com>
-Subject: [linux-lvm] bug in CLING allocator on lv extend
+Content-Transfer-Encoding: 8bit
+Message-ID: <478326.25880.qm@web51109.mail.yahoo.com>
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -35,312 +24,196 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: Jun'ichi Nomura <j-nomura@ce.jp.nec.com>, linux-lvm@redhat.com
-
---Boundary-00=_h/pdFgGxnQOl7Lc
-Content-Type: text/plain;
-  charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-Hi,
-
-I did some extensive tests of the new CLING allocator algorithm which
-should allow proper mirror extension.
-
-Testing with CVS HEAD dated 1st december, this is the error I get on 
-lvextend in a specific test configuration:
-lvextend: metadata/pv_map.c:197: consume_pv_area: Assertion `to_go <= pva->count' failed.
-
-The problem arises in case of an unbalanced amount of free space on the data disks,
-mimages twisted (mimage_1 on PV0), and a hole (or at least two areas, I suppose)
-that needs to be allocated.
-
-The attached extendtest.sh is the generic code that leads to the error situation 
-(set environment varibales disk[0-2] and vg respectively).
-
-The attached extendtest.vg is the meta data backup before the lvextend
-with 3 PVs of 128MB each.
-
-Best,
-
-Jens
-
---Boundary-00=_h/pdFgGxnQOl7Lc
-Content-Type: application/x-shellscript;
-  name="extendtest.sh"
-Content-Transfer-Encoding: 7bit
-Content-Disposition: attachment;
-	filename="extendtest.sh"
-
-#!/bin/sh
-
-pvcreate -ff $disk0 $disk1 $disk2
-vgcreate $vg $disk0 $disk1 $disk2;
-# we assume all PVs have the same amount of free space
-[ `pvs -o pv_free --noheadings $disk0 $disk1 | uniq | wc -l` = "1" ] || {
-	echo "identical PV sizes needed";
-	exit 1;
-}
-# capacity of one pv in MB
-formatted=`pvs -o pv_pe_count --noheading $disk0`
-# strip whitespace, so we can calculate
-capacity=$formatted;
-halfcapacity=$(( $capacity / 2 ));
-
-lvcreate -l 1 -n lx1 $vg $disk0
-lvcreate -l 1 -n lx2 $vg $disk1
-
-mirrorsize=$(( $halfcapacity - 6 ));
-# data will allocated now on disk2 and disk0
-lvcreate ${allocparm} -m1 -l ${mirrorsize} -n m1 $vg
-lvcreate -l 3 -n lx3 $vg $disk2
-
-# produce a 1 PE hole on the PVs holding the data
-lvcreate -l 1 -n l1 $vg $disk2
-lvcreate -l 1 -n l2 $vg $disk2
-lvcreate -l 1 -n l3 $vg $disk0
-lvcreate -l 1 -n l4 $vg $disk0
-lvremove -f $vg/l1
-lvremove -f $vg/l3
-
-# find minimum amount free space
-free=$(( `pvs -o pv_pe_count --noheading $disk0` - `pvs -o pv_pe_alloc_count --noheading $disk0` ));
-free1=$(( `pvs -o pv_pe_count --noheading $disk2` - `pvs -o pv_pe_alloc_count --noheading $disk2` ));
-if [ "$free1" -lt "$free" ]; then
-	free=$free1;
-fi
-
-lvchange -an $vg/m1
-
-lvextend -l +$free $vg/m1 $disk0 $disk2
-
---Boundary-00=_h/pdFgGxnQOl7Lc
-Content-Type: text/plain;
-  charset="us-ascii";
-  name="extendtest.vg"
-Content-Transfer-Encoding: 7bit
-Content-Disposition: attachment;
-	filename="extendtest.vg"
-
-# Generated by LVM2: Wed Dec  6 11:41:23 2006
-
-contents = "Text Format Volume Group"
-version = 1
-
-description = "vgcfgbackup -f extend.vg dmtestvg"
-
-creation_host = "t6345027"	# Linux t6345027 2.6.9-prep #8 SMP Tue Jun 20 15:36:09 CEST 2006 s390x
-creation_time = 1165401683	# Wed Dec  6 11:41:23 2006
-
-dmtestvg {
-	id = "y4I28Z-YHvd-ZffY-f7Zw-515t-wB5U-dS5Hv2"
-	seqno = 12
-	status = ["RESIZEABLE", "READ", "WRITE"]
-	extent_size = 8192		# 4 Megabytes
-	max_lv = 0
-	max_pv = 0
-
-	physical_volumes {
-
-		pv0 {
-			id = "pdqOdr-j5sJ-RQeX-wfkd-DiJW-MeHt-Di4Izx"
-			device = "/dev/dm-0"	# Hint only
-
-			status = ["ALLOCATABLE"]
-			dev_size = 262144	# 128 Megabytes
-			pe_start = 384
-			pe_count = 31	# 124 Megabytes
-		}
-
-		pv1 {
-			id = "k7EULd-xRpN-tFtV-gAW9-4zZc-njst-RLwKxk"
-			device = "/dev/dm-1"	# Hint only
-
-			status = ["ALLOCATABLE"]
-			dev_size = 262144	# 128 Megabytes
-			pe_start = 384
-			pe_count = 31	# 124 Megabytes
-		}
-
-		pv2 {
-			id = "jNqEdU-ZWHf-kW7D-XFGG-ti9s-g0VQ-9hbdiL"
-			device = "/dev/dm-2"	# Hint only
-
-			status = ["ALLOCATABLE"]
-			dev_size = 262144	# 128 Megabytes
-			pe_start = 384
-			pe_count = 31	# 124 Megabytes
-		}
-	}
-
-	logical_volumes {
-
-		lx1 {
-			id = "ITQ4ue-FCs4-MCmm-RSYX-Vnjh-TbtQ-Myy3uo"
-			status = ["READ", "WRITE", "VISIBLE"]
-			segment_count = 1
-
-			segment1 {
-				start_extent = 0
-				extent_count = 1	# 4 Megabytes
-
-				type = "striped"
-				stripe_count = 1	# linear
-
-				stripes = [
-					"pv0", 0
-				]
-			}
-		}
-
-		lx2 {
-			id = "6Ola3N-lOJt-G6Dw-ItpA-T8Cx-wNyn-G8x0IM"
-			status = ["READ", "WRITE", "VISIBLE"]
-			segment_count = 1
-
-			segment1 {
-				start_extent = 0
-				extent_count = 1	# 4 Megabytes
-
-				type = "striped"
-				stripe_count = 1	# linear
-
-				stripes = [
-					"pv1", 0
-				]
-			}
-		}
-
-		m1 {
-			id = "FE1p7Y-Criz-mPWF-hJMJ-eY19-wjTM-uPocc0"
-			status = ["READ", "WRITE", "VISIBLE"]
-			segment_count = 1
-
-			segment1 {
-				start_extent = 0
-				extent_count = 9	# 36 Megabytes
-
-				type = "mirror"
-				mirror_count = 2
-				mirror_log = "m1_mlog"
-				region_size = 1024
-
-				mirrors = [
-					"m1_mimage_0", 0,
-					"m1_mimage_1", 0
-				]
-			}
-		}
-
-		lx3 {
-			id = "BpzPY5-E87r-VaeG-2FXV-uLId-P94j-5S17iu"
-			status = ["READ", "WRITE", "VISIBLE"]
-			segment_count = 1
-
-			segment1 {
-				start_extent = 0
-				extent_count = 3	# 12 Megabytes
-
-				type = "striped"
-				stripe_count = 1	# linear
-
-				stripes = [
-					"pv2", 9
-				]
-			}
-		}
-
-		l2 {
-			id = "1XrfVI-QBn6-CqOF-fxPN-ja8C-rgor-nkrMLI"
-			status = ["READ", "WRITE", "VISIBLE"]
-			segment_count = 1
-
-			segment1 {
-				start_extent = 0
-				extent_count = 1	# 4 Megabytes
-
-				type = "striped"
-				stripe_count = 1	# linear
-
-				stripes = [
-					"pv2", 13
-				]
-			}
-		}
-
-		l4 {
-			id = "R8CvQp-EDQx-Ui25-EGZM-i3Tf-zfSL-5Iv6AD"
-			status = ["READ", "WRITE", "VISIBLE"]
-			segment_count = 1
-
-			segment1 {
-				start_extent = 0
-				extent_count = 1	# 4 Megabytes
-
-				type = "striped"
-				stripe_count = 1	# linear
-
-				stripes = [
-					"pv0", 11
-				]
-			}
-		}
-
-		m1_mlog {
-			id = "q5XnM3-VtHZ-EoB9-VT52-2Zct-5oCM-UeWwSg"
-			status = ["READ", "WRITE"]
-			segment_count = 1
-
-			segment1 {
-				start_extent = 0
-				extent_count = 1	# 4 Megabytes
-
-				type = "striped"
-				stripe_count = 1	# linear
-
-				stripes = [
-					"pv1", 1
-				]
-			}
-		}
-
-		m1_mimage_0 {
-			id = "NZHdXZ-mzK3-eDj8-nLTn-auSY-tou0-xuaicM"
-			status = ["READ", "WRITE"]
-			segment_count = 1
-
-			segment1 {
-				start_extent = 0
-				extent_count = 9	# 36 Megabytes
-
-				type = "striped"
-				stripe_count = 1	# linear
-
-				stripes = [
-					"pv2", 0
-				]
-			}
-		}
-
-		m1_mimage_1 {
-			id = "lJphqJ-NebL-V9LD-0SVe-n4ud-sisi-rkE1vO"
-			status = ["READ", "WRITE"]
-			segment_count = 1
-
-			segment1 {
-				start_extent = 0
-				extent_count = 9	# 36 Megabytes
-
-				type = "striped"
-				stripe_count = 1	# linear
-
-				stripes = [
-					"pv0", 1
-				]
-			}
-		}
-	}
-}
-
---Boundary-00=_h/pdFgGxnQOl7Lc--
+Content-Type: text/plain; charset="us-ascii"
+To: LVM general discussion and development <linux-lvm@redhat.com>
+
+Hi Patrick, et al.
+
+Thanks for your comments!
+I've been doing some testing on this topic, and encountering a bit of strange
+behavior which seems to confirm the murkiness with switching VGs between hosts. 
+Please bear with my lengthy description, as I'm trying to be as clear as possible. 
+I really need to work this out.
+
+THE TEST:
+
+Hosts are P10 (primary node) and P11 (backup node)
+VG is activated on P10 and fs is mounted.  To test a switch to P11, I deactivate the
+VG on P10, but DO NOT run vgexport (following your suggestion).  I then, run
+vgimport on P11 (but P11 reports it already knows about the VG - that's fine), and
+then run an activate.  However, when I try to run an e2fsck on the fs, I get the
+following error:
+
+/sbin/e2fsck: No such device or address while trying to open /dev/tux-ao/app
+Possibly non-existent or swap device?
+
+However, the device does exist, and looks identical to the one on P10:
+[P11]$ ls -l /dev/tux-ao/app
+brw-rw----    1 root     disk      58,  14 Dec  6 14:46 /dev/tux-ao/app
+
+I was able to fix the problem by putting vgexport back into the mix.  In this case,
+I export the VG from P10 and then after an import on P11 I was able to run e2fsck
+and mount successfully.  
+
+Also, this (unknown VG) message is somewhat common in pvscan, if a vgexport is not
+performed:
+
+> pvscan -- inactive PV "/dev/sdk"  is associated to unknown VG "tux-ao" (run
+vgscan)
+
+
+Here is another clear example of some unexpected behavior (at least to me)...
+1. status when $vg on P11 successful - notice the status of ACTIVE on P11 and
+EXPORTED on P10
+
+[P11]$ sudo pvscan
+pvscan -- reading all physical volumes (this may take a while...)
+ ...
+pvscan -- ACTIVE   PV "/dev/sdk" of VG "tux-ao"   [27.09 GB / 9.09 GB free]
+
+[P10]$ sudo pvscan
+pvscan -- reading all physical volumes (this may take a while...)
+ ...
+pvscan -- inactive PV "/dev/sdk"  is in EXPORTED VG "tux-ao" [27.09 GB / 9.09 GB
+free]
+
+Then...
+2. status after $vg is deactivated on P11 and activated on P10 (no vgexport run on
+P11 before activation on P10) - Notice the "unknown VG" message on P10!!!  
+
+[P11]$ sudo pvscan
+pvscan -- reading all physical volumes (this may take a while...)
+ ...
+pvscan -- inactive PV "/dev/sdk" of VG "tux-ao"   [27.09 GB / 9.09 GB free]
+
+[P10]$ sudo pvscan
+pvscan -- reading all physical volumes (this may take a while...)
+ ...
+pvscan -- inactive PV "/dev/sdk"  is associated to unknown VG "tux-ao" (run vgscan)
+
+Then...
+3.  Then, when I tried an activation on P10 I get no joy at all (ie. cannot perform
+operations on the logical volume), despite the fact that it exists:
+[P10]$ ls -l /dev/tux-ao/app
+brw-rw----    1 root     disk      58,  14 Dec  6 15:04 /dev/tux-ao/app
+
+/sbin/e2fsck: No such device or address while trying to open /dev/tux-ao/app
+Possibly non-existent or swap device?
+
+Is this simply flakey behavior with LVM 1.0.8 ?
+
+We have several VGs on the machine, and sometimes we need to move one or two at a
+time.  LVM (v1) seems to have trouble here, at least without vgexport.  Anyone know
+what might be happening behind the scenes to cause this behavior?  It's looking to
+me like I really do need vgexport to make things work the way we want.
+
+Thanks again for helping me to clarify this situation.
+Dave
+
+
+
+
+
+--- Patrick Caulfield <pcaulfie@redhat.com> wrote:
+
+> Dave wrote:
+> > Hello,
+> > 
+> > I believe I might be misunderstanding whether vgimport and vgexport are needed
+> in my
+> > particular situation.  It would be great to get some feedback for clarification.
+> > 
+> > THE SETUP:
+> > 
+> > LVM1 (1.0.8-14) on two RedHat AS3 systems (kernel: 2.4.21-47.ELsmp).
+> > I think the same concept applies for LVM2 as well though.
+> > Machine A is primary and Machine B is backup in a two-node Linux heartbeat
+> cluster.
+> > Both machines are connected to the same SAN via fiber, and see the same disks,
+> where
+> > the volume groups reside.
+> > 
+> > THE STRATEGY:
+> > 
+> > The idea is for A to have the LVM file systems mounted, and when a failure is
+> > detected, have the LVM file systems "moved" to (or seen by) system B.  The way
+> this
+> > is currently accomplished is for A to do the following upon detection of a
+> failure:
+> > 
+> > + unmount file systems
+> > + deactivate (vgchange -an $vg)
+> > + export (vgexport $vg)
+> > 
+> > then, on system B:
+> > 
+> > + import & activate (vgimport $vg $disks)
+> > + mount file systems
+> > 
+> > THE ISSUE:
+> > 
+> > The export works as expected on A, but upon import on B, a return code of 4 is
+> > returned meaning "volume group already exists".  The mounting works properly,
+> but
+> > all the disks are shown like this:
+> > 
+> > "inactive PV /dev/sdx  is in EXPORTED VG $vg"  
+> > 
+> > when inspected with pvscan.
+> > 
+> > 
+> > Does a vgimport and/or vgexport mark the disks themselves, or simply update the
+> > system on which the commands are run???  I suppose that is essentially the heart
+> of
+> > this issue.
+> 
+> 
+> Yes, vgimport/export marks the disks in the volume group. It's really for moving
+> disks between systems where the target system might
+> have a volume group with the same name as the one to be imported.
+> 
+> > I'm starting to believe that for our strategy the vgexport and vgimport commands
+> are
+> > not necessary, and are actually causing the problem.  (The HOWTO mentions these
+> > commands are used to move disks between systems, but perhaps that is meant to
+> refer
+> > to disks that are only physically moved?)
+> > 
+> > Instead, the following strategy might be correct in case system A fails (Note:
+> no
+> > vgimport or vgexport commands):
+> > 
+> > + unmount fs
+> > + vgchange -an $vg
+> > 
+> > then, on system B:
+> > 
+> > + vgchange -ay $vg
+> > + mount fs
+> > 
+> > 
+> > IS THIS CORRECT???
+> > 
+> 
+> Yes. IF YOU'RE VERY CAREFUL!
+> vgimport/vgexport are not the tools you want for this job.
+> 
+> 
+> -- 
+> 
+> patrick
+> 
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@redhat.com
+> https://www.redhat.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+> 
+
+
+
+ 
+____________________________________________________________________________________
+Cheap talk?
+Check out Yahoo! Messenger's low PC-to-Phone call rates.
+http://voice.yahoo.com
