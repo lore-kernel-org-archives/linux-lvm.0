@@ -1,11 +1,15 @@
-Message-ID: <45770A5C.9050407@ce.jp.nec.com>
-Date: Wed, 06 Dec 2006 13:22:20 -0500
-From: "Jun'ichi Nomura" <j-nomura@ce.jp.nec.com>
+Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id kB81s45Z010551
+	for <linux-lvm@redhat.com>; Thu, 7 Dec 2006 20:54:04 -0500
+Received: from rpc1.mailstreet2003.net (rpc1.mailstreet2003.net [69.25.50.236])
+	by mx1.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
+	kB81s3Qw029778
+	for <linux-lvm@redhat.com>; Thu, 7 Dec 2006 20:54:03 -0500
+Date: Thu, 7 Dec 2006 17:53:50 -0800 (PST)
+From: Antonio Varni <avarni@estalea.com>
+Message-ID: <Pine.LNX.4.64.0612071745430.7186@io.corp.sb.estalea.net>
 MIME-Version: 1.0
-References: <200612061148.01266.jens.wilke@de.ibm.com>
-In-Reply-To: <200612061148.01266.jens.wilke@de.ibm.com>
-Content-Type: multipart/mixed; boundary="------------080802020609070306030103"
-Subject: [linux-lvm] Re: bug in CLING allocator on lv extend
+Subject: [linux-lvm] LVM question relating to a server crash
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -16,99 +20,166 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: Jens Wilke <jens.wilke@de.ibm.com>
-Cc: linux-lvm@redhat.com
-
-This is a multi-part message in MIME format.
---------------080802020609070306030103
-Content-Type: text/plain; charset=ISO-2022-JP
+Content-Type: TEXT/PLAIN; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
+To: linux-lvm@redhat.com
 
-Hi Jens,
 
-Thanks for testing and detailed bug report.
+Hello!
 
-Attached patch will fix the problem.
-I have tested it with your test case and it works well.
-Please check on your environment, too.
+I recently tried to lvremove a snapshot LV that was
+a few days old.  I had let it get to the point
+where the LV snapshot was unusable because too
+many changes had been written to the parent.
+When I went to lvremove it, the entire system
+locked up and had to be reset.  Everything
+came back up fine but I still want to remove
+that LV and am unsure as to why it crashed
+to begin with.
 
-The cause of the problem was that _alloc_parallel_area()
-in lib/metadata/lv_manip.c assumed either:
-  - areas in "areas[]" are sorted in size
-or
-  - all areas in areas[] are large enough to fulfill the
-    allocation request at once
-So it's been ok just to check the last item of areas[]
-for adjusting the allocation size.
+I could not see anything on console and there's nothing
+interesting in my system logs.
 
-Under the "cling" policy, this assumption is no longer true.
+Here's my LV setup:
 
-BTW, the bug was already fixed in the allocation patch set
-posted to lvm-devel on Oct. 13, which is not yet accepted.
 
-Jens Wilke wrote:
-> I did some extensive tests of the new CLING allocator algorithm which
-> should allow proper mirror extension.
-> 
-> Testing with CVS HEAD dated 1st december, this is the error I get on 
-> lvextend in a specific test configuration:
-> lvextend: metadata/pv_map.c:197: consume_pv_area: Assertion `to_go <= pva->count' failed.
-> 
-> The problem arises in case of an unbalanced amount of free space on the data disks,
-> mimages twisted (mimage_1 on PV0), and a hole (or at least two areas, I suppose)
-> that needs to be allocated.
-> 
-> The attached extendtest.sh is the generic code that leads to the error situation 
-> (set environment varibales disk[0-2] and vg respectively).
-> 
-> The attached extendtest.vg is the meta data backup before the lvextend
-> with 3 PVs of 128MB each.
+[root@dw ~]# lvscan
+  /dev/dm-5: read failed after 0 of 4096 at 0: Input/output error
+  ACTIVE            '/dev/VolGroup00/Lroot' [6.00 GB] inherit
+  ACTIVE            '/dev/VolGroup00/Lswap' [1.94 GB] inherit
+  inactive Original '/dev/VolGroup00/Llpdw' [40.00 GB] inherit
+  inactive Snapshot '/dev/VolGroup00/temp' [1.00 GB] inherit
 
--- 
-Jun'ichi Nomura, NEC Corporation of America
 
---------------080802020609070306030103
-Content-Type: text/x-patch;
-	name="fix-alloc_parallel_area-for-unsorted-areas.patch"
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline;
-	filename="fix-alloc_parallel_area-for-unsorted-areas.patch"
+/dev/VolGroup00/Lroot /dev/VolGroup00/Lswap and
+/dev/VolGroup00/Llpdw are all mounted, active
+file systems.  /dev/VolGroup00/temp is a snapshot
+of /dev/VolGroup00/Llpdw.
 
-_alloc_parallel_area() assumes areas[] being sorted or every items
-of areas[] being larger than or equal to area_len.
-It's no longer true under "cling" allocation policy.
-Because, areas[] are indexed based on the layout of previous LV segment
-and some of the areas can be smaller than area_len.
+Like I mentioned before the snapshot is unusable and
+I want to remove it:
 
-Patch applicable to LVM2 2.02.16.
+[root@dw ~]# mount /dev/VolGroup00/temp  /z
+/dev/VolGroup00/temp: Input/output error
+mount: /dev/VolGroup00/temp: can't read superblock
 
- lib/metadata/lv_manip.c |   10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
 
---- LVM2.orig/lib/metadata/lv_manip.c	30 Oct 2006 16:10:55 -0000	1.112
-+++ LVM2/lib/metadata/lv_manip.c	6 Dec 2006 18:06:28 -0000
-@@ -628,17 +628,17 @@ static int _alloc_parallel_area(struct a
- 				struct pv_area **areas,
- 				uint32_t *ix, struct pv_area *log_area)
- {
--	uint32_t area_len, smallest, remaining;
-+	uint32_t area_len, remaining;
- 	uint32_t s;
- 	struct alloced_area *aa;
- 
- 	remaining = needed - *ix;
- 	area_len = remaining / ah->area_multiple;
- 
--	smallest = areas[ah->area_count - 1]->count;
--
--	if (area_len > smallest)
--		area_len = smallest;
-+	/* adjust area_len to the smallest area */
-+	for (s = 0; s < ah->area_count; s++)
-+		if (area_len > areas[s]->count)
-+			area_len = areas[s]->count;
- 
- 	if (!(aa = dm_pool_alloc(ah->mem, sizeof(*aa) *
- 			      (ah->area_count + (log_area ? 1 : 0))))) {
+system info:
 
---------------080802020609070306030103--
+[root@dw ~]# cat /etc/redhat-release; uname -a
+CentOS release 4.4 (Final)
+Linux dw.xxxxxxx 2.6.9-42.0.3.ELsmp #1 SMP Fri Oct 6 06:28:26 CDT 2006 x86_64 x86_64 x86_64 GNU/Linux
+
+Dell PowerEdge 1950 server.
+
+more lvm info:
+
+[root@dw ~]# pvdisplay
+  /dev/dm-5: read failed after 0 of 4096 at 0: Input/output error
+  --- Physical volume ---
+  PV Name               /dev/sda2
+  VG Name               VolGroup00
+  PV Size               136.00 GB / not usable 0
+  Allocatable           yes
+  PE Size (KByte)       32768
+  Total PE              4352
+  Free PE               2786
+  Allocated PE          1566
+  PV UUID               5Vshsw-Swd9-bSTH-kixv-frPK-SzSi-jm31hE
+
+[root@dw ~]# vgdisplay
+  /dev/dm-5: read failed after 0 of 4096 at 0: Input/output error
+  --- Volume group ---
+  VG Name               VolGroup00
+  System ID
+  Format                lvm2
+  Metadata Areas        1
+  Metadata Sequence No  30
+  VG Access             read/write
+  VG Status             resizable
+  MAX LV                0
+  Cur LV                4
+  Open LV               3
+  Max PV                0
+  Cur PV                1
+  Act PV                1
+  VG Size               136.00 GB
+  PE Size               32.00 MB
+  Total PE              4352
+  Alloc PE / Size       1566 / 48.94 GB
+  Free  PE / Size       2786 / 87.06 GB
+  VG UUID               MHdx9f-7mNZ-WtEp-ogmZ-Wo2H-47Db-o90d0e
+
+
+[root@dw ~]# lvdisplay
+  /dev/dm-5: read failed after 0 of 4096 at 0: Input/output error
+  --- Logical volume ---
+  LV Name                /dev/VolGroup00/Lroot
+  VG Name                VolGroup00
+  LV UUID                ZNXYXZ-fFHI-GPsn-fGZy-0QtI-19TR-iGwtmx
+  LV Write Access        read/write
+  LV Status              available
+  # open                 1
+  LV Size                6.00 GB
+  Current LE             192
+  Segments               1
+  Allocation             inherit
+  Read ahead sectors     0
+  Block device           253:0
+
+  --- Logical volume ---
+  LV Name                /dev/VolGroup00/Lswap
+  VG Name                VolGroup00
+  LV UUID                5ZiUYo-aC7P-0YyN-XDAI-kiVc-GUz7-zCB5Q8
+  LV Write Access        read/write
+  LV Status              available
+  # open                 1
+  LV Size                1.94 GB
+  Current LE             62
+  Segments               1
+  Allocation             inherit
+  Read ahead sectors     0
+  Block device           253:1
+
+  --- Logical volume ---
+  LV Name                /dev/VolGroup00/Llpdw
+  VG Name                VolGroup00
+  LV UUID                HJ9V38-zAYH-Et0F-Qb9o-8dzu-PwbQ-5AgPiF
+  LV Write Access        read/write
+  LV snapshot status     source of
+                         /dev/VolGroup00/temp [INACTIVE]
+  LV Status              available
+  # open                 1
+  LV Size                40.00 GB
+  Current LE             1280
+  Segments               1
+  Allocation             inherit
+  Read ahead sectors     0
+  Block device           253:3
+
+  --- Logical volume ---
+  LV Name                /dev/VolGroup00/temp
+  VG Name                VolGroup00
+  LV UUID                yv8X2f-9Xud-PkJT-Q0l2-h5Qy-48ze-KOAg3t
+  LV Write Access        read/write
+  LV snapshot status     INACTIVE destination for /dev/VolGroup00/Llpdw
+  LV Status              available
+  # open                 0
+  LV Size                40.00 GB
+  Current LE             1280
+  COW-table size         1.00 GB
+  COW-table LE           32
+  Snapshot chunk size    8.00 KB
+  Segments               1
+  Allocation             inherit
+  Read ahead sectors     0
+  Block device           253:5
+
+
+The command I typed in that caused the crash
+was 'lvremove /dev/VolGroup00/temp'.
+
+
+Thanks in advance for any replies. I am
+going to try this command again tomorrow
+night after I do some more research into this.
