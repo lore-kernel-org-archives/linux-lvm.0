@@ -1,10 +1,18 @@
-Date: Fri, 8 Dec 2006 15:07:34 +0100
-From: Bastian Blank <waldi@debian.org>
-Message-ID: <20061208140734.GA20472@wavehammer.waldi.eu.org>
+Received: from mx2.redhat.com (mx2.redhat.com [10.255.15.25])
+	by int-mx2.corp.redhat.com (8.13.1/8.13.1) with ESMTP id kB8Hxscs027304
+	for <linux-lvm@redhat.com>; Fri, 8 Dec 2006 12:59:55 -0500
+Received: from web51008.mail.yahoo.com (web51008.mail.yahoo.com
+	[206.190.38.139])
+	by mx2.redhat.com (8.12.11.20060308/8.12.11) with SMTP id
+	kB8HNm02014599
+	for <linux-lvm@redhat.com>; Fri, 8 Dec 2006 12:23:53 -0500
+Date: Fri, 8 Dec 2006 09:23:39 -0800 (PST)
+From: Richard Mollel <unixtipz@yahoo.com>
+Subject: Re: [linux-lvm] LVM problem - how to recover?
+In-Reply-To: <200612031426.30561.Richard.Kampmann@freenet.de>
 MIME-Version: 1.0
-Content-Disposition: inline
-Subject: [linux-lvm] [iwj@ubuntu.com: Bug#402132: lvm2 racey symlink
-	creation]
+Content-Transfer-Encoding: 8bit
+Message-ID: <938785.41035.qm@web51008.mail.yahoo.com>
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -16,105 +24,117 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: linux-lvm@redhat.com
-Cc: Alasdair G Kergon <agk@redhat.com>
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
------ Forwarded message from Ian Jackson <iwj@ubuntu.com> -----
+Hi Richard,
+1. What does/did vgcfgrestore tell you when you tried
+to use it? You said it did not work....
 
-Date: Fri, 8 Dec 2006 12:20:05 +0000
-From: Ian Jackson <iwj@ubuntu.com>
-To: submit@bugs.debian.org
-Subject: Bug#402132: lvm2 racey symlink creation
+2. Does debugreiserfs /dev/mapper/VGgroup-LVlist say
+that there is a filesystem there? (assuming you have
+not created a new filesystem there && also assuming
+you can perform "vgchange -a y VGgroup" )
 
-Package: lvm2
-Version: 2.02.06-2
-Tags: patch
+_thanks
 
-When the lvm2 utilities vgchange, vgmknodes, et al, create the
-/dev/<vg>/<lv> symlinks, they do it like this
-    lstat
-    unlink
-    symlink
+Richard
 
-This means that even if the vg is and remains active throughout, there
-is a moment when the symlink is missing.  Any other program on the
-system which is referring to that lv may see this glitch and
-misbehave.
 
-The patch below fixes this.  It now does this instead:
-    stat
-    symlink to /dev/<vg>/<lv>..tmp
-    rename the ..tmp symlink to /dev/<vg>/<lv>
 
-FYI, we will be deploying this change in the forthcoming Ubuntu
-release.
+--- Richard Kampmann <Richard.Kampmann@freenet.de>
+wrote:
 
-Thanks for your attention,
-Ian.
+> Hi everybody,
+> 
+> I'm a bit disappointed, because there was really no
+> feedback to my mail.
+> 
+> The situation is a real problem for me - is there
+> anything missing? Or is 
+> there no way to recover (can't believe that ...)?
+> Wrong way or place to ask? Then please tell me where
+> to go ...
+> 
+> I tried to find a solution myself (also with help of
+> Google ...), but it did 
+> not help me.
+> 
+> Bye
+> 
+> Richard Kampmann
+> 
+> Am Dienstag, 28. November 2006 21:15 schrieb Richard
+> Kampmann:
+> > Hi everybody ...
+> >
+> > I recently had a lvm crash from which I now have
+> to recover. So now I need
+> > your help ...
+> >
+> > The system is a SUSE 10.1 system with actual
+> patches.
+> > # uname -rio
+> > 2.6.16.21-0.25-default i386 GNU/Linux
+> > # lvm version
+> >   LVM version:     2.02.02 (2006-02-07)
+> >   Library version: 1.02.03 (2006-02-08)
+> >   Driver version:  4.5.0
+> > #
+> >
+> > There was the unenlightened crash and before there
+> was a volume goup
+> > spanning two physical partitions (sda2, sdb2),
+> each on one physical disk
+> > (sda, sdb). The system froze (maybe in coincidence
+> with some
+> > snapshot-handling) and I had to press the reset
+> button. When rebooting lvm
+> > told me he could not open the volume group because
+> one pv was missing. The
+> > partition looked OK when checking the partition
+> table. I tried several
+> > things - and to do a vgcfgrestore but it did not
+> help.
+> >
+> > The volume group (system_vg) contained the root
+> partition, so I installed a
+> > new system on a third disc and tried to recover
+> the old volume group.
+> > Unfortunately when doing the pvcreate for the two
+> physical volumes I did
+> > NOT choose the "--zero n" switch.
+> >
+> > Fact is: I now have the volume group containing
+> two physical discs and two
+> > physical volumes with the correct PV UUIDs. But
+> the first sectors are
+> > zeroed, aren't they?
+> >
+> > Any way to recover the LVs of the old volume
+> group? A vgcfgrestore (YES,
+> > there was a vgcfgbackup before!) does not work ...
+> bad luck.
+> >
+> > Ah - and all logical volumes contain Reiser
+> Filesystems V 3.6 - they MUST
+> > still be there ...
+> >
+> > So - what could be my next steps?
+> >
+> > Bye
+> >
+> > Richard Kampmann
+> > _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@redhat.com
+> https://www.redhat.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at
+http://tldp.org/HOWTO/LVM-HOWTO/
 
-diff -ruN --exclude='*~' orig/lvm2-2.02.06/lib/activate/fs.c lvm2-2.02.06/lib/activate/fs.c
---- orig/lvm2-2.02.06/lib/activate/fs.c	2005-11-15 17:45:32.000000000 +0000
-+++ lvm2-2.02.06/lib/activate/fs.c	2006-12-08 12:16:32.000000000 +0000
-@@ -106,7 +106,7 @@
- 		    const char *lv_name, const char *dev)
- {
- 	char lv_path[PATH_MAX], link_path[PATH_MAX], lvm1_group_path[PATH_MAX];
--	char vg_path[PATH_MAX];
-+	char vg_path[PATH_MAX], lv_path_tmp[PATH_MAX];
- 	struct stat buf;
+
+
  
- 	if (lvm_snprintf(vg_path, sizeof(vg_path), "%s%s",
-@@ -123,6 +123,13 @@
- 		return 0;
- 	}
- 
-+	if (lvm_snprintf(lv_path_tmp, sizeof(lv_path_tmp), "%s..tmp",
-+			 lv_path) == -1) {
-+		log_error("Couldn't create temporary pathname for "
-+			  "logical volume link %s", lv_path);
-+		return 0;
-+	}
-+
- 	if (lvm_snprintf(link_path, sizeof(link_path), "%s/%s",
- 			 dm_dir(), dev) == -1) {
- 		log_error("Couldn't create destination pathname for "
-@@ -160,17 +167,11 @@
- 				  link_path);
- 			return 0;
- 		}
--
--		log_very_verbose("Removing %s", lv_path);
--		if (unlink(lv_path) < 0) {
--			log_sys_error("unlink", lv_path);
--			return 0;
--		}
- 	}
- 
--	log_very_verbose("Linking %s -> %s", lv_path, link_path);
--	if (symlink(link_path, lv_path) < 0) {
--		log_sys_error("symlink", lv_path);
-+	log_very_verbose("Linking %s -> %s", lv_path_tmp, link_path);
-+	if (symlink(link_path, lv_path_tmp) < 0) {
-+		log_sys_error("symlink", lv_path_tmp);
- 		return 0;
- 	}
- 
-@@ -181,6 +182,12 @@
-         }
- #endif
- 
-+	log_very_verbose("Installing symlink %s as %s", lv_path_tmp, lv_path);
-+	if (rename(lv_path_tmp, lv_path) < 0) {
-+		log_sys_error("rename", lv_path_tmp);
-+		return 0;
-+	}
-+
- 	return 1;
- }
-
------ End forwarded message -----
-
--- 
-Violence in reality is quite different from theory.
-		-- Spock, "The Cloud Minders", stardate 5818.4
+____________________________________________________________________________________
+Do you Yahoo!?
+Everyone is raving about the all-new Yahoo! Mail beta.
+http://new.mail.yahoo.com
