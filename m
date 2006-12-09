@@ -1,18 +1,19 @@
 Received: from mx2.redhat.com (mx2.redhat.com [10.255.15.25])
-	by int-mx2.corp.redhat.com (8.13.1/8.13.1) with ESMTP id kB8Hxscs027304
-	for <linux-lvm@redhat.com>; Fri, 8 Dec 2006 12:59:55 -0500
-Received: from web51008.mail.yahoo.com (web51008.mail.yahoo.com
-	[206.190.38.139])
-	by mx2.redhat.com (8.12.11.20060308/8.12.11) with SMTP id
-	kB8HNm02014599
-	for <linux-lvm@redhat.com>; Fri, 8 Dec 2006 12:23:53 -0500
-Date: Fri, 8 Dec 2006 09:23:39 -0800 (PST)
-From: Richard Mollel <unixtipz@yahoo.com>
-Subject: Re: [linux-lvm] LVM problem - how to recover?
-In-Reply-To: <200612031426.30561.Richard.Kampmann@freenet.de>
+	by int-mx2.corp.redhat.com (8.13.1/8.13.1) with ESMTP id kB9EJ9iB032329
+	for <linux-lvm@redhat.com>; Sat, 9 Dec 2006 09:19:09 -0500
+Received: from nf-out-0910.google.com (nf-out-0910.google.com [64.233.182.187])
+	by mx2.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
+	kB9EJ8pU018434
+	for <linux-lvm@redhat.com>; Sat, 9 Dec 2006 09:19:08 -0500
+Received: by nf-out-0910.google.com with SMTP id k26so1154331nfc
+	for <linux-lvm@redhat.com>; Sat, 09 Dec 2006 06:19:07 -0800 (PST)
+Message-ID: <c5530b840612090619v2f807944h361a5dc163cb69c4@mail.gmail.com>
+Date: Sat, 9 Dec 2006 09:19:07 -0500
+From: "Michael Lessard" <michael.lessard@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Message-ID: <938785.41035.qm@web51008.mail.yahoo.com>
+Content-Type: multipart/alternative; 
+	boundary="----=_Part_88704_19390654.1165673947067"
+Subject: [linux-lvm] LVM2 and OCFS2
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -23,118 +24,37 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: LVM general discussion and development <linux-lvm@redhat.com>
+To: linux-lvm@redhat.com
 
-Hi Richard,
-1. What does/did vgcfgrestore tell you when you tried
-to use it? You said it did not work....
+------=_Part_88704_19390654.1165673947067
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
 
-2. Does debugreiserfs /dev/mapper/VGgroup-LVlist say
-that there is a filesystem there? (assuming you have
-not created a new filesystem there && also assuming
-you can perform "vgchange -a y VGgroup" )
+Hi Everyboy !
 
-_thanks
+ I read that LVM2 is not cluster aware (specially with OCFS2) from different
+post on internet forum... If it's true, could someone could confirm this
+information and point me where i can find this affirmation in documentention
+?
 
-Richard
+ I do some test with OCFS2 on LVM2 and it's seems to run correctly , so i
+have some interrogation about this fact !
 
+ If it's true that LVM2 are not cluster aware, doess anybody know how could
+i run ocfs on technology who are offer similair fonctionnality ?
 
+ Thanks in advance !
 
---- Richard Kampmann <Richard.Kampmann@freenet.de>
-wrote:
+Michael
 
-> Hi everybody,
-> 
-> I'm a bit disappointed, because there was really no
-> feedback to my mail.
-> 
-> The situation is a real problem for me - is there
-> anything missing? Or is 
-> there no way to recover (can't believe that ...)?
-> Wrong way or place to ask? Then please tell me where
-> to go ...
-> 
-> I tried to find a solution myself (also with help of
-> Google ...), but it did 
-> not help me.
-> 
-> Bye
-> 
-> Richard Kampmann
-> 
-> Am Dienstag, 28. November 2006 21:15 schrieb Richard
-> Kampmann:
-> > Hi everybody ...
-> >
-> > I recently had a lvm crash from which I now have
-> to recover. So now I need
-> > your help ...
-> >
-> > The system is a SUSE 10.1 system with actual
-> patches.
-> > # uname -rio
-> > 2.6.16.21-0.25-default i386 GNU/Linux
-> > # lvm version
-> >   LVM version:     2.02.02 (2006-02-07)
-> >   Library version: 1.02.03 (2006-02-08)
-> >   Driver version:  4.5.0
-> > #
-> >
-> > There was the unenlightened crash and before there
-> was a volume goup
-> > spanning two physical partitions (sda2, sdb2),
-> each on one physical disk
-> > (sda, sdb). The system froze (maybe in coincidence
-> with some
-> > snapshot-handling) and I had to press the reset
-> button. When rebooting lvm
-> > told me he could not open the volume group because
-> one pv was missing. The
-> > partition looked OK when checking the partition
-> table. I tried several
-> > things - and to do a vgcfgrestore but it did not
-> help.
-> >
-> > The volume group (system_vg) contained the root
-> partition, so I installed a
-> > new system on a third disc and tried to recover
-> the old volume group.
-> > Unfortunately when doing the pvcreate for the two
-> physical volumes I did
-> > NOT choose the "--zero n" switch.
-> >
-> > Fact is: I now have the volume group containing
-> two physical discs and two
-> > physical volumes with the correct PV UUIDs. But
-> the first sectors are
-> > zeroed, aren't they?
-> >
-> > Any way to recover the LVs of the old volume
-> group? A vgcfgrestore (YES,
-> > there was a vgcfgbackup before!) does not work ...
-> bad luck.
-> >
-> > Ah - and all logical volumes contain Reiser
-> Filesystems V 3.6 - they MUST
-> > still be there ...
-> >
-> > So - what could be my next steps?
-> >
-> > Bye
-> >
-> > Richard Kampmann
-> > _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at
-http://tldp.org/HOWTO/LVM-HOWTO/
+------=_Part_88704_19390654.1165673947067
+Content-Type: text/html; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
 
+Hi Everyboy !<br><br>&nbsp;I read that LVM2 is not cluster aware (specially with OCFS2) from different post on internet forum... If it's true, could someone could confirm this information and point me where i can find this affirmation in documentention ? 
+<br><br>&nbsp;I do some test with OCFS2 on LVM2 and it's seems to run correctly , so i have some interrogation about this fact !<br><br>&nbsp;If it's true that LVM2 are not cluster aware, doess anybody know how could i run ocfs on technology who are offer similair fonctionnality ? 
+<br><br>&nbsp;Thanks in advance !<br><br>Michael <br><br><br>
 
-
- 
-____________________________________________________________________________________
-Do you Yahoo!?
-Everyone is raving about the all-new Yahoo! Mail beta.
-http://new.mail.yahoo.com
+------=_Part_88704_19390654.1165673947067--
