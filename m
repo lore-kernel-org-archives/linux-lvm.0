@@ -1,19 +1,27 @@
-Received: from mx2.redhat.com (mx2.redhat.com [10.255.15.25])
-	by int-mx2.corp.redhat.com (8.13.1/8.13.1) with ESMTP id kBBLOMeJ031216
-	for <linux-lvm@redhat.com>; Mon, 11 Dec 2006 16:24:22 -0500
-Received: from nf-out-0910.google.com (nf-out-0910.google.com [64.233.182.189])
-	by mx2.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
-	kBBLOK0U000680
-	for <linux-lvm@redhat.com>; Mon, 11 Dec 2006 16:24:20 -0500
-Received: by nf-out-0910.google.com with SMTP id k26so27719nfc
-	for <linux-lvm@redhat.com>; Mon, 11 Dec 2006 13:24:19 -0800 (PST)
-Message-ID: <859a78260612111324o267816f7qa29ce67e5c9eff94@mail.gmail.com>
-Date: Mon, 11 Dec 2006 15:24:19 -0600
-From: "Matt P" <slarty.tj@gmail.com>
+Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id kBBLZnre001044
+	for <linux-lvm@redhat.com>; Mon, 11 Dec 2006 16:35:49 -0500
+Received: from mexforward.lss.emc.com (mexforward.lss.emc.com [128.222.32.20])
+	by mx1.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
+	kBBLZmr2019231
+	for <linux-lvm@redhat.com>; Mon, 11 Dec 2006 16:35:48 -0500
+Received: from mailhub.lss.emc.com (nagas.lss.emc.com [10.254.144.11])
+	by mexforward.lss.emc.com (Switch-3.1.8/Switch-3.1.7) with ESMTP id
+	kBBLZhWN024118
+	for <linux-lvm@redhat.com>; Mon, 11 Dec 2006 16:35:43 -0500 (EST)
+Received: from corpussmtp4.corp.emc.com (corpussmtp4.corp.emc.com
+	[10.254.64.54])
+	by mailhub.lss.emc.com (Switch-3.1.8/Switch-3.1.7) with ESMTP id
+	kBBLZX7e007245
+	for <linux-lvm@redhat.com>; Mon, 11 Dec 2006 16:35:39 -0500 (EST)
+From: Kearnan_Keith@emc.com
+Content-class: urn:content-classes:message
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-Subject: [linux-lvm] directory # contains a hole
+Subject: RE: [linux-lvm] directory # contains a hole
+Date: Mon, 11 Dec 2006 16:35:21 -0500
+Message-ID: <4A8F680AC6EC43458BCAE06010D8E81B04620863@CORPUSMX40A.corp.emc.com>
+In-Reply-To: <859a78260612111324o267816f7qa29ce67e5c9eff94@mail.gmail.com>
+Content-Transfer-Encoding: quoted-printable
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -24,8 +32,29 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
+Content-Type: text/plain; charset="iso-8859-1"
 To: linux-lvm@redhat.com
+
+
+Hi Matt,
+
+Please see bugzilla 213921.  We are working on this one.=20
+
+https://bugzilla.redhat.com/bugzilla/show_bug.cgi?id=3D213921
+
+Keith R. Kearnan
+Principal Engineer
+E-Lab
+EMC=EF=BF=BD Engineering
+Phone: (508) 249-1315
+Kearnan_Keith@emc.com
+
+-----Original Message-----
+From: linux-lvm-bounces@redhat.com [mailto:linux-lvm-bounces@redhat.com] On=
+ Behalf Of Matt P
+Sent: Monday, December 11, 2006 4:24 PM
+To: linux-lvm@redhat.com
+Subject: [linux-lvm] directory # contains a hole
 
 I'm not certain this is LVM related but at this point I'm grasping at
 straws. Every so often, ranging from 14 days to a little over a month,
@@ -60,7 +89,8 @@ About 350Gig presented to the system
 LVM version:     2.01.14 (2005-08-04)
  Library version: 1.01.04 (2005-08-02)
  Driver version:  4.4.0
--------------------------------------------------------------------------------------------
+---------------------------------------------------------------------------=
+----------------
 # vgdisplay -v vg01
     Using volume group(s) on command line
     Finding volume group "vg01"
@@ -134,10 +164,12 @@ LVM version:     2.01.14 (2005-08-04)
   PV UUID               jbcB7h-qh8O-LkAB-wcJz-CxKy-GIIm-xwylk2
   PV Status             allocatable
   Total PE / Free PE    1598 / 0
--------------------------------------------------------------------------------------------
+---------------------------------------------------------------------------=
+----------------
 
 Messages Clip Below:
--------------------------------------------------------------------------------------------
+---------------------------------------------------------------------------=
+----------------
 Dec  8 17:50:01 localhost logger: 17:50:01 up 17 days, 4:17, 2 users,
 load average: 3.07, 4.30, 4.54
 Dec  8 17:50:04 localhost kernel: EXT3-fs error (device dm-6):
@@ -365,3 +397,9 @@ freeing b_committed_data
 Dec  8 17:51:17 localhost last message repeated 8 times
 Dec  8 17:52:01 localhost logger: 17:52:01 up 17 days, 4:19, 0 users,
 load average: 1.77, 3.92, 4.41
+
+_______________________________________________
+linux-lvm mailing list
+linux-lvm@redhat.com
+https://www.redhat.com/mailman/listinfo/linux-lvm
+read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
