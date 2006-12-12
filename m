@@ -1,19 +1,29 @@
 Received: from mx2.redhat.com (mx2.redhat.com [10.255.15.25])
-	by int-mx2.corp.redhat.com (8.13.1/8.13.1) with ESMTP id kBC4rWqq032250
-	for <linux-lvm@redhat.com>; Mon, 11 Dec 2006 23:53:33 -0500
-Received: from tungsten.msp.technicality.org (tungsten.msp.technicality.org
-	[216.250.164.46])
+	by int-mx2.corp.redhat.com (8.13.1/8.13.1) with ESMTP id kBCAGL5B007863
+	for <linux-lvm@redhat.com>; Tue, 12 Dec 2006 05:16:21 -0500
+Received: from tornado.virtua.ch (tornado.virtua.ch [217.119.144.130])
 	by mx2.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
-	kBC4rWeB011200
-	for <linux-lvm@redhat.com>; Mon, 11 Dec 2006 23:53:32 -0500
-Date: Mon, 11 Dec 2006 22:52:22 -0600 (CST)
-From: Nate Carlson <natecars@natecarlson.com>
-Subject: Re: [linux-lvm] LVM2 and OCFS2
-In-Reply-To: <457D4295.9060601@mortent.org>
-Message-ID: <Pine.LNX.4.63.0612112248030.353@tungsten.msp.technicality.org>
-References: <c5530b840612090619v2f807944h361a5dc163cb69c4@mail.gmail.com>
-	<457D2F40.7060708@redhat.com> <457D4295.9060601@mortent.org>
+	kBCAGJFN032090
+	for <linux-lvm@redhat.com>; Tue, 12 Dec 2006 05:16:20 -0500
+Received: from tornado.virtua.ch (localhost.localdomain [127.0.0.1])
+	by tornado.virtua.ch (Postfix) with ESMTP id 0B4902D2A08
+	for <linux-lvm@redhat.com>; Tue, 12 Dec 2006 11:16:18 +0100 (CET)
+Received: from albator.aubonne.virtua.ch (albator.aubonne.virtua.ch
+	[192.168.1.2])
+	by tornado.virtua.ch (Postfix) with ESMTP id E4D322D29CA
+	for <linux-lvm@redhat.com>; Tue, 12 Dec 2006 11:16:17 +0100 (CET)
+Received: from [192.168.1.30] (unknown [192.168.1.30])
+	by albator.aubonne.virtua.ch (Postfix) with ESMTP id A9CBB73579
+	for <linux-lvm@redhat.com>; Tue, 12 Dec 2006 11:16:17 +0100 (CET)
+Message-ID: <457E8170.4000007@virtua.ch>
+Date: Tue, 12 Dec 2006 11:16:16 +0100
+From: Jean Chiappini <Jean.Chiappini@virtua.ch>
 MIME-Version: 1.0
+Subject: Re: [linux-lvm] EXT3-fs: unable to read superblock
+References: <457D8863.1020801@virtua.ch>
+	<20061211180859.GN31405@valinor.arda.theunixman.com>
+In-Reply-To: <20061211180859.GN31405@valinor.arda.theunixman.com>
+Content-Transfer-Encoding: 7bit
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -24,19 +34,42 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"; format="flowed"
-Content-Transfer-Encoding: 7bit
-To: morten@mortent.org, LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+To: linux-lvm@redhat.com
 
-On Mon, 11 Dec 2006, Morten Torstensen wrote:
-> Another option is GPFS from IBM, free as in beer. It really is a state 
-> of the art cluster filesystem and well worth the effort to look into if 
-> you are in the market for a cluster FS.
+Thank you for your answer, but when I do this command, this error appear :
+tune2fs: Argument invalide while trying to open 
+/dev/mapper/VolGroup00-mysqldata
+Couldn't find valid filesystem superblock.
 
-GPFS is available for free now? I'm not finding it available for download 
-anywhere - got a link?
-y
-------------------------------------------------------------------------
-| nate carlson | natecars@natecarlson.com | http://www.natecarlson.com |
-|       depriving some poor village of its idiot since 1981            |
-------------------------------------------------------------------------
+The only solution I see now is to format this partition...
+
+Evan Cofsky wrote:
+> On 12/11 17:33, Jean Chiappini wrote:
+>   
+>> Hello all,
+>>
+>> I have a server production with centos 4 with kernel 2.6.9-42 and 
+>> lvm2-2.02.06 installed. All was working find, but today the server 
+>> crashed. When I would reboot my server, I saw in the log that the lvm 
+>> partiton wouldn't mount. This is the error -> kernel: EXT3-fs: unable to 
+>> read superblock.
+>>     
+>
+> I had this problem recently with a few systems.  Try booting to
+> single-user mode, and then do the following command:
+>
+> tune2fs -j DEVICE-FILE-WITH-PROBLEM
+>
+> This will create a new journal on the filesystem.  I haven't tracked
+> down why the journal disappears yet, but it seems to, and then the
+> system (of course) won't mount it as ext3.
+>
+>   
+> ------------------------------------------------------------------------
+>
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@redhat.com
+> https://www.redhat.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
