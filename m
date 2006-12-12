@@ -1,22 +1,18 @@
-Received: from mx2.redhat.com (mx2.redhat.com [10.255.15.25])
-	by int-mx2.corp.redhat.com (8.13.1/8.13.1) with ESMTP id kBC0Bsgp022494
-	for <linux-lvm@redhat.com>; Mon, 11 Dec 2006 19:11:54 -0500
-Received: from nf-out-0910.google.com (nf-out-0910.google.com [64.233.182.184])
-	by mx2.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
-	kBC0BrYi001218
-	for <linux-lvm@redhat.com>; Mon, 11 Dec 2006 19:11:53 -0500
-Received: by nf-out-0910.google.com with SMTP id k26so59499nfc
-	for <linux-lvm@redhat.com>; Mon, 11 Dec 2006 16:11:52 -0800 (PST)
-Message-ID: <c5530b840612111611t2c507226k9b9a494a26064a2f@mail.gmail.com>
-Date: Mon, 11 Dec 2006 19:11:52 -0500
-From: "Michael Lessard" <michael.lessard@gmail.com>
-Subject: Re: [linux-lvm] LVM2 and OCFS2
-In-Reply-To: <457D2F40.7060708@redhat.com>
+Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id kBC1ZqAZ001335
+	for <linux-lvm@redhat.com>; Mon, 11 Dec 2006 20:35:52 -0500
+Received: from nycpsmtp01.online.weightwatchers.net (smtp1.weightwatchers.com
+	[216.89.71.57])
+	by mx1.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
+	kBC1Zp6d023894
+	for <linux-lvm@redhat.com>; Mon, 11 Dec 2006 20:35:51 -0500
+Content-class: urn:content-classes:message
 MIME-Version: 1.0
-Content-Type: multipart/alternative; 
-	boundary="----=_Part_131024_31979342.1165882312258"
-References: <c5530b840612090619v2f807944h361a5dc163cb69c4@mail.gmail.com>
-	<457D2F40.7060708@redhat.com>
+Date: Mon, 11 Dec 2006 20:35:45 -0500
+Message-ID: <FFCAB2A80304DB40BBE766409E0D7F050855BCC5@nycpmbx01>
+From: "Ohad Imer \(Consultant\)" <oimer@weightwatchers.com>
+Content-Transfer-Encoding: 8bit
+Subject: [linux-lvm] Q about NetApp Image Cloning of LVM
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -27,74 +23,84 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
+Content-Type: text/plain; charset="us-ascii"
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-------=_Part_131024_31979342.1165882312258
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
+Good day,
 
-Thanks Patrick !  I appreciate and now understand why LVM are not cluster
-aware !
+I was wondering if anyone has experienced image based cloning
+(especially using NetApp) of LVM volumes from one server to other. In
+addition, some lower environment servers need to have the same
+"original" volume mounted few times under different mount points as
+multiple lower oracle environments are needed.
 
- have good week !
+I was able to accomplish this and wanted to hear some feed back from the
+group as there might be better ways to handle this, and also best ways
+to remove the volumes once a refresh is needed.
 
-Michael
+For testing I created a 10GB lun, and mounted via LVM and EXT3 on the
+original server - I then created a clone on the filer (netapp
+controller) using the following command:
 
+vol clone create ohad_clone -b ohadtest
 
-On 12/11/06, Patrick Caulfield <pcaulfie@redhat.com> wrote:
->
-> Michael Lessard wrote:
-> > Hi Everyboy !
-> >
-> >  I read that LVM2 is not cluster aware (specially with OCFS2) from
-> > different post on internet forum... If it's true, could someone could
-> > confirm this information and point me where i can find this affirmation
-> > in documentention ?
-> >
-> >  I do some test with OCFS2 on LVM2 and it's seems to run correctly , so
-> > i have some interrogation about this fact !
->
-> It's true that lvm is not cluster-aware. What that means is that if you
-> update the volume groups on one node then the other nodes in
-> the cluster will not see the changes and you could end up with the block
-> devices on the machines dangerously out of sync.
->
-> What you tried (it seems to me) is just created LVM volumes and run OCFS2
-> on them. that /will/ work provided you never change the
-> volume groups!
->
-> To get clustered LVM you need to use clvm (RPM package lvm2-cluster) which
-> synchronises LVM metadata updates across the cluster.
-> This only works with Red Hat cluster suite though - you would need you
-> write your own cluster management plugin for OCFS2 if you
-> wanted to use that (hard, but not impossible). Of course, RHCS does offer
-> GFS as the cluster filesystem, if that's what you really need!
->
-> --
->
-> patrick
->
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
->
+And I mapped the new clowe "ohad_clone" to the new server. I then use
+the NetApp utility 
 
-------=_Part_131024_31979342.1165882312258
-Content-Type: text/html; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
+qla2xxx_lun_rescan all  
 
-Thanks Patrick !&nbsp; I appreciate and now understand why LVM are not cluster aware !<br><br>&nbsp;have good week !<br><br>Michael <br><br><br><div><span class="gmail_quote">On 12/11/06, <b class="gmail_sendername">Patrick Caulfield
-</b> &lt;<a href="mailto:pcaulfie@redhat.com">pcaulfie@redhat.com</a>&gt; wrote:</span><blockquote class="gmail_quote" style="border-left: 1px solid rgb(204, 204, 204); margin: 0pt 0pt 0pt 0.8ex; padding-left: 1ex;">Michael Lessard wrote:
-<br>&gt; Hi Everyboy !<br>&gt;<br>&gt;&nbsp;&nbsp;I read that LVM2 is not cluster aware (specially with OCFS2) from<br>&gt; different post on internet forum... If it's true, could someone could<br>&gt; confirm this information and point me where i can find this affirmation
-<br>&gt; in documentention ?<br>&gt;<br>&gt;&nbsp;&nbsp;I do some test with OCFS2 on LVM2 and it's seems to run correctly , so<br>&gt; i have some interrogation about this fact !<br><br>It's true that lvm is not cluster-aware. What that means is that if you update the volume groups on one node then the other nodes in
-<br>the cluster will not see the changes and you could end up with the block devices on the machines dangerously out of sync.<br><br>What you tried (it seems to me) is just created LVM volumes and run OCFS2 on them. that /will/ work provided you never change the
-<br>volume groups!<br><br>To get clustered LVM you need to use clvm (RPM package lvm2-cluster) which synchronises LVM metadata updates across the cluster.<br>This only works with Red Hat cluster suite though - you would need you write your own cluster management plugin for OCFS2 if you
-<br>wanted to use that (hard, but not impossible). Of course, RHCS does offer GFS as the cluster filesystem, if that's what you really need!<br><br>--<br><br>patrick<br><br>_______________________________________________<br>
-linux-lvm mailing list<br><a href="mailto:linux-lvm@redhat.com">linux-lvm@redhat.com</a><br><a href="https://www.redhat.com/mailman/listinfo/linux-lvm">https://www.redhat.com/mailman/listinfo/linux-lvm</a><br>read the LVM HOW-TO at 
-<a href="http://tldp.org/HOWTO/LVM-HOWTO/">http://tldp.org/HOWTO/LVM-HOWTO/</a><br></blockquote></div><br>
+to scan all the buses, and it also created the dm-multipath devices in
+/dev/mapper. In this case it created mpath4. Since I am going to mount
+multiple clones of the original lun on the same server, I need to change
+the volume name and the UUID, and I accomplish this with the following:
 
-------=_Part_131024_31979342.1165882312258--
+[root@nyadebizdb03 backup]# pvchange -u /dev/mapper/mpath4
+  Physical volume "/dev/dm-13" changed
+  1 physical volume changed / 0 physical volumes not changed
+[root@nyadebizdb03 backup]# vgrename ohadtest ohadtest3
+  Volume group "ohadtest" successfully renamed to "ohadtest3"
+[root@nyadebizdb03 backup]# vgchange -a y ohadtest3
+  1 logical volume(s) in volume group "ohadtest3" now active
+
+And then able to mount the volume.
+
+[root@nyadebizdb03 backup]# mkdir /ohad3
+[root@nyadebizdb03 backup]# mount /dev/ohadtest3/ohad-lv /ohad3
+
+I then re-clone off of the original volume, and mount it in the same
+steps changing the name to ohadtest2 and a new UUID, and so on... I was
+able to mount 3 clones of the original LVM lun on a new server.
+
+[root@nyadebizdb03 itadmin]# vgs
+  VG         #PV #LV #SN Attr   VSize   VFree
+  VolGroup00   1   5   0 wz--n- 136.59G 32.00M
+  n01fcfc02    1   1   0 wz--n- 120.01G     0
+  n01stfc01    1   1   0 wz--n- 400.02G     0
+  ohadtest     1   1   0 wz--n-  10.00G  7.50G
+  ohadtest2    1   1   0 wz--n-  10.00G  7.50G
+  ohadtest3    1   1   0 wz--n-  10.00G  7.50G
+You have new mail in /var/spool/mail/root
+[root@nyadebizdb03 itadmin]# lvs
+  LV       VG         Attr   LSize   Origin Snap%  Move Log Copy%
+  LogVol00 VolGroup00 -wi-ao  19.53G
+  LogVol01 VolGroup00 -wi-ao  11.72G
+  LogVol02 VolGroup00 -wi-ao   4.91G
+  LogVol03 VolGroup00 -wi-ao   4.88G
+  LogVol04 VolGroup00 -wi-ao  95.53G
+  u01      n01fcfc02  -wi-ao 120.01G
+  u02      n01stfc01  -wi-ao 400.02G
+  ohad-lv  ohadtest   -wi-ao   2.50G
+  ohad-lv  ohadtest2  -wi-ao   2.50G
+  ohad-lv  ohadtest3  -wi-ao   2.50G
+[root@nyadebizdb03 itadmin]#
+
+Are there any additional suggestions, and also what would be the best
+way to remove all the volumes? I used the dmsetup remove command to
+delete the dm-multipath device and then remove the entries from LVM all
+the *.vg.
+
+Thank you in advance for your help!
+
+Cheers,
+
+Ohad
