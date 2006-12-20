@@ -1,19 +1,28 @@
-Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id kBKE2nbx017259
-	for <linux-lvm@redhat.com>; Wed, 20 Dec 2006 09:02:49 -0500
-Received: from mx2.post.ch (mx2.post.ch [194.41.216.135])
-	by mx1.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
-	kBKE2hih005031
-	for <linux-lvm@redhat.com>; Wed, 20 Dec 2006 09:02:47 -0500
-Message-ID: <2482337.1166623357215.JavaMail.mailer@post.ch>
+Received: from mx2.redhat.com (mx2.redhat.com [10.255.15.25])
+	by int-mx2.corp.redhat.com (8.13.1/8.13.1) with ESMTP id kBKHYaFj015898
+	for <linux-lvm@redhat.com>; Wed, 20 Dec 2006 12:34:36 -0500
+Received: from nirvana.newsnow.net (bush.newsnow.net [217.204.97.18])
+	by mx2.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
+	kBKHYXEf013344
+	for <linux-lvm@redhat.com>; Wed, 20 Dec 2006 12:34:34 -0500
+Received: from amavis by nirvana.newsnow.net with scanned-ok (Exim 3.35 #1
+	(Debian)) id 1Gx5Kl-0006AY-00
+	for <linux-lvm@redhat.com>; Wed, 20 Dec 2006 17:34:27 +0000
+Received: from nasa.newsnow.net ([192.168.1.206] helo=nasa)
+	by nirvana.newsnow.net with esmtp (Exim 3.35 #1 (Debian))
+	id 1Gx5Kj-000697-00
+	for <linux-lvm@redhat.com>; Wed, 20 Dec 2006 17:34:25 +0000
+Received: from alan by nasa with local (Exim 4.63)
+	(envelope-from <alan.mcnatty@NewsNow.co.uk>) id 1Gx5MN-0007Dr-Hv
+	for linux-lvm@redhat.com; Wed, 20 Dec 2006 17:36:07 +0000
+From: Alan McNatty <alan.mcnatty@NewsNow.co.uk>
+Content-Transfer-Encoding: 7bit
+Date: Wed, 20 Dec 2006 17:36:06 +0000
+Message-Id: <1166636167.10999.40.camel@nasa>
 Mime-Version: 1.0
-Content-Type: multipart/signed; protocol="application/pkcs7-signature";
-	micalg=sha1; boundary="----=_Part_18248_6178180.1166623357214"
-Content-class: urn:content-classes:message
-Date: Wed, 20 Dec 2006 15:01:27 +0100
-From: <mathias.herzog@postfinance.ch>
-Subject: [linux-lvm] Mirror between  different SAN fabrics
-Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
+Subject: [linux-lvm] oops during umount of lvm snapshot
+Reply-To: alan.mcnatty@NewsNow.co.uk,
+	LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -23,122 +32,159 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
+Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@redhat.com
-
-------=_Part_18248_6178180.1166623357214
-Content-Type: text/plain;
-	charset="iso-8859-1"
-Content-class: urn:content-classes:message
-Content-Transfer-Encoding: quoted-printable
 
 Hi,
 
-Using lvm2, I would like to mirror a logical volume between two
-different SAN fabrics to guarantee high availability for my data, even
-if a whole SAN fabric crashes.
-Is there a possibility in lvm2 to define two volume groups, put the
-disks from fabric1 into group 1 and the disks from fabric2 into group 2
-and then create the mirror over the two groups? I didn't find much
-documentation for lvm2 about this, I just know that other Volume
-Managers can handle it.
+I have been testing creating in effect rolling snapshots in a mysql-zrm
+kinda way (mysql lock and system call). I have in the process managed to
+create a kernel oops that might be of interest to ML (brought about by
+me doing something pretty stupid, don't panic). 
 
-It's essential to group the discs together because I use like 100 discs
-for each mirror and I have to be sure that mirroring takes place between
-the two different SAN storages.
+I originally have my /var/lib/mysql as a LVM jfs partition. Then took a
+number of snapshots, mounted them, etc .. Then descided to switch to
+ext3, etc so backed up the contents, unmounted /var/lib/mysql,
+reformatted as ext3 and remounted. Then tried (afterwards) to umount
+then lvremove the snapshots .. oops (I think it is triggered by the
+umount)! Life seems to be continuing as normal inspite of the oops
+(subsequent snapshots seem fine, etc).
 
-Mathias
+Let me know if anyone is interested in more info .. some obvious bits
+follow. 
 
+-- from syslog
 
+Dec 20 17:15:02 ford kernel: metapage_read_end_io: I/O error
+Dec 20 17:15:03 ford kernel: metapage_write_end_io: I/O error
+Dec 20 17:15:05 ford kernel: kjournald starting.  Commit interval 5
+seconds
+Dec 20 17:15:05 ford kernel: EXT3 FS on dm-14, internal journal
+Dec 20 17:15:05 ford kernel: EXT3-fs: mounted filesystem with ordered
+data mode.
+Dec 20 17:15:05 ford kernel: kjournald starting.  Commit interval 5
+seconds
+Dec 20 17:15:05 ford kernel: EXT3 FS on dm-26, internal journal
+Dec 20 17:15:05 ford kernel: EXT3-fs: mounted filesystem with ordered
+data mode.
+Dec 20 17:15:11 ford kernel: metapage_write_end_io: I/O error
+Dec 20 17:15:11 ford kernel: metapage_read_end_io: I/O error
+Dec 20 17:15:11 ford kernel: metapage_read_end_io: I/O error
+Dec 20 17:15:11 ford kernel: metapage_write_end_io: I/O error
+Dec 20 17:15:11 ford kernel: metapage_read_end_io: I/O error
+Dec 20 17:15:11 ford kernel: metapage_read_end_io: I/O error
+Dec 20 17:15:11 ford kernel: metapage_write_end_io: I/O error
+Dec 20 17:15:11 ford kernel: metapage_read_end_io: I/O error
+Dec 20 17:15:11 ford last message repeated 2 times
+Dec 20 17:15:12 ford kernel: BUG: unable to handle kernel NULL pointer
+dereference at virtual address 00000024
+Dec 20 17:15:12 ford kernel:  printing eip:
+Dec 20 17:15:12 ford kernel: f89838a8
+Dec 20 17:15:12 ford kernel: *pde = 2f277001
+Dec 20 17:15:12 ford kernel: *pte = 00000000
+Dec 20 17:15:12 ford kernel: Oops: 0000 [#1]
+Dec 20 17:15:12 ford kernel: SMP
+Dec 20 17:15:12 ford kernel: Modules linked in: jfs dm_snapshot
+dm_mirror softdog tg3 genrtc ext2 ext3 jbd mbcache dm_mod sd_mod aacraid
+scsi_mod unix
+Dec 20 17:15:12 ford kernel: CPU:    1
+Dec 20 17:15:12 ford kernel: EIP:    0060:[pg0+946014376/1070248960]
+Not tainted VLI
+Dec 20 17:15:12 ford kernel: EFLAGS: 00010246   (2.6.19 #1)
+Dec 20 17:15:12 ford kernel: EIP is at lmWriteRecord+0x28/0x366 [jfs]
+Dec 20 17:15:12 ford kernel: eax: 00000000   ebx: e222040c   ecx:
+00000000   edx: e2220434
+Dec 20 17:15:12 ford kernel: esi: e22203c0   edi: e22203c0   ebp:
+f05290c0   esp: c82afe18
+Dec 20 17:15:12 ford kernel: ds: 007b   es: 007b   ss: 0068
+Dec 20 17:15:12 ford kernel: Process umount (pid: 5513, ti=c82ae000
+task=c7dbf550 task.ti=c82ae000)
+Dec 20 17:15:12 ford kernel: Stack: 00000001 0000000e 00000000 00000000
+00000000 00000000 7fffffff 00000000
+Dec 20 17:15:12 ford kernel:        c20f7700 c01840f2 00000000 00000000
+00000000 e222040c e22203c0 e22203c0
+Dec 20 17:15:12 ford kernel:        f05290c0 f8984eb6 e22203c0 00000000
+c82afe74 00000000 edab542c 00000000
+Dec 20 17:15:12 ford kernel: Call Trace:
+Dec 20 17:15:12 ford kernel:  [bio_put+42/48] bio_put+0x2a/0x30
+Dec 20 17:15:12 ford kernel:  [pg0+946020022/1070248960] lmLogShutdown
++0x60/0x11e [jfs]
+Dec 20 17:15:12 ford kernel:  [filemap_write_and_wait+61/68]
+filemap_write_and_wait+0x3d/0x44
+Dec 20 17:15:12 ford kernel:  [pg0+946019339/1070248960] lmLogClose
++0x102/0x108 [jfs]
+Dec 20 17:15:12 ford kernel:  [pg0+945920067/1070248960] updateSuper
++0x56/0x11a [jfs]
+Dec 20 17:15:12 ford kernel:  [pg0+945920780/1070248960] jfs_umount
++0xf4/0x104 [jfs]
+Dec 20 17:15:12 ford kernel:  [pg0+945902263/1070248960] jfs_put_super
++0x19/0x83 [jfs]
+Dec 20 17:15:12 ford kernel:  [generic_shutdown_super+264/274]
+generic_shutdown_super+0x108/0x112
+Dec 20 17:15:12 ford kernel:  [kill_block_super+45/73] kill_block_super
++0x2d/0x49
+Dec 20 17:15:12 ford kernel:  [deactivate_super+81/151] deactivate_super
++0x51/0x97
+Dec 20 17:15:12 ford kernel:  [sys_umount+63/145] sys_umount+0x3f/0x91
+Dec 20 17:15:12 ford kernel:  [sys_munmap+71/85] sys_munmap+0x47/0x55
+Dec 20 17:15:12 ford kernel:  [sys_oldumount+23/27] sys_oldumount
++0x17/0x1b
+Dec 20 17:15:12 ford kernel:  [syscall_call+7/11] syscall_call+0x7/0xb
+Dec 20 17:15:12 ford kernel:  [fib_get_next+255/282] fib_get_next
++0xff/0x11a
+Dec 20 17:15:12 ford kernel:  =======================
+Dec 20 17:15:12 ford kernel: Code: 00 eb b0 55 57 56 53 83 ec 34 c7 44
+24 30 00 00 00 00 c7 44 24 14 00 00 00 00 8b 44 24 48 8b 40 48 8b 4c 24
+54 89 44 24 2c 85 c9 <8b> 50 24 8b 44 24 48 89 54 24 28 8b 40 44 89 44
+24 24 0f 84 a4
+Dec 20 17:15:12 ford kernel: EIP: [pg0+946014376/1070248960]
+lmWriteRecord+0x28/0x366 [jfs] SS:ESP 0068:c82afe18
+Dec 20 17:15:12 ford kernel:  BUG: warning at
+kernel/exit.c:859/do_exit()
+Dec 20 17:15:12 ford kernel:  [do_exit+1096/1101] do_exit+0x448/0x44d
+Dec 20 17:15:12 ford kernel:  [do_trap+0/269] do_trap+0x0/0x10d
+Dec 20 17:15:12 ford kernel:  [do_page_fault+737/1749] do_page_fault
++0x2e1/0x6d5
+Dec 20 17:15:12 ford kernel:  [find_get_pages_tag+65/131]
+find_get_pages_tag+0x41/0x83
+Dec 20 17:15:12 ford kernel:  [do_page_fault+0/1749] do_page_fault
++0x0/0x6d5
+Dec 20 17:15:12 ford kernel:  [error_code+57/64] error_code+0x39/0x40
+Dec 20 17:15:12 ford kernel:  [pg0+946014376/1070248960] lmWriteRecord
++0x28/0x366 [jfs]
+Dec 20 17:15:12 ford kernel:  [bio_put+42/48] bio_put+0x2a/0x30
+Dec 20 17:15:12 ford kernel:  [pg0+946020022/1070248960] lmLogShutdown
++0x60/0x11e [jfs]
+Dec 20 17:15:12 ford kernel:  [filemap_write_and_wait+61/68]
+filemap_write_and_wait+0x3d/0x44
+Dec 20 17:15:12 ford kernel:  [pg0+946019339/1070248960] lmLogClose
++0x102/0x108 [jfs]
+Dec 20 17:15:12 ford kernel:  [pg0+945920067/1070248960] updateSuper
++0x56/0x11a [jfs]
+Dec 20 17:15:12 ford kernel:  [pg0+945920780/1070248960] jfs_umount
++0xf4/0x104 [jfs]
+Dec 20 17:15:12 ford kernel:  [pg0+945902263/1070248960] jfs_put_super
++0x19/0x83 [jfs]
+Dec 20 17:15:12 ford kernel:  [generic_shutdown_super+264/274]
+generic_shutdown_super+0x108/0x112
+Dec 20 17:15:12 ford kernel:  [kill_block_super+45/73] kill_block_super
++0x2d/0x49
+Dec 20 17:15:12 ford kernel:  [deactivate_super+81/151] deactivate_super
++0x51/0x97
+Dec 20 17:15:12 ford kernel:  [sys_umount+63/145] sys_umount+0x3f/0x91
+Dec 20 17:15:12 ford kernel:  [sys_munmap+71/85] sys_munmap+0x47/0x55
+Dec 20 17:15:12 ford kernel:  [sys_oldumount+23/27] sys_oldumount
++0x17/0x1b
+Dec 20 17:15:12 ford kernel:  [syscall_call+7/11] syscall_call+0x7/0xb
+Dec 20 17:15:12 ford kernel:  [fib_get_next+255/282] fib_get_next
++0xff/0x11a
+Dec 20 17:15:12 ford kernel:  =======================
 
-Sicherheitshinweis:
-Dieses E-Mail von PostFinance ist signiert. Weitere Informationen finden Si=
-e unter:=20
-https://www.postfinance.ch/e-signature.
-Geben Sie Ihre Sicherheitselemente niemals Dritten bekannt.
-------=_Part_18248_6178180.1166623357214
-Content-Type: application/pkcs7-signature; name=smime.p7s;
-	smime-type=signed-data
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="smime.p7s"
-Content-Description: S/MIME Cryptographic Signature
+I'm running a 2.6.19 kernel, lvdisplay --version tells me:
 
-MIAGCSqGSIb3DQEHAqCAMIACAQExCzAJBgUrDgMCGgUAMIAGCSqGSIb3DQEHAQAAoIINszCCA6cw
-ggMQoAMCAQICEG+vuGdzb316NcV1yvWubhowDQYJKoZIhvcNAQEFBQAwbjEpMCcGA1UEChMgRGV1
-dHNjaGVyIFNwYXJrYXNzZW4gVmVybGFnIEdtYkgxHzAdBgNVBAsTFlZlcmlTaWduIFRydXN0IE5l
-dHdvcmsxIDAeBgNVBAMTF1MtVHJ1c3QsIERFLCBDbGFzcyAyIENBMB4XDTA1MTEyMjAwMDAwMFoX
-DTE1MTEyMTIzNTk1OVowggEFMQswCQYDVQQGEwJDSDENMAsGA1UECBMEQmVybjENMAsGA1UEBxME
-QmVybjEgMB4GA1UEChMXRGllIFNjaHdlaXplcmlzY2hlIFBvc3QxHzAdBgNVBAsTFlZlcmlTaWdu
-IFRydXN0IE5ldHdvcmsxOTA3BgNVBAsTMFRlcm1zIG9mIHVzZSBhdCBodHRwczovL3d3dy5zLXRy
-dXN0LmRlL3JwYSAoYykwNTEwMC4GA1UECxMnQ2xhc3MgMiBPblNpdGUgSW5kaXZpZHVhbCBTdWJz
-Y3JpYmVyIENBMSgwJgYDVQQDEx9EaWUgU2Nod2VpemVyaXNjaGUgUG9zdCBNYWlsIENBMIGfMA0G
-CSqGSIb3DQEBAQUAA4GNADCBiQKBgQDsULs5KMIpCW4QrE3xKMO0FKxooh6XbkEL8QqW/rWLKoqc
-NyAQxdWpYB6RjWupKklPPrkMJNT5IwgbfeF9InLAGTUHX5ZMuynsvfIxB739ArYWErbDvEoP7+oe
-P1AxLd63YgGz6W6hS46Rg1pmXwJ1ISdhABSifM4jmIDkLq75awIDAQABo4GsMIGpMBIGA1UdEwEB
-/wQIMAYBAf8CAQAwQgYDVR0gBDswOTA3BgtghkgBhvhFAQcXAjAoMCYGCCsGAQUFBwIBFhpodHRw
-czovL3d3dy5zLXRydXN0LmRlL3JwYTAOBgNVHQ8BAf8EBAMCAQYwIAYDVR0RBBkwF6QVMBMxETAP
-BgNVBAMTCEMxQzItMS01MB0GA1UdDgQWBBRIOwWhs7CcfqGatK/Ext+WyKs4KzANBgkqhkiG9w0B
-AQUFAAOBgQB2nxmJWiIUOlwTlhqQpCVNelrBMnMR5RA9DQJQpt9bfM2qpbLVo3n+wziO63iRjGAR
-LSlbQh2Q+nbeVwilQ7u4nh8+kwT2VcXElO61hNqU+6MTCWQob5rXu1LJjvcejD3OQwHEVmkr9bH9
-rqo7E/NFYFNiF0tssg9rDgaDH4PjXDCCAwIwggJrAhAfQihfPIgPjjyJs4Szqx8cMA0GCSqGSIb3
-DQEBBQUAMIHBMQswCQYDVQQGEwJVUzEXMBUGA1UEChMOVmVyaVNpZ24sIEluYy4xPDA6BgNVBAsT
-M0NsYXNzIDIgUHVibGljIFByaW1hcnkgQ2VydGlmaWNhdGlvbiBBdXRob3JpdHkgLSBHMjE6MDgG
-A1UECxMxKGMpIDE5OTggVmVyaVNpZ24sIEluYy4gLSBGb3IgYXV0aG9yaXplZCB1c2Ugb25seTEf
-MB0GA1UECxMWVmVyaVNpZ24gVHJ1c3QgTmV0d29yazAeFw05ODA1MTgwMDAwMDBaFw0xODA1MTgy
-MzU5NTlaMIHBMQswCQYDVQQGEwJVUzEXMBUGA1UEChMOVmVyaVNpZ24sIEluYy4xPDA6BgNVBAsT
-M0NsYXNzIDIgUHVibGljIFByaW1hcnkgQ2VydGlmaWNhdGlvbiBBdXRob3JpdHkgLSBHMjE6MDgG
-A1UECxMxKGMpIDE5OTggVmVyaVNpZ24sIEluYy4gLSBGb3IgYXV0aG9yaXplZCB1c2Ugb25seTEf
-MB0GA1UECxMWVmVyaVNpZ24gVHJ1c3QgTmV0d29yazCBnzANBgkqhkiG9w0BAQEFAAOBjQAwgYkC
-gYEAp4gBIXQs5xoD8JjhlzwPIQjxnNuX6Zr8wgQGE75fUsjMHiwSViy4AWkszJkfrbCWrnkE8hM5
-wXuYuggs6MKEEyyqaekJ9MepAqRCwiNPStjwDqL7MWzJ5m+ZJwf15vRMeJ5t60aG+rmGyVTyssSv
-1EYcWskVMP8NbPUtDm3Of3cCAwEAATANBgkqhkiG9w0BAQUFAAOBgQARRaikf/HjcyDKve7f9Ycj
-kT2NrEdFGt5t21Qhzg6DDvjc5UPV6y5hkSPicgA0VffEzxEz3cHkIiNcUFMZ+GTn9wkPRVGgVyvf
-vCJm/jFweyU6D8WKfsO7cgHM8L1NUoGkG1hYU9VTOvUOatrpr8ThWPNCb1RiR6wxlNENzu8dMTCC
-BCgwggORoAMCAQICEFOzgj3/z/gxFoM0KNJ2u24wDQYJKoZIhvcNAQEEBQAwggEFMQswCQYDVQQG
-EwJDSDENMAsGA1UECBMEQmVybjENMAsGA1UEBxMEQmVybjEgMB4GA1UEChMXRGllIFNjaHdlaXpl
-cmlzY2hlIFBvc3QxHzAdBgNVBAsTFlZlcmlTaWduIFRydXN0IE5ldHdvcmsxOTA3BgNVBAsTMFRl
-cm1zIG9mIHVzZSBhdCBodHRwczovL3d3dy5zLXRydXN0LmRlL3JwYSAoYykwNTEwMC4GA1UECxMn
-Q2xhc3MgMiBPblNpdGUgSW5kaXZpZHVhbCBTdWJzY3JpYmVyIENBMSgwJgYDVQQDEx9EaWUgU2No
-d2VpemVyaXNjaGUgUG9zdCBNYWlsIENBMB4XDTA2MDQwNDAwMDAwMFoXDTA3MDQwNDIzNTk1OVow
-gbgxIDAeBgNVBAoUF0RpZSBTY2h3ZWl6ZXJpc2NoZSBQb3N0MRowGAYDVQQLFBFNYWlsIENlcnRp
-ZmljYXRlczExMC8GA1UECxMoVGVybXMgb2YgdXNlIGF0IHd3dy5zLXRydXN0LmRlL3JwYSAoYykw
-MTEXMBUGA1UEAxMOTWF0aGlhcyBIZXJ6b2cxLDAqBgkqhkiG9w0BCQEWHW1hdGhpYXMuaGVyem9n
-QHBvc3RmaW5hbmNlLmNoMIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCxwCsm0o4w2arhohH7
-QuB/KfdOGgX2SYmlHMcwLCbh/MfmuQg78zdaaF4zE366h4p7tOuGhGNLGqJT8bOc1K86edvtQ2yN
-6QsuFNfSsHFa152hlgzoALNyZRqhGdOrQzvcAuuodVGZCVQyYX3GLwzLXXE7qfmLplNPmjNDtKUg
-SwIDAQABo4HiMIHfMAkGA1UdEwQCMAAwQQYDVR0gBDowODA2BgpghkgBhvhFAQcnMCgwJgYIKwYB
-BQUHAgEWGmh0dHBzOi8vd3d3LnMtdHJ1c3QuZGUvcnBhMAsGA1UdDwQEAwIFoDARBglghkgBhvhC
-AQEEBAMCB4AwXAYDVR0fBFUwUzBRoE+gTYZLaHR0cDovL29uc2l0ZWNybC5zLXRydXN0LmRlL0Rp
-ZVNjaHdlaXplcmlzY2hlUG9zdE1haWxDZXJ0aWZpY2F0ZXMvTGF0ZXN0Q1JMMBEGCmCGSAGG+EUB
-BgkEAwEB/zANBgkqhkiG9w0BAQQFAAOBgQBCjd2C7oLyYc7paVjRl4AJuSH7n01VIgGNXCQ2mN4J
-B6Y5zYfqHB+zmhmqDun/fhcdfKwD4R15Q/tdSPpd6CLGzGff0A0nD18mBL1XlIc0XRLavNdFR5bc
-ZMP+VtSlYBUa+YBenF/thPECCdk5M/EAzazqdXIxvGjTdhgudCl/eDCCAtIwggI7oAMCAQICEEHl
-U7TbxXw+tOS7l1GkNQUwDQYJKoZIhvcNAQEFBQAwgcExCzAJBgNVBAYTAlVTMRcwFQYDVQQKEw5W
-ZXJpU2lnbiwgSW5jLjE8MDoGA1UECxMzQ2xhc3MgMiBQdWJsaWMgUHJpbWFyeSBDZXJ0aWZpY2F0
-aW9uIEF1dGhvcml0eSAtIEcyMTowOAYDVQQLEzEoYykgMTk5OCBWZXJpU2lnbiwgSW5jLiAtIEZv
-ciBhdXRob3JpemVkIHVzZSBvbmx5MR8wHQYDVQQLExZWZXJpU2lnbiBUcnVzdCBOZXR3b3JrMB4X
-DTAxMDYxMjAwMDAwMFoXDTE2MDYxMTIzNTk1OVowbjEpMCcGA1UEChMgRGV1dHNjaGVyIFNwYXJr
-YXNzZW4gVmVybGFnIEdtYkgxHzAdBgNVBAsTFlZlcmlTaWduIFRydXN0IE5ldHdvcmsxIDAeBgNV
-BAMTF1MtVHJ1c3QsIERFLCBDbGFzcyAyIENBMIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDn
-A5RxqZgSd7R6nw6D9qd1h2whdYj6biACg/BGyHqI+1FMLGMJh1En2nfzSBTqwJIdVa2+6YiMDQHz
-8LbWCIYv3oABiLXBG8FG6rlY6nVwdkz0EXKyTtClaGDhVU36o77ApCmhNPnpmGbPZvsL9kRA1A7L
-Tvc0OW+iVWTAcaetKQIDAQABox0wGzAMBgNVHRMEBTADAQH/MAsGA1UdDwQEAwIBBjANBgkqhkiG
-9w0BAQUFAAOBgQBAX0VqvODgoRR3ryXnpi2G5yO7KrANMHHl6GXT+WpeY7QEsmjyJWT4RUAhLc9u
-xMIqt5p4EmsgjrfRNdnPQt8tnWpGIR3ZpT/A7zOUs4j9H4W2n7gyow2Gzf3gF8vJkMGE+5kBOYFW
-31uXgMsURqt2xMNVFJZ0n+fuc8kHKKlTRzGCA44wggOKAgEBMIIBGzCCAQUxCzAJBgNVBAYTAkNI
-MQ0wCwYDVQQIEwRCZXJuMQ0wCwYDVQQHEwRCZXJuMSAwHgYDVQQKExdEaWUgU2Nod2VpemVyaXNj
-aGUgUG9zdDEfMB0GA1UECxMWVmVyaVNpZ24gVHJ1c3QgTmV0d29yazE5MDcGA1UECxMwVGVybXMg
-b2YgdXNlIGF0IGh0dHBzOi8vd3d3LnMtdHJ1c3QuZGUvcnBhIChjKTA1MTAwLgYDVQQLEydDbGFz
-cyAyIE9uU2l0ZSBJbmRpdmlkdWFsIFN1YnNjcmliZXIgQ0ExKDAmBgNVBAMTH0RpZSBTY2h3ZWl6
-ZXJpc2NoZSBQb3N0IE1haWwgQ0ECEFOzgj3/z/gxFoM0KNJ2u24wCQYFKw4DAhoFAKCCAccwGAYJ
-KoZIhvcNAQkDMQsGCSqGSIb3DQEHATAcBgkqhkiG9w0BCQUxDxcNMDYxMjIwMTQwMjM3WjAjBgkq
-hkiG9w0BCQQxFgQU0zZzZigyf0bahlnpl267TaWBCNYwNAYJKoZIhvcNAQkPMScwJTAKBggqhkiG
-9w0DBzAOBggqhkiG9w0DAgICAIAwBwYFKw4DAgcwggEwBgsqhkiG9w0BCRACCzGCAR8wggEbMIIB
-BTELMAkGA1UEBhMCQ0gxDTALBgNVBAgTBEJlcm4xDTALBgNVBAcTBEJlcm4xIDAeBgNVBAoTF0Rp
-ZSBTY2h3ZWl6ZXJpc2NoZSBQb3N0MR8wHQYDVQQLExZWZXJpU2lnbiBUcnVzdCBOZXR3b3JrMTkw
-NwYDVQQLEzBUZXJtcyBvZiB1c2UgYXQgaHR0cHM6Ly93d3cucy10cnVzdC5kZS9ycGEgKGMpMDUx
-MDAuBgNVBAsTJ0NsYXNzIDIgT25TaXRlIEluZGl2aWR1YWwgU3Vic2NyaWJlciBDQTEoMCYGA1UE
-AxMfRGllIFNjaHdlaXplcmlzY2hlIFBvc3QgTWFpbCBDQQIQU7OCPf/P+DEWgzQo0na7bjANBgkq
-hkiG9w0BAQEFAASBgGb9wkoLsWx2Ju2kVL4zRs6d5M7WYJdVh80myS4JJNKQ8UbvvxtX8ZAILS+i
-ZopfUmJKlkyxX3qKUpxnJHjVWv/4o843LaV4DSr1l+3OOfga0IUZwOm9SkJ4Z9fk2717gER2A8TI
-hwFpznump/8xvGkVOk8/KoQ2bRF4ZqPDGA0KAAAAAAAA
-------=_Part_18248_6178180.1166623357214--
+  LVM version:     2.02.07 (2006-07-17)
+  Library version: 1.02.08 (2006-07-17)
+  Driver version:  4.10.0
+
+Cheers,
+Alan
