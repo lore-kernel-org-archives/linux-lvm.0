@@ -1,21 +1,19 @@
 Received: from mx2.redhat.com (mx2.redhat.com [10.255.15.25])
-	by int-mx2.corp.redhat.com (8.13.1/8.13.1) with ESMTP id kBMFp6gI019978
-	for <linux-lvm@redhat.com>; Fri, 22 Dec 2006 10:51:07 -0500
-Received: from wr-out-0506.google.com (wr-out-0506.google.com [64.233.184.233])
+	by int-mx2.corp.redhat.com (8.13.1/8.13.1) with ESMTP id kBO9eia5015781
+	for <linux-lvm@redhat.com>; Sun, 24 Dec 2006 04:40:44 -0500
+Received: from mta05.sannet.ne.jp (mta05.sannet.ne.jp [134.180.49.75])
 	by mx2.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
-	kBMFp4cu018554
-	for <linux-lvm@redhat.com>; Fri, 22 Dec 2006 10:51:04 -0500
-Received: by wr-out-0506.google.com with SMTP id 50so1435348wri
-	for <linux-lvm@redhat.com>; Fri, 22 Dec 2006 07:51:04 -0800 (PST)
-Message-ID: <859a78260612220751n3f0570abgdf4e865fabeb90d5@mail.gmail.com>
-Date: Fri, 22 Dec 2006 09:51:04 -0600
-From: "Matt P" <slarty.tj@gmail.com>
-Subject: Re: [linux-lvm] Mirror between different SAN fabrics
-In-Reply-To: <2482337.1166623357215.JavaMail.mailer@post.ch>
-MIME-Version: 1.0
-Content-Type: multipart/alternative; 
-	boundary="----=_Part_35851_481326.1166802664049"
-References: <2482337.1166623357215.JavaMail.mailer@post.ch>
+	kBO9ehw5012528
+	for <linux-lvm@redhat.com>; Sun, 24 Dec 2006 04:40:43 -0500
+Received: from [192.168.0.77] (eaa1-ppp746.west.sannet.ne.jp [211.133.178.238])
+	by mta05.sannet.ne.jp (Postfix) with ESMTP id 9DDD228C3
+	for <linux-lvm@redhat.com>; Sun, 24 Dec 2006 18:40:42 +0900 (JST)
+Mime-Version: 1.0 (Apple Message framework v752.2)
+Content-Transfer-Encoding: 7bit
+Message-Id: <ED3062F2-3141-4767-AB70-3E9096A54E1C@sannet.ne.jp>
+From: Joel Rees <joel_rees@sannet.ne.jp>
+Date: Sun, 24 Dec 2006 18:40:41 +0900
+Subject: [linux-lvm] recovering volumes
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -26,71 +24,26 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="us-ascii"; delsp="yes"; format="flowed"
+To: linux-lvm@redhat.com
 
-------=_Part_35851_481326.1166802664049
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
+Using Fedora Core 5 I had a volume group on /dev/hda3 and added a  
+logical volume on /dev/hde3. Didn't read the how to, didn't know it's  
+a no-no. Decided to play with Ubuntu, and thought I'd set up logical  
+volumes for it on /dev/hde2. Apparently, I wiped out the headers on / 
+dev/hde3 and then the entire logical group for FC5 refused to mount.  
+In attempting to recover the headers I've apparently wiped out the  
+headers for the whole volume group -- pvcreate using a recovery  
+option or something that I failed to follow with some generate  
+command, if I remember right. Also, I set up a volume group on /dev/ 
+hde2 and loaded FC6 into that since I was feeling burned by Ubuntu at  
+the time.
 
-I can't think of any Volume Manager that would let you mirror disks from 2
-separate VGs... I know Veritas won't let you, unless they've changed
-something in the last version or 2... But other than that I wouldn't see why
-you couldn't use 2 different fabrics, they're just disks to LVM... If you're
-having trouble managing 200+ PVs, just build the LV first using only disks
-from 1 fabric, then make the second fabric available/visible, and add a
-mirror using only those disks... I think that would work...
+Any guesses at how badly I'm screwed? or pointers to more information  
+than can be found on the how-to pages?
 
-On 12/20/06, mathias.herzog@postfinance.ch <mathias.herzog@postfinance.ch>
-wrote:
->
-> Hi,
->
-> Using lvm2, I would like to mirror a logical volume between two
-> different SAN fabrics to guarantee high availability for my data, even
-> if a whole SAN fabric crashes.
-> Is there a possibility in lvm2 to define two volume groups, put the
-> disks from fabric1 into group 1 and the disks from fabric2 into group 2
-> and then create the mirror over the two groups? I didn't find much
-> documentation for lvm2 about this, I just know that other Volume
-> Managers can handle it.
->
-> It's essential to group the discs together because I use like 100 discs
-> for each mirror and I have to be sure that mirroring takes place between
-> the two different SAN storages.
->
-> Mathias
->
->
->
-> Sicherheitshinweis:
-> Dieses E-Mail von PostFinance ist signiert. Weitere Informationen finden
-> Sie unter:
-> https://www.postfinance.ch/e-signature.
-> Geben Sie Ihre Sicherheitselemente niemals Dritten bekannt.
->
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
->
->
->
-
-------=_Part_35851_481326.1166802664049
-Content-Type: text/html; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-I can&#39;t think of any Volume Manager that would let you mirror disks from 2 separate VGs... I know Veritas won&#39;t let you, unless they&#39;ve changed something in the last version or 2... But other than that I wouldn&#39;t see why you couldn&#39;t use 2 different fabrics, they&#39;re just disks to LVM... If you&#39;re having trouble managing 200+ PVs, just build the LV first using only disks from 1 fabric, then make the second fabric available/visible, and add a mirror using only those disks... I think that would work...
-<br><br><div><span class="gmail_quote">On 12/20/06, <b class="gmail_sendername"><a href="mailto:mathias.herzog@postfinance.ch">mathias.herzog@postfinance.ch</a></b> &lt;<a href="mailto:mathias.herzog@postfinance.ch">mathias.herzog@postfinance.ch
-</a>&gt; wrote:</span><blockquote class="gmail_quote" style="border-left: 1px solid rgb(204, 204, 204); margin: 0pt 0pt 0pt 0.8ex; padding-left: 1ex;">Hi,<br><br>Using lvm2, I would like to mirror a logical volume between two
-<br>different SAN fabrics to guarantee high availability for my data, even<br>if a whole SAN fabric crashes.<br>Is there a possibility in lvm2 to define two volume groups, put the<br>disks from fabric1 into group 1 and the disks from fabric2 into group 2
-<br>and then create the mirror over the two groups? I didn&#39;t find much<br>documentation for lvm2 about this, I just know that other Volume<br>Managers can handle it.<br><br>It&#39;s essential to group the discs together because I use like 100 discs
-<br>for each mirror and I have to be sure that mirroring takes place between<br>the two different SAN storages.<br><br>Mathias<br><br><br><br>Sicherheitshinweis:<br>Dieses E-Mail von PostFinance ist signiert. Weitere Informationen finden Sie unter:
-<br><a href="https://www.postfinance.ch/e-signature">https://www.postfinance.ch/e-signature</a>.<br>Geben Sie Ihre Sicherheitselemente niemals Dritten bekannt.<br><br>_______________________________________________<br>linux-lvm mailing list
-<br><a href="mailto:linux-lvm@redhat.com">linux-lvm@redhat.com</a><br><a href="https://www.redhat.com/mailman/listinfo/linux-lvm">https://www.redhat.com/mailman/listinfo/linux-lvm</a><br>read the LVM HOW-TO at <a href="http://tldp.org/HOWTO/LVM-HOWTO/">
-http://tldp.org/HOWTO/LVM-HOWTO/</a><br><br><br></blockquote></div><br>
-
-------=_Part_35851_481326.1166802664049--
+Not really life-or-death data lost, but I had been using it to back  
+up the digital camera and there were about a months worth of my kids  
+experiments that I don't have a backup of. Also, it would be a useful  
+exercise for me, in terms of gaining confidence in lvm, if there were  
+some way to recover the headers just from the stuff in /etc/lvm .
