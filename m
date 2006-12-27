@@ -1,18 +1,20 @@
 Received: from mx2.redhat.com (mx2.redhat.com [10.255.15.25])
-	by int-mx2.corp.redhat.com (8.13.1/8.13.1) with ESMTP id kBQDOLxh001449
-	for <linux-lvm@redhat.com>; Tue, 26 Dec 2006 08:24:21 -0500
-Received: from mail.reagi.com (mail.reagi.com [195.60.188.80])
+	by int-mx2.corp.redhat.com (8.13.1/8.13.1) with ESMTP id kBRCFqpD022547
+	for <linux-lvm@redhat.com>; Wed, 27 Dec 2006 07:15:53 -0500
+Received: from mx2.post.ch (mx2.post.ch [194.41.216.135])
 	by mx2.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
-	kBQDOKDE003256
-	for <linux-lvm@redhat.com>; Tue, 26 Dec 2006 08:24:21 -0500
-Message-ID: <4591227C.9060605@oxeva.fr>
-Date: Tue, 26 Dec 2006 14:24:12 +0100
-From: Gabriel Barazer <gabriel@oxeva.fr>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] LVM full snapshot deletion bug - again
-Reply-To: gabriel@oxeva.fr,
-	LVM general discussion and development <linux-lvm@redhat.com>
+	kBRCFpij001605
+	for <linux-lvm@redhat.com>; Wed, 27 Dec 2006 07:15:51 -0500
+Message-ID: <4339128.1167221745260.JavaMail.mailer@post.ch>
+Mime-Version: 1.0
+Content-Type: multipart/signed; protocol="application/pkcs7-signature";
+	micalg=sha1; boundary="----=_Part_51166_2604634.1167221745259"
+Content-class: urn:content-classes:message
+Subject: RE: [linux-lvm] Mirror between different SAN fabrics
+Date: Wed, 27 Dec 2006 13:15:40 +0100
+In-Reply-To: <859a78260612220751n3f0570abgdf4e865fabeb90d5@mail.gmail.com>
+From: <mathias.herzog@postfinance.ch>
+Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -22,105 +24,126 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: LVM general discussion and development <linux-lvm@redhat.com>
+To: linux-lvm@redhat.com
 
-Hello,
-
-This bug has been reported about a few weeks ago, but I don't know if it 
-has been noticed ?
-This is about a segfault with lvremove which occurs when deleting a 
-corrupted snapshot (because COW space is full, attributes are "Swi-I-")
-
-Additionally I get a kernel bug notification :
------------ [cut here ] --------- [please bite here ] ---------
-Kernel BUG at mm/slab.c:595
-invalid opcode: 0000 [1] SMP
-CPU 3
-Modules linked in:
-Pid: 5544, comm: lvremove Not tainted 2.6.18 #1
-RIP: 0010:[<ffffffff802074cd>]  [<ffffffff802074cd>] 
-kmem_cache_free+0x5e/0xba
-RSP: 0018:ffff81001b62bc48  EFLAGS: 00010246
-RAX: 000000000001002c RBX: ffffc20010f734b0 RCX: ffff810002a42808
-RDX: ffff810001ccb740 RSI: ffff81003a7d8c88 RDI: ffff81007ed0e380
-RBP: 0000000000000000 R08: ffffffff80663388 R09: 0000000000000001
-R10: ffff8100780a52e0 R11: ffff810078034840 R12: ffff81003a7d8c88
-R13: 0000000000000b4b R14: ffff81007a99d628 R15: 0000000000004000
-FS:  00002b760ae936e0(0000) GS:ffff81007ff35840(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 000000008005003b
-CR2: 00007fffa015b4f0 CR3: 000000001d470000 CR4: 00000000000006e0
-Process lvremove (pid: 5544, threadinfo ffff81001b62a000, task 
-ffff81007ee02140)
-Stack:  ffffc20010f734b0 0000000000000000 ffff81007ed0e380 ffffffff804d5f38
- ffff81007de90480 ffff81007a99d5c0 ffffc20010659080 0000000000000000
- ffffc2001064d000 ffffffff804cf725 ffffc2001064d000 ffffffff804d659f
-Call Trace:
- [<ffffffff804d5f38>] exit_exception_table+0x45/0x77
- [<ffffffff804cf725>] dev_remove+0x0/0xbb
- [<ffffffff804d659f>] snapshot_dtr+0xaa/0xfb
- [<ffffffff804cd422>] dm_table_put+0x6e/0xd8
- [<ffffffff804ccb30>] dm_put+0x9a/0x132
- [<ffffffff804cf7ca>] dev_remove+0xa5/0xbb
- [<ffffffff804d066f>] ctl_ioctl+0x26f/0x2ae
- [<ffffffff8024004d>] do_ioctl+0x6d/0x82
- [<ffffffff8022de9e>] vfs_ioctl+0x28e/0x2b0
- [<ffffffff80214ff2>] vfs_write+0x122/0x160
- [<ffffffff8024a91c>] sys_ioctl+0x3c/0x60
- [<ffffffff8025aa0e>] system_call+0x7e/0x83
+------=_Part_51166_2604634.1167221745259
+Content-Type: text/plain;
+	charset="iso-8859-1"
+Content-class: urn:content-classes:message
+Content-Transfer-Encoding: quoted-printable
 
 
-Code: 0f 0b 68 72 dc 5e 80 c2 53 02 48 39 7a 28 3e 74 0a 0f 0b 68
-RIP  [<ffffffff802074cd>] kmem_cache_free+0x5e/0xba
- RSP <ffff81001b62bc48>
------
+> From: linux-lvm-bounces@redhat.com=20
+> [mailto:linux-lvm-bounces@redhat.com] On Behalf Of Matt P
+=20
+> I can't think of any Volume Manager that would let you mirror=20
+> disks from 2 separate VGs...=20
+Maybe not from 2 separate VGs but they add an additional level to group
+PVs together. With HP-UX you can use "lvcreate -m -s g" to use different
+PV-groups for the mirror. With Tru64 as far as I know you can use a Plex
+to create a PV-group (should be similar with Veritas)
+=20
+> But other than that I wouldn't see why you couldn't use 2=20
+> different fabrics, they're just disks to LVM... If you're=20
+> having trouble managing 200+ PVs, just build the LV first=20
+> using only disks from 1 fabric, then make the second fabric=20
+> available/visible, and add a mirror using only those disks...=20
+> I think that would work...=20
+That's an idea, but when I'm adding 4 more disks (eg. disk1 and disk2
+from fabric1, disk3 and disk4 from fabric2), how can I tell LVM to
+mirror Disk1,2 to Disk3,4 and not to mirror Disk1 to Disk2?
 
-The command line entered is :
-# lvremove -d -v filer1/backup_stor_7
-    Using logical volume(s) on command line
-  /dev/dm-16: read failed after 0 of 4096 at 0: Input/Output error
-Do you really want to remove active logical volume "backup_stor_7"? [y/n]: y
-    Archiving volume group "filer1" metadata (seqno 197).
-    Found volume group "filer1"
-    Removing filer1-backup_stor_7 (254:16)
-Segmentation Fault
+Regards Mathias
 
-"lvs" still display the "failed-to-remove" device :
-# lvs | grep backup_stor_7
-  /dev/dm-16: open failed: No such device or address
-  backup_stor_7              filer1 swi---  20.00G stor
+Sicherheitshinweis:
+Dieses E-Mail von PostFinance ist signiert. Weitere Informationen finden Si=
+e unter:=20
+https://www.postfinance.ch/e-signature.
+Geben Sie Ihre Sicherheitselemente niemals Dritten bekannt.
+------=_Part_51166_2604634.1167221745259
+Content-Type: application/pkcs7-signature; name=smime.p7s;
+	smime-type=signed-data
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="smime.p7s"
+Content-Description: S/MIME Cryptographic Signature
 
-"dmsetup status" may help understanding what's going on :
-# dmsetup status
-[output with unused thing wiped]
-filer1-backup_stor_1: 0 734003200 snapshot 31583232/62914560
-filer1-backup_stor_1-cow: 0 62914560 linear
-filer1-backup_stor_7-cow: 0 41943040 linear
-filer1-stor: 0 734003200 snapshot-origin
-filer1-stor-real: 0 314572800 linear
-filer1-stor-real: 314572800 293601280 linear
-filer1-stor-real: 608174080 62914560 linear
-filer1-stor-real: 671088640 62914560 linear
-
-Remarks: filer1-backup_stor_7 is missing. The COW storage is still 
-present, but not the snapshot device.
-
-More informations following :
-- VG is "filer1" storage LV is "stor", snapshot LV is "backup_stor_7"
-- It may be useful to know that there is already another snapshot device 
-present: filer1/backup_stor_1 (snapshot: dm-14, COW: dm-13).
-- /dev/dm-16 is the snapshot device input/output on causes errors 
-because the snapshot is full, nothing wrong here.
-- /dev/dm-15 is the COW snapshot device (here : 
-/dev/mapper/filer1-backup_stor_7-cow)
-- /dev/dm-11 is the real storage device (here: /dev/mapper/filer1-stor-real)
-- /dev/dm-12 is the snapshot origin (here: /dev/mapper/filer1-stor)
-
-- environment is SMP (dual xeon) server running on Linux 2.6.18 x86_64
-- LVM version: 2.02.10 (2006-09-19)
-- Library version: 1.02.10 (2006-09-19)
-- Driver version: 4.7.0
-
-I can provide other useful informations if needed.
-
-Gabriel
+MIAGCSqGSIb3DQEHAqCAMIACAQExCzAJBgUrDgMCGgUAMIAGCSqGSIb3DQEHAQAAoIINszCCA6cw
+ggMQoAMCAQICEG+vuGdzb316NcV1yvWubhowDQYJKoZIhvcNAQEFBQAwbjEpMCcGA1UEChMgRGV1
+dHNjaGVyIFNwYXJrYXNzZW4gVmVybGFnIEdtYkgxHzAdBgNVBAsTFlZlcmlTaWduIFRydXN0IE5l
+dHdvcmsxIDAeBgNVBAMTF1MtVHJ1c3QsIERFLCBDbGFzcyAyIENBMB4XDTA1MTEyMjAwMDAwMFoX
+DTE1MTEyMTIzNTk1OVowggEFMQswCQYDVQQGEwJDSDENMAsGA1UECBMEQmVybjENMAsGA1UEBxME
+QmVybjEgMB4GA1UEChMXRGllIFNjaHdlaXplcmlzY2hlIFBvc3QxHzAdBgNVBAsTFlZlcmlTaWdu
+IFRydXN0IE5ldHdvcmsxOTA3BgNVBAsTMFRlcm1zIG9mIHVzZSBhdCBodHRwczovL3d3dy5zLXRy
+dXN0LmRlL3JwYSAoYykwNTEwMC4GA1UECxMnQ2xhc3MgMiBPblNpdGUgSW5kaXZpZHVhbCBTdWJz
+Y3JpYmVyIENBMSgwJgYDVQQDEx9EaWUgU2Nod2VpemVyaXNjaGUgUG9zdCBNYWlsIENBMIGfMA0G
+CSqGSIb3DQEBAQUAA4GNADCBiQKBgQDsULs5KMIpCW4QrE3xKMO0FKxooh6XbkEL8QqW/rWLKoqc
+NyAQxdWpYB6RjWupKklPPrkMJNT5IwgbfeF9InLAGTUHX5ZMuynsvfIxB739ArYWErbDvEoP7+oe
+P1AxLd63YgGz6W6hS46Rg1pmXwJ1ISdhABSifM4jmIDkLq75awIDAQABo4GsMIGpMBIGA1UdEwEB
+/wQIMAYBAf8CAQAwQgYDVR0gBDswOTA3BgtghkgBhvhFAQcXAjAoMCYGCCsGAQUFBwIBFhpodHRw
+czovL3d3dy5zLXRydXN0LmRlL3JwYTAOBgNVHQ8BAf8EBAMCAQYwIAYDVR0RBBkwF6QVMBMxETAP
+BgNVBAMTCEMxQzItMS01MB0GA1UdDgQWBBRIOwWhs7CcfqGatK/Ext+WyKs4KzANBgkqhkiG9w0B
+AQUFAAOBgQB2nxmJWiIUOlwTlhqQpCVNelrBMnMR5RA9DQJQpt9bfM2qpbLVo3n+wziO63iRjGAR
+LSlbQh2Q+nbeVwilQ7u4nh8+kwT2VcXElO61hNqU+6MTCWQob5rXu1LJjvcejD3OQwHEVmkr9bH9
+rqo7E/NFYFNiF0tssg9rDgaDH4PjXDCCAwIwggJrAhAfQihfPIgPjjyJs4Szqx8cMA0GCSqGSIb3
+DQEBBQUAMIHBMQswCQYDVQQGEwJVUzEXMBUGA1UEChMOVmVyaVNpZ24sIEluYy4xPDA6BgNVBAsT
+M0NsYXNzIDIgUHVibGljIFByaW1hcnkgQ2VydGlmaWNhdGlvbiBBdXRob3JpdHkgLSBHMjE6MDgG
+A1UECxMxKGMpIDE5OTggVmVyaVNpZ24sIEluYy4gLSBGb3IgYXV0aG9yaXplZCB1c2Ugb25seTEf
+MB0GA1UECxMWVmVyaVNpZ24gVHJ1c3QgTmV0d29yazAeFw05ODA1MTgwMDAwMDBaFw0xODA1MTgy
+MzU5NTlaMIHBMQswCQYDVQQGEwJVUzEXMBUGA1UEChMOVmVyaVNpZ24sIEluYy4xPDA6BgNVBAsT
+M0NsYXNzIDIgUHVibGljIFByaW1hcnkgQ2VydGlmaWNhdGlvbiBBdXRob3JpdHkgLSBHMjE6MDgG
+A1UECxMxKGMpIDE5OTggVmVyaVNpZ24sIEluYy4gLSBGb3IgYXV0aG9yaXplZCB1c2Ugb25seTEf
+MB0GA1UECxMWVmVyaVNpZ24gVHJ1c3QgTmV0d29yazCBnzANBgkqhkiG9w0BAQEFAAOBjQAwgYkC
+gYEAp4gBIXQs5xoD8JjhlzwPIQjxnNuX6Zr8wgQGE75fUsjMHiwSViy4AWkszJkfrbCWrnkE8hM5
+wXuYuggs6MKEEyyqaekJ9MepAqRCwiNPStjwDqL7MWzJ5m+ZJwf15vRMeJ5t60aG+rmGyVTyssSv
+1EYcWskVMP8NbPUtDm3Of3cCAwEAATANBgkqhkiG9w0BAQUFAAOBgQARRaikf/HjcyDKve7f9Ycj
+kT2NrEdFGt5t21Qhzg6DDvjc5UPV6y5hkSPicgA0VffEzxEz3cHkIiNcUFMZ+GTn9wkPRVGgVyvf
+vCJm/jFweyU6D8WKfsO7cgHM8L1NUoGkG1hYU9VTOvUOatrpr8ThWPNCb1RiR6wxlNENzu8dMTCC
+BCgwggORoAMCAQICEFOzgj3/z/gxFoM0KNJ2u24wDQYJKoZIhvcNAQEEBQAwggEFMQswCQYDVQQG
+EwJDSDENMAsGA1UECBMEQmVybjENMAsGA1UEBxMEQmVybjEgMB4GA1UEChMXRGllIFNjaHdlaXpl
+cmlzY2hlIFBvc3QxHzAdBgNVBAsTFlZlcmlTaWduIFRydXN0IE5ldHdvcmsxOTA3BgNVBAsTMFRl
+cm1zIG9mIHVzZSBhdCBodHRwczovL3d3dy5zLXRydXN0LmRlL3JwYSAoYykwNTEwMC4GA1UECxMn
+Q2xhc3MgMiBPblNpdGUgSW5kaXZpZHVhbCBTdWJzY3JpYmVyIENBMSgwJgYDVQQDEx9EaWUgU2No
+d2VpemVyaXNjaGUgUG9zdCBNYWlsIENBMB4XDTA2MDQwNDAwMDAwMFoXDTA3MDQwNDIzNTk1OVow
+gbgxIDAeBgNVBAoUF0RpZSBTY2h3ZWl6ZXJpc2NoZSBQb3N0MRowGAYDVQQLFBFNYWlsIENlcnRp
+ZmljYXRlczExMC8GA1UECxMoVGVybXMgb2YgdXNlIGF0IHd3dy5zLXRydXN0LmRlL3JwYSAoYykw
+MTEXMBUGA1UEAxMOTWF0aGlhcyBIZXJ6b2cxLDAqBgkqhkiG9w0BCQEWHW1hdGhpYXMuaGVyem9n
+QHBvc3RmaW5hbmNlLmNoMIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCxwCsm0o4w2arhohH7
+QuB/KfdOGgX2SYmlHMcwLCbh/MfmuQg78zdaaF4zE366h4p7tOuGhGNLGqJT8bOc1K86edvtQ2yN
+6QsuFNfSsHFa152hlgzoALNyZRqhGdOrQzvcAuuodVGZCVQyYX3GLwzLXXE7qfmLplNPmjNDtKUg
+SwIDAQABo4HiMIHfMAkGA1UdEwQCMAAwQQYDVR0gBDowODA2BgpghkgBhvhFAQcnMCgwJgYIKwYB
+BQUHAgEWGmh0dHBzOi8vd3d3LnMtdHJ1c3QuZGUvcnBhMAsGA1UdDwQEAwIFoDARBglghkgBhvhC
+AQEEBAMCB4AwXAYDVR0fBFUwUzBRoE+gTYZLaHR0cDovL29uc2l0ZWNybC5zLXRydXN0LmRlL0Rp
+ZVNjaHdlaXplcmlzY2hlUG9zdE1haWxDZXJ0aWZpY2F0ZXMvTGF0ZXN0Q1JMMBEGCmCGSAGG+EUB
+BgkEAwEB/zANBgkqhkiG9w0BAQQFAAOBgQBCjd2C7oLyYc7paVjRl4AJuSH7n01VIgGNXCQ2mN4J
+B6Y5zYfqHB+zmhmqDun/fhcdfKwD4R15Q/tdSPpd6CLGzGff0A0nD18mBL1XlIc0XRLavNdFR5bc
+ZMP+VtSlYBUa+YBenF/thPECCdk5M/EAzazqdXIxvGjTdhgudCl/eDCCAtIwggI7oAMCAQICEEHl
+U7TbxXw+tOS7l1GkNQUwDQYJKoZIhvcNAQEFBQAwgcExCzAJBgNVBAYTAlVTMRcwFQYDVQQKEw5W
+ZXJpU2lnbiwgSW5jLjE8MDoGA1UECxMzQ2xhc3MgMiBQdWJsaWMgUHJpbWFyeSBDZXJ0aWZpY2F0
+aW9uIEF1dGhvcml0eSAtIEcyMTowOAYDVQQLEzEoYykgMTk5OCBWZXJpU2lnbiwgSW5jLiAtIEZv
+ciBhdXRob3JpemVkIHVzZSBvbmx5MR8wHQYDVQQLExZWZXJpU2lnbiBUcnVzdCBOZXR3b3JrMB4X
+DTAxMDYxMjAwMDAwMFoXDTE2MDYxMTIzNTk1OVowbjEpMCcGA1UEChMgRGV1dHNjaGVyIFNwYXJr
+YXNzZW4gVmVybGFnIEdtYkgxHzAdBgNVBAsTFlZlcmlTaWduIFRydXN0IE5ldHdvcmsxIDAeBgNV
+BAMTF1MtVHJ1c3QsIERFLCBDbGFzcyAyIENBMIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDn
+A5RxqZgSd7R6nw6D9qd1h2whdYj6biACg/BGyHqI+1FMLGMJh1En2nfzSBTqwJIdVa2+6YiMDQHz
+8LbWCIYv3oABiLXBG8FG6rlY6nVwdkz0EXKyTtClaGDhVU36o77ApCmhNPnpmGbPZvsL9kRA1A7L
+Tvc0OW+iVWTAcaetKQIDAQABox0wGzAMBgNVHRMEBTADAQH/MAsGA1UdDwQEAwIBBjANBgkqhkiG
+9w0BAQUFAAOBgQBAX0VqvODgoRR3ryXnpi2G5yO7KrANMHHl6GXT+WpeY7QEsmjyJWT4RUAhLc9u
+xMIqt5p4EmsgjrfRNdnPQt8tnWpGIR3ZpT/A7zOUs4j9H4W2n7gyow2Gzf3gF8vJkMGE+5kBOYFW
+31uXgMsURqt2xMNVFJZ0n+fuc8kHKKlTRzGCA44wggOKAgEBMIIBGzCCAQUxCzAJBgNVBAYTAkNI
+MQ0wCwYDVQQIEwRCZXJuMQ0wCwYDVQQHEwRCZXJuMSAwHgYDVQQKExdEaWUgU2Nod2VpemVyaXNj
+aGUgUG9zdDEfMB0GA1UECxMWVmVyaVNpZ24gVHJ1c3QgTmV0d29yazE5MDcGA1UECxMwVGVybXMg
+b2YgdXNlIGF0IGh0dHBzOi8vd3d3LnMtdHJ1c3QuZGUvcnBhIChjKTA1MTAwLgYDVQQLEydDbGFz
+cyAyIE9uU2l0ZSBJbmRpdmlkdWFsIFN1YnNjcmliZXIgQ0ExKDAmBgNVBAMTH0RpZSBTY2h3ZWl6
+ZXJpc2NoZSBQb3N0IE1haWwgQ0ECEFOzgj3/z/gxFoM0KNJ2u24wCQYFKw4DAhoFAKCCAccwGAYJ
+KoZIhvcNAQkDMQsGCSqGSIb3DQEHATAcBgkqhkiG9w0BCQUxDxcNMDYxMjI3MTIxNTQ1WjAjBgkq
+hkiG9w0BCQQxFgQU0hkJVU6I4mM09RQEpP1ui780m30wNAYJKoZIhvcNAQkPMScwJTAKBggqhkiG
+9w0DBzAOBggqhkiG9w0DAgICAIAwBwYFKw4DAgcwggEwBgsqhkiG9w0BCRACCzGCAR8wggEbMIIB
+BTELMAkGA1UEBhMCQ0gxDTALBgNVBAgTBEJlcm4xDTALBgNVBAcTBEJlcm4xIDAeBgNVBAoTF0Rp
+ZSBTY2h3ZWl6ZXJpc2NoZSBQb3N0MR8wHQYDVQQLExZWZXJpU2lnbiBUcnVzdCBOZXR3b3JrMTkw
+NwYDVQQLEzBUZXJtcyBvZiB1c2UgYXQgaHR0cHM6Ly93d3cucy10cnVzdC5kZS9ycGEgKGMpMDUx
+MDAuBgNVBAsTJ0NsYXNzIDIgT25TaXRlIEluZGl2aWR1YWwgU3Vic2NyaWJlciBDQTEoMCYGA1UE
+AxMfRGllIFNjaHdlaXplcmlzY2hlIFBvc3QgTWFpbCBDQQIQU7OCPf/P+DEWgzQo0na7bjANBgkq
+hkiG9w0BAQEFAASBgJlWkrPdFcnLxq6EZ6LR/dQ9/bV1Un/UJO64UNRffEcuVrmEPgoneMFtY6fZ
+VMdM0rN4o9C0BnDW0UOmM2DlY4ZqT2J9S18ryhiet2QNSEx2A6FMmSN3SUK3dOZcEKxGpBsRNP6Z
+lWH1liPLcbZ5Vy1nSAoZsS2VGFY+qJ4tFuNTAAAAAAAA
+------=_Part_51166_2604634.1167221745259--
