@@ -1,19 +1,12 @@
-Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id kBSADMnO027496
-	for <linux-lvm@redhat.com>; Thu, 28 Dec 2006 05:13:22 -0500
-Received: from mx1.post.ch (mx1.post.ch [194.41.152.137])
-	by mx1.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
-	kBSADG5B006665
-	for <linux-lvm@redhat.com>; Thu, 28 Dec 2006 05:13:17 -0500
-Message-ID: <1755938.1167300787168.JavaMail.mailer@post.ch>
-Mime-Version: 1.0
-Content-Type: multipart/signed; protocol="application/pkcs7-signature";
-	micalg=sha1; boundary="----=_Part_40650_3289265.1167300787168"
-Content-class: urn:content-classes:message
+In-Reply-To: <1755938.1167300787168.JavaMail.mailer@post.ch>
 Subject: RE: [linux-lvm] Mirror between different SAN fabrics
-Date: Thu, 28 Dec 2006 11:13:01 +0100
-In-Reply-To: <OF96D12158.513C59F5-ONC1257252.002F043B-C1257252.00307A01@schering.de>
-From: <mathias.herzog@postfinance.ch>
+Message-ID: <OF00509E1D.6C564DF2-ONC1257252.003B531C-C1257252.003C0B39@schering.de>
+From: Christian.Rohrmeier@SCHERING.DE
+Date: Thu, 28 Dec 2006 11:55:49 +0100
+MIME-Version: 1.0
+Content-type: multipart/mixed; 
+	Boundary="0__=4EBBF8C1DFA8D58C8f9e8a93df938690918c4EBBF8C1DFA8D58C"
+Content-Disposition: inline
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -24,17 +17,61 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: linux-lvm@redhat.com
+To: LVM general discussion and development <linux-lvm@redhat.com>
+Cc: linux-lvm-bounces@redhat.com
 
-------=_Part_40650_3289265.1167300787168
-Content-Type: text/plain;
-	charset="iso-8859-1"
-Content-class: urn:content-classes:message
-Content-Transfer-Encoding: quoted-printable
+--0__=4EBBF8C1DFA8D58C8f9e8a93df938690918c4EBBF8C1DFA8D58C
+Content-type: text/plain; charset=US-ASCII
+
+
+Hi,
+
+I haven't tried it in a cluster yet. I was planning on using HP's
+MC-ServiceGuard to deal with HA clustering. I don't see why the LUNs that
+are used on one system with mdadm can't be used another, since the RAID
+block is on the disk and is readable even on a system upon which it wasn't
+created on. /etc/mdadm.conf will ofcourse need to be copied and kept
+current on all cluster nodes, but with the config file and the RAID block
+on the disk, an "mdadm --assemble" should work. Importing the LVM
+structures should then also not be a problem.
+
+Well, like I said, thats what I assume will work, as I have not yet tested
+this setup. I will do so shortly and can report my findings to the list. If
+that doesn't work, then I would, as you suggested, also try RH cluster
+suite.
+
+Cheers,
+
+Christian
+
+
+
+                                                                           
+             <mathias.herzog@p                                             
+             ostfinance.ch>                                                
+             Sent by:                                                   To 
+             linux-lvm-bounces         <linux-lvm@redhat.com>              
+             @redhat.com                                                cc 
+                                                                           
+                                                                   Subject 
+             28.12.2006 11:13          RE: [linux-lvm] Mirror between      
+                                       different SAN fabrics               
+                                                                           
+             Please respond to                                             
+                LVM general                                                
+              discussion and                                               
+                development                                                
+             <linux-lvm@redhat                                             
+                   .com>                                                   
+                                                                           
+                                                                           
+
+
+
 
 Hi
 
-Looks nice your solution.=20
+Looks nice your solution.
 But I just found out that unlike lvm2, mdadm is not cluster aware. It
 seems not possible to transfer RAID state information from one node to
 another.
@@ -43,32 +80,32 @@ As we use Red Hat Cluster Suite, we depend on a cluster solution.
 Regards Mathias
 
 > -----Original Message-----
-> From: linux-lvm-bounces@redhat.com=20
-> [mailto:linux-lvm-bounces@redhat.com] On Behalf Of=20
+> From: linux-lvm-bounces@redhat.com
+> [mailto:linux-lvm-bounces@redhat.com] On Behalf Of
 > Christian.Rohrmeier@SCHERING.DE
 > Sent: Donnerstag, 28 Dezember, 2006 09:49
-[...]=20
+[...]
 > Hi,
->=20
+>
 > Here is a nice example from one of my RHEL 4 Oracle servers:
->=20
+>
 > We have three layers:
->=20
+>
 > first the LUNs from the SAN are multipathed to device aliases:
->=20
+>
 > [root@ ~]# multipath -ll
 > sanb (XXXX60e8003f653000000XXXX000001c7)
-> [size=3D101 GB][features=3D"1 queue_if_no_path"][hwhandler=3D"0"]=20
-> \_ round-robin 0 [active]  \_ 0:0:1:1 sdb 8:16=20
+> [size=101 GB][features="1 queue_if_no_path"][hwhandler="0"]
+> \_ round-robin 0 [active]  \_ 0:0:1:1 sdb 8:16
 > [active][ready]  \_ 1:0:1:1 sdd 8:48 [active][ready]
->=20
+>
 > sana (XXXX60e80039cbe000000XXXX000006ad)
-> [size=3D101 GB][features=3D"1 queue_if_no_path"][hwhandler=3D"0"]=20
-> \_ round-robin 0 [active]  \_ 0:0:0:1 sda 8:0 =20
+> [size=101 GB][features="1 queue_if_no_path"][hwhandler="0"]
+> \_ round-robin 0 [active]  \_ 0:0:0:1 sda 8:0
 > [active][ready]  \_ 1:0:0:1 sdc 8:32 [active][ready]
->=20
+>
 > Next these multipath aliases are RAIDed:
->=20
+>
 > [root@ ~]# mdadm --detail /dev/md0
 > /dev/md0:
 >         Version : 00.90.01
@@ -80,23 +117,23 @@ Regards Mathias
 >   Total Devices : 2
 > Preferred Minor : 0
 >     Persistence : Superblock is persistent
->=20
+>
 >     Update Time : Thu Dec 28 09:36:19 2006
 >           State : clean
 >  Active Devices : 2
 > Working Devices : 2
 >  Failed Devices : 0
 >   Spare Devices : 0
->=20
->=20
+>
+>
 >     Number   Major   Minor   RaidDevice State
 >        0     253        2        0      active sync   /dev/mapper/sana
 >        1     253        3        1      active sync   /dev/mapper/sanb
 >            UUID : b5ac4ae9:99da8114:744a7ebb:aba6f687
 >          Events : 0.4254576
->=20
+>
 > And finally, the RAID device is used with LVM:
->=20
+>
 > [root@ ~]# vgs -o +devices
 >   VG   #PV #LV #SN Attr   VSize   VFree Devices
 >   vg00   2   2   0 wz--n-  31.78G    0  /dev/cciss/c0d0p2(0)
@@ -107,25 +144,29 @@ Regards Mathias
 >   vg01   1   5   0 wz--n- 101.84G    0  /dev/md0(5376)
 >   vg01   1   5   0 wz--n- 101.84G    0  /dev/md0(5632)
 >   vg01   1   5   0 wz--n- 101.84G    0  /dev/md0(8192)
->=20
-> This works very well, as both paths and mirrors are able to=20
+>
+> This works very well, as both paths and mirrors are able to
 > break away without any disruption in disk access.
->=20
+>
 > Cheers,
->=20
+>
 > Christian
 
 Sicherheitshinweis:
-Dieses E-Mail von PostFinance ist signiert. Weitere Informationen finden Si=
-e unter:=20
+Dieses E-Mail von PostFinance ist signiert. Weitere Informationen finden
+Sie unter:
 https://www.postfinance.ch/e-signature.
-Geben Sie Ihre Sicherheitselemente niemals Dritten bekannt.
-------=_Part_40650_3289265.1167300787168
-Content-Type: application/pkcs7-signature; name=smime.p7s;
-	smime-type=signed-data
-Content-Transfer-Encoding: base64
+Geben Sie Ihre Sicherheitselemente niemals Dritten bekannt.(See attached
+file: smime.p7s)_______________________________________________
+linux-lvm mailing list
+linux-lvm@redhat.com
+https://www.redhat.com/mailman/listinfo/linux-lvm
+read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+--0__=4EBBF8C1DFA8D58C8f9e8a93df938690918c4EBBF8C1DFA8D58C
+Content-type: application/pkcs7; 
+	name="smime.p7s"
 Content-Disposition: attachment; filename="smime.p7s"
-Content-Description: S/MIME Cryptographic Signature
+Content-transfer-encoding: base64
 
 MIAGCSqGSIb3DQEHAqCAMIACAQExCzAJBgUrDgMCGgUAMIAGCSqGSIb3DQEHAQAAoIINszCCA6cw
 ggMQoAMCAQICEG+vuGdzb316NcV1yvWubhowDQYJKoZIhvcNAQEFBQAwbjEpMCcGA1UEChMgRGV1
@@ -206,4 +247,5 @@ AxMfRGllIFNjaHdlaXplcmlzY2hlIFBvc3QgTWFpbCBDQQIQU7OCPf/P+DEWgzQo0na7bjANBgkq
 hkiG9w0BAQEFAASBgFd3ITTDYiRLTNajkzuDlcPe+eHC63jW/FDr5N02os7HMUP8JeMFAZlWTcMe
 t1DCuiJZeBTLiMN4Y0+PWLJqJLEDpmkoESzbjknD2xL5RHp2L8jEfPykVTuLkhlqkakvrx7dvUry
 Rk9VGY81OORR4sBA4Ul2Vcna6U02lRmIwPcdAAAAAAAA
-------=_Part_40650_3289265.1167300787168--
+
+--0__=4EBBF8C1DFA8D58C8f9e8a93df938690918c4EBBF8C1DFA8D58C--
