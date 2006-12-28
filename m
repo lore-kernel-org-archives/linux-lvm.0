@@ -1,22 +1,19 @@
 Received: from mx2.redhat.com (mx2.redhat.com [10.255.15.25])
-	by int-mx2.corp.redhat.com (8.13.1/8.13.1) with ESMTP id kBRKlq2l028847
-	for <linux-lvm@redhat.com>; Wed, 27 Dec 2006 15:47:52 -0500
-Received: from wx-out-0506.google.com (wx-out-0506.google.com [66.249.82.236])
+	by int-mx2.corp.redhat.com (8.13.1/8.13.1) with ESMTP id kBS8CRVr020556
+	for <linux-lvm@redhat.com>; Thu, 28 Dec 2006 03:12:27 -0500
+Received: from mx1.post.ch (mx1.post.ch [194.41.152.137])
 	by mx2.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
-	kBRKlp6L030785
-	for <linux-lvm@redhat.com>; Wed, 27 Dec 2006 15:47:51 -0500
-Received: by wx-out-0506.google.com with SMTP id s11so5377331wxc
-	for <linux-lvm@redhat.com>; Wed, 27 Dec 2006 12:47:51 -0800 (PST)
-Message-ID: <859a78260612271247m7b14c247n7f420c7ebea5b906@mail.gmail.com>
-Date: Wed, 27 Dec 2006 14:47:51 -0600
-From: "Matt P" <slarty.tj@gmail.com>
-Subject: Re: [linux-lvm] Mirror between different SAN fabrics
-In-Reply-To: <4339128.1167221745260.JavaMail.mailer@post.ch>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-References: <859a78260612220751n3f0570abgdf4e865fabeb90d5@mail.gmail.com>
-	<4339128.1167221745260.JavaMail.mailer@post.ch>
+	kBS8CPRt018122
+	for <linux-lvm@redhat.com>; Thu, 28 Dec 2006 03:12:25 -0500
+Message-ID: <4218702.1167293532536.JavaMail.mailer@post.ch>
+Mime-Version: 1.0
+Content-Type: multipart/signed; protocol="application/pkcs7-signature";
+	micalg=sha1; boundary="----=_Part_40013_2836216.1167293532536"
+Content-class: urn:content-classes:message
+Subject: RE: [linux-lvm] Mirror between different SAN fabrics
+Date: Thu, 28 Dec 2006 09:12:11 +0100
+In-Reply-To: <859a78260612271247m7b14c247n7f420c7ebea5b906@mail.gmail.com>
+From: <mathias.herzog@postfinance.ch>
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -27,56 +24,115 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: LVM general discussion and development <linux-lvm@redhat.com>
+To: linux-lvm@redhat.com
 
-I guess I should have tested the functionality out before I made the
-comment. It seems the ability to add a mirror after the fact is still
-not available (in lvconvert or otherwise). I'm sure someone will
-correct me if I wrong on that.
+------=_Part_40013_2836216.1167293532536
+Content-Type: text/plain;
+	charset="iso-8859-1"
+Content-class: urn:content-classes:message
+Content-Transfer-Encoding: quoted-printable
 
-I did figure out a crazy way you could do it, but it's messy, even
-with small number of PVs. It would impact performance and is probably
-not feasible in reality.
+=20
+> -----Original Message-----
+> From: linux-lvm-bounces@redhat.com=20
+> [mailto:linux-lvm-bounces@redhat.com] On Behalf Of Matt P
+[...]
+> I think the proper way would be to use mdadm. Setup software=20
+> RAID1 prior to getting LVM involved...
+That sounds like a good solution. So far I don't know mdadm but I'm
+already getting into it
 
-I think the proper way would be to use mdadm. Setup software RAID1
-prior to getting LVM involved...
+Thanks, Mathias
 
-On 12/27/06, mathias.herzog@postfinance.ch
-<mathias.herzog@postfinance.ch> wrote:
->
-> > From: linux-lvm-bounces@redhat.com
-> > [mailto:linux-lvm-bounces@redhat.com] On Behalf Of Matt P
->
-> > I can't think of any Volume Manager that would let you mirror
-> > disks from 2 separate VGs...
-> Maybe not from 2 separate VGs but they add an additional level to group
-> PVs together. With HP-UX you can use "lvcreate -m -s g" to use different
-> PV-groups for the mirror. With Tru64 as far as I know you can use a Plex
-> to create a PV-group (should be similar with Veritas)
->
-> > But other than that I wouldn't see why you couldn't use 2
-> > different fabrics, they're just disks to LVM... If you're
-> > having trouble managing 200+ PVs, just build the LV first
-> > using only disks from 1 fabric, then make the second fabric
-> > available/visible, and add a mirror using only those disks...
-> > I think that would work...
-> That's an idea, but when I'm adding 4 more disks (eg. disk1 and disk2
-> from fabric1, disk3 and disk4 from fabric2), how can I tell LVM to
-> mirror Disk1,2 to Disk3,4 and not to mirror Disk1 to Disk2?
->
-> Regards Mathias
->
-> Sicherheitshinweis:
-> Dieses E-Mail von PostFinance ist signiert. Weitere Informationen finden Sie unter:
-> https://www.postfinance.ch/e-signature.
-> Geben Sie Ihre Sicherheitselemente niemals Dritten bekannt.
->
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
->
->
->
+Sicherheitshinweis:
+Dieses E-Mail von PostFinance ist signiert. Weitere Informationen finden Si=
+e unter:=20
+https://www.postfinance.ch/e-signature.
+Geben Sie Ihre Sicherheitselemente niemals Dritten bekannt.
+------=_Part_40013_2836216.1167293532536
+Content-Type: application/pkcs7-signature; name=smime.p7s;
+	smime-type=signed-data
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="smime.p7s"
+Content-Description: S/MIME Cryptographic Signature
+
+MIAGCSqGSIb3DQEHAqCAMIACAQExCzAJBgUrDgMCGgUAMIAGCSqGSIb3DQEHAQAAoIINszCCA6cw
+ggMQoAMCAQICEG+vuGdzb316NcV1yvWubhowDQYJKoZIhvcNAQEFBQAwbjEpMCcGA1UEChMgRGV1
+dHNjaGVyIFNwYXJrYXNzZW4gVmVybGFnIEdtYkgxHzAdBgNVBAsTFlZlcmlTaWduIFRydXN0IE5l
+dHdvcmsxIDAeBgNVBAMTF1MtVHJ1c3QsIERFLCBDbGFzcyAyIENBMB4XDTA1MTEyMjAwMDAwMFoX
+DTE1MTEyMTIzNTk1OVowggEFMQswCQYDVQQGEwJDSDENMAsGA1UECBMEQmVybjENMAsGA1UEBxME
+QmVybjEgMB4GA1UEChMXRGllIFNjaHdlaXplcmlzY2hlIFBvc3QxHzAdBgNVBAsTFlZlcmlTaWdu
+IFRydXN0IE5ldHdvcmsxOTA3BgNVBAsTMFRlcm1zIG9mIHVzZSBhdCBodHRwczovL3d3dy5zLXRy
+dXN0LmRlL3JwYSAoYykwNTEwMC4GA1UECxMnQ2xhc3MgMiBPblNpdGUgSW5kaXZpZHVhbCBTdWJz
+Y3JpYmVyIENBMSgwJgYDVQQDEx9EaWUgU2Nod2VpemVyaXNjaGUgUG9zdCBNYWlsIENBMIGfMA0G
+CSqGSIb3DQEBAQUAA4GNADCBiQKBgQDsULs5KMIpCW4QrE3xKMO0FKxooh6XbkEL8QqW/rWLKoqc
+NyAQxdWpYB6RjWupKklPPrkMJNT5IwgbfeF9InLAGTUHX5ZMuynsvfIxB739ArYWErbDvEoP7+oe
+P1AxLd63YgGz6W6hS46Rg1pmXwJ1ISdhABSifM4jmIDkLq75awIDAQABo4GsMIGpMBIGA1UdEwEB
+/wQIMAYBAf8CAQAwQgYDVR0gBDswOTA3BgtghkgBhvhFAQcXAjAoMCYGCCsGAQUFBwIBFhpodHRw
+czovL3d3dy5zLXRydXN0LmRlL3JwYTAOBgNVHQ8BAf8EBAMCAQYwIAYDVR0RBBkwF6QVMBMxETAP
+BgNVBAMTCEMxQzItMS01MB0GA1UdDgQWBBRIOwWhs7CcfqGatK/Ext+WyKs4KzANBgkqhkiG9w0B
+AQUFAAOBgQB2nxmJWiIUOlwTlhqQpCVNelrBMnMR5RA9DQJQpt9bfM2qpbLVo3n+wziO63iRjGAR
+LSlbQh2Q+nbeVwilQ7u4nh8+kwT2VcXElO61hNqU+6MTCWQob5rXu1LJjvcejD3OQwHEVmkr9bH9
+rqo7E/NFYFNiF0tssg9rDgaDH4PjXDCCAwIwggJrAhAfQihfPIgPjjyJs4Szqx8cMA0GCSqGSIb3
+DQEBBQUAMIHBMQswCQYDVQQGEwJVUzEXMBUGA1UEChMOVmVyaVNpZ24sIEluYy4xPDA6BgNVBAsT
+M0NsYXNzIDIgUHVibGljIFByaW1hcnkgQ2VydGlmaWNhdGlvbiBBdXRob3JpdHkgLSBHMjE6MDgG
+A1UECxMxKGMpIDE5OTggVmVyaVNpZ24sIEluYy4gLSBGb3IgYXV0aG9yaXplZCB1c2Ugb25seTEf
+MB0GA1UECxMWVmVyaVNpZ24gVHJ1c3QgTmV0d29yazAeFw05ODA1MTgwMDAwMDBaFw0xODA1MTgy
+MzU5NTlaMIHBMQswCQYDVQQGEwJVUzEXMBUGA1UEChMOVmVyaVNpZ24sIEluYy4xPDA6BgNVBAsT
+M0NsYXNzIDIgUHVibGljIFByaW1hcnkgQ2VydGlmaWNhdGlvbiBBdXRob3JpdHkgLSBHMjE6MDgG
+A1UECxMxKGMpIDE5OTggVmVyaVNpZ24sIEluYy4gLSBGb3IgYXV0aG9yaXplZCB1c2Ugb25seTEf
+MB0GA1UECxMWVmVyaVNpZ24gVHJ1c3QgTmV0d29yazCBnzANBgkqhkiG9w0BAQEFAAOBjQAwgYkC
+gYEAp4gBIXQs5xoD8JjhlzwPIQjxnNuX6Zr8wgQGE75fUsjMHiwSViy4AWkszJkfrbCWrnkE8hM5
+wXuYuggs6MKEEyyqaekJ9MepAqRCwiNPStjwDqL7MWzJ5m+ZJwf15vRMeJ5t60aG+rmGyVTyssSv
+1EYcWskVMP8NbPUtDm3Of3cCAwEAATANBgkqhkiG9w0BAQUFAAOBgQARRaikf/HjcyDKve7f9Ycj
+kT2NrEdFGt5t21Qhzg6DDvjc5UPV6y5hkSPicgA0VffEzxEz3cHkIiNcUFMZ+GTn9wkPRVGgVyvf
+vCJm/jFweyU6D8WKfsO7cgHM8L1NUoGkG1hYU9VTOvUOatrpr8ThWPNCb1RiR6wxlNENzu8dMTCC
+BCgwggORoAMCAQICEFOzgj3/z/gxFoM0KNJ2u24wDQYJKoZIhvcNAQEEBQAwggEFMQswCQYDVQQG
+EwJDSDENMAsGA1UECBMEQmVybjENMAsGA1UEBxMEQmVybjEgMB4GA1UEChMXRGllIFNjaHdlaXpl
+cmlzY2hlIFBvc3QxHzAdBgNVBAsTFlZlcmlTaWduIFRydXN0IE5ldHdvcmsxOTA3BgNVBAsTMFRl
+cm1zIG9mIHVzZSBhdCBodHRwczovL3d3dy5zLXRydXN0LmRlL3JwYSAoYykwNTEwMC4GA1UECxMn
+Q2xhc3MgMiBPblNpdGUgSW5kaXZpZHVhbCBTdWJzY3JpYmVyIENBMSgwJgYDVQQDEx9EaWUgU2No
+d2VpemVyaXNjaGUgUG9zdCBNYWlsIENBMB4XDTA2MDQwNDAwMDAwMFoXDTA3MDQwNDIzNTk1OVow
+gbgxIDAeBgNVBAoUF0RpZSBTY2h3ZWl6ZXJpc2NoZSBQb3N0MRowGAYDVQQLFBFNYWlsIENlcnRp
+ZmljYXRlczExMC8GA1UECxMoVGVybXMgb2YgdXNlIGF0IHd3dy5zLXRydXN0LmRlL3JwYSAoYykw
+MTEXMBUGA1UEAxMOTWF0aGlhcyBIZXJ6b2cxLDAqBgkqhkiG9w0BCQEWHW1hdGhpYXMuaGVyem9n
+QHBvc3RmaW5hbmNlLmNoMIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCxwCsm0o4w2arhohH7
+QuB/KfdOGgX2SYmlHMcwLCbh/MfmuQg78zdaaF4zE366h4p7tOuGhGNLGqJT8bOc1K86edvtQ2yN
+6QsuFNfSsHFa152hlgzoALNyZRqhGdOrQzvcAuuodVGZCVQyYX3GLwzLXXE7qfmLplNPmjNDtKUg
+SwIDAQABo4HiMIHfMAkGA1UdEwQCMAAwQQYDVR0gBDowODA2BgpghkgBhvhFAQcnMCgwJgYIKwYB
+BQUHAgEWGmh0dHBzOi8vd3d3LnMtdHJ1c3QuZGUvcnBhMAsGA1UdDwQEAwIFoDARBglghkgBhvhC
+AQEEBAMCB4AwXAYDVR0fBFUwUzBRoE+gTYZLaHR0cDovL29uc2l0ZWNybC5zLXRydXN0LmRlL0Rp
+ZVNjaHdlaXplcmlzY2hlUG9zdE1haWxDZXJ0aWZpY2F0ZXMvTGF0ZXN0Q1JMMBEGCmCGSAGG+EUB
+BgkEAwEB/zANBgkqhkiG9w0BAQQFAAOBgQBCjd2C7oLyYc7paVjRl4AJuSH7n01VIgGNXCQ2mN4J
+B6Y5zYfqHB+zmhmqDun/fhcdfKwD4R15Q/tdSPpd6CLGzGff0A0nD18mBL1XlIc0XRLavNdFR5bc
+ZMP+VtSlYBUa+YBenF/thPECCdk5M/EAzazqdXIxvGjTdhgudCl/eDCCAtIwggI7oAMCAQICEEHl
+U7TbxXw+tOS7l1GkNQUwDQYJKoZIhvcNAQEFBQAwgcExCzAJBgNVBAYTAlVTMRcwFQYDVQQKEw5W
+ZXJpU2lnbiwgSW5jLjE8MDoGA1UECxMzQ2xhc3MgMiBQdWJsaWMgUHJpbWFyeSBDZXJ0aWZpY2F0
+aW9uIEF1dGhvcml0eSAtIEcyMTowOAYDVQQLEzEoYykgMTk5OCBWZXJpU2lnbiwgSW5jLiAtIEZv
+ciBhdXRob3JpemVkIHVzZSBvbmx5MR8wHQYDVQQLExZWZXJpU2lnbiBUcnVzdCBOZXR3b3JrMB4X
+DTAxMDYxMjAwMDAwMFoXDTE2MDYxMTIzNTk1OVowbjEpMCcGA1UEChMgRGV1dHNjaGVyIFNwYXJr
+YXNzZW4gVmVybGFnIEdtYkgxHzAdBgNVBAsTFlZlcmlTaWduIFRydXN0IE5ldHdvcmsxIDAeBgNV
+BAMTF1MtVHJ1c3QsIERFLCBDbGFzcyAyIENBMIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDn
+A5RxqZgSd7R6nw6D9qd1h2whdYj6biACg/BGyHqI+1FMLGMJh1En2nfzSBTqwJIdVa2+6YiMDQHz
+8LbWCIYv3oABiLXBG8FG6rlY6nVwdkz0EXKyTtClaGDhVU36o77ApCmhNPnpmGbPZvsL9kRA1A7L
+Tvc0OW+iVWTAcaetKQIDAQABox0wGzAMBgNVHRMEBTADAQH/MAsGA1UdDwQEAwIBBjANBgkqhkiG
+9w0BAQUFAAOBgQBAX0VqvODgoRR3ryXnpi2G5yO7KrANMHHl6GXT+WpeY7QEsmjyJWT4RUAhLc9u
+xMIqt5p4EmsgjrfRNdnPQt8tnWpGIR3ZpT/A7zOUs4j9H4W2n7gyow2Gzf3gF8vJkMGE+5kBOYFW
+31uXgMsURqt2xMNVFJZ0n+fuc8kHKKlTRzGCA44wggOKAgEBMIIBGzCCAQUxCzAJBgNVBAYTAkNI
+MQ0wCwYDVQQIEwRCZXJuMQ0wCwYDVQQHEwRCZXJuMSAwHgYDVQQKExdEaWUgU2Nod2VpemVyaXNj
+aGUgUG9zdDEfMB0GA1UECxMWVmVyaVNpZ24gVHJ1c3QgTmV0d29yazE5MDcGA1UECxMwVGVybXMg
+b2YgdXNlIGF0IGh0dHBzOi8vd3d3LnMtdHJ1c3QuZGUvcnBhIChjKTA1MTAwLgYDVQQLEydDbGFz
+cyAyIE9uU2l0ZSBJbmRpdmlkdWFsIFN1YnNjcmliZXIgQ0ExKDAmBgNVBAMTH0RpZSBTY2h3ZWl6
+ZXJpc2NoZSBQb3N0IE1haWwgQ0ECEFOzgj3/z/gxFoM0KNJ2u24wCQYFKw4DAhoFAKCCAccwGAYJ
+KoZIhvcNAQkDMQsGCSqGSIb3DQEHATAcBgkqhkiG9w0BCQUxDxcNMDYxMjI4MDgxMjEyWjAjBgkq
+hkiG9w0BCQQxFgQUNwz7w7Mz2EQGFw5LXJ9IP7owFlAwNAYJKoZIhvcNAQkPMScwJTAKBggqhkiG
+9w0DBzAOBggqhkiG9w0DAgICAIAwBwYFKw4DAgcwggEwBgsqhkiG9w0BCRACCzGCAR8wggEbMIIB
+BTELMAkGA1UEBhMCQ0gxDTALBgNVBAgTBEJlcm4xDTALBgNVBAcTBEJlcm4xIDAeBgNVBAoTF0Rp
+ZSBTY2h3ZWl6ZXJpc2NoZSBQb3N0MR8wHQYDVQQLExZWZXJpU2lnbiBUcnVzdCBOZXR3b3JrMTkw
+NwYDVQQLEzBUZXJtcyBvZiB1c2UgYXQgaHR0cHM6Ly93d3cucy10cnVzdC5kZS9ycGEgKGMpMDUx
+MDAuBgNVBAsTJ0NsYXNzIDIgT25TaXRlIEluZGl2aWR1YWwgU3Vic2NyaWJlciBDQTEoMCYGA1UE
+AxMfRGllIFNjaHdlaXplcmlzY2hlIFBvc3QgTWFpbCBDQQIQU7OCPf/P+DEWgzQo0na7bjANBgkq
+hkiG9w0BAQEFAASBgJNt+1UZTWG4P2NYlhIC3wJ1LndCgEK0PTovCVgXUlimrIYgAiDZBBEBpFhx
+x+Ye/ae3uhlvqamg8VfQ19hrbtr+gtX6FZaXv5YrJ4DTjTOXWtTKG0MIV0lUoQ+FTkdGrpFmOMbG
+7e18tRMxs4AzSCAARNkrPqPr3VvLQl4nA4daAAAAAAAA
+------=_Part_40013_2836216.1167293532536--
