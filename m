@@ -1,16 +1,24 @@
-Received: from mx2.redhat.com (mx2.redhat.com [10.255.15.25])
-	by int-mx2.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l060nnAl011512
-	for <linux-lvm@redhat.com>; Fri, 5 Jan 2007 19:49:49 -0500
-Received: from bay0-omc3-s27.bay0.hotmail.com (bay0-omc3-s27.bay0.hotmail.com
-	[65.54.246.227])
-	by mx2.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
-	l060nnQR026213
-	for <linux-lvm@redhat.com>; Fri, 5 Jan 2007 19:49:49 -0500
-Message-ID: <BAY123-F22AC1D482784952B5317BBF9BE0@phx.gbl>
-From: "Sergej Smirnov" <foma3@hotmail.com>
-Date: Sat, 06 Jan 2007 00:49:40 +0000
+Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l06GAvl8003001
+	for <linux-lvm@redhat.com>; Sat, 6 Jan 2007 11:10:57 -0500
+Received: from kallisti.us (kallisti.us [67.59.168.233])
+	by mx1.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
+	l06GAugr010837
+	for <linux-lvm@redhat.com>; Sat, 6 Jan 2007 11:10:56 -0500
+Received: from eris.kallisti.us (ross@localhost.localdomain [127.0.0.1])
+	by kallisti.us (8.13.4/8.13.4/Debian-3sarge3) with ESMTP id
+	l06GAoPa018674
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NOT)
+	for <linux-lvm@redhat.com>; Sat, 6 Jan 2007 11:10:50 -0500
+Received: (from ross@localhost)
+	by eris.kallisti.us (8.13.4/8.13.4/Submit) id l06GAnMg018673
+	for linux-lvm@redhat.com; Sat, 6 Jan 2007 11:10:49 -0500
+From: Ross Vandegrift <ross@kallisti.us>
+Date: Sat, 6 Jan 2007 11:10:48 -0500
+Message-ID: <20070106161048.GA18619@kallisti.us>
 Mime-Version: 1.0
-Subject: [linux-lvm] Re: Reverting "bd_mount_mutex" to "bd_mount_sem"
+Content-Disposition: inline
+Subject: [linux-lvm] pvmove ioctl errors
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -21,106 +29,61 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; format=flowed; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@redhat.com
-Cc: srinivasa@in.ibm.com
 
-Reply-To: foma3@hotmail.com
+Hi everyone,
 
-Hi.
-You need comment? I have some for you:
-----------------------------------------------------------------------
-#if 0
-/* old: */
-#define MOUNT_SEMUTEX_IS_MUTEX yes
-#undef MOUNT_SEMUTEX_IS_SEMAPHORE
-#else
-/* new: */
-#undef MOUNT_SEMUTEX_IS_MUTEX
-#define MOUNT_SEMUTEX_IS_SEMAPHORE yes
-#endif
-----------------------------------------------------------------------
-#ifdef MOUNT_SEMUTEX_IS_MUTEX
-#ifdef MOUNT_SEMUTEX_IS_SEMAPHORE
-#error "both defined"
-#else
-#define INIT_MOUNT_SEMUTEX(x) mutex_init(&x->bd_mount_mutex)
-#define LOCK_MOUNT_SEMUTEX(x) mutex_lock(&x->bd_mount_mutex)
-#define UNLOCK_MOUNT_SEMUTEX(x) mutex_unlock(&x->bd_mount_mutex)
-#endif
-#else
-#ifdef MOUNT_SEMUTEX_IS_SEMAPHORE
-#define INIT_MOUNT_SEMUTEX(x) sema_init(&x->bd_mount_sem, 1)
-#define LOCK_MOUNT_SEMUTEX(x) down(&x->bd_mount_sem)
-#define UNLOCK_MOUNT_SEMUTEX(x) up(&x->bd_mount_sem)
-#else
-#error "none defined"
-#endif
-#endif
-----------------------------------------------------------------------
-   	{
-   		memset(bdev, 0, sizeof(*bdev));
-   		mutex_init(&bdev->bd_mutex);
---		mutex_init(&bdev->bd_mount_mutex);
--+		sema_init(&bdev->bd_mount_sem, 1);
-++		INIT_MOUNT_SEMUTEX(bdev);
-   		INIT_LIST_HEAD(&bdev->bd_inodes);
-   		INIT_LIST_HEAD(&bdev->bd_list);
-   #ifdef CONFIG_SYSFS
-----------------------------------------------------------------------
-   {
-   	struct super_block *sb;
+Judging by the archives, a few others have seen this issue, but I'm
+getting errors when I try to pvmove off a PV to remove it from my VG:
 
---	mutex_lock(&bdev->bd_mount_mutex);
--+	down(&bdev->bd_mount_sem);
-++	LOCK_MOUNT_SEMUTEX(bdev);
-   	sb = get_super(bdev);
-   	if (sb && !(sb->s_flags & MS_RDONLY)) {
-   		sb->s_frozen = SB_FREEZE_WRITE;
-----------------------------------------------------------------------
-   		drop_super(sb);
-   	}
+root@turalyon:~# pvmove -v /dev/hda2
+    Wiping cache of LVM-capable devices
+    Finding volume group "vg0"
+    Archiving volume group "vg0" metadata (seqno 16).
+    Creating logical volume pvmove0
+    Moving 33769 extents of logical volume vg0/home
+    Found volume group "vg0"
+    Creating vg0-home
+    Loading vg0-home table
+    Resuming vg0-home (253:0)
+    Updating volume group metadata
+    Creating volume group backup "/etc/lvm/backup/vg0" (seqno 17).
+    Found volume group "vg0"
+    Found volume group "vg0"
+    Suspending vg0-home (253:0)
+    Found volume group "vg0"
+    Creating vg0-pvmove0
+    Loading vg0-pvmove0 table
+  device-mapper: reload ioctl failed: Invalid argument
+  ABORTING: Temporary mirror activation failed.  Run pvmove --abort.
+    Found volume group "vg0"
+    Loading vg0-pvmove0 table
+  device-mapper: reload ioctl failed: Invalid argument
+    Loading vg0-home table
+  device-mapper: reload ioctl failed: Invalid argument
+root@turalyon:~# 
 
---	mutex_unlock(&bdev->bd_mount_mutex);
--+	up(&bdev->bd_mount_sem);
-++	UNLOCK_MOUNT_SEMUTEX(bdev);
-   }
-   EXPORT_SYMBOL(thaw_bdev);
 
-----------------------------------------------------------------------
-   	 * will protect the lockfs code from trying to start a snapshot
-   	 * while we are mounting
-   	 */
---	mutex_lock(&bdev->bd_mount_mutex);
--+	down(&bdev->bd_mount_sem);
-++	LOCK_MOUNT_SEMUTEX(bdev);
-   	s = sget(fs_type, test_bdev_super, set_bdev_super, bdev);
---	mutex_unlock(&bdev->bd_mount_mutex);
--+	up(&bdev->bd_mount_sem);
-++	UNLOCK_MOUNT_SEMUTEX(bdev);
-   	if (IS_ERR(s))
-   		goto error_s;
+I noticed one post that indicated pvmove requires snapshot support,
+which I don't normally use.  Before running this pvmove, I modprobed
+all of the dm-* modules just to make sure.
 
-----------------------------------------------------------------------
-   	struct inode *		bd_inode;	/* will die */
-   	int			bd_openers;
-   	struct mutex		bd_mutex;	/* open/close mutex */
---	struct mutex		bd_mount_mutex;	/* mount mutex */
--+	struct semaphore        bd_mount_sem;
-++#ifdef MOUNT_SEMUTEX_IS_MUTEX
-++	struct mutex		bd_mount_mutex;	/* mount mutex */
-++#endif
-++#ifdef MOUNT_SEMUTEX_IS_SEMAPHORE
-++	struct semaphore        bd_mount_sem;
-++#endif
-   	struct list_head	bd_inodes;
-   	void *			bd_holder;
-   	int			bd_holders;
-----------------------------------------------------------------------
-The End.
-2007-01-03T06:20:00+0000 foma@pc.somewhere.over.the.ru
+The box in question is running Ubuntu Edgy Eft on i386.  I've been
+able to recover just fine from this by rebooting, running pvmove
+--abort, and then rebooting again.
 
-_________________________________________________________________
-FREE pop-up blocking with the new MSN Toolbar - get it now! 
-http://toolbar.msn.click-url.com/go/onm00200415ave/direct/01/
+Obviously this prevents me from removing the volume though.  Thanks in
+advance for any help!
+
+
+-- 
+Ross Vandegrift
+ross@kallisti.us
+
+"The good Christian should beware of mathematicians, and all those who
+make empty prophecies. The danger already exists that the mathematicians
+have made a covenant with the devil to darken the spirit and to confine
+man in the bonds of Hell."
+	--St. Augustine, De Genesi ad Litteram, Book II, xviii, 37
