@@ -1,19 +1,20 @@
-Received: from mx2.redhat.com (mx2.redhat.com [10.255.15.25])
-	by int-mx2.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l070gf64009399
-	for <linux-lvm@redhat.com>; Sat, 6 Jan 2007 19:42:43 -0500
-Received: from mail.esperi.org.uk (41-052.adsl.zetnet.co.uk [194.247.41.52])
-	by mx2.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
-	l070gVet003199
-	for <linux-lvm@redhat.com>; Sat, 6 Jan 2007 19:42:41 -0500
-Subject: Re: [linux-lvm] snapshot on root file system
-References: <20070102102130.744.qmail@web27605.mail.ukl.yahoo.com>
-From: Nix <nix@esperi.org.uk>
-Date: Sun, 07 Jan 2007 00:41:09 +0000
-In-Reply-To: <20070102102130.744.qmail@web27605.mail.ukl.yahoo.com>
-	(jjletho67-mvl@yahoo.it's message of "Tue,
-	2 Jan 2007 11:21:30 +0100 (CET)")
-Message-ID: <87vejjfz2y.fsf@hades.wkstn.nix>
-MIME-Version: 1.0
+Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l08BP6Gk011732
+	for <linux-lvm@redhat.com>; Mon, 8 Jan 2007 06:25:06 -0500
+Received: from mrz.swissptt.ch (outmail30.swisscom.com [138.190.3.150])
+	by mx1.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
+	l08BP4VD024984
+	for <linux-lvm@redhat.com>; Mon, 8 Jan 2007 06:25:05 -0500
+Date: Mon, 8 Jan 2007 12:24:21 +0100
+From: Chris Osicki <osk@admin.swisscom-mobile.ch>
+Subject: Re: [linux-lvm] Persistent minor number problem in lvm2
+Message-ID: <20070108122421.334a1933@slopi>
+In-Reply-To: <200701050801.49807.krienke@uni-koblenz.de>
+References: <200701041524.50995.krienke@uni-koblenz.de>
+	<20070104203734.GB12275@IUPUI.Edu>
+	<200701050801.49807.krienke@uni-koblenz.de>
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -25,29 +26,44 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: jjletho67-mvl@yahoo.it
-Cc: LVM general discussion and development <linux-lvm@redhat.com>
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-On 2 Jan 2007, jjletho67-mvl@yahoo.it outgrape:
-> Searching around about this problem I found that also
-> other lvm users suffer of a similar problem when the
-> root partition is involved, but I was unable to
-> understand what is the cause of the problem and if
-> there is a way to avoid it. Does LVM really support
-> root partition ? Does the problem involves only
-> snapshot or also other aspetcs ? Workaround ?
+On Fri, 5 Jan 2007 08:01:46 +0100
 
-My understanding is that snapshot creation involves a brief period when
-I/O to the origin LV is suspended: if lvcreate needs to page in
-something from that device, or needs to read, say, /etc/lvm/lvm.conf,
-or something, you'll get a deadlock.
+Hi Paul
 
-(Mind you this all seems fixable to me: before suspending, mlockall()
-lvcreate in memory, touch all its pages to force pagein, and do all
-other reading required. But I guess this just hasn't been done yet.)
+Don't let OS generate filesystem handles from major/minor numbers.
+Have a look at fsid option for exportfs (man 5 exports). It works. 
+It's how I implemented it on my failover NFS clusters.
+BTW, persistent minors works as well, I found fsid easier to manage, though.
 
--- 
-`He accused the FSF of being "something of a hypocrit", which
- shows that he neither understands hypocrisy nor can spell.'
-   --- jimmybgood
+Hope it helps.
+
+Regards
+Chris
+
+Rainer Krienke <krienke@uni-koblenz.de> wrote:
+
+> Am Donnerstag, 4. Januar 2007 21:37 schrieb Mark H. Wood:
+> > Mount by LABEL= or UUID=?
+> >
+> > Device node numbers are good for physical things like serial lines,
+> > but not so good for logical things like storage volumes.  If you can
+> > label it, do, and always identify it by your label.
+> 
+> I doubt that this would solve the problem since in the scenario I had, the 
+> client already had mounted a directory from a server. Then on the server the 
+> minor ids of exported NFS volumes changed and then the client did see 
+> the "wrong" contents in the "right" NFS share mounted from the server. The 
+> problem is that NFS relies on major, minor numbers in its protocol, I think. 
+> So UUIDs could only help  in an initial mount but not later.
+> 
+> Have a nice day
+> Rainer
+> -- 
+> ---------------------------------------------------------------------------
+> Rainer Krienke, Universitaet Koblenz, Rechenzentrum, Raum A022
+> Universitaetsstrasse 1, 56070 Koblenz, Tel: +49 261287 -1312, Fax: -1001312
+> Mail: krienke@uni-koblenz.de, Web: http://www.uni-koblenz.de/~krienke
+> Get my public PGP key: http://www.uni-koblenz.de/~krienke/mypgp.html
+> ---------------------------------------------------------------------------
