@@ -1,24 +1,19 @@
-Received: from mx2.redhat.com (mx2.redhat.com [10.255.15.25])
-	by int-mx2.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l099Txdx019842
-	for <linux-lvm@redhat.com>; Tue, 9 Jan 2007 04:30:00 -0500
-Received: from smtp-out1.berkeley.edu (smtp-out1.Berkeley.EDU [128.32.61.106])
-	by mx2.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
-	l099TxTc028522
-	for <linux-lvm@redhat.com>; Tue, 9 Jan 2007 04:29:59 -0500
-Received: from adsl-75-18-230-253.dsl.pltn13.sbcglobal.net ([75.18.230.253]
-	helo=[192.168.42.3])
-	by fe5.calmail with esmtpsa (TLSv1:AES256-SHA:256) (Exim 4.65)
-	(auth plain:stevenschlansker@berkeley.edu)
-	(envelope-from <stevenschlansker@calmail.berkeley.edu>)
-	id 1H4DIo-0007yN-HH
-	for linux-lvm@redhat.com; Tue, 09 Jan 2007 01:29:54 -0800
-Message-ID: <45A36071.2040803@calmail.berkeley.edu>
-Date: Tue, 09 Jan 2007 01:29:21 -0800
-From: Steven Schlansker <stevenschlansker@calmail.berkeley.edu>
-MIME-Version: 1.0
-Subject: Re: [linux-lvm] pvmove ioctl errors
-References: <20070106161048.GA18619@kallisti.us>
-In-Reply-To: <20070106161048.GA18619@kallisti.us>
+Received: from lacrosse.corp.redhat.com (lacrosse.corp.redhat.com
+	[172.16.52.154])
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l09N7llp013691
+	for <linux-lvm@redhat.com>; Tue, 9 Jan 2007 18:07:47 -0500
+Received: from vpn-14-149.rdu.redhat.com (vpn-14-149.rdu.redhat.com
+	[10.11.14.149])
+	by lacrosse.corp.redhat.com (8.12.11.20060308/8.11.6) with ESMTP id
+	l09N7k14030366
+	for <linux-lvm@redhat.com>; Tue, 9 Jan 2007 18:07:47 -0500
+Subject: Re: [linux-lvm] lvextend Insufficient free space
+From: Dave Wysochanski <dave.wysochanski@redhat.com>
+In-Reply-To: <5adb39f00701082249g3a13757csf27383fa9a27e53d@mail.gmail.com>
+References: <5adb39f00701082249g3a13757csf27383fa9a27e53d@mail.gmail.com>
+Date: Tue, 09 Jan 2007 18:07:49 -0500
+Message-Id: <1168384069.4283.87.camel@linux-cxyg.rtp.netapp.com>
+Mime-Version: 1.0
 Content-Transfer-Encoding: 7bit
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
@@ -30,59 +25,46 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="us-ascii"
+To: linux-lvm@redhat.com
 
-Indeed I had the same error.  Nothing I tried worked until I upgraded 
-the device mapper tools/libraries and the lvm stuff (not sure which one 
-fixed it, but doing both did)
+On Mon, 2007-01-08 at 22:49 -0800, David Tran wrote:
+> Hi, 
+> What wrong with my command line? Please help.
+> OR
+> This is a bug?
+> 
+> linux-server:/ # vgdisplay
+>   --- Volume group ---
+>   VG Name               gdata
+>   System ID             
+>   Format                lvm2 
+>   Metadata Areas        3
+>   Metadata Sequence No  5
+>   VG Access             read/write
+>   VG Status             resizable
+>   MAX LV                0
+>   Cur LV                3
+>   Open LV               3
+>   Max PV                0
+>   Cur PV                3
+>   Act PV                3
+>   VG Size               544.62 GB
+>   PE Size               4.00 MB
+>   Total PE              139424
+>   Alloc PE / Size       100148 / 391.20 GB
+>   Free  PE / Size       39276 / 153.42 GB
+>   VG UUID               gROPCK-xUmS-Tk99-nTmp-S63F-otHE-9QJukD
+> -------------------------------------------------------------
+> /////// So I have 153.42 GB free space NOW
+> -------------------------------------------------------------
+> linux-server:/ # lvextend -L +100G /dev/gdata/priv
+>   Extending logical volume priv to 177.80 GB
+>   Insufficient free space: 45517 extents needed, but only 39276
+> available
+> 
 
-Then it worked like a charm.
+What is the output of these cmds:
+uname -a; lvm version; lvdisplay --maps
 
-Ross Vandegrift wrote:
-> Hi everyone,
->
-> Judging by the archives, a few others have seen this issue, but I'm
-> getting errors when I try to pvmove off a PV to remove it from my VG:
->
-> root@turalyon:~# pvmove -v /dev/hda2
->     Wiping cache of LVM-capable devices
->     Finding volume group "vg0"
->     Archiving volume group "vg0" metadata (seqno 16).
->     Creating logical volume pvmove0
->     Moving 33769 extents of logical volume vg0/home
->     Found volume group "vg0"
->     Creating vg0-home
->     Loading vg0-home table
->     Resuming vg0-home (253:0)
->     Updating volume group metadata
->     Creating volume group backup "/etc/lvm/backup/vg0" (seqno 17).
->     Found volume group "vg0"
->     Found volume group "vg0"
->     Suspending vg0-home (253:0)
->     Found volume group "vg0"
->     Creating vg0-pvmove0
->     Loading vg0-pvmove0 table
->   device-mapper: reload ioctl failed: Invalid argument
->   ABORTING: Temporary mirror activation failed.  Run pvmove --abort.
->     Found volume group "vg0"
->     Loading vg0-pvmove0 table
->   device-mapper: reload ioctl failed: Invalid argument
->     Loading vg0-home table
->   device-mapper: reload ioctl failed: Invalid argument
-> root@turalyon:~# 
->
->
-> I noticed one post that indicated pvmove requires snapshot support,
-> which I don't normally use.  Before running this pvmove, I modprobed
-> all of the dm-* modules just to make sure.
->
-> The box in question is running Ubuntu Edgy Eft on i386.  I've been
-> able to recover just fine from this by rebooting, running pvmove
-> --abort, and then rebooting again.
->
-> Obviously this prevents me from removing the volume though.  Thanks in
-> advance for any help!
->
->
->   
+It might be a bug.
