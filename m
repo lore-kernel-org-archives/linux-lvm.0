@@ -1,19 +1,20 @@
 Received: from mx2.redhat.com (mx2.redhat.com [10.255.15.25])
-	by int-mx2.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l096nlJ2006906
-	for <linux-lvm@redhat.com>; Tue, 9 Jan 2007 01:49:47 -0500
-Received: from nz-out-0506.google.com (nz-out-0506.google.com [64.233.162.237])
+	by int-mx2.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l09IQ5gS006725
+	for <linux-lvm@redhat.com>; Tue, 9 Jan 2007 13:26:05 -0500
+Received: from wr-out-0506.google.com (wr-out-0506.google.com [64.233.184.231])
 	by mx2.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
-	l096nkgc015478
-	for <linux-lvm@redhat.com>; Tue, 9 Jan 2007 01:49:47 -0500
-Received: by nz-out-0506.google.com with SMTP id s18so5803445nze
-	for <linux-lvm@redhat.com>; Mon, 08 Jan 2007 22:49:46 -0800 (PST)
-Message-ID: <5adb39f00701082249g3a13757csf27383fa9a27e53d@mail.gmail.com>
-Date: Mon, 8 Jan 2007 22:49:46 -0800
-From: "David Tran" <davidtt3@gmail.com>
+	l09IQ4HG000476
+	for <linux-lvm@redhat.com>; Tue, 9 Jan 2007 13:26:05 -0500
+Received: by wr-out-0506.google.com with SMTP id i22so39697wra
+	for <linux-lvm@redhat.com>; Tue, 09 Jan 2007 10:26:04 -0800 (PST)
+Message-ID: <aec22fc50701091026i3b66ec18jbd18760e59164622@mail.gmail.com>
+Date: Tue, 9 Jan 2007 21:26:03 +0300
+From: `VL <vl.homutov@gmail.com>
 MIME-Version: 1.0
 Content-Type: multipart/alternative; 
-	boundary="----=_Part_71637_6092184.1168325386536"
-Subject: [linux-lvm] lvextend Insufficient free space
+	boundary="----=_Part_75091_23096450.1168367163285"
+Subject: [linux-lvm] vgscan -- ERROR "vg_read_with_pv_and_lv(): current PV"
+	can't get data of volume group
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -26,57 +27,73 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 List-Id: <linux-lvm.redhat.com>
 To: linux-lvm@redhat.com
 
-------=_Part_71637_6092184.1168325386536
+------=_Part_75091_23096450.1168367163285
 Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
 Content-Disposition: inline
 
-Hi,
-What wrong with my command line? Please help.
-OR
-This is a bug?
+Dear ALL, <linux-lvm@redhat.com>
 
-linux-server:/ # vgdisplay
-  --- Volume group ---
-  VG Name               gdata
-  System ID
-  Format                lvm2
-  Metadata Areas        3
-  Metadata Sequence No  5
-  VG Access             read/write
-  VG Status             resizable
-  MAX LV                0
-  Cur LV                3
-  Open LV               3
-  Max PV                0
-  Cur PV                3
-  Act PV                3
-  VG Size               544.62 GB
-  PE Size               4.00 MB
-  Total PE              139424
-  Alloc PE / Size       100148 / 391.20 GB
-  Free  PE / Size       39276 / 153.42 GB
-  VG UUID               gROPCK-xUmS-Tk99-nTmp-S63F-otHE-9QJukD
--------------------------------------------------------------
-/////// So I have 153.42 GB free space NOW
--------------------------------------------------------------
-linux-server:/ # lvextend -L +100G /dev/gdata/priv
-  Extending logical volume priv to 177.80 GB
-  Insufficient free space: 45517 extents needed, but only 39276 available
+I have a problem with LVM volume(details below) probably after bad shutdown:
 
-Thank you.
+There are 2 volumes: lvm2 and lvm1 (just names, type is lvm-1). lvm2 is fine
+and mounted,
+and lvm1 has problems:
 
-------=_Part_71637_6092184.1168325386536
+# pvscan
+pvscan -- reading all physical volumes (this may take a while...)
+pvscan -- ACTIVE   PV "/dev/sda1" of VG "lvm2" [372.56 GB / 0 free]
+pvscan -- ACTIVE   PV "/dev/sdb1" of VG "lvm2" [372.56 GB / 0 free]
+pvscan -- inactive PV "/dev/hdg1"  is associated to unknown VG "lvm1" (run
+vgscan)
+pvscan -- inactive PV "/dev/hdf1"  is associated to unknown VG "lvm1" (run
+vgscan)
+pvscan -- inactive PV "/dev/hdb1"  is associated to unknown VG "lvm1" (run
+vgscan)
+pvscan -- total: 5 [1.36 TB] / in use: 5 [1.36 TB] / in no VG: 0 [0]
+
+# vgscan
+vgscan -- reading all physical volumes (this may take a while...)
+vgscan -- found active volume group "lvm2"
+vgscan -- ERROR "vg_read_with_pv_and_lv(): current PV" can't get data of
+volume group "lvm1" from physical volume(s)
+vgscan -- "/etc/lvmtab" and "/etc/lvmtab.d" successfully created
+vgscan -- WARNING: This program does not do a VGDA backup of your volume
+groups
+
+ ls -l /dev/lvm*
+crw-r-----  1 root root 109, 0 2005-03-27 17:11 /dev/lvm
+
+/dev/lvm1:
+total 0
+crw-r-----  1 root disk 109, 0 2007-01-05 17:14 group
+
+/dev/lvm2:
+total 0
+crw-r-----  1 root disk 109, 1 2007-01-09 21:22 group
+brw-rw----  1 root disk  58, 1 2007-01-09 21:22 lv2
+
+
+System description:
+
+kernel 2.4.31 vanilla
+slackware-10.2.0
+lvm-1.0.8-i486-1
+
+any help will be greatly appreciated.
+
+------=_Part_75091_23096450.1168367163285
 Content-Type: text/html; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
 Content-Disposition: inline
 
-Hi, <br>What wrong with my command line? Please help.<br>OR<br>This is a bug?<br><br>linux-server:/ # vgdisplay<br>&nbsp; --- Volume group ---<br>&nbsp; VG Name&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; gdata<br>&nbsp; System ID&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <br>&nbsp; Format&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; lvm2
-<br>&nbsp; Metadata Areas&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 3<br>&nbsp; Metadata Sequence No&nbsp; 5<br>&nbsp; VG Access&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; read/write<br>&nbsp; VG Status&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; resizable<br>&nbsp; MAX LV&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0<br>&nbsp; Cur LV&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 3<br>&nbsp; Open
- LV&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 3<br>&nbsp; Max PV&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0<br>&nbsp; Cur PV&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 3<br>&nbsp; Act PV&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 3<br>&nbsp; VG Size&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 544.62 GB<br>&nbsp; PE Size&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 4.00 MB<br>&nbsp; Total PE&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 139424<br>&nbsp; Alloc PE / Size&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 100148 / 
-391.20 GB<br>&nbsp; <span style="color: rgb(255, 0, 0); font-weight: bold;">Free&nbsp; PE / Size&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 39276 / 153.42 GB</span><br>&nbsp; VG
- UUID&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; gROPCK-xUmS-Tk99-nTmp-S63F-otHE-9QJukD<br>-------------------------------------------------------------<br>/////// <span style="font-weight: bold; color: rgb(255, 0, 0);">So I have 153.42 GB free space NOW
-</span><br>-------------------------------------------------------------<br>linux-server:/ # lvextend -L +<span style="color: rgb(51, 51, 255); font-weight: bold;">100G</span> /dev/gdata/priv<br>&nbsp; Extending logical volume priv to 
-177.80 GB<br>&nbsp; Insufficient free space: <span style="color: rgb(51, 51, 255); font-weight: bold;">45517 extents needed, but only 39276 available</span><br><br>Thank you.
+<a onclick="return top.js.OpenExtLink(window,event,this)" href="mailto:linux-lvm@redhat.com">Dear ALL,</a><br><br>I have a problem with LVM volume(details below) probably after bad shutdown:<br><br>There are 2 volumes: lvm2 and lvm1 (just names, type is lvm-1). lvm2 is fine and mounted,
+<br>and lvm1 has problems:<br><br># pvscan <br>pvscan -- reading all physical volumes (this may take a while...)<br>pvscan -- ACTIVE&nbsp;&nbsp; PV &quot;/dev/sda1&quot; of VG &quot;lvm2&quot; [372.56 GB / 0 free]<br>pvscan -- ACTIVE&nbsp;&nbsp; PV &quot;/dev/sdb1&quot; of VG &quot;lvm2&quot; [
+372.56 GB / 0 free]<br>pvscan -- inactive PV &quot;/dev/hdg1&quot;&nbsp; is associated to unknown VG &quot;lvm1&quot; (run vgscan)<br>pvscan -- inactive PV &quot;/dev/hdf1&quot;&nbsp; is associated to unknown VG &quot;lvm1&quot; (run vgscan)
+<br>pvscan -- inactive PV &quot;/dev/hdb1&quot;&nbsp; is associated to unknown VG &quot;lvm1&quot; (run vgscan)<br>pvscan -- total: 5 [1.36 TB] / in use: 5 [1.36 TB] / in no VG: 0 [0]<br><br># vgscan <br>vgscan -- reading all physical volumes (this may take a while...)
+<br>vgscan -- found active volume group &quot;lvm2&quot;<br>vgscan -- ERROR &quot;vg_read_with_pv_and_lv(): current PV&quot; can&#39;t get data of volume group &quot;lvm1&quot; from physical volume(s)<br>vgscan -- &quot;/etc/lvmtab&quot; and &quot;/etc/lvmtab.d&quot; successfully created
+<br>vgscan -- WARNING: This program does not do a VGDA backup of your volume groups<br><br>&nbsp;ls -l /dev/lvm*<br>crw-r-----&nbsp; 1 root root 109, 0 2005-03-27 17:11 /dev/lvm<br><br>/dev/lvm1:<br>total 0<br>crw-r-----&nbsp; 1 root disk 109, 0 2007-01-05 17:14 group
+<br><br>/dev/lvm2:<br>total 0<br>crw-r-----&nbsp; 1 root disk 109, 1 2007-01-09 21:22 group<br>brw-rw----&nbsp; 1 root disk&nbsp; 58, 1 2007-01-09 21:22 lv2<br><br><br>System description:<br><br>kernel 2.4.31 vanilla<br>slackware-10.2.0
+<br>lvm-1.0.8-i486-1<br><br>any help will be greatly appreciated.<br><br><br>
 
-------=_Part_71637_6092184.1168325386536--
+------=_Part_75091_23096450.1168367163285--
