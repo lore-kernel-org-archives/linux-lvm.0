@@ -1,21 +1,25 @@
 Received: from mx2.redhat.com (mx2.redhat.com [10.255.15.25])
-	by int-mx2.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l05E7DdK007477
-	for <linux-lvm@redhat.com>; Fri, 5 Jan 2007 09:07:14 -0500
-Received: from smtp23.kolumbus.fi (smtp23.kolumbus.fi [193.229.0.81])
+	by int-mx2.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l099Txdx019842
+	for <linux-lvm@redhat.com>; Tue, 9 Jan 2007 04:30:00 -0500
+Received: from smtp-out1.berkeley.edu (smtp-out1.Berkeley.EDU [128.32.61.106])
 	by mx2.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
-	l05E7CLM017225
-	for <linux-lvm@redhat.com>; Fri, 5 Jan 2007 09:07:13 -0500
-Received: from SECN002.acc.master.epnet (sec002.acc.master.epnet
-	[172.21.169.114])
-	by smtp23.kolumbus.fi (8.13.6/8.13.6) with ESMTP id l05E78K9008876
-	for <linux-lvm@redhat.com>; Fri, 5 Jan 2007 16:07:08 +0200 (EET)
-Content-class: urn:content-classes:message
+	l099TxTc028522
+	for <linux-lvm@redhat.com>; Tue, 9 Jan 2007 04:29:59 -0500
+Received: from adsl-75-18-230-253.dsl.pltn13.sbcglobal.net ([75.18.230.253]
+	helo=[192.168.42.3])
+	by fe5.calmail with esmtpsa (TLSv1:AES256-SHA:256) (Exim 4.65)
+	(auth plain:stevenschlansker@berkeley.edu)
+	(envelope-from <stevenschlansker@calmail.berkeley.edu>)
+	id 1H4DIo-0007yN-HH
+	for linux-lvm@redhat.com; Tue, 09 Jan 2007 01:29:54 -0800
+Message-ID: <45A36071.2040803@calmail.berkeley.edu>
+Date: Tue, 09 Jan 2007 01:29:21 -0800
+From: Steven Schlansker <stevenschlansker@calmail.berkeley.edu>
 MIME-Version: 1.0
-Date: Fri, 5 Jan 2007 16:07:00 +0200
-Message-ID: <1A25D4A40AE65D4E83D73E457DFB24EA847256@SEMB001.acc.master.epnet>
-From: "Sulko Ville" <Ville.Sulko@elisa.fi>
-Content-Transfer-Encoding: 8bit
-Subject: [linux-lvm] LVM1 pvmove fails to move PE with read errors
+Subject: Re: [linux-lvm] pvmove ioctl errors
+References: <20070106161048.GA18619@kallisti.us>
+In-Reply-To: <20070106161048.GA18619@kallisti.us>
+Content-Transfer-Encoding: 7bit
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -26,52 +30,59 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@redhat.com
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-Hello,
+Indeed I had the same error.  Nothing I tried worked until I upgraded 
+the device mapper tools/libraries and the lvm stuff (not sure which one 
+fixed it, but doing both did)
 
-I have an old linux server running RH9. The system
-has two scsi disks, one of which shows scsi-errors
-for a few sectors.
+Then it worked like a charm.
 
-I mapped these disk sectors to one PE, number 00097
-on PV sda2 (LE 00097 on vg00/lvol02). I tried to
-move this LE to different PV (sdb1), using command:
-
-pvmove -v -i -n lvol02:97 /dev/sda2 /dev/sdb1
-
-However, moving fails with the following errors:
-
-...
-pvmove -- /dev/sda2 [PE 97 [lvol02 [LE 97]] -> /dev/sdb1 [PE 1946] [1/1]
-/dev/Volume00/group::/dev/Volume00/lvol02: 0802 803200, 0811 15950208
-pvmove -- ERROR "Input/output error" copying extent from "/dev/sda2"
-pvmove -- ERROR "Input/output error" moving physical extents
-
-and as a result LE was not moved. I would expect this to
-work as I used the -i -option (--ignore_read_errors).
-pvmove result code is 23 (error moving physical extent(s)).
-
-Moving the PE to working disk would allow me to run fsck
-and repair the filesystem. Of course some of the data
-would be corrupt, because of the read errors. Well, this
-is irrelevant, the point is, that -i -option seems not to
-work.
-
-I know this is old LVM1 version, with little or no
-maintenance. Kernel and LVM utility versions are as
-follows:
-
-kernel-2.4.20-46.9.legacy
-lvm-1.0.3-12.1.legacy
-
-Example SCSI error:
-
-scsi0: ERROR on channel 0, id 0, lun 0, CDB: Read (10) 00 00 0f 8d 8b 00 03 c2 00
-Info fld=0xf8d8b, Current sd08:02: sense key Medium Error
-Additional sense indicates Data synchronization mark error
- I/O error: dev 08:02, sector 810430
-
-BR,
-Ville
+Ross Vandegrift wrote:
+> Hi everyone,
+>
+> Judging by the archives, a few others have seen this issue, but I'm
+> getting errors when I try to pvmove off a PV to remove it from my VG:
+>
+> root@turalyon:~# pvmove -v /dev/hda2
+>     Wiping cache of LVM-capable devices
+>     Finding volume group "vg0"
+>     Archiving volume group "vg0" metadata (seqno 16).
+>     Creating logical volume pvmove0
+>     Moving 33769 extents of logical volume vg0/home
+>     Found volume group "vg0"
+>     Creating vg0-home
+>     Loading vg0-home table
+>     Resuming vg0-home (253:0)
+>     Updating volume group metadata
+>     Creating volume group backup "/etc/lvm/backup/vg0" (seqno 17).
+>     Found volume group "vg0"
+>     Found volume group "vg0"
+>     Suspending vg0-home (253:0)
+>     Found volume group "vg0"
+>     Creating vg0-pvmove0
+>     Loading vg0-pvmove0 table
+>   device-mapper: reload ioctl failed: Invalid argument
+>   ABORTING: Temporary mirror activation failed.  Run pvmove --abort.
+>     Found volume group "vg0"
+>     Loading vg0-pvmove0 table
+>   device-mapper: reload ioctl failed: Invalid argument
+>     Loading vg0-home table
+>   device-mapper: reload ioctl failed: Invalid argument
+> root@turalyon:~# 
+>
+>
+> I noticed one post that indicated pvmove requires snapshot support,
+> which I don't normally use.  Before running this pvmove, I modprobed
+> all of the dm-* modules just to make sure.
+>
+> The box in question is running Ubuntu Edgy Eft on i386.  I've been
+> able to recover just fine from this by rebooting, running pvmove
+> --abort, and then rebooting again.
+>
+> Obviously this prevents me from removing the volume though.  Thanks in
+> advance for any help!
+>
+>
+>   
