@@ -1,21 +1,24 @@
-Received: from mx2.redhat.com (mx2.redhat.com [10.255.15.25])
-	by int-mx2.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l0AGWjr5006364
-	for <linux-lvm@redhat.com>; Wed, 10 Jan 2007 11:32:46 -0500
-Received: from smtp-b1.antel.net.uy (smtp-b1.antel.net.uy [200.40.30.224])
-	by mx2.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
-	l0AGWiTD017026
-	for <linux-lvm@redhat.com>; Wed, 10 Jan 2007 11:32:44 -0500
-Received: from [192.168.0.16] (200.40.82.186) by smtp-b1.antel.net.uy
-	(7.2.072.1) (authenticated as arle)
-	id 456AF1820319A61F for linux-lvm@redhat.com;
-	Wed, 10 Jan 2007 13:51:13 -0200
-Message-ID: <45A5194D.5070501@adinet.com.uy>
-Date: Wed, 10 Jan 2007 13:50:21 -0300
-From: =?UTF-8?B?QXJsZXF1w61u?= <arle@adinet.com.uy>
-MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Subject: [linux-lvm] fsck.ext3 truncates boot sequence
-Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
+Received: from o.ww.redhat.com (vpn-4-10.str.redhat.com [10.32.4.10])
+	by pobox.stuttgart.redhat.com (8.12.8/8.12.8) with ESMTP id
+	l0AH6Ye5001817
+	for <linux-lvm@redhat.com>; Wed, 10 Jan 2007 18:06:34 +0100
+Received: from o.ww.redhat.com (localhost.localdomain [127.0.0.1])
+	by o.ww.redhat.com (8.13.8/8.13.7) with ESMTP id l0AH8mAn005786
+	for <linux-lvm@redhat.com>; Wed, 10 Jan 2007 18:08:48 +0100
+Received: (from mauelsha@localhost)
+	by o.ww.redhat.com (8.13.8/8.13.8/Submit) id l0AH8mqf005785
+	for linux-lvm@redhat.com; Wed, 10 Jan 2007 18:08:48 +0100
+Date: Wed, 10 Jan 2007 18:08:48 +0100
+From: Heinz Mauelshagen <mauelshagen@redhat.com>
+Subject: Re: [linux-lvm] vgscan -- ERROR "vg_read_with_pv_and_lv(): current
+	PV" can't get data of volume group
+Message-ID: <20070110170848.GA19858@redhat.com>
+References: <aec22fc50701091026i3b66ec18jbd18760e59164622@mail.gmail.com>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <aec22fc50701091026i3b66ec18jbd18760e59164622@mail.gmail.com>
+Reply-To: mauelshagen@redhat.com,
+	LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -25,51 +28,90 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="iso-8859-1"; format="flowed"
-To: linux-lvm@redhat.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-Hello, list.
+On Tue, Jan 09, 2007 at 09:26:03PM +0300, `VL wrote:
+> Dear ALL, <linux-lvm@redhat.com>
+> 
+> I have a problem with LVM volume(details below) probably after bad shutdown:
 
-I've a LVM working OK. I plugged an externar USB harddisk and Linux=20
-emulates SCSCI, so it is seen as /dev/sdc1
+Do you assume that, because your system died during
+a running configuration change on "lvm1" ?
 
-I formated it as ext3 and the added it as a new Physical Volume in order=20
-to gaim more disk space. Then, create a new logical volume, say=20
-<LOGICAL_VOLUME_**new**> and was up'n'running OK.
+Are all PVs of "lvm1" accessible ?
 
-I assume that the USB device is recognized before LVM mount, since the=20
-boot sequence:
+If so, you need to fetch your most recent valid VG metadata archive
+(see 'man vgcfgrestore'; option '-ll' to look at archive content)
+and restore it. 'vgscan ; vgchange -ay' afterwards.
 
-   Setting up LVM Volume Groups ...done
-   Starting Enterprise Volume Management System ...done
-   Checking all file systems
-
-      fsck.ext3 Bad magic number in super-block while trying to open
-/dev/sdc1
-
-      the superblock could not be read or does not describe a correct
-ext2 filesystem. if the device is valid and it really contains an ext2
-filesystem (and not swap ou ufs or something else), then the superblock
-is corrupt, and you might try running e2fsck with an alternate superblock:
-e2fsck - 8193 <device>
-
-/dev/<VOLUME_GROUP>/<LOGICAL_VOLUME_**new**> clean
-
-    fsck failed Please repair manually
+Regards,
+Heinz    -- The LVM Guy --
 
 
-Freezes there and only can continue starting the system using Ctrl+D.
-Please note that after that the system works just fine, LVM & USB device=20
-included.
+> 
+> There are 2 volumes: lvm2 and lvm1 (just names, type is lvm-1). lvm2 is fine
+> and mounted,
+> and lvm1 has problems:
+> 
+> # pvscan
+> pvscan -- reading all physical volumes (this may take a while...)
+> pvscan -- ACTIVE   PV "/dev/sda1" of VG "lvm2" [372.56 GB / 0 free]
+> pvscan -- ACTIVE   PV "/dev/sdb1" of VG "lvm2" [372.56 GB / 0 free]
+> pvscan -- inactive PV "/dev/hdg1"  is associated to unknown VG "lvm1" (run
+> vgscan)
+> pvscan -- inactive PV "/dev/hdf1"  is associated to unknown VG "lvm1" (run
+> vgscan)
+> pvscan -- inactive PV "/dev/hdb1"  is associated to unknown VG "lvm1" (run
+> vgscan)
+> pvscan -- total: 5 [1.36 TB] / in use: 5 [1.36 TB] / in no VG: 0 [0]
+> 
+> # vgscan
+> vgscan -- reading all physical volumes (this may take a while...)
+> vgscan -- found active volume group "lvm2"
+> vgscan -- ERROR "vg_read_with_pv_and_lv(): current PV" can't get data of
+> volume group "lvm1" from physical volume(s)
+> vgscan -- "/etc/lvmtab" and "/etc/lvmtab.d" successfully created
+> vgscan -- WARNING: This program does not do a VGDA backup of your volume
+> groups
+> 
+> ls -l /dev/lvm*
+> crw-r-----  1 root root 109, 0 2005-03-27 17:11 /dev/lvm
+> 
+> /dev/lvm1:
+> total 0
+> crw-r-----  1 root disk 109, 0 2007-01-05 17:14 group
+> 
+> /dev/lvm2:
+> total 0
+> crw-r-----  1 root disk 109, 1 2007-01-09 21:22 group
+> brw-rw----  1 root disk  58, 1 2007-01-09 21:22 lv2
+> 
+> 
+> System description:
+> 
+> kernel 2.4.31 vanilla
+> slackware-10.2.0
+> lvm-1.0.8-i486-1
+> 
+> any help will be greatly appreciated.
 
-Tried to run fsck.ext on that parition and says it's clean.
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@redhat.com
+> https://www.redhat.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
 
-What am I missing to solve?
-How can I avoid the boot sequence being stopped?
+*** Software bugs are stupid.
+    Nevertheless it needs not so stupid people to solve them ***
 
-Thanks in advance. Cheers.
---=20
-Arlequ=C3=ADn                         _o)
-arle_AT_adinet_DOT_com_DOT_uy    / \\
-http://counter.li.org/         _(___V
-Linux Registered User          #207262
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+Heinz Mauelshagen                                 Red Hat GmbH
+Consulting Development Engineer                   Am Sonnenhang 11
+Storage Development                               56242 Marienrachdorf
+                                                  Germany
+Mauelshagen@RedHat.com                            PHONE +49  171 7803392
+                                                  FAX   +49 2626 924446
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
