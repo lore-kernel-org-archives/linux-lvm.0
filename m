@@ -1,22 +1,19 @@
 Received: from mx2.redhat.com (mx2.redhat.com [10.255.15.25])
-	by int-mx2.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l0BBK5s5006861
-	for <linux-lvm@redhat.com>; Thu, 11 Jan 2007 06:20:06 -0500
-Received: from mta06.sannet.ne.jp (mta06.sannet.ne.jp [134.180.49.76])
+	by int-mx2.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l0BCn59Y013748
+	for <linux-lvm@redhat.com>; Thu, 11 Jan 2007 07:49:05 -0500
+Received: from wr-out-0506.google.com (wr-out-0506.google.com [64.233.184.230])
 	by mx2.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
-	l0BBK4lh022968
-	for <linux-lvm@redhat.com>; Thu, 11 Jan 2007 06:20:05 -0500
-Received: from [192.168.0.77] (eaa1-ppp746.west.sannet.ne.jp [211.133.178.238])
-	by mta06.sannet.ne.jp (Postfix) with ESMTP id 2E2AB23F1
-	for <linux-lvm@redhat.com>; Thu, 11 Jan 2007 20:20:03 +0900 (JST)
-Mime-Version: 1.0 (Apple Message framework v752.2)
-In-Reply-To: <aec22fc50701091026i3b66ec18jbd18760e59164622@mail.gmail.com>
-References: <aec22fc50701091026i3b66ec18jbd18760e59164622@mail.gmail.com>
-Message-Id: <7682E579-E6B5-41E0-BC72-659301959512@sannet.ne.jp>
-Content-Transfer-Encoding: 7bit
-From: Joel Rees <joel_rees@sannet.ne.jp>
-Subject: Re: [linux-lvm] vgscan -- ERROR "vg_read_with_pv_and_lv(): current
-	PV" can't get data of volume group
-Date: Thu, 11 Jan 2007 20:20:01 +0900
+	l0BCn4nE016907
+	for <linux-lvm@redhat.com>; Thu, 11 Jan 2007 07:49:04 -0500
+Received: by wr-out-0506.google.com with SMTP id 37so312499wra
+	for <linux-lvm@redhat.com>; Thu, 11 Jan 2007 04:49:04 -0800 (PST)
+Message-ID: <ebe74ab10701110449k3b5ee6ccw3e41a85dfbdca4a0@mail.gmail.com>
+Date: Thu, 11 Jan 2007 14:49:02 +0200
+From: "Yalusa Jongihlati" <yjongihlati@gmail.com>
+MIME-Version: 1.0
+Content-Type: multipart/alternative; 
+	boundary="----=_Part_23357_31132729.1168519742988"
+Subject: [linux-lvm] A question about deleting partitions - LVM related
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -27,85 +24,49 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="iso-2022-jp"; delsp="yes"; format="flowed"
-To: LVM general discussion and development <linux-lvm@redhat.com>
+To: linux-lvm@redhat.com
 
-Theis looks a little like something I just went through.
+------=_Part_23357_31132729.1168519742988
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
 
-Check
+I have a drive partitioned like this
 
-     http://tldp.org/HOWTO/LVM-HOWTO/  for general stuff.
 
-also
+   Device Boot      Start         End      Blocks   Id  System
+/dev/sda1               1       30401   244196001    5  Extended
+/dev/sda5   *           1        2611    20972794+  83  Linux
+/dev/sda6            2612        5222    20972826   83  Linux
+/dev/sda7            5223        7180    15727603+  83  Linux
+/dev/sda8            7181        9138    15727603+  83  Linux
+/dev/sda9            9139       11096    15727603+  83  Linux
+/dev/sda10          11097       13054    15727603+  83  Linux
+/dev/sda11          13055       16971    31463271    7  HPFS/NTFS
+/dev/sda12          16972       22192    41937651   8e  Linux LVM
+/dev/sda13          22193       26108    31455238+  8e  Linux LVM
+/dev/sda14          26109       30401    34483491   8e  Linux LVM
 
-     man pvcreate
-     man vgcfgrestore
 
-and if you want to look at my descriptions of what I did,
+I was quite ambitious at the time about how many distros I would load. I now
+want to basically kill partitions sda6 to sda11 and repartition that space
+differently. Instead of the 6 partitions I will have fewer.
 
-      https://www.redhat.com/archives/linux-lvm/2007-January/ 
-msg00003.html
-      https://www.redhat.com/archives/fedora-list/2007-January/ 
-msg00770.html
+My concern is that this will change the partition numbers of the partitions
+currently 12, 13 and 14. As can be seen these currently form part of LVM
+partitions. If the partition numbers change eg sda12 to sda10, my concern is
+whether LVM will adjust accordingly? Or is there a command I will have to
+run once I have re-partitioned? The LVM partitions are all reiserfs.
 
-I can't say whether that will be more confusion than help. Good luck.
+------=_Part_23357_31132729.1168519742988
+Content-Type: text/html; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
 
-On 平成 19/01/10, at 3:26, `VL wrote:
+I have a drive partitioned like this<br><br><br>&nbsp;&nbsp; Device Boot&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Start&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; End&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Blocks&nbsp;&nbsp; Id&nbsp; System<br>/dev/sda1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 30401&nbsp;&nbsp; 244196001&nbsp;&nbsp;&nbsp; 5&nbsp; Extended<br>/dev/sda5&nbsp;&nbsp; *&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 2611&nbsp;&nbsp;&nbsp; 20972794+&nbsp; 83&nbsp; Linux
+<br>/dev/sda6&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 2612&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 5222&nbsp;&nbsp;&nbsp; 20972826&nbsp;&nbsp; 83&nbsp; Linux<br>/dev/sda7&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 5223&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 7180&nbsp;&nbsp;&nbsp; 15727603+&nbsp; 83&nbsp; Linux<br>/dev/sda8&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 7181&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 9138&nbsp;&nbsp;&nbsp; 15727603+&nbsp; 83&nbsp; Linux<br>/dev/sda9&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 9139&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 11096&nbsp;&nbsp;&nbsp; 15727603+&nbsp; 83&nbsp; Linux
+<br>/dev/sda10&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 11097&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 13054&nbsp;&nbsp;&nbsp; 15727603+&nbsp; 83&nbsp; Linux<br>/dev/sda11&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 13055&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 16971&nbsp;&nbsp;&nbsp; 31463271&nbsp;&nbsp;&nbsp; 7&nbsp; HPFS/NTFS<br>/dev/sda12&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 16972&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 22192&nbsp;&nbsp;&nbsp; 41937651&nbsp;&nbsp; 8e&nbsp; Linux LVM<br>/dev/sda13&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 22193&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 26108&nbsp;&nbsp;&nbsp; 31455238+&nbsp; 8e&nbsp; Linux LVM
+<br>/dev/sda14&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 26109&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 30401&nbsp;&nbsp;&nbsp; 34483491&nbsp;&nbsp; 8e&nbsp; Linux LVM<br><br><br>I was quite ambitious at the time about how many distros I would load. I now want to basically kill partitions sda6 to sda11 and repartition that space differently. Instead of the 6 partitions I will have fewer. 
+<br><br>My concern is that this will change the partition numbers of the partitions currently 12, 13 and 14. As can be seen these currently form part of LVM partitions. If the partition numbers change eg sda12 to sda10, my concern is whether LVM will adjust accordingly? Or is there a command I will have to run once I have re-partitioned? The LVM partitions are all reiserfs.
 
-> Dear ALL,
->
-> I have a problem with LVM volume(details below) probably after bad  
-> shutdown:
->
-> There are 2 volumes: lvm2 and lvm1 (just names, type is lvm-1).  
-> lvm2 is fine and mounted,
-> and lvm1 has problems:
->
-> # pvscan
-> pvscan -- reading all physical volumes (this may take a while...)
-> pvscan -- ACTIVE   PV "/dev/sda1" of VG "lvm2" [372.56 GB / 0 free]
-> pvscan -- ACTIVE   PV "/dev/sdb1" of VG "lvm2" [ 372.56 GB / 0 free]
-> pvscan -- inactive PV "/dev/hdg1"  is associated to unknown VG  
-> "lvm1" (run vgscan)
-> pvscan -- inactive PV "/dev/hdf1"  is associated to unknown VG  
-> "lvm1" (run vgscan)
-> pvscan -- inactive PV "/dev/hdb1"  is associated to unknown VG  
-> "lvm1" (run vgscan)
-> pvscan -- total: 5 [1.36 TB] / in use: 5 [1.36 TB] / in no VG: 0 [0]
->
-> # vgscan
-> vgscan -- reading all physical volumes (this may take a while...)
-> vgscan -- found active volume group "lvm2"
-> vgscan -- ERROR "vg_read_with_pv_and_lv(): current PV" can't get  
-> data of volume group "lvm1" from physical volume(s)
-> vgscan -- "/etc/lvmtab" and "/etc/lvmtab.d" successfully created
-> vgscan -- WARNING: This program does not do a VGDA backup of your  
-> volume groups
->
->  ls -l /dev/lvm*
-> crw-r-----  1 root root 109, 0 2005-03-27 17:11 /dev/lvm
->
-> /dev/lvm1:
-> total 0
-> crw-r-----  1 root disk 109, 0 2007-01-05 17:14 group
->
-> /dev/lvm2:
-> total 0
-> crw-r-----  1 root disk 109, 1 2007-01-09 21:22 group
-> brw-rw----  1 root disk  58, 1 2007-01-09 21:22 lv2
->
->
-> System description:
->
-> kernel 2.4.31 vanilla
-> slackware-10.2.0
-> lvm-1.0.8-i486-1
->
-> any help will be greatly appreciated.
->
->
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+------=_Part_23357_31132729.1168519742988--
