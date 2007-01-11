@@ -1,10 +1,25 @@
-Message-Id: <45A6CC0F.A9E3.000B.0@novell.com>
-Date: Thu, 11 Jan 2007 11:18:13 -0700
-From: "Vijai Babu Madhavan" <mvijai@novell.com>
-Mime-Version: 1.0
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-Subject: [linux-lvm] [RFC] Multiple Snapshots - Manageability problem
+Received: from mx2.redhat.com (mx2.redhat.com [10.255.15.25])
+	by int-mx2.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l0BJGTbx023437
+	for <linux-lvm@redhat.com>; Thu, 11 Jan 2007 14:16:29 -0500
+Received: from tungsten.msp.technicality.org (tungsten.msp.technicality.org
+	[216.250.164.46])
+	by mx2.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
+	l0BJGRne032691
+	for <linux-lvm@redhat.com>; Thu, 11 Jan 2007 14:16:27 -0500
+Received: from tungsten.msp.technicality.org (tungsten.msp.technicality.org
+	[216.250.164.46])
+	by tungsten.msp.technicality.org (8.13.4/8.13.4/Debian-3sarge3) with
+	ESMTP id l0BJGHJB000531
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NOT)
+	for <linux-lvm@redhat.com>; Thu, 11 Jan 2007 13:16:18 -0600
+Date: Thu, 11 Jan 2007 13:16:17 -0600 (CST)
+From: Nate Carlson <natecars@natecarlson.com>
+Subject: Re: [linux-lvm] Combination of clvm and non-cluster?
+In-Reply-To: <20070111172004.GF21980@agk.surrey.redhat.com>
+Message-ID: <Pine.LNX.4.63.0701111316090.28722@tungsten.msp.technicality.org>
+References: <Pine.LNX.4.63.0701111112520.28722@tungsten.msp.technicality.org>
+	<20070111172004.GF21980@agk.surrey.redhat.com>
+MIME-Version: 1.0
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -15,43 +30,27 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: evms-devel@lists.sourceforge.net, dm-devel@redhat.com, linux-lvm@redhat.com
+Content-Type: TEXT/PLAIN; charset="us-ascii"; format="flowed"
+Content-Transfer-Encoding: 7bit
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-Hi,
+On Thu, 11 Jan 2007, Alasdair G Kergon wrote:
+> Clustering is a volume group property.
+>  vgchange -c
+>
+> Can't mix local and clustered volumes in the same VG.
+>
+> Best to use version 2.02.17 with built-in clustered locking
+> (locking type 3).
+>
+> New config parameters
+>  fallback_to_clustered_locking
+>  fallback_to_local_locking
+> (see example.conf, but default settings are normally OK)
 
-The problem of DM snapshots with multiple snapshots have been discussed 
-in the lists quiet a bit (Most recently @ 
-https://www.redhat.com/archives/dm-devel/2006-October/msg00034.html).
+I will experiment with this -- thanks!
 
-We are currently in the process of building a DM snapshot target that scales 
-well with many snapshots (so that the changed blocks don't get copied to each 
-snapshot). In this process, I would also like to validate an assumption.
-
-Today, when a single snapshot gets created, a new cow device of a given size 
-is also created. IMO, there are two problems with this approach:
-
-a) It is difficult to predict the size of the cow device, which requires a prediction 
-of the number of writes would go into the origin volume during the snapshot 
-life cycle. It is difficult to get this prediction right, as very high value reduces 
-utilization and low value increases the chances of snapshot becoming full.
-
-b) A new cow device needs to be created every time.
-
-This really gets messy and creates a management problem once many 
-snapshots of a given origin are created, and gets worse with multiple origins.
-
-I am thinking, having a single device that would hold the cow blocks of any 
-number of snapshots of a given origin (or more) would help solve this issue 
-(Apart from this, having a single device helps share the cow blocks among 
-snapshots very effectively in a variety of scenarios).
-
-But, it does require that LVM and EVMS be changed to suit this model and 
-also makes the snapshot target quiet complex.
-
-I would like to receive some comments about what users, developers 
-and others think about this.
-
-Thanks,
-Vijai
-P.S:- BTW, apologizes for cross posting.
+------------------------------------------------------------------------
+| nate carlson | natecars@natecarlson.com | http://www.natecarlson.com |
+|       depriving some poor village of its idiot since 1981            |
+------------------------------------------------------------------------
