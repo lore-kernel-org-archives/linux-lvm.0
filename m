@@ -1,25 +1,14 @@
-Received: from mx2.redhat.com (mx2.redhat.com [10.255.15.25])
-	by int-mx2.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l0BJGTbx023437
-	for <linux-lvm@redhat.com>; Thu, 11 Jan 2007 14:16:29 -0500
-Received: from tungsten.msp.technicality.org (tungsten.msp.technicality.org
-	[216.250.164.46])
-	by mx2.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
-	l0BJGRne032691
-	for <linux-lvm@redhat.com>; Thu, 11 Jan 2007 14:16:27 -0500
-Received: from tungsten.msp.technicality.org (tungsten.msp.technicality.org
-	[216.250.164.46])
-	by tungsten.msp.technicality.org (8.13.4/8.13.4/Debian-3sarge3) with
-	ESMTP id l0BJGHJB000531
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NOT)
-	for <linux-lvm@redhat.com>; Thu, 11 Jan 2007 13:16:18 -0600
-Date: Thu, 11 Jan 2007 13:16:17 -0600 (CST)
-From: Nate Carlson <natecars@natecarlson.com>
-Subject: Re: [linux-lvm] Combination of clvm and non-cluster?
-In-Reply-To: <20070111172004.GF21980@agk.surrey.redhat.com>
-Message-ID: <Pine.LNX.4.63.0701111316090.28722@tungsten.msp.technicality.org>
-References: <Pine.LNX.4.63.0701111112520.28722@tungsten.msp.technicality.org>
-	<20070111172004.GF21980@agk.surrey.redhat.com>
-MIME-Version: 1.0
+Message-Id: <45A75F5B.A9E3.000B.0@novell.com>
+Date: Thu, 11 Jan 2007 21:46:42 -0700
+From: "Vijai Babu Madhavan" <mvijai@novell.com>
+References: <45A6CC0F.A9E3.000B.0@novell.com>
+	<500DD6DE2DFA8E40A33E5898D9471B97016D46BB@ASHEVS006.mcilink.com>
+In-Reply-To: <500DD6DE2DFA8E40A33E5898D9471B97016D46BB@ASHEVS006.mcilink.com>
+Mime-Version: 1.0
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+Subject: [linux-lvm] RE: [dm-devel] [RFC] Multiple Snapshots - Manageability
+	problem
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -30,27 +19,104 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"; format="flowed"
-Content-Transfer-Encoding: 7bit
-To: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="us-ascii"
+To: evms-devel@lists.sourceforge.net, device-mapper development <dm-devel@redhat.com>, linux-lvm@redhat.com
 
-On Thu, 11 Jan 2007, Alasdair G Kergon wrote:
-> Clustering is a volume group property.
->  vgchange -c
->
-> Can't mix local and clustered volumes in the same VG.
->
-> Best to use version 2.02.17 with built-in clustered locking
-> (locking type 3).
->
-> New config parameters
->  fallback_to_clustered_locking
->  fallback_to_local_locking
-> (see example.conf, but default settings are normally OK)
+Hi Chris,
 
-I will experiment with this -- thanks!
+Thanks for the response. I am trying to keep my mails short as I 
+believe the lack of responses to my mails are probably due to the 
+fact that they are long, but its kinda difficult to keep them small 
+and still convey the various aspects. :)
 
-------------------------------------------------------------------------
-| nate carlson | natecars@natecarlson.com | http://www.natecarlson.com |
-|       depriving some poor village of its idiot since 1981            |
-------------------------------------------------------------------------
+>>> On 1/12/2007 at 3:04 AM, "Wilson, Christopher J"
+<chris.j.wilson@verizonbusiness.com> wrote:
+> I haven't read through all of these options yet (but I will).  I will
+> say that synthesizing all your cow objects into one pool will be
+> difficult.  You're going to have issues with garbage collection of old
+> copies and may have to build in some scavenge or compress functions
+> which will take system resources.  From my experience with disk based
+> de-duplication technologies you're heading down a hole which can be a
+> dark place.  There are performance issues and maintaining all those
+> pointers is problematic.  The virtual pool sounds good, and works very
+> will for primary storage functions (3PAR) but in practice for backup
+> applications with virtual pools for deduplication it's not been so hot.
+
+I completely agree that its not going to be easy. But, I guess some price 
+needs to be paid to get the benefits. If snapshots could be implemented 
+at the file system level, we do not necessarily need to redo lot of these, 
+but building snapshot functionality into the file system itself comes with 
+the obvious drawback. If only we could build some framework at the 
+file system layer, but some thing that is not tied to each file system would 
+be good. I have not had a chance to spend time in this space yet, do others
+have any ideas in this space?
+
+> I'm not clear what the issue is with maintaining multiple cow snapshots.
+> Just exactly how many are users asking for?  Keeping more than a few cow
+> snaps online is not using the function for what it was meant for.  COW
+> technology is for immediate rollback (to me) and not for long term
+> backup images.  
+
+From what we see from the users/IT admins, I see two common uses of 
+snapshots.
+
+a) Snapshots for backups
+b) Snapshots as backups
+
+In the first case, snapshots are obtained to avoid the open file errors, etc
+and keeping few snapshots online is more than sufficient.
+
+But, increasingly, we see lot of admins trying to deploy D2D2T 
+(Disk->Disk->Tape), to avoid the many problems associated with the tape 
+backups. And, Snapshots are one of the very efficient way of keeping the 
+disk backups to protect against logical failures (of course not for hardware 
+failures).
+
+Hence, the second case is becoming a strong use-case, as admins want to 
+take 3-4 snapshots a day and recycle them after a week or two weeks. 
+Based on the frequency and the time a snapshot is kept alive, number of 
+snapshots easily get into double digit, in some cases, triple digit.
+
+With the current DM snapshot code, with couple of snapshots, the system 
+comes down rapidly (The throughput numbers in the earlier mail thread and 
+the complaints from users reported in the list indicate this).
+
+As we fix this multiple snapshots issue, it also makes sense to fix the multiple
+snapshots management issue using a single cow device. Besides, using a single
+cow device provides a very compelling efficient way to share the blocks among 
+snapshots. This also enables the snapshots to be managed independently.
+
+> Sizing is an issue that will not go away and is not
+> resolvable in any low level OS code, this is a business/user issue.
+> Most customers don't even know how much data they're going to have much
+> less what their average write rates are, and I don't envision a cow pool
+> as solving the sizing issue.
+
+I totally agree. I guess most admins today are loading their servers around 60-70%
+utilization to avoid these space issues. While this works ok for primary servers, 
+it is impractical to waste so much space in each snapshot, especially with multiple
+snapshots. I think having a single cow device for each (origin), preferably multiple
+origins sharing a single cow device would help alleviate this.
+ 
+> If I had my way I'd rather see energy put into cow technology for use as
+> a disk cache for backup applications and tighter integration with those
+> apps.  Better still would be for interfaces from business level
+> applications (Oracle, MySQL, etc) to quiece IO, flush buffers, and take
+> a consistent copy of the application, state and all.  Putting together
+> an application level copy on hardware, being able to move that through a
+> tighter workflow to backup media through a common API would be my
+> preference instead of having each user create their own individual
+> "glue" code.  If you look into SNIA's SMI-S (Storage Management API)
+> copy services package there may already be a template for this.  I'd say
+> at least that supporting SMI-S Copy Services through that API is
+> desirable because a lot of the SRM application today are on their way to
+> leveraging that code.   
+
+I completely agree. Application co-ordinated snapshot facility is really 
+important and would really help lot of application developers and admins.
+It is going to be interesting and challenging to build a framework that would 
+satisfy diverse application needs. At Novell, we also have some interest in this
+space, and we are going through some internal processes and I believe we would
+come out some time soon.
+
+Vijai
