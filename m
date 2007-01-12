@@ -1,28 +1,10 @@
-Received: from mx2.redhat.com (mx2.redhat.com [10.255.15.25])
-	by int-mx2.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l0DI05HU003483
-	for <linux-lvm@redhat.com>; Sat, 13 Jan 2007 13:00:05 -0500
-Received: from ciao.gmane.org (main.gmane.org [80.91.229.2])
-	by mx2.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
-	l0DI04vA014612
-	for <linux-lvm@redhat.com>; Sat, 13 Jan 2007 13:00:04 -0500
-Received: from root by ciao.gmane.org with local (Exim 4.43)
-	id 1H5nAg-0005mk-DG
-	for linux-lvm@redhat.com; Sat, 13 Jan 2007 19:00:02 +0100
-Received: from adsl-67-117-144-57.dsl.snfc21.pacbell.net ([67.117.144.57])
-	by main.gmane.org with esmtp (Gmexim 0.1 (Debian))
-	id 1AlnuQ-0007hv-00
-	for <linux-lvm@redhat.com>; Sat, 13 Jan 2007 19:00:02 +0100
-Received: from jon by adsl-67-117-144-57.dsl.snfc21.pacbell.net with local
-	(Gmexim 0.1 (Debian)) id 1AlnuQ-0007hv-00
-	for <linux-lvm@redhat.com>; Sat, 13 Jan 2007 19:00:02 +0100
-From: Jonathan Biggar <jon@levanta.com>
-Message-ID: <eob6bh$89j$1@sea.gmane.org>
-References: <87hcuu9902.fsf@pumba.bayour.com>
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
-In-Reply-To: <87hcuu9902.fsf@pumba.bayour.com>
-Sender: news <news@sea.gmane.org>
-Subject: [linux-lvm] Re: Can't pvcreate /dev/sda
+From: "Wilson, Christopher J" <chris.j.wilson@verizonbusiness.com>
+In-reply-to: <45A766F3.A9E3.000B.0@novell.com>
+Message-id: <500DD6DE2DFA8E40A33E5898D9471B97016D4D39@ASHEVS006.mcilink.com>
+MIME-version: 1.0
+Content-class: urn:content-classes:message
+Content-Transfer-Encoding: quoted-printable
+Subject: [linux-lvm] RE: [dm-devel] [RFC] Out of order snapshot deletion
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -32,31 +14,111 @@ List-Post: <mailto:linux-lvm@redhat.com>
 List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
-Date: Sat, 13 Jan 2007 18:00:07 -0000
+Date: Fri, 12 Jan 2007 18:51:24 -0000
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: linux-lvm@redhat.com
+Content-Type: text/plain; charset="iso-8859-1"
+To: device-mapper development <dm-devel@redhat.com>, evms-devel@lists.sourceforge.net, linux-lvm@redhat.com
 
-Turbo Fredriksson wrote:
-> This is very weird!
-> 
-> ----- s n i p -----
-> root@pegasos:~# pvscan
->   PV /dev/hdb   VG MovieShare   lvm2 [74.53 GB / 74.53 GB free]
->   PV /dev/sdb                   lvm2 [372.61 GB]
->   Total: 2 [447.14 GB] / in use: 1 [74.53 GB] / in no VG: 1 [372.61 GB]
-> root@pegasos:~# pvcreate /dev/sda
->   Physical volume "/dev/sda" successfully created
-> root@pegasos:~# pvscan
->   PV /dev/hdb   VG MovieShare   lvm2 [74.53 GB / 74.53 GB free]
->   PV /dev/sdb                   lvm2 [372.61 GB]
->   Total: 2 [447.14 GB] / in use: 1 [74.53 GB] / in no VG: 1 [372.61 GB]
-> ----- s n i p -----
-> 
-> Any ideas?
+My opinion is that "snapshots" should be less persistent than full clone
+copies.  Longer term retention should move to full clone then you don't
+have the snapshot overhead you've raised on your other thread.  I can't
+imagine that there are so many administrators out there wanting to
+maintain week old snapshots.  Those older ones would most likely have
+been mounted somewhere and spooled to tape.  I could be way off base but
+I'd not feel so confident in a week old cow as I would with a week old
+clone.
 
-Check the filter in lvm.conf to see if /dev/sdb is excluded from scanning?
+We here have been tossing around the idea of treating snapshot (or full
+clone) as backup media.  Media that would contain a barcode and which
+could be migrated to physical tape.  Currently this is the realm of VTL.
+VTL is a copy of your data written out in a sequential manner, if you
+could somehow create disk media via snapshot that the disk caches
+(Falconstor, Sepaton) use then you could get the long sequential
+read/write overhead out of the backup application and the host.
 
--- 
-Jonathan Biggar
-jon@levanta.com
+Our issue with snapshot, as I mentioned on the other thread, is that
+there are no close ties to the upper level applications, this includes
+backup software like NetBackup and Legato.  NetBackup has the "virtual
+backup" piece but I've not really seen it implemented.  Ideally an
+interface for a database application to take a snapshot of its data and
+call it barcode xxxx03 could then be imported into your backup
+application as a virtual tape xxxx03.  That "tape" could be cloned via
+NetBackup or disk cache software to real tape with barcode xxxx03 for
+off site storage (through an encryption device of course).  I know there
+are data alignment issues that exist here with data sizes and physical
+tape sizes but we believe it's an avenue worth exploring.
+
+There are several opportunities to better admin quality of life here.
+One is that backup administrators would be able to continually manage
+their media in what they know, tapes with barcodes they can touch and
+feel.  The other is DBA's could maintain a list of snapshots through
+something other than "glue code".  It would integrate into the processes
+that exist around data protection.
+
+Christopher Wilson
+Storage Architect
+Verizon Business
+IT Solutions - IP Application Hosting
+240 264 4136
+vnet: 364 4136
+
+=20
+
+-----Original Message-----
+From: dm-devel-bounces@redhat.com [mailto:dm-devel-bounces@redhat.com]
+On Behalf Of Vijai Babu Madhavan
+Sent: Friday, January 12, 2007 12:19 AM
+To: evms-devel@lists.sourceforge.net; dm-devel@redhat.com;
+linux-lvm@redhat.com
+Subject: [dm-devel] [RFC] Out of order snapshot deletion
+
+Hi,
+
+I thought I would bring this topic in a separate thread so that it can
+be discussed independently.
+
+As users start taking a bunch of snapshots and keep them as backups, we
+see the following use pattern when the snapshots get recycled.
+
+Different snapshots have different life cycle. When some one decides to
+keep 'x' snapshots, at the recycle phase, the least recent does not
+necessarily get deleted.
+
+As users want to keep the daily snapshots for a much longer period than
+the bi-hourly snapshots. In the same way, weekly snapshots live longer
+than daily snapshots.
+
+I think this is pretty much similar to the way the current backup tapes
+are managed.
+
+I want to know if this is the kind of use case that users are having or
+the developers are thinking.
+
+The reason why I am posting this is that this out of snapshot deletion
+scenario, poses some interesting challenges in the design on the
+solution of multiple snapshots that share blocks with each other, as it
+is a lot easier to design a solution where the least recent gets deleted
+always.
+
+Vijai
+
+
+--
+dm-devel mailing list
+dm-devel@redhat.com
+https://www.redhat.com/mailman/listinfo/dm-devel
+
+______________________________________________________________________
+This e-mail has been scanned by Verizon Managed Email Content Service,
+using Skeptic(tm) technology powered by MessageLabs. For more
+information on Verizon Managed Email Content Service, visit
+http://www.verizonbusiness.com.
+______________________________________________________________________
+
+
+______________________________________________________________________
+This e-mail has been scanned by Verizon Managed Email Content Service, usin=
+g Skeptic=EF=BF=BD technology powered by MessageLabs. For more information =
+on Verizon Managed Email Content Service, visit http://www.verizonbusiness.=
+com.
+______________________________________________________________________
