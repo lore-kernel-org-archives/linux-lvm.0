@@ -1,23 +1,12 @@
-Received: from mx2.redhat.com (mx2.redhat.com [10.255.15.25])
-	by int-mx2.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l0CIoXfR014187
-	for <linux-lvm@redhat.com>; Fri, 12 Jan 2007 13:50:33 -0500
-Received: from nf-out-0910.google.com (nf-out-0910.google.com [64.233.182.187])
-	by mx2.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
-	l0CIoLBg032645
-	for <linux-lvm@redhat.com>; Fri, 12 Jan 2007 13:50:33 -0500
-Received: by nf-out-0910.google.com with SMTP id k26so1393342nfc
-	for <linux-lvm@redhat.com>; Fri, 12 Jan 2007 10:50:32 -0800 (PST)
-Message-ID: <aec22fc50701121044x403ed456xdd34f1e696d5cff4@mail.gmail.com>
-Date: Fri, 12 Jan 2007 21:44:27 +0300
-From: `VL <vl.homutov@gmail.com>
-Subject: Re: [linux-lvm] vgscan -- ERROR "vg_read_with_pv_and_lv(): current
-	PV" can't get data of volume group
-In-Reply-To: <7682E579-E6B5-41E0-BC72-659301959512@sannet.ne.jp>
+Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l0DDaSJe004805
+	for <linux-lvm@redhat.com>; Sat, 13 Jan 2007 08:36:28 -0500
+From: Turbo Fredriksson <turbo@bayour.com>
+Date: Sat, 13 Jan 2007 14:37:57 +0100
+Message-ID: <87lkk79he2.fsf@pumba.bayour.com>
 MIME-Version: 1.0
-Content-Type: multipart/alternative; 
-	boundary="----=_Part_38786_16763517.1168627467105"
-References: <aec22fc50701091026i3b66ec18jbd18760e59164622@mail.gmail.com>
-	<7682E579-E6B5-41E0-BC72-659301959512@sannet.ne.jp>
+Sender: Turbo Fredriksson <turbo@pumba.redhat.com>
+Subject: [linux-lvm] Resetup of my LVM device
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -28,49 +17,69 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: LVM general discussion and development <linux-lvm@redhat.com>
-
-------=_Part_38786_16763517.1168627467105
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
+To: linux-lvm@sistina.com
 
-Thanks for everyone!
+A couple of months ago I setup an LVM2 device conisting
+of a 400Gb SATA and a 80Gb PATA...
+After a a couple of weeks, the SATA disk crashed (badly).
+I managed to get it removed from the LVM2 setup, but now
+I got the (warranty) replacement...
 
-I`ve got some ideas that helped me to get data back. Here is summary, that
-someone maybe find usefull:
+I've been trying to get the data on the PATA disk so that
+I can recreate the whole thing, but I'm not shure how to
+do that (I don't have much experience with LVM...
 
-volume group lost one of it`s physical volumes and refused to mount.
-So, i had to create new physical volume with same metadata (UUID and others)
-as old one,
-Metadata was saved in backup.The only problem i had that new harddisk i had
-was not hdh (as one those
-at volume group was), but hdb. Thus, vgcfgrestore refused to work, telling
-that there are no such drive
-in volume group. So, i edited manually binary backup file of lvm and changed
-just one letter in the name of disk.
-it worked. Also,i had to set same UID for new physical volume as it was for
-old drive. I achieved this by
-installing lvm2 tools and using pvcreate from there. After all those
-manipulations, vgscan reported about
-inactive volume group, which was successfully activated.
+Now do I recreate the whole device with the two new 400Gb
+SATA disks and move the data I already have on the PATA disk
+to this new LVM2 disk/device?
 
-P.S. The most funny part of all this story is that there was 23 megs of data
-on that group. Person, who
-asked me to help with maintance, remembered that there was some sort of
-'cleaning' on that server. =)
 
-P.P.S. Thanks for your job, LVM people! LVM rules.
+I'm running PPC Ubuntu dapper, and this is (if it matters/helps)
+what /etc/lvm/archive/* say:
 
-------=_Part_38786_16763517.1168627467105
-Content-Type: text/html; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
+----- s n i p -----
+root@pegasos:/etc/lvm# grep ^description archive/*
+archive/MovieShare_00000.vg:description = "Created *before* executing 'vgcreate MovieShare /dev/sda'"
+archive/MovieShare_00001.vg:description = "Created *before* executing 'lvcreate -L300G -nMovieShare MovieShare'"
+archive/MovieShare_00002.vg:description = "Created *before* executing 'lvremove /dev/MovieShare/MovieShare'"
+archive/MovieShare_00003.vg:description = "Created *before* executing 'vgremove MovieShare'"
+archive/MovieShare_00004.vg:description = "Created *before* executing 'vgcreate MovieShare /dev/sda'"
+archive/MovieShare_00005.vg:description = "Created *before* executing 'lvcreate -l 95388 -ndisk MovieShare'"
+archive/MovieShare_00006.vg:description = "Created *before* executing 'vgextend MovieShare /dev/hdb'"
+archive/MovieShare_00007.vg:description = "Created *before* executing 'lvextend -l +19079 /dev/MovieShare/disk /dev/hdb'"
+archive/MovieShare_00008.vg:description = "Created *before* executing 'vgreduce --removemissing MovieShare'"
+----- s n i p -----
 
-Thanks for everyone!<br><br>I`ve got some ideas that helped me to get data back. Here is summary, that someone maybe find usefull:<br><br>volume group lost one of it`s physical volumes and refused to mount. <br>So, i had to create new physical volume with same metadata (UUID and others) as old one,
-<br>Metadata was saved in backup.The only problem i had that new harddisk i had was not hdh (as one those<br>at volume group was), but hdb. Thus, vgcfgrestore refused to work, telling that there are no such drive<br>in volume group. So, i edited manually binary backup file of lvm and changed just one letter in the name of disk.
-<br>it worked. Also,i had to set same UID for new physical volume as it was for old drive. I achieved this by<br>installing lvm2 tools and using pvcreate from there. After all those manipulations, vgscan reported about<br>
-inactive volume group, which was successfully activated.<br><br>P.S. The most funny part of all this story is that there was 23 megs of data on that group. Person, who<br>asked me to help with maintance, remembered that there was some sort of &#39;cleaning&#39; on that server. =)
-<br><br>P.P.S. Thanks for your job, LVM people! LVM rules.<br>
+I guess it's >= 4 that matters (seems like I didn't create it
+correctly the 'first time' :).
 
-------=_Part_38786_16763517.1168627467105--
+This is what 'backup/MovieShare' contains (empty lines trimmed):
+
+----- s n i p -----
+# Generated by LVM2: Sun Dec 17 14:26:19 2006
+contents = "Text Format Volume Group"
+version = 1
+description = "Created *after* executing 'vgreduce --removemissing MovieShare'"
+creation_host = "pegasos"       # Linux pegasos 2.6.15-27-powerpc #1 Sat Sep 16 01:55:03 UTC 2006 ppc
+creation_time = 1166361979      # Sun Dec 17 14:26:19 2006
+MovieShare {
+        id = "a6WfmR-Iuyt-jI1n-ii4E-CoUf-iLQ6-1RHFGC"
+        seqno = 5
+        status = ["RESIZEABLE", "READ", "WRITE"]
+        extent_size = 8192              # 4 Megabytes
+        max_lv = 0
+        max_pv = 0
+        physical_volumes {
+                pv0 {
+                        id = "WA7SHt-AI3U-voLG-6IwU-z8qE-FFrE-fWMIbn"
+                        device = "/dev/hdb"     # Hint only
+
+                        status = ["ALLOCATABLE"]
+                        pe_start = 384
+                        pe_count = 19079        # 74.5273 Gigabytes
+                }
+        }
+}
+----- s n i p -----
