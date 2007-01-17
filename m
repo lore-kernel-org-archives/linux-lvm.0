@@ -1,18 +1,19 @@
-Received: from agk.surrey.redhat.com (agk.surrey.redhat.com [172.16.10.74])
-	by pobox.surrey.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
-	l0GNDaxS002968
-	for <linux-lvm@redhat.com>; Tue, 16 Jan 2007 23:13:36 GMT
-Received: from agk by agk.surrey.redhat.com with local (Exim 4.34)
-	id 1H6xUm-00055S-SF
-	for linux-lvm@redhat.com; Tue, 16 Jan 2007 23:13:36 +0000
-Date: Tue, 16 Jan 2007 23:13:36 +0000
-From: Alasdair G Kergon <agk@redhat.com>
-Subject: Re: [linux-lvm] MAX LV
-Message-ID: <20070116231336.GR21980@agk.surrey.redhat.com>
-References: <Pine.LNX.4.64.0701161644370.22063@rray.drdc.mstc.ms.gov>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <Pine.LNX.4.64.0701161644370.22063@rray.drdc.mstc.ms.gov>
+Received: from mx2.redhat.com (mx2.redhat.com [10.255.15.25])
+	by int-mx2.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l0H9GDpT001021
+	for <linux-lvm@redhat.com>; Wed, 17 Jan 2007 04:16:13 -0500
+Received: from smtp5-g19.free.fr (smtp5-g19.free.fr [212.27.42.35])
+	by mx2.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
+	l0H9GBJw009833
+	for <linux-lvm@redhat.com>; Wed, 17 Jan 2007 04:16:12 -0500
+Received: from imp1-g19.free.fr (imp1-g19.free.fr [212.27.42.1])
+	by smtp5-g19.free.fr (Postfix) with ESMTP id 6AC5C27A20
+	for <linux-lvm@redhat.com>; Wed, 17 Jan 2007 10:16:11 +0100 (CET)
+Message-ID: <1169025371.45ade95b2ffe7@imp.free.fr>
+Date: Wed, 17 Jan 2007 10:16:11 +0100
+From: Georges Giralt <georges.giralt@free.fr>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Subject: [linux-lvm] How big must be the log partition on a mirrored VG ?
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -24,17 +25,17 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: LVM general discussion and development <linux-lvm@redhat.com>
+To: linux-lvm@redhat.com
 
-On Tue, Jan 16, 2007 at 04:49:26PM -0600, Richard Ray wrote:
-> Using vgdisplay shows MAX LV 0 on volume groups.
-> I understand that this is the maximum number of logical volumes for this 
-> volume group.
-> Does 0 mean unlimited?
-
-On LVM2, yes - see vgcreate -l.
-
-Alasdair
--- 
-agk@redhat.com
+Hi !
+I plan to improve security on my system by setting up mirror on my Fedora Core 6
+install (Kernel 2.6.18-XXX) X86-64 platform.
+Ive the main vg used for /, /usr/var, etccc for which I would like to use
+mirorring. For now it uses only one PV residing on a 55 GB hda partition.
+I will add a 55 GB partiton on hdb to hold the second copy of the mirror, and
+another partiton on sda (SATA disk) to hold the logs.
+Question : How big should be this partition ? Does it nedd to be 55GB ? Could it
+be smaller ? Way smaller ?
+Thanks a lot for yoor help !
+Regards
+--
