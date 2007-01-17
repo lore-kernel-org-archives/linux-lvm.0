@@ -1,20 +1,21 @@
 Received: from mx2.redhat.com (mx2.redhat.com [10.255.15.25])
-	by int-mx2.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l0H9GDpT001021
-	for <linux-lvm@redhat.com>; Wed, 17 Jan 2007 04:16:13 -0500
-Received: from smtp5-g19.free.fr (smtp5-g19.free.fr [212.27.42.35])
+	by int-mx2.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l0HCTfZo016151
+	for <linux-lvm@redhat.com>; Wed, 17 Jan 2007 07:29:41 -0500
+Received: from aa013msr.fastwebnet.it (aa013msr.fastwebnet.it [85.18.95.73])
 	by mx2.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
-	l0H9GBJw009833
-	for <linux-lvm@redhat.com>; Wed, 17 Jan 2007 04:16:12 -0500
-Received: from imp1-g19.free.fr (imp1-g19.free.fr [212.27.42.1])
-	by smtp5-g19.free.fr (Postfix) with ESMTP id 6AC5C27A20
-	for <linux-lvm@redhat.com>; Wed, 17 Jan 2007 10:16:11 +0100 (CET)
-Message-ID: <1169025371.45ade95b2ffe7@imp.free.fr>
-Date: Wed, 17 Jan 2007 10:16:11 +0100
-From: Georges Giralt <georges.giralt@free.fr>
+	l0HCTd9C024967
+	for <linux-lvm@redhat.com>; Wed, 17 Jan 2007 07:29:39 -0500
+Received: from pr004msr (10.31.174.233) by aa013msr.fastwebnet.it (7.3.105.6)
+	id 45A526630058DD65 for linux-lvm@redhat.com;
+	Wed, 17 Jan 2007 13:29:32 +0100
+Message-ID: <24326319.2035461169036972730.JavaMail.defaultUser@defaultHost>
+Date: Wed, 17 Jan 2007 13:29:32 +0100 (CET)
+From: <antonio_cecere@fastwebnet.it>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: [linux-lvm] How big must be the log partition on a mirrored VG ?
-Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] (no subject)
+Reply-To: antonio_cecere@fastwebnet.it,
+	LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -27,15 +28,44 @@ List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@redhat.com
 
-Hi !
-I plan to improve security on my system by setting up mirror on my Fedora Core 6
-install (Kernel 2.6.18-XXX) X86-64 platform.
-Ive the main vg used for /, /usr/var, etccc for which I would like to use
-mirorring. For now it uses only one PV residing on a 55 GB hda partition.
-I will add a 55 GB partiton on hdb to hold the second copy of the mirror, and
-another partiton on sda (SATA disk) to hold the logs.
-Question : How big should be this partition ? Does it nedd to be 55GB ? Could it
-be smaller ? Way smaller ?
-Thanks a lot for yoor help !
-Regards
---
+Hi list,
+
+I have a motherboard Intel multicore i686 on fc6Xen. I would want to mount a 
+SCSI HDD identical to mine. fdisk -l message:
+
+[root@localhost ~]# fdisk -l
+
+Disk /dev/sda: 80.0 GB, 80026361856 bytes
+255 heads, 63 sectors/track, 9729 cylinders
+Units = cylinders of 16065 * 512 = 8225280 bytes
+
+   Device Boot      Start         End      Blocks   Id  System
+/dev/sda1   *           1          13      104391   83  Linux
+/dev/sda2              14        9729    78043770   8e  Linux LVM
+
+Disk /dev/sdb: 80.0 GB, 80026361856 bytes
+255 heads, 63 sectors/track, 9729 cylinders
+Units = cylinders of 16065 * 512 = 8225280 bytes
+
+   Device Boot      Start         End      Blocks   Id  System
+/dev/sdb1   *           1          13      104391   83  Linux
+/dev/sdb2              14        9729    78043770   8e  Linux LVM
+[root@localhost ~]# 
+
+What I must write in order to mount the partition sdb2 in /etc/fstab? This is 
+the mine /etc/fstab whit the line that I have added, but doesn't work.
+
+/dev/VolGroup00/LogVol00 /                       ext3    defaults        1 1
+LABEL=/boot             /boot                   ext3    defaults        1 2
+devpts                  /dev/pts                devpts  gid=5,mode=620  0 0
+tmpfs                   /dev/shm                tmpfs   defaults        0 0
+proc                    /proc                   proc    defaults        0 0
+sysfs                   /sys                    sysfs   defaults        0 0
+/dev/VolGroup00/LogVol01 swap                    swap    defaults        0 0
+#This
+/dev/sdb2		/mnt/Stefano		ext3 	defaults,user,rw,exec	0 0
+
+Any idea?
+
+Thanks
+Antonio
