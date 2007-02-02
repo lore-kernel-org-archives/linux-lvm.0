@@ -1,18 +1,22 @@
-Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l12Fi8iF012337
-	for <linux-lvm@redhat.com>; Fri, 2 Feb 2007 10:44:09 -0500
-Received: from ahlnx01.ah.org (host67.ah.org [66.60.186.67])
-	by mx1.redhat.com (8.13.1/8.13.1) with ESMTP id l12Fi2Jm007292
-	for <linux-lvm@redhat.com>; Fri, 2 Feb 2007 10:44:03 -0500
-Received: from [10.35.1.204] (helo=C35ISD02)
-	by ahlnx01.ah.org with smtp (Exim 4.50) id 1HD0Zw-0007Cm-0F
-	for linux-lvm@redhat.com; Fri, 02 Feb 2007 07:43:56 -0800
+Received: from mx2.redhat.com (mx2.redhat.com [10.255.15.25])
+	by int-mx2.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l12GQ7XP001989
+	for <linux-lvm@redhat.com>; Fri, 2 Feb 2007 11:26:08 -0500
+Received: from mail4.sv.ziprealty.com (mail4.ziprealty.com [66.77.108.26])
+	by mx2.redhat.com (8.13.1/8.13.1) with ESMTP id l12GQ2St029988
+	for <linux-lvm@redhat.com>; Fri, 2 Feb 2007 11:26:02 -0500
+Received: from hqmail1.ziprealty.corp (netscaler-map.sv.ziprealty.com
+	[10.1.3.182])
+	by mail4.sv.ziprealty.com (8.12.11/8.12.11) with ESMTP id
+	l12GQ0Z0011841
+	for <linux-lvm@redhat.com>; Fri, 2 Feb 2007 08:26:00 -0800
+Subject: Re: [linux-lvm] LVM changing bios from legacy/IDE to AHCI/Sata
+From: Michael Davis <mdavis@ziprealty.com>
+In-Reply-To: <45C2EB9A.81EB.0099.0@charter.net>
+References: <45C2EB9A.81EB.0099.0@charter.net>
+Date: Fri, 02 Feb 2007 08:25:59 -0800
+Message-Id: <1170433559.18411.9.camel@beethoven.hq.office.ziprealty.com>
 Mime-Version: 1.0
-Date: Fri, 2 Feb 2007 07:43:22 -0800
-Message-ID: <45C2EB9A.81EB.0099.0@charter.net>
-From: "Dwight Morgan" <dwightbulk@charter.net>
-Content-Type: multipart/alternative; boundary="____RUEFXQQNDBCYYCNYQFJH____"
-Subject: [linux-lvm] LVM changing bios from legacy/IDE to AHCI/Sata
+Content-Transfer-Encoding: 7bit
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -23,56 +27,36 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: linux-lvm@redhat.com
+Content-Type: text/plain; charset="us-ascii"
+To: LVM general discussion and development <linux-lvm@redhat.com>
+
+I just ran into this problem.  After trying a whole bunch of things
+(including importing/exporting) that didn't work, it turns out that all
+it took was adding the ahci driver to the initrd image (mkinitrd
+--preload ahci).
+
+  Michael
 
 
---____RUEFXQQNDBCYYCNYQFJH____
-Content-Type: text/plain; charset=iso-8859-15
-Content-Transfer-Encoding: quoted-printable
-Content-Disposition: inline; modification-date="Fri, 1 Feb 2007 23:43:22 -0800"
-
-I am running LVM on FC6 2.6.19 and would like to switch over from =
-Legacy/IDE in the intel 965 bios to AHCI/SATA.  Of course, as soon as I =
-change the bios setting fedora won't boot as it can't find any volumes.  I =
-can see how to export the LVM settings, change the text file from hda1 to =
-sda1, and restore it.  But I figure the odds of me screwing this up are =
-good, and I don't see a good recovery method.
-
-Any help on process/recovery?
-
-Thanks,
--Dwight
-
-PS.  Same drive, nothing changing other than a bios setting.
---____RUEFXQQNDBCYYCNYQFJH____
-Content-Type: multipart/related; boundary="____IHULEHMBQPPTCCFBNCEP____"
 
 
---____IHULEHMBQPPTCCFBNCEP____
-Content-Type: text/html; charset=iso-8859-15
-Content-Transfer-Encoding: quoted-printable
-Content-Disposition: inline; filename="Text.htm"; modification-date="Fri, 1
-	Feb 2007 23:43:22 -0800"
-
-<HTML><HEAD>
-<META http-equiv=3DContent-Type content=3D"text/html; charset=3Diso-8859-15=
-">
-<META content=3D"MSHTML 6.00.2900.3020" name=3DGENERATOR></HEAD>
-<BODY style=3D"MARGIN: 4px 4px 1px; FONT: 10pt Tahoma">
-<DIV>I am running LVM on FC6 2.6.19 and would like to switch over from =
-Legacy/IDE in the intel 965 bios to AHCI/SATA.&nbsp; Of course, as soon as =
-I change the bios setting fedora won't boot as it can't find any volumes.&n=
-bsp; I can see how to export the LVM settings, change the text file from =
-hda1 to sda1, and restore it.&nbsp; But I figure the odds of me screwing =
-this up are good, and I don't see a good recovery method.</DIV>
-<DIV>&nbsp;</DIV>
-<DIV>Any help on process/recovery?</DIV>
-<DIV>&nbsp;</DIV>
-<DIV>Thanks,</DIV>
-<DIV>-Dwight</DIV>
-<DIV>&nbsp;</DIV>
-<DIV>PS.&nbsp; Same drive, nothing changing other than a bios setting.</DIV=
-></BODY></HTML>
---____IHULEHMBQPPTCCFBNCEP____--
-
---____RUEFXQQNDBCYYCNYQFJH____--
+On Fri, 2007-02-02 at 07:43 -0800, Dwight Morgan wrote:
+> HTML document attachment (Text.htm)
+> I am running LVM on FC6 2.6.19 and would like to switch over from
+> Legacy/IDE in the intel 965 bios to AHCI/SATA.  Of course, as soon as
+> I change the bios setting fedora won't boot as it can't find any
+> volumes.  I can see how to export the LVM settings, change the text
+> file from hda1 to sda1, and restore it.  But I figure the odds of me
+> screwing this up are good, and I don't see a good recovery method.
+>  
+> Any help on process/recovery?
+>  
+> Thanks,
+> -Dwight
+>  
+> PS.  Same drive, nothing changing other than a bios setting.
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@redhat.com
+> https://www.redhat.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
