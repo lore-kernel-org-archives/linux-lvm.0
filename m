@@ -1,25 +1,14 @@
-Received: from mx2.redhat.com (mx2.redhat.com [10.255.15.25])
-	by int-mx2.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l15KbKU0012094
-	for <linux-lvm@redhat.com>; Mon, 5 Feb 2007 15:37:20 -0500
-Received: from mexforward.lss.emc.com (mexforward.lss.emc.com [128.222.32.20])
-	by mx2.redhat.com (8.13.1/8.13.1) with ESMTP id l15KbIq4019066
-	for <linux-lvm@redhat.com>; Mon, 5 Feb 2007 15:37:19 -0500
-Received: from mailhub.lss.emc.com (nirah.lss.emc.com [10.254.144.13])
-	by mexforward.lss.emc.com (Switch-3.1.8/Switch-3.1.7) with ESMTP id
-	l15KbDA1019540
-	for <linux-lvm@redhat.com>; Mon, 5 Feb 2007 15:37:13 -0500 (EST)
-Received: from corpussmtp3.corp.emc.com (corpussmtp3.corp.emc.com
-	[10.254.64.53])
-	by mailhub.lss.emc.com (Switch-3.1.8/Switch-3.1.7) with ESMTP id
-	l15KakHc022122
-	for <linux-lvm@redhat.com>; Mon, 5 Feb 2007 15:37:12 -0500 (EST)
-From: Lin_ChiiShing@emc.com
-Content-class: urn:content-classes:message
-MIME-Version: 1.0
-Date: Mon, 5 Feb 2007 15:37:09 -0500
-Message-ID: <97982DAF1EA1494DB6C65C2EEAA6296104FF4045@CORPUSMX40B.corp.emc.com>
+Received: from [192.168.50.23] (vpn-14-137.rdu.redhat.com [10.11.14.137])
+	by pobox.corp.redhat.com (8.13.1/8.12.8) with ESMTP id l16Dcwmx021384
+	for <linux-lvm@redhat.com>; Tue, 6 Feb 2007 08:38:59 -0500
+Mime-Version: 1.0 (Apple Message framework v624)
+In-Reply-To: <45C62BB0.6090004@free.fr>
+References: <45C62BB0.6090004@free.fr>
+Message-Id: <abae97f2062bff4699caa277e2faea30@redhat.com>
+From: Jonathan E Brassow <jbrassow@redhat.com>
+Subject: Re: [linux-lvm] replacing a failling disk on a mirrred VG.
+Date: Tue, 6 Feb 2007 07:40:03 -0600
 Content-Transfer-Encoding: 8bit
-Subject: [linux-lvm] Software versions for LVM2 mirroring
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -30,27 +19,50 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@redhat.com
+Content-Type: text/plain; charset="utf-8"; format="flowed"
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
+This one should be pretty easy...
 
-I am interested in looking at the LVM2 mirroring. My interpretation from
-reading the archived information
-is that this is still work in progress.
+Effectively, you want to keep the primary mirror devices, so do:
+lvconvert -m0 <vg/lv>
+to down convert them to linear devices.
 
-What are the recommended software versions that I need to install on my
-cluster systems
-in order to evaluate LVM2 mirroring ? My systems are running
-2.6.9-42.0.3 kernel.
+Then remove PV1 (vgreduce), add a new disk to your system, add it to 
+your vg (vgextend), and finally, up-convert the linear devices to 
+mirrors again:
+lvconvert -m1 <vg/lv>
 
-The CVS tag I used to checkout the source are:
+  brassow
 
-	cluster:		RHEL4U4	
-   	device-mapper	v1_02_14
-	LVM2		v2_02_18
+On Feb 4, 2007, at 12:53 PM, Georges Giralt wrote:
 
-Should I use other versions for LVM2 mirroring evaluation for now ?
-
-
-Thanks,
--chiishing
+> Hi !
+> I run A Fedora Core 6 box with
+> lvm> version
+>   LVM version:     2.02.17 (2006-12-14)
+>   Library version: 1.02.13 (2006-11-28)
+>   Driver version:  4.10.0
+> lvm>
+> on a 2.6.19 kernel.
+> My VG comprises 3PV  onto which I've spread 4 mirrored LVs.
+> PV 0 : LV1 mirror copy 0, LV2 mirror copy 0, lv3 mirror copy 0 and lv4 
+> mirror copy 0
+> PV 1 : LV1 mirror copy 1, LV2 mirror log, LV3 mirror log and LV4 
+> mirror copy 1
+> PV2 : LV1 mirror log, LV2 mirror copy 1 , LV3 mirror copy 1 and LV4 
+> mirror log.
+> I plan to replace (Smart signals a future failure) the PV #1.
+> Question : What is the best route to do this ? And is it feasible ?
+> Thanks a lot in advance for your answer !
+> -- 
+> Ce message est constitu� d'au moins 50 % d'�lectrons recycl�s.
+> S'il vous pla�t, aidez nous � conserver nos ressources,
+> recyclez vos �lectrons !
+>
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@redhat.com
+> https://www.redhat.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+>
