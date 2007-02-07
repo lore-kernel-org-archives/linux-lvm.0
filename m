@@ -1,24 +1,18 @@
-Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l16Hgr5o009942
-	for <linux-lvm@redhat.com>; Tue, 6 Feb 2007 12:42:53 -0500
-Received: from mail.myself.gen.nz
-	(Debian-exim@203-97-171-123.cable.telstraclear.net [203.97.171.123])
-	by mx1.redhat.com (8.13.1/8.13.1) with ESMTP id l16Hgold028380
-	for <linux-lvm@redhat.com>; Tue, 6 Feb 2007 12:42:52 -0500
-Received: from malkuth.lan.myself.gen.nz ([192.168.1.20] helo=[127.0.0.1])
-	by mail.myself.gen.nz with esmtp (Exim 4.50) id 1HEUK5-0007ld-DU
-	for linux-lvm@redhat.com; Wed, 07 Feb 2007 06:41:55 +1300
-Message-ID: <45C8BDE7.5020403@myself.gen.nz>
-Date: Wed, 07 Feb 2007 06:41:59 +1300
-From: Steve Wray <steve@myself.gen.nz>
-MIME-Version: 1.0
-References: <45C62BB0.6090004@free.fr>
-	<abae97f2062bff4699caa277e2faea30@redhat.com>
-In-Reply-To: <abae97f2062bff4699caa277e2faea30@redhat.com>
-Content-Transfer-Encoding: 7bit
-Subject: Re: [linux-lvm] replacing a failling disk on a mirrred VG.
-Reply-To: steve@myself.gen.nz,
-	LVM general discussion and development <linux-lvm@redhat.com>
+Received: from mx2.redhat.com (mx2.redhat.com [10.255.15.25])
+	by int-mx2.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l177pG9H030685
+	for <linux-lvm@redhat.com>; Wed, 7 Feb 2007 02:51:16 -0500
+Received: from percy.comedia.it (percy.comedia.it [212.97.59.71])
+	by mx2.redhat.com (8.13.1/8.13.1) with ESMTP id l177pEZI031689
+	for <linux-lvm@redhat.com>; Wed, 7 Feb 2007 02:51:15 -0500
+Date: Wed, 7 Feb 2007 08:51:13 +0100
+From: Luca Berra <bluca@comedia.it>
+Subject: Re: [linux-lvm] pvscan does not detect lvm1 exported volume group
+Message-ID: <20070207075112.GB12469@percy.comedia.it>
+References: <C40752F5-E7A4-4B4A-98F1-3DFF485DD152@cmpmail.ucsf.edu>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <C40752F5-E7A4-4B4A-98F1-3DFF485DD152@cmpmail.ucsf.edu>
+Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -29,41 +23,29 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Transfer-Encoding: 7bit
+To: linux-lvm@redhat.com
 
-Jonathan E Brassow wrote:
-> This one should be pretty easy...
-> 
-> Effectively, you want to keep the primary mirror devices, so do:
-> lvconvert -m0 <vg/lv>
-> to down convert them to linear devices.
-> 
-> Then remove PV1 (vgreduce), add a new disk to your system, add it to 
-> your vg (vgextend), and finally, up-convert the linear devices to 
-> mirrors again:
-> lvconvert -m1 <vg/lv>
+On Thu, Feb 01, 2007 at 08:21:00AM -0800, Nico Stuurman wrote:
+>The relevant output of pvscan -vvvv is copied below.  The volume  
+>group consists of /dev/sdb1 and /dev/sdc1.  Apparently, pvscan sees  
+>some kind of md raid information on /dev/sdb1 and decides to skip it?
 
-So you can't just add a new disk and use pvmove to move extents off of 
-the failing disk?
+I don't know why there is a md superblock at the end of sdb1 and sdc1,
+maybe you used to mirror or stripe them before, then forgot to remove
+the superblock when you quit md.
+anyway you can use mdadm to examine and remove the superblock from sdb1
+and sdc1.
+In alternative you can disable md_component_detection in
+/etc/lvm/lvm.conf (if you will never use lvm over md anymore, that is)
+
+L.
 
 
-> On Feb 4, 2007, at 12:53 PM, Georges Giralt wrote:
-> 
->> Hi !
->> I run A Fedora Core 6 box with
->> lvm> version
->>   LVM version:     2.02.17 (2006-12-14)
->>   Library version: 1.02.13 (2006-11-28)
->>   Driver version:  4.10.0
->> lvm>
->> on a 2.6.19 kernel.
->> My VG comprises 3PV  onto which I've spread 4 mirrored LVs.
->> PV 0 : LV1 mirror copy 0, LV2 mirror copy 0, lv3 mirror copy 0 and lv4 
->> mirror copy 0
->> PV 1 : LV1 mirror copy 1, LV2 mirror log, LV3 mirror log and LV4 
->> mirror copy 1
->> PV2 : LV1 mirror log, LV2 mirror copy 1 , LV3 mirror copy 1 and LV4 
->> mirror log.
->> I plan to replace (Smart signals a future failure) the PV #1.
->> Question : What is the best route to do this ? And is it feasible ?
->> Thanks a lot in advance for your answer !
+-- 
+Luca Berra -- bluca@comedia.it
+        Communication Media & Services S.r.l.
+ /"\
+ \ /     ASCII RIBBON CAMPAIGN
+  X        AGAINST HTML MAIL
+ / \
