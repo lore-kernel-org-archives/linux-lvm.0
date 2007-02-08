@@ -1,18 +1,18 @@
 Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l17MNx6u022017
-	for <linux-lvm@redhat.com>; Wed, 7 Feb 2007 17:23:59 -0500
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l180Xo2C031798
+	for <linux-lvm@redhat.com>; Wed, 7 Feb 2007 19:33:50 -0500
 Received: from souja.net (souja.net [64.22.224.60])
-	by mx1.redhat.com (8.13.1/8.13.1) with ESMTP id l17MNvbJ024405
-	for <linux-lvm@redhat.com>; Wed, 7 Feb 2007 17:23:57 -0500
-In-Reply-To: <45C9E5B0.5010703@redhat.com>
-References: <A2E4EC06-9B8D-4C63-8567-4DF6475D4543@engineyard.com>
-	<45C9E5B0.5010703@redhat.com>
+	by mx1.redhat.com (8.13.1/8.13.1) with ESMTP id l180XiJb001050
+	for <linux-lvm@redhat.com>; Wed, 7 Feb 2007 19:33:44 -0500
+Received: from [64.22.224.41] by souja.net with esmtpa (Exim 4.60)
+	(envelope-from <jvantuyl@engineyard.com>) id 1HExEj-00045V-CA
+	for linux-lvm@redhat.com; Wed, 07 Feb 2007 18:34:05 -0600
 Mime-Version: 1.0 (Apple Message framework v752.3)
-Content-Type: multipart/alternative; boundary=Apple-Mail-2--693735259
-Message-Id: <976BA119-1058-434F-82AC-3525EB3AC698@engineyard.com>
+Message-Id: <DDC513CA-32D7-466C-A34E-1F5EFDFDD265@engineyard.com>
+Content-Type: multipart/alternative; boundary=Apple-Mail-3--685911554
 From: Jayson Vantuyl <jvantuyl@engineyard.com>
-Subject: Re: [linux-lvm] Strange LVM Error With AoE Disks
-Date: Wed, 7 Feb 2007 16:23:12 -0600
+Date: Wed, 7 Feb 2007 18:33:36 -0600
+Subject: [linux-lvm] CLVM Questions
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -23,26 +23,21 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: LVM general discussion and development <linux-lvm@redhat.com>
-Cc: Coraid Support <support@coraid.com>
+To: LVM and development general discussion <linux-lvm@redhat.com>
 
 
---Apple-Mail-2--693735259
+--Apple-Mail-3--685911554
 Content-Transfer-Encoding: 7bit
 Content-Type: text/plain;
 	charset=US-ASCII;
 	delsp=yes;
 	format=flowed
 
-No, I didn't, actually.  That worked.  Thanks a MILLION!
+Is it possible to mix clustered LVM and unclustered LVM?  I tried but  
+it seemed to have issues.
 
-On Feb 7, 2007, at 8:44 AM, Patrick Caulfield wrote:
-
-> Did you restart clvmd after adding the new disks? There is a bug  
-> where it
-> doesn't always recognise new hardware.
-
-
+Also, does anyone know if Gentoo likes it better if you use the CLVM  
+package or if you build the LVM package with the clvm USE flag?
 
 -- 
 Jayson Vantuyl
@@ -52,23 +47,18 @@ jvantuyl@engineyard.com
 
 
 
---Apple-Mail-2--693735259
+--Apple-Mail-3--685911554
 Content-Transfer-Encoding: quoted-printable
 Content-Type: text/html;
 	charset=ISO-8859-1
 
 <HTML><BODY style=3D"word-wrap: break-word; -khtml-nbsp-mode: space; =
--khtml-line-break: after-white-space; ">No, I didn't, actually.=A0 That =
-worked.=A0 Thanks a MILLION!<DIV><DIV><BR><DIV><DIV>On Feb 7, 2007, at =
-8:44 AM, Patrick Caulfield wrote:</DIV><BR =
-class=3D"Apple-interchange-newline"><BLOCKQUOTE type=3D"cite"><DIV =
-style=3D"margin-top: 0px; margin-right: 0px; margin-bottom: 0px; =
-margin-left: 0px; ">Did you restart clvmd after adding the new disks? =
-There is a bug where it</DIV><DIV style=3D"margin-top: 0px; =
-margin-right: 0px; margin-bottom: 0px; margin-left: 0px; ">doesn't =
-always recognise new =
-hardware.</DIV></BLOCKQUOTE></DIV><BR></DIV><BR><BR><DIV> <SPAN =
-class=3D"Apple-style-span" style=3D"border-collapse: separate; =
+-khtml-line-break: after-white-space; ">Is it possible to mix clustered =
+LVM and unclustered LVM?=A0 I tried but it seemed to have =
+issues.<DIV><BR class=3D"khtml-block-placeholder"></DIV><DIV>Also, does =
+anyone know if Gentoo likes it better if you use the CLVM package or if =
+you build the LVM package with the clvm USE flag?</DIV><DIV><BR><DIV> =
+<SPAN class=3D"Apple-style-span" style=3D"border-collapse: separate; =
 border-spacing: 0px 0px; color: rgb(0, 0, 0); font-family: Helvetica; =
 font-size: 12px; font-style: normal; font-variant: normal; font-weight: =
 normal; letter-spacing: normal; line-height: normal; text-align: auto; =
@@ -109,4 +99,4 @@ href=3D"mailto:jvantuyl@engineyard.com">jvantuyl@engineyard.com</A></SPAN>=
 class=3D"Apple-interchange-newline"></SPAN></SPAN> =
 </DIV><BR></DIV></BODY></HTML>=
 
---Apple-Mail-2--693735259--
+--Apple-Mail-3--685911554--
