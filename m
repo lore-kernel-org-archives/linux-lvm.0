@@ -1,22 +1,22 @@
-Received: from mx2.redhat.com (mx2.redhat.com [10.255.15.25])
-	by int-mx2.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l18KbQY2009101
-	for <linux-lvm@redhat.com>; Thu, 8 Feb 2007 15:37:26 -0500
-Received: from smtp8-g19.free.fr (smtp8-g19.free.fr [212.27.42.65])
-	by mx2.redhat.com (8.13.1/8.13.1) with ESMTP id l18KbLd3028877
-	for <linux-lvm@redhat.com>; Thu, 8 Feb 2007 15:37:21 -0500
-Received: from [192.168.0.1] (bon31-1-82-66-78-161.fbx.proxad.net
-	[82.66.78.161])
-	by smtp8-g19.free.fr (Postfix) with ESMTP id 7BFE055CB
-	for <linux-lvm@redhat.com>; Thu,  8 Feb 2007 21:37:20 +0100 (CET)
-Message-ID: <45CB89CE.6080208@free.fr>
-Date: Thu, 08 Feb 2007 21:36:30 +0100
-From: Georges Giralt <georges.giralt@free.fr>
-MIME-Version: 1.0
-Subject: Re: [linux-lvm] replacing a failling disk on a mirrred VG.
-References: <45C62BB0.6090004@free.fr>
-	<abae97f2062bff4699caa277e2faea30@redhat.com>
-In-Reply-To: <abae97f2062bff4699caa277e2faea30@redhat.com>
-Content-Transfer-Encoding: 8bit
+Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l19B55Td012591
+	for <linux-lvm@redhat.com>; Fri, 9 Feb 2007 06:05:05 -0500
+Received: from souja.net (souja.net [64.22.224.60])
+	by mx1.redhat.com (8.13.1/8.13.1) with ESMTP id l19B52Ce004413
+	for <linux-lvm@redhat.com>; Fri, 9 Feb 2007 06:05:02 -0500
+Received: from [64.22.234.43] (helo=[192.168.2.3])
+	by souja.net with esmtpa (Exim 4.60)
+	(envelope-from <jvantuyl@engineyard.com>) id 1HFTZD-00033V-BI
+	for linux-lvm@redhat.com; Fri, 09 Feb 2007 05:05:23 -0600
+Mime-Version: 1.0 (Apple Message framework v752.3)
+In-Reply-To: <45CAE514.7020200@redhat.com>
+References: <DDC513CA-32D7-466C-A34E-1F5EFDFDD265@engineyard.com>
+	<45CAE514.7020200@redhat.com>
+Content-Type: multipart/alternative; boundary=Apple-Mail-2--561666268
+Message-Id: <00503406-DE29-4057-AC21-D466819CAA5A@engineyard.com>
+From: Jayson Vantuyl <jvantuyl@engineyard.com>
+Subject: Re: [linux-lvm] CLVM Questions
+Date: Fri, 9 Feb 2007 05:04:21 -0600
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -27,48 +27,121 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="utf-8"; format="flowed"
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-Jonathan E Brassow a �crit :
-> This one should be pretty easy...
-> 
-> Effectively, you want to keep the primary mirror devices, so do:
-> lvconvert -m0 <vg/lv>
-> to down convert them to linear devices.
-> 
-> Then remove PV1 (vgreduce), add a new disk to your system, add it to 
-> your vg (vgextend), and finally, up-convert the linear devices to 
-> mirrors again:
-> lvconvert -m1 <vg/lv>
-> 
->  brassow
-> 
-> On Feb 4, 2007, at 12:53 PM, Georges Giralt wrote:
-> 
->> Hi !
->> I run A Fedora Core 6 box with
->> lvm> version
->>   LVM version:     2.02.17 (2006-12-14)
->>   Library version: 1.02.13 (2006-11-28)
->>   Driver version:  4.10.0
->> lvm>
->> on a 2.6.19 kernel.
->> My VG comprises 3PV  onto which I've spread 4 mirrored LVs.
->> PV 0 : LV1 mirror copy 0, LV2 mirror copy 0, lv3 mirror copy 0 and lv4 
->> mirror copy 0
->> PV 1 : LV1 mirror copy 1, LV2 mirror log, LV3 mirror log and LV4 
->> mirror copy 1
->> PV2 : LV1 mirror log, LV2 mirror copy 1 , LV3 mirror copy 1 and LV4 
->> mirror log.
->> I plan to replace (Smart signals a future failure) the PV #1.
->> Question : What is the best route to do this ? And is it feasible ?
->> Thanks a lot in advance for your answer !
-Hi Brassov !
-Your method was like a walk in a park.
-Thanks !
+
+--Apple-Mail-2--561666268
+Content-Transfer-Encoding: 7bit
+Content-Type: text/plain;
+	charset=US-ASCII;
+	delsp=yes;
+	format=flowed
+
+On Feb 8, 2007, at 2:53 AM, Patrick Caulfield wrote:
+> I'm not sure what you mean here. You either have a cluster or you  
+> don't.
+Yes.
+
+> If you have clvm on one node on a cluster then it needs to be on  
+> ALL nodes of
+> the cluster - you can't have an isolated node that is also part of  
+> the CMAN
+> cluster.
+I had kind of figured this out.
+
+> If what you mean is "can I have a non-clustered Volume Group  
+> alongside cluster
+> volume groups", then the answer is "yes". There is a flag on the VG  
+> that
+> indicates whether it is clustered or not. activated with vgchange -cy,
+> deactivated with vgchange -cn. You can't mark individual LVs within  
+> a VG as
+> clustered/non-clustered though. That wouldn't make sense.
+Well, I think I have a bug to report.  When I create a vg and mark it  
+as not clustered, I get locking errors when working with its LVs.
 
 -- 
-Ce message est constitu� d'au moins 50 % d'�lectrons recycl�s.
-S'il vous pla�t, aidez nous � conserver nos ressources,
-recyclez vos �lectrons !
+Jayson Vantuyl
+Systems Architect
+Engine Yard
+jvantuyl@engineyard.com
+
+
+
+--Apple-Mail-2--561666268
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/html;
+	charset=ISO-8859-1
+
+<HTML><BODY style=3D"word-wrap: break-word; -khtml-nbsp-mode: space; =
+-khtml-line-break: after-white-space; "><DIV><DIV>On Feb 8, 2007, at =
+2:53 AM, Patrick Caulfield wrote:</DIV><BLOCKQUOTE type=3D"cite"><DIV =
+style=3D"margin-top: 0px; margin-right: 0px; margin-bottom: 0px; =
+margin-left: 0px; ">I'm not sure what you mean here. You either have a =
+cluster or you don't.</DIV></BLOCKQUOTE>Yes.</DIV><DIV><BR><BLOCKQUOTE =
+type=3D"cite"><DIV style=3D"margin-top: 0px; margin-right: 0px; =
+margin-bottom: 0px; margin-left: 0px; ">If you have clvm on one node on =
+a cluster then it needs to be on ALL nodes of</DIV><DIV =
+style=3D"margin-top: 0px; margin-right: 0px; margin-bottom: 0px; =
+margin-left: 0px; ">the cluster - you can't have an isolated node that =
+is also part of the CMAN</DIV><DIV style=3D"margin-top: 0px; =
+margin-right: 0px; margin-bottom: 0px; margin-left: 0px; =
+">cluster.</DIV></BLOCKQUOTE>I had kind of figured this =
+out.</DIV><DIV><BR><BLOCKQUOTE type=3D"cite"><DIV style=3D"margin-top: =
+0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; ">If what =
+you mean is "can I have a non-clustered Volume Group alongside =
+cluster</DIV><DIV style=3D"margin-top: 0px; margin-right: 0px; =
+margin-bottom: 0px; margin-left: 0px; ">volume groups", then the answer =
+is "yes". There is a flag on the VG that</DIV><DIV style=3D"margin-top: =
+0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; =
+">indicates whether it is clustered or not. activated with vgchange =
+-cy,</DIV><DIV style=3D"margin-top: 0px; margin-right: 0px; =
+margin-bottom: 0px; margin-left: 0px; ">deactivated with vgchange -cn. =
+You can't mark individual LVs within a VG as</DIV><DIV =
+style=3D"margin-top: 0px; margin-right: 0px; margin-bottom: 0px; =
+margin-left: 0px; ">clustered/non-clustered though. That wouldn't make =
+sense.</DIV></BLOCKQUOTE>Well, I think I have a bug to report.=A0 When I =
+create a vg and mark it as not clustered, I get locking errors when =
+working with its LVs.</DIV><BR><DIV> <SPAN class=3D"Apple-style-span" =
+style=3D"border-collapse: separate; border-spacing: 0px 0px; color: =
+rgb(0, 0, 0); font-family: Helvetica; font-size: 12px; font-style: =
+normal; font-variant: normal; font-weight: normal; letter-spacing: =
+normal; line-height: normal; text-align: auto; =
+-khtml-text-decorations-in-effect: none; text-indent: 0px; =
+-apple-text-size-adjust: auto; text-transform: none; orphans: 2; =
+white-space: normal; widows: 2; word-spacing: 0px; "><SPAN =
+class=3D"Apple-style-span" style=3D"border-collapse: separate; =
+border-spacing: 0px 0px; color: rgb(0, 0, 0); font-family: Helvetica; =
+font-size: 12px; font-style: normal; font-variant: normal; font-weight: =
+normal; letter-spacing: normal; line-height: normal; text-align: auto; =
+-khtml-text-decorations-in-effect: none; text-indent: 0px; =
+-apple-text-size-adjust: auto; text-transform: none; orphans: 2; =
+white-space: normal; widows: 2; word-spacing: 0px; "><SPAN =
+class=3D"Apple-style-span" style=3D"border-collapse: separate; =
+border-spacing: 0px 0px; color: rgb(0, 0, 0); font-family: Helvetica; =
+font-size: 12px; font-style: normal; font-variant: normal; font-weight: =
+normal; letter-spacing: normal; line-height: normal; text-align: auto; =
+-khtml-text-decorations-in-effect: none; text-indent: 0px; =
+-apple-text-size-adjust: auto; text-transform: none; orphans: 2; =
+white-space: normal; widows: 2; word-spacing: 0px; =
+"><DIV>--=A0</DIV><DIV>Jayson Vantuyl</DIV><DIV><FONT =
+class=3D"Apple-style-span" size=3D"2"><SPAN class=3D"Apple-style-span" =
+style=3D"font-size: 10px;"><SPAN class=3D"Apple-style-span" =
+style=3D"font-size: 10px; "><SPAN class=3D"Apple-style-span" =
+style=3D"font-size: 10px; ">Systems =
+Architect</SPAN></SPAN></SPAN></FONT></DIV><DIV><B style=3D"font-weight: =
+bold; "><A href=3D"http://www.engineyard.com"><SPAN =
+class=3D"Apple-style-span" style=3D"font-weight: normal;; color: rgb(0, =
+0, 238); -khtml-text-decorations-in-effect: underline; "><SPAN =
+class=3D"Apple-style-span" style=3D"color: rgb(0, 0, 238); =
+-khtml-text-decorations-in-effect: underline; ">Engine =
+Yard</SPAN></SPAN></A></B></DIV><DIV><FONT class=3D"Apple-style-span" =
+size=3D"2"><SPAN class=3D"Apple-style-span" style=3D"font-size: =
+10px;"><SPAN class=3D"Apple-style-span" style=3D"font-size: 10px; =
+"><SPAN class=3D"Apple-style-span" style=3D"font-size: 10px; "><A =
+href=3D"mailto:jvantuyl@engineyard.com">jvantuyl@engineyard.com</A></SPAN>=
+</SPAN></SPAN></FONT></DIV></SPAN><BR =
+class=3D"Apple-interchange-newline"></SPAN></SPAN> =
+</DIV><BR></BODY></HTML>=
+
+--Apple-Mail-2--561666268--
