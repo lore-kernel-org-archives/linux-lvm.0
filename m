@@ -1,26 +1,15 @@
 Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l1B2Od78030704
-	for <linux-lvm@redhat.com>; Sat, 10 Feb 2007 21:24:39 -0500
-Received: from mailserv03.cliche.dk (mailserv03.cliche.dk [195.249.40.228])
-	by mx1.redhat.com (8.13.1/8.13.1) with ESMTP id l1B2OYd9020752
-	for <linux-lvm@redhat.com>; Sat, 10 Feb 2007 21:24:35 -0500
-Received: from [81.216.192.212] by mailserv03.cliche.dk [195.249.40.228] with
-	SmartMax MailMax for linux-lvm@redhat.com;
-	Sun, 11 Feb 2007 03:36:21 +0100
-Received: from aragorn (aragorn [10.76.16.120])
-	(using TLSv1 with cipher AES128-SHA (128/128 bits))
-	(No client certificate requested)
-	by mail.hyllander.org (Postfix) with ESMTP id 7CA77480B9
-	for <linux-lvm@redhat.com>; Sun, 11 Feb 2007 03:24:07 +0100 (CET)
-Message-ID: <45CE7E36.5070609@hyllander.org>
-Date: Sun, 11 Feb 2007 03:23:50 +0100
-From: Magnus Hyllander <mhylist1@hyllander.org>
-MIME-Version: 1.0
-Subject: Re: [linux-lvm] Different sizes being reported for logical volume
-	after extend
-References: <456F4196.4020603@hyllander.org> <45AC032A.20104@hyllander.org>
-In-Reply-To: <45AC032A.20104@hyllander.org>
-Content-Transfer-Encoding: 7bit
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l1B6lC7k020401
+	for <linux-lvm@redhat.com>; Sun, 11 Feb 2007 01:47:12 -0500
+Received: from souja.net (souja.net [64.22.224.60])
+	by mx1.redhat.com (8.13.1/8.13.1) with ESMTP id l1B6lB5U003683
+	for <linux-lvm@redhat.com>; Sun, 11 Feb 2007 01:47:11 -0500
+Mime-Version: 1.0 (Apple Message framework v752.3)
+Message-Id: <53BC8DA1-9E2E-47C4-95C3-FF54870B403D@engineyard.com>
+Content-Type: multipart/alternative; boundary=Apple-Mail-4--404305241
+From: Jayson Vantuyl <jvantuyl@engineyard.com>
+Date: Sun, 11 Feb 2007 00:47:02 -0600
+Subject: [linux-lvm] Metadata Too Large For Circular Buffer
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -31,89 +20,111 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: LVM general discussion and development <linux-lvm@redhat.com>
+To: and development general discussion LVM <linux-lvm@redhat.com>
 
-I finally managed to solve my problem.
 
-After some fiddling around with resize2fs, with which I changed the size 
-of the root partition back and forth between 4GB and 8GB a couple of 
-times, I actually ended up with the initial situation in which I again 
-saw that the size of  /dev/VolGroup00/LogVol00 was 4GB when booting from 
-disk. So I started thinking, maybe the metadata is wrong somehow (even 
-though it looks right when booting with the rescue CD). I tried to run 
-"lvm vgcfgrestore VolGroup00", but could not do that because I got a 
-"Locking type 1" failure.
+--Apple-Mail-4--404305241
+Content-Transfer-Encoding: 7bit
+Content-Type: text/plain;
+	charset=US-ASCII;
+	delsp=yes;
+	format=flowed
 
-When I booted from the rescue CD, "lvm vgscan" followed by "lvm lvs" 
-showed 8GB. Then I tried successfully to run "lvm vgcfgrestore 
-VolGroup00". When I rebooted from disk again, the problem was solved!
+Hello LVM List,
 
-I can't really say that I understand what was going on, why "lvm lvs" 
-showed different results when booting from disk or the rescue CD. Maybe 
-one of you knowledgeable people can offer an explanation?
+I recently encountered this error doing an lvcreate with CLVM:
 
-Thanks,
-Magnus
+   VG ey00-data metadata too large for circular buffer
 
-Magnus Hyllander wrote:
-> Hi,
->
-> I've been trying to solve this problem on my own but without success. 
-> One thing has changed though, and that is that the size of the logical 
-> volume is now 8GB both when I boot from the disk and from the rescue 
-> cd. So at least the logical volume seems to be alright now. But fsck 
-> still complains that the "device" is half the size of the file system. 
-> What "device" is fsck looking at, and why is the size wrong? I'd 
-> really appreciate some help!
->
-> Thanks,
-> Magnus
->
-> Magnus Hyllander wrote:
->>  Hi,
->>
->> I have a little problem with a logical volume: in short, the size of 
->> the volume is different depending on if I boot from the FC5 rescue CD 
->> or from the installed FC5.
->>
->> I have two mirrored disks. On the mirror I have created a logical 
->> volume /dev/VolGroup00/LogVol00 which contains the root filesystem. 
->> Initially I made the volume 4GB. Later I needed more space, so I 
->> decided to extend the volume to 8GB. I booted from the FC5 rescue CD 
->> and ran the following commands:
->>
->>    dmraid -a y
->>    lvm vgscan
->>    lvm vgchange -a y
->>    lvm lvextend -L +4G /dev/VolGroup00/LogVol00
->>    fsck /dev/VolGroup00/LogVol00
->>    resize2fs /dev/VolGroup00/LogVol00
->>
->> So far so good. Then I rebooted the system from disk and got the 
->> following error:
->>
->>    Checking filesystems
->>    /dev/VolGroup00/LogVol00: The filesystem size (according to the
->>    superblock) is 2097152 blocks
->>    The physical size of the device is 1048576 blocks
->>    Either the superblock or the partition table is likely to be corrupt!
->>
->>    /dev/VolGroup/LogVol00: UNEXPECTED INCONSISTENCY, run fsck manually.
->>
->> I entered the system administration mode and checked the size of 
->> /dev/VolGroup/LogVol00 with "lvm lvs": 4.00G
->> Strange... so I booted with the rescue CD again and checked the size 
->> once more from the rescue environment: 8.00G.
->>
->> So it seems that when I boot the system normally it doesn't "see" 
->> that the size of the logical volume has changed. Can someone explain 
->> this, and hopefully help me fix the problem?
->>
->> /Magnus
->
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+I've Googled and found it elsewhere.  It appears my metadata is too  
+large for the space allocated by default on the PVs.  It also appears  
+that everybody else has encountered this with throw-away data.  I  
+have a very large, very live system on this.  What can I do to get  
+more metadata space?
+
+It's CLVM, so I can't pvmove (even if I had the metadata space to  
+make new PVs and move this 3TB).
+
+I can pvcreate a new PV with enough space and presumably add it to  
+the system, but will this work?  Can it handle having one PV with  
+enough space and others without enough space?
+
+I absolutely have to find a solution to this, so any help would be  
+appreciated.
+
+-- 
+Jayson Vantuyl
+Systems Architect
+Engine Yard
+jvantuyl@engineyard.com
+
+
+
+--Apple-Mail-4--404305241
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/html;
+	charset=ISO-8859-1
+
+<HTML><BODY style=3D"word-wrap: break-word; -khtml-nbsp-mode: space; =
+-khtml-line-break: after-white-space; ">Hello LVM List,<DIV><BR =
+class=3D"khtml-block-placeholder"></DIV><DIV>I recently encountered this =
+error doing an lvcreate with CLVM:</DIV><DIV><BR =
+class=3D"khtml-block-placeholder"></DIV><DIV>=A0 VG ey00-data metadata =
+too large for circular buffer</DIV><DIV><BR =
+class=3D"khtml-block-placeholder"></DIV><DIV>I've Googled and found it =
+elsewhere.=A0 It appears my metadata is too large for the space =
+allocated by default on the PVs.=A0 It also appears that everybody else =
+has encountered this with throw-away data.=A0 I have a very large, very =
+live system on this.=A0 What can I do to get more metadata =
+space?</DIV><DIV><BR class=3D"khtml-block-placeholder"></DIV><DIV>It's =
+CLVM, so I can't pvmove (even if I had the metadata space to make new =
+PVs and move this 3TB).</DIV><DIV><BR =
+class=3D"khtml-block-placeholder"></DIV><DIV>I can pvcreate a new PV =
+with enough space and presumably add it to the system, but will this =
+work?=A0 Can it handle having one PV with enough space and others =
+without enough space?</DIV><DIV><BR =
+class=3D"khtml-block-placeholder"></DIV><DIV>I absolutely have to find a =
+solution to this, so any help would be appreciated.</DIV><DIV><BR =
+class=3D"khtml-block-placeholder"></DIV><DIV><DIV> <SPAN =
+class=3D"Apple-style-span" style=3D"border-collapse: separate; =
+border-spacing: 0px 0px; color: rgb(0, 0, 0); font-family: Helvetica; =
+font-size: 12px; font-style: normal; font-variant: normal; font-weight: =
+normal; letter-spacing: normal; line-height: normal; text-align: auto; =
+-khtml-text-decorations-in-effect: none; text-indent: 0px; =
+-apple-text-size-adjust: auto; text-transform: none; orphans: 2; =
+white-space: normal; widows: 2; word-spacing: 0px; "><SPAN =
+class=3D"Apple-style-span" style=3D"border-collapse: separate; =
+border-spacing: 0px 0px; color: rgb(0, 0, 0); font-family: Helvetica; =
+font-size: 12px; font-style: normal; font-variant: normal; font-weight: =
+normal; letter-spacing: normal; line-height: normal; text-align: auto; =
+-khtml-text-decorations-in-effect: none; text-indent: 0px; =
+-apple-text-size-adjust: auto; text-transform: none; orphans: 2; =
+white-space: normal; widows: 2; word-spacing: 0px; "><SPAN =
+class=3D"Apple-style-span" style=3D"border-collapse: separate; =
+border-spacing: 0px 0px; color: rgb(0, 0, 0); font-family: Helvetica; =
+font-size: 12px; font-style: normal; font-variant: normal; font-weight: =
+normal; letter-spacing: normal; line-height: normal; text-align: auto; =
+-khtml-text-decorations-in-effect: none; text-indent: 0px; =
+-apple-text-size-adjust: auto; text-transform: none; orphans: 2; =
+white-space: normal; widows: 2; word-spacing: 0px; =
+"><DIV>--=A0</DIV><DIV>Jayson Vantuyl</DIV><DIV><FONT =
+class=3D"Apple-style-span" size=3D"2"><SPAN class=3D"Apple-style-span" =
+style=3D"font-size: 10px;"><SPAN class=3D"Apple-style-span" =
+style=3D"font-size: 10px; "><SPAN class=3D"Apple-style-span" =
+style=3D"font-size: 10px; ">Systems =
+Architect</SPAN></SPAN></SPAN></FONT></DIV><DIV><B style=3D"font-weight: =
+bold; "><A href=3D"http://www.engineyard.com"><SPAN =
+class=3D"Apple-style-span" style=3D"font-weight: normal;; color: rgb(0, =
+0, 238); -khtml-text-decorations-in-effect: underline; "><SPAN =
+class=3D"Apple-style-span" style=3D"color: rgb(0, 0, 238); =
+-khtml-text-decorations-in-effect: underline; ">Engine =
+Yard</SPAN></SPAN></A></B></DIV><DIV><FONT class=3D"Apple-style-span" =
+size=3D"2"><SPAN class=3D"Apple-style-span" style=3D"font-size: =
+10px;"><SPAN class=3D"Apple-style-span" style=3D"font-size: 10px; =
+"><SPAN class=3D"Apple-style-span" style=3D"font-size: 10px; "><A =
+href=3D"mailto:jvantuyl@engineyard.com">jvantuyl@engineyard.com</A></SPAN>=
+</SPAN></SPAN></FONT></DIV></SPAN><BR =
+class=3D"Apple-interchange-newline"></SPAN></SPAN> =
+</DIV><BR></DIV></BODY></HTML>=
+
+--Apple-Mail-4--404305241--
