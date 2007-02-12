@@ -1,16 +1,22 @@
 Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l1CKBhtK013089
-	for <linux-lvm@redhat.com>; Mon, 12 Feb 2007 15:11:43 -0500
-Received: from web38214.mail.mud.yahoo.com (web38214.mail.mud.yahoo.com
-	[209.191.124.157])
-	by mx1.redhat.com (8.13.1/8.13.1) with SMTP id l1CKBaw1020674
-	for <linux-lvm@redhat.com>; Mon, 12 Feb 2007 15:11:36 -0500
-Date: Mon, 12 Feb 2007 12:11:30 -0800 (PST)
-From: Sean McGlynn <sean_mcglynn@yahoo.com>
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l1CKi81r023023
+	for <linux-lvm@redhat.com>; Mon, 12 Feb 2007 15:44:08 -0500
+Received: from nlpi042.sbcis.sbc.com (nlpi042.sbcis.sbc.com [207.115.36.71])
+	by mx1.redhat.com (8.13.1/8.13.1) with ESMTP id l1CKi5Rc006224
+	for <linux-lvm@redhat.com>; Mon, 12 Feb 2007 15:44:06 -0500
+Received: from [69.104.219.9] (adsl-69-104-219-9.dsl.irvnca.pacbell.net
+	[69.104.219.9]) (authenticated bits=0)
+	by nlpi042.sbcis.sbc.com (8.13.8 smtpauth/dk/8.13.8) with ESMTP id
+	l1CKgsoG006955
+	for <linux-lvm@redhat.com>; Mon, 12 Feb 2007 14:43:02 -0600
+Message-ID: <45D0D187.4020206@pacbell.net>
+Date: Mon, 12 Feb 2007 12:43:51 -0800
+From: Duane Clark <duane_clark@pacbell.net>
 MIME-Version: 1.0
-Content-Type: multipart/alternative; boundary="0-360077062-1171311090=:73875"
-Message-ID: <682963.73875.qm@web38214.mail.mud.yahoo.com>
-Subject: [linux-lvm] Extending the Root Volume with LVM
+References: <682963.73875.qm@web38214.mail.mud.yahoo.com>
+In-Reply-To: <682963.73875.qm@web38214.mail.mud.yahoo.com>
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] Re: Extending the Root Volume with LVM
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -21,71 +27,36 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: linux-lvm@redhat.com
 
---0-360077062-1171311090=:73875
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: quoted-printable
+Sean McGlynn wrote:
+> I am working with RHEL 4 Update 4.  When initially installing the OS I 
+> allowed the installation to automatically partition the disk, and it 
+> used LVM to create a logical volume to mount the root file system.  The 
+> only other logical volume it created was for the swap file.
+>  
+> Now, as an experiment, I am attempting to extend the volume group and 
+> logical volume on which root is mounted.  Everything appeared to 
+> be going smoothly (extending the VG, extending the LV, doing a vgchange, 
+> and then a lvm lvchange), but I am now at the point where I want to run 
+> e2fsck to check the file system and resize2fs to resize the files system 
+> to realize the added space, and I can't do either because the volume is 
+> mounted, and cannot be unmounted.
+>  
+> I've read a few suggestions such as using the installation media to go 
+> in in rescue mode, but nothing seems to do the trick. 
 
-=0A=0AI am working with =0ARHEL 4 Update 4.  When initially installing the =
-OS I allowed the installation to =0Aautomatically partition the disk, and i=
-t used LVM to create a logical volume to =0Amount the root file system.  Th=
-e only other logical volume it created was for =0Athe swap file.=0A=0A =0A=
-=0ANow, as an =0Aexperiment, I am attempting to extend the volume group and=
- logical volume on =0Awhich root is mounted.  Everything appeared to be goi=
-ng smoothly (extending the =0AVG, extending the LV, doing a vgchange, and t=
-hen a lvm lvchange), but I am now =0Aat the point where I want to run e2fsc=
-k to check the file system and resize2fs =0Ato resize the files system to r=
-ealize the added space, and I can't do either =0Abecause the volume is moun=
-ted, and cannot be unmounted.=0A=0A =0A=0AI've read a few =0Asuggestions su=
-ch as using the installation media to go in in rescue mode, but =0Anothing =
-seems to do the trick.  I also read something that said that you cannot =0A=
-extend the root volume, and that you shouldn't have to.  This appears to be=
- more =0Aaccurate than anything else I've read.=0A=0A =0A=0AIs it the case =
-that =0Ayou cannot extent the root volume, and if so, why would RHEL config=
-ure the root =0Avolume using LVM if you can't?  If I am missing something, =
-I would greatly =0Aappreciate someone pointing out what I'm missing.=0A=0A =
-=0A=0AThank =0Ayou.=0A=0A=0A=0A=0A=0A =0A__________________________________=
-__________________________________________________=0ADon't pick lemons.=0AS=
-ee all the new 2007 cars at Yahoo! Autos.=0Ahttp://autos.yahoo.com/new_cars=
-.html 
---0-360077062-1171311090=:73875
-Content-Type: text/html; charset=iso-8859-1
-Content-Transfer-Encoding: quoted-printable
+Why, what problems are you running into? When rescue mode asked if you 
+wanted it to find and mount the filesystems, did you select "skip"? Here 
+is step by step how I reduced the LVM on FC4, including e2fsck and 
+resize2fs:
 
-<html><head><style type=3D"text/css"><!-- DIV {margin:0px;} --></style></he=
-ad><body><div style=3D"font-family:times new roman, new york, times, serif;=
-font-size:12pt"><div>=0A<p><font face=3D"Arial" size=3D"2">=0A<div><span cl=
-ass=3D"984012114-09022007"><font face=3D"Arial" size=3D"2">I am working wit=
-h =0ARHEL 4 Update 4.&nbsp; When initially installing the OS I allowed the =
-installation to =0Aautomatically partition the disk, and it used LVM to cre=
-ate a logical volume to =0Amount the root file system.&nbsp; The only other=
- logical volume it created was for =0Athe swap file.</font></span></div>=0A=
-<div><span class=3D"984012114-09022007"></span>&nbsp;</div>=0A<div><span cl=
-ass=3D"984012114-09022007"><font face=3D"Arial" size=3D"2">Now, as an =0Aex=
-periment, I am attempting to extend the volume group and logical volume on =
-=0Awhich root is mounted.&nbsp; Everything appeared to be&nbsp;going smooth=
-ly (extending the =0AVG, extending the LV, doing a vgchange, and then a lvm=
- lvchange), but I am now =0Aat the point where I want to run e2fsck to chec=
-k the file system and resize2fs =0Ato resize the files system to realize th=
-e added space, and I can't do either =0Abecause the volume is mounted, and =
-cannot be unmounted.</font></span></div>=0A<div><span class=3D"984012114-09=
-022007"></span>&nbsp;</div>=0A<div><span class=3D"984012114-09022007"><font=
- face=3D"Arial" size=3D"2">I've read a few =0Asuggestions such as using the=
- installation media to go in in rescue mode, but =0Anothing seems to do the=
- trick.&nbsp; I also read something that said that you cannot =0Aextend the=
- root volume, and that you shouldn't have to.&nbsp; This appears to be more=
- =0Aaccurate than anything else I've read.</font></span></div>=0A<div><span=
- class=3D"984012114-09022007"></span>&nbsp;</div>=0A<div><span class=3D"984=
-012114-09022007"><font face=3D"Arial" size=3D"2">Is it the case that =0Ayou=
- cannot extent the root volume, and if so, why would RHEL configure the roo=
-t =0Avolume using LVM if you can't?&nbsp; If I am missing something, I woul=
-d greatly =0Aappreciate someone pointing out what I'm missing.</font></span=
-></div>=0A<div><span class=3D"984012114-09022007"></span>&nbsp;</div>=0A<di=
-v><span class=3D"984012114-09022007"><font face=3D"Arial" size=3D"2">Thank =
-=0Ayou.</font></span></div></font></p></div></div><br>=0A=0A=0A <hr size=3D=
-1>Looking for earth-friendly autos? <br> <a href=3D"http://autos.yahoo.com/=
-green_center/;_ylc=3DX3oDMTE4MGw4Z2hlBF9TAzk3MTA3MDc2BHNlYwNtYWlsdGFncwRzbG=
-sDZ3JlZW5jZW50ZXI-">Browse Top Cars by "Green Rating"</a> at Yahoo! Autos' =
-Green Center.  </body></html>
---0-360077062-1171311090=:73875--
+https://www.redhat.com/archives/linux-lvm/2006-August/msg00081.html
+
+> I also read 
+> something that said that you cannot extend the root volume, and that you 
+> shouldn't have to.  This appears to be more accurate than anything else 
+> I've read.
+
+Definitely not true. I have used the above technique on several drives.
