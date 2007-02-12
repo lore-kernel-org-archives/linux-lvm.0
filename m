@@ -1,12 +1,15 @@
-Date: Mon, 12 Feb 2007 18:47:02 +0100
-From: Andre Noll <maan@systemlinux.org>
-Message-ID: <20070212174702.GG19569@skl-net.de>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="vA66WO2vHvL/CRSR"
-Content-Disposition: inline
-Sender: Andre Noll <maan@skl-net.de>
-Subject: [linux-lvm] more than 10 shapshots freeze system
+Received: from mx2.redhat.com (mx2.redhat.com [10.255.15.25])
+	by int-mx2.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l1CJYFgU009189
+	for <linux-lvm@redhat.com>; Mon, 12 Feb 2007 14:34:15 -0500
+Received: from ati.es (mail.ati.es [212.170.227.221])
+	by mx2.redhat.com (8.13.1/8.13.1) with ESMTP id l1CJY9YD027198
+	for <linux-lvm@redhat.com>; Mon, 12 Feb 2007 14:34:10 -0500
+Message-Id: <200702121934.l1CJY9YD027198@mx2.redhat.com>
+From: "Cesar O. Pablo" <cesar@ati.es>
+Date: Mon, 12 Feb 2007 20:33:43 +0100
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] Re: Doubts about LVM2 real limits
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -17,65 +20,24 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: Alasdair G Kergon <agk@redhat.com>
-Cc: dm-devel@redhat.com, LVM general discussion and development <linux-lvm@redhat.com>, Heinz Mauelshagen <mauelshagen@redhat.com>
+Content-Type: text/plain; charset="us-ascii"
+To: "linux-lvm@redhat.com" <linux-lvm@redhat.com>
 
 
---vA66WO2vHvL/CRSR
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+  
+  Hi Scott,
 
-Hi
 
-last week I was experimenting a bit with lvm snapshots. What I tried
-to do was to create 2 snapshots per day from our ~5T "backup" ext3
-filesystem which gets rsynced twice a day from the (remote) "real"
-production filesystem.
+       Thank you very much for the information provided, I hope we will not need to reach 
+your mark (less than a half would be enough).
 
-Our workload changes at most 50G of data a day, so I chose an initial
-snapshot size of 50G. After each rsync run, the snapshot lvs were
-extended so that each of them had again 50G free space available.
 
-This worked very well for about three days, i.e. six snapshots. From
-this day on, the system [1] became more and more sluggish during
-the rsync runs. Hitting return in bash on the otherwise idle system
-began to take as much as several seconds. Simple lvm commands like
-lvdisplay took up to several minutes.
+  kind regards
 
-Two or three days later (i.e. 10+ snapshots) the system froze totally
-during the rsync. Nothing made it to the system log. I could easily
-reproduce this by running rsync again or by simply creating a 100M
-file.
 
-Is this an expected behaviour?
 
-If so, is there a formula in terms of filesytem/snapshot/ram size to
-compute the maximal number of snapshots that may be created from the
-same filesystem without risking to freeze the system?
 
-If this behaviour is not expected, what can I do to improve the
-situation or to debug this problem?
 
-Thanks
-Andre
 
-[1] HP Proliant, 2-way AMD Opteron, 5G Ram, linux-2.6.19.x and
-linux-2.6.20, ubuntu server lvm tools based on libdevmapper-1.02
---=20
-The only person who always got his work done by Friday was Robinson Crusoe
 
---vA66WO2vHvL/CRSR
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-Content-Disposition: inline
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.1 (GNU/Linux)
-
-iD8DBQFF0KgWWto1QDEAkw8RAl0JAKCDVibgKUIOc6qb8p9XXknV7RzeDQCgiA+x
-WEHncJLfcevG7oz1t5DO++Y=
-=CikV
------END PGP SIGNATURE-----
-
---vA66WO2vHvL/CRSR--
+Cesar
