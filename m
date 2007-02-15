@@ -1,26 +1,17 @@
-Received: from mx2.redhat.com (mx2.redhat.com [10.255.15.25])
-	by int-mx2.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l1JDUfQn016995
-	for <linux-lvm@redhat.com>; Mon, 19 Feb 2007 08:30:41 -0500
-Received: from ciao.gmane.org (main.gmane.org [80.91.229.2])
-	by mx2.redhat.com (8.13.1/8.13.1) with ESMTP id l1JDUd1X032308
-	for <linux-lvm@redhat.com>; Mon, 19 Feb 2007 08:30:40 -0500
-Received: from list by ciao.gmane.org with local (Exim 4.43)
-	id 1HJ8b5-0001UM-Rv
-	for linux-lvm@redhat.com; Mon, 19 Feb 2007 14:30:28 +0100
-Received: from 202.3.112.4 ([202.3.112.4])
-	by main.gmane.org with esmtp (Gmexim 0.1 (Debian))
-	id 1AlnuQ-0007hv-00
-	for <linux-lvm@redhat.com>; Mon, 19 Feb 2007 14:30:27 +0100
-Received: from rrs by 202.3.112.4 with local (Gmexim 0.1 (Debian))
-	id 1AlnuQ-0007hv-00
-	for <linux-lvm@redhat.com>; Mon, 19 Feb 2007 14:30:27 +0100
-From: Ritesh Raj Sarraf <rrs@researchut.com>
-Date: Mon, 19 Feb 2007 18:33:50 +0530
-Message-ID: <mqjoa4-2hn.ln1@www.researchut.com>
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Sender: news <news@sea.gmane.org>
-Subject: [linux-lvm] LVM + Multipath
+Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l1FI53Im009351
+	for <linux-lvm@redhat.com>; Thu, 15 Feb 2007 13:05:03 -0500
+Received: from mail2.lefthandnetworks.com (mail2.lefthandnetworks.com
+	[63.251.177.227])
+	by mx1.redhat.com (8.13.1/8.13.1) with ESMTP id l1FI4xkE007431
+	for <linux-lvm@redhat.com>; Thu, 15 Feb 2007 13:05:00 -0500
+Content-class: urn:content-classes:message
+MIME-Version: 1.0
+Date: Thu, 15 Feb 2007 11:04:52 -0700
+Message-ID: <44E94AC31873BC43A74D040A9C113522971A4B@SOLVISTA.corp.lefthandnetworks.com>
+From: "Brian Auld" <Brian.Auld@lefthandnetworks.com>
+Content-Transfer-Encoding: 8bit
+Subject: [linux-lvm] Linux LVM and iSCSI
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -34,28 +25,18 @@ List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@redhat.com
 
-Hi,
+Can you please respond directly to my email address as I do not
+subscribe to the LVM mailing list.
 
-I have a question regarding the combination of LVM + Multipathing in a SAN
-environment.
+Is there an understood way to deal with LVM volumes with iscsi disks
+discovered through the native iscsi intiator?  LVM startup takes place
+in rc.sysinit prior to networking being up, and thus the iscsi
+initiator.  I found that I needed to run vgscan and vgchange by hand
+after booting for these volumes to persist.  
 
-I have a LUN mapped to a host using iSCSI. I have two two paths to the LUN. This
-setup, using multipathing, provides me failover functionality.
+Do admins typically do their own customization to achieve something
+similar, or is there a way to achieve this through some configuration
+file?
 
-My question is how does LVM react to path failures ?
-In a failover environment, multipathing can take upto 120 seconds to detect that
-the active path to the LUN is no more available and then switch to the
-secondary path. During this 120 seconds, how does LVM react ? Does it really
-sense that the device is offlined ? Or that information is never passed to LVM
-and it just allows I/O to happen leaving that responsibility to the
-multipathing layer ?
-
-Thanks,
-Ritesh
--- 
-Ritesh Raj Sarraf
-RESEARCHUT - http://www.researchut.com
-"Necessity is the mother of invention."
-"Stealing logic from one person is plagiarism, stealing from many is research."
-"The great are those who achieve the impossible, the petty are those who
-cannot - rrs"
+Regards,
+Brian Auld
