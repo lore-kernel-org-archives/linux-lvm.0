@@ -1,17 +1,18 @@
 Received: from mx2.redhat.com (mx2.redhat.com [10.255.15.25])
-	by int-mx2.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l1DAR3Hl013578
-	for <linux-lvm@redhat.com>; Tue, 13 Feb 2007 05:27:04 -0500
-Received: from percy.comedia.it (percy.comedia.it [212.97.59.71])
-	by mx2.redhat.com (8.13.1/8.13.1) with ESMTP id l1DAQxTh003285
-	for <linux-lvm@redhat.com>; Tue, 13 Feb 2007 05:27:00 -0500
-Date: Tue, 13 Feb 2007 11:26:57 +0100
-From: Luca Berra <bluca@comedia.it>
-Subject: Re: [linux-lvm] Extending the Root Volume with LVM
-Message-ID: <20070213102657.GD16573@percy.comedia.it>
-References: <682963.73875.qm@web38214.mail.mud.yahoo.com>
-Mime-Version: 1.0
+	by int-mx2.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l1F9Nobv012162
+	for <linux-lvm@redhat.com>; Thu, 15 Feb 2007 04:23:51 -0500
+Received: from nz-out-0506.google.com (nz-out-0506.google.com [64.233.162.225])
+	by mx2.redhat.com (8.13.1/8.13.1) with ESMTP id l1F9NnrA015691
+	for <linux-lvm@redhat.com>; Thu, 15 Feb 2007 04:23:49 -0500
+Received: by nz-out-0506.google.com with SMTP id s18so511554nze
+	for <linux-lvm@redhat.com>; Thu, 15 Feb 2007 01:23:49 -0800 (PST)
+Message-ID: <9cf248670702150123n6648abf5u2bbd9eb31645c81a@mail.gmail.com>
+Date: Thu, 15 Feb 2007 14:53:47 +0530
+From: "Vasan " <vasan.vs@gmail.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Content-Disposition: inline
-In-Reply-To: <682963.73875.qm@web38214.mail.mud.yahoo.com>
+Subject: [linux-lvm] LVM2 snapshot contents on a reboot
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -23,36 +24,42 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"; format="flowed"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@redhat.com
 
-On Mon, Feb 12, 2007 at 12:11:30PM -0800, Sean McGlynn wrote:
->
->
->I am working with 
->RHEL 4 Update 4.  When initially installing the OS I allowed the installation to 
-...
->Now, as an 
->experiment, I am attempting to extend the volume group and logical volume on 
->which root is mounted.  Everything appeared to be going smoothly (extending the 
->VG, extending the LV, doing a vgchange, and then a lvm lvchange), but I am now 
->at the point where I want to run e2fsck to check the file system and resize2fs 
->to resize the files system to realize the added space, and I can't do either 
->because the volume is mounted, and cannot be unmounted.
->
->I've read a few 
-you probablu missed to "read the fine manual(TM)" provided with your rhel.
-or the fine release notes
+Hi all,
 
-rhel 4 supports online resize of filesystem, check the man page of
-ext2online to find more.
+We are using the latest version of LVM2 and creating a snapshot LV
+(This is a fresh snapshot LV and we are not attempting to migrate from
+LVM1). However, on rebooting the server, we find the snapshot contents
+are getting synced up with the original source volume contents
+completely. Any changes that has been made in the source volume after
+the snapshot volume has been taken is getting reflected in the
+snapshot volume as well after the reboot.
 
-L.
+The following are the commands that we are using:
 
--- 
-Luca Berra -- bluca@comedia.it
-        Communication Media & Services S.r.l.
- /"\
- \ /     ASCII RIBBON CAMPAIGN
-  X        AGAINST HTML MAIL
- / \
+For the creation of snapshot:
+
+lvcreate -s -L  <snap size> -n <snapshot Name> -p <R-W permission>
+<original volume>
+
+ However, if the server (running Linux  2.6.15.4) is not rebooted, the
+snapshot contents are correctly shown even if there has been any
+changes on the source volume.
+
+Should we do anything specific at the time of the server shutdown to
+ensure that the snapshot contents should not be getting synced with
+the source volume on start up?
+
+The following are the versions that we are using from a LVM perspective:
+
+-bash-3.00# lvs --version
+LVM version:     2.02.13 (2006-10-27)
+Library version: 1.02.10 (2006-09-19)
+Driver version:  4.4.0
+
+Please advice.
+
+Thanks
+
+Srini
