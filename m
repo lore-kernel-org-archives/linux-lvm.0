@@ -1,17 +1,21 @@
 Received: from mx2.redhat.com (mx2.redhat.com [10.255.15.25])
-	by int-mx2.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l1G7lfu0027110
-	for <linux-lvm@redhat.com>; Fri, 16 Feb 2007 02:47:41 -0500
-Received: from percy.comedia.it (percy.comedia.it [212.97.59.71])
-	by mx2.redhat.com (8.13.1/8.13.1) with ESMTP id l1G7ldkR026514
-	for <linux-lvm@redhat.com>; Fri, 16 Feb 2007 02:47:39 -0500
-Date: Fri, 16 Feb 2007 08:47:38 +0100
-From: Luca Berra <bluca@comedia.it>
-Subject: Re: [linux-lvm] vgdisplay - checksum error - what does it mean?
-Message-ID: <20070216074737.GA14119@percy.comedia.it>
-References: <45D448F5.3000301@wpkg.org> <45D47AF5.2040106@wpkg.org>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <45D47AF5.2040106@wpkg.org>
+	by int-mx2.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l1G8jjit031394
+	for <linux-lvm@redhat.com>; Fri, 16 Feb 2007 03:45:45 -0500
+Received: from carlit.cesca.es (carlit.cesca.es [84.88.0.2])
+	by mx2.redhat.com (8.13.1/8.13.1) with ESMTP id l1G8jhdK012787
+	for <linux-lvm@redhat.com>; Fri, 16 Feb 2007 03:45:43 -0500
+Received: from carlit.cesca.es (localhost [127.0.0.1])
+	by carlit.cesca.es (Postfix) with ESMTP id E10A7331E22
+	for <linux-lvm@redhat.com>; Fri, 16 Feb 2007 09:45:36 +0100 (CET)
+Received: from [192.94.163.17] (santalis.cesca.es [192.94.163.17])
+	by carlit.cesca.es (Postfix) with ESMTP id 317B7330E9C
+	for <linux-lvm@redhat.com>; Fri, 16 Feb 2007 09:45:35 +0100 (CET)
+Message-ID: <45D56FD4.7060908@cesca.es>
+Date: Fri, 16 Feb 2007 09:48:20 +0100
+From: Jordi Prats <jprats@cesca.es>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Subject: [linux-lvm] pvscan/vgscan/lvscan error
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -22,50 +26,38 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"; format="flowed"
 To: linux-lvm@redhat.com
 
-On Thu, Feb 15, 2007 at 04:23:33PM +0100, Tomasz Chmielewski wrote:
->Tomasz Chmielewski schrieb:
->>Recently, I used "vgdisplay", and noticed that it gives a "checksum error":
->>
->># vgdisplay
->>   /dev/sda2: Checksum error
-....
->>
->>Should I be scared? What does it mean? What should I do about it? I 
->>wouldn't like to loose the data.
->>
->>If it helps, my setup looks like that:
->>
->>HDD1-sda2-\
->>HDD2-sdb2-|__RAID-10--LVM-2
->>HDD3-sdc2-|
->>HDD4-sdd2-/
->>
->>I'm running 2.6.17.8 kernel.
->
-...
->
->So this basically means, that LVM was set up on /dev/sda2 some time ago, 
->but it was never removed from there - instead, RAID-10 was set up on 
->that partition?
+Hi all,
+I've found that all vgscan is giving me an error. This is the output:
 
-I don't think so. if sda2 is part of a raid10 md array probably the
-beginning sector of the md device maps to the beginning sector of the
-real device, hence lvm will find an lvm signature on /dev/sda2.
+# vgscan -v
+    Wiping cache of LVM-capable devices
+    Wiping internal VG cache
+  Reading all physical volumes.  This may take a while...
+    Finding all volume groups
+  /dev/dm-4: read failed after 0 of 4096 at 12989693952: Input/output error
+  /dev/dm-4: read failed after 0 of 4096 at 0: Input/output error
+    Finding volume group "padicat"
+  Found volume group "padicat" using metadata type lvm2
+    Finding volume group "vg_bbdd"
+  Found volume group "vg_bbdd" using metadata type lvm2
+    Finding volume group "vg_ordal"
+  Found volume group "vg_ordal" using metadata type lvm2
 
->Should I do something to fix the things? What?
-yes, re-enable md_component_detection in lvm.conf, why did you disable
-that?
+Any idea what this "Input/output error" on /dev/dm-4 does it means? What 
+is causing this error?
 
-L.
+Thank you!
 
 -- 
-Luca Berra -- bluca@comedia.it
-        Communication Media & Services S.r.l.
- /"\
- \ /     ASCII RIBBON CAMPAIGN
-  X        AGAINST HTML MAIL
- / \
+......................................................................
+         __
+        / /          Jordi Prats
+  C E / S / C A      Dept. de Sistemes
+      /_/            Centre de Supercomputaci� de Catalunya
+
+  Gran Capit�, 2-4 (Edifici Nexus) � 08034 Barcelona
+  T. 93 205 6464 � F.  93 205 6979 � jprats@cesca.es
+...................................................................... 
