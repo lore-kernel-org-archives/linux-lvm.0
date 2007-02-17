@@ -1,18 +1,26 @@
 Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l1CKaPk9021000
-	for <linux-lvm@redhat.com>; Mon, 12 Feb 2007 15:36:25 -0500
-Received: from smtp102.sbc.mail.re2.yahoo.com (smtp102.sbc.mail.re2.yahoo.com
-	[68.142.229.103])
-	by mx1.redhat.com (8.13.1/8.13.1) with SMTP id l1CKaNwQ002129
-	for <linux-lvm@redhat.com>; Mon, 12 Feb 2007 15:36:23 -0500
-Message-ID: <45D0CFA1.9070508@akamail.com>
-Date: Mon, 12 Feb 2007 12:35:45 -0800
-From: Duane Clark <dclark@akamail.com>
-MIME-Version: 1.0
-References: <682963.73875.qm@web38214.mail.mud.yahoo.com>
-In-Reply-To: <682963.73875.qm@web38214.mail.mud.yahoo.com>
-Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] Re: Extending the Root Volume with LVM
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l1HHF9Ah001965
+	for <linux-lvm@redhat.com>; Sat, 17 Feb 2007 12:15:09 -0500
+Received: from ciao.gmane.org (main.gmane.org [80.91.229.2])
+	by mx1.redhat.com (8.13.1/8.13.1) with ESMTP id l1HHF7op006070
+	for <linux-lvm@redhat.com>; Sat, 17 Feb 2007 12:15:08 -0500
+Received: from root by ciao.gmane.org with local (Exim 4.43)
+	id 1HIT9K-0005Q9-1Z
+	for linux-lvm@redhat.com; Sat, 17 Feb 2007 18:15:02 +0100
+Received: from 202.3.112.4 ([202.3.112.4])
+	by main.gmane.org with esmtp (Gmexim 0.1 (Debian))
+	id 1AlnuQ-0007hv-00
+	for <linux-lvm@redhat.com>; Sat, 17 Feb 2007 18:15:02 +0100
+Received: from rrs by 202.3.112.4 with local (Gmexim 0.1 (Debian))
+	id 1AlnuQ-0007hv-00
+	for <linux-lvm@redhat.com>; Sat, 17 Feb 2007 18:15:02 +0100
+From: Ritesh Raj Sarraf <rrs@researchut.com>
+Date: Sat, 17 Feb 2007 21:52:27 +0530
+Message-ID: <3nmja4-jtv.ln1@www.researchut.com>
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7Bit
+Sender: news <news@sea.gmane.org>
+Subject: [linux-lvm] LVM + Multipathing
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -23,36 +31,31 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
+Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@redhat.com
 
-Sean McGlynn wrote:
-> I am working with RHEL 4 Update 4.  When initially installing the OS I 
-> allowed the installation to automatically partition the disk, and it 
-> used LVM to create a logical volume to mount the root file system.  The 
-> only other logical volume it created was for the swap file.
->  
-> Now, as an experiment, I am attempting to extend the volume group and 
-> logical volume on which root is mounted.  Everything appeared to 
-> be going smoothly (extending the VG, extending the LV, doing a vgchange, 
-> and then a lvm lvchange), but I am now at the point where I want to run 
-> e2fsck to check the file system and resize2fs to resize the files system 
-> to realize the added space, and I can't do either because the volume is 
-> mounted, and cannot be unmounted.
->  
-> I've read a few suggestions such as using the installation media to go 
-> in in rescue mode, but nothing seems to do the trick. 
+Hi,
 
-Why, what problems did you run into? When rescue mode asked you whether 
-you wanted it to find and mount the root partitions, did you select 
-"skip"? Here are step by step instructions on how I reduced the LVM (on 
-FC4), including e2fsck and resize2fs.
+I have a question regarding the combination of LVM + Multipathing in a SAN
+environment.
 
-https://www.redhat.com/archives/linux-lvm/2006-August/msg00081.html
+I have a LUN mapped to a host using iSCSI. I have two two paths to the LUN. This
+setup, using multipathing, provides me failover functionality.
 
-> I also read 
-> something that said that you cannot extend the root volume, and that you 
-> shouldn't have to.  This appears to be more accurate than anything else 
-> I've read.
+My question is how does LVM react to path failures ?
+In a failover environment, multipathing can take upto 120 seconds to detect that
+the active path to the LUN is no more available and then switch to the
+secondary path. During this 120 seconds, how does LVM react ? Does it really
+sense that the device is offlined ? Or that information is never passed to LVM
+and it just allows I/O to happen leaving that responsibility to the
+multipathing layer ?
 
-Definitely not true.
+Thanks,
+Ritesh
+-- 
+Ritesh Raj Sarraf
+RESEARCHUT - http://www.researchut.com
+"Necessity is the mother of invention."
+"Stealing logic from one person is plagiarism, stealing from many is research."
+"The great are those who achieve the impossible, the petty are those who
+cannot - rrs"
