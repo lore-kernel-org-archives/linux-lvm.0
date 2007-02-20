@@ -1,22 +1,16 @@
 Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l1KJCEWA001972
-	for <linux-lvm@redhat.com>; Tue, 20 Feb 2007 14:12:14 -0500
-Received: from ug-out-1314.google.com (ug-out-1314.google.com [66.249.92.175])
-	by mx1.redhat.com (8.13.1/8.13.1) with ESMTP id l1KJBLoa012537
-	for <linux-lvm@redhat.com>; Tue, 20 Feb 2007 14:12:12 -0500
-Received: by ug-out-1314.google.com with SMTP id x30so821800ugc
-	for <linux-lvm@redhat.com>; Tue, 20 Feb 2007 11:12:12 -0800 (PST)
-Message-ID: <87f94c370702201112n725a6482gdf164bcd2f9c4fc1@mail.gmail.com>
-Date: Tue, 20 Feb 2007 14:12:12 -0500
-From: "Greg Freemyer" <greg.freemyer@gmail.com>
-Subject: Re: [linux-lvm] LVM & snapshots
-In-Reply-To: <Pine.LNX.4.64.0702201452390.27267@lion.drogon.net>
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l1KJac0X013466
+	for <linux-lvm@redhat.com>; Tue, 20 Feb 2007 14:36:38 -0500
+Received: from web50705.mail.yahoo.com (web50705.mail.yahoo.com
+	[206.190.38.103])
+	by mx1.redhat.com (8.13.1/8.13.1) with SMTP id l1KJaZcX001294
+	for <linux-lvm@redhat.com>; Tue, 20 Feb 2007 14:36:35 -0500
+Date: Tue, 20 Feb 2007 11:36:29 -0800 (PST)
+From: John Koshi <jkoshi@yahoo.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-References: <Pine.LNX.4.64.0702201132560.27267@lion.drogon.net>
-	<45DAFBE8.2040009@gmail.com>
-	<Pine.LNX.4.64.0702201452390.27267@lion.drogon.net>
+Content-Transfer-Encoding: 8bit
+Message-ID: <512064.59586.qm@web50705.mail.yahoo.com>
+Subject: [linux-lvm] Grub/LVM boot problem
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -27,51 +21,46 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="us-ascii"
+To: linux-lvm@redhat.com
 
-On 2/20/07, Gordon Henderson <gordon@drogon.net> wrote:
-> On Tue, 20 Feb 2007, Les Mikesell wrote:
->
-> > You might want to look at backuppc (http://backuppc.sourceforge.net/) to
-> > manage the on-line backups.  It uses a scheme of compression and hard-linking
-> > duplicate files to greatly reduce the storage space you need when keeping a
-> > long history - especially if many files are unchanged over that time.   With
-> > something that size you might still have to play some tricks with snapshots
-> > or break it down into smaller directory runs.  It uses tar, smb, or rsync to
-> > do the actual copies, then has some extra overhead for the compression and
-> > linking jobs.  If it is too slow, you might run it against your existing
-> > uncompressed copy so it has all day to make the long-term archive version.
->
-> Interesting, especially for the Win side of things, thanks!
->
-> However one of the things I may need is to use the backup server as a
-> "live" server, should the original server ever catch fire (or whatever),
-> so pull the backup from the bunker, drive it across town and with minimal
-> changes, have it take the place of the live server (turn on nfs/samba on
-> the appropriate locations) until we get a new one installed... So it's
-> compression would be of minimal use, but it may have other uses...
->
-> Thanks,
->
-> Gordon
->
-You might want to look into rdiff-backup.
+Hi,
 
-It keeps a uncompressed copy of all backed up data.  Then compressed
-deltas to get you to older revisions.
+I have a problem with the grub bootloader, as follows. I have a
+laptop, with an 80G disk, with Windows XP on the first half of
+the disk (NTFS), and Fedora core 4 (LVM) on the rest. Dual boot
+is managed by grub, installed with the Fedora install.
 
-The uncompressed copy should be easy to serve via Samba / NSF.
+I wish to clone this disk, so I don't lose hours of setup/installs
+on both OS's, and my work, in case of a crash. I did the following:
 
-Suse has been including it in their distro for a while.  I don't know
-about others.
+1) Installed Acronis 10 under Windows, and cloned the entire disk
+   to a 120G USB disk.
+2) Restored from that clone onto a new 80G disk of the same geometry,
+   and replaced the existing disk with the newly cloned one.
+3) On start-up, got a grub hang, so did the following:
+      a) Boot from Fedora core 4 rescue CD
+      b) chroot /mnt/sysimage
+      c) grub-install /dev/hda
+      d) Enter grub
+      e) grub> find /grub/stage1 -> gave me (hd0,3)
+      f) grub> root (hd0,3)
+      g) grub> kernel /vmlinuz-2.6.17-1.2142_FC4 ro root=/dev/hda4
+      h) grub> initrd /initrd-2.6.17-1.2142_FC4.img -> gave me 
+                    "Error 16: Inconsistent filesystem structure"
+      i) Exit grub, repeat to step b) above, and rebuild initrd:
+         "mkinitrd -v -f initrd-2.6.17-1.2142_FC4.img 2.6.17-1.2142_FC4
+      j) Repeat from d) again, and get the same Error 16 as above.
+4) Note that after step 3-c) above, I got past the grub hang, and was able
+   to boot Windows. But selecting the Linux installation gave me "Error 17:
+   Cannot mount selected partition". That's when I did the remaining steps
+   above.
 
-It is written in python (I think), so it may not be fast enough for
-you, but it only ships the deltas across the wire (like rsync), so it
-is worth looking into.
+Sorry about the long-winded explanation, but this is frustrating, and I
+wanted to provide all the details, in the hope that some-one could throw
+some light on the dark innards of grub vis-a-vis LVM, to resolve this.
 
-Greg
--- 
-Greg Freemyer
-The Norcross Group
-Forensics for the 21st Century
+Thanks in advance.
+
+regards,
+John
