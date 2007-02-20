@@ -1,17 +1,25 @@
-Received: from mx2.redhat.com (mx2.redhat.com [10.255.15.25])
-	by int-mx2.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l1K6Bsui002758
-	for <linux-lvm@redhat.com>; Tue, 20 Feb 2007 01:11:55 -0500
-Received: from percy.comedia.it (percy.comedia.it [212.97.59.71])
-	by mx2.redhat.com (8.13.1/8.13.1) with ESMTP id l1K6BqU6014932
-	for <linux-lvm@redhat.com>; Tue, 20 Feb 2007 01:11:53 -0500
-Date: Tue, 20 Feb 2007 07:11:51 +0100
-From: Luca Berra <bluca@comedia.it>
-Subject: Re: [linux-lvm] LVM + Multipathing
-Message-ID: <20070220061150.GA3215@percy.comedia.it>
-References: <3nmja4-jtv.ln1@www.researchut.com>
+Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l1KAjSIN009286
+	for <linux-lvm@redhat.com>; Tue, 20 Feb 2007 05:45:28 -0500
+Received: from mrp.swissptt.ch (outmail20.swisscom.com [138.190.3.140])
+	by mx1.redhat.com (8.13.1/8.13.1) with ESMTP id l1KAjLJl006540
+	for <linux-lvm@redhat.com>; Tue, 20 Feb 2007 05:45:22 -0500
+Received: from slopi.osk.ch (mwdsp001.swissptt.ch [10.225.18.78])
+	by mrp.swissptt.ch with ESMTP id l1KAjJob001091
+	(using TLSv1/SSLv3 with cipher DHE-RSA-AES256-SHA (256 bits) verified
+	NO) for <linux-lvm@redhat.com>; Tue, 20 Feb 2007 11:45:19 +0100 (MET)
+Received: from slopi (localhost [127.0.0.1])
+	by slopi.osk.ch (8.13.7/8.13.7) with ESMTP id l1KAjILi004277
+	for <linux-lvm@redhat.com>; Tue, 20 Feb 2007 11:45:19 +0100
+Date: Tue, 20 Feb 2007 11:45:18 +0100
+From: Chris Osicki <osk@admin.swisscom-mobile.ch>
+Subject: Re: [linux-lvm] Re: Extending the Root Volume with LVM
+Message-ID: <20070220114518.13e93256@slopi>
+In-Reply-To: <45D0CFA1.9070508@akamail.com>
+References: <682963.73875.qm@web38214.mail.mud.yahoo.com>
+	<45D0CFA1.9070508@akamail.com>
 Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <3nmja4-jtv.ln1@www.researchut.com>
+Content-Transfer-Encoding: 7bit
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -22,35 +30,54 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@redhat.com
 
-On Sat, Feb 17, 2007 at 09:52:27PM +0530, Ritesh Raj Sarraf wrote:
->Hi,
->
->I have a question regarding the combination of LVM + Multipathing in a SAN
->environment.
->
->I have a LUN mapped to a host using iSCSI. I have two two paths to the LUN. This
->setup, using multipathing, provides me failover functionality.
->
->My question is how does LVM react to path failures ?
->In a failover environment, multipathing can take upto 120 seconds to detect that
->the active path to the LUN is no more available and then switch to the
->secondary path. During this 120 seconds, how does LVM react ? Does it really
->sense that the device is offlined ? Or that information is never passed to LVM
->and it just allows I/O to happen leaving that responsibility to the
->multipathing layer ?
 
-i believe LVM does not react at all.
+Clark
 
-L.
+Have a look at ext2online. It comes with RHEL 4.
 
--- 
-Luca Berra -- bluca@comedia.it
-        Communication Media & Services S.r.l.
- /"\
- \ /     ASCII RIBBON CAMPAIGN
-  X        AGAINST HTML MAIL
- / \
+Regards,
+Chris
+
+On Mon, 12 Feb 2007 12:35:45 -0800
+Duane Clark <dclark@akamail.com> wrote:
+
+> Sean McGlynn wrote:
+> > I am working with RHEL 4 Update 4.  When initially installing the OS I 
+> > allowed the installation to automatically partition the disk, and it 
+> > used LVM to create a logical volume to mount the root file system.  The 
+> > only other logical volume it created was for the swap file.
+> >  
+> > Now, as an experiment, I am attempting to extend the volume group and 
+> > logical volume on which root is mounted.  Everything appeared to 
+> > be going smoothly (extending the VG, extending the LV, doing a vgchange, 
+> > and then a lvm lvchange), but I am now at the point where I want to run 
+> > e2fsck to check the file system and resize2fs to resize the files system 
+> > to realize the added space, and I can't do either because the volume is 
+> > mounted, and cannot be unmounted.
+> >  
+> > I've read a few suggestions such as using the installation media to go 
+> > in in rescue mode, but nothing seems to do the trick. 
+> 
+> Why, what problems did you run into? When rescue mode asked you whether 
+> you wanted it to find and mount the root partitions, did you select 
+> "skip"? Here are step by step instructions on how I reduced the LVM (on 
+> FC4), including e2fsck and resize2fs.
+> 
+> https://www.redhat.com/archives/linux-lvm/2006-August/msg00081.html
+> 
+> > I also read 
+> > something that said that you cannot extend the root volume, and that you 
+> > shouldn't have to.  This appears to be more accurate than anything else 
+> > I've read.
+> 
+> Definitely not true.
+> 
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@redhat.com
+> https://www.redhat.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+> 
