@@ -1,9 +1,19 @@
-In-Reply-To: <859a78260702200903o14188cb1hf874d589c5204698@mail.gmail.com>
-Subject: Re: [linux-lvm] Re: LVM + Multipathing
-Message-ID: <OF7543DA7C.A03F9444-ONC1257288.005E5E10-C1257288.005E978B@schering.de>
-From: Christian.Rohrmeier@SCHERING.DE
-Date: Tue, 20 Feb 2007 18:13:11 +0100
+Received: from mx2.redhat.com (mx2.redhat.com [10.255.15.25])
+	by int-mx2.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l1KHaVsq030385
+	for <linux-lvm@redhat.com>; Tue, 20 Feb 2007 12:36:31 -0500
+Received: from smtp112.sbc.mail.mud.yahoo.com (smtp112.sbc.mail.mud.yahoo.com
+	[68.142.198.211])
+	by mx2.redhat.com (8.13.1/8.13.1) with SMTP id l1KHaTBW030387
+	for <linux-lvm@redhat.com>; Tue, 20 Feb 2007 12:36:30 -0500
+Message-ID: <45DB3196.20908@akamail.com>
+Date: Tue, 20 Feb 2007 09:36:22 -0800
+From: Duane Clark <dclark@akamail.com>
 MIME-Version: 1.0
+References: <682963.73875.qm@web38214.mail.mud.yahoo.com>	<45D0CFA1.9070508@akamail.com>
+	<20070220114518.13e93256@slopi>
+In-Reply-To: <20070220114518.13e93256@slopi>
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] Re: Extending the Root Volume with LVM
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -14,111 +24,31 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: LVM general discussion and development <linux-lvm@redhat.com>
-Cc: linux-lvm-bounces@redhat.com
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+To: linux-lvm@redhat.com
 
-Using device-mapper-multipath to create a device alias (/dev/mapper/<...>)
-which you would then use as a PV in your LVM setup. Device-mapper-multipath
-can indeed handle multi-pathingsuch that a failure of one one of the path
-would not lead to any IO issues and LVm would just keep on ticking.
+Chris Osicki wrote:
+> Clark
+> 
+> Have a look at ext2online. It comes with RHEL 4.
 
+I'll admit I was unaware of that command. I notice that the third 
+sentence of the man page says "It is only possible to enlarge a mounted 
+filesystem". While Sean was indeed increasing the size, I was trying to 
+reduce it.
 
+<just a bit of venting, so feel free to ignore>
+A big pain with Linux, in my view, is that even after using it for six 
+years, I am unaware of the majority of features available in it. I did 
+what I thought was reasonable; I read the HOWTO (the one mentioned down 
+there at the bottom of this email ;). No mention of ext2online there, 
+nor any mention of the steps I used to resize a root filesystem; only 
+the steps for a filesystem that can be easily unmounted while the OS is 
+running.
 
-
-                                                                           
-             "Matt P"                                                      
-             <slarty.tj@gmail.                                             
-             com>                                                       To 
-             Sent by:                  linux-lvm@redhat.com                
-             linux-lvm-bounces                                          cc 
-             @redhat.com                                                   
-                                                                   Subject 
-                                       Re: [linux-lvm] Re: LVM +           
-             20.02.2007 18:03          Multipathing                        
-                                                                           
-                                                                           
-             Please respond to                                             
-                LVM general                                                
-              discussion and                                               
-                development                                                
-             <linux-lvm@redhat                                             
-                   .com>                                                   
-                                                                           
-                                                                           
-
-
-
-
-Your problem might be related to this bug
-https://bugzilla.redhat.com/bugzilla/show_bug.cgi?id=213921
-
-On 2/20/07, Luca Berra <bluca@comedia.it> wrote:
-> On Tue, Feb 20, 2007 at 06:00:25PM +0530, Ritesh Raj Sarraf wrote:
-> >Luca Berra wrote:
-> >
-> >> On Sat, Feb 17, 2007 at 09:52:27PM +0530, Ritesh Raj Sarraf wrote:
-> >>>Hi,
-> >>>
-> >>>I have a question regarding the combination of LVM + Multipathing in a
-SAN
-> >>>environment.
-> >>>
-> >>>I have a LUN mapped to a host using iSCSI. I have two two paths to the
-LUN.
-> >>>This setup, using multipathing, provides me failover functionality.
-> >>>
-> >>>My question is how does LVM react to path failures ?
-> >>>In a failover environment, multipathing can take upto 120 seconds to
-detect
-> >>>that the active path to the LUN is no more available and then switch
-to the
-> >>>secondary path. During this 120 seconds, how does LVM react ? Does it
-really
-> >>>sense that the device is offlined ? Or that information is never
-passed to LVM
-> >>>and it just allows I/O to happen leaving that responsibility to the
-> >>>multipathing layer ?
-> >>
-> >> i believe LVM does not react at all.
-> >>
-> >
-> >I brought this question because I'm seeing Filesystem READONLY issues
-when doing
-> >a takeover/giveback.
-> >
-> >My understanding is that a filesystem usually goes read-only, only when
-it
-> >senses errors in the drive. Now I believe LVM might the culprit because
-beneath
-> >the filesystem and above the block device, LVM is the only layer.
-> to clarify my point above:
-> i meant that LVM (actually device-mapper) does not do anything special.
-> it just passes the IO requests from the fs layer to the
-> underlying block device and if the underlyng block device returns an IO
-> error then it is passed back to the fs. which will cause ext2 to remount
-> the filesystem readonly.
->
-> L.
->
-> --
-> Luca Berra -- bluca@comedia.it
->         Communication Media & Services S.r.l.
->  /"\
->  \ /     ASCII RIBBON CAMPAIGN
->   X        AGAINST HTML MAIL
->  / \
->
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
->
-
-_______________________________________________
-linux-lvm mailing list
-linux-lvm@redhat.com
-https://www.redhat.com/mailman/listinfo/linux-lvm
-read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+And in order to figure out the steps to resize the root filesystem, I 
+read through a lot of man pages and web pages and howtos, and nowhere do 
+I recall coming across ext2online (though I'll admit that was awhile 
+ago). By the way, I suggested in my posting that the steps be added to 
+the howto (the subject line was "Howto suggestion..."). And I have seen 
+other postings here with suggestions about the howto.
