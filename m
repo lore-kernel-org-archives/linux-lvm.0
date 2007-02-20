@@ -1,22 +1,28 @@
 Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l1KIOESF018940
-	for <linux-lvm@redhat.com>; Tue, 20 Feb 2007 13:24:14 -0500
-Received: from mx3-6.spamtrap.magma.ca (mx3-6.spamtrap.magma.ca
-	[209.217.78.173])
-	by mx1.redhat.com (8.13.1/8.13.1) with ESMTP id l1KIOAs9019013
-	for <linux-lvm@redhat.com>; Tue, 20 Feb 2007 13:24:10 -0500
-Received: from www-webmail1.magma.ca (www-webmail1.internal.magma.ca
-	[10.0.10.246])
-	by mx3-6.spamtrap.magma.ca (8.13.0/8.13.1) with ESMTP id l1KIO8Eg028348
-	for <linux-lvm@redhat.com>; Tue, 20 Feb 2007 13:24:08 -0500
-Received: from www-webmail1.magma.ca (localhost.localdomain [127.0.0.1])
-	by www-webmail1.magma.ca (8.13.1/8.13.1) with ESMTP id l1KIO8KK001650
-	for <linux-lvm@redhat.com>; Tue, 20 Feb 2007 13:24:08 -0500
-Date: Tue, 20 Feb 2007 13:24:07 -0500
-Message-Id: <200702201824.l1KIO73V001649@www-webmail1.magma.ca>
-From: "Reid" <lvm@nri.ca>
-Mime-Version: 1.0
-Subject: [linux-lvm] Restoring LVM configuration
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l1KETjpD030779
+	for <linux-lvm@redhat.com>; Tue, 20 Feb 2007 09:29:45 -0500
+Received: from pat.uio.no
+	(IDENT:U2FsdGVkX18vrkyDkbnxFIKxLnGx3JLA09fhE+OMAkI@pat.uio.no
+	[129.240.10.15])
+	by mx1.redhat.com (8.13.1/8.13.1) with ESMTP id l1KETiE9018938
+	for <linux-lvm@redhat.com>; Tue, 20 Feb 2007 09:29:44 -0500
+Received: from mail-mx2.uio.no ([129.240.10.30])
+	by pat.uio.no with esmtp (Exim 4.66)
+	(envelope-from <terjekv@nommo.uio.no>) id 1HJVzy-0006sG-T3
+	for linux-lvm@redhat.com; Tue, 20 Feb 2007 15:29:42 +0100
+Received: from nommo.uio.no ([129.240.222.179])
+	by mail-mx2.uio.no with esmtp (Exim 4.66)
+	(envelope-from <terjekv@nommo.uio.no>) id 1HJVzy-0000hX-In
+	for linux-lvm@redhat.com; Tue, 20 Feb 2007 15:29:42 +0100
+Received: from terjekv by nommo.uio.no with local (Exim 4.44)
+	id 1HJVzy-0007Px-Be
+	for linux-lvm@redhat.com; Tue, 20 Feb 2007 15:29:42 +0100
+From: Terje Kvernes <terjekv@math.uio.no>
+Date: Tue, 20 Feb 2007 15:29:42 +0100
+Message-ID: <wxx3b50297t.fsf@nommo.uio.no>
+MIME-Version: 1.0
+Sender: Terje Kvernes <terjekv@math.uio.no>
+Subject: [linux-lvm] devsize problems.
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -31,26 +37,29 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@redhat.com
 
-Hi,
 
-Through a number of steps in an attempt to upgrade my server I ended up losing the
-lvm.conf configuration file and my backup of it.
+  (my apologies if you see this twice, I couldn't see my previous
+  attempt reach the archives)
 
-Part of the problem occured when I moved the disks from one controller to another on my
-server.  For some reason the partition information was lost.  This was recovered without
-too many troubles leaving me with a boot (ext2) and lvm2 partitions on one drive and a
-lvm2 partition on the other.
+  I've been trying to create a large (4TB) volume on a 3ware raid
+  controller, and I get "device-mapper: reload ioctl failed: Invalid
+  argument" from lvcreate and 
 
-I noticed on the LVM how-to that you might be able to recreate the configuration using
-pvcreate after looking at /etc/lvm/archive/VolumeGroupName_XXXXX.vg but I am unable to in
-this case because the root file system was part of the LVM itself.  (If I could mount it
-to find out the configuration then I wouldn't be having such a problem!)
+Feb 19 13:42:10 siniolchu kernel: device-mapper: device 8:3 too small for target
+Feb 19 13:42:10 siniolchu kernel: device-mapper: dm-linear: Device lookup failed
+Feb 19 13:42:10 siniolchu kernel: device-mapper: error adding target to table
 
-Ideally I would like to be able to create a configuration using Knoppix so that I could
-mount the drives and write it onto them.  
+  from the logs.  interestingly enough, the DevSize reports the
+  following:
 
-The next best thing for me would be to find some way to get the files off of the drives
-and onto a spare drive (basically recreate my backup) without losing file names/directory
-structure.
+siniolchu:/# pvs  -o +dev_size
+  PV         VG       Fmt  Attr PSize PFree DevSize
+  /dev/sda3  internvg lvm2 a-   4.09T 4.06T  89.86G
 
-Thanks.
+  if I'm reading this correctly, the device seems to be telling LVM
+  that it's 89.86G only?  any suggestions on how to solve this would
+  be appreciated.
+
+
+-- 
+Terje
