@@ -1,25 +1,22 @@
 Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l1LLNKvS028832
-	for <linux-lvm@redhat.com>; Wed, 21 Feb 2007 16:23:20 -0500
-Received: from mhw.ulib.iupui.edu (mail@mhw.ulib.iupui.edu [134.68.171.23])
-	by mx1.redhat.com (8.13.1/8.13.1) with ESMTP id l1LLNJmi020123
-	for <linux-lvm@redhat.com>; Wed, 21 Feb 2007 16:23:19 -0500
-Received: from mwood by mhw.ulib.iupui.edu with local (Exim 4.62)
-	(envelope-from <mwood@mhw.ulib.iupui.edu>) id 1HJyvm-00035T-Cb
-	for linux-lvm@redhat.com; Wed, 21 Feb 2007 16:23:18 -0500
-Date: Wed, 21 Feb 2007 16:23:18 -0500
-From: "Mark H. Wood" <mwood@IUPUI.Edu>
-Subject: Re: [linux-lvm] LVM - History
-Message-ID: <20070221212318.GA8141@IUPUI.Edu>
-References: <628454.24513.qm@web32913.mail.mud.yahoo.com>
-	<87f94c370702210853i643ef08co7667e9bf5e77f126@mail.gmail.com>
-	<45DC80B3.6000001@free.fr>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="lrZ03NoBR/3+SXJZ"
-Content-Disposition: inline
-In-Reply-To: <45DC80B3.6000001@free.fr>
-Sender: "Mark H. Wood,UL 0115A,+1 317 274 0749," <mwood@mhw.ulib.iupui.edu>
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l1KIOESF018940
+	for <linux-lvm@redhat.com>; Tue, 20 Feb 2007 13:24:14 -0500
+Received: from mx3-6.spamtrap.magma.ca (mx3-6.spamtrap.magma.ca
+	[209.217.78.173])
+	by mx1.redhat.com (8.13.1/8.13.1) with ESMTP id l1KIOAs9019013
+	for <linux-lvm@redhat.com>; Tue, 20 Feb 2007 13:24:10 -0500
+Received: from www-webmail1.magma.ca (www-webmail1.internal.magma.ca
+	[10.0.10.246])
+	by mx3-6.spamtrap.magma.ca (8.13.0/8.13.1) with ESMTP id l1KIO8Eg028348
+	for <linux-lvm@redhat.com>; Tue, 20 Feb 2007 13:24:08 -0500
+Received: from www-webmail1.magma.ca (localhost.localdomain [127.0.0.1])
+	by www-webmail1.magma.ca (8.13.1/8.13.1) with ESMTP id l1KIO8KK001650
+	for <linux-lvm@redhat.com>; Tue, 20 Feb 2007 13:24:08 -0500
+Date: Tue, 20 Feb 2007 13:24:07 -0500
+Message-Id: <200702201824.l1KIO73V001649@www-webmail1.magma.ca>
+From: "Reid" <lvm@nri.ca>
+Mime-Version: 1.0
+Subject: [linux-lvm] Restoring LVM configuration
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -30,48 +27,30 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: linux-lvm@redhat.com
 
+Hi,
 
---lrZ03NoBR/3+SXJZ
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Through a number of steps in an attempt to upgrade my server I ended up losing the
+lvm.conf configuration file and my backup of it.
 
-Maybe you should define the scope of "LVM" for your purposes.  The
-basic idea goes waaaaay back.  Netware 4 had the ability to divvy up a
-partition, slice off pieces, and stick them together into one or more
-logical volumes.  Most mainframe and mini OSes could at least paste
-multiple physical disk volumes together to form larger logical
-volumes.  The ANSI X3.27 tape label standard from the 1970s or so (my
-copy is at home now) (last edition is from 1987) defines a way to do
-this with *open-reel tapes*.
+Part of the problem occured when I moved the disks from one controller to another on my
+server.  For some reason the partition information was lost.  This was recovered without
+too many troubles leaving me with a boot (ext2) and lvm2 partitions on one drive and a
+lvm2 partition on the other.
 
-It's interesting to look at how the idea developed over time.  Logical
-volume management started out as a way to make a single large logical
-volume out of multiple rather dinky physical volumes.  Nowadays it's
-typically used in the opposite fashion:  take a huge physical volume
-and carve it into multiple smaller logical volumes.  You can still
-make logical volumes bigger than the biggest available physical
-volume, though, and there are sites which do.  (I haven't needed that
-much storage in a single block address space since the 1990s, but YMMV.)
+I noticed on the LVM how-to that you might be able to recreate the configuration using
+pvcreate after looking at /etc/lvm/archive/VolumeGroupName_XXXXX.vg but I am unable to in
+this case because the root file system was part of the LVM itself.  (If I could mount it
+to find out the configuration then I wouldn't be having such a problem!)
 
---=20
-Mark H. Wood, Lead System Programmer   mwood@IUPUI.Edu
-Typically when a software vendor says that a product is "intuitive" he
-means the exact opposite.
+Ideally I would like to be able to create a configuration using Knoppix so that I could
+mount the drives and write it onto them.  
 
+The next best thing for me would be to find some way to get the files off of the drives
+and onto a spare drive (basically recreate my backup) without losing file names/directory
+structure.
 
---lrZ03NoBR/3+SXJZ
-Content-Type: application/pgp-signature
-Content-Disposition: inline
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.6 (GNU/Linux)
-
-iD8DBQFF3LhGs/NR4JuTKG8RAqHzAJ0ZgCy7/jGvHfEjAijntWcFJRG2DACfca4R
-H/5NRA3xuiX1bJwSbeyGkII=
-=FJkW
------END PGP SIGNATURE-----
-
---lrZ03NoBR/3+SXJZ--
+Thanks.
