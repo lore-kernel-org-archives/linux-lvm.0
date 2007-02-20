@@ -1,19 +1,22 @@
-Received: from mx2.redhat.com (mx2.redhat.com [10.255.15.25])
-	by int-mx2.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l1KHaVsq030385
-	for <linux-lvm@redhat.com>; Tue, 20 Feb 2007 12:36:31 -0500
-Received: from smtp112.sbc.mail.mud.yahoo.com (smtp112.sbc.mail.mud.yahoo.com
-	[68.142.198.211])
-	by mx2.redhat.com (8.13.1/8.13.1) with SMTP id l1KHaTBW030387
-	for <linux-lvm@redhat.com>; Tue, 20 Feb 2007 12:36:30 -0500
-Message-ID: <45DB3196.20908@akamail.com>
-Date: Tue, 20 Feb 2007 09:36:22 -0800
-From: Duane Clark <dclark@akamail.com>
+Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l1KJCEWA001972
+	for <linux-lvm@redhat.com>; Tue, 20 Feb 2007 14:12:14 -0500
+Received: from ug-out-1314.google.com (ug-out-1314.google.com [66.249.92.175])
+	by mx1.redhat.com (8.13.1/8.13.1) with ESMTP id l1KJBLoa012537
+	for <linux-lvm@redhat.com>; Tue, 20 Feb 2007 14:12:12 -0500
+Received: by ug-out-1314.google.com with SMTP id x30so821800ugc
+	for <linux-lvm@redhat.com>; Tue, 20 Feb 2007 11:12:12 -0800 (PST)
+Message-ID: <87f94c370702201112n725a6482gdf164bcd2f9c4fc1@mail.gmail.com>
+Date: Tue, 20 Feb 2007 14:12:12 -0500
+From: "Greg Freemyer" <greg.freemyer@gmail.com>
+Subject: Re: [linux-lvm] LVM & snapshots
+In-Reply-To: <Pine.LNX.4.64.0702201452390.27267@lion.drogon.net>
 MIME-Version: 1.0
-References: <682963.73875.qm@web38214.mail.mud.yahoo.com>	<45D0CFA1.9070508@akamail.com>
-	<20070220114518.13e93256@slopi>
-In-Reply-To: <20070220114518.13e93256@slopi>
 Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] Re: Extending the Root Volume with LVM
+Content-Disposition: inline
+References: <Pine.LNX.4.64.0702201132560.27267@lion.drogon.net>
+	<45DAFBE8.2040009@gmail.com>
+	<Pine.LNX.4.64.0702201452390.27267@lion.drogon.net>
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -25,30 +28,50 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: linux-lvm@redhat.com
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-Chris Osicki wrote:
-> Clark
-> 
-> Have a look at ext2online. It comes with RHEL 4.
+On 2/20/07, Gordon Henderson <gordon@drogon.net> wrote:
+> On Tue, 20 Feb 2007, Les Mikesell wrote:
+>
+> > You might want to look at backuppc (http://backuppc.sourceforge.net/) to
+> > manage the on-line backups.  It uses a scheme of compression and hard-linking
+> > duplicate files to greatly reduce the storage space you need when keeping a
+> > long history - especially if many files are unchanged over that time.   With
+> > something that size you might still have to play some tricks with snapshots
+> > or break it down into smaller directory runs.  It uses tar, smb, or rsync to
+> > do the actual copies, then has some extra overhead for the compression and
+> > linking jobs.  If it is too slow, you might run it against your existing
+> > uncompressed copy so it has all day to make the long-term archive version.
+>
+> Interesting, especially for the Win side of things, thanks!
+>
+> However one of the things I may need is to use the backup server as a
+> "live" server, should the original server ever catch fire (or whatever),
+> so pull the backup from the bunker, drive it across town and with minimal
+> changes, have it take the place of the live server (turn on nfs/samba on
+> the appropriate locations) until we get a new one installed... So it's
+> compression would be of minimal use, but it may have other uses...
+>
+> Thanks,
+>
+> Gordon
+>
+You might want to look into rdiff-backup.
 
-I'll admit I was unaware of that command. I notice that the third 
-sentence of the man page says "It is only possible to enlarge a mounted 
-filesystem". While Sean was indeed increasing the size, I was trying to 
-reduce it.
+It keeps a uncompressed copy of all backed up data.  Then compressed
+deltas to get you to older revisions.
 
-<just a bit of venting, so feel free to ignore>
-A big pain with Linux, in my view, is that even after using it for six 
-years, I am unaware of the majority of features available in it. I did 
-what I thought was reasonable; I read the HOWTO (the one mentioned down 
-there at the bottom of this email ;). No mention of ext2online there, 
-nor any mention of the steps I used to resize a root filesystem; only 
-the steps for a filesystem that can be easily unmounted while the OS is 
-running.
+The uncompressed copy should be easy to serve via Samba / NSF.
 
-And in order to figure out the steps to resize the root filesystem, I 
-read through a lot of man pages and web pages and howtos, and nowhere do 
-I recall coming across ext2online (though I'll admit that was awhile 
-ago). By the way, I suggested in my posting that the steps be added to 
-the howto (the subject line was "Howto suggestion..."). And I have seen 
-other postings here with suggestions about the howto.
+Suse has been including it in their distro for a while.  I don't know
+about others.
+
+It is written in python (I think), so it may not be fast enough for
+you, but it only ships the deltas across the wire (like rsync), so it
+is worth looking into.
+
+Greg
+-- 
+Greg Freemyer
+The Norcross Group
+Forensics for the 21st Century
