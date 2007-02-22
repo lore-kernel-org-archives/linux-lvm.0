@@ -1,16 +1,39 @@
 Received: from mx2.redhat.com (mx2.redhat.com [10.255.15.25])
-	by int-mx2.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l1MDAEfa000478
-	for <linux-lvm@redhat.com>; Thu, 22 Feb 2007 08:10:15 -0500
-Received: from smtp.retaggio.net (q.retaggio.net [80.88.84.22])
-	by mx2.redhat.com (8.13.1/8.13.1) with ESMTP id l1MDACTj015849
-	for <linux-lvm@redhat.com>; Thu, 22 Feb 2007 08:10:12 -0500
-From: Daniele Palumbo <daniele@retaggio.net>
-Subject: [linux-lvm] Re: Strange LVM Error With AoE Disks
-Date: Thu, 22 Feb 2007 14:11:42 +0100
+	by int-mx2.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l1MDLpal001482
+	for <linux-lvm@redhat.com>; Thu, 22 Feb 2007 08:21:51 -0500
+Received: from mail2.syneticon.net (mail.syneticon.net [213.239.212.131])
+	by mx2.redhat.com (8.13.1/8.13.1) with ESMTP id l1MDLnqk018693
+	for <linux-lvm@redhat.com>; Thu, 22 Feb 2007 08:21:49 -0500
+Received: from localhost (localhost [127.0.0.1])
+	by mail2.syneticon.net (Postfix) with ESMTP id 640165434A
+	for <linux-lvm@redhat.com>; Thu, 22 Feb 2007 14:21:39 +0100 (CET)
+Received: from mail2.syneticon.net ([127.0.0.1])
+	by localhost (linux [127.0.0.1]) (amavisd-new, port 10024) with ESMTP
+	id 21808-07 for <linux-lvm@redhat.com>;
+	Thu, 22 Feb 2007 14:21:23 +0100 (CET)
+Received: from postfix1.syneticon.net (postfix1.syneticon.net [192.168.112.6])
+	by mail2.syneticon.net (Postfix) with ESMTP
+	for <linux-lvm@redhat.com>; Thu, 22 Feb 2007 14:21:23 +0100 (CET)
+Received: from localhost (filter1.syneticon.net [192.168.113.3])
+	by postfix1.syneticon.net (Postfix) with ESMTP id 3297D9483
+	for <linux-lvm@redhat.com>; Thu, 22 Feb 2007 14:20:53 +0100 (CET)
+Received: from postfix1.syneticon.net ([192.168.113.4])
+	by localhost (192.168.113.3 [192.168.113.3]) (amavisd-new, port 10025)
+	with ESMTP id E+o03ZPaDeu1 for <linux-lvm@redhat.com>;
+	Thu, 22 Feb 2007 14:21:26 +0100 (CET)
+Received: from [81.173.188.20] (xdsl-81-173-188-20.netcologne.de
+	[81.173.188.20]) by postfix1.syneticon.net (Postfix) with ESMTP
+	for <linux-lvm@redhat.com>; Thu, 22 Feb 2007 14:20:48 +0100 (CET)
+Message-ID: <45DD98CC.1020305@wpkg.org>
+Date: Thu, 22 Feb 2007 14:21:16 +0100
+From: Tomasz Chmielewski <mangoo@wpkg.org>
 MIME-Version: 1.0
+Subject: Re: [linux-lvm] vgdisplay - checksum error - what does it mean?
+References: <45D448F5.3000301@wpkg.org>
+	<45D47AF5.2040106@wpkg.org>	<20070216074737.GA14119@percy.comedia.it>	<45D57D16.8060902@wpkg.org>	<20070217125644.GC11919@percy.comedia.it>
+	<20070217183431.GW7201@agk.surrey.redhat.com>
+In-Reply-To: <20070217183431.GW7201@agk.surrey.redhat.com>
 Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-Message-Id: <200702221411.42321.daniele@retaggio.net>
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -21,52 +44,23 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: linux-lvm@redhat.com
-Cc: Ed L Cashin <ecashin@coraid.com>
 
+Alasdair G Kergon schrieb:
+> On Sat, Feb 17, 2007 at 01:56:44PM +0100, Luca Berra wrote:
+>> On Fri, Feb 16, 2007 at 10:44:54AM +0100, Tomasz Chmielewski wrote:
+>>> BTW, the machine is running Debian etch (ARM port).
+>> mmm i don't have an arm maybe this is the issue why lvm does not
+>> understand that sda2 is a md component?!?
+>  
+> I've not followed this thread, but you must use version 2.02.21 or later
+> for the ARM architecture with md (or backport the patch).
 
-First of all, sorry but i went on this ML after feb 7 2007, so i have to make 
-a 'manual reply', hoping that thread will be not broken.
+Hmm, I must try that.
 
-> > Feb  7 06:09:36 ey00-00 lvm[4869]: Couldn't find all physical volumes
-> > for volume group ey00-data.
-> > Feb  7 06:09:37 ey00-00 lvm[4869]: Couldn't find device with uuid
-> > '0Cot9Z-BHjK-2Nkw-eEdy-fbFF-Wh1q-qhRaut'.
-[...]
-> > The only thing I can note about these devices that is particularly
-> > different is that they appear to be using minor numbers above 256.
+I'll let the list know in a week or so.
 
-i have this error and setup too (e4.0, e5.0).
-
-> I haven't looked at the CLVM sources really recently, but we have seen
-> the large minor device number problem before in older versions of LVM
-> where glibc's macros are used to work with the major and minor parts
-> that are encoded within device numbers.  So if there's a problem, it
-> might be possible to find it by looking for those macros.
-
-i am using vblade daemon on gentoo (waiting for my coraid...).
-i am now using e0.1 and e0.2 (i have changed my setup), but the problem was 
-that i have a clustered volume but not the volume on the other server.
-
-i am now trying to explain with ascii:
-xen2 and backuphost are 2 machine.
-Xen2Volume is a vg that belong to xen2, XenBackupVolume belong to backuphost.
-
-now on:
-i have vblade on backuphost, and xen2 can read it.
-but, xen2 won't export (my choise) its Xen2Volume.
-
-note that Xen2Volume is marked clustered (vgchange -cy Xen2Volume)
-
-so, when i create a lv in Xen2Volume, an error will came on screen, cause 
-backuphost can't see the volume.
-clvm knows by cman that there is Xen2Volume but cannot find it!
-
-setting clustered bit of Xen2Volume off, will resolve problem.
-or, you can export your Xen2Volume to your backuphost...
-
-HTH
-
-bye
-d.
+-- 
+Tomasz Chmielewski
+http://wpkg.org
