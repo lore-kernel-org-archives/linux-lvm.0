@@ -1,17 +1,16 @@
 Received: from mx2.redhat.com (mx2.redhat.com [10.255.15.25])
-	by int-mx2.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l1M8eXCA009523
-	for <linux-lvm@redhat.com>; Thu, 22 Feb 2007 03:40:33 -0500
-Received: from web32913.mail.mud.yahoo.com (web32913.mail.mud.yahoo.com
-	[209.191.69.113])
-	by mx2.redhat.com (8.13.1/8.13.1) with SMTP id l1M8eVYK011180
-	for <linux-lvm@redhat.com>; Thu, 22 Feb 2007 03:40:32 -0500
-Date: Thu, 22 Feb 2007 00:40:25 -0800 (PST)
-From: k <shikam@yahoo.com>
-Subject: Re: [linux-lvm] LVM - History
-In-Reply-To: <20070221212318.GA8141@IUPUI.Edu>
+	by int-mx2.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l1MDAEfa000478
+	for <linux-lvm@redhat.com>; Thu, 22 Feb 2007 08:10:15 -0500
+Received: from smtp.retaggio.net (q.retaggio.net [80.88.84.22])
+	by mx2.redhat.com (8.13.1/8.13.1) with ESMTP id l1MDACTj015849
+	for <linux-lvm@redhat.com>; Thu, 22 Feb 2007 08:10:12 -0500
+From: Daniele Palumbo <daniele@retaggio.net>
+Subject: [linux-lvm] Re: Strange LVM Error With AoE Disks
+Date: Thu, 22 Feb 2007 14:11:42 +0100
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Message-ID: <809419.63369.qm@web32913.mail.mud.yahoo.com>
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+Message-Id: <200702221411.42321.daniele@retaggio.net>
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -22,70 +21,52 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="utf-8"
-To: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="us-ascii"
+To: linux-lvm@redhat.com
+Cc: Ed L Cashin <ecashin@coraid.com>
 
-Thaks for your help; my goal is to document LVM, from
-an architecture, and source code point of views:
--The architecture will probably go back to 70�s or
-early 80�s.
--The Source code will start from when LVM, started to
-exist as an open source product (1998??) , and the
-product that inspired the first release.
 
-Do you know if IBM licensed, LVM to HP, and also
-released it to the open source for linux developments?
+First of all, sorry but i went on this ML after feb 7 2007, so i have to make 
+a 'manual reply', hoping that thread will be not broken.
 
-Did Linux (Sistina) LVM derived from the IBM's LVM? Is
-HP's LVM also drived from IBM's LVM? 
+> > Feb  7 06:09:36 ey00-00 lvm[4869]: Couldn't find all physical volumes
+> > for volume group ey00-data.
+> > Feb  7 06:09:37 ey00-00 lvm[4869]: Couldn't find device with uuid
+> > '0Cot9Z-BHjK-2Nkw-eEdy-fbFF-Wh1q-qhRaut'.
+[...]
+> > The only thing I can note about these devices that is particularly
+> > different is that they appear to be using minor numbers above 256.
 
-Regards
-Shikam
---- "Mark H. Wood" <mwood@IUPUI.Edu> wrote:
+i have this error and setup too (e4.0, e5.0).
 
-> Maybe you should define the scope of "LVM" for your
-> purposes.  The
-> basic idea goes waaaaay back.  Netware 4 had the
-> ability to divvy up a
-> partition, slice off pieces, and stick them together
-> into one or more
-> logical volumes.  Most mainframe and mini OSes could
-> at least paste
-> multiple physical disk volumes together to form
-> larger logical
-> volumes.  The ANSI X3.27 tape label standard from
-> the 1970s or so (my
-> copy is at home now) (last edition is from 1987)
-> defines a way to do
-> this with *open-reel tapes*.
-> 
-> It's interesting to look at how the idea developed
-> over time.  Logical
-> volume management started out as a way to make a
-> single large logical
-> volume out of multiple rather dinky physical
-> volumes.  Nowadays it's
-> typically used in the opposite fashion:  take a huge
-> physical volume
-> and carve it into multiple smaller logical volumes. 
-> You can still
-> make logical volumes bigger than the biggest
-> available physical
-> volume, though, and there are sites which do.  (I
-> haven't needed that
-> much storage in a single block address space since
-> the 1990s, but YMMV.)
-> 
-> -- 
-> Mark H. Wood, Lead System Programmer  
-> mwood@IUPUI.Edu
-> Typically when a software vendor says that a product
-> is "intuitive" he
-> means the exact opposite.
-> 
-> > _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at
-http://tldp.org/HOWTO/LVM-HOWTO/
+> I haven't looked at the CLVM sources really recently, but we have seen
+> the large minor device number problem before in older versions of LVM
+> where glibc's macros are used to work with the major and minor parts
+> that are encoded within device numbers.  So if there's a problem, it
+> might be possible to find it by looking for those macros.
+
+i am using vblade daemon on gentoo (waiting for my coraid...).
+i am now using e0.1 and e0.2 (i have changed my setup), but the problem was 
+that i have a clustered volume but not the volume on the other server.
+
+i am now trying to explain with ascii:
+xen2 and backuphost are 2 machine.
+Xen2Volume is a vg that belong to xen2, XenBackupVolume belong to backuphost.
+
+now on:
+i have vblade on backuphost, and xen2 can read it.
+but, xen2 won't export (my choise) its Xen2Volume.
+
+note that Xen2Volume is marked clustered (vgchange -cy Xen2Volume)
+
+so, when i create a lv in Xen2Volume, an error will came on screen, cause 
+backuphost can't see the volume.
+clvm knows by cman that there is Xen2Volume but cannot find it!
+
+setting clustered bit of Xen2Volume off, will resolve problem.
+or, you can export your Xen2Volume to your backuphost...
+
+HTH
+
+bye
+d.
