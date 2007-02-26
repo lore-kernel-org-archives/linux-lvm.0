@@ -1,26 +1,20 @@
-Received: from mx2.redhat.com (mx2.redhat.com [10.255.15.25])
-	by int-mx2.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l1QBXw1C010510
-	for <linux-lvm@redhat.com>; Mon, 26 Feb 2007 06:33:58 -0500
-Received: from hawk.dcu.ie (mail.dcu.ie [136.206.1.5])
-	by mx2.redhat.com (8.13.1/8.13.1) with ESMTP id l1QBXu38006446
-	for <linux-lvm@redhat.com>; Mon, 26 Feb 2007 06:33:57 -0500
-Received: from deathray.redbrick.dcu.ie (136.206.15.3) by hawk.dcu.ie (7.3.120)
-	id 45E2BC5300001E1E for linux-lvm@redhat.com;
-	Mon, 26 Feb 2007 11:33:51 +0000
-Received: from login.redbrick.dcu.ie
-	([2001:770:107:15::50] helo=murphy.redbrick.dcu.ie ident=Debian-exim)
-	by deathray.redbrick.dcu.ie with esmtp (Exim 4.50)
-	id 1HLe74-0001eV-SO
-	for linux-lvm@redhat.com; Mon, 26 Feb 2007 11:33:50 +0000
-Received: from kpodesta by murphy.redbrick.dcu.ie with local (Exim 4.60)
-	(envelope-from <kpodesta@murphy.redbrick.dcu.ie>) id 1HLe74-0004Vs-Mz
-	for linux-lvm@redhat.com; Mon, 26 Feb 2007 11:33:50 +0000
-Date: Mon, 26 Feb 2007 11:33:50 +0000
-From: Karl Podesta <kpodesta@redbrick.dcu.ie>
-Message-ID: <20070226113350.GC31458@murphy.redbrick.dcu.ie>
-MIME-Version: 1.0
-Content-Disposition: inline
-Subject: [linux-lvm] lvchange read ahead sectors
+Received: from lacrosse.corp.redhat.com (lacrosse.corp.redhat.com
+	[172.16.52.154])
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l1QEhEZq024834
+	for <linux-lvm@redhat.com>; Mon, 26 Feb 2007 09:43:14 -0500
+Received: from vpn-14-248.rdu.redhat.com (vpn-14-248.rdu.redhat.com
+	[10.11.14.248])
+	by lacrosse.corp.redhat.com (8.12.11.20060308/8.11.6) with ESMTP id
+	l1QEhDsM005312
+	for <linux-lvm@redhat.com>; Mon, 26 Feb 2007 09:43:13 -0500
+Subject: Re: [linux-lvm] Restoring LVM configuration
+From: Dave Wysochanski <dwysocha@redhat.com>
+In-Reply-To: <200702201824.l1KIO73V001649@www-webmail1.magma.ca>
+References: <200702201824.l1KIO73V001649@www-webmail1.magma.ca>
+Date: Mon, 26 Feb 2007 09:43:13 -0500
+Message-Id: <1172500994.4170.6.camel@linux-cxyg.rtp.netapp.com>
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -32,38 +26,40 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: linux-lvm@redhat.com
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-Hi there, 
+On Tue, 2007-02-20 at 13:24 -0500, Reid wrote:
+> Hi,
+> 
+> Through a number of steps in an attempt to upgrade my server I ended up losing the
+> lvm.conf configuration file and my backup of it.
+> 
+> Part of the problem occured when I moved the disks from one controller to another on my
+> server.  For some reason the partition information was lost.  This was recovered without
+> too many troubles leaving me with a boot (ext2) and lvm2 partitions on one drive and a
+> lvm2 partition on the other.
+> 
+> I noticed on the LVM how-to that you might be able to recreate the configuration using
+> pvcreate after looking at /etc/lvm/archive/VolumeGroupName_XXXXX.vg but I am unable to in
+> this case because the root file system was part of the LVM itself.  (If I could mount it
+> to find out the configuration then I wouldn't be having such a problem!)
+> 
+> Ideally I would like to be able to create a configuration using Knoppix so that I could
+> mount the drives and write it onto them.  
+> 
+> The next best thing for me would be to find some way to get the files off of the drives
+> and onto a spare drive (basically recreate my backup) without losing file names/directory
+> structure.
+> 
 
-Does anyone know if I can change "read ahead sectors" to 1024 with LVM1 ?
+Are you still in need of help?
 
-I'm using lvm-1.0.5-129 on SUSE/SLES 8 - I have a logical volume with 
-"read ahead sectors" set to 1024, and another one with the value as
-0 (i.e. disabled). When I try to set the latter one to 1024 using 
-"lvchange -r 1024", I get:
+If so, do you know the details of your original setup that created the
+LVM2 configuration (kernel version, lvm version, etc)?
 
-lvchange -- ERROR "Invalid argument" read ahead sector change
+I am working on a LVM command/enhancement that will read the LVM
+information off the drives and allow recreation of the lvm
+configuration.
 
-... and then in the lvchange man page I notice: 
- -r, --readahead ReadAheadSectors
-              Change read ahead sector count per logical  between
-              2 and 120.
-
-If I can only set the value to 120, how come I have a volume with 1024? 
-Is there a conversion needed between the two values? 
-
-If anyone could shed some light on this or point me in the right 
-direction, that would be great! Haven't had any joy looking through 
-stuff on the net, or on the archives of this list... 
-
-Many thanks!
-
-Karl
-
-PS - I realise this list is hosted on redhat.com, so sorry for any 
-cross-distro pollination! :-)
-
--- 
-Karl Podesta
+Let me see if I can get something together for you to try recovery in
+your situation.
