@@ -1,17 +1,22 @@
 Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l1RL15Ko028511
-	for <linux-lvm@redhat.com>; Tue, 27 Feb 2007 16:01:05 -0500
-Received: from percy.comedia.it (percy.comedia.it [212.97.59.71])
-	by mx1.redhat.com (8.13.1/8.13.1) with ESMTP id l1RL13ku024015
-	for <linux-lvm@redhat.com>; Tue, 27 Feb 2007 16:01:04 -0500
-Date: Tue, 27 Feb 2007 22:01:03 +0100
-From: Luca Berra <bluca@comedia.it>
-Subject: Re: [linux-lvm] lvextend problem
-Message-ID: <20070227210103.GA23712@percy.comedia.it>
-References: <45E45454.6000402@yahoo-inc.com>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <45E45454.6000402@yahoo-inc.com>
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l1RMPZJZ031067
+	for <linux-lvm@redhat.com>; Tue, 27 Feb 2007 17:25:35 -0500
+Received: from carlit.cesca.es (carlit.cesca.es [84.88.0.2])
+	by mx1.redhat.com (8.13.1/8.13.1) with ESMTP id l1RMPXRu012386
+	for <linux-lvm@redhat.com>; Tue, 27 Feb 2007 17:25:34 -0500
+Received: from carlit.cesca.es (localhost [127.0.0.1])
+	by carlit.cesca.es (Postfix) with ESMTP id 3B708331CAE
+	for <linux-lvm@redhat.com>; Tue, 27 Feb 2007 23:25:28 +0100 (CET)
+Received: from [213.97.212.36] (36.Red-213-97-212.staticIP.rima-tde.net
+	[213.97.212.36])
+	by carlit.cesca.es (Postfix) with ESMTP id BA837331CA1
+	for <linux-lvm@redhat.com>; Tue, 27 Feb 2007 23:25:27 +0100 (CET)
+Message-ID: <45E4B1BD.8040007@cesca.es>
+Date: Tue, 27 Feb 2007 23:33:33 +0100
+From: Jordi Prats <jprats@cesca.es>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Subject: [linux-lvm] liblvm2cmd
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -22,74 +27,33 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
 To: linux-lvm@redhat.com
 
-On Tue, Feb 27, 2007 at 04:55:00PM +0100, Guilio Iannazzo wrote:
->Hi,
->about the *environment* :
->[root@priscilla var]# cat /proc/version
->Linux version 2.4.21-20.ELsmp (bhcompile@tweety.build.redhat.com) (gcc 
->version 3.2.3 20030502 (Red Hat Linux 3.2.3-42)) #1 SMP Wed Aug 18 
->20:46:40 EDT 2004
->
->The *problem* :
->I extended a logical volume following the procedure
->
->umount -l /dev/Volume00/var
+Hi list,
+I'd like to develop a application that would be using lvm to perform
+some tasks.
 
-from umount man page:
-       -l     Lazy unmount. Detach the filesystem from the filesystem  hierar-
-              chy now, and cleanup all references to the filesystem as soon as
-              it is not busy anymore.  (Requires kernel 2.4.11 or later.)
+I've found this thread on this list:
+https://www.redhat.com/archives/linux-lvm/2006-November/msg00019.html
 
-the key phrase here is: "as soon as it is not busy anymore"
+But no reference (webpage) about this library. liblvm2cmd seems to be
+included with LVM2 package, isn't it? Do you know any reference how to
+use it, like an API or some documentation about? Or at least, do you
+know any program that use it as a example?
 
->lvextend -L+5G /dev/Volume00/var
-harmless
-
->e2fsck -f /dev/Volume00/var
-so you fscked an active filesystem, bad bad bad...
-
---- i think you wanted to resize2fs here ---
->mount -l /dev/Volume00/var
-'mount -l' is _not_ the opposite of 'umount -l'
-
-....
->
->Now, once the filesystem mounted, I've lost all the data I had on /var 
->(which I didn't back up, I know I know it's extremely stupid, luckily 
->enough this is not a production machine).
->For example
->
->[root@priscilla var]# ll /var/
->total 0
->
->however
->
->[root@priscilla var]# mkdir /var/log
->mkdir: cannot create directory `/var/log': File exists
->
->??
->What happened ? How to get all the data back ?
-is the filesystem really mounted now?
-
-- reboot the machine into single user
-- fsck the filesystem again
-- and try mounting it and check all data is still here.
-if it is:
-- backup your data
-- umount the filesystem (really, not using -l)
-- fsck -f 
-- resize2fs
-- mount again
-- return to multi-user
+Thank you all for your help,
+Jordi
 
 -- 
-Luca Berra -- bluca@comedia.it
-        Communication Media & Services S.r.l.
- /"\
- \ /     ASCII RIBBON CAMPAIGN
-  X        AGAINST HTML MAIL
- / \
+......................................................................
+        __
+       / /          Jordi Prats Catal�
+ C E / S / C A      Departament de Sistemes
+     /_/            Centre de Supercomputaci� de Catalunya
+
+ Gran Capit�, 2-4 (Edifici Nexus) � 08034 Barcelona
+ T. 93 205 6464 � F.  93 205 6979 � jprats@cesca.es
+......................................................................
+pgp:0x5D0D1321
+......................................................................
