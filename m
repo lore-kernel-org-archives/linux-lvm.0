@@ -1,20 +1,21 @@
 Received: from mx2.redhat.com (mx2.redhat.com [10.255.15.25])
-	by int-mx2.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l1SIho9P024837
-	for <linux-lvm@redhat.com>; Wed, 28 Feb 2007 13:43:50 -0500
-Received: from wx-out-0506.google.com (wx-out-0506.google.com [66.249.82.238])
-	by mx2.redhat.com (8.13.1/8.13.1) with ESMTP id l1SIhi8A022774
-	for <linux-lvm@redhat.com>; Wed, 28 Feb 2007 13:43:44 -0500
-Received: by wx-out-0506.google.com with SMTP id s11so201802wxc
-	for <linux-lvm@redhat.com>; Wed, 28 Feb 2007 10:43:41 -0800 (PST)
-Message-ID: <859a78260702281043u179acc69g21cd1df894820e3f@mail.gmail.com>
-Date: Wed, 28 Feb 2007 12:43:41 -0600
-From: "Matt P" <slarty.tj@gmail.com>
+	by int-mx2.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l216ej81013261
+	for <linux-lvm@redhat.com>; Thu, 1 Mar 2007 01:40:46 -0500
+Received: from nz-out-0506.google.com (nz-out-0506.google.com [64.233.162.233])
+	by mx2.redhat.com (8.13.1/8.13.1) with ESMTP id l216eiwC004114
+	for <linux-lvm@redhat.com>; Thu, 1 Mar 2007 01:40:44 -0500
+Received: by nz-out-0506.google.com with SMTP id s18so419636nze
+	for <linux-lvm@redhat.com>; Wed, 28 Feb 2007 22:40:44 -0800 (PST)
+Message-ID: <5d25729a0702281530h61b6dc27rc6e4acb780d70ca9@mail.gmail.com>
+Date: Wed, 28 Feb 2007 18:30:47 -0500
+From: "Nick Gyma" <nickgyma@gmail.com>
 Subject: Re: [linux-lvm] Help: Mount point does not report full size of LV.
-In-Reply-To: <5d25729a0702281007p381e10fas464177acaa614dc2@mail.gmail.com>
+In-Reply-To: <859a78260702281043u179acc69g21cd1df894820e3f@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
+Content-Type: multipart/alternative; 
+	boundary="----=_Part_51892_7665200.1172705447811"
 References: <5d25729a0702281007p381e10fas464177acaa614dc2@mail.gmail.com>
+	<859a78260702281043u179acc69g21cd1df894820e3f@mail.gmail.com>
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -25,81 +26,33 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: linux-lvm@redhat.com
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-To be safe unmount the filesystem you want to grow. Then you'll use
-the resize2fs command. From what you've provided so far, and assuming
-you want to use all the available space on the LV, the command line
-will probably look something like:
+------=_Part_51892_7665200.1172705447811
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
 
-resize2fs -p /dev/VGforMyth/video
+you know what.  i think that was the final step i just missed.  funny
+because i was following the guide on the mythtv site.
+thanks for helping me out guys.
 
-I'd recommending reading the man page for resize2fs before proceeding.
+for those following along:
+i unmounted the path, it had me run "sudo e2fsck -f /dev/VGforMyth/video"
+first, then i ran "sudo resize2fs -p /dev/VGforMyth/video", then remounted
+it to /home/nick/video
 
-On 2/28/07, Nick Gyma <nickgyma@gmail.com> wrote:
->
->
-> Thanks for the reply.  The other two disks are file system ext3.  Is it possible to change this 3rd disk to be ext3 as well from the current state i'm in?  and then resize to fill?
->
-> Thanks for helping.  here are the results of vgdisplay:  (the 208.31GB is correct)
->
-> nick@ubuntu:~$ sudo vgdisplay -v
-> Finding all volume groups
-> Finding volume group "VGforMyth"
-> --- Volume group ---
-> VG Name VGforMyth
-> System ID
-> Format lvm2
-> Metadata Areas 3
-> Metadata Sequence No 5
-> VG Access read/write
-> VG Status resizable
-> MAX LV 0
-> Cur LV 1
-> Open LV 0
-> Max PV 0
-> Cur PV 3
-> Act PV 3
-> VG Size 208.31 GB
-> PE Size 64.00 MB
-> Total PE 3333
-> Alloc PE / Size 3333 / 208.31 GB
-> Free PE / Size 0 / 0
-> VG UUID C8kSGQ-rAw1-GmUi-7oKx-zatX-8D1A-bYuK35
->
-> --- Logical volume ---
-> LV Name /dev/VGforMyth/video
-> VG Name VGforMyth
-> LV UUID q6mYAL-6r5u-92bK-xeIc-qttc-Zmxk-00e0rS
-> LV Write Access read/write
-> LV Status available
-> # open 0
-> LV Size 208.31 GB
-> Current LE 3333
-> Segments 3
-> Allocation inherit
-> Read ahead sectors 0
-> Block device 253:0
->
-> --- Physical volumes ---
-> PV Name /dev/hda4
-> PV UUID 9VmJ6M-UxhP-7LRF-SAOE-ix3l-pSWe-a2ueRL
-> PV Status allocatable
-> Total PE / Free PE 950 / 0
->
-> PV Name /dev/hdb1
-> PV UUID tCKbgt-nBvc-r8FS-OxEd-u9XW-NiOA-00q0BI
-> PV Status allocatable
-> Total PE / Free PE 1192 / 0
->
-> PV Name /dev/hdd1
-> PV UUID KEBtSE-LKcc-l79g-2NSh-6VLQ-HKoG-l0zciX
-> PV Status allocatable
-> Total PE / Free PE 1191 / 0
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
->
+it now shows up as 194.4GB under the file browser, which i guess is right
+even though VGforMyth shows up as 208.31GB?
+
+thanks again...
+
+------=_Part_51892_7665200.1172705447811
+Content-Type: text/html; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+you know what.&nbsp; i think that was the final step i just missed.&nbsp; funny because i was following the guide on the mythtv site.<br>thanks for helping me out guys.&nbsp; <br><br>for those following along:<br>i unmounted the path, it had me run &quot;sudo e2fsck -f /dev/VGforMyth/video&quot; first, then i ran &quot;sudo resize2fs -p /dev/VGforMyth/video&quot;, then remounted it to /home/nick/video
+<br><br>it now shows up as 194.4GB under the file browser, which i guess is right even though VGforMyth shows up as 208.31GB? <br><br>thanks again...<br><br><br>
+
+------=_Part_51892_7665200.1172705447811--
