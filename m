@@ -1,31 +1,20 @@
-Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l1RNwsew023085
-	for <linux-lvm@redhat.com>; Tue, 27 Feb 2007 18:58:54 -0500
-Received: from mail.greatschools.net (zeus.greatschools.net [198.144.205.143])
-	by mx1.redhat.com (8.13.1/8.13.1) with ESMTP id l1RNwpgl024596
-	for <linux-lvm@redhat.com>; Tue, 27 Feb 2007 18:58:52 -0500
-Received: from zimbra.greatschools.net (zimbra.GreatSchools.Net
-	[198.144.205.155])
-	by mail.greatschools.net (8.13.8/8.13.8) with ESMTP id l1RNwgnb041122
-	for <linux-lvm@redhat.com>; Tue, 27 Feb 2007 15:58:42 -0800 (PST)
-	(envelope-from dane@greatschools.net)
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by zimbra.greatschools.net (Postfix) with ESMTP id 4152C1FA0037
-	for <linux-lvm@redhat.com>; Tue, 27 Feb 2007 15:58:13 -0800 (PST)
-Received: from zimbra.greatschools.net ([127.0.0.1])
-	by localhost (zimbra.greatschools.net [127.0.0.1]) (amavisd-new,
-	port 10024) with ESMTP id WyYw8WctJMLj for <linux-lvm@redhat.com>;
-	Tue, 27 Feb 2007 15:58:10 -0800 (PST)
-Received: from zimbra.greatschools.net (zimbra.greatschools.net
-	[198.144.205.155])
-	by zimbra.greatschools.net (Postfix) with ESMTP id 5EE2E1FA0033
-	for <linux-lvm@redhat.com>; Tue, 27 Feb 2007 15:58:10 -0800 (PST)
-Message-ID: <4384431.130961172620690322.JavaMail.root@zimbra.greatschools.net>
-Date: Tue, 27 Feb 2007 15:58:10 -0800 (PST)
-From: Dane Miller <dane@greatschools.net>
+Received: from mx2.redhat.com (mx2.redhat.com [10.255.15.25])
+	by int-mx2.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l1S14T2Z006546
+	for <linux-lvm@redhat.com>; Tue, 27 Feb 2007 20:04:29 -0500
+Received: from wr-out-0506.google.com (wr-out-0506.google.com [64.233.184.232])
+	by mx2.redhat.com (8.13.1/8.13.1) with ESMTP id l1S14QlR012292
+	for <linux-lvm@redhat.com>; Tue, 27 Feb 2007 20:04:26 -0500
+Received: by wr-out-0506.google.com with SMTP id 69so2352570wra
+	for <linux-lvm@redhat.com>; Tue, 27 Feb 2007 17:04:26 -0800 (PST)
+Message-ID: <170fa0d20702271704w469bec42t743b33d4dd82c584@mail.gmail.com>
+Date: Tue, 27 Feb 2007 20:04:25 -0500
+From: "Mike Snitzer" <snitzer@gmail.com>
+Subject: Re: [linux-lvm] snapshots documentation clarification
+In-Reply-To: <4384431.130961172620690322.JavaMail.root@zimbra.greatschools.net>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] snapshots documentation clarification
+Content-Disposition: inline
+References: <4384431.130961172620690322.JavaMail.root@zimbra.greatschools.net>
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -36,27 +25,27 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: linux-lvm@redhat.com
 
-afternoon collector
-	lvm reading
-	GS update: single auth db
-	check ebay
+On 2/27/07, Dane Miller <dane@greatschools.net> wrote:
+>
+> Section 3.8 "Snapshots" of the LVM Howto has a scary warning after the first paragraph (http://tldp.org/HOWTO/LVM-HOWTO/snapshotintro.html), with a caveat in the last sentence:
+>   "If the snapshot size equals the origin size, it will never overflow."
+>
+> What exactly does this mean?
 
-	bmi virtual machine
-	zimbra schedule downtime: snapshot conversion
-	zimbra security updates
+It means there isn't any risk of the snapshot LV getting invalidated
+because of overflow.  Reason being, the copy-on-write would only ever
+fill (but _not_ overflow) the snapshot LV if the entire origin LV
+changed.  Even if that were the case you wouldn't overflow because the
+snap LV would accomodate such extensive change.
 
-Hi,
+That said, I can't see how a long-term (3yr) _single_ snapshot is
+useful but thats up to you.  Generally snapshots are done periodically
+rather than maintaining a single snap for such a long period.  Do you
+understand that LVM snapshots need a new snapshot LV for each snapshot
+you create?  So if you want N snapshots, without the risk of overflow,
+during the 3yr period you'd consume N*(size_of_origin_LV) space.
 
-Section 3.8 "Snapshots" of the LVM Howto has a scary warning after the first paragraph (http://tldp.org/HOWTO/LVM-HOWTO/snapshotintro.html), with a caveat in the last sentence:
-  "If the snapshot size equals the origin size, it will never overflow."
-
-What exactly does this mean?  Does this imply that it's safe to use "long-term" snapshots whose size is equal to the origin's size, without worrying about effects of significant divergence from the original?  Long-term to me is 3yrs as the root fs of a (Xen domU) mail server.
-
-Note that in this case, writes to the root fs will be limited to logs (/var/log) and software updates.  Mailboxes live on a separate, non-snapshot logical volume.
-
-Thanks,
-
-Dane
+Mike
