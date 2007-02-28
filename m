@@ -1,20 +1,33 @@
 Received: from mx2.redhat.com (mx2.redhat.com [10.255.15.25])
-	by int-mx2.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l1S14T2Z006546
-	for <linux-lvm@redhat.com>; Tue, 27 Feb 2007 20:04:29 -0500
-Received: from wr-out-0506.google.com (wr-out-0506.google.com [64.233.184.232])
-	by mx2.redhat.com (8.13.1/8.13.1) with ESMTP id l1S14QlR012292
-	for <linux-lvm@redhat.com>; Tue, 27 Feb 2007 20:04:26 -0500
-Received: by wr-out-0506.google.com with SMTP id 69so2352570wra
-	for <linux-lvm@redhat.com>; Tue, 27 Feb 2007 17:04:26 -0800 (PST)
-Message-ID: <170fa0d20702271704w469bec42t743b33d4dd82c584@mail.gmail.com>
-Date: Tue, 27 Feb 2007 20:04:25 -0500
-From: "Mike Snitzer" <snitzer@gmail.com>
+	by int-mx2.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l1S1Dvee007156
+	for <linux-lvm@redhat.com>; Tue, 27 Feb 2007 20:13:57 -0500
+Received: from mail.greatschools.net (zeus.GreatSchools.Net [198.144.205.143])
+	by mx2.redhat.com (8.13.1/8.13.1) with ESMTP id l1S1DtO9014293
+	for <linux-lvm@redhat.com>; Tue, 27 Feb 2007 20:13:55 -0500
+Received: from zimbra.greatschools.net (zimbra.GreatSchools.Net
+	[198.144.205.155])
+	by mail.greatschools.net (8.13.8/8.13.8) with ESMTP id l1S1DnE9044330
+	for <linux-lvm@redhat.com>; Tue, 27 Feb 2007 17:13:50 -0800 (PST)
+	(envelope-from dane@greatschools.net)
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by zimbra.greatschools.net (Postfix) with ESMTP id E12C01FA0037
+	for <linux-lvm@redhat.com>; Tue, 27 Feb 2007 17:13:19 -0800 (PST)
+Received: from zimbra.greatschools.net ([127.0.0.1])
+	by localhost (zimbra.greatschools.net [127.0.0.1]) (amavisd-new,
+	port 10024) with ESMTP id Q4nU4vSctdk4 for <linux-lvm@redhat.com>;
+	Tue, 27 Feb 2007 17:13:19 -0800 (PST)
+Received: from dh1.office.GreatSchools.Net (dh1.office.GreatSchools.Net
+	[198.144.205.132])
+	by zimbra.greatschools.net (Postfix) with ESMTP id 664E61FA0033
+	for <linux-lvm@redhat.com>; Tue, 27 Feb 2007 17:13:19 -0800 (PST)
 Subject: Re: [linux-lvm] snapshots documentation clarification
+From: Dane Miller <dane@greatschools.net>
 In-Reply-To: <4384431.130961172620690322.JavaMail.root@zimbra.greatschools.net>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
 References: <4384431.130961172620690322.JavaMail.root@zimbra.greatschools.net>
+Date: Tue, 27 Feb 2007 17:13:46 -0800
+Message-Id: <1172625226.16294.2.camel@danedesk.greatschools.net>
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -25,27 +38,20 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: linux-lvm@redhat.com
+Content-Type: text/plain; charset="us-ascii"
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-On 2/27/07, Dane Miller <dane@greatschools.net> wrote:
->
-> Section 3.8 "Snapshots" of the LVM Howto has a scary warning after the first paragraph (http://tldp.org/HOWTO/LVM-HOWTO/snapshotintro.html), with a caveat in the last sentence:
->   "If the snapshot size equals the origin size, it will never overflow."
->
-> What exactly does this mean?
+Dane Miller wrote:
+> afternoon collector
+> 	lvm reading
+> 	GS update: single auth db
+> 	check ebay
+> 
+> 	bmi virtual machine
+> 	zimbra schedule downtime: snapshot conversion
+> 	zimbra security updates
 
-It means there isn't any risk of the snapshot LV getting invalidated
-because of overflow.  Reason being, the copy-on-write would only ever
-fill (but _not_ overflow) the snapshot LV if the entire origin LV
-changed.  Even if that were the case you wouldn't overflow because the
-snap LV would accomodate such extensive change.
+oops.  cut-'n-paste snafu here.  now the world knows my todo list for
+this afternoon :-\  sorry...
 
-That said, I can't see how a long-term (3yr) _single_ snapshot is
-useful but thats up to you.  Generally snapshots are done periodically
-rather than maintaining a single snap for such a long period.  Do you
-understand that LVM snapshots need a new snapshot LV for each snapshot
-you create?  So if you want N snapshots, without the risk of overflow,
-during the 3yr period you'd consume N*(size_of_origin_LV) space.
-
-Mike
+Dane
