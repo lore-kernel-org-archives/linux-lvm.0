@@ -1,18 +1,11 @@
-Received: from agk.surrey.redhat.com (agk.surrey.redhat.com [172.16.10.74])
-	by pobox.surrey.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
-	l21NJ7eU031982
-	for <linux-lvm@redhat.com>; Thu, 1 Mar 2007 23:19:07 GMT
-Received: from agk by agk.surrey.redhat.com with local (Exim 4.34)
-	id 1HMuYF-0005iV-I7
-	for linux-lvm@redhat.com; Thu, 01 Mar 2007 23:19:07 +0000
-Date: Thu, 1 Mar 2007 23:19:07 +0000
+Date: Thu, 1 Mar 2007 23:29:46 +0000
 From: Alasdair G Kergon <agk@redhat.com>
-Subject: Re: [linux-lvm] partition table needed for lvm ?
-Message-ID: <20070301231907.GG3319@agk.surrey.redhat.com>
-References: <20070301171425.30ktkd2oroo4cco0@www.mail.yale.edu>
+Subject: Re: [linux-lvm] Away from Office
+Message-ID: <20070301232946.GH3319@agk.surrey.redhat.com>
+References: <OF836C2089.4CA2E7E4-ON87257291.007F0B87-87257291.007F0B88@us.ibm.com>
 Mime-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20070301171425.30ktkd2oroo4cco0@www.mail.yale.edu>
+In-Reply-To: <OF836C2089.4CA2E7E4-ON87257291.007F0B87-87257291.007F0B88@us.ibm.com>
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -25,12 +18,18 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: LVM general discussion and development <linux-lvm@redhat.com>
+To: Scott Denham <sdenham@us.ibm.com>
+Cc: linux-lvm@redhat.com
 
-On Thu, Mar 01, 2007 at 05:14:25PM -0500, Chris Hunter wrote:
-> Do I reallly need to make partition tables on all my disks to use lvm2 ?
+On Thu, Mar 01, 2007 at 04:07:40PM -0700, Scott Denham wrote:
+> I will be out of the office starting  03/01/2007 and will not return until
+> 03/05/2007.
  
-Other packages such as the installer like to have them.
+Unsubscribed.
+
+Please fix your software so as not to respond to mailing list posts like
+that (e.g. it should check the 'Precedence' header of each message) before
+resubscribing.
 
 Alasdair
 -- 
