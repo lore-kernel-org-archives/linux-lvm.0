@@ -1,34 +1,18 @@
-Received: from mx2.redhat.com (mx2.redhat.com [10.255.15.25])
-	by int-mx2.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l21N7ms3007856
-	for <linux-lvm@redhat.com>; Thu, 1 Mar 2007 18:07:48 -0500
-Received: from e31.co.us.ibm.com (e31.co.us.ibm.com [32.97.110.149])
-	by mx2.redhat.com (8.13.1/8.13.1) with ESMTP id l21N7lql003843
-	for <linux-lvm@redhat.com>; Thu, 1 Mar 2007 18:07:47 -0500
-Received: from westrelay02.boulder.ibm.com (westrelay02.boulder.ibm.com
-	[9.17.195.11])
-	by e31.co.us.ibm.com (8.13.8/8.13.8) with ESMTP id l21N7gxi015375
-	for <linux-lvm@redhat.com>; Thu, 1 Mar 2007 18:07:42 -0500
-Received: from d03av02.boulder.ibm.com (d03av02.boulder.ibm.com [9.17.195.168])
-	by westrelay02.boulder.ibm.com (8.13.8/8.13.8/NCO v8.2) with ESMTP id
-	l21N7gaf556494
-	for <linux-lvm@redhat.com>; Thu, 1 Mar 2007 16:07:42 -0700
-Received: from d03av02.boulder.ibm.com (loopback [127.0.0.1])
-	by d03av02.boulder.ibm.com (8.12.11.20060308/8.13.3) with ESMTP id
-	l21N7fYa016377
-	for <linux-lvm@redhat.com>; Thu, 1 Mar 2007 16:07:41 -0700
-Received: from d03nm131.boulder.ibm.com (d03nm131.boulder.ibm.com
-	[9.17.195.171])
-	by d03av02.boulder.ibm.com (8.12.11.20060308/8.12.11) with ESMTP id
-	l21N7faO016320
-	for <linux-lvm@redhat.com>; Thu, 1 Mar 2007 16:07:41 -0700
-From: Scott Denham <sdenham@us.ibm.com>
-Message-ID: <OF836C2089.4CA2E7E4-ON87257291.007F0B87-87257291.007F0B88@us.ibm.com>
-Date: Thu, 1 Mar 2007 16:07:40 -0700
-MIME-Version: 1.0
-Content-type: multipart/alternative; 
-	Boundary="0__=08BBF802DFEC8D178f9e8a93df938690918c08BBF802DFEC8D17"
+Received: from agk.surrey.redhat.com (agk.surrey.redhat.com [172.16.10.74])
+	by pobox.surrey.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
+	l21NJ7eU031982
+	for <linux-lvm@redhat.com>; Thu, 1 Mar 2007 23:19:07 GMT
+Received: from agk by agk.surrey.redhat.com with local (Exim 4.34)
+	id 1HMuYF-0005iV-I7
+	for linux-lvm@redhat.com; Thu, 01 Mar 2007 23:19:07 +0000
+Date: Thu, 1 Mar 2007 23:19:07 +0000
+From: Alasdair G Kergon <agk@redhat.com>
+Subject: Re: [linux-lvm] partition table needed for lvm ?
+Message-ID: <20070301231907.GG3319@agk.surrey.redhat.com>
+References: <20070301171425.30ktkd2oroo4cco0@www.mail.yale.edu>
+Mime-Version: 1.0
 Content-Disposition: inline
-Subject: [linux-lvm] Away from Office
+In-Reply-To: <20070301171425.30ktkd2oroo4cco0@www.mail.yale.edu>
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -39,23 +23,15 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: linux-lvm@redhat.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
---0__=08BBF802DFEC8D178f9e8a93df938690918c08BBF802DFEC8D17
-Content-type: text/plain; charset=US-ASCII
+On Thu, Mar 01, 2007 at 05:14:25PM -0500, Chris Hunter wrote:
+> Do I reallly need to make partition tables on all my disks to use lvm2 ?
+ 
+Other packages such as the installer like to have them.
 
-
-I will be out of the office starting  03/01/2007 and will not return until
-03/05/2007.
-
-Traveling with no access to email or voicemail.  I will respond to your
-message when I return on Monday
---0__=08BBF802DFEC8D178f9e8a93df938690918c08BBF802DFEC8D17
-Content-type: text/html; charset=US-ASCII
-Content-Disposition: inline
-
-<html><body>
-<p>I will be out of the office starting  03/01/2007 and will not return until 03/05/2007.<br>
-<br>
-Traveling with no access to email or voicemail.  I will respond to your message when I return on Monday</body></html>
---0__=08BBF802DFEC8D178f9e8a93df938690918c08BBF802DFEC8D17--
+Alasdair
+-- 
+agk@redhat.com
