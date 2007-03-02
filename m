@@ -1,29 +1,18 @@
 Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l22DbSXa026080
-	for <linux-lvm@redhat.com>; Fri, 2 Mar 2007 08:37:28 -0500
-Received: from outmx018.isp.belgacom.be (outmx018.isp.belgacom.be
-	[195.238.4.117])
-	by mx1.redhat.com (8.13.1/8.13.1) with ESMTP id l22DbQwT021415
-	for <linux-lvm@redhat.com>; Fri, 2 Mar 2007 08:37:27 -0500
-Received: from outmx018.isp.belgacom.be (localhost [127.0.0.1])
-	by outmx018.isp.belgacom.be (8.12.11.20060308/8.12.11/Skynet-OUT-2.22)
-	with ESMTP id l22Db8jM018309
-	for <linux-lvm@redhat.com>; Fri, 2 Mar 2007 14:37:09 +0100
-	(envelope-from <pubmb01@skynet.be>)
-Received: from [192.168.0.5] (50.178-65-87.adsl-dyn.isp.belgacom.be
-	[87.65.178.50])
-	by outmx018.isp.belgacom.be (8.12.11.20060308/8.12.11/Skynet-OUT-2.22)
-	with ESMTP id l22Daq4O018073
-	for <linux-lvm@redhat.com>; Fri, 2 Mar 2007 14:37:02 +0100
-	(envelope-from <pubmb01@skynet.be>)
-From: Bruno Costacurta <pubmb01@skynet.be>
-Date: Fri, 2 Mar 2007 14:29:45 +0100
-MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="nextPart2777969.1Ku4byVqoP";
-	protocol="application/pgp-signature"; micalg=pgp-sha1
-Content-Transfer-Encoding: 7bit
-Message-Id: <200703021429.55192.pubmb01@skynet.be>
-Subject: [linux-lvm] Newbie looking for tutorials, guidelines ..etc..
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l22E1xQk001653
+	for <linux-lvm@redhat.com>; Fri, 2 Mar 2007 09:01:59 -0500
+Received: from percy.comedia.it (percy.comedia.it [212.97.59.71])
+	by mx1.redhat.com (8.13.1/8.13.1) with ESMTP id l22E1uLC003641
+	for <linux-lvm@redhat.com>; Fri, 2 Mar 2007 09:01:57 -0500
+Date: Fri, 2 Mar 2007 15:01:53 +0100
+From: Luca Berra <bluca@comedia.it>
+Subject: Re: [linux-lvm] partition table needed for lvm ?
+Message-ID: <20070302140153.GB12744@percy.comedia.it>
+References: <20070301171425.30ktkd2oroo4cco0@www.mail.yale.edu>
+	<20070301231907.GG3319@agk.surrey.redhat.com>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20070301231907.GG3319@agk.surrey.redhat.com>
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -34,34 +23,29 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@redhat.com
 
---nextPart2777969.1Ku4byVqoP
-Content-Type: text/plain;
-  charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-Content-Disposition: inline
+On Thu, Mar 01, 2007 at 11:19:07PM +0000, Alasdair G Kergon wrote:
+>On Thu, Mar 01, 2007 at 05:14:25PM -0500, Chris Hunter wrote:
+>> Do I reallly need to make partition tables on all my disks to use lvm2 ?
+> 
+>Other packages such as the installer like to have them.
 
-Hello,
-as a newbie I'm looking for tutorials, guidelines ..etc.. about LVM
+what about the fact that on many storage creating an ms-dos compatible
+partition usually results in screwing io alignment?
 
-Thanks,
-Bruno Costacurta
-=2D-=20
-Bruno Costacurta
-PGP key : http://www.costacurta.org/keys/bruno_costacurta_pgp_key.html
-Key fingerprint =3D 713F 7956 9441 7DEF 58ED  1951 7E07 569B 2E60 4D51
-=2D-
+Do _NOT_ use partitions, they are evil and should have been shot long
+ago.
 
---nextPart2777969.1Ku4byVqoP
-Content-Type: application/pgp-signature
+Regards,
+L.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.3 (GNU/Linux)
-
-iD8DBQBF6CbTfgdWmy5gTVERAu2PAJ9aOfVJyVN1S7Y/Yoh6bFLbxeImdACdHgKv
-HhuL/qC1f3umEjbxacn3UuY=
-=Pj/7
------END PGP SIGNATURE-----
-
---nextPart2777969.1Ku4byVqoP--
+-- 
+Luca Berra -- bluca@comedia.it
+        Communication Media & Services S.r.l.
+ /"\
+ \ /     ASCII RIBBON CAMPAIGN
+  X        AGAINST HTML MAIL
+ / \
