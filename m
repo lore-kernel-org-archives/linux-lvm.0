@@ -1,37 +1,16 @@
-Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l22Bmqj1030164
-	for <linux-lvm@redhat.com>; Fri, 2 Mar 2007 06:48:52 -0500
-Received: from mail2.syneticon.net (mail.syneticon.net [213.239.212.131])
-	by mx1.redhat.com (8.13.1/8.13.1) with ESMTP id l22BmoBb030840
-	for <linux-lvm@redhat.com>; Fri, 2 Mar 2007 06:48:51 -0500
-Received: from localhost (localhost [127.0.0.1])
-	by mail2.syneticon.net (Postfix) with ESMTP id E73A6547C2
-	for <linux-lvm@redhat.com>; Fri,  2 Mar 2007 12:48:38 +0100 (CET)
-Received: from mail2.syneticon.net ([127.0.0.1])
-	by localhost (linux [127.0.0.1]) (amavisd-new, port 10024) with ESMTP
-	id 28352-08 for <linux-lvm@redhat.com>;
-	Fri,  2 Mar 2007 12:48:22 +0100 (CET)
-Received: from postfix1.syneticon.net (postfix1.syneticon.net [192.168.112.6])
-	by mail2.syneticon.net (Postfix) with ESMTP
-	for <linux-lvm@redhat.com>; Fri,  2 Mar 2007 12:48:22 +0100 (CET)
-Received: from localhost (filter1.syneticon.net [192.168.113.3])
-	by postfix1.syneticon.net (Postfix) with ESMTP id 31621946C
-	for <linux-lvm@redhat.com>; Fri,  2 Mar 2007 12:48:22 +0100 (CET)
-Received: from postfix1.syneticon.net ([192.168.113.4])
-	by localhost (mx03.syneticon.net [192.168.113.3]) (amavisd-new,
-	port 10025) with ESMTP id 7Zrucq7-4bFx for <linux-lvm@redhat.com>;
-	Fri,  2 Mar 2007 12:47:22 +0100 (CET)
-Received: from [81.173.142.58] (xdsl-81-173-142-58.netcologne.de
-	[81.173.142.58]) by postfix1.syneticon.net (Postfix) with ESMTP
-	for <linux-lvm@redhat.com>; Fri,  2 Mar 2007 12:48:20 +0100 (CET)
-Message-ID: <45E80F02.6080003@wpkg.org>
-Date: Fri, 02 Mar 2007 12:48:18 +0100
-From: Tomasz Chmielewski <mangoo@wpkg.org>
+Received: from [10.32.64.203] (dhcp-0-203.surrey.redhat.com [10.32.64.203])
+	by pobox.surrey.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
+	l22BwBcO013657
+	for <linux-lvm@redhat.com>; Fri, 2 Mar 2007 11:58:11 GMT
+Message-ID: <45E81174.206@redhat.com>
+Date: Fri, 02 Mar 2007 11:58:44 +0000
+From: "Bryn M. Reeves" <breeves@redhat.com>
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] vgdisplay - checksum error - what does it mean?
-References: <45D448F5.3000301@wpkg.org>	<45D47AF5.2040106@wpkg.org>	<20070216074737.GA14119@percy.comedia.it>	<45D57D16.8060902@wpkg.org>	<20070217125644.GC11919@percy.comedia.it>	<20070217183431.GW7201@agk.surrey.redhat.com>	<45DD98CC.1020305@wpkg.org>	<45DDA0DE.2020105@wpkg.org>	<20070225083815.GA23001@percy.comedia.it>
-	<45E80C24.5020301@wpkg.org>
-In-Reply-To: <45E80C24.5020301@wpkg.org>
+Subject: Re: [linux-lvm] moving logical volumes to another system *remotely*
+	-	how?
+References: <45DED477.8040809@wpkg.org>	<20070223124452.GB22388@homer.panici.net>	<45DF0F5B.6000506@wpkg.org>	<20070223173220.GD9124@soda.linbit>
+	<45E80D9A.6050409@wpkg.org>
+In-Reply-To: <45E80D9A.6050409@wpkg.org>
 Content-Transfer-Encoding: 7bit
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
@@ -43,30 +22,50 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
+Content-Type: text/plain; charset="us-ascii"
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-Tomasz Chmielewski schrieb:
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA1
 
-(...)
-
-> Curiously, I updated lvm to Debian's 2.02.06-3, rebooted (machine was in 
-> a rather weird state), and the issue is gone.
+Tomasz Chmielewski wrote:
+> The kernel oopsed after I created a snapshot, made it full
+> (invalidated), and tried to remove it.
+> The kernel I used was 2.6.17.8 running on Debian-ARM:
 > 
-> With Debian's libdevmapper-dev 1.02.08-1 it doesn't compile; I didn't 
-> try to upgrade it anymore.
 
-As described in another post from today ("moving logical volumes to 
-another system *remotely* - how?"), perhaps the issue had nothing to do 
-with lvm tools, but with kernel?
+<snip>
 
-I use 2.6.17.8 on that ARM machine, the kernel oopses after I create a 
-snapshot, invalidate it (make it full), and try to remove it.
+> # dmesg
+> Unable to handle kernel paging request at virtual address 31376632
+> pgd = 8cce8000
+> [31376632] *pgd=00000000
+> Internal error: Oops: f3 [#1]
+> Modules linked in: iscsi_trgt bonding dm_snapshot dm_mirror loop
+> CPU: 0
 
-I'll try to upgrade to a newest stable kernel to see if anything changed 
-(it will take some time, though).
+<snip>
 
+> [<7f00bba0>] (exit_exception_table+0x0/0x70 [dm_snapshot]) from
+> [<7f00bcb0>] (snapshot_dtr+0xa0/0xf4 [dm_snapshot])
+> [<7f00bc10>] (snapshot_dtr+0x0/0xf4 [dm_snapshot]) from [<8016791c>]
+> (dm_table_put+0x80/0xe4)
 
--- 
-Tomasz Chmielewski
-http://wpkg.org
+This is a known issue in older kernels that was fixed upstream in
+2.6.19. See:
+
+http://www.uwsg.iu.edu/hypermail/linux/kernel/0612.1/2301.html
+https://bugzilla.redhat.com/bugzilla/show_bug.cgi?id=204791
+
+Kind regards,
+
+Bryn.
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.6 (GNU/Linux)
+Comment: Using GnuPG with Fedora - http://enigmail.mozdev.org
+
+iD8DBQFF6BF06YSQoMYUY94RAtZBAKC0+h3dCuTXr6lZ5M2eNfCfF8CPBgCgqMpY
+rQV9Bm+kHTBVRQoSDdUH7Nw=
+=oa4U
+-----END PGP SIGNATURE-----
