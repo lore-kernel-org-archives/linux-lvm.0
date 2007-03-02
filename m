@@ -1,26 +1,35 @@
-Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l22GwjMD011615
-	for <linux-lvm@redhat.com>; Fri, 2 Mar 2007 11:58:45 -0500
-Received: from homer.panici.net (homer.panici.net [207.234.145.200])
-	by mx1.redhat.com (8.13.1/8.13.1) with ESMTP id l22Gwg8A019382
-	for <linux-lvm@redhat.com>; Fri, 2 Mar 2007 11:58:42 -0500
-Received: from homer.panici.net (localhost.localdomain [127.0.0.1])
-	by homer.panici.net (8.13.4/8.13.4/Debian-3sarge3) with ESMTP id
-	l22GwbJL005529
-	for <linux-lvm@redhat.com>; Fri, 2 Mar 2007 16:58:37 GMT
-Received: (from paddy@localhost)
-	by homer.panici.net (8.13.4/8.13.4/Submit) id l22Gwb9a005524
-	for linux-lvm@redhat.com; Fri, 2 Mar 2007 16:58:37 GMT
-Date: Fri, 2 Mar 2007 16:58:37 +0000
-From: paddy@panici.net
-Subject: Re: [linux-lvm] partition table needed for lvm ?
-Message-ID: <20070302165837.GB28190@homer.panici.net>
-References: <20070301171425.30ktkd2oroo4cco0@www.mail.yale.edu>
-	<20070301231907.GG3319@agk.surrey.redhat.com>
-	<20070302140153.GB12744@percy.comedia.it>
+Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l22L65GX004355
+	for <linux-lvm@redhat.com>; Fri, 2 Mar 2007 16:06:05 -0500
+Received: from lnx130.hrz.tu-darmstadt.de (root@lnx130.hrz.tu-darmstadt.de
+	[130.83.174.24])
+	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id l22L3sfW004735
+	for <linux-lvm@redhat.com>; Fri, 2 Mar 2007 16:03:55 -0500
+Received: from iss1.vlsi.informatik.tu-darmstadt.de
+	(iss1.vlsi.informatik.tu-darmstadt.de [130.83.164.1])
+	by lnx130.hrz.tu-darmstadt.de (8.13.4/8.12.10) with ESMTP id
+	l22L3ahJ020637
+	for <linux-lvm@redhat.com>; Fri, 2 Mar 2007 22:03:37 +0100
+Received: from localhost (localhost [127.0.0.1])
+	by iss1.vlsi.informatik.tu-darmstadt.de (Postfix) with ESMTP id
+	DE6DC8007
+	for <linux-lvm@redhat.com>; Fri,  2 Mar 2007 22:03:36 +0100 (CET)
+Received: from iss1.vlsi.informatik.tu-darmstadt.de ([127.0.0.1])
+	by localhost (iss1 [127.0.0.1]) (amavisd-new, port 10024) with ESMTP
+	id 02233-07 for <linux-lvm@redhat.com>;
+	Fri, 2 Mar 2007 22:03:36 +0100 (CET)
+Received: from iss17.vlsi.informatik.tu-darmstadt.de
+	(iss17.vlsi.informatik.tu-darmstadt.de [130.83.164.17])
+	by iss1.vlsi.informatik.tu-darmstadt.de (Postfix) with ESMTP id
+	BC2028006
+	for <linux-lvm@redhat.com>; Fri,  2 Mar 2007 22:03:36 +0100 (CET)
+Date: Fri, 2 Mar 2007 22:02:41 +0100
+From: Tom Assmuth <ml-lvm@iss.tu-darmstadt.de>
+Message-ID: <20070302210230.GA10659@iss.tu-darmstadt.de>
 Mime-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20070302140153.GB12744@percy.comedia.it>
+Subject: [linux-lvm] severe problems to remove invalid/full snapshots with
+	debian-etch
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -35,63 +44,80 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@redhat.com
 
-On Fri, Mar 02, 2007 at 03:01:53PM +0100, Luca Berra wrote:
-> On Thu, Mar 01, 2007 at 11:19:07PM +0000, Alasdair G Kergon wrote:
-> >On Thu, Mar 01, 2007 at 05:14:25PM -0500, Chris Hunter wrote:
-> >>Do I reallly need to make partition tables on all my disks to use lvm2 ?
-> >
-> >Other packages such as the installer like to have them.
-> 
-> what about the fact that on many storage creating an ms-dos compatible
-> partition usually results in screwing io alignment?
+hi,
 
-interesting.  
+i gave up using lvm2 with debian sarge cause to a lot of problems
+concerning stability but now i gave it another try with my debian-etch
+box. but here problems with snapshots are still severe.
 
-Although it comes as no surprise that the CHS boundaries are not aligned
-with the hardware anymore (like they were back in the days of say MFM),
-I thought that systems that attempted to use this level of information 
-about a disk were fairly rare these days ?
+--
+used system:
+kernel: 2.6.18-3-686 (normal kernel version in etch)
+lvm version
+  LVM version:     2.02.07 (2006-07-17)
+  Library version: 1.02.08 (2006-07-17)
+  Driver version:  4.7.0
+--
 
-> Do _NOT_ use partitions, they are evil and should have been shot long
-> ago.
+problem: 
 
-:-)
+if a snapshot runs full (having attributes like this calling
+lvs: Swi-I- ) I of course try to remove it with lvremove:
 
-agreed, there are plenty of reasons to retire msdos partitions.
+this will throw something like this on all consoles:
 
-What would you recommend as a setup for boot drives where the bios
-expects to boot from an msdos partition table (or more specifically
-the code at the begining of a sector with the magic of an msdos 
-partitiontable) on sector 0 ?
+ kernel BUG at mm/slab.c:595!
+ invalid opcode: 0000 [#1]
+ EIP is at kmem_cache_free+0x29/0x6d
+ esi: daa2f28c   edi: d9439a88   ebp: 00036c68   esp: c593fdb0
+ Process lvremove (pid: 25402, ti=c593e000 task=c533aaa0 task.ti=c593e000)
+ Stack: 15f529ae daa2f28c dd08dc68 dc86c94e dbf84220 00006d8d 00008000 daa2f240
+ ...
+ EIP: [<c0156f55>] kmem_cache_free+0x29/0x6d SS:ESP 0068:c593fdb0
+ ...
 
-<reminisces ...>
+afterwards the snapshot is not removed but has the attributes sri---
+when it is lvremoved a second time it seems to be away using "lvs"
 
-back in the days of around LVM 0.7 I patched my LVM to leave a blank
-sector at the front of the PV, in the much the same fashion as ext2,
-specifically so that I could format an entire boot disk in HM LVM.
+BUT a new snapshot with the same name fails:
+  device-mapper: create ioctl failed: Device or resource busy
+  device-mapper: reload ioctl failed: No such device or address
+  Failed to suspend origin lvsanyback
 
-I found a number of "bugs" in the userspace tools which didn't account 
-for variations in this variable, but were easy enough to fix up.
+lvs gives for this recreated snapshot the attributes -wi-d- 
 
-As I recall, the author wasn't interested in such a modification, and 
-warned against booting/swapping on LVM.
+reboot of the maschine is the only way to help me out.
 
-one of the problems with this setup (apart from my learning at the time
-that you can patch your kernel so far, but eventually with enough
-patches it becomes a serious headache :-) was that grub didn't
-understand LVM and LILO wants blocks that don't move about, but there
-was no way to tell LVM to pin the relevant block in place (not that this
-was ever a problem in practice for me).
+------
 
-One of the reasons I felt confident to do this was because I had read
-the kernel code, which was exceeding clear and simple.
+playing around with "dmsetup table" I learned that a snapshot normally
+has two entries (the normal name and the name-cow)
 
-Of course that code has changed, and I have not kept up, and I have had
-one nasty LVM related event in the past few years (couldn't promise you
-that it wasn't operator error) and I am much more shy of putting swap 
-and root on LVM than I was back then.
+when removing the invalid snapshot dmsetup table still shows the -cow
+snapshot entry and found no way to get rid of it without reboot.  even
+dmsetup remove vgnam-snapshotname-cow only gave a "Device or resource
+busy"
 
-Anyway, enough of that! </reminisces>
+Btw reboot mostly did not work. the box has to be resetted and after
+start a manual fsck becomes necessary.
 
-Regards,
-Paddy
+---
+
+question: 
+
+Is this a "normal/known" behaviour?? Are there any workarounds besides
+reboot?  kernel-issue? Should I try a vanilla kernel and if yes which
+one?
+
+---
+
+p.s.:
+i have been using lvm1 for many years and I am somehow disappointed
+with lvm2 as there are a lot of stability problems and restrictions I
+never experienced in lvm1. And lvm1 seems to be not present in debian
+etch <sigh>!  (sorry 4 nagging)
+
+-- 
+___________  __  ____          ___    
+ / _   __   /_/ ( (   /|/| / / /  /_/ 
+/ (_) ///  / / __)_) /   |/_/ /  / /  
