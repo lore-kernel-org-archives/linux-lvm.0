@@ -1,22 +1,21 @@
-Received: from o.ww.redhat.com (vpn-4-5.str.redhat.com [10.32.4.5])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l25BrOex018765
-	for <linux-lvm@redhat.com>; Mon, 5 Mar 2007 06:53:24 -0500
-Received: from o.ww.redhat.com (localhost.localdomain [127.0.0.1])
-	by o.ww.redhat.com (8.13.8/8.13.8) with ESMTP id l25BrNho007834
-	for <linux-lvm@redhat.com>; Mon, 5 Mar 2007 12:53:23 +0100
-Received: (from mauelsha@localhost)
-	by o.ww.redhat.com (8.13.8/8.13.8/Submit) id l25BrNEi007833
-	for linux-lvm@redhat.com; Mon, 5 Mar 2007 12:53:23 +0100
-Date: Mon, 5 Mar 2007 12:53:23 +0100
-From: Heinz Mauelshagen <mauelshagen@redhat.com>
-Subject: Re: [linux-lvm] Questions
-Message-ID: <20070305115323.GA7635@redhat.com>
-References: <Pine.LNX.4.44.0703032051050.6632-100000@bmsred.bmsi.com>
+Received: from lacrosse.corp.redhat.com (lacrosse.corp.redhat.com
+	[172.16.52.154])
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l25GCNbs007620
+	for <linux-lvm@redhat.com>; Mon, 5 Mar 2007 11:12:23 -0500
+Received: from vpn-15-27.rdu.redhat.com (vpn-15-27.rdu.redhat.com
+	[10.11.15.27])
+	by lacrosse.corp.redhat.com (8.12.11.20060308/8.11.6) with ESMTP id
+	l25GCMkU006081
+	for <linux-lvm@redhat.com>; Mon, 5 Mar 2007 11:12:23 -0500
+Subject: Re: [linux-lvm] On-disk and LVM internal metadata representation
+From: Dave Wysochanski <dwysocha@redhat.com>
+In-Reply-To: <45EC51C0.669D.00E9.0@novell.com>
+References: <45EC51C0.669D.00E9.0@novell.com>
+Date: Mon, 05 Mar 2007 11:12:23 -0500
+Message-Id: <1173111143.4432.29.camel@linux-cxyg.rtp.netapp.com>
 Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <Pine.LNX.4.44.0703032051050.6632-100000@bmsred.bmsi.com>
-Reply-To: mauelshagen@redhat.com,
-	LVM general discussion and development <linux-lvm@redhat.com>
+Content-Transfer-Encoding: 7bit
+Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -27,74 +26,28 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-On Sat, Mar 03, 2007 at 08:59:38PM -0500, Stuart D. Gathman wrote:
-> Which display commands display on-disk metadata, which display 
-> lvmtab/lvmtab.d, and which display kernel data structures?  I'd like to 
-> know if the metadata is trashed on my original two PVs, or just on
-> the new one I tried to add.
-
-Because you're refering to LVM1, you see kernel metadata unless you
-provide the -D option to the *display commands.
-
+On Mon, 2007-03-05 at 04:54 -0700, Nallammai S wrote:
+> Hi,
 > 
-> Given my situation described previously (where vgextend/me screwed up and 
-> kernel data is fine, VG is active, but disk metadata seems to be toast),
-> should I run vgcfgrestore on the live VG in the hope that things might 
-> boot?  I have Centos-3  /etc/lvmconf backups of metadata (I think) for
-> prior to the attempt to vgextend.
-
-Make sure that your /etc/lvmconf backup is alright for your case
-by running "vgcfgrestore -ll -f ...".
-If so, vgcfgrestore it after initializing the PVs with pvcreate -f.
-
+> Whats the difference between on-disk metadata and LVM  internal representation? How does LVM map between these two representations?
 > 
-> What is the equivalent of pvremove (which is what I needed) in LVM1?
-> I tried using pvcreate "I'm really really sure", but that seems to have
-> screwed up.  If VG metadata is stored at the beginning of a PV, then
-> I guess dd might be the answer.
-
-There's no pveremove in LVM1, so dd of 512 bytes of zeroes will do.
-
+> Thanks in advance.
 > 
-> Does the last /etc/lvmconf entry respresent the result of the last 
-> command?
-
-/etc/lvmconf contains a backup history including the actual
-VG configuration.
-
-> Or is it a backup of things just before the last autobackup
-> command?
+> Nallammai.S 
 > 
-> 
-> -- 
-> 	      Stuart D. Gathman <stuart@bmsi.com>
->     Business Management Systems Inc.  Phone: 703 591-0911 Fax: 703 591-6154
-> "Confutatis maledictis, flammis acribus addictis" - background song for
-> a Microsoft sponsored "Where do you want to go from here?" commercial.
-> 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
 
--- 
+It is different for LVM1 vs LVM2.
 
-Regards,
-Heinz    -- The LVM Guy --
+LVM2
+- text-based on-disk metadata
+- format-specific code in lib/format_text
 
-*** Software bugs are stupid.
-    Nevertheless it needs not so stupid people to solve them ***
+LVM1
+- binary on-disk metadata
+- format-specific code in lib/format1
 
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-
-Heinz Mauelshagen                                 Red Hat GmbH
-Consulting Development Engineer                   Am Sonnenhang 11
-Storage Development                               56242 Marienrachdorf
-                                                  Germany
-Mauelshagen@RedHat.com                            PHONE +49  171 7803392
-                                                  FAX   +49 2626 924446
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+If you read the import*.[ch] and export*.[ch] files in the format
+specific directories you will get an understanding of the mapping.  I
+also found following the label_read() function to be helpful.
