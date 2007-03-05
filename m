@@ -1,19 +1,21 @@
-Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l25JGw9h016032
-	for <linux-lvm@redhat.com>; Mon, 5 Mar 2007 14:16:58 -0500
-Received: from mail.gmx.net (mail.gmx.net [213.165.64.20])
-	by mx1.redhat.com (8.13.1/8.13.1) with SMTP id l25JGg3e000524
-	for <linux-lvm@redhat.com>; Mon, 5 Mar 2007 14:16:45 -0500
-From: "Cisco" <cisco66@gmx.de>
-Subject: AW: [linux-lvm] WARNING: Ignoring duplicate config node:
+Received: from agk.surrey.redhat.com (agk.surrey.redhat.com [172.16.10.74])
+	by pobox.surrey.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
+	l25JZpvt015418
+	for <linux-lvm@redhat.com>; Mon, 5 Mar 2007 19:35:51 GMT
+Received: from agk by agk.surrey.redhat.com with local (Exim 4.34)
+	id 1HOIyN-0002hl-Kv
+	for linux-lvm@redhat.com; Mon, 05 Mar 2007 19:35:51 +0000
+Date: Mon, 5 Mar 2007 19:35:51 +0000
+From: Alasdair G Kergon <agk@redhat.com>
+Subject: Re: [linux-lvm] WARNING: Ignoring duplicate config node:
 	filter	(seeking filter)
-Date: Mon, 5 Mar 2007 20:16:35 +0100
-MIME-Version: 1.0
-In-Reply-To: <45EC5F32.1060100@davidb.org>
-Message-Id: <20070305191635.75F0E7576E@mailer.at.ds9>
-Content-Transfer-Encoding: 8bit
-Reply-To: cisco66@gmx.de,
-	LVM general discussion and development <linux-lvm@redhat.com>
+Message-ID: <20070305193551.GL3319@agk.surrey.redhat.com>
+References: <45EC5F32.1060100@davidb.org>
+	<20070305191635.75F0E7576E@mailer.at.ds9>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20070305191635.75F0E7576E@mailer.at.ds9>
+Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -23,47 +25,30 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="utf-8"
-To: 'David Brown' <lvm@davidb.org>, 'LVM general discussion and development' <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-Hi Dave,
-
-thanks a lot !
-It worked by consolidating the "filter" lines into one single line
-containing all filter statements.
-filter = [ "a/.*/", "r|/dev/cdrom|", "r|/dev/hda|", "r|/dev/hdb|",
-"r|/cdrom|" ]
-
-Tom
+On Mon, Mar 05, 2007 at 08:16:35PM +0100, Cisco wrote:
+> filter = [ "a/.*/", "r|/dev/cdrom|", "r|/dev/hda|", "r|/dev/hdb|",
+> "r|/cdrom|" ]
  
+Oops - the first pattern matches everything so the rest will have no effect:-)
 
-> -----Urspr�ngliche Nachricht-----
-> Von: David Brown [mailto:lvm@davidb.org] 
-> Gesendet: Montag, 5. M�rz 2007 19:20
-> An: cisco66@gmx.de; LVM general discussion and development
-> Betreff: Re: [linux-lvm] WARNING: Ignoring duplicate config 
-> node: filter (seeking filter)
-> 
-> Cisco wrote:
-> >  
-> >  Hi all,
-> >  
-> >  after upgrading (compiling from source)LVM2 and device  mapper, i 
-> > always get the warning message "WARNING: Ignoring  duplicate config 
-> > node: filter (seeking filter)" when doing  "lvm version" or 
-> any other 
-> > lvm command.
-> >  
-> >  Does anyone know what's going on and if i should be  
-> concerned about 
-> > this, or even better: What is the meaning of  this message 
-> and how can 
-> > i get rid of it.
-> 
-> You have multiple "filter = " lines in your lvm config file.  
-> Previous versions ignored this (but appeared to only use one 
-> of them).  You need to specify all of the filtering you want 
-> in one list.
-> 
-> Dave
-> 
+The man page says:
+              filter  -- List of patterns to apply to devices found by a scan.
+              Patterns are regular expressions delimited by any character  and
+              preceded  by a (for accept) or r (for reject).  The list is tra-
+              versed in order, and the first regex that matches determines  if
+              the device will be accepted or rejected (ignored).  Devices that
+              don't match any patterns are accepted. If  you  want  to  reject
+              patterns  that don't match, end the list with "r/.*/".  If there
+              are several names for the same device (e.g.  symbolic  links  in
+              /dev),  if  any  name  matches  any  a  pattern,  the  device is
+              accepted; otherwise if any name matches  any  r  pattern  it  is
+              rejected;  otherwise  it  is accepted.  As an example, to ignore
+              /dev/cdrom you could use: devices { filter=["r|cdrom|"] }
+
+Alasdair
+-- 
+agk@redhat.com
