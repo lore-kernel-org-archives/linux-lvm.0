@@ -1,21 +1,19 @@
-Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l25L3kJb029440
-	for <linux-lvm@redhat.com>; Mon, 5 Mar 2007 16:03:46 -0500
-Received: from mail.bmsi.com (www.bmsi.com [24.248.44.156])
-	by mx1.redhat.com (8.13.1/8.13.1) with ESMTP id l25L3hka000413
-	for <linux-lvm@redhat.com>; Mon, 5 Mar 2007 16:03:43 -0500
-Received: from bmsred.bmsi.com (bmsred.bmsi.com [192.168.9.50])
-	by mail.bmsi.com (8.13.6/8.13.6) with ESMTP id l25L3b2E024096
-	(version=TLSv1/SSLv3 cipher=EDH-RSA-DES-CBC3-SHA bits=168 verify=NO)
-	for <linux-lvm@redhat.com>; Mon, 5 Mar 2007 16:03:37 -0500
-Received: from localhost (localhost [127.0.0.1])
-	by bmsred.bmsi.com (8.13.5/8.13.5) with ESMTP id l25L3bg8025604
-	for <linux-lvm@redhat.com>; Mon, 5 Mar 2007 16:03:37 -0500
-Date: Mon, 5 Mar 2007 16:03:37 -0500 (EST)
-From: "Stuart D. Gathman" <stuart@bmsi.com>
-Message-ID: <Pine.LNX.4.44.0703051550290.25520-100000@bmsred.bmsi.com>
+Received: from mx2.redhat.com (mx2.redhat.com [10.255.15.25])
+	by int-mx2.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l260bjpG010808
+	for <linux-lvm@redhat.com>; Mon, 5 Mar 2007 19:37:45 -0500
+Received: from ug-out-1314.google.com (ug-out-1314.google.com [66.249.92.175])
+	by mx2.redhat.com (8.13.1/8.13.1) with ESMTP id l260bhpP025863
+	for <linux-lvm@redhat.com>; Mon, 5 Mar 2007 19:37:43 -0500
+Received: by ug-out-1314.google.com with SMTP id x30so17947ugc
+	for <linux-lvm@redhat.com>; Mon, 05 Mar 2007 16:37:42 -0800 (PST)
+Message-ID: <31dadfbb0703051637n6b9fc6c4w1eea492bd08079@mail.gmail.com>
+Date: Mon, 5 Mar 2007 16:37:40 -0800
+From: "Vern Kyle" <vkyle@acm.org>
+Sender: vern.kyle@gmail.com
 MIME-Version: 1.0
-Subject: [linux-lvm] Some apparent success: recommendations?
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+Subject: [linux-lvm] Encapsulate existing partition / Moving logical volumes
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -26,24 +24,24 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: linux-lvm@redhat.com
 
-Based on what I've learned, I copied /etc/lvmconf/rootvg.conf to 
-/etc/lvmtab.d/rootvg, overwriting the version copied from my system backup 
-(which didn't include md3).   I then ran vgck, still no errors.  Then I 
-ran lvremove -v /dev/rootvg/lvtest, which then succeeded!  Even better, 
-the ondisk metadata for /dev/md3 is now "available".  The ondisk VG status 
-is still "NOT available", but I believe this is normal based on checking
-two other RHEL3 LVM1 systems.
+I'm in the process of converting a couple of servers to use lvm2, and
+there are two items that I can not find a reference for in the how-to
+or on the lvm wiki.
 
-What else should I check before rebooting?  Should I run vgscan ?  Does 
-vgck compare ondisk metadata with kernel?  Is it safe to expand LVs now?  
-Or should I reboot first?
+First, is there a method to encapsulate an existing disk partition
+into a logical volume?  (I can copy all of the data manually, but I'm
+thinking there is an eloquent way to accomplish this.)
 
--- 
-	      Stuart D. Gathman <stuart@bmsi.com>
-    Business Management Systems Inc.  Phone: 703 591-0911 Fax: 703 591-6154
-"Confutatis maledictis, flammis acribus addictis" - background song for
-a Microsoft sponsored "Where do you want to go from here?" commercial.
+Second, I have found references to moving a volume group between
+different physical volumes.  Is there a method to moving logical
+volumes between volume groups?
+
+If someone could provide a hint or a pointer to the documentation I'm
+overlooking, I'd appreciate it.
+
+Thanks,
+
+Vern
