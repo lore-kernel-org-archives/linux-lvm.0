@@ -1,21 +1,19 @@
 Received: from mx2.redhat.com (mx2.redhat.com [10.255.15.25])
-	by int-mx2.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l2FJdFN2013656
-	for <linux-lvm@redhat.com>; Thu, 15 Mar 2007 15:39:16 -0400
-Received: from smtp4-g19.free.fr (smtp4-g19.free.fr [212.27.42.30])
-	by mx2.redhat.com (8.13.1/8.13.1) with ESMTP id l2FJd9D7029302
-	for <linux-lvm@redhat.com>; Thu, 15 Mar 2007 15:39:09 -0400
-Received: from [192.168.0.1] (bon31-1-82-66-78-161.fbx.proxad.net
-	[82.66.78.161])
-	by smtp4-g19.free.fr (Postfix) with ESMTP id D648D676C8
-	for <linux-lvm@redhat.com>; Thu, 15 Mar 2007 20:39:07 +0100 (CET)
-Message-ID: <45F9A0DB.3050407@free.fr>
-Date: Thu, 15 Mar 2007 20:39:07 +0100
-From: Georges Giralt <georges.giralt@free.fr>
+	by int-mx2.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l2GIQK9s005642
+	for <linux-lvm@redhat.com>; Fri, 16 Mar 2007 14:26:21 -0400
+Received: from imo-m25.mx.aol.com (imo-m25.mx.aol.com [64.12.137.6])
+	by mx2.redhat.com (8.13.1/8.13.1) with ESMTP id l2GIQDn7014413
+	for <linux-lvm@redhat.com>; Fri, 16 Mar 2007 14:26:14 -0400
+Received: from P3tr0x@aol.com
+	by imo-m25.mx.aol.com (mail_out_v38_r7.6.) id e.d42.48636c1 (60469)
+	for <linux-lvm@redhat.com>; Fri, 16 Mar 2007 14:25:59 -0400 (EDT)
+Date: Fri, 16 Mar 2007 14:25:59 -0400
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] Aftermath of a dead hard disk
-References: <45F99BD3.3000204@gmail.com>
-In-Reply-To: <45F99BD3.3000204@gmail.com>
-Content-Transfer-Encoding: 8bit
+From: p3tr0x@aol.com
+Content-Type: multipart/alternative; 
+	boundary="--------MB_8C9360FAE02F3E0_EA0_6505_WEBMAIL-RC11.sysops.aol.com"
+Message-Id: <8C9360FAE05563F-EA0-3661@WEBMAIL-RC11.sysops.aol.com>
+Subject: [linux-lvm] Mounting part of a logical volume?
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -26,28 +24,65 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="utf-8"; format="flowed"
-To: LVM general discussion and development <linux-lvm@redhat.com>
+To: linux-lvm@redhat.com
 
-Will May a �crit :
-> I recently had a hard disk die on me that was in my LVM group and so had 
-> to replace it with a new one. When I added the new hard disk into the 
-> group, I didn't format it first and so LVM still thinks the new hard 
-> disk (250GB) is the size of the old one (60GB). I'd like to convince LVM 
-> of the new size. Anyone know how?
-> 
-> I've tried just formatting the hard disk, but that just causes LVM to 
-> cry that it can't find the pv on the disk.
-Hi !
-Just in case, did you pvremove the failed disk ?
-If not, unplug the new one, pvremove -f the old one
-re-plug the new one,
-pvcreate the new one
-vgextend the vg.
-and enjoy.
-read the manpages carefully in order to avoid mistakes.
-Hope this helps.
--- 
-Ce message est constitu� d'au moins 50 % d'�lectrons recycl�s.
-S'il vous pla�t, aidez nous � conserver nos ressources,
-recyclez vos �lectrons !
+
+----------MB_8C9360FAE02F3E0_EA0_6505_WEBMAIL-RC11.sysops.aol.com
+Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
+
+ Hi,
+ 
+ I have a Fedora Core 6 system with a root volume group (VolGroup00) spanning 2 physical drives. Through my own negligence the first drive got overwritten when the system was rebooted with a bootable cd in the drive. This effectively reformated the primary drive but left the second drive intact. What I would like to do is mount the second drive to see if there is any data worth retrieving before rebuilding the system. 
+ 
+ I can boot onto a rescue CD so I can access the drive through lvm. lvdisplay reports that it cannot find all of the physical volumes which makes sense as the other drive was reformatted. pvscan also reports a missing drive. 
+ 
+ Can anyone give me a pointer on what might be my next step?
+ 
+ Thanks!
+ Pete  
+________________________________________________________________________
+AOL now offers free email to everyone.  Find out more about what's free from AOL at AOL.com.
+
+----------MB_8C9360FAE02F3E0_EA0_6505_WEBMAIL-RC11.sysops.aol.com
+Content-Transfer-Encoding: 7bit
+Content-Type: text/html; charset="us-ascii"
+
+<HTML><BODY>
+<div>Hi,<br>
+
+<br>
+
+I have a Fedora Core 6 system with a root volume group (VolGroup00)
+spanning 2 physical drives. Through my own negligence the first drive
+got overwritten when the system was rebooted with a bootable cd in the
+drive. This effectively reformated the primary drive but left the
+second drive intact. What I would like to do is mount the second drive
+to see if there is any data worth retrieving before rebuilding the
+system. <br>
+
+<br>
+
+I can boot onto a rescue CD so I can access the drive through lvm.
+lvdisplay reports that it cannot find all of the physical volumes which
+makes sense as the other drive was reformatted. pvscan also reports a
+missing drive. <br>
+
+<br>
+
+Can anyone give me a pointer on what might be my next step?<br>
+
+<br>
+
+Thanks!<br>
+
+Pete </div>
+
+<div class="AOLPromoFooter">
+<hr style="margin-top:10px;" />
+AOL now offers free email to everyone.  Find out more about what's free from AOL at <a href="http://pr.atwola.com/promoclk/1615326657x4311227241x4298082137/aol?redir=http://www.aol.com" target="_blank"><b>AOL.com</b></a>.<br />
+</div>
+
+</BODY></HTML>
+
+----------MB_8C9360FAE02F3E0_EA0_6505_WEBMAIL-RC11.sysops.aol.com--
