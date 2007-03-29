@@ -1,21 +1,22 @@
-Received: from mx2.redhat.com (mx2.redhat.com [10.255.15.25])
-	by int-mx2.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l2TGtrrN031193
-	for <linux-lvm@redhat.com>; Thu, 29 Mar 2007 12:55:54 -0400
-Received: from goose.ntrg.com (goose.ehsco.com [207.65.203.98])
-	by mx2.redhat.com (8.13.1/8.13.1) with ESMTP id l2TGtlh7010500
-	for <linux-lvm@redhat.com>; Thu, 29 Mar 2007 12:55:47 -0400
-Received: from [207.65.71.19] (pool-72-75-36-189.washdc.east.verizon.net
-	[72.75.36.189])
-	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
-	(Client did not present a certificate)
-	by goose.ntrg.com (Postfix ) with ESMTP id 75C0D239F3
-	for <linux-lvm@redhat.com>; Thu, 29 Mar 2007 10:55:45 -0600 (CST)
-Message-ID: <460BEF90.60900@ehsco.com>
-Date: Thu, 29 Mar 2007 11:55:44 -0500
-From: "Eric A. Hall" <ehall@ehsco.com>
+Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l2THd1Ov015158
+	for <linux-lvm@redhat.com>; Thu, 29 Mar 2007 13:39:01 -0400
+Received: from mail.bmsi.com (www.bmsi.com [24.248.44.156])
+	by mx1.redhat.com (8.13.1/8.13.1) with ESMTP id l2THcu2B022154
+	for <linux-lvm@redhat.com>; Thu, 29 Mar 2007 13:38:56 -0400
+Received: from bmsred.bmsi.com (bmsred.bmsi.com [192.168.9.50])
+	by mail.bmsi.com (8.13.6/8.13.6) with ESMTP id l2THcox5011939
+	(version=TLSv1/SSLv3 cipher=EDH-RSA-DES-CBC3-SHA bits=168 verify=NO)
+	for <linux-lvm@redhat.com>; Thu, 29 Mar 2007 13:38:50 -0400
+Received: from localhost (localhost [127.0.0.1])
+	by bmsred.bmsi.com (8.13.5/8.13.5) with ESMTP id l2THcoRg029905
+	for <linux-lvm@redhat.com>; Thu, 29 Mar 2007 13:38:50 -0400
+Date: Thu, 29 Mar 2007 13:38:50 -0400 (EDT)
+From: "Stuart D. Gathman" <stuart@bmsi.com>
+Subject: Re: [linux-lvm] LVM questions
+In-Reply-To: <460BEF90.60900@ehsco.com>
+Message-ID: <Pine.LNX.4.44.0703291325420.29826-100000@bmsred.bmsi.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] LVM questions
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -26,42 +27,43 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@redhat.com
+Content-Type: TEXT/PLAIN; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
+On Thu, 29 Mar 2007, Eric A. Hall wrote:
 
-Hi guys,
+> I have seen some people talk about creating hundreds of small partitions
+> and using those for moving and resizing. Is this needed, desirable, or
+> just a stupid human trick?
 
-I'm putting together a storage server for NAS and iSCSI purposes and am
-looking to use LVM for some or all of this. I've read up on LVM but I
-still have some basic newbie questions for this.
+That is a work around for lack of functionality in LVM.  Having used
+LVM on AIX, that is the gold standard for me.  The LVM divides into
+little partitions and keeps track of them for you.  So why do it 
+manually?  Using md for mirroring, each partition synchronizes separately.
+Manually making several smaller partitions lets you move them around and resync
+- all while the system is running.  This happens automatically when LVM
+supports mirroring, but LVM mirroring is still a new experimental feature
+on linux.
 
-I've got a bunch of Raptor 150 ADFD drives and a 3Ware 9650SE board
-providing the basic back-end storage (currently RAID-5 but will move to
-RAID-6 soon, with estimated capacity of approx 800-900 GB, although the
-entire array may shrink or grow as projects demand). The opsys root
-partition will be about 40 GB XFS, with another 4GB swap partition, and
-the NAS/storage pool will be about 300 GB XFS, with the remainder of the
-space being used by the iSCSI volumes (about another 300 GB, divvied up
-among different iSCSI LUNs). I want to be able to shrink and expand these
-by about 10 GB per (although swap may only change by +/-4GB) so I figure
-I'll use LVM for all of the partitions. A couple of other considerations
-here: I need to align the partitions on page boundaries for iSCSI
-performance reasons, and I am also thinking about managing blockdev
-read-ahead differently for each of the final volumes.
+Multiple volume groups just get in the way when you are resizing and
+migrating between physical volumes.  You need a separate volume group
+when you need to physically pick up the entire volume group and 
+take it somewhere else.  For instance, scientific datasets are
+often much too large (terabytes) for DVD, tape, or internet.  So, just make a
+volume group on a handful of 500G drives, build and process your data
+there, then deactivate the VG and send the drives to your colleague
+(make a copy first, of course).  Your colleague plugs the drives into
+his USB/SATA/iSCSI/whatever controller, activates the volume group,
+and now has a copy of your work.
 
-I assume that a single physical extent across /dev/sda will work as well
-as anything else here. Will having more partitions make it easier to
-shrink and expand the whole RAID if that ever becomes necessary? Anything
-else I should take into consideration?
+For anything that will never be physically moved to another machine, keep
+it all on one volume group.  But, for instance, if you think you might
+want to move the iSCSI data to another box at some point, keep it 
+in its own VG (with its own set of drives) to make that easy.
 
-Should I create a single volume group or should I create multiple volume
-groups, or does it even matter? What are the issues?
-
-I have seen some people talk about creating hundreds of small partitions
-and using those for moving and resizing. Is this needed, desirable, or
-just a stupid human trick?
-
-Anything else I should take into consideration here would be appreciated
-
-Thanks!
+-- 
+	      Stuart D. Gathman <stuart@bmsi.com>
+    Business Management Systems Inc.  Phone: 703 591-0911 Fax: 703 591-6154
+"Confutatis maledictis, flammis acribus addictis" - background song for
+a Microsoft sponsored "Where do you want to go from here?" commercial.
