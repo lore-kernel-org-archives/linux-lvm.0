@@ -1,11 +1,15 @@
-Message-ID: <461A6EAE.5040008@ce.jp.nec.com>
-Date: Mon, 09 Apr 2007 12:49:50 -0400
-From: "Jun'ichi Nomura" <j-nomura@ce.jp.nec.com>
-MIME-Version: 1.0
-Subject: Re: [linux-lvm] bug in lvs reporting -- version  2.02.07 Debian
-References: <200704082223.42433.benscott@nwlink.com>
-In-Reply-To: <200704082223.42433.benscott@nwlink.com>
-Content-Transfer-Encoding: 7bit
+Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l39IUBoW010382
+	for <linux-lvm@redhat.com>; Mon, 9 Apr 2007 14:30:12 -0400
+Received: from gmi.com (outgoing.mail.gmi.com [70.103.172.51])
+	by mx1.redhat.com (8.13.1/8.13.1) with SMTP id l39IU4bc016904
+	for <linux-lvm@redhat.com>; Mon, 9 Apr 2007 14:30:05 -0400
+Date: Mon, 9 Apr 2007 11:29:59 -0700
+From: "Adam D. Morley" <adam-software-linux-lvm@gmi.com>
+Message-ID: <20070409182959.GA7163@pri.dmz.gmi.com>
+Mime-Version: 1.0
+Content-Disposition: inline
+Subject: [linux-lvm] Sharing volumes via SAN?
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -17,43 +21,34 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: benscott@nwlink.com
-Cc: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Transfer-Encoding: 7bit
+To: linux-lvm@redhat.com
 
 Hi,
 
-ben scott wrote:
-> I have found a couple of times in testing that lvs will sometimes report the 
-> same logical volume 2 or more times when output options are used. It seems to 
-> happen with volumes that are a large percentage of the total group size. 
-> Below I give an example. Notice how "lvs" with no options works fine but with 
-> options doesn't.
+I'd like to share LVM volumes hosted on a SAN between two systems.  I do
+not want to mount at the same time (ie: GFS), but rather I just want
+to be able to swap them between hosts.  I'm assuming this is possible
+now by simply assigning SAN LUNs to both systems, but I don't see
+much talk of about a piece of LVM that handles knowing which host
+"owns" a given LV.
 
-lvs reports per-lv by default.
-However, depending on the specified fields, it reports per-segments
-as if '--segments' are given, for the fields are per-segment info.
+Background: In Solaris, when using Sun's VM, one can create a shared
+diskset which is seen by two hosts, but only one can do IO against the
+volumes at a given time.  Solaris also implements a forcible take
+mechanism which allows the passive host to take the volumes from the
+active host, panicing the active host out.  Regular takes are also
+implemented, to allow the volumes to migrate between hosts if first
+released by the active host.
 
-# lvs
-  LV    VG   Attr   LSize  Origin Snap%  Move Log Copy% 
-  lvol4 mvg  -wi-a- 21.88G                
+It doesn't seem like LVM does this out of the box, probably because it
+lacks a built-in lock manager.  If it does, could someone point me to a
+resource that shows how it works?
 
-# lvs --segments
-  LV    VG   Attr   #Str Type   SSize  
-  lvol4 mvg  -wi-a-    1 linear  7.45G 
-  lvol4 mvg  -wi-a-    1 linear  7.44G 
-  lvol4 mvg  -wi-a-    1 linear  6.99G 
+In the event LVM doesn't do this, is this something that CLVM will do?
+Was there ever a version of CLVM for the 2.4.x kernel series?
 
-In this case, mvg/lvol4 consists of 3 segments.
+Thanks!
 
-# dmsetup table mvg-lvol4
-0 15613952 linear 8:33 8576
-15613952 15605760 linear 8:35 16768
-31219712 14655488 linear 8:34 164224
-
-With combination of LVM2 2.02.20 or newer and device-mapper 1.02.16
-or newer, you can see which field belongs to which category by
-'lvs -o help'.
-
-Thanks,
 -- 
-Jun'ichi Nomura, NEC Corporation of America
+adam
