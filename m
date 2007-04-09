@@ -1,22 +1,24 @@
 Received: from mx2.redhat.com (mx2.redhat.com [10.255.15.25])
-	by int-mx2.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l37MLOfx022059
-	for <linux-lvm@redhat.com>; Sat, 7 Apr 2007 18:21:25 -0400
-Received: from an-out-0708.google.com (an-out-0708.google.com [209.85.132.243])
-	by mx2.redhat.com (8.13.1/8.13.1) with ESMTP id l37MLNAk010208
-	for <linux-lvm@redhat.com>; Sat, 7 Apr 2007 18:21:23 -0400
-Received: by an-out-0708.google.com with SMTP id d18so1803734and
-	for <linux-lvm@redhat.com>; Sat, 07 Apr 2007 15:21:22 -0700 (PDT)
-Message-ID: <3120c9e30704071521n3b077451pa47d78aa738699b2@mail.gmail.com>
-Date: Sun, 8 Apr 2007 03:51:22 +0530
-From: "Anuj Singh" <anujhere@gmail.com>
-In-Reply-To: <3120c9e30704071002p184e6676ieddfa0cc6b1e6645@mail.gmail.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-References: <3120c9e30704071002p184e6676ieddfa0cc6b1e6645@mail.gmail.com>
-Subject: [linux-lvm] Re: piranha on Fedora core 6, piranha-gui fails,
-	pulse running_real servers not switching
-Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
+	by int-mx2.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l3920aTn024704
+	for <linux-lvm@redhat.com>; Sun, 8 Apr 2007 22:00:36 -0400
+Received: from mail.mediacell.com
+	(74-92-210-145-Colorado.hfc.comcastbusiness.net [74.92.210.145]
+	(may be forged))
+	by mx2.redhat.com (8.13.1/8.13.1) with ESMTP id l3920WjF028968
+	for <linux-lvm@redhat.com>; Sun, 8 Apr 2007 22:00:34 -0400
+Received: from [192.168.0.229] (asbestos.bish0p.org [74.92.210.149])
+	(using TLSv1 with cipher RC4-MD5 (128/128 bits))
+	(No client certificate requested)
+	by mail.mediacell.com (Postfix) with ESMTP id 75D23D1271
+	for <linux-lvm@redhat.com>; Sun,  8 Apr 2007 20:00:31 -0600 (MDT)
+From: Don Bishop <donbishop@mediacell.com>
+Content-Type: multipart/alternative; boundary="=-mT9PF/ACXlWR6vkVoVN+"
+Date: Sun, 08 Apr 2007 20:03:48 -0600
+Message-Id: <1176084228.14147.47.camel@zit>
+Mime-Version: 1.0
+Subject: [linux-lvm] Unrecognised segment type mirror
+Reply-To: donbishop@mediacell.com,
+	LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -26,164 +28,302 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: linux-lvm@redhat.com
 
-Hello,
-it is working now, one of my real server had some routing problem, i
-changed it, now only problem remaining is to read load as nanny is
-still showing the same error ,
 
-Thank and regards
-anugunj "anuj"
+--=-mT9PF/ACXlWR6vkVoVN+
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
+
+I have just recently installed LVM2 on top of a 4-disk software RAID5
+array under Gentoo Linux (x86).  I have four other machines with a
+similar configuration although they are variously EIDE, SATA, and
+SCSI-based).
+
+This 5th machine gives the following error/warning whenever running any
+of the lvm tools (vgdisplay, pvdisplay, lvdisplay, vgscan, etc).  The
+drives are all identical EIDE WD2500JBRTL, partitions are type fd, and
+are a single partition drives.
+
+Unrecognised segment type mirror
+
+This above error repeats once for each logical volume I create using,
+eg,  lvcreate -L10G -nwhatever vg0
+
+Here is the output from vgscan:
+
+pus ~ # vgscan
+    Logging initialised at Sun Apr  8 19:39:58 2007
+    Set umask to 0077
+    Wiping cache of LVM-capable devices
+    Wiping internal VG cache
+  Reading all physical volumes.  This may take a while...
+    Finding all volume groups
+    Finding volume group "vg0"
+  Unrecognised segment type mirror
+  Unrecognised segment type mirror
+  Unrecognised segment type mirror
+  Unrecognised segment type mirror
+  Unrecognised segment type mirror
+  Unrecognised segment type mirror
+  Found volume group "vg0" using metadata type lvm2
+    Wiping internal VG cache
 
 
-Apr  7 21:51:48 pr0032 nanny[7703]: failed to read remote load
-Apr  7 21:52:08 pr0032 nanny[7703]: The following exited abnormally:
-Apr  7 21:52:08 pr0032 nanny[7703]: failed to read remote load
-Apr  7 21:52:28 pr0032 nanny[7703]: The following exited abnormally:
+I have tried various filters, etc, to no avail.  It seems to be linked
+to the /dev/md/0 logical volumes.  Here is the output from lvdisplay
 
-What am i missing here? Is it necessary to use piranha-gui to
-On 4/7/07, Anuj Singh <anujhere@gmail.com> wrote:
-> Hi ,
-> I am configuring lvs nat router with piranha-0.7.12-1 on Fedora Core 6 machines
-> When i turn off service of one of my real service it is not switching
-> to second real server. I can access and see logs of connection in
-> ipvsadm -L.
-> I edited sample.cf file and copied as lvs.cf. as my piranha-gui is not
-> running due to some missing appache modules.
->
-> Director Master lvs machine
-> eth0=10.1.1.1
-> eth1=192.168.10.42
->
-> routing table without running pulse service
-> Kernel IP routing table
-> Destination     Gateway         Genmask         Flags Metric Ref    Use Iface
-> 192.168.10.0    0.0.0.0         255.255.255.0   U     0      0        0 eth1
-> 10.1.1.0        0.0.0.0         255.255.255.0   U     0      0        0 eth0
-> 169.254.0.0     0.0.0.0         255.255.0.0     U     0      0        0 eth1
->
-> routing table after starting pulse service
-> Kernel IP routing table
-> Destination     Gateway         Genmask         Flags Metric Ref    Use Iface
-> 192.168.10.0    0.0.0.0         255.255.255.0   U     0      0        0 eth1
-> 10.1.1.0        0.0.0.0         255.255.255.0   U     0      0        0 eth0
-> 169.254.0.0     0.0.0.0         255.255.0.0     U     0      0        0 eth1
-> 10.0.0.0        0.0.0.0         255.0.0.0       U     0      0        0 eth0
->
-> ipvsadm -L
-> IP Virtual Server version 1.2.1 (size=4096)
-> Prot LocalAddress:Port Scheduler Flags
->  -> RemoteAddress:Port           Forward Weight ActiveConn InActConn
-> TCP  10.1.1.22:ftp wlc
-> TCP  10.1.1.21:http rr persistent 60
->  -> node31.prolog.com:http Masq    2      0          0
->
->
-> Slave backupp lvs machine
-> eth0=10.1.12
-> eth1=192.168.10.55
->
-> Test client machine IP = 10.1.1.11
->
-> my lvs.cf
->
-> service = lvs
-> primary = 192.168.10.42
-> backup = 192.168.10.55
-> backup_active = 1
-> heartbeat = 1
-> heartbeat_port = 1050
-> keepalive = 6
-> deadtime = 18
-> network = nat
-> nat_router = 192.168.10.111 eth1:1
-> virtual server1 {
->    address = 10.1.1.21 eth0:1
->    active = 1
->    load_monitor = uptime
->    timeout = 5
->    reentry = 10
->    port = http
->        send = "GET / HTTP/1.0\r\n\r\n"
->        expect = "HTTP"
->    scheduler = rr
->    persistent = 60
->    pmask = 255.255.255.255
->        protocol = tcp
->    server Real1 {
->        address = 192.168.10.31
->        active = 1
->        weight = 2
->    }
->    server Real2 {
->        address = 192.168.10.83
->        active = 1
->        weight = 1
->    }
-> }
-> virtual server2 {
->    address = 10.1.1.22 eth0:2
->    active = 1
->    load_monitor = uptime
->    timeout = 5
->    reentry = 10
->    port = 21
->        send = "\n"
->    server Real1 {
->        address = 192.168.10.83
->        active = 1
->    }
->    server Real2 {
->        address = 192.168.10.3
->        active = 1
->    }
-> }
->
->
-> Logs:
-> Apr  7 21:50:45 pr0032 pulse[7695]: STARTING PULSE AS MASTER
-> Apr  7 21:51:03 pr0032 pulse[7695]: partner dead: activating lvs
-> Apr  7 21:51:03 pr0032 lvs[7697]: starting virtual service server1 active: 80
-> Apr  7 21:51:03 pr0032 nanny[7703]: starting LVS client monitor for 10.1.1.21:80
-> Apr  7 21:51:03 pr0032 lvs[7697]: create_monitor for server1/Real1
-> running as pid 7703
-> Apr  7 21:51:03 pr0032 nanny[7704]: starting LVS client monitor for 10.1.1.21:80
-> Apr  7 21:51:03 pr0032 lvs[7697]: create_monitor for server1/Real2
-> running as pid 7704
-> Apr  7 21:51:03 pr0032 lvs[7697]: starting virtual service server2 active: 21
-> Apr  7 21:51:03 pr0032 nanny[7706]: starting LVS client monitor for 10.1.1.22:21
-> Apr  7 21:51:03 pr0032 lvs[7697]: create_monitor for server2/Real1
-> running as pid 7706
-> Apr  7 21:51:03 pr0032 nanny[7707]: starting LVS client monitor for 10.1.1.22:21
-> Apr  7 21:51:03 pr0032 lvs[7697]: create_monitor for server2/Real2
-> running as pid 7707
-> Apr  7 21:51:03 pr0032 avahi-daemon[4317]: Registering new address
-> record for 10.1.1.21 on eth0.
-> Apr  7 21:51:03 pr0032 avahi-daemon[4317]: Registering new address
-> record for 10.1.1.22 on eth0.
-> Apr  7 21:51:03 pr0032 nanny[7703]: making 192.168.10.31:80 available
-> Apr  7 21:51:03 pr0032 avahi-daemon[4317]: Registering new address
-> record for 192.168.10.111 on eth1.
-> Apr  7 21:51:08 pr0032 pulse[7700]: gratuitous lvs arps finished
-> Apr  7 21:51:28 pr0032 nanny[7703]: The following exited abnormally:
-> Apr  7 21:51:28 pr0032 nanny[7703]: failed to read remote load
-> Apr  7 21:51:08 pr0032 pulse[7700]: gratuitous lvs arps finished
-> Apr  7 21:51:28 pr0032 nanny[7703]: The following exited abnormally:
-> Apr  7 21:51:28 pr0032 nanny[7703]: failed to read remote load
-> Apr  7 21:51:48 pr0032 nanny[7703]: The following exited abnormally:
-> Apr  7 21:51:48 pr0032 nanny[7703]: failed to read remote load
-> Apr  7 21:52:08 pr0032 nanny[7703]: The following exited abnormally:
-> Apr  7 21:52:08 pr0032 nanny[7703]: failed to read remote load
-> Apr  7 21:52:28 pr0032 nanny[7703]: The following exited abnormally:
->
-> What am i missing here? Is it necessary to use piranha-gui to
-> configure pulse? I am using Fedora core 6.
-> When I switch off one of my real server it is not switching to real
-> server2. My logs showing errors in nanny for reading load. Do i need
-> to make some changes on my real servers?
->
-> Thanks and regards
-> Anuj Singh
->
+pus ~ # lvdisplay
+    Logging initialised at Sun Apr  8 19:49:17 2007
+    Set umask to 0077
+    Finding all logical volumes
+  Unrecognised segment type mirror
+  Unrecognised segment type mirror
+  Unrecognised segment type mirror
+  Unrecognised segment type mirror
+  Unrecognised segment type mirror
+  Unrecognised segment type mirror
+  --- Logical volume ---
+  LV Name                /dev/vg0/ccache
+  VG Name                vg0
+  LV UUID                nO0w8H-WsOA-8djw-Xk9w-xE25-mH0o-9pD4B2
+  LV Write Access        read/write
+  LV Status              available
+  # open                 2
+  LV Size                2.00 GB
+  Current LE             512
+  Segments               1
+  Allocation             inherit
+  Read ahead sectors     0
+  Block device           253:0
+   
+  --- Logical volume ---
+  LV Name                /dev/vg0/netstor
+  VG Name                vg0
+  LV UUID                38f0Cs-WJ0Q-BNhJ-yCwn-3oqw-xBHT-9yjKGy
+  LV Write Access        read/write
+  LV Status              available
+  # open                 2
+  LV Size                200.00 GB
+  Current LE             51200
+  Segments               1
+  Allocation             inherit
+  Read ahead sectors     0
+  Block device           253:1
+   
+  --- Logical volume ---
+  LV Name                /dev/vg0/portage
+  VG Name                vg0
+  LV UUID                3AgwV0-lfLN-ksVr-68fT-d2E6-HsTE-ffEYOb
+  LV Write Access        read/write
+  LV Status              available
+  # open                 2
+  LV Size                10.00 GB
+  Current LE             2560
+  Segments               1
+  Allocation             inherit
+  Read ahead sectors     0
+  Block device           253:2
+   
+  --- Logical volume ---
+  LV Name                /dev/vg0/livecd
+  VG Name                vg0
+  LV UUID                yfrzKx-pCnE-43Oc-QA0K-nooy-GTn8-EH16QM
+  LV Write Access        read/write
+  LV Status              available
+  # open                 2
+  LV Size                6.00 GB
+  Current LE             1536
+  Segments               1
+  Allocation             inherit
+  Read ahead sectors     0
+  Block device           253:3
+   
+  --- Logical volume ---
+  LV Name                /dev/vg0/mediacell
+  VG Name                vg0
+  LV UUID                3xaj3s-1E8c-HJuH-8ADe-ZTuP-b8iW-PMcNuS
+  LV Write Access        read/write
+  LV Status              available
+  # open                 2
+  LV Size                20.00 GB
+  Current LE             5120
+  Segments               1
+  Allocation             inherit
+  Read ahead sectors     0
+  Block device           253:4
+   
+  --- Logical volume ---
+  LV Name                /dev/vg0/home
+  VG Name                vg0
+  LV UUID                3vD1l9-oCwM-pG8C-c37H-p9hw-HIWq-D1hB0k
+  LV Write Access        read/write
+  LV Status              available
+  # open                 2
+  LV Size                60.00 GB
+  Current LE             15360
+  Segments               1
+  Allocation             inherit
+  Read ahead sectors     0
+  Block device           253:5
+   
+    Wiping internal VG cache
+
+
+
+
+I'd appreciate any help, this error only happens on this machine.
+
+thanks,
+Don B
+
+
+--=-mT9PF/ACXlWR6vkVoVN+
+Content-Type: text/html; charset=utf-8
+Content-Transfer-Encoding: 7bit
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 TRANSITIONAL//EN">
+<HTML>
+<HEAD>
+  <META HTTP-EQUIV="Content-Type" CONTENT="text/html; CHARSET=UTF-8">
+  <META NAME="GENERATOR" CONTENT="GtkHTML/3.12.2">
+</HEAD>
+<BODY>
+I have just recently installed LVM2 on top of a 4-disk software RAID5 array under Gentoo Linux (x86).&nbsp; I have four other machines with a similar configuration although they are variously EIDE, SATA, and SCSI-based).<BR>
+<BR>
+This 5th machine gives the following error/warning whenever running any of the lvm tools (vgdisplay, pvdisplay, lvdisplay, vgscan, etc).&nbsp; The drives are all identical EIDE WD2500JBRTL, partitions are type fd, and are a single partition drives.<BR>
+<BR>
+<TT>Unrecognised segment type mirror</TT><BR>
+<BR>
+This above error repeats once for each logical volume I create using, eg,&nbsp; lvcreate -L10G -nwhatever vg0<BR>
+<BR>
+Here is the output from vgscan:<BR>
+<BR>
+pus ~ # vgscan<BR>
+&nbsp;&nbsp;&nbsp; Logging initialised at Sun Apr&nbsp; 8 19:39:58 2007<BR>
+&nbsp;&nbsp;&nbsp; Set umask to 0077<BR>
+&nbsp;&nbsp;&nbsp; Wiping cache of LVM-capable devices<BR>
+&nbsp;&nbsp;&nbsp; Wiping internal VG cache<BR>
+&nbsp; Reading all physical volumes.&nbsp; This may take a while...<BR>
+&nbsp;&nbsp;&nbsp; Finding all volume groups<BR>
+&nbsp;&nbsp;&nbsp; Finding volume group &quot;vg0&quot;<BR>
+&nbsp; Unrecognised segment type mirror<BR>
+&nbsp; Unrecognised segment type mirror<BR>
+&nbsp; Unrecognised segment type mirror<BR>
+&nbsp; Unrecognised segment type mirror<BR>
+&nbsp; Unrecognised segment type mirror<BR>
+&nbsp; Unrecognised segment type mirror<BR>
+&nbsp; Found volume group &quot;vg0&quot; using metadata type lvm2<BR>
+&nbsp;&nbsp;&nbsp; Wiping internal VG cache<BR>
+<BR>
+<BR>
+I have tried various filters, etc, to no avail.&nbsp; It seems to be linked to the /dev/md/0 logical volumes.&nbsp; Here is the output from lvdisplay<BR>
+<BR>
+pus ~ # lvdisplay<BR>
+&nbsp;&nbsp;&nbsp; Logging initialised at Sun Apr&nbsp; 8 19:49:17 2007<BR>
+&nbsp;&nbsp;&nbsp; Set umask to 0077<BR>
+&nbsp;&nbsp;&nbsp; Finding all logical volumes<BR>
+&nbsp; Unrecognised segment type mirror<BR>
+&nbsp; Unrecognised segment type mirror<BR>
+&nbsp; Unrecognised segment type mirror<BR>
+&nbsp; Unrecognised segment type mirror<BR>
+&nbsp; Unrecognised segment type mirror<BR>
+&nbsp; Unrecognised segment type mirror<BR>
+&nbsp; --- Logical volume ---<BR>
+&nbsp; LV Name&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; /dev/vg0/ccache<BR>
+&nbsp; VG Name&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; vg0<BR>
+&nbsp; LV UUID&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; nO0w8H-WsOA-8djw-Xk9w-xE25-mH0o-9pD4B2<BR>
+&nbsp; LV Write Access&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; read/write<BR>
+&nbsp; LV Status&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; available<BR>
+&nbsp; # open&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 2<BR>
+&nbsp; LV Size&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 2.00 GB<BR>
+&nbsp; Current LE&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 512<BR>
+&nbsp; Segments&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1<BR>
+&nbsp; Allocation&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; inherit<BR>
+&nbsp; Read ahead sectors&nbsp;&nbsp;&nbsp;&nbsp; 0<BR>
+&nbsp; Block device&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 253:0<BR>
+&nbsp;&nbsp; <BR>
+&nbsp; --- Logical volume ---<BR>
+&nbsp; LV Name&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; /dev/vg0/netstor<BR>
+&nbsp; VG Name&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; vg0<BR>
+&nbsp; LV UUID&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 38f0Cs-WJ0Q-BNhJ-yCwn-3oqw-xBHT-9yjKGy<BR>
+&nbsp; LV Write Access&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; read/write<BR>
+&nbsp; LV Status&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; available<BR>
+&nbsp; # open&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 2<BR>
+&nbsp; LV Size&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 200.00 GB<BR>
+&nbsp; Current LE&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 51200<BR>
+&nbsp; Segments&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1<BR>
+&nbsp; Allocation&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; inherit<BR>
+&nbsp; Read ahead sectors&nbsp;&nbsp;&nbsp;&nbsp; 0<BR>
+&nbsp; Block device&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 253:1<BR>
+&nbsp;&nbsp; <BR>
+&nbsp; --- Logical volume ---<BR>
+&nbsp; LV Name&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; /dev/vg0/portage<BR>
+&nbsp; VG Name&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; vg0<BR>
+&nbsp; LV UUID&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 3AgwV0-lfLN-ksVr-68fT-d2E6-HsTE-ffEYOb<BR>
+&nbsp; LV Write Access&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; read/write<BR>
+&nbsp; LV Status&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; available<BR>
+&nbsp; # open&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 2<BR>
+&nbsp; LV Size&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 10.00 GB<BR>
+&nbsp; Current LE&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 2560<BR>
+&nbsp; Segments&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1<BR>
+&nbsp; Allocation&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; inherit<BR>
+&nbsp; Read ahead sectors&nbsp;&nbsp;&nbsp;&nbsp; 0<BR>
+&nbsp; Block device&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 253:2<BR>
+&nbsp;&nbsp; <BR>
+&nbsp; --- Logical volume ---<BR>
+&nbsp; LV Name&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; /dev/vg0/livecd<BR>
+&nbsp; VG Name&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; vg0<BR>
+&nbsp; LV UUID&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; yfrzKx-pCnE-43Oc-QA0K-nooy-GTn8-EH16QM<BR>
+&nbsp; LV Write Access&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; read/write<BR>
+&nbsp; LV Status&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; available<BR>
+&nbsp; # open&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 2<BR>
+&nbsp; LV Size&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 6.00 GB<BR>
+&nbsp; Current LE&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1536<BR>
+&nbsp; Segments&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1<BR>
+&nbsp; Allocation&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; inherit<BR>
+&nbsp; Read ahead sectors&nbsp;&nbsp;&nbsp;&nbsp; 0<BR>
+&nbsp; Block device&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 253:3<BR>
+&nbsp;&nbsp; <BR>
+&nbsp; --- Logical volume ---<BR>
+&nbsp; LV Name&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; /dev/vg0/mediacell<BR>
+&nbsp; VG Name&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; vg0<BR>
+&nbsp; LV UUID&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 3xaj3s-1E8c-HJuH-8ADe-ZTuP-b8iW-PMcNuS<BR>
+&nbsp; LV Write Access&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; read/write<BR>
+&nbsp; LV Status&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; available<BR>
+&nbsp; # open&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 2<BR>
+&nbsp; LV Size&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 20.00 GB<BR>
+&nbsp; Current LE&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 5120<BR>
+&nbsp; Segments&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1<BR>
+&nbsp; Allocation&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; inherit<BR>
+&nbsp; Read ahead sectors&nbsp;&nbsp;&nbsp;&nbsp; 0<BR>
+&nbsp; Block device&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 253:4<BR>
+&nbsp;&nbsp; <BR>
+&nbsp; --- Logical volume ---<BR>
+&nbsp; LV Name&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; /dev/vg0/home<BR>
+&nbsp; VG Name&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; vg0<BR>
+&nbsp; LV UUID&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 3vD1l9-oCwM-pG8C-c37H-p9hw-HIWq-D1hB0k<BR>
+&nbsp; LV Write Access&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; read/write<BR>
+&nbsp; LV Status&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; available<BR>
+&nbsp; # open&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 2<BR>
+&nbsp; LV Size&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 60.00 GB<BR>
+&nbsp; Current LE&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 15360<BR>
+&nbsp; Segments&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1<BR>
+&nbsp; Allocation&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; inherit<BR>
+&nbsp; Read ahead sectors&nbsp;&nbsp;&nbsp;&nbsp; 0<BR>
+&nbsp; Block device&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 253:5<BR>
+&nbsp;&nbsp; <BR>
+&nbsp;&nbsp;&nbsp; Wiping internal VG cache<BR>
+<BR>
+<BR>
+<BR>
+<BR>
+I'd appreciate any help, this error only happens on this machine.<BR>
+<BR>
+thanks,<BR>
+Don B<BR>
+<BR>
+</BODY>
+</HTML>
+
+--=-mT9PF/ACXlWR6vkVoVN+--
