@@ -1,27 +1,21 @@
-Received: from mx2.redhat.com (mx2.redhat.com [10.255.15.25])
-	by int-mx2.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l3EFDH7Z026243
-	for <linux-lvm@redhat.com>; Sat, 14 Apr 2007 11:13:17 -0400
-Received: from server.klug.on.ca (server.klug.on.ca [205.189.48.131])
-	by mx2.redhat.com (8.13.1/8.13.1) with ESMTP id l3EFDFmT029929
-	for <linux-lvm@redhat.com>; Sat, 14 Apr 2007 11:13:16 -0400
-Received: from linux.interlinx.bc.ca (linux.interlinx.bc.ca [66.11.173.224])
-	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by server.klug.on.ca (Postfix) with ESMTP id DF4D32803
-	for <linux-lvm@redhat.com>; Sat, 14 Apr 2007 11:13:14 -0400 (EDT)
-Received: from [10.75.22.1] (pc.ilinx [10.75.22.1])
-	(using TLSv1 with cipher RC4-MD5 (128/128 bits))
-	(No client certificate requested)
-	by linux.interlinx.bc.ca (Postfix) with ESMTP id 12133101680
-	for <linux-lvm@redhat.com>; Sat, 14 Apr 2007 11:13:08 -0400 (EDT)
-From: "Brian J. Murrell" <brian@interlinx.bc.ca>
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature";
-	boundary="=-L8vy/wGPyqKrZOqCMvIb"
-Date: Sat, 14 Apr 2007 11:13:07 -0400
-Message-Id: <1176563587.17452.16.camel@pc.ilinx>
+Received: from agk.fab.redhat.com (agk.fab.redhat.com [10.33.0.19])
+	by pobox.surrey.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
+	l3EFO70M025004
+	for <linux-lvm@redhat.com>; Sat, 14 Apr 2007 16:24:07 +0100
+Received: from agk by agk.fab.redhat.com with local (Exim 4.34)
+	id 1Hck6h-0006VW-7E
+	for linux-lvm@redhat.com; Sat, 14 Apr 2007 16:24:07 +0100
+Date: Sat, 14 Apr 2007 16:24:07 +0100
+From: Alasdair G Kergon <agk@redhat.com>
+Subject: Re: [linux-lvm] Limitation: Snapshots does not work in
+	cluster	enviroment ?
+Message-ID: <20070414152407.GK26983@agk.fab.redhat.com>
+References: <4620D7E3.9090609@dtnet.de>
+	<20070414145250.GI26983@agk.fab.redhat.com>
+	<4620E73F.50100@dtnet.de>
 Mime-Version: 1.0
-Subject: [linux-lvm] removing an origin from under snapshots
+Content-Disposition: inline
+In-Reply-To: <4620E73F.50100@dtnet.de>
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -32,55 +26,33 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
+On Sat, Apr 14, 2007 at 04:37:51PM +0200, Daniel Schwager wrote:
+> So, i want to use snapshot1 on server1, snapshot2 on server2. The 
+> original LV
+> (where the snapshot is created from) is not in use (not mounted on any 
+> server).
+> 
+> Is this possible ?
 
---=-L8vy/wGPyqKrZOqCMvIb
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
+Well the reason you can't use snapshots in a cluster is because writes
+cannot be handled correctly when there's more than one machine involved.
+If all your writes are local with no impact on LVs in use on other
+machines then the current kernel implementation ought to work.
+I think the userspace LVM code could be tweaked to support this
+configuration.  Until then, you'll need to activate the snapshots
+manually using dmsetup directly.
 
-I am fairly sure LVM does not currently allow this, but what I would
-like to do is create one or more snapshots of an origin, work within the
-snapshot(s) and then remove the origin.
 
-Understanding a bit about how LVM works, I can understand some of the
-problems with this.
+Userspace changes we'd need for the tools to support this:
+  Permit a snapshot to be activated without its corresponding origin.
+  - requires a snapshot exclusive lock (already supported)
+  - requires an origin lock that prevents any node having origin active
+(implementation needs more thought but it should be possible)
 
-      * All snapshot volumes would need to be (expanded to the) same
-        size as the origin.
-      * In the case of multiple snapshots, snapshots n+1 would need to
-        have the blocks it shares with the origin copied to it.
-
-Why would I want to do this you might ask?
-
-Let's say I have a Fedora Core 5 system in /dev/vg00/{root,usr,var}.  I
-want to upgrade with the safety of having somewhere to very quickly and
-easily fall back to if it goes horribly wrong.  So I make snapshots of
-those root, usr, and var volumes, mount them (or reboot from them even)
-and try the upgrade.  If and when I'm happy with them I have no use for
-the original root, usr and var and would like to collapse them, turning
-my snaphots of those volumes into bona fide logical volumes, which I can
-then take snapshots of at some time in the future.
-
-Thots?
-
-b.
-
---=20
-My other computer is your Microsoft Windows server.
-
-Brian J. Murrell
-
---=-L8vy/wGPyqKrZOqCMvIb
-Content-Type: application/pgp-signature; name=signature.asc
-Content-Description: This is a digitally signed message part
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.6 (GNU/Linux)
-
-iD8DBQBGIO+Dl3EQlGLyuXARAkEGAJ44SCRFcQGPuE/KeqmFwjtieL/Z1gCgre44
-8U9UhqGT9aOs5O1CLoNt4Z8=
-=GZqV
------END PGP SIGNATURE-----
-
---=-L8vy/wGPyqKrZOqCMvIb--
+Alasdair
+-- 
+agk@redhat.com
