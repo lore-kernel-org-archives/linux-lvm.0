@@ -1,18 +1,22 @@
 Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l3KBllp8009358
-	for <linux-lvm@redhat.com>; Fri, 20 Apr 2007 07:47:47 -0400
-Received: from mail.mhnet.de (213-146-240-5.skytron.de [213.146.240.5])
-	by mx1.redhat.com (8.13.1/8.13.1) with ESMTP id l3KBliDY018977
-	for <linux-lvm@redhat.com>; Fri, 20 Apr 2007 07:47:45 -0400
-Received: from mail.mhnet.de (localhost [127.0.0.1])
-	by mail.mhnet.de (Postfix) with ESMTP id C741A72378
-	for <linux-lvm@redhat.com>; Fri, 20 Apr 2007 13:47:43 +0200 (CEST)
-Date: Fri, 20 Apr 2007 13:47:43 +0200
-From: Micha Holzmann <holzmann@gmx.de>
-Message-ID: <20070420114742.GA6661@mail.mhnet.de>
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l3KDafOl013650
+	for <linux-lvm@redhat.com>; Fri, 20 Apr 2007 09:36:41 -0400
+Received: from mail.esperi.org.uk (41-052.adsl.zetnet.co.uk [194.247.41.52])
+	by mx1.redhat.com (8.13.1/8.13.1) with ESMTP id l3KDaakA017015
+	for <linux-lvm@redhat.com>; Fri, 20 Apr 2007 09:36:38 -0400
+Received: from esperi.org.uk (nix@hades.wkstn.nix [192.168.14.18])
+	by mail.esperi.org.uk (8.12.11.20060614/8.12.11) with ESMTP id
+	l3KDaSIJ004347
+	for <linux-lvm@redhat.com>; Fri, 20 Apr 2007 14:36:28 +0100
+Subject: Re: [linux-lvm] LVM questions
+References: <Pine.LNX.4.44.0703291325420.29826-100000@bmsred.bmsi.com>
+From: Nix <nix@esperi.org.uk>
+Date: Fri, 20 Apr 2007 14:36:26 +0100
+In-Reply-To: <Pine.LNX.4.44.0703291325420.29826-100000@bmsred.bmsi.com>
+	(Stuart D. Gathman's message of "Thu,
+	29 Mar 2007 13:38:50 -0400 (EDT)")
+Message-ID: <87r6qfgobp.fsf@hades.wkstn.nix>
 MIME-Version: 1.0
-Content-Disposition: inline
-Subject: [linux-lvm] How to resize a PV located on a SAN LUN
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -25,45 +29,29 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: linux-lvm@redhat.com
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-Hello,
+On 29 Mar 2007, Stuart D. Gathman said:
+> For anything that will never be physically moved to another machine, keep
+> it all on one volume group.  But, for instance, if you think you might
+> want to move the iSCSI data to another box at some point, keep it 
+> in its own VG (with its own set of drives) to make that easy.
 
-since a few weeks we have an IBM SAN environment with Blade-Center.
-The SAN controller is a DS4700 formerly known as FASTt. We have a LUN
-with 200 GB of size. The LUN ist partioned:
+I also use VGs when I have several classes of PV with radically
+different properties (especially failure properties) and want to be sure
+that the failure of one PV can't possibly affect the LVs on the devices
+with other failure properties.
 
+At one point I had three VGs on one of my systems. One spanned PVs on
+top of a RAID-5 md array. That array was composed of disks of radically
+different sizes, so I had another VG spanning PVs consuming all that
+slack space. Then, for testing purposes, I had another VG sitting
+entirely atop the network block device.
 
-fdisk -l /dev/sda
+The NBDed VG could be expected to go down fairly frequently (as NBD
+connections don't outlast server reboots), but I didn't want that to
+affect either of the local VGs. The non-RAIDed VG might fail if a single
+disk dies, but that only had news spool and caches on it so I didn't
+want it to affect the important stuff on the RAIDed VGs.
 
-Disk /dev/sda: 214.7 GB, 214748364800 bytes
-255 heads, 63 sectors/track, 26108 cylinders
-Units = cylinders of 16065 * 512 = 8225280 bytes
-
-   Device Boot      Start         End      Blocks   Id  System
-/dev/sda1   *           1         125     1004031   83  Linux
-/dev/sda2             126       26108   208708447+   5  Extended
-/dev/sda5             126         188      506016   83  Linux
-/dev/sda6             189        1185     8008371   83  Linux
-/dev/sda7            1186        1435     2008093+  83  Linux
-/dev/sda8            1436        1560     1004031   83  Linux
-/dev/sda9            1561        1810     2008093+  83  Linux
-/dev/sda10           1811        2060     2008093+  83  Linux
-/dev/sda11           2061        4053    16008741   83  Linux
-/dev/sda12           4054       24960   167935446   8e  Linux LVM
-/dev/sda13          24961       26108     9221278+  82  Linux swap
-
-
-
-Now i had to increase the size of partition of sda12 which is a LVM.
-I am not sure which is the right way. Within the storage managment
-software i can increase the size of the LUN. After rebooting the machine
-the additional space is appended at the end of partitions and it is
-marked as free. How can i now increase the LVM partition. Which
-tool/programm i do need for this task?
-
-Best regards,
-Micha
-
--- 
-Who the hell is General Failure, and why he is reading my disk?
+Hence, three VGs made considerable sense.
