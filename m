@@ -1,15 +1,23 @@
-Received: from [10.33.1.214] (dhcp-1-214.fab.redhat.com [10.33.1.214])
-	by pobox.surrey.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
-	l3OAarjV006128
-	for <linux-lvm@redhat.com>; Tue, 24 Apr 2007 11:36:53 +0100
-Message-ID: <462DDE8D.1070601@redhat.com>
-Date: Tue, 24 Apr 2007 11:40:13 +0100
-From: "Bryn M. Reeves" <breeves@redhat.com>
+Received: from mx2.redhat.com (mx2.redhat.com [10.255.15.25])
+	by int-mx2.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l3OAjOr3014414
+	for <linux-lvm@redhat.com>; Tue, 24 Apr 2007 06:45:25 -0400
+Received: from vs1011.euddene.net (vs1011.euddene.net [84.20.3.36])
+	by mx2.redhat.com (8.13.1/8.13.1) with ESMTP id l3OAjKOr002693
+	for <linux-lvm@redhat.com>; Tue, 24 Apr 2007 06:45:21 -0400
+Received: from [192.168.1.33] (28.Red-83-55-207.dynamicIP.rima-tde.net
+	[83.55.207.28])
+	by vs1011.euddene.net (8.12.3/8.12.3/Debian-7.1) with ESMTP id
+	l3OAItkm012184
+	for <linux-lvm@redhat.com>; Tue, 24 Apr 2007 12:18:56 +0200
+Message-ID: <462DDFBE.2010104@euddene.com>
+Date: Tue, 24 Apr 2007 12:45:18 +0200
+From: Mariano Gonzalvo <mgm@euddene.com>
 MIME-Version: 1.0
 Subject: Re: [linux-lvm] Configure lvm2 with drbd
-References: <462DDAC5.20100@euddene.com>
-In-Reply-To: <462DDAC5.20100@euddene.com>
-Content-Transfer-Encoding: 7bit
+References: <462DDAC5.20100@euddene.com> <462DDC87.5040808@redhat.com>
+In-Reply-To: <462DDC87.5040808@redhat.com>
+Content-Type: multipart/alternative;
+	boundary="------------070006090503020207000903"
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -20,50 +28,117 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
------BEGIN PGP SIGNED MESSAGE-----
-Hash: SHA1
+This is a multi-part message in MIME format.
+--------------070006090503020207000903
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Mariano Gonzalvo wrote:
-> 
->     /dev/md4 is the raid device over was configured drbd0.
-> 
->     Why /dev/md4 it's taken as PV Name?
-> 
+Thanks so much! now it does work ok.
 
-Hi Mariano,
+Best regards
 
-LVM2 identifies devices using labels written on the disks. So, if md4 is
-the underlying device for your drbd devices, when lvm2 scans /dev
-looking for labels it finds the label on md4 first and uses that.
+Mariano
+> Mariano Gonzalvo wrote:
+>   
+>> Hi,
+>>
+>>     I'm trying to configure lvm2 on top of drbd. I've configured drbd
+>> (/dev/drbd0 and /dev/drbd1) and put them as primary node, but when I try
+>> to create a physical volume this is what it does happens
+>>
+>>        pvcreate /dev/drbd0
+>>           Physical volume "/dev/drbd0" successfully created
+>>        pvdisplay
+>>             --- NEW Physical volume ---
+>>           PV Name               /dev/md4
+>>           VG Name
+>>           PV Size               129,45 GB
+>>           Allocatable           NO
+>>           PE Size (KByte)       0
+>>           Total PE              0
+>>           Free PE               0
+>>           Allocated PE          0
+>>           PV UUID               MtxjHy-8zfW-i9nq-TJA4-b6F9-jtcW-FkanLB
+>>
+>>     /dev/md4 is the raid device over was configured drbd0.
+>>
+>>     Why /dev/md4 it's taken as PV Name?
+>>
+>>     
+>
+> It's trying to be helpful! Normally people build MD devices out of other devices
+> and so LVM uses the MD in preference to other devices it finds with the same UUID.
+>
+> You'll need to exclude the MD device in the /etc/lvm/lvm.conf filters entry.
+> something like:
+>
+> filter =[ "r/md4/" ]
+>
+>
+>   
 
-You can control this using lvm2's filtering options.
 
-See the man page for lvm.conf for the full details, but editing
-/etc/lvm/lvm.conf and changing the filter line from:
+--------------070006090503020207000903
+Content-Type: text/html; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
 
-        filter = [ "a/.*/" ]
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+  <meta content="text/html;charset=ISO-8859-1" http-equiv="Content-Type">
+</head>
+<body bgcolor="#ffffff" text="#000000">
+Thanks so much! now it does work ok.<br>
+<br>
+Best regards<br>
+<br>
+Mariano<br>
+<blockquote cite="mid462DDC87.5040808@redhat.com" type="cite">
+  <pre wrap="">Mariano Gonzalvo wrote:
+  </pre>
+  <blockquote type="cite">
+    <pre wrap="">Hi,
 
-to:
+    I'm trying to configure lvm2 on top of drbd. I've configured drbd
+(/dev/drbd0 and /dev/drbd1) and put them as primary node, but when I try
+to create a physical volume this is what it does happens
 
-        filter = [ "a|/dev/drdb|", "r|/dev/md|", "a|.*|" ]
+       pvcreate /dev/drbd0
+          Physical volume "/dev/drbd0" successfully created
+       pvdisplay
+            --- NEW Physical volume ---
+          PV Name               /dev/md4
+          VG Name
+          PV Size               129,45 GB
+          Allocatable           NO
+          PE Size (KByte)       0
+          Total PE              0
+          Free PE               0
+          Allocated PE          0
+          PV UUID               MtxjHy-8zfW-i9nq-TJA4-b6F9-jtcW-FkanLB
 
-Should accept all drdb devices as physical volumes, reject any software
-raid (md) devices, and accept everything else.
+    /dev/md4 is the raid device over was configured drbd0.
 
-This should work if you only have PVs on drdb or other device types and
-not on any plain md devices. If you have a mix of the types you will
-need to create a more specific filter line for your system.
+    Why /dev/md4 it's taken as PV Name?
 
-Regards,
-Bryn.
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.7 (GNU/Linux)
-Comment: Using GnuPG with Fedora - http://enigmail.mozdev.org
+    </pre>
+  </blockquote>
+  <pre wrap=""><!---->
+It's trying to be helpful! Normally people build MD devices out of other devices
+and so LVM uses the MD in preference to other devices it finds with the same UUID.
 
-iD8DBQFGLd6M6YSQoMYUY94RAtI8AKDFS6jYQQ4869RQQKy/qMYZEdjiagCfaKGP
-te2AMpkzZ45lDQTMwXmyTgE=
-=nRwl
------END PGP SIGNATURE-----
+You'll need to exclude the MD device in the /etc/lvm/lvm.conf filters entry.
+something like:
+
+filter =[ "r/md4/" ]
+
+
+  </pre>
+</blockquote>
+<br>
+</body>
+</html>
+
+--------------070006090503020207000903--
