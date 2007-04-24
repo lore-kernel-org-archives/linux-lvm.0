@@ -1,23 +1,26 @@
-Received: from mx2.redhat.com (mx2.redhat.com [10.255.15.25])
-	by int-mx2.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l3OAjOr3014414
-	for <linux-lvm@redhat.com>; Tue, 24 Apr 2007 06:45:25 -0400
-Received: from vs1011.euddene.net (vs1011.euddene.net [84.20.3.36])
-	by mx2.redhat.com (8.13.1/8.13.1) with ESMTP id l3OAjKOr002693
-	for <linux-lvm@redhat.com>; Tue, 24 Apr 2007 06:45:21 -0400
-Received: from [192.168.1.33] (28.Red-83-55-207.dynamicIP.rima-tde.net
-	[83.55.207.28])
-	by vs1011.euddene.net (8.12.3/8.12.3/Debian-7.1) with ESMTP id
-	l3OAItkm012184
-	for <linux-lvm@redhat.com>; Tue, 24 Apr 2007 12:18:56 +0200
-Message-ID: <462DDFBE.2010104@euddene.com>
-Date: Tue, 24 Apr 2007 12:45:18 +0200
-From: Mariano Gonzalvo <mgm@euddene.com>
+Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l3OCXiwe014714
+	for <linux-lvm@redhat.com>; Tue, 24 Apr 2007 08:33:44 -0400
+Received: from smtp.aic.fr (smtp.aic.fr [195.13.32.109])
+	by mx1.redhat.com (8.13.1/8.13.1) with ESMTP id l3OCXgX9029862
+	for <linux-lvm@redhat.com>; Tue, 24 Apr 2007 08:33:43 -0400
+Received: from localhost (postfix07.aic.fr [127.0.0.1])
+	by smtp.aic.fr (Postfix) with ESMTP id 9C2BD190806A
+	for <linux-lvm@redhat.com>; Tue, 24 Apr 2007 14:33:36 +0200 (CEST)
+Received: from smtp.aic.fr ([127.0.0.1])
+	by localhost (postfix07.aic.fr [127.0.0.1]) (amavisd-new, port 10024)
+	with ESMTP id UYm5nKFK3qwB for <linux-lvm@redhat.com>;
+	Tue, 24 Apr 2007 14:33:36 +0200 (CEST)
+Received: from localhost (unknown [195.13.32.101])
+	by smtp.aic.fr (Postfix) with ESMTP id 86D021908041
+	for <linux-lvm@redhat.com>; Tue, 24 Apr 2007 14:33:36 +0200 (CEST)
+Message-ID: <20070424143336.9lp8booi04c04oss@webmail.aic.fr>
+Date: Tue, 24 Apr 2007 14:33:36 +0200
+From: jmfaidy@aic.fr
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] Configure lvm2 with drbd
-References: <462DDAC5.20100@euddene.com> <462DDC87.5040808@redhat.com>
-In-Reply-To: <462DDC87.5040808@redhat.com>
-Content-Type: multipart/alternative;
-	boundary="------------070006090503020207000903"
+Content-Disposition: inline
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] lvm over iscsi
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -28,117 +31,26 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="us-ascii"; delsp="Yes"; format="flowed"
+To: linux-lvm@redhat.com
 
-This is a multi-part message in MIME format.
---------------070006090503020207000903
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
+Hi,
+I asked this question in icsci mailing list, with no answer, so I try here.
+I'm using fc6 2.6.20 as target and 2.18fc6-xen as initiator, my goal  
+is to export a volume group from the target, in order to be abale to  
+make a lvscan on the initiator, but i don't succeed.
 
-Thanks so much! now it does work ok.
+  iscsiadm --mode node --targetname iqn.2007-05.fr.aic:jimiscsi  
+--portal 10.0.22.133:3260 --login
 
-Best regards
+-> end with no error, but i have nothing in /proc/scsi/scsi and no  
+volume are detected by lvscan.
 
-Mariano
-> Mariano Gonzalvo wrote:
->   
->> Hi,
->>
->>     I'm trying to configure lvm2 on top of drbd. I've configured drbd
->> (/dev/drbd0 and /dev/drbd1) and put them as primary node, but when I try
->> to create a physical volume this is what it does happens
->>
->>        pvcreate /dev/drbd0
->>           Physical volume "/dev/drbd0" successfully created
->>        pvdisplay
->>             --- NEW Physical volume ---
->>           PV Name               /dev/md4
->>           VG Name
->>           PV Size               129,45 GB
->>           Allocatable           NO
->>           PE Size (KByte)       0
->>           Total PE              0
->>           Free PE               0
->>           Allocated PE          0
->>           PV UUID               MtxjHy-8zfW-i9nq-TJA4-b6F9-jtcW-FkanLB
->>
->>     /dev/md4 is the raid device over was configured drbd0.
->>
->>     Why /dev/md4 it's taken as PV Name?
->>
->>     
->
-> It's trying to be helpful! Normally people build MD devices out of other devices
-> and so LVM uses the MD in preference to other devices it finds with the same UUID.
->
-> You'll need to exclude the MD device in the /etc/lvm/lvm.conf filters entry.
-> something like:
->
-> filter =[ "r/md4/" ]
->
->
->   
+is it possible to export volume group instead of logical ?
 
+Thx for any answer or clue...
 
---------------070006090503020207000903
-Content-Type: text/html; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
+JiM
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
-<html>
-<head>
-  <meta content="text/html;charset=ISO-8859-1" http-equiv="Content-Type">
-</head>
-<body bgcolor="#ffffff" text="#000000">
-Thanks so much! now it does work ok.<br>
-<br>
-Best regards<br>
-<br>
-Mariano<br>
-<blockquote cite="mid462DDC87.5040808@redhat.com" type="cite">
-  <pre wrap="">Mariano Gonzalvo wrote:
-  </pre>
-  <blockquote type="cite">
-    <pre wrap="">Hi,
-
-    I'm trying to configure lvm2 on top of drbd. I've configured drbd
-(/dev/drbd0 and /dev/drbd1) and put them as primary node, but when I try
-to create a physical volume this is what it does happens
-
-       pvcreate /dev/drbd0
-          Physical volume "/dev/drbd0" successfully created
-       pvdisplay
-            --- NEW Physical volume ---
-          PV Name               /dev/md4
-          VG Name
-          PV Size               129,45 GB
-          Allocatable           NO
-          PE Size (KByte)       0
-          Total PE              0
-          Free PE               0
-          Allocated PE          0
-          PV UUID               MtxjHy-8zfW-i9nq-TJA4-b6F9-jtcW-FkanLB
-
-    /dev/md4 is the raid device over was configured drbd0.
-
-    Why /dev/md4 it's taken as PV Name?
-
-    </pre>
-  </blockquote>
-  <pre wrap=""><!---->
-It's trying to be helpful! Normally people build MD devices out of other devices
-and so LVM uses the MD in preference to other devices it finds with the same UUID.
-
-You'll need to exclude the MD device in the /etc/lvm/lvm.conf filters entry.
-something like:
-
-filter =[ "r/md4/" ]
-
-
-  </pre>
-</blockquote>
-<br>
-</body>
-</html>
-
---------------070006090503020207000903--
+----------------------------------------------------------------
+This message was sent using IMP, the Internet Messaging Program.
