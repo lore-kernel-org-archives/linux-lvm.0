@@ -1,10 +1,10 @@
-Received: from [192.168.1.2] (vpn-6-1.fab.redhat.com [10.33.6.1])
+Received: from [10.33.1.214] (dhcp-1-214.fab.redhat.com [10.33.1.214])
 	by pobox.surrey.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
-	l3OAVb2g005803
-	for <linux-lvm@redhat.com>; Tue, 24 Apr 2007 11:31:37 +0100
-Message-ID: <462DDC87.5040808@redhat.com>
-Date: Tue, 24 Apr 2007 11:31:35 +0100
-From: Patrick Caulfield <pcaulfie@redhat.com>
+	l3OAarjV006128
+	for <linux-lvm@redhat.com>; Tue, 24 Apr 2007 11:36:53 +0100
+Message-ID: <462DDE8D.1070601@redhat.com>
+Date: Tue, 24 Apr 2007 11:40:13 +0100
+From: "Bryn M. Reeves" <breeves@redhat.com>
 MIME-Version: 1.0
 Subject: Re: [linux-lvm] Configure lvm2 with drbd
 References: <462DDAC5.20100@euddene.com>
@@ -23,44 +23,47 @@ List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA1
+
 Mariano Gonzalvo wrote:
-> Hi,
-> 
->     I'm trying to configure lvm2 on top of drbd. I've configured drbd
-> (/dev/drbd0 and /dev/drbd1) and put them as primary node, but when I try
-> to create a physical volume this is what it does happens
-> 
->        pvcreate /dev/drbd0
->           Physical volume "/dev/drbd0" successfully created
->        pvdisplay
->             --- NEW Physical volume ---
->           PV Name               /dev/md4
->           VG Name
->           PV Size               129,45 GB
->           Allocatable           NO
->           PE Size (KByte)       0
->           Total PE              0
->           Free PE               0
->           Allocated PE          0
->           PV UUID               MtxjHy-8zfW-i9nq-TJA4-b6F9-jtcW-FkanLB
 > 
 >     /dev/md4 is the raid device over was configured drbd0.
 > 
 >     Why /dev/md4 it's taken as PV Name?
 > 
 
-It's trying to be helpful! Normally people build MD devices out of other devices
-and so LVM uses the MD in preference to other devices it finds with the same UUID.
+Hi Mariano,
 
-You'll need to exclude the MD device in the /etc/lvm/lvm.conf filters entry.
-something like:
+LVM2 identifies devices using labels written on the disks. So, if md4 is
+the underlying device for your drbd devices, when lvm2 scans /dev
+looking for labels it finds the label on md4 first and uses that.
 
-filter =[ "r/md4/" ]
+You can control this using lvm2's filtering options.
 
+See the man page for lvm.conf for the full details, but editing
+/etc/lvm/lvm.conf and changing the filter line from:
 
--- 
-Patrick
+        filter = [ "a/.*/" ]
 
-Registered Address: Red Hat UK Ltd, Amberley Place, 107-111 Peascod Street,
-Windsor, Berkshire, SL4 ITE, UK.
-Registered in England and Wales under Company Registration No. 3798903
+to:
+
+        filter = [ "a|/dev/drdb|", "r|/dev/md|", "a|.*|" ]
+
+Should accept all drdb devices as physical volumes, reject any software
+raid (md) devices, and accept everything else.
+
+This should work if you only have PVs on drdb or other device types and
+not on any plain md devices. If you have a mix of the types you will
+need to create a more specific filter line for your system.
+
+Regards,
+Bryn.
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.7 (GNU/Linux)
+Comment: Using GnuPG with Fedora - http://enigmail.mozdev.org
+
+iD8DBQFGLd6M6YSQoMYUY94RAtI8AKDFS6jYQQ4869RQQKy/qMYZEdjiagCfaKGP
+te2AMpkzZ45lDQTMwXmyTgE=
+=nRwl
+-----END PGP SIGNATURE-----
