@@ -1,27 +1,26 @@
 Received: from mx2.redhat.com (mx2.redhat.com [10.255.15.25])
-	by int-mx2.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l3PCIN2v012958
-	for <linux-lvm@redhat.com>; Wed, 25 Apr 2007 08:18:23 -0400
-Received: from emailgate2.cpvie.co.at (smtp.cargo-partner.com [195.234.151.28])
-	by mx2.redhat.com (8.13.1/8.13.1) with ESMTP id l3PCIKIY002450
-	for <linux-lvm@redhat.com>; Wed, 25 Apr 2007 08:18:21 -0400
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by emailgate2.cpvie.co.at (Postfix) with ESMTP id C61D240CB1
-	for <linux-lvm@redhat.com>; Wed, 25 Apr 2007 14:18:14 +0200 (CEST)
-Received: from cp.com (mail.cargo-partner.com [10.10.201.21])
-	by emailgate2.cpvie.co.at (Postfix) with ESMTP id 195DE40C2C
-	for <linux-lvm@redhat.com>; Wed, 25 Apr 2007 14:18:14 +0200 (CEST)
-Received: from [81.5.235.182] (account eisenkoe@cargo-partner.com HELO
-	[81.5.235.182]) by cp.com (CommuniGate Pro SMTP 5.1.8)
-	with ESMTPA id 23264477 for linux-lvm@redhat.com;
-	Wed, 25 Apr 2007 14:18:13 +0200
-Message-ID: <462F4703.8040200@cargo-partner.com>
-Date: Wed, 25 Apr 2007 14:18:11 +0200
-From: =?ISO-8859-1?Q?Michael_Eisenk=F6lbl?= <eisenkoe@cargo-partner.com>
+	by int-mx2.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l3PElDsU004720
+	for <linux-lvm@redhat.com>; Wed, 25 Apr 2007 10:47:14 -0400
+Received: from mexforward.lss.emc.com (mexforward.lss.emc.com [128.222.32.20])
+	by mx2.redhat.com (8.13.1/8.13.1) with ESMTP id l3PElBvC028158
+	for <linux-lvm@redhat.com>; Wed, 25 Apr 2007 10:47:12 -0400
+Received: from mailhub.lss.emc.com (nirah.lss.emc.com [10.254.144.13])
+	by mexforward.lss.emc.com (Switch-3.2.5/Switch-3.1.7) with ESMTP id
+	l3PEl5Pw027280
+	for <linux-lvm@redhat.com>; Wed, 25 Apr 2007 10:47:06 -0400 (EDT)
+Received: from corpussmtp3.corp.emc.com (corpussmtp3.corp.emc.com
+	[10.254.64.53])
+	by mailhub.lss.emc.com (Switch-3.2.5/Switch-3.1.7) with ESMTP id
+	l3PEl1Ei002742
+	for <linux-lvm@redhat.com>; Wed, 25 Apr 2007 10:47:04 -0400 (EDT)
+From: Lin_ChiiShing@emc.com
+Content-class: urn:content-classes:message
 MIME-Version: 1.0
 Subject: Re: [linux-lvm] clusteredVG+mirroredLV
-References: <462332EF.5090505@cargo-partner.com>	<462E65D2.5070008@cargo-partner.com>	<462F07B8.9060205@cargo-partner.com>
-	<47D4EAB4-1EA1-42DB-A8F9-C412B07E0005@engineyard.com>
-In-Reply-To: <47D4EAB4-1EA1-42DB-A8F9-C412B07E0005@engineyard.com>
+Date: Wed, 25 Apr 2007 10:46:59 -0400
+Message-ID: <97982DAF1EA1494DB6C65C2EEAA6296105EAA2D1@CORPUSMX40B.corp.emc.com>
+In-Reply-To: <20070425121838.70D3A732E7@hormel.redhat.com>
+References: <20070425121838.70D3A732E7@hormel.redhat.com>
 Content-Transfer-Encoding: quoted-printable
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
@@ -33,10 +32,38 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="iso-8859-1"; format="flowed"
-To: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="iso-8859-1"
+To: linux-lvm@redhat.com
 
-is there any other possibility the get a solution?
+
+I am using source with cvs tag RHEL4U4, and was able to go into
+cmirror-kernel directory to build the module dm-cmirror.ko
+
+After loading dm_cmirror module, the system-config-lvm tool
+configured a mirrored LV in a clustered VG successfully.
+
+Can someone in RedHat shed light on what's the current status of source
+for cmirror-kernel and clustered mirroring?=20
+What's expected to work (such as normal IO), and
+what's expected not to work yet ? For early bird developers who are interes=
+ted in=20
+using this technology, do you have a recommended CVS tag for the source to =
+do the prototype ?=20
+
+    Thanks,
+    -ChiiSHing
+
+
+-----Original Message-----
+Date: Wed, 25 Apr 2007 10:29:52 +0200
+From: Michael Eisenk?lbl <eisenkoe@cargo-partner.com>
+Subject: Re: [linux-lvm] clusteredVG+mirroredLV
+To: LVM general discussion and development <linux-lvm@redhat.com>
+Message-ID: <462F1180.1010602@cargo-partner.com>
+Content-Type: text/plain; charset=3DISO-8859-1; format=3Dflowed
+
+Do you know when it will be released?
+Will it work with with RHEL 5?
 
 Jayson Vantuyl wrote:
 > Mirroring (and snapshotting) does not currently work with clustered=20
@@ -93,3 +120,7 @@ Jayson Vantuyl wrote:
 > linux-lvm@redhat.com
 > https://www.redhat.com/mailman/listinfo/linux-lvm
 > read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+
+
+
+=20
