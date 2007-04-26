@@ -1,16 +1,16 @@
 Received: from devserv.devel.redhat.com (devserv.devel.redhat.com
 	[172.16.58.1])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l3QC1nAn000788
-	for <linux-lvm@redhat.com>; Thu, 26 Apr 2007 08:01:49 -0400
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l3QCBL6M003564
+	for <linux-lvm@redhat.com>; Thu, 26 Apr 2007 08:11:21 -0400
 Received: from mx.meyering.net (sebastian-int.corp.redhat.com [172.16.52.221])
 	by devserv.devel.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
-	l3QC1nL6016817
-	for <linux-lvm@redhat.com>; Thu, 26 Apr 2007 08:01:49 -0400
+	l3QCBL8x017149
+	for <linux-lvm@redhat.com>; Thu, 26 Apr 2007 08:11:21 -0400
 From: Jim Meyering <jim@meyering.net>
-Date: Thu, 26 Apr 2007 14:01:48 +0200
-Message-ID: <87slan4a4z.fsf@rho.meyering.net>
+Date: Thu, 26 Apr 2007 14:11:21 +0200
+Message-ID: <87k5vz49p2.fsf@rho.meyering.net>
 MIME-Version: 1.0
-Subject: [linux-lvm] unchecked malloc return value in clvmd.c
+Subject: [linux-lvm] avoid format-mismatch warnings on x86_64
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -25,28 +25,58 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@redhat.com
 
-The use of malloc in clvmd.c's send_local_reply
-function lacks a check to detect a NULL return value:
+Building from cvs, with an added -Wformat-security option in CFLAGS,
+I got two warnings:
 
-    /* Send an aggregated reply back to the client */
-    static void send_local_reply(struct local_client *client, int status, int fd)
-    {
-            ...
-            replybuf = malloc(message_len);
+    format_text/export.c:163: warning: format not a string literal and no format arguments
+    format_text/export.c:179: warning: format not a string literal and no format arguments
 
-            clientreply = (struct clvm_header *) replybuf;
-            clientreply->status = status;
-            ...
+The following patch fixes those and adds the option to make.tmpl.in.
 
-It should log the failure, at least, rather than dereferencing NULL.
-Is it important to get each message out?  If so, it could fall back
-on (or even use first) a static buffer that's large enough so that
-most messages fit.  But if the message is too long, it can still fail,
-of course.
+2007-04-26  Jim Meyering  <jim@meyering.net>
 
-Unfortunately, there's no simple way to tell callers about this.
-At first, I was going to suggest changing the return type, and
-then adjusting the callers, where possible.  But then I saw that
-at least one caller (add_reply_to_list) is also a void function
-(called from yet another void function), so even that starts to
-look rather invasive.
+	* lib/format_text/export.c (_out_with_comment_file): Avoid using
+	a non-literal fprintf format string.  Instead, use fputs.
+
+Index: lib/format_text/export.c
+===================================================================
+RCS file: /cvs/lvm2/LVM2/lib/format_text/export.c,v
+retrieving revision 1.54
+diff -u -p -r1.54 export.c
+--- lib/format_text/export.c	10 Nov 2006 18:24:11 -0000	1.54
++++ lib/format_text/export.c	26 Apr 2007 12:03:59 -0000
+@@ -160,7 +160,7 @@ static int _out_with_comment_file(struct
+ 	for (i = 0; i < f->indent; i++)
+ 		white_space[i] = '\t';
+ 	white_space[i] = '\0';
+-	fprintf(f->data.fp, white_space);
++	fputs(white_space, f->data.fp);
+ 	i = vfprintf(f->data.fp, fmt, ap);
+
+ 	if (comment) {
+@@ -176,7 +176,7 @@ static int _out_with_comment_file(struct
+
+ 		while (++i < COMMENT_TAB);
+
+-		fprintf(f->data.fp, comment);
++		fputs(comment, f->data.fp);
+ 	}
+ 	fputc('\n', f->data.fp);
+
+
+Index: make.tmpl.in
+===================================================================
+RCS file: /cvs/lvm2/LVM2/make.tmpl.in,v
+retrieving revision 1.47
+diff -u -p -r1.47 make.tmpl.in
+--- make.tmpl.in	11 Jan 2007 17:12:26 -0000	1.47
++++ make.tmpl.in	26 Apr 2007 12:08:30 -0000
+@@ -56,7 +56,7 @@ endif
+
+ .SUFFIXES: .c .d .o .so .a .po .pot .mo .dylib
+
+-CFLAGS += -fPIC -Wall -Wundef -Wshadow -Wcast-align -Wwrite-strings -Wmissing-prototypes -Wmissing-declarations -Wnested-externs -Winline -Wmissing-noreturn
++CFLAGS += -fPIC -Wall -Wundef -Wshadow -Wcast-align -Wwrite-strings -Wmissing-prototypes -Wmissing-declarations -Wnested-externs -Winline -Wmissing-noreturn -Wformat-security
+
+ #CFLAGS += -W -Wconversion -Wpointer-arith -Wredundant-decls -Wbad-function-cast -Wcast-qual
+ #CFLAGS += -pedantic -std=gnu99
