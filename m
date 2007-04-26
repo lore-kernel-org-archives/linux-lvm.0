@@ -1,17 +1,18 @@
-Received: from devserv.devel.redhat.com (devserv.devel.redhat.com
-	[172.16.58.1])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l3QCFt2D004799
-	for <linux-lvm@redhat.com>; Thu, 26 Apr 2007 08:15:55 -0400
-Received: from mx.meyering.net (sebastian-int.corp.redhat.com [172.16.52.221])
-	by devserv.devel.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
-	l3QCFsBn017280
-	for <linux-lvm@redhat.com>; Thu, 26 Apr 2007 08:15:55 -0400
-From: Jim Meyering <jim@meyering.net>
-Date: Thu, 26 Apr 2007 14:15:54 +0200
-Message-ID: <87ejm749hh.fsf@rho.meyering.net>
+Received: from mx2.redhat.com (mx2.redhat.com [10.255.15.25])
+	by int-mx2.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l3QEFJUB020596
+	for <linux-lvm@redhat.com>; Thu, 26 Apr 2007 10:15:20 -0400
+Received: from nz-out-0506.google.com (nz-out-0506.google.com [64.233.162.236])
+	by mx2.redhat.com (8.13.1/8.13.1) with ESMTP id l3QEFInA026531
+	for <linux-lvm@redhat.com>; Thu, 26 Apr 2007 10:15:18 -0400
+Received: by nz-out-0506.google.com with SMTP id s18so877534nze
+	for <linux-lvm@redhat.com>; Thu, 26 Apr 2007 07:15:12 -0700 (PDT)
+Message-ID: <fd8dc0d20704260700l76ae6476k13c1e5dfac8b24f3@mail.gmail.com>
+Date: Thu, 26 Apr 2007 10:00:08 -0400
+From: "Boris Ostrovsky" <baostr@gmail.com>
+Subject: Re: [linux-lvm] multiple levels of snapshots
 MIME-Version: 1.0
-Subject: [linux-lvm] avoid ptrdiff_t-related format-mismatch warnings on
-	x86_64
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -22,44 +23,54 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: linux-lvm@redhat.com
 
-Building from cvs, I saw about a dozen of these warnings:
+At Alasdair suggestion, I am posting to the list steps that I executed
+to make this work,
+in case someone else is interested in doing something like this as well.
 
-    config/config.c:493: warning: format '%d' expects type 'int', but argument 5 has type 'long int'
+Here is the hierarchy  that I was trying to create:
 
-This fixes them:
+             base
+                |
+             child1
+              /     \
+       child2.1  child2.2
+                       |
+                     child3
 
-2007-04-26  Jim Meyering  <jim@meyering.net>
+I used 1GB volume for base and gave 1GB to each COW volume (you can give less
+than that if you don't expect too many dirty writes):
 
-	* lib/config/config.c (match): Use %ld, not %d, to match argument
-	of type ptrdiff_t.
-	(_type): Likewise.
+# lvcreate -L 1G -n base vg
+# lvcreate -L 1G -n cow1 vg
+# lvcreate -L 1G -n cow2.1 vg
+# lvcreate -L 1G -n cow2.2 vg
+# lvcreate -L 1G -n cow3 vg
+# echo 0 $(blockdev --getsize /dev/mapper/vg-base) snapshot \
+/dev/mapper/vg-base /dev/mapper/vg-cow1 p 8 | dmsetup create vg-child1
+# echo 0 $(blockdev --getsize /dev/mapper/vg-child1) snapshot \
+/dev/mapper/vg-child1 /dev/mapper/vg-cow2.1 p 8 | dmsetup create vg-child2.1
+# echo 0 $(blockdev --getsize /dev/mapper/vg-child1) snapshot \
+/dev/mapper/vg-child1 /dev/mapper/vg-cow2.2 p 8 | dmsetup create vg-child2.2
+# echo 0 $(blockdev --getsize /dev/mapper/vg-child1) snapshot \
+/dev/mapper/vg-child2.2 /dev/mapper/vg-cow3 p 8 | dmsetup create vg-child3
 
-Index: lib/config/config.c
-===================================================================
-RCS file: /cvs/lvm2/LVM2/lib/config/config.c,v
-retrieving revision 1.56
-diff -u -p -r1.56 config.c
---- lib/config/config.c	25 Apr 2007 20:38:39 -0000	1.56
-+++ lib/config/config.c	26 Apr 2007 12:14:39 -0000
-@@ -83,7 +83,7 @@ static const int sep = '/';
+If you now mount /dev/mapper/vg-child2.1, you will see contents of
+base and child1.
+Mounting /dev/mapper/vg-child3 will additionally provide you with contents of
+child2.2.
 
- #define match(t) do {\
-    if (!_match_aux(p, (t))) {\
--	log_error("Parse error at byte %d (line %d): unexpected token", p->tb - p->fb + 1, p->line); \
-+	log_error("Parse error at byte %ld (line %d): unexpected token", p->tb - p->fb + 1, p->line); \
-       return 0;\
-    } \
- } while(0);
-@@ -590,7 +590,7 @@ static struct config_value *_type(struct
- 		break;
+-boris
 
- 	default:
--		log_error("Parse error at byte %d (line %d): expected a value", p->tb - p->fb + 1, p->line);
-+		log_error("Parse error at byte %ld (line %d): expected a value", p->tb - p->fb + 1, p->line);
- 		return 0;
- 	}
- 	return v;
+Alasdair G Kergon wrote:
+>
+> On Mon, Apr 23, 2007 at 02:54:37PM -0400, Boris Ostrovsky wrote:
+> > From what I can see, LVM tools don't allow creating multiple levels of
+> > snapshots (i.e. creating a
+> > snapshot of a snapshot). Is this a fundamental property of LVM/device
+> > mapper architecture
+> > or is it that this feature simply hasn't made it to LVM (yet)?
+>
+> You could indeed set it up outside LVM using dmsetup.
