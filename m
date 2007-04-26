@@ -1,28 +1,16 @@
-Received: from mx2.redhat.com (mx2.redhat.com [10.255.15.25])
-	by int-mx2.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l3PK0fb5023652
-	for <linux-lvm@redhat.com>; Wed, 25 Apr 2007 16:00:43 -0400
-Received: from emailgate2.cpvie.co.at (smtp.cargo-partner.com [195.234.151.28])
-	by mx2.redhat.com (8.13.1/8.13.1) with ESMTP id l3PK0dUg016112
-	for <linux-lvm@redhat.com>; Wed, 25 Apr 2007 16:00:40 -0400
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by emailgate2.cpvie.co.at (Postfix) with ESMTP id 0D6B740C66
-	for <linux-lvm@redhat.com>; Wed, 25 Apr 2007 22:00:34 +0200 (CEST)
-Received: from cp.com (mail.cargo-partner.com [10.10.201.21])
-	by emailgate2.cpvie.co.at (Postfix) with ESMTP id 7CFCF40C0F
-	for <linux-lvm@redhat.com>; Wed, 25 Apr 2007 22:00:33 +0200 (CEST)
-Received: from [81.217.103.251] (account eisenkoe@cargo-partner.com HELO
-	[10.1.1.15]) by cp.com (CommuniGate Pro SMTP 5.1.8)
-	with ESMTPA id 23299482 for linux-lvm@redhat.com;
-	Wed, 25 Apr 2007 22:00:33 +0200
-Message-ID: <462FB35F.3010904@cargo-partner.com>
-Date: Wed, 25 Apr 2007 22:00:31 +0200
-From: =?ISO-8859-1?Q?Michael_Eisenk=F6lbl?= <eisenkoe@cargo-partner.com>
+Received: from devserv.devel.redhat.com (devserv.devel.redhat.com
+	[172.16.58.1])
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l3QC1nAn000788
+	for <linux-lvm@redhat.com>; Thu, 26 Apr 2007 08:01:49 -0400
+Received: from mx.meyering.net (sebastian-int.corp.redhat.com [172.16.52.221])
+	by devserv.devel.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
+	l3QC1nL6016817
+	for <linux-lvm@redhat.com>; Thu, 26 Apr 2007 08:01:49 -0400
+From: Jim Meyering <jim@meyering.net>
+Date: Thu, 26 Apr 2007 14:01:48 +0200
+Message-ID: <87slan4a4z.fsf@rho.meyering.net>
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] clusteredVG+mirroredLV
-References: <20070425121838.70D3A732E7@hormel.redhat.com>	<97982DAF1EA1494DB6C65C2EEAA6296105EAA2D1@CORPUSMX40B.corp.emc.com>
-	<25F6FD1D-0C06-49C5-99D0-2029DB762115@redhat.com>
-In-Reply-To: <25F6FD1D-0C06-49C5-99D0-2029DB762115@redhat.com>
-Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] unchecked malloc return value in clvmd.c
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -33,45 +21,32 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: linux-lvm@redhat.com
 
-Does anybody know, when it will be official released (rhel4u5)?
-or is there any rpm, which i can dowload to patch my kernel?
-how can I create the dm_cmirror myself?
+The use of malloc in clvmd.c's send_local_reply
+function lacks a check to detect a NULL return value:
 
-michael
+    /* Send an aggregated reply back to the client */
+    static void send_local_reply(struct local_client *client, int status, int fd)
+    {
+            ...
+            replybuf = malloc(message_len);
 
-Jonathan Brassow wrote:
-> cluster mirroring is slated to come out with rhel4 u5
->
-> It will not be immediately available in rhel5.
->
-> There are two versions of cluster mirroring.  One which will go into 
-> rhel4u5.  The other is to go upstream and into rhel5 at some point.  
-> The re-write is based on OpenAIS.
->
->  brassow
->
-> On Apr 25, 2007, at 9:46 AM, Lin_ChiiShing@emc.com wrote:
->
->>
->> I am using source with cvs tag RHEL4U4, and was able to go into
->> cmirror-kernel directory to build the module dm-cmirror.ko
->>
->> After loading dm_cmirror module, the system-config-lvm tool
->> configured a mirrored LV in a clustered VG successfully.
->>
->> Can someone in RedHat shed light on what's the current status of source
->> for cmirror-kernel and clustered mirroring?
->> What's expected to work (such as normal IO), and
->> what's expected not to work yet ? For early bird developers who are 
->> interested in
->> using this technology, do you have a recommended CVS tag for the 
->> source to do the prototype ?
->
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+            clientreply = (struct clvm_header *) replybuf;
+            clientreply->status = status;
+            ...
+
+It should log the failure, at least, rather than dereferencing NULL.
+Is it important to get each message out?  If so, it could fall back
+on (or even use first) a static buffer that's large enough so that
+most messages fit.  But if the message is too long, it can still fail,
+of course.
+
+Unfortunately, there's no simple way to tell callers about this.
+At first, I was going to suggest changing the return type, and
+then adjusting the callers, where possible.  But then I saw that
+at least one caller (add_reply_to_list) is also a void function
+(called from yet another void function), so even that starts to
+look rather invasive.
