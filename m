@@ -1,16 +1,19 @@
-Received: from mx2.redhat.com (mx2.redhat.com [10.255.15.25])
-	by int-mx2.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l49GUoj7032316
-	for <linux-lvm@redhat.com>; Wed, 9 May 2007 12:30:51 -0400
-Received: from moutng.kundenserver.de (moutng.kundenserver.de
-	[212.227.126.179])
-	by mx2.redhat.com (8.13.1/8.13.1) with ESMTP id l49GUmc3005371
-	for <linux-lvm@redhat.com>; Wed, 9 May 2007 12:30:48 -0400
-Message-ID: <4641F72E.6050907@sas-clan.de>
-Date: Wed, 09 May 2007 18:30:38 +0200
-From: BigMac <bigmac@sas-clan.de>
-MIME-Version: 1.0
+Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l49ITCa8024889
+	for <linux-lvm@redhat.com>; Wed, 9 May 2007 14:29:12 -0400
+Received: from mail.opendreams.net (mail.opendreams.net [69.88.106.142])
+	by mx1.redhat.com (8.13.1/8.13.1) with ESMTP id l49IT2EQ024319
+	for <linux-lvm@redhat.com>; Wed, 9 May 2007 14:29:04 -0400
+Date: Wed, 9 May 2007 11:28:50 -0700
+From: Jesse Molina <jesse@opendreams.net>
+Subject: Re: [linux-lvm] Can't use LVM1 VG/LVs under LVM2;
+	LV xxx: inconsistent LE count 32 != 64
+Message-ID: <20070509182848.GA20114@sorrows.opendreams.net>
+References: <4641541D.2010709@opendreams.net> <4641970A.8000606@redhat.com>
+Mime-Version: 1.0
 Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] f*cked up metadata on 1of3 LVM-disks
+Content-Disposition: inline
+In-Reply-To: <4641970A.8000606@redhat.com>
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -22,116 +25,79 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@redhat.com
-
-Hi lists!
-
-My fileserver stored it's data on 3 physical disks,building a
-volumegroup with lvm2.
-The mashine was running ubuntu dapper drake for a long time without any
-problems but I decided to switch to ubuntu feisty fawn. Switching from
-debian to dapper drake I installed and removed quite a lot of packages,
-leaving a messy system, so I thought a new and clean installation with
-feisty fawn might be a great idea.
-
-box config with dapper drake:
-
-hda: 120GB (PATA) systemdisk
-hdb: unused
-hdc: 250GB (PATA) part of the LVM-array
-hdd: 250GB (PATA) part of the LVM-array
-sda: 400GB (SATA) part of the LVM-array
-sdb: DVD-RW (PATA on additional PCI-controller UDMA-100)
-
-The additional IDE-controller was installed to be able to install even
-more disks, but as I won't buy any new PATA stuff the controller was
-dispensable.
-
-new box config:
-
-hda: 120GB (PATA) systemdisk
-hdb: DVD-RW
-hdc: 250GB (PATA) part of the LVM-array
-hdd: 250GB (PATA) part of the LVM-array
-sda: 400GB (SATA) part of the LVM-array
-
-I exported the vg before shutting down dapper drake and while installing
-festy fawn to the box I - no idea what did me do so - installed grub to
-hdc. Ooops, this disk was part of the LVM array and so grub f*cked up
-the lvm meta-data on hdc.
-
-After installing grub to hda the box is running fine, despite the LVM
-which can't find one of the vgs volumes:
-
-Code:
-
-bigmac@knecht:~$ sudo pvscan
-Couldn't find device with uuid '9kpWwu-LdwT-YiqV-DRPg-kSAN-plYN-v1Eq81'.
-Couldn't find device with uuid '9kpWwu-LdwT-YiqV-DRPg-kSAN-plYN-v1Eq81'.
-Couldn't find device with uuid '9kpWwu-LdwT-YiqV-DRPg-kSAN-plYN-v1Eq81'.
-Couldn't find device with uuid '9kpWwu-LdwT-YiqV-DRPg-kSAN-plYN-v1Eq81'.
-PV /dev/hdd         VG vgdata   lvm2 [232.88 GB / 0    free]
-PV unknown device   VG vgdata   lvm2 [232.88 GB / 0    free]
-PV /dev/sda         VG vgdata   lvm2 [372.61 GB / 4.00 MB free]
-Total: 3 [838.38 GB] / in use: 3 [838.38 GB] / in no VG: 0 [0   ]
-
-bigmac@knecht:~$ sudo pvdisplay
-Couldn't find device with uuid '9kpWwu-LdwT-YiqV-DRPg-kSAN-plYN-v1Eq81'.
-Couldn't find device with uuid '9kpWwu-LdwT-YiqV-DRPg-kSAN-plYN-v1Eq81'.
-Couldn't find device with uuid '9kpWwu-LdwT-YiqV-DRPg-kSAN-plYN-v1Eq81'.
-Couldn't find device with uuid '9kpWwu-LdwT-YiqV-DRPg-kSAN-plYN-v1Eq81'.
---- Physical volume ---
-PV Name               /dev/hdd
-VG Name               vgdata
-PV Size               232.88 GB / not usable 0
-Allocatable           yes (but full)
-PE Size (KByte)       4096
-Total PE              59618
-Free PE               0
-Allocated PE          59618
-PV UUID               locW5S-HNFK-b1WW-iOLt-olHl-2SNd-fmXKC8
-
---- Physical volume ---
-PV Name               unknown device
-VG Name               vgdata
-PV Size               232.88 GB / not usable 0
-Allocatable           yes (but full)
-PE Size (KByte)       4096
-Total PE              59618
-Free PE               0
-Allocated PE          59618
-PV UUID               9kpWwu-LdwT-YiqV-DRPg-kSAN-plYN-v1Eq81
-
---- Physical volume ---
-PV Name               /dev/sda
-VG Name               vgdata
-PV Size               372.61 GB / not usable 0
-Allocatable           yes
-PE Size (KByte)       4096
-Total PE              95388
-Free PE               1
-Allocated PE          95387
-PV UUID               YUJcsF-3XP7-OrbO-pITp-5z96-gw1A-DI11QS
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
 
-bigmac@knecht:~$ sudo vgscan
-Reading all physical volumes.  This may take a while...
-Couldn't find device with uuid '9kpWwu-LdwT-YiqV-DRPg-kSAN-plYN-v1Eq81'.
-Couldn't find all physical volumes for volume group vgdata.
-Couldn't find device with uuid '9kpWwu-LdwT-YiqV-DRPg-kSAN-plYN-v1Eq81'.
-Couldn't find all physical volumes for volume group vgdata.
-Couldn't find device with uuid '9kpWwu-LdwT-YiqV-DRPg-kSAN-plYN-v1Eq81'.
-Couldn't find all physical volumes for volume group vgdata.
-Couldn't find device with uuid '9kpWwu-LdwT-YiqV-DRPg-kSAN-plYN-v1Eq81'.
-Couldn't find all physical volumes for volume group vgdata.
-Volume group "vgdata" not found
+Thanks for the replies.  I see that Debian has a lvm2 package version 2.02.24-6 out, and I'll try to install that.  However, I'll have to force the install, as 2.4 kernels are completely dead on Debian Unstable now, due to recent versions of libc6 requiring NPTL.  Hopefully I won't get into a critical dependency problem.
 
-I tried multiple Live-CDs like gparted (with testdisk), Ultimate Boot-CD
-and SystemRescueCd, but none could help.
 
-Any idea what to do to get the lvm up and running?
-How to restore the metadata on hdc?
 
-Best Regards,
+On Wed, May 09, 2007 at 10:40:26AM +0100, Bryn M. Reeves wrote:
+> -----BEGIN PGP SIGNED MESSAGE-----
+> Hash: SHA1
+> 
+> Jesse Molina wrote:
+> > 
+> > I'm having a problem getting a Debian system from Linux kernel 2.4 to
+> > 2.6 due to LVM.  On the 2.4 kernel/LVM1, the VGs and LVs work fine,
+> > mount up, and show absolutely no sign of any problem.  However, I can't
+> > get the 2.6 kernel/LVM2 to activate the VGs at all.
+> > 
+> > I've filed a Debian bug, which has additional information, here;
+> >     http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=422963
+> > 
+> > 
+> > 
+> > The interesting error messages under 2.6 include;
+> > 
+> >     "LV tmp: inconsistent LE count 32 != 64"
+> >     
+> >     "System ID sorrows1107837513 on /dev/sdd3 differs from
+> > sorrows1107837515 for volume group"
+> 
+> Hi Jesse,
+> 
+> This sounds like:
+> 
+> https://bugzilla.redhat.com/bugzilla/show_bug.cgi?id=232397
+> 
+> This is fixed upstream in versions from v2_02_24:
+> - --------
+> /cvs/lvm2/LVM2/WHATS_NEW:
+> revision 1.586
+> date: 2007/03/15 13:38:27;  author: agk;  state: Exp;  lines: +2 -2
+> Try to fix reading in of lvm1 striped LVs.
+> There are two fixes other than improving variable names and updating
+> code layout etc.
+> 
+> The loop counter is incremented by area_len instead of area_len * stripes;
+> 
+> the 3rd _check_stripe parameter is no longer multiplied by number of
+> stripes.
+> - --------
+> 
+> Kind regards,
+> Bryn.
+> -----BEGIN PGP SIGNATURE-----
+> Version: GnuPG v1.4.7 (GNU/Linux)
+> Comment: Using GnuPG with Fedora - http://enigmail.mozdev.org
+> 
+> iD8DBQFGQZcK6YSQoMYUY94RAqenAKCLdOcbDCJSFqvDUwZsUx/yZXQebgCfTdXu
+> Nwz6xK1mCHIiiPVpHp6h0Ss=
+> =fBTO
+> -----END PGP SIGNATURE-----
+> 
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@redhat.com
+> https://www.redhat.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
 
-BigMac
+-- 
+# Jesse Molina
+# Mail = jesse@opendreams.net
+# Page = page-jesse@opendreams.net
+# Cell = 1.602.323.7608
+# Web  = http://www.opendreams.net/jesse/
+ 
+ 
