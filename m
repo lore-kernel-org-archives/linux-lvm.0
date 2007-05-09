@@ -1,16 +1,20 @@
-Received: from [10.34.32.13] (mazyland.brq.redhat.com [10.34.32.13])
-	by pobox.stuttgart.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
-	l49FIX24007911
-	for <linux-lvm@redhat.com>; Wed, 9 May 2007 17:18:33 +0200
-Message-ID: <4641E649.4050607@redhat.com>
-Date: Wed, 09 May 2007 17:18:33 +0200
-From: Milan Broz <mbroz@redhat.com>
+Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l49GK4k6008502
+	for <linux-lvm@redhat.com>; Wed, 9 May 2007 12:20:04 -0400
+Received: from mail.wrs.com (mail.windriver.com [147.11.1.11])
+	by mx1.redhat.com (8.13.1/8.13.1) with ESMTP id l49GJxud013238
+	for <linux-lvm@redhat.com>; Wed, 9 May 2007 12:19:59 -0400
+Received: from ALA-MAIL03.corp.ad.wrs.com (ala-mail03 [147.11.57.144])
+	by mail.wrs.com (8.13.6/8.13.6) with ESMTP id l49GJrMZ028575
+	for <linux-lvm@redhat.com>; Wed, 9 May 2007 09:19:53 -0700 (PDT)
+Content-class: urn:content-classes:message
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] mirrored lv with 6TB
-References: <4641D430.1010101@cargo-partner.com>
-	<4641D81D.1040009@cargo-partner.com>
-In-Reply-To: <4641D81D.1040009@cargo-partner.com>
-Content-Transfer-Encoding: quoted-printable
+Subject: RE: [linux-lvm] Problems removing snapshots
+Date: Wed, 9 May 2007 09:19:52 -0700
+Message-ID: <37B62E0F71C9E14B9859FADB1FC3E3E1388C3B@ala-mail02.corp.ad.wrs.com>
+In-Reply-To: <20070330082749.GB18888@pion05.tphys.physik.uni-tuebingen.de>
+From: "Kottaridis, Chris" <chris.kottaridis@windriver.com>
+Content-Transfer-Encoding: 8bit
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -21,21 +25,73 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="iso-8859-1"
+Content-Type: text/plain; charset="us-ascii"
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-Michael Eisenk=EF=BF=BDlbl / FIS wrote:
-> *i am currently using the kernel 2.6.9-42.0.3.ELsmp and=20
-> lvm2-2.02.06-6.0.RHEL4 on RHEL4.4 (32bitCPU) and i have three disks:*
-...
-> kernel: EIP is at bio_set_alloc+0x95/0x11c [dm_mod]
+I am seeing something similar, did you ever get a resolution to your
+problem ?
 
-Bioset allocation code in device mapper is different in RHEL4.5,
-please test it with RHEL4.5 update.
+I unmount my snapshot first and then do the lvremove. I am running and
+older version of 2.6.10
 
-If you hit this bug again, please use Red Hat support or bugzilla
-to report this problem, thanks.
+Thanks 
 
-Milan
+
+Chris Kottaridis
+Senior Engineer
+Wind River Systems
+719-522-9786
+
+-----Original Message-----
+From: linux-lvm-bounces@redhat.com [mailto:linux-lvm-bounces@redhat.com]
+On Behalf Of Dominik Epple
+Sent: Friday, March 30, 2007 2:28 AM
+To: linux-lvm@redhat.com
+Subject: [linux-lvm] Problems removing snapshots
+
+Hi list,
+
+I have two snapshot volumes:
+
+# lvs
+  LV        VG         Attr   LSize  Origin Snap%  Move Copy%
+  home      lvm_share  owi-ao 44.00G
+  mail      lvm_share  owi-ao  4.00G
+  snap_home lvm_share  swi-a-  6.00G home    63.72
+  snap_mail lvm_share  swi-a-  1.00G mail    23.68
+
+When I try to remove one of them...
+
+# lvremove -d -v /dev/lvm_share/snap_mail
+    Using logical volume(s) on command line Do you really want to remove
+active logical volume "snap_mail"? [y/n]: y
+    Archiving volume group "lvm_share" metadata.
+    Found volume group "lvm_share"
+    Loading lvm_share-mail-real
+    Loading lvm_share-snap_mail-cow
+    Loading lvm_share-snap_mail
+
+... it seems to take forever (at least it does not complete within
+minutes), and the load of the machine goes up very high (larger than 10,
+and still increasing), and finally, I need to reboot the machine with
+the reset button.
+
+How can I get rid of my snapshots?
+
+The system is debian sarge on amd64 with a custom kernel and standard
+debian packages of lvm etc.
+
+# uname -a
+Linux hostname 2.6.18.3-k8-smp #1 SMP Wed Nov 22 11:58:25 CET 2006
+x86_64 GNU/Linux
+
+Thanks, Dominik.
 --
-mbroz@redhat.com
+PGP Public Key and contact information available at
+http://www.tphys.physik.uni-tuebingen.de/tplist/phonelist.py?uid=epple
+
+_______________________________________________
+linux-lvm mailing list
+linux-lvm@redhat.com
+https://www.redhat.com/mailman/listinfo/linux-lvm
+read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
