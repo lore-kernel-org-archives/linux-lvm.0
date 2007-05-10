@@ -1,22 +1,23 @@
 Received: from mx2.redhat.com (mx2.redhat.com [10.255.15.25])
-	by int-mx2.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l4AIaJOD003387
-	for <linux-lvm@redhat.com>; Thu, 10 May 2007 14:36:19 -0400
-Received: from an-out-0708.google.com (an-out-0708.google.com [209.85.132.240])
-	by mx2.redhat.com (8.13.1/8.13.1) with ESMTP id l4AIaH7Q020609
-	for <linux-lvm@redhat.com>; Thu, 10 May 2007 14:36:18 -0400
-Received: by an-out-0708.google.com with SMTP id b33so176287ana
-	for <linux-lvm@redhat.com>; Thu, 10 May 2007 11:36:17 -0700 (PDT)
-Subject: Re: [linux-lvm] Should I expect snapshot origin LV's to be 10x slower?
-From: Ming Zhang <blackmagic02881@gmail.com>
-In-Reply-To: <87f94c370705100733o2d6fb499q8370f801c6833b42@mail.gmail.com>
-References: <55c223960705100654m36b559cckada97fccb09a42ac@mail.gmail.com>
-	<87f94c370705100733o2d6fb499q8370f801c6833b42@mail.gmail.com>
-Date: Thu, 10 May 2007 14:36:13 -0400
-Message-Id: <1178822173.3869.53.camel@dhcp-136.ibrix.com>
-Mime-Version: 1.0
+	by int-mx2.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l4AJxJJU016644
+	for <linux-lvm@redhat.com>; Thu, 10 May 2007 15:59:19 -0400
+Received: from wx-out-0506.google.com (wx-out-0506.google.com [66.249.82.232])
+	by mx2.redhat.com (8.13.1/8.13.1) with ESMTP id l4AJxHQD014161
+	for <linux-lvm@redhat.com>; Thu, 10 May 2007 15:59:18 -0400
+Received: by wx-out-0506.google.com with SMTP id s11so655191wxc
+	for <linux-lvm@redhat.com>; Thu, 10 May 2007 12:59:17 -0700 (PDT)
+Message-ID: <aad5bb0705101259t18703524x46dc9f1fa48ecc06@mail.gmail.com>
+Date: Thu, 10 May 2007 21:59:17 +0200
+From: "Damir Hasakovic" <bosnianx@gmail.com>
+Subject: Re: [linux-lvm] How to remove crashed inaccessible harddrive from
+	LVM2.
+In-Reply-To: <4639D56F.9070802@redhat.com>
+MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
-Reply-To: blackmagic02881@gmail.com,
-	LVM general discussion and development <linux-lvm@redhat.com>
+Content-Disposition: inline
+References: <aad5bb0705030448i100ffe37of929baac081535b4@mail.gmail.com>
+	<4639D56F.9070802@redhat.com>
+Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -26,51 +27,51 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-On Thu, 2007-05-10 at 10:33 -0400, Greg Freemyer wrote:
-> On 5/10/07, Alex Owen <r.alex.owen@gmail.com> wrote:
-> > Hello,
-> > I have just been making some snapshot performance benchmarks on a
-> > Debian Etch system.
-> > Kernel:  2.6.18-4-686 (2.6.18.dfsg.1-12etch1)
-> > dmsetup: 1.02.08-1
-> > lvm2: 2.02.06-4
-> >
-> > I have been using commands of the form:
-> >   time dd if=/dev/zero of=/dev/volgroup/test bs=1M count=100
-> > to get speeds for copying to a LVM device both WITH and WITHOUT a
-> > single snapshot.
-> >
-> > It seems that writes take >=10 times longer the first time a newly
-> > snapshot origin device is written to.
-> >
-> > I was expecting somthing like a 2x or 3x performance loss as 1
-> > physical read and 2 physical writes must occur for a single logical
-> > write. I was NOT expecting there to be a 10x overhead. As I move to
-> > larger devices (bs=1M count=1000) the 10x figure rises to nearer 20x.
-> > This is also true on mounted origin LV's.
-> >
-> > Has anyone else benchmarked this? Is this normal?
-> >
-> > Thanks for any feedback
-> > Alex Owen
-> 
-> I always ensure my snapshots are on physically separate drives than my
-> origin.  If they are on the same drive I'm not surprised you're having
-> speed issues.  You are significantly increasing the amount of disk
-> seek activity.  Having in separate drives should be much better.
+On 5/3/07, Bryn M. Reeves <breeves@redhat.com> wrote:
 
-by putting it into separate device, you might see a 5x slow instead of
-10x. still because disk seek activity 
+>
+> LVM2 allows you to activate partial volume groups and to remove missing
+> physical volumes via the --partial and --removemissing options to
+> vgchange and vgreduce. See the manual pages for full details.
+>
+> It sounds like your failed drive has not 'gone away' but is throwing I/O
+> errors for some sectors and maybe causing system hangs. You might be
+> better off disconnecting it and booting the system into a rescue
+> environment to perform the recovery of the volume group since it does
+> not contain important data you want to recover.
+>
+> Kind regards,
+> Bryn.
+>
+> -----BEGIN PGP SIGNATURE-----
+> Version: GnuPG v1.4.7 (GNU/Linux)
+> Comment: Using GnuPG with Fedora - http://enigmail.mozdev.org
+>
+> iD8DBQFGOdVv6YSQoMYUY94RAkmJAJ9V2faGbFKgpH5CIHLDrzFJL7lazgCfcpfm
+> nz6q3j33RKyQuNKzWgPRAC0=
+> =OAqy
+> -----END PGP SIGNATURE-----
+>
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@redhat.com
+> https://www.redhat.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+>
+Do u mean rescue env like booting with the rescue cd?
 
-do not use current snapshot on a write intense lv. and adjust your lv
-chunk size base on your application workload can remedy it a bit.
+I tried to do like u said but when i disconnect the drive, some other
+device take /dev/sdc from the failed drive but LVM complains that UID
+is missing and when i check /etc/backup/VG i can see the missing UID
+and that is the drive that have failed /dev/sdc
 
+Now i'm afraird to remove the /dev/sdc from the volume group beacuse
+some other drive took over /dev/sdc.
 
+Can u please provide some useful commands that i can begin with?
 
-> 
-> (FYI: It has been a while since I benchmarked, so you may still have problems.)
-> 
-> Greg
+Kind regards
+//damir
