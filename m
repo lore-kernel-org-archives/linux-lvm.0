@@ -1,19 +1,18 @@
-Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l4A0PUZg020229
-	for <linux-lvm@redhat.com>; Wed, 9 May 2007 20:25:30 -0400
-Received: from mail.opendreams.net (mail.opendreams.net [69.88.106.142])
-	by mx1.redhat.com (8.13.1/8.13.1) with ESMTP id l4A0PRX8029902
-	for <linux-lvm@redhat.com>; Wed, 9 May 2007 20:25:28 -0400
-Message-ID: <46426671.3@opendreams.net>
-Date: Wed, 09 May 2007 17:25:21 -0700
-From: Jesse Molina <jesse@opendreams.net>
+Received: from mx2.redhat.com (mx2.redhat.com [10.255.15.25])
+	by int-mx2.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l4ADshoq029813
+	for <linux-lvm@redhat.com>; Thu, 10 May 2007 09:54:43 -0400
+Received: from an-out-0708.google.com (an-out-0708.google.com [209.85.132.242])
+	by mx2.redhat.com (8.13.1/8.13.1) with ESMTP id l4ADsMTc002742
+	for <linux-lvm@redhat.com>; Thu, 10 May 2007 09:54:42 -0400
+Received: by an-out-0708.google.com with SMTP id b33so149028ana
+	for <linux-lvm@redhat.com>; Thu, 10 May 2007 06:54:42 -0700 (PDT)
+Message-ID: <55c223960705100654m36b559cckada97fccb09a42ac@mail.gmail.com>
+Date: Thu, 10 May 2007 14:54:39 +0100
+From: "Alex Owen" <r.alex.owen@gmail.com>
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] Can't use LVM1 VG/LVs under LVM2; LV xxx: inconsistent
-	LE count 32 != 64
-References: <4641541D.2010709@opendreams.net> <4641970A.8000606@redhat.com>
-	<20070509182848.GA20114@sorrows.opendreams.net>
-In-Reply-To: <20070509182848.GA20114@sorrows.opendreams.net>
 Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+Subject: [linux-lvm] Should I expect snapshot origin LV's to be 10x slower?
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -25,98 +24,30 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: LVM general discussion and development <linux-lvm@redhat.com>
+To: linux-lvm@redhat.com
 
+Hello,
+I have just been making some snapshot performance benchmarks on a
+Debian Etch system.
+Kernel:  2.6.18-4-686 (2.6.18.dfsg.1-12etch1)
+dmsetup: 1.02.08-1
+lvm2: 2.02.06-4
 
-This is confirmed as fixed.  Thanks David and Bryn for the referral to 
-the fix!
+I have been using commands of the form:
+  time dd if=/dev/zero of=/dev/volgroup/test bs=1M count=100
+to get speeds for copying to a LVM device both WITH and WITHOUT a
+single snapshot.
 
-I am surprised that this bug survived in the wild for so long.  I had 
-unsuccessfully tried to upgrade this system several times in the last 
-two years.  I had previously thought it was the funky Promise ATA 
-controller in this host.
+It seems that writes take >=10 times longer the first time a newly
+snapshot origin device is written to.
 
-Thanks for the help.  I'll be closing Debian bug #422963 here soon.
+I was expecting somthing like a 2x or 3x performance loss as 1
+physical read and 2 physical writes must occur for a single logical
+write. I was NOT expecting there to be a 10x overhead. As I move to
+larger devices (bs=1M count=1000) the 10x figure rises to nearer 20x.
+This is also true on mounted origin LV's.
 
---
+Has anyone else benchmarked this? Is this normal?
 
-For documentation/spidering purposes;
-
-https://bugzilla.redhat.com/bugzilla/show_bug.cgi?id=232397
-
-LVM2 unable to use LVM1 striped logical volumes
-LVM2 is unable to import striped LVM1 volumes
-
-
-
-Jesse Molina wrote:
-> Thanks for the replies.  I see that Debian has a lvm2 package version 2.02.24-6 out, and I'll try to install that.  However, I'll have to force the install, as 2.4 kernels are completely dead on Debian Unstable now, due to recent versions of libc6 requiring NPTL.  Hopefully I won't get into a critical dependency problem.
-> 
-> 
-> 
-> On Wed, May 09, 2007 at 10:40:26AM +0100, Bryn M. Reeves wrote:
->> -----BEGIN PGP SIGNED MESSAGE-----
->> Hash: SHA1
->>
->> Jesse Molina wrote:
->>> I'm having a problem getting a Debian system from Linux kernel 2.4 to
->>> 2.6 due to LVM.  On the 2.4 kernel/LVM1, the VGs and LVs work fine,
->>> mount up, and show absolutely no sign of any problem.  However, I can't
->>> get the 2.6 kernel/LVM2 to activate the VGs at all.
->>>
->>> I've filed a Debian bug, which has additional information, here;
->>>     http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=422963
->>>
->>>
->>>
->>> The interesting error messages under 2.6 include;
->>>
->>>     "LV tmp: inconsistent LE count 32 != 64"
->>>     
->>>     "System ID sorrows1107837513 on /dev/sdd3 differs from
->>> sorrows1107837515 for volume group"
->> Hi Jesse,
->>
->> This sounds like:
->>
->> https://bugzilla.redhat.com/bugzilla/show_bug.cgi?id=232397
->>
->> This is fixed upstream in versions from v2_02_24:
->> - --------
->> /cvs/lvm2/LVM2/WHATS_NEW:
->> revision 1.586
->> date: 2007/03/15 13:38:27;  author: agk;  state: Exp;  lines: +2 -2
->> Try to fix reading in of lvm1 striped LVs.
->> There are two fixes other than improving variable names and updating
->> code layout etc.
->>
->> The loop counter is incremented by area_len instead of area_len * stripes;
->>
->> the 3rd _check_stripe parameter is no longer multiplied by number of
->> stripes.
->> - --------
->>
->> Kind regards,
->> Bryn.
->> -----BEGIN PGP SIGNATURE-----
->> Version: GnuPG v1.4.7 (GNU/Linux)
->> Comment: Using GnuPG with Fedora - http://enigmail.mozdev.org
->>
->> iD8DBQFGQZcK6YSQoMYUY94RAqenAKCLdOcbDCJSFqvDUwZsUx/yZXQebgCfTdXu
->> Nwz6xK1mCHIiiPVpHp6h0Ss=
->> =fBTO
->> -----END PGP SIGNATURE-----
->>
->> _______________________________________________
->> linux-lvm mailing list
->> linux-lvm@redhat.com
->> https://www.redhat.com/mailman/listinfo/linux-lvm
->> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
-> 
-
--- 
-# Jesse Molina
-# Mail = jesse@opendreams.net
-# Page = page-jesse@opendreams.net
-# Cell = 1.602.323.7608
-# Web  = http://www.opendreams.net/jesse/
+Thanks for any feedback
+Alex Owen
