@@ -1,16 +1,21 @@
-Received: from mx2.redhat.com (mx2.redhat.com [10.255.15.25])
-	by int-mx2.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l4CLgsSq006210
-	for <linux-lvm@redhat.com>; Sat, 12 May 2007 17:42:54 -0400
-Received: from mailgate103.isp.belgacom.be (mailgate103.isp.belgacom.be
-	[195.238.6.84])
-	by mx2.redhat.com (8.13.1/8.13.1) with ESMTP id l4CLgqfm013722
-	for <linux-lvm@redhat.com>; Sat, 12 May 2007 17:42:52 -0400
-From: "Bertrand Renuart" <bertrand.renuart@modulo1.be>
-Date: Sat, 12 May 2007 23:42:45 +0200
-Message-ID: <001e01c794de$7a54b210$6600a8c0@idefix>
+Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l4CLnKlM029371
+	for <linux-lvm@redhat.com>; Sat, 12 May 2007 17:49:20 -0400
+Received: from mail.lauwerscollege.nl (a80-127-173-76.adsl.xs4all.nl
+	[80.127.173.76])
+	by mx1.redhat.com (8.13.1/8.13.1) with ESMTP id l4CLnIEe031849
+	for <linux-lvm@redhat.com>; Sat, 12 May 2007 17:49:19 -0400
+Received: from [192.168.1.100] (f14030.upc-f.chello.nl [80.56.14.30])
+	(authenticated bits=0)
+	by mail.lauwerscollege.nl (8.13.8/8.13.8) with ESMTP id l4CLnCdo016155
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO)
+	for <linux-lvm@redhat.com>; Sat, 12 May 2007 23:49:12 +0200
+Message-ID: <464635EE.4020001@lauwerscollege.nl>
+Date: Sat, 12 May 2007 23:47:26 +0200
+From: Jan Kuipers <jrkuipers@lauwerscollege.nl>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] LVM on SATA/PATA disks
+Content-Type: multipart/mixed; boundary="------------090606020207000105030707"
+Subject: [linux-lvm] Fixing up missing format1 size
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -21,24 +26,49 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@redhat.com
 
-Dear all,
+This is a multi-part message in MIME format.
+--------------090606020207000105030707
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
 
-I always have been told (S/P)ATA disks should somehow be avoided in server
-systems. This mainly because the high rate of interrupt requests generated
-by the IO subsystem will constantly interrupt the CPU which then becomes
-unavailable for other server tasks. SCSI disks should be preferred mainly
-for that reason.
+Hello,
 
-Can someone confirm this statement?
+When I execute vgscan  -v, the output contains this message:
 
-FYI, we have to upgrade one of our development machine - hence the question.
-This machine is mainly used to run unattended software builds -> moves large
-quantity of small files and requires lots of CPU.
+Fixing up missing format1 size (19,53 GB) for PV /dev/cciss/c0d0p2
 
-(sorry if my question is "stupid" or has already been asked many times - but
-couldn't find any hint anywere)
+I something wrong with the PV? Can it be fixed?
 
-Thanks
+FYI: the PV contains the root filesystem of Dom0 of a xen server. The 
+server works fine.
+
+Found nothing sofar on this issue.
+
+-- 
+Jan Kuipers
+Systeembeheer Lauwers College
+
+
+--------------090606020207000105030707
+Content-Type: text/x-vcard; charset=utf-8;
+ name="jrkuipers.vcf"
+Content-Transfer-Encoding: 7bit
+Content-Disposition: attachment;
+ filename="jrkuipers.vcf"
+
+begin:vcard
+fn:Jan Kuipers
+n:Kuipers;Jan
+org:Lauwers College;Systeembeheer
+adr:;;De Hoefslag 40;Buitenpost;Friesland;9285 RV;Netherlands
+email;internet:jrkuipers@lauwerscollege.nl
+tel;work:0511-542415
+tel;fax:0511-543915
+x-mozilla-html:FALSE
+version:2.1
+end:vcard
+
+
+--------------090606020207000105030707--
