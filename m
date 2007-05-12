@@ -1,22 +1,19 @@
 Received: from mx2.redhat.com (mx2.redhat.com [10.255.15.25])
-	by int-mx2.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l4AJxJJU016644
-	for <linux-lvm@redhat.com>; Thu, 10 May 2007 15:59:19 -0400
-Received: from wx-out-0506.google.com (wx-out-0506.google.com [66.249.82.232])
-	by mx2.redhat.com (8.13.1/8.13.1) with ESMTP id l4AJxHQD014161
-	for <linux-lvm@redhat.com>; Thu, 10 May 2007 15:59:18 -0400
-Received: by wx-out-0506.google.com with SMTP id s11so655191wxc
-	for <linux-lvm@redhat.com>; Thu, 10 May 2007 12:59:17 -0700 (PDT)
-Message-ID: <aad5bb0705101259t18703524x46dc9f1fa48ecc06@mail.gmail.com>
-Date: Thu, 10 May 2007 21:59:17 +0200
-From: "Damir Hasakovic" <bosnianx@gmail.com>
-Subject: Re: [linux-lvm] How to remove crashed inaccessible harddrive from
-	LVM2.
-In-Reply-To: <4639D56F.9070802@redhat.com>
+	by int-mx2.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l4C3T3ET009142
+	for <linux-lvm@redhat.com>; Fri, 11 May 2007 23:29:03 -0400
+Received: from nz-out-0506.google.com (nz-out-0506.google.com [64.233.162.232])
+	by mx2.redhat.com (8.13.1/8.13.1) with ESMTP id l4C3T1Of018233
+	for <linux-lvm@redhat.com>; Fri, 11 May 2007 23:29:01 -0400
+Received: by nz-out-0506.google.com with SMTP id s18so1492697nze
+	for <linux-lvm@redhat.com>; Fri, 11 May 2007 20:29:01 -0700 (PDT)
+Message-ID: <230d1df80705112029w7b4b9fd0ncf7a733363b44705@mail.gmail.com>
+Date: Fri, 11 May 2007 23:29:00 -0400
+From: "Saad Shakhshir" <saads@alum.mit.edu>
+Sender: shakhshir@gmail.com
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-References: <aad5bb0705030448i100ffe37of929baac081535b4@mail.gmail.com>
-	<4639D56F.9070802@redhat.com>
+Content-Type: multipart/alternative; 
+	boundary="----=_Part_172235_6170283.1178940540481"
+Subject: [linux-lvm] Restoring data after losing a drive
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -27,51 +24,197 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: LVM general discussion and development <linux-lvm@redhat.com>
+To: linux-lvm@redhat.com
 
-On 5/3/07, Bryn M. Reeves <breeves@redhat.com> wrote:
+------=_Part_172235_6170283.1178940540481
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
 
->
-> LVM2 allows you to activate partial volume groups and to remove missing
-> physical volumes via the --partial and --removemissing options to
-> vgchange and vgreduce. See the manual pages for full details.
->
-> It sounds like your failed drive has not 'gone away' but is throwing I/O
-> errors for some sectors and maybe causing system hangs. You might be
-> better off disconnecting it and booting the system into a rescue
-> environment to perform the recovery of the volume group since it does
-> not contain important data you want to recover.
->
-> Kind regards,
-> Bryn.
->
-> -----BEGIN PGP SIGNATURE-----
-> Version: GnuPG v1.4.7 (GNU/Linux)
-> Comment: Using GnuPG with Fedora - http://enigmail.mozdev.org
->
-> iD8DBQFGOdVv6YSQoMYUY94RAkmJAJ9V2faGbFKgpH5CIHLDrzFJL7lazgCfcpfm
-> nz6q3j33RKyQuNKzWgPRAC0=
-> =OAqy
-> -----END PGP SIGNATURE-----
->
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
->
-Do u mean rescue env like booting with the rescue cd?
+I lost one of my drives that was a physical volume in my lvm.  The volume
+group spanned across all the drives and so did the logical volume.  I know
+that the data on the good drives is still intact I just don't know how to
+get the lvm up and running again to be able to read the data.
 
-I tried to do like u said but when i disconnect the drive, some other
-device take /dev/sdc from the failed drive but LVM complains that UID
-is missing and when i check /etc/backup/VG i can see the missing UID
-and that is the drive that have failed /dev/sdc
+I tried running 'vgreduce --removemissing fileserver' and that managed to
+restore my other small logical volume that was located entirely on one of
+the (still good) physical volumes.  The other large logical volume is still
+not showing up.
 
-Now i'm afraird to remove the /dev/sdc from the volume group beacuse
-some other drive took over /dev/sdc.
+I'm going to attach the last good configuration from /etc/lvm/archive  The
+drive that died was pv0.
 
-Can u please provide some useful commands that i can begin with?
+I really hope that someone can help with this.  It's terrible losing so much
+data...
 
-Kind regards
-//damir
+# Generated by LVM2: Fri May 11 19:48:00 2007
+
+contents = "Text Format Volume Group"
+version = 1
+
+description = "Created *before* executing 'vgreduce --removemissing
+fileserver'"
+
+creation_host = "veritas"    # Linux veritas 2.6.20-15-generic #2 SMP Sun
+Apr 15 07:36:31 UTC 2007 i686
+creation_time = 1178927280    # Fri May 11 19:48:00 2007
+
+fileserver {
+    id = "9vePH6-W5lO-S1HD-aQyC-jOCY-R0Re-nIBPcJ"
+    seqno = 12
+    status = ["RESIZEABLE", "PARTIAL", "READ"]
+    extent_size = 8192        # 4 Megabytes
+    max_lv = 0
+    max_pv = 0
+
+    physical_volumes {
+
+        pv0 {
+            id = "V2yZV5-qx19-7c98-5WLY-9lTF-Wb4c-70Q0na"
+            device = "unknown device"    # Hint only
+
+            status = ["ALLOCATABLE"]
+            pe_start = 384
+            pe_count = 76310    # 298.086 Gigabytes
+        }
+
+        pv1 {
+            id = "MZrncO-HYwT-6YEB-w3hV-2YqP-HZRY-u6OMyf"
+            device = "/dev/mapper/hdb1"    # Hint only
+
+            status = ["ALLOCATABLE"]
+            pe_start = 384
+            pe_count = 59618    # 232.883 Gigabytes
+        }
+
+        pv2 {
+            id = "52vIhv-lOnI-RDQ3-Z5KT-4Ifc-thL0-uLZQVo"
+            device = "/dev/mapper/sdb1"    # Hint only
+
+            status = ["ALLOCATABLE"]
+            pe_start = 384
+            pe_count = 59618    # 232.883 Gigabytes
+        }
+
+        pv3 {
+            id = "0q8rC2-9Nxi-YriB-7oa6-0wp4-frBa-GT9aQt"
+            device = "/dev/mapper/hda3"    # Hint only
+
+            status = ["ALLOCATABLE"]
+            pe_start = 384
+            pe_count = 26611    # 103.949 Gigabytes
+        }
+    }
+
+    logical_volumes {
+
+        data {
+            id = "O0WU1C-0f0H-ZZvL-AwIc-vl8x-seFe-J3uE2X"
+            status = ["READ", "WRITE", "VISIBLE"]
+            segment_count = 4
+
+            segment1 {
+                start_extent = 0
+                extent_count = 76310    # 298.086 Gigabytes
+
+                type = "striped"
+                stripe_count = 1    # linear
+
+                stripes = [
+                    "pv0", 0
+                ]
+            }
+            segment2 {
+                start_extent = 76310
+                extent_count = 59618    # 232.883 Gigabytes
+
+                type = "striped"
+                stripe_count = 1    # linear
+
+                stripes = [
+                    "pv1", 0
+                ]
+            }
+            segment3 {
+                start_extent = 135928
+                extent_count = 51937    # 202.879 Gigabytes
+
+                type = "striped"
+                stripe_count = 1    # linear
+
+                stripes = [
+                    "pv2", 0
+                ]
+            }
+            segment4 {
+                start_extent = 187865
+                extent_count = 26611    # 103.949 Gigabytes
+
+                type = "striped"
+                stripe_count = 1    # linear
+
+                stripes = [
+                    "pv3", 0
+                ]
+            }
+        }
+
+        home {
+            id = "13Bra6-cE4i-MRgA-CZhC-RC0f-qtEo-R2Y0x2"
+            status = ["READ", "WRITE", "VISIBLE"]
+            segment_count = 1
+
+            segment1 {
+                start_extent = 0
+                extent_count = 7681    # 30.0039 Gigabytes
+
+                type = "striped"
+                stripe_count = 1    # linear
+
+                stripes = [
+                    "pv2", 51937
+                ]
+            }
+        }
+    }
+}
+
+------=_Part_172235_6170283.1178940540481
+Content-Type: text/html; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+I lost one of my drives that was a physical volume in my lvm.&nbsp; The
+volume group spanned across all the drives and so did the logical
+volume.&nbsp; I know that the data on the good drives is still intact I just
+don&#39;t know how to get the lvm up and running again to be able to read
+the data.
+<br><br>I tried running &#39;vgreduce --removemissing fileserver&#39; and that
+managed to restore my other small logical volume that was located
+entirely on one of the (still good) physical volumes.&nbsp; The other large
+logical volume is still not showing up.
+<br><br>I&#39;m going to attach the last good configuration from /etc/lvm/archive&nbsp; The drive that died was pv0.&nbsp; <br><br>I really hope that someone can help with this.&nbsp; It&#39;s terrible losing so much data... <br><br># Generated by LVM2: Fri May 11 19:48:00 2007
+<br><br>contents = &quot;Text Format Volume Group&quot;<br>version = 1<br><br>description = &quot;Created *before* executing &#39;vgreduce --removemissing fileserver&#39;&quot;<br><br>creation_host = &quot;veritas&quot;&nbsp;&nbsp;&nbsp; # Linux veritas 
+2.6.20-15-generic #2 SMP Sun Apr 15 07:36:31 UTC 2007 i686<br>creation_time = 1178927280&nbsp;&nbsp;&nbsp; # Fri May 11 19:48:00 2007<br><br>fileserver {<br>&nbsp;&nbsp;&nbsp; id = &quot;9vePH6-W5lO-S1HD-aQyC-jOCY<div>-R0Re-nIBPcJ&quot;<br>
+&nbsp;&nbsp;&nbsp; seqno = 12<br>
+&nbsp;&nbsp;&nbsp; status = [&quot;RESIZEABLE&quot;, &quot;PARTIAL&quot;, &quot;READ&quot;]<br>&nbsp;&nbsp;&nbsp; extent_size = 8192&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; # 4 Megabytes<br>&nbsp;&nbsp;&nbsp; max_lv = 0<br>&nbsp;&nbsp;&nbsp; max_pv = 0<br><br>&nbsp;&nbsp;&nbsp; physical_volumes {<br><br>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; pv0 {<br>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; id = &quot;V2yZV5-qx19-7c98-5WLY-9lTF-Wb4c-70Q0na&quot;
+<br>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; device = &quot;unknown device&quot;&nbsp;&nbsp;&nbsp; # Hint only<br><br>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; status = [&quot;ALLOCATABLE&quot;]<br>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; pe_start = 384<br>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; pe_count = 76310&nbsp;&nbsp;&nbsp; # 298.086 Gigabytes<br>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; }<br>
+
+
+<br>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; pv1 {<br>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; id = &quot;MZrncO-HYwT-6YEB-w3hV-2YqP-HZRY-u6OMyf&quot;<br>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; device = &quot;/dev/mapper/hdb1&quot;&nbsp;&nbsp;&nbsp; # Hint only<br><br>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; status = [&quot;ALLOCATABLE&quot;]<br>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; pe_start = 384
+<br>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; pe_count = 59618&nbsp;&nbsp;&nbsp; # 232.883 Gigabytes<br>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; }<br><br>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; pv2 {<br>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; id = &quot;52vIhv-lOnI-RDQ3-Z5KT-4Ifc-thL0-uLZQVo&quot;<br>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; device = &quot;/dev/mapper/sdb1&quot;&nbsp;&nbsp;&nbsp; # Hint only
+<br><br>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; status = [&quot;ALLOCATABLE&quot;]<br>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; pe_start = 384<br>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; pe_count = 59618&nbsp;&nbsp;&nbsp; # 232.883 Gigabytes<br>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; }<br><br>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; pv3 {<br>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; id = &quot;0q8rC2-9Nxi-YriB-7oa6-0wp4-frBa-GT9aQt&quot;
+<br>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; device = &quot;/dev/mapper/hda3&quot;&nbsp;&nbsp;&nbsp; # Hint only<br><br>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; status = [&quot;ALLOCATABLE&quot;]<br>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; pe_start = 384<br>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; pe_count = 26611&nbsp;&nbsp;&nbsp; # 103.949 Gigabytes<br>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; }
+<br>
+&nbsp;&nbsp;&nbsp; }<br><br>&nbsp;&nbsp;&nbsp; logical_volumes {<br><br>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; data {<br>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; id = &quot;O0WU1C-0f0H-ZZvL-AwIc-vl8x-seFe-J3uE2X&quot;<br>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; status = [&quot;READ&quot;, &quot;WRITE&quot;, &quot;VISIBLE&quot;]<br>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; segment_count = 4
+<br><br>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; segment1 {<br>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; start_extent = 0<br>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; extent_count = 76310&nbsp;&nbsp;&nbsp; # 298.086 Gigabytes<br><br>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; type = &quot;striped&quot;<br>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; stripe_count = 1&nbsp;&nbsp;&nbsp; # linear
+<br><br>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; stripes = [<br>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &quot;pv0&quot;, 0<br>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; ]<br>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; }<br>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; segment2 {<br>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; start_extent = 76310<br>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; extent_count = 59618&nbsp;&nbsp;&nbsp; # 
+232.883 Gigabytes<br><br>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; type = &quot;striped&quot;<br>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; stripe_count = 1&nbsp;&nbsp;&nbsp; # linear<br><br>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; stripes = [<br>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &quot;pv1&quot;, 0<br>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; ]<br>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; }
+<br>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; segment3 {<br>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; start_extent = 135928<br>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; extent_count = 51937&nbsp;&nbsp;&nbsp; # 202.879 Gigabytes<br><br>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; type = &quot;striped&quot;<br>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; stripe_count = 1&nbsp;&nbsp;&nbsp; # linear
+<br><br>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; stripes = [<br>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &quot;pv2&quot;, 0<br>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; ]<br>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; }<br>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; segment4 {<br>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; start_extent = 187865<br>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; extent_count = 26611&nbsp;&nbsp;&nbsp; # 
+103.949 Gigabytes<br><br>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; type = &quot;striped&quot;<br>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; stripe_count = 1&nbsp;&nbsp;&nbsp; # linear<br><br>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; stripes = [<br>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &quot;pv3&quot;, 0<br>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; ]<br>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; }
+<br>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; }<br><br>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; home {<br>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; id = &quot;13Bra6-cE4i-MRgA-CZhC-RC0f-qtEo-R2Y0x2&quot;<br>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; status = [&quot;READ&quot;, &quot;WRITE&quot;, &quot;VISIBLE&quot;]<br>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; segment_count = 1
+<br><br>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; segment1 {<br>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; start_extent = 0<br>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; extent_count = 7681&nbsp;&nbsp;&nbsp; # 30.0039 Gigabytes<br><br>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; type = &quot;striped&quot;<br>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; stripe_count = 1&nbsp;&nbsp;&nbsp; # linear
+<br><br>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; stripes = [<br>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &quot;pv2&quot;, 51937<br>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; ]<br>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; }<br>&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; }<br>&nbsp;&nbsp;&nbsp; }<br>}</div>
+
+------=_Part_172235_6170283.1178940540481--
