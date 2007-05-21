@@ -1,18 +1,16 @@
-Received: from mx2.redhat.com (mx2.redhat.com [10.255.15.25])
-	by int-mx2.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l4LAcV7m019090
-	for <linux-lvm@redhat.com>; Mon, 21 May 2007 06:38:31 -0400
-Received: from moutng.kundenserver.de (moutng.kundenserver.de
-	[212.227.126.183])
-	by mx2.redhat.com (8.13.1/8.13.1) with ESMTP id l4LAcT9r005983
-	for <linux-lvm@redhat.com>; Mon, 21 May 2007 06:38:29 -0400
-Message-ID: <4651769C.6050007@sas-clan.de>
-Date: Mon, 21 May 2007 12:38:20 +0200
-From: BigMac <bigmac@sas-clan.de>
+Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l4LEIDqZ032428
+	for <linux-lvm@redhat.com>; Mon, 21 May 2007 10:18:13 -0400
+Received: from web38214.mail.mud.yahoo.com (web38214.mail.mud.yahoo.com
+	[209.191.124.157])
+	by mx3.redhat.com (8.13.1/8.13.1) with SMTP id l4LEICVC009766
+	for <linux-lvm@redhat.com>; Mon, 21 May 2007 10:18:12 -0400
+Date: Mon, 21 May 2007 07:18:00 -0700 (PDT)
+From: Sean McGlynn <sean_mcglynn@yahoo.com>
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] f*cked up metadata on 1of3 LVM-disks
-References: <4641F72E.6050907@sas-clan.de>
-In-Reply-To: <4641F72E.6050907@sas-clan.de>
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/alternative; boundary="0-1778335099-1179757080=:80102"
+Message-ID: <247618.80102.qm@web38214.mail.mud.yahoo.com>
+Subject: [linux-lvm] Disk /dev/dm-0 doesn't contain a valid partition table
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -23,140 +21,101 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-Nobody an idea how to recover the lvm meta data on the disk?
-The data itself an the other disks are fine, just the first sectors of
-/dev/hdc are gone by installing grub on it.
+--0-1778335099-1179757080=:80102
+Content-Type: text/plain; charset=ascii
 
-I had a deeper look on the disk with one of those low level disk editors
-and there are still parts of the meta-data stored on the disk.
-It seems to be that grub messed up just the first 17 sectors of the disk.
+Hello,
 
-Regards,
+I did an fdisk -l to review my partition table (see results below), and found four entries that end with "Disk /dev/dm-X doesn't contain a valid partition table."  I don't recall seeing this in the past, so I believe it is something new.
 
-BigMac
+I recently began using kernel 2.6.21.1, up from 2.6.9-42.  I don't know if perhaps this had some effect, or if the entries are normal and I just never noticed them.
+
+What led me here is that sar -d output includes four entries for hard drives (dev253 entries) when there are only three on my system.  Fdisk is reporting four DM devices, so I'm thinking there is some correlation, but I don't know what.
+
+Any constructrive feedback would be appreciated.
+
+Thank you.
+
+Disk /dev/sda: 1900.1 GB, 1900120375296 bytes
+255 heads, 63 sectors/track, 231009 cylinders
+Units = cylinders of 16065 * 512 = 8225280 bytes
+   Device Boot      Start         End      Blocks   Id  System
+/dev/sda1               1      231009  1855579761   8e  Linux LVM
+
+Disk /dev/sdb: 146.1 GB, 146163105792 bytes
+255 heads, 63 sectors/track, 17769 cylinders
+Units = cylinders of 16065 * 512 = 8225280 bytes
+   Device Boot      Start         End      Blocks   Id  System
+/dev/sdb1   *           1          38      305203+  83  Linux
+/dev/sdb2              39       17769   142424257+  8e  Linux LVM
+
+Disk /dev/sdc: 146.1 GB, 146163105792 bytes
+255 heads, 63 sectors/track, 17769 cylinders
+Units = cylinders of 16065 * 512 = 8225280 bytes
+   Device Boot      Start         End      Blocks   Id  System
+/dev/sdc1               1       17769   142729461   8e  Linux LVM
+
+Disk /dev/dm-0: 137.4 GB, 137405399040 bytes
+255 heads, 63 sectors/track, 16705 cylinders
+Units = cylinders of 16065 * 512 = 8225280 bytes
+Disk /dev/dm-0 doesn't contain a valid partition table
+
+Disk /dev/dm-1: 8388 MB, 8388608000 bytes
+255 heads, 63 sectors/track, 1019 cylinders
+Units = cylinders of 16065 * 512 = 8225280 bytes
+Disk /dev/dm-1 doesn't contain a valid partition table
+
+Disk /dev/dm-2: 146.1 GB, 146150522880 bytes
+255 heads, 63 sectors/track, 17768 cylinders
+Units = cylinders of 16065 * 512 = 8225280 bytes
+Disk /dev/dm-2 doesn't contain a valid partition table
+
+Disk /dev/dm-3: 1900.1 GB, 1900111986688 bytes
+255 heads, 63 sectors/track, 231008 cylinders
+Units = cylinders of 16065 * 512 = 8225280 bytes
+Disk /dev/dm-3 doesn't contain a valid partition table
 
 
+      ____________________________________________________________________________________Shape Yahoo! in your own image.  Join our Network Research Panel today!   http://surveylink.yahoo.com/gmrs/yahoo_panel_invite.asp?a=7 
 
-BigMac schrieb:
-> Hi lists!
-> 
-> My fileserver stored it's data on 3 physical disks,building a
-> volumegroup with lvm2.
-> The mashine was running ubuntu dapper drake for a long time without any
-> problems but I decided to switch to ubuntu feisty fawn. Switching from
-> debian to dapper drake I installed and removed quite a lot of packages,
-> leaving a messy system, so I thought a new and clean installation with
-> feisty fawn might be a great idea.
-> 
-> box config with dapper drake:
-> 
-> hda: 120GB (PATA) systemdisk
-> hdb: unused
-> hdc: 250GB (PATA) part of the LVM-array
-> hdd: 250GB (PATA) part of the LVM-array
-> sda: 400GB (SATA) part of the LVM-array
-> sdb: DVD-RW (PATA on additional PCI-controller UDMA-100)
-> 
-> The additional IDE-controller was installed to be able to install even
-> more disks, but as I won't buy any new PATA stuff the controller was
-> dispensable.
-> 
-> new box config:
-> 
-> hda: 120GB (PATA) systemdisk
-> hdb: DVD-RW
-> hdc: 250GB (PATA) part of the LVM-array
-> hdd: 250GB (PATA) part of the LVM-array
-> sda: 400GB (SATA) part of the LVM-array
-> 
-> I exported the vg before shutting down dapper drake and while installing
-> festy fawn to the box I - no idea what did me do so - installed grub to
-> hdc. Ooops, this disk was part of the LVM array and so grub f*cked up
-> the lvm meta-data on hdc.
-> 
-> After installing grub to hda the box is running fine, despite the LVM
-> which can't find one of the vgs volumes:
-> 
-> Code:
-> 
-> bigmac@knecht:~$ sudo pvscan
-> Couldn't find device with uuid '9kpWwu-LdwT-YiqV-DRPg-kSAN-plYN-v1Eq81'.
-> Couldn't find device with uuid '9kpWwu-LdwT-YiqV-DRPg-kSAN-plYN-v1Eq81'.
-> Couldn't find device with uuid '9kpWwu-LdwT-YiqV-DRPg-kSAN-plYN-v1Eq81'.
-> Couldn't find device with uuid '9kpWwu-LdwT-YiqV-DRPg-kSAN-plYN-v1Eq81'.
-> PV /dev/hdd         VG vgdata   lvm2 [232.88 GB / 0    free]
-> PV unknown device   VG vgdata   lvm2 [232.88 GB / 0    free]
-> PV /dev/sda         VG vgdata   lvm2 [372.61 GB / 4.00 MB free]
-> Total: 3 [838.38 GB] / in use: 3 [838.38 GB] / in no VG: 0 [0   ]
-> 
-> bigmac@knecht:~$ sudo pvdisplay
-> Couldn't find device with uuid '9kpWwu-LdwT-YiqV-DRPg-kSAN-plYN-v1Eq81'.
-> Couldn't find device with uuid '9kpWwu-LdwT-YiqV-DRPg-kSAN-plYN-v1Eq81'.
-> Couldn't find device with uuid '9kpWwu-LdwT-YiqV-DRPg-kSAN-plYN-v1Eq81'.
-> Couldn't find device with uuid '9kpWwu-LdwT-YiqV-DRPg-kSAN-plYN-v1Eq81'.
-> --- Physical volume ---
-> PV Name               /dev/hdd
-> VG Name               vgdata
-> PV Size               232.88 GB / not usable 0
-> Allocatable           yes (but full)
-> PE Size (KByte)       4096
-> Total PE              59618
-> Free PE               0
-> Allocated PE          59618
-> PV UUID               locW5S-HNFK-b1WW-iOLt-olHl-2SNd-fmXKC8
-> 
-> --- Physical volume ---
-> PV Name               unknown device
-> VG Name               vgdata
-> PV Size               232.88 GB / not usable 0
-> Allocatable           yes (but full)
-> PE Size (KByte)       4096
-> Total PE              59618
-> Free PE               0
-> Allocated PE          59618
-> PV UUID               9kpWwu-LdwT-YiqV-DRPg-kSAN-plYN-v1Eq81
-> 
-> --- Physical volume ---
-> PV Name               /dev/sda
-> VG Name               vgdata
-> PV Size               372.61 GB / not usable 0
-> Allocatable           yes
-> PE Size (KByte)       4096
-> Total PE              95388
-> Free PE               1
-> Allocated PE          95387
-> PV UUID               YUJcsF-3XP7-OrbO-pITp-5z96-gw1A-DI11QS
-> 
-> 
-> bigmac@knecht:~$ sudo vgscan
-> Reading all physical volumes.  This may take a while...
-> Couldn't find device with uuid '9kpWwu-LdwT-YiqV-DRPg-kSAN-plYN-v1Eq81'.
-> Couldn't find all physical volumes for volume group vgdata.
-> Couldn't find device with uuid '9kpWwu-LdwT-YiqV-DRPg-kSAN-plYN-v1Eq81'.
-> Couldn't find all physical volumes for volume group vgdata.
-> Couldn't find device with uuid '9kpWwu-LdwT-YiqV-DRPg-kSAN-plYN-v1Eq81'.
-> Couldn't find all physical volumes for volume group vgdata.
-> Couldn't find device with uuid '9kpWwu-LdwT-YiqV-DRPg-kSAN-plYN-v1Eq81'.
-> Couldn't find all physical volumes for volume group vgdata.
-> Volume group "vgdata" not found
-> 
-> I tried multiple Live-CDs like gparted (with testdisk), Ultimate Boot-CD
-> and SystemRescueCd, but none could help.
-> 
-> Any idea what to do to get the lvm up and running?
-> How to restore the metadata on hdc?
-> 
-> Best Regards,
-> 
-> BigMac
-> 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
-> 
-> 
+
+--0-1778335099-1179757080=:80102
+Content-Type: text/html; charset=ascii
+
+<html><head><style type="text/css"><!-- DIV {margin:0px;} --></style></head><body><div style="font-family:times new roman, new york, times, serif;font-size:12pt"><P>Hello,</P>
+<P>&nbsp;</P>
+<P>I did an fdisk -l to&nbsp;review my partition table (see results below), and found four entries that end&nbsp;with "Disk /dev/dm-X doesn't contain a valid partition table."&nbsp; I don't recall seeing this in the past, so I believe it is something new.</P>
+<P>&nbsp;</P>
+<P>I recently began using kernel 2.6.21.1, up from 2.6.9-42.&nbsp; I don't know if perhaps this had some effect, or if the entries are normal and I just never noticed them.</P>
+<P>&nbsp;</P>
+<P>What led me here is that sar -d output includes four entries for hard drives (dev253 entries) when there are only three on my system.&nbsp; Fdisk is reporting four DM devices, so I'm thinking there is some correlation, but I don't know what.</P>
+<P>&nbsp;</P>
+<P>Any constructrive feedback would be appreciated.</P>
+<P>&nbsp;</P>
+<P>Thank you.</P>
+<P><BR>Disk /dev/sda: 1900.1 GB, 1900120375296 bytes<BR>255 heads, 63 sectors/track, 231009 cylinders<BR>Units = cylinders of 16065 * 512 = 8225280 bytes</P>
+<P>&nbsp;&nbsp; Device Boot&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Start&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; End&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Blocks&nbsp;&nbsp; Id&nbsp; System<BR>/dev/sda1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 231009&nbsp; 1855579761&nbsp;&nbsp; 8e&nbsp; Linux LVM</P>
+<P>&nbsp;</P>
+<P>Disk /dev/sdb: 146.1 GB, 146163105792 bytes<BR>255 heads, 63 sectors/track, 17769 cylinders<BR>Units = cylinders of 16065 * 512 = 8225280 bytes</P>
+<P>&nbsp;&nbsp; Device Boot&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Start&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; End&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Blocks&nbsp;&nbsp; Id&nbsp; System<BR>/dev/sdb1&nbsp;&nbsp; *&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 38&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 305203+&nbsp; 83&nbsp; Linux<BR>/dev/sdb2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 39&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 17769&nbsp;&nbsp; 142424257+&nbsp; 8e&nbsp; Linux LVM</P>
+<P>&nbsp;</P>
+<P>Disk /dev/sdc: 146.1 GB, 146163105792 bytes<BR>255 heads, 63 sectors/track, 17769 cylinders<BR>Units = cylinders of 16065 * 512 = 8225280 bytes</P>
+<P>&nbsp;&nbsp; Device Boot&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Start&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; End&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Blocks&nbsp;&nbsp; Id&nbsp; System<BR>/dev/sdc1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 17769&nbsp;&nbsp; 142729461&nbsp;&nbsp; 8e&nbsp; Linux LVM</P>
+<P>&nbsp;</P>
+<P>Disk /dev/dm-0: 137.4 GB, 137405399040 bytes<BR>255 heads, 63 sectors/track, 16705 cylinders<BR>Units = cylinders of 16065 * 512 = 8225280 bytes</P>
+<P>Disk /dev/dm-0 doesn't contain a valid partition table</P>
+<P>&nbsp;</P>
+<P>Disk /dev/dm-1: 8388 MB, 8388608000 bytes<BR>255 heads, 63 sectors/track, 1019 cylinders<BR>Units = cylinders of 16065 * 512 = 8225280 bytes</P>
+<P>Disk /dev/dm-1 doesn't contain a valid partition table</P>
+<P>&nbsp;</P>
+<P>Disk /dev/dm-2: 146.1 GB, 146150522880 bytes<BR>255 heads, 63 sectors/track, 17768 cylinders<BR>Units = cylinders of 16065 * 512 = 8225280 bytes</P>
+<P>Disk /dev/dm-2 doesn't contain a valid partition table</P>
+<P>&nbsp;</P>
+<P>Disk /dev/dm-3: 1900.1 GB, 1900111986688 bytes<BR>255 heads, 63 sectors/track, 231008 cylinders<BR>Units = cylinders of 16065 * 512 = 8225280 bytes</P>
+<P>Disk /dev/dm-3 doesn't contain a valid partition table</P></div><br>
+      <hr size=1><a href="http://us.rd.yahoo.com/evt=48250/*http://searchmarketing.yahoo.com/arp/sponsoredsearch_v9.php?o=US2226&cmp=Yahoo&ctv=AprNI&s=Y&s2=EM&b=50">Pinpoint customers </a>who are looking for what you sell. 
+
+</body></html>
+--0-1778335099-1179757080=:80102--
