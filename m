@@ -1,26 +1,19 @@
-Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l4J2BpG7025200
-	for <linux-lvm@redhat.com>; Fri, 18 May 2007 22:11:51 -0400
-Received: from vms048pub.verizon.net (vms048pub.verizon.net [206.46.252.48])
-	by mx1.redhat.com (8.13.1/8.13.1) with ESMTP id l4J2BmI9005789
-	for <linux-lvm@redhat.com>; Fri, 18 May 2007 22:11:49 -0400
-Received: from [127.0.0.1] ([68.238.134.230])
-	by vms048.mailsrvcs.net (Sun Java System Messaging Server 6.2-6.01
-	(built Apr
-	3 2006)) with ESMTPA id <0JI900MFQNFEOIV5@vms048.mailsrvcs.net> for
-	linux-lvm@redhat.com; Fri, 18 May 2007 21:11:43 -0500 (CDT)
-Date: Fri, 18 May 2007 19:12:57 -0700
-From: Greg Hanson <greg@perusion.com>
-Subject: Re: [linux-lvm] difference in space used
-In-reply-to: <20070519010033.GA12791@kallisti.us>
-Message-id: <464E5D29.2020508@perusion.com>
-MIME-version: 1.0
-Content-type: multipart/alternative;
-	boundary=------------050102000003020801070207
-References: <464E22F3.5040108@perusion.com>
-	<20070519010033.GA12791@kallisti.us>
-Reply-To: Greg <greg@valuemedia.com>,
-	LVM general discussion and development <linux-lvm@redhat.com>
+Received: from mx2.redhat.com (mx2.redhat.com [10.255.15.25])
+	by int-mx2.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l4LAcV7m019090
+	for <linux-lvm@redhat.com>; Mon, 21 May 2007 06:38:31 -0400
+Received: from moutng.kundenserver.de (moutng.kundenserver.de
+	[212.227.126.183])
+	by mx2.redhat.com (8.13.1/8.13.1) with ESMTP id l4LAcT9r005983
+	for <linux-lvm@redhat.com>; Mon, 21 May 2007 06:38:29 -0400
+Message-ID: <4651769C.6050007@sas-clan.de>
+Date: Mon, 21 May 2007 12:38:20 +0200
+From: BigMac <bigmac@sas-clan.de>
+MIME-Version: 1.0
+Subject: Re: [linux-lvm] f*cked up metadata on 1of3 LVM-disks
+References: <4641F72E.6050907@sas-clan.de>
+In-Reply-To: <4641F72E.6050907@sas-clan.de>
+Content-Transfer-Encoding: 7bit
+Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -30,143 +23,140 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: Ross Vandegrift <ross@kallisti.us>
-Cc: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="us-ascii"
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-This is a multi-part message in MIME format.
---------------050102000003020801070207
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
+Nobody an idea how to recover the lvm meta data on the disk?
+The data itself an the other disks are fine, just the first sectors of
+/dev/hdc are gone by installing grub on it.
 
-Ross Vandegrift wrote:
-> On Fri, May 18, 2007 at 03:04:35PM -0700, Greg Hanson wrote:
->   
->> [root@newbox1 ~]# du /log/
->> 16      /log/lost+found
->> 23696   /log/httpd
->> 23716   /log/
->>
->> Any ideas as to what could be going on?
->>     
->
-> An unlinked file isn't actually deleted until all file handles to it
-> are closed.  Since this is your log partition, you probably have
-> broken log rotation script.  I bet its moving the files to a new name,
-> but the logging process isn't closing and reopening the logfile.
->
-> These files that are unlinked but still have open handles to them
-> continue to consume their usual amount of disk space.  FWIW, I have
-> seen this issue particularly noticably with MySQL when the query log
-> is enabled, but that's a wild guess...
->
->   
-Thanks for the input Ross.  You are exactly on target.  I found another
-post on another forum with regards to this,
+I had a deeper look on the disk with one of those low level disk editors
+and there are still parts of the meta-data stored on the disk.
+It seems to be that grub messed up just the first 17 sectors of the disk.
 
-http://lists.debian.org/debian-isp/2002/05/msg00046.html
+Regards,
 
-and started examining the log rotate scripts. There was an error in the
-path in the HUP line to restart apache, and there were many deleted log
-files laying around.
-
-this command
-
-lsof | grep deleted
-
-confirmed that there were several occurrences of error and access logs hanging in there.  
-Did an apachectl stop and start and things went back to normal.
-
-Thank you so much for the response!
-
-
-Greg
-
--- 
-Greg Hanson
-Interchange Consulting
-Perusion
-1506 E Gilbert Ave
-Coeur d'Alene, ID 83815
-
-Email		greg@perusion.com
-Phone		208-667-2442
-Toll Free	800-949-1889
-Fax		775-256-2231
-Web		http://www.perusion.com
+BigMac
 
 
 
---------------050102000003020801070207
-Content-Type: text/html; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
-<html>
-<head>
-  <meta content="text/html;charset=ISO-8859-1" http-equiv="Content-Type">
-</head>
-<body bgcolor="#ffffff" text="#000000">
-Ross Vandegrift wrote:
-<blockquote cite="mid:20070519010033.GA12791@kallisti.us" type="cite">
-  <pre wrap="">On Fri, May 18, 2007 at 03:04:35PM -0700, Greg Hanson wrote:
-  </pre>
-  <blockquote type="cite">
-    <pre wrap="">[root@newbox1 ~]# du /log/
-16      /log/lost+found
-23696   /log/httpd
-23716   /log/
-
-Any ideas as to what could be going on?
-    </pre>
-  </blockquote>
-  <pre wrap=""><!---->
-An unlinked file isn't actually deleted until all file handles to it
-are closed.  Since this is your log partition, you probably have
-broken log rotation script.  I bet its moving the files to a new name,
-but the logging process isn't closing and reopening the logfile.
-
-These files that are unlinked but still have open handles to them
-continue to consume their usual amount of disk space.  FWIW, I have
-seen this issue particularly noticably with MySQL when the query log
-is enabled, but that's a wild guess...
-
-  </pre>
-</blockquote>
-Thanks for the input Ross.&nbsp; You are exactly on target.&nbsp; I found another
-post on another forum with regards to this, <br>
-<br>
-<a class="moz-txt-link-freetext" href="http://lists.debian.org/debian-isp/2002/05/msg00046.html">http://lists.debian.org/debian-isp/2002/05/msg00046.html</a><br>
-<br>
-and started examining the log rotate scripts. There was an error in the
-path in the HUP line to restart apache, and there were many deleted log
-files laying around.<br>
-<br>
-this command<br>
-<pre>lsof | grep deleted
-
-confirmed that there were several occurrences of error and access logs hanging in there.  
-Did an apachectl stop and start and things went back to normal.
-
-Thank you so much for the response!
-</pre>
-<br>
-Greg<br>
-<br>
-<pre class="moz-signature" cols="72">-- 
-Greg Hanson
-Interchange Consulting
-Perusion
-1506 E Gilbert Ave
-Coeur d'Alene, ID 83815
-
-Email		<a class="moz-txt-link-abbreviated" href="mailto:greg@perusion.com">greg@perusion.com</a>
-Phone		208-667-2442
-Toll Free	800-949-1889
-Fax		775-256-2231
-Web		<a class="moz-txt-link-freetext" href="http://www.perusion.com">http://www.perusion.com</a>
-
-</pre>
-</body>
-</html>
-
---------------050102000003020801070207--
+BigMac schrieb:
+> Hi lists!
+> 
+> My fileserver stored it's data on 3 physical disks,building a
+> volumegroup with lvm2.
+> The mashine was running ubuntu dapper drake for a long time without any
+> problems but I decided to switch to ubuntu feisty fawn. Switching from
+> debian to dapper drake I installed and removed quite a lot of packages,
+> leaving a messy system, so I thought a new and clean installation with
+> feisty fawn might be a great idea.
+> 
+> box config with dapper drake:
+> 
+> hda: 120GB (PATA) systemdisk
+> hdb: unused
+> hdc: 250GB (PATA) part of the LVM-array
+> hdd: 250GB (PATA) part of the LVM-array
+> sda: 400GB (SATA) part of the LVM-array
+> sdb: DVD-RW (PATA on additional PCI-controller UDMA-100)
+> 
+> The additional IDE-controller was installed to be able to install even
+> more disks, but as I won't buy any new PATA stuff the controller was
+> dispensable.
+> 
+> new box config:
+> 
+> hda: 120GB (PATA) systemdisk
+> hdb: DVD-RW
+> hdc: 250GB (PATA) part of the LVM-array
+> hdd: 250GB (PATA) part of the LVM-array
+> sda: 400GB (SATA) part of the LVM-array
+> 
+> I exported the vg before shutting down dapper drake and while installing
+> festy fawn to the box I - no idea what did me do so - installed grub to
+> hdc. Ooops, this disk was part of the LVM array and so grub f*cked up
+> the lvm meta-data on hdc.
+> 
+> After installing grub to hda the box is running fine, despite the LVM
+> which can't find one of the vgs volumes:
+> 
+> Code:
+> 
+> bigmac@knecht:~$ sudo pvscan
+> Couldn't find device with uuid '9kpWwu-LdwT-YiqV-DRPg-kSAN-plYN-v1Eq81'.
+> Couldn't find device with uuid '9kpWwu-LdwT-YiqV-DRPg-kSAN-plYN-v1Eq81'.
+> Couldn't find device with uuid '9kpWwu-LdwT-YiqV-DRPg-kSAN-plYN-v1Eq81'.
+> Couldn't find device with uuid '9kpWwu-LdwT-YiqV-DRPg-kSAN-plYN-v1Eq81'.
+> PV /dev/hdd         VG vgdata   lvm2 [232.88 GB / 0    free]
+> PV unknown device   VG vgdata   lvm2 [232.88 GB / 0    free]
+> PV /dev/sda         VG vgdata   lvm2 [372.61 GB / 4.00 MB free]
+> Total: 3 [838.38 GB] / in use: 3 [838.38 GB] / in no VG: 0 [0   ]
+> 
+> bigmac@knecht:~$ sudo pvdisplay
+> Couldn't find device with uuid '9kpWwu-LdwT-YiqV-DRPg-kSAN-plYN-v1Eq81'.
+> Couldn't find device with uuid '9kpWwu-LdwT-YiqV-DRPg-kSAN-plYN-v1Eq81'.
+> Couldn't find device with uuid '9kpWwu-LdwT-YiqV-DRPg-kSAN-plYN-v1Eq81'.
+> Couldn't find device with uuid '9kpWwu-LdwT-YiqV-DRPg-kSAN-plYN-v1Eq81'.
+> --- Physical volume ---
+> PV Name               /dev/hdd
+> VG Name               vgdata
+> PV Size               232.88 GB / not usable 0
+> Allocatable           yes (but full)
+> PE Size (KByte)       4096
+> Total PE              59618
+> Free PE               0
+> Allocated PE          59618
+> PV UUID               locW5S-HNFK-b1WW-iOLt-olHl-2SNd-fmXKC8
+> 
+> --- Physical volume ---
+> PV Name               unknown device
+> VG Name               vgdata
+> PV Size               232.88 GB / not usable 0
+> Allocatable           yes (but full)
+> PE Size (KByte)       4096
+> Total PE              59618
+> Free PE               0
+> Allocated PE          59618
+> PV UUID               9kpWwu-LdwT-YiqV-DRPg-kSAN-plYN-v1Eq81
+> 
+> --- Physical volume ---
+> PV Name               /dev/sda
+> VG Name               vgdata
+> PV Size               372.61 GB / not usable 0
+> Allocatable           yes
+> PE Size (KByte)       4096
+> Total PE              95388
+> Free PE               1
+> Allocated PE          95387
+> PV UUID               YUJcsF-3XP7-OrbO-pITp-5z96-gw1A-DI11QS
+> 
+> 
+> bigmac@knecht:~$ sudo vgscan
+> Reading all physical volumes.  This may take a while...
+> Couldn't find device with uuid '9kpWwu-LdwT-YiqV-DRPg-kSAN-plYN-v1Eq81'.
+> Couldn't find all physical volumes for volume group vgdata.
+> Couldn't find device with uuid '9kpWwu-LdwT-YiqV-DRPg-kSAN-plYN-v1Eq81'.
+> Couldn't find all physical volumes for volume group vgdata.
+> Couldn't find device with uuid '9kpWwu-LdwT-YiqV-DRPg-kSAN-plYN-v1Eq81'.
+> Couldn't find all physical volumes for volume group vgdata.
+> Couldn't find device with uuid '9kpWwu-LdwT-YiqV-DRPg-kSAN-plYN-v1Eq81'.
+> Couldn't find all physical volumes for volume group vgdata.
+> Volume group "vgdata" not found
+> 
+> I tried multiple Live-CDs like gparted (with testdisk), Ultimate Boot-CD
+> and SystemRescueCd, but none could help.
+> 
+> Any idea what to do to get the lvm up and running?
+> How to restore the metadata on hdc?
+> 
+> Best Regards,
+> 
+> BigMac
+> 
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@redhat.com
+> https://www.redhat.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+> 
+> 
