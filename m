@@ -1,15 +1,19 @@
-Received: from [172.16.44.152] (friday.brisbane.redhat.com [172.16.44.152])
-	by pobox.brisbane.redhat.com (8.13.1/8.13.1) with ESMTP id
-	l4T7aVWb004709
-	for <linux-lvm@redhat.com>; Tue, 29 May 2007 17:36:31 +1000
-Message-ID: <465BD7FE.7080501@gmail.com>
-Date: Tue, 29 May 2007 17:36:30 +1000
-From: David Robinson <zxvdr.au@gmail.com>
+Received: from mx2.redhat.com (mx2.redhat.com [10.255.15.25])
+	by int-mx2.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l4T7pHK2010493
+	for <linux-lvm@redhat.com>; Tue, 29 May 2007 03:51:18 -0400
+Received: from mu-out-0910.google.com (mu-out-0910.google.com [209.85.134.188])
+	by mx2.redhat.com (8.13.1/8.13.1) with ESMTP id l4T7pFIV027566
+	for <linux-lvm@redhat.com>; Tue, 29 May 2007 03:51:16 -0400
+Received: by mu-out-0910.google.com with SMTP id i10so2080760mue
+	for <linux-lvm@redhat.com>; Tue, 29 May 2007 00:51:11 -0700 (PDT)
+Message-ID: <7dd6ce6e0705290051v5789e7b6h5fdde325093fde68@mail.gmail.com>
+Date: Tue, 29 May 2007 09:51:10 +0200
+From: Jonathan <arbitraryuser@gmail.com>
+Subject: re: [linux-lvm] pvcreate is successful but nothing is reported by
+	pvdisplay
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] LVM on a fake disk
-References: <465BD163.4010904@cesca.es>
-In-Reply-To: <465BD163.4010904@cesca.es>
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/alternative; 
+	boundary="----=_Part_134216_11422488.1180425070685"
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -20,47 +24,23 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-Jordi Prats wrote:
-> Hi all,
-> How can I define voluem groups and logical volumes using a disk image on 
-> a file that will be the root filesystem of another machine (not the one 
-> that is defining them)?
+------=_Part_134216_11422488.1180425070685
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
 
-The link below provides some details which may help. You can use losetup 
-to associate a loop device with a regular file, then treat it as you 
-would to a normal block device.
+Just wanted to let everyone know that even though pvdisplay wasn't reporting
+anything, creating the volume groups etc worked perfectly. Is this a bug?
 
-http://fedoraproject.org/wiki/Docs/Fedora7VirtQuickStart#head-498c8bbe74fd334cf63a4f1f918be74c726238dd
+j.
 
-ie:
+------=_Part_134216_11422488.1180425070685
+Content-Type: text/html; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
 
-# create a sparse file to use as the block device in the guest
-dd if=/dev/zero of=disk1.img seek=8096 bs=1M count=0
+Just wanted to let everyone know that even though pvdisplay wasn&#39;t reporting anything, creating the volume groups etc worked perfectly. Is this a bug?<br><br>j.<br>
 
-# setup a loopback device
-losetup /dev/loop0 disk1.img
-
-/dev/loop0 can now be used like a normal block device. If you partition 
-the device thou it's slightly different - you need to use kpartx to make 
-the partitions usable.
-
-ie:
-
-# create a partition table on the device (/boot cannot be on an LVM volume)
-fdisk /dev/loop0
-
-# make the partitions visible (they will appear as /dev/mapper/loop0pX, 
-where X is a partition number)
-kpartx -a /dev/loop0
-
-# then you can use LVM on the devices
-pvcreate /dev/mapper/loop0p1
-
-The LVM's point of view there is nothing special that needs to be done 
-other than scanning for the volume groups (vgscan) and 
-activating/deactivating them (vgchange -ay <vg>/ vgchange -an <vg>).
-
-Dave
+------=_Part_134216_11422488.1180425070685--
