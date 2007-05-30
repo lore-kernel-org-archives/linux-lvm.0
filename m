@@ -1,15 +1,16 @@
-Received: from [172.16.44.152] (friday.brisbane.redhat.com [172.16.44.152])
-	by pobox.brisbane.redhat.com (8.13.1/8.13.1) with ESMTP id
-	l4U2twHf011483
-	for <linux-lvm@redhat.com>; Wed, 30 May 2007 12:55:58 +1000
-Message-ID: <465CE7BE.90106@gmail.com>
-Date: Wed, 30 May 2007 12:55:58 +1000
-From: David Robinson <zxvdr.au@gmail.com>
-MIME-Version: 1.0
-Subject: Re: [linux-lvm] about rhel5 lvm
-References: <465CCE4B.439404.22055@m12-13.163.com>
-In-Reply-To: <465CCE4B.439404.22055@m12-13.163.com>
-Content-Transfer-Encoding: 7bit
+Received: from mx2.redhat.com (mx2.redhat.com [10.255.15.25])
+	by int-mx2.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l4U35I7N009640
+	for <linux-lvm@redhat.com>; Tue, 29 May 2007 23:05:18 -0400
+Received: from m12-13.163.com (m12-13.163.com [220.181.12.13])
+	by mx2.redhat.com (8.13.1/8.13.1) with SMTP id l4U3500R012040
+	for <linux-lvm@redhat.com>; Tue, 29 May 2007 23:05:02 -0400
+Date: Wed, 30 May 2007 11:05:34 +0800
+From: "iamboy_2000" <iamboy_2000@163.com>
+Subject: Re: Re: [linux-lvm] about rhel5 lvm
+Mime-Version: 1.0
+Content-Type: multipart/alternative;
+	boundary="=====003_Dragon025388545007_====="
+Message-Id: <465CE9DD.43C340.22055@m12-13.163.com>
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -20,17 +21,92 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: LVM general discussion and development <linux-lvm@redhat.com>
+To: LVM general discussion and devel <linux-lvm@redhat.com>
 
-iamboy_2000 wrote:
-> dear all:
-> 
->    when in rhel4,the command ext2online can extend the filesystem,but in rhel5,the ext2online is't exist,then what command can do this?
-> 
 
-Slightly OT but, but resize2fs can resize mounted filesystems in RHEL5
-(resize2fs and ext2online were merged).
+This is a multi-part message in MIME format.
 
-Regards,
-Dave
+--=====003_Dragon025388545007_=====
+Content-Type: text/plain;
+	charset="gb2312"
+Content-Transfer-Encoding: base64
+
+VGhhbmsgeW91ICEgDQoNCg0KDQoNCmlhbWJveV8yMDAwDQoyMDA3LTA1LTMwDQoNCg0KDQq3orz+
+yMujuiBEYXZpZCBSb2JpbnNvbg0Kt6LLzcqxvOSjuiAyMDA3LTA1LTMwIDEwOjU1OjU4DQrK1bz+
+yMujuiBMVk0gZ2VuZXJhbCBkaXNjdXNzaW9uIGFuZCBkZXZlbG9wbWVudA0Ks63LzaO6IA0K1vfM
+4qO6IFJlOiBbbGludXgtbHZtXSBhYm91dCByaGVsNSBsdm0NCg0KDQoNCg0KaWFtYm95XzIwMDAg
+d3JvdGU6DQo+ICBkZWFyIGFsbDoNCj4gIA0KPiAgICAgd2hlbiBpbiByaGVsNCx0aGUgY29tbWFu
+ZCBleHQyb25saW5lIGNhbiBleHRlbmQgdGhlIGZpbGVzeXN0ZW0sYnV0IGluIHJoZWw1LHRoZSBl
+eHQyb25saW5lIGlzJ3QgZXhpc3QsdGhlbiB3aGF0IGNvbW1hbmQgY2FuIGRvIHRoaXM/DQo+ICAN
+Cg0KU2xpZ2h0bHkgT1QgYnV0LCBidXQgcmVzaXplMmZzIGNhbiByZXNpemUgbW91bnRlZCBmaWxl
+c3lzdGVtcyBpbiBSSEVMNQ0KKHJlc2l6ZTJmcyBhbmQgZXh0Mm9ubGluZSB3ZXJlIG1lcmdlZCku
+DQoNClJlZ2FyZHMsDQpEYXZlDQoNCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fDQpsaW51eC1sdm0gbWFpbGluZyBsaXN0DQpsaW51eC1sdm1AcmVkaGF0LmNv
+bQ0KaHR0cHM6Ly93d3cucmVkaGF0LmNvbS9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWx2bQ0KcmVh
+ZCB0aGUgTFZNIEhPVy1UTyBhdCBodHRwOi8vdGxkcC5vcmcvSE9XVE8vTFZNLUhPV1RPLw0K
+
+--=====003_Dragon025388545007_=====
+Content-Type: text/html;
+	charset="gb2312"
+Content-Transfer-Encoding: base64
+
+PCFET0NUWVBFIEhUTUwgUFVCTElDICItLy9XM0MvL0RURCBIVE1MIDQuMCBUcmFuc2l0aW9uYWwv
+L0VOIj4NCjxIVE1MPjxIRUFEPg0KPE1FVEEgaHR0cC1lcXVpdj1Db250ZW50LVR5cGUgY29udGVu
+dD0idGV4dC9odG1sOyBjaGFyc2V0PWdiMjMxMiI+DQo8TUVUQSBjb250ZW50PSJNU0hUTUwgNi4w
+MC4yOTAwLjMwODYiIG5hbWU9R0VORVJBVE9SPg0KPFNUWUxFPg0KPCEtLQ0KIC8qIEZvbnQgRGVm
+aW5pdGlvbnMgKi8NCiBAZm9udC1mYWNlDQoJe2ZvbnQtZmFtaWx5OsvOzOU7DQoJcGFub3NlLTE6
+MiAxIDYgMCAzIDEgMSAxIDEgMTt9DQpAZm9udC1mYWNlDQoJe2ZvbnQtZmFtaWx5OlZlcmRhbmE7
+DQoJcGFub3NlLTE6MiAxMSA2IDQgMyA1IDQgNCAyIDQ7fQ0KQGZvbnQtZmFjZQ0KCXtmb250LWZh
+bWlseToiXEDLzszlIjsNCglwYW5vc2UtMToyIDEgNiAwIDMgMSAxIDEgMSAxO30NCiAvKiBTdHls
+ZSBEZWZpbml0aW9ucyAqLw0KIHAuTXNvTm9ybWFsLCBsaS5Nc29Ob3JtYWwsIGRpdi5Nc29Ob3Jt
+YWwNCgl7bWFyZ2luOjBjbTsNCgltYXJnaW4tYm90dG9tOi4wMDAxcHQ7DQoJdGV4dC1hbGlnbjpq
+dXN0aWZ5Ow0KCXRleHQtanVzdGlmeTppbnRlci1pZGVvZ3JhcGg7DQoJZm9udC1zaXplOjEwLjVw
+dDsNCglmb250LWZhbWlseToiVGltZXMgTmV3IFJvbWFuIjt9DQphOmxpbmssIHNwYW4uTXNvSHlw
+ZXJsaW5rDQoJe2NvbG9yOmJsdWU7DQoJdGV4dC1kZWNvcmF0aW9uOnVuZGVybGluZTt9DQphOnZp
+c2l0ZWQsIHNwYW4uTXNvSHlwZXJsaW5rRm9sbG93ZWQNCgl7Y29sb3I6cHVycGxlOw0KCXRleHQt
+ZGVjb3JhdGlvbjp1bmRlcmxpbmU7fQ0Kc3Bhbi5FbWFpbFN0eWxlMTcNCgl7bXNvLXN0eWxlLXR5
+cGU6cGVyc29uYWwtY29tcG9zZTsNCglmb250LWZhbWlseTpWZXJkYW5hOw0KCWNvbG9yOndpbmRv
+d3RleHQ7DQoJZm9udC13ZWlnaHQ6bm9ybWFsOw0KCWZvbnQtc3R5bGU6bm9ybWFsOw0KCXRleHQt
+ZGVjb3JhdGlvbjpub25lIG5vbmU7fQ0KIC8qIFBhZ2UgRGVmaW5pdGlvbnMgKi8NCiBAcGFnZSBT
+ZWN0aW9uMQ0KCXtzaXplOjU5NS4zcHQgODQxLjlwdDsNCgltYXJnaW46NzIuMHB0IDkwLjBwdCA3
+Mi4wcHQgOTAuMHB0Ow0KCWxheW91dC1ncmlkOjE1LjZwdDt9DQpkaXYuU2VjdGlvbjENCgl7cGFn
+ZTpTZWN0aW9uMTt9DQotLT4NCjwvU1RZTEU+DQo8L0hFQUQ+DQo8Qk9EWT4NCjxESVY+PEZPTlQg
+ZmFjZT1WZXJkYW5hIGNvbG9yPSMwMDAwZmYgc2l6ZT0yPlRoYW5rIHlvdSAhIDwvRk9OVD48L0RJ
+Vj4NCjxESVY+PEZPTlQgZmFjZT1WZXJkYW5hIHNpemU9Mj48L0ZPTlQ+Jm5ic3A7PC9ESVY+DQo8
+RElWIGFsaWduPWxlZnQ+DQo8RElWIGFsaWduPWxlZnQ+PEZPTlQgZmFjZT1WZXJkYW5hIHNpemU9
+Mj4NCjxIUiBzdHlsZT0iV0lEVEg6IDEyMnB4OyBIRUlHSFQ6IDJweCIgU0laRT0yPg0KPC9GT05U
+PjwvRElWPg0KPERJVj48Rk9OVCBjb2xvcj0jYzBjMGMwPjxGT05UIGZhY2U9VmVyZGFuYSBzaXpl
+PTI+aWFtYm95XzIwMDA8L0ZPTlQ+PC9ESVY+DQo8RElWPjxGT05UIGZhY2U9VmVyZGFuYSBzaXpl
+PTI+MjAwNy0wNS0zMDwvRk9OVD48L0ZPTlQ+PC9ESVY+PC9ESVY+DQo8RElWPjxGT05UIGZhY2U9
+VmVyZGFuYSBzaXplPTI+DQo8SFI+DQo8L0ZPTlQ+PC9ESVY+DQo8RElWPjxGT05UIGZhY2U9VmVy
+ZGFuYT48Rk9OVCBzaXplPTI+PFNUUk9ORz63orz+yMujujwvU1RST05HPiBEYXZpZCANClJvYmlu
+c29uPC9GT05UPjwvRk9OVD48L0RJVj4NCjxESVY+PEZPTlQgZmFjZT1WZXJkYW5hPjxGT05UIHNp
+emU9Mj48U1RST05HPreiy83Ksbzko7o8L1NUUk9ORz4gDQoyMDA3LTA1LTMwJm5ic3A7MTA6NTU6
+NTg8L0ZPTlQ+PC9GT05UPjwvRElWPg0KPERJVj48Rk9OVCBmYWNlPVZlcmRhbmE+PEZPTlQgc2l6
+ZT0yPjxTVFJPTkc+ytW8/sjLo7o8L1NUUk9ORz4gTFZNIGdlbmVyYWwgDQpkaXNjdXNzaW9uIGFu
+ZCBkZXZlbG9wbWVudDwvRk9OVD48L0ZPTlQ+PC9ESVY+DQo8RElWPjxGT05UIGZhY2U9VmVyZGFu
+YT48Rk9OVCBzaXplPTI+PFNUUk9ORz6zrcvNo7o8L1NUUk9ORz4gPC9GT05UPjwvRk9OVD48L0RJ
+Vj4NCjxESVY+PEZPTlQgZmFjZT1WZXJkYW5hPjxGT05UIHNpemU9Mj48U1RST05HPtb3zOKjujwv
+U1RST05HPiBSZTogW2xpbnV4LWx2bV0gYWJvdXQgDQpyaGVsNSBsdm08L0ZPTlQ+PC9GT05UPjwv
+RElWPg0KPERJVj48Rk9OVCBmYWNlPVZlcmRhbmEgc2l6ZT0yPjwvRk9OVD4mbmJzcDs8L0RJVj4N
+CjxESVY+PEZPTlQgZmFjZT1WZXJkYW5hIHNpemU9Mj4NCjxIUj4NCg0KPERJVj5pYW1ib3lfMjAw
+MCZuYnNwO3dyb3RlOjwvRElWPg0KPERJVj4mZ3Q7ICZuYnNwO2RlYXImbmJzcDthbGw6PC9ESVY+
+DQo8RElWPiZndDsgJm5ic3A7PC9ESVY+DQo8RElWPiZndDsgDQombmJzcDsmbmJzcDsmbmJzcDsm
+bmJzcDt3aGVuJm5ic3A7aW4mbmJzcDtyaGVsNCx0aGUmbmJzcDtjb21tYW5kJm5ic3A7ZXh0Mm9u
+bGluZSZuYnNwO2NhbiZuYnNwO2V4dGVuZCZuYnNwO3RoZSZuYnNwO2ZpbGVzeXN0ZW0sYnV0Jm5i
+c3A7aW4mbmJzcDtyaGVsNSx0aGUmbmJzcDtleHQyb25saW5lJm5ic3A7aXMndCZuYnNwO2V4aXN0
+LHRoZW4mbmJzcDt3aGF0Jm5ic3A7Y29tbWFuZCZuYnNwO2NhbiZuYnNwO2RvJm5ic3A7dGhpcz88
+L0RJVj4NCjxESVY+Jmd0OyAmbmJzcDs8L0RJVj4NCjxESVY+Jm5ic3A7PC9ESVY+DQo8RElWPlNs
+aWdodGx5Jm5ic3A7T1QmbmJzcDtidXQsJm5ic3A7YnV0Jm5ic3A7cmVzaXplMmZzJm5ic3A7Y2Fu
+Jm5ic3A7cmVzaXplJm5ic3A7bW91bnRlZCZuYnNwO2ZpbGVzeXN0ZW1zJm5ic3A7aW4mbmJzcDtS
+SEVMNTwvRElWPg0KPERJVj4ocmVzaXplMmZzJm5ic3A7YW5kJm5ic3A7ZXh0Mm9ubGluZSZuYnNw
+O3dlcmUmbmJzcDttZXJnZWQpLjwvRElWPg0KPERJVj4mbmJzcDs8L0RJVj4NCjxESVY+UmVnYXJk
+cyw8L0RJVj4NCjxESVY+RGF2ZTwvRElWPg0KPERJVj4mbmJzcDs8L0RJVj4NCjxESVY+X19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX188L0RJVj4NCjxESVY+bGlu
+dXgtbHZtJm5ic3A7bWFpbGluZyZuYnNwO2xpc3Q8L0RJVj4NCjxESVY+bGludXgtbHZtQHJlZGhh
+dC5jb208L0RJVj4NCjxESVY+aHR0cHM6Ly93d3cucmVkaGF0LmNvbS9tYWlsbWFuL2xpc3RpbmZv
+L2xpbnV4LWx2bTwvRElWPg0KPERJVj5yZWFkJm5ic3A7dGhlJm5ic3A7TFZNJm5ic3A7SE9XLVRP
+Jm5ic3A7YXQmbmJzcDtodHRwOi8vdGxkcC5vcmcvSE9XVE8vTFZNLUhPV1RPLzwvRElWPg0KPERJ
+Vj4mbmJzcDs8L0RJVj4NCjxIUj4NCjwvRk9OVD48L0RJVj48L0JPRFk+PC9IVE1MPg0K
+
+--=====003_Dragon025388545007_=====--
