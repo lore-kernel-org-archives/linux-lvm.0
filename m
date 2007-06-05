@@ -1,18 +1,24 @@
 Received: from mx2.redhat.com (mx2.redhat.com [10.255.15.25])
-	by int-mx2.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l55Iuhbt019056
-	for <linux-lvm@redhat.com>; Tue, 5 Jun 2007 14:56:44 -0400
+	by int-mx2.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l55Jv7SJ027831
+	for <linux-lvm@redhat.com>; Tue, 5 Jun 2007 15:57:14 -0400
 Received: from mailbox.simutronics.com (mailbox.simutronics.com
 	[209.16.217.35])
-	by mx2.redhat.com (8.13.1/8.13.1) with ESMTP id l55Itcu6005394
-	for <linux-lvm@redhat.com>; Tue, 5 Jun 2007 14:55:38 -0400
+	by mx2.redhat.com (8.13.1/8.13.1) with ESMTP id l55JtDDZ031238
+	for <linux-lvm@redhat.com>; Tue, 5 Jun 2007 15:55:13 -0400
+Received: from e3demo (jim.simutronics.com [209.16.216.93])
+	(authenticated bits=0)
+	by mailbox.simutronics.com (8.13.7/8.13.7) with ESMTP id l55Jt7iU022110
+	(version=TLSv1/SSLv3 cipher=RC4-MD5 bits=128 verify=NO)
+	for <linux-lvm@redhat.com>; Tue, 5 Jun 2007 14:55:07 -0500
 From: "James Miller" <jimm@simutronics.com>
-References: <075801c7a7a0$7fbdce60$5dd810d1@e3demo>
-Subject: Solved: RE: [linux-lvm] CLVMD and Locking type 3 initialisation failed
-Date: Tue, 5 Jun 2007 13:55:32 -0500
-Message-ID: <076c01c7a7a3$181a40b0$5dd810d1@e3demo>
+References: 
+Date: Tue, 5 Jun 2007 14:55:07 -0500
+Message-ID: <078001c7a7ab$6ae46e30$5dd810d1@e3demo>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
-In-Reply-To: <075801c7a7a0$7fbdce60$5dd810d1@e3demo>
+In-Reply-To: 
+Subject: [linux-lvm] SolvedLRE: CLVMD and Locking type 3 initialisation
+	failed
 Reply-To: jimm@simutronics.com,
 	LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
@@ -25,20 +31,15 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: jimm@simutronics.com, 'LVM general discussion and development' <linux-lvm@redhat.com>
+To: linux-lvm@redhat.com
 
-Sorry for the top posting!!!
-
-For Debian lvm2 you have to set the locking_type=2.  It's in the lvm2 source
-clvm.README.Debian.
 
 
 > -----Original Message-----
-> From: linux-lvm-bounces@redhat.com 
-> [mailto:linux-lvm-bounces@redhat.com] On Behalf Of James Miller
+> From: James Miller 
 > Sent: Tuesday, June 05, 2007 1:37 PM
 > To: linux-lvm@redhat.com
-> Subject: [linux-lvm] CLVMD and Locking type 3 initialisation failed
+> Subject: CLVMD and Locking type 3 initialisation failed
 > 
 > Hello everyone,
 > 
@@ -159,15 +160,40 @@ clvm.README.Debian.
 > lock_harness           10160  1 lock_dlm
 > ----------------------------------
 > 
-> 
-> Thank you in advance for your help
-> 
-> 
-> --Jim
-> 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
-> 
+
+
+For Debian lvm2 you have to set the locking_type=2.  It's in the lvm2 source
+debian/clvm.README.Debian 
+
+However, now that I have ccsd, cman and clvmd happily running (I discovered
+I had clvmd running ok when I could run LVM commands).  On both computers in
+my cluster, I'm still not seeing the volume group of the other cluster
+member.  And the status of my Clustser seems fine.  
+
+Is there anything I'm missing or doing wrong?  I'm not running a SAN or
+iSCSI.  The PVs for each server are partitions I've created from the HW
+Raid.
+
+The only anomaly I'm seeing is in /var/log/messages.  I am getting a kernel
+cluster error for one of my nodes:
+CMAN: WARNING no listener for port 11 on node seldon.  I don't know what the
+error even means, since I thought traffic when over port 6809.
+
+Anyway here's some info:
+Server1	Server2
+Hari		Seldon
+
+LVM info:
+PVs:
+/dev/sda5	/devsda5
+/dev/sda6	/devsda6
+/dev/sda7	/devsda7
+Volume Group Info:
+hari-vg01	seldon-vg01
+
+
+I guess I don't really understand how clvm work.
+
+
+
+--Jim
