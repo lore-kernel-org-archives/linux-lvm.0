@@ -1,22 +1,19 @@
-Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l56JcVVK007005
-	for <linux-lvm@redhat.com>; Wed, 6 Jun 2007 15:38:31 -0400
-Received: from mailbox.simutronics.com (mailbox.simutronics.com
-	[209.16.217.35])
-	by mx1.redhat.com (8.13.1/8.13.1) with ESMTP id l56JcR5n023918
-	for <linux-lvm@redhat.com>; Wed, 6 Jun 2007 15:38:27 -0400
-Received: from e3demo (jim.simutronics.com [209.16.216.93])
-	(authenticated bits=0)
-	by mailbox.simutronics.com (8.13.7/8.13.7) with ESMTP id l56JcLX3012607
-	(version=TLSv1/SSLv3 cipher=RC4-MD5 bits=128 verify=NO)
-	for <linux-lvm@redhat.com>; Wed, 6 Jun 2007 14:38:21 -0500
-From: "James Miller" <jimm@simutronics.com>
-Date: Wed, 6 Jun 2007 14:38:21 -0500
-Message-ID: <082001c7a872$3d662170$5dd810d1@e3demo>
-MIME-Version: 1.0
+Received: from mx2.redhat.com (mx2.redhat.com [10.255.15.25])
+	by int-mx2.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l58FPIX3025335
+	for <linux-lvm@redhat.com>; Fri, 8 Jun 2007 11:25:18 -0400
+Received: from ureach.com (mail31.ureach.com [63.236.74.67])
+	by mx2.redhat.com (8.13.1/8.13.1) with ESMTP id l58FOVbc021450
+	for <linux-lvm@redhat.com>; Fri, 8 Jun 2007 11:24:31 -0400
+Received: from www22.ureach.com (www22.ureach.com [172.16.2.50])
+	by ureach.com (8.13.6/8.13.6) with ESMTP id l58FOPCt006649
+	for <linux-lvm@redhat.com>; Fri, 8 Jun 2007 11:24:25 -0400
+Date: Fri, 8 Jun 2007 11:24:25 -0400
+Message-Id: <200706081524.LAA14129@www22.ureach.com>
+From: Daniel Matters <matters12@ureach.com>
+Mime-Version: 1.0
 Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] Unlocking a locked lv
-Reply-To: jimm@simutronics.com,
+Subject: [linux-lvm] lvmcreate_initrd problem
+Reply-To: matters12@ureach.com,
 	LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -27,34 +24,32 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: Text/Plain; charset="us-ascii"
 To: linux-lvm@redhat.com
 
-Hello everyone,
+Im having trouble create initrd using lvmcreate_initrd when
+mounting root lvm, and /boot ext3 and all other lvm
+(usr,var,opt,home) from slack 11dvd
 
-Hopefully this time I might get a response ;)
+Heres the log:
 
-I REALLY just want to get rid of all volume groups, but I can't.  I was
-doing a pvmove (and I'm using clmvd so locking it set to 2) and the process
-hung.  Now I can't delete the lv (called) test nor the hung pvmove0.
+lvmcreate_initrd 2.6.18
 
-vgremove -v hari-vg01
-    Loaded external locking library liblvm2clusterlock.so
-    Using volume group(s) on command line
-    Finding volume group "hari-vg01"
-  Volume group "hari-vg01" still contains 2 logical volume(s)
+lvmcreate_initrd -- make LVM initial ram disk
+/boot/initrd-lvm-2.6.18.gz
 
-
-lvremove -v -f hari-vg01 test
-   Loaded external locking library liblvm2clusterlock.so
-   Using logical volume(s) on command line
- Can't remove locked LV test
- Can't remove locked LV pvmove0
-   Wiping cache of LVM-capable devices
- Volume group "test" not found
-
-When I try to activate hari-vg01 it just hangs. I've tried to set locking to
-0 but no lock.
+lvmcreate_initrd -- finding required shared libraries
+lvmcreate_initrd -- stripping shared libraries
+cp: cannot stat `(0xffffe000)': No such file or directory
+lvmcreate_initrd -- ERROR copying shared library (0xffffe000) go
+ram disk
 
 
---Jim
+Wondering where is the problem, and what means
+cp: cannot stat `(0xffffe000)': No such file or directory ?
+
+
+________________________________________________
+Get your own "800" number
+Voicemail, fax, email, and a lot more
+http://www.ureach.com/reg/tag
