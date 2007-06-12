@@ -1,20 +1,21 @@
 Received: from mx2.redhat.com (mx2.redhat.com [10.255.15.25])
-	by int-mx2.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l58FPIX3025335
-	for <linux-lvm@redhat.com>; Fri, 8 Jun 2007 11:25:18 -0400
-Received: from ureach.com (mail31.ureach.com [63.236.74.67])
-	by mx2.redhat.com (8.13.1/8.13.1) with ESMTP id l58FOVbc021450
-	for <linux-lvm@redhat.com>; Fri, 8 Jun 2007 11:24:31 -0400
-Received: from www22.ureach.com (www22.ureach.com [172.16.2.50])
-	by ureach.com (8.13.6/8.13.6) with ESMTP id l58FOPCt006649
-	for <linux-lvm@redhat.com>; Fri, 8 Jun 2007 11:24:25 -0400
-Date: Fri, 8 Jun 2007 11:24:25 -0400
-Message-Id: <200706081524.LAA14129@www22.ureach.com>
-From: Daniel Matters <matters12@ureach.com>
+	by int-mx2.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l5CJqAxh020501
+	for <linux-lvm@redhat.com>; Tue, 12 Jun 2007 15:52:10 -0400
+Received: from postalmail-a1.g.dreamhost.com (sd-green-bigip-74.dreamhost.com
+	[208.97.132.74])
+	by mx2.redhat.com (8.13.1/8.13.1) with ESMTP id l5CJq72I013237
+	for <linux-lvm@redhat.com>; Tue, 12 Jun 2007 15:52:07 -0400
+Received: from [192.168.12.113]
+	(82-46-27-208.cable.ubr02.hawk.blueyonder.co.uk [82.46.27.208])
+	by postalmail-a1.g.dreamhost.com (Postfix) with ESMTP id 9FA568990
+	for <linux-lvm@redhat.com>; Tue, 12 Jun 2007 12:52:06 -0700 (PDT)
+From: Dave Fear <david@dfear.info>
+Date: Tue, 12 Jun 2007 20:51:43 +0100
+Message-Id: <1181677903.19437.7.camel@osiris.home.dfear.info>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] lvmcreate_initrd problem
-Reply-To: matters12@ureach.com,
-	LVM general discussion and development <linux-lvm@redhat.com>
+Subject: [linux-lvm] devsize problems
+Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -24,32 +25,44 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: Text/Plain; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@redhat.com
 
-Im having trouble create initrd using lvmcreate_initrd when
-mounting root lvm, and /boot ext3 and all other lvm
-(usr,var,opt,home) from slack 11dvd
+Hi
 
-Heres the log:
+I have a problem with device-mapper and/or lvm.
 
-lvmcreate_initrd 2.6.18
+"vgchange -ay" outputs:
 
-lvmcreate_initrd -- make LVM initial ram disk
-/boot/initrd-lvm-2.6.18.gz
+root@ubuntu:/home/ubuntu# vgchange -ay
+  device-mapper: reload ioctl failed: Invalid argument
+  device-mapper: reload ioctl failed: Invalid argument
+  device-mapper: reload ioctl failed: Invalid argument
+  device-mapper: reload ioctl failed: Invalid argument
+  device-mapper: reload ioctl failed: Invalid argument
+  device-mapper: reload ioctl failed: Invalid argument
+  6 logical volume(s) in volume group "vgroot" now active
 
-lvmcreate_initrd -- finding required shared libraries
-lvmcreate_initrd -- stripping shared libraries
-cp: cannot stat `(0xffffe000)': No such file or directory
-lvmcreate_initrd -- ERROR copying shared library (0xffffe000) go
-ram disk
+and "dmesg | tail" outputs:
 
+root@ubuntu:/home/ubuntu# dmesg | tail
+[12363.172000] device-mapper: table: 254:0: linear: dm-linear: Device
+lookup failed
+[12363.172000] device-mapper: ioctl: error adding target to table
+[12363.256000] device-mapper: table: device 3:2 too small for target
+**** above lines repeats 5 more times, the only difference is the number
+after "table 254:    ".
 
-Wondering where is the problem, and what means
-cp: cannot stat `(0xffffe000)': No such file or directory ?
+therefore:
 
+the error seems to be "device 3:2 too small for target" and "pvs -o
++dev_size" prints incorrect dev_size.
 
-________________________________________________
-Get your own "800" number
-Voicemail, fax, email, and a lot more
-http://www.ureach.com/reg/tag
+how do i fix this?
+
+-- 
+-----------------------------------
+Dave Fear :: david@dfear.info
+Skype: dpfear
+GPG: key ID - 805B3D54
+GPG: server - wwwkeys.eu.pgp.net
