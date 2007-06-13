@@ -1,20 +1,18 @@
 Received: from mx2.redhat.com (mx2.redhat.com [10.255.15.25])
-	by int-mx2.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l5CJqAxh020501
-	for <linux-lvm@redhat.com>; Tue, 12 Jun 2007 15:52:10 -0400
-Received: from postalmail-a1.g.dreamhost.com (sd-green-bigip-74.dreamhost.com
-	[208.97.132.74])
-	by mx2.redhat.com (8.13.1/8.13.1) with ESMTP id l5CJq72I013237
-	for <linux-lvm@redhat.com>; Tue, 12 Jun 2007 15:52:07 -0400
-Received: from [192.168.12.113]
-	(82-46-27-208.cable.ubr02.hawk.blueyonder.co.uk [82.46.27.208])
-	by postalmail-a1.g.dreamhost.com (Postfix) with ESMTP id 9FA568990
-	for <linux-lvm@redhat.com>; Tue, 12 Jun 2007 12:52:06 -0700 (PDT)
-From: Dave Fear <david@dfear.info>
-Date: Tue, 12 Jun 2007 20:51:43 +0100
-Message-Id: <1181677903.19437.7.camel@osiris.home.dfear.info>
-Mime-Version: 1.0
+	by int-mx2.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l5D1qttc007407
+	for <linux-lvm@redhat.com>; Tue, 12 Jun 2007 21:52:56 -0400
+Received: from an-out-0708.google.com (an-out-0708.google.com [209.85.132.240])
+	by mx2.redhat.com (8.13.1/8.13.1) with ESMTP id l5D1qsku017997
+	for <linux-lvm@redhat.com>; Tue, 12 Jun 2007 21:52:54 -0400
+Received: by an-out-0708.google.com with SMTP id c31so10675ana
+	for <linux-lvm@redhat.com>; Tue, 12 Jun 2007 18:52:54 -0700 (PDT)
+Message-ID: <89f9efee0706121852rb00a21oab00877f4af43dfd@mail.gmail.com>
+Date: Tue, 12 Jun 2007 21:52:54 -0400
+From: "Leonard Smith" <lrsmith@gmail.com>
+MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] devsize problems
+Content-Disposition: inline
+Subject: [linux-lvm] LVM2 resync speed problems
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -25,44 +23,36 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: linux-lvm@redhat.com
 
-Hi
+I am running CentOS4.4 on  two "black" box systems that are
+identically configured. Both have 500 GB internal drives, ( same type)
+and were installed using the same kickstart configuration. The drives
+are being mirrored using LVM.
 
-I have a problem with device-mapper and/or lvm.
+When I check the first system it is re-syncing and the resync time and speed are
 
-"vgchange -ay" outputs:
+finish=18559.6min speed=355K/sec
 
-root@ubuntu:/home/ubuntu# vgchange -ay
-  device-mapper: reload ioctl failed: Invalid argument
-  device-mapper: reload ioctl failed: Invalid argument
-  device-mapper: reload ioctl failed: Invalid argument
-  device-mapper: reload ioctl failed: Invalid argument
-  device-mapper: reload ioctl failed: Invalid argument
-  device-mapper: reload ioctl failed: Invalid argument
-  6 logical volume(s) in volume group "vgroot" now active
+On the second system the time and speed are
 
-and "dmesg | tail" outputs:
+finish=89.5min speed=68170K/sec
 
-root@ubuntu:/home/ubuntu# dmesg | tail
-[12363.172000] device-mapper: table: 254:0: linear: dm-linear: Device
-lookup failed
-[12363.172000] device-mapper: ioctl: error adding target to table
-[12363.256000] device-mapper: table: device 3:2 too small for target
-**** above lines repeats 5 more times, the only difference is the number
-after "table 254:    ".
+I can't figure out why the speeds are different between the two. I
+checked /proc/sys/dev/raid/speed_limit_ and they are the same. The
+priority of the md proceses are they same.
 
-therefore:
+I tweaked the setting of the speel_limit_min and increase the nice
+priority of the resync process, on the first box, but I could never
+get it better than
 
-the error seems to be "device 3:2 too small for target" and "pvs -o
-+dev_size" prints incorrect dev_size.
+finish=4551.8min speed=1445K/sec
 
-how do i fix this?
 
--- 
------------------------------------
-Dave Fear :: david@dfear.info
-Skype: dpfear
-GPG: key ID - 805B3D54
-GPG: server - wwwkeys.eu.pgp.net
+I've googled and I haven't found much more useful information that to
+adjust those settings. Besides those setting what else dictates the
+speed used?
+
+Thanks,
+Len
