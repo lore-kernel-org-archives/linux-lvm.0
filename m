@@ -1,17 +1,19 @@
 Received: from mx2.redhat.com (mx2.redhat.com [10.255.15.25])
-	by int-mx2.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l5D1qttc007407
-	for <linux-lvm@redhat.com>; Tue, 12 Jun 2007 21:52:56 -0400
-Received: from an-out-0708.google.com (an-out-0708.google.com [209.85.132.240])
-	by mx2.redhat.com (8.13.1/8.13.1) with ESMTP id l5D1qsku017997
-	for <linux-lvm@redhat.com>; Tue, 12 Jun 2007 21:52:54 -0400
-Received: by an-out-0708.google.com with SMTP id c31so10675ana
-	for <linux-lvm@redhat.com>; Tue, 12 Jun 2007 18:52:54 -0700 (PDT)
-Message-ID: <89f9efee0706121852rb00a21oab00877f4af43dfd@mail.gmail.com>
-Date: Tue, 12 Jun 2007 21:52:54 -0400
+	by int-mx2.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l5DJ5drM028461
+	for <linux-lvm@redhat.com>; Wed, 13 Jun 2007 15:05:39 -0400
+Received: from an-out-0708.google.com (an-out-0708.google.com [209.85.132.242])
+	by mx2.redhat.com (8.13.1/8.13.1) with ESMTP id l5DJ5bZU022785
+	for <linux-lvm@redhat.com>; Wed, 13 Jun 2007 15:05:37 -0400
+Received: by an-out-0708.google.com with SMTP id c31so77343ana
+	for <linux-lvm@redhat.com>; Wed, 13 Jun 2007 12:05:37 -0700 (PDT)
+Message-ID: <89f9efee0706131205y62cc705dve2cbeef28dfe2f36@mail.gmail.com>
+Date: Wed, 13 Jun 2007 15:05:36 -0400
 From: "Leonard Smith" <lrsmith@gmail.com>
+In-Reply-To: <89f9efee0706121852rb00a21oab00877f4af43dfd@mail.gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
 Content-Disposition: inline
+References: <89f9efee0706121852rb00a21oab00877f4af43dfd@mail.gmail.com>
 Subject: [linux-lvm] LVM2 resync speed problems
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
