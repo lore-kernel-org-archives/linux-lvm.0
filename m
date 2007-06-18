@@ -1,19 +1,26 @@
 Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l5IJEfiK024266
-	for <linux-lvm@redhat.com>; Mon, 18 Jun 2007 15:14:41 -0400
-Received: from mail.ukfsn.org (s2.ukfsn.org [217.158.120.143])
-	by mx1.redhat.com (8.13.1/8.13.1) with ESMTP id l5IJEcaV031415
-	for <linux-lvm@redhat.com>; Mon, 18 Jun 2007 15:14:38 -0400
-Message-ID: <4676D97E.4000403@dgreaves.com>
-Date: Mon, 18 Jun 2007 20:14:06 +0100
-From: David Greaves <david@dgreaves.com>
-MIME-Version: 1.0
-Subject: Re: [linux-lvm] 2.6.22-rc4 XFS fails after hibernate/resume
-References: <46744065.6060605@dgreaves.com> <4674645F.5000906@gmail.com>
-	<46751D37.5020608@dgreaves.com> <4676390E.6010202@dgreaves.com>
-	<20070618145007.GE85884050@sgi.com>
-In-Reply-To: <20070618145007.GE85884050@sgi.com>
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l5ILGNTj011669
+	for <linux-lvm@redhat.com>; Mon, 18 Jun 2007 17:16:23 -0400
+Received: from ciao.gmane.org (main.gmane.org [80.91.229.2])
+	by mx1.redhat.com (8.13.1/8.13.1) with ESMTP id l5ILGKbl020038
+	for <linux-lvm@redhat.com>; Mon, 18 Jun 2007 17:16:20 -0400
+Received: from list by ciao.gmane.org with local (Exim 4.43)
+	id 1I0Oa5-0002Xq-2n
+	for linux-lvm@redhat.com; Mon, 18 Jun 2007 23:16:13 +0200
+Received: from p57a0c993.dip.t-dialin.net ([87.160.201.147])
+	by main.gmane.org with esmtp (Gmexim 0.1 (Debian))
+	id 1AlnuQ-0007hv-00
+	for <linux-lvm@redhat.com>; Mon, 18 Jun 2007 23:16:13 +0200
+Received: from gator_ml by p57a0c993.dip.t-dialin.net with local (Gmexim 0.1
+	(Debian)) id 1AlnuQ-0007hv-00
+	for <linux-lvm@redhat.com>; Mon, 18 Jun 2007 23:16:13 +0200
+From: Peter Daum <gator_ml@yahoo.de>
+Date: Mon, 18 Jun 2007 23:16:03 +0200
+Message-ID: <f56smj$275$1@sea.gmane.org>
+Mime-Version: 1.0
 Content-Transfer-Encoding: 7bit
+Sender: news <news@sea.gmane.org>
+Subject: [linux-lvm] pvresize after extending RAID array
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -24,55 +31,52 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: David Chinner <dgc@sgi.com>
-Cc: linux-pm <linux-pm@lists.osdl.org>, "'linux-kernel@vger.kernel.org'" <linux-kernel@vger.kernel.org>, xfs@oss.sgi.com, LinuxRaid <linux-raid@vger.kernel.org>, LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="us-ascii"
+To: linux-lvm@redhat.com
 
-OK, just an quick ack
+I have a physical volume consisting of 1 hardware raid array (/dev/sdb).
+Now I added some disks to the raid array, extending its size from 4.5
+to ~6 TB. The kernel (Linux 2.6.16.51) now correctly reports the new
+device size:
 
-When I resumed tonight (having done a freeze/thaw over the suspend) some libata 
-errors threw up during the resume and there was an eventual hard hang. Maybe I 
-spoke to soon?
+# cat /sys/block/sdb/size
+12695042048
 
-I'm going to have to do some more testing...
+From reading the manuals I got the impression, that all that is needed
+to be able to use the additional space is "pvresize /dev/sdb".
+Unfortunately, it looks like pvresize insists on the old device size:
 
-David Chinner wrote:
-> On Mon, Jun 18, 2007 at 08:49:34AM +0100, David Greaves wrote:
->> David Greaves wrote:
->> So doing:
->> xfs_freeze -f /scratch
->> sync
->> echo platform > /sys/power/disk
->> echo disk > /sys/power/state
->> # resume
->> xfs_freeze -u /scratch
->>
->> Works (for now - more usage testing tonight)
-> 
-> Verrry interesting.
-Good :)
+# pvresize -v  -d  /dev/sdb
+File descriptor 3 left open
+    Using physical volume(s) on command line
+    Archiving volume group "raid6_12" metadata (seqno 19).
+    No change to size of physical volume /dev/sdb.
+    Resizing volume "/dev/sdb" to 9765416576 sectors.
+    Updating physical volume "/dev/sdb"
+    Creating volume group backup "/etc/lvm/backup/raid6_12" (seqno 20).
+  Physical volume "/dev/sdb" changed
+  1 physical volume(s) resized / 0 physical volume(s) not resized
 
+Did I miss something? Is there anything to worry about or should I just
+go ahead and set the new device size manually:
+# pvresize -v  -d --setphysicalvolumesize 6347521024k /dev/sdb
+File descriptor 3 left open
+    Using physical volume(s) on command line
+    Archiving volume group "raid6_12" metadata (seqno 22).
+  WARNING: /dev/sdb: Overriding real size. You could lose data.
+    /dev/sdb: Pretending size is 12695042048 not 12695035904 sectors.
+    No change to size of physical volume /dev/sdb.
+    Resizing volume "/dev/sdb" to 12695041664 sectors.
+    Updating physical volume "/dev/sdb"
+    Creating volume group backup "/etc/lvm/backup/raid6_12" (seqno 23).
+  Physical volume "/dev/sdb" changed
+  1 physical volume(s) resized / 0 physical volume(s) not resized
 
-> What you were seeing was an XFS shutdown occurring because the free space
-> btree was corrupted. IOWs, the process of suspend/resume has resulted
-> in either bad data being written to disk, the correct data not being
-> written to disk or the cached block being corrupted in memory.
-That's the kind of thing I was suspecting, yes.
+In this case, pvresize comes up with yet another size for the device
+(12695035904 sectors) - is this the actual size of the device minus
+the space needed for lvm's metadata? Should I manually set to this?
 
-> If you run xfs_check on the filesystem after it has shut down after a resume,
-> can you tell us if it reports on-disk corruption? Note: do not run xfs_repair
-> to check this - it does not check the free space btrees; instead it simply
-> rebuilds them from scratch. If xfs_check reports an error, then run xfs_repair
-> to fix it up.
-OK, I can try this tonight...
+Any comments?
 
-> FWIW, I'm on record stating that "sync" is not sufficient to quiesce an XFS
-> filesystem for a suspend/resume to work safely and have argued that the only
-> safe thing to do is freeze the filesystem before suspend and thaw it after
-> resume. This is why I originally asked you to test that with the other problem
-> that you reported. Up until this point in time, there's been no evidence to
-> prove either side of the argument......
-> 
-> Cheers,
-> 
-> Dave.
+Regards,
+                          Peter Daum
