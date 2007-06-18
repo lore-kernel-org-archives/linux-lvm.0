@@ -1,18 +1,29 @@
 Received: from mx2.redhat.com (mx2.redhat.com [10.255.15.25])
-	by int-mx2.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l5I7njHW002074
-	for <linux-lvm@redhat.com>; Mon, 18 Jun 2007 03:49:45 -0400
-Received: from mail.ukfsn.org (s2.ukfsn.org [217.158.120.143])
-	by mx2.redhat.com (8.13.1/8.13.1) with ESMTP id l5I7nh8j004095
-	for <linux-lvm@redhat.com>; Mon, 18 Jun 2007 03:49:43 -0400
-Message-ID: <4676390E.6010202@dgreaves.com>
-Date: Mon, 18 Jun 2007 08:49:34 +0100
-From: David Greaves <david@dgreaves.com>
+	by int-mx2.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l5II5p3w004480
+	for <linux-lvm@redhat.com>; Mon, 18 Jun 2007 14:05:52 -0400
+Received: from carpentier.vpsland.com (carpentier.vpsland.com [207.210.113.97])
+	by mx2.redhat.com (8.13.1/8.13.1) with ESMTP id l5II5od8022046
+	for <linux-lvm@redhat.com>; Mon, 18 Jun 2007 14:05:50 -0400
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by carpentier.vpsland.com (Postfix) with ESMTP id 8B65018228
+	for <linux-lvm@redhat.com>; Mon, 18 Jun 2007 20:05:48 +0200 (CEST)
+Received: from carpentier.vpsland.com ([127.0.0.1])
+	by localhost (carpentier.vpsland.com [127.0.0.1]) (amavisd-new,
+	port 10024) with ESMTP id TVWLPzDfuzZD for <linux-lvm@redhat.com>;
+	Mon, 18 Jun 2007 20:04:57 +0200 (CEST)
+Received: from soetens.vdberg.org (h8441201224.dsl.speedlinq.nl
+	[84.41.201.224])
+	by carpentier.vpsland.com (Postfix) with ESMTP id 1783C18227
+	for <linux-lvm@redhat.com>; Mon, 18 Jun 2007 20:04:56 +0200 (CEST)
+Received: from [192.168.0.34] (h8441201224.dsl.speedlinq.nl [84.41.201.224])
+	by soetens.vdberg.org (Postfix) with ESMTP id 880A714C50C
+	for <linux-lvm@redhat.com>; Mon, 18 Jun 2007 20:04:56 +0200 (CEST)
+Message-ID: <4676C948.5020602@vdberg.org>
+Date: Mon, 18 Jun 2007 20:04:56 +0200
+From: Richard van den Berg <richard@vdberg.org>
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] 2.6.22-rc4 XFS fails after hibernate/resume
-References: <46744065.6060605@dgreaves.com> <4674645F.5000906@gmail.com>
-	<46751D37.5020608@dgreaves.com>
-In-Reply-To: <46751D37.5020608@dgreaves.com>
 Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] vgsplit needs lvs on source vg to be inactive
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -23,64 +34,38 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: David Robinson <zxvdr.au@gmail.com>
-Cc: LinuxRaid <linux-raid@vger.kernel.org>, xfs@oss.sgi.com, linux-pm <linux-pm@lists.osdl.org>, "'linux-kernel@vger.kernel.org'" <linux-kernel@vger.kernel.org>, LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="us-ascii"
+To: linux-lvm@redhat.com
 
-David Greaves wrote:
-> David Robinson wrote:
->> David Greaves wrote:
->>> This isn't a regression.
->>>
->>> I was seeing these problems on 2.6.21 (but 22 was in -rc so I waited 
->>> to try it).
->>> I tried 2.6.22-rc4 (with Tejun's patches) to see if it had improved - 
->>> no.
->>>
->>> Note this is a different (desktop) machine to that involved my recent 
->>> bugs.
->>>
->>> The machine will work for days (continually powered up) without a 
->>> problem and then exhibits a filesystem failure within minutes of a 
->>> resume.
+Today I decided to unmirror part of my lvm2 disks. I started off with
+vg00 on top of md1 (raid1). I wanted end up with vg00 on top of md2
+(raid1) and vg01 on top of sda3 and sdb3 (concatenation). I've come all
+the way to have vg00 on top off md2 and sdb3. The last step would be to
+split off sda3 into vg01 and add sda3 to it.
 
-<snip>
+The error I am getting is:
 
-> OK, that gave me an idea.
-> 
-> Freeze the filesystem
-> md5sum the lvm
-> hibernate
-> resume
-> md5sum the lvm
-<snip>
-> So the lvm and below looks OK...
-> 
-> I'll see how it behaves now the filesystem has been frozen/thawed over 
-> the hibernate...
+# vgsplit -v vg00 vg01 /dev/sdb3
+    Checking for volume group "vg00"
+    Checking for volume group "vg01"
+    Wiping cache of LVM-capable devices
+  Logical volumes in "vg00" must be inactive
 
+I did deactivate (lvchange) the lv that is using /dev/sdb3. But that
+doesn't seem enough. Does vgsplit actually need ALL lvs to be inactive?
+This makes little sense to me since the other lvs are not affected at
+all by vgsplit.
 
-And it appears to behave well. (A few hours compile/clean cycling kernel builds 
-on that filesystem were OK).
+I've found
+http://www.redhat.com/archives/fedora-list/2007-January/msg03485.html
+which suggests that vgsplit can only be done with all lvs inactive. This
+would be mean booting from a cdrom for me as my root filesystem is on
+vg00. So far I have been doing all this online, and I'd like to keep it
+that way.
 
+Is this at all possible? Can someone confirm that vgsplit needs all lvs
+on the source vg to be inactive?
 
-Historically I've done:
-sync
-echo platform > /sys/power/disk
-echo disk > /sys/power/state
-# resume
+Sincerely,
 
-and had filesystem corruption (only on this machine, my other hibernating xfs 
-machines don't have this problem)
-
-So doing:
-xfs_freeze -f /scratch
-sync
-echo platform > /sys/power/disk
-echo disk > /sys/power/state
-# resume
-xfs_freeze -u /scratch
-
-Works (for now - more usage testing tonight)
-
-David
+Richard van den Berg
