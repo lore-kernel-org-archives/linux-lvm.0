@@ -1,16 +1,17 @@
 Received: from mx2.redhat.com (mx2.redhat.com [10.255.15.25])
-	by int-mx2.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l5HBcfi1019377
-	for <linux-lvm@redhat.com>; Sun, 17 Jun 2007 07:38:41 -0400
+	by int-mx2.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l5I7njHW002074
+	for <linux-lvm@redhat.com>; Mon, 18 Jun 2007 03:49:45 -0400
 Received: from mail.ukfsn.org (s2.ukfsn.org [217.158.120.143])
-	by mx2.redhat.com (8.13.1/8.13.1) with ESMTP id l5HBcd5Q027787
-	for <linux-lvm@redhat.com>; Sun, 17 Jun 2007 07:38:39 -0400
-Message-ID: <46751D37.5020608@dgreaves.com>
-Date: Sun, 17 Jun 2007 12:38:31 +0100
+	by mx2.redhat.com (8.13.1/8.13.1) with ESMTP id l5I7nh8j004095
+	for <linux-lvm@redhat.com>; Mon, 18 Jun 2007 03:49:43 -0400
+Message-ID: <4676390E.6010202@dgreaves.com>
+Date: Mon, 18 Jun 2007 08:49:34 +0100
 From: David Greaves <david@dgreaves.com>
 MIME-Version: 1.0
 Subject: Re: [linux-lvm] 2.6.22-rc4 XFS fails after hibernate/resume
 References: <46744065.6060605@dgreaves.com> <4674645F.5000906@gmail.com>
-In-Reply-To: <4674645F.5000906@gmail.com>
+	<46751D37.5020608@dgreaves.com>
+In-Reply-To: <46751D37.5020608@dgreaves.com>
 Content-Transfer-Encoding: 7bit
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
@@ -26,87 +27,60 @@ Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: David Robinson <zxvdr.au@gmail.com>
 Cc: LinuxRaid <linux-raid@vger.kernel.org>, xfs@oss.sgi.com, linux-pm <linux-pm@lists.osdl.org>, "'linux-kernel@vger.kernel.org'" <linux-kernel@vger.kernel.org>, LVM general discussion and development <linux-lvm@redhat.com>
 
-David Robinson wrote:
-> David Greaves wrote:
->> This isn't a regression.
->>
->> I was seeing these problems on 2.6.21 (but 22 was in -rc so I waited 
->> to try it).
->> I tried 2.6.22-rc4 (with Tejun's patches) to see if it had improved - no.
->>
->> Note this is a different (desktop) machine to that involved my recent 
->> bugs.
->>
->> The machine will work for days (continually powered up) without a 
->> problem and then exhibits a filesystem failure within minutes of a 
->> resume.
->>
->> I know xfs/raid are OK with hibernate. Is lvm?
+David Greaves wrote:
+> David Robinson wrote:
+>> David Greaves wrote:
+>>> This isn't a regression.
+>>>
+>>> I was seeing these problems on 2.6.21 (but 22 was in -rc so I waited 
+>>> to try it).
+>>> I tried 2.6.22-rc4 (with Tejun's patches) to see if it had improved - 
+>>> no.
+>>>
+>>> Note this is a different (desktop) machine to that involved my recent 
+>>> bugs.
+>>>
+>>> The machine will work for days (continually powered up) without a 
+>>> problem and then exhibits a filesystem failure within minutes of a 
+>>> resume.
+
+<snip>
+
+> OK, that gave me an idea.
 > 
-> I have LVM working with hibernate w/o any problems (w/ ext3). If there 
-> were a problem it wouldn't be with LVM but with device-mapper, and I 
-> doubt there's a problem with either. The stack trace shows that you're 
-> within XFS code (but it's likely its hibernate).
-
-Thanks - that's good to know.
-The suspicion arises because I have xfs on raid1 as root and have *never* had a 
-problem with that filesystem. It's *always* xfs on lvm on raid5. I also have 
-another system (previously discussed) that reliably hibernated xfs on raid6.
-
-(Clearly raid5 is in my suspect list)
-
-> You can easily check whether its LVM/device-mapper:
+> Freeze the filesystem
+> md5sum the lvm
+> hibernate
+> resume
+> md5sum the lvm
+<snip>
+> So the lvm and below looks OK...
 > 
-> 1) check "dmsetup table" - it should be the same before hibernating and 
-> after resuming.
-> 
-> 2) read directly from the LV - ie, "dd if=/dev/mapper/video_vg-video_lv 
-> of=/dev/null bs=10M count=200".
-> 
-> If dmsetup shows the same info and you can read directly from the LV I 
-> doubt it would be a LVM/device-mapper problem.
-
-OK, that gave me an idea.
-
-Freeze the filesystem
-md5sum the lvm
-hibernate
-resume
-md5sum the lvm
-
-so:
+> I'll see how it behaves now the filesystem has been frozen/thawed over 
+> the hibernate...
 
 
-haze:~# xfs_freeze -f /scratch/
-
-Without this sync, the next two md5sums differed..
-haze:~# sync
-haze:~# dd if=/dev/video_vg/video_lv bs=10M count=200 | md5sum
-200+0 records in
-200+0 records out
-2097152000 bytes (2.1 GB) copied, 41.2495 seconds, 50.8 MB/s
-f42539366bb4269623fa4db14e8e8be2  -
-haze:~# dd if=/dev/video_vg/video_lv bs=10M count=200 | md5sum
-200+0 records in
-200+0 records out
-2097152000 bytes (2.1 GB) copied, 41.8111 seconds, 50.2 MB/s
-f42539366bb4269623fa4db14e8e8be2  -
+And it appears to behave well. (A few hours compile/clean cycling kernel builds 
+on that filesystem were OK).
 
 
-haze:~# echo platform > /sys/power/disk
-haze:~# echo disk > /sys/power/state
+Historically I've done:
+sync
+echo platform > /sys/power/disk
+echo disk > /sys/power/state
+# resume
 
+and had filesystem corruption (only on this machine, my other hibernating xfs 
+machines don't have this problem)
 
-haze:~# dd if=/dev/video_vg/video_lv bs=10M count=200 | md5sum
-200+0 records in
-200+0 records out
-2097152000 bytes (2.1 GB) copied, 42.0478 seconds, 49.9 MB/s
-f42539366bb4269623fa4db14e8e8be2  -
-haze:~# xfs_freeze -u /scratch/
+So doing:
+xfs_freeze -f /scratch
+sync
+echo platform > /sys/power/disk
+echo disk > /sys/power/state
+# resume
+xfs_freeze -u /scratch
 
-So the lvm and below looks OK...
-
-I'll see how it behaves now the filesystem has been frozen/thawed over the 
-hibernate...
+Works (for now - more usage testing tonight)
 
 David
