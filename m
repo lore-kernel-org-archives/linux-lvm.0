@@ -1,21 +1,20 @@
 Received: from mx2.redhat.com (mx2.redhat.com [10.255.15.25])
-	by int-mx2.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l5LEjwgS020684
-	for <linux-lvm@redhat.com>; Thu, 21 Jun 2007 10:45:58 -0400
+	by int-mx2.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l5LEt1LB021894
+	for <linux-lvm@redhat.com>; Thu, 21 Jun 2007 10:55:01 -0400
 Received: from mail.bmsi.com (www.bmsi.com [24.248.44.156])
-	by mx2.redhat.com (8.13.1/8.13.1) with ESMTP id l5LEjvTs000366
-	for <linux-lvm@redhat.com>; Thu, 21 Jun 2007 10:45:57 -0400
+	by mx2.redhat.com (8.13.1/8.13.1) with ESMTP id l5LEsxtJ007866
+	for <linux-lvm@redhat.com>; Thu, 21 Jun 2007 10:54:59 -0400
 Received: from bmsred.bmsi.com (bmsred.bmsi.com [192.168.9.50])
-	by mail.bmsi.com (8.13.6/8.13.6) with ESMTP id l5LEjVI2000596
-	for <linux-lvm@redhat.com>; Thu, 21 Jun 2007 10:45:51 -0400
+	by mail.bmsi.com (8.13.6/8.13.6) with ESMTP id l5LEssi9000953
+	for <linux-lvm@redhat.com>; Thu, 21 Jun 2007 10:54:54 -0400
 Received: from localhost (localhost [127.0.0.1])
-	by bmsred.bmsi.com (8.13.5/8.13.5) with ESMTP id l5LEjVkN017532
-	for <linux-lvm@redhat.com>; Thu, 21 Jun 2007 10:45:31 -0400
-Date: Thu, 21 Jun 2007 10:45:31 -0400 (EDT)
+	by bmsred.bmsi.com (8.13.5/8.13.5) with ESMTP id l5LEssZH017735
+	for <linux-lvm@redhat.com>; Thu, 21 Jun 2007 10:54:54 -0400
+Date: Thu, 21 Jun 2007 10:54:54 -0400 (EDT)
 From: "Stuart D. Gathman" <stuart@bmsi.com>
-Subject: Re: [linux-lvm] Does pv failure effect whole vg?
-In-Reply-To: <467A2C22.6030503@vdberg.org>
-Message-ID: <Pine.LNX.4.44.0706211043080.17457-100000@bmsred.bmsi.com>
+Message-ID: <Pine.LNX.4.44.0706211046300.17457-100000@bmsred.bmsi.com>
 MIME-Version: 1.0
+Subject: [linux-lvm] Backup with snapshots
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -30,18 +29,55 @@ Content-Type: TEXT/PLAIN; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-On Thu, 21 Jun 2007, Richard van den Berg wrote:
+I have been manually running this script to make backups of a live 
+application system:
+-----------lvbackup------------------
+#!/bin/sh
+if test "$#" -lt 2; then
+  echo "Usage: $0 SRCLV DESTDIR"
+  exit 2
+fi
+lvpath="$1"
+media="$2"
+shift 2
+if test -e "${media}/BMS_BACKUP_V1"; then
+        :
+else
+  echo "${media} is not formatted as a backup drive"
+  exit 1
+fi
 
-> When booting from cdrom (systemrescuecd) md2 failed to come up, so vg00
-> did not come up. I then manually brought up md2 and split the vg, and
-> added sda3 in the mix:
+lvname="${lvpath##*/}"
+lvname="${lvname##*-}"
+snapname="${lvname}_SNAP"
+snappath="${lvpath}_SNAP"
+tmpdir="/mnt/${snapname}"
+destdir="${media}/${lvname}/current"
 
-When md devices haven't come up, it has been one of the following:
+lvcreate -s -L 2G -n "$snapname" "$lvpath" || exit 1
+mkdir -p "$tmpdir" "$destdir"
+mount -r "$snappath" "$tmpdir"
+mount -o remount,rw "${media}"
+rsync -ravXHx "$@" "${tmpdir}/" "${destdir}"
+umount "$tmpdir"
+mount -r -o remount,ro "${media}"
+lvremove "$snappath"
+---------------------------------------------
 
-1) I forgot to make the partition type fd - RAID autodetect
-2) The raid1 (or other) driver was not in initrd.  Makeinitrd
-   does not always add it when it needs to.  (Wants to
-   see /etc/mdadm.conf or /etc/raidtab.)
+My question concerns the last line.  I asks me if I really want
+to remove the LV.
+
+1) Is it intended usage to create and destroy snapshots every day like this?
+2) Am I missing a step?  Am I supposed to deactivate the snapshot first?
+3) If I deactivate it, can I leave it allocated, and will it resync with
+   source LV when I reactivate it?
+4) Or am I just supposed to use "-f" on the lvremove?  How do I ensure
+   that no stray processes still have the LV open.  The umount will fail
+   if stray processes are still in the filesystem, but will the lvremove -f
+   still fail if something has the block device open?
+
+I just feel nervous turning scripts that change LVs loose in cron, and
+want to make it as safe as possible.
 
 -- 
 	      Stuart D. Gathman <stuart@bmsi.com>
