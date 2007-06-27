@@ -1,18 +1,31 @@
-Received: from mx2.redhat.com (mx2.redhat.com [10.255.15.25])
-	by int-mx2.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l5RHwm1a025923
-	for <linux-lvm@redhat.com>; Wed, 27 Jun 2007 13:58:48 -0400
-Received: from apollo.sr.unh.edu (apollo.sr.unh.edu [132.177.249.110])
-	by mx2.redhat.com (8.13.1/8.13.1) with ESMTP id l5RHwhKK025874
-	for <linux-lvm@redhat.com>; Wed, 27 Jun 2007 13:58:43 -0400
-Received: from [132.177.249.85] (lxion.sr.unh.edu [132.177.249.85])
-	by apollo.sr.unh.edu (8.12.8/8.12.8) with ESMTP id l5RHwbdv015691
-	for <linux-lvm@redhat.com>; Wed, 27 Jun 2007 13:58:37 -0400
-Message-ID: <4682A5BE.1050409@apollo.sr.unh.edu>
-Date: Wed, 27 Jun 2007 14:00:30 -0400
-From: burlen <burlen@apollo.sr.unh.edu>
+Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l5RIv3Um018037
+	for <linux-lvm@redhat.com>; Wed, 27 Jun 2007 14:57:03 -0400
+Received: from carpentier.vpsland.com (carpentier.vpsland.com [207.210.113.97])
+	by mx1.redhat.com (8.13.1/8.13.1) with ESMTP id l5RIv0YX008960
+	for <linux-lvm@redhat.com>; Wed, 27 Jun 2007 14:57:01 -0400
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by carpentier.vpsland.com (Postfix) with ESMTP id 8955818246
+	for <linux-lvm@redhat.com>; Wed, 27 Jun 2007 20:56:54 +0200 (CEST)
+Received: from carpentier.vpsland.com ([127.0.0.1])
+	by localhost (carpentier.vpsland.com [127.0.0.1]) (amavisd-new,
+	port 10024) with ESMTP id M2tf3DdkWYlk for <linux-lvm@redhat.com>;
+	Wed, 27 Jun 2007 20:47:04 +0200 (CEST)
+Received: from soetens.vdberg.org (h8441201224.dsl.speedlinq.nl
+	[84.41.201.224])
+	by carpentier.vpsland.com (Postfix) with ESMTP id 0649118240
+	for <linux-lvm@redhat.com>; Wed, 27 Jun 2007 20:42:31 +0200 (CEST)
+Received: from [192.168.0.14] (82-170-10-11.dsl.ip.tiscali.nl [82.170.10.11])
+	by soetens.vdberg.org (Postfix) with ESMTP id 6587A14C1C6
+	for <linux-lvm@redhat.com>; Wed, 27 Jun 2007 20:42:30 +0200 (CEST)
+Message-ID: <4682AF92.8050303@vdberg.org>
+Date: Wed, 27 Jun 2007 20:42:26 +0200
+From: Richard van den Berg <richard@vdberg.org>
 MIME-Version: 1.0
+Subject: Re: [linux-lvm] recover one LVM disk without the other
+References: <4682A5BE.1050409@apollo.sr.unh.edu>
+In-Reply-To: <4682A5BE.1050409@apollo.sr.unh.edu>
 Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] recover one LVM disk without the other
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -23,18 +36,19 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: linux-lvm@redhat.com
+Content-Type: text/plain; charset="us-ascii"
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-Hi recently we had a FC4 system with 2 disks go down do to disk failure. 
-I replaced the bad drive, and installed Ubuntu 7 on the new drive with 
-out the old drive. Unknown to us, FC4 was apparently using a LVM. I try 
-to mount the remaining FC4 drive but get the mount error:
+burlen wrote:
+> How can I recover this drive? Really all I need to do is mount it and
+> recover some data then we can repartion/ format it as well.
 
-burlen@terra:~$ sudo mount /dev/sdb2 /mount_hd/
-mount: unknown filesystem type 'LVM2_member'
+It should be a simple matter of using "vgscan" to activate the volume
+groups. Of course this will only work if the volume groups do not
+contain any physical volumes that were on the failed drives. If the vgs
+do come up, use "lvdisplay" or "lvs" to display the logical volumes that
+you can mount.
 
-How can I recover this drive? Really all I need to do is mount it and 
-recover some data then we can repartion/ format it as well.
+Sincerely,
 
-Burlen
+Richard van den Berg
