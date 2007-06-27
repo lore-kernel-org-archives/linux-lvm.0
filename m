@@ -1,12 +1,15 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l5RKlM7w003257
-	for <linux-lvm@redhat.com>; Wed, 27 Jun 2007 16:47:22 -0400
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l5RL5RwB010170
+	for <linux-lvm@redhat.com>; Wed, 27 Jun 2007 17:05:27 -0400
 From: Turbo Fredriksson <turbo@bayour.com>
-Date: Wed, 27 Jun 2007 22:47:12 +0200
-Message-ID: <87abuljfan.fsf@pumba.bayour.com>
+Subject: Re: [linux-lvm] moving disk from PPC to x86
+References: <87abuljfan.fsf@pumba.bayour.com>
+Date: Wed, 27 Jun 2007 23:05:23 +0200
+In-Reply-To: <87abuljfan.fsf@pumba.bayour.com> (Turbo Fredriksson's message of
+	"Wed, 27 Jun 2007 22:47:12 +0200")
+Message-ID: <876459jegc.fsf@pumba.bayour.com>
 MIME-Version: 1.0
 Sender: Turbo Fredriksson <turbo@pumba.redhat.com>
-Subject: [linux-lvm] moving disk from PPC to x86
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -21,45 +24,32 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@sistina.com
 
-I'm trying to move some disks from my PPC desktop to a dedicated
-server. Yesterday my system looked like this:
+>>>>> "Turbo" == Turbo Fredriksson <turbo@bayour.com> writes:
 
-  1. /dev/md0     372.61Gb  (sda1+missing)
-  2. /dev/hdb      74.53Gb
-  3. /dev/sdb     298.09Gb
+    Turbo> The idea was to re-create sdb as mdX+missing, so I tried
+    Turbo> pvmove sdb.  But instantly received a lot of errors. Now I
+    Turbo> can't remove it from the VG!
 
-Now with the paycheck, I bought a third SATA disk (400Gb). I new from
-the start that disk wouldn't fit in my desktopbox, so I also bought a
-500W PSU (I had a huge server case without PSU from previously).
+This is the error I'm getting (starts more or directly after LVM
+is setup):
 
-I was a little impatient, so I added the new disk (physically just
-dangling outside the box :) to the LVM (as md1+missing).
+[  370.565512] ata4: command 0x35 timeout, stat 0xd1 host_stat 0x1
+[  370.565707] ata4: translated ATA stat/err 0xd1/00 to SCSI SK/ASC/ASCQ 0xb/47/00
+[  370.565890] ata4: status=0xd1 { Busy }
+[  370.565929] sd 3:0:0:0: SCSI error: return code = 0x8000002
+[  370.565937] sdc: Current: sense key: Aborted Command
+[  370.565943]     Additional sense: Scsi parity error
+[  370.565967] end_request: I/O error, dev sdc, sector 12491199
 
-The idea was to re-create sdb as mdX+missing, so I tried pvmove sdb.
-But instantly received a lot of errors. Now I can't remove it
-from the VG!
-
-I figured this had/might have something to do with the (very) small
-PSU in the workstation (250W I think it is).
-
-
-My new server is a i386, and I already had a disk with Linux installed
-for Intel, so that disk was also moved (from another server I don't
-need any more - it was a Pentium 1 - to slow! :).
-
-In with the system disk, in with the LVM disk and started. The system
-had to be upgraded (from Ubuntu 6.xx to 7.04 - Feisty). Took a couple
-of hours, and when that was done, I started to get the MD's working.
-No go... One of the disks didn't even have a partition table!? None
-of the disks had a MD [info/rootblock/whatever-it-was-called].
-
-I wasn't really scared, I knew I haven't tried to modify the disks.
-Put everything back into the PPC, and yes, everything works as
-expected (exept the read errors from sdc/md1).
-
-
-So, long winded explanation of what i've done, any idea about:
-
-  1. How do I remove md1/sdc before I get data on it (i have the
-     LVM unmounted for the time being).
-  2. How do I move a VG/PV/LV from PPC to x86?
+The 'Scsi parity error' (from what I knew) is usually/most likley
+due to faulty/insufficient PSU. I _should_ probably try to strap 
+the new PSU to the desktop just to make sure, but... ?
+-- 
+bomb 767 PLO Uzi Ortega ammunition Soviet FSF radar NORAD pits colonel
+Delta Force killed genetic
+[See http://www.aclu.org/echelonwatch/index.html for more about this]
+[Or http://www.europarl.eu.int/tempcom/echelon/pdf/rapport_echelon_en.pdf]
+If neither of these works, try http://www.aclu.org and search for echelon.
+Note. This is a real, not fiction.
+http://www.theregister.co.uk/2001/09/06/eu_releases_echelon_spying_report/
+http://www.aclu.org/safefree/nsaspying/23989res20060131.html#echelon
