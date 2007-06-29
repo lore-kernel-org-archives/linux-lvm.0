@@ -1,25 +1,24 @@
 Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l5TDMIUx009860
-	for <linux-lvm@redhat.com>; Fri, 29 Jun 2007 09:22:18 -0400
-Received: from smtp5-g19.free.fr (smtp5-g19.free.fr [212.27.42.35])
-	by mx1.redhat.com (8.13.1/8.13.1) with ESMTP id l5TDMD4w019049
-	for <linux-lvm@redhat.com>; Fri, 29 Jun 2007 09:22:14 -0400
-Received: from taris.localnet (stc92-2-82-228-136-150.fbx.proxad.net
-	[82.228.136.150])
-	by smtp5-g19.free.fr (Postfix) with ESMTP id 3EF5344FFB
-	for <linux-lvm@redhat.com>; Fri, 29 Jun 2007 15:22:13 +0200 (CEST)
-Received: from localhost ([127.0.0.1])
-	by taris.localnet (Kerio MailServer 6.3.1) for linux-lvm@redhat.com;
-	Fri, 29 Jun 2007 15:22:10 +0200
-From: "Mathieu CARBONNEAUX" <info@ch2o.info>
-Message-ID: <20070629132210.41def20c@taris.localnet>
-Date: Fri, 29 Jun 2007 15:22:10 +0200
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l5TLdxdj026777
+	for <linux-lvm@redhat.com>; Fri, 29 Jun 2007 17:39:59 -0400
+Received: from drakesmith.net (drakesmith.net [64.62.223.80])
+	by mx1.redhat.com (8.13.1/8.13.1) with SMTP id l5TLduej030101
+	for <linux-lvm@redhat.com>; Fri, 29 Jun 2007 17:39:56 -0400
+Received: from PaulXP ([71.164.137.136]) by drakesmith.net for
+	<linux-lvm@redhat.com>; Fri, 29 Jun 2007 14:39:54 -0700
+From: "WarlockD" <warlockd@drakesmith.net>
+References: <001201c7b9a3$4f0da2d0$ed28e870$@net>
+	<46842D81.8090501@vdberg.org>	<001601c7b9f6$8ff21990$afd64cb0$@net>
+	<4684A547.8080302@vdberg.org>
+In-Reply-To: <4684A547.8080302@vdberg.org>
+Subject: RE: [linux-lvm] Serious problem and I don't know where to turn.
+Date: Fri, 29 Jun 2007 16:40:07 -0500
+Message-ID: <004601c7ba96$10484160$30d8c420$@net>
 MIME-Version: 1.0
 Content-Type: multipart/alternative;
-	boundary="-----------2b194ad083937d02cfed1d8d600c2ca0"
-Subject: [linux-lvm] os upgrade probleme...lv activation error...
-Reply-To: info@ch2o.info,
-	LVM general discussion and development <linux-lvm@redhat.com>
+	boundary="----=_NextPart_000_0047_01C7BA6C.27723960"
+Content-Language: en-us
+Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -29,411 +28,335 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: linux-lvm@redhat.com
+To: 'LVM general discussion and development' <linux-lvm@redhat.com>
 
-This is a multi-part message in MIME format.
+This is a multipart message in MIME format.
 
--------------2b194ad083937d02cfed1d8d600c2ca0
+------=_NextPart_000_0047_01C7BA6C.27723960
 Content-Type: text/plain;
-	charset="us-ascii"
+	charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
+
+The good news is the logical drive came up.  I just recreated the =
+logical drive exactly as it was and its even detected, with a missing =
+superblock, as an ext3 partition. The bad news is that e2fsck still =
+froze on me.  I can=E2=80=99t tell if it=E2=80=99s the iSCSI driver that =
+is doing it (The logical drive comes up as =E2=80=9Cbusy=E2=80=9D when I =
+try to access it after killing e2fsck) or something with lvm2 as =
+doubtful as that is.
 
 =20
 
-hi,
+I picked up some hard drives and put it in my old raid card for a RAID0, =
+and doing a dd if=3D/dev/ANIME/testlv of=3D/dev/sdc1.  If this works, =
+and e2fsck works, then I got my data back, yea!
 
-my configuration:
-- bi-xeon emt64 hyperthread 2.8ghz.
-- 3 go ram
-- sata promise "Promise PDC20318 (SATA150 TX4)" cards.
-- sata intel "6300ESB SATA Storage Controller" cards.
+=20
 
+Now what to do with it:P
 
-with i've upgraded opensuse from 10.0 (x64) to 10.2 (x64).
-all worked fine... but one lv d'ont whant to activate...
+=20
 
-and when they try to activate my lv/vg with "vgchange" they say device m=
-apper error:
-#vgchange -ay
-  1 logical volume(s) in volume group "mailvg" now active
-  1 logical volume(s) in volume group "imagesvg" now active
-  device-mapper: reload ioctl failed: Invalid argument
-  4 logical volume(s) in volume group "downvg" now active
-  4 logical volume(s) in volume group "rootvg" now active
-  1 logical volume(s) in volume group "backupvg" now active
+From: linux-lvm-bounces@redhat.com [mailto:linux-lvm-bounces@redhat.com] =
+On Behalf Of Richard van den Berg
+Sent: Friday, June 29, 2007 1:23 AM
+To: LVM general discussion and development
+Subject: Re: [linux-lvm] Serious problem and I don't know where to turn.
 
-#lvs
-  LV         VG       Attr   LSize   Origin Snap%  Move Log Copy%
-  lvbackup   backupvg -wi-ao  80.00G
-  downloadlv downvg   -wi-d- 310.00G
-  mysqllv    downvg   -wi-ao 200.00M
-  rootarchlv downvg   -wi-ao   1.00G
-  vmwarelv   downvg   -wi-ao  40.00G
-  imageslv   imagesvg -wi-ao  80.00G
-  lvmail     mailvg   -wi-ao  30.00G
-  homelv     rootvg   -wi-ao 500.00M
-  rootlv     rootvg   -wi-ao   6.80G
-  swaplv     rootvg   -wi-ao   1.00G
-  varlv      rootvg   -wi-ao   1.00G
+=20
 
-the downloadlv from downvg can't be activated...
-the device-mapper don't whant the device...
-
-i've activated debug log and extracted the part who seem interesting:
-Jun 29 11:59:51 taris lvm[31615]: memlock=5Fcount inc to 1
-Jun 29 11:59:51 taris lvm[31615]: Setting activation/missing=5Fstripe=5F=
-filler to /dev/ioerror
-Jun 29 11:59:51 taris lvm[31615]: Getting device info for downvg-downloa=
-dlv [LVM-opeUf9Zkipl4E843JYE0hxbksLxIZEscOUOvuMPZ4twoc4dC5WrxF1ScqfYwo3F=
-r]
-Jun 29 11:59:51 taris lvm[31615]: dm info  LVM-opeUf9Zkipl4E843JYE0hxbks=
-LxIZEscOUOvuMPZ4twoc4dC5WrxF1ScqfYwo3Fr OF   [16384]
-Jun 29 11:59:51 taris lvm[31615]: dm deps   (253:6) OF   [16384]
-Jun 29 11:59:51 taris lvm[31615]: Getting device info for downvg-downloa=
-dlv-real [LVM-opeUf9Zkipl4E843JYE0hxbksLxIZEscOUOvuMPZ4twoc4dC5WrxF1Scqf=
-Ywo3Fr-real]
-Jun 29 11:59:51 taris lvm[31615]: dm info  LVM-opeUf9Zkipl4E843JYE0hxbks=
-LxIZEscOUOvuMPZ4twoc4dC5WrxF1ScqfYwo3Fr-real OF   [16384]
-Jun 29 11:59:51 taris lvm[31615]: dm info  opeUf9Zkipl4E843JYE0hxbksLxIZ=
-EscOUOvuMPZ4twoc4dC5WrxF1ScqfYwo3Fr-real OF   [16384]
-Jun 29 11:59:51 taris lvm[31615]: dm info downvg-downloadlv-real  OF   [=
-16384]
-Jun 29 11:59:51 taris lvm[31615]: Getting device info for downvg-downloa=
-dlv-cow [LVM-opeUf9Zkipl4E843JYE0hxbksLxIZEscOUOvuMPZ4twoc4dC5WrxF1ScqfY=
-wo3Fr-cow]
-Jun 29 11:59:51 taris lvm[31615]: dm info  LVM-opeUf9Zkipl4E843JYE0hxbks=
-LxIZEscOUOvuMPZ4twoc4dC5WrxF1ScqfYwo3Fr-cow OF   [16384]
-Jun 29 11:59:51 taris lvm[31615]: dm info  opeUf9Zkipl4E843JYE0hxbksLxIZ=
-EscOUOvuMPZ4twoc4dC5WrxF1ScqfYwo3Fr-cow OF   [16384]
-Jun 29 11:59:51 taris lvm[31615]: dm info downvg-downloadlv-cow  OF   [1=
-6384]
-Jun 29 11:59:51 taris lvm[31615]: Getting device info for downvg-downloa=
-dlv=5Fmlog [LVM-opeUf9Zkipl4E843JYE0hxbksLxIZEscOUOvuMPZ4twoc4dC5WrxF1Sc=
-qfYwo3Fr-=5Fmlog]
-Jun 29 11:59:51 taris lvm[31615]: dm info  LVM-opeUf9Zkipl4E843JYE0hxbks=
-LxIZEscOUOvuMPZ4twoc4dC5WrxF1ScqfYwo3Fr-=5Fmlog OF   [16384]
-Jun 29 11:59:51 taris lvm[31615]: dm info  opeUf9Zkipl4E843JYE0hxbksLxIZ=
-EscOUOvuMPZ4twoc4dC5WrxF1ScqfYwo3Fr-=5Fmlog OF   [16384]
-Jun 29 11:59:51 taris lvm[31615]: dm info downvg-downloadlv=5Fmlog  OF  =
- [16384]
-Jun 29 11:59:51 taris lvm[31615]: Getting target version for linear
-Jun 29 11:59:51 taris lvm[31615]: dm versions   OF   [16384]
-Jun 29 11:59:51 taris lvm[31615]: Getting target version for striped
-Jun 29 11:59:51 taris lvm[31615]: dm versions   OF   [16384]
-Jun 29 11:59:51 taris lvm[31615]: Loading downvg-downloadlv table
-Jun 29 11:59:51 taris lvm[31615]: Adding target: 0 488390656 linear 8:33=
- 384
-Jun 29 11:59:51 taris lvm[31615]: Adding target: 488390656 245760 linear=
- 8:65 384
-Jun 29 11:59:51 taris lvm[31615]: Adding target: 488636416 98566144 line=
-ar 8:65 63160704
-Jun 29 11:59:51 taris lvm[31615]: Adding target: 587202560 62914560 line=
-ar 8:65 182698368
-Jun 29 11:59:51 taris lvm[31615]: dm table   (253:6) OF   [16384]
-Jun 29 11:59:51 taris lvm[31615]: dm reload   (253:6) NF   [16384]
-Jun 29 11:59:51 taris kernel: device-mapper: table: 253:6: linear: dm-li=
-near: Device lookup failed
-Jun 29 11:59:51 taris kernel: device-mapper: ioctl: error adding target =
-to table
-Jun 29 11:59:51 taris lvm[31615]: device-mapper: reload ioctl failed: In=
-valid argument
-
-is the only one vg that make "dm deps", what it is =3F why =3F
-
-is the only one vg that is on two disk.
-#pvs
-  PV         VG       Fmt  Attr PSize   PFree
-  /dev/hda2  rootvg   lvm2 a-     9.36G  72.00M
-  /dev/sda1  backupvg lvm2 a-   232.88G 152.88G
-  /dev/sdc1  downvg   lvm2 a-   232.88G      0
-  /dev/sdd1  imagesvg lvm2 a-   232.88G 152.88G
-  /dev/sde1  downvg   lvm2 a-   232.88G 114.57G
-  /dev/sdf1  mailvg   lvm2 a-   232.88G 202.88G
-
-i've tryed to recreate pv metadata in single user with
-# pvcreate -ff --uuid "HHJhqk-4N8h-bwZF-6CIg-8pex-uMtK-NCTfJ4" --restore=
-file  /etc/lvm/archive/downvg=5F00024.vg  /dev/sdc1
-# pvcreate -ff --uuid "H58I7A-nzSX-9zbR-qxlo-LfXQ-3fNr-LBJdz3" --restore=
-file  /etc/lvm/archive/downvg=5F00024.vg  /dev/sde1
-# vgcfgrestore -f /etc/lvm/archive/downvg=5F00024.vg downvg
-# vgscan
-and when y try to activate vg it's ok!!!!
-
-but when reboot in multi user...
-i've the error again...
-
-extract from downvg backup:
-downvg {
-        id =3D "opeUf9-Zkip-l4E8-43JY-E0hx-bksL-xIZEsc"
-        seqno =3D 21
-        status =3D ["EXPORTED", "RESIZEABLE", "READ", "WRITE"]
-        extent=5Fsize =3D 8192              # 4 Megabytes
-        max=5Flv =3D 0
-        max=5Fpv =3D 0
-
-        physical=5Fvolumes {
-
-                pv0 {
-                        id =3D "HHJhqk-4N8h-bwZF-6CIg-8pex-uMtK-NCTfJ4"
-                        device =3D "/dev/sdc1"    # Hint only
-
-                        status =3D ["ALLOCATABLE", "EXPORTED"]
-                        dev=5Fsize =3D 488392002    # 232.883 Gigabytes
-                        pe=5Fstart =3D 384
-                        pe=5Fcount =3D 59618        # 232.883 Gigabytes
-                }
-
-                pv1 {
-                        id =3D "H58I7A-nzSX-9zbR-qxlo-LfXQ-3fNr-LBJdz3"
-                        device =3D "/dev/sde1"    # Hint only
-
-                        status =3D ["ALLOCATABLE", "EXPORTED"]
-                        dev=5Fsize =3D 488392002    # 232.883 Gigabytes
-                        pe=5Fstart =3D 384
-                        pe=5Fcount =3D 59618        # 232.883 Gigabytes
-                }
-        }
-
-        logical=5Fvolumes {
-
-                downloadlv {
-                        id =3D "OUOvuM-PZ4t-woc4-dC5W-rxF1-Scqf-Ywo3Fr"
-                        status =3D ["READ", "WRITE", "VISIBLE"]
-                        segment=5Fcount =3D 4
-
-                        segment1 {
-                                start=5Fextent =3D 0
-                                extent=5Fcount =3D 59618    # 232.883 Gi=
-gabytes
-
-                                type =3D "striped"
-                                stripe=5Fcount =3D 1        # linear
-
-                                stripes =3D [
-                                        "pv0", 0
-                                ]
-                        }
-                        segment2 {
-                                start=5Fextent =3D 59618
-                                extent=5Fcount =3D 30       # 120 Megaby=
-tes
-
-                                type =3D "striped"
-                                stripe=5Fcount =3D 1        # linear
-
-                                stripes =3D [
-                                        "pv1", 0
-                                ]
-                        }
-                        segment3 {
-                                start=5Fextent =3D 59648
-                                extent=5Fcount =3D 12032    # 47 Gigabyt=
-es
-
-                                type =3D "striped"
-                                stripe=5Fcount =3D 1        # linear
-
-                                stripes =3D [
-                                        "pv1", 7710
-                                ]
-                        }
-                        segment4 {
-                                start=5Fextent =3D 71680
-                                extent=5Fcount =3D 7680     # 30 Gigabyt=
-es
-
-                                type =3D "striped"
-                                stripe=5Fcount =3D 1        # linear
-
-                                stripes =3D [
-                                        "pv1", 22302
-                                ]
-                        }
-                }
+WarlockD wrote:
 
 
-package version on opensuse 10.0:
+
+[root@server ~]# lvscan -a
+
+  ACTIVE            '/dev/VolGroup00/LogVol00' [147.00 GB] inherit
+
+  ACTIVE            '/dev/VolGroup00/LogVol01' [1.94 GB] inherit
+
+[root@server ~]# vgscan
+
+  Reading all physical volumes.  This may take a while...
+
+  Found volume group "VolGroup00" using metadata type lvm2
+
+  Found volume group "ANIME" using metadata type lvm2
 
 
-* kernel                 2.6.13
+So the vg "ANIME" is found, but is not activated? That kind of makes =
+sense because it is missing the pv on the deleted /dev/sdb2 partition. =
+According to the vgreduce man pages you can:
 
-* device-mapper    1.01.04
-* lvm2                   2.01.14
-on opensuse 10.2:
+vgreduce --removemissing ANIME
+
+to remove all  missing physical volumes from the volume group and make =
+the volume group consistent again. It's a good idea to run this option =
+with --test  first to find out what it would remove before running it =
+for real. There is also "--partial" option you can use to activate vgs =
+and lvs even if they are missing data. Read the man pages and be very =
+careful before you proceed.
 
 
-* kernel                  2.6.18
 
-* device-mapper     1.02.12
-* lvm2                    2.02.13
-any idea to correct this =3F
-how to add more trace =3F
 
-Thanks for help!
-Best regards,
-Mathieu
+Basicly, I have a volume called =E2=80=9CANIME-logical=E2=80=9D I am =
+trying to restore, but I don=E2=80=99t have the metadata.  Is there a =
+way I can get to it?
 
-   =20
--------------2b194ad083937d02cfed1d8d600c2ca0
+
+Without the metadata that's going to be tough. If the filesystem is all =
+continuous on your RAID5 partition, technically you should be able to =
+mount it if you can create a device pointing at the right start, and =
+with the right size. Good luck figuring that out.
+
+Another approach could be to recreate the /dev/sdb2 partition in exactly =
+the same way you did before. The metadata might still be there, and the =
+vg might come up.
+
+Sincerely,
+
+Richard van den Berg
+
+
+------=_NextPart_000_0047_01C7BA6C.27723960
 Content-Type: text/html;
-	charset="us-ascii"
+	charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-<!DOCTYPE html PUBLIC '-//W3C//DTD HTML 4.01 Transitional//EN'>
-<html>
+<html xmlns:v=3D"urn:schemas-microsoft-com:vml" =
+xmlns:o=3D"urn:schemas-microsoft-com:office:office" =
+xmlns:w=3D"urn:schemas-microsoft-com:office:word" =
+xmlns:m=3D"http://schemas.microsoft.com/office/2004/12/omml" =
+xmlns=3D"http://www.w3.org/TR/REC-html40">
+
 <head>
- <meta http-equiv=3D'Content-Type' content=3D'text/html;charset=3Dus-asc=
-ii'>
- <style>BODY{font:10pt Tahoma, Verdana, sans-serif;}</style>
-</head>
-<body>
-
-
-
-=20
-=20
-
-
-<pre>hi,<br><br>my configuration:<br>- bi-xeon emt64 hyperthread 2.8ghz.=
-<br>- 3 go ram<br>- sata promise "Promise PDC20318 (SATA150 TX4)" cards.=
-<br>- sata intel "6300ESB SATA Storage Controller" cards.<br><br><br>wit=
-h i've upgraded opensuse from 10.0 (x64) to 10.2 (x64).<br>all worked fi=
-ne... but one lv d'ont whant to activate...<br><br>and when they try to =
-activate my lv/vg with "vgchange" they say device mapper error:<br>#vgch=
-ange -ay<br>  1 logical volume(s) in volume group "mailvg" now active<br=
->  1 logical volume(s) in volume group "imagesvg" now active<br>  device=
--mapper: reload ioctl failed: Invalid argument<br>  4 logical volume(s) =
-in volume group "downvg" now active<br>  4 logical volume(s) in volume g=
-roup "rootvg" now active<br>  1 logical volume(s) in volume group "backu=
-pvg" now active<br><br>#lvs<br>  LV         VG       Attr   LSize   Orig=
-in Snap%  Move Log Copy%<br>  lvbackup   backupvg -wi-ao  80.00G<br>  do=
-wnloadlv downvg   -wi-d- 310.00G<br>  mysqllv    downvg   -wi-ao 200.00M=
-<br>  rootarchlv downvg   -wi-ao   1.00G<br>  vmwarelv   downvg   -wi-ao=
-  40.00G<br>  imageslv   imagesvg -wi-ao  80.00G<br>  lvmail     mailvg =
-  -wi-ao  30.00G<br>  homelv     rootvg   -wi-ao 500.00M<br>  rootlv    =
- rootvg   -wi-ao   6.80G<br>  swaplv     rootvg   -wi-ao   1.00G<br>  va=
-rlv      rootvg   -wi-ao   1.00G<br><br>the downloadlv from downvg can't=
- be activated...<br>the device-mapper don't whant the device...<br><br>i=
-'ve activated debug log and extracted the part who seem interesting:<br>=
-Jun 29 11:59:51 taris lvm[31615]: memlock=5Fcount inc to 1<br>Jun 29 11:=
-59:51 taris lvm[31615]: Setting activation/missing=5Fstripe=5Ffiller to =
-/dev/ioerror<br>Jun 29 11:59:51 taris lvm[31615]: Getting device info fo=
-r downvg-downloadlv [LVM-opeUf9Zkipl4E843JYE0hxbksLxIZEscOUOvuMPZ4twoc4d=
-C5WrxF1ScqfYwo3Fr]<br>Jun 29 11:59:51 taris lvm[31615]: dm info  LVM-ope=
-Uf9Zkipl4E843JYE0hxbksLxIZEscOUOvuMPZ4twoc4dC5WrxF1ScqfYwo3Fr OF   [1638=
-4]<br>Jun 29 11:59:51 taris lvm[31615]: dm deps   (253:6) OF   [16384]<b=
-r>Jun 29 11:59:51 taris lvm[31615]: Getting device info for downvg-downl=
-oadlv-real [LVM-opeUf9Zkipl4E843JYE0hxbksLxIZEscOUOvuMPZ4twoc4dC5WrxF1Sc=
-qfYwo3Fr-real]<br>Jun 29 11:59:51 taris lvm[31615]: dm info  LVM-opeUf9Z=
-kipl4E843JYE0hxbksLxIZEscOUOvuMPZ4twoc4dC5WrxF1ScqfYwo3Fr-real OF   [163=
-84]<br>Jun 29 11:59:51 taris lvm[31615]: dm info  opeUf9Zkipl4E843JYE0hx=
-bksLxIZEscOUOvuMPZ4twoc4dC5WrxF1ScqfYwo3Fr-real OF   [16384]<br>Jun 29 1=
-1:59:51 taris lvm[31615]: dm info downvg-downloadlv-real  OF   [16384]<b=
-r>Jun 29 11:59:51 taris lvm[31615]: Getting device info for downvg-downl=
-oadlv-cow [LVM-opeUf9Zkipl4E843JYE0hxbksLxIZEscOUOvuMPZ4twoc4dC5WrxF1Scq=
-fYwo3Fr-cow]<br>Jun 29 11:59:51 taris lvm[31615]: dm info  LVM-opeUf9Zki=
-pl4E843JYE0hxbksLxIZEscOUOvuMPZ4twoc4dC5WrxF1ScqfYwo3Fr-cow OF   [16384]=
-<br>Jun 29 11:59:51 taris lvm[31615]: dm info  opeUf9Zkipl4E843JYE0hxbks=
-LxIZEscOUOvuMPZ4twoc4dC5WrxF1ScqfYwo3Fr-cow OF   [16384]<br>Jun 29 11:59=
-:51 taris lvm[31615]: dm info downvg-downloadlv-cow  OF   [16384]<br>Jun=
- 29 11:59:51 taris lvm[31615]: Getting device info for downvg-downloadlv=
-=5Fmlog [LVM-opeUf9Zkipl4E843JYE0hxbksLxIZEscOUOvuMPZ4twoc4dC5WrxF1ScqfY=
-wo3Fr-=5Fmlog]<br>Jun 29 11:59:51 taris lvm[31615]: dm info  LVM-opeUf9Z=
-kipl4E843JYE0hxbksLxIZEscOUOvuMPZ4twoc4dC5WrxF1ScqfYwo3Fr-=5Fmlog OF   [=
-16384]<br>Jun 29 11:59:51 taris lvm[31615]: dm info  opeUf9Zkipl4E843JYE=
-0hxbksLxIZEscOUOvuMPZ4twoc4dC5WrxF1ScqfYwo3Fr-=5Fmlog OF   [16384]<br>Ju=
-n 29 11:59:51 taris lvm[31615]: dm info downvg-downloadlv=5Fmlog  OF   [=
-16384]<br>Jun 29 11:59:51 taris lvm[31615]: Getting target version for l=
-inear<br>Jun 29 11:59:51 taris lvm[31615]: dm versions   OF   [16384]<br=
->Jun 29 11:59:51 taris lvm[31615]: Getting target version for striped<br=
->Jun 29 11:59:51 taris lvm[31615]: dm versions   OF   [16384]<br>Jun 29 =
-11:59:51 taris lvm[31615]: Loading downvg-downloadlv table<br>Jun 29 11:=
-59:51 taris lvm[31615]: Adding target: 0 488390656 linear 8:33 384<br>Ju=
-n 29 11:59:51 taris lvm[31615]: Adding target: 488390656 245760 linear 8=
-:65 384<br>Jun 29 11:59:51 taris lvm[31615]: Adding target: 488636416 98=
-566144 linear 8:65 63160704<br>Jun 29 11:59:51 taris lvm[31615]: Adding =
-target: 587202560 62914560 linear 8:65 182698368<br>Jun 29 11:59:51 tari=
-s lvm[31615]: dm table   (253:6) OF   [16384]<br>Jun 29 11:59:51 taris l=
-vm[31615]: dm reload   (253:6) NF   [16384]<br>Jun 29 11:59:51 taris ker=
-nel: device-mapper: table: 253:6: linear: dm-linear: Device lookup faile=
-d<br>Jun 29 11:59:51 taris kernel: device-mapper: ioctl: error adding ta=
-rget to table<br>Jun 29 11:59:51 taris lvm[31615]: device-mapper: reload=
- ioctl failed: Invalid argument<br><br>is the only one vg that make "dm =
-deps", what it is =3F why =3F<br><br>is the only one vg that is on two d=
-isk.<br>#pvs<br>  PV         VG       Fmt  Attr PSize   PFree<br>  /dev/=
-hda2  rootvg   lvm2 a-     9.36G  72.00M<br>  /dev/sda1  backupvg lvm2 a=
--   232.88G 152.88G<br>  /dev/sdc1  downvg   lvm2 a-   232.88G      0<br=
->  /dev/sdd1  imagesvg lvm2 a-   232.88G 152.88G<br>  /dev/sde1  downvg =
-  lvm2 a-   232.88G 114.57G<br>  /dev/sdf1  mailvg   lvm2 a-   232.88G 2=
-02.88G<br><br>i've tryed to recreate pv metadata in single user with<br>=
-# pvcreate -ff --uuid "HHJhqk-4N8h-bwZF-6CIg-8pex-uMtK-NCTfJ4" --restore=
-file  /etc/lvm/archive/downvg=5F00024.vg  /dev/sdc1<br># pvcreate -ff --=
-uuid "H58I7A-nzSX-9zbR-qxlo-LfXQ-3fNr-LBJdz3" --restorefile  /etc/lvm/ar=
-chive/downvg=5F00024.vg  /dev/sde1<br># vgcfgrestore -f /etc/lvm/archive=
-/downvg=5F00024.vg downvg<br># vgscan<br>and when y try to activate vg i=
-t's ok!!!!<br><br>but when reboot in multi user...<br>i've the error aga=
-in...<br><br>extract from downvg backup:<br>downvg {<br>        id =3D "=
-opeUf9-Zkip-l4E8-43JY-E0hx-bksL-xIZEsc"<br>        seqno =3D 21<br>     =
-   status =3D ["EXPORTED", "RESIZEABLE", "READ", "WRITE"]<br>        ext=
-ent=5Fsize =3D 8192              # 4 Megabytes<br>        max=5Flv =3D 0=
-<br>        max=5Fpv =3D 0<br><br>        physical=5Fvolumes {<br><br>  =
-              pv0 {<br>                        id =3D "HHJhqk-4N8h-bwZF-=
-6CIg-8pex-uMtK-NCTfJ4"<br>                        device =3D "/dev/sdc1"=
-    # Hint only<br><br>                        status =3D ["ALLOCATABLE"=
-, "EXPORTED"]<br>                        dev=5Fsize =3D 488392002    # 2=
-32.883 Gigabytes<br>                        pe=5Fstart =3D 384<br>      =
-                  pe=5Fcount =3D 59618        # 232.883 Gigabytes<br>   =
-             }<br><br>                pv1 {<br>                        i=
-d =3D "H58I7A-nzSX-9zbR-qxlo-LfXQ-3fNr-LBJdz3"<br>                      =
-  device =3D "/dev/sde1"    # Hint only<br><br>                        s=
-tatus =3D ["ALLOCATABLE", "EXPORTED"]<br>                        dev=5Fs=
-ize =3D 488392002    # 232.883 Gigabytes<br>                        pe=
-=5Fstart =3D 384<br>                        pe=5Fcount =3D 59618        =
-# 232.883 Gigabytes<br>                }<br>        }<br><br>        log=
-ical=5Fvolumes {<br><br>                downloadlv {<br>                =
-        id =3D "OUOvuM-PZ4t-woc4-dC5W-rxF1-Scqf-Ywo3Fr"<br>             =
-           status =3D ["READ", "WRITE", "VISIBLE"]<br>                  =
-      segment=5Fcount =3D 4<br><br>                        segment1 {<br=
->                                start=5Fextent =3D 0<br>               =
-                 extent=5Fcount =3D 59618    # 232.883 Gigabytes<br><br>=
-                                type =3D "striped"<br>                  =
-              stripe=5Fcount =3D 1        # linear<br><br>              =
-                  stripes =3D [<br>                                     =
-   "pv0", 0<br>                                ]<br>                    =
-    }<br>                        segment2 {<br>                         =
-       start=5Fextent =3D 59618<br>                                exten=
-t=5Fcount =3D 30       # 120 Megabytes<br><br>                          =
-      type =3D "striped"<br>                                stripe=5Fcou=
-nt =3D 1        # linear<br><br>                                stripes =
-=3D [<br>                                        "pv1", 0<br>           =
-                     ]<br>                        }<br>                 =
-       segment3 {<br>                                start=5Fextent =3D =
-59648<br>                                extent=5Fcount =3D 12032    # 4=
-7 Gigabytes<br><br>                                type =3D "striped"<br=
->                                stripe=5Fcount =3D 1        # linear<br=
-><br>                                stripes =3D [<br>                  =
-                      "pv1", 7710<br>                                ]<b=
-r>                        }<br>                        segment4 {<br>   =
-                             start=5Fextent =3D 71680<br>               =
-                 extent=5Fcount =3D 7680     # 30 Gigabytes<br><br>     =
-                           type =3D "striped"<br>                       =
-         stripe=5Fcount =3D 1        # linear<br><br>                   =
-             stripes =3D [<br>                                        "p=
-v1", 22302<br>                                ]<br>                     =
-   }<br>                }<br><br><br>package version on opensuse 10.0:<b=
-r></pre><ul><li>kernel&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&n=
-bsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 2.6.13<br></li><li>device=
--mapper&nbsp;&nbsp;&nbsp; 1.01.04</li><li>lvm2&nbsp;&nbsp;&nbsp;&nbsp;&n=
-bsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&n=
-bsp;&nbsp; 2.01.14</li></ul>on opensuse 10.2:<br><ul><li>kernel&nbsp;&nb=
-sp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nb=
-sp;&nbsp;&nbsp;&nbsp; 2.6.18<br></li><li>device-mapper&nbsp;&nbsp;&nbsp;=
-&nbsp; 1.02.12</li><li>lvm2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nb=
-sp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 2.=
-02.13</li></ul>any idea to correct this =3F<br>how to add more trace =3F=
-<br><br>Thanks for help!<br>Best regards,<br>Mathieu<br><br>
+<meta http-equiv=3DContent-Type content=3D"text/html; charset=3Dutf-8">
+<meta name=3DGenerator content=3D"Microsoft Word 12 (filtered medium)">
 <style>
- BODY {font:10pt Tahoma,Verdana,sans-serif;}
+<!--
+ /* Font Definitions */
+ @font-face
+	{font-family:"Cambria Math";
+	panose-1:0 0 0 0 0 0 0 0 0 0;}
+@font-face
+	{font-family:Calibri;
+	panose-1:2 15 5 2 2 2 4 3 2 4;}
+@font-face
+	{font-family:Tahoma;
+	panose-1:2 11 6 4 3 5 4 4 2 4;}
+@font-face
+	{font-family:Consolas;
+	panose-1:2 11 6 9 2 2 4 3 2 4;}
+ /* Style Definitions */
+ p.MsoNormal, li.MsoNormal, div.MsoNormal
+	{margin:0in;
+	margin-bottom:.0001pt;
+	font-size:11.0pt;
+	font-family:"Calibri","sans-serif";
+	color:black;}
+a:link, span.MsoHyperlink
+	{mso-style-priority:99;
+	color:blue;
+	text-decoration:underline;}
+a:visited, span.MsoHyperlinkFollowed
+	{mso-style-priority:99;
+	color:purple;
+	text-decoration:underline;}
+pre
+	{mso-style-priority:99;
+	mso-style-link:"HTML Preformatted Char";
+	margin:0in;
+	margin-bottom:.0001pt;
+	font-size:10.0pt;
+	font-family:"Courier New";
+	color:black;}
+span.HTMLPreformattedChar
+	{mso-style-name:"HTML Preformatted Char";
+	mso-style-priority:99;
+	mso-style-link:"HTML Preformatted";
+	font-family:Consolas;
+	color:black;}
+span.EmailStyle19
+	{mso-style-type:personal;
+	font-family:"Calibri","sans-serif";
+	color:windowtext;}
+span.EmailStyle20
+	{mso-style-type:personal;
+	font-family:"Calibri","sans-serif";
+	color:#1F497D;}
+span.EmailStyle21
+	{mso-style-type:personal-reply;
+	font-family:"Calibri","sans-serif";
+	color:#1F497D;}
+.MsoChpDefault
+	{mso-style-type:export-only;
+	font-size:10.0pt;}
+@page Section1
+	{size:8.5in 11.0in;
+	margin:1.0in 1.0in 1.0in 1.0in;}
+div.Section1
+	{page:Section1;}
+-->
 </style>
-</body></html>
--------------2b194ad083937d02cfed1d8d600c2ca0--
+<!--[if gte mso 9]><xml>
+ <o:shapedefaults v:ext=3D"edit" spidmax=3D"1026" />
+</xml><![endif]--><!--[if gte mso 9]><xml>
+ <o:shapelayout v:ext=3D"edit">
+  <o:idmap v:ext=3D"edit" data=3D"1" />
+ </o:shapelayout></xml><![endif]-->
+</head>
+
+<body bgcolor=3Dwhite lang=3DEN-US link=3Dblue vlink=3Dpurple>
+
+<div class=3DSection1>
+
+<p class=3DMsoNormal><span style=3D'color:#1F497D'>The good news is the =
+logical
+drive came up.=C2=A0 I just recreated the logical drive exactly as it =
+was and its
+even detected, with a missing superblock, as an ext3 partition. The bad =
+news is
+that e2fsck still froze on me.=C2=A0 I can=E2=80=99t tell if =
+it=E2=80=99s the iSCSI driver that is
+doing it (The logical drive comes up as =E2=80=9Cbusy=E2=80=9D when I =
+try to access it after
+killing e2fsck) or something with lvm2 as doubtful as that =
+is.<o:p></o:p></span></p>
+
+<p class=3DMsoNormal><span =
+style=3D'color:#1F497D'><o:p>&nbsp;</o:p></span></p>
+
+<p class=3DMsoNormal><span style=3D'color:#1F497D'>I picked up some hard =
+drives and
+put it in my old raid card for a RAID0, and doing a dd =
+if=3D/dev/ANIME/testlv
+of=3D/dev/sdc1.=C2=A0 If this works, and e2fsck works, then I got my =
+data back, yea!<o:p></o:p></span></p>
+
+<p class=3DMsoNormal><span =
+style=3D'color:#1F497D'><o:p>&nbsp;</o:p></span></p>
+
+<p class=3DMsoNormal><span style=3D'color:#1F497D'>Now what to do with =
+it:P<o:p></o:p></span></p>
+
+<p class=3DMsoNormal><span =
+style=3D'color:#1F497D'><o:p>&nbsp;</o:p></span></p>
+
+<div>
+
+<div style=3D'border:none;border-top:solid #B5C4DF 1.0pt;padding:3.0pt =
+0in 0in 0in'>
+
+<p class=3DMsoNormal><b><span =
+style=3D'font-size:10.0pt;font-family:"Tahoma","sans-serif";
+color:windowtext'>From:</span></b><span =
+style=3D'font-size:10.0pt;font-family:
+"Tahoma","sans-serif";color:windowtext'> linux-lvm-bounces@redhat.com
+[mailto:linux-lvm-bounces@redhat.com] <b>On Behalf Of </b>Richard van =
+den Berg<br>
+<b>Sent:</b> Friday, June 29, 2007 1:23 AM<br>
+<b>To:</b> LVM general discussion and development<br>
+<b>Subject:</b> Re: [linux-lvm] Serious problem and I don't know where =
+to turn.<o:p></o:p></span></p>
+
+</div>
+
+</div>
+
+<p class=3DMsoNormal><o:p>&nbsp;</o:p></p>
+
+<p class=3DMsoNormal>WarlockD wrote:<br>
+<br>
+<o:p></o:p></p>
+
+<p class=3DMsoNormal =
+style=3D'mso-margin-top-alt:auto;mso-margin-bottom-alt:auto'><span
+style=3D'color:#1F497D'>[root@server ~]# lvscan -a</span><o:p></o:p></p>
+
+<p class=3DMsoNormal =
+style=3D'mso-margin-top-alt:auto;mso-margin-bottom-alt:auto'><span
+style=3D'color:#1F497D'>&nbsp;
+ACTIVE&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+'/dev/VolGroup00/LogVol00' [147.00 GB] inherit</span><o:p></o:p></p>
+
+<p class=3DMsoNormal =
+style=3D'mso-margin-top-alt:auto;mso-margin-bottom-alt:auto'><span
+style=3D'color:#1F497D'>&nbsp;
+ACTIVE&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+'/dev/VolGroup00/LogVol01' [1.94 GB] inherit</span><o:p></o:p></p>
+
+<p class=3DMsoNormal =
+style=3D'mso-margin-top-alt:auto;mso-margin-bottom-alt:auto'><span
+style=3D'color:#1F497D'>[root@server ~]# vgscan</span><o:p></o:p></p>
+
+<p class=3DMsoNormal =
+style=3D'mso-margin-top-alt:auto;mso-margin-bottom-alt:auto'><span
+style=3D'color:#1F497D'>&nbsp; Reading all physical volumes.&nbsp; This =
+may take
+a while...</span><o:p></o:p></p>
+
+<p class=3DMsoNormal =
+style=3D'mso-margin-top-alt:auto;mso-margin-bottom-alt:auto'><span
+style=3D'color:#1F497D'>&nbsp; Found volume group &quot;VolGroup00&quot; =
+using
+metadata type lvm2</span><o:p></o:p></p>
+
+<p class=3DMsoNormal><span style=3D'color:#1F497D'>&nbsp; Found volume =
+group
+&quot;ANIME&quot; using metadata type lvm2</span><o:p></o:p></p>
+
+<p class=3DMsoNormal><br>
+So the vg &quot;ANIME&quot; is found, but is not activated? That kind of =
+makes
+sense because it is missing the pv on the deleted /dev/sdb2 partition.
+According to the vgreduce man pages you can:<br>
+<br>
+vgreduce --removemissing ANIME<br>
+<br>
+to remove all&nbsp; missing physical volumes from the volume group and =
+make the
+volume group consistent again. It's a good idea to run this option with
+--test&nbsp; first to find out what it would remove before running it =
+for real.
+There is also &quot;--partial&quot; option you can use to activate vgs =
+and lvs
+even if they are missing data. Read the man pages and be very careful =
+before
+you proceed.<br>
+<br>
+<br>
+<o:p></o:p></p>
+
+<p class=3DMsoNormal><span style=3D'color:#1F497D'>Basicly, I have a =
+volume called
+=E2=80=9CANIME-logical=E2=80=9D I am trying to restore, but I =
+don=E2=80=99t have the metadata.&nbsp; Is
+there a way I can get to it?</span><o:p></o:p></p>
+
+<p class=3DMsoNormal><span style=3D'font-size:12.0pt;font-family:"Times =
+New Roman","serif"'><br>
+Without the metadata that's going to be tough. If the filesystem is all
+continuous on your RAID5 partition, technically you should be able to =
+mount it
+if you can create a device pointing at the right start, and with the =
+right
+size. Good luck figuring that out.<br>
+<br>
+Another approach could be to recreate the /dev/sdb2 partition in exactly =
+the
+same way you did before. The metadata might still be there, and the vg =
+might
+come up.<br>
+<br>
+Sincerely,<br>
+<br>
+Richard van den Berg<o:p></o:p></span></p>
+
+</div>
+
+</body>
+
+</html>
+
+------=_NextPart_000_0047_01C7BA6C.27723960--
