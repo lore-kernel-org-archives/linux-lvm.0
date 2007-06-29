@@ -1,14 +1,15 @@
-Received: from [10.33.0.40] (breeves.fab.redhat.com [10.33.0.40])
-	by pobox.fab.redhat.com (8.13.1/8.13.1) with ESMTP id l5TAKFVh012358
-	for <linux-lvm@redhat.com>; Fri, 29 Jun 2007 06:20:15 -0400
-Message-ID: <4684DCA3.8020504@redhat.com>
-Date: Fri, 29 Jun 2007 11:19:15 +0100
-From: "Bryn M. Reeves" <breeves@redhat.com>
-MIME-Version: 1.0
+Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l5TB1IBQ019178
+	for <linux-lvm@redhat.com>; Fri, 29 Jun 2007 07:01:18 -0400
+From: Turbo Fredriksson <turbo@bayour.com>
 Subject: Re: [linux-lvm] Forcibly remove broken disk from LV
-References: <87ps3fdqex.fsf@pumba.bayour.com>
-In-Reply-To: <87ps3fdqex.fsf@pumba.bayour.com>
-Content-Transfer-Encoding: 7bit
+References: <87ps3fdqex.fsf@pumba.bayour.com> <4684DCA3.8020504@redhat.com>
+Date: Fri, 29 Jun 2007 13:01:14 +0200
+In-Reply-To: <4684DCA3.8020504@redhat.com> (Bryn M. Reeves's message of "Fri, 
+	29 Jun 2007 11:19:15 +0100")
+Message-ID: <87k5tndnyd.fsf@pumba.bayour.com>
+MIME-Version: 1.0
+Sender: Turbo Fredriksson <turbo@pumba.redhat.com>
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -20,42 +21,65 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Transfer-Encoding: 7bit
+To: linux-lvm@sistina.com
 
------BEGIN PGP SIGNED MESSAGE-----
-Hash: SHA1
+Quoting "Bryn M. Reeves" <breeves@redhat.com>:
 
-Turbo Fredriksson wrote:
-> I have a disk that only gives SCSI errors etc which
-> I want to remove from the VG. But vgreduce only hangs
-> and so does pvremove...
-> 
-> If I physically remove the disk, the vg/pv/lv etc isn't
-> accessible so the vgreduce won't work (claims that it
-> can't find any PV's etc).
-> 
-> So how do I remove the disk?
-> 
+> You can activate what's left of the volume group with:
+> vgchange --partial -ay <VolGroup>
 
-You can activate what's left of the volume group with:
+Tried that but it didn't seem to be working:
 
-vgchange --partial -ay <VolGroup>
+----- s n i p -----
+root@pegasos:~# vgchange --partial -ay movies
+  Partial mode. Incomplete volume groups will be activated read-only.
+  Couldn't find device with uuid 'nqj4V1-CxT3-At8I-Vc0h-E6iu-6jY3-a6z0A3'.
+  Couldn't find device with uuid 'nqj4V1-CxT3-At8I-Vc0h-E6iu-6jY3-a6z0A3'.
+  Couldn't find device with uuid 'nqj4V1-CxT3-At8I-Vc0h-E6iu-6jY3-a6z0A3'.
+  Couldn't find device with uuid 'nqj4V1-CxT3-At8I-Vc0h-E6iu-6jY3-a6z0A3'.
+  Couldn't find device with uuid 'nqj4V1-CxT3-At8I-Vc0h-E6iu-6jY3-a6z0A3'.
+  Couldn't find device with uuid 'nqj4V1-CxT3-At8I-Vc0h-E6iu-6jY3-a6z0A3'.
+  Couldn't find device with uuid 'nqj4V1-CxT3-At8I-Vc0h-E6iu-6jY3-a6z0A3'.
+  Couldn't find device with uuid 'nqj4V1-CxT3-At8I-Vc0h-E6iu-6jY3-a6z0A3'.
+  Couldn't find device with uuid 'nqj4V1-CxT3-At8I-Vc0h-E6iu-6jY3-a6z0A3'.
+  Couldn't find device with uuid 'nqj4V1-CxT3-At8I-Vc0h-E6iu-6jY3-a6z0A3'.
+  Couldn't find device with uuid 'nqj4V1-CxT3-At8I-Vc0h-E6iu-6jY3-a6z0A3'.
+  Couldn't find device with uuid 'nqj4V1-CxT3-At8I-Vc0h-E6iu-6jY3-a6z0A3'.
+  Device /dev/ioerror not found.
+  device-mapper: reload ioctl failed: Invalid argument
+  device-mapper: reload ioctl failed: Invalid argument
+  Couldn't find device with uuid 'nqj4V1-CxT3-At8I-Vc0h-E6iu-6jY3-a6z0A3'.
+  Couldn't find device with uuid 'nqj4V1-CxT3-At8I-Vc0h-E6iu-6jY3-a6z0A3'.
+  Couldn't find device with uuid 'nqj4V1-CxT3-At8I-Vc0h-E6iu-6jY3-a6z0A3'.
+  Couldn't find device with uuid 'nqj4V1-CxT3-At8I-Vc0h-E6iu-6jY3-a6z0A3'.
+  Couldn't find device with uuid 'nqj4V1-CxT3-At8I-Vc0h-E6iu-6jY3-a6z0A3'.
+  Couldn't find device with uuid 'nqj4V1-CxT3-At8I-Vc0h-E6iu-6jY3-a6z0A3'.
+  Device /dev/ioerror not found.
+  device-mapper: reload ioctl failed: Invalid argument
+  1 logical volume(s) in volume group "movies" now active
+root@pegasos:~# vgdisplay
+  Couldn't find device with uuid 'nqj4V1-CxT3-At8I-Vc0h-E6iu-6jY3-a6z0A3'.
+  Couldn't find all physical volumes for volume group movies.
+  Couldn't find device with uuid 'nqj4V1-CxT3-At8I-Vc0h-E6iu-6jY3-a6z0A3'.
+  Couldn't find all physical volumes for volume group movies.
+  Couldn't find device with uuid 'nqj4V1-CxT3-At8I-Vc0h-E6iu-6jY3-a6z0A3'.
+  Couldn't find all physical volumes for volume group movies.
+  Couldn't find device with uuid 'nqj4V1-CxT3-At8I-Vc0h-E6iu-6jY3-a6z0A3'.
+  Couldn't find all physical volumes for volume group movies.
+  Couldn't find device with uuid 'nqj4V1-CxT3-At8I-Vc0h-E6iu-6jY3-a6z0A3'.
+  Couldn't find all physical volumes for volume group movies.
+  Couldn't find device with uuid 'nqj4V1-CxT3-At8I-Vc0h-E6iu-6jY3-a6z0A3'.
+  Couldn't find all physical volumes for volume group movies.
+  Volume group "movies" not found
+----- s n i p -----
 
-You can remove the missing PV from the VG with:
+I was supposed to do this after physically removing/disconnecting the
+broken disk, right?
 
-vgreduce --removemissing <VolGroup>
 
-Note that this will also remove any logical volumes that were using the
-missing physical volume. You can run it with --test first to see what
-effect it will have.
-
-Regards,
-Bryn.
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.7 (GNU/Linux)
-Comment: Using GnuPG with Fedora - http://enigmail.mozdev.org
-
-iD8DBQFGhNyj6YSQoMYUY94RAj1/AKC5MV2UOwX1H9fJDEPB29gAzAwLXQCg1c6b
-fd0Tnpn1dInlwx5TnH8G2fM=
-=WGy8
------END PGP SIGNATURE-----
+Also, i noticed that I had the /dev/mapper/movies-pvmove0 block device.
+How do i cancel the pvmove I initiated a couple of days ago (tried
+to move hdb to availible space on VG - this availible space is/was
+on the - now - broken disk)? The command 'pvmove --abort' won't
+work - it also hangs...
