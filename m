@@ -1,24 +1,13 @@
-Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l61JBQuT006782
-	for <linux-lvm@redhat.com>; Sun, 1 Jul 2007 15:11:26 -0400
-Received: from mail.esperi.org.uk (user99069@41-052.adsl.zetnet.co.uk
-	[194.247.41.52])
-	by mx1.redhat.com (8.13.1/8.13.1) with ESMTP id l61JBOpF007065
-	for <linux-lvm@redhat.com>; Sun, 1 Jul 2007 15:11:25 -0400
-Received: from esperi.org.uk (nix@hades.wkstn.nix [192.168.14.18])
-	by mail.esperi.org.uk (8.12.11.20060614/8.12.11) with ESMTP id
-	l61JBI9b027467
-	for <linux-lvm@redhat.com>; Sun, 1 Jul 2007 20:11:19 +0100
+Date: Sun, 1 Jul 2007 21:34:36 +0100
+From: Alasdair G Kergon <agk@redhat.com>
 Subject: Re: [linux-lvm] [PATCH]: don't use functions marked by SUSv3 as legacy
+Message-ID: <20070701203436.GK30047@agk.fab.redhat.com>
 References: <200707011529.08381.arekm@maven.pl>
 	<20070701144829.GI30047@agk.fab.redhat.com>
 	<200707011658.00819.arekm@maven.pl>
-From: Nix <nix@esperi.org.uk>
-Date: Sun, 01 Jul 2007 20:11:18 +0100
-In-Reply-To: <200707011658.00819.arekm@maven.pl> (Arkadiusz Miskiewicz's
-	message of "Sun, 1 Jul 2007 16:58:00 +0200")
-Message-ID: <87lke0ueg9.fsf@hades.wkstn.nix>
-MIME-Version: 1.0
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <200707011658.00819.arekm@maven.pl>
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -31,25 +20,47 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: LVM general discussion and development <linux-lvm@redhat.com>
+To: Arkadiusz Miskiewicz <arekm@maven.pl>
+Cc: LVM general discussion and development <linux-lvm@redhat.com>
 
-On 1 Jul 2007, Arkadiusz Miskiewicz stated:
+On Sun, Jul 01, 2007 at 04:58:00PM +0200, Arkadiusz Miskiewicz wrote:
+> Please merge this one, too:
+> http://cvs.pld-linux.org/cgi-bin/cvsweb/SOURCES/lvm2-as-needed.patch
+ 
+Yep.
+
 > The other one puts LDFLAGS (linker flags) not CFLAGS (cflags is for 
-> compilation, ldflags for linking)
-
-That's sane.
-
->                                   and changes order so linking will success 
+> compilation, ldflags for linking) and changes order so linking will success 
 > when using -Wl,--as-needed flag.
+ 
+For fsadm, which I don't consider production-ready yet - but if you're
+using it successfully that'd be nice to know!
 
-There must be more to it than this. I've always built with -Wl,--as-needed
-(wired into my GCC specs file), and I've never had a problem with LVM.
+> There are also others mostly self explaining patches for device-mapper:
+> http://cvs.pld-linux.org/cgi-bin/cvsweb/SOURCES/device-mapper-disable_dynamic_link.patch
 
-I can't see how moving the -o around would change a thing, myself.
+Want to test that one - how does it handle configure --disable-dynamic without
+--enable-static?  (A nice error message?  Is there a cleaner way?)
 
-What problem does this fix?
+> http://cvs.pld-linux.org/cgi-bin/cvsweb/SOURCES/device-mapper-force-local-headers.patch
 
+Not sure what the best way to achieve that upstream is: the patch breaks some
+valid alternative configurations.
+
+> http://cvs.pld-linux.org/cgi-bin/cvsweb/SOURCES/device-mapper-getopt.patch
+
+OK
+
+> http://cvs.pld-linux.org/cgi-bin/cvsweb/SOURCES/device-mapper-klibc.patch
+
+basename: I'd rather call a local implementation if 'configure' didn't find one
+
+fread+sscanf: I'd prefer not to change that at this stage unless you can show
+if fixes bugs in the existing implementation (it's not easy to get this sort of
+code correct, so any change involves avoidable risk) - again an alternative
+function implementation (possibly with a little refactoring) would be more
+acceptable.
+
+Alasdair
 -- 
-`... in the sense that dragons logically follow evolution so they would
- be able to wield metal.' --- Kenneth Eng's colourless green ideas sleep
- furiously
+agk@redhat.com
