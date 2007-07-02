@@ -1,31 +1,18 @@
-Received: from mx2.redhat.com (mx2.redhat.com [10.255.15.25])
-	by int-mx2.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l62KOpbZ021981
-	for <linux-lvm@redhat.com>; Mon, 2 Jul 2007 16:24:52 -0400
-Received: from carpentier.vpsland.com (carpentier.vpsland.com [207.210.113.97])
-	by mx2.redhat.com (8.13.1/8.13.1) with ESMTP id l62KOoZF020621
-	for <linux-lvm@redhat.com>; Mon, 2 Jul 2007 16:24:50 -0400
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by carpentier.vpsland.com (Postfix) with ESMTP id C217E181C2
-	for <linux-lvm@redhat.com>; Mon,  2 Jul 2007 22:24:48 +0200 (CEST)
-Received: from carpentier.vpsland.com ([127.0.0.1])
-	by localhost (carpentier.vpsland.com [127.0.0.1]) (amavisd-new,
-	port 10024) with ESMTP id DXdiht5wqh5o for <linux-lvm@redhat.com>;
-	Mon,  2 Jul 2007 22:24:27 +0200 (CEST)
-Received: from soetens.vdberg.org (h8441201224.dsl.speedlinq.nl
-	[84.41.201.224])
-	by carpentier.vpsland.com (Postfix) with ESMTP id EDE26181BD
-	for <linux-lvm@redhat.com>; Mon,  2 Jul 2007 22:24:24 +0200 (CEST)
-Received: from [192.168.0.34] (h8441201224.dsl.speedlinq.nl [84.41.201.224])
-	by soetens.vdberg.org (Postfix) with ESMTP id C00F814C515
-	for <linux-lvm@redhat.com>; Mon,  2 Jul 2007 22:24:24 +0200 (CEST)
-Message-ID: <46895EF8.6090702@vdberg.org>
-Date: Mon, 02 Jul 2007 22:24:24 +0200
-From: Richard van den Berg <richard@vdberg.org>
+Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l62Lpr1Y025976
+	for <linux-lvm@redhat.com>; Mon, 2 Jul 2007 17:51:53 -0400
+Received: from email.arc.nasa.gov (email.arc.nasa.gov [143.232.64.51])
+	by mx1.redhat.com (8.13.1/8.13.1) with ESMTP id l62Lpq3m027487
+	for <linux-lvm@redhat.com>; Mon, 2 Jul 2007 17:51:52 -0400
+Received: from gobo.arc.nasa.gov (gobo.arc.nasa.gov [143.232.65.135])
+	by email.arc.nasa.gov (Postfix) with ESMTP id A4486204
+	for <linux-lvm@redhat.com>; Mon,  2 Jul 2007 14:51:51 -0700 (PDT)
+Message-ID: <46897378.8040305@email.arc.nasa.gov>
+Date: Mon, 02 Jul 2007 14:51:52 -0700
+From: Ryan Nelson <ryan@email.arc.nasa.gov>
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] some questions
-References: <e55f48520707021203w1cfe21f3qb7f91f2b093508a2@mail.gmail.com>
-In-Reply-To: <e55f48520707021203w1cfe21f3qb7f91f2b093508a2@mail.gmail.com>
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] Clone disk with LVM
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -36,18 +23,26 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="iso-8859-1"
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-Andr=EF=BF=BDs Ghigliazza wrote:
-> - Several times, I had to recover data from hard disks without LVM; in
-> those cases, I boot with a live GNU/Linux CD, mount the partitions,
-> and copy the files. Can this be done with disks with LVM?, how?, which
-> live CD do you recommend for this task?.
 
-Personally I recommend systemrescuecd from http://www.sysresccd.org/ It
-comes with lvm2 and all other tools I've ever needed to recover a system.
+I had a Linux system using LVM for / (root) that was going away for 
+field tests and the users of the system wanted to have a couple hot 
+spares of the drives.  Using dd I replicated the disk to two diffrent 
+drives.  One drive stored away and the other drive was going to be in 
+the system being rsync'd nightly so that it would have the freshest data 
+on it.
 
-Sincerely,
+Because of the dd the LVM had the same names and UUIDs for the vg and 
+lg.  I was able to change the names however I wasn't successful in 
+change the UUIDs.  It didn't even look like there was an option to 
+change the UUIDs for the lv. 
 
-Richard van den Berg
+What would have been the correct way to achieve a setup like this with 
+LVM?  I would assume a mirroring of some sort although I don't know what 
+would be involved for the user if the drive did die and they needed to 
+use the second drive.
+
+Thanks
+Ryan
