@@ -1,25 +1,18 @@
-Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l62Im3m0016682
-	for <linux-lvm@redhat.com>; Mon, 2 Jul 2007 14:48:03 -0400
-Received: from mail.esperi.org.uk (user17731@41-052.adsl.zetnet.co.uk
-	[194.247.41.52])
-	by mx1.redhat.com (8.13.1/8.13.1) with ESMTP id l62Im0D2017924
-	for <linux-lvm@redhat.com>; Mon, 2 Jul 2007 14:48:01 -0400
-Received: from esperi.org.uk (nix@hades.wkstn.nix [192.168.14.18])
-	by mail.esperi.org.uk (8.12.11.20060614/8.12.11) with ESMTP id
-	l62IlwRA013942
-	for <linux-lvm@redhat.com>; Mon, 2 Jul 2007 19:47:58 +0100
-Subject: Re: [linux-lvm] [PATCH]: don't use functions marked by SUSv3 as legacy
-References: <200707011529.08381.arekm@maven.pl>
-	<20070701144829.GI30047@agk.fab.redhat.com>
-	<200707011658.00819.arekm@maven.pl> <87lke0ueg9.fsf@hades.wkstn.nix>
-	<20070701203656.GL30047@agk.fab.redhat.com>
-From: Nix <nix@esperi.org.uk>
-Date: Mon, 02 Jul 2007 19:47:57 +0100
-In-Reply-To: <20070701203656.GL30047@agk.fab.redhat.com> (Alasdair G. Kergon's
-	message of "Sun, 1 Jul 2007 21:36:56 +0100")
-Message-ID: <87k5tiabhe.fsf@hades.wkstn.nix>
+Received: from mx2.redhat.com (mx2.redhat.com [10.255.15.25])
+	by int-mx2.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l62J3AkD008931
+	for <linux-lvm@redhat.com>; Mon, 2 Jul 2007 15:03:10 -0400
+Received: from py-out-1112.google.com (py-out-1112.google.com [64.233.166.183])
+	by mx2.redhat.com (8.13.1/8.13.1) with ESMTP id l62J39dn020584
+	for <linux-lvm@redhat.com>; Mon, 2 Jul 2007 15:03:09 -0400
+Received: by py-out-1112.google.com with SMTP id p76so2902359pyb
+	for <linux-lvm@redhat.com>; Mon, 02 Jul 2007 12:03:09 -0700 (PDT)
+Message-ID: <e55f48520707021203w1cfe21f3qb7f91f2b093508a2@mail.gmail.com>
+Date: Mon, 2 Jul 2007 16:03:08 -0300
+From: "=?ISO-8859-1?Q?Andr=E9s_Ghigliazza?=" <tizone@gmail.com>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+Subject: [linux-lvm] some questions
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -30,26 +23,25 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+To: linux-lvm@redhat.com
 
-On 1 Jul 2007, Alasdair G. Kergon told this:
+Hi there,
 
-> On Sun, Jul 01, 2007 at 08:11:18PM +0100, Nix wrote:
->> There must be more to it than this. I've always built with -Wl,--as-needed
->> (wired into my GCC specs file), and I've never had a problem with LVM.
->  
-> This is only changing 'fsadm' which is not enabled by default upstream
-> as I don't yet consider it stable.
+I have some questions:
 
-I build fsadm and I don't need this patch.
+- In http://www.tldp.org/HOWTO/LVM-HOWTO/, there is a guide to convert
+a root filesystem to LVM1 (13.8). Is there any guide to convert a root
+filesystem to LVM2?
 
-(However, without this patch, including -Wl,--as-needed in the LDFLAGS
-won't link fsadm with --as-needed, so it is still beneficial. I just
-don't see that it's making linking work where before it didn't.)
+- It is LVM2 stable enough?, or by now, and for a production system,
+is preferable LVM1?
 
--- 
-`... in the sense that dragons logically follow evolution so they would
- be able to wield metal.' --- Kenneth Eng's colourless green ideas sleep
- furiously
+- Several times, I had to recover data from hard disks without LVM; in
+those cases, I boot with a live GNU/Linux CD, mount the partitions,
+and copy the files. Can this be done with disks with LVM?, how?, which
+live CD do you recommend for this task?.
+
+Thanks very much,
+
+tizo
