@@ -1,21 +1,25 @@
 Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l627Z8O2024514
-	for <linux-lvm@redhat.com>; Mon, 2 Jul 2007 03:35:08 -0400
-Received: from jogback.se (root@mail1.jogback.se [192.165.82.16])
-	by mx1.redhat.com (8.13.1/8.13.1) with ESMTP id l627Z1mi025499
-	for <linux-lvm@redhat.com>; Mon, 2 Jul 2007 03:35:02 -0400
-Received: from [130.244.254.1] (account lm HELO [127.0.0.1])
-	by mail1.jogback.se (CommuniGate Pro SMTP 5.1.9)
-	with ESMTPA id 4525145 for linux-lvm@redhat.com;
-	Mon, 02 Jul 2007 09:35:01 +0200
-Message-ID: <4688AAA2.6070807@swip.net>
-Date: Mon, 02 Jul 2007 09:34:58 +0200
-From: =?ISO-8859-1?Q?Lars_Michael_Jogb=E4ck?= <lm@swip.net>
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l62Im3m0016682
+	for <linux-lvm@redhat.com>; Mon, 2 Jul 2007 14:48:03 -0400
+Received: from mail.esperi.org.uk (user17731@41-052.adsl.zetnet.co.uk
+	[194.247.41.52])
+	by mx1.redhat.com (8.13.1/8.13.1) with ESMTP id l62Im0D2017924
+	for <linux-lvm@redhat.com>; Mon, 2 Jul 2007 14:48:01 -0400
+Received: from esperi.org.uk (nix@hades.wkstn.nix [192.168.14.18])
+	by mail.esperi.org.uk (8.12.11.20060614/8.12.11) with ESMTP id
+	l62IlwRA013942
+	for <linux-lvm@redhat.com>; Mon, 2 Jul 2007 19:47:58 +0100
+Subject: Re: [linux-lvm] [PATCH]: don't use functions marked by SUSv3 as legacy
+References: <200707011529.08381.arekm@maven.pl>
+	<20070701144829.GI30047@agk.fab.redhat.com>
+	<200707011658.00819.arekm@maven.pl> <87lke0ueg9.fsf@hades.wkstn.nix>
+	<20070701203656.GL30047@agk.fab.redhat.com>
+From: Nix <nix@esperi.org.uk>
+Date: Mon, 02 Jul 2007 19:47:57 +0100
+In-Reply-To: <20070701203656.GL30047@agk.fab.redhat.com> (Alasdair G. Kergon's
+	message of "Sun, 1 Jul 2007 21:36:56 +0100")
+Message-ID: <87k5tiabhe.fsf@hades.wkstn.nix>
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] Problems(?) with pvresize
-References: <4688A567.2030005@swip.net> <4688A90B.8080507@vdberg.org>
-In-Reply-To: <4688A90B.8080507@vdberg.org>
-Content-Transfer-Encoding: quoted-printable
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -26,23 +30,26 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="iso-8859-1"; format="flowed"
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-Richard van den Berg wrote:
-> Lars Michael Jogb=EF=BF=BDck wrote:
->  =20
->> I've got a hardware-raid5 that I've extended (/dev/sdk), and after
->> extending it, I get the kernel to recognize the new size.
->> But pvresize is still using the old size. I'm pretty convinced that a
->> reboot will solve this issue for me, but isn't there a way of solving
->> this without rebooting?
->>    =20
->
-> I used "partprobe" that comes with parted, and it worked well for me
->  =20
-Thanks, but I've tried that and it didn't work either. pvresize still=20
-thinks it's the old size.
+On 1 Jul 2007, Alasdair G. Kergon told this:
 
-Best Regards,
-/LM
+> On Sun, Jul 01, 2007 at 08:11:18PM +0100, Nix wrote:
+>> There must be more to it than this. I've always built with -Wl,--as-needed
+>> (wired into my GCC specs file), and I've never had a problem with LVM.
+>  
+> This is only changing 'fsadm' which is not enabled by default upstream
+> as I don't yet consider it stable.
+
+I build fsadm and I don't need this patch.
+
+(However, without this patch, including -Wl,--as-needed in the LDFLAGS
+won't link fsadm with --as-needed, so it is still beneficial. I just
+don't see that it's making linking work where before it didn't.)
+
+-- 
+`... in the sense that dragons logically follow evolution so they would
+ be able to wield metal.' --- Kenneth Eng's colourless green ideas sleep
+ furiously
