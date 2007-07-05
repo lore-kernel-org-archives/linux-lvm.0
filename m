@@ -1,21 +1,31 @@
 Received: from mx2.redhat.com (mx2.redhat.com [10.255.15.25])
-	by int-mx2.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l65GlFGQ007145
-	for <linux-lvm@redhat.com>; Thu, 5 Jul 2007 12:47:16 -0400
-Received: from mail.bmsi.com (www.bmsi.com [24.248.44.156])
-	by mx2.redhat.com (8.13.1/8.13.1) with ESMTP id l65GlDqN030357
-	for <linux-lvm@redhat.com>; Thu, 5 Jul 2007 12:47:13 -0400
-Received: from bmsred.bmsi.com (bmsred.bmsi.com [192.168.9.50])
-	by mail.bmsi.com (8.13.6/8.13.6) with ESMTP id l65Gl7Bs028058
-	for <linux-lvm@redhat.com>; Thu, 5 Jul 2007 12:47:07 -0400
+	by int-mx2.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l65Gs78t008061
+	for <linux-lvm@redhat.com>; Thu, 5 Jul 2007 12:54:08 -0400
+Received: from vps.decarpentier.com (vps.decarpentier.com [208.78.99.7])
+	by mx2.redhat.com (8.13.1/8.13.1) with ESMTP id l65Gs0dc000587
+	for <linux-lvm@redhat.com>; Thu, 5 Jul 2007 12:54:00 -0400
 Received: from localhost (localhost [127.0.0.1])
-	by bmsred.bmsi.com (8.13.5/8.13.5) with ESMTP id l65Gl7ho008716
-	for <linux-lvm@redhat.com>; Thu, 5 Jul 2007 12:47:07 -0400
-Date: Thu, 5 Jul 2007 12:47:07 -0400 (EDT)
-From: "Stuart D. Gathman" <stuart@bmsi.com>
-In-Reply-To: <Pine.LNX.4.44.0707051234061.8628-100000@bmsred.bmsi.com>
-Message-ID: <Pine.LNX.4.44.0707051242290.8628-100000@bmsred.bmsi.com>
+	by vps.decarpentier.com (Postfix) with ESMTP id 1C9FB805E5
+	for <linux-lvm@redhat.com>; Thu,  5 Jul 2007 18:54:01 +0200 (CEST)
+Received: from vps.decarpentier.com ([127.0.0.1])
+	by localhost (vps.decarpentier.com [127.0.0.1]) (amavisd-new,
+	port 10024) with ESMTP id KkaGUeu4pQFV for <linux-lvm@redhat.com>;
+	Thu,  5 Jul 2007 18:53:56 +0200 (CEST)
+Received: from soetens.vdberg.org (h8441201224.dsl.speedlinq.nl
+	[84.41.201.224])
+	by vps.decarpentier.com (Postfix) with ESMTP id EA67B805E4
+	for <linux-lvm@redhat.com>; Thu,  5 Jul 2007 18:53:55 +0200 (CEST)
+Received: from [192.168.0.34] (h8441201224.dsl.speedlinq.nl [84.41.201.224])
+	by soetens.vdberg.org (Postfix) with ESMTP id B6CDB14C35F
+	for <linux-lvm@redhat.com>; Thu,  5 Jul 2007 18:53:53 +0200 (CEST)
+Message-ID: <468D2221.7000004@vdberg.org>
+Date: Thu, 05 Jul 2007 18:53:53 +0200
+From: Richard van den Berg <richard@vdberg.org>
 MIME-Version: 1.0
-Subject: [linux-lvm] Debugging partial drive failure
+Subject: Re: [linux-lvm] Pvmove Cannot Be Aborted
+References: <20070704140438.8BE0177702@mail.futurelabusa.com>
+In-Reply-To: <20070704140438.8BE0177702@mail.futurelabusa.com>
+Content-Transfer-Encoding: 7bit
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -26,36 +36,16 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-On Thu, 5 Jul 2007, Stuart D. Gathman wrote:
+Jim Schatzman wrote:
+> So... I have learned my lesson - never use pvmove on a bad drive. 
 
-> On Wed, 4 Jul 2007, Jim Schatzman wrote:
-> 
-> > I made the mistake of trying to use pvmove to move any good data from a bad
-> > disk to a new identical good disk in an LV. Unfortunately, the Pvmove failed
-> > in midoperation. It cannot now be aborted, presumably because of the bad
-> > disk.
-> 
-> I wish there was a SMART command to a drive that would tell it to pretend a
-> range of sectors is bad until further notice (without actually remapping said
-> sectors).  This would be a great help is debugging the error handling of
-> things like LVM.  In fact, maybe there already is such a feature in SMART,
-> and it just isn't widely known.
+Your VG and LVs are not in worse shape now (after the stuck pvmove) than
+they would have been if you did not attempt the pvmove, right? I guess
+you did not use use raid on top of or under lvm?
 
-This could be added to the linux disk driver.  There could be an
-option for a disk module that would pretend that a range of sectors
-got an I/O error from the drive.  This would allow debugging the LVM
-layer.
+Sincerely,
 
-E.g. modprobe.conf:
-
-options mptbase debug_bad=450000-500000
-
--- 
-	      Stuart D. Gathman <stuart@bmsi.com>
-    Business Management Systems Inc.  Phone: 703 591-0911 Fax: 703 591-6154
-"Confutatis maledictis, flammis acribus addictis" - background song for
-a Microsoft sponsored "Where do you want to go from here?" commercial.
+Richard van den Berg
