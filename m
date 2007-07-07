@@ -1,20 +1,20 @@
-Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l67B3gK8016463
-	for <linux-lvm@redhat.com>; Sat, 7 Jul 2007 07:03:42 -0400
+Received: from mx2.redhat.com (mx2.redhat.com [10.255.15.25])
+	by int-mx2.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l67B5UI5005258
+	for <linux-lvm@redhat.com>; Sat, 7 Jul 2007 07:05:30 -0400
 Received: from mail.esperi.org.uk (41-052.adsl.zetnet.co.uk [194.247.41.52])
-	by mx1.redhat.com (8.13.1/8.13.1) with ESMTP id l67B3e49001409
-	for <linux-lvm@redhat.com>; Sat, 7 Jul 2007 07:03:41 -0400
+	by mx2.redhat.com (8.13.1/8.13.1) with ESMTP id l67B5S5k014522
+	for <linux-lvm@redhat.com>; Sat, 7 Jul 2007 07:05:28 -0400
 Received: from esperi.org.uk (nix@hades.wkstn.nix [192.168.14.18])
 	by mail.esperi.org.uk (8.12.11.20060614/8.12.11) with ESMTP id
-	l67B3cHR032454
-	for <linux-lvm@redhat.com>; Sat, 7 Jul 2007 12:03:38 +0100
-Subject: Re: [linux-lvm] Clone disk with LVM
-References: <46897378.8040305@email.arc.nasa.gov>
+	l67B5Nop000105
+	for <linux-lvm@redhat.com>; Sat, 7 Jul 2007 12:05:23 +0100
+Subject: Re: [linux-lvm] Debugging partial drive failure
+References: <Pine.LNX.4.44.0707051242290.8628-100000@bmsred.bmsi.com>
 From: Nix <nix@esperi.org.uk>
-Date: Sat, 07 Jul 2007 12:03:37 +0100
-In-Reply-To: <46897378.8040305@email.arc.nasa.gov> (Ryan Nelson's message of
-	"Mon, 02 Jul 2007 14:51:52 -0700")
-Message-ID: <87ir8wa31y.fsf@hades.wkstn.nix>
+Date: Sat, 07 Jul 2007 12:05:23 +0100
+In-Reply-To: <Pine.LNX.4.44.0707051242290.8628-100000@bmsred.bmsi.com> (Stuart
+	D. Gathman's message of "Thu, 5 Jul 2007 12:47:07 -0400 (EDT)")
+Message-ID: <87ejjka2z0.fsf@hades.wkstn.nix>
 MIME-Version: 1.0
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
@@ -30,14 +30,17 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-On 2 Jul 2007, Ryan Nelson spake thusly:
-> Because of the dd the LVM had the same names and UUIDs for the vg and lg.  I was able to change the names however I wasn't
-> successful in change the UUIDs.  It didn't even look like there was an option to change the UUIDs for the lv.
+On 5 Jul 2007, Stuart D. Gathman uttered the following:
+> This could be added to the linux disk driver.  There could be an
+> option for a disk module that would pretend that a range of sectors
+> got an I/O error from the drive.  This would allow debugging the LVM
+> layer.
 
-vgcfgbackup, edit the backup, edit the ids in the logical_volumes
-sections, check your work carefully, and vgcfgrestore?
+I think something in /sys or /debug would be more practical. debugfs
+seems a better fit.
 
-(One very nice thing about LVM2 is that all the metadata is textual...)
+You really want to be able to change this at runtime without rmmodding
+or rebooting.
 
 -- 
 `... in the sense that dragons logically follow evolution so they would
