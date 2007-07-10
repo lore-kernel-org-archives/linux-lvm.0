@@ -1,15 +1,22 @@
-Received: from [10.15.80.216] (dhcp80-216.msp.redhat.com [10.15.80.216])
-	by pobox.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l6AErqYK027552
-	for <linux-lvm@redhat.com>; Tue, 10 Jul 2007 10:53:53 -0400
-Mime-Version: 1.0 (Apple Message framework v752.3)
-In-Reply-To: <468DCB29.9020305@cargo-partner.com>
-References: <20070704140438.8BE0177702@mail.futurelabusa.com>
-	<468DCB29.9020305@cargo-partner.com>
-Message-Id: <BF0A9817-D66C-4583-8416-D5A4B687351A@redhat.com>
-From: Jonathan Brassow <jbrassow@redhat.com>
-Subject: Re: [linux-lvm] lv with cmirror
-Date: Tue, 10 Jul 2007 09:51:10 -0500
-Content-Transfer-Encoding: quoted-printable
+Received: from mx2.redhat.com (mx2.redhat.com [10.255.15.25])
+	by int-mx2.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l6AF0ufu013373
+	for <linux-lvm@redhat.com>; Tue, 10 Jul 2007 11:00:56 -0400
+Received: from py-out-1112.google.com (py-out-1112.google.com [64.233.166.181])
+	by mx2.redhat.com (8.13.1/8.13.1) with ESMTP id l6AF0tLP026464
+	for <linux-lvm@redhat.com>; Tue, 10 Jul 2007 11:00:55 -0400
+Received: by py-out-1112.google.com with SMTP id p76so2741354pyb
+	for <linux-lvm@redhat.com>; Tue, 10 Jul 2007 08:00:55 -0700 (PDT)
+Message-ID: <1cd18cb0707100800l62d33876sc90e29854a43dc42@mail.gmail.com>
+Date: Tue, 10 Jul 2007 17:00:55 +0200
+From: "Marco Antonelli" <marcoantonelli82@gmail.com>
+Subject: Re: [linux-lvm] Logical Volume on two disk,
+	one is broken: how to restore data from the good disk?
+In-Reply-To: <20070710145150.GA2984@redhat.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+References: <1cd18cb0707100731h7cef5a91qcab1051f234c61bb@mail.gmail.com>
+	<20070710145150.GA2984@redhat.com>
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -20,33 +27,16 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="iso-8859-1"; delsp="yes"; format="flowed"
-To: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+To: mauelshagen@redhat.com, LVM general discussion and development <linux-lvm@redhat.com>
 
-Any output found in /var/log/messages?
+2007/7/10, Heinz Mauelshagen <mauelshagen@redhat.com>:
 
-  brassow
+> You got to put the PVs on MD RAID >= 1 or use LVM mirring to avoid this.
+> Reach out for your backups :(
+>
+> Regards,
+> Heinz    -- The LVM Guy --
 
-On Jul 5, 2007, at 11:55 PM, Michael Eisenk=EF=BF=BDlbl / FIS wrote:
-
-> Hi,
->
-> I installed a clustered VG with a mirrored LV (RHEL4.5 and cmirror).
-> and using three iscsi storages (each two channels) and =20
-> multipathd ... to be sure.
->
-> If I disconnect one iscsi storage, the LV is not working.
-> the command lvs or lvdisplay stucks.... when connecting again, the =20
-> command will be
-> finished and everything will work.
->
-> why doesn't it remove the fault pv? any ideas?
->
-> kind regards,
-> michael
->
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+Yes, I will setup RAID these days, but... there is no way to read the
+data on the good disk?? I have only an incomplete backup
