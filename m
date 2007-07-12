@@ -1,18 +1,32 @@
-Received: from mx2.redhat.com (mx2.redhat.com [10.255.15.25])
-	by int-mx2.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l6C8rsH8002932
-	for <linux-lvm@redhat.com>; Thu, 12 Jul 2007 04:53:54 -0400
-Received: from web94412.mail.in2.yahoo.com (web94412.mail.in2.yahoo.com
-	[203.104.16.237])
-	by mx2.redhat.com (8.13.1/8.13.1) with SMTP id l6C8rlG0029285
-	for <linux-lvm@redhat.com>; Thu, 12 Jul 2007 04:53:47 -0400
-Date: Thu, 12 Jul 2007 09:53:40 +0100 (BST)
-From: Indraveni <indraveni@yahoo.co.in>
+Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l6C9sCBl031089
+	for <linux-lvm@redhat.com>; Thu, 12 Jul 2007 05:54:12 -0400
+Received: from smtp-4.hut.fi (smtp-4.hut.fi [130.233.228.94])
+	by mx1.redhat.com (8.13.1/8.13.1) with ESMTP id l6C9sBHL016094
+	for <linux-lvm@redhat.com>; Thu, 12 Jul 2007 05:54:11 -0400
+Received: from localhost (putosiko.hut.fi [130.233.228.114])
+	by smtp-4.hut.fi (8.13.6/8.12.10) with ESMTP id l6C9s57u003762
+	for <linux-lvm@redhat.com>; Thu, 12 Jul 2007 12:54:05 +0300
+Received: from smtp-4.hut.fi ([130.233.228.94])
+	by localhost (putosiko.hut.fi [130.233.228.114]) (amavisd-new,
+	port 10024) with LMTP id 24961-31-5 for <linux-lvm@redhat.com>;
+	Thu, 12 Jul 2007 12:54:05 +0300 (EEST)
+Received: from aski.hut.fi (aski.hut.fi [130.233.79.196])
+	by smtp-4.hut.fi (8.13.6/8.12.10) with ESMTP id l6C9rrda003719
+	for <linux-lvm@redhat.com>; Thu, 12 Jul 2007 12:53:53 +0300
+Received: from localhost (localhost [127.0.0.1])
+	by aski.hut.fi (Postfix) with ESMTP id DF01E33B8A
+	for <linux-lvm@redhat.com>; Thu, 12 Jul 2007 12:53:52 +0300 (EEST)
+Date: Thu, 12 Jul 2007 12:53:52 +0300 (EEST)
+From: Vesa-Pekka Palmu <palmu@aski.hut.fi>
+Subject: Re: [linux-lvm] pvmove fails with "Failure parsing mirror status
+	fraction: 1 core"
+In-Reply-To: <4695E421.4040106@redhat.com>
+Message-ID: <Pine.LNX.4.62.0707121253170.22959@aski.hut.fi>
+References: <Pine.LNX.4.62.0707120828240.22959@aski.hut.fi>
+	<4695E421.4040106@redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Message-ID: <489446.83468.qm@web94412.mail.in2.yahoo.com>
-Subject: [linux-lvm] how to activate the lvm partition which is not detected
-Reply-To: indraveni@yahoo.co.in,
-	LVM general discussion and development <linux-lvm@redhat.com>
+Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -22,30 +36,19 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@redhat.com
+Content-Type: TEXT/PLAIN; charset="us-ascii"; format="flowed"
+Content-Transfer-Encoding: 7bit
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-Hi all,
+On Thu, 12 Jul 2007, Milan Broz wrote:
 
- I have two harddisks, each of 80GB, sda1 and sdb1,
-sdb1 is added as lvm partition and thus all the data
-resides in that lvm parition only. It was working fine
-from some months. Suddenly the system showed the
-content as readonly content of that lvm partition and
-when I tried restarting the system, I am not able to
-find my lvm partition. lvdisplay command is showing
-output like , No Volume Groups available. fdisk -l
-command, is showig the partions of the sda1 only and
-sdb1 its showign a message like, no partition table
-available for sdb1, and thus its not getting mounted. 
-  Could some one please tell me how to recover my data
-back. How can I reactivate my lvm partition.
+> Hi,
+> there is bug in status string - and pvmove use it for monitoring,
+> unfotunatelly the fix is not in 2.6.22 stable tree yet...
+> (kernel 2.6.21 is ok)
+>
+> Patch is here
+> http://www.kernel.org/pub/linux/kernel/people/agk/patches/2.6/editing/dm-raid1-fix-status.patch
+>
 
-Awaiting for your reply.
-
-Regards
-Indraveni
-
-
-
-      Get the freedom to save as many mails as you wish. To know how, go to http://help.yahoo.com/l/in/yahoo/mail/yahoomail/tools/tools-08.html
+Thanks.
