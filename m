@@ -1,15 +1,25 @@
-Received: from [10.32.4.62] (vpn-4-62.str.redhat.com [10.32.4.62])
-	by pobox.stuttgart.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
-	l6UIgPpZ007361
-	for <linux-lvm@redhat.com>; Mon, 30 Jul 2007 20:42:26 +0200
-Message-ID: <46AE3149.50709@redhat.com>
-Date: Mon, 30 Jul 2007 20:43:21 +0200
-From: Milan Broz <mbroz@redhat.com>
+Received: from mx2.redhat.com (mx2.redhat.com [10.255.15.25])
+	by int-mx2.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l6VET5O1017522
+	for <linux-lvm@redhat.com>; Tue, 31 Jul 2007 10:29:06 -0400
+Received: from an-out-0708.google.com (an-out-0708.google.com [209.85.132.249])
+	by mx2.redhat.com (8.13.1/8.13.1) with ESMTP id l6VET4bR027308
+	for <linux-lvm@redhat.com>; Tue, 31 Jul 2007 10:29:04 -0400
+Received: by an-out-0708.google.com with SMTP id c31so427789ana
+	for <linux-lvm@redhat.com>; Tue, 31 Jul 2007 07:29:03 -0700 (PDT)
+Message-ID: <ca3f4a240707310729t72de8478mb80b6f1b2431a9f0@mail.gmail.com>
+Date: Tue, 31 Jul 2007 09:29:03 -0500
+From: "Allan Wolfe" <allan.wolfe@gmail.com>
+Subject: Re: [linux-lvm] disk recovery - mounting external USB lvm2 volume
+In-Reply-To: <469DEBB4.5080602@redhat.com>
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] Xen, LVM, Snapshots Random Kernel Panics
-References: <2C96D4B0-33EC-4250-89C5-1B516C83A04D@smytheonline.com>
-In-Reply-To: <2C96D4B0-33EC-4250-89C5-1B516C83A04D@smytheonline.com>
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/alternative; 
+	boundary="----=_Part_50969_20515197.1185892143085"
+References: <ca3f4a240707151830q4cd06100hbaea5969e4589258@mail.gmail.com>
+	<20070716014007.GA31102@bdmcc-us.com>
+	<ca3f4a240707161928y94deabr15839a6b6eb554ef@mail.gmail.com>
+	<20070717031215.GB24644@bdmcc-us.com>
+	<ca3f4a240707171841w626b2a41o7cc07d14111ebea9@mail.gmail.com>
+	<469DEBB4.5080602@redhat.com>
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -20,76 +30,69 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-Hi,
+------=_Part_50969_20515197.1185892143085
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
 
-this is one of the problems caused by one common
-mempool for dm-io in kernel when using multiple snapshots.
+Thanks Bryn for the added info.
 
-Please try to use kernel 2.6.22, there is new dm-io
-code and this is fixed.
-Bug is not related to particular lvm2 tools version.
+I finally wound back around to finish the renaming of my local volume name.
+It was successful after figuring out that the lvm commands are packaged as
+the single "lvm" command on the Fedora Rescue CD.  I also discovered that
+the initrd had to be expanded and modified and repacked.  There was a
+reference there as well.
 
-Milan
---
-mbroz@redhat.com
+Thanks for your help.
 
-Norbert Phillipps wrote:
-> Hi all,
-> 
-> I'm currently running lvm 2.02.25, and device-mapper 1.02.19 on kernel
-> 2.6.20.13 with Xen 3.1 on Gentoo Linux
-> 
-> I randomly have kernel panics when creating snapshots and also when
-> removing snapshots.
-> 
-> Attached is one of the kernel panics that I have seen while creating a
-> snapshot.  I'm trying to find a stable combination of kernel, lvm, and
-> Xen version.
-> 
-> Thanks!
-> 
-> ------------[ cut here ]------------
-> kernel BUG at mm/mempool.c:121!
-> invalid opcode: 0000 [#1]
-> SMP 
-> Modules linked in: ipv6 nfs lockd nfs_acl sunrpc bridge llc dm_snapshot
-> dm_mod aoe qla2xxx i2c_i801 i2c_core firmware_class e1000 uhci_hcd evdev
-> CPU:    0
-> EIP:    0061:[<c013d66b>]    Not tainted VLI
-> EFLAGS: 00010282   (2.6.20.14-xen #5)
-> EIP is at mempool_resize+0x137/0x16c
-> eax: ec5a6900   ebx: ffffffe0   ecx: 000000d0   edx: ffffffe0
-> esi: e9395b00   edi: f07f5080   ebp: ec5a6900   esp: e8317d5c
-> ds: 007b   es: 007b   ss: 0069
-> Process vgchange (pid: 8179, ti=e8316000 task=e873da70 task.ti=e8316000)
-> Stack: 00692000 000000d0 ffffffe0 80000000 ffffffe0 e9395b00 f07f5080
-> 00000000 
->        ee24a3c8 00000000 e8d289c0 ee24a5cd e873da70 c012d034 e8317d94
-> e8317d94 
->        c0156c7e e93962c0 e9395b00 f07f5080 ee06ebf1 f07f5080 e93964c0
-> 00000000 
-> Call Trace:
->  [<ee24a3c8>] resize_pool+0x47/0xb2 [dm_mod]
->  [<ee24a5cd>] kcopyd_client_destroy+0x84/0xc9 [dm_mod]
->  [<c012d034>] autoremove_wake_function+0x0/0x37
->  [<c0156c7e>] kfree+0xe/0x7d
->  [<ee06ebf1>] snapshot_dtr+0x85/0xcf [dm_snapshot]
->  [<ee246d73>] dm_table_put+0x55/0xbd [dm_mod]
->  [<ee245b0e>] dm_put+0x6f/0x110 [dm_mod]
->  [<ee249561>] dev_remove+0x76/0xa4 [dm_mod]
->  [<ee249b48>] ctl_ioctl+0x1eb/0x255 [dm_mod]
->  [<c0107457>] monotonic_clock+0x37/0x74
->  [<ee2494eb>] dev_remove+0x0/0xa4 [dm_mod]
->  [<c0164874>] do_ioctl+0x64/0x6d
->  [<c01648cd>] vfs_ioctl+0x50/0x278
->  [<c0164b29>] sys_ioctl+0x34/0x53
->  [<c0104c34>] syscall_call+0x7/0xb
->  [<c0320033>] unix_dgram_sendmsg+0x2f9/0x48a
->  =======================
-> Code: 8b 45 08 3b 45 04 0f 8d 4c ff ff ff 8b 14 24 89 e8 e8 c4 93 1e 00
-> 8b 55 10 8b 44 24 04 ff 55 14 89 c3 85 c0 75 bf e9 37 ff ff ff <0f> 0b
-> eb fe 8b 14 24 89 e8 e8 a1 93 1e 00 8b 55 10 89 d8 ff 55 
-> EIP: [<c013d66b>] mempool_resize+0x137/0x16c SS:ESP 0069:e8317d5c
+On 7/18/07, Bryn M. Reeves <breeves@redhat.com> wrote:
+>
+> -----BEGIN PGP SIGNED MESSAGE-----
+> Hash: SHA1
+>
+> Allan Wolfe wrote:
+> > Yes.  The grub.conf does refer to the logical volume.  I also see
+> > /etc/blkid/blkid.tab which looks like it is built at boot time (kudzu?).
+> >
+>
+> The /etc/blkid/blkid.tab file is the libblkid persistent device cache.
+> It's used by the blkid command and other users of the library (e.g.
+> e2fsprogs). It's always validated prior to use and is indexed by UUID,
+> label etc, so there's no need to worry about updating it when device
+> nodes change.
+>
+> Kind regards,
+> Bryn.
+> -----BEGIN PGP SIGNATURE-----
+> Version: GnuPG v1.4.7 (GNU/Linux)
+> Comment: Using GnuPG with Fedora - http://enigmail.mozdev.org
+>
+> iD8DBQFGneu06YSQoMYUY94RAg2oAKCABfby/SZtrOyLZ8zTZcr1FdKzjwCgj9Tn
+> Z9Axek7SWivOMiBbSYxOjCs=
+> =ySEM
+> -----END PGP SIGNATURE-----
+>
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@redhat.com
+> https://www.redhat.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+>
+
+------=_Part_50969_20515197.1185892143085
+Content-Type: text/html; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+Thanks Bryn for the added info. <br><br>I finally wound back around to finish the renaming of my local volume name.&nbsp; It was successful after figuring out that the lvm commands are packaged as the single &quot;lvm&quot; command on the Fedora Rescue CD.&nbsp; I also discovered that the initrd had to be expanded and modified and repacked.&nbsp; There was a reference there as well.
+<br><br>Thanks for your help.<br><br><div><span class="gmail_quote">On 7/18/07, <b class="gmail_sendername">Bryn M. Reeves</b> &lt;<a href="mailto:breeves@redhat.com">breeves@redhat.com</a>&gt; wrote:</span><blockquote class="gmail_quote" style="border-left: 1px solid rgb(204, 204, 204); margin: 0pt 0pt 0pt 0.8ex; padding-left: 1ex;">
+-----BEGIN PGP SIGNED MESSAGE-----<br>Hash: SHA1<br><br>Allan Wolfe wrote:<br>&gt; Yes.&nbsp;&nbsp;The grub.conf does refer to the logical volume.&nbsp;&nbsp;I also see<br>&gt; /etc/blkid/blkid.tab which looks like it is built at boot time (kudzu?).
+<br>&gt;<br><br>The /etc/blkid/blkid.tab file is the libblkid persistent device cache.<br>It&#39;s used by the blkid command and other users of the library (e.g.<br>e2fsprogs). It&#39;s always validated prior to use and is indexed by UUID,
+<br>label etc, so there&#39;s no need to worry about updating it when device<br>nodes change.<br><br>Kind regards,<br>Bryn.<br>-----BEGIN PGP SIGNATURE-----<br>Version: GnuPG v1.4.7 (GNU/Linux)<br>Comment: Using GnuPG with Fedora - 
+<a href="http://enigmail.mozdev.org">http://enigmail.mozdev.org</a><br><br>iD8DBQFGneu06YSQoMYUY94RAg2oAKCABfby/SZtrOyLZ8zTZcr1FdKzjwCgj9Tn<br>Z9Axek7SWivOMiBbSYxOjCs=<br>=ySEM<br>-----END PGP SIGNATURE-----<br><br>_______________________________________________
+<br>linux-lvm mailing list<br><a href="mailto:linux-lvm@redhat.com">linux-lvm@redhat.com</a><br><a href="https://www.redhat.com/mailman/listinfo/linux-lvm">https://www.redhat.com/mailman/listinfo/linux-lvm</a><br>read the LVM HOW-TO at 
+<a href="http://tldp.org/HOWTO/LVM-HOWTO/">http://tldp.org/HOWTO/LVM-HOWTO/</a><br></blockquote></div><br>
+
+------=_Part_50969_20515197.1185892143085--
