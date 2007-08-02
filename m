@@ -1,28 +1,18 @@
 Received: from mx2.redhat.com (mx2.redhat.com [10.255.15.25])
-	by int-mx2.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l71K89cq012500
-	for <linux-lvm@redhat.com>; Wed, 1 Aug 2007 16:08:10 -0400
-Received: from mail.berlin.i-dmedia.com (mail.berlin.i-dmedia.com
-	[62.159.214.249])
-	by mx2.redhat.com (8.13.1/8.13.1) with ESMTP id l71K86oH026691
-	for <linux-lvm@redhat.com>; Wed, 1 Aug 2007 16:08:07 -0400
-Received: from localhost (localhost [127.0.0.1])
-	by mail.berlin.i-dmedia.com (Postfix) with ESMTP id 775E74C801E
-	for <linux-lvm@redhat.com>; Wed,  1 Aug 2007 22:13:35 +0200 (CEST)
-Received: from mail.berlin.i-dmedia.com ([127.0.0.1])
-	by localhost (mail.berlin.i-dmedia.com [127.0.0.1]) (amavisd-new,
-	port 10024) with ESMTP id RD4egvmDrYds for <linux-lvm@redhat.com>;
-	Wed,  1 Aug 2007 22:13:33 +0200 (CEST)
-Received: from x1.ads.i-dmedia.com (x1.berlin.i-dmedia.com [10.1.69.45])
-	by mail.berlin.i-dmedia.com (Postfix) with ESMTP id E1E934C8013
-	for <linux-lvm@redhat.com>; Wed,  1 Aug 2007 22:13:33 +0200 (CEST)
-Content-class: urn:content-classes:message
+	by int-mx2.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l7226O4X007596
+	for <linux-lvm@redhat.com>; Wed, 1 Aug 2007 22:06:29 -0400
+Received: from dubh.id.au ([202.45.122.140])
+	by mx2.redhat.com (8.13.1/8.13.1) with ESMTP id l7226KG0002903
+	for <linux-lvm@redhat.com>; Wed, 1 Aug 2007 22:06:23 -0400
+Date: Thu, 2 Aug 2007 10:06:17 +0800
+From: Nigel Duff <nigel-lvm@dubh.id.au>
+Subject: Re: [linux-lvm] Missing logical volume
+Message-ID: <20070802020617.GA6873@dubh.id.au>
+References: <20070801072738.GA9466@dubh.id.au>
+	<366C0458-4DED-43B6-B639-99252B03BAA3@redhat.com>
 MIME-Version: 1.0
-Content-Type: multipart/alternative;
-	boundary="----_=_NextPart_001_01C7D477.A5C27770"
-Subject: AW: [linux-lvm] Redirecting LVM command output on RHEL5?
-Date: Wed, 1 Aug 2007 22:07:54 +0200
-Message-ID: <1A2D7011B6705B449F66B36B232097C07A7534@x1.ads.i-dmedia.com>
-From: "Zurell, Falko" <Falko.Zurell@idmedia.com>
+Content-Disposition: inline
+In-Reply-To: <366C0458-4DED-43B6-B639-99252B03BAA3@redhat.com>
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -33,109 +23,23 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: linux-lvm@redhat.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-This is a multi-part message in MIME format.
+Hi,
+	
+On Wed, Aug 01, 2007 at 10:14:28AM -0500, Jonathan Brassow wrote:
+> 
+> I think you need to figure out what happened to the missing disk.  If  
+> that's gone, so is your data.  Nothing you've described so far has  
+> given me reason to believe the drive shouldn't be there.  So, I'm  
+> assuming device failure...
 
-------_=_NextPart_001_01C7D477.A5C27770
-Content-Type: text/plain;
-	charset="UTF-8"
-Content-Transfer-Encoding: base64
+I was thinking that LVM could handle the loss of a drive without losing the
+whole volume. The fact that pvscan was showing all the drives still
+belonging to the volume group was throwing me.
 
-SGVsbG8gS2V2aW4sDQoNCk1heWJlIHRoZSBvdXRwdXQgaXMgbm90IG9uIHN0ZG91dCBidXQgb24g
-c3RkZXJyLiBTbyB0cmllIHRoaXM6DQoNCiNsdnMgMj4ga2V2aW4udHh0DQoNCktpbmQgcmVnYXJk
-cw0KDQpGYWxrbw0KDQoNCkZhbGtvIFp1cmVsbA0KDQpIZWFkIG9mIEFwcGxpY2F0aW9uIE1hbmFn
-ZW1lbnQNCmZhbGtvLnp1cmVsbEBpZG1lZGlhLmNvbQ0KTW9iaWwgKzQ5ICgwKTE2MCAtIDMgNjIg
-NTIgNzcNCg0KL2ktZCBtZWRpYSBBRw0KT2hsYXVlciBTdHJhw59lIDQzDQpELTEwOTk5IEJlcmxp
-bg0KDQpUZWwgKzQ5ICgwKTMwIC0gMiA1OSA0NyAtIDM1Nw0KRmF4ICs0OSAoMCkzMCAtIDIgNTkg
-NDcgLSA0NzENCnd3dy5pZG1lZGlhLmNvbQ0KDQpfX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fXw0KDQpCb2FyZDogUmVnaW5lIEhhc2Noa2EtSGVsbWVyIChDRU8p
-LCBGcmFueiBLbG9zZSAoQ0ZPKQ0KQ2hhaXJtYW4gb2YgdGhlIFN1cGVydmlzb3J5IEJvYXJkOiBD
-aHJpc3RpYW4gQS4gSHVmbmFnbA0KSGVhZHF1YXJ0ZXJzOiBCZXJsaW4sIFBsYWNlIG9mIEp1cmlz
-ZGljdGlvbjogQmVybGluIEhSQiA3NjM0Mg0KVVNULUlkLiBERTgxMjY5ODM0MA0KX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18NCg0KDQotLS0tLSBPcmlnaW5h
-bG5hY2hyaWNodCAtLS0tLQ0KVm9uOiBsaW51eC1sdm0tYm91bmNlc0ByZWRoYXQuY29tIDxsaW51
-eC1sdm0tYm91bmNlc0ByZWRoYXQuY29tPg0KQW46IGxpbnV4LWx2bUByZWRoYXQuY29tIDxsaW51
-eC1sdm1AcmVkaGF0LmNvbT4NCkdlc2VuZGV0OiBXZWQgQXVnIDAxIDIxOjA4OjQzIDIwMDcNCkJl
-dHJlZmY6IFtsaW51eC1sdm1dIFJlZGlyZWN0aW5nIExWTSBjb21tYW5kIG91dHB1dCBvbiBSSEVM
-NT8NCg0KIA0KSGVsbG8sIA0KDQpPa2F5Li4gSSBhbSBwcm9iYWJseSBtaXNzaW5nIHNvbWV0aGlu
-ZyBzaW1wbGUgaGVyZSBidXQuLi4NCg0KSSBqdXN0IGFkZGVkIGEgUkhFTDUgc3lzdGVtIHRvIG15
-IGxhYiBhbmQgSSBhbSB0ZXN0aW5nIGEgc2NyaXB0IHRoYXQNCmNhcHR1cmVzIExWTSBzdHJ1Y3R1
-cmUuIA0KVGhpcyBzY3JpcHQgd29ya3Mgb24gb3RoZXIgdmVyc2lvbnMgb2YgUkhFTCBhbmQgU0xF
-UywgYnV0IG9uIFJIRUw1LA0Kd2hlbmV2ZXIgSSB0cnkgdG8gcmVkaXJlY3QgTFZNIGNvbW1hbmQg
-b3V0cHV0LCBJIGdldCBhIGJsYW5rLiANCg0KRm9yIGluc3RhbmNlLi4uDQoNCltyb290QGxpbnV4
-LWRsNTg1IH5dIyBwdnMNCiAgUFYgICAgICAgICBWRyAgIEZtdCAgQXR0ciBQU2l6ZSAgUEZyZWUN
-CiAgL2Rldi9zZGEgICB2ZzAxIGx2bTIgYS0gICAxMC4wMEcgICAgMA0KICAvZGV2L3NkZCAgIHZn
-MDIgbHZtMiBheCAgICAxLjk1RyAxLjA4Rw0KICAvZGV2L3NkZSAgIHZnMDIgbHZtMiBheCAgICAx
-Ljk1RyAxLjQ2Rw0KDQpbcm9vdEBsaW51eC1kbDU4NSB+XSMgcHZzID4ga2V2aW4udHh0DQoNClty
-b290QGxpbnV4LWRsNTg1IH5dIyBjYXQga2V2aW4udHh0DQoNCg0KTm8gbWF0dGVyIHdoYXQgTFZN
-IGNvbW1hbmQgSSBydW4gKGkuZS4gdmdkaXNwbGF5LCBsdnMsIGV0Yy4gZXRjLiksIGl0DQp3aWxs
-IG5vdCByZWRpcmVjdCBvdXRwdXQgdG8gbXkgdGV4dCBmaWxlLiBTY3JlZW4gb3V0cHV0IGlzIGFs
-d2F5cw0Kc3VjY2Vzc2Z1bCwgYW5kIGV2ZXJ5IG90aGVyIHN5c3RlbSBjb21tYW5kIEkgaGF2ZSB0
-cmllZCAoaS5lLiBmZGlzaywNCmV0Yy4pIHdpbGwgcmVkaXJlY3Qgb3V0cHV0IHN1Y2Nlc3NmdWxs
-eS4gDQoNCg0KQW55IGlkZWFzPw0KDQoNCktldmluIA0KDQpfX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fXw0KbGludXgtbHZtIG1haWxpbmcgbGlzdA0KbGludXgt
-bHZtQHJlZGhhdC5jb20NCmh0dHBzOi8vd3d3LnJlZGhhdC5jb20vbWFpbG1hbi9saXN0aW5mby9s
-aW51eC1sdm0NCnJlYWQgdGhlIExWTSBIT1ctVE8gYXQgaHR0cDovL3RsZHAub3JnL0hPV1RPL0xW
-TS1IT1dUTy8NCg==
+Thanks for the help,
 
-------_=_NextPart_001_01C7D477.A5C27770
-Content-Type: text/html;
-	charset="UTF-8"
-Content-Transfer-Encoding: base64
-
-PCFET0NUWVBFIEhUTUwgUFVCTElDICItLy9XM0MvL0RURCBIVE1MIDMuMi8vRU4iPg0KPEhUTUw+
-DQo8SEVBRD4NCjxNRVRBIEhUVFAtRVFVSVY9IkNvbnRlbnQtVHlwZSIgQ09OVEVOVD0idGV4dC9o
-dG1sOyBjaGFyc2V0PXV0Zi04Ij4NCjxNRVRBIE5BTUU9IkdlbmVyYXRvciIgQ09OVEVOVD0iTVMg
-RXhjaGFuZ2UgU2VydmVyIHZlcnNpb24gNi41Ljc2NTIuMjQiPg0KPFRJVExFPkFXOiBbbGludXgt
-bHZtXSBSZWRpcmVjdGluZyBMVk0gY29tbWFuZCBvdXRwdXQgb24gUkhFTDU/PC9USVRMRT4NCjwv
-SEVBRD4NCjxCT0RZPg0KPCEtLSBDb252ZXJ0ZWQgZnJvbSB0ZXh0L3BsYWluIGZvcm1hdCAtLT4N
-Cg0KPFA+PEZPTlQgU0laRT0yPkhlbGxvIEtldmluLDxCUj4NCjxCUj4NCk1heWJlIHRoZSBvdXRw
-dXQgaXMgbm90IG9uIHN0ZG91dCBidXQgb24gc3RkZXJyLiBTbyB0cmllIHRoaXM6PEJSPg0KPEJS
-Pg0KI2x2cyAyJmd0OyBrZXZpbi50eHQ8QlI+DQo8QlI+DQpLaW5kIHJlZ2FyZHM8QlI+DQo8QlI+
-DQpGYWxrbzxCUj4NCjxCUj4NCjxCUj4NCkZhbGtvIFp1cmVsbDxCUj4NCjxCUj4NCkhlYWQgb2Yg
-QXBwbGljYXRpb24gTWFuYWdlbWVudDxCUj4NCmZhbGtvLnp1cmVsbEBpZG1lZGlhLmNvbTxCUj4N
-Ck1vYmlsICs0OSAoMCkxNjAgLSAzIDYyIDUyIDc3PEJSPg0KPEJSPg0KL2ktZCBtZWRpYSBBRzxC
-Uj4NCk9obGF1ZXIgU3RyYcOfZSA0MzxCUj4NCkQtMTA5OTkgQmVybGluPEJSPg0KPEJSPg0KVGVs
-ICs0OSAoMCkzMCAtIDIgNTkgNDcgLSAzNTc8QlI+DQpGYXggKzQ5ICgwKTMwIC0gMiA1OSA0NyAt
-IDQ3MTxCUj4NCnd3dy5pZG1lZGlhLmNvbTxCUj4NCjxCUj4NCl9fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fPEJSPg0KPEJSPg0KQm9hcmQ6IFJlZ2luZSBIYXNj
-aGthLUhlbG1lciAoQ0VPKSwgRnJhbnogS2xvc2UgKENGTyk8QlI+DQpDaGFpcm1hbiBvZiB0aGUg
-U3VwZXJ2aXNvcnkgQm9hcmQ6IENocmlzdGlhbiBBLiBIdWZuYWdsPEJSPg0KSGVhZHF1YXJ0ZXJz
-OiBCZXJsaW4sIFBsYWNlIG9mIEp1cmlzZGljdGlvbjogQmVybGluIEhSQiA3NjM0MjxCUj4NClVT
-VC1JZC4gREU4MTI2OTgzNDA8QlI+DQpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fXzxCUj4NCjxCUj4NCjxCUj4NCi0tLS0tIE9yaWdpbmFsbmFjaHJpY2h0IC0t
-LS0tPEJSPg0KVm9uOiBsaW51eC1sdm0tYm91bmNlc0ByZWRoYXQuY29tICZsdDtsaW51eC1sdm0t
-Ym91bmNlc0ByZWRoYXQuY29tJmd0OzxCUj4NCkFuOiBsaW51eC1sdm1AcmVkaGF0LmNvbSAmbHQ7
-bGludXgtbHZtQHJlZGhhdC5jb20mZ3Q7PEJSPg0KR2VzZW5kZXQ6IFdlZCBBdWcgMDEgMjE6MDg6
-NDMgMjAwNzxCUj4NCkJldHJlZmY6IFtsaW51eC1sdm1dIFJlZGlyZWN0aW5nIExWTSBjb21tYW5k
-IG91dHB1dCBvbiBSSEVMNT88QlI+DQo8QlI+DQo8QlI+DQpIZWxsbyw8QlI+DQo8QlI+DQpPa2F5
-Li4gSSBhbSBwcm9iYWJseSBtaXNzaW5nIHNvbWV0aGluZyBzaW1wbGUgaGVyZSBidXQuLi48QlI+
-DQo8QlI+DQpJIGp1c3QgYWRkZWQgYSBSSEVMNSBzeXN0ZW0gdG8gbXkgbGFiIGFuZCBJIGFtIHRl
-c3RpbmcgYSBzY3JpcHQgdGhhdDxCUj4NCmNhcHR1cmVzIExWTSBzdHJ1Y3R1cmUuPEJSPg0KVGhp
-cyBzY3JpcHQgd29ya3Mgb24gb3RoZXIgdmVyc2lvbnMgb2YgUkhFTCBhbmQgU0xFUywgYnV0IG9u
-IFJIRUw1LDxCUj4NCndoZW5ldmVyIEkgdHJ5IHRvIHJlZGlyZWN0IExWTSBjb21tYW5kIG91dHB1
-dCwgSSBnZXQgYSBibGFuay48QlI+DQo8QlI+DQpGb3IgaW5zdGFuY2UuLi48QlI+DQo8QlI+DQpb
-cm9vdEBsaW51eC1kbDU4NSB+XSMgcHZzPEJSPg0KJm5ic3A7IFBWJm5ic3A7Jm5ic3A7Jm5ic3A7
-Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7Jm5ic3A7IFZHJm5ic3A7Jm5ic3A7IEZtdCZuYnNwOyBB
-dHRyIFBTaXplJm5ic3A7IFBGcmVlPEJSPg0KJm5ic3A7IC9kZXYvc2RhJm5ic3A7Jm5ic3A7IHZn
-MDEgbHZtMiBhLSZuYnNwOyZuYnNwOyAxMC4wMEcmbmJzcDsmbmJzcDsmbmJzcDsgMDxCUj4NCiZu
-YnNwOyAvZGV2L3NkZCZuYnNwOyZuYnNwOyB2ZzAyIGx2bTIgYXgmbmJzcDsmbmJzcDsmbmJzcDsg
-MS45NUcgMS4wOEc8QlI+DQombmJzcDsgL2Rldi9zZGUmbmJzcDsmbmJzcDsgdmcwMiBsdm0yIGF4
-Jm5ic3A7Jm5ic3A7Jm5ic3A7IDEuOTVHIDEuNDZHPEJSPg0KPEJSPg0KW3Jvb3RAbGludXgtZGw1
-ODUgfl0jIHB2cyAmZ3Q7IGtldmluLnR4dDxCUj4NCjxCUj4NCltyb290QGxpbnV4LWRsNTg1IH5d
-IyBjYXQga2V2aW4udHh0PEJSPg0KPEJSPg0KPEJSPg0KTm8gbWF0dGVyIHdoYXQgTFZNIGNvbW1h
-bmQgSSBydW4gKGkuZS4gdmdkaXNwbGF5LCBsdnMsIGV0Yy4gZXRjLiksIGl0PEJSPg0Kd2lsbCBu
-b3QgcmVkaXJlY3Qgb3V0cHV0IHRvIG15IHRleHQgZmlsZS4gU2NyZWVuIG91dHB1dCBpcyBhbHdh
-eXM8QlI+DQpzdWNjZXNzZnVsLCBhbmQgZXZlcnkgb3RoZXIgc3lzdGVtIGNvbW1hbmQgSSBoYXZl
-IHRyaWVkIChpLmUuIGZkaXNrLDxCUj4NCmV0Yy4pIHdpbGwgcmVkaXJlY3Qgb3V0cHV0IHN1Y2Nl
-c3NmdWxseS48QlI+DQo8QlI+DQo8QlI+DQpBbnkgaWRlYXM/PEJSPg0KPEJSPg0KPEJSPg0KS2V2
-aW48QlI+DQo8QlI+DQpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fXzxCUj4NCmxpbnV4LWx2bSBtYWlsaW5nIGxpc3Q8QlI+DQpsaW51eC1sdm1AcmVkaGF0LmNv
-bTxCUj4NCjxBIEhSRUY9Imh0dHBzOi8vd3d3LnJlZGhhdC5jb20vbWFpbG1hbi9saXN0aW5mby9s
-aW51eC1sdm0iPmh0dHBzOi8vd3d3LnJlZGhhdC5jb20vbWFpbG1hbi9saXN0aW5mby9saW51eC1s
-dm08L0E+PEJSPg0KcmVhZCB0aGUgTFZNIEhPVy1UTyBhdCA8QSBIUkVGPSJodHRwOi8vdGxkcC5v
-cmcvSE9XVE8vTFZNLUhPV1RPLyI+aHR0cDovL3RsZHAub3JnL0hPV1RPL0xWTS1IT1dUTy88L0E+
-PEJSPg0KPC9GT05UPg0KPC9QPg0KDQo8L0JPRFk+DQo8L0hUTUw+
-
-------_=_NextPart_001_01C7D477.A5C27770--
+Nigel
