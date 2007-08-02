@@ -1,28 +1,12 @@
-Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l729j9RX026631
-	for <linux-lvm@redhat.com>; Thu, 2 Aug 2007 05:45:09 -0400
-Received: from ns2.sozvers.at (ns2.sozvers.at [194.153.217.233])
-	by mx1.redhat.com (8.13.1/8.13.1) with ESMTP id l729j60G025338
-	for <linux-lvm@redhat.com>; Thu, 2 Aug 2007 05:45:07 -0400
-Received: from mailgw01.sozvers.at (gateway-ext.sozvers.at [194.153.217.230])
-	by ns2.sozvers.at (8.12.11.20060308/8.12.8) with ESMTP id
-	l729j5Tp003214
-	for <linux-lvm@redhat.com>; Thu, 2 Aug 2007 11:45:05 +0200
-Received: from lin-mrout1.wgkk.sozvers.at (viruswall-01.sozvers.at
-	[172.16.10.31])
-	by mailgw01.sozvers.at (8.13.8/8.13.8) with ESMTP id l729j5gU021818
-	for <linux-lvm@redhat.com>; Thu, 2 Aug 2007 11:45:05 +0200
-Received: from ivlotus3.wgkk.sozvers.at (lnvw101s10.wgkk.sozvers.at
-	[1.110.51.213])
-	by lin-mrout1.wgkk.sozvers.at (Postfix) with ESMTP id 875E91223A0
-	for <linux-lvm@redhat.com>; Thu,  2 Aug 2007 10:34:21 +0200 (CEST)
+Message-ID: <46B1B5E1.1050406@redhat.com>
+Date: Thu, 02 Aug 2007 11:45:53 +0100
+From: "Bryn M. Reeves" <breeves@redhat.com>
 MIME-Version: 1.0
-Message-ID: <OFB2F66466.9B8DE5B5-ONC125732B.0031679C-C125732B.00358E8B@wgkk.sozvers.at>
-From: Andreas.Trawoeger@wgkk.at
-Date: Thu, 2 Aug 2007 11:44:58 +0200
-Content-Type: multipart/alternative;
-	boundary="=_alternative 00358E8AC125732B_="
-Subject: [linux-lvm] How to automate lvextend?
+References: <46B0EAEF.6090305@cfl.rr.com>
+	<20070802065012.GA28687@percy.comedia.it>
+In-Reply-To: <20070802065012.GA28687@percy.comedia.it>
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] Re: LVM on dmraid breakage
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -33,73 +17,37 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: linux-lvm@redhat.com
+Content-Type: text/plain; charset="us-ascii"
+To: device-mapper development <dm-devel@redhat.com>, "ATARAID (eg, Promise Fasttrak,
+	Highpoint 370) related discussions" <ataraid-list@redhat.com>, linux-lvm@redhat.com
 
-Dies ist eine mehrteilige Nachricht im MIME-Format.
---=_alternative 00358E8AC125732B_=
-Content-Type: text/plain; charset="US-ASCII"
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA1
 
-Hi!
+Luca Berra wrote:
+> Two things come to mind
+> 1) dmraid should use ioctl BLKPG_DEL_PARTITION, to clean up any eventual
+> partition table on component devices
+> 
+> 2) lvm tool filter could be modified to check if a device has been
+> already claimed by device-mapper.
+> 
 
-Is there a sane or somewhat standard way to automate lvextend?
+But device-mapper already opens devices exclusively when a target claims
+them.
 
-I'm running LVM2 on my laptop and I'm pretty happy with it (lvm is great 
-if you run 3 different distros and disk space is tight).
-
-Main problem I have is that I have to be quite restrictive with space 
-allocation (it't difficult to add disk space to a laptop) and regularily 
-run into full filesystems. Which is annoying and you end up having 
-problems like not beeing able to log into KDE, because your home directory 
-is full.
-
-But is is extremly annoying when you would like to use snapshots. 
-Snaphshots are a great way to keep older versions of your file, but they 
-are basically useless if they either have to be unnecessarily  large (you 
-won't have the disc space to do it), or get invalidated pretty often 
-(which isn't what you want to happen to your backup).
-
-In theory it shouldn't be too difficult to have a script that regularily 
-checks the fill rate of your  filesystems and snapshots and do an lvextend 
-if necessary. But for snapshots it would be great if lvm could do the 
-lvextend by it self and it shouldn't be too difficult to teach ext3 to do 
-the same with a normal lv.
+The problem here sounds more like it's down to ordering; LVM2 is being
+given a chance to scan the devices & build LVs / claim devices before
+dmraid gets a look at them.
 
 
-cu andreas
+Kind regards,
+Bryn.
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.7 (GNU/Linux)
+Comment: Using GnuPG with Fedora - http://enigmail.mozdev.org
 
---=_alternative 00358E8AC125732B_=
-Content-Type: text/html; charset="US-ASCII"
-
-
-<br><font size=2 face="sans-serif">Hi!</font>
-<br>
-<br><font size=2 face="sans-serif">Is there a sane or somewhat standard
-way to automate lvextend?</font>
-<br>
-<br><font size=2 face="sans-serif">I'm running LVM2 on my laptop and I'm
-pretty happy with it (lvm is great if you run 3 different distros and disk
-space is tight).</font>
-<br>
-<br><font size=2 face="sans-serif">Main problem I have is that I have to
-be quite restrictive with space allocation (it't difficult to add disk
-space to a laptop) and regularily run into full filesystems. Which is annoying
-and you end up having problems like not beeing able to log into KDE, because
-your home directory is full.</font>
-<br>
-<br><font size=2 face="sans-serif">But is is extremly annoying when you
-would like to use snapshots. Snaphshots are a great way to keep older versions
-of your file, but they are basically useless if they either have to be
-unnecessarily &nbsp;large (you won't have the disc space to do it), or
-get invalidated pretty often (which isn't what you want to happen to your
-backup).</font>
-<br>
-<br><font size=2 face="sans-serif">In theory it shouldn't be too difficult
-to have a script that regularily checks the fill rate of your &nbsp;filesystems
-and snapshots and do an lvextend if necessary. But for snapshots it would
-be great if lvm could do the lvextend by it self and it shouldn't be too
-difficult to teach ext3 to do the same with a normal lv.</font>
-<br>
-<br>
-<br><font size=2 face="sans-serif">cu andreas<br>
-</font>
---=_alternative 00358E8AC125732B_=--
+iD8DBQFGsbXh6YSQoMYUY94RAp5aAKDHrjX/LIoM5XPkeD/3hkd+oQ9vHgCZAXHS
+Ykme+1gwvYuRat0fZwBALJs=
+=mIsK
+-----END PGP SIGNATURE-----
