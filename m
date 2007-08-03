@@ -1,27 +1,14 @@
-Received: from mx2.redhat.com (mx2.redhat.com [10.255.15.25])
-	by int-mx2.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l73G1Hsr008492
-	for <linux-lvm@redhat.com>; Fri, 3 Aug 2007 12:01:17 -0400
-Received: from mail.terrascale.net ([64.254.245.114])
-	by mx2.redhat.com (8.13.1/8.13.1) with ESMTP id l73G1GlQ012519
-	for <linux-lvm@redhat.com>; Fri, 3 Aug 2007 12:01:16 -0400
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.terrascale.net (Postfix) with ESMTP id BDE23A4029
-	for <linux-lvm@redhat.com>; Fri,  3 Aug 2007 16:01:15 +0000 (UTC)
-Received: from mail.terrascale.net ([127.0.0.1])
-	by localhost (mail.terrascale.net [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id 18296-05 for <linux-lvm@redhat.com>;
-	Fri,  3 Aug 2007 12:01:14 -0400 (EDT)
-Received: from [172.20.6.11] (monkey.ts [172.20.6.11])
-	by mail.terrascale.net (Postfix) with ESMTP id A6534A4026
-	for <linux-lvm@redhat.com>; Fri,  3 Aug 2007 12:01:14 -0400 (EDT)
-Message-ID: <46B35149.6090604@terrascale.net>
-Date: Fri, 03 Aug 2007 12:01:13 -0400
-From: Steeve McCauley <steeve@terrascale.net>
-MIME-Version: 1.0
-Subject: Re: [linux-lvm] Listing physical volumes in a volume group
-References: <46B3395A.5020701@terrascale.net> <46B34DDC.6020609@redhat.com>
-In-Reply-To: <46B34DDC.6020609@redhat.com>
-Content-Transfer-Encoding: 7bit
+Date: Fri, 3 Aug 2007 21:57:50 +0200
+From: Luca Berra <bluca@comedia.it>
+Message-ID: <20070803195749.GA27271@percy.comedia.it>
+References: <46B0EAEF.6090305@cfl.rr.com>
+	<20070802065012.GA28687@percy.comedia.it>
+	<46B254E4.60700@cfl.rr.com> <20070803081133.GB939@percy.comedia.it>
+	<46B36F7A.2090601@cfl.rr.com>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <46B36F7A.2090601@cfl.rr.com>
+Subject: [linux-lvm] Re: [dm-devel] Re: LVM on dmraid breakage
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -32,70 +19,35 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+Content-Transfer-Encoding: 7bit
+To: dm-devel@redhat.com, ataraid-list@redhat.com, linux-lvm@redhat.com
+
+On Fri, Aug 03, 2007 at 02:10:02PM -0400, Phillip Susi wrote:
+>I agree with moving the partition detection code to user space, but 
+>trying to undo it after the fact doesn't help because udev is already 
+>processing the add events.  Also you do not need to remove the 
+>partitions so long as pvscan understands that it shouldn't be using them.
+which is the modification i proposed to lvm tools, isn't it?
 
 
-Milan,
+>Udev is supposed to be the new model for enumerating devices and 
+i know that, and i will withdraw from this discussion, since it might
+get to an useless flame war.
 
-Ah, I didn't realise one could use the pv_ column names
-with the vgs utility.
+Is there any technical reason for not having lvm tools filter out devices that
+are used by device mapper?
 
-That's much better.
+besides dmraid, think of multipath.
 
-Thanks,
+Regards,
+L.
 
-steeve
-
-Milan Broz wrote:
-> Hi,
-> 
-> this will not help for using in script ?
-> (comma separated list of PVS & PV UUID  in VG)
-> 
-> vgs --separator , --noheadings -o pv_name,pv_uuid <vgname>
-> 
-> Milan
-> --
-> mbroz@redhat.com
-> 
-> Steeve McCauley wrote:
->> I would like to know if there is a canonical way to list the
->> physical volumes in a volume group, specifically to extract
->> the uuid for those PVs in a bash script.  I am able to do
->> something along the lines of,
->>
->> PVS=$(vgdisplay -vv 2>&1 | grep "PV UUID" | awk '{print $3}')
->> PVUUID=$(pvs -o pv_uuid --noheadings /dev/sdx | awk '{print $1}')
->>
->> and then look for PVUUID in the list of PVS.
->>
->> for uuid in $PVS; do
->>    [ "$uuid" != "$PVUUID" ] && continue
->>    ...
->> done
->>
->> but this relies on the output format of 'vgdisplay -vv' and
->> I want to be sure that I will always get the expected result.
->>
->> Thanks,
->>
->> steeve
->>
-> 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
-> 
 
 -- 
-Steeve McCauley
-Director of Research and Development
-Rackable Systems
-407 McGill Street, Suite 1002
-Montreal, Quebec, H2Y 2G3 (Canada)
-Tel: 514-288-3343
-http://www.rackable.com
-:wq
+Luca Berra -- bluca@comedia.it
+        Communication Media & Services S.r.l.
+ /"\
+ \ /     ASCII RIBBON CAMPAIGN
+  X        AGAINST HTML MAIL
+ / \
