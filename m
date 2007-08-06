@@ -1,15 +1,20 @@
 Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l758SIGM025453
-	for <linux-lvm@redhat.com>; Sun, 5 Aug 2007 04:28:18 -0400
-Received: from mx00.upc.ro (ns00.upc.ro [85.186.249.30])
-	by mx1.redhat.com (8.13.1/8.13.1) with ESMTP id l758SBe9005751
-	for <linux-lvm@redhat.com>; Sun, 5 Aug 2007 04:28:12 -0400
-Message-ID: <46B58A15.6040401@upc.ro>
-Date: Sun, 05 Aug 2007 11:28:05 +0300
-From: Imre Gergely <imre.gergely@upc.ro>
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l764QJVJ005217
+	for <linux-lvm@redhat.com>; Mon, 6 Aug 2007 00:26:19 -0400
+Received: from barge.anchor.net.au (barge.anchor.net.au [203.202.1.123])
+	by mx1.redhat.com (8.13.1/8.13.1) with ESMTP id l764QH1A012154
+	for <linux-lvm@redhat.com>; Mon, 6 Aug 2007 00:26:17 -0400
+Received: from [127.0.0.1] (dsl-58-6-32-215.nsw.westnet.com.au [58.6.32.215])
+	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by barge.anchor.net.au (Postfix) with ESMTP id 1D2D610103
+	for <linux-lvm@redhat.com>; Mon,  6 Aug 2007 14:27:46 +1000 (EST)
+Message-ID: <46B6A2D5.6030402@backstagetech.com.au>
+Date: Mon, 06 Aug 2007 14:25:57 +1000
+From: Scott Eade <seade@backstagetech.com.au>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] pvmove with nbd
+Subject: [linux-lvm] superblock or partition table corrupt - fixable?
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -20,88 +25,66 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: linux-lvm@redhat.com
 
+My problem is that system-config-lvm seems to have corrupted the 
+superblock on my root logical volume. When I boot I am required to fsck 
+manually and this reports: "Either the superblock or the partition table 
+is likely to be corupted." Further details show that the superblock 
+thinks the volume size is some 71663616 blocks where as the physical 
+size of the volume is just 57884672 blocks. The following is a 
+description of how I got to this point.
 
-hi
+I have a Fedora 7 box, recently upgraded from FC5. System had a single 
+250GB HD and I am in the process of adding a second HD, this time 500GB.
 
-i have a bit of a problem with pvmove. it may not be pvmove's fault,
-we'll see.
-i have two systems, sysA and sysB. on sysA i have a VG with 3 PVs (say
-sda,sdb,sdc). i've exported these two block devices thru nbd, and i've
-imported them on sysB as nbd0, nbd1, nbd2.
+I used system-config-lvm to create a partition on the new drive and 
+added it to the original volume group (VolGroup00).
 
-on sysB i can see the "exported" VG, i can mount the LVs, it's working
-fine. now i add a 4th PV local on sysB, so in the VG i have it like this:
+I then attempted to extend the original logical volume (LogVol00) by 
+some arbitrary portion of the newly added PV - I kind of assumed that 
+part of the point of LVM was to allow LVs greater in size than a PV. I 
+still don't know whether or not this is supported, but in any case the 
+operation in system-config-lvm failed. I just assumed that this was a 
+graceful failure and went on to create a couple of new LVs for stuff I 
+would pull out of LogVol00.
 
-nbd0, nbd1, nbd2, sda (this one is the local PV).
+I completed the configuration of the new LVs, including copying the data 
+from LogVol00 and updating fstab to mount the new LVs, but upon reboot I 
+am required to run fsck manually and the above listed error is produced.
 
-now i want to move everythin from nbd* to this new local sda, and then
-remove all the nbd*s from the VG. practically this would mean that i've
-moved the VG from one machine to another through the network.
+So it seems to me that my original attempt to expand LogVol00 using 
+system-config-lvm did not actually fail gracefully - it appears to have 
+updated the superblock with the new size before then falling over when 
+updating the partition table.
 
-but the pvmove is not really working. it just hangs, and stays in D when
-i look at it with 'ps'. and no disk activity whatsoever. i cant kill the
-process, i cant do anything, sort of a reboot, after which i can do a
-pvmove --abort, but nothing more, because whatever i want to do, the LVM
-related stuff just hangs again (im guessing that's because pvmove wants
-to resume the moving operation). one CPU always stays in 100% i/o wait
-during this.
+fsck is not particularly helpful - upon boot the system stops and 
+requires me to run fsck manually with no -p. The first error that comes 
+up when I manually fsck is the one listed above followed by an Abort 
+prompt which requires a N response in order to continue (so there goes 
+any opportunity of using -y). If I don't abort it goes onto Phase 1, 
+checking inodes, blocks and sizes and starts failing on blocks above 
+57884672. Each block then fails, so something like 41 million Y 
+responses would need to be manually entered in order to get through 
+Phase 1 of fsck - not really viable and unlikely to resolve the problem 
+in any case.
 
-the LVs in the VG are NOT mounted and are unused during the move, noting
-is mounted. so basically this would be a remote pvmove, from one system
-to another through nbd export.
+If I boot using the Fedora 7 DVD and select the recover mode it mounts 
+the volume group with no problem and all of the data is present and 
+accessible (in fact the entire system image seems fine, including the 
+data on the two new LVs I created).
 
-obviously i'm missing something, or this can't be done.
+To me this says that all is well, but this doesn't stop fsck from 
+falling over when it hits the bad information in the superblock.
 
-any other ideas on how i could do this without physically moving the
-storage from sysA to sysB ?
+I have looked at the set up using TestDisk, but since it doesn't look 
+inside the LV it doesn't seem to offer much hope.
 
-[root@emailro nbd-2.8.8]# pvmove -v -n log /dev/nbd2 /dev/sdd
-    Finding volume group "zerg"
-    Archiving volume group "zerg" metadata (seqno 12).
-    Creating logical volume pvmove0
-    Moving 1920 extents of logical volume zerg/log
-    Found volume group "zerg"
-    Creating zerg-log
-    Loading zerg-log table
-    Resuming zerg-log (253:2)
-    Updating volume group metadata
-    Creating volume group backup "/etc/lvm/backup/zerg" (seqno 13).
-    Found volume group "zerg"
-    Found volume group "zerg"
-    Suspending zerg-log (253:2)
-    Found volume group "zerg"
-    Creating zerg-pvmove0
-    Loading zerg-pvmove0 table
-    Resuming zerg-pvmove0 (253:3)
+I am guessing that the solution would be to somehow revert the volume 
+size in the superblock. Is there some way to do this or am I barking up 
+the wrong tree?
 
-'ps output, filtered:
+TIA for any assistance rendered,
 
-11650 pts/0    D<L+   0:00 pvmove -v -n log /dev/nbd2 /dev/sdd
-11666 ?        S<     0:00 [kcopyd]
-
-sysA is centos 4.4 with kernel 2.6.9-42.0.8.plus.c4smp, nbd 2.8.8 and
-LVM version
-
-[root@email ~]# lvm
-lvm> version
-  LVM version:     2.02.06 (2006-05-12)
-  Library version: 1.02.07 (2006-05-11)
-  Driver version:  4.5.0
-
-and sysB is centos 5.0 with kernel 2.6.18-8.1.6.el5.centos.plus, nbd
-2.8.8 and LVM version
-
-[root@emailro ~]# lvm
-lvm> version
-  LVM version:     2.02.16-RHEL5 (2006-12-14)
-  Library version: 1.02.13 (2006-11-28)
-  Driver version:  4.11.0
-
-the systems have fibrechannel connected SAN storages, but would guess
-that's not so important. between the two systems there is at least a
-200Mbps connection, with no network problems.
-
-any help greatly appreciated.
+Scott
