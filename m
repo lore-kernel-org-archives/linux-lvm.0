@@ -1,13 +1,18 @@
-Date: Tue, 7 Aug 2007 22:28:17 +0100
+Received: from agk.fab.redhat.com (agk.fab.redhat.com [10.33.0.19])
+	by pobox.fab.redhat.com (8.13.1/8.13.1) with ESMTP id l77LYCDd009022
+	for <linux-lvm@redhat.com>; Tue, 7 Aug 2007 17:34:12 -0400
+Received: from agk by agk.fab.redhat.com with local (Exim 4.34)
+	id 1IIWgu-0006Sz-EE
+	for linux-lvm@redhat.com; Tue, 07 Aug 2007 22:34:12 +0100
+Date: Tue, 7 Aug 2007 22:34:12 +0100
 From: Alasdair G Kergon <agk@redhat.com>
-Message-ID: <20070807212817.GB2064@agk.fab.redhat.com>
-References: <46B0EAEF.6090305@cfl.rr.com>
-	<20070802065012.GA28687@percy.comedia.it>
-	<46B254E4.60700@cfl.rr.com>
+Subject: Re: [linux-lvm] Best practice: metadata backup
+Message-ID: <20070807213412.GC2064@agk.fab.redhat.com>
+References: <20070807190153.GV2064@agk.fab.redhat.com>
+	<Pine.LNX.4.44.0708071653390.17321-100000@bmsred.bmsi.com>
 Mime-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <46B254E4.60700@cfl.rr.com>
-Subject: [linux-lvm] Re: [dm-devel] Re: LVM on dmraid breakage
+In-Reply-To: <Pine.LNX.4.44.0708071653390.17321-100000@bmsred.bmsi.com>
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -20,50 +25,22 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: device-mapper development <dm-devel@redhat.com>, "ATARAID (eg, Promise Fasttrak,
-	Highpoint 370) related discussions" <ataraid-list@redhat.com>, linux-lvm@redhat.com
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-On Thu, Aug 02, 2007 at 06:04:20PM -0400, Phillip Susi wrote:
-> I'd rather not see it that tightly coupled to dm.  I was thinking 
-> perhaps of something involving udev attributes so that udev would know 
-> not to run pvscan on that device.  Though it looks like pvscan also 
-> needs reworked so it plays nice with udev, being called to scan a given 
-> device as detected rather than looking for all well known physical 
-> device names in /dev.
+On Tue, Aug 07, 2007 at 04:56:01PM -0400, Stuart D. Gathman wrote:
+> I meant metadata backups.  AIX keeps a copy on each physical volume
+> (using quorum to ensure a majority of the copies agree).  I was wondering
+> how linux LVM would handle metadata backup on an all LVM system.  Seems
+> like you would still need a small non LVM filesystem just for that.
 
-It's been fairly clear how this should all work from the lvm2 side for
-some time now, but it will still take a while to implement.
+The backups in /etc/lvm are backups in case you lost or overwrote the metadata
+accidentally.
 
-As I've said many times before, in my view the current problems stem
-from some system components unilaterally switching to an event-driven
-model while others (including lvm2 and initscripts) haven't - and
-combining two incompatible models on a system was "brave".
-
-If lvm2 is run in an event-driven environment, the idea is for it to
-give up all its device scanning and filtering.  It will hand over
-control of what devices to use to an external module shared by
-everything that needs to know about devices - including mdadm,
-initscripts, mount, hal, udev etc.  [What owns this module is irrelevant
-but udev is an obvious candidate.]
-
-When udev sees a new device, it will inform each subsystem of the
-device.
-
-lvm2 will provide an interface that is given a device and, if a PV is
-present on it, lvm2 will pass information about it (including its UUID)
-to the external module for storage.
-
-The external module will have an interface capable of being told
-by lvm2 (at any time) 'Devices with UUIDs X, Y and Z form a volume
-group called VGn'.
-
-Triggers can be defined so that when all the PV UUIDs are present
-for a volume group with name VGn, an lvm2 command (like 'vgchange -ay
-VGn') gets invoked.
+There are already copies (and backups of previous copies) on each physical
+volume (in the default configuration) and there's an automated process to deal
+with simple problems like power failure during a metadata update leading to
+disagreement between the copies.
  
-You can see how md, mount etc. can work in a similar event-driven
-fashion.
-
 Alasdair
 -- 
 agk@redhat.com
