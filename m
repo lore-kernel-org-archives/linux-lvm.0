@@ -1,15 +1,18 @@
-Date: Tue, 7 Aug 2007 22:53:07 +0100
+Date: Tue, 7 Aug 2007 23:01:49 +0100
 From: Alasdair G Kergon <agk@redhat.com>
-Message-ID: <20070807215307.GG2064@agk.fab.redhat.com>
+Message-ID: <20070807220149.GH2064@agk.fab.redhat.com>
 References: <46B0EAEF.6090305@cfl.rr.com>
 	<20070802065012.GA28687@percy.comedia.it>
 	<46B254E4.60700@cfl.rr.com> <20070803081133.GB939@percy.comedia.it>
 	<46B36F7A.2090601@cfl.rr.com>
 	<20070803195749.GA27271@percy.comedia.it>
 	<46B39E58.2040305@cfl.rr.com>
+	<20070804065047.GA29541@percy.comedia.it>
+	<46B733EE.4090507@cfl.rr.com>
+	<20070807091747.GA20787@percy.comedia.it>
 Mime-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <46B39E58.2040305@cfl.rr.com>
+In-Reply-To: <20070807091747.GA20787@percy.comedia.it>
 Subject: [linux-lvm] Re: [dm-devel] Re: LVM on dmraid breakage
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
@@ -23,17 +26,21 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: device-mapper development <dm-devel@redhat.com>, ataraid-list@redhat.com, linux-lvm@redhat.com
+To: dm-devel@redhat.com, ataraid-list@redhat.com, linux-lvm@redhat.com
 
-On Fri, Aug 03, 2007 at 05:30:00PM -0400, Phillip Susi wrote:
-> Editing a conf file to 
-> specify a filter list of devices by name is all well and good for a 
-> static system, but it does not play well in the modern udev managed plug 
-> and play world.
- 
-BTW The filters could of course be generated dynamically (from a database) and
-supplied on the command line (with --config) - or lvm2 could be extended to
-read them from a database.
+On Tue, Aug 07, 2007 at 11:17:47AM +0200, Luca Berra wrote:
+> 1) disable the automatic vgscan performed by every lvm command
+
+With access to a 100% accurate external device database instead of the
+existing .cache this is easy.
+The --trustcache argument would be enabled by default on such a system.
+
+> 2) modify pvscan to be able to scan a single device
+
+This would actually just be something like 'pvs -o uuid <device>' with
+a subtle modification so it notices there are no VG fields required
+and so it doesn't attempt to access the VG metadata (which might
+require accessing disks other than the one specified).
 
 Alasdair
 -- 
