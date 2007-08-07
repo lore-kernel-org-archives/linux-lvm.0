@@ -1,18 +1,17 @@
-Date: Tue, 7 Aug 2007 11:17:47 +0200
-From: Luca Berra <bluca@comedia.it>
-Message-ID: <20070807091747.GA20787@percy.comedia.it>
-References: <46B0EAEF.6090305@cfl.rr.com>
-	<20070802065012.GA28687@percy.comedia.it>
-	<46B254E4.60700@cfl.rr.com> <20070803081133.GB939@percy.comedia.it>
-	<46B36F7A.2090601@cfl.rr.com>
-	<20070803195749.GA27271@percy.comedia.it>
-	<46B39E58.2040305@cfl.rr.com>
-	<20070804065047.GA29541@percy.comedia.it>
-	<46B733EE.4090507@cfl.rr.com>
+Received: from agk.fab.redhat.com (agk.fab.redhat.com [10.33.0.19])
+	by pobox.fab.redhat.com (8.13.1/8.13.1) with ESMTP id l77J1snU008588
+	for <linux-lvm@redhat.com>; Tue, 7 Aug 2007 15:01:54 -0400
+Received: from agk by agk.fab.redhat.com with local (Exim 4.34)
+	id 1IIUJW-0006Kg-05
+	for linux-lvm@redhat.com; Tue, 07 Aug 2007 20:01:54 +0100
+Date: Tue, 7 Aug 2007 20:01:53 +0100
+From: Alasdair G Kergon <agk@redhat.com>
+Subject: Re: [linux-lvm] Best practice: metadata backup
+Message-ID: <20070807190153.GV2064@agk.fab.redhat.com>
+References: <Pine.LNX.4.44.0708050009370.22952-100000@bmsred.bmsi.com>
 Mime-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <46B733EE.4090507@cfl.rr.com>
-Subject: [linux-lvm] Re: [dm-devel] Re: LVM on dmraid breakage
+In-Reply-To: <Pine.LNX.4.44.0708050009370.22952-100000@bmsred.bmsi.com>
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -23,61 +22,39 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: dm-devel@redhat.com, ataraid-list@redhat.com, linux-lvm@redhat.com
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-On Mon, Aug 06, 2007 at 10:45:02AM -0400, Phillip Susi wrote:
->>udev is not the only thing on earth that wants to activate a volume
->>group. what if i wanted to do it manually?
->
->Then you do so manually.  This discussion is about what the system does 
->automatically.
-And by activating a vg manually i don't benefit from the filter? why?
+On Sun, Aug 05, 2007 at 12:17:15AM -0400, Stuart D. Gathman wrote:
+> LVM keeps backups of metadata in /etc/lvm (or some distro specific place).  
+> This is not especially useful when the root filesystem itself is in LVM.  
+> I have been making rsync backups of /etc/lvm to /boot (which is non-LVM
+> since grub doesn't support LVM until 1.95).  Should I make /etc/lvm a
+> symlink to /boot/lvm?
+ 
+If you give /boot enough free space.
 
-What about if it is a ha-cluster suite that needs to activate the volume
-group. I can't have udev activate that on sight, it will probably
-corrupt data.
+You can also change the location by setting the environment variable
+LVM_SYSTEM_DIR.
 
->>whoever wrote about editing the conf file?
->>i wrote about detecting that a device is already in user by
->>device-mapper and skipping that.
->
->Johnathan Brassow suggested adding the devices claimed by dmraid to 
->lvm's filter spec in its conf file.
+> When grub supports LVM, and the entire disk is LVM (no partition table),
+> how will backups be made?  
 
-probably because this is the only available way now.
-anyway this method tends to suck when you have a complex setup.
-and lvm device filters are not very intuitive to setup.
+Just like any other file backups - tape, CD, internet: you choose!
 
->What I am saying is to generalize your suggestion.  Rather than 
->specifically code the lvm tools to use the dm ioctls to check if a 
->device is in use and avoid using it, take a more general approach that 
->will work on similar problems as well, that don't involve device mapper 
->targeting the underlying device, and may be easier to implement.
+> AIX treats the boot LV specially, and ensures
+> that its PEs are contiguous at the beginning of the disk(s).  
 
-Let's make a deal, you code that in udev, and in the meantime try to
-convince Linus in ditching partition detection code from kernel.
-I will code the filter for current lvm.
+Nothing is stopping a linux installer doing that today:
+  --alloc contiguous and specify the extents.
 
->If udev uses pvscan on each disk to find out if it is a member of a vg, 
->it can then note which vg it is a member of in its db.  Then it can 
->invoke lvm to attempt to activate that vg, explicitly telling lvm which 
->devices comprise the known pvs of that vg ( since it knows this 
->information ), rather than letting lvm scan /dev/sd*.  When dmraid 
->activates a raid set, udev can note that the physical disk is claimed by 
->dmraid, and it will never ask lvm to do anything with it.
-doing this will require changing how lvm tools work.
-1) disable the automatic vgscan performed by every lvm command
-2) modify pvscan to be able to scan a single device
+But if grub supports LVM2 properly (add a trivial mapping layer from LV
+extents to physical sectors, then populate it from the LVM2 metadata
+across an agreed interface from a library maintained as part of the lvm2
+package) it won't require anything like that of course - the hardest
+problem I think is actually for it to identify the right disks to use.
 
-L.
-
-
+Alasdair
 -- 
-Luca Berra -- bluca@comedia.it
-        Communication Media & Services S.r.l.
- /"\
- \ /     ASCII RIBBON CAMPAIGN
-  X        AGAINST HTML MAIL
- / \
+agk@redhat.com
