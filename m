@@ -1,19 +1,24 @@
-Date: Tue, 7 Aug 2007 23:01:49 +0100
-From: Alasdair G Kergon <agk@redhat.com>
-Message-ID: <20070807220149.GH2064@agk.fab.redhat.com>
-References: <46B0EAEF.6090305@cfl.rr.com>
-	<20070802065012.GA28687@percy.comedia.it>
-	<46B254E4.60700@cfl.rr.com> <20070803081133.GB939@percy.comedia.it>
-	<46B36F7A.2090601@cfl.rr.com>
-	<20070803195749.GA27271@percy.comedia.it>
-	<46B39E58.2040305@cfl.rr.com>
-	<20070804065047.GA29541@percy.comedia.it>
-	<46B733EE.4090507@cfl.rr.com>
-	<20070807091747.GA20787@percy.comedia.it>
-Mime-Version: 1.0
+Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l78EZAtE026205
+	for <linux-lvm@redhat.com>; Wed, 8 Aug 2007 10:35:10 -0400
+Received: from sender-02.it.helsinki.fi (sender-02.it.helsinki.fi
+	[128.214.205.137])
+	by mx1.redhat.com (8.13.1/8.13.1) with ESMTP id l78EZ0Tw015826
+	for <linux-lvm@redhat.com>; Wed, 8 Aug 2007 10:35:00 -0400
+Received: from widch.it.helsinki.fi (widch.it.helsinki.fi [128.214.0.47])
+	by sender-02.it.helsinki.fi (8.13.8/8.13.8) with ESMTP id
+	l78EYsm9013802
+	(version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=NOT)
+	for <linux-lvm@redhat.com>; Wed, 8 Aug 2007 17:34:54 +0300
+Received: from trkr by widch.it.helsinki.fi with local (Exim 4.63)
+	(envelope-from <janne.peltonen@helsinki.fi>) id 1IImcg-000410-HI
+	for linux-lvm@redhat.com; Wed, 08 Aug 2007 17:34:54 +0300
+Date: Wed, 8 Aug 2007 17:34:54 +0300
+From: Janne Peltonen <janne.peltonen@helsinki.fi>
+Message-ID: <20070808143454.GE12798@helsinki.fi>
+MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20070807091747.GA20787@percy.comedia.it>
-Subject: [linux-lvm] Re: [dm-devel] Re: LVM on dmraid breakage
+Subject: [linux-lvm] Trouble pvmoving lv's out of a metadatacopies=0 pv
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -26,22 +31,18 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: dm-devel@redhat.com, ataraid-list@redhat.com, linux-lvm@redhat.com
+To: linux-lvm@redhat.com
 
-On Tue, Aug 07, 2007 at 11:17:47AM +0200, Luca Berra wrote:
-> 1) disable the automatic vgscan performed by every lvm command
+Hi!
 
-With access to a 100% accurate external device database instead of the
-existing .cache this is easy.
-The --trustcache argument would be enabled by default on such a system.
+If I try to pvmove lv's out of a pv I created using the metadatacopies 0
+option, pvmove concludes that the source physical volume is not in a
+volume group and refuses to commence with the move.
 
-> 2) modify pvscan to be able to scan a single device
+Any ideas? Thanks.
 
-This would actually just be something like 'pvs -o uuid <device>' with
-a subtle modification so it notices there are no VG fields required
-and so it doesn't attempt to access the VG metadata (which might
-require accessing disks other than the one specified).
 
-Alasdair
+--Janne Peltonen
+Univ. of Helsinki
 -- 
-agk@redhat.com
+Janne Peltonen <janne.peltonen@helsinki.fi>
