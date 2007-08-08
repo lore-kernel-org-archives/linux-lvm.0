@@ -1,18 +1,15 @@
-Received: from agk.fab.redhat.com (agk.fab.redhat.com [10.33.0.19])
-	by pobox.fab.redhat.com (8.13.1/8.13.1) with ESMTP id l78LL3Ur014787
-	for <linux-lvm@redhat.com>; Wed, 8 Aug 2007 17:21:03 -0400
-Received: from agk by agk.fab.redhat.com with local (Exim 4.34)
-	id 1IIsxi-0007YJ-Fj
-	for linux-lvm@redhat.com; Wed, 08 Aug 2007 22:21:02 +0100
-Date: Wed, 8 Aug 2007 22:21:02 +0100
+Date: Wed, 8 Aug 2007 22:45:38 +0100
 From: Alasdair G Kergon <agk@redhat.com>
-Subject: Re: [linux-lvm] Best practice: metadata backup
-Message-ID: <20070808212102.GP2064@agk.fab.redhat.com>
-References: <20070807213412.GC2064@agk.fab.redhat.com>
-	<Pine.LNX.4.44.0708081447350.23150-100000@bmsred.bmsi.com>
+Message-ID: <20070808214538.GR2064@agk.fab.redhat.com>
+References: <46B0EAEF.6090305@cfl.rr.com>
+	<20070802065012.GA28687@percy.comedia.it>
+	<46B1B5E1.1050406@redhat.com> <46B251BB.1010004@cfl.rr.com>
+	<20070807210359.GA2064@agk.fab.redhat.com>
+	<46BA2FCC.1040001@cfl.rr.com>
 Mime-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <Pine.LNX.4.44.0708081447350.23150-100000@bmsred.bmsi.com>
+In-Reply-To: <46BA2FCC.1040001@cfl.rr.com>
+Subject: [linux-lvm] Re: [dm-devel] Re: LVM on dmraid breakage
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -25,43 +22,39 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: LVM general discussion and development <linux-lvm@redhat.com>
+To: device-mapper development <dm-devel@redhat.com>
+Cc: "ATARAID (eg, Promise Fasttrak,
+	Highpoint 370) related discussions" <ataraid-list@redhat.com>, linux-lvm@redhat.com
 
-On Wed, Aug 08, 2007 at 03:03:38PM -0400, Stuart D. Gathman wrote:
-> That's good.  But I've been lurking and noticed that when things
-> go disastrously wrong, and some poor admin posts here hoping for a miracle,
-> the key to the miracle is having a copy of the LVM metadata somewhere for
-> use with vgcfgrestore.  Apparently, the PV copies are not enough for
-> current tools to allow recovery from some situations.
+On Wed, Aug 08, 2007 at 05:04:12PM -0400, Phillip Susi wrote:
+> https://bugs.launchpad.net/ubuntu/+source/dmraid/+bug/129285
  
-No distribution that I'm aware of uses the existing facilities in full
-to solve problems at system boot.  If things aren't exactly right they
-fail and leave the user to work out how to clean up the mess.  There's
-quite a bit of logic that could be added to the initrd/initscripts to
-handle - or at least report on - certain failure situations using the
-existing LVM2 features.
+There's something not quite right there:
+  Why doesn't the 'lvdisplay' issue a message about the duplicate PV?
+  - run 'vgscan -vvvv' to see what lvm2 is really doing with all the
+    relevant devices
 
-Secondly, by the time admins seek help, they've sometimes already made
-their situation many times worse by attempting to fix things the wrong
-way.  Worse, they sometimes realise they did something stupid and
-convince themselves they can still get sensible advice without revealing
-everything they know they did.  So someone providing that help needs to
-try to check everything in more than one way in case relevant
-information is being withheld.  Mechanisms to help skilled support
-engineers deal with such situations efficiently pervade the LVM2 design.  
+  What lvm2 version? 
+   - could be old and not containing the code to do the detection
+     correctly?
 
-The lvm_dump.sh script is being developed to capture the essential
-information about an LVM2 system, and eventually we hope to have tools
-to analyse and report upon the contents of the dump.  'pvck' is also
-under development to aid recovery from one class of problems.
+  Are there non-upstream-default config settings that had the effect of turning
+off the detection?  
+   - see 'lvm dumpconfig' output or /etc/lvm/lvm.conf plus any compile-time
+     default changes
 
-> Certainly, automatically bringing all remaining LVs online after
-> PV failure is a must.
+
+Standard procedure these days is to ask people to run 'lvmdump -a'
+(scripts/lvm_dump.sh in the source tree) to capture the relevant information
+for examination.
+
+> This is do to the fact that the lvm tools open /dev/sd* and look for lvm 
+> partitions, which it finds.
  
-That's an example in point.  The LVM2 tools have offered facilities to
-do that for several years.  The distributions do not yet make use of
-them.
-
+But I don't yet see why it didn't also open the other devices, write a warning
+message about duplicate IDs, and do the right thing and give them
+precedence.
+ 
 Alasdair
 -- 
 agk@redhat.com
