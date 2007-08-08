@@ -1,24 +1,21 @@
-Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l78EZAtE026205
-	for <linux-lvm@redhat.com>; Wed, 8 Aug 2007 10:35:10 -0400
-Received: from sender-02.it.helsinki.fi (sender-02.it.helsinki.fi
-	[128.214.205.137])
-	by mx1.redhat.com (8.13.1/8.13.1) with ESMTP id l78EZ0Tw015826
-	for <linux-lvm@redhat.com>; Wed, 8 Aug 2007 10:35:00 -0400
-Received: from widch.it.helsinki.fi (widch.it.helsinki.fi [128.214.0.47])
-	by sender-02.it.helsinki.fi (8.13.8/8.13.8) with ESMTP id
-	l78EYsm9013802
-	(version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=NOT)
-	for <linux-lvm@redhat.com>; Wed, 8 Aug 2007 17:34:54 +0300
-Received: from trkr by widch.it.helsinki.fi with local (Exim 4.63)
-	(envelope-from <janne.peltonen@helsinki.fi>) id 1IImcg-000410-HI
-	for linux-lvm@redhat.com; Wed, 08 Aug 2007 17:34:54 +0300
-Date: Wed, 8 Aug 2007 17:34:54 +0300
-From: Janne Peltonen <janne.peltonen@helsinki.fi>
-Message-ID: <20070808143454.GE12798@helsinki.fi>
+Received: from mx2.redhat.com (mx2.redhat.com [10.255.15.25])
+	by int-mx2.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l78J3jM0030966
+	for <linux-lvm@redhat.com>; Wed, 8 Aug 2007 15:03:45 -0400
+Received: from mail.bmsi.com (www.bmsi.com [24.248.44.156])
+	by mx2.redhat.com (8.13.1/8.13.1) with ESMTP id l78J3huD005157
+	for <linux-lvm@redhat.com>; Wed, 8 Aug 2007 15:03:43 -0400
+Received: from bmsred.bmsi.com (bmsred.bmsi.com [192.168.9.50])
+	by mail.bmsi.com (8.13.6/8.13.6) with ESMTP id l78J3cW2021025
+	for <linux-lvm@redhat.com>; Wed, 8 Aug 2007 15:03:38 -0400
+Received: from localhost (localhost [127.0.0.1])
+	by bmsred.bmsi.com (8.13.5/8.13.5) with ESMTP id l78J3cBC023245
+	for <linux-lvm@redhat.com>; Wed, 8 Aug 2007 15:03:38 -0400
+Date: Wed, 8 Aug 2007 15:03:38 -0400 (EDT)
+From: "Stuart D. Gathman" <stuart@bmsi.com>
+Subject: Re: [linux-lvm] Best practice: metadata backup
+In-Reply-To: <20070807213412.GC2064@agk.fab.redhat.com>
+Message-ID: <Pine.LNX.4.44.0708081447350.23150-100000@bmsred.bmsi.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-Subject: [linux-lvm] Trouble pvmoving lv's out of a metadatacopies=0 pv
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -29,20 +26,43 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: TEXT/PLAIN; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: linux-lvm@redhat.com
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-Hi!
+On Tue, 7 Aug 2007, Alasdair G Kergon wrote:
 
-If I try to pvmove lv's out of a pv I created using the metadatacopies 0
-option, pvmove concludes that the source physical volume is not in a
-volume group and refuses to commence with the move.
+> There are already copies (and backups of previous copies) on each physical
+> volume (in the default configuration) and there's an automated process to deal
+> with simple problems like power failure during a metadata update leading to
+> disagreement between the copies.
 
-Any ideas? Thanks.
+That's good.  But I've been lurking and noticed that when things
+go disastrously wrong, and some poor admin posts here hoping for a miracle,
+the key to the miracle is having a copy of the LVM metadata somewhere for
+use with vgcfgrestore.  Apparently, the PV copies are not enough for
+current tools to allow recovery from some situations.
 
+I wish I could take a sabbatical and spend a year setting up VGs,
+breaking them in evil ways, and fixing the tools to intelligently
+recover.  Given the nature of open source, OSS friendly employers should
+offer sabbaticals for developers, like clergy and academics get.  A year
+every 7 years to work full-time on whatever project (hardware or
+software related) grabs their interest.
 
---Janne Peltonen
-Univ. of Helsinki
+Certainly, automatically bringing all remaining LVs online after
+PV failure is a must.
+
+I've always been interested in data storage that can recover from
+disaster.  I designed a database filesystem that stores a table id
+in every block, so that usable tables and directories can be recovered
+regardless of what portion of the filesystem is wiped out (missing records,
+of course).  It has saved our customers butt several times ("No, we don't
+know where the backup tapes have gone...we took them offsite like you said.
+You didn't say anything about bringing them back.").
+
 -- 
-Janne Peltonen <janne.peltonen@helsinki.fi>
+	      Stuart D. Gathman <stuart@bmsi.com>
+    Business Management Systems Inc.  Phone: 703 591-0911 Fax: 703 591-6154
+"Confutatis maledictis, flammis acribus addictis" - background song for
+a Microsoft sponsored "Where do you want to go from here?" commercial.
