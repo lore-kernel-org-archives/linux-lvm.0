@@ -1,16 +1,30 @@
-Date: Wed, 8 Aug 2007 22:45:38 +0100
-From: Alasdair G Kergon <agk@redhat.com>
-Message-ID: <20070808214538.GR2064@agk.fab.redhat.com>
-References: <46B0EAEF.6090305@cfl.rr.com>
-	<20070802065012.GA28687@percy.comedia.it>
-	<46B1B5E1.1050406@redhat.com> <46B251BB.1010004@cfl.rr.com>
-	<20070807210359.GA2064@agk.fab.redhat.com>
-	<46BA2FCC.1040001@cfl.rr.com>
+Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l797NOgh003815
+	for <linux-lvm@redhat.com>; Thu, 9 Aug 2007 03:23:24 -0400
+Received: from mail.streamline-computing.com (mail.streamline-computing.com
+	[87.127.209.200])
+	by mx1.redhat.com (8.13.1/8.13.1) with ESMTP id l797NFmj025900
+	for <linux-lvm@redhat.com>; Thu, 9 Aug 2007 03:23:15 -0400
+Received: from localhost (localhost [127.0.0.1])
+	by mail.streamline-computing.com (Postfix) with ESMTP id 35873BB33
+	for <linux-lvm@redhat.com>; Thu,  9 Aug 2007 08:23:10 +0100 (BST)
+Received: from mail.streamline-computing.com ([127.0.0.1])
+	by localhost (mail.streamline-computing.com [127.0.0.1]) (amavisd-new,
+	port 10024) with ESMTP id 6jPTJSMTkhxT for <linux-lvm@redhat.com>;
+	Thu,  9 Aug 2007 08:23:07 +0100 (BST)
+Received: from [192.168.1.13] (unknown [212.159.87.168])
+	by mail.streamline-computing.com (Postfix) with ESMTP id 3A415BB31
+	for <linux-lvm@redhat.com>; Thu,  9 Aug 2007 08:23:07 +0100 (BST)
+Subject: Re: [linux-lvm] Best practice: metadata backup
+From: John Hearns <john.hearns@streamline-computing.com>
+In-Reply-To: <Pine.LNX.4.44.0708081447350.23150-100000@bmsred.bmsi.com>
+References: <Pine.LNX.4.44.0708081447350.23150-100000@bmsred.bmsi.com>
+Date: Thu, 09 Aug 2007 08:23:54 +0100
+Message-Id: <1186644244.11799.6.camel@Vigor13>
 Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <46BA2FCC.1040001@cfl.rr.com>
-Subject: [linux-lvm] Re: [dm-devel] Re: LVM on dmraid breakage
-Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Transfer-Encoding: 7bit
+Reply-To: john.hearns@streamline-computing.com,
+	LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -21,40 +35,24 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: device-mapper development <dm-devel@redhat.com>
-Cc: "ATARAID (eg, Promise Fasttrak,
-	Highpoint 370) related discussions" <ataraid-list@redhat.com>, linux-lvm@redhat.com
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-On Wed, Aug 08, 2007 at 05:04:12PM -0400, Phillip Susi wrote:
-> https://bugs.launchpad.net/ubuntu/+source/dmraid/+bug/129285
- 
-There's something not quite right there:
-  Why doesn't the 'lvdisplay' issue a message about the duplicate PV?
-  - run 'vgscan -vvvv' to see what lvm2 is really doing with all the
-    relevant devices
+On Wed, 2007-08-08 at 15:03 -0400, Stuart D. Gathman wrote:
 
-  What lvm2 version? 
-   - could be old and not containing the code to do the detection
-     correctly?
+> 
+> I've always been interested in data storage that can recover from
+> disaster.  I designed a database filesystem that stores a table id
+> in every block, so that usable tables and directories can be recovered
+> regardless of what portion of the filesystem is wiped out (missing records,
+> of course).  It has saved our customers butt several times ("No, we don't
+> know where the backup tapes have gone...we took them offsite like you said.
+> You didn't say anything about bringing them back.").
 
-  Are there non-upstream-default config settings that had the effect of turning
-off the detection?  
-   - see 'lvm dumpconfig' output or /etc/lvm/lvm.conf plus any compile-time
-     default changes
+Something along the lines of an object-based filesystem?
+Great minds think alike!
+
+I do a lot of work with Panasas  www.panasas.com
+and Lustre   www.clusterfs.com
 
 
-Standard procedure these days is to ask people to run 'lvmdump -a'
-(scripts/lvm_dump.sh in the source tree) to capture the relevant information
-for examination.
-
-> This is do to the fact that the lvm tools open /dev/sd* and look for lvm 
-> partitions, which it finds.
- 
-But I don't yet see why it didn't also open the other devices, write a warning
-message about duplicate IDs, and do the right thing and give them
-precedence.
- 
-Alasdair
--- 
-agk@redhat.com
+Not that familiar with ZFS - anyone care to comment?
