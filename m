@@ -1,29 +1,15 @@
-Received: from mx2.redhat.com (mx2.redhat.com [10.255.15.25])
-	by int-mx2.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l7DEbAqW021248
-	for <linux-lvm@redhat.com>; Mon, 13 Aug 2007 10:37:10 -0400
-Received: from smtp-out04.email.it (smtp-out04.email.it [212.97.34.24])
-	by mx2.redhat.com (8.13.1/8.13.1) with ESMTP id l7DEb57c023710
-	for <linux-lvm@redhat.com>; Mon, 13 Aug 2007 10:37:05 -0400
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by smtp-out04.email.it (Postfix) with ESMTP id E2080C00E
-	for <linux-lvm@redhat.com>; Mon, 13 Aug 2007 16:36:58 +0200 (CEST)
-Received: from smtp-out04.email.it ([127.0.0.1])
-	by localhost (smtp-out04.email.it [127.0.0.1]) (amavisd-new, port 10024)
-	with LMTP id gD14IQq6xyLZ for <linux-lvm@redhat.com>;
-	Mon, 13 Aug 2007 16:36:58 +0200 (CEST)
-Received: from [10.9.0.10] (host135-150-dynamic.8-87-r.retail.telecomitalia.it
-	[87.8.150.135])
-	by smtp-out04.email.it (Postfix) with ESMTP id C4DB5C006
-	for <linux-lvm@redhat.com>; Mon, 13 Aug 2007 16:36:57 +0200 (CEST)
-From: Simone Gotti <simone.gotti@email.it>
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature";
-	boundary="=-Or+kIKlZGdy0yvZ5nr+Q"
-Date: Mon, 13 Aug 2007 16:36:34 +0200
-Message-Id: <1187015794.2799.11.camel@localhost>
-Mime-Version: 1.0
-Subject: [linux-lvm] Some questions on "Mirrors cannot be resized while
+Received: from [192.168.1.100] (vpn-248-114.boston.redhat.com [10.13.248.114])
+	by pobox.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l7DFWplJ018184
+	for <linux-lvm@redhat.com>; Mon, 13 Aug 2007 11:32:52 -0400
+Mime-Version: 1.0 (Apple Message framework v752.3)
+In-Reply-To: <1187015794.2799.11.camel@localhost>
+References: <1187015794.2799.11.camel@localhost>
+Message-Id: <330CCC1A-5400-472C-8DCE-59CCE61E739C@redhat.com>
+Content-Transfer-Encoding: 7bit
+From: Jonathan Brassow <jbrassow@redhat.com>
+Subject: Re: [linux-lvm] Some questions on "Mirrors cannot be resized while
 	active yet"
+Date: Mon, 13 Aug 2007 10:29:21 -0500
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -34,43 +20,44 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: linux-lvm@redhat.com
+Content-Type: text/plain; charset="us-ascii"; delsp="yes"; format="flowed"
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
+I don't remember all the reasons, but I *think* two of them were:
+1) 186304 - potential to spoil redundancy
+2) cluster mirroring needed ability to hold to identical logs for a  
+short period
 
---=-Or+kIKlZGdy0yvZ5nr+Q
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
+Both of these issues have been resolved, so it may be a simple matter  
+of turning it on...
 
-Hi all,
+  brassow
 
-lvresize gives the message "Mirrors cannot be resized while active yet."
-when trying to resize an active lv.
+On Aug 13, 2007, at 9:36 AM, Simone Gotti wrote:
 
-Simple tests using directly dmsetup let me resize a mirror on the fly
-without problems (maybe I'm missing some problematic corner cases). With
-a core log everything was resynced every time while with disk log only
-the extended part was resynced.=20
-
-So, is there only missing code in lvm2 (curious to know if I should be
-able to write the missing part) or also the kernel parts (dm-raid1,
-dm-log and future dm-clog) needs some more code?
-
-Thanks!
-
-Bye!
---=20
-Simone Gotti
-
---=-Or+kIKlZGdy0yvZ5nr+Q
-Content-Type: application/pgp-signature; name=signature.asc
-Content-Description: This is a digitally signed message part
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.7 (GNU/Linux)
-
-iD8DBQBGwGxDl0ZU7uYHW3kRApIFAJ9dfQ718JUYVgO8R6T4pFQacN8j5QCbBxok
-wywEbvNErZdpKCzxK5BrPOY=
-=Q4D+
------END PGP SIGNATURE-----
-
---=-Or+kIKlZGdy0yvZ5nr+Q--
+> Hi all,
+>
+> lvresize gives the message "Mirrors cannot be resized while active  
+> yet."
+> when trying to resize an active lv.
+>
+> Simple tests using directly dmsetup let me resize a mirror on the fly
+> without problems (maybe I'm missing some problematic corner cases).  
+> With
+> a core log everything was resynced every time while with disk log only
+> the extended part was resynced.
+>
+> So, is there only missing code in lvm2 (curious to know if I should be
+> able to write the missing part) or also the kernel parts (dm-raid1,
+> dm-log and future dm-clog) needs some more code?
+>
+> Thanks!
+>
+> Bye!
+> -- 
+> Simone Gotti
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@redhat.com
+> https://www.redhat.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
