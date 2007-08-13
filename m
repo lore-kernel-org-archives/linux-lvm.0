@@ -1,21 +1,29 @@
-Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l7B3Yvhg004071
-	for <linux-lvm@redhat.com>; Fri, 10 Aug 2007 23:34:57 -0400
-Received: from mail145.messagelabs.com (mail145.messagelabs.com
-	[216.82.245.115])
-	by mx1.redhat.com (8.13.1/8.13.1) with SMTP id l7B3YrNg024202
-	for <linux-lvm@redhat.com>; Fri, 10 Aug 2007 23:34:53 -0400
-Received: from amer-gw07.amer.csc.com (amer-gw07.amer.csc.com [20.6.39.243])
-	by amer-mta07.csc.com (Switch-3.1.6/Switch-3.1.7) with ESMTP id
-	l7B3Z3l7017385
-	for <linux-lvm@redhat.com>; Fri, 10 Aug 2007 23:35:03 -0400 (EDT)
-MIME-Version: 1.0
-Message-ID: <OF28DDAEBA.68783C1A-ON85257334.0013818B-85257334.0013ACF5@csc.com>
-From: Mahmoud Hanafi <mhanafi@csc.com>
-Date: Fri, 10 Aug 2007 23:34:44 -0400
-Content-Type: multipart/alternative;
-	boundary="=_alternative 0013ACE785257334_="
-Subject: [linux-lvm] RHEL5 I/O request size
+Received: from mx2.redhat.com (mx2.redhat.com [10.255.15.25])
+	by int-mx2.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l7DEbAqW021248
+	for <linux-lvm@redhat.com>; Mon, 13 Aug 2007 10:37:10 -0400
+Received: from smtp-out04.email.it (smtp-out04.email.it [212.97.34.24])
+	by mx2.redhat.com (8.13.1/8.13.1) with ESMTP id l7DEb57c023710
+	for <linux-lvm@redhat.com>; Mon, 13 Aug 2007 10:37:05 -0400
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by smtp-out04.email.it (Postfix) with ESMTP id E2080C00E
+	for <linux-lvm@redhat.com>; Mon, 13 Aug 2007 16:36:58 +0200 (CEST)
+Received: from smtp-out04.email.it ([127.0.0.1])
+	by localhost (smtp-out04.email.it [127.0.0.1]) (amavisd-new, port 10024)
+	with LMTP id gD14IQq6xyLZ for <linux-lvm@redhat.com>;
+	Mon, 13 Aug 2007 16:36:58 +0200 (CEST)
+Received: from [10.9.0.10] (host135-150-dynamic.8-87-r.retail.telecomitalia.it
+	[87.8.150.135])
+	by smtp-out04.email.it (Postfix) with ESMTP id C4DB5C006
+	for <linux-lvm@redhat.com>; Mon, 13 Aug 2007 16:36:57 +0200 (CEST)
+From: Simone Gotti <simone.gotti@email.it>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature";
+	boundary="=-Or+kIKlZGdy0yvZ5nr+Q"
+Date: Mon, 13 Aug 2007 16:36:34 +0200
+Message-Id: <1187015794.2799.11.camel@localhost>
+Mime-Version: 1.0
+Subject: [linux-lvm] Some questions on "Mirrors cannot be resized while
+	active yet"
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -28,43 +36,41 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 List-Id: <linux-lvm.redhat.com>
 To: linux-lvm@redhat.com
 
-This is a multipart message in MIME format.
---=_alternative 0013ACE785257334_=
-Content-Type: text/plain; charset="US-ASCII"
 
-I have noticed that in RHEL5 there seems to be a 512KB limit to the I/O 
-request size. This wasn't the case on EL4. Any ideas?
+--=-Or+kIKlZGdy0yvZ5nr+Q
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 
--Mahmoud
+Hi all,
 
+lvresize gives the message "Mirrors cannot be resized while active yet."
+when trying to resize an active lv.
 
---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-This is a PRIVATE message. If you are not the intended recipient, please 
-delete without copying and kindly advise us by e-mail of the mistake in 
-delivery. NOTE: Regardless of content, this e-mail shall not operate to 
-bind CSC to any order or other contract unless pursuant to explicit 
-written agreement or government initiative expressly permitting the use of 
-e-mail for such purpose.
---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+Simple tests using directly dmsetup let me resize a mirror on the fly
+without problems (maybe I'm missing some problematic corner cases). With
+a core log everything was resynced every time while with disk log only
+the extended part was resynced.=20
 
---=_alternative 0013ACE785257334_=
-Content-Type: text/html; charset="US-ASCII"
+So, is there only missing code in lvm2 (curious to know if I should be
+able to write the missing part) or also the kernel parts (dm-raid1,
+dm-log and future dm-clog) needs some more code?
 
+Thanks!
 
-<br><font size=2 face="sans-serif">I have noticed that in RHEL5 there seems
-to be a 512KB limit to the I/O request size. This wasn't the case on EL4.
-Any ideas?</font>
-<br>
-<br><font size=2 face="sans-serif">-Mahmoud<br>
-<br>
-<br>
---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------<br>
-This is a PRIVATE message. If you are not the intended recipient, please
-delete without copying and kindly advise us by e-mail of the mistake in
-delivery. NOTE: Regardless of content, this e-mail shall not operate to
-bind CSC to any order or other contract unless pursuant to explicit written
-agreement or government initiative expressly permitting the use of e-mail
-for such purpose.<br>
---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------<br>
-</font>
---=_alternative 0013ACE785257334_=--
+Bye!
+--=20
+Simone Gotti
+
+--=-Or+kIKlZGdy0yvZ5nr+Q
+Content-Type: application/pgp-signature; name=signature.asc
+Content-Description: This is a digitally signed message part
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.7 (GNU/Linux)
+
+iD8DBQBGwGxDl0ZU7uYHW3kRApIFAJ9dfQ718JUYVgO8R6T4pFQacN8j5QCbBxok
+wywEbvNErZdpKCzxK5BrPOY=
+=Q4D+
+-----END PGP SIGNATURE-----
+
+--=-Or+kIKlZGdy0yvZ5nr+Q--
