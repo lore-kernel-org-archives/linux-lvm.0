@@ -1,21 +1,15 @@
-Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l7FK3p1w011890
-	for <linux-lvm@redhat.com>; Wed, 15 Aug 2007 16:03:51 -0400
-Received: from vms048pub.verizon.net (vms048pub.verizon.net [206.46.252.48])
-	by mx1.redhat.com (8.13.1/8.13.1) with ESMTP id l7FK3oXr022700
-	for <linux-lvm@redhat.com>; Wed, 15 Aug 2007 16:03:50 -0400
-Received: from [192.168.1.13] ([209.172.69.66])
-	by vms048.mailsrvcs.net (Sun Java System Messaging Server 6.2-6.01
-	(built Apr
-	3 2006)) with ESMTPA id <0JMT0019EZPYC312@vms048.mailsrvcs.net> for
-	linux-lvm@redhat.com; Wed, 15 Aug 2007 15:03:36 -0500 (CDT)
-Date: Wed, 15 Aug 2007 13:03:33 -0700
-From: Lothar Werzinger <lothar@tradescape.biz>
-Message-id: <200708151303.33774.lothar@tradescape.biz>
-MIME-version: 1.0
-Content-transfer-encoding: 7bit
-Content-disposition: inline
-Subject: [linux-lvm] Is this possible with LVM?
+Received: from mx2.redhat.com (mx2.redhat.com [10.255.15.25])
+	by int-mx2.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l7FKA2lK018338
+	for <linux-lvm@redhat.com>; Wed, 15 Aug 2007 16:10:03 -0400
+Received: from gk.uu.epigenomics.net (qmailr@gk.uu.epigenomics.net
+	[195.127.125.226])
+	by mx2.redhat.com (8.13.1/8.13.1) with ESMTP id l7FK9x1p014820
+	for <linux-lvm@redhat.com>; Wed, 15 Aug 2007 16:10:00 -0400
+From: linux-lvm@ml.epigenomics.com
+Subject: Re: [linux-lvm] Tool to manage LVM
+Date: Wed, 15 Aug 2007 20:09:57 +0000 (UTC)
+Message-ID: <slrnfc6ncl.4kl.robert.sander@raman.epigenomics.epi>
+References: <46C33D37.7020001@terra.com.br>
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -26,28 +20,33 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@redhat.com
 
-Hi,
+On Wed, 15 Aug 2007 14:51:51 -0300,
+ Piter PUNK <piterpk@terra.com.br> wrote:
+> Hi,
+>
+> 	I am writing an small app to manage LVM. Currently it supports:
+>
+> 	1. Create and Remove Physical Volumes
+> 	2. Create, Remove, Extend and Reduce Volume Groups
+> 	3. Create and Remove Logical Volumes
 
-I have a Lenovo Thinkpad T61 with a second disk drive for the Ultrabay.
+Hi!
 
-I created one PV on the internal and external (Ultrabay) each
-I created a VG with these two PVs.
-I created a LV (LV1) that uses exclusively PV intern
-I created a LV (LV2) that uses both PVs in striped mode.
+Sorry to interrupt but isn't this exactly the list of features from
+EVMS? They have evmsn (ncurses interface) and emvsgui (GUI) to create,
+resize, etc. volumes.
 
-So far everything works fine.
+EVMS currently lacks active developers, maybe you can put your resources
+into this project? http://evms.sourceforge.net/
 
-What I would like to do is to unmount LV2 and be able to remove the external 
-disk from the Ultrabay to replace it with a DVD drive while still be able to 
-acess the filesystem on LV1 (which uses only space on the internal disk).
-I would like to do this to backup data from LV1 to DVD-RW.
-
-Is this possible with LVM? How would I go and prepare the external disk for 
-removal? How would I reconnect if I insert the disk again.
-
-Thanks in advance!
-
-Lothar
+Greetings
+-- 
+Robert Sander                     Senior Manager Information Systems
+Epigenomics AG    Kleine Praesidentenstr. 1    10178 Berlin, Germany
+phone:+49-30-24345-0                            fax:+49-30-24345-555
+http://www.epigenomics.com             robert.sander@epigenomics.com
