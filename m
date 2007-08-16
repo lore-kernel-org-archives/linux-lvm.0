@@ -1,18 +1,20 @@
 Received: from mx2.redhat.com (mx2.redhat.com [10.255.15.25])
-	by int-mx2.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l7G4fuwn004120
-	for <linux-lvm@redhat.com>; Thu, 16 Aug 2007 00:41:57 -0400
-Received: from fk-out-0910.google.com (fk-out-0910.google.com [209.85.128.184])
-	by mx2.redhat.com (8.13.1/8.13.1) with ESMTP id l7G4fsPf003309
-	for <linux-lvm@redhat.com>; Thu, 16 Aug 2007 00:41:55 -0400
-Received: by fk-out-0910.google.com with SMTP id b27so127835fka
-	for <linux-lvm@redhat.com>; Wed, 15 Aug 2007 21:41:54 -0700 (PDT)
-Message-ID: <4e5956450708152141p6532b797redb6acabb7e51081@mail.gmail.com>
-Date: Thu, 16 Aug 2007 10:11:53 +0530
-From: vishnu <ckmvishnu@gmail.com>
+	by int-mx2.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l7GCH4gj007085
+	for <linux-lvm@redhat.com>; Thu, 16 Aug 2007 08:17:04 -0400
+Received: from rv-out-0910.google.com (rv-out-0910.google.com [209.85.198.186])
+	by mx2.redhat.com (8.13.1/8.13.1) with ESMTP id l7GCH1k8023396
+	for <linux-lvm@redhat.com>; Thu, 16 Aug 2007 08:17:01 -0400
+Received: by rv-out-0910.google.com with SMTP id k15so197853rvb
+	for <linux-lvm@redhat.com>; Thu, 16 Aug 2007 05:17:00 -0700 (PDT)
+Message-ID: <b30466f90708160517s3bc1e4d4q9da7a6d0889b0b90@mail.gmail.com>
+Date: Thu, 16 Aug 2007 17:47:00 +0530
+From: "prasad k" <openkerala@gmail.com>
+Subject: Re: [linux-lvm] Redirecting LVM command output on RHEL5?
+In-Reply-To: <55D16D5A051757489679376DECFE315E0157E47F@G3W0639.americas.hpqcorp.net>
 MIME-Version: 1.0
-Content-Type: multipart/alternative; 
-	boundary="----=_Part_73006_7305667.1187239313693"
-Subject: [linux-lvm] inux-lvm mailing list submission
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+References: <55D16D5A051757489679376DECFE315E0157E47F@G3W0639.americas.hpqcorp.net>
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -23,24 +25,60 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: linux-lvm@redhat.com
+Content-Type: text/plain; charset="us-ascii"
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-------=_Part_73006_7305667.1187239313693
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
+Hi,
 
--- 
-Vishnu,
+The below command should work fine with RHEL5,
 
-"if you don't make mistakes,
-chances are you are not stretching yourself."
+lvs | tee kevin.txt
 
-------=_Part_73006_7305667.1187239313693
-Content-Type: text/html; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
+check,
 
-<br clear="all"><br>-- <br>Vishnu,<br><br>&quot;if you don&#39;t make mistakes,<br>chances are you are not stretching yourself.&quot;
+less kevin.txt
 
-------=_Part_73006_7305667.1187239313693--
+Thanks,
+
+
+On 8/2/07, Joubert, Kevin <kevin.joubert@hp.com> wrote:
+>
+> Hello,
+>
+> Okay.. I am probably missing something simple here but...
+>
+> I just added a RHEL5 system to my lab and I am testing a script that
+> captures LVM structure.
+> This script works on other versions of RHEL and SLES, but on RHEL5,
+> whenever I try to redirect LVM command output, I get a blank.
+>
+> For instance...
+>
+> [root@linux-dl585 ~]# pvs
+>   PV         VG   Fmt  Attr PSize  PFree
+>   /dev/sda   vg01 lvm2 a-   10.00G    0
+>   /dev/sdd   vg02 lvm2 ax    1.95G 1.08G
+>   /dev/sde   vg02 lvm2 ax    1.95G 1.46G
+>
+> [root@linux-dl585 ~]# pvs > kevin.txt
+>
+> [root@linux-dl585 ~]# cat kevin.txt
+>
+>
+> No matter what LVM command I run (i.e. vgdisplay, lvs, etc. etc.), it
+> will not redirect output to my text file. Screen output is always
+> successful, and every other system command I have tried (i.e. fdisk,
+> etc.) will redirect output successfully.
+>
+>
+> Any ideas?
+>
+>
+> Kevin
+>
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@redhat.com
+> https://www.redhat.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+>
