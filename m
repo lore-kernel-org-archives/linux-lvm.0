@@ -1,20 +1,25 @@
-Received: from mx2.redhat.com (mx2.redhat.com [10.255.15.25])
-	by int-mx2.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l7GCH4gj007085
-	for <linux-lvm@redhat.com>; Thu, 16 Aug 2007 08:17:04 -0400
-Received: from rv-out-0910.google.com (rv-out-0910.google.com [209.85.198.186])
-	by mx2.redhat.com (8.13.1/8.13.1) with ESMTP id l7GCH1k8023396
-	for <linux-lvm@redhat.com>; Thu, 16 Aug 2007 08:17:01 -0400
-Received: by rv-out-0910.google.com with SMTP id k15so197853rvb
-	for <linux-lvm@redhat.com>; Thu, 16 Aug 2007 05:17:00 -0700 (PDT)
-Message-ID: <b30466f90708160517s3bc1e4d4q9da7a6d0889b0b90@mail.gmail.com>
-Date: Thu, 16 Aug 2007 17:47:00 +0530
-From: "prasad k" <openkerala@gmail.com>
-Subject: Re: [linux-lvm] Redirecting LVM command output on RHEL5?
-In-Reply-To: <55D16D5A051757489679376DECFE315E0157E47F@G3W0639.americas.hpqcorp.net>
-MIME-Version: 1.0
+Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l7GH43sK030105
+	for <linux-lvm@redhat.com>; Thu, 16 Aug 2007 13:04:03 -0400
+Received: from probity.mcc.ac.uk (probity.mcc.ac.uk [130.88.200.94])
+	by mx1.redhat.com (8.13.1/8.13.1) with ESMTP id l7GH3xsw019370
+	for <linux-lvm@redhat.com>; Thu, 16 Aug 2007 13:04:00 -0400
+Received: from gerhayn.mcc.ac.uk ([10.2.18.1])
+	by probity.mcc.ac.uk with esmtps (TLSv1:AES256-SHA:256)
+	(Exim 4.63 (FreeBSD))
+	(envelope-from <cs@networkingnewsletter.org.uk>) id 1ILilL-0004HI-CB
+	for linux-lvm@redhat.com; Thu, 16 Aug 2007 18:03:59 +0100
+Received: from ratty.phy.umist.ac.uk ([130.88.128.163]:54133)
+	by gerhayn.mcc.ac.uk with esmtpsa (TLSv1:RC4-MD5:128)
+	(Exim 4.67 (FreeBSD))
+	(envelope-from <cs@networkingnewsletter.org.uk>) id 1ILilL-0003nG-9d
+	for linux-lvm@redhat.com; Thu, 16 Aug 2007 18:03:59 +0100
+From: michael <cs@networkingnewsletter.org.uk>
+Date: Thu, 16 Aug 2007 18:03:57 +0100
+Message-Id: <1187283837.16162.2.camel@localhost.localdomain>
+Mime-Version: 1.0
 Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-References: <55D16D5A051757489679376DECFE315E0157E47F@G3W0639.americas.hpqcorp.net>
+Subject: [linux-lvm] pvmove problems
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -26,59 +31,44 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: LVM general discussion and development <linux-lvm@redhat.com>
+To: linux-lvm@redhat.com
 
-Hi,
+I'm trying to reduce a logical vol so that I can remove a HD from it.  
+However, I get errors with pvmove but I don't know why. I saw some old
+postings with a kernel patch but the URL is extinct.
 
-The below command should work fine with RHEL5,
-
-lvs | tee kevin.txt
-
-check,
-
-less kevin.txt
-
-Thanks,
+I'm running Fedora: Linux xxx.phy.umist.ac.uk 2.6.22.1-41.fc7 #1 SMP Fri
+Jul 27 18:21:43 EDT 2007 x86_64 x86_64 x86_64 GNU/Linux
 
 
-On 8/2/07, Joubert, Kevin <kevin.joubert@hp.com> wrote:
->
-> Hello,
->
-> Okay.. I am probably missing something simple here but...
->
-> I just added a RHEL5 system to my lab and I am testing a script that
-> captures LVM structure.
-> This script works on other versions of RHEL and SLES, but on RHEL5,
-> whenever I try to redirect LVM command output, I get a blank.
->
-> For instance...
->
-> [root@linux-dl585 ~]# pvs
->   PV         VG   Fmt  Attr PSize  PFree
->   /dev/sda   vg01 lvm2 a-   10.00G    0
->   /dev/sdd   vg02 lvm2 ax    1.95G 1.08G
->   /dev/sde   vg02 lvm2 ax    1.95G 1.46G
->
-> [root@linux-dl585 ~]# pvs > kevin.txt
->
-> [root@linux-dl585 ~]# cat kevin.txt
->
->
-> No matter what LVM command I run (i.e. vgdisplay, lvs, etc. etc.), it
-> will not redirect output to my text file. Screen output is always
-> successful, and every other system command I have tried (i.e. fdisk,
-> etc.) will redirect output successfully.
->
->
-> Any ideas?
->
->
-> Kevin
->
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
->
+chris@veri:~$ sudo /usr/sbin/pvdisplay /dev/sdb1
+Password:
+   --- Physical volume ---
+   PV Name               /dev/sdb1
+   VG Name               VolGroup00
+   PV Size               698.64 GB / not usable 10.34 MB
+   Allocatable           yes
+   PE Size (KByte)       32768
+   Total PE              22356
+   Free PE               19156
+   Allocated PE          3200
+   PV UUID               xDWUQB-wdEx-AtEs-YFkh-BKBR-7Jgd-9ik3p0
+
+
+chris@veri:~$ sudo /usr/sbin/pvdisplay /dev/sda2
+   --- Physical volume ---
+   PV Name               /dev/sda2
+   VG Name               VolGroup00
+   PV Size               465.66 GB / not usable 3.56 MB
+   Allocatable           yes
+   PE Size (KByte)       32768
+   Total PE              14901
+   Free PE               14839
+   Allocated PE          62
+   PV UUID               GLGcHf-b3Ga-M61f-okkW-HaAk-Al7P-leVK91
+
+
+chris@veri:~$ sudo /usr/sbin/pvmove /dev/sdb1
+   Failure parsing mirror status fraction: 1 core
+   Failure parsing mirror status fraction: 1 core
+   ABORTING: Mirror percentage check failed.
