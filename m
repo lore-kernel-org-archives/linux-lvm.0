@@ -1,22 +1,14 @@
-Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l7JNpufK012526
-	for <linux-lvm@redhat.com>; Sun, 19 Aug 2007 19:51:56 -0400
-Received: from mail.bmsi.com (www.bmsi.com [24.248.44.156])
-	by mx1.redhat.com (8.13.1/8.13.1) with ESMTP id l7JNptSh010697
-	for <linux-lvm@redhat.com>; Sun, 19 Aug 2007 19:51:55 -0400
-Received: from bmsred.bmsi.com (bmsred.bmsi.com [192.168.9.50])
-	by mail.bmsi.com (8.13.6/8.13.6) with ESMTP id l7JNpoTo029418
-	for <linux-lvm@redhat.com>; Sun, 19 Aug 2007 19:51:50 -0400
-Received: from localhost (localhost [127.0.0.1])
-	by bmsred.bmsi.com (8.13.5/8.13.5) with ESMTP id l7JNpoYw002562
-	for <linux-lvm@redhat.com>; Sun, 19 Aug 2007 19:51:50 -0400
-Date: Sun, 19 Aug 2007 19:51:49 -0400 (EDT)
-From: "Stuart D. Gathman" <stuart@bmsi.com>
-Subject: Re: [linux-lvm] Altering a Physical Volume's UUID on SATA hard drives
-	[solved]
-In-Reply-To: <6.0.3.0.1.20070818141148.03e03b50@mail.ecis.com>
-Message-ID: <Pine.LNX.4.44.0708191740520.2161-100000@bmsred.bmsi.com>
-MIME-Version: 1.0
+Received: from [192.168.1.100] (vpn-248-128.boston.redhat.com [10.13.248.128])
+	by pobox.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l7KEmbWE028872
+	for <linux-lvm@redhat.com>; Mon, 20 Aug 2007 10:48:38 -0400
+Mime-Version: 1.0 (Apple Message framework v752.3)
+In-Reply-To: <200708181124.03742.benscott@nwlink.com>
+References: <200708181124.03742.benscott@nwlink.com>
+Message-Id: <B484E4B6-DBA5-426A-8A3B-EAB16A465BFD@redhat.com>
+Content-Transfer-Encoding: 7bit
+From: Jonathan Brassow <jbrassow@redhat.com>
+Subject: Re: [linux-lvm] using lvconvert for mirroring
+Date: Mon, 20 Aug 2007 09:44:58 -0500
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -27,25 +19,61 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; delsp="yes"; format="flowed"
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-On Sat, 18 Aug 2007, A.Lizard wrote:
+Try using the additional '-a' argument (e.g. 'lvs -a -o +devices).   
+That should tell you more.
 
-> I bit-copied a backup LVM disk using dd from a Knoppix LiveCD (based on 
-> Debian) and wound up with duplicate volume and uuids, meaning I couldn't 
-> mount both the main and backup volumes simultaneously at the same time for 
-> subsequent backups. Of course, vgrename is ineffective to allow 
-> simultaneous mounting without changing the uuids.
+The reason you are getting errors with the last convert mentioned is  
+because you didn't specify enough devices.  Mirroring (with disk  
+logging) requires at least 3 devices - two for the actual mirror  
+images and one for the log.
 
-I would suggest copying (bitwise if desired) each LV individually to another
-volume group with a different name (and UUID).  This gives you a lot more
-flexibility with physical storage for primary vs backup volume groups.
-Furthermore, your LV backup procedure can take snapshots of each LV first.
+There are some pending enhancements to the allocation code that allow  
+the log device to be placed on the same physical disk as a mirror  
+device - thus only requiring two devices.  I'm not sure when the  
+allocation changes will go in.
 
--- 
-	      Stuart D. Gathman <stuart@bmsi.com>
-    Business Management Systems Inc.  Phone: 703 591-0911 Fax: 703 591-6154
-"Confutatis maledictis, flammis acribus addictis" - background song for
-a Microsoft sponsored "Where do you want to go from here?" commercial.
+  brassow
+
+On Aug 18, 2007, at 1:24 PM, ben scott wrote:
+
+> I have been playing with lvconvert but I can't quite figure out  
+> what it is
+> doing.  If I start with this:
+>
+> 	Debian# lvs -o +devices
+> 	  LV    VG   Attr   LSize Origin Snap%  Move Log Copy%  Devices
+> 	  lvol0 vg1  -wima- 7.81G                               /dev/hde2(0)
+>
+> Then run:
+>
+> 	Debian# lvconvert -m1 vg1/lvol0
+>
+> I get this:
+>
+> Debian# lvs -o +devices
+> 	  LV    VG   Attr   LSize Origin Snap%  Move Log        Copy%   
+> Devices
+> 	  lvol0 vg1  mwima- 7.81G                    lvol0_mlog   2.75  
+> lvol0_mimage_0			
+> (0),lvol0_mimage_1(0)
+>
+> So my first question is how do I find out where the mirror really  
+> is? I have
+> also tried specifying the physical volume at the end of the command  
+> to put
+> the mirror on a different pv but then I get this error message:
+>
+> 	Debian# lvconvert -m1 vg1/lvol0 /dev/hdg1
+> 	  Not enough PVs with free space available for parallel allocation.
+> 	  Consider --alloc anywhere if desperate.
+>
+> Thank you for any insight.
+>
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@redhat.com
+> https://www.redhat.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
