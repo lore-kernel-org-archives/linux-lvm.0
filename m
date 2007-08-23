@@ -1,10 +1,16 @@
-Date: Wed, 22 Aug 2007 11:42:21 -0400 (EDT)
-From: "Stuart D. Gathman" <stuart@bmsi.com>
-Subject: Re: [linux-lvm] partitioning enterprise Linux 4 one or more
-	partitions?
-In-Reply-To: <1187786370.6318.14.camel@jfaubin.cnedom.cgi.com>
-Message-ID: <Pine.LNX.4.44.0708221126290.17389-100000@bmsred.bmsi.com>
+Received: from mx2.redhat.com (mx2.redhat.com [10.255.15.25])
+	by int-mx2.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l7N8vJ4a018836
+	for <linux-lvm@redhat.com>; Thu, 23 Aug 2007 04:57:20 -0400
+Received: from bay0-omc2-s17.bay0.hotmail.com (bay0-omc2-s17.bay0.hotmail.com
+	[65.54.246.153])
+	by mx2.redhat.com (8.13.1/8.13.1) with ESMTP id l7N8vHGH031658
+	for <linux-lvm@redhat.com>; Thu, 23 Aug 2007 04:57:17 -0400
+Message-ID: <BAY115-W274EC6B50C58F0EADF27EB85D60@phx.gbl>
+From: Achievement <achievement.hk@hotmail.com>
+Date: Thu, 23 Aug 2007 16:37:55 +0800
+Content-Transfer-Encoding: 8bit
 MIME-Version: 1.0
+Subject: [linux-lvm] Guest os running with lvm under xen (lvm-backed vbd)
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -15,45 +21,63 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: LVM general discussion and development <linux-lvm@redhat.com>
-Cc: redhat-list@redhat.com
+Content-Type: text/plain; charset="utf-8"
+To: linux-lvm@redhat.com
 
-On Wed, 22 Aug 2007, Aubin, Jean-Francois wrote:
 
-> RHEL 4 with ACL SELinux activated for more secure server, monitoring and
-> backuping this server. 
-> Swap partition with ext3
-> /boot with ext3 partition
-> / Root in a LVM partition for the rest of system files
+Dear All,
+I've installed CentOS5 and configured the system with Xen+LVM
 
-I've done 6 or so el4 (actually centos) systems, and evolved to this, except
-swap goes on LVM also.  You have only 2 old fashioned partitions: /boot and
-LVM PV.  The only reason /boot is not in LVM is to play nice with rhel 
-versions of grub.
+All guest domain are installed in logical volume, lvm-backed vbd.
+and the guest domain will also use lvm too.
 
-For the last 3 I've added a new wrinkle which has greatly helped, although
-it is not obvious why at first.  Install and boot el5, and run el4 in a xen
-VM (with only 1 LV for system with boot and root).  This lets you do all kinds
-of things to the VM without being physically present.  You can do fun things
-like take a rw snapshot of the application VM, create a new VM, and apply an
-upgrade to see if you like the result, all without disturbing the live
-application system.  You can migrate the application VM to different hardware
-with no fuss - apparently you can migrate it live while running, but I haven't
-tried this yet.  The only glitch I've run into is that when you map a LV to a
-xenblk (which is otherwise most convenient), you can't resize the LV for the VM
-without rebooting the VM (which at least doesn't require rebooting the physical
-machine).
+My example.
+1. Install centos5 with software raid (raid 1)
+2. create pv, vg, lv on the md device
+3. install guest domain (centos5) in one of the lv '/dev/VolGroup00/xen2vbd1'
+4. the guest domain also use lvm, vg 'Xen1Vbd1VG00' created within the guest domain.
 
-If you can't afford both el4 and el5 license, maybe you could use
-CentOS for one (not sure how RH would feel about that).  They
-should offer a discount for that kind of setup, since it makes support
-easier rather than harder.  Caveat: I haven't tried running Oracle
-with multi-gigs of RAM in a VM.  My VMs are all 256-512M range.
+I can get the guest domain up and run correctly. 
 
--- 
-	      Stuart D. Gathman <stuart@bmsi.com>
-    Business Management Systems Inc.  Phone: 703 591-0911 Fax: 703 591-6154
-"Confutatis maledictis, flammis acribus addictis" - background song for
-a Microsoft sponsored "Where do you want to go from here?" commercial.
+and able to clone the guest domain by adding new lv and using dd
+
+dd if=/dev/VolGroup00/xen2vbd1  of=/dev/VolGroup00/xen2vbd2
+
+Then, i have several guest domain with same data.
+
+After several add/delete action of the lv under domain-0 for testing and cloning guest domain.
+
+I got the following error:
+
+[root@xen2 ~]# pvs
+
+  Couldn't find device with uuid '0gmklZ-HcGJ-Asv1-pkQz-guhK-bbY4-MJ24nq'.
+  Couldn't find device with uuid '0gmklZ-HcGJ-Asv1-pkQz-guhK-bbY4-MJ24nq'.
+Segmentation fault
+
+[root@xen2 ~]# lvs
+
+
+  Couldn't find device with uuid '0gmklZ-HcGJ-Asv1-pkQz-guhK-bbY4-MJ24nq'.
+  Couldn't find all physical volumes for volume group Xen1Vbd1VG00.
+  Couldn't find device with uuid '0gmklZ-HcGJ-Asv1-pkQz-guhK-bbY4-MJ24nq'.
+  Couldn't find all physical volumes for volume group Xen1Vbd1VG00.
+  Volume group "Xen1Vbd1VG00" not found
+  LV        VG         Attr   LSize  Origin Snap%  Move Log Copy%
+  LogVol00  VolGroup00 -wi-ao 14.62G
+  xen2vbd1  VolGroup00 -wi-a-  8.00G
+  xen2vbd2  VolGroup00 -wi-a-  8.00G
+
+Any one face the similar error? and why lvm see the logical volume as a physical volumes?
+or I should not use lvm in guest domain if i use lvm-backed vbd for xen?
+
+Thanks.
+
+Achievement
+
+
+
+
+_________________________________________________________________
+Messenger �� PC - to - PC ������ܥ\��A����~�ˤͧK�O�����~�q�ܡA�ǿ���K �X Messenger PC - to - PC ������� 
+http://get.live.com/messenger/features 
