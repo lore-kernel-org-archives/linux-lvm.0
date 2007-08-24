@@ -1,28 +1,21 @@
-Received: from mx2.redhat.com (mx2.redhat.com [10.255.15.25])
-	by int-mx2.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l7OEBbuD002017
-	for <linux-lvm@redhat.com>; Fri, 24 Aug 2007 10:11:38 -0400
-Received: from mail2.syneticon.net (mail.syneticon.net [213.239.212.131])
-	by mx2.redhat.com (8.13.1/8.13.1) with ESMTP id l7OEBNit017443
-	for <linux-lvm@redhat.com>; Fri, 24 Aug 2007 10:11:24 -0400
-Received: from postfix1.syneticon.net (postfix1.syneticon.net [192.168.112.6])
-	by mail2.syneticon.net (Postfix) with ESMTP id 756BE48670
-	for <linux-lvm@redhat.com>; Fri, 24 Aug 2007 16:11:15 +0200 (CEST)
-Received: from localhost (filter1.syneticon.net [192.168.113.3])
-	by postfix1.syneticon.net (Postfix) with ESMTP id B82BB9339
-	for <linux-lvm@redhat.com>; Fri, 24 Aug 2007 16:11:15 +0200 (CEST)
-Received: from postfix1.syneticon.net ([192.168.113.4])
-	by localhost (mx03.syneticon.net [192.168.113.3]) (amavisd-new,
-	port 10025) with ESMTP id gGlWoHzQY5sG for <linux-lvm@redhat.com>;
-	Fri, 24 Aug 2007 16:11:13 +0200 (CEST)
-Received: from [192.168.10.145] (xdsl-87-78-224-108.netcologne.de
-	[87.78.224.108]) by postfix1.syneticon.net (Postfix) with ESMTP
-	for <linux-lvm@redhat.com>; Fri, 24 Aug 2007 16:11:12 +0200 (CEST)
-Message-ID: <46CEE6FF.1090000@wpkg.org>
-Date: Fri, 24 Aug 2007 16:11:11 +0200
-From: Tomasz Chmielewski <mangoo@wpkg.org>
+Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l7OIRwGT003291
+	for <linux-lvm@redhat.com>; Fri, 24 Aug 2007 14:27:58 -0400
+Received: from mail.bmsi.com (www.bmsi.com [24.248.44.156])
+	by mx1.redhat.com (8.13.1/8.13.1) with ESMTP id l7OIRu5O030893
+	for <linux-lvm@redhat.com>; Fri, 24 Aug 2007 14:27:57 -0400
+Received: from bmsred.bmsi.com (bmsred.bmsi.com [192.168.9.50])
+	by mail.bmsi.com (8.13.6/8.13.6) with ESMTP id l7OIRoCQ014864
+	for <linux-lvm@redhat.com>; Fri, 24 Aug 2007 14:27:50 -0400
+Received: from localhost (localhost [127.0.0.1])
+	by bmsred.bmsi.com (8.13.5/8.13.5) with ESMTP id l7OIRonD030495
+	for <linux-lvm@redhat.com>; Fri, 24 Aug 2007 14:27:50 -0400
+Date: Fri, 24 Aug 2007 14:27:50 -0400 (EDT)
+From: "Stuart D. Gathman" <stuart@bmsi.com>
+Subject: Re: [linux-lvm] Snapshot Full
+In-Reply-To: <46CE4F11.4050901@cyberxdesigns.com>
+Message-ID: <Pine.LNX.4.44.0708241421510.30463-100000@bmsred.bmsi.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] "cannot allocate memory" when trying to do a snapshot?
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -33,40 +26,32 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
+Content-Type: TEXT/PLAIN; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-I have a server with ~1.5T PV, on which I have several logial volumes (LVs).
+On Thu, 23 Aug 2007, Hans C. Kaspersetz wrote:
 
-I decided to do a snapshot for five of these LVs, and it succeeded, but 
-only few times.
+> I hate to have to ask this, but how do I handle a full snapshot that has 
+> been disabled?  I would like to extend the lv, remout it and keep using 
+> it.  However, I am getting superblock errors and the like.
+> 
+> I have been searching through the archives and on Google for hours and I 
+> must not be looking for the right thing.
 
-   dom-dc1           san1 owi-ao   8.00G
-   dom-oss1          san1 owi-ao  16.00G
-   dom-sql1          san1 owi-ao   8.00G
-   dom-sql1-2        san1 owi-ao  50.00G
-   dom-ts1           san1 owi-ao  16.00G
+It is too late to extend the snapshot once it becomes full, because backups of
+clusters written on the source LV were not able to be copied to the snapshot
+before being overwritten.  So once the shapshot gets full, the data seen is
+mostly from the past at the point of the snapshot, but with random sectors
+overwritten with new data from the source LV since the point at which it became
+full.  I.e., you might be able to pull out a critical file if you had to, but
+it is a mess, and you are usually better off just deleting the snapsnot.
 
-For each of the LVs, I made 5G snapshots.
-I could make three snapshots for all of them, but the fourth snapshot 
-failed for some LVs (in all, I could only make 18 * 5GB snapshots).
-
-Why?
-
-I'm using Debian Etch, with its 2.6.18 64 bit kernel.
-The machine has 512 MB RAM, and 3 GB swap:
-
-# free
-              total       used       free     shared    buffers     cached
-Mem:        512204     492212      19992          0     297784      17864
--/+ buffers/cache:     176564     335640
-Swap:      3145720          0    3145720
-
-
-
-I've searched the list, and a similar cases appeared on the list in 
-2002/2003, most without any reply - but it was LVM1 / 2.4.x times.
-
+P.S.  If you need to recover a critical file, unmount (or mount readonly) the
+source LV immediately so it stops overwriting the snapshot.
 
 -- 
-Tomasz Chmielewski
+	      Stuart D. Gathman <stuart@bmsi.com>
+    Business Management Systems Inc.  Phone: 703 591-0911 Fax: 703 591-6154
+"Confutatis maledictis, flammis acribus addictis" - background song for
+a Microsoft sponsored "Where do you want to go from here?" commercial.
