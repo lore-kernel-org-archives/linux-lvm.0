@@ -1,21 +1,27 @@
-Received: from mx2.redhat.com (mx2.redhat.com [10.255.15.25])
-	by int-mx2.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l7O3NMbV004633
-	for <linux-lvm@redhat.com>; Thu, 23 Aug 2007 23:23:22 -0400
-Received: from host.cxdhosting.com (host.cxdhosting.com [66.98.192.74])
-	by mx2.redhat.com (8.13.1/8.13.1) with ESMTP id l7O3NL3o014518
-	for <linux-lvm@redhat.com>; Thu, 23 Aug 2007 23:23:21 -0400
-Received: from 64-205-249-2.client.dsl.net ([64.205.249.2]
-	helo=[192.168.217.59])
-	by host.cxdhosting.com with esmtpsa (TLSv1:AES256-SHA:256)
-	(Exim 4.63) (envelope-from <hans@cyberxdesigns.com>)
-	id 1IOPit-00064I-9V
-	for linux-lvm@redhat.com; Thu, 23 Aug 2007 23:20:35 -0400
-Message-ID: <46CE4F11.4050901@cyberxdesigns.com>
-Date: Thu, 23 Aug 2007 23:22:57 -0400
-From: "Hans C. Kaspersetz" <hans@cyberxdesigns.com>
+Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l7O4gXgB010404
+	for <linux-lvm@redhat.com>; Fri, 24 Aug 2007 00:42:33 -0400
+Received: from mail.berlin.i-dmedia.com (mail.i-dmedia.com [62.159.214.249])
+	by mx1.redhat.com (8.13.1/8.13.1) with ESMTP id l7O4gVuJ006978
+	for <linux-lvm@redhat.com>; Fri, 24 Aug 2007 00:42:31 -0400
+Received: from localhost (localhost [127.0.0.1])
+	by mail.berlin.i-dmedia.com (Postfix) with ESMTP id C132749D638
+	for <linux-lvm@redhat.com>; Fri, 24 Aug 2007 06:50:39 +0200 (CEST)
+Received: from mail.berlin.i-dmedia.com ([127.0.0.1])
+	by localhost (mail.berlin.i-dmedia.com [127.0.0.1]) (amavisd-new,
+	port 10024) with ESMTP id GRO8APWzQXU1 for <linux-lvm@redhat.com>;
+	Fri, 24 Aug 2007 06:50:36 +0200 (CEST)
+Received: from x1.ads.i-dmedia.com (x1.berlin.i-dmedia.com [10.1.69.45])
+	by mail.berlin.i-dmedia.com (Postfix) with ESMTP id C0F3D49D356
+	for <linux-lvm@redhat.com>; Fri, 24 Aug 2007 06:50:36 +0200 (CEST)
+Content-class: urn:content-classes:message
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] Snapshot Full
+Content-Type: multipart/alternative;
+	boundary="----_=_NextPart_001_01C7E609.33C54CE1"
+Subject: AW: [linux-lvm] Snapshot Full
+Date: Fri, 24 Aug 2007 06:42:39 +0200
+Message-ID: <1A2D7011B6705B449F66B36B232097C07A7550@x1.ads.i-dmedia.com>
+From: "Zurell, Falko" <Falko.Zurell@idmedia.com>
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -26,24 +32,94 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: linux-lvm@redhat.com
 
-I hate to have to ask this, but how do I handle a full snapshot that has 
-been disabled?  I would like to extend the lv, remout it and keep using 
-it.  However, I am getting superblock errors and the like.
+This is a multi-part message in MIME format.
 
-I have been searching through the archives and on Google for hours and I 
-must not be looking for the right thing.
+------_=_NextPart_001_01C7E609.33C54CE1
+Content-Type: text/plain;
+	charset="UTF-8"
+Content-Transfer-Encoding: base64
 
-Thanks in advance,
-Hans
+SGVsbG8gSGFucywNCg0KSSdtIGFmcmFpZCB5b3UgaGF2ZSB0byBkaXNjYXJkIGEgb3ZlcmZsb3du
+IHNuYXBzaG90LiBUaGF0J3Mgd2hhdCBhbGwgdGhlIG1hbnVhbHMgSSBrbm93IHNheS4NCg0KS2lu
+ZCByZWdhcmRzDQoNCkZhbGtvDQoNCg0KRmFsa28gWnVyZWxsDQoNCkhlYWQgb2YgQXBwbGljYXRp
+b24gTWFuYWdlbWVudA0KZmFsa28uenVyZWxsQGlkbWVkaWEuY29tDQpNb2JpbCArNDkgKDApMTYw
+IC0gMyA2MiA1MiA3Nw0KDQovaS1kIG1lZGlhIEFHDQpPaGxhdWVyIFN0cmHDn2UgNDMNCkQtMTA5
+OTkgQmVybGluDQoNClRlbCArNDkgKDApMzAgLSAyIDU5IDQ3IC0gMzU3DQpGYXggKzQ5ICgwKTMw
+IC0gMiA1OSA0NyAtIDQ3MQ0Kd3d3LmlkbWVkaWEuY29tDQoNCl9fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fDQoNCkJvYXJkOiBSZWdpbmUgSGFzY2hrYS1IZWxt
+ZXIgKENFTyksIEZyYW56IEtsb3NlIChDRk8pDQpDaGFpcm1hbiBvZiB0aGUgU3VwZXJ2aXNvcnkg
+Qm9hcmQ6IENocmlzdGlhbiBBLiBIdWZuYWdsDQpIZWFkcXVhcnRlcnM6IEJlcmxpbiwgUGxhY2Ug
+b2YgSnVyaXNkaWN0aW9uOiBCZXJsaW4gSFJCIDc2MzQyDQpVU1QtSWQuIERFODEyNjk4MzQwDQpf
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXw0KDQoNCi0tLS0t
+IE9yaWdpbmFsbmFjaHJpY2h0IC0tLS0tDQpWb246IGxpbnV4LWx2bS1ib3VuY2VzQHJlZGhhdC5j
+b20gPGxpbnV4LWx2bS1ib3VuY2VzQHJlZGhhdC5jb20+DQpBbjogbGludXgtbHZtQHJlZGhhdC5j
+b20gPGxpbnV4LWx2bUByZWRoYXQuY29tPg0KR2VzZW5kZXQ6IEZyaSBBdWcgMjQgMDU6MjI6NTcg
+MjAwNw0KQmV0cmVmZjogW2xpbnV4LWx2bV0gU25hcHNob3QgRnVsbA0KDQpJIGhhdGUgdG8gaGF2
+ZSB0byBhc2sgdGhpcywgYnV0IGhvdyBkbyBJIGhhbmRsZSBhIGZ1bGwgc25hcHNob3QgdGhhdCBo
+YXMgDQpiZWVuIGRpc2FibGVkPyAgSSB3b3VsZCBsaWtlIHRvIGV4dGVuZCB0aGUgbHYsIHJlbW91
+dCBpdCBhbmQga2VlcCB1c2luZyANCml0LiAgSG93ZXZlciwgSSBhbSBnZXR0aW5nIHN1cGVyYmxv
+Y2sgZXJyb3JzIGFuZCB0aGUgbGlrZS4NCg0KSSBoYXZlIGJlZW4gc2VhcmNoaW5nIHRocm91Z2gg
+dGhlIGFyY2hpdmVzIGFuZCBvbiBHb29nbGUgZm9yIGhvdXJzIGFuZCBJIA0KbXVzdCBub3QgYmUg
+bG9va2luZyBmb3IgdGhlIHJpZ2h0IHRoaW5nLg0KDQpUaGFua3MgaW4gYWR2YW5jZSwNCkhhbnMN
+Cg0KDQojIHVuYW1lIC1hDQpMaW51eCBmb29iYXIuY29tIDIuNi45LTUuRUxzbXAgIzEgU01QIFdl
+ZCBKYW4gNSAxOTozMDozOSBFU1QgMjAwNSBpNjg2IA0KaTY4NiBpMzg2IEdOVS9MaW51eA0KIyBs
+dm0gdmVyc2lvbg0KICBMVk0gdmVyc2lvbjogICAgIDIuMDIuMjEtUkhFTDQgKDIwMDctMDMtMjYp
+DQogIExpYnJhcnkgdmVyc2lvbjogMS4wMi4xNy1SSEVMNCAoMjAwNy0wNC0yNCkNCiAgRHJpdmVy
+IHZlcnNpb246ICA0LjEuMA0KDQoNCg0KX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX18NCmxpbnV4LWx2bSBtYWlsaW5nIGxpc3QNCmxpbnV4LWx2bUByZWRoYXQu
+Y29tDQpodHRwczovL3d3dy5yZWRoYXQuY29tL21haWxtYW4vbGlzdGluZm8vbGludXgtbHZtDQpy
+ZWFkIHRoZSBMVk0gSE9XLVRPIGF0IGh0dHA6Ly90bGRwLm9yZy9IT1dUTy9MVk0tSE9XVE8vDQo=
 
+------_=_NextPart_001_01C7E609.33C54CE1
+Content-Type: text/html;
+	charset="UTF-8"
+Content-Transfer-Encoding: base64
 
-# uname -a
-Linux foobar.com 2.6.9-5.ELsmp #1 SMP Wed Jan 5 19:30:39 EST 2005 i686 
-i686 i386 GNU/Linux
-# lvm version
-  LVM version:     2.02.21-RHEL4 (2007-03-26)
-  Library version: 1.02.17-RHEL4 (2007-04-24)
-  Driver version:  4.1.0
+PCFET0NUWVBFIEhUTUwgUFVCTElDICItLy9XM0MvL0RURCBIVE1MIDMuMi8vRU4iPg0KPEhUTUw+
+DQo8SEVBRD4NCjxNRVRBIEhUVFAtRVFVSVY9IkNvbnRlbnQtVHlwZSIgQ09OVEVOVD0idGV4dC9o
+dG1sOyBjaGFyc2V0PXV0Zi04Ij4NCjxNRVRBIE5BTUU9IkdlbmVyYXRvciIgQ09OVEVOVD0iTVMg
+RXhjaGFuZ2UgU2VydmVyIHZlcnNpb24gNi41Ljc2NTIuMjQiPg0KPFRJVExFPkFXOiBbbGludXgt
+bHZtXSBTbmFwc2hvdCBGdWxsPC9USVRMRT4NCjwvSEVBRD4NCjxCT0RZPg0KPCEtLSBDb252ZXJ0
+ZWQgZnJvbSB0ZXh0L3BsYWluIGZvcm1hdCAtLT4NCg0KPFA+PEZPTlQgU0laRT0yPkhlbGxvIEhh
+bnMsPEJSPg0KPEJSPg0KSSdtIGFmcmFpZCB5b3UgaGF2ZSB0byBkaXNjYXJkIGEgb3ZlcmZsb3du
+IHNuYXBzaG90LiBUaGF0J3Mgd2hhdCBhbGwgdGhlIG1hbnVhbHMgSSBrbm93IHNheS48QlI+DQo8
+QlI+DQpLaW5kIHJlZ2FyZHM8QlI+DQo8QlI+DQpGYWxrbzxCUj4NCjxCUj4NCjxCUj4NCkZhbGtv
+IFp1cmVsbDxCUj4NCjxCUj4NCkhlYWQgb2YgQXBwbGljYXRpb24gTWFuYWdlbWVudDxCUj4NCmZh
+bGtvLnp1cmVsbEBpZG1lZGlhLmNvbTxCUj4NCk1vYmlsICs0OSAoMCkxNjAgLSAzIDYyIDUyIDc3
+PEJSPg0KPEJSPg0KL2ktZCBtZWRpYSBBRzxCUj4NCk9obGF1ZXIgU3RyYcOfZSA0MzxCUj4NCkQt
+MTA5OTkgQmVybGluPEJSPg0KPEJSPg0KVGVsICs0OSAoMCkzMCAtIDIgNTkgNDcgLSAzNTc8QlI+
+DQpGYXggKzQ5ICgwKTMwIC0gMiA1OSA0NyAtIDQ3MTxCUj4NCnd3dy5pZG1lZGlhLmNvbTxCUj4N
+CjxCUj4NCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fPEJS
+Pg0KPEJSPg0KQm9hcmQ6IFJlZ2luZSBIYXNjaGthLUhlbG1lciAoQ0VPKSwgRnJhbnogS2xvc2Ug
+KENGTyk8QlI+DQpDaGFpcm1hbiBvZiB0aGUgU3VwZXJ2aXNvcnkgQm9hcmQ6IENocmlzdGlhbiBB
+LiBIdWZuYWdsPEJSPg0KSGVhZHF1YXJ0ZXJzOiBCZXJsaW4sIFBsYWNlIG9mIEp1cmlzZGljdGlv
+bjogQmVybGluIEhSQiA3NjM0MjxCUj4NClVTVC1JZC4gREU4MTI2OTgzNDA8QlI+DQpfX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXzxCUj4NCjxCUj4NCjxCUj4N
+Ci0tLS0tIE9yaWdpbmFsbmFjaHJpY2h0IC0tLS0tPEJSPg0KVm9uOiBsaW51eC1sdm0tYm91bmNl
+c0ByZWRoYXQuY29tICZsdDtsaW51eC1sdm0tYm91bmNlc0ByZWRoYXQuY29tJmd0OzxCUj4NCkFu
+OiBsaW51eC1sdm1AcmVkaGF0LmNvbSAmbHQ7bGludXgtbHZtQHJlZGhhdC5jb20mZ3Q7PEJSPg0K
+R2VzZW5kZXQ6IEZyaSBBdWcgMjQgMDU6MjI6NTcgMjAwNzxCUj4NCkJldHJlZmY6IFtsaW51eC1s
+dm1dIFNuYXBzaG90IEZ1bGw8QlI+DQo8QlI+DQpJIGhhdGUgdG8gaGF2ZSB0byBhc2sgdGhpcywg
+YnV0IGhvdyBkbyBJIGhhbmRsZSBhIGZ1bGwgc25hcHNob3QgdGhhdCBoYXM8QlI+DQpiZWVuIGRp
+c2FibGVkPyZuYnNwOyBJIHdvdWxkIGxpa2UgdG8gZXh0ZW5kIHRoZSBsdiwgcmVtb3V0IGl0IGFu
+ZCBrZWVwIHVzaW5nPEJSPg0KaXQuJm5ic3A7IEhvd2V2ZXIsIEkgYW0gZ2V0dGluZyBzdXBlcmJs
+b2NrIGVycm9ycyBhbmQgdGhlIGxpa2UuPEJSPg0KPEJSPg0KSSBoYXZlIGJlZW4gc2VhcmNoaW5n
+IHRocm91Z2ggdGhlIGFyY2hpdmVzIGFuZCBvbiBHb29nbGUgZm9yIGhvdXJzIGFuZCBJPEJSPg0K
+bXVzdCBub3QgYmUgbG9va2luZyBmb3IgdGhlIHJpZ2h0IHRoaW5nLjxCUj4NCjxCUj4NClRoYW5r
+cyBpbiBhZHZhbmNlLDxCUj4NCkhhbnM8QlI+DQo8QlI+DQo8QlI+DQojIHVuYW1lIC1hPEJSPg0K
+TGludXggZm9vYmFyLmNvbSAyLjYuOS01LkVMc21wICMxIFNNUCBXZWQgSmFuIDUgMTk6MzA6Mzkg
+RVNUIDIwMDUgaTY4NjxCUj4NCmk2ODYgaTM4NiBHTlUvTGludXg8QlI+DQojIGx2bSB2ZXJzaW9u
+PEJSPg0KJm5ic3A7IExWTSB2ZXJzaW9uOiZuYnNwOyZuYnNwOyZuYnNwOyZuYnNwOyAyLjAyLjIx
+LVJIRUw0ICgyMDA3LTAzLTI2KTxCUj4NCiZuYnNwOyBMaWJyYXJ5IHZlcnNpb246IDEuMDIuMTct
+UkhFTDQgKDIwMDctMDQtMjQpPEJSPg0KJm5ic3A7IERyaXZlciB2ZXJzaW9uOiZuYnNwOyA0LjEu
+MDxCUj4NCjxCUj4NCjxCUj4NCjxCUj4NCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fPEJSPg0KbGludXgtbHZtIG1haWxpbmcgbGlzdDxCUj4NCmxpbnV4LWx2
+bUByZWRoYXQuY29tPEJSPg0KPEEgSFJFRj0iaHR0cHM6Ly93d3cucmVkaGF0LmNvbS9tYWlsbWFu
+L2xpc3RpbmZvL2xpbnV4LWx2bSI+aHR0cHM6Ly93d3cucmVkaGF0LmNvbS9tYWlsbWFuL2xpc3Rp
+bmZvL2xpbnV4LWx2bTwvQT48QlI+DQpyZWFkIHRoZSBMVk0gSE9XLVRPIGF0IDxBIEhSRUY9Imh0
+dHA6Ly90bGRwLm9yZy9IT1dUTy9MVk0tSE9XVE8vIj5odHRwOi8vdGxkcC5vcmcvSE9XVE8vTFZN
+LUhPV1RPLzwvQT48QlI+DQo8L0ZPTlQ+DQo8L1A+DQoNCjwvQk9EWT4NCjwvSFRNTD4=
+
+------_=_NextPart_001_01C7E609.33C54CE1--
