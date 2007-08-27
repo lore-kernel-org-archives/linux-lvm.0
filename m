@@ -1,21 +1,24 @@
-Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l7OIRwGT003291
-	for <linux-lvm@redhat.com>; Fri, 24 Aug 2007 14:27:58 -0400
-Received: from mail.bmsi.com (www.bmsi.com [24.248.44.156])
-	by mx1.redhat.com (8.13.1/8.13.1) with ESMTP id l7OIRu5O030893
-	for <linux-lvm@redhat.com>; Fri, 24 Aug 2007 14:27:57 -0400
-Received: from bmsred.bmsi.com (bmsred.bmsi.com [192.168.9.50])
-	by mail.bmsi.com (8.13.6/8.13.6) with ESMTP id l7OIRoCQ014864
-	for <linux-lvm@redhat.com>; Fri, 24 Aug 2007 14:27:50 -0400
-Received: from localhost (localhost [127.0.0.1])
-	by bmsred.bmsi.com (8.13.5/8.13.5) with ESMTP id l7OIRonD030495
-	for <linux-lvm@redhat.com>; Fri, 24 Aug 2007 14:27:50 -0400
-Date: Fri, 24 Aug 2007 14:27:50 -0400 (EDT)
-From: "Stuart D. Gathman" <stuart@bmsi.com>
-Subject: Re: [linux-lvm] Snapshot Full
-In-Reply-To: <46CE4F11.4050901@cyberxdesigns.com>
-Message-ID: <Pine.LNX.4.44.0708241421510.30463-100000@bmsred.bmsi.com>
+Received: from mx2.redhat.com (mx2.redhat.com [10.255.15.25])
+	by int-mx2.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l7R8rgsS029148
+	for <linux-lvm@redhat.com>; Mon, 27 Aug 2007 04:53:42 -0400
+Received: from mailout3.imos.net (mailout3.imos.net [212.87.132.34])
+	by mx2.redhat.com (8.13.1/8.13.1) with ESMTP id l7R8rSUK004454
+	for <linux-lvm@redhat.com>; Mon, 27 Aug 2007 04:53:29 -0400
+Received: from homer.imos.net (homer.imos.net [212.87.132.35])
+	by mailout3.imos.net (8.14.1/8.14.1) with ESMTP id l7R8rRPj009985
+	for <linux-lvm@redhat.com>; Mon, 27 Aug 2007 10:53:27 +0200
+Received: from lstyd.imos.net (lstyd.imos.net [212.87.130.122])
+	by homer.imos.net (8.14.1/8.14.1) with ESMTP id l7R8rQaM019274
+	for <linux-lvm@redhat.com>; Mon, 27 Aug 2007 10:53:26 +0200
+Received: from [5.15.153.128] ([5.15.153.128])
+	by lstyd.imos.net (8.14.0/8.13.7) with ESMTP id l7RBZ7l3012340
+	for <linux-lvm@redhat.com>; Mon, 27 Aug 2007 13:35:07 +0200
+Message-ID: <46D2910D.7050908@theendofthetunnel.de>
+Date: Mon, 27 Aug 2007 10:53:33 +0200
+From: Hannes Dorbath <light@theendofthetunnel.de>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] Snapshot COW area on different PV / device
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -26,32 +29,34 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+To: linux-lvm@redhat.com
 
-On Thu, 23 Aug 2007, Hans C. Kaspersetz wrote:
+Hello,
 
-> I hate to have to ask this, but how do I handle a full snapshot that has 
-> been disabled?  I would like to extend the lv, remout it and keep using 
-> it.  However, I am getting superblock errors and the like.
-> 
-> I have been searching through the archives and on Google for hours and I 
-> must not be looking for the right thing.
+I suffer from massive I/O trashing, due to the snapshot COW area being 
+located on the same physical device as the origin. The machine now has a 
+second disk array, that I'd like to dedicate to snapshot COW data. My 
+problem now is that I fail to see from the documentation how to create a 
+snapshot, which has its COW area located on another device. The setup 
+currently looks like:
 
-It is too late to extend the snapshot once it becomes full, because backups of
-clusters written on the source LV were not able to be copied to the snapshot
-before being overwritten.  So once the shapshot gets full, the data seen is
-mostly from the past at the point of the snapshot, but with random sectors
-overwritten with new data from the source LV since the point at which it became
-full.  I.e., you might be able to pull out a critical file if you had to, but
-it is a mess, and you are usually better off just deleting the snapsnot.
+VG     #PV #LV #SN Attr   VSize   VFree
+data     1   1   0 wz--c- 437.62G      0
+cow1     1   0   0 wz--c- 232.82G 232.82G
+cow2     1   0   0 wz--c- 232.82G 232.82G
 
-P.S.  If you need to recover a critical file, unmount (or mount readonly) the
-source LV immediately so it stops overwriting the snapshot.
+LV     VG     Attr   LSize   Origin Snap%  Move Log Copy%
+data   data   -wc-ao 437.62G
+
+data is the LV where production data is located, and the cow1 and cow2 
+VGs should be used for snapshots. Can someone give me an example on the 
+lvcreate syntax to archive this? I tried various things, but end up with 
+error messages like "Could not fine LV <foo> in PV <bar>".
+
+Thanks in advance.
+
 
 -- 
-	      Stuart D. Gathman <stuart@bmsi.com>
-    Business Management Systems Inc.  Phone: 703 591-0911 Fax: 703 591-6154
-"Confutatis maledictis, flammis acribus addictis" - background song for
-a Microsoft sponsored "Where do you want to go from here?" commercial.
+Regards,
+Hannes Dorbath
