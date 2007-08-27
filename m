@@ -1,24 +1,18 @@
 Received: from mx2.redhat.com (mx2.redhat.com [10.255.15.25])
-	by int-mx2.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l7R8rgsS029148
-	for <linux-lvm@redhat.com>; Mon, 27 Aug 2007 04:53:42 -0400
-Received: from mailout3.imos.net (mailout3.imos.net [212.87.132.34])
-	by mx2.redhat.com (8.13.1/8.13.1) with ESMTP id l7R8rSUK004454
-	for <linux-lvm@redhat.com>; Mon, 27 Aug 2007 04:53:29 -0400
-Received: from homer.imos.net (homer.imos.net [212.87.132.35])
-	by mailout3.imos.net (8.14.1/8.14.1) with ESMTP id l7R8rRPj009985
-	for <linux-lvm@redhat.com>; Mon, 27 Aug 2007 10:53:27 +0200
-Received: from lstyd.imos.net (lstyd.imos.net [212.87.130.122])
-	by homer.imos.net (8.14.1/8.14.1) with ESMTP id l7R8rQaM019274
-	for <linux-lvm@redhat.com>; Mon, 27 Aug 2007 10:53:26 +0200
-Received: from [5.15.153.128] ([5.15.153.128])
-	by lstyd.imos.net (8.14.0/8.13.7) with ESMTP id l7RBZ7l3012340
-	for <linux-lvm@redhat.com>; Mon, 27 Aug 2007 13:35:07 +0200
-Message-ID: <46D2910D.7050908@theendofthetunnel.de>
-Date: Mon, 27 Aug 2007 10:53:33 +0200
-From: Hannes Dorbath <light@theendofthetunnel.de>
+	by int-mx2.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l7RDC9Zu002106
+	for <linux-lvm@redhat.com>; Mon, 27 Aug 2007 09:12:09 -0400
+Received: from an-out-0708.google.com (an-out-0708.google.com [209.85.132.244])
+	by mx2.redhat.com (8.13.1/8.13.1) with ESMTP id l7RDC82U025073
+	for <linux-lvm@redhat.com>; Mon, 27 Aug 2007 09:12:08 -0400
+Received: by an-out-0708.google.com with SMTP id c31so247942ana
+	for <linux-lvm@redhat.com>; Mon, 27 Aug 2007 06:12:08 -0700 (PDT)
+Message-ID: <f90461730708270612j42d3875fob523d223183e5790@mail.gmail.com>
+Date: Mon, 27 Aug 2007 15:12:07 +0200
+From: "Denis Richard" <drich68@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] Snapshot COW area on different PV / device
+Content-Type: multipart/alternative; 
+	boundary="----=_Part_90865_7588810.1188220327814"
+Subject: [linux-lvm] Restore snapshot
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -29,34 +23,36 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: linux-lvm@redhat.com
 
-Hello,
+------=_Part_90865_7588810.1188220327814
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
 
-I suffer from massive I/O trashing, due to the snapshot COW area being 
-located on the same physical device as the origin. The machine now has a 
-second disk array, that I'd like to dedicate to snapshot COW data. My 
-problem now is that I fail to see from the documentation how to create a 
-snapshot, which has its COW area located on another device. The setup 
-currently looks like:
+Hi all,
+I use LVM snapshot to install a new software version.
+So I create a snapshot of the partition where the soft is installed.
+If the install finishes without any problem, I remove the snapshot.
+But, if the install has a problem, I would like to restore the snapshot on
+the initial partition,
+to restore the old version of the soft.
+Is there a command to do that "easily", different that copying the whole
+snapshot partition on the initial one ?
 
-VG     #PV #LV #SN Attr   VSize   VFree
-data     1   1   0 wz--c- 437.62G      0
-cow1     1   0   0 wz--c- 232.82G 232.82G
-cow2     1   0   0 wz--c- 232.82G 232.82G
+Thanks for your answers.
 
-LV     VG     Attr   LSize   Origin Snap%  Move Log Copy%
-data   data   -wc-ao 437.62G
+Denis
 
-data is the LV where production data is located, and the cow1 and cow2 
-VGs should be used for snapshots. Can someone give me an example on the 
-lvcreate syntax to archive this? I tried various things, but end up with 
-error messages like "Could not fine LV <foo> in PV <bar>".
+------=_Part_90865_7588810.1188220327814
+Content-Type: text/html; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
 
-Thanks in advance.
+<div id="mb_0">Hi all,<br>I use LVM snapshot to install a new software version.<br>So I create a snapshot of the partition where the soft is installed.<br>If the install finishes without any problem, I remove the snapshot.
+<br>But, if the install has a problem, I would like to restore the snapshot on the initial partition,
+<br>to restore the old version of the soft.<br>Is there a command to do that &quot;easily&quot;, different that copying the whole snapshot partition on the initial one ?<br><br>Thanks for your answers.<br><span class="sg">
+<br>Denis<br>
+</span></div>
 
-
--- 
-Regards,
-Hannes Dorbath
+------=_Part_90865_7588810.1188220327814--
