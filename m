@@ -1,30 +1,30 @@
 Received: from mx2.redhat.com (mx2.redhat.com [10.255.15.25])
-	by int-mx2.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l7RG9Htw030933
-	for <linux-lvm@redhat.com>; Mon, 27 Aug 2007 12:09:17 -0400
-Received: from mail2.syneticon.net (mail.syneticon.net [213.239.212.131])
-	by mx2.redhat.com (8.13.1/8.13.1) with ESMTP id l7RG99oO029194
-	for <linux-lvm@redhat.com>; Mon, 27 Aug 2007 12:09:10 -0400
-Received: from postfix1.syneticon.net (postfix1.syneticon.net [192.168.112.6])
-	by mail2.syneticon.net (Postfix) with ESMTP id 7B4A153BD8
-	for <linux-lvm@redhat.com>; Mon, 27 Aug 2007 18:08:59 +0200 (CEST)
-Received: from localhost (filter1.syneticon.net [192.168.113.3])
-	by postfix1.syneticon.net (Postfix) with ESMTP id 3C5E69325
-	for <linux-lvm@redhat.com>; Mon, 27 Aug 2007 18:08:59 +0200 (CEST)
-Received: from postfix1.syneticon.net ([192.168.113.4])
-	by localhost (mx03.syneticon.net [192.168.113.3]) (amavisd-new,
-	port 10025) with ESMTP id odtwcaeWhKj8 for <linux-lvm@redhat.com>;
-	Mon, 27 Aug 2007 18:08:55 +0200 (CEST)
-Received: from [192.168.10.145] (xdsl-87-79-96-91.netcologne.de [87.79.96.91])
-	by postfix1.syneticon.net (Postfix) with ESMTP
-	for <linux-lvm@redhat.com>; Mon, 27 Aug 2007 18:08:55 +0200 (CEST)
-Message-ID: <46D2F715.9000308@wpkg.org>
-Date: Mon, 27 Aug 2007 18:08:53 +0200
-From: Tomasz Chmielewski <mangoo@wpkg.org>
-MIME-Version: 1.0
+	by int-mx2.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l7RGECbH031835
+	for <linux-lvm@redhat.com>; Mon, 27 Aug 2007 12:14:13 -0400
+Received: from server.klug.on.ca (server.klug.on.ca [205.189.48.131])
+	by mx2.redhat.com (8.13.1/8.13.1) with ESMTP id l7RGE5gT031282
+	for <linux-lvm@redhat.com>; Mon, 27 Aug 2007 12:14:05 -0400
+Received: from linux.interlinx.bc.ca (d38-139-100.home1.cgocable.net
+	[72.38.139.100])
+	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by server.klug.on.ca (Postfix) with ESMTP id 3B3DD2803
+	for <linux-lvm@redhat.com>; Mon, 27 Aug 2007 12:14:04 -0400 (EDT)
+Received: from [10.75.22.1] (pc.ilinx [10.75.22.1])
+	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by linux.interlinx.bc.ca (Postfix) with ESMTP id 57B6BEF709
+	for <linux-lvm@redhat.com>; Mon, 27 Aug 2007 12:14:02 -0400 (EDT)
 Subject: Re: [linux-lvm] "cannot allocate memory" when trying to do a snapshot?
-References: <46CEE6FF.1090000@wpkg.org>
-In-Reply-To: <46CEE6FF.1090000@wpkg.org>
-Content-Transfer-Encoding: 7bit
+From: "Brian J. Murrell" <brian@interlinx.bc.ca>
+In-Reply-To: <46D2F715.9000308@wpkg.org>
+References: <46CEE6FF.1090000@wpkg.org>  <46D2F715.9000308@wpkg.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature";
+	boundary="=-lpY2OToel63xYynz/q53"
+Date: Mon, 27 Aug 2007 12:14:01 -0400
+Message-Id: <1188231241.24432.1.camel@pc.ilinx>
+Mime-Version: 1.0
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -35,63 +35,43 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-Tomasz Chmielewski schrieb:
-> I have a server with ~1.5T PV, on which I have several logial volumes 
-> (LVs).
-> 
-> I decided to do a snapshot for five of these LVs, and it succeeded, but 
-> only few times.
-> 
->   dom-dc1           san1 owi-ao   8.00G
->   dom-oss1          san1 owi-ao  16.00G
->   dom-sql1          san1 owi-ao   8.00G
->   dom-sql1-2        san1 owi-ao  50.00G
->   dom-ts1           san1 owi-ao  16.00G
-> 
-> For each of the LVs, I made 5G snapshots.
-> I could make three snapshots for all of them, but the fourth snapshot 
-> failed for some LVs (in all, I could only make 18 * 5GB snapshots).
-> 
-> Why?
-> 
-> I'm using Debian Etch, with its 2.6.18 64 bit kernel.
-> The machine has 512 MB RAM, and 3 GB swap:
 
-Some more info on that.
-Apparently, this whole snapshotting thing is not very stable, and there 
-are bugs in it.
+--=-lpY2OToel63xYynz/q53
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 
-I just played a bit more with creating snapshots.
+On Mon, 2007-08-27 at 18:08 +0200, Tomasz Chmielewski wrote:
+>=20
+> Some more info on that.
+> Apparently, this whole snapshotting thing is not very stable, and there=20
+> are bugs in it.
 
-Below, although creating a snapshot fails, a new logical volume is created:
+This whole snapshotting thing is a known and fixed bug.  I opened a bug
+about it in RH's bugzilla about a year ago but am unable to log back in
+there to find it specifically for you.  Search for bugs reported by
+anyone @interlinx.bc.ca.  Try the word "kcopy" in the bug if there are
+too many listed.
 
-# lvcreate -L100G -s -n backup-snapshot /dev/san1/backup
-File descriptor 3 left open
-File descriptor 5 left open
-File descriptor 7 left open
-   device-mapper: reload ioctl failed: Cannot allocate memory
-   Failed to suspend origin backup
+Cheers,
+b.
 
+--=20
+My other computer is your Microsoft Windows server.
 
-# lvs
-File descriptor 3 left open
-File descriptor 5 left open
-File descriptor 7 left open
-   LV                     VG   Attr   LSize   Origin          Snap% 
-Move Log Copy%
-   backup                 san1 -wi-ao 628.28G
-   backup-snapshot        san1 -wi-d- 100.00G
-(...)
+Brian J. Murrell
 
+--=-lpY2OToel63xYynz/q53
+Content-Type: application/pgp-signature; name=signature.asc
+Content-Description: This is a digitally signed message part
 
-So, if it fails, at least it shouldn't create any phantom volumes.
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.6 (GNU/Linux)
 
-Does lvm snapshotting work any better with newer kernels?
+iD8DBQBG0vhJl3EQlGLyuXARAoB4AKD8yIfr1eAAYrhEba3htVDWiQRKWQCgtL3P
+sGyKPhdEt7JxjzuuyF/UPsc=
+=w/uA
+-----END PGP SIGNATURE-----
 
-
--- 
-Tomasz Chmielewski
-http://wpkg.org
+--=-lpY2OToel63xYynz/q53--
