@@ -1,14 +1,21 @@
-Received: from [192.168.1.100] (vpn-248-115.boston.redhat.com [10.13.248.115])
-	by pobox.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l7SLhv1B015864
-	for <linux-lvm@redhat.com>; Tue, 28 Aug 2007 17:43:59 -0400
-Mime-Version: 1.0 (Apple Message framework v752.3)
-In-Reply-To: <46D2910D.7050908@theendofthetunnel.de>
-References: <46D2910D.7050908@theendofthetunnel.de>
-Message-Id: <46E02D31-CD01-4184-9664-B727C16C9ABB@redhat.com>
+Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l7UAb2KR023251
+	for <linux-lvm@redhat.com>; Thu, 30 Aug 2007 06:37:02 -0400
+Received: from anchor-post-31.mail.demon.net (anchor-post-31.mail.demon.net
+	[194.217.242.89])
+	by mx1.redhat.com (8.13.1/8.13.1) with ESMTP id l7UAashe009579
+	for <linux-lvm@redhat.com>; Thu, 30 Aug 2007 06:36:54 -0400
+Received: from g6dzj.demon.co.uk ([80.177.30.245] helo=animal.ether-net)
+	by anchor-post-31.mail.demon.net with esmtp (Exim 4.42)
+	id 1IQhOJ-000KNm-4k
+	for linux-lvm@redhat.com; Thu, 30 Aug 2007 10:36:49 +0000
+From: Stephen Kitchener <stephen@g6dzj.demon.co.uk>
+Date: Thu, 30 Aug 2007 11:35:56 +0100
+MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
-From: Jonathan Brassow <jbrassow@redhat.com>
-Subject: Re: [linux-lvm] Snapshot COW area on different PV / device
-Date: Tue, 28 Aug 2007 16:40:08 -0500
+Content-Disposition: inline
+Message-Id: <200708301135.57038.stephen@g6dzj.demon.co.uk>
+Subject: [linux-lvm] Moving LVM drive from fedora 5 to fedora 7
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -19,53 +26,46 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; delsp="yes"; format="flowed"
-To: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="us-ascii"
+To: linux-lvm@redhat.com
 
-you will need more than on device in your volume group.  Example:
-$> pvcreate /dev/sd[ab]
-$> vgcreate vg /dev/sd[ab]
-$> lvcreate -n lv -L 200G vg /dev/sda
-$> lvcreate -s -n snap -L 20G vg/lv /dev/sdb
+Hi,
 
-The cow will be located on sdb, while the origin will be located on sda.
+New to the list and I applogise if this has been asked before.
 
-  brassow
+I am moving a system from fedora 5 to 7 and would like to keep and use the 
+data on a data drive.
 
-On Aug 27, 2007, at 3:53 AM, Hannes Dorbath wrote:
+Unfortunately I get some errors when I try to make the new system aware of the 
+lvm drive. It's a one drive LVM btw.
 
-> Hello,
->
-> I suffer from massive I/O trashing, due to the snapshot COW area  
-> being located on the same physical device as the origin. The  
-> machine now has a second disk array, that I'd like to dedicate to  
-> snapshot COW data. My problem now is that I fail to see from the  
-> documentation how to create a snapshot, which has its COW area  
-> located on another device. The setup currently looks like:
->
-> VG     #PV #LV #SN Attr   VSize   VFree
-> data     1   1   0 wz--c- 437.62G      0
-> cow1     1   0   0 wz--c- 232.82G 232.82G
-> cow2     1   0   0 wz--c- 232.82G 232.82G
->
-> LV     VG     Attr   LSize   Origin Snap%  Move Log Copy%
-> data   data   -wc-ao 437.62G
->
-> data is the LV where production data is located, and the cow1 and  
-> cow2 VGs should be used for snapshots. Can someone give me an  
-> example on the lvcreate syntax to archive this? I tried various  
-> things, but end up with error messages like "Could not fine LV  
-> <foo> in PV <bar>".
->
-> Thanks in advance.
->
->
-> -- 
-> Regards,
-> Hannes Dorbath
->
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+These show them selves up with I/O errors when I do a 
+vgscan --mknodes
+If I do mount the drive the dir list shows up like this
+
+-rw-r--r--  1 root   root   1130244096 2006-12-17 21:54 
+1086_20061217212500.mpg
+-rw-rw-rw-  1 root   root        37946 2006-12-29 17:16 
+1086_20061217212500.mpg.png
+-?????????  ? ?      ?               ?                ? 
+1086_20070102113000.mpg
+-?????????  ? ?      ?               ?                ? 
+1086_20070102113000.mpg.png
+-rw-r--r--  1 root   root   2118948864 2007-01-02 20:48 
+1086_20070102195300.mpg
+-rw-rw-rw-  1 root   root        36003 2007-03-12 22:46 
+1086_20070102195300.mpg.png
+-rw-rw-rw-  1 root   root        33399 2007-01-08 12:30 
+1086_20070108103000.mpg.png
+
+(apologies for the wrap-around)
+
+I have checked the drives as far as possible, they both seem to be using LVM2, 
+and the drive functions correctly under the older FC5.
+
+So, what's changed between FC5 and F7 ? , what do I need to do, to 
+make/convert the drive so that it's fully working under F7 ? 
+
+Thanks
+
+Steve
