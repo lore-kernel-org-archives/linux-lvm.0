@@ -1,18 +1,26 @@
-Received: from mx2.redhat.com (mx2.redhat.com [10.255.15.25])
-	by int-mx2.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l81HJb1r004864
-	for <linux-lvm@redhat.com>; Sat, 1 Sep 2007 13:19:37 -0400
-Received: from py-out-1112.google.com (py-out-1112.google.com [64.233.166.180])
-	by mx2.redhat.com (8.13.1/8.13.1) with ESMTP id l81HJZKb011688
-	for <linux-lvm@redhat.com>; Sat, 1 Sep 2007 13:19:36 -0400
-Received: by py-out-1112.google.com with SMTP id p76so4095694pyb
-	for <linux-lvm@redhat.com>; Sat, 01 Sep 2007 10:19:35 -0700 (PDT)
-Message-ID: <d00698fb0709011019x688e5363q931f16444685ea97@mail.gmail.com>
-Date: Sat, 1 Sep 2007 19:19:35 +0200
-From: noah <noah123@gmail.com>
+Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l81JBIA5020984
+	for <linux-lvm@redhat.com>; Sat, 1 Sep 2007 15:11:18 -0400
+Received: from mailout1.imos.net (mailout1.imos.net [212.87.132.33])
+	by mx1.redhat.com (8.13.1/8.13.1) with ESMTP id l81JB9oO022484
+	for <linux-lvm@redhat.com>; Sat, 1 Sep 2007 15:11:09 -0400
+Received: from homer.imos.net (homer.imos.net [212.87.132.35])
+	by mailout1.imos.net (8.14.1/8.14.1) with ESMTP id l81JB7MZ006805
+	for <linux-lvm@redhat.com>; Sat, 1 Sep 2007 21:11:08 +0200
+Received: from lstyd.imos.net (lstyd.imos.net [212.87.130.122])
+	by homer.imos.net (8.14.1/8.14.1) with ESMTP id l81JB7oX028248
+	for <linux-lvm@redhat.com>; Sat, 1 Sep 2007 21:11:07 +0200
+Received: from [5.34.46.207] ([5.34.46.207])
+	by lstyd.imos.net (8.14.0/8.13.7) with ESMTP id l81LrJRa015536
+	for <linux-lvm@redhat.com>; Sat, 1 Sep 2007 23:53:19 +0200
+Message-ID: <46D9B8B2.3070104@theendofthetunnel.de>
+Date: Sat, 01 Sep 2007 21:08:34 +0200
+From: Hannes Dorbath <light@theendofthetunnel.de>
 MIME-Version: 1.0
+Subject: Re: [linux-lvm] pvmove hung on 2.6.22 (ubuntu gutsy)
+References: <d00698fb0709011019x688e5363q931f16444685ea97@mail.gmail.com>
+In-Reply-To: <d00698fb0709011019x688e5363q931f16444685ea97@mail.gmail.com>
 Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-Subject: [linux-lvm] pvmove hung on 2.6.22 (ubuntu gutsy)
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -24,55 +32,17 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@redhat.com
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-Pvmove hung and now all commands that access the filesystem hang too,
-possibly in uninterruptible sleep.
-Is this a bug or did I do something forbidden, somehow? ;)
+noah wrote:
+> Pvmove hung and now all commands that access the filesystem hang too,
+> possibly in uninterruptible sleep.
+> Is this a bug or did I do something forbidden, somehow? ;)
 
-The most irritating thing right now is that the keys used for dm-crypt
-for the new PVs weren't moved out of the box before the crash
-happened.. I didn't even consider pvmove to fail since it's worked
-flawlessly for me before, but now it apparently did. Guess I'm beyond
-fucked here.
+To my knowledge pvmove is broken on 2.6.22. I'd go back to 2.6.21 until
+there is a fix. Maybe there is already a fix, I haven't followed it.
 
 
-My original setup was the following:
-/dev/sda + missing -> md0 (raid 1)
-dmcrypt on md0 -> aesmd0
-aesmd0 is part of a VG aes
-
-The rootfilesystem and a bunch of others are all LVMs in VG aes.
-
-
-Prior to running pvmove I did the following:
-/dev/sdb + missing -> md3 (raid 1)
-dmcrypt on md3 -> aesmd3
-/dev/sdd + missing -> md4 (raid 1)
-dmcrypt on md4 -> aesmd4
-aesmd3 + aesmd4 -> md5 (raid 0)
-
-pvcreate /dev/md5
-vgextend aes /dev/md5
-
-Then I did pvmove -v -i 60 /dev/aesmd0 to move over extents from
-aesmd0 to /dev/md5.
-It started spitting out some logs and seemed to progress just fine.
-Meanwhile I did 'mdadm /dev/md3 -a /dev/sdc' to complete the degraded
-RAID1 mirror.
-pvmove still seemed to progress well but 10 minutes later I
-experienced hangs anything that deals with the filesystem.
-
-The system is running Ubuntu Gutsy Gibbon on an AMD64 X2 CPU with 2GB
-memory, no swap.
-Vmware server was also running on the machine when this happened in
-case it's interesting.
-The terminal sessions I had to this machine when it hung continued to
-work as long as they didn't try to access the filesystem where as the
-sessions to my vmware guests were all hung.
-
-Since I was working in screen I've recovered some parts of the output,
-mainly the lvm2 commands and stuff regarding md.
-It's available here: http://pastebin.com/m34412938
-
-  -- noah
+-- 
+Best regards,
+Hannes Dorbath
