@@ -1,32 +1,21 @@
 Received: from mx2.redhat.com (mx2.redhat.com [10.255.15.25])
-	by int-mx2.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l81Kdhu2031017
-	for <linux-lvm@redhat.com>; Sat, 1 Sep 2007 16:39:43 -0400
-Received: from mail2.syneticon.net (mail.syneticon.net [213.239.212.131])
-	by mx2.redhat.com (8.13.1/8.13.1) with ESMTP id l81Kdact021962
-	for <linux-lvm@redhat.com>; Sat, 1 Sep 2007 16:39:36 -0400
-Received: from postfix1.syneticon.net (postfix1.syneticon.net [192.168.112.6])
-	by mail2.syneticon.net (Postfix) with ESMTP id 242D754914
-	for <linux-lvm@redhat.com>; Sat,  1 Sep 2007 22:39:28 +0200 (CEST)
-Received: from localhost (filter1.syneticon.net [192.168.113.3])
-	by postfix1.syneticon.net (Postfix) with ESMTP id 0F70894E3
-	for <linux-lvm@redhat.com>; Sat,  1 Sep 2007 22:39:28 +0200 (CEST)
-Received: from postfix1.syneticon.net ([192.168.113.4])
-	by localhost (mx03.syneticon.net [192.168.113.3]) (amavisd-new,
-	port 10025) with ESMTP id aGhEIvkkMNYM for <linux-lvm@redhat.com>;
-	Sat,  1 Sep 2007 22:39:26 +0200 (CEST)
-Received: from [192.168.10.145] (xdsl-87-78-243-125.netcologne.de
-	[87.78.243.125]) by postfix1.syneticon.net (Postfix) with ESMTP
-	for <linux-lvm@redhat.com>; Sat,  1 Sep 2007 22:39:26 +0200 (CEST)
-Message-ID: <46D9CDFD.7010800@wpkg.org>
-Date: Sat, 01 Sep 2007 22:39:25 +0200
-From: Tomasz Chmielewski <mangoo@wpkg.org>
+	by int-mx2.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l81N58EC016207
+	for <linux-lvm@redhat.com>; Sat, 1 Sep 2007 19:05:08 -0400
+Received: from py-out-1112.google.com (py-out-1112.google.com [64.233.166.179])
+	by mx2.redhat.com (8.13.1/8.13.1) with ESMTP id l81N57A7029091
+	for <linux-lvm@redhat.com>; Sat, 1 Sep 2007 19:05:07 -0400
+Received: by py-out-1112.google.com with SMTP id p76so4208871pyb
+	for <linux-lvm@redhat.com>; Sat, 01 Sep 2007 16:05:06 -0700 (PDT)
+Message-ID: <d00698fb0709011605h25edefbep1c989c23effe5c55@mail.gmail.com>
+Date: Sun, 2 Sep 2007 01:05:06 +0200
+From: noah <noah123@gmail.com>
+Subject: Re: [linux-lvm] pvmove hung on 2.6.22 (ubuntu gutsy)
+In-Reply-To: <46D9B8B2.3070104@theendofthetunnel.de>
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] "cannot allocate memory" when trying to do a snapshot?
-References: <46CEE6FF.1090000@wpkg.org>
-	<46D2F715.9000308@wpkg.org>	<1188231241.24432.1.camel@pc.ilinx>
-	<46D2FAFB.7010807@wpkg.org> <1188232446.24432.3.camel@pc.ilinx>
-In-Reply-To: <1188232446.24432.3.camel@pc.ilinx>
 Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+References: <d00698fb0709011019x688e5363q931f16444685ea97@mail.gmail.com>
+	<46D9B8B2.3070104@theendofthetunnel.de>
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -37,29 +26,26 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
+Content-Type: text/plain; charset="us-ascii"
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-Brian J. Murrell schrieb:
-> On Mon, 2007-08-27 at 18:25 +0200, Tomasz Chmielewski wrote:
->> Looks like it's here:
->>
->> https://bugzilla.redhat.com/show_bug.cgi?id=208172
-> 
-> Yup.  That's the one my bug 191531 was dup'd to.
-> 
->> Let's see if upgrading the kernel helps...
-> 
-> Let us know.
+2007/9/1, Hannes Dorbath <light@theendofthetunnel.de>:
+> noah wrote:
+> > Pvmove hung and now all commands that access the filesystem hang too,
+> > possibly in uninterruptible sleep.
+> > Is this a bug or did I do something forbidden, somehow? ;)
+>
+> To my knowledge pvmove is broken on 2.6.22. I'd go back to 2.6.21 until
+> there is a fix. Maybe there is already a fix, I haven't followed it.
 
-It looks that it helped.
+Thanks for a quick reply.
+Has this problem been documented elsewhere?
+Just curious what the problem is and whether anybody is working on a fix.
 
-However, now it's possible to create a snapshot that is no longer 
-possible to remove...
+While looking through Ubuntu's bug database a found others who had
+been countering problems with pvmove; something related to
+device-mapper.
+http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=376283
+Is the problem I stumbled upon a different one?
 
-See my other thread ("how much memory does LVM need? oom-killer comes").
-
-
--- 
-Tomasz Chmielewski
-http://wpkg.org
+  -- noah
