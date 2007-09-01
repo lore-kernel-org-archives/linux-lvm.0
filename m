@@ -1,21 +1,18 @@
-Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l7UAb2KR023251
-	for <linux-lvm@redhat.com>; Thu, 30 Aug 2007 06:37:02 -0400
-Received: from anchor-post-31.mail.demon.net (anchor-post-31.mail.demon.net
-	[194.217.242.89])
-	by mx1.redhat.com (8.13.1/8.13.1) with ESMTP id l7UAashe009579
-	for <linux-lvm@redhat.com>; Thu, 30 Aug 2007 06:36:54 -0400
-Received: from g6dzj.demon.co.uk ([80.177.30.245] helo=animal.ether-net)
-	by anchor-post-31.mail.demon.net with esmtp (Exim 4.42)
-	id 1IQhOJ-000KNm-4k
-	for linux-lvm@redhat.com; Thu, 30 Aug 2007 10:36:49 +0000
-From: Stephen Kitchener <stephen@g6dzj.demon.co.uk>
-Date: Thu, 30 Aug 2007 11:35:56 +0100
+Received: from mx2.redhat.com (mx2.redhat.com [10.255.15.25])
+	by int-mx2.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l81HJb1r004864
+	for <linux-lvm@redhat.com>; Sat, 1 Sep 2007 13:19:37 -0400
+Received: from py-out-1112.google.com (py-out-1112.google.com [64.233.166.180])
+	by mx2.redhat.com (8.13.1/8.13.1) with ESMTP id l81HJZKb011688
+	for <linux-lvm@redhat.com>; Sat, 1 Sep 2007 13:19:36 -0400
+Received: by py-out-1112.google.com with SMTP id p76so4095694pyb
+	for <linux-lvm@redhat.com>; Sat, 01 Sep 2007 10:19:35 -0700 (PDT)
+Message-ID: <d00698fb0709011019x688e5363q931f16444685ea97@mail.gmail.com>
+Date: Sat, 1 Sep 2007 19:19:35 +0200
+From: noah <noah123@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
 Content-Disposition: inline
-Message-Id: <200708301135.57038.stephen@g6dzj.demon.co.uk>
-Subject: [linux-lvm] Moving LVM drive from fedora 5 to fedora 7
+Subject: [linux-lvm] pvmove hung on 2.6.22 (ubuntu gutsy)
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -29,43 +26,53 @@ List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@redhat.com
 
-Hi,
+Pvmove hung and now all commands that access the filesystem hang too,
+possibly in uninterruptible sleep.
+Is this a bug or did I do something forbidden, somehow? ;)
 
-New to the list and I applogise if this has been asked before.
+The most irritating thing right now is that the keys used for dm-crypt
+for the new PVs weren't moved out of the box before the crash
+happened.. I didn't even consider pvmove to fail since it's worked
+flawlessly for me before, but now it apparently did. Guess I'm beyond
+fucked here.
 
-I am moving a system from fedora 5 to 7 and would like to keep and use the 
-data on a data drive.
 
-Unfortunately I get some errors when I try to make the new system aware of the 
-lvm drive. It's a one drive LVM btw.
+My original setup was the following:
+/dev/sda + missing -> md0 (raid 1)
+dmcrypt on md0 -> aesmd0
+aesmd0 is part of a VG aes
 
-These show them selves up with I/O errors when I do a 
-vgscan --mknodes
-If I do mount the drive the dir list shows up like this
+The rootfilesystem and a bunch of others are all LVMs in VG aes.
 
--rw-r--r--  1 root   root   1130244096 2006-12-17 21:54 
-1086_20061217212500.mpg
--rw-rw-rw-  1 root   root        37946 2006-12-29 17:16 
-1086_20061217212500.mpg.png
--?????????  ? ?      ?               ?                ? 
-1086_20070102113000.mpg
--?????????  ? ?      ?               ?                ? 
-1086_20070102113000.mpg.png
--rw-r--r--  1 root   root   2118948864 2007-01-02 20:48 
-1086_20070102195300.mpg
--rw-rw-rw-  1 root   root        36003 2007-03-12 22:46 
-1086_20070102195300.mpg.png
--rw-rw-rw-  1 root   root        33399 2007-01-08 12:30 
-1086_20070108103000.mpg.png
 
-(apologies for the wrap-around)
+Prior to running pvmove I did the following:
+/dev/sdb + missing -> md3 (raid 1)
+dmcrypt on md3 -> aesmd3
+/dev/sdd + missing -> md4 (raid 1)
+dmcrypt on md4 -> aesmd4
+aesmd3 + aesmd4 -> md5 (raid 0)
 
-I have checked the drives as far as possible, they both seem to be using LVM2, 
-and the drive functions correctly under the older FC5.
+pvcreate /dev/md5
+vgextend aes /dev/md5
 
-So, what's changed between FC5 and F7 ? , what do I need to do, to 
-make/convert the drive so that it's fully working under F7 ? 
+Then I did pvmove -v -i 60 /dev/aesmd0 to move over extents from
+aesmd0 to /dev/md5.
+It started spitting out some logs and seemed to progress just fine.
+Meanwhile I did 'mdadm /dev/md3 -a /dev/sdc' to complete the degraded
+RAID1 mirror.
+pvmove still seemed to progress well but 10 minutes later I
+experienced hangs anything that deals with the filesystem.
 
-Thanks
+The system is running Ubuntu Gutsy Gibbon on an AMD64 X2 CPU with 2GB
+memory, no swap.
+Vmware server was also running on the machine when this happened in
+case it's interesting.
+The terminal sessions I had to this machine when it hung continued to
+work as long as they didn't try to access the filesystem where as the
+sessions to my vmware guests were all hung.
 
-Steve
+Since I was working in screen I've recovered some parts of the output,
+mainly the lvm2 commands and stuff regarding md.
+It's available here: http://pastebin.com/m34412938
+
+  -- noah
