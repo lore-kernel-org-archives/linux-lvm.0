@@ -1,30 +1,18 @@
 Received: from mx2.redhat.com (mx2.redhat.com [10.255.15.25])
-	by int-mx2.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l849Wbrd029881
-	for <linux-lvm@redhat.com>; Tue, 4 Sep 2007 05:32:38 -0400
-Received: from mail2.syneticon.net (mail.syneticon.net [213.239.212.131])
-	by mx2.redhat.com (8.13.1/8.13.1) with ESMTP id l849WTVY015877
-	for <linux-lvm@redhat.com>; Tue, 4 Sep 2007 05:32:30 -0400
-Received: from postfix1.syneticon.net (postfix1.syneticon.net [192.168.112.6])
-	by mail2.syneticon.net (Postfix) with ESMTP id C56BF6061F
-	for <linux-lvm@redhat.com>; Tue,  4 Sep 2007 11:32:21 +0200 (CEST)
-Received: from localhost (filter1.syneticon.net [192.168.113.3])
-	by postfix1.syneticon.net (Postfix) with ESMTP id 724599356
-	for <linux-lvm@redhat.com>; Tue,  4 Sep 2007 11:32:21 +0200 (CEST)
-Received: from postfix1.syneticon.net ([192.168.113.4])
-	by localhost (mx03.syneticon.net [192.168.113.3]) (amavisd-new,
-	port 10025) with ESMTP id f7nHJReKwRAZ for <linux-lvm@redhat.com>;
-	Tue,  4 Sep 2007 11:32:18 +0200 (CEST)
-Received: from [192.168.10.145] (xdsl-87-78-206-10.netcologne.de
-	[87.78.206.10]) by postfix1.syneticon.net (Postfix) with ESMTP
-	for <linux-lvm@redhat.com>; Tue,  4 Sep 2007 11:32:18 +0200 (CEST)
-Message-ID: <46DD2621.1010608@wpkg.org>
-Date: Tue, 04 Sep 2007 11:32:17 +0200
-From: Tomasz Chmielewski <mangoo@wpkg.org>
+	by int-mx2.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l84BSMD6014748
+	for <linux-lvm@redhat.com>; Tue, 4 Sep 2007 07:28:22 -0400
+Received: from web57203.mail.re3.yahoo.com (web57203.mail.re3.yahoo.com
+	[216.252.111.219])
+	by mx2.redhat.com (8.13.1/8.13.1) with SMTP id l84BSFFH000813
+	for <linux-lvm@redhat.com>; Tue, 4 Sep 2007 07:28:15 -0400
+Date: Tue, 4 Sep 2007 04:28:09 -0700 (PDT)
+From: Cliff Avey <mpwr5@yahoo.com>
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] how much memory does LVM need? oom-killer comes
-References: <Pine.LNX.4.44.0709031201030.18181-100000@bmsred.bmsi.com>
-In-Reply-To: <Pine.LNX.4.44.0709031201030.18181-100000@bmsred.bmsi.com>
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/alternative; boundary="0-1232244412-1188905289=:11486"
+Content-Transfer-Encoding: 8bit
+Message-ID: <764899.11486.qm@web57203.mail.re3.yahoo.com>
+Subject: [linux-lvm] Attaching an existing LVM volume to a new linux on same
+	box
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -35,72 +23,27 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: LVM general discussion and development <linux-lvm@redhat.com>
+To: linux-lvm@redhat.com
 
-Stuart D. Gathman schrieb:
-> On Mon, 3 Sep 2007, Tomasz Chmielewski wrote:
-> 
->> Again, replying to myself, as no one on this list seem to have a clue 
->> about problems with LVM snapshots... I added RAM, and was able to boot 
->> again.
-> 
-> I may have an answer after all.  I suspect that the chunksize parameter
-> to lvcreate -s will affect memory use.  A larger chunksize should use
-> less memory.
-> 
->> So, as a rule of thumb, we can say that for each *used* GB of snapshot, 
->> ~3 MB of RAM is needed.
-> 
-> On my snapshots on Centos-5, the chunksize defaults to 8k.  With your
-> observation of 3MB per Gig of snapshot, that comes to 24 bytes per chunk.
-> Quite reasonable.  If you make your chunksize 512K (the maximum supported),
-> memory use should change to 48K per Gig.
-> 
-> lvdisplay will show the chunksize for a snapshot.
+--0-1232244412-1188905289=:11486
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
 
-Indeed, it was 8 kB.
+I have an old Fedora system on which I just installed Fedora 7 in new partitions. I have chained the bootloaders so I can boot either the old or new Fedora. Separate from that drive, I have two SATA drives. Under the old Fedora, I build a raid with the these drives with md, then created a single PV on that, and a LV on that.
 
-What is the meaning of the chunksize in snapshots?
+Now I want to be able to mount this LVM partition when I boot the new Fedora 7 system. I don't want to destroy existing data on it, and until I get the new Fedora 7 fully set up, I still want to be able to boot the old Fedora and use it as before.
 
-With 512 kB chunksize, I guess the snapshot will fill faster than with 8 
-KB chunksize, given that the same amount of data changes?
+Looks like I can configure the md array on the new system by using "mdadm --assemble", but I'm not quite sure about the correct commands to use on the new system to make the the LVM volume available.
 
+       
+---------------------------------
+Shape Yahoo! in your own image.  Join our Network Research Panel today!
+--0-1232244412-1188905289=:11486
+Content-Type: text/html; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
 
-Here is a quick test that shows it.
+I have an old Fedora system on which I just installed Fedora 7 in new partitions. I have chained the bootloaders so I can boot either the old or new Fedora. Separate from that drive, I have two SATA drives. Under the old Fedora, I build a raid with the these drives with md, then created a single PV on that, and a LV on that.<br><br>Now I want to be able to mount this LVM partition when I boot the new Fedora 7 system. I don't want to destroy existing data on it, and until I get the new Fedora 7 fully set up, I still want to be able to boot the old Fedora and use it as before.<br><br>Looks like I can configure the md array on the new system by using "mdadm --assemble", but I'm not quite sure about the correct commands to use on the new system to make the the LVM volume available.<br><p>&#32;
+      <hr size=1>Shape Yahoo! in your own image.  
+<a href="http://us.rd.yahoo.com/evt=48517/*http://surveylink.yahoo.com/gmrs/yahoo_panel_invite.asp?a=7">Join our Network Research Panel today!</a>
 
-I created two 20 GB snapshots of a 20GB volume, one with 8kB, and the 
-other with 512 kB chunksize.
-
-Then, I created a 50 MB file on the original volume (out of /dev/zero):
-
-   build1                  san1 owi-ao  20.00G
-   build1-512              san1 swi-a-  20.00G build1            0.09
-   build1-8                san1 swi-a-  20.00G build1            0.08
-
-Copying /bin, /boot and /lib (71 MB in total) into a new directory makes 
-that difference bigger:
-
-   build1                  san1 owi-ao  20.00G
-   build1-512              san1 swi-a-  20.00G build1            0.76
-   build1-8                san1 swi-a-  20.00G build1            0.62
-
-Copying a 1.2 GB /usr into a new directory shows this:
-
-   build1-512              san1 swi-a-  20.00G build1            7.40
-   build1-8                san1 swi-a-  20.00G build1            7.18
-
-
-And finally, create 1000000 empty files:
-
-   build1                  san1 owi-ao  20.00G
-   build1-512              san1 swi-a-  20.00G build1            8.22
-   build1-8                san1 swi-a-  20.00G build1            7.91
-
-
-The difference is not that big, usually it should be below 5%.
-
-
--- 
-Tomasz Chmielewski
-http://wpkg.org
+--0-1232244412-1188905289=:11486--
