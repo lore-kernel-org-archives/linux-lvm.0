@@ -1,18 +1,22 @@
 Received: from mx2.redhat.com (mx2.redhat.com [10.255.15.25])
-	by int-mx2.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l84BSMD6014748
-	for <linux-lvm@redhat.com>; Tue, 4 Sep 2007 07:28:22 -0400
-Received: from web57203.mail.re3.yahoo.com (web57203.mail.re3.yahoo.com
-	[216.252.111.219])
-	by mx2.redhat.com (8.13.1/8.13.1) with SMTP id l84BSFFH000813
-	for <linux-lvm@redhat.com>; Tue, 4 Sep 2007 07:28:15 -0400
-Date: Tue, 4 Sep 2007 04:28:09 -0700 (PDT)
-From: Cliff Avey <mpwr5@yahoo.com>
+	by int-mx2.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l859vAnX023532
+	for <linux-lvm@redhat.com>; Wed, 5 Sep 2007 05:57:11 -0400
+Received: from nz-out-0506.google.com (nz-out-0506.google.com [64.233.162.231])
+	by mx2.redhat.com (8.13.1/8.13.1) with ESMTP id l859v5ZT012907
+	for <linux-lvm@redhat.com>; Wed, 5 Sep 2007 05:57:05 -0400
+Received: by nz-out-0506.google.com with SMTP id r28so1184430nza
+	for <linux-lvm@redhat.com>; Wed, 05 Sep 2007 02:57:04 -0700 (PDT)
+Message-ID: <d00698fb0709050257y220be827ybc88fd680b14f1d4@mail.gmail.com>
+Date: Wed, 5 Sep 2007 11:57:02 +0200
+From: noah <noah123@gmail.com>
+Subject: Re: [linux-lvm] pvmove hung on 2.6.22 (ubuntu gutsy)
+In-Reply-To: <d00698fb0709011605h25edefbep1c989c23effe5c55@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/alternative; boundary="0-1232244412-1188905289=:11486"
-Content-Transfer-Encoding: 8bit
-Message-ID: <764899.11486.qm@web57203.mail.re3.yahoo.com>
-Subject: [linux-lvm] Attaching an existing LVM volume to a new linux on same
-	box
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+References: <d00698fb0709011019x688e5363q931f16444685ea97@mail.gmail.com>
+	<46D9B8B2.3070104@theendofthetunnel.de>
+	<d00698fb0709011605h25edefbep1c989c23effe5c55@mail.gmail.com>
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -23,27 +27,32 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: linux-lvm@redhat.com
+Content-Type: text/plain; charset="us-ascii"
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
---0-1232244412-1188905289=:11486
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
+2007/9/2, noah <noah123@gmail.com>:
+> 2007/9/1, Hannes Dorbath <light@theendofthetunnel.de>:
+> > noah wrote:
+> > > Pvmove hung and now all commands that access the filesystem hang too,
+> > > possibly in uninterruptible sleep.
+> > > Is this a bug or did I do something forbidden, somehow? ;)
+> >
+> > To my knowledge pvmove is broken on 2.6.22. I'd go back to 2.6.21 until
+> > there is a fix. Maybe there is already a fix, I haven't followed it.
+>
+> Thanks for a quick reply.
+> Has this problem been documented elsewhere?
+> Just curious what the problem is and whether anybody is working on a fix.
 
-I have an old Fedora system on which I just installed Fedora 7 in new partitions. I have chained the bootloaders so I can boot either the old or new Fedora. Separate from that drive, I have two SATA drives. Under the old Fedora, I build a raid with the these drives with md, then created a single PV on that, and a LV on that.
+I'm still curious what the problem is, when it happend, why and
+whether or not somebody is working on it.
+Is this a problem with dm, lvm, barriers, userland utilities or something else?
 
-Now I want to be able to mount this LVM partition when I boot the new Fedora 7 system. I don't want to destroy existing data on it, and until I get the new Fedora 7 fully set up, I still want to be able to boot the old Fedora and use it as before.
+>
+> While looking through Ubuntu's bug database a found others who had
+> been countering problems with pvmove; something related to
+> device-mapper.
+> http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=376283
+> Is the problem I stumbled upon a different one?
 
-Looks like I can configure the md array on the new system by using "mdadm --assemble", but I'm not quite sure about the correct commands to use on the new system to make the the LVM volume available.
-
-       
----------------------------------
-Shape Yahoo! in your own image.  Join our Network Research Panel today!
---0-1232244412-1188905289=:11486
-Content-Type: text/html; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
-
-I have an old Fedora system on which I just installed Fedora 7 in new partitions. I have chained the bootloaders so I can boot either the old or new Fedora. Separate from that drive, I have two SATA drives. Under the old Fedora, I build a raid with the these drives with md, then created a single PV on that, and a LV on that.<br><br>Now I want to be able to mount this LVM partition when I boot the new Fedora 7 system. I don't want to destroy existing data on it, and until I get the new Fedora 7 fully set up, I still want to be able to boot the old Fedora and use it as before.<br><br>Looks like I can configure the md array on the new system by using "mdadm --assemble", but I'm not quite sure about the correct commands to use on the new system to make the the LVM volume available.<br><p>&#32;
-      <hr size=1>Shape Yahoo! in your own image.  
-<a href="http://us.rd.yahoo.com/evt=48517/*http://surveylink.yahoo.com/gmrs/yahoo_panel_invite.asp?a=7">Join our Network Research Panel today!</a>
-
---0-1232244412-1188905289=:11486--
+  -- noah
