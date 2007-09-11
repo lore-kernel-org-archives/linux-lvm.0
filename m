@@ -1,20 +1,19 @@
-Received: from lacrosse.corp.redhat.com (lacrosse.corp.redhat.com
-	[172.16.52.154])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l8BHTm8v010205
-	for <linux-lvm@redhat.com>; Tue, 11 Sep 2007 13:29:48 -0400
-Received: from [10.11.15.65] (vpn-15-65.rdu.redhat.com [10.11.15.65])
-	by lacrosse.corp.redhat.com (8.12.11.20060308/8.11.6) with ESMTP id
-	l8BHTluO006853
-	for <linux-lvm@redhat.com>; Tue, 11 Sep 2007 13:29:47 -0400
-Subject: Re: [linux-lvm] Any exiisting users of existing LVM2 command line
-	library interface (lvm2cmd.h)?
-From: Dave Wysochanski <dwysocha@redhat.com>
-In-Reply-To: <46E6A8DB.6040802@redhat.com>
-References: <1189521146.4451.17.camel@linux-cxyg> <46E6A8DB.6040802@redhat.com>
-Date: Tue, 11 Sep 2007 13:29:53 -0400
-Message-Id: <1189531794.4451.27.camel@linux-cxyg>
-Mime-Version: 1.0
+Received: from mx2.redhat.com (mx2.redhat.com [10.255.15.25])
+	by int-mx2.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l8BMgl3D031277
+	for <linux-lvm@redhat.com>; Tue, 11 Sep 2007 18:42:47 -0400
+Received: from portal.bppiac.hu (portal.bppiac.hu [213.253.216.130])
+	by mx2.redhat.com (8.13.1/8.13.1) with ESMTP id l8BMgjFW009518
+	for <linux-lvm@redhat.com>; Tue, 11 Sep 2007 18:42:46 -0400
+Received: from sas.dynamic.lfarkas.org (sas-182-3.lfarkas.bppiac.hu
+	[192.168.182.3])
+	by portal.bppiac.hu (Postfix) with ESMTP id C4C2D376647
+	for <linux-lvm@redhat.com>; Wed, 12 Sep 2007 00:42:43 +0200 (CEST)
+Message-ID: <46E719BE.5000202@bppiac.hu>
+Date: Wed, 12 Sep 2007 00:42:06 +0200
+From: Farkas Levente <lfarkas@bppiac.hu>
+MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] is it possible to move lvm2 logvols?
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -26,54 +25,22 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: LVM general discussion and development <linux-lvm@redhat.com>
+To: linux-lvm@redhat.com
 
-On Tue, 2007-09-11 at 10:40 -0400, James Parsons wrote:
-> Dave Wysochanski wrote:
-> 
-> >A new LVM2 API library is in progress.
-> >
-> >If you are an existing user of the current command line library
-> >interface or are interested in a new LVM2 library, we're interested to
-> >hear input:
-> >1) how you are currently using the existing interface
-> >2) what you would like to see in the new interface
-> >
-> >Thanks. 
-> >
-> >_
-> >
-> I maintain the gnome graphical tool for lvm called system-config-lvm, as 
-> well as a web based lvm configuration tool called conga. I depend on the 
-> current command line set to make the app work. Will the rug soon be 
-> pulled out from under me? :)
-> 
+hi,
+hi we've got a server with a lvm2 pv with a dozen of logvol in it. under
+the lvm we'd like to create a raid1 array on 2 disk. unfortunately we
+create raid0 under it. but the logvols contains a lots of important
+data. we'd like to
+- put 2 new disks into the system,
+- create the raid1 array on it,
+- put a new volgroup over the raid1,
+- create the same size logvols in the new volgroup,
+- and move the old logvols to the new logvols, but how can i do that?
+everything is ok, except the last step. is there any easy way to do the
+last step? can i use vgexport and vgimport for this? or can i use a
+simple dd for it? or?
+thank you for your help in advance.
 
-Hi Jim!  ;-)
-We're still a ways off.  We'll be sure to let you know.
-
-It would be nice to get an idea of the lvm cmds you use and which
-options.  Is it easy to grep through the code and find this or do you
-have a list handy?
-
-I know cluster info is here:
-http://sourceware.org/cluster/
-and upstream conga code is here correct?
-cvs -d :pserver:cvs@sources.redhat.com:/cvs/cluster checkout conga
-
-I could not readily locate the upstream code for system-config-lvm.
-
-
-> No big deal, as long as I have a little warning - like a quarter, or so. 
-> As you amend the CLI, though, please maintain the 'machine readable' 
-> output commands...ones without column headers or unnecessary formatting 
-> characters, so that my app, and the many, many users that have built 
-> scripts around the CLI are not confronted with surprises.
-> 
-> Maintaining compatibility with the current CLI for a few releases of the 
-> new CLI would be a nice gift to us!
-> 
-We will do our best to maintain backward compatibility, especially in
-areas we know people are already using.
-
-Thanks.
+-- 
+  Levente                               "Si vis pacem para bellum!"
