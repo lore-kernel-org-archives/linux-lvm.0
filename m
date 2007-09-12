@@ -1,16 +1,18 @@
-Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l8CEeMeN005951
-	for <linux-lvm@redhat.com>; Wed, 12 Sep 2007 10:40:22 -0400
-Received: from soho.greekattic.com (soho.greekattic.com [83.146.34.92])
-	by mx1.redhat.com (8.13.1/8.13.1) with ESMTP id l8CEeIfV001674
-	for <linux-lvm@redhat.com>; Wed, 12 Sep 2007 10:40:18 -0400
-Content-class: urn:content-classes:message
+Received: from mx2.redhat.com (mx2.redhat.com [10.255.15.25])
+	by int-mx2.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l8CEm3S8007043
+	for <linux-lvm@redhat.com>; Wed, 12 Sep 2007 10:48:03 -0400
+Received: from portal.bppiac.hu (portal.bppiac.hu [213.253.216.130])
+	by mx2.redhat.com (8.13.1/8.13.1) with ESMTP id l8CEm18x027079
+	for <linux-lvm@redhat.com>; Wed, 12 Sep 2007 10:48:02 -0400
+Message-ID: <46E7FC20.8090003@bppiac.hu>
+Date: Wed, 12 Sep 2007 16:48:00 +0200
+From: Farkas Levente <lfarkas@bppiac.hu>
 MIME-Version: 1.0
-Subject: RE: [linux-lvm] Q: Online resizing ext3 FS
-Date: Wed, 12 Sep 2007 15:40:11 +0100
-Message-ID: <37238624DE95654997C360CA6CD36F8403B5BA13@mimas.greekattic.local>
-From: "Hiren Joshi" <josh@moonfruit.com>
-Content-Transfer-Encoding: 8bit
+Subject: Re: [linux-lvm] is it possible to move lvm2 logvols?
+References: <46E719BE.5000202@bppiac.hu>
+	<slrnfeesv8.dn9.robert.sander@raman.epigenomics.epi>
+In-Reply-To: <slrnfeesv8.dn9.robert.sander@raman.epigenomics.epi>
+Content-Transfer-Encoding: 7bit
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -22,46 +24,35 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: LVM general discussion and development <linux-lvm@redhat.com>, linux-raid@vger.kernel.org
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-I've been fine with it, so long as you have done the ext2prepare before
-hand. Otherwise you will only be able to go up to the next 16G boundary.
+Robert Sander wrote:
+> On Wed, 12 Sep 2007 00:42:06 +0200,
+>  Farkas Levente <lfarkas@bppiac.hu> wrote:
+>> hi,
+>> hi we've got a server with a lvm2 pv with a dozen of logvol in it. under
+>> the lvm we'd like to create a raid1 array on 2 disk. unfortunately we
+>> create raid0 under it. but the logvols contains a lots of important
+>> data. we'd like to
+>> - put 2 new disks into the system,
+>> - create the raid1 array on it,
+>> - put a new volgroup over the raid1,
+> 
+> Hi!
+> 
+> Do not create a new vg.
+> Add the raid1 as a second pv to the existing vg.
+> Use pvmove to move the logical volumes from one pv to the other.
+> This is an online operatipn.
 
-I asked it to skip the fsck check but I've been told this is not a good
-idea.... 
+ok everything seems to working. after i move the logvols i remove the
+old pv and try to boot the system. now the problem during the boot linux
+can't find the volume group so can't find it's / since the / is on the
+first logvol of the vg. this on centos-5.
+the strange thing if i boot from centos rescue dvd it see the vg and
+logvols too and i can chroot /mnt/sysimage into the new real system.
+what can be the reason that if i boot the new system it can't find the
+vg and it's logvols?
 
------Original Message-----
-From: linux-lvm-bounces@redhat.com [mailto:linux-lvm-bounces@redhat.com]
-On Behalf Of Chris Osicki
-Sent: 12 September 2007 15:36
-To: linux-raid@vger.kernel.org; linux-lvm@redhat.com
-Subject: [linux-lvm] Q: Online resizing ext3 FS
-
-
-Hi
-
-I apologize in advance for asking a question not really appropriate for
-this mailing list, but I couldn't find a better place with lots of
-people managing lots of disk space. 
-
-The question:
-Has anyone of you been using ext2online to resize (large) ext3
-filesystems?
-I have to do it going from 500GB to 1TB on a productive system I was
-wondering if you have some horror/success stories.
-I'm using RHEL4/U4 (kernel 2.6.9) on this system.
-
-Thanks for your time.
-
-Regards,
-Chris
-
-UNIX System Engineer
-Swisscom Mobile Ltd.
-Switzerland
-
-_______________________________________________
-linux-lvm mailing list
-linux-lvm@redhat.com
-https://www.redhat.com/mailman/listinfo/linux-lvm
-read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+-- 
+  Levente                               "Si vis pacem para bellum!"
