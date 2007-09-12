@@ -1,18 +1,15 @@
 Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l8CFpiR5012901
-	for <linux-lvm@redhat.com>; Wed, 12 Sep 2007 11:51:44 -0400
-Received: from portal.bppiac.hu (portal.bppiac.hu [213.253.216.130])
-	by mx1.redhat.com (8.13.1/8.13.1) with ESMTP id l8CFpefL017425
-	for <linux-lvm@redhat.com>; Wed, 12 Sep 2007 11:51:41 -0400
-Message-ID: <46E80B0A.5030101@bppiac.hu>
-Date: Wed, 12 Sep 2007 17:51:38 +0200
-From: Farkas Levente <lfarkas@bppiac.hu>
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l8CK4StQ010613
+	for <linux-lvm@redhat.com>; Wed, 12 Sep 2007 16:04:28 -0400
+Received: from mail.bmsi.com (www.bmsi.com [24.248.44.156])
+	by mx1.redhat.com (8.13.1/8.13.1) with ESMTP id l8CK4QPP004676
+	for <linux-lvm@redhat.com>; Wed, 12 Sep 2007 16:04:26 -0400
+Date: Wed, 12 Sep 2007 16:04:21 -0400 (EDT)
+From: "Stuart D. Gathman" <stuart@bmsi.com>
+Subject: RE: [linux-lvm] Q: Online resizing ext3 FS
+In-Reply-To: <37238624DE95654997C360CA6CD36F8403B5BA13@mimas.greekattic.local>
+Message-ID: <Pine.LNX.4.44.0709121600080.1583-100000@bmsred.bmsi.com>
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] is it possible to move lvm2 logvols?
-References: <46E719BE.5000202@bppiac.hu>	<slrnfeesv8.dn9.robert.sander@raman.epigenomics.epi>
-	<46E7FC20.8090003@bppiac.hu>
-In-Reply-To: <46E7FC20.8090003@bppiac.hu>
-Content-Transfer-Encoding: 7bit
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -23,39 +20,31 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: TEXT/PLAIN; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: LVM general discussion and development <linux-lvm@redhat.com>
+Cc: linux-raid@vger.kernel.org
 
-Farkas Levente wrote:
-> Robert Sander wrote:
->> On Wed, 12 Sep 2007 00:42:06 +0200,
->>  Farkas Levente <lfarkas@bppiac.hu> wrote:
->>> hi,
->>> hi we've got a server with a lvm2 pv with a dozen of logvol in it. under
->>> the lvm we'd like to create a raid1 array on 2 disk. unfortunately we
->>> create raid0 under it. but the logvols contains a lots of important
->>> data. we'd like to
->>> - put 2 new disks into the system,
->>> - create the raid1 array on it,
->>> - put a new volgroup over the raid1,
->> Hi!
->>
->> Do not create a new vg.
->> Add the raid1 as a second pv to the existing vg.
->> Use pvmove to move the logical volumes from one pv to the other.
->> This is an online operatipn.
-> 
-> ok everything seems to working. after i move the logvols i remove the
-> old pv and try to boot the system. now the problem during the boot linux
-> can't find the volume group so can't find it's / since the / is on the
-> first logvol of the vg. this on centos-5.
-> the strange thing if i boot from centos rescue dvd it see the vg and
-> logvols too and i can chroot /mnt/sysimage into the new real system.
-> what can be the reason that if i boot the new system it can't find the
-> vg and it's logvols?
+On Wed, 12 Sep 2007, Hiren Joshi wrote:
 
-already find the old initrd contains only raid0.ko so it can't find the
-raid1 disk:-(
+> Has anyone of you been using ext2online to resize (large) ext3
+> filesystems?
+> I have to do it going from 500GB to 1TB on a productive system I was
+> wondering if you have some horror/success stories.
+> I'm using RHEL4/U4 (kernel 2.6.9) on this system.
+
+This brings up an LVM related question I've had.  Can I do this:
+
+  1) take snapshot of 500GB LV
+  2) resize source LV to 1TB
+  3) run ext2online
+  4a) resize succeeds - remove shapshot
+  4b) resize fails horribly - copy shapshot to LV and restart
+    4b.1) is there a way to "revert" the source LV to the snapshot?
+    	(without allocating snapshot as big as source LV)
 
 -- 
-  Levente                               "Si vis pacem para bellum!"
+	      Stuart D. Gathman <stuart@bmsi.com>
+    Business Management Systems Inc.  Phone: 703 591-0911 Fax: 703 591-6154
+"Confutatis maledictis, flammis acribus addictis" - background song for
+a Microsoft sponsored "Where do you want to go from here?" commercial.
