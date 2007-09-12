@@ -1,15 +1,14 @@
-Received: from mx2.redhat.com (mx2.redhat.com [10.255.15.25])
-	by int-mx2.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l8C56roN018750
-	for <linux-lvm@redhat.com>; Wed, 12 Sep 2007 01:06:55 -0400
-Received: from gk.uu.epigenomics.net (gk.uu.epigenomics.net [195.127.125.226])
-	by mx2.redhat.com (8.13.1/8.13.1) with ESMTP id l8C56oTV024060
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO)
-	for <linux-lvm@redhat.com>; Wed, 12 Sep 2007 01:06:52 -0400
-From: Robert Sander <robert.sander@epigenomics.com>
-Subject: Re: [linux-lvm] is it possible to move lvm2 logvols?
-Date: Wed, 12 Sep 2007 05:06:48 +0000 (UTC)
-Message-ID: <slrnfeesv8.dn9.robert.sander@raman.epigenomics.epi>
-References: <46E719BE.5000202@bppiac.hu>
+Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l8C79cjK007678
+	for <linux-lvm@redhat.com>; Wed, 12 Sep 2007 03:09:38 -0400
+Received: from mx1.aecom.yu.edu (mx1.aecom.yu.edu [129.98.1.51])
+	by mx1.redhat.com (8.13.1/8.13.1) with ESMTP id l8C79TtE027176
+	for <linux-lvm@redhat.com>; Wed, 12 Sep 2007 03:09:29 -0400
+Mime-Version: 1.0
+Message-Id: <a06240411c30cd5dee72c@[129.98.90.227]>
+Date: Wed, 12 Sep 2007 03:09:14 -0400
+From: Maurice Volaski <mvolaski@aecom.yu.edu>
+Subject: [linux-lvm] Can LVM block I/O and hang a system?
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -20,32 +19,42 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
 Content-Transfer-Encoding: 7bit
-To: linux-lvm@ml.epigenomics.com
+To: linux-lvm@redhat.com
+Cc: linux-kernel@vger.kernel.org
 
-On Wed, 12 Sep 2007 00:42:06 +0200,
- Farkas Levente <lfarkas@bppiac.hu> wrote:
-> hi,
-> hi we've got a server with a lvm2 pv with a dozen of logvol in it. under
-> the lvm we'd like to create a raid1 array on 2 disk. unfortunately we
-> create raid0 under it. but the logvols contains a lots of important
-> data. we'd like to
-> - put 2 new disks into the system,
-> - create the raid1 array on it,
-> - put a new volgroup over the raid1,
+A working system begins hanging and it seems to be stuck on I/O 
+processes that use ext3 partitions that are running on top of LVM. 
+The system is AMD 64-bit running Gentoo. Kernel is Gentoo 2.6.22-r3 
+and LVM lvm2-2.02.27. Here is the disk setup:
 
-Hi!
+Boot disk, attached to motherboard via SATA
+1) some partitions accessed via ext3 -> hardware partition.
+2) some partitions accessed via ext3 -> drbd, which is version 8.0.5, 
+-> hardware partition.
 
-Do not create a new vg.
-Add the raid1 as a second pv to the existing vg.
-Use pvmove to move the logical volumes from one pv to the other.
-This is an online operatipn.
+External SATA-SCSI RAID, attached to via an LSI Logic card,
+3) one partition accessed via ext3 -> drbd -> hardware partition.
+4) some partitions accessed via ext3 -> LVM -> drbd -> hardware partition.
 
-Greetings
+On repeated reboots, #1) boots fine, and I can fsck #2) no problem. I 
+can also fsck #3, but the fsck processes on #4, which all are trying 
+to recover the journals, just seem to not do anything. There is no 
+evidence of I/O and there are no errors reported anywhere. The frozen 
+fsck processes cannot even be killed and the system ignores the 
+shutdown command.
+
+That the hanging fsck processes are all occurring on just the LVM 
+partitions seems to imply that LVM is responsible.
+
+drbd had been unattached to its peer during this time, and when I 
+reattached it, it had no trouble syncing to the peer. That system, 
+which should basically be identical, however, has no trouble running 
+running fsck everywhere. I'm not sure, though, if that lets LVM off 
+the hook.
 -- 
-Robert Sander                     Senior Manager Information Systems
-Epigenomics AG    Kleine Praesidentenstr. 1    10178 Berlin, Germany
-phone:+49-30-24345-0                            fax:+49-30-24345-555
-http://www.epigenomics.com             robert.sander@epigenomics.com
+
+Maurice Volaski, mvolaski@aecom.yu.edu
+Computing Support, Rose F. Kennedy Center
+Albert Einstein College of Medicine of Yeshiva University
