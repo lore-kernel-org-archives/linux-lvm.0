@@ -1,15 +1,16 @@
-Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l8CK4StQ010613
-	for <linux-lvm@redhat.com>; Wed, 12 Sep 2007 16:04:28 -0400
-Received: from mail.bmsi.com (www.bmsi.com [24.248.44.156])
-	by mx1.redhat.com (8.13.1/8.13.1) with ESMTP id l8CK4QPP004676
-	for <linux-lvm@redhat.com>; Wed, 12 Sep 2007 16:04:26 -0400
-Date: Wed, 12 Sep 2007 16:04:21 -0400 (EDT)
-From: "Stuart D. Gathman" <stuart@bmsi.com>
-Subject: RE: [linux-lvm] Q: Online resizing ext3 FS
-In-Reply-To: <37238624DE95654997C360CA6CD36F8403B5BA13@mimas.greekattic.local>
-Message-ID: <Pine.LNX.4.44.0709121600080.1583-100000@bmsred.bmsi.com>
-MIME-Version: 1.0
+Received: from mx2.redhat.com (mx2.redhat.com [10.255.15.25])
+	by int-mx2.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l8CKJ83m021457
+	for <linux-lvm@redhat.com>; Wed, 12 Sep 2007 16:19:08 -0400
+Received: from mx1.aecom.yu.edu (mx1.aecom.yu.edu [129.98.1.51])
+	by mx2.redhat.com (8.13.1/8.13.1) with ESMTP id l8CKJ0vN031600
+	for <linux-lvm@redhat.com>; Wed, 12 Sep 2007 16:19:00 -0400
+Mime-Version: 1.0
+Message-Id: <a0624041cc30df858fbcf@[129.98.90.227]>
+In-Reply-To: <20070912200433.66AED72FE3@hormel.redhat.com>
+References: <20070912200433.66AED72FE3@hormel.redhat.com>
+Date: Wed, 12 Sep 2007 16:18:42 -0400
+From: Maurice Volaski <mvolaski@aecom.yu.edu>
+Subject: [linux-lvm] Re: Can LVM block I/O and hang a system?
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -20,31 +21,27 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
 Content-Transfer-Encoding: 7bit
-To: LVM general discussion and development <linux-lvm@redhat.com>
-Cc: linux-raid@vger.kernel.org
+To: linux-lvm@redhat.com
+Cc: drbd-user@linbit.com
 
-On Wed, 12 Sep 2007, Hiren Joshi wrote:
+Oh, this is good to know, but the peer was unattached during the 
+initial hanging and when I fscked.
 
-> Has anyone of you been using ext2online to resize (large) ext3
-> filesystems?
-> I have to do it going from 500GB to 1TB on a productive system I was
-> wondering if you have some horror/success stories.
-> I'm using RHEL4/U4 (kernel 2.6.9) on this system.
+At 4:04 PM -0400 9/12/07, linux-lvm-request@redhat.com wrote:
+>please use drbd 8.0.6 with kernels that do not allow recursion in
+>generic_make_request, otherwise any lock is likely to be caused by this.
+>
+>then, if there are still lockups, these may be caused by lvm, and may be
+>due to some similar problem, namely doing synchronous (housekeeping) io
+>from within the generic_make_request path within the same "thread".
 
-This brings up an LVM related question I've had.  Can I do this:
-
-  1) take snapshot of 500GB LV
-  2) resize source LV to 1TB
-  3) run ext2online
-  4a) resize succeeds - remove shapshot
-  4b) resize fails horribly - copy shapshot to LV and restart
-    4b.1) is there a way to "revert" the source LV to the snapshot?
-    	(without allocating snapshot as big as source LV)
-
+For drbd mailing list readers, who didn't see the original message, 
+the kernel version I am using is Gentoo 2.6.22-r3. (I don't know 
+whether this will still be true of kernels after 22-r3.)
 -- 
-	      Stuart D. Gathman <stuart@bmsi.com>
-    Business Management Systems Inc.  Phone: 703 591-0911 Fax: 703 591-6154
-"Confutatis maledictis, flammis acribus addictis" - background song for
-a Microsoft sponsored "Where do you want to go from here?" commercial.
+
+Maurice Volaski, mvolaski@aecom.yu.edu
+Computing Support, Rose F. Kennedy Center
+Albert Einstein College of Medicine of Yeshiva University
