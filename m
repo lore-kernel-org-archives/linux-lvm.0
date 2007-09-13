@@ -1,16 +1,18 @@
 Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l8D89Lav004300
-	for <linux-lvm@redhat.com>; Thu, 13 Sep 2007 04:09:21 -0400
-Received: from soho.greekattic.com (soho.greekattic.com [83.146.34.92])
-	by mx1.redhat.com (8.13.1/8.13.1) with ESMTP id l8D89Hxc019302
-	for <linux-lvm@redhat.com>; Thu, 13 Sep 2007 04:09:18 -0400
-Content-class: urn:content-classes:message
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l8DD8mHj015657
+	for <linux-lvm@redhat.com>; Thu, 13 Sep 2007 09:08:48 -0400
+Received: from mail2.syneticon.net (mail.syneticon.net [213.239.212.131])
+	by mx1.redhat.com (8.13.1/8.13.1) with ESMTP id l8DD8eRV019151
+	for <linux-lvm@redhat.com>; Thu, 13 Sep 2007 09:08:41 -0400
+Message-ID: <46E93628.3060902@wpkg.org>
+Date: Thu, 13 Sep 2007 15:07:52 +0200
+From: Tomasz Chmielewski <mangoo@wpkg.org>
 MIME-Version: 1.0
-Subject: RE: [linux-lvm] Q: Online resizing ext3 FS
-Date: Thu, 13 Sep 2007 09:09:10 +0100
-Message-ID: <37238624DE95654997C360CA6CD36F8403B5BA2C@mimas.greekattic.local>
-From: "Hiren Joshi" <josh@moonfruit.com>
-Content-Transfer-Encoding: 8bit
+Subject: Re: [linux-lvm] Q: Online resizing ext3 FS
+References: <20070912163621.1f951876@slopi> <46E7FE32.7010404@wpkg.org>
+	<87ejh2n2kk.fsf@informatik.uni-tuebingen.de>
+In-Reply-To: <87ejh2n2kk.fsf@informatik.uni-tuebingen.de>
+Content-Transfer-Encoding: 7bit
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -21,55 +23,37 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: LVM general discussion and development <linux-lvm@redhat.com>
-Cc: linux-raid@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+To: Goswin von Brederlow <brederlo@informatik.uni-tuebingen.de>
+Cc: linux-raid@vger.kernel.org, LVM general discussion and development <linux-lvm@redhat.com>
 
-Sorry for the top quoting, I'm new to outlook =)
+Goswin von Brederlow schrieb:
+> Tomasz Chmielewski <mangoo@wpkg.org> writes:
 
-We did something similar, as the lv grows (with ext2online) the snapshot
-will start filling up. If the resize fails, you will not be able to
-(easily) revert directly back to the logical volume. This is because as
-you start copying stuff back, the snapshot will be filling up. If you
-want to be 100% safe, I would say go for some near line device that can
-store 500G and backup to that!
-HTH
+(...)
 
------Original Message-----
-From: linux-lvm-bounces@redhat.com [mailto:linux-lvm-bounces@redhat.com]
-On Behalf Of Stuart D. Gathman
-Sent: 12 September 2007 21:04
-To: LVM general discussion and development
-Cc: linux-raid@vger.kernel.org
-Subject: RE: [linux-lvm] Q: Online resizing ext3 FS
+>> Yes, I tried to online resize a similar filesystem (600 MB to 1.2 TB)
+>> and it didn't work.
+>>
+>> At some point, resize2fs would just exit with errors.
+>> I tried to do it several times before I figured out what's missing;
+>> sometimes, I interrupted the process with ctrl+c. No data loss
+>> occurred.
+>>
+>> To do an online ext3 resize, the filesystem needs a "resize_inode"
+>> feature. You can check the features with dumpe2fs:
+> 
+> So was that what you were missing or did some other error occur?
+> 
+> I tried to resize an fs without resize_inode and it just plain told me
+> and abrted.
 
-On Wed, 12 Sep 2007, Hiren Joshi wrote:
+It was working for some time (15 or 30 minutes?), the fs grew a couple 
+of gigabytes, and then it exited with an error. At first I thought it's 
+because the fs might need fsck, but after I did fsck, it didn't help - 
+next online tries didn't increase the fs anymore.
 
-> Has anyone of you been using ext2online to resize (large) ext3 
-> filesystems?
-> I have to do it going from 500GB to 1TB on a productive system I was 
-> wondering if you have some horror/success stories.
-> I'm using RHEL4/U4 (kernel 2.6.9) on this system.
-
-This brings up an LVM related question I've had.  Can I do this:
-
-  1) take snapshot of 500GB LV
-  2) resize source LV to 1TB
-  3) run ext2online
-  4a) resize succeeds - remove shapshot
-  4b) resize fails horribly - copy shapshot to LV and restart
-    4b.1) is there a way to "revert" the source LV to the snapshot?
-    	(without allocating snapshot as big as source LV)
 
 -- 
-	      Stuart D. Gathman <stuart@bmsi.com>
-    Business Management Systems Inc.  Phone: 703 591-0911 Fax: 703
-591-6154 "Confutatis maledictis, flammis acribus addictis" - background
-song for a Microsoft sponsored "Where do you want to go from here?"
-commercial.
-
-_______________________________________________
-linux-lvm mailing list
-linux-lvm@redhat.com
-https://www.redhat.com/mailman/listinfo/linux-lvm
-read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+Tomasz Chmielewski
+http://wpkg.org
