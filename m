@@ -1,36 +1,33 @@
 Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l8IL7icj013695
-	for <linux-lvm@redhat.com>; Tue, 18 Sep 2007 17:07:44 -0400
-Received: from e34.co.us.ibm.com (e34.co.us.ibm.com [32.97.110.152])
-	by mx1.redhat.com (8.13.1/8.13.1) with ESMTP id l8IL7WtD032661
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=OK)
-	for <linux-lvm@redhat.com>; Tue, 18 Sep 2007 17:07:33 -0400
-Received: from d03relay02.boulder.ibm.com (d03relay02.boulder.ibm.com
-	[9.17.195.227])
-	by e34.co.us.ibm.com (8.13.8/8.13.8) with ESMTP id l8IL7P4M017796
-	for <linux-lvm@redhat.com>; Tue, 18 Sep 2007 17:07:25 -0400
-Received: from d03av03.boulder.ibm.com (d03av03.boulder.ibm.com [9.17.195.169])
-	by d03relay02.boulder.ibm.com (8.13.8/8.13.8/NCO v8.5) with ESMTP id
-	l8IL7OCw458350
-	for <linux-lvm@redhat.com>; Tue, 18 Sep 2007 15:07:24 -0600
-Received: from d03av03.boulder.ibm.com (loopback [127.0.0.1])
-	by d03av03.boulder.ibm.com (8.12.11.20060308/8.13.3) with ESMTP id
-	l8IL7OUk030975
-	for <linux-lvm@redhat.com>; Tue, 18 Sep 2007 15:07:24 -0600
-Received: from malahal.beaverton.ibm.com (malahal.beaverton.ibm.com
-	[9.47.17.130])
-	by d03av03.boulder.ibm.com (8.12.11.20060308/8.12.11) with ESMTP id
-	l8IL7OBV030950
-	for <linux-lvm@redhat.com>; Tue, 18 Sep 2007 15:07:24 -0600
-Date: Tue, 18 Sep 2007 14:07:23 -0700
-From: malahal@us.ibm.com
-Subject: Re: [linux-lvm] Resizing an ext3 file system after extending a
-	logical volume group
-Message-ID: <20070918210723.GA8224@us.ibm.com>
-References: <78B3687E-533C-4AEF-BD23-7DA4E3308C40@uiuc.edu>
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l8JFQxA2014899
+	for <linux-lvm@redhat.com>; Wed, 19 Sep 2007 11:26:59 -0400
+Received: from postman.formosahost.com (postman.formosahost.com [203.190.4.19])
+	by mx1.redhat.com (8.13.1/8.13.1) with ESMTP id l8JFQloh013015
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO)
+	for <linux-lvm@redhat.com>; Wed, 19 Sep 2007 11:26:51 -0400
+Received: from localhost (localhost [127.0.0.1])
+	by postman.formosahost.com (Postfix) with ESMTP id 9870D8A264
+	for <linux-lvm@redhat.com>; Wed, 19 Sep 2007 23:23:17 +0800 (CST)
+Received: from postman.formosahost.com ([127.0.0.1])
+	by localhost (postman.formosahost.com [127.0.0.1]) (amavisd-new,
+	port 10024) with LMTP id 2XCd8F6p3gXV for <linux-lvm@redhat.com>;
+	Wed, 19 Sep 2007 23:23:15 +0800 (CST)
+Received: from [192.168.0.6] (61-56-145-65-adsl-tpe.STATIC.so-net.net.tw
+	[61.56.145.65])
+	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by postman.formosahost.com (Postfix) with ESMTP id D13998A263
+	for <linux-lvm@redhat.com>; Wed, 19 Sep 2007 23:23:14 +0800 (CST)
+Message-ID: <46F13FE5.6010905@ezpear.com>
+Date: Wed, 19 Sep 2007 23:27:33 +0800
+From: Hans <hans@ezpear.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <78B3687E-533C-4AEF-BD23-7DA4E3308C40@uiuc.edu>
+Subject: Re: [linux-lvm] lvm HA problem with  file descriptor left open
+References: <46E4F110.6040003@ezpear.com>
+	<20070917213319.GV18444@agk.fab.redhat.com>
+In-Reply-To: <20070917213319.GV18444@agk.fab.redhat.com>
+Content-Type: multipart/alternative;
+	boundary="------------060506060201070208030401"
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -41,60 +38,89 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+To: LVM general discussion and development <linux-lvm@redhat.com>
+
+This is a multi-part message in MIME format.
+--------------060506060201070208030401
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
-To: linux-lvm@redhat.com
 
-Depending on your kernel, you may be able to resize a mounted ext3. Just
-run resize2fs. It worked fine on my gentoo distro on a plain partition.
+Alasdair G Kergon wrote:
+> On Mon, Sep 10, 2007 at 03:24:00PM +0800, hans wrote:
+>   
+>> File descriptor 5 left open File descriptor 6 left open File descriptor
+>> 7 left open File descriptor 8 left open File descriptor 9 left open File
+>> descriptor 10 left open File descriptor 11 left open File descriptor 12
+>> left open 0 logical volume(s) in volume group "vg0_sites" now active
+>> Is it possible to force LVM
+>> to close descriptors?
+>>     
+>  
+> Those are only harmless warnings - LVM2 does close the file descriptors.
+> It is only fatal under some selinux configurations.
+>
+> Alasdair
+>   
 
-Thanks, Malahal.
+Thanks for answer.
+But I don't think it is harmless. When my server shutdown , and my 
+backup is up high availability doesn't work.
+DRBD  doesn't start because of this error.
+After I manual set up drbd active, I can not see files created on main 
+machine .
+After I again start main machine and start DRBD I can see all files.
+I think it is problem with descriptors which cause errors in my HA.
+I heard that I can use CLVM, but I don't know how it is compatible with LVM.
 
-Richard Kollmar [rkollmar@uiuc.edu] wrote:
->    Dear All:
->    I apologize if this has been asked before, but I can't find a way to
->    search the list archives:
->    How do you safely resize an ext3 filesystem after extending a logical
->    volume?
->    I am adding a new hard drive to increase the size of my logical volume
->    "home1" in logical volume group "home" with LVM2 under Ubuntu 6.10.1 LTS.*
->    The instructions*in the LVM Howto are pretty straightforward; the only
->    part that spooks me is the resizing of the ext3 filesystem.* This is what
->    I have done so far:
->            (installed new hardware & partitioned with fdisk; shows up as
->    /dev/sdb1)
->            (backed up the existing logical volume in case something bad
->    happens)
->            # pvcreate /dev/sdb1
->                    * Physical volume "/dev/sdb1" successfully created
->            # vgextend home /dev/sdb1
->                    * Volume group "home" successfully extended
->            # lvextend -l 357700 /dev/home/home1
->                    * Extending logical volume home1 to 1.36 TB
->                    * Logical volume home1 successfully resized
->    From what I googled, the next steps are a bit more involved for LVM2 than
->    the Howto lets on.* Does the following look o.k. to the experts:
->            ' use a root login, not su or sudo, because /home will be
->    unmounted
->            # umount*/dev/home/home1        ' the next steps should be done
->    off-line
->            # e2fsck -C 0 -v*dev/home/home1                 ' make sure the
->    file system is ok
->            #*tune2fs -O ^has_journal*/dev/home/home1       'disable
->    journaling on the logical volume
->            # resize2fs /dev/home/home1             'do the resizing
->            # e2fsck -C 0 -v*dev/home/home1                 ' make sure the
->    file system is still ok
->            #*tune2fs -O has_journal*/dev/home/home1                're-enable
->    journaling
->            # e2fsck -C 0 -v*dev/home/home1                 ' yes, I am a
->    first-timer and somewhat paranoid
->            # mount*/dev/home/home1 /home   ' back on-line
->    Thanks in advance for any help,
->    microscope
+Regards,
+Hans
 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+--------------060506060201070208030401
+Content-Type: text/html; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+  <meta content="text/html;charset=ISO-8859-1" http-equiv="Content-Type">
+</head>
+<body bgcolor="#ffffff" text="#000000">
+Alasdair G Kergon wrote:
+<blockquote cite="mid:20070917213319.GV18444@agk.fab.redhat.com"
+ type="cite">
+  <pre wrap="">On Mon, Sep 10, 2007 at 03:24:00PM +0800, hans wrote:
+  </pre>
+  <blockquote type="cite">
+    <pre wrap="">File descriptor 5 left open File descriptor 6 left open File descriptor
+7 left open File descriptor 8 left open File descriptor 9 left open File
+descriptor 10 left open File descriptor 11 left open File descriptor 12
+left open 0 logical volume(s) in volume group "vg0_sites" now active
+Is it possible to force LVM
+to close descriptors?
+    </pre>
+  </blockquote>
+  <pre wrap=""><!----> 
+Those are only harmless warnings - LVM2 does close the file descriptors.
+It is only fatal under some selinux configurations.
+
+Alasdair
+  </pre>
+</blockquote>
+<br>
+Thanks for answer.<br>
+But I don't think it is harmless. When my server shutdown , and my
+backup is up high availability doesn't work.<br>
+DRBD&nbsp; doesn't start because of this error. <br>
+After I manual set up drbd active, I can not see files created on main
+machine .<br>
+After I again start main machine and start DRBD I can see all files. <br>
+I think it is problem with descriptors which cause errors in my HA. <br>
+I heard that I can use CLVM, but I don't know how it is compatible with
+LVM.<br>
+<br>
+Regards,<br>
+Hans<br>
+</body>
+</html>
+
+--------------060506060201070208030401--
