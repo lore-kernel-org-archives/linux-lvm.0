@@ -1,19 +1,35 @@
-Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l8LHQOF0023402
-	for <linux-lvm@redhat.com>; Fri, 21 Sep 2007 13:26:24 -0400
-Received: from web33614.mail.mud.yahoo.com (web33614.mail.mud.yahoo.com
-	[68.142.199.246])
-	by mx1.redhat.com (8.13.1/8.13.1) with SMTP id l8LHQHEs007463
-	for <linux-lvm@redhat.com>; Fri, 21 Sep 2007 13:26:17 -0400
-Date: Fri, 21 Sep 2007 10:26:11 -0700 (PDT)
-From: Sagar Borikar <borikar_sagar@yahoo.com>
-Subject: Re: [linux-lvm] exception when snapshot size is less than the volume
-	size
-In-Reply-To: <46F2D78F.5020705@redhat.com>
-MIME-Version: 1.0
-Content-Type: multipart/alternative; boundary="0-1328842134-1190395571=:71432"
-Content-Transfer-Encoding: 8bit
-Message-ID: <440173.71432.qm@web33614.mail.mud.yahoo.com>
+Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l8MIRr8u015271
+	for <linux-lvm@redhat.com>; Sat, 22 Sep 2007 14:27:53 -0400
+Received: from pd2mo1so.prod.shaw.ca (idcmail-mo1so.shaw.ca [24.71.223.10])
+	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id l8MIRklF026430
+	for <linux-lvm@redhat.com>; Sat, 22 Sep 2007 14:27:47 -0400
+Received: from pd3mr5so.prod.shaw.ca (pd3mr5so-qfe3.prod.shaw.ca [10.0.141.12])
+	by l-daemon (Sun ONE Messaging Server 6.0 HotFix 1.01 (built Mar 15
+	2004))
+	with ESMTP id <0JOS005S28IZAJ20@l-daemon> for linux-lvm@redhat.com; Sat,
+	22 Sep 2007 12:25:47 -0600 (MDT)
+Received: from pn2ml5so.prod.shaw.ca ([10.0.121.149])
+	by pd3mr5so.prod.shaw.ca (Sun Java System Messaging Server 6.2-7.05
+	(built Sep
+	5 2006)) with ESMTP id <0JOS00JTV8ISHF40@pd3mr5so.prod.shaw.ca> for
+	linux-lvm@redhat.com; Sat, 22 Sep 2007 12:25:47 -0600 (MDT)
+Received: from mail.activenetwerx.com ([68.144.68.179])
+	by l-daemon (Sun ONE Messaging Server 6.0 HotFix 1.01 (built Mar 15
+	2004))
+	with ESMTP id <0JOS0072Q8IRL9R2@l-daemon> for linux-lvm@redhat.com; Sat,
+	22 Sep 2007 12:25:39 -0600 (MDT)
+Received: from an-ex.ActiveNetwerx.int (an-ex.activenetwerx.int [192.168.5.3])
+	by mail.activenetwerx.com (Postfix) with ESMTP id B3F3328223	for
+	<linux-lvm@redhat.com>; Sat, 22 Sep 2007 12:56:40 -0600 (MDT)
+Date: Sat, 22 Sep 2007 12:25:33 -0600
+From: "Joseph L. Casale" <jcasale@activenetwerx.com>
+Message-id: <1C8CF1EA1A5B5940B81B0710B2A4C9381DF6018911@an-ex.ActiveNetwerx.int>
+MIME-version: 1.0
+Content-type: multipart/alternative;
+	boundary=_000_1C8CF1EA1A5B5940B81B0710B2A4C9381DF6018911anexActiveNet_
+Content-language: en-US
+Subject: [linux-lvm] LVM Overhead
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -24,83 +40,110 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: LVM general discussion and development <linux-lvm@redhat.com>
-
---0-1328842134-1190395571=:71432
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
-
-Hi Milan,
-   
-  Thanks a lot!
-  It worked very nice!
-   
-  Cheers
-  Sagar
-
-Milan Broz <mbroz@redhat.com> wrote:
-  Hi,
-
-this is an old snapshot bug, already fixed in all
-recent kernels - see http://bugzilla.kernel.org/show_bug.cgi?id=7040
-
-Plese could you try to apply patch mentioned in this bugzilla ?
-also here
-http://git.kernel.org/?p=linux/kernel/git/stable/linux-2.6.18.y.git;a=commitdiff;h=2b64e22fdbc35b4a0e7c1cbda590daaced401c35;hp=6e28fa8b0390dcbb883994f3c634c1f56fe4f93a
-
-(or simply use latest stable 2.6.18.8 kernel)
-
-Milan
---
-mbroz@redhat.com
-
-Sagar Borikar wrote:
-> In my NAS box, I observed strange thing yesterday. I had the snapshot
-> size (32MB) less than volume size was (10 GB) You can say I was trying
-> to do failure analysis of my box. The LVM HOwto for snapshot says
-> "
-> **
-> 
-> 
-> If the snapshot logical volume becomes full it will be dropped (become
-> unusable) so it is vitally important to allocate enough space. The
-> amount of space necessary is dependent on the usage of the snapshot, so
-> there is no set recipe to follow for this. If the snapshot size equals
-> the origin size, it will never overflow.
-> 
-> "
-> But my box was crashed in this scenario.
-> Was wondering why didn't it disable the snapshots. 
-> The underlying processor is MIPS and linux kernel version is 2.6.18.
-> After delving little bit in the sources I found that break is occurring
-> while blowing away the snapshot facility -- so it`s not surprising that
-> snapshots do not work anymore. Just before the error,
-> kcopyd_client_destroy is called -- so that`s it for kcopyd jobs -- hence
-> snapshots. The snapshot faciltiy is gone at that point, with or without
-> the BUG_ON. The error actually occurs while freeing the exception tables
-> in the slab cache.
-> 
-> Any pointers if this has been resolved?
-> I am working with lvm version 2.02.28. and device mapper version 1.02.22
-
-_______________________________________________
-linux-lvm mailing list
-linux-lvm@redhat.com
-https://www.redhat.com/mailman/listinfo/linux-lvm
-read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+To: "'linux-lvm@redhat.com'" <linux-lvm@redhat.com>
 
 
-       
----------------------------------
-Shape Yahoo! in your own image.  Join our Network Research Panel today!
---0-1328842134-1190395571=:71432
-Content-Type: text/html; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
+--_000_1C8CF1EA1A5B5940B81B0710B2A4C9381DF6018911anexActiveNet_
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 
-<div>Hi Milan,</div>  <div>&nbsp;</div>  <div>Thanks a lot!</div>  <div>It worked very nice!</div>  <div>&nbsp;</div>  <div>Cheers</div>  <div>Sagar<BR><BR><B><I>Milan Broz &lt;mbroz@redhat.com&gt;</I></B> wrote:</div>  <BLOCKQUOTE class=replbq style="PADDING-LEFT: 5px; MARGIN-LEFT: 5px; BORDER-LEFT: #1010ff 2px solid">Hi,<BR><BR>this is an old snapshot bug, already fixed in all<BR>recent kernels - see http://bugzilla.kernel.org/show_bug.cgi?id=7040<BR><BR>Plese could you try to apply patch mentioned in this bugzilla ?<BR>also here<BR>http://git.kernel.org/?p=linux/kernel/git/stable/linux-2.6.18.y.git;a=commitdiff;h=2b64e22fdbc35b4a0e7c1cbda590daaced401c35;hp=6e28fa8b0390dcbb883994f3c634c1f56fe4f93a<BR><BR>(or simply use latest stable 2.6.18.8 kernel)<BR><BR>Milan<BR>--<BR>mbroz@redhat.com<BR><BR>Sagar Borikar wrote:<BR>&gt; In my NAS box, I observed strange thing yesterday. I had the snapshot<BR>&gt; size (32MB) less than volume size was (10 GB) You can say I was
- trying<BR>&gt; to do failure analysis of my box. The LVM HOwto for snapshot says<BR>&gt; "<BR>&gt; **<BR>&gt; <BR>&gt; <BR>&gt; If the snapshot logical volume becomes full it will be dropped (become<BR>&gt; unusable) so it is vitally important to allocate enough space. The<BR>&gt; amount of space necessary is dependent on the usage of the snapshot, so<BR>&gt; there is no set recipe to follow for this. If the snapshot size equals<BR>&gt; the origin size, it will never overflow.<BR>&gt; <BR>&gt; "<BR>&gt; But my box was crashed in this scenario.<BR>&gt; Was wondering why didn't it disable the snapshots. <BR>&gt; The underlying processor is MIPS and linux kernel version is 2.6.18.<BR>&gt; After delving little bit in the sources I found that break is occurring<BR>&gt; while blowing away the snapshot facility -- so it`s not surprising that<BR>&gt; snapshots do not work anymore. Just before the error,<BR>&gt; kcopyd_client_destroy is called -- so that`s it for kcopyd jobs --
- hence<BR>&gt; snapshots. The snapshot faciltiy is gone at that point, with or without<BR>&gt; the BUG_ON. The error actually occurs while freeing the exception tables<BR>&gt; in the slab cache.<BR>&gt; <BR>&gt; Any pointers if this has been resolved?<BR>&gt; I am working with lvm version 2.02.28. and device mapper version 1.02.22<BR><BR>_______________________________________________<BR>linux-lvm mailing list<BR>linux-lvm@redhat.com<BR>https://www.redhat.com/mailman/listinfo/linux-lvm<BR>read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/<BR></BLOCKQUOTE><BR><p>&#32;
-      <hr size=1>Shape Yahoo! in your own image.  
-<a href="http://us.rd.yahoo.com/evt=48517/*http://surveylink.yahoo.com/gmrs/yahoo_panel_invite.asp?a=7">Join our Network Research Panel today!</a>
+Hi,
+I am wanting to use LVM behind an iet iscsi target and I am wondering how m=
+uch overhead if any does LVM add? Would the performance degrade any, curren=
+tly I am exporting full unpartitioned discs and am happy with the performan=
+ce. From what I am reading now, I would likely partition the physical discs=
+ and use that in LVM then export a volume.
 
---0-1328842134-1190395571=:71432--
+I am new to LVM but see some advantages long term to using it!
+
+Thanks!
+jlc
+
+
+
+--_000_1C8CF1EA1A5B5940B81B0710B2A4C9381DF6018911anexActiveNet_
+Content-Type: text/html; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+
+<html xmlns:v=3D"urn:schemas-microsoft-com:vml" xmlns:o=3D"urn:schemas-micr=
+osoft-com:office:office" xmlns:w=3D"urn:schemas-microsoft-com:office:word" =
+xmlns:m=3D"http://schemas.microsoft.com/office/2004/12/omml" xmlns=3D"http:=
+//www.w3.org/TR/REC-html40">
+
+<head>
+<meta http-equiv=3DContent-Type content=3D"text/html; charset=3Dus-ascii">
+<meta name=3DGenerator content=3D"Microsoft Word 12 (filtered medium)">
+<style>
+<!--
+ /* Font Definitions */
+ @font-face
+	{font-family:Calibri;
+	panose-1:2 15 5 2 2 2 4 3 2 4;}
+ /* Style Definitions */
+ p.MsoNormal, li.MsoNormal, div.MsoNormal
+	{margin:0in;
+	margin-bottom:.0001pt;
+	font-size:11.0pt;
+	font-family:"Calibri","sans-serif";}
+a:link, span.MsoHyperlink
+	{mso-style-priority:99;
+	color:blue;
+	text-decoration:underline;}
+a:visited, span.MsoHyperlinkFollowed
+	{mso-style-priority:99;
+	color:purple;
+	text-decoration:underline;}
+span.EmailStyle17
+	{mso-style-type:personal-compose;
+	font-family:"Calibri","sans-serif";
+	color:windowtext;}
+.MsoChpDefault
+	{mso-style-type:export-only;}
+@page Section1
+	{size:8.5in 11.0in;
+	margin:1.0in 1.0in 1.0in 1.0in;}
+div.Section1
+	{page:Section1;}
+-->
+</style>
+<!--[if gte mso 9]><xml>
+ <o:shapedefaults v:ext=3D"edit" spidmax=3D"1026" />
+</xml><![endif]--><!--[if gte mso 9]><xml>
+ <o:shapelayout v:ext=3D"edit">
+  <o:idmap v:ext=3D"edit" data=3D"1" />
+ </o:shapelayout></xml><![endif]-->
+</head>
+
+<body lang=3DEN-US link=3Dblue vlink=3Dpurple>
+
+<div class=3DSection1>
+
+<p class=3DMsoNormal>Hi,<br>
+I am wanting to use LVM behind an iet iscsi target and I am wondering how m=
+uch
+overhead if any does LVM add? Would the performance degrade any, currently =
+I am
+exporting full unpartitioned discs and am happy with the performance. From =
+what
+I am reading now, I would likely partition the physical discs and use that =
+in
+LVM then export a volume.<o:p></o:p></p>
+
+<p class=3DMsoNormal><o:p>&nbsp;</o:p></p>
+
+<p class=3DMsoNormal>I am new to LVM but see some advantages long term to u=
+sing
+it!<o:p></o:p></p>
+
+<p class=3DMsoNormal><o:p>&nbsp;</o:p></p>
+
+<p class=3DMsoNormal>Thanks!<br>
+jlc<o:p></o:p></p>
+
+</div>
+
+</body>
+
+</html>
+
+--_000_1C8CF1EA1A5B5940B81B0710B2A4C9381DF6018911anexActiveNet_--
