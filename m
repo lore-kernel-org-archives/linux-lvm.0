@@ -1,17 +1,19 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l8N1cXPn030399
-	for <linux-lvm@redhat.com>; Sat, 22 Sep 2007 21:38:33 -0400
-Received: from mail.memcpy.com (whistler.memcpy.com [69.36.243.53])
-	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id l8N1cW5E016758
-	for <linux-lvm@redhat.com>; Sat, 22 Sep 2007 21:38:32 -0400
-Mime-Version: 1.0
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l8OF5nV5003152
+	for <linux-lvm@redhat.com>; Mon, 24 Sep 2007 11:05:49 -0400
+Received: from shuttlerun.csg.stercomm.com (scidalsmtp02.csg.stercomm.com
+	[204.214.3.25])
+	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id l8OF5lid023709
+	for <linux-lvm@redhat.com>; Mon, 24 Sep 2007 11:05:47 -0400
+Message-ID: <46F7D242.3030707@stercomm.com>
+Date: Mon, 24 Sep 2007 10:05:38 -0500
+From: Chris Cox <chris_cox@stercomm.com>
+MIME-Version: 1.0
+Subject: Re: [linux-lvm] LVM Overhead
+References: <1C8CF1EA1A5B5940B81B0710B2A4C9381DF6018911@an-ex.ActiveNetwerx.int>
+In-Reply-To: <1C8CF1EA1A5B5940B81B0710B2A4C9381DF6018911@an-ex.ActiveNetwerx.int>
 Content-Transfer-Encoding: 7bit
-Date: Sat, 22 Sep 2007 18:36:41 -0700
-From: Kelly Byrd <kbyrd-lvm@memcpy.com>
-Message-ID: <5cbd03f56b69e61e1407530930bb5939@memcpy.com>
-Subject: [linux-lvm] LVM2 striping or md raid0
-Reply-To: kbyrd-lvm@memcpy.com,
-	LVM general discussion and development <linux-lvm@redhat.com>
+Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -22,20 +24,33 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@redhat.com
+To: LVM general discussion and development <linux-lvm@redhat.com>
+
+Joseph L. Casale wrote:
+> Hi,
+> I am wanting to use LVM behind an iet iscsi target and I am wondering
+> how much overhead if any does LVM add? Would the performance degrade
+> any, currently I am exporting full unpartitioned discs and am happy with
+> the performance. From what I am reading now, I would likely partition
+> the physical discs and use that in LVM then export a volume.
+
+Overhead is negligible.  I haven't seen any impact at all.
+
+> 
+>  
+> 
+> I am new to LVM but see some advantages long term to using it!
+
+Definitely.
+
+> 
+>  
+> 
+> Thanks!
+> jlc
+> 
 
 
-Two questions really:
-
-I'm going to use lvm to partition up 4 equal size partitions.
-I can either use the md driver to RAID0 them the make /dev/md0
-my PV, or just use the 4 partitions as PVs and stripe across
-them.
-
-How does lvm2 striping compare with md's RAID0 as far as speed?
-I don't quite get how it stripes on chunk sizes smaller than
-a PE, but a 4MB stripe size seems crazy.
-
-Finally, what's the tuning advice for LVM2 striping? I usually
-create my RAID0 or RAID5 with 128k chunk sizes, is it similar
-for LVM2 striping?
+-- 
+Chris Cox
+Sr. Unix Sys Admin
