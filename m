@@ -1,20 +1,19 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l8PFDmOv030525
-	for <linux-lvm@redhat.com>; Tue, 25 Sep 2007 11:13:48 -0400
-Received: from shuttlerun.csg.stercomm.com (scidalsmtp02.csg.stercomm.com
-	[204.214.3.25])
-	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id l8PFDlq9000483
-	for <linux-lvm@redhat.com>; Tue, 25 Sep 2007 11:13:48 -0400
-Message-ID: <46F925A3.4060306@stercomm.com>
-Date: Tue, 25 Sep 2007 10:13:39 -0500
-From: Chris Cox <chris_cox@stercomm.com>
-MIME-Version: 1.0
-Subject: Re: [linux-lvm] LVM Overhead
-References: <1C8CF1EA1A5B5940B81B0710B2A4C9381DF6018911@an-ex.ActiveNetwerx.int>	<46F7D242.3030707@stercomm.com>	<46F7D49A.2090206@wpkg.org>	<46F7E720.4060304@stercomm.com>
-	<46F7E839.8040805@stercomm.com> <46F7F955.7070608@wpkg.org>
-In-Reply-To: <46F7F955.7070608@wpkg.org>
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l8PK2oI6021357
+	for <linux-lvm@redhat.com>; Tue, 25 Sep 2007 16:02:50 -0400
+Received: from mail.memcpy.com (whistler.memcpy.com [69.36.243.53])
+	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id l8PK2m7B001150
+	for <linux-lvm@redhat.com>; Tue, 25 Sep 2007 16:02:49 -0400
+Subject: Re: [linux-lvm] LVM2 striping or md raid0
+Mime-Version: 1.0
 Content-Transfer-Encoding: 7bit
-Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
+Date: Tue, 25 Sep 2007 12:49:35 -0700
+From: Kelly Byrd <kbyrd-lvm@memcpy.com>
+In-Reply-To: <5cbd03f56b69e61e1407530930bb5939@memcpy.com>
+References: <5cbd03f56b69e61e1407530930bb5939@memcpy.com>
+Message-ID: <f73e16539766341385fcc97b8915a65f@memcpy.com>
+Reply-To: kbyrd-lvm@memcpy.com,
+	LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -27,28 +26,27 @@ List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-Tomasz Chmielewski wrote:
-> Chris Cox schrieb:
-...
->> I check my local drives, they all use the default 1024....
->> Is setting the read ahead that big of a deal with just LVM?
->> I would think if it's an issue, it's an issue everywhere.
+
+
+
+On Sat, 22 Sep 2007 18:36:41 -0700, Kelly Byrd <kbyrd-lvm@memcpy.com>
+wrote:
 > 
-> For me, the default was 256.
+> Two questions really:
 > 
-> I use that big readahead after a bit of benchmarking; perhaps it's very
-> specific to my setup.
+> I'm going to use lvm to partition up 4 equal size partitions.
+> I can either use the md driver to RAID0 them the make /dev/md0
+> my PV, or just use the 4 partitions as PVs and stripe across
+> them.
+> 
+> How does lvm2 striping compare with md's RAID0 as far as speed?
+> I don't quite get how it stripes on chunk sizes smaller than
+> a PE, but a 4MB stripe size seems crazy.
+> 
+> Finally, what's the tuning advice for LVM2 striping? I usually
+> create my RAID0 or RAID5 with 128k chunk sizes, is it similar
+> for LVM2 striping?
 > 
 > 
 
-Oh... I didn't say it wouldn't benefit, I just know in my case
-it's not a HUGE win... but it is significant, significant enough
-for me to want to experiment with the values and doing some
-benchmarking.
-
-256?  Whoa... that seems really low.
-
-
--- 
-Chris Cox
-Sr. Unix Sys Admin
+anyone?
