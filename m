@@ -1,19 +1,22 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l8PLrfb1008328
-	for <linux-lvm@redhat.com>; Tue, 25 Sep 2007 17:53:41 -0400
-Received: from mail.memcpy.com (whistler.memcpy.com [69.36.243.53])
-	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id l8PLrel0029950
-	for <linux-lvm@redhat.com>; Tue, 25 Sep 2007 17:53:40 -0400
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l8Q15PSB004008
+	for <linux-lvm@redhat.com>; Tue, 25 Sep 2007 21:05:25 -0400
+Received: from mail.bmsi.com (www.bmsi.com [24.248.44.156])
+	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id l8Q15P0c025835
+	for <linux-lvm@redhat.com>; Tue, 25 Sep 2007 21:05:25 -0400
+Received: from bmsred.bmsi.com (bmsred.bmsi.com [192.168.9.50])
+	by mail.bmsi.com (8.13.6/8.13.6) with ESMTP id l8Q15Jou014697
+	for <linux-lvm@redhat.com>; Tue, 25 Sep 2007 21:05:19 -0400
+Received: from localhost (localhost [127.0.0.1])
+	by bmsred.bmsi.com (8.13.5/8.13.5) with ESMTP id l8Q15JDF006033
+	for <linux-lvm@redhat.com>; Tue, 25 Sep 2007 21:05:19 -0400
+Date: Tue, 25 Sep 2007 21:05:19 -0400 (EDT)
+From: "Stuart D. Gathman" <stuart@bmsi.com>
 Subject: Re: [linux-lvm] LVM2 striping or md raid0
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Date: Tue, 25 Sep 2007 14:40:28 -0700
-From: Kelly Byrd <kbyrd-lvm@memcpy.com>
-In-Reply-To: <4b9a0d7ea026e7ca31fcfc9063443f08@memcpy.com>
-References: <4b9a0d7ea026e7ca31fcfc9063443f08@memcpy.com>
-Message-ID: <83eabe914754651e07860c6d3f3d7eb6@memcpy.com>
-Reply-To: kbyrd-lvm@memcpy.com,
-	LVM general discussion and development <linux-lvm@redhat.com>
+In-Reply-To: <46F97D06.60306@stercomm.com>
+Message-ID: <Pine.LNX.4.44.0709252059290.5975-100000@bmsred.bmsi.com>
+MIME-Version: 1.0
+Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -23,53 +26,33 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: TEXT/PLAIN; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
+On Tue, 25 Sep 2007, Chris Cox wrote:
 
+> This is merely my own opinion, but md was designed to be
+> THE software raid mechanism.  So, my preference would be
+> to establish a RAID md device and make that into a PV.
 
+This is FOSS, and choice is king.  There is no "THE" desktop, you
+can choose from KDE, Gnome, or a host of desktop-like window managers.
+It is entirely in character to have 2 different RAID mechanisms.
 
-On Tue, 25 Sep 2007 14:21:44 -0700, Kelly Byrd <kbyrd@memcpy.com> wrote:
-> 
-> 
-> On Tue, 25 Sep 2007 16:26:30 -0500, Chris Cox <chris_cox@stercomm.com>
-> wrote:
->> Kelly Byrd wrote:
->>>
->>>
->>> On Sat, 22 Sep 2007 18:36:41 -0700, Kelly Byrd <kbyrd-lvm@memcpy.com>
->>> wrote:
->>>> Two questions really:
->>>>
->>>> I'm going to use lvm to partition up 4 equal size partitions.
->>>> I can either use the md driver to RAID0 them the make /dev/md0
->>>> my PV, or just use the 4 partitions as PVs and stripe across
->>>> them.
->>>>
->>>> How does lvm2 striping compare with md's RAID0 as far as speed?
->>>> I don't quite get how it stripes on chunk sizes smaller than
->>>> a PE, but a 4MB stripe size seems crazy.
->>>>
->>>> Finally, what's the tuning advice for LVM2 striping? I usually
->>>> create my RAID0 or RAID5 with 128k chunk sizes, is it similar
->>>> for LVM2 striping?
->>>>
->>>>
->>>
->>> anyone?
->>
->> This is merely my own opinion, but md was designed to be
->> THE software raid mechanism.  So, my preference would be
->> to establish a RAID md device and make that into a PV.
->>
->> Of course, I don't believe in non-RAID (i.e. RAID0) anyhow.
->> Maybe someone else will chime in on this one.
->>
->>
-> 
+That said, LVM raid will likely always be restricted to RAID0 and RAID1,
+because these are simple and efficient to implement as part of what
+LVM does anyway.  For RAID5, etc, your only choice in linux will be
+hardware or the md driver.
 
-I had the same thought, but there's also this instinct that
-'one less layer between my files and this physical disk is
-better'. I'm really hoping someone will say something like:
-'LVM2 striping uses the same code as md raid0' or some other
-silly thing.
+> Of course, I don't believe in non-RAID (i.e. RAID0) anyhow.
+> Maybe someone else will chime in on this one.
+
+RAID0 on top of RAID1 or (RAID1 on RAID0) gives you mirroring plus high
+bandwidth.  For RAID5, I'd go with hardware.
+
+-- 
+	      Stuart D. Gathman <stuart@bmsi.com>
+    Business Management Systems Inc.  Phone: 703 591-0911 Fax: 703 591-6154
+"Confutatis maledictis, flammis acribus addictis" - background song for
+a Microsoft sponsored "Where do you want to go from here?" commercial.
