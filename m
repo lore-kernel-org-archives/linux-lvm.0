@@ -1,15 +1,27 @@
-Received: from agk.fab.redhat.com (agk.fab.redhat.com [10.33.0.19])
-	by pobox.fab.redhat.com (8.13.1/8.13.1) with ESMTP id l93JSkmP006036
-	for <linux-lvm@redhat.com>; Wed, 3 Oct 2007 15:28:46 -0400
-Received: from agk by agk.fab.redhat.com with local (Exim 4.34)
-	id 1Id9tm-0007Fk-NR
-	for linux-lvm@redhat.com; Wed, 03 Oct 2007 20:28:46 +0100
-Date: Wed, 3 Oct 2007 20:28:46 +0100
-From: Alasdair G Kergon <agk@redhat.com>
+Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l93LmSfJ027021
+	for <linux-lvm@redhat.com>; Wed, 3 Oct 2007 17:48:28 -0400
+Received: from e31.co.us.ibm.com (e31.co.us.ibm.com [32.97.110.149])
+	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id l93LmLGt016208
+	for <linux-lvm@redhat.com>; Wed, 3 Oct 2007 17:48:21 -0400
+Received: from d03relay02.boulder.ibm.com (d03relay02.boulder.ibm.com
+	[9.17.195.227])
+	by e31.co.us.ibm.com (8.13.8/8.13.8) with ESMTP id l93LmFuH000694
+	for <linux-lvm@redhat.com>; Wed, 3 Oct 2007 17:48:15 -0400
+Received: from d03av04.boulder.ibm.com (d03av04.boulder.ibm.com [9.17.195.170])
+	by d03relay02.boulder.ibm.com (8.13.8/8.13.8/NCO v8.5) with ESMTP id
+	l93Lm1kU490518
+	for <linux-lvm@redhat.com>; Wed, 3 Oct 2007 15:48:03 -0600
+Received: from d03av04.boulder.ibm.com (loopback [127.0.0.1])
+	by d03av04.boulder.ibm.com (8.12.11.20060308/8.13.3) with ESMTP id
+	l93Lm0GD001409
+	for <linux-lvm@redhat.com>; Wed, 3 Oct 2007 15:48:01 -0600
+Date: Wed, 3 Oct 2007 14:47:59 -0700
+From: malahal@us.ibm.com
 Subject: Re: [linux-lvm] Poison pills
-Message-ID: <20071003192846.GP18444@agk.fab.redhat.com>
+Message-ID: <20071003214759.GA10385@us.ibm.com>
 References: <Pine.LNX.4.44.0710031449370.29351-100000@bmsred.bmsi.com>
-Mime-Version: 1.0
+MIME-Version: 1.0
 Content-Disposition: inline
 In-Reply-To: <Pine.LNX.4.44.0710031449370.29351-100000@bmsred.bmsi.com>
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
@@ -24,24 +36,12 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: LVM general discussion and development <linux-lvm@redhat.com>
+To: "Stuart D. Gathman" <stuart@bmsi.com>
+Cc: linux-lvm@redhat.com
 
-On Wed, Oct 03, 2007 at 03:06:42PM -0400, Stuart D. Gathman wrote:
-> What happens in linux LVM?  If it sees 
-> two conflicting metadatas for the same VGID, what happens?
- 
-It'll apply some simple rules to distinguish them (e.g. if one has the
-current hostname written into its metadata identifying the machine where
-it was created and the other doesn't it'll select that one), but if it
-can't tell them apart it will pick one at random (not in the strict
-sense of that word - in identical external conditions it'll always
-choose the same one) and use that.   [The hostname test is less use than
-you might think, as many VGs are created with identical hostnames during
-installation, and others are accessed early in the boot sequence before
-the hostname has been set.]
+It would be a lot cheaper if you can test it with loop devices!
 
-BTW vgrename accepts the VGID as a parameter.
-
-Alasdair
--- 
-agk@redhat.com
+Stuart D. Gathman [stuart@bmsi.com] wrote:
+> I think an inexpensive torture test of this logic is to get 3 or 4 external USB
+> drives, put them all in a VG, and start playing games with hotplugging them.
+> (E.g. unplug drive, vgreduce, plug drive back in).
