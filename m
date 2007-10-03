@@ -1,22 +1,24 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l93FGMj3023685
-	for <linux-lvm@redhat.com>; Wed, 3 Oct 2007 11:16:22 -0400
-Received: from mail.bmsi.com (www.bmsi.com [24.248.44.156])
-	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id l93FGL3C001648
-	for <linux-lvm@redhat.com>; Wed, 3 Oct 2007 11:16:21 -0400
-Received: from bmsred.bmsi.com (bmsred.bmsi.com [192.168.9.50])
-	by mail.bmsi.com (8.13.6/8.13.6) with ESMTP id l93FGFDj018082
-	for <linux-lvm@redhat.com>; Wed, 3 Oct 2007 11:16:15 -0400
-Received: from localhost (localhost [127.0.0.1])
-	by bmsred.bmsi.com (8.13.5/8.13.5) with ESMTP id l93FGFKT028543
-	for <linux-lvm@redhat.com>; Wed, 3 Oct 2007 11:16:15 -0400
-Date: Wed, 3 Oct 2007 11:16:15 -0400 (EDT)
-From: "Stuart D. Gathman" <stuart@bmsi.com>
-Subject: Re: [linux-lvm] Backuping "special" snapshots
-In-Reply-To: <47037B9A.3040209@es.clara.net>
-Message-ID: <Pine.LNX.4.44.0710031115400.28515-100000@bmsred.bmsi.com>
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l93FIrEC025161
+	for <linux-lvm@redhat.com>; Wed, 3 Oct 2007 11:18:53 -0400
+Received: from mailout1.imos.net (mailout1.imos.net [212.87.132.33])
+	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id l93FIjIE003030
+	for <linux-lvm@redhat.com>; Wed, 3 Oct 2007 11:18:45 -0400
+Received: from homer.imos.net (homer.imos.net [212.87.132.35])
+	by mailout1.imos.net (8.14.1/8.14.1) with ESMTP id l93FIiIN007170
+	for <linux-lvm@redhat.com>; Wed, 3 Oct 2007 17:18:44 +0200
+Received: from lstyd.imos.net (lstyd.imos.net [212.87.130.122])
+	by homer.imos.net (8.14.1/8.14.1) with ESMTP id l93FIiJM032478
+	for <linux-lvm@redhat.com>; Wed, 3 Oct 2007 17:18:44 +0200
+Received: from [5.34.46.207] ([5.34.46.207])
+	by lstyd.imos.net (8.14.0/8.13.7) with ESMTP id l93I7Hm5003671
+	for <linux-lvm@redhat.com>; Wed, 3 Oct 2007 20:07:17 +0200
+Message-ID: <4703B2CD.9050206@theendofthetunnel.de>
+Date: Wed, 03 Oct 2007 17:18:37 +0200
+From: Hannes Dorbath <light@theendofthetunnel.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] Where to report bugs?
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -27,21 +29,17 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="iso-8859-1"
+Content-Type: text/plain; charset="us-ascii"
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-On Wed, 3 Oct 2007, Marc Patino G=EF=BF=BDmez wrote:
+I failed to locate a definitive location to reports LVM2 bugs. Isn't the
+Redhat Bugzilla the right place?
 
-> I try kpartx and it's so cool, but I can't make snapshots of=20
-> /dev/vg00/lv00p1 ... so I can't solve the problem of making backup=20
-> without stopping the Virtual Machine.
+If so, what category should LVM bugs go to?
 
-> Any advice?
+https://bugzilla.redhat.com/enter_bug.cgi
 
-Run kpartx on your snapshot.
 
---=20
-	      Stuart D. Gathman <stuart@bmsi.com>
-    Business Management Systems Inc.  Phone: 703 591-0911 Fax: 703 591-6154
-"Confutatis maledictis, flammis acribus addictis" - background song for
-a Microsoft sponsored "Where do you want to go from here?" commercial.
+-- 
+Best regards,
+Hannes Dorbath
