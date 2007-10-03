@@ -1,19 +1,17 @@
 Received: from agk.fab.redhat.com (agk.fab.redhat.com [10.33.0.19])
-	by pobox.fab.redhat.com (8.13.1/8.13.1) with ESMTP id l93JILKS004538
-	for <linux-lvm@redhat.com>; Wed, 3 Oct 2007 15:18:21 -0400
+	by pobox.fab.redhat.com (8.13.1/8.13.1) with ESMTP id l93JSkmP006036
+	for <linux-lvm@redhat.com>; Wed, 3 Oct 2007 15:28:46 -0400
 Received: from agk by agk.fab.redhat.com with local (Exim 4.34)
-	id 1Id9jh-0007Ef-79
-	for linux-lvm@redhat.com; Wed, 03 Oct 2007 20:18:21 +0100
-Date: Wed, 3 Oct 2007 20:18:21 +0100
+	id 1Id9tm-0007Fk-NR
+	for linux-lvm@redhat.com; Wed, 03 Oct 2007 20:28:46 +0100
+Date: Wed, 3 Oct 2007 20:28:46 +0100
 From: Alasdair G Kergon <agk@redhat.com>
-Subject: Re: [linux-lvm] Where to report bugs?
-Message-ID: <20071003191821.GO18444@agk.fab.redhat.com>
-References: <4703B2CD.9050206@theendofthetunnel.de>
-	<20071003171552.GL18444@agk.fab.redhat.com>
-	<4703E000.4050307@theendofthetunnel.de>
+Subject: Re: [linux-lvm] Poison pills
+Message-ID: <20071003192846.GP18444@agk.fab.redhat.com>
+References: <Pine.LNX.4.44.0710031449370.29351-100000@bmsred.bmsi.com>
 Mime-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <4703E000.4050307@theendofthetunnel.de>
+In-Reply-To: <Pine.LNX.4.44.0710031449370.29351-100000@bmsred.bmsi.com>
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -28,29 +26,21 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-On Wed, Oct 03, 2007 at 08:31:28PM +0200, Hannes Dorbath wrote:
-> 8. Use vgreduce --removemissing to get VG data up again
-> LV origin is gone and can only be brought back from backup with
-> vgcfgrestore.
+On Wed, Oct 03, 2007 at 03:06:42PM -0400, Stuart D. Gathman wrote:
+> What happens in linux LVM?  If it sees 
+> two conflicting metadatas for the same VGID, what happens?
  
-Right.  So you're asking for vgreduce --removemissing to be enhanced
-to consider just removing the snapshot and leaving behind the LV if
-it possible.  Seems reasonable.
+It'll apply some simple rules to distinguish them (e.g. if one has the
+current hostname written into its metadata identifying the machine where
+it was created and the other doesn't it'll select that one), but if it
+can't tell them apart it will pick one at random (not in the strict
+sense of that word - in identical external conditions it'll always
+choose the same one) and use that.   [The hostname test is less use than
+you might think, as many VGs are created with identical hostnames during
+installation, and others are accessed early in the boot sequence before
+the hostname has been set.]
 
-The logic that needs improving is in _remove_lv() in tools/vgreduce.c
-if anyone wants to have a go at fixing it.
-
-                /* Use the origin LV */
-                lv = snap_seg->origin;
-
-Perhaps it should have a second variable to hold the origin, and in the
-following loop only deal with the current cow instead of all of them.
-
-(It needs to handle two cases: origin LV is gone=>loop and remove all snapshots
-as well as the origin; snapshot LV only is gone=>only remove this snapshot.
-Maybe push the remove_snapshot code into a separate function then call
-it from two places for the two different cases, avoiding the loop for the
-one snapshot only case.)
+BTW vgrename accepts the VGID as a parameter.
 
 Alasdair
 -- 
