@@ -1,22 +1,22 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l939JGjx028224
-	for <linux-lvm@redhat.com>; Wed, 3 Oct 2007 05:19:16 -0400
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l93BMMQP009081
+	for <linux-lvm@redhat.com>; Wed, 3 Oct 2007 07:22:22 -0400
 Received: from bacterio.es.clara.net (mail.es.clara.net [80.67.96.90])
-	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id l939J9vn013265
-	for <linux-lvm@redhat.com>; Wed, 3 Oct 2007 05:19:09 -0400
+	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id l93BMFMv003782
+	for <linux-lvm@redhat.com>; Wed, 3 Oct 2007 07:22:15 -0400
 Received: from localhost (localhost.localdomain [127.0.0.1])
-	by bacterio.es.clara.net (Postfix) with ESMTP id DE953124C01A
-	for <linux-lvm@redhat.com>; Wed,  3 Oct 2007 11:19:08 +0200 (CEST)
+	by bacterio.es.clara.net (Postfix) with ESMTP id 25A02124C01A
+	for <linux-lvm@redhat.com>; Wed,  3 Oct 2007 13:22:14 +0200 (CEST)
 Received: from bacterio.es.clara.net ([127.0.0.1])
 	by localhost (bacterio.es.clara.net [127.0.0.1]) (amavisd-new,
-	port 10024) with LMTP id 09551-02-2 for <linux-lvm@redhat.com>;
-	Wed, 3 Oct 2007 11:18:58 +0200 (CEST)
+	port 10024) with LMTP id 16730-01-2 for <linux-lvm@redhat.com>;
+	Wed, 3 Oct 2007 13:22:03 +0200 (CEST)
 Received: from [192.168.92.83] (ga-bcn-ar4-lpb-1.router.es.clara.net
 	[80.67.96.65])
-	by bacterio.es.clara.net (Postfix) with ESMTP id C9035124C00B
-	for <linux-lvm@redhat.com>; Wed,  3 Oct 2007 11:18:58 +0200 (CEST)
-Message-ID: <47035EC1.3080502@es.clara.net>
-Date: Wed, 03 Oct 2007 11:20:01 +0200
+	by bacterio.es.clara.net (Postfix) with ESMTP id 52073124C00B
+	for <linux-lvm@redhat.com>; Wed,  3 Oct 2007 13:22:03 +0200 (CEST)
+Message-ID: <47037B9A.3040209@es.clara.net>
+Date: Wed, 03 Oct 2007 13:23:06 +0200
 From: =?ISO-8859-1?Q?Marc_Patino_G=F3mez?= <mpatino@es.clara.net>
 MIME-Version: 1.0
 Subject: Re: [linux-lvm] Backuping "special" snapshots
@@ -36,13 +36,19 @@ List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="iso-8859-1"; format="flowed"
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-Hi Bryn,
+Hi again,
 
-many thanks for the info. I'm going to read kpartx documentation.
+I try kpartx and it's so cool, but I can't make snapshots of=20
+/dev/vg00/lv00p1 ... so I can't solve the problem of making backup=20
+without stopping the Virtual Machine.
+
+Any advice?
 
 Regards,
 
 Marc
+
+
 Bryn M. Reeves wrote:
 > -----BEGIN PGP SIGNED MESSAGE-----
 > Hash: SHA1
