@@ -1,18 +1,15 @@
-Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l968Zvr5022000
-	for <linux-lvm@redhat.com>; Sat, 6 Oct 2007 04:35:57 -0400
-Received: from wa-out-1112.google.com (wa-out-1112.google.com [209.85.146.180])
-	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id l968ZuVO003765
-	for <linux-lvm@redhat.com>; Sat, 6 Oct 2007 04:35:56 -0400
-Received: by wa-out-1112.google.com with SMTP id j37so980191waf
-	for <linux-lvm@redhat.com>; Sat, 06 Oct 2007 01:35:55 -0700 (PDT)
-Message-ID: <55e074e80710060135g264a3eeatc57178975862f288@mail.gmail.com>
-Date: Sat, 6 Oct 2007 01:35:55 -0700
-From: "Michael Jiang" <xiaominj@gmail.com>
+Received: from thunderbird6.fab.redhat.com (sebastian-int.corp.redhat.com
+	[172.16.52.221])
+	by pobox.fab.redhat.com (8.13.1/8.13.1) with ESMTP id l969dBeI012916
+	for <linux-lvm@redhat.com>; Sat, 6 Oct 2007 05:39:12 -0400
+Message-ID: <470757EE.5070306@redhat.com>
+Date: Sat, 06 Oct 2007 10:39:58 +0100
+From: "Bryn M. Reeves" <breeves@redhat.com>
 MIME-Version: 1.0
-Content-Type: multipart/alternative; 
-	boundary="----=_Part_33241_6582386.1191659755601"
-Subject: [linux-lvm] could not mount LVM2 read only snapshot
+Subject: Re: [linux-lvm] could not mount LVM2 read only snapshot
+References: <55e074e80710060135g264a3eeatc57178975862f288@mail.gmail.com>
+In-Reply-To: <55e074e80710060135g264a3eeatc57178975862f288@mail.gmail.com>
+Content-Transfer-Encoding: 7bit
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -23,45 +20,48 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: linux-lvm@redhat.com
+Content-Type: text/plain; charset="us-ascii"
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-------=_Part_33241_6582386.1191659755601
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA1
 
-I use 'lvcreate -p r' to create a read only snapshot. got following error
-message when I try to mount it
+Michael Jiang wrote:
+> I use 'lvcreate -p r' to create a read only snapshot. got following
+> error message when I try to mount it
+> 
+> "mount: wrong fs type, bad option, bad superblock on /dev/VolGroup00/snap,
+>       or too many mounted file systems"
+> 
+> If I do not use '-p r' and mount -r, then it works fine.
+> 
 
-"mount: wrong fs type, bad option, bad superblock on /dev/VolGroup00/snap,
-      or too many mounted file systems"
+Working fine here:
 
-If I do not use '-p r' and mount -r, then it works fine.
+# lvcreate -L 10M -pr -s -n l0-snap /dev/vg0/l0
+  Rounding up size to full physical extent 12.00 MB
+  Logical volume "l0-snap" created
 
-kernel 2.6.9-42.ELsmp
+# mount -oro /dev/vg0/l0-snap /mnt/snap
+
+# umount  /mnt/snap
+
+# mount /dev/vg0/l0-snap /mnt/snap
+mount: block device /dev/vg0/l0-snap is write-protected, mounting read-only
+
 # lvm version
-  LVM version:     2.02.06 (2006-05-12)
-  Library version: 1.02.07 (2006-05-11)
-  Driver version:  4.5.0
+  LVM version:     2.02.21-RHEL4 (2007-03-26)
+  Library version: 1.02.17-RHEL4 (2007-02-02)
+  Driver version:  4.5.5
 
-Anyone had the same problem before?
+Regards,
+Bryn.
 
-Thanks
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.7 (GNU/Linux)
+Comment: Using GnuPG with Fedora - http://enigmail.mozdev.org
 
-Michael
-
-------=_Part_33241_6582386.1191659755601
-Content-Type: text/html; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-I use &#39;lvcreate -p r&#39; to create a read only snapshot. got following error message when I try to mount it<br><br>&quot;mount: wrong fs type, bad option, bad superblock on 
-/dev/VolGroup00/snap,
-<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; or too many mounted file systems&quot;<br><br>If I do not use &#39;-p r&#39; and mount -r, then it works fine.<br><br>kernel 2.6.9-42.ELsmp<br>
-# lvm version<br>
-&nbsp; LVM version:&nbsp;&nbsp;&nbsp;&nbsp; 2.02.06 (2006-05-12)<br>
-&nbsp; Library version: 1.02.07 (2006-05-11)<br>
-&nbsp; Driver version:&nbsp; 4.5.0<br>
-<br>Anyone had the same problem before?<br><br>Thanks<br><br>Michael<br>
-
-------=_Part_33241_6582386.1191659755601--
+iD8DBQFHB1fu6YSQoMYUY94RAjrNAJ43uS//1K5RsahvHSzWA+0dPnKaOQCeIiTb
+LOuWlsH9ohqlJZLgjja5/As=
+=6L6d
+-----END PGP SIGNATURE-----
