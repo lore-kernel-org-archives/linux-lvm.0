@@ -1,19 +1,29 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l9BKlmlZ024883
-	for <linux-lvm@redhat.com>; Thu, 11 Oct 2007 16:47:48 -0400
-Received: from smtp.iplan.com.ar (smtp.iplan.com.ar [190.2.0.12])
-	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id l9BKlk4Q021803
-	for <linux-lvm@redhat.com>; Thu, 11 Oct 2007 16:47:47 -0400
-Received: from localhost (unknown [10.30.1.14])
-	by smtp.iplan.com.ar (Postfix) with ESMTP id 071B011C0AF
-	for <linux-lvm@redhat.com>; Thu, 11 Oct 2007 17:47:40 -0300 (ART)
-Message-ID: <20071011174739.mzvwpbgg008gck8w@webmail.iplan.com.ar>
-Date: Thu, 11 Oct 2007 17:47:39 -0300
-From: rroldan <rroldan@iplan.com.ar>
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l9E1XScS024527
+	for <linux-lvm@redhat.com>; Sat, 13 Oct 2007 21:33:28 -0400
+Received: from troy.its.carleton.edu (Troy.ITS.Carleton.edu [137.22.94.86])
+	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id l9E1XL61003013
+	for <linux-lvm@redhat.com>; Sat, 13 Oct 2007 21:33:21 -0400
+Received: from mail.carleton.edu (mail2.its.carleton.edu [137.22.194.92])
+	by troy.its.carleton.edu (8.13.1/8.13.1) with ESMTP id l9E1XKRr014434
+	for <linux-lvm@redhat.com>; Sat, 13 Oct 2007 20:33:20 -0500
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.carleton.edu (Postfix) with ESMTP id 928E5D6CF86
+	for <linux-lvm@redhat.com>; Sat, 13 Oct 2007 20:33:20 -0500 (CDT)
+Received: from mail.carleton.edu ([127.0.0.1])
+	by localhost (mail.carleton.edu [127.0.0.1]) (amavisd-new, port 10024)
+	with ESMTP id 0Mupu-EdC59u for <linux-lvm@redhat.com>;
+	Sat, 13 Oct 2007 20:33:17 -0500 (CDT)
+Received: from mail.carleton.edu (mail.carleton.edu [137.22.194.90])
+	by mail.carleton.edu (Postfix) with ESMTP id 7432DD6CF54
+	for <linux-lvm@redhat.com>; Sat, 13 Oct 2007 20:33:17 -0500 (CDT)
+Date: Sat, 13 Oct 2007 20:33:17 -0500 (CDT)
+From: Rich Graves <rgraves@carleton.edu>
+Message-ID: <1862200849.103791192325597355.JavaMail.root@mail2.its.carleton.edu>
 MIME-Version: 1.0
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-Subject: [linux-lvm] consistency when I try the migration?
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] Issues with > 2TB PV with old GPT;
+ how to build a partition around it
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -24,29 +34,90 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="utf-8"; delsp="Yes"; format="flowed"
+Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@redhat.com
 
-Hello, I installed a physical machine with Red Hat 5.1 without CLVM,  
-with Xen 3.1 and I need to know whether it is possible to hot migrate  
-virtual machines. I successfully tested it, but it never made  
-production.
-If I care with the creation of LV, could I have problems of data  
-consistency when I try the migration?
-thanks.
-Roldyx
+Platform: RHEL4 2.6.9-55.0.9.ELsmp x86_64.
 
+In part, this is a redirect (not cross-post) from https://www.redhat.com/archives/nahant-list/2007-October/msg00020.html
 
-------------------------------------------------------------------
+I have a single-PV VG on a 2.7TB LUN on an Apple Xserve RAID, multipath fibre channel-attached.
 
-ESTE MENSAJE ES CONFIDENCIAL. Puede contener informaci�n amparada por  
-el secreto profesional. Si usted ha recibido este e-mail por error,  
-por favor comun�quenoslo inmediatamente v�a e-mail y tenga la  
-amabilidad de eliminarlo de su sistema; no deber� copiar el mensaje ni  
-divulgar su contenido a ninguna persona. Muchas gracias.
+The 2.7TB LUN regularly "disappears," I think whenever multipath does anything (including regular multipathd checks). Currently a filesystem on that LUN is mounted RW and shows up in dmsetup, but not in lvscan. The relevant /etc/lvm/backup/ file has this fascinating tidbit:
 
-THIS MESSAGE IS CONFIDENTIAL. It may also contain information that is  
-privileged or otherwise legally exempt from disclosure. If you have  
-received it by mistake please let us know by e-mail immediately and  
-delete it from your system; should also not copy the message nor  
-disclose its contents to anyone. Many thanks.
+                        dev_size = 1565605888   # 746.539 Gigabytes
+                        pe_start = 384
+                        pe_count = 715401       # 2.72904 Terabytes
+
+The physical extents are larger than the device? Looks like it wrapped at 2TB. Why did it let me do that? I knew that I couldn't create a > 2TB partition with fdisk, but I didn't understand that on a 64-bit OS, I couldn't point LVM2 at a > 2TB raw disk. (Is that in fact the problem?)
+
+More ugly history: The LUN had been used by a Windows machine, with a GUID partition table. I overwrote the first several blocks with zeroes and created a single-PV VG taking up the whole 2.7TB, then pointed pvcreate at the parent devive-mapper path for the disk (not the partitions). Unfortunately, I did not blow away the backup GPT, so those partitions popped up again upon reboot. Oops. But that history is probably beside the point.
+
+I would like to resolve this without recreating the filesystem, which has a large amount of data on it. The filesystem works just fine (doesn't it?), as long as I don't reboot. :-|
+
+The start of the filesystem is easy to find, and it is exactly 2TB long (I created the LV with padding), so there should be no problem:
+
+[root@mail2 ~]# dd if=/dev/sdd bs=512 count=1 skip=384 count=3 of=/tmp/fs
+3+0 records in
+3+0 records out
+[root@mail2 ~]# file /tmp/fs
+/tmp/fs: Linux rev 1.0 ext3 filesystem data (needs journal recovery) (large file
+s)
+
+So, [how] can I create a partition with parted that happens to land at the right blocks? Can I safely reduce the "pe_start" parameter of the LVM by the partition overhead, which appears to be 34 blocks, then pvcreate --restorefile the modified config?
+
+# Generated by LVM2: Thu Jul 19 23:23:35 2007
+
+contents = "Text Format Volume Group"
+version = 1
+
+description = "Created *after* executing 'lvcreate -L2T -n lvZimbraBackup1 vgZimOffsite'"
+
+creation_host = "mail2.its.carleton.edu"        # Linux mail2.its.carleton.edu 2.6.9-55.0.2.ELsmp #1 SMP Tue Jun 12 17:58:20 EDT 2007 x86_64 creation_time = 1184905415      # Thu Jul 19 23:23:35 2007
+
+vgZimOffsite {
+        id = "vqX3RX-7JVH-UVCE-4Zfh-xa6F-hak8-gih0v8"
+        seqno = 2
+        status = ["RESIZEABLE", "READ", "WRITE"]
+        extent_size = 8192              # 4 Megabytes
+        max_lv = 0
+        max_pv = 0
+
+        physical_volumes {
+
+                pv0 {
+                        id = "9yEHDP-hVi2-W72J-wWAP-loRk-6Do5-5SQwe0"
+                        device = "/dev/dm-4"    # Hint only
+
+                        status = ["ALLOCATABLE"]
+                        dev_size = 1565605888   # 746.539 Gigabytes
+                        pe_start = 384
+                        pe_count = 715401       # 2.72904 Terabytes
+                }
+        }
+
+        logical_volumes {
+
+                lvZimbraBackup1 {
+                        id = "GCeeRm-oKFZ-Rqz9-vM0w-zegj-PljH-bAv9qm"
+                        status = ["READ", "WRITE", "VISIBLE"]
+                        segment_count = 1
+
+                        segment1 {
+                                start_extent = 0
+                                extent_count = 524288   # 2 Terabytes
+
+                                type = "striped"
+                                stripe_count = 1        # linear
+
+                                stripes = [
+                                        "pv0", 0
+                                ]
+                        }
+                }
+        }
+}
+-- 
+Rich Graves http://claimid.com/rcgraves
+Carleton.edu Sr UNIX and Security Admin
+CMC135: 507-646-7079 Cell: 952-292-6529
