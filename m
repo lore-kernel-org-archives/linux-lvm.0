@@ -1,28 +1,26 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l9GNQuXT028739
-	for <linux-lvm@redhat.com>; Tue, 16 Oct 2007 19:26:56 -0400
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l9GNUDVq029905
+	for <linux-lvm@redhat.com>; Tue, 16 Oct 2007 19:30:13 -0400
 Received: from ciao.gmane.org (main.gmane.org [80.91.229.2])
-	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id l9GNQnMF020475
-	for <linux-lvm@redhat.com>; Tue, 16 Oct 2007 19:26:50 -0400
-Received: from list by ciao.gmane.org with local (Exim 4.43)
-	id 1Ihvo9-0005vN-TW
-	for linux-lvm@redhat.com; Tue, 16 Oct 2007 23:26:41 +0000
+	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id l9GNU6f2022601
+	for <linux-lvm@redhat.com>; Tue, 16 Oct 2007 19:30:06 -0400
+Received: from root by ciao.gmane.org with local (Exim 4.43)
+	id 1IhvrO-0006KI-C3
+	for linux-lvm@redhat.com; Tue, 16 Oct 2007 23:30:02 +0000
 Received: from brian.lafayette.switchmanagement.com ([198.144.213.21])
 	by main.gmane.org with esmtp (Gmexim 0.1 (Debian))
 	id 1AlnuQ-0007hv-00
-	for <linux-lvm@redhat.com>; Tue, 16 Oct 2007 23:26:41 +0000
+	for <linux-lvm@redhat.com>; Tue, 16 Oct 2007 23:30:02 +0000
 Received: from bstrand by brian.lafayette.switchmanagement.com with local
 	(Gmexim 0.1 (Debian)) id 1AlnuQ-0007hv-00
-	for <linux-lvm@redhat.com>; Tue, 16 Oct 2007 23:26:41 +0000
+	for <linux-lvm@redhat.com>; Tue, 16 Oct 2007 23:30:02 +0000
 From: Brian Strand <bstrand@switchmanagement.com>
-Date: Tue, 16 Oct 2007 23:26:33 +0000
-Message-ID: <ff3hb9$7rt$1@ger.gmane.org>
-References: <471351AD.4070406@ianburnett.com>
+Date: Tue, 16 Oct 2007 23:27:42 +0000
+Message-ID: <ff3hde$7rt$2@ger.gmane.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 7bit
-In-Reply-To: <471351AD.4070406@ianburnett.com>
 Sender: news <news@ger.gmane.org>
-Subject: [linux-lvm] Re: LVM on an external USB device - why not?
+Subject: [linux-lvm] pvmove obliterates filesystem (Opensuse 10.2, x86-64)
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -36,43 +34,137 @@ List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@redhat.com
 
-Ian Burnett wrote:
-> My current system configuration is a 250GB internal IDE HDD, managed
-> using LVM2 under Fedora Core 6. What I would like to do is to put this
-> disk into an external USB enclosure to reduce heat generation inside the
-> PC. Another reason is to allow the addition of extra disks very easily
-> (current case only has room for 1x 3.5" HDD).
-> 
-> Once the USB drive is connected, I will be performing the initial boot
-> stages off a small (2GB) solid-state CF disk, so I don't necessarily
-> need the full "boot from USB" capabilities.
-> 
-> I can't see any problems in doing so myself. I realise that if
-> additional usb-storage devices are added, then the raw device may change
-> from /dev/sda to /dev/sdb, but with LVM using PV UUIDs to locate
-> devices, won't that be irrelevant?
-> 
-> Are there any caveats to doing this? I haven't seen anything
-> particularly relevant on the archives of this mailing list, and I've
-> Googled around the subject. I did discover a couple of boot-from-USB
-> walkthroughs scattered around the web which unhelpfully said "don't do
-> it" without giving any particular reasons. That was from some old posts
-> (c. 2005), without any citations, and didn't mention LVM2 so could have
-> been based on LVM1.
-> 
-> All advice welcomed.
-> 
-> Ian.
-> 
+(Apologies in advance if this is the wrong place for this.)  Yesterday I
+ran a pvmove of a mounted filesystem, but something went wrong and the
+filesystem was very badly damaged.  The box is a 2x quad-core box with
+16gb running Opensuse 10.2 x86-64; it is under heavy load 24x7 (typical
+ load average 15-20).  The storage is connected to a san via a QLogic
+2462 dual-port FC HBA, using qla2400 (no dm-multipath).  Note:  I had
+just completed a successful pvmove of another lv about 30 minutes prior
+to this incident.
 
-(Apologies in advance if this shows up on the list twice.)
 
-While not often usually from USB, I've used LVM2 on USB devices with no
-problems (in fact I rarely use them without LVM due to the improved
-manageability, as you hinted at).  I'd recommend having all the
-necessary USB goo (er, kernel modules) in your initrd regardless of
-whether you are actually booting off of the USB device, as LVM doesn't
-like to activate a vg with missing pvs.
+# pvmove --version
+  LVM version:     2.02.13 (2006-10-27)
+  Library version: 1.02.12 (2006-10-13)
+  Driver version:  4.7.0
 
-Best regards,
+# uname -a
+Linux somebox 2.6.18.2-34-default #1 SMP Mon Nov 27 11:46:27 UTC 2006
+x86_64 x86_64 x86_64 GNU/Linux
+
+
+Here is the output from attempting to pvmove a 100gb lv:
+
+# (time pvmove --verbose -n archlogs /dev/sdc @sata) >>
+pvmove-archlogs.log-20071009 2>&1 </dev/null &
+
+# cat pvmove-archlogs.log-20071009
+    Wiping cache of LVM-capable devices
+    Finding volume group "switch"
+    Archiving volume group "switch" metadata (seqno 248).
+    Creating logical volume pvmove0
+    Moving 800 extents of logical volume switch/archlogs
+    Found volume group "switch"
+    Updating volume group metadata
+    Creating volume group backup "/etc/lvm/backup/switch" (seqno 249).
+    Found volume group "switch"
+    Found volume group "switch"
+    Suspending switch-archlogs (253:13)
+    Found volume group "switch"
+    Found volume group "switch"
+    Creating switch-pvmove0
+  device-mapper: create ioctl failed: Device or resource busy
+    Loading switch-archlogs table
+  device-mapper: reload ioctl failed: Invalid argument
+    Checking progress every 15 seconds
+  WARNING: dev_open(/dev/sdc) called while suspended
+  WARNING: dev_open(/dev/sdc) called while suspended
+  WARNING: dev_open(/dev/sdc) called while suspended
+  WARNING: dev_open(/dev/sda2) called while suspended
+  WARNING: dev_open(/dev/sdb) called while suspended
+  WARNING: dev_open(/dev/sdc) called while suspended
+  WARNING: dev_open(/dev/sda2) called while suspended
+  WARNING: dev_open(/dev/sdb) called while suspended
+  WARNING: dev_open(/dev/sda2) called while suspended
+  WARNING: dev_open(/dev/sdb) called while suspended
+  WARNING: dev_open(/dev/sdc) called while suspended
+  WARNING: dev_open(/dev/sdb) called while suspended
+  WARNING: dev_open(/dev/sda2) called while suspended
+  WARNING: dev_open(/dev/sdc) called while suspended
+  WARNING: dev_open(/dev/sdc) called while suspended
+  WARNING: dev_open(/dev/sda2) called while suspended
+  WARNING: dev_open(/dev/sdb) called while suspended
+    Updating volume group metadata
+    Creating volume group backup "/etc/lvm/backup/switch" (seqno 250).
+    Found volume group "switch"
+    Found volume group "switch"
+    Found volume group "switch"
+    Found volume group "switch"
+    Suspending switch-pvmove0 (253:14)
+    Found volume group "switch"
+    Creating switch-pvmove0
+  device-mapper: create ioctl failed: Device or resource busy
+  Unable to reactivate logical volume "pvmove0"
+    Found volume group "switch"
+    Creating switch-pvmove0
+  device-mapper: create ioctl failed: Device or resource busy
+    Loading switch-archlogs table
+  device-mapper: reload ioctl failed: Invalid argument
+  ABORTING: Segment progression failed.
+    Found volume group "switch"
+    Found volume group "switch"
+    Found volume group "switch"
+    Found volume group "switch"
+    Found volume group "switch"
+    Creating switch-pvmove0
+  device-mapper: create ioctl failed: Device or resource busy
+  Unable to reactivate logical volume "pvmove0"
+    Found volume group "switch"
+    Loading switch-archlogs table
+    Resuming switch-archlogs (253:13)
+    Found volume group "switch"
+    Removing switch-pvmove0 (253:14)
+    Found volume group "switch"
+    Removing temporary pvmove LV
+    Writing out final volume group after pvmove
+    Creating volume group backup "/etc/lvm/backup/switch" (seqno 252).
+  /dev/sdc: Moved: 60.0%
+
+real    0m21.789s
+user    0m0.108s
+sys     0m0.052s
+
+
+Kernel messages from /var/log/messages:
+
+Oct  9 22:33:21 somebox kernel: device-mapper: table: 253:13: linear:
+dm-linear: Device lookup failed
+Oct  9 22:33:21 somebox kernel: device-mapper: ioctl: error adding
+target to table
+Oct  9 22:33:21 somebox kernel: klogd 1.4.1, ---------- state change
+----------
+Oct  9 22:33:36 somebox kernel: device-mapper: table: 253:13: linear:
+dm-linear: Device lookup failed
+Oct  9 22:33:36 somebox kernel: device-mapper: ioctl: error adding
+target to table
+Oct  9 22:40:01 somebox kernel: ReiserFS: dm-13: warning: vs-4080:
+reiserfs_free_block: free_block (dm-13:13061735)[dev:blocknr]: bit
+already cleared
+Oct  9 22:40:01 somebox kernel: ReiserFS: dm-13: warning: vs-4080:
+reiserfs_free_block: free_block (dm-13:13061734)[dev:blocknr]: bit
+already cleared
+
+...and many thousands more complaints from reiserfs.  Given the error
+messages (especially "/dev/sdc: Moved: 60.0%") and the speed with which
+the destruction occurred, my working hypothesis is that the first 60% of
+the lv got repointed to the destination pv, but that the data got left
+behind.
+
+Are there any known issues with pvmove?  Is pvmove a supported
+operation?  I had many pvmove-induced kernel oopses under Suse 9.3, but
+up until this instance it had worked fine under Opensuse 10.2 for at
+least 10 pvmoves on various boxes, all under load.
+
+Thanks,
 Brian
