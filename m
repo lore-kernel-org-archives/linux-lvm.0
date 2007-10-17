@@ -1,11 +1,27 @@
-Date: Wed, 17 Oct 2007 02:28:58 +0100
-From: Alasdair G Kergon <agk@redhat.com>
-Subject: Re: [linux-lvm] pvmove obliterates filesystem (Opensuse 10.2, x86-64)
-Message-ID: <20071017012858.GW10006@agk.fab.redhat.com>
-References: <ff3hde$7rt$2@ger.gmane.org>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <ff3hde$7rt$2@ger.gmane.org>
+Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l9H6D4XE025420
+	for <linux-lvm@redhat.com>; Wed, 17 Oct 2007 02:13:04 -0400
+Received: from postman.formosahost.com (postman.formosahost.com [203.190.4.19])
+	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id l9H6Cvq4010898
+	for <linux-lvm@redhat.com>; Wed, 17 Oct 2007 02:12:57 -0400
+Received: from localhost (localhost [127.0.0.1])
+	by postman.formosahost.com (Postfix) with ESMTP id CC7148A28D
+	for <linux-lvm@redhat.com>; Wed, 17 Oct 2007 14:09:41 +0800 (CST)
+Received: from postman.formosahost.com ([127.0.0.1])
+	by localhost (postman.formosahost.com [127.0.0.1]) (amavisd-new,
+	port 10024) with LMTP id jJFUbIHdU76t for <linux-lvm@redhat.com>;
+	Wed, 17 Oct 2007 14:09:27 +0800 (CST)
+Received: from [192.168.0.98] (unknown [203.190.4.13])
+	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by postman.formosahost.com (Postfix) with ESMTP id 4BBBB8A25D
+	for <linux-lvm@redhat.com>; Wed, 17 Oct 2007 14:09:27 +0800 (CST)
+Message-ID: <4715A86F.40504@ezpear.com>
+Date: Wed, 17 Oct 2007 14:15:11 +0800
+From: Hans <hans@ezpear.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] stupid question about lvm/lvm2/clvm
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -16,52 +32,17 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: Brian Strand <bstrand@switchmanagement.com>
-Cc: linux-lvm@redhat.com
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+To: linux-lvm@redhat.com
 
-On Tue, Oct 16, 2007 at 11:27:42PM +0000, Brian Strand wrote:
-> 2462 dual-port FC HBA, using qla2400 (no dm-multipath).  Note:  I had
-> just completed a successful pvmove of another lv about 30 minutes prior
-> to this incident.
- 
->   LVM version:     2.02.13 (2006-10-27)
->   Library version: 1.02.12 (2006-10-13)
->   Driver version:  4.7.0
-> Linux somebox 2.6.18.2-34-default #1 SMP Mon Nov 27 11:46:27 UTC 2006
-> x86_64 x86_64 x86_64 GNU/Linux
- 
-(need to check those versions are all compatible and kernel isn't missing
-relevant patches)
+Hi!
+I want build cluster. I couldn't decide about which system use OCFS2 or 
+GFS2.
+I was looking for some information about clvm.
+On redhat website I found some tarball with clvm toolset but called lvm2...
+Does it mean that clvm=lvm2? Or clvm is special extension to lvm2, not 
+identical with lvm2.
+I use openfiler (installed lvm2-2.02.14). Does it include clvm ext.?
 
->     Creating switch-pvmove0
->   device-mapper: create ioctl failed: Device or resource busy
-
-That should *not* happen.
-Are you sure the preceding pvmove completed correctly?
-Is some version of udev enabled on dm devices that might be interfering?
-
->   device-mapper: reload ioctl failed: Invalid argument
-
->     Creating volume group backup "/etc/lvm/backup/switch" (seqno 250).
-
-Need to check through the sequence of backups to see all the metadata
-changes it actually made (probably need the ones in the on-disk metadata
-area rather than just the /etc/lvm/backup ones).
-
->   ABORTING: Segment progression failed.
-
->   /dev/sdc: Moved: 60.0%
-
-Message could be incorrect, need to check.
-
-> Oct  9 22:33:21 somebox kernel: device-mapper: table: 253:13: linear:
-> dm-linear: Device lookup failed
-
-So it couldn't use that device (a common cause is a size error when wrong
-device is used e.g. with software raid or partially-cloned devices).
-
-Alasdair
--- 
-agk@redhat.com
+Regards,
+Hans
