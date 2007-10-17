@@ -1,16 +1,21 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l9HFrM0k027321
-	for <linux-lvm@redhat.com>; Wed, 17 Oct 2007 11:53:22 -0400
-Received: from victor.provo.novell.com (victor.provo.novell.com
-	[137.65.250.26])
-	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id l9HFrF3V010579
-	for <linux-lvm@redhat.com>; Wed, 17 Oct 2007 11:53:16 -0400
-From: "Peter W. Morreale" <pmorreale@novell.com>
-Date: Wed, 17 Oct 2007 09:50:22 -0600
-Message-Id: <1192636222.4275.97.camel@hermosa.morrealenet>
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] new LVM2 feature?
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l9HGB2N2007153
+	for <linux-lvm@redhat.com>; Wed, 17 Oct 2007 12:11:02 -0400
+Received: from mail.bmsi.com (www.bmsi.com [24.248.44.156])
+	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id l9HGB1dh026770
+	for <linux-lvm@redhat.com>; Wed, 17 Oct 2007 12:11:01 -0400
+Received: from bmsred.bmsi.com (bmsred.bmsi.com [192.168.9.50])
+	by mail.bmsi.com (8.13.6/8.13.6) with ESMTP id l9HGAp3j006136
+	for <linux-lvm@redhat.com>; Wed, 17 Oct 2007 12:10:56 -0400
+Received: from localhost (localhost [127.0.0.1])
+	by bmsred.bmsi.com (8.13.5/8.13.5) with ESMTP id l9HGAp8G030833
+	for <linux-lvm@redhat.com>; Wed, 17 Oct 2007 12:10:51 -0400
+Date: Wed, 17 Oct 2007 12:10:51 -0400 (EDT)
+From: "Stuart D. Gathman" <stuart@bmsi.com>
+Subject: Re: [linux-lvm] new LVM2 feature?
+In-Reply-To: <1192636222.4275.97.camel@hermosa.morrealenet>
+Message-ID: <Pine.LNX.4.44.0710171210050.30797-100000@bmsred.bmsi.com>
+MIME-Version: 1.0
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -21,51 +26,20 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@redhat.com
+Content-Type: TEXT/PLAIN; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
+On Wed, 17 Oct 2007, Peter W. Morreale wrote:
 
-Hello all,
+> The idea is COW LV stacking below a primary LV.  The intent is to allow
+> a number of 'users' the ability to share a common dataset, and
+> independently save their changes to to a 'private' LV.    
 
-I'm wondering whether there is interest (or development :-) on a new
-feature for LVM2. I did look through the wiki and it doesn't appear that
-this idea is on the roadmap, save for the "Stacking LVs" listed on the
-roadmap page.  However there is no discussion AFAIK about stacking.
+How does this differ from rw snapshots?
 
-The idea is COW LV stacking below a primary LV.  The intent is to allow
-a number of 'users' the ability to share a common dataset, and
-independently save their changes to to a 'private' LV.    
-
-On to the requisite bad ascii drawing:
-
-   lv-1      lv-2      lv-[n]
-     \         |        /
-      \        |       /
-       \       |      /
-         shared ro lv
-        /      |      \
-       /       |       \
-      /        |        \
-     /         |         \
-  cow_lv-1  cow_lv-2    cow_lv3
-
-So, any changed blocks sent to "lv-1" are routed to "cow_lv-1", and
-changed blocks sent to "lv-2" are routed to "cow_lv-2", etc.  The
-simple, but as yet to-be-determined algorithm for reads is: if the block
-'exists' in the cow, return the cow version, else return the shared
-version. 
-
-Changes from independent paths are saved to independent volumes.   From
-there I can decide to destroy the COW LV, or perhaps merge it with the
-shared LV to create a new "shared LV" for creation of a new set.  
-
-Is there any interest in such a feature?  
-
-Has this already been considered and perhaps dropped? 
-
-Is this consistent (and/or possible) with the architecture of LVM2?
-
-What are the source changes I need to make?  That was humor.
-
-Thanks,
--PWM
+-- 
+	      Stuart D. Gathman <stuart@bmsi.com>
+    Business Management Systems Inc.  Phone: 703 591-0911 Fax: 703 591-6154
+"Confutatis maledictis, flammis acribus addictis" - background song for
+a Microsoft sponsored "Where do you want to go from here?" commercial.
