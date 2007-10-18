@@ -1,30 +1,26 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l9HNqcv7022348
-	for <linux-lvm@redhat.com>; Wed, 17 Oct 2007 19:52:38 -0400
-Received: from ciao.gmane.org (main.gmane.org [80.91.229.2])
-	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id l9HNqVG9006040
-	for <linux-lvm@redhat.com>; Wed, 17 Oct 2007 19:52:32 -0400
-Received: from list by ciao.gmane.org with local (Exim 4.43)
-	id 1IiIgg-0001aO-DM
-	for linux-lvm@redhat.com; Wed, 17 Oct 2007 23:52:30 +0000
-Received: from brian.lafayette.switchmanagement.com ([198.144.213.21])
-	by main.gmane.org with esmtp (Gmexim 0.1 (Debian))
-	id 1AlnuQ-0007hv-00
-	for <linux-lvm@redhat.com>; Wed, 17 Oct 2007 23:52:30 +0000
-Received: from bstrand by brian.lafayette.switchmanagement.com with local
-	(Gmexim 0.1 (Debian)) id 1AlnuQ-0007hv-00
-	for <linux-lvm@redhat.com>; Wed, 17 Oct 2007 23:52:30 +0000
-From: Brian Strand <bstrand@switchmanagement.com>
-Date: Wed, 17 Oct 2007 23:52:22 +0000
-Message-ID: <ff677n$a64$1@ger.gmane.org>
-References: <ff3hde$7rt$2@ger.gmane.org>
-	<20071017012858.GW10006@agk.fab.redhat.com>
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
-In-Reply-To: <20071017012858.GW10006@agk.fab.redhat.com>
-Sender: news <news@ger.gmane.org>
-Subject: [linux-lvm] Re: pvmove obliterates filesystem (Opensuse 10.2,
-	x86-64)
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l9I8e0ct013577
+	for <linux-lvm@redhat.com>; Thu, 18 Oct 2007 04:40:00 -0400
+Received: from post.berlin.i-dmedia.com (post.berlin.i-dmedia.com
+	[62.159.214.250])
+	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id l9I8dxjh027899
+	for <linux-lvm@redhat.com>; Thu, 18 Oct 2007 04:39:59 -0400
+Received: from localhost (localhost [127.0.0.1])
+	by post.berlin.i-dmedia.com (Postfix) with ESMTP id 9989B2F1B5
+	for <linux-lvm@redhat.com>; Thu, 18 Oct 2007 10:40:10 +0200 (CEST)
+Received: from post.berlin.i-dmedia.com ([127.0.0.1])
+	by localhost (post.berlin.i-dmedia.com [127.0.0.1]) (amavisd-new,
+	port 10024) with ESMTP id OTdN6RrKh5Fz for <linux-lvm@redhat.com>;
+	Thu, 18 Oct 2007 10:40:09 +0200 (CEST)
+Received: from x1.ads.i-dmedia.com (x1.berlin.i-dmedia.com [10.1.69.45])
+	by post.berlin.i-dmedia.com (Postfix) with ESMTP id 393872F1B4
+	for <linux-lvm@redhat.com>; Thu, 18 Oct 2007 10:40:09 +0200 (CEST)
+Message-ID: <47171BD6.3090709@idmedia.com>
+Date: Thu, 18 Oct 2007 10:39:50 +0200
+From: Falko Zurell <falko.zurell@idmedia.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Subject: [linux-lvm] very slow fw performance when snapshots active
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -35,78 +31,58 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="iso-8859-1"
 To: linux-lvm@redhat.com
 
-Alasdair G Kergon wrote:
-> On Tue, Oct 16, 2007 at 11:27:42PM +0000, Brian Strand wrote:
->> 2462 dual-port FC HBA, using qla2400 (no dm-multipath).  Note:  I had
->> just completed a successful pvmove of another lv about 30 minutes prior
->> to this incident.
->  
->>   LVM version:     2.02.13 (2006-10-27)
->>   Library version: 1.02.12 (2006-10-13)
->>   Driver version:  4.7.0
->> Linux somebox 2.6.18.2-34-default #1 SMP Mon Nov 27 11:46:27 UTC 2006
->> x86_64 x86_64 x86_64 GNU/Linux
->  
-> (need to check those versions are all compatible and kernel isn't missing
-> relevant patches)
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA1
 
-Is this information available somewhere I can check?
+Hi List,
 
+I have an actual CentOS Linux with LVM on hardware RAID1+0.
 
->>     Creating switch-pvmove0
->>   device-mapper: create ioctl failed: Device or resource busy
-> 
-> That should *not* happen.
-> Are you sure the preceding pvmove completed correctly?
+fs layout looks like this:
 
-For the preceding pvmove, the log file showed no errors and there was
-nothing from device-mapper in the logs.  "lvs -o +devices" showed the
-expected result (the lv was now on the desired pv, and was not there
-prior to the pvmove).  Also the successfully pvmoved lv contains some of
-Oracle's system datafiles as well as binaries, so Oracle would have
-imploded rapidly if something went wrong.
+[root@C20-DB1-00 ~]# lvs
+  LV     VG   Attr   LSize   Origin Snap%  Move Log Copy%
+  LVOpt  VG0  -wi-ao 300.00G
+  LVRoot VG0  -wi-ao  43.94G
+  LVSwap VG0  -wi-ao  23.44G
 
+Then I create a snapshot vor VG0/LVOpt with 40 GB size.
 
-> Is some version of udev enabled on dm devices that might be interfering?
+Then I edit a 2 GB text file on /opt (XFS filesystem) with vi (just
+hitting "enter" and save this minor change). This will take minutes to
+finish the vi during saving.
+I see the kcopyd in the process list which fills up the snapshot.
 
-This I don't know; we're just running the stock out-of-the-box udev.
-Any pointers to how I can find this out would be appreciated.
+When the snapshot is off then saving the same file with the same minor
+change will take only seconds.
 
+I understand that snapshots are copy-on-write. But I can't explain why
+this takes minutes for a 2 GB file which has changed only in a few bytes.
 
->>   device-mapper: reload ioctl failed: Invalid argument
-> 
->>     Creating volume group backup "/etc/lvm/backup/switch" (seqno 250).
-> 
-> Need to check through the sequence of backups to see all the metadata
-> changes it actually made (probably need the ones in the on-disk metadata
-> area rather than just the /etc/lvm/backup ones).
+Shouldn't only the changed blocks be copied to the snapshot space? Even
+if only whole PEs are copied then it shouldn't take only seconds to copy
+to the snapshot.
 
-Would dd suffice to get the on-disk metadata area?  If so, what is (are)
-the offset(s) to use?  Is it ok to post these as attachments to the
-list, or is there some other preferred means?
+- From the actual point of view activating snapshots on this database
+machine absolutly kills performance.
 
+Did I something wrong on that?
+- --
 
->>   ABORTING: Segment progression failed.
-> 
->>   /dev/sdc: Moved: 60.0%
-> 
-> Message could be incorrect, need to check.
-> 
->> Oct  9 22:33:21 somebox kernel: device-mapper: table: 253:13: linear:
->> dm-linear: Device lookup failed
-> 
-> So it couldn't use that device (a common cause is a size error when wrong
-> device is used e.g. with software raid or partially-cloned devices).
-> 
-> Alasdair
+Falko Zurell
+Skype: zero_data
+/i-d media AG
+Ohlauer Stra=EF=BF=BDe 43
+D-10999 Berlin
 
-If it helps any, 253:13 is the major:minor of the lv which got destroyed
-during the pvmove.  It is still present in /dev/mapper, as I left the lv
-alone (after fsck).  Please let me know if I should attach (or otherwise
-send) any files.
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.7 (Darwin)
+Comment: Using GnuPG with Mozilla - http://enigmail.mozdev.org
 
-Thanks,
-Brian
+iD8DBQFHFxvWsdVNK8p2VTARArgkAJ9KK9hpQBH6gxhzMQiYdZMH87Q0GwCgwOSy
+w9tcXzNveVWCnTfB4EO5bKU=3D
+=3Du+DI
+-----END PGP SIGNATURE-----
