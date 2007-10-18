@@ -1,28 +1,17 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l9IE1jE6003675
-	for <linux-lvm@redhat.com>; Thu, 18 Oct 2007 10:01:46 -0400
-Received: from post.berlin.i-dmedia.com (post.berlin.i-dmedia.com
-	[62.159.214.250])
-	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id l9IE1dbQ013285
-	for <linux-lvm@redhat.com>; Thu, 18 Oct 2007 10:01:41 -0400
-Received: from localhost (localhost [127.0.0.1])
-	by post.berlin.i-dmedia.com (Postfix) with ESMTP id A0AFE2F371
-	for <linux-lvm@redhat.com>; Thu, 18 Oct 2007 16:01:48 +0200 (CEST)
-Received: from post.berlin.i-dmedia.com ([127.0.0.1])
-	by localhost (post.berlin.i-dmedia.com [127.0.0.1]) (amavisd-new,
-	port 10024) with ESMTP id pKKBMIlP05TM for <linux-lvm@redhat.com>;
-	Thu, 18 Oct 2007 16:01:46 +0200 (CEST)
-Received: from x1.ads.i-dmedia.com (x1.berlin.i-dmedia.com [10.1.69.45])
-	by post.berlin.i-dmedia.com (Postfix) with ESMTP id BB40D2F36B
-	for <linux-lvm@redhat.com>; Thu, 18 Oct 2007 16:01:46 +0200 (CEST)
-Content-class: urn:content-classes:message
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l9IFIvjg019115
+	for <linux-lvm@redhat.com>; Thu, 18 Oct 2007 11:18:57 -0400
+Received: from mail.reagi.com (mail.reagi.com [195.60.188.80])
+	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id l9IFIosD026935
+	for <linux-lvm@redhat.com>; Thu, 18 Oct 2007 11:18:50 -0400
+Message-ID: <47177953.4020008@oxeva.fr>
+Date: Thu, 18 Oct 2007 17:18:43 +0200
+From: Gabriel Barazer <gabriel@oxeva.fr>
 MIME-Version: 1.0
-Content-Type: multipart/alternative;
-	boundary="----_=_NextPart_001_01C8118F.6821E122"
-Subject: AW: Re: [linux-lvm] very slow fw performance when snapshots active
-Date: Thu, 18 Oct 2007 16:01:40 +0200
-Message-ID: <1A2D7011B6705B449F66B36B232097C07A7597@x1.ads.i-dmedia.com>
-From: "Zurell, Falko" <Falko.Zurell@idmedia.com>
+Subject: Re: AW: Re: [linux-lvm] very slow fw performance when snapshots active
+References: <1A2D7011B6705B449F66B36B232097C07A7597@x1.ads.i-dmedia.com>
+In-Reply-To: <1A2D7011B6705B449F66B36B232097C07A7597@x1.ads.i-dmedia.com>
+Content-Transfer-Encoding: 7bit
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -33,117 +22,25 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: linux-lvm@redhat.com
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-This is a multi-part message in MIME format.
+On 10/18/2007 4:01:40 PM +0200, "Zurell, Falko" 
+<Falko.Zurell@idmedia.com> wrote:
+> Ok, i understand the point with the swap file of vi. But why is this 
+> with snapshots activated that much slower than without?
+> Why can the file be saved in seconds without cow instead of about 2 
+> minutes with cow. Needing twice the time for saving would be reasonable.
 
-------_=_NextPart_001_01C8118F.6821E122
-Content-Type: text/plain;
-	charset="UTF-8"
-Content-Transfer-Encoding: base64
+I think this is because the re-writing operation on a standard block 
+device is done using a comparison between the data to write, and the 
+data already written (which is nearly all the time read from the OS file 
+cache in your test case, instead of the block device itself, because the 
+file written was entirely read just before) whereas the LVM snapshot 
+target redirect any write to the COW space without this comparison step. 
+Maybe there is a possible optimization of the snapshot dm target which 
+could compare block before deciding to write them on the COW space. 
+Obvisouly, such optimization process add a slight overhead an can 
+possibly have a negative impact on the performance.
 
-T2ssIGkgdW5kZXJzdGFuZCB0aGUgcG9pbnQgd2l0aCB0aGUgc3dhcCBmaWxlIG9mIHZpLiBCdXQg
-d2h5IGlzIHRoaXMgd2l0aCBzbmFwc2hvdHMgYWN0aXZhdGVkIHRoYXQgbXVjaCBzbG93ZXIgdGhh
-biB3aXRob3V0PyANCldoeSBjYW4gdGhlIGZpbGUgYmUgc2F2ZWQgaW4gc2Vjb25kcyB3aXRob3V0
-IGNvdyBpbnN0ZWFkIG9mIGFib3V0IDIgbWludXRlcyB3aXRoIGNvdy4gTmVlZGluZyB0d2ljZSB0
-aGUgdGltZSBmb3Igc2F2aW5nIHdvdWxkIGJlIHJlYXNvbmFibGUuDQoNCkVkaXRpbmcgd2l0aCB2
-aSB3YXMganVzdCBhIHBlcmZvcm1hbmNlIHRlc3QgOy0pDQoNClRoYW5rcyBhbmQga2luZCByZWdh
-cmRzDQoNCg0KRmFsa28gWnVyZWxsDQoNCkhlYWQgb2YgQXBwbGljYXRpb24gTWFuYWdlbWVudA0K
-ZmFsa28uenVyZWxsQGlkbWVkaWEuY29tDQpNb2JpbCArNDkgKDApMTYwIC0gMyA2MiA1MiA3Nw0K
-DQovaS1kIG1lZGlhIEFHDQpPaGxhdWVyIFN0cmHDn2UgNDMNCkQtMTA5OTkgQmVybGluDQoNClRl
-bCArNDkgKDApMzAgLSAyIDU5IDQ3IC0gMzU3DQpGYXggKzQ5ICgwKTMwIC0gMiA1OSA0NyAtIDQ3
-MQ0Kd3d3LmlkbWVkaWEuY29tDQoNCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fDQoNCkJvYXJkOiBSZWdpbmUgSGFzY2hrYS1IZWxtZXIgKENFTyksIEZyYW56
-IEtsb3NlIChDRk8pDQpDaGFpcm1hbiBvZiB0aGUgU3VwZXJ2aXNvcnkgQm9hcmQ6IENocmlzdGlh
-biBBLiBIdWZuYWdsDQpIZWFkcXVhcnRlcnM6IEJlcmxpbiwgUGxhY2Ugb2YgSnVyaXNkaWN0aW9u
-OiBCZXJsaW4gSFJCIDc2MzQyDQpVU1QtSWQuIERFODEyNjk4MzQwDQpfX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXw0KDQoNCi0tLS0tIE9yaWdpbmFsbmFjaHJp
-Y2h0IC0tLS0tDQpWb246IGxpbnV4LWx2bS1ib3VuY2VzQHJlZGhhdC5jb20gPGxpbnV4LWx2bS1i
-b3VuY2VzQHJlZGhhdC5jb20+DQpBbjogTFZNIGdlbmVyYWwgZGlzY3Vzc2lvbiBhbmQgZGV2ZWxv
-cG1lbnQgPGxpbnV4LWx2bUByZWRoYXQuY29tPg0KR2VzZW5kZXQ6IFRodSBPY3QgMTggMTU6NTI6
-MzYgMjAwNw0KQmV0cmVmZjogUmU6IFtsaW51eC1sdm1dIHZlcnkgc2xvdyBmdyBwZXJmb3JtYW5j
-ZSB3aGVuIHNuYXBzaG90cyBhY3RpdmUNCg0KSGksDQoNCk9uIDEwLzE4LzIwMDcgMTA6Mzk6NTAg
-QU0gKzAyMDAsIEZhbGtvIFp1cmVsbCA8ZmFsa28uenVyZWxsQGlkbWVkaWEuY29tPiANCndyb3Rl
-Og0KPiANCj4gVGhlbiBJIGVkaXQgYSAyIEdCIHRleHQgZmlsZSBvbiAvb3B0IChYRlMgZmlsZXN5
-c3RlbSkgd2l0aCB2aSAoanVzdA0KPiBoaXR0aW5nICJlbnRlciIgYW5kIHNhdmUgdGhpcyBtaW5v
-ciBjaGFuZ2UpLiBUaGlzIHdpbGwgdGFrZSBtaW51dGVzIHRvDQo+IGZpbmlzaCB0aGUgdmkgZHVy
-aW5nIHNhdmluZy4NCg0KVGhpcyBwcm9ibGVtIGlzIG5vdCBsdm0tcmVsYXRlZDogd2hlbiBvcGVu
-aW5nIGEgZmlsZSB3aXRoIHZpbSwgaXQgcmVhZHMgDQp0aGUgZW50aXJlIGZpbGUgaW50byBtZW1v
-cnkgKGV2ZW4gaWYgdGhlIGZpbGUgaXMgMkdCKSwgbWFya3MgdGhlIGNoYW5nZXMgDQppbnRvIGEg
-LnN3cCBmaWxlLiBXaGVuIHNhdmluZywgdmltIHJld3JpdGVzIHRoZSBlbnRpcmUgZmlsZSBpbiBw
-bGFjZSwgDQplZmZlY3RpdmVseSBjaGFuZ2luZyAyR0Igb2YgY29weSBvbiB3cml0ZSBibG9ja3Mu
-IFRoaXMgaGFwcGVucyBldmVyeSANCnRpbWUsIHdpdGggb3Igd2l0aG91dCBzbmFwc2hvdCwgdGhl
-IGxhdHRlciBiZWluZyB3b3JzZSBiZWNhdXNlIG9mIHRoZSANCmNvdyBvdmVyaGVhZC4NCg0KZm9y
-IHJlYWRpbmctb25seSB2ZXJ5IGxhcmdlIGZpbGVzLCAibGVzcyIgb3IgIm1vcmUiIHJlYWQgZmls
-ZXMgb24tZGVtYW5kIA0Kd2hpY2ggaXMgYSBmYXIgbW9yZSBlZmZlY2llbnQgd2F5Lg0KDQpmb3Ig
-d3JpdGluZywgSSBkb24ndCBrbm93IGFueSBtZXRob2QgYWxsb3dpbmcgdG8gc2FmZWx5IHdyaXRl
-IGEgc21hbGwgDQpjaGFuZ2UgaW50byBhIGxhcmdlIGZpbGUsIGV4Y2VwdCB1c2luZyBhd2sgb3Ig
-cGVybCBwYXJzaW5nICh3aGljaCByZWFkcyANCnRoZSBlbnRpcmUgc3RyZWFtZWQgZmlsZSBhbnl3
-YXkpDQoNCkdhYnJpZWwNCg0KX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX18NCmxpbnV4LWx2bSBtYWlsaW5nIGxpc3QNCmxpbnV4LWx2bUByZWRoYXQuY29tDQpo
-dHRwczovL3d3dy5yZWRoYXQuY29tL21haWxtYW4vbGlzdGluZm8vbGludXgtbHZtDQpyZWFkIHRo
-ZSBMVk0gSE9XLVRPIGF0IGh0dHA6Ly90bGRwLm9yZy9IT1dUTy9MVk0tSE9XVE8vDQo=
-
-------_=_NextPart_001_01C8118F.6821E122
-Content-Type: text/html;
-	charset="UTF-8"
-Content-Transfer-Encoding: base64
-
-PCFET0NUWVBFIEhUTUwgUFVCTElDICItLy9XM0MvL0RURCBIVE1MIDMuMi8vRU4iPg0KPEhUTUw+
-DQo8SEVBRD4NCjxNRVRBIEhUVFAtRVFVSVY9IkNvbnRlbnQtVHlwZSIgQ09OVEVOVD0idGV4dC9o
-dG1sOyBjaGFyc2V0PXV0Zi04Ij4NCjxNRVRBIE5BTUU9IkdlbmVyYXRvciIgQ09OVEVOVD0iTVMg
-RXhjaGFuZ2UgU2VydmVyIHZlcnNpb24gNi41Ljc2NTIuMjQiPg0KPFRJVExFPkFXOiBSZTogW2xp
-bnV4LWx2bV0gdmVyeSBzbG93IGZ3IHBlcmZvcm1hbmNlIHdoZW4gc25hcHNob3RzIGFjdGl2ZTwv
-VElUTEU+DQo8L0hFQUQ+DQo8Qk9EWT4NCjwhLS0gQ29udmVydGVkIGZyb20gdGV4dC9wbGFpbiBm
-b3JtYXQgLS0+DQoNCjxQPjxGT05UIFNJWkU9Mj5PaywgaSB1bmRlcnN0YW5kIHRoZSBwb2ludCB3
-aXRoIHRoZSBzd2FwIGZpbGUgb2YgdmkuIEJ1dCB3aHkgaXMgdGhpcyB3aXRoIHNuYXBzaG90cyBh
-Y3RpdmF0ZWQgdGhhdCBtdWNoIHNsb3dlciB0aGFuIHdpdGhvdXQ/PEJSPg0KV2h5IGNhbiB0aGUg
-ZmlsZSBiZSBzYXZlZCBpbiBzZWNvbmRzIHdpdGhvdXQgY293IGluc3RlYWQgb2YgYWJvdXQgMiBt
-aW51dGVzIHdpdGggY293LiBOZWVkaW5nIHR3aWNlIHRoZSB0aW1lIGZvciBzYXZpbmcgd291bGQg
-YmUgcmVhc29uYWJsZS48QlI+DQo8QlI+DQpFZGl0aW5nIHdpdGggdmkgd2FzIGp1c3QgYSBwZXJm
-b3JtYW5jZSB0ZXN0IDstKTxCUj4NCjxCUj4NClRoYW5rcyBhbmQga2luZCByZWdhcmRzPEJSPg0K
-PEJSPg0KPEJSPg0KRmFsa28gWnVyZWxsPEJSPg0KPEJSPg0KSGVhZCBvZiBBcHBsaWNhdGlvbiBN
-YW5hZ2VtZW50PEJSPg0KZmFsa28uenVyZWxsQGlkbWVkaWEuY29tPEJSPg0KTW9iaWwgKzQ5ICgw
-KTE2MCAtIDMgNjIgNTIgNzc8QlI+DQo8QlI+DQovaS1kIG1lZGlhIEFHPEJSPg0KT2hsYXVlciBT
-dHJhw59lIDQzPEJSPg0KRC0xMDk5OSBCZXJsaW48QlI+DQo8QlI+DQpUZWwgKzQ5ICgwKTMwIC0g
-MiA1OSA0NyAtIDM1NzxCUj4NCkZheCArNDkgKDApMzAgLSAyIDU5IDQ3IC0gNDcxPEJSPg0Kd3d3
-LmlkbWVkaWEuY29tPEJSPg0KPEJSPg0KX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX188QlI+DQo8QlI+DQpCb2FyZDogUmVnaW5lIEhhc2Noa2EtSGVsbWVyIChD
-RU8pLCBGcmFueiBLbG9zZSAoQ0ZPKTxCUj4NCkNoYWlybWFuIG9mIHRoZSBTdXBlcnZpc29yeSBC
-b2FyZDogQ2hyaXN0aWFuIEEuIEh1Zm5hZ2w8QlI+DQpIZWFkcXVhcnRlcnM6IEJlcmxpbiwgUGxh
-Y2Ugb2YgSnVyaXNkaWN0aW9uOiBCZXJsaW4gSFJCIDc2MzQyPEJSPg0KVVNULUlkLiBERTgxMjY5
-ODM0MDxCUj4NCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-PEJSPg0KPEJSPg0KPEJSPg0KLS0tLS0gT3JpZ2luYWxuYWNocmljaHQgLS0tLS08QlI+DQpWb246
-IGxpbnV4LWx2bS1ib3VuY2VzQHJlZGhhdC5jb20gJmx0O2xpbnV4LWx2bS1ib3VuY2VzQHJlZGhh
-dC5jb20mZ3Q7PEJSPg0KQW46IExWTSBnZW5lcmFsIGRpc2N1c3Npb24gYW5kIGRldmVsb3BtZW50
-ICZsdDtsaW51eC1sdm1AcmVkaGF0LmNvbSZndDs8QlI+DQpHZXNlbmRldDogVGh1IE9jdCAxOCAx
-NTo1MjozNiAyMDA3PEJSPg0KQmV0cmVmZjogUmU6IFtsaW51eC1sdm1dIHZlcnkgc2xvdyBmdyBw
-ZXJmb3JtYW5jZSB3aGVuIHNuYXBzaG90cyBhY3RpdmU8QlI+DQo8QlI+DQpIaSw8QlI+DQo8QlI+
-DQpPbiAxMC8xOC8yMDA3IDEwOjM5OjUwIEFNICswMjAwLCBGYWxrbyBadXJlbGwgJmx0O2ZhbGtv
-Lnp1cmVsbEBpZG1lZGlhLmNvbSZndDs8QlI+DQp3cm90ZTo8QlI+DQomZ3Q7PEJSPg0KJmd0OyBU
-aGVuIEkgZWRpdCBhIDIgR0IgdGV4dCBmaWxlIG9uIC9vcHQgKFhGUyBmaWxlc3lzdGVtKSB3aXRo
-IHZpIChqdXN0PEJSPg0KJmd0OyBoaXR0aW5nICZxdW90O2VudGVyJnF1b3Q7IGFuZCBzYXZlIHRo
-aXMgbWlub3IgY2hhbmdlKS4gVGhpcyB3aWxsIHRha2UgbWludXRlcyB0bzxCUj4NCiZndDsgZmlu
-aXNoIHRoZSB2aSBkdXJpbmcgc2F2aW5nLjxCUj4NCjxCUj4NClRoaXMgcHJvYmxlbSBpcyBub3Qg
-bHZtLXJlbGF0ZWQ6IHdoZW4gb3BlbmluZyBhIGZpbGUgd2l0aCB2aW0sIGl0IHJlYWRzPEJSPg0K
-dGhlIGVudGlyZSBmaWxlIGludG8gbWVtb3J5IChldmVuIGlmIHRoZSBmaWxlIGlzIDJHQiksIG1h
-cmtzIHRoZSBjaGFuZ2VzPEJSPg0KaW50byBhIC5zd3AgZmlsZS4gV2hlbiBzYXZpbmcsIHZpbSBy
-ZXdyaXRlcyB0aGUgZW50aXJlIGZpbGUgaW4gcGxhY2UsPEJSPg0KZWZmZWN0aXZlbHkgY2hhbmdp
-bmcgMkdCIG9mIGNvcHkgb24gd3JpdGUgYmxvY2tzLiBUaGlzIGhhcHBlbnMgZXZlcnk8QlI+DQp0
-aW1lLCB3aXRoIG9yIHdpdGhvdXQgc25hcHNob3QsIHRoZSBsYXR0ZXIgYmVpbmcgd29yc2UgYmVj
-YXVzZSBvZiB0aGU8QlI+DQpjb3cgb3ZlcmhlYWQuPEJSPg0KPEJSPg0KZm9yIHJlYWRpbmctb25s
-eSB2ZXJ5IGxhcmdlIGZpbGVzLCAmcXVvdDtsZXNzJnF1b3Q7IG9yICZxdW90O21vcmUmcXVvdDsg
-cmVhZCBmaWxlcyBvbi1kZW1hbmQ8QlI+DQp3aGljaCBpcyBhIGZhciBtb3JlIGVmZmVjaWVudCB3
-YXkuPEJSPg0KPEJSPg0KZm9yIHdyaXRpbmcsIEkgZG9uJ3Qga25vdyBhbnkgbWV0aG9kIGFsbG93
-aW5nIHRvIHNhZmVseSB3cml0ZSBhIHNtYWxsPEJSPg0KY2hhbmdlIGludG8gYSBsYXJnZSBmaWxl
-LCBleGNlcHQgdXNpbmcgYXdrIG9yIHBlcmwgcGFyc2luZyAod2hpY2ggcmVhZHM8QlI+DQp0aGUg
-ZW50aXJlIHN0cmVhbWVkIGZpbGUgYW55d2F5KTxCUj4NCjxCUj4NCkdhYnJpZWw8QlI+DQo8QlI+
-DQpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXzxCUj4NCmxp
-bnV4LWx2bSBtYWlsaW5nIGxpc3Q8QlI+DQpsaW51eC1sdm1AcmVkaGF0LmNvbTxCUj4NCjxBIEhS
-RUY9Imh0dHBzOi8vd3d3LnJlZGhhdC5jb20vbWFpbG1hbi9saXN0aW5mby9saW51eC1sdm0iPmh0
-dHBzOi8vd3d3LnJlZGhhdC5jb20vbWFpbG1hbi9saXN0aW5mby9saW51eC1sdm08L0E+PEJSPg0K
-cmVhZCB0aGUgTFZNIEhPVy1UTyBhdCA8QSBIUkVGPSJodHRwOi8vdGxkcC5vcmcvSE9XVE8vTFZN
-LUhPV1RPLyI+aHR0cDovL3RsZHAub3JnL0hPV1RPL0xWTS1IT1dUTy88L0E+PEJSPg0KPC9GT05U
-Pg0KPC9QPg0KDQo8L0JPRFk+DQo8L0hUTUw+
-
-------_=_NextPart_001_01C8118F.6821E122--
+Gabriel
