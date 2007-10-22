@@ -1,16 +1,21 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l9M6CBBr006548
-	for <linux-lvm@redhat.com>; Mon, 22 Oct 2007 02:12:11 -0400
-Received: from ispbrasil.com.br (server.ispbrasil.com.br [209.67.213.238])
-	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id l9M6CARb013087
-	for <linux-lvm@redhat.com>; Mon, 22 Oct 2007 02:12:10 -0400
-Message-ID: <025401c81472$c80e8080$fe01a8c0@ispbrasil>
-From: "Itamar Reis Peixoto" <itamar@ispbrasil.com.br>
-References: <471C29F2.5090408@redhat.com>
-Subject: Re: [linux-lvm] lvreduce
-Date: Mon, 22 Oct 2007 03:14:15 -0300
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l9M815Ir003039
+	for <linux-lvm@redhat.com>; Mon, 22 Oct 2007 04:01:05 -0400
+Received: from mars.math-info.univ-paris5.fr (mars.math-info.univ-paris5.fr
+	[193.48.200.18])
+	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id l9M813pQ005625
+	for <linux-lvm@redhat.com>; Mon, 22 Oct 2007 04:01:04 -0400
+Received: from [127.0.0.1] (mars.math-info.univ-paris5.fr [127.0.0.1])
+	by mars.math-info.univ-paris5.fr (8.14.1/jtpda-5.4) with ESMTP id
+	l9M8129L031999
+	for <linux-lvm@redhat.com>; Mon, 22 Oct 2007 10:01:03 +0200
+Message-ID: <471C58BE.6040902@math-info.univ-paris5.fr>
+Date: Mon, 22 Oct 2007 10:01:02 +0200
+From: =?ISO-8859-1?Q?Fran=E7ois_Patte?=
+	<francois.patte@math-info.univ-paris5.fr>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Subject: [linux-lvm] error messages
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -21,50 +26,58 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; format="flowed"; charset="us-ascii"; reply-type="response"
-To: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="utf-8"
+To: linux-lvm@redhat.com
 
-try to grow the partition again
+Bonjour,
 
-make a backup first (dd is your friend)
+I am new to LVM and perhaps made some mistake during installation. I
+changed my mind and removed VG after I created them, before recreating
+them in a better way.
+
+Now, it is working but I have some messages at boot time; here are some
+samples:
+
+couldn't find device with uuid "long-uuid"
+couldn't find all PV for VG fedora
+
+(this repeated two times)
+
+VG fedora not found
+
+Found VG fedora using metadata type lvm2
+  "    " suppl    "      "       "   "
+  "    " suppl    "      "       "   "
+
+6 LV in VG fedora now active
+
+Then the boot sequence goes on.... And:
+
+Warning LVM: duplicate VG name suppl existing "long-uuid" (created here)
+takes precedence over "long-uuid"
+
+same for VG fedora
+
+then new warning as above "couldn't find, etc...."
+
+At the end something has FAILED
+
+And:
+
+6 LV in VG fedora now active
+2 LV in VG suppl now active
+0 LV in VG suppl now active
 
 
---------------------
+BTW everything seems to work! (ie: i can use my computer)
 
-Itamar Reis Peixoto
+thanks for any help.
 
-e-mail/msn: itamar@ispbrasil.com.br
-skype: itamarjp 
-icq: 81053601
-+55 11 4063 5033
------ Original Message ----- 
-From: "Humble Chirammal" <hchiramm@redhat.com>
-To: <linux-lvm@redhat.com>
-Sent: Monday, October 22, 2007 1:41 AM
-Subject: [linux-lvm] lvreduce
-
-
-> Hi All,
->  One of the customer ran  "lvreduce" command without reducing the 
-> filesystem (resize2fs ).  After the system was rebooted got this error.
-> 
-> <<snip>>
-> 
-> The filesystem size (according to the superblock) is 19922944 blocks
-> The physical size of the device is 13369344 blocks
-> Either the superblock or the partition table is likely to be corrupt!
-> <<snip>>
-> 
-> Is there any way for data recovery???
-> 
-> Welcomes your valid responses
-> 
-> Regards
-> Humble
-> 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
->
+-- 
+Fran�ois Patte
+UFR de math�matiques et informatique
+Universit� Paris Descartes
+45, rue des Saints P�res
+F-75270 Paris Cedex 06
+T�l. +33 (0)1 44 55 35 61
+http://www.math-info.univ-paris5.fr/~patte
