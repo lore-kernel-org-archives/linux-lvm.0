@@ -1,30 +1,24 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l9PMJ3kX019385
-	for <linux-lvm@redhat.com>; Thu, 25 Oct 2007 18:19:03 -0400
-Received: from mail.backcountry.com (mail.backcountry.com [206.71.94.246])
-	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id l9PMIuet003222
-	for <linux-lvm@redhat.com>; Thu, 25 Oct 2007 18:18:56 -0400
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.backcountry.com (Postfix) with ESMTP id 50B3523E1AC8
-	for <linux-lvm@redhat.com>; Thu, 25 Oct 2007 16:18:52 -0600 (MDT)
-Received: from mail.backcountry.com ([127.0.0.1])
-	by localhost (mail.backcountry.com [127.0.0.1]) (amavisd-new,
-	port 10024) with ESMTP id y--FwA8wF7hO for <linux-lvm@redhat.com>;
-	Thu, 25 Oct 2007 16:18:49 -0600 (MDT)
-Received: from skrugerlt.local (unknown [4.71.96.110])
-	by mail.backcountry.com (Postfix) with ESMTP id 42AD923E1AB5
-	for <linux-lvm@redhat.com>; Thu, 25 Oct 2007 16:18:49 -0600 (MDT)
-From: Shaun Kruger <skruger@backcountry.com>
-Subject: Re: [linux-lvm] LVM snapshot limits
-Date: Thu, 25 Oct 2007 16:18:44 -0600
-References: <200710251447.43405.skruger@backcountry.com>
-	<47210A6B.6090104@redhat.com>
-In-Reply-To: <47210A6B.6090104@redhat.com>
-MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="nextPart6825821.mJV3jB75yC";
-	protocol="application/pgp-signature"; micalg=pgp-sha1
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l9SK75jt023698
+	for <linux-lvm@redhat.com>; Sun, 28 Oct 2007 16:07:05 -0400
+Received: from server.klug.on.ca (server.klug.on.ca [205.189.48.131])
+	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id l9SK6xOm003318
+	for <linux-lvm@redhat.com>; Sun, 28 Oct 2007 16:06:59 -0400
+Received: from linux.interlinx.bc.ca (d38-139-100.home1.cgocable.net
+	[72.38.139.100])
+	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by server.klug.on.ca (Postfix) with ESMTP id 7D4C22803
+	for <linux-lvm@redhat.com>; Sun, 28 Oct 2007 16:06:58 -0400 (EDT)
+Received: from [10.75.22.1] (pc.ilinx [10.75.22.1])
+	by linux.interlinx.bc.ca (Postfix) with ESMTP id 9539E872E
+	for <linux-lvm@redhat.com>; Sun, 28 Oct 2007 16:06:54 -0400 (EDT)
+From: "Brian J. Murrell" <brian@interlinx.bc.ca>
+Date: Sun, 28 Oct 2007 16:06:54 -0400
+Message-Id: <1193602014.24601.27.camel@pc.ilinx>
+Mime-Version: 1.0
 Content-Transfer-Encoding: 7bit
-Message-Id: <200710251618.47974.skruger@backcountry.com>
+Subject: [linux-lvm] pvresize not working?
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -35,43 +29,39 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="us-ascii"
+To: linux-lvm@redhat.com
 
---nextPart6825821.mJV3jB75yC
-Content-Type: text/plain;
-  charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Content-Disposition: inline
+I'm trying to shrink a PV and it just does not seem to want to work.
 
-Thanks for the information.  I'll post that to my redhat support ticket and=
-=20
-see if they can help me with a more immediate fix.
+My disk has to partitions, hda1 and hda2.  hda1 is a regular primary
+partition and so is hda2.  hda1 has an ext3 filesystem and hda2 is an
+LVM PV.
 
-> Anyway, multiple snapshots from the same origin can cause considerable
-> performance decrease (there is no shared area for snapshots in current
-> implementation, so write to origin will cause new writes to every snapshot
-> copy-on-write area).
+After booting from a livecd, I used pvdisplay /dev/hda2 to observe that
+it was 4886 extents long and each extent is 4M.  Through trial and error
+I discovered I could reduce it to 4761 extents.  So I went ahead and did
+that.
 
-This copy on write issue had already occoured to us.  We were going to roll=
-=20
-out with the concept of a persistent or nonpersistent database instance.  T=
-he=20
-nonpersistent ones were going to be removed before refreshing the data on t=
-he=20
-main database source.  There is another script that recreates all the=20
-developer instances after the update is complete.
+I then shrank the partition (through a delete and add operation for
+partition #2) by 10 cylinders where each cylinder is 8225280 bytes long.
+I observed through /proc/partitions before and after the fdisk operation
+that the partition table change was effective to the kernel.
 
-Shaun
+Considering I reduced the PV by 524,288,000 bytes, reducing the
+partition by 82,252,800 should be quite safe.  Or so I thought.
 
---nextPart6825821.mJV3jB75yC
-Content-Type: application/pgp-signature
+After reducing the partition and observing the reduction
+through /proc/partitions, a vgscan was giving me errors:
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.6 (GNU/Linux)
+lseek: 20497235968 failed: Invalid ... (EINVAL)
 
-iD8DBQBHIRZH/zJrlJgPNdURAssbAJ4qPM92ZvxpToa3FEYLzw9vMRDhcQCgv+FC
-xcfQbhQ17p9/swx/DCATjTc=
-=Z8sS
------END PGP SIGNATURE-----
+Now for the life of me I cannot figure out why vgscan would be trying to
+seek to 20,497,235,968 considering that is beyond the end of even 4886
+4M extents (20,493,369,344).  But even still, why would it be trying to
+seek what is obviously beyond the end of the partition considering I
+told it that the PV is now smaller?
 
---nextPart6825821.mJV3jB75yC--
+Any thoughts?
+
+b.
