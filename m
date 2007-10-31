@@ -1,19 +1,19 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l9V7jxdL030510
-	for <linux-lvm@redhat.com>; Wed, 31 Oct 2007 03:45:59 -0400
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l9VBCiRX012718
+	for <linux-lvm@redhat.com>; Wed, 31 Oct 2007 07:12:44 -0400
 Received: from luther.localdomain (eshfire.ESH.Uni-Linz.AC.AT [193.171.36.5])
-	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id l9V7jq0l030519
-	for <linux-lvm@redhat.com>; Wed, 31 Oct 2007 03:45:52 -0400
+	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id l9VBCce4007723
+	for <linux-lvm@redhat.com>; Wed, 31 Oct 2007 07:12:39 -0400
 Received: from [193.171.36.121] (eshfire.ESH.Uni-Linz.AC.AT [193.171.36.5])
-	by luther.localdomain (Postfix) with ESMTP id 0DD69137F1
-	for <linux-lvm@redhat.com>; Wed, 31 Oct 2007 16:59:11 +0100 (CET)
-Message-ID: <472832A8.60201@esh.jku.at>
-Date: Wed, 31 Oct 2007 08:45:44 +0100
+	by luther.localdomain (Postfix) with ESMTP id E3A2F137F1
+	for <linux-lvm@redhat.com>; Wed, 31 Oct 2007 20:26:04 +0100 (CET)
+Message-ID: <47286325.7080900@esh.jku.at>
+Date: Wed, 31 Oct 2007 12:12:37 +0100
 From: Christian <bernth@esh.jku.at>
 MIME-Version: 1.0
 Subject: Re: [linux-lvm] LVM2 Problem Can t resize locked LV lv
-References: <47277994.3020803@esh.jku.at>
-In-Reply-To: <47277994.3020803@esh.jku.at>
+References: <47277994.3020803@esh.jku.at> <472832A8.60201@esh.jku.at>
+In-Reply-To: <472832A8.60201@esh.jku.at>
 Content-Transfer-Encoding: 7bit
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
@@ -28,126 +28,156 @@ List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-Let me extend my previously posted message, as I mixed up some error 
-messages: here are the correct ones:
+just got the solution over irc.
+i post it in case anyone else encounters this strange behaviour.
 
- # lvreduce -L -150G /dev/vg/lv
-  Can't resize locked LV lv
+i need to mention first that pvmove was not running (checked using lvs 
+-a), so this is kind of a stange behaviour.
 
- # pvmove /dev/hdb1 /dev/hdf1
-  Skipping locked LV lv
-  No data to move for vg
+to fix the "locked" error, you first need to deactivate your lv
+# lvchange -an /dev/vg/lv
+then edit your vg backup (/etc/lvm/backup/vg) and remove "LOCKED" in the 
+lv status line.
+after that do
+# vgcfgrestore vg
+# lvchange -ay /dev/vg/lv
 
-Anyways I am still looking for an answer what "locked" means and how I 
-unlock the logical volume.
+when doing lvreduce now, everything should work properly.
 
-I am using gentoo with kernel 2.6.17-gentoo-r8.
+big thanks to the guys on #lvm.
 
-Once again, thank you for your help in advance
-
-Cheers
-Christian
-
+cheers
+christian
 
 Christian wrote:
-> Hi,
+> Let me extend my previously posted message, as I mixed up some error 
+> messages: here are the correct ones:
 >
-> I am using LVM2 for some time now and haven't had any troubles.
-> But this week one of the hard disks, the one I added approx. one month 
-> ago, started to report read/write errors.
-> I bought a new one and followed the steps of an LVM how-to found on 
-> this website 
-> (http://charlesnadeau.blogspot.com/2006/10/howto-replaceupgrade-disk-part-of-lvm2_04.html). 
+> # lvreduce -L -150G /dev/vg/lv
+>  Can't resize locked LV lv
 >
+> # pvmove /dev/hdb1 /dev/hdf1
+>  Skipping locked LV lv
+>  No data to move for vg
 >
-> The first steps worked fine. Even shrinking the reiser file system was 
-> no problem.
-> But when I tried to pvmove /dev/hdb1 /dev/hdf1, I am getting the error 
-> message: Can't resize locked LV lv.
+> Anyways I am still looking for an answer what "locked" means and how I 
+> unlock the logical volume.
 >
-> As there is no available information about what this error message 
-> actually means nor how to resolve it, I hope someone on this list 
-> might be able to help me.
+> I am using gentoo with kernel 2.6.17-gentoo-r8.
 >
-> Thank you very much in advance.
+> Once again, thank you for your help in advance
 >
-> Cheers Christian
->
-> PS: this is my current configuration. where hdb1 is the failing hdd, 
-> and hdf1 the new one.
->
-> vgdisplay -v
->    Finding all volume groups
->    Finding volume group "vg"
->  --- Volume group ---
->  VG Name               vg
->  System ID
->  Format                lvm2
->  Metadata Areas        6
->  Metadata Sequence No  10
->  VG Access             read/write
->  VG Status             resizable
->  MAX LV                0
->  Cur LV                1
->  Open LV               0
->  Max PV                0
->  Cur PV                6
->  Act PV                6
->  VG Size               1.37 TB
->  PE Size               4.00 MB
->  Total PE              359489
->  Alloc PE / Size       264102 / 1.01 TB
->  Free  PE / Size       95387 / 372.61 GB
->  VG UUID               bf1tJ5-X79X-Uy02-iilF-XEM8-u2GK-6lFhQZ
->
->  --- Logical volume ---
->  LV Name                /dev/vg/lv
->  VG Name                vg
->  LV UUID                oyJf6j-xKtk-qtQv-LLE3-wy4I-9qC3-9VLPr0
->  LV Write Access        read/write
->  LV Status              available
->  # open                 0
->  LV Size                1.01 TB
->  Current LE             264102
->  Segments               5
->  Allocation             inherit
->  Read ahead sectors     0
->  Block device           253:0
->
->  --- Physical volumes ---
->  PV Name               /dev/hda3
->  PV UUID               IKxWRX-hzHO-fra9-vm8O-JyVp-FyM8-trMXlw
->  PV Status             allocatable
->  Total PE / Free PE    25632 / 0
->
->  PV Name               /dev/hde1
->  PV UUID               wM0a1a-mT0y-2M2s-9CVH-1CYJ-sNGV-sdjrkJ
->  PV Status             allocatable
->  Total PE / Free PE    47694 / 0
->
->  PV Name               /dev/hdg1
->  PV UUID               oeAOVW-D4qq-24QO-PiH0-WyYh-y8lP-rqL3r9
->  PV Status             allocatable
->  Total PE / Free PE    76310 / 0
->
->  PV Name               /dev/hdh1
->  PV UUID               o58ymK-u6zC-J63r-w98A-cPPw-JcMN-FXWQUi
->  PV Status             allocatable
->  Total PE / Free PE    76310 / 0
->
->  PV Name               /dev/hdb1
->  PV UUID               uLgbrb-aNFy-8nsE-X7Aa-q0mp-n8AY-46FqSc
->  PV Status             allocatable
->  Total PE / Free PE    38156 / 0
->
->  PV Name               /dev/hdf1
->  PV UUID               uKsPbR-CNjT-IWTr-edSp-VmrO-CgtL-rxm0M2
->  PV Status             allocatable
->  Total PE / Free PE    95387 / 95387
+> Cheers
+> Christian
 >
 >
->
->
+> Christian wrote:
+>> Hi,
+>>
+>> I am using LVM2 for some time now and haven't had any troubles.
+>> But this week one of the hard disks, the one I added approx. one 
+>> month ago, started to report read/write errors.
+>> I bought a new one and followed the steps of an LVM how-to found on 
+>> this website 
+>> (http://charlesnadeau.blogspot.com/2006/10/howto-replaceupgrade-disk-part-of-lvm2_04.html). 
+>>
+>>
+>> The first steps worked fine. Even shrinking the reiser file system 
+>> was no problem.
+>> But when I tried to pvmove /dev/hdb1 /dev/hdf1, I am getting the 
+>> error message: Can't resize locked LV lv.
+>>
+>> As there is no available information about what this error message 
+>> actually means nor how to resolve it, I hope someone on this list 
+>> might be able to help me.
+>>
+>> Thank you very much in advance.
+>>
+>> Cheers Christian
+>>
+>> PS: this is my current configuration. where hdb1 is the failing hdd, 
+>> and hdf1 the new one.
+>>
+>> vgdisplay -v
+>>    Finding all volume groups
+>>    Finding volume group "vg"
+>>  --- Volume group ---
+>>  VG Name               vg
+>>  System ID
+>>  Format                lvm2
+>>  Metadata Areas        6
+>>  Metadata Sequence No  10
+>>  VG Access             read/write
+>>  VG Status             resizable
+>>  MAX LV                0
+>>  Cur LV                1
+>>  Open LV               0
+>>  Max PV                0
+>>  Cur PV                6
+>>  Act PV                6
+>>  VG Size               1.37 TB
+>>  PE Size               4.00 MB
+>>  Total PE              359489
+>>  Alloc PE / Size       264102 / 1.01 TB
+>>  Free  PE / Size       95387 / 372.61 GB
+>>  VG UUID               bf1tJ5-X79X-Uy02-iilF-XEM8-u2GK-6lFhQZ
+>>
+>>  --- Logical volume ---
+>>  LV Name                /dev/vg/lv
+>>  VG Name                vg
+>>  LV UUID                oyJf6j-xKtk-qtQv-LLE3-wy4I-9qC3-9VLPr0
+>>  LV Write Access        read/write
+>>  LV Status              available
+>>  # open                 0
+>>  LV Size                1.01 TB
+>>  Current LE             264102
+>>  Segments               5
+>>  Allocation             inherit
+>>  Read ahead sectors     0
+>>  Block device           253:0
+>>
+>>  --- Physical volumes ---
+>>  PV Name               /dev/hda3
+>>  PV UUID               IKxWRX-hzHO-fra9-vm8O-JyVp-FyM8-trMXlw
+>>  PV Status             allocatable
+>>  Total PE / Free PE    25632 / 0
+>>
+>>  PV Name               /dev/hde1
+>>  PV UUID               wM0a1a-mT0y-2M2s-9CVH-1CYJ-sNGV-sdjrkJ
+>>  PV Status             allocatable
+>>  Total PE / Free PE    47694 / 0
+>>
+>>  PV Name               /dev/hdg1
+>>  PV UUID               oeAOVW-D4qq-24QO-PiH0-WyYh-y8lP-rqL3r9
+>>  PV Status             allocatable
+>>  Total PE / Free PE    76310 / 0
+>>
+>>  PV Name               /dev/hdh1
+>>  PV UUID               o58ymK-u6zC-J63r-w98A-cPPw-JcMN-FXWQUi
+>>  PV Status             allocatable
+>>  Total PE / Free PE    76310 / 0
+>>
+>>  PV Name               /dev/hdb1
+>>  PV UUID               uLgbrb-aNFy-8nsE-X7Aa-q0mp-n8AY-46FqSc
+>>  PV Status             allocatable
+>>  Total PE / Free PE    38156 / 0
+>>
+>>  PV Name               /dev/hdf1
+>>  PV UUID               uKsPbR-CNjT-IWTr-edSp-VmrO-CgtL-rxm0M2
+>>  PV Status             allocatable
+>>  Total PE / Free PE    95387 / 95387
+>>
+>>
+>>
+>>
+>>
+>> _______________________________________________
+>> linux-lvm mailing list
+>> linux-lvm@redhat.com
+>> https://www.redhat.com/mailman/listinfo/linux-lvm
+>> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+>>
+>>
 >
 > _______________________________________________
 > linux-lvm mailing list
