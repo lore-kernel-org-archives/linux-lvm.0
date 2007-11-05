@@ -1,15 +1,23 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id l9VI0Qc2014112
-	for <linux-lvm@redhat.com>; Wed, 31 Oct 2007 14:00:26 -0400
-Received: from mail.bmsi.com (www.bmsi.com [24.248.44.156])
-	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id l9VI0P6A027253
-	for <linux-lvm@redhat.com>; Wed, 31 Oct 2007 14:00:25 -0400
-Date: Wed, 31 Oct 2007 14:00:19 -0400 (EDT)
-From: "Stuart D. Gathman" <stuart@bmsi.com>
-Subject: Re: [linux-lvm] LVM snapshot limits
-In-Reply-To: <4727B561.50206@redhat.com>
-Message-ID: <Pine.LNX.4.44.0710311359330.10401-100000@bmsred.bmsi.com>
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id lA5CZoAI029296
+	for <linux-lvm@redhat.com>; Mon, 5 Nov 2007 07:35:50 -0500
+Received: from pat.uio.no (pat.uio.no [129.240.10.15])
+	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id lA5CZgf8030121
+	for <linux-lvm@redhat.com>; Mon, 5 Nov 2007 07:35:42 -0500
+Received: from mail-mx1.uio.no ([129.240.10.29])
+	by pat.uio.no with esmtp (Exim 4.67)
+	(envelope-from <martingi@ifi.uio.no>) id 1Ip1B3-0005a2-6L
+	for linux-lvm@redhat.com; Mon, 05 Nov 2007 13:35:37 +0100
+Received: from edelsten.ifi.uio.no ([129.240.71.14])
+	by mail-mx1.uio.no with esmtp (Exim 4.67)
+	(envelope-from <martingi@ifi.uio.no>) id 1Ip1B2-0001Vq-EX
+	for linux-lvm@redhat.com; Mon, 05 Nov 2007 13:35:36 +0100
+Message-ID: <472F0E18.20906@ifi.uio.no>
+Date: Mon, 05 Nov 2007 13:35:36 +0100
+From: Martin Giese <martingi@ifi.uio.no>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] Extend LVM physical volume
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -20,21 +28,30 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="us-ascii"
+To: linux-lvm@redhat.com
 
-On Tue, 30 Oct 2007, Milan Broz wrote:
+Hi,
 
-> > There is however one issue that probably needs attention.  If I create
-> > snapshots until I get an error (about 200 snaps), remove them, and
-> > repeat the creation/removal multiple times it is possible to destroy the
-> > LVM metadata.  When this happens pvscan shows that there is no VG
+I have a task I'm not sure how to do from the information in the LVM man
+pages.
 
-Cool!  Great torture test!  BwaHaHaHa...
+I want to resize a LVM Physical Volume, i.e. a partition that has LVM on
+it.  I have some free space on the disk just before the LVM partition.
 
--- 
-	      Stuart D. Gathman <stuart@bmsi.com>
-    Business Management Systems Inc.  Phone: 703 591-0911 Fax: 703 591-6154
-"Confutatis maledictis, flammis acribus addictis" - background song for
-a Microsoft sponsored "Where do you want to go from here?" commercial.
+[ DOS ][ Boot ][***FREE***][ LVM ][Swap]
+
+According to the pvresize man page, I just need to change the place used
+by the LVM partition to include the free space, e.g. using fdisk, and
+then run pvresize.  However, I read somewhere that this will only work
+if the free space comes behind the existing LVM area.  Is that right?
+If so, is there a way of moving the filesystem data from the end to the
+beginning of the enlarged space?
+
+Making the free space into a new partition doesn't work since I already
+have 4 primary partitions.
+
+Any ideas?
+
+Regards,
+    Martin
