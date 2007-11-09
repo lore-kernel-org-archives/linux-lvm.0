@@ -1,24 +1,17 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id lA7JZbFu015532
-	for <linux-lvm@redhat.com>; Wed, 7 Nov 2007 14:35:37 -0500
-Received: from smtp2.powertech.no (smtp2.powertech.no [195.159.0.177])
-	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id lA7JZUV2024456
-	for <linux-lvm@redhat.com>; Wed, 7 Nov 2007 14:35:30 -0500
-Received: from smtp1.powertech.no (smtp1.powertech.no [195.159.0.145])
-	by smtp2.powertech.no (Postfix) with ESMTP id 95E24C0F80
-	for <linux-lvm@redhat.com>; Wed,  7 Nov 2007 20:35:24 +0100 (CET)
-Received: from localhost.localdomain (webmail1.start.no [195.159.73.31])
-	by smtp1.powertech.no (Postfix) with ESMTP id 6AA6882F4
-	for <linux-lvm@redhat.com>; Wed,  7 Nov 2007 20:35:24 +0100 (CET)
-Content-Disposition: inline
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id lA9GM2Tq031099
+	for <linux-lvm@redhat.com>; Fri, 9 Nov 2007 11:22:02 -0500
+Received: from nhindia.com (del-static-52-67-7-210.direct.net.in [210.7.67.52]
+	(may be forged))
+	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id lA9GM0W9029313
+	for <linux-lvm@redhat.com>; Fri, 9 Nov 2007 11:22:00 -0500
+Message-ID: <36110.61.8.131.123.1194625395.squirrel@webmail.nhindia.com>
+Date: Fri, 9 Nov 2007 21:53:15 +0530 (IST)
+From: "bhagwat swarup" <bhagwat.swarup@nhindia.com>
 MIME-Version: 1.0
-From: Frode Mangset <frodemed@start.no>
-Date: Wed, 07 Nov 2007 20:35:24 +0100
-Message-Id: <62884.1194464124@start.no>
 Content-Transfer-Encoding: 8bit
-Subject: [linux-lvm] Regarding full snapshot
-Reply-To: frodemed@start.no,
-	LVM general discussion and development <linux-lvm@redhat.com>
+Subject: [linux-lvm] EXCEPT option is not working in /etc/hosts.allow
+Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -28,31 +21,22 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@redhat.com
 
-Hello.
+Hi all
+I configure vsftpd on RHEL5 and use tcp_wrapers security
+My /etc/hosts.allow
+vsftpd : .example.com EXCEPT server1.example.com
+/etc/hosts.deny is empty.
 
-I managed to fill up a snapshot which (obviously) rendered it invalid and I know this topic 
-has been touched several times. However, it was mentioned (post quoted below) that it might be 
-possbile to recover some ciritcal files out of the snapshot.
+according to this all hosts of example.com domain are allowed to use
+vsftpd except server1.example.com ,But it not working like this ,it
+allowed all example.com domain and server1.example.com also.
 
----8<---------
-On Thu, 23 Aug 2007, Hans C. Kaspersetz wrote:
-...
-full.  I.e., you might be able to pull out a critical file if you had to, but
-it is a mess, and you are usually better off just deleting the snapsnot.
 
-P.S.  If you need to recover a critical file, unmount (or mount readonly) the
-source LV immediately so it stops overwriting the snapshot.
-...
----8<---------
 
-Can someone give me some hints about this? After a reboot the device-mapper fails to read the 
-snapshot metadata.
 
-best regards,
-frodem
-
--------------------------------------------------------------------------
-F� din egen, gratis e-postadresse p� Start.no
+Thanks And Regards
+Bhagwat Swarup
+NH India Ltd
