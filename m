@@ -1,16 +1,14 @@
-Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id lA9GM2Tq031099
-	for <linux-lvm@redhat.com>; Fri, 9 Nov 2007 11:22:02 -0500
-Received: from nhindia.com (del-static-52-67-7-210.direct.net.in [210.7.67.52]
-	(may be forged))
-	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id lA9GM0W9029313
-	for <linux-lvm@redhat.com>; Fri, 9 Nov 2007 11:22:00 -0500
-Message-ID: <36110.61.8.131.123.1194625395.squirrel@webmail.nhindia.com>
-Date: Fri, 9 Nov 2007 21:53:15 +0530 (IST)
-From: "bhagwat swarup" <bhagwat.swarup@nhindia.com>
+Received: from [10.33.0.40] (breeves.fab.redhat.com [10.33.0.40])
+	by pobox.fab.redhat.com (8.13.1/8.13.1) with ESMTP id lA9GVsrt020376
+	for <linux-lvm@redhat.com>; Fri, 9 Nov 2007 11:31:54 -0500
+Message-ID: <47348A23.3040007@redhat.com>
+Date: Fri, 09 Nov 2007 16:26:11 +0000
+From: "Bryn M. Reeves" <breeves@redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: [linux-lvm] EXCEPT option is not working in /etc/hosts.allow
+Subject: Re: [linux-lvm] EXCEPT option is not working in /etc/hosts.allow
+References: <36110.61.8.131.123.1194625395.squirrel@webmail.nhindia.com>
+In-Reply-To: <36110.61.8.131.123.1194625395.squirrel@webmail.nhindia.com>
+Content-Transfer-Encoding: 7bit
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -22,21 +20,40 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@redhat.com
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-Hi all
-I configure vsftpd on RHEL5 and use tcp_wrapers security
-My /etc/hosts.allow
-vsftpd : .example.com EXCEPT server1.example.com
-/etc/hosts.deny is empty.
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA1
 
-according to this all hosts of example.com domain are allowed to use
-vsftpd except server1.example.com ,But it not working like this ,it
-allowed all example.com domain and server1.example.com also.
+bhagwat swarup wrote:
+> Hi all
+> I configure vsftpd on RHEL5 and use tcp_wrapers security
+> My /etc/hosts.allow
+> vsftpd : .example.com EXCEPT server1.example.com
+> /etc/hosts.deny is empty.
+> 
+> according to this all hosts of example.com domain are allowed to use
+> vsftpd except server1.example.com ,But it not working like this ,it
+> allowed all example.com domain and server1.example.com also.
+> 
 
+Hi Bhagwat,
 
+This mailing list is for discussion & development of Linux LVM - the
+Linux Logical Volume Manager (a way to manage storage devices under Linux).
 
+You'd probably be better off asking your question on a list dedicated to
+discussing tcp_wrappers, or one of the general RHEL or Fedora discussion
+lists.
 
-Thanks And Regards
-Bhagwat Swarup
-NH India Ltd
+Kind regards,
+Bryn.
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.7 (GNU/Linux)
+Comment: Using GnuPG with Fedora - http://enigmail.mozdev.org
+
+iD8DBQFHNIoj6YSQoMYUY94RAiKKAJ9hPXrzqxHxOPgohxeeoqq5FP545ACgzBu1
+OuNwlVsLryODXT4UJRuh8xs=
+=FCwe
+-----END PGP SIGNATURE-----
