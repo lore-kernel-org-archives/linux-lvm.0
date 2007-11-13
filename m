@@ -1,28 +1,26 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id lADIDmdH014617
-	for <linux-lvm@redhat.com>; Tue, 13 Nov 2007 13:13:48 -0500
-Received: from mail2.sharplabs.com (mail2.sharplabs.com [216.65.151.51])
-	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id lADIDgqo023740
-	for <linux-lvm@redhat.com>; Tue, 13 Nov 2007 13:13:44 -0500
-Received: from localhost (localhost [127.0.0.1])
-	by mail2.sharplabs.com (Postfix) with ESMTP id 974391E141D
-	for <linux-lvm@redhat.com>; Tue, 13 Nov 2007 10:13:36 -0800 (PST)
-Received: from mail2.sharplabs.com ([127.0.0.1])
-	by localhost (mail2.sharplabs.com [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id LFAGk6WIrYnB for <linux-lvm@redhat.com>;
-	Tue, 13 Nov 2007 10:13:35 -0800 (PST)
-Received: from medulla.enet.sharplabs.com (medulla.enet.sharplabs.com
-	[172.29.226.11]) by mail2.sharplabs.com (Postfix) with ESMTP
-	for <linux-lvm@redhat.com>; Tue, 13 Nov 2007 10:13:22 -0800 (PST)
-From: "Dean S. Messing" <deanm@sharplabs.com>
-In-reply-to: <7C6C00FDABF70949A0A5D4DD8A4DC2170474A2BA@CORPUSMX20A.corp.emc.com>
-	(pham_cuong@emc.com)
-Subject: Re: [linux-lvm] Beginner Questions
-References: <1C8CF1EA1A5B5940B81B0710B2A4C93823D19EC88A@an-ex.ActiveNetwerx.int><20071112215854.GU22843@agk.fab.redhat.com><1C8CF1EA1A5B5940B81B0710B2A4C93823D19EC88C@an-ex.ActiveNetwerx.int><20071112223338.GV22843@agk.fab.redhat.com><1C8CF1EA1A5B5940B81B0710B2A4C93823D19EC88D@an-ex.ActiveNetwerx.int><20071112230026.GW22843@agk.fab.redhat.com>
-	<1C8CF1EA1A5B5940B81B0710B2A4C93823D19EC88E@an-ex.ActiveNetwerx.int>
-	<7C6C00FDABF70949A0A5D4DD8A4DC2170474A2BA@CORPUSMX20A.corp.emc.com>
-Message-Id: <20071113181322.B30E71020A4@medulla.enet.sharplabs.com>
-Date: Tue, 13 Nov 2007 10:13:22 -0800 (PST)
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id lADKRaSZ031723
+	for <linux-lvm@redhat.com>; Tue, 13 Nov 2007 15:27:36 -0500
+Received: from server.klug.on.ca (server.klug.on.ca [205.189.48.131])
+	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id lADKROEX016292
+	for <linux-lvm@redhat.com>; Tue, 13 Nov 2007 15:27:24 -0500
+Received: from linux.interlinx.bc.ca (d38-139-100.home1.cgocable.net
+	[72.38.139.100])
+	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by server.klug.on.ca (Postfix) with ESMTP id 8A8192806
+	for <linux-lvm@redhat.com>; Tue, 13 Nov 2007 15:27:23 -0500 (EST)
+Received: from [10.75.22.1] (pc.ilinx [10.75.22.1])
+	by linux.interlinx.bc.ca (Postfix) with ESMTP id 90579867B
+	for <linux-lvm@redhat.com>; Tue, 13 Nov 2007 15:27:21 -0500 (EST)
+Subject: Re: [linux-lvm] balooning/dynamic snapshots?
+From: "Brian J. Murrell" <brian@interlinx.bc.ca>
+In-Reply-To: <4739DB30.9060805@wpkg.org>
+References: <4739DB30.9060805@wpkg.org>
+Date: Tue, 13 Nov 2007 15:27:21 -0500
+Message-Id: <1194985641.24880.11.camel@pc.ilinx>
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -33,16 +31,41 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: linux-lvm@redhat.com
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
+On Tue, 2007-11-13 at 18:13 +0100, Tomasz Chmielewski wrote:
+> 
+> Is it possible to make a "balooning", or dynamic LVM snapshot? That is, 
+> if the snapshot reaches its maximum, it will be automatically resized, 
+> provided we still have space on the medium.
 
-: One last thing:
-: 
-: While your physical drive is said to be 1.5 GB, I think that is the
-: marketing GB (1E+30) and not engineering GB (2^30 Bytes).  Performing
-^^^^^^^^^^^^^^^^^^^^^^
+Yeah, that is something I wanted at one time.  In it's absence, I hacked
+up the following brute-force solution.  I don't like the concept, but it
+works.
 
-Those are _mighty_big_ Gigabytes!
+        #!/usr/bin/ruby
+        
+        threshold=80.0
+        increase_factor=0.5
+        
+        IO.popen("/testsuite/ltest-boulder/acceptance/common/timed_run 10 /usr/sbin/lvs") do |f|
+          f.each_line do |line|
+            j,volume,j,j,size,j,used = line.chomp.split(/\s+/)
+            if used.to_f > threshold then
+              # by bytes
+              #size = eval(size.sub(/G$/, ' * 1024 * 1024 * 1024'))
+              re = /([\d\.]+)([GM])/
+              md = re.match(size)
+              size = md[1]
+              units = md[2]
+              expand_by = size.to_f * increase_factor
+              system("echo \"lv #{volume} was #{size}#{units} big and #{used} full and was expaned +#{expand_by}#{units}\" | mail -s \"snap expanded\" root")
+              system("/testsuite/ltest-boulder/acceptance/common/timed_run 60 /usr/sbin/lvextend -L+#{expand_by}#{units} /dev/vg0/#{volume}")
+            end
+          end
+        end
+
+Put it in cron and run at an appropriate frequency.
+
+b.
