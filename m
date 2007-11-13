@@ -1,28 +1,28 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id lADHDfa1015506
-	for <linux-lvm@redhat.com>; Tue, 13 Nov 2007 12:13:41 -0500
-Received: from mail2.syneticon.net (mail.syneticon.net [213.239.212.131])
-	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id lADHDYZw008973
-	for <linux-lvm@redhat.com>; Tue, 13 Nov 2007 12:13:34 -0500
-Received: from postfix1.syneticon.net (postfix1.syneticon.net [192.168.112.6])
-	by mail2.syneticon.net (Postfix) with ESMTP id 390CE3DCA0
-	for <linux-lvm@redhat.com>; Tue, 13 Nov 2007 18:13:27 +0100 (CET)
-Received: from localhost (filter1.syneticon.net [192.168.113.3])
-	by postfix1.syneticon.net (Postfix) with ESMTP id B2F92947E
-	for <linux-lvm@redhat.com>; Tue, 13 Nov 2007 18:13:27 +0100 (CET)
-Received: from postfix1.syneticon.net ([192.168.113.4])
-	by localhost (mx03.syneticon.net [192.168.113.3]) (amavisd-new,
-	port 10025) with ESMTP id FiY-708nNzsY for <linux-lvm@redhat.com>;
-	Tue, 13 Nov 2007 18:13:21 +0100 (CET)
-Received: from [192.168.10.145] (xdsl-87-79-104-215.netcologne.de
-	[87.79.104.215]) by postfix1.syneticon.net (Postfix) with ESMTP
-	for <linux-lvm@redhat.com>; Tue, 13 Nov 2007 18:13:21 +0100 (CET)
-Message-ID: <4739DB30.9060805@wpkg.org>
-Date: Tue, 13 Nov 2007 18:13:20 +0100
-From: Tomasz Chmielewski <mangoo@wpkg.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] balooning/dynamic snapshots?
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id lADIDmdH014617
+	for <linux-lvm@redhat.com>; Tue, 13 Nov 2007 13:13:48 -0500
+Received: from mail2.sharplabs.com (mail2.sharplabs.com [216.65.151.51])
+	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id lADIDgqo023740
+	for <linux-lvm@redhat.com>; Tue, 13 Nov 2007 13:13:44 -0500
+Received: from localhost (localhost [127.0.0.1])
+	by mail2.sharplabs.com (Postfix) with ESMTP id 974391E141D
+	for <linux-lvm@redhat.com>; Tue, 13 Nov 2007 10:13:36 -0800 (PST)
+Received: from mail2.sharplabs.com ([127.0.0.1])
+	by localhost (mail2.sharplabs.com [127.0.0.1]) (amavisd-new, port 10024)
+	with ESMTP id LFAGk6WIrYnB for <linux-lvm@redhat.com>;
+	Tue, 13 Nov 2007 10:13:35 -0800 (PST)
+Received: from medulla.enet.sharplabs.com (medulla.enet.sharplabs.com
+	[172.29.226.11]) by mail2.sharplabs.com (Postfix) with ESMTP
+	for <linux-lvm@redhat.com>; Tue, 13 Nov 2007 10:13:22 -0800 (PST)
+From: "Dean S. Messing" <deanm@sharplabs.com>
+In-reply-to: <7C6C00FDABF70949A0A5D4DD8A4DC2170474A2BA@CORPUSMX20A.corp.emc.com>
+	(pham_cuong@emc.com)
+Subject: Re: [linux-lvm] Beginner Questions
+References: <1C8CF1EA1A5B5940B81B0710B2A4C93823D19EC88A@an-ex.ActiveNetwerx.int><20071112215854.GU22843@agk.fab.redhat.com><1C8CF1EA1A5B5940B81B0710B2A4C93823D19EC88C@an-ex.ActiveNetwerx.int><20071112223338.GV22843@agk.fab.redhat.com><1C8CF1EA1A5B5940B81B0710B2A4C93823D19EC88D@an-ex.ActiveNetwerx.int><20071112230026.GW22843@agk.fab.redhat.com>
+	<1C8CF1EA1A5B5940B81B0710B2A4C93823D19EC88E@an-ex.ActiveNetwerx.int>
+	<7C6C00FDABF70949A0A5D4DD8A4DC2170474A2BA@CORPUSMX20A.corp.emc.com>
+Message-Id: <20071113181322.B30E71020A4@medulla.enet.sharplabs.com>
+Date: Tue, 13 Nov 2007 10:13:22 -0800 (PST)
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -33,31 +33,16 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: LVM general discussion and development <linux-lvm@redhat.com>
-
-Right now, one has to specify a snapshot size.
-
-If the snapshot takes more space that one specified with -s (size), that 
-snapshot is automatically dropped, and is no longer usable.
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: linux-lvm@redhat.com
 
 
-Sometimes, it is just not possible to know beforehand how much data will 
-change, but on the other hand, specifying 100% snapshot size is not 
-possible or hard to estimate.
+: One last thing:
+: 
+: While your physical drive is said to be 1.5 GB, I think that is the
+: marketing GB (1E+30) and not engineering GB (2^30 Bytes).  Performing
+^^^^^^^^^^^^^^^^^^^^^^
 
-
-Is it possible to make a "balooning", or dynamic LVM snapshot? That is, 
-if the snapshot reaches its maximum, it will be automatically resized, 
-provided we still have space on the medium.
-
-Looking at lvm manuals, I didn't see such a feature, and the only 
-possibility seems to be to create a userspace program which would check 
-the status of the snapshots periodically, and resize them if needed - 
-but this seems crude, and may not work sometimes (very loaded system, 
-volumes with a lot of writes etc.).
-
-
--- 
-Tomasz Chmielewski
-http://lists.wpkg.org
+Those are _mighty_big_ Gigabytes!
