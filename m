@@ -1,22 +1,19 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id lAK89EAt002624
-	for <linux-lvm@redhat.com>; Tue, 20 Nov 2007 03:09:14 -0500
-Received: from emailgate2.cpvie.co.at (smtp.cargo-partner.com [195.234.151.28])
-	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id lAK89AhJ030652
-	for <linux-lvm@redhat.com>; Tue, 20 Nov 2007 03:09:10 -0500
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by emailgate2.cpvie.co.at (Postfix) with ESMTP id D514E40D39
-	for <linux-lvm@redhat.com>; Tue, 20 Nov 2007 09:09:04 +0100 (CET)
-Received: from [10.10.55.2] (eisenkoe.cp.com [10.10.55.2])
-	by emailgate2.cpvie.co.at (Postfix) with ESMTP id 1D42540C8E
-	for <linux-lvm@redhat.com>; Tue, 20 Nov 2007 09:09:03 +0100 (CET)
-Message-ID: <4742963A.5050509@cargo-partner.com>
-Date: Tue, 20 Nov 2007 09:09:30 +0100
-From: =?ISO-8859-15?Q?Michael_Eisenk=F6lbl?=
-	<michael.eisenkoelbl@cargo-partner.com>
-MIME-Version: 1.0
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id lAKBDd2S016313
+	for <linux-lvm@redhat.com>; Tue, 20 Nov 2007 06:13:39 -0500
+Received: from mailrelay02.solcon.nl (mailrelay02.solcon.nl [212.45.32.108])
+	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id lAKBD8bf002191
+	for <linux-lvm@redhat.com>; Tue, 20 Nov 2007 06:13:08 -0500
+Received: from [62.163.86.220] (helo=[192.168.0.122])
+	by mailrelay02.solcon.nl with esmtp (Exim 4.60)
+	(envelope-from <svh@dds.nl>) id 1IuR2L-0000Bq-8V
+	for linux-lvm@redhat.com; Tue, 20 Nov 2007 12:13:01 +0100
+From: "S. J. van Harmelen" <svh@dds.nl>
+Date: Tue, 20 Nov 2007 12:13:03 +0100
+Message-Id: <1195557183.6329.54.camel@sanderbal>
+Mime-Version: 1.0
 Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] cmirror LV size - kernel panic
+Subject: [linux-lvm] LVM snapshots in a iSCSI and XenSource environment
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -27,77 +24,58 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
+Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@redhat.com
 
-Hi,
+Hi list,
 
-I have a "big" problem with cmirror-1.0.1-1 (RHEL4.5 or RHEL5, 
-cmirror-kernel-smp-2.6.9-32.0.0.6).
-When I am trying to active a LV with 6 TB (in cmirror ONLY, without it 
-works fine) i got this kernel panic:
+In advance my excusses for this radar long post (although it's easy
+readable ;), but I want to make sure that I understand it correctly so I
+don't end up making a very costly mistake.
 
-Nov 19 13:45:44 mail2 kernel: Unable to handle kernel NULL pointer 
-dereference at virtual address 00000000
-Nov 19 13:45:44 mail2 kernel:  printing eip:
-Nov 19 13:45:44 mail2 kernel: f88cae00
-Nov 19 13:45:44 mail2 kernel: *pde = 00004001
-Nov 19 13:45:44 mail2 kernel: Oops: 0002 [#1]
-Nov 19 13:45:44 mail2 kernel: SMP
-Nov 19 13:45:44 mail2 kernel: Modules linked in: nfsd exportfs lockd 
-nfs_acl autofs4 i2c_dev i2c_core dm_cmirror(U) dlm(U) cman(U) sunrpc 
-dm_round_robin crc32
-c libcrc32c iscsi_sfnet scsi_transport_iscsi md5 ipv6 8021q mptctl 
-dm_multipath button battery ac ohci_hcd tg3 e1000 bonding(U) floppy sg 
-dm_snapshot dm_zero
-dm_mirror ext3 jbd dm_mod qla2xxx scsi_transport_fc mptscsih mptsas 
-mptspi mptfc mptscsi mptbase sd_mod scsi_mod
-Nov 19 13:45:44 mail2 kernel: CPU:    3
-Nov 19 13:45:44 mail2 kernel: EIP:    0060:[<f88cae00>]    Not tainted VLI
-Nov 19 13:45:44 mail2 kernel: EFLAGS: 00010246   (2.6.9-55.0.12.ELsmp)
-Nov 19 13:45:44 mail2 kernel: EIP is at do_region+0x52/0x10a [dm_mod]
-Nov 19 13:45:44 mail2 kernel: eax: 00000002   ebx: 00000800   ecx: 
-f78c08f8   edx: 00000000
-Nov 19 13:45:44 mail2 kernel: esi: 00000000   edi: 00000000   ebp: 
-00000000   esp: f565be64
-Nov 19 13:45:44 mail2 [7238]: Monitoring mirror device VG_mail-LV_mail 
-for events
-Nov 19 13:45:44 mail2 kernel: ds: 007b   es: 007b   ss: 0068
-Nov 19 13:45:44 mail2 kernel: Process cluster_log_ser (pid: 9262, 
-threadinfo=f565b000 task=f4ebb1b0)
-Nov 19 13:45:44 mail2 kernel: Stack: f78c08f8 00000000 00000010 f565befc 
-00000010 f565befc f565bf08 00000010
-Nov 19 13:45:44 mail2 kernel:        00000000 00000000 f88caf3b f565bf08 
-f565bed0 f78c08f8 00000001 f88cad46
-Nov 19 13:45:44 mail2 kernel:        f88cad70 00000000 f8cd6000 00000000 
-00000001 f78c08f8 00000001 f88cafd7
-Nov 19 13:45:44 mail2 kernel: Call Trace:
-Nov 19 13:45:44 mail2 kernel:  [<f88caf3b>] dispatch_io+0x83/0xa4 [dm_mod]
-Nov 19 13:45:44 mail2 kernel:  [<f88cad46>] vm_get_page+0x0/0x2a [dm_mod]
-Nov 19 13:45:44 mail2 kernel:  [<f88cad70>] vm_next_page+0x0/0x17 [dm_mod]
-Nov 19 13:45:44 mail2 kernel:  [<f88cafd7>] sync_io+0x7b/0xdf [dm_mod]
-Nov 19 13:45:44 mail2 kernel:  [<f88cb169>] dm_io_sync_vm+0x2a/0x32 [dm_mod]
-Nov 19 13:45:44 mail2 kernel:  [<f88cad46>] vm_get_page+0x0/0x2a [dm_mod]
-Nov 19 13:45:44 mail2 kernel:  [<f88cad70>] vm_next_page+0x0/0x17 [dm_mod]
-Nov 19 13:45:44 mail2 kernel:  [<f8b7ca75>] read_bits+0x2f/0x37 [dm_cmirror]
-Nov 19 13:45:44 mail2 kernel:  [<f8b7ceea>] disk_resume+0xc2/0x3f6 
-[dm_cmirror]
-Nov 19 13:45:44 mail2 kernel:  [<f8b7e1c8>] 
-process_log_request+0x1bd/0x460 [dm_cmirror]
-Nov 19 13:45:44 mail2 kernel:  [<f8b7e616>] 
-cluster_log_serverd+0x1ab/0x21f [dm_cmirror]
-Nov 19 13:45:45 mail2 kernel:  [<f8b7e46b>] 
-cluster_log_serverd+0x0/0x21f [dm_cmirror]
-Nov 19 13:45:45 mail2 kernel:  [<c01041f5>] kernel_thread_helper+0x5/0xb
-Nov 19 13:45:45 mail2 kernel: Code: f8 89 d8 89 f5 0f ac f0 03 8d 50 02 
-b8 10 00 00 00 e8 17 11 00 00 8b 0c 24 89 c7 8b 41 0c 8b 51 10 29 d8 19 
-f2 03 41 04 13
- 51 08 <89> 07 89 57 04 8b 01 c7 47 34 8d ac 8c f8 8b 57 30 89 47 0c 8b
-Nov 19 13:45:45 mail2 kernel:  <0>Fatal exception: panic in 5 seconds
+I have a storage server (Debian Etch) with mutlipath-tools running and
+on top of that I use IET iscsi-target software to export the multipathed
+device to a XenSource server.
 
-maybe you have a solution for me? how big can be a LV in cmirror?
-discs are connectec with iscsi-initiator-utils-4.0.3.0-5 and 
-device-mapper-multipath-0.4.5-21.0.1.RHEL4
+XenSource creates a PV on the entire exported disk, and then creates a
+few LV's when I create some virtual machines.
 
-kind regards
-Michael
+Now I would like to take snapshots of these virtual machines as a
+backup. So I want to take a snapshot every day, but hold them for only
+one day. These are quite static machines, so I need want several
+snapshots per machine. Just one in case something happens or a bad
+adjustment is made.
+
+I asume that when I drop the snapshot just before creating the new one,
+all changes are merged back to the original volume. Correct? While this
+merging is happening, does the disk then becomes unavailable to the
+virtual machine, or doesn't the virtual machine doesn't notice the
+merge?
+
+Also I was wondering if it's a smart idea to create a PV and a LV (both
+spanning the whole disk) on the storage server, and then exporting the
+LV true iSCSI to the XenSource server. In that way I can take the
+snapshots on to storage server directly.
+
+Questions that I think of then are if it's not a problem that XenSource
+then creates a new PV and some LV's in je LV I created adn exported on
+the storage server. Is that a problem, or should this work fine?
+
+And another question is how I can then restore a single LV Xen created,
+from the snapshot of the LV that spans the whole disk on the storage
+server? In that case I can not just revert to the old disk before taking
+the snapshot, because then all the LV's created by Xen will be set back
+to that point, and not just the LV that went bad.
+
+Last question... Without creating a PV and a LV on the storage server
+and just letting XenSource create what it needs to provision the virtual
+machines, I can still see the PV and the LV's Xen created on the storage
+server. Could I take the snapshots from there, although the PV and LV's
+where not created here?
+
+Hope someone can tell me what the best option is, and if all this is
+possible?
+
+Thanks!!
+
+Sander
