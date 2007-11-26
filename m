@@ -1,22 +1,15 @@
-Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id lAQ5D2St019169
-	for <linux-lvm@redhat.com>; Mon, 26 Nov 2007 00:13:02 -0500
-Received: from smtp1.pacifier.net (smtp1.pacifier.net [64.255.237.171])
-	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id lAQ5CWOg016646
-	for <linux-lvm@redhat.com>; Mon, 26 Nov 2007 00:12:32 -0500
-Received: from bedroom.boskone (ip136.133.dsl-acs2.pdx.iinet.com
-	[209.20.133.136])
-	by smtp1.pacifier.net (Postfix) with ESMTP id B5E106F165
-	for <linux-lvm@redhat.com>; Sun, 25 Nov 2007 21:12:31 -0800 (PST)
-From: ben scott <benscott@nwlink.com>
-Date: Sun, 25 Nov 2007 21:12:31 -0800
-References: <4739DB30.9060805@wpkg.org> <1194985641.24880.11.camel@pc.ilinx>
-In-Reply-To: <1194985641.24880.11.camel@pc.ilinx>
+Received: from thunderbird6.fab.redhat.com (sebastian-int.corp.redhat.com
+	[172.16.52.221])
+	by pobox.fab.redhat.com (8.13.1/8.13.1) with ESMTP id lAQ8UTd2030893
+	for <linux-lvm@redhat.com>; Mon, 26 Nov 2007 03:30:29 -0500
+Message-ID: <474A83A4.30103@redhat.com>
+Date: Mon, 26 Nov 2007 08:28:20 +0000
+From: "Bryn M. Reeves" <breeves@redhat.com>
 MIME-Version: 1.0
+Subject: Re: [linux-lvm] Renaming Loopback 'Mounted' Volume Group
+References: <47474790.9010009@stthomasepc.org>
+In-Reply-To: <47474790.9010009@stthomasepc.org>
 Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-Message-Id: <200711252112.31500.benscott@nwlink.com>
-Subject: [linux-lvm] lvm library progress?
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -28,14 +21,45 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@redhat.com
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-I saw a recent reference on this list to the development  of a library for lvm 
-functions. Is this at a point where it could be used for anything useful? I 
-have written a program that calls the lvm programs directly but would prefer 
-to use a library if possible. Even if only some functions are done that might 
-still be helpful. 
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA1
 
-Thank you.
-Ben Scott
-benscott@nwlink.com
+Tod wrote:
+> Please take a look at this old thread first ...
+> 
+> http://linux.derkeiler.com/Mailing-Lists/Fedora/2007-02/msg02237.html
+> 
+> 
+> This was back in February and I'm just now trying to get back into
+> recovery mode.  I've mounted the image like so:
+> 
+> /sbin/losetup /dev/loop0 ./recover.img
+> /sbin/kpartx -lv /dev/loop0
+> /sbin/kpartx -av /dev/loop0
+> 
+> This gives me /dev/mapper/loop0p1, and /dev/mapper/loop0p2 which seem to
+>  be my original boot drive and VolGroup00.  When I do an lvscan I get:
+> 
+> WARNING: Duplicate VG name VolGroup00: Existing
+> Vmi02d-0hr7-7NVb-vYZi-1fbD-E9n5-ixWu0a (created here) takes precedence
+> over D7avZX-pVCb-ibTN-tyvs-7Q62-rzR9-tquBi9
+
+See the steps I posted last Friday, with some corrections/improvements
+from Alasdair:
+
+https://www.redhat.com/archives/linux-lvm/2007-November/msg00039.html
+https://www.redhat.com/archives/linux-lvm/2007-November/msg00040.html
+
+Regards,
+Bryn.
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.7 (GNU/Linux)
+Comment: Using GnuPG with Fedora - http://enigmail.mozdev.org
+
+iD8DBQFHSoOk6YSQoMYUY94RAkp1AKCixiD85e6gtb+fju0M0VJbiyrFwACg0vLQ
+dkdB8lPKZxzueFAutdkptP8=
+=qyM4
+-----END PGP SIGNATURE-----
