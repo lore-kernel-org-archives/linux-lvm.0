@@ -1,16 +1,17 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id lASDQS6r003714
-	for <linux-lvm@redhat.com>; Wed, 28 Nov 2007 08:26:28 -0500
-Received: from bay0-omc2-s1.bay0.hotmail.com (bay0-omc2-s1.bay0.hotmail.com
-	[65.54.246.137])
-	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id lASDPp9t009096
-	for <linux-lvm@redhat.com>; Wed, 28 Nov 2007 08:25:52 -0500
-Message-ID: <BAY140-W4219331DE43A364FBD6EB4DA770@phx.gbl>
-From: Tahir Saleh <tahirsaleh@hotmail.com>
-Date: Wed, 28 Nov 2007 18:25:46 +0500
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id lASFQs6O010600
+	for <linux-lvm@redhat.com>; Wed, 28 Nov 2007 10:26:54 -0500
+Received: from py-out-1112.google.com (py-out-1112.google.com [64.233.166.176])
+	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id lASFQMLw030484
+	for <linux-lvm@redhat.com>; Wed, 28 Nov 2007 10:26:22 -0500
+Received: by py-out-1112.google.com with SMTP id p76so3033596pyb
+	for <linux-lvm@redhat.com>; Wed, 28 Nov 2007 07:26:22 -0800 (PST)
+Message-ID: <474D8885.4090108@gmail.com>
+Date: Wed, 28 Nov 2007 10:25:57 -0500
+From: Sumit Narayan <sumnaray@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: [linux-lvm] question about reducing LVM partition
+Content-Type: multipart/mixed; boundary="------------010009030102070908010306"
+Subject: [linux-lvm] Function clone_bio
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -21,13 +22,61 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@redhat.com
 
+This is a multi-part message in MIME format.
+--------------010009030102070908010306
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
 
-ive been givin a task to find such a way that by shrinking an LVM logical volume implemented on RAID, lets say to half its size without losing any data on the partition present in such a state that the data is supposedly smaller than the shrinked logical volume.what i did is that i implemented logical volume through LVM2(on RAID) packaged with the distro RHEL4 and tried the test but with no success. my question is that does e2fsadm utility provided by LVM1 gives the facility of data intagrity while shrinking the filesystem what iam trying to ask is that will LVM1 would do the job if not is there any otherway.
-regards
+static struct bio *clone_bio(struct bio *bio, sector_t sector,
+              unsigned short idx, unsigned short bv_count,
+              unsigned int len, struct bio_set *bs)
+{
+   struct bio *clone;
 
-_________________________________________________________________
-Discover the new Windows Vista
-http://search.msn.com/results.aspx?q=windows+vista&mkt=en-US&form=QBRE
+   clone = bio_alloc_bioset(GFP_NOIO, bio->bi_max_vecs, bs);
+   __bio_clone(clone, bio);
+   clone->bi_destructor = dm_bio_destructor;
+   clone->bi_sector = sector;
+   clone->bi_idx = idx;
+   clone->bi_vcnt = idx + bv_count;
+   clone->bi_size = to_bytes(len);
+   clone->bi_flags &= ~(1 << BIO_SEG_VALID);
+
+   return clone;
+}
+
+There is a possibility of NULL being returned from bio_alloc_bioset. 
+Although unlikely, it could crash the kernel.
+
+If required, I have attached a patch (created on linux-2.6.23.9).
+
+--Sumit
+
+--------------010009030102070908010306
+Content-Type: text/x-patch;
+ name="dm-dm_c-fix.patch"
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline;
+ filename="dm-dm_c-fix.patch"
+
+diff -uNr linux-2.6.23.9/drivers/md/dm.c linux-2.6.23.9-new/drivers/md/dm.c
+--- linux-2.6.23.9/drivers/md/dm.c	2007-11-26 12:51:43.000000000 -0500
++++ linux-2.6.23.9-new/drivers/md/dm.c	2007-11-28 10:07:20.376734456 -0500
+@@ -652,6 +652,13 @@
+ 	struct bio *clone;
+ 
+ 	clone = bio_alloc_bioset(GFP_NOIO, bio->bi_max_vecs, bs);
++
++	/*
++	 * bio_alloc_bioset could return NULL.
++	 */
++	if(!clone)
++		return clone;
++
+ 	__bio_clone(clone, bio);
+ 	clone->bi_destructor = dm_bio_destructor;
+ 	clone->bi_sector = sector;
+
+--------------010009030102070908010306--
