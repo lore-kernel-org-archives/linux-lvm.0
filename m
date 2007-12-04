@@ -1,15 +1,16 @@
-Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id lB43wJRa005298
-	for <linux-lvm@redhat.com>; Mon, 3 Dec 2007 22:58:19 -0500
-Received: from smtpoutwbe07.prod.mesa1.secureserver.net
-	(smtpoutwbe07.prod.mesa1.secureserver.net [208.109.78.209])
-	by mx3.redhat.com (8.13.1/8.13.1) with SMTP id lB43vk43024167
-	for <linux-lvm@redhat.com>; Mon, 3 Dec 2007 22:57:46 -0500
-Date: Mon, 03 Dec 2007 20:57:40 -0700
-From: Dave Scott <dave@mauidiver.com>
-Subject: RE: [linux-lvm] lvm amnesia (Incorrect metadata area header checksum)
-Message-ID: <20071203205740.51068ac31da99c5a25b4d9fb7ad88fd1.f901ffeae0.wbe@email.secureserver.net>
+Received: from mx2.redhat.com (mx2.redhat.com [10.255.15.25])
+	by int-mx2.corp.redhat.com (8.13.1/8.13.1) with ESMTP id lB495FN0024423
+	for <linux-lvm@redhat.com>; Tue, 4 Dec 2007 04:05:15 -0500
+Received: from QMTA08.westchester.pa.mail.comcast.net
+	(qmta08.westchester.pa.mail.comcast.net [76.96.62.80])
+	by mx2.redhat.com (8.13.1/8.13.1) with ESMTP id lB494kB8031194
+	for <linux-lvm@redhat.com>; Tue, 4 Dec 2007 04:04:46 -0500
+Message-ID: <475517F1.9050000@ucdavis.edu>
+Date: Tue, 04 Dec 2007 01:03:45 -0800
+From: Brad Sickler <basickler@ucdavis.edu>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] moving a logical volume between servers
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -20,45 +21,46 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+To: linux-lvm@redhat.com
 
-Thanks for your response, Alasdair.
+I'm surprised I couldn't find a good answer to the question before but I 
+want to move logical volumes from one computer to another.
 
-But, it didn't work (unless I have the options wrong). Here's the
-output:
+A little more detail... I created a bunch of xen images on logical 
+volumes. I brought another computer up to split the load of all the 
+virtual machines and I want to move some volumes to the new computer. 
+When I created them I figured I could just dd them like a partition but 
+upon attempting this and booting the transported xen machine/logical 
+volume fsck showed some bad errors on the boot partition of the virtual 
+machine. The later partitions seemed fine.
 
-# vgcfgrestore -v -f /etc/lvm/backup/raid5a raid5a
-  Incorrect metadata area header checksum
-  Incorrect metadata area header checksum
-    Fixing up missing format1 size (255.89 GB) for PV /dev/md1
-  Incorrect metadata area header checksum
-  Restore failed.
-#
+I did some testing and found that I got the same error no matter the 
+block size. That if I created a new logical volume on the same machine 
+as the source and dd'd between them ala
+lvcreate -n machine2 -L 20G lvmxen
+dd if=/dev/lvmxen/machine of=/dev/lvmxen/machine2
+machine2 worked just like machine.
+But when I dd'd to a file, moved that file to another computer then dd'd 
+back into a new logical volume. I had the errors again.
 
---dave;
+I have some ideas on how to fix the error inside of the virtual machine 
+but they would be painful considering that I have 10 virtual boxes 
+running in this configuration.
 
-> -------- Original Message --------
-> Subject: Re: [linux-lvm] lvm amnesia (Incorrect metadata area header
-> checksum)
-> From: Alasdair G Kergon <agk@redhat.com>
-> Date: Mon, December 03, 2007 5:31 pm
-> To: LVM general discussion and development <linux-lvm@redhat.com>
-> 
-> 
-> On Mon, Dec 03, 2007 at 07:02:03PM -0700, Dave Scott wrote:
-> > I have the archive file and the data. How do I get the lvm to see it
-> > once again?
-> 
-> add a 'vgcfgrestore' after the pvcreate
->  
-> Alasdair
-> -- 
-> agk@redhat.com
-> 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+So, I have a few questions for the lvm guru's.
+A. Is it possible to move logical volumes from one computer to another? 
+And no, these aren't simple ext3 file systems so I can't just mount it 
+and export the files, they contain entire machines. I was hoping for 
+something in the nature of lvexport / lvimport but that obviously 
+doesn't exist.
+B. Why does this occur?... I searched for a while but didn't find 
+anything concrete as to why this occurs. I've always thought that a 
+block device = a block device. Evidently I was wrong.
+
+Thanks for any help.
+
+
+Brad Sickler
+Bioinformatician, Genome Center
+University of California, Davis
