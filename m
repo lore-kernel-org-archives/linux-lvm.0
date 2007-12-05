@@ -1,19 +1,21 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id lB58qDhh020901
-	for <linux-lvm@redhat.com>; Wed, 5 Dec 2007 03:52:13 -0500
-Received: from rv-out-0910.google.com (rv-out-0910.google.com [209.85.198.186])
-	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id lB58ppK3001926
-	for <linux-lvm@redhat.com>; Wed, 5 Dec 2007 03:51:51 -0500
-Received: by rv-out-0910.google.com with SMTP id k15so3972423rvb
-	for <linux-lvm@redhat.com>; Wed, 05 Dec 2007 00:51:50 -0800 (PST)
-Message-ID: <a71bd89a0712050051t4dd722c9ycb5dbbe11ffe0acf@mail.gmail.com>
-Date: Wed, 5 Dec 2007 00:51:50 -0800
-From: "Dan Kegel" <dank@kegel.com>
-Sender: daniel.r.kegel@gmail.com
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id lB5Empxu017130
+	for <linux-lvm@redhat.com>; Wed, 5 Dec 2007 09:48:51 -0500
+Received: from mail.bmsi.com (www.bmsi.com [24.248.44.156])
+	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id lB5EmVqt027164
+	for <linux-lvm@redhat.com>; Wed, 5 Dec 2007 09:48:31 -0500
+Received: from bmsred.bmsi.com (bmsred.bmsi.com [192.168.9.50])
+	by mail.bmsi.com (8.13.6/8.13.6) with ESMTP id lB5EmQ1B018100
+	for <linux-lvm@redhat.com>; Wed, 5 Dec 2007 09:48:26 -0500
+Received: from localhost (localhost [127.0.0.1])
+	by bmsred.bmsi.com (8.13.5/8.13.6) with ESMTP id lB5EmPUJ022104
+	for <linux-lvm@redhat.com>; Wed, 5 Dec 2007 09:48:25 -0500
+Date: Wed, 5 Dec 2007 09:48:25 -0500 (EST)
+From: "Stuart D. Gathman" <stuart@bmsi.com>
+Subject: Re: [linux-lvm] moving a logical volume between servers
+In-Reply-To: <200712050311.WAA26761@out-of-band.media.mit.edu>
+Message-ID: <Pine.LNX.4.44.0712050946001.22070-100000@bmsred.bmsi.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-Subject: [linux-lvm] Improving performance with many snapshots
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -24,25 +26,22 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@redhat.com
+Content-Type: TEXT/PLAIN; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-If you need to keep many snapshots mounted
-(e.g. 24 hourly snapshots), you may have noticed
-that it hurts write performance; see
-http://marc.info/?l=dm-devel&m=116322666022667&w=2
-for data.
+On Tue, 4 Dec 2007 f-lvm@media.mit.edu wrote:
 
-We have some new code ready to test that should get around this problem.
+> Not being able to write-lock disks means I've had to be very, very
+> careful in a number of situations when I wished I didn't have to worry
+> so much about shooting myself in the foot.
 
-If you have time to test some new stuff on non-production machines,
-are running Ubuntu, Debian, or Gentoo (or like building from source),
-don't mind installing patched kernels,
-don't mind incomplete documentation,
-and do like filing bug reports, please see
-http://zumastor.org.   We have something you might like.
+For IDE drives, hdparm -r will set the readonly flag for the entire
+drive.  I'm not sure if SATA has a similar feature.  But as you say,
+in a number of situations, a hardware jumper is better.
 
-The rest of you, wait a few weeks, it's not ready for you yet :-)
-
-Thanks...
-- Dan
+-- 
+	      Stuart D. Gathman <stuart@bmsi.com>
+    Business Management Systems Inc.  Phone: 703 591-0911 Fax: 703 591-6154
+"Confutatis maledictis, flammis acribus addictis" - background song for
+a Microsoft sponsored "Where do you want to go from here?" commercial.
