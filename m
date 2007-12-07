@@ -1,13 +1,9 @@
-Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id lB7FQqRL017264
-	for <linux-lvm@redhat.com>; Fri, 7 Dec 2007 10:26:52 -0500
-Received: from QMTA10.westchester.pa.mail.comcast.net
-	(qmta10.westchester.pa.mail.comcast.net [76.96.62.17])
-	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id lB7FQIOA021803
-	for <linux-lvm@redhat.com>; Fri, 7 Dec 2007 10:26:18 -0500
-Message-ID: <47596612.70305@mattgillen.net>
-Date: Fri, 07 Dec 2007 10:26:10 -0500
-From: Matthew Gillen <me@mattgillen.net>
+Received: from [10.33.0.40] (breeves.fab.redhat.com [10.33.0.40])
+	by pobox.fab.redhat.com (8.13.1/8.13.1) with ESMTP id lB7FUGSo032535
+	for <linux-lvm@redhat.com>; Fri, 7 Dec 2007 10:30:16 -0500
+Message-ID: <47596708.10609@redhat.com>
+Date: Fri, 07 Dec 2007 15:30:16 +0000
+From: "Bryn M. Reeves" <breeves@redhat.com>
 MIME-Version: 1.0
 Subject: Re: [linux-lvm] Re: Welcome to the "linux-lvm" mailing list (Digest
 	mode)
@@ -28,6 +24,9 @@ List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA1
+
 Seokmann Ju wrote:
 > linux-lvm-request@redhat.com wrote:
 >> Welcome to the linux-lvm@redhat.com mailing list! There are several
@@ -39,11 +38,25 @@ Seokmann Ju wrote:
 > Can anyone help me to locate the how-to document?
 > Above link is broken and no longer working.
 
-I guess the list admin needs to remove that link.  Try the URL at the bottom
-of each message to get to the HOW-TO:
+As Matthew points out, the correct link is now:
 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+http://tldp.org/HOWTO/LVM-HOWTO/
+
+You might also find the wiki & Red Hat manuals have some useful info,
+depending on what you're looking for:
+
+http://sourceware.org/lvm2/
+http://sources.redhat.com/lvm2/wiki/
+http://tinyurl.com/yryj8g [RHEL4 sysadmin guide LVM intro on redhat.com]
+
+Kind regards,
+Bryn.
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.7 (GNU/Linux)
+Comment: Using GnuPG with Fedora - http://enigmail.mozdev.org
+
+iD8DBQFHWWcI6YSQoMYUY94RAlEhAKCVZqyy3WOM4lM6GrIEUJWVfUYNuwCfaC+B
+n1QSeY/5aWabhAJccKWJ8j4=
+=PDV9
+-----END PGP SIGNATURE-----
