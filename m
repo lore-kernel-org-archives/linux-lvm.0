@@ -1,20 +1,30 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id lB7IwPfI016714
-	for <linux-lvm@redhat.com>; Fri, 7 Dec 2007 13:58:25 -0500
-Received: from gwa5.webcontrolcenter.com (gwa5.webcontrolcenter.com
-	[63.134.207.25])
-	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id lB7Ivoto015915
-	for <linux-lvm@redhat.com>; Fri, 7 Dec 2007 13:57:50 -0500
-Received: from maila61.webcontrolcenter.com (unverified [216.119.106.87]) 
-	by gwa5.webcontrolcenter.com (SurgeMail 3.8k4) with ESMTP id
-	31103246-1777419 
-	for <linux-lvm@redhat.com>; Fri, 07 Dec 2007 11:57:45 -0700
-From: "Ian Puleston" <ian@underpressuredivers.com>
-Date: Fri, 7 Dec 2007 10:57:05 -0800
-Message-ID: <06a601c83902$f88ac160$01a8a8c0@sv.us.sonicwall.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: [linux-lvm] RAID mapper device size wrong after replacing drives
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id lB7KEwmG022629
+	for <linux-lvm@redhat.com>; Fri, 7 Dec 2007 15:14:58 -0500
+Received: from mx.greatschools.net (mx.greatschools.net [198.144.205.131])
+	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id lB7KENeZ032084
+	for <linux-lvm@redhat.com>; Fri, 7 Dec 2007 15:14:24 -0500
+Received: from zimbra.greatschools.net (zimbra.greatschools.net
+	[198.144.205.155])
+	by mx.greatschools.net (8.13.1/8.13.1) with ESMTP id lB7KEH9E020954
+	for <linux-lvm@redhat.com>; Fri, 7 Dec 2007 12:14:17 -0800
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by zimbra.greatschools.net (Postfix) with ESMTP id 5297C304DBC
+	for <linux-lvm@redhat.com>; Fri,  7 Dec 2007 12:14:17 -0800 (PST)
+Received: from zimbra.greatschools.net ([127.0.0.1])
+	by localhost (zimbra.greatschools.net [127.0.0.1]) (amavisd-new,
+	port 10024) with ESMTP id XkeQQ5POyzgI for <linux-lvm@redhat.com>;
+	Fri,  7 Dec 2007 12:14:16 -0800 (PST)
+Received: from [198.144.205.132] (dh1.office.greatschools.net
+	[198.144.205.132])
+	by zimbra.greatschools.net (Postfix) with ESMTP id C0FC7304D88
+	for <linux-lvm@redhat.com>; Fri,  7 Dec 2007 12:14:16 -0800 (PST)
+From: Dane Miller <dane@greatschools.net>
+Date: Fri, 07 Dec 2007 12:14:01 -0800
+Message-Id: <1197058441.23187.30.camel@danedesk.greatschools.net>
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] dm errors with lvcreate --snapshot
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -25,81 +35,44 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@redhat.com
 
-Hi, 
+Hi,
 
-I posted this question on linux-raid@vger.kernel.org and was told it might
-be more appropriate here, so apologies to anyone on both lists who might be
-seeing it twice.
+I've recently started getting errors when creating a snapshot.  I'm new
+to LVM2 troubleshooting, so please point me in the right direction if
+these are obvious error messages.
 
-I have a problem with my RAID array under Linux after upgrading to larger
-drives. I have a machine with Windows and Linux dual-boot which had a pair
-of 160GB drives in a RAID-1 mirror with 3 partitions: partiton 1 = Windows
-boot partition (FAT32), partiton 2 = Linux /boot (ext3), partiton 3 =
-Windows system (NTFS). The Linux /root is on a separate physical drive. The
-dual boot is via Grub installed on the /boot partiton, and this was all
-working fine. 
+The script 'amanda_snapshot.pl' removes yesterday's snapshot and creates
+a new snapshot, which amanda backs up some time later.  Here's the
+output of this script, including error messages:
 
-But I just upgraded the drives in the RAID pair, replacing them with 500GB
-drives. I did this by replacing one of the 160s with a new 500 and letting
-the RAID copy the drive, splitting the drives out of the RAID array and
-increasing the size of the last partition of the 500 (which I did under
-Windows since its the Windows partiton) then replacing the last 160 with the
-other 500 and having the RAID controller create a new array with the two
-500s, copying the drive that I'd copied from the 160. This worked great for
-Windows, and that now boots and sees a 500GB RAID drive with all the data
-intact. 
-
-However, Linux has a problem and will not now boot all the way. It reports
-that the RAID /dev/mapper volume failed - the partition is beyond the
-boundaries of the disk. Running fdisk shows that it is seeing the larger
-partiton, but still sees the size of the RAID /dev/mapper drive as 160GB.
-Here is the fdisk output for one of the physical drives and for the RAID
-mapper drive: 
-
-Disk /dev/sda: 500.1 GB, 500107862016 bytes 
-255 heads, 63 sectors/track, 60801 cylinders 
-Units = cylinders of 16065 * 512 = 8225280 bytes 
-
-� �Device Boot � � �Start � � � � End � � �Blocks � Id �System 
-/dev/sda1 � � � � � � � 1 � � � � 625 � � 5018624 � �b �W95 FAT32 
-Partition 1 does not end on cylinder boundary. 
-/dev/sda2 � � � � � � 626 � � � � 637 � � � 96390 � 83 �Linux 
-/dev/sda3 � * � � � � 638 � � � 60802 � 483264512 � �7 �HPFS/NTFS 
+amanda_snapshot.pl: umount /media/vm1optsnap
+amanda_snapshot.pl: lvremove -f /dev/vg0/vm1optsnap
+  Logical volume "vm1optsnap" successfully removed
+amanda_snapshot.pl: lvcreate --snapshot --name vm1optsnap --size
+10G /dev/vg0/vm1opt
+  /dev/dm-9: stat failed: No such file or directory
+  Path /dev/dm-9 no longer valid for device(253,9)
+  Aborting - please provide new pathname for what used to be /dev/dm-9
+  /dev/dm-10: stat failed: No such file or directory
+  Path /dev/dm-10 no longer valid for device(253,10)
+  Aborting - please provide new pathname for what used to be /dev/dm-10
+  /dev/dm-11: stat failed: No such file or directory
+  Path /dev/dm-11 no longer valid for device(253,11)
+  Aborting - please provide new pathname for what used to be /dev/dm-11
+  Logical volume "vm1optsnap" created
+amanda_snapshot.pl: mount /dev/vg0/vm1optsnap /media/vm1optsnap
 
 
-Disk /dev/mapper/isw_bcifcijdi_Raid-0: 163.9 GB, 163925983232 bytes 
-255 heads, 63 sectors/track, 19929 cylinders 
-Units = cylinders of 16065 * 512 = 8225280 bytes 
-
-� � � � � � � � � � � � � � Device Boot � � �Start � � � � End � � �Blocks �
-Id �System 
-/dev/mapper/isw_bcifcijdi_Raid-0p1 � � � � � � � 1 � � � � 625 � � 5018624 �
-�b �W95 FAT32 
-Partition 1 does not end on cylinder boundary. 
-/dev/mapper/isw_bcifcijdi_Raid-0p2 � � � � � � 626 � � � � 637 � � � 96390 �
-83 �Linux 
-/dev/mapper/isw_bcifcijdi_Raid-0p3 � * � � � � 638 � � � 60802 � 483264512 �
-�7 �HPFS/NTFS 
+What would cause these /dev/dm-* errors?  How can I find out what's
+going on?
 
 
-They differ only in the drive capacity and number of cylinders. 
-
-I started to try to run a Linux reinstall, but it reports that the partiion
-table on the mapper drive is invalid, giving an option to re-initialize it
-but saying that doing so will lose all the data on the drive. 
-
-So questions: 
-
-1. Where is the drive size information for the RAID mapper drive kept, and
-is there some way to patch it? 
-
-2. Is there some way to re-initialize the RAID mapper drive without
-destroying the data on the drive? 
-
-By the way, this is a software RAID with an Intel chipset.
-
-Thanks, 
-Ian
+Dane
+-- 
+Dane Miller
+Systems Administartor
+Greatschools, Inc
+http://www.greatschools.net
