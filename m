@@ -1,18 +1,15 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id lB9Iqtnt018850
-	for <linux-lvm@redhat.com>; Sun, 9 Dec 2007 13:52:55 -0500
-Received: from ug-out-1314.google.com (ug-out-1314.google.com [66.249.92.168])
-	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id lB9IqMcp003037
-	for <linux-lvm@redhat.com>; Sun, 9 Dec 2007 13:52:23 -0500
-Received: by ug-out-1314.google.com with SMTP id t39so1338242ugd
-	for <linux-lvm@redhat.com>; Sun, 09 Dec 2007 10:52:22 -0800 (PST)
-From: "Ivan Lezhnjov Jr." <ivan.lezhnjov.jr@gmail.com>
-Date: Sun, 9 Dec 2007 20:51:27 +0200
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id lBAFM6SP008266
+	for <linux-lvm@redhat.com>; Mon, 10 Dec 2007 10:22:06 -0500
+Received: from avexch2.qlogic.com (avexch2.qlogic.com [198.70.193.116])
+	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id lBAFLjfL026138
+	for <linux-lvm@redhat.com>; Mon, 10 Dec 2007 10:21:45 -0500
+Message-ID: <475D598B.3010809@qlogic.com>
+Date: Mon, 10 Dec 2007 07:21:47 -0800
+From: Seokmann Ju <seokmann.ju@qlogic.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-Message-Id: <200712092051.28094.ivan.lezhnjov.jr@gmail.com>
-Subject: [linux-lvm] Name change: '/dev/dm-0' -> '/dev/lvm/home'
+Subject: [linux-lvm] Is LVM2 available on upstream kernel?
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -28,178 +25,9 @@ To: linux-lvm@redhat.com
 
 Hello,
 
-I'm using LVM2 on my system and I faced an issue that I've set myself to 
-resolve. The essence of the issue is shown in the following /sbin/lilo -t 
-command output: 
+Is LVM2 available on upstream kernel?
+If so, where is the source located in the tree?
+If not, can anyone share with me if there is any efforts going on to make this happen?
 
-> root@sega:/home/users/ilj# /sbin/lilo -t
-> Warning: '/proc/partitions' does not match '/dev' directory structure.
->     Name change: '/dev/dm-0' -> '/dev/lvm/home'
-> Warning: Name change: '/dev/dm-1' -> '/dev/lvm/tmp'
-> Warning: Name change: '/dev/dm-2' -> '/dev/lvm/usr'
-> Warning: Name change: '/dev/dm-3' -> '/dev/lvm/var'
-> Added linux-2.6.23 *
-> Added 2.6.22
-> Added linux-2.6.19.5
-> The boot sector and the map file have *NOT* been altered.
-> 4 warnings were issued.
-
-I'm pretty novice to device-mapper (hey, i'm a mere user! :) ) and LVM. I use 
-basic configurations for both. Nothing really special.
-
-These warnings LILO returns weren't always there. They appeared after a recent 
-system update (I'm running Source Mage). There were no such warnings 
-previously. I contacted a LILO maintainer on a related issue and he kindly 
-responded with confirmation that these warnings are not LILO related. As far 
-as I know, LVM is a set of userspace tools and the actual job is done by 
-device-mapper. I did try to contact the developers of dev-mappper project but 
-no single person replied to my message so I'm writing you now, the developers 
-of LVM.
-
-My goal is to comprehend the origin of the warnings and their actual meaning, 
-also set things straight so that LILO doesn't return these warnings.
-
-Hopefully, you are the guys that can help me with this :)
-
-Information about what software version numbers I use and configuration 
-details:
-
-- linux 2.6.23
-(not patched but not vanilla either; configured tuned and tweaked with my own 
-two hands :))
-
-device-mapper related linux configuration options:
-
-> CONFIG_BLK_DEV_DM=y
-> # CONFIG_DM_DEBUG is not set
-> CONFIG_DM_CRYPT=y
-> CONFIG_DM_SNAPSHOT=y
-> CONFIG_DM_MIRROR=y
-> CONFIG_DM_ZERO=y
-> CONFIG_DM_MULTIPATH=y
-> # CONFIG_DM_MULTIPATH_EMC is not set
-> # CONFIG_DM_MULTIPATH_RDAC is not set
-> # CONFIG_DM_DELAY is not set
-> # CONFIG_DM9102 is not set
-
-- lilo 22.8
-- lvm 2.02.28
-
-Physical Volume I use
-
-> root@sega:/home/users/ilj# pvdisplay
->   --- Physical volume ---
->   PV Name               /dev/sda3
->   VG Name               lvm
->   PV Size               69.87 GB / not usable 3.30 MB
->   Allocatable           yes (but full)
->   PE Size (KByte)       4096
->   Total PE              17886
->   Free PE               0
->   Allocated PE          17886
->   PV UUID               eRl10i-TM4M-Z7yk-JOGu-b0o9-IaNa-G1iThc
-
-Virtual Group on the Physical Volume
-
-> root@sega:/home/users/ilj# vgdisplay
->   --- Volume group ---
->   VG Name               lvm
->   System ID
->   Format                lvm2
->   Metadata Areas        1
->   Metadata Sequence No  13
->   VG Access             read/write
->   VG Status             resizable
->   MAX LV                0
->   Cur LV                4
->   Open LV               4
->   Max PV                0
->   Cur PV                1
->   Act PV                1
->   VG Size               69.87 GB
->   PE Size               4.00 MB
->   Total PE              17886
->   Alloc PE / Size       17886 / 69.87 GB
->   Free  PE / Size       0 / 0
->   VG UUID               PdcYgd-CsWE-CVUJ-po1J-tKGp-VdW9-08bx33
-
-Logical Volumes themselves
-
-> root@sega:/home/users/ilj# lvdisplay
->   --- Logical volume ---
->   LV Name                /dev/lvm/home
->   VG Name                lvm
->   LV UUID                IlQCbp-CY44-E5Fn-VHk2-CGVR-Cgud-aLCtNv
->   LV Write Access        read/write
->   LV Status              available
->   # open                 1
->   LV Size                49.87 GB
->   Current LE             12766
->   Segments               1
->   Allocation             inherit
->   Read ahead sectors     0
->   Block device           253:0
->
->   --- Logical volume ---
->   LV Name                /dev/lvm/tmp
->   VG Name                lvm
->   LV UUID                s9tqUP-V0il-2jd1-suyS-bLpG-Wy2n-zm4Eeu
->   LV Write Access        read/write
->   LV Status              available
->   # open                 1
->   LV Size                2.00 GB
->   Current LE             512
->   Segments               1
->   Allocation             inherit
->   Read ahead sectors     0
->   Block device           253:1
->
->   --- Logical volume ---
->   LV Name                /dev/lvm/usr
->   VG Name                lvm
->   LV UUID                A8PDF8-8o8X-hX2H-WiYq-nBTF-Cbtd-DpVwxq
->   LV Write Access        read/write
->   LV Status              available
->   # open                 1
->   LV Size                14.00 GB
->   Current LE             3584
->   Segments               1
->   Allocation             inherit
->   Read ahead sectors     0
->   Block device           253:2
->
->   --- Logical volume ---
->   LV Name                /dev/lvm/var
->   VG Name                lvm
->   LV UUID                7hagoJ-k3t7-yyZ1-d5Tc-C106-KOQK-3K3vpV
->   LV Write Access        read/write
->   LV Status              available
->   # open                 1
->   LV Size                4.00 GB
->   Current LE             1024
->   Segments               1
->   Allocation             inherit
->   Read ahead sectors     0
->   Block device           253:3
-
-- device-mapper-1.02.22
-> root@sega:/home/users/ilj# dmsetup --version
-> Library version:   1.02.22 (2007-08-21)
-> Driver version:    4.11.0
-
-This is it. If I missed anything, please, let me know.
-I'm really looking forward to getting answers to my questions. I'm more than 
-just curious now since I've spent quite a period of time already trying to 
-figure out the answers on my own, bothered random people in real life and on 
-the Internet in forums, IRC and now in mailing-lists :)
-
-I really want to know what these warnings are all about :)
-
--- 
-Ivan Lezhnjov Jr.
-
-Europe, Ukraine, Simferopol. Local Time:
-Sun Dec  9 20:48:30 EET 2007
-
-Source Mage GNU/Linux 0.9.6.3, linux-2.6.23 #1
-Disassemble To Assemble Something Pure
+Thank you,
+Seokmann
