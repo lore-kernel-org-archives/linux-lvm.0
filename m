@@ -1,14 +1,19 @@
-Received: from [10.33.0.40] (breeves.fab.redhat.com [10.33.0.40])
-	by pobox.fab.redhat.com (8.13.1/8.13.1) with ESMTP id lBCFLqmF029004
-	for <linux-lvm@redhat.com>; Wed, 12 Dec 2007 10:21:52 -0500
-Message-ID: <475FFC90.6050903@redhat.com>
-Date: Wed, 12 Dec 2007 15:21:52 +0000
-From: "Bryn M. Reeves" <breeves@redhat.com>
+Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id lBCJ5ALc032212
+	for <linux-lvm@redhat.com>; Wed, 12 Dec 2007 14:05:10 -0500
+Received: from bay0-omc2-s7.bay0.hotmail.com (bay0-omc2-s7.bay0.hotmail.com
+	[65.54.246.143])
+	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id lBCJ4XES024053
+	for <linux-lvm@redhat.com>; Wed, 12 Dec 2007 14:04:33 -0500
+Message-ID: <BAY124-W369BAF74F0EBE8FA1B966ACD650@phx.gbl>
+From: Glynn <glymor@hotmail.com>
+Subject: RE: [linux-lvm] After replacing sata card can't read
+Date: Wed, 12 Dec 2007 19:04:28 +0000
+In-Reply-To: <20071212082953.GA23948@percy.comedia.it>
+References: <BAY124-W59BBCA092E4CB4D14E3BE1CD650@phx.gbl>
+	<20071212082953.GA23948@percy.comedia.it>
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] Inconsistent VG
-References: <5485940d0712120657t54d848a0l5f40bdc209ce2d6a@mail.gmail.com>
-In-Reply-To: <5485940d0712120657t54d848a0l5f40bdc209ce2d6a@mail.gmail.com>
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -22,31 +27,20 @@ List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
------BEGIN PGP SIGNED MESSAGE-----
-Hash: SHA1
 
-C'est Pierre wrote:
-> Does someone have any guesses?
-> Aside from that, we've checked from the lvm/archive/vgdw2_* files. The
-> recent-most, doesn't include lvol4. We've managed to pull the "lvol4 {
-> }" part from an older file and confirmed all pv's in the segment
-> definitions existed in the destination, but it didn't help either.
 
-You need to find a version of the metadata that's consistent & contains
-the LV that has gone "missing", then restore that using vgcfgrestore.
+>>  mdadm  --create --assume-clean /dev/md2 --level=5 --raid-devices=6 /dev/sd[a-f]1
+> and you are 1000% sure you got the order right?
 
-You should also probably look at the metadata backups for lines that
-begin "description = ", as these contain the command that was run at the
-time the archive was created. If your LV disappeared at some point in
-the past there is a good chance this will tell you when & why.
+No, I'm pretty sure I didn't. I tried again with what I thought was the right order but to no affect, so I ran it again without the assume-clean and it rebuilt one of the drives. I assumed that meant mdadm was now okay with the ordering?
 
-Regards,
-Bryn.
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.7 (GNU/Linux)
-Comment: Using GnuPG with Fedora - http://enigmail.mozdev.org
+> usually after doing "mdadm --create --assume-clean" you should check
+> that data is still readable, if not try changing the order of drives in
+> "mdadm" and try again.
 
-iD8DBQFHX/yQ6YSQoMYUY94RAvdEAJ97ITMjN9hFbzRWLMTc2DG0SfNzuACfW3MC
-lTlIEpTQZgM4NcS978osQLM=
-=oF9U
------END PGP SIGNATURE-----
+Would it make sense to try and resolve this by constructing a bash script to try all the permitations of drive order until pvdisplay returns something?
+
+Thanks for your help and I apologize for essentially asking mdadm questions on the lvm mailling list.
+_________________________________________________________________
+Telly addicts unite!
+http://www.searchgamesbox.com/tvtown.shtml
