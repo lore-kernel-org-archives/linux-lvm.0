@@ -1,18 +1,21 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id lBHFhSqf001924
-	for <linux-lvm@redhat.com>; Mon, 17 Dec 2007 10:43:29 -0500
-Received: from NIHCESSMTP.hub.nih.gov (nihcessmtp.hub.nih.gov [128.231.90.115])
-	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id lBHFgmZ1009077
-	for <linux-lvm@redhat.com>; Mon, 17 Dec 2007 10:42:53 -0500
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id lBHG2prb017682
+	for <linux-lvm@redhat.com>; Mon, 17 Dec 2007 11:02:51 -0500
+Received: from NIHCESSMTP3.hub.nih.gov (nihcessmtp3.hub.nih.gov
+	[128.231.90.117])
+	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id lBHG2I2B023033
+	for <linux-lvm@redhat.com>; Mon, 17 Dec 2007 11:02:18 -0500
 Content-class: urn:content-classes:message
 MIME-Version: 1.0
 Content-Type: multipart/alternative;
-	boundary="----_=_NextPart_001_01C840C3.76699C1B"
-Date: Mon, 17 Dec 2007 10:42:42 -0500
-Message-ID: <86C31097FBD0B549855F1209D0C2183E03D751CA@NIHCESMLBX11.nih.gov>
-From: "Smith, Troy (NIH/NCI) [C]" <trsmith@mail.nih.gov>
-Subject: [linux-lvm] LV, VG,
+	boundary="----_=_NextPart_001_01C840C6.2F77232A"
+Subject: RE: [linux-lvm] LV, VG,
 	and PV information not available after vgcfgrestore
+Date: Mon, 17 Dec 2007 11:02:12 -0500
+Message-ID: <86C31097FBD0B549855F1209D0C2183E03D751CB@NIHCESMLBX11.nih.gov>
+In-Reply-To: <86C31097FBD0B549855F1209D0C2183E03D751CA@NIHCESMLBX11.nih.gov>
+References: <86C31097FBD0B549855F1209D0C2183E03D751CA@NIHCESMLBX11.nih.gov>
+From: "Smith, Troy (NIH/NCI) [C]" <trsmith@mail.nih.gov>
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -27,10 +30,34 @@ To: linux-lvm@redhat.com
 
 This is a multi-part message in MIME format.
 
-------_=_NextPart_001_01C840C3.76699C1B
+------_=_NextPart_001_01C840C6.2F77232A
 Content-Type: text/plain;
 	charset="US-ASCII"
 Content-Transfer-Encoding: quoted-printable
+
+I think I may have figured out what I missed.  Perhaps I should have
+executed the following on the new host prior to the vgcfgrestore?
+
+=20
+
+pvcreate --uuid "0OwDU9-wqnr-ylvu-2V0h-2uSZ-N2Xv-xOZRst" --restorefile
+/etc/lvm/archive/vg_00001.vg /dev/sdh
+
+=20
+
+Thanks
+
+Troy
+
+=20
+
+From: Smith, Troy (NIH/NCI) [C]=20
+Sent: Monday, December 17, 2007 10:43 AM
+To: linux-lvm@redhat.com
+Subject: [linux-lvm] LV, VG,and PV information not available after
+vgcfgrestore
+
+=20
 
 Hello all.
 
@@ -89,7 +116,7 @@ Troy
 =20
 
 
-------_=_NextPart_001_01C840C3.76699C1B
+------_=_NextPart_001_01C840C6.2F77232A
 Content-Type: text/html;
 	charset="US-ASCII"
 Content-Transfer-Encoding: quoted-printable
@@ -101,7 +128,7 @@ xmlns:m=3D"http://schemas.microsoft.com/office/2004/12/omml" =
 xmlns=3D"http://www.w3.org/TR/REC-html40">
 
 <head>
-<meta http-equiv=3DContent-Type content=3D"text/html; =
+<META HTTP-EQUIV=3D"Content-Type" CONTENT=3D"text/html; =
 charset=3Dus-ascii">
 <meta name=3DGenerator content=3D"Microsoft Word 12 (filtered medium)">
 <style>
@@ -113,6 +140,9 @@ charset=3Dus-ascii">
 @font-face
 	{font-family:Calibri;
 	panose-1:2 15 5 2 2 2 4 3 2 4;}
+@font-face
+	{font-family:Tahoma;
+	panose-1:2 11 6 4 3 5 4 4 2 4;}
  /* Style Definitions */
  p.MsoNormal, li.MsoNormal, div.MsoNormal
 	{margin:0in;
@@ -128,11 +158,16 @@ a:visited, span.MsoHyperlinkFollowed
 	color:purple;
 	text-decoration:underline;}
 span.EmailStyle17
-	{mso-style-type:personal-compose;
+	{mso-style-type:personal;
 	font-family:"Calibri","sans-serif";
 	color:windowtext;}
+span.EmailStyle18
+	{mso-style-type:personal-reply;
+	font-family:"Calibri","sans-serif";
+	color:#1F497D;}
 .MsoChpDefault
-	{mso-style-type:export-only;}
+	{mso-style-type:export-only;
+	font-size:10.0pt;}
 @page Section1
 	{size:8.5in 11.0in;
 	margin:1.0in 1.0in 1.0in 1.0in;}
@@ -152,6 +187,54 @@ div.Section1
 
 <div class=3DSection1>
 
+<p class=3DMsoNormal><span style=3D'color:#1F497D'>I think I may have =
+figured out what
+I missed.&nbsp; Perhaps I should have executed the following on the new =
+host prior
+to the vgcfgrestore?<o:p></o:p></span></p>
+
+<p class=3DMsoNormal><span =
+style=3D'color:#1F497D'><o:p>&nbsp;</o:p></span></p>
+
+<p class=3DMsoNormal><span style=3D'color:#1F497D'>pvcreate --uuid
+&quot;0OwDU9-wqnr-ylvu-2V0h-2uSZ-N2Xv-xOZRst&quot; --restorefile
+/etc/lvm/archive/vg_00001.vg /dev/sdh<o:p></o:p></span></p>
+
+<p class=3DMsoNormal><span =
+style=3D'color:#1F497D'><o:p>&nbsp;</o:p></span></p>
+
+<p class=3DMsoNormal><span =
+style=3D'color:#1F497D'>Thanks<o:p></o:p></span></p>
+
+<p class=3DMsoNormal><span =
+style=3D'color:#1F497D'>Troy<o:p></o:p></span></p>
+
+<p class=3DMsoNormal><span =
+style=3D'color:#1F497D'><o:p>&nbsp;</o:p></span></p>
+
+<div>
+
+<div style=3D'border:none;border-top:solid #B5C4DF 1.0pt;padding:3.0pt =
+0in 0in 0in'>
+
+<p class=3DMsoNormal><b><span =
+style=3D'font-size:10.0pt;font-family:"Tahoma","sans-serif"'>From:</span>=
+</b><span
+style=3D'font-size:10.0pt;font-family:"Tahoma","sans-serif"'> Smith, =
+Troy
+(NIH/NCI) [C] <br>
+<b>Sent:</b> Monday, December 17, 2007 10:43 AM<br>
+<b>To:</b> linux-lvm@redhat.com<br>
+<b>Subject:</b> [linux-lvm] LV, VG,and PV information not available =
+after
+vgcfgrestore<o:p></o:p></span></p>
+
+</div>
+
+</div>
+
+<p class=3DMsoNormal><o:p>&nbsp;</o:p></p>
+
 <p class=3DMsoNormal>Hello all.<o:p></o:p></p>
 
 <p class=3DMsoNormal><o:p>&nbsp;</o:p></p>
@@ -169,9 +252,9 @@ pvdisplay.<o:p></o:p></p>
 /etc/lvm/backup/file was copied from the failing host to the new host, =
 and
 using vgcfgrestore and vgchange, the LV&#8217;s are now mounted on the =
-new host
-and completely accessible.&nbsp; However, when I run any of the display =
-or scan
+new host and
+completely accessible.&nbsp; However, when I run any of the display or =
+scan
 commands, information regarding these volumes does not appear.&nbsp; =
 I&#8217;m
 wondering if I missed a step in recovery.&nbsp; Following are the steps =
@@ -233,4 +316,4 @@ appreciated.<o:p></o:p></p>
 
 </html>
 
-------_=_NextPart_001_01C840C3.76699C1B--
+------_=_NextPart_001_01C840C6.2F77232A--
