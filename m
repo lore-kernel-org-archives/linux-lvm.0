@@ -1,24 +1,20 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id lBH9GNtY007303
-	for <linux-lvm@redhat.com>; Mon, 17 Dec 2007 04:16:23 -0500
-Received: from cluster-f.mailcontrol.com (cluster-f.mailcontrol.com
-	[85.119.2.190])
-	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id lBH9Flsa016651
-	for <linux-lvm@redhat.com>; Mon, 17 Dec 2007 04:15:48 -0500
-Received: from mx.zetex.com (mx.zetex.com [194.129.23.24] (may be forged))
-	by rly27f.srv.mailcontrol.com (MailControl) with ESMTP id
-	lBH9FeuA025555
-	for <linux-lvm@redhat.com>; Mon, 17 Dec 2007 09:15:41 GMT
-Received: from zen.zetex.local (zen.zetex.com [192.168.230.14])
-	by mx.zetex.com (8.9.3/8.9.3) with ESMTP id JAA02614
-	for <linux-lvm@redhat.com>; Mon, 17 Dec 2007 09:19:32 GMT
-Content-class: urn:content-classes:message
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id lBH9ijpY021755
+	for <linux-lvm@redhat.com>; Mon, 17 Dec 2007 04:44:45 -0500
+Received: from mx1.lunarix.de (mx1.lunarix.de [85.131.251.86])
+	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id lBH9iMMN000519
+	for <linux-lvm@redhat.com>; Mon, 17 Dec 2007 04:44:23 -0500
+Received: from dslb-088-066-050-098.pools.arcor-ip.net ([88.66.50.98]
+	helo=[192.168.1.24])
+	by mx1.lunarix.de with esmtpsa (TLS-1.0:DHE_RSA_AES_256_CBC_SHA1:32)
+	(Exim 4.68) (envelope-from <corinl@gmx.de>) id 1J4CWG-0001KH-J8
+	for linux-lvm@redhat.com; Mon, 17 Dec 2007 10:44:16 +0100
+Message-ID: <476644EF.4030103@gmx.de>
+Date: Mon, 17 Dec 2007 10:44:15 +0100
+From: Corin Langosch <corinl@gmx.de>
 MIME-Version: 1.0
-Date: Mon, 17 Dec 2007 09:15:37 -0000
-Message-ID: <A374F37068535C46BFCF8D48CF29AA7F83940D@zen.zetex.local>
-From: "Karl Wagner" <kwagner@zetex.com>
-Content-Transfer-Encoding: 8bit
-Subject: [linux-lvm] Dropped LVM2 snapshot
+Subject: [linux-lvm] dynamic allocation
+Content-Transfer-Encoding: 7bit
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -29,40 +25,36 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@redhat.com
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
+Hi!
 
-I have a problem...
+I'm using lvm2. Currently I have on big VG (100GB) and several LV for
+VServers each 20GB. So my system is limited to having 5 Vservers.
 
-I run several Xen VM's, all based on Suse 10.2. In order to save space,
-and to simplify adding a new VM in future, I built a base system in a
-logical volume, then made writable snapshots for each. However, I made a
-mistake with one, and it filled the snapshot. Now it is marked as
-invalid and is inaccessible.
+Is it possible to tell lvm2 to start with only little allocation and
+dynamically grow the LV? I know I can grow it using the command line
+tools but I want it to happen fully automatically.
 
-Is there any way to force reactivation of the snapshot? The base image
-hasn't changed, so it should still contain the exact state of the system
-at the point at which it failed.
+So in terms of comands something like:
+lvcreate --size-max 20GB --size-grow 100MB --size-start 1GB vserver06 data
 
-Thanks
-Karl
+So the LV would intitially allocate only 1GB of the VG and allocate new
+space in 100MB as it needs, stopping at a maximum size of 20GB. Of
+course I would then have to make sure the VG has enough free blocks for
+the LVs to grow, but that shouldn't be a problem.
 
+I think this should technically be possible as software like VirtualBox
+can grow it's image file the same way to. If lvm can't to that, could
+that be done with some kind of loopback device? Which is the best way
+(also in terms of performance) to handle such a setup?
 
-_________________________________________________________
+Best regards,
+Corin
 
-Zetex Semiconductors - Solutions for an analog world.
-
-http://www.zetex.com
-http://www.zetex.cn
-
-E-MAILS are susceptible to interference.  You should not assume that
-the contents originated from the sender or the Zetex Group or that they 
-have been accurately reproduced from their original form.
-Zetex accepts no responsibility for information, errors or omissions in
-this e-mail nor for its use or misuse nor for any act committed or
-omitted in connection with this communication.
-If in doubt, please verify the authenticity with the sender.
-_________________________________________________________
-
- 
+_______________________________________________
+linux-lvm mailing list
+linux-lvm@redhat.com
+https://www.redhat.com/mailman/listinfo/linux-lvm
+read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
