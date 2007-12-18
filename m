@@ -1,17 +1,31 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id lBIJrrrT019778
-	for <linux-lvm@redhat.com>; Tue, 18 Dec 2007 14:53:53 -0500
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id lBIKAbA9032754
+	for <linux-lvm@redhat.com>; Tue, 18 Dec 2007 15:10:37 -0500
 Received: from mexforward.lss.emc.com (mexforward.lss.emc.com [128.222.32.20])
-	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id lBIJrLVI025535
-	for <linux-lvm@redhat.com>; Tue, 18 Dec 2007 14:53:21 -0500
+	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id lBIKA5vc003725
+	for <linux-lvm@redhat.com>; Tue, 18 Dec 2007 15:10:05 -0500
+Received: from hop04-l1d11-si01.isus.emc.com (HOP04-L1D11-SI01.isus.emc.com
+	[10.254.111.54])
+	by mexforward.lss.emc.com (Switch-3.2.5/Switch-3.1.7) with ESMTP id
+	lBIK9xHo027632
+	for <linux-lvm@redhat.com>; Tue, 18 Dec 2007 15:09:59 -0500 (EST)
+Received: from mailhub.lss.emc.com (uraeus.lss.emc.com [10.254.144.14]) by
+	hop04-l1d11-si01.isus.emc.com (Tablus Interceptor) for
+	<linux-lvm@redhat.com>; Tue, 18 Dec 2007 15:09:59 -0500
+Received: from corpussmtp4.corp.emc.com (corpussmtp4.corp.emc.com
+	[10.254.64.54])
+	by mailhub.lss.emc.com (Switch-3.2.5/Switch-3.1.7) with ESMTP id
+	lBIK9jgi016273
+	for <linux-lvm@redhat.com>; Tue, 18 Dec 2007 15:09:57 -0500 (EST)
 From: pham_cuong@emc.com
 Content-class: urn:content-classes:message
 MIME-Version: 1.0
 Subject: RE: [linux-lvm] won't dual boot: 2 disks and LVM
-Date: Tue, 18 Dec 2007 14:52:56 -0500
-Message-ID: <7C6C00FDABF70949A0A5D4DD8A4DC2170474A353@CORPUSMX20A.corp.emc.com>
-In-Reply-To: <1197988092.29413.77.camel@veri.phy.umist.ac.uk>
+Date: Tue, 18 Dec 2007 15:09:04 -0500
+Message-ID: <7C6C00FDABF70949A0A5D4DD8A4DC2170474A354@CORPUSMX20A.corp.emc.com>
+In-Reply-To: <7C6C00FDABF70949A0A5D4DD8A4DC2170474A353@CORPUSMX20A.corp.emc.com>
 References: <1197988092.29413.77.camel@veri.phy.umist.ac.uk>
+	<7C6C00FDABF70949A0A5D4DD8A4DC2170474A353@CORPUSMX20A.corp.emc.com>
 Content-Transfer-Encoding: 8bit
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
@@ -25,6 +39,25 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@redhat.com
+
+FYI:   
+
+I have servers and even laptop configured to multi-boot with RHEL, SuSE
+Linux, Vmware Workstation (laptop only), Vmware ESX 3.5,  W2K3EE-X32,
+W2K3EE-X64, and XP Pro w/o any problem.  You just have to know the
+behavior of each OS you want to install in a multiboot environment.
+
+If you need offline help, write to my email at khongphutu@yahoo.com
+
+Regards.
+
+
+
+-----Original Message-----
+From: pham, cuong 
+Sent: Tuesday, December 18, 2007 2:53 PM
+To: 'LVM general discussion and development'
+Subject: RE: [linux-lvm] won't dual boot: 2 disks and LVM
 
  Michael,
 
