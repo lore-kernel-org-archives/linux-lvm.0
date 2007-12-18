@@ -1,34 +1,17 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id lBIJe6PC010665
-	for <linux-lvm@redhat.com>; Tue, 18 Dec 2007 14:40:11 -0500
-Received: from pd4mo2so.prod.shaw.ca (idcmail-mo1so.shaw.ca [24.71.223.10])
-	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id lBIJda4x015447
-	for <linux-lvm@redhat.com>; Tue, 18 Dec 2007 14:39:36 -0500
-Received: from pd3mr4so.prod.shaw.ca
-	(pd3mr4so-qfe3.prod.shaw.ca [10.0.141.180]) by l-daemon
-	(Sun ONE Messaging Server 6.0 HotFix 1.01 (built Mar 15 2004))
-	with ESMTP id <0JT90023JFUV9X40@l-daemon> for linux-lvm@redhat.com; Tue,
-	18 Dec 2007 12:37:43 -0700 (MST)
-Received: from pn2ml2so.prod.shaw.ca ([10.0.121.146])
-	by pd3mr4so.prod.shaw.ca (Sun Java System Messaging Server 6.2-7.05
-	(built Sep
-	5 2006)) with ESMTP id <0JT9004NZFUV9XE0@pd3mr4so.prod.shaw.ca> for
-	linux-lvm@redhat.com; Tue, 18 Dec 2007 12:37:43 -0700 (MST)
-Received: from an-ex.ActiveNetwerx.int ([68.144.68.179])
-	by l-daemon (Sun Java System Messaging Server 6.2-7.05 (built Sep 5
-	2006))
-	with ESMTP id <0JT90082BFUTZF40@l-daemon> for linux-lvm@redhat.com; Tue,
-	18 Dec 2007 12:37:42 -0700 (MST)
-Date: Tue, 18 Dec 2007 12:37:40 -0700
-From: "Joseph L. Casale" <jcasale@ActiveNetwerx.com>
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id lBIJrrrT019778
+	for <linux-lvm@redhat.com>; Tue, 18 Dec 2007 14:53:53 -0500
+Received: from mexforward.lss.emc.com (mexforward.lss.emc.com [128.222.32.20])
+	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id lBIJrLVI025535
+	for <linux-lvm@redhat.com>; Tue, 18 Dec 2007 14:53:21 -0500
+From: pham_cuong@emc.com
+Content-class: urn:content-classes:message
+MIME-Version: 1.0
 Subject: RE: [linux-lvm] won't dual boot: 2 disks and LVM
-In-reply-to: <67500E55-99D2-4F59-9942-F014BEC4C8F2@networkingnewsletter.org.uk>
-Message-id: <1C8CF1EA1A5B5940B81B0710B2A4C93823E21AC9CE@an-ex.ActiveNetwerx.int>
-MIME-version: 1.0
-Content-language: en-US
+Date: Tue, 18 Dec 2007 14:52:56 -0500
+Message-ID: <7C6C00FDABF70949A0A5D4DD8A4DC2170474A353@CORPUSMX20A.corp.emc.com>
+In-Reply-To: <1197988092.29413.77.camel@veri.phy.umist.ac.uk>
 References: <1197988092.29413.77.camel@veri.phy.umist.ac.uk>
-	<1C8CF1EA1A5B5940B81B0710B2A4C93823E21AC9CD@an-ex.ActiveNetwerx.int>
-	<67500E55-99D2-4F59-9942-F014BEC4C8F2@networkingnewsletter.org.uk>
 Content-Transfer-Encoding: 8bit
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
@@ -41,15 +24,100 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: 'LVM general discussion and development' <linux-lvm@redhat.com>
+To: linux-lvm@redhat.com
 
->i've not had problems with Linux dual booting it's the LVM itself
->that seems a problem for WinXP installation.
->I'm really hoping it is possible to dual boot Linux/LVM and WinXP!!!
+ Michael,
 
-I am triple booting winxp, vista and Fedora Core 8, it works just fine. LVM doesn't have anything to do with it (Even though I am also using LVM). It is more likely there is some specific hiccup with your computer that WinXP setup gets tangled up on (I have encountered enough of my own...).
+No. There are several issues here, and the discussion in this email
+chain mixes thing up.
 
-Regardless, IMHO it's easier to take out your Linux HD and make the WinXP HD the only one in your system then install winxp, that's less work afaik.
+This has nothing to do with WinXP vs LVM.
 
-Ymmv,
-jlc
+It has to do with the way WinXP want to install vs. the way you want to
+install.  In all case, you will lose to XP.  More specifcally, it has to
+do with the way Windows XP works with primary and secondary disks, and
+with the way XP works with partitions in each disk.
+
+What you want to do is wrong for your intended purpose.  You can not
+install XP onto a slave disk in a multidisk host SUSEQUENT TO installing
+other Oses on the primary disk, without data loss, since XP would want
+to write data to a useable partition of the primary disk (after it
+formats the [first] paritition on the primary disk) regardless of
+whether you want to install the rest of the OS onto a partition on the
+primary disk or onto a partition of the secondary disk.  This is why you
+have to install XP first, so that the boot info is saved.  Once XP is
+successfully installed, you then can install other non-Windows Oses
+either:
+
+A.  On the same partition of the same disk (some Oses)
+B.  On a different partition of the same disk
+C.  On a different partition of a different disk.
+
+If you'd done this, then the Primary disk contains 1 or more partitions,
+one of which is designated for XP, as recorded in the hidden system file
+in the root directory of the primary drive, in the partition you've
+designated to XP at the time of installation.  For most people, the
+entire primary disk would be used, so the partition would be the first
+partition.  This partition would have the size less than or equaled to
+the entire raw disk.  Windows would, by default, designate this as "C:"
+drive.  The "boot.ini" file would look like this:
+
+[operating system]
+Multi(1)disk(0)rdisk(0)partition(1)\WINNT="Microsoft Windows XP
+Professional" /noexecute=Alwaysoff /fastdetect
+Multi(1)disk(1)rdisk(0)partition(1)\WINNT="Microsoft Windows 2003-X64
+Enterprise  Edition" /noexecute=Alwaysoff /fastdetect
+
+Upon a system boot, XP reads this boot.ini and display a menu of boot
+options within Windows.
+
+If you want to reinstall XP onto the 2nd/secondary disk, XP still have
+to write severla hidden system files onto a [NTFS]-formatted partition
+on the primary disk anyway; one of which is the boot.ini file.  If there
+is another non-Windows, non-DOS, or previous incompatible Windows OS
+exists, XP will format that partition and wipe out the ther OS.  This is
+why you always have to install [Windows] XP first before installing
+other non-Windows Oses.
+
+You should not care about whether Fedora exists in the primary or
+secondary disk.
+Instead, you want to install XP on the primary disk first, then install
+Fedore or whatever, on the secondary disk.  This is the way XP is
+designed to work.  Other Oses just have to to work around XP when it
+comes to multiboot.
+
+
+Good luck.
+
+Confucius.
+
+
+
+
+
+-----Original Message-----
+From: linux-lvm-bounces@redhat.com [mailto:linux-lvm-bounces@redhat.com]
+On Behalf Of michael
+Sent: Tuesday, December 18, 2007 9:28 AM
+To: linux-lvm@redhat.com
+Subject: [linux-lvm] won't dual boot: 2 disks and LVM
+
+I'm looking for a solution for (re-)installing WinXP on my slave disk
+when I have Fedora and LVM on the master disk. In the past I've opened
+up the box and unplugged the Fedora/LVM disk in order for WinXP to
+install okay. But this seems much too drastic. Even swapping disk order
+(in BIOS) doesn't help - WinXP installation sits there "forever" when
+checking current config.
+
+Whilst I cannot find any definite reference stating "MS WinXP cannot
+handle LVM" it does seem to be the culprit. 
+
+Anybody got any such definitive references or other help?
+
+Thanks, Michael
+
+_______________________________________________
+linux-lvm mailing list
+linux-lvm@redhat.com
+https://www.redhat.com/mailman/listinfo/linux-lvm
+read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
