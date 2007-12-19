@@ -1,26 +1,27 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id lBJA0AUe011753
-	for <linux-lvm@redhat.com>; Wed, 19 Dec 2007 05:00:10 -0500
-Received: from anchor-post-33.mail.demon.net (anchor-post-33.mail.demon.net
-	[194.217.242.91])
-	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id lBJ9xns4015667
-	for <linux-lvm@redhat.com>; Wed, 19 Dec 2007 04:59:49 -0500
-Received: from dyn-62-56-118-152.dslaccess.co.uk ([62.56.118.152]
-	helo=amd64.lan)
-	by anchor-post-33.mail.demon.net with esmtpa (AUTH miasmic)
-	(Exim 4.67) id 1J4viO-000MGb-Bs
-	for linux-lvm@redhat.com; Wed, 19 Dec 2007 09:59:48 +0000
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id lBJALPZD021988
+	for <linux-lvm@redhat.com>; Wed, 19 Dec 2007 05:21:25 -0500
+Received: from smtp8-g19.free.fr (smtp8-g19.free.fr [212.27.42.65])
+	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id lBJAKk9H028397
+	for <linux-lvm@redhat.com>; Wed, 19 Dec 2007 05:20:46 -0500
+Received: from smtp8-g19.free.fr (localhost [127.0.0.1])
+	by smtp8-g19.free.fr (Postfix) with ESMTP id 8E00517F55F
+	for <linux-lvm@redhat.com>; Wed, 19 Dec 2007 11:20:45 +0100 (CET)
+Received: from imp6-g19.free.fr (imp6-g19.free.fr [212.27.42.6])
+	by smtp8-g19.free.fr (Postfix) with ESMTP id 8008E17F525
+	for <linux-lvm@redhat.com>; Wed, 19 Dec 2007 11:20:45 +0100 (CET)
+Message-ID: <1198059645.4768f07d37201@imp.free.fr>
+Date: Wed, 19 Dec 2007 11:20:45 +0100
+From: Georges Giralt <georges.giralt@free.fr>
 Subject: RE: [linux-lvm] won't dual boot: 2 disks and LVM
-From: cs <cs@networkingnewsletter.org.uk>
-In-Reply-To: <7C6C00FDABF70949A0A5D4DD8A4DC2170474A356@CORPUSMX20A.corp.emc.com>
 References: <1197988092.29413.77.camel@veri.phy.umist.ac.uk>
 	<7C6C00FDABF70949A0A5D4DD8A4DC2170474A353@CORPUSMX20A.corp.emc.com>
 	<1198010286.6637.10.camel@amd64.local>
 	<7C6C00FDABF70949A0A5D4DD8A4DC2170474A356@CORPUSMX20A.corp.emc.com>
-Date: Wed, 19 Dec 2007 09:59:28 +0000
-Message-Id: <1198058368.3859.10.camel@amd64.local>
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+	<1198058368.3859.10.camel@amd64.local>
+In-Reply-To: <1198058368.3859.10.camel@amd64.local>
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -31,41 +32,46 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="iso-8859-1"
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-On Tue, 2007-12-18 at 16:52 -0500, pham_cuong@emc.com wrote:
-> There is a difference between changing the boot order from the BIOS vs.
-> [physically] removing the master HD.  Here's why:
-> 
-> In the former case, the BIOS boot order is at the lower-level (earlier)
-> and it will take effect before the boot loader exists in each drive.
-> Depending on your BIOS, the boot order can be fixed or priority-based
-> (most BIOSes support priority-based boot path).  Fixed order means that
-> only the specified boot order is used.  Priority-based boot order means
-> that the system will attempt the first boot path on the list, if failed,
-> or timed out, goes to the 2nd boot path.  BIOS boot order only changes
-> the order of which path to boot from first. It has no control over the
-> designation of which drive is detected and designated as drive 0 or
-> drive 1.  Boot.ini has this level of granularity, and more... Down to
-> the partition level (one below the disk level).
-> 
-> The act of removing the Master HD changes the HD designation at the
-> hardware level, and this in turn may affect how the system boots (for
-> non-SCSI only). Specifically, for your case the XP's boot.ini may
-> designate that XP is to be booted from the first disk (connected to
-> PR1), first paritition, and you've physically connect this drive as a
-> secondary/slave (SL) drive so XP will never boot when XP's boot loader
-> reads the boot.ini.  Upon either moving this drive to the primary (PR1)
-> connection, or change the boot.ini, the drive order for this drive is
-> changed from disk1 to disk0, so XP would see this drive and be able to
-> boot from it.  As you can see, in this case, changing the BIOS boot
-> order is inconsequential.
-> 
-> Regards,
-> 
-> Confucius
+Selon cs <cs@networkingnewsletter.org.uk>:
 
-useful stuff but I'm still unsure why if I change the order in BIOS then
-(when I had it working a bit) it would start the XP boot sequence (and
-not the GRUB from master) but then hang indefinitely...
+> On Tue, 2007-12-18 at 16:52 -0500, pham_cuong@emc.com wrote:
+> > There is a difference between changing the boot order from the BIOS vs.
+> > [physically] removing the master HD.  Here's why:
+...............Usefull stuff snipped............
+> > Regards,
+> >
+> > Confucius
+>
+> useful stuff but I'm still unsure why if I change the order in BIOS then
+> (when I had it working a bit) it would start the XP boot sequence (and
+> not the GRUB from master) but then hang indefinitely...
+Hi !
+Let me chime in here as I've faced the same problem you've got.
+My PC has a lot of disks, some of them for Fedora/LVM/mirror install, some =
+of
+them for Mandriva/Ubuntu install and one with Windows XP.
+The problem I encountered came from ...guess what ? Windows XP installation.
+Here is a _short_ HowTo.
+1) open you PC and let ONLY one disk into it as MASTER (if IDE) and install
+Windows/XP.
+2) Double check that the Windows/XP boot section specify only this disk.
+3) Test that you can boot Windows/XP in this particular configuration.
+4) Return PC hardware as it should be.
+5) double check that you Linux/LVM config boots fine.
+6) modify the Grub.conf file to have Windows/XP believe it is on first disk=
+/only
+disk using map() command.
+7) double check Windows/XP boots fine.
+If you do a Windows/XP install with another configuration than above, you w=
+ill
+have some references to this configuration in the registry/boot config...et=
+c and
+won't be able to run  XP=EF=BF=BDagain. Also be sure to wipe clean the Wind=
+ows/XP disk
+before installation, otherwise, you know what....
+This is just "been there, done that" .... kind of PITA I had.
+And, of course, YMMV.
+--=20
