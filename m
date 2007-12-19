@@ -1,29 +1,23 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id lBJ9Nrfi024562
-	for <linux-lvm@redhat.com>; Wed, 19 Dec 2007 04:23:53 -0500
-Received: from mail2.syneticon.net (mail.syneticon.net [213.239.212.131])
-	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id lBJ9NEWf026630
-	for <linux-lvm@redhat.com>; Wed, 19 Dec 2007 04:23:15 -0500
-Received: from postfix1.syneticon.net (postfix1.syneticon.net [192.168.112.6])
-	by mail2.syneticon.net (Postfix) with ESMTP id A2C1B4A77A
-	for <linux-lvm@redhat.com>; Wed, 19 Dec 2007 10:23:08 +0100 (CET)
-Received: from localhost (filter1.syneticon.net [192.168.113.3])
-	by postfix1.syneticon.net (Postfix) with ESMTP id 79F6B9483
-	for <linux-lvm@redhat.com>; Wed, 19 Dec 2007 10:23:07 +0100 (CET)
-Received: from postfix1.syneticon.net ([192.168.113.4])
-	by localhost (mx03.syneticon.net [192.168.113.3]) (amavisd-new,
-	port 10025) with ESMTP id ISSPbwYTURVf for <linux-lvm@redhat.com>;
-	Wed, 19 Dec 2007 10:23:05 +0100 (CET)
-Received: from [192.168.10.145] (xdsl-87-78-227-49.netcologne.de
-	[87.78.227.49]) by postfix1.syneticon.net (Postfix) with ESMTP
-	for <linux-lvm@redhat.com>; Wed, 19 Dec 2007 10:23:05 +0100 (CET)
-Message-ID: <4768E2F7.6000308@wpkg.org>
-Date: Wed, 19 Dec 2007 10:23:03 +0100
-From: Tomasz Chmielewski <mangoo@wpkg.org>
-MIME-Version: 1.0
-Subject: Re: [linux-lvm] dynamic allocation
-References: <476644EF.4030103@gmx.de>
-In-Reply-To: <476644EF.4030103@gmx.de>
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id lBJ9vu4J010364
+	for <linux-lvm@redhat.com>; Wed, 19 Dec 2007 04:57:56 -0500
+Received: from anchor-post-35.mail.demon.net (anchor-post-35.mail.demon.net
+	[194.217.242.85])
+	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id lBJ9vZYZ014759
+	for <linux-lvm@redhat.com>; Wed, 19 Dec 2007 04:57:35 -0500
+Received: from dyn-62-56-118-152.dslaccess.co.uk ([62.56.118.152]
+	helo=amd64.lan)
+	by anchor-post-35.mail.demon.net with esmtpa (AUTH miasmic)
+	(Exim 4.67) id 1J4vgE-0006eo-JD
+	for linux-lvm@redhat.com; Wed, 19 Dec 2007 09:57:35 +0000
+Subject: Re: [linux-lvm] won't dual boot: 2 disks and LVM
+From: cs <cs@networkingnewsletter.org.uk>
+In-Reply-To: <1198018946.6460.31.camel@behemoth.csg.stercomm.com>
+References: <1197988092.29413.77.camel@veri.phy.umist.ac.uk>
+	<1198018946.6460.31.camel@behemoth.csg.stercomm.com>
+Date: Wed, 19 Dec 2007 09:57:14 +0000
+Message-Id: <1198058234.3859.7.camel@amd64.local>
+Mime-Version: 1.0
 Content-Transfer-Encoding: 7bit
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
@@ -35,55 +29,41 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
+Content-Type: text/plain; charset="us-ascii"
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-Corin Langosch schrieb:
-> Hi!
+On Tue, 2007-12-18 at 17:02 -0600, Chris Cox wrote:
+> On Tue, 2007-12-18 at 14:28 +0000, michael wrote:
+> > I'm looking for a solution for (re-)installing WinXP on my slave disk
+> > when I have Fedora and LVM on the master disk. In the past I've opened
+> > up the box and unplugged the Fedora/LVM disk in order for WinXP to
+> > install okay. But this seems much too drastic. Even swapping disk order
+> > (in BIOS) doesn't help - WinXP installation sits there "forever" when
+> > checking current config.
+> > 
+> > Whilst I cannot find any definite reference stating "MS WinXP cannot
+> > handle LVM" it does seem to be the culprit. 
+> > 
+> > Anybody got any such definitive references or other help?
 > 
-> I'm using lvm2. Currently I have on big VG (100GB) and several LV for
-> VServers each 20GB. So my system is limited to having 5 Vservers.
+> Do the "remove the Linux disk and move he XP disk" technique
+> you mentioned to install WinXP onto
+> what it believes will be the primary disk.... then...
 > 
-> Is it possible to tell lvm2 to start with only little allocation and
-> dynamically grow the LV? I know I can grow it using the command line
-> tools but I want it to happen fully automatically.
+> Then switch things to put the Linux drive back as the
+> primary and the WinXP as the secondary.
 > 
-> So in terms of comands something like:
-> lvcreate --size-max 20GB --size-grow 100MB --size-start 1GB vserver06 data
+> You can try something like this inside of grub.  Notice the
+> map commands in particular.
 > 
-> So the LV would intitially allocate only 1GB of the VG and allocate new
-> space in 100MB as it needs, stopping at a maximum size of 20GB. Of
-> course I would then have to make sure the VG has enough free blocks for
-> the LVs to grow, but that shouldn't be a problem.
+> title WinXP
+> map (hd0) (hd1)
+> map (hd1) (hd0)
+> root (hd1,0)
+> savedefault
+> makeactive
+> chainloader +1
 > 
-> I think this should technically be possible as software like VirtualBox
-> can grow it's image file the same way to. If lvm can't to that, could
-> that be done with some kind of loopback device? Which is the best way
-> (also in terms of performance) to handle such a setup?
+> Let us know if this works for you.
 
-Right now it's not possible (kernel-side).
-
-The best you can do is to use a user-space tool which will monitor a 
-given volume, and grow it when needed. Saying that, I'm thinking 
-primarily of snapshots. You may see a similar discussion last month - 
-"balooning/dynamic snapshots?".
-
-
-With dynamic non-snapshot volumes there is one significant problem 
-added: not only must you grow the volume; you also have to (live-)grow 
-the filesystem (ext3, xfs, ntfs, raw volumes serving as partitioned 
-disks for virtualised guests etc.) that sits on top of that volume.
-
-
-Perhaps if some skilled developer considers dynamic volumes for LVM in 
-the future (be it snapshots, or normal volumes) a good idea would be to 
-allow to create a "sparse volume" (similar to a sparse file, where space 
-was allocated, but not actually filled with data yet) which could grow, 
-if there is still place on the physical volume (with no space, make the 
-device read only).
-
-
-
--- 
-Tomasz Chmielewski
-http://wpkg.org
+It doesn't! This is exactly what I tried and it just hangs...
