@@ -1,27 +1,31 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id lBJAPqCG024023
-	for <linux-lvm@redhat.com>; Wed, 19 Dec 2007 05:25:52 -0500
-Received: from anchor-post-34.mail.demon.net (anchor-post-34.mail.demon.net
-	[194.217.242.92])
-	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id lBJAPVYw031266
-	for <linux-lvm@redhat.com>; Wed, 19 Dec 2007 05:25:31 -0500
-Received: from dyn-62-56-118-152.dslaccess.co.uk ([62.56.118.152]
-	helo=amd64.lan)
-	by anchor-post-34.mail.demon.net with esmtpa (AUTH miasmic)
-	(Exim 4.67) id 1J4w7G-0000Yw-Ee
-	for linux-lvm@redhat.com; Wed, 19 Dec 2007 10:25:30 +0000
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id lBJEZoTu017474
+	for <linux-lvm@redhat.com>; Wed, 19 Dec 2007 09:35:50 -0500
+Received: from mexforward.lss.emc.com (mexforward.lss.emc.com [128.222.32.20])
+	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id lBJEZHDP021587
+	for <linux-lvm@redhat.com>; Wed, 19 Dec 2007 09:35:17 -0500
+Received: from hop04-l1d11-si01.isus.emc.com (HOP04-L1D11-SI01.isus.emc.com
+	[10.254.111.54])
+	by mexforward.lss.emc.com (Switch-3.2.5/Switch-3.1.7) with ESMTP id
+	lBJEZBZM009554
+	for <linux-lvm@redhat.com>; Wed, 19 Dec 2007 09:35:11 -0500 (EST)
+Received: from mailhub.lss.emc.com (nagas.lss.emc.com [10.254.144.11]) by
+	hop04-l1d11-si01.isus.emc.com (Tablus Interceptor) for
+	<linux-lvm@redhat.com>; Wed, 19 Dec 2007 09:35:11 -0500
+Received: from corpussmtp4.corp.emc.com (corpussmtp4.corp.emc.com
+	[10.254.64.54])
+	by mailhub.lss.emc.com (Switch-3.2.5/Switch-3.1.7) with ESMTP id
+	lBJEYcKh003548
+	for <linux-lvm@redhat.com>; Wed, 19 Dec 2007 09:35:09 -0500 (EST)
+From: pham_cuong@emc.com
+Content-class: urn:content-classes:message
+MIME-Version: 1.0
 Subject: RE: [linux-lvm] won't dual boot: 2 disks and LVM
-From: cs <cs@networkingnewsletter.org.uk>
-In-Reply-To: <1198059645.4768f07d37201@imp.free.fr>
-References: <1197988092.29413.77.camel@veri.phy.umist.ac.uk>
-	<7C6C00FDABF70949A0A5D4DD8A4DC2170474A353@CORPUSMX20A.corp.emc.com>
-	<1198010286.6637.10.camel@amd64.local>
-	<7C6C00FDABF70949A0A5D4DD8A4DC2170474A356@CORPUSMX20A.corp.emc.com>
-	<1198058368.3859.10.camel@amd64.local>
-	<1198059645.4768f07d37201@imp.free.fr>
-Date: Wed, 19 Dec 2007 10:25:09 +0000
-Message-Id: <1198059909.3859.21.camel@amd64.local>
-Mime-Version: 1.0
+Date: Wed, 19 Dec 2007 09:33:00 -0500
+Message-ID: <7C6C00FDABF70949A0A5D4DD8A4DC2170474A35A@CORPUSMX20A.corp.emc.com>
+In-Reply-To: <1198059909.3859.21.camel@amd64.local>
+References: <1197988092.29413.77.camel@veri.phy.umist.ac.uk><7C6C00FDABF70949A0A5D4DD8A4DC2170474A353@CORPUSMX20A.corp.emc.com><1198010286.6637.10.camel@amd64.local><7C6C00FDABF70949A0A5D4DD8A4DC2170474A356@CORPUSMX20A.corp.emc.com><1198058368.3859.10.camel@amd64.local><1198059645.4768f07d37201@imp.free.fr>
+	<1198059909.3859.21.camel@amd64.local>
 Content-Transfer-Encoding: quoted-printable
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
@@ -34,7 +38,41 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="iso-8859-1"
-To: LVM general discussion and development <linux-lvm@redhat.com>
+To: linux-lvm@redhat.com
+
+ Instead of discussing back and forth w/o real data to discuss/explore with=
+ concrete evidences, could you:
+
+A. Post the content of both the grub.conf and boot.ini files
+B. Tell us the physical position of each of the drive, and
+C. The current BIOS setting
+D. Any observed behavior with the settings stated in A,B, and C.
+
+I presume (please make appropriate correction as needed), based on the emai=
+l trails, that the "current config that failed" is:
+
+E.  Primary drive contains Fedorea.
+F.  Slave drive contains XP.
+G.  Upon POST, Fedora boot loader comes up first, if you make the selection=
+ to boot to Fedora, then Fedora boot up w/o problem.
+H.  However, if you were to make the selection to boot to XP, then XP start=
+ed, but hung.  If so, let us know what transpired (what the last thing that=
+ passed, what the last thing that failed
+
+I.  I need to know whether the failure is caused by the Fedora boot loader =
+or the XP boot loader.  At this time, I can not ascertain which one is the =
+culprit.  If E,F,G,H are correct, then boot.ini along with all the necessar=
+y hidden system files must be scrutized to ensure that they exists, that th=
+ey are good (integrity check), and that the config is set correctly.
+
+Thanks.
+
+-----Original Message-----
+From: linux-lvm-bounces@redhat.com [mailto:linux-lvm-bounces@redhat.com] On=
+ Behalf Of cs
+Sent: Wednesday, December 19, 2007 5:25 AM
+To: LVM general discussion and development
+Subject: RE: [linux-lvm] won't dual boot: 2 disks and LVM
 
 On Wed, 2007-12-19 at 11:20 +0100, Georges Giralt wrote:
 > Selon cs <cs@networkingnewsletter.org.uk>:
@@ -74,8 +112,8 @@ sk/only
  will
 > have some references to this configuration in the registry/boot config...=
 etc and
-> won't be able to run  XP=C2=A8again. Also be sure to wipe clean the Windo=
-ws/XP disk
+> won't be able to run  XP=EF=BF=BDagain. Also be sure to wipe clean the Wi=
+ndows/XP disk
 > before installation, otherwise, you know what....
 > This is just "been there, done that" .... kind of PITA I had.
 > And, of course, YMMV.
@@ -84,3 +122,12 @@ that does seem the only safe way but I'm still struggling to understand
 why!
 
 Thanks, Michael
+
+
+
+
+_______________________________________________
+linux-lvm mailing list
+linux-lvm@redhat.com
+https://www.redhat.com/mailman/listinfo/linux-lvm
+read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
