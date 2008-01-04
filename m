@@ -1,22 +1,19 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m04Ihl3w031035
-	for <linux-lvm@redhat.com>; Fri, 4 Jan 2008 13:43:47 -0500
-Received: from mailgw.soe.ucsc.edu (mailgw.cse.ucsc.edu [128.114.48.9])
-	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id m04Ih1m6011515
-	for <linux-lvm@redhat.com>; Fri, 4 Jan 2008 13:43:01 -0500
-Received: from [128.114.56.35] (wraith.cse.ucsc.edu [128.114.56.35])
-	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by mailgw.soe.ucsc.edu (Spam Firewall) with ESMTP id 0614B423DB8
-	for <linux-lvm@redhat.com>; Fri,  4 Jan 2008 10:42:59 -0800 (PST)
-Message-ID: <477E7E31.6080500@soe.ucsc.edu>
-Date: Fri, 04 Jan 2008 10:42:57 -0800
-From: Erich Weiler <weiler@soe.ucsc.edu>
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m04J8LXn014046
+	for <linux-lvm@redhat.com>; Fri, 4 Jan 2008 14:08:21 -0500
+Received: from xchg03.bolivar.k12.mo.us (liberator.bolivar.k12.mo.us
+	[204.185.27.8])
+	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id m04J80s1000540
+	for <linux-lvm@redhat.com>; Fri, 4 Jan 2008 14:08:00 -0500
+Content-class: urn:content-classes:message
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] How to 'copy' a volume?
-References: <Pine.LNX.4.44.0801041117060.2402-100000@bmsred.bmsi.com>
-In-Reply-To: <Pine.LNX.4.44.0801041117060.2402-100000@bmsred.bmsi.com>
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/alternative;
+	boundary="----_=_NextPart_001_01C84F05.1F3D9164"
+Subject: [LINUX-LVM] shrinking a volume inside an LVM
+Date: Fri, 4 Jan 2008 13:07:42 -0600
+Message-ID: <F61B3F3722111146AF452DF29FDCCF5F038D1BD6@xchg03.bolivar.k12.mo.us>
+References: <F61B3F3722111146AF452DF29FDCCF5F038D1BD3@xchg03.bolivar.k12.mo.us>
+From: "Kemp, Levi" <lnkemp@bolivar.k12.mo.us>
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -27,27 +24,56 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: LVM general discussion and development <linux-lvm@redhat.com>
+To: linux-lvm@redhat.com
 
-Stuart D. Gathman wrote:
->> The machine then had a kernel panic (I think).  I'm remote so I'm not 
->> sure, but I'll be going in soon to check on it.  Not a critical system 
->> so no big deal.  I'll let everyone one what I see at the console.
-> 
-> Could be very slow.  On one of my systems, a blocksize of 300k is optimal.
-> The default block size is usually 512 bytes.
-> 
-> # dd if=/dev/volgroup00/original of=/dev/volgroup00/clone bs=300k
+This is a multi-part message in MIME format.
 
-It was probably slow, as you say, but it turns out our machines were 
-powered off by one of the other guys in our group because the UPS was 
-draining fast.  Power was lost because of a major storm on the central 
-California coast.
+------_=_NextPart_001_01C84F05.1F3D9164
+Content-Type: text/plain;
+	charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 
-I have a feeling it was working but was interrupted.  I'll try again 
-when power is restored...
+I'm sure it's been asked before, but I must be terrible at searching =
+because I cannot find the answer. I have, like many, followed defaults =
+and ended up wiht a boot partion and a lvm. Inside the lvm is a / and a =
+swap. I'd like to shrink the / so that I can do another install of a =
+different distro without upsetting my current one. I don't have another =
+computer, or equal setup to run my test on and cannot take this one down =
+yet either. If it's impossible let me know, but either way thanks for =
+the help.
 
-Thanks so much for your input!
+Levi
 
--erich
+------_=_NextPart_001_01C84F05.1F3D9164
+Content-Type: text/html;
+	charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML>
+<HEAD>
+<META HTTP-EQUIV=3D"Content-Type" CONTENT=3D"text/html; =
+charset=3Diso-8859-1">
+<META NAME=3D"Generator" CONTENT=3D"MS Exchange Server version =
+6.5.7652.24">
+<TITLE>[LINUX-LVM] shrinking a volume inside an LVM</TITLE>
+</HEAD>
+<BODY>
+<!-- Converted from text/plain format -->
+
+<P><FONT SIZE=3D2>I'm sure it's been asked before, but I must be =
+terrible at searching because I cannot find the answer. I have, like =
+many, followed defaults and ended up wiht a boot partion and a lvm. =
+Inside the lvm is a / and a swap. I'd like to shrink the / so that I can =
+do another install of a different distro without upsetting my current =
+one. I don't have another computer, or equal setup to run my test on and =
+cannot take this one down yet either. If it's impossible let me know, =
+but either way thanks for the help.<BR>
+<BR>
+Levi<BR>
+</FONT>
+</P>
+
+</BODY>
+</HTML>
+------_=_NextPart_001_01C84F05.1F3D9164--
