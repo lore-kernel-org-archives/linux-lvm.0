@@ -1,15 +1,23 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m04FjwxV004031
-	for <linux-lvm@redhat.com>; Fri, 4 Jan 2008 10:45:58 -0500
-Received: from edge.omniti.com (smtp.omniti.com [8.8.38.6])
-	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id m04Fjbsa027914
-	for <linux-lvm@redhat.com>; Fri, 4 Jan 2008 10:45:37 -0500
-Message-Id: <C52F339D-8ECB-48F3-94A6-4345E7CE3764@omniti.com>
-From: Troy Hanson <troy@omniti.com>
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m04GFwSa026788
+	for <linux-lvm@redhat.com>; Fri, 4 Jan 2008 11:15:58 -0500
+Received: from mailgw.soe.ucsc.edu (mailgw.cse.ucsc.edu [128.114.48.9])
+	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id m04GFRup013321
+	for <linux-lvm@redhat.com>; Fri, 4 Jan 2008 11:15:27 -0500
+Received: from CBSE-Powerbook-Pinocchio.local (dsl-63-249-88-71.cruzio.com
+	[63.249.88.71])
+	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by mailgw.soe.ucsc.edu (Spam Firewall) with ESMTP id 29BB6422F6A
+	for <linux-lvm@redhat.com>; Fri,  4 Jan 2008 08:15:27 -0800 (PST)
+Message-ID: <477E5B9E.1030605@soe.ucsc.edu>
+Date: Fri, 04 Jan 2008 08:15:26 -0800
+From: Erich Weiler <weiler@soe.ucsc.edu>
+MIME-Version: 1.0
+Subject: Re: [linux-lvm] How to 'copy' a volume?
+References: <477D7E55.3050003@soe.ucsc.edu> <477DEB7B.7050100@gmail.com>
+In-Reply-To: <477DEB7B.7050100@gmail.com>
 Content-Transfer-Encoding: 7bit
-Mime-Version: 1.0 (Apple Message framework v915)
-Date: Fri, 4 Jan 2008 10:45:30 -0500
-Subject: [linux-lvm] duplicating a snapshot volume
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -20,22 +28,25 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"; delsp="yes"
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-I see that lvcreate cannot create a snapshot volume from another  
-snapshot volume. It gives an error message about  snapshots of  
-snapshots being "not supported yet".
+David Robinson wrote:
+> I find 'dd' is the simplest way of doing this. Unmount the volume, 
+> create a new logical volume of equal or greater size, then 'dd' from one 
+> to the other:
+> 
+> lvcreate -L 500G -n clone volgroup00
+> dd if=/dev/volgroup00/original of=/dev/volgroup/clone
 
-As an alternative, is there any way to duplicate (not snapshot) a  
-snapshot volume, i.e. so the new snapshot shares the same source and  
-accumulated differences as the original snapshot?
+Hmmm...  I think it didn't work as expected.  I brought down the VM and 
+made sure that no LVM volumes were mounted, then:
 
-I assume copying the snapshot with dd would produce a flat, non- 
-snapshot volume, but I want my copy to still be a snapshot.
+# lvcreate -L 500G -n clone volgroup00
+# dd if=/dev/volgroup00/original of=/dev/volgroup00/clone
 
-Context: I'm running a bunch of Xen VM's. I have a base logical volume  
-from which snapshots are made, one for each Xen VM. But I want to go  
-one step further, with multiple snapshots per VM.
+The machine then had a kernel panic (I think).  I'm remote so I'm not 
+sure, but I'll be going in soon to check on it.  Not a critical system 
+so no big deal.  I'll let everyone one what I see at the console.
 
-Troy
+-erich
