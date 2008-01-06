@@ -1,26 +1,21 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m056cDlT010884
-	for <linux-lvm@redhat.com>; Sat, 5 Jan 2008 01:38:14 -0500
-Received: from fmailhost05.isp.att.net (fmailhost05.isp.att.net
-	[207.115.11.55])
-	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id m056bheo014239
-	for <linux-lvm@redhat.com>; Sat, 5 Jan 2008 01:37:43 -0500
-Received: from localhost (mail.bdmcc-us.com [192.168.1.133])
-	by bdmcc-us.com (Postfix) with ESMTP id 5DC9717FAA2
-	for <linux-lvm@redhat.com>; Sat,  5 Jan 2008 01:37:37 -0500 (EST)
-Received: from bdmcc-us.com ([127.0.0.1])
-	by localhost (mail.bdmcc-us.com [127.0.0.1]) (amavisd-maia, port 10024)
-	with LMTP id 19238-01-2 for <linux-lvm@redhat.com>;
-	Sat,  5 Jan 2008 01:37:36 -0500 (EST)
-Date: Sat, 5 Jan 2008 01:37:36 -0500
-From: Brian McCullough <bdmc@bdmcc-us.com>
-Subject: Re: [LINUX-LVM] shrinking a volume inside an LVM
-Message-ID: <20080105063736.GB19245@bdmcc-us.com>
-References: <Pine.LNX.4.44.0801041556120.5886-100000@bmsred.bmsi.com>
-	<F61B3F3722111146AF452DF29FDCCF5F038D1BDA@xchg03.bolivar.k12.mo.us>
-Mime-Version: 1.0
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m0617Ddk024418
+	for <linux-lvm@redhat.com>; Sat, 5 Jan 2008 20:07:13 -0500
+Received: from py-out-1112.google.com (py-out-1112.google.com [64.233.166.177])
+	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id m0616qnj016350
+	for <linux-lvm@redhat.com>; Sat, 5 Jan 2008 20:06:52 -0500
+Received: by py-out-1112.google.com with SMTP id a29so10345387pyi.0
+	for <linux-lvm@redhat.com>; Sat, 05 Jan 2008 17:06:52 -0800 (PST)
+Message-ID: <a9b19e850801051706o567d9244tb07b55f8f7877c21@mail.gmail.com>
+Date: Sun, 6 Jan 2008 02:06:52 +0100
+From: Hiamal <hiamall@gmail.com>
+Subject: Re: [linux-lvm] Crashed disk with LVM
+In-Reply-To: <477DEC64.6050108@sandbox.cz>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Content-Disposition: inline
-In-Reply-To: <F61B3F3722111146AF452DF29FDCCF5F038D1BDA@xchg03.bolivar.k12.mo.us>
+References: <a9b19e850712270618p16d62ae9w7200be49ebe74386@mail.gmail.com>
+	<477DEC64.6050108@sandbox.cz>
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -32,17 +27,38 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-On Fri, Jan 04, 2008 at 03:58:43PM -0600, Kemp, Levi wrote:
-> Ok I understand. Is there anything I need to do to the volume to prep it first, as in defragment it or something similar? I'm unsure as to how the ext2/3 file systems work with data, so I didn't know if it needed to be moved before shrinking the file system, then shrinking the LV, then exanding the file system to fill the LV, leaving room in the LVM to create another LV with whatever file system I want correct? Doesn't sound as complicated now. Thanks.
-
-As long as the "/" volume isn't actually "Live," this can be done "in
-place."   ( don't you love quotation marks? )
-
-The "e2fsck" does a form of defragment as a side effect of "cleaning up"
-the filesystem.
+Hi,
 
 
-Brian
+On Jan 4, 2008 9:20 AM, PeS <pes@sandbox.cz> wrote:
+>
+> Hiamal wrote:
+> > Hi,
+> >
+> > I have tow disks(hda and hdb) where tow partitions(hda2 and hdb1) a
+> > part of one LVM group VG01.
+> > Now disk hdb has crashed and I'am trying to save the data on hdb1 to
+> > another disk.
+> > I tried with knoppix dumping(dd) hda2(works) and hdb1(don't work) and
+> > I also tried activating the lvm group and dd the lvm volume but when
+> > dd comes to hdb1 the disk just hacks and sounds noisy :-P
+>
+> Instead of dd try dd_rescue. It's able to skip errors on failed disc and
+> read the rest.
+>
+> > What should I do?
+>
+> During dumping, prepare you regular backup plan ;-)
+
+That was my backup server...
+
+Anyway I solved the prob running ddrescue from a LiveCD dumping the
+recovered data to a file on a new disk. It took
+ ca 4 days for ddrescue to do the jobb. After that I had to mounted
+the dumped file, activated the LVM vol's and was abel to recover
+almost all the data.
+
+
+/h
