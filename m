@@ -1,19 +1,32 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m07154u5031809
-	for <linux-lvm@redhat.com>; Sun, 6 Jan 2008 20:05:04 -0500
-Received: from rv-out-0910.google.com (rv-out-0910.google.com [209.85.198.186])
-	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id m0714h6m000379
-	for <linux-lvm@redhat.com>; Sun, 6 Jan 2008 20:04:43 -0500
-Received: by rv-out-0910.google.com with SMTP id k15so8851411rvb.51
-	for <linux-lvm@redhat.com>; Sun, 06 Jan 2008 17:04:42 -0800 (PST)
-Message-ID: <9e15d1930801061704j347d41c7n9159bd5df98e45bd@mail.gmail.com>
-Date: Mon, 7 Jan 2008 02:04:42 +0100
-From: "=?ISO-8859-1?Q?Kiss_Tam=E1s?=" <littlet@freemail.hu>
-Sender: kiss.tamas@gmail.com
-MIME-Version: 1.0
-Content-Type: multipart/alternative; 
-	boundary="----=_Part_28242_12875940.1199667882853"
-Subject: [linux-lvm] Linux 2.4.34 Kernel Patch Device Mapper And LVM2 Support
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m07KOoLR021611
+	for <linux-lvm@redhat.com>; Mon, 7 Jan 2008 15:24:50 -0500
+Received: from pd4mo2so.prod.shaw.ca (idcmail-mo1so.shaw.ca [24.71.223.10])
+	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id m07KO6Al001031
+	for <linux-lvm@redhat.com>; Mon, 7 Jan 2008 15:24:06 -0500
+Received: from pd2mr2so.prod.shaw.ca
+	(pd2mr2so-qfe3.prod.shaw.ca [10.0.141.109]) by l-daemon
+	(Sun ONE Messaging Server 6.0 HotFix 1.01 (built Mar 15 2004))
+	with ESMTP id <0JUA00IYZJC5ET70@l-daemon> for linux-lvm@redhat.com; Mon,
+	07 Jan 2008 13:24:05 -0700 (MST)
+Received: from pn2ml4so.prod.shaw.ca ([10.0.121.148])
+	by pd2mr2so.prod.shaw.ca (Sun Java System Messaging Server 6.2-7.05
+	(built Sep
+	5 2006)) with ESMTP id <0JUA004CLJC5OB50@pd2mr2so.prod.shaw.ca> for
+	linux-lvm@redhat.com; Mon, 07 Jan 2008 13:24:06 -0700 (MST)
+Received: from an-ex.ActiveNetwerx.int ([68.144.68.179])
+	by l-daemon (Sun ONE Messaging Server 6.0 HotFix 1.01 (built Mar 15
+	2004))
+	with ESMTP id <0JUA008GAJC4KI10@l-daemon> for linux-lvm@redhat.com; Mon,
+	07 Jan 2008 13:24:04 -0700 (MST)
+Date: Mon, 07 Jan 2008 13:24:03 -0700
+From: "Joseph L. Casale" <jcasale@ActiveNetwerx.com>
+Message-id: <1C8CF1EA1A5B5940B81B0710B2A4C938373B12A45C@an-ex.ActiveNetwerx.int>
+MIME-version: 1.0
+Content-type: multipart/alternative;
+	boundary=_000_1C8CF1EA1A5B5940B81B0710B2A4C938373B12A45CanexActiveNet_
+Content-language: en-US
+Subject: [linux-lvm] Failed Disk Replacement
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -24,25 +37,106 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: linux-lvm@redhat.com
+To: "'linux-lvm@redhat.com'" <linux-lvm@redhat.com>
 
-------=_Part_28242_12875940.1199667882853
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
+--_000_1C8CF1EA1A5B5940B81B0710B2A4C938373B12A45CanexActiveNet_
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 
-Hi!
+The monitoring utils were setup wrong on a hardware raid 5 array and two di=
+sk's failed. The array has been rebuilt and is now accessible to the system=
+ but LVM was using the old array and obviously it is no longer available. H=
+ow can I remove the old pv and force lvm to truncate the existing lv? I wil=
+l attempt to recover all that I can from the volume then blow out the file =
+system in it and extend the lv with the new pv that was added and recreate =
+a clean file system.
 
-Where I found the "device mapper" and "lvm2" patch for the 2.4.34 or
-2.4.35linux kernel.
+Thanks for any help,
+jlc
 
-Thank's!
+--_000_1C8CF1EA1A5B5940B81B0710B2A4C938373B12A45CanexActiveNet_
+Content-Type: text/html; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 
-------=_Part_28242_12875940.1199667882853
-Content-Type: text/html; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
+<html xmlns:v=3D"urn:schemas-microsoft-com:vml" xmlns:o=3D"urn:schemas-micr=
+osoft-com:office:office" xmlns:w=3D"urn:schemas-microsoft-com:office:word" =
+xmlns:m=3D"http://schemas.microsoft.com/office/2004/12/omml" xmlns=3D"http:=
+//www.w3.org/TR/REC-html40">
 
-Hi!<br><br>Where I found the &quot;device mapper&quot; and &quot;lvm2&quot; patch for the 2.4.34 or 2.4.35 linux kernel.<br><br>Thank&#39;s!<br>
+<head>
+<META HTTP-EQUIV=3D"Content-Type" CONTENT=3D"text/html; charset=3Dus-ascii"=
+>
+<meta name=3DGenerator content=3D"Microsoft Word 12 (filtered medium)">
+<style>
+<!--
+ /* Font Definitions */
+ @font-face
+	{font-family:"Cambria Math";
+	panose-1:2 4 5 3 5 4 6 3 2 4;}
+@font-face
+	{font-family:Calibri;
+	panose-1:2 15 5 2 2 2 4 3 2 4;}
+ /* Style Definitions */
+ p.MsoNormal, li.MsoNormal, div.MsoNormal
+	{margin:0in;
+	margin-bottom:.0001pt;
+	font-size:11.0pt;
+	font-family:"Calibri","sans-serif";}
+a:link, span.MsoHyperlink
+	{mso-style-priority:99;
+	color:blue;
+	text-decoration:underline;}
+a:visited, span.MsoHyperlinkFollowed
+	{mso-style-priority:99;
+	color:purple;
+	text-decoration:underline;}
+span.EmailStyle17
+	{mso-style-type:personal-compose;
+	font-family:"Calibri","sans-serif";
+	color:windowtext;}
+.MsoChpDefault
+	{mso-style-type:export-only;}
+@page Section1
+	{size:8.5in 11.0in;
+	margin:1.0in 1.0in 1.0in 1.0in;}
+div.Section1
+	{page:Section1;}
+-->
+</style>
+<!--[if gte mso 9]><xml>
+ <o:shapedefaults v:ext=3D"edit" spidmax=3D"1026" />
+</xml><![endif]--><!--[if gte mso 9]><xml>
+ <o:shapelayout v:ext=3D"edit">
+  <o:idmap v:ext=3D"edit" data=3D"1" />
+ </o:shapelayout></xml><![endif]-->
+</head>
 
-------=_Part_28242_12875940.1199667882853--
+<body lang=3DEN-US link=3Dblue vlink=3Dpurple>
+
+<div class=3DSection1>
+
+<p class=3DMsoNormal>The monitoring utils were setup wrong on a hardware ra=
+id 5
+array and two disk&#8217;s failed. The array has been rebuilt and is now ac=
+cessible
+to the system but LVM was using the old array and obviously it is no longer
+available. How can I remove the old pv and force lvm to truncate the existi=
+ng
+lv? I will attempt to recover all that I can from the volume then blow out =
+the file
+system in it and extend the lv with the new pv that was added and recreate =
+a
+clean file system.<o:p></o:p></p>
+
+<p class=3DMsoNormal><o:p>&nbsp;</o:p></p>
+
+<p class=3DMsoNormal>Thanks for any help,<br>
+jlc<o:p></o:p></p>
+
+</div>
+
+</body>
+
+</html>
+
+--_000_1C8CF1EA1A5B5940B81B0710B2A4C938373B12A45CanexActiveNet_--
