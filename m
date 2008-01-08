@@ -1,24 +1,15 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m07LZpFs005752
-	for <linux-lvm@redhat.com>; Mon, 7 Jan 2008 16:35:51 -0500
-Received: from services.cse.ucsc.edu (services.cse.ucsc.edu [128.114.48.10])
-	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id m07LZSKp007989
-	for <linux-lvm@redhat.com>; Mon, 7 Jan 2008 16:35:28 -0500
-Received: from services.cse.ucsc.edu (localhost [127.0.0.1])
-	by services.cse.ucsc.edu (8.13.6/8.13.1) with ESMTP id m07LZRgS021768
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO)
-	for <linux-lvm@redhat.com>; Mon, 7 Jan 2008 13:35:27 -0800 (PST)
-Received: from localhost (weiler@localhost)
-	by services.cse.ucsc.edu (8.13.6/8.12.1/Submit) with ESMTP id
-	m07LZRNp021765
-	for <linux-lvm@redhat.com>; Mon, 7 Jan 2008 13:35:27 -0800 (PST)
-Date: Mon, 7 Jan 2008 13:35:27 -0800 (PST)
-From: Erich Weiler <weiler@soe.ucsc.edu>
-Subject: Re: [linux-lvm] How to 'copy' a volume?
-In-Reply-To: <Pine.LNX.4.44.0801041606310.5937-100000@bmsred.bmsi.com>
-Message-ID: <Pine.GSO.4.58.0801071324210.8567@services.cse.ucsc.edu>
-References: <Pine.LNX.4.44.0801041606310.5937-100000@bmsred.bmsi.com>
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m08Hu025007323
+	for <linux-lvm@redhat.com>; Tue, 8 Jan 2008 12:56:00 -0500
+Received: from snefru.openlib.org (wuecon195.wustl.edu [128.252.177.195])
+	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id m08HtS8Q006461
+	for <linux-lvm@redhat.com>; Tue, 8 Jan 2008 12:55:28 -0500
+Date: Tue, 8 Jan 2008 11:55:28 -0600
+From: Thomas Krichel <krichel@openlib.org>
+Message-ID: <20080108175528.GA6100@openlib.org>
 MIME-Version: 1.0
+Content-Disposition: inline
+Subject: [linux-lvm] uuid already in use
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -29,87 +20,91 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: LVM general discussion and development <linux-lvm@redhat.com>
+To: Linux LVM <linux-lvm@redhat.com>
+Cc: Bob Parks <bparks@wustl.edu>
 
-OK, cool, this worked great!  Was able to dd the contents of one LV to
-another and it worked.
 
-So the next thing I did was reduce the size of one of the filesystems on
-the Xen VM from 500GB to 5GB.  Then I reduced the size of the Logical
-Volume that the VM was sitting on from 524GB to 30GB.  Again, worked fine,
-still enough space to house all the data in the VM.  The filesystem resize worked fine.  Then
-I rebooted the VM.  Now I'm getting odd error during the VM's boot that say
-something about the disk being not the correct size, or something along
-those lines.
+  Hi,
 
-[root@xenvm ~]# fdisk -l
+  I have a disk /dev/hdb that appears to be physically
+  damaged. It is in a volume group vg1. At some 
+  stage it was so bad that I could not see it
 
-Disk /dev/xvda: 32.2 GB, 32212254720 bytes
-255 heads, 63 sectors/track, 3916 cylinders
+raneb:# fdisk /dev/hdb
+
+Unable to open /dev/hdb
+
+  I ran 
+
+raneb:# vgreduce vg1 --removemissing
+
+  but could not restore the volume group to run,
+  it kept complaing that /dev/hdb was missing.
+
+  I read 
+
+http://www.novell.com/communities/node/1502/recovering+lost+lvm+volume+disk
+
+  and tried to apply the procedure described in the
+  section "disk permanently removed". I first had
+  to order a new disk. A new 500G disk arrived today.
+
+  After a long shutdown, today the disk appears
+  visible again, miraculously. 
+
+raneb:/etc/lvm/archive# fdisk -l /dev/hdb
+
+Disk /dev/hdb: 200.0 GB, 200049647616 bytes
+255 heads, 63 sectors/track, 24321 cylinders
 Units = cylinders of 16065 * 512 = 8225280 bytes
+Disk identifier: 0x00000000
 
-    Device Boot      Start         End      Blocks   Id  System
-/dev/xvda1   *           1          13      104391   83  Linux
-/dev/xvda2              14        1288    10241437+  83  Linux
-/dev/xvda3            1289        2308     8193150   82  Linux swap /
-Solaris
-/dev/xvda4            2309       67620   524618640    5  Extended
-/dev/xvda5            2309       67620   524618608+  83  Linux
-[root@xenvm ~]#
+   Device Boot      Start         End      Blocks   Id  System
+/dev/hdb1               1       24321   195358401   83  Linux
 
-Notice it says that /dev/xvda is 32.2GB (which is what I want, and is
-correct), but the
-filesystem that I reduced from 500GB to 5GB, /dev/xvda5, is still listed
-as being 524GB, even though it is no longer that big!  Even though the
-filesystem on /dev/xvda5 is just 5GB:
+  So I try to see it in lvm
 
-[root@xenvm ~]# df -h
-Filesystem            Size  Used Avail Use% Mounted on
-/dev/xvda2            9.5G  2.0G  7.1G  22% /
-/dev/xvda5            5.0G  4.4G  365M  93% /data
-/dev/xvda1             99M   19M   76M  20% /boot
-tmpfs                 2.0G     0  2.0G   0% /dev/shm
-[root@xenvm ~]#
+raneb:/etc/lvm/archive# pvdisplay 
+  Warning: Volume Group vg1 is not consistent
+  --- Physical volume ---
+  PV Name               /dev/hdd1
+  VG Name               vg1
+  PV Size               186.31 GB / not usable 3.69 MB
+  Allocatable           yes 
+  PE Size (KByte)       4096
+  Total PE              47694
+  Free PE               47694
+  Allocated PE          0
+  PV UUID               vy3MOc-47sl-zUal-nhdO-FFX3-ispO-Rl0h8p
+   
+  --- Physical volume ---
+  PV Name               /dev/hdc
+  VG Name               vg1
+  PV Size               465.76 GB / not usable 4.02 MB
+  Allocatable           yes 
+  PE Size (KByte)       4096
+  Total PE              119234
+  Free PE               119234
+  Allocated PE          0
+  PV UUID               NxRIE1-ROxx-pfjJ-QHzh-7B80-F7wt-kRCmSK
+   
 
-This makes me think the disk label is not showing the correct block device
-size.  The VM still boots and runs fine despite the errors, but I'd like
-to fix it because I'll be resizing stuff often and want things to go
-smoothly when the resizes happen.  Does anyone know of a way to correct
-this?
+  I try to recover the metadata. The correct one is in 
+  vg1_00026.vg, because this is the version before the
+  "vgreduce vg1 --removemissing". But
 
-Thanks so much for the help!
+raneb:/etc/lvm/archive# pvcreate --uuid v3HXpi-d5QN-OGiW-VFBG-TNIY-qTun-bFhlVd  --restorefile vg1_00026.vg /dev/hdb
+  uuid v3HXpi-d5QN-OGiW-VFBG-TNIY-qTun-bFhlVd already in use on "/dev/hdb1"
 
--erich
+  I am puzzled. pvdisplay does not see the uuid value but
+  pvcreate says it is is use?? What am I missing here?
 
-On Fri, 4 Jan 2008, Stuart D. Gathman wrote:
 
-> On Fri, 4 Jan 2008, Erich Weiler wrote:
->
-> > > # dd if=/dev/volgroup00/original of=/dev/volgroup00/clone bs=300k
-> >
-> > It was probably slow, as you say, but it turns out our machines were
-> > powered off by one of the other guys in our group because the UPS was
-> > draining fast.  Power was lost because of a major storm on the central
-> > California coast.
->
-> You can use iostat to see throughput while dd is in progress.  If
-> you're ambitious, you can try various blocksizes to find the optimum
-> for your system.
->
-> Oh.  And *don't* get source and target mixed up with dd.  I did that
-> once ....
->
-> --
-> 	      Stuart D. Gathman <stuart@bmsi.com>
->     Business Management Systems Inc.  Phone: 703 591-0911 Fax: 703 591-6154
-> "Confutatis maledictis, flammis acribus addictis" - background song for
-> a Microsoft sponsored "Where do you want to go from here?" commercial.
->
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
->
+
+  Cheers,
+
+  Thomas Krichel                    http://openlib.org/home/krichel
+                                RePEc:per:1965-06-05:thomas_krichel
+                                               skype: thomaskrichel
