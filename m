@@ -1,15 +1,20 @@
-Received: from thunderbird6.fab.redhat.com (sebastian-int.corp.redhat.com
-	[172.16.52.221])
-	by pobox.fab.redhat.com (8.13.1/8.13.1) with ESMTP id m09DjvtY009841
-	for <linux-lvm@redhat.com>; Wed, 9 Jan 2008 08:45:58 -0500
-Message-ID: <4784CF70.3000307@redhat.com>
-Date: Wed, 09 Jan 2008 13:43:12 +0000
-From: "Bryn M. Reeves" <breeves@redhat.com>
+Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m09E3TKq000702
+	for <linux-lvm@redhat.com>; Wed, 9 Jan 2008 09:03:29 -0500
+Received: from poczta.davicom.pl (postfix@dym124.internetdsl.tpnet.pl
+	[83.14.64.124])
+	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id m09E2vje032472
+	for <linux-lvm@redhat.com>; Wed, 9 Jan 2008 09:02:57 -0500
+Received: from pingwinek (unknown [83.238.22.2])
+	by poczta.davicom.pl (Postfix) with ESMTP id A5E223BAC7
+	for <linux-lvm@redhat.com>; Wed,  9 Jan 2008 15:05:32 +0100 (CET)
+Message-ID: <000c01c852c8$524660e0$eef8a8c0@pingwinek>
+From: "admin" <admin@davicom.pl>
+Date: Wed, 9 Jan 2008 15:02:47 +0100
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] fdisk and lvs size differences
-References: <4784CDCC.6000809@wpkg.org>
-In-Reply-To: <4784CDCC.6000809@wpkg.org>
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/alternative;
+	boundary="----=_NextPart_000_0009_01C852D0.B1E41850"
+Subject: [linux-lvm] CLVM
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -20,44 +25,53 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: LVM general discussion and development <linux-lvm@redhat.com>
+To: linux-lvm@redhat.com
 
------BEGIN PGP SIGNED MESSAGE-----
-Hash: SHA1
+This is a multi-part message in MIME format.
 
-Tomasz Chmielewski wrote:
-> Let's say I have a 500GB logical volume:
-> 
-> # lvs | grep san2_data
->   san2_data                  san1 -wi-a- 500.00G
-> 
-> 
-> fdisk will report a bigger number:
-> 
-> # fdisk -l /dev/san1/san2_data
-> 
-> Disk /dev/san1/san2_data: 536.8 GB, 536870912000 bytes
+------=_NextPart_000_0009_01C852D0.B1E41850
+Content-Type: text/plain;
+	charset="iso-8859-2"
+Content-Transfer-Encoding: quoted-printable
 
-It's just units; the G in lvm's output signifies powers-of-two units,
-wheras the GB reported by fdisk is in powers-of-ten (SI units).
+Hi,
+I wan't to use clvm but without cman and related packages, is this =
+possible. When i was trying to compile lvm to use clvm i need to add =
+--with-clvmd but there were problem with dependencies so I need to =
+compile cluster first. I'm using debian and don't need cluster and gfs, =
+only clvm.
 
-See the lvm man pages for a description of the units supported (lower
-case are SI, upper case are powers-of-two).
+Please help!!!
 
-Strictly speaking, the powers-of-two versions should use the SI binary
-prefixes (MiB, GiB, etc.):
+Best Regards
+Bart
+------=_NextPart_000_0009_01C852D0.B1E41850
+Content-Type: text/html;
+	charset="iso-8859-2"
+Content-Transfer-Encoding: quoted-printable
 
-http://en.wikipedia.org/wiki/Binary_prefix
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML><HEAD>
+<META http-equiv=3DContent-Type content=3D"text/html; =
+charset=3Diso-8859-2">
+<META content=3D"MSHTML 6.00.2900.3243" name=3DGENERATOR>
+<STYLE></STYLE>
+</HEAD>
+<BODY bgColor=3D#ffffff>
+<DIV><FONT face=3DArial size=3D2>Hi,</FONT></DIV>
+<DIV><FONT face=3DArial size=3D2>I wan't to use clvm but without cman =
+and related=20
+packages, is this possible. When i was trying to compile lvm to use clvm =
+i need=20
+to add --with-clvmd but there were problem with dependencies so I need =
+to=20
+compile cluster first. I'm using debian and don't need cluster and gfs, =
+only=20
+clvm.</FONT></DIV>
+<DIV><FONT face=3DArial size=3D2></FONT>&nbsp;</DIV>
+<DIV><FONT face=3DArial size=3D2>Please help!!!</FONT></DIV>
+<DIV><FONT face=3DArial size=3D2></FONT>&nbsp;</DIV>
+<DIV><FONT face=3DArial size=3D2>Best Regards</FONT></DIV>
+<DIV><FONT face=3DArial size=3D2>Bart</FONT></DIV></BODY></HTML>
 
-Regards,
-Bryn.
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.7 (GNU/Linux)
-Comment: Using GnuPG with Fedora - http://enigmail.mozdev.org
-
-iD8DBQFHhM9w6YSQoMYUY94RAiINAKC87sqVnH6PpcQRKFuQNoMfOcpr7wCeM0gS
-wsnqw+Y7qtZx/FDKNnbnSBI=
-=tRAA
------END PGP SIGNATURE-----
+------=_NextPart_000_0009_01C852D0.B1E41850--
