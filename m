@@ -1,28 +1,21 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m09Ghbvg008199
-	for <linux-lvm@redhat.com>; Wed, 9 Jan 2008 11:43:37 -0500
-Received: from mail2.syneticon.net (mail.syneticon.net [213.239.212.131])
-	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id m09Gh4WI013633
-	for <linux-lvm@redhat.com>; Wed, 9 Jan 2008 11:43:04 -0500
-Received: from postfix1.syneticon.net (postfix1.syneticon.net [192.168.112.6])
-	by mail2.syneticon.net (Postfix) with ESMTP id 21E46379AF
-	for <linux-lvm@redhat.com>; Wed,  9 Jan 2008 17:43:01 +0100 (CET)
-Received: from localhost (filter1.syneticon.net [192.168.113.3])
-	by postfix1.syneticon.net (Postfix) with ESMTP id 06E8D9383
-	for <linux-lvm@redhat.com>; Wed,  9 Jan 2008 17:42:57 +0100 (CET)
-Received: from postfix1.syneticon.net ([192.168.113.4])
-	by localhost (mx03.syneticon.net [192.168.113.3]) (amavisd-new,
-	port 10025) with ESMTP id C1pGVrV4+EyB for <linux-lvm@redhat.com>;
-	Wed,  9 Jan 2008 17:42:54 +0100 (CET)
-Received: from [192.168.10.145] (xdsl-87-79-218-67.netcologne.de
-	[87.79.218.67]) by postfix1.syneticon.net (Postfix) with ESMTP
-	for <linux-lvm@redhat.com>; Wed,  9 Jan 2008 17:42:54 +0100 (CET)
-Message-ID: <4784F989.3030801@wpkg.org>
-Date: Wed, 09 Jan 2008 17:42:49 +0100
-From: Tomasz Chmielewski <mangoo@wpkg.org>
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m0A8khJx010301
+	for <linux-lvm@redhat.com>; Thu, 10 Jan 2008 03:46:43 -0500
+Received: from snefru.openlib.org (wuecon195.wustl.edu [128.252.177.195])
+	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id m0A8kKom019191
+	for <linux-lvm@redhat.com>; Thu, 10 Jan 2008 03:46:20 -0500
+Received: from krichel by snefru.openlib.org with local (Exim 4.68)
+	(envelope-from <krichel@openlib.org>) id 1JCt3Q-0005Cf-Qw
+	for linux-lvm@redhat.com; Thu, 10 Jan 2008 02:46:24 -0600
+Date: Thu, 10 Jan 2008 02:46:24 -0600
+From: Thomas Krichel <krichel@openlib.org>
+Subject: Re: [linux-lvm] uuid already in use
+Message-ID: <20080110084624.GA19895@openlib.org>
+References: <20080108175528.GA6100@openlib.org> <4783BB2C.5060803@redhat.com>
+	<20080108182230.GA6223@openlib.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] can't use LVM2 - "Failed to write physical volume"?
+Content-Disposition: inline
+In-Reply-To: <20080108182230.GA6223@openlib.org>
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -33,67 +26,100 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-It seems to me that for some reason it's not possible to create a 
-physical volume on a DRBD device. Below, we can see that running 
-"pvcreate" succeeds and than fails, then it succeeds again etc.:
-
-# pvcreate -d -v /dev/drbd0
-     Set up physical volume for "/dev/drbd0" with 976544952 available 
-sectors
-     Zeroing start of device /dev/drbd0
-   Physical volume "/dev/drbd0" successfully created
-
-# pvcreate -d -v /dev/drbd0
-     Wiping cache of LVM-capable devices
-     Set up physical volume for "/dev/drbd0" with 976544952 available 
-sectors
-     Zeroing start of device /dev/drbd0
-   Failed to write physical volume "/dev/drbd0"
-
-# pvcreate -d -v /dev/drbd0
-     Set up physical volume for "/dev/drbd0" with 976544952 available 
-sectors
-     Zeroing start of device /dev/drbd0
-   Physical volume "/dev/drbd0" successfully created
-
-
-Running vgcreate fails:
-
-# vgcreate san2_data /dev/drbd0
-   No physical volume label read from /dev/drbd0
-   /dev/drbd0 not identified as an existing physical volume
-   Unable to add physical volume '/dev/drbd0' to volume group 'san2_data'.
-
+  Thomas Krichel writes
+>    
+> raneb:/etc/lvm/archive# vgdisplay 
+>   --- Volume group ---
+>   VG Name               vg1
+>   System ID             
+>   Format                lvm2
+>   Metadata Areas        2
+>   Metadata Sequence No  17
+>   VG Access             read/write
+>   VG Status             resizable
+>   MAX LV                0
+>   Cur LV                0
+>   Open LV               0
+>   Max PV                0
+>   Cur PV                2
+>   Act PV                2
+>   VG Size               652.06 GB
+>   PE Size               4.00 MB
+>   Total PE              166928
+>   Alloc PE / Size       0 / 0   
+>   Free  PE / Size       166928 / 652.06 GB
+>   VG UUID               Hm2mZH-jACj-gxQI-tbZM-H6pm-ovfr-TVgurC
+>    
+> raneb:/etc/lvm/archive# lvdisplay 
+> raneb:/etc/lvm/archive#
+> 
+>   I presume I have to restore the lv somehow. But this
+>   has got me a step foward.
 
 
-This is the setup used:
+  I could not see how I would restore the lv, 
+  so I created a new one, with the same size and
+  name as the previous one
 
-encrypted /dev/sdb -> unencrypted /dev/mapper/san2_crypt -> partition 
-/dev/mapper/san2_crypt1 -> /dev/drbd0
+raneb:~# lvcreate -n lv1 -L 652.06G vg1
 
+  However, checking the volume fails
 
-I can create physical volume on /dev/mapper/san2_crypt2 (no DRBD) just fine.
+raneb:~# e2fsck /dev/mapper/vg1-lv1 
+e2fsck 1.40.2 (12-Jul-2007)
+Couldn't find ext2 superblock, trying backup blocks...
+e2fsck: Bad magic number in super-block while trying to open /dev/mapper/vg1-lv1
 
-
-The machine is running Debian Etch on a 2.6.23.12 kernel.
-
-# lvm version
-   LVM version:     2.02.07 (2006-07-17)
-   Library version: 1.02.08 (2006-07-17)
-   Driver version:  4.11.0
-
-
-I found a similar post, where DRBD wasn't used:
-
-http://linux.derkeiler.com/Mailing-Lists/Ubuntu/2006-11/msg00414.html
+The superblock could not be read or does not describe a correct ext2
+filesystem.  If the device is valid and it really contains an ext2
+filesystem (and not swap or ufs or something else), then the superblock
+is corrupt, and you might try running e2fsck with an alternate superblock:
+    e2fsck -b 8193 <device>
 
 
-Any clues why this happens?
+  Alternative superblocks, gleaned from
+
+raneb:~# mke2fs -n /dev/mapper/vg1-lv1 
+mke2fs 1.40.2 (12-Jul-2007)
+Filesystem label=
+OS type: Linux
+Block size=4096 (log=2)
+Fragment size=4096 (log=2)
+85475328 inodes, 170934272 blocks
+8546713 blocks (5.00%) reserved for the super user
+First data block=0
+Maximum filesystem blocks=0
+5217 block groups
+32768 blocks per group, 32768 fragments per group
+16384 inodes per group
+Superblock backups stored on blocks: 
+        32768, 98304, 163840, 229376, 294912, 819200, 884736, 1605632, 2654208, 
+        4096000, 7962624, 11239424, 20480000, 23887872, 71663616, 78675968, 
+        102400000
 
 
--- 
-Tomasz Chmielewski
-http://wpkg.org
+  also fail. I presume all superblocks where on disk /dev/hdb,
+  and now that disk is gone, it is not possible to recover
+  data from /dev/hdc and /dev/hdd, the two other disks 
+  in the vg. Thus, a failure on the first disk spills onto
+  the other disks because that disk hold vital information
+  for all.
+
+  Is that assessment correct?
+
+  Note I am desparate to recover data here because I destroyed
+  the backup through a mistake of mine 10 hours before disk
+  /dev/hdb crashed. The data represents about 10 years of
+  work of mine. 
+
+  Conclusion: next time two backups.
+
+  Cheers,
+
+  Thomas Krichel                    http://openlib.org/home/krichel
+                                RePEc:per:1965-06-05:thomas_krichel
+                                               skype: thomaskrichel
