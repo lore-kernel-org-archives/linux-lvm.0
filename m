@@ -1,31 +1,16 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m0ACDbB7024542
-	for <linux-lvm@redhat.com>; Thu, 10 Jan 2008 07:13:37 -0500
-Received: from mail2.syneticon.net (mail.syneticon.net [213.239.212.131])
-	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id m0ACD45F006735
-	for <linux-lvm@redhat.com>; Thu, 10 Jan 2008 07:13:04 -0500
-Received: from postfix1.syneticon.net (postfix1.syneticon.net [192.168.112.6])
-	by mail2.syneticon.net (Postfix) with ESMTP id E56C548841
-	for <linux-lvm@redhat.com>; Thu, 10 Jan 2008 13:12:58 +0100 (CET)
-Received: from localhost (filter1.syneticon.net [192.168.113.3])
-	by postfix1.syneticon.net (Postfix) with ESMTP id 894979456
-	for <linux-lvm@redhat.com>; Thu, 10 Jan 2008 13:12:56 +0100 (CET)
-Received: from postfix1.syneticon.net ([192.168.113.4])
-	by localhost (mx03.syneticon.net [192.168.113.3]) (amavisd-new,
-	port 10025) with ESMTP id 6VEZDSo06TgN for <linux-lvm@redhat.com>;
-	Thu, 10 Jan 2008 13:12:47 +0100 (CET)
-Received: from [192.168.178.20] (koln-4d0b0b66.pool.mediaWays.net
-	[77.11.11.102]) by postfix1.syneticon.net (Postfix) with ESMTP
-	for <linux-lvm@redhat.com>; Thu, 10 Jan 2008 13:12:47 +0100 (CET)
-Message-ID: <47860BBE.3090302@wpkg.org>
-Date: Thu, 10 Jan 2008 13:12:46 +0100
-From: Tomasz Chmielewski <mangoo@wpkg.org>
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m0DFMlMP005128
+	for <linux-lvm@redhat.com>; Sun, 13 Jan 2008 10:22:47 -0500
+Received: from nhindia.com (del-static-52-67-7-210.direct.net.in [210.7.67.52]
+	(may be forged))
+	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id m0DFMPhU009762
+	for <linux-lvm@redhat.com>; Sun, 13 Jan 2008 10:22:26 -0500
+Message-ID: <60595.61.8.131.123.1200237699.squirrel@webmail.nhindia.com>
+Date: Sun, 13 Jan 2008 20:51:39 +0530 (IST)
+From: "bhagwat swarup" <bhagwat.swarup@nhindia.com>
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] can't use LVM2 - "Failed to write physical volume"?
-	[SOLVED]
-References: <4784F989.3030801@wpkg.org>
-In-Reply-To: <4784F989.3030801@wpkg.org>
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Subject: [linux-lvm] snapshot of a lvm
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -36,50 +21,28 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: LVM general discussion and development <linux-lvm@redhat.com>
-
-Tomasz Chmielewski schrieb:
-> It seems to me that for some reason it's not possible to create a 
-> physical volume on a DRBD device. Below, we can see that running 
-> "pvcreate" succeeds and than fails, then it succeeds again etc.:
-> 
-> # pvcreate -d -v /dev/drbd0
->     Set up physical volume for "/dev/drbd0" with 976544952 available 
-> sectors
->     Zeroing start of device /dev/drbd0
->   Physical volume "/dev/drbd0" successfully created
-> 
-> # pvcreate -d -v /dev/drbd0
->     Wiping cache of LVM-capable devices
->     Set up physical volume for "/dev/drbd0" with 976544952 available 
-> sectors
->     Zeroing start of device /dev/drbd0
->   Failed to write physical volume "/dev/drbd0"
-
-Looks like LVM doesn't like some raw devices?
-
-I added a partition to /dev/drbd0 with fdisk.
-
-Then, I added a drive mapping with kpartx.
-
-It works fine now.
-
-# kpartx -a -v /dev/drbd0
-add map drbd0p1 : 0 976543092 linear /dev/drbd0 63
-
-# pvcreate -d -v /dev/mapper/drbd0p1
-     Set up physical volume for "/dev/mapper/drbd0p1" with 976542708 
-available sectors
-     Zeroing start of device /dev/mapper/drbd0p1
-   Physical volume "/dev/mapper/drbd0p1" successfully created
+Content-Type: text/plain; charset="us-ascii"
+To: linux-lvm@redhat.com
 
 
-Anyway, why does it fail if I want to set up LVM on raw DRBD device? A 
-bug or a feature?
+Dear All
+OS -RHEL5(Tikanga)
+I tried to take  a snapshot of a LV but it result in continous failure if
+selinux is in enforcing mode .
+I disabled the selinux and successfully took the snapshot of lv.
+
+Now the issue is that in RHEL5 ,what is the procedure of taking snapshot
+if Selinux is in enforcing mode.
+How can i modify selinux ,so that snapshot will be possible in selinux
+enforcing mode.
 
 
+My second question
+I tried to configure a SSL enabled apache-2.2.3 on RHEL5 ,but it is not
+working ,i guess threre must be something with selinux on its certificate
+and key file.
 
--- 
-Tomasz Chmielewski
-http://wpkg.org
+
+Thanks And Regards
+Bhagwat Swarup
+NH India Ltd
