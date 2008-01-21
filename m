@@ -1,15 +1,20 @@
-Received: from agk.fab.redhat.com (agk.fab.redhat.com [10.33.0.19])
-	by pobox.fab.redhat.com (8.13.1/8.13.1) with ESMTP id m0LDV7Al025647
-	for <linux-lvm@redhat.com>; Mon, 21 Jan 2008 08:31:07 -0500
-Received: from agk by agk.fab.redhat.com with local (Exim 4.34)
-	id 1JGwjz-0003q5-Kt
-	for linux-lvm@redhat.com; Mon, 21 Jan 2008 13:31:07 +0000
-Date: Mon, 21 Jan 2008 13:31:07 +0000
-From: Alasdair G Kergon <agk@redhat.com>
-Message-ID: <20080121133107.GZ24157@agk.fab.redhat.com>
-Mime-Version: 1.0
-Content-Disposition: inline
-Subject: [linux-lvm] LVM2 development release 2.02.31
+Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m0LDVFPT017021
+	for <linux-lvm@redhat.com>; Mon, 21 Jan 2008 08:31:15 -0500
+Received: from ag-out-0708.google.com (ag-out-0708.google.com [72.14.246.248])
+	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id m0LDUrE6032093
+	for <linux-lvm@redhat.com>; Mon, 21 Jan 2008 08:30:53 -0500
+Received: by ag-out-0708.google.com with SMTP id 22so1516533agd.7
+	for <linux-lvm@redhat.com>; Mon, 21 Jan 2008 05:30:53 -0800 (PST)
+Message-ID: <ddaf98bd0801210530u2855b767p9bce691f3e88dc8c@mail.gmail.com>
+Date: Mon, 21 Jan 2008 07:30:53 -0600
+From: "Cory Zerwas" <gannas@gmail.com>
+Subject: Re: [linux-lvm] Recover UUID
+In-Reply-To: <e2be335f0801201942w1c3a7687gbe0d57df3cb754f5@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: multipart/alternative; 
+	boundary="----=_Part_18851_26455932.1200922253130"
+References: <e2be335f0801201942w1c3a7687gbe0d57df3cb754f5@mail.gmail.com>
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -20,60 +25,51 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+To: LVM general discussion and development <linux-lvm@redhat.com>
+
+------=_Part_18851_26455932.1200922253130
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-To: linux-lvm@redhat.com
+Content-Disposition: inline
 
-We've just made a new development release of LVM2 with a few new features we'd
-like people to test.
+This is pretty similar to what happened to me recently.  Hopefully someone
+will take the time to help one, or both, of us out.  In the interim can you
+do at least a "uname -r" to get your major kernel version and a "lvm" then
+"version" within the lvm program to get the LVM version numbers, this can
+assist people helping you.
 
-ftp://sources.redhat.com/pub/lvm2/LVM2.2.02.31.tgz
-  (Current stable release is 2.02.28)
+Regards,
+Cory
 
-ftp://sources.redhat.com/pub/dm/device-mapper.1.02.24.tgz
-  (considered stable in its default configuration)
+2008/1/20 J Lindsay <lindsay.james@gmail.com>:
 
+> Hello,
+> I recently had a hardware failure on my OS disk, which means I lost all
+> files including /etc/lvm/archive. My LVM2 volume spans 3 disks, all of which
+> are intact. How do I go about recreating this volume, without knowing the
+> UUID's of the disks. I tried running uuid_fixer but was given the error
+> "pv_read(): pv_flush". Running lvscan and pvscan returns no results.
+>
+> Thanks,
+> James
+>
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@redhat.com
+> https://www.redhat.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+>
 
-1. Setting readahead is now supported.
-Use --readahead with lvchange or lvcreate.
+------=_Part_18851_26455932.1200922253130
+Content-Type: text/html; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
 
-       -r, --readahead ReadAheadSectors|auto|none
-              Set read ahead sector count of this logical volume.  For  volume
-              groups  with  metadata  in  lvm1  format,  this  must be a value
-              between 2 and 120 sectors.  The default value  is  "auto"  which
-              allows  the  kernel  to  choose  a suitable value automatically.
-              "None" is equivalent to specifying zero.
+This is pretty similar to what happened to me recently.&nbsp; Hopefully someone will take the time to help one, or both, of us out.&nbsp; In the interim can you do at least a &quot;uname -r&quot; to get your major kernel version and a &quot;lvm&quot; then &quot;version&quot; within the lvm program to get the LVM version numbers, this can assist people helping you.
+<br><br>Regards,<br>Cory<br><br><div class="gmail_quote">2008/1/20 J Lindsay &lt;<a href="mailto:lindsay.james@gmail.com">lindsay.james@gmail.com</a>&gt;:<br><blockquote class="gmail_quote" style="border-left: 1px solid rgb(204, 204, 204); margin: 0pt 0pt 0pt 0.8ex; padding-left: 1ex;">
+Hello,<br>I recently had a hardware failure on my OS disk, which means I lost all files including /etc/lvm/archive. My LVM2 volume spans 3 disks, all of which are intact. How do I go about recreating this volume, without knowing the UUID&#39;s of the disks. I tried running uuid_fixer but was given the error &quot;pv_read(): pv_flush&quot;. Running lvscan and pvscan returns no results.
+<br><br>Thanks,<br>James<br>
+<br>_______________________________________________<br>linux-lvm mailing list<br><a href="mailto:linux-lvm@redhat.com">linux-lvm@redhat.com</a><br><a href="https://www.redhat.com/mailman/listinfo/linux-lvm" target="_blank">
+https://www.redhat.com/mailman/listinfo/linux-lvm</a><br>read the LVM HOW-TO at <a href="http://tldp.org/HOWTO/LVM-HOWTO/" target="_blank">http://tldp.org/HOWTO/LVM-HOWTO/</a><br></blockquote></div><br>
 
-We're particularly interested in comparisons between 'auto' and 'none' with
-different configurations.
-
-
-2. vgsplit now lets you split off PVs into a new VG, and accepts vgcreate
-command line options to set properties of that VG.
-  [a few known bugs in the validation still to fix here]
-
-
-3. If you enable dmeventd (configure '--enable-dmeventd' on both packages)
-it can now monitor snapshots and report to syslog if they are getting full.
-  [further enhancements to this are planned]
-
-
-4. The --resizefs argument to lvresize/lvextend/lvreduce now calls out
-to a new script, fsadm, which attempts to resize the filesystem in
-conjunction with the LV.
-  [further enhancements to this are planned - only some cases supported 
-   so far, and we want fsadm to become a new commandline entry point too,
-   like e2fsadm used to be in LVM1 - it isn't yet]
-
-
-5. pvs --segments will now also display LV segment fields so you can
-see what is layered on each PV segment.
-
-
-6. lvconvert now supports additional mirror reconfigurations (similar to the
-way pvmove works).  E.g. convert from -m1 to -m2.
-
-
-Alasdair
--- 
-agk@redhat.com
+------=_Part_18851_26455932.1200922253130--
