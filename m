@@ -1,18 +1,15 @@
-Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m0L3gkqY010644
-	for <linux-lvm@redhat.com>; Sun, 20 Jan 2008 22:42:46 -0500
-Received: from py-out-1112.google.com (py-out-1112.google.com [64.233.166.182])
-	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id m0L3gPL7013302
-	for <linux-lvm@redhat.com>; Sun, 20 Jan 2008 22:42:25 -0500
-Received: by py-out-1112.google.com with SMTP id a29so2262650pyi.0
-	for <linux-lvm@redhat.com>; Sun, 20 Jan 2008 19:42:25 -0800 (PST)
-Message-ID: <e2be335f0801201942w1c3a7687gbe0d57df3cb754f5@mail.gmail.com>
-Date: Sun, 20 Jan 2008 22:42:25 -0500
-From: "J Lindsay" <lindsay.james@gmail.com>
-MIME-Version: 1.0
-Content-Type: multipart/alternative; 
-	boundary="----=_Part_11545_24052806.1200886945344"
-Subject: [linux-lvm] Recover UUID
+Received: from agk.fab.redhat.com (agk.fab.redhat.com [10.33.0.19])
+	by pobox.fab.redhat.com (8.13.1/8.13.1) with ESMTP id m0LDV7Al025647
+	for <linux-lvm@redhat.com>; Mon, 21 Jan 2008 08:31:07 -0500
+Received: from agk by agk.fab.redhat.com with local (Exim 4.34)
+	id 1JGwjz-0003q5-Kt
+	for linux-lvm@redhat.com; Mon, 21 Jan 2008 13:31:07 +0000
+Date: Mon, 21 Jan 2008 13:31:07 +0000
+From: Alasdair G Kergon <agk@redhat.com>
+Message-ID: <20080121133107.GZ24157@agk.fab.redhat.com>
+Mime-Version: 1.0
+Content-Disposition: inline
+Subject: [linux-lvm] LVM2 development release 2.02.31
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -23,29 +20,60 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@redhat.com
 
-------=_Part_11545_24052806.1200886945344
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
+We've just made a new development release of LVM2 with a few new features we'd
+like people to test.
 
-Hello,
-I recently had a hardware failure on my OS disk, which means I lost all
-files including /etc/lvm/archive. My LVM2 volume spans 3 disks, all of which
-are intact. How do I go about recreating this volume, without knowing the
-UUID's of the disks. I tried running uuid_fixer but was given the error
-"pv_read(): pv_flush". Running lvscan and pvscan returns no results.
+ftp://sources.redhat.com/pub/lvm2/LVM2.2.02.31.tgz
+  (Current stable release is 2.02.28)
 
-Thanks,
-James
+ftp://sources.redhat.com/pub/dm/device-mapper.1.02.24.tgz
+  (considered stable in its default configuration)
 
-------=_Part_11545_24052806.1200886945344
-Content-Type: text/html; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
 
-Hello,<br>I recently had a hardware failure on my OS disk, which means I lost all files including /etc/lvm/archive. My LVM2 volume spans 3 disks, all of which are intact. How do I go about recreating this volume, without knowing the UUID&#39;s of the disks. I tried running uuid_fixer but was given the error &quot;pv_read(): pv_flush&quot;. Running lvscan and pvscan returns no results.
-<br><br>Thanks,<br>James<br>
+1. Setting readahead is now supported.
+Use --readahead with lvchange or lvcreate.
 
-------=_Part_11545_24052806.1200886945344--
+       -r, --readahead ReadAheadSectors|auto|none
+              Set read ahead sector count of this logical volume.  For  volume
+              groups  with  metadata  in  lvm1  format,  this  must be a value
+              between 2 and 120 sectors.  The default value  is  "auto"  which
+              allows  the  kernel  to  choose  a suitable value automatically.
+              "None" is equivalent to specifying zero.
+
+We're particularly interested in comparisons between 'auto' and 'none' with
+different configurations.
+
+
+2. vgsplit now lets you split off PVs into a new VG, and accepts vgcreate
+command line options to set properties of that VG.
+  [a few known bugs in the validation still to fix here]
+
+
+3. If you enable dmeventd (configure '--enable-dmeventd' on both packages)
+it can now monitor snapshots and report to syslog if they are getting full.
+  [further enhancements to this are planned]
+
+
+4. The --resizefs argument to lvresize/lvextend/lvreduce now calls out
+to a new script, fsadm, which attempts to resize the filesystem in
+conjunction with the LV.
+  [further enhancements to this are planned - only some cases supported 
+   so far, and we want fsadm to become a new commandline entry point too,
+   like e2fsadm used to be in LVM1 - it isn't yet]
+
+
+5. pvs --segments will now also display LV segment fields so you can
+see what is layered on each PV segment.
+
+
+6. lvconvert now supports additional mirror reconfigurations (similar to the
+way pvmove works).  E.g. convert from -m1 to -m2.
+
+
+Alasdair
+-- 
+agk@redhat.com
