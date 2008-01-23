@@ -1,23 +1,17 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m0NBdulI027795
-	for <linux-lvm@redhat.com>; Wed, 23 Jan 2008 06:39:56 -0500
-Received: from carlit.cesca.es (carlit.cesca.es [84.88.0.2])
-	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id m0NBdPBY008014
-	for <linux-lvm@redhat.com>; Wed, 23 Jan 2008 06:39:25 -0500
-Received: from carlit.cesca.es (localhost [127.0.0.1])
-	by carlit.cesca.es (Postfix) with ESMTP id 78277331FA9
-	for <linux-lvm@redhat.com>; Wed, 23 Jan 2008 12:39:19 +0100 (CET)
-Received: from webmail.cesca.es (calderer.cesca.es [84.88.0.35])
-	by carlit.cesca.es (Postfix) with ESMTP id 49536330A7D
-	for <linux-lvm@redhat.com>; Wed, 23 Jan 2008 12:38:59 +0100 (CET)
-Message-ID: <1746.193.144.33.101.1201088359.squirrel@webmail.cesca.es>
-Date: Wed, 23 Jan 2008 12:39:19 +0100 (CET)
-From: Jordi Prats =?iso-8859-1?Q?Catal=E0?= <jprats@cesca.es>
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m0NFfKVW014177
+	for <linux-lvm@redhat.com>; Wed, 23 Jan 2008 10:41:20 -0500
+Received: from mail.gmx.net (mail.gmx.net [213.165.64.20])
+	by mx3.redhat.com (8.13.1/8.13.1) with SMTP id m0NFeoua023340
+	for <linux-lvm@redhat.com>; Wed, 23 Jan 2008 10:40:50 -0500
+Message-ID: <C01E9F21E783445AB830B0D165A98DE6@t1000>
+From: "David Steinberg" <klusou@gmx.de>
+Date: Wed, 23 Jan 2008 16:42:31 +0100
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: [linux-lvm] how to remove a device
-Reply-To: jprats@cesca.es,
-	LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: multipart/alternative;
+	boundary="----=_NextPart_000_0068_01C85DDE.F25F64C0"
+Subject: [linux-lvm] How to set the "OPEN" - Attribute manual to 0 
+Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -27,32 +21,75 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@redhat.com
 
-Hi all,
-I'm currently using cLVM. I moved a RAID0 disc to a RAID5 disc using
-pvmove on my first node and removed from it's volume group using vgreduce.
+This is a multi-part message in MIME format.
 
-After that I deleted de first disk. Now on the secondary node I'm getting
-IO errors like that:
+------=_NextPart_000_0068_01C85DDE.F25F64C0
+Content-Type: text/plain;
+	charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 
-[root@inf18 ~]# pvscan
-  /dev/sdb: read failed after 0 of 4096 at 214748299264: Input/output error
-  /dev/sdb1: read failed after 0 of 512 at 214745481216: Input/output error
-  PV /dev/sde1           VG padicat.bench   lvm2 [200.00 GB / 0    free]
-  PV /dev/sda1           VG vm.fibra        lvm2 [10.00 GB / 0    free]
-  PV /dev/sdd1           VG vm.fibra        lvm2 [25.00 GB / 0    free]
-  PV /dev/sdc2           VG vm.fibra        lvm2 [1012.00 MB / 492.00 MB
-free]
-  PV /dev/cciss/c0d0p3                      lvm2 [91.69 GB]
-  Total: 5 [327.66 GB] / in use: 4 [235.98 GB] / in no VG: 1 [91.69 GB]
-[root@inf18 ~]# vgreduce padicat.bench /dev/sdb1
-  Physical Volume "/dev/sdb1" not found in Volume Group "padicat.bench"
+Hello,
 
-Also I can't use the LV on the VG that was that disk. Anyone can help me
-on telling LVM not to use sdb anymore? It's a production system, so by now
-reboot it it's no an option to me.
+i am using Xen and LVM2. On one Hypervisor - Machine (Dom0) i have a =
+very special problem. When I create a Windows - machine on a logical - =
+volume (lv), an Windows makes a partition within, i cannot=20
+"lvchange -an /dev/vg/lv " because vgdisplay shows me an Open-Count of =
+1. After deleting the partition within (fdisk /dev/vg/lv), its "open" =
+count is zero again and ich can handel the lv normally.
+The same procedure on a different pc shows "OPEN =3D 0" in the moment =
+when the Virtual machine is stopped.
 
-Thanks!
-Jordi
+Primary - I am interrested in how to change this attribute
+
+Secondary - What goes wrong
+
+Sry for my bad english.
+
+
+David
+------=_NextPart_000_0068_01C85DDE.F25F64C0
+Content-Type: text/html;
+	charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML><HEAD>
+<META http-equiv=3DContent-Type content=3D"text/html; =
+charset=3Diso-8859-1">
+<META content=3D"MSHTML 6.00.6000.16587" name=3DGENERATOR>
+<STYLE></STYLE>
+</HEAD>
+<BODY bgColor=3D#ffffff>
+<DIV><FONT face=3DArial size=3D2>Hello,</FONT></DIV>
+<DIV><FONT face=3DArial size=3D2></FONT>&nbsp;</DIV>
+<DIV><FONT face=3DArial size=3D2>i am using Xen and LVM2. On one =
+Hypervisor -=20
+Machine (Dom0) i have a very special problem. When I create a Windows - =
+machine=20
+on a logical - volume (lv), an Windows makes a partition within, i =
+cannot=20
+</FONT></DIV>
+<DIV><FONT face=3DArial size=3D2>"lvchange -an /dev/vg/lv " because =
+vgdisplay shows=20
+me an Open-Count of&nbsp;1. After deleting the partition within (fdisk=20
+/dev/vg/lv), its "open" count is zero again and ich can handel the lv=20
+normally.</FONT></DIV>
+<DIV><FONT face=3DArial size=3D2>The same procedure on a different pc =
+shows "OPEN =3D=20
+0" in the moment when the Virtual machine is stopped.</FONT></DIV>
+<DIV><FONT face=3DArial size=3D2></FONT>&nbsp;</DIV>
+<DIV><FONT face=3DArial size=3D2>Primary - I am interrested in how to =
+change this=20
+attribute</FONT></DIV>
+<DIV><FONT face=3DArial size=3D2></FONT>&nbsp;</DIV>
+<DIV><FONT face=3DArial size=3D2>Secondary - What goes =
+wrong</FONT></DIV>
+<DIV><FONT face=3DArial size=3D2></FONT>&nbsp;</DIV>
+<DIV><FONT face=3DArial size=3D2>Sry for my bad english.</FONT></DIV>
+<DIV><FONT face=3DArial size=3D2></FONT>&nbsp;</DIV>
+<DIV><FONT face=3DArial size=3D2></FONT>&nbsp;</DIV>
+<DIV><FONT face=3DArial size=3D2>David</FONT></DIV></BODY></HTML>
+
+------=_NextPart_000_0068_01C85DDE.F25F64C0--
