@@ -1,26 +1,23 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m0LEoBdd026482
-	for <linux-lvm@redhat.com>; Mon, 21 Jan 2008 09:50:11 -0500
-Received: from slartibartfast.qult.net (Debian-exim@qult.net [82.238.217.46])
-	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id m0LEnjUV018106
-	for <linux-lvm@redhat.com>; Mon, 21 Jan 2008 09:49:46 -0500
-Received: from zenon.in.qult.net ([192.168.0.1])
-	by slartibartfast.qult.net with esmtp (Exim 4.67)
-	(envelope-from <lvm@qult.net>) id 1JGxy4-0006IN-Ue
-	for linux-lvm@redhat.com; Mon, 21 Jan 2008 15:49:44 +0100
-Received: from ig by zenon.in.qult.net with local (Exim 4.67)
-	(envelope-from <lvm@qult.net>) id 1JGxy4-000626-Ru
-	for linux-lvm@redhat.com; Mon, 21 Jan 2008 15:49:44 +0100
-Date: Mon, 21 Jan 2008 15:49:44 +0100
-From: Ignacy Gawedzki <lvm@qult.net>
-Subject: Re: [linux-lvm] How to hide a "Linux LVM" partition away from Windows?
-Message-ID: <20080121144944.GA22769@zenon.in.qult.net>
-References: <20080121140239.GA16686@zenon.in.qult.net>
-	<1C8CF1EA1A5B5940B81B0710B2A4C9384FF7C05295@an-ex.ActiveNetwerx.int>
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m0NBdulI027795
+	for <linux-lvm@redhat.com>; Wed, 23 Jan 2008 06:39:56 -0500
+Received: from carlit.cesca.es (carlit.cesca.es [84.88.0.2])
+	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id m0NBdPBY008014
+	for <linux-lvm@redhat.com>; Wed, 23 Jan 2008 06:39:25 -0500
+Received: from carlit.cesca.es (localhost [127.0.0.1])
+	by carlit.cesca.es (Postfix) with ESMTP id 78277331FA9
+	for <linux-lvm@redhat.com>; Wed, 23 Jan 2008 12:39:19 +0100 (CET)
+Received: from webmail.cesca.es (calderer.cesca.es [84.88.0.35])
+	by carlit.cesca.es (Postfix) with ESMTP id 49536330A7D
+	for <linux-lvm@redhat.com>; Wed, 23 Jan 2008 12:38:59 +0100 (CET)
+Message-ID: <1746.193.144.33.101.1201088359.squirrel@webmail.cesca.es>
+Date: Wed, 23 Jan 2008 12:39:19 +0100 (CET)
+From: Jordi Prats =?iso-8859-1?Q?Catal=E0?= <jprats@cesca.es>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <1C8CF1EA1A5B5940B81B0710B2A4C9384FF7C05295@an-ex.ActiveNetwerx.int>
-Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Transfer-Encoding: 8bit
+Subject: [linux-lvm] how to remove a device
+Reply-To: jprats@cesca.es,
+	LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -31,22 +28,31 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: LVM general discussion and development <linux-lvm@redhat.com>
+To: linux-lvm@redhat.com
 
-On Mon, Jan 21, 2008 at 07:31:11AM -0700, thus spake Joseph L. Casale:
-> >I've been looking for the answer for some time now and it is apparently
-> >nowhere to be found, so I resolved to ask it here.
-> 
-> http://support.microsoft.com/kb/179221
+Hi all,
+I'm currently using cLVM. I moved a RAID0 disc to a RAID5 disc using
+pvmove on my first node and removed from it's volume group using vgreduce.
 
-I've seen that, but I'm not sure it works reliably.  It seems more like a
-cosmetic hiding, but I suspect any program might still easily access the
-partitions (i.e. still not by directly reading the bytes on the block device).
+After that I deleted de first disk. Now on the secondary node I'm getting
+IO errors like that:
 
-Besides, it is rather annoying 1) having to do it for each partition by hand,
-2) eating up drive letters for nothing and 3) to use with drive racks or other
-removeable drives.
+[root@inf18 ~]# pvscan
+  /dev/sdb: read failed after 0 of 4096 at 214748299264: Input/output error
+  /dev/sdb1: read failed after 0 of 512 at 214745481216: Input/output error
+  PV /dev/sde1           VG padicat.bench   lvm2 [200.00 GB / 0    free]
+  PV /dev/sda1           VG vm.fibra        lvm2 [10.00 GB / 0    free]
+  PV /dev/sdd1           VG vm.fibra        lvm2 [25.00 GB / 0    free]
+  PV /dev/sdc2           VG vm.fibra        lvm2 [1012.00 MB / 492.00 MB
+free]
+  PV /dev/cciss/c0d0p3                      lvm2 [91.69 GB]
+  Total: 5 [327.66 GB] / in use: 4 [235.98 GB] / in no VG: 1 [91.69 GB]
+[root@inf18 ~]# vgreduce padicat.bench /dev/sdb1
+  Physical Volume "/dev/sdb1" not found in Volume Group "padicat.bench"
 
--- 
-Save the whales. Feed the hungry. Free the mallocs. 
+Also I can't use the LV on the VG that was that disk. Anyone can help me
+on telling LVM not to use sdb anymore? It's a production system, so by now
+reboot it it's no an option to me.
+
+Thanks!
+Jordi
