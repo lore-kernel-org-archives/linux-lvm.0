@@ -1,23 +1,28 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m0ODJPtX006131
-	for <linux-lvm@redhat.com>; Thu, 24 Jan 2008 08:19:25 -0500
-Received: from rv-out-0910.google.com (rv-out-0910.google.com [209.85.198.191])
-	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id m0ODIxvY004290
-	for <linux-lvm@redhat.com>; Thu, 24 Jan 2008 08:19:00 -0500
-Received: by rv-out-0910.google.com with SMTP id k15so215536rvb.51
-	for <linux-lvm@redhat.com>; Thu, 24 Jan 2008 05:18:59 -0800 (PST)
-Message-ID: <a71bd89a0801240518i78f9d5fcj6173f663931fff55@mail.gmail.com>
-Date: Thu, 24 Jan 2008 05:18:58 -0800
-From: "Dan Kegel" <dank@kegel.com>
-Sender: daniel.r.kegel@gmail.com
-Subject: Re: [linux-lvm] Re: [RFC] Multiple Snapshots - Manageability problem
-In-Reply-To: <4798705C.4080802@wpkg.org>
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m0OHL9dJ005361
+	for <linux-lvm@redhat.com>; Thu, 24 Jan 2008 12:21:09 -0500
+Received: from mail2.syneticon.net (mail.syneticon.net [213.239.212.131])
+	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id m0OHKZx0012621
+	for <linux-lvm@redhat.com>; Thu, 24 Jan 2008 12:20:35 -0500
+Received: from postfix1.syneticon.net (postfix1.syneticon.net [192.168.112.6])
+	by mail2.syneticon.net (Postfix) with ESMTP id E3317486C0
+	for <linux-lvm@redhat.com>; Thu, 24 Jan 2008 18:20:29 +0100 (CET)
+Received: from localhost (filter1.syneticon.net [192.168.113.3])
+	by postfix1.syneticon.net (Postfix) with ESMTP id 63466931B
+	for <linux-lvm@redhat.com>; Thu, 24 Jan 2008 18:20:28 +0100 (CET)
+Received: from postfix1.syneticon.net ([192.168.113.4])
+	by localhost (mx03.syneticon.net [192.168.113.3]) (amavisd-new,
+	port 10025) with ESMTP id rOGIEpFs6Ao8 for <linux-lvm@redhat.com>;
+	Thu, 24 Jan 2008 18:20:26 +0100 (CET)
+Received: from [192.168.10.145] (koln-4d0b0172.pool.mediaWays.net
+	[77.11.1.114]) by postfix1.syneticon.net (Postfix) with ESMTP
+	for <linux-lvm@redhat.com>; Thu, 24 Jan 2008 18:20:26 +0100 (CET)
+Message-ID: <4798C8D9.6020506@wpkg.org>
+Date: Thu, 24 Jan 2008 18:20:25 +0100
+From: Tomasz Chmielewski <mangoo@wpkg.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-References: <4797686A.4000306@wpkg.org>
-	<a71bd89a0801231436k3653acfw9bd0a63f027daacf@mail.gmail.com>
-	<4798705C.4080802@wpkg.org>
+Subject: [linux-lvm] is LVM cluster-aware?
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -28,29 +33,35 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: LVM general discussion and development <linux-lvm@redhat.com>
-Cc: dm-devel@redhat.com
 
-Tomasz Chmielewski <mangoo@wpkg.org> wrote:
-> Dan Kegel schrieb:
-> > Yes.  Dan Phillips has implemented a shared snapshot exception store.
-> > You can try it out now if you like; it's at http://zumastor.org.
-> > It feels a bit different from the user's point of view than LVM, though.
-> > It plays well with the device mapper and can be used with any
-> > block device (LVM or non-LVM).
->
-> Does it use device mapper (or it just "plays well with the device
-> mapper")? Or is it a totally different technology?
+Is LVM cluster-aware? Of course it's not, but... Will I loose data if I 
+have a LVM physical volume replicated on two machines with DRBD, and I 
+want to access two separate logical volumes on different machines?
 
-It is a device mapper target, so yeah, it uses device mapper.
 
-> I didn't find it explained very clearly in Zumastor HOWTO on
-> http://zumastor.googlecode.com/svn/trunk/doc/zumastor-howto.html (other
-> than pointers to /dev/mapper/zumatest, which probably means it uses
-> device mapper).
+Machine_1
+          \            /--Logical_volume_1
+           DRBD-LVM2-PV
+          /            \--Logical_volume_2
+Machine_2
 
-A little further down the page, http://zumastor.org links to
-http://zumastor.googlecode.com/svn/trunk/doc/desimplnotes.html
-which does mention it explicitly.
-- Dan
+
+On Machine_1 I only want to read/write to Logical_volume_1.
+On Machine_2 I only want to read/write to Logical_volume_2.
+
+I don't want to add/remove/rename/resize/etc. any volumes - just access 
+them on separate machines.
+
+
+Perhaps the answer is: yes, you will loose your data, but I wanted to be 
+sure ;)
+
+Are there any workarounds to that (with just two volumes it's simple - 
+don't use LVM; but let's suppose there are many logical volumes)?
+
+
+-- 
+Tomasz Chmielewski
+http://wpkg.org
