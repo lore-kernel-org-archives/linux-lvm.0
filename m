@@ -1,28 +1,14 @@
-Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m0OHL9dJ005361
-	for <linux-lvm@redhat.com>; Thu, 24 Jan 2008 12:21:09 -0500
-Received: from mail2.syneticon.net (mail.syneticon.net [213.239.212.131])
-	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id m0OHKZx0012621
-	for <linux-lvm@redhat.com>; Thu, 24 Jan 2008 12:20:35 -0500
-Received: from postfix1.syneticon.net (postfix1.syneticon.net [192.168.112.6])
-	by mail2.syneticon.net (Postfix) with ESMTP id E3317486C0
-	for <linux-lvm@redhat.com>; Thu, 24 Jan 2008 18:20:29 +0100 (CET)
-Received: from localhost (filter1.syneticon.net [192.168.113.3])
-	by postfix1.syneticon.net (Postfix) with ESMTP id 63466931B
-	for <linux-lvm@redhat.com>; Thu, 24 Jan 2008 18:20:28 +0100 (CET)
-Received: from postfix1.syneticon.net ([192.168.113.4])
-	by localhost (mx03.syneticon.net [192.168.113.3]) (amavisd-new,
-	port 10025) with ESMTP id rOGIEpFs6Ao8 for <linux-lvm@redhat.com>;
-	Thu, 24 Jan 2008 18:20:26 +0100 (CET)
-Received: from [192.168.10.145] (koln-4d0b0172.pool.mediaWays.net
-	[77.11.1.114]) by postfix1.syneticon.net (Postfix) with ESMTP
-	for <linux-lvm@redhat.com>; Thu, 24 Jan 2008 18:20:26 +0100 (CET)
-Message-ID: <4798C8D9.6020506@wpkg.org>
-Date: Thu, 24 Jan 2008 18:20:25 +0100
-From: Tomasz Chmielewski <mangoo@wpkg.org>
+Received: from [10.33.0.40] (breeves.fab.redhat.com [10.33.0.40])
+	by pobox.fab.redhat.com (8.13.1/8.13.1) with ESMTP id m0OHTkLB011896
+	for <linux-lvm@redhat.com>; Thu, 24 Jan 2008 12:29:47 -0500
+Message-ID: <4798CB0A.8090501@redhat.com>
+Date: Thu, 24 Jan 2008 17:29:46 +0000
+From: "Bryn M. Reeves" <breeves@redhat.com>
 MIME-Version: 1.0
+Subject: Re: [linux-lvm] is LVM cluster-aware?
+References: <4798C8D9.6020506@wpkg.org>
+In-Reply-To: <4798C8D9.6020506@wpkg.org>
 Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] is LVM cluster-aware?
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -33,35 +19,50 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
+Content-Type: text/plain; charset="us-ascii"
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-Is LVM cluster-aware? Of course it's not, but... Will I loose data if I 
-have a LVM physical volume replicated on two machines with DRBD, and I 
-want to access two separate logical volumes on different machines?
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA1
 
+Tomasz Chmielewski wrote:
+> Is LVM cluster-aware? Of course it's not, but... Will I loose data if I
+> have a LVM physical volume replicated on two machines with DRBD, and I
+> want to access two separate logical volumes on different machines?
 
-Machine_1
-          \            /--Logical_volume_1
-           DRBD-LVM2-PV
-          /            \--Logical_volume_2
-Machine_2
+LVM2 supports clustering with several generations of Red Hat cluster
+(RHEL4 cman, RHEL5 openais with dlm or gulm locking) via the clvmd
+deamon. Once a volume group is marked as clustered & the infrastructure
+is set up, the tools automatically lock and unlock LVM resources across
+the cluster. This prevents a tool running on one node from interfering
+with another tool running at the same time on a different node.
 
+If you need it to work with another clustering environment you'll need
+to make code changes - see the code in daemons/clvmd/ for the existing
+cluster types.
 
-On Machine_1 I only want to read/write to Logical_volume_1.
-On Machine_2 I only want to read/write to Logical_volume_2.
+> I don't want to add/remove/rename/resize/etc. any volumes - just access
+> them on separate machines.
 
-I don't want to add/remove/rename/resize/etc. any volumes - just access 
-them on separate machines.
+As long as you never try to update the LVM metadata from two nodes at
+the same time (e.g. add/remove/rename/resize etc. running on two nodes
+simultaneously) then this is fine, but there is no automatic prevention
+of this situation.
 
+If/when you do need to make changes, you'll want to make sure the VG you
+are working with is only active on one node.
 
-Perhaps the answer is: yes, you will loose your data, but I wanted to be 
-sure ;)
+See various threads on this mailing list & linux-cluster for further
+discussion of clvmd and using LVM in a clustered environment without it.
 
-Are there any workarounds to that (with just two volumes it's simple - 
-don't use LVM; but let's suppose there are many logical volumes)?
+Regards,
+Bryn.
 
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.7 (GNU/Linux)
+Comment: Using GnuPG with Fedora - http://enigmail.mozdev.org
 
--- 
-Tomasz Chmielewski
-http://wpkg.org
+iD8DBQFHmMsK6YSQoMYUY94RAiXoAJ9TAFF1QbQa6bK0aycb9udk5XvXiwCffQce
+T4mLoq+DEPWqOA2DODXVcuU=
+=VzSD
+-----END PGP SIGNATURE-----
