@@ -1,21 +1,30 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m0OMF7K5001534
-	for <linux-lvm@redhat.com>; Thu, 24 Jan 2008 17:15:07 -0500
-Received: from mars.math-info.univ-paris5.fr (mars.math-info.univ-paris5.fr
-	[193.48.200.18])
-	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id m0OMEiKp026082
-	for <linux-lvm@redhat.com>; Thu, 24 Jan 2008 17:14:44 -0500
-Received: from [127.0.0.1] (mars.math-info.univ-paris5.fr [127.0.0.1])
-	by mars.math-info.univ-paris5.fr (8.14.1/jtpda-5.4) with ESMTP id
-	m0OMEg8b010498
-	for <linux-lvm@redhat.com>; Thu, 24 Jan 2008 23:14:42 +0100
-Message-ID: <47990DD2.1020001@math-info.univ-paris5.fr>
-Date: Thu, 24 Jan 2008 23:14:42 +0100
-From: =?ISO-8859-1?Q?Fran=E7ois_Patte?=
-	<francois.patte@math-info.univ-paris5.fr>
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m0PFYJXL022968
+	for <linux-lvm@redhat.com>; Fri, 25 Jan 2008 10:34:20 -0500
+Received: from mail2.syneticon.net (mail.syneticon.net [213.239.212.131])
+	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id m0PFXcD5027556
+	for <linux-lvm@redhat.com>; Fri, 25 Jan 2008 10:33:39 -0500
+Received: from postfix1.syneticon.net (postfix1.syneticon.net [192.168.112.6])
+	by mail2.syneticon.net (Postfix) with ESMTP id 8BA8649B35
+	for <linux-lvm@redhat.com>; Fri, 25 Jan 2008 16:33:34 +0100 (CET)
+Received: from localhost (filter1.syneticon.net [192.168.113.3])
+	by postfix1.syneticon.net (Postfix) with ESMTP id 271FF9486
+	for <linux-lvm@redhat.com>; Fri, 25 Jan 2008 16:33:32 +0100 (CET)
+Received: from postfix1.syneticon.net ([192.168.113.4])
+	by localhost (mx03.syneticon.net [192.168.113.3]) (amavisd-new,
+	port 10025) with ESMTP id hXk-AlpTR4Gy for <linux-lvm@redhat.com>;
+	Fri, 25 Jan 2008 16:33:30 +0100 (CET)
+Received: from [192.168.10.145] (koln-4d0b06c4.pool.mediaWays.net
+	[77.11.6.196]) by postfix1.syneticon.net (Postfix) with ESMTP
+	for <linux-lvm@redhat.com>; Fri, 25 Jan 2008 16:33:30 +0100 (CET)
+Message-ID: <479A0148.40500@wpkg.org>
+Date: Fri, 25 Jan 2008 16:33:28 +0100
+From: Tomasz Chmielewski <mangoo@wpkg.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: [linux-lvm] naive questions
+Subject: Re: [linux-lvm] is LVM cluster-aware?
+References: <4798C8D9.6020506@wpkg.org> <4798CB0A.8090501@redhat.com>
+In-Reply-To: <4798CB0A.8090501@redhat.com>
+Content-Transfer-Encoding: 7bit
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -26,47 +35,29 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
------BEGIN PGP SIGNED MESSAGE-----
-Hash: SHA1
+Bryn M. Reeves schrieb:
 
-Bonsoir,
+>> I don't want to add/remove/rename/resize/etc. any volumes - just access
+>> them on separate machines.
+> 
+> As long as you never try to update the LVM metadata from two nodes at
+> the same time (e.g. add/remove/rename/resize etc. running on two nodes
+> simultaneously) then this is fine, but there is no automatic prevention
+> of this situation.
 
-I would like to change my linux install and I need to modify /home which
-is now like this:
+Thanks for the tips on clvmd and pointing to linux-cluster list archive 
+- I'm about to dig into it.
 
-__________________________|__________
-         sdc1                 sdb2 = 4126 extends
+Are you 100% sure LVM metadata is not updated when I don't 
+add/remove/rename/resize/etc. any volumes?
 
-If I reduce /home by 4127 extends may I be sure that /home will now stay
-on sdc1 only?
+I.e., won't lvs or pvs commands write or update some timestamps, for 
+example?
 
 
-I have another question question related to this one: when I created
-this /home volume, I could not master the fact that it will be on two
-different physical disks.
-
-Was it possible to be aware of this before discoring it after install?
-
-What happens if sdb disk crashes? Shall I loose all my data in /home?
-
-Thanks for attention.
-
-- --
-Fran�ois Patte
-UFR de math�matiques et informatique
-Universit� Paris Descartes
-45, rue des Saints P�res
-F-75270 Paris Cedex 06
-T�l. +33 (0)1 44 55 35 61
-http://www.math-info.univ-paris5.fr/~patte
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.7 (GNU/Linux)
-Comment: Using GnuPG with Fedora - http://enigmail.mozdev.org
-
-iD8DBQFHmQ3RdE6C2dhV2JURAsSpAJ9YO7+RpmQ3o41t0NKqBPNHjVV+YACdFoR7
-eFdOuOgABlGTa0pxSOFXOic=
-=sDyH
------END PGP SIGNATURE-----
+-- 
+Tomasz Chmielewski
+http://wpkg.org
