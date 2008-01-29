@@ -1,29 +1,32 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m0T9bKXs003056
-	for <linux-lvm@redhat.com>; Tue, 29 Jan 2008 04:37:20 -0500
-Received: from mail2.syneticon.net (mail.syneticon.net [213.239.212.131])
-	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id m0T9ak8U013246
-	for <linux-lvm@redhat.com>; Tue, 29 Jan 2008 04:36:46 -0500
-Received: from postfix1.syneticon.net (postfix1.syneticon.net [192.168.112.6])
-	by mail2.syneticon.net (Postfix) with ESMTP id C4A5B624CA
-	for <linux-lvm@redhat.com>; Tue, 29 Jan 2008 10:36:40 +0100 (CET)
-Received: from localhost (filter1.syneticon.net [192.168.113.3])
-	by postfix1.syneticon.net (Postfix) with ESMTP id 41FF09383
-	for <linux-lvm@redhat.com>; Tue, 29 Jan 2008 10:36:39 +0100 (CET)
-Received: from postfix1.syneticon.net ([192.168.113.4])
-	by localhost (mx03.syneticon.net [192.168.113.3]) (amavisd-new,
-	port 10025) with ESMTP id dLvZ0DH96ssQ for <linux-lvm@redhat.com>;
-	Tue, 29 Jan 2008 10:36:37 +0100 (CET)
-Received: from [192.168.10.145] (koln-4d0b0605.pool.mediaWays.net [77.11.6.5])
-	by postfix1.syneticon.net (Postfix) with ESMTP
-	for <linux-lvm@redhat.com>; Tue, 29 Jan 2008 10:36:37 +0100 (CET)
-Message-ID: <479EF3A4.8040905@wpkg.org>
-Date: Tue, 29 Jan 2008 10:36:36 +0100
-From: Tomasz Chmielewski <mangoo@wpkg.org>
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m0TA56Us019047
+	for <linux-lvm@redhat.com>; Tue, 29 Jan 2008 05:05:06 -0500
+Received: from unix.mvs.co.il (bzq-193-16-147-12.bgp.bezeqint.net
+	[193.16.147.12])
+	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id m0TA4gTC029594
+	for <linux-lvm@redhat.com>; Tue, 29 Jan 2008 05:04:42 -0500
+Received: from beta.mvs.co.il (beta [10.253.0.3])
+	by unix.mvs.co.il (8.13.7/8.13.7) with ESMTP id m0TA4ZP7025273
+	for <linux-lvm@redhat.com>; Tue, 29 Jan 2008 12:04:36 +0200
+Received: from beta.mvs.co.il (localhost [127.0.0.1])
+	by beta.mvs.co.il (8.14.1/8.14.1) with ESMTP id m0TA4Zan030686
+	for <linux-lvm@redhat.com>; Tue, 29 Jan 2008 12:04:35 +0200
+Date: Tue, 29 Jan 2008 12:04:35 +0200
+Message-Id: <200801291004.m0TA4Zrm030681@beta.mvs.co.il>
+From: "Ehud Karni" <ehud@unix.mvs.co.il>
+Subject: Re: [linux-lvm] LVM limits?
+In-reply-to: <1201566433.30560.65.camel@behemoth.csg.stercomm.com> (message
+	from Chris Cox on Mon, 28 Jan 2008 18:27:13 -0600)
+References: <479DAD35.1080209@cesca.es> <479E2BEF.1090703@cesca.es>
+	<1201541894.30560.24.camel@behemoth.csg.stercomm.com>
+	<200801281801.m0SI10Xi010185@beta.mvs.co.il>
+	<1C8CF1EA1A5B5940B81B0710B2A4C9385030AC683C@an-ex.ActiveNetwerx.int>
+	<200801282338.m0SNcjbP024435@beta.mvs.co.il>
+	<1201566433.30560.65.camel@behemoth.csg.stercomm.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] "vgchange -a n VG" freezes, other LVM commands too
-Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
+Reply-To: ehud@unix.mvs.co.il,
+	LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -33,68 +36,36 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: LVM general discussion and development <linux-lvm@redhat.com>
-
-I just wanted to deactivate a volume group - I used:
-
-vgchange -a n volume_group
+Content-Type: text/plain; charset="us-ascii"
+To: linux-lvm@redhat.com
 
 
-Unfortunately, it didn't work and it seems frozen - the command is still 
-being executed, and is in "D" state.
+I think this is quiet off topic, so this is my last reply.
 
-Any other LVM command (lvs etc.) freezes as well (D state), adding +1 to 
-the system load average.
+On Mon, 28 Jan 2008 18:27:13 Chris Cox wrote:
+>
+> Let's say you want to make a copy of your 5TB filesystem... how long
+> does that take?
+>
+> My point (washed away in silly talk) is that operations on large
+> filesytems can take a VERY long time.  Just looking at the (very)
+> trivial examples and not looking that the problem at a whole doesn't
+> solve the problem (as much as we'd like to think that it does).
 
-This is what happens when I start lvs with verbose/debug parameters:
+I agree to your basic point, but what is your solution ?
+Even if you have distributed FSs, you still have to back it all,
+keep its integrity and manage it somehow. I don't see how it is
+a lesser problem.
 
+The basic problem is that the data we hold grows faster than the
+software/hardware capabilities (or they are unreasonably priced).
 
-
-# lvs -vvvv -dddd
-#lvmcmdline.c:871         Processing: lvs -vvvv -dddd
-#lvmcmdline.c:874         O_DIRECT will be used
-#config/config.c:846       Setting global/locking_type to 1
-#config/config.c:823       Setting global/locking_dir to /var/lock/lvm
-#locking/locking.c:139       File-based locking enabled.
-#config/config.c:851       report/aligned not found in config: 
-defaulting to 1
-#config/config.c:851       report/buffered not found in config: 
-defaulting to 1
-#config/config.c:851       report/headings not found in config: 
-defaulting to 1
-#config/config.c:829       report/separator not found in config: 
-defaulting to
-#config/config.c:829       report/lvs_sort not found in config: 
-defaulting to vg_name,lv_name
-#config/config.c:829       report/lvs_cols_verbose not found in config: 
-defaulting to 
-lv_name,vg_name,seg_count,lv_attr,lv_size,lv_major,lv_minor,lv_kernel_major,lv_kernel_minor,origin,snap_percent,move_pv,copy_percent,mirror_log,lv_uuid
-#toollib.c:286     Finding all logical volumes
-#device/dev-io.c:439         Opened /dev/loop0 RO
-#device/dev-io.c:264       /dev/loop0: size is 0 sectors
-#filters/filter.c:106         /dev/loop0: Skipping: Too small to hold a PV
-#device/dev-io.c:485         Closed /dev/loop0
-#device/dev-io.c:439         Opened /dev/sda RO
-#device/dev-io.c:264       /dev/sda: size is 3985632 sectors
-#device/dev-io.c:134         /dev/sda: block size is 4096 bytes
-#filters/filter.c:112         /dev/sda: Skipping: Partition table 
-signature found
-#device/dev-io.c:485         Closed /dev/sda
-#device/dev-io.c:439         Opened /dev/sdq RO O_DIRECT
-#device/dev-io.c:134         /dev/sdq: block size is 4096 bytes
+Ehud.
 
 
-And it stays there.
-
-Any clues how to unblock it?
-
-
-If it is important, some other kernel thread (drbd0_worker from DRBD) 
-is/was accessing that volume group when I started that command.
-
-
-
--- 
-Tomasz Chmielewski
-http://wpkg.org
+--
+ Ehud Karni           Tel: +972-3-7966-561  /"\
+ Mivtach - Simon      Fax: +972-3-7966-667  \ /  ASCII Ribbon Campaign
+ Insurance agencies   (USA) voice mail and   X   Against   HTML   Mail
+ http://www.mvs.co.il  FAX:  1-815-5509341  / \
+ GnuPG: 98EA398D <http://www.keyserver.net/>    Better Safe Than Sorry
