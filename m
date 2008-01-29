@@ -1,17 +1,30 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m0TAHgk1025687
-	for <linux-lvm@redhat.com>; Tue, 29 Jan 2008 05:17:42 -0500
-Received: from percy.comedia.it (percy.comedia.it [212.97.59.71])
-	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id m0TAHIfU005342
-	for <linux-lvm@redhat.com>; Tue, 29 Jan 2008 05:17:18 -0500
-Date: Tue, 29 Jan 2008 11:17:18 +0100
-From: Luca Berra <bluca@comedia.it>
-Subject: Re: [linux-lvm] How to hide a "Linux LVM" partition away from Windows?
-Message-ID: <20080129101717.GE15191@percy.comedia.it>
-References: <20080121140239.GA16686@zenon.in.qult.net>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20080121140239.GA16686@zenon.in.qult.net>
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m0TAIeKf026039
+	for <linux-lvm@redhat.com>; Tue, 29 Jan 2008 05:18:40 -0500
+Received: from mail2.syneticon.net (mail.syneticon.net [213.239.212.131])
+	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id m0TAI7fS005781
+	for <linux-lvm@redhat.com>; Tue, 29 Jan 2008 05:18:08 -0500
+Received: from postfix1.syneticon.net (postfix1.syneticon.net [192.168.112.6])
+	by mail2.syneticon.net (Postfix) with ESMTP id EB6644889C
+	for <linux-lvm@redhat.com>; Tue, 29 Jan 2008 11:18:02 +0100 (CET)
+Received: from localhost (filter1.syneticon.net [192.168.113.3])
+	by postfix1.syneticon.net (Postfix) with ESMTP id 9EBA09383
+	for <linux-lvm@redhat.com>; Tue, 29 Jan 2008 11:18:01 +0100 (CET)
+Received: from postfix1.syneticon.net ([192.168.113.4])
+	by localhost (mx03.syneticon.net [192.168.113.3]) (amavisd-new,
+	port 10025) with ESMTP id KEFH7e7QRTL8 for <linux-lvm@redhat.com>;
+	Tue, 29 Jan 2008 11:17:59 +0100 (CET)
+Received: from [192.168.10.145] (koln-4d0b0605.pool.mediaWays.net [77.11.6.5])
+	by postfix1.syneticon.net (Postfix) with ESMTP
+	for <linux-lvm@redhat.com>; Tue, 29 Jan 2008 11:17:58 +0100 (CET)
+Message-ID: <479EFD55.7030505@wpkg.org>
+Date: Tue, 29 Jan 2008 11:17:57 +0100
+From: Tomasz Chmielewski <mangoo@wpkg.org>
+MIME-Version: 1.0
+Subject: Re: [linux-lvm] "vgchange -a n VG" freezes, other LVM commands too
+References: <479EF3A4.8040905@wpkg.org>
+In-Reply-To: <479EF3A4.8040905@wpkg.org>
+Content-Transfer-Encoding: 7bit
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -23,42 +36,28 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"; format="flowed"
-Content-Transfer-Encoding: 7bit
-To: linux-lvm@redhat.com
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-On Mon, Jan 21, 2008 at 03:02:39PM +0100, Ignacy Gawedzki wrote:
->Hi everyone,
->
->I've been looking for the answer for some time now and it is apparently
->nowhere to be found, so I resolved to ask it here.
->
->Somehow unexpectedly, Windows "sees" LVM partitions (partition type 8e) and
->shows them in the explorer and in other places.  Of course it doesn't
->understand the format and I don't have access to their contents from there,
->but nevertheless it happens to offer a "format..." entry in the contextual
->menu (brrrr... quite frightening!).  Obviously, LVM just doesn't care that
->much about the partition type when it scans for PVs, so I could probably just
->put something else here (e.g. Linux, 82).
->
->I was just wondering whether anybody here could provide with some insight
->about this (why doesn't Windows simply ignore these partitions or whether
->there are better tricks to hide them from it).  I find it pretty useful to be
->able to identify LVM PVs when using fdisk for example (curiously enough,
->gparted doesn't understand the 8e type).
->
-right click on my computer.
-chose manage
-open disk management
-right click on the partitio,
-chose change drive letter and paths
-chose remove
+Tomasz Chmielewski schrieb:
+> I just wanted to deactivate a volume group - I used:
+> 
+> vgchange -a n volume_group
+> 
+> 
+> Unfortunately, it didn't work and it seems frozen - the command is still 
+> being executed, and is in "D" state.
+> 
+> Any other LVM command (lvs etc.) freezes as well (D state), adding +1 to 
+> the system load average.
+> 
+> This is what happens when I start lvs with verbose/debug parameters:
 
-L.
+Oh, it looks like it's a dead iSCSI session that got in the way... With 
+a timeout set to 10 days or so. Well, let's wait 10 days and see what 
+happens.
+
+
 
 -- 
-Luca Berra -- bluca@comedia.it
-        Communication Media & Services S.r.l.
- /"\
- \ /     ASCII RIBBON CAMPAIGN
-  X        AGAINST HTML MAIL
- / \
+Tomasz Chmielewski
+http://wpkg.org
