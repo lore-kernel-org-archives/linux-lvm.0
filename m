@@ -1,28 +1,24 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m0TGGQYK030195
-	for <linux-lvm@redhat.com>; Tue, 29 Jan 2008 11:16:26 -0500
-Received: from scidubsmtp03.stercomm.com (scidubsmtp03.stercomm.com
-	[209.95.244.153])
-	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id m0TGG5h5012452
-	for <linux-lvm@redhat.com>; Tue, 29 Jan 2008 11:16:05 -0500
-Received: from IWDUBCORMSG002.sci.local (iwdubcormsg002.sci.local
-	[10.105.142.32])
-	by boamail2.stercomm.com (Postfix) with ESMTP id 20BD333BE7
-	for <linux-lvm@redhat.com>; Tue, 29 Jan 2008 11:16:54 -0500 (EST)
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m0THdRvX007048
+	for <linux-lvm@redhat.com>; Tue, 29 Jan 2008 12:39:27 -0500
+Received: from mail.linbit.com (nudl.linbit.com [212.69.162.21])
+	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id m0THcsKv011762
+	for <linux-lvm@redhat.com>; Tue, 29 Jan 2008 12:38:55 -0500
+Received: from soda.linbit (office.linbit [86.59.100.100])
+	(using TLSv1 with cipher DHE-RSA-AES128-SHA (128/128 bits))
+	(No client certificate requested)
+	by mail.linbit.com (LINBIT Mail Daemon) with ESMTP id ABDEC2DEAC70
+	for <linux-lvm@redhat.com>; Tue, 29 Jan 2008 18:38:48 +0100 (CET)
+Date: Tue, 29 Jan 2008 18:38:48 +0100
+From: Lars Ellenberg <linux-lvm@linbit.com>
 Subject: Re: [linux-lvm] LVM limits?
-From: Chris Cox <chris_cox@stercomm.com>
-In-Reply-To: <200801291004.m0TA4Zrm030681@beta.mvs.co.il>
+Message-ID: <20080129173848.GE5710@barkeeper1.linbit>
 References: <479DAD35.1080209@cesca.es> <479E2BEF.1090703@cesca.es>
 	<1201541894.30560.24.camel@behemoth.csg.stercomm.com>
-	<200801281801.m0SI10Xi010185@beta.mvs.co.il>
-	<1C8CF1EA1A5B5940B81B0710B2A4C9385030AC683C@an-ex.ActiveNetwerx.int>
-	<200801282338.m0SNcjbP024435@beta.mvs.co.il>
-	<1201566433.30560.65.camel@behemoth.csg.stercomm.com>
-	<200801291004.m0TA4Zrm030681@beta.mvs.co.il>
-Content-Transfer-Encoding: 7bit
-Date: Tue, 29 Jan 2008 10:16:03 -0600
-Message-Id: <1201623363.30560.69.camel@behemoth.csg.stercomm.com>
-Mime-Version: 1.0
+	<479E698C.10204@cesca.es>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <479E698C.10204@cesca.es>
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -34,40 +30,58 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-On Tue, 2008-01-29 at 12:04 +0200, Ehud Karni wrote:
-> I think this is quiet off topic, so this is my last reply.
+On Tue, Jan 29, 2008 at 12:47:24AM +0100, Jordi Prats wrote:
+> Hi,
+> I'm the system administrator of PADICAT (http://www.padi.cat). It
+> collects Catalan (http://en.wikipedia.org/wiki/Catalonia) web sites to
+> provide permanent access to them (http://www.padi.cat/en/quees.php).
+> It's equivalent to Internet Archive (http://www.archive.org) but for a
+> particular culture.
 > 
-> On Mon, 28 Jan 2008 18:27:13 Chris Cox wrote:
-> >
-> > Let's say you want to make a copy of your 5TB filesystem... how long
-> > does that take?
-> >
-> > My point (washed away in silly talk) is that operations on large
-> > filesytems can take a VERY long time.  Just looking at the (very)
-> > trivial examples and not looking that the problem at a whole doesn't
-> > solve the problem (as much as we'd like to think that it does).
-> 
-> I agree to your basic point, but what is your solution ?
-> Even if you have distributed FSs, you still have to back it all,
-> keep its integrity and manage it somehow. I don't see how it is
-> a lesser problem.
+> Our software developers require us to have one large file system,
+> actually a single directory, with all this historically-classified web
+> sites on a gziped file.
 
-The solution... create and use multiple filesystems rather than
-one big  one.
+if I may...
+if you are _archiving_ then the archive will be read-only.
+so you need a "working area" where you download and prepare the current
+stuff, "pack" it into the form of object repository you need.
+but then you archive it away into some much larger,
+but basically read-only, store.
 
-> 
-> The basic problem is that the data we hold grows faster than the
-> software/hardware capabilities (or they are unreasonably priced).
+if that is correct so far,
+what about having a some TB volume for the "working area",
+and then (for example) cramfs it away into versioned archive images.
+cramfs (or other strictly read-only) images have the additional
+advantage that they very easily scale out: you just clone it one other
+time, done. because of the read-only nature of the archive there is no
+need for any coordination, and one clone is as good as the other one.
+scales in any direction without effort.
 
-It's growing much, much faster.
+> I'm currently studying lustre and other HPC-related file systems to get
+> this large file system, but by now I have ext3 as our file system. Next
+> Monday I'm planning to extend it to 3TB o 4TB, so I'm currently
+> researching for restrictions because during next month I'll have between
+> 3TB to 4TB more to add: so, it will become a 8TB file system.
 
-Can you imagine if every machine at a 10,000 person shop had
-one of those inexpensive terabyte drives... AND somehow they
-manage to fill the space up... let's say 50% ... AND then you
-have to back it all up?
+If you have enterprise class hardware (enough RAM, good battery-backed
+controller etc), I personaly do very much prefer XFS.
+you should upgrade the "xfsprogs", though,
+most distributions ship outdated xfs tools.
 
-It's not just a large filesystem problem...
+<shameless plug>
+btw., if you want to explore lustre further, we have some cooperation
+with the lustre people to run lustre on DRBD. if interessted in details,
+contact address is below...
+</shameless plug>
 
-:)
+-- 
+: Lars Ellenberg                           http://www.linbit.com :
+: DRBD/HA support and consulting             sales at linbit.com :
+: LINBIT Information Technologies GmbH      Tel +43-1-8178292-0  :
+: Vivenotgasse 48, A-1120 Vienna/Europe     Fax +43-1-8178292-82 :
+__
+please use the "List-Reply" function of your email client.
