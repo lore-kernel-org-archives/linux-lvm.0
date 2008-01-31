@@ -1,21 +1,22 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m0V6TAIR005086
-	for <linux-lvm@redhat.com>; Thu, 31 Jan 2008 01:29:11 -0500
-Received: from victor.provo.novell.com (victor.provo.novell.com
-	[137.65.250.26])
-	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id m0V6SEIY021521
-	for <linux-lvm@redhat.com>; Thu, 31 Jan 2008 01:28:25 -0500
-Message-Id: <47A1B844.E775.009D.0@novell.com>
-Date: Wed, 30 Jan 2008 23:32:51 -0700
-From: "Vijayababu Dandi" <dvijayababu@novell.com>
-Subject: RE: [linux-lvm] How to create partitions using  LVM
-References: <47A1A629.E775.009D.0@novell.com>
-	<47A159DE.4010401@mattgillen.net> <47A1AA0D.E775.009D.0@novell.com>
-	<1C8CF1EA1A5B5940B81B0710B2A4C9385030AC6855@an-ex.ActiveNetwerx.int>
-In-Reply-To: <1C8CF1EA1A5B5940B81B0710B2A4C9385030AC6855@an-ex.ActiveNetwerx.int>
-Mime-Version: 1.0
-Content-Disposition: inline
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m0VA39J3015334
+	for <linux-lvm@redhat.com>; Thu, 31 Jan 2008 05:03:09 -0500
+Received: from mars.math-info.univ-paris5.fr (mars.math-info.univ-paris5.fr
+	[193.48.200.18])
+	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id m0VA2Xdj000786
+	for <linux-lvm@redhat.com>; Thu, 31 Jan 2008 05:02:34 -0500
+Received: from krishna.math-info.univ-paris5.fr
+	(krishna.math-info.univ-paris5.fr [193.48.200.152])
+	by mars.math-info.univ-paris5.fr (8.14.1/jtpda-5.4) with ESMTP id
+	m0VA2XLP024595
+	for <linux-lvm@redhat.com>; Thu, 31 Jan 2008 11:02:33 +0100
+Message-ID: <47A19CB9.6030503@math-info.univ-paris5.fr>
+Date: Thu, 31 Jan 2008 11:02:33 +0100
+From: =?ISO-8859-1?Q?Fran=E7ois_Patte?=
+	<francois.patte@math-info.univ-paris5.fr>
+MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Subject: [linux-lvm] question about install on a new disk
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -26,18 +27,47 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: 'LVM general discussion and development' <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="utf-8"; format="flowed"
+To: linux-lvm@redhat.com
 
-Thanks Joseph  i will go through it
- 
->>> "Joseph L. Casale" <jcasale@ActiveNetwerx.com> 01/31/08 11:12 AM >>> 
->I mean that from (disk) sda if i want to create sda2,sda3 .... In EVMS just like creating Segments.
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA1
 
-So you want to carve up three partitions on an LVM disc? --> You want 3 Logical Volumes then, check out that website I gave you...
+Bonjour,
 
-_______________________________________________
-linux-lvm mailing list
-linux-lvm@redhat.com
-https://www.redhat.com/mailman/listinfo/linux-lvm
-read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+I have presently an install of fedora 6 on a disk sdb with partitions:
+
+sdb1 / (ext3)
+sdb2 LVM with lv: /usr, /var, /opt, /tmp, /home
+
+I would like to perform a new install on sda with partitions:
+
+sda1 / (ext3)
+sda2 LVM with same lv except /home
+
+
+How can I mount the "old" logical volumes located on sdb when the new
+system will be running on sda?
+
+As devices /dev/mapper/VolGroup00-LogVol00 etc. are created at boot time
+in the /dev of the running system I will be unable to access the logical
+volumes located on sdb....
+
+I don't know how to proceed.
+
+Thanks for any help.
+
+- --
+Fran�ois Patte
+UFR de math�matiques et informatique
+Universit� Paris Descartes
+T�l. +33 (0)1 44 55 35 61
+http://www.math-info.univ-paris5.fr/~patte
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.7 (GNU/Linux)
+Comment: Using GnuPG with Fedora - http://enigmail.mozdev.org
+
+iD8DBQFHoZy4dE6C2dhV2JURAkX5AKCe5XYdJTe3su16YrR8KogjWONc7QCfbOyO
+UImcEFi74zPWLj2agd+hICE=
+=k3H+
+-----END PGP SIGNATURE-----
