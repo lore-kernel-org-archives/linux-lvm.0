@@ -1,35 +1,18 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m0V5NbSx012101
-	for <linux-lvm@redhat.com>; Thu, 31 Jan 2008 00:23:37 -0500
-Received: from pd3mo1so.prod.shaw.ca (idcmail-mo1so.shaw.ca [24.71.223.10])
-	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id m0V5MxGl024944
-	for <linux-lvm@redhat.com>; Thu, 31 Jan 2008 00:23:00 -0500
-Received: from pd4mr1so.prod.shaw.ca
-	(pd4mr1so-qfe3.prod.shaw.ca [10.0.141.212]) by l-daemon
-	(Sun ONE Messaging Server 6.0 HotFix 1.01 (built Mar 15 2004))
-	with ESMTP id <0JVH00AV1TMAU8F0@l-daemon> for linux-lvm@redhat.com; Wed,
-	30 Jan 2008 22:22:58 -0700 (MST)
-Received: from pn2ml9so.prod.shaw.ca ([10.0.121.7])
-	by pd4mr1so.prod.shaw.ca (Sun Java System Messaging Server 6.2-7.05
-	(built Sep
-	5 2006)) with ESMTP id <0JVH00MTXTMAUU30@pd4mr1so.prod.shaw.ca> for
-	linux-lvm@redhat.com; Wed, 30 Jan 2008 22:22:59 -0700 (MST)
-Received: from mail.activenetwerx.com ([68.144.68.179])
-	by l-daemon (Sun ONE Messaging Server 6.0 HotFix 1.01 (built Mar 15
-	2004))
-	with ESMTP id <0JVH00HHXTMAB050@l-daemon> for linux-lvm@redhat.com; Wed,
-	30 Jan 2008 22:22:58 -0700 (MST)
-Received: from exchange.activenetwerx.com (localhost.localdomain [127.0.0.1])
-	by mail.activenetwerx.com (Postfix) with ESMTP id 0937F178056	for
-	<linux-lvm@redhat.com>; Wed, 30 Jan 2008 15:25:22 -0700 (MST)
-Date: Wed, 30 Jan 2008 22:22:57 -0700
-From: "Joseph L. Casale" <jcasale@ActiveNetwerx.com>
-Subject: RE: [linux-lvm] How to create partitions using  LVM
-In-reply-to: <47A1A629.E775.009D.0@novell.com>
-Message-id: <1C8CF1EA1A5B5940B81B0710B2A4C9385030AC6854@an-ex.ActiveNetwerx.int>
-MIME-version: 1.0
-Content-language: en-US
-References: <47A1A629.E775.009D.0@novell.com>
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m0V5Rp6g013886
+	for <linux-lvm@redhat.com>; Thu, 31 Jan 2008 00:27:51 -0500
+Received: from victor.provo.novell.com (victor.provo.novell.com
+	[137.65.250.26])
+	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id m0V5RSsY026937
+	for <linux-lvm@redhat.com>; Thu, 31 Jan 2008 00:27:28 -0500
+Message-Id: <47A1AA0D.E775.009D.0@novell.com>
+Date: Wed, 30 Jan 2008 22:32:12 -0700
+From: "Vijayababu Dandi" <dvijayababu@novell.com>
+Subject: Re: [linux-lvm] How to create partitions using  LVM
+References: <47A1A629.E775.009D.0@novell.com> <47A159DE.4010401@mattgillen.net>
+In-Reply-To: <47A159DE.4010401@mattgillen.net>
+Mime-Version: 1.0
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
@@ -42,11 +25,31 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: "linux-lvm@redhat.com" <linux-lvm@redhat.com>
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
->Hi,
->I am very new to LVM. How to create a partition using LVM.
+Hi,
 
-http://www.howtoforge.com/linux_lvm
-Great beginners guide.
-jlc
+I mean that from (disk) sda if i want to create sda2,sda3 .... In EVMS just like creating Segments.
+
+Regards,
+Vijay  
+ 
+>>> Matthew Gillen <me@mattgillen.net> 01/31/08 10:47 AM >>> 
+Vijayababu Dandi wrote:
+> Hi,
+> I am very new to LVM. How to create a partition using LVM.
+
+Not sure exactly what you mean by that.  You can set a partition's type to 
+Linux LVM, but that doesn't do much (and isn't necessary with LVM 2).
+
+Check out the FAQ:
+http://tldp.org/HOWTO/LVM-HOWTO/initdisks.html
+(look for the "For partitions" section on that page)
+
+Matt
+
+_______________________________________________
+linux-lvm mailing list
+linux-lvm@redhat.com
+https://www.redhat.com/mailman/listinfo/linux-lvm
+read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
