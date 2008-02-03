@@ -1,24 +1,16 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m11D8hnU022578
-	for <linux-lvm@redhat.com>; Fri, 1 Feb 2008 08:08:43 -0500
-Received: from relais.videotron.ca (relais.videotron.ca [24.201.245.36])
-	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id m11D81s6017600
-	for <linux-lvm@redhat.com>; Fri, 1 Feb 2008 08:08:01 -0500
-MIME-version: 1.0
-Content-transfer-encoding: 7BIT
-Received: from [192.168.1.109] ([74.57.215.142]) by VL-MO-MR005.ip.videotron.ca
-	(Sun Java(tm) System Messaging Server 6.3-4.01 (built Aug  3 2007;
-	32bit))
-	with ESMTP id <0JVK00CDX9T6ZV00@VL-MO-MR005.ip.videotron.ca> for
-	linux-lvm@redhat.com; Fri, 01 Feb 2008 08:07:55 -0500 (EST)
-Message-id: <47A319B0.8010007@terrascale.net>
-Date: Fri, 01 Feb 2008 08:08:00 -0500
-From: Steeve McCauley <steeve@terrascale.net>
-Subject: Re: [linux-lvm] LVM limits?  OT
-References: <479DAD35.1080209@cesca.es> <479E2BEF.1090703@cesca.es>
-	<1201541894.30560.24.camel@behemoth.csg.stercomm.com>
-	<479E698C.10204@cesca.es> <47A2B0C5.6010809@gmail.com>
-In-reply-to: <47A2B0C5.6010809@gmail.com>
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m132JSDn015841
+	for <linux-lvm@redhat.com>; Sat, 2 Feb 2008 21:19:28 -0500
+Received: from moutng.kundenserver.de (moutng.kundenserver.de
+	[212.227.126.187])
+	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id m132Ivpt005119
+	for <linux-lvm@redhat.com>; Sat, 2 Feb 2008 21:18:57 -0500
+From: Eckhard Kosin <Eckhard.Kosin@online.de>
+Date: Sun, 03 Feb 2008 03:18:51 +0100
+Message-Id: <1202005131.5857.18.camel@localhost.localdomain>
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Subject: [linux-lvm] Incorrect metadata area header checksum
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -29,57 +21,84 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="iso-8859-1"
+To: linux-lvm@redhat.com
 
+Hi all,
 
+I just reordered my disk space:  shrunk /dev/hda6, created a new
+partition /dev/hda10 with this new space and added /dev/hda10 to the
+existing volume group vg_uhu00.  After that I could boot and all seems
+to be fine. but running vgscan I get
 
-David Robinson wrote:
-> Jordi Prats wrote:
->> Hi,
->> I'm the system administrator of PADICAT (http://www.padi.cat). It
->> collects Catalan (http://en.wikipedia.org/wiki/Catalonia) web sites to
->> provide permanent access to them (http://www.padi.cat/en/quees.php).
->> It's equivalent to Internet Archive (http://www.archive.org) but for a
->> particular culture.
->>
->> Our software developers require us to have one large file system,
->> actually a single directory, with all this historically-classified web
->> sites on a gziped file.
->>
->> I'm currently studying lustre and other HPC-related file systems to get
->> this large file system, but by now I have ext3 as our file system. Next
->> Monday I'm planning to extend it to 3TB o 4TB, so I'm currently
->> researching for restrictions because during next month I'll have between
->> 3TB to 4TB more to add: so, it will become a 8TB file system.
->>
->> Last time I fsck my 2'1TB file system I spend about 2 hours. Anyway, I'm
->> also curious about the maximums :P
-> 
-> The man page for vgcreate talks a little bit about limits:
-> 
-> "If the volume group metadata uses lvm1 format, extents can vary in size 
-> from 8KB to 16GB and there is a limit of 65534 extents in each logical 
-> volume. The default of 4 MB leads to a maximum logical volume size of 
-> around 256GB.
-> If the volume group metadata uses lvm2 format those restrictions do not 
-> apply, but having a large number of extents will slow down the tools but 
-> have no impact on I/O performance to the logical volume."
-> 
-> In short, you're more likely to reach filesystem limits before LVM's. 
-> EXT3 has a theoretical limit of 32 TB, but 32 GB its not practical. 
-> Creating an EXT3 filesystem larger than 8 TB is umm, brave - as you have 
-> noticed the tools (eg. fsck) do not scale well w/ EXT3.
+root@uhu:/home/ecki/backup/uhu# vgscan
+  Reading all physical volumes.  This may take a while...
+  Incorrect metadata area header checksum
+  Incorrect metadata area header checksum
+  Couldn't find device with uuid 'Cm961g-X5km-ifdU-r0Cp-ACmd-N9qG-XcieTR'.
+  Couldn't find all physical volumes for volume group vg_uhu00.
+  Incorrect metadata area header checksum
+  Couldn't find device with uuid 'Cm961g-X5km-ifdU-r0Cp-ACmd-N9qG-XcieTR'.
+  Couldn't find all physical volumes for volume group vg_uhu00.
+  Incorrect metadata area header checksum
+  Incorrect metadata area header checksum
+  Couldn't find device with uuid 'Cm961g-X5km-ifdU-r0Cp-ACmd-N9qG-XcieTR'.
+  Couldn't find all physical volumes for volume group vg_uhu00.
+  Incorrect metadata area header checksum
+  Couldn't find device with uuid 'Cm961g-X5km-ifdU-r0Cp-ACmd-N9qG-XcieTR'.
+  Couldn't find all physical volumes for volume group vg_uhu00.
+  Volume group "vg_uhu00" not found
 
-With a 4K block size the theoretical limit is 16TB.  The ext2/3
-tools do not work beyond 4TB, or at least they didn't as of a year
-or two ago.  I did report the problem to Theodore, not sure if the
-fix was ever adopted, but you're absolutely right about the scalability
-problems of ext3.  An fsck of a 16TB filesystem was something that
-definitely required tea.
+Some additional information:
 
-> GFS or XFS (or others) may be more suitable, but it depends on your 
-> requirements.
+I'm running Ubuntu 6.06 (dapper)
 
-Any of the extent based filesystems.  A fixed format filesystem like
-ext3 does not scale.
+root@uhu:/home/ecki/backup/uhu# uname -a
+Linux uhu 2.6.15-51-386 #1 PREEMPT Thu Dec 6 20:20:49 UTC 2007 i686 GNU/Lin=
+ux
+
+root@uhu:/home/ecki/backup/uhu# apt-show-versions lvm2
+lvm2/dapper uptodate 2.02.02-1ubuntu1.5
+
+root@uhu:/home/ecki/backup/uhu# fdisk -ul
+
+Disk /dev/hda: 40.0 GB, 40007761920 bytes
+255 heads, 63 sectors/track, 4864 cylinders, total 78140160 sectors
+Units =3D sectors of 1 * 512 =3D 512 bytes
+
+   Device Boot      Start         End      Blocks   Id  System
+/dev/hda1   *          63    14329979     7164958+   7  HPFS/NTFS
+/dev/hda2        14329980    78140159    31905090    f  W95 Ext'd (LBA)
+/dev/hda5        23438898    25993169     1277136   82  Linux swap / Solaris
+/dev/hda6        25993233    38443544     6225156   83  Linux
+/dev/hda7        42556248    42684704       64228+  83  Linux
+/dev/hda8        42684768    78140159    17727696   8e  Linux LVM
+/dev/hda9        14330106    23438834     4554364+  83  Linux
+/dev/hda10       38443608    42556184     2056288+  83  Linux
+
+Partition table entries are not in disk order
+
+The volume group vg_uhu00 uses the partitions /dev/hda8, /dev/hda9 and
+/dev/hda10 and, I believe, but I'm not sure, /dev/hda5 (swap
+partition).  I can't check, because lvdisplay gives the same output as vgsc=
+an above.
+
+I have a line
+
+  filter =3D [ "r|/dev/cdrom|", "r|/dev/hda[1,6,7]|" ]
+
+in my /etc/lvm/lvm.conf
+
+Any suggestions, how to get a clean volume group?
+
+       Thanks a lot
+
+             Ecki
+
+--=20
+  Eckhard Kosin
+  Kaspar-Kerll-Str. 41
+D-81245 M=C3=BCnchen, Germany
+  Tel.: (+49)(+89) 88 88 479
+  Tel., Fax: (+49)(+89) 835 844
+  mailto:Eckhard.Kosin@online.de
