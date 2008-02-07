@@ -1,9 +1,18 @@
-Subject: [Fwd: Re: [linux-lvm] Incorrect metadata area header checksum]
-From: Eckhard Kosin <Eckhard.Kosin@online.de>
-Date: Tue, 05 Feb 2008 14:26:36 +0100
-Message-Id: <1202217996.12076.18.camel@localhost.localdomain>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m17Ed9kM024896
+	for <linux-lvm@redhat.com>; Thu, 7 Feb 2008 09:39:09 -0500
+Received: from mail180.messagelabs.com (mail180.messagelabs.com
+	[85.158.139.51])
+	by mx3.redhat.com (8.13.1/8.13.1) with SMTP id m17Ecc45001325
+	for <linux-lvm@redhat.com>; Thu, 7 Feb 2008 09:38:38 -0500
+Content-class: urn:content-classes:message
+MIME-Version: 1.0
+Content-Type: multipart/alternative;
+	boundary="----_=_NextPart_001_01C86997.1C98CEB7"
+Date: Thu, 7 Feb 2008 14:38:31 -0000
+Message-ID: <A78DB34D00374344A0AB65B6523C05DC02AFC226@marsden.win.datacash.com>
+From: "Gerrard Geldenhuis" <Gerrard.Geldenhuis@datacash.com>
+Subject: [linux-lvm] Docs on clustererd option of vgcreate
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -14,108 +23,139 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="iso-8859-1"
-To: Alasdair G Kergon <agk@redhat.com>, linux-lvm@redhat.com
+To: linux-lvm@redhat.com
 
-Hi Alasdair,
+This is a multi-part message in MIME format.
 
-I'm sorry to mail directly to you,  but I tried three times without
-success to post the below listed mail to linux-lvm@redhat.com , it
-doesn't arrive their ;=3D{{  Perhaps you can check the reason, post my
-mail to our thread in the list, and last but not least, do you have an
-answer to my problem?
+------_=_NextPart_001_01C86997.1C98CEB7
+Content-Type: text/plain;
+	charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 
-     Thank you very much, have a nice day
+Hi=20
 
-           Ecki=20
+I am after a bit more documentation about the usage of the=20
+
+--clustered option in vgcreate.
+
+=20
+
+At the moment I don't have a spare san drive with which I can
+experiment. My understanding is that you would set this flag when
+different hosts(nodes) connect to the same storage area typically a san
+with lvm configured.=20
+
+=20
+
+I am after a bit more information describing this "clusterering"
+functionality in lvm and how/where it is used. The man pages on lvm and
+commands is a bit sparse and I am trawling through google results but
+not with great success at the moment.
+
+=20
+
+Regards
 
 
--------- Weitergeleitete Nachricht --------
-> Von: Eckhard Kosin <Eckhard.Kosin@online.de>
-> An: linux-lvm@redhat.com
-> Betreff: Re: [linux-lvm] Incorrect metadata area header checksum
-> Datum: Tue, 05 Feb 2008 12:52:16 +0100
->=20
-> Am Montag, den 04.02.2008, 10:36 +0000 schrieb Alasdair G Kergon:
-> > On Sun, Feb 03, 2008 at 07:06:48PM -0800, David Brown wrote:
-> > > You'll probably find that there is a lvm2 label there.  I'm not sure =
-of a
-> > > safe way of elminiating it.
-> Okay, there is a LVM label on hda7:
->=20
-> ecki@uhu:~$ sudo dd if=3D/dev/hda7 bs=3D1k count=3D1 | hexdump -e '"%_p"'
-> 1+0 records in
-> 1+0 records out
-> 1024 bytes (1,0 kB) copied, 6,4e-05 Sekunden, 16 MB/s
-> .*
-> LABELONE..*
-> ..$. .*
-> LVM2 0*
-> 1EWhly9hF5TcIV1KyHfXVUQDBe7S1uf14.P.=3D..*
-> ..*
-> ..*
-> ...*
->=20
-> > =20
-> > man pvremove
-> I tried
->=20
-> root@uhu:/home/ecki# umount -l /dev/hda7
-> root@uhu:/home/ecki# pvremove /dev/hda7
->   /dev/hda7: Couldn't find device.  Check your filters?
->=20
-> I changed my filter rule in /etc/lvm/lvm.conf from
->=20
-> filter =3D [ "r|/dev/cdrom|", "r|^/dev/hda[1,6,7]$|" ]
->=20
-> to
->=20
-> filter =3D [ "r|/dev/cdrom|", "r|^/dev/hda[1,6]$|" ]
->=20
-> but again no success:
->=20
-> root@uhu:/home/ecki# pvremove /dev/hda7
->   Incorrect metadata area header checksum
->   Incorrect metadata area header checksum
->   Incorrect metadata area header checksum
->   Incorrect metadata area header checksum
->   Can't open /dev/hda7 exclusively.  Mounted filesystem?
->   Device '/dev/hda8' has been left open.
->   Device '/dev/hda9' has been left open.
->   Device '/dev/hda10' has been left open.
->   Device '/dev/hda10' has been left open.
->   Device '/dev/hda10' has been left open.
->   Device '/dev/hda8' has been left open.
->   Device '/dev/hda9' has been left open.
->   Device '/dev/hda8' has been left open.
->   Device '/dev/hda9' has been left open.
->   Device '/dev/evms/hda7' has been left open.
-> root@uhu:/home/ecki# mount |grep hda
-> root@uhu:/home/ecki#
->=20
-> You see, /dev/hda7 isn't mounted:-(  The problem is "/dev/evms/hda7"?
-> How to resolve it?  I append the output of "pvremove -vvvv /dev/hda7".
-> Any suggestions?
->=20
->=20
-> >=20
-> > And you really should upgrade lvm2 - that's a 2-year old version with n=
-umerous
-> > known bugs in it.
-> The version I use is the version supplied by my Ubuntu distribution 6.06
-> (which is still supported).  I don't like to mix different versions as
-> long as I'm not forced by a bug to do so.
->=20
->     Thanks for your help
->=20
->          Ecki
->=20
-> >=20
-> > Alasdair
---=20
-  Eckhard Kosin
-  Kaspar-Kerll-Str. 41
-D-81245 M=C3=BCnchen, Germany
-  Tel.: (+49)(+89) 88 88 479
-  Tel., Fax: (+49)(+89) 835 844
-  mailto:Eckhard.Kosin@online.de
+------_=_NextPart_001_01C86997.1C98CEB7
+Content-Type: text/html;
+	charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+
+<html xmlns:o=3D"urn:schemas-microsoft-com:office:office" =
+xmlns:w=3D"urn:schemas-microsoft-com:office:word" =
+xmlns=3D"http://www.w3.org/TR/REC-html40">
+
+<head>
+<meta http-equiv=3DContent-Type content=3D"text/html; =
+charset=3Dus-ascii">
+<meta name=3DGenerator content=3D"Microsoft Word 11 (filtered medium)">
+<style>
+<!--
+ /* Style Definitions */
+ p.MsoNormal, li.MsoNormal, div.MsoNormal
+	{margin:0cm;
+	margin-bottom:.0001pt;
+	font-size:12.0pt;
+	font-family:"Times New Roman";}
+a:link, span.MsoHyperlink
+	{color:blue;
+	text-decoration:underline;}
+a:visited, span.MsoHyperlinkFollowed
+	{color:purple;
+	text-decoration:underline;}
+span.EmailStyle17
+	{mso-style-type:personal-compose;
+	font-family:Arial;
+	color:windowtext;}
+@page Section1
+	{size:612.0pt 792.0pt;
+	margin:72.0pt 90.0pt 72.0pt 90.0pt;}
+div.Section1
+	{page:Section1;}
+-->
+</style>
+
+</head>
+
+<body lang=3DEN-US link=3Dblue vlink=3Dpurple>
+
+<div class=3DSection1>
+
+<p class=3DMsoNormal><font size=3D2 face=3DArial><span lang=3DEN-GB =
+style=3D'font-size:
+10.0pt;font-family:Arial'>Hi <o:p></o:p></span></font></p>
+
+<p class=3DMsoNormal><font size=3D2 face=3DArial><span lang=3DEN-GB =
+style=3D'font-size:
+10.0pt;font-family:Arial'>I am after a bit more documentation about the =
+usage
+of the <o:p></o:p></span></font></p>
+
+<p class=3DMsoNormal><font size=3D2 face=3DArial><span lang=3DEN-GB =
+style=3D'font-size:
+10.0pt;font-family:Arial'>--clustered option in =
+vgcreate.<o:p></o:p></span></font></p>
+
+<p class=3DMsoNormal><font size=3D2 face=3DArial><span lang=3DEN-GB =
+style=3D'font-size:
+10.0pt;font-family:Arial'><o:p>&nbsp;</o:p></span></font></p>
+
+<p class=3DMsoNormal><font size=3D2 face=3DArial><span lang=3DEN-GB =
+style=3D'font-size:
+10.0pt;font-family:Arial'>At the moment I don&#8217;t have a spare san =
+drive
+with which I can experiment. My understanding is that you would set this =
+flag
+when different hosts(nodes) connect to the same storage area typically a =
+san
+with lvm configured. <o:p></o:p></span></font></p>
+
+<p class=3DMsoNormal><font size=3D2 face=3DArial><span lang=3DEN-GB =
+style=3D'font-size:
+10.0pt;font-family:Arial'><o:p>&nbsp;</o:p></span></font></p>
+
+<p class=3DMsoNormal><font size=3D2 face=3DArial><span lang=3DEN-GB =
+style=3D'font-size:
+10.0pt;font-family:Arial'>I am after a bit more information describing =
+this &#8220;clusterering&#8221;
+functionality in lvm and how/where it is used. The man pages on lvm and
+commands is a bit sparse and I am trawling through google results but =
+not with
+great success at the moment.<o:p></o:p></span></font></p>
+
+<p class=3DMsoNormal><font size=3D2 face=3DArial><span lang=3DEN-GB =
+style=3D'font-size:
+10.0pt;font-family:Arial'><o:p>&nbsp;</o:p></span></font></p>
+
+<p class=3DMsoNormal><font size=3D2 face=3DArial><span lang=3DEN-GB =
+style=3D'font-size:
+10.0pt;font-family:Arial'>Regards<o:p></o:p></span></font></p>
+
+</div>
+
+</body>
+
+</html>
+
+------_=_NextPart_001_01C86997.1C98CEB7--
