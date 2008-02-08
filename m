@@ -1,28 +1,21 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m18C5V06024443
-	for <linux-lvm@redhat.com>; Fri, 8 Feb 2008 07:05:31 -0500
-Received: from mail2.syneticon.net (mail.syneticon.net [213.239.212.131])
-	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id m18C4trV027158
-	for <linux-lvm@redhat.com>; Fri, 8 Feb 2008 07:04:59 -0500
-Received: from postfix1.syneticon.net (postfix1.syneticon.net [192.168.112.6])
-	by mail2.syneticon.net (Postfix) with ESMTP id 90D1B62871
-	for <linux-lvm@redhat.com>; Fri,  8 Feb 2008 13:04:51 +0100 (CET)
-Received: from localhost (filter1.syneticon.net [192.168.113.3])
-	by postfix1.syneticon.net (Postfix) with ESMTP id 45E6D9383
-	for <linux-lvm@redhat.com>; Fri,  8 Feb 2008 13:04:49 +0100 (CET)
-Received: from postfix1.syneticon.net ([192.168.113.4])
-	by localhost (mx03.syneticon.net [192.168.113.3]) (amavisd-new,
-	port 10025) with ESMTP id k5DVgKeG5t3w for <linux-lvm@redhat.com>;
-	Fri,  8 Feb 2008 13:04:47 +0100 (CET)
-Received: from [192.168.10.145] (koln-4d0b07e2.pool.mediaWays.net
-	[77.11.7.226]) by postfix1.syneticon.net (Postfix) with ESMTP
-	for <linux-lvm@redhat.com>; Fri,  8 Feb 2008 13:04:47 +0100 (CET)
-Message-ID: <47AC455E.4030502@wpkg.org>
-Date: Fri, 08 Feb 2008 13:04:46 +0100
-From: Tomasz Chmielewski <mangoo@wpkg.org>
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m18CSWX2002073
+	for <linux-lvm@redhat.com>; Fri, 8 Feb 2008 07:28:32 -0500
+Received: from hs-out-2122.google.com (hs-out-0708.google.com [64.233.178.242])
+	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id m18CSAQ0005053
+	for <linux-lvm@redhat.com>; Fri, 8 Feb 2008 07:28:10 -0500
+Received: by hs-out-2122.google.com with SMTP id k27so3582443hsc.3
+	for <linux-lvm@redhat.com>; Fri, 08 Feb 2008 04:28:05 -0800 (PST)
+Message-ID: <a71bd89a0802080428h5c58abf5v8328a82a9f7d7487@mail.gmail.com>
+Date: Fri, 8 Feb 2008 04:28:04 -0800
+From: "Dan Kegel" <dank@kegel.com>
+Sender: daniel.r.kegel@gmail.com
+Subject: Re: [linux-lvm] snapshots and filesystem freezing
+In-Reply-To: <47AC455E.4030502@wpkg.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] snapshots and filesystem freezing
+Content-Disposition: inline
+References: <47AC455E.4030502@wpkg.org>
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -33,25 +26,34 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
+Content-Type: text/plain; charset="us-ascii"
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-Some filesystems, like xfs, have a "freeze" feature. There was a 
-discussion on lkml about implementing it in ext3, too.
+On Feb 8, 2008 4:04 AM, Tomasz Chmielewski <mangoo@wpkg.org> wrote:
+> Some filesystems, like xfs, have a "freeze" feature. There was a
+> discussion on lkml about implementing it in ext3, too.
+>
+> What is the relationship between a filesystem freeze and LVM snapshots?
+>
+> As far as I understand, snapshotting a filesystem in any random
+> timepoint can mean that the snapshotted fs will be inconsistent (i.e.,
+> may need fsck).
+> "Freezing" the filesystem will flush all writes to the media, and a
+> snapshotted fs should be consistent then (in theory; without an
+> interface between filesystem freeze and LVM snapshot it does not
+> guarantee that the operation is "atomic").
 
-What is the relationship between a filesystem freeze and LVM snapshots?
+Historically, executing sync() does most of what freeze does,
+though there's a risk that some pesky process will go and do
+a write (or some in-flight write will land) after the sync and before
+you finish the snapshot.
+XFS decided to be different; I think they wanted to shout out to the
+world that the old sync() idea was racy, so they refused to implement
+it properly, and introduced the theoretically safer freeze/thaw idea.
+They may yet drag the rest of us kicking and screaming into the modern world.
 
-As far as I understand, snapshotting a filesystem in any random 
-timepoint can mean that the snapshotted fs will be inconsistent (i.e., 
-may need fsck).
-"Freezing" the filesystem will flush all writes to the media, and a 
-snapshotted fs should be consistent then (in theory; without an 
-interface between filesystem freeze and LVM snapshot it does not 
-guarantee that the operation is "atomic").
-
-Am I correct?
-
-
--- 
-Tomasz Chmielewski
-http://blog.wpkg.org
+Comments in
+http://www.paragon-cs.com/wordpress/?p=67 mention that
+one used to have to do the xfs freeze manually, but lvm2 now does it for you.
+(It also mentions that you really want to manually quiesce your apps, too.)
+- Dan
