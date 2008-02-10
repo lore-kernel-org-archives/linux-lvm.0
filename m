@@ -1,25 +1,28 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m1A6fbGh025605
-	for <linux-lvm@redhat.com>; Sun, 10 Feb 2008 01:41:37 -0500
-Received: from slartibartfast.qult.net (Debian-exim@qult.net [82.238.217.46])
-	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id m1A6fGHc000387
-	for <linux-lvm@redhat.com>; Sun, 10 Feb 2008 01:41:16 -0500
-Received: from zenon.in.qult.net ([192.168.0.1])
-	by slartibartfast.qult.net with esmtp (Exim 4.67)
-	(envelope-from <lvm@qult.net>) id 1JO5sJ-0002Dk-EX
-	for linux-lvm@redhat.com; Sun, 10 Feb 2008 07:41:15 +0100
-Received: from ig by zenon.in.qult.net with local (Exim 4.67)
-	(envelope-from <lvm@qult.net>) id 1JO5sH-0000yM-CF
-	for linux-lvm@redhat.com; Sun, 10 Feb 2008 07:41:13 +0100
-Date: Sun, 10 Feb 2008 07:41:13 +0100
-From: Ignacy Gawedzki <lvm@qult.net>
-Subject: Re: [linux-lvm] How to hide a "Linux LVM" partition away from Windows?
-Message-ID: <20080210064113.GB3131@zenon.in.qult.net>
-References: <20080121140239.GA16686@zenon.in.qult.net>
-	<20080129101717.GE15191@percy.comedia.it>
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m1AA7hOm008890
+	for <linux-lvm@redhat.com>; Sun, 10 Feb 2008 05:07:43 -0500
+Received: from post.berlin.i-dmedia.com (post.berlin.i-dmedia.com
+	[62.159.214.250])
+	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id m1AA7Kbh008076
+	for <linux-lvm@redhat.com>; Sun, 10 Feb 2008 05:07:20 -0500
+Received: from localhost (localhost [127.0.0.1])
+	by post.berlin.i-dmedia.com (Postfix) with ESMTP id EFCC640EA
+	for <linux-lvm@redhat.com>; Sun, 10 Feb 2008 11:07:49 +0100 (CET)
+Received: from post.berlin.i-dmedia.com ([127.0.0.1])
+	by localhost (post.berlin.i-dmedia.com [127.0.0.1]) (amavisd-new,
+	port 10024) with ESMTP id gkUF7rG+uTbl for <linux-lvm@redhat.com>;
+	Sun, 10 Feb 2008 11:07:40 +0100 (CET)
+Received: from x1.ads.i-dmedia.com (x1.berlin.i-dmedia.com [10.1.69.45])
+	by post.berlin.i-dmedia.com (Postfix) with ESMTP id 6A0D440F6
+	for <linux-lvm@redhat.com>; Sun, 10 Feb 2008 11:06:38 +0100 (CET)
+Content-class: urn:content-classes:message
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20080129101717.GE15191@percy.comedia.it>
+Content-Type: multipart/alternative;
+	boundary="----_=_NextPart_001_01C86BCC.8A948D68"
+Date: Sun, 10 Feb 2008 11:06:02 +0100
+Message-ID: <1A2D7011B6705B449F66B36B232097C07A7666@x1.ads.i-dmedia.com>
+From: "Zurell, Falko" <Falko.Zurell@idmedia.com>
+Subject: [linux-lvm] Lvm hangs when creating a snapshot
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -30,19 +33,85 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@redhat.com
 
-On Tue, Jan 29, 2008 at 11:17:18AM +0100, thus spake Luca Berra:
-> right click on my computer.
-> chose manage
-> open disk management
-> right click on the partitio,
-> chose change drive letter and paths
-> chose remove
+This is a multi-part message in MIME format.
 
-Great!  This was exactly what I was looking for.  Thanks. =)
+------_=_NextPart_001_01C86BCC.8A948D68
+Content-Type: text/plain;
+	charset="utf-8"
+Content-Transfer-Encoding: base64
 
--- 
-I used to have a sig, but I've stopped smoking now.
+SGVsbG8gbGlzdCwNCg0KSSBnb3QgYSBzdHJhbmdlIHByb2JsZW0gd2l0aCBsdm0gb24gQ2VudE9T
+IChmcmVlIHBvcnQgb2YgcmVkaGF0IGVudGVycHJpc2UgbGludXgpLiBJIGNyZWF0ZWQgYSBzaGVs
+bCBzY3JpcHQgd2hpY2ggc2hvdWxkIGNyZWF0ZSBhIHNuYXBzaG90IG9mIGEgbHZtIGxvZ2ljYWwg
+ZGV2aWNlIG1vdW50ZWQgb24gL29wdC4gVGhlIGNvbW1hbmQgd29ya3MgZmluZSB3aGVuIEkgY2Fs
+bCBpdCBmcm9tIHRoZSBzaGVsbC4gSSBpbnN0YWxsZWQgdGhlIHNjcmlwdCBhcyBjcm9uam9iIGZv
+ciBuaWdodGx5IGJhY2t1cC4gQnV0IHRoZW4gSSBub3RpY2VkIHRoYXQgdGhlIGx2Y3JlYXRlIG9m
+IHRoZSBzbmFwc2hvdCBoYW5ncyB3aGVuIGNhbGxlZCB2aWEgdGhlIGNyb24uIA0KSSBjYW4ndCBr
+aWxsIHRoaXMgcHJvY2VzcywgZXZlbiBub3Qgd2l0aCBraWxsIC05IGFzIHJvb3QuIEkgbG9va2Vk
+IHdpdGggc3RyYWNlIGludG8gdGhpcyBwcm9jZXNzIGFuZCBpdCBkb2VzIG5vdGhpbmcuIFRoZSBv
+cHQtZmlsZXN5c3RlbSB0aGVuIHRvdGFsbHkgaGFuZ3MgYW5kIG90aGVyIGx2bSBvcGVyYXRpb25z
+IGFzIHdlbGwuIEkgZXZlbiBjYW4ndCByZWJvb3QgdGhlIG1hY2hpbmUgbm9ybWFsbHkgYmVjYXVz
+ZSB1bm1vdW50aW5nIG9mIGx2bSB2b2x1bWVzIGZhaWwuIFRoZSBvbmx5IGNoYW5jZSBpcyBhIGhh
+cmQgcG93ZXJkb3duLg0KQWZ0ZXIgcmVib290IEkgY2FuIHNlZSwgdGhhdCB0aGUgc25hcHNob3Qg
+d2FzIGNyZWF0ZWQgYW5kIGNhbiByZW1vdmUgaXQgYXMgaXQgaXMgaW52YWxpZCBieSB0aGVuLg0K
+DQpVbmZvcnR1bmF0bHkgSSBkb24ndCBoYXZlIGFueSBkZXRhaWxlZCBkaWFnbm9zdGljIGluZm9y
+bWF0aW9uIGFzIGV2ZXJ5IGx2bSBjb21tYW5kIGhhbmdzIHRoZW4uDQoNCklzIHRoZXJlIGFueSB3
+YXkgdG8gdHJhY2sgZG93biB0aGlzIHByb2JsZW0gYW5kIG1heWJlIGEgc29sdXRpb24gb3RoZXIg
+dGhlbiBwb3dlcmRvd24/DQoNClRoYW5rcyBhbmQga2luZCByZWdhcmRzDQoNCg0KRmFsa28gWnVy
+ZWxsDQoNCkhlYWQgb2YgQXBwbGljYXRpb24gTWFuYWdlbWVudA0KZmFsa28uenVyZWxsQGlkbWVk
+aWEuY29tDQpNb2JpbCArNDkgKDApMTc2IC0gMTIgNTk0IDcyMw0KDQovaS1kIG1lZGlhIEFHDQpP
+aGxhdWVyIFN0cmHDn2UgNDMNCkQtMTA5OTkgQmVybGluDQoNClRlbCArNDkgKDApMzAgLSAyIDU5
+IDQ3IC0gMzU3DQpGYXggKzQ5ICgwKTMwIC0gMiA1OSA0NyAtIDQ3MQ0Kd3d3LmlkbWVkaWEuY29t
+DQoNCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fDQoNCkJv
+YXJkOiBSZWdpbmUgSGFzY2hrYS1IZWxtZXIgKENFTyksIEZyYW56IEtsb3NlIChDRk8pDQpDaGFp
+cm1hbiBvZiB0aGUgU3VwZXJ2aXNvcnkgQm9hcmQ6IENocmlzdGlhbiBBLiBIdWZuYWdsDQpIZWFk
+cXVhcnRlcnM6IEJlcmxpbiwgUGxhY2Ugb2YgSnVyaXNkaWN0aW9uOiBCZXJsaW4gSFJCIDc2MzQy
+DQpVU1QtSWQuIERFODEyNjk4MzQwDQpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fXw0K
+
+------_=_NextPart_001_01C86BCC.8A948D68
+Content-Type: text/html;
+	charset="utf-8"
+Content-Transfer-Encoding: base64
+
+PCFET0NUWVBFIEhUTUwgUFVCTElDICItLy9XM0MvL0RURCBIVE1MIDMuMi8vRU4iPg0KPEhUTUw+
+DQo8SEVBRD4NCjxNRVRBIEhUVFAtRVFVSVY9IkNvbnRlbnQtVHlwZSIgQ09OVEVOVD0idGV4dC9o
+dG1sOyBjaGFyc2V0PXV0Zi04Ij4NCjxNRVRBIE5BTUU9IkdlbmVyYXRvciIgQ09OVEVOVD0iTVMg
+RXhjaGFuZ2UgU2VydmVyIHZlcnNpb24gNi41Ljc2NTIuMjQiPg0KPFRJVExFPkx2bSBoYW5ncyB3
+aGVuIGNyZWF0aW5nIGEgc25hcHNob3Q8L1RJVExFPg0KPC9IRUFEPg0KPEJPRFk+DQo8IS0tIENv
+bnZlcnRlZCBmcm9tIHRleHQvcGxhaW4gZm9ybWF0IC0tPg0KDQo8UD48Rk9OVCBTSVpFPTI+SGVs
+bG8gbGlzdCw8QlI+DQo8QlI+DQpJIGdvdCBhIHN0cmFuZ2UgcHJvYmxlbSB3aXRoIGx2bSBvbiBD
+ZW50T1MgKGZyZWUgcG9ydCBvZiByZWRoYXQgZW50ZXJwcmlzZSBsaW51eCkuIEkgY3JlYXRlZCBh
+IHNoZWxsIHNjcmlwdCB3aGljaCBzaG91bGQgY3JlYXRlIGEgc25hcHNob3Qgb2YgYSBsdm0gbG9n
+aWNhbCBkZXZpY2UgbW91bnRlZCBvbiAvb3B0LiBUaGUgY29tbWFuZCB3b3JrcyBmaW5lIHdoZW4g
+SSBjYWxsIGl0IGZyb20gdGhlIHNoZWxsLiBJIGluc3RhbGxlZCB0aGUgc2NyaXB0IGFzIGNyb25q
+b2IgZm9yIG5pZ2h0bHkgYmFja3VwLiBCdXQgdGhlbiBJIG5vdGljZWQgdGhhdCB0aGUgbHZjcmVh
+dGUgb2YgdGhlIHNuYXBzaG90IGhhbmdzIHdoZW4gY2FsbGVkIHZpYSB0aGUgY3Jvbi48QlI+DQpJ
+IGNhbid0IGtpbGwgdGhpcyBwcm9jZXNzLCBldmVuIG5vdCB3aXRoIGtpbGwgLTkgYXMgcm9vdC4g
+SSBsb29rZWQgd2l0aCBzdHJhY2UgaW50byB0aGlzIHByb2Nlc3MgYW5kIGl0IGRvZXMgbm90aGlu
+Zy4gVGhlIG9wdC1maWxlc3lzdGVtIHRoZW4gdG90YWxseSBoYW5ncyBhbmQgb3RoZXIgbHZtIG9w
+ZXJhdGlvbnMgYXMgd2VsbC4gSSBldmVuIGNhbid0IHJlYm9vdCB0aGUgbWFjaGluZSBub3JtYWxs
+eSBiZWNhdXNlIHVubW91bnRpbmcgb2YgbHZtIHZvbHVtZXMgZmFpbC4gVGhlIG9ubHkgY2hhbmNl
+IGlzIGEgaGFyZCBwb3dlcmRvd24uPEJSPg0KQWZ0ZXIgcmVib290IEkgY2FuIHNlZSwgdGhhdCB0
+aGUgc25hcHNob3Qgd2FzIGNyZWF0ZWQgYW5kIGNhbiByZW1vdmUgaXQgYXMgaXQgaXMgaW52YWxp
+ZCBieSB0aGVuLjxCUj4NCjxCUj4NClVuZm9ydHVuYXRseSBJIGRvbid0IGhhdmUgYW55IGRldGFp
+bGVkIGRpYWdub3N0aWMgaW5mb3JtYXRpb24gYXMgZXZlcnkgbHZtIGNvbW1hbmQgaGFuZ3MgdGhl
+bi48QlI+DQo8QlI+DQpJcyB0aGVyZSBhbnkgd2F5IHRvIHRyYWNrIGRvd24gdGhpcyBwcm9ibGVt
+IGFuZCBtYXliZSBhIHNvbHV0aW9uIG90aGVyIHRoZW4gcG93ZXJkb3duPzxCUj4NCjxCUj4NClRo
+YW5rcyBhbmQga2luZCByZWdhcmRzPEJSPg0KPEJSPg0KPEJSPg0KRmFsa28gWnVyZWxsPEJSPg0K
+PEJSPg0KSGVhZCBvZiBBcHBsaWNhdGlvbiBNYW5hZ2VtZW50PEJSPg0KZmFsa28uenVyZWxsQGlk
+bWVkaWEuY29tPEJSPg0KTW9iaWwgKzQ5ICgwKTE3NiAtIDEyIDU5NCA3MjM8QlI+DQo8QlI+DQov
+aS1kIG1lZGlhIEFHPEJSPg0KT2hsYXVlciBTdHJhw59lIDQzPEJSPg0KRC0xMDk5OSBCZXJsaW48
+QlI+DQo8QlI+DQpUZWwgKzQ5ICgwKTMwIC0gMiA1OSA0NyAtIDM1NzxCUj4NCkZheCArNDkgKDAp
+MzAgLSAyIDU5IDQ3IC0gNDcxPEJSPg0Kd3d3LmlkbWVkaWEuY29tPEJSPg0KPEJSPg0KX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX188QlI+DQo8QlI+DQpCb2Fy
+ZDogUmVnaW5lIEhhc2Noa2EtSGVsbWVyIChDRU8pLCBGcmFueiBLbG9zZSAoQ0ZPKTxCUj4NCkNo
+YWlybWFuIG9mIHRoZSBTdXBlcnZpc29yeSBCb2FyZDogQ2hyaXN0aWFuIEEuIEh1Zm5hZ2w8QlI+
+DQpIZWFkcXVhcnRlcnM6IEJlcmxpbiwgUGxhY2Ugb2YgSnVyaXNkaWN0aW9uOiBCZXJsaW4gSFJC
+IDc2MzQyPEJSPg0KVVNULUlkLiBERTgxMjY5ODM0MDxCUj4NCl9fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fPEJSPg0KPC9GT05UPg0KPC9QPg0KDQo8L0JPRFk+
+DQo8L0hUTUw+
+
+------_=_NextPart_001_01C86BCC.8A948D68--
