@@ -1,21 +1,18 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m1BISRSj014815
-	for <linux-lvm@redhat.com>; Mon, 11 Feb 2008 13:28:27 -0500
-Received: from mail.bmsi.com (www.bmsi.com [24.248.44.156])
-	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id m1BIRtiV012556
-	for <linux-lvm@redhat.com>; Mon, 11 Feb 2008 13:27:56 -0500
-Received: from bmsred.bmsi.com (bmsred.bmsi.com [192.168.9.50])
-	by mail.bmsi.com (8.13.6/8.13.6) with ESMTP id m1BIRolN001109
-	for <linux-lvm@redhat.com>; Mon, 11 Feb 2008 13:27:50 -0500
-Received: from localhost (localhost [127.0.0.1])
-	by bmsred.bmsi.com (8.13.5/8.13.6) with ESMTP id m1BIRopk017739
-	for <linux-lvm@redhat.com>; Mon, 11 Feb 2008 13:27:50 -0500
-Date: Mon, 11 Feb 2008 13:27:50 -0500 (EST)
-From: "Stuart D. Gathman" <stuart@bmsi.com>
-Subject: Re: [linux-lvm] Disk dying and LVM2
-In-Reply-To: <4078129D-6D0E-4879-B909-2BE67695EC85@redhat.com>
-Message-ID: <Pine.LNX.4.44.0802111323130.17717-100000@bmsred.bmsi.com>
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m1CFd7Jn021077
+	for <linux-lvm@redhat.com>; Tue, 12 Feb 2008 10:39:07 -0500
+Received: from qb-out-0506.google.com (qb-out-0506.google.com [72.14.204.233])
+	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id m1CFcafF030662
+	for <linux-lvm@redhat.com>; Tue, 12 Feb 2008 10:38:38 -0500
+Received: by qb-out-0506.google.com with SMTP id o12so8386038qba.17
+	for <linux-lvm@redhat.com>; Tue, 12 Feb 2008 07:38:36 -0800 (PST)
+Message-ID: <a7108f870802120738mfae97a2x6411f00457b2ef53@mail.gmail.com>
+Date: Tue, 12 Feb 2008 13:38:35 -0200
+From: "Rodrigo Severo" <rodrigo@fabricadeideias.com>
 MIME-Version: 1.0
+Content-Type: multipart/alternative; 
+	boundary="----=_Part_47029_11462011.1202830715504"
+Subject: [linux-lvm] How to map LBA to LV?
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -26,30 +23,56 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: LVM general discussion and development <linux-lvm@redhat.com>
+To: linux-lvm@redhat.com
 
-On Mon, 11 Feb 2008, Jonathan Brassow wrote:
+------=_Part_47029_11462011.1202830715504
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: quoted-printable
+Content-Disposition: inline
 
-> pvmove will ignore the errors it encounters and "do the best it can"  
-> to transfer all data.  If it can't read a certain sector, that will be  
-> missing from the move.
+Hi,
 
-Having done logic like that for my own filesystem, it is not trivial to
-do efficiently.  You have to read a large buffer, but when there
-is an IO error, the OS doesn't always report the bad sector correctly,
-so you have to then narrow down the bad parts in that buffer.
-Reading the buffer 1 sector at a time works, using binary search 
-(read each half, read each half of failing half, etc) is faster but
-more complex.  Without some such logic, more data is lost in the buffer
-containing bad blocks that is necessary.
 
-pvmove source is available, and I'll take a look when I get to it, but in the
-meantime maybe someone knows, does pvmove incorporate such logic?
+I have a disk with bad sectors. I already identified that the bad sectors
+are on a LVM2 partition.
 
--- 
-	      Stuart D. Gathman <stuart@bmsi.com>
-    Business Management Systems Inc.  Phone: 703 591-0911 Fax: 703 591-6154
-"Confutatis maledictis, flammis acribus addictis" - background song for
-a Microsoft sponsored "Where do you want to go from here?" commercial.
+I need to know in which LV the bad sectors are so I can decide what to get
+from backup and what to get from the disk itself.
+
+How can I map a LBA to a LV?
+
+
+Rodrigo Severo
+
+
+--=20
+---------------------------------------------------------------------------=
+------------
+Rodrigo Severo
+
+F=E1brica de Id=E9ias
+SBS Quadra 2 - Bloco S - Ed. Empire Center - Sala 1.301
+Bras=EDlia - DF - CEP 70070-904
+Tel. (61) 3321-1357       Fax (61) 3223-1712
+---------------------------------------------------------------------------=
+------------
+
+------=_Part_47029_11462011.1202830715504
+Content-Type: text/html; charset=ISO-8859-1
+Content-Transfer-Encoding: quoted-printable
+Content-Disposition: inline
+
+Hi,<br><br><br>I have a disk with bad sectors. I already identified that th=
+e bad sectors are on a LVM2 partition.<br><br>I need to know in which LV th=
+e bad sectors are so I can decide what to get from backup and what to get f=
+rom the disk itself.<br>
+<br>How can I map a LBA to a LV?<br><br><br>Rodrigo Severo<br><br clear=3D"=
+all"><br>-- <br>-----------------------------------------------------------=
+----------------------------<br>Rodrigo Severo<br><br>F=E1brica de Id=E9ias=
+<br>
+SBS Quadra 2 - Bloco S - Ed. Empire Center - Sala 1.301<br>Bras=EDlia - DF =
+- CEP 70070-904<br>Tel. (61) 3321-1357&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; =
+Fax (61) 3223-1712<br>-----------------------------------------------------=
+----------------------------------
+
+------=_Part_47029_11462011.1202830715504--
