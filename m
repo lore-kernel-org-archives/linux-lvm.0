@@ -1,20 +1,35 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m1CIecTs006177
-	for <linux-lvm@redhat.com>; Tue, 12 Feb 2008 13:40:38 -0500
-Received: from perkons.com.br (smtp.perkons.com.br [200.150.64.20])
-	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id m1CIeBO0018309
-	for <linux-lvm@redhat.com>; Tue, 12 Feb 2008 13:40:12 -0500
-Received: from [10.1.30.2] by perkons.com.br
-	(Cipher SSLv3:RC4-MD5:128) (MDaemon.PRO.v8.0.3.R)
-	with ESMTP id md50001319910.msg
-	for <linux-lvm@redhat.com>; Tue, 12 Feb 2008 16:38:54 -0300
-From: Guilherme Destefani <gd@helixbrasil.com.br>
-Date: Tue, 12 Feb 2008 16:39:58 -0200
-Message-Id: <1202841598.32238.15.camel@localhost.localdomain>
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] Question: How much space is needed do make sure that a
-	LVM snapshot won't overflow
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m1CLQwNK024453
+	for <linux-lvm@redhat.com>; Tue, 12 Feb 2008 16:26:58 -0500
+Received: from pd2mo2so.prod.shaw.ca (idcmail-mo1so.shaw.ca [24.71.223.10])
+	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id m1CLQGsb027864
+	for <linux-lvm@redhat.com>; Tue, 12 Feb 2008 16:26:25 -0500
+Received: from pd2mr1so.prod.shaw.ca
+	(pd2mr1so-qfe3.prod.shaw.ca [10.0.141.110]) by l-daemon
+	(Sun ONE Messaging Server 6.0 HotFix 1.01 (built Mar 15 2004))
+	with ESMTP id <0JW5002ADA6B1740@l-daemon> for linux-lvm@redhat.com; Tue,
+	12 Feb 2008 14:25:23 -0700 (MST)
+Received: from pn2ml1so.prod.shaw.ca ([10.0.121.145])
+	by pd2mr1so.prod.shaw.ca (Sun Java System Messaging Server 6.2-7.05
+	(built Sep
+	5 2006)) with ESMTP id <0JW5005V0A6A6SD0@pd2mr1so.prod.shaw.ca> for
+	linux-lvm@redhat.com; Tue, 12 Feb 2008 14:25:23 -0700 (MST)
+Received: from mail.activenetwerx.com ([68.144.68.179])
+	by l-daemon (Sun Java System Messaging Server 6.2-7.05 (built Sep 5
+	2006))
+	with ESMTP id <0JW5000RDA68K0F0@l-daemon> for linux-lvm@redhat.com; Tue,
+	12 Feb 2008 14:25:21 -0700 (MST)
+Received: from exchange.activenetwerx.com (localhost.localdomain [127.0.0.1])
+	by mail.activenetwerx.com (Postfix) with ESMTP id 2F90F17805C	for
+	<linux-lvm@redhat.com>; Tue, 12 Feb 2008 13:26:19 -0700 (MST)
+Date: Tue, 12 Feb 2008 14:25:18 -0700
+From: "Joseph L. Casale" <jcasale@ActiveNetwerx.com>
+Message-id: <1C8CF1EA1A5B5940B81B0710B2A4C93850BB382BA1@an-ex.ActiveNetwerx.int>
+MIME-version: 1.0
+Content-type: multipart/alternative;
+	boundary=_000_1C8CF1EA1A5B5940B81B0710B2A4C93850BB382BA1anexActiveNet_
+Content-language: en-US
+Subject: [linux-lvm] pvmove safety
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -25,206 +40,101 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
+To: "'linux-lvm@redhat.com'" <linux-lvm@redhat.com>
+
+--_000_1C8CF1EA1A5B5940B81B0710B2A4C93850BB382BA1anexActiveNet_
 Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@redhat.com
+Content-Transfer-Encoding: quoted-printable
 
-Hi.
+How safe is pvmove in LVM2 when being operated on live volumes? I understan=
+d a backup is always a good policy as nothing can be 100% safe, but is the =
+command known to produce unreliable results when used on a live filesystem?=
+ I am reading http://tldp.org/HOWTO/LVM-HOWTO/removeadisk.html and the warn=
+ing up top is hard to miss, but I wonder if it's a bit outdated?
 
-In the LVM2 HOWTO, it says:
-(http://www.tldp.org/HOWTO/LVM-HOWTO/snapshotintro.html),
+Thanks!
+jlc
 
-"Full snapshot are automatically disabled"
-and:
-"If the snapshot size equals the origin size, it will never overflow.".
+--_000_1C8CF1EA1A5B5940B81B0710B2A4C93850BB382BA1anexActiveNet_
+Content-Type: text/html; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 
-But if one snapshot is created and an equal size is allocated to the
-snapshot, it still overflows (creates a volume with 32M, a snapshot with
-32M, and fills the volume with zeros).
-Using more space, it doesn't overflow (same thing, but 64M for the
-snapshot).
+<html xmlns:v=3D"urn:schemas-microsoft-com:vml" xmlns:o=3D"urn:schemas-micr=
+osoft-com:office:office" xmlns:w=3D"urn:schemas-microsoft-com:office:word" =
+xmlns:m=3D"http://schemas.microsoft.com/office/2004/12/omml" xmlns=3D"http:=
+//www.w3.org/TR/REC-html40">
 
-How much more space is needed to be alocated to the snapshot to ensure
-that it will never overflow?
+<head>
+<META HTTP-EQUIV=3D"Content-Type" CONTENT=3D"text/html; charset=3Dus-ascii"=
+>
+<meta name=3DGenerator content=3D"Microsoft Word 12 (filtered medium)">
+<style>
+<!--
+ /* Font Definitions */
+ @font-face
+	{font-family:"Cambria Math";
+	panose-1:2 4 5 3 5 4 6 3 2 4;}
+@font-face
+	{font-family:Calibri;
+	panose-1:2 15 5 2 2 2 4 3 2 4;}
+ /* Style Definitions */
+ p.MsoNormal, li.MsoNormal, div.MsoNormal
+	{margin:0in;
+	margin-bottom:.0001pt;
+	font-size:11.0pt;
+	font-family:"Calibri","sans-serif";}
+a:link, span.MsoHyperlink
+	{mso-style-priority:99;
+	color:blue;
+	text-decoration:underline;}
+a:visited, span.MsoHyperlinkFollowed
+	{mso-style-priority:99;
+	color:purple;
+	text-decoration:underline;}
+span.EmailStyle17
+	{mso-style-type:personal-compose;
+	font-family:"Calibri","sans-serif";
+	color:windowtext;}
+.MsoChpDefault
+	{mso-style-type:export-only;}
+@page Section1
+	{size:8.5in 11.0in;
+	margin:1.0in 1.0in 1.0in 1.0in;}
+div.Section1
+	{page:Section1;}
+-->
+</style>
+<!--[if gte mso 9]><xml>
+ <o:shapedefaults v:ext=3D"edit" spidmax=3D"1026" />
+</xml><![endif]--><!--[if gte mso 9]><xml>
+ <o:shapelayout v:ext=3D"edit">
+  <o:idmap v:ext=3D"edit" data=3D"1" />
+ </o:shapelayout></xml><![endif]-->
+</head>
 
-Thanks in advance,
+<body lang=3DEN-US link=3Dblue vlink=3Dpurple>
 
-Guilherme.
+<div class=3DSection1>
 
+<p class=3DMsoNormal>How safe is pvmove in LVM2 when being operated on live
+volumes? I understand a backup is always a good policy as nothing can be 10=
+0%
+safe, but is the command known to produce unreliable results when used on a
+live filesystem? I am reading <a
+href=3D"http://tldp.org/HOWTO/LVM-HOWTO/removeadisk.html">http://tldp.org/H=
+OWTO/LVM-HOWTO/removeadisk.html</a>
+and the warning up top is hard to miss, but I wonder if it&#8217;s a bit
+outdated?<o:p></o:p></p>
 
-        Script started on Tue 12 Feb 2008 02:11:11 PM BRST
-        [root@localhost ~]# lvcreate -L 32M -n base_volume hf
-          Logical volume "base_volume" created
-        [root@localhost ~]# lvcreate -s -L 32M -n
-        copy_volume /dev/hf/base_volume 
-          Logical volume "copy_volume" created
-        [root@localhost ~]# lvdisplay |grep -A 13 "_volume"
-          LV Name                /dev/hf/base_volume
-          VG Name                hf
-          LV UUID                qPzWgG-ON3V-swUr-O0IP-I172-G3YV-GH431K
-          LV Write Access        read/write
-          LV snapshot status     source of
-                                 /dev/hf/copy_volume [active]
-          LV Status              available
-          # open                 0
-          LV Size                32.00 MB
-        --
-          LV Name                /dev/hf/copy_volume
-          VG Name                hf
-          LV UUID                oGK0gG-o62D-Tu84-9CW0-rvPb-H7HX-bjUwk0
-          LV Write Access        read/write
-          LV snapshot status     active destination
-        for /dev/hf/base_volume
-          LV Status              available
-          # open                 0
-          LV Size                32.00 MB
-          Current LE             1
-          COW-table size         32.00 MB
-          COW-table LE           1
-          Allocated to snapshot  0.05% 
-          Snapshot chunk size    8.00 KB
-          Segments               1
-          Allocation             inherit
-          Read ahead sectors     0
-          Block device           253:20
-           
-        [root@localhost ~]# dd if=/dev/zero of=/dev/hf/copy_volume 
-        dd: writing to `/dev/hf/copy_volume': No space left on device
-        65537+0 records in
-        65536+0 records out
-        33554432 bytes (34 MB) copied, 8.01466 s, 4.2 MB/s
-        [root@localhost ~]# lvresize -L 64M /dev/hf/copy_volume 
-          /dev/dm-20: read failed after 0 of 4096 at 0: Input/output
-        error
-          Extending logical volume copy_volume to 64.00 MB
-          Logical volume copy_volume successfully resized
-        [root@localhost ~]# lvdisplay |grep -A 13 "_volume"
-          /dev/dm-20: read failed after 0 of 4096 at 0: Input/output
-        error
-          LV Name                /dev/hf/base_volume
-          VG Name                hf
-          LV UUID                qPzWgG-ON3V-swUr-O0IP-I172-G3YV-GH431K
-          LV Write Access        read/write
-          LV snapshot status     source of
-                                 /dev/hf/copy_volume [INACTIVE]
-          LV Status              available
-          # open                 0
-          LV Size                32.00 MB
-          Current LE             1
-          Segments               1
-          Allocation             inherit
-          Read ahead sectors     0
-          Block device           253:18
-        --
-          LV Name                /dev/hf/copy_volume
-          VG Name                hf
-          LV UUID                oGK0gG-o62D-Tu84-9CW0-rvPb-H7HX-bjUwk0
-          LV Write Access        read/write
-          LV snapshot status     INACTIVE destination
-        for /dev/hf/base_volume
-          LV Status              available
-          # open                 0
-          LV Size                32.00 MB
-          Current LE             1
-          COW-table size         64.00 MB
-          COW-table LE           2
-          Snapshot chunk size    8.00 KB
-          Segments               1
-          Allocation             inherit
-          Read ahead sectors     0
-          Block device           253:20
-           
-        [root@localhost ~]# lvremove /dev/hf/copy_volume 
-          /dev/dm-20: read failed after 0 of 4096 at 0: Input/output
-        error
-        Do you really want to remove active logical volume
-        "copy_volume"? [y/n]: y
-          Logical volume "copy_volume" successfully removed
-        [root@localhost ~]# lvcreate -s -L 64M -n \
-        copy_volume /dev/hf/base_volume 
-          Logical volume "copy_volume" created
-        [root@localhost ~]# lvdisplay |grep -A 13 "_volume"
-          LV Name                /dev/hf/base_volume
-          VG Name                hf
-          LV UUID                qPzWgG-ON3V-swUr-O0IP-I172-G3YV-GH431K
-          LV Write Access        read/write
-          LV snapshot status     source of
-                                 /dev/hf/copy_volume [active]
-          LV Status              available
-          # open                 0
-          LV Size                32.00 MB
-          Current LE             1
-          Segments               1
-          Allocation             inherit
-          Read ahead sectors     0
-          Block device           253:18 
-        --
-          LV Name                /dev/hf/copy_volume
-          VG Name                hf
-          LV UUID                LSUqQB-O2n4-8zmk-iL9n-2vDQ-qSsB-yOBDL1
-          LV Write Access        read/write
-          LV snapshot status     active destination
-        for /dev/hf/base_volume
-          LV Status              available
-          # open                 0
-          LV Size                32.00 MB
-          Current LE             1
-          COW-table size         64.00 MB
-          COW-table LE           2
-          Allocated to snapshot  0.02% 
-          Snapshot chunk size    8.00 KB
-          Segments               1
-          Allocation             inherit
-          Read ahead sectors     0
-          Block device           253:20
-           
-        [root@localhost ~]# dd if=/dev/zero of=/dev/hf/copy_volume 
-        dd: writing to `/dev/hf/copy_volume': No space left on device
-        65537+0 records in
-        65536+0 records out
-        33554432 bytes (34 MB) copied, 9.5375 s, 3.5 MB/s
-        [root@localhost ~]# lvdisplay |grep -A 13 "_volume"
-          LV Name                /dev/hf/base_volume
-          VG Name                hf
-          LV UUID                qPzWgG-ON3V-swUr-O0IP-I172-G3YV-GH431K
-          LV Write Access        read/write
-          LV snapshot status     source of
-                                 /dev/hf/copy_volume [active]
-          LV Status              available
-          # open                 0
-          LV Size                32.00 MB
-          Current LE             1
-          Segments               1
-          Allocation             inherit
-          Read ahead sectors     0
-          Block device           253:18
-           
-          --- Logical volume ---
-          LV Name                /dev/hf/F4_burn
-          VG Name                hf
-          LV UUID                Bj1VJS-1JUK-BA18-egFj-xOoY-qrbq-jbZFFY
-        --
-          LV Name                /dev/hf/copy_volume
-          VG Name                hf
-          LV UUID                LSUqQB-O2n4-8zmk-iL9n-2vDQ-qSsB-yOBDL1
-          LV Write Access        read/write
-          LV snapshot status     active destination
-        for /dev/hf/base_volume
-          LV Status              available
-          # open                 0
-          LV Size                32.00 MB
-          Current LE             1
-          COW-table size         64.00 MB
-          COW-table LE           2
-          Allocated to snapshot  50.12% 
-          Snapshot chunk size    8.00 KB
-          Segments               1
-          Allocation             inherit
-          Read ahead sectors     0
-          Block device           253:20
-           
-        [root@localhost ~]# exit
-        
-        Script done on Tue 12 Feb 2008 02:13:07 PM BRST
-        [Gui@localhost:~]$ 
-        
-        
+<p class=3DMsoNormal><o:p>&nbsp;</o:p></p>
+
+<p class=3DMsoNormal>Thanks!<br>
+jlc<o:p></o:p></p>
+
+</div>
+
+</body>
+
+</html>
+
+--_000_1C8CF1EA1A5B5940B81B0710B2A4C93850BB382BA1anexActiveNet_--
