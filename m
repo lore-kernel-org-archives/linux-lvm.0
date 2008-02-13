@@ -1,25 +1,26 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m1D94TwU005463
-	for <linux-lvm@redhat.com>; Wed, 13 Feb 2008 04:04:29 -0500
-Received: from ag-out-0708.google.com (ag-out-0708.google.com [72.14.246.241])
-	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id m1D943df029093
-	for <linux-lvm@redhat.com>; Wed, 13 Feb 2008 04:04:03 -0500
-Received: by ag-out-0708.google.com with SMTP id 31so13852215agc.3
-	for <linux-lvm@redhat.com>; Wed, 13 Feb 2008 01:04:03 -0800 (PST)
-Message-ID: <b646832c0802130104i7d8eb37fkb61d49c5127f316b@mail.gmail.com>
-Date: Wed, 13 Feb 2008 14:34:02 +0530
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m1D96R0F007090
+	for <linux-lvm@redhat.com>; Wed, 13 Feb 2008 04:06:27 -0500
+Received: from ag-out-0708.google.com (ag-out-0708.google.com [72.14.246.250])
+	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id m1D964wN030851
+	for <linux-lvm@redhat.com>; Wed, 13 Feb 2008 04:06:04 -0500
+Received: by ag-out-0708.google.com with SMTP id 31so13854689agc.3
+	for <linux-lvm@redhat.com>; Wed, 13 Feb 2008 01:06:04 -0800 (PST)
+Message-ID: <b646832c0802130106v3d7c6f6ene7475edc2c599fec@mail.gmail.com>
+Date: Wed, 13 Feb 2008 14:36:03 +0530
 From: "=?UTF-8?Q?Yajith_Ajantha_Dayarath?=
 	=?UTF-8?Q?na_|_=E0=B6=BA=E0=B6=A2=E0=B7=92=E0=B6=AD=E0=B7=8A_=E0=B6=85?=
 	=?UTF-8?Q?=E0=B6=A2=E0=B6=B1=E0=B7=8A=E0=B6=AD_=E0=B6=AF?=
 	=?UTF-8?Q?=E0=B6=BA=E0=B7=8F=E0=B6=BB=E0=B6=AD=E0=B7=8A=E0=B6=B1?="
 	<yajith@gmail.com>
 Subject: Re: [linux-lvm] pvcreate problem
-In-Reply-To: <47B2AC45.6030901@redhat.com>
+In-Reply-To: <b646832c0802130104i7d8eb37fkb61d49c5127f316b@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: multipart/alternative; 
-	boundary="----=_Part_21479_11582493.1202893442287"
+	boundary="----=_Part_21495_26360395.1202893563664"
 References: <b646832c0802130013x2081fe55y10f6e2c079134acf@mail.gmail.com>
 	<47B2AC45.6030901@redhat.com>
+	<b646832c0802130104i7d8eb37fkb61d49c5127f316b@mail.gmail.com>
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -32,92 +33,127 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 List-Id: <linux-lvm.redhat.com>
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-------=_Part_21479_11582493.1202893442287
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
+------=_Part_21495_26360395.1202893563664
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: base64
 Content-Disposition: inline
 
-On Feb 13, 2008 2:07 PM, Mark Huth <mhuth@redhat.com> wrote:
-
-> Yajith Ajantha Dayarathna | ????? ????? ??????? wrote:
-> > Hi all,
-> > Forgive me if this is the wrong list to ask this question.
-> > I'm quite new to LVM(-and to this list) and one of my friends brought
-> > this question up to me..
-> >
-> > There is an error coming up when they try to "pvcreate"
-> >
-> > Below is the "fdisk -l" output.
-> >
-> > [root@lwlsvr bin]# fdisk -l
-> >
-> >
-> > Disk /dev/cciss/c0d0: 145.6 GB, 145667358720 bytes
-> > 255 heads, 32 sectors/track, 34866 cylinders
-> > Units = cylinders of 8160 * 512 = 4177920 bytes
-> >
-> > Device Boot Start End Blocks Id System
-> > /dev/cciss/c0d0p1 * 1 25 101984 83 Linux
-> > /dev/cciss/c0d0p2 26 7554 30718320 83 Linux
-> > /dev/cciss/c0d0p3 7555 8068 2097120 82 Linux swap
-> > /dev/cciss/c0d0p4 8069 34866 109335840 5 Extended
-> > /dev/cciss/c0d0p5 8069 10578 10240784 83 Linux
-> > /dev/cciss/c0d0p6 10579 10587 36704 83 Linux
-> > /dev/cciss/c0d0p7 10588 10596 36704 83 Linux
-> > /dev/cciss/c0d0p8 10597 10725 526304 83 Linux
-> > /dev/cciss/c0d0p9 10726 10988 1073024 83 Linux
-> > /dev/cciss/c0d0p10 10989 11251 1073024 83 Linux
-> > /dev/cciss/c0d0p11 11252 11776 2141984 83 Linux
-> > /dev/cciss/c0d0p12 11777 12301 2141984 83 Linux
-> > /dev/cciss/c0d0p13 12302 12826 2141984 83 Linux
-> > /dev/cciss/c0d0p14 12827 13351 2141984 83 Linux
-> > /dev/cciss/c0d0p15 13352 13876 2141984 83 Linux
-> > /dev/cciss/c0d0p16 13877 34866 85639184 8e Linux LVM
-> >
-> > When a pvcreate is attempted on "/dev/cciss/c0d0p16" it produces the
-> > below output.
-> >
-> > [root@lwlsvr informix]# pvcreate /dev/cciss/c0d0p16
-> > pvcreate -- can't open physical volume "/dev/cciss/c0d0p16" to get its
-> > size
-> >
-> AFAIK, the major/minor numbering scheme for block devices limits you to
-> 15 partitions per device.
->
-> Mark
->
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
->
-
-thanks for the quick reply..
-is it possible to create more than 15 partitions from fdisk, while
-major/minor numbering scheme limitation is there ?
-could you point me to someplace i can read more about on this?
-
-thanks again
--- 
-Yajith Ajantha
-
-------=_Part_21479_11582493.1202893442287
-Content-Type: text/html; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
+T24gRmViIDEzLCAyMDA4IDI6MzQgUE0sIFlhaml0aCBBamFudGhhIERheWFyYXRobmEgfCDgtrrg
+tqLgt5Lgtq3gt4og4LaF4Lai4Lax4LeK4LatIOC2r+C2uuC3j+C2u+C2reC3iuC2sSA8Cnlhaml0
+aEBnbWFpbC5jb20+IHdyb3RlOgoKPiBPbiBGZWIgMTMsIDIwMDggMjowNyBQTSwgTWFyayBIdXRo
+IDxtaHV0aEByZWRoYXQuY29tPiB3cm90ZToKPgo+ID4gWWFqaXRoIEFqYW50aGEgRGF5YXJhdGhu
+YSB8ID8/Pz8/ID8/Pz8/ID8/Pz8/Pz8gd3JvdGU6Cj4gPiA+IEhpIGFsbCwKPiA+ID4gRm9yZ2l2
+ZSBtZSBpZiB0aGlzIGlzIHRoZSB3cm9uZyBsaXN0IHRvIGFzayB0aGlzIHF1ZXN0aW9uLgo+ID4g
+PiBJJ20gcXVpdGUgbmV3IHRvIExWTSgtYW5kIHRvIHRoaXMgbGlzdCkgYW5kIG9uZSBvZiBteSBm
+cmllbmRzIGJyb3VnaHQKPiA+ID4gdGhpcyBxdWVzdGlvbiB1cCB0byBtZS4uCj4gPiA+Cj4gPiA+
+IFRoZXJlIGlzIGFuIGVycm9yIGNvbWluZyB1cCB3aGVuIHRoZXkgdHJ5IHRvICJwdmNyZWF0ZSIK
+PiA+ID4KPiA+ID4gQmVsb3cgaXMgdGhlICJmZGlzayAtbCIgb3V0cHV0Lgo+ID4gPgo+ID4gPiBb
+cm9vdEBsd2xzdnIgYmluXSMgZmRpc2sgLWwKPiA+ID4KPiA+ID4KPiA+ID4gRGlzayAvZGV2L2Nj
+aXNzL2MwZDA6IDE0NS42IEdCLCAxNDU2NjczNTg3MjAgYnl0ZXMKPiA+ID4gMjU1IGhlYWRzLCAz
+MiBzZWN0b3JzL3RyYWNrLCAzNDg2NiBjeWxpbmRlcnMKPiA+ID4gVW5pdHMgPSBjeWxpbmRlcnMg
+b2YgODE2MCAqIDUxMiA9IDQxNzc5MjAgYnl0ZXMKPiA+ID4KPiA+ID4gRGV2aWNlIEJvb3QgU3Rh
+cnQgRW5kIEJsb2NrcyBJZCBTeXN0ZW0KPiA+ID4gL2Rldi9jY2lzcy9jMGQwcDEgKiAxIDI1IDEw
+MTk4NCA4MyBMaW51eAo+ID4gPiAvZGV2L2NjaXNzL2MwZDBwMiAyNiA3NTU0IDMwNzE4MzIwIDgz
+IExpbnV4Cj4gPiA+IC9kZXYvY2Npc3MvYzBkMHAzIDc1NTUgODA2OCAyMDk3MTIwIDgyIExpbnV4
+IHN3YXAKPiA+ID4gL2Rldi9jY2lzcy9jMGQwcDQgODA2OSAzNDg2NiAxMDkzMzU4NDAgNSBFeHRl
+bmRlZAo+ID4gPiAvZGV2L2NjaXNzL2MwZDBwNSA4MDY5IDEwNTc4IDEwMjQwNzg0IDgzIExpbnV4
+Cj4gPiA+IC9kZXYvY2Npc3MvYzBkMHA2IDEwNTc5IDEwNTg3IDM2NzA0IDgzIExpbnV4Cj4gPiA+
+IC9kZXYvY2Npc3MvYzBkMHA3IDEwNTg4IDEwNTk2IDM2NzA0IDgzIExpbnV4Cj4gPiA+IC9kZXYv
+Y2Npc3MvYzBkMHA4IDEwNTk3IDEwNzI1IDUyNjMwNCA4MyBMaW51eAo+ID4gPiAvZGV2L2NjaXNz
+L2MwZDBwOSAxMDcyNiAxMDk4OCAxMDczMDI0IDgzIExpbnV4Cj4gPiA+IC9kZXYvY2Npc3MvYzBk
+MHAxMCAxMDk4OSAxMTI1MSAxMDczMDI0IDgzIExpbnV4Cj4gPiA+IC9kZXYvY2Npc3MvYzBkMHAx
+MSAxMTI1MiAxMTc3NiAyMTQxOTg0IDgzIExpbnV4Cj4gPiA+IC9kZXYvY2Npc3MvYzBkMHAxMiAx
+MTc3NyAxMjMwMSAyMTQxOTg0IDgzIExpbnV4Cj4gPiA+IC9kZXYvY2Npc3MvYzBkMHAxMyAxMjMw
+MiAxMjgyNiAyMTQxOTg0IDgzIExpbnV4Cj4gPiA+IC9kZXYvY2Npc3MvYzBkMHAxNCAxMjgyNyAx
+MzM1MSAyMTQxOTg0IDgzIExpbnV4Cj4gPiA+IC9kZXYvY2Npc3MvYzBkMHAxNSAxMzM1MiAxMzg3
+NiAyMTQxOTg0IDgzIExpbnV4Cj4gPiA+IC9kZXYvY2Npc3MvYzBkMHAxNiAxMzg3NyAzNDg2NiA4
+NTYzOTE4NCA4ZSBMaW51eCBMVk0KPiA+ID4KPiA+ID4gV2hlbiBhIHB2Y3JlYXRlIGlzIGF0dGVt
+cHRlZCBvbiAiL2Rldi9jY2lzcy9jMGQwcDE2IiBpdCBwcm9kdWNlcyB0aGUKPiA+ID4gYmVsb3cg
+b3V0cHV0Lgo+ID4gPgo+ID4gPiBbcm9vdEBsd2xzdnIgaW5mb3JtaXhdIyBwdmNyZWF0ZSAvZGV2
+L2NjaXNzL2MwZDBwMTYKPiA+ID4gcHZjcmVhdGUgLS0gY2FuJ3Qgb3BlbiBwaHlzaWNhbCB2b2x1
+bWUgIi9kZXYvY2Npc3MvYzBkMHAxNiIgdG8gZ2V0IGl0cwo+ID4gPiBzaXplCj4gPiA+Cj4gPiBB
+RkFJSywgdGhlIG1ham9yL21pbm9yIG51bWJlcmluZyBzY2hlbWUgZm9yIGJsb2NrIGRldmljZXMg
+bGltaXRzIHlvdSB0bwo+ID4gMTUgcGFydGl0aW9ucyBwZXIgZGV2aWNlLgo+ID4KPiA+IE1hcmsK
+PiA+Cj4gPiBfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwo+
+ID4gbGludXgtbHZtIG1haWxpbmcgbGlzdAo+ID4gbGludXgtbHZtQHJlZGhhdC5jb20KPiA+IGh0
+dHBzOi8vd3d3LnJlZGhhdC5jb20vbWFpbG1hbi9saXN0aW5mby9saW51eC1sdm0KPiA+IHJlYWQg
+dGhlIExWTSBIT1ctVE8gYXQgaHR0cDovL3RsZHAub3JnL0hPV1RPL0xWTS1IT1dUTy8KPiA+Cj4K
+PiB0aGFua3MgZm9yIHRoZSBxdWljayByZXBseS4uCj4gaXMgaXQgcG9zc2libGUgdG8gY3JlYXRl
+IG1vcmUgdGhhbiAxNSBwYXJ0aXRpb25zIGZyb20gZmRpc2ssIHdoaWxlCj4gbWFqb3IvbWlub3Ig
+bnVtYmVyaW5nIHNjaGVtZSBsaW1pdGF0aW9uIGlzIHRoZXJlID8KPiBjb3VsZCB5b3UgcG9pbnQg
+bWUgdG8gc29tZXBsYWNlIGkgY2FuIHJlYWQgbW9yZSBhYm91dCBvbiB0aGlzPwo+Cj4gdGhhbmtz
+IGFnYWluCj4gLS0KPiBZYWppdGggQWphbnRoYQoKCgpldmVuIHRob3VnaCB0aGUgZmRpc2sgb3V0
+cHV0IGNvbnRhaW5zICIvZGV2L2NjaXNzL2MwZDBwMTYiIHRoZXJlIGlzIG5vIHN1Y2gKZGV2aWNl
+IGNyZWF0ZWQgdW5kZXIgL2Rldi9jY2lzcy8uCklzIGl0IGJlY2F1c2Ugb2YgdGhlIGFib3ZlIG1l
+bnRpb25lZCBsaW1pdGF0aW9uID8KLS0gCllhaml0aCBBamFudGhhCg==
+------=_Part_21495_26360395.1202893563664
+Content-Type: text/html; charset=UTF-8
+Content-Transfer-Encoding: base64
 Content-Disposition: inline
 
-On Feb 13, 2008 2:07 PM, Mark Huth &lt;<a href="mailto:mhuth@redhat.com">mhuth@redhat.com</a>&gt; wrote:<br><div class="gmail_quote"><blockquote class="gmail_quote" style="border-left: 1px solid rgb(204, 204, 204); margin: 0pt 0pt 0pt 0.8ex; padding-left: 1ex;">
-<div><div></div><div class="Wj3C7c">Yajith Ajantha Dayarathna | ????? ????? ??????? wrote:<br>&gt; Hi all,<br>&gt; Forgive me if this is the wrong list to ask this question.<br>&gt; I&#39;m quite new to LVM(-and to this list) and one of my friends brought<br>
-&gt; this question up to me..<br>&gt;<br>&gt; There is an error coming up when they try to &quot;pvcreate&quot;<br>&gt;<br>&gt; Below is the &quot;fdisk -l&quot; output.<br>&gt;<br>&gt; [root@lwlsvr bin]# fdisk -l<br>&gt;<br>
-&gt;<br>&gt; Disk /dev/cciss/c0d0: 145.6 GB, 145667358720 bytes<br>&gt; 255 heads, 32 sectors/track, 34866 cylinders<br>&gt; Units = cylinders of 8160 * 512 = 4177920 bytes<br>&gt;<br>&gt; Device Boot Start End Blocks Id System<br>
-&gt; /dev/cciss/c0d0p1 * 1 25 101984 83 Linux<br>&gt; /dev/cciss/c0d0p2 26 7554 30718320 83 Linux<br>&gt; /dev/cciss/c0d0p3 7555 8068 2097120 82 Linux swap<br>&gt; /dev/cciss/c0d0p4 8069 34866 109335840 5 Extended<br>&gt; /dev/cciss/c0d0p5 8069 10578 10240784 83 Linux<br>
-&gt; /dev/cciss/c0d0p6 10579 10587 36704 83 Linux<br>&gt; /dev/cciss/c0d0p7 10588 10596 36704 83 Linux<br>&gt; /dev/cciss/c0d0p8 10597 10725 526304 83 Linux<br>&gt; /dev/cciss/c0d0p9 10726 10988 1073024 83 Linux<br>&gt; /dev/cciss/c0d0p10 10989 11251 1073024 83 Linux<br>
-&gt; /dev/cciss/c0d0p11 11252 11776 2141984 83 Linux<br>&gt; /dev/cciss/c0d0p12 11777 12301 2141984 83 Linux<br>&gt; /dev/cciss/c0d0p13 12302 12826 2141984 83 Linux<br>&gt; /dev/cciss/c0d0p14 12827 13351 2141984 83 Linux<br>
-&gt; /dev/cciss/c0d0p15 13352 13876 2141984 83 Linux<br>&gt; /dev/cciss/c0d0p16 13877 34866 85639184 8e Linux LVM<br>&gt;<br>&gt; When a pvcreate is attempted on &quot;/dev/cciss/c0d0p16&quot; it produces the<br>&gt; below output.<br>
-&gt;<br>&gt; [root@lwlsvr informix]# pvcreate /dev/cciss/c0d0p16<br>&gt; pvcreate -- can&#39;t open physical volume &quot;/dev/cciss/c0d0p16&quot; to get its<br>&gt; size<br>&gt;<br></div></div>AFAIK, the major/minor numbering scheme for block devices limits you to<br>
-15 partitions per device.<br><br>Mark<br><br>_______________________________________________<br>linux-lvm mailing list<br><a href="mailto:linux-lvm@redhat.com">linux-lvm@redhat.com</a><br><a href="https://www.redhat.com/mailman/listinfo/linux-lvm" target="_blank">https://www.redhat.com/mailman/listinfo/linux-lvm</a><br>
-read the LVM HOW-TO at <a href="http://tldp.org/HOWTO/LVM-HOWTO/" target="_blank">http://tldp.org/HOWTO/LVM-HOWTO/</a><br></blockquote></div><br>thanks for the quick reply..<br>is it possible to create more than 15 partitions from fdisk, while major/minor numbering scheme limitation is there ?<br>
-could you point me to someplace i can read more about on this?<br><br>thanks again<br clear="all">-- <br>Yajith Ajantha
-
-------=_Part_21479_11582493.1202893442287--
+PGJyPjxicj48ZGl2IGNsYXNzPSJnbWFpbF9xdW90ZSI+T24gRmViIDEzLCAyMDA4IDI6MzQgUE0s
+IFlhaml0aCBBamFudGhhIERheWFyYXRobmEgfCDgtrrgtqLgt5Lgtq3gt4og4LaF4Lai4Lax4LeK
+4LatIOC2r+C2uuC3j+C2u+C2reC3iuC2sSAmbHQ7PGEgaHJlZj0ibWFpbHRvOnlhaml0aEBnbWFp
+bC5jb20iPnlhaml0aEBnbWFpbC5jb208L2E+Jmd0OyB3cm90ZTo8YnI+PGJsb2NrcXVvdGUgY2xh
+c3M9ImdtYWlsX3F1b3RlIiBzdHlsZT0iYm9yZGVyLWxlZnQ6IDFweCBzb2xpZCByZ2IoMjA0LCAy
+MDQsIDIwNCk7IG1hcmdpbjogMHB0IDBwdCAwcHQgMC44ZXg7IHBhZGRpbmctbGVmdDogMWV4OyI+
+CjxkaXY+PGRpdj48L2Rpdj48ZGl2IGNsYXNzPSJXajNDN2MiPk9uIEZlYiAxMywgMjAwOCAyOjA3
+IFBNLCBNYXJrIEh1dGggJmx0OzxhIGhyZWY9Im1haWx0bzptaHV0aEByZWRoYXQuY29tIiB0YXJn
+ZXQ9Il9ibGFuayI+bWh1dGhAcmVkaGF0LmNvbTwvYT4mZ3Q7IHdyb3RlOjxicj48ZGl2IGNsYXNz
+PSJnbWFpbF9xdW90ZSI+PGJsb2NrcXVvdGUgY2xhc3M9ImdtYWlsX3F1b3RlIiBzdHlsZT0iYm9y
+ZGVyLWxlZnQ6IDFweCBzb2xpZCByZ2IoMjA0LCAyMDQsIDIwNCk7IG1hcmdpbjogMHB0IDBwdCAw
+cHQgMC44ZXg7IHBhZGRpbmctbGVmdDogMWV4OyI+Cgo8ZGl2PjxkaXY+PC9kaXY+PGRpdj5ZYWpp
+dGggQWphbnRoYSBEYXlhcmF0aG5hIHwgPz8/Pz8gPz8/Pz8gPz8/Pz8/PyB3cm90ZTo8YnI+Jmd0
+OyBIaSBhbGwsPGJyPiZndDsgRm9yZ2l2ZSBtZSBpZiB0aGlzIGlzIHRoZSB3cm9uZyBsaXN0IHRv
+IGFzayB0aGlzIHF1ZXN0aW9uLjxicj4mZ3Q7IEkmIzM5O20gcXVpdGUgbmV3IHRvIExWTSgtYW5k
+IHRvIHRoaXMgbGlzdCkgYW5kIG9uZSBvZiBteSBmcmllbmRzIGJyb3VnaHQ8YnI+CgomZ3Q7IHRo
+aXMgcXVlc3Rpb24gdXAgdG8gbWUuLjxicj4mZ3Q7PGJyPiZndDsgVGhlcmUgaXMgYW4gZXJyb3Ig
+Y29taW5nIHVwIHdoZW4gdGhleSB0cnkgdG8gJnF1b3Q7cHZjcmVhdGUmcXVvdDs8YnI+Jmd0Ozxi
+cj4mZ3Q7IEJlbG93IGlzIHRoZSAmcXVvdDtmZGlzayAtbCZxdW90OyBvdXRwdXQuPGJyPiZndDs8
+YnI+Jmd0OyBbcm9vdEBsd2xzdnIgYmluXSMgZmRpc2sgLWw8YnI+Jmd0Ozxicj4KCiZndDs8YnI+
+Jmd0OyBEaXNrIC9kZXYvY2Npc3MvYzBkMDogMTQ1LjYgR0IsIDE0NTY2NzM1ODcyMCBieXRlczxi
+cj4mZ3Q7IDI1NSBoZWFkcywgMzIgc2VjdG9ycy90cmFjaywgMzQ4NjYgY3lsaW5kZXJzPGJyPiZn
+dDsgVW5pdHMgPSBjeWxpbmRlcnMgb2YgODE2MCAqIDUxMiA9IDQxNzc5MjAgYnl0ZXM8YnI+Jmd0
+Ozxicj4mZ3Q7IERldmljZSBCb290IFN0YXJ0IEVuZCBCbG9ja3MgSWQgU3lzdGVtPGJyPgoKJmd0
+OyAvZGV2L2NjaXNzL2MwZDBwMSAqIDEgMjUgMTAxOTg0IDgzIExpbnV4PGJyPiZndDsgL2Rldi9j
+Y2lzcy9jMGQwcDIgMjYgNzU1NCAzMDcxODMyMCA4MyBMaW51eDxicj4mZ3Q7IC9kZXYvY2Npc3Mv
+YzBkMHAzIDc1NTUgODA2OCAyMDk3MTIwIDgyIExpbnV4IHN3YXA8YnI+Jmd0OyAvZGV2L2NjaXNz
+L2MwZDBwNCA4MDY5IDM0ODY2IDEwOTMzNTg0MCA1IEV4dGVuZGVkPGJyPiZndDsgL2Rldi9jY2lz
+cy9jMGQwcDUgODA2OSAxMDU3OCAxMDI0MDc4NCA4MyBMaW51eDxicj4KCiZndDsgL2Rldi9jY2lz
+cy9jMGQwcDYgMTA1NzkgMTA1ODcgMzY3MDQgODMgTGludXg8YnI+Jmd0OyAvZGV2L2NjaXNzL2Mw
+ZDBwNyAxMDU4OCAxMDU5NiAzNjcwNCA4MyBMaW51eDxicj4mZ3Q7IC9kZXYvY2Npc3MvYzBkMHA4
+IDEwNTk3IDEwNzI1IDUyNjMwNCA4MyBMaW51eDxicj4mZ3Q7IC9kZXYvY2Npc3MvYzBkMHA5IDEw
+NzI2IDEwOTg4IDEwNzMwMjQgODMgTGludXg8YnI+Jmd0OyAvZGV2L2NjaXNzL2MwZDBwMTAgMTA5
+ODkgMTEyNTEgMTA3MzAyNCA4MyBMaW51eDxicj4KCiZndDsgL2Rldi9jY2lzcy9jMGQwcDExIDEx
+MjUyIDExNzc2IDIxNDE5ODQgODMgTGludXg8YnI+Jmd0OyAvZGV2L2NjaXNzL2MwZDBwMTIgMTE3
+NzcgMTIzMDEgMjE0MTk4NCA4MyBMaW51eDxicj4mZ3Q7IC9kZXYvY2Npc3MvYzBkMHAxMyAxMjMw
+MiAxMjgyNiAyMTQxOTg0IDgzIExpbnV4PGJyPiZndDsgL2Rldi9jY2lzcy9jMGQwcDE0IDEyODI3
+IDEzMzUxIDIxNDE5ODQgODMgTGludXg8YnI+CgomZ3Q7IC9kZXYvY2Npc3MvYzBkMHAxNSAxMzM1
+MiAxMzg3NiAyMTQxOTg0IDgzIExpbnV4PGJyPiZndDsgL2Rldi9jY2lzcy9jMGQwcDE2IDEzODc3
+IDM0ODY2IDg1NjM5MTg0IDhlIExpbnV4IExWTTxicj4mZ3Q7PGJyPiZndDsgV2hlbiBhIHB2Y3Jl
+YXRlIGlzIGF0dGVtcHRlZCBvbiAmcXVvdDsvZGV2L2NjaXNzL2MwZDBwMTYmcXVvdDsgaXQgcHJv
+ZHVjZXMgdGhlPGJyPiZndDsgYmVsb3cgb3V0cHV0Ljxicj4KCiZndDs8YnI+Jmd0OyBbcm9vdEBs
+d2xzdnIgaW5mb3JtaXhdIyBwdmNyZWF0ZSAvZGV2L2NjaXNzL2MwZDBwMTY8YnI+Jmd0OyBwdmNy
+ZWF0ZSAtLSBjYW4mIzM5O3Qgb3BlbiBwaHlzaWNhbCB2b2x1bWUgJnF1b3Q7L2Rldi9jY2lzcy9j
+MGQwcDE2JnF1b3Q7IHRvIGdldCBpdHM8YnI+Jmd0OyBzaXplPGJyPiZndDs8YnI+PC9kaXY+PC9k
+aXY+QUZBSUssIHRoZSBtYWpvci9taW5vciBudW1iZXJpbmcgc2NoZW1lIGZvciBibG9jayBkZXZp
+Y2VzIGxpbWl0cyB5b3UgdG88YnI+CgoxNSBwYXJ0aXRpb25zIHBlciBkZXZpY2UuPGJyPjxicj5N
+YXJrPGJyPjxicj5fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+Xzxicj5saW51eC1sdm0gbWFpbGluZyBsaXN0PGJyPjxhIGhyZWY9Im1haWx0bzpsaW51eC1sdm1A
+cmVkaGF0LmNvbSIgdGFyZ2V0PSJfYmxhbmsiPmxpbnV4LWx2bUByZWRoYXQuY29tPC9hPjxicj48
+YSBocmVmPSJodHRwczovL3d3dy5yZWRoYXQuY29tL21haWxtYW4vbGlzdGluZm8vbGludXgtbHZt
+IiB0YXJnZXQ9Il9ibGFuayI+aHR0cHM6Ly93d3cucmVkaGF0LmNvbS9tYWlsbWFuL2xpc3RpbmZv
+L2xpbnV4LWx2bTwvYT48YnI+CgpyZWFkIHRoZSBMVk0gSE9XLVRPIGF0IDxhIGhyZWY9Imh0dHA6
+Ly90bGRwLm9yZy9IT1dUTy9MVk0tSE9XVE8vIiB0YXJnZXQ9Il9ibGFuayI+aHR0cDovL3RsZHAu
+b3JnL0hPV1RPL0xWTS1IT1dUTy88L2E+PGJyPjwvYmxvY2txdW90ZT48L2Rpdj48YnI+PC9kaXY+
+PC9kaXY+dGhhbmtzIGZvciB0aGUgcXVpY2sgcmVwbHkuLjxicj5pcyBpdCBwb3NzaWJsZSB0byBj
+cmVhdGUgbW9yZSB0aGFuIDE1IHBhcnRpdGlvbnMgZnJvbSBmZGlzaywgd2hpbGUgbWFqb3IvbWlu
+b3IgbnVtYmVyaW5nIHNjaGVtZSBsaW1pdGF0aW9uIGlzIHRoZXJlID88YnI+Cgpjb3VsZCB5b3Ug
+cG9pbnQgbWUgdG8gc29tZXBsYWNlIGkgY2FuIHJlYWQgbW9yZSBhYm91dCBvbiB0aGlzPzxicj48
+YnI+dGhhbmtzIGFnYWluPGJyIGNsZWFyPSJhbGwiPi0tIDxicj48Zm9udCBjb2xvcj0iIzg4ODg4
+OCI+WWFqaXRoIEFqYW50aGEKPC9mb250PjwvYmxvY2txdW90ZT48L2Rpdj48YnI+PGJyIGNsZWFy
+PSJhbGwiPmV2ZW4gdGhvdWdoIHRoZSBmZGlzayBvdXRwdXQgY29udGFpbnMgJnF1b3Q7L2Rldi9j
+Y2lzcy9jMGQwcDE2JnF1b3Q7IHRoZXJlIGlzIG5vIHN1Y2ggZGV2aWNlIGNyZWF0ZWQgdW5kZXIg
+L2Rldi9jY2lzcy8uPGJyPklzIGl0IGJlY2F1c2Ugb2YgdGhlIGFib3ZlIG1lbnRpb25lZCBsaW1p
+dGF0aW9uID88YnI+Ci0tIDxicj5ZYWppdGggQWphbnRoYQo=
+------=_Part_21495_26360395.1202893563664--
