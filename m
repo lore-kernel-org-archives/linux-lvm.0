@@ -1,35 +1,22 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m1CLQwNK024453
-	for <linux-lvm@redhat.com>; Tue, 12 Feb 2008 16:26:58 -0500
-Received: from pd2mo2so.prod.shaw.ca (idcmail-mo1so.shaw.ca [24.71.223.10])
-	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id m1CLQGsb027864
-	for <linux-lvm@redhat.com>; Tue, 12 Feb 2008 16:26:25 -0500
-Received: from pd2mr1so.prod.shaw.ca
-	(pd2mr1so-qfe3.prod.shaw.ca [10.0.141.110]) by l-daemon
-	(Sun ONE Messaging Server 6.0 HotFix 1.01 (built Mar 15 2004))
-	with ESMTP id <0JW5002ADA6B1740@l-daemon> for linux-lvm@redhat.com; Tue,
-	12 Feb 2008 14:25:23 -0700 (MST)
-Received: from pn2ml1so.prod.shaw.ca ([10.0.121.145])
-	by pd2mr1so.prod.shaw.ca (Sun Java System Messaging Server 6.2-7.05
-	(built Sep
-	5 2006)) with ESMTP id <0JW5005V0A6A6SD0@pd2mr1so.prod.shaw.ca> for
-	linux-lvm@redhat.com; Tue, 12 Feb 2008 14:25:23 -0700 (MST)
-Received: from mail.activenetwerx.com ([68.144.68.179])
-	by l-daemon (Sun Java System Messaging Server 6.2-7.05 (built Sep 5
-	2006))
-	with ESMTP id <0JW5000RDA68K0F0@l-daemon> for linux-lvm@redhat.com; Tue,
-	12 Feb 2008 14:25:21 -0700 (MST)
-Received: from exchange.activenetwerx.com (localhost.localdomain [127.0.0.1])
-	by mail.activenetwerx.com (Postfix) with ESMTP id 2F90F17805C	for
-	<linux-lvm@redhat.com>; Tue, 12 Feb 2008 13:26:19 -0700 (MST)
-Date: Tue, 12 Feb 2008 14:25:18 -0700
-From: "Joseph L. Casale" <jcasale@ActiveNetwerx.com>
-Message-id: <1C8CF1EA1A5B5940B81B0710B2A4C93850BB382BA1@an-ex.ActiveNetwerx.int>
-MIME-version: 1.0
-Content-type: multipart/alternative;
-	boundary=_000_1C8CF1EA1A5B5940B81B0710B2A4C93850BB382BA1anexActiveNet_
-Content-language: en-US
-Subject: [linux-lvm] pvmove safety
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m1D8DYio012906
+	for <linux-lvm@redhat.com>; Wed, 13 Feb 2008 03:13:34 -0500
+Received: from wx-out-0506.google.com (wx-out-0506.google.com [66.249.82.228])
+	by mx3.redhat.com (8.13.1/8.13.1) with ESMTP id m1D8DDTp002390
+	for <linux-lvm@redhat.com>; Wed, 13 Feb 2008 03:13:14 -0500
+Received: by wx-out-0506.google.com with SMTP id t16so4766010wxc.6
+	for <linux-lvm@redhat.com>; Wed, 13 Feb 2008 00:13:13 -0800 (PST)
+Message-ID: <b646832c0802130013x2081fe55y10f6e2c079134acf@mail.gmail.com>
+Date: Wed, 13 Feb 2008 13:43:12 +0530
+From: "=?UTF-8?Q?Yajith_Ajantha_Dayarath?=
+	=?UTF-8?Q?na_|_=E0=B6=BA=E0=B6=A2=E0=B7=92=E0=B6=AD=E0=B7=8A_=E0=B6=85?=
+	=?UTF-8?Q?=E0=B6=A2=E0=B6=B1=E0=B7=8A=E0=B6=AD_=E0=B6=AF?=
+	=?UTF-8?Q?=E0=B6=BA=E0=B7=8F=E0=B6=BB=E0=B6=AD=E0=B7=8A=E0=B6=B1?="
+	<yajith@gmail.com>
+MIME-Version: 1.0
+Content-Type: multipart/alternative; 
+	boundary="----=_Part_21371_17744412.1202890392916"
+Subject: [linux-lvm] pvcreate problem
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -40,101 +27,77 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: "'linux-lvm@redhat.com'" <linux-lvm@redhat.com>
+To: linux-lvm@redhat.com
 
---_000_1C8CF1EA1A5B5940B81B0710B2A4C93850BB382BA1anexActiveNet_
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+------=_Part_21371_17744412.1202890392916
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
 
-How safe is pvmove in LVM2 when being operated on live volumes? I understan=
-d a backup is always a good policy as nothing can be 100% safe, but is the =
-command known to produce unreliable results when used on a live filesystem?=
- I am reading http://tldp.org/HOWTO/LVM-HOWTO/removeadisk.html and the warn=
-ing up top is hard to miss, but I wonder if it's a bit outdated?
+Hi all,
+Forgive me if this is the wrong list to ask this question.
+I'm quite new to LVM(-and to this list) and one of my friends brought this
+question up to me..
 
-Thanks!
-jlc
+There is an error coming up when they try to "pvcreate"
 
---_000_1C8CF1EA1A5B5940B81B0710B2A4C93850BB382BA1anexActiveNet_
-Content-Type: text/html; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+Below is the "fdisk -l" output.
 
-<html xmlns:v=3D"urn:schemas-microsoft-com:vml" xmlns:o=3D"urn:schemas-micr=
-osoft-com:office:office" xmlns:w=3D"urn:schemas-microsoft-com:office:word" =
-xmlns:m=3D"http://schemas.microsoft.com/office/2004/12/omml" xmlns=3D"http:=
-//www.w3.org/TR/REC-html40">
+[root@lwlsvr bin]# fdisk -l
 
-<head>
-<META HTTP-EQUIV=3D"Content-Type" CONTENT=3D"text/html; charset=3Dus-ascii"=
->
-<meta name=3DGenerator content=3D"Microsoft Word 12 (filtered medium)">
-<style>
-<!--
- /* Font Definitions */
- @font-face
-	{font-family:"Cambria Math";
-	panose-1:2 4 5 3 5 4 6 3 2 4;}
-@font-face
-	{font-family:Calibri;
-	panose-1:2 15 5 2 2 2 4 3 2 4;}
- /* Style Definitions */
- p.MsoNormal, li.MsoNormal, div.MsoNormal
-	{margin:0in;
-	margin-bottom:.0001pt;
-	font-size:11.0pt;
-	font-family:"Calibri","sans-serif";}
-a:link, span.MsoHyperlink
-	{mso-style-priority:99;
-	color:blue;
-	text-decoration:underline;}
-a:visited, span.MsoHyperlinkFollowed
-	{mso-style-priority:99;
-	color:purple;
-	text-decoration:underline;}
-span.EmailStyle17
-	{mso-style-type:personal-compose;
-	font-family:"Calibri","sans-serif";
-	color:windowtext;}
-.MsoChpDefault
-	{mso-style-type:export-only;}
-@page Section1
-	{size:8.5in 11.0in;
-	margin:1.0in 1.0in 1.0in 1.0in;}
-div.Section1
-	{page:Section1;}
--->
-</style>
-<!--[if gte mso 9]><xml>
- <o:shapedefaults v:ext=3D"edit" spidmax=3D"1026" />
-</xml><![endif]--><!--[if gte mso 9]><xml>
- <o:shapelayout v:ext=3D"edit">
-  <o:idmap v:ext=3D"edit" data=3D"1" />
- </o:shapelayout></xml><![endif]-->
-</head>
 
-<body lang=3DEN-US link=3Dblue vlink=3Dpurple>
+Disk /dev/cciss/c0d0: 145.6 GB, 145667358720 bytes
+255 heads, 32 sectors/track, 34866 cylinders
+Units = cylinders of 8160 * 512 = 4177920 bytes
 
-<div class=3DSection1>
+          Device Boot    Start       End    Blocks   Id  System
+/dev/cciss/c0d0p1   *         1        25    101984   83  Linux
+/dev/cciss/c0d0p2            26      7554  30718320   83  Linux
+/dev/cciss/c0d0p3          7555      8068   2097120   82  Linux swap
+/dev/cciss/c0d0p4          8069     34866 109335840    5  Extended
+/dev/cciss/c0d0p5          8069     10578  10240784   83  Linux
+/dev/cciss/c0d0p6         10579     10587     36704   83  Linux
+/dev/cciss/c0d0p7         10588     10596     36704   83  Linux
+/dev/cciss/c0d0p8         10597     10725    526304   83  Linux
+/dev/cciss/c0d0p9         10726     10988   1073024   83  Linux
+/dev/cciss/c0d0p10        10989     11251   1073024   83  Linux
+/dev/cciss/c0d0p11        11252     11776   2141984   83  Linux
+/dev/cciss/c0d0p12        11777     12301   2141984   83  Linux
+/dev/cciss/c0d0p13        12302     12826   2141984   83  Linux
+/dev/cciss/c0d0p14        12827     13351   2141984   83  Linux
+/dev/cciss/c0d0p15        13352     13876   2141984   83  Linux
+/dev/cciss/c0d0p16        13877     34866  85639184   8e  Linux LVM
 
-<p class=3DMsoNormal>How safe is pvmove in LVM2 when being operated on live
-volumes? I understand a backup is always a good policy as nothing can be 10=
-0%
-safe, but is the command known to produce unreliable results when used on a
-live filesystem? I am reading <a
-href=3D"http://tldp.org/HOWTO/LVM-HOWTO/removeadisk.html">http://tldp.org/H=
-OWTO/LVM-HOWTO/removeadisk.html</a>
-and the warning up top is hard to miss, but I wonder if it&#8217;s a bit
-outdated?<o:p></o:p></p>
+When a pvcreate is attempted on "/dev/cciss/c0d0p16" it produces the below
+output.
 
-<p class=3DMsoNormal><o:p>&nbsp;</o:p></p>
+[root@lwlsvr informix]# pvcreate /dev/cciss/c0d0p16
+pvcreate -- can't open physical volume "/dev/cciss/c0d0p16" to get its size
 
-<p class=3DMsoNormal>Thanks!<br>
-jlc<o:p></o:p></p>
 
-</div>
+pvcreate [-d|--debug] [-f[f]|--force [--force]] [-h|--help]
+       [-s|--size PhysicalVolumeSize[kKmMgGtT]] [-y|--yes] [-v|--verbose]
+       [--version] PhysicalVolume [PhysicalVolume...]
 
-</body>
+Highly appreciate any help...
 
-</html>
+Thanks.
+-- 
+Yajith Ajantha
 
---_000_1C8CF1EA1A5B5940B81B0710B2A4C93850BB382BA1anexActiveNet_--
+------=_Part_21371_17744412.1202890392916
+Content-Type: text/html; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+Hi all,<br>Forgive me if this is the wrong list to ask this question.<br>I&#39;m quite new to LVM(-and to this list) and one of my friends brought this question up to me..<br><br>There is an error coming up when they try to &quot;pvcreate&quot;<br>
+<br>Below is the &quot;fdisk -l&quot; output.<br><br>[root@lwlsvr bin]# fdisk -l<br><div class="Ih2E3d"><br><br>Disk /dev/cciss/c0d0: 145.6 GB, 145667358720 bytes<br>255 heads, 32 sectors/track, 34866 cylinders<br>Units = cylinders of 8160 * 512 = 4177920 bytes<br>
+<br> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Device Boot &nbsp; &nbsp;Start &nbsp; &nbsp; &nbsp; End &nbsp; &nbsp;Blocks &nbsp; Id &nbsp;System<br>/dev/cciss/c0d0p1 &nbsp; * &nbsp; &nbsp; &nbsp; &nbsp; 1 &nbsp; &nbsp; &nbsp; &nbsp;25 &nbsp; &nbsp;101984 &nbsp; 83 &nbsp;Linux<br>/dev/cciss/c0d0p2 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;26 &nbsp; &nbsp; &nbsp;7554 &nbsp;30718320 &nbsp; 83 &nbsp;Linux<br>/dev/cciss/c0d0p3 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;7555 &nbsp; &nbsp; &nbsp;8068 &nbsp; 2097120 &nbsp; 82 &nbsp;Linux swap<br>
+/dev/cciss/c0d0p4 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;8069 &nbsp; &nbsp; 34866 109335840 &nbsp; &nbsp;5 &nbsp;Extended<br>/dev/cciss/c0d0p5 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;8069 &nbsp; &nbsp; 10578 &nbsp;10240784 &nbsp; 83 &nbsp;Linux<br>/dev/cciss/c0d0p6 &nbsp; &nbsp; &nbsp; &nbsp; 10579 &nbsp; &nbsp; 10587 &nbsp; &nbsp; 36704 &nbsp; 83 &nbsp;Linux<br>/dev/cciss/c0d0p7 &nbsp; &nbsp; &nbsp; &nbsp; 10588 &nbsp; &nbsp; 10596 &nbsp; &nbsp; 36704 &nbsp; 83 &nbsp;Linux<br>
+/dev/cciss/c0d0p8 &nbsp; &nbsp; &nbsp; &nbsp; 10597 &nbsp; &nbsp; 10725 &nbsp; &nbsp;526304 &nbsp; 83 &nbsp;Linux<br>/dev/cciss/c0d0p9 &nbsp; &nbsp; &nbsp; &nbsp; 10726 &nbsp; &nbsp; 10988 &nbsp; 1073024 &nbsp; 83 &nbsp;Linux<br>/dev/cciss/c0d0p10 &nbsp; &nbsp; &nbsp; &nbsp;10989 &nbsp; &nbsp; 11251 &nbsp; 1073024 &nbsp; 83 &nbsp;Linux<br>/dev/cciss/c0d0p11 &nbsp; &nbsp; &nbsp; &nbsp;11252 &nbsp; &nbsp; 11776 &nbsp; 2141984 &nbsp; 83 &nbsp;Linux<br>
+/dev/cciss/c0d0p12 &nbsp; &nbsp; &nbsp; &nbsp;11777 &nbsp; &nbsp; 12301 &nbsp; 2141984 &nbsp; 83 &nbsp;Linux<br>/dev/cciss/c0d0p13 &nbsp; &nbsp; &nbsp; &nbsp;12302 &nbsp; &nbsp; 12826 &nbsp; 2141984 &nbsp; 83 &nbsp;Linux<br>/dev/cciss/c0d0p14 &nbsp; &nbsp; &nbsp; &nbsp;12827 &nbsp; &nbsp; 13351 &nbsp; 2141984 &nbsp; 83 &nbsp;Linux<br>/dev/cciss/c0d0p15 &nbsp; &nbsp; &nbsp; &nbsp;13352 &nbsp; &nbsp; 13876 &nbsp; 2141984 &nbsp; 83 &nbsp;Linux<br>
+</div>/dev/cciss/c0d0p16 &nbsp; &nbsp; &nbsp; &nbsp;13877 &nbsp; &nbsp; 34866 &nbsp;85639184 &nbsp; 8e &nbsp;Linux LVM<br><br>When a pvcreate is attempted on &quot;/dev/cciss/c0d0p16&quot; it produces the below output.<br><br>[root@lwlsvr informix]# pvcreate /dev/cciss/c0d0p16<br>
+pvcreate -- can&#39;t open physical volume &quot;/dev/cciss/c0d0p16&quot; to get its size<br><br><br>pvcreate [-d|--debug] [-f[f]|--force [--force]] [-h|--help]<br> &nbsp; &nbsp; &nbsp; &nbsp;[-s|--size PhysicalVolumeSize[kKmMgGtT]] [-y|--yes] [-v|--verbose]<br>
+ &nbsp; &nbsp; &nbsp; &nbsp;[--version] PhysicalVolume [PhysicalVolume...]<br><br>Highly appreciate any help...<br><br>Thanks.<br>-- <br>Yajith Ajantha
+
+------=_Part_21371_17744412.1202890392916--
