@@ -1,14 +1,31 @@
-Received: from [192.168.1.101] (vpn-248-146.boston.redhat.com [10.13.248.146])
-	by pobox.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m1FFjCVa025828
-	for <linux-lvm@redhat.com>; Fri, 15 Feb 2008 10:45:13 -0500
-Message-Id: <C3E4CC38-3764-4EC3-910E-9FBD91667701@redhat.com>
-From: Jonathan Brassow <jbrassow@redhat.com>
-In-Reply-To: <1C8CF1EA1A5B5940B81B0710B2A4C93850BB382BA1@an-ex.ActiveNetwerx.int>
-Content-Type: multipart/alternative; boundary=Apple-Mail-14--702670944
+Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m1FGINDE001379
+	for <linux-lvm@redhat.com>; Fri, 15 Feb 2008 11:18:23 -0500
+Received: from ulx.hu (ulx.tvnet.hu [195.38.96.124])
+	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id m1FGHwNZ020118
+	for <linux-lvm@redhat.com>; Fri, 15 Feb 2008 11:17:59 -0500
+Received: from lucy.ulx.hu (lucy [172.16.0.2])
+	by ulx.hu (Postfix) with ESMTP id 080CA140341
+	for <linux-lvm@redhat.com>; Fri, 15 Feb 2008 17:17:53 +0100 (CET)
+Received: from localhost (localhost [127.0.0.1])
+	by lucy.ulx.hu (Postfix) with ESMTP id 92A606405D
+	for <linux-lvm@redhat.com>; Fri, 15 Feb 2008 17:17:52 +0100 (CET)
+Received: from lucy.ulx.hu ([127.0.0.1])
+	by localhost (lucy.ulx.hu [127.0.0.1]) (amavisd-new, port 10024)
+	with ESMTP id N3qTmPEkrQOd for <linux-lvm@redhat.com>;
+	Fri, 15 Feb 2008 17:17:46 +0100 (CET)
+Received: from [172.16.1.240] (unknown [172.16.1.240])
+	by lucy.ulx.hu (Postfix) with ESMTP id E04D16405C
+	for <linux-lvm@redhat.com>; Fri, 15 Feb 2008 17:17:46 +0100 (CET)
+Message-Id: <F66CC8D7-624C-4090-B0D8-1A0406B384A4@ulx.hu>
+From: =?ISO-8859-1?Q?Lajk=F3_Attila?= <Lajko.Attila@ulx.hu>
+In-Reply-To: <2D7245F3-4FBF-4569-BBA9-22E37E22C58A@redhat.com>
+Content-Transfer-Encoding: 7bit
 Mime-Version: 1.0 (Apple Message framework v919.2)
-Subject: Re: [linux-lvm] pvmove safety
-Date: Fri, 15 Feb 2008 09:45:11 -0600
-References: <1C8CF1EA1A5B5940B81B0710B2A4C93850BB382BA1@an-ex.ActiveNetwerx.int>
+Subject: Re: [linux-lvm] mirrored LV + cmirror problem
+Date: Fri, 15 Feb 2008 17:17:46 +0100
+References: <76EAFFE5-C713-42D4-B6DC-9F63F56C071C@ulx.hu>
+	<2D7245F3-4FBF-4569-BBA9-22E37E22C58A@redhat.com>
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -19,92 +36,42 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
+Content-Type: text/plain; charset="us-ascii"; format="flowed"; delsp="yes"
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
 
---Apple-Mail-14--702670944
-Content-Type: text/plain;
-	charset=WINDOWS-1252;
-	format=flowed;
-	delsp=yes
-Content-Transfer-Encoding: quoted-printable
 
-pvmove is pretty reliable.  However, I would probably make a backup =20
-before doing any sort of operation that would grow/shrink/move a file =20=
+On Feb 15, 2008, at 4:41 PM, Jonathan Brassow wrote:
 
-system.
+> Are all the packages rhel4.6 as well, or have you compiled pkgs  
+> yourself?
 
-  brassow
+All the packages are binaries from rhel4.6:
+lvm2-cluster-2.02.27-2.el4_6.1
+cmirror-1.0.1-1
+cmirror-kernel-xenU-2.6.9-38.5
 
-On Feb 12, 2008, at 3:25 PM, Joseph L. Casale wrote:
-
-> How safe is pvmove in LVM2 when being operated on live volumes? I =20
-> understand a backup is always a good policy as nothing can be 100% =20
-> safe, but is the command known to produce unreliable results when =20
-> used on a live filesystem? I am =
-readinghttp://tldp.org/HOWTO/LVM-HOWTO/removeadisk.html=20
->  and the warning up top is hard to miss, but I wonder if it=92s a bit =20=
-
-> outdated?
 >
-> Thanks!
-> jlc
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+>
+> What was the load you had on the system?
 
+Very low, approx. 0.
 
---Apple-Mail-14--702670944
-Content-Type: text/html;
-	charset=WINDOWS-1252
-Content-Transfer-Encoding: quoted-printable
+> The messages I see from dm-cmirror suggest that it is properly  
+> shutting down in the face of the failure... However, before it has  
+> finished, we can see "Failed to remove faulty devices in vgtest- 
+> lvtest".  This suggests to me that clvmd is not waiting long enough  
+> for the shutdown to complete, but I only see 3 seconds of the log.   
+> When was the device failure initiated?
+>
+> brassow
+>
+>
 
-<html><body style=3D"word-wrap: break-word; -webkit-nbsp-mode: space; =
--webkit-line-break: after-white-space; ">pvmove is pretty reliable. =
-&nbsp;However, I would probably make a backup before doing any sort of =
-operation that would grow/shrink/move a file system.<div><br =
-class=3D"webkit-block-placeholder"></div><div>&nbsp;brassow<br><div><br><d=
-iv><div>On Feb 12, 2008, at 3:25 PM, Joseph L. Casale wrote:</div><br =
-class=3D"Apple-interchange-newline"><blockquote type=3D"cite"><span =
-class=3D"Apple-style-span" style=3D"border-collapse: separate; color: =
-rgb(0, 0, 0); font-family: Helvetica; font-size: 12px; font-style: =
-normal; font-variant: normal; font-weight: normal; letter-spacing: =
-normal; line-height: normal; orphans: 2; text-align: auto; text-indent: =
-0px; text-transform: none; white-space: normal; widows: 2; word-spacing: =
-0px; -webkit-border-horizontal-spacing: 0px; =
--webkit-border-vertical-spacing: 0px; =
--webkit-text-decorations-in-effect: none; -webkit-text-size-adjust: =
-auto; -webkit-text-stroke-width: 0; "><div lang=3D"EN-US" link=3D"blue" =
-vlink=3D"purple"><div class=3D"Section1"><div style=3D"margin-top: 0in; =
-margin-right: 0in; margin-left: 0in; margin-bottom: 0.0001pt; font-size: =
-11pt; font-family: Calibri, sans-serif; ">How safe is pvmove in LVM2 =
-when being operated on live volumes? I understand a backup is always a =
-good policy as nothing can be 100% safe, but is the command known to =
-produce unreliable results when used on a live filesystem? I am =
-reading<a href=3D"http://tldp.org/HOWTO/LVM-HOWTO/removeadisk.html" =
-style=3D"color: blue; text-decoration: underline; =
-">http://tldp.org/HOWTO/LVM-HOWTO/removeadisk.html</a><span =
-class=3D"Apple-converted-space">&nbsp;</span>and the warning up top is =
-hard to miss, but I wonder if it=92s a bit =
-outdated?<o:p></o:p></div><div style=3D"margin-top: 0in; margin-right: =
-0in; margin-left: 0in; margin-bottom: 0.0001pt; font-size: 11pt; =
-font-family: Calibri, sans-serif; "><o:p>&nbsp;</o:p></div><div =
-style=3D"margin-top: 0in; margin-right: 0in; margin-left: 0in; =
-margin-bottom: 0.0001pt; font-size: 11pt; font-family: Calibri, =
-sans-serif; =
-">Thanks!<br>jlc<o:p></o:p></div></div>___________________________________=
-____________<br>linux-lvm mailing list<br><a =
-href=3D"mailto:linux-lvm@redhat.com" style=3D"color: blue; =
-text-decoration: underline; ">linux-lvm@redhat.com</a><br><a =
-href=3D"https://www.redhat.com/mailman/listinfo/linux-lvm" style=3D"color:=
- blue; text-decoration: underline; =
-">https://www.redhat.com/mailman/listinfo/linux-lvm</a><br>read the LVM =
-HOW-TO at<span class=3D"Apple-converted-space">&nbsp;</span><a =
-href=3D"http://tldp.org/HOWTO/LVM-HOWTO/" style=3D"color: blue; =
-text-decoration: underline; =
-">http://tldp.org/HOWTO/LVM-HOWTO/</a></div></span></blockquote></div><br>=
-</div></div></body></html>=
+The failure was initiated at the beginning of the log. I put the  
+complete messages files from both nodes (el42 and el4) to FTP.
 
---Apple-Mail-14--702670944--
+ftp://ftp.ulx.hu/upload/clvmd/messages.el4
+ftp://ftp.ulx.hu/upload/clvmd/messages.el42
+
+Attila
