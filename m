@@ -1,19 +1,17 @@
-Received: from agk.fab.redhat.com (agk.fab.redhat.com [10.33.0.19])
-	by pobox.fab.redhat.com (8.13.1/8.13.1) with ESMTP id m1G0mgHH003867
-	for <linux-lvm@redhat.com>; Fri, 15 Feb 2008 19:48:42 -0500
-Received: from agk by agk.fab.redhat.com with local (Exim 4.34)
-	id 1JQBEQ-0000vx-Lp
-	for linux-lvm@redhat.com; Sat, 16 Feb 2008 00:48:42 +0000
-Date: Sat, 16 Feb 2008 00:48:42 +0000
-From: Alasdair G Kergon <agk@redhat.com>
-Subject: Re: [linux-lvm] pvmove safety
-Message-ID: <20080216004842.GG1788@agk.fab.redhat.com>
-References: <1C8CF1EA1A5B5940B81B0710B2A4C93850BB382BA1@an-ex.ActiveNetwerx.int>
-	<C3E4CC38-3764-4EC3-910E-9FBD91667701@redhat.com>
-	<1C8CF1EA1A5B5940B81B0710B2A4C93850BB382BD6@an-ex.ActiveNetwerx.int>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <1C8CF1EA1A5B5940B81B0710B2A4C93850BB382BD6@an-ex.ActiveNetwerx.int>
+Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m1GBV1E7013913
+	for <linux-lvm@redhat.com>; Sat, 16 Feb 2008 06:31:01 -0500
+Received: from web57704.mail.re3.yahoo.com (web57704.mail.re3.yahoo.com
+	[68.142.236.58])
+	by mx3.redhat.com (8.13.8/8.13.8) with SMTP id m1GBUTdU000979
+	for <linux-lvm@redhat.com>; Sat, 16 Feb 2008 06:30:30 -0500
+Date: Sat, 16 Feb 2008 03:30:24 -0800 (PST)
+From: Karan Popali <karanpopali@yahoo.com>
+MIME-Version: 1.0
+Content-Type: multipart/alternative; boundary="0-1152053925-1203161424=:77497"
+Content-Transfer-Encoding: 8bit
+Message-ID: <269300.77497.qm@web57704.mail.re3.yahoo.com>
+Subject: [linux-lvm] Where I can get LVM metadata?
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -24,20 +22,26 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: LVM general discussion and development <linux-lvm@redhat.com>
+To: linux-lvm@redhat.com
 
-On Fri, Feb 15, 2008 at 12:21:12PM -0700, Joseph L. Casale wrote:
-> If the pvmove is stopped at any point and an -abort is given, are all the
-> PE's that *were* reserved automatically freed up? Also, I assume the old PE's
-> aren't freed up until everything is copied over and in sync?
- 
-Read the pvmove man page: the operation is done in stages with checkpoints,
-and an abort reverts to the last checkpoint.  So part might have moved
-and part might not have moved.
-No old PEs are freed until the whole operation completes (or --abort).
+--0-1152053925-1203161424=:77497
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
 
-Alasdair
--- 
-agk@redhat.com
+Hi,
+      I want to know that where the LVM meta data is stored and how we can modify it?
+
+Thanking You,
+-Karan
+
+       
+---------------------------------
+Looking for last minute shopping deals?  Find them fast with Yahoo! Search.
+--0-1152053925-1203161424=:77497
+Content-Type: text/html; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
+
+Hi,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; I want to know that where the LVM meta data is stored and how we can modify it?<br><br>Thanking You,<br>-Karan<br><p>&#32;
+      <hr size=1>Looking for last minute shopping deals? <a href="http://us.rd.yahoo.com/evt=51734/*http://tools.search.yahoo.com/newsearch/category.php?category=shopping"> 
+Find them fast with Yahoo! Search.</a>
+--0-1152053925-1203161424=:77497--
