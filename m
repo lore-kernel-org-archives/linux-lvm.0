@@ -1,17 +1,22 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m1GBV1E7013913
-	for <linux-lvm@redhat.com>; Sat, 16 Feb 2008 06:31:01 -0500
-Received: from web57704.mail.re3.yahoo.com (web57704.mail.re3.yahoo.com
-	[68.142.236.58])
-	by mx3.redhat.com (8.13.8/8.13.8) with SMTP id m1GBUTdU000979
-	for <linux-lvm@redhat.com>; Sat, 16 Feb 2008 06:30:30 -0500
-Date: Sat, 16 Feb 2008 03:30:24 -0800 (PST)
-From: Karan Popali <karanpopali@yahoo.com>
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m1H5Segr002972
+	for <linux-lvm@redhat.com>; Sun, 17 Feb 2008 00:28:40 -0500
+Received: from smtp2.pacifier.net (smtp2.pacifier.net [64.255.237.172])
+	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id m1H5S9fR014686
+	for <linux-lvm@redhat.com>; Sun, 17 Feb 2008 00:28:10 -0500
+Received: from laptop1.local (ip136.133.dsl-acs2.pdx.iinet.com
+	[209.20.133.136])
+	by smtp2.pacifier.net (Postfix) with ESMTP id 6F4556B41A
+	for <linux-lvm@redhat.com>; Sat, 16 Feb 2008 21:26:14 -0800 (PST)
+From: ben scott <benscott@nwlink.com>
+Date: Sat, 16 Feb 2008 21:26:09 -0800
+References: <269300.77497.qm@web57704.mail.re3.yahoo.com>
+In-Reply-To: <269300.77497.qm@web57704.mail.re3.yahoo.com>
 MIME-Version: 1.0
-Content-Type: multipart/alternative; boundary="0-1152053925-1203161424=:77497"
-Content-Transfer-Encoding: 8bit
-Message-ID: <269300.77497.qm@web57704.mail.re3.yahoo.com>
-Subject: [linux-lvm] Where I can get LVM metadata?
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+Message-Id: <200802162126.09898.benscott@nwlink.com>
+Subject: [linux-lvm] I have started writing a KDE program for LVM
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -22,26 +27,14 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: linux-lvm@redhat.com
+Content-Type: text/plain; charset="us-ascii"
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
---0-1152053925-1203161424=:77497
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
+I have a program on sourceforge.net called kvpm. It is a KDE version 4 gui 
+wrapper for the LVM tools. It needs the kdelibs version 4 headers but not the 
+full kde 4 base installation. It is still very alpha but I really would like 
+to get some feedback on it. 
 
-Hi,
-      I want to know that where the LVM meta data is stored and how we can modify it?
+Also, has there been any progress towards an lvm library?
 
-Thanking You,
--Karan
-
-       
----------------------------------
-Looking for last minute shopping deals?  Find them fast with Yahoo! Search.
---0-1152053925-1203161424=:77497
-Content-Type: text/html; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
-
-Hi,<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; I want to know that where the LVM meta data is stored and how we can modify it?<br><br>Thanking You,<br>-Karan<br><p>&#32;
-      <hr size=1>Looking for last minute shopping deals? <a href="http://us.rd.yahoo.com/evt=51734/*http://tools.search.yahoo.com/newsearch/category.php?category=shopping"> 
-Find them fast with Yahoo! Search.</a>
---0-1152053925-1203161424=:77497--
+Thank you.
