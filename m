@@ -1,17 +1,34 @@
-Received: from [192.168.1.101] (vpn-248-104.boston.redhat.com [10.13.248.104])
-	by pobox.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m1IG8nEL008090
-	for <linux-lvm@redhat.com>; Mon, 18 Feb 2008 11:08:50 -0500
-Message-Id: <CB529B09-D602-4B23-AD87-6702B24B2086@redhat.com>
-From: Jonathan Brassow <jbrassow@redhat.com>
-In-Reply-To: <31248093.1203252552606.OPEN-XCHANGE.WebMail.ox@lucy.ulx.hu>
+Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m1IGmv42020454
+	for <linux-lvm@redhat.com>; Mon, 18 Feb 2008 11:48:57 -0500
+Received: from ulx.hu (ulx.tvnet.hu [195.38.96.124])
+	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id m1IGmL0v001179
+	for <linux-lvm@redhat.com>; Mon, 18 Feb 2008 11:48:21 -0500
+Received: from lucy.ulx.hu (lucy [172.16.0.2])
+	by ulx.hu (Postfix) with ESMTP id CF90A140342
+	for <linux-lvm@redhat.com>; Mon, 18 Feb 2008 17:48:15 +0100 (CET)
+Received: from localhost (localhost [127.0.0.1])
+	by lucy.ulx.hu (Postfix) with ESMTP id 8765C6405D
+	for <linux-lvm@redhat.com>; Mon, 18 Feb 2008 17:48:15 +0100 (CET)
+Received: from lucy.ulx.hu ([127.0.0.1])
+	by localhost (lucy.ulx.hu [127.0.0.1]) (amavisd-new, port 10024)
+	with ESMTP id tQYszKIclcWY for <linux-lvm@redhat.com>;
+	Mon, 18 Feb 2008 17:48:09 +0100 (CET)
+Received: from [172.16.1.240] (unknown [172.16.1.240])
+	by lucy.ulx.hu (Postfix) with ESMTP id 235976405C
+	for <linux-lvm@redhat.com>; Mon, 18 Feb 2008 17:48:09 +0100 (CET)
+Message-Id: <9EB92745-951F-4C64-8E66-3EA0999A3A14@ulx.hu>
+From: =?ISO-8859-1?Q?Lajk=F3_Attila?= <Lajko.Attila@ulx.hu>
+In-Reply-To: <CB529B09-D602-4B23-AD87-6702B24B2086@redhat.com>
 Mime-Version: 1.0 (Apple Message framework v919.2)
 Subject: Re: [linux-lvm] mirrored LV + cmirror problem
-Date: Mon, 18 Feb 2008 10:08:48 -0600
+Date: Mon, 18 Feb 2008 17:48:08 +0100
 References: <76EAFFE5-C713-42D4-B6DC-9F63F56C071C@ulx.hu>
 	<2D7245F3-4FBF-4569-BBA9-22E37E22C58A@redhat.com>
 	<F66CC8D7-624C-4090-B0D8-1A0406B384A4@ulx.hu>
 	<1D5E8B4E-A142-4276-8D12-5EB64E2AC2E3@redhat.com>
 	<31248093.1203252552606.OPEN-XCHANGE.WebMail.ox@lucy.ulx.hu>
+	<CB529B09-D602-4B23-AD87-6702B24B2086@redhat.com>
 Content-Transfer-Encoding: 8bit
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
@@ -26,47 +43,63 @@ List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="utf-8"; format="flowed"; delsp="yes"
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-How are you performing the failures?  It looks like just one machine  
-is loosing its connection to the device, while the other machines  
-links remain in place.
+Yes, I disconnected the lun via the Vtrak GUI from one of the nodes  
+(el4).
 
-  brassow
+Attila
 
-On Feb 17, 2008, at 6:49 AM, Lajk� Attila wrote:
+On Feb 18, 2008, at 5:08 PM, Jonathan Brassow wrote:
 
-> Here is the output of vgreduce:
-> ftp://ftp.ulx.hu/upload/clvmd/vgreduce.tar.gz
+> How are you performing the failures?  It looks like just one machine  
+> is loosing its connection to the device, while the other machines  
+> links remain in place.
 >
-> Attila
+> brassow
 >
+> On Feb 17, 2008, at 6:49 AM, Lajk� Attila wrote:
 >
-> 2008. febr. 15, 22:06 DU d�tummal Jonathan Brassow <jbrassow@redhat.com 
-> >
-> ezt �rta:
->
->> If the problem is reproducible, we should be able to track it down.
+>> Here is the output of vgreduce:
+>> ftp://ftp.ulx.hu/upload/clvmd/vgreduce.tar.gz
 >>
->> When a failure happens, the kernel sends an event to userspace that
->> signals 'dmeventd' to take action. If we take dmeventd out of the
->> picture, we can run the commands ourselves with higher verbose
->> settings.
+>> Attila
 >>
->> When you activate the volume, you can 'lvchange -ay --monitor n <vg>/
->> <lv>' - this will prevent dmeventd from monitoring the mirror. Then
->> kill the log device. Finally, run 'vgreduce --removemissing <VG> -
->> vvvv' to perform the recovery. (redirecting all the output to a file
->> will give us something to look at if the failure is reproduced.)
 >>
->> We may need to grab debugging output from clvmd too, but that can get
->> messy, so we'll start with this.
+>> 2008. febr. 15, 22:06 DU d�tummal Jonathan Brassow <jbrassow@redhat.com 
+>> >
+>> ezt �rta:
 >>
->> brassow
+>>> If the problem is reproducible, we should be able to track it down.
+>>>
+>>> When a failure happens, the kernel sends an event to userspace that
+>>> signals 'dmeventd' to take action. If we take dmeventd out of the
+>>> picture, we can run the commands ourselves with higher verbose
+>>> settings.
+>>>
+>>> When you activate the volume, you can 'lvchange -ay --monitor n  
+>>> <vg>/
+>>> <lv>' - this will prevent dmeventd from monitoring the mirror. Then
+>>> kill the log device. Finally, run 'vgreduce --removemissing <VG> -
+>>> vvvv' to perform the recovery. (redirecting all the output to a file
+>>> will give us something to look at if the failure is reproduced.)
+>>>
+>>> We may need to grab debugging output from clvmd too, but that can  
+>>> get
+>>> messy, so we'll start with this.
+>>>
+>>> brassow
+>>>
+>>> P.S. It looks like you must have *.debug; in your /etc/syslog.conf,
+>>> yes?
+>>>
+>>> On Feb 15, 2008, at 10:17 AM, Lajk� Attila wrote:
 >>
->> P.S. It looks like you must have *.debug; in your /etc/syslog.conf,
->> yes?
 >>
->> On Feb 15, 2008, at 10:17 AM, Lajk� Attila wrote:
->
+>>
+>> _______________________________________________
+>> linux-lvm mailing list
+>> linux-lvm@redhat.com
+>> https://www.redhat.com/mailman/listinfo/linux-lvm
+>> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
 >
 >
 > _______________________________________________
