@@ -1,21 +1,23 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m1SI5bqA021409
-	for <linux-lvm@redhat.com>; Thu, 28 Feb 2008 13:05:37 -0500
-Received: from ag-out-0708.google.com (ag-out-0708.google.com [72.14.246.247])
-	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id m1SI53t1005302
-	for <linux-lvm@redhat.com>; Thu, 28 Feb 2008 13:05:03 -0500
-Received: by ag-out-0708.google.com with SMTP id 31so9087899agc.3
-	for <linux-lvm@redhat.com>; Thu, 28 Feb 2008 10:05:03 -0800 (PST)
-Message-ID: <a9e5040802281004m6104a205o36fcee9021a3c5aa@mail.gmail.com>
-Date: Thu, 28 Feb 2008 13:04:58 -0500
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m1SIH46X030143
+	for <linux-lvm@redhat.com>; Thu, 28 Feb 2008 13:17:04 -0500
+Received: from ag-out-0708.google.com (ag-out-0708.google.com [72.14.246.249])
+	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id m1SIGUmV016566
+	for <linux-lvm@redhat.com>; Thu, 28 Feb 2008 13:16:30 -0500
+Received: by ag-out-0708.google.com with SMTP id 31so9103718agc.3
+	for <linux-lvm@redhat.com>; Thu, 28 Feb 2008 10:16:29 -0800 (PST)
+Message-ID: <a9e5040802281016g9497567vf1332f42791f8501@mail.gmail.com>
+Date: Thu, 28 Feb 2008 13:16:28 -0500
 From: "Rob West" <robertfwest@gmail.com>
-Subject: Re: [linux-lvm] Question: How much space is needed do make sure that
-	a LVM snapshot won't overflow
-In-Reply-To: <1202841598.32238.15.camel@localhost.localdomain>
+Subject: Re: [linux-lvm] I have started writing a KDE program for LVM
+In-Reply-To: <200802221850.18136.benscott@nwlink.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
 Content-Disposition: inline
-References: <1202841598.32238.15.camel@localhost.localdomain>
+References: <269300.77497.qm@web57704.mail.re3.yahoo.com>
+	<200802162126.09898.benscott@nwlink.com>
+	<1203613838.3540.1.camel@localhost.localdomain>
+	<200802221850.18136.benscott@nwlink.com>
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -29,241 +31,33 @@ List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-To guarantee that the snapshot will not overflow, you have to make it
-big enough to contain all of the origin plus the maximum COW table
-overhead.
+In the version we use (2.02.21), there is a library interface
+(lvm2_run) that essentially allows one to run any LVM command and get
+its output without having to fork. The problem, of course, is the
+effort of parsing the output well.
 
-The maximum overhead is the chunk size * (max_number_exceptions_chunks
-+ 1).  The "+ 1" is for the header chunk. The maximum number of
-exception chunks is the number of origin chunks divided by the number
-of exceptions per exception chunk, plus one to account for a possible
-allocated but unused exception chunk. The number of exceptions per
-exception chunk is the chunk size divided by the size of an exception
-structure, which is 16 bytes.
+- Rob
 
-Here is some code that may help:
-
-        /* Do some calculations. The - 1 and + 1 stuff is to handle any
-         * remainders. The extra + 1 for num_exception_chunks is for the
-         * allocated, but unused, exception chunk.
-         */
-        u_int64_t num_chunks_in_origin =
-            ((lv_info.size - 1) / OUR_CHUNK_SIZE_INT) + 1;
-        u_int64_t num_exceptions_per_chunk =
-            ((OUR_CHUNK_SIZE_INT - 1) / sizeof(dm_disk_exception_t)) + 1;
-        u_int64_t num_exception_chunks =
-            ((num_chunks_in_origin - 1) / num_exceptions_per_chunk) + 1 + 1;
-
-        /* The maximum size of the COW device overhead is the chunk size times
-         * (the number of exception chunks plus 1 for the header chunk).
-         */
-        u_int64_t sizeof_max_overhead =
-            (num_exception_chunks + 1) * OUR_CHUNK_SIZE_INT;
-
-Hope this helps,
-Rob
-
-On Tue, Feb 12, 2008 at 1:39 PM, Guilherme Destefani
-<gd@helixbrasil.com.br> wrote:
-> Hi.
+On Fri, Feb 22, 2008 at 9:50 PM, ben scott <benscott@nwlink.com> wrote:
+> On Thursday 21 February 2008 9:10:38 am Dave Wysochanski wrote:
+>  > On Sat, 2008-02-16 at 21:26 -0800, ben scott wrote:
+>  > >
 >
->  In the LVM2 HOWTO, it says:
->  (http://www.tldp.org/HOWTO/LVM-HOWTO/snapshotintro.html),
+> > > Also, has there been any progress towards an lvm library?
+>  >
+>  > Slow progress so far but it is being worked on.
+>  >
+>  > Do you have specific requirements and/or use cases you can share?  Are
+>  > they straightforward things such as pvcreate, vgcreate, lvcreate, and
+>  > displaying of PVs, VGs, and LVs, or are there more complicated things?
+>  >
+>  > Anything you can share would be appreciated.
 >
->  "Full snapshot are automatically disabled"
->  and:
->  "If the snapshot size equals the origin size, it will never overflow.".
+>  Ultimately I would like to have a GUI interface that can do anything
+>  the CLI can do. However just having a library for reading the information
+>  like vgs, pvs and lvs would be really nice.
 >
->  But if one snapshot is created and an equal size is allocated to the
->  snapshot, it still overflows (creates a volume with 32M, a snapshot with
->  32M, and fills the volume with zeros).
->  Using more space, it doesn't overflow (same thing, but 64M for the
->  snapshot).
->
->  How much more space is needed to be alocated to the snapshot to ensure
->  that it will never overflow?
->
->  Thanks in advance,
->
->  Guilherme.
->
->
->         Script started on Tue 12 Feb 2008 02:11:11 PM BRST
->         [root@localhost ~]# lvcreate -L 32M -n base_volume hf
->           Logical volume "base_volume" created
->         [root@localhost ~]# lvcreate -s -L 32M -n
->         copy_volume /dev/hf/base_volume
->           Logical volume "copy_volume" created
->         [root@localhost ~]# lvdisplay |grep -A 13 "_volume"
->           LV Name                /dev/hf/base_volume
->           VG Name                hf
->           LV UUID                qPzWgG-ON3V-swUr-O0IP-I172-G3YV-GH431K
->           LV Write Access        read/write
->           LV snapshot status     source of
->                                  /dev/hf/copy_volume [active]
->           LV Status              available
->           # open                 0
->           LV Size                32.00 MB
->         --
->           LV Name                /dev/hf/copy_volume
->           VG Name                hf
->           LV UUID                oGK0gG-o62D-Tu84-9CW0-rvPb-H7HX-bjUwk0
->           LV Write Access        read/write
->           LV snapshot status     active destination
->         for /dev/hf/base_volume
->           LV Status              available
->           # open                 0
->           LV Size                32.00 MB
->           Current LE             1
->           COW-table size         32.00 MB
->           COW-table LE           1
->           Allocated to snapshot  0.05%
->           Snapshot chunk size    8.00 KB
->           Segments               1
->           Allocation             inherit
->           Read ahead sectors     0
->           Block device           253:20
->
->         [root@localhost ~]# dd if=/dev/zero of=/dev/hf/copy_volume
->         dd: writing to `/dev/hf/copy_volume': No space left on device
->         65537+0 records in
->         65536+0 records out
->         33554432 bytes (34 MB) copied, 8.01466 s, 4.2 MB/s
->         [root@localhost ~]# lvresize -L 64M /dev/hf/copy_volume
->           /dev/dm-20: read failed after 0 of 4096 at 0: Input/output
->         error
->           Extending logical volume copy_volume to 64.00 MB
->           Logical volume copy_volume successfully resized
->         [root@localhost ~]# lvdisplay |grep -A 13 "_volume"
->           /dev/dm-20: read failed after 0 of 4096 at 0: Input/output
->         error
->           LV Name                /dev/hf/base_volume
->           VG Name                hf
->           LV UUID                qPzWgG-ON3V-swUr-O0IP-I172-G3YV-GH431K
->           LV Write Access        read/write
->           LV snapshot status     source of
->                                  /dev/hf/copy_volume [INACTIVE]
->           LV Status              available
->           # open                 0
->           LV Size                32.00 MB
->           Current LE             1
->           Segments               1
->           Allocation             inherit
->           Read ahead sectors     0
->           Block device           253:18
->         --
->           LV Name                /dev/hf/copy_volume
->           VG Name                hf
->           LV UUID                oGK0gG-o62D-Tu84-9CW0-rvPb-H7HX-bjUwk0
->           LV Write Access        read/write
->           LV snapshot status     INACTIVE destination
->         for /dev/hf/base_volume
->           LV Status              available
->           # open                 0
->           LV Size                32.00 MB
->           Current LE             1
->           COW-table size         64.00 MB
->           COW-table LE           2
->           Snapshot chunk size    8.00 KB
->           Segments               1
->           Allocation             inherit
->           Read ahead sectors     0
->           Block device           253:20
->
->         [root@localhost ~]# lvremove /dev/hf/copy_volume
->           /dev/dm-20: read failed after 0 of 4096 at 0: Input/output
->         error
->         Do you really want to remove active logical volume
->         "copy_volume"? [y/n]: y
->           Logical volume "copy_volume" successfully removed
->         [root@localhost ~]# lvcreate -s -L 64M -n \
->         copy_volume /dev/hf/base_volume
->           Logical volume "copy_volume" created
->         [root@localhost ~]# lvdisplay |grep -A 13 "_volume"
->           LV Name                /dev/hf/base_volume
->           VG Name                hf
->           LV UUID                qPzWgG-ON3V-swUr-O0IP-I172-G3YV-GH431K
->           LV Write Access        read/write
->           LV snapshot status     source of
->                                  /dev/hf/copy_volume [active]
->           LV Status              available
->           # open                 0
->           LV Size                32.00 MB
->           Current LE             1
->           Segments               1
->           Allocation             inherit
->           Read ahead sectors     0
->           Block device           253:18
->         --
->           LV Name                /dev/hf/copy_volume
->           VG Name                hf
->           LV UUID                LSUqQB-O2n4-8zmk-iL9n-2vDQ-qSsB-yOBDL1
->           LV Write Access        read/write
->           LV snapshot status     active destination
->         for /dev/hf/base_volume
->           LV Status              available
->           # open                 0
->           LV Size                32.00 MB
->           Current LE             1
->           COW-table size         64.00 MB
->           COW-table LE           2
->           Allocated to snapshot  0.02%
->           Snapshot chunk size    8.00 KB
->           Segments               1
->           Allocation             inherit
->           Read ahead sectors     0
->           Block device           253:20
->
->         [root@localhost ~]# dd if=/dev/zero of=/dev/hf/copy_volume
->         dd: writing to `/dev/hf/copy_volume': No space left on device
->         65537+0 records in
->         65536+0 records out
->         33554432 bytes (34 MB) copied, 9.5375 s, 3.5 MB/s
->         [root@localhost ~]# lvdisplay |grep -A 13 "_volume"
->           LV Name                /dev/hf/base_volume
->           VG Name                hf
->           LV UUID                qPzWgG-ON3V-swUr-O0IP-I172-G3YV-GH431K
->           LV Write Access        read/write
->           LV snapshot status     source of
->                                  /dev/hf/copy_volume [active]
->           LV Status              available
->           # open                 0
->           LV Size                32.00 MB
->           Current LE             1
->           Segments               1
->           Allocation             inherit
->           Read ahead sectors     0
->           Block device           253:18
->
->           --- Logical volume ---
->           LV Name                /dev/hf/F4_burn
->           VG Name                hf
->           LV UUID                Bj1VJS-1JUK-BA18-egFj-xOoY-qrbq-jbZFFY
->         --
->           LV Name                /dev/hf/copy_volume
->           VG Name                hf
->           LV UUID                LSUqQB-O2n4-8zmk-iL9n-2vDQ-qSsB-yOBDL1
->           LV Write Access        read/write
->           LV snapshot status     active destination
->         for /dev/hf/base_volume
->           LV Status              available
->           # open                 0
->           LV Size                32.00 MB
->           Current LE             1
->           COW-table size         64.00 MB
->           COW-table LE           2
->           Allocated to snapshot  50.12%
->           Snapshot chunk size    8.00 KB
->           Segments               1
->           Allocation             inherit
->           Read ahead sectors     0
->           Block device           253:20
->
->         [root@localhost ~]# exit
->
->         Script done on Tue 12 Feb 2008 02:13:07 PM BRST
->         [Gui@localhost:~]$
->
+>  Thank you.
 >
 >
 >
