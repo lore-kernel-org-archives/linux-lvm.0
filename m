@@ -1,19 +1,24 @@
-Received: from [10.13.248.156] (vpn-248-156.boston.redhat.com [10.13.248.156])
-	by mail.boston.redhat.com (8.13.1/8.13.1) with ESMTP id
-	m1SIWvCS016579
-	for <linux-lvm@redhat.com>; Thu, 28 Feb 2008 13:32:58 -0500
-Subject: Re: [linux-lvm] I have started writing a KDE program for LVM
-From: jim parsons <jparsons@redhat.com>
-In-Reply-To: <a9e5040802281016g9497567vf1332f42791f8501@mail.gmail.com>
-References: <269300.77497.qm@web57704.mail.re3.yahoo.com>
-	<200802162126.09898.benscott@nwlink.com>
-	<1203613838.3540.1.camel@localhost.localdomain>
-	<200802221850.18136.benscott@nwlink.com>
-	<a9e5040802281016g9497567vf1332f42791f8501@mail.gmail.com>
-Date: Thu, 28 Feb 2008 13:32:57 -0500
-Message-Id: <1204223577.3343.2.camel@localhost.localdomain>
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m1TBSJUI017462
+	for <linux-lvm@redhat.com>; Fri, 29 Feb 2008 06:28:19 -0500
+Received: from cluster-d.mailcontrol.com (cluster-d.mailcontrol.com
+	[217.69.20.190])
+	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id m1TBRh7S010263
+	for <linux-lvm@redhat.com>; Fri, 29 Feb 2008 06:27:44 -0500
+Received: from mx.zetex.com (mx.zetex.com [194.129.23.24] (may be forged))
+	by rly20d.srv.mailcontrol.com (MailControl) with ESMTP id
+	m1TBRYeB021648
+	for <linux-lvm@redhat.com>; Fri, 29 Feb 2008 11:27:35 GMT
+Received: from zen.zetex.local (zen.zetex.com [192.168.230.14])
+	by mx.zetex.com (8.9.3/8.9.3) with ESMTP id LAA18145
+	for <linux-lvm@redhat.com>; Fri, 29 Feb 2008 11:35:43 GMT
+Content-class: urn:content-classes:message
+MIME-Version: 1.0
+Date: Fri, 29 Feb 2008 11:27:32 -0000
+Message-ID: <A374F37068535C46BFCF8D48CF29AA7FA60045@zen.zetex.com>
+From: "Karl Wagner" <kwagner@zetex.com>
+Content-Transfer-Encoding: 8bit
+Subject: [linux-lvm] Snapshot of a Snapshot
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -25,54 +30,43 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: LVM general discussion and development <linux-lvm@redhat.com>
+To: linux-lvm@redhat.com
 
-Have you seen the gnome application system-config-lvm? There is also a
-web based version which is part of conga...just thought you may wish to
-know for due diligence purposes. 
+Hi
 
--j
+I was just wondering if there was a plan to add 'Snapshot of a Snapshot'
+functionality to LVM2? If so, is there any timescale on it?
 
-On Thu, 2008-02-28 at 13:16 -0500, Rob West wrote:
-> In the version we use (2.02.21), there is a library interface
-> (lvm2_run) that essentially allows one to run any LVM command and get
-> its output without having to fork. The problem, of course, is the
-> effort of parsing the output well.
-> 
-> - Rob
-> 
-> On Fri, Feb 22, 2008 at 9:50 PM, ben scott <benscott@nwlink.com> wrote:
-> > On Thursday 21 February 2008 9:10:38 am Dave Wysochanski wrote:
-> >  > On Sat, 2008-02-16 at 21:26 -0800, ben scott wrote:
-> >  > >
-> >
-> > > > Also, has there been any progress towards an lvm library?
-> >  >
-> >  > Slow progress so far but it is being worked on.
-> >  >
-> >  > Do you have specific requirements and/or use cases you can share?  Are
-> >  > they straightforward things such as pvcreate, vgcreate, lvcreate, and
-> >  > displaying of PVs, VGs, and LVs, or are there more complicated things?
-> >  >
-> >  > Anything you can share would be appreciated.
-> >
-> >  Ultimately I would like to have a GUI interface that can do anything
-> >  the CLI can do. However just having a library for reading the information
-> >  like vgs, pvs and lvs would be really nice.
-> >
-> >  Thank you.
-> >
-> >
-> >
-> >  _______________________________________________
-> >  linux-lvm mailing list
-> >  linux-lvm@redhat.com
-> >  https://www.redhat.com/mailman/listinfo/linux-lvm
-> >  read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
-> >
-> 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+This would be a very useful feature, especially in a Xen environment.
+
+Also, is there an easy way to backup and restore a snapshot? My scenario
+is that I am running several Xen DomU's (Virtual machines, 4 of them to
+be precise) from snapshots of a base image. However, if one dies (eg the
+snapshot overflows, something which should not happen again but just in
+case...) and I recreate the snapshot and restore the backup image I
+took, it fills the snapshot up. It doesn't seem to check if the data
+being written to the snapshot is the same as on the origin volume, just
+adds the data to the snapshot anyway. Is there any way round this (apart
+from the very slow script I currently have which checks each sector
+before writing)?
+
+Cheers in advance
+
+
+_________________________________________________________
+
+Zetex Semiconductors - Solutions for an analog world.
+
+http://www.zetex.com
+http://www.zetex.cn
+
+E-MAILS are susceptible to interference.  You should not assume that
+the contents originated from the sender or the Zetex Group or that they 
+have been accurately reproduced from their original form.
+Zetex accepts no responsibility for information, errors or omissions in
+this e-mail nor for its use or misuse nor for any act committed or
+omitted in connection with this communication.
+If in doubt, please verify the authenticity with the sender.
+_________________________________________________________
+
+ 
