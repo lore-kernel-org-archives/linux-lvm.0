@@ -1,24 +1,18 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m27BKk8P020439
-	for <linux-lvm@redhat.com>; Fri, 7 Mar 2008 06:20:46 -0500
-Received: from cluster-d.mailcontrol.com (cluster-d.mailcontrol.com
-	[217.69.20.190])
-	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id m27BK9YT005035
-	for <linux-lvm@redhat.com>; Fri, 7 Mar 2008 06:20:10 -0500
-Received: from mx.zetex.com (mx.zetex.com [194.129.23.24] (may be forged))
-	by rly43d.srv.mailcontrol.com (MailControl) with ESMTP id
-	m27BK0DI025400
-	for <linux-lvm@redhat.com>; Fri, 7 Mar 2008 11:20:01 GMT
-Received: from zen.zetex.local (zen.zetex.com [192.168.230.14])
-	by mx.zetex.com (8.9.3/8.9.3) with ESMTP id LAA08297
-	for <linux-lvm@redhat.com>; Fri, 7 Mar 2008 11:28:31 GMT
-Content-class: urn:content-classes:message
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m27FZSMP014010
+	for <linux-lvm@redhat.com>; Fri, 7 Mar 2008 10:35:28 -0500
+Received: from wr-out-0506.google.com (wr-out-0506.google.com [64.233.184.226])
+	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id m27FYvk4031016
+	for <linux-lvm@redhat.com>; Fri, 7 Mar 2008 10:34:57 -0500
+Received: by wr-out-0506.google.com with SMTP id 67so306342wri.3
+	for <linux-lvm@redhat.com>; Fri, 07 Mar 2008 07:34:57 -0800 (PST)
+Message-ID: <dd20e5b50803070734o3eac4e18o156fe4e1552040c@mail.gmail.com>
+Date: Fri, 7 Mar 2008 10:34:56 -0500
+From: "Lionel Kernux" <lionel.kernux@gmail.com>
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] Snapshot of a Snapshot
-Date: Fri, 7 Mar 2008 11:19:57 -0000
-Message-ID: <A374F37068535C46BFCF8D48CF29AA7FA604B0@zen.zetex.com>
-From: "Karl Wagner" <kwagner@zetex.com>
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+Subject: [linux-lvm] How to "clone" a logical volume
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -32,30 +26,22 @@ List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@redhat.com
 
-> Just to use correct terms: in a Xen world, one runs domU (or, a guest)
-on > top of dom0 (a.k.a host), not the other way around. 
->
-> So you have a Xen dom0 running several domUs.
+Hi,
 
-Yes, sorry, of course that's what I meant :)
+Here's what I'm trying to do:
 
-Think my brain must have temporarily shut down when I wrote that.
+I have an LV that is being used as a physical disk for a XEN virtual machine.
+I want to "clone" the VM.
+lvcreate -L 75G -n virtualmachine_clone_lv VG00
+dd if=/path/to/virtualmachine_lv of=/path/to/virtualmachine_clone_lvT
 
+This method would be perfect if it wasn't for the fact that now I have
+2 LV's with the same uuid....not good...
+Is there a way to do this (ie. copy an LV but change its uuid, or
+create a duplicate of the source LV with a new uuid?)
 
-_________________________________________________________
+I want to do this WITHOUT using any XEN cloning tools (buggy).
 
-Zetex Semiconductors - Solutions for an analog world.
+Thanks
 
-http://www.zetex.com
-http://www.zetex.cn
-
-E-MAILS are susceptible to interference.  You should not assume that
-the contents originated from the sender or the Zetex Group or that they 
-have been accurately reproduced from their original form.
-Zetex accepts no responsibility for information, errors or omissions in
-this e-mail nor for its use or misuse nor for any act committed or
-omitted in connection with this communication.
-If in doubt, please verify the authenticity with the sender.
-_________________________________________________________
-
- 
+LK
