@@ -1,23 +1,22 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m2AGWjD2022842
-	for <linux-lvm@redhat.com>; Mon, 10 Mar 2008 12:32:45 -0400
-Received: from mail.linbit.com (aug.linbit.com [212.69.162.22])
-	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id m2AGW63P006657
-	for <linux-lvm@redhat.com>; Mon, 10 Mar 2008 12:32:10 -0400
-Received: from soda.linbit (office.linbit [86.59.100.100])
-	(using TLSv1 with cipher DHE-RSA-AES128-SHA (128/128 bits))
-	(No client certificate requested)
-	by mail.linbit.com (LINBIT Mail Daemon) with ESMTP id 7D7FB2DEAC73
-	for <linux-lvm@redhat.com>; Mon, 10 Mar 2008 17:32:00 +0100 (CET)
-Date: Mon, 10 Mar 2008 17:32:00 +0100
-From: Lars Ellenberg <linux-lvm@linbit.com>
-Subject: Re: [linux-lvm] Restore LVM snapshot without creating a full
-	dumpto an "external" device?
-Message-ID: <20080310163200.GE5426@barkeeper1.linbit>
-References: <A374F37068535C46BFCF8D48CF29AA7FB358AF@zen.zetex.com>
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m2AHjpH1011746
+	for <linux-lvm@redhat.com>; Mon, 10 Mar 2008 13:45:51 -0400
+Received: from mail.bmsi.com (www.bmsi.com [24.248.44.156])
+	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id m2AHjKxh003681
+	for <linux-lvm@redhat.com>; Mon, 10 Mar 2008 13:45:20 -0400
+Received: from bmsred.bmsi.com (bmsred.bmsi.com [192.168.9.50])
+	by mail.bmsi.com (8.13.6/8.13.6) with ESMTP id m2AHjF2L020658
+	for <linux-lvm@redhat.com>; Mon, 10 Mar 2008 13:45:15 -0400
+Received: from localhost (localhost [127.0.0.1])
+	by bmsred.bmsi.com (8.13.5/8.13.6) with ESMTP id m2AHjFsc029172
+	for <linux-lvm@redhat.com>; Mon, 10 Mar 2008 13:45:15 -0400
+Date: Mon, 10 Mar 2008 13:45:15 -0400 (EDT)
+From: "Stuart D. Gathman" <stuart@bmsi.com>
+Subject: Re: [linux-lvm] Can I create a PV that only uses a portion of a
+	partition?
+In-Reply-To: <47D54FC2.9050600@redhat.com>
+Message-ID: <Pine.LNX.4.44.0803101332080.29088-100000@bmsred.bmsi.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <A374F37068535C46BFCF8D48CF29AA7FB358AF@zen.zetex.com>
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -28,49 +27,41 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: TEXT/PLAIN; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: linux-lvm@redhat.com
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-On Mon, Mar 10, 2008 at 10:43:18AM -0000, Karl Wagner wrote:
-> That is almost exactly what I was after.
+On Mon, 10 Mar 2008, Bryn M. Reeves wrote:
+
+> > creating multiple PV on the same disk makes no sense.
+> > if you were to do this you could well do without LVM and avoid the
+> > hassle.
 > 
-> Just one thing though... If I was to just take a backup of the COW
-> device, assuming the underlying origin had not changed, would I just be
-> able to restore this? (i.e. gzip < /path/to/cowdevice >
-> /path/to/backupfile.gz and restore with zcat /path/to/backup/file.gz >
-> /path/to/cowdevice, or similar.) Would this work with a newly created
-> snapshot? (ie backup as above then lvcreate -s -n newsnapshot
-> /path/to/origin; zcat /path/to/backup/file.gz > /path/to/new/cow/device)
-> 
-> I will just emphasize that the UNDERLYING ORIGIN WILL NEVER CHANGE, it
-> is never mounted, never used for anything except as a snapshot origin.
+> Not necessarily; Lionel could have perfectly valid reasons for wanting
+> to have multiple volume groups on the same disk.
 
-won't work "just so."
-just because you are messing with the storage does not mean the
-in-kernel exception tables would be updated magically.
+I commonly use multiple PVs.  This wastes a little space, but it allows me to
+do things like:
 
-I mean, the equivalent is to dd back a file system image backup
-below a mounted file system...
+o Use md raid1 mirroring with smaller (20-30G) pieces that need syncing.
+  Very important on systems where md driver can't remember its sync
+  status between reboots.
 
-it may be possible to
-lvcreate -s -n newsnapshot /path/to/origin
-dmsetup table $that-new-snapshot
-remember it.
-dmsetup remove snapshot.
-zcat image.gz > snapshot-cow
-sync!!! maybe rather zcat | dd oflag=sync
+o Rearrange PVs while operating by creating, syncing and removing md raid1
+  mirrors.
 
-dmsetup create snapshot with identical table again.
+Granted, these should be replaced with LVM mirroring and pvmove.  But
+LVM mirroring doesn't seem to be mainstream with rhel5, and pvmove doesn't
+seem as trustworthy as a result (since it depends on temporary mirroring
+to move LVs while operating).
 
-that in theory should make it read the
-(just restored from backup) exeption table from storage again.
-
-but I never tried.
-and I think it is scary :-)
+Also, when upgrading a system with LVM1 to LVM2, I prefer to create
+a new VG and when committed to new OS, move LVs and incorporate PVs
+of old VG.  Although I've also just created an LVM1 LV for new OS, I'm
+then left with a LVM1 VG, and I'm afraid to run the convert. :-)
 
 -- 
-: Lars Ellenberg                           http://www.linbit.com :
-: DRBD/HA support and consulting             sales at linbit.com :
-: LINBIT Information Technologies GmbH      Tel +43-1-8178292-0  :
-: Vivenotgasse 48, A-1120 Vienna/Europe     Fax +43-1-8178292-82 :
+	      Stuart D. Gathman <stuart@bmsi.com>
+    Business Management Systems Inc.  Phone: 703 591-0911 Fax: 703 591-6154
+"Confutatis maledictis, flammis acribus addictis" - background song for
+a Microsoft sponsored "Where do you want to go from here?" commercial.
