@@ -1,16 +1,26 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m2BGTlFv001968
-	for <linux-lvm@redhat.com>; Tue, 11 Mar 2008 12:29:47 -0400
-Received: from mail.bmsi.com (www.bmsi.com [24.248.44.156])
-	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id m2BGTEav001664
-	for <linux-lvm@redhat.com>; Tue, 11 Mar 2008 12:29:14 -0400
-Date: Tue, 11 Mar 2008 12:29:05 -0400 (EDT)
-From: "Stuart D. Gathman" <stuart@bmsi.com>
-Subject: Re: [linux-lvm] Can I create a PV that only uses a portion of a
-	partition?
-In-Reply-To: <732689741.20080311084802@marki-online.net>
-Message-ID: <Pine.LNX.4.44.0803111227100.3399-100000@bmsred.bmsi.com>
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m2DDSjtq015971
+	for <linux-lvm@redhat.com>; Thu, 13 Mar 2008 09:28:45 -0400
+Received: from sender-02.it.helsinki.fi (sender-02.it.helsinki.fi
+	[128.214.205.137])
+	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id m2DDSCEL017288
+	for <linux-lvm@redhat.com>; Thu, 13 Mar 2008 09:28:13 -0400
+Received: from widch.it.helsinki.fi (widch.it.helsinki.fi [128.214.0.47])
+	by sender-02.it.helsinki.fi (8.13.8/8.13.8) with ESMTP id
+	m2DDS6gj028219
+	(version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=NOT)
+	for <linux-lvm@redhat.com>; Thu, 13 Mar 2008 15:28:07 +0200
+Received: from trkr by widch.it.helsinki.fi with local (Exim 4.63)
+	(envelope-from <janne.peltonen@helsinki.fi>) id 1JZnTa-0003Vy-Uh
+	for linux-lvm@redhat.com; Thu, 13 Mar 2008 15:28:06 +0200
+Date: Thu, 13 Mar 2008 15:28:06 +0200
+From: Janne Peltonen <janne.peltonen@helsinki.fi>
+Subject: Re: [linux-lvm] Trouble pvmoving lv's out of a metadatacopies=0 pv
+Message-ID: <20080313132806.GA25620@helsinki.fi>
+References: <20070808143454.GE12798@helsinki.fi>
 MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20070808143454.GE12798@helsinki.fi>
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -21,31 +31,32 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: Marek Podmaka <marki@marki-online.net>, LVM general discussion and development <linux-lvm@redhat.com>
+To: linux-lvm@redhat.com
 
-On Tue, 11 Mar 2008, Marek Podmaka wrote:
+Hi.
 
-> I didn't have md failure on recent kernels... now the reboot while
-> syncing is possible? On older kernels it just started from the
-> beginning.
+On Wed, Aug 08, 2007 at 05:34:54PM +0300, Janne Peltonen wrote:
+> If I try to pvmove lv's out of a pv I created using the metadatacopies 0
+> option, pvmove concludes that the source physical volume is not in a
+> volume group and refuses to commence with the move.
 
-Yes, recent kernels keep a sync status in the raid superblock.
+Is there really no way around this bug? It's a bit annoying to have 28
+physical volumes more than I actually need... This being a production
+system, I haven't (at least yet) wanted to take the system off line for
+as long as it'd take to sync the contents of the lv into another lv.
+(After which I could run my app on the new lvs and remove the old lvs
+and the old pvs.)
 
-> But this approach has a performance penalty - from the md raid1 kernel
-> sources it seems that it does try to optimize reads (choose from which
-> of the mirrored drive to read block), but it does not work with multiple
-> md devices on the same disks (each md has its own information about
-> the current position of drive heads and doesn't know that the md is
-> also "using" the same drives).
+(See bug #252150 in bugzilla.redhat.com. I submitted the bug report last
+August, but this doesn't appear to be a trivial bug to squash - so I'm
+asking here for ways to work around it.)
 
-Mirroring of any description is fairly pointless unless the mirrors
-are on separate devices.  Not only for performance, but because the
-main point is to protect you from single disk device failure.
+Thanks for any ideas.
 
+
+--Janne Peltonen
+Univ. of Helsinki
 -- 
-	      Stuart D. Gathman <stuart@bmsi.com>
-    Business Management Systems Inc.  Phone: 703 591-0911 Fax: 703 591-6154
-"Confutatis maledictis, flammis acribus addictis" - background song for
-a Microsoft sponsored "Where do you want to go from here?" commercial.
+Janne Peltonen <janne.peltonen@helsinki.fi>
