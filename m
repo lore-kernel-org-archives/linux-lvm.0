@@ -1,20 +1,17 @@
-Received: from agk.fab.redhat.com (agk.fab.redhat.com [10.33.0.19])
-	by pobox.fab.redhat.com (8.13.1/8.13.1) with ESMTP id m2DDmI1X015455
-	for <linux-lvm@redhat.com>; Thu, 13 Mar 2008 09:48:18 -0400
-Received: from agk by agk.fab.redhat.com with local (Exim 4.34)
-	id 1JZnn7-0005zg-WB
-	for linux-lvm@redhat.com; Thu, 13 Mar 2008 13:48:18 +0000
-Date: Thu, 13 Mar 2008 13:48:17 +0000
-From: Alasdair G Kergon <agk@redhat.com>
-Subject: Re: [linux-lvm] Trouble pvmoving lv's out of a metadatacopies=0 pv
-Message-ID: <20080313134817.GX1788@agk.fab.redhat.com>
-References: <20070808143454.GE12798@helsinki.fi>
-	<20080313132806.GA25620@helsinki.fi>
-	<20080313133919.GW1788@agk.fab.redhat.com>
-	<20080313134322.GB25620@helsinki.fi>
-Mime-Version: 1.0
+Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m2E1A85c020232
+	for <linux-lvm@redhat.com>; Thu, 13 Mar 2008 21:10:08 -0400
+Received: from destar.net (88.183.dowl.anc.borealisbroadband.net
+	[12.17.183.88])
+	by mx3.redhat.com (8.13.8/8.13.8) with SMTP id m2E19Y4I011825
+	for <linux-lvm@redhat.com>; Thu, 13 Mar 2008 21:09:35 -0400
+Message-ID: <20080313170928.p624q5xqo844kc0w@www.destar.net>
+Date: Thu, 13 Mar 2008 17:09:28 -0800
+From: jonr@destar.net
+MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20080313134322.GB25620@helsinki.fi>
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] Duplicate VG
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -25,16 +22,17 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; delsp="Yes"; format="flowed"
 To: linux-lvm@redhat.com
 
-On Thu, Mar 13, 2008 at 03:43:22PM +0200, Janne Peltonen wrote:
-> Oh! I'm sorry. I took the comment #8 to mean that the bug is still
-> present in lvm2-2.02.30-1.el5.
- 
-The ON_QA status means the fixed package is being tested.
+Hello!
 
-Alasdair
--- 
-agk@redhat.com
+I have somehow got a duplicate VG on my system. I was wondering if  
+there is a way to remove it without having to shutdown the server.  
+They have uniqe uuid's so I was hoping I could just do a vgremove  
+<uuid>. So far I have been unable to find a way to do it without  
+shutting down.
+
+Thanks for any help,
+
+Jon
