@@ -1,23 +1,14 @@
-Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m2IG11uA021503
-	for <linux-lvm@redhat.com>; Tue, 18 Mar 2008 12:01:01 -0400
-Received: from barney.tradebotsystems.com (barney.tradebotsystems.com
-	[38.100.176.19])
-	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id m2IG0RYa000385
-	for <linux-lvm@redhat.com>; Tue, 18 Mar 2008 12:00:29 -0400
-Received: from tradebotsystems.com (tbmail.tradebotsystems.com
-	[192.168.254.26])
-	by barney.tradebotsystems.com (8.13.6/8.14.1/Linux) with ESMTP id
-	m2IG0Hr3021725
-	for <linux-lvm@redhat.com>; Tue, 18 Mar 2008 11:00:19 -0500
-Content-class: urn:content-classes:message
+Received: from [10.33.0.40] (breeves.fab.redhat.com [10.33.0.40])
+	by pobox.fab.redhat.com (8.13.1/8.13.1) with ESMTP id m2IGBYUs023268
+	for <linux-lvm@redhat.com>; Tue, 18 Mar 2008 12:11:34 -0400
+Message-ID: <47DFE7AD.9000206@redhat.com>
+Date: Tue, 18 Mar 2008 16:02:53 +0000
+From: "Bryn M. Reeves" <breeves@redhat.com>
 MIME-Version: 1.0
-Content-Type: multipart/alternative;
-	boundary="----_=_NextPart_001_01C88911.2902ADA8"
-Date: Tue, 18 Mar 2008 11:00:17 -0500
-Message-ID: <07774C6E31D94A44A2A60E2085944F0901398E92@tbmail.tradebot.com>
-From: "Taylor Lewick" <tlewick@tradebotsystems.com>
-Subject: [linux-lvm] vgimport without vgexport (hardware crash)
+Subject: Re: [linux-lvm] vgimport without vgexport (hardware crash)
+References: <07774C6E31D94A44A2A60E2085944F0901398E92@tbmail.tradebot.com>
+In-Reply-To: <07774C6E31D94A44A2A60E2085944F0901398E92@tbmail.tradebot.com>
+Content-Transfer-Encoding: 7bit
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -28,159 +19,89 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: linux-lvm@redhat.com
+Content-Type: text/plain; charset="us-ascii"
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-This is a multi-part message in MIME format.
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA1
 
-------_=_NextPart_001_01C88911.2902ADA8
-Content-Type: text/plain;
-	charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+Taylor Lewick wrote:
+> Should that server suffer a hardware failure, we?d like to connect up a
+> standby server to take its place.
+> 
+> So in the event of a bad hardware failure, I won?t be able to unmount
+> the filesystems, vgchange ?an, and vgexport the volume groups.
+> 
+> Can I expect a vgscan and vgimport to work on the new server if I wasn?t
+>  able to run vgexport?  Any other data I would need to make this work?
 
-We have a database server accessing a disk array. (Array supports only a
-single host connection)
+Yes - this isn't a problem with LVM2 - you'll be able to activate the VG
+on any other host that can see the storage by issuing a vgchange.
 
-Should that server suffer a hardware failure, we'd like to connect up a
-standby server to take its place.
+The vgimport/vgexport just toggle a flag in the LVM2 metadata that marks
+the VG status and PV statuses as imported or exported, e.g.:
 
-So in the event of a bad hardware failure, I won't be able to unmount
-the filesystems, vgchange -an, and vgexport the volume groups.
+Before exporting t0:
 
-=20
+t0 {
+        id = "ecajMI-eLGR-5Gmn-T3KG-f3Ey-4JkR-VIQGh0"
+        seqno = 1
+        status = ["RESIZEABLE", "READ", "WRITE"]
+[...]
+        physical_volumes {
 
-Can I expect a vgscan and vgimport to work on the new server if I wasn't
-able to run vgexport?  Any other data I would need to make this work?
+                pv0 {
+                        id = "5LgAWX-Qc1q-e3IB-ak8P-EkEK-uY0q-Ar3Im6"
+                        device = "/dev/loop0"   # Hint only
 
-I know in HP-UX you were able to run a vgexport in output mode only, and
-give it a map file and you could then import using this map file in this
-scenario.
+                        status = ["ALLOCATABLE"]
+[...]
+                }
+        }
 
-=20
+}
 
-Thanks,
+After exporting t0:
 
-Taylor
+t0 {
+        id = "ecajMI-eLGR-5Gmn-T3KG-f3Ey-4JkR-VIQGh0"
+        seqno = 2
+        status = ["EXPORTED", "RESIZEABLE", "READ", "WRITE"]
+[...]
+        physical_volumes {
 
+                pv0 {
+                        id = "5LgAWX-Qc1q-e3IB-ak8P-EkEK-uY0q-Ar3Im6"
+                        device = "/dev/loop0"   # Hint only
 
-------_=_NextPart_001_01C88911.2902ADA8
-Content-Type: text/html;
-	charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+                        status = ["ALLOCATABLE", "EXPORTED"]
+[...]
+                }
+        }
 
-<html xmlns:o=3D"urn:schemas-microsoft-com:office:office" =
-xmlns:w=3D"urn:schemas-microsoft-com:office:word" =
-xmlns:st1=3D"urn:schemas-microsoft-com:office:smarttags" =
-xmlns=3D"http://www.w3.org/TR/REC-html40">
+}
 
-<head>
-<META HTTP-EQUIV=3D"Content-Type" CONTENT=3D"text/html; =
-charset=3Dus-ascii">
-<meta name=3DGenerator content=3D"Microsoft Word 11 (filtered medium)">
-<o:SmartTagType =
-namespaceuri=3D"urn:schemas-microsoft-com:office:smarttags"
- name=3D"City"/>
-<o:SmartTagType =
-namespaceuri=3D"urn:schemas-microsoft-com:office:smarttags"
- name=3D"place"/>
-<!--[if !mso]>
-<style>
-st1\:*{behavior:url(#default#ieooui) }
-</style>
-<![endif]-->
-<style>
-<!--
- /* Style Definitions */
- p.MsoNormal, li.MsoNormal, div.MsoNormal
-	{margin:0in;
-	margin-bottom:.0001pt;
-	font-size:12.0pt;
-	font-family:"Times New Roman";}
-a:link, span.MsoHyperlink
-	{color:blue;
-	text-decoration:underline;}
-a:visited, span.MsoHyperlinkFollowed
-	{color:purple;
-	text-decoration:underline;}
-span.EmailStyle17
-	{mso-style-type:personal-compose;
-	font-family:Arial;
-	color:windowtext;}
-@page Section1
-	{size:8.5in 11.0in;
-	margin:1.0in 1.25in 1.0in 1.25in;}
-div.Section1
-	{page:Section1;}
--->
-</style>
+The tools won't allow you to change the VG while it's exported, e.g.:
 
-</head>
+# lvcreate -n foo -L 10M t0
+  Volume group t0 is exported
 
-<body lang=3DEN-US link=3Dblue vlink=3Dpurple>
+But it's fine to activate and use a VG previously created/used on
+another host without doing the vgexport step first - the HA LVM service
+in Red Hat Cluster Suite uses this for e.g. since it's not always
+possible to cleanly export the VG when a node dies. We just change the
+host tags used on the VG and activate it on the new node.
 
-<div class=3DSection1>
+You might still need to fsck file systems if they weren't unmounted
+cleanly but from LVM2's side it should be fine.
 
-<p class=3DMsoNormal><font size=3D2 face=3DArial><span =
-style=3D'font-size:10.0pt;
-font-family:Arial'>We have a database server accessing a disk array. =
-(Array
-supports only a single host connection)<o:p></o:p></span></font></p>
+Regards,
+Bryn.
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.7 (GNU/Linux)
+Comment: Using GnuPG with Fedora - http://enigmail.mozdev.org
 
-<p class=3DMsoNormal><font size=3D2 face=3DArial><span =
-style=3D'font-size:10.0pt;
-font-family:Arial'>Should that server suffer a hardware failure, =
-we&#8217;d
-like to connect up a standby server to take its =
-place.<o:p></o:p></span></font></p>
-
-<p class=3DMsoNormal><font size=3D2 face=3DArial><span =
-style=3D'font-size:10.0pt;
-font-family:Arial'>So in the event of a bad hardware failure, I =
-won&#8217;t be
-able to unmount the filesystems, vgchange &#8211;an, and vgexport the =
-volume
-groups.<o:p></o:p></span></font></p>
-
-<p class=3DMsoNormal><font size=3D2 face=3DArial><span =
-style=3D'font-size:10.0pt;
-font-family:Arial'><o:p>&nbsp;</o:p></span></font></p>
-
-<p class=3DMsoNormal><font size=3D2 face=3DArial><span =
-style=3D'font-size:10.0pt;
-font-family:Arial'>Can I expect a vgscan and vgimport to work on the new =
-server
-if I wasn&#8217;t &nbsp;able to run vgexport?&nbsp; Any other data I =
-would need to make
-this work?<o:p></o:p></span></font></p>
-
-<p class=3DMsoNormal><font size=3D2 face=3DArial><span =
-style=3D'font-size:10.0pt;
-font-family:Arial'>I know in HP-UX you were able to run a vgexport in =
-output
-mode only, and give it a map file and you could then import using this =
-map file
-in this scenario.<o:p></o:p></span></font></p>
-
-<p class=3DMsoNormal><font size=3D2 face=3DArial><span =
-style=3D'font-size:10.0pt;
-font-family:Arial'><o:p>&nbsp;</o:p></span></font></p>
-
-<p class=3DMsoNormal><font size=3D2 face=3DArial><span =
-style=3D'font-size:10.0pt;
-font-family:Arial'>Thanks,<o:p></o:p></span></font></p>
-
-<p class=3DMsoNormal><st1:City w:st=3D"on"><st1:place w:st=3D"on"><font =
-size=3D2
-  face=3DArial><span =
-style=3D'font-size:10.0pt;font-family:Arial'>Taylor</span></font></st1:pl=
-ace></st1:City><font
-size=3D2 face=3DArial><span =
-style=3D'font-size:10.0pt;font-family:Arial'><o:p></o:p></span></font></p=
->
-
-</div>
-
-</body>
-
-</html>
-
-------_=_NextPart_001_01C88911.2902ADA8--
+iD8DBQFH3+et6YSQoMYUY94RAjtWAKDhho6glzvP8+LkvlVf2IUPUdsZkwCfVI5f
+mc60NA1vw1AFXaGSDuQg9Ew=
+=vC7h
+-----END PGP SIGNATURE-----
