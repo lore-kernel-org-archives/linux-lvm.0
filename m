@@ -1,14 +1,18 @@
-Received: from [10.33.0.40] (breeves.fab.redhat.com [10.33.0.40])
-	by pobox.fab.redhat.com (8.13.1/8.13.1) with ESMTP id m2IGBYUs023268
-	for <linux-lvm@redhat.com>; Tue, 18 Mar 2008 12:11:34 -0400
-Message-ID: <47DFE7AD.9000206@redhat.com>
-Date: Tue, 18 Mar 2008 16:02:53 +0000
-From: "Bryn M. Reeves" <breeves@redhat.com>
+Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m2JDK4xI001799
+	for <linux-lvm@redhat.com>; Wed, 19 Mar 2008 09:20:04 -0400
+Received: from mail177.messagelabs.com (mail177.messagelabs.com
+	[85.158.138.99])
+	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id m2JDJVMH000859
+	for <linux-lvm@redhat.com>; Wed, 19 Mar 2008 09:19:32 -0400
+Content-class: urn:content-classes:message
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] vgimport without vgexport (hardware crash)
-References: <07774C6E31D94A44A2A60E2085944F0901398E92@tbmail.tradebot.com>
-In-Reply-To: <07774C6E31D94A44A2A60E2085944F0901398E92@tbmail.tradebot.com>
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/alternative;
+	boundary="----_=_NextPart_001_01C889C3.D6C22E87"
+Date: Wed, 19 Mar 2008 13:19:19 -0000
+Message-ID: <A78DB34D00374344A0AB65B6523C05DC02CDCF5D@marsden.win.datacash.com>
+From: "Gerrard Geldenhuis" <Gerrard.Geldenhuis@datacash.com>
+Subject: [linux-lvm] Characters allowed for vg name
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -19,89 +23,113 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
------BEGIN PGP SIGNED MESSAGE-----
-Hash: SHA1
+This is a multi-part message in MIME format.
 
-Taylor Lewick wrote:
-> Should that server suffer a hardware failure, we?d like to connect up a
-> standby server to take its place.
-> 
-> So in the event of a bad hardware failure, I won?t be able to unmount
-> the filesystems, vgchange ?an, and vgexport the volume groups.
-> 
-> Can I expect a vgscan and vgimport to work on the new server if I wasn?t
->  able to run vgexport?  Any other data I would need to make this work?
+------_=_NextPart_001_01C889C3.D6C22E87
+Content-Type: text/plain;
+	charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 
-Yes - this isn't a problem with LVM2 - you'll be able to activate the VG
-on any other host that can see the storage by issuing a vgchange.
+Hi
 
-The vgimport/vgexport just toggle a flag in the LVM2 metadata that marks
-the VG status and PV statuses as imported or exported, e.g.:
+I have a kickstart file which fails if I use an - character in the
+vgname. Using a _ works fine. I did not see any reference to allowable
+characters in the man pages. The man pages only makes mention off
+allowable characters for tags.
 
-Before exporting t0:
+=20
 
-t0 {
-        id = "ecajMI-eLGR-5Gmn-T3KG-f3Ey-4JkR-VIQGh0"
-        seqno = 1
-        status = ["RESIZEABLE", "READ", "WRITE"]
-[...]
-        physical_volumes {
+Does anybody know what the allowable characters are for vg, pv and lv
+names?
 
-                pv0 {
-                        id = "5LgAWX-Qc1q-e3IB-ak8P-EkEK-uY0q-Ar3Im6"
-                        device = "/dev/loop0"   # Hint only
+=20
 
-                        status = ["ALLOCATABLE"]
-[...]
-                }
-        }
+Regards
 
-}
 
-After exporting t0:
+------_=_NextPart_001_01C889C3.D6C22E87
+Content-Type: text/html;
+	charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 
-t0 {
-        id = "ecajMI-eLGR-5Gmn-T3KG-f3Ey-4JkR-VIQGh0"
-        seqno = 2
-        status = ["EXPORTED", "RESIZEABLE", "READ", "WRITE"]
-[...]
-        physical_volumes {
+<html xmlns:o=3D"urn:schemas-microsoft-com:office:office" =
+xmlns:w=3D"urn:schemas-microsoft-com:office:word" =
+xmlns=3D"http://www.w3.org/TR/REC-html40">
 
-                pv0 {
-                        id = "5LgAWX-Qc1q-e3IB-ak8P-EkEK-uY0q-Ar3Im6"
-                        device = "/dev/loop0"   # Hint only
+<head>
+<META HTTP-EQUIV=3D"Content-Type" CONTENT=3D"text/html; =
+charset=3Dus-ascii">
+<meta name=3DGenerator content=3D"Microsoft Word 11 (filtered medium)">
+<style>
+<!--
+ /* Style Definitions */
+ p.MsoNormal, li.MsoNormal, div.MsoNormal
+	{margin:0cm;
+	margin-bottom:.0001pt;
+	font-size:12.0pt;
+	font-family:"Times New Roman";}
+a:link, span.MsoHyperlink
+	{color:blue;
+	text-decoration:underline;}
+a:visited, span.MsoHyperlinkFollowed
+	{color:purple;
+	text-decoration:underline;}
+span.EmailStyle17
+	{mso-style-type:personal-compose;
+	font-family:Arial;
+	color:windowtext;}
+@page Section1
+	{size:612.0pt 792.0pt;
+	margin:72.0pt 90.0pt 72.0pt 90.0pt;}
+div.Section1
+	{page:Section1;}
+-->
+</style>
 
-                        status = ["ALLOCATABLE", "EXPORTED"]
-[...]
-                }
-        }
+</head>
 
-}
+<body lang=3DEN-US link=3Dblue vlink=3Dpurple>
 
-The tools won't allow you to change the VG while it's exported, e.g.:
+<div class=3DSection1>
 
-# lvcreate -n foo -L 10M t0
-  Volume group t0 is exported
+<p class=3DMsoNormal><font size=3D2 face=3DArial><span lang=3DEN-GB =
+style=3D'font-size:
+10.0pt;font-family:Arial'>Hi<o:p></o:p></span></font></p>
 
-But it's fine to activate and use a VG previously created/used on
-another host without doing the vgexport step first - the HA LVM service
-in Red Hat Cluster Suite uses this for e.g. since it's not always
-possible to cleanly export the VG when a node dies. We just change the
-host tags used on the VG and activate it on the new node.
+<p class=3DMsoNormal><font size=3D2 face=3DArial><span lang=3DEN-GB =
+style=3D'font-size:
+10.0pt;font-family:Arial'>I have a kickstart file which fails if I use =
+an -
+character in the vgname. Using a _ works fine. I did not see any =
+reference to
+allowable characters in the man pages. The man pages only makes mention =
+off
+allowable characters for tags.<o:p></o:p></span></font></p>
 
-You might still need to fsck file systems if they weren't unmounted
-cleanly but from LVM2's side it should be fine.
+<p class=3DMsoNormal><font size=3D2 face=3DArial><span lang=3DEN-GB =
+style=3D'font-size:
+10.0pt;font-family:Arial'><o:p>&nbsp;</o:p></span></font></p>
 
-Regards,
-Bryn.
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.7 (GNU/Linux)
-Comment: Using GnuPG with Fedora - http://enigmail.mozdev.org
+<p class=3DMsoNormal><font size=3D2 face=3DArial><span lang=3DEN-GB =
+style=3D'font-size:
+10.0pt;font-family:Arial'>Does anybody know what the allowable =
+characters are
+for vg, pv and lv names?<o:p></o:p></span></font></p>
 
-iD8DBQFH3+et6YSQoMYUY94RAjtWAKDhho6glzvP8+LkvlVf2IUPUdsZkwCfVI5f
-mc60NA1vw1AFXaGSDuQg9Ew=
-=vC7h
------END PGP SIGNATURE-----
+<p class=3DMsoNormal><font size=3D2 face=3DArial><span lang=3DEN-GB =
+style=3D'font-size:
+10.0pt;font-family:Arial'><o:p>&nbsp;</o:p></span></font></p>
+
+<p class=3DMsoNormal><font size=3D2 face=3DArial><span lang=3DEN-GB =
+style=3D'font-size:
+10.0pt;font-family:Arial'>Regards<o:p></o:p></span></font></p>
+
+</div>
+
+</body>
+
+</html>
+
+------_=_NextPart_001_01C889C3.D6C22E87--
