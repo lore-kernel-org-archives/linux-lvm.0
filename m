@@ -1,9 +1,10 @@
-Received: from [10.33.0.40] (breeves.fab.redhat.com [10.33.0.40])
-	by pobox.fab.redhat.com (8.13.1/8.13.1) with ESMTP id m2JDW8pe002605
-	for <linux-lvm@redhat.com>; Wed, 19 Mar 2008 09:32:08 -0400
-Message-ID: <47E113C4.1050503@redhat.com>
-Date: Wed, 19 Mar 2008 13:23:16 +0000
-From: "Bryn M. Reeves" <breeves@redhat.com>
+Received: from [10.34.32.183] (mazybook.englab.brq.redhat.com [10.34.32.183])
+	by pobox.stuttgart.redhat.com (8.13.1/8.13.1) with ESMTP id
+	m2JDWrXs018013
+	for <linux-lvm@redhat.com>; Wed, 19 Mar 2008 09:32:53 -0400
+Message-ID: <47E115FC.90802@redhat.com>
+Date: Wed, 19 Mar 2008 14:32:44 +0100
+From: Milan Broz <mbroz@redhat.com>
 MIME-Version: 1.0
 Subject: Re: [linux-lvm] Characters allowed for vg name
 References: <A78DB34D00374344A0AB65B6523C05DC02CDCF5D@marsden.win.datacash.com>
@@ -22,36 +23,18 @@ List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
------BEGIN PGP SIGNED MESSAGE-----
-Hash: SHA1
-
 Gerrard Geldenhuis wrote:
-> Hi
-> 
 > I have a kickstart file which fails if I use an - character in the
 > vgname. Using a _ works fine. I did not see any reference to allowable
 > characters in the man pages. The man pages only makes mention off
 > allowable characters for tags.
-> 
-> Does anybody know what the allowable characters are for vg, pv and lv names?
 
-The '-' character is allowed:
+It's bug in kickstart processing - lvm allows '-' in vgname.
 
-# vgrename t0 t0-foo
-  Volume group "t0" successfully renamed to "t0-foo"
+If using Fedora/RHEL/CentOS see
+https://bugzilla.redhat.com/show_bug.cgi?id=430907
 
-Sounds like this is the installer enforcing an additional restriction.
+Milan
 
-What distribution/version are you using?
-
-Regards,
-Bryn.
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.7 (GNU/Linux)
-Comment: Using GnuPG with Fedora - http://enigmail.mozdev.org
-
-iD8DBQFH4RPE6YSQoMYUY94RAmfaAJ9ogAt9lRovgG+DvcGchebhl5BdTQCfTG+T
-MIBhZhsiADR5+FWUugXZtj0=
-=s/6+
------END PGP SIGNATURE-----
+--
+mbroz@redhat.com
