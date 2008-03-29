@@ -1,25 +1,28 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m2SCebJs007499
-	for <linux-lvm@redhat.com>; Fri, 28 Mar 2008 08:40:37 -0400
-Received: from barney.tradebotsystems.com (barney.tradebotsystems.com
-	[38.100.176.19])
-	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id m2SCeR3h018634
-	for <linux-lvm@redhat.com>; Fri, 28 Mar 2008 08:40:27 -0400
-Received: from tradebotsystems.com (tbmail.tradebotsystems.com
-	[192.168.254.26])
-	by barney.tradebotsystems.com (8.13.6/8.14.1/Linux) with ESMTP id
-	m2SCeJZY010711
-	for <linux-lvm@redhat.com>; Fri, 28 Mar 2008 07:40:21 -0500
-Content-class: urn:content-classes:message
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m2TBYGrf013392
+	for <linux-lvm@redhat.com>; Sat, 29 Mar 2008 07:34:16 -0400
+Received: from server.onart.com.tr (dsl.static81214109175.ttnet.net.tr
+	[81.214.109.175] (may be forged))
+	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id m2TBY1GW026578
+	for <linux-lvm@redhat.com>; Sat, 29 Mar 2008 07:34:05 -0400
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by server.onart.com.tr (Postfix) with ESMTP id 54F1656FC1B2
+	for <linux-lvm@redhat.com>; Sat, 29 Mar 2008 13:29:47 +0200 (EET)
+Received: from server.onart.com.tr ([127.0.0.1])
+	by localhost (server.onart.com.tr [127.0.0.1]) (amavisd-new, port 10024)
+	with ESMTP id 94qfezePkGGx for <linux-lvm@redhat.com>;
+	Sat, 29 Mar 2008 13:29:45 +0200 (EET)
+Received: from [10.0.0.12] (unknown [10.0.0.12])
+	(using SSLv3 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by server.onart.com.tr (Postfix) with ESMTP id 8D7F356FC1B1
+	for <linux-lvm@redhat.com>; Sat, 29 Mar 2008 13:29:45 +0200 (EET)
+Message-ID: <47EE2926.3020201@onart.com.tr>
+Date: Sat, 29 Mar 2008 13:33:58 +0200
+From: Mufit Eribol <hme@onart.com.tr>
 MIME-Version: 1.0
-Content-Type: multipart/alternative;
-	boundary="----_=_NextPart_001_01C890D0.E1B9E4AC"
-Subject: RE: [linux-lvm] vgimport without vgexport (hardware crash)
-Date: Fri, 28 Mar 2008 07:40:19 -0500
-Message-ID: <07774C6E31D94A44A2A60E2085944F09013994F3@tbmail.tradebot.com>
-In-Reply-To: <07774C6E31D94A44A2A60E2085944F0901398E92@tbmail.tradebot.com>
-References: <07774C6E31D94A44A2A60E2085944F0901398E92@tbmail.tradebot.com>
-From: "Taylor Lewick" <tlewick@tradebotsystems.com>
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] Problem with partition table on LV
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -30,229 +33,104 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+To: linux-lvm@redhat.com
 
-This is a multi-part message in MIME format.
+Hello,
 
-------_=_NextPart_001_01C890D0.E1B9E4AC
-Content-Type: text/plain;
-	charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+After loosing all the data on my production server by issuing wrong lvm 
+commands in restoring the logical volume, I have worked for weeks to 
+setup my server again from scratch up. Now, today I noticed another 
+problem, but scared to death to touch it.
 
-Just wanted to let everyone know, that I've tested moving a disk array
-between two hosts several times and everything works.
+This time I have to ask you before issuing any commands as obviously I 
+haven't learned LVM internals.
 
-Our setup is a database server connected to a dell md1000 disk array and
-the disks have been carved into 3 volume groups.
+Please find the details below. I would appreciate any help.
 
-=20
+Thanks,
+Mufit
 
-We've simulated a server crash by just powering it off, and connecting
-the disk array to another like linux server.
+Problem:
+The system works but fdisk -l gives the following error:
 
-When you boot up the new server you just have to tell the bios to import
-the foreign configuration (that's at hardware level).
+[root@server ~]# fdisk -l
+...
+    Device Boot      Start         End      Blocks   Id  System
 
-=20
+Disk /dev/sdc: 799.9 GB, 799937658880 bytes
+255 heads, 63 sectors/track, 97253 cylinders
+Units = cylinders of 16065 * 512 = 8225280 bytes
 
-The first time I tried it, because we didn't run a vgexport on the
-primary server (you wouldn't have the chance to do that in a crash
-situation),
+Disk /dev/sdc doesn't contain a valid partition table
 
-I had to vgexport the volume groups, then vgimport and vgchange them,
-then mount the filesystems.  But I discovered, that if you add the same
-entries to /etc/fstab for the logical volumes on the backup server, that
-you do not have to run any lvm steps like vgexport, vgimport, or
-vgchange, the OS does all of that automatically.  And if you boot the
-backup server when its not connected to the disk array, it just fails
-trying to mount those drives but it doesn't keep the O.S. from starting
-up.
+Specs:
+RHEL 5.1
 
-=20
+/dev/sdc is a hardware raid array
 
-So the net of all of this is if we have a hardware failure on our
-database server we can have it back up and running on a secondary server
-in less then 5 minutes, unless it has to do an fsck on the filesystems.
+/dev/raid_vg0/raid_lv0 -> /dev/mapper/raid_vg0-raid_lv0
 
-=20
+[root@server ~]vi /etc/fstab
+...
+/dev/raid_vg0/raid_lv0  /mnt/raid               ext3    defaults        0 0
 
-Taylor
+[root@server ~]# pvdisplay
+  --- Physical volume ---
+  PV Name               /dev/sdc
+  VG Name               raid_vg0
+  PV Size               745.00 GB / not usable 27.67 MB
+  Allocatable           yes
+  PE Size (KByte)       32768
+  Total PE              23839
+  Free PE               15
+  Allocated PE          23824
+  PV UUID               cyjzuJ-34VJ-l1S6-5Wcj-Qtw7-8Zcb-TR36bV
 
-=20
+[root@server ~]# vgdisplay
+  --- Volume group ---
+  VG Name               raid_vg0
+  System ID
+  Format                lvm2
+  Metadata Areas        1
+  Metadata Sequence No  6
+  VG Access             read/write
+  VG Status             resizable
+  MAX LV                0
+  Cur LV                1
+  Open LV               1
+  Max PV                0
+  Cur PV                1
+  Act PV                1
+  VG Size               744.97 GB
+  PE Size               32.00 MB
+  Total PE              23839
+  Alloc PE / Size       23824 / 744.50 GB
+  Free  PE / Size       15 / 480.00 MB
+  VG UUID               8XRQX4-g3bN-yaRB-RAG4-9qpx-7uXJ-p7VxYS
 
-=20
+[root@server ~]# lvdisplay
+  --- Logical volume ---
+  LV Name                /dev/raid_vg0/raid_lv0
+  VG Name                raid_vg0
+  LV UUID                bYKncb-bUAW-FkFn-rYUr-O7RI-KL3y-18R0Oc
+  LV Write Access        read/write
+  LV Status              available
+  # open                 1
+  LV Size                744.50 GB
+  Current LE             23824
+  Segments               1
+  Allocation             inherit
+  Read ahead sectors     0
+  Block device           253:0
 
-=20
+[root@server ~]# pvscan
+  PV /dev/sdc   VG raid_vg0   lvm2 [744.97 GB / 480.00 MB free]
+  Total: 1 [744.97 GB] / in use: 1 [744.97 GB] / in no VG: 0 [0   ]
 
+[root@server ~]# vgscan
+  Reading all physical volumes.  This may take a while...
+  Found volume group "raid_vg0" using metadata type lvm2
 
-------_=_NextPart_001_01C890D0.E1B9E4AC
-Content-Type: text/html;
-	charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-
-<html xmlns:o=3D"urn:schemas-microsoft-com:office:office" =
-xmlns:w=3D"urn:schemas-microsoft-com:office:word" =
-xmlns:st1=3D"urn:schemas-microsoft-com:office:smarttags" =
-xmlns=3D"http://www.w3.org/TR/REC-html40">
-
-<head>
-<META HTTP-EQUIV=3D"Content-Type" CONTENT=3D"text/html; =
-charset=3Dus-ascii">
-<meta name=3DGenerator content=3D"Microsoft Word 11 (filtered medium)">
-<o:SmartTagType =
-namespaceuri=3D"urn:schemas-microsoft-com:office:smarttags"
- name=3D"City"/>
-<o:SmartTagType =
-namespaceuri=3D"urn:schemas-microsoft-com:office:smarttags"
- name=3D"place"/>
-<!--[if !mso]>
-<style>
-st1\:*{behavior:url(#default#ieooui) }
-</style>
-<![endif]-->
-<style>
-<!--
- /* Style Definitions */
- p.MsoNormal, li.MsoNormal, div.MsoNormal
-	{margin:0in;
-	margin-bottom:.0001pt;
-	font-size:12.0pt;
-	font-family:"Times New Roman";}
-a:link, span.MsoHyperlink
-	{color:blue;
-	text-decoration:underline;}
-a:visited, span.MsoHyperlinkFollowed
-	{color:purple;
-	text-decoration:underline;}
-span.EmailStyle17
-	{mso-style-type:personal;
-	font-family:Arial;
-	color:windowtext;}
-span.EmailStyle18
-	{mso-style-type:personal-reply;
-	font-family:Arial;
-	color:navy;}
-@page Section1
-	{size:8.5in 11.0in;
-	margin:1.0in 1.25in 1.0in 1.25in;}
-div.Section1
-	{page:Section1;}
--->
-</style>
-
-</head>
-
-<body lang=3DEN-US link=3Dblue vlink=3Dpurple>
-
-<div class=3DSection1>
-
-<p class=3DMsoNormal><font size=3D2 color=3Dnavy face=3DArial><span =
-style=3D'font-size:
-10.0pt;font-family:Arial;color:navy'>Just wanted to let everyone know, =
-that I&#8217;ve
-tested moving a disk array between two hosts several times and =
-everything
-works.<o:p></o:p></span></font></p>
-
-<p class=3DMsoNormal><font size=3D2 color=3Dnavy face=3DArial><span =
-style=3D'font-size:
-10.0pt;font-family:Arial;color:navy'>Our setup is a database server =
-connected
-to a dell md1000 disk array and the disks have been carved into 3 volume
-groups.<o:p></o:p></span></font></p>
-
-<p class=3DMsoNormal><font size=3D2 color=3Dnavy face=3DArial><span =
-style=3D'font-size:
-10.0pt;font-family:Arial;color:navy'><o:p>&nbsp;</o:p></span></font></p>
-
-<p class=3DMsoNormal><font size=3D2 color=3Dnavy face=3DArial><span =
-style=3D'font-size:
-10.0pt;font-family:Arial;color:navy'>We&#8217;ve simulated a server =
-crash by
-just powering it off, and connecting the disk array to another like =
-linux
-server.<o:p></o:p></span></font></p>
-
-<p class=3DMsoNormal><font size=3D2 color=3Dnavy face=3DArial><span =
-style=3D'font-size:
-10.0pt;font-family:Arial;color:navy'>When you boot up the new server you =
-just
-have to tell the bios to import the foreign configuration (that&#8217;s =
-at
-hardware level).<o:p></o:p></span></font></p>
-
-<p class=3DMsoNormal><font size=3D2 color=3Dnavy face=3DArial><span =
-style=3D'font-size:
-10.0pt;font-family:Arial;color:navy'><o:p>&nbsp;</o:p></span></font></p>
-
-<p class=3DMsoNormal><font size=3D2 color=3Dnavy face=3DArial><span =
-style=3D'font-size:
-10.0pt;font-family:Arial;color:navy'>The first time I tried it, because =
-we didn&#8217;t
-run a vgexport on the primary server (you wouldn&#8217;t have the chance =
-to do
-that in a crash situation),<o:p></o:p></span></font></p>
-
-<p class=3DMsoNormal><font size=3D2 color=3Dnavy face=3DArial><span =
-style=3D'font-size:
-10.0pt;font-family:Arial;color:navy'>I had to vgexport the volume =
-groups, then
-vgimport and vgchange them, then mount the filesystems.&nbsp; But I =
-discovered, that
-if you add the same entries to /etc/fstab for the logical volumes on the =
-backup
-server, that you do not have to run any lvm steps like vgexport, =
-vgimport, or
-vgchange, the OS does all of that automatically.&nbsp; And if you boot =
-the backup
-server when its not connected to the disk array, it just fails trying to =
-mount
-those drives but it doesn&#8217;t keep the O.S. from starting =
-up.<o:p></o:p></span></font></p>
-
-<p class=3DMsoNormal><font size=3D2 color=3Dnavy face=3DArial><span =
-style=3D'font-size:
-10.0pt;font-family:Arial;color:navy'><o:p>&nbsp;</o:p></span></font></p>
-
-<p class=3DMsoNormal><font size=3D2 color=3Dnavy face=3DArial><span =
-style=3D'font-size:
-10.0pt;font-family:Arial;color:navy'>So the net of all of this is if we =
-have a
-hardware failure on our database server we can have it back up and =
-running on a
-secondary server in less then 5 minutes, unless it has to do an fsck on =
-the
-filesystems.<o:p></o:p></span></font></p>
-
-<p class=3DMsoNormal><font size=3D2 color=3Dnavy face=3DArial><span =
-style=3D'font-size:
-10.0pt;font-family:Arial;color:navy'><o:p>&nbsp;</o:p></span></font></p>
-
-<p class=3DMsoNormal><st1:City w:st=3D"on"><st1:place w:st=3D"on"><font =
-size=3D2
-  color=3Dnavy face=3DArial><span =
-style=3D'font-size:10.0pt;font-family:Arial;
-  color:navy'>Taylor</span></font></st1:place></st1:City><font size=3D2
-color=3Dnavy face=3DArial><span =
-style=3D'font-size:10.0pt;font-family:Arial;
-color:navy'><o:p></o:p></span></font></p>
-
-<p class=3DMsoNormal><font size=3D2 color=3Dnavy face=3DArial><span =
-style=3D'font-size:
-10.0pt;font-family:Arial;color:navy'><o:p>&nbsp;</o:p></span></font></p>
-
-<p class=3DMsoNormal><font size=3D2 color=3Dnavy face=3DArial><span =
-style=3D'font-size:
-10.0pt;font-family:Arial;color:navy'><o:p>&nbsp;</o:p></span></font></p>
-
-<p class=3DMsoNormal><font size=3D2 color=3Dnavy face=3DArial><span =
-style=3D'font-size:
-10.0pt;font-family:Arial;color:navy'><o:p>&nbsp;</o:p></span></font></p>
-
-</div>
-
-</body>
-
-</html>
-
-------_=_NextPart_001_01C890D0.E1B9E4AC--
+[root@server ~]# lvscan
+  ACTIVE            '/dev/raid_vg0/raid_lv0' [744.50 GB] inherit
