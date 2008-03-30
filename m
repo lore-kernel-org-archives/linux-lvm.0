@@ -1,19 +1,23 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m2TMecDd011953
-	for <linux-lvm@redhat.com>; Sat, 29 Mar 2008 18:40:38 -0400
-Received: from wf-out-1314.google.com (wf-out-1314.google.com [209.85.200.173])
-	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id m2TMeQV0011251
-	for <linux-lvm@redhat.com>; Sat, 29 Mar 2008 18:40:26 -0400
-Received: by wf-out-1314.google.com with SMTP id 28so1633402wfc.6
-	for <linux-lvm@redhat.com>; Sat, 29 Mar 2008 15:40:25 -0700 (PDT)
-Date: Sun, 30 Mar 2008 08:40:12 +1000
-From: David Robinson <zxvdr.au@gmail.com>
-Subject: Re: [linux-lvm] Problem with partition table on LV
-Message-ID: <20080329224010.GA6475@laptop.home>
-References: <47EE2926.3020201@onart.com.tr>
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m2U0C3bk005560
+	for <linux-lvm@redhat.com>; Sat, 29 Mar 2008 20:12:03 -0400
+Received: from mta21.charter.net (mta21.charter.net [216.33.127.81])
+	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id m2U0BoHl020918
+	for <linux-lvm@redhat.com>; Sat, 29 Mar 2008 20:11:51 -0400
+Received: from aarprv06.charter.net ([10.20.200.76]) by mta21.charter.net
+	(InterMail vM.7.08.03.00 201-2186-126-20070710) with ESMTP
+	id <20080330001141.KVQP23078.mta21.charter.net@aarprv06.charter.net>
+	for <linux-lvm@redhat.com>; Sat, 29 Mar 2008 20:11:41 -0400
+Received: from stringer.lotuscat.com ([24.196.91.180])
+	by aarprv06.charter.net with ESMTP id
+	<20080330001140.ETPL11293.aarprv06.charter.net@stringer.lotuscat.com>
+	for <linux-lvm@redhat.com>; Sat, 29 Mar 2008 20:11:40 -0400
+Message-ID: <47EEDB6E.7080207@lotuscat.com>
+Date: Sat, 29 Mar 2008 19:14:38 -0500
+From: Chris Black <chris@lotuscat.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <47EE2926.3020201@onart.com.tr>
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] pvmove hung at 100%
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -24,50 +28,68 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+To: linux-lvm@redhat.com
 
-On Sat, Mar 29, 2008 at 01:33:58PM +0200, Mufit Eribol wrote:
-> Hello,
->
-> After loosing all the data on my production server by issuing wrong lvm 
-> commands in restoring the logical volume, I have worked for weeks to setup 
-> my server again from scratch up. Now, today I noticed another problem, but 
-> scared to death to touch it.
->
-> This time I have to ask you before issuing any commands as obviously I 
-> haven't learned LVM internals.
->
-> Please find the details below. I would appreciate any help.
->
-> Thanks,
-> Mufit
->
-> Problem:
-> The system works but fdisk -l gives the following error:
->
-> [root@server ~]# fdisk -l
-> ...
->    Device Boot      Start         End      Blocks   Id  System
->
-> Disk /dev/sdc: 799.9 GB, 799937658880 bytes
-> 255 heads, 63 sectors/track, 97253 cylinders
-> Units = cylinders of 16065 * 512 = 8225280 bytes
->
-> Disk /dev/sdc doesn't contain a valid partition table
+I did a pvmove between two PVs of equal size (both 4TB on different 
+raids) and it seems to have finished (shows 100%) yet pvdisplay commands 
+show that the source is still allocated and lvdisplay -m on the LV that 
+used the source PV shows that logical extents are still on the logical 
+volume pvmove0. My goal is to get this PV and the other PV this LV uses 
+(lv03) totally off the system and disconnected.
+Does anyone have any advice/clues on how to resolve/unstick this?
 
-That's not an error. Its simply saying that there is no partition table on sdc.
-You don't necessarily need a partition table. A lot of people actually setup
-their system like this, especially when the device is from a SAN.
+Details:
+Source disk is /dev/mapper/VOL04_4TB which is /dev/dm-1
+Destination disk is /dev/mapper/FN00_01_4TB which is /dev/dm-10
+Both are exactly 953673 PEs, source was totally allocated before pvmove 
+and destination was totally empty.
+The command I used was:
+pvmove -v -i 900 /dev/mapper/VOL04_4TB /dev/mapper/FN00_01_4TB
 
->  --- Physical volume ---
->  PV Name               /dev/sdc
+Subsequent pvmoves still show /dev/dm-1 100%.
 
-LVM is using the correct device. You don't need to change anything.
+lvs -av:
+    Finding all logical volumes
+  LV        VG   #Seg Attr   LSize   Maj Min KMaj KMin Origin Snap%  
+Move      Copy%  Log LV UUID                              
+  bioinfo   vg01    4 -wi-ao  10.56T  -1  -1 253  
+16                                      
+1QbcmS-tt8J-zuMB-DCUn-dAAI-pVFi-HPBUWA
+  lv03      vg01    2 -wI-ao   4.55T  -1  -1 253  
+14                                      
+OXgokc-vqd7-Bcgm-8ccF-vgUo-Awfu-CNmFMo
+  pipeline  vg01    1 -wi-ao 500.00G  -1  -1 253  
+17                                      
+dQ3JCe-vU2m-VS7C-2VTy-nXZ4-aGdk-kbpYd6
+  [pvmove0] vg01    1 p-C-ao   3.64T  -1  -1 253  15                 
+/dev/dm-1 100.00     dvl7Gn-sgWk-m3Wl-hGKM-Ow6E-7j51-394T6r
+  rnd       vg01    2 -wi-ao   7.28T  -1  -1 253  
+18                                      
+HWBhgP-1plT-d1fu-pGdH-7Ii6-gEQN-hpu4k2
+  system    vg01    1 -wi-ao 220.00G  -1  -1 253  
+13                                      
+0LRNrB-TrZV-iK64-dm5C-pMTb-e8Dh-8wAVLy
 
-> [root@server ~]# pvscan
->  PV /dev/sdc   VG raid_vg0   lvm2 [744.97 GB / 480.00 MB free]
->  Total: 1 [744.97 GB] / in use: 1 [744.97 GB] / in no VG: 0 [0   ]
+lvdisplay -m /dev/vg01/lv01 shows segments:
+  --- Segments ---
+  Logical extent 0 to 953672:
+    Type                linear
+    Logical volume      pvmove0
+    Logical extents     0 to 953672
+  
+  Logical extent 953673 to 1192090:
+    Type                linear
+    Physical volume     /dev/dm-2
+    Physical extents    0 to 238417
 
---Dave
+pvdisplay of /dev/dm-1 and /dev/dm-10 (source and destination) show both 
+as full.
+
+Kernel version: 2.6.18.8-0.5 (SuSE 10.2 on x64)
+LVM version:     2.02.13 (2006-10-27)
+Library version: 1.02.12 (2006-10-13)
+Driver version:  4.7.0
+
+Thanks in advance,
+Chris
