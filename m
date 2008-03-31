@@ -1,23 +1,22 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m2U0C3bk005560
-	for <linux-lvm@redhat.com>; Sat, 29 Mar 2008 20:12:03 -0400
-Received: from mta21.charter.net (mta21.charter.net [216.33.127.81])
-	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id m2U0BoHl020918
-	for <linux-lvm@redhat.com>; Sat, 29 Mar 2008 20:11:51 -0400
-Received: from aarprv06.charter.net ([10.20.200.76]) by mta21.charter.net
-	(InterMail vM.7.08.03.00 201-2186-126-20070710) with ESMTP
-	id <20080330001141.KVQP23078.mta21.charter.net@aarprv06.charter.net>
-	for <linux-lvm@redhat.com>; Sat, 29 Mar 2008 20:11:41 -0400
-Received: from stringer.lotuscat.com ([24.196.91.180])
-	by aarprv06.charter.net with ESMTP id
-	<20080330001140.ETPL11293.aarprv06.charter.net@stringer.lotuscat.com>
-	for <linux-lvm@redhat.com>; Sat, 29 Mar 2008 20:11:40 -0400
-Message-ID: <47EEDB6E.7080207@lotuscat.com>
-Date: Sat, 29 Mar 2008 19:14:38 -0500
-From: Chris Black <chris@lotuscat.com>
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m2V0dl3G011178
+	for <linux-lvm@redhat.com>; Sun, 30 Mar 2008 20:39:47 -0400
+Received: from palakse.guam.net (palakse.guam.net [202.128.0.38])
+	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id m2V0dTKu016294
+	for <linux-lvm@redhat.com>; Sun, 30 Mar 2008 20:39:30 -0400
+Received: from localhost (smtp1 [10.255.255.254])
+	by palakse.guam.net (Postfix) with ESMTP id 37BA03A0160
+	for <linux-lvm@redhat.com>; Mon, 31 Mar 2008 10:39:24 +1000 (ChST)
+Received: from [192.168.128.3] (119.121.55.225.guam.net [121.55.225.119])
+	by smtp.guam.net (Postfix) with ESMTP id F3C4DED1041
+	for <linux-lvm@redhat.com>; Mon, 31 Mar 2008 10:39:23 +1000 (ChST)
+From: "Michael D. Setzer II" <mikes@kuentos.guam.net>
+Date: Mon, 31 Mar 2008 10:38:49 +1000
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] pvmove hung at 100%
+Message-ID: <47F0BF39.11865.4559B09@mikes.kuentos.guam.net>
+Content-transfer-encoding: 7BIT
+Content-description: Mail message body
+Subject: [linux-lvm] Adding LVM TW support to live boot cd.
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -28,68 +27,47 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
+Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@redhat.com
 
-I did a pvmove between two PVs of equal size (both 4TB on different 
-raids) and it seems to have finished (shows 100%) yet pvdisplay commands 
-show that the source is still allocated and lvdisplay -m on the LV that 
-used the source PV shows that logical extents are still on the logical 
-volume pvmove0. My goal is to get this PV and the other PV this LV uses 
-(lv03) totally off the system and disconnected.
-Does anyone have any advice/clues on how to resolve/unstick this?
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA1
 
-Details:
-Source disk is /dev/mapper/VOL04_4TB which is /dev/dm-1
-Destination disk is /dev/mapper/FN00_01_4TB which is /dev/dm-10
-Both are exactly 953673 PEs, source was totally allocated before pvmove 
-and destination was totally empty.
-The command I used was:
-pvmove -v -i 900 /dev/mapper/VOL04_4TB /dev/mapper/FN00_01_4TB
+I'm the current maintaner of the G4L project that does disk imaging from a 
+boot cd. At the moment, it can create images on an FTP server or locally on 
+ext2/3, fat32 (limited size or splitting), and NTFS partitions. It might also 
+support some of the other linux formats, but LVM it doesn't. Is there some 
+documentation, on what would be required to add this support. It can backup 
+LVM with no problem, but does so in raw mode using dd. 
 
-Subsequent pvmoves still show /dev/dm-1 100%.
+I am currently using Fedora 8 machine to build the support system, but use 
+kernels build from Kernel.org to support the latest hardware.
 
-lvs -av:
-    Finding all logical volumes
-  LV        VG   #Seg Attr   LSize   Maj Min KMaj KMin Origin Snap%  
-Move      Copy%  Log LV UUID                              
-  bioinfo   vg01    4 -wi-ao  10.56T  -1  -1 253  
-16                                      
-1QbcmS-tt8J-zuMB-DCUn-dAAI-pVFi-HPBUWA
-  lv03      vg01    2 -wI-ao   4.55T  -1  -1 253  
-14                                      
-OXgokc-vqd7-Bcgm-8ccF-vgUo-Awfu-CNmFMo
-  pipeline  vg01    1 -wi-ao 500.00G  -1  -1 253  
-17                                      
-dQ3JCe-vU2m-VS7C-2VTy-nXZ4-aGdk-kbpYd6
-  [pvmove0] vg01    1 p-C-ao   3.64T  -1  -1 253  15                 
-/dev/dm-1 100.00     dvl7Gn-sgWk-m3Wl-hGKM-Ow6E-7j51-394T6r
-  rnd       vg01    2 -wi-ao   7.28T  -1  -1 253  
-18                                      
-HWBhgP-1plT-d1fu-pGdH-7Ii6-gEQN-hpu4k2
-  system    vg01    1 -wi-ao 220.00G  -1  -1 253  
-13                                      
-0LRNrB-TrZV-iK64-dm5C-pMTb-e8Dh-8wAVLy
 
-lvdisplay -m /dev/vg01/lv01 shows segments:
-  --- Segments ---
-  Logical extent 0 to 953672:
-    Type                linear
-    Logical volume      pvmove0
-    Logical extents     0 to 953672
-  
-  Logical extent 953673 to 1192090:
-    Type                linear
-    Physical volume     /dev/dm-2
-    Physical extents    0 to 238417
++----------------------------------------------------------+
+  Michael D. Setzer II -  Computer Science Instructor      
+  Guam Community College  Computer Center                  
+  mailto:mikes@kuentos.guam.net                            
+  mailto:msetzerii@gmail.com
+  http://www.guam.net/home/mikes
+  Guam - Where America's Day Begins                        
++----------------------------------------------------------+
 
-pvdisplay of /dev/dm-1 and /dev/dm-10 (source and destination) show both 
-as full.
+http://setiathome.berkeley.edu (Original)
+Number of Seti Units Returned:  19,471
+Processing time:  32 years, 290 days, 12 hours, 58 minutes
+(Total Hours: 287,489)
 
-Kernel version: 2.6.18.8-0.5 (SuSE 10.2 on x64)
-LVM version:     2.02.13 (2006-10-27)
-Library version: 1.02.12 (2006-10-13)
-Driver version:  4.7.0
+BOINC@HOME CREDITS
+SETI 5,083,348.272836 | EINSTEIN 1,506,162.284587 | ROSETTA 
+453,574.076057
 
-Thanks in advance,
-Chris
+
+-----BEGIN PGP SIGNATURE-----
+Version: PGP 6.5.8 -- QDPGP 2.61c
+Comment: http://community.wow.net/grt/qdpgp.html
+
+iQA/AwUBR++l+izGQcr/2AKZEQIxOgCbBEy6j+AIfnXJ+hrVCWvD/Mgu3+oAnAr4
+IL6wnGmbYBt+Lwr5+UJh8Cki
+=hH4w
+-----END PGP SIGNATURE-----
