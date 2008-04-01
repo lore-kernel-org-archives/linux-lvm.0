@@ -1,22 +1,14 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m2V0dl3G011178
-	for <linux-lvm@redhat.com>; Sun, 30 Mar 2008 20:39:47 -0400
-Received: from palakse.guam.net (palakse.guam.net [202.128.0.38])
-	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id m2V0dTKu016294
-	for <linux-lvm@redhat.com>; Sun, 30 Mar 2008 20:39:30 -0400
-Received: from localhost (smtp1 [10.255.255.254])
-	by palakse.guam.net (Postfix) with ESMTP id 37BA03A0160
-	for <linux-lvm@redhat.com>; Mon, 31 Mar 2008 10:39:24 +1000 (ChST)
-Received: from [192.168.128.3] (119.121.55.225.guam.net [121.55.225.119])
-	by smtp.guam.net (Postfix) with ESMTP id F3C4DED1041
-	for <linux-lvm@redhat.com>; Mon, 31 Mar 2008 10:39:23 +1000 (ChST)
-From: "Michael D. Setzer II" <mikes@kuentos.guam.net>
-Date: Mon, 31 Mar 2008 10:38:49 +1000
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m31AJbIo025839
+	for <linux-lvm@redhat.com>; Tue, 1 Apr 2008 06:19:37 -0400
+Received: from mail.gmx.net (mail.gmx.net [213.165.64.20])
+	by mx3.redhat.com (8.13.8/8.13.8) with SMTP id m31AJMjG000573
+	for <linux-lvm@redhat.com>; Tue, 1 Apr 2008 06:19:23 -0400
+Date: Tue, 1 Apr 2008 12:19:05 +0200 (CEST)
+From: Stephan Schulz <ss.c@gmx.net>
+Message-ID: <Pine.LNX.4.64.0804011210060.5647@p3-700.home.all>
 MIME-Version: 1.0
-Message-ID: <47F0BF39.11865.4559B09@mikes.kuentos.guam.net>
-Content-transfer-encoding: 7BIT
-Content-description: Mail message body
-Subject: [linux-lvm] Adding LVM TW support to live boot cd.
+Subject: [linux-lvm] device x:x too small for target
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -27,47 +19,40 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: TEXT/PLAIN; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@redhat.com
 
------BEGIN PGP SIGNED MESSAGE-----
-Hash: SHA1
+Hi!
 
-I'm the current maintaner of the G4L project that does disk imaging from a 
-boot cd. At the moment, it can create images on an FTP server or locally on 
-ext2/3, fat32 (limited size or splitting), and NTFS partitions. It might also 
-support some of the other linux formats, but LVM it doesn't. Is there some 
-documentation, on what would be required to add this support. It can backup 
-LVM with no problem, but does so in raw mode using dd. 
+I've currently problems to access my data on a logical volume, reason:
+"/etc/init.d/lvm start" gives the following output:
 
-I am currently using Fedora 8 machine to build the support system, but use 
-kernels build from Kernel.org to support the latest hardware.
+Setting up LVM Volume Groups...
+  Reading all physical volumes.  This may take a while...
+  Found volume group "storage_vg" using metadata type lvm2
+  device-mapper: reload ioctl failed: Invalid argument
+  1 logical volume(s) in volume group "storage_vg" now active
 
+A look to "dmesg" reveals the following:
+device-mapper: table: device 8:0 too small for target
+device-mapper: table: 254:0: linear: dm-linear: Device lookup failed
+device-mapper: ioctl: error adding target to table
 
-+----------------------------------------------------------+
-  Michael D. Setzer II -  Computer Science Instructor      
-  Guam Community College  Computer Center                  
-  mailto:mikes@kuentos.guam.net                            
-  mailto:msetzerii@gmail.com
-  http://www.guam.net/home/mikes
-  Guam - Where America's Day Begins                        
-+----------------------------------------------------------+
+The LVM-System consists of one logical volume with two harddrives (sda and 
+sdb, which contains each a physical volume) and worked flawless in the 
+past. I used to swap these both disks between a linux and a windows 
+system without any problems (access in windows through vmware as 
+"physical disks"), but for some reason something screwed it up..
+I thought about overwriting the lvm metadata but I wasn't sure how to do 
+it in a way without doing more damage to the non-metadata.
 
-http://setiathome.berkeley.edu (Original)
-Number of Seti Units Returned:  19,471
-Processing time:  32 years, 290 days, 12 hours, 58 minutes
-(Total Hours: 287,489)
+Any hints where to look or what to do about it?
 
-BOINC@HOME CREDITS
-SETI 5,083,348.272836 | EINSTEIN 1,506,162.284587 | ROSETTA 
-453,574.076057
+Yours,
+Stephan
 
+-- 
 
------BEGIN PGP SIGNATURE-----
-Version: PGP 6.5.8 -- QDPGP 2.61c
-Comment: http://community.wow.net/grt/qdpgp.html
-
-iQA/AwUBR++l+izGQcr/2AKZEQIxOgCbBEy6j+AIfnXJ+hrVCWvD/Mgu3+oAnAr4
-IL6wnGmbYBt+Lwr5+UJh8Cki
-=hH4w
------END PGP SIGNATURE-----
+A computer is like an Old Testament god, with a lot of rules and no mercy.
+- Joseph Campbell
