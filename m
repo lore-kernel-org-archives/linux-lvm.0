@@ -1,14 +1,17 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m31AJbIo025839
-	for <linux-lvm@redhat.com>; Tue, 1 Apr 2008 06:19:37 -0400
-Received: from mail.gmx.net (mail.gmx.net [213.165.64.20])
-	by mx3.redhat.com (8.13.8/8.13.8) with SMTP id m31AJMjG000573
-	for <linux-lvm@redhat.com>; Tue, 1 Apr 2008 06:19:23 -0400
-Date: Tue, 1 Apr 2008 12:19:05 +0200 (CEST)
-From: Stephan Schulz <ss.c@gmx.net>
-Message-ID: <Pine.LNX.4.64.0804011210060.5647@p3-700.home.all>
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m31GwSiO020887
+	for <linux-lvm@redhat.com>; Tue, 1 Apr 2008 12:58:28 -0400
+Received: from tecmo.mokeys.org (tecmo.mokeys.org [69.55.238.126])
+	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id m31Gw8ZY031539
+	for <linux-lvm@redhat.com>; Tue, 1 Apr 2008 12:58:08 -0400
+Message-ID: <44410.144.92.92.161.1207069075.squirrel@webmail.lotuscat.com>
+Date: Tue, 1 Apr 2008 09:57:55 -0700 (PDT)
+Subject: Re: [linux-lvm] pvmove hung at 100%
+From: <chris@lotuscat.com>
+In-Reply-To: <47EEDB6E.7080207@lotuscat.com>
+References: <47EEDB6E.7080207@lotuscat.com>
 MIME-Version: 1.0
-Subject: [linux-lvm] device x:x too small for target
+Content-Transfer-Encoding: 8bit
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -19,40 +22,24 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@redhat.com
 
-Hi!
+> I did a pvmove between two PVs of equal size (both 4TB on different
+> raids) and it seems to have finished (shows 100%) yet pvdisplay commands
+>  show that the source is still allocated and lvdisplay -m on the LV that
+>  used the source PV shows that logical extents are still on the logical
+> volume pvmove0. My goal is to get this PV and the other PV this LV uses
+> (lv03) totally off the system and disconnected.
+> Does anyone have any advice/clues on how to resolve/unstick this?
 
-I've currently problems to access my data on a logical volume, reason:
-"/etc/init.d/lvm start" gives the following output:
+This is still stuck after two days. I am thinking perhaps I should do a
+pvmove --abort to reverse the move and then do the pvmove differently in
+terms of specifying the LV and multiple PVs to use instead. Does this
+sound like a relatively safe course of action? I do have backups, but
+would prefer not to go through all that. Also, even though I am at this
+odd "pvmove 100.0% but still showing pvmove0 LV" status the data is
+accessible.
 
-Setting up LVM Volume Groups...
-  Reading all physical volumes.  This may take a while...
-  Found volume group "storage_vg" using metadata type lvm2
-  device-mapper: reload ioctl failed: Invalid argument
-  1 logical volume(s) in volume group "storage_vg" now active
-
-A look to "dmesg" reveals the following:
-device-mapper: table: device 8:0 too small for target
-device-mapper: table: 254:0: linear: dm-linear: Device lookup failed
-device-mapper: ioctl: error adding target to table
-
-The LVM-System consists of one logical volume with two harddrives (sda and 
-sdb, which contains each a physical volume) and worked flawless in the 
-past. I used to swap these both disks between a linux and a windows 
-system without any problems (access in windows through vmware as 
-"physical disks"), but for some reason something screwed it up..
-I thought about overwriting the lvm metadata but I wasn't sure how to do 
-it in a way without doing more damage to the non-metadata.
-
-Any hints where to look or what to do about it?
-
-Yours,
-Stephan
-
--- 
-
-A computer is like an Old Testament god, with a lot of rules and no mercy.
-- Joseph Campbell
+Thanks in advance,
+Chris
