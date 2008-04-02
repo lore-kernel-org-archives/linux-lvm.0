@@ -1,22 +1,34 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m32G3VB1029156
-	for <linux-lvm@redhat.com>; Wed, 2 Apr 2008 12:03:31 -0400
-Received: from scidubsmtp03.stercomm.com (scidubsmtp03.stercomm.com
-	[209.95.244.153])
-	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id m32G3KnU031987
-	for <linux-lvm@redhat.com>; Wed, 2 Apr 2008 12:03:21 -0400
-Received: from IWDUBCORMSG002.sci.local (iwdubcormsg002.sci.local
-	[10.105.142.32])
-	by boamail2.stercomm.com (Postfix) with ESMTP id CAD6E33BE1
-	for <linux-lvm@redhat.com>; Wed,  2 Apr 2008 12:04:50 -0400 (EDT)
-Subject: Re: [linux-lvm] JBOD/NRAID configuration with LVM (repost)
-From: Chris Cox <chris_cox@stercomm.com>
-In-Reply-To: <3457CA04-F4B0-4D9A-A42C-290A4BCD9844@xgm.de>
-References: <3457CA04-F4B0-4D9A-A42C-290A4BCD9844@xgm.de>
-Content-Transfer-Encoding: 7bit
-Date: Wed, 02 Apr 2008 11:03:18 -0500
-Message-Id: <1207152198.30043.17.camel@behemoth.csg.stercomm.com>
-Mime-Version: 1.0
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m32HBCxt018259
+	for <linux-lvm@redhat.com>; Wed, 2 Apr 2008 13:11:12 -0400
+Received: from e34.co.us.ibm.com (e34.co.us.ibm.com [32.97.110.152])
+	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id m32HAnWs024650
+	for <linux-lvm@redhat.com>; Wed, 2 Apr 2008 13:10:49 -0400
+Received: from d03relay02.boulder.ibm.com (d03relay02.boulder.ibm.com
+	[9.17.195.227])
+	by e34.co.us.ibm.com (8.13.8/8.13.8) with ESMTP id m32H91Ci015877
+	for <linux-lvm@redhat.com>; Wed, 2 Apr 2008 13:09:01 -0400
+Received: from d03av01.boulder.ibm.com (d03av01.boulder.ibm.com [9.17.195.167])
+	by d03relay02.boulder.ibm.com (8.13.8/8.13.8/NCO v8.7) with ESMTP id
+	m32HAVaJ155444
+	for <linux-lvm@redhat.com>; Wed, 2 Apr 2008 11:10:39 -0600
+Received: from d03av01.boulder.ibm.com (loopback [127.0.0.1])
+	by d03av01.boulder.ibm.com (8.12.11.20060308/8.13.3) with ESMTP id
+	m32HAVI0004209
+	for <linux-lvm@redhat.com>; Wed, 2 Apr 2008 11:10:31 -0600
+Received: from malahal.beaverton.ibm.com (malahal.beaverton.ibm.com
+	[9.47.17.130])
+	by d03av01.boulder.ibm.com (8.12.11.20060308/8.12.11) with ESMTP id
+	m32HAV20004186
+	for <linux-lvm@redhat.com>; Wed, 2 Apr 2008 11:10:31 -0600
+Date: Wed, 2 Apr 2008 10:10:30 -0700
+From: malahal@us.ibm.com
+Subject: Re: [linux-lvm] LVM2
+Message-ID: <20080402171030.GA10230@us.ibm.com>
+References: <6b16fb4c0804020707v2fca5c05y7f5f258da6ebfe07@mail.gmail.com>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <6b16fb4c0804020707v2fca5c05y7f5f258da6ebfe07@mail.gmail.com>
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -28,44 +40,29 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Transfer-Encoding: 7bit
+To: linux-lvm@redhat.com
 
-On Wed, 2008-04-02 at 17:17 +0200, Florian Lindner wrote:
-...snip...
-> My idea:
-> 
-> - Create an JBOD/NRAID of a all harddisks (except the system disk)
-> 
-> - The JBOD should be flexible when it comes to removing or adding  
-> another disk. For example if I want to remove a harddisk I a) unmount  
-> the JBOD b) say some kind of tool to free the harddisk to remove as  
-> completely as possible c) remove the disk software and hardware wise.
-> 
-> - If we manage to get our hands on another harddisk it is added to the  
-> volume. It there are already more than three disk present it replaces  
-> the smallest one.
-> 
-> - Hot swapping is not important. I don't think it's possible anyway  
-> due to the desktop PC hardware
-> 
-> - If a disk is broken the data loss should be limited to the data that  
-> actually is on that disk, the rest of the JBOD should remain  
-> functional (it is ok if it is not functional before a manual repair run)
-> 
-> How far is this possible with LVM? The distribution is Debian etch.
+I use gentoo but not LVM. Did you enable their /etc/init.d/lvm service.
 
-IMHO, the safest way it to segment your data areas into multiple
-filesystems rather than (you can use LVM areas, just not leverage
-it for what you are asking for) using LVM.
+--Malahal.
 
-Just my opinion.
-
-By using separate filesystems (possibly separate VGs in your
-situation), you can bring a new drive into a VG holding the
-partitions you want to migrate to the larger drive (pvmove) and
-the after that, remove the old smaller drive from that VG
-and ultimately the system.
-
-You might be able to create some kind of mess using contiguous
-allocation of LVs ... but I personally would not recommend it
-(makes way too many assumptions about things... loses flexibility).
+Kaushal Shriyan [kaushalshriyan@gmail.com] wrote:
+> Hi
+> 
+> when i reboot the gentoo box all the lvm settings are gone, I have
+> followed the below steps on Gentoo Linux
+> 
+> http://pastebin.com/d52c219ba
+> 
+> Please let me know if I am missing something
+> 
+> Thanks and Regards
+> 
+> Kaushal
+> 
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@redhat.com
+> https://www.redhat.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
