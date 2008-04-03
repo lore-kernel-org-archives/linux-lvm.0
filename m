@@ -1,18 +1,20 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m32KcKJg018364
-	for <linux-lvm@redhat.com>; Wed, 2 Apr 2008 16:38:20 -0400
-Received: from tecmo.mokeys.org (tecmo.mokeys.org [69.55.238.126])
-	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id m32Kc9lR000834
-	for <linux-lvm@redhat.com>; Wed, 2 Apr 2008 16:38:10 -0400
-Message-ID: <2221.144.92.92.161.1207168681.squirrel@webmail.lotuscat.com>
-Date: Wed, 2 Apr 2008 13:38:01 -0700 (PDT)
-Subject: Re: [linux-lvm] pvmove hung at 100%
-From: <chris@lotuscat.com>
-In-Reply-To: <44410.144.92.92.161.1207069075.squirrel@webmail.lotuscat.com>
-References: <47EEDB6E.7080207@lotuscat.com>
-	<44410.144.92.92.161.1207069075.squirrel@webmail.lotuscat.com>
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m333EXdt003038
+	for <linux-lvm@redhat.com>; Wed, 2 Apr 2008 23:14:33 -0400
+Received: from smtp3.pacifier.net (smtp3.pacifier.net [64.255.237.173])
+	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id m333EL3P010898
+	for <linux-lvm@redhat.com>; Wed, 2 Apr 2008 23:14:21 -0400
+Received: from laptop1.local (ip136.133.dsl-acs2.pdx.iinet.com
+	[209.20.133.136])
+	by smtp3.pacifier.net (Postfix) with ESMTP id CBD5E8589
+	for <linux-lvm@redhat.com>; Wed,  2 Apr 2008 20:14:20 -0700 (PDT)
+From: ben scott <benscott@nwlink.com>
+Date: Wed, 2 Apr 2008 20:14:15 -0700
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+Message-Id: <200804022014.15804.benscott@nwlink.com>
+Subject: [linux-lvm] lvconvert parameters to remove mirror
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -24,23 +26,52 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: chris@lotuscat.com
-Cc: linux-lvm@redhat.com
+To: linux-lvm@redhat.com
 
->> I did a pvmove between two PVs of equal size (both 4TB on different
->> raids) and it seems to have finished (shows 100%) yet pvdisplay
->> commands
->>  show that the source is still allocated and lvdisplay -m on the LV
->> that used the source PV shows that logical extents are still on the
-[stuff deleted]
->
-> This is still stuck after two days. I am thinking perhaps I should do a
-> pvmove --abort to reverse the move and then do the pvmove differently in
-> terms of specifying the LV and multiple PVs to use instead. Does this
-> sound like a relatively safe course of action? I do have backups, but
-[stuff deleted]
+I have a question about how to remove a mirror. On a test
+set up I have the following mirrors:
 
-In case anyone is curious or finds this via search later: the pvmove
---abort was successful and returned everything to the state it was before
-I started the pvmove. I will be doing a different pvmove with the same
-goal soon.
+  bedroom:~/kvpm# lvs --all --segments -o +devices
+    LV               VG    Attr   #Str Type   SSize  Devices
+    lvol0            trurg mwn-a-    3 mirror 23.68G lvol0_mimage_2  
+(0),lvol0_mimage_1(0),lvol0_mimage_3(0)
+    [lvol0_mimage_1] trurg iwi-ao    1 linear 23.68G /dev/hdg6(155008)
+    [lvol0_mimage_2] trurg iwi-ao    1 linear 19.53G /dev/hde2(0)
+    [lvol0_mimage_2] trurg iwi-ao    1 linear  4.15G /dev/hdg5(0)
+    [lvol0_mimage_3] trurg iwi-ao    1 linear 23.68G /dev/hde3(0)
+    [lvol0_mlog]     trurg lwn-ao    1 linear 64.00K /dev/hde1(0)
+
+
+So to remove the mirror "[lvol0_mimage_1]" on /dev/hdg6
+I do the following:
+
+  bedroom:~/kvpm# lvconvert --mirrors -1 trurg/lvol0   /dev/hdg6
+    Logical volume lvol0 converted.
+
+  bedroom:~/kvpm# lvs --all --segments -o +devices
+    LV               VG    Attr   #Str Type   SSize  Devices
+    lvol0            trurg mwn-a-    2 mirror 23.68G lvol0_mimage_2
+(0),lvol0_mimage_3(0)
+    [lvol0_mimage_2] trurg iwi-ao    1 linear 19.53G /dev/hde2(0)
+    [lvol0_mimage_2] trurg iwi-ao    1 linear  4.15G /dev/hdg5(0)
+    [lvol0_mimage_3] trurg iwi-ao    1 linear 23.68G /dev/hde3(0)
+    [lvol0_mlog]     trurg lwn-ao    1 linear 64.00K /dev/hde1(0)
+
+And indeed it is gone. However when I do this:
+
+  bedroom:~/kvpm# lvconvert --mirrors -1 trurg/lvol0   /dev/hde2
+    No free extents on physical volume "/dev/hde2"
+    No specified PVs have space available
+
+Or this:
+
+  bedroom:~/kvpm# lvconvert --mirrors -1 trurg/lvol0   /dev/hde2 /dev/hdg5
+    No free extents on physical volume "/dev/hde2"
+    No mirror images found using specified PVs.
+
+So how do I delete a mirror that spans multiple segments? Wouldn't it make
+sense to have a command such as:
+
+  bedroom:~/kvpm# lvconvert --mirrors -1 trurg/lvol0  [lvol0_mimage_2]
+
+Thank you for any help.
