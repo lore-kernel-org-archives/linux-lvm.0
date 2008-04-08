@@ -1,21 +1,21 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m38B1dQd028574
-	for <linux-lvm@redhat.com>; Tue, 8 Apr 2008 07:01:39 -0400
-Received: from odzwierny0.comarch.com (inptr-69-8.comarch.com [217.74.69.8])
-	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id m38B1Pia026793
-	for <linux-lvm@redhat.com>; Tue, 8 Apr 2008 07:01:26 -0400
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m38BEl5V003685
+	for <linux-lvm@redhat.com>; Tue, 8 Apr 2008 07:14:47 -0400
+Received: from mail.bmsi.com (www.bmsi.com [24.248.44.156])
+	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id m38BEalp005000
+	for <linux-lvm@redhat.com>; Tue, 8 Apr 2008 07:14:37 -0400
+Received: from bmsred.bmsi.com (bmsred.bmsi.com [192.168.9.50])
+	by mail.bmsi.com (8.13.6/8.13.6) with ESMTP id m38BEVNR004921
+	for <linux-lvm@redhat.com>; Tue, 8 Apr 2008 07:14:31 -0400
 Received: from localhost (localhost [127.0.0.1])
-	authenticated as marcin.kaluza@comarch.com
-	by odzwierny0.comarch.com with esmtpa (ComArch ESMTP)
-	id 1JjBZs-00017j-E9
-	for linux-lvm@redhat.com; Tue, 08 Apr 2008 13:01:24 +0200
-From: =?iso-8859-2?Q?Marcin_Ka=B3u=BFa?= <marcin.kaluza@comarch.pl>
-Subject: RE: [linux-lvm] LVM mirroring questions...
-Date: Tue, 8 Apr 2008 13:01:24 +0200
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+	by bmsred.bmsi.com (8.13.5/8.13.6) with ESMTP id m38BEVam023756
+	for <linux-lvm@redhat.com>; Tue, 8 Apr 2008 07:14:31 -0400
+Date: Tue, 8 Apr 2008 07:14:31 -0400 (EDT)
+From: "Stuart D. Gathman" <stuart@bmsi.com>
+Subject: Re: [linux-lvm] LVM mirroring questions...
 In-Reply-To: <69649d440804080214v706eedf3m50e443182a1827ae@mail.gmail.com>
-Message-Id: <E1JjBZs-00017j-E9@odzwierny0.comarch.com>
+Message-ID: <Pine.LNX.4.44.0804080710220.23698-100000@bmsred.bmsi.com>
+MIME-Version: 1.0
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -26,58 +26,46 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: 'LVM general discussion and development' <linux-lvm@redhat.com>
+Content-Type: TEXT/PLAIN; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-Hello
+On Tue, 8 Apr 2008, Jess Bromley wrote:
 
-Why software RAID is not an option? It works with partitions as well as with
-whole disks (actually it doesn't care what it is working on as long as it's
-a block device)
+> I've got a situation where I want to mirror only a partition of a
+> physical disk on to that of another physical disk, not the whole disk;
+> so software/hardware RAID isn't an option.
 
-The amount of log data is small - on my test setup for creating 1GB mirrored
-LV log fit into single 16MB PE - don't know how much of it was left freee
-though. 
-Everything is in mans - the HOWTO seems to be a little old
+That is exactly what software RAID does for you - mirrors a partition.
+LVM mirroring allows you to mirror a logical volume.
 
-But if all you want to do is mirroring one partition, than just create a
-partition of the same size (well, it can be bigger, but then the remaining
-space is lost an unusable) on the other drive and create md over them.
+Here is an example status of partitions mirrored via software raid1:
 
-Hope this helps
-Martin
+$ cat /proc/mdstat
+Personalities : [raid1] 
+read_ahead 1024 sectors
+md0 : active raid1 hda3[0] hdc3[1]
+      530048 blocks [2/2] [UU]
+      
+md2 : active raid1 hda5[0] hdc2[1]
+      18916032 blocks [2/2] [UU]
+      
+md1 : active raid1 hda2[0] hdc1[1]
+      24000 blocks [2/2] [UU]
+      
+unused devices: <none>
 
------Original Message-----
-From: linux-lvm-bounces@redhat.com [mailto:linux-lvm-bounces@redhat.com] On
-Behalf Of Jess Bromley
-Sent: Tuesday, April 08, 2008 11:15 AM
-To: linux-lvm@redhat.com
-Subject: [linux-lvm] LVM mirroring questions...
+You then make PVs on the mds if you want LVM.  For example (another system):
 
-Hi all,
+# pvs
+  PV         VG      Fmt  Attr PSize   PFree  
+  /dev/md2   rootvg  lvm2 a-    36.19G  15.69G
+  /dev/md3   rootvg  lvm2 a-    55.88G   2.00G
+  /dev/md4   rootvg  lvm2 a-    55.88G   6.50G
+  /dev/md5   rootvg  lvm2 a-    83.81G  23.81G
 
-I've been trying to find out about LVM mirroring, but it's hard to
-find much information in the documentation.
-
-Is mirroring considered stable/ready for production use yet?  "man
-lvcreate" and "man lvconvert" suggest that the current stable versions
-support creating mirrored volumes, but the HOWTO has nothing to say
-about it.
-
-On a more detailed note, what sort of size does the physical volume
-for the disk log need to be in relation to the size of the logical
-volume to be mirrored, and is there any way to specify which physical
-volume will hold the disk log (either using lvconvert or lvcreate)?
-
-I've got a situation where I want to mirror only a partition of a
-physical disk on to that of another physical disk, not the whole disk;
-so software/hardware RAID isn't an option.
-
-Thanks for your help,
-J Bromley
-
-_______________________________________________
-linux-lvm mailing list
-linux-lvm@redhat.com
-https://www.redhat.com/mailman/listinfo/linux-lvm
-read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+-- 
+	      Stuart D. Gathman <stuart@bmsi.com>
+    Business Management Systems Inc.  Phone: 703 591-0911 Fax: 703 591-6154
+"Confutatis maledictis, flammis acribus addictis" - background song for
+a Microsoft sponsored "Where do you want to go from here?" commercial.
