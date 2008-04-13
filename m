@@ -1,18 +1,20 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m3BGIW9H005977
-	for <linux-lvm@redhat.com>; Fri, 11 Apr 2008 12:18:32 -0400
-Received: from percy.comedia.it (percy.comedia.it [212.97.59.71])
-	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id m3BGILxY023769
-	for <linux-lvm@redhat.com>; Fri, 11 Apr 2008 12:18:22 -0400
-Date: Fri, 11 Apr 2008 18:18:20 +0200
-From: Luca Berra <bluca@comedia.it>
-Subject: Re: [linux-lvm] LVM mirroring questions...
-Message-ID: <20080411161817.GA5028@percy.comedia.it>
-References: <69649d440804080414qba1bb21waa98de61c11876f8@mail.gmail.com>
-	<Pine.LNX.4.44.0804080716300.23698-100000@bmsred.bmsi.com>
-Mime-Version: 1.0
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m3D2Kj5B013537
+	for <linux-lvm@redhat.com>; Sat, 12 Apr 2008 22:20:45 -0400
+Received: from smtp4.pacifier.net (smtp4.pacifier.net [64.255.237.174])
+	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id m3D2KXEL024702
+	for <linux-lvm@redhat.com>; Sat, 12 Apr 2008 22:20:34 -0400
+Received: from laptop1.local (ip136.133.dsl-acs2.pdx.iinet.com
+	[209.20.133.136])
+	by smtp4.pacifier.net (Postfix) with ESMTP id E50086A884
+	for <linux-lvm@redhat.com>; Sat, 12 Apr 2008 19:20:32 -0700 (PDT)
+From: ben scott <benscott@nwlink.com>
+Date: Sat, 12 Apr 2008 19:20:25 -0700
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Content-Disposition: inline
-In-Reply-To: <Pine.LNX.4.44.0804080716300.23698-100000@bmsred.bmsi.com>
+Message-Id: <200804121920.25946.benscott@nwlink.com>
+Subject: [linux-lvm] removing mirror images
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -23,42 +25,57 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@redhat.com
 
-On Tue, Apr 08, 2008 at 07:25:05AM -0400, Stuart D. Gathman wrote:
->On Tue, 8 Apr 2008, Jess Bromley wrote:
->
->> Also does the fact that software RAID doesn't use a disk log mean that
->> LVM is actually better/faster than RAID at correctly recovering from
->> crashes that leave the mirrored disks out of sync?
->
->The md driver doesn't track which blocks are out of sync.  It recovers
->from a crash by copying the entire partition.  On recent versions, it
->tracks how far it has gotten on the resync in the md superblock, so that it
->doesn't have to start from scratch on a reboot.
+I posted this question about a week ago and received no
+replies at all. Does anyone know the answer to this problem? 
 
-this is not entirely correct.
-md has a bitmap feature that is used to track which blocks are out of
-sync.
+The Problem:
+I have a question about how to remove a mirror. On a test
+set up I have the following mirrors:
 
->The md driver keeps its superblock at the *end* of the partition.  This
->means that you can mount any filesystem/pv as the raw partition.
-again, newer version of md allow to put the superblock at the beginning
-of the device (or 4k from the beginning)
+  bedroom:~/kvpm# lvs --all --segments -o +devices
+    LV               VG    Attr   #Str Type   SSize  Devices
+    lvol0            trurg mwn-a-    3 mirror 23.68G lvol0_mimage_2  
+(0),lvol0_mimage_1(0),lvol0_mimage_3(0)
+    [lvol0_mimage_1] trurg iwi-ao    1 linear 23.68G /dev/hdg6(155008)
+    [lvol0_mimage_2] trurg iwi-ao    1 linear 19.53G /dev/hde2(0)
+    [lvol0_mimage_2] trurg iwi-ao    1 linear  4.15G /dev/hdg5(0)
+    [lvol0_mimage_3] trurg iwi-ao    1 linear 23.68G /dev/hde3(0)
+    [lvol0_mlog]     trurg lwn-ao    1 linear 64.00K /dev/hde1(0)
 
->This requires that LVM give md devices preference when scanning for
->PVs to work correctly :-)
 
-this should be the default in lvm.
+So to remove the mirror "[lvol0_mimage_1]" on /dev/hdg6
+I do the following:
 
-L.
+  bedroom:~/kvpm# lvconvert --mirrors -1 trurg/lvol0   /dev/hdg6
+    Logical volume lvol0 converted.
 
--- 
-Luca Berra -- bluca@comedia.it
-        Communication Media & Services S.r.l.
- /"\
- \ /     ASCII RIBBON CAMPAIGN
-  X        AGAINST HTML MAIL
- / \
+  bedroom:~/kvpm# lvs --all --segments -o +devices
+    LV               VG    Attr   #Str Type   SSize  Devices
+    lvol0            trurg mwn-a-    2 mirror 23.68G lvol0_mimage_2
+(0),lvol0_mimage_3(0)
+    [lvol0_mimage_2] trurg iwi-ao    1 linear 19.53G /dev/hde2(0)
+    [lvol0_mimage_2] trurg iwi-ao    1 linear  4.15G /dev/hdg5(0)
+    [lvol0_mimage_3] trurg iwi-ao    1 linear 23.68G /dev/hde3(0)
+    [lvol0_mlog]     trurg lwn-ao    1 linear 64.00K /dev/hde1(0)
+
+And indeed it is gone. However when I do this:
+
+  bedroom:~/kvpm# lvconvert --mirrors -1 trurg/lvol0   /dev/hde2
+    No free extents on physical volume "/dev/hde2"
+    No specified PVs have space available
+
+Or this:
+
+  bedroom:~/kvpm# lvconvert --mirrors -1 trurg/lvol0   /dev/hde2 /dev/hdg5
+    No free extents on physical volume "/dev/hde2"
+    No mirror images found using specified PVs.
+
+So how do I delete a mirror that spans multiple segments? Wouldn't it make
+sense to have a command such as:
+
+  bedroom:~/kvpm# lvconvert --mirrors -1 trurg/lvol0  [lvol0_mimage_2]
+
+Thank you for any help.
