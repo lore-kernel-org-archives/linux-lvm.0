@@ -1,21 +1,15 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m3EIHpYJ015332
-	for <linux-lvm@redhat.com>; Mon, 14 Apr 2008 14:17:51 -0400
-Received: from wr-out-0506.google.com (wr-out-0506.google.com [64.233.184.234])
-	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id m3EIHd2x019002
-	for <linux-lvm@redhat.com>; Mon, 14 Apr 2008 14:17:39 -0400
-Received: by wr-out-0506.google.com with SMTP id c57so902431wra.9
-	for <linux-lvm@redhat.com>; Mon, 14 Apr 2008 11:17:38 -0700 (PDT)
-Message-ID: <a71bd89a0804141117i4f73fc5q8a7df8fc6ea33b47@mail.gmail.com>
-Date: Mon, 14 Apr 2008 11:17:38 -0700
-From: "Dan Kegel" <dank@kegel.com>
-Sender: daniel.r.kegel@gmail.com
-Subject: Re: [linux-lvm] merge an lvm snapshot back
-In-Reply-To: <1C8CF1EA1A5B5940B81B0710B2A4C93857F239C1AF@an-ex.ActiveNetwerx.int>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m3F2uKaI032415
+	for <linux-lvm@redhat.com>; Mon, 14 Apr 2008 22:56:20 -0400
+Received: from pretender.frop.net (pretender.frop.net [70.85.16.90])
+	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id m3F2uA96000559
+	for <linux-lvm@redhat.com>; Mon, 14 Apr 2008 22:56:10 -0400
+Date: Mon, 14 Apr 2008 22:56:10 -0400
+From: dave@frop.net
+Message-ID: <20080415025610.GB8011@pretender.frop.net>
+Mime-Version: 1.0
 Content-Disposition: inline
-References: <1C8CF1EA1A5B5940B81B0710B2A4C93857F239C1AF@an-ex.ActiveNetwerx.int>
+Subject: [linux-lvm] Increase LV size of snapshot (not COW table size)
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -27,18 +21,15 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Transfer-Encoding: 7bit
+To: linux-lvm@redhat.com
 
-On Mon, Apr 14, 2008 at 11:10 AM, Joseph L. Casale
-<jcasale@activenetwerx.com> wrote:
-> Looking through the archives, I see some mention of this.
-> Is there any progress on this functionality and is intended to be included in a release any time soon?
+I want to use LVM snapshots as CoW filesystems for virtual machines.
 
-For what it's worth, we implemented revert-to-snapshot in the latest
-release of zumastor,
-http://zumastor.org/
-That's not LVM, so this is kind of off-topic, but if you really want
-that feature, zumastor is one way to get it.
+Is it possible to increase the apparent size of the snapshot LV without increasing the COW table size?
 
-What's your use case?
-- Dan
+Basically I want to have a minimally sized filesystem on a lv which I snapshot for each virtual machine.  I don't want to be restricted to having all the snapshots only be the size of the source lv.  I want to increase the LV size of the snapshots at will and then resize the underlying filesystems to fill it out (sparsely within the COW table of course).
+
+It seems that lvresize only increases the cow table size for snapshots, am I correct that LVM can't do what I want? 
+
+thanks alot!
