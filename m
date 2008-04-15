@@ -1,18 +1,18 @@
-Received: from pobox.fab.redhat.com (pobox.fab.redhat.com [10.33.63.12])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m3FF5IIo004948
-	for <linux-lvm@redhat.com>; Tue, 15 Apr 2008 11:05:18 -0400
-Received: from agk.fab.redhat.com (agk.fab.redhat.com [10.33.0.19])
-	by pobox.fab.redhat.com (8.13.1/8.13.1) with ESMTP id m3FF5Icf022734
-	for <linux-lvm@redhat.com>; Tue, 15 Apr 2008 11:05:18 -0400
-Received: from agk by agk.fab.redhat.com with local (Exim 4.34)
-	id 1Jlmik-0007Nk-8B
-	for linux-lvm@redhat.com; Tue, 15 Apr 2008 16:05:18 +0100
-Date: Tue, 15 Apr 2008 16:05:18 +0100
-From: Alasdair G Kergon <agk@redhat.com>
-Message-ID: <20080415150518.GP24157@agk.fab.redhat.com>
+Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m3FG1vkj031222
+	for <linux-lvm@redhat.com>; Tue, 15 Apr 2008 12:01:57 -0400
+Received: from pretender.frop.net (pretender.frop.net [70.85.16.90])
+	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id m3FG1jkX016423
+	for <linux-lvm@redhat.com>; Tue, 15 Apr 2008 12:01:45 -0400
+Date: Tue, 15 Apr 2008 12:01:44 -0400
+From: dave@frop.net
+Subject: Re: [linux-lvm] Increase LV size of snapshot (not COW table size)
+Message-ID: <20080415160144.GA31651@pretender.frop.net>
+References: <20080415025610.GB8011@pretender.frop.net>
+	<234BF196-FE40-4B32-AC84-FB336EC830DA@engineyard.com>
 Mime-Version: 1.0
 Content-Disposition: inline
-Subject: [linux-lvm] LVM2 release 2.02.35
+In-Reply-To: <234BF196-FE40-4B32-AC84-FB336EC830DA@engineyard.com>
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -25,22 +25,17 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: linux-lvm@redhat.com
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-I've uploaded LVM2 2.02.35 to ftp://sources.redhat.com/pub/lvm2/ .
- 
-Fixes some bugs in 2.02.34, the worst of which was a common segfault when
-starting up clvmd, so it's best not to use 2.02.34.  Try 2.02.35 now instead.
+ok, thanks
 
-Changelog
----------
-  Drop cached VG metadata before and after committing changes to it.
-  Rename P_global to P_#global.
-  Don't attempt remote metadata backups of non-clustered VGs. (2.02.29)
-  Don't store fid in VG metadata cache to avoid clvmd segfault. (2.02.34)
-  Update vgsplit to only restrict split with active LVs involved in split.
-  Add lv_is_active() to determine whether an lv is active.
+I'd rather do this at the block device level than at the filesystem level. It seems like this is possible using dmsetup directly, similarly to what is described in this blog post.
 
-Alasdair
--- 
-agk@redhat.com
+http://jons-thoughts.blogspot.com/2007/11/creating-sparse-block-devices.html
+
+Are there any caveats to getting your own dm maps to play nice with lvm? Can i just pretend that lvs are block devices and map onto them?
+
+On Tue, Apr 15, 2008 at 12:48:15AM -0700, Jayson Vantuyl wrote:
+> You'll probably have better luck with unionfs.  LVM doesn't really do  
+> what you're asking for.
+> 
