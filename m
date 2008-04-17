@@ -1,34 +1,18 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m3HCk1EI009908
-	for <linux-lvm@redhat.com>; Thu, 17 Apr 2008 08:46:01 -0400
-Received: from septimus.inrp.fr (septimus.inrp.fr [193.51.247.28])
-	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id m3HCjGn3004243
-	for <linux-lvm@redhat.com>; Thu, 17 Apr 2008 08:45:16 -0400
-Received: from septimus.inrp.fr (septimus.inrp.fr [127.0.0.1])
-	by localhost.septimus.inrp.fr (Postfix) with ESMTP id E97B7E3274
-	for <linux-lvm@redhat.com>; Thu, 17 Apr 2008 14:45:13 +0200 (CEST)
-Received: from valerian.inrp.fr (valerian.inrp.fr [195.83.134.122])
-	by septimus.inrp.fr (Postfix) with ESMTP id DC3AFE3273
-	for <linux-lvm@redhat.com>; Thu, 17 Apr 2008 14:45:13 +0200 (CEST)
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by valerian.inrp.fr (Postfix) with ESMTP id CA1062C0E5
-	for <linux-lvm@redhat.com>; Thu, 17 Apr 2008 14:45:13 +0200 (CEST)
-Received: from valerian.inrp.fr ([127.0.0.1])
-	by localhost (valerian [127.0.0.1]) (amavisd-new, port 10024) with ESMTP
-	id 12816-07 for <linux-lvm@redhat.com>;
-	Thu, 17 Apr 2008 14:45:09 +0200 (CEST)
-Received: from [195.83.134.19] (SCI004.inrp.fr [195.83.134.19])
-	by valerian.inrp.fr (Postfix) with ESMTP id DE8F32BEAD
-	for <linux-lvm@redhat.com>; Thu, 17 Apr 2008 14:45:09 +0200 (CEST)
-Message-ID: <4807463B.2070508@gmail.com>
-Date: Thu, 17 Apr 2008 14:44:43 +0200
-From: Thomas Bellembois <thomas.bellembois@gmail.com>
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m3HEwQWj026139
+	for <linux-lvm@redhat.com>; Thu, 17 Apr 2008 10:58:26 -0400
+Received: from exprod7og106.obsmtp.com (exprod7og106.obsmtp.com [64.18.2.165])
+	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id m3HEwDDR014358
+	for <linux-lvm@redhat.com>; Thu, 17 Apr 2008 10:58:13 -0400
+Received: from stephane by ant.artesyncp.com with local (Exim 4.69)
+	(envelope-from <stephane@artesyncp.com>) id 1JmVYv-0007nv-Hz
+	for linux-lvm@redhat.com; Thu, 17 Apr 2008 15:58:09 +0100
+Date: Thu, 17 Apr 2008 15:58:09 +0100
+From: Stephane Chazelas <stephane.chazelas@emerson.com>
+Message-ID: <chaz20080417145809.GA20413@artesyncp.com>
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] LVM snapshot - "dd" file size
-References: <48061439.6040001@gmail.com>	<20080416210439.GA31820@pretender.frop.net>
-	<003e01c8a009$fa453ad0$0132a8c0@denie>
-In-Reply-To: <003e01c8a009$fa453ad0$0132a8c0@denie>
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+Subject: [linux-lvm] snapshotting to a different volume group
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -40,88 +24,61 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Transfer-Encoding: 7bit
+To: linux-lvm@redhat.com
 
-Nice tip ! It works fine !
-Thanks a lot.
+Hiya,
 
-Ragards,
+I hope you could help me on this:
 
-Thomas
 
-Denie Andriessen wrote:
-> A compressed dd can still be quite large, as there still might contain
-> non zero values..
->
-> if you compress the image, a possible way to make the resulting files
-> smaller is to:
->
-> - do a: 'dd if=/dev/zero of=/dummyfile' on the filesystem first (you
-> might want to use 'bs' and 'count' parameters)
-> - if you topped off the disk, delete the all zero dummyfile.
->
-> The zipped result might be smaller. (both with dd and with tar..)
->
-> Regards,
-> Denie
->
-> ----- Original Message ----- From: <dave@frop.net>
-> To: "LVM general discussion and development" <linux-lvm@redhat.com>
-> Sent: Wednesday, April 16, 2008 11:04 PM
-> Subject: Re: [linux-lvm] LVM snapshot - "dd" file size
->
->
->> this has nothing to do with LVM.
->>
->> dd knows nothing about files, it just copies the entire device (or
->> file or whatever).
->>
->> tar will work, if you use the right command line switches. Search
->> around on the web for pointers on how to use it.
->>
->> Another intermediate way would be to compress the image you get with dd.
->>
->> On Wed, Apr 16, 2008 at 04:59:05PM +0200, Thomas Bellembois wrote:
->>> Hi!
->>>
->>> I am using LVM partitions on a Debian Xen system.
->>> I use LVM snapshots to clone and backup my virtual machines.
->>>
->>> I have noticed that the ISO file created with the "dd" command it much
->>> bigger that the partition used space (actually 4.7GB for the ISO -
->>> 500MB
->>> used space). No problem if I mount the LVM snapshot and "tar" all of
->>> the
->>> data.
->>>
->>> I have googled the question and read that "dd" also copy "not used
->>> space".
->>> Why is the ISO file so big ? Is the "tar" method less safe ?
->>> Is there a better solution ?
->>>
->>> Thanks for your answers.
->>>
->>> Regards,
->>>
->>> Thomas
->>>
->>>
->>>
->>> _______________________________________________
->>> linux-lvm mailing list
->>> linux-lvm@redhat.com
->>> https://www.redhat.com/mailman/listinfo/linux-lvm
->>> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
->>
->> _______________________________________________
->> linux-lvm mailing list
->> linux-lvm@redhat.com
->> https://www.redhat.com/mailman/listinfo/linux-lvm
->> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
->>
->
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+in short:
+
+is it possible to create a snapshot LV of an original LV
+but in a different volume group?
+
+or alternatively, what's the best way to bring up a LV in a VG
+that is missing a PV (as in a disk crash) if that LV has all its
+extents on still sane PVs?
+
+
+in long:
+
+basically, this is what I would like to do:
+
+I have two disks, not as much as I would like, and I want:
+  - to have 100GB of data mirrored (using Linux software raid
+    (mdadm)) on 2 disks so that it survives disk crashs
+  - to make a number of frequent snapshots of that data to
+    be able to restore things in case of human errors.
+  - (and I also want to have some "striped" storage space for
+    worthless data).
+
+BUT, I don't want to have the snapshot volumes mirrored.
+
+My initial idea was to have 2 volume groups: a "safe" one with
+only one /dev/md0 PV and an "unsafe" one with the striped LVs
+and the snapshots.
+
+However I couldn't find how to create snapshots of the LVs in
+"safe" into the "unsafe" VG. It seems to me that it should be
+possible, shouldn't it?
+
+Anyway, then I merged the two "safe" and "unsafe" VGs into one
+"vol" VG. Now I can make snapshots of the LV physically located
+on /dev/md0 into the "unsafe" area.
+
+But if one of the disks fails, /dev/md0 will still be available
+but the "vol" VG won't be able to come up because of the other
+missing PVs.
+
+If such a thing happen, I can happily live with the missing
+snapshots and "unsafe" storage for a while until I buy a
+replacement HD, but how should I do about making sure that the
+/dev/md0 filesystem is still available in the mean time?
+
+Or is there a more straightforward way to achieve this that I
+haven't thought of?
+
+TIA,
+Stephane
