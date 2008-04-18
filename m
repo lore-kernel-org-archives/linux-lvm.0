@@ -1,25 +1,13 @@
-Received: from file.rdu.redhat.com (file.rdu.redhat.com [10.11.255.147])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m3I8Ocf7015400
-	for <linux-lvm@RedHat.com>; Fri, 18 Apr 2008 04:24:38 -0400
-Received: from o.ww.redhat.com (vpn-4-20.str.redhat.com [10.32.4.20])
-	by file.rdu.redhat.com (8.13.1/8.13.1) with ESMTP id m3I8ObVm030346
-	for <linux-lvm@RedHat.com>; Fri, 18 Apr 2008 04:24:37 -0400
-Received: from o.ww.redhat.com (localhost [127.0.0.1])
-	by o.ww.redhat.com (8.14.2/8.14.2) with ESMTP id m3I8OaSX004458
-	for <linux-lvm@RedHat.com>; Fri, 18 Apr 2008 10:24:36 +0200
-Received: (from mauelsha@localhost)
-	by o.ww.redhat.com (8.14.2/8.14.2/Submit) id m3I8OarV004457
-	for linux-lvm@redhat.com; Fri, 18 Apr 2008 10:24:36 +0200
-Date: Fri, 18 Apr 2008 10:24:36 +0200
-From: Heinz Mauelshagen <mauelshagen@redhat.com>
+Date: Fri, 18 Apr 2008 10:35:13 +0100
+From: Stephane Chazelas <stephane.chazelas@emerson.com>
 Subject: Re: [linux-lvm] snapshotting to a different volume group
-Message-ID: <20080418082436.GA7331@redhat.com>
+Message-ID: <chaz20080418093513.GD20413@artesyncp.com>
 References: <chaz20080417145809.GA20413@artesyncp.com>
+	<20080418082436.GA7331@redhat.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <chaz20080417145809.GA20413@artesyncp.com>
-Reply-To: mauelshagen@redhat.com,
-	LVM general discussion and development <linux-lvm@redhat.com>
+In-Reply-To: <20080418082436.GA7331@redhat.com>
+Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -31,89 +19,47 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: linux-lvm@redhat.com
+To: mauelshagen@redhat.com, LVM general discussion and development <linux-lvm@redhat.com>
 
-On Thu, Apr 17, 2008 at 03:58:09PM +0100, Stephane Chazelas wrote:
-> Hiya,
+2008-04-18 10:24:36 +0200, Heinz Mauelshagen:
+> On Thu, Apr 17, 2008 at 03:58:09PM +0100, Stephane Chazelas wrote:
+[...]
+> > is it possible to create a snapshot LV of an original LV
+> > but in a different volume group?
 > 
-> I hope you could help me on this:
-> 
-> 
-> in short:
-> 
-> is it possible to create a snapshot LV of an original LV
-> but in a different volume group?
+> No, not with LVM.
 
-No, not with LVM.
+Hi Heinz,
 
-> 
-> or alternatively, what's the best way to bring up a LV in a VG
-> that is missing a PV (as in a disk crash) if that LV has all its
-> extents on still sane PVs?
+thanks. I've just come accross zumastor while reading the ML
+archives. It looks promising for what I'm trying to achieve. I
+suspect it's gonna be the same wrt to snapshot though, but I'll
+give it a try.
 
-vgchange -P -ay
+> > or alternatively, what's the best way to bring up a LV in a VG
+> > that is missing a PV (as in a disk crash) if that LV has all its
+> > extents on still sane PVs?
+> 
+> vgchange -P -ay
 
-If you have 2 disks, you better mirror them to be completely
-HA on the spindle side of things and avoid any such config hassle,
-potentially leaving you with lost data.
+Oh thanks. I missed that as the option was described in lvm(8)
+and not in vgchange(8). I'll see how to make it fit in the
+initrd scripts.
 
-Heinz
+> If you have 2 disks, you better mirror them to be completely
+> HA on the spindle side of things and avoid any such config hassle,
+> potentially leaving you with lost data.
+[...]
 
-> 
-> 
-> in long:
-> 
-> basically, this is what I would like to do:
-> 
-> I have two disks, not as much as I would like, and I want:
->   - to have 100GB of data mirrored (using Linux software raid
->     (mdadm)) on 2 disks so that it survives disk crashs
->   - to make a number of frequent snapshots of that data to
->     be able to restore things in case of human errors.
->   - (and I also want to have some "striped" storage space for
->     worthless data).
-> 
-> BUT, I don't want to have the snapshot volumes mirrored.
-> 
-> My initial idea was to have 2 volume groups: a "safe" one with
-> only one /dev/md0 PV and an "unsafe" one with the striped LVs
-> and the snapshots.
-> 
-> However I couldn't find how to create snapshots of the LVs in
-> "safe" into the "unsafe" VG. It seems to me that it should be
-> possible, shouldn't it?
-> 
-> Anyway, then I merged the two "safe" and "unsafe" VGs into one
-> "vol" VG. Now I can make snapshots of the LV physically located
-> on /dev/md0 into the "unsafe" area.
-> 
-> But if one of the disks fails, /dev/md0 will still be available
-> but the "vol" VG won't be able to come up because of the other
-> missing PVs.
-> 
-> If such a thing happen, I can happily live with the missing
-> snapshots and "unsafe" storage for a while until I buy a
-> replacement HD, but how should I do about making sure that the
-> /dev/md0 filesystem is still available in the mean time?
-> 
-> Or is there a more straightforward way to achieve this that I
-> haven't thought of?
-> 
-> TIA,
-> Stephane
-> 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+I didn't get that ("the spindle side of things"??). Do you mean
+I should mirror the whole disks? Note that they are not the same
+size. The thing is I have 400 GB of disk space available, I only
+need 100GB of data to be "safe". If I had 2 200GB drives and
+wanted to mirror everything, and have 50GB for snapshots, that
+would leave me with 150 GB for data. While as I need only 100GB
+of safe data and don't need the snapshots to be mirrored. I can
+have 250 GB of storage, 150 GB of which I don't care if it's
+lost (mirrors and snapshots).
 
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-
-Heinz Mauelshagen                                 Red Hat GmbH
-Consulting Development Engineer                   Am Sonnenhang 11
-Storage Development                               56242 Marienrachdorf
-                                                  Germany
-Mauelshagen@RedHat.com                            PHONE +49  171 7803392
-                                                  FAX   +49 2626 924446
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+Best regards,
+Stephane
