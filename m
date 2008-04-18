@@ -1,13 +1,16 @@
-Date: Fri, 18 Apr 2008 13:45:40 +0100
-From: Stephane Chazelas <stephane.chazelas@emerson.com>
-Subject: Re: [linux-lvm] snapshotting to a different volume group
-Message-ID: <chaz20080418124540.GF20413@artesyncp.com>
-References: <chaz20080417145809.GA20413@artesyncp.com>
-	<20080418082436.GA7331@redhat.com>
-	<chaz20080418115315.GE20413@artesyncp.com>
+Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m3IETWYm003628
+	for <linux-lvm@redhat.com>; Fri, 18 Apr 2008 10:29:32 -0400
+Received: from tietoe03.tietoenator.com (datnt07.tieto.com [194.110.47.24])
+	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id m3IET8IK008754
+	for <linux-lvm@redhat.com>; Fri, 18 Apr 2008 10:29:08 -0400
+Content-class: urn:content-classes:message
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <chaz20080418115315.GE20413@artesyncp.com>
+Date: Fri, 18 Apr 2008 16:29:06 +0200
+Message-ID: <FFD83F5BFE8FFB43BFD05446E63D90AC127614DC@maserati.eu.tieto.com>
+From: <Anders.Strandberg@tietoenator.com>
+Content-Transfer-Encoding: 8bit
+Subject: [linux-lvm] Lvm backup/restore
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -19,34 +22,21 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: mauelshagen@redhat.com, LVM general discussion and development <linux-lvm@redhat.com>
+To: linux-lvm@redhat.com
 
-2008-04-18 12:53:15 +0100, Stephane Chazelas:
-[...]
-> By bypassing LVM2 and using dmsetup directly, would I
-> theoretically be able to setup a snapshot outside of LVM2
-> managed volume groups, is it worth me trying to dig that way?
-> Something like: having a LVM (or not) volume group with only
-> /dev/md0 and creating snapshots of that elsewhere while leaving
-> the VG containing /dev/md0 undisturbed?
-[...]
+Hi,
 
-[replying to myself]
+I have scenario where I have defined a PV and a VG covering a whole
+physical disk. I have defined two logical volumes in this VG and used
+them for installing Xen guest domains. Due to some initial problems I
+need to start over again, which means a I have to scratch the whole disk
+to erase all partition information and create  new PV,VG and LV:s.  I
+would like to be able to restore the data from the LV:s to the new disk
+and run the Xen guests as before.
 
-OK, I get it.
+Is there a way of backing up the LV:s and restore them to the disk
+without losing any information?
 
-When one creates a snapshot, he changes the original block
-device to be a "snapshot-origin" so that every write to the
-device is forked into:
-  - copying the original block to the snapshot device(s) COW(s)
-  - writing to the original device.
 
-So, if I've got the COWs on a failed disk, I suspect this might
-degrade the performances or even stop the snapshot-origin from
-working altogether wouldn't it?
-
-I'll keep testing...
-
--- 
-Stephane
+Thanks,
+Anders
