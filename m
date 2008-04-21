@@ -1,26 +1,18 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m3LCqT3S016125
-	for <linux-lvm@redhat.com>; Mon, 21 Apr 2008 08:52:31 -0400
-Received: from smtp02.atlngahp.sys.nuvox.net (smtp-out2.atlngahp.sys.nuvox.net
-	[70.43.63.19])
-	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id m3LCptEJ028953
-	for <linux-lvm@redhat.com>; Mon, 21 Apr 2008 08:51:57 -0400
-Received: from smtp.media-brokers.com (70.43.81.99.nw.nuvox.net [70.43.81.99])
-	by smtp02.atlngahp.sys.nuvox.net (8.13.1/8.13.1) with ESMTP id
-	m3LCpqTF009822
-	for <linux-lvm@redhat.com>; Mon, 21 Apr 2008 08:51:52 -0400
-Received: from [192.168.1.110] (sjester.atl.media-brokers.com [192.168.1.110])
-	by smtp.media-brokers.com (Postfix) with ESMTPSA id 892F463335
-	for <linux-lvm@redhat.com>; Mon, 21 Apr 2008 08:51:52 -0400 (EDT)
-Message-ID: <480C8DE8.3040208@Media-Brokers.com>
-Date: Mon, 21 Apr 2008 08:51:52 -0400
-From: Charles Marcus <CMarcus@Media-Brokers.com>
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m3LKDYER001967
+	for <linux-lvm@redhat.com>; Mon, 21 Apr 2008 16:13:34 -0400
+Received: from fg-out-1718.google.com (fg-out-1718.google.com [72.14.220.155])
+	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id m3LKDN34006286
+	for <linux-lvm@redhat.com>; Mon, 21 Apr 2008 16:13:24 -0400
+Received: by fg-out-1718.google.com with SMTP id e12so1793875fga.7
+	for <linux-lvm@redhat.com>; Mon, 21 Apr 2008 13:13:23 -0700 (PDT)
+Message-ID: <1c748a490804211313j4fabbab7n1003e0208c4d80a2@mail.gmail.com>
+Date: Mon, 21 Apr 2008 13:13:23 -0700
+From: "Larry Dickson" <ldickson@cuttedge.com>
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] Adding PVs to a group
-References: <48091663.2070404@Media-Brokers.com>	<480917FD.60002@Media-Brokers.com>	<20080419001857.GA21151@pretender.frop.net>
-	<480C697E.2020702@redhat.com>
-In-Reply-To: <480C697E.2020702@redhat.com>
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/alternative; 
+	boundary="----=_Part_1115_5473639.1208808803152"
+Subject: [linux-lvm] Instrumenting LVM2
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -31,34 +23,36 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: LVM general discussion and development <linux-lvm@redhat.com>
+To: linux-lvm@redhat.com
 
-On 4/21/2008, Bryn M. Reeves (bmr@redhat.com) wrote:
-> > I had never heard of the %FREE thing though. To fill out a vg I 
-> would just check how many extents are available and use that on the 
-> command line with -l, remember there are no spaces between -l and the 
-> number of extents given.
-> 
-> The %VG, %LV & %FREE suffices were introduced a while back:
-> 
-> Version 2.02.11 - 12th October 2006
-> ===================================
-> [...]
->   Add %VG, %LV and %FREE suffices to lvcreate/lvresize --extents arg.
+------=_Part_1115_5473639.1208808803152
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
 
-Cool... so to confirm, the correct syntax would be:
+Hi all,
 
-lvextend -l%FREE /dev/vg2/var
+I found some promising programs (entry points) for instrumenting LVM, namely
+lvmsadc and lvmsar. Though still present, they seem to be deactivated in
+LVM2, and I can't find anything about them in the HOWTO, etc. Are they going
+to return, and if not, what if anything will take their place?
 
-(no space between the 'l' and '%FREE')
+TIA,
 
-?
+Larry Dickson
 
-Thanks again guys...
+------=_Part_1115_5473639.1208808803152
+Content-Type: text/html; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
 
--- 
+<div>Hi all,</div>
+<div>&nbsp;</div>
+<div>I found some promising programs (entry points) for instrumenting LVM, namely lvmsadc and lvmsar. Though still present, they seem to be deactivated in LVM2, and I can&#39;t find anything about them in the HOWTO, etc. Are they going to return, and if not, what if anything will take their place?</div>
 
-Best regards,
+<div>&nbsp;</div>
+<div>TIA,</div>
+<div>&nbsp;</div>
+<div>Larry Dickson</div>
 
-Charles
+------=_Part_1115_5473639.1208808803152--
