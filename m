@@ -1,26 +1,17 @@
-Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m3LA724N020482
-	for <linux-lvm@redhat.com>; Mon, 21 Apr 2008 06:07:02 -0400
-Received: from smtp01.atlngahp.sys.nuvox.net (smtp-out1.atlngahp.sys.nuvox.net
-	[70.43.63.18])
-	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id m3LA6eTr023122
-	for <linux-lvm@redhat.com>; Mon, 21 Apr 2008 06:06:40 -0400
-Received: from smtp.media-brokers.com (70.43.81.99.nw.nuvox.net [70.43.81.99])
-	by smtp01.atlngahp.sys.nuvox.net (8.13.1/8.13.1) with ESMTP id
-	m3LA6avW024825
-	for <linux-lvm@redhat.com>; Mon, 21 Apr 2008 06:06:36 -0400
-Received: from [192.168.1.110] (sjester.atl.media-brokers.com [192.168.1.110])
-	by smtp.media-brokers.com (Postfix) with ESMTPSA id 2011935F4DA
-	for <linux-lvm@redhat.com>; Mon, 21 Apr 2008 06:06:36 -0400 (EDT)
-Message-ID: <480C672C.4050407@Media-Brokers.com>
-Date: Mon, 21 Apr 2008 06:06:36 -0400
-From: Charles Marcus <CMarcus@Media-Brokers.com>
+Received: from pobox.fab.redhat.com (pobox.fab.redhat.com [10.33.63.12])
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m3LAGVXQ025065
+	for <linux-lvm@redhat.com>; Mon, 21 Apr 2008 06:16:31 -0400
+Received: from [10.33.0.40] (breeves.fab.redhat.com [10.33.0.40])
+	by pobox.fab.redhat.com (8.13.1/8.13.1) with ESMTP id m3LAGUh5005636
+	for <linux-lvm@redhat.com>; Mon, 21 Apr 2008 06:16:31 -0400
+Message-ID: <480C697E.2020702@redhat.com>
+Date: Mon, 21 Apr 2008 11:16:30 +0100
+From: "Bryn M. Reeves" <bmr@redhat.com>
 MIME-Version: 1.0
 Subject: Re: [linux-lvm] Adding PVs to a group
-References: <48091663.2070404@Media-Brokers.com>	<480A3291.7070702@Media-Brokers.com>
-	<480AB63C.4070605@gmail.com>	<480B728C.9010708@Media-Brokers.com>
-	<1208737330.13193.66.camel@corn.betterworld.us>
-In-Reply-To: <1208737330.13193.66.camel@corn.betterworld.us>
+References: <48091663.2070404@Media-Brokers.com>	<480917FD.60002@Media-Brokers.com>
+	<20080419001857.GA21151@pretender.frop.net>
+In-Reply-To: <20080419001857.GA21151@pretender.frop.net>
 Content-Transfer-Encoding: 7bit
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
@@ -32,30 +23,32 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
+Content-Type: text/plain; charset="us-ascii"
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-On 4/20/2008, Ross Boylan (ross@biostat.ucsf.edu) wrote:
->> vgextend vg2 /dev/sdb2, then
->> 
->> lvextend -L+100G /dev/vg2/var, then
->> 
->> resize_reiserfs -f /dev/vg2/var
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA1
 
-> In your first example you umount'd before resizing. In this example 
-> you don't. reiser doesn't require taking the volume offline before 
-> resizing, so I don't think you need umount in any case.
+dave@frop.net wrote:
+> sounds fine to me.
+> 
+> I had never heard of the %FREE thing though. To fill out a vg I would just check how many extents are available and use that on the command line with -l, remember there are no spaces between -l and the number of extents given.
 
-Right... although, if I'm not mistaken, you do have to umount if you are 
-*shrinking*...
+The %VG, %LV & %FREE suffices were introduced a while back:
 
-And I'm assuming thats what the -f is for when doing it on a live 
-filesystem?
+Version 2.02.11 - 12th October 2006
+===================================
+[...]
+  Add %VG, %LV and %FREE suffices to lvcreate/lvresize --extents arg.
 
-But I prefer to umount anyway... just feels safer to me...
 
--- 
+Regards,
+Bryn.
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.7 (GNU/Linux)
+Comment: Using GnuPG with Fedora - http://enigmail.mozdev.org
 
-Best regards,
-
-Charles
+iD8DBQFIDGl+6YSQoMYUY94RAmYvAKCSdjcxMRVbvZY0RCKEJZYClEyzdwCgrJ2m
+kJj33ju8X2nYhJcG0yhBA1g=
+=cdou
+-----END PGP SIGNATURE-----
