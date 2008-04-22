@@ -1,23 +1,20 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m3MAVRNu006313
-	for <linux-lvm@redhat.com>; Tue, 22 Apr 2008 06:31:27 -0400
-Received: from smtp03.atlngahp.sys.nuvox.net (smtp-out3.atlngahp.sys.nuvox.net
-	[70.43.63.20])
-	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id m3MAUv5V008373
-	for <linux-lvm@redhat.com>; Tue, 22 Apr 2008 06:30:58 -0400
-Received: from smtp.media-brokers.com (70.43.81.99.nw.nuvox.net [70.43.81.99])
-	by smtp03.atlngahp.sys.nuvox.net (8.13.1/8.13.1) with ESMTP id
-	m3MAUjsD028524
-	for <linux-lvm@redhat.com>; Tue, 22 Apr 2008 06:30:45 -0400
-Received: from [192.168.1.110] (sjester.atl.media-brokers.com [192.168.1.110])
-	by smtp.media-brokers.com (Postfix) with ESMTPSA id E98B52A57D5
-	for <linux-lvm@redhat.com>; Tue, 22 Apr 2008 06:30:44 -0400 (EDT)
-Message-ID: <480DBE54.1090406@Media-Brokers.com>
-Date: Tue, 22 Apr 2008 06:30:44 -0400
-From: Charles Marcus <CMarcus@Media-Brokers.com>
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m3MAmNvW014546
+	for <linux-lvm@redhat.com>; Tue, 22 Apr 2008 06:48:23 -0400
+Received: from exprod7og112.obsmtp.com (exprod7og112.obsmtp.com [64.18.2.177])
+	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id m3MAllKC019310
+	for <linux-lvm@redhat.com>; Tue, 22 Apr 2008 06:47:48 -0400
+Received: from stephane by ant.artesyncp.com with local (Exim 4.69)
+	(envelope-from <stephane@artesyncp.com>) id 1JoG2K-0004Bs-UF
+	for linux-lvm@redhat.com; Tue, 22 Apr 2008 11:47:45 +0100
+Date: Tue, 22 Apr 2008 11:47:44 +0100
+From: Stephane Chazelas <stephane.chazelas@emerson.com>
+Subject: Re: [linux-lvm] Snapshot question...
+Message-ID: <chaz20080422104744.GI20413@artesyncp.com>
+References: <480DBE54.1090406@Media-Brokers.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] Snapshot question...
+Content-Disposition: inline
+In-Reply-To: <480DBE54.1090406@Media-Brokers.com>
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -28,40 +25,51 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: linux-lvm@redhat.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-Ok, now I have a question on how snapshots work...
+2008-04-22 06:30:44 -0400, Charles Marcus:
+[...]
+> So, I have allocated 5GB of 'free space' in my volume group for snapshot 
+> use.
+>
+> What I don't understand is... why am I mounting and then backing up the 
+> newly created snapshot volume, if it only contains the *changes* to the 
+> volume I really want to backup - which in my case is /var/virtual?
+>
+> If the snapshot volume is only 5GB, how, by backing up *this* volume, am I 
+> backing up over 100GB of data that is in a different volume?
+[...]
 
-I've read the following links:
+When you create a snapshot, LVM2 does 4 things:
 
-http://tldp.org/HOWTO/LVM-HOWTO/snapshotintro.html
+- it allocates a normal (linear) storage COW (copy-on-write)
+  volume of the specified size which you don't normally access directly.
+- creates a "snapshot" volume which is a virtual volume that
+  allows you to access the frozen version of the snaphost
+  volume.
 
-http://tldp.org/HOWTO/LVM-HOWTO/snapshots_backup.html
+(if it hasn't been done before):
+- it dupplicates the original volume as xxxx-real
+- it changes the original volume to a be "snapshot-origin" type
+  which refers to the "real" volume and the "COW" volume.
 
-but am still unsure of something...
+When you read from the "snapshot" volume (the one you're backing
+up), data that hasn't been modified since the snapshot is read
+from the "real" volume and from the "COW" volume otherwise.
 
-When a snapshot volume is created, it only needs to be large enough to 
-accommodate any *changes* to the volume I'll be taking a snapshot of, 
-correct? So, on a low volume mail server, 5GB should be way more than 
-enough, especially if done in the middle of the night when it is 
-essentially idling, right? I'm guessing that 500MB would probably be 
-more than enough, but disk space is cheap, and I have plenty.
+When you read from your original volume (that has been changed
+to be of "snapshot-origin" type), you actually read from the
+"real" volume (the original version of the original volume), but
+when you write to it, the system makes sure that unless it has
+been done already, the block you're modifying are being copied
+first from the "real" volume to COW volume before being modified
+in the "real" volume.
 
-So, I have allocated 5GB of 'free space' in my volume group for snapshot 
-use.
+So to sum up, the "snapshot" volume you are creating is a
+"virtual" volume that is a front end to both the snapshot
+storage volume ("COW") and the original real volume ("real").
 
-What I don't understand is... why am I mounting and then backing up the 
-newly created snapshot volume, if it only contains the *changes* to the 
-volume I really want to backup - which in my case is /var/virtual?
-
-If the snapshot volume is only 5GB, how, by backing up *this* volume, am 
-I backing up over 100GB of data that is in a different volume?
-
-Tia for any responses,
-
--- 
-
-Best regards,
-
-Charles
+Hope this clarifies a bit,
+Stephane
