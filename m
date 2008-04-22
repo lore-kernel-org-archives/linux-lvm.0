@@ -1,18 +1,23 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m3LKDYER001967
-	for <linux-lvm@redhat.com>; Mon, 21 Apr 2008 16:13:34 -0400
-Received: from fg-out-1718.google.com (fg-out-1718.google.com [72.14.220.155])
-	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id m3LKDN34006286
-	for <linux-lvm@redhat.com>; Mon, 21 Apr 2008 16:13:24 -0400
-Received: by fg-out-1718.google.com with SMTP id e12so1793875fga.7
-	for <linux-lvm@redhat.com>; Mon, 21 Apr 2008 13:13:23 -0700 (PDT)
-Message-ID: <1c748a490804211313j4fabbab7n1003e0208c4d80a2@mail.gmail.com>
-Date: Mon, 21 Apr 2008 13:13:23 -0700
-From: "Larry Dickson" <ldickson@cuttedge.com>
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m3MAVRNu006313
+	for <linux-lvm@redhat.com>; Tue, 22 Apr 2008 06:31:27 -0400
+Received: from smtp03.atlngahp.sys.nuvox.net (smtp-out3.atlngahp.sys.nuvox.net
+	[70.43.63.20])
+	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id m3MAUv5V008373
+	for <linux-lvm@redhat.com>; Tue, 22 Apr 2008 06:30:58 -0400
+Received: from smtp.media-brokers.com (70.43.81.99.nw.nuvox.net [70.43.81.99])
+	by smtp03.atlngahp.sys.nuvox.net (8.13.1/8.13.1) with ESMTP id
+	m3MAUjsD028524
+	for <linux-lvm@redhat.com>; Tue, 22 Apr 2008 06:30:45 -0400
+Received: from [192.168.1.110] (sjester.atl.media-brokers.com [192.168.1.110])
+	by smtp.media-brokers.com (Postfix) with ESMTPSA id E98B52A57D5
+	for <linux-lvm@redhat.com>; Tue, 22 Apr 2008 06:30:44 -0400 (EDT)
+Message-ID: <480DBE54.1090406@Media-Brokers.com>
+Date: Tue, 22 Apr 2008 06:30:44 -0400
+From: Charles Marcus <CMarcus@Media-Brokers.com>
 MIME-Version: 1.0
-Content-Type: multipart/alternative; 
-	boundary="----=_Part_1115_5473639.1208808803152"
-Subject: [linux-lvm] Instrumenting LVM2
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] Snapshot question...
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -23,36 +28,40 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: linux-lvm@redhat.com
 
-------=_Part_1115_5473639.1208808803152
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
+Ok, now I have a question on how snapshots work...
 
-Hi all,
+I've read the following links:
 
-I found some promising programs (entry points) for instrumenting LVM, namely
-lvmsadc and lvmsar. Though still present, they seem to be deactivated in
-LVM2, and I can't find anything about them in the HOWTO, etc. Are they going
-to return, and if not, what if anything will take their place?
+http://tldp.org/HOWTO/LVM-HOWTO/snapshotintro.html
 
-TIA,
+http://tldp.org/HOWTO/LVM-HOWTO/snapshots_backup.html
 
-Larry Dickson
+but am still unsure of something...
 
-------=_Part_1115_5473639.1208808803152
-Content-Type: text/html; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
+When a snapshot volume is created, it only needs to be large enough to 
+accommodate any *changes* to the volume I'll be taking a snapshot of, 
+correct? So, on a low volume mail server, 5GB should be way more than 
+enough, especially if done in the middle of the night when it is 
+essentially idling, right? I'm guessing that 500MB would probably be 
+more than enough, but disk space is cheap, and I have plenty.
 
-<div>Hi all,</div>
-<div>&nbsp;</div>
-<div>I found some promising programs (entry points) for instrumenting LVM, namely lvmsadc and lvmsar. Though still present, they seem to be deactivated in LVM2, and I can&#39;t find anything about them in the HOWTO, etc. Are they going to return, and if not, what if anything will take their place?</div>
+So, I have allocated 5GB of 'free space' in my volume group for snapshot 
+use.
 
-<div>&nbsp;</div>
-<div>TIA,</div>
-<div>&nbsp;</div>
-<div>Larry Dickson</div>
+What I don't understand is... why am I mounting and then backing up the 
+newly created snapshot volume, if it only contains the *changes* to the 
+volume I really want to backup - which in my case is /var/virtual?
 
-------=_Part_1115_5473639.1208808803152--
+If the snapshot volume is only 5GB, how, by backing up *this* volume, am 
+I backing up over 100GB of data that is in a different volume?
+
+Tia for any responses,
+
+-- 
+
+Best regards,
+
+Charles
