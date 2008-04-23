@@ -1,17 +1,25 @@
-Received: from pobox.fab.redhat.com (pobox.fab.redhat.com [10.33.63.12])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m3N9sOZE011220
-	for <linux-lvm@redhat.com>; Wed, 23 Apr 2008 05:54:25 -0400
-Received: from jeltz.chrissie.net (vpn-6-9.fab.redhat.com [10.33.6.9])
-	by pobox.fab.redhat.com (8.13.1/8.13.1) with ESMTP id m3N9sO1W010450
-	for <linux-lvm@redhat.com>; Wed, 23 Apr 2008 05:54:24 -0400
-Message-ID: <480F074E.40903@redhat.com>
-Date: Wed, 23 Apr 2008 10:54:22 +0100
-From: Christine Caulfield <ccaulfie@redhat.com>
+Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m3NA8Tia019163
+	for <linux-lvm@redhat.com>; Wed, 23 Apr 2008 06:08:29 -0400
+Received: from smtp01.atlngahp.sys.nuvox.net (smtp-out1.atlngahp.sys.nuvox.net
+	[70.43.63.18])
+	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id m3NA843Z031434
+	for <linux-lvm@redhat.com>; Wed, 23 Apr 2008 06:08:04 -0400
+Received: from smtp.media-brokers.com (70.43.81.99.nw.nuvox.net [70.43.81.99])
+	by smtp01.atlngahp.sys.nuvox.net (8.13.1/8.13.1) with ESMTP id
+	m3NA81GE010676
+	for <linux-lvm@redhat.com>; Wed, 23 Apr 2008 06:08:01 -0400
+Received: from [192.168.1.110] (sjester.atl.media-brokers.com [192.168.1.110])
+	by smtp.media-brokers.com (Postfix) with ESMTPSA id 4AA822407
+	for <linux-lvm@redhat.com>; Wed, 23 Apr 2008 06:08:01 -0400 (EDT)
+Message-ID: <480F0A81.6030504@Media-Brokers.com>
+Date: Wed, 23 Apr 2008 06:08:01 -0400
+From: Charles Marcus <CMarcus@Media-Brokers.com>
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] clvmd on openais
-References: <1cafab770804230025q585c565awc8a70c8b9b2d2345@mail.gmail.com>	<480EE876.6050400@redhat.com>	<1cafab770804230110n4370eb37ga0dc41ee255ecffb@mail.gmail.com>	<480EFD72.5010809@redhat.com>
-	<1cafab770804230225l6dabdd65na69df87466a81ed6@mail.gmail.com>
-In-Reply-To: <1cafab770804230225l6dabdd65na69df87466a81ed6@mail.gmail.com>
+Subject: Re: [linux-lvm] Snapshot question...
+References: <480DBE54.1090406@Media-Brokers.com>	<chaz20080422104744.GI20413@artesyncp.com>	<480E121A.7020100@Media-Brokers.com>	<20080422164712.GA22544@pretender.frop.net>
+	<480E1BD1.3020601@Media-Brokers.com>
+In-Reply-To: <480E1BD1.3020601@Media-Brokers.com>
 Content-Transfer-Encoding: 7bit
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
@@ -23,47 +31,23 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-Xinwei Hu wrote:
-> 2008/4/23, Christine Caulfield <ccaulfie@redhat.com>:
->> Xinwei Hu wrote:
->>  > 2008/4/23, Christine Caulfield <ccaulfie@redhat.com>:
->>  >> Xinwei Hu wrote:
->>  >>  > Hi all,
->>  >>  >   clvmd-openais.c uses saLckResourceLockAsync and
->>  >>  > saLckResourceUnlockAsync. But they then pthread_cond_wait the lock
->>  >>  > operation to finished.
->>  >>  >
->>  >>  >   Since we have to wait, why not switch to use saLckResourceLock and
->>  >>  > saLckResourceUnlock directly ? Are there any reasons behind this ?
->>  >>  >
->>  >>
->>  >>
->>  >> It's mainly because the code was copied and editted from the other
->>  >>  cluster systems, I think :-)
->>  > Then I propose this patch to switch over. ;)
->>
->>
->>
->> Thanks, but that patch seems to have got corrupted or something, it
->>  doesn't apply to head of CVS. can you send it again please ?
->>
->>
->>  Hunk #3 FAILED at 295.
->>  Hunk #4 succeeded at 315 (offset -8 lines).
->>  Hunk #6 succeeded at 478 (offset -8 lines).
->>  patch: **** malformed patch at line 161: @@ -590,15 +536,13 @@
->>
-> Take 2.
-> Against CVS head now. Please help to review ;)
+On 4/22/2008, Charles Marcus (CMarcus@Media-Brokers.com) wrote:
+> Lastly...
+> 
+> Should the snapshot volume fill up, what happens to the original? I'm 
+> guessing that it would be protected from any kind of data loss?
 
+Never mind... tfm answers this (automatically released)...
 
-That looks good to me and it tests out OK.
-
-It's now in CVS, thank you very much.
+Hmmm... this appears to be a dev oriented list? Is there one aimed more 
+at lowly users? I hate bothering the magicians behind the curtain with 
+simple/dumb end-user questions like above...
 
 -- 
 
-Chrissie
+Best regards,
+
+Charles
