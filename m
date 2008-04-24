@@ -1,21 +1,18 @@
-Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m3OIunc7002802
-	for <linux-lvm@redhat.com>; Thu, 24 Apr 2008 14:56:49 -0400
-Received: from hrndva-omtalb.mail.rr.com (hrndva-omtalb.mail.rr.com
-	[71.74.56.123])
-	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id m3OIubAc003753
-	for <linux-lvm@redhat.com>; Thu, 24 Apr 2008 14:56:38 -0400
-Received: from cpe-76-90-113-66.socal.rr.com ([76.90.113.66])
-	by hrndva-omta03.mail.rr.com with ESMTP id
-	<20080424185632.ZIUW28252.hrndva-omta03.mail.rr.com@cpe-76-90-113-66.socal.rr.com>
-	for <linux-lvm@redhat.com>; Thu, 24 Apr 2008 18:56:32 +0000
-Date: Thu, 24 Apr 2008 11:56:31 -0700 (PDT)
-From: chekov@ucla.edu
-In-Reply-To: <20080424172021.E3A06619B4C@hormel.redhat.com>
-Message-ID: <alpine.LRH.1.10.0804241155020.4181@cpe-76-90-113-66.socal.rr.com>
+Received: from pobox.corp.redhat.com (pobox.corp.redhat.com [10.11.255.20])
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m3OLFe7k007879
+	for <linux-lvm@redhat.com>; Thu, 24 Apr 2008 17:15:40 -0400
+Received: from [192.168.1.101] (vpn-248-22.boston.redhat.com [10.13.248.22])
+	by pobox.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m3OLFc9v020703
+	for <linux-lvm@redhat.com>; Thu, 24 Apr 2008 17:15:39 -0400
+Message-Id: <6DEE1975-4C6A-4471-9F63-ADD44C0A1D4C@redhat.com>
+From: Jonathan Brassow <jbrassow@redhat.com>
+In-Reply-To: <alpine.LRH.1.10.0804241155020.4181@cpe-76-90-113-66.socal.rr.com>
+Content-Transfer-Encoding: 7bit
+Mime-Version: 1.0 (Apple Message framework v919.2)
+Subject: Re: [linux-lvm] question about mirrors
+Date: Thu, 24 Apr 2008 16:15:37 -0500
 References: <20080424172021.E3A06619B4C@hormel.redhat.com>
-MIME-Version: 1.0
-Subject: [linux-lvm] question about mirrors
+	<alpine.LRH.1.10.0804241155020.4181@cpe-76-90-113-66.socal.rr.com>
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -26,14 +23,28 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; format="flowed"; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: linux-lvm@redhat.com
+Content-Type: text/plain; charset="us-ascii"; format="flowed"; delsp="yes"
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-I created a lvm mirror on two seperate storage arrays.
+There is not a way to do what you want right now through a simple lvm  
+command.
 
-now I want to break the mirror but use _both_ copies of the data.  it seems 
-that whenever I break a test mirror the mirror just goes back in to the 
-storage pool and can't be accessed any more.  is there a way to mount both 
-mirror halfs?
--alan
+If you are willing to hand edit some metadata, then it can be done.
+
+  brassow
+
+On Apr 24, 2008, at 1:56 PM, chekov@ucla.edu wrote:
+
+> I created a lvm mirror on two seperate storage arrays.
+>
+> now I want to break the mirror but use _both_ copies of the data.   
+> it seems that whenever I break a test mirror the mirror just goes  
+> back in to the storage pool and can't be accessed any more.  is  
+> there a way to mount both mirror halfs?
+> -alan
+>
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@redhat.com
+> https://www.redhat.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
