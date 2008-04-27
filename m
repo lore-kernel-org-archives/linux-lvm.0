@@ -1,27 +1,25 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m3R2Hdwc007676
-	for <linux-lvm@redhat.com>; Sat, 26 Apr 2008 22:17:39 -0400
-Received: from nlpi053.prodigy.net (nlpi053.sbcis.sbc.com [207.115.36.82])
-	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id m3R2HFhf027312
-	for <linux-lvm@redhat.com>; Sat, 26 Apr 2008 22:17:16 -0400
-Received: from mail.kdzbn.homelinux.net
-	(adsl-75-40-228-163.dsl.klmzmi.sbcglobal.net [75.40.228.163])
-	(authenticated bits=0)
-	by nlpi053.prodigy.net (8.13.8 smtpauth/dk/8.13.8) with ESMTP id
-	m3R2H7UB024931
-	for <linux-lvm@redhat.com>; Sat, 26 Apr 2008 21:17:07 -0500
-Received: from beta.mydomain ([192.168.2.237])
-	by mail.kdzbn.homelinux.net with esmtp (Exim 4.62)
-	(envelope-from <bryan@kadzban.is-a-geek.net>) id 1JpwRx-0007an-Tu
-	for linux-lvm@redhat.com; Sat, 26 Apr 2008 22:17:09 -0400
-Message-ID: <4813E225.7040900@kadzban.is-a-geek.net>
-Date: Sat, 26 Apr 2008 22:17:09 -0400
-From: Bryan Kadzban <bryan@kadzban.is-a-geek.net>
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m3RJmjuj002482
+	for <linux-lvm@redhat.com>; Sun, 27 Apr 2008 15:48:45 -0400
+Received: from smtp04.atlngahp.sys.nuvox.net (smtp-out4.atlngahp.sys.nuvox.net
+	[70.43.63.22])
+	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id m3RJmXfW028978
+	for <linux-lvm@redhat.com>; Sun, 27 Apr 2008 15:48:34 -0400
+Received: from smtp.media-brokers.com (70.43.81.99.nw.nuvox.net [70.43.81.99])
+	by smtp04.atlngahp.sys.nuvox.net (8.13.1/8.13.1) with ESMTP id
+	m3RJmTD5026509
+	for <linux-lvm@redhat.com>; Sun, 27 Apr 2008 15:48:29 -0400
+Received: from [192.168.1.110] (sjester.atl.media-brokers.com [192.168.1.110])
+	by smtp.media-brokers.com (Postfix) with ESMTPSA id D222549ED
+	for <linux-lvm@redhat.com>; Sun, 27 Apr 2008 15:48:28 -0400 (EDT)
+Message-ID: <4814D88C.3050304@Media-Brokers.com>
+Date: Sun, 27 Apr 2008 15:48:28 -0400
+From: Charles Marcus <CMarcus@Media-Brokers.com>
 MIME-Version: 1.0
 Subject: Re: [linux-lvm] Offline fsck (checking snapshots)
-References: <48110C2D.5020800@kadzban.is-a-geek.net>
-	<4813D644.7080003@Media-Brokers.com>
-In-Reply-To: <4813D644.7080003@Media-Brokers.com>
+References: <48110C2D.5020800@kadzban.is-a-geek.net>	<4813D644.7080003@Media-Brokers.com>
+	<4813E225.7040900@kadzban.is-a-geek.net>
+In-Reply-To: <4813E225.7040900@kadzban.is-a-geek.net>
 Content-Transfer-Encoding: 7bit
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
@@ -33,51 +31,56 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
------BEGIN PGP SIGNED MESSAGE-----
-Hash: RIPEMD160
+On 4/26/2008, Bryan Kadzban (bryan@kadzban.is-a-geek.net) wrote:
+>>> I've gotten a script that I think is reasonable, that handles 
+>>> this. With some help from others, it now works with XFS as well
+>>> as ext2/3, and it's supposed to also work with JFS. Since it
+>>> requires LVM, I think it might make sense to put something like
+>>> it into the LVM userspace tools.
 
-Charles Marcus wrote:
-> Bryan Kadzban wrote:
->> I've gotten a script that I think is reasonable, that handles this.
->> With some help from others, it now works with XFS as well as ext2/3,
->> and it's supposed to also work with JFS.  Since it requires LVM, I
->> think it might make sense to put something like it into the LVM
->> userspace tools.
-> 
-> Sounds interesting... but any particular reason you're ignoring
-> reiserfs?
+>> Sounds interesting... but any particular reason you're ignoring
+>> reiserfs?
 
-No particular reason, no.  I just haven't used it in maybe 6 years, so I
-don't remember much about it.  I also assume that nobody listening to
-the discussion on ext3-users uses it either (based on the fact that
-nobody else asked for it).  So it didn't get added.  :-)
+> No particular reason, no. I just haven't used it in maybe 6 years, so
+> I don't remember much about it. I also assume that nobody listening
+> to the discussion on ext3-users uses it either (based on the fact
+> that nobody else asked for it). So it didn't get added. :-)
 
-I assume fsck.reiserfs is the right executable to use?  (I seem to
-remember a reiserfsck, but not whether they were equivalent...)  What
-args should be used to get it to check the snapshot FS, preferably
-making as few changes as possible?  (E.g., ext3 requires a pre-check
-check to clean up orphan inodes, otherwise the real check will exit with
-a failure status; does reiserfs require anything similar?)
+Heh - no worries, I wasn't complaining, just asking... I do use it for 
+my /var (maildirs), which is why I was asking...
 
-I don't remember whether it stores the last-fsck time either; if it
-does, is there some way to get that out (for try_get_check_date)?  Does
-it support updating that time while an LV is online?  What about forcing
-a check (per-filesystem) on the next reboot?  (Any ability to set the
-last-fsck time would work for both preventing a check and forcing a
-check, of course.)
+I know, I've heard all of the horror stories... but my RAID card has a 
+BBU on it, and my servers all have good UPS's on them , and are running 
+nut sp will safely shut down in the event of a prolonged power failure 
+(which has only happened once).
 
-Google says it can do an external journal; how can you tell whether
-that's in use (to skip making snapshots of only half the device)?
+Mine has been rock-solid for almost 4 years now.
 
-Thanks!
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.7 (GNU/Linux)
-Comment: Using GnuPG with Mozilla - http://enigmail.mozdev.org
+> I assume fsck.reiserfs is the right executable to use? (I seem to 
+> remember a reiserfsck, but not whether they were equivalent...) What 
+> args should be used to get it to check the snapshot FS, preferably 
+> making as few changes as possible? (E.g., ext3 requires a pre-check 
+> check to clean up orphan inodes, otherwise the real check will exit 
+> with a failure status; does reiserfs require anything similar?)
 
-iD8DBQFIE+IlS5vET1Wea5wRA9jiAKDWRfyU42n5gVbmeN5oqdt4ElhhkgCfZ+we
-T5XNVLgYw/tG4r5g5uaNIAU=
-=Vdq3
------END PGP SIGNATURE-----
+Ouch... I wish I could help, I'd be happy to, but I'm just a lowly sys 
+admin pretender, not a programmer... ;)
+
+Right now, I'm just trying to find the time to get an automated backup 
+script running to pause some services (postfix+dovecot), take a snapshot 
+of my /var, restart the services, run rsnapshot on the snapshot volume, 
+then release the snapshot volume...
+
+Right now I'm running my backups on the live filesystem, which, since 
+this system isn't used all that heavily, especially at night, isn't 
+doesn't worry me *too* much, I'd still prefer to 'do it right'... hence 
+my interest in your script...
+
+-- 
+
+Best regards,
+
+Charles
