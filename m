@@ -1,17 +1,24 @@
-Received: from pobox.fab.redhat.com (pobox.fab.redhat.com [10.33.63.12])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m3S8vqLZ006773
-	for <linux-lvm@redhat.com>; Mon, 28 Apr 2008 04:57:53 -0400
-Received: from jeltz.chrissie.net (vpn-6-14.fab.redhat.com [10.33.6.14])
-	by pobox.fab.redhat.com (8.13.1/8.13.1) with ESMTP id m3S8vqET016548
-	for <linux-lvm@redhat.com>; Mon, 28 Apr 2008 04:57:52 -0400
-Message-ID: <4815918E.5080806@redhat.com>
-Date: Mon, 28 Apr 2008 09:57:50 +0100
-From: Christine Caulfield <ccaulfie@redhat.com>
+Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m3SGQJ9F011790
+	for <linux-lvm@redhat.com>; Mon, 28 Apr 2008 12:26:19 -0400
+Received: from smtp03.atlngahp.sys.nuvox.net (smtp-out3.atlngahp.sys.nuvox.net
+	[70.43.63.20])
+	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id m3SGQ5cc021414
+	for <linux-lvm@redhat.com>; Mon, 28 Apr 2008 12:26:06 -0400
+Received: from smtp.media-brokers.com (70.43.81.99.nw.nuvox.net [70.43.81.99])
+	by smtp03.atlngahp.sys.nuvox.net (8.13.1/8.13.1) with ESMTP id
+	m3SGPwd4023086
+	for <linux-lvm@redhat.com>; Mon, 28 Apr 2008 12:25:59 -0400
+Received: from [192.168.1.110] (sjester.atl.media-brokers.com [192.168.1.110])
+	by smtp.media-brokers.com (Postfix) with ESMTPSA id CA1202834E0
+	for <linux-lvm@redhat.com>; Mon, 28 Apr 2008 12:25:58 -0400 (EDT)
+Message-ID: <4815FA96.1090302@Media-Brokers.com>
+Date: Mon, 28 Apr 2008 12:25:58 -0400
+From: Charles Marcus <CMarcus@Media-Brokers.com>
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] Re: Patch to clvmd-openais.c again
-References: <1cafab770804250311n1c530743h30cbd62e725f345f@mail.gmail.com>
-	<1cafab770804250312y7556ceddu3cff6a4c13a06355@mail.gmail.com>
-In-Reply-To: <1cafab770804250312y7556ceddu3cff6a4c13a06355@mail.gmail.com>
+Subject: Re: [linux-lvm] How to move /usr from LVM back to non-LVM?
+References: <4814E782.9080805@Media-Brokers.com> <4815553F.5030806@free.fr>
+In-Reply-To: <4815553F.5030806@free.fr>
 Content-Transfer-Encoding: 7bit
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
@@ -23,38 +30,22 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-Xinwei Hu wrote:
-> Sorry, stupid thing happens ;)
-> 
-> 2008/4/25, Xinwei Hu <hxinwei@gmail.com>:
->> Hi all,
->>
->>   The attached patch is a try to make clvmd work correctly on openais stack.
->>  It does 2 things.
->>
->>  1. The cpg_deliver_callback make a compare between target_nodeid and our_nodeid.
->>  It turns out openais set target_nodeid to 0 sometimes. for
->>  broadcasting ? I change
->>  the behavior so that lvm will process_remote also on target_nodeid == 0
->>
->>  2. The joined_list passed to cpg_confchg_callback doesn't include the
->>  already exist
->>  nodes in the group, which leads to an incomplete node_hash. I simply
->>  add all other
->>  nodes in member_list to node_hash also.
->>
->>   With this patch applied, clvmd works correctly with basic lvm commands now.
->>
->>   Please kindly review this, and consider it for upstream.
->>
+On 4/28/2008, Georges Giralt (georges.giralt@free.fr) wrote:
+> But some people will question the reason you will move from LVM to 
+> plain filesystem/partitioning.... 
 
-Your patch has now been included in upstream clvmd.
+Good point... and maybe my reason is not a 'good one'... ;)
 
-Thank you.
+My thinking is, since /usr is a critical system partition, it should be 
+on the main system drive - which I always set up as a simple 2 drive mirror.
+
+So, I'm now curious how/what other people generally use LVM for?
 
 -- 
 
-Chrissie
+Best regards,
+
+Charles
