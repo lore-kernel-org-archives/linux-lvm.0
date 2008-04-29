@@ -1,25 +1,24 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m3TECODH023281
-	for <linux-lvm@redhat.com>; Tue, 29 Apr 2008 10:12:24 -0400
-Received: from cluster-d.mailcontrol.com (cluster-d.mailcontrol.com
-	[217.69.20.190])
-	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id m3TEBFSm002846
-	for <linux-lvm@redhat.com>; Tue, 29 Apr 2008 10:11:17 -0400
-Received: from mx.zetex.com (mx.zetex.com [194.129.23.24] (may be forged))
-	by rly50d.srv.mailcontrol.com (MailControl) with ESMTP id
-	m3TEB6GC018420
-	for <linux-lvm@redhat.com>; Tue, 29 Apr 2008 15:11:07 +0100
-Received: from zen.zetex.local (zen.zetex.com [192.168.230.14])
-	by mx.zetex.com (8.9.3/8.9.3) with ESMTP id PAA05821
-	for <linux-lvm@redhat.com>; Tue, 29 Apr 2008 15:22:35 +0100
-Content-class: urn:content-classes:message
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m3TEP5h1003695
+	for <linux-lvm@redhat.com>; Tue, 29 Apr 2008 10:25:05 -0400
+Received: from kenny.oneemedia.com (kenny.oneemedia.com [92.240.244.202])
+	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id m3TEOrOb013508
+	for <linux-lvm@redhat.com>; Tue, 29 Apr 2008 10:24:54 -0400
+Received: from localhost (mail-o.oneemedia.com [92.240.244.203])
+	(Authenticated sender: markionline)
+	by kenny.oneemedia.com (Postfix) with ESMTP id 17CC32000BA
+	for <linux-lvm@redhat.com>; Tue, 29 Apr 2008 16:24:52 +0200 (CEST)
+Date: Tue, 29 Apr 2008 16:24:51 +0200
+From: Marek Podmaka <marki@marki-online.net>
+Message-ID: <184354922.20080429162451@marki-online.net>
+Subject: Re: [linux-lvm] LVM mirroring questions...
+In-Reply-To: <Pine.LNX.4.44.0804290941010.6839-100000@bmsred.bmsi.com>
+References: <4816F5B1.6010608@mortent.org>
+	<Pine.LNX.4.44.0804290941010.6839-100000@bmsred.bmsi.com>
 MIME-Version: 1.0
-Subject: RE: [linux-lvm] How to move /usr from LVM back to non-LVM?
-Date: Tue, 29 Apr 2008 15:11:24 +0100
-Message-ID: <A374F37068535C46BFCF8D48CF29AA7F0116E41F@zen.zetex.com>
-From: "Karl Wagner" <kwagner@zetex.com>
-Content-Transfer-Encoding: quoted-printable
-Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Transfer-Encoding: 7bit
+Reply-To: Marek Podmaka <marki@marki-online.net>,
+	LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -29,154 +28,23 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="iso-8859-1"
+Content-Type: text/plain; charset="us-ascii"
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-Cheers, but this defeats one point of my server... I have a LOT of data.
+Hello,
 
-Currently my data totals nearly 1TB. Some of this I will be removing (as I =
-reorganise my music/videos etc) but that wont be much. So I have 2 choices.=
-.. buy more HDDs (with no money... not happenning) or use RAID5 across all =
-4. Of course I am not considering a non-RAID for it coz theres no WAY I am =
-loosing 1TB of data, after spending weeks ripping all my CDs & DVDs, buildi=
-ng custom media database, etc...
+Tuesday, April 29, 2008, 16:01:53, Stuart D. Gathman wrote:
 
-Karl
+> With LVM, many equal sized PE make this automatic. (Although the
+> write intent table needs a 3rd drive.)
 
------Original Message-----
-From: linux-lvm-bounces@redhat.com [mailto:linux-lvm-bounces@redhat.com] On=
- Behalf Of Georges Giralt
-Sent: 29 April 2008 10:39
-To: LVM general discussion and development
-Subject: RE: [linux-lvm] How to move /usr from LVM back to non-LVM?
-
-Hi Karl,
-If I may,
-As you've 4 HDD here what I would do :
-Get 2 for system files :
-2 part on each of them
-1) small 200 MB
-2) the remaining.
-Set up MD raid on the 2 first partition, use as /boot
-Set un md raid partition of the 2 other, us as LVM onto which you put
- lv 1 /
- lv2 /tmp
- lv3 /usr
- lv4 /var
-LV5 swap
-
-Get the 2 remaining disks and set only one partition on them,
-MD mirror the 2 partiton and set up a LVM on the md.
-create lv as needed for /home, database storage area, whatever is needed.
-
-If ons disk dies on you, you can use the remaing for the whole function dur=
-ing
-repair time.
-When the disk has been replaced, you've only to re-sync the md 's it was
-supporting and "everithing's fine".
-As LVM is concerned, the software mirror is transparent and goes unnoticed.
-If the whole server crash, you can get the user data disks onto another ser=
-ver
-and import the LVM to make the data availlable again. This may be planned by
-exporting the LVM data in advance (if you've similar servers (same tools, b=
-ut
-maybe different application) )
-Hope this helps.
-Selon Karl Wagner <kwagner@zetex.com>:
-
-> At work, I'm stuck with the static partitions on the current servers, til=
-l I
-> do a rebuild on new hardware at least ;)
->
-> My own home server uses 4xHDD with the same partition layout.
-> sdX1: MD RAID1, 1GB /boot
-> sdX2: MD RAID10, 5GB /
-> sdX3: MD RAID10, 20GB LVM for;
-> 		/usr
-> 		/var
-> sdX5: 50GB LVM for;
-> 		/tmp (striped)
-> 		Some exported AoE and iSCSI volumes
-> sdX6: rest of disk, MD RAID5, dm-crypt and LVM for data (including /home)
->
-> I know it's convoluted, but it works. I wish I had done dm-crypt on top of
-> the LV's now rather than LVM on dm-crypt. It is not too slow, but I don't
-> need encryption for everything on there and I can't do anything about it =
-now
-> (Think save up to replce them all with 1TB drives, now only =EF=BF=BD100 =
-on Ebuyer :D
-> )
->
-> -----Original Message-----
-> From: linux-lvm-bounces@redhat.com [mailto:linux-lvm-bounces@redhat.com] =
-On
-> Behalf Of Charles Marcus
-> Sent: 28 April 2008 19:36
-> To: LVM general discussion and development
-> Subject: Re: [linux-lvm] How to move /usr from LVM back to non-LVM?
->
-> On 4/28/2008, Georges Giralt (georges.giralt@free.fr) wrote:
-> > The fisrt one,  small will be used for /boot
-> > The second one for everything else using LVM.
->
-> Actually, I should have gone ahead and mention how I usually do it...
->
-> /boot (100MB)
-> / (10GB - I know, but disks are cheap these days)
-> swap (1GB)
-> /tmp (1GB)
->
-> Then LVM for:
->
-> /home
-> /var
->
-> --
->
-> Best regards,
->
-> Charles
->
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
->
->
->  This has been checked by www.blackspider.com
->
->
-> _________________________________________________________
->
-> Zetex Semiconductors - Solutions for an analog world.
->
-> http://www.zetex.com
-> http://www.zetex.cn
->
-> E-MAILS are susceptible to interference.  You should not assume that
-> the contents originated from the sender or the Zetex Group or that they
-> have been accurately reproduced from their original form.
-> Zetex accepts no responsibility for information, errors or omissions in
-> this e-mail nor for its use or misuse nor for any act committed or
-> omitted in connection with this communication.
-> If in doubt, please verify the authenticity with the sender.
-> _________________________________________________________
->
->
->
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
->
+I was wondering why this can't use LVM internal structures for storing
+it (like for example on HP-UX). Having to use 3rd disk is not very
+practical (as is not the requirement to re-sync whole LV in case of
+disk failure when the LV is really big). I don't remember now if HP-UX
+uses the headers of VG or LV to track these changes. But is there any
+reason, why this couldn't use for example first LE of LV?
 
 
---=20
-
-_______________________________________________
-linux-lvm mailing list
-linux-lvm@redhat.com
-https://www.redhat.com/mailman/listinfo/linux-lvm
-read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+-- 
+  bYE, Marki
