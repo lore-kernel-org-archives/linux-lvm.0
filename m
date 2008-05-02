@@ -1,35 +1,18 @@
-Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m42Ejb51001900
-	for <linux-lvm@redhat.com>; Fri, 2 May 2008 10:45:37 -0400
-Received: from kenny.oneemedia.com (kenny.oneemedia.com [92.240.244.202])
-	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id m42Ej9iO020469
-	for <linux-lvm@redhat.com>; Fri, 2 May 2008 10:45:09 -0400
-Received: from localhost (mail-o.oneemedia.com [92.240.244.203])
-	(Authenticated sender: markionline)
-	by kenny.oneemedia.com (Postfix) with ESMTP id 56D4F2000A3
-	for <linux-lvm@redhat.com>; Fri,  2 May 2008 16:45:08 +0200 (CEST)
-Date: Fri, 2 May 2008 16:45:06 +0200
-From: Marek Podmaka <marki@marki-online.net>
-Message-ID: <1398373243.20080502164506@marki-online.net>
-Subject: Re: [linux-lvm] F7 will not boot after running backup w/snapshot
-In-Reply-To: <481B1E6D.3040000@verizon.net>
-References: <4817C2FD.1010909@verizon.net> <4817D97D.8060805@verizon.net>
-	<4817ECAF.4020806@verizon.net> <48187B91.4060901@verizon.net>
-	<1c748a490804300809s304f7fdfx55aeb0fd9c6cc7ab@mail.gmail.com>
-	<4818AB1C.9030809@verizon.net> <4818BA5D.6070501@Media-Brokers.com>
-	<4818D59A.8020906@verizon.net> <4818E262.4070105@redhat.com>
-	<4818F2FC.5050907@verizon.net> <20080501154800.GA5941@us.ibm.com>
-	<Pine.LNX.4.64.0805011223590.32190@engineering.redhat.com>
-	<481A08A7.5010305@verizon.net> <481A0E28.5030108@Media-Brokers.com>
-	<481A1C09.7070508@verizon.net> <481A1D32.6020705@Media-Brokers.com>
-	<481A1FAF.5050303@verizon.net> <481A221D.80209@Media-Brokers.com>
-	<481A262C.7080908@verizon.net>
-	<1311113506.20080502101444@marki-online.net>
-	<481B1E6D.3040000@verizon.net>
+Received: from pobox.fab.redhat.com (pobox.fab.redhat.com [10.33.63.12])
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m42ElwJw004583
+	for <linux-lvm@redhat.com>; Fri, 2 May 2008 10:47:58 -0400
+Received: from [10.33.0.40] (breeves.fab.redhat.com [10.33.0.40])
+	by pobox.fab.redhat.com (8.13.1/8.13.1) with ESMTP id m42ElwIU008441
+	for <linux-lvm@redhat.com>; Fri, 2 May 2008 10:47:58 -0400
+Message-ID: <481B299E.7040509@redhat.com>
+Date: Fri, 02 May 2008 15:47:58 +0100
+From: "Bryn M. Reeves" <bmr@redhat.com>
 MIME-Version: 1.0
+Subject: Re: [linux-lvm] F7 will not boot after running backup w/snapshot
+References: <Pine.LNX.4.44.0805021022270.30479-100000@bmsred.bmsi.com>
+In-Reply-To: <Pine.LNX.4.44.0805021022270.30479-100000@bmsred.bmsi.com>
 Content-Transfer-Encoding: 7bit
-Reply-To: Marek Podmaka <marki@marki-online.net>,
-	LVM general discussion and development <linux-lvm@redhat.com>
+Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -42,31 +25,46 @@ List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-Hello,
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA1
 
-Friday, May 2, 2008, 16:00:13, Gerry Reno wrote:
+Stuart D. Gathman wrote:
+> When activating a VG, missing PVs should be marked "missing", and show as 
+> such with pvs.  Missing PVs should behave exactly as if they were
+> not missing, but have I/O errors on every operation.  Every attempted
+> I/O on a missing PV should cause a synthetic "missing PV" error.  This
+> should make mirrors, etc, do the right thing.  LVs partially on the
+> missing PV could be mountable, getting errors for spots on the missing PV.
+> 
+> The could be an option on vgchange for --ignoremissingpv to activate
+> with missing PVs.  You might not want to activate with a root filesystem
+> partially on a missing PV (filesystem corruption).  
 
-> You cannot activate a VG with missing PV's because at some point
-> then LVM would attempt to write on one of the missing PV and then
-> you get panic.
+Am I missing something here? vgchange --partial seems like it will do
+what you want (man 8 lvm):
 
-As I told - I'm not sure if it is possible on Linux, but for example
-on HP-UX LVM it is normally possible to activate VG even with some
-missing PVs (there is also special Low Quorum mode - which is not
-enabled by default - to activate VG when you have available <=50% of
-mirrored PVs).
+- -P | --partial
+ When set, the tools will do their best to provide access to volume
+ groups that are only partially available.  Where part of a logical
+ volume is missing, /dev/ioerror  will be substituted, and you could use
+ dmsetup (8) to set this up to return I/O errors when accessed, or
+ create it as a large block device of nulls.  Metadata may not be
+ changed with this option. To insert a replacement physical volume of
+ the same or large size use pvcreate -u to set the uuid to match the
+ original followed by vgcfgrestore (8).
 
-Of course trying to read/write from missing PV should (and on HP-UX
-does) produce an I/O error to application, but should NOT panic. From
-my point there is almost no difference between activating VG with
-missing PV and loosing that PV while VG is activated (SAN or HDD
-failure).
+You can also choose the device used for mapping segments on any
+incomplete logical volumes by setting the missing_stripe_filler
+parameter in the activation section of lvm.conf.
 
-Having snaphot on failed/missing PV is a little bit different, because
-there is question what to do with original lvol. But that can/should
-prevent activating the lvol and not entire VG (which can have more
-lvols which don't have any data/snapshots on the missing PV).
+Regards,
+Bryn.
 
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.7 (GNU/Linux)
+Comment: Using GnuPG with Fedora - http://enigmail.mozdev.org
 
--- 
-  bYE, Marki
+iD8DBQFIGyme6YSQoMYUY94RAuqLAJ0SNvliyJFj+oPca084RnCrjhtLPQCeMc42
+mPcsR4yUr4WSJq1K+0eyZQY=
+=Fu2C
+-----END PGP SIGNATURE-----
