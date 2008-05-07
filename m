@@ -1,26 +1,22 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m45Eji1E013774
-	for <linux-lvm@redhat.com>; Mon, 5 May 2008 10:45:44 -0400
-Received: from smtp05.atlngahp.sys.nuvox.net (smtp-out5.atlngahp.sys.nuvox.net
-	[70.43.63.23])
-	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id m45EjTYZ000418
-	for <linux-lvm@redhat.com>; Mon, 5 May 2008 10:45:32 -0400
-Received: from smtp.media-brokers.com (70.43.81.99.nw.nuvox.net [70.43.81.99])
-	by smtp05.atlngahp.sys.nuvox.net (8.13.1/8.13.1) with ESMTP id
-	m45EjMvL014134
-	for <linux-lvm@redhat.com>; Mon, 5 May 2008 10:45:24 -0400
-Received: from [192.168.1.110] (sjester.atl.media-brokers.com [192.168.1.110])
-	by smtp.media-brokers.com (Postfix) with ESMTPSA id 1451D3797C6
-	for <linux-lvm@redhat.com>; Mon,  5 May 2008 10:45:22 -0400 (EDT)
-Message-ID: <481F1D81.2010503@Media-Brokers.com>
-Date: Mon, 05 May 2008 10:45:21 -0400
-From: Charles Marcus <CMarcus@Media-Brokers.com>
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m4710FNW027657
+	for <linux-lvm@redhat.com>; Tue, 6 May 2008 21:00:15 -0400
+Received: from scan.5ninesdata.com (scan.5ninesdata.com [208.66.134.12])
+	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id m47102nY006000
+	for <linux-lvm@redhat.com>; Tue, 6 May 2008 21:00:03 -0400
+Received: from 5ninesdata.com (localhost [127.0.0.1])
+	by scan.5ninesdata.com (Spam Firewall) with ESMTP id AEF193A7088
+	for <linux-lvm@redhat.com>; Tue,  6 May 2008 19:59:45 -0500 (CDT)
+Received: from 5ninesdata.com (mail.5ninesdata.com [208.66.134.10]) by
+	scan.5ninesdata.com with ESMTP id yRRSzjBBSTxnW9mp
+	(version=TLSv1 cipher=AES256-SHA bits=256 verify=NO) for
+	<linux-lvm@redhat.com>; Tue, 06 May 2008 19:59:45 -0500 (CDT)
+Message-ID: <4820FF09.4000309@stthomasepc.org>
+Date: Tue, 06 May 2008 20:59:53 -0400
+From: Tod <tod@stthomasepc.org>
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] Temporary shapshots
-References: <Pine.LNX.4.64.0805022200280.13318@engineering.redhat.com>	<Pine.LNX.4.44.0805032037140.6617-100000@bmsred.bmsi.com>
-	<1c748a490805050730w3c303bf4y77c624ab0669641a@mail.gmail.com>
-In-Reply-To: <1c748a490805050730w3c303bf4y77c624ab0669641a@mail.gmail.com>
 Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] vgdisplay can't see volume group after upgrade
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -34,33 +30,30 @@ List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-On 5/5/2008 10:30 AM, Larry Dickson wrote:
->>> To use temporary storage for snapshot, a special command for lvm 
->>> would be more appropriate --- a command that would setup snapshot
->>> and write nothing about it to metadata, so that the snapshot would
->>> be forgotten on next reboot --- then, you can setup the snapshot on
->>> any device outside the volume group. You can already do this with
->>> dmsetup.
+I'm trying to upgrade (yum) from FC6 to FC8.  I started by upgrading to 
+FC7 but that hosed something giving me a kernel panic trying to find 
+/dev/root so I figured I'd push ahead to FC8 to see if that would 
+resolve my problem.
 
->> This is an excellent idea - and not just for ramdisks. The hardest
->> part of using snapshots for backups is making sure they are deleted 
->> afterward. Not having to check at reboot would be one less 'i' to
->> dot.
+I have one small /boot partition on my first drive the rest of it and a 
+second drive is all lvm.  Once I discovered the problem with the FC8 
+upgrade I rebooted back to my FC6 kernel.  Everything boots fine but 
+vgdisplay shows nothing.  When I run system-config-lvm it sees the 
+second lvm partition of my first drive unallocated, as well as the 
+entire second drive.
 
-> I love this idea because it nicely covers one of the main purposes of
-> snapshotting, namely, making backups at a well-defined time point. 
-> Would there ever be any use of a temporary read-write snapshot? If
-> not, perhaps making it read-only would simplify the design.
+I can back everything up and just reinstall but I've upgraded fedora 
+using yum before and while there were problems I always found a way to 
+make it work.  This one has me stumped.  I believe the kernel panic 
+_might_ be coming from the fact the kernel doesn't recognize my managed 
+volumes.  Maybe the lvm meta information is trashed?
 
-Ditto...
+If anybody can help I'd appreciate it.  Any diagnostics or hints would 
+be appreciated.  I can reinstall but I'd like to get it working on my 
+own so I can learn something.
 
-I feel much better now about using snapshots after realizing the OP's 
-problem was due to the use of a RAMdisk for a snapshot volume (combined 
-with an unclean shutdown), but anything that makes these safer and 
-easier gets my vite...
+I'll be happy to post any system information necessary if it will help. 
+  Also, I did prepare for the upgrade by applying labels and validating 
+fstab, and grub.conf before proceeding.
 
--- 
-
-Best regards,
-
-Charles
+Thanks - Tod
