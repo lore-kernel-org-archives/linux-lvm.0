@@ -1,22 +1,24 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m4710FNW027657
-	for <linux-lvm@redhat.com>; Tue, 6 May 2008 21:00:15 -0400
-Received: from scan.5ninesdata.com (scan.5ninesdata.com [208.66.134.12])
-	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id m47102nY006000
-	for <linux-lvm@redhat.com>; Tue, 6 May 2008 21:00:03 -0400
-Received: from 5ninesdata.com (localhost [127.0.0.1])
-	by scan.5ninesdata.com (Spam Firewall) with ESMTP id AEF193A7088
-	for <linux-lvm@redhat.com>; Tue,  6 May 2008 19:59:45 -0500 (CDT)
-Received: from 5ninesdata.com (mail.5ninesdata.com [208.66.134.10]) by
-	scan.5ninesdata.com with ESMTP id yRRSzjBBSTxnW9mp
-	(version=TLSv1 cipher=AES256-SHA bits=256 verify=NO) for
-	<linux-lvm@redhat.com>; Tue, 06 May 2008 19:59:45 -0500 (CDT)
-Message-ID: <4820FF09.4000309@stthomasepc.org>
-Date: Tue, 06 May 2008 20:59:53 -0400
-From: Tod <tod@stthomasepc.org>
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m47F0dLx000970
+	for <linux-lvm@redhat.com>; Wed, 7 May 2008 11:00:39 -0400
+Received: from smtp3.mail.easynet.fr (smarthost187.mail.easynet.fr
+	[212.180.1.187])
+	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id m47F0A3b004241
+	for <linux-lvm@redhat.com>; Wed, 7 May 2008 11:00:11 -0400
+Received: from saros016845-4.clients.easynet.fr ([84.37.61.220]
+	helo=titan.saros.fr) by smtp3.mail.easynet.fr with esmtp (Exim 4.63)
+	(envelope-from <gilles.guiot@saros.fr>) id 1Jtl7n-0000MP-J3
+	for linux-lvm@redhat.com; Wed, 07 May 2008 17:00:08 +0200
+Received: from [192.168.100.11] (helo=[127.0.0.1])
+	by titan.saros.fr with esmtp (Exim 4.63)
+	(envelope-from <gilles.guiot@saros.fr>) id 1Jtl7m-0006mi-Cm
+	for linux-lvm@redhat.com; Wed, 07 May 2008 17:00:06 +0200
+Message-ID: <4821C3F1.6000108@saros.fr>
+Date: Wed, 07 May 2008 17:00:01 +0200
+From: Gilles Guiot <gilles.guiot@saros.fr>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] vgdisplay can't see volume group after upgrade
+Content-Transfer-Encoding: quoted-printable
+Subject: [linux-lvm] device /dev/sdb1 not found or ignored by filtering
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -27,33 +29,33 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="iso-8859-1"; format="flowed"
+To: linux-lvm@redhat.com
 
-I'm trying to upgrade (yum) from FC6 to FC8.  I started by upgrading to 
-FC7 but that hosed something giving me a kernel panic trying to find 
-/dev/root so I figured I'd push ahead to FC8 to see if that would 
-resolve my problem.
+Hello Everybody
 
-I have one small /boot partition on my first drive the rest of it and a 
-second drive is all lvm.  Once I discovered the problem with the FC8 
-upgrade I rebooted back to my FC6 kernel.  Everything boots fine but 
-vgdisplay shows nothing.  When I run system-config-lvm it sees the 
-second lvm partition of my first drive unallocated, as well as the 
-entire second drive.
+I have two raid 1 arrays on a Dell PowerEdge 2950,
+1) 2*500 Go
+2) 2*750 Go
 
-I can back everything up and just reinstall but I've upgraded fedora 
-using yum before and while there were problems I always found a way to 
-make it work.  This one has me stumped.  I believe the kernel panic 
-_might_ be coming from the fact the kernel doesn't recognize my managed 
-volumes.  Maybe the lvm meta information is trashed?
+I need to use LVM, to create a LV on the second raid array, in which i=20
+will afterwards incorporate the first raid array. I have the latest=20
+debian distro installed, with kernel updates, and LVM2 is installed.
 
-If anybody can help I'd appreciate it.  Any diagnostics or hints would 
-be appreciated.  I can reinstall but I'd like to get it working on my 
-own so I can learn something.
+I encounter my first problem when typing pvcreate /dev/sdb1. ( the=20
+partition of the second raid array) I get the message :
+device /dev/sdb1 not found or ignored by filtering
+I checked /etc/lvm/lvm.conf, and I commented out the line about the filter.
+After a reboot, no more luck. I tried to circumvent the problem by=20
+booting with an ubuntu CD, but i get the same error message.
+Could anybody tip me about what's wrong and more importantly suggest=20
+solutions to me ? :-)
 
-I'll be happy to post any system information necessary if it will help. 
-  Also, I did prepare for the upgrade by applying labels and validating 
-fstab, and grub.conf before proceeding.
+Thanks a lot in advance.
 
-Thanks - Tod
+
+--=20
+Gilles Guiot
+Responsable exploitation informatique
+T=EF=BF=BDl. : 01 53 23 02 20
+gilles.guiot@saros.fr
