@@ -1,21 +1,11 @@
-Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m49Ec3cb023996
-	for <linux-lvm@redhat.com>; Fri, 9 May 2008 10:38:03 -0400
-Received: from mail.bmsi.com (www.bmsi.com [24.248.44.156])
-	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id m49EbW0q005777
-	for <linux-lvm@redhat.com>; Fri, 9 May 2008 10:37:32 -0400
-Received: from bmsred.bmsi.com (bmsred.bmsi.com [192.168.9.50])
-	by mail.bmsi.com (8.13.6/8.13.6) with ESMTP id m49EbQVE020489
-	for <linux-lvm@redhat.com>; Fri, 9 May 2008 10:37:27 -0400
-Received: from localhost (localhost [127.0.0.1])
-	by bmsred.bmsi.com (8.13.5/8.13.6) with ESMTP id m49EbQ92023324
-	for <linux-lvm@redhat.com>; Fri, 9 May 2008 10:37:26 -0400
-Date: Fri, 9 May 2008 10:37:26 -0400 (EDT)
-From: "Stuart D. Gathman" <stuart@bmsi.com>
-Subject: Re: [linux-lvm] device /dev/sdb1 not found or ignored by filtering
-In-Reply-To: <48241070.6020207@saros.fr>
-Message-ID: <Pine.LNX.4.44.0805091032200.23258-100000@bmsred.bmsi.com>
+From: Jim Meyering <jim@meyering.net>
+In-Reply-To: <878wymxf6h.fsf@rho.meyering.net> (Jim Meyering's message of
+	"Wed, 07 May 2008 18:16:38 +0200")
+References: <878wymxf6h.fsf@rho.meyering.net>
+Date: Fri, 09 May 2008 23:06:30 +0200
+Message-ID: <87bq3fxk4p.fsf@rho.meyering.net>
 MIME-Version: 1.0
+Subject: [linux-lvm] Re: [dm-devel] merging configure.in between dm and lvm
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -26,30 +16,84 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: LVM general discussion and development <linux-lvm@redhat.com>
+To: device-mapper development <dm-devel@redhat.com>
+Cc: LVM general discussion and development <linux-lvm@redhat.com>
 
-On Fri, 9 May 2008, Gilles Guiot wrote:
+Jim Meyering <jim@meyering.net> wrote:
+> I'm in the process of merging the configure.in files used by lvm and
+> device-mapper.  The goal is to make them as similar as reasonable while
+> the two packages are still separate, so that once dm and lvm coexist
+> there will only be minimal changes.
+...
+> I've eliminated most of the differences between the two configure.in
+> files, but haven't yet done the binary-comparison bit with lvm
+> (that'll be harder because there are far more combinations of
+> configure-time options to test).  I'll probably post both configure.in
+> patches tomorrow or Friday.  So, for now, here's a preliminary
+> version of the proposed device-mapper configure.in changes:
+> [omitting changes in derived+VC'd files]
 
-> Hello and thanks for the answer.
-> For "political" (indeed) reasons, we can't use the raid 5......
+Those were the changes for device-mapper.
+Here are the analogous ones for lvm.
+Tested with the following script:
+(examining diffs shows no significant binary differences)
+-----------------------------------
+#!/bin/bash
 
-I actually prefer raid1, even though it uses more disks and has slower writes.
+t=/t/lvm-test
+mkdir -p $t
 
-1) It is easy to use the mirrors apart from raid for recovery.  For instance, a
-   clients motherboard died.  I had him ship me 2 of his 4 disks, from which I
-   constructed a clone of his system on new hardware, and shipped it to him.
-   He kept the other two as backup.
+opts='
+readline
+selinux
+realtime
+devmapper
+o_direct
+cmdlib
+fsadm
+dmeventd
+nls
+'
 
-2) You do get some speedup for reads.
+# debug
+# static_link
+# with-cluster=shared
+# with-snapshots=shared
+# with-mirrors=shared
 
-3) Disk space is cheap.
+set -e
 
-4) You can always use raid0+1 to speed up writes.
+srcdir=$HOME/w/co/lvm+dm/lvm2
+srcdir=/t/lvm2
+dmdir=$HOME/w/co/lvm+dm/device-mapper
 
--- 
-	      Stuart D. Gathman <stuart@bmsi.com>
-    Business Management Systems Inc.  Phone: 703 591-0911 Fax: 703 591-6154
-"Confutatis maledictis, flammis acribus addictis" - background song for
-a Microsoft sponsored "Where do you want to go from here?" commercial.
+for enable in enable disable; do
+  for opt in $opts; do
+    for br in master a-conf-merge; do
+      cd $srcdir && git checkout $br
+      o=$enable-$opt
+      echo "============= $br --$o"
+
+      (./configure --$o --with-dmdir=$dmdir CFLAGS=-g &&
+	make -j5) > log 2>&1 &&
+      cp log $t/log-$br-$o
+      rm -rf $t/$br
+      cp -al $PWD $t/$br
+      find $t/$br -type l -delete
+      git clean -f -d > /dev/null 2>&1
+    done
+
+    diff -ur \
+      -x config.status -x config.log -x .git -x autom4te.cache -x configure \
+      -x configure.in -x configure.h -x configure.h.in -x log -x '*.a' \
+      $t/master $t/a-conf-merge > $t/diff-$o 2>&1 || :
+  done
+done
+
+================================
+Of course, this just enables/disables each of those options one at a
+time, and doesn't do the n-choose-2, n-choose-3, etc. combinations.
+BTW, I noticed that when configured with --disable-devmapper,
+the build failed.  Does that option even make sense anymore?
