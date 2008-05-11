@@ -1,20 +1,28 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m4A185iO023208
-	for <linux-lvm@redhat.com>; Fri, 9 May 2008 21:08:05 -0400
-Received: from py-out-1112.google.com (py-out-1112.google.com [64.233.166.177])
-	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id m4A17ofR028016
-	for <linux-lvm@redhat.com>; Fri, 9 May 2008 21:07:50 -0400
-Received: by py-out-1112.google.com with SMTP id a29so1290052pyi.0
-	for <linux-lvm@redhat.com>; Fri, 09 May 2008 18:07:49 -0700 (PDT)
-Message-ID: <4824F560.208@davidcoulson.net>
-Date: Fri, 09 May 2008 21:07:44 -0400
-From: David Coulson <david@davidcoulson.net>
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m4B0PnIK001579
+	for <linux-lvm@redhat.com>; Sat, 10 May 2008 20:25:49 -0400
+Received: from nlpi043.prodigy.net (nlpi043.sbcis.sbc.com [207.115.36.72])
+	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id m4B0PWh8027098
+	for <linux-lvm@redhat.com>; Sat, 10 May 2008 20:25:32 -0400
+Received: from mail.kdzbn.homelinux.net
+	(adsl-75-40-228-163.dsl.klmzmi.sbcglobal.net [75.40.228.163])
+	(authenticated bits=0)
+	by nlpi043.prodigy.net (8.13.8 smtpauth/dk/8.13.8) with ESMTP id
+	m4B0PO7h020597
+	for <linux-lvm@redhat.com>; Sat, 10 May 2008 19:25:24 -0500
+Received: from beta.mydomain ([192.168.2.237])
+	by mail.kdzbn.homelinux.net with esmtp (Exim 4.62)
+	(envelope-from <bryan@kadzban.is-a-geek.net>) id 1JuzNV-00013M-O7
+	for linux-lvm@redhat.com; Sat, 10 May 2008 20:25:25 -0400
+Message-ID: <48263CF5.2080305@kadzban.is-a-geek.net>
+Date: Sat, 10 May 2008 20:25:25 -0400
+From: Bryan Kadzban <bryan@kadzban.is-a-geek.net>
 MIME-Version: 1.0
 Subject: Re: [linux-lvm] Offline fsck (checking snapshots)
 References: <48110C2D.5020800@kadzban.is-a-geek.net>
-In-Reply-To: <48110C2D.5020800@kadzban.is-a-geek.net>
-Content-Type: multipart/alternative;
-	boundary="------------060209080000070809000205"
+	<4824F560.208@davidcoulson.net>
+In-Reply-To: <4824F560.208@davidcoulson.net>
+Content-Transfer-Encoding: 7bit
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -25,158 +33,52 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
+Content-Type: text/plain; charset="us-ascii"
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-This is a multi-part message in MIME format.
---------------060209080000070809000205
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-
-I've been playing with this script today - Is there a more current 
-version, or someone who maintains it? There are a bunch of things that 
-seem to be broken that I ended up cleaning up on my own (e.g. it 
-calculates the snapshot size in M, then creates it in extents...).
-
-I imagine there are other users who are frustrated with it, as it does 
-not run cleanly as it is.
-
-David
-
-Bryan Kadzban wrote:
-> -----BEGIN PGP SIGNED MESSAGE-----
-> Hash: RIPEMD160
->
-> There was some discussion on the ext3-users list a few months ago, about
-> how e2fsck took a long time to run, and it was getting forced because it
-> keeps track of a couple of counters that can force it (the counters are
-> days since the last full fsck, and mounts since the last full fsck).
-> (The thread starts at [1], the script development started at [2], and
-> the most recent version is at [3].  The one extra thing I've added is
-> skipping ext2/3 FSes that have an external journal.)
->
-> The suggestion was made that if the user is using LVM, a temporary
-> snapshot could be taken, and then fsck could be run on that.  If it
-> succeeds, then it's possible to set the last-fsck-time and mount-count
-> while the real FS is mounted.
->
-> I've gotten a script that I think is reasonable, that handles this.
-> With some help from others, it now works with XFS as well as ext2/3, and
-> it's supposed to also work with JFS.  Since it requires LVM, I think it
-> might make sense to put something like it into the LVM userspace tools.
->
-> (There is one issue: it also requires blkid and logsave from e2fsprogs.
-> I could work around the requirement for logsave (using tee -a), but
-> blkid would be harder.)
->
-> The idea behind the script is, you run it at night from cron; it will
-> check each LV on the system and mail a user if there are any problems.
-> It also logs to syslog.
->
-> I've attached the script and its configuration file to this message.
-> Comments?
->
-> [1] https://www.redhat.com/archives/ext3-users/2008-January/msg00027.html
->
-> [2] https://www.redhat.com/archives/ext3-users/2008-January/msg00032.html
->
-> [3]
-> https://www.redhat.com/archives/ext3-users/2008-February/msg00004.html
-> -----BEGIN PGP SIGNATURE-----
-> Version: GnuPG v1.4.7 (GNU/Linux)
-> Comment: Using GnuPG with Mozilla - http://enigmail.mozdev.org
->
-> iD8DBQFIEQwpS5vET1Wea5wRA43cAKDWGJVFgV6fmJKeQUgcPH6Ebd1aygCfb4a9
-> TbiWVGUYFnPeQSWiJVl0x2k=
-> =Juq0
-> -----END PGP SIGNATURE-----
->   
-> ------------------------------------------------------------------------
->
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
-
---------------060209080000070809000205
-Content-Type: text/html; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
-<html>
-<head>
-  <meta content="text/html;charset=ISO-8859-1" http-equiv="Content-Type">
-</head>
-<body bgcolor="#ffffff" text="#000000">
-I've been playing with this script today - Is there a more current
-version, or someone who maintains it? There are a bunch of things that
-seem to be broken that I ended up cleaning up on my own (e.g. it
-calculates the snapshot size in M, then creates it in extents...).<br>
-<br>
-I imagine there are other users who are frustrated with it, as it does
-not run cleanly as it is.<br>
-<br>
-David<br>
-<br>
-Bryan Kadzban wrote:
-<blockquote cite="mid:48110C2D.5020800@kadzban.is-a-geek.net"
- type="cite">
-  <pre wrap="">-----BEGIN PGP SIGNED MESSAGE-----
+-----BEGIN PGP SIGNED MESSAGE-----
 Hash: RIPEMD160
 
-There was some discussion on the ext3-users list a few months ago, about
-how e2fsck took a long time to run, and it was getting forced because it
-keeps track of a couple of counters that can force it (the counters are
-days since the last full fsck, and mounts since the last full fsck).
-(The thread starts at [1], the script development started at [2], and
-the most recent version is at [3].  The one extra thing I've added is
-skipping ext2/3 FSes that have an external journal.)
+David Coulson wrote:
+> I've been playing with this script today - Is there a more current 
+> version, or someone who maintains it? There are a bunch of things
+> that seem to be broken that I ended up cleaning up on my own
 
-The suggestion was made that if the user is using LVM, a temporary
-snapshot could be taken, and then fsck could be run on that.  If it
-succeeds, then it's possible to set the last-fsck-time and mount-count
-while the real FS is mounted.
+There isn't a more current version, no.  I guess (for the moment anyway)
+I maintain it, since I was the one that took the original and added the
+config file, support for other filesystems, etc.  (All that really
+happened was some discussion on the ext3-users list.)
 
-I've gotten a script that I think is reasonable, that handles this.
-With some help from others, it now works with XFS as well as ext2/3, and
-it's supposed to also work with JFS.  Since it requires LVM, I think it
-might make sense to put something like it into the LVM userspace tools.
+If you have patches, I'd be happy to apply them, and re-post.  :-)
 
-(There is one issue: it also requires blkid and logsave from e2fsprogs.
-I could work around the requirement for logsave (using tee -a), but
-blkid would be harder.)
+(I did try running it once or twice, but those were older versions, and
+lots of stuff got changed since then.  Unfortunately my main system
+doesn't use LVM, and the qemu image that does seems to be corrupted (it
+crashed at one point, and the RAID5 under the LVM got screwed up), so
+it's been a long time since I ran it.  It sounds like I should create
+another qemu image and start testing it again.)
 
-The idea behind the script is, you run it at night from cron; it will
-check each LV on the system and mail a user if there are any problems.
-It also logs to syslog.
+> (e.g. it calculates the snapshot size in M, then creates it in 
+> extents...).
 
-I've attached the script and its configuration file to this message.
-Comments?
+Ouch.  I don't remember exactly when that part of the script changed,
+but obviously it should be using -L, and should have an "M" suffix.
+I've fixed that.
 
-[1] <a class="moz-txt-link-freetext" href="https://www.redhat.com/archives/ext3-users/2008-January/msg00027.html">https://www.redhat.com/archives/ext3-users/2008-January/msg00027.html</a>
+> I imagine there are other users who are frustrated with it, as it
+> does not run cleanly as it is.
 
-[2] <a class="moz-txt-link-freetext" href="https://www.redhat.com/archives/ext3-users/2008-January/msg00032.html">https://www.redhat.com/archives/ext3-users/2008-January/msg00032.html</a>
+If there are any other users.  ;-)
 
-[3]
-<a class="moz-txt-link-freetext" href="https://www.redhat.com/archives/ext3-users/2008-February/msg00004.html">https://www.redhat.com/archives/ext3-users/2008-February/msg00004.html</a>
+So far, this is just an idea that was brought up in the context of ext3
+(and someone complaining about really long fsck times being forced on
+them on huge FSes).  I brought it up here in an attempt to get it maybe
+merged into the LVM tools.
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v1.4.7 (GNU/Linux)
-Comment: Using GnuPG with Mozilla - <a class="moz-txt-link-freetext" href="http://enigmail.mozdev.org">http://enigmail.mozdev.org</a>
+Comment: Using GnuPG with Mozilla - http://enigmail.mozdev.org
 
-iD8DBQFIEQwpS5vET1Wea5wRA43cAKDWGJVFgV6fmJKeQUgcPH6Ebd1aygCfb4a9
-TbiWVGUYFnPeQSWiJVl0x2k=
-=Juq0
+iD8DBQFIJjz1S5vET1Wea5wRAySLAKCXKxAA+ahI/bTzlP2Zcf0gwuNqGwCfeeZC
+Cmg0RzRJmIrSKD+0XabcRTQ=
+=xn99
 -----END PGP SIGNATURE-----
-  </pre>
-  <pre wrap=""><pre wrap=""><pre wrap="">
-<hr size="4" width="90%">
-_______________________________________________
-linux-lvm mailing list
-<a class="moz-txt-link-abbreviated" href="mailto:linux-lvm@redhat.com">linux-lvm@redhat.com</a>
-<a class="moz-txt-link-freetext" href="https://www.redhat.com/mailman/listinfo/linux-lvm">https://www.redhat.com/mailman/listinfo/linux-lvm</a>
-read the LVM HOW-TO at <a class="moz-txt-link-freetext" href="http://tldp.org/HOWTO/LVM-HOWTO/">http://tldp.org/HOWTO/LVM-HOWTO/</a></pre></pre></pre>
-</blockquote>
-</body>
-</html>
-
---------------060209080000070809000205--
