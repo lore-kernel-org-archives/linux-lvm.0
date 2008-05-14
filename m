@@ -1,17 +1,18 @@
-Received: from pobox.fab.redhat.com (pobox.fab.redhat.com [10.33.63.12])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m4E93Idk012560
-	for <linux-lvm@redhat.com>; Wed, 14 May 2008 05:03:19 -0400
-Received: from [10.33.0.40] (breeves.fab.redhat.com [10.33.0.40])
-	by pobox.fab.redhat.com (8.13.1/8.13.1) with ESMTP id m4E93IBe012539
-	for <linux-lvm@redhat.com>; Wed, 14 May 2008 05:03:18 -0400
-Message-ID: <482AAAD6.2030405@redhat.com>
-Date: Wed, 14 May 2008 10:03:18 +0100
-From: "Bryn M. Reeves" <bmr@redhat.com>
+Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m4EAZ80u026367
+	for <linux-lvm@redhat.com>; Wed, 14 May 2008 06:35:08 -0400
+Received: from wa-out-1112.google.com (wa-out-1112.google.com [209.85.146.183])
+	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id m4EAYvuk016145
+	for <linux-lvm@redhat.com>; Wed, 14 May 2008 06:34:57 -0400
+Received: by wa-out-1112.google.com with SMTP id j32so4327531waf.7
+	for <linux-lvm@redhat.com>; Wed, 14 May 2008 03:34:57 -0700 (PDT)
+Message-ID: <55c04c360805140334j34b6f67dy7409d656f68ebbb9@mail.gmail.com>
+Date: Wed, 14 May 2008 12:34:51 +0200
+From: "Jorge Souto" <jorgeother@gmail.com>
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] recovering data from hdd
-References: <482A3BF1.9020607@verizon.net>
-In-Reply-To: <482A3BF1.9020607@verizon.net>
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/alternative; 
+	boundary="----=_Part_10777_17007534.1210761291185"
+Subject: [linux-lvm] disk striping
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -22,37 +23,46 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: LVM general discussion and development <linux-lvm@redhat.com>
+To: linux-lvm@redhat.com
 
------BEGIN PGP SIGNED MESSAGE-----
-Hash: SHA1
+------=_Part_10777_17007534.1210761291185
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
 
-Gerry Reno wrote:
-> I have a machine that suffered a lightning hit and it's toast.  Even
-> with surge protectors it still got zapped.  Anyway, I'm not going to
-> rebuild this machine.  What I want to do is to get some information off
-> the hard drive.  If I remember it only had one VG VolGroup00.  So can I
-> attach this to another machine and read it?  Won't the VolGroup00
-> conflict with the hosts VolGroup00?  How can I change it to be some
-> other name?
+Hello,
 
-See this thread:
+I use lvm in a mainframe environment, with small ECKD disks (maximum model
+54, aprox. 45 GB). So to create a big volume a I need a lot of disks. I'm
+going to create one with 35 physical volumes. I have doubts about striping,
+particularly deciding the number of stripes in such case (35 PVs in one
+storage array rank -yeah, not good-), and the drawbacks in administration
+tasks ( growing and limitations adding pvs to a stripped volume).
 
-http://archives.free.net.ph/message/20071122.151843.1d3b9863.en.html
 
-The steps are for cloning & renaming an existing VG but they should work
-fine to rename any VG that has a name conflict with something else on
-the system.
+The use of striping is recommended because of performance improvement:
 
-Regards,
-Bryn.
+http://www-128.ibm.com/developerworks/linux/linux390/perf/tuning_rec_dasd_volMan.html
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.7 (GNU/Linux)
-Comment: Using GnuPG with Fedora - http://enigmail.mozdev.org
 
-iD8DBQFIKqrW6YSQoMYUY94RAvy9AJ9R+xj1Z0AAIG8fc3fLCR+RJLW9gQCeMwS7
-AfGu0n9mO+g03n820THisKY=
-=9nBT
------END PGP SIGNATURE-----
+Thanks for your suggestions
+
+------=_Part_10777_17007534.1210761291185
+Content-Type: text/html; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+<div>Hello,</div>
+<div>&nbsp;</div>
+<div>I use lvm in a mainframe environment, with small ECKD disks (maximum model 54, aprox. 45 GB). So to create a big volume a I need a lot of disks. I&#39;m going to create one with 35 physical volumes. I have doubts about striping, particularly deciding the number of stripes in such case (35 PVs in one storage array rank -yeah, not good-), and the drawbacks in administration tasks ( growing and limitations adding&nbsp;pvs to a stripped volume).</div>
+
+<div>&nbsp;</div>
+<div>&nbsp;</div>
+<div>The use of striping is recommended because of performance improvement:</div>
+<div>&nbsp;</div>
+<div><a href="http://www-128.ibm.com/developerworks/linux/linux390/perf/tuning_rec_dasd_volMan.html">http://www-128.ibm.com/developerworks/linux/linux390/perf/tuning_rec_dasd_volMan.html</a></div>
+<div>&nbsp;</div>
+<div>&nbsp;</div>
+<div>Thanks for your suggestions</div>
+
+------=_Part_10777_17007534.1210761291185--
