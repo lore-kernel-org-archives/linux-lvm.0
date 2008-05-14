@@ -1,21 +1,25 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m4EKnS5a006519
-	for <linux-lvm@redhat.com>; Wed, 14 May 2008 16:49:28 -0400
-Received: from mail.bmsi.com (www.bmsi.com [24.248.44.156])
-	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id m4EKnIns024034
-	for <linux-lvm@redhat.com>; Wed, 14 May 2008 16:49:18 -0400
-Received: from bmsred.bmsi.com (bmsred.bmsi.com [192.168.9.50])
-	by mail.bmsi.com (8.13.6/8.13.6) with ESMTP id m4EKnCAY007702
-	for <linux-lvm@redhat.com>; Wed, 14 May 2008 16:49:12 -0400
-Received: from localhost (localhost [127.0.0.1])
-	by bmsred.bmsi.com (8.13.5/8.13.6) with ESMTP id m4EKnCJe005450
-	for <linux-lvm@redhat.com>; Wed, 14 May 2008 16:49:12 -0400
-Date: Wed, 14 May 2008 16:49:12 -0400 (EDT)
-From: "Stuart D. Gathman" <stuart@bmsi.com>
-Subject: Re: [linux-lvm] disk striping
-In-Reply-To: <55c04c360805140334j34b6f67dy7409d656f68ebbb9@mail.gmail.com>
-Message-ID: <Pine.LNX.4.44.0805141643580.5417-100000@bmsred.bmsi.com>
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m4EKtUVD011565
+	for <linux-lvm@redhat.com>; Wed, 14 May 2008 16:55:30 -0400
+Received: from mx03.syneticon.net (mx03.syneticon.net [87.79.32.166])
+	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id m4EKtGw1028914
+	for <linux-lvm@redhat.com>; Wed, 14 May 2008 16:55:16 -0400
+Received: from localhost (filter1.syneticon.net [192.168.113.3])
+	by mx03.syneticon.net (Postfix) with ESMTP id A4F50936B
+	for <linux-lvm@redhat.com>; Wed, 14 May 2008 22:55:15 +0200 (CEST)
+Received: from mx03.syneticon.net ([192.168.113.4])
+	by localhost (mx03.syneticon.net [192.168.113.3]) (amavisd-new,
+	port 10025) with ESMTP id QnvogJprmc3D for <linux-lvm@redhat.com>;
+	Wed, 14 May 2008 22:55:05 +0200 (CEST)
+Received: from [192.168.10.145] (koln-4d0b6e02.pool.mediaWays.net
+	[77.11.110.2]) by mx03.syneticon.net (Postfix) with ESMTP
+	for <linux-lvm@redhat.com>; Wed, 14 May 2008 22:55:05 +0200 (CEST)
+Message-ID: <482B51A5.4070800@wpkg.org>
+Date: Wed, 14 May 2008 22:55:01 +0200
+From: Tomasz Chmielewski <mangoo@wpkg.org>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] lvs / pvs takes ages to execute under slight load
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -26,32 +30,22 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-On Wed, 14 May 2008, Jorge Souto wrote:
+I noticed that various LVM commands, such as lvs, pvs, lvresize etc. can take 
+several minutes to execute if I do a simple task like:
 
-> I use lvm in a mainframe environment, with small ECKD disks (maximum model
-> 54, aprox. 45 GB). So to create a big volume a I need a lot of disks. I'm
-> going to create one with 35 physical volumes. I have doubts about striping,
-> particularly deciding the number of stripes in such case (35 PVs in one
-> storage array rank -yeah, not good-), and the drawbacks in administration
-> tasks ( growing and limitations adding pvs to a stripped volume).
+   dd if=/dev/vol/lv-snapshot of=/dev/vol/lv
 
-Idea 1:
-Make 4 PVs of 8 disks with raid1+0 (create 4 mirror pairs, then
-stripe the 4 mirrors in each group).  Keep the additional 3 disks
-as spares.
+Other than LVM commands, the machine is responsive and works fine.
 
-Idea 2:
-Make 7 PVs of 5 disks with raid5 (4 disks with 1 parity).
+Is it normal that LVM commands take so long to execute if we dd one volume (or 
+snapshot volume) to another?
 
-In each case, 4 way striping accelerates read/write by 4.  Each case
-is able to tolerate single disk failures. 
+I have Debian Etch 4.0 and kernel 2.6.24.2.
+
 
 -- 
-	      Stuart D. Gathman <stuart@bmsi.com>
-    Business Management Systems Inc.  Phone: 703 591-0911 Fax: 703 591-6154
-"Confutatis maledictis, flammis acribus addictis" - background song for
-a Microsoft sponsored "Where do you want to go from here?" commercial.
+Tomasz Chmielewski
+http://wpkg.org
