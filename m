@@ -1,23 +1,24 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m4JFNdWb021602
-	for <linux-lvm@redhat.com>; Mon, 19 May 2008 11:23:39 -0400
-Received: from gv-out-0910.google.com (gv-out-0910.google.com [216.239.58.184])
-	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id m4JFN3bt022591
-	for <linux-lvm@redhat.com>; Mon, 19 May 2008 11:23:03 -0400
-Received: by gv-out-0910.google.com with SMTP id n8so267990gve.13
-	for <linux-lvm@redhat.com>; Mon, 19 May 2008 08:23:03 -0700 (PDT)
-Message-ID: <1c748a490805190823t42deb053o1714c7f0b4d74ecb@mail.gmail.com>
-Date: Mon, 19 May 2008 08:23:01 -0700
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m4JFfshN005219
+	for <linux-lvm@redhat.com>; Mon, 19 May 2008 11:41:54 -0400
+Received: from gv-out-0910.google.com (gv-out-0910.google.com [216.239.58.189])
+	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id m4JFfdnZ004614
+	for <linux-lvm@redhat.com>; Mon, 19 May 2008 11:41:40 -0400
+Received: by gv-out-0910.google.com with SMTP id n8so272993gve.13
+	for <linux-lvm@redhat.com>; Mon, 19 May 2008 08:41:39 -0700 (PDT)
+Message-ID: <1c748a490805190841i5cfdcddfuf978893981f03718@mail.gmail.com>
+Date: Mon, 19 May 2008 08:41:38 -0700
 From: "Larry Dickson" <ldickson@cuttedge.com>
 Subject: Re: [linux-lvm] lvm partition on ramdisk
-In-Reply-To: <A78DB34D00374344A0AB65B6523C05DC02FA9324@marsden.win.datacash.com>
+In-Reply-To: <1c748a490805190823t42deb053o1714c7f0b4d74ecb@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: multipart/alternative; 
-	boundary="----=_Part_13911_33041675.1211210581533"
+	boundary="----=_Part_13951_16260047.1211211698915"
 References: <1c748a490805130716y558520d7i7b2781816bd743e1@mail.gmail.com>
 	<Pine.LNX.4.44.0805131309330.29266-100000@bmsred.bmsi.com>
 	<1c748a490805190737h35a11073le7dede4a98ae78c0@mail.gmail.com>
 	<A78DB34D00374344A0AB65B6523C05DC02FA9324@marsden.win.datacash.com>
+	<1c748a490805190823t42deb053o1714c7f0b4d74ecb@mail.gmail.com>
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -30,125 +31,170 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 List-Id: <linux-lvm.redhat.com>
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-------=_Part_13911_33041675.1211210581533
+------=_Part_13951_16260047.1211211698915
 Content-Type: text/plain; charset=WINDOWS-1252
 Content-Transfer-Encoding: quoted-printable
 Content-Disposition: inline
 
-The purpose was to move seeking operations onto the ramdisk (ultimately
-NVRAM or battery-backed), and use a file system that allocates disk sectors
-in sequential order for scientific (no-delete) data streaming writes. It
-allows near full speed writing to the main (big RAID) storage, and yet a
-standard file system structure appears on the recorded data at little cost.
-Log-structured file systems serve a similar purpose, but the structure of
-the data and metadata is quite complex, and an additional step of "capping"
-is needed if random-access reads are to be reasonably fast.
+Rereading your question more precisely, the performances were (write speeds=
+,
+as percentage of long sequential writes to raw device, 64GB timed, with
+pre-filling of buffers in all tests):
+
+97%    ramdisk-assisted FAT32
+79%    ext2 (fastest non-ramdisk-assisted FS)
+59%    FAT32
+58%    xfs
+
+So, in respect of performance loss, the ramdisk results in at least a
+tenfold improvement. In the test, not only the FAT but the directory was on
+ramdisk - and this is realistic.
 
 Larry
 
-On 5/19/08, Gerrard Geldenhuis <Gerrard.Geldenhuis@datacash.com> wrote:
+On 5/19/08, Larry Dickson <ldickson@cuttedge.com> wrote:
 >
->  Thanks for the update. I have not followed the thread closely=85 did you
-> see any significant measured peformance increase in using lvm on a ramdis=
-k?
->
->
->
-> Regards
->
->
->   ------------------------------
->
-> *From:* linux-lvm-bounces@redhat.com [mailto:linux-lvm-bounces@redhat.com=
-]
-> *On Behalf Of *Larry Dickson
-> *Sent:* 19 May 2008 15:37
-> *To:* LVM general discussion and development
-> *Subject:* Re: [linux-lvm] lvm partition on ramdisk
->
->
->
-> Final results FYI in this investigation: A recent Ubuntu release gets pas=
-t
-> the 1TB limit. I found binaries for dosfstools_2.11-2.1ubuntu3 at
->
-> http://packages.ubuntu.com/feisty/otherosfs/dosfstools
->
-> and unpacked them with ar -x. The source is in
->
-> https://launchpad.net/ubuntu/+source/dosfstools/2.11-2.1ubuntu3
->
->
->   With 4KB sectors, it defaults to 128KB clusters and reaches over 97%
-> write speed on an 8TB volume. The ramdisk area needed is a little over
-> 512MB, so if you use 768MB you get quite a bit of room for directories al=
-so
-> on ramdisk, and with a little finesse you can even make the subdirectorie=
-s
-> lay themselves down on ramdisk. To be "Windows-legal" you could use 32KB
-> clusters and a little over 2GB ramdisk (or a little over 1GB with one FAT=
-).
-> Linux is happy with the big clusters, and according to the design should
-> actually be willing to go to 16TB.
+> The purpose was to move seeking operations onto the ramdisk (ultimately
+> NVRAM or battery-backed), and use a file system that allocates disk secto=
+rs
+> in sequential order for scientific (no-delete) data streaming writes. It
+> allows near full speed writing to the main (big RAID) storage, and yet a
+> standard file system structure appears on the recorded data at little cos=
+t.
+> Log-structured file systems serve a similar purpose, but the structure of
+> the data and metadata is quite complex, and an additional step of "cappin=
+g"
+> is needed if random-access reads are to be reasonably fast.
 >
 > Larry
 >
+>  On 5/19/08, Gerrard Geldenhuis <Gerrard.Geldenhuis@datacash.com> wrote:
+>>
+>>  Thanks for the update. I have not followed the thread closely=85 did yo=
+u
+>> see any significant measured peformance increase in using lvm on a ramdi=
+sk?
+>>
+>>
+>>
+>> Regards
+>>
+>>
+>>   ------------------------------
+>>
+>> *From:* linux-lvm-bounces@redhat.com [mailto:linux-lvm-bounces@redhat.co=
+m]
+>> *On Behalf Of *Larry Dickson
+>> *Sent:* 19 May 2008 15:37
+>> *To:* LVM general discussion and development
+>> *Subject:* Re: [linux-lvm] lvm partition on ramdisk
+>>
+>>
+>>
+>> Final results FYI in this investigation: A recent Ubuntu release gets pa=
+st
+>> the 1TB limit. I found binaries for dosfstools_2.11-2.1ubuntu3 at
+>>
+>> http://packages.ubuntu.com/feisty/otherosfs/dosfstools
+>>
+>> and unpacked them with ar -x. The source is in
+>>
+>> https://launchpad.net/ubuntu/+source/dosfstools/2.11-2.1ubuntu3
+>>
+>>
+>>   With 4KB sectors, it defaults to 128KB clusters and reaches over 97%
+>> write speed on an 8TB volume. The ramdisk area needed is a little over
+>> 512MB, so if you use 768MB you get quite a bit of room for directories a=
+lso
+>> on ramdisk, and with a little finesse you can even make the subdirectori=
+es
+>> lay themselves down on ramdisk. To be "Windows-legal" you could use 32KB
+>> clusters and a little over 2GB ramdisk (or a little over 1GB with one FA=
+T).
+>> Linux is happy with the big clusters, and according to the design should
+>> actually be willing to go to 16TB.
+>>
+>> Larry
+>>
+>>
+>>
+>> On 5/13/08, *Stuart D. Gathman* <stuart@bmsi.com> wrote:
+>>
+>> On Tue, 13 May 2008, Larry Dickson wrote:
+>>
+>> > on the full, unpartitioned lv. Then it mounted, with the entire FAT on
+>> > ramdisk, and wrote very fast because FAT32 (like DOS) lays down data i=
+n
+>> > order from the start of a disk and does not skip around (I'd be
+>> interested
+>> > if anyone knows any other file systems with that property).
+>>
+>> The SysV filesystem put a fixed size inode table at the beginning of a
+>> partition.  More modern filesystems from ext to reiser try to distribute
+>> the meta-data to keep it closer to the data.  This is, of course, counte=
+r
+>> productive when the beginning of a disk is significantly faster and
+>> seek-free
+>> as in your setup.
+>>
+>> Since ext3 inode placement is table driven (with the table in a magic
+>> inode),
+>> there is probably a simple patch to mke2fs to create only one inode tabl=
+e
+>> at
+>> the beginning of a drive.  In fact, I wonder if there is already an
+>> option...
+>> looks like -g blocks_per_group might do the trick - assuming inodes are
+>> at the beginning of a block group, rather than the middle.  If not,
+>> a patch to mke2fs is needed to do what you want.
+>>
+>> --
+>>              Stuart D. Gathman <stuart@bmsi.com>
+>>    Business Management Systems Inc.  Phone: 703 591-0911 Fax: 703 591-61=
+54
+>> "Confutatis maledictis, flammis acribus addictis" - background song for
+>> a Microsoft sponsored "Where do you want to go from here?" commercial.
+>>
+>> _______________________________________________
+>> linux-lvm mailing list
+>> linux-lvm@redhat.com
+>> https://www.redhat.com/mailman/listinfo/linux-lvm
+>> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+>>
+>>
+>>
+>> _______________________________________________
+>> linux-lvm mailing list
+>> linux-lvm@redhat.com
+>> https://www.redhat.com/mailman/listinfo/linux-lvm
+>> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+>>
 >
->
-> On 5/13/08, *Stuart D. Gathman* <stuart@bmsi.com> wrote:
->
-> On Tue, 13 May 2008, Larry Dickson wrote:
->
-> > on the full, unpartitioned lv. Then it mounted, with the entire FAT on
-> > ramdisk, and wrote very fast because FAT32 (like DOS) lays down data in
-> > order from the start of a disk and does not skip around (I'd be
-> interested
-> > if anyone knows any other file systems with that property).
->
-> The SysV filesystem put a fixed size inode table at the beginning of a
-> partition.  More modern filesystems from ext to reiser try to distribute
-> the meta-data to keep it closer to the data.  This is, of course, counter
-> productive when the beginning of a disk is significantly faster and
-> seek-free
-> as in your setup.
->
-> Since ext3 inode placement is table driven (with the table in a magic
-> inode),
-> there is probably a simple patch to mke2fs to create only one inode table
-> at
-> the beginning of a drive.  In fact, I wonder if there is already an
-> option...
-> looks like -g blocks_per_group might do the trick - assuming inodes are
-> at the beginning of a block group, rather than the middle.  If not,
-> a patch to mke2fs is needed to do what you want.
->
-> --
->              Stuart D. Gathman <stuart@bmsi.com>
->    Business Management Systems Inc.  Phone: 703 591-0911 Fax: 703 591-615=
-4
-> "Confutatis maledictis, flammis acribus addictis" - background song for
-> a Microsoft sponsored "Where do you want to go from here?" commercial.
->
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
->
->
->
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
 >
 
-------=_Part_13911_33041675.1211210581533
+------=_Part_13951_16260047.1211211698915
 Content-Type: text/html; charset=WINDOWS-1252
 Content-Transfer-Encoding: quoted-printable
 Content-Disposition: inline
 
+<div>Rereading your question more precisely, the performances were (write s=
+peeds, as percentage of long sequential writes to raw device, 64GB timed, w=
+ith pre-filling of buffers in all tests):</div>
+<div>&nbsp;</div>
+<div>97%&nbsp;&nbsp;&nbsp; ramdisk-assisted FAT32</div>
+<div>79%&nbsp;&nbsp;&nbsp; ext2 (fastest non-ramdisk-assisted FS)</div>
+<div>59%&nbsp;&nbsp;&nbsp; FAT32</div>
+<div>58%&nbsp;&nbsp;&nbsp; xfs</div>
+<div>&nbsp;</div>
+<div>So, in respect of performance loss, the ramdisk results in at least a =
+tenfold improvement. In the test, not only the FAT but the directory was on=
+ ramdisk - and this is realistic.<br>&nbsp;</div>
+<div>Larry<br>&nbsp;</div>
+<div><span class=3D"gmail_quote">On 5/19/08, <b class=3D"gmail_sendername">=
+Larry Dickson</b> &lt;<a href=3D"mailto:ldickson@cuttedge.com">ldickson@cut=
+tedge.com</a>&gt; wrote:</span>
+<blockquote class=3D"gmail_quote" style=3D"PADDING-LEFT: 1ex; MARGIN: 0px 0=
+px 0px 0.8ex; BORDER-LEFT: #ccc 1px solid">
 <div>The purpose was to move seeking operations onto the ramdisk (ultimatel=
 y NVRAM or battery-backed), and use a file system that allocates disk secto=
 rs in sequential order for scientific (no-delete) data streaming writes. It=
@@ -159,8 +205,9 @@ ost. Log-structured file systems serve a similar purpose, but the structure=
 ;capping&quot; is needed if random-access reads are to be reasonably fast.<=
 /div>
 
-<div>&nbsp;</div>
-<div>Larry<br>&nbsp;</div>
+<div>&nbsp;</div><span class=3D"sg">
+<div>Larry<br>&nbsp;</div></span>
+<div><span class=3D"q" id=3D"q_11a01c6c47d0ba1f_2">
 <div><span class=3D"gmail_quote">On 5/19/08, <b class=3D"gmail_sendername">=
 Gerrard Geldenhuis</b> &lt;<a onclick=3D"return top.js.OpenExtLink(window,e=
 vent,this)" href=3D"mailto:Gerrard.Geldenhuis@datacash.com" target=3D"_blan=
@@ -217,6 +264,7 @@ eturn top.js.OpenExtLink(window,event,this)" href=3D"https://launchpad.net/=
 ubuntu/+source/dosfstools/2.11-2.1ubuntu3" target=3D"_blank">https://launch=
 pad.net/ubuntu/+source/dosfstools/2.11-2.1ubuntu3</a><br>
 &nbsp;</span></div></span></font>
+<p></p>
 <p></p>
 <p></p></p></div>
 <div><span>
@@ -287,6 +335,6 @@ edhat.com/mailman/listinfo/linux-lvm</a><br>read the LVM HOW-TO at <a oncli=
 ck=3D"return top.js.OpenExtLink(window,event,this)" href=3D"http://tldp.org=
 /HOWTO/LVM-HOWTO/" target=3D"_blank">http://tldp.org/HOWTO/LVM-HOWTO/</a><b=
 r>
-</blockquote></div><br>
+</blockquote></div><br></span></div></blockquote></div><br>
 
-------=_Part_13911_33041675.1211210581533--
+------=_Part_13951_16260047.1211211698915--
