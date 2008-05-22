@@ -1,16 +1,17 @@
-Received: from pobox.fab.redhat.com (pobox.fab.redhat.com [10.33.63.12])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m4LFwN0T031349
-	for <linux-lvm@redhat.com>; Wed, 21 May 2008 11:58:24 -0400
-Received: from boomer.trellisnet.co.uk (sebastian-int.corp.redhat.com
-	[172.16.52.221])
-	by pobox.fab.redhat.com (8.13.1/8.13.1) with ESMTP id m4LFwMUg022591
-	for <linux-lvm@redhat.com>; Wed, 21 May 2008 11:58:23 -0400
-Message-ID: <48344659.9040401@redhat.com>
-Date: Wed, 21 May 2008 16:57:13 +0100
-From: Thomas Ellis <tellis@redhat.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] Restoring data from a SAN based clone/snapshot
+Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m4MD1Jal019883
+	for <linux-lvm@redhat.com>; Thu, 22 May 2008 09:01:19 -0400
+Received: from victor.provo.novell.com (victor.provo.novell.com
+	[137.65.250.26])
+	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id m4MD11hW004305
+	for <linux-lvm@redhat.com>; Thu, 22 May 2008 09:01:03 -0400
+Message-Id: <4835BC14.D5D9.0001.0@novell.com>
+Date: Thu, 22 May 2008 07:06:25 -0600
+From: "R Ramkumar" <rramkumar@novell.com>
+Mime-Version: 1.0
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+Subject: [linux-lvm] Removing PVs from Volume Groups which have allocated LVs
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -24,30 +25,12 @@ List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@redhat.com
 
------BEGIN PGP SIGNED MESSAGE-----
-Hash: SHA1
 
-Hi all,
+Hi,
 
-When you take a hardware based clone of a SAN LUN containing a PV/VG and present it to a
-system already using the original PV/VG, LVM notices that the both have the same UUID's
-and chooses to use one rather than the other.
-Using the clone and copying data from it is not initially obvious, so I've added a
-procedure to the wiki for $subject:
+I have a LVM setup where I have a VG with 3 PVs.. I have created 2 LVs from the VG which eventually has taken physical storage space from one or two of the PVs.. Now, when I want to shrink the VG, I need to know the unallocated PV so that I can remove from the VG.. 
 
-http://sources.redhat.com/lvm2/wiki/HardwareSnapshotRestore
+Is there anyway that I can find out which PV is unallocated and which PV to remove from the VG.. Please let me know your views..
 
-Please take a look and let me know what your think, feel free to modify/update as you feel
-necessary.
-
-regards,
-
-Tom
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.9 (GNU/Linux)
-
-iEYEARECAAYFAkg0RlkACgkQOZBvfQY8NVp2EgCfYzUno36yrBlzjzmoD0aD7Gkx
-SoIAn0Jz1mlrzuV+Q9RiRbwKmdFIquXL
-=C9NG
------END PGP SIGNATURE-----
+Thanks,
+Ram
