@@ -1,17 +1,21 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m4MD1Jal019883
-	for <linux-lvm@redhat.com>; Thu, 22 May 2008 09:01:19 -0400
-Received: from victor.provo.novell.com (victor.provo.novell.com
-	[137.65.250.26])
-	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id m4MD11hW004305
-	for <linux-lvm@redhat.com>; Thu, 22 May 2008 09:01:03 -0400
-Message-Id: <4835BC14.D5D9.0001.0@novell.com>
-Date: Thu, 22 May 2008 07:06:25 -0600
-From: "R Ramkumar" <rramkumar@novell.com>
-Mime-Version: 1.0
-Content-Disposition: inline
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m4NArWi5012018
+	for <linux-lvm@redhat.com>; Fri, 23 May 2008 06:53:32 -0400
+Received: from mailgw11.wm.net (mailgw10.wm.net [85.119.129.3])
+	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id m4NAr131029275
+	for <linux-lvm@redhat.com>; Fri, 23 May 2008 06:53:02 -0400
+Received: from WMSI001555.corp.wmdata.net (wmbridgehead.wmdata.se
+	[164.9.238.11]) by mailgw11.wm.net  with ESMTP id m4NAr1Nh011253
+	for <linux-lvm@redhat.com>; Fri, 23 May 2008 12:53:01 +0200
+From: "Henry, Andrew" <andrew.henry@logica.com>
+Date: Fri, 23 May 2008 12:52:58 +0200
+Message-ID: <3ECBDC05781B3D48ABD520A01ABF2F9B12C56CC13B@SE-EX008.groupinfra.com>
+Content-Language: en-US
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: [linux-lvm] Removing PVs from Volume Groups which have allocated LVs
+Subject: [linux-lvm] Can I implement RAID1 through LVM2 instead of using
+	mdadm?
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -22,15 +26,12 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@redhat.com
+To: "linux-lvm@redhat.com" <linux-lvm@redhat.com>
 
+Subject says it all.
 
-Hi,
+I want to avoid triple layers (softRAID,dmcrypt,LVM).  If LVM2 can do mirroring and if it is as stable as software RAID, then I would prefer this method.
 
-I have a LVM setup where I have a VG with 3 PVs.. I have created 2 LVs from the VG which eventually has taken physical storage space from one or two of the PVs.. Now, when I want to shrink the VG, I need to know the unallocated PV so that I can remove from the VG.. 
+Which is easier to manager? Software RAID or LVM mirroring?
 
-Is there anyway that I can find out which PV is unallocated and which PV to remove from the VG.. Please let me know your views..
-
-Thanks,
-Ram
+--andrew
