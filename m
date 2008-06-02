@@ -1,22 +1,25 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m52D1clg026767
-	for <linux-lvm@redhat.com>; Mon, 2 Jun 2008 09:01:38 -0400
-Received: from an-out-0708.google.com (an-out-0708.google.com [209.85.132.247])
-	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id m52D1F6E027000
-	for <linux-lvm@redhat.com>; Mon, 2 Jun 2008 09:01:15 -0400
-Received: by an-out-0708.google.com with SMTP id d31so322119and.124
-	for <linux-lvm@redhat.com>; Mon, 02 Jun 2008 06:01:15 -0700 (PDT)
-Message-ID: <87f94c370806020601h6a4b4ff1s20f89899ce1848f5@mail.gmail.com>
-Date: Mon, 2 Jun 2008 09:01:14 -0400
-From: "Greg Freemyer" <greg.freemyer@gmail.com>
-Subject: Re: [linux-lvm] Distributed LVM/filesystem/storage
-In-Reply-To: <20080601230039.GO19431@lug-owl.de>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m52GRoGS003908
+	for <linux-lvm@redhat.com>; Mon, 2 Jun 2008 12:27:50 -0400
+Received: from v-mailgw.milnet.lan (mailgw.milnet.ch [193.47.190.37])
+	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id m52GRdFt013237
+	for <linux-lvm@redhat.com>; Mon, 2 Jun 2008 12:27:40 -0400
+Received: from v-mailgw.milnet.lan (localhost [192.168.193.37])
+	by v-mailgw-despam.milnet.lan (Postfix) with ESMTP id 5A3C719C0C1
+	for <linux-lvm@redhat.com>; Mon,  2 Jun 2008 18:27:33 +0200 (CEST)
+Received: from v-mailgw.milnet.lan (localhost [192.168.193.37])
+	by v-mailgw-clamav.milnet.lan (Postfix) with ESMTP id 4348E19C0C6
+	for <linux-lvm@redhat.com>; Mon,  2 Jun 2008 18:27:33 +0200 (CEST)
+Received: from groupwise.milnet.lan (groupwise.milnet.lan [192.168.193.18])
+	by v-mailgw.milnet.lan (Postfix) with ESMTP id 30F2219C0C1
+	for <linux-lvm@redhat.com>; Mon,  2 Jun 2008 18:27:30 +0200 (CEST)
+Message-Id: <48443B86.DB9C.0010.0@milprog.ch>
+Date: Mon, 02 Jun 2008 18:27:19 +0200
+From: "Marcel Gsteiger" <Marcel.Gsteiger@milprog.ch>
+Mime-Version: 1.0
 Content-Disposition: inline
-References: <20080529231213.GY19431@lug-owl.de>
-	<48430FED.1080306@theendofthetunnel.de>
-	<20080601230039.GO19431@lug-owl.de>
+Content-Transfer-Encoding: 8bit
+Subject: [linux-lvm] Can't get rid of INACTIVE read/write snapshot
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -28,60 +31,54 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: LVM general discussion and development <linux-lvm@redhat.com>, Maximilian Wilhelm <max@rfc2324.org>
+To: linux-lvm@redhat.com
 
-2008/6/1 Jan-Benedict Glaw <jbglaw@lug-owl.de>:
-> On Sun, 2008-06-01 23:09:01 +0200, Hannes Dorbath <light@theendofthetunnel.de> wrote:
->> Jan-Benedict Glaw wrote:
->> > However I still fail to find a good approach. One initial idea was to
->> > export all physical volumes (partitions or full disks) vie NBD, join
->> > them all on a single machine into one VG/LV, create a filesystem and
->> > re-export that via NFS/SMB/...  However, all data would need to go
->> > through the net twice. While speed isn't the most important thing here
->> > (but storage is!), that's way suboptimal.
->>
->> GlusterFS with Unify translator is exactly what you are asking for.
->>
->> http://www.gluster.org/docs/index.php/GlusterFS
->
-> Already had a look at that, too. "Unify" seems to not directly
-> implement any measure of redundancy. So if one Brick goes down,
-> everything that was there is gone. Maybe its possible to play with the
-> `mirror' translator as well, but on the first look, it seems to be
-> non-trivial to accomodate for a steady loss and addition of bricks.
->
-> MfG, JBG
+Hi all
 
-I haven't seen Lustre mentioned in this thread.  I think there is
-kernel support, etc.  May be worth checking out. (I have not used it.)
+I'm using lvm2-2.01.08-2.1 on fc4, kernel 2.6.16-1 with linux-vserver patches.
 
-Quoting wikipedia http://en.wikipedia.org/wiki/Lustre_(file_system)
-===
-High availability
+A while ago, I mistakenly created a 39GB read-write snapshot of my /vservers partition (which, btw, seemed to work). But after some time this partition got to an overflow and since then I can't get rid of it anymore. See the lvdisplay output below.
 
-Lustre file system high availability features include a robust
-failover and recovery mechanism, making server failures and reboots
-transparent. Version interoperability between successive minor
-versions of the Lustre software enables a server to be upgraded by
-taking it offline (or failing it over to a standby server), performing
-the upgrade, and restarting it, while all active jobs continue to run,
-merely experiencing a delay.
+lvchange -an or --refresh gives me a message "Can't change snapshot logical volume "vservers_snapshot"".
 
-Lustre MDSs are configured as an active/passive pair, while OSSs are
-typically deployed in an active/active configuration that provides
-redundancy without extra overhead. Often the standby MDS is the active
-MDS for another Lustre file system, so no nodes are idle in the
-cluster.
-===
+lvremove lets me wait, then "top" shows 100% IO-Wait but does not come to an end (at least after an hour). I don't know how much patience I would need, this box is rather fast otherwise (dual xeon 2.8GHz w/ SATA drives).
 
-Greg
--- 
-Greg Freemyer
-Litigation Triage Solutions Specialist
-http://www.linkedin.com/in/gregfreemyer
-First 99 Days Litigation White Paper -
-http://www.norcrossgroup.com/forms/whitepapers/99%20Days%20whitepaper.pdf
+Rebooting does not help anything.
 
-The Norcross Group
-The Intersection of Evidence & Technology
-http://www.norcrossgroup.com
+Is there a safe way to simply get rid of this snapshot? Any help would much be appreciated.
+
+Regards
+--Marcel
+
+ --- Logical volume ---
+  LV Name                /dev/vg00/lv00_vservers
+  VG Name                vg00
+  LV UUID                9oELP3-2l7d-gTML-2xg2-unTu-znP0-qVd3Mc
+  LV Write Access        read/write
+  LV snapshot status     source of
+                         /dev/vg00/vservers_snapshot [INACTIVE]
+  LV Status              available
+  # open                 1
+  LV Size                39,06 GB
+  Current LE             625
+  Segments               1
+  Allocation             contiguous
+  Read ahead sectors     0
+  Block device           253:9
+   
+  --- Logical volume ---
+  LV Name                /dev/vg00/vservers_snapshot
+  VG Name                vg00
+  LV UUID                cQEj3z-V2jD-QOCl-3Yea-ETQZ-Egj9-2B7nd2
+  LV Write Access        read/write
+  LV snapshot status     INACTIVE destination for /dev/vg00/lv00_vservers
+  LV Status              available
+  # open                 0
+  LV Size                39,06 GB
+  Current LE             625
+  Segments               1
+  Snapshot chunk size    4,00 KB
+  Allocated to snapshot  100,00% 
+  Allocation             inherit
+  Read ahead sectors     0
+  Block device           253:8
