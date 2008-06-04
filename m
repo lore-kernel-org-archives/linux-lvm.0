@@ -1,28 +1,24 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m53NcPqr025116
-	for <linux-lvm@redhat.com>; Tue, 3 Jun 2008 19:38:26 -0400
-Received: from server.klug.on.ca (server.klug.on.ca [205.189.48.131])
-	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id m53Nc9nf015843
-	for <linux-lvm@redhat.com>; Tue, 3 Jun 2008 19:38:09 -0400
-Received: from linux.interlinx.bc.ca (unknown [67.193.220.102])
-	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by server.klug.on.ca (Postfix) with ESMTP id 05EAF2803
-	for <linux-lvm@redhat.com>; Tue,  3 Jun 2008 19:38:08 -0400 (EDT)
-Received: from [10.75.22.1] (pc.ilinx [10.75.22.1])
-	by linux.interlinx.bc.ca (Postfix) with ESMTP id 006508710
-	for <linux-lvm@redhat.com>; Tue,  3 Jun 2008 19:38:06 -0400 (EDT)
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m5405dBa003623
+	for <linux-lvm@redhat.com>; Tue, 3 Jun 2008 20:05:39 -0400
+Received: from scidubsmtp03.stercomm.com (scidubsmtp03.stercomm.com
+	[209.95.244.153])
+	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id m5405TRw029381
+	for <linux-lvm@redhat.com>; Tue, 3 Jun 2008 20:05:29 -0400
+Received: from IWDUBCORMSG001.sci.local (iwdubcormsg001.sci.local
+	[10.105.142.31])
+	by boamail2.stercomm.com (Postfix) with ESMTP id B531B33BEC
+	for <linux-lvm@redhat.com>; Tue,  3 Jun 2008 20:07:38 -0400 (EDT)
 Subject: Re: [linux-lvm] ANNOUNCE: an experimental implementation of
 	snapshot merging
-From: "Brian J. Murrell" <brian@interlinx.bc.ca>
-In-Reply-To: <1212525819.19122.16.camel@behemoth.csg.stercomm.com>
+From: Chris Cox <chris_cox@stercomm.com>
+In-Reply-To: <1212536286.29076.202.camel@pc.ilinx>
 References: <Pine.LNX.4.64.0806031516380.20514@engineering.redhat.com>
 	<1212525819.19122.16.camel@behemoth.csg.stercomm.com>
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature";
-	boundary="=-OfBhZd6dlofbEnQWYesu"
-Date: Tue, 03 Jun 2008 19:38:06 -0400
-Message-Id: <1212536286.29076.202.camel@pc.ilinx>
+	<1212536286.29076.202.camel@pc.ilinx>
+Content-Transfer-Encoding: 7bit
+Date: Tue, 03 Jun 2008 19:05:26 -0500
+Message-Id: <1212537926.2724.16.camel@behemoth.csg.stercomm.com>
 Mime-Version: 1.0
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
@@ -34,49 +30,37 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
+Content-Type: text/plain; charset="us-ascii"
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
+On Tue, 2008-06-03 at 19:38 -0400, Brian J. Murrell wrote:
+> On Tue, 2008-06-03 at 15:43 -0500, Chris Cox wrote:
+> > 
+> > I would think this would be VERY hard to do since both the "origin" and
+> > "snapshot" change (file deletes, etc).
+> 
+> I don't think it's as difficult as you are thinking it is.  You are
+> thinking of synchronizing filesystems, at the filesystem level, but
+> merging a snapshot back up into the origin does not deal with files or
+> even filesystems.  It deals with block devices and blocks, and is really
+> nothing more than a coordinated:
+> 
+> for each COW_block in snapshot; do
+>     for other_snapshot of origin; do
+>         copy origin[COW_block] to other_snapshot[COW_block]
+>         copy snapshot[COW_block] to origin[COW_block]
+>     done
+> done
+> 
+> > Do you have a set of rules you
+> > use for the merge?
+> 
+> There is no filesystem level merge.  There are no rules needed.
 
---=-OfBhZd6dlofbEnQWYesu
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
+Ok... I'm still a bit confused (sorry)... I'm going to assume
+a last out wins scenario with regards to meta data conflicts
+... yes.. I know, I'm having a tough time separating out the
+filesystem element from the block device :)
 
-On Tue, 2008-06-03 at 15:43 -0500, Chris Cox wrote:
->=20
-> I would think this would be VERY hard to do since both the "origin" and
-> "snapshot" change (file deletes, etc).
-
-I don't think it's as difficult as you are thinking it is.  You are
-thinking of synchronizing filesystems, at the filesystem level, but
-merging a snapshot back up into the origin does not deal with files or
-even filesystems.  It deals with block devices and blocks, and is really
-nothing more than a coordinated:
-
-for each COW_block in snapshot; do
-    for other_snapshot of origin; do
-        copy origin[COW_block] to other_snapshot[COW_block]
-        copy snapshot[COW_block] to origin[COW_block]
-    done
-done
-
-> Do you have a set of rules you
-> use for the merge?
-
-There is no filesystem level merge.  There are no rules needed.
-
-b.
-
-
---=-OfBhZd6dlofbEnQWYesu
-Content-Type: application/pgp-signature; name=signature.asc
-Content-Description: This is a digitally signed message part
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.6 (GNU/Linux)
-
-iD8DBQBIRdXel3EQlGLyuXARAsdHAJ9mhqY6F/boW1skZ07gNjgl0nHsbgCdENwn
-2moZx0aTD8v8gfVOE1jElGg=
-=XrCA
------END PGP SIGNATURE-----
-
---=-OfBhZd6dlofbEnQWYesu--
+Thanks for the answer... it does make sense (just makes my
+brain hurt).
