@@ -1,22 +1,22 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m54Bjwq5021667
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m54BjwWB021669
 	for <linux-lvm@redhat.com>; Wed, 4 Jun 2008 07:45:58 -0400
 Received: from mx03.syneticon.net (mx03.syneticon.net [87.79.32.166])
-	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id m54BjjZ5023133
+	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id m54Bjjhr023141
 	for <linux-lvm@redhat.com>; Wed, 4 Jun 2008 07:45:45 -0400
 Received: from localhost (filter1.syneticon.net [192.168.113.3])
-	by mx03.syneticon.net (Postfix) with ESMTP id 5AE1D9453
-	for <linux-lvm@redhat.com>; Wed,  4 Jun 2008 13:45:44 +0200 (CEST)
+	by mx03.syneticon.net (Postfix) with ESMTP id 1352F946A
+	for <linux-lvm@redhat.com>; Wed,  4 Jun 2008 13:45:45 +0200 (CEST)
 Received: from mx03.syneticon.net ([192.168.113.4])
 	by localhost (mx03.syneticon.net [192.168.113.3]) (amavisd-new,
-	port 10025) with ESMTP id AumwKjfCSDBr for <linux-lvm@redhat.com>;
-	Wed,  4 Jun 2008 13:45:36 +0200 (CEST)
+	port 10025) with ESMTP id tFz-v16QEV1t for <linux-lvm@redhat.com>;
+	Wed,  4 Jun 2008 13:45:44 +0200 (CEST)
 Received: from [192.168.10.145] (koln-4d0b66b7.pool.mediaWays.net
 	[77.11.102.183]) by mx03.syneticon.net (Postfix) with ESMTP
-	for <linux-lvm@redhat.com>; Wed,  4 Jun 2008 13:45:36 +0200 (CEST)
-Message-ID: <4846805F.5000109@syneticon.net>
-Date: Wed, 04 Jun 2008 13:45:35 +0200
-From: Tomasz Chmielewski <tch@syneticon.net>
+	for <linux-lvm@redhat.com>; Wed,  4 Jun 2008 13:45:44 +0200 (CEST)
+Message-ID: <48468067.2080406@wpkg.org>
+Date: Wed, 04 Jun 2008 13:45:43 +0200
+From: Tomasz Chmielewski <mangoo@wpkg.org>
 MIME-Version: 1.0
 Subject: Re: [linux-lvm] Restoring method Snapshot to Orginal Volume
 References: <OF7B312B80.8E5D67C6-ONC125745E.0029E521-C125745E.0029F5B6@lippi.fr>
