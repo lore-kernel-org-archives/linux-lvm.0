@@ -1,24 +1,32 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m540KYrt009765
-	for <linux-lvm@redhat.com>; Tue, 3 Jun 2008 20:20:34 -0400
-Received: from an-out-0708.google.com (an-out-0708.google.com [209.85.132.240])
-	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id m540KJiD003661
-	for <linux-lvm@redhat.com>; Tue, 3 Jun 2008 20:20:19 -0400
-Received: by an-out-0708.google.com with SMTP id d31so545321and.124
-	for <linux-lvm@redhat.com>; Tue, 03 Jun 2008 17:20:19 -0700 (PDT)
-Message-ID: <87f94c370806031720ybdc557ax303c03fb8f4e56ff@mail.gmail.com>
-Date: Tue, 3 Jun 2008 20:20:19 -0400
-From: "Greg Freemyer" <greg.freemyer@gmail.com>
-Subject: Re: [linux-lvm] ANNOUNCE: an experimental implementation of snapshot
-	merging
-In-Reply-To: <1212537926.2724.16.camel@behemoth.csg.stercomm.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m542vaw7005920
+	for <linux-lvm@redhat.com>; Tue, 3 Jun 2008 22:57:36 -0400
+Received: from server.klug.on.ca (server.klug.on.ca [205.189.48.131])
+	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id m542vNA7009902
+	for <linux-lvm@redhat.com>; Tue, 3 Jun 2008 22:57:23 -0400
+Received: from linux.interlinx.bc.ca (unknown [67.193.220.102])
+	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by server.klug.on.ca (Postfix) with ESMTP id E2E432803
+	for <linux-lvm@redhat.com>; Tue,  3 Jun 2008 22:57:22 -0400 (EDT)
+Received: from [10.75.22.1] (pc.ilinx [10.75.22.1])
+	by linux.interlinx.bc.ca (Postfix) with ESMTP id EB3118710
+	for <linux-lvm@redhat.com>; Tue,  3 Jun 2008 22:57:20 -0400 (EDT)
+Subject: Re: [linux-lvm] ANNOUNCE: an experimental implementation of
+	snapshot merging
+From: "Brian J. Murrell" <brian@interlinx.bc.ca>
+In-Reply-To: <87f94c370806031720ybdc557ax303c03fb8f4e56ff@mail.gmail.com>
 References: <Pine.LNX.4.64.0806031516380.20514@engineering.redhat.com>
 	<1212525819.19122.16.camel@behemoth.csg.stercomm.com>
 	<1212536286.29076.202.camel@pc.ilinx>
 	<1212537926.2724.16.camel@behemoth.csg.stercomm.com>
+	<87f94c370806031720ybdc557ax303c03fb8f4e56ff@mail.gmail.com>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature";
+	boundary="=-1G7MFeoKXiYltkPkWtXU"
+Date: Tue, 03 Jun 2008 22:57:20 -0400
+Message-Id: <1212548240.29076.215.camel@pc.ilinx>
+Mime-Version: 1.0
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -29,69 +37,44 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-Your making it too complicated.
 
-Effectively the snapshot immediately becomes the primary volume and a
-bunch of stuff goes on in the background to sync the true primary and
-the other snapshots to it.
+--=-1G7MFeoKXiYltkPkWtXU
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 
-After everything is in sync, the snapshot is deleted and the true
-primary once again becomes the logical primary.
+On Tue, 2008-06-03 at 20:20 -0400, Greg Freemyer wrote:
+> Your making it too complicated.
+>=20
+> Effectively the snapshot immediately becomes the primary volume
 
-Greg
+How can that be done?  I thought the snapshot was simply a device which
+upon creation (i.e. before any writes to the origin) is just a series of
+block-by-block pointers to the origin.  As blocks in the origin are
+changed, those blocks are copied down to the snapshot are replace the
+pointer to itself.
 
-On Tue, Jun 3, 2008 at 8:05 PM, Chris Cox <chris_cox@stercomm.com> wrote:
-> On Tue, 2008-06-03 at 19:38 -0400, Brian J. Murrell wrote:
->> On Tue, 2008-06-03 at 15:43 -0500, Chris Cox wrote:
->> >
->> > I would think this would be VERY hard to do since both the "origin" and
->> > "snapshot" change (file deletes, etc).
->>
->> I don't think it's as difficult as you are thinking it is.  You are
->> thinking of synchronizing filesystems, at the filesystem level, but
->> merging a snapshot back up into the origin does not deal with files or
->> even filesystems.  It deals with block devices and blocks, and is really
->> nothing more than a coordinated:
->>
->> for each COW_block in snapshot; do
->>     for other_snapshot of origin; do
->>         copy origin[COW_block] to other_snapshot[COW_block]
->>         copy snapshot[COW_block] to origin[COW_block]
->>     done
->> done
->>
->> > Do you have a set of rules you
->> > use for the merge?
->>
->> There is no filesystem level merge.  There are no rules needed.
->
-> Ok... I'm still a bit confused (sorry)... I'm going to assume
-> a last out wins scenario with regards to meta data conflicts
-> ... yes.. I know, I'm having a tough time separating out the
-> filesystem element from the block device :)
->
-> Thanks for the answer... it does make sense (just makes my
-> brain hurt).
->
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
->
+So in the case where the origin has had 50% of it's blocks updated, in
+order for the snapshot to become the origin, that 50% which has been
+written down in to the snapshot need to be written back up into the
+origin (along with any blocks which were changed in the snapshot
+directly).  How can the snapshot "immediately" become the primary volume
+if that data migration has to happen?
+
+b.
 
 
+--=-1G7MFeoKXiYltkPkWtXU
+Content-Type: application/pgp-signature; name=signature.asc
+Content-Description: This is a digitally signed message part
 
--- 
-Greg Freemyer
-Litigation Triage Solutions Specialist
-http://www.linkedin.com/in/gregfreemyer
-First 99 Days Litigation White Paper -
-http://www.norcrossgroup.com/forms/whitepapers/99%20Days%20whitepaper.pdf
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.6 (GNU/Linux)
 
-The Norcross Group
-The Intersection of Evidence & Technology
-http://www.norcrossgroup.com
+iD8DBQBIRgSQl3EQlGLyuXARAnvkAJ9GQE/POeczLAIUlb6ugX99x+q5NQCeLss7
++lqeT5hYhE4JWi0iWvySNUA=
+=Rj6n
+-----END PGP SIGNATURE-----
+
+--=-1G7MFeoKXiYltkPkWtXU--
