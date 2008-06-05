@@ -1,11 +1,23 @@
-Date: Thu, 5 Jun 2008 11:01:15 -0400 (EDT)
+Received: from engineering.redhat.com (engineering.redhat.com [10.10.36.82])
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m55F9Cs7010029
+	for <linux-lvm@redhat.com>; Thu, 5 Jun 2008 11:09:12 -0400
+Received: from engineering.redhat.com (localhost.localdomain [127.0.0.1])
+	by engineering.redhat.com (8.13.1/8.13.1) with ESMTP id m55F9CKi021451
+	for <linux-lvm@redhat.com>; Thu, 5 Jun 2008 11:09:12 -0400
+Received: from localhost (mpatocka@localhost)
+	by engineering.redhat.com (8.13.1/8.13.1/Submit) with ESMTP id
+	m55F9BZJ021446
+	for <linux-lvm@redhat.com>; Thu, 5 Jun 2008 11:09:11 -0400
+Date: Thu, 5 Jun 2008 11:09:11 -0400 (EDT)
 From: Mikulas Patocka <mpatocka@redhat.com>
 Subject: Re: [linux-lvm] ANNOUNCE: an experimental implementation of snapshot
 	merging
-In-Reply-To: <4846A052.10607@rackable.com>
-Message-ID: <Pine.LNX.4.64.0806051058200.19487@engineering.redhat.com>
+In-Reply-To: <1212588457.29076.252.camel@pc.ilinx>
+Message-ID: <Pine.LNX.4.64.0806051102370.19487@engineering.redhat.com>
 References: <Pine.LNX.4.64.0806031516380.20514@engineering.redhat.com>
-	<4846A052.10607@rackable.com>
+	<1212525167.29076.191.camel@pc.ilinx>
+	<Pine.LNX.4.64.0806040656380.2902@engineering.redhat.com>
+	<1212588457.29076.252.camel@pc.ilinx>
 MIME-Version: 1.0
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
@@ -19,85 +31,63 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 List-Id: <linux-lvm.redhat.com>
 Content-Type: TEXT/PLAIN; charset="us-ascii"; format="flowed"
 Content-Transfer-Encoding: 7bit
-To: steeve@terrascale.net, LVM general discussion and development <linux-lvm@redhat.com>
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-On Wed, 4 Jun 2008, Steeve McCauley wrote:
 
-> Is this change meant to add cluster support for merging?  I had
-> been under the assumption that merging was already a feature of
-> snapshots.
 
-My implementation has nothing to do with clustering.
+On Wed, 4 Jun 2008, Brian J. Murrell wrote:
 
-I think there were some userspace programs for off-line merging of 
-inactive snapshots. My implementation works in kernel and can be used 
-while the snapshot is mounted.
+> On Wed, 2008-06-04 at 07:07 -0400, Mikulas Patocka wrote:
+>>
+>>> A pedantic example would be to create an origin, O1 and then a snapshot
+>>> of O1 called S1.  Make a bunch of changes to S1 and then create another
+>>> snapshot of O1 called S2 and then block copy from S1 to S2 (presumably,
+>>> although I don't know for sure, S2 only contains the same changed blocks
+>>> as S1).
+>>
+>> No, if you block copy over /dev/vg/snapshot device, it will contain all
+>> the blocks (regardless if they differ from the origin or not).
+>
+> So my premise of copying from S1 to S2 and the result that S2 would only
+> contain real blocks for what differs to the origin and pointers for
+> blocks that don't differ is false?
 
-> What is the difference between the current implementation using
-> lvremove (which I assumed was where the COW blocks were merged back
-> into the original volume) and lvconvert as below?  Why was this
-> functionality not kept in lvremove?
+Yes, it's false.
 
-lvremove drops the snapshot and forgets its content. lvconvert -M copies 
-the snapshot to the origin (I'm now working on to let it automatically 
-drop the snapshot when the merging finishes).
+If you overwrite a snapshot, you always allocate new exceptions of the 
+written blocks --- regardless if the blocks differ from the origin or not.
+
+>> There could theoretically be compare function, testing if the write equals
+>> to actual data and dropping the write eventually --- but it would be too
+>> much coding overhead for too little practical advantage.
+>
+> For certain use cases I think this would be a great advantage.  Think
+> about this:
+>
+>     1. Create an LV and install a linux distro into it.
+>     2. Make a snapshot and customize to the settings for a given
+>        configuration (i.e. a group of hosts)
+>     3. Now I want to make an (initially) identical (to the snapshot
+>        customized in step 2) snapshot for each node in that
+>        configuration
+>
+> Being able to do:
+>
+> # lvcreate -L5G -n pristine node_group
+> [ install linux distro into /dev/node_group/pristine ]
+> # lvcreate -s -L$size -n config1_master pristine
+> # for node in $nodelist; do
+>>     lvcreate -s -L$size -n $node pristine
+>>     dd if=/dev/node_group/config1_master of=/dev/node_group/$node
+>> done
+>
+> And have each of those snapshots be as efficient as config1_master.
+
+You can do this if you copy the exception store (i.e. don't copy 
+/dev/vg/snap or /dev/mapper/vg-snap --- instead, copy 
+/dev/mapper/vg-snap-cow). Copy it to a new linear logical volume and then 
+use lvconvert -s to turn it into a snapshot. When you copy 
+/dev/mapper/vg-snap-cow, the snapshot and origin must be idle --- 
+otherwise you'd be copying data while it's being modified.
 
 Mikulas
-
-> Mikulas Patocka wrote:
->> Hi
->> 
->> Here I release the first experimental implementation of snapshot merging. 
->> Merging allows you to copy data in snapshot back to the origin device. Once 
->> merging starts, it runs on background. When the merging finishes (you see 
->> "0%" with "lvs" command), you should remove the merging snapshot with 
->> lvremove command.
->> 
->> The userspace will still be changed, the kernel is already finished (there 
->> are no known bugs in the kernel, I'm curious about the unknown ones :)
->> 
->> Merging is initiated with "lvconvert -M vg/lv_snapshot" command. When you 
->> initiate merging, make sure that the origin device is not mounted. Snapshot 
->> can be mounted while it's merging is initiated.
->> 
->> During merging, aby reads and writes to the origin device are identical to 
->> accesses to the merging snapshots.
->> 
->> There may be multiple snapshots while one of them is being merged --- 
->> exceptions in other snapshots are being allocated and there snapshots are 
->> kept stable.
->> 
->> Don't try to concurrently merge more than one snapshot (the kernel refuses 
->> to do it, the userspace tools don't know about it --- the userspace will be 
->> rewritten anyway).
->> 
->> The patches are at:
->> http://people.redhat.com/mpatocka/patches/
->> The patches are for 2.6.26-rc4
->> 
->> (besides merging, there are some other bugfixes, I made for the kernel)
->> 
->> Mikulas
->> 
->> _______________________________________________
->> linux-lvm mailing list
->> linux-lvm@redhat.com
->> https://www.redhat.com/mailman/listinfo/linux-lvm
->> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
->
-> -- 
-> Steeve McCauley
-> Director of Research and Development
-> Rackable Systems
-> 407 McGill Street, Suite 1002
-> Montreal, Quebec, H2Y 2G3 (Canada)
-> Tel: 514-288-3343
-> http://www.rackable.com
-> :wq
->
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
->
