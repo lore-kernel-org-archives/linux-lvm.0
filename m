@@ -1,18 +1,18 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m57FdL5Z004824
-	for <linux-lvm@redhat.com>; Sat, 7 Jun 2008 11:39:21 -0400
-Received: from wf-out-1314.google.com (wf-out-1314.google.com [209.85.200.169])
-	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id m57FdAgv016882
-	for <linux-lvm@redhat.com>; Sat, 7 Jun 2008 11:39:11 -0400
-Received: by wf-out-1314.google.com with SMTP id 25so1337984wfc.6
-	for <linux-lvm@redhat.com>; Sat, 07 Jun 2008 08:39:10 -0700 (PDT)
-Message-ID: <1cbd6f830806070839l436b0b4ai99d3c4264e896ea6@mail.gmail.com>
-Date: Sat, 7 Jun 2008 11:39:09 -0400
-From: "Mag Gam" <magawake@gmail.com>
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m58MNZiv006203
+	for <linux-lvm@redhat.com>; Sun, 8 Jun 2008 18:23:35 -0400
+Received: from yw-out-2324.google.com (yw-out-2324.google.com [74.125.46.29])
+	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id m58MNOwQ027475
+	for <linux-lvm@redhat.com>; Sun, 8 Jun 2008 18:23:24 -0400
+Received: by yw-out-2324.google.com with SMTP id 5so973202ywb.81
+	for <linux-lvm@redhat.com>; Sun, 08 Jun 2008 15:23:24 -0700 (PDT)
+Message-ID: <2122f0920806081523w7a7ce274q9707992948f6e1b4@mail.gmail.com>
+Date: Sun, 8 Jun 2008 18:23:23 -0400
+From: "Girish V" <girish.xen@gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/alternative; 
-	boundary="----=_Part_7579_7441759.1212853149587"
-Subject: [linux-lvm] striping question
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+Subject: [linux-lvm] Loopback mount a disk image with lvm
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -23,26 +23,26 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
+Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@redhat.com
 
-------=_Part_7579_7441759.1212853149587
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
+Hello,
 
-If I am using x RAID 5 volumes and create PVs. Once I create the LVs is it a
-good idea to stripe them? If so, what is a valid stripe size?
+I have a disk.img (a disk image file, raw format) with the following "fdisk -l"
 
-I am looking for performance BTW.
+    Device Boot      Start         End      Blocks   Id  System
+disk.img1   *           1          13      104391   83  Linux
+disk.img2              14        2491    19904535   8e  Linux LVM
 
+Now I can loopback mount the first bartition using
+"mount -o loop,offset=32256 disk.img /mnt".
 
-TIA
+I need to mount the second partition. If the secoond partition had
+been an ext3 partition, I would have loopback mounted it as
+"mount -o loop,offset=$((255*63*512*13) disk.img /mnt", but when I try
+that, I get
+mount: unknown filesystem type 'LVM2_member'
 
-------=_Part_7579_7441759.1212853149587
-Content-Type: text/html; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
+Any help is greatly appreciated.
 
-If I am using x RAID 5 volumes and create PVs. Once I create the LVs is it a good idea to stripe them? If so, what is a valid stripe size? <br><br>I am looking for performance BTW.<br><br><br>TIA <br>
-
-------=_Part_7579_7441759.1212853149587--
+Thanks.
