@@ -1,17 +1,17 @@
 Received: from file.rdu.redhat.com (file.rdu.redhat.com [10.11.255.147])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m5C9LdYV030465
-	for <linux-lvm@redhat.com>; Thu, 12 Jun 2008 05:21:39 -0400
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m5C9gdIX008318
+	for <linux-lvm@redhat.com>; Thu, 12 Jun 2008 05:42:39 -0400
 Received: from devserv.devel.redhat.com (devserv.devel.redhat.com
 	[10.10.36.72])
-	by file.rdu.redhat.com (8.13.1/8.13.1) with ESMTP id m5C9LcGt016225
-	for <linux-lvm@redhat.com>; Thu, 12 Jun 2008 05:21:38 -0400
+	by file.rdu.redhat.com (8.13.1/8.13.1) with ESMTP id m5C9gd10019238
+	for <linux-lvm@redhat.com>; Thu, 12 Jun 2008 05:42:39 -0400
 Received: from mx.meyering.net (sebastian-int.corp.redhat.com [172.16.52.221])
 	by devserv.devel.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
-	m5C9LcAk016158
-	for <linux-lvm@redhat.com>; Thu, 12 Jun 2008 05:21:38 -0400
+	m5C9gcRh016779
+	for <linux-lvm@redhat.com>; Thu, 12 Jun 2008 05:42:39 -0400
 From: Jim Meyering <jim@meyering.net>
-Date: Thu, 12 Jun 2008 11:21:37 +0200
-Message-ID: <87abhrnh3y.fsf@rho.meyering.net>
+Date: Thu, 12 Jun 2008 11:42:38 +0200
+Message-ID: <87y75bm1kh.fsf@rho.meyering.net>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Subject: [linux-lvm] [PATCH] Makefile.in: correct distclean rule
@@ -27,6 +27,9 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 To: LVM general discussion and development <linux-lvm@redhat.com>
+
+[resending, with "From " escaped to avoid triggering the mailman bug
+ that would otherwise elide any patch produced by "git format-patch"]
 
 Currently, "make distclean" gets lots of errors,
 because none of the directories test/mm, test/device, ...
