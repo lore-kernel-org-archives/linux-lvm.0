@@ -1,19 +1,18 @@
-Received: from file.rdu.redhat.com (file.rdu.redhat.com [10.11.255.147])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m5DAjAM6028568
-	for <linux-lvm@redhat.com>; Fri, 13 Jun 2008 06:45:10 -0400
-Received: from devserv.devel.redhat.com (devserv.devel.redhat.com
-	[10.10.36.72])
-	by file.rdu.redhat.com (8.13.1/8.13.1) with ESMTP id m5DAjAMv017924
-	for <linux-lvm@redhat.com>; Fri, 13 Jun 2008 06:45:10 -0400
-Received: from mx.meyering.net (sebastian-int.corp.redhat.com [172.16.52.221])
-	by devserv.devel.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
-	m5DAj9tH013284
-	for <linux-lvm@redhat.com>; Fri, 13 Jun 2008 06:45:09 -0400
-From: Jim Meyering <jim@meyering.net>
-Date: Fri, 13 Jun 2008 12:45:09 +0200
-Message-ID: <878wx9ipfu.fsf@rho.meyering.net>
+Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m5DHHcss022609
+	for <linux-lvm@redhat.com>; Fri, 13 Jun 2008 13:17:38 -0400
+Received: from fg-out-1718.google.com (fg-out-1718.google.com [72.14.220.155])
+	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id m5DHHQOJ031918
+	for <linux-lvm@redhat.com>; Fri, 13 Jun 2008 13:17:26 -0400
+Received: by fg-out-1718.google.com with SMTP id e21so3270087fga.7
+	for <linux-lvm@redhat.com>; Fri, 13 Jun 2008 10:17:25 -0700 (PDT)
+Message-ID: <1c748a490806131017i5958c950n47d0fdc2f3b080c7@mail.gmail.com>
+Date: Fri, 13 Jun 2008 10:17:25 -0700
+From: "Larry Dickson" <ldickson@cuttedge.com>
 MIME-Version: 1.0
-Subject: [linux-lvm] uninitialized pointer deref upon failed mirror addition
+Content-Type: multipart/alternative; 
+	boundary="----=_Part_8844_16957353.1213377445518"
+Subject: [linux-lvm] reconstituting a logical volume
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -24,23 +23,49 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: LVM general discussion and development <linux-lvm@redhat.com>
+Cc: Scott Smyth <scotts@cuttedge.com>
 
-While preparing an unrelated patch, I saw this warning go by,
-so went and looked:
+------=_Part_8844_16957353.1213377445518
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
 
-  metadata/mirror.c: In function 'add_mirror_images':
-  metadata/mirror.c:1347: warning: 'log_lv' may be used uninitialized in this function
+Hi all,
 
-It turns out that it is a legitimate warning, indeed,
-and an uninitialized log_lv will be dereferenced if any
-of the "goto out_remove_log;" statements is reached with
-log_count == 0 (aka log_lv uninitialized).
+In the thread "lvm partition on ramdisk," circa May 19, you helped me get a
+FAT32 instance running on a lv that was a combination of a ramdisk (actually
+3 of them) and an 8TB RAID array. Can someone tell me if the following is
+trivial, or possible, under LVM:
 
-If someone can tell me precisely how to exercise one of the offending
-code paths, I'll try to make time to write a test script that'd be run
-via "make check".
+unmount the fs
+dd the ramdisk[s] to equal sized volume[s] "rdcopy" on the array
+break the composite ramdisk+8TB lv
+create a rdcopy+8TB lv with the fs and its data undamaged and ready to mount
 
-Here's a proposed (but untested) fix.
+TIA,
+
+Larry Dickson
+Cutting Edge Networked Storage
+
+------=_Part_8844_16957353.1213377445518
+Content-Type: text/html; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+<div>Hi all, </div>
+<div>&nbsp;</div>
+<div>In the thread &quot;lvm partition on ramdisk,&quot; circa May 19, you helped me get a FAT32 instance running on a lv that was a combination of a ramdisk (actually 3 of them) and an 8TB RAID array. Can someone tell me if the following is trivial, or possible, under LVM:</div>
+
+<div>&nbsp;</div>
+<div>unmount the fs</div>
+<div>dd&nbsp;the ramdisk[s] to equal sized volume[s] &quot;rdcopy&quot; on the array</div>
+<div>break the composite ramdisk+8TB lv</div>
+<div>create a rdcopy+8TB lv with the fs and its&nbsp;data&nbsp;undamaged and ready to mount</div>
+<div>&nbsp;</div>
+<div>TIA,</div>
+<div>&nbsp;</div>
+<div>Larry Dickson</div>
+<div>Cutting Edge Networked Storage</div>
+
+------=_Part_8844_16957353.1213377445518--
