@@ -1,17 +1,19 @@
-Received: from pobox.fab.redhat.com (pobox.fab.redhat.com [10.33.63.12])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m5D7icOk002286
-	for <linux-lvm@redhat.com>; Fri, 13 Jun 2008 03:44:38 -0400
-Received: from jeltz.chrissie.net (vpn-6-23.fab.redhat.com [10.33.6.23])
-	by pobox.fab.redhat.com (8.13.1/8.13.1) with ESMTP id m5D7ibMq013346
-	for <linux-lvm@redhat.com>; Fri, 13 Jun 2008 03:44:38 -0400
-Message-ID: <48522565.9000808@redhat.com>
-Date: Fri, 13 Jun 2008 08:44:37 +0100
-From: Christine Caulfield <ccaulfie@redhat.com>
+Received: from file.rdu.redhat.com (file.rdu.redhat.com [10.11.255.147])
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m5DAjAM6028568
+	for <linux-lvm@redhat.com>; Fri, 13 Jun 2008 06:45:10 -0400
+Received: from devserv.devel.redhat.com (devserv.devel.redhat.com
+	[10.10.36.72])
+	by file.rdu.redhat.com (8.13.1/8.13.1) with ESMTP id m5DAjAMv017924
+	for <linux-lvm@redhat.com>; Fri, 13 Jun 2008 06:45:10 -0400
+Received: from mx.meyering.net (sebastian-int.corp.redhat.com [172.16.52.221])
+	by devserv.devel.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
+	m5DAj9tH013284
+	for <linux-lvm@redhat.com>; Fri, 13 Jun 2008 06:45:09 -0400
+From: Jim Meyering <jim@meyering.net>
+Date: Fri, 13 Jun 2008 12:45:09 +0200
+Message-ID: <878wx9ipfu.fsf@rho.meyering.net>
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] multiple openlog invocations in clvmd.c
-References: <20080613.113139.17746189.yamato@redhat.com>
-In-Reply-To: <20080613.113139.17746189.yamato@redhat.com>
-Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] uninitialized pointer deref upon failed mirror addition
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -22,20 +24,23 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-Masatake YAMATO wrote:
-> Hi,
-> 	syslog_init static variable defined in debuglog() of 
-> daemons/clvmd/clvmd.c is not used properly: the variable is
-> never updated.
-> 
-> Here is a fix.
+While preparing an unrelated patch, I saw this warning go by,
+so went and looked:
 
+  metadata/mirror.c: In function 'add_mirror_images':
+  metadata/mirror.c:1347: warning: 'log_lv' may be used uninitialized in this function
 
-Thank you, that's now in CVS.
+It turns out that it is a legitimate warning, indeed,
+and an uninitialized log_lv will be dereferenced if any
+of the "goto out_remove_log;" statements is reached with
+log_count == 0 (aka log_lv uninitialized).
 
--- 
+If someone can tell me precisely how to exercise one of the offending
+code paths, I'll try to make time to write a test script that'd be run
+via "make check".
 
-Chrissie
+Here's a proposed (but untested) fix.
