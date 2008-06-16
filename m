@@ -1,15 +1,30 @@
-Message-ID: <48566EF9.2010502@rackable.com>
-Date: Mon, 16 Jun 2008 09:47:37 -0400
-From: Steeve McCauley <steeve@rackable.com>
+Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m5GEq68J023071
+	for <linux-lvm@redhat.com>; Mon, 16 Jun 2008 10:52:06 -0400
+Received: from mx03.syneticon.net (mx03.syneticon.net [87.79.32.166])
+	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id m5GEpjwP002729
+	for <linux-lvm@redhat.com>; Mon, 16 Jun 2008 10:51:45 -0400
+Received: from localhost (filter1.syneticon.net [192.168.113.3])
+	by mx03.syneticon.net (Postfix) with ESMTP id 0B7549654
+	for <linux-lvm@redhat.com>; Mon, 16 Jun 2008 16:51:45 +0200 (CEST)
+Received: from mx03.syneticon.net ([192.168.113.4])
+	by localhost (mx03.syneticon.net [192.168.113.3]) (amavisd-new,
+	port 10025) with ESMTP id Lm4gji6vSdcH for <linux-lvm@redhat.com>;
+	Mon, 16 Jun 2008 16:51:37 +0200 (CEST)
+Received: from [192.168.10.145] (koln-4d0b73de.pool.mediaWays.net
+	[77.11.115.222]) by mx03.syneticon.net (Postfix) with ESMTP
+	for <linux-lvm@redhat.com>; Mon, 16 Jun 2008 16:51:37 +0200 (CEST)
+Message-ID: <48567DF8.7080600@wpkg.org>
+Date: Mon, 16 Jun 2008 16:51:36 +0200
+From: Tomasz Chmielewski <mangoo@wpkg.org>
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] Re: Fwd: [help] how to deal with Incorrect metadata
-	area header checksum in LVM
-References: <ad41208c0806110111t6290e5a5yf8e03ce1766362c4@mail.gmail.com>	<ad41208c0806110504y6eacdf0cn13731dc33d471afc@mail.gmail.com>	<484FC903.1030105@iinet.net.au>
-	<ad41208c0806120054k247d48b9n27a42104cffd9ab6@mail.gmail.com>
-In-Reply-To: <ad41208c0806120054k247d48b9n27a42104cffd9ab6@mail.gmail.com>
+Subject: Re: [linux-lvm] Server hangs when writing to LVM volume due to LVM
+	Snapshots
+References: <20080616135319.GA29234@campbell-lange.net>	<4856715A.6050107@wpkg.org>
+	<20080616141907.GH3765@campbell-lange.net>
+In-Reply-To: <20080616141907.GH3765@campbell-lange.net>
 Content-Transfer-Encoding: 7bit
-Reply-To: steeve@terrascale.net,
-	LVM general discussion and development <linux-lvm@redhat.com>
+Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -21,51 +36,46 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: LVM general discussion and development <linux-lvm@redhat.com>
-Cc: For users of Fedora <fedora-list@redhat.com>
+
+Veselin Kantsev schrieb:
+> Hello Tomasz,
+> thank you much for the prompt reply.
+> 
+> The server has 6119216k of RAM in total.
+
+That's quite a bit..
+You would need terabytes of snapshots to fill it.
+So perhaps it hangs for a different reason.
+
+Capacitors? Hardware?
 
 
-Maybe this?
+> And most of it is shown as used all the time (To my knowledge thats just how
+> linux utilizes ram). 
 
-http://tldp.org/HOWTO/LVM-HOWTO/recovermetadata.html
+Please show the output of "free" command. The "buffers/cache" line is 
+your current RAM usage, excluding buffers (more or less).
 
-Zhen Zhou wrote:
-> On Wed, Jun 11, 2008 at 8:45 PM, David Timms <dtimms@iinet.net.au> wrote:
->> Zhen Zhou wrote:
->>> So what is the right path to recover these lvm?
->>>
->>> Any tips will be welcome! Thanks in advanced,
->>>
->>> BTW: the attached is lvm metadata file. More detail information
->>> needed, pls tell me.
->> You might find experts in LVM hanging out on:
->> linux-lvm@redhat.com [subscription required].
->>
->> Good luck.
-> FTA, thanks for your tips.
-> and I really wonder whether these errors "Incorrect metadata area
-> header checksum,
-> Volume group VolGroup00 metadata is inconsistent" is impossible to recover.
-> 
-> Or what I need to deal, is to follow:
-> http://thread.gmane.org/gmane.linux.redhat.fedora.general/196481
-> to recover all lvm's data?
-> 
-> Any tips will be welcome. TIA
-> 
-> Zhou Zhen
-> 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+
+> But from memory, the last time the server froze during copying (goes
+> back to normal once I kill the copy process) I didn't notice any extreme
+> RAM usage or swapping.
+
+Kernel data in memory used for snapshots will not be swapped out.
+
+
+> As I'm rotating LVM snapshots weekly, there are 7 snapshots on the system
+> at all times, and 1 of them is active(the last one taken).
+
+(...)
+
+> Do you see a flaw in this process that might be causing the issues?
+
+Unless you have terabytes of data in snapshots, it shouldn't be a problem.
+
+Does it freeze for good? Machine stops responding, stops logging, etc.?
+
 
 -- 
-Steeve McCauley
-Director of Research and Development
-Rackable Systems
-407 McGill Street, Suite 1002
-Montreal, Quebec, H2Y 2G3 (Canada)
-Tel: 514-288-3343
-http://www.rackable.com
-:wq
+Tomasz Chmielewski
+http://wpkg.org
