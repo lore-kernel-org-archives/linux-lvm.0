@@ -1,15 +1,20 @@
-Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m5JLO4ST010757
-	for <linux-lvm@redhat.com>; Thu, 19 Jun 2008 17:24:04 -0400
-Received: from biostat.ucsf.edu (upstrm185.psg-ucsf.org [38.99.193.74])
-	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id m5JLNo0A030652
-	for <linux-lvm@redhat.com>; Thu, 19 Jun 2008 17:23:51 -0400
-From: Ross Boylan <ross@biostat.ucsf.edu>
-Date: Thu, 19 Jun 2008 14:23:44 -0700
-Message-Id: <1213910624.9478.15.camel@iron.psg.net>
+Received: from pobox.fab.redhat.com (pobox.fab.redhat.com [10.33.63.12])
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m5JN8Rlk031057
+	for <linux-lvm@redhat.com>; Thu, 19 Jun 2008 19:08:27 -0400
+Received: from agk.fab.redhat.com (agk.fab.redhat.com [10.33.0.19])
+	by pobox.fab.redhat.com (8.13.1/8.13.1) with ESMTP id m5JN8Rdm026314
+	for <linux-lvm@redhat.com>; Thu, 19 Jun 2008 19:08:27 -0400
+Received: from agk by agk.fab.redhat.com with local (Exim 4.34)
+	id 1K9TEx-0005GK-7n
+	for linux-lvm@redhat.com; Fri, 20 Jun 2008 00:08:27 +0100
+Date: Fri, 20 Jun 2008 00:08:27 +0100
+From: Alasdair G Kergon <agk@redhat.com>
+Subject: Re: [linux-lvm] snapshot bug
+Message-ID: <20080619230827.GF20826@agk.fab.redhat.com>
+References: <1213910624.9478.15.camel@iron.psg.net>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] snapshot bug
+Content-Disposition: inline
+In-Reply-To: <1213910624.9478.15.camel@iron.psg.net>
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -21,21 +26,21 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-The discussion on
-https://bugzilla.redhat.com/show_bug.cgi?id=209927
-seems to indicate that there is a bug in snapshotting that could affect
-even LVM2 based snapshots.
+On Thu, Jun 19, 2008 at 02:23:44PM -0700, Ross Boylan wrote:
+> seems to indicate that there is a bug in snapshotting that could affect
+> even LVM2 based snapshots.
 
-Are LVM2 snapshots safe without the fix for that bug?
+It's the format used for the metadata on disk that matters here.
+If the default LVM2 metadata format is in use, there are no problems.
+If the older LVM1 metadata format is used, you cannot create
+and use new snapshots successfully.
 
-Also, I'm still wondering if converting LVM1 volumes to LVM2 has any
-gotcha's, whether related to safety or otherwise.
+To see which format you are using, run:
+  vgs -o +vg_fmt
 
+Alasdair
 -- 
-Ross Boylan                                      wk:  (415) 514-8146
-185 Berry St #5700                               ross@biostat.ucsf.edu
-Dept of Epidemiology and Biostatistics           fax: (415) 514-8150
-University of California, San Francisco
-San Francisco, CA 94107-1739                     hm:  (415) 550-1062
+agk@redhat.com
