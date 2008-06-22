@@ -1,19 +1,20 @@
 Received: from file.rdu.redhat.com (file.rdu.redhat.com [10.11.255.147])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m5KKivW7010886
-	for <linux-lvm@redhat.com>; Fri, 20 Jun 2008 16:44:57 -0400
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m5MGamvX032250
+	for <linux-lvm@redhat.com>; Sun, 22 Jun 2008 12:36:48 -0400
 Received: from devserv.devel.redhat.com (devserv.devel.redhat.com
 	[10.10.36.72])
-	by file.rdu.redhat.com (8.13.1/8.13.1) with ESMTP id m5KKivN8005765
-	for <linux-lvm@redhat.com>; Fri, 20 Jun 2008 16:44:57 -0400
+	by file.rdu.redhat.com (8.13.1/8.13.1) with ESMTP id m5MGamtl030742
+	for <linux-lvm@redhat.com>; Sun, 22 Jun 2008 12:36:48 -0400
 Received: from mx.meyering.net (sebastian-int.corp.redhat.com [172.16.52.221])
 	by devserv.devel.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
-	m5KKiuMl025487
-	for <linux-lvm@redhat.com>; Fri, 20 Jun 2008 16:44:57 -0400
+	m5MGalxR030152
+	for <linux-lvm@redhat.com>; Sun, 22 Jun 2008 12:36:48 -0400
 From: Jim Meyering <jim@meyering.net>
-Date: Fri, 20 Jun 2008 22:44:56 +0200
-Message-ID: <87k5gjn8dz.fsf@rho.meyering.net>
+Date: Sun, 22 Jun 2008 18:36:47 +0200
+Message-ID: <87ej6pifz4.fsf@rho.meyering.net>
 MIME-Version: 1.0
-Subject: [linux-lvm] avoid configure-dependent link failures
+Subject: [linux-lvm] lvm2_run: don't return uninitialized for _memlock_inc
+	or _memlock_dec
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -28,22 +29,10 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-I noticed that when configuring without --enable-readline,
-or without --enable-cmdlib, building would fail with link errors,
-at least on rawhide.
+I noticed a valid warning:
 
-The two patches below fix those problems so that builds
-succeed regardless of which settings you choose for those
-configure-time options.  i.e., these four builds all succeed:
+  lvmcmdlib.c:45: warning: 'ret' may be used uninitialized in this function
 
-for enable in enable disable; do
-  for f in readline cmdlib; do
-    echo --$enable-$f
-    { make clean && ./configure --$enable-$f --enable-dmeventd \
-      --disable-nls --with-dmdir=$PWD/../device-mapper CFLAGS=-g \
-      --enable-readline && make } > log-$enable-$f 2>&1
-  done
-done
-
-Barring objections, I'll commit these (along with WHATS_NEW
-and configure updates) on Monday.
+Sure, it's in nominally "Temporary" code (and code we'd rather
+be rid of), but it's been over 6 months.
+Any objection?
