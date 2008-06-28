@@ -1,23 +1,19 @@
-Received: from file.rdu.redhat.com (file.rdu.redhat.com [10.11.255.147])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m5N9Hpsw027662
-	for <linux-lvm@redhat.com>; Mon, 23 Jun 2008 05:17:51 -0400
-Received: from devserv.devel.redhat.com (devserv.devel.redhat.com
-	[10.10.36.72])
-	by file.rdu.redhat.com (8.13.1/8.13.1) with ESMTP id m5N9HpGf023284
-	for <linux-lvm@redhat.com>; Mon, 23 Jun 2008 05:17:51 -0400
-Received: from mx.meyering.net (sebastian-int.corp.redhat.com [172.16.52.221])
-	by devserv.devel.redhat.com (8.12.11.20060308/8.12.11) with ESMTP id
-	m5N9HouH019276
-	for <linux-lvm@redhat.com>; Mon, 23 Jun 2008 05:17:51 -0400
-From: Jim Meyering <jim@meyering.net>
-Subject: Re: [linux-lvm] lvm2_run: don't return uninitialized for _memlock_inc
-	or _memlock_dec
-In-Reply-To: <87ej6pifz4.fsf@rho.meyering.net> (Jim Meyering's message of
-	"Sun, 22 Jun 2008 18:36:47 +0200")
-References: <87ej6pifz4.fsf@rho.meyering.net>
-Date: Mon, 23 Jun 2008 11:17:50 +0200
-Message-ID: <87prq8fr29.fsf@rho.meyering.net>
+Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m5SIi3iq012584
+	for <linux-lvm@redhat.com>; Sat, 28 Jun 2008 14:44:03 -0400
+Received: from fg-out-1718.google.com (fg-out-1718.google.com [72.14.220.156])
+	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id m5SIhlnv027109
+	for <linux-lvm@redhat.com>; Sat, 28 Jun 2008 14:43:47 -0400
+Received: by fg-out-1718.google.com with SMTP id e21so561716fga.7
+	for <linux-lvm@redhat.com>; Sat, 28 Jun 2008 11:43:46 -0700 (PDT)
+Message-ID: <bf6f43f40806281143h5a028857k494a4e4b9ec51@mail.gmail.com>
+Date: Sat, 28 Jun 2008 15:43:46 -0300
+From: "Levy Abinajm Melero Sant'Anna" <levy.santanna@gmail.com>
+Sender: log.todos@gmail.com
 MIME-Version: 1.0
+Content-Type: multipart/alternative; 
+	boundary="----=_Part_8284_16582917.1214678626836"
+Subject: [linux-lvm] Split LV mirror or something
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -28,18 +24,41 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-Jim Meyering <jim@meyering.net> wrote:
-> I noticed a valid warning:
->
->   lvmcmdlib.c:45: warning: 'ret' may be used uninitialized in this function
->
-> Sure, it's in nominally "Temporary" code (and code we'd rather
-> be rid of), but it's been over 6 months.
-> Any objection?
+------=_Part_8284_16582917.1214678626836
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
 
-It'll be nice when mailman stops removing my patches.
-Here it is again:
+Hi all,
+
+I have one question about the LV mirrors.
+
+Anytime that I think about LV mirrors I think that it should be the response
+for all the issues.
+If I could control the mirrors in the way that I would know each PE
+location, and could split the PE mirrors on different LVs it would resolve
+almost the problems regarding LV migrations with more security and speed
+than snapshot and/or copy the data inside LV.
+
+The question is:
+
+I have one LV with some critical data, and want to make a safe copy with
+less time possible of downtime. Could I make one mirror on a new PV
+(lvconvert -m1) and split this copy into a new LV or/and maybe split the VG
+into a new VG?
+
+Thank you so much,
+Levy Sant'Anna
+
+------=_Part_8284_16582917.1214678626836
+Content-Type: text/html; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+Hi all,<br><br>I have one question about the LV mirrors.<br><br>Anytime that I think about LV mirrors I think that it should be the response for all the issues.<br>If I could control the mirrors in the way that I would know each PE location, and could split the PE mirrors on different LVs it would resolve almost the problems regarding LV migrations with more security and speed than snapshot and/or copy the data inside LV.<br>
+<br>The question is:<br><br>I have one LV with some critical data, and want to make a safe copy with less time possible of downtime. Could I make one mirror on a new PV (lvconvert -m1) and split this copy into a new LV or/and maybe split the VG into a new VG?<br>
+<br>Thank you so much,<br>Levy Sant&#39;Anna<br>
+
+------=_Part_8284_16582917.1214678626836--
