@@ -1,29 +1,20 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m5T3T2Hq029841
-	for <linux-lvm@redhat.com>; Sat, 28 Jun 2008 23:29:02 -0400
-Received: from troy.its.carleton.edu (Troy.its.Carleton.edu [137.22.94.86])
-	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id m5T3SkZB000519
-	for <linux-lvm@redhat.com>; Sat, 28 Jun 2008 23:28:47 -0400
-Received: from mail.carleton.edu (mail2.its.carleton.edu [137.22.194.92])
-	by troy.its.carleton.edu (8.13.1/8.13.1) with ESMTP id m5T3Skau013655
-	for <linux-lvm@redhat.com>; Sat, 28 Jun 2008 22:28:46 -0500
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.carleton.edu (Postfix) with ESMTP id EF8BA57E2E32
-	for <linux-lvm@redhat.com>; Sat, 28 Jun 2008 22:28:45 -0500 (CDT)
-Received: from mail.carleton.edu ([127.0.0.1])
-	by localhost (mail.carleton.edu [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id YJoYqKWoTPmB for <linux-lvm@redhat.com>;
-	Sat, 28 Jun 2008 22:28:45 -0500 (CDT)
-Received: from mail.carleton.edu (mail.carleton.edu [137.22.194.90])
-	by mail.carleton.edu (Postfix) with ESMTP id A7CEF57E2E21
-	for <linux-lvm@redhat.com>; Sat, 28 Jun 2008 22:28:45 -0500 (CDT)
-Date: Sat, 28 Jun 2008 22:28:45 -0500 (CDT)
-From: Rich Graves <rgraves@carleton.edu>
-Message-ID: <562849231.15095191214710125649.JavaMail.root@mail2.its.carleton.edu>
-In-Reply-To: <95164166.15094811214709604949.JavaMail.root@mail2.its.carleton.edu>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] Re: Mounting a Partition Image of LM partition?
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m5UL6PSQ014640
+	for <linux-lvm@redhat.com>; Mon, 30 Jun 2008 17:06:26 -0400
+Received: from smtp1.globetrotter.net (smtp1.globetrotter.net [142.169.1.151])
+	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id m5UL6Cie024267
+	for <linux-lvm@redhat.com>; Mon, 30 Jun 2008 17:06:12 -0400
+Received: from [192.168.1.158]
+	(c207.134.181-229.clta.globetrotter.net [207.134.181.229])
+	by smtp1.globetrotter.net (iPlanet Messaging Server 5.2)
+	with ESMTP id <0K3A00865NY6ZS@"TELUS Quebec"> for linux-lvm@redhat.com;
+	Mon, 30 Jun 2008 17:06:07 -0400 (EDT)
+Date: Mon, 30 Jun 2008 17:06:06 -0400
+From: Jean-Philippe Villeneuve <jeepii@globetrotter.net>
+Message-id: <48694ABE.2080307@globetrotter.net>
+MIME-version: 1.0
+Content-Transfer-Encoding: 8bit
+Subject: [linux-lvm] Backup of ROOT Partition.
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -34,24 +25,19 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="utf-8"; format="flowed"
 To: linux-lvm@redhat.com
 
-Michael D. Setzer II wrote:
-> with info. I have a compressed disk image of the 250G drive, and also have 
-> a compressed partition image of the partitions with the LVM partition. I
-> was able to copy this partition to my home machine taking about 11 hours,
-> and was able to uncompress the lzop image. I was then able to use losetup 
-> /dev/loop0 to load the image, and pvscan then shows it, but it has the
-> same name  as the regular LVM volumne on the machine. 
+Hi,
+I would like to know if I can backup all my system partitions(ROOT 
+included) using a snapshot? I searched the internet for this information 
+and found nobody that said that this was possible or not.  if someone 
+has a link to a page that describes this I would really appreciate this 
+information.
+Thank You.
 
-Well, that's relatively easy to fix. Pick a unique name for your home
-system's volume group; change fstab and grub.conf; mkinitrd; boot from a
-rescue CD; vgrename; cross your fingers; reboot. Then you ought to be able
-to finish the job you started.
-
-...and don't accept the default VolumeGroup00 name again.
--- 
-Rich Graves http://claimid.com/rcgraves
-Carleton.edu Sr UNIX and Security Admin
-CMC135: 507-646-7079 Cell: 952-292-6529
+Jean-Philippe Villeneuve
+Programmeur R&D/Programmer R&D
+MULTI-�LECTRONIQUE (MTE) INC.
+www.multi-electronique.com
+T�l. : (418) 724-5835
