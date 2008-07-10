@@ -1,21 +1,16 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m68Ee74x008878
-	for <linux-lvm@redhat.com>; Tue, 8 Jul 2008 10:40:07 -0400
-Received: from an-out-0708.google.com (an-out-0708.google.com [209.85.132.245])
-	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id m68Edvsx005060
-	for <linux-lvm@redhat.com>; Tue, 8 Jul 2008 10:39:57 -0400
-Received: by an-out-0708.google.com with SMTP id d31so555542and.124
-	for <linux-lvm@redhat.com>; Tue, 08 Jul 2008 07:39:56 -0700 (PDT)
-Message-ID: <a9e5040807080739m6dab9cd2ye344b9c446f8e85@mail.gmail.com>
-Date: Tue, 8 Jul 2008 10:39:56 -0400
-From: "Rob West" <robertfwest@gmail.com>
-In-Reply-To: <a9e5040807011410q485a3a4bkebe7c684301b865d@mail.gmail.com>
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m6AF6ccB017471
+	for <linux-lvm@redhat.com>; Thu, 10 Jul 2008 11:06:38 -0400
+Received: from tzm.it (relay2.tzm.it [195.137.128.2])
+	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id m6AF6PnX018622
+	for <linux-lvm@redhat.com>; Thu, 10 Jul 2008 11:06:26 -0400
+Message-ID: <002301c8e29e$cca45110$ae00a8c0@ferroamd64>
+From: "Alessandro Ferrari" <alexferro@tiscali.it>
+Date: Thu, 10 Jul 2008 17:08:24 +0200
 MIME-Version: 1.0
-Content-Type: multipart/alternative; 
-	boundary="----=_Part_2613_27886554.1215527996648"
-References: <a9e5040807011410q485a3a4bkebe7c684301b865d@mail.gmail.com>
-Subject: [linux-lvm] Re: Is it possible to invalidate snapshots other than
-	by overfilling?
+Content-Type: multipart/alternative;
+	boundary="----=_NextPart_000_0020_01C8E2AF.8FEF2DB0"
+Subject: [linux-lvm] vgscan problem: Snapshot and origin LVs must differ.
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -28,29 +23,124 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 List-Id: <linux-lvm.redhat.com>
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-------=_Part_2613_27886554.1215527996648
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
+This is a multi-part message in MIME format.
 
-Just wanted to let anyone that was following this thread know that it _did_
-turn out to be overfilling. There was an rsync to the origin that no one
-mentioned until late last week.
+------=_NextPart_000_0020_01C8E2AF.8FEF2DB0
+Content-Type: text/plain;
+	charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 
-- Rob
+Hi Guys!
 
-On Tue, Jul 1, 2008 at 5:10 PM, Rob West <robertfwest@gmail.com> wrote:
+I tell you my LVM story....
 
-> The reason I ask is that we're having cases where a snapshot is becoming
-> invalid, but we are very skeptical that it is due to overfilling.
+I have add LVM1 capability to my linux box kernel 2.4.36.5.
 
-------=_Part_2613_27886554.1215527996648
-Content-Type: text/html; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
+So I make (whit success) a snapshot of my /dev/VOLHOME/HOMELV! =
+Snapshot's name is SNAPHOME.
 
-Just wanted to let anyone that was following this thread know that it _did_ turn out to be overfilling. There was an rsync to the origin that no one mentioned until late last week.<br><br>- Rob<br><br><div class="gmail_quote">
-On Tue, Jul 1, 2008 at 5:10 PM, Rob West &lt;<a href="mailto:robertfwest@gmail.com">robertfwest@gmail.com</a>&gt; wrote:<br><blockquote class="gmail_quote" style="border-left: 1px solid rgb(204, 204, 204); margin: 0pt 0pt 0pt 0.8ex; padding-left: 1ex;">
-The reason I ask is that we&#39;re having cases where a snapshot is becoming invalid, but we are very skeptical that it is due to overfilling. </blockquote></div><br>
+Than I restart my linux box.
 
-------=_Part_2613_27886554.1215527996648--
+Now I can't mount /dev/VOLHOME/HOMELV and "vgscan -v" write this =
+messages:
+
+:
+:
+    /dev/sdb1: size is 3906204687 sectors
+    /dev/sdb1: lvm1 label detect
+    Locking /var/lock/lvm/V_VOLHOME RB
+  Finding volume group "VOLHOME"
+    /dev/sdb1: lvm1 label detected
+    Found /dev/sdb1 in VG VOLHOME
+Snapshot and origin LVs must differ.
+Couldn't add snapshot.
+    Found /dev/sdb1 in VG VOLHOME
+Snapshot and origin LVs must differ.
+Couldn't add snapshot.
+Volume group "VOLHOME" not found
+    Unlocking /var/lock/lvm/V_VOLHOME
+:
+:
+
+I don't know what's happen!
+
+Help me please, thanks Alessandro
+
+------=_NextPart_000_0020_01C8E2AF.8FEF2DB0
+Content-Type: text/html;
+	charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML><HEAD>
+<META http-equiv=3DContent-Type content=3D"text/html; =
+charset=3Diso-8859-1">
+<META content=3D"MSHTML 6.00.2900.3354" name=3DGENERATOR>
+<STYLE></STYLE>
+</HEAD>
+<BODY bgColor=3D#ffffff>
+<DIV><FONT face=3DCourier size=3D2>Hi Guys!</FONT></DIV>
+<DIV><FONT face=3DCourier size=3D2></FONT>&nbsp;</DIV>
+<DIV><FONT face=3DCourier size=3D2>I tell you my LVM =
+story....</FONT></DIV>
+<DIV><FONT face=3DCourier size=3D2></FONT>&nbsp;</DIV>
+<DIV><FONT face=3DCourier size=3D2>I have add LVM1 capability to my =
+linux box kernel=20
+2.4.36.5.</FONT></DIV>
+<DIV><FONT face=3DCourier size=3D2></FONT>&nbsp;</DIV>
+<DIV><FONT face=3DCourier size=3D2>So I make (whit success) =
+a&nbsp;snapshot of my=20
+/dev/VOLHOME/HOMELV! Snapshot's name is SNAPHOME.</FONT></DIV>
+<DIV><FONT face=3DCourier size=3D2></FONT>&nbsp;</DIV>
+<DIV><FONT face=3DCourier size=3D2>Than I restart my linux =
+box.</FONT></DIV>
+<DIV><FONT face=3DCourier size=3D2></FONT>&nbsp;</DIV>
+<DIV><FONT face=3DCourier size=3D2>Now I can't mount /dev/VOLHOME/HOMELV =
+and=20
+</FONT><FONT face=3DCourier size=3D2>"vgscan -v" write this =
+messages:</FONT></DIV>
+<DIV><FONT face=3DCourier size=3D2></FONT>&nbsp;</DIV>
+<DIV><FONT face=3DCourier size=3D2>:</FONT></DIV>
+<DIV><FONT face=3DCourier size=3D2>:</FONT></DIV>
+<DIV><FONT face=3DCourier size=3D2>&nbsp;&nbsp;&nbsp; /dev/sdb1: size is =
+3906204687=20
+sectors</FONT></DIV>
+<DIV><FONT face=3DCourier size=3D2>&nbsp;&nbsp;&nbsp; /dev/sdb1: lvm1 =
+label=20
+detect</FONT></DIV>
+<DIV><FONT face=3DCourier size=3D2>&nbsp;&nbsp;&nbsp; Locking=20
+/var/lock/lvm/V_VOLHOME RB</FONT></DIV>
+<DIV><FONT face=3DCourier size=3D2>&nbsp;&nbsp;Finding volume group=20
+"VOLHOME"</FONT></DIV>
+<DIV><FONT face=3DCourier size=3D2>&nbsp;&nbsp;&nbsp; /dev/sdb1: lvm1 =
+label=20
+detected</FONT></DIV>
+<DIV><FONT face=3DCourier size=3D2>&nbsp;&nbsp;&nbsp; Found /dev/sdb1 in =
+VG=20
+VOLHOME</FONT></DIV>
+<DIV><FONT face=3DCourier size=3D2>Snapshot and origin LVs must =
+differ.</FONT></DIV>
+<DIV><FONT face=3DCourier size=3D2>Couldn't add snapshot.</FONT></DIV>
+<DIV><FONT face=3DCourier size=3D2>&nbsp;&nbsp;&nbsp; Found /dev/sdb1 in =
+VG=20
+VOLHOME</FONT></DIV>
+<DIV>
+<DIV><FONT face=3DCourier size=3D2>Snapshot and origin LVs must =
+differ.</FONT></DIV>
+<DIV><FONT face=3DCourier size=3D2>Couldn't add =
+snapshot.</FONT></DIV></DIV>
+<DIV><FONT face=3DCourier size=3D2>Volume group "VOLHOME" not =
+found</FONT></DIV>
+<DIV><FONT face=3DCourier size=3D2>&nbsp;&nbsp;&nbsp; Unlocking=20
+/var/lock/lvm/V_VOLHOME</FONT></DIV>
+<DIV><FONT face=3DCourier size=3D2>:</FONT></DIV>
+<DIV><FONT face=3DCourier size=3D2>:</FONT></DIV>
+<DIV><FONT face=3DCourier size=3D2></FONT>&nbsp;</DIV>
+<DIV><FONT face=3DCourier size=3D2>I don't know what's =
+happen!</FONT></DIV>
+<DIV><FONT face=3DCourier size=3D2></FONT>&nbsp;</DIV>
+<DIV><FONT face=3DCourier size=3D2>Help me please, thanks =
+Alessandro</FONT></DIV>
+<DIV>&nbsp;</DIV></BODY></HTML>
+
+------=_NextPart_000_0020_01C8E2AF.8FEF2DB0--
