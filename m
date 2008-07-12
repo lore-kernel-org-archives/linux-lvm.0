@@ -1,20 +1,19 @@
-Received: from pobox.fab.redhat.com (pobox.fab.redhat.com [10.33.63.12])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m6CGpkbO027513
-	for <linux-lvm@redhat.com>; Sat, 12 Jul 2008 12:51:46 -0400
-Received: from agk.fab.redhat.com (agk.fab.redhat.com [10.33.0.19])
-	by pobox.fab.redhat.com (8.13.1/8.13.1) with ESMTP id m6CGpjGQ030118
-	for <linux-lvm@redhat.com>; Sat, 12 Jul 2008 12:51:45 -0400
-Received: from agk by agk.fab.redhat.com with local (Exim 4.34)
-	id 1KHiK1-0002l7-DC
-	for linux-lvm@redhat.com; Sat, 12 Jul 2008 17:51:45 +0100
-Date: Sat, 12 Jul 2008 17:51:45 +0100
-From: Alasdair G Kergon <agk@redhat.com>
-Subject: Re: [linux-lvm] vgchange -a memory consumption
-Message-ID: <20080712165145.GC7155@agk.fab.redhat.com>
-References: <1215842251.3751.53.camel@desktop>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <1215842251.3751.53.camel@desktop>
+Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m6CNMWWx031790
+	for <linux-lvm@redhat.com>; Sat, 12 Jul 2008 19:22:32 -0400
+Received: from yw-out-2324.google.com (yw-out-2324.google.com [74.125.46.30])
+	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id m6CNLdvE014658
+	for <linux-lvm@redhat.com>; Sat, 12 Jul 2008 19:21:39 -0400
+Received: by yw-out-2324.google.com with SMTP id 5so1876275ywb.81
+	for <linux-lvm@redhat.com>; Sat, 12 Jul 2008 16:21:35 -0700 (PDT)
+Message-ID: <e3fe12630807121621m30ff681cxe0614750a5872007@mail.gmail.com>
+Date: Sun, 13 Jul 2008 00:21:35 +0100
+From: "Edgar Costa" <dane@netcabo.pt>
+Sender: daneone@gmail.com
+MIME-Version: 1.0
+Content-Type: multipart/alternative; 
+	boundary="----=_Part_39798_17521143.1215904895274"
+Subject: [linux-lvm] lvm unstriping
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -25,33 +24,46 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+To: linux-lvm@redhat.com
+
+------=_Part_39798_17521143.1215904895274
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-To: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Disposition: inline
 
-On Fri, Jul 11, 2008 at 10:57:31PM -0700, Daniel Stodden wrote:
-> I'm running, lvm2-2.02.26.
- 
-Don't bother investigating that version - stuff got changed.
-Update to the latest release (or CVS) and try again.
+at first i striped my partitions by 3 disks but then there was a need to
+remove one so i make pvmove, now what happens is that now i lose performance
+because the disk his always jumping from where it reads/writes
+for example onde de / (not in lvm) with hdparm i get 232 / 50 mb/s and in a
+lvm partition 193 / 5.8
 
-> Why is that data reread? 
+so i need to unstrip the logical volumes
 
-Because the two parts of the code are designed to be independent.  - The
-so-called "activation" code sits behind an API in a so-called "locking"
-module.  There's a choice of locking modules, and some send the requests
-around a cluster of machines - remote machines will only run the
-activation code and manage the metadata independently.  We just pass
-UUIDs through the cluster communication layer, never metadata itself.
+but the question is: how?
 
-> Second: why isn't that memory freed after returning from
-> activate_lv?
- 
-It's released after processing the whole command.  If there are cases
-where too much is still being held while processing in the *current*
-version of the code, then yes, you might be able to free parts of it
-sooner.
+there is any reshaper? or something like that?
+i already found out that pvmove can move only a PE at a time but this will
+be very lame, I would have to make a script to make my efficient again, and
+it's a easy way to get it worse...(if i get something wrong)
 
-Alasdair
--- 
-agk@redhat.com
+------=_Part_39798_17521143.1215904895274
+Content-Type: text/html; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+<span class="postbody">at first i striped my partitions by 3 disks but
+then there was a need to remove one so i make pvmove, now what happens
+is that now i lose performance because the disk his always jumping from
+where it reads/writes <br>
+for example onde de / (not in lvm) with hdparm i get 232 / 50 mb/s and  in a lvm partition 193 / 5.8
+<br>
+
+<br>
+so i need to unstrip the logical volumes
+<br>
+
+<br>
+but the question is: how?<br><br>there is any reshaper? or something like that? <br>i already found out that pvmove can move only a PE at a time but this will be very lame, I would have to make a script to make my efficient again, and it&#39;s a easy way to get it worse...(if i get something wrong)<br>
+</span>
+
+------=_Part_39798_17521143.1215904895274--
