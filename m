@@ -1,18 +1,19 @@
-Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m6E74MFO007367
-	for <linux-lvm@redhat.com>; Mon, 14 Jul 2008 03:04:22 -0400
-Received: from tzm.it (relay.tzm.it [195.137.128.2])
-	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id m6E745nI019199
-	for <linux-lvm@redhat.com>; Mon, 14 Jul 2008 03:04:06 -0400
-Message-ID: <000001c8e580$16b19310$ae00a8c0@ferroamd64>
-From: "Alessandro Ferrari" <alexferro@tiscali.it>
-References: <002301c8e29e$cca45110$ae00a8c0@ferroamd64>
-	<20080710151043.GZ22522@agk.fab.redhat.com>
-Subject: Re: [linux-lvm] vgscan problem: Snapshot and origin LVs must differ.
-Date: Sun, 13 Jul 2008 20:45:16 +0200
+Received: from pobox.fab.redhat.com (pobox.fab.redhat.com [10.33.63.12])
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m6EAY9jl022994
+	for <linux-lvm@redhat.com>; Mon, 14 Jul 2008 06:34:09 -0400
+Received: from [10.33.0.40] (breeves.fab.redhat.com [10.33.0.40])
+	by pobox.fab.redhat.com (8.13.1/8.13.1) with ESMTP id m6EAY85e002168
+	for <linux-lvm@redhat.com>; Mon, 14 Jul 2008 06:34:09 -0400
+Message-ID: <487B2BA0.8010501@redhat.com>
+Date: Mon, 14 Jul 2008 11:34:08 +0100
+From: "Bryn M. Reeves" <bmr@redhat.com>
 MIME-Version: 1.0
+Subject: Re: [linux-lvm] sector zero on a Logical Volume
+References: <200807131751.57651.gene@czarc.net>
+In-Reply-To: <200807131751.57651.gene@czarc.net>
 Content-Transfer-Encoding: 7bit
-Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
+Reply-To: bmr@redhat.com,
+	LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -22,48 +23,53 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; format="flowed"; charset="us-ascii"; reply-type="original"
+Content-Type: text/plain; charset="us-ascii"
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-Hi Alasdair!
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA1
 
-I writed you log message show me by sysreccd 1.4beta7.
+Gene Czarcinski wrote:
+> I am hoping that someone on this mailing list is expert enough to answer my 
+> question:
+> 
+> Is there any reason that sector 0 on a Logical Volume should not be all zeros?
 
-This sysresccd version is lvm1 capable.
+All depends what you are doing with it. Many file systems and other
+block device users avoid using this sector because it may be "shared"
+with the firmware on x86 but there's no requirement for it to be
+reserved like this. Ext2/3 are fine (they start in the 1st sector) as
+would be LVM2 - e.g. if you were using the LV to provide a physical
+volume for a virtualised system.
 
-I don't understand what means:
+> My problem occurred when I effectively dd'ed a real disk partition on which 
+> grub is installed to a Logical Volume.  When grub in installed into a 
+> partition, it not only installs it's boot code but also makes sector 0 on 
+> that partition have a fake "msdos" partition table and the kernel (and other 
+> software) does not like that at all!!
 
-"Snapshot and origin LVs must differ." ?
+It is not a "fake" msdos partition table, it's a real one. The
+conventions for x86 boot loaders require a partition table since the MBR
+(master boot record) consists of a 512 byte sector containing 446 bytes
+of executable code followed by the four-entry primary partition table.
 
-Thanks, Alessandro
+You can't install grub without an MBR/partition table so when you
+attempt to install it to a device that lacks one grub will lay down a
+skeleton MBR on the device.
 
+> My solution was to use dd to zero sector 0 and then everything worked ... 
+> could mount the Logical Volume, etc.
 
------ Original Message ----- 
-From: "Alasdair G Kergon" <agk@redhat.com>
-To: "LVM general discussion and development" <linux-lvm@redhat.com>
-Sent: Thursday, July 10, 2008 5:10 PM
-Subject: Re: [linux-lvm] vgscan problem: Snapshot and origin LVs must 
-differ.
+Shouldn't be a problem for anything that doesn't store data in this
+sector. Just be sure to limit the command to only wipe sector 0.
 
+Regards,
+Bryn.
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.7 (GNU/Linux)
+Comment: Using GnuPG with Fedora - http://enigmail.mozdev.org
 
-> On Thu, Jul 10, 2008 at 05:08:24PM +0200, Alessandro Ferrari wrote:
->> I tell you my LVM story....
->> I have add LVM1 capability to my linux box kernel 2.4.36.5.
->
->> Now I can't mount /dev/VOLHOME/HOMELV and "vgscan -v" write this 
->> messages:
->>     /dev/sdb1: size is 3906204687 sectors
->
-> That's output from lvm2 - but you say your kernel only has lvm1 in it.
-> You can't mix and match them like that: work out what you meant to
-> run - lvm1 or lvm2.
->
-> Alasdair
-> -- 
-> agk@redhat.com
->
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/ 
+iD8DBQFIeyug6YSQoMYUY94RAurDAJ4keJuVilimG/ftZbFLt18PP6btEQCfUrSL
+cSAZeVbaOwxI+uySMI8qzWQ=
+=hDCA
+-----END PGP SIGNATURE-----
