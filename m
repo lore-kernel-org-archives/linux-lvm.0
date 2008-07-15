@@ -1,22 +1,18 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m6ELDLq7002680
-	for <linux-lvm@redhat.com>; Mon, 14 Jul 2008 17:13:21 -0400
-Received: from eastrmmtao106.cox.net (eastrmmtao106.cox.net [68.230.240.48])
-	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id m6ELD8ww003330
-	for <linux-lvm@redhat.com>; Mon, 14 Jul 2008 17:13:09 -0400
-Received: from eastrmimpo01.cox.net ([68.1.16.119]) by eastrmmtao106.cox.net
-	(InterMail vM.7.08.02.01 201-2186-121-102-20070209) with ESMTP
-	id <20080714211304.FEHP4226.eastrmmtao106.cox.net@eastrmimpo01.cox.net>
-	for <linux-lvm@redhat.com>; Mon, 14 Jul 2008 17:13:04 -0400
-From: Gene Czarcinski <gene@czarc.net>
-Subject: Re: [linux-lvm] sector zero on a Logical Volume
-Date: Mon, 14 Jul 2008 17:14:37 -0400
-References: <200807131751.57651.gene@czarc.net> <487B2BA0.8010501@redhat.com>
-In-Reply-To: <487B2BA0.8010501@redhat.com>
-MIME-Version: 1.0
-Content-Disposition: inline
-Message-Id: <200807141714.38312.gene@czarc.net>
-Content-Transfer-Encoding: 8bit
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m6F6L1eL027584
+	for <linux-lvm@redhat.com>; Tue, 15 Jul 2008 02:21:01 -0400
+Received: from SMTP02.CITRIX.COM (smtp02.citrix.com [66.165.176.63])
+	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id m6F6KpJ3024367
+	for <linux-lvm@redhat.com>; Tue, 15 Jul 2008 02:20:51 -0400
+Subject: Re: [linux-lvm] vgchange -a memory consumption
+From: Daniel Stodden <daniel.stodden@citrix.com>
+In-Reply-To: <20080712165145.GC7155@agk.fab.redhat.com>
+References: <1215842251.3751.53.camel@desktop>
+	<20080712165145.GC7155@agk.fab.redhat.com>
+Date: Mon, 14 Jul 2008 23:19:44 -0700
+Message-Id: <1216102784.3751.78.camel@desktop>
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -28,67 +24,66 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@redhat.com
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-On Monday 14 July 2008 06:34:08 Bryn M. Reeves wrote:
-> Gene Czarcinski wrote:
-> > I am hoping that someone on this mailing list is expert enough to answer
-> > my question:
-> >
-> > Is there any reason that sector 0 on a Logical Volume should not be all
-> > zeros?
->
-> All depends what you are doing with it. Many file systems and other
-> block device users avoid using this sector because it may be "shared"
-> with the firmware on x86 but there's no requirement for it to be
-> reserved like this. Ext2/3 are fine (they start in the 1st sector) as
-> would be LVM2 - e.g. if you were using the LV to provide a physical
-> volume for a virtualised system.
->
-> > My problem occurred when I effectively dd'ed a real disk partition on
-> > which grub is installed to a Logical Volume.  When grub in installed into
-> > a partition, it not only installs it's boot code but also makes sector 0
-> > on that partition have a fake "msdos" partition table and the kernel (and
-> > other software) does not like that at all!!
->
-> It is not a "fake" msdos partition table, it's a real one. The
-> conventions for x86 boot loaders require a partition table since the MBR
-> (master boot record) consists of a 512 byte sector containing 446 bytes
-> of executable code followed by the four-entry primary partition table.
 
-If the partition table was defined in an MBR ... yes, that is a real one.  But 
-this is installed in a partition.  I suspect that grub does not "know" if it 
-is installing in a partition or the MBR for a real disk.
+Hey Alasdair,
 
-I do note (just looked) and both ntfs and fat32 disks step on sector 0 of a 
-partition with a skelaton partition table and "msdos" partition table 
-signature.
+thanks a lot for the prompt reply.
 
->
-> You can't install grub without an MBR/partition table so when you
-> attempt to install it to a device that lacks one grub will lay down a
-> skeleton MBR on the device.
 
-device==yes but this was a partition.
+ On Sat, 2008-07-12 at 17:51 +0100, Alasdair G Kergon wrote:
+> On Fri, Jul 11, 2008 at 10:57:31PM -0700, Daniel Stodden wrote:
+> > I'm running, lvm2-2.02.26.
+>  
+> Don't bother investigating that version - stuff got changed.
+> Update to the latest release (or CVS) and try again.
+> 
+> > Why is that data reread? 
+> 
+> Because the two parts of the code are designed to be independent.  - The
+> so-called "activation" code sits behind an API in a so-called "locking"
+> module.  There's a choice of locking modules, and some send the requests
+> around a cluster of machines - remote machines will only run the
+> activation code and manage the metadata independently.  We just pass
+> UUIDs through the cluster communication layer, never metadata itself.
 
-One thing I want to try is to zap the "signature" and see if grub will still 
-boot.
+Oooh - kay. I've only been looking at _file..() operations. In the
+clustered version that sounds much more obvious.
 
->
-> > My solution was to use dd to zero sector 0 and then everything worked ...
-> > could mount the Logical Volume, etc.
->
-> Shouldn't be a problem for anything that doesn't store data in this
-> sector. Just be sure to limit the command to only wipe sector 0.
+> > Second: why isn't that memory freed after returning from
+> > activate_lv?
+>  
+> It's released after processing the whole command.  If there are cases
+> where too much is still being held while processing in the *current*
+> version of the code, then yes, you might be able to free parts of it
+> sooner.
 
-Thanks for the reply.
+I've been running on CVS today. The situation appears to have improved,
+but only slightly. Still way to much memory going down the drain. 
 
-From what you said, I understand that most linux filesystems stay away from 
-sector 0.  I have verified this for ext2/ext3 and xfs.  It is unlikely that 
-any native use of a Logical Volume will use sector 0.
+BTW: Did CVS change the memlocking policy? I just noticed that I can run
+beyond physical RAM now. Is that a bug or a feature?
 
-But, there could be a situation with a virtual machine where a Logical Volume 
-was being used as a virtual physical volume.  Furthermore, with grub, ntfs, 
-and fat32 put a partition table in sector 0 of a partition.
+I had a very long look at the path down activate/deactivate() in general
+and the dm storage allocator in particular. If I nail a separate per-LV
+pool over the cmd_context in _activate_lvs_in_vg() and empty it once per
+cycle, things slow down a little [1], but the general problem vanishes. 
 
-Gene
+Now, overriding cmd->mem isn't exactly beautiful. Any better
+suggestions? I need this fixed. And soon. :}
+
+Second is revisions: I suppose something like the above would work as a
+patch into elderly source RPMs as well. Such as the .26 I mentioned in
+my original post. Any tips on this? I'd consider upgrading, but I've see
+your advise against that on debian's launchpad, at least regarding .38
+and .39. Which is hip?
+
+So far, thank you very much again.
+
+Best,
+Daniel
+
+[1] For a stack-alike allocator, I think dm_pool_free() generates a
+rather scary number of individual brk()s while rewinding. But that's
+certainly not a functional issue, and I may, again, be mistaken.
