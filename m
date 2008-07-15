@@ -1,17 +1,21 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m6FJ0sDN005257
-	for <linux-lvm@redhat.com>; Tue, 15 Jul 2008 15:00:54 -0400
-Received: from mendel.bio.caltech.edu (mendel.bio.caltech.edu [131.215.12.38])
-	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id m6FJ0iuF022592
-	for <linux-lvm@redhat.com>; Tue, 15 Jul 2008 15:00:44 -0400
-Received: from nobody by mendel.bio.caltech.edu with local (Exim 4.63)
-	(envelope-from <mathog@caltech.edu>) id 1KIplT-0007TT-Py
-	for linux-lvm@redhat.com; Tue, 15 Jul 2008 12:00:43 -0700
-From: "David Mathog" <mathog@caltech.edu>
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m6FKafND017859
+	for <linux-lvm@redhat.com>; Tue, 15 Jul 2008 16:36:41 -0400
+Received: from mail.bmsi.com (www.bmsi.com [24.248.44.156])
+	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id m6FKaUNI019314
+	for <linux-lvm@redhat.com>; Tue, 15 Jul 2008 16:36:31 -0400
+Received: from bmsred.bmsi.com (bmsred.bmsi.com [192.168.9.50])
+	by mail.bmsi.com (8.13.6/8.13.6) with ESMTP id m6FKaPU6017302
+	for <linux-lvm@redhat.com>; Tue, 15 Jul 2008 16:36:25 -0400
+Received: from localhost (localhost [127.0.0.1])
+	by bmsred.bmsi.com (8.13.5/8.13.6) with ESMTP id m6FKaPKQ028455
+	for <linux-lvm@redhat.com>; Tue, 15 Jul 2008 16:36:25 -0400
+Date: Tue, 15 Jul 2008 16:36:25 -0400 (EDT)
+From: "Stuart D. Gathman" <stuart@bmsi.com>
+Subject: Re: [linux-lvm] UPS shutdown on system with lvm volume for root
+In-Reply-To: <E1KIplT-0007TT-Py@mendel.bio.caltech.edu>
+Message-ID: <Pine.LNX.4.44.0807151627280.28299-100000@bmsred.bmsi.com>
 MIME-Version: 1.0
-Message-Id: <E1KIplT-0007TT-Py@mendel.bio.caltech.edu>
-Date: Tue, 15 Jul 2008 12:00:43 -0700
-Subject: [linux-lvm] UPS shutdown on system with lvm volume for root
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -22,73 +26,48 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: TEXT/PLAIN; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: linux-lvm@redhat.com
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-I am trying to use nut on a Centos 5.0 system. On this system "/" is a
-1.4 Tb LVM volume composed of two 700Gb partitions (striped). Nut is set
-up completely except for the final modification to the /etc/init.d/halt
-script. So far I have made this change:
+On Tue, 15 Jul 2008, David Mathog wrote:
 
-< command=/sbin/halt
-< if [ -f /var/run/killpower -a -r /etc/ups/upsmon.conf -a -f
-/etc/sysconfig/ups ] ; then
-< /usr/local/ups/sbin/upsdrvctl shutdown
----
-> if [ "$command" = /sbin/halt -a -r /etc/ups/upsmon.conf -a -f
-/etc/killpower -a -f /etc/sysconfig/ups ] ; then
-> . /etc/sysconfig/ups
-> if [ "$SERVER" = "yes" -a "$MODEL" = "upsdrvctl" ] ; then
-> /sbin/upsdrvctl shutdown
-> elif [ "$SERVER" = "yes" -a "$MODEL" != "NONE" -a -n "$MODEL" -a -n
-"$DEVICE" ] ; then
-> $MODEL $OPTIONS_HALT -k $DEVICE
-> fi
+> Is a similar command necessary for lvm? Or will the lvm volume have been
+> remounted readonly "automagically" by this section of the halt script,
+> which precedes the above changes by a couple of lines?
+> 
+> # Remount read only anything that's left mounted.
+> # echo $"Remounting remaining filesystems readonly"
+> mount | awk '{ print $3 }' | while read line; do
+> fstab-decode mount -n -o ro,remount $line
+> done
 
-However, I'm worried that this might corrupt the LVM metadata.  The
-"upsdrvctl shutdown" is equivalent to pulling the server's power cord
-out. Because of this, elsewhere in the nut documentation it suggested doing
+The above makes all mounted filesystems readonly, including those on logical
+volumes.  There is no "mounting" for LVM itself.  Under normal operations, the
+metadata does not change.  If the system is in the middle of a pvmove - well -
+making the metadata suddenly readonly won't exactly help matters.  Ideally, LVM
+should update metadata in a manner that leaves it consistent should the system
+crash in the middle.  The current LVM strives toward that goal.  But there
+shouldn't be any LVM updating going on during a shutdown.  There is no
+LVM metadata updated in normal operations.
 
-mdadm --readonly <device>
+Snapshots will update the COW table.  Mounting the filesystems read-only 
+should freeze that.  And again, COW updates are designed to be interruptable.
 
-before the upsdrvctl shutdown. However, I do not believe that the
-present system is using mdadm. 
+> It is important that the logical volume is shut down nicely on a power
+> failure event, since it takes a very long time to fsck it, and that
 
-Is a similar command necessary for lvm? Or will the lvm volume have been
-remounted readonly "automagically" by this section of the halt script,
-which precedes the above changes by a couple of lines?
+Even if you lose power before the mount readonly, you don't need a full fsck
+for journalled filesystems.
 
-# Remount read only anything that's left mounted.
-# echo $"Remounting remaining filesystems readonly"
-mount | awk '{ print $3 }' | while read line; do
-fstab-decode mount -n -o ro,remount $line
-done
+If you are using Xen, then virtual machines may be updating their filesystems.
+The standard shutdown for Xen will either shutdown each VM or suspend each
+VM to disk.  Suspending to disk is actually the fastest approach.
 
-It is important that the logical volume is shut down nicely on a power
-failure event, since it takes a very long time to fsck it, and that
-should not be needed when power is restored from a controlled UPS
-initiated shutdown. Additionally, swap is also a logical volume, so it
-might need special attention too. 
+You don't need to worry about swap.
 
-In a normal shutdown the upsdrvctl is never called and the halt proceeds to:
---------------------
-
-# First, try kexec. If that fails, fall back to rebooting the old way.
-[ -n "$kexec_command" ] && $kexec_command -e >& /dev/null
-
-HALTARGS="-d"
-[ -f /poweroff -o ! -f /halt ] && HALTARGS="$HALTARGS -p"
-
-exec $command $HALTARGS
-
----------------------------
-
-Is anything in there required for the lvm to be seen as clean on the
-next boot???
-
-Thanks,
-
-David Mathog
-mathog@caltech.edu
-Manager, Sequence Analysis Facility, Biology Division, Caltech
+-- 
+	      Stuart D. Gathman <stuart@bmsi.com>
+    Business Management Systems Inc.  Phone: 703 591-0911 Fax: 703 591-6154
+"Confutatis maledictis, flammis acribus addictis" - background song for
+a Microsoft sponsored "Where do you want to go from here?" commercial.
