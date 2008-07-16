@@ -1,24 +1,28 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m6GL4hx3004253
-	for <linux-lvm@redhat.com>; Wed, 16 Jul 2008 17:04:43 -0400
-Received: from smtp2.globetrotter.net (smtp2.globetrotter.net [142.169.1.152])
-	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id m6GL4Qtq002635
-	for <linux-lvm@redhat.com>; Wed, 16 Jul 2008 17:04:26 -0400
-Received: from [192.168.1.158]
-	(c207.134.181-229.clta.globetrotter.net [207.134.181.229])
-	by smtp2.globetrotter.net (iPlanet Messaging Server 5.2)
-	with ESMTP id <0K44009I1AJ8WU@"TELUS Quebec"> for linux-lvm@redhat.com;
-	Wed, 16 Jul 2008 17:04:21 -0400 (EDT)
-Date: Wed, 16 Jul 2008 17:03:21 -0400
-From: Jean-Philippe Villeneuve <jeepii@globetrotter.net>
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m6GMNGSG031149
+	for <linux-lvm@redhat.com>; Wed, 16 Jul 2008 18:23:16 -0400
+Received: from nlpi053.prodigy.net (nlpi053.sbcis.sbc.com [207.115.36.82])
+	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id m6GMMsFW015906
+	for <linux-lvm@redhat.com>; Wed, 16 Jul 2008 18:22:54 -0400
+Received: from mail.kdzbn.homelinux.net
+	(adsl-75-40-253-44.dsl.klmzmi.sbcglobal.net [75.40.253.44])
+	(authenticated bits=0)
+	by nlpi053.prodigy.net (8.13.8 smtpauth/dk/8.13.8) with ESMTP id
+	m6GMMlXw016527
+	for <linux-lvm@redhat.com>; Wed, 16 Jul 2008 17:22:48 -0500
+Received: from beta.mydomain ([192.168.2.237])
+	by mail.kdzbn.homelinux.net with esmtp (Exim 4.62)
+	(envelope-from <bryan@kadzban.is-a-geek.net>) id 1KJFOa-0006m6-OA
+	for linux-lvm@redhat.com; Wed, 16 Jul 2008 18:22:48 -0400
+Message-ID: <487E74B8.7010904@kadzban.is-a-geek.net>
+Date: Wed, 16 Jul 2008 18:22:48 -0400
+From: Bryan Kadzban <bryan@kadzban.is-a-geek.net>
+MIME-Version: 1.0
 Subject: Re: [linux-lvm] Backup of ROOT Partition.
-In-reply-to: <486B8550.6070605@globetrotter.net>
-Message-id: <487E6219.7030507@globetrotter.net>
-MIME-version: 1.0
-Content-transfer-encoding: 7BIT
-References: <48694ABE.2080307@globetrotter.net>
-	<486A0EFE.8020805@kadzban.is-a-geek.net>
-	<486B8550.6070605@globetrotter.net>
+References: <48694ABE.2080307@globetrotter.net>	<486A0EFE.8020805@kadzban.is-a-geek.net>	<486B8550.6070605@globetrotter.net>
+	<487E6219.7030507@globetrotter.net>
+In-Reply-To: <487E6219.7030507@globetrotter.net>
+Content-Transfer-Encoding: 7bit
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -29,76 +33,39 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
+Content-Type: text/plain; charset="us-ascii"
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-I tried the folowing recipe: 
-http://tldp.org/HOWTO/LVM-HOWTO/snapshots_backup.html with the folowing 
-script:
-
-/****************************/
-
-#!/bin/sh
-BAKLVMNAME=sysbackup
-lvcreate -L592M -s -n $BAKLVMNAME  /dev/VolGroup00/LogVol00
-mount /dev/VolGroup00/$BAKLVMNAME /mnt/sysbackup/ -o ro
-cd /mnt/sysbackup
-time tar -cjvpf /mnt/serveur/backSysVol.bz2 *
-cd ..
-umount /mnt/sysbackup
-lvremove -f /dev/VolGroup00/$BAKLVMNAME
-
-/****************************/
-
-I get the folowing error:
-  Rounding up size to full physical extent 608.00 MB
-  Insufficient free extents (1) in volume group VolGroup00: 19 required
-
-It works find if I do it with -L20M.
-How do I change the LogicalVolumeSize?
-
-according to 'df' I have plenty of space for data.
-
-# df -h
-Filesystem            Size  Used Avail Use% Mounted on
-/dev/mapper/VolGroup00-LogVol00
-                       35G  6.0G   27G  19% /
-/dev/md0              677G  270G  373G  42% /mnt/serveur
-/dev/sda1             190M   26M  155M  15% /boot
-tmpfs                 374M     0  374M   0% /dev/shm
-
-Am I missing something?
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: RIPEMD160
 
 Jean-Philippe Villeneuve wrote:
->
-> Bryan Kadzban wrote:
->> -----BEGIN PGP SIGNED MESSAGE-----
->> Hash: RIPEMD160
->>
->> Jean-Philippe Villeneuve wrote:
->>  
->>> I would like to know if I can backup all my system partitions(ROOT 
->>> included) using a snapshot?
->>>     
->>
->> Depends on what you mean by "backup [...] using a snapshot".
->>
->> If you mean taking a snapshot, then mounting it somewhere and pointing
->> your backup software to that mount point, then unmounting and deleting
->> the snapshot after the backup is done, then yes, it should work fine.
->>   
-> This is exactly what I want to do.  I just want the latest 
-> configuration, users files etc. I realy don't need files at a specific 
-> date with tons of backups.
->
-> Than you all for the fast and acurate answers.
->
-> Jean-Philippe
->
->
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
->
+> I get the folowing error:
+> 
+> Insufficient free extents (1) in volume group VolGroup00: 19 required
+> 
+> It works find if I do it with -L20M.
+
+You need to either grow the physical volume if possible, add extra
+physical volumes to the volume group (and therefore grow the volume
+group), or shrink the existing logical volume.
+
+> according to 'df' I have plenty of space for data.
+
+Yeah, but that's not the space that logical volumes use.
+
+LVs are allocated from inside the group-of-physical-volumes in a VG.
+Think of LVs like partitions: if you have tons of space available on the
+FS that's inside a partition, that doesn't necessarily mean you can add
+a new partition to the disk.  You'll have to either shrink the existing
+LV, or add more physical volumes to the group.
+
+I believe either can be done while the FS is mounted.
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.7 (GNU/Linux)
+Comment: Using GnuPG with Mozilla - http://enigmail.mozdev.org
+
+iD8DBQFIfnS4S5vET1Wea5wRA2bLAKDbIXtd9c56WFCWM8hf2Au5t7D/TgCgoV0k
+BPTR74O1ES4C1bFJKdfhESI=
+=p+QB
+-----END PGP SIGNATURE-----
