@@ -1,28 +1,18 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m6GMNGSG031149
-	for <linux-lvm@redhat.com>; Wed, 16 Jul 2008 18:23:16 -0400
-Received: from nlpi053.prodigy.net (nlpi053.sbcis.sbc.com [207.115.36.82])
-	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id m6GMMsFW015906
-	for <linux-lvm@redhat.com>; Wed, 16 Jul 2008 18:22:54 -0400
-Received: from mail.kdzbn.homelinux.net
-	(adsl-75-40-253-44.dsl.klmzmi.sbcglobal.net [75.40.253.44])
-	(authenticated bits=0)
-	by nlpi053.prodigy.net (8.13.8 smtpauth/dk/8.13.8) with ESMTP id
-	m6GMMlXw016527
-	for <linux-lvm@redhat.com>; Wed, 16 Jul 2008 17:22:48 -0500
-Received: from beta.mydomain ([192.168.2.237])
-	by mail.kdzbn.homelinux.net with esmtp (Exim 4.62)
-	(envelope-from <bryan@kadzban.is-a-geek.net>) id 1KJFOa-0006m6-OA
-	for linux-lvm@redhat.com; Wed, 16 Jul 2008 18:22:48 -0400
-Message-ID: <487E74B8.7010904@kadzban.is-a-geek.net>
-Date: Wed, 16 Jul 2008 18:22:48 -0400
-From: Bryan Kadzban <bryan@kadzban.is-a-geek.net>
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m6HFigG0001646
+	for <linux-lvm@redhat.com>; Thu, 17 Jul 2008 11:44:42 -0400
+Received: from ti-out-0910.google.com (ti-out-0910.google.com [209.85.142.190])
+	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id m6HFiVRs013641
+	for <linux-lvm@redhat.com>; Thu, 17 Jul 2008 11:44:31 -0400
+Received: by ti-out-0910.google.com with SMTP id 24so3605018tim.7
+	for <linux-lvm@redhat.com>; Thu, 17 Jul 2008 08:44:29 -0700 (PDT)
+Message-ID: <d96bd5b70807170844w6d4d445m882e3a00d879f48e@mail.gmail.com>
+Date: Thu, 17 Jul 2008 09:44:28 -0600
+From: Bo <beowulfnewbee@gmail.com>
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] Backup of ROOT Partition.
-References: <48694ABE.2080307@globetrotter.net>	<486A0EFE.8020805@kadzban.is-a-geek.net>	<486B8550.6070605@globetrotter.net>
-	<487E6219.7030507@globetrotter.net>
-In-Reply-To: <487E6219.7030507@globetrotter.net>
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/alternative; 
+	boundary="----=_Part_2125_31316685.1216309468119"
+Subject: [linux-lvm] LVM issue? Checksum warning
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -33,39 +23,97 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: LVM general discussion and development <linux-lvm@redhat.com>
+To: linux-lvm@redhat.com
 
------BEGIN PGP SIGNED MESSAGE-----
-Hash: RIPEMD160
+------=_Part_2125_31316685.1216309468119
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
 
-Jean-Philippe Villeneuve wrote:
-> I get the folowing error:
-> 
-> Insufficient free extents (1) in volume group VolGroup00: 19 required
-> 
-> It works find if I do it with -L20M.
+OK, when I boot the system, it shows something like Volume group
+"meta..blah" not found. Several messages like this went by fast so I
+don't exactly remember.
+Can anyone point me to the right direction? The system seem to work
+fine. But these messages does not comfort my boss.
+Following are some outputs to fdisk and
+LVM commands
 
-You need to either grow the physical volume if possible, add extra
-physical volumes to the volume group (and therefore grow the volume
-group), or shrink the existing logical volume.
+[root@localhost ~]# fdisk -l
+Disk /dev/hda: 40.0 GB, 40020664320 bytes
+255 heads, 63 sectors/track, 4865 cylinders
+Units = cylinders of 16065 * 512 = 8225280 bytes
 
-> according to 'df' I have plenty of space for data.
+   Device Boot      Start         End      Blocks   Id  System
+/dev/hda1   *           1        4864    39070048+   7  HPFS/NTFS
 
-Yeah, but that's not the space that logical volumes use.
+Disk /dev/hdb: 40.0 GB, 40020664320 bytes
+255 heads, 63 sectors/track, 4865 cylinders
+Units = cylinders of 16065 * 512 = 8225280 bytes
 
-LVs are allocated from inside the group-of-physical-volumes in a VG.
-Think of LVs like partitions: if you have tons of space available on the
-FS that's inside a partition, that doesn't necessarily mean you can add
-a new partition to the disk.  You'll have to either shrink the existing
-LV, or add more physical volumes to the group.
+   Device Boot      Start         End      Blocks   Id  System
+/dev/hdb1   *           1          13      104391   83  Linux
+/dev/hdb2              14         242     1839442+  82  Linux swap / Solaris
+/dev/hdb3             243        4865    37134247+  83  Linux
+[root@localhost ~]# lvmdiskscan
+  /dev/hda1 [       37.26 GB]
+  /dev/hdb1 [      101.94 MB]
+  Incorrect metadata area header checksum
+  /dev/hdb2 [        1.75 GB] LVM physical volume
+  /dev/hdb3 [       35.41 GB]
+  0 disks
+  3 partitions
+  0 LVM physical volume whole disks
+  1 LVM physical volume
+[root@localhost ~]# pvdisplay
+  Incorrect metadata area header checksum
+  Incorrect metadata area header checksum
+  Incorrect metadata area header checksum
+  Incorrect metadata area header checksum
+  --- NEW Physical volume ---
+  PV Name               /dev/hdb2
+  VG Name
+  PV Size               37.17 GB
+  Allocatable           NO
+  PE Size (KByte)       0
+  Total PE              0
+  Free PE               0
+  Allocated PE          0
+  PV UUID               0SmZ7P-44BI-Ls4s-lR2V-Q4Bo-Ah0p-CxWUYe
 
-I believe either can be done while the FS is mounted.
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.7 (GNU/Linux)
-Comment: Using GnuPG with Mozilla - http://enigmail.mozdev.org
+[root@localhost ~]# lvs
+  Incorrect metadata area header checksum
+[root@localhost ~]# lvscan
+  Incorrect metadata area header checksum
+[root@localhost ~]# pvscan
+  Incorrect metadata area header checksum
+  Incorrect metadata area header checksum
+  Incorrect metadata area header checksum
+  PV /dev/hdb2         lvm2 [37.17 GB]
+  Total: 1 [37.17 GB] / in use: 0 [0   ] / in no VG: 1 [37.17 GB]
+[root@localhost ~]# vgck
+  Incorrect metadata area header checksum
+[root@localhost ~]# vgdisplay
+  Incorrect metadata area header checksum
+[root@localhost ~]# vgscan
+  Reading all physical volumes.  This may take a while...
+  Incorrect metadata area header checksum
+[root@localhost ~]#
 
-iD8DBQFIfnS4S5vET1Wea5wRA2bLAKDbIXtd9c56WFCWM8hf2Au5t7D/TgCgoV0k
-BPTR74O1ES4C1bFJKdfhESI=
-=p+QB
------END PGP SIGNATURE-----
+------=_Part_2125_31316685.1216309468119
+Content-Type: text/html; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+<div dir="ltr"><pre>OK, when I boot the system, it shows something like Volume group &quot;meta..blah&quot; not found. Several messages like this went by fast so I don&#39;t exactly remember.<br>Can anyone point me to the right direction? The system seem to work fine. But these messages does not comfort my boss.<br>
+Following are some outputs to fdisk and <br>LVM commands<br><br>[root@localhost ~]# fdisk -l<br>Disk /dev/hda: 40.0 GB, 40020664320 bytes<br>255 heads, 63 sectors/track, 4865 cylinders<br>Units = cylinders of 16065 * 512 = 8225280 bytes<br>
+<br>   Device Boot      Start         End      Blocks   Id  System<br>/dev/hda1   *           1        4864    39070048+   7  HPFS/NTFS<br><br>Disk /dev/hdb: 40.0 GB, 40020664320 bytes<br>255 heads, 63 sectors/track, 4865 cylinders<br>
+Units = cylinders of 16065 * 512 = 8225280 bytes<br><br>   Device Boot      Start         End      Blocks   Id  System<br>/dev/hdb1   *           1          13      104391   83  Linux<br>/dev/hdb2              14         242     1839442+  82  Linux swap / Solaris<br>
+/dev/hdb3             243        4865    37134247+  83  Linux<br>[root@localhost ~]# lvmdiskscan<br>  /dev/hda1 [       37.26 GB]<br>  /dev/hdb1 [      101.94 MB]<br>  Incorrect metadata area header checksum<br>  /dev/hdb2 [        1.75 GB] LVM physical volume<br>
+  /dev/hdb3 [       35.41 GB]<br>  0 disks<br>  3 partitions<br>  0 LVM physical volume whole disks<br>  1 LVM physical volume<br>[root@localhost ~]# pvdisplay<br>  Incorrect metadata area header checksum<br>  Incorrect metadata area header checksum<br>
+  Incorrect metadata area header checksum<br>  Incorrect metadata area header checksum<br>  --- NEW Physical volume ---<br>  PV Name               /dev/hdb2<br>  VG Name<br>  PV Size               37.17 GB<br>  Allocatable           NO<br>
+  PE Size (KByte)       0<br>  Total PE              0<br>  Free PE               0<br>  Allocated PE          0<br>  PV UUID               0SmZ7P-44BI-Ls4s-lR2V-Q4Bo-Ah0p-CxWUYe<br><br>[root@localhost ~]# lvs<br>  Incorrect metadata area header checksum<br>
+[root@localhost ~]# lvscan<br>  Incorrect metadata area header checksum<br>[root@localhost ~]# pvscan<br>  Incorrect metadata area header checksum<br>  Incorrect metadata area header checksum<br>  Incorrect metadata area header checksum<br>
+  PV /dev/hdb2         lvm2 [37.17 GB]<br>  Total: 1 [37.17 GB] / in use: 0 [0   ] / in no VG: 1 [37.17 GB]<br>[root@localhost ~]# vgck<br>  Incorrect metadata area header checksum<br>[root@localhost ~]# vgdisplay<br>  Incorrect metadata area header checksum<br>
+[root@localhost ~]# vgscan<br>  Reading all physical volumes.  This may take a while...<br>  Incorrect metadata area header checksum<br>[root@localhost ~]#<br><br></pre></div>
+
+------=_Part_2125_31316685.1216309468119--
