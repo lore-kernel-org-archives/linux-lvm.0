@@ -1,22 +1,19 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m6KGPfdn022056
-	for <linux-lvm@redhat.com>; Sun, 20 Jul 2008 12:25:41 -0400
-Received: from fk-out-0910.google.com (fk-out-0910.google.com [209.85.128.190])
-	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id m6KGPUjj001830
-	for <linux-lvm@redhat.com>; Sun, 20 Jul 2008 12:25:31 -0400
-Received: by fk-out-0910.google.com with SMTP id e30so800574fke.3
-	for <linux-lvm@redhat.com>; Sun, 20 Jul 2008 09:25:29 -0700 (PDT)
-Message-ID: <bf6f43f40807200925p5bb2d9a2xc22a7ff323ced6ce@mail.gmail.com>
-Date: Sun, 20 Jul 2008 13:25:28 -0300
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m6KI99aL018766
+	for <linux-lvm@redhat.com>; Sun, 20 Jul 2008 14:09:09 -0400
+Received: from fg-out-1718.google.com (fg-out-1718.google.com [72.14.220.155])
+	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id m6KI8o9S009448
+	for <linux-lvm@redhat.com>; Sun, 20 Jul 2008 14:08:51 -0400
+Received: by fg-out-1718.google.com with SMTP id e21so592947fga.7
+	for <linux-lvm@redhat.com>; Sun, 20 Jul 2008 11:08:50 -0700 (PDT)
+Message-ID: <bf6f43f40807201108s15b68449yf682d84b919d140a@mail.gmail.com>
+Date: Sun, 20 Jul 2008 15:08:50 -0300
 From: "Levy Abinajm Melero Sant'Anna" <levy.santanna@gmail.com>
 Sender: log.todos@gmail.com
-Subject: Re: [linux-lvm] Re: Split LV mirror or something
-In-Reply-To: <Pine.LNX.4.44.0807161020330.715-100000@bmsred.bmsi.com>
 MIME-Version: 1.0
 Content-Type: multipart/alternative; 
-	boundary="----=_Part_41315_29215758.1216571129033"
-References: <bf6f43f40807160121j27df33c5o5135e1fb9fdd16f1@mail.gmail.com>
-	<Pine.LNX.4.44.0807161020330.715-100000@bmsred.bmsi.com>
+	boundary="----=_Part_41730_10460887.1216577330119"
+Subject: [linux-lvm] lvconvert alloc policy
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -29,20 +26,46 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 List-Id: <linux-lvm.redhat.com>
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-------=_Part_41315_29215758.1216571129033
+------=_Part_41730_10460887.1216577330119
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 Content-Disposition: inline
 
-Dear Stuart and list,
+Hi all,
+I don't understand why I can't mirror this LV
 
-I was thinking about snapshot and copy, but it looks like "less
-professional" than split a LV mirror.
-I can explain: When I copy is difficult to say that I kept the same
-permissions and ownership; Different of a mirror, that the process really
-guarantee by itself that the data is still with the same characteristic.
+root@atom:~# pvs
+  PV         VG       Fmt  Attr PSize   PFree
+  /dev/sda5  backvg   lvm2 a-   186,26G 316,00M
+  /dev/sdb1  archvg   lvm2 a-   465,76G 465,76G
+  /dev/sdc3  onlinevg lvm2 a-   315,62G 310,18G
+  /dev/sdc4  archvg   lvm2 a-   381,48G 632,00M
 
-Thank you all,
+root@atom:~# lvs
+  LV        VG       Attr   LSize   Origin Snap%  Move Log Copy%
+  onhomelv  archvg   -wi-a- 380,86G
+  arcsnaplv backvg   sri-a-   2,00G backlv  48,00
+  backlv    backvg   owi-a- 164,00G
+  homelv    backvg   -wi-ao  12,00G
+  usrlv     backvg   -wi-ao   7,95G
+  drooton   onlinevg -wi-a-   1,00G
+  dusron    onlinevg -wi-a-   2,45G
+  dvaron    onlinevg -wi-a-   1,00G
+  swaplv    onlinevg -wi-a-   1,00G
+
+root@atom:~# vgs
+  VG       #PV #LV #SN Attr   VSize   VFree
+  archvg     2   1   0 wz--n- 847,23G 466,38G
+  backvg     1   3   1 wz--n- 186,26G 316,00M
+  onlinevg   1   4   0 wz--n- 315,62G 310,18G
+
+root@atom:~# lvconvert -v -m 1 /dev/archvg/onhomelv /dev/sdb1
+    Checking for existing volume group "archvg"
+    Archiving volume group "archvg" metadata (seqno 6).
+  Not enough PVs with free space available for parallel allocation.
+  Consider --alloc anywhere if desperate.
+
+All help will be nice,
 -- 
 Lewis/Iceman/Levy
 
@@ -51,43 +74,19 @@ ICQ 12913566
 MSN levy.santanna@gmail.com
 Meebo lewisgodus
 
-On Wed, Jul 16, 2008 at 11:21 AM, Stuart D. Gathman <stuart@bmsi.com> wrote:
-
-> On Wed, 16 Jul 2008, Levy Abinajm Melero Sant'Anna wrote:
->
-> > > I have one LV with some critical data, and want to make a safe copy
-> with
-> > > less time possible of downtime. Could I make one mirror on a new PV
-> > > (lvconvert -m1) and split this copy into a new LV or/and maybe split
-> the VG
-> > > into a new VG?
->
-> Why not take a snapshot, and copy that to an LV on new VG ?
->
-> --
->              Stuart D. Gathman <stuart@bmsi.com>
->
-
-------=_Part_41315_29215758.1216571129033
+------=_Part_41730_10460887.1216577330119
 Content-Type: text/html; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 Content-Disposition: inline
 
-<div dir="ltr">Dear Stuart and list,<br><br>I was thinking about snapshot and copy, but it looks like &quot;less professional&quot; than split a LV mirror.<br>I can explain: When I copy is difficult to say that I kept the same permissions and ownership; Different of a mirror, that the process really guarantee by itself that the data is still with the same characteristic.<br>
-<br>Thank you all,<br>-- <br>Lewis/Iceman/Levy<br><br>Google Talk! <a href="mailto:levy.santanna@gmail.com">levy.santanna@gmail.com</a><br>ICQ 12913566<br>MSN <a href="mailto:levy.santanna@gmail.com">levy.santanna@gmail.com</a><br>
-Meebo lewisgodus
-<br><br><div class="gmail_quote">On Wed, Jul 16, 2008 at 11:21 AM, Stuart D. Gathman &lt;<a href="mailto:stuart@bmsi.com">stuart@bmsi.com</a>&gt; wrote:<br><blockquote class="gmail_quote" style="border-left: 1px solid rgb(204, 204, 204); margin: 0pt 0pt 0pt 0.8ex; padding-left: 1ex;">
-<div class="Ih2E3d">On Wed, 16 Jul 2008, Levy Abinajm Melero Sant&#39;Anna wrote:<br>
-<br>
-&gt; &gt; I have one LV with some critical data, and want to make a safe copy with<br>
-&gt; &gt; less time possible of downtime. Could I make one mirror on a new PV<br>
-&gt; &gt; (lvconvert -m1) and split this copy into a new LV or/and maybe split the VG<br>
-&gt; &gt; into a new VG?<br>
-<br>
-</div>Why not take a snapshot, and copy that to an LV on new VG ?<br>
-<br>
---<br>
- &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;Stuart D. Gathman &lt;<a href="mailto:stuart@bmsi.com">stuart@bmsi.com</a>&gt;<br>
- </blockquote></div><br></div>
+<div dir="ltr">Hi all, <br>I don&#39;t understand why I can&#39;t mirror this LV<br clear="all"><br>root@atom:~# pvs<br>&nbsp; PV&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; VG&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Fmt&nbsp; Attr PSize&nbsp;&nbsp; PFree&nbsp; <br>&nbsp; /dev/sda5&nbsp; backvg&nbsp;&nbsp; lvm2 a-&nbsp;&nbsp; 186,26G 316,00M<br>
+&nbsp; /dev/sdb1&nbsp; archvg&nbsp;&nbsp; lvm2 a-&nbsp;&nbsp; 465,76G 465,76G<br>&nbsp; /dev/sdc3&nbsp; onlinevg lvm2 a-&nbsp;&nbsp; 315,62G 310,18G<br>&nbsp; /dev/sdc4&nbsp; archvg&nbsp;&nbsp; lvm2 a-&nbsp;&nbsp; 381,48G 632,00M<br><br>root@atom:~# lvs<br>&nbsp; LV&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; VG&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Attr&nbsp;&nbsp; LSize&nbsp;&nbsp; Origin Snap%&nbsp; Move Log Copy% <br>
+&nbsp; onhomelv&nbsp; archvg&nbsp;&nbsp; -wi-a- 380,86G&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <br>&nbsp; arcsnaplv backvg&nbsp;&nbsp; sri-a-&nbsp;&nbsp; 2,00G backlv&nbsp; 48,00&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <br>&nbsp; backlv&nbsp;&nbsp;&nbsp; backvg&nbsp;&nbsp; owi-a- 164,00G&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <br>&nbsp; homelv&nbsp;&nbsp;&nbsp; backvg&nbsp;&nbsp; -wi-ao&nbsp; 12,00G&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <br>
+&nbsp; usrlv&nbsp;&nbsp;&nbsp;&nbsp; backvg&nbsp;&nbsp; -wi-ao&nbsp;&nbsp; 7,95G&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <br>&nbsp; drooton&nbsp;&nbsp; onlinevg -wi-a-&nbsp;&nbsp; 1,00G&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <br>&nbsp; dusron&nbsp;&nbsp;&nbsp; onlinevg -wi-a-&nbsp;&nbsp; 2,45G&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <br>&nbsp; dvaron&nbsp;&nbsp;&nbsp; onlinevg -wi-a-&nbsp;&nbsp; 1,00G&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <br>
+&nbsp; swaplv&nbsp;&nbsp;&nbsp; onlinevg -wi-a-&nbsp;&nbsp; 1,00G <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <br>root@atom:~# vgs<br>&nbsp; VG&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; #PV #LV #SN Attr&nbsp;&nbsp; VSize&nbsp;&nbsp; VFree&nbsp; <br>&nbsp; archvg&nbsp;&nbsp;&nbsp;&nbsp; 2&nbsp;&nbsp; 1&nbsp;&nbsp; 0 wz--n- 847,23G 466,38G<br>&nbsp; backvg&nbsp;&nbsp;&nbsp;&nbsp; 1&nbsp;&nbsp; 3&nbsp;&nbsp; 1 wz--n- 186,26G 316,00M<br>
+&nbsp; onlinevg&nbsp;&nbsp; 1&nbsp;&nbsp; 4&nbsp;&nbsp; 0 wz--n- 315,62G 310,18G<br><br>root@atom:~# lvconvert -v -m 1 /dev/archvg/onhomelv /dev/sdb1<br>&nbsp;&nbsp;&nbsp; Checking for existing volume group &quot;archvg&quot;<br>&nbsp;&nbsp;&nbsp; Archiving volume group &quot;archvg&quot; metadata (seqno 6).<br>
+&nbsp; Not enough PVs with free space available for parallel allocation.<br>&nbsp; Consider --alloc anywhere if desperate.<br><br>All help will be nice,<br>-- <br>Lewis/Iceman/Levy<br><br>Google Talk! <a href="mailto:levy.santanna@gmail.com">levy.santanna@gmail.com</a><br>
+ICQ 12913566<br>MSN <a href="mailto:levy.santanna@gmail.com">levy.santanna@gmail.com</a><br>Meebo lewisgodus
+</div>
 
-------=_Part_41315_29215758.1216571129033--
+------=_Part_41730_10460887.1216577330119--
