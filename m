@@ -1,21 +1,13 @@
-Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m6KMUGob000571
-	for <linux-lvm@redhat.com>; Sun, 20 Jul 2008 18:30:16 -0400
-Received: from mail.bmsi.com (www.bmsi.com [24.248.44.156])
-	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id m6KMU5nW017214
-	for <linux-lvm@redhat.com>; Sun, 20 Jul 2008 18:30:05 -0400
-Received: from bmsred.bmsi.com (bmsred.bmsi.com [192.168.9.50])
-	by mail.bmsi.com (8.13.6/8.13.6) with ESMTP id m6KMTxgH001924
-	for <linux-lvm@redhat.com>; Sun, 20 Jul 2008 18:29:59 -0400
-Received: from localhost (localhost [127.0.0.1])
-	by bmsred.bmsi.com (8.13.5/8.13.6) with ESMTP id m6KMTxEw006566
-	for <linux-lvm@redhat.com>; Sun, 20 Jul 2008 18:29:59 -0400
-Date: Sun, 20 Jul 2008 18:29:59 -0400 (EDT)
-From: "Stuart D. Gathman" <stuart@bmsi.com>
-Subject: Re: [linux-lvm] Re: Split LV mirror or something
-In-Reply-To: <bf6f43f40807200925p5bb2d9a2xc22a7ff323ced6ce@mail.gmail.com>
-Message-ID: <Pine.LNX.4.44.0807201827410.6462-100000@bmsred.bmsi.com>
-MIME-Version: 1.0
+Message-Id: <48846130.DB9C.0010.0@milprog.ch>
+Date: Mon, 21 Jul 2008 10:13:09 +0200
+From: "Marcel Gsteiger" <Marcel.Gsteiger@milprog.ch>
+Subject: Antw: Re: [linux-lvm] Can't get rid of INACTIVE read/write
+	snapshot
+References: <48443B86.DB9C.0010.0@milprog.ch>
+	<Pine.LNX.4.64.0806031513430.20514@engineering.redhat.com>
+In-Reply-To: <Pine.LNX.4.64.0806031513430.20514@engineering.redhat.com>
+Mime-Version: 1.0
+Content-Type: multipart/mixed; boundary="=__PartE4CD2505.0__="
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -26,24 +18,352 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: LVM general discussion and development <linux-lvm@redhat.com>
+To: LVM general discussion and development <linux-lvm@redhat.com>, Mikulas Patocka <mpatocka@redhat.com>
 
-On Sun, 20 Jul 2008, Levy Abinajm Melero Sant'Anna wrote:
+This is a MIME message. If you are reading this text, you may want to 
+consider changing to a mail reader or gateway that understands how to 
+properly handle MIME multipart messages.
 
-> I was thinking about snapshot and copy, but it looks like "less
-> professional" than split a LV mirror.
-> I can explain: When I copy is difficult to say that I kept the same
-> permissions and ownership; Different of a mirror, that the process really
-> guarantee by itself that the data is still with the same characteristic.
+--=__PartE4CD2505.0__=
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
+Content-Disposition: inline
 
-What kind of permissions are you talking about?  'dd' (or your favorite
-raw block copy) does the same thing as a mirror.  It just copies raw blocks
-verbatim.  No filesystem is involved.
+.sorry for the delay, I tried again to lvremove, find the strace =
+enclosed.
 
--- 
-	      Stuart D. Gathman <stuart@bmsi.com>
-    Business Management Systems Inc.  Phone: 703 591-0911 Fax: 703 591-6154
-"Confutatis maledictis, flammis acribus addictis" - background song for
-a Microsoft sponsored "Where do you want to go from here?" commercial.
+After the output "flock(3, LOCK_EX
+
+at the end, lvremove seems to go into an endless loop (100% CPU usage).
+
+Then I tried the following:
+
+kill -9 <pid of lvremove>
+rm /var/lock/lvm/V_vg00
+
+to remove /var/lock/lvm/V_vg00 "by hand" and tried again. Now the system =
+does not go to 100% CPU usage anymore, but lvremove does not terminate. =
+See my second lvremove2.strace.
+
+As mentioned before, I simply wanted to get rid of a overflowed snapshot =
+and clean up my volume group, as I should extend the LVM in question. How =
+can I safely accomplish this in my situation?
+
+Thanks for your help and best regards
+--Marcel
+
+
+
+
+
+
+
+
+>>> Mikulas Patocka <mpatocka@redhat.com> 03.06.2008 21:15 >>>
+> Hi all
+>
+> I'm using lvm2-2.01.08-2.1 on fc4, kernel 2.6.16-1 with linux-vserver=20
+> patches.
+>
+> A while ago, I mistakenly created a 39GB read-write snapshot of my=20
+> /vservers partition (which, btw, seemed to work). But after some time=20
+> this partition got to an overflow and since then I can't get rid of =
+it=20
+> anymore. See the lvdisplay output below.
+>
+> lvchange -an or --refresh gives me a message "Can't change snapshot=20
+> logical volume "vservers_snapshot"".
+>
+> lvremove lets me wait, then "top" shows 100% IO-Wait but does not =
+come=20
+> to an end (at least after an hour). I don't know how much patience I=20
+> would need, this box is rather fast otherwise (dual xeon 2.8GHz w/ =
+SATA=20
+> drives).
+
+Hi
+
+It looks like an unknown bug in lvremove. Send a strace of lvremove =
+while=20
+it waits for that long amount of time.
+
+Mikulas
+
+> Rebooting does not help anything.
+>
+> Is there a safe way to simply get rid of this snapshot? Any help =
+would=20
+> much be appreciated.
+>
+> Regards
+> --Marcel
+>
+> --- Logical volume ---
+>  LV Name                /dev/vg00/lv00_vservers
+>  VG Name                vg00
+>  LV UUID                9oELP3-2l7d-gTML-2xg2-unTu-znP0-qVd3Mc
+>  LV Write Access        read/write
+>  LV snapshot status     source of
+>                         /dev/vg00/vservers_snapshot [INACTIVE]
+>  LV Status              available
+>  # open                 1
+>  LV Size                39,06 GB
+>  Current LE             625
+>  Segments               1
+>  Allocation             contiguous
+>  Read ahead sectors     0
+>  Block device           253:9
+>
+>  --- Logical volume ---
+>  LV Name                /dev/vg00/vservers_snapshot
+>  VG Name                vg00
+>  LV UUID                cQEj3z-V2jD-QOCl-3Yea-ETQZ-Egj9-2B7nd2
+>  LV Write Access        read/write
+>  LV snapshot status     INACTIVE destination for /dev/vg00/lv00_vservers
+>  LV Status              available
+>  # open                 0
+>  LV Size                39,06 GB
+>  Current LE             625
+>  Segments               1
+>  Snapshot chunk size    4,00 KB
+>  Allocated to snapshot  100,00%
+>  Allocation             inherit
+>  Read ahead sectors     0
+>  Block device           253:8
+>
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@redhat.com=20
+> https://www.redhat.com/mailman/listinfo/linux-lvm=20
+> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/=20
+>
+
+
+--=__PartE4CD2505.0__=
+Content-Type: application/x-zip-compressed; name="strace.zip"
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="strace.zip"
+
+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
+bE8l21PJ9lSyPZVsTyXbU8kOVLIDlexAJTtQyQ5UsgOV7EAlO1DJDlSyA5XsSCU7UsmOVLIjlexI
+JTtSyY5UsiOV7EglO0LJFsoghTJIoQxSKIMUyiCFMkihDFIogxTKIIUySKEMUiiDFMoghTJIoQxS
+KIMUyiCFMkihDFIogxTKIIUySKEMUiiDFMoghTJIoQxSKIMUyiCFMkihDFIogxTKIIUySKEMUiiD
+FMoghTJIoQxSKIMUyiCFMkihDFIogxTKIIUySKEMUiiDFMoghTJIoQxSKIMUyiCFMkihDFIogxTK
+IIUySKEMUiiDFMoghTJIoQxSKIMUyiCFMkihDFIogxTKIIUySKEMUiiDFMoghTJIoQxSKIMUyiCF
+MkihDFIogxTKIIUySKEMUiiDFMoghTJIoQxSKIMUyiCFMkihDFIogxTKIIUySKEMUiiDFMoghTJI
+oQxSKIM0lEEayiANZZCGMkhDGaShDNJQBmkogzSUQRrKIA1lkIYySEMZpKEM0lAGaSiDNJRBGsog
+DWWQhjJIQxmkoQzSUAZpKIM0lEEayiANZZCGMkhDGaShDNJQBmkogzSUQRrKIA1lkIYySEMZpKEM
+0lAGaSiDNJRBGsogDWWQhjJIQxmkoQzSUAZpKIM0lEEayiANZZCGMkhDGaShDNJQBmkogzSUQRrK
+IA1lkIYySEMZpKEM0lAGaSiDNJRBGsogDWWQhjJIQxmkoQzSUAZpKIM0lEEayiANZZCGMkhDGaSh
+DNJQBmkogzSUQRrKIA1lkIYySEMZpKEM0lAGaSiDNJRBGsogDWWQhjJIQxmkoQzSUAZpKIM0lEEa
+yiANZZCGMkilDFIpg1TKIJUySKUMUimDVMoglTJIpQxSKYNUyiCVMkilDFIpg1TKIJUySKUMUimD
+VMoglTJIpQxSKYNUyiCVMkilDFIpg1TKIJUySKUMUimDVMoglTJIpQxSKYNUyiCVMkilDFIpg1TK
+IJUySKUMUimDVMoglTJIpQxSKYNUyiCVMkilDFIpg1TKIJUySKUMUimDVMoglTJIpQxSKYNUyiCV
+MkilDFIpg1TKIJUySKUMUimDVMoglTJIpQxSKYNUyiCVMkilDFIpg1TKIJUySKUMUimDVMoglTJI
+pQxSKYNUyiCVMkilDFIpg1TKIJUySKUMUimDVMoglTJIpQxSKYNUyiCVMkilDFIpg1TKIJUySEsZ
+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
+q1ca8AcmclJuYduLXrObr38Z/jF8vbbX6V1cFTPTKwdwrdNrXwzXZofrotscfl5Pn3CnpjjvXR8F
+54N+696D0c4ejOk9x087v3z8KLYxpPccMeVeq93+RW80vC9qj4ZNZ1OT/oszM+j3R6fDpJpMnwz+
+nqRJetwrRyQZD8s4HsWioGUZn8o3i8fscBY77rTy+8fz33k433xqDpqtUT5Ipj347riXJFnSzbvl
+E02q8+NZtOP2zWvXrz88nt9q7BeWka1Ws/Upv38RKWtcD2/I7JLF6JlVFhaimyqLSVhYiMZVmGXo
+zj8psurQ355VimWof56li4Pw/d67crmYDMKg2O51t/k5Lx7XfRmCjftPUeNisloxWVrMrFbMLC22
+Wq0HS7U7w8/Vkz82Ly467Wp0MbcuyzbFneab2o5usxnzsNk0UUxmYtpcpQtxyW7HE5WtNlHZ0ola
+rZgsLbZiw5aWMqvVMkuL6WrFdGkxv1oxv3T4V+umLO2mrNZNWdpNWa2bsrSbq/VyaSdX6+PSLq7W
+Q//YqeCseZKfVX9q/N//NoZpY6vRyL9r/HWlw16W5k5Wy93yYmG1YmFpsbhasbg0d6t1U5Z2U1br
+piztpqzWTVnezdVqLSu1Wh+XdnG1Hj7YwW5bmNzPrbJtn/pm67S9mRp3sqmu3do8OSlWWWdOW2nu
+orbCCbPbbptcru1qR4ddGpvVisnSYqvVsg+PVrbSaC1f991qo+WWjtZqxWRpsdVqzZf6mI/OO+31
+J3wsNzFa/s7bZXNQ3mr6/PCNwNlLncUbgc1WcY04vFum3jh49/Xn8scvxY+5HY6vj8u2//TDsHr5
+MS2Pp/TKn5Zf7awt2fhCp7xDu39Q2z9K1vf7yfCi9Wlym7ZfXJl2Bnlr1B/8sfFqUDbrY1lxfLvl
+cPeHxmHt6P324btK8s/f6kfvd/eT+lEj+72S/PZ7eYKbvUCbbXKxNk+bUl6l/Vz/etDY/vChtr9T
+PHlTXI8dFW0c//Pj5UXbZK/FZXKn3yv3ubtf/PlLeqUaQyiusH8rXij2drhdXMkdHh3Ua/Wv0+fb
+9bLQlWmqqJyaNP2zeGPZ6p23e3/etG95r4riyVzPppePs+9daNtki2e3cFnppUXvVJpr6mk5+OWN
+g72DN+8atV+W3Td4bre4viwboHtm4EmZfHzmZsLx0um753i/Tf3dk8fcYZ8+8Qbyw2/6NpfaLy01
+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
+2+jhIzwv9/AZvMhPtzEYnQ+nky/P3k+4+6PL/Uz/xd0cj0bTk0nSSBYPxv9I0iQ9Gpa3BZPy27yd
+WSpalvGp3L62dv3819v5vVr/Pp+OT/uD/nSttbvzZqdcEF7t7Ba9+Fw+3S4+mL0sh1ZPZr8OOpez
+XxdtffqgyruAP25tv0rWfuz05pHr5ZPuuH82HY3XF4WUKmSpQo4q5KlCgSoUqULZo+fbpxbKqEJC
+FTJUIaUKWaqQowp5qlCgCkWokFDJFirZQiVbqGQLlWyhki1UsoVKtlDJFirZhkq2oZJtqGQbKtmG
+Srahkm2oZBsq2YZKtqGSrVSylUq2UslWKtlKJVupZCuVbKWSrVSylUq2pZJtqWRbKtmWSralkm2p
+ZFsq2ZZKtqWSbalkOyrZjkq2o5LtqGQ7KtmOSrajku2oZDsq2Y5KtqeS7alkeyrZnkq2p5LtqWR7
+KtmeSranku2pZAcq2YFKdqCSHahkByrZgUp2oJIdqGQHKtmBSnakkh2pZEcq2ZFKdqSSHalkRyrZ
+kUp2pJIdqWRn6WPRfnKhjCokVCFDFVKqkKUKOaqQpwoFqlCECmVUsjMq2RmV7IxKdkYlO6OSnVHJ
+zqhkZ1SyMyrZQiVbqGQLlWyhki1UsoVKtlDJFirZQiVbqGQbKtmGSrahkm2oZBsq2YZKtqGSbahk
+GyrZhkq2UslWKtlKJVupZCuVbKWSrVSylUq2UslWKtmWSralkm2pZFsq2ZZKtqWSbalkWyrZlkq2
+pZLtqGQ7KtmOSrajku2oZDsq2Y5KtqOS7ahkOyrZnkq2p5LtqWR7KtmeSranku2pZHsq2Z5KtqeS
+HahkByrZgUp2oJIdqGQHKtmBSnagkh2oZAcq2ZFKdqSSHalkRyrZkUp2pJIdqWRHKtmRSnaEki2U
+QQplkEIZpFAGKZRBCmWQQhmkUAYplEEKZZBCGaRQBimUQQplkEIZpFAGKZRBCmWQQhmkUAYplEEK
+ZZBCGaRQBimUQQplkEIZpFAGKZRBCmWQQhmkUAYplEEKZZBCGaRQBimUQQplkEIZpFAGKZRBCmWQ
+QhmkUAYplEEKZZBCGaRQBimUQQplkEIZpFAGKZRBCmWQQhmkUAYplEEKZZBCGaRQBimUQQplkEIZ
+pFAGKZRBCmWQQhmkUAYplEEKZZBCGaRQBimUQQplkEIZpFAGKZRBCmWQQhmkUAYplEEKZZBCGaRQ
+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
+zK3Lsg1xJ/mG9qLb6MQ8bHRMFJOZmHaqTCGu2O3sQGXVDlS28kBVKyYri1Uc2MpSplots7KYVium
+K4v5asX8yvZXm6asnKZUm6asnKZUm6asnGa1Wa6cZLU5rpxitRn6x04Fp53j/LTxa/t//6c9Sdub
+7Xb+Q/vvld72sjJ3Ui13q4uFasXCymKxWrG4MnfVpikrpynVpikrpynVpimrp1mt1qpS1ea4corV
+ZvjVCQ56wuT+zirb86nvdE96G6lxxxvqet2N4+NilXXmpJvmLmo3HDO7HfTI5dpWe3fYlbGpVkxW
+FqtWy369W1mlbq1e9121brmV3apWTFYWq1brbqn3+fSs31t7wsdykTTL+FtvF51xea/p49fvBC5f
+69y/E9jpFheJky/LtNr7r69+K7/9Xny7s8PZBXI59l9/njQu3qflGyq99CflVx5t2ptd6ZS3aPf2
+m3uHydreKJmcdz/M79OOikvT/jjvTkfjT+svxuWw3pcVZ/dbDnZ+bh80D99sHbyuJ//9R+vwzc5e
+0jpsZ3/Wkz/+LM9wy1doy0MuFufFUMrLtN9aV/vtrbdvm3vbxYOfiguyw2KMs///eHnVNt9rcZ3c
+Hw3Lfe7sFX/+nF6qxhCKS+w/iieKvR1sFZdyB4f7rWbravF4q1UWujQdFZUTk6Z/FS8sR739avev
+m/GtnlVRPLkzs8X14/Jr741tvsU3j3BV6ZVFv6h0Z6gnZfPLOwe7+z+9bjd//z9QSwECFAAUAAIA
+CAA0UPU4Mw7MKCIbAABbkgEAEAAAAAAAAAAAACAAAAAAAAAAbHZyZW1vdmUyLnN0cmFjZVBLAQIU
+ABQAAgAIALNM9Tgt3NOzAxUAALpPAQAPAAAAAAAAAAAAIAAAAFAbAABsdnJlbW92ZS5zdHJhY2VQ
+SwUGAAAAAAIAAgB7AAAAgDAAAAAA
+
+--=__PartE4CD2505.0__=--
