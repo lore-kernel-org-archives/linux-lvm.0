@@ -1,20 +1,19 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m6MKVoXw002474
-	for <linux-lvm@redhat.com>; Tue, 22 Jul 2008 16:31:50 -0400
-Received: from biostat.ucsf.edu (upstrm185.psg-ucsf.org [38.99.193.74])
-	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id m6MKVK6P032576
-	for <linux-lvm@redhat.com>; Tue, 22 Jul 2008 16:31:20 -0400
-Subject: Re: [linux-lvm] Wisdom of multiple disks in one VG
-From: Ross Boylan <ross@biostat.ucsf.edu>
-In-Reply-To: <1c748a490807220907x19fa0990occ05853440884fcb@mail.gmail.com>
-References: <1216674096.7888.5.camel@corn.betterworld.us>
-	<1216674897.20588.14.camel@behemoth.csg.stercomm.com>
-	<1216700602.7888.37.camel@corn.betterworld.us>
-	<1c748a490807220907x19fa0990occ05853440884fcb@mail.gmail.com>
-Date: Tue, 22 Jul 2008 13:31:14 -0700
-Message-Id: <1216758674.20426.12.camel@iron.psg.net>
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m6NC8gFO022856
+	for <linux-lvm@redhat.com>; Wed, 23 Jul 2008 08:08:42 -0400
+Received: from crow1.exxs.net (crow1.exxs.net [213.202.244.7])
+	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id m6NC7bQb014385
+	for <linux-lvm@redhat.com>; Wed, 23 Jul 2008 08:07:41 -0400
+Received: from [192.168.178.20] (mnch-5d873438.pool.einsundeins.de
+	[93.135.52.56]) by crow1.exxs.net (Postfix) with ESMTP id C35D4A54152
+	for <linux-lvm@redhat.com>; Wed, 23 Jul 2008 14:08:16 +0200 (CEST)
+Message-ID: <48871F04.9090002@exxs.net>
+Date: Wed, 23 Jul 2008 14:07:32 +0200
+From: "exxs.net - matevz sernc-urban" <ms@exxs.net>
+MIME-Version: 1.0
+Content-Type: multipart/mixed; boundary="------------010807090502020600080209"
+Subject: [linux-lvm] Every now and then LVM is not recognized - LVM2 on
+	RAID10
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -25,22 +24,219 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: LVM general discussion and development <linux-lvm@redhat.com>
+To: linux-lvm@redhat.com
 
-On Tue, 2008-07-22 at 09:07 -0700, Larry Dickson wrote:
-> Perhaps I'm being unfair, but making valuable stuff depend on md raid1
-> scares me. We've had trouble when an event happens (i.e. primary goes
-> bad) and have had to do stuff by hand. 
-I thought raid 1 handled that kind of situation automatically. Am I
-under a mistaken impression, or is it just that other things can go
-wrong easily?  I know raid 1 and 5 are both vulnerable until the
-redundancy is reconstructed.
-> For real peace of mind, I would think of a backup strategy involving
-> another system; snapshot is nice for that. Perhaps your unused big
-> disk could go on that system. Just a practical note.
-It won't be unused for long, and since some stuff to backup goes there,
-I think I need to put the on-disk backup somewhere else.  Spreading
-things out across disks should also speed up the backup, which is
-sometimes very slow.
-Ross
+This is a multi-part message in MIME format.
+--------------010807090502020600080209
+Content-Type: text/plain; charset=ISO-8859-15; format=flowed
+Content-Transfer-Encoding: 7bit
+
+Dear LVM-Users,
+
+i am running into a very interesting situation today, that our LVM 
+metadata is recognized only sometimes. LVM was running fine for some 
+weeks and now from today on running pvscan 10 times one after another i 
+get about 4 positive and 6 negative results (its somehow a coincidence 
+that LVM is recognized).
+
+* WORKING STATE:
+server$ pvscan
+   PV /dev/md2   VG mainvg   lvm2 [909.59 GB / 299.59 GB free]
+   Total: 1 [909.59 GB] / in use: 1 [909.59 GB] / in no VG: 0 [0   ]
+
+* NOT-WORKING STATE:
+server$ pvscan
+   No matching physical volumes found
+
+notice: Same behaviour with vgscan and lvscan.
+
+Our Setup:
+* RAID-10 /dev/md2 on /dev/sd[a-d]5
+cat /proc/mdstat
+Personalities : [raid1] [raid10]
+md2 : active raid10 sdb5[1] sda5[0] sdd5[3] sdc5[2]
+       953778688 blocks 64K chunks 2 far-copies [4/4] [UUUU]
+
+* LVM2 on top of /dev/md2 (no separate lvm partition)
+lvm metadata backup is present and it is exactly the same as backups we 
+did months ago
+
+I will attach the lvm2 metadata file to this message (vg name: mainvg)
+
+WORKING STATE:
+server$ pvscan -vv
+       Setting global/locking_type to 1
+       File-based locking selected.
+       Setting global/locking_dir to /var/lock/lvm
+       Locking /var/lock/lvm/P_global WB
+     Wiping cache of LVM-capable devices
+       /dev/sndstat: stat failed: No such file or directory
+     Wiping internal VG cache
+     Walking through all physical volumes
+       /dev/md2: size is 1907557376 sectors
+       /dev/md2: lvm2 label detected
+   PV /dev/md2   VG mainvg   lvm2 [909.59 GB / 299.59 GB free]
+   Total: 1 [909.59 GB] / in use: 1 [909.59 GB] / in no VG: 0 [0   ]
+       Unlocking /var/lock/lvm/P_global
+
+NOT-WORKING STATE:
+server$ pvscan -vv
+       Setting global/locking_type to 1
+       File-based locking selected.
+       Setting global/locking_dir to /var/lock/lvm
+       Locking /var/lock/lvm/P_global WB
+     Wiping cache of LVM-capable devices
+       /dev/sndstat: stat failed: No such file or directory
+     Wiping internal VG cache
+     Walking through all physical volumes
+       /dev/md2: size is 1907557376 sectors
+       /dev/md2: No label detected
+   No matching physical volumes found
+       Unlocking /var/lock/lvm/P_global
+
+
+Any hints?
+
+Where should it look regarding "/dev/md2: No label detected" vs. 
+"/dev/md2: lvm2 label detected"??
+
+It seems like RAID-10 is not sync'ed well maybe? But, mdstat reports all 
+disks are up.
+
+Thanks for your help.
+Mat
+
+--------------010807090502020600080209
+Content-Type: text/plain;
+ name="mainvg.txt"
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline;
+ filename="mainvg.txt"
+
+# Generated by LVM2 version 2.02.38 (2008-06-11): Wed Jul 23 13:16:36 2008
+
+contents = "Text Format Volume Group"
+version = 1
+
+description = "Created *after* executing 'vgcfgbackup -vvv'"
+
+creation_host = "fileserver.exxs.net"	# Linux fileserver.exxs.net 2.6.18-6-xen-686 #1 SMP Sun Feb 10 22:43:13 UTC 2008 i686
+creation_time = 1216811796	# Wed Jul 23 13:16:36 2008
+
+mainvg {
+	id = "mNtCkm-qYPB-RzWY-Kfke-asbD-xMDD-7ABoDq"
+	seqno = 15
+	status = ["RESIZEABLE", "READ", "WRITE"]
+	extent_size = 8192		# 4 Megabytes
+	max_lv = 0
+	max_pv = 0
+
+	physical_volumes {
+
+		pv0 {
+			id = "nKql7U-MLbt-5Grp-Hrp7-DOwQ-E2fd-R0n4aD"
+			device = "/dev/md2"	# Hint only
+
+			status = ["ALLOCATABLE"]
+			dev_size = 1907557376	# 909.594 Gigabytes
+			pe_start = 384
+			pe_count = 232856	# 909.594 Gigabytes
+		}
+	}
+
+	logical_volumes {
+
+		yangc-root {
+			id = "oSKqz7-2zJK-FXZ3-r79j-mFCS-2oaK-CIIcN7"
+			status = ["READ", "WRITE", "VISIBLE"]
+			read_ahead = 3072
+			segment_count = 1
+
+			segment1 {
+				start_extent = 0
+				extent_count = 2560	# 10 Gigabytes
+
+				type = "striped"
+				stripe_count = 1	# linear
+
+				stripes = [
+					"pv0", 51200
+				]
+			}
+		}
+
+		yangc-imap {
+			id = "maitoY-2pNZ-eJt2-YgbA-QXlh-i7WC-xOSwp2"
+			status = ["READ", "WRITE", "VISIBLE"]
+			segment_count = 1
+
+			segment1 {
+				start_extent = 0
+				extent_count = 25600	# 100 Gigabytes
+
+				type = "striped"
+				stripe_count = 1	# linear
+
+				stripes = [
+					"pv0", 53760
+				]
+			}
+		}
+
+		yangc-home {
+			id = "hI0d5Q-GFRV-D3H1-0IiQ-IU8m-bnXw-LE5jdH"
+			status = ["READ", "WRITE", "VISIBLE"]
+			segment_count = 1
+
+			segment1 {
+				start_extent = 0
+				extent_count = 20480	# 80 Gigabytes
+
+				type = "striped"
+				stripe_count = 1	# linear
+
+				stripes = [
+					"pv0", 79360
+				]
+			}
+		}
+
+		test.exxs.net-disk {
+			id = "CjHEEF-viBE-UHvg-qIhW-Muk1-9m53-2tMH00"
+			status = ["READ", "WRITE", "VISIBLE"]
+			segment_count = 1
+
+			segment1 {
+				start_extent = 0
+				extent_count = 5120	# 20 Gigabytes
+
+				type = "striped"
+				stripe_count = 1	# linear
+
+				stripes = [
+					"pv0", 99840
+				]
+			}
+		}
+
+		yangc-backup {
+			id = "WqcTef-vvW1-2tfa-HbUQ-NBjN-zai2-l3dd2F"
+			status = ["READ", "WRITE", "VISIBLE"]
+			segment_count = 1
+
+			segment1 {
+				start_extent = 0
+				extent_count = 102400	# 400 Gigabytes
+
+				type = "striped"
+				stripe_count = 1	# linear
+
+				stripes = [
+					"pv0", 104960
+				]
+			}
+		}
+	}
+}
+
+--------------010807090502020600080209--
