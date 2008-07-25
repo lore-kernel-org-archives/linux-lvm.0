@@ -1,22 +1,15 @@
-Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m6OFb5Qj013292
-	for <linux-lvm@redhat.com>; Thu, 24 Jul 2008 11:37:05 -0400
-Received: from crow1.exxs.net (crow1.exxs.net [213.202.244.7])
-	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id m6OFapAt018170
-	for <linux-lvm@redhat.com>; Thu, 24 Jul 2008 11:36:52 -0400
-Received: from [192.168.178.37] (p4FE59F6B.dip0.t-ipconnect.de
-	[79.229.159.107])
-	by crow1.exxs.net (Postfix) with ESMTP id 336A5A5402B
-	for <linux-lvm@redhat.com>; Thu, 24 Jul 2008 17:37:38 +0200 (CEST)
-Message-ID: <4888A190.2090103@exxs.net>
-Date: Thu, 24 Jul 2008 17:36:48 +0200
-From: "exxs.net - matevz sernc-urban" <ms@exxs.net>
+From: Jim Meyering <jim@meyering.net>
+In-Reply-To: <1216958314.10255.3.camel@localhost.localdomain> (Dave
+	Wysochanski's message of "Thu, 24 Jul 2008 23:58:34 -0400")
+References: <1216661693.3355.6.camel@localhost.localdomain>
+	<87od4r15b3.fsf@rho.meyering.net>
+	<1216669323.3355.7.camel@localhost.localdomain>
+	<87vdyyx6z4.fsf@rho.meyering.net>
+	<1216958314.10255.3.camel@localhost.localdomain>
+Date: Fri, 25 Jul 2008 09:59:19 +0200
+Message-ID: <87fxpyo0mg.fsf@rho.meyering.net>
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] Every now and then LVM is not recognized - LVM2 on
-	RAID10
-References: <48871F04.9090002@exxs.net> <20080723173514.GC30203@soda.linbit>
-In-Reply-To: <20080723173514.GC30203@soda.linbit>
-Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] Re: lvm build failures without readline-devel installed?
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -27,52 +20,37 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: dwysocha@redhat.com
+Cc: LVM general discussion and development <linux-lvm@redhat.com>
 
-Lars Ellenberg schrieb:
-> On Wed, Jul 23, 2008 at 02:07:32PM +0200, exxs.net - matevz sernc-urban wrote:
->>
->> i am running into a very interesting situation today, that our LVM  
->> metadata is recognized only sometimes. LVM was running fine for some  
->> weeks and now from today on running pvscan 10 times one after another i  
->> get about 4 positive and 6 negative results (its somehow a coincidence  
->> that LVM is recognized).
->>
+Dave Wysochanski <dwysocha@redhat.com> wrote:
 ...
->>
->> Any hints?
->>
->> Where should it look regarding "/dev/md2: No label detected" vs.  
->> "/dev/md2: lvm2 label detected"??
->>
->> It seems like RAID-10 is not sync'ed well maybe? But, mdstat reports all  
->> disks are up.
-> 
-> just a shot in the dark:
-> 
-> for dev in /dev/sd{a,b,c,d}5; do
-> 	md5=$(dd if=$dev iflag=direct bs=1M count=1 | md5sum)
-> 	echo "$dev: $md5"
-> done
+> I'm seeing build failures now with readline-devel _not_ installed and a
+> configure line with the readline options absent (only "--enable-debug"
+> and "--with-dmdir" options)
+>
+> http://10.11.231.162:8010/waterfall
 
-this is a RAID 10,f2 (with 2 far copies)
-so the starting order of blocks is different on all 4 hdd's (and 
-therefore all four md5's are different).
+Thanks, Dave!
 
-> 
-> echo check > /sys/block/md2/md/sync_action
-> 
+These are the relevant warnings:
 
-i did this, and it finished without any failures - all disks are up and 
-sync'ed again. RAID is therefore not a possible problem.
+  lvm.c:135: warning: implicit declaration of function 'completion_matches'
+  lvm.c:135: warning: nested extern declaration of 'completion_matches'
+  lvm.c:135: warning: assignment makes pointer from integer without a cast
+  lvm.c:138: warning: assignment makes pointer from integer without a cast
 
-i must add that the logical volumes are in use and working. i just 
-really do not want to reboot the machine as i suppose they couldn't be 
-brought up again.
+In my recent change, I made the mistake of specifying the
+previously unspecified ACTION_IF_FOUND parameter to AC_CHECK_LIB.
+That overrode the default action (which would prepend -lreadline to LIBS),
+so the subsequent check for rl_completion_matches would fail.
+Then, the work-around C code would redefine it to "completion_matches",
+which would not be declared, resulting in the warnings above.
 
-Any other hints of why sometimes i get "/dev/md2: No label detected" vs.
-  "/dev/md2: lvm2 label detected"?
+The following patch also replaces AC_CHECK_FUNC+AC_DEFINE
+with an equivalent AC_CHECK_FUNCS call.
 
-thanks in advance for any possible hints
-mat
+I confirmed that this works on a RHEL5 system
+with readline-devel not installed.
