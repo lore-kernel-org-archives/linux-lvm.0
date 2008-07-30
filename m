@@ -1,18 +1,26 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m6U4uQUB029193
-	for <linux-lvm@redhat.com>; Wed, 30 Jul 2008 00:56:26 -0400
-Received: from qw-out-2122.google.com (qw-out-2122.google.com [74.125.92.25])
-	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id m6U4uGxo010511
-	for <linux-lvm@redhat.com>; Wed, 30 Jul 2008 00:56:16 -0400
-Received: by qw-out-2122.google.com with SMTP id 3so83653qwe.39
-	for <linux-lvm@redhat.com>; Tue, 29 Jul 2008 21:56:15 -0700 (PDT)
-Message-ID: <769e0ec0807292156k5d01d731n69570ff619add413@mail.gmail.com>
-Date: Tue, 29 Jul 2008 21:56:15 -0700
-From: "Wil Decius" <wilson.decius@gmail.com>
-MIME-Version: 1.0
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m6ULjD4U025593
+	for <linux-lvm@redhat.com>; Wed, 30 Jul 2008 17:45:13 -0400
+Received: from ucsc.edu (massmail.ucsc.edu [128.114.129.84])
+	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id m6ULiwUB000957
+	for <linux-lvm@redhat.com>; Wed, 30 Jul 2008 17:44:58 -0400
+Received: from [128.114.125.120] (HELO ucsc.edu)
+	by massmail.ucsc.edu (CommuniGate Pro SMTP 5.1.7)
+	with ESMTPS id 37478967 for linux-lvm@redhat.com;
+	Wed, 30 Jul 2008 14:44:57 -0700
+Received: from [24.5.124.163] (account ermorris@ucsc.edu HELO [10.0.1.200])
+	by email-prod-fe-1.ucsc.edu (CommuniGate Pro SMTP 5.1.11)
+	with ESMTPSA id 135103613 for linux-lvm@redhat.com;
+	Wed, 30 Jul 2008 14:44:44 -0700
+Message-Id: <D1CA7710-F172-4749-8B4C-2A46C384906A@pmc.ucsc.edu>
+From: Eli Morris <emorris@pmc.ucsc.edu>
+In-Reply-To: <0748F01A-AAE0-4E18-AF1E-8ABDBBCDF2AA@redhat.com>
 Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-Subject: [linux-lvm] Possible to extend a partition "nested" in an LV?
+Mime-Version: 1.0 (Apple Message framework v926)
+Subject: Re: [linux-lvm] Volume group "vgs" not found
+Date: Wed, 30 Jul 2008 14:44:43 -0700
+References: <EDDC9BAC-A82E-4D93-AA6D-BDCA1E0E1714@pmc.ucsc.edu>
+	<0748F01A-AAE0-4E18-AF1E-8ABDBBCDF2AA@redhat.com>
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -23,61 +31,96 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@redhat.com
+Content-Type: text/plain; charset="us-ascii"; format="flowed"; delsp="yes"
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
 Hi,
 
-I'd like to expand the /root partition of a partitioned-OS on an LV.
-Combinations of pv/lv/vg extend,resize, etc as well as resize2fs,
-parted, fdisk have mainly resulted in garbage.
+I finally got a chance to reboot and get back to this problem. Here is  
+a bit from rc.sysinit.
 
-Here's what I'm trying to do:
-
-I've a VolumeGroup, "VG_MAIN" sized @ 50GB.  It's empty/unused, except
-for a 3GB LV,
-
-    /dev/VG_MAIN/test
-
-LV(/dev/VG_MAIN/test) contains a deployable/bootable Xen DomU OS.
-
-LV(/dev/VG_MAIN/test) has two partitions
-
- kpartx -av /dev/VG_MAIN/test
-   add map VG_MAIN-test1 (253:13): 0 192717 linear  /dev/VG_MAIN/test 63
-   add map VG_MAIN-test2 (253:14): 0 6056505 linear /dev/VG_MAIN/test 192780
-
-partition(VG_MAIN-test1) is formatted as
-
-    /boot, ext3, 100MB
-
-partition(VG_MAIN-test2) itself contains a single VolumeGroup, "vg0",
-partitioned into to LV's,
-
-    vgchange -ay vg0
-    lvs | grep vg0
-      LVROOT       vg0     -wi-a-   2.31G
-      LVSWAP       vg0     -wi-a- 512.00M
-
-i.e., the partitioning "looks" like,
-
-    HD
-        VG(VG_MAIN) -> 3G
-            LV(test) -> 100%
-                PART(1) = /boot, ext3 -> 100MB
-                PART(2)               -> *
-                    VG(vg0) -> 100%
-                        LV(LVSWAP) -> 512 MB
-                            PART(1) = swap, swap -> *
-                        LV(LVROOT) -> *
-***->                    PART(1) = /, ext3 -> *    i.e., ~ 2.31 GB
+[root@nimbus etc]# more rc.sysinit | grep lvm
+if [ -x /sbin/lvm.static -o -x /sbin/multipath.static -o -x /sbin/ 
+dmraid ]; then
+     if [ -x /sbin/lvm.static ]; then
+	    action $"Setting up Logical Volume Management:" /sbin/lvm.static  
+vgchange -a y --ignorelockingfailure
+		if [ -x /sbin/lvm.static ]; then
+			action $"Setting up Logical Volume Management:" /sbin/lvm.static  
+vgchange -a y --ignorelockingfailure
+		if [ -x /sbin/lvm.static ]; then
+			action $"Setting up Logical Volume Management:" /sbin/lvm.static  
+vgchange -a y --ignorelockingfailure
 
 
-QUESTION --
+  I think the error happens during boot, because like you said there  
+is some sort of problem with the initialization script. Here is a  
+snippet from the lvm2.log during bootup:
 
- I'd like to EXPAND the Xen DomU image by +9B to 12GB, total, adding
-the add'l 9GB space to the currently 2.31GB last (***->) partition.
+lvmcmdline.c:877   Parsing: /usr/sbin/vgchange --monitor y vgs
+lvmcmdline.c:905 vgchange  Processing: /usr/sbin/vgchange --monitor y  
+vgs
+lvmcmdline.c:908 vgchange  O_DIRECT will be used
+config/config.c:952 vgchange  Setting global/locking_type to 1
+locking/locking.c:222 vgchange  File-based locking selected.
+config/config.c:929 vgchange  Setting global/locking_dir to /var/lock/ 
+lvm
+toollib.c:560 vgchange  Using volume group(s) on command line
+locking/file_locking.c:164 vgchange  Locking /var/lock/lvm/V_vgs WB
+toollib.c:506 vgchange  Finding volume group "vgs"
 
-Can I do that? If so, how?
+Any ideas? Thanks,
 
-Wil
+Eli
+
+
+
+On Jun 19, 2008, at 11:30 AM, Jonathan Brassow wrote:
+
+> if you can activate the volume group once the machine is up, it  
+> sounds like there is a problem in the initrd.  Perhaps the static  
+> binaries there or the lvm config file it contains...
+>
+> You turned on logging... When you see "vgs" not found, is that  
+> during bootup, or after?
+>
+> ('vgs' is an LVM command.  There could be a script somewhere that is  
+> duplicating the string 'vgs' and inadvertently sending it as an  
+> argument...)
+>
+> Might need more information for this one... :(
+>
+> brassow
+>
+> On Jun 12, 2008, at 11:23 AM, Eli Morris wrote:
+>
+>> Dear all,
+>>
+>> 	I'm running Centos 4, as part of a Rocks cluster. I have a 13 TB  
+>> lvm2 volume. At boot up, the volume group doesn't get activated.  
+>> When I run 'vgchange -ay' it activates the volume group without  
+>> error and I can then mount it. I've turned lvm logging on and I  
+>> notice the message 'toollib.c:508 vgchange  Volume group "vgs" not  
+>> found'. I don't think I have a 'vgs' volume group. At least I don't  
+>> find I have one if I use tools like 'vgscan'. The only thing that  
+>> shows up is my 13 TB volume, as it should be. I haven't been able  
+>> to find any information on such an error. I used yum update to make  
+>> sure I had the latest lvm2 packages for my distro. I can't upgrade  
+>> distros, because that would screw other stuff up. Any info on this,  
+>> or recommendations as to how I could track it down?
+>>
+>> Thanks,
+>>
+>> Eli
+>>
+>> _______________________________________________
+>> linux-lvm mailing list
+>> linux-lvm@redhat.com
+>> https://www.redhat.com/mailman/listinfo/linux-lvm
+>> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+>
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@redhat.com
+> https://www.redhat.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
