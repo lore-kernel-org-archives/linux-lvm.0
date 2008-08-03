@@ -1,26 +1,18 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m6ULjD4U025593
-	for <linux-lvm@redhat.com>; Wed, 30 Jul 2008 17:45:13 -0400
-Received: from ucsc.edu (massmail.ucsc.edu [128.114.129.84])
-	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id m6ULiwUB000957
-	for <linux-lvm@redhat.com>; Wed, 30 Jul 2008 17:44:58 -0400
-Received: from [128.114.125.120] (HELO ucsc.edu)
-	by massmail.ucsc.edu (CommuniGate Pro SMTP 5.1.7)
-	with ESMTPS id 37478967 for linux-lvm@redhat.com;
-	Wed, 30 Jul 2008 14:44:57 -0700
-Received: from [24.5.124.163] (account ermorris@ucsc.edu HELO [10.0.1.200])
-	by email-prod-fe-1.ucsc.edu (CommuniGate Pro SMTP 5.1.11)
-	with ESMTPSA id 135103613 for linux-lvm@redhat.com;
-	Wed, 30 Jul 2008 14:44:44 -0700
-Message-Id: <D1CA7710-F172-4749-8B4C-2A46C384906A@pmc.ucsc.edu>
-From: Eli Morris <emorris@pmc.ucsc.edu>
-In-Reply-To: <0748F01A-AAE0-4E18-AF1E-8ABDBBCDF2AA@redhat.com>
-Content-Transfer-Encoding: 7bit
-Mime-Version: 1.0 (Apple Message framework v926)
-Subject: Re: [linux-lvm] Volume group "vgs" not found
-Date: Wed, 30 Jul 2008 14:44:43 -0700
-References: <EDDC9BAC-A82E-4D93-AA6D-BDCA1E0E1714@pmc.ucsc.edu>
-	<0748F01A-AAE0-4E18-AF1E-8ABDBBCDF2AA@redhat.com>
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m73KZO3D021507
+	for <linux-lvm@redhat.com>; Sun, 3 Aug 2008 16:35:24 -0400
+Received: from bay0-omc2-s10.bay0.hotmail.com (bay0-omc2-s10.bay0.hotmail.com
+	[65.54.246.146])
+	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id m73KZ5xq028706
+	for <linux-lvm@redhat.com>; Sun, 3 Aug 2008 16:35:06 -0400
+Message-ID: <BAY121-W18FBE574F2652BF209FED4E5790@phx.gbl>
+Content-Type: multipart/alternative;
+	boundary="_3d009c70-e971-4271-b959-48d1fdc3c383_"
+From: Prometheus Prometheus <prometheus__0@hotmail.com>
+Date: Sun, 3 Aug 2008 20:35:00 +0000
+MIME-Version: 1.0
+Subject: [linux-lvm] create logical volumes over remote file system (like
+	samba)?
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -31,96 +23,69 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"; delsp="yes"
-To: LVM general discussion and development <linux-lvm@redhat.com>
+To: linux-lvm@redhat.com
 
-Hi,
+--_3d009c70-e971-4271-b959-48d1fdc3c383_
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 
-I finally got a chance to reboot and get back to this problem. Here is  
-a bit from rc.sysinit.
+hi list
 
-[root@nimbus etc]# more rc.sysinit | grep lvm
-if [ -x /sbin/lvm.static -o -x /sbin/multipath.static -o -x /sbin/ 
-dmraid ]; then
-     if [ -x /sbin/lvm.static ]; then
-	    action $"Setting up Logical Volume Management:" /sbin/lvm.static  
-vgchange -a y --ignorelockingfailure
-		if [ -x /sbin/lvm.static ]; then
-			action $"Setting up Logical Volume Management:" /sbin/lvm.static  
-vgchange -a y --ignorelockingfailure
-		if [ -x /sbin/lvm.static ]; then
-			action $"Setting up Logical Volume Management:" /sbin/lvm.static  
-vgchange -a y --ignorelockingfailure
+after asking the question on some boards/irc channels i got the hint of usi=
+ng LVM.
+Since=2C after reading some docs=2C im not sure if it solves my needs im as=
+king here.
 
+I try to create some kind of RAID0 using remote storage servers.
+And i think i will use Samba for this.
+So the question is: is it possible to create a RAID0 using LVM over remote =
+Storages?
+I thought of mouting the samba shares on local directories and then create =
+an lvm
+over it and mount it in another directory.
+Is this possible using LVM?
+Or are there any alternatives which can solve this problem?
 
-  I think the error happens during boot, because like you said there  
-is some sort of problem with the initialization script. Here is a  
-snippet from the lvm2.log during bootup:
+thx all
 
-lvmcmdline.c:877   Parsing: /usr/sbin/vgchange --monitor y vgs
-lvmcmdline.c:905 vgchange  Processing: /usr/sbin/vgchange --monitor y  
-vgs
-lvmcmdline.c:908 vgchange  O_DIRECT will be used
-config/config.c:952 vgchange  Setting global/locking_type to 1
-locking/locking.c:222 vgchange  File-based locking selected.
-config/config.c:929 vgchange  Setting global/locking_dir to /var/lock/ 
-lvm
-toollib.c:560 vgchange  Using volume group(s) on command line
-locking/file_locking.c:164 vgchange  Locking /var/lock/lvm/V_vgs WB
-toollib.c:506 vgchange  Finding volume group "vgs"
+_________________________________________________________________
+Invite your mail contacts to join your friends list with Windows Live Space=
+s. It's easy!
+http://spaces.live.com/spacesapi.aspx?wx_action=3Dcreate&wx_url=3D/friends.=
+aspx&mkt=3Den-us=
 
-Any ideas? Thanks,
+--_3d009c70-e971-4271-b959-48d1fdc3c383_
+Content-Type: text/html; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 
-Eli
+<html>
+<head>
+<style>
+.hmmessage P
+{
+margin:0px=3B
+padding:0px
+}
+body.hmmessage
+{
+FONT-SIZE: 10pt=3B
+FONT-FAMILY:Tahoma
+}
+</style>
+</head>
+<body class=3D'hmmessage'><div style=3D"text-align: left=3B">hi list<br><br=
+>after asking the question on some boards/irc channels i got the hint of us=
+ing LVM.<br>Since=2C after reading some docs=2C im not sure if it solves my=
+ needs im asking here.<br><br>I try to create some kind of RAID0 using remo=
+te storage servers.<br>And i think i will use Samba for this.<br>So the que=
+stion is: is it possible to create a RAID0 using LVM over remote Storages?<=
+br>I thought of mouting the samba shares on local directories and then crea=
+te an lvm<br>over it and mount it in another directory.<br>Is this possible=
+ using LVM?<br>Or are there any alternatives which can solve this problem?<=
+br><br>thx all<br></div><br /><hr />Invite your mail contacts to join your =
+friends list with Windows Live Spaces. It's easy! <a href=3D'http://spaces.=
+live.com/spacesapi.aspx?wx_action=3Dcreate&wx_url=3D/friends.aspx&mkt=3Den-=
+us' target=3D'_new'>Try it!</a></body>
+</html>=
 
-
-
-On Jun 19, 2008, at 11:30 AM, Jonathan Brassow wrote:
-
-> if you can activate the volume group once the machine is up, it  
-> sounds like there is a problem in the initrd.  Perhaps the static  
-> binaries there or the lvm config file it contains...
->
-> You turned on logging... When you see "vgs" not found, is that  
-> during bootup, or after?
->
-> ('vgs' is an LVM command.  There could be a script somewhere that is  
-> duplicating the string 'vgs' and inadvertently sending it as an  
-> argument...)
->
-> Might need more information for this one... :(
->
-> brassow
->
-> On Jun 12, 2008, at 11:23 AM, Eli Morris wrote:
->
->> Dear all,
->>
->> 	I'm running Centos 4, as part of a Rocks cluster. I have a 13 TB  
->> lvm2 volume. At boot up, the volume group doesn't get activated.  
->> When I run 'vgchange -ay' it activates the volume group without  
->> error and I can then mount it. I've turned lvm logging on and I  
->> notice the message 'toollib.c:508 vgchange  Volume group "vgs" not  
->> found'. I don't think I have a 'vgs' volume group. At least I don't  
->> find I have one if I use tools like 'vgscan'. The only thing that  
->> shows up is my 13 TB volume, as it should be. I haven't been able  
->> to find any information on such an error. I used yum update to make  
->> sure I had the latest lvm2 packages for my distro. I can't upgrade  
->> distros, because that would screw other stuff up. Any info on this,  
->> or recommendations as to how I could track it down?
->>
->> Thanks,
->>
->> Eli
->>
->> _______________________________________________
->> linux-lvm mailing list
->> linux-lvm@redhat.com
->> https://www.redhat.com/mailman/listinfo/linux-lvm
->> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
->
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+--_3d009c70-e971-4271-b959-48d1fdc3c383_--
