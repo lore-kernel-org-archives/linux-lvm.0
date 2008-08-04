@@ -1,19 +1,19 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m73NwL7s022771
-	for <linux-lvm@redhat.com>; Sun, 3 Aug 2008 19:58:21 -0400
-Received: from an-out-0708.google.com (an-out-0708.google.com [209.85.132.248])
-	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id m73NwCjo007266
-	for <linux-lvm@redhat.com>; Sun, 3 Aug 2008 19:58:12 -0400
-Received: by an-out-0708.google.com with SMTP id d31so351965and.124
-	for <linux-lvm@redhat.com>; Sun, 03 Aug 2008 16:58:12 -0700 (PDT)
-Message-ID: <f4f537b50808031658h61d5c295xe93b1ffab3b9a15e@mail.gmail.com>
-Date: Sun, 3 Aug 2008 18:58:11 -0500
-From: "Eugene Vilensky" <evilensky@gmail.com>
-Subject: Re: [linux-lvm] create logical volumes over remote file system (like
-	samba)?
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m742BJJb000587
+	for <linux-lvm@redhat.com>; Sun, 3 Aug 2008 22:11:19 -0400
+Received: from smtp.lippi.fr (smtp.lippi.fr [213.223.112.35])
+	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id m742B8PT023969
+	for <linux-lvm@redhat.com>; Sun, 3 Aug 2008 22:11:09 -0400
+Received: from inetgw (inetgw [127.0.0.1])
+	by smtp.lippi.fr (smtp) with ESMTP id F3BF6C0BE20B
+	for <linux-lvm@redhat.com>; Mon,  4 Aug 2008 04:11:00 +0200 (CEST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
+Message-ID: <OF1560E5FB.6C5FE131-ONC125749B.000C00C0-C125749B.000C00C3@LocalDomain>
+Date: Mon, 4 Aug 2008 04:11:06 +0200
+From: "Antony MARTINEAU" <Antony.MARTINEAU@lippi.fr>
+Content-Transfer-Encoding: 8bit
+Subject: [linux-lvm] AUTO : Antony MARTINEAU est absent(e) (renvoi de Lun
+	25/08/2008)
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -24,73 +24,24 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="utf-8"
+To: linux-lvm@redhat.com
 
-If you can dedicate a link using iSCSI may be an option, but if by
-"remote" you mean over the general internet, it may be an interesting
-toy but the latencies will quickly be untenable for any production
-use.
 
-What are the original poster's requirements that NFS cannot meet? If
-you raid0 a slow disk and a fast disk, you end up with a (nostly) slow
-disk, so why even entertain the thought?
+Je suis absent entre Sam 02/08/2008 et Lun 25/08/2008.
 
-- Original message -
-Hi, I think this is not possible with Samba as Samba will provide a NAS...
+D�sol�, Je suis absent jusqu'au 25 Aout 2008
+Merci de me recontacter � partir de cette date
 
 
 
-On 8/3/08, Zurell, Falko <Falko.Zurell@idmedia.com> wrote:
-> Hi,
->
-> I think this is not possible with Samba as Samba will provide a NAS storage
-> (space with filesystem etc.). For LVM you would need raw devices. So maybe
-> iSCSI would be an idea.
->
->
->
->
->
-> ________________________________
->
-> Von: linux-lvm-bounces@redhat.com
-> An: linux-lvm@redhat.com
-> Gesendet: Sun Aug 03 22:35:00 2008
-> Betreff: [linux-lvm] create logical volumes over remote file system
-> (likesamba)?
->
->
-> hi list
->
-> after asking the question on some boards/irc channels i got the hint of
-> using LVM.
-> Since, after reading some docs, im not sure if it solves my needs im asking
-> here.
->
-> I try to create some kind of RAID0 using remote storage servers.
-> And i think i will use Samba for this.
-> So the question is: is it possible to create a RAID0 using LVM over remote
-> Storages?
-> I thought of mouting the samba shares on local directories and then create
-> an lvm
-> over it and mount it in another directory.
-> Is this possible using LVM?
-> Or are there any alternatives which can solve this problem?
->
-> thx all
->
->
-> ________________________________
->
-> Invite your mail contacts to join your friends list with Windows Live
-> Spaces. It's easy! Try it!
-> <http://spaces.live.com/spacesapi.aspx?wx_action=create&wx_url=/friends.aspx&mkt=en-us>
->
->
+Remarque�: ceci est une r�ponse automatique � votre message  "linux-lvm
+Digest, Vol 54, Issue 1" envoy� le 03/08/2008 23:23:56.
 
--- 
-Sent from Gmail for mobile | mobile.google.com
+C'est la seule notification que vous recevrez pendant l'absence de cette
+personne.
 
-Eugene Vilensky
-evilensky@gmail.com
+
+
+Ce message et toutes les pieces jointes sont etablis a l'attention exclusive de ses destinataires et sont strictement confidentiels.  Pour en savoir plus cliquer ici 
+This message and any attachments are confidential to the ordinary user of the e-mail address to which it was addressed and may also be privileged.  More information   
