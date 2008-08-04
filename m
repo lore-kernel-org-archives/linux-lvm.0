@@ -1,18 +1,35 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m74EaL0R029239
-	for <linux-lvm@redhat.com>; Mon, 4 Aug 2008 10:36:21 -0400
-Received: from fk-out-0910.google.com (fk-out-0910.google.com [209.85.128.185])
-	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id m74Ea1GT018627
-	for <linux-lvm@redhat.com>; Mon, 4 Aug 2008 10:36:08 -0400
-Received: by fk-out-0910.google.com with SMTP id e30so2304297fke.3
-	for <linux-lvm@redhat.com>; Mon, 04 Aug 2008 07:35:55 -0700 (PDT)
-Message-ID: <a847b5a10808040735n59431d13h6a9ae8c91326e143@mail.gmail.com>
-Date: Tue, 5 Aug 2008 00:35:55 +1000
-From: "Jason Lee" <huajie.lee@gmail.com>
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m74HL9uH016912
+	for <linux-lvm@redhat.com>; Mon, 4 Aug 2008 13:21:09 -0400
+Received: from e32.co.us.ibm.com (e32.co.us.ibm.com [32.97.110.150])
+	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id m74HKGQ7005077
+	for <linux-lvm@redhat.com>; Mon, 4 Aug 2008 13:20:32 -0400
+Received: from d03relay03.boulder.ibm.com (d03relay03.boulder.ibm.com
+	[9.17.195.228])
+	by e32.co.us.ibm.com (8.13.8/8.13.8) with ESMTP id m74HDq4p020018
+	for <linux-lvm@redhat.com>; Mon, 4 Aug 2008 13:13:52 -0400
+Received: from d03av01.boulder.ibm.com (d03av01.boulder.ibm.com [9.17.195.167])
+	by d03relay03.boulder.ibm.com (8.13.8/8.13.8/NCO v9.0) with ESMTP id
+	m74HK1on124778
+	for <linux-lvm@redhat.com>; Mon, 4 Aug 2008 11:20:02 -0600
+Received: from d03av01.boulder.ibm.com (loopback [127.0.0.1])
+	by d03av01.boulder.ibm.com (8.12.11.20060308/8.13.3) with ESMTP id
+	m74HK0WJ014072
+	for <linux-lvm@redhat.com>; Mon, 4 Aug 2008 11:20:00 -0600
+Received: from malahal.beaverton.ibm.com (malahal.beaverton.ibm.com
+	[9.47.17.130])
+	by d03av01.boulder.ibm.com (8.12.11.20060308/8.12.11) with ESMTP id
+	m74HK0BU012369
+	for <linux-lvm@redhat.com>; Mon, 4 Aug 2008 11:20:00 -0600
+Date: Mon, 4 Aug 2008 10:19:45 -0700
+From: malahal@us.ibm.com
+Subject: Re: [linux-lvm] create logical volumes over remote file system
+	(likesamba)?
+Message-ID: <20080804171945.GA16635@us.ibm.com>
+References: <1A2D7011B6705B449F66B36B232097C07A7740@x1.ads.i-dmedia.com>
 MIME-Version: 1.0
-Content-Type: multipart/alternative; 
-	boundary="----=_Part_9692_12989845.1217860555533"
-Subject: [linux-lvm] Problem in LVM settings in VMware
+Content-Disposition: inline
+In-Reply-To: <1A2D7011B6705B449F66B36B232097C07A7740@x1.ads.i-dmedia.com>
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -23,46 +40,15 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@redhat.com
 
-------=_Part_9692_12989845.1217860555533
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
+Zurell, Falko [Falko.Zurell@idmedia.com] wrote:
+>    Hi,
+> 
+>    I think this is not possible with Samba as Samba will provide a NAS
+>    storage (space with filesystem etc.). For LVM you would need raw devices.
+>    So maybe iSCSI would be an idea.
 
-Hi,
-
-I am quite new to VMware and recently installed a VM of Fedora in my Host OS
-Win XP. In this VM, I have couple of VMDK files which comes together as
-parts of vmdk file. Each vmdk file is about 2-3GB size and I have 4 of them
-totalling to 8-12GB. However, currently, I am facing shortage of space.
-
-What I did was freeing up some space from my Host OS and in the VM, I can
-see this "unallocated space" partition. So, I have no idea how to proceed
-with these unallocated space partition. Ultimate goal is to absorb this
-unallocated partition as similar LVM so these current LVM can expand beyond
-the existing size.
-
-I am currently using VM server 1.0.5 Build and LVM2. I tried to find several
-articles from the net but that didnt help due to my specific problem.
-I tried Pvdisplay and only able to see one VG even though it has various
-parts of vmdk. Besides, Im not sure whether issuing Pvcreate for this newly
-created partition would help.
-
-Anyone could please advise me.
-
-Thanks alot.
-
-Rgrds,
-
-------=_Part_9692_12989845.1217860555533
-Content-Type: text/html; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-<div dir="ltr">Hi,<br><br>I am quite new to VMware and recently installed a VM of Fedora in my Host OS Win XP. In this VM, I have couple of VMDK files which comes together as parts of vmdk file. Each vmdk file is about 2-3GB size and I have 4 of them totalling to 8-12GB. However, currently, I am facing shortage of space. <br>
-<br>What I did was freeing up some space from my Host OS and in the VM, I can see this &quot;unallocated space&quot; partition. So, I have no idea how to proceed with these unallocated space partition. Ultimate goal is to absorb this unallocated partition as similar LVM so these current LVM can expand beyond the existing size. <br>
-<br>I am currently using VM server 1.0.5 Build and LVM2. I tried to find several articles from the net but that didnt help due to my specific problem.<br>I tried Pvdisplay and only able to see one VG even though it has various parts of vmdk. Besides, Im not sure whether issuing Pvcreate for this newly created partition would help.<br>
-<br>Anyone could please advise me. <br><br>Thanks alot.<br><br>Rgrds,<br></div>
-
-------=_Part_9692_12989845.1217860555533--
+Can you create a loop device on a file, and then use LVM?
