@@ -1,21 +1,26 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m75HctWR008735
-	for <linux-lvm@redhat.com>; Tue, 5 Aug 2008 13:39:00 -0400
-Received: from mk-outboundfilter-1.mail.uk.tiscali.com
-	(mk-outboundfilter-1.mail.uk.tiscali.com [212.74.114.37])
-	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id m75Hc1eI016152
-	for <linux-lvm@redhat.com>; Tue, 5 Aug 2008 13:38:23 -0400
-Received: from [192.168.100.54] (daisy.localdomain [192.168.100.54])
-	by katy.localdomain (Postfix) with ESMTP id E60D680054
-	for <linux-lvm@redhat.com>; Tue,  5 Aug 2008 18:36:59 +0100 (BST)
-Message-ID: <48988FD2.5050401@ianburnett.com>
-Date: Tue, 05 Aug 2008 18:37:22 +0100
-From: Ian Burnett <maillist-lvm@ianburnett.com>
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m766d83A012756
+	for <linux-lvm@redhat.com>; Wed, 6 Aug 2008 02:39:08 -0400
+Received: from smtp-msa-out01.orange.fr (smtp-msa-out01.orange.fr
+	[193.252.23.120])
+	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id m766cufk026650
+	for <linux-lvm@redhat.com>; Wed, 6 Aug 2008 02:38:56 -0400
+Received: from me-wanadoo.net (localhost [127.0.0.1])
+	by mwinf2352.orange.fr (SMTP Server) with ESMTP id C885B7000083
+	for <linux-lvm@redhat.com>; Wed,  6 Aug 2008 08:38:50 +0200 (CEST)
+Received: from [172.20.20.150] (LPuteaux-151-41-11-129.w217-128.abo.wanadoo.fr
+	[217.128.26.129])
+	by mwinf2352.orange.fr (SMTP Server) with ESMTP id 8CC277000088
+	for <linux-lvm@redhat.com>; Wed,  6 Aug 2008 08:38:50 +0200 (CEST)
+Message-ID: <489946F6.60706@squirk.org>
+Date: Wed, 06 Aug 2008 08:38:46 +0200
+From: Jean Spirat <jeanspirat@squirk.org>
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] Problem in LVM settings in VMware
-References: <a847b5a10808040735n59431d13h6a9ae8c91326e143@mail.gmail.com>
-In-Reply-To: <a847b5a10808040735n59431d13h6a9ae8c91326e143@mail.gmail.com>
-Content-Transfer-Encoding: 7bit
+Subject: Re: [linux-lvm] the lvm shared storage question of the week
+References: <48985774.2080509@squirk.org>
+	<54CA3782-8BC9-4F64-B209-2066B2315E77@redhat.com>
+In-Reply-To: <54CA3782-8BC9-4F64-B209-2066B2315E77@redhat.com>
+Content-Transfer-Encoding: quoted-printable
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -26,61 +31,50 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
+Content-Type: text/plain; charset="iso-8859-1"; format="flowed"
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-Jason Lee wrote:
-> Hi,
+Jonathan Brassow a =EF=BF=BDcrit :
+> Our testing group has machines that use AOE.  It works well with=20
+> CLVM.  However, they use their machines as a cluster.  It seems to me=20
+> that you want to carve up your storage, but you only want one machine=20
+> to use each piece.
 >
-> I am quite new to VMware and recently installed a VM of Fedora in my 
-> Host OS Win XP. In this VM, I have couple of VMDK files which comes 
-> together as parts of vmdk file. Each vmdk file is about 2-3GB size and 
-> I have 4 of them totalling to 8-12GB. However, currently, I am facing 
-> shortage of space.
+yes each server will mount a part of the filesystem and not the same=20
+part on each. This mean a single lvm logical volume will be mounted only=20
+on one host.
+
+> LVM manual briefly mentions CLVM (should apply equally well to debian):
+> http://www.redhat.com/docs/manuals/enterprise/RHEL-5-manual/Cluster_Logic=
+al_Volume_Manager/index.html=20
 >
-> What I did was freeing up some space from my Host OS and in the VM, I 
-> can see this "unallocated space" partition. So, I have no idea how to 
-> proceed with these unallocated space partition. Ultimate goal is to 
-> absorb this unallocated partition as similar LVM so these current LVM 
-> can expand beyond the existing size.
-The VMware image appears to the guest OS as a whole machine complete 
-with what look like standard disks. In the case of a Linux guest OS, any 
-allocated disk space will appear as /dev/sd? devices, which will require 
-partitioning, marking these partitions as type "Linux LVM" and then 
-initialising with pvcreate. In this respect there's nothing special 
-about your setup and any of the on-line LVM guides should work in this 
-case.
+yes it just speak about it but there is no doc at all, nothing tells us=20
+if it listen on a tcp port or just communicate by using data on the disk=20
+or anything about the setup. Also it speak about special configuration=20
+in lvm.conf but nowhere i see WHAT should be configured :)
 
-If your host OS is reporting unallocated space, then you need to make 
-that space available to WinXP first, then VMware, then add it to the 
-Linux guest image as an extra or larger drive. How you do that is a 
-question for a WinXP or VMware newsgroup.
+i guess with:
 
-Try to separate in your mind the difference between the Linux guest OS 
-and the Windows host OS and the disks that they are viewing. The Windows 
-host OS sees the real physical drives spinning in your system (assuming 
-no RAID controller stuff, etc.) The Linux guest OS simply knows about 
-what VMware has told it about. The data stored by the Linux image just 
-happens to be stored in a bunch of vmdk files in the WinXP filesystem.
+locking_type What type of locking to use. 1 is the default, which use=20
+flocks on files in locking_dir (see below) to avoid conflicting LVM2=20
+commands running concurrently on a single machine. 0 disables locking=20
+and risks corrupting your metadata. If set to 2, the tools will load the=20
+external locking_library (see below). If the tools were configured=20
+--with-cluster=3Dinternal (the default) then 3 means to use built-in=20
+cluster-wide locking. All changes to logical volumes and their states=20
+are communicated using locks.
 
-The ultimate goal should certainly be achievable - just a question of 
-working out who knows about this "unallocated space".
-> I am currently using VM server 1.0.5 Build and LVM2. I tried to find 
-> several articles from the net but that didnt help due to my specific 
-> problem.
-> I tried Pvdisplay and only able to see one VG even though it has 
-> various parts of vmdk. Besides, Im not sure whether issuing Pvcreate 
-> for this newly created partition would help.
-Have you tried pvcreate? What happened? I know Microsoft VirtualPC has a 
-feature known as "scratch disks", which allows you to decide on VM 
-shutdown whether to commit the changes made to the image or rollback to 
-the last time the VM started. In effect you can completly trash the 
-system, then quickly restore it to a known working state.
+that it should use
 
-What disk devices does your Fedora system show? (fdisk -l) What physical 
-volumes have you already created? (pvscan and pvdisplay).
+locking_type=3D2
 
-Ian
 
--- 
-Ian Burnett :: www.ianburnett.com
+but is this enough ?
+>
+> You will want to come up to speed on the cluster infrastructure (at=20
+> least the setup) if you want to use CLVM....
+>
+sorry i am not native english speaker, what do you mean by that ?
+
+regards,
+Jean.
