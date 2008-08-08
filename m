@@ -1,27 +1,18 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m77Kk0Td001601
-	for <linux-lvm@redhat.com>; Thu, 7 Aug 2008 16:46:00 -0400
-Received: from mule.trantor.org.uk (mule.trantor.org.uk [213.146.154.198])
-	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id m77KjlbX011219
-	for <linux-lvm@redhat.com>; Thu, 7 Aug 2008 16:45:47 -0400
-Received: from lion.trantor.org.uk (cpc1-leds8-0-0-cust743.leed.cable.ntl.com
-	[82.30.178.232])
-	by mule.trantor.org.uk (Postfix) with ESMTP id 096401F1D6
-	for <linux-lvm@redhat.com>; Thu,  7 Aug 2008 21:45:47 +0100 (BST)
-Received: from [192.168.87.26] (unknown [192.168.87.26])
-	by lion.trantor.org.uk (Postfix) with ESMTP id 008F7C0048
-	for <linux-lvm@redhat.com>; Thu,  7 Aug 2008 22:02:15 +0100 (BST)
-Subject: Re: [linux-lvm] metadata too large for circular buffer - any way
-	to increase PV metadatasize?
-From: John Leach <john@johnleach.co.uk>
-In-Reply-To: <20080807195241.GU7257@agk.fab.redhat.com>
-References: <1218132476.4013.10.camel@dogen.thepride.>
-	<20080807194151.GT7257@agk.fab.redhat.com>
-	<20080807195241.GU7257@agk.fab.redhat.com>
-Date: Thu, 07 Aug 2008 21:45:46 +0100
-Message-Id: <1218141946.4013.29.camel@dogen.thepride.>
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m78153C7003189
+	for <linux-lvm@redhat.com>; Thu, 7 Aug 2008 21:05:03 -0400
+Received: from an-out-0708.google.com (an-out-0708.google.com [209.85.132.251])
+	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id m7814rxr021573
+	for <linux-lvm@redhat.com>; Thu, 7 Aug 2008 21:04:53 -0400
+Received: by an-out-0708.google.com with SMTP id d31so142963and.124
+	for <linux-lvm@redhat.com>; Thu, 07 Aug 2008 18:04:53 -0700 (PDT)
+Message-ID: <f9d530070808071804s36f55963y504cdf0ccd73f00b@mail.gmail.com>
+Date: Thu, 7 Aug 2008 18:04:52 -0700
+From: unlisted <unlisted@gmail.com>
+MIME-Version: 1.0
+Content-Type: multipart/alternative; 
+	boundary="----=_Part_9978_26419578.1218157492962"
+Subject: [linux-lvm] tps for block device vs lvm device
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -32,31 +23,45 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: LVM general discussion and development <linux-lvm@redhat.com>
+To: linux-lvm@redhat.com
 
-On Thu, 2008-08-07 at 20:52 +0100, Alasdair G Kergon wrote:
-> And if you have problems making space in the metadata to add the PV to it,
-> a workaround is to temporarily use in-filesystem metadata:
-> 
->   create a metadata dir in a local filesystem (NOT an LV), and place an up-to-date
->   backup copy of the metadata there (from vgcfgbackup)
-> 
->   update lvm.conf to start using this metadata (metadata/dirs)
->   - use verbose display options to check it's doing this
-> 
->   pvcreate as in my last message to remove the too-small metadata area
->   - you're now relying entirely on the in-filesystem metadata
-> 
->   add the new PVs to the VG as before
-> 
->   revert the lvm.conf change
+------=_Part_9978_26419578.1218157492962
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
 
-Will this work with clustered LVM?  If so, I take it all nodes will have
-to be configured to use in-filesystem metadata?
+Why would I see 50x the amount of transactions on the lvm volume vs the
+actual underlying block device ?
 
-Thanks,
+avg-cpu:  %user   %nice %system %iowait  %steal   %idle
+           0.00    0.00   11.41   57.07    0.00   31.51
+Device:            tps    MB_read/s    MB_wrtn/s    MB_read    MB_wrtn
+sda             211.33         0.00        56.12          0        113
+sdb             268.47        63.05         0.00        128          0
+dm-0          14365.52         0.00        56.11          0        113
+dm-1              0.00         0.00         0.00          0          0
+sdc               0.00         0.00         0.00          0          0
+211 tps versus 14365 tps.  The box is idle and the following command was
+running:
 
-John.
--- 
-http://johnleach.co.uk
+dd if=/dev/sdb of=/home/xxxxxxx/bigrandomfile.txt bs=4k count=10000000
+
+Sam
+
+------=_Part_9978_26419578.1218157492962
+Content-Type: text/html; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+<div dir="ltr"><div>Why would I see 50x the amount of transactions on the lvm volume vs the actual underlying block device ?</div>
+<div>&nbsp;</div>
+<div>avg-cpu:&nbsp; %user&nbsp;&nbsp; %nice %system %iowait&nbsp; %steal&nbsp;&nbsp; %idle<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0.00&nbsp;&nbsp;&nbsp; 0.00&nbsp;&nbsp; 11.41&nbsp;&nbsp; 57.07&nbsp;&nbsp;&nbsp; 0.00&nbsp;&nbsp; 31.51</div>
+<div>Device:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; tps&nbsp;&nbsp;&nbsp; MB_read/s&nbsp;&nbsp;&nbsp; MB_wrtn/s&nbsp;&nbsp;&nbsp; MB_read&nbsp;&nbsp;&nbsp; MB_wrtn<br>sda&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 211.33&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0.00&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 56.12&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 113<br>sdb&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 268.47&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 63.05&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0.00&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 128&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0<br>
+dm-0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 14365.52&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0.00&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 56.11&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 113<br>dm-1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0.00&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0.00&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0.00&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0<br>sdc&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0.00&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0.00&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0.00&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0<br>
+</div>
+<div>211 tps versus 14365 tps.&nbsp; The box is idle&nbsp;and the following command was running:</div>
+<div>&nbsp;</div>
+<div>dd if=/dev/sdb of=/home/xxxxxxx/bigrandomfile.txt bs=4k count=10000000</div>
+<div><br>Sam</div></div>
+
+------=_Part_9978_26419578.1218157492962--
