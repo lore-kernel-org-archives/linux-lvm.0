@@ -1,18 +1,26 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m78153C7003189
-	for <linux-lvm@redhat.com>; Thu, 7 Aug 2008 21:05:03 -0400
-Received: from an-out-0708.google.com (an-out-0708.google.com [209.85.132.251])
-	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id m7814rxr021573
-	for <linux-lvm@redhat.com>; Thu, 7 Aug 2008 21:04:53 -0400
-Received: by an-out-0708.google.com with SMTP id d31so142963and.124
-	for <linux-lvm@redhat.com>; Thu, 07 Aug 2008 18:04:53 -0700 (PDT)
-Message-ID: <f9d530070808071804s36f55963y504cdf0ccd73f00b@mail.gmail.com>
-Date: Thu, 7 Aug 2008 18:04:52 -0700
-From: unlisted <unlisted@gmail.com>
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m788dqhe018757
+	for <linux-lvm@redhat.com>; Fri, 8 Aug 2008 04:39:52 -0400
+Received: from smtp-msa-out01.orange.fr (smtp-msa-out01.orange.fr
+	[193.252.23.120])
+	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id m788deU3029589
+	for <linux-lvm@redhat.com>; Fri, 8 Aug 2008 04:39:40 -0400
+Received: from me-wanadoo.net (localhost [127.0.0.1])
+	by mwinf2353.orange.fr (SMTP Server) with ESMTP id 097AB700008A
+	for <linux-lvm@redhat.com>; Fri,  8 Aug 2008 10:39:35 +0200 (CEST)
+Received: from [172.20.20.150] (LPuteaux-151-41-11-129.w217-128.abo.wanadoo.fr
+	[217.128.26.129])
+	by mwinf2353.orange.fr (SMTP Server) with ESMTP id D37C17000089
+	for <linux-lvm@redhat.com>; Fri,  8 Aug 2008 10:39:34 +0200 (CEST)
+Message-ID: <489C0647.9070101@squirk.org>
+Date: Fri, 08 Aug 2008 10:39:35 +0200
+From: Jean Spirat <jeanspirat@squirk.org>
 MIME-Version: 1.0
-Content-Type: multipart/alternative; 
-	boundary="----=_Part_9978_26419578.1218157492962"
-Subject: [linux-lvm] tps for block device vs lvm device
+Subject: Re: [linux-lvm] the lvm shared storage question of the week
+References: <48985774.2080509@squirk.org>	<54CA3782-8BC9-4F64-B209-2066B2315E77@redhat.com>	<489946F6.60706@squirk.org>
+	<1218133329.4013.20.camel@dogen.thepride.>
+In-Reply-To: <1218133329.4013.20.camel@dogen.thepride.>
+Content-Transfer-Encoding: 7bit
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -23,45 +31,40 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: linux-lvm@redhat.com
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-------=_Part_9978_26419578.1218157492962
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
 
-Why would I see 50x the amount of transactions on the lvm volume vs the
-actual underlying block device ?
+> CLVM needs a distributed lock manager to work (which communicates over
+> the network, not via the disk).  This is usually provided with the help
+> of the RedHat Cluster Suite.
+>   
 
-avg-cpu:  %user   %nice %system %iowait  %steal   %idle
-           0.00    0.00   11.41   57.07    0.00   31.51
-Device:            tps    MB_read/s    MB_wrtn/s    MB_read    MB_wrtn
-sda             211.33         0.00        56.12          0        113
-sdb             268.47        63.05         0.00        128          0
-dm-0          14365.52         0.00        56.11          0        113
-dm-1              0.00         0.00         0.00          0          0
-sdc               0.00         0.00         0.00          0          0
-211 tps versus 14365 tps.  The box is idle and the following command was
-running:
+locking on the disk seems easier to setup than network port firewall 
+rules and so on but if it was not done i assume there was a good reason 
+for it that my poor brain cannot see :)  if each node is gived a unique 
+key then you could use on disk  locking with a special lock metadata and 
+a timestamps for reloading configuration for the other node. Of course 
+it seems too easy to have not been thinked about so there must be a 
+major flaw in my thinking :)
 
-dd if=/dev/sdb of=/home/xxxxxxx/bigrandomfile.txt bs=4k count=10000000
 
-Sam
 
-------=_Part_9978_26419578.1218157492962
-Content-Type: text/html; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
+> by default, locking type 2 or 3 requires clvmd, which as I say will
+> require a cluster setup of some kind.
+>
+> You *can* work without a cluster manager but I'm not sure how advised it
+> is.  So you leave your locking type as 1 and use "lvchange
+> --refresh /dev/vg/*" on all nodes to reload metadata from disk whenever
+> you make a change.  Can be a bit risky.
+>
+> John.
+>   
+strange that this use case has not handled in an safer/easier way :)
 
-<div dir="ltr"><div>Why would I see 50x the amount of transactions on the lvm volume vs the actual underlying block device ?</div>
-<div>&nbsp;</div>
-<div>avg-cpu:&nbsp; %user&nbsp;&nbsp; %nice %system %iowait&nbsp; %steal&nbsp;&nbsp; %idle<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0.00&nbsp;&nbsp;&nbsp; 0.00&nbsp;&nbsp; 11.41&nbsp;&nbsp; 57.07&nbsp;&nbsp;&nbsp; 0.00&nbsp;&nbsp; 31.51</div>
-<div>Device:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; tps&nbsp;&nbsp;&nbsp; MB_read/s&nbsp;&nbsp;&nbsp; MB_wrtn/s&nbsp;&nbsp;&nbsp; MB_read&nbsp;&nbsp;&nbsp; MB_wrtn<br>sda&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 211.33&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0.00&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 56.12&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 113<br>sdb&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 268.47&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 63.05&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0.00&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 128&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0<br>
-dm-0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 14365.52&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0.00&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 56.11&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 113<br>dm-1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0.00&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0.00&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0.00&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0<br>sdc&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0.00&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0.00&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0.00&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0<br>
-</div>
-<div>211 tps versus 14365 tps.&nbsp; The box is idle&nbsp;and the following command was running:</div>
-<div>&nbsp;</div>
-<div>dd if=/dev/sdb of=/home/xxxxxxx/bigrandomfile.txt bs=4k count=10000000</div>
-<div><br>Sam</div></div>
 
-------=_Part_9978_26419578.1218157492962--
+if each lvm partition is mounted on only one box where does the risk 
+lies in your opinion ?
+
+regards,
+Jean.
