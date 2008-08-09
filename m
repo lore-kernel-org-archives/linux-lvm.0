@@ -1,34 +1,18 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m78GTuMu009565
-	for <linux-lvm@redhat.com>; Fri, 8 Aug 2008 12:29:56 -0400
-Received: from e34.co.us.ibm.com (e34.co.us.ibm.com [32.97.110.152])
-	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id m78GTda2020918
-	for <linux-lvm@redhat.com>; Fri, 8 Aug 2008 12:29:39 -0400
-Received: from d03relay04.boulder.ibm.com (d03relay04.boulder.ibm.com
-	[9.17.195.106])
-	by e34.co.us.ibm.com (8.13.8/8.13.8) with ESMTP id m78GTYep016023
-	for <linux-lvm@redhat.com>; Fri, 8 Aug 2008 12:29:34 -0400
-Received: from d03av01.boulder.ibm.com (d03av01.boulder.ibm.com [9.17.195.167])
-	by d03relay04.boulder.ibm.com (8.13.8/8.13.8/NCO v9.0) with ESMTP id
-	m78GTXfY178370
-	for <linux-lvm@redhat.com>; Fri, 8 Aug 2008 10:29:33 -0600
-Received: from d03av01.boulder.ibm.com (loopback [127.0.0.1])
-	by d03av01.boulder.ibm.com (8.12.11.20060308/8.13.3) with ESMTP id
-	m78GTXuq008781
-	for <linux-lvm@redhat.com>; Fri, 8 Aug 2008 10:29:33 -0600
-Received: from malahal.beaverton.ibm.com (malahal.beaverton.ibm.com
-	[9.47.17.130])
-	by d03av01.boulder.ibm.com (8.12.11.20060308/8.12.11) with ESMTP id
-	m78GTX4S008746
-	for <linux-lvm@redhat.com>; Fri, 8 Aug 2008 10:29:33 -0600
-Date: Fri, 8 Aug 2008 09:29:32 -0700
-From: malahal@us.ibm.com
-Subject: Re: [linux-lvm] tps for block device vs lvm device
-Message-ID: <20080808162932.GA12253@us.ibm.com>
-References: <f9d530070808071804s36f55963y504cdf0ccd73f00b@mail.gmail.com>
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m79HAC2g018147
+	for <linux-lvm@redhat.com>; Sat, 9 Aug 2008 13:10:12 -0400
+Received: from py-out-1112.google.com (py-out-1112.google.com [64.233.166.182])
+	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id m79HA28R022432
+	for <linux-lvm@redhat.com.>; Sat, 9 Aug 2008 13:10:02 -0400
+Received: by py-out-1112.google.com with SMTP id a29so752006pyi.0
+	for <linux-lvm@redhat.com.>; Sat, 09 Aug 2008 10:10:02 -0700 (PDT)
+Message-ID: <4e9ec2930808091010y2bfbd341p6e04411c01138a40@mail.gmail.com>
+Date: Sat, 9 Aug 2008 12:10:01 -0500
+From: Puttitintheovenn <puttitintheovenn@gmail.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <f9d530070808071804s36f55963y504cdf0ccd73f00b@mail.gmail.com>
+Content-Type: multipart/alternative; 
+	boundary="----=_Part_1088_24071958.1218301801987"
+Subject: [linux-lvm] Ran pvemove Before vgreduce, need help recovering
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -39,37 +23,31 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@redhat.com
 
-I believe, that is due to bio vs request. LVM/DM block devices receive
-and use bio requests where as sdX uses requests (which are coalesced
-from these bio's using elevator algorithms). So the actual disk
-transactions would be fewer.
+------=_Part_1088_24071958.1218301801987
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
 
---Malahal.
+Hey All, I am trying to remove /dev/sdb1 from my LVM but I booted to a live
+CD and ran pvremove /dev/sdb1, it said it was busy so i added -ff and forced
+it. Then I realized after when trying to boot it was still trying to find
+that disk. I ran vgredce --removemissing and that seemed to fix the issue
+but now It seems that my logical volume is gone and when i try to run
+vgchange -a y it says 0 volume groups found. I am not at a loss, I am sure
+there is a Volume Group, and a Psyhical Volume for /dev/sda1 and /dev/sda2
+but no Logical Volume. I dont care about the data on /dev/sdb1 I just want
+to get back everything on /dev/sda1 and 2.
 
-unlisted [unlisted@gmail.com] wrote:
->    Why would I see 50x the amount of transactions on the lvm volume vs the
->    actual underlying block device ?
-> 
->    avg-cpu:  %user   %nice %system %iowait  %steal   %idle
->               0.00    0.00   11.41   57.07    0.00   31.51
->    Device:            tps    MB_read/s    MB_wrtn/s    MB_read    MB_wrtn
->    sda             211.33         0.00        56.12          0        113
->    sdb             268.47        63.05         0.00        128          0
->    dm-0          14365.52         0.00        56.11          0        113
->    dm-1              0.00         0.00         0.00          0          0
->    sdc               0.00         0.00         0.00          0          0
->    211 tps versus 14365 tps.  The box is idle and the following command was
->    running:
-> 
->    dd if=/dev/sdb of=/home/xxxxxxx/bigrandomfile.txt bs=4k count=10000000
->    Sam
+Thanks and sorry if I did not give enough detail.
 
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+------=_Part_1088_24071958.1218301801987
+Content-Type: text/html; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+<div dir="ltr">Hey All, I am trying to remove /dev/sdb1 from my LVM but I booted to a live CD and ran pvremove /dev/sdb1, it said it was busy so i added -ff and forced it. Then I realized after when trying to boot it was still trying to find that disk. I ran vgredce --removemissing and that seemed to fix the issue but now It seems that my logical volume is gone and when i try to run vgchange -a y it says 0 volume groups found. I am not at a loss, I am sure there is a Volume Group, and a Psyhical Volume for /dev/sda1 and /dev/sda2 but no Logical Volume. I dont care about the data on /dev/sdb1 I just want to get back everything on /dev/sda1 and 2.<br>
+<br>Thanks and sorry if I did not give enough detail.<br></div>
+
+------=_Part_1088_24071958.1218301801987--
