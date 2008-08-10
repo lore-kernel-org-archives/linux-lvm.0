@@ -1,18 +1,26 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m79HAC2g018147
-	for <linux-lvm@redhat.com>; Sat, 9 Aug 2008 13:10:12 -0400
-Received: from py-out-1112.google.com (py-out-1112.google.com [64.233.166.182])
-	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id m79HA28R022432
-	for <linux-lvm@redhat.com.>; Sat, 9 Aug 2008 13:10:02 -0400
-Received: by py-out-1112.google.com with SMTP id a29so752006pyi.0
-	for <linux-lvm@redhat.com.>; Sat, 09 Aug 2008 10:10:02 -0700 (PDT)
-Message-ID: <4e9ec2930808091010y2bfbd341p6e04411c01138a40@mail.gmail.com>
-Date: Sat, 9 Aug 2008 12:10:01 -0500
-From: Puttitintheovenn <puttitintheovenn@gmail.com>
-MIME-Version: 1.0
-Content-Type: multipart/alternative; 
-	boundary="----=_Part_1088_24071958.1218301801987"
-Subject: [linux-lvm] Ran pvemove Before vgreduce, need help recovering
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m7AHjTBt027817
+	for <linux-lvm@redhat.com>; Sun, 10 Aug 2008 13:45:29 -0400
+Received: from mule.trantor.org.uk (mule.trantor.org.uk [213.146.154.198])
+	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id m7AHjH25027331
+	for <linux-lvm@redhat.com>; Sun, 10 Aug 2008 13:45:17 -0400
+Received: from lion.trantor.org.uk (cpc1-leds8-0-0-cust743.leed.cable.ntl.com
+	[82.30.178.232])
+	by mule.trantor.org.uk (Postfix) with ESMTP id DCE9A15049
+	for <linux-lvm@redhat.com>; Sun, 10 Aug 2008 18:45:16 +0100 (BST)
+Received: from [192.168.87.26] (unknown [192.168.87.26])
+	by lion.trantor.org.uk (Postfix) with ESMTP id E957DC0048
+	for <linux-lvm@redhat.com>; Sun, 10 Aug 2008 19:02:15 +0100 (BST)
+Subject: Re: [linux-lvm] metadata too large for circular buffer - any way
+	to increase PV metadatasize?
+From: John Leach <john@johnleach.co.uk>
+In-Reply-To: <20080807194151.GT7257@agk.fab.redhat.com>
+References: <1218132476.4013.10.camel@dogen.thepride.>
+	<20080807194151.GT7257@agk.fab.redhat.com>
+Date: Sun, 10 Aug 2008 18:45:16 +0100
+Message-Id: <1218390316.9292.6.camel@dogen.thepride.>
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -23,31 +31,30 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: linux-lvm@redhat.com
+Content-Type: text/plain; charset="us-ascii"
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-------=_Part_1088_24071958.1218301801987
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
+On Thu, 2008-08-07 at 20:41 +0100, Alasdair G Kergon wrote:
 
-Hey All, I am trying to remove /dev/sdb1 from my LVM but I booted to a live
-CD and ran pvremove /dev/sdb1, it said it was busy so i added -ff and forced
-it. Then I realized after when trying to boot it was still trying to find
-that disk. I ran vgredce --removemissing and that seemed to fix the issue
-but now It seems that my logical volume is gone and when i try to run
-vgchange -a y it says 0 volume groups found. I am not at a loss, I am sure
-there is a Volume Group, and a Psyhical Volume for /dev/sda1 and /dev/sda2
-but no Logical Volume. I dont care about the data on /dev/sdb1 I just want
-to get back everything on /dev/sda1 and 2.
+> To remove the metadata areas you need to:
+> 
+>    get an up-to-date metadata backup (vgcfgbackup)
+> 
+>   pvcreate --restorefile pointing at a copy of that backup file requesting 0 metadata areas
+> and specifying the same uuid as it had before
+> 
+>   vgcfgrestore from the backup file
+>  
 
-Thanks and sorry if I did not give enough detail.
+This doesn't look like something you can do with the volume group active
+(with cluster lvm anyway):
 
-------=_Part_1088_24071958.1218301801987
-Content-Type: text/html; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
+[root@testnode0 ~]# pvcreate --restorefile san-metadata -u fTLglk-j1C1-02Z7-8k6l-DTAm-2WNj-9ZGT19 --metadatacopies 0 /dev/hdb -ff
+Really INITIALIZE physical volume "/dev/hdb" of volume group "san" [y/n]? y
+  Can't open /dev/hdb exclusively.  Mounted filesystem?
 
-<div dir="ltr">Hey All, I am trying to remove /dev/sdb1 from my LVM but I booted to a live CD and ran pvremove /dev/sdb1, it said it was busy so i added -ff and forced it. Then I realized after when trying to boot it was still trying to find that disk. I ran vgredce --removemissing and that seemed to fix the issue but now It seems that my logical volume is gone and when i try to run vgchange -a y it says 0 volume groups found. I am not at a loss, I am sure there is a Volume Group, and a Psyhical Volume for /dev/sda1 and /dev/sda2 but no Logical Volume. I dont care about the data on /dev/sdb1 I just want to get back everything on /dev/sda1 and 2.<br>
-<br>Thanks and sorry if I did not give enough detail.<br></div>
+Is that right, or am I missing something?
 
-------=_Part_1088_24071958.1218301801987--
+Thanks,
+
+John.
