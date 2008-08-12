@@ -1,14 +1,12 @@
-Message-ID: <48A18FB1.1000102@redhat.com>
-Date: Tue, 12 Aug 2008 14:27:13 +0100
+Message-ID: <48A192B7.7000108@redhat.com>
+Date: Tue, 12 Aug 2008 14:40:07 +0100
 From: "Bryn M. Reeves" <bmr@redhat.com>
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] Found duplicate PV 7TGP3THphAvROCTtC4OI2gZrvrAGrn15:
-	using /dev/sdah not /dev/sdq Found duplicate PV
-	Qbpd3ov1sd3GHCwCQHUzkI00X53lbcDC:
-	using /dev/sdai not /dev/sdr Found duplicate PV
-	v0YURmuRm51dfY8br0Bx7XxOOIJyV6oa: using /dev/sdt no
-References: <47311dd20808120607w3a20fe0u2e776d9e86a08a9f@mail.gmail.com>
-In-Reply-To: <47311dd20808120607w3a20fe0u2e776d9e86a08a9f@mail.gmail.com>
+Subject: Re: [linux-lvm] Found duplicate PVs
+References: <47311dd20808120424w30a33b88uf8418db1f411a52d@mail.gmail.com>
+	<48A1747A.8060808@redhat.com>
+	<48A186A7.3050901@kadzban.is-a-geek.net>
+In-Reply-To: <48A186A7.3050901@kadzban.is-a-geek.net>
 Content-Transfer-Encoding: 7bit
 Reply-To: bmr@redhat.com,
 	LVM general discussion and development <linux-lvm@redhat.com>
@@ -22,45 +20,55 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: Pedro Gonzalez Zamora <pedroche5@gmail.com>
+To: Bryan Kadzban <bryan@kadzban.is-a-geek.net>
 Cc: LVM general discussion and development <linux-lvm@redhat.com>
 
 -----BEGIN PGP SIGNED MESSAGE-----
 Hash: SHA1
 
-Pedro Gonzalez Zamora wrote:
-> Hi Bryan
+Bryan Kadzban wrote:
+> Bryn M. Reeves wrote:
+>>> broken (split) RAID1 mirror?
 > 
-> How can I configure multipathing if I  have scsi enviroment with multiple
-> paths?
+> Alternately, software RAID1 -- either a dm-raid type setup (most onboard
+> "RAID controllers", and in fact almost every consumer "RAID" device) or
+> md?
 
-As well as the upstream documentation & website, if you are using Red
-Hat Enterprise Linux or Fedora (or CentOS), take a look in the Red Hat
-knowledge base:
+That's exactly what I meant by a split/broken RAID1 mirror - either two
+disks being presented as SCSI/ATA devices when they contain an array or
+an array "controller" (fakeraid) using the wrong drivers. Unlikely to be
+MD since LVM2 already performs MD component detection (enabled by
+default iirc) and will use the MD device in preference to components.
 
-What are the general steps for configuring a dm-multipath?
-http://kbase.redhat.com/faq/FAQ_43_13026.shtm
+> You can control which devices get scanned by editing the "filter" option
+> in /etc/lvm/lvm.conf -- you can make it only include the RAID array
+> device (/dev/mapper/whatever or /dev/mdX), instead of the member drives
+> (/dev/sdXY).
 
-How do I make device mapper multipath ignore my local disks when
-generating the multipath maps in Red Hat Enterprise Linux 4?
-http://kbase.redhat.com/faq/FAQ_85_7319.shtm
+Shouldn't be needed for MD devices - just make sure you have:
 
-How do I configure device-mapper-multipath with an EMC Clariion SAN?
-http://kbase.redhat.com/faq/FAQ_46_8983.shtm
+devices {
+[...]
+    md_component_detection = 1
+}
 
-Why I get the message "Found duplicate PV" when when a physical volume,
-volume group, or logical volume is created or displayed on the EMC
-powerpath or other multipathing device?
-http://kbase.redhat.com/faq/FAQ_80_12135.shtm
+Somewhere in your lvm.conf. As you say, this is most common with dmraid
+ since the "controller" is just a regular ATA part with some BIOS goop
+and a bit of metadata on the disks but you can get the same sort of
+behavior with "real" RAID controllers in some cases.
+
+> (And this is probably just a special case of the "broken (split) RAID1
+> mirror" possibility that Bryn was talking about.)
+
+Yup :)
 
 Regards,
 Bryn.
-
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v1.4.7 (GNU/Linux)
 Comment: Using GnuPG with Fedora - http://enigmail.mozdev.org
 
-iD8DBQFIoY+x6YSQoMYUY94RAoWmAJ4nZcka33RSf+Td4Hyq7oL36HcLagCggLxG
-qHKdPkyMvG2mJ37qL5yg/Dw=
-=D7xm
+iD8DBQFIoZK36YSQoMYUY94RAid3AKDFmEtVBuIBCKOhNJbsC70oVcRdzgCdFRQs
+BjW8XPFFatq0y8GpER6GI+c=
+=vplQ
 -----END PGP SIGNATURE-----
