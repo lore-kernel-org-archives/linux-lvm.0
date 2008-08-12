@@ -1,24 +1,17 @@
-Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m7CDAAve030067
-	for <linux-lvm@redhat.com>; Tue, 12 Aug 2008 09:10:11 -0400
-Received: from wx-out-0506.google.com (wx-out-0506.google.com [66.249.82.236])
-	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id m7CD9vWL022983
-	for <linux-lvm@redhat.com>; Tue, 12 Aug 2008 09:09:57 -0400
-Received: by wx-out-0506.google.com with SMTP id i27so561393wxd.6
-	for <linux-lvm@redhat.com>; Tue, 12 Aug 2008 06:09:54 -0700 (PDT)
-Message-ID: <cfe2fc960808120609n2fabf0d5wb86c9820d2b25ba8@mail.gmail.com>
-Date: Tue, 12 Aug 2008 09:09:53 -0400
-From: "Shawn Hood" <shawnlhood@gmail.com>
+Message-ID: <48A18FB1.1000102@redhat.com>
+Date: Tue, 12 Aug 2008 14:27:13 +0100
+From: "Bryn M. Reeves" <bmr@redhat.com>
+MIME-Version: 1.0
 Subject: Re: [linux-lvm] Found duplicate PV 7TGP3THphAvROCTtC4OI2gZrvrAGrn15:
 	using /dev/sdah not /dev/sdq Found duplicate PV
-	Qbpd3ov1sd3GHCwCQHUzkI00X53lbcDC: using /dev/sdai not /dev/sdr
-	Found duplicate PV v0YURmuRm51dfY8br0Bx7XxOOIJyV6oa: using /dev/sdt no
-In-Reply-To: <47311dd20808120607w3a20fe0u2e776d9e86a08a9f@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: multipart/alternative; 
-	boundary="----=_Part_98806_21027847.1218546593667"
+	Qbpd3ov1sd3GHCwCQHUzkI00X53lbcDC:
+	using /dev/sdai not /dev/sdr Found duplicate PV
+	v0YURmuRm51dfY8br0Bx7XxOOIJyV6oa: using /dev/sdt no
 References: <47311dd20808120607w3a20fe0u2e776d9e86a08a9f@mail.gmail.com>
-Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
+In-Reply-To: <47311dd20808120607w3a20fe0u2e776d9e86a08a9f@mail.gmail.com>
+Content-Transfer-Encoding: 7bit
+Reply-To: bmr@redhat.com,
+	LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -28,159 +21,46 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="us-ascii"
+To: Pedro Gonzalez Zamora <pedroche5@gmail.com>
+Cc: LVM general discussion and development <linux-lvm@redhat.com>
 
-------=_Part_98806_21027847.1218546593667
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA1
 
-See the following:
-http://sources.redhat.com/dm/
-http://christophe.varoqui.free.fr/
-
-
-Shawn
-
-2008/8/12 Pedro Gonzalez Zamora <pedroche5@gmail.com>
-
+Pedro Gonzalez Zamora wrote:
 > Hi Bryan
->
+> 
 > How can I configure multipathing if I  have scsi enviroment with multiple
 > paths?
->
-> Best
->
-> Pedro
->
-> 2008/8/12 Bryn M. Reeves <bmr@redhat.com>
->
->> -----BEGIN PGP SIGNED MESSAGE-----
->> Hash: SHA1
->>
->> Pedro Gonzalez Zamora wrote:
->> > Hi all,
->> >
->> > I'm new in LVM when I execute the command "vgscan -v" I get a message
->> below
->> > I don't why this message appear
->> >
->> >
->> > Found duplicate PV 7TGP3THphAvROCTtC4OI2gZrvrAGrn15: using /dev/sdah not
->> > /dev/sdq
->> > Found duplicate PV Qbpd3ov1sd3GHCwCQHUzkI00X53lbcDC: using /dev/sdai not
->> > /dev/sdr
->> >
->> > Anyone Can help me to understand what is the problem and How  can I fix
->> it?
->> >
->> > Bests Regards
->> >
->> > Pedro G.
->>
->> Do you have a SAN/fiber/iSCSI environment with multiple paths to the
->> storage? If so, then you can configure multipathing and filtering to
->> allow LVM to take advantage of the redundant paths to the storage.
->>
->> If you don't have a multipath environment then you need to figure out
->> why these two devices seem to have the same content. Could they have
->> been copied (dd, some clever storage mirroring thingamy? broken (split)
->> RAID1 mirror?).
->>
->> Regards,
->> Bryn.
->>
->> -----BEGIN PGP SIGNATURE-----
->> Version: GnuPG v1.4.7 (GNU/Linux)
->> Comment: Using GnuPG with Fedora - http://enigmail.mozdev.org
->>
->> iD8DBQFIoXR56YSQoMYUY94RAigRAKCIh7YRDyiXjqK0rIxuBRbUbTHTvACbBoAL
->> WB4BOU4CoOlPxs95s6OvNBg=
->> =0GU3
->> -----END PGP SIGNATURE-----
->>
->> _______________________________________________
->> linux-lvm mailing list
->> linux-lvm@redhat.com
->> https://www.redhat.com/mailman/listinfo/linux-lvm
->> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
->>
->
->
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
->
 
+As well as the upstream documentation & website, if you are using Red
+Hat Enterprise Linux or Fedora (or CentOS), take a look in the Red Hat
+knowledge base:
 
---
-Shawn Hood
-910.670.1819 m
+What are the general steps for configuring a dm-multipath?
+http://kbase.redhat.com/faq/FAQ_43_13026.shtm
 
-------=_Part_98806_21027847.1218546593667
-Content-Type: text/html; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
+How do I make device mapper multipath ignore my local disks when
+generating the multipath maps in Red Hat Enterprise Linux 4?
+http://kbase.redhat.com/faq/FAQ_85_7319.shtm
 
-<div dir="ltr">See the following:<br><a href="http://sources.redhat.com/dm/">http://sources.redhat.com/dm/</a><br><a href="http://christophe.varoqui.free.fr/">http://christophe.varoqui.free.fr/</a><br><br><br>Shawn<br><br>
-<div class="gmail_quote">2008/8/12 Pedro Gonzalez Zamora <span dir="ltr">&lt;<a href="mailto:pedroche5@gmail.com">pedroche5@gmail.com</a>&gt;</span><br><blockquote class="gmail_quote" style="border-left: 1px solid rgb(204, 204, 204); margin: 0pt 0pt 0pt 0.8ex; padding-left: 1ex;">
-<div dir="ltr">Hi Bryan<br><br>How can I configure multipathing if I&nbsp; have scsi enviroment with multiple paths?<br><br>Best<br><br>Pedro<br><br><div class="gmail_quote">2008/8/12 Bryn M. Reeves <span dir="ltr">&lt;<a href="mailto:bmr@redhat.com" target="_blank">bmr@redhat.com</a>&gt;</span><br>
+How do I configure device-mapper-multipath with an EMC Clariion SAN?
+http://kbase.redhat.com/faq/FAQ_46_8983.shtm
 
-<blockquote class="gmail_quote" style="border-left: 1px solid rgb(204, 204, 204); margin: 0pt 0pt 0pt 0.8ex; padding-left: 1ex;">-----BEGIN PGP SIGNED MESSAGE-----<br>
-Hash: SHA1<br>
-<div><div></div><div><br>
-Pedro Gonzalez Zamora wrote:<br>
-&gt; Hi all,<br>
-&gt;<br>
-&gt; I&#39;m new in LVM when I execute the command &quot;vgscan -v&quot; I get a message below<br>
-&gt; I don&#39;t why this message appear<br>
-&gt;<br>
-&gt;<br>
-&gt; Found duplicate PV 7TGP3THphAvROCTtC4OI2gZrvrAGrn15: using /dev/sdah not<br>
-&gt; /dev/sdq<br>
-&gt; Found duplicate PV Qbpd3ov1sd3GHCwCQHUzkI00X53lbcDC: using /dev/sdai not<br>
-&gt; /dev/sdr<br>
-&gt;<br>
-&gt; Anyone Can help me to understand what is the problem and How &nbsp;can I fix it?<br>
-&gt;<br>
-&gt; Bests Regards<br>
-&gt;<br>
-&gt; Pedro G.<br>
-<br>
-</div></div>Do you have a SAN/fiber/iSCSI environment with multiple paths to the<br>
-storage? If so, then you can configure multipathing and filtering to<br>
-allow LVM to take advantage of the redundant paths to the storage.<br>
-<br>
-If you don&#39;t have a multipath environment then you need to figure out<br>
-why these two devices seem to have the same content. Could they have<br>
-been copied (dd, some clever storage mirroring thingamy? broken (split)<br>
-RAID1 mirror?).<br>
-<br>
-Regards,<br>
-Bryn.<br>
-<br>
------BEGIN PGP SIGNATURE-----<br>
-Version: GnuPG v1.4.7 (GNU/Linux)<br>
-Comment: Using GnuPG with Fedora - <a href="http://enigmail.mozdev.org" target="_blank">http://enigmail.mozdev.org</a><br>
-<br>
-iD8DBQFIoXR56YSQoMYUY94RAigRAKCIh7YRDyiXjqK0rIxuBRbUbTHTvACbBoAL<br>
-WB4BOU4CoOlPxs95s6OvNBg=<br>
-=0GU3<br>
------END PGP SIGNATURE-----<br>
-<br>
-_______________________________________________<br>
-linux-lvm mailing list<br>
-<a href="mailto:linux-lvm@redhat.com" target="_blank">linux-lvm@redhat.com</a><br>
-<a href="https://www.redhat.com/mailman/listinfo/linux-lvm" target="_blank">https://www.redhat.com/mailman/listinfo/linux-lvm</a><br>
-read the LVM HOW-TO at <a href="http://tldp.org/HOWTO/LVM-HOWTO/" target="_blank">http://tldp.org/HOWTO/LVM-HOWTO/</a><br>
-</blockquote></div><br></div>
-<br>_______________________________________________<br>
-linux-lvm mailing list<br>
-<a href="mailto:linux-lvm@redhat.com">linux-lvm@redhat.com</a><br>
-<a href="https://www.redhat.com/mailman/listinfo/linux-lvm" target="_blank">https://www.redhat.com/mailman/listinfo/linux-lvm</a><br>
-read the LVM HOW-TO at <a href="http://tldp.org/HOWTO/LVM-HOWTO/" target="_blank">http://tldp.org/HOWTO/LVM-HOWTO/</a><br></blockquote></div><br><br clear="all">--<br>Shawn Hood<br>910.670.1819 m<br><br>
-</div>
+Why I get the message "Found duplicate PV" when when a physical volume,
+volume group, or logical volume is created or displayed on the EMC
+powerpath or other multipathing device?
+http://kbase.redhat.com/faq/FAQ_80_12135.shtm
 
-------=_Part_98806_21027847.1218546593667--
+Regards,
+Bryn.
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.7 (GNU/Linux)
+Comment: Using GnuPG with Fedora - http://enigmail.mozdev.org
+
+iD8DBQFIoY+x6YSQoMYUY94RAoWmAJ4nZcka33RSf+Td4Hyq7oL36HcLagCggLxG
+qHKdPkyMvG2mJ37qL5yg/Dw=
+=D7xm
+-----END PGP SIGNATURE-----
