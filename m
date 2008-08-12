@@ -1,18 +1,17 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m7AIpZpA013789
-	for <linux-lvm@redhat.com>; Sun, 10 Aug 2008 14:51:35 -0400
-Received: from fg-out-1718.google.com (fg-out-1718.google.com [72.14.220.157])
-	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id m7AIpOwb019861
-	for <linux-lvm@redhat.com>; Sun, 10 Aug 2008 14:51:24 -0400
-Received: by fg-out-1718.google.com with SMTP id e21so998517fga.7
-	for <linux-lvm@redhat.com>; Sun, 10 Aug 2008 11:51:23 -0700 (PDT)
-Message-ID: <47311dd20808101151m11a944cu11b88f5f5bf7477e@mail.gmail.com>
-Date: Sun, 10 Aug 2008 20:51:23 +0200
-From: "Pedro Gonzalez Zamora" <pedroche5@gmail.com>
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m7C3rvij017547
+	for <linux-lvm@redhat.com>; Mon, 11 Aug 2008 23:53:57 -0400
+Received: from ocelot.uvic.ca (ocelot.uvic.ca [142.104.151.81])
+	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id m7C3rg6W021169
+	for <linux-lvm@redhat.com>; Mon, 11 Aug 2008 23:53:42 -0400
+From: "David S. Broome" <dbroome@uvic.ca>
+Date: Mon, 11 Aug 2008 20:53:26 -0700
+Message-ID: <54AA5D29CDD96948959171E0DF2990295352@EMC1.uvic.ca>
+Content-Language: en-US
+Content-Type: text/plain; charset="us-ascii"
 MIME-Version: 1.0
-Content-Type: multipart/alternative; 
-	boundary="----=_Part_36887_4321916.1218394283715"
-Subject: [linux-lvm] Fixing up missing format1 size
+Content-Transfer-Encoding: 8bit
+Subject: [linux-lvm] LVM with large arrays, one large or mutiple small PV's?
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -23,40 +22,27 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: linux-lvm@redhat.com
+To: "linux-lvm@redhat.com" <linux-lvm@redhat.com>
 
-------=_Part_36887_4321916.1218394283715
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
+Hello - This is a best practices style question.
 
-Dear all
+LVM with large arrays, one large or mutiple small PV's?
 
-I get a message  below when I execute "vgdisplay -v".
-I don't know exactly what this message means
-Is something wrong whit the PV?
+What is the suggested physical partition layout with large hardware RAID arrays (is NAS or SAN) in the case where there can be one VG?
 
-Best Regards
+ie I have two Raid 5 Arrays that can either present one large logical volume ie 3.5T and 2.9T each or a multiple smaller logical volumes ie 500G.
 
-Pedro G.
+Would it be better have the hardware present add multiple smaller logical volumes to as PV's or the single larger volumes?
 
-Fixing up missing format1 size (558,16 GB) for PV /dev/sdt
-    Fixing up missing format1 size (558,16 GB) for PV /dev/sdu
-    Fixing up missing format1 size (558,16 GB) for PV /dev/sdv
-    Fixing up missing format1 size (558,16 GB) for PV /dev/sdw
-    Fixing up missing format1 size (558,16 GB) for PV /dev/sdx
-    Fixing up missing format1 size (558,16 GB) for PV /dev/sdy
-    Fixing up missing format1 size (558,16 GB) for PV /dev/sdz
+If there is a need for multiple VG's then obviously there needs to be multiple PVs.
 
-------=_Part_36887_4321916.1218394283715
-Content-Type: text/html; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
+The smaller volumes would have the advantage of being able to pvmoved to other hardware in the future with more flexibility due to the size of PV's.
 
-<div dir="ltr">Dear all<br><br>I get a message&nbsp; below when I execute &quot;vgdisplay -v&quot;.<br>I don&#39;t know exactly what this message means<br>Is something wrong whit the PV?<br><br>Best Regards<br><br>Pedro G.<br><br>
-Fixing up missing format1 size (558,16 GB) for PV /dev/sdt<br>
-&nbsp;&nbsp;&nbsp; Fixing up missing format1 size (558,16 GB) for PV /dev/sdu<br>&nbsp;&nbsp;&nbsp; Fixing up missing format1 size (558,16 GB) for PV /dev/sdv<br>&nbsp;&nbsp;&nbsp; Fixing up missing format1 size (558,16 GB) for PV /dev/sdw<br>&nbsp;&nbsp;&nbsp; Fixing up missing format1 size (558,16 GB) for PV /dev/sdx<br>
+There would be some overhead space lost due to the multiple PV's, although this would be small.
 
-&nbsp;&nbsp;&nbsp; Fixing up missing format1 size (558,16 GB) for PV /dev/sdy<br>&nbsp;&nbsp;&nbsp; Fixing up missing format1 size (558,16 GB) for PV /dev/sdz<br></div>
+Thanks in advance for any comments.
 
-------=_Part_36887_4321916.1218394283715--
+Dave,
+--
+David Broome  Sr. Programmer Analyst @ FineArts.UVic.CA /BSc
+250.721-6307 | dbroome@uvic.ca | FIA 221
