@@ -1,23 +1,13 @@
-Received: from pobox.fab.redhat.com (pobox.fab.redhat.com [10.33.63.12])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m7CBV6ih028275
-	for <linux-lvm@redhat.com>; Tue, 12 Aug 2008 07:31:06 -0400
-Received: from [10.33.0.40] (breeves.fab.redhat.com [10.33.0.40])
-	by pobox.fab.redhat.com (8.13.1/8.13.1) with ESMTP id m7CBV6PU027638
-	for <linux-lvm@redhat.com>; Tue, 12 Aug 2008 07:31:06 -0400
-Message-ID: <48A1747A.8060808@redhat.com>
-Date: Tue, 12 Aug 2008 12:31:06 +0100
-From: "Bryn M. Reeves" <bmr@redhat.com>
+Message-ID: <48A186A7.3050901@kadzban.is-a-geek.net>
+Date: Tue, 12 Aug 2008 08:48:39 -0400
+From: Bryan Kadzban <bryan@kadzban.is-a-geek.net>
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] Found duplicate PV 7TGP3THphAvROCTtC4OI2gZrvrAGrn15:
-	using /dev/sdah not /dev/sdq Found duplicate
-	PV	Qbpd3ov1sd3GHCwCQHUzkI00X53lbcDC:
-	using /dev/sdai not	/dev/sdr Found duplicate PV
-	v0YURmuRm51dfY8br0Bx7XxOOIJyV6oa: using /dev/sdt not /dev/sdc Found
+Subject: Re: [linux-lvm] Found duplicate PVs
 References: <47311dd20808120424w30a33b88uf8418db1f411a52d@mail.gmail.com>
-In-Reply-To: <47311dd20808120424w30a33b88uf8418db1f411a52d@mail.gmail.com>
+	<48A1747A.8060808@redhat.com>
+In-Reply-To: <48A1747A.8060808@redhat.com>
 Content-Transfer-Encoding: 7bit
-Reply-To: bmr@redhat.com,
-	LVM general discussion and development <linux-lvm@redhat.com>
+Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -28,46 +18,35 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: LVM general discussion and development <linux-lvm@redhat.com>
+To: bmr@redhat.com, LVM general discussion and development <linux-lvm@redhat.com>
 
 -----BEGIN PGP SIGNED MESSAGE-----
-Hash: SHA1
+Hash: RIPEMD160
 
-Pedro Gonzalez Zamora wrote:
-> Hi all,
-> 
-> I'm new in LVM when I execute the command "vgscan -v" I get a message below
-> I don't why this message appear
-> 
-> 
-> Found duplicate PV 7TGP3THphAvROCTtC4OI2gZrvrAGrn15: using /dev/sdah not
-> /dev/sdq
-> Found duplicate PV Qbpd3ov1sd3GHCwCQHUzkI00X53lbcDC: using /dev/sdai not
-> /dev/sdr
-> 
-> Anyone Can help me to understand what is the problem and How  can I fix it?
-> 
-> Bests Regards
-> 
-> Pedro G.
+Bryn M. Reeves wrote:
+> broken (split) RAID1 mirror?
 
-Do you have a SAN/fiber/iSCSI environment with multiple paths to the
-storage? If so, then you can configure multipathing and filtering to
-allow LVM to take advantage of the redundant paths to the storage.
+Alternately, software RAID1 -- either a dm-raid type setup (most onboard
+"RAID controllers", and in fact almost every consumer "RAID" device) or
+md?
 
-If you don't have a multipath environment then you need to figure out
-why these two devices seem to have the same content. Could they have
-been copied (dd, some clever storage mirroring thingamy? broken (split)
-RAID1 mirror?).
+If the LVM PVs sit on the RAID1 array instead of the member drives, then
+you'll get duplicate PVs if you're scanning the member drives themselves
+instead of the entire array.  You need to scan the RAID1 array (and of
+course it needs to be assembled before you do the scan).
 
-Regards,
-Bryn.
+You can control which devices get scanned by editing the "filter" option
+in /etc/lvm/lvm.conf -- you can make it only include the RAID array
+device (/dev/mapper/whatever or /dev/mdX), instead of the member drives
+(/dev/sdXY).
 
+(And this is probably just a special case of the "broken (split) RAID1
+mirror" possibility that Bryn was talking about.)
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v1.4.7 (GNU/Linux)
-Comment: Using GnuPG with Fedora - http://enigmail.mozdev.org
+Comment: Using GnuPG with Mozilla - http://enigmail.mozdev.org
 
-iD8DBQFIoXR56YSQoMYUY94RAigRAKCIh7YRDyiXjqK0rIxuBRbUbTHTvACbBoAL
-WB4BOU4CoOlPxs95s6OvNBg=
-=0GU3
+iD8DBQFIoYamS5vET1Wea5wRAzqpAJ4lLzECth88MHROD6T2mahDqMn0jgCfTfPR
+1O2q8f2jZnocvQ1VkPCsIHg=
+=ygT4
 -----END PGP SIGNATURE-----
