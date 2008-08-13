@@ -1,14 +1,24 @@
-Message-ID: <48A1ABE9.1030608@kadzban.is-a-geek.net>
-Date: Tue, 12 Aug 2008 11:27:37 -0400
-From: Bryan Kadzban <bryan@kadzban.is-a-geek.net>
+Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m7D9hqKA021602
+	for <linux-lvm@redhat.com>; Wed, 13 Aug 2008 05:43:52 -0400
+Received: from kenny.oneemedia.com (kenny.oneemedia.com [92.240.244.202])
+	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id m7D9het5018147
+	for <linux-lvm@redhat.com>; Wed, 13 Aug 2008 05:43:41 -0400
+Received: from localhost (mail-o.oneemedia.com [92.240.244.203])
+	(Authenticated sender: markionline)
+	by kenny.oneemedia.com (Postfix) with ESMTP id 60E3A2001FA
+	for <linux-lvm@redhat.com>; Wed, 13 Aug 2008 11:43:39 +0200 (CEST)
+Date: Wed, 13 Aug 2008 11:43:38 +0200
+From: Marek Podmaka <marki@marki-online.net>
+Message-ID: <325343817.20080813114338@marki-online.net>
+Subject: Re: [linux-lvm] LVM with large arrays,
+	one large or mutiple small PV's?
+In-Reply-To: <54AA5D29CDD96948959171E0DF2990295352@EMC1.uvic.ca>
+References: <54AA5D29CDD96948959171E0DF2990295352@EMC1.uvic.ca>
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] Found duplicate PVs
-References: <47311dd20808120424w30a33b88uf8418db1f411a52d@mail.gmail.com>	<48A1747A.8060808@redhat.com>
-	<48A186A7.3050901@kadzban.is-a-geek.net>	<48A192B7.7000108@redhat.com>
-	<47311dd20808120710h48268c0uc941b28dca2eb903@mail.gmail.com>
-In-Reply-To: <47311dd20808120710h48268c0uc941b28dca2eb903@mail.gmail.com>
 Content-Transfer-Encoding: 7bit
-Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
+Reply-To: Marek Podmaka <marki@marki-online.net>,
+	LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -21,34 +31,36 @@ List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
------BEGIN PGP SIGNED MESSAGE-----
-Hash: RIPEMD160
+Hello,
 
-Pedro Gonzalez Zamora wrote:
-> The messages "Found duplicate PVs" disappear when I add this line in 
-> lvm.conf:
-> 
-> filter = [ "a/sd[a-r]$/" , "r/.*/" ]
-> 
-> But I don't know if it is a good solution?
+Tuesday, August 12, 2008, 5:53:26, David S. Broome wrote:
 
-Not likely, but it depends on your hardware setup -- it depends on what
-exactly is on those disks.
+> Hello - This is a best practices style question.
+> LVM with large arrays, one large or mutiple small PV's?
 
-If you're using fakeraid, then I'd reject sd.* and accept .* (which
-would include the /dev/mapper/XXXX fakeraid DM device).
+> What is the suggested physical partition layout with large hardware
+> RAID arrays (is NAS or SAN) in the case where there can be one VG?
+> ie I have two Raid 5 Arrays that can either present one large
+> logical volume ie 3.5T and 2.9T each or a multiple smaller logical volumes ie 500G.
 
-If you're using multipath, then I don't know -- follow the multipath docs.
+I think from LVM side it doesn't matter if you have 10x PV of size 100
+GB or 1 PV of size 1 TB. But it really depends on the SAN disk array
+you have and how it handles each virtual disk. Does it have queues,
+caches for each vdisk or for the entire array? For example for HP EVA
+arrays it is recommended to prefer smaller vdisks if possible.
 
-If you're using LVM on md-raid, then it should be working properly by
-default without this change (though md_component_detection must be set
-to 1, so you may want to double-check that setting if your system is set
-up like this).
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.7 (GNU/Linux)
-Comment: Using GnuPG with Mozilla - http://enigmail.mozdev.org
+If array has for example queue for 100 outstanding requests per vdisk
+then it means 100 req for 1 TB vdisk, or 10x100 req for the same 1TB
+over 10 vdisks.
 
-iD8DBQFIoavmS5vET1Wea5wRAxgxAJ0UO3Vkwudc77vS+46V5ER2uiXc+ACgvR2z
-wx3Q8uYyUf/tEKAfKqeQUuo=
-=TrGx
------END PGP SIGNATURE-----
+The same applies also for OS. Don't know how are the defaults on
+linux, but for HP-UX we have to increase scsi queue depth for large
+disks.
+
+Also more PV is better when you somewhere in future want to shrink the
+VG... you just pvmove some data and can remove PV. This can't be done
+when you will have only one big PV.
+
+
+-- 
+  bYE, Marki
