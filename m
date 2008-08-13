@@ -1,23 +1,14 @@
-Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m7D9hqKA021602
-	for <linux-lvm@redhat.com>; Wed, 13 Aug 2008 05:43:52 -0400
-Received: from kenny.oneemedia.com (kenny.oneemedia.com [92.240.244.202])
-	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id m7D9het5018147
-	for <linux-lvm@redhat.com>; Wed, 13 Aug 2008 05:43:41 -0400
-Received: from localhost (mail-o.oneemedia.com [92.240.244.203])
-	(Authenticated sender: markionline)
-	by kenny.oneemedia.com (Postfix) with ESMTP id 60E3A2001FA
-	for <linux-lvm@redhat.com>; Wed, 13 Aug 2008 11:43:39 +0200 (CEST)
-Date: Wed, 13 Aug 2008 11:43:38 +0200
-From: Marek Podmaka <marki@marki-online.net>
-Message-ID: <325343817.20080813114338@marki-online.net>
-Subject: Re: [linux-lvm] LVM with large arrays,
-	one large or mutiple small PV's?
-In-Reply-To: <54AA5D29CDD96948959171E0DF2990295352@EMC1.uvic.ca>
-References: <54AA5D29CDD96948959171E0DF2990295352@EMC1.uvic.ca>
+Message-ID: <48A2B2F4.2080903@redhat.com>
+Date: Wed, 13 Aug 2008 11:09:56 +0100
+From: "Bryn M. Reeves" <bmr@redhat.com>
 MIME-Version: 1.0
+Subject: Re: [linux-lvm] LVM with large arrays,	one large or mutiple small
+	PV's?
+References: <54AA5D29CDD96948959171E0DF2990295352@EMC1.uvic.ca>
+	<325343817.20080813114338@marki-online.net>
+In-Reply-To: <325343817.20080813114338@marki-online.net>
 Content-Transfer-Encoding: 7bit
-Reply-To: Marek Podmaka <marki@marki-online.net>,
+Reply-To: bmr@redhat.com,
 	LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -29,38 +20,42 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: LVM general discussion and development <linux-lvm@redhat.com>
+To: Marek Podmaka <marki@marki-online.net>, LVM general discussion and development <linux-lvm@redhat.com>
 
-Hello,
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA1
 
-Tuesday, August 12, 2008, 5:53:26, David S. Broome wrote:
+Marek Podmaka wrote:
+> I think from LVM side it doesn't matter if you have 10x PV of size 100
+> GB or 1 PV of size 1 TB. But it really depends on the SAN disk array
+> you have and how it handles each virtual disk. Does it have queues,
+> caches for each vdisk or for the entire array? For example for HP EVA
+> arrays it is recommended to prefer smaller vdisks if possible.
 
-> Hello - This is a best practices style question.
-> LVM with large arrays, one large or mutiple small PV's?
+It does affect LVM - the performance of the LVM2 tools is affected by
+the number of physical volumes in a volume group. Strictly speaking,
+it's the number of metadata areas which defaults to one per physical
+volume. This means that for large volume groups you can use the
+"--metadatacopies" option to pvcreate to control the number of metadata
+areas present (set it to zero for some PVs) and avoid the sluggish tool
+performance you might otherwise see.
 
-> What is the suggested physical partition layout with large hardware
-> RAID arrays (is NAS or SAN) in the case where there can be one VG?
-> ie I have two Raid 5 Arrays that can either present one large
-> logical volume ie 3.5T and 2.9T each or a multiple smaller logical volumes ie 500G.
+Recent releases of LVM2 improve performance for large VGs as they
+perform caching of metadata read from disk under some circumstances.
+There were also a series of fixes to ensure that the tools behave
+correctly when they find PVs with no metadata.
 
-I think from LVM side it doesn't matter if you have 10x PV of size 100
-GB or 1 PV of size 1 TB. But it really depends on the SAN disk array
-you have and how it handles each virtual disk. Does it have queues,
-caches for each vdisk or for the entire array? For example for HP EVA
-arrays it is recommended to prefer smaller vdisks if possible.
+See earlier threads in the archives on this subject for more information
+& examples of creating VGs with reduced numbers of metadata areas.
 
-If array has for example queue for 100 outstanding requests per vdisk
-then it means 100 req for 1 TB vdisk, or 10x100 req for the same 1TB
-over 10 vdisks.
+Regards,
+Bryn.
 
-The same applies also for OS. Don't know how are the defaults on
-linux, but for HP-UX we have to increase scsi queue depth for large
-disks.
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.7 (GNU/Linux)
+Comment: Using GnuPG with Fedora - http://enigmail.mozdev.org
 
-Also more PV is better when you somewhere in future want to shrink the
-VG... you just pvmove some data and can remove PV. This can't be done
-when you will have only one big PV.
-
-
--- 
-  bYE, Marki
+iD8DBQFIorLz6YSQoMYUY94RAhMRAJ4hwLFf1dGfQRmNq5+C3F/hjCwVNgCfawJJ
+hm3SO7u8tJSPz23rZcwT5XQ=
+=0PG6
+-----END PGP SIGNATURE-----
