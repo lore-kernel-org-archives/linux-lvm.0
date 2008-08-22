@@ -1,19 +1,20 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m7JK9Zun019050
-	for <linux-lvm@redhat.com>; Tue, 19 Aug 2008 16:09:35 -0400
-Received: from mail-gx0-f15.google.com (mail-gx0-f15.google.com
-	[209.85.217.15])
-	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id m7JK9DmE011116
-	for <linux-lvm@redhat.com>; Tue, 19 Aug 2008 16:09:14 -0400
-Received: by gxk8 with SMTP id 8so8377501gxk.3
-	for <linux-lvm@redhat.com>; Tue, 19 Aug 2008 13:09:08 -0700 (PDT)
-Message-ID: <779919740808191309r63a54bd6q7335aba2e56e3715@mail.gmail.com>
-Date: Tue, 19 Aug 2008 14:09:07 -0600
-From: "Jeremy Lyon" <jerlyon@gmail.com>
+	by int-mx2.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m7MF3dDO027666
+	for <linux-lvm@redhat.com>; Fri, 22 Aug 2008 11:03:39 -0400
+Received: from rv-out-0506.google.com (rv-out-0506.google.com [209.85.198.233])
+	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id m7MF3C5h018546
+	for <linux-lvm@redhat.com>; Fri, 22 Aug 2008 11:03:20 -0400
+Received: by rv-out-0506.google.com with SMTP id f6so1168129rvb.51
+	for <linux-lvm@redhat.com>; Fri, 22 Aug 2008 08:03:12 -0700 (PDT)
+Message-ID: <b072968d0808220803s16906f0ajdd73c406e3e94d9f@mail.gmail.com>
+Date: Fri, 22 Aug 2008 16:03:12 +0100
+From: "David Robinson" <zxvdr.au@gmail.com>
+Subject: Re: [linux-lvm] devices clarification
+In-Reply-To: <779919740808191309r63a54bd6q7335aba2e56e3715@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/alternative; 
-	boundary="----=_Part_30820_19228306.1219176547899"
-Subject: [linux-lvm] devices clarification
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+References: <779919740808191309r63a54bd6q7335aba2e56e3715@mail.gmail.com>
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -24,39 +25,31 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
+Content-Type: text/plain; charset="us-ascii"
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-------=_Part_30820_19228306.1219176547899
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
+> In the following output, are the numbers in the parentheses the starting PE
+> of that LV?
+>
+>   VG        LV        KMin Devices
+>   vg00      lvol1     0    /dev/sda2(0)
+>   vg00      lvol4     1    /dev/sda2(32)
+>   vg00      lvol7     2    /dev/sda2(64)
+>   vg00      lvol5     3    /dev/sda2(192)
+>   vg00      lvol3     4    /dev/sda2(208)
+>   vg00      lvol6     5    /dev/sda2(272)
+>   vg00      lvol6     5    /dev/sda2(1136)
+>   vg00      lvol2     6    /dev/sda2(304)
+>   vg00      lvol8     7    /dev/sda2(496)
 
-Hi,
+You didn't show the command that you used, but yes, it looks like they
+are. The devices and seg_pe_ranges parameters for lvs show the details
+you're after, eg:
 
-In the following output, are the numbers in the parentheses the starting PE
-of that LV?
+# lvs -o lv_name,vg_name,seg_start,seg_size,devices,seg_pe_ranges
+  LV     VG   Start SSize  Devices         PE Ranges
+  fedora vg0     0   9.75G /dev/dm-0(0)    /dev/dm-0:0-311
+  home   vg0     0  44.44G /dev/dm-0(312)  /dev/dm-0:312-1733
+  swap   vg0     0   1.50G /dev/dm-0(1734) /dev/dm-0:1734-1781
 
-  VG        LV        KMin Devices
-  vg00      lvol1     0    /dev/sda2(0)
-  vg00      lvol4     1    /dev/sda2(32)
-  vg00      lvol7     2    /dev/sda2(64)
-  vg00      lvol5     3    /dev/sda2(192)
-  vg00      lvol3     4    /dev/sda2(208)
-  vg00      lvol6     5    /dev/sda2(272)
-  vg00      lvol6     5    /dev/sda2(1136)
-  vg00      lvol2     6    /dev/sda2(304)
-  vg00      lvol8     7    /dev/sda2(496)
-
-Thanks
-Jeremy
-
-------=_Part_30820_19228306.1219176547899
-Content-Type: text/html; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-<div dir="ltr">Hi,<br><br>In the following output, are the numbers in the parentheses the starting PE of that LV?<br><br>&nbsp; VG&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; LV&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; KMin Devices<br>&nbsp; vg00&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; lvol1&nbsp;&nbsp;&nbsp;&nbsp; 0&nbsp;&nbsp;&nbsp; /dev/sda2(0)<br>&nbsp; vg00&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; lvol4&nbsp;&nbsp;&nbsp;&nbsp; 1&nbsp;&nbsp;&nbsp; /dev/sda2(32)<br>
-&nbsp; vg00&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; lvol7&nbsp;&nbsp;&nbsp;&nbsp; 2&nbsp;&nbsp;&nbsp; /dev/sda2(64)<br>&nbsp; vg00&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; lvol5&nbsp;&nbsp;&nbsp;&nbsp; 3&nbsp;&nbsp;&nbsp; /dev/sda2(192)<br>&nbsp; vg00&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; lvol3&nbsp;&nbsp;&nbsp;&nbsp; 4&nbsp;&nbsp;&nbsp; /dev/sda2(208)<br>&nbsp; vg00&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; lvol6&nbsp;&nbsp;&nbsp;&nbsp; 5&nbsp;&nbsp;&nbsp; /dev/sda2(272)<br>&nbsp; vg00&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; lvol6&nbsp;&nbsp;&nbsp;&nbsp; 5&nbsp;&nbsp;&nbsp; /dev/sda2(1136)<br>
-&nbsp; vg00&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; lvol2&nbsp;&nbsp;&nbsp;&nbsp; 6&nbsp;&nbsp;&nbsp; /dev/sda2(304)<br>&nbsp; vg00&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; lvol8&nbsp;&nbsp;&nbsp;&nbsp; 7&nbsp;&nbsp;&nbsp; /dev/sda2(496)<br><br>Thanks<br>Jeremy<br></div>
-
-------=_Part_30820_19228306.1219176547899--
+--Dave
