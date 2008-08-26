@@ -1,27 +1,15 @@
-Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx2.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m7QH9etC006382
-	for <linux-lvm@redhat.com>; Tue, 26 Aug 2008 13:09:40 -0400
-Received: from mail-gx0-f15.google.com (mail-gx0-f15.google.com
-	[209.85.217.15])
-	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id m7QH9Opf007923
-	for <linux-lvm@redhat.com>; Tue, 26 Aug 2008 13:09:24 -0400
-Received: by gxk8 with SMTP id 8so4283241gxk.3
-	for <linux-lvm@redhat.com>; Tue, 26 Aug 2008 10:09:19 -0700 (PDT)
-Message-ID: <b646832c0808261009u6a6888bdy720d5a44a2e2e7ae@mail.gmail.com>
-Date: Tue, 26 Aug 2008 22:39:18 +0530
-From: "=?UTF-8?Q?Yajith_Ajantha_Dayarath?=
-	=?UTF-8?Q?na_|_=E0=B6=BA=E0=B6=A2=E0=B7=92=E0=B6=AD=E0=B7=8A_=E0=B6=85?=
-	=?UTF-8?Q?=E0=B6=A2=E0=B6=B1=E0=B7=8A=E0=B6=AD_=E0=B6=AF?=
-	=?UTF-8?Q?=E0=B6=BA=E0=B7=8F=E0=B6=BB=E0=B6=AD=E0=B7=8A=E0=B6=B1?="
-	<yajith@gmail.com>
-Subject: Re: [linux-lvm] VG won't activate upon reboot
-In-Reply-To: <48B3DFD4.5030502@redhat.com>
+Message-ID: <48B43C1B.6060801@redhat.com>
+Date: Tue, 26 Aug 2008 18:23:39 +0100
+From: "Bryn M. Reeves" <bmr@redhat.com>
 MIME-Version: 1.0
-Content-Type: multipart/alternative; 
-	boundary="----=_Part_6984_6070233.1219770558952"
-References: <BAY107-W8ADCAC071D0CAF22B6B488F640@phx.gbl>
+Subject: Re: [linux-lvm] VG won't activate upon reboot
+References: <BAY107-W8ADCAC071D0CAF22B6B488F640@phx.gbl>	
 	<48B3DFD4.5030502@redhat.com>
-Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
+	<b646832c0808261009u6a6888bdy720d5a44a2e2e7ae@mail.gmail.com>
+In-Reply-To: <b646832c0808261009u6a6888bdy720d5a44a2e2e7ae@mail.gmail.com>
+Content-Transfer-Encoding: 7bit
+Reply-To: bmr@redhat.com,
+	LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -31,70 +19,34 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: bmr@redhat.com, LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="us-ascii"
+To: =?windows-1252?Q?Yajith_Ajantha_Dayarathna_=7C_=3F=3F=3F=3F=3F?= =?windows-1252?Q?_=3F=3F=3F=3F=3F_=3F=3F=3F=3F=3F=3F=3F?= <yajith@gmail.com>
+Cc: LVM general discussion and development <linux-lvm@redhat.com>
 
-------=_Part_6984_6070233.1219770558952
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: base64
-Content-Disposition: inline
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA1
 
-bWtpbml0cmQgbWlnaHQgaGVscC4uLnBlcmhhcHMuCgpPbiBUdWUsIEF1ZyAyNiwgMjAwOCBhdCA0
-OjE5IFBNLCBCcnluIE0uIFJlZXZlcyA8Ym1yQHJlZGhhdC5jb20+IHdyb3RlOgoKPiAtLS0tLUJF
-R0lOIFBHUCBTSUdORUQgTUVTU0FHRS0tLS0tCj4gSGFzaDogU0hBMQo+Cj4gTWFyayBSZWFyZG9u
-IHdyb3RlOgo+ID4gVXBvbiByZWJvb3QsIG15IFZHIHdpbGwgbm90IGFjdGl2YXRlLCB0aGVyZWZv
-cmUgSSdtIHVuYWJsZSB0byBtb3VudCB0aGUKPiBmaWxlc3lzdGVtLgo+ID4KPiA+IEkgaGF2ZSB0
-byBydW4gYSB2Z2NoYW5nZSAtYXkgLCB0aGVuIG1vdW50IHRoZSBmaWxlc3lzdGVtIG1hbnVhbGx5
-Lgo+ID4KPiA+IEkgbmVlZCB0aGUgVkcgdG8gYWN0aXZhdGUgb24gcmVib290LCBob3cgZG8gSSBk
-byB0aGlzPwo+Cj4gWW91J3JlIG5vdCBnaXZpbmcgdXMgYW55IGluZm9ybWF0aW9uIHdpdGggd2hp
-Y2ggdG8gaGVscCB5b3UuIFdoYXQgT1MKPiBkaXN0cmlidXRpb24gaXMgdGhpcz8gSG93IGlzIHRo
-ZSBWRyBjb25maWd1cmVkPyBXaGF0IHR5cGUgb2Ygc3RvcmFnZQo+IGRvZXMgaXQgdXNlPyBEbyB5
-b3UgZ2V0IGFueSBlcnJvcnMvd2FybmluZ3Mgd2hpbGUgYm9vdGluZz8gRXRjLgo+Cj4gUmVnYXJk
-cywKPiBCcnluLgo+Cj4gLS0tLS1CRUdJTiBQR1AgU0lHTkFUVVJFLS0tLS0KPiBWZXJzaW9uOiBH
-bnVQRyB2MS40LjcgKEdOVS9MaW51eCkKPiBDb21tZW50OiBVc2luZyBHbnVQRyB3aXRoIEZlZG9y
-YSAtIGh0dHA6Ly9lbmlnbWFpbC5tb3pkZXYub3JnCj4KPiBpRDhEQlFGSXM5L1Q2WVNRb01ZVVk5
-NFJBb2t1QUo5emI2MTc4L2RraVJFVEdoUkZwZUpDMkNHY0hRQ2dnY0x1Cj4gYlFOSHhyL3FTS0JC
-d012dUNod0VjTzQ9Cj4gPTRUQkQKPiAtLS0tLUVORCBQR1AgU0lHTkFUVVJFLS0tLS0KPgo+IF9f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCj4gbGludXgtbHZt
-IG1haWxpbmcgbGlzdAo+IGxpbnV4LWx2bUByZWRoYXQuY29tCj4gaHR0cHM6Ly93d3cucmVkaGF0
-LmNvbS9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWx2bQo+IHJlYWQgdGhlIExWTSBIT1ctVE8gYXQg
-aHR0cDovL3RsZHAub3JnL0hPV1RPL0xWTS1IT1dUTy8KPgoKCgotLSAKWWFqaXRoIEFqYW50aGEg
-fCDgtrrgtqLgt5Lgtq3gt4og4LaF4Lai4Lax4LeK4LatCg==
-------=_Part_6984_6070233.1219770558952
-Content-Type: text/html; charset=UTF-8
-Content-Transfer-Encoding: base64
-Content-Disposition: inline
+Yajith Ajantha Dayarathna
+> mkinitrd might help...perhaps.
 
-PGRpdiBkaXI9Imx0ciI+bWtpbml0cmQgbWlnaHQgaGVscC4uLnBlcmhhcHMuPGJyPjxicj48ZGl2
-IGNsYXNzPSJnbWFpbF9xdW90ZSI+T24gVHVlLCBBdWcgMjYsIDIwMDggYXQgNDoxOSBQTSwgQnJ5
-biBNLiBSZWV2ZXMgPHNwYW4gZGlyPSJsdHIiPiZsdDs8YSBocmVmPSJtYWlsdG86Ym1yQHJlZGhh
-dC5jb20iPmJtckByZWRoYXQuY29tPC9hPiZndDs8L3NwYW4+IHdyb3RlOjxicj48YmxvY2txdW90
-ZSBjbGFzcz0iZ21haWxfcXVvdGUiIHN0eWxlPSJib3JkZXItbGVmdDogMXB4IHNvbGlkIHJnYigy
-MDQsIDIwNCwgMjA0KTsgbWFyZ2luOiAwcHQgMHB0IDBwdCAwLjhleDsgcGFkZGluZy1sZWZ0OiAx
-ZXg7Ij4KLS0tLS1CRUdJTiBQR1AgU0lHTkVEIE1FU1NBR0UtLS0tLTxicj4KSGFzaDogU0hBMTxi
-cj4KPGRpdiBjbGFzcz0iSWgyRTNkIj48YnI+Ck1hcmsgUmVhcmRvbiB3cm90ZTo8YnI+CiZndDsg
-VXBvbiByZWJvb3QsIG15IFZHIHdpbGwgbm90IGFjdGl2YXRlLCB0aGVyZWZvcmUgSSYjMzk7bSB1
-bmFibGUgdG8gbW91bnQgdGhlIGZpbGVzeXN0ZW0uPGJyPgomZ3Q7PGJyPgomZ3Q7IEkgaGF2ZSB0
-byBydW4gYSB2Z2NoYW5nZSAtYXkgLCB0aGVuIG1vdW50IHRoZSBmaWxlc3lzdGVtIG1hbnVhbGx5
-Ljxicj4KJmd0Ozxicj4KJmd0OyBJIG5lZWQgdGhlIFZHIHRvIGFjdGl2YXRlIG9uIHJlYm9vdCwg
-aG93IGRvIEkgZG8gdGhpcz88YnI+Cjxicj4KPC9kaXY+WW91JiMzOTtyZSBub3QgZ2l2aW5nIHVz
-IGFueSBpbmZvcm1hdGlvbiB3aXRoIHdoaWNoIHRvIGhlbHAgeW91LiBXaGF0IE9TPGJyPgpkaXN0
-cmlidXRpb24gaXMgdGhpcz8gSG93IGlzIHRoZSBWRyBjb25maWd1cmVkPyBXaGF0IHR5cGUgb2Yg
-c3RvcmFnZTxicj4KZG9lcyBpdCB1c2U/IERvIHlvdSBnZXQgYW55IGVycm9ycy93YXJuaW5ncyB3
-aGlsZSBib290aW5nPyBFdGMuPGJyPgo8YnI+ClJlZ2FyZHMsPGJyPgpCcnluLjxicj4KPGJyPgot
-LS0tLUJFR0lOIFBHUCBTSUdOQVRVUkUtLS0tLTxicj4KVmVyc2lvbjogR251UEcgdjEuNC43IChH
-TlUvTGludXgpPGJyPgpDb21tZW50OiBVc2luZyBHbnVQRyB3aXRoIEZlZG9yYSAtIDxhIGhyZWY9
-Imh0dHA6Ly9lbmlnbWFpbC5tb3pkZXYub3JnIiB0YXJnZXQ9Il9ibGFuayI+aHR0cDovL2VuaWdt
-YWlsLm1vemRldi5vcmc8L2E+PGJyPgo8YnI+CmlEOERCUUZJczkvVDZZU1FvTVlVWTk0UkFva3VB
-Sjl6YjYxNzgvZGtpUkVUR2hSRnBlSkMyQ0djSFFDZ2djTHU8YnI+CmJRTkh4ci9xU0tCQndNdnVD
-aHdFY080PTxicj4KPTRUQkQ8YnI+Ci0tLS0tRU5EIFBHUCBTSUdOQVRVUkUtLS0tLTxicj4KPGRp
-dj48ZGl2PjwvZGl2PjxkaXYgY2xhc3M9IldqM0M3YyI+PGJyPgpfX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fXzxicj4KbGludXgtbHZtIG1haWxpbmcgbGlzdDxi
-cj4KPGEgaHJlZj0ibWFpbHRvOmxpbnV4LWx2bUByZWRoYXQuY29tIj5saW51eC1sdm1AcmVkaGF0
-LmNvbTwvYT48YnI+CjxhIGhyZWY9Imh0dHBzOi8vd3d3LnJlZGhhdC5jb20vbWFpbG1hbi9saXN0
-aW5mby9saW51eC1sdm0iIHRhcmdldD0iX2JsYW5rIj5odHRwczovL3d3dy5yZWRoYXQuY29tL21h
-aWxtYW4vbGlzdGluZm8vbGludXgtbHZtPC9hPjxicj4KcmVhZCB0aGUgTFZNIEhPVy1UTyBhdCA8
-YSBocmVmPSJodHRwOi8vdGxkcC5vcmcvSE9XVE8vTFZNLUhPV1RPLyIgdGFyZ2V0PSJfYmxhbmsi
-Pmh0dHA6Ly90bGRwLm9yZy9IT1dUTy9MVk0tSE9XVE8vPC9hPjxicj4KPC9kaXY+PC9kaXY+PC9i
-bG9ja3F1b3RlPjwvZGl2Pjxicj48YnIgY2xlYXI9ImFsbCI+PGJyPi0tIDxicj5ZYWppdGggQWph
-bnRoYSB8IOC2uuC2ouC3kuC2reC3iiDgtoXgtqLgtrHgt4rgtq08YnI+CjwvZGl2Pgo=
-------=_Part_6984_6070233.1219770558952--
+Why?
+
+Most distribution initramfs scripts should only bring up the VG that
+contains the root volume group. If this were a root VG then the system
+would not boot at all.
+
+Auxiliary volume groups should be activated later on by the boot scripts
+(possibly after loading drivers and initialising other subsystems on
+which they depend).
+
+Regards,
+Bryn.
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.7 (GNU/Linux)
+Comment: Using GnuPG with Fedora - http://enigmail.mozdev.org
+
+iD8DBQFItDwb6YSQoMYUY94RAkD/AKDS3usW1y7iVbnKPSw53zqORXhJqwCeJ024
+zY46lV7EwHV7pjmSi8tqKeM=
+=sStt
+-----END PGP SIGNATURE-----
