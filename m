@@ -1,19 +1,20 @@
-Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx2.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m8BELODv007204
-	for <linux-lvm@redhat.com>; Thu, 11 Sep 2008 10:21:25 -0400
-Received: from lists.geoinf.fu-berlin.de (lists.geoinf.fu-berlin.de
-	[160.45.89.23])
-	by mx3.redhat.com (8.13.8/8.13.8) with SMTP id m8BELCSR028330
-	for <linux-lvm@redhat.com>; Thu, 11 Sep 2008 10:21:13 -0400
-Received: from [160.45.89.15] (callisto.geoinf.fu-berlin.de [160.45.89.15])
-	by lists.geoinf.fu-berlin.de (Postfix) with ESMTP id E279518359
-	for <linux-lvm@redhat.com>; Thu, 11 Sep 2008 16:21:11 +0200 (CEST)
-Message-ID: <48C92937.9090506@fu-berlin.de>
-Date: Thu, 11 Sep 2008 16:20:39 +0200
-From: Sebastian Walter <sebastian.walter@fu-berlin.de>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] pvmove abort
+Received: from pobox.fab.redhat.com (pobox.fab.redhat.com [10.33.63.12])
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m8BESS5v018040
+	for <linux-lvm@redhat.com>; Thu, 11 Sep 2008 10:28:28 -0400
+Received: from agk.fab.redhat.com (agk.fab.redhat.com [10.33.0.19])
+	by pobox.fab.redhat.com (8.13.1/8.13.1) with ESMTP id m8BESSQW026606
+	for <linux-lvm@redhat.com>; Thu, 11 Sep 2008 10:28:28 -0400
+Received: from agk by agk.fab.redhat.com with local (Exim 4.34)
+	id 1Kdn9o-0006SF-9H
+	for linux-lvm@redhat.com; Thu, 11 Sep 2008 15:28:28 +0100
+Date: Thu, 11 Sep 2008 15:28:28 +0100
+From: Alasdair G Kergon <agk@redhat.com>
+Subject: Re: [linux-lvm] pvmove abort
+Message-ID: <20080911142828.GC24064@agk.fab.redhat.com>
+References: <48C92937.9090506@fu-berlin.de>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <48C92937.9090506@fu-berlin.de>
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -25,32 +26,17 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-Dear list,
+pvmove --abort is the correct way to stop a pvmove.
+Then see how much got moved and decide if you want to pvmove it back.
 
-I have a problem recovering from an aborted pvmove process. I have a
-volume group called storage consisting of 2 partitions (PV's) with 2 TB
-each (let's call them A and B). I added a third partition (let's call it
-C) using vgextend. Now I did a pvmove A to move A's content to C but
-recognized that it would take a long time so I canceled the pvmove
-pressing ctrl-c.
+The man page explains how it works, but the data moving happens in
+the kernel - in the background if you like - and after the move begins,
+the 'pvmove' process just monitors progress and tidies up when the
+kernel has finished what it's been asked to do.
 
-After that I saw that some data was already written on the formerly
-empty PV C. I tried to pvmove this new pv out of the volume group, but
-pvmove refuses to work with the following error:
-
-Skipping locked LV storage
-Skipping mirror LV pvmove0
-No data to move for storage
-
-There is an additional LV on the VG now called pvmove0. I dont
-understand what pvmove does, but this LV seems to be a mirror. Does this
-mean that everything is still on the old PV and I can delete the LV
-pvmove0? The VG in total seems to be ok.
-
-How can I unlock the volume and free the pv? Any help is greatly
-appreciated.
-
-Best regards,
-Sebastian
+Alasdair
+-- 
+agk@redhat.com
