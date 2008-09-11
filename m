@@ -1,18 +1,24 @@
-Received: from ns3.rdu.redhat.com (ns3.rdu.redhat.com [10.11.255.199])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m8AIi4ef013327
-	for <linux-lvm@redhat.com>; Wed, 10 Sep 2008 14:44:04 -0400
-Received: from [192.168.1.104] (vpn-12-28.rdu.redhat.com [10.11.12.28])
-	by ns3.rdu.redhat.com (8.13.8/8.13.8) with ESMTP id m8AIi4wf004987
-	for <linux-lvm@redhat.com>; Wed, 10 Sep 2008 14:44:04 -0400
-Message-Id: <F6CA41F2-D34F-40CD-A4DE-D9ABD92ECFFD@redhat.com>
-From: Jonathan Brassow <jbrassow@redhat.com>
-In-Reply-To: <425904320809092221i700af066h4072234624b5bf60@mail.gmail.com>
-Content-Transfer-Encoding: 7bit
-Mime-Version: 1.0 (Apple Message framework v928.1)
+Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
+	by int-mx2.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m8BB6Kv1019556
+	for <linux-lvm@redhat.com>; Thu, 11 Sep 2008 07:06:21 -0400
+Received: from s1.echoreply.us (s1.echoreply.us [216.146.143.173])
+	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id m8BB65iI021639
+	for <linux-lvm@redhat.com>; Thu, 11 Sep 2008 07:06:05 -0400
+Received: from [125.60.243.116] (helo=[10.92.1.100])
+	by s1.echoreply.us with esmtpsa (SSLv3:RC4-MD5:128) (Exim 4.68)
+	(envelope-from <echo@echoreply.us>) id 1Kdjzo-0006X1-BB
+	for linux-lvm@redhat.com; Thu, 11 Sep 2008 11:05:56 +0000
 Subject: Re: [linux-lvm] Problem in understanding code
-Date: Wed, 10 Sep 2008 13:44:03 -0500
+From: Tim Post <echo@echoreply.us>
+In-Reply-To: <F6CA41F2-D34F-40CD-A4DE-D9ABD92ECFFD@redhat.com>
 References: <425904320809092221i700af066h4072234624b5bf60@mail.gmail.com>
-Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
+	<F6CA41F2-D34F-40CD-A4DE-D9ABD92ECFFD@redhat.com>
+Date: Thu, 11 Sep 2008 19:05:52 +0800
+Message-Id: <1221131152.5569.119.camel@localhost.localdomain>
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Reply-To: echo@echoreply.us,
+	LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -22,34 +28,31 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"; delsp="yes"
+Content-Type: text/plain; charset="us-ascii"
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-You aren't the first person to stumble on this...  The learning curve  
-is pretty steep.
+On Wed, 2008-09-10 at 13:44 -0500, Jonathan Brassow wrote:
+> You aren't the first person to stumble on this...  The learning curve  
+> is pretty steep.
 
-You might want to have a look in the 'tools' directory to get your  
-head around that stuff (check tools.h, commands.h, and args.h).  There  
-is some clever macro work going on that you don't see very often -  
-neat stuff, but not always as clear as it could be.
+I just did too. I've been working with liblvm2cmd for a day and a half
+and began working backwards through tools/ to see how things worked.
 
-  brassow
+> You might want to have a look in the 'tools' directory to get your  
+> head around that stuff (check tools.h, commands.h, and args.h).  There  
+> is some clever macro work going on that you don't see very often -  
+> neat stuff, but not always as clear as it could be.
+> 
+>   brassow
 
-On Sep 10, 2008, at 12:21 AM, Vineet Agarwal wrote:
+Thanks to all who made liblvm2cmd which makes things much simpler for
+those who are just getting their first glimpse of things. It is going to
+take some time to digest the rest.
 
-> hello
-> i was going through the code of lvcreate and pvcreate LVM2 and i was
-> not able to understand it. there were few arguments var like
-> stripes_ARG etc . Can anyone please provide me with any documentation
-> related to LVM2 code .
-> thankyou
->
-> -- 
->> From :
-> Vineet Agarwal
->
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+I found liblvm2cmd by accident, really. I grabbed the source to LVM2
+while in search of a more elegant way to use LVM in other programs
+without resorting to system() or exec*() calls.
+
+
+Cheers,
+--Tim
