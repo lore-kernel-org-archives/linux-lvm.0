@@ -1,24 +1,20 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx2.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m8BB6Kv1019556
-	for <linux-lvm@redhat.com>; Thu, 11 Sep 2008 07:06:21 -0400
-Received: from s1.echoreply.us (s1.echoreply.us [216.146.143.173])
-	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id m8BB65iI021639
-	for <linux-lvm@redhat.com>; Thu, 11 Sep 2008 07:06:05 -0400
-Received: from [125.60.243.116] (helo=[10.92.1.100])
-	by s1.echoreply.us with esmtpsa (SSLv3:RC4-MD5:128) (Exim 4.68)
-	(envelope-from <echo@echoreply.us>) id 1Kdjzo-0006X1-BB
-	for linux-lvm@redhat.com; Thu, 11 Sep 2008 11:05:56 +0000
-Subject: Re: [linux-lvm] Problem in understanding code
-From: Tim Post <echo@echoreply.us>
-In-Reply-To: <F6CA41F2-D34F-40CD-A4DE-D9ABD92ECFFD@redhat.com>
-References: <425904320809092221i700af066h4072234624b5bf60@mail.gmail.com>
-	<F6CA41F2-D34F-40CD-A4DE-D9ABD92ECFFD@redhat.com>
-Date: Thu, 11 Sep 2008 19:05:52 +0800
-Message-Id: <1221131152.5569.119.camel@localhost.localdomain>
-Mime-Version: 1.0
+	by int-mx2.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m8BELODv007204
+	for <linux-lvm@redhat.com>; Thu, 11 Sep 2008 10:21:25 -0400
+Received: from lists.geoinf.fu-berlin.de (lists.geoinf.fu-berlin.de
+	[160.45.89.23])
+	by mx3.redhat.com (8.13.8/8.13.8) with SMTP id m8BELCSR028330
+	for <linux-lvm@redhat.com>; Thu, 11 Sep 2008 10:21:13 -0400
+Received: from [160.45.89.15] (callisto.geoinf.fu-berlin.de [160.45.89.15])
+	by lists.geoinf.fu-berlin.de (Postfix) with ESMTP id E279518359
+	for <linux-lvm@redhat.com>; Thu, 11 Sep 2008 16:21:11 +0200 (CEST)
+Message-ID: <48C92937.9090506@fu-berlin.de>
+Date: Thu, 11 Sep 2008 16:20:39 +0200
+From: Sebastian Walter <sebastian.walter@fu-berlin.de>
+MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
-Reply-To: echo@echoreply.us,
-	LVM general discussion and development <linux-lvm@redhat.com>
+Subject: [linux-lvm] pvmove abort
+Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -31,28 +27,30 @@ List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-On Wed, 2008-09-10 at 13:44 -0500, Jonathan Brassow wrote:
-> You aren't the first person to stumble on this...  The learning curve  
-> is pretty steep.
+Dear list,
 
-I just did too. I've been working with liblvm2cmd for a day and a half
-and began working backwards through tools/ to see how things worked.
+I have a problem recovering from an aborted pvmove process. I have a
+volume group called storage consisting of 2 partitions (PV's) with 2 TB
+each (let's call them A and B). I added a third partition (let's call it
+C) using vgextend. Now I did a pvmove A to move A's content to C but
+recognized that it would take a long time so I canceled the pvmove
+pressing ctrl-c.
 
-> You might want to have a look in the 'tools' directory to get your  
-> head around that stuff (check tools.h, commands.h, and args.h).  There  
-> is some clever macro work going on that you don't see very often -  
-> neat stuff, but not always as clear as it could be.
-> 
->   brassow
+After that I saw that some data was already written on the formerly
+empty PV C. I tried to pvmove this new pv out of the volume group, but
+pvmove refuses to work with the following error:
 
-Thanks to all who made liblvm2cmd which makes things much simpler for
-those who are just getting their first glimpse of things. It is going to
-take some time to digest the rest.
+Skipping locked LV storage
+Skipping mirror LV pvmove0
+No data to move for storage
 
-I found liblvm2cmd by accident, really. I grabbed the source to LVM2
-while in search of a more elegant way to use LVM in other programs
-without resorting to system() or exec*() calls.
+There is an additional LV on the VG now called pvmove0. I dont
+understand what pvmove does, but this LV seems to be a mirror. Does this
+mean that everything is still on the old PV and I can delete the LV
+pvmove0? The VG in total seems to be ok.
 
+How can I unlock the volume and free the pv? Any help is greatly
+appreciated.
 
-Cheers,
---Tim
+Best regards,
+Sebastian
