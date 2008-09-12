@@ -1,18 +1,21 @@
-Received: from ns3.rdu.redhat.com (ns3.rdu.redhat.com [10.11.255.199])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m8CIjD42001853
-	for <linux-lvm@redhat.com>; Fri, 12 Sep 2008 14:45:13 -0400
-Received: from [10.32.4.65] (vpn-4-65.str.redhat.com [10.32.4.65])
-	by ns3.rdu.redhat.com (8.13.8/8.13.8) with ESMTP id m8CIjCNf023594
-	for <linux-lvm@redhat.com>; Fri, 12 Sep 2008 14:45:13 -0400
-Message-ID: <48CAB8B9.60407@redhat.com>
-Date: Fri, 12 Sep 2008 20:45:13 +0200
-From: Milan Broz <mbroz@redhat.com>
+Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
+	by int-mx2.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m8CIpn0U022167
+	for <linux-lvm@redhat.com>; Fri, 12 Sep 2008 14:51:49 -0400
+Received: from rn-out-0910.google.com (rn-out-0910.google.com [64.233.170.189])
+	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id m8CIpA1I026512
+	for <linux-lvm@redhat.com>; Fri, 12 Sep 2008 14:51:36 -0400
+Received: by rn-out-0910.google.com with SMTP id k32so777069rnd.7
+	for <linux-lvm@redhat.com>; Fri, 12 Sep 2008 11:51:10 -0700 (PDT)
+Message-ID: <3d847d110809121151r611783cet8d9b24f6534aaeff@mail.gmail.com>
+Date: Fri, 12 Sep 2008 20:51:10 +0200
+From: hanocri <hanocri@gmail.com>
+Subject: Re: [linux-lvm] Recovering LVM partition after OS reinstallation
+In-Reply-To: <48CA9D5F.8090502@redhat.com>
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] Cannot create a logical volume
-References: <fbe022af0809120016l13bee5ak957d8e3084dcdac2@mail.gmail.com>
-	<48CA9EC1.1070701@redhat.com>
-In-Reply-To: <48CA9EC1.1070701@redhat.com>
 Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+References: <3d847d110809120248r796de032u29b08d41278c6299@mail.gmail.com>
+	<48CA9D5F.8090502@redhat.com>
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -26,35 +29,49 @@ List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-Jaroslav Stava wrote:
->> [root@localhost ~]# pvscan
->>   PV /dev/md3   VG gt_vg   lvm2 [909.91 GB / 909.91 GB free]
->>   Total: 1 [909.91 GB] / in use: 1 [909.91 GB] / in no VG: 0 [0   ]
+2008/9/12 Jaroslav Stava <jstava@redhat.com>:
+>
+> Check dmraid. Twice.
+>
+> If *scan can't find a lvm pv, than there is something wrong.
+> (unless you are filtering out /dev/dm* - check filter= in lvm.conf)
+>
+> Did you (or the Debian installation) change the partition layout?
+> Where did you install the system to? I assume not to the old
+> "lvroot" logical volume.
+>
+> Partition type (fdisk) means quite nothing.
+> If the device/partition is a lvm PV, then there should be an lvm
+> label at the beginning. That's what vgscan is looking for (see -vvv).
+> If there is no label at the beginning, then:
+> - we are looking at the wrong place - partition layout changed or
+>  perhaps dmraid changed it's mapping
+> - we are looking at the correct place, but the label is not there
+>
+> You could try looking for the label at other places - man pvck.
+>
+> Either way provide some info:
+> "lvmdump -m -a" can automate that
+> or at least post dmsetup table, vgscan -vvv
+> dmraid information
+>
+> Regards,
+> Jaroslav Stava
+>
 
-...
->> [root@localhost ~]# lvcreate -L 5G -n data gt_vg
->>   Not enough PVs with free space available for parallel allocation.
->>   Consider --alloc anywhere if desperate.
->>
->> Any feedback would be very much appreciated,
->>
->> Thanks for your time,
->>
->>   
-> AFAIK this message should be seen only when trying to create a mirrored
-> or striped lv.
-There is another possible problem:
+Sorry, I made a terrible mistake!
+After your suggestions I've dumped (using dd) some first sectors of
+/dev/dm-6 to check what is in header and I noticed LUKS label.
+I totally forgot that whole partition was encrypted (it used to be
+unlocked by external keyfile). So I unlocked partition first and after
+that activated LVM.
+All volumes are here, healthy and intact.
 
-Is the PV allowed to allocate any extents?
+About "lvroot" volume - it was never in use. I planned to install
+other distribution here, but I never did.
+Root filesystem is on non-lvm partition.
 
-Please check "pvdisplay /dev/md3" - there should be
-  Allocatable           yes
+Again sorry for this stupid mistake and thank you for your help.
 
-If not, allow allocation on the PV: "pvchange -x y /dev/md3"
-and try lvcreate again.
-
-That error message is misleading it this situation...
-
-Milan
---
-mbroz@redhat.com
+-- 
+Regards, Grzegorz R.
