@@ -1,16 +1,16 @@
 Received: from ns3.rdu.redhat.com (ns3.rdu.redhat.com [10.11.255.199])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m8CGmacd017359
-	for <linux-lvm@redhat.com>; Fri, 12 Sep 2008 12:48:36 -0400
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m8CGsUjs019688
+	for <linux-lvm@redhat.com>; Fri, 12 Sep 2008 12:54:30 -0400
 Received: from localhost.localdomain (dhcp-0-147.brq.redhat.com [10.34.0.147])
-	by ns3.rdu.redhat.com (8.13.8/8.13.8) with ESMTP id m8CGmZZt010315
-	for <linux-lvm@redhat.com>; Fri, 12 Sep 2008 12:48:35 -0400
-Message-ID: <48CA9D5F.8090502@redhat.com>
-Date: Fri, 12 Sep 2008 18:48:31 +0200
+	by ns3.rdu.redhat.com (8.13.8/8.13.8) with ESMTP id m8CGsTJp010881
+	for <linux-lvm@redhat.com>; Fri, 12 Sep 2008 12:54:29 -0400
+Message-ID: <48CA9EC1.1070701@redhat.com>
+Date: Fri, 12 Sep 2008 18:54:25 +0200
 From: Jaroslav Stava <jstava@redhat.com>
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] Recovering LVM partition after OS reinstallation
-References: <3d847d110809120248r796de032u29b08d41278c6299@mail.gmail.com>
-In-Reply-To: <3d847d110809120248r796de032u29b08d41278c6299@mail.gmail.com>
+Subject: Re: [linux-lvm] Cannot create a logical volume
+References: <fbe022af0809120016l13bee5ak957d8e3084dcdac2@mail.gmail.com>
+In-Reply-To: <fbe022af0809120016l13bee5ak957d8e3084dcdac2@mail.gmail.com>
 Content-Transfer-Encoding: 7bit
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
@@ -25,47 +25,58 @@ List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-hanocri wrote:
-> After root filesystem failure my "/" was all messed up so i had to
-> install system from scratch (Debian Unstable). /home is on separate
-> LVM partition and (i hope so) intact. However pvscan and vgscan gives
-> no result. According to fdisk partition is marked as "8e  Linux LVM".
-> I have LVM metadata backup which you can find here:
-> http://pastebin.com/m5a13d266
-> At line 23 there is: 'device = "/dev/dm-7"    # Hint only ', but there
-> is no such device as /dev/dm-7. I think it should be rather /dev/dm-6
-> (I'm using dmraid), again according to fdisk - the size and type is
-> correct.
-> Should I change dm-7 into dm-6 or simply ignore it and do
-> vgcfgrestore? And what does ' #Hint only' mean? Or maybe there is
-> other way to recover LVM config?
+Vikas wrote:
+> Objective: Be able to take snapshots of XEN disk images for backup.
 >
-> Thanks for any help.
+> Problem: lvcreate is failing
+>
+> The environment:
+>
+> [root@localhost ~]# pvscan
+>   PV /dev/md3   VG gt_vg   lvm2 [909.91 GB / 909.91 GB free]
+>   Total: 1 [909.91 GB] / in use: 1 [909.91 GB] / in no VG: 0 [0   ]
+>
+> [root@localhost ~]# vgscan
+>   Reading all physical volumes.  This may take a while...
+>   Found volume group "gt_vg" using metadata type lvm2
+>
+> [root@localhost ~]# vgdisplay gt_vg
+>   --- Volume group ---
+>   VG Name               gt_vg
+>   System ID
+>   Format                lvm2
+>   Metadata Areas        1
+>   Metadata Sequence No  7
+>   VG Access             read/write
+>   VG Status             resizable
+>   MAX LV                0
+>   Cur LV                0
+>   Open LV               0
+>   Max PV                0
+>   Cur PV                1
+>   Act PV                1
+>   VG Size               909.91 GB
+>   PE Size               32.00 MB
+>   Total PE              29117
+>   Alloc PE / Size       0 / 0
+>   Free  PE / Size       29117 / 909.91 GB
+>   VG UUID               j4aEP0-PCwG-Qyub-DCxw-aVVp-VyCK-EkZUsN
+>
+> [root@localhost ~]# lvcreate -L 5G -n data gt_vg
+>   Not enough PVs with free space available for parallel allocation.
+>   Consider --alloc anywhere if desperate.
+>
+> Any feedback would be very much appreciated,
+>
+> Thanks for your time,
 >
 >   
-Check dmraid. Twice.
+AFAIK this message should be seen only when trying to create a mirrored
+or striped lv.
 
-If *scan can't find a lvm pv, than there is something wrong.
-(unless you are filtering out /dev/dm* - check filter= in lvm.conf)
-
-Did you (or the Debian installation) change the partition layout?
-Where did you install the system to? I assume not to the old
-"lvroot" logical volume.
-
-Partition type (fdisk) means quite nothing.
-If the device/partition is a lvm PV, then there should be an lvm
-label at the beginning. That's what vgscan is looking for (see -vvv).
-If there is no label at the beginning, then:
-- we are looking at the wrong place - partition layout changed or
-  perhaps dmraid changed it's mapping
-- we are looking at the correct place, but the label is not there
- 
-You could try looking for the label at other places - man pvck.
-
-Either way provide some info:
-"lvmdump -m -a" can automate that
-or at least post dmsetup table, vgscan -vvv
-dmraid information
+Post at least the log of -vvv run, so we can guess why this is happening.
+Posting extended lvm info could be helpful too - try lvmdump.
 
 Regards,
+
 Jaroslav Stava
