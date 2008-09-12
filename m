@@ -1,18 +1,18 @@
-Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx2.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m8CIcmYM017164
-	for <linux-lvm@redhat.com>; Fri, 12 Sep 2008 14:38:49 -0400
-Received: from ey-out-2122.google.com (ey-out-2122.google.com [74.125.78.25])
-	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id m8CIcZEK019078
-	for <linux-lvm@redhat.com>; Fri, 12 Sep 2008 14:38:35 -0400
-Received: by ey-out-2122.google.com with SMTP id 4so382429eyf.39
-	for <linux-lvm@redhat.com>; Fri, 12 Sep 2008 11:38:34 -0700 (PDT)
-Message-ID: <425904320809121138u3a25c1cfr63313aae98573f3e@mail.gmail.com>
-Date: Sat, 13 Sep 2008 00:08:34 +0530
-From: "Vineet Agarwal" <checkout.vineet@gmail.com>
+Received: from ns3.rdu.redhat.com (ns3.rdu.redhat.com [10.11.255.199])
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m8CIjD42001853
+	for <linux-lvm@redhat.com>; Fri, 12 Sep 2008 14:45:13 -0400
+Received: from [10.32.4.65] (vpn-4-65.str.redhat.com [10.32.4.65])
+	by ns3.rdu.redhat.com (8.13.8/8.13.8) with ESMTP id m8CIjCNf023594
+	for <linux-lvm@redhat.com>; Fri, 12 Sep 2008 14:45:13 -0400
+Message-ID: <48CAB8B9.60407@redhat.com>
+Date: Fri, 12 Sep 2008 20:45:13 +0200
+From: Milan Broz <mbroz@redhat.com>
 MIME-Version: 1.0
-Content-Type: multipart/alternative; 
-	boundary="----=_Part_163493_27821.1221244714862"
-Subject: [linux-lvm] Please help
+Subject: Re: [linux-lvm] Cannot create a logical volume
+References: <fbe022af0809120016l13bee5ak957d8e3084dcdac2@mail.gmail.com>
+	<48CA9EC1.1070701@redhat.com>
+In-Reply-To: <48CA9EC1.1070701@redhat.com>
+Content-Transfer-Encoding: 7bit
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -23,30 +23,38 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: LVM <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="us-ascii"
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-------=_Part_163493_27821.1221244714862
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
+Jaroslav Stava wrote:
+>> [root@localhost ~]# pvscan
+>>   PV /dev/md3   VG gt_vg   lvm2 [909.91 GB / 909.91 GB free]
+>>   Total: 1 [909.91 GB] / in use: 1 [909.91 GB] / in no VG: 0 [0   ]
 
-Hello
-Can anyone please tell me the entry point of LVM in kernel . I want to know
-that when we do lvcreate or pvcreate or vgcreate then whether a linear map
-is made by device mapper. If yes can anyone please tell which function it
-uses or how mapping is done
-thank you
--- 
-From :
-Vineet Agarwal
+...
+>> [root@localhost ~]# lvcreate -L 5G -n data gt_vg
+>>   Not enough PVs with free space available for parallel allocation.
+>>   Consider --alloc anywhere if desperate.
+>>
+>> Any feedback would be very much appreciated,
+>>
+>> Thanks for your time,
+>>
+>>   
+> AFAIK this message should be seen only when trying to create a mirrored
+> or striped lv.
+There is another possible problem:
 
-------=_Part_163493_27821.1221244714862
-Content-Type: text/html; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
+Is the PV allowed to allocate any extents?
 
-<div dir="ltr">Hello <br>Can anyone please tell me the entry point of LVM in kernel . I want to know that when we do lvcreate or pvcreate or vgcreate then whether a linear map is made by device mapper. If yes can anyone please tell which function it uses or how mapping is done <br clear="all">
-thank you<br>-- <br>From :<br>Vineet Agarwal<br>
-</div>
+Please check "pvdisplay /dev/md3" - there should be
+  Allocatable           yes
 
-------=_Part_163493_27821.1221244714862--
+If not, allow allocation on the PV: "pvchange -x y /dev/md3"
+and try lvcreate again.
+
+That error message is misleading it this situation...
+
+Milan
+--
+mbroz@redhat.com
