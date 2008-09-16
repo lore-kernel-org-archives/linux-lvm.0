@@ -1,21 +1,19 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx2.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m8D3jT7W006166
-	for <linux-lvm@redhat.com>; Fri, 12 Sep 2008 23:45:29 -0400
-Received: from s1.echoreply.us (s1.echoreply.us [216.146.143.173])
-	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id m8D3iCi2003937
-	for <linux-lvm@redhat.com>; Fri, 12 Sep 2008 23:44:12 -0400
-Received: from [125.60.243.116] (helo=[10.92.1.100])
-	by s1.echoreply.us with esmtpsa (SSLv3:RC4-MD5:128) (Exim 4.68)
-	(envelope-from <echo@echoreply.us>) id 1KeM3G-0005ga-JH
-	for linux-lvm@redhat.com; Sat, 13 Sep 2008 03:44:03 +0000
-From: Tim Post <echo@echoreply.us>
-Date: Sat, 13 Sep 2008 11:43:57 +0800
-Message-Id: <1221277437.5569.193.camel@localhost.localdomain>
+	by int-mx2.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m8GJRQj8019641
+	for <linux-lvm@redhat.com>; Tue, 16 Sep 2008 15:27:26 -0400
+Received: from smtp6.versatel.nl (smtp6.versatel.nl [62.58.50.97])
+	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id m8GJR8mf030356
+	for <linux-lvm@redhat.com>; Tue, 16 Sep 2008 15:27:09 -0400
+Received: from [192.168.1.102] (unknown [192.168.1.102])
+	by mail.vermeer.tv (Postfix) with ESMTPA id C9BEA26F1BB
+	for <linux-lvm@redhat.com>; Tue, 16 Sep 2008 21:19:50 +0200 (CEST)
+From: Koen Vermeer <koen@vermeer.tv>
+Date: Tue, 16 Sep 2008 21:20:27 +0200
+Message-Id: <1221592827.6037.57.camel@localhost>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] Question regarding liblvm2cmd
-Reply-To: echo@echoreply.us,
-	LVM general discussion and development <linux-lvm@redhat.com>
+Subject: [linux-lvm] Mirrored LV
+Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -26,29 +24,29 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: LVM general discussion and development <linux-lvm@redhat.com>
+To: linux-lvm@redhat.com
 
-Hello,
+Hi,
 
-I am working with liblvm2cmd within a program that aims to simplify
-typical LV management tasks from a web interface. Using the library
-allows me to accomplish this with better sanity and safety.
+I was thinking of using a mirrored LV as a easier to use alternative to
+a RAID1 PV (with matching VG and LV). I tried to find the information I
+need on how this works and how to set it up, but so far, I failed.
 
-I noticed that lvm2_run() only has a few possible return values and does
-not set a global errno to give more information as to why something may
-have failed. I inspected lvm2_run() and _run_command() in tools/.
+First, am I right in trying to use LVM in this way? I have two disks,
+and I just want to mirror some LVs.
 
-For instance, if you try to create a LV of a size that exceeds the
-capacity of the given VG, its easy to tell that something went wrong and
-print the response from lvm in the callback. However, it seems rather
-difficult for the calling function to know what went wrong. The user
-knows, obviously, by what is printed.
+Second, I am confused by the apparent need to have this log stored on
+another device. Actually, this doesn't seem true in two ways: There's
+the option of having the log in memory and then the documentation only
+says that the log is 'usually on a separate device'. Does that mean that
+using a mirrored LV makes no sense on a system with two disks? Or should
+I just keep the log in memory in this case? Or can I use another PV on
+one of the disks? Should this be mirrored as well? What happens if I
+loose that data?
 
-Barring picking apart the strings that would be printed for any given
-level, is there some other way to make a program understand the nature
-of a failure?
+From what I found when searching for answers, it seems that I'm not the
+only one that's confused... But maybe my searching skills are just
+lacking. Anyway, I appreciate any help and insights!
 
-Many thanks in advance.
-
-Cheers,
---Tim
+Best,
+Koen
