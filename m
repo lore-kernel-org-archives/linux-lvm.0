@@ -1,24 +1,32 @@
-Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx2.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m8GJuSbu000933
-	for <linux-lvm@redhat.com>; Tue, 16 Sep 2008 15:56:29 -0400
-Received: from smtp2-g19.free.fr (smtp2-g19.free.fr [212.27.42.28])
-	by mx3.redhat.com (8.13.8/8.13.8) with SMTP id m8GJuGDd020278
-	for <linux-lvm@redhat.com>; Tue, 16 Sep 2008 15:56:16 -0400
-Received: from smtp2-g19.free.fr (localhost.localdomain [127.0.0.1])
-	by smtp2-g19.free.fr (Postfix) with ESMTP id 902F112B7D9
-	for <linux-lvm@redhat.com>; Tue, 16 Sep 2008 21:56:14 +0200 (CEST)
-Received: from [192.168.1.2] (bon31-1-82-66-78-161.fbx.proxad.net
-	[82.66.78.161])
-	by smtp2-g19.free.fr (Postfix) with ESMTP id E4B1212B82C
-	for <linux-lvm@redhat.com>; Tue, 16 Sep 2008 21:56:01 +0200 (CEST)
-Message-ID: <48D00F51.5090305@free.fr>
-Date: Tue, 16 Sep 2008 21:56:01 +0200
-From: Georges Giralt <georges.giralt@free.fr>
-MIME-Version: 1.0
+Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m8GKgvJN031294
+	for <linux-lvm@redhat.com>; Tue, 16 Sep 2008 16:42:57 -0400
+Received: from e2.ny.us.ibm.com (e2.ny.us.ibm.com [32.97.182.142])
+	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id m8GKgtAn012102
+	for <linux-lvm@redhat.com>; Tue, 16 Sep 2008 16:42:55 -0400
+Received: from d01relay02.pok.ibm.com (d01relay02.pok.ibm.com [9.56.227.234])
+	by e2.ny.us.ibm.com (8.13.8/8.13.8) with ESMTP id m8GKgteT018509
+	for <linux-lvm@redhat.com>; Tue, 16 Sep 2008 16:42:55 -0400
+Received: from d01av04.pok.ibm.com (d01av04.pok.ibm.com [9.56.224.64])
+	by d01relay02.pok.ibm.com (8.13.8/8.13.8/NCO v9.1) with ESMTP id
+	m8GKgsEc287046
+	for <linux-lvm@redhat.com>; Tue, 16 Sep 2008 16:42:54 -0400
+Received: from d01av04.pok.ibm.com (loopback [127.0.0.1])
+	by d01av04.pok.ibm.com (8.12.11.20060308/8.13.3) with ESMTP id
+	m8GKgskf025449
+	for <linux-lvm@redhat.com>; Tue, 16 Sep 2008 16:42:54 -0400
+Received: from malahal.localdomain (malahal.beaverton.ibm.com [9.47.17.130])
+	by d01av04.pok.ibm.com (8.12.11.20060308/8.12.11) with ESMTP id
+	m8GKgslY024902
+	for <linux-lvm@redhat.com>; Tue, 16 Sep 2008 16:42:54 -0400
+Date: Tue, 16 Sep 2008 13:42:41 -0700
+From: malahal@us.ibm.com
 Subject: Re: [linux-lvm] Mirrored LV
+Message-ID: <20080916204241.GA9810@us.ibm.com>
 References: <1221592827.6037.57.camel@localhost>
+MIME-Version: 1.0
+Content-Disposition: inline
 In-Reply-To: <1221592827.6037.57.camel@localhost>
-Content-Transfer-Encoding: quoted-printable
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -29,19 +37,22 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="iso-8859-1"; format="flowed"
-To: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: linux-lvm@redhat.com
 
-Koen Vermeer a =EF=BF=BDcrit :
+Koen Vermeer [koen@vermeer.tv] wrote:
 > Hi,
->=20
+> 
 > I was thinking of using a mirrored LV as a easier to use alternative to
 > a RAID1 PV (with matching VG and LV). I tried to find the information I
 > need on how this works and how to set it up, but so far, I failed.
->=20
+> 
 > First, am I right in trying to use LVM in this way? I have two disks,
 > and I just want to mirror some LVs.
->=20
+
+You can by using corelog (aka, log in memory), but read on...
+
 > Second, I am confused by the apparent need to have this log stored on
 > another device. Actually, this doesn't seem true in two ways: There's
 > the option of having the log in memory and then the documentation only
@@ -50,33 +61,12 @@ Koen Vermeer a =EF=BF=BDcrit :
 > I just keep the log in memory in this case? Or can I use another PV on
 > one of the disks? Should this be mirrored as well? What happens if I
 > loose that data?
->=20
->>From what I found when searching for answers, it seems that I'm not the
-> only one that's confused... But maybe my searching skills are just
-> lacking. Anyway, I appreciate any help and insights!
->=20
-> Best,
-> Koen
-Koen,
-I confirm that you have to use 3 disks to mirror a VG with the actual=20
-version of software.
-At home, having enough disk, I use 3 disks to get my VG/LV mirrored and=20
-it works flawlessly since a couple of years.
-At work, we have mirrored the PV using 2 devices and the software RAID=20
-(md) and build the VG/LV on top of that. It runs flawlessly for 4 years=20
-I think (have to check the exact installation date...) So choice is yours...
-HAve a nice day.
-P.S. At home, I do not use the whole PV for my LV.
-Each PV is split in two dissymitrical parts : a small 100 M partition=20
-and the rest of the device. The small partition is used for a software=20
-RAID (md) to hold the /boot. The rest of the disk as a regular PV used=20
-to build the mirrored VG/LV. This way, if one disk breaks I still can=20
-boot onto the remaining  one. Of course, it is a manual boot but easier=20
-compared to searching a useable rescue CD and the correct kernel=20
-version. Think about it.
 
+The log records what regions of your master device are in sync with your
+other mirror device. It is used to synchronize the failed regions from
+the master to your other device when your 'other device' comes back to
+life. This should work whether your log device is in memory or on a PV
+by itself as long as you don't de-activate or restart your machine. The
+log data on a PV can be useful for reboots.
 
---=20
-If the only tool you have is a hammer, you tend to see every problem as=20
-a nail.
-                 Abraham Maslow
+-Malahal.
