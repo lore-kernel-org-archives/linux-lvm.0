@@ -1,22 +1,36 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx2.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m8JF7q54016873
-	for <linux-lvm@redhat.com>; Fri, 19 Sep 2008 11:07:53 -0400
-Received: from smtp1.versatel.nl (smtp1.versatel.nl [62.58.50.88])
-	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id m8JF7nfN013750
-	for <linux-lvm@redhat.com>; Fri, 19 Sep 2008 11:07:50 -0400
-Received: from [192.168.1.18] (unknown [80.101.105.201])
-	by mail.vermeer.tv (Postfix) with ESMTPSA id B03B926F1BB
-	for <linux-lvm@redhat.com>; Fri, 19 Sep 2008 17:06:01 +0200 (CEST)
+	by int-mx2.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m8JHVWQ3013145
+	for <linux-lvm@redhat.com>; Fri, 19 Sep 2008 13:31:32 -0400
+Received: from e1.ny.us.ibm.com (e1.ny.us.ibm.com [32.97.182.141])
+	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id m8JHVGs6014147
+	for <linux-lvm@redhat.com>; Fri, 19 Sep 2008 13:31:16 -0400
+Received: from d01relay04.pok.ibm.com (d01relay04.pok.ibm.com [9.56.227.236])
+	by e1.ny.us.ibm.com (8.13.8/8.13.8) with ESMTP id m8JHVGnj018139
+	for <linux-lvm@redhat.com>; Fri, 19 Sep 2008 13:31:16 -0400
+Received: from d01av03.pok.ibm.com (d01av03.pok.ibm.com [9.56.224.217])
+	by d01relay04.pok.ibm.com (8.13.8/8.13.8/NCO v9.1) with ESMTP id
+	m8JHVBcl136570
+	for <linux-lvm@redhat.com>; Fri, 19 Sep 2008 13:31:15 -0400
+Received: from d01av03.pok.ibm.com (loopback [127.0.0.1])
+	by d01av03.pok.ibm.com (8.12.11.20060308/8.13.3) with ESMTP id
+	m8JHVA2r010916
+	for <linux-lvm@redhat.com>; Fri, 19 Sep 2008 13:31:11 -0400
+Received: from malahal.localdomain ([9.47.17.130])
+	by d01av03.pok.ibm.com (8.12.11.20060308/8.12.11) with ESMTP id
+	m8JHVA2v010736
+	for <linux-lvm@redhat.com>; Fri, 19 Sep 2008 13:31:10 -0400
+Date: Fri, 19 Sep 2008 10:31:08 -0700
+From: malahal@us.ibm.com
 Subject: Re: [linux-lvm] Mirrored LV
-From: Koen Vermeer <koen@vermeer.tv>
-In-Reply-To: <20080916215759.GA11670@us.ibm.com>
+Message-ID: <20080919173108.GA15000@us.ibm.com>
 References: <1221592827.6037.57.camel@localhost>
-	<20080916204241.GA9810@us.ibm.com> <1221599565.6037.82.camel@localhost>
+	<20080916204241.GA9810@us.ibm.com>
+	<1221599565.6037.82.camel@localhost>
 	<20080916215759.GA11670@us.ibm.com>
-Date: Fri, 19 Sep 2008 17:06:50 +0200
-Message-Id: <1221836810.4051.8.camel@koenws.oogziekenhuis.lan>
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+	<1221836810.4051.8.camel@koenws.oogziekenhuis.lan>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <1221836810.4051.8.camel@koenws.oogziekenhuis.lan>
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -28,27 +42,20 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Transfer-Encoding: 7bit
+To: linux-lvm@redhat.com
 
-On Tue, 2008-09-16 at 14:57 -0700, malahal@us.ibm.com wrote:
-> Koen Vermeer [koen@vermeer.tv] wrote:
-> > If I understand you correctly, you're statements are about when the
-> > 'other device' is failing. Is this right? If so, then the log should
-> > normally show that everything is synced. In that case, it's not of much
-> > use in normal operation. Now, when one disk fails, I need to replace it,
-> > and rebuild the mirror. So again, I don't need it, because I have to
-> > copy everything anyway. Only when a disk is temporarily gone, it may be
-> > of some use. Does this make sense?
-> Yes, it makes sense for temporarily gone devices. Otherwise use corelog
-> for your lvcreate command and you should be able to create mirrored LV.
+Koen Vermeer [koen@vermeer.tv] wrote:
+> I tried converting my lv to a mirrored one with --corelog, which worked
+> perfectly. However, after a reboot, the mirror is being recreated, which
+> takes quite some time and leaves me with a largely unresponsive system.
+> 
+> Is there some way around this? Would having the log on the master disk
+> fix this? If so, does it need it's own PV or LV or neither?
 
-I tried converting my lv to a mirrored one with --corelog, which worked
-perfectly. However, after a reboot, the mirror is being recreated, which
-takes quite some time and leaves me with a largely unresponsive system.
+It needs it own PV. Create an extra partition on your master disk and
+add the PV tou the volume group.  Then run lvcreate again with out
+corelog option. By default the command would create a disklog. You can
+also specify where you want your log.
 
-Is there some way around this? Would having the log on the master disk
-fix this? If so, does it need it's own PV or LV or neither?
-
-Thanks!
-
-Koen
+--Malahal.
