@@ -1,18 +1,40 @@
-Received: from mx2.redhat.com (mx2.redhat.com [10.255.15.25])
-	by int-mx2.corp.redhat.com (8.13.1/8.13.1) with SMTP id m8KFIU1D004527
-	for <linux-lvm@redhat.com>; Sat, 20 Sep 2008 11:18:30 -0400
-Received: from mcw.edu (fortimail.fm.mcw.edu [141.106.20.130])
-	by mx2.redhat.com (8.13.8/8.13.8) with SMTP id m8KFIB5o005741
-	for <linux-lvm@redhat.com>; Sat, 20 Sep 2008 11:18:11 -0400
-Received: from kaiso.biophysics.mcw.edu (kaiso.biophysics.mcw.edu
-	[141.106.202.68])
-	by fortimail2.fm.mcw.edu  with ESMTP id m8KFIBQ0017900
-	for <linux-lvm@redhat.com>; Sat, 20 Sep 2008 10:18:11 -0500
-Date: Sat, 20 Sep 2008 10:18:11 -0500 (CDT)
-From: vinai <vroopcha@mcw.edu>
-Message-ID: <Pine.OSX.4.62.0809201012250.31987@kaiso.biophysics.mcw.edu>
+Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
+	by int-mx2.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m8MLLZO5009254
+	for <linux-lvm@redhat.com>; Mon, 22 Sep 2008 17:21:36 -0400
+Received: from e2.ny.us.ibm.com (e2.ny.us.ibm.com [32.97.182.142])
+	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id m8MLLYbF011396
+	for <linux-lvm@redhat.com>; Mon, 22 Sep 2008 17:21:34 -0400
+Received: from d01relay04.pok.ibm.com (d01relay04.pok.ibm.com [9.56.227.236])
+	by e2.ny.us.ibm.com (8.13.8/8.13.8) with ESMTP id m8MLLXn4023864
+	for <linux-lvm@redhat.com>; Mon, 22 Sep 2008 17:21:33 -0400
+Received: from d01av04.pok.ibm.com (d01av04.pok.ibm.com [9.56.224.64])
+	by d01relay04.pok.ibm.com (8.13.8/8.13.8/NCO v9.1) with ESMTP id
+	m8MLLK0A164208
+	for <linux-lvm@redhat.com>; Mon, 22 Sep 2008 17:21:33 -0400
+Received: from d01av04.pok.ibm.com (loopback [127.0.0.1])
+	by d01av04.pok.ibm.com (8.12.11.20060308/8.13.3) with ESMTP id
+	m8MLLKQn013151
+	for <linux-lvm@redhat.com>; Mon, 22 Sep 2008 17:21:20 -0400
+Received: from malahal.localdomain (malahal.beaverton.ibm.com [9.47.17.130]
+	(may be forged))
+	by d01av04.pok.ibm.com (8.12.11.20060308/8.12.11) with ESMTP id
+	m8MLLKA5012636
+	for <linux-lvm@redhat.com>; Mon, 22 Sep 2008 17:21:20 -0400
+Date: Mon, 22 Sep 2008 14:21:07 -0700
+From: malahal@us.ibm.com
+Subject: Re: [linux-lvm] Mirrored LV
+Message-ID: <20080922212107.GA19145@us.ibm.com>
+References: <1221592827.6037.57.camel@localhost>
+	<20080916204241.GA9810@us.ibm.com>
+	<1221599565.6037.82.camel@localhost>
+	<20080916215759.GA11670@us.ibm.com>
+	<1221836810.4051.8.camel@koenws.oogziekenhuis.lan>
+	<20080919173108.GA15000@us.ibm.com>
+	<1221861679.4718.1.camel@localhost>
+	<C6403FD1-E3EE-45EC-B294-F8C55FB07896@redhat.com>
 MIME-Version: 1.0
-Subject: [linux-lvm] Problems growing a logical volume with LVM tools.
+Content-Disposition: inline
+In-Reply-To: <C6403FD1-E3EE-45EC-B294-F8C55FB07896@redhat.com>
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -23,71 +45,30 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"; format="flowed"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@redhat.com
 
-Hi Folks,
+Jonathan Brassow [jbrassow@redhat.com] wrote:
+> Just to answer some questions:
+>
+> You can use just 2 disks to create a mirror and a disk log:
+> prompt> lvcreate --alloc anywhere -m1 -L 500M -n my_lv my_vg
+>
+> I wish the allocation policy 'normal' (which is the default) would also do 
+> this... but instead you must choose a looser allocation policy to get what 
+> you want.
+>
+> The reason that you want the disk-based log is to prevent all the extra 
+> work when you machine comes up.
 
-I've been using Linux SuSE and openSUSE for a little while now, but this 
-is my first foray into LVM.  This message was originally posted to an 
-openSUSE list, but it was suggested to ask a crowd better versed in lvm.
+I wish LVM can detect and only re-sync if needed even with corelog!
 
-First off - the setup is a rack-mounted server running 64-bit openSUSE 
-10.3, with all updates installed.  There are 16 hard drives are split 
-up into 2 8-disk RAID-5 volumes using a 3ware SATA RAID controller card. 
-Each volume was made up of disks that were previously 400 GB, but now 
-upgraded to 1 TB, hence the total volume size grew from 2.4 TB to 6.3 
-TB.  The initial setup on this machine did not include LVM, and I would 
-like to implement it to handle future size increases.  But I am stuck at 
-the final step of extending the logical volume.  Here's what I did so 
-far:
+> The reason that LVM wants a separate disk for the log is so the head on the 
+> storage device doesn't need to go ping-ponging around the device.  (The log 
+> is touched for almost every write.)  So, its a performance thing... and 
+> possibly a not-wear-out-your-hardware thing too.
 
-- On the 6.3 TB RAID-5 volume, I created a partition (with parted, type 
-GPT, with the lvm flag on).  This partition was 2.4 TB (or thereabouts) 
-in size, to simulate the growth from 2.4 to 6.3 TB (we were previously 
-able to grow the underlying RAID-5 volume successfully).
+Nice to know about guaranteed long disk seeks with this approach!
 
-- I made this partition (sdc1) a physical volume.
-
-- I then made a volume group (array2) from this single partition
-
-- After that, I made a logical volume (rd2) from the array2 volume group
-
-- I used parted and mkfs on this logical partition (rd2) to create a 
-partition with the "loop" label and format it.
-
-- I put some data on there and ran a checksum.
-
-- Then I unmounted the rd2 logical partition from the computer's file 
-system.
-
-- I ran pvresize on it and maxed out the number of extents available on 
-the physical volume successfully.
-
-- I repeated the same for vgresize successfully.
-
-- And finally (or so I thought) I ran lvextend to resize the logical 
-volume.  But here's where I ran into issues.  Here's the command I've 
-been trying and the output:
-
-# lvresize -d -v -l 1668910  /dev/array2/rd2
-     Finding volume group array2
-     Archiving volume group "array2" metadata (seqno 4).
-   Extending logical volume rd2 to 6.37 TB
-     Creating volume group backup "/etc/lvm/backup/array2" (seqno 5).
-     Found volume group "array2"
-     Found volume group "array2"
-     Loading array2-rd2 table
-   device-mapper: reload ioctl failed: Invalid argument
-   Failed to suspend rd2
-
-The size of the logical volume does not change.  I even tried this using 
-the GUI in YaST2, but the error message that popped up was essentially 
-the same thing.  What did I miss, or what I am not doing ?  I got the 
-same results with "lvextend" ...
-
-Thanks all.
-
-cheers
-vinai
+--Malahal.
