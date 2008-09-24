@@ -1,26 +1,18 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx2.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m8OGsLD0022421
-	for <linux-lvm@redhat.com>; Wed, 24 Sep 2008 12:54:22 -0400
-Received: from smtp-3.tky.hut.fi (smtp03.tky.fi [82.130.63.73])
-	by mx3.redhat.com (8.13.8/8.13.8) with SMTP id m8OGrUtt008517
-	for <linux-lvm@redhat.com>; Wed, 24 Sep 2008 12:53:58 -0400
-Received: from depili.fi ([82.130.16.250])
-	by smtp-3.tky.hut.fi (SMSSMTP 4.1.9.35) with SMTP id
-	M2008092419532930400
-	for <linux-lvm@redhat.com>; Wed, 24 Sep 2008 19:53:29 +0300
-Received: from localhost (localhost [127.0.0.1])
-	by depili.fi (Postfix) with ESMTP id 75B609A03
-	for <linux-lvm@redhat.com>; Wed, 24 Sep 2008 16:53:29 +0000 (UTC)
-Date: Wed, 24 Sep 2008 19:53:29 +0300 (EEST)
-From: Vesa-Pekka Palmu <palmu@aski.hut.fi>
-Subject: Re: [linux-lvm] LVM label lost on MD RAID5 reshape?
-In-Reply-To: <Pine.LNX.4.64.0809231711250.4246@gremlin.fruitbat.org>
-Message-ID: <alpine.DEB.1.10.0809241950340.11522@depili.fi>
-References: <20080923210233.GA32676@newbie.thebellsplace.net>
-	<Pine.LNX.4.64.0809231419010.4246@gremlin.fruitbat.org>
-	<1c748a490809231456q4a0d2656y48427f57a8bbcb0c@mail.gmail.com>
-	<Pine.LNX.4.64.0809231711250.4246@gremlin.fruitbat.org>
+	by int-mx2.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m8OKbkIO002398
+	for <linux-lvm@redhat.com>; Wed, 24 Sep 2008 16:37:47 -0400
+Received: from rv-out-0506.google.com (rv-out-0506.google.com [209.85.198.230])
+	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id m8OKaMmA006220
+	for <linux-lvm@redhat.com>; Wed, 24 Sep 2008 16:36:22 -0400
+Received: by rv-out-0506.google.com with SMTP id f6so78712rvb.51
+	for <linux-lvm@redhat.com>; Wed, 24 Sep 2008 13:36:22 -0700 (PDT)
+Message-ID: <db9fa2350809241336q29572ae9xf9ff6f4b5c2ce384@mail.gmail.com>
+Date: Wed, 24 Sep 2008 22:36:22 +0200
+From: "Kevin Maguire" <k.c.f.maguire@gmail.com>
 MIME-Version: 1.0
+Content-Type: multipart/alternative; 
+	boundary="----=_Part_143710_6051797.1222288582116"
+Subject: [linux-lvm] problem with devices / mirrors
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -31,49 +23,102 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"
+To: linux-lvm@redhat.com
+
+------=_Part_143710_6051797.1222288582116
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-To: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Disposition: inline
 
-On Tue, 23 Sep 2008, Peter A. Castro wrote:
+Hi
 
-> > > My understanding of RAID5 is that once you configure the set of disks to
-> > > the array, you can't just add an additional disk to it.  Attempting to do
-> > > so does more than just "reshape" the array, it changes the logical layout
-> > > of the sectors completely.  It's no wonder that LVM can't find anything,
-> > > since it's data (if it survived the reorg) is no longer where it should
-> > > be.  And, once you've done this, there's really no going back to recover.
-> > > This is assuming my understanding of RAID5 is correct.
-> >
-> > I disagree, because assuming the md reshape operates intuitively, the old
-> > 320 GB of data should still be visible as the first 320 GB of data on the
-> > new VIRTUAL 640GB device. And LVM should know nothing about the underlying
-> > RAIDing, so it should be happy to look there. However, I have no idea what
-> > "bumped the values in /proc/sys/dev/raid/" means, or if it causes LVM to
-> > look in the wrong places for things.
->
-> I don't believe the MD/RAID5 operates in this way.  He started with a
-> 2-disk RAID5 (effectively having the data logically interleaved between
-> the two drives), then he added an additional disk.  The way RAID works,
-> it doesn't just add the disk space to the end of the array (that would
-> not create a recoverable scenario should it or one of the others fail),
-> it re-integrates and effectively re-interleaves the logical sectors to
-> re-spread the data across all three drives.  The trouble is, I don't
-> think you can actually do this with current MD tech (I could be wrong).
->
-> Perhaps a better question would be to ask how, exactly, Bob create his
-> array initially (what commands) and what steps he took to add the new
-> drive (again, what commands did he issue).  That would give us a better
-> idea of how the array looked before and after.
->
-> All of this is orthogonal to LVM, however.  I suspect a RAID/MD email
-> list would be a better forum to discuss this.
->
+# lvm version
+  LVM version:     2.02.17 (2006-12-14)
+  Library version: 1.02.13 (2006-11-28)
+  Driver version:  4.7.0
+# uname -a
+Linux srv1 2.6.16.60-0.27-smp #1 SMP Mon Jul 28 12:55:32 UTC 2008 x86_64
+x86_64 x86_64 GNU/Linux
 
-Current linux MD-raid can reshape raid-5 arrays, the operation just takes
-really long time and there is a critical section at the start, which means
-if your computer crashes during the first second or two at the start all
-data is pretty much lost.
+This is a SLES 10 based system.
 
-The raid-5 reshape is quite new feature in md-raid and I don't know how
-stable it is.
+I was using 2 disks, with one partiotion on each (sda5/sdb5) as PVs.
+
+One VG (vg01) was created on these underlying PVs.
+
+The LVs were /dev/mapper/vg01-VM--m and /dev/mapper/vg01-ISO--m
+
+(as listed in /etc/fstab)
+
+I don't much care about the ISO one, it was just ISO images. The VM one was
+VMware virtual machines.
+
+I needed more disk space, so I changed these to linear volumes via lvconvert
+-m0. It said it worked.
+
+There seemed to be a few "devices" left hanging around, so i removed them
+with dmsetup,
+
+dmsetup remove vg01-ISO--m_mimage_0
+dmsetup remove vg01-ISO--m_mimage_1
+
+I then tried to remove the physical volume with pvremove. It told me I had
+to use "-ff" so i did.
+
+Now things look really bad :-(
+
+My filesystem was/is still mounted, and I am right now rsyncing the data to
+another system. But this does not look good:
+
+# lvs -P -o +devices
+  Partial mode. Incomplete volume groups will be activated read-only.
+  Couldn't find device with uuid 'jGk0w0-UC8A-VMnX-riS4-QMVV-wYYH-pB2klH'.
+  Couldn't find device with uuid 'jGk0w0-UC8A-VMnX-riS4-QMVV-wYYH-pB2klH'.
+  LV   VG   Attr   LSize   Origin Snap%  Move Log Copy%  Devices
+  VM-m vg01 -wi-ao 125.00G                               /dev/sda5(32000)
+
+# pvscan  -P
+  Partial mode. Incomplete volume groups will be activated read-only.
+  Couldn't find device with uuid 'jGk0w0-UC8A-VMnX-riS4-QMVV-wYYH-pB2klH'.
+  Couldn't find device with uuid 'jGk0w0-UC8A-VMnX-riS4-QMVV-wYYH-pB2klH'.
+  PV /dev/sda5        VG vg01   lvm2 [348.61 GB / 223.61 GB free]
+  PV unknown device   VG vg01   lvm2 [348.61 GB / 348.61 GB free]
+  Total: 2 [697.21 GB] / in use: 2 [697.21 GB] / in no VG: 0 [0   ]
+
+# vgscan  -P
+  Partial mode. Incomplete volume groups will be activated read-only.
+  Reading all physical volumes.  This may take a while...
+  Couldn't find device with uuid 'jGk0w0-UC8A-VMnX-riS4-QMVV-wYYH-pB2klH'.
+  Couldn't find device with uuid 'jGk0w0-UC8A-VMnX-riS4-QMVV-wYYH-pB2klH'.
+  Found volume group "vg01" using metadata type lvm2
+
+# lvscan  -P
+  Partial mode. Incomplete volume groups will be activated read-only.
+  Couldn't find device with uuid 'jGk0w0-UC8A-VMnX-riS4-QMVV-wYYH-pB2klH'.
+  Couldn't find device with uuid 'jGk0w0-UC8A-VMnX-riS4-QMVV-wYYH-pB2klH'.
+  ACTIVE            '/dev/vg01/VM-m' [125.00 GB] inherit
+
+Ideas and or suggestions *really* appreciated! Am I correct to be really
+concerned?
+
+Kevin
+
+------=_Part_143710_6051797.1222288582116
+Content-Type: text/html; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+<div dir="ltr">Hi<br><br># lvm version<br>&nbsp; LVM version:&nbsp;&nbsp;&nbsp;&nbsp; 2.02.17 (2006-12-14)<br>&nbsp; Library version: 1.02.13 (2006-11-28)<br>&nbsp; Driver version:&nbsp; 4.7.0<br># uname -a<br>Linux srv1 2.6.16.60-0.27-smp #1 SMP Mon Jul 28 12:55:32 UTC 2008 x86_64 x86_64 x86_64 GNU/Linux<br>
+<br>This is a SLES 10 based system.<br><br>I was using 2 disks, with one partiotion on each (sda5/sdb5) as PVs.<br><br>One VG (vg01) was created on these underlying PVs. <br><br>The LVs were /dev/mapper/vg01-VM--m and /dev/mapper/vg01-ISO--m<br>
+<br>(as listed in /etc/fstab)<br><br>I don&#39;t much care about the ISO one, it was just ISO images. The VM one was VMware virtual machines.<br><br>I needed more disk space, so I changed these to linear volumes via lvconvert -m0. It said it worked.<br>
+<br>There seemed to be a few &quot;devices&quot; left hanging around, so i removed them with dmsetup, <br><br>dmsetup remove vg01-ISO--m_mimage_0<br>dmsetup remove vg01-ISO--m_mimage_1<br><br>I then tried to remove the physical volume with pvremove. It told me I had to use &quot;-ff&quot; so i did.<br>
+<br>Now things look really bad :-(<br><br>My filesystem was/is still mounted, and I am right now rsyncing the data to another system. But this does not look good:<br><br># lvs -P -o +devices<br>&nbsp; Partial mode. Incomplete volume groups will be activated read-only.<br>
+&nbsp; Couldn&#39;t find device with uuid &#39;jGk0w0-UC8A-VMnX-riS4-QMVV-wYYH-pB2klH&#39;.<br>&nbsp; Couldn&#39;t find device with uuid &#39;jGk0w0-UC8A-VMnX-riS4-QMVV-wYYH-pB2klH&#39;.<br>&nbsp; LV&nbsp;&nbsp; VG&nbsp;&nbsp; Attr&nbsp;&nbsp; LSize&nbsp;&nbsp; Origin Snap%&nbsp; Move Log Copy%&nbsp; Devices<br>
+&nbsp; VM-m vg01 -wi-ao 125.00G&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; /dev/sda5(32000)<br><br># pvscan&nbsp; -P<br>&nbsp; Partial mode. Incomplete volume groups will be activated read-only.<br>&nbsp; Couldn&#39;t find device with uuid &#39;jGk0w0-UC8A-VMnX-riS4-QMVV-wYYH-pB2klH&#39;.<br>
+&nbsp; Couldn&#39;t find device with uuid &#39;jGk0w0-UC8A-VMnX-riS4-QMVV-wYYH-pB2klH&#39;.<br>&nbsp; PV /dev/sda5&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; VG vg01&nbsp;&nbsp; lvm2 [348.61 GB / 223.61 GB free]<br>&nbsp; PV unknown device&nbsp;&nbsp; VG vg01&nbsp;&nbsp; lvm2 [348.61 GB / 348.61 GB free]<br>
+&nbsp; Total: 2 [697.21 GB] / in use: 2 [697.21 GB] / in no VG: 0 [0&nbsp;&nbsp; ]<br><br># vgscan&nbsp; -P<br>&nbsp; Partial mode. Incomplete volume groups will be activated read-only.<br>&nbsp; Reading all physical volumes.&nbsp; This may take a while...<br>
+&nbsp; Couldn&#39;t find device with uuid &#39;jGk0w0-UC8A-VMnX-riS4-QMVV-wYYH-pB2klH&#39;.<br>&nbsp; Couldn&#39;t find device with uuid &#39;jGk0w0-UC8A-VMnX-riS4-QMVV-wYYH-pB2klH&#39;.<br>&nbsp; Found volume group &quot;vg01&quot; using metadata type lvm2<br>
+<br># lvscan&nbsp; -P<br>&nbsp; Partial mode. Incomplete volume groups will be activated read-only.<br>&nbsp; Couldn&#39;t find device with uuid &#39;jGk0w0-UC8A-VMnX-riS4-QMVV-wYYH-pB2klH&#39;.<br>&nbsp; Couldn&#39;t find device with uuid &#39;jGk0w0-UC8A-VMnX-riS4-QMVV-wYYH-pB2klH&#39;.<br>
+&nbsp; ACTIVE&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &#39;/dev/vg01/VM-m&#39; [125.00 GB] inherit<br><br>Ideas and or suggestions *really* appreciated! Am I correct to be really concerned?<br><br>Kevin<br></div>
+
+------=_Part_143710_6051797.1222288582116--
