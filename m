@@ -1,21 +1,18 @@
-Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx2.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m8QHj2TL011587
-	for <linux-lvm@redhat.com>; Fri, 26 Sep 2008 13:45:02 -0400
-Received: from wr-out-0506.google.com (wr-out-0506.google.com [64.233.184.232])
-	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id m8QHihJi022601
-	for <linux-lvm@redhat.com>; Fri, 26 Sep 2008 13:44:43 -0400
-Received: by wr-out-0506.google.com with SMTP id c49so439781wra.19
-	for <linux-lvm@redhat.com>; Fri, 26 Sep 2008 10:44:43 -0700 (PDT)
-Message-ID: <db00b3d70809261037s3d01f436h71092ca658f8548@mail.gmail.com>
-Date: Fri, 26 Sep 2008 19:37:05 +0200
-From: "geert Geurts" <begeert@gmail.com>
-Subject: Re: [linux-lvm] lvm over loop device
-In-Reply-To: <48DCE54F.6060707@bmsi.com>
+Received: from pobox.fab.redhat.com (pobox.fab.redhat.com [10.33.63.12])
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m8T9BwZM005055
+	for <linux-lvm@redhat.com>; Mon, 29 Sep 2008 05:11:59 -0400
+Received: from thunderbird6.fab.redhat.com (vpn-10-10.bos.redhat.com
+	[10.16.10.10])
+	by pobox.fab.redhat.com (8.13.1/8.13.1) with ESMTP id m8T9BuLK020888
+	for <linux-lvm@redhat.com>; Mon, 29 Sep 2008 05:11:57 -0400
+Message-ID: <48E09B18.6030908@redhat.com>
+Date: Mon, 29 Sep 2008 10:08:40 +0100
+From: "Bryn M. Reeves" <bmr@redhat.com>
 MIME-Version: 1.0
-Content-Type: multipart/alternative; 
-	boundary="----=_Part_4945_14022122.1222450625353"
+Subject: Re: [linux-lvm] lvm over loop device
 References: <db00b3d70809260504j1754c205v9044f069c37e2c24@mail.gmail.com>
-	<48DCE54F.6060707@bmsi.com>
+In-Reply-To: <db00b3d70809260504j1754c205v9044f069c37e2c24@mail.gmail.com>
+Content-Transfer-Encoding: 7bit
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -26,63 +23,45 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
+Content-Type: text/plain; charset="us-ascii"
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-------=_Part_4945_14022122.1222450625353
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA1
 
-Ok, I'll try your snapshots idea.
-Is it possible to mount such a snapshot like it's an image?
+geert Geurts wrote:
+> So what I did first create a LVM partition of 1MB on a memorystick and then 
+> change the if of dd to point to the LVM partition, I'm now able to pvcreate 
+> /dev/loop0, vgcreate SmallDisk /dev/loop0.
+> But I'm unable to create a logical volume in the SmallDisk group...
+> what am I doing wrong here? is it even possible if not why?
 
+Hi Geert,
 
-2008/9/26 Stuart D. Gathman <stuart@bmsi.com>
+What was the error you were getting at this point? If possible, can you
+use a service like pastebin.com to post the complete output of "lvcreate
+- -vvv" with the options you're using for the SmallDisk VG. That should
+give enough detail to have some idea where it's failing.
 
-> geert Geurts wrote:
-> > ps. for people interested, I'm trying to create a disk of allot of
-> > small virtual disks so I can create a encrypted partition on for
-> > instance gmailfs and minimalize up/download time on changes.
-> > Pretty cool if it's possible no?
-> I think a better solution might be to keep the encrypted fs on a single
-> normal LV.  Take a snapshot and send to remote.  Keep the snapshot
-> around.  On next upload, take a 2nd snapshot, and send the diff between
-> the two snapshots.  The diff can be efficiently computed from the COW
-> tables - accessible as dw-nn devices.  After sending the diff, delete
-> the 1st snapshot and go back to "keep snapshot around".
->
->
->
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
->
+I think the idea is reasonable enough although you'll probably need to
+do some fiddling around to get the size/number of the gmailfs volumes
+right to give good performance.
 
-------=_Part_4945_14022122.1222450625353
-Content-Type: text/html; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
+Snapshots could definitely work here but I think it might be a bit
+tricky without some of the patches that are currently outstanding for
+device-mapper, esp. Mikulas' snapshot merging patches which you'd need
+to "restore" one of the COW areas. See the thread here:
 
-<div dir="ltr">Ok, I&#39;ll try your snapshots idea.<br>Is it possible to mount such a snapshot like it&#39;s an image?<br><br><br><div class="gmail_quote">2008/9/26 Stuart D. Gathman <span dir="ltr">&lt;<a href="mailto:stuart@bmsi.com">stuart@bmsi.com</a>&gt;</span><br>
-<blockquote class="gmail_quote" style="border-left: 1px solid rgb(204, 204, 204); margin: 0pt 0pt 0pt 0.8ex; padding-left: 1ex;"><div class="Ih2E3d">geert Geurts wrote:<br>
-&gt; ps. for people interested, I&#39;m trying to create a disk of allot of<br>
-&gt; small virtual disks so I can create a encrypted partition on for<br>
-&gt; instance gmailfs and minimalize up/download time on changes.<br>
-&gt; Pretty cool if it&#39;s possible no?<br>
-</div>I think a better solution might be to keep the encrypted fs on a single<br>
-normal LV. &nbsp;Take a snapshot and send to remote. &nbsp;Keep the snapshot<br>
-around. &nbsp;On next upload, take a 2nd snapshot, and send the diff between<br>
-the two snapshots. &nbsp;The diff can be efficiently computed from the COW<br>
-tables - accessible as dw-nn devices. &nbsp;After sending the diff, delete<br>
-the 1st snapshot and go back to &quot;keep snapshot around&quot;.<br>
-<br>
-<br>
-<br>_______________________________________________<br>
-linux-lvm mailing list<br>
-<a href="mailto:linux-lvm@redhat.com">linux-lvm@redhat.com</a><br>
-<a href="https://www.redhat.com/mailman/listinfo/linux-lvm" target="_blank">https://www.redhat.com/mailman/listinfo/linux-lvm</a><br>
-read the LVM HOW-TO at <a href="http://tldp.org/HOWTO/LVM-HOWTO/" target="_blank">http://tldp.org/HOWTO/LVM-HOWTO/</a><br></blockquote></div><br></div>
+http://kerneltrap.org/Linux/LVM_Snapshot_Merging
 
-------=_Part_4945_14022122.1222450625353--
+Regards,
+Bryn.
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.9 (GNU/Linux)
+Comment: Using GnuPG with Fedora - http://enigmail.mozdev.org
+
+iEYEARECAAYFAkjgmxgACgkQ6YSQoMYUY96LegCcCHPZNLfhTUjIrsLiJcgROTDV
++SwAoLFQDiGpkZl5tpEFW5hjFH+6OuAj
+=i+W8
+-----END PGP SIGNATURE-----
