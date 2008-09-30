@@ -1,14 +1,20 @@
-Received: from [192.168.1.104] (vpn-13-177.rdu.redhat.com [10.11.13.177])
-	by ns3.rdu.redhat.com (8.13.8/8.13.8) with ESMTP id m8TESQIn006441
-	for <linux-lvm@redhat.com>; Mon, 29 Sep 2008 10:28:27 -0400
-Message-Id: <620D4470-458A-4FD4-B79E-AFF17E1852B1@redhat.com>
-From: Jonathan Brassow <jbrassow@redhat.com>
-In-Reply-To: <521877a70809260729y58a40b09re99fae1282714149@mail.gmail.com>
-Content-Transfer-Encoding: 7bit
-Mime-Version: 1.0 (Apple Message framework v929.2)
-Subject: Re: [linux-lvm] mirror legs order and priority (2)
-Date: Mon, 29 Sep 2008 09:28:09 -0500
-References: <521877a70809260729y58a40b09re99fae1282714149@mail.gmail.com>
+Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
+	by int-mx2.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m8UJWaf4018903
+	for <linux-lvm@redhat.com>; Tue, 30 Sep 2008 15:32:36 -0400
+Received: from n8.bullet.re3.yahoo.com (n8.bullet.re3.yahoo.com
+	[68.142.237.93])
+	by mx3.redhat.com (8.13.8/8.13.8) with SMTP id m8UJWOoc029308
+	for <linux-lvm@redhat.com>; Tue, 30 Sep 2008 15:32:24 -0400
+From: Steve Brueggeman <xioborg@yahoo.com>
+Subject: Re: [linux-lvm] lvm over loop device
+Date: Tue, 30 Sep 2008 14:32:23 -0500
+Message-ID: <sbv4e49co2f8nhe2e9rpreo3co90ss7vbs@4ax.com>
+References: <db00b3d70809260504j1754c205v9044f069c37e2c24@mail.gmail.com>
+	<48E09B18.6030908@redhat.com>
+	<1222681480.6519.33.camel@geert-laptop>
+In-Reply-To: <1222681480.6519.33.camel@geert-laptop>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -19,42 +25,98 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"; delsp="yes"
+Content-Type: text/plain; charset="us-ascii"
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-When you 'down-convert' a mirror, you should be able to specify which  
-leg you want pulled.
+I didn't see any replies to this, so I thought I'd post what I've found.
 
-# Change 2-way mirror to linear - specifying the device to be removed
-prompt> lvconvert -m0 vg/lv /dev/sdb
+You have to specify a smaller extent size when creating the volume group.  The
+default extent size is 4MB, which is larger than your physical device on
+/dev/loop1 (use the -s option)
 
-  brassow
+For example, try this instead, which would give 4 extents on the 1MB physical
+device on /dev/loop1 (I think.  I am not certain about how much metadata exists
+on the physical device for LVM2)
 
-On Sep 26, 2008, at 9:29 AM, daniele wrote:
+>vgcreate SmallDiskGroup -s256k /dev/loop0 # create a new volumegroup using the
+>loop0 device as phisical volume.
 
-> Greetings everyone,
-> I have recently changed one of the mirrored-legs-hard-drives and  
-> substituted it with a faster, bigger HD.
-> Now does it matter which leg is the first one?
-> I mean the home_mimage_0, right now is not on the fastest, and  
-> newer(thus more reliable), hard drive. Does it matter? If so, is  
-> there a way to quick switch it?
-> Anyway when I added the new HD to the mirror-legs, the first leg was  
-> chosen to be on an old disk regardless of the order in which I  
-> provided "/dev/mirror_disk1   /dev/mirror_disk2   /dev/mirror_log"  
-> to lvcovert -m1.
-> Also when I do lvconvert a mirrored LV to an m0 linear one, how can  
-> I choose which of the legs has to become the linear LV? So far it  
-> seems that with "lvconvert -m0 vg00/home" the 'first' leg, is  
-> automatically chosen to be the one(which is home_mimage_0). (That  
-> might not be what one wants at times, and pvmoving the linear LV  
-> after the lvconversion would be really a waste of resources and disk  
-> efforts).
+Steve.
+
+
+On Mon, 29 Sep 2008 11:44:40 +0200, you wrote:
+
+>Hello Bryn,
+>I haven't had the time yet to try Stuart's suggestion... I've re did my
+>attempt to create the lv though, and this time with the -vvv option in
+>the step where I create the lv.
+>my steps:
+>dd if=/dev/sdb1 of=./disk0 # copy a existing LVM-partition to a file
+>losetup -f ./disk0 	   # link the file to a loop device
+>pvcreate /dev/loop0	   # create a pv using the file
+>vgcreate SmallDiskGroup /dev/loop0 # create a new volumegroup using the
+>loop0 device as phisical volume.
+>vgchange -a y SmallDiskGroup #Activate the volumegroup
 >
-> Thanks for any help or info on all this,
-> Best regards, Daniele.
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+>nb. vgdisplay SmallDiskGroup gives 'Act PV 1' but 'MAX LV 0'
+>
+>the output of lvcreate -vvv -L1 -nSmallDiskVolume SmallDiskGroup is
+>downloadable here: http://pastebin.com/pastebin.php?dl=m2b9dcd7f
+>
+>I hope you can find anything.
+>
+>Greetings,
+>Geert
+>  
+>On Mon, 2008-09-29 at 10:08 +0100, Bryn M. Reeves wrote:
+>> -----BEGIN PGP SIGNED MESSAGE-----
+>> Hash: SHA1
+>> 
+>> geert Geurts wrote:
+>> > So what I did first create a LVM partition of 1MB on a memorystick and then 
+>> > change the if of dd to point to the LVM partition, I'm now able to pvcreate 
+>> > /dev/loop0, vgcreate SmallDisk /dev/loop0.
+>> > But I'm unable to create a logical volume in the SmallDisk group...
+>> > what am I doing wrong here? is it even possible if not why?
+>> 
+>> Hi Geert,
+>> 
+>> What was the error you were getting at this point? If possible, can you
+>> use a service like pastebin.com to post the complete output of "lvcreate
+>> - -vvv" with the options you're using for the SmallDisk VG. That should
+>> give enough detail to have some idea where it's failing.
+>> 
+>> I think the idea is reasonable enough although you'll probably need to
+>> do some fiddling around to get the size/number of the gmailfs volumes
+>> right to give good performance.
+>> 
+>> Snapshots could definitely work here but I think it might be a bit
+>> tricky without some of the patches that are currently outstanding for
+>> device-mapper, esp. Mikulas' snapshot merging patches which you'd need
+>> to "restore" one of the COW areas. See the thread here:
+>> 
+>> http://kerneltrap.org/Linux/LVM_Snapshot_Merging
+>> 
+>> Regards,
+>> Bryn.
+>> 
+>> -----BEGIN PGP SIGNATURE-----
+>> Version: GnuPG v1.4.9 (GNU/Linux)
+>> Comment: Using GnuPG with Fedora - http://enigmail.mozdev.org
+>> 
+>> iEYEARECAAYFAkjgmxgACgkQ6YSQoMYUY96LegCcCHPZNLfhTUjIrsLiJcgROTDV
+>> +SwAoLFQDiGpkZl5tpEFW5hjFH+6OuAj
+>> =i+W8
+>> -----END PGP SIGNATURE-----
+>> 
+>> _______________________________________________
+>> linux-lvm mailing list
+>> linux-lvm@redhat.com
+>> https://www.redhat.com/mailman/listinfo/linux-lvm
+>> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+>
+>_______________________________________________
+>linux-lvm mailing list
+>linux-lvm@redhat.com
+>https://www.redhat.com/mailman/listinfo/linux-lvm
+>read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
