@@ -1,25 +1,29 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx2.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m8UJsmR4028782
-	for <linux-lvm@redhat.com>; Tue, 30 Sep 2008 15:54:48 -0400
-Received: from ciao.gmane.org (main.gmane.org [80.91.229.2])
-	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id m8UJrqgK010427
-	for <linux-lvm@redhat.com>; Tue, 30 Sep 2008 15:53:53 -0400
-Received: from list by ciao.gmane.org with local (Exim 4.43)
-	id 1KklI3-0007cI-7f
-	for linux-lvm@redhat.com; Tue, 30 Sep 2008 19:53:47 +0000
-Received: from vpn-132-204-232-132.acd.umontreal.ca ([132.204.232.132])
-	by main.gmane.org with esmtp (Gmexim 0.1 (Debian))
-	id 1AlnuQ-0007hv-00
-	for <linux-lvm@redhat.com>; Tue, 30 Sep 2008 19:53:47 +0000
-Received: from monnier by vpn-132-204-232-132.acd.umontreal.ca with local
-	(Gmexim 0.1 (Debian)) id 1AlnuQ-0007hv-00
-	for <linux-lvm@redhat.com>; Tue, 30 Sep 2008 19:53:47 +0000
-From: Stefan Monnier <monnier@iro.umontreal.ca>
-Date: Tue, 30 Sep 2008 15:53:38 -0400
-Message-ID: <jwvfxnhbevl.fsf-monnier+gmane.linux.lvm.general@gnu.org>
-Mime-Version: 1.0
-Sender: news <news@ger.gmane.org>
-Subject: [linux-lvm] Hot(un)plugging LVM volumes
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m92IvlhP010230
+	for <linux-lvm@redhat.com>; Thu, 2 Oct 2008 14:57:47 -0400
+Received: from mailhost.auckland.ac.nz (moe.its.auckland.ac.nz [130.216.12.35])
+	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id m92IvVRn014147
+	for <linux-lvm@redhat.com>; Thu, 2 Oct 2008 14:57:36 -0400
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mailhost.auckland.ac.nz (Postfix) with ESMTP id 46F3948146A
+	for <linux-lvm@redhat.com>; Fri,  3 Oct 2008 07:57:30 +1300 (NZDT)
+Received: from mailhost.auckland.ac.nz ([127.0.0.1])
+	by localhost (moe.its.auckland.ac.nz [127.0.0.1]) (amavisd-new,
+	port 10024) with ESMTP id odfksQrBACB9 for <linux-lvm@redhat.com>;
+	Fri,  3 Oct 2008 07:57:30 +1300 (NZDT)
+Received: from esp104.esc.auckland.ac.nz (esp104.esc.auckland.ac.nz
+	[130.216.209.104])
+	by mailhost.auckland.ac.nz (Postfix) with ESMTP id 2D26E481466
+	for <linux-lvm@redhat.com>; Fri,  3 Oct 2008 07:57:29 +1300 (NZDT)
+Received: from localhost.localdomain (esp104 [127.0.0.1])
+	by esp104.esc.auckland.ac.nz (Postfix) with ESMTP id D5C9C187D6
+	for <linux-lvm@redhat.com>; Fri,  3 Oct 2008 07:57:29 +1300 (NZDT)
+Message-ID: <2429.128.187.150.9.1222973849.squirrel@mail.esc.auckland.ac.nz>
+Date: Fri, 3 Oct 2008 07:57:29 +1300 (NZDT)
+From: michael.osullivan@auckland.ac.nz
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Subject: [linux-lvm] Can't create LV in cluster
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -31,52 +35,22 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: linux-lvm@redhat.com
 
+Hi everyone,
 
-How is LVM supposed to work for hotpluggable disks?
-The best I came up with so far is something like:
+I have created a 2-node cluster and (after a little difficulty) created a
+clustered volume group visible on both nodes. However, I can't create a
+logical volume on either node. I get the following error:
 
-   <plug>
-   lvchange -a y <lvname>
-   mount <lvname> <mountpoint>
+Error locking on node <other node>: Error backing up metadata, can't find
+VG for group #global
+Aborting. Failed to activate new LV to wipe the start of it.
 
-and when unplugging, doing the reverse:
+I have locking_type = 3 and locking_library = liblvm2clusterlock.so. The
+metadata areas and sequence nos are the same using vgdisplay on both
+nodes.
 
-   umount <mountpoint>
-   lvchange -a n <lvname>
-   <plug>
+Can anyone help me create LVs? I am happy to provide any extra info needed.
 
-But it's rather inconvenient, and brittle.  If I just unplug while the
-volume is mounted, I can still unmount the volume afterwards, but LVM
-seems to keep some info about the volume, so I get errors and subsequent
-hotplugging does not bring me back the volume (probably because the old
-instance is still left around and in an inconsistent state).
-
-More specifically, after unplugging and unmounting, I get errors like:
-
-# pvs
-  /dev/dm-3: read failed after 0 of 4096 at 0: Input/output error
-  PV         VG      Fmt  Attr PSize  PFree
-  /dev/hda3  Toto    lvm2 a-   26.39G    0 
-# ~-0# ~-0# lvchange -a n /dev/Titi/tata
-  /dev/dm-3: read failed after 0 of 4096 at 0: Input/output error
-  /dev/dm-3: read failed after 0 of 4096 at 300647645184: Input/output error
-  /dev/dm-3: read failed after 0 of 4096 at 300647702528: Input/output error
-  /dev/dm-3: read failed after 0 of 4096 at 0: Input/output error
-  /dev/dm-3: read failed after 0 of 4096 at 4096: Input/output error
-  /dev/dm-3: read failed after 0 of 4096 at 0: Input/output error
-  Volume group "Titi" not found
-# l /dev/mapper/Titi-tata
-brw-rw---- 1 root disk 254, 3 2008-09-29 13:39 /dev/mapper/Titi-tata
-# 
-
-I did find a workaround, tho: after unplugging "uncleanly", I need to
-unmount all the volumes, the plug the disk back in, then deactivate all
-the volumes with "lvchange -a n <lvname>" (which signals the same
-errors as above, except for the last line, and which does deactivate
-the volume this time), and then reactive them with "lvchange -a y <lvname>".
-
-
-        Stefan
+Thanks, Mike
