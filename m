@@ -1,29 +1,17 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m92IvlhP010230
-	for <linux-lvm@redhat.com>; Thu, 2 Oct 2008 14:57:47 -0400
-Received: from mailhost.auckland.ac.nz (moe.its.auckland.ac.nz [130.216.12.35])
-	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id m92IvVRn014147
-	for <linux-lvm@redhat.com>; Thu, 2 Oct 2008 14:57:36 -0400
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mailhost.auckland.ac.nz (Postfix) with ESMTP id 46F3948146A
-	for <linux-lvm@redhat.com>; Fri,  3 Oct 2008 07:57:30 +1300 (NZDT)
-Received: from mailhost.auckland.ac.nz ([127.0.0.1])
-	by localhost (moe.its.auckland.ac.nz [127.0.0.1]) (amavisd-new,
-	port 10024) with ESMTP id odfksQrBACB9 for <linux-lvm@redhat.com>;
-	Fri,  3 Oct 2008 07:57:30 +1300 (NZDT)
-Received: from esp104.esc.auckland.ac.nz (esp104.esc.auckland.ac.nz
-	[130.216.209.104])
-	by mailhost.auckland.ac.nz (Postfix) with ESMTP id 2D26E481466
-	for <linux-lvm@redhat.com>; Fri,  3 Oct 2008 07:57:29 +1300 (NZDT)
-Received: from localhost.localdomain (esp104 [127.0.0.1])
-	by esp104.esc.auckland.ac.nz (Postfix) with ESMTP id D5C9C187D6
-	for <linux-lvm@redhat.com>; Fri,  3 Oct 2008 07:57:29 +1300 (NZDT)
-Message-ID: <2429.128.187.150.9.1222973849.squirrel@mail.esc.auckland.ac.nz>
-Date: Fri, 3 Oct 2008 07:57:29 +1300 (NZDT)
-From: michael.osullivan@auckland.ac.nz
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m9495kqH016131
+	for <linux-lvm@redhat.com>; Sat, 4 Oct 2008 05:05:46 -0400
+Received: from mail.gmx.net (mail.gmx.net [213.165.64.20])
+	by mx3.redhat.com (8.13.8/8.13.8) with SMTP id m9495YSQ019478
+	for <linux-lvm@redhat.com>; Sat, 4 Oct 2008 05:05:35 -0400
+Content-Type: text/plain; charset="iso-8859-1"
+Date: Sat, 04 Oct 2008 11:05:34 +0200
+From: "Michael Schmarck" <michael.schmarck@habmalnefrage.de>
+Message-ID: <20081004090534.227400@gmx.net>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: [linux-lvm] Can't create LV in cluster
+Content-Transfer-Encoding: quoted-printable
+Subject: [linux-lvm] Create Snapshot volume,
+	with sized based on size of original lv
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -34,23 +22,43 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@redhat.com
 
-Hi everyone,
+Hi.
 
-I have created a 2-node cluster and (after a little difficulty) created a
-clustered volume group visible on both nodes. However, I can't create a
-logical volume on either node. I get the following error:
+I'd like to create a snapshot volume of eg. /dev/sys/Bilder and
+call it /dev/sys/Bilder_snap. Bilder_snap should be 25% the size
+of Bilder.
 
-Error locking on node <other node>: Error backing up metadata, can't find
-VG for group #global
-Aborting. Failed to activate new LV to wipe the start of it.
+How would I do that?
 
-I have locking_type = 3 and locking_library = liblvm2clusterlock.so. The
-metadata areas and sequence nos are the same using vgdisplay on both
-nodes.
+In lvcreate --help, I find:
 
-Can anyone help me create LVs? I am happy to provide any extra info needed.
+$ lvm lvcreate --help
+[...]
+lvcreate -s|--snapshot
+[...]
+	{-l|--extents LogicalExtentsNumber[%{VG|LV|PVS|FREE}] |
+	 -L|--size LogicalVolumeSize[kKmMgGtTpPeE]}
+[...]
 
-Thanks, Mike
+$ lvm version
+  WARNING: Running as a non-root user. Functionality may be unavailable.
+  LVM version:     2.02.36 (2008-04-29)
+  Library version: 1.02.24 (2007-12-20)
+  /dev/mapper/control: open failed: Keine Berechtigung
+  Failure to communicate with kernel device-mapper driver.
+
+Based on the --help output, I tried:
+
+$ sudo lvm lvcreate -s -l 25%LV -n Bilder_snap /dev/sys/Bilder
+  Please express size as %VG, %PVS, or %FREE.
+
+Did I do something wrong, or is the output "--help"
+just wrong?
+
+Thanks a lot,
+Michael
+--=20
+Psssst! Schon vom neuen GMX MultiMessenger geh=EF=BF=BDrt? Der kann`s mit a=
+llen: http://www.gmx.net/de/go/multimessenger
