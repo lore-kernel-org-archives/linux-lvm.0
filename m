@@ -1,23 +1,24 @@
-Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m96FAFM6015516
-	for <linux-lvm@redhat.com>; Mon, 6 Oct 2008 11:10:15 -0400
-Received: from bay0-omc2-s23.bay0.hotmail.com (bay0-omc2-s23.bay0.hotmail.com
-	[65.54.246.159])
-	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id m96F9slR032419
-	for <linux-lvm@redhat.com>; Mon, 6 Oct 2008 11:09:55 -0400
-Message-ID: <BAY111-W17E35B1FDD1647A5FDBFF8DA390@phx.gbl>
-Content-Type: multipart/alternative;
-	boundary="_3f8c84f7-811a-4cef-b3ca-c330173e881f_"
-From: Robin Thompson <robane00@hotmail.com>
-Subject: RE: [linux-lvm] Help with LVM reconstruction
-Date: Mon, 6 Oct 2008 16:09:47 +0100
-In-Reply-To: <613158041.20081005225221@marki-online.net>
-References: <mailman.0.1223142047.24795.linux-lvm@redhat.com>
-	<BAY111-W46B2F1F16550BBDF7B6293DA3E0@phx.gbl>
-	<310119351.20081005215811@marki-online.net>
-	<BAY111-W54A5BF416B569C8DC0E99FDA3E0@phx.gbl> 
-	<613158041.20081005225221@marki-online.net> 
+Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m96HFLWw006675
+	for <linux-lvm@redhat.com>; Mon, 6 Oct 2008 13:15:21 -0400
+Received: from mail-gx0-f15.google.com (mail-gx0-f15.google.com
+	[209.85.217.15])
+	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id m96HF8as015041
+	for <linux-lvm@redhat.com>; Mon, 6 Oct 2008 13:15:08 -0400
+Received: by gxk8 with SMTP id 8so5329302gxk.3
+	for <linux-lvm@redhat.com>; Mon, 06 Oct 2008 10:15:08 -0700 (PDT)
+Message-ID: <ae1cf3f40810061015t6400da70p532f294033f8bb2e@mail.gmail.com>
+Date: Mon, 6 Oct 2008 19:15:08 +0200
+From: "Michael Schmarck" <michael.schmarck@habmalnefrage.de>
+Sender: a.skwar@gmail.com
+Subject: Re: [linux-lvm] Create Snapshot volume,
+	with sized based on size of original lv
+In-Reply-To: <20081006131141.GA23898@agk.fab.redhat.com>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+References: <20081004090534.227400@gmx.net>
+	<20081006131141.GA23898@agk.fab.redhat.com>
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -28,82 +29,59 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: linux-lvm@redhat.com
+Content-Type: text/plain; charset="us-ascii"
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
---_3f8c84f7-811a-4cef-b3ca-c330173e881f_
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Hi!
 
- Hi=2CIt must be 4mb per PE=2C as the other PV would be estimated to be 100=
-gb=2C when it should be 50gb. Does anyone know what I should be looking for=
- on the 2nd PV - is there LVM information data stored there?Robin
+2008/10/6 Alasdair G Kergon <agk@redhat.com>
+>
+> On Sat, Oct 04, 2008 at 11:05:34AM +0200, Michael Schmarck wrote:
+> > $ sudo lvm lvcreate -s -l 25%LV -n Bilder_snap /dev/sys/Bilder
+> >   Please express size as %VG, %PVS, or %FREE.
+> > Did I do something wrong, or is the output "--help"
+> > just wrong?
+>
+> %LV is for resizing an existing LV.
 
-> Date: Sun=2C 5 Oct 2008 22:52:21 +0200> From: marki@marki-online.net> To:=
- linux-lvm@redhat.com> Subject: Re: FW: [linux-lvm] Help with LVM reconstru=
-ction> > Hello=2C> > Sunday=2C October 5=2C 2008=2C 22:47:50=2C Robin Thomp=
-son wrote:> > > Hi=2C> > > > Problem is that I don't - the card will only r=
-efer to it in 2gb -> > but it could be actually 2tb as in 2 x 1024 x 1024 x=
- 1024 x1024 bytes.> > > > I can extract this: > > physical_volumes {> > pv0=
- {> > id =3D "QADZl1-asMf-PyLf-EIw1-qLkv-ZbFI-2goQUD"> > device =3D "/dev/s=
-db1"> > status =3D ["ALLOCATABLE"]> > pe_start =3D 384> > pe_count =3D 5242=
-86> > That should be enough information... But it looks like 4 TB...> > PE =
-size is 8 MB and you have 524286 PEs (Physical Extents). That's> 3.99 TB (a=
-ctually it's 4 TB without 16 MB - two PEs=2C maybe the PV> header is locate=
-d there - I don't remember the exact LVM structure> on disk).> > -- > bYE=
-=2C Marki> > > _______________________________________________> linux-lvm m=
-ailing list> linux-lvm@redhat.com> https://www.redhat.com/mailman/listinfo/=
-linux-lvm> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
-_________________________________________________________________
-Make a mini you and download it into Windows Live Messenger
-http://clk.atdmt.com/UKM/go/111354029/direct/01/=
+All right; but why is it shown in the output of
+lvcreate --help in the "-s" section? It's not
+as if %<whatever> is shown in every output
+of "-l" (eg. in the normal/first section of lvcreate,
+in the "-l" list, no % options are shown).
 
---_3f8c84f7-811a-4cef-b3ca-c330173e881f_
-Content-Type: text/html; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+> lvcreate -s -l n%LV would indeed be unambiguous,
 
-<html>
-<head>
-<style>
-.hmmessage P
-{
-margin:0px=3B
-padding:0px
-}
-body.hmmessage
-{
-FONT-SIZE: 10pt=3B
-FONT-FAMILY:Tahoma
-}
-</style>
-</head>
-<body class=3D'hmmessage'>&nbsp=3B<BR>Hi=2C<BR><BR>It must be 4mb per PE=2C=
- as the other PV would be estimated to be 100gb=2C when it should be 50gb.<=
-BR>&nbsp=3B<BR>Does anyone know what I should be looking for on the 2nd PV =
-- is there LVM information data stored there?<BR><BR>Robin<BR><BR>
-<HR id=3DstopSpelling>
-<BR>&gt=3B Date: Sun=2C 5 Oct 2008 22:52:21 +0200<BR>&gt=3B From: marki@mar=
-ki-online.net<BR>&gt=3B To: linux-lvm@redhat.com<BR>&gt=3B Subject: Re: FW:=
- [linux-lvm] Help with LVM reconstruction<BR>&gt=3B <BR>&gt=3B Hello=2C<BR>=
-&gt=3B <BR>&gt=3B Sunday=2C October 5=2C 2008=2C 22:47:50=2C Robin Thompson=
- wrote:<BR>&gt=3B <BR>&gt=3B &gt=3B Hi=2C<BR>&gt=3B &gt=3B <BR>&gt=3B &gt=
-=3B Problem is that I don't - the card will only refer to it in 2gb -<BR>&g=
-t=3B &gt=3B but it could be actually 2tb as in 2 x 1024 x 1024 x 1024 x1024=
- bytes.<BR>&gt=3B &gt=3B <BR>&gt=3B &gt=3B I can extract this: <BR>&gt=3B &=
-gt=3B physical_volumes {<BR>&gt=3B &gt=3B pv0 {<BR>&gt=3B &gt=3B id =3D "QA=
-DZl1-asMf-PyLf-EIw1-qLkv-ZbFI-2goQUD"<BR>&gt=3B &gt=3B device =3D "/dev/sdb=
-1"<BR>&gt=3B &gt=3B status =3D ["ALLOCATABLE"]<BR>&gt=3B &gt=3B pe_start =
-=3D 384<BR>&gt=3B &gt=3B pe_count =3D 524286<BR>&gt=3B <BR>&gt=3B That shou=
-ld be enough information... But it looks like 4 TB...<BR>&gt=3B <BR>&gt=3B =
-PE size is 8 MB and you have 524286 PEs (Physical Extents). That's<BR>&gt=
-=3B 3.99 TB (actually it's 4 TB without 16 MB - two PEs=2C maybe the PV<BR>=
-&gt=3B header is located there - I don't remember the exact LVM structure<B=
-R>&gt=3B on disk).<BR>&gt=3B <BR>&gt=3B -- <BR>&gt=3B bYE=2C Marki<BR>&gt=
-=3B <BR>&gt=3B <BR>&gt=3B _______________________________________________<B=
-R>&gt=3B linux-lvm mailing list<BR>&gt=3B linux-lvm@redhat.com<BR>&gt=3B ht=
-tps://www.redhat.com/mailman/listinfo/linux-lvm<BR>&gt=3B read the LVM HOW-=
-TO at http://tldp.org/HOWTO/LVM-HOWTO/<BR><BR><br /><hr />Win =A33000 to sp=
-end on whatever you want at Uni! <a href=3D'http://clk.atdmt.com/UKM/go/111=
-354032/direct/01/' target=3D'_new'>Click here to WIN!</a></body>
-</html>=
+Yep.
 
---_3f8c84f7-811a-4cef-b3ca-c330173e881f_--
+> but what then about lvresize on a snapshot?  Would it be % of
+> base LV or % of existing snapshot?
+
+Hm. What happens, if you do a "lvcreate -s -l 42%VGS"
+and then make the VG larger? Do you then make the
+snapshot volume larger as well? Or what, if you'd
+use 8%FREE and then change the free space - do you
+make the snap lv larger and smaller as required?
+
+Anyway: I'd expect the size of the snap lv to *NOT*
+change. Reason: The snap LV has been created with
+a certain size. Why should changes in the setup of
+the VG change the size of the snap lv? The size of
+a (snap) LV is something which I expect to be static
+(unless I, the admin of the system, change it). It should
+not at all be dynamic (although dynamic volumes are
+kinda cool, as can be seen in the case of ZFS - but
+that's a totally different approach and thus not comparable
+to LVM).
+
+> (Perhaps we need %ORIGIN.)
+
+Maybe. But that would IMO only make sense, if you
+currently change the sizes of snap LVs dynamically
+in the case of the other % options. If that's not done,
+then adding yet another option there would not be such
+a great idea, IMO. Instead, %LV should be used - for
+the reasons, please see above *g*.
+
+Best regards,
+Mike
