@@ -1,26 +1,22 @@
-Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m95KqYrl010914
-	for <linux-lvm@redhat.com>; Sun, 5 Oct 2008 16:52:34 -0400
-Received: from kenny.oneemedia.com (kenny.oneemedia.com [92.240.244.202])
-	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id m95KqMB0023111
-	for <linux-lvm@redhat.com>; Sun, 5 Oct 2008 16:52:22 -0400
-Received: from localhost (mail-o.oneemedia.com [92.240.244.203])
-	(Authenticated sender: markionline)
-	by kenny.oneemedia.com (Postfix) with ESMTP id 0B45420008E
-	for <linux-lvm@redhat.com>; Sun,  5 Oct 2008 22:52:22 +0200 (CEST)
-Date: Sun, 5 Oct 2008 22:52:21 +0200
-From: Marek Podmaka <marki@marki-online.net>
-Message-ID: <613158041.20081005225221@marki-online.net>
-Subject: Re: FW: [linux-lvm] Help with LVM reconstruction
-In-Reply-To: <BAY111-W54A5BF416B569C8DC0E99FDA3E0@phx.gbl>
-References: <mailman.0.1223142047.24795.linux-lvm@redhat.com>
-	<BAY111-W46B2F1F16550BBDF7B6293DA3E0@phx.gbl>
-	<310119351.20081005215811@marki-online.net>
-	<BAY111-W54A5BF416B569C8DC0E99FDA3E0@phx.gbl>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Reply-To: Marek Podmaka <marki@marki-online.net>,
-	LVM general discussion and development <linux-lvm@redhat.com>
+Received: from pobox.fab.redhat.com (pobox.fab.redhat.com [10.33.63.12])
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m96DBfLr003481
+	for <linux-lvm@redhat.com>; Mon, 6 Oct 2008 09:11:42 -0400
+Received: from agk.fab.redhat.com (agk.fab.redhat.com [10.33.0.19])
+	by pobox.fab.redhat.com (8.13.1/8.13.1) with ESMTP id m96DBf61028211
+	for <linux-lvm@redhat.com>; Mon, 6 Oct 2008 09:11:41 -0400
+Received: from agk by agk.fab.redhat.com with local (Exim 4.34)
+	id 1KmpsD-000745-Ha
+	for linux-lvm@redhat.com; Mon, 06 Oct 2008 14:11:41 +0100
+Date: Mon, 6 Oct 2008 14:11:41 +0100
+From: Alasdair G Kergon <agk@redhat.com>
+Subject: Re: [linux-lvm] Create Snapshot volume,
+	with sized based on size of original lv
+Message-ID: <20081006131141.GA23898@agk.fab.redhat.com>
+References: <20081004090534.227400@gmx.net>
+Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20081004090534.227400@gmx.net>
+Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -31,32 +27,20 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-Hello,
+On Sat, Oct 04, 2008 at 11:05:34AM +0200, Michael Schmarck wrote:
+> $ sudo lvm lvcreate -s -l 25%LV -n Bilder_snap /dev/sys/Bilder
+>   Please express size as %VG, %PVS, or %FREE.
+> Did I do something wrong, or is the output "--help"
+> just wrong?
+ 
+%LV is for resizing an existing LV.
+lvcreate -s -l n%LV would indeed be unambiguous,
+but what then about lvresize on a snapshot?  Would it be % of 
+base LV or % of existing snapshot?  (Perhaps we need %ORIGIN.)
 
-Sunday, October 5, 2008, 22:47:50, Robin Thompson wrote:
-
-> Hi,
->  
-> Problem is that I don't  - the card will only refer to it in 2gb -
-> but it could be actually 2tb as in 2 x 1024 x 1024 x 1024 x1024 bytes.
->  
-> I can extract this: 
-> physical_volumes {
-> pv0 {
-> id = "QADZl1-asMf-PyLf-EIw1-qLkv-ZbFI-2goQUD"
-> device = "/dev/sdb1"
-> status = ["ALLOCATABLE"]
-> pe_start = 384
-> pe_count = 524286
-
-That should be enough information... But it looks like 4 TB...
-
-PE size is 8 MB and you have 524286 PEs (Physical Extents). That's
-3.99 TB (actually it's 4 TB without 16 MB - two PEs, maybe the PV
-header is located there - I don't remember the exact LVM structure
-on disk).
-
+Alasdair
 -- 
-  bYE, Marki
+agk@redhat.com
