@@ -1,24 +1,20 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m9EFoYNN030214
-	for <linux-lvm@redhat.com>; Tue, 14 Oct 2008 11:50:34 -0400
-Received: from smtp004.apm-internet.net (smtp004.apm-internet.net
-	[85.119.248.54])
-	by mx3.redhat.com (8.13.8/8.13.8) with SMTP id m9EFnRF1007578
-	for <linux-lvm@redhat.com>; Tue, 14 Oct 2008 11:49:27 -0400
-Received: from bernoulli.globalphasing.com (bernoulli.globalphasing.com
-	[192.168.131.101])
-	by mailserv1.globalphasing.com (Postfix) with ESMTP id 4655517E68
-	for <linux-lvm@redhat.com>; Tue, 14 Oct 2008 16:49:42 +0100 (BST)
-Date: Tue, 14 Oct 2008 16:49:26 +0100 (BST)
-From: Peter Keller <pkeller@globalphasing.com>
-Subject: Re: [linux-lvm] device-mapper may have read performance issue
-In-Reply-To: <f4f537b50810102118gb1e7d7el459f56e3d4d06cea@mail.gmail.com>
-Message-ID: <alpine.LNX.1.10.0810141618220.31211@bernoulli.globalphasing.com>
-References: <alpine.LNX.1.10.0810091047140.19362@bernoulli.globalphasing.com>
-	<701452.25518.qm@web92206.mail.cnh.yahoo.com>
-	<f4f537b50810102118gb1e7d7el459f56e3d4d06cea@mail.gmail.com>
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m9EGIVDw017383
+	for <linux-lvm@redhat.com>; Tue, 14 Oct 2008 12:18:31 -0400
+Received: from gv-out-0910.google.com (gv-out-0910.google.com [216.239.58.185])
+	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id m9EGIKKb028543
+	for <linux-lvm@redhat.com>; Tue, 14 Oct 2008 12:18:21 -0400
+Received: by gv-out-0910.google.com with SMTP id n8so455913gve.13
+	for <linux-lvm@redhat.com>; Tue, 14 Oct 2008 09:18:20 -0700 (PDT)
+Message-ID: <a01fe36d0810140918q6033d6f6naf1f520b4e585505@mail.gmail.com>
+Date: Tue, 14 Oct 2008 18:18:20 +0200
+From: "Federico Simoncelli" <federico.simoncelli@gmail.com>
+In-Reply-To: <a01fe36d0810140112q282e12e4xb4e86fb21e361086@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: MULTIPART/MIXED; BOUNDARY="8323584-975308919-1223999366=:31211"
+Content-Type: multipart/mixed; 
+	boundary="----=_Part_102592_5958244.1224001100236"
+References: <a01fe36d0810140112q282e12e4xb4e86fb21e361086@mail.gmail.com>
+Subject: [linux-lvm] Re: Clustered snapshots
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -29,88 +25,87 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: LVM general discussion and development <linux-lvm@redhat.com>
+To: Linux LVM2 <linux-lvm@redhat.com>
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+------=_Part_102592_5958244.1224001100236
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
 
---8323584-975308919-1223999366=:31211
-Content-Type: TEXT/PLAIN; charset="gb2312"; format="flowed"
+On Tue, Oct 14, 2008 at 10:12 AM, Federico Simoncelli
+<federico.simoncelli@gmail.com> wrote:
+> Looking at the LVM2 code (LVM2.2.02.40, tools/lvcreate.c:640):
+>
+> /* FIXME Allow exclusive activation. */
+> if (vg_is_clustered(vg)) {
+>        log_error("Clustered snapshots are not yet supported.");
+>        return 0;
+> }
+>
+> looks like there is no way to activate a snapshot in a clustered
+> volume group. Is the documentation wrong?
+> Is there anyone actively working on the "exclusive activation" FIXME
+> that is mentioned in the comment?
+
+Hi all,
+  I worked a little on this issue and I came up with a working patch
+for LVM2.2.02.32.
+I'm not sure if my work is enough to prevent wrong behaviours but in
+my tests worked ok.
+The same patch should be applied both on the lvm2 and the lvm2-cluster
+rpm packages in order to work.
+To be able to set the lv as exclusive you have to deactivate it on the
+other nodes with the command:
+
+# lvchange -aln /dev/vg00/lvol1
+
+and then you can create the snapshot:
+
+# lvcreate --size 100M --snapshot --name snap /dev/vg00/lvol1
+  Logical volume "snap" created
+
+It automatically takes care to set the lv device as exclusive (vgchange -aey).
+Can anyone review the patch?
+
+Thanks in advance,
+-- 
+Federico.
+
+------=_Part_102592_5958244.1224001100236
+Content-Type: application/octet-stream;
+ name=lvm2-2_02_34-fix-exclsnap.patch
 Content-Transfer-Encoding: base64
+X-Attachment-Id: f_fmaq4tgu0
+Content-Disposition: attachment; filename=lvm2-2_02_34-fix-exclsnap.patch
 
-SGksCgpPbiBGcmksIDEwIE9jdCAyMDA4LCBFdWdlbmUgVmlsZW5za3kgd3JvdGU6Cgo+IEhpIGFs
-bCwKPiBIb3cgaW1wb3J0YW50IGFyZSB0aGVzZSByZWFkIGFoZWFkIHNldHRpbmdzIGZvciByYW5k
-b20sIGRhdGFiYXNlIElPPwoKR29vZCBxdWVzdGlvbjogYnkgY29pbmNpZGVuY2UgSSd2ZSBqdXN0
-IGhhZCB0byBleGVyY2lzZSBhIHN5c3RlbSB0aGF0IGhhcyBMVk0yIAp2b2x1bWVzIHNldCB1cCBv
-biBhIGhhcmR3YXJlIFJBSUQtNiBhcnJheSAoU0FUQS1JSSBkaXNrcyBhbmQgYW4gQWRhcHRlYyAK
-SUNQNTA4NUJMIGNhcmQpLiBJIHRvb2sgdGhlIG9wcG9ydHVuaXR5IHRvIGRvIHNvbWUgYm9ubmll
-KysgdGVzdHMgd2l0aCByZWFkYWhlYWQgCnNldHRpbmdzIG9mIDEwMjQgYW5kIDgxOTIuIEkgd2Fz
-IHJ1bm5pbmcgNSBpbnN0YW5jZXMgb2YgYm9ubmllKysgYXQgdGhlIHNhbWUgCnRpbWUgKGVhY2gg
-b24gaXRzIG93biBMVk0gdm9sdW1lLCBidXQgbG9ja2VkIHRvZ2V0aGVyIHdpdGggdGhlIC1wLy15
-IG9wdGlvbnMpLiBJIApnb3QgbnVtYmVycyBsaWtlIHRoZXNlOgoKUmVhZGFoZWFkIDEwMjQ6Cgog
-ICAgICAgICAgICAgICAgICAgICAtLS0tLS1TZXF1ZW50aWFsIENyZWF0ZS0tLS0tLSAtLS0tLS0t
-LVJhbmRvbSBDcmVhdGUtLS0tLS0tLQogICAgICAgICAgICAgICAgICAgICAtQ3JlYXRlLS0gLS1S
-ZWFkLS0tIC1EZWxldGUtLSAtQ3JlYXRlLS0gLS1SZWFkLS0tIC1EZWxldGUtLQpmaWxlczptYXg6
-bWluICAgICAgICAvc2VjICVDUCAgL3NlYyAlQ1AgIC9zZWMgJUNQICAvc2VjICVDUCAgL3NlYyAl
-Q1AgIC9zZWMgJUNQCnNlcnZlcjEgKGJ1aWxkaG8gMTYgIDM5NDYgIDk5ICsrKysrICsrKyAgMjk1
-NyAxMDAgIDQxMjUgIDk5ICsrKysrICsrKyAxMTQwMCAgODgKClJlYWRhaGVhZCA4MTkyOgoKICAg
-ICAgICAgICAgICAgICAgICAgLS0tLS0tU2VxdWVudGlhbCBDcmVhdGUtLS0tLS0gLS0tLS0tLS1S
-YW5kb20gQ3JlYXRlLS0tLS0tLS0KICAgICAgICAgICAgICAgICAgICAgLUNyZWF0ZS0tIC0tUmVh
-ZC0tLSAtRGVsZXRlLS0gLUNyZWF0ZS0tIC0tUmVhZC0tLSAtRGVsZXRlLS0KZmlsZXM6bWF4Om1p
-biAgICAgICAgL3NlYyAlQ1AgIC9zZWMgJUNQICAvc2VjICVDUCAgL3NlYyAlQ1AgIC9zZWMgJUNQ
-ICAvc2VjICVDUApzZXJ2ZXIxIChidWlsZGhvIDE2ICAzOTY4ICA5OSArKysrKyArKysgIDU5MzQg
-MTAwICA0MTEzICA5OSArKysrKyArKysgIDUwMzcgIDk5CgpTbywgb24gdGhpcyBzeXN0ZW0gcmVh
-ZGFoZWFkIG1ha2VzIG5vIGRpZmZlcmVuY2UgZm9yIGNyZWF0ZSwgYW5kIHJlYWQgaXMgc28gCnF1
-aWNrIHRoYXQgYm9ubmllKysgZG9lc24ndCBldmVuIHdhbnQgdG8gcmVwb3J0IGFueSBudW1iZXJz
-LiBIb3dldmVyLCBzZXF1ZW50aWFsIApkZWxldGUgaXMgYWJvdXQgdHdpY2UgYXMgZmFzdCB3aXRo
-IHRoZSBsYXJnZXIgcmVhZGFoZWFkLCBhbmQgcmFuZG9tIGRlbGV0ZSBpcyAKdHdpY2UgYXMgZmFz
-dCB3aXRoIHRoZSBzbWFsbGVyIHJlYWRhaGVhZC4KCkl0IGlzIGhhcmQgdG8gdHVuZSBmb3IgZ2Vu
-ZXJhbCB1c2FnZSBhcyBvcHBvc2VkIHRvIHNwZWNpZmljIHRhc2tzLCBhbmQgYnkgbWFraW5nIApz
-b21lIHRoaW5ncyBiZXR0ZXIgeW91IG1heSBtYWtlIG90aGVyIHRoaW5ncyB3b3JzZS4gSSByZXNw
-b25kZWQgdG8gdGhlIG9yaWdpbmFsIApxdWVzdGlvbiBvbiB0aGUgYXNzdW1wdGlvbiB0aGF0IGRv
-aW5nIGEgc2VxdWVudGlhbCBkZCByZXByZXNlbnRlZCBzb21ldGhpbmcgbGlrZSAKdGhlIGV4cGVj
-dGVkIHVzYWdlIHBhdHRlcm4gZm9yIHRoZSBkaXNrcy4KCk9uIHRoZSBiYXNpcyBvZiB0aGlzIHBh
-dGljdWxhciAodmVyeSBsaW1pdGVkKSB0ZXN0IG9uIHRoaXMgcGFydGljdWxhciBzeXN0ZW0sIEkg
-CndvdWxkIGFuc3dlciBFdWdlbmUncyBxdWVzdGlvbiBieSBzYXlpbmcgdGhhdCB0aGUgcmVhZGFo
-ZWFkIHNldHRpbmcgaXMgZXF1YWxseSAKaW1wb3J0YW50IGZvciByYW5kb20gYW5kIHNlcXVlbnRp
-YWwgSS9PLCBidXQgaW4gb3Bwb3NpdGUgZGlyZWN0aW9ucyA6LSkKCllNTVYsIGVzcGVjaWFsbHkg
-b24gYSB0eXBpY2FsIGRlc2t0b3Agc3lzdGVtIHdoZXJlIHRoZSBkaXNrcyBhcmUgY29ubmVjdGVk
-IApkaXJlY3RseSB0byB0aGUgbW90aGVyYm9hcmQgb3IgdmlhIGFuIGVTQVRBIHBvcnQsIGFuZCBp
-ZiBSQUlEIGlzIGJlaW5nIHVzZWQgYXQgCmFsbCBpdCBpcyBsaWtlbHkgdG8gYmUgc29mdHdhcmUg
-UkFJRC0wIG9yIFJBSUQtMQoKUmVnYXJkcywKUGV0ZXIuCgo+Cj4gT24gMTAvMTAvMDgsIEJlbiBI
-dWFuZyA8YmVuX2RldmVsQHlhaG9vLmNuPiB3cm90ZToKPj4gSGkgYWxsLAo+Pgo+PiAtLS0gUGV0
-ZXIgS2VsbGVyIDxwa2VsbGVyQGdsb2JhbHBoYXNpbmcuY29tPtC077+977+9Ogo+Pgo+Pj4gSGkg
-YWxsLAo+Pj4KPj4+IE9uIFdlZCwgOCBPY3QgMjAwOCwgdGhvbWFzNjIxODYyMThAYW9sLmNvbSB3
-cm90ZToKPj4+Cj4+Pj4gQmVuLAo+Pj4+Cj4+Pj4gSSBoYXZlIHNlZW4gdGhpcyBzYW1lIGlzc3Vl
-IGFzIHdlbGwuIEkgaGF2ZQo+Pj4gY3JlYXRlZCBhbiBtZCBkZXZpY2UgY2FwYWJsZSBvZgo+Pj4+
-IDQyNU1CL3NlYyB1c2luZyB0aGUgaGRwYXJtIC10IGNvbW1hbmQsIHlldCBhbiBMVk0KPj4+IHZv
-bHVtZSBmdWxseSBjb21wcmlzaW5nCj4+Pj4gdGhpcyBtZCBkZXZpY2Ugb25seSBnb3QgYWJvdXQg
-MTUwTUIvc2VjLiBJIGFtIG5vdAo+Pj4gc3VyZSB3aGF0IHRoZSBpc3N1ZSBpcy4gSQo+Pj4+IGFt
-IHJ1bm5pbmcgVWJ1bnR1IEhhcmR5IDgwNCBzZXJ2ZXIgZWRpdGlvbiwKPj4+IDY0LWJpdC4KPj4+
-Pgo+Pj4+IC1UaG9tYXMKPj4+Cj4+PiBJIGhhdmUgZml4ZWQgdGhpcyBraW5kIG9mIHByb2JsZW0g
-YnkgdHdlYWtpbmcgdGhlCj4+PiByZWFkYWhlYWQgb2YgdGhlIExWTQo+Pj4gdm9sdW1lIHVzaW5n
-ICdibG9ja2RldiAtLXNldHJhJyBhbmQvb3IgJ2Jsb2NrZGV2Cj4+PiAtLXNldGZyYScuCj4+Cj4+
-IEl0IG1ha2UgZWZmZWN0Cj4+Cj4+Cj4+IGJsb2NrZGV2IC0tc2V0cmEgNjU1MzYgL2Rldi9tZDAK
-Pj4gYmxvY2tkZXYgLS1zZXRyYSA2NTUzNiAvZGV2L21hcHBlci9ERzUtbHYxCj4+Cj4+IGRkIGlm
-PS9kZXYvbWQwIG9mPS9kZXYvbnVsbCBicz0xTQo+PiAzNTMxODU1NjI2MjQgYnl0ZXMgKDM1MyBH
-QikgY29waWVkLCA0MjAuMDMzIHMsIDg0MQo+PiBNQi9zCj4+Cj4+IGRkIGlmPS9kZXYvbWFwcGVy
-L0RHNS1sdjEgb2Y9L2Rldi9udWxsIGJzPTFNCj4+IDE1NTU1MTAwNjcyMCBieXRlcyAoMTU2IEdC
-KSBjb3BpZWQsIDIxNi41NzYgcywgNzE4Cj4+IE1CL3MKPj4KPj4gV2FybSByZWdhcmRzLAo+PiAt
-QmVuCj4+Cj4+Cj4+ICAgICAgIF9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fCj4+ICDvv73Fu++/ve+/ve+/ve+/veSjrO+/ve+/ve+/ve+/
-ve+/ve+/ve+/ve+/ve+/ve+/ve+/veSjoQo+PiBodHRwOi8vY24ubWFpbC55YWhvby5jb20vCj4+
-Cj4+IF9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCj4+IGxp
-bnV4LWx2bSBtYWlsaW5nIGxpc3QKPj4gbGludXgtbHZtQHJlZGhhdC5jb20KPj4gaHR0cHM6Ly93
-d3cucmVkaGF0LmNvbS9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWx2bQo+PiByZWFkIHRoZSBMVk0g
-SE9XLVRPIGF0IGh0dHA6Ly90bGRwLm9yZy9IT1dUTy9MVk0tSE9XVE8vCj4+Cj4KPiAtLSAKPiBT
-ZW50IGZyb20gbXkgbW9iaWxlIGRldmljZQo+Cj4gRXVnZW5lIFZpbGVuc2t5Cj4gZXZpbGVuc2t5
-QGdtYWlsLmNvbQo+Cj4gX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX18KPiBsaW51eC1sdm0gbWFpbGluZyBsaXN0Cj4gbGludXgtbHZtQHJlZGhhdC5jb20KPiBo
-dHRwczovL3d3dy5yZWRoYXQuY29tL21haWxtYW4vbGlzdGluZm8vbGludXgtbHZtCj4gcmVhZCB0
-aGUgTFZNIEhPVy1UTyBhdCBodHRwOi8vdGxkcC5vcmcvSE9XVE8vTFZNLUhPV1RPLwo+CgotLQpQ
-ZXRlciBLZWxsZXIgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgVGVsLjogKzQ0
-ICgwKTEyMjMgMzUzMDMzCkdsb2JhbCBQaGFzaW5nIEx0ZC4sICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICBGYXguOiArNDQgKDApMTIyMyAzNjY4ODkKU2hlcmF0b24gSG91c2UsCkNhc3RsZSBQ
-YXJrLApDYW1icmlkZ2UgQ0IzIDBBWApVbml0ZWQgS2luZ2RvbQ==
+ZGlmZiAtdU5yIExWTTIuMi4wMi4zMi9saWIvYWN0aXZhdGUvZGV2X21hbmFnZXIuYyBMVk0yLjIu
+MDIuMzItZXhjbHNuYXAvbGliL2FjdGl2YXRlL2Rldl9tYW5hZ2VyLmMKLS0tIExWTTIuMi4wMi4z
+Mi9saWIvYWN0aXZhdGUvZGV2X21hbmFnZXIuYwkyMDA4LTAxLTA4IDE3OjQ3OjEwLjAwMDAwMDAw
+MCArMDEwMAorKysgTFZNMi4yLjAyLjMyLWV4Y2xzbmFwL2xpYi9hY3RpdmF0ZS9kZXZfbWFuYWdl
+ci5jCTIwMDgtMTAtMTQgMTE6NTc6NTQuMDAwMDAwMDAwICswMjAwCkBAIC04NTYsMTAgKzg1Niwx
+MiBAQAogCiAJLyogSWYgdGhpcyBpcyBhIHNuYXBzaG90IG9yaWdpbiwgYWRkIHJlYWwgTFYgKi8K
+IAlpZiAobHZfaXNfb3JpZ2luKHNlZy0+bHYpICYmICFsYXllcikgewotCQlpZiAoc2VnLT5sdi0+
+dmctPnN0YXR1cyAmIENMVVNURVJFRCkgewotCQkJbG9nX2Vycm9yKCJDbHVzdGVyZWQgc25hcHNo
+b3RzIGFyZSBub3QgeWV0IHN1cHBvcnRlZCIpOwotCQkJcmV0dXJuIDA7Ci0JCX0KKy8qIFRoaXMg
+bWlnaHQgbm90IGJlIHRoZSByaWdodCBwbGFjZSBmb3IgdGhpcyBjaGVjaworICoJCWlmIChzZWct
+Pmx2LT52Zy0+c3RhdHVzICYgQ0xVU1RFUkVEKSB7CisgKgkJCWxvZ19lcnJvcigiQ2x1c3RlcmVk
+IHNuYXBzaG90cyBhcmUgbm90IHlldCBzdXBwb3J0ZWQiKTsKKyAqCQkJcmV0dXJuIDA7CisgKgkJ
+fQorICovCiAJCWlmICghX2FkZF9uZXdfbHZfdG9fZHRyZWUoZG0sIGR0cmVlLCBzZWctPmx2LCAi
+cmVhbCIpKQogCQkJcmV0dXJuXzA7CiAJfSBlbHNlIGlmIChsdl9pc19jb3coc2VnLT5sdikgJiYg
+IWxheWVyKSB7CmRpZmYgLXVOciBMVk0yLjIuMDIuMzIvdG9vbHMvbHZjcmVhdGUuYyBMVk0yLjIu
+MDIuMzItZXhjbHNuYXAvdG9vbHMvbHZjcmVhdGUuYwotLS0gTFZNMi4yLjAyLjMyL3Rvb2xzL2x2
+Y3JlYXRlLmMJMjAwOC0xMC0xNCAxMjowMDowOC4wMDAwMDAwMDAgKzAyMDAKKysrIExWTTIuMi4w
+Mi4zMi1leGNsc25hcC90b29scy9sdmNyZWF0ZS5jCTIwMDgtMTAtMTQgMTE6NTQ6MzcuMDAwMDAw
+MDAwICswMjAwCkBAIC02NDcsMTYgKzY0NywxNSBAQAogCQkJCSAgImRldmljZS1tYXBwZXIga2Vy
+bmVsIGRyaXZlciIpOwogCQkJcmV0dXJuIDA7CiAJCX0KLQkJLyogRklYTUUgQWxsb3cgZXhjbHVz
+aXZlIGFjdGl2YXRpb24uICovCi0JCWlmICh2Z19zdGF0dXModmcpICYgQ0xVU1RFUkVEKSB7Ci0J
+CQlsb2dfZXJyb3IoIkNsdXN0ZXJlZCBzbmFwc2hvdHMgYXJlIG5vdCB5ZXQgc3VwcG9ydGVkLiIp
+OwotCQkJcmV0dXJuIDA7Ci0JCX0KIAkJaWYgKCEob3JnID0gZmluZF9sdih2ZywgbHAtPm9yaWdp
+bikpKSB7CiAJCQlsb2dfZXJyKCJDb3VsZG4ndCBmaW5kIG9yaWdpbiB2b2x1bWUgJyVzJy4iLAog
+CQkJCWxwLT5vcmlnaW4pOwogCQkJcmV0dXJuIDA7CiAJCX0KKwkJaWYgKCh2Z19zdGF0dXModmcp
+ICYgQ0xVU1RFUkVEKSAmJiAhYWN0aXZhdGVfbHZfZXhjbChjbWQsIG9yZykpIHsKKwkJCWxvZ19l
+cnJvcigiQ2x1c3RlcmVkIHNuYXBzaG90cyBhcmUgbm90IHlldCBzdXBwb3J0ZWQuIik7CisJCQly
+ZXR1cm4gMDsKKwkJfQogCQlpZiAobHZfaXNfY293KG9yZykpIHsKIAkJCWxvZ19lcnJvcigiU25h
+cHNob3RzIG9mIHNuYXBzaG90cyBhcmUgbm90IHN1cHBvcnRlZCAiCiAJCQkJICAieWV0LiIpOwo=
 
---8323584-975308919-1223999366=:31211--
+------=_Part_102592_5958244.1224001100236--
