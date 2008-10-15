@@ -1,20 +1,18 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m9EGIVDw017383
-	for <linux-lvm@redhat.com>; Tue, 14 Oct 2008 12:18:31 -0400
-Received: from gv-out-0910.google.com (gv-out-0910.google.com [216.239.58.185])
-	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id m9EGIKKb028543
-	for <linux-lvm@redhat.com>; Tue, 14 Oct 2008 12:18:21 -0400
-Received: by gv-out-0910.google.com with SMTP id n8so455913gve.13
-	for <linux-lvm@redhat.com>; Tue, 14 Oct 2008 09:18:20 -0700 (PDT)
-Message-ID: <a01fe36d0810140918q6033d6f6naf1f520b4e585505@mail.gmail.com>
-Date: Tue, 14 Oct 2008 18:18:20 +0200
-From: "Federico Simoncelli" <federico.simoncelli@gmail.com>
-In-Reply-To: <a01fe36d0810140112q282e12e4xb4e86fb21e361086@mail.gmail.com>
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m9FDKbbk001466
+	for <linux-lvm@redhat.com>; Wed, 15 Oct 2008 09:20:37 -0400
+Received: from wf-out-1314.google.com (wf-out-1314.google.com [209.85.200.172])
+	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id m9FDKR1C008628
+	for <linux-lvm@redhat.com>; Wed, 15 Oct 2008 09:20:28 -0400
+Received: by wf-out-1314.google.com with SMTP id 25so2629700wfc.6
+	for <linux-lvm@redhat.com>; Wed, 15 Oct 2008 06:20:27 -0700 (PDT)
+Message-ID: <d5dce2210810150620l2e9c4b44uc519eeeebadd604f@mail.gmail.com>
+Date: Wed, 15 Oct 2008 18:50:27 +0530
+From: "himanshu padmanabhi" <himanshu.padmanabhi@gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; 
-	boundary="----=_Part_102592_5958244.1224001100236"
-References: <a01fe36d0810140112q282e12e4xb4e86fb21e361086@mail.gmail.com>
-Subject: [linux-lvm] Re: Clustered snapshots
+Content-Type: multipart/alternative; 
+	boundary="----=_Part_27219_18307324.1224076827278"
+Subject: [linux-lvm] [IMPORTANT]LVM+iSCSI issue..Local Disk disappeared..
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -25,87 +23,114 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: Linux LVM2 <linux-lvm@redhat.com>
+To: linux-lvm@redhat.com
 
-------=_Part_102592_5958244.1224001100236
-Content-Type: text/plain; charset=ISO-8859-1
+------=_Part_27219_18307324.1224076827278
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 Content-Disposition: inline
 
-On Tue, Oct 14, 2008 at 10:12 AM, Federico Simoncelli
-<federico.simoncelli@gmail.com> wrote:
-> Looking at the LVM2 code (LVM2.2.02.40, tools/lvcreate.c:640):
->
-> /* FIXME Allow exclusive activation. */
-> if (vg_is_clustered(vg)) {
->        log_error("Clustered snapshots are not yet supported.");
->        return 0;
-> }
->
-> looks like there is no way to activate a snapshot in a clustered
-> volume group. Is the documentation wrong?
-> Is there anyone actively working on the "exclusive activation" FIXME
-> that is mentioned in the comment?
+I am using "iscsi-initiator-utils-6.2.0.865-0.2.fc7" as initiator and
+"iscsitarget-0.4.15-1" as target.
 
-Hi all,
-  I worked a little on this issue and I came up with a working patch
-for LVM2.2.02.32.
-I'm not sure if my work is enough to prevent wrong behaviours but in
-my tests worked ok.
-The same patch should be applied both on the lvm2 and the lvm2-cluster
-rpm packages in order to work.
-To be able to set the lv as exclusive you have to deactivate it on the
-other nodes with the command:
+Following is the scenario
 
-# lvchange -aln /dev/vg00/lvol1
+*PV  =  local_disk1       remote_disk1  (i.e PV is formed using 2 disks
+1 local and 1 from iscsitarget)
+*
 
-and then you can create the snapshot:
+* VG  =  Vgname
+*
 
-# lvcreate --size 100M --snapshot --name snap /dev/vg00/lvol1
-  Logical volume "snap" created
+* LV =  lv_localdisk_1       lv_localremotedisk1
+lv_remotedisk1 (i.e. 1 lv only from local disk,1 from remote
+iscsitarget and one from combination of both)
+*
 
-It automatically takes care to set the lv device as exclusive (vgchange -aey).
-Can anyone review the patch?
+I performed "logout" operation on "remote_disk1" after deactivating
+"lv_localremotedisk1 and           lv_remotedisk1" on it using
+"lvchange" command.
 
-Thanks in advance,
+Then result I should at least get,
+
+*PV  =  local_disk1    (remote_disk1 is removed now)
+*
+
+* VG = Vgname
+*
+
+* LV = lv_localdisk1     (So LVs containing PVs as "remote_disk1" are
+deactivated.It can be in combination with local disk also) *
+
+Still confused about  "lv_localremotedisk1"?Local disk part would also
+lost here till I again login to that target.
+
+But the result was
+
+*PV =
+VG =
+LV =
+*
+
+i.e They all were lost temporarily.
+
+When I logged in to the same target and activated the LVs on
+"remote_disk1",I got my original configuration.i.e.
+
+*PV  =  local_disk1       remote_disk1  (i.e PV is formed using 2 disks
+1 local and 1 from iscsitarget)
+*
+
+* VG  =  Vgname
+*
+
+* LV =  lv_localdisk_1       lv_localremotedisk1
+lv_remotedisk1 (i.e. 1 lv only from local disk,1 from remote
+iscsitarget and one from combination of both)*
+
+Please help......
+
+This should not happen.....right...
+
 -- 
-Federico.
+Thanks and Regards,
+Himanshu Padmanabhi
 
-------=_Part_102592_5958244.1224001100236
-Content-Type: application/octet-stream;
- name=lvm2-2_02_34-fix-exclsnap.patch
-Content-Transfer-Encoding: base64
-X-Attachment-Id: f_fmaq4tgu0
-Content-Disposition: attachment; filename=lvm2-2_02_34-fix-exclsnap.patch
+------=_Part_27219_18307324.1224076827278
+Content-Type: text/html; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
 
-ZGlmZiAtdU5yIExWTTIuMi4wMi4zMi9saWIvYWN0aXZhdGUvZGV2X21hbmFnZXIuYyBMVk0yLjIu
-MDIuMzItZXhjbHNuYXAvbGliL2FjdGl2YXRlL2Rldl9tYW5hZ2VyLmMKLS0tIExWTTIuMi4wMi4z
-Mi9saWIvYWN0aXZhdGUvZGV2X21hbmFnZXIuYwkyMDA4LTAxLTA4IDE3OjQ3OjEwLjAwMDAwMDAw
-MCArMDEwMAorKysgTFZNMi4yLjAyLjMyLWV4Y2xzbmFwL2xpYi9hY3RpdmF0ZS9kZXZfbWFuYWdl
-ci5jCTIwMDgtMTAtMTQgMTE6NTc6NTQuMDAwMDAwMDAwICswMjAwCkBAIC04NTYsMTAgKzg1Niwx
-MiBAQAogCiAJLyogSWYgdGhpcyBpcyBhIHNuYXBzaG90IG9yaWdpbiwgYWRkIHJlYWwgTFYgKi8K
-IAlpZiAobHZfaXNfb3JpZ2luKHNlZy0+bHYpICYmICFsYXllcikgewotCQlpZiAoc2VnLT5sdi0+
-dmctPnN0YXR1cyAmIENMVVNURVJFRCkgewotCQkJbG9nX2Vycm9yKCJDbHVzdGVyZWQgc25hcHNo
-b3RzIGFyZSBub3QgeWV0IHN1cHBvcnRlZCIpOwotCQkJcmV0dXJuIDA7Ci0JCX0KKy8qIFRoaXMg
-bWlnaHQgbm90IGJlIHRoZSByaWdodCBwbGFjZSBmb3IgdGhpcyBjaGVjaworICoJCWlmIChzZWct
-Pmx2LT52Zy0+c3RhdHVzICYgQ0xVU1RFUkVEKSB7CisgKgkJCWxvZ19lcnJvcigiQ2x1c3RlcmVk
-IHNuYXBzaG90cyBhcmUgbm90IHlldCBzdXBwb3J0ZWQiKTsKKyAqCQkJcmV0dXJuIDA7CisgKgkJ
-fQorICovCiAJCWlmICghX2FkZF9uZXdfbHZfdG9fZHRyZWUoZG0sIGR0cmVlLCBzZWctPmx2LCAi
-cmVhbCIpKQogCQkJcmV0dXJuXzA7CiAJfSBlbHNlIGlmIChsdl9pc19jb3coc2VnLT5sdikgJiYg
-IWxheWVyKSB7CmRpZmYgLXVOciBMVk0yLjIuMDIuMzIvdG9vbHMvbHZjcmVhdGUuYyBMVk0yLjIu
-MDIuMzItZXhjbHNuYXAvdG9vbHMvbHZjcmVhdGUuYwotLS0gTFZNMi4yLjAyLjMyL3Rvb2xzL2x2
-Y3JlYXRlLmMJMjAwOC0xMC0xNCAxMjowMDowOC4wMDAwMDAwMDAgKzAyMDAKKysrIExWTTIuMi4w
-Mi4zMi1leGNsc25hcC90b29scy9sdmNyZWF0ZS5jCTIwMDgtMTAtMTQgMTE6NTQ6MzcuMDAwMDAw
-MDAwICswMjAwCkBAIC02NDcsMTYgKzY0NywxNSBAQAogCQkJCSAgImRldmljZS1tYXBwZXIga2Vy
-bmVsIGRyaXZlciIpOwogCQkJcmV0dXJuIDA7CiAJCX0KLQkJLyogRklYTUUgQWxsb3cgZXhjbHVz
-aXZlIGFjdGl2YXRpb24uICovCi0JCWlmICh2Z19zdGF0dXModmcpICYgQ0xVU1RFUkVEKSB7Ci0J
-CQlsb2dfZXJyb3IoIkNsdXN0ZXJlZCBzbmFwc2hvdHMgYXJlIG5vdCB5ZXQgc3VwcG9ydGVkLiIp
-OwotCQkJcmV0dXJuIDA7Ci0JCX0KIAkJaWYgKCEob3JnID0gZmluZF9sdih2ZywgbHAtPm9yaWdp
-bikpKSB7CiAJCQlsb2dfZXJyKCJDb3VsZG4ndCBmaW5kIG9yaWdpbiB2b2x1bWUgJyVzJy4iLAog
-CQkJCWxwLT5vcmlnaW4pOwogCQkJcmV0dXJuIDA7CiAJCX0KKwkJaWYgKCh2Z19zdGF0dXModmcp
-ICYgQ0xVU1RFUkVEKSAmJiAhYWN0aXZhdGVfbHZfZXhjbChjbWQsIG9yZykpIHsKKwkJCWxvZ19l
-cnJvcigiQ2x1c3RlcmVkIHNuYXBzaG90cyBhcmUgbm90IHlldCBzdXBwb3J0ZWQuIik7CisJCQly
-ZXR1cm4gMDsKKwkJfQogCQlpZiAobHZfaXNfY293KG9yZykpIHsKIAkJCWxvZ19lcnJvcigiU25h
-cHNob3RzIG9mIHNuYXBzaG90cyBhcmUgbm90IHN1cHBvcnRlZCAiCiAJCQkJICAieWV0LiIpOwo=
+<div dir="ltr"><br clear="all"><font class="fixed_width" face="Courier, Monospaced">I am using &quot;iscsi-initiator-utils-6.2.0.865-0.2.fc7&quot; as initiator and
+<br> &quot;iscsitarget-0.4.15-1&quot; as target.
+<br> </font><p><font class="fixed_width" face="Courier, Monospaced">Following is the scenario
+<br> </font></p><p><b><font class="fixed_width" face="Courier, Monospaced">PV &nbsp;= &nbsp;local_disk1 &nbsp; &nbsp; &nbsp; remote_disk1 &nbsp;(i.e PV is formed using 2 disks
+<br> 1 local and 1 from iscsitarget) <br></font></b></p><p><b><font class="fixed_width" face="Courier, Monospaced"> VG &nbsp;= &nbsp;Vgname <br></font></b></p><p><b><font class="fixed_width" face="Courier, Monospaced"> LV = &nbsp;lv_localdisk_1 &nbsp; &nbsp; &nbsp; lv_localremotedisk1
+<br> lv_remotedisk1 (i.e. 1 lv only from local disk,1 from remote
+<br> iscsitarget and one from combination of both)
+<br> </font></b></p><p><font class="fixed_width" face="Courier, Monospaced">I performed &quot;logout&quot; operation on &quot;remote_disk1&quot; after deactivating
+<br> &quot;lv_localremotedisk1 and &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; lv_remotedisk1&quot; on it using
+<br> &quot;lvchange&quot; command.
+<br> </font></p><p><font class="fixed_width" face="Courier, Monospaced">Then result I should at least get,
+<br> </font></p><p><font class="fixed_width" face="Courier, Monospaced"><b>PV &nbsp;= &nbsp;local_disk1 &nbsp; &nbsp;(remote_disk1 is removed now) <br></b></font></p><p><font class="fixed_width" face="Courier, Monospaced"><b> VG = Vgname <br>
+</b></font></p><p><font class="fixed_width" face="Courier, Monospaced"><b> LV = lv_localdisk1 &nbsp; &nbsp; (So LVs containing PVs as &quot;remote_disk1&quot; are
+<br> deactivated.It can be in combination with local disk also)
+</b><br> </font></p><p><font class="fixed_width" face="Courier, Monospaced">Still confused about &nbsp;&quot;lv_localremotedisk1&quot;?Local disk part would also
+<br> lost here till I again login to that target.
+<br> </font></p><p><font class="fixed_width" face="Courier, Monospaced">But the result was
+<br> </font></p><p><b><font class="fixed_width" face="Courier, Monospaced">PV =
+<br> VG =
+<br> LV =
+<br> </font></b></p><p><font class="fixed_width" face="Courier, Monospaced">i.e They all were lost temporarily.
+<br> </font></p><p><font class="fixed_width" face="Courier, Monospaced">When I logged in to the same target and activated the LVs on
+<br> &quot;remote_disk1&quot;,I got my original configuration.i.e.
+<br> </font></p><p><font class="fixed_width" face="Courier, Monospaced"><b>PV &nbsp;= &nbsp;local_disk1 &nbsp; &nbsp; &nbsp; remote_disk1 &nbsp;(i.e PV is formed using 2 disks
+<br> 1 local and 1 from iscsitarget) <br></b></font></p><p><font class="fixed_width" face="Courier, Monospaced"><b> VG &nbsp;= &nbsp;Vgname <br></b></font></p><p><font class="fixed_width" face="Courier, Monospaced"><b> LV = &nbsp;lv_localdisk_1 &nbsp; &nbsp; &nbsp; lv_localremotedisk1
+<br> lv_remotedisk1 (i.e. 1 lv only from local disk,1 from remote
+<br> iscsitarget and one from combination of both)</b>
+<br> </font></p><p><font class="fixed_width" face="Courier, Monospaced">Please help......
+<br> </font></p><p><font class="fixed_width" face="Courier, Monospaced">This should not happen.....right...</font>
+  </p><br>-- <br>Thanks and Regards,<br>Himanshu Padmanabhi<br><br>
+</div>
 
-------=_Part_102592_5958244.1224001100236--
+------=_Part_27219_18307324.1224076827278--
