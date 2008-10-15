@@ -1,18 +1,17 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m9FDKbbk001466
-	for <linux-lvm@redhat.com>; Wed, 15 Oct 2008 09:20:37 -0400
-Received: from wf-out-1314.google.com (wf-out-1314.google.com [209.85.200.172])
-	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id m9FDKR1C008628
-	for <linux-lvm@redhat.com>; Wed, 15 Oct 2008 09:20:28 -0400
-Received: by wf-out-1314.google.com with SMTP id 25so2629700wfc.6
-	for <linux-lvm@redhat.com>; Wed, 15 Oct 2008 06:20:27 -0700 (PDT)
-Message-ID: <d5dce2210810150620l2e9c4b44uc519eeeebadd604f@mail.gmail.com>
-Date: Wed, 15 Oct 2008 18:50:27 +0530
-From: "himanshu padmanabhi" <himanshu.padmanabhi@gmail.com>
-MIME-Version: 1.0
-Content-Type: multipart/alternative; 
-	boundary="----=_Part_27219_18307324.1224076827278"
-Subject: [linux-lvm] [IMPORTANT]LVM+iSCSI issue..Local Disk disappeared..
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m9FG79aB020314
+	for <linux-lvm@redhat.com>; Wed, 15 Oct 2008 12:07:09 -0400
+Received: from cdc-exfep1.ciber.cbr.inc (fw.ciber.com [12.10.248.50])
+	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id m9FG6wQp027527
+	for <linux-lvm@redhat.com>; Wed, 15 Oct 2008 12:06:59 -0400
+Subject: Re: [linux-lvm] [IMPORTANT]LVM+iSCSI issue..Local Disk disappeared..
+From: Peter Larsen <plarsen@CIBER.com>
+In-Reply-To: <d5dce2210810150620l2e9c4b44uc519eeeebadd604f@mail.gmail.com>
+References: <d5dce2210810150620l2e9c4b44uc519eeeebadd604f@mail.gmail.com>
+Date: Wed, 15 Oct 2008 12:06:54 -0400
+Message-Id: <1224086814.7418.11.camel@localhost.localdomain>
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -23,114 +22,80 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: linux-lvm@redhat.com
+Content-Type: text/plain; charset="us-ascii"
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-------=_Part_27219_18307324.1224076827278
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
+On Wed, 2008-10-15 at 18:50 +0530, himanshu padmanabhi wrote:
+> 
+> I am using "iscsi-initiator-utils-6.2.0.865-0.2.fc7" as initiator and 
+> "iscsitarget-0.4.15-1" as target. 
+> 
+> 
+> Following is the scenario 
+> 
+> 
+> PV  =  local_disk1       remote_disk1  (i.e PV is formed using 2
+> disks 
+> 1 local and 1 from iscsitarget) 
 
-I am using "iscsi-initiator-utils-6.2.0.865-0.2.fc7" as initiator and
-"iscsitarget-0.4.15-1" as target.
+Strange construction?
+Why not simply format each target as a separate PV and then join them in
+a single VG? Much easier to manage. 
 
-Following is the scenario
+That aside - I wouldn't mix and match that way. You're getting very
+different response times and security issues on each device. I would
+treat them very different.
 
-*PV  =  local_disk1       remote_disk1  (i.e PV is formed using 2 disks
-1 local and 1 from iscsitarget)
-*
+> VG  =  Vgname 
 
-* VG  =  Vgname
-*
+You need to assign the PV's to your VG.
 
-* LV =  lv_localdisk_1       lv_localremotedisk1
-lv_remotedisk1 (i.e. 1 lv only from local disk,1 from remote
-iscsitarget and one from combination of both)
-*
+> LV =  lv_localdisk_1       lv_localremotedisk1 
+> lv_remotedisk1 (i.e. 1 lv only from local disk,1 from remote 
+> iscsitarget and one from combination of both) 
 
-I performed "logout" operation on "remote_disk1" after deactivating
-"lv_localremotedisk1 and           lv_remotedisk1" on it using
-"lvchange" command.
+That makes no sense. You don't use physical volumes when you create
+logical ones. You use groups. You don't assign physical devices like
+that when you do LVs.
 
-Then result I should at least get,
+> I performed "logout" operation on "remote_disk1" after deactivating 
+> "lv_localremotedisk1 and           lv_remotedisk1" on it using 
+> "lvchange" command. 
+> 
+> 
+> Then result I should at least get, 
+> 
+> 
+> PV  =  local_disk1    (remote_disk1 is removed now) 
+> 
+> 
+> VG = Vgname 
+> 
+> 
+> LV = lv_localdisk1     (So LVs containing PVs as "remote_disk1" are 
+> deactivated.It can be in combination with local disk also)
 
-*PV  =  local_disk1    (remote_disk1 is removed now)
-*
+No - things don't work that way. If you damage/remove a PV from a VG -
+everything in that VG gets disabled until the whole VG is operational.
+It doesn't matter if your LV is in the area damaged or not.
 
-* VG = Vgname
-*
+> i.e They all were lost temporarily. 
 
-* LV = lv_localdisk1     (So LVs containing PVs as "remote_disk1" are
-deactivated.It can be in combination with local disk also) *
+Not temporarily. As long as the VG is bad, nothing is there. You should
+see all available PVs but the way you set it up, you didn't do a PV on
+each disk so when the disk-group sees one disk missing the whole disk
+group is offline, you loose your PV, your VG gets deactivated = the
+result you see.
 
-Still confused about  "lv_localremotedisk1"?Local disk part would also
-lost here till I again login to that target.
+> When I logged in to the same target and activated the LVs on 
+> "remote_disk1",I got my original configuration.i.e. 
 
-But the result was
+Because your PV is now present, the VG can activate etc.
 
-*PV =
-VG =
-LV =
-*
 
-i.e They all were lost temporarily.
+--- 
+Regards
+    Peter Larsen
 
-When I logged in to the same target and activated the LVs on
-"remote_disk1",I got my original configuration.i.e.
-
-*PV  =  local_disk1       remote_disk1  (i.e PV is formed using 2 disks
-1 local and 1 from iscsitarget)
-*
-
-* VG  =  Vgname
-*
-
-* LV =  lv_localdisk_1       lv_localremotedisk1
-lv_remotedisk1 (i.e. 1 lv only from local disk,1 from remote
-iscsitarget and one from combination of both)*
-
-Please help......
-
-This should not happen.....right...
-
--- 
-Thanks and Regards,
-Himanshu Padmanabhi
-
-------=_Part_27219_18307324.1224076827278
-Content-Type: text/html; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-<div dir="ltr"><br clear="all"><font class="fixed_width" face="Courier, Monospaced">I am using &quot;iscsi-initiator-utils-6.2.0.865-0.2.fc7&quot; as initiator and
-<br> &quot;iscsitarget-0.4.15-1&quot; as target.
-<br> </font><p><font class="fixed_width" face="Courier, Monospaced">Following is the scenario
-<br> </font></p><p><b><font class="fixed_width" face="Courier, Monospaced">PV &nbsp;= &nbsp;local_disk1 &nbsp; &nbsp; &nbsp; remote_disk1 &nbsp;(i.e PV is formed using 2 disks
-<br> 1 local and 1 from iscsitarget) <br></font></b></p><p><b><font class="fixed_width" face="Courier, Monospaced"> VG &nbsp;= &nbsp;Vgname <br></font></b></p><p><b><font class="fixed_width" face="Courier, Monospaced"> LV = &nbsp;lv_localdisk_1 &nbsp; &nbsp; &nbsp; lv_localremotedisk1
-<br> lv_remotedisk1 (i.e. 1 lv only from local disk,1 from remote
-<br> iscsitarget and one from combination of both)
-<br> </font></b></p><p><font class="fixed_width" face="Courier, Monospaced">I performed &quot;logout&quot; operation on &quot;remote_disk1&quot; after deactivating
-<br> &quot;lv_localremotedisk1 and &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; lv_remotedisk1&quot; on it using
-<br> &quot;lvchange&quot; command.
-<br> </font></p><p><font class="fixed_width" face="Courier, Monospaced">Then result I should at least get,
-<br> </font></p><p><font class="fixed_width" face="Courier, Monospaced"><b>PV &nbsp;= &nbsp;local_disk1 &nbsp; &nbsp;(remote_disk1 is removed now) <br></b></font></p><p><font class="fixed_width" face="Courier, Monospaced"><b> VG = Vgname <br>
-</b></font></p><p><font class="fixed_width" face="Courier, Monospaced"><b> LV = lv_localdisk1 &nbsp; &nbsp; (So LVs containing PVs as &quot;remote_disk1&quot; are
-<br> deactivated.It can be in combination with local disk also)
-</b><br> </font></p><p><font class="fixed_width" face="Courier, Monospaced">Still confused about &nbsp;&quot;lv_localremotedisk1&quot;?Local disk part would also
-<br> lost here till I again login to that target.
-<br> </font></p><p><font class="fixed_width" face="Courier, Monospaced">But the result was
-<br> </font></p><p><b><font class="fixed_width" face="Courier, Monospaced">PV =
-<br> VG =
-<br> LV =
-<br> </font></b></p><p><font class="fixed_width" face="Courier, Monospaced">i.e They all were lost temporarily.
-<br> </font></p><p><font class="fixed_width" face="Courier, Monospaced">When I logged in to the same target and activated the LVs on
-<br> &quot;remote_disk1&quot;,I got my original configuration.i.e.
-<br> </font></p><p><font class="fixed_width" face="Courier, Monospaced"><b>PV &nbsp;= &nbsp;local_disk1 &nbsp; &nbsp; &nbsp; remote_disk1 &nbsp;(i.e PV is formed using 2 disks
-<br> 1 local and 1 from iscsitarget) <br></b></font></p><p><font class="fixed_width" face="Courier, Monospaced"><b> VG &nbsp;= &nbsp;Vgname <br></b></font></p><p><font class="fixed_width" face="Courier, Monospaced"><b> LV = &nbsp;lv_localdisk_1 &nbsp; &nbsp; &nbsp; lv_localremotedisk1
-<br> lv_remotedisk1 (i.e. 1 lv only from local disk,1 from remote
-<br> iscsitarget and one from combination of both)</b>
-<br> </font></p><p><font class="fixed_width" face="Courier, Monospaced">Please help......
-<br> </font></p><p><font class="fixed_width" face="Courier, Monospaced">This should not happen.....right...</font>
-  </p><br>-- <br>Thanks and Regards,<br>Himanshu Padmanabhi<br><br>
-</div>
-
-------=_Part_27219_18307324.1224076827278--
+We have met the enemy, and he is us.
+		-- Walt Kelly
