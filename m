@@ -1,17 +1,20 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m9GFWg7f026683
-	for <linux-lvm@redhat.com>; Thu, 16 Oct 2008 11:32:42 -0400
-Received: from cdc-exfep1.ciber.cbr.inc (fw.ciber.com [12.10.248.50])
-	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id m9GFWWvu007017
-	for <linux-lvm@redhat.com>; Thu, 16 Oct 2008 11:32:32 -0400
-Subject: Re: [linux-lvm] New to LVM
-From: Peter Larsen <plarsen@CIBER.com>
-In-Reply-To: <200810161109.37242.d_baron@012.net.il>
-References: <200810161109.37242.d_baron@012.net.il>
-Date: Thu, 16 Oct 2008 11:32:30 -0400
-Message-Id: <1224171150.7716.15.camel@localhost.localdomain>
-Mime-Version: 1.0
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m9GL9TZ1011454
+	for <linux-lvm@redhat.com>; Thu, 16 Oct 2008 17:09:29 -0400
+Received: from mail.knebb.de (mail.knebb.de [83.137.99.149])
+	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id m9GL9Emf023375
+	for <linux-lvm@redhat.com>; Thu, 16 Oct 2008 17:09:14 -0400
+Received: from tp.knebb.de (p54BC5FE0.dip.t-dialin.net [84.188.95.224])
+	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+	(Client did not present a certificate)
+	by mail.knebb.de (Postfix) with ESMTP id 0EF07F7CA
+	for <linux-lvm@redhat.com>; Thu, 16 Oct 2008 23:09:12 +0200 (CEST)
+Message-ID: <48F7AD78.1000002@knebb.de>
+Date: Thu, 16 Oct 2008 23:09:12 +0200
+From: =?ISO-8859-1?Q?Christian_V=F6lker?= <chrischan@knebb.de>
+MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] LVs corrupted after pvresize
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -22,63 +25,60 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+To: linux-lvm@redhat.com
 
-On Thu, 2008-10-16 at 11:09 +0200, David Baron wrote:
-> Looks very good, but have a few questions before setting up that disk:
-> 
-> 1. Realttime patch kernels -- use with these, io performance hit for audio 
-> work?
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA1
 
-Straight up LVM has very little overhead once setup. Not really sure
-what you mean by real-time patch kernels; the requirement for LVM is to
-have device mapper (the dm* module(s)). 
-> 
-> 2. LV for /? LV_ROOT--Ok to do this? Avoid it? OK if device mapper compiled in 
-> kernel (I do not use an initrd)?
+Yohoo!
 
-Sure! Works great. The only thing that won't work is /boot - but
-hopefully GRUB will fix that soon.
+I'm currently in big troubles :-(
+What happened?
 
-It's possible without initrd - you just have to link the dm* modules
-static in the kernel. However, it's easily setup with initrd which is
-the method I prefer.
+I have a single VG running on three RAID arrays.
 
-> 3. Changes to /etc/fstab look straightforward. Changes to lilo.conf (yes, 
-> there are those of us who have not switched to grub)?
+I resized one of these RAID arrays for additional 250GB. After this was
+done I needed to reboot for the kernel to pick up the new size.
+Then I went into fdisk, deleted the 8e-LVM partition and re-created a
+new one with the same starting sector but a later end sector.
+Again, for the kernel to pick up the new partition table I rebooted.
 
-LILO - man, haven't used that forever. But the boot loaders don't care.
-You still need a /boot that's "non-lvm". Once the kernel is loaded,
-there'll be device mapper support and you're go.
+After the reboot my VG was inaccessible because it complained about a
+missing PV.
+I checked
+http://www.novell.com/coolsolutions/appnote/19386.html#DiskPermanentlyRemoved
+Symptom2, Solution2.
 
-> 4. If I leave / as regular partition, how big should this be (containing /lib, 
-> /bin, /sbin, /etc, etc.)? Boot on this or separate or does it matter?
+vgcfgrestore showed the same error: "Couldn't find device with uuid ..."
 
-That's really a non-LVM question. It depends on your approach. /
-basically holds /etc and a few core binaries/libaries. It usually takes
-up less than 1GB but I would use 2G minimum. However, it really defeats
-the purpose of LVM? With LVM you get the flexibility to change your
-sizes/setup dynamically. The idea is to use as little "normal"
-partitions as possible to get the maximum flexibility.
+So I re-created th PV with "pvcreate --uuid [...] /dev/sdd1.
 
-> 5. I will create all this on by hdd, copy everything into the fileystems from 
-> my current hdb and then move the hdd to the hdb slot. Docs say this is OK (and 
-> imply that I could even try it out booting from the old hdb  /boot). True?
+vgscan and I had the new size and a running VG showing all my LVs. :)
 
-Everything now a days uses UUID or similar ways to identify devices.
-When you format a hdd with LVM it gets assigned an UUID. This is what
-the "assembler" looks for - your groups are groups of UUIDs. So you can
-move your disks around as much as you want.
+Unfortunately ALL my LVs on the /dev/sdd1 PV are severely corrupted- the
+complain about missing partition tables, fsck.ext2 prints thousands of
+errors and so on.
 
-Only grub/lilo is really fixated on the BIOS address of your harddisk.
-Everything else shouldn't care anymore (and yes /etc/fstab should use
-UUIDs too).
+I tried to reduce the PV again, but the LVs remain corrupted.
 
---- 
-Regards
-    Peter Larsen
+I don't expect my data to be recoverable- but I want to know what I did
+wrong.
 
-I'm telling you that the kernel is stable not because it's a kernel,
-but because I refuse to listen to arguments like this.
-	-- Linus Torvalds
+Though, if you can recover my LVs it would be fine ;-)
+
+
+Any ideas?
+
+
+Christian
+
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.7 (GNU/Linux)
+Comment: Using GnuPG with Fedora - http://enigmail.mozdev.org
+
+iD8DBQFI96130XNIYlAXmzsRAqMGAKDK13dabQD/LFGl460R410PQlNFCQCgt7ZT
+iVCXd/QCUoSQIdfTaODAbPU=
+=XMWS
+-----END PGP SIGNATURE-----
