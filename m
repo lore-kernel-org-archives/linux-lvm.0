@@ -1,25 +1,23 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m9GMxApH024602
-	for <linux-lvm@redhat.com>; Thu, 16 Oct 2008 18:59:10 -0400
-Received: from mail.bmsi.com (www.bmsi.com [24.248.44.156])
-	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id m9GMW4Rn030088
-	for <linux-lvm@redhat.com>; Thu, 16 Oct 2008 18:32:04 -0400
-Received: from bmsred.bmsi.com (bmsred.bmsi.com [192.168.9.50])
-	by mail.bmsi.com (8.13.6/8.13.6) with ESMTP id m9GMVr5V024058
-	(version=TLSv1/SSLv3 cipher=EDH-RSA-DES-CBC3-SHA bits=168 verify=NO)
-	for <linux-lvm@redhat.com>; Thu, 16 Oct 2008 18:31:54 -0400
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by bmsred.bmsi.com (8.13.8/8.13.8) with ESMTP id m9GMVrSA014538
-	for <linux-lvm@redhat.com>; Thu, 16 Oct 2008 18:31:53 -0400
-Date: Thu, 16 Oct 2008 18:31:53 -0400 (EDT)
-From: "Stuart D. Gathman" <stuart@bmsi.com>
-Subject: Re: [linux-lvm] LVs corrupted after pvresize
-In-Reply-To: <48F7AD78.1000002@knebb.de>
-Message-ID: <Pine.LNX.4.64.0810161829570.14457@bmsred.bmsi.com>
-References: <48F7AD78.1000002@knebb.de>
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m9H462qe028015
+	for <linux-lvm@redhat.com>; Fri, 17 Oct 2008 00:06:02 -0400
+Received: from mail.knebb.de (mail.knebb.de [83.137.99.149])
+	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id m9H45HeF030368
+	for <linux-lvm@redhat.com>; Fri, 17 Oct 2008 00:05:47 -0400
+Received: from tp.knebb.de (p54BC5FE0.dip.t-dialin.net [84.188.95.224])
+	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+	(Client did not present a certificate)
+	by mail.knebb.de (Postfix) with ESMTP id 87367F7BB
+	for <linux-lvm@redhat.com>; Fri, 17 Oct 2008 06:05:16 +0200 (CEST)
+Message-ID: <48F80EFB.30404@knebb.de>
+Date: Fri, 17 Oct 2008 06:05:15 +0200
+From: =?ISO-8859-1?Q?Christian_V=F6lker?= <chrischan@knebb.de>
 MIME-Version: 1.0
-Content-Type: MULTIPART/MIXED;
-	BOUNDARY="-1463799287-1988648372-1224196313=:14457"
+Subject: Re: [linux-lvm] LVs corrupted after pvresize
+References: <48F7AD78.1000002@knebb.de>
+	<Pine.LNX.4.64.0810161829570.14457@bmsred.bmsi.com>
+In-Reply-To: <Pine.LNX.4.64.0810161829570.14457@bmsred.bmsi.com>
+Content-Transfer-Encoding: 7bit
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -30,33 +28,37 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA1
 
----1463799287-1988648372-1224196313=:14457
-Content-Type: TEXT/PLAIN; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Yohoo!
 
-On Thu, 16 Oct 2008, Christian V=EF=BF=BDlker wrote:
+|> I resized one of these RAID arrays for additional 250GB. After this was
+| Resizing a RAID-5 array is often not what you think, and doing so often
+| scrambles the data, depending on what RAID implementation you are using.
+I'm using a hardware RAID 3ware 9500S Controller. And this guy offers
+migration from RAID10 (4disks) to RAID5 (4disks, but with larger capacity).
+And I already did this task several times on these types of controllers.
 
-> I'm currently in big troubles :-(
-> What happened?
->=20
-> I have a single VG running on three RAID arrays.
->=20
-> I resized one of these RAID arrays for additional 250GB. After this was
 
-Resizing a RAID-5 array is often not what you think, and doing so often
-scrambles the data, depending on what RAID implementation you are using.  T=
-hat
-is why I stick with RAID-1.  Resizing is simple.  In any case, LVM
-was not your problem.
+| In any case, LVM was not your problem.
+This answer is too simple to be true.
+After the resize the partition and the PV were recognized correctly! So
+I'm pretty sure the migration was ok.
+But after the deletion of the partion, recreation and pvcreate
+everything went wrong. So for me it is obvious, LVM had an issue. But
+which one?
 
---=20
-	      Stuart D. Gathman <stuart@bmsi.com>
-    Business Management Systems Inc.  Phone: 703 591-0911 Fax: 703 591-6154
-"Confutatis maledictis, flammis acribus addictis" - background song for
-a Microsoft sponsored "Where do you want to go from here?" commercial.
----1463799287-1988648372-1224196313=:14457--
+Greets
+Christian
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.7 (GNU/Linux)
+Comment: Using GnuPG with Fedora - http://enigmail.mozdev.org
+
+iD8DBQFI+A770XNIYlAXmzsRAicJAKCpogPKLWhuOtABRI/cBthIRVwlHACZAcoi
+b7+z+RaIKUKnui+b8XLqtw0=
+=TSoe
+-----END PGP SIGNATURE-----
