@@ -1,26 +1,18 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m9HIpcI6022407
-	for <linux-lvm@redhat.com>; Fri, 17 Oct 2008 14:51:38 -0400
-Received: from server.klug.on.ca (server.klug.on.ca [205.189.48.131])
-	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id m9HIpQ1E030188
-	for <linux-lvm@redhat.com>; Fri, 17 Oct 2008 14:51:26 -0400
-Received: from linux.interlinx.bc.ca (d193-213-184.home3.cgocable.net
-	[67.193.213.184])
-	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by server.klug.on.ca (Postfix) with ESMTP id 84ED72805
-	for <linux-lvm@redhat.com>; Fri, 17 Oct 2008 14:51:25 -0400 (EDT)
-Received: from [10.75.22.1] (pc.ilinx [10.75.22.1])
-	by linux.interlinx.bc.ca (Postfix) with ESMTP id CFB8C875B
-	for <linux-lvm@redhat.com>; Fri, 17 Oct 2008 14:51:23 -0400 (EDT)
-From: "Brian J. Murrell" <brian@interlinx.bc.ca>
-Content-Type: multipart/signed; micalg="pgp-sha1";
-	protocol="application/pgp-signature";
-	boundary="=-Jub6IpAse7A+a80XgJFf"
-Date: Fri, 17 Oct 2008 14:51:23 -0400
-Message-Id: <1224269483.17821.39.camel@pc.ilinx>
-Mime-Version: 1.0
-Subject: [linux-lvm] dmraid - where is the raid done?
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m9JEJopo025154
+	for <linux-lvm@redhat.com>; Sun, 19 Oct 2008 10:19:50 -0400
+Received: from mtaout1.012.net.il (mtaout1.012.net.il [84.95.2.1])
+	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id m9JEJcBQ020194
+	for <linux-lvm@redhat.com>; Sun, 19 Oct 2008 10:19:39 -0400
+Received: from davidb ([77.125.79.81]) by i-mtaout1.012.net.il (HyperSendmail
+	v2007.08) with ESMTPA id <0K8Z004KFP739Z81@i-mtaout1.012.net.il> for
+	linux-lvm@redhat.com; Sun, 19 Oct 2008 16:21:04 +0200 (IST)
+Date: Sun, 19 Oct 2008 16:19:25 +0200
+From: David Baron <d_baron@012.net.il>
+Message-id: <005e01c931f5$b101bf00$0101c80a@davidb>
+MIME-version: 1.0
+Content-transfer-encoding: 7bit
+Subject: [linux-lvm] HELP!
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -31,49 +23,33 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
+Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@redhat.com
 
+Set up lvm, a breeze. NO lv root so should boot with a normal lilo.
+I was able to boot mounting the lvm volumes to the old failing disk.
+I cannot boot the new disk.
 
---=-Jub6IpAse7A+a80XgJFf
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
+Configuration
+1 boot-ext3
+2 root-ext3
+3 swap
+5 vfat
+6 lvm volumes
 
-I think this is the right place for dmraid questions.  Please redirect
-me if it's not.  Thanx.
+What type of lilo do I need for this. I ran it with
+boot /dev/hdc1
+root  /dev/hdc2
 
-I understand that dmraid is just some kind of interface to the
-_software_ raid that is provided on a number of SATA interface cards
-such as the Promise and Adaptec cards.
+All I get is the bootmagic text "preparing machine to start linux", then
+nothing.
 
-Reading http://ata.wiki.kernel.org/index.php/SATA_RAID_FAQ I get the
-message loud and clear that this is not real hardware RAID but rather
-it's done in the BIOS on the card.
+I am typing this in (gulp) window 98 (at least that still works--somewhat).
 
-The message there seems to be, if you are going to do it in software
-anyway, why not just skip the IO card RAID and just use MD?
+The boot record of the old failing disk is messed so I canot use that
+knoppix 3.* will not allow me to chroot (its kernel too old)
+knoppix 5.01 will, but will not let me run lilo. The device mapper is too
+old for the (Sid) system.
 
-The one reason I could think of for using the BIOS provided RAID would
-be to reduce the data needing to traverse the PCI bus.  With host-raid
-(i.e. MD) every write to disk needs to actually be written over the PCI
-bus twice, once for each disk, right?
-
-But do the BIOS RAID cards out there only need the write command and
-data once and they do the work of writing it to the two disks on-board
-the IO card?
-
-b.
-
-
---=-Jub6IpAse7A+a80XgJFf
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.9 (GNU/Linux)
-
-iEYEABECAAYFAkj43qsACgkQl3EQlGLyuXDFvQCeL8xAt26iLVywXIeSx0TQDGxW
-oQoAoIFa3Qq17KKUe66JdNFYjBGnbboL
-=kdd2
------END PGP SIGNATURE-----
-
---=-Jub6IpAse7A+a80XgJFf--
+Please reply to my email as well as the list.
+Thank for any help
