@@ -1,22 +1,24 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m9KIol8u012691
-	for <linux-lvm@redhat.com>; Mon, 20 Oct 2008 14:50:47 -0400
-Received: from cdc-exfep1.ciber.cbr.inc (fw.ciber.com [12.10.248.50])
-	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id m9KIoY59006940
-	for <linux-lvm@redhat.com>; Mon, 20 Oct 2008 14:50:34 -0400
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m9LBDmca007816
+	for <linux-lvm@redhat.com>; Tue, 21 Oct 2008 07:13:48 -0400
+Received: from mailstore03.fastname.no (mailstore03.fastname.no [85.19.150.34])
+	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id m9LBDEfN010807
+	for <linux-lvm@redhat.com>; Tue, 21 Oct 2008 07:13:15 -0400
+Received: from [195.212.29.67] (helo=[192.168.94.25])
+	by mailstore03.fastname.no with esmtpa (Exim 4.69)
+	(envelope-from <morten@mortent.org>) id 1KsFAo-0003aB-3i
+	for linux-lvm@redhat.com; Tue, 21 Oct 2008 13:13:14 +0200
+Message-ID: <48FDB947.3090509@mortent.org>
+Date: Tue, 21 Oct 2008 13:13:11 +0200
+From: Morten Torstensen <morten@mortent.org>
+MIME-Version: 1.0
 Subject: Re: [linux-lvm] LVs corrupted after pvresize
-From: Peter Larsen <plarsen@CIBER.com>
-In-Reply-To: <Pine.LNX.4.64.0810201136250.14488@bmsred.bmsi.com>
-References: <48F7AD78.1000002@knebb.de>
-	<Pine.LNX.4.64.0810161829570.14457@bmsred.bmsi.com>
-	<48F80EFB.30404@knebb.de>
-	<1224221030.7772.17.camel@localhost.localdomain>
-	<Pine.LNX.4.64.0810201136250.14488@bmsred.bmsi.com>
-Date: Mon, 20 Oct 2008 14:50:32 -0400
-Message-Id: <1224528632.6013.66.camel@localhost.localdomain>
-Mime-Version: 1.0
+References: <48F7AD78.1000002@knebb.de>	<Pine.LNX.4.64.0810161829570.14457@bmsred.bmsi.com>	<48F80EFB.30404@knebb.de>	<1224221030.7772.17.camel@localhost.localdomain>	<Pine.LNX.4.64.0810201136250.14488@bmsred.bmsi.com>
+	<1224528632.6013.66.camel@localhost.localdomain>
+In-Reply-To: <1224528632.6013.66.camel@localhost.localdomain>
 Content-Transfer-Encoding: 7bit
-Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
+Reply-To: morten@mortent.org,
+	LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -26,27 +28,35 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-On Mon, 2008-10-20 at 11:41 -0400, Stuart D. Gathman wrote:
+Peter Larsen wrote:
+> Can you give an example or two on how the LVM differs on the
+> user-friendliness areas?
 
-> Having used AIX LVM, I can say that Linux LVM has a way to go before
-> it reaches that level of ease of use.  But it keeps getting better,
-> and I get to participate!
+Say you want to mirror a LV, then you just do a "mklvcopy mylvname 2" to 
+have 2 copies of data (one extra, like raid-1). If you want to migrate 
+your disks to a new system, add the new PV to your VG and do a "mklvcopy 
+mylvname 3 newpv", then when it finish remove your old mirrors and 
+delete the old PVs.
 
-I'm currious - my exposure to LVM like systems is mainly on Linux.
-Where's the catch? I find the basic LVM command structure pretty
-straight forward and easy. There's even a couple of GUI's available now
-to make the LVM management easier.
+The AIX concept of physical extent/logical extent mapping is sorely 
+missed on linux.
 
-Can you give an example or two on how the LVM differs on the
-user-friendliness areas?
+Generally speaking, LVM on AIX is also more mature. Exporting and 
+importing VGs (to move VGs between systems) works better in my 
+experience, clustering is more stable, but that is also something where 
+YMMV can show.
 
---- 
-Regards
-    Peter Larsen
+Managing mirrors, data placement and hotspot detection are what I mainly 
+miss on Linux.
 
-"Here's something to think about:  How come you never see a headline like
-`Psychic Wins Lottery'?"
-		-- Jay Leno
+-- 
+
+//Morten Torstensen
+//Email: morten@mortent.org
+//IM: Cartoon@jabber.no morten.torstensen@gmail.com
+
+And if it turns out that there is a God, I don't believe that he is evil.
+The worst that can be said is that he's an underachiever.
