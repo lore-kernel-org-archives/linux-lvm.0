@@ -1,22 +1,20 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m9NKS5K3010820
-	for <linux-lvm@redhat.com>; Thu, 23 Oct 2008 16:28:05 -0400
-Received: from scidubsmtp01.stercomm.com (scidubsmtp01.stercomm.com
-	[209.95.244.35])
-	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id m9NKRoBt021775
-	for <linux-lvm@redhat.com>; Thu, 23 Oct 2008 16:27:51 -0400
-Received: from IWDUBCORMSG001.sci.local (iwdubcormsg001.sci.local
-	[10.105.142.31])
-	by boamail1.stercomm.com (Postfix) with ESMTP id 935D233FE7
-	for <linux-lvm@redhat.com>; Thu, 23 Oct 2008 16:28:12 -0400 (EDT)
-Subject: Re: [linux-lvm] LVM corruption possibilites??
-From: Chris Cox <chris_cox@stercomm.com>
-In-Reply-To: <20081023193142.GA17753@netfirms.com>
-References: <20081023193142.GA17753@netfirms.com>
-Content-Transfer-Encoding: 7bit
-Date: Thu, 23 Oct 2008 15:27:46 -0500
-Message-Id: <1224793666.30118.16.camel@behemoth.csg.stercomm.com>
-Mime-Version: 1.0
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m9O9Y0qd025357
+	for <linux-lvm@redhat.com>; Fri, 24 Oct 2008 05:34:00 -0400
+Received: from odzwierny0.comarch.com (inptr-69-8.comarch.com [217.74.69.8])
+	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id m9O9XBG6011255
+	for <linux-lvm@redhat.com>; Fri, 24 Oct 2008 05:33:11 -0400
+Received: from localhost (localhost [127.0.0.1])
+	authenticated as marcin.kaluza@comarch.pl
+	by odzwierny0.comarch.com with esmtpa (ComArch ESMTP)
+	id 1KtJ2c-000I45-EJ
+	for linux-lvm@redhat.com; Fri, 24 Oct 2008 11:33:10 +0200
+Message-ID: <17984.89.200.148.101.1224840790.squirrel@wmail.comarch.com>
+Date: Fri, 24 Oct 2008 11:33:10 +0200 (CEST)
+From: marcin.kaluza@comarch.pl
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Subject: [linux-lvm] How to monitor and possibly autoextend snapshots
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -28,34 +26,22 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: LVM general discussion and development <linux-lvm@redhat.com>
+To: linux-lvm@redhat.com
 
-On Thu, 2008-10-23 at 15:31 -0400, Steve Shorter wrote:
-> Howdy!
-> 
-> 	I intend a simple minimal setup  of LVM. I have a number
-> of hardware nodes connected to a SAN. On the SAN is a pool of  drives.
-> If I assign whole drives to Volume Groups and dedicate each Volume Group
-> to a single node, am I correct in assuming that data/metadata corruption
-> will/can not occur? Each node will only modify the VG that it is assigned.
-> Are there any other issues that need to be considered? Am I correct
-> in assuming that Volume/LVM metadata for a volume is written only
-> to disks in that volume and volumes are independent of each other and
-> that in this simple setup some kind of clustering solution  is not
-> neccessary? 
+Hi
 
-Well... if the LVM metas are VISIBLE to all hosts, then yes... there
-are situations where this will cause some confusion.
+Is there a way to get notified, when the snapshot fills up to a certain
+level? i.e.  via dmsetup wait [] ? I looked for event numbers but couldn't
+find any doc for them.
+The best thing would be to make snapshots autoextensible when given a max
+size and resize value (just like oracle tablespaces do), but I suppose
+that would require much coding...
+Any thoughts?
 
-Let's just say that even it is possible... it just doesn't
-sound like something wise to do.
+We're using lvm snapshots for samba shadow copies and database cloning,
+but there's a problem with monitoring snapshots % of usage - now we just
+have a daemon that polls lvdisplay periodically and extends the lv when
+necessary. But this is unreliable - you have to either poll often or keep
+enough of free space and still you can end up with a trashed snap.
 
-Usually you perform LUN masking on storage areas you expose to
-prevent other hosts within the same zone from seeing each others
-storage.
-
-The problem without masking is that a scan will find all of the
-metas if the drives (LUNs) are visible to all.
-
-For safety and to avoid some consistency issues, I'd use
-LUN masking.  Just my opinion.
+Martin
