@@ -1,15 +1,21 @@
-Received: from dhcp80-216.msp.redhat.com (dhcp80-216.msp.redhat.com
-	[10.15.80.216])
-	by ns3.rdu.redhat.com (8.13.8/8.13.8) with ESMTP id m9OGUkFv014785
-	for <linux-lvm@redhat.com>; Fri, 24 Oct 2008 12:30:46 -0400
-Message-Id: <99ED4C7B-473E-422F-AC32-F34EB2A11FA4@redhat.com>
-From: Jonathan Brassow <jbrassow@redhat.com>
-In-Reply-To: <17984.89.200.148.101.1224840790.squirrel@wmail.comarch.com>
+Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m9RCHEn0031125
+	for <linux-lvm@redhat.com>; Mon, 27 Oct 2008 08:17:14 -0400
+Received: from odzwierny2.comarch.com (inptr-69-10.comarch.com [217.74.69.10])
+	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id m9RCGox6013793
+	for <linux-lvm@redhat.com>; Mon, 27 Oct 2008 08:16:50 -0400
+Received: from localhost (localhost [127.0.0.1])
+	authenticated as marcin.kaluza@comarch.com
+	by odzwierny2.comarch.com with esmtpa (ComArch ESMTP)
+	id 1KuR1d-00031r-QR
+	for linux-lvm@redhat.com; Mon, 27 Oct 2008 13:16:49 +0100
+From: =?iso-8859-2?Q?Marcin_Ka=B3u=BFa?= <marcin.kaluza@comarch.pl>
+Subject: RE: [linux-lvm] How to monitor and possibly autoextend snapshots
+Date: Mon, 27 Oct 2008 13:17:43 +0100
+MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
-Mime-Version: 1.0 (Apple Message framework v929.2)
-Subject: Re: [linux-lvm] How to monitor and possibly autoextend snapshots
-Date: Fri, 24 Oct 2008 11:30:00 -0500
-References: <17984.89.200.148.101.1224840790.squirrel@wmail.comarch.com>
+In-Reply-To: <99ED4C7B-473E-422F-AC32-F34EB2A11FA4@redhat.com>
+Message-Id: <E1KuR1d-00031r-QR@odzwierny2.comarch.com>
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -20,8 +26,48 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"; delsp="yes"
-To: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="us-ascii"
+To: 'LVM general discussion and development' <linux-lvm@redhat.com>
+
+Hi,
+Well, that's not much of help since after it becomes invalid I'll know it
+anyway (IO error ;D), so the event is purely informational.
+The "other program" is just my simple script, that periodically scans all
+mounted snapshots, checks if their root has specific xattrs set ("increase"
+and "maxsize" - drawback is that it has to be mounted to work, the bonus is
+that it is mountpoint and configuration file independent) and based on those
+parameters it polls and resizes those snapshots if necessary. The problem
+with this script is that if it polls them not often enough, there is a
+possibility that it won't resize it in time.
+
+The simplest (and mostly sufficient) thing to do would be forewarning that
+you talk about. 
+
+The way I see it:
+In it's simplest form, at snapshot creation (or later of course) you would
+give an extra param like --warn-level with either absolute size or
+percentage value, so that lvm emits an event when free space in the snapshot
+goes below that value. 
+I think this doesn't require much work.
+
+Better solution would be to have another two parameters, like --increase-by
+and --max-size, that would tell lvm to enlarge the snapshot by --increase-by
+MB's or percent when free space goes below --warn-limit(it could emit the
+event anyway). --max-size would be enlargment limit, because sometimes we
+might prefer snapshot to become invalid than to eat up too much space in vg.
+Of course without --max-size the snapshot would extend until reaching the
+size of original lv.
+But I suppose this requires significantly more coding.
+
+greetz,
+Martin
+
+-----Original Message-----
+From: linux-lvm-bounces@redhat.com [mailto:linux-lvm-bounces@redhat.com] On
+Behalf Of Jonathan Brassow
+Sent: Friday, October 24, 2008 6:30 PM
+To: LVM general discussion and development
+Subject: Re: [linux-lvm] How to monitor and possibly autoextend snapshots
 
 Right now, you get notified when the snapshot becomes invalid.  I  
 thought I heard someone talking about adding forewarning, but I don't  
@@ -71,3 +117,9 @@ On Oct 24, 2008, at 4:33 AM, marcin.kaluza@comarch.pl wrote:
 > linux-lvm@redhat.com
 > https://www.redhat.com/mailman/listinfo/linux-lvm
 > read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+
+_______________________________________________
+linux-lvm mailing list
+linux-lvm@redhat.com
+https://www.redhat.com/mailman/listinfo/linux-lvm
+read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
