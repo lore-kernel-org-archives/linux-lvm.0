@@ -1,18 +1,23 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m9S2TnOc005213
-	for <linux-lvm@redhat.com>; Mon, 27 Oct 2008 22:29:49 -0400
-Received: from mail.unpatched.net (mail.unpatched.net [80.179.151.65])
-	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id m9S2SCf3001676
-	for <linux-lvm@redhat.com>; Mon, 27 Oct 2008 22:28:13 -0400
-Received: from [192.168.10.98] (localhost [127.0.0.1])
-	by mail.unpatched.net (Postfix) with ESMTP id 754F5D40DA
-	for <linux-lvm@redhat.com>; Tue, 28 Oct 2008 04:31:26 +0200 (IST)
-Message-ID: <490678BE.1070700@hidden.domain.name>
-Date: Tue, 28 Oct 2008 04:28:14 +0200
-From: Yoav <ml-lvm@hidden.domain.name>
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m9S6iTvq023737
+	for <linux-lvm@redhat.com>; Tue, 28 Oct 2008 02:44:30 -0400
+Received: from om.cz.net (om.cz.net [193.85.2.13])
+	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id m9S6hl87001111
+	for <linux-lvm@redhat.com>; Tue, 28 Oct 2008 02:44:14 -0400
+Received: from 192.168.60.224 ([193.179.76.212])
+	by om.cz.net (8.13.8/8.13.8/om) with SMTP id m9S6hk2Q016283
+	for <linux-lvm@redhat.com>; Tue, 28 Oct 2008 07:43:46 +0100 (CET)
+Received: from [192.168.58.13] (skadlec.es.gk-software.com [192.168.58.13])
+	by hermes.es.gk-software.com (Postfix) with ESMTP id 739868F504
+	for <linux-lvm@redhat.com>; Tue, 28 Oct 2008 07:43:46 +0100 (CET)
+Message-ID: <4906B4AD.3030304@gk-software.com>
+Date: Tue, 28 Oct 2008 07:43:57 +0100
+From: Stepan Kadlec <skadlec@gk-software.com>
 MIME-Version: 1.0
+References: <17984.89.200.148.101.1224840790.squirrel@wmail.comarch.com>
+In-Reply-To: <17984.89.200.148.101.1224840790.squirrel@wmail.comarch.com>
 Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] mirror and snapshot incompatible
+Subject: [linux-lvm] libdlm.h: No such file or directory
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -26,20 +31,16 @@ List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: linux-lvm@redhat.com
 
-According to lvcreate, a snapshot of a mirrored volume cannot be created 
-("Snapshots and mirrors may not yet be mixed").  However, devmapper does 
-not seem to have the same limitation when used directly (not through lvm).
+hello list,
+I am trying to compile clustered LVM with OpenAIS (instead of cluster 
+framework) using
 
-Is there a current reason for lvcreate to enforce this rather harsh 
-limitation?
+./configure --with-clvmd=openais --with-cluster=shared --libdir=/usr/lib64/
 
-What are the risks I'm taking by manually creating a dm-snapshot from a 
-dm-mirror device?  (of course I'm also replacing the dm-mirror device 
-with a snapshot-origin of the actual dm-mirror device).
+but it fails because of missing libdlm.h. I know this is part of the 
+cluster framework, but I thought I don't need 'cluster' when using 
+'OpenAIS'.
 
-If there is an actual reason for preventing this, what is the suggested 
-way to consistently backup a mirror volume?  Is there a way to 
-temporarily take one of the mirror "legs" (mimage devices)  offline in 
-order to back it up, and resync it later?
+what is the clean way for compiling clustered LVM with OpenAIS?
 
-    Yoav
+thanks for any hints. stepan
