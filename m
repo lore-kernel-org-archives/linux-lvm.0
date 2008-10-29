@@ -1,9 +1,9 @@
-Received: from jeltz.chrissie.net (vpn-4-31.str.redhat.com [10.32.4.31])
-	by ns3.rdu.redhat.com (8.13.8/8.13.8) with ESMTP id m9TBWJ7K017334
-	for <linux-lvm@redhat.com>; Wed, 29 Oct 2008 07:32:20 -0400
-Message-ID: <490849C2.2040900@redhat.com>
-Date: Wed, 29 Oct 2008 11:32:18 +0000
-From: Christine Caulfield <ccaulfie@redhat.com>
+Received: from [10.34.32.183] (mazybook.englab.brq.redhat.com [10.34.32.183])
+	by ns3.rdu.redhat.com (8.13.8/8.13.8) with ESMTP id m9TBdOIP018100
+	for <linux-lvm@redhat.com>; Wed, 29 Oct 2008 07:39:25 -0400
+Message-ID: <49084B6D.90604@redhat.com>
+Date: Wed, 29 Oct 2008 12:39:25 +0100
+From: Milan Broz <mbroz@redhat.com>
 MIME-Version: 1.0
 Subject: Re: [linux-lvm] clvmd locking disabled
 References: <490678BE.1070700@hidden.domain.name>	<08781647-26E4-46F3-B148-A64933B84363@redhat.com>	<4907AF21.4030808@hidden.domain.name>	<49083B9E.4090308@gk-software.com>
@@ -27,61 +27,29 @@ Stepan Kadlec wrote:
 > one more report:
 > 
 > # vgscan
-> File descriptor 3 (/dev/tty) leaked on vgscan invocation. Parent PID
+> File descriptor 3 (/dev/tty) leaked on vgscan invocation. Parent PID 
 > 3389: bash
-> File descriptor 5 (/dev/pts/1) leaked on vgscan invocation. Parent PID
+> File descriptor 5 (/dev/pts/1) leaked on vgscan invocation. Parent PID 
 > 3389: bash
-> File descriptor 7 (pipe:[9066]) leaked on vgscan invocation. Parent PID
+> File descriptor 7 (pipe:[9066]) leaked on vgscan invocation. Parent PID 
 > 3389: bash
->   Unknown locking type requested.
->   Locking type 3 initialisation failed.
-> 
-> steve
-> 
-> Stepan Kadlec wrote:
->>     hello,
->>     I can't make the clustered LVM running. it can't start the
->> built-in clustered locking mechanism (using cman).
->>
->>     lvm is compiled with following options:
->>
->> ./configure --with-clvmd=cman  --with-cluster=shared
->> --libdir=/usr/lib64/ --enable-dmeventd --enable-cmdlib
 
+So the calling application (bash) forgot to close some descriptors
+(running lvm in mc shell usually produces this:-)
 
-If you've built using with-cluster=shared then the locking type in
-lvm.conf should be 2 and not 3, provided you have remembered to install
-the shared library that gets built.
+That's just warning, lvm close all descriptors, you can ignore these messages.
+(and if the parent process is clvmd, it is bug in clvmd and we should fix it :)
 
-I recommend you don't build it shared (the default), and use locking type 3
+>    Unknown locking type requested.
+>    Locking type 3 initialisation failed.
 
-Chrissie
+Locking type 2 and 3 are cluster locking
+Type 2 is for external locking library, 3 is internal (compiled-in)
 
->>     does anyone have some experiences that could help me make it working?
->>     thanks, steve
->>
->>     when the clvmd starts it reports this:
->>
->> CLVMD[1772a6d0]: Oct 29 13:16:57 CLVMD started
->> CLVMD[1772a6d0]: Oct 29 13:16:57 Connected to CMAN
->> CLVMD[1772a6d0]: Oct 29 13:16:57 CMAN initialisation complete
->> CLVMD[1772a6d0]: Oct 29 13:16:57 DLM initialisation complete
->> CLVMD[1772a6d0]: Oct 29 13:16:57 Cluster ready, doing some more
->> initialisation
->> CLVMD[1772a6d0]: Oct 29 13:16:57 starting LVM thread
->> CLVMD[41d0c940]: Oct 29 13:16:57 LVM thread function started
->> CLVMD[1772a6d0]: Oct 29 13:16:57 clvmd ready for work
->> CLVMD[1772a6d0]: Oct 29 13:16:57 Using timeout of 60 seconds
->> File descriptor 3 (/dev/tty) leaked on lvm invocation. Parent PID
->> 13867: clvmd
->> File descriptor 5 (/dev/pts/3) leaked on lvm invocation. Parent PID
->> 13867: clvmd
->> File descriptor 7 (pipe:[12892]) leaked on lvm invocation. Parent PID
->> 13867: clvmd
->> File descriptor 8 (/dev/zero) leaked on lvm invocation. Parent PID
->> 13867: clvmd
->>   WARNING: Locking disabled. Be careful! This could corrupt your
->> metadata.
->> CLVMD[41d0c940]: Oct 29 13:16:57 LVM thread waiting for work
->>
->>
+For type 3 you should use  --with-cluster=internal in configure.
+(you can still switch type 2 with this setting, but if you do not
+use own locking library, it is probably not needed).
+
+Milan
+--
+mbroz@redhat.com
