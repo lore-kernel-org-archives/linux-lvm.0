@@ -1,16 +1,17 @@
 Received: from pobox.fab.redhat.com (pobox.fab.redhat.com [10.33.63.12])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m9UAUvd5013074
-	for <linux-lvm@redhat.com>; Thu, 30 Oct 2008 06:30:58 -0400
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id m9UAooe8021827
+	for <linux-lvm@redhat.com>; Thu, 30 Oct 2008 06:50:51 -0400
 Received: from [10.33.0.40] (breeves.fab.redhat.com [10.33.0.40])
-	by pobox.fab.redhat.com (8.13.1/8.13.1) with ESMTP id m9UAUv9T017694
-	for <linux-lvm@redhat.com>; Thu, 30 Oct 2008 06:30:57 -0400
-Message-ID: <49098ACA.9000409@redhat.com>
-Date: Thu, 30 Oct 2008 10:22:02 +0000
+	by pobox.fab.redhat.com (8.13.1/8.13.1) with ESMTP id m9UAootF019644
+	for <linux-lvm@redhat.com>; Thu, 30 Oct 2008 06:50:50 -0400
+Message-ID: <49098F73.7000706@redhat.com>
+Date: Thu, 30 Oct 2008 10:41:55 +0000
 From: "Bryn M. Reeves" <bmr@redhat.com>
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] How to make lvm error handling robust?
-References: <91b13c310810300015j25be4feeqdab86d28ecfb0866@mail.gmail.com>
-In-Reply-To: <91b13c310810300015j25be4feeqdab86d28ecfb0866@mail.gmail.com>
+Subject: Re: [linux-lvm] dmraid - where is the raid done?
+References: <1224269483.17821.39.camel@pc.ilinx>
+	<c268e4660810270656u72bb8e29n69866ccf77a0fef2@mail.gmail.com>
+In-Reply-To: <c268e4660810270656u72bb8e29n69866ccf77a0fef2@mail.gmail.com>
 Content-Transfer-Encoding: 7bit
 Reply-To: bmr@redhat.com,
 	LVM general discussion and development <linux-lvm@redhat.com>
@@ -26,32 +27,22 @@ List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-rae l wrote:
-> How to make lvm error handling robust?
+Drew wrote:
+> 2008/10/17 Brian J. Murrell <brian@interlinx.bc.ca>:
+>> I think this is the right place for dmraid questions.  Please redirect
+>> me if it's not.  Thanx.
 > 
-> Steps:
-> 1. create pv,vg,lv on multiple disks, one group (sda,sdb,sdc), other
-> groups (sdd, sde, ...);
-> 2. unplug one disk (sda, one pv);
+> Try the folks over at the software raid list. They'd be your best bet.
 > 
-> then all LVM broken, even other unrelated groups of lvm cannot work
-> from then on,
-
-Not been the case when I've encountered this situation. The affected VG
-can only be activated in partial mode but all other VGs should continue
-to operate just fine.
-
-> all lvm commands report error and stops executing.
+> list: linux-raid@vger.kernel.org
 > 
-> How to solve this?
 
-Plan your storage better. If you're placing VGs on single disk devices
-then you should use LVM2's redundancy features - by creating mirrored
-LVs you would avoid a single disk becoming a single point of failure.
+Wrong list - that's for the Linux MD RAID subsystem (mdadm, /dev/md* and
+friends). You're looking for ataraid-list:
 
-Alternately, address redundancy further down the stack by using hardware
-or software RAID to add redundancy and fault tolerance to the storage
-being managed by LVM2.
+http://www.redhat.com/mailman/listinfo/ataraid-list
+
+Which is the place for discussion of dmraid development.
 
 Regards,
 Bryn.
