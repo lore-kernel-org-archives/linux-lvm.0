@@ -1,17 +1,19 @@
-Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id mACHxEti022289
-	for <linux-lvm@redhat.com>; Wed, 12 Nov 2008 12:59:14 -0500
-Received: from scexcdmz1.akbank.com (scexcdmz1.akbank.com [217.169.192.16])
-	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id mACHx2wi028261
-	for <linux-lvm@redhat.com>; Wed, 12 Nov 2008 12:59:03 -0500
-Content-Class: urn:content-classes:message
+Received: from pobox.fab.redhat.com (pobox.fab.redhat.com [10.33.63.12])
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id mACIF46B032145
+	for <linux-lvm@redhat.com>; Wed, 12 Nov 2008 13:15:05 -0500
+Received: from breeves.fab.redhat.com (breeves.fab.redhat.com [10.33.0.40])
+	by pobox.fab.redhat.com (8.13.1/8.13.1) with ESMTP id mACIF4dS014406
+	for <linux-lvm@redhat.com>; Wed, 12 Nov 2008 13:15:04 -0500
+Message-ID: <491B1C9D.3090401@redhat.com>
+Date: Wed, 12 Nov 2008 18:12:45 +0000
+From: "Bryn M. Reeves" <bmr@redhat.com>
 MIME-Version: 1.0
-Date: Wed, 12 Nov 2008 19:58:59 +0200
-Message-ID: <B668DE010628694A85EC2A4C53DCF769261FA0D8@SA000011>
-From: <Tuncel.Mutlu@akbank.com>
-Content-Transfer-Encoding: 8bit
-Subject: [linux-lvm] device filter in lvm.conf
-Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
+Subject: Re: [linux-lvm] device filter in lvm.conf
+References: <B668DE010628694A85EC2A4C53DCF769261FA0D8@SA000011>
+In-Reply-To: <B668DE010628694A85EC2A4C53DCF769261FA0D8@SA000011>
+Content-Transfer-Encoding: 7bit
+Reply-To: bmr@redhat.com,
+	LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -21,37 +23,44 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="utf-8"
-To: linux-lvm@redhat.com
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-Hi,
+Tuncel.Mutlu@akbank.com wrote:
+> filter = [ "a/sda[1-9]$/" "a/sddlm*/" "r/.*/" ]
+> 
+> and types row has been added
+> 
+> types = [ "sddlmfdrv", 16 ]
+> 
+> This has been known to work on another Linux box, but not here. How must I
+> alter the filter so the LVM should accept sda and sddlm devices but reject
+> all others ?
 
-RedHat 5.2 - Kernel 2.6.18-92.el5 - x86_64 box - LVM2 lvm2-2.02.32-4.el5
+When you say it doesn't work on this box, what actually happens? Do you 
+fail to filter out the individual paths, or do you fail to include the 
+multipath device that you want to use?
 
-I assume that this may be a trivial question but I haven't find the solution
-anywhere, so I decided to ask you.
+You may find that removing the cache (/etc/lvm/cache/.cache) after 
+editing the filters straightens things out (this should be automatic but 
+I've found that on some releases I've needed to manually remove it).
 
-I have HDS USP-V disk and HDLM (Hitachi Dynamic Link Manager - HDS's
-load-balancing and failover software). I have shown 1 disk over 4 paths to
-the Linux and have created the HDLM device /dev/sddlmaa (the multipath and
-failover device). This device's 4 paths are actually disk devices in Linux -
-sdb, sdc, sdd and sde, but I don't want LVM to sees them, so I have changes
-the lvm.conf to mask them, but to allow sda - where rootvg is.
+Also, is the filter really what you wanted?
 
-Filter row is been changed to:
+ > filter = [ "a/sda[1-9]$/" "a/sddlm*/" "r/.*/" ]
+                              ^^^^^^^^
 
-filter = [ "a/sda[1-9]$/" "a/sddlm*/" "r/.*/" ]
+This says to accept devices that have a string "sddl" followed by any 
+zero or more "m" characters. I don't know the naming scheme for HDLM, 
+but your example implies that they'd follow a pattern of 
+sddlm[a-z][a-z], or something.
 
-and types row has been added
-
-types = [ "sddlmfdrv", 16 ]
-
-This has been known to work on another Linux box, but not here. How must I
-alter the filter so the LVM should accept sda and sddlm devices but reject
-all others ?
+Perhaps "a/sddlm.*/" would work better (sddlm followed by any number of 
+any character), since you're unlikely to have other device nodes with a 
+prefix of sddlm. You could tighten that up further as: "a|/dev/sddlm.*|" 
+if you liked (lvm filter expressions work like sed - you can uniformly 
+replace the '//' delimiters with other chars - I like pipes as it means 
+you need less \/ escaping when using paths).
 
 Regards,
-
-Tuncel
-
-Bu e-posta ve muhtemel eklerinde verilen bilgiler ki�iye �zel ve gizli olup, yaln�zca mesajda belirlenen al�c� ile ilgilidir.Size yanl��l�kla ula�m��sa l�tfen g�ndericiye bilgi veriniz, mesaj� siliniz ve i�eri�ini ba�ka bir ki�iye a��klamay�n�z, herhangi bir ortama kopyalamay�n�z. Bu mesaj aksi s�zle�me ile belirtilmedik�e herhangi bir finansal i�lem teklifi, al�m�, sat�m� veya herhangi bir havalenin teyidi gibi bankac�l�k i�lemi yap�lmas� amac�n� ta��mamaktad�r.Verilen t�m bilgilerin do�rulu�u ve b�t�nl���n�n garantisi verilmemekte olup, �nceden bildirilmeksizin de�i�tirilebilecektir.Bu mesaj�n i�eri�i Bankam�z�n resmi g�r��lerini yans�tmayabilece�inden Akbank T.A.�. hi�bir hukuki sorumlulu�u kabul etmez.
+Bryn.
