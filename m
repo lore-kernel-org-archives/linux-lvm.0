@@ -1,20 +1,24 @@
-Received: from pobox.fab.redhat.com (pobox.fab.redhat.com [10.33.63.12])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id mACJ9DUe004030
-	for <linux-lvm@redhat.com>; Wed, 12 Nov 2008 14:09:13 -0500
-Received: from breeves.fab.redhat.com (breeves.fab.redhat.com [10.33.0.40])
-	by pobox.fab.redhat.com (8.13.1/8.13.1) with ESMTP id mACJ9Duf019246
-	for <linux-lvm@redhat.com>; Wed, 12 Nov 2008 14:09:13 -0500
-Message-ID: <491B294E.508@redhat.com>
-Date: Wed, 12 Nov 2008 19:06:54 +0000
-From: "Bryn M. Reeves" <bmr@redhat.com>
+Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id mAD5I8L7010855
+	for <linux-lvm@redhat.com>; Thu, 13 Nov 2008 00:18:08 -0500
+Received: from mail.knebb.de (mail.knebb.de [83.137.99.149])
+	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id mAD5HrVV007508
+	for <linux-lvm@redhat.com>; Thu, 13 Nov 2008 00:17:54 -0500
+Received: from tp.knebb.de (p54BC5DE8.dip.t-dialin.net [84.188.93.232])
+	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+	(Client did not present a certificate)
+	by mail.knebb.de (Postfix) with ESMTP id B6DCA119E6
+	for <linux-lvm@redhat.com>; Thu, 13 Nov 2008 06:17:50 +0100 (CET)
+Message-ID: <491BB87D.7020903@knebb.de>
+Date: Thu, 13 Nov 2008 06:17:49 +0100
+From: =?ISO-8859-1?Q?Christian_V=F6lker?= <chrischan@knebb.de>
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] device filter in lvm.conf
-References: <B668DE010628694A85EC2A4C53DCF769261FA0D8@SA000011>	<491B1C9D.3090401@redhat.com>
-	<B668DE010628694A85EC2A4C53DCF769261FA16A@SA000011>
-In-Reply-To: <B668DE010628694A85EC2A4C53DCF769261FA16A@SA000011>
-Content-Transfer-Encoding: 7bit
-Reply-To: bmr@redhat.com,
-	LVM general discussion and development <linux-lvm@redhat.com>
+Subject: Re: [linux-lvm] pvmove and 100% IO Wait
+References: <4915F80E.40407@knebb.de>	<f4f537b50811081243i351b8a7ch716292ec1ef7d08a@mail.gmail.com>	<4915FB94.1070005@knebb.de>	<f4f537b50811081523v303ba8aep6b24de53c414a6d2@mail.gmail.com>	<4916670C.4020502@knebb.de>
+	<779919740811100933y914c938mc7813453ac88da59@mail.gmail.com>
+In-Reply-To: <779919740811100933y914c938mc7813453ac88da59@mail.gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -24,27 +28,29 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
+Content-Type: text/plain; charset="iso-8859-1"
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-Tuncel.Mutlu@akbank.com wrote:
-> Thanks a lot,
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA1
 
-Great! Glad it's working for you now.
+Yohoo!
 
-> 
-> PS: By the way are you sure about sddlm* been the "sddl + 0 or more m". The
-> LVM has been accepting my filter now.
+> I ran into similar issues when attempting a pvmove with clustered VG's
+> under CLVMD.
+What is CLVMD?
 
-Sorry, that was my mistake - this is true for regexes, but since LVM2 
-filter regexes have an implicit ".*" at beginning/end (unless you use 
-anchors - see the comments in the default lvm.conf) and the '*' will 
-match 0 or more occurrences of the preceding character, it actually 
-behaves as though there is no '*' there at all.
+Anyway: It happened again and USB was not involved at all!
+All SATA disks or SATA RAIDs.
 
-E.g. "/sdlm*/" would match sdl$ANYTHING, since "m*" is matched by zero 
-occurrences of 'm' and the remaining string is consumed by the implicit 
-".*" at the end.
+$%^$%^=EF=BF=BD!!!
 
-Regards,
-Bryn.
+Any clues?
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.7 (GNU/Linux)
+Comment: Using GnuPG with Fedora - http://enigmail.mozdev.org
+
+iD8DBQFJG7h80XNIYlAXmzsRAtHXAKDf0EyUvZngOLzoMoIHsWj+VxtWUQCcCqR2
+E1COMYVO2FaqxB88K4wBGgY=3D
+=3D+riP
+-----END PGP SIGNATURE-----
