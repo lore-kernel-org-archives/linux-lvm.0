@@ -1,15 +1,23 @@
-Received: from dhcp80-216.msp.redhat.com (dhcp80-216.msp.redhat.com
-	[10.15.80.216])
-	by ns3.rdu.redhat.com (8.13.8/8.13.8) with ESMTP id mADAPOKD025597
-	for <linux-lvm@redhat.com>; Thu, 13 Nov 2008 05:25:24 -0500
-Message-Id: <C9F9ED04-6B26-4681-9D1D-46017DD7CF41@redhat.com>
-From: Jonathan Brassow <jbrassow@redhat.com>
-In-Reply-To: <491BF3CF.2090800@knebb.de>
-Mime-Version: 1.0 (Apple Message framework v929.2)
+Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id mADAU4ps002337
+	for <linux-lvm@redhat.com>; Thu, 13 Nov 2008 05:30:04 -0500
+Received: from mail.knebb.de (mail.knebb.de [83.137.99.149])
+	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id mADATrfH022948
+	for <linux-lvm@redhat.com>; Thu, 13 Nov 2008 05:29:53 -0500
+Received: from tp.knebb.de (p54BC6088.dip.t-dialin.net [84.188.96.136])
+	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+	(Client did not present a certificate)
+	by mail.knebb.de (Postfix) with ESMTP id 5CCA5FA0C
+	for <linux-lvm@redhat.com>; Thu, 13 Nov 2008 11:29:52 +0100 (CET)
+Message-ID: <491C019F.6060205@knebb.de>
+Date: Thu, 13 Nov 2008 11:29:51 +0100
+From: =?ISO-8859-1?Q?Christian_V=F6lker?= <chrischan@knebb.de>
+MIME-Version: 1.0
 Subject: Re: [linux-lvm] pvmove --abort does nothing
-Date: Thu, 13 Nov 2008 04:24:21 -0600
 References: <491BF3CF.2090800@knebb.de>
-Content-Transfer-Encoding: quoted-printable
+	<C9F9ED04-6B26-4681-9D1D-46017DD7CF41@redhat.com>
+In-Reply-To: <C9F9ED04-6B26-4681-9D1D-46017DD7CF41@redhat.com>
+Content-Transfer-Encoding: 7bit
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -20,51 +28,31 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="iso-8859-1"; format="flowed"; delsp="yes"
+Content-Type: text/plain; charset="us-ascii"
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-Might be interesting to know what dmsetup says...
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA1
 
-prompt> dmsetup status
-and
-prompt> dmsetup table
+Yohoo!
+> prompt> dmsetup status
+> and
+> prompt> dmsetup table
+Both report several line for each LV, but empty for the pvmove0:
 
-  brassow
+"vg1-pvmove0:"
 
-On Nov 13, 2008, at 3:30 AM, Christian V=EF=BF=BDlker wrote:
+Nothing more. Do you need the lines from the other LVs?
 
-> -----BEGIN PGP SIGNED MESSAGE-----
-> Hash: SHA1
->
-> Yohoo!
->
-> Regarding to another thread (pvmove and 100% IO Wait) I had to =20
-> reboot my
-> server during a pvmove.
->
-> Now I have a pvmove0 LV which seems to be locked.
-> A "pvmove"  does nothing.
-> Same for "pvmove --abort".
-> Nothing happens- I can't remove the pvmove0 LV neither continue with =20
-> the
-> pvmove operation!
->
-> How can I get out of here?
->
-> Thanks!
->
-> Christian
-> -----BEGIN PGP SIGNATURE-----
-> Version: GnuPG v1.4.7 (GNU/Linux)
-> Comment: Using GnuPG with Fedora - http://enigmail.mozdev.org
->
-> iD8DBQFJG/PP0XNIYlAXmzsRAvLtAJ9oD5GrLwdtHhf9dzbxOoZoQKLkYACgoLfS
-> 5pT48VLTB2t93MJdiMfA8Xo=3D
-> =3DsN2X
-> -----END PGP SIGNATURE-----
->
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+Thanks for trying to help!
+
+Christian
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.7 (GNU/Linux)
+Comment: Using GnuPG with Fedora - http://enigmail.mozdev.org
+
+iD8DBQFJHAGf0XNIYlAXmzsRAuGLAJ9gA3Xc0DIZybrO6f0OQagfrUzOvQCgtBID
+5DQIHKtzPj2Bp6lfWAH5tAI=
+=Ma56
+-----END PGP SIGNATURE-----
