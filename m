@@ -1,25 +1,26 @@
-Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id mAEFZwEK025539
-	for <linux-lvm@redhat.com>; Fri, 14 Nov 2008 10:35:58 -0500
-Received: from qw-out-2122.google.com (qw-out-2122.google.com [74.125.92.27])
-	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id mAEFZgRl003041
-	for <linux-lvm@redhat.com>; Fri, 14 Nov 2008 10:35:43 -0500
-Received: by qw-out-2122.google.com with SMTP id 3so814126qwe.39
-	for <linux-lvm@redhat.com>; Fri, 14 Nov 2008 07:35:42 -0800 (PST)
-Message-ID: <87f94c370811140735s7687cabbp78179e646b556109@mail.gmail.com>
-Date: Fri, 14 Nov 2008 10:35:41 -0500
-From: "Greg Freemyer" <greg.freemyer@gmail.com>
-Subject: Re: [linux-lvm] Moving Xen LV to image and mounting the image.
-In-Reply-To: <61252CC53A97634BA52256DCF2344FBC66CA1457C7@OFFICEEXCHANGE.office.smartechcorp.net>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
+Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id mAEFiJ0r031030
+	for <linux-lvm@redhat.com>; Fri, 14 Nov 2008 10:44:19 -0500
+Received: from officeexchange.office.smartechcorp.net
+	(exchange.office.smartechcorp.net [64.203.96.71])
+	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id mAEFi9Vh009629
+	for <linux-lvm@redhat.com>; Fri, 14 Nov 2008 10:44:09 -0500
+From: Chris Edwards <cedwards@smartechcorp.net>
+Date: Fri, 14 Nov 2008 10:44:00 -0500
+Subject: RE: [linux-lvm] Moving Xen LV to image and mounting the image.
+Message-ID: <61252CC53A97634BA52256DCF2344FBC66CA1457CC@OFFICEEXCHANGE.office.smartechcorp.net>
 References: <491BF3CF.2090800@knebb.de>
 	<C9F9ED04-6B26-4681-9D1D-46017DD7CF41@redhat.com>
 	<491C019F.6060205@knebb.de>
 	<361513C7-BBE2-45D0-A6BA-F42E6219706A@redhat.com>
 	<491D34F3.7030108@knebb.de>
 	<61252CC53A97634BA52256DCF2344FBC66CA1457C7@OFFICEEXCHANGE.office.smartechcorp.net>
+	<87f94c370811140735s7687cabbp78179e646b556109@mail.gmail.com>
+In-Reply-To: <87f94c370811140735s7687cabbp78179e646b556109@mail.gmail.com>
+Content-Language: en-US
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -30,8 +31,39 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
 To: LVM general discussion and development <linux-lvm@redhat.com>
+
+Here are some things I have tried with no luck...
+
+losetup /dev/loop5 ~/wdcdns1.img
+sfdisk -l /dev/loop5
+
+Disk /dev/loop5: 606 cylinders, 255 heads, 63 sectors/track
+
+sfdisk: ERROR: sector 0 does not have an msdos signature
+ /dev/loop5: unrecognized partition table type
+No partitions found
+---
+mount -o loop wdcdns1.img /mnt/tmp/
+
+mount: you must specify the filesystem type
+---
+mount -t xfs -o loop,ro,noatime,nodev,nofsck ~/wdcdns1.img /mnt/tmp/
+
+mount: unknown filesystem type 'xfs'
+---
+
+Thanks for your input!
+
+---
+Chris Edwards
+
+
+-----Original Message-----
+From: linux-lvm-bounces@redhat.com [mailto:linux-lvm-bounces@redhat.com] On Behalf Of Greg Freemyer
+Sent: Friday, November 14, 2008 10:36 AM
+To: LVM general discussion and development
+Subject: Re: [linux-lvm] Moving Xen LV to image and mounting the image.
 
 On Fri, Nov 14, 2008 at 9:53 AM, Chris Edwards
 <cedwards@smartechcorp.net> wrote:
@@ -63,3 +95,9 @@ http://www.norcrossgroup.com/forms/whitepapers/99%20Days%20whitepaper.pdf
 The Norcross Group
 The Intersection of Evidence & Technology
 http://www.norcrossgroup.com
+
+_______________________________________________
+linux-lvm mailing list
+linux-lvm@redhat.com
+https://www.redhat.com/mailman/listinfo/linux-lvm
+read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
