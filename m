@@ -1,23 +1,18 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id mAHDVPjn016563
-	for <linux-lvm@redhat.com>; Mon, 17 Nov 2008 08:31:25 -0500
-Received: from hs-out-0708.google.com (hs-out-0708.google.com [64.233.178.246])
-	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id mAHDTfQs013301
-	for <linux-lvm@redhat.com>; Mon, 17 Nov 2008 08:29:41 -0500
-Received: by hs-out-0708.google.com with SMTP id x43so1072471hsb.3
-	for <linux-lvm@redhat.com>; Mon, 17 Nov 2008 05:29:40 -0800 (PST)
-Message-ID: <d5dce2210811170529k68603cb7k21bb031c53ec6136@mail.gmail.com>
-Date: Mon, 17 Nov 2008 18:59:40 +0530
-From: "himanshu padmanabhi" <himanshu.padmanabhi@gmail.com>
-Subject: Re: [linux-lvm] Editing LVM 2 metadata
-In-Reply-To: <b072968d0811150444v2e23a535p21dc41bb25d114d4@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: multipart/alternative; 
-	boundary="----=_Part_15480_21352144.1226928580300"
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id mAHMwXgg026157
+	for <linux-lvm@redhat.com>; Mon, 17 Nov 2008 17:58:33 -0500
+Received: from web38304.mail.mud.yahoo.com (web38304.mail.mud.yahoo.com
+	[209.191.125.20])
+	by mx3.redhat.com (8.13.8/8.13.8) with SMTP id mAHMwGvt031149
+	for <linux-lvm@redhat.com>; Mon, 17 Nov 2008 17:58:16 -0500
 References: <878853.96084.qm@web38301.mail.mud.yahoo.com>
 	<20081115025515.GX30569@agk.fab.redhat.com>
-	<309738.64869.qm@web38304.mail.mud.yahoo.com>
-	<b072968d0811150444v2e23a535p21dc41bb25d114d4@mail.gmail.com>
+Date: Mon, 17 Nov 2008 14:58:15 -0800 (PST)
+From: Michael Jensen <beachhangar@yahoo.com>
+Subject: Re: [linux-lvm] steps to clone a volume group
+MIME-Version: 1.0
+Content-Type: multipart/alternative; boundary="0-387316236-1226962695=:66521"
+Message-ID: <165789.66521.qm@web38304.mail.mud.yahoo.com>
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -30,112 +25,66 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 List-Id: <linux-lvm.redhat.com>
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-------=_Part_15480_21352144.1226928580300
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
+--0-387316236-1226962695=:66521
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: quoted-printable
 
-*Is this issue having connection with it.
+The information shown from a nov 2007 post has been very useful - much appr=
+eciated.=0A=0AThere are some circumstances with the case I am working on th=
+at complicates the process a bit.=0A=0AAfter having removed the master volu=
+me from the host and presenting just a snapshot, I have been able to=A0chan=
+ge the physical uuid, and rename the volume group.=A0If I then re-introduce=
+ the master volume there is no conflict (no-duplicates) found by the lvm ut=
+ilities and can mount both sucessfully.=0A=0AThe constraints I am operating=
+ under require the master volume not to disappear - i.e.=A0production syste=
+m and volume.=0A=0AIf I filter out the snapshot and leave the accept (a) po=
+rtion - "a|.*|" in the filter line, then a conflict is reported by pvscan, =
+but not between sda and sdb but between sdb and the device-mapper string th=
+at appears to use the FC WWN.=A0 =0AIf I remove the accept portion then the=
+re is no conflict during pvscan.=A0 =0AIf I attempt to do a --=0Apvchange -=
+-uuid /dev/sda=0AFailed to read physical volume /dev/sda=0A0 physical volum=
+es changed / 0 physical volumes not changed=0A=0AIs the filtered out device=
+ name (/dev/sda) supposed to be available to the lvm utilities?=0A=0Athanks=
+,=0Amike=0A=0A=0A=0A=0A________________________________=0AFrom: Alasdair G =
+Kergon <agk@redhat.com>=0ATo: LVM general discussion and development <linux=
+-lvm@redhat.com>=0ASent: Friday, November 14, 2008 6:55:15 PM=0ASubject: Re=
+: [linux-lvm] Editing LVM 2 metadata=0A=0AOn Fri, Nov 14, 2008 at 06:37:51P=
+M -0800, Michael Jensen wrote:=0A> I have a need to edit the metadata on an=
+ LVM2 PV.=0A=0AWhy?=0A=0AIf you really have to, please do this using the su=
+pplied tools - it's *much*=0Aeasier!=0A=0Avgcfgbackup gives you a text file=
+, edit it, vgcfgrestore puts it back.=0A=0AIf you need to edit the label to=
+o, careful use of pvcreate --restorefile --uuid=0Aplus vgcfgrestore lets yo=
+u do that.=0A=0AAlasdair=0A-- =0Aagk@redhat.com=0A=0A______________________=
+_________________________=0Alinux-lvm mailing list=0Alinux-lvm@redhat.com=
+=0Ahttps://www.redhat.com/mailman/listinfo/linux-lvm=0Aread the LVM HOW-TO =
+at http://tldp.org/HOWTO/LVM-HOWTO/=0A=0A=0A=0A      
+--0-387316236-1226962695=:66521
+Content-Type: text/html; charset=us-ascii
 
-Problem*
+<html><head><style type="text/css"><!-- DIV {margin:0px;} --></style></head><body><div style="font-family:times new roman, new york, times, serif;font-size:12pt"><DIV>The information shown from a nov 2007 post has been very useful - much appreciated.</DIV>
+<DIV>&nbsp;</DIV>
+<DIV>There are some circumstances with the case I am working on that complicates the process a bit.</DIV>
+<DIV>&nbsp;</DIV>
+<DIV>After having removed the master volume from the host and presenting just a snapshot, I have been able to&nbsp;change the physical uuid, and rename the volume group.&nbsp;If I then re-introduce the master volume there is no conflict (no-duplicates) found by the lvm utilities and can mount both sucessfully.</DIV>
+<DIV>&nbsp;</DIV>
+<DIV>The constraints I am operating under require the master volume not to disappear - i.e.&nbsp;production system and volume.</DIV>
+<DIV>&nbsp;</DIV>
+<DIV>If I filter out the snapshot and leave the accept (a) portion - "a|.*|" in the filter line, then a conflict is reported by pvscan, but not between sda and sdb but between sdb and the device-mapper string that appears to use the FC WWN.&nbsp; </DIV>
+<DIV>If I remove the accept portion then there is no conflict during pvscan.&nbsp; </DIV>
+<DIV>If I attempt to do a --</DIV>
+<DIV>pvchange --uuid /dev/sda</DIV>
+<DIV>Failed to read physical volume /dev/sda</DIV>
+<DIV>0 physical volumes changed / 0 physical volumes not changed</DIV>
+<DIV>&nbsp;</DIV>
+<DIV>Is the filtered out device name (/dev/sda) supposed to be available to the lvm utilities?</DIV>
+<DIV>&nbsp;</DIV>
+<DIV>thanks,</DIV>
+<DIV>mike<BR></DIV>
+<DIV style="FONT-SIZE: 12pt; FONT-FAMILY: times new roman, new york, times, serif"><BR>
+<DIV style="FONT-SIZE: 13px; FONT-FAMILY: arial, helvetica, sans-serif"><FONT face=Tahoma size=2>
+<HR SIZE=1>
+<B><SPAN style="FONT-WEIGHT: bold">From:</SPAN></B> Alasdair G Kergon &lt;agk@redhat.com&gt;<BR><B><SPAN style="FONT-WEIGHT: bold">To:</SPAN></B> LVM general discussion and development &lt;linux-lvm@redhat.com&gt;<BR><B><SPAN style="FONT-WEIGHT: bold">Sent:</SPAN></B> Friday, November 14, 2008 6:55:15 PM<BR><B><SPAN style="FONT-WEIGHT: bold">Subject:</SPAN></B> Re: [linux-lvm] Editing LVM 2 metadata<BR></FONT><BR>On Fri, Nov 14, 2008 at 06:37:51PM -0800, Michael Jensen wrote:<BR>&gt; I have a need to edit the metadata on an LVM2 PV.<BR><BR>Why?<BR><BR>If you really have to, please do this using the supplied tools - it's *much*<BR>easier!<BR><BR>vgcfgbackup gives you a text file, edit it, vgcfgrestore puts it back.<BR><BR>If you need to edit the label too, careful use of pvcreate --restorefile --uuid<BR>plus vgcfgrestore lets you do that.<BR><BR>Alasdair<BR>-- <BR><A href="mailto:agk@redhat.com"
+ ymailto="mailto:agk@redhat.com">agk@redhat.com</A><BR><BR>_______________________________________________<BR>linux-lvm mailing list<BR><A href="mailto:linux-lvm@redhat.com" ymailto="mailto:linux-lvm@redhat.com">linux-lvm@redhat.com</A><BR><A href="https://www.redhat.com/mailman/listinfo/linux-lvm" target=_blank>https://www.redhat.com/mailman/listinfo/linux-lvm</A><BR>read the LVM HOW-TO at <A href="http://tldp.org/HOWTO/LVM-HOWTO/" target=_blank>http://tldp.org/HOWTO/LVM-HOWTO/</A><BR></DIV></DIV></div><br>
 
-One IET target is having 2 luns as "Parent LV" and "its snapshot".
-
-When MS initiator connects to it,it gets rebooted.
-
-I came to know through forum that it is due to same disk signatures of the
-two disks on initiator side.
-
-If I attach "Parent LV" and "its snapshot" to different targets,then windows
-initiator is behaving well.
-
-But in Open-iSCSI initiator under linux,both cases work well,
-*
-Issues
-
-*both parent lv and its snapshot are taking same IDs probably.How can i
-change the id of snapshot.It determines ID internally through timestamps and
-some other things.Both takes UUID obviously different.Windows might see
-these either as two copies of the same volume or two paths to the same
-volume, but their data diverges which causes Windows to freak out.Windows
-stores a volume identifier in the MBR/GPT when a disk is first recognized
-and uses that identifier for identification of storage volumes.But I cannot
-make changes on client(initiator) side as my product is server machine.
-
-basically *what changes should be made on the target side so that initiator
-will recognize both as different disks?*
-
-On Sat, Nov 15, 2008 at 6:14 PM, David Robinson <zxvdr.au@gmail.com> wrote:
-
-> 2008/11/15 Michael Jensen <beachhangar@yahoo.com>:
-> > The why is because I am attempting to use storage managed snapshots.  The
-> > storage can present the master volume and the snapshot as separate LUN's
-> but
-> > they present identical contents in the header area (first 256
-> sectors...).
-> > So the effort is to modify the snapshot (doable with this storage)
-> without
-> > altering the contents of the master volume.  Hopefully the snapshot with
-> > suitable edits to the UUID's would then pass vgscan test.
->
-> Its easiest if you follow the steps listed here:
->
-> https://www.redhat.com/archives/linux-lvm/2007-November/msg00039.html
->
-> --Dave
->
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
->
-
-
-
--- 
-Regards,
-Himanshu Padmanabhi
-
-------=_Part_15480_21352144.1226928580300
-Content-Type: text/html; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-<span><b>Is this issue having connection with it.<br><br>Problem</b><br><br>One IET target is having 2 luns as &quot;Parent LV&quot; and &quot;its snapshot&quot;.<br><br>When MS initiator connects to it,it gets rebooted.<br>
-<br>I came to know through forum that it is due to same disk signatures of the two disks on initiator side.<br>
-<br>If I attach &quot;Parent LV&quot; and &quot;its snapshot&quot; to different targets,then windows initiator is behaving well.<br><br></span>But in Open-iSCSI initiator under linux,both cases work well,<span></span><br clear="all">
-
-<b><br>Issues<br><br></b>both parent lv and its snapshot are taking
-same IDs probably.How can i change the id of snapshot.It determines ID
-internally through timestamps and some other things.Both takes UUID
-obviously different.Windows might see these either as two copies of the
-same volume or two paths to the same volume, but their data diverges
-which causes Windows to freak out.Windows stores a volume identifier in
-the MBR/GPT when a disk is first recognized and uses that identifier
-for identification of storage volumes.But I cannot make changes on
-client(initiator) side as my product is server machine.<br>
-<br>basically <b>what changes should be made on the target side so that initiator will recognize both as different disks?</b><br><br><div class="gmail_quote">On Sat, Nov 15, 2008 at 6:14 PM, David Robinson <span dir="ltr">&lt;<a href="mailto:zxvdr.au@gmail.com">zxvdr.au@gmail.com</a>&gt;</span> wrote:<br>
-<blockquote class="gmail_quote" style="border-left: 1px solid rgb(204, 204, 204); margin: 0pt 0pt 0pt 0.8ex; padding-left: 1ex;">2008/11/15 Michael Jensen &lt;<a href="mailto:beachhangar@yahoo.com">beachhangar@yahoo.com</a>&gt;:<br>
-
-<div class="Ih2E3d">&gt; The why is because I am attempting to use storage managed snapshots. &nbsp;The<br>
-&gt; storage can present the master volume and the snapshot as separate LUN&#39;s but<br>
-&gt; they present identical contents in the header area (first 256 sectors...).<br>
-&gt; So the effort is to modify the snapshot (doable with this storage) without<br>
-&gt; altering the contents of the master volume. &nbsp;Hopefully the snapshot with<br>
-&gt; suitable edits to the UUID&#39;s would then pass vgscan test.<br>
-<br>
-</div>Its easiest if you follow the steps listed here:<br>
-<br>
-<a href="https://www.redhat.com/archives/linux-lvm/2007-November/msg00039.html" target="_blank">https://www.redhat.com/archives/linux-lvm/2007-November/msg00039.html</a><br>
-<br>
---Dave<br>
-<div><div></div><div class="Wj3C7c"><br>
-_______________________________________________<br>
-linux-lvm mailing list<br>
-<a href="mailto:linux-lvm@redhat.com">linux-lvm@redhat.com</a><br>
-<a href="https://www.redhat.com/mailman/listinfo/linux-lvm" target="_blank">https://www.redhat.com/mailman/listinfo/linux-lvm</a><br>
-read the LVM HOW-TO at <a href="http://tldp.org/HOWTO/LVM-HOWTO/" target="_blank">http://tldp.org/HOWTO/LVM-HOWTO/</a><br>
-</div></div></blockquote></div><br><br clear="all"><br>-- <br>Regards,<br>Himanshu Padmanabhi<br><br>
-
-------=_Part_15480_21352144.1226928580300--
+      </body></html>
+--0-387316236-1226962695=:66521--
