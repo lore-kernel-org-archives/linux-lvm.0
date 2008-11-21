@@ -1,18 +1,14 @@
-Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id mALB9V9Q011663
-	for <linux-lvm@redhat.com>; Fri, 21 Nov 2008 06:09:31 -0500
-Received: from fk-out-0910.google.com (fk-out-0910.google.com [209.85.128.190])
-	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id mALB9Kq4012552
-	for <linux-lvm@redhat.com>; Fri, 21 Nov 2008 06:09:20 -0500
-Received: by fk-out-0910.google.com with SMTP id e30so987983fke.3
-	for <linux-lvm@redhat.com>; Fri, 21 Nov 2008 03:09:20 -0800 (PST)
-Message-ID: <38bdcd1f0811210309k67f7ed36uc45fe0848374739@mail.gmail.com>
-Date: Fri, 21 Nov 2008 20:09:19 +0900
-From: "Masanari Iida" <standby24x7@gmail.com>
+Received: from thunderbird6.fab.redhat.com (vpn-6-7.fab.redhat.com [10.33.6.7])
+	by ns3.rdu.redhat.com (8.13.8/8.13.8) with ESMTP id mALBCRo8002857
+	for <linux-lvm@redhat.com>; Fri, 21 Nov 2008 06:12:28 -0500
+Message-ID: <492696EE.3070709@redhat.com>
+Date: Fri, 21 Nov 2008 11:09:34 +0000
+From: "Bryn M. Reeves" <bmr@redhat.com>
 MIME-Version: 1.0
+Subject: Re: [linux-lvm] Share Volume Group between x86-64 and x86.
+References: <38bdcd1f0811210309k67f7ed36uc45fe0848374739@mail.gmail.com>
+In-Reply-To: <38bdcd1f0811210309k67f7ed36uc45fe0848374739@mail.gmail.com>
 Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-Subject: [linux-lvm] Share Volume Group between x86-64 and x86.
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -24,20 +20,32 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@redhat.com
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-Hello list,
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA1
 
-I have a question about LVM2 compatibility between different CPU architectures.
+Masanari Iida wrote:
+> Hello list,
+> 
+> I have a question about LVM2 compatibility between different CPU architectures.
+> 
+> If one create a VG on x86(32bit) and export the VG,
+> then try to import the VG on x86(64bit), what is going to happen?
+> Both systems are RHEL5, in my mind.
 
-If one create a VG on x86(32bit) and export the VG,
-then try to import the VG on x86(64bit), what is going to happen?
-Both systems are RHEL5, in my mind.
+It will work just fine - LVM2 metadata is in text format and the binary
+components (labels, metadata area headers) are treated in an
+architecture-neutral way to avoid compatibility problems.
 
-I would like to know this is
-  - technically can or can not
-  - supported or not supported.
+Regards,
+Bryn.
 
-Thanks in advance !
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.9 (GNU/Linux)
+Comment: Using GnuPG with Fedora - http://enigmail.mozdev.org
 
-Masanari
+iEYEARECAAYFAkkmlu4ACgkQ6YSQoMYUY96KwgCguVHo5eKjFo5s8YxgFYBAcA8V
+GN8AnRG//aoroZCSEZFlaNioxmg+V4ob
+=dvTs
+-----END PGP SIGNATURE-----
