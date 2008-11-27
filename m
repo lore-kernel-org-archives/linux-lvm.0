@@ -1,18 +1,27 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id mAR8mSRv008018
-	for <linux-lvm@redhat.com>; Thu, 27 Nov 2008 03:48:28 -0500
-Received: from smtp.lippi.fr (smtp.lippi.fr [213.223.112.35])
-	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id mAR8mEcW013252
-	for <linux-lvm@redhat.com>; Thu, 27 Nov 2008 03:48:14 -0500
-Received: from inetgw (inetgw [127.0.0.1])
-	by smtp.lippi.fr (smtp) with ESMTP id 23BBFC35D972
-	for <linux-lvm@redhat.com>; Thu, 27 Nov 2008 09:48:13 +0100 (CET)
-MIME-Version: 1.0
-Message-ID: <OFEEAC56CA.4D4B448B-ONC125750E.00300773-C125750E.00305B8E@lippi.fr>
-From: Antony MARTINEAU <Antony.MARTINEAU@lippi.fr>
-Date: Thu, 27 Nov 2008 09:48:12 +0100
-Content-Type: multipart/related; boundary="=_related 00305B8BC125750E_="
-Subject: [linux-lvm] XFS_freeze and LVM
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id mAR8sbSu010509
+	for <linux-lvm@redhat.com>; Thu, 27 Nov 2008 03:54:37 -0500
+Received: from post.berlin.i-dmedia.com (post.i-dmedia.com [62.159.214.250])
+	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id mAR8sQ3x016578
+	for <linux-lvm@redhat.com>; Thu, 27 Nov 2008 03:54:26 -0500
+Received: from localhost (localhost [127.0.0.1])
+	by post.berlin.i-dmedia.com (Postfix) with ESMTP id 8C3FDFAB4
+	for <linux-lvm@redhat.com>; Thu, 27 Nov 2008 09:56:07 +0100 (CET)
+Received: from post.berlin.i-dmedia.com ([127.0.0.1])
+	by localhost (post.berlin.i-dmedia.com [127.0.0.1]) (amavisd-new,
+	port 10024) with ESMTP id blUYO5rj0ULG for <linux-lvm@redhat.com>;
+	Thu, 27 Nov 2008 09:55:57 +0100 (CET)
+Received: from x1.ads.i-dmedia.com (x1.berlin.i-dmedia.com [10.1.69.45])
+	by post.berlin.i-dmedia.com (Postfix) with ESMTP id 780D8FAB0
+	for <linux-lvm@redhat.com>; Thu, 27 Nov 2008 09:55:57 +0100 (CET)
+Message-Id: <E3E8DACD-916F-4A20-AE40-535AE1373326@idmedia.com>
+From: Falko Zurell <falko.zurell@idmedia.com>
+In-Reply-To: <OFEEAC56CA.4D4B448B-ONC125750E.00300773-C125750E.00305B8E@lippi.fr>
+Content-Type: multipart/alternative; boundary=Apple-Mail-4-360751138
+Mime-Version: 1.0 (Apple Message framework v929.2)
+Subject: Re: [linux-lvm] XFS_freeze and LVM
+Date: Thu, 27 Nov 2008 09:54:14 +0100
+References: <OFEEAC56CA.4D4B448B-ONC125750E.00300773-C125750E.00305B8E@lippi.fr>
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -23,226 +32,174 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: linux-lvm@redhat.com
-
-Message en plusieurs parties au format MIME
---=_related 00305B8BC125750E_=
-Content-Type: multipart/alternative;
-	boundary="=_alternative 00305B8EC125750E_="
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
 
---=_alternative 00305B8EC125750E_=
-Content-Type: text/plain; charset="US-ASCII"
+--Apple-Mail-4-360751138
+Content-Type: text/plain;
+	charset=UTF-8;
+	format=flowed;
+	delsp=yes
+Content-Transfer-Encoding: quoted-printable
 
-Hello, 
-I want using LVM 2 and Mysql
-So i have mounted /var/lib/mysql on /dev/vg0/mysql.
+Hi,
 
-For doing a backup i want do
-xfs_freeze -f /var/lib/mysql
-and after : lvcreate --snapshot -n snap -L1G /dev/vg0/mysql.
+are your LVM tools on the freezed file system? Is this the / partition =20=
 
-But the problem is when i freeze xfs filesystem i can't use lvm 
-commands... 
-When i unfreeze xfs lvm commands are available...
+you are freezing? Bad idea ;-)
 
-Do you know the problem?? is it a bug.?? 
-
-Cordialement,
+kind regards
 
 
 
-MARTINEAU
-Antony 
-Service informatique 
-Assistant informatique 
-LIPPI Management 
-La Fouillouse
-16440 Mouthiers sur Boheme 
-Tel.: 05.45.67.34.35
-Courriel: antony.martineau@lippi.fr
-http://www.lippi.fr 
+Am 27.11.2008 um 09:48 schrieb Antony MARTINEAU:
+
+>
+> Hello,
+> I want using LVM 2 and Mysql
+> So i have mounted /var/lib/mysql on /dev/vg0/mysql.
+>
+> For doing a backup i want do
+> xfs_freeze -f /var/lib/mysql
+> and after : lvcreate --snapshot -n snap -L1G /dev/vg0/mysql.
+>
+> But the problem is when i freeze xfs filesystem i can't use lvm =20
+> commands...
+> When i unfreeze xfs lvm commands are available...
+>
+> Do you know the problem?? is it a bug.??
+> Cordialement,
+>
+> <ATT54517403.gif>
+> MARTINEAU
+> Antony
+> Service informatique
+> Assistant informatique
+> LIPPI Management	La Fouillouse
+> 16440 Mouthiers sur Boheme
+> Tel.: 05.45.67.34.35
+> Courriel: antony.martineau@lippi.fr
+> http://www.lippi.fr
+>
+>
+>
+>
+>
+>
+>
+>
+>
+> Ce message et toutes les pieces jointes sont etablis a l'attention =20
+> exclusive de ses destinataires et sont strictement confidentiels. =20
+> Pour en savoir plus cliquer ici
+>
+> This message and any attachments are confidential to the ordinary =20
+> user of the e-mail address to which it was addressed and may also be =20=
+
+> privileged. More information
+>
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@redhat.com
+> https://www.redhat.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+
+Falko Zurell =EF=A3=BF
+
+Head of Application Management
+
+
+/i-d media AG
+Ohlauer Stra=C3=9Fe 43
+D-10999 Berlin
 
 
 
 
 
+--Apple-Mail-4-360751138
+Content-Type: text/html;
+	charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
+<html><body style=3D"word-wrap: break-word; -webkit-nbsp-mode: space; =
+-webkit-line-break: after-white-space; ">Hi,<div><br></div><div>are your =
+LVM tools on the freezed file system? Is this the / partition you are =
+freezing? Bad idea ;-)</div><div><br></div><div>kind =
+regards</div><div><br></div><div><br></div><div><br><div><div>Am =
+27.11.2008 um 09:48 schrieb Antony MARTINEAU:</div><br =
+class=3D"Apple-interchange-newline"><blockquote type=3D"cite"><br><font =
+size=3D"2" face=3D"sans-serif">Hello, </font> <br><font size=3D"2" =
+face=3D"sans-serif">I want using LVM 2 and Mysql</font> <br><font =
+size=3D"2" face=3D"sans-serif">So i have mounted /var/lib/mysql on =
+/dev/vg0/mysql.</font> <br> <br><font size=3D"2" face=3D"sans-serif">For =
+doing a backup i want do</font> <br><font size=3D"2" =
+face=3D"sans-serif">xfs_freeze -f /var/lib/mysql</font> <br><font =
+size=3D"2" face=3D"sans-serif">and after : lvcreate --snapshot -n snap =
+-L1G /dev/vg0/mysql.</font> <br> <br><font size=3D"2" =
+face=3D"sans-serif">But the problem is when i freeze xfs filesystem i =
+can't use lvm commands... </font> <br><font size=3D"2" =
+face=3D"sans-serif">When i unfreeze xfs lvm commands are =
+available...</font> <br> <br><font size=3D"2" face=3D"sans-serif">Do you =
+know the problem?? is it a bug.?? <br> </font> <table> <tbody><tr> =
+<td><font size=3D"2" face=3D"Arial">Cordialement,<br> =
+</font></td></tr></tbody></table> <br> <table> <tbody><tr> <td =
+colspan=3D"2"> <div =
+align=3D"center"><span>&lt;ATT54517403.gif></span></div> </td></tr><tr> =
+<td><font size=3D"3" face=3D"Arial"><b>MARTINEAU<br> Antony</b> =
+</font><font size=3D"2" color=3D"#808080" face=3D"Arial"><br> Service =
+informatique </font><font size=3D"1" color=3D"#808080" face=3D"Arial"><br>=
+ Assistant informatique <br> LIPPI Management </font> </td><td><font =
+size=3D"1" color=3D"#004080" face=3D"Arial">La Fouillouse<br> 16440 =
+Mouthiers sur Boheme <br> Tel.: 05.45.67.34.35<br> Courriel: </font><a =
+href=3D"mailto:antony.martineau@lippi.fr"><font size=3D"1" color=3D"blue" =
+face=3D"Arial"><u>antony.martineau@lippi.fr</u></font></a><font size=3D"1"=
+ color=3D"blue" face=3D"Arial"><u><br> </u></font><a =
+href=3D"http://www.lippi.fr/"><font size=3D"1" color=3D"blue" =
+face=3D"Arial"><u>http://www.lippi.fr</u></font></a><font size=3D"1" =
+color=3D"#004080" face=3D"Arial"> </font></td></tr></tbody></table> =
+<br><font size=3D"2" face=3D"sans-serif"><br> <br> <br> </font> =
+<br><font size=3D"2" face=3D"Lucida Sans"><br> </font><img =
+src=3D"http://www.lippi.fr/img/eco.jpg"><font size=3D"2" face=3D"Lucida =
+Sans"><br> <br> <br> Ce message et toutes les pieces jointes sont =
+etablis a l'attention exclusive de ses destinataires et sont strictement =
+confidentiels. </font><a href=3D"http://www.lippi.fr/disclaimer.php"><font=
+ size=3D"2" color=3D"blue" face=3D"Lucida Sans"><u>Pour en savoir plus =
+cliquer ici</u></font></a><font size=3D"2" face=3D"Lucida Sans"><br> =
+<br> This message and any attachments are confidential to the ordinary =
+user of the e-mail address to which it was addressed and may also be =
+privileged. </font><a href=3D"http://www.lippi.fr/disclaimer.php"><font =
+size=3D"2" color=3D"blue" face=3D"Lucida Sans"><u>More =
+information</u></font></a><font size=3D"2" face=3D"Lucida Sans"><br> =
+</font> <br>_______________________________________________<br>linux-lvm =
+mailing list<br><a =
+href=3D"mailto:linux-lvm@redhat.com">linux-lvm@redhat.com</a><br>https://w=
+ww.redhat.com/mailman/listinfo/linux-lvm<br>read the LVM HOW-TO at =
+http://tldp.org/HOWTO/LVM-HOWTO/</blockquote></div><br><div =
+apple-content-edited=3D"true"> <span class=3D"Apple-style-span" =
+style=3D"border-collapse: separate; color: rgb(0, 0, 0); font-family: =
+Helvetica; font-size: 12px; font-style: normal; font-variant: normal; =
+font-weight: normal; letter-spacing: normal; line-height: normal; =
+orphans: 2; text-align: auto; text-indent: 0px; text-transform: none; =
+white-space: normal; widows: 2; word-spacing: 0px; =
+-webkit-border-horizontal-spacing: 0px; -webkit-border-vertical-spacing: =
+0px; -webkit-text-decorations-in-effect: none; -webkit-text-size-adjust: =
+auto; -webkit-text-stroke-width: 0; "><div style=3D"word-wrap: =
+break-word; -webkit-nbsp-mode: space; -webkit-line-break: =
+after-white-space; "><span class=3D"Apple-style-span" =
+style=3D"border-collapse: separate; color: rgb(0, 0, 0); font-family: =
+Helvetica; font-size: 12px; font-style: normal; font-variant: normal; =
+font-weight: normal; letter-spacing: normal; line-height: normal; =
+orphans: 2; text-indent: 0px; text-transform: none; white-space: normal; =
+widows: 2; word-spacing: 0px; -webkit-border-horizontal-spacing: 0px; =
+-webkit-border-vertical-spacing: 0px; =
+-webkit-text-decorations-in-effect: none; -webkit-text-size-adjust: =
+auto; -webkit-text-stroke-width: 0px; "><div style=3D"word-wrap: =
+break-word; -webkit-nbsp-mode: space; -webkit-line-break: =
+after-white-space; "><div><p align=3D"">Falko Zurell&nbsp;=EF=A3=BF</p><p =
+align=3D"">Head of Application Management<br><br></p><p align=3D"">/i-d =
+media&nbsp;AG<br>Ohlauer Stra=C3=9Fe 43<br>D-10999 Berlin</p><p =
+align=3D""><br></p></div></div></span></div></span> =
+</div><br></div></body></html>=
 
-
-Ce message et toutes les pieces jointes sont etablis a l'attention 
-exclusive de ses destinataires et sont strictement confidentiels. Pour en 
-savoir plus cliquer ici
-
-This message and any attachments are confidential to the ordinary user of 
-the e-mail address to which it was addressed and may also be privileged. 
-More information
-
-
---=_alternative 00305B8EC125750E_=
-Content-Type: text/html; charset="US-ASCII"
-
-
-<br><font size=2 face="sans-serif">Hello, </font>
-<br><font size=2 face="sans-serif">I want using LVM 2 and Mysql</font>
-<br><font size=2 face="sans-serif">So i have mounted /var/lib/mysql on
-/dev/vg0/mysql.</font>
-<br>
-<br><font size=2 face="sans-serif">For doing a backup i want do</font>
-<br><font size=2 face="sans-serif">xfs_freeze -f /var/lib/mysql</font>
-<br><font size=2 face="sans-serif">and after : lvcreate --snapshot -n snap
--L1G /dev/vg0/mysql.</font>
-<br>
-<br><font size=2 face="sans-serif">But the problem is when i freeze xfs
-filesystem i can't use lvm commands... </font>
-<br><font size=2 face="sans-serif">When i unfreeze xfs lvm commands are
-available...</font>
-<br>
-<br><font size=2 face="sans-serif">Do you know the problem?? is it a bug.??
-<br>
-</font>
-<table>
-<tr>
-<td><font size=2 face="Arial">Cordialement,<br>
-</font></table>
-<br>
-<table>
-<tr>
-<td colspan=2>
-<div align=center><img src=cid:_1_083BA2B8083B9EE400305B8BC125750E></div>
-<tr>
-<td><font size=3 face="Arial"><b>MARTINEAU<br>
-Antony</b> </font><font size=2 color=#808080 face="Arial"><br>
-Service informatique </font><font size=1 color=#808080 face="Arial"><br>
-Assistant informatique <br>
-LIPPI Management </font>
-<td><font size=1 color=#004080 face="Arial">La Fouillouse<br>
-16440 Mouthiers sur Boheme <br>
-Tel.: 05.45.67.34.35<br>
-Courriel: </font><a href=mailto:antony.martineau@lippi.fr><font size=1 color=blue face="Arial"><u>antony.martineau@lippi.fr</u></font></a><font size=1 color=blue face="Arial"><u><br>
-</u></font><a href=http://www.lippi.fr/><font size=1 color=blue face="Arial"><u>http://www.lippi.fr</u></font></a><font size=1 color=#004080 face="Arial">
-</font></table>
-<br><font size=2 face="sans-serif"><br>
-<br>
-<br>
-</font>
-<br><font size=2 face="Lucida Sans"><br>
-</font><img src=http://www.lippi.fr/img/eco.jpg><font size=2 face="Lucida Sans"><br>
-<br>
-<br>
-Ce message et toutes les pieces jointes sont etablis a l'attention exclusive
-de ses destinataires et sont strictement confidentiels. </font><a href=http://www.lippi.fr/disclaimer.php><font size=2 color=blue face="Lucida Sans"><u>Pour
-en savoir plus cliquer ici</u></font></a><font size=2 face="Lucida Sans"><br>
-<br>
-This message and any attachments are confidential to the ordinary user
-of the e-mail address to which it was addressed and may also be privileged.
-</font><a href=http://www.lippi.fr/disclaimer.php><font size=2 color=blue face="Lucida Sans"><u>More
-information</u></font></a><font size=2 face="Lucida Sans"><br>
-</font>
-<br>
---=_alternative 00305B8EC125750E_=--
-
---=_related 00305B8BC125750E_=
-Content-Type: image/gif
-Content-ID: <_1_083BA2B8083B9EE400305B8BC125750E>
-Content-Transfer-Encoding: base64
-
-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
-CVEEq5EJ8v3iOVFtPiEHKqLjKxEQADs=
---=_related 00305B8BC125750E_=--
+--Apple-Mail-4-360751138--
