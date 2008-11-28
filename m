@@ -1,19 +1,14 @@
-Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id mASL9VF1019862
-	for <linux-lvm@redhat.com>; Fri, 28 Nov 2008 16:09:31 -0500
-Received: from nf-out-0910.google.com (nf-out-0910.google.com [64.233.182.184])
-	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id mASL9JaA011944
-	for <linux-lvm@redhat.com>; Fri, 28 Nov 2008 16:09:20 -0500
-Received: by nf-out-0910.google.com with SMTP id d3so856547nfc.21
-	for <linux-lvm@redhat.com>; Fri, 28 Nov 2008 13:09:19 -0800 (PST)
-Message-ID: <614f37be0811281309gb115861yea65f65979e48951@mail.gmail.com>
-Date: Fri, 28 Nov 2008 16:09:19 -0500
-From: "Gary Desrochers" <garybrenda@comcast.net>
-Sender: garyfdes@gmail.com
+Received: from leguan.localdomain (vpn-10-90.str.redhat.com [10.32.10.90])
+	by ns3.rdu.redhat.com (8.13.8/8.13.8) with ESMTP id mASNKqY9016906
+	for <linux-lvm@redhat.com>; Fri, 28 Nov 2008 18:20:53 -0500
+Message-ID: <49307CD4.9010705@redhat.com>
+Date: Sat, 29 Nov 2008 00:20:52 +0100
+From: Jaroslav Stava <jstava@redhat.com>
 MIME-Version: 1.0
-Content-Type: multipart/alternative; 
-	boundary="----=_Part_52440_2071523.1227906559460"
-Subject: [linux-lvm] Let's try again with the lvm mirror failure.
+Subject: Re: [linux-lvm] Let's try again with the lvm mirror failure.
+References: <614f37be0811281309gb115861yea65f65979e48951@mail.gmail.com>
+In-Reply-To: <614f37be0811281309gb115861yea65f65979e48951@mail.gmail.com>
+Content-Transfer-Encoding: 7bit
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -24,46 +19,39 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: linux-lvm@redhat.com
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-------=_Part_52440_2071523.1227906559460
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
+Hi,
 
-I will try one more time. Can someone please tell me if it is possible to
-recover a mirrored drive?  If not then why are so many people using mirrors
-out there?
+Gary Desrochers wrote:
+> I will try one more time. Can someone please tell me if it is possible 
+> to recover a mirrored drive?  If not then why are so many people using 
+> mirrors out there?
+Some info:
+man vgreduce (see --removemissing)
+man lvm (see --partial activation)
 
-In a previous message posted to the forums I said:
+Btw. it's a good idea to state your lvm version.
 
-> I had a disk failure for my lvm mirror.  It was between two disks.  This
-was a failure of the primary.
+> > So how do you fix up from a crashed primary mirror?
+To make the VG consistent again you use "vgreduce --removemissing VG".
+That will remove any LVs that were (even partially) on any missing PV.
+When mirror legs are lost this way then mirror get downconverted.
+You may want to use it with --test first, to see what you would loose.
+(And you may try --mirrorsonly, it should fail when anything except mirror
+legs would be lost. Without guarantee, depends on version.)
+
 >
-> I have been trying to recover the mirror but I cannot find directions as
-to what to do.
->
-> Seems like if I create a new partition, give it the old uuid and then try
-to load everything I get superblock errors.
->
-> So how do you fix up from a crashed primary mirror?
+> As a second question, I know the extents and such.  Is there a way to 
+> copy off the data into a non-lvm partition?  At this point I will even 
+> take that.  I just want to get to the data.
+Partial activation: "vgchange -ay -P". Doesn't make much sense
+if you only lost a mirror leg.
 
-As a second question, I know the extents and such.  Is there a way to copy
-off the data into a non-lvm partition?  At this point I will even take that.
- I just want to get to the data.
 
-Gary
+Btw. when you need realtime response to your problem,
+there is an irc channel #lvm on freenode (ask question and wait).
 
-------=_Part_52440_2071523.1227906559460
-Content-Type: text/html; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-<span style="font-family:&#39;Times New Roman&#39;;font-size:16px"><div>I will try one more time. Can someone please tell me if it is possible to recover a mirrored drive? &nbsp;If not then why are so many people using mirrors out there?</div>
-<div><br></div><div>In a previous message posted to the forums I said:</div><div><br></div>&gt; I had a disk failure for my lvm mirror.&nbsp; It was between two disks.&nbsp; This was a failure of the primary.<br>&gt;&nbsp;<br>&gt; I have been trying to recover the mirror but I cannot find directions as to what to do.<br>
-
-&gt;&nbsp;<br>&gt; Seems like if I create a new partition, give it the old uuid and then try to load everything I get superblock errors.<br>&gt;&nbsp;<br>&gt; So how do you fix up from a crashed primary mirror?</span><br>
-<div><br></div><div><span class="Apple-style-span" style="font-family: &#39;Times New Roman&#39;; font-size: 16px;">As a second question, I know the extents and such. &nbsp;Is there a way to copy off the data into a non-lvm partition? &nbsp;At this point I will even take that. &nbsp;I just want to get to the data.</span></div>
-<div><span class="Apple-style-span" style="font-family: &#39;Times New Roman&#39;; font-size: 16px;"><br></span></div><div><span class="Apple-style-span" style="font-family: &#39;Times New Roman&#39;; font-size: 16px;">Gary</span></div>
-
-------=_Part_52440_2071523.1227906559460--
+Regards,
+Jaroslav Stava
