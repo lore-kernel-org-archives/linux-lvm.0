@@ -1,23 +1,19 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id mASFdv4T024694
-	for <linux-lvm@redhat.com>; Fri, 28 Nov 2008 10:39:57 -0500
-Received: from mail.linbit.com (nudl.linbit.com [212.69.162.21])
-	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id mASFdfYL012309
-	for <linux-lvm@redhat.com>; Fri, 28 Nov 2008 10:39:42 -0500
-Received: from soda.linbit (office.linbit [86.59.100.100])
-	by mail.linbit.com (LINBIT Mail Daemon) with ESMTP id C6B582E0520F
-	for <linux-lvm@redhat.com>; Fri, 28 Nov 2008 16:39:40 +0100 (CET)
-Date: Fri, 28 Nov 2008 16:39:40 +0100
-From: Lars Ellenberg <lars.ellenberg@linbit.com>
-Subject: Re: [linux-lvm] XFS_freeze and LVM
-Message-ID: <20081128153940.GI18698@barkeeper1-xen.linbit>
-References: <OFEEAC56CA.4D4B448B-ONC125750E.00300773-C125750E.00305B8E@lippi.fr>
-	<E3E8DACD-916F-4A20-AE40-535AE1373326@idmedia.com>
-	<alpine.LNX.1.10.0811271006200.27683@bernoulli.globalphasing.com>
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id mASL9VF1019862
+	for <linux-lvm@redhat.com>; Fri, 28 Nov 2008 16:09:31 -0500
+Received: from nf-out-0910.google.com (nf-out-0910.google.com [64.233.182.184])
+	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id mASL9JaA011944
+	for <linux-lvm@redhat.com>; Fri, 28 Nov 2008 16:09:20 -0500
+Received: by nf-out-0910.google.com with SMTP id d3so856547nfc.21
+	for <linux-lvm@redhat.com>; Fri, 28 Nov 2008 13:09:19 -0800 (PST)
+Message-ID: <614f37be0811281309gb115861yea65f65979e48951@mail.gmail.com>
+Date: Fri, 28 Nov 2008 16:09:19 -0500
+From: "Gary Desrochers" <garybrenda@comcast.net>
+Sender: garyfdes@gmail.com
 MIME-Version: 1.0
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <alpine.LNX.1.10.0811271006200.27683@bernoulli.globalphasing.com>
+Content-Type: multipart/alternative; 
+	boundary="----=_Part_52440_2071523.1227906559460"
+Subject: [linux-lvm] Let's try again with the lvm mirror failure.
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -28,48 +24,46 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="utf-8"
 To: linux-lvm@redhat.com
 
-On Thu, Nov 27, 2008 at 10:28:05AM +0000, Peter Keller wrote:
-> Hi,
+------=_Part_52440_2071523.1227906559460
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+I will try one more time. Can someone please tell me if it is possible to
+recover a mirrored drive?  If not then why are so many people using mirrors
+out there?
+
+In a previous message posted to the forums I said:
+
+> I had a disk failure for my lvm mirror.  It was between two disks.  This
+was a failure of the primary.
 >
-> IIRC sometime around 2005 developments in LVM meant that using xfs_freeze 
-> before creating a snapshot became the wrong thing to do. See the entry in 
-> the changelog for revision 0.15 of the LVM how-to at  
-> http://tldp.org/HOWTO/LVM-HOWTO/ . You will probably find that 
-> authoritative recommendations to use xfs_freeze relate to versions of LVM 
-> from before this time. (Please correct me if I am wrong about this, 
-> someone.)
+> I have been trying to recover the mirror but I cannot find directions as
+to what to do.
 >
-> Also bear in mind that filesystem transactions do not correspond to 
-> database (i.e. MySQL) transactions. To get a reliable backup using a 
-> snapshot you may need to allow uncommitted database transactions to 
-> complete or roll back while preventing new ones from being started, then 
-> take the snapshot. Oracle has a way of doing this that doesn't need the 
-> database to be completely shut down, but I have no experience with MySQL 
-> so I can't be more specific.
+> Seems like if I create a new partition, give it the old uuid and then try
+to load everything I get superblock errors.
+>
+> So how do you fix up from a crashed primary mirror?
 
-at some stage lvm/devicemapper started to do the freeze implicitly
-(on file systems that support freeze), and somewhen in between I think
-there was a deadlock on "double freeze" (some long time ago).
-maybe that is what you see.
+As a second question, I know the extents and such.  Is there a way to copy
+off the data into a non-lvm partition?  At this point I will even take that.
+ I just want to get to the data.
 
-on "modern" systems, it should work either way, with or without the
-explicit freeze (as long as you don't try to freeze your root fs,
-probably).
+Gary
 
-for mysql and (innodb) transaction safety, yes,
-it is enough to use (writeable) snapshots.
+------=_Part_52440_2071523.1227906559460
+Content-Type: text/html; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
 
-however, iirc, you better do a "FLUSH TABLES WITH READ LOCK" (which may
-take a long time, as it waits for all pending statements to complete),
-then create the snapshot (which implicitly also freezes/unfreezes the
-fs), and "UNLOCK TABLES" again.
+<span style="font-family:&#39;Times New Roman&#39;;font-size:16px"><div>I will try one more time. Can someone please tell me if it is possible to recover a mirrored drive? &nbsp;If not then why are so many people using mirrors out there?</div>
+<div><br></div><div>In a previous message posted to the forums I said:</div><div><br></div>&gt; I had a disk failure for my lvm mirror.&nbsp; It was between two disks.&nbsp; This was a failure of the primary.<br>&gt;&nbsp;<br>&gt; I have been trying to recover the mirror but I cannot find directions as to what to do.<br>
 
--- 
-: Lars Ellenberg
-: LINBIT | Your Way to High Availability
-: DRBD/HA support and consulting http://www.linbit.com
+&gt;&nbsp;<br>&gt; Seems like if I create a new partition, give it the old uuid and then try to load everything I get superblock errors.<br>&gt;&nbsp;<br>&gt; So how do you fix up from a crashed primary mirror?</span><br>
+<div><br></div><div><span class="Apple-style-span" style="font-family: &#39;Times New Roman&#39;; font-size: 16px;">As a second question, I know the extents and such. &nbsp;Is there a way to copy off the data into a non-lvm partition? &nbsp;At this point I will even take that. &nbsp;I just want to get to the data.</span></div>
+<div><span class="Apple-style-span" style="font-family: &#39;Times New Roman&#39;; font-size: 16px;"><br></span></div><div><span class="Apple-style-span" style="font-family: &#39;Times New Roman&#39;; font-size: 16px;">Gary</span></div>
 
-DRBD� and LINBIT� are registered trademarks of LINBIT, Austria.
+------=_Part_52440_2071523.1227906559460--
