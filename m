@@ -1,18 +1,18 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id mB88bFt0008178
-	for <linux-lvm@redhat.com>; Mon, 8 Dec 2008 03:37:15 -0500
-Received: from nf-out-0910.google.com (nf-out-0910.google.com [64.233.182.191])
-	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id mB88b2Uc031400
-	for <linux-lvm@redhat.com>; Mon, 8 Dec 2008 03:37:03 -0500
-Received: by nf-out-0910.google.com with SMTP id d3so481342nfc.21
-	for <linux-lvm@redhat.com>; Mon, 08 Dec 2008 00:37:02 -0800 (PST)
-Message-ID: <d66ef690812080037k5d99dbcdm1ce11ab32744efff@mail.gmail.com>
-Date: Mon, 8 Dec 2008 16:37:02 +0800
-From: "wu jessinay" <jessinay@gmail.com>
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id mB8BSWHX015400
+	for <linux-lvm@redhat.com>; Mon, 8 Dec 2008 06:28:32 -0500
+Received: from bay0-omc2-s26.bay0.hotmail.com (bay0-omc2-s26.bay0.hotmail.com
+	[65.54.246.162])
+	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id mB8BSE5d025240
+	for <linux-lvm@redhat.com>; Mon, 8 Dec 2008 06:28:14 -0500
+Message-ID: <BAY107-W48D83CEC26F385DECFFA8F8FFD0@phx.gbl>
+Content-Type: multipart/alternative;
+	boundary="_a7584195-f888-4dd5-b7bd-0e23b8515d4b_"
+From: Mark Reardon <markreardon4@hotmail.com>
+Date: Mon, 8 Dec 2008 11:28:13 +0000
 MIME-Version: 1.0
-Content-Type: multipart/alternative; 
-	boundary="----=_Part_42812_2059893.1228725422301"
-Subject: [linux-lvm] system-config-lvm bug with using lv as swap space
+Subject: [linux-lvm] SCSI errors - qlogic scsi I/O errors qla2xxx_eh_abort
+ scsi(0:0:0:1): cmd_timeout_in_sec=0x1e.
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -25,85 +25,72 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 List-Id: <linux-lvm.redhat.com>
 To: linux-lvm@redhat.com
 
-------=_Part_42812_2059893.1228725422301
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
+--_a7584195-f888-4dd5-b7bd-0e23b8515d4b_
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 
- Hi,all
-I have encountered several bugs of system-config-lvm.
-The first one is if there is a logical volume entry in /etc/fstab
-and another raw device entry for swap
-such as
-/dev/my_vg1/my_lv1   swap  swap  defaults 0 0
-/dev/hda1       swap    swap   defaults   0  0
 
-then if we use system-config-lvm to remove my_lv1,
-Not only the my_lv1 entry,but all other swap entries in /etc/fstab will get
-removed.
+Hello All=2C
 
-After some investigation on the system-config-lvm python source file.
-It seems that the problem is in the InputController.py file.
-When we click the remove button,the program will check if there is any
-entry of the removed logical volume in /etc/fstab.
-If any entry exist in /etc/fstab, it will remove this line from /etc/fstab
-so that when the system reboot it won't mount this logical volume(since it
-has been removed).
+Has anybody ever been able to determine the cause of the below errors?
 
-This procedure is OK.However,the program will delete the corresponding entry
-in the following way:
-1.check what is the mount point of this logical volume.(in our case it is
-swap)
-2.search /etc/fstab file,delete all the entries with the same mount
-point.This won't result in any trouble if the logical volume is mounted on
-/mnt/mylv1 .but if the mount point is swap ,it will delete all swap entries
-in /etc/fstab file.
+qla2400 0000:10:00.1: qla2xxx_eh_abort=20
+scsi cmd_timeout_in_sec=3D0x1e.
+qla2400 0000:10:00.1: qla2xxx_eh_abort scsi:=20
+cmd_timeout_in_sec=3D0x1e.
+qla2400=20
+0000:10:00.0: qla2xxx_eh_abort scsi cmd_timeout_in_sec=3D0x3c.
+qla2400 0000:10:00.0: qla2xxx_eh_abort=20
+scsi cmd_timeout_in_sec=3D0x3c.
+qla2400 0000:10:00.1: RISC paused -- HCCR=3Dffffffff=2C Dumping=20
+firmware!
+qla2400 0000:10:00.1: RISC=20
+paused -- HCCR=3Dffffffff=2C Dumping firmware!
 
-I have created a patch to solve this problem,which modify the removing
-procedure if the mount point is swap.
+Thanks.
 
-There is several other bugs with system-config-lvm but the root cause should
-be the same.
+Regards=2C
 
-this problem exist in enterprise linux 5 and enterprise linux 5 U1.
-Is this a fixed bug?Any advice is appreciated!
+Mark
 
-Thanks
+_________________________________________________________________
+Are you a PC?=A0 Upload your PC story and show the world=20
+http://clk.atdmt.com/UKM/go/122465942/direct/01/=
 
-------=_Part_42812_2059893.1228725422301
-Content-Type: text/html; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
+--_a7584195-f888-4dd5-b7bd-0e23b8515d4b_
+Content-Type: text/html; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 
-<div id="mb_0">
-<div>Hi,all</div>
-<div>I have encountered several bugs of system-config-lvm.</div>
-<div>The first one is if&nbsp;there is&nbsp;a logical volume entry in /etc/fstab</div>
-<div>and another raw device entry for swap</div>
-<div>such as</div>
-<div>/dev/my_vg1/my_lv1&nbsp;&nbsp; swap&nbsp; swap&nbsp; defaults 0 0</div>
-<div>/dev/hda1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; swap&nbsp;&nbsp;&nbsp; swap&nbsp;&nbsp; defaults&nbsp;&nbsp; 0&nbsp; 0</div>
-<div>&nbsp;</div>
-<div>then if we use system-config-lvm to remove my_lv1,</div>
-<div>Not only the my_lv1 entry,but all other&nbsp;swap entries in /etc/fstab will get removed.</div>
-<div>&nbsp;</div>
-<div>After some investigation on the system-config-lvm python source file.</div>
-<div>It seems that the problem is in the InputController.py file.</div>
-<div>When we click the remove button,the program will check if there is any entry&nbsp;of the removed logical volume&nbsp;in /etc/fstab.</div>
-<div>If any entry exist in /etc/fstab, it will remove this line from /etc/fstab so that when the system reboot it won&#39;t mount this logical volume(since it has been removed).</div>
-<div>&nbsp;</div>
-<div>This procedure is OK.However,the program will delete the corresponding entry in the following way:</div>
-<div>1.check what is the mount point of this logical volume.(in our case it is swap)</div>
-<div>2.search /etc/fstab file,delete all the entries with the same mount point.This won&#39;t result in any trouble if the logical volume is mounted on /mnt/mylv1 .but if the mount point is swap ,it will delete all swap entries in /etc/fstab file.</div>
+<html>
+<head>
+<style>
+.hmmessage P
+{
+margin:0px=3B
+padding:0px
+}
+body.hmmessage
+{
+font-size: 10pt=3B
+font-family:Verdana
+}
+</style>
+</head>
+<body class=3D'hmmessage'>
+Hello All=2C<br><br>Has anybody ever been able to determine the cause of th=
+e below errors?<br><br>qla2400 0000:10:00.1: qla2xxx_eh_abort=20
+scsi cmd_timeout_in_sec=3D0x1e.<br>qla2400 0000:10:00.1: qla2xxx_eh_abort s=
+csi:=20
+cmd_timeout_in_sec=3D0x1e.<br>qla2400=20
+0000:10:00.0: qla2xxx_eh_abort scsi cmd_timeout_in_sec=3D0x3c.<br>qla2400 0=
+000:10:00.0: qla2xxx_eh_abort=20
+scsi cmd_timeout_in_sec=3D0x3c.<br>qla2400 0000:10:00.1: RISC paused -- HCC=
+R=3Dffffffff=2C Dumping=20
+firmware!<br>qla2400 0000:10:00.1: RISC=20
+paused -- HCCR=3Dffffffff=2C Dumping firmware!<br><br>Thanks.<br><br>Regard=
+s=2C<br><br>Mark<br><br /><hr />Take your friends with you with Mobile Mess=
+enger. <a href=3D'http://clk.atdmt.com/UKM/go/msnnkmgl0010000001ukm/direct/=
+01/' target=3D'_new'>Click Here!</a></body>
+</html>=
 
-<div>&nbsp;</div>
-<div>I have created a patch to solve this problem,which modify the removing procedure if the mount point is swap.</div>
-<div>&nbsp;</div>
-<div>There is several other bugs with system-config-lvm but the root cause should be the same.</div>
-<div>&nbsp;</div>
-<div>this problem exist in enterprise linux 5 and enterprise linux 5 U1.&nbsp;</div>
-<div>Is this a fixed bug?Any advice is appreciated!</div>
-<div>&nbsp;</div>
-<div>Thanks</div></div>
-
-------=_Part_42812_2059893.1228725422301--
+--_a7584195-f888-4dd5-b7bd-0e23b8515d4b_--
