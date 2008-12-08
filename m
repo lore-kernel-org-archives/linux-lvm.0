@@ -1,17 +1,17 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id mB8741lm009132
-	for <linux-lvm@redhat.com>; Mon, 8 Dec 2008 02:04:01 -0500
-Received: from nf-out-0910.google.com (nf-out-0910.google.com [64.233.182.185])
-	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id mB873nWH022163
-	for <linux-lvm@redhat.com>; Mon, 8 Dec 2008 02:03:49 -0500
-Received: by nf-out-0910.google.com with SMTP id d3so470086nfc.21
-	for <linux-lvm@redhat.com>; Sun, 07 Dec 2008 23:03:48 -0800 (PST)
-Message-ID: <d66ef690812072303h4ef84671sd90bac8143f90656@mail.gmail.com>
-Date: Mon, 8 Dec 2008 15:03:48 +0800
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id mB88bFt0008178
+	for <linux-lvm@redhat.com>; Mon, 8 Dec 2008 03:37:15 -0500
+Received: from nf-out-0910.google.com (nf-out-0910.google.com [64.233.182.191])
+	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id mB88b2Uc031400
+	for <linux-lvm@redhat.com>; Mon, 8 Dec 2008 03:37:03 -0500
+Received: by nf-out-0910.google.com with SMTP id d3so481342nfc.21
+	for <linux-lvm@redhat.com>; Mon, 08 Dec 2008 00:37:02 -0800 (PST)
+Message-ID: <d66ef690812080037k5d99dbcdm1ce11ab32744efff@mail.gmail.com>
+Date: Mon, 8 Dec 2008 16:37:02 +0800
 From: "wu jessinay" <jessinay@gmail.com>
 MIME-Version: 1.0
 Content-Type: multipart/alternative; 
-	boundary="----=_Part_42317_11028608.1228719828632"
+	boundary="----=_Part_42812_2059893.1228725422301"
 Subject: [linux-lvm] system-config-lvm bug with using lv as swap space
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
@@ -25,12 +25,12 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 List-Id: <linux-lvm.redhat.com>
 To: linux-lvm@redhat.com
 
-------=_Part_42317_11028608.1228719828632
+------=_Part_42812_2059893.1228725422301
 Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
 Content-Disposition: inline
 
-Hi,all
+ Hi,all
 I have encountered several bugs of system-config-lvm.
 The first one is if there is a logical volume entry in /etc/fstab
 and another raw device entry for swap
@@ -70,11 +70,12 @@ Is this a fixed bug?Any advice is appreciated!
 
 Thanks
 
-------=_Part_42317_11028608.1228719828632
+------=_Part_42812_2059893.1228725422301
 Content-Type: text/html; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
 Content-Disposition: inline
 
+<div id="mb_0">
 <div>Hi,all</div>
 <div>I have encountered several bugs of system-config-lvm.</div>
 <div>The first one is if&nbsp;there is&nbsp;a logical volume entry in /etc/fstab</div>
@@ -103,6 +104,6 @@ Content-Disposition: inline
 <div>this problem exist in enterprise linux 5 and enterprise linux 5 U1.&nbsp;</div>
 <div>Is this a fixed bug?Any advice is appreciated!</div>
 <div>&nbsp;</div>
-<div>Thanks</div>
+<div>Thanks</div></div>
 
-------=_Part_42317_11028608.1228719828632--
+------=_Part_42812_2059893.1228725422301--
