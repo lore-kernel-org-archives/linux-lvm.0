@@ -1,14 +1,14 @@
-Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id mB9L4ZeG017227
+Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id mB9L4Zo7017229
 	for <linux-lvm@redhat.com>; Tue, 9 Dec 2008 16:04:35 -0500
 Received: from mail.bmsi.com (www.bmsi.com [24.248.44.156])
-	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id mB9L3bhS028494
-	for <linux-lvm@redhat.com>; Tue, 9 Dec 2008 16:03:38 -0500
-Date: Tue, 9 Dec 2008 16:03:36 -0500 (EST)
+	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id mB9L4P60005126
+	for <linux-lvm@redhat.com>; Tue, 9 Dec 2008 16:04:25 -0500
+Date: Tue, 9 Dec 2008 16:04:23 -0500 (EST)
 From: "Stuart D. Gathman" <stuart@bmsi.com>
 Subject: Re: [linux-lvm] shift PV from disk to raid device?
-In-Reply-To: <VA.000034fb.04c01c18@news.conactive.com>
-Message-ID: <Pine.LNX.4.64.0812091558080.18598@bmsred.bmsi.com>
+In-Reply-To: <VA.000034fc.04d542d4@news.conactive.com>
+Message-ID: <Pine.LNX.4.64.0812091604000.18598@bmsred.bmsi.com>
 References: <VA.000034ec.0056c987@news.conactive.com>
 	<493E48DE.3070705@redhat.com>
 	<Pine.LNX.4.64.0812091146560.16428@bmsred.bmsi.com>
@@ -17,7 +17,7 @@ References: <VA.000034ec.0056c987@news.conactive.com>
 	<Pine.LNX.4.64.0812091325290.17327@bmsred.bmsi.com>
 	<VA.000034f7.04a27ead@news.conactive.com>
 	<1228852584.32405.37.camel@firewall.xsintricity.com>
-	<VA.000034fb.04c01c18@news.conactive.com>
+	<VA.000034fc.04d542d4@news.conactive.com>
 MIME-Version: 1.0
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
@@ -35,27 +35,16 @@ To: maillists@conactive.com, LVM general discussion and development <linux-lvm@r
 
 On Tue, 9 Dec 2008, Kai Schaetzl wrote:
 
-> > The solution to this problem is to create the raid device with a
-> > superblock format of 1.1 or 1.2 (aka, -e 1.1 or -e 1.2).
+> Doug Ledford wrote on Tue, 09 Dec 2008 14:56:24 -0500:
 > 
-> Is this an option to mdraid? mdadm --create --help doesn't show me this 
-> option. Might mdadm-2.6.4-1.el5 on 5.2 be too old? Or is this an option to 
-> fdisk/sfdisk?
+> > superblock
+> 
+> another question: this is not the same as the filesystem superblock, 
+> right? e.g. "dumpe2fs -h /dev/mdn" shows me "Bad magic number in super-
+> block" on all raid arrays that have LVM on them. That's to be expected, 
+> right?
 
-I don't think changing the raid superblock will help.  I generally
-prefer having the superblock at the end - there are times when you
-*do* want sda3/sdb3 to alias md3:
-
- o many versions of grub will not install on md? - you have to unmount /boot,
- break mirror, mount sd? on /boot, install grub, unmount /boot, mount md? on
- /boot again, add back mirror copy of /boot.
-
- o Also, when recovering a system, it is helpful to be able to mount a
- partition directly, without setting up the raid devices.  I've had customers
- remove a mirror copy and mail me the disk.  I can then mount the filesystems
- directly, while they keep operating.
-
-The key is breaking the aliasing and copying the data to a proper md? PV.
+Yes, because they are PVs, not filesystems.
 
 -- 
 	      Stuart D. Gathman <stuart@bmsi.com>
