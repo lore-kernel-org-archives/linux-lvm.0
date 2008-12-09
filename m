@@ -1,15 +1,15 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id mB9KcfAN031502
-	for <linux-lvm@redhat.com>; Tue, 9 Dec 2008 15:38:41 -0500
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id mB9Ko2dQ007539
+	for <linux-lvm@redhat.com>; Tue, 9 Dec 2008 15:50:02 -0500
 Received: from d01.online-netz.de (d01.online-netz.de [213.160.90.171])
-	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id mB9KcOcV013388
-	for <linux-lvm@redhat.com>; Tue, 9 Dec 2008 15:38:25 -0500
+	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id mB9Knihw020380
+	for <linux-lvm@redhat.com>; Tue, 9 Dec 2008 15:49:44 -0500
 Received: from news.conactive.com (fandango.conactive.com [212.202.99.226])
-	by d01.online-netz.de (Postfix) with ESMTP id 3793CF9206
-	for <linux-lvm@redhat.com>; Tue,  9 Dec 2008 21:38:21 +0100 (CET)
-Date: Tue, 09 Dec 2008 21:38:21 +0100
+	by d01.online-netz.de (Postfix) with ESMTP id 349CDF9206
+	for <linux-lvm@redhat.com>; Tue,  9 Dec 2008 21:49:40 +0100 (CET)
+Date: Tue, 09 Dec 2008 21:49:40 +0100
 Subject: Re: [linux-lvm] shift PV from disk to raid device?
-Message-Id: <VA.000034fc.04d542d4@news.conactive.com>
+Message-Id: <VA.000034fd.04df9fe8@news.conactive.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 From: Kai Schaetzl <maillists@conactive.com>
@@ -39,12 +39,24 @@ To: LVM general discussion and development <linux-lvm@redhat.com>
 
 Doug Ledford wrote on Tue, 09 Dec 2008 14:56:24 -0500:
 
-> superblock
+> One thing that might be happening here (and I'm not sure since I'm not
+> an LVM expert) is that when the lvm stack finds the pv on /dev/sdb3
+> or /dev/sda3, it sees a full size partition (meaning it can access all
+> the way to the end of the device).
 
-another question: this is not the same as the filesystem superblock,=20
-right? e.g. "dumpe2fs -h /dev/mdn" shows me "Bad magic number in super-
-block" on all raid arrays that have LVM on them. That's to be expected,=20
-right?
+But this couldn't normally happen if I just created LVM on top of the md=20
+device, correct? However, as I created a PV on /dev/sda3, did not remove=20
+it and then create the md array on it and then the PV on the md device=20
+there might be something going on ... especially in case the array broke.
+
+> The solution to this problem is to create the raid device with a
+> superblock format of 1.1 or 1.2 (aka, -e 1.1 or -e 1.2).
+
+man mdadm gives the difference between 1.1 and 1.2 as 1.2 putting the RAID =
+
+superblock 4k after the beginning. Is this another measure against=20
+accidental overwrites? Would you recommend 1.2 if I were to use a newer=20
+superblock version?
 
 Kai
 
