@@ -1,13 +1,24 @@
-Message-ID: <493EB3A0.6020306@redhat.com>
-Date: Tue, 09 Dec 2008 18:06:24 +0000
-From: "Bryn M. Reeves" <bmr@redhat.com>
-MIME-Version: 1.0
+Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id mB9IIFkC005735
+	for <linux-lvm@redhat.com>; Tue, 9 Dec 2008 13:18:16 -0500
+Received: from d01.online-netz.de (d01.online-netz.de [213.160.90.171])
+	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id mB9IGmUL020842
+	for <linux-lvm@redhat.com>; Tue, 9 Dec 2008 13:17:23 -0500
+Received: from news.conactive.com (fandango.conactive.com [212.202.99.226])
+	by d01.online-netz.de (Postfix) with ESMTP id 5EC60F9206
+	for <linux-lvm@redhat.com>; Tue,  9 Dec 2008 19:16:43 +0100 (CET)
+Date: Tue, 09 Dec 2008 19:16:43 +0100
 Subject: Re: [linux-lvm] shift PV from disk to raid device?
-References: <VA.000034ec.0056c987@news.conactive.com>	<493E48DE.3070705@redhat.com>	<Pine.LNX.4.64.0812091146560.16428@bmsred.bmsi.com>
-	<VA.000034f2.04473327@news.conactive.com>
-In-Reply-To: <VA.000034f2.04473327@news.conactive.com>
-Content-Transfer-Encoding: 7bit
-Reply-To: bmr@redhat.com,
+Message-Id: <VA.000034f3.0453966b@news.conactive.com>
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+From: Kai Schaetzl <maillists@conactive.com>
+In-Reply-To: <493EAC86.6010104@redhat.com>
+References: <VA.000034ec.0056c987@news.conactive.com>
+	<493E48DE.3070705@redhat.com>
+	<Pine.LNX.4.64.0812091146560.16428@bmsred.bmsi.com>
+	<493EAC86.6010104@redhat.com>
+Reply-To: maillists@conactive.com,
 	LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -18,46 +29,27 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: maillists@conactive.com, LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="iso-8859-1"
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-Kai Schaetzl wrote:
-> Stuart D. Gathman wrote on Tue, 9 Dec 2008 11:54:08 -0500 (EST):
-> 
-> Hallo, thanks for the suggestions. I'll try to follow that logically and with 
-> possible commands, see below with comments/questions.
-> 
->> 1) remove sda from md2 array
-> 
-> mdadm /dev/md2 --fail /dev/sda3 --remove /dev/sda3
-> 
->> 2) use dd or pvremove to clear PV info in md2.  This should not
->>    affect sda since sda is removed from md2
-> 
-> md2 shouldn't have PV info. do you mean sdb3? (this would destroy my data on 
-> sdb3 then), so:
+Thanks for the long reply, Stuart. Still trying to digest it. As a quick=20
+info: I'm using CentoS 5.2 with mdadm-2.6.4-1.el5.
 
-Are you sure? If the MD array is a straightforward RAID1 mirror of two 
-SD devices then the PV data should also be visible on the MD device - 
-see my other post.
+I created a partition /dev/sda3, created /dev/md2 with it and then=20
+pvcreated /dev/sda3 mistakenly. I think (!) I remember that if I tried to=20
+do it the other way around (create PV and LVs on /dev/sda3, then create an =
 
-> vgchange dom0 -an (deactivate the LVs on sdb3)
-> pvremove /dev/sdb3 ?
-> After this point a pvdisplay should show /dev/sda3 as the active PV for dom0.
-> (At the moment I get: "using /dev/sdb3 not /dev/sda3")
-> 
->> 3) pvcreate md2 as a new PV and add to volume group
-> 
-> pvcreate /dev/md2
-> I fear I will get "device busy", not? (just a feeling from recent experience 
-> with juggling with md and lvm that are on top of each other)
-> vgextend dom0 /dev/md2
-> (dom0 then consists of sda3 and md2)
+md device from sda3) it would fail with device busy until I deactivated=20
+the LVs. Then I could do that and it seemingly worked and didn't destroy=20
+the data. But there were some error messages when using pv/lvdisplay if I=20
+remember right. I just did this for testing what I can do with all that as =
 
-If there are still active LVs (or if the LVM2 tools recognise md2 as a 
-PV) then you will get an error here - either that the device could not 
-be opened exclusively (LVs present) or that you can't initialise the new 
-PV without '-ff' as it is already part of a volume group.
+I had the chance to do it :-) before recreating the array the correct way=20
+and filling it with my backup data on sdb3. Unfortunately, then I=20
+overlooked this tiny bit and created the PV on the wrong device ...
 
-Regards,
-Bryn.
+Kai
+
+--=20
+Kai Sch=EF=BF=BDtzl, Berlin, Germany
+Get your web at Conactive Internet Services: http://www.conactive.com
