@@ -1,21 +1,28 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id mB9Id3Px020854
-	for <linux-lvm@redhat.com>; Tue, 9 Dec 2008 13:39:03 -0500
-Received: from mail.bmsi.com (www.bmsi.com [24.248.44.156])
-	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id mB9IcnUG001528
-	for <linux-lvm@redhat.com>; Tue, 9 Dec 2008 13:38:49 -0500
-Date: Tue, 9 Dec 2008 13:38:46 -0500 (EST)
-From: "Stuart D. Gathman" <stuart@bmsi.com>
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id mB9JhC0B029118
+	for <linux-lvm@redhat.com>; Tue, 9 Dec 2008 14:43:12 -0500
+Received: from d01.online-netz.de (d01.online-netz.de [213.160.90.171])
+	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id mB9JgwCm008689
+	for <linux-lvm@redhat.com>; Tue, 9 Dec 2008 14:42:59 -0500
+Received: from news.conactive.com (fandango.conactive.com [212.202.99.226])
+	by d01.online-netz.de (Postfix) with ESMTP id F1D60F90D1
+	for <linux-lvm@redhat.com>; Tue,  9 Dec 2008 20:42:53 +0100 (CET)
+Date: Tue, 09 Dec 2008 20:42:54 +0100
 Subject: Re: [linux-lvm] shift PV from disk to raid device?
-In-Reply-To: <VA.000034f4.0456d5b7@news.conactive.com>
-Message-ID: <Pine.LNX.4.64.0812091325290.17327@bmsred.bmsi.com>
+Message-Id: <VA.000034f7.04a27ead@news.conactive.com>
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+From: Kai Schaetzl <maillists@conactive.com>
+In-Reply-To: <Pine.LNX.4.64.0812091325290.17327@bmsred.bmsi.com>
 References: <VA.000034ec.0056c987@news.conactive.com>
 	<493E48DE.3070705@redhat.com>
 	<Pine.LNX.4.64.0812091146560.16428@bmsred.bmsi.com>
 	<VA.000034f2.04473327@news.conactive.com>
-	<493EB3A0.6020306@redhat.com> <VA.000034f4.0456d5b7@news.conactive.com>
-MIME-Version: 1.0
-Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
+	<493EB3A0.6020306@redhat.com>
+	<VA.000034f4.0456d5b7@news.conactive.com>
+	<Pine.LNX.4.64.0812091325290.17327@bmsred.bmsi.com>
+Reply-To: maillists@conactive.com,
+	LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -25,48 +32,78 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: maillists@conactive.com, LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="iso-8859-1"
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-On Tue, 9 Dec 2008, Kai Schaetzl wrote:
+Stuart D. Gathman wrote on Tue, 9 Dec 2008 13:38:46 -0500 (EST):
 
-> 
-> how could I confirm that? pvs? No, it gives me:
-> 
->   Found duplicate PV cs0HTBNIjwhdDD2fd6wvHTzAN61x8aWD: using /dev/sdb3 not 
-> /dev/sda3
->   PV         VG   Fmt  Attr PSize   PFree
->   /dev/sdb3  dom0 lvm2 a-   456.34G 350.34G
+> 1) create md2 from sda3 and sdb3
+> 2) pvcreate md2
+> 3) add sda3 to VG - LVM complains about dup and uses sdb3 instead
 
-Yes, there is a problem.  (Keep checking and double checking the procedure
-before executing.)  You need to know which device, (sda3, sdb3, md2), LVM is
-actually writing to.  
+A bit different. But thanks for this hint. I checked my bash history now.=20
+Short summary:
 
-Here is what I think you did:
+mdadm --create --verbose /dev/md3 --level=3D1 --raid-devices=3D2 /dev/sda3 =
+missing
+mdadm --detail /dev/md3
+pvcreate /dev/md3
+pvcreate /dev/md3 -ff
+vgcreate dom1 /dev/md3 (to avoid name clash with dom0 on sdb3)
+.. some lvcreate and other stuff
+mdadm --detail /dev/md3
+reboot
+vgchange dom1 -an
 
-1) create md2 from sda3 and sdb3
-2) pvcreate md2
-3) add sda3 to VG - LVM complains about dup and uses sdb3 instead
+vgrename dom1 dom0
 
-If LVM is current actually using sdb3, then you need to remove *sdb3* from md2,
-and pvmove the data to md2 (which will now have only sda3).
 
-Let's try again:
+vgchange dom0 -ay
+mdadm /dev/md3 -a /dev/sdb3
+reboot
 
-0.5) backup
-1) remove the partition LVM is writing to (sdb3) from md2 (otherwise all
-   writes to md2 will scribble on both),
-2) pvremove md2 (which hopefully does *not* contain the device LVM is
-   putting your data on) to erase duplicate metadata (or use dd - maybe
-   pvremove gets confused with dups)
-3) pvcreate md2 and add to VG
-4) pvmove data from sdb3 to md2
-5) reduce sdb3 from VG
-6) add sdb3 to md2 and sync
+So, I did it all alright. I was wrong with my assumption about using the wr=
+ong=20
+device for the PV. However, I only notice now that /dev/md3 is gone for goo=
+d,=20
+mdadm cannot find it. I had not been paying attention and thought that md2 =
+was=20
+the array in question. (Thinking md0=3Dsda1/sdb1, md1=3Dsda2/sdb2, md2=3Dsd=
+a3/sdb3, but=20
+I used md0=3Dsda1/sdb1, md2=3Dsda2/sdb2, md3=3Dsda3/sdb3). So I didn't noti=
+ce it.
 
--- 
-	      Stuart D. Gathman <stuart@bmsi.com>
-    Business Management Systems Inc.  Phone: 703 591-0911 Fax: 703 591-6154
-"Confutatis maledictis, flammis acribus addictis" - background song for
-a Microsoft sponsored "Where do you want to go from here?" commercial.
+Going further back in the history, it seems I forgot to pvremove the earlie=
+r=20
+existing PV /dev/sda3 (which had the same structure and data) before creati=
+ng the=20
+PV on /dev/md3. That's why I had to -ff /dev/md3 I assume. It seems that af=
+ter=20
+adding sdb3 to the array and rebooting the array dissolved completely and t=
+he=20
+existing PVs on sda3 and sdb3 came back into existence. And I thought it wa=
+s an=20
+effect of the mirror sync.
+
+So, I think I will just start over by removing /dev/sda3 now completely,
+recreating the raid array and then recreating the PV on it. I think I shoul=
+d then=20
+be able to pvmove the LVs from /dev/sdb3 to /dev/md3, right? Problem solved=
+. This=20
+time.
+
+However, as this is the second time that this or a similar array just vanis=
+hes I=20
+wonder if there's something else going on. e.g. some kind of unwanted inter=
+action=20
+between LVM and mdraid partitions. The other two raid arrays on the disk ar=
+e=20
+absolutely stable and don't use LVM.
+
+
+
+Kai
+
+--=20
+Kai Sch=EF=BF=BDtzl, Berlin, Germany
+Get your web at Conactive Internet Services: http://www.conactive.co
