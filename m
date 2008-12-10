@@ -1,28 +1,18 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id mBA0Vd59020970
-	for <linux-lvm@redhat.com>; Tue, 9 Dec 2008 19:31:39 -0500
-Received: from d01.online-netz.de (d01.online-netz.de [213.160.90.171])
-	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id mBA0VJYC007315
-	for <linux-lvm@redhat.com>; Tue, 9 Dec 2008 19:31:19 -0500
-Received: from news.conactive.com (fandango.conactive.com [212.202.99.226])
-	by d01.online-netz.de (Postfix) with ESMTP id 7F58AF922A
-	for <linux-lvm@redhat.com>; Wed, 10 Dec 2008 01:31:15 +0100 (CET)
-Date: Wed, 10 Dec 2008 01:31:15 +0100
-Subject: Re: [linux-lvm] shift PV from disk to raid device?
-Message-Id: <VA.00003502.05aa7bda@news.conactive.com>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-From: Kai Schaetzl <maillists@conactive.com>
-In-Reply-To: <VA.000034f7.04a27ead@news.conactive.com>
-References: <VA.000034ec.0056c987@news.conactive.com>
-	<493E48DE.3070705@redhat.com>
-	<Pine.LNX.4.64.0812091146560.16428@bmsred.bmsi.com>
-	<VA.000034f2.04473327@news.conactive.com>
-	<493EB3A0.6020306@redhat.com>
-	<VA.000034f4.0456d5b7@news.conactive.com>
-	<Pine.LNX.4.64.0812091325290.17327@bmsred.bmsi.com>
-	<VA.000034f7.04a27ead@news.conactive.com>
-Reply-To: maillists@conactive.com,
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id mBANf2MV026360
+	for <linux-lvm@redhat.com>; Wed, 10 Dec 2008 18:41:02 -0500
+Received: from web38305.mail.mud.yahoo.com (web38305.mail.mud.yahoo.com
+	[209.191.125.21])
+	by mx3.redhat.com (8.13.8/8.13.8) with SMTP id mBANek9v023164
+	for <linux-lvm@redhat.com>; Wed, 10 Dec 2008 18:40:46 -0500
+Date: Wed, 10 Dec 2008 15:40:45 -0800 (PST)
+From: Michael Jensen <beachhangar@yahoo.com>
+Subject: Re: FW: Re: [linux-lvm] lvm utilities, metadata format, CRC (checksum)
+In-Reply-To: <b072968d0812091511o268e89bamd1cf615a40ea60d3@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: multipart/alternative; boundary="0-1844795578-1228952445=:10513"
+Message-ID: <383338.10513.qm@web38305.mail.mud.yahoo.com>
+Reply-To: beachhangar@yahoo.com,
 	LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -33,36 +23,100 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="iso-8859-1"
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-Kai Schaetzl wrote on Tue, 09 Dec 2008 20:42:54 +0100:
+--0-1844795578-1228952445=:10513
+Content-Type: text/plain; charset=us-ascii
 
-> So, I think I will just start over by removing /dev/sda3 now completely,
-> recreating the raid array and then recreating the PV on it. I think I sho=
-uld then=20
-> be able to pvmove the LVs from /dev/sdb3 to /dev/md3, right?
+David - that is a comprehensive treatment of what I have been trying to accomplish - will test it in the next day or two - many thanks!!
 
-pvmove worked great. Here's what I used to get back to my wanted setup:
+--- On Tue, 12/9/08, David Robinson <zxvdr.au@gmail.com> wrote:
 
-boot with only one disk (sda)
-vgchange -an dom1
-pvremove /dev/sda3
-reboot
-mdadm --create /dev/md3 --level=3D1 --raid-devices=3D2 /dev/sda3 missing
-pvcreate /dev/md3
-pvextend dom0 /dev/md3
-pvmove /dev/sdb3 /dev/md3
-pvdisplay (shows /dev/sdb3 as empty now)
-pvremove /dev/sdb3
-vgreduce dom0 /dev/sdb3
-pvremove /dev/sdb3
-mdadm /dev/md3 -a /dev/sdb3
+From: David Robinson <zxvdr.au@gmail.com>
+Subject: Re: FW: Re: [linux-lvm] lvm utilities, metadata format, CRC (checksum)
+To: "Alasdair G Kergon" <agk@redhat.com>
+Cc: "LVM general discussion and development" <linux-lvm@redhat.com>
+Date: Tuesday, December 9, 2008, 3:11 PM
 
-Thanks for all the help and information to everyone!
+Looks like I'm able to edit the wiki page now - thanks :-)
 
-Kai
+I went to add Bryn's instructions then discovered that they're already
+in the wiki, so I've added an entry to the FAQ briefly explaining the
+issue and pointing to the existing page[1]. I added a few new pages
+too, one explaining the duplicate PV messages[2], and one for using
+LVM with SAN based snapshots[3]. If there's anything incorrect or
+unclear in there feel free to fix it or let me know.
 
---=20
-Kai Sch=EF=BF=BDtzl, Berlin, Germany
-Get your web at Conactive Internet Services: http://www.conactive.com
+The FAQ structure seems a bit strange to me. Would it be worthwhile
+moving to a structure like the Cluster FAQ uses[4]? Or even a flat
+page like the old cluster FAQ[5] (which I prefer - its easier to
+search)?
+
+[1] http://sources.redhat.com/lvm2/wiki/HardwareSnapshotRestore
+[2]
+http://sources.redhat.com/lvm2/wiki/FrequentlyAskedQuestions/FoundDuplicatePV
+[3]
+http://sources.redhat.com/lvm2/wiki/FrequentlyAskedQuestions/SANBasedSnapshots
+[4] http://sources.redhat.com/cluster/wiki/FAQ/CLVM
+[5] http://sources.redhat.com/cluster/faq.html
+
+--Dave
+
+On Sun, Dec 7, 2008 at 10:48 PM, Alasdair G Kergon <agk@redhat.com>
+wrote:
+> That reply was meant to be addressed to you, not Michael.
+>
+>
+
+_______________________________________________
+linux-lvm mailing list
+linux-lvm@redhat.com
+https://www.redhat.com/mailman/listinfo/linux-lvm
+read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+
+
+
+      
+--0-1844795578-1228952445=:10513
+Content-Type: text/html; charset=us-ascii
+
+<table cellspacing="0" cellpadding="0" border="0" ><tr><td valign="top" style="font: inherit;">David - that is a comprehensive treatment of what I have been trying to accomplish - will test it in the next day or two - many thanks!!<BR><BR>--- On <B>Tue, 12/9/08, David Robinson <I>&lt;zxvdr.au@gmail.com&gt;</I></B> wrote:<BR>
+<BLOCKQUOTE style="PADDING-LEFT: 5px; MARGIN-LEFT: 5px; BORDER-LEFT: rgb(16,16,255) 2px solid">From: David Robinson &lt;zxvdr.au@gmail.com&gt;<BR>Subject: Re: FW: Re: [linux-lvm] lvm utilities, metadata format, CRC (checksum)<BR>To: "Alasdair G Kergon" &lt;agk@redhat.com&gt;<BR>Cc: "LVM general discussion and development" &lt;linux-lvm@redhat.com&gt;<BR>Date: Tuesday, December 9, 2008, 3:11 PM<BR><BR><PRE>Looks like I'm able to edit the wiki page now - thanks :-)
+
+I went to add Bryn's instructions then discovered that they're already
+in the wiki, so I've added an entry to the FAQ briefly explaining the
+issue and pointing to the existing page[1]. I added a few new pages
+too, one explaining the duplicate PV messages[2], and one for using
+LVM with SAN based snapshots[3]. If there's anything incorrect or
+unclear in there feel free to fix it or let me know.
+
+The FAQ structure seems a bit strange to me. Would it be worthwhile
+moving to a structure like the Cluster FAQ uses[4]? Or even a flat
+page like the old cluster FAQ[5] (which I prefer - its easier to
+search)?
+
+[1] http://sources.redhat.com/lvm2/wiki/HardwareSnapshotRestore
+[2]
+http://sources.redhat.com/lvm2/wiki/FrequentlyAskedQuestions/FoundDuplicatePV
+[3]
+http://sources.redhat.com/lvm2/wiki/FrequentlyAskedQuestions/SANBasedSnapshots
+[4] http://sources.redhat.com/cluster/wiki/FAQ/CLVM
+[5] http://sources.redhat.com/cluster/faq.html
+
+--Dave
+
+On Sun, Dec 7, 2008 at 10:48 PM, Alasdair G Kergon &lt;agk@redhat.com&gt;
+wrote:
+&gt; That reply was meant to be addressed to you, not Michael.
+&gt;
+&gt;
+
+_______________________________________________
+linux-lvm mailing list
+linux-lvm@redhat.com
+https://www.redhat.com/mailman/listinfo/linux-lvm
+read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+</PRE></BLOCKQUOTE></td></tr></table><br>
+
+      
+--0-1844795578-1228952445=:10513--
