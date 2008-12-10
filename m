@@ -1,22 +1,29 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id mB9NBH2A023647
-	for <linux-lvm@redhat.com>; Tue, 9 Dec 2008 18:11:17 -0500
-Received: from mail-fx0-f10.google.com (mail-fx0-f10.google.com
-	[209.85.220.10])
-	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id mB9NB4il002989
-	for <linux-lvm@redhat.com>; Tue, 9 Dec 2008 18:11:05 -0500
-Received: by fxm3 with SMTP id 3so229905fxm.3
-	for <linux-lvm@redhat.com>; Tue, 09 Dec 2008 15:11:04 -0800 (PST)
-Message-ID: <b072968d0812091511o268e89bamd1cf615a40ea60d3@mail.gmail.com>
-Date: Tue, 9 Dec 2008 23:11:04 +0000
-From: "David Robinson" <zxvdr.au@gmail.com>
-Subject: Re: FW: Re: [linux-lvm] lvm utilities, metadata format, CRC (checksum)
-In-Reply-To: <20081207224843.GO26097@agk.fab.redhat.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-References: <20081207224843.GO26097@agk.fab.redhat.com>
-Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id mBA0Vd59020970
+	for <linux-lvm@redhat.com>; Tue, 9 Dec 2008 19:31:39 -0500
+Received: from d01.online-netz.de (d01.online-netz.de [213.160.90.171])
+	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id mBA0VJYC007315
+	for <linux-lvm@redhat.com>; Tue, 9 Dec 2008 19:31:19 -0500
+Received: from news.conactive.com (fandango.conactive.com [212.202.99.226])
+	by d01.online-netz.de (Postfix) with ESMTP id 7F58AF922A
+	for <linux-lvm@redhat.com>; Wed, 10 Dec 2008 01:31:15 +0100 (CET)
+Date: Wed, 10 Dec 2008 01:31:15 +0100
+Subject: Re: [linux-lvm] shift PV from disk to raid device?
+Message-Id: <VA.00003502.05aa7bda@news.conactive.com>
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+From: Kai Schaetzl <maillists@conactive.com>
+In-Reply-To: <VA.000034f7.04a27ead@news.conactive.com>
+References: <VA.000034ec.0056c987@news.conactive.com>
+	<493E48DE.3070705@redhat.com>
+	<Pine.LNX.4.64.0812091146560.16428@bmsred.bmsi.com>
+	<VA.000034f2.04473327@news.conactive.com>
+	<493EB3A0.6020306@redhat.com>
+	<VA.000034f4.0456d5b7@news.conactive.com>
+	<Pine.LNX.4.64.0812091325290.17327@bmsred.bmsi.com>
+	<VA.000034f7.04a27ead@news.conactive.com>
+Reply-To: maillists@conactive.com,
+	LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -26,33 +33,36 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: Alasdair G Kergon <agk@redhat.com>
-Cc: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="iso-8859-1"
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-Looks like I'm able to edit the wiki page now - thanks :-)
+Kai Schaetzl wrote on Tue, 09 Dec 2008 20:42:54 +0100:
 
-I went to add Bryn's instructions then discovered that they're already
-in the wiki, so I've added an entry to the FAQ briefly explaining the
-issue and pointing to the existing page[1]. I added a few new pages
-too, one explaining the duplicate PV messages[2], and one for using
-LVM with SAN based snapshots[3]. If there's anything incorrect or
-unclear in there feel free to fix it or let me know.
+> So, I think I will just start over by removing /dev/sda3 now completely,
+> recreating the raid array and then recreating the PV on it. I think I sho=
+uld then=20
+> be able to pvmove the LVs from /dev/sdb3 to /dev/md3, right?
 
-The FAQ structure seems a bit strange to me. Would it be worthwhile
-moving to a structure like the Cluster FAQ uses[4]? Or even a flat
-page like the old cluster FAQ[5] (which I prefer - its easier to
-search)?
+pvmove worked great. Here's what I used to get back to my wanted setup:
 
-[1] http://sources.redhat.com/lvm2/wiki/HardwareSnapshotRestore
-[2] http://sources.redhat.com/lvm2/wiki/FrequentlyAskedQuestions/FoundDuplicatePV
-[3] http://sources.redhat.com/lvm2/wiki/FrequentlyAskedQuestions/SANBasedSnapshots
-[4] http://sources.redhat.com/cluster/wiki/FAQ/CLVM
-[5] http://sources.redhat.com/cluster/faq.html
+boot with only one disk (sda)
+vgchange -an dom1
+pvremove /dev/sda3
+reboot
+mdadm --create /dev/md3 --level=3D1 --raid-devices=3D2 /dev/sda3 missing
+pvcreate /dev/md3
+pvextend dom0 /dev/md3
+pvmove /dev/sdb3 /dev/md3
+pvdisplay (shows /dev/sdb3 as empty now)
+pvremove /dev/sdb3
+vgreduce dom0 /dev/sdb3
+pvremove /dev/sdb3
+mdadm /dev/md3 -a /dev/sdb3
 
---Dave
+Thanks for all the help and information to everyone!
 
-On Sun, Dec 7, 2008 at 10:48 PM, Alasdair G Kergon <agk@redhat.com> wrote:
-> That reply was meant to be addressed to you, not Michael.
->
->
+Kai
+
+--=20
+Kai Sch=EF=BF=BDtzl, Berlin, Germany
+Get your web at Conactive Internet Services: http://www.conactive.com
