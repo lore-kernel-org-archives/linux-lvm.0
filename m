@@ -1,21 +1,18 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id mBC7cBxp012759
-	for <linux-lvm@redhat.com>; Fri, 12 Dec 2008 02:38:11 -0500
-Received: from s1.echoreply.us (s1.echoreply.us [216.146.143.192])
-	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id mBC7btIu011290
-	for <linux-lvm@redhat.com>; Fri, 12 Dec 2008 02:37:56 -0500
-Received: from [125.60.243.116] (helo=[10.92.1.100])
-	by s1.echoreply.us with esmtpsa (SSLv3:RC4-MD5:128) (Exim 4.69)
-	(envelope-from <echo@echoreply.us>) id 1LB2cm-0002sk-QZ
-	for linux-lvm@redhat.com; Fri, 12 Dec 2008 02:39:49 -0500
-From: Tim Post <echo@echoreply.us>
-Date: Fri, 12 Dec 2008 15:37:42 +0800
-Message-Id: <1229067462.5414.290.camel@localhost.localdomain>
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] Liblvm2
-Reply-To: echo@echoreply.us,
-	LVM general discussion and development <linux-lvm@redhat.com>
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id mBCAVdYL025291
+	for <linux-lvm@redhat.com>; Fri, 12 Dec 2008 05:31:39 -0500
+Received: from bay0-omc2-s36.bay0.hotmail.com (bay0-omc2-s36.bay0.hotmail.com
+	[65.54.246.172])
+	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id mBCAVI2J024229
+	for <linux-lvm@redhat.com>; Fri, 12 Dec 2008 05:31:19 -0500
+Message-ID: <BAY107-W39509E3F8F980D0E35961D8FF90@phx.gbl>
+Content-Type: multipart/alternative;
+	boundary="_8e478033-6d11-4246-8e10-e4529ab77f31_"
+From: Mark Reardon <markreardon4@hotmail.com>
+Date: Fri, 12 Dec 2008 10:31:18 +0000
+MIME-Version: 1.0
+Subject: [linux-lvm] DM-MPIO - Boot from SAN
+Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -25,27 +22,53 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: LVM general discussion and development <linux-lvm@redhat.com>
+To: linux-lvm@redhat.com
 
-Hi,
+--_8e478033-6d11-4246-8e10-e4529ab77f31_
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 
-I was reading the plans for liblvm2 here:
 
-https://fedoraproject.org/wiki/LVM/liblvm
+Hello All=2C
 
-I also looked at the API proposal, here:
+Would anybody have a document/procedure for how to setup DM-MPIO to boot fr=
+om SAN?
 
-https://fedoraproject.org/wiki/LVM/liblvm/api
+Thank=2C
 
-This looks very promising and I noticed that things are soon to get
-underway. Will the availability of alpha code be announced here for
-those who would like to test and provide feedback, or is there another
-list that I should subscribe to?
+Kind Regards=2C
 
-I am very much looking forward to working with this library :)
+Mark
 
-Thanks in advance!
+_________________________________________________________________
+Imagine a life without walls.=A0 See the possibilities.=20
+http://clk.atdmt.com/UKM/go/122465943/direct/01/=
 
-Cheers,
---Tim
+--_8e478033-6d11-4246-8e10-e4529ab77f31_
+Content-Type: text/html; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+
+<html>
+<head>
+<style>
+.hmmessage P
+{
+margin:0px=3B
+padding:0px
+}
+body.hmmessage
+{
+font-size: 10pt=3B
+font-family:Verdana
+}
+</style>
+</head>
+<body class=3D'hmmessage'>
+Hello All=2C<br><br>Would anybody have a document/procedure for how to setu=
+p DM-MPIO to boot from SAN?<br><br>Thank=2C<br><br>Kind Regards=2C<br><br>M=
+ark<br><br /><hr />Win John Lewis vouchers with BigSnapSearch.com  <a href=
+=3D'http://clk.atdmt.com/UKM/go/117442309/direct/01/' target=3D'_new'>Searc=
+h now</a></body>
+</html>=
+
+--_8e478033-6d11-4246-8e10-e4529ab77f31_--
