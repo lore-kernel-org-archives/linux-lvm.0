@@ -1,23 +1,22 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id mBDEnmsI013796
-	for <linux-lvm@redhat.com>; Sat, 13 Dec 2008 09:49:48 -0500
-Received: from smtp7-g19.free.fr (smtp7-g19.free.fr [212.27.42.64])
-	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id mBDEnXgp006034
-	for <linux-lvm@redhat.com>; Sat, 13 Dec 2008 09:49:34 -0500
-Received: from smtp7-g19.free.fr (localhost [127.0.0.1])
-	by smtp7-g19.free.fr (Postfix) with ESMTP id 4383AB00F9
-	for <linux-lvm@redhat.com>; Sat, 13 Dec 2008 15:49:33 +0100 (CET)
-Received: from [192.168.0.2] (JRAF.org [82.66.230.87])
-	by smtp7-g19.free.fr (Postfix) with ESMTP id A321CB015F
-	for <linux-lvm@redhat.com>; Sat, 13 Dec 2008 15:49:32 +0100 (CET)
-Message-ID: <4943CB7A.305@JRAF.org>
-Date: Sat, 13 Dec 2008 15:49:30 +0100
-From: BoD <BoD@JRAF.org>
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id mBDHdrFU010784
+	for <linux-lvm@redhat.com>; Sat, 13 Dec 2008 12:39:53 -0500
+Received: from mail-bw0-f20.google.com (mail-bw0-f20.google.com
+	[209.85.218.20])
+	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id mBDHbSsJ018299
+	for <linux-lvm@redhat.com>; Sat, 13 Dec 2008 12:37:29 -0500
+Received: by bwz13 with SMTP id 13so6708424bwz.3
+	for <linux-lvm@redhat.com>; Sat, 13 Dec 2008 09:37:28 -0800 (PST)
+Message-ID: <b072968d0812130937y64eca7dcjb6863f95397d8e7e@mail.gmail.com>
+Date: Sat, 13 Dec 2008 17:37:28 +0000
+From: "David Robinson" <zxvdr.au@gmail.com>
+Subject: Re: [linux-lvm] Help after disk crash
+In-Reply-To: <4943CB7A.305@JRAF.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] Help after disk crash
-Reply-To: BoD@JRAF.org,
-	LVM general discussion and development <linux-lvm@redhat.com>
+Content-Disposition: inline
+References: <4943CB7A.305@JRAF.org>
+Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -27,231 +26,44 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: linux-lvm@redhat.com
+Content-Type: text/plain; charset="us-ascii"
+To: BoD@jraf.org, LVM general discussion and development <linux-lvm@redhat.com>
 
-Hi!
-I recently bought a new hard drive and used LVM to add it to my system. 
-Unfortunately the disk just crashed. This is not too bad since I have a 
-backup of the most important files.
-But currently my system can't work correctly as the crashed disk 
-belonged to the vg that contains /usr, /home, /opt, /var and /tmp. (It 
-also contains a /docs which I have a backup of, so it doesn't matter if 
-I lose it.) The system still boots though and I can login as root.
+On Sat, Dec 13, 2008 at 2:49 PM, BoD <BoD@jraf.org> wrote:
+> Hi!
+> I recently bought a new hard drive and used LVM to add it to my system.
+> Unfortunately the disk just crashed. This is not too bad since I have a
+> backup of the most important files.
+> But currently my system can't work correctly as the crashed disk belonged to
+> the vg that contains /usr, /home, /opt, /var and /tmp. (It also contains a
+> /docs which I have a backup of, so it doesn't matter if I lose it.) The
+> system still boots though and I can login as root.
+>
+> The vg is on pv0, pv1 and pv2 - It is pv2 that crashed.
+> I am kind of a newbie so I don't know how to proceed, but I believe it
+> should be possible to resize the vg to only use the first 2 pvs.
+>
+> From what I see on my /etc/lvm/backup/vg file (see below), it seems that
+> only the 'docs' lv uses pv2, I think it is a good sign, right?
 
-The vg is on pv0, pv1 and pv2 - It is pv2 that crashed.
-I am kind of a newbie so I don't know how to proceed, but I believe it 
-should be possible to resize the vg to only use the first 2 pvs.
+yep, and it does look like the docs LV was the only volume using pv2.
 
- From what I see on my /etc/lvm/backup/vg file (see below), it seems 
-that only the 'docs' lv uses pv2, I think it is a good sign, right?
+> So far, after googling a bit I tried vgscan -P and vgchange -Pay and tried
+> to mount /dev/vg/usr but it didn't work with the following error: EXT3-fs:
+> INFO: recovery required on readonly filesystem. / write access unavailable,
+> cannot proceed.
 
-So far, after googling a bit I tried vgscan -P and vgchange -Pay and 
-tried to mount /dev/vg/usr but it didn't work with the following error: 
-EXT3-fs: INFO: recovery required on readonly filesystem. / write access 
-unavailable, cannot proceed.
+That sounds like the volume group has been activated but there are
+problems with the filesystem (but that does sound strange because usr
+wasn't using pv2). Are you able to mount the other filesystems OK? If
+so, then I'd run a fsck on /dev/vg/usr (make sure the filesystem isn't
+mounted when you run fsck... not that you're able to atm :-) ).
 
-Any help is greatly appreciated! Thanks a lot.
+"vgchange -Pay" will allow you to enable the volume group, but its
+only temporary, ie you'll still have problems whilst booting (the VG
+needs to be consistent at boot time). If the other volumes (and the
+filesystems on them) are OK and running a fsck on usr fixes the
+problem then use "vgreduce --removemissing vg" to permanently remove
+pv2 from the volume group.
 
-BoD
-
-
-
-Here is my /etc/lvm/backup/vg:
-==================
-# Generated by LVM2 version 2.02.36 (2008-04-29): Sat Nov 15 17:19:28 2008
-
-contents = "Text Format Volume Group"
-version = 1
-
-description = "Created *after* executing 'lvextend /dev/vg/docs /dev/sda'"
-
-creation_host = "server"    # Linux server 2.6.25-gentoo-r7 #3 SMP Mon 
-Nov 10 01:14:23 CET 2008 i686
-creation_time = 1226765968    # Sat Nov 15 17:19:28 2008
-
-vg {
-    id = "PH2tSI-13yC-X0oh-vn11-a0n6-1ho5-6UiCs9"
-    seqno = 15
-    status = ["RESIZEABLE", "READ", "WRITE"]
-    extent_size = 8192        # 4 Megabytes
-    max_lv = 0
-    max_pv = 0
-
-    physical_volumes {
-
-        pv0 {
-            id = "eGnP16-zOOk-CR6Y-sDib-27kL-T83J-d6oRp9"
-            device = "/dev/hda4"    # Hint only
-
-            status = ["ALLOCATABLE"]
-            dev_size = 223656930    # 106.648 Gigabytes
-            pe_start = 384
-            pe_count = 27301    # 106.645 Gigabytes
-        }
-
-        pv1 {
-            id = "6DnMKc-Rpb2-Rq52-xsXY-3Nrw-ZJoZ-YAwf1C"
-            device = "/dev/hdb1"    # Hint only
-
-            status = ["ALLOCATABLE"]
-            dev_size = 240107427    # 114.492 Gigabytes
-            pe_start = 384
-            pe_count = 29309    # 114.488 Gigabytes
-        }
-
-        pv2 {
-            id = "9RSjlM-bZ8W-8cC0-s122-bYTo-jyci-DZOSpM"
-            device = "/dev/sda"    # Hint only
-
-            status = ["ALLOCATABLE"]
-            dev_size = 1953525168    # 931.513 Gigabytes
-            pe_start = 384
-            pe_count = 238467    # 931.512 Gigabytes
-        }
-    }
-
-    logical_volumes {
-
-        usr {
-            id = "0CY7Ox-x0UG-LVXl-jhEk-IrJG-ig8l-ELPI3C"
-            status = ["READ", "WRITE", "VISIBLE"]
-            segment_count = 2
-
-            segment1 {
-                start_extent = 0
-                extent_count = 2560    # 10 Gigabytes
-
-                type = "striped"
-                stripe_count = 1    # linear
-
-                stripes = [
-                    "pv1", 0
-                ]
-            }
-            segment2 {
-                start_extent = 2560
-                extent_count = 1280    # 5 Gigabytes
-
-                type = "striped"
-                stripe_count = 1    # linear
-
-                stripes = [
-                    "pv1", 4352
-                ]
-            }
-        }
-
-        home {
-            id = "C26mF3-f25l-K3ct-NgKQ-A6Mb-OgOn-ZtqlAt"
-            status = ["READ", "WRITE", "VISIBLE"]
-            segment_count = 1
-
-            segment1 {
-                start_extent = 0
-                extent_count = 1280    # 5 Gigabytes
-
-                type = "striped"
-                stripe_count = 1    # linear
-
-                stripes = [
-                    "pv0", 0
-                ]
-            }
-        }
-
-        opt {
-            id = "9xQxKJ-KrpD-iDny-6SAh-dFyY-4URm-0qAH6l"
-            status = ["READ", "WRITE", "VISIBLE"]
-            segment_count = 1
-
-            segment1 {
-                start_extent = 0
-                extent_count = 1280    # 5 Gigabytes
-
-                type = "striped"
-                stripe_count = 1    # linear
-
-                stripes = [
-                    "pv1", 2560
-                ]
-            }
-        }
-
-        var {
-            id = "1Vt3kw-xlHL-Rh66-cYoQ-f5QP-5D9f-Inan21"
-            status = ["READ", "WRITE", "VISIBLE"]
-            segment_count = 1
-
-            segment1 {
-                start_extent = 0
-                extent_count = 2560    # 10 Gigabytes
-
-                type = "striped"
-                stripe_count = 1    # linear
-
-                stripes = [
-                    "pv0", 1280
-                ]
-            }
-        }
-
-        tmp {
-            id = "QcoIcV-tSUP-iJ9J-MjZE-cI0n-8fEG-20Gb08"
-            status = ["READ", "WRITE", "VISIBLE"]
-            segment_count = 1
-
-            segment1 {
-                start_extent = 0
-                extent_count = 512    # 2 Gigabytes
-
-                type = "striped"
-                stripe_count = 1    # linear
-
-                stripes = [
-                    "pv1", 3840
-                ]
-            }
-        }
-
-        docs {
-            id = "5xHiv1-uzBg-kd8c-jdJQ-QuOa-eFei-w4hUbl"
-            status = ["READ", "WRITE", "VISIBLE"]
-            segment_count = 3
-
-            segment1 {
-                start_extent = 0
-                extent_count = 23677    # 92.4883 Gigabytes
-
-                type = "striped"
-                stripe_count = 1    # linear
-
-                stripes = [
-                    "pv1", 5632
-                ]
-            }
-            segment2 {
-                start_extent = 23677
-                extent_count = 23461    # 91.6445 Gigabytes
-
-                type = "striped"
-                stripe_count = 1    # linear
-
-                stripes = [
-                    "pv0", 3840
-                ]
-            }
-            segment3 {
-                start_extent = 47138
-                extent_count = 238467    # 931.512 Gigabytes
-
-                type = "striped"
-                stripe_count = 1    # linear
-
-                stripes = [
-                    "pv2", 0
-                ]
-            }
-        }
-    }
-}
+--Dave
