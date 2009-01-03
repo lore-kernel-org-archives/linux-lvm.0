@@ -1,17 +1,23 @@
-Received: from agk.fab.redhat.com (agk.fab.redhat.com [10.33.0.19])
-	by ns3.rdu.redhat.com (8.13.8/8.13.8) with ESMTP id n03ISqJi018855
-	for <linux-lvm@redhat.com>; Sat, 3 Jan 2009 13:28:52 -0500
-Received: from agk by agk.fab.redhat.com with local (Exim 4.34)
-	id 1LJBEy-0005Mt-FE
-	for linux-lvm@redhat.com; Sat, 03 Jan 2009 18:28:52 +0000
-Date: Sat, 3 Jan 2009 18:28:52 +0000
-From: Alasdair G Kergon <agk@redhat.com>
+Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id n03Ia8Vm017038
+	for <linux-lvm@redhat.com>; Sat, 3 Jan 2009 13:36:08 -0500
+Received: from mail-bw0-f20.google.com (mail-bw0-f20.google.com
+	[209.85.218.20])
+	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id n03IZqi0022149
+	for <linux-lvm@redhat.com>; Sat, 3 Jan 2009 13:35:52 -0500
+Received: by bwz13 with SMTP id 13so18555458bwz.3
+	for <linux-lvm@redhat.com>; Sat, 03 Jan 2009 10:35:50 -0800 (PST)
+Message-ID: <68c491a60901031035q43ab16f4td3c3e6856ece91fa@mail.gmail.com>
+Date: Sat, 3 Jan 2009 19:35:50 +0100
+From: "=?ISO-8859-1?Q?Martin_Schr=F6der?=" <martin@oneiros.de>
+Sender: pdftex@gmail.com
 Subject: Re: [linux-lvm] LVM mapper and device names
-Message-ID: <20090103182852.GG11060@agk.fab.redhat.com>
-References: <b08d3e870901030855i7d8f7d25x4dee43a6fc93a397@mail.gmail.com>
-Mime-Version: 1.0
+In-Reply-To: <20090103182852.GG11060@agk.fab.redhat.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Content-Disposition: inline
-In-Reply-To: <b08d3e870901030855i7d8f7d25x4dee43a6fc93a397@mail.gmail.com>
+References: <b08d3e870901030855i7d8f7d25x4dee43a6fc93a397@mail.gmail.com>
+	<20090103182852.GG11060@agk.fab.redhat.com>
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -23,17 +29,20 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-On Sat, Jan 03, 2009 at 05:55:37PM +0100, Markus Baertschi wrote:
-> /dev/mapper/datavg-work on /work type jfs (rw)
- 
-> When I now have a mounted filesystem, how can I
-> determine reliably which is the original lv I've used ?
+2009/1/3 Alasdair G Kergon <agk@redhat.com>:
+>> When I now have a mounted filesystem, how can I
+>> determine reliably which is the original lv I've used ?
+>
+> lvs -o vg_name,name /dev/mapper/datavg-work
 
-lvs -o vg_name,name /dev/mapper/datavg-work
+Volume group "mapper" not found
 
-Alasdair
--- 
-agk@redhat.com
+> sudo /sbin/lvs --version
+  LVM version:     2.02.13 (2006-10-27)
+  Library version: 1.02.12 (2006-10-13)
+  Driver version:  4.7.0
+
+Best
+   Martin
