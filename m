@@ -1,19 +1,20 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id n03CiHhl030325
-	for <linux-lvm@redhat.com>; Sat, 3 Jan 2009 07:44:17 -0500
-Received: from mo-p00-ob.rzone.de (mo-p00-ob.rzone.de [81.169.146.160])
-	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id n03ChsJ5020793
-	for <linux-lvm@redhat.com>; Sat, 3 Jan 2009 07:43:55 -0500
-Received: from [192.168.255.25] (p5791639D.dip.t-dialin.net [87.145.99.157])
-	by post.strato.de (klopstock mo56) (RZmta 18.7)
-	with ESMTP id 502ed8l03CZe58 for <linux-lvm@redhat.com>;
-	Sat, 3 Jan 2009 13:43:53 +0100 (MET)
-From: me <lvm@soulsweeper.org>
-Date: Sat, 03 Jan 2009 13:43:50 +0100
-Message-Id: <1230986630.9671.40.camel@fraws70-gentoo>
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] Please help, [Incorrect metadata area header checksum]
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id n03GtxHq025380
+	for <linux-lvm@redhat.com>; Sat, 3 Jan 2009 11:55:59 -0500
+Received: from mail-bw0-f20.google.com (mail-bw0-f20.google.com
+	[209.85.218.20])
+	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id n03GtdOr020686
+	for <linux-lvm@redhat.com>; Sat, 3 Jan 2009 11:55:39 -0500
+Received: by bwz13 with SMTP id 13so18495018bwz.3
+	for <linux-lvm@redhat.com>; Sat, 03 Jan 2009 08:55:38 -0800 (PST)
+Message-ID: <b08d3e870901030855i7d8f7d25x4dee43a6fc93a397@mail.gmail.com>
+Date: Sat, 3 Jan 2009 17:55:37 +0100
+From: "Markus Baertschi" <markus@markus.org>
+Sender: markus.baertschi@gmail.com
+MIME-Version: 1.0
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: [linux-lvm] LVM mapper and device names
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -24,45 +25,34 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="iso-8859-1"
 To: linux-lvm@redhat.com
 
-Hello list,
+I'm confused on how to navigate forth and back between
+the /dev entries of lv's and what dm makes of it.
 
-i've got a (hopefully not) serious problem with my lvm installation.
+If I craeate a lv 'work' in my vg 'datavg' I'll get a /dev
+entry /dev/datavg/work to work with (mount/mkfs, etc).
+But after mounting a 'mount' shows the same lv as
+/dev/mapper/datavg-work.
 
-I did some changes in my XEN-networking and wanted to reboot my server.
-For this I did shutdown every DOM-U and tried to stop lvm with 'vgchange
--a n'. At this point lvm states 'Incorrect metadata area header
-checksum', before this every worked fine. I tried to start lvm
-immediately without success, a reboot didn't help either.
-I searched the net (almost two days now) for a solution, without
-success.
+Example:
+root@altair:~# lvdisplay /dev/datavg/work
+  --- Logical volume ---
+  LV Name                /dev/datavg/work
+...
+root@altair:~# mount /dev/datavg/work /work
+root@altair:~# mount | grep work
+/dev/mapper/datavg-work on /work type jfs (rw)
 
-1) It's not a filter-issue (lvm.conf), only loop-devices are scanned.
-2) vgcfgrestore doesn't work either (tried only testrun)
-3) pvcreate --uuid xxx --restorefile /etc/lvm/archive/xxx_00039.vg xxx
-says, the uuid is already in use on /dev/loopX (correct device). I
-didn't try the '--force'-option, I'm a coward at last :(
+When I now have a mounted filesystem, how can I
+determine reliably which is the original lv I've used ?
+Do I have to dissect what 'mount' shows or is there
+an official way to do it ?
 
-The last change (and reboot) was in november. I added two new drives and
-growed the raid, rebooted the server and growed one lv. All without any
-error. There's only one PV.
-
-If you need any information (configs etc), I'll post everything ;)
-
-
---- snip ---
-
-$>pvscan
-  Incorrect metadata area header checksum
-  Incorrect metadata area header checksum
-  WARNING: Volume Group alice is not consistent
-  PV /dev/loop53   VG alice   lvm2 [6.37 TB / 408.57 GB free]
-  Total: 1 [376.57 GB] / in use: 1 [376.57 GB] / in no VG: 0 [0   ]
-
-
-Any help is appreciated!
-
-greets
-ralf
+Markus
+--=20
+  Markus Baertschi             Phone: ++41 (21) 807 1677
+  Bas du Ross=C3=A9 16             Fax  : ++41 (21) 807 1678
+  CH-1163, Etoy                Email: markus@markus.org
+  Switzerland                  Homepage: www.markus.org
