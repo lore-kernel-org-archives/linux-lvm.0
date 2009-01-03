@@ -1,23 +1,20 @@
-Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id n03Ia8Vm017038
-	for <linux-lvm@redhat.com>; Sat, 3 Jan 2009 13:36:08 -0500
-Received: from mail-bw0-f20.google.com (mail-bw0-f20.google.com
-	[209.85.218.20])
-	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id n03IZqi0022149
-	for <linux-lvm@redhat.com>; Sat, 3 Jan 2009 13:35:52 -0500
-Received: by bwz13 with SMTP id 13so18555458bwz.3
-	for <linux-lvm@redhat.com>; Sat, 03 Jan 2009 10:35:50 -0800 (PST)
-Message-ID: <68c491a60901031035q43ab16f4td3c3e6856ece91fa@mail.gmail.com>
-Date: Sat, 3 Jan 2009 19:35:50 +0100
-From: "=?ISO-8859-1?Q?Martin_Schr=F6der?=" <martin@oneiros.de>
-Sender: pdftex@gmail.com
+Received: from agk.fab.redhat.com (agk.fab.redhat.com [10.33.0.19])
+	by ns3.rdu.redhat.com (8.13.8/8.13.8) with ESMTP id n03IeA9n019986
+	for <linux-lvm@redhat.com>; Sat, 3 Jan 2009 13:40:10 -0500
+Received: from agk by agk.fab.redhat.com with local (Exim 4.34)
+	id 1LJBPt-0005NB-Rn
+	for linux-lvm@redhat.com; Sat, 03 Jan 2009 18:40:09 +0000
+Date: Sat, 3 Jan 2009 18:40:09 +0000
+From: Alasdair G Kergon <agk@redhat.com>
 Subject: Re: [linux-lvm] LVM mapper and device names
-In-Reply-To: <20090103182852.GG11060@agk.fab.redhat.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
+Message-ID: <20090103184009.GH11060@agk.fab.redhat.com>
 References: <b08d3e870901030855i7d8f7d25x4dee43a6fc93a397@mail.gmail.com>
 	<20090103182852.GG11060@agk.fab.redhat.com>
+	<68c491a60901031035q43ab16f4td3c3e6856ece91fa@mail.gmail.com>
+Mime-Version: 1.0
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <68c491a60901031035q43ab16f4td3c3e6856ece91fa@mail.gmail.com>
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -28,21 +25,17 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="iso-8859-1"
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-2009/1/3 Alasdair G Kergon <agk@redhat.com>:
->> When I now have a mounted filesystem, how can I
->> determine reliably which is the original lv I've used ?
->
-> lvs -o vg_name,name /dev/mapper/datavg-work
+On Sat, Jan 03, 2009 at 07:35:50PM +0100, Martin Schr=EF=BF=BDder wrote:
+> Volume group "mapper" not found
+=20
+>   LVM version:     2.02.13 (2006-10-27)
 
-Volume group "mapper" not found
+Time to update then - that one's over two years old:-)
+It got added in March 2007.
 
-> sudo /sbin/lvs --version
-  LVM version:     2.02.13 (2006-10-27)
-  Library version: 1.02.12 (2006-10-13)
-  Driver version:  4.7.0
-
-Best
-   Martin
+Alasdair
+--=20
+agk@redhat.com
