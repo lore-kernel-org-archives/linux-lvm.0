@@ -1,16 +1,12 @@
-Received: from pobox.fab.redhat.com (pobox.fab.redhat.com [10.33.63.12])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id n06C9jBI000945
-	for <linux-lvm@redhat.com>; Tue, 6 Jan 2009 07:09:46 -0500
-Received: from breeves.fab.redhat.com (breeves.fab.redhat.com [10.33.0.40])
-	by pobox.fab.redhat.com (8.13.1/8.13.1) with ESMTP id n06C9jnH017339
-	for <linux-lvm@redhat.com>; Tue, 6 Jan 2009 07:09:45 -0500
-Message-ID: <496349D8.8000800@redhat.com>
-Date: Tue, 06 Jan 2009 12:08:56 +0000
+Message-ID: <496391C6.7010502@redhat.com>
+Date: Tue, 06 Jan 2009 17:15:50 +0000
 From: "Bryn M. Reeves" <bmr@redhat.com>
 MIME-Version: 1.0
 Subject: Re: [linux-lvm] pvcreate & vgcfgrestore won't work
-References: <1231217144.7947.19.camel@fraws70-gentoo>
-In-Reply-To: <1231217144.7947.19.camel@fraws70-gentoo>
+References: <1231217144.7947.19.camel@fraws70-gentoo>	
+	<496349D8.8000800@redhat.com>
+	<1231260819.7947.29.camel@fraws70-gentoo>
+In-Reply-To: <1231260819.7947.29.camel@fraws70-gentoo>
 Content-Transfer-Encoding: 7bit
 Reply-To: bmr@redhat.com,
 	LVM general discussion and development <linux-lvm@redhat.com>
@@ -24,47 +20,40 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: LVM general discussion and development <linux-lvm@redhat.com>
+To: SoulSweeper <soulsweeper@soulsweeper.org>
+Cc: LVM general discussion and development <linux-lvm@redhat.com>
 
-Ralf Sparr wrote:
-> Hi list,
+SoulSweeper wrote:
+> On Tue, 2009-01-06 at 12:08 +0000, Bryn M. Reeves wrote:
+>> Ralf Sparr wrote:
+>>> Hi list,
+>>>
+>>> as mentioned in my earlier post, LVM complains about
+>>> "Incorrect metadata area header checksum". As this occurs
+>>> often (many questions, rarely answers in the list) I tried to create
+>>> some 'new' via
+>> Running pvcreate followed by vgcfgrestore is the correct way to fix a 
+>> broken MDA checksum - I've used this many times to recover from these 
+>> situations.
 > 
-> as mentioned in my earlier post, LVM complains about
-> "Incorrect metadata area header checksum". As this occurs
-> often (many questions, rarely answers in the list) I tried to create
-> some 'new' via
+> Hmmm, doesn\t sound very promising. Why does this happen? The error
+> directly occured after shutting the lvm down. I wanted to reboot the
+> server to check a new network-configuration (no LVM changes at all).
+> loop-aes & md were still up.
 
-Running pvcreate followed by vgcfgrestore is the correct way to fix a 
-broken MDA checksum - I've used this many times to recover from these 
-situations.
+It's hard to say - when I've encountered this in the past, I've usually 
+been doing things that I'd expect might introduce a bit of "excitement" 
+to the system, e.g. reproducing bugs that involve crashing the kernel 
+with a lot of I/O happening.
 
-> # pvcreate --force --uuid 7vFXd3-MYnt-TVdG-luYr-rDPn-o8a1-vjewWk
-> --restorefile /etc/lvm/archive/alice_00038.vg alice
+I am not aware of any deterministic steps that would trigger this under 
+normal circumstances (and I'd consider it a bug if I was :) - when I've 
+needed to demonstrate how to recover from this in the past I've had to 
+resort to writing code to deliberately trash the checksums.
 
-Your syntax is wrong. You've got:
-
-pvcreate -f -u=$UUID --restorefile=/path $VGNAME
-
-But pvcreate is expecting a PV path as the last argument (the device to 
-be initialised as a PV), not a VG name (are you confusing this with the 
-vgcfgrestore arguments?).
-
-This works just fine for me:
-
-# pvcreate -f --uuid 6cxF7v-f0XU-3EK1-QhA2-YSVT-yEe3-vQnE09 
---restorefile /etc/lvm/archive/l0_00000.vg /dev/loop0
-   Can't initialize physical volume "/dev/loop0" of volume group "l0" 
-without -ff
-
-# pvcreate -ff --uuid 6cxF7v-f0XU-3EK1-QhA2-YSVT-yEe3-vQnE09 
---restorefile /etc/lvm/archive/l0_00000.vg /dev/loop0
-Really INITIALIZE physical volume "/dev/loop0" of volume group "l0" [y/n]? y
-   WARNING: Forcing physical volume creation on /dev/loop0 of volume 
-group "l0"
-   Physical volume "/dev/loop0" successfully created
-
-# vgcfgrestore -f /etc/lvm/archive/l0_00000.vg l0
-   Restored volume group l0
+You mention that you're using loop-aes and md, I wonder if maybe 
+something's being cached or not flushed to disk correctly when you 
+reboot that could be causing corruption?
 
 Regards,
 Bryn.
