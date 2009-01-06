@@ -1,17 +1,16 @@
 Received: from pobox.fab.redhat.com (pobox.fab.redhat.com [10.33.63.12])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id n06AmD4H031977
-	for <linux-lvm@redhat.com>; Tue, 6 Jan 2009 05:48:13 -0500
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id n06C9jBI000945
+	for <linux-lvm@redhat.com>; Tue, 6 Jan 2009 07:09:46 -0500
 Received: from breeves.fab.redhat.com (breeves.fab.redhat.com [10.33.0.40])
-	by pobox.fab.redhat.com (8.13.1/8.13.1) with ESMTP id n06AmC01009687
-	for <linux-lvm@redhat.com>; Tue, 6 Jan 2009 05:48:12 -0500
-Message-ID: <496336BC.9090805@redhat.com>
-Date: Tue, 06 Jan 2009 10:47:24 +0000
+	by pobox.fab.redhat.com (8.13.1/8.13.1) with ESMTP id n06C9jnH017339
+	for <linux-lvm@redhat.com>; Tue, 6 Jan 2009 07:09:45 -0500
+Message-ID: <496349D8.8000800@redhat.com>
+Date: Tue, 06 Jan 2009 12:08:56 +0000
 From: "Bryn M. Reeves" <bmr@redhat.com>
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] LVM2 on-disk layout
-References: <ffa0f8300901050222y2083fbb1pbbc4bdb5c10aeb5a@mail.gmail.com>
-	<Pine.LNX.4.64.0901051346580.508@bmsred.bmsi.com>
-In-Reply-To: <Pine.LNX.4.64.0901051346580.508@bmsred.bmsi.com>
+Subject: Re: [linux-lvm] pvcreate & vgcfgrestore won't work
+References: <1231217144.7947.19.camel@fraws70-gentoo>
+In-Reply-To: <1231217144.7947.19.camel@fraws70-gentoo>
 Content-Transfer-Encoding: 7bit
 Reply-To: bmr@redhat.com,
 	LVM general discussion and development <linux-lvm@redhat.com>
@@ -27,11 +26,45 @@ List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-Stuart D. Gathman wrote:
->> 3) Why the metadata inside MDA wraps around, instead of the offset
->> pointing to the start of metadata?
+Ralf Sparr wrote:
+> Hi list,
+> 
+> as mentioned in my earlier post, LVM complains about
+> "Incorrect metadata area header checksum". As this occurs
+> often (many questions, rarely answers in the list) I tried to create
+> some 'new' via
 
-It's a ring (circular) buffer.
+Running pvcreate followed by vgcfgrestore is the correct way to fix a 
+broken MDA checksum - I've used this many times to recover from these 
+situations.
+
+> # pvcreate --force --uuid 7vFXd3-MYnt-TVdG-luYr-rDPn-o8a1-vjewWk
+> --restorefile /etc/lvm/archive/alice_00038.vg alice
+
+Your syntax is wrong. You've got:
+
+pvcreate -f -u=$UUID --restorefile=/path $VGNAME
+
+But pvcreate is expecting a PV path as the last argument (the device to 
+be initialised as a PV), not a VG name (are you confusing this with the 
+vgcfgrestore arguments?).
+
+This works just fine for me:
+
+# pvcreate -f --uuid 6cxF7v-f0XU-3EK1-QhA2-YSVT-yEe3-vQnE09 
+--restorefile /etc/lvm/archive/l0_00000.vg /dev/loop0
+   Can't initialize physical volume "/dev/loop0" of volume group "l0" 
+without -ff
+
+# pvcreate -ff --uuid 6cxF7v-f0XU-3EK1-QhA2-YSVT-yEe3-vQnE09 
+--restorefile /etc/lvm/archive/l0_00000.vg /dev/loop0
+Really INITIALIZE physical volume "/dev/loop0" of volume group "l0" [y/n]? y
+   WARNING: Forcing physical volume creation on /dev/loop0 of volume 
+group "l0"
+   Physical volume "/dev/loop0" successfully created
+
+# vgcfgrestore -f /etc/lvm/archive/l0_00000.vg l0
+   Restored volume group l0
 
 Regards,
 Bryn.
