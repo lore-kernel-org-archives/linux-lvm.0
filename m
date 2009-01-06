@@ -1,20 +1,14 @@
-Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id n064k21q032001
-	for <linux-lvm@redhat.com>; Mon, 5 Jan 2009 23:46:02 -0500
-Received: from mo-p00-ob.rzone.de (mo-p00-ob.rzone.de [81.169.146.161])
-	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id n064jlda020904
-	for <linux-lvm@redhat.com>; Mon, 5 Jan 2009 23:45:47 -0500
-Received: from [192.168.255.107] (p57916731.dip.t-dialin.net [87.145.103.49])
-	by post.strato.de (klopstock mo7) (RZmta 18.7)
-	with ESMTP id 603539l061HpSe for <linux-lvm@redhat.com>;
-	Tue, 6 Jan 2009 05:45:46 +0100 (MET)
-From: Ralf Sparr <lvm@soulsweeper.org>
-Date: Tue, 06 Jan 2009 05:45:44 +0100
-Message-Id: <1231217144.7947.19.camel@fraws70-gentoo>
-Mime-Version: 1.0
+Received: from amote.csb (ashishks.pnq.redhat.com [10.65.0.178])
+	by ns3.rdu.redhat.com (8.13.8/8.13.8) with ESMTP id n069I9Fg010055
+	for <linux-lvm@redhat.com>; Tue, 6 Jan 2009 04:18:10 -0500
+Message-ID: <496321D1.5050102@redhat.com>
+Date: Tue, 06 Jan 2009 14:48:09 +0530
+From: Ajit Mote <amote@redhat.com>
+MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] pvcreate & vgcfgrestore won't work
-Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
+Subject: [linux-lvm] Logical volume contains an incomplete mapping table
+Reply-To: amote@redhat.com,
+	LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -24,95 +18,170 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: linux-lvm@redhat.com
 
-Hi list,
+Hello,
 
-as mentioned in my earlier post, LVM complains about
-"Incorrect metadata area header checksum". As this occurs
-often (many questions, rarely answers in the list) I tried to create
-some 'new' via
+Initially  installed machine is RHEL3 with LVM  then installed RHEL4 U6 
+and trying to access LVM (which were available in RHEL3).
 
-# pvcreate --force --uuid 7vFXd3-MYnt-TVdG-luYr-rDPn-o8a1-vjewWk
---restorefile /etc/lvm/archive/alice_00038.vg alice
-  Incorrect metadata area header checksum
-  uuid 7vFXd3-MYnt-TVdG-luYr-rDPn-o8a1-vjewWk already in use on
-"/dev/loop53"
+After executing vgscan , getting following errors :
+  Reading all physical volumes.  This may take a while...
+  Found duplicate PV hk255uVUz6FaIcZidRLotgRQ4iYvVJ7x: using 
+/dev/emcpowerag not /dev/sdq
+  /dev/sds: read failed after 0 of 4096 at 0: Input/output error
+  /dev/sds: read failed after 0 of 4096 at 1073676288: Input/output error
+  /dev/sds: read failed after 0 of 4096 at 0: Input/output error
+  Found duplicate PV MaBySYaqMiJnOpZjiToOxOjsy3A3goU3: using 
+/dev/emcpowerai not /dev/sday
+  Found duplicate PV tX8c8WE9celz8GkAO1zmKSVNuvlvE7u0: using /dev/sdd 
+not /dev/sdaw
+  Found duplicate PV gcySABZ3n0iyMyIRIXiukYaMhRFKK3OG: using /dev/sde 
+not /dev/sdax
+  Found duplicate PV CWyb0xFUD44n672EejT6kwsYIAv9ad7K: using /dev/sdba 
+not /dev/emcpowerah
+  Found duplicate PV MaBySYaqMiJnOpZjiToOxOjsy3A3goU3: using /dev/sdf 
+not /dev/emcpowerai
+  Found duplicate PV hk255uVUz6FaIcZidRLotgRQ4iYvVJ7x: using /dev/sdbb 
+not /dev/emcpowerag
+  Found duplicate PV 8TYowYcRjvC7da017w4b0WLKSNavfRcY: using /dev/sdg 
+not /dev/sdaz
+  Found duplicate PV MtmaHFD0BMgJzLm3FQG0iz0WXUTSrKl8: using /dev/sdbc 
+not /dev/sdb
+  Found duplicate PV CWyb0xFUD44n672EejT6kwsYIAv9ad7K: using /dev/sdh 
+not /dev/sdba
+  Found duplicate PV HGGFOVxr4AlRsoW4s58qkmfqFIUBpDzc: using /dev/sdbd 
+not /dev/sdc
+  Found duplicate PV hk255uVUz6FaIcZidRLotgRQ4iYvVJ7x: using /dev/sdi 
+not /dev/sdbb
+  Found duplicate PV tX8c8WE9celz8GkAO1zmKSVNuvlvE7u0: using /dev/sdbe 
+not /dev/sdd
+  Found duplicate PV MtmaHFD0BMgJzLm3FQG0iz0WXUTSrKl8: using /dev/sdj 
+not /dev/sdbc
+  Found duplicate PV gcySABZ3n0iyMyIRIXiukYaMhRFKK3OG: using /dev/sdbf 
+not /dev/sde
+  Found duplicate PV HGGFOVxr4AlRsoW4s58qkmfqFIUBpDzc: using /dev/sdk 
+not /dev/sdbd
+  Found duplicate PV MaBySYaqMiJnOpZjiToOxOjsy3A3goU3: using /dev/sdbg 
+not /dev/sdf
+  Found duplicate PV tX8c8WE9celz8GkAO1zmKSVNuvlvE7u0: using /dev/sdl 
+not /dev/sdbe
+  Found duplicate PV 8TYowYcRjvC7da017w4b0WLKSNavfRcY: using /dev/sdbh 
+not /dev/sdg
+  Found duplicate PV tX8c8WE9celz8GkAO1zmKSVNuvlvE7u0: using 
+/dev/emcpowerab not /dev/sdl
+  Found duplicate PV gcySABZ3n0iyMyIRIXiukYaMhRFKK3OG: using /dev/sdm 
+not /dev/sdbf
+  Found duplicate PV CWyb0xFUD44n672EejT6kwsYIAv9ad7K: using /dev/sdbi 
+not /dev/sdh
+  Found duplicate PV MtmaHFD0BMgJzLm3FQG0iz0WXUTSrKl8: using 
+/dev/emcpowerac not /dev/sdj
+  Found duplicate PV MaBySYaqMiJnOpZjiToOxOjsy3A3goU3: using /dev/sdn 
+not /dev/sdbg
+  Found duplicate PV hk255uVUz6FaIcZidRLotgRQ4iYvVJ7x: using /dev/sdbj 
+not /dev/sdi
+  Found duplicate PV 8TYowYcRjvC7da017w4b0WLKSNavfRcY: using 
+/dev/emcpowerad not /dev/sdbh
+  Found duplicate PV 8TYowYcRjvC7da017w4b0WLKSNavfRcY: using /dev/sdo 
+not /dev/emcpowerad
+  Found duplicate PV MtmaHFD0BMgJzLm3FQG0iz0WXUTSrKl8: using /dev/sdau 
+not /dev/emcpowerac
+  Found duplicate PV gcySABZ3n0iyMyIRIXiukYaMhRFKK3OG: using 
+/dev/emcpowerae not /dev/sdm
+  Found duplicate PV CWyb0xFUD44n672EejT6kwsYIAv9ad7K: using /dev/sdp 
+not /dev/sdbi
+  Found duplicate PV HGGFOVxr4AlRsoW4s58qkmfqFIUBpDzc: using /dev/sdav 
+not /dev/sdk
+  Found duplicate PV HGGFOVxr4AlRsoW4s58qkmfqFIUBpDzc: using 
+/dev/emcpoweraf not /dev/sdav
+  Found volume group "linux_vg0" using metadata type lvm1
+  Logical volume (db_files) contains an incomplete mapping table.
+  Found duplicate PV hk255uVUz6FaIcZidRLotgRQ4iYvVJ7x: using /dev/sdq 
+not /dev/sdbj
+  Found duplicate PV tX8c8WE9celz8GkAO1zmKSVNuvlvE7u0: using /dev/sdaw 
+not /dev/emcpowerab
+  Found duplicate PV hk255uVUz6FaIcZidRLotgRQ4iYvVJ7x: using 
+/dev/emcpowerag not /dev/sdq
+  Found duplicate PV MtmaHFD0BMgJzLm3FQG0iz0WXUTSrKl8: using /dev/sdb 
+not /dev/sdau
+  Found duplicate PV gcySABZ3n0iyMyIRIXiukYaMhRFKK3OG: using /dev/sdax 
+not /dev/emcpowerae
+  Found duplicate PV CWyb0xFUD44n672EejT6kwsYIAv9ad7K: using 
+/dev/emcpowerah not /dev/sdp
+  Found duplicate PV HGGFOVxr4AlRsoW4s58qkmfqFIUBpDzc: using /dev/sdc 
+not /dev/emcpoweraf
+  /dev/sds: read failed after 0 of 4096 at 0: Input/output error
+  Found duplicate PV MaBySYaqMiJnOpZjiToOxOjsy3A3goU3: using /dev/sday 
+not /dev/sdn
+  Found duplicate PV MaBySYaqMiJnOpZjiToOxOjsy3A3goU3: using 
+/dev/emcpowerai not /dev/sday
+  Found duplicate PV tX8c8WE9celz8GkAO1zmKSVNuvlvE7u0: using /dev/sdd 
+not /dev/sdaw
+  Found duplicate PV 8TYowYcRjvC7da017w4b0WLKSNavfRcY: using /dev/sdaz 
+not /dev/sdo
+  Found duplicate PV gcySABZ3n0iyMyIRIXiukYaMhRFKK3OG: using /dev/sde 
+not /dev/sdax
+  Found duplicate PV CWyb0xFUD44n672EejT6kwsYIAv9ad7K: using /dev/sdba 
+not /dev/emcpowerah
+  Found duplicate PV MaBySYaqMiJnOpZjiToOxOjsy3A3goU3: using /dev/sdf 
+not /dev/emcpowerai
+  Found duplicate PV hk255uVUz6FaIcZidRLotgRQ4iYvVJ7x: using /dev/sdbb 
+not /dev/emcpowerag
+  Found duplicate PV 8TYowYcRjvC7da017w4b0WLKSNavfRcY: using /dev/sdg 
+not /dev/sdaz
+  Found duplicate PV MtmaHFD0BMgJzLm3FQG0iz0WXUTSrKl8: using /dev/sdbc 
+not /dev/sdb
+  Found duplicate PV CWyb0xFUD44n672EejT6kwsYIAv9ad7K: using /dev/sdh 
+not /dev/sdba
+  Found duplicate PV HGGFOVxr4AlRsoW4s58qkmfqFIUBpDzc: using /dev/sdbd 
+not /dev/sdc
+  Found duplicate PV hk255uVUz6FaIcZidRLotgRQ4iYvVJ7x: using /dev/sdi 
+not /dev/sdbb
+  Found duplicate PV tX8c8WE9celz8GkAO1zmKSVNuvlvE7u0: using /dev/sdbe 
+not /dev/sdd
+  Found duplicate PV MtmaHFD0BMgJzLm3FQG0iz0WXUTSrKl8: using /dev/sdj 
+not /dev/sdbc
+  Found duplicate PV gcySABZ3n0iyMyIRIXiukYaMhRFKK3OG: using /dev/sdbf 
+not /dev/sde
+  Found duplicate PV HGGFOVxr4AlRsoW4s58qkmfqFIUBpDzc: using /dev/sdk 
+not /dev/sdbd
+  Found duplicate PV MaBySYaqMiJnOpZjiToOxOjsy3A3goU3: using /dev/sdbg 
+not /dev/sdf
+  Found duplicate PV tX8c8WE9celz8GkAO1zmKSVNuvlvE7u0: using /dev/sdl 
+not /dev/sdbe
+  Found duplicate PV 8TYowYcRjvC7da017w4b0WLKSNavfRcY: using /dev/sdbh 
+not /dev/sdg
+  Found duplicate PV tX8c8WE9celz8GkAO1zmKSVNuvlvE7u0: using 
+/dev/emcpowerab not /dev/sdl
+  Found duplicate PV gcySABZ3n0iyMyIRIXiukYaMhRFKK3OG: using /dev/sdm 
+not /dev/sdbf
+  Found duplicate PV CWyb0xFUD44n672EejT6kwsYIAv9ad7K: using /dev/sdbi 
+not /dev/sdh
+  Found duplicate PV MtmaHFD0BMgJzLm3FQG0iz0WXUTSrKl8: using 
+/dev/emcpowerac not /dev/sdj
+  Found duplicate PV MaBySYaqMiJnOpZjiToOxOjsy3A3goU3: using /dev/sdn 
+not /dev/sdbg
+  Found duplicate PV hk255uVUz6FaIcZidRLotgRQ4iYvVJ7x: using /dev/sdbj 
+not /dev/sdi
+  Found duplicate PV 8TYowYcRjvC7da017w4b0WLKSNavfRcY: using 
+/dev/emcpowerad not /dev/sdbh
+  Found duplicate PV 8TYowYcRjvC7da017w4b0WLKSNavfRcY: using /dev/sdo 
+not /dev/emcpowerad
+  Found duplicate PV MtmaHFD0BMgJzLm3FQG0iz0WXUTSrKl8: using /dev/sdau 
+not /dev/emcpowerac
+  Found duplicate PV gcySABZ3n0iyMyIRIXiukYaMhRFKK3OG: using 
+/dev/emcpowerae not /dev/sdm
+  Found duplicate PV CWyb0xFUD44n672EejT6kwsYIAv9ad7K: using /dev/sdp 
+not /dev/sdbi
+  Found duplicate PV HGGFOVxr4AlRsoW4s58qkmfqFIUBpDzc: using /dev/sdav 
+not /dev/sdk
+  Found duplicate PV HGGFOVxr4AlRsoW4s58qkmfqFIUBpDzc: using 
+/dev/emcpoweraf not /dev/sdav
+  Logical volume (db_files) contains an incomplete mapping table.
+  Volume group "presale_copy_vg0" not found
 
---> also '-ff' doesn't do the trick
+Kindly suggest what this error is and how to recover LVM in RHEL4 U6.
 
-# pvscan -vvv
-        Processing: pvscan -vvv
-        O_DIRECT will be used
-      Setting global/locking_type to 1
-      File-based locking selected.
-      Setting global/locking_dir to /var/lock/lvm
-      Locking /var/lock/lvm/P_global WB
-    Wiping cache of LVM-capable devices
-[...]
-    Wiping internal VG cache
-        lvmcache: initialised VG #orphans_lvm1
-        lvmcache: initialised VG #orphans_pool
-        lvmcache: initialised VG #orphans_lvm2
-    Walking through all physical volumes
-        /dev/hda: Skipping (regex)
-[...]
-      /dev/loop53: size is 13674639104 sectors
-        Closed /dev/loop53
-      /dev/loop53: size is 13674639104 sectors
-        Opened /dev/loop53 RW O_DIRECT
-        /dev/loop53: block size is 4096 bytes
-        Closed /dev/loop53
-        Using /dev/loop53
-        Opened /dev/loop53 RW O_DIRECT
-        /dev/loop53: block size is 4096 bytes
-      /dev/loop53: lvm2 label detected
-        lvmcache: /dev/loop53: now in VG #orphans_lvm2 (#orphans_lvm2)
-        /dev/loop53: Found metadata at 49152 size 3734 (in area at 4096
-size 192512) for alice (xIDosE-M2TQ-l9oj-PyAU-BZHY-XgV2-ZeasFv)
-        lvmcache: /dev/loop53: now in VG alice
-        lvmcache: /dev/loop53: setting alice VGID to
-xIDosEM2TQl9ojPyAUBZHYXgV2ZeasFv
-        lvmcache: /dev/loop53: VG alice: Set creation host to
-xen-master.
-  Incorrect metadata area header checksum
-        Closed /dev/loop53
-        Opened /dev/loop54 RO
-[...]
-        Using cached label for /dev/loop53
-        Opened /dev/loop53 RW O_DIRECT
-        /dev/loop53: block size is 4096 bytes
-        Using cached label for /dev/loop53
-        Read alice metadata (19) from /dev/loop53 at 49152 size 3734
-        Closed /dev/loop53
-        Opened /dev/loop53 RW O_DIRECT
-        /dev/loop53: block size is 4096 bytes
-  Incorrect metadata area header checksum
-        Closed /dev/loop53
-        /dev/loop53 0:      0 1048576: alice_storage_data(0:0)
-        /dev/loop53 1: 1048576   2560: alice_storage(0:0)
-        /dev/loop53 2: 1051136   2560: alice_fuppes(0:0)
-        /dev/loop53 3: 1053696   2560: alice_game(0:0)
-        /dev/loop53 4: 1056256   2560: alice_openvpn(0:0)
-        /dev/loop53 5: 1058816   2560: alice_primary(0:0)
-        /dev/loop53 6: 1061376  12800: alice_apache(0:0)
-        /dev/loop53 7: 1074176  12800: alice_xen(0:0)
-        /dev/loop53 8: 1086976  51200: alice_game_data(0:0)
-        /dev/loop53 9: 1138176  25600: alice_xp(0:0)
-        /dev/loop53 10: 1163776   5120: alice_x264(0:0)
-        /dev/loop53 11: 1168896   2560: alice_firewall(0:0)
-        /dev/loop53 12: 1171456 393216: alice_storage_data(1048576:0)
-        /dev/loop53 13: 1564672 104595: NULL(0:0)
-  WARNING: Volume Group alice is not consistent
-  PV /dev/loop53   VG alice   lvm2 [6.37 TB / 408.57 GB free]
-  Total: 1 [376.57 GB] / in use: 1 [376.57 GB] / in no VG: 0 [0   ]
-      Unlocking /var/lock/lvm/P_global
-
--> I think 'Total' is messed up, there 6TB missing :(
-
-
-Is there anything I can do to recover my data? Any  clue is very
-welcome!
-
-Ralf
+Thanks & Regards,
+Ajit Mote
