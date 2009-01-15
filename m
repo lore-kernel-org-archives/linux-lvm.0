@@ -1,33 +1,20 @@
-Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id n0FA5IW9026842
-	for <linux-lvm@redhat.com>; Thu, 15 Jan 2009 05:05:18 -0500
-Received: from buexe.b-5.de (buexe.b-5.de [84.19.0.30])
-	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id n0FA3Ban028861
-	for <linux-lvm@redhat.com>; Thu, 15 Jan 2009 05:03:12 -0500
-Received: from alanya.lupe-christoph.de (alanya.lupe-christoph.de
-	[172.17.0.19])
-	by buexe.b-5.de (8.13.8/8.13.8/b-5/buexe-3.6.3) with ESMTP id
-	n0FA3Bst000679
-	for <linux-lvm@redhat.com>; Thu, 15 Jan 2009 11:03:11 +0100
-Received: from localhost (localhost [127.0.0.1])
-	by alanya.lupe-christoph.de (Postfix) with ESMTP id 054D42C0B7
-	for <linux-lvm@redhat.com>; Thu, 15 Jan 2009 11:03:06 +0100 (CET)
-Received: from alanya.lupe-christoph.de ([127.0.0.1])
-	by localhost (alanya.lupe-christoph.de [127.0.0.1]) (amavisd-new,
-	port 10024) with LMTP id Ew+krmjC+Axd for <linux-lvm@redhat.com>;
-	Thu, 15 Jan 2009 11:03:05 +0100 (CET)
-Date: Thu, 15 Jan 2009 11:03:05 +0100
-From: Lupe Christoph <lupe@lupe-christoph.de>
-Subject: Re: [linux-lvm] Allocation maps of a mirrored LV?
-Message-ID: <20090115100305.GM21131@lupe-christoph.de>
-References: <20090113100902.GJ21131@lupe-christoph.de>
-	<b072968d0901141258n12aaea7nbccf0700bdda4512@mail.gmail.com>
-	<20090115083656.GL21131@lupe-christoph.de>
-	<496F0233.7040101@redhat.com>
+Received: from pobox.fab.redhat.com (pobox.fab.redhat.com [10.33.63.12])
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id n0FAxoiG019694
+	for <linux-lvm@redhat.com>; Thu, 15 Jan 2009 05:59:51 -0500
+Received: from breeves.fab.redhat.com (breeves.fab.redhat.com [10.33.0.40])
+	by pobox.fab.redhat.com (8.13.1/8.13.1) with ESMTP id n0FAxnTf023331
+	for <linux-lvm@redhat.com>; Thu, 15 Jan 2009 05:59:49 -0500
+Message-ID: <496F1706.3080403@redhat.com>
+Date: Thu, 15 Jan 2009 10:59:18 +0000
+From: "Bryn M. Reeves" <bmr@redhat.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <496F0233.7040101@redhat.com>
-Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
+Subject: Re: [linux-lvm] Can no longer mount logical volume after a kernal
+	panic. HELP!
+References: <BLU117-W51CBAE0430A271DF3DC52FFAD70@phx.gbl>
+In-Reply-To: <BLU117-W51CBAE0430A271DF3DC52FFAD70@phx.gbl>
+Content-Transfer-Encoding: 7bit
+Reply-To: bmr@redhat.com,
+	LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -37,31 +24,35 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: linux-lvm@redhat.com
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-On Thursday, 2009-01-15 at 10:30:27 +0100, Jaroslav Stava wrote:
-> Lupe Christoph wrote:
->> I can't find an option for pvs that prints the allocation map, nor for
->> vgs. Any suggestions?
+Bob Smith wrote:
+> 
+> I have been using LVM for quite a while to create a 3.64 stripe out of 4 x 1TB drives.  I use this as storage for my MythTV.  Tonight my system had a kernel panic, and when I rebooted I was no longer able to mount my LV, when I do I get:
+> 
+> ----------------------------------------------------------------------------------------------------------------------------------------------
+> mount: wrong fs type, bad option, bad superblock on /dev/mapper/stripe-raid,
+>        missing codepage or helper program, or other error
+>        In some cases useful info is found in syslog - try
+>        dmesg | tail  or so
 
-> Try
-> lvs VG -a --segments -o +devices
-> that should print all the information you need.
+Did anything appear in dmesg? What does "file -s 
+/dev/mapper/stripe-raid" say?
 
-<hug>Jaroslav, you're right!</hug>
+> When I do an fdisk -l /dev/stripe/raid (I know these are really dumb names for the lv and vg):
 
-Actually, I don't need segment information, so I can omit --segment. The
-command that gives me what I can use is
+Why are you expecting there to be a partition table on the LV? That's 
+something that you'd only normally do if you're using the LV as "whole 
+disk" storage for an entire machine (e.g. exporting it via iSCSI or 
+using it as storage for some kind of virtual machine).
 
-lvs testvg --separator : --noheadings --all -o +devices
+Normally with LVM, file systems go directly onto the LV.
 
-The "-a" or "--all" option is the key. Thanks a lot for this! Now that I
-know what to look for, I find it in lvs --help. But not in the manpages.
-Guess where I looked :-(
+> Which makes me really worried that something has happened to the partition table when I was forced to reboot after the kernel panic.  Doing fdisk /dev/stripe/raid shows:
 
-Lupe Christoph
--- 
-| There is no substitute for bad design except worse design.                   |
-| /me                                                                          |
+See above - I wouldn't normally expect there to be a partition table 
+*inside* the LV.
+
+Regards,
+Bryn.
