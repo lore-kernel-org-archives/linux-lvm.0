@@ -1,18 +1,14 @@
-Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id n0KHDxYL008027
-	for <linux-lvm@redhat.com>; Tue, 20 Jan 2009 12:13:59 -0500
-Received: from eu1sys200aog105.obsmtp.com (eu1sys200aog105.obsmtp.com
-	[207.126.144.119])
-	by mx3.redhat.com (8.13.8/8.13.8) with SMTP id n0KHDgEo003911
-	for <linux-lvm@redhat.com>; Tue, 20 Jan 2009 12:13:43 -0500
-Received: by bwz5 with SMTP id 5so10166192bwz.6
-	for <linux-lvm@redhat.com>; Tue, 20 Jan 2009 09:13:41 -0800 (PST)
-Date: Tue, 20 Jan 2009 18:11:12 +0100
-From: "F-D. Cami" <fcami@winsoft.fr>
-Message-ID: <20090120181112.5523a424@winsoft.fr>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Subject: [linux-lvm] starting LVs on RAID stripe boundaries
+Message-ID: <1c748a490901201015t2a075b93x4a7801fa0c269b07@mail.gmail.com>
+Date: Tue, 20 Jan 2009 10:15:17 -0800
+From: "Larry Dickson" <ldickson@cuttedge.com>
+Subject: Re: [linux-lvm] 2GB limit
+In-Reply-To: <4976024E.4030508@redhat.com>
+MIME-Version: 1.0
+Content-Type: multipart/alternative; 
+	boundary="----=_Part_28766_18955035.1232475317800"
+References: <4975932A.6090902@bortal.de> <4975B1A6.3090902@redhat.com>
+	<1c748a490901200843i1cf9a6ean4ff622c59e75843@mail.gmail.com>
+	<4976024E.4030508@redhat.com>
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -23,56 +19,86 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="iso-8859-1"
-To: linux-lvm@redhat.com
+To: bmr@redhat.com
+Cc: LVM general discussion and development <linux-lvm@redhat.com>
+
+------=_Part_28766_18955035.1232475317800
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+On 1/20/09, Bryn M. Reeves <bmr@redhat.com> wrote:
+>
+> Larry Dickson wrote:
+>
+>> We have considerable experience getting parted to work. Basically, the
+>> distinction between primary and extended partitions is not needed, nor are
+>> partition types. There are other subtle differences too. Very annoyingly,
+>>
+>
+> Correct.
+>
+> SOME versions of parted interpret megabytes and even kilobytes (but not
+>>
+>
+> Older versions, right?
 
 
-Hi Linux-LVM,
+1.6.19-1.EL had "standard" binary kB and mB.
 
-I'm searching for some definitive information about how to make sure that l=
-ogical
-volumes start exactly at the beginning of a RAID stripe.
+1.8.1-17.el5 (CentOS 5.2), presumably a newer version, went to the
+decimal-only kB and mB. There were a lot of other format changes in output,
+too. We are on top of them, but decimal-only kB and mB is really a bad idea,
+since it's inconsistent with all previous practice and also with sectors.
 
-My hardware is an EMC Clariion CX3-40F array with a RHEL5 host.
-The default stripe element size is 64 KB (128 blocks) on the CX3.
+Larry Dickson
 
-Both EMC and Red Hat recommend using fdisk or parted  to align the first pa=
-rtition
-to the start of a stripe boundary (128th block, 128x512=3D64KB) :
-Red Hat : http://kbase.redhat.com/faq/docs/DOC-2893
-EMC : "EMC CLARiiON Best Practices", PDF available on emc.com
+ sectors) as decimal only. For these you have to use unit B (bytes) to
+>> regain
+>> control. Experiment a little, to see what uses counting from 1 or counting
+>> from 0, and what uses last-index or total-size, as these off-by-1 errors
+>> can
+>> be killer.
+>>
+>
+> If you find problems like this with recent versions then please let us know
+> via the parted mailing lists:
+>
+> http://www.gnu.org/software/parted/lists.shtml
+>
+> Ironing out the UI inconsistencies in parted is one of the areas that we
+> are keen to improve at the moment so if you hit issues like this, we would
+> very much like to hear about them.
+>
+> Regards,
+> Bryn.
+>
+>
+>
 
-After doing that. the first partition is now aligned, next I need to make s=
-ure my logical
-volumes are similarly aligned. However, after reading the LVM Howto on tldp=
-.org,
-the LVM wiki at redhat.com, and Alasdair Kergon's LinuxTag presentation at :
-http://people.redhat.com/agk/talks/LVM2-LinuxTag2006/
-I found no information on how to do that.=20
+------=_Part_28766_18955035.1232475317800
+Content-Type: text/html; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
 
-I'll now use some reasonable (?) assumptions :
-* the physical extent size is a multiple of 64K (vgcreate's default is 4MB)=
- ;
-* if physical extents are aligned, logical volumes are themselves aligned
-  (lvcreate -l, --extents LogicalExtentsNumber) ;
-* since PV, VG and LV infos are stored in PV metadata, the only possible PE
-   misalignment culprit is PV metadata ;
-* PV metadata size is a multiple of 64KB=20
- ( http://orezpraw.com/orezpraw.php/blogosphere/your-filesystem-starts-wher=
-e )
+<br><br>
+<div><span class="gmail_quote">On 1/20/09, <b class="gmail_sendername">Bryn M. Reeves</b> &lt;<a href="mailto:bmr@redhat.com">bmr@redhat.com</a>&gt; wrote:</span>
+<blockquote class="gmail_quote" style="PADDING-LEFT: 1ex; MARGIN: 0px 0px 0px 0.8ex; BORDER-LEFT: #ccc 1px solid"><span class="q">Larry Dickson wrote:<br>
+<blockquote class="gmail_quote" style="PADDING-LEFT: 1ex; MARGIN: 0px 0px 0px 0.8ex; BORDER-LEFT: #ccc 1px solid">We have considerable experience getting parted to work. Basically, the<br>distinction between primary and extended partitions is not needed, nor are<br>
+partition types. There are other subtle differences too. Very annoyingly,<br></blockquote><br></span>Correct.<span class="q"><br><br>
+<blockquote class="gmail_quote" style="PADDING-LEFT: 1ex; MARGIN: 0px 0px 0px 0.8ex; BORDER-LEFT: #ccc 1px solid">SOME versions of parted interpret megabytes and even kilobytes (but not<br></blockquote><br></span>Older versions, right?</blockquote>
 
-Since 64KB is my stripe size, and metadata size is a multiple of 64KB,
-pvcreate should do the RightThing(tm) with default options, i.e. start the
-first PE at a multiple of the stripe size.
+<div>&nbsp;</div>
+<div>1.6.19-1.EL had &quot;standard&quot; binary kB and mB.</div>
+<div>&nbsp;</div>
+<div>1.8.1-17.el5 (CentOS 5.2), presumably a newer version, went to the decimal-only kB and mB. There were a lot of other format changes in output, too. We are on top of them, but decimal-only kB and mB is really a bad idea, since it&#39;s inconsistent with all previous practice and also with sectors.</div>
 
-In other words, aligning the partition the PV uses to the stripe boundary a=
-nd
-using a PE size multiple of the stripe size insure that LVs get themselves =
-created
-on stripe boundaries.
+<div>&nbsp;</div>
+<div>Larry Dickson</div><br>
+<blockquote class="gmail_quote" style="PADDING-LEFT: 1ex; MARGIN: 0px 0px 0px 0.8ex; BORDER-LEFT: #ccc 1px solid"><span class="q">
+<blockquote class="gmail_quote" style="PADDING-LEFT: 1ex; MARGIN: 0px 0px 0px 0.8ex; BORDER-LEFT: #ccc 1px solid">sectors) as decimal only. For these you have to use unit B (bytes) to regain<br>control. Experiment a little, to see what uses counting from 1 or counting<br>
+from 0, and what uses last-index or total-size, as these off-by-1 errors can<br>be killer.<br></blockquote><br></span>If you find problems like this with recent versions then please let us know via the parted mailing lists:<br>
+<br><a onclick="return top.js.OpenExtLink(window,event,this)" href="http://www.gnu.org/software/parted/lists.shtml" target="_blank">http://www.gnu.org/software/parted/lists.shtml</a><br><br>Ironing out the UI inconsistencies in parted is one of the areas that we are keen to improve at the moment so if you hit issues like this, we would very much like to hear about them.<br>
+<br>Regards,<br><span class="sg">Bryn.<br><br><br></span></blockquote></div><br>
 
-Comments, please ?
-
-Thanks,
-
-Fran=C3=A7ois Cami
+------=_Part_28766_18955035.1232475317800--
