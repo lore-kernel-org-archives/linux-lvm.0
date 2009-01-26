@@ -1,21 +1,19 @@
-Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id n0QCeaNC031766
-	for <linux-lvm@redhat.com>; Mon, 26 Jan 2009 07:40:36 -0500
-Received: from mrxmail0.mbuyu.com (mrxmail0.mbuyu.com [85.158.204.176])
-	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id n0QCeKI1021325
-	for <linux-lvm@redhat.com>; Mon, 26 Jan 2009 07:40:20 -0500
-Received: from [172.16.26.19] (unknown [87.215.139.10])
-	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by mrxmail0.mbuyu.com (Postfix) with ESMTP id 9F12512D33
-	for <linux-lvm@redhat.com>; Mon, 26 Jan 2009 13:40:19 +0100 (CET)
-Message-ID: <497DAF33.5050608@m4n.nl>
-Date: Mon, 26 Jan 2009 13:40:19 +0100
-From: M4N - Arjan Tijms <arjan.tijms@m4n.nl>
+Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id n0QHpUHR011764
+	for <linux-lvm@redhat.com>; Mon, 26 Jan 2009 12:51:30 -0500
+Received: from wf-out-1314.google.com (wf-out-1314.google.com [209.85.200.170])
+	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id n0QHpCCP022785
+	for <linux-lvm@redhat.com>; Mon, 26 Jan 2009 12:51:12 -0500
+Received: by wf-out-1314.google.com with SMTP id 25so6304516wfc.6
+	for <linux-lvm@redhat.com>; Mon, 26 Jan 2009 09:51:11 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] Suspicious performance gaps in LVM volume over 2 block
- devices (internally RAID 5).
+In-Reply-To: <20090120181112.5523a424@winsoft.fr>
+References: <20090120181112.5523a424@winsoft.fr>
+Date: Mon, 26 Jan 2009 09:51:11 -0800
+Message-ID: <f9d530070901260951t131a7291n17d57c62e14edf45@mail.gmail.com>
+Subject: Re: [linux-lvm] starting LVs on RAID stripe boundaries
+From: unlisted <unlisted@gmail.com>
+Content-Type: multipart/alternative; boundary=0016364c6da35f40f704616662f7
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -26,78 +24,147 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: linux-lvm@redhat.com
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-Hi,
+--0016364c6da35f40f704616662f7
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: quoted-printable
 
-We're building a system on Linux (kernel 2.6.26) using LVM 2.02.39, for 
-which we stripe 2 block devices into 1 volume. Each device is internally 
-build using a RAID 5 on a hardware RAID controller (Areca 1680Ix-12/4GB 
-RAM). This RAID controller is rather fast (sporting a 1.2Ghz IOP 348). 
-To each Areca we connected 6 Mtron pro 7535's. The stripe set thus spans 
-12 physical disks over 2 raid controllers.
+that sounds right... as long as your lvm PVs are entire disks and not insid=
+e
+of another partition.  I spend months trying to understand all this.
 
-Initially it seemed to work just fine, but when running the easyco 
-benchmark (see http://easyco.com/), suspicious gaps in the performance 
-figures appear for certain block sizes:
+Also, isn't your LVM metadata 192k ?
+
+Sam
 
 
-EasyCo# ./bm-flash /ssd/ssd-striped/test.txt
-Filling 4G before testing  ...   4096 MB done in 1 seconds (4096 MB/sec).
+On Tue, Jan 20, 2009 at 9:11 AM, F-D. Cami <fcami@winsoft.fr> wrote:
 
-Read Tests:
+>
+> Hi Linux-LVM,
+>
+> I'm searching for some definitive information about how to make sure that
+> logical
+> volumes start exactly at the beginning of a RAID stripe.
+>
+> My hardware is an EMC Clariion CX3-40F array with a RHEL5 host.
+> The default stripe element size is 64 KB (128 blocks) on the CX3.
+>
+> Both EMC and Red Hat recommend using fdisk or parted  to align the first
+> partition
+> to the start of a stripe boundary (128th block, 128x512=3D64KB) :
+> Red Hat : http://kbase.redhat.com/faq/docs/DOC-2893
+> EMC : "EMC CLARiiON Best Practices", PDF available on emc.com
+>
+> After doing that. the first partition is now aligned, next I need to make
+> sure my logical
+> volumes are similarly aligned. However, after reading the LVM Howto on
+> tldp.org,
+> the LVM wiki at redhat.com, and Alasdair Kergon's LinuxTag presentation a=
+t
+> :
+> http://people.redhat.com/agk/talks/LVM2-LinuxTag2006/
+> I found no information on how to do that.
+>
+> I'll now use some reasonable (?) assumptions :
+> * the physical extent size is a multiple of 64K (vgcreate's default is 4M=
+B)
+> ;
+> * if physical extents are aligned, logical volumes are themselves aligned
+>  (lvcreate -l, --extents LogicalExtentsNumber) ;
+> * since PV, VG and LV infos are stored in PV metadata, the only possible =
+PE
+>   misalignment culprit is PV metadata ;
+> * PV metadata size is a multiple of 64KB
+>  (
+> http://orezpraw.com/orezpraw.php/blogosphere/your-filesystem-starts-where=
+)
+>
+> Since 64KB is my stripe size, and metadata size is a multiple of 64KB,
+> pvcreate should do the RightThing(tm) with default options, i.e. start th=
+e
+> first PE at a multiple of the stripe size.
+>
+> In other words, aligning the partition the PV uses to the stripe boundary
+> and
+> using a PE size multiple of the stripe size insure that LVs get themselve=
+s
+> created
+> on stripe boundaries.
+>
+> Comments, please ?
+>
+> Thanks,
+>
+> Fran=E7ois Cami
+>
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@redhat.com
+> https://www.redhat.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+>
 
-Block |   1 thread    |  10 threads   |  40 threads   
- Size |  IOPS    BW   |  IOPS    BW   |  IOPS    BW   
-      |               |               |               
- 512B | 21856   10.6M | 59945   29.2M | 59381   28.9M 
-   1K | 32945   32.1M | 59773   58.3M | 59252   57.8M 
-   2K | 32462   63.4M | 59611  116.4M | 59081  115.3M 
-   4K | 31398  122.6M | 59707  233.2M | 58946  230.2M 
-   8K | 28847  225.3M | 58294  455.4M | 57684  450.6M 
-  16K | 24965  390.0M | 57934  905.2M | 57004  890.6M 
-  32K | 19393  606.0M | 52848 1651.5M | 52520 1641.2M 
-  64K | 13466  841.6M | 46626    2.8G | 46533    2.8G 
- 128K |  8541 1067.6M | 25962    3.1G | 27364    3.3G 
- 256K |  7777    1.8G | 13876    3.3G | 13876    3.3G 
- 512K |  4377    2.1G |  6942    3.3G |  6943    3.3G 
-   1M |  2356    2.3G |  3472    3.3G |  3473    3.3G 
-   2M |  1292    2.5G |  1735    3.3G |  1732    3.3G 
-   4M |   728    2.8G |   847    3.3G |   864    3.3G 
+--0016364c6da35f40f704616662f7
+Content-Type: text/html; charset=ISO-8859-1
+Content-Transfer-Encoding: quoted-printable
 
-Write Tests:
+<div>that sounds right... as long as your lvm PVs are&nbsp;entire disks and=
+ not inside of another partition.&nbsp; I spend months trying to understand=
+ all this.</div>
+<div>&nbsp;</div>
+<div>Also, isn&#39;t your LVM metadata 192k ?</div>
+<div>&nbsp;</div>
+<div>Sam</div>
+<div><br>&nbsp;</div>
+<div class=3D"gmail_quote">On Tue, Jan 20, 2009 at 9:11 AM, F-D. Cami <span=
+ dir=3D"ltr">&lt;<a href=3D"mailto:fcami@winsoft.fr">fcami@winsoft.fr</a>&g=
+t;</span> wrote:<br>
+<blockquote class=3D"gmail_quote" style=3D"PADDING-LEFT: 1ex; MARGIN: 0px 0=
+px 0px 0.8ex; BORDER-LEFT: #ccc 1px solid"><br>Hi Linux-LVM,<br><br>I&#39;m=
+ searching for some definitive information about how to make sure that logi=
+cal<br>
+volumes start exactly at the beginning of a RAID stripe.<br><br>My hardware=
+ is an EMC Clariion CX3-40F array with a RHEL5 host.<br>The default stripe =
+element size is 64 KB (128 blocks) on the CX3.<br><br>Both EMC and Red Hat =
+recommend using fdisk or parted &nbsp;to align the first partition<br>
+to the start of a stripe boundary (128th block, 128x512=3D64KB) :<br>Red Ha=
+t : <a href=3D"http://kbase.redhat.com/faq/docs/DOC-2893" target=3D"_blank"=
+>http://kbase.redhat.com/faq/docs/DOC-2893</a><br>EMC : &quot;EMC CLARiiON =
+Best Practices&quot;, PDF available on <a href=3D"http://emc.com/" target=
+=3D"_blank">emc.com</a><br>
+<br>After doing that. the first partition is now aligned, next I need to ma=
+ke sure my logical<br>volumes are similarly aligned. However, after reading=
+ the LVM Howto on <a href=3D"http://tldp.org/" target=3D"_blank">tldp.org</=
+a>,<br>
+the LVM wiki at <a href=3D"http://redhat.com/" target=3D"_blank">redhat.com=
+</a>, and Alasdair Kergon&#39;s LinuxTag presentation at :<br><a href=3D"ht=
+tp://people.redhat.com/agk/talks/LVM2-LinuxTag2006/" target=3D"_blank">http=
+://people.redhat.com/agk/talks/LVM2-LinuxTag2006/</a><br>
+I found no information on how to do that.<br><br>I&#39;ll now use some reas=
+onable (?) assumptions :<br>* the physical extent size is a multiple of 64K=
+ (vgcreate&#39;s default is 4MB) ;<br>* if physical extents are aligned, lo=
+gical volumes are themselves aligned<br>
+&nbsp;(lvcreate -l, --extents LogicalExtentsNumber) ;<br>* since PV, VG and=
+ LV infos are stored in PV metadata, the only possible PE<br>&nbsp; misalig=
+nment culprit is PV metadata ;<br>* PV metadata size is a multiple of 64KB<=
+br>&nbsp;( <a href=3D"http://orezpraw.com/orezpraw.php/blogosphere/your-fil=
+esystem-starts-where" target=3D"_blank">http://orezpraw.com/orezpraw.php/bl=
+ogosphere/your-filesystem-starts-where</a> )<br>
+<br>Since 64KB is my stripe size, and metadata size is a multiple of 64KB,<=
+br>pvcreate should do the RightThing(tm) with default options, i.e. start t=
+he<br>first PE at a multiple of the stripe size.<br><br>In other words, ali=
+gning the partition the PV uses to the stripe boundary and<br>
+using a PE size multiple of the stripe size insure that LVs get themselves =
+created<br>on stripe boundaries.<br><br>Comments, please ?<br><br>Thanks,<b=
+r><br>Fran=E7ois Cami<br><br>______________________________________________=
+_<br>
+linux-lvm mailing list<br><a href=3D"mailto:linux-lvm@redhat.com">linux-lvm=
+@redhat.com</a><br><a href=3D"https://www.redhat.com/mailman/listinfo/linux=
+-lvm" target=3D"_blank">https://www.redhat.com/mailman/listinfo/linux-lvm</=
+a><br>
+read the LVM HOW-TO at <a href=3D"http://tldp.org/HOWTO/LVM-HOWTO/" target=
+=3D"_blank">http://tldp.org/HOWTO/LVM-HOWTO/</a><br></blockquote></div><br>
 
-Block |   1 thread    |  10 threads   |  40 threads   
- Size |  IOPS    BW   |  IOPS    BW   |  IOPS    BW   
-      |               |               |               
- 512B | 31208   15.2M | 30125   14.7M | 22332   10.9M 
-   1K | 29351   28.6M | 29055   28.3M | 27419   26.7M 
-   2K | 24413   47.6M | 28681   56.0M | 27832   54.3M 
-   4K | 28874  112.7M | 25613  100.0M | 25060   97.8M 
-   8K |    27  216.0K |   925    7.2M | 12215   95.4M 
-  16K | 18230  284.8M | 20401  318.7M |    13  209.5K 
-  32K | 12462  389.4M |    35 1148.7K | 13666  427.0M 
-  64K |    10  684.7K |  8437  527.3M |     6  441.5K 
- 128K |  7030  878.7M |     2  332.7K 
- 256K |  4523 1130.8M |     3  947.1K 
- 512K |  4222    2.0G |     5    2.5M 
-   1M |  2085    2.0G |     2    2.0M 
-   2M |  1495    2.9G |    12   25.1M 
-   4M |   768    3.0G |   122  488.0M |   143  573.5M
-
-
-As can be seen from this report, testing with 1 thread shows no gaps, 
-but does show numbers which are clearly too high for writing. When more 
-threads are added to the test, gaps start to appear.
-
-We have extensively tested the individual devices (i.e. 6 disks, 1 
-controller, no LVM) and there doesn't seem to be any problem. I wonder 
-if someone could explain the behavior we're seeing when using LVM to 
-stripe two otherwise correctly working devices into 1 volume.
-
-Thanks in advance,
-Arjan
-
--- 
-It's a cult. If you've coded for any length of time, you've run across someone from this warped brotherhood. Their creed: if you can write complicated code, you must be good.
+--0016364c6da35f40f704616662f7--
