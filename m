@@ -1,23 +1,27 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id n0QNjNsr011693
-	for <linux-lvm@redhat.com>; Mon, 26 Jan 2009 18:45:23 -0500
-Received: from mckesson.com (mailgw01.mckesson.com [143.112.144.27])
-	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id n0QNiL56005477
-	for <linux-lvm@redhat.com>; Mon, 26 Jan 2009 18:44:22 -0500
-From: "Allen, Jack" <Jack.Allen@mckesson.com>
-Content-class: urn:content-classes:message
-In-Reply-To: <ab74ee140901261433p4f3056d5wa55e601afbef9872@mail.gmail.com>
-References: <4905EFD192EEDF4A9A19EEE98C32B7F70EC5207D@DBQV3005.na.corp.mckesson.com>
-	<ab74ee140901261433p4f3056d5wa55e601afbef9872@mail.gmail.com>
-Content-class: urn:content-classes:message
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id n0S8ovvC025995
+	for <linux-lvm@redhat.com>; Wed, 28 Jan 2009 03:50:57 -0500
+Received: from buexe.b-5.de (buexe.b-5.de [84.19.0.30])
+	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id n0S8ofNC031809
+	for <linux-lvm@redhat.com>; Wed, 28 Jan 2009 03:50:42 -0500
+Received: from alanya.lupe-christoph.de (alanya.lupe-christoph.de
+	[172.17.0.19])
+	by buexe.b-5.de (8.13.8/8.13.8/b-5/buexe-3.6.3) with ESMTP id
+	n0S8odHa004776
+	for <linux-lvm@redhat.com>; Wed, 28 Jan 2009 09:50:39 +0100
+Received: from localhost (localhost [127.0.0.1])
+	by alanya.lupe-christoph.de (Postfix) with ESMTP id A5E422C0B1
+	for <linux-lvm@redhat.com>; Wed, 28 Jan 2009 09:50:24 +0100 (CET)
+Received: from alanya.lupe-christoph.de ([127.0.0.1])
+	by localhost (alanya.lupe-christoph.de [127.0.0.1]) (amavisd-new,
+	port 10024) with LMTP id QnNcObwCfbYt for <linux-lvm@redhat.com>;
+	Wed, 28 Jan 2009 09:50:24 +0100 (CET)
+Date: Wed, 28 Jan 2009 09:50:24 +0100
+From: Lupe Christoph <lupe@lupe-christoph.de>
+Message-ID: <20090128085024.GA14023@lupe-christoph.de>
 MIME-Version: 1.0
-Subject: RE: [linux-lvm] Why is part of a PV not usable?
-Date: Mon, 26 Jan 2009 17:43:00 -0600
-Message-ID: <4905EFD192EEDF4A9A19EEE98C32B7F70EC52D0B@DBQV3005.na.corp.mckesson.com>
-In-Reply-To: <ab74ee140901261433p4f3056d5wa55e601afbef9872@mail.gmail.com>
-References: <4905EFD192EEDF4A9A19EEE98C32B7F70EC5207D@DBQV3005.na.corp.mckesson.com>
-	<ab74ee140901261433p4f3056d5wa55e601afbef9872@mail.gmail.com>
-Content-Transfer-Encoding: 8bit
+Content-Disposition: inline
+Subject: [linux-lvm] Size of the mirror log?
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -29,63 +33,21 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Transfer-Encoding: 7bit
+To: linux-lvm@redhat.com
 
-Thanks. I guess I have just always used a PE size or the default and the
-PV size was just the right size, because this was the first time I had
-seen this. This was on a customer's system that was connected to a SAN.
+Hi!
 
-----
-Jack Allen 
+I'm unable to find any information on how the size of the mirror log is
+determined. Right now I only have four volumes of 1GB each to test this,
+obviously too little. We will be getting a few 128GB volumes soon, but I
+would rather have a formula than some test results...
 
------Original Message-----
-From: linux-lvm-bounces@redhat.com [mailto:linux-lvm-bounces@redhat.com]
-On Behalf Of Francois Cami
-Sent: Monday, January 26, 2009 5:34 PM
-To: LVM general discussion and development
-Subject: Re: [linux-lvm] Why is part of a PV not usable?
+I presume the size will depend on the number of mirror regions, but how
+much log does a region require?
 
-Hi Jack,
-
-Your PE size is 4096KB and your PV's size is 2559x4096KB+3.98 MB.
-In other words, your PV's size is not an exact multiple of the PE size
-and
-all you lose is always less than the PE.
-( http://tldp.org/HOWTO/LVM-HOWTO )
-
-F
-
-
-2009/1/26 Allen, Jack <Jack.Allen@mckesson.com>:
-> Hello:
->         When I do "vgdisplay -v" or pvdisplay to see the PV, why is
-part of
-> the PV not usable?
->
->  --- Physical volume ---
->   PV Name               /dev/sdd1
->   VG Name               vg01
->   PV Size               10.00 GB / not usable 3.98 MB
->   Allocatable           yes
->   PE Size (KByte)       4096
->   Total PE              2559
->   Free PE               740
->   Allocated PE          1819
->   PV UUID               Q3LoGB-474h-ztit-HBA7-AUEX-OxpE-xoRo0J
->
-> -----
-> Thanks
-> Jack Allen
->
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
->
-
-_______________________________________________
-linux-lvm mailing list
-linux-lvm@redhat.com
-https://www.redhat.com/mailman/listinfo/linux-lvm
-read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+Thanks for help,
+Lupe Christoph
+-- 
+| There is no substitute for bad design except worse design.                   |
+| /me                                                                          |
