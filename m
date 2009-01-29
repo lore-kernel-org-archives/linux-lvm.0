@@ -1,34 +1,21 @@
-Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id n0SHEsLQ016848
-	for <linux-lvm@redhat.com>; Wed, 28 Jan 2009 12:14:54 -0500
-Received: from e35.co.us.ibm.com (e35.co.us.ibm.com [32.97.110.153])
-	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id n0SHEWCx009243
-	for <linux-lvm@redhat.com>; Wed, 28 Jan 2009 12:14:33 -0500
-Received: from d03relay02.boulder.ibm.com (d03relay02.boulder.ibm.com
-	[9.17.195.227])
-	by e35.co.us.ibm.com (8.13.1/8.13.1) with ESMTP id n0SHBZiX016704
-	for <linux-lvm@redhat.com>; Wed, 28 Jan 2009 10:11:35 -0700
-Received: from d03av04.boulder.ibm.com (d03av04.boulder.ibm.com [9.17.195.170])
-	by d03relay02.boulder.ibm.com (8.13.8/8.13.8/NCO v9.1) with ESMTP id
-	n0SHEVtR047316
-	for <linux-lvm@redhat.com>; Wed, 28 Jan 2009 10:14:31 -0700
-Received: from d03av04.boulder.ibm.com (loopback [127.0.0.1])
-	by d03av04.boulder.ibm.com (8.12.11.20060308/8.13.3) with ESMTP id
-	n0SHEVvj020385
-	for <linux-lvm@redhat.com>; Wed, 28 Jan 2009 10:14:31 -0700
-Received: from malahal.localdomain (malahal.beaverton.ibm.com [9.47.17.130])
-	by d03av04.boulder.ibm.com (8.12.11.20060308/8.12.11) with ESMTP id
-	n0SHEVTO020358
-	for <linux-lvm@redhat.com>; Wed, 28 Jan 2009 10:14:31 -0700
-Date: Wed, 28 Jan 2009 09:14:30 -0800
-From: malahal@us.ibm.com
-Subject: Re: [linux-lvm] Size of the mirror log?
-Message-ID: <20090128171430.GA13592@us.ibm.com>
-References: <20090128085024.GA14023@lupe-christoph.de>
-	<20090128162636.GA12514@us.ibm.com> <49808E4B.7080804@redhat.com>
+Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id n0T782Ap020023
+	for <linux-lvm@redhat.com>; Thu, 29 Jan 2009 02:08:02 -0500
+Received: from mail.knebb.de (mail.knebb.de [83.137.99.149])
+	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id n0T77fBx004702
+	for <linux-lvm@redhat.com>; Thu, 29 Jan 2009 02:07:42 -0500
+Received: from mx.knebb.de (p54BC59FB.dip.t-dialin.net [84.188.89.251])
+	by mail.knebb.de (Postfix) with ESMTP id 44E8570165
+	for <linux-lvm@redhat.com>; Thu, 29 Jan 2009 08:08:16 +0100 (CET)
+Received: from tp.knebb.de (tp.knebb.de [192.168.0.200])
+	by mx.knebb.de (Postfix) with ESMTP id 4E62E1D014D
+	for <linux-lvm@redhat.com>; Thu, 29 Jan 2009 08:07:43 +0100 (CET)
+Message-ID: <498155BB.9030607@knebb.de>
+Date: Thu, 29 Jan 2009 08:07:39 +0100
+From: =?ISO-8859-1?Q?Christian_V=F6lker?= <chrischan@knebb.de>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <49808E4B.7080804@redhat.com>
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] Snapshot on "disk": file system consistent?
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -40,29 +27,39 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: linux-lvm@redhat.com
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-Milan Broz [mbroz@redhat.com] wrote:
-> malahal@us.ibm.com wrote:
-> > Lupe Christoph [lupe@lupe-christoph.de] wrote:
-> >> I'm unable to find any information on how the size of the mirror log is
-> >> determined. Right now I only have four volumes of 1GB each to test this,
-> >> obviously too little. We will be getting a few 128GB volumes soon, but I
-> >> would rather have a formula than some test results...
-> >>
-> >> I presume the size will depend on the number of mirror regions, but how
-> >> much log does a region require?
-> > 
-> > Currently the log size is fixed at 1 PE (4MB by default). It is always a
-> > 1 PE.
-> 
-> Since LVM2 2.02.44 release mirror log size is properly calculated and can
-> be higher, it is not fixed to 1 PE anymore.
-> 
-> 
-> Milan
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA1
 
-Thank you Milan. I was looking at the 2.02.43 that I was working with.
+Yohoo!
 
---Malahal.
+Just for my own curiousity:
+
+I have a LVM volume which is presentet through iSCSI to another box. On
+the other box I used fdisk to create a partition and formatted the
+partition with ext3.
+
+Now I'm performing a backup on the local iSCSI/LVM server like follows:
+
+Taking a snapshot of the LV:
+lvcreate -s -p r -c 64K -L 30G -n snap_backup /dev/vg/backup
+
+Setting up the lo-device with the calculation for the partition start:
+losetup -o$[512*64] /dev/loop1 /dev/vg/snap_backup
+
+Mounting:
+mount /dev/loop1 /srv/snap/ -t ext3 -o ro
+
+Now my question is about the file system on the partition. Is it
+consistent? Would it be better to perform a fsck before mounting?
+
+Or can I rely on the above procedure to gain always a proper filesystem?
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.7 (GNU/Linux)
+Comment: Using GnuPG with Fedora - http://enigmail.mozdev.org
+
+iD8DBQFJgVW70XNIYlAXmzsRAvFeAJ9Xz1IzEqEw49+kBnhAChixvK6zCgCgtxaz
+a7bgGVSkpTWpEoDXueralWE=
+=RR04
+-----END PGP SIGNATURE-----
