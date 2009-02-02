@@ -1,19 +1,13 @@
-Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id n128xaJR002134
-	for <linux-lvm@redhat.com>; Mon, 2 Feb 2009 03:59:36 -0500
-Received: from eu1sys200aog117.obsmtp.com (eu1sys200aog117.obsmtp.com
-	[207.126.144.143])
-	by mx3.redhat.com (8.13.8/8.13.8) with SMTP id n128xIFV030724
-	for <linux-lvm@redhat.com>; Mon, 2 Feb 2009 03:59:19 -0500
-Received: by bwz14 with SMTP id 14so267309bwz.20
-	for <linux-lvm@redhat.com>; Mon, 02 Feb 2009 00:59:18 -0800 (PST)
-Date: Mon, 2 Feb 2009 09:59:14 +0100
-From: "F-D. Cami" <fcami@winsoft.fr>
+Received: from [10.34.32.183] (mazybook.englab.brq.redhat.com [10.34.32.183])
+	by ns3.rdu.redhat.com (8.13.8/8.13.8) with ESMTP id n129C17Y011649
+	for <linux-lvm@redhat.com>; Mon, 2 Feb 2009 04:12:01 -0500
+Message-ID: <4986B8DF.7020307@redhat.com>
+Date: Mon, 02 Feb 2009 10:11:59 +0100
+From: Milan Broz <mbroz@redhat.com>
+MIME-Version: 1.0
 Subject: Re: [linux-lvm] resizefs and ext4
-Message-ID: <20090202095914.21ab336e@winsoft.fr>
-In-Reply-To: <20090202034739.8EE5C6F06C@alopias.GreenKey.net>
 References: <20090202034739.8EE5C6F06C@alopias.GreenKey.net>
-Mime-Version: 1.0
+In-Reply-To: <20090202034739.8EE5C6F06C@alopias.GreenKey.net>
 Content-Transfer-Encoding: 7bit
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
@@ -27,17 +21,14 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 To: LVM general discussion and development <linux-lvm@redhat.com>
-Cc: Curtis@GreenKey.net
 
-On Sun, 1 Feb 2009 19:47:39 -0800 (PST)
-Curtis Doty <Curtis@GreenKey.net> wrote:
-
+Curtis Doty wrote:
 > Any plans to let the fsadm script support ext4 in Fedora 11?
 
-I think you should look at what's already available in rawhide or ask in
-fedora-devel :)
+For fsadm, probably only a small change needed in script, please
+fill a bug for lvm2 component/rawhide on bugzilla.redhat.com to track this.
 
-Best,
-
+Thanks,
+Milan
 --
-fdc
+mbroz@redhat.com
