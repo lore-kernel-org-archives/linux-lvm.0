@@ -1,24 +1,20 @@
-Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id n14ENxI3022432
-	for <linux-lvm@redhat.com>; Wed, 4 Feb 2009 09:23:59 -0500
-Received: from smtp2-g21.free.fr (smtp2-g21.free.fr [212.27.42.2])
-	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id n14ENbpK007797
-	for <linux-lvm@redhat.com>; Wed, 4 Feb 2009 09:23:40 -0500
-Received: from smtp2-g21.free.fr (localhost [127.0.0.1])
-	by smtp2-g21.free.fr (Postfix) with ESMTP id 9F2634B01FB
-	for <linux-lvm@redhat.com>; Wed,  4 Feb 2009 15:23:35 +0100 (CET)
-Received: from [192.168.1.4] (bon31-1-82-66-78-161.fbx.proxad.net
-	[82.66.78.161])
-	by smtp2-g21.free.fr (Postfix) with ESMTP id 9F6F54B015A
-	for <linux-lvm@redhat.com>; Wed,  4 Feb 2009 15:23:32 +0100 (CET)
-Message-ID: <4989A4E3.6040201@free.fr>
-Date: Wed, 04 Feb 2009 15:23:31 +0100
-From: Georges Giralt <georges.giralt@free.fr>
+Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id n14FGwlq026095
+	for <linux-lvm@redhat.com>; Wed, 4 Feb 2009 10:16:58 -0500
+Received: from wf-out-1314.google.com (wf-out-1314.google.com [209.85.200.172])
+	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id n14FEiZ2031950
+	for <linux-lvm@redhat.com>; Wed, 4 Feb 2009 10:14:44 -0500
+Received: by wf-out-1314.google.com with SMTP id 25so2627982wfc.6
+	for <linux-lvm@redhat.com>; Wed, 04 Feb 2009 07:14:43 -0800 (PST)
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] Query regarding conversion of root partition to LV
-References: <a80c86b70902040505l257e8ab8k4bad5ac121520e3f@mail.gmail.com>
-In-Reply-To: <a80c86b70902040505l257e8ab8k4bad5ac121520e3f@mail.gmail.com>
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <a5543b500902040533n5ccc396eyc3e0e02aaa3b30c5@mail.gmail.com>
+References: <a5543b500902030451o160e8318u13e08c236f0ebec7@mail.gmail.com>
+	<a5543b500902040533n5ccc396eyc3e0e02aaa3b30c5@mail.gmail.com>
+Date: Wed, 4 Feb 2009 07:14:43 -0800
+Message-ID: <1c748a490902040714l650f46a3wecc2a8d268456506@mail.gmail.com>
+Subject: Re: [linux-lvm] Doubts on Snapshots
+From: Larry Dickson <ldickson@cuttedge.com>
+Content-Type: multipart/alternative; boundary=00163646d97f5838b80462193fbb
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -29,52 +25,86 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="iso-8859-1"; format="flowed"
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-Prateek Donni a =C3=A9crit :
-> I have a fedora 9 installation with two partitions swap and /
-> partition. Now i want to mirror the files on the root partition to
-> another disk using LVM mirroring. Since i dint make root on a LV and
-> have no allocated space left so i am thinking of using the free space
-> on the root partition as a block device that can be converted into PV
-> and then mirrored after making it a LV.
-> Is this feasible?
-> Can someone let me know wht can be done?
->=20
-> Thanks
-> Prateek
->
-Hi Prateek !
-IMHO this won't work.
-As you spoke about mirroring, you can do this :
-1) add another disk to the system (ideally same size of the original one)
-2) partition it as :
-	part #1 used as /boot (about a 100 MB, Ext2/3 FS )
-	part #2 the remaining of the disk tagged as LVM.
-3) boot your system under Fedora 9 and using LVM mamger create a PV ont=20
-the second partition, then a VG on the PV and then as much LV as you=20
-need. Do not forget to create the swap LV.
-4) Format and temporary mount each LV ont the filesystem, recreating the=20
-correct layout but under, say, /mnt.
-5) copy the data using a command like : cd / && tar cf - . |(cd /mnt &&=20
-tar xf -)
-6) under the /mnt layout correct the Grub menu file, then using this as=20
-the root with chroot, re-run grub-install.
-7) boot under the new disk and test your system.
-If fine,
-8) create the same partition layout on the old disk as the new one and=20
-create 2 software raid 1 (mirror) using mdadm, one for the first=20
-partition used as /boot , the other one for the PV.
-9) synchronize the md.
-Enjoy.
-Be carefull and read the man pages before proceding. A complete backup=20
-may prove usefull, also.
-Hope this helps.
+--00163646d97f5838b80462193fbb
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
 
---=20
-If the only tool you have is a hammer, you tend to see every problem as=20
-a nail.
-                 Abraham Maslow
-A British variant :
-Any tool can serve as a hammer but a screwdriver makes the best chisel.
+This is a misunderstanding of what snapshot does. To minimize copying, it
+makes a special volume containing the OLD versions of only those sectors
+CHANGED since the snap was made. Thus, when mated with the original,
+continually-being-updated volume, it can reconstruct its state at the time
+of the snap. Without the original, it cannot do much.
+
+I think what you want is mirroring or rsync.
+
+Larry Dickson
+Cutting Edge Networked Storage
+
+On 2/4/09, Rahul Baheti <rahulbaheti86@gmail.com> wrote:
+>
+>
+>
+>
+> I have connected a pen drive and make a logical volume from it. then i take
+> a snapshot of this logical volume and the snapshot logical volume lies in
+> hard disk. After that i plugged out the pen drive. Without pen drive being
+> plugged into the system can i recover the data of pen drive using the
+> snapshot volume.
+>
+>
+> Waiting for reply
+>
+> Thanks and Regards
+>
+> Rahul Baheti
+>
+>
+>
+> _______________________________________________
+> linux-lvm mailing list
+> linux-lvm@redhat.com
+> https://www.redhat.com/mailman/listinfo/linux-lvm
+> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
+>
+
+--00163646d97f5838b80462193fbb
+Content-Type: text/html; charset=ISO-8859-1
+Content-Transfer-Encoding: quoted-printable
+
+<div>This is a misunderstanding of what snapshot does. To minimize copying,=
+ it makes a special volume containing the OLD versions of only those sector=
+s CHANGED since the snap was made. Thus, when mated with the original, cont=
+inually-being-updated volume, it can reconstruct its state at the time of t=
+he snap. Without the original, it cannot do much.</div>
+
+<div>&nbsp;</div>
+<div>I think what you want is mirroring or rsync.</div>
+<div>&nbsp;</div>
+<div>Larry Dickson</div>
+<div>Cutting Edge Networked Storage<br>&nbsp;</div>
+<div><span class=3D"gmail_quote">On 2/4/09, <b class=3D"gmail_sendername">R=
+ahul Baheti</b> &lt;<a href=3D"mailto:rahulbaheti86@gmail.com">rahulbaheti8=
+6@gmail.com</a>&gt; wrote:</span>
+<blockquote class=3D"gmail_quote" style=3D"PADDING-LEFT: 1ex; MARGIN: 0px 0=
+px 0px 0.8ex; BORDER-LEFT: #ccc 1px solid"><br>
+<div class=3D"gmail_quote"><br><br>I have connected a pen drive and make a =
+logical volume from it. then i take a snapshot of this logical volume and t=
+he snapshot logical volume lies in hard disk. After that i plugged out the =
+pen drive. Without pen drive being plugged into the system can i recover th=
+e data of pen drive using the snapshot volume. <br>
+<br><br>Waiting for reply<br><br>Thanks and Regards<br><font color=3D"#8888=
+88"><br>Rahul Baheti<br><br></font></div><br><br>__________________________=
+_____________________<br>linux-lvm mailing list<br><a onclick=3D"return top=
+.js.OpenExtLink(window,event,this)" href=3D"mailto:linux-lvm@redhat.com">li=
+nux-lvm@redhat.com</a><br>
+<a onclick=3D"return top.js.OpenExtLink(window,event,this)" href=3D"https:/=
+/www.redhat.com/mailman/listinfo/linux-lvm" target=3D"_blank">https://www.r=
+edhat.com/mailman/listinfo/linux-lvm</a><br>read the LVM HOW-TO at <a oncli=
+ck=3D"return top.js.OpenExtLink(window,event,this)" href=3D"http://tldp.org=
+/HOWTO/LVM-HOWTO/" target=3D"_blank">http://tldp.org/HOWTO/LVM-HOWTO/</a><b=
+r>
+</blockquote></div><br>
+
+--00163646d97f5838b80462193fbb--
