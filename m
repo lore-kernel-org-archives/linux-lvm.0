@@ -1,32 +1,17 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id n15NGGq9011900
-	for <linux-lvm@redhat.com>; Thu, 5 Feb 2009 18:16:16 -0500
-Received: from smtp.01.com (smtp.01.com [38.98.186.166])
-	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id n15NFQ8P019622
-	for <linux-lvm@redhat.com>; Thu, 5 Feb 2009 18:15:27 -0500
-Received: from asav-1.01.com (localhost.localdomain [127.0.0.1])
-	by asav-1.01.com (8.13.1/8.13.1) with ESMTP id n15NDZ97025502
-	for <linux-lvm@redhat.com>; Thu, 5 Feb 2009 17:13:35 -0600
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by smtp-2.01.com (Postfix) with ESMTP id 764721AD3D1
-	for <linux-lvm@redhat.com>; Thu,  5 Feb 2009 17:13:35 -0600 (CST)
-Received: from smtp-2.01.com ([127.0.0.1])
-	by localhost (smtp-2.01.com [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id pP5bSBeppbrS for <linux-lvm@redhat.com>;
-	Thu,  5 Feb 2009 17:13:35 -0600 (CST)
-Received: from [172.16.23.43] (unknown [12.130.157.75])
-	by smtp-2.01.com (Postfix) with ESMTP id 3E9351AD3B0
-	for <linux-lvm@redhat.com>; Thu,  5 Feb 2009 17:13:35 -0600 (CST)
-Message-ID: <EMEWEMEW2_DELIMl14HDZd4de99353d877064574350,
-	vsrini@spikesource.com, 498B72AB.>
-Date: Thu, 05 Feb 2009 15:13:47 -0800
-From: Vinay Srini <vsrini@spikesource.com>
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id n165QCBl000745
+	for <linux-lvm@redhat.com>; Fri, 6 Feb 2009 00:26:13 -0500
+Received: from wa-out-1112.google.com (wa-out-1112.google.com [209.85.146.179])
+	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id n165Pucl012705
+	for <linux-lvm@redhat.com>; Fri, 6 Feb 2009 00:25:56 -0500
+Received: by wa-out-1112.google.com with SMTP id n4so319052wag.19
+	for <linux-lvm@redhat.com>; Thu, 05 Feb 2009 21:25:55 -0800 (PST)
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] lvm2 specificiation
-References: <20090205224659.GU20668@agk.fab.redhat.com>
-	<498B6FF5.9010307@gmail.com>
-In-Reply-To: <498B6FF5.9010307@gmail.com>
-Content-Transfer-Encoding: 7bit
+Date: Fri, 6 Feb 2009 12:25:55 +0700
+Message-ID: <e8699ecc0902052125o3f7036e9u17c931051b3c9db2@mail.gmail.com>
+From: J Cipto <jcipto@gmail.com>
+Content-Type: multipart/alternative; boundary=00163645759457538c04623941b8
+Subject: [linux-lvm] Recovering data from lost /dev/vg
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -37,41 +22,59 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: LVM general discussion and development <linux-lvm@redhat.com>
+To: linux-lvm@redhat.com
 
-Les Mikesell wrote:
-> Alasdair G Kergon wrote:
->> On Thu, Feb 05, 2009 at 01:54:00PM -0800, Vinay Srini wrote:
->>> I have a requirement to mount multiple volume groups with the same 
->>> name (VolGroup00, as that is the most popular default name), without 
->>> first using vgrename (because something might go wrong, and I may not 
->>> be able to restore the name back).
->>  
->> It was an early design decision that every VG on a system should have a
->> different name.  Departures from that won't get supported - because 
->> it's so
->> simple to choose different names!
-> 
-> How do you move drives around among machines then, if they have been 
-> created with the default names that will conflict?
-> 
+--00163645759457538c04623941b8
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
 
-These are flat files mounted in a directory across the network. Which 
-when accessed, gets bytes across the network. (mounted using fuse libs)
+Hi,
 
-eg. if the flat file is located in /mnt/over-network/flat,
-# losetup -f --show /mnt/over-network/flat
-/dev/loop0
+Is there any way to recover data from lost /dev/vg?
+The story is as follows :
+The  linux server was connected to external storage  and a volume group
+(namely /dev/vdisks) was created out of 8 LUNs from the storage.
+For some reasons the presentation to the server was lost.
+Representation was done and the server recognizes all the 8 LUNS but not the
+volume group.
+Found that /dev/vdisks was gone.
 
-# vgscan (this will find my VolGroup00)
-# .. and so on
+We need to recover the data, but to my understanding (i have a bit knowledge
+of hpux) what need to be done is to recreate the /dev/vdisks and reimport
+the volume.
+Unfortunately, i don't know how to do it in linux.
 
-One example is mounting virtual machine drives from the virtual server 
-on to my desktop. In this case, i would like to perform some operations 
-on the drive (copy from/to etc), and unmount.
+Could someone provide me step by step information on how i can get back the
+data?
+FYI, there is no backup for the data and pvscan showed no devices found.
 
-Is there an RFC for the lvm design that I could read throught to better 
-understand this?
 
-Vinay.
+Thanks,
+
+jcipto
+
+--00163645759457538c04623941b8
+Content-Type: text/html; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+
+<div>Hi,</div>
+<div>&nbsp;</div>
+<div>Is there any way to recover data from lost /dev/vg?</div>
+<div>The story is as follows&nbsp;:</div>
+<div>The &nbsp;linux server was connected to external storage&nbsp; and a volume group (namely /dev/vdisks)&nbsp;was created out of 8 LUNs from the storage. </div>
+<div>For some reasons the presentation to the server was lost. </div>
+<div>Representation was done and the server recognizes all the 8 LUNS but not the volume group.</div>
+<div>Found that /dev/vdisks was gone. </div>
+<div>&nbsp;</div>
+<div>We need to recover the data, but to my understanding (i have a bit knowledge of hpux) what need to be done is to recreate the /dev/vdisks and reimport the volume.</div>
+<div>Unfortunately, i don&#39;t know how to do it in linux. </div>
+<div>&nbsp;</div>
+<div>Could someone provide me step by step information on how i can get back the data? </div>
+<div>FYI, there is no backup for the data and pvscan showed no devices found. </div>
+<div>&nbsp;</div>
+<div>&nbsp;</div>
+<div>Thanks,</div>
+<div>&nbsp;</div>
+<div>jcipto</div>
+
+--00163645759457538c04623941b8--
