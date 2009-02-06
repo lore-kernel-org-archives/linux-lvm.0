@@ -1,20 +1,18 @@
-Received: from pobox.fab.redhat.com (pobox.fab.redhat.com [10.33.63.12])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id n16B87DV008782
-	for <linux-lvm@redhat.com>; Fri, 6 Feb 2009 06:08:07 -0500
-Received: from breeves.fab.redhat.com (breeves.fab.redhat.com [10.33.0.40])
-	by pobox.fab.redhat.com (8.13.1/8.13.1) with ESMTP id n16B84mu000887
-	for <linux-lvm@redhat.com>; Fri, 6 Feb 2009 06:08:04 -0500
-Message-ID: <498C1A1D.9080108@redhat.com>
-Date: Fri, 06 Feb 2009 11:08:13 +0000
-From: "Bryn M. Reeves" <bmr@redhat.com>
+Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id n16Da4dj009882
+	for <linux-lvm@redhat.com>; Fri, 6 Feb 2009 08:36:04 -0500
+Received: from alopias.GreenKey.net (alopias.GreenKey.net [209.209.60.60])
+	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id n16DZb76015244
+	for <linux-lvm@redhat.com>; Fri, 6 Feb 2009 08:35:38 -0500
+Date: Fri, 6 Feb 2009 05:35:36 -0800 (PST)
+From: Curtis Doty <Curtis@GreenKey.net>
+Subject: Re: [linux-lvm] resizefs and ext4
+In-Reply-To: <4986B8DF.7020307@redhat.com>
+References: <20090202034739.8EE5C6F06C@alopias.GreenKey.net>
+	<4986B8DF.7020307@redhat.com>
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] lvm2 specificiation
-References: <20090205224659.GU20668@agk.fab.redhat.com>
-	<498B6FF5.9010307@gmail.com>
-In-Reply-To: <498B6FF5.9010307@gmail.com>
-Content-Transfer-Encoding: 7bit
-Reply-To: bmr@redhat.com,
-	LVM general discussion and development <linux-lvm@redhat.com>
+Message-Id: <20090206133537.4F4F76F064@alopias.GreenKey.net>
+Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -24,27 +22,19 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
+Content-Type: TEXT/PLAIN; charset="us-ascii"; format="flowed"
+Content-Transfer-Encoding: 7bit
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-Les Mikesell wrote:
-> Alasdair G Kergon wrote:
->> On Thu, Feb 05, 2009 at 01:54:00PM -0800, Vinay Srini wrote:
->>> I have a requirement to mount multiple volume groups with the same 
->>> name (VolGroup00, as that is the most popular default name), without 
->>> first using vgrename (because something might go wrong, and I may not 
->>> be able to restore the name back).
->>  
->> It was an early design decision that every VG on a system should have a
->> different name.  Departures from that won't get supported - because 
->> it's so
->> simple to choose different names!
-> 
-> How do you move drives around among machines then, if they have been 
-> created with the default names that will conflict?
-> 
+Monday Milan Broz said:
 
-Using the oft-posted directions for changing the VG name and UUID.
+> Curtis Doty wrote:
+>> Any plans to let the fsadm script support ext4 in Fedora 11?
+>
+> For fsadm, probably only a small change needed in script, please
+> fill a bug for lvm2 component/rawhide on bugzilla.redhat.com to track this.
+>
 
-Regards,
-Bryn.
+Done here FYI. http://bugzilla.redhat.com/483596
+
+../C
