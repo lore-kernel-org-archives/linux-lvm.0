@@ -1,13 +1,13 @@
 Received: from [10.32.10.85] (vpn-10-85.str.redhat.com [10.32.10.85])
-	by ns3.rdu.redhat.com (8.13.8/8.13.8) with ESMTP id n18DvSS3011038
-	for <linux-lvm@redhat.com>; Sun, 8 Feb 2009 08:57:29 -0500
-Message-ID: <498EE4C7.8020407@redhat.com>
-Date: Sun, 08 Feb 2009 14:57:27 +0100
+	by ns3.rdu.redhat.com (8.13.8/8.13.8) with ESMTP id n18EBR24015449
+	for <linux-lvm@redhat.com>; Sun, 8 Feb 2009 09:11:27 -0500
+Message-ID: <498EE80D.3090307@redhat.com>
+Date: Sun, 08 Feb 2009 15:11:25 +0100
 From: Milan Broz <mbroz@redhat.com>
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] Can't mount or access Logical Volume (LV)
-References: <9b08fe090902080346i4d6ff602td9abf882adda1067@mail.gmail.com>
-In-Reply-To: <9b08fe090902080346i4d6ff602td9abf882adda1067@mail.gmail.com>
+Subject: Re: [linux-lvm] Problems running my home-built LVM2
+References: <jwvzlgzlh6o.fsf-monnier+gmane.linux.lvm.general@gnu.org>
+In-Reply-To: <jwvzlgzlh6o.fsf-monnier+gmane.linux.lvm.general@gnu.org>
 Content-Transfer-Encoding: 7bit
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
@@ -22,29 +22,28 @@ List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-Glenn Everette wrote:
-> I'm using OpenSuSe 11.1. The LV was initially created on a 10.3 with one
-> drive and extended to two drives. I've moved the physical volume into
-> and out of various linux distros with no problem. Now the Logical Volume
-> does not show up in any partitioning tool or any Linux distro.
-...
-> vault {
->         id = "4LIF0K-KJQl-JtpG-bRTv-YoSA-18Zz-kwKIoy"
->         seqno = 6
->         status = ["EXPORTED", "RESIZEABLE", "READ", "WRITE"]
-...
+Stefan Monnier wrote:
+> I'm trying to use LVM2 on a small MIPS machine.  This machine uses
+> uClibc-0.9.29 with Linux-2.6.25.20 and has limited RAM and CPU power,
+> but does come with a 1TB drive which I'd rather manage with LVM.
 
-> omni:~ # lvs --all --debug --verbose
->     Finding all logical volumes
->   Volume group vault is exported
+> I had no particular problems building the latest version of LVM2
+> for it.  And as far as I can tell, it's not fully broken,
+> but it's unusable: every run of `lvm' gives different results.
+> E.g. `lvm pvs' sometimes gives the expected output, sometimes lists
+> nothing at all, sometimes complains about missing volume groups,
+> sometimes "Incorrect metadata area header checksum" [as mentioned in an
+> earlier message on this list, incidentally].
 
-Your VG is apparently marked as exported (see man for vgexport/vgimport)
+I guess that using uClibc is the problem.
+Can you try to link it to standard glibc (if possible; you can try to use
+static build also)?
+(Just to test that using uClibc is the problem or not.)
 
-Try 
+> Then I installed Debian in a chroot, and Debian's 2.02.39 version of
+> `lvm' works just fine.
 
-vgimport vault
-vgchange -a y vault
-
+That version uses glibc, right?
 
 Milan
 --
