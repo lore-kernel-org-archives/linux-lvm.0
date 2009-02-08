@@ -1,25 +1,19 @@
-Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id n16FbEwS018107
-	for <linux-lvm@redhat.com>; Fri, 6 Feb 2009 10:37:14 -0500
-Received: from ciao.gmane.org (main.gmane.org [80.91.229.2])
-	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id n16FavHC017933
-	for <linux-lvm@redhat.com>; Fri, 6 Feb 2009 10:36:57 -0500
-Received: from list by ciao.gmane.org with local (Exim 4.43)
-	id 1LVSlC-00048C-04
-	for linux-lvm@redhat.com; Fri, 06 Feb 2009 15:36:54 +0000
-Received: from 69-196-139-226.dsl.teksavvy.com ([69.196.139.226])
-	by main.gmane.org with esmtp (Gmexim 0.1 (Debian))
-	id 1AlnuQ-0007hv-00
-	for <linux-lvm@redhat.com>; Fri, 06 Feb 2009 15:36:53 +0000
-Received: from monnier by 69-196-139-226.dsl.teksavvy.com with local (Gmexim
-	0.1 (Debian)) id 1AlnuQ-0007hv-00
-	for <linux-lvm@redhat.com>; Fri, 06 Feb 2009 15:36:53 +0000
-From: Stefan Monnier <monnier@iro.umontreal.ca>
-Date: Fri, 06 Feb 2009 10:36:45 -0500
-Message-ID: <jwvzlgzlh6o.fsf-monnier+gmane.linux.lvm.general@gnu.org>
-Mime-Version: 1.0
-Sender: news <news@ger.gmane.org>
-Subject: [linux-lvm] Problems running my home-built LVM2
+Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id n18A0R1S007299
+	for <linux-lvm@redhat.com>; Sun, 8 Feb 2009 05:00:27 -0500
+Received: from fk-out-0910.google.com (fk-out-0910.google.com [209.85.128.188])
+	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id n18A0AfZ026179
+	for <linux-lvm@redhat.com>; Sun, 8 Feb 2009 05:00:11 -0500
+Received: by fk-out-0910.google.com with SMTP id k31so1350913fkk.3
+	for <linux-lvm@redhat.com>; Sun, 08 Feb 2009 02:00:10 -0800 (PST)
+MIME-Version: 1.0
+In-Reply-To: <1233644558.21625.12.camel@box0>
+References: <1233644558.21625.12.camel@box0>
+Date: Sun, 8 Feb 2009 10:00:10 +0000
+Message-ID: <b072968d0902080200s7ba825cbs79432556c7551496@mail.gmail.com>
+Subject: Re: [linux-lvm] Is my xen hosting tech support misleading me?
+From: David Robinson <zxvdr.au@gmail.com>
+Content-Transfer-Encoding: 7bit
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -31,32 +25,36 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: linux-lvm@redhat.com
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-I'm trying to use LVM2 on a small MIPS machine.  This machine uses
-uClibc-0.9.29 with Linux-2.6.25.20 and has limited RAM and CPU power,
-but does come with a 1TB drive which I'd rather manage with LVM.
+> Attached is a question I've asked my xen hosting provider's technical
+> support and the answer they've supplied.
+>
+> Sam sais "There is no LVM module available, so you would need to compile
+> LVM by yourself from the Xen kernel sources." but I've no problem
+> loading dm_mod and to my understanding of LVM, this is the only module
+> needed. So is he just wrong?
 
-I had no particular problems building the latest version of LVM2
-for it.  And as far as I can tell, it's not fully broken,
-but it's unusable: every run of `lvm' gives different results.
-E.g. `lvm pvs' sometimes gives the expected output, sometimes lists
-nothing at all, sometimes complains about missing volume groups,
-sometimes "Incorrect metadata area header checksum" [as mentioned in an
-earlier message on this list, incidentally].
+If you're able to activate the volumes after the system has booted
+(which the discussion below suggests), then the device-mapper modules
+would already be available so there's no need to compile anything.
 
-I've taken a look at the compile log and didn't see any funny warning.
-I tried to compile other versions of LVM (2.02.44, 2.02.43, 2.02.39),
-but they all give the same result.
+> The issue is that logical volumes are not activated on bootup. This prevents me from using /etc/fstab to mount them.
+>
+> root@shacharor:~# lvdisplay | grep 'LV Status' && udevtrigger && udevsettle && lvdisplay | grep 'LV Status'
+>   LV Status              NOT available
+>   LV Status              available
+> root@shacharor:~#
+>
+> This shows that udev handles logical volumes correctly and does activate them. But why doesn't it do it on bootup?
 
-Then I installed Debian in a chroot, and Debian's 2.02.39 version of
-`lvm' works just fine.
+If the volumes aren't created at boot time you're probably missing the
+relevant stuff in your initial ram disk... usually, if you're root fs
+is on an LVM volume, the ram disk would contain the relevant dm_*
+kernel modules and a script that (amongst other things) loads the
+relevant kernel modules and activates the volumes. Your simplest
+solution may be to just add "vgscan --mknodes" and "vgchange -ay" to
+rc.local (its uglier than fixing the initrd, but you may not be able
+to recreate the initrd in your situation).
 
-Does anyone have any idea what might be going on?
-
-As a temporary workaround, I use "chroot /debian lvm" instead of "lvm",
-but I really would like to get the "native" lvm working.
-
-
-        Stefan
+--Dave
