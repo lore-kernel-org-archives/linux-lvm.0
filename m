@@ -1,21 +1,20 @@
-Received: from pobox.fab.redhat.com (pobox.fab.redhat.com [10.33.63.12])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id n19IrId5017437
-	for <linux-lvm@redhat.com>; Mon, 9 Feb 2009 13:53:18 -0500
-Received: from breeves.fab.redhat.com (breeves.fab.redhat.com [10.33.0.40])
-	by pobox.fab.redhat.com (8.13.1/8.13.1) with ESMTP id n19IrFtJ022418
-	for <linux-lvm@redhat.com>; Mon, 9 Feb 2009 13:53:15 -0500
-Message-ID: <49907BAB.7000204@redhat.com>
-Date: Mon, 09 Feb 2009 18:53:31 +0000
-From: "Bryn M. Reeves" <bmr@redhat.com>
+Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id n19KZoeD013975
+	for <linux-lvm@redhat.com>; Mon, 9 Feb 2009 15:35:50 -0500
+Received: from mail-bw0-f160.google.com (mail-bw0-f160.google.com
+	[209.85.218.160])
+	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id n19KYUlC005939
+	for <linux-lvm@redhat.com>; Mon, 9 Feb 2009 15:35:34 -0500
+Received: by mail-bw0-f160.google.com with SMTP id 4so1893529bwz.3
+	for <linux-lvm@redhat.com>; Mon, 09 Feb 2009 12:35:34 -0800 (PST)
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] Dead device and cleaning up LVM
-References: <20090209173514.GA1244@esri.com>
-	<49906BCA.9070904@redhat.com>	<20090209175804.GA1501@esri.com>
-	<20090209182657.GA1797@esri.com>
-In-Reply-To: <20090209182657.GA1797@esri.com>
+Sender: pgnet.trash@gmail.com
+Date: Mon, 9 Feb 2009 12:35:34 -0800
+Message-ID: <dbd51810902091235l3669eb73w9f9266b87f323d48@mail.gmail.com>
+From: PGNet <pgnet.trash+lvm@gmail.com>
 Content-Transfer-Encoding: 7bit
-Reply-To: bmr@redhat.com,
-	LVM general discussion and development <linux-lvm@redhat.com>
+Subject: [linux-lvm] lvm 'filter = [...]' by VG or LV name?
+Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -25,46 +24,38 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="us-ascii"
+To: linux-lvm@redhat.com
 
-Ray Van Dolson wrote:
-> On Mon, Feb 09, 2009 at 09:58:04AM -0800, Ray Van Dolson wrote:
->> On Mon, Feb 09, 2009 at 09:45:46AM -0800, Bryn M. Reeves wrote:
->>> Ray Van Dolson wrote:
->>>> Anyone know how I can remove this device both from the system and from
->>>> LVM safely?  I can reboot, but saving that as a last resort if
->>>> possible.
->>> You don't mention the name of your VG/LV but you should be able to 
->>> remove the active lvm devices with "dmsetup remove", e.g.:
->>>
->>> dmsetup remove $VG-$LV
->>>
->>> For each LV in each VG that was using the iSCSI devices.
->> Beautiful.  This did the trick!  I can now also unload the iSCSI kernel
->> modules correctly on the initiator.
->>
-> 
-> Also, just an FYI in case anyone else runs across this thread... to get
-> my filesystem back (pvscan didn't detect the LVM at all):
-> 
->   # pvcreate --uuid 3HpAVg-fRz0-HWXp-EFxK-khVO-IvN6-J4a6w1 /dev/sdb
+i've a RAID device, with a VolumeGroup & a LovicalVolume,
 
-If you also specify "--restorefile=" and the path to the current 
-metadata backup in /etc/lvm, pvcreate will ensure that the new PV can 
-accommodate the VG you want to restore to it. It'll almost certainly 
-always work without this if you always use the default options but by 
-specifying --restorefile you can be completely sure.
+       /dev/md3 -> VG('VG01'):LV('test'):'/home/test'
 
->   (Found the old UUID by examining the /etc/lvm/backup directory)
->   # vgcfgrestore FTP1
->   # vgchange -ay FTP1
->   # fsck.ext3 /dev/FTP1/LogVol00
->   # mount -a
-> 
-> Back in action!
+i've added a new LV to VGO1's available space,
 
-Glad to hear it!
+       lvcreate -n new_DomU -L 4G /dev/VG01
+       dd if=.../template of=/dev/VG01/new_DomU
 
-Regards,
-Bryn.
+i need to *exclude* '/dev/VG01/new_DomU' from lvm scanning, but make
+sure the 'home/test/ mount is still scanned.
+
+in lvm.conf, if i set,
+
+       filter =[ "a|/dev/md[3]|", "r|.*|" ]
+
+it correctly excludes the entire block-dev, and it's VG/LV contents.
+but, @ attempt to, e.g.,
+
+       dd if=.../template of=/dev/VG01/new_DomU
+
+then returns,
+
+       Volume group "VG01" not found
+
+iiuc, the 'filter=' specification filters on block-devices only, not
+VG/LV names (at least i've not figured out a regex that works, yet).
+
+is there any way to exclude just certain LVM's in/on a block device,
+leaving the rest scannable?
+
+thanks.
