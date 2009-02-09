@@ -1,20 +1,25 @@
-Received: from pobox.fab.redhat.com (pobox.fab.redhat.com [10.33.63.12])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id n19GW3M7015501
-	for <linux-lvm@redhat.com>; Mon, 9 Feb 2009 11:32:04 -0500
-Received: from breeves.fab.redhat.com (breeves.fab.redhat.com [10.33.0.40])
-	by pobox.fab.redhat.com (8.13.1/8.13.1) with ESMTP id n19GW04W009320
-	for <linux-lvm@redhat.com>; Mon, 9 Feb 2009 11:32:00 -0500
-Message-ID: <49905A90.2000802@redhat.com>
-Date: Mon, 09 Feb 2009 16:32:16 +0000
-From: "Bryn M. Reeves" <bmr@redhat.com>
+Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id n19HZW5M029406
+	for <linux-lvm@redhat.com>; Mon, 9 Feb 2009 12:35:32 -0500
+Received: from Vail.esri.com (esrismtp2.esri.com [198.102.62.103])
+	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id n19HZHOJ012682
+	for <linux-lvm@redhat.com>; Mon, 9 Feb 2009 12:35:17 -0500
+Received: from leoray.esri.com (leoray.esri.com [10.27.102.12])
+	by Vail.esri.com (8.13.7+Sun/8.13.7) with ESMTP id n19HZFAi029818
+	for <linux-lvm@redhat.com>; Mon, 9 Feb 2009 09:35:16 -0800 (PST)
+Received: from leoray.esri.com (leoray.esri.com [127.0.0.1])
+	by leoray.esri.com (8.14.3/8.14.1) with ESMTP id n19HZFQv001307
+	for <linux-lvm@redhat.com>; Mon, 9 Feb 2009 09:35:15 -0800
+Received: (from ray5147@localhost)
+	by leoray.esri.com (8.14.3/8.14.3/Submit) id n19HZF1F001305
+	for linux-lvm@redhat.com; Mon, 9 Feb 2009 09:35:15 -0800
+Date: Mon, 9 Feb 2009 09:35:15 -0800
+From: Ray Van Dolson <rvandolson@esri.com>
+Message-ID: <20090209173514.GA1244@esri.com>
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] Re: Problems running my home-built LVM2
-References: <jwvzlgzlh6o.fsf-monnier+gmane.linux.lvm.general@gnu.org>	<498EE80D.3090307@redhat.com>
-	<jwvprhrinmg.fsf-monnier+gmane.linux.lvm.general@gnu.org>
-In-Reply-To: <jwvprhrinmg.fsf-monnier+gmane.linux.lvm.general@gnu.org>
-Content-Transfer-Encoding: 7bit
-Reply-To: bmr@redhat.com,
-	LVM general discussion and development <linux-lvm@redhat.com>
+Content-Disposition: inline
+Subject: [linux-lvm] Dead device and cleaning up LVM
+Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -24,32 +29,47 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: linux-lvm@redhat.com
 
-Stefan Monnier wrote:
->>> I'm trying to use LVM2 on a small MIPS machine.  This machine uses
->>> uClibc-0.9.29 with Linux-2.6.25.20 and has limited RAM and CPU power,
->>> but does come with a 1TB drive which I'd rather manage with LVM.
-> 
->>> I had no particular problems building the latest version of LVM2
->>> for it.  And as far as I can tell, it's not fully broken,
->>> but it's unusable: every run of `lvm' gives different results.
->>> E.g. `lvm pvs' sometimes gives the expected output, sometimes lists
->>> nothing at all, sometimes complains about missing volume groups,
->>> sometimes "Incorrect metadata area header checksum" [as mentioned in an
->>> earlier message on this list, incidentally].
-> 
->> I guess that using uClibc is the problem.
-> 
-> It sounds like a likely culprit, indeed.  But Googling indicates that
-> LVM2 has been compiled and used with uClibc for initramfs purposes so it
-> should work fine.  Tho maybe the problem is that those references I see
+I have a volgroup that was created on top of an iSCSI mounted block
+device (target was stgt on RHEL 5.3 and initiator is the default iSCSI
+initiator in RHEL 4.7).
 
-AFAIK, nobody is testing this regularly, especially not for the latest 
-releases. Also many (most?) distributions are now shipping an 
-initramfs with a full glibc environment so this use is becoming less 
-common.
+Through a goof the target went offline and I tried shutting down the
+initiator software before disabling the volume group on the initiator
+with vgchange -an.  Now I'm left with a bit of a mess including iSCSI
+initiator modules that won't completely unload.  I'm trying to avoid a
+reboot and we have been theorizing that we somehow need to tell LVM to
+"let go" of the remaining ghosts of the iSCSI device before things can
+go back to normal.
 
-Regards,
-Bryn.
+The /dev/sdXX device is gone, but how can I convice LVM to quit trying
+to use /dev/dm-2?  Can I edit the /etc/lvm/cache/.cache file and remove
+entries there?
+
+I'm seeing the following stuff in dmesg:
+
+  scsi7 (0:1): rejecting I/O to dead device
+
+And all the various pvscan/vgscan/lvscan tools show something similar
+to the following:
+
+  /dev/dm-2: read failed after 0 of 4096 at 4398038056960: Input/output error
+  /dev/dm-2: read failed after 0 of 4096 at 4398038114304: Input/output error
+  /dev/dm-2: read failed after 0 of 4096 at 0: Input/output error
+  /dev/dm-2: read failed after 0 of 4096 at 4096: Input/output error
+  /dev/dm-2: read failed after 0 of 4096 at 0: Input/output error
+
+Anyone know how I can remove this device both from the system and from
+LVM safely?  I can reboot, but saving that as a last resort if
+possible.
+
+Also, any best practices or suggestions for using iSCSI backed block
+devices as volgroup members would be appreciated.  I'm worried about
+LVM not recognizing the volume group of physical volumes correctly on
+reboots...
+
+Thanks,
+Ray
