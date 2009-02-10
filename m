@@ -1,15 +1,15 @@
+Date: Tue, 10 Feb 2009 16:00:14 +0100
+From: hondza <mbdrzq8jm1wljrwyo1sk@gmail.com>
 Subject: Re: [linux-lvm] dm-merge: userspace tool to merge copy-on-write
 	exception table
-From: "Brian J. Murrell" <brian@interlinx.bc.ca>
-In-Reply-To: <20090209123047.GH3702@hondza.sh.cvut.cz>
+Message-ID: <20090210150014.GI3702@hondza.sh.cvut.cz>
 References: <20090209123047.GH3702@hondza.sh.cvut.cz>
-Content-Type: multipart/signed; micalg="pgp-sha1";
-	protocol="application/pgp-signature";
-	boundary="=-2Y57bmEMy1eLRgFY6NQm"
-Date: Mon, 09 Feb 2009 23:09:00 -0500
-Message-Id: <1234238940.3257.984.camel@pc.interlinx.bc.ca>
-Mime-Version: 1.0
-Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
+	<1234238940.3257.984.camel@pc.interlinx.bc.ca>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <1234238940.3257.984.camel@pc.interlinx.bc.ca>
+Reply-To: mbdrzq8jm1wljrwyo1sk@gmail.com,
+	LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -19,47 +19,32 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: mbdrzq8jm1wljrwyo1sk@gmail.com, LVM general discussion and development <linux-lvm@redhat.com>
-Cc: Mark McLoughlin <markmc@redhat.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: "Brian J. Murrell" <brian@interlinx.bc.ca>
+Cc: Mark McLoughlin <markmc@redhat.com>, LVM general discussion and development <linux-lvm@redhat.com>
 
+Hello.
 
---=-2Y57bmEMy1eLRgFY6NQm
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
+On 2009-02-09; 23:09:00, Brian J. Murrell wrote:
+> On Mon, 2009-02-09 at 13:30 +0100, hondza wrote:
+> > I liked the idea very much so I made a simple C tool to do so. Thanks to
+> > Lars for describing how it works.
+> 
+> But how/why is it any different than the above project?
 
-On Mon, 2009-02-09 at 13:30 +0100, hondza wrote:
-> Hello.
->=20
-> Back in 2008 there was a thread about merging/reverting snapshots
-> (http://article.gmane.org/gmane.linux.lvm.general/9899).=20
+As to how: dm-merge is standalone, doesn't rely on any patches, and is
+more of a hack. The CachedClient patches seem to be more robust.
 
-Yes, indeed.  This (the StatelessLinux/CachedClient) project is what I
-immediately thought of reading your message.
+As to why: first time I browsed the CachedClient web, I overlooked the
+fact that effort was already made to implement the merge/revert feature.
 
-> I liked the idea very much so I made a simple C tool to do so. Thanks to
-> Lars for describing how it works.
+> Cheers,
+> b.
 
-But how/why is it any different than the above project?
+Regards,
 
-Speaking of the
-http://fedoraproject.org/wiki/StatelessLinux/CachedClient project,
-anyone know what the status is on those patches waiting upstream review
-now for almost (over?) a year now?
-
-Cheers,
-b.
-
-
---=-2Y57bmEMy1eLRgFY6NQm
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.9 (GNU/Linux)
-
-iEYEABECAAYFAkmQ/doACgkQl3EQlGLyuXCK2gCgkxKaTjm2A7+c89JzfY66C6u6
-FogAn1VVtB6e5AAAnAVv/8c2ozsNi3P1
-=KQwZ
------END PGP SIGNATURE-----
-
---=-2Y57bmEMy1eLRgFY6NQm--
+-- 
+hondza | GPG key: http://www.hondza.adslink.cz/key.asc
+Fingerprint: 31E7 EF56 7280 5C89 75E9 FF9D 010E 175F 7823 CF38
+GPG/PGP encrypted/signed emails are welcome.
