@@ -1,19 +1,14 @@
-Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id n19KZoeD013975
-	for <linux-lvm@redhat.com>; Mon, 9 Feb 2009 15:35:50 -0500
-Received: from mail-bw0-f160.google.com (mail-bw0-f160.google.com
-	[209.85.218.160])
-	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id n19KYUlC005939
-	for <linux-lvm@redhat.com>; Mon, 9 Feb 2009 15:35:34 -0500
-Received: by mail-bw0-f160.google.com with SMTP id 4so1893529bwz.3
-	for <linux-lvm@redhat.com>; Mon, 09 Feb 2009 12:35:34 -0800 (PST)
-MIME-Version: 1.0
-Sender: pgnet.trash@gmail.com
-Date: Mon, 9 Feb 2009 12:35:34 -0800
-Message-ID: <dbd51810902091235l3669eb73w9f9266b87f323d48@mail.gmail.com>
-From: PGNet <pgnet.trash+lvm@gmail.com>
-Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] lvm 'filter = [...]' by VG or LV name?
+Subject: Re: [linux-lvm] dm-merge: userspace tool to merge copy-on-write
+	exception table
+From: "Brian J. Murrell" <brian@interlinx.bc.ca>
+In-Reply-To: <20090209123047.GH3702@hondza.sh.cvut.cz>
+References: <20090209123047.GH3702@hondza.sh.cvut.cz>
+Content-Type: multipart/signed; micalg="pgp-sha1";
+	protocol="application/pgp-signature";
+	boundary="=-2Y57bmEMy1eLRgFY6NQm"
+Date: Mon, 09 Feb 2009 23:09:00 -0500
+Message-Id: <1234238940.3257.984.camel@pc.interlinx.bc.ca>
+Mime-Version: 1.0
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -24,38 +19,47 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@redhat.com
+To: mbdrzq8jm1wljrwyo1sk@gmail.com, LVM general discussion and development <linux-lvm@redhat.com>
+Cc: Mark McLoughlin <markmc@redhat.com>
 
-i've a RAID device, with a VolumeGroup & a LovicalVolume,
 
-       /dev/md3 -> VG('VG01'):LV('test'):'/home/test'
+--=-2Y57bmEMy1eLRgFY6NQm
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 
-i've added a new LV to VGO1's available space,
+On Mon, 2009-02-09 at 13:30 +0100, hondza wrote:
+> Hello.
+>=20
+> Back in 2008 there was a thread about merging/reverting snapshots
+> (http://article.gmane.org/gmane.linux.lvm.general/9899).=20
 
-       lvcreate -n new_DomU -L 4G /dev/VG01
-       dd if=.../template of=/dev/VG01/new_DomU
+Yes, indeed.  This (the StatelessLinux/CachedClient) project is what I
+immediately thought of reading your message.
 
-i need to *exclude* '/dev/VG01/new_DomU' from lvm scanning, but make
-sure the 'home/test/ mount is still scanned.
+> I liked the idea very much so I made a simple C tool to do so. Thanks to
+> Lars for describing how it works.
 
-in lvm.conf, if i set,
+But how/why is it any different than the above project?
 
-       filter =[ "a|/dev/md[3]|", "r|.*|" ]
+Speaking of the
+http://fedoraproject.org/wiki/StatelessLinux/CachedClient project,
+anyone know what the status is on those patches waiting upstream review
+now for almost (over?) a year now?
 
-it correctly excludes the entire block-dev, and it's VG/LV contents.
-but, @ attempt to, e.g.,
+Cheers,
+b.
 
-       dd if=.../template of=/dev/VG01/new_DomU
 
-then returns,
+--=-2Y57bmEMy1eLRgFY6NQm
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
 
-       Volume group "VG01" not found
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.9 (GNU/Linux)
 
-iiuc, the 'filter=' specification filters on block-devices only, not
-VG/LV names (at least i've not figured out a regex that works, yet).
+iEYEABECAAYFAkmQ/doACgkQl3EQlGLyuXCK2gCgkxKaTjm2A7+c89JzfY66C6u6
+FogAn1VVtB6e5AAAnAVv/8c2ozsNi3P1
+=KQwZ
+-----END PGP SIGNATURE-----
 
-is there any way to exclude just certain LVM's in/on a block device,
-leaving the rest scannable?
-
-thanks.
+--=-2Y57bmEMy1eLRgFY6NQm--
