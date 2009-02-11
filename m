@@ -1,19 +1,21 @@
-Received: from pobox.fab.redhat.com (pobox.fab.redhat.com [10.33.63.12])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id n1BFoECv013225
-	for <linux-lvm@redhat.com>; Wed, 11 Feb 2009 10:50:15 -0500
-Received: from breeves.fab.redhat.com (breeves.fab.redhat.com [10.33.0.40])
-	by pobox.fab.redhat.com (8.13.1/8.13.1) with ESMTP id n1BFoBke018473
-	for <linux-lvm@redhat.com>; Wed, 11 Feb 2009 10:50:12 -0500
-Message-ID: <4992F3C7.4050403@redhat.com>
-Date: Wed, 11 Feb 2009 15:50:31 +0000
-From: "Bryn M. Reeves" <bmr@redhat.com>
+Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id n1BLxUnk031021
+	for <linux-lvm@redhat.com>; Wed, 11 Feb 2009 16:59:30 -0500
+Received: from mail-bw0-f160.google.com (mail-bw0-f160.google.com
+	[209.85.218.160])
+	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id n1BLwHIY007329
+	for <linux-lvm@redhat.com>; Wed, 11 Feb 2009 16:58:18 -0500
+Received: by bwz4 with SMTP id 4so626067bwz.3
+	for <linux-lvm@redhat.com>; Wed, 11 Feb 2009 13:58:17 -0800 (PST)
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] system-config-lvm
-References: <4992F340.7040005@cox.net>
-In-Reply-To: <4992F340.7040005@cox.net>
+In-Reply-To: <3a4237470902110745l7f4ebda9s3539a329e83dace6@mail.gmail.com>
+References: <3a4237470902110745l7f4ebda9s3539a329e83dace6@mail.gmail.com>
+Date: Wed, 11 Feb 2009 21:58:16 +0000
+Message-ID: <b072968d0902111358v66bb8d64h8bd9d54e9bf4b039@mail.gmail.com>
+Subject: Re: [linux-lvm] About fstab and fsck
+From: David Robinson <zxvdr.au@gmail.com>
 Content-Transfer-Encoding: 7bit
-Reply-To: bmr@redhat.com,
-	LVM general discussion and development <linux-lvm@redhat.com>
+Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -23,17 +25,34 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
+Content-Type: text/plain; charset="us-ascii"
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-Clyde E. Kunkel wrote:
-> With the ext4 file csystem becoming a default for Fedora and the btrfs 
-> becoming experimental in Fedora, when will system-config-lvm be updated 
-> to recognize these file systems instead of reporting "no filesystem."
+> I recently added a new disk ( secondary 750G) and added it into a VG  and
+> then increased the size of the LV.
+>
+> Can you please advise of the following q:
+>
+> 1) Do we need to change anything in  /etc/fstab or the second disk will be
+> automatically mounted on reboot?
 
-File a bug/bugs in Red Hat BZ against the system-config-lvm package 
-(in rawhide or a supported Fedora release that includes the file 
-system the bug relates to) requesting support for these file systems.
+You said you increased the size of a LV, not added a new LV. If you
+added a new LV and created a filesystem on it you'd want to add it to
+fstab, but if you're growing an existing LV and filesystem you
+wouldn't need to change anything - the filesystem you grew would
+already be listed in fstab. You did grow the filesystem too, right?
+Why do you think you need to reboot?
 
-Regards,
-Bryn.
+> 2)  For 1.3 TB , fsck is going to take a long time
+>
+> Is it good idea disable fsck completely on reboot and or  do scheduled
+> manual fsck.  Due to the nature of data , even manual fsck is not preffered
+> though, but with tight budget, other things are not possible
+
+Usually you'd want to have fsck enabled for your root filesystem, but
+by the looks of it the LV and filesystem you grew _is_ your root
+filesystem... so considering its size, I'd turn it off. Hopefully the
+"fsck takes _forever_" problem will die when btrfs becomes the
+standard filesystem.
+
+--Dave
