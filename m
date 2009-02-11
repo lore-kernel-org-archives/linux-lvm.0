@@ -1,15 +1,27 @@
-Date: Tue, 10 Feb 2009 16:00:14 +0100
-From: hondza <mbdrzq8jm1wljrwyo1sk@gmail.com>
-Subject: Re: [linux-lvm] dm-merge: userspace tool to merge copy-on-write
-	exception table
-Message-ID: <20090210150014.GI3702@hondza.sh.cvut.cz>
-References: <20090209123047.GH3702@hondza.sh.cvut.cz>
-	<1234238940.3257.984.camel@pc.interlinx.bc.ca>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <1234238940.3257.984.camel@pc.interlinx.bc.ca>
-Reply-To: mbdrzq8jm1wljrwyo1sk@gmail.com,
-	LVM general discussion and development <linux-lvm@redhat.com>
+Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id n1B3M3SN030719
+	for <linux-lvm@redhat.com>; Tue, 10 Feb 2009 22:22:03 -0500
+Received: from ciao.gmane.org (main.gmane.org [80.91.229.2])
+	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id n1B3L7Jt019567
+	for <linux-lvm@redhat.com>; Tue, 10 Feb 2009 22:21:07 -0500
+Received: from list by ciao.gmane.org with local (Exim 4.43)
+	id 1LX5eu-00032M-Nh
+	for linux-lvm@redhat.com; Wed, 11 Feb 2009 03:21:08 +0000
+Received: from 69-196-139-226.dsl.teksavvy.com ([69.196.139.226])
+	by main.gmane.org with esmtp (Gmexim 0.1 (Debian))
+	id 1AlnuQ-0007hv-00
+	for <linux-lvm@redhat.com>; Wed, 11 Feb 2009 03:21:08 +0000
+Received: from monnier by 69-196-139-226.dsl.teksavvy.com with local (Gmexim
+	0.1 (Debian)) id 1AlnuQ-0007hv-00
+	for <linux-lvm@redhat.com>; Wed, 11 Feb 2009 03:21:08 +0000
+From: Stefan Monnier <monnier@iro.umontreal.ca>
+Date: Tue, 10 Feb 2009 22:20:59 -0500
+Message-ID: <jwv1vu5ek3a.fsf-monnier+gmane.linux.lvm.general@gnu.org>
+References: <20090209173514.GA1244@esri.com> <49906BCA.9070904@redhat.com>
+Mime-Version: 1.0
+Sender: news <news@ger.gmane.org>
+Subject: [linux-lvm] Re: Dead device and cleaning up LVM
+Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -21,30 +33,20 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-To: "Brian J. Murrell" <brian@interlinx.bc.ca>
-Cc: Mark McLoughlin <markmc@redhat.com>, LVM general discussion and development <linux-lvm@redhat.com>
+To: linux-lvm@redhat.com
 
-Hello.
+> You don't mention the name of your VG/LV but you should be able to remove
+> the active lvm devices with "dmsetup remove", e.g.:
 
-On 2009-02-09; 23:09:00, Brian J. Murrell wrote:
-> On Mon, 2009-02-09 at 13:30 +0100, hondza wrote:
-> > I liked the idea very much so I made a simple C tool to do so. Thanks to
-> > Lars for describing how it works.
-> 
-> But how/why is it any different than the above project?
+> dmsetup remove $VG-$LV
 
-As to how: dm-merge is standalone, doesn't rely on any patches, and is
-more of a hack. The CachedClient patches seem to be more robust.
+IIUC you can also use
 
-As to why: first time I browsed the CachedClient web, I overlooked the
-fact that effort was already made to implement the merge/revert feature.
+   lvchange -an /dev/<VG>/<LV>
 
-> Cheers,
-> b.
+at leas that's what I do when an LVM volume becomes unavailable
+(e.g., because the corresponding USB drive was disconnected).
+I guess "vgchange -an" might work as well.
 
-Regards,
 
--- 
-hondza | GPG key: http://www.hondza.adslink.cz/key.asc
-Fingerprint: 31E7 EF56 7280 5C89 75E9 FF9D 010E 175F 7823 CF38
-GPG/PGP encrypted/signed emails are welcome.
+        Stefan
