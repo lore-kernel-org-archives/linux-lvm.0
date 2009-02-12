@@ -1,29 +1,20 @@
-Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id n1CKEQUu016225
-	for <linux-lvm@redhat.com>; Thu, 12 Feb 2009 15:14:26 -0500
-Received: from ciao.gmane.org (main.gmane.org [80.91.229.2])
-	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id n1CKE9up021837
-	for <linux-lvm@redhat.com>; Thu, 12 Feb 2009 15:14:09 -0500
-Received: from list by ciao.gmane.org with local (Exim 4.43)
-	id 1LXhwl-0001Tc-Ih
-	for linux-lvm@redhat.com; Thu, 12 Feb 2009 20:14:07 +0000
-Received: from 69-196-139-226.dsl.teksavvy.com ([69.196.139.226])
-	by main.gmane.org with esmtp (Gmexim 0.1 (Debian))
-	id 1AlnuQ-0007hv-00
-	for <linux-lvm@redhat.com>; Thu, 12 Feb 2009 20:14:07 +0000
-Received: from monnier by 69-196-139-226.dsl.teksavvy.com with local (Gmexim
-	0.1 (Debian)) id 1AlnuQ-0007hv-00
-	for <linux-lvm@redhat.com>; Thu, 12 Feb 2009 20:14:07 +0000
-From: Stefan Monnier <monnier@iro.umontreal.ca>
-Date: Thu, 12 Feb 2009 15:13:59 -0500
-Message-ID: <jwv3aej76uf.fsf-monnier+gmane.linux.lvm.general@gnu.org>
-References: <3a4237470902110745l7f4ebda9s3539a329e83dace6@mail.gmail.com>
-	<b072968d0902111358v66bb8d64h8bd9d54e9bf4b039@mail.gmail.com>
-	<68c491a60902120038g6cede40ckaa5ae58600f5ff21@mail.gmail.com>
-Mime-Version: 1.0
-Sender: news <news@ger.gmane.org>
-Subject: [linux-lvm] Re: About fstab and fsck
-Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
+Received: from pobox.fab.redhat.com (pobox.fab.redhat.com [10.33.63.12])
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id n1CKHIVG018345
+	for <linux-lvm@redhat.com>; Thu, 12 Feb 2009 15:17:19 -0500
+Received: from breeves.fab.redhat.com (breeves.fab.redhat.com [10.33.0.40])
+	by pobox.fab.redhat.com (8.13.1/8.13.1) with ESMTP id n1CKHFWE018581
+	for <linux-lvm@redhat.com>; Thu, 12 Feb 2009 15:17:16 -0500
+Message-ID: <499483E1.3020509@redhat.com>
+Date: Thu, 12 Feb 2009 20:17:37 +0000
+From: "Bryn M. Reeves" <bmr@redhat.com>
+MIME-Version: 1.0
+Subject: Re: [linux-lvm] Re: About fstab and fsck
+References: <3a4237470902110745l7f4ebda9s3539a329e83dace6@mail.gmail.com>	<b072968d0902111358v66bb8d64h8bd9d54e9bf4b039@mail.gmail.com>	<68c491a60902120038g6cede40ckaa5ae58600f5ff21@mail.gmail.com>
+	<jwv3aej76uf.fsf-monnier+gmane.linux.lvm.general@gnu.org>
+In-Reply-To: <jwv3aej76uf.fsf-monnier+gmane.linux.lvm.general@gnu.org>
+Content-Transfer-Encoding: 7bit
+Reply-To: bmr@redhat.com,
+	LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -33,21 +24,29 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: linux-lvm@redhat.com
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
->> filesystem... so considering its size, I'd turn it off. Hopefully the
->> "fsck takes _forever_" problem will die when btrfs becomes the
->> standard filesystem.
+Stefan Monnier wrote:
+>>> filesystem... so considering its size, I'd turn it off. Hopefully the
+>>> "fsck takes _forever_" problem will die when btrfs becomes the
+>>> standard filesystem.
+> 
+>> Just a reminder: Linux has xfs since 2002. A full-blown fsck on xfs is
+>> a rare thing.
+> 
+> Similarly, I don't know of any case where fsck on an ext3 partition
+> turned out to be useful.  As a matter of fact, my home router's ext3
 
-> Just a reminder: Linux has xfs since 2002. A full-blown fsck on xfs is
-> a rare thing.
+I wouldn't go that far. It all depends what messed the file system up 
+in the first place. Ext3 bugs, minor scribbling and suchlike generally 
+get tidied up reasonably well by e2fsck. It's quite true that with 
+major corruption to the file system there's often not an awful lot 
+left afterwards but that's true of many other file systems as well.
 
-Similarly, I don't know of any case where fsck on an ext3 partition
-turned out to be useful.  As a matter of fact, my home router's ext3
-partition is never fsck'd (it would take way too much time to this poor
-266MHz thingy to fsck my 1TB filesystem).
+> partition is never fsck'd (it would take way too much time to this poor
+> 266MHz thingy to fsck my 1TB filesystem).
 
+/me wonders why a router needs a 1TB fs :-)
 
-        Stefan
+Bryn.
