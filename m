@@ -1,16 +1,28 @@
-Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id n1CAbaHR003145
-	for <linux-lvm@redhat.com>; Thu, 12 Feb 2009 05:37:36 -0500
-Received: from mail.gmx.net (mail.gmx.net [213.165.64.20])
-	by mx3.redhat.com (8.13.8/8.13.8) with SMTP id n1CAaw5u004808
-	for <linux-lvm@redhat.com>; Thu, 12 Feb 2009 05:36:58 -0500
-Content-Type: text/plain; charset="iso-8859-1"
-Date: Thu, 12 Feb 2009 11:36:57 +0100
-From: "Manuel Neuger" <mneuger@gmx.at>
-Message-ID: <20090212103657.41710@gmx.net>
-MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Subject: [linux-lvm] clustered lvm without clvmd
+Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id n1CKEQUu016225
+	for <linux-lvm@redhat.com>; Thu, 12 Feb 2009 15:14:26 -0500
+Received: from ciao.gmane.org (main.gmane.org [80.91.229.2])
+	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id n1CKE9up021837
+	for <linux-lvm@redhat.com>; Thu, 12 Feb 2009 15:14:09 -0500
+Received: from list by ciao.gmane.org with local (Exim 4.43)
+	id 1LXhwl-0001Tc-Ih
+	for linux-lvm@redhat.com; Thu, 12 Feb 2009 20:14:07 +0000
+Received: from 69-196-139-226.dsl.teksavvy.com ([69.196.139.226])
+	by main.gmane.org with esmtp (Gmexim 0.1 (Debian))
+	id 1AlnuQ-0007hv-00
+	for <linux-lvm@redhat.com>; Thu, 12 Feb 2009 20:14:07 +0000
+Received: from monnier by 69-196-139-226.dsl.teksavvy.com with local (Gmexim
+	0.1 (Debian)) id 1AlnuQ-0007hv-00
+	for <linux-lvm@redhat.com>; Thu, 12 Feb 2009 20:14:07 +0000
+From: Stefan Monnier <monnier@iro.umontreal.ca>
+Date: Thu, 12 Feb 2009 15:13:59 -0500
+Message-ID: <jwv3aej76uf.fsf-monnier+gmane.linux.lvm.general@gnu.org>
+References: <3a4237470902110745l7f4ebda9s3539a329e83dace6@mail.gmail.com>
+	<b072968d0902111358v66bb8d64h8bd9d54e9bf4b039@mail.gmail.com>
+	<68c491a60902120038g6cede40ckaa5ae58600f5ff21@mail.gmail.com>
+Mime-Version: 1.0
+Sender: news <news@ger.gmane.org>
+Subject: [linux-lvm] Re: About fstab and fsck
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -21,28 +33,21 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@redhat.com
 
-Hi all,
+>> filesystem... so considering its size, I'd turn it off. Hopefully the
+>> "fsck takes _forever_" problem will die when btrfs becomes the
+>> standard filesystem.
 
-I have a lvm VG on top of a iscsi lun, and want to share that on=20
-multiple hosts in order to run kvm virtual machines on logical volumes.
+> Just a reminder: Linux has xfs since 2002. A full-blown fsck on xfs is
+> a rare thing.
 
-I recently noticed that xen-server also do this, but they do not run clvmd.=
- Can someone explain how that could work?
+Similarly, I don't know of any case where fsck on an ext3 partition
+turned out to be useful.  As a matter of fact, my home router's ext3
+partition is never fsck'd (it would take way too much time to this poor
+266MHz thingy to fsck my 1TB filesystem).
 
-I also detected that I can protect LVs by using 'tags'. That way I can
-make sure that LVs are only activated by one host?
 
-It is also no problem to restrict VG write access to one host (master).=20
-
-The only problem I see is how to propagate metadata changes to the other
-nodes. How do I make sure that metadata is written back to the iscsi storag=
-e? And is it enough to simple issue a 'vgsvan' on all nodes? Or is
-that a bad idea?
-
-- Manuel
-
---=20
-Psssst! Schon vom neuen GMX MultiMessenger geh=EF=BF=BDrt? Der kann`s mit a=
-llen: http://www.gmx.net/de/go/multimessenger01
+        Stefan
