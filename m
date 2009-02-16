@@ -1,22 +1,29 @@
-Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id n1DLv9ZW002105
-	for <linux-lvm@redhat.com>; Fri, 13 Feb 2009 16:57:09 -0500
-Received: from mail-fx0-f10.google.com (mail-fx0-f10.google.com
-	[209.85.220.10])
-	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id n1DLurRW022710
-	for <linux-lvm@redhat.com>; Fri, 13 Feb 2009 16:56:53 -0500
-Received: by fxm3 with SMTP id 3so2595507fxm.3
-	for <linux-lvm@redhat.com>; Fri, 13 Feb 2009 13:56:50 -0800 (PST)
-MIME-Version: 1.0
-Sender: pdftex@gmail.com
-In-Reply-To: <200902132034.PAA09181@out-of-band.media.mit.edu>
-References: <499541F1.3080501@redhat.com>
-	<200902132034.PAA09181@out-of-band.media.mit.edu>
-Date: Fri, 13 Feb 2009 22:55:37 +0100
-Message-ID: <68c491a60902131355g7d69e760va70625e499c3d576@mail.gmail.com>
-Subject: Re: [linux-lvm] Re: About fstab and fsck
-From: =?ISO-8859-1?Q?Martin_Schr=F6der?= <martin@oneiros.de>
-Content-Transfer-Encoding: 7bit
+Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id n1GNKwPL032457
+	for <linux-lvm@redhat.com>; Mon, 16 Feb 2009 18:20:58 -0500
+Received: from ciao.gmane.org (main.gmane.org [80.91.229.2])
+	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id n1GNKktK004892
+	for <linux-lvm@redhat.com>; Mon, 16 Feb 2009 18:20:46 -0500
+Received: from list by ciao.gmane.org with local (Exim 4.43)
+	id 1LZCla-0006gB-2l
+	for linux-lvm@redhat.com; Mon, 16 Feb 2009 23:20:46 +0000
+Received: from 76-10-148-202.dsl.teksavvy.com ([76.10.148.202])
+	by main.gmane.org with esmtp (Gmexim 0.1 (Debian))
+	id 1AlnuQ-0007hv-00
+	for <linux-lvm@redhat.com>; Mon, 16 Feb 2009 23:20:46 +0000
+Received: from monnier by 76-10-148-202.dsl.teksavvy.com with local (Gmexim
+	0.1 (Debian)) id 1AlnuQ-0007hv-00
+	for <linux-lvm@redhat.com>; Mon, 16 Feb 2009 23:20:46 +0000
+From: Stefan Monnier <monnier@iro.umontreal.ca>
+Date: Mon, 16 Feb 2009 18:20:32 -0500
+Message-ID: <jwvk57q0y5w.fsf-monnier+gmane.linux.lvm.general@gnu.org>
+References: <jwvzlgzlh6o.fsf-monnier+gmane.linux.lvm.general@gnu.org>
+	<498EE80D.3090307@redhat.com>
+	<jwvprhrinmg.fsf-monnier+gmane.linux.lvm.general@gnu.org>
+	<49905A90.2000802@redhat.com>
+Mime-Version: 1.0
+Sender: news <news@ger.gmane.org>
+Subject: [linux-lvm] Re: Problems running my home-built LVM2
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -28,17 +35,27 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-To: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Transfer-Encoding: 7bit
+To: linux-lvm@redhat.com
 
-2009/2/13  <f-lvm@media.mit.edu>:
-> For that matter, subtle hardware issues might eat the data in your
-> files, bit by bit, and you might never notice unless it was starting
-> to eat your metadata and you wondered why fsck kept finding small
-> errors.  It depends on whether you care whether your data might have
-> a few bits of corruption scattered through it.
+>> It sounds like a likely culprit, indeed.  But Googling indicates that
+>> LVM2 has been compiled and used with uClibc for initramfs purposes so it
+>> should work fine.  Tho maybe the problem is that those references I see
 
-Which is why ZFS was invented, and we are hoping for btrfs. You need
-checksums when you use pc-level rotating rust for storing data.
+> AFAIK, nobody is testing this regularly, especially not for the latest
+> releases.  Also many (most?) distributions are now shipping an
+> initramfs with a full glibc environment so this use is becoming
+> less common.
 
-Best
-   Martin
+I think I've finally "tracked it down".  Or at least I've found
+a workaround: if I pass "--disable-o_direct" to configure, everything
+works fine.
+
+While trying to track it down, I saw that calls to "read" (from within
+_io in dev-io.c) would often return garbage (tho not always).  Not sure
+if it's a problem in LVM2, or in uClibc, or in the kernel, but I think
+I've already wasted more than enough time on this, so I'll just use
+the --disable-o_direct workaround.
+
+
+        Stefan
