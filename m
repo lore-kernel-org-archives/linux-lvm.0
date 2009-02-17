@@ -1,15 +1,17 @@
-Received: from [10.32.10.69] (vpn-10-69.str.redhat.com [10.32.10.69])
-	by ns3.rdu.redhat.com (8.13.8/8.13.8) with ESMTP id n1H7UwIe011346
-	for <linux-lvm@redhat.com>; Tue, 17 Feb 2009 02:30:59 -0500
-Message-ID: <499A67B8.8070507@redhat.com>
-Date: Tue, 17 Feb 2009 08:31:04 +0100
-From: Milan Broz <mbroz@redhat.com>
+Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id n1HAQ2Wc015617
+	for <linux-lvm@redhat.com>; Tue, 17 Feb 2009 05:26:02 -0500
+Received: from rv-out-0506.google.com (rv-out-0506.google.com [209.85.198.237])
+	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id n1HAPpPV026487
+	for <linux-lvm@redhat.com>; Tue, 17 Feb 2009 05:25:51 -0500
+Received: by rv-out-0506.google.com with SMTP id f6so2298383rvb.51
+	for <linux-lvm@redhat.com>; Tue, 17 Feb 2009 02:25:48 -0800 (PST)
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] Re: Problems running my home-built LVM2
-References: <jwvzlgzlh6o.fsf-monnier+gmane.linux.lvm.general@gnu.org>	<498EE80D.3090307@redhat.com>	<jwvprhrinmg.fsf-monnier+gmane.linux.lvm.general@gnu.org>	<49905A90.2000802@redhat.com>	<jwvk57q0y5w.fsf-monnier+gmane.linux.lvm.general@gnu.org>	<20090217000623.GD26197@agk.fab.redhat.com>
-	<jwv7i3p24qp.fsf-monnier+gmane.linux.lvm.general@gnu.org>
-In-Reply-To: <jwv7i3p24qp.fsf-monnier+gmane.linux.lvm.general@gnu.org>
-Content-Transfer-Encoding: 7bit
+Date: Tue, 17 Feb 2009 15:55:48 +0530
+Message-ID: <9d1973c20902170225m7e0f87d2ydda7622a2c0dccf7@mail.gmail.com>
+From: Dayanand Math <dmmath@gmail.com>
+Content-Type: multipart/alternative; boundary=000e0cd29c700e5ccc04631abac7
+Subject: [linux-lvm] File system size difference betwen lvdisplay & df -h
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -20,31 +22,32 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: LVM general discussion and development <linux-lvm@redhat.com>
+To: linux-lvm@redhat.com
 
-Stefan Monnier wrote:
->>> _io in dev-io.c) would often return garbage (tho not always).  Not sure
->>> if it's a problem in LVM2, or in uClibc, or in the kernel, but I think
->>> I've already wasted more than enough time on this, so I'll just use
->>> the --disable-o_direct workaround.
->> We had a problem with O-direct several years ago which we blamed on a rogue
->> version of gcc.
-> 
-> Based on my experience I'd say that it seems to still be around.
-> At least on `mipsel'.  I have since discovered that Debian's `lvm2'
-> package disables O_DIRECT with the following lines:
-> 
->    ifneq (,$(findstring $(DEB_HOST_ARCH), arm armeb hppa mips mipsel))
->    CONFIGURE_FLAGS += --disable-o_direct
->    endif
+--000e0cd29c700e5ccc04631abac7
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
 
-Ah, ok. That explains why my test on i686 arch & uClibc works:)
+Hi,
 
-This really seems like problem unrelated to LVM2,
-is possible that O_DIRECT is just buggy on ARM & similar archs
-see http://lkml.org/lkml/2008/11/19/300 for example...
+I am observing the file system size difference between df -h & lvdisplay
+output for the systems with RHEL 4 (update 3 & 6).
+Its showing the discrepancy in size between lvdisplay & df -h , If lvsize is
+less than 1GB .. Is there any specific reason for that..
 
-Milan 
---
-mbroz@redhat.com
+Regs,
+DM
+
+--000e0cd29c700e5ccc04631abac7
+Content-Type: text/html; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+
+<div>Hi,</div>
+<div>&nbsp;</div>
+<div>I am observing the file system size difference between df -h &amp; lvdisplay output for the systems with RHEL 4 (update 3 &amp; 6).</div>
+<div>Its showing the discrepancy in size between lvdisplay &amp; df -h&nbsp;, If lvsize is less than 1GB .. Is there any specific reason for that..</div>
+<div>&nbsp;</div>
+<div>Regs,<br>DM</div>
+<div>&nbsp;</div>
+
+--000e0cd29c700e5ccc04631abac7--
