@@ -1,15 +1,14 @@
-Message-ID: <499A9C88.4060100@redhat.com>
-Date: Tue, 17 Feb 2009 11:16:24 +0000
-From: "Bryn M. Reeves" <bmr@redhat.com>
-MIME-Version: 1.0
+Date: Tue, 17 Feb 2009 12:26:05 +0100
+From: Lupe Christoph <lupe@lupe-christoph.de>
 Subject: Re: [linux-lvm] File system size difference betwen lvdisplay & df -h
-References: <9d1973c20902170225m7e0f87d2ydda7622a2c0dccf7@mail.gmail.com>	
+Message-ID: <20090217112605.GM10238@lupe-christoph.de>
+References: <9d1973c20902170225m7e0f87d2ydda7622a2c0dccf7@mail.gmail.com>
 	<499A96CD.20808@redhat.com>
 	<9d1973c20902170305h14bfb304h84f839f5ac301b03@mail.gmail.com>
+MIME-Version: 1.0
+Content-Disposition: inline
 In-Reply-To: <9d1973c20902170305h14bfb304h84f839f5ac301b03@mail.gmail.com>
-Content-Transfer-Encoding: 7bit
-Reply-To: bmr@redhat.com,
-	LVM general discussion and development <linux-lvm@redhat.com>
+Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -19,26 +18,44 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: Dayanand Math <dmmath@gmail.com>
-Cc: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-Dayanand Math wrote:
-> Hi,
-> 
-> The following df -h & lvdisplay shows the discrpancy..What could be
-> the reson? I am referring to the discrepancy between LV Size in
-> lvdisplay &  total size df -h output of the corresponding file
-> system.
+On Tuesday, 2009-02-17 at 16:35:53 +0530, Dayanand Math wrote:
 
-That just appears to be normal file system overheads. All file systems
-use some of the total space available on a device for storing internal
-structures and data (the file system's metadata). You'll see this with
-any block device type, e.g. with a 64M USB key:
+> The following df -h & lvdisplay shows the discrpancy..What could be the
+> reson?
 
-# df -h /mnt
-Filesystem            Size  Used Avail Use% Mounted on
-/dev/sdc1              61M  5.3M   53M  10% /mnt
+Get a spelin cheker :-P
 
-Regards,
-Bryn.
+> I am referring to the discrepancy between LV Size in lvdisplay &  total
+> size df -h output of the corresponding file system.
+
+>  df -h /test
+> Filesystem            Size  Used Avail Use% Mounted on
+> /dev/mapper/vg00-lv_test
+>                       124M   11M  107M   9% /test
+
+Please use df -k to get exact figures.
+
+> # lvdisplay -v /dev/vg00/lv_test
+>   LV Size                128.00 MB
+
+Depending on the filesystem type, which we don't know, the filesystem
+may not use all available space because of its structure, i.e. because
+you don't get an integral number of cylinder groups out of the available
+space. This is less obvious with large (i.e. multi-Gigabyte)
+filesystems.
+
+Please do not top-post and remove all fluff in your answers.
+
+> On 2/17/09, Bryn M. Reeves <bmr@redhat.com> wrote:
+
+> > Dayanand Math wrote:
+
+HTH,
+Lupe Christoph
+-- 
+| There is no substitute for bad design except worse design.                   |
+| /me                                                                          |
