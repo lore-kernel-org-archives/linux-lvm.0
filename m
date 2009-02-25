@@ -1,32 +1,22 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id n1N7BpmM015461
-	for <linux-lvm@redhat.com>; Mon, 23 Feb 2009 02:11:51 -0500
-Received: from e5.ny.us.ibm.com (e5.ny.us.ibm.com [32.97.182.145])
-	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id n1N7BY2Y017665
-	for <linux-lvm@redhat.com>; Mon, 23 Feb 2009 02:11:34 -0500
-Received: from d01relay02.pok.ibm.com (d01relay02.pok.ibm.com [9.56.227.234])
-	by e5.ny.us.ibm.com (8.13.1/8.13.1) with ESMTP id n1N78jph014805
-	for <linux-lvm@redhat.com>; Mon, 23 Feb 2009 02:08:45 -0500
-Received: from d01av02.pok.ibm.com (d01av02.pok.ibm.com [9.56.224.216])
-	by d01relay02.pok.ibm.com (8.13.8/8.13.8/NCO v9.1) with ESMTP id
-	n1N7BXj3192064
-	for <linux-lvm@redhat.com>; Mon, 23 Feb 2009 02:11:33 -0500
-Received: from d01av02.pok.ibm.com (loopback [127.0.0.1])
-	by d01av02.pok.ibm.com (8.12.11.20060308/8.13.3) with ESMTP id
-	n1N7ALKt012647
-	for <linux-lvm@redhat.com>; Mon, 23 Feb 2009 02:10:21 -0500
-Received: from malahal.localdomain (malahal.beaverton.ibm.com [9.47.17.130])
-	by d01av02.pok.ibm.com (8.12.11.20060308/8.12.11) with ESMTP id
-	n1N7AKQF012634
-	for <linux-lvm@redhat.com>; Mon, 23 Feb 2009 02:10:20 -0500
-Date: Sun, 22 Feb 2009 23:11:32 -0800
-From: malahal@us.ibm.com
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id n1P54Wb2015975
+	for <linux-lvm@redhat.com>; Wed, 25 Feb 2009 00:04:33 -0500
+Received: from vms173019pub.verizon.net (vms173019pub.verizon.net
+	[206.46.173.19])
+	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id n1P53Mll025895
+	for <linux-lvm@redhat.com>; Wed, 25 Feb 2009 00:03:27 -0500
+Received: from [192.168.1.2] ([96.255.155.44]) by vms173019.mailsrvcs.net
+	(Sun Java(tm) System Messaging Server 6.3-7.04 (built Sep 26 2008;
+	32bit)) with ESMTPA id <0KFL007JQVD80US1@vms173019.mailsrvcs.net> for
+	linux-lvm@redhat.com; Tue, 24 Feb 2009 23:03:18 -0600 (CST)
+Message-id: <49A4CE09.8070101@smart.net>
+Date: Tue, 24 Feb 2009 23:50:17 -0500
+From: "Daniel B." <dsb@smart.net>
+MIME-version: 1.0
 Subject: Re: [linux-lvm] re --corelog: does synchronization re-copy all data?
-Message-ID: <20090223071132.GA9670@us.ibm.com>
-References: <49A0A252.30803@smart.net>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <49A0A252.30803@smart.net>
+References: <49A0A252.30803@smart.net> <20090223071132.GA9670@us.ibm.com>
+In-reply-to: <20090223071132.GA9670@us.ibm.com>
+Content-transfer-encoding: 7bit
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -37,35 +27,28 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: linux-lvm@redhat.com
 
-Daniel B. [dsb@smart.net] wrote:
-> In the LVM Administrator's Guide, at least the one at
-> http://www.centos.org/docs/5/html/Cluster_Logical_Volume_Manager/LV_create.html ,
-> it says:"
->
->   LVM maintains a small log which it uses to keep track of which regions
->   are in sync with the mirror or mirrors. By default, this log is kept
->   on disk, which keeps it persistent across reboots. You can specify
->   instead that this log be kept in memory with the --corelog argument;
->   this eliminates the need for an extra log device, but it requires that
->   the entire mirror be resynchronized at every reboot.
->
-> Does that last sentence mean that _all_ the data is recopied, or just
-> that all _regions_ are checked and not all the data necessarily has
-> to be copied (perhaps only change regions have to be copied, but
-> unchanged regions don't)?
+malahal@us.ibm.com wrote:
+> Daniel B. [dsb@smart.net] wrote:
 
-Everything has to be re-copied because it doesn't know what is changed
-as the "log" is kept in memory which is lost after a reboot.
+>> More generally, can LVM perform RAID1-style mirroring with only
+>> two disks (without having to re-copy everything each boot)
+>> (and, of course, being recoverable in case either disk fails)?
+> 
+> You should be able to force LVM to create a log device on one of your
+> two devices (--alloc anywhere)
 
-> More generally, can LVM perform RAID1-style mirroring with only
-> two disks (without having to re-copy everything each boot)
-> (and, of course, being recoverable in case either disk fails)?
+So what happens if the disk containing the log dies?  Does LVM
+keep running (presenting the logical volume implemented on the
+physical volumes on the still-working disk)?
 
-You should be able to force LVM to create a log device on one of your
-two devices (--alloc anywhere)
+(And what happens at reboot time (with the failed disk still in
+place)?)
 
-Thanks, Malahal.
+Thanks,
+Daniel
+-- 
+Daniel B.
+dsb@smart.net
