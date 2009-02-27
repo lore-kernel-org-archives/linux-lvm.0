@@ -1,14 +1,27 @@
-Received: from [10.32.10.80] (vpn-10-80.str.redhat.com [10.32.10.80])
-	by ns3.rdu.redhat.com (8.13.8/8.13.8) with ESMTP id n1R9DQ3s030176
-	for <linux-lvm@redhat.com>; Fri, 27 Feb 2009 04:13:27 -0500
-Message-ID: <49A7AEBB.3010109@redhat.com>
-Date: Fri, 27 Feb 2009 10:13:31 +0100
-From: Milan Broz <mbroz@redhat.com>
-MIME-Version: 1.0
-Subject: Re: [linux-lvm] ext3 on lvm2 on raid10
-References: <20090227031359.63e57341@dhcp-143.ilievnet.com>
-In-Reply-To: <20090227031359.63e57341@dhcp-143.ilievnet.com>
-Content-Transfer-Encoding: 7bit
+Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id n1RFkcPD014143
+	for <linux-lvm@redhat.com>; Fri, 27 Feb 2009 10:46:42 -0500
+Received: from server.klug.on.ca (server.klug.on.ca [205.189.48.131])
+	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id n1RFaaY2018873
+	for <linux-lvm@redhat.com>; Fri, 27 Feb 2009 10:37:14 -0500
+Received: from linux.interlinx.bc.ca (d193-213-184.home3.cgocable.net
+	[67.193.213.184])
+	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by server.klug.on.ca (Postfix) with ESMTP id 624152803
+	for <linux-lvm@redhat.com>; Fri, 27 Feb 2009 10:36:38 -0500 (EST)
+Received: from [IPv6:2001:4978:161:0:218:f3ff:fee1:65cc] (pc.interlinx.bc.ca
+	[IPv6:2001:4978:161:0:218:f3ff:fee1:65cc])
+	by linux.interlinx.bc.ca (Postfix) with ESMTP id 46341802C
+	for <linux-lvm@redhat.com>; Fri, 27 Feb 2009 10:36:44 -0500 (EST)
+From: "Brian J. Murrell" <brian@interlinx.bc.ca>
+Content-Type: multipart/signed; micalg="pgp-sha1";
+	protocol="application/pgp-signature";
+	boundary="=-fhcZIGJVvgzzi6YLYXHL"
+Date: Fri, 27 Feb 2009 10:36:37 -0500
+Message-Id: <1235748997.1193.15.camel@pc.interlinx.bc.ca>
+Mime-Version: 1.0
+Subject: [linux-lvm] vgchange doesn't enable found VGs
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -19,40 +32,38 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: LVM general discussion and development <linux-lvm@redhat.com>
+To: linux-lvm@redhat.com
 
-Daniel Iliev wrote:
-> How is the raid10 chunk size related to LVM2 layout and how do ext3's
-> "stride" and "stripe-width" parameters depend on LVM2?
-> 
-> In more detail:
-> I've 4 equal HDDs. My intention is to make a raid10, put LVM2 on top
-> of it and format the LVM volumes with ext3.
-> 
-> stride and stripe-width values are described in MKE2FS(8), but the
-> case with LVM is not covered there.
-> 
-> Please, point me to some documentation on the subject or advise me how
-> to proceed.
 
-Hi,
+--=-fhcZIGJVvgzzi6YLYXHL
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 
-lvm2 since version 2.02.41 allows automatically align LV start according
-to underlying md device "chunk" size.
+Strange:
 
-See this paramater in lvm.conf:
-    # By default, if a PV is placed directly upon an md device, LVM2
-    # will align its data blocks with the the chunk_size exposed in sysfs.
-    # 1 enables; 0 disables.
-    md_chunk_alignment = 1
++ /usr/sbin/vgscan --ignorelockingfailure
+  Reading all physical volumes.  This may take a while...
+  Found volume group "foobar" using metadata type lvm2
++ /usr/sbin/vgchange -a y --ignorelockingfailure
+  No volume groups found
 
-You should also set extent size as multiple of chunk size.
+It seems I have to tell vgchange to enable the foobar VG explicitly.
 
-(The development code in CVS also allows set the alignment manually
-using parameter, so administrator can set the align value according
-to other types of underlaying devices - useful for hw raid, SSD, etc.)
+Why is this?
 
-Milan
---
-mbroz@redhat.com
+b.
+
+
+--=-fhcZIGJVvgzzi6YLYXHL
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.9 (GNU/Linux)
+
+iEYEABECAAYFAkmoCIIACgkQl3EQlGLyuXBLigCcDnjGHW8hiYF1Zn+Khj0AQj+r
+EX4AoN1UYPPArrrAtqYcyDsmTCUroULH
+=+hX0
+-----END PGP SIGNATURE-----
+
+--=-fhcZIGJVvgzzi6YLYXHL--
