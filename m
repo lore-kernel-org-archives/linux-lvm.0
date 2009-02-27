@@ -1,23 +1,18 @@
 Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id n1PE8neO031174
-	for <linux-lvm@redhat.com>; Wed, 25 Feb 2009 09:08:49 -0500
-Received: from ey-out-2122.google.com (ey-out-2122.google.com [74.125.78.26])
-	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id n1PE7jop023881
-	for <linux-lvm@redhat.com>; Wed, 25 Feb 2009 09:07:45 -0500
-Received: by ey-out-2122.google.com with SMTP id 9so7097eyd.39
-	for <linux-lvm@redhat.com>; Wed, 25 Feb 2009 06:07:44 -0800 (PST)
-MIME-Version: 1.0
-In-Reply-To: <49A54D38.9030309@redhat.com>
-References: <1cafab770902250235x39c180a4x63b9e5e6d9a761d5@mail.gmail.com>
-	<49A547EB.6020106@redhat.com>
-	<1cafab770902250534m38e712cepc2f0c3e80ad93257@mail.gmail.com>
-	<49A54D38.9030309@redhat.com>
-Date: Wed, 25 Feb 2009 22:07:42 +0800
-Message-ID: <1cafab770902250607j4b39a765ua592f672897848b3@mail.gmail.com>
-Subject: Re: [linux-lvm] clvmd-corosync should check lksb.sb_status instead of
-	return code ?
-From: Xinwei Hu <hxinwei@gmail.com>
-Content-Transfer-Encoding: 8bit
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id n1R1EJFX015588
+	for <linux-lvm@redhat.com>; Thu, 26 Feb 2009 20:14:19 -0500
+Received: from mail-fx0-f174.google.com (mail-fx0-f174.google.com
+	[209.85.220.174])
+	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id n1R1E3sv005033
+	for <linux-lvm@redhat.com>; Thu, 26 Feb 2009 20:14:03 -0500
+Received: by fxm22 with SMTP id 22so842120fxm.3
+	for <linux-lvm@redhat.com>; Thu, 26 Feb 2009 17:14:03 -0800 (PST)
+Date: Fri, 27 Feb 2009 03:13:59 +0200
+From: Daniel Iliev <daniel.iliev@gmail.com>
+Message-ID: <20090227031359.63e57341@dhcp-143.ilievnet.com>
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] ext3 on lvm2 on raid10
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -28,61 +23,27 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="utf-8"
-To: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="us-ascii"
+To: linux-lvm@redhat.com
 
-2009/2/25 Chrissie Caulfield <ccaulfie@redhat.com>:
-> Xinwei Hu wrote:
->> Hi Chrissie,
->>
->>   You are right. It should be returned in errno. Also, it seems errno
->> should positive as lksb.sb_status too.
->>
->>   I modified the patch a little bit further.
->>
->>   Any comments ?
->
->
-> Hi
->
-> You're right ... this kernel-itis is catching! lksb status are indeed
-> positive and correct for returning as errno.
->
-> I'll commit this patch
 
-Good. Thanks for taking care of this.
+Hi, guys
 
-> Thank you.
->
-> Chrissie
->
->> 2009/2/25 Chrissie Caulfield <ccaulfie@redhat.com>:
->>> Xinwei Hu wrote:
->>>> Hi all,
->>>>
->>>>   In clvmd-corosync, lock_resource calls dlm_ls_lock_wait with flags
->>>> set to LKF_NOQUEUE.
->>>>   When LKF_NOQUEUE is set, the return code of dlm_ls_lock_wait is
->>>> always 0, while the actual errno is in lksb.sb_status.
->>>>
->>>>   This causes problem when using vgchange -aey or something like.
->>>>
->>>>   I attached a patch to try to fix this issue.
->>>>
->>>>   Please help to review. Thanks.
->>> Hi
->>>
->>> You are correct, the functions do need to check the LKSB. Your patch
->>> isn't quite right I don't think though - the lksb status should be
->>> returned in errno as shown below:
->>>
->>> --
->>>
->>> Chrissie
->
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
->
+
+How is the raid10 chunk size related to LVM2 layout and how do ext3's
+"stride" and "stripe-width" parameters depend on LVM2?
+
+In more detail:
+I've 4 equal HDDs. My intention is to make a raid10, put LVM2 on top
+of it and format the LVM volumes with ext3.
+
+stride and stripe-width values are described in MKE2FS(8), but the
+case with LVM is not covered there.
+
+Please, point me to some documentation on the subject or advise me how
+to proceed.
+
+
+-- 
+Best regards,
+Daniel
