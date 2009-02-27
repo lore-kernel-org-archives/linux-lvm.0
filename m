@@ -1,16 +1,21 @@
+Received: from agk.fab.redhat.com (agk.fab.redhat.com [10.33.0.19])
+	by ns3.rdu.redhat.com (8.13.8/8.13.8) with ESMTP id n1RK01cv003370
+	for <linux-lvm@redhat.com>; Fri, 27 Feb 2009 15:00:02 -0500
+Received: from agk by agk.fab.redhat.com with local (Exim 4.34)
+	id 1Ld8sK-0002km-Ub
+	for linux-lvm@redhat.com; Fri, 27 Feb 2009 20:00:00 +0000
+Date: Fri, 27 Feb 2009 20:00:00 +0000
+From: Alasdair G Kergon <agk@redhat.com>
 Subject: Re: [linux-lvm] vgchange doesn't enable found VGs
-From: "Brian J. Murrell" <brian@interlinx.bc.ca>
-In-Reply-To: <49A81CA2.7080907@redhat.com>
+Message-ID: <20090227200000.GF6714@agk.fab.redhat.com>
 References: <1235748997.1193.15.camel@pc.interlinx.bc.ca>
 	<49A814EA.3090902@redhat.com>
 	<1235752705.1193.32.camel@pc.interlinx.bc.ca>
 	<49A81CA2.7080907@redhat.com>
-Content-Type: multipart/signed; micalg="pgp-sha1";
-	protocol="application/pgp-signature";
-	boundary="=-RksTpPFR9dLsRbksSqGl"
-Date: Fri, 27 Feb 2009 12:30:30 -0500
-Message-Id: <1235755830.1193.40.camel@pc.interlinx.bc.ca>
+	<1235755830.1193.40.camel@pc.interlinx.bc.ca>
 Mime-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <1235755830.1193.40.camel@pc.interlinx.bc.ca>
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -21,81 +26,34 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: bmr@redhat.com, LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
+On Fri, Feb 27, 2009 at 12:30:30PM -0500, Brian J. Murrell wrote:
+>     cache_dir = "/etc/lvm/cache"
 
---=-RksTpPFR9dLsRbksSqGl
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
+The cache_dir must be *writeable*.
+If you're attempting to use read-only root, then move it somewhere else
+(is /var writeable? or make a ramfs) or delete that directory *and*
+change
 
-On Fri, 2009-02-27 at 17:02 +0000, Bryn M. Reeves wrote:
->=20
-> So it's not scanning /dev/sda at all (only ramdisks?).
+>     write_cache_state = 1
+to 0.
 
-So it seems, yes.
+(This will slow commands down.)
 
-> Do you have any
-> filter settings in lvm.conf
+Or if all devices on your system are the same on every boot, 
+place the correct version of that file into your read only image.
+This won't work if devices can move about unless you include
+all the possible locations in there.
 
-devices {
-    dir =3D "/dev"
-    scan =3D [ "/dev" ]
-    preferred_names =3D [ ]
-    filter =3D [ "a/.*/" ]
-    cache_dir =3D "/etc/lvm/cache"
-    cache_file_prefix =3D ""
-    write_cache_state =3D 1
-    sysfs_scan =3D 1     =20
-    md_component_detection =3D 1
-    ignore_suspended_devices =3D 0
-}
+> > Is there any way you can grab a listing of /dev at the moment the
+> > vgchange runs during boot?
+> Not relevant per above.
 
->  and are you sure that the SD device nodes
-> will have been created at this point in the boot process?
+-vvvv output provides this information already.
 
-Well, the data from the previous message was done on a fully booted
-machine, complete with /dev/sda being present for many, many minutes if
-not hours.
-
-> You don't mention the distribution you're using
-
-RHEL5.2.
-
-> but most 2.6 based
-> setups will use udev to manage driver loading and device node creation
-> during boot. It's possible for these to get out of sync in some cases.
-
-Yes, but again, the data I am giving you is being taken from a
-completely up and running system.
-
-> Is there any way you can grab a listing of /dev at the moment the
-> vgchange runs during boot?
-
-Not relevant per above.
-
-> Did it scan /dev/sda this time?
-
-Yes.
-
-> Just to be clear, are you only seeing this problem during boot or are
-> you able to reproduce once the system has completed booting (i.e.
-> vgchange -ay fails but vgchange -ay <vg name> succeeds)?
-
-As per the above, I can reproduce on a completed booted system.
-
-b.
-
-
---=-RksTpPFR9dLsRbksSqGl
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.9 (GNU/Linux)
-
-iEYEABECAAYFAkmoIzQACgkQl3EQlGLyuXA/jACgreaHhLOTpGZyrfE6/xTrWElT
-6cMAoMxEJEz2blv/B8vX0oNF1NLRj2wB
-=rmUb
------END PGP SIGNATURE-----
-
---=-RksTpPFR9dLsRbksSqGl--
+Alasdair
+-- 
+agk@redhat.com
