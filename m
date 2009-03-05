@@ -1,18 +1,20 @@
-Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id n312Bkfp029034
-	for <linux-lvm@redhat.com>; Tue, 31 Mar 2009 22:11:46 -0400
-Received: from ti-out-0910.google.com (ti-out-0910.google.com [209.85.142.191])
-	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id n312B3WF007555
-	for <linux-lvm@redhat.com>; Tue, 31 Mar 2009 22:11:03 -0400
-Received: by ti-out-0910.google.com with SMTP id d10so2407322tib.7
-	for <linux-lvm@redhat.com>; Tue, 31 Mar 2009 19:11:02 -0700 (PDT)
+Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id n25EJkgd025526
+	for <linux-lvm@redhat.com>; Thu, 5 Mar 2009 09:19:46 -0500
+Received: from hermes1.cf.ac.uk (hermes1.cf.ac.uk [131.251.0.112])
+	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id n25EJRl3012937
+	for <linux-lvm@redhat.com>; Thu, 5 Mar 2009 09:19:28 -0500
+Received: from mdomsmp01.cf.ac.uk ([10.255.228.22])
+	by hermes1.cf.ac.uk with esmtp (Exim 4.69)
+	(envelope-from <Rees@cardiff.ac.uk>) id 1LfEQ3-0008O9-76
+	for linux-lvm@redhat.com; Thu, 05 Mar 2009 14:19:27 +0000
 MIME-Version: 1.0
-Date: Wed, 1 Apr 2009 10:11:02 +0800
-Message-ID: <1cafab770903311911p63f962afybfd39137e61344d1@mail.gmail.com>
-From: Xinwei Hu <hxinwei@gmail.com>
-Content-Type: multipart/mixed; boundary=001485f33e42cb5727046674d30b
-Subject: [linux-lvm] Call dlm_release_lockspace with force=1 in
-	clvmd-corosync.c
+From: Lyn Rees <Rees@cardiff.ac.uk>
+Message-ID: <OF225E8B06.ABEB6C57-ON80257570.004EA632-80257570.004EADBC@cardiff.ac.uk>
+Date: Thu, 5 Mar 2009 14:19:25 +0000
+Content-Type: multipart/alternative;
+	boundary="=_alternative 004EAD6C80257570_="
+Subject: [linux-lvm] LVM iostat readings
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -23,58 +25,89 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: LVM general discussion and development <linux-lvm@redhat.com>
+To: linux-lvm@redhat.com
 
---001485f33e42cb5727046674d30b
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+This is a multipart message in MIME format.
+--=_alternative 004EAD6C80257570_=
+Content-Type: text/plain; charset="US-ASCII"
 
-Hi all,
+Anyone?
 
-    All calls to dlm_release_lockspace in clvmd-corosync.c use
-force=0. This may cause the problem when
-the node is the "lock master" of lockspace, the lockspace won't be
-release then, and there'll be no any error
-information from libdlm.
+__________________
 
-    Issues' found and analysied by Lars Marowsky-Bree and David Teigland.
+Hi,
 
-    The patch tries to call dlm_release_lockspace with force = 1 in all cases.
+I've had a good look around for answers but found nothing useful.
 
-    Please consider it for inclusion.
+I've collected data using iostat from a production server. I've got 3 
+disks stitched together as a linear LVM, 250GB+500GB+500GB, with data on 
+only the first 2 disks at the moment.
 
-    Thanks.
+Under load, the PV's get busy showing high utilisation (%util) and quite 
+high queue depths (avgqu-sz). the LV however hits 100% utilisation and the 
+queue depth gets huge! Performance becomes poor at these times, suggesting 
+the values are representative of what is actually happening.
 
---001485f33e42cb5727046674d30b
-Content-Type: text/x-patch; charset=US-ASCII;
-	name="dlm_release_lockspace_with_force.diff"
-Content-Disposition: attachment; 
-	filename="dlm_release_lockspace_with_force.diff"
-Content-Transfer-Encoding: base64
-X-Attachment-Id: f_fszdshie1
+Can someone help me understand what's going on here please? Could LVM be 
+causing a bottleneck, or is a physical bottleneck causing this?
 
-SW5kZXg6IGNsdm1kL2Nsdm1kLWNvcm9zeW5jLmMKPT09PT09PT09PT09PT09PT09PT09PT09PT09
-PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PQotLS0gY2x2bWQub3JpZy9j
-bHZtZC1jb3Jvc3luYy5jCTIwMDktMDMtMTAgMTY6NDc6MTUuMDAwMDAwMDAwICswODAwCisrKyBj
-bHZtZC9jbHZtZC1jb3Jvc3luYy5jCTIwMDktMDQtMDEgMTA6MTA6MzcuMDAwMDAwMDAwICswODAw
-CkBAIC0zMzQsNyArMzM0LDcgQEAKIAlpZiAoZXJyICE9IENTX09LKSB7CiAJCWNwZ19maW5hbGl6
-ZShjcGdfaGFuZGxlKTsKIAkJcXVvcnVtX2ZpbmFsaXplKHF1b3J1bV9oYW5kbGUpOwotCQlkbG1f
-cmVsZWFzZV9sb2Nrc3BhY2UoTE9DS1NQQUNFX05BTUUsIGxvY2tzcGFjZSwgMCk7CisJCWRsbV9y
-ZWxlYXNlX2xvY2tzcGFjZShMT0NLU1BBQ0VfTkFNRSwgbG9ja3NwYWNlLCAxKTsKIAkJc3lzbG9n
-KExPR19FUlIsICJDYW5ub3Qgam9pbiBjbHZtZCBwcm9jZXNzIGdyb3VwIik7CiAJCURFQlVHTE9H
-KCJDYW5ub3Qgam9pbiBjbHZtZCBwcm9jZXNzIGdyb3VwOiAlZFxuIiwgZXJyKTsKIAkJcmV0dXJu
-IGNzX3RvX2Vycm5vKGVycik7CkBAIC0zNDUsNyArMzQ1LDcgQEAKIAlpZiAoZXJyICE9IENTX09L
-KSB7CiAJCWNwZ19maW5hbGl6ZShjcGdfaGFuZGxlKTsKIAkJcXVvcnVtX2ZpbmFsaXplKHF1b3J1
-bV9oYW5kbGUpOwotCQlkbG1fcmVsZWFzZV9sb2Nrc3BhY2UoTE9DS1NQQUNFX05BTUUsIGxvY2tz
-cGFjZSwgMCk7CisJCWRsbV9yZWxlYXNlX2xvY2tzcGFjZShMT0NLU1BBQ0VfTkFNRSwgbG9ja3Nw
-YWNlLCAxKTsKIAkJc3lzbG9nKExPR19FUlIsICJDYW5ub3QgZ2V0IGxvY2FsIG5vZGUgaWRcbiIp
-OwogCQlyZXR1cm4gY3NfdG9fZXJybm8oZXJyKTsKIAl9CkBAIC0zNjEsNyArMzYxLDExIEBACiAJ
-REVCVUdMT0coImNsdXN0ZXJfY2xvc2Vkb3duXG4iKTsKIAl1bmxvY2tfYWxsKCk7CiAKLQlkbG1f
-cmVsZWFzZV9sb2Nrc3BhY2UoTE9DS1NQQUNFX05BTUUsIGxvY2tzcGFjZSwgMCk7CisJLyogVGhl
-IGZpcnN0IG5vZGUgaXMgdGhlIGxvY2sgbWFzdGVyLgorCSAgIFVubGVzcyBjYWxsIGRsbV9yZWxl
-YXNlX2xvY2tzcGFjZSB3aXRoIGZvcmNlPTEsIHRoZSBub2RlCisJICAgbWFzdGVyIGNhbid0IHJl
-bGVhc2UgdGhlIGxvY2tzcGFjZSwgYW5kIG5vIGVycm9yIHdpbGwKKwkgICBiZSByZXR1cm5lZCBi
-eSBkbG1fcmVsZWFzZV9sb2Nrc3BhY2UgaW4gdGhpcyBjYXNlLiAqLworCWRsbV9yZWxlYXNlX2xv
-Y2tzcGFjZShMT0NLU1BBQ0VfTkFNRSwgbG9ja3NwYWNlLCAxKTsKIAljcGdfZmluYWxpemUoY3Bn
-X2hhbmRsZSk7CiAJcXVvcnVtX2ZpbmFsaXplKHF1b3J1bV9oYW5kbGUpOwogfQo=
---001485f33e42cb5727046674d30b--
+Thanks,
+Lyn Rees.
+--------------------------------------------------
+Mr Lyn Rees
+Senior Engineer, UIG
+Information Services Computing Centre
+Cardiff University, 40-41 Park Place,
+Cardiff. CF10 3BB.
+--------------------------------------------------
+Contact numbers:
+ (029) 2087 9188 (direct)
+ (029) 2087 4875 (reception)
+ (029) 2087 4285 (fax)
+--------------------------------------------------
+Email: rees@cardiff.ac.uk
+Web: www.cardiff.ac.uk
+--=_alternative 004EAD6C80257570_=
+Content-Type: text/html; charset="US-ASCII"
+
+<font size=2 face="sans-serif">Anyone?</font>
+<br>
+<br><font size=2 face="sans-serif">__________________</font>
+<br>
+<br><font size=2 face="sans-serif">Hi,</font>
+<br>
+<br><font size=2 face="sans-serif">I've had a good look around for answers
+but found nothing useful.</font>
+<br>
+<br><font size=2 face="sans-serif">I've collected data using iostat from
+a production server. I've got 3 disks stitched together as a linear LVM,
+250GB+500GB+500GB, with data on only the first 2 disks at the moment.</font>
+<br>
+<br><font size=2 face="sans-serif">Under load, the PV's get busy showing
+high utilisation (%util) and quite high queue depths (avgqu-sz). the LV
+however hits 100% utilisation and the queue depth gets huge! Performance
+becomes poor at these times, suggesting the values are representative of
+what is actually happening.</font>
+<br>
+<br><font size=2 face="sans-serif">Can someone help me understand what's
+going on here please? Could LVM be causing a bottleneck, or is a physical
+bottleneck causing this?</font>
+<br>
+<br><font size=2 face="sans-serif">Thanks,</font>
+<br><font size=2 face="sans-serif">Lyn Rees.</font>
+<br><font size=2 face="sans-serif">
+--------------------------------------------------<br>
+Mr Lyn Rees<br>
+Senior Engineer, UIG<br>
+Information Services Computing Centre<br>
+Cardiff University, 40-41 Park Place,<br>
+Cardiff. CF10 3BB.<br>
+--------------------------------------------------<br>
+Contact numbers:<br>
+ (029) 2087 9188 (direct)<br>
+ (029) 2087 4875 (reception)<br>
+ (029) 2087 4285 (fax)<br>
+--------------------------------------------------<br>
+Email: rees@cardiff.ac.uk<br>
+Web: </font><a href=www.cardiff.ac.uk><font size=2 face="sans-serif">www.cardiff.ac.uk</font></a>
+--=_alternative 004EAD6C80257570_=--
