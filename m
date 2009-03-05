@@ -1,20 +1,17 @@
-Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id n25EJkgd025526
-	for <linux-lvm@redhat.com>; Thu, 5 Mar 2009 09:19:46 -0500
-Received: from hermes1.cf.ac.uk (hermes1.cf.ac.uk [131.251.0.112])
-	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id n25EJRl3012937
-	for <linux-lvm@redhat.com>; Thu, 5 Mar 2009 09:19:28 -0500
-Received: from mdomsmp01.cf.ac.uk ([10.255.228.22])
-	by hermes1.cf.ac.uk with esmtp (Exim 4.69)
-	(envelope-from <Rees@cardiff.ac.uk>) id 1LfEQ3-0008O9-76
-	for linux-lvm@redhat.com; Thu, 05 Mar 2009 14:19:27 +0000
+Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id n25FrRm5001591
+	for <linux-lvm@redhat.com>; Thu, 5 Mar 2009 10:53:27 -0500
+Received: from wf-out-1314.google.com (wf-out-1314.google.com [209.85.200.169])
+	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id n25FrANj032395
+	for <linux-lvm@redhat.com>; Thu, 5 Mar 2009 10:53:11 -0500
+Received: by wf-out-1314.google.com with SMTP id 25so4164284wfc.6
+	for <linux-lvm@redhat.com>; Thu, 05 Mar 2009 07:53:10 -0800 (PST)
 MIME-Version: 1.0
-From: Lyn Rees <Rees@cardiff.ac.uk>
-Message-ID: <OF225E8B06.ABEB6C57-ON80257570.004EA632-80257570.004EADBC@cardiff.ac.uk>
-Date: Thu, 5 Mar 2009 14:19:25 +0000
-Content-Type: multipart/alternative;
-	boundary="=_alternative 004EAD6C80257570_="
-Subject: [linux-lvm] LVM iostat readings
+Date: Thu, 5 Mar 2009 21:23:10 +0530
+Message-ID: <ffa0f8300903050753q6dc7c47bx6302d31d174a3dec@mail.gmail.com>
+From: Tejas Sumant <tejas.sumant@gmail.com>
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] LVM partition type
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -25,89 +22,17 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
+Content-Type: text/plain; charset="us-ascii"
 To: linux-lvm@redhat.com
 
-This is a multipart message in MIME format.
---=_alternative 004EAD6C80257570_=
-Content-Type: text/plain; charset="US-ASCII"
+Hi there,
 
-Anyone?
+I created a physical volume using pvcreate command on /dev/sda. When I
+checked the partition entries in MBR for /dev/sda using fdisk observed
+that no partitions were displayed.
 
-__________________
+Why pvcreate doesnt make partition entry with type 8e in MBR? Which
+partition entry gets used in case whole disk is made PV?
 
-Hi,
-
-I've had a good look around for answers but found nothing useful.
-
-I've collected data using iostat from a production server. I've got 3 
-disks stitched together as a linear LVM, 250GB+500GB+500GB, with data on 
-only the first 2 disks at the moment.
-
-Under load, the PV's get busy showing high utilisation (%util) and quite 
-high queue depths (avgqu-sz). the LV however hits 100% utilisation and the 
-queue depth gets huge! Performance becomes poor at these times, suggesting 
-the values are representative of what is actually happening.
-
-Can someone help me understand what's going on here please? Could LVM be 
-causing a bottleneck, or is a physical bottleneck causing this?
-
-Thanks,
-Lyn Rees.
---------------------------------------------------
-Mr Lyn Rees
-Senior Engineer, UIG
-Information Services Computing Centre
-Cardiff University, 40-41 Park Place,
-Cardiff. CF10 3BB.
---------------------------------------------------
-Contact numbers:
- (029) 2087 9188 (direct)
- (029) 2087 4875 (reception)
- (029) 2087 4285 (fax)
---------------------------------------------------
-Email: rees@cardiff.ac.uk
-Web: www.cardiff.ac.uk
---=_alternative 004EAD6C80257570_=
-Content-Type: text/html; charset="US-ASCII"
-
-<font size=2 face="sans-serif">Anyone?</font>
-<br>
-<br><font size=2 face="sans-serif">__________________</font>
-<br>
-<br><font size=2 face="sans-serif">Hi,</font>
-<br>
-<br><font size=2 face="sans-serif">I've had a good look around for answers
-but found nothing useful.</font>
-<br>
-<br><font size=2 face="sans-serif">I've collected data using iostat from
-a production server. I've got 3 disks stitched together as a linear LVM,
-250GB+500GB+500GB, with data on only the first 2 disks at the moment.</font>
-<br>
-<br><font size=2 face="sans-serif">Under load, the PV's get busy showing
-high utilisation (%util) and quite high queue depths (avgqu-sz). the LV
-however hits 100% utilisation and the queue depth gets huge! Performance
-becomes poor at these times, suggesting the values are representative of
-what is actually happening.</font>
-<br>
-<br><font size=2 face="sans-serif">Can someone help me understand what's
-going on here please? Could LVM be causing a bottleneck, or is a physical
-bottleneck causing this?</font>
-<br>
-<br><font size=2 face="sans-serif">Thanks,</font>
-<br><font size=2 face="sans-serif">Lyn Rees.</font>
-<br><font size=2 face="sans-serif">
---------------------------------------------------<br>
-Mr Lyn Rees<br>
-Senior Engineer, UIG<br>
-Information Services Computing Centre<br>
-Cardiff University, 40-41 Park Place,<br>
-Cardiff. CF10 3BB.<br>
---------------------------------------------------<br>
-Contact numbers:<br>
- (029) 2087 9188 (direct)<br>
- (029) 2087 4875 (reception)<br>
- (029) 2087 4285 (fax)<br>
---------------------------------------------------<br>
-Email: rees@cardiff.ac.uk<br>
-Web: </font><a href=www.cardiff.ac.uk><font size=2 face="sans-serif">www.cardiff.ac.uk</font></a>
---=_alternative 004EAD6C80257570_=--
+-- 
+Tejas Sumant
