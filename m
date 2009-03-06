@@ -1,17 +1,16 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id n266WlTF003624
-	for <linux-lvm@redhat.com>; Fri, 6 Mar 2009 01:32:47 -0500
-Received: from yx-out-2324.google.com (yx-out-2324.google.com [74.125.44.28])
-	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id n266WVJ5011931
-	for <linux-lvm@redhat.com>; Fri, 6 Mar 2009 01:32:31 -0500
-Received: by yx-out-2324.google.com with SMTP id 8so167409yxm.81
-	for <linux-lvm@redhat.com>; Thu, 05 Mar 2009 22:32:31 -0800 (PST)
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id n26HfUhk029400
+	for <linux-lvm@redhat.com>; Fri, 6 Mar 2009 12:41:30 -0500
+Received: from web8320.mail.in.yahoo.com (web8320.mail.in.yahoo.com
+	[202.43.219.75])
+	by mx3.redhat.com (8.13.8/8.13.8) with SMTP id n26HfCEJ021269
+	for <linux-lvm@redhat.com>; Fri, 6 Mar 2009 12:41:13 -0500
+Message-ID: <753673.52190.qm@web8320.mail.in.yahoo.com>
+Date: Fri, 6 Mar 2009 23:04:30 +0530 (IST)
+From: Senthil Kumar <senthilkumar_vc@yahoo.co.in>
 MIME-Version: 1.0
-Date: Fri, 6 Mar 2009 00:32:30 -0600
-Message-ID: <1020a8600903052232q545ff5bch6230d16e5fc478c7@mail.gmail.com>
-From: mantra UNIX <unix.mantra@gmail.com>
-Content-Type: multipart/alternative; boundary=0016e640985a088dae04646d73aa
-Subject: [linux-lvm] lvm - gfs2 - snapshots
+Content-Type: multipart/alternative; boundary="0-199274082-1236360870=:52190"
+Subject: [linux-lvm] LVM Mirroring
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -24,28 +23,25 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 List-Id: <linux-lvm.redhat.com>
 To: linux-lvm@redhat.com
 
---0016e640985a088dae04646d73aa
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
 
-Hi there,
-I can create a snapshot logical volume with gfs2 file-system. But having a
-hard time mounting the snapshot,  Is it possible with GFS2 ?
-
-
-
--- 
-Regards,
-mantra - Instrument of Thought
-
---0016e640985a088dae04646d73aa
-Content-Type: text/html; charset=ISO-8859-1
+--0-199274082-1236360870=:52190
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
 
-Hi there,<br>I can create a snapshot logical volume with gfs2 file-system. =
-But having a hard time mounting the snapshot,=A0 Is it possible with GFS2 ?=
-<br><br><br clear=3D"all"><br>-- <br>Regards,<br>mantra - Instrument of Tho=
-ught<br>
+Hi All,=0A=0AIs it Possible to create LVM mirroring with out using RAID=0AI=
+f possible can u send related document or URL.=0AThanks in  Advance.=0A=0AS=
+enthilkumar.C=0A=0A=0A      Add more friends to your messenger and enjoy! G=
+o to http://messenger.yahoo.com/invite/
+--0-199274082-1236360870=:52190
+Content-Type: text/html; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-
---0016e640985a088dae04646d73aa--
+<html><head><style type=3D"text/css"><!-- DIV {margin:0px;} --></style></he=
+ad><body><div style=3D"font-family:times new roman,new york,times,serif;fon=
+t-size:12pt"><div>Hi All,<br><br>Is it Possible to create LVM mirroring wit=
+h out using RAID<br>If possible can u send related document or URL.<br>Than=
+ks in&nbsp; Advance.<br><br>Senthilkumar.C<br><br><br></div></div><br>=0A  =
+    <!--1--><hr size=3D1></hr> Connect with friends all over the world. <a =
+href=3D"http://in.rd.yahoo.com/tagline_messenger_1/*http://in.messenger.yah=
+oo.com/?wm=3Dn/"> Get Yahoo! India Messenger.</a></body></html>
+--0-199274082-1236360870=:52190--
