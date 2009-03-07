@@ -1,16 +1,18 @@
-Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id n26HfUhk029400
-	for <linux-lvm@redhat.com>; Fri, 6 Mar 2009 12:41:30 -0500
-Received: from web8320.mail.in.yahoo.com (web8320.mail.in.yahoo.com
-	[202.43.219.75])
-	by mx3.redhat.com (8.13.8/8.13.8) with SMTP id n26HfCEJ021269
-	for <linux-lvm@redhat.com>; Fri, 6 Mar 2009 12:41:13 -0500
-Message-ID: <753673.52190.qm@web8320.mail.in.yahoo.com>
-Date: Fri, 6 Mar 2009 23:04:30 +0530 (IST)
-From: Senthil Kumar <senthilkumar_vc@yahoo.co.in>
+Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id n273BI6Z019747
+	for <linux-lvm@redhat.com>; Fri, 6 Mar 2009 22:11:18 -0500
+Received: from qw-out-2122.google.com (qw-out-2122.google.com [74.125.92.24])
+	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id n273B215027361
+	for <linux-lvm@redhat.com>; Fri, 6 Mar 2009 22:11:02 -0500
+Received: by qw-out-2122.google.com with SMTP id 3so463782qwe.39
+	for <linux-lvm@redhat.com>; Fri, 06 Mar 2009 19:11:02 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: multipart/alternative; boundary="0-199274082-1236360870=:52190"
-Subject: [linux-lvm] LVM Mirroring
+Date: Sat, 7 Mar 2009 00:11:02 -0300
+Message-ID: <f9d0f9760903061911s6db14df3t1ac602afa411e7e1@mail.gmail.com>
+From: Ricardo Funke Ormieres <funke.listas@gmail.com>
+Content-Type: multipart/alternative; boundary=0015175cb15452ae2804647ec05f
+Subject: [linux-lvm] how to enlarge a logical volume that is a virtual disk
+	of a virtual machine that uses lvm too?
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -23,25 +25,33 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 List-Id: <linux-lvm.redhat.com>
 To: linux-lvm@redhat.com
 
+--0015175cb15452ae2804647ec05f
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
 
---0-199274082-1236360870=:52190
-Content-Type: text/plain; charset=utf-8
+Hello,
+
+I have a phisical machine with a xen vm installed and I'm using LVM in both.
+The Virtual Machine is using a LogVol (that belongs to the Dom0) as it's
+virtual hard disk.
+
+It's possible to enlarge this LogVol in order to enlarge the vm's hard disk?
+
+I know that I can just create another LogVol in the Dom0 and add it to the
+vm's PV, but I'm curious for that possible alternative.
+
+Thanks in advance
+
+--0015175cb15452ae2804647ec05f
+Content-Type: text/html; charset=ISO-8859-1
 Content-Transfer-Encoding: quoted-printable
 
-Hi All,=0A=0AIs it Possible to create LVM mirroring with out using RAID=0AI=
-f possible can u send related document or URL.=0AThanks in  Advance.=0A=0AS=
-enthilkumar.C=0A=0A=0A      Add more friends to your messenger and enjoy! G=
-o to http://messenger.yahoo.com/invite/
---0-199274082-1236360870=:52190
-Content-Type: text/html; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Hello,<br><br>I have a phisical machine with a xen vm installed and I&#39;m=
+ using LVM in both. The Virtual Machine is using a LogVol (that belongs to =
+the Dom0) as it&#39;s virtual hard disk.<br><br>It&#39;s possible to enlarg=
+e this LogVol in order to enlarge the vm&#39;s hard disk?<br>
+<br>I know that I can just create another LogVol in the Dom0 and add it to =
+the vm&#39;s PV, but I&#39;m curious for that possible alternative.<br><br>=
+Thanks in advance<br>
 
-<html><head><style type=3D"text/css"><!-- DIV {margin:0px;} --></style></he=
-ad><body><div style=3D"font-family:times new roman,new york,times,serif;fon=
-t-size:12pt"><div>Hi All,<br><br>Is it Possible to create LVM mirroring wit=
-h out using RAID<br>If possible can u send related document or URL.<br>Than=
-ks in&nbsp; Advance.<br><br>Senthilkumar.C<br><br><br></div></div><br>=0A  =
-    <!--1--><hr size=3D1></hr> Connect with friends all over the world. <a =
-href=3D"http://in.rd.yahoo.com/tagline_messenger_1/*http://in.messenger.yah=
-oo.com/?wm=3Dn/"> Get Yahoo! India Messenger.</a></body></html>
---0-199274082-1236360870=:52190--
+--0015175cb15452ae2804647ec05f--
