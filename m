@@ -1,18 +1,27 @@
 Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id n273BI6Z019747
-	for <linux-lvm@redhat.com>; Fri, 6 Mar 2009 22:11:18 -0500
-Received: from qw-out-2122.google.com (qw-out-2122.google.com [74.125.92.24])
-	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id n273B215027361
-	for <linux-lvm@redhat.com>; Fri, 6 Mar 2009 22:11:02 -0500
-Received: by qw-out-2122.google.com with SMTP id 3so463782qwe.39
-	for <linux-lvm@redhat.com>; Fri, 06 Mar 2009 19:11:02 -0800 (PST)
-MIME-Version: 1.0
-Date: Sat, 7 Mar 2009 00:11:02 -0300
-Message-ID: <f9d0f9760903061911s6db14df3t1ac602afa411e7e1@mail.gmail.com>
-From: Ricardo Funke Ormieres <funke.listas@gmail.com>
-Content-Type: multipart/alternative; boundary=0015175cb15452ae2804647ec05f
-Subject: [linux-lvm] how to enlarge a logical volume that is a virtual disk
-	of a virtual machine that uses lvm too?
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id n278lhMS001888
+	for <linux-lvm@redhat.com>; Sat, 7 Mar 2009 03:47:43 -0500
+Received: from ciao.gmane.org (main.gmane.org [80.91.229.2])
+	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id n278lOfx025167
+	for <linux-lvm@redhat.com>; Sat, 7 Mar 2009 03:47:25 -0500
+Received: from list by ciao.gmane.org with local (Exim 4.43)
+	id 1LfsBj-0004fJ-7D
+	for linux-lvm@redhat.com; Sat, 07 Mar 2009 08:47:19 +0000
+Received: from 122.172.156.217 ([122.172.156.217])
+	by main.gmane.org with esmtp (Gmexim 0.1 (Debian))
+	id 1AlnuQ-0007hv-00
+	for <linux-lvm@redhat.com>; Sat, 07 Mar 2009 08:47:19 +0000
+Received: from rrs by 122.172.156.217 with local (Gmexim 0.1 (Debian))
+	id 1AlnuQ-0007hv-00
+	for <linux-lvm@redhat.com>; Sat, 07 Mar 2009 08:47:19 +0000
+From: Ritesh Raj Sarraf <rrs@researchut.com>
+Date: Sat, 07 Mar 2009 13:34:22 +0530
+Message-ID: <ldm986-uh3.ln1@news.researchut.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Sender: news <news@ger.gmane.org>
+Subject: [linux-lvm] Block Diff Utility
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -25,33 +34,19 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 List-Id: <linux-lvm.redhat.com>
 To: linux-lvm@redhat.com
 
---0015175cb15452ae2804647ec05f
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
+Hi,
 
-Hello,
+LVM Snapshots stands as a very good tool for backup and recovery.
+I have my root on an LV. To have a backup, I just need to create a snapshot 
+of my root LV and then dd the snapshot image.
 
-I have a phisical machine with a xen vm installed and I'm using LVM in both.
-The Virtual Machine is using a LogVol (that belongs to the Dom0) as it's
-virtual hard disk.
+Works perfect. Infact I have been able to restore the root LV to a different 
+machine without any issues.
 
-It's possible to enlarge this LogVol in order to enlarge the vm's hard disk?
+I was just wondering if there are block diff utilities. Because currently, I 
+can't see a way to take incremental snapshots.
 
-I know that I can just create another LogVol in the Dom0 and add it to the
-vm's PV, but I'm curious for that possible alternative.
 
-Thanks in advance
-
---0015175cb15452ae2804647ec05f
-Content-Type: text/html; charset=ISO-8859-1
-Content-Transfer-Encoding: quoted-printable
-
-Hello,<br><br>I have a phisical machine with a xen vm installed and I&#39;m=
- using LVM in both. The Virtual Machine is using a LogVol (that belongs to =
-the Dom0) as it&#39;s virtual hard disk.<br><br>It&#39;s possible to enlarg=
-e this LogVol in order to enlarge the vm&#39;s hard disk?<br>
-<br>I know that I can just create another LogVol in the Dom0 and add it to =
-the vm&#39;s PV, but I&#39;m curious for that possible alternative.<br><br>=
-Thanks in advance<br>
-
---0015175cb15452ae2804647ec05f--
+Ritesh
+-- 
+If possible, Please CC me when replying. I'm not subscribed to the list.
