@@ -1,18 +1,21 @@
-Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id n29AEtdx027842
-	for <linux-lvm@redhat.com>; Mon, 9 Mar 2009 06:14:55 -0400
-Received: from rv-out-0506.google.com (rv-out-0506.google.com [209.85.198.226])
-	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id n29AEcX6030737
-	for <linux-lvm@redhat.com>; Mon, 9 Mar 2009 06:14:38 -0400
-Received: by rv-out-0506.google.com with SMTP id f6so1792702rvb.51
-	for <linux-lvm@redhat.com>; Mon, 09 Mar 2009 03:14:37 -0700 (PDT)
+Received: from pobox.fab.redhat.com (pobox.fab.redhat.com [10.33.63.12])
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id n29C4ZIV023798
+	for <linux-lvm@redhat.com>; Mon, 9 Mar 2009 08:04:36 -0400
+Received: from breeves.fab.redhat.com (breeves.fab.redhat.com [10.33.0.40])
+	by pobox.fab.redhat.com (8.13.1/8.13.1) with ESMTP id n29C4VoB002960
+	for <linux-lvm@redhat.com>; Mon, 9 Mar 2009 08:04:31 -0400
+Message-ID: <49B50610.3020600@redhat.com>
+Date: Mon, 09 Mar 2009 12:05:36 +0000
+From: "Bryn M. Reeves" <bmr@redhat.com>
 MIME-Version: 1.0
-Date: Mon, 9 Mar 2009 15:44:37 +0530
-Message-ID: <ffa0f8300903090314i2d4e827mc79ff89438c53ce6@mail.gmail.com>
-From: Tejas Sumant <tejas.sumant@gmail.com>
+Subject: Re: [linux-lvm] how to enlarge a logical volume that is a virtual
+	disk	of a virtual machine that uses lvm too?
+References: <f9d0f9760903061911s6db14df3t1ac602afa411e7e1@mail.gmail.com>
+	<49B23E93.6090004@alexbrett.net>
+In-Reply-To: <49B23E93.6090004@alexbrett.net>
 Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] label_read()
-Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
+Reply-To: bmr@redhat.com,
+	LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -22,14 +25,19 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-To: linux-lvm@redhat.com
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-When I checked label_read() code found that the function finds LVM
-label id "LABELONE" in first four sectors starting from scan_sector.
-Why 4 sectors in particular are checked, why not more than 4 or less
-than 4?
+Alex Brett wrote:
+> I'm not sure if you could do it online or not (I can't see any
+> reason why not, but there may be issues), but you should just be
+> able to resize the LV (lvresize) in dom0 (obviously make sure you
+> enlarge it, not shrink it), then do a pvresize in the VM to enlarge
+> the PV to use all
 
-Thanks.
--- 
-Tejas Sumant
+Depending on the type of device and whether it is partitioned or not
+it may not be possible to have the guest recognise the new size of the
+device without a reboot.
+
+Regards,
+Bryn.
