@@ -1,17 +1,14 @@
-Received: from agk.fab.redhat.com (agk.fab.redhat.com [10.33.0.19])
-	by ns3.rdu.redhat.com (8.13.8/8.13.8) with ESMTP id n2CEv3XY026000
-	for <linux-lvm@redhat.com>; Thu, 12 Mar 2009 10:57:03 -0400
-Received: from agk by agk.fab.redhat.com with local (Exim 4.34)
-	id 1LhmLG-0007SW-B9
-	for linux-lvm@redhat.com; Thu, 12 Mar 2009 14:57:02 +0000
-Date: Thu, 12 Mar 2009 14:57:02 +0000
-From: Alasdair G Kergon <agk@redhat.com>
+Received: from [10.33.0.40] (breeves.fab.redhat.com [10.33.0.40])
+	by ns3.rdu.redhat.com (8.13.8/8.13.8) with ESMTP id n2CEx3L7026259
+	for <linux-lvm@redhat.com>; Thu, 12 Mar 2009 10:59:04 -0400
 Subject: Re: [linux-lvm] pvcreate and partition alignment
-Message-ID: <20090312145702.GH7445@agk.fab.redhat.com>
-References: <f4f537b50903120752s73e40288wbdfaaae814acbdd9@mail.gmail.com>
-Mime-Version: 1.0
-Content-Disposition: inline
+From: "Bryn M. Reeves" <bmr@redhat.com>
 In-Reply-To: <f4f537b50903120752s73e40288wbdfaaae814acbdd9@mail.gmail.com>
+References: <f4f537b50903120752s73e40288wbdfaaae814acbdd9@mail.gmail.com>
+Date: Thu, 12 Mar 2009 15:00:13 +0000
+Message-Id: <1236870013.18005.96.camel@breeves.fab.redhat.com>
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -23,16 +20,28 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-On Thu, Mar 12, 2009 at 09:52:32AM -0500, Eugene Vilensky wrote:
+On Thu, 2009-03-12 at 09:52 -0500, Eugene Vilensky wrote:
+> Greetings,
+> 
+> NetApp requires for best performance that all partitions be aligned to
+> 4k boundaries to prevent "partial writes" and lost IOPS.  We are using
+> LVM on un-partitioned devices.  The only response I can get out of
+> NetApp is that, by not having a partition, the partition itself is not
+> mis-aligned.  
+
+You need to make sure that the extents on the PV have the correct
+alignment.
+
+> We are using a blocksize of 4096b for ext3.  
+> 
 > Is there another "allocation" setting that we need to select for LVM
 > specifically, to ensure alignment to this 4k NetApp boundary?
- 
-The default alignment should (64k) work fine if you've no other
-layers like partitions in between.
 
-Alasdair
--- 
-agk@redhat.com
+See this thread on lvm-devel last month:
+
+https://www.redhat.com/archives/lvm-devel/2009-January/msg00148.html
+
+Regards,
+Bryn.
