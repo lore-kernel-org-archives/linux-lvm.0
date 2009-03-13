@@ -1,21 +1,22 @@
 Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id n2CHltfO021137
-	for <linux-lvm@redhat.com>; Thu, 12 Mar 2009 13:47:55 -0400
-Received: from exprod5og113.obsmtp.com (exprod5og113.obsmtp.com [64.18.0.26])
-	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id n2CHl55d010363
-	for <linux-lvm@redhat.com>; Thu, 12 Mar 2009 13:47:11 -0400
-Received: from kipc2.localdomain (unknown [3.249.4.68])
-	by mail-rly-prd-01.am.health.ge.com (Postfix) with ESMTP id 6A9C93723
-	for <linux-lvm@redhat.com>; Thu, 12 Mar 2009 17:45:18 +0000 (GMT)
-Date: Thu, 12 Mar 2009 18:46:59 +0100
-From: Karl Kiniger <karl.kiniger@med.ge.com>
-Message-ID: <20090312174659.GA11057@kipc2.localdomain>
-References: <20090312151238.GA5816@kipc2.localdomain>
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id n2DHl0H2007352
+	for <linux-lvm@redhat.com>; Fri, 13 Mar 2009 13:47:00 -0400
+Received: from nazgul.esiway.net (Nazgul.esiway.net [193.194.16.154])
+	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id n2DHkZr1005722
+	for <linux-lvm@redhat.com>; Fri, 13 Mar 2009 13:46:35 -0400
+Received: from Megathlon.ESI (Ghost.esi.it [193.194.16.225])
+	by nazgul.esiway.net (8.13.8/8.13.8) with ESMTPS id n2DHkYcd027914
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=OK)
+	for <linux-lvm@redhat.com>; Fri, 13 Mar 2009 18:46:34 +0100
+Received: from frodo.esi (Frodo.ESI [10.10.10.13])
+	by Megathlon.ESI (8.14.1/8.14.1) with ESMTP id n2DHkXCr023369
+	for <linux-lvm@redhat.com>; Fri, 13 Mar 2009 18:46:33 +0100
+Message-ID: <49BA9BF9.3070507@esiway.net>
+Date: Fri, 13 Mar 2009 18:46:33 +0100
+From: Marco Colombo <linux-lvm@esiway.net>
 MIME-Version: 1.0
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20090312151238.GA5816@kipc2.localdomain>
-Subject: [linux-lvm] Re: changing protection of lvm2 snapshot origin
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] fsync() and LVM
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -26,28 +27,26 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="utf-8"
-To: linux-lvm@redhat.com
+Content-Type: text/plain; charset="us-ascii"
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-> * lvcreate -m test_lv -L 4G some_vg
-that should read -n test_lv
-> 
-> * fill test_lv with a qemu disk image
-> 
-> * lvchange -p r some_vg/test_lv  --- I want to make sure that nobody
->                                      will ever modify the (future) origin
->                                      unintentionally.
-> * lvcreate -s -m test_lv_snap -L 1G some_vg/test_lv
-and this too. grrr copy&paste
+Hi, I'm a long time user of both PostgreSQL and LVM. So far I've been quite
+happy with both. But a recent thread on the PostgreSQL list made me
+unconfortable. What is this thing they're referring to, fsync()'s being
+ignored? Makes me feel like I'm running on thin ice, without even
+knowing. Before I start phasing out LVM from all my PostgreSQL installations
+(as they suggest), I'd like to hear some kind of confirmation.
+This is quite scary.
 
-Karl
+http://archives.postgresql.org/pgsql-general/2009-03/msg00204.php
 
--- 
-D.I. Karl Kiniger     mailto:karl.kiniger@med.ge.com
-Tel: (++43) 7682-3800-710  Voip(GE): 1662 710
-Fax: (++43) 7682-3800-47 C: +43 6991 3800 710
--
-GE Medical Systems Kretztechnik GmbH & Co OHG - Tiefenbach 15 – A-4871 Zipf
-Landesgericht Wels FN 222387s – UID (VAT-ID): ATU54086108 - DVR: 2111103 – ARA: 12816
-Persönlich haftende Gesellschafterin: GE Medical Systems Kretztechnik GmbH
-Tiefenbach 15 – A-4871 Zipf  - Landesgericht Wels FN 218689b
+In my understanding:
+
+fsync():  force data from OS memory to disk (ending up in the disk cache)
+write barrier: force data from disk cache to disk platters
+
+If you disable write-back cache on the disks, you no longer need write
+barriers. But apparently they claim LVM being unsafe even with disks
+caches in write-thru mode, which surprises me a lot.
+
+.TM.
