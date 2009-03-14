@@ -1,18 +1,25 @@
-Received: from agk.fab.redhat.com (agk.fab.redhat.com [10.33.0.19])
-	by ns3.rdu.redhat.com (8.13.8/8.13.8) with ESMTP id n2DKcD1c018225
-	for <linux-lvm@redhat.com>; Fri, 13 Mar 2009 16:38:13 -0400
-Received: from agk by agk.fab.redhat.com with local (Exim 4.34)
-	id 1LiE8y-0000rO-8w
-	for linux-lvm@redhat.com; Fri, 13 Mar 2009 20:38:12 +0000
-Date: Fri, 13 Mar 2009 20:38:12 +0000
-From: Alasdair G Kergon <agk@redhat.com>
+Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id n2E3GLX4017688
+	for <linux-lvm@redhat.com>; Fri, 13 Mar 2009 23:16:21 -0400
+Received: from nazgul.esiway.net (Nazgul.ESIWAY.NET [193.194.16.154])
+	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id n2E3G6SA027894
+	for <linux-lvm@redhat.com>; Fri, 13 Mar 2009 23:16:07 -0400
+Received: from Megathlon.ESI (Ghost.esi.it [193.194.16.225])
+	by nazgul.esiway.net (8.13.8/8.13.8) with ESMTPS id n2E3G5do014686
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=OK)
+	for <linux-lvm@redhat.com>; Sat, 14 Mar 2009 04:16:05 +0100
+Received: from frodo.esi (Frodo.ESI [10.10.10.13])
+	by Megathlon.ESI (8.14.1/8.14.1) with ESMTP id n2E3G4im028049
+	for <linux-lvm@redhat.com>; Sat, 14 Mar 2009 04:16:05 +0100
+Message-ID: <49BB2174.7070301@esiway.net>
+Date: Sat, 14 Mar 2009 04:16:04 +0100
+From: Marco Colombo <linux-lvm@esiway.net>
+MIME-Version: 1.0
 Subject: Re: [linux-lvm] fsync() and LVM
-Message-ID: <20090313203812.GK7445@agk.fab.redhat.com>
-References: <49BA9BF9.3070507@esiway.net>
-	<Pine.LNX.4.64.0903131552560.2685@bmsred.bmsi.com>
-Mime-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <Pine.LNX.4.64.0903131552560.2685@bmsred.bmsi.com>
+References: <49BA9BF9.3070507@esiway.net>	<Pine.LNX.4.64.0903131552560.2685@bmsred.bmsi.com>
+	<20090313203812.GK7445@agk.fab.redhat.com>
+In-Reply-To: <20090313203812.GK7445@agk.fab.redhat.com>
+Content-Transfer-Encoding: 7bit
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -24,29 +31,20 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-Let's try to clear up the confusion.
+Alasdair G Kergon wrote:
+ > Several kernels releases ago, the implementation of the 'flush device'
+> operation in the block layer was changed from a simple function call
+> that dm supported to a mechanism involving barriers that is trickier for
+> dm to support.  Previously 'flush' could not fail and so callers do not
+> generally have strategies to handle such a situation.
 
-Kernel device-mapper (which lvm uses) does not support write barriers
-except in very restricted circumstances (when only one device is
-involved and the mapping is trivial).  If dm receives a write barrier
-which is not supported it notifies the caller (typically a filesystem)
-so appropriate action can be taken if it wishes.
+The 'caller' here would be fsync() in the FS. What strategies are available
+to handle a failing 'flush'? It there anything that can be done at
+application level (userland)?
 
-Several kernels releases ago, the implementation of the 'flush device'
-operation in the block layer was changed from a simple function call
-that dm supported to a mechanism involving barriers that is trickier for
-dm to support.  Previously 'flush' could not fail and so callers do not
-generally have strategies to handle such a situation.
+More than anything, does LVM (or device mapper) really reorder writes?
+Is it safe with disk caches in write-thru mode? (hdparm -W0)
 
-The latest of several attempts to support barriers is contained in
-patches here:
-  http://patchwork.kernel.org/project/dm-devel/list/?q=barriers
-
-Please review and test if you are interested!
-
-Alasdair
--- 
-agk@redhat.com
+.TM.
