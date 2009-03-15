@@ -1,25 +1,25 @@
-Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id n2EEWCSb017914
-	for <linux-lvm@redhat.com>; Sat, 14 Mar 2009 10:32:12 -0400
-Received: from mail.bmsi.com (www.bmsi.com [24.248.44.156])
-	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id n2EEVwYd010017
-	for <linux-lvm@redhat.com>; Sat, 14 Mar 2009 10:31:59 -0400
-Received: from bmsred.bmsi.com (bmsred.bmsi.com [192.168.9.50])
-	by mail.bmsi.com (8.14.3/8.14.3) with ESMTP id n2EEVq2x019001
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO)
-	for <linux-lvm@redhat.com>; Sat, 14 Mar 2009 10:31:52 -0400
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by bmsred.bmsi.com (8.14.3/8.14.3) with ESMTP id n2EEVpqh006152
-	for <linux-lvm@redhat.com>; Sat, 14 Mar 2009 10:31:51 -0400
-Date: Sat, 14 Mar 2009 10:31:51 -0400 (EDT)
-From: "Stuart D. Gathman" <stuart@bmsi.com>
-Subject: RE: [linux-lvm] fsync() and LVM
-In-Reply-To: <7B7881568CF40E4388B615CD06F87B98098BDA@clara.maurer-it.com>
-Message-ID: <Pine.LNX.4.64.0903141028190.6115@bmsred.bmsi.com>
-References: <49BA9BF9.3070507@esiway.net><Pine.LNX.4.64.0903131552560.2685@bmsred.bmsi.com>
-	<20090313203812.GK7445@agk.fab.redhat.com>
-	<7B7881568CF40E4388B615CD06F87B98098BDA@clara.maurer-it.com>
+Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id n2F0q0N9023208
+	for <linux-lvm@redhat.com>; Sat, 14 Mar 2009 20:52:00 -0400
+Received: from nazgul.esiway.net (Nazgul.ESIWAY.NET [193.194.16.154])
+	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id n2F0pjHu009161
+	for <linux-lvm@redhat.com>; Sat, 14 Mar 2009 20:51:45 -0400
+Received: from Megathlon.ESI (Ghost.esi.it [193.194.16.225])
+	by nazgul.esiway.net (8.13.8/8.13.8) with ESMTPS id n2F0phTZ006919
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-SHA bits=256 verify=OK)
+	for <linux-lvm@redhat.com>; Sun, 15 Mar 2009 01:51:44 +0100
+Received: from frodo.esi (Frodo.ESI [10.10.10.13])
+	by Megathlon.ESI (8.14.1/8.14.1) with ESMTP id n2F0pgZB004485
+	for <linux-lvm@redhat.com>; Sun, 15 Mar 2009 01:51:43 +0100
+Message-ID: <49BC511E.5040402@esiway.net>
+Date: Sun, 15 Mar 2009 01:51:42 +0100
+From: Marco Colombo <linux-lvm@esiway.net>
 MIME-Version: 1.0
+Subject: Re: [linux-lvm] fsync() and LVM
+References: <49BA9BF9.3070507@esiway.net><Pine.LNX.4.64.0903131552560.2685@bmsred.bmsi.com>	<20090313203812.GK7445@agk.fab.redhat.com>	<7B7881568CF40E4388B615CD06F87B98098BDA@clara.maurer-it.com>
+	<Pine.LNX.4.64.0903141028190.6115@bmsred.bmsi.com>
+In-Reply-To: <Pine.LNX.4.64.0903141028190.6115@bmsred.bmsi.com>
+Content-Transfer-Encoding: 7bit
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -30,30 +30,21 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-On Sat, 14 Mar 2009, Dietmar Maurer wrote:
+Stuart D. Gathman wrote:
+> On Sat, 14 Mar 2009, Dietmar Maurer wrote: 
+> It just means that write barriers won't get passed to the device.
+> This is only a problem if the devices have write caches.  Note 
+> that with multiple devices, even a FIFO write cache could cause 
+> reordering between devices (one device could finish faster than another).
 
-> > Let's try to clear up the confusion.
-> > 
-> > Kernel device-mapper (which lvm uses) does not support write barriers
-> > except in very restricted circumstances (when only one device is
-> > involved and the mapping is trivial).  If dm receives a write barrier
-> > which is not supported it notifies the caller (typically a filesystem)
-> > so appropriate action can be taken if it wishes.
-> 
-> Does that mean I should never use more than one device if I have
-> applications depending on fsync (databases)?
+No, it's more than that. PostgreSQL gurus say LVM doesn't honor fsync(),
+that data doesn't even get to the controller, and it doesn't matter
+if the disks have write caches enabled or not. Or if they have battery backed
+caches. Please read the thread I linked. If what they say it's true,
+you can't use LVM for anything that needs fsync(), including mail queues
+(sendmail), mail storage (imapd), as such. So I'd really like to know.
 
-It just means that write barriers won't get passed to the device.
-This is only a problem if the devices have write caches.  Note 
-that with multiple devices, even a FIFO write cache could cause 
-reordering between devices (one device could finish faster than another).
-
--- 
-	      Stuart D. Gathman <stuart@bmsi.com>
-    Business Management Systems Inc.  Phone: 703 591-0911 Fax: 703 591-6154
-"Confutatis maledictis, flammis acribus addictis" - background song for
-a Microsoft sponsored "Where do you want to go from here?" commercial.
+.TM.
