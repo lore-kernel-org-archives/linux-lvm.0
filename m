@@ -1,20 +1,18 @@
-Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id n2JGFeku017422
-	for <linux-lvm@redhat.com>; Thu, 19 Mar 2009 12:15:40 -0400
-Received: from wa-out-1112.google.com (wa-out-1112.google.com [209.85.146.176])
-	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id n2JGF3kr010867
-	for <linux-lvm@redhat.com>; Thu, 19 Mar 2009 12:15:03 -0400
-Received: by wa-out-1112.google.com with SMTP id v33so458760wah.19
-	for <linux-lvm@redhat.com>; Thu, 19 Mar 2009 09:15:00 -0700 (PDT)
+Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id n2JI1N82026995
+	for <linux-lvm@redhat.com>; Thu, 19 Mar 2009 14:01:23 -0400
+Received: from pluto.sivell.com (pluto-t3.sivell.com [65.112.245.197])
+	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id n2JI16VT031295
+	for <linux-lvm@redhat.com>; Thu, 19 Mar 2009 14:01:06 -0400
+Received: from ef.sivell.com (ef [192.168.249.210]) (authenticated bits=0)
+	by pluto.sivell.com (8.13.1/8.13.1) with ESMTP id n2JI1LWi011613
+	for <linux-lvm@redhat.com>; Thu, 19 Mar 2009 13:01:21 -0500
+Message-ID: <49C29649.7040402@sivell.com>
+Date: Thu, 19 Mar 2009 13:00:25 -0600
+From: vu pham <vu@sivell.com>
 MIME-Version: 1.0
-In-Reply-To: <jwveiwt3347.fsf-monnier+gmane.linux.lvm.general@gnu.org>
-References: <37d33d830903190431yf906795j45f2efd5e765a2fd@mail.gmail.com>
-	<jwveiwt3347.fsf-monnier+gmane.linux.lvm.general@gnu.org>
-Date: Thu, 19 Mar 2009 21:44:59 +0530
-Message-ID: <37d33d830903190914x43b78478xd10bc57a7374ecd@mail.gmail.com>
-Subject: Re: [linux-lvm] Re: liblvm IOCTL/sysfs interface
-From: Sandeep K Sinha <sandeepksinha@gmail.com>
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+Subject: [linux-lvm] multipath question
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -25,49 +23,41 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-On Thu, Mar 19, 2009 at 9:43 PM, Stefan Monnier
-<monnier@iro.umontreal.ca> wrote:
->> I �would like to know if there is any means currently to know the complete
->> geometry of a LVM volume.
->> e.g, If a volume has 3 PV(targets).
->> So, we should be able to extract some information like.
->> Name of Volume.
->> Name of Volume Group.
->> Name, Range and size for each of the Physical devices involved.
-> [...]
->> We do maintain these informations inside the kernel, We should atleast
->> have an ioctl or sysfs based interface to extract
->> these information.
->
-> Actually, IIUC only part of this info is kept in the kernel.
-> Intuitively, I'd expect that only the set of LVs, along with their size
-> (and mapping to physical blocks) is kept in the kernel, whereas all the
-> names are not, and neither are the volume groups.
->
 
-Thats true. We only meant the target and maps related informations.
->
-> � � � �Stefan
->
-> _______________________________________________
-> linux-lvm mailing list
-> linux-lvm@redhat.com
-> https://www.redhat.com/mailman/listinfo/linux-lvm
-> read the LVM HOW-TO at http://tldp.org/HOWTO/LVM-HOWTO/
->
+I set up multipath on /dev/sda and /dev/sdb which are mapped from a 
+remote single disk, which has two partitions.
+
+Below are some output.
+[root@vm5 mpath]# ls -l
+total 0
+lrwxrwxrwx 1 root root 7 Mar 19 10:34 mpath0 -> ../dm-2
+lrwxrwxrwx 1 root root 7 Mar 19 10:34 mpath0p1 -> ../dm-3
+lrwxrwxrwx 1 root root 7 Mar 19 10:34 mpath0p2 -> ../dm-4
+
+[root@vm5 mpath]# multipath -ll
+mpath0 (16465616462656166313a3100000000000000000000000000) dm-2 
+IET,VIRTUAL-DISK
+[size=5.0G][features=0][hwhandler=0]
+\_ round-robin 0 [prio=0][active]
+  \_ 0:0:0:1 sda 8:0   [active][ready]
+\_ round-robin 0 [prio=0][enabled]
+  \_ 1:0:0:1 sdb 8:16  [active][ready]
+[root@vm5 mpath]#
 
 
+ From the multipath command, I know dm-2 is mapped from two devices 
+/dev/sda and /dev/sdb as expected.
 
--- 
-Regards,
-Sandeep.
+But how can I know if dm-3 is mapped from /dev/sda1 and /dev/sdb1, and 
+dm-4 from /dev/sda2 and /dev/sdb2 ?
 
+The command "multipath -ll" only gives info on mpath0 or dm-2.
 
+I tried  multipath -ll /dev/mpath/mpath0p1 but does not show anything.
 
+Thanks,
 
-
- 	
-�To learn is to change. Education is a process that changes the learner.�
+Vu
