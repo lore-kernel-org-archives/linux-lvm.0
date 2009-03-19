@@ -1,17 +1,14 @@
-Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id n2JBVJLd017902
-	for <linux-lvm@redhat.com>; Thu, 19 Mar 2009 07:31:19 -0400
-Received: from wa-out-1112.google.com (wa-out-1112.google.com [209.85.146.176])
-	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id n2JBV3ng006420
-	for <linux-lvm@redhat.com>; Thu, 19 Mar 2009 07:31:04 -0400
-Received: by wa-out-1112.google.com with SMTP id v33so388075wah.19
-	for <linux-lvm@redhat.com>; Thu, 19 Mar 2009 04:31:03 -0700 (PDT)
-MIME-Version: 1.0
-Date: Thu, 19 Mar 2009 17:01:03 +0530
-Message-ID: <37d33d830903190431yf906795j45f2efd5e765a2fd@mail.gmail.com>
-From: Sandeep K Sinha <sandeepksinha@gmail.com>
-Content-Transfer-Encoding: 8bit
-Subject: [linux-lvm] liblvm IOCTL/sysfs interface
+Received: from [10.33.0.40] (breeves.fab.redhat.com [10.33.0.40])
+	by ns3.rdu.redhat.com (8.13.8/8.13.8) with ESMTP id n2JBaZCl006942
+	for <linux-lvm@redhat.com>; Thu, 19 Mar 2009 07:36:35 -0400
+Subject: Re: [linux-lvm] liblvm IOCTL/sysfs interface
+From: "Bryn M. Reeves" <bmr@redhat.com>
+In-Reply-To: <37d33d830903190431yf906795j45f2efd5e765a2fd@mail.gmail.com>
+References: <37d33d830903190431yf906795j45f2efd5e765a2fd@mail.gmail.com>
+Date: Thu, 19 Mar 2009 11:37:57 +0000
+Message-Id: <1237462677.10568.208.camel@breeves.fab.redhat.com>
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -22,51 +19,31 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="utf-8"
-To: linux-lvm@redhat.com
+Content-Type: text/plain; charset="us-ascii"
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-Hi all,
+On Thu, 2009-03-19 at 17:01 +0530, Sandeep K Sinha wrote:
+> So, I should see the information like.
+> 
+> lvol0
+> vg
+> target1 - /dev/sda5 ----  0 -- 10000 ( BEGIN  -- Length )
+> target2 - /dev/sda6 ----  10001 -- 4000
 
-I  would like to know if there is any means currently to know the complete
-geometry of a LVM volume.
-e.g, If a volume has 3 PV(targets).
+dmsetup table
 
-So, we should be able to extract some information like.
+> 
+> We do maintain these informations inside the kernel, We should atleast
+> have an ioctl or sysfs based interface to extract
+> these information.
+> 
+> Liblvm is under development, won't it be of a good use to provide such
+> a functionality.
 
-Name of Volume.
-Name of Volume Group.
-Name, Range and size for each of the Physical devices involved.
+This is a lower level than liblvm targets (liblvm will work in terms of
+"LVM level" objects; pvs, vgs, lvs). The functionality to observe and
+manipulate the targets used by a specific LVM device is already provided
+by libdevmapper and the dmsetup tool.
 
-I execute the following steps.
-
-1. pvcreate /dev/sda5 /dev/sda6
-2. vgcreate vg /dev/sda5 /dev/sda6
-3. lvcreate vg -L 5G
-
-So, I should see the information like.
-
-lvol0
-vg
-target1 - /dev/sda5 ----  0 -- 10000 ( BEGIN  -- Length )
-target2 - /dev/sda6 ----  10001 -- 4000
-
-
-We do maintain these informations inside the kernel, We should atleast
-have an ioctl or sysfs based interface to extract
-these information.
-
-Liblvm is under development, won't it be of a good use to provide such
-a functionality.
-
-Kindly suggest.
-
--- 
 Regards,
-Sandeep.
-
-
-
-
-
- 	
-�To learn is to change. Education is a process that changes the learner.�
+Bryn.
