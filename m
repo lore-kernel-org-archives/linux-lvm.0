@@ -1,18 +1,32 @@
 Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id n2IJ6uCb019600
-	for <linux-lvm@redhat.com>; Wed, 18 Mar 2009 15:06:56 -0400
-Received: from mail.bmsi.com (www.bmsi.com [24.248.44.156])
-	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id n2IJ6ftC019818
-	for <linux-lvm@redhat.com>; Wed, 18 Mar 2009 15:06:41 -0400
-Date: Wed, 18 Mar 2009 15:06:26 -0400 (EDT)
-From: "Stuart D. Gathman" <stuart@bmsi.com>
-Subject: Re: [linux-lvm] mirroring in LVM2
-In-Reply-To: <1237401754.10568.167.camel@breeves.fab.redhat.com>
-Message-ID: <Pine.LNX.4.64.0903181448430.4069@bmsred.bmsi.com>
-References: <OF96FD7B06.F97BF3D7-ON88256FBA.0054ABFA-8825757D.00652D4B@overlandstorage.com>
-	<1237401754.10568.167.camel@breeves.fab.redhat.com>
-MIME-Version: 1.0
-Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id n2J9LY36016841
+	for <linux-lvm@redhat.com>; Thu, 19 Mar 2009 05:21:34 -0400
+Received: from s1.echoreply.us (s1.echoreply.us [216.146.143.192])
+	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id n2J9LHBl019751
+	for <linux-lvm@redhat.com>; Thu, 19 Mar 2009 05:21:17 -0400
+Subject: Re: [linux-lvm] fsync() and LVM
+From: Tim Post <echo@echoreply.us>
+In-Reply-To: <1237304003.8159.3.camel@jd-laptop.pragmaticzealot.org>
+References: <49BA9BF9.3070507@esiway.net>
+	<7B7881568CF40E4388B615CD06F87B98098BDA@clara.maurer-it.com>
+	<Pine.LNX.4.64.0903141028190.6115@bmsred.bmsi.com>
+	<49BC511E.5040402@esiway.net>
+	<Pine.LNX.4.64.0903161314310.22113@bmsred.bmsi.com>
+	<49BE9F73.8050109@gmail.com>
+	<87f94c370903161236y197edd7ehef3dc8eefc6d617b@mail.gmail.com>
+	<49BEB683.7020209@gmail.com>
+	<87f94c370903161354v2e43f13ci914f45175ca6af6f@mail.gmail.com>
+	<49BEC1CC.5050900@gmail.com>
+	<87f94c370903161436y40eddb3pe162bfa64a90e371@mail.gmail.com>
+	<49BECA5A.3040407@gmail.com>
+	<1237243887.29552.43.camel@jd-laptop.pragmaticzealot.org>
+	<1237304003.8159.3.camel@jd-laptop.pragmaticzealot.org>
+Date: Thu, 19 Mar 2009 17:20:58 +0800
+Message-Id: <1237454458.19345.157.camel@localhost.localdomain>
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Reply-To: echo@echoreply.us,
+	LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -22,34 +36,50 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: TEXT/PLAIN; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-To: LVM general discussion and development <linux-lvm@redhat.com>
-Cc: pritambhavsar <pritambhavsar@indiatimes.com>
+Content-Type: text/plain; charset="us-ascii"
+To: jd@commandprompt.com, LVM general discussion and development <linux-lvm@redhat.com>
 
-On Wed, 18 Mar 2009, Bryn M. Reeves wrote:
+On Tue, 2009-03-17 at 08:33 -0700, Joshua D. Drake wrote:
+> On Mon, 2009-03-16 at 15:51 -0700, Joshua D. Drake wrote:
+> > On Mon, 2009-03-16 at 16:53 -0500, Les Mikesell wrote:
+> > 
+> > > The point of fsync() is for an application to know that a write has been 
+> > > safely committed, as for example sendmail would do before acknowledging 
+> > > to the sender that a message has been accepted.  The question isn't 
+> > > whether an application can call fsync() but rather whether it's return 
+> > > status is lying, making the underlying storage unsuitable for anything 
+> > > that needs reliability.
+> > 
+> > Right and for databases this is critical. So enlightenment here would be
+> > good.
+> 
+> Anyone?
+> 
+> Joshua D. Drake
 
-> On Wed, 2009-03-18 at 11:24 -0700, linux-lvm-bounces@redhat.com wrote:
-> > I have Fedora Core 2 with LVM2 2.00.25. 
+If a logical volume spans physical devices where write caching is
+enabled, the results of fsync() can not be trusted. This is an issue
+with device mapper, lvm is one of a few possible customers of DM.
 
-> First update your distribution. FC2 is a museum-piece today and has not
+Now it gets interesting:
 
-If upgrading is a problem, you might consider upgrading to RedHat EL5.2 
-($$, commercial support) or CentOS-5.2 (non-profit, community supported, 
-mostly EL5.2 binary compatible).  EL5 is approximately FC6, but is 
-supported (by community in the case of CentOS) until 2012, and security 
-patched for even longer.  Fedora is fun and exciting, current, and well 
-supported, but you'll need to upgrade every year at least to stay 
-supported (new Fedoras come out every 6 months, and versions are supported 
-a total of 18 months from release). On the other hand, by running Fedora 
-(and participating in test days and stuff), you are giving back to open 
-source.
+Enter virtualization. When you have something like this:
 
-P.S.  The organization on Fedora Project is fantastic.  Kudos to Red Hat,
-who I presume does the organizing and key infrastructure.
+fsync -> guest block device -> block tap driver -> CLVM -> iscsi ->
+storage -> physical disk.
 
--- 
-	      Stuart D. Gathman <stuart@bmsi.com>
-    Business Management Systems Inc.  Phone: 703 591-0911 Fax: 703 591-6154
-"Confutatis maledictis, flammis acribus addictis" - background song for
-a Microsoft sponsored "Where do you want to go from here?" commercial.
+Even if device mapper passed along the write barrier, would it be
+reliable? Is every part of that chain going to pass the same along, and
+how many opportunities for re-ordering are presented in the above?
+
+So, even if its fixed in DM, can fsync() still be trusted? I think, at
+the least, more testing should be done with various configurations even
+after a suitable patch to DM is merged. What about PGSQL users using
+some kind of elastic hosting?
+
+Given the craze in 'cloud' technology, its an important question to ask
+(and research). 
+
+
+Cheers,
+--Tim
