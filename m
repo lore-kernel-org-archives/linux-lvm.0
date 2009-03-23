@@ -1,25 +1,17 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id n2NFctnX016483
-	for <linux-lvm@redhat.com>; Mon, 23 Mar 2009 11:38:55 -0400
-Received: from mx03.syneticon.net (mx03.syneticon.net [78.111.66.105])
-	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id n2NFcJK9018951
-	for <linux-lvm@redhat.com>; Mon, 23 Mar 2009 11:38:19 -0400
-Received: from localhost (filter1.syneticon.net [192.168.113.83])
-	by mx03.syneticon.net (Postfix) with ESMTP id A39F435E1A
-	for <linux-lvm@redhat.com>; Mon, 23 Mar 2009 16:38:18 +0100 (CET)
-Received: from mx03.syneticon.net ([192.168.113.84])
-	by localhost (mx03.syneticon.net [192.168.113.83]) (amavisd-new,
-	port 10025) with ESMTP id DWxgGKO8dEUA for <linux-lvm@redhat.com>;
-	Mon, 23 Mar 2009 16:38:14 +0100 (CET)
-Received: from [192.168.10.145] (koln-4db489a7.pool.einsundeins.de
-	[77.180.137.167]) by mx03.syneticon.net (Postfix) with ESMTPSA
-	for <linux-lvm@redhat.com>; Mon, 23 Mar 2009 16:38:14 +0100 (CET)
-Message-ID: <49C7ACE1.4070000@wpkg.org>
-Date: Mon, 23 Mar 2009 16:38:09 +0100
-From: Tomasz Chmielewski <mangoo@wpkg.org>
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id n2NH5lMi026091
+	for <linux-lvm@redhat.com>; Mon, 23 Mar 2009 13:05:47 -0400
+Received: from ti-out-0910.google.com (ti-out-0910.google.com [209.85.142.187])
+	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id n2NH5T61000746
+	for <linux-lvm@redhat.com>; Mon, 23 Mar 2009 13:05:29 -0400
+Received: by ti-out-0910.google.com with SMTP id d10so1740778tib.7
+	for <linux-lvm@redhat.com>; Mon, 23 Mar 2009 10:05:28 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] why LVM reads when I tell it to write?
+Date: Tue, 24 Mar 2009 01:05:28 +0800
+Message-ID: <1cafab770903231005x4bb8b64cmc0919cac9190d8bc@mail.gmail.com>
+From: Xinwei Hu <hxinwei@gmail.com>
+Content-Type: multipart/mixed; boundary=0016e651fad0f30f890465cc4518
+Subject: [linux-lvm] Signal handling in clvmd
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -30,120 +22,47 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
 To: LVM general discussion and development <linux-lvm@redhat.com>
 
-Why is LVM reading large amounts of data when I tell it to write only?
+--0016e651fad0f30f890465cc4518
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
+Hi all,
 
-For example, this is what iostat shows when writing to a raw partition
-(when doing "dd if=/dev/zero of=/dev/sdb5", iostat output every second):
+  I'm running into a problem that clvmd sometimes take a long time to shutdown.
+The clvmd itself is waiting for select to timeout in main_loop. But
+since the SIGINT
+(or SIGTERM) is handled in other threads, select is not interrupted as expected.
 
-Device:            tps    kB_read/s    kB_wrtn/s    kB_read    kB_wrtn
-sdb              80.81         0.00      5171.72          0       5120
+  The attached patch tries to mask SIGINT and SIGTERM in all other threads,
+to make sure the signal is properly handled in the main_loop. This
+helps to reduce
+the chance that we are waiting meaninglessly.
 
-Device:            tps    kB_read/s    kB_wrtn/s    kB_read    kB_wrtn
-sdb              78.00         0.00      4992.00          0       4992
+  Would you please kindly review the patch ?
 
-Device:            tps    kB_read/s    kB_wrtn/s    kB_read    kB_wrtn
-sdb              81.82         0.00      5236.36          0       5184
+--0016e651fad0f30f890465cc4518
+Content-Type: text/x-patch; charset=US-ASCII;
+	name="sigterm_in_main_thread.diff"
+Content-Disposition: attachment; filename="sigterm_in_main_thread.diff"
+Content-Transfer-Encoding: base64
+X-Attachment-Id: f_fsnes1mh0
 
-Device:            tps    kB_read/s    kB_wrtn/s    kB_read    kB_wrtn
-sdb              77.00         0.00      4928.00          0       4928
-
-Device:            tps    kB_read/s    kB_wrtn/s    kB_read    kB_wrtn
-sdb              79.21         0.00      5069.31          0       5120
-
-
-This is what happens if we go through LVM - look how much is read before 
-it actually writes anything:
-
-(when doing "dd if=/dev/zero of=/dev/test/test_volume").
-
-What's interesting, if I add i.e. bs=64k to dd, I don't see these unexpected
-reads on LVM any more. Why does it happen?
-
-
-Device:            tps    kB_read/s    kB_wrtn/s    kB_read    kB_wrtn
-sdb             212.87       851.49         0.00        860          0
-
-Device:            tps    kB_read/s    kB_wrtn/s    kB_read    kB_wrtn
-sdb             956.57      3826.26         0.00       3788          0
-
-Device:            tps    kB_read/s    kB_wrtn/s    kB_read    kB_wrtn
-sdb            1083.84      4335.35         0.00       4292          0
-
-Device:            tps    kB_read/s    kB_wrtn/s    kB_read    kB_wrtn
-sdb            1016.00      4064.00         0.00       4064          0
-
-Device:            tps    kB_read/s    kB_wrtn/s    kB_read    kB_wrtn
-sdb            1035.64      4142.57         0.00       4184          0
-
-Device:            tps    kB_read/s    kB_wrtn/s    kB_read    kB_wrtn
-sdb            1034.00      4136.00         0.00       4136          0
-
-Device:            tps    kB_read/s    kB_wrtn/s    kB_read    kB_wrtn
-sdb             965.66      3862.63         0.00       3824          0
-
-Device:            tps    kB_read/s    kB_wrtn/s    kB_read    kB_wrtn
-sdb            1025.00      4100.00         0.00       4100          0
-
-Device:            tps    kB_read/s    kB_wrtn/s    kB_read    kB_wrtn
-sdb             991.92      3967.68         0.00       3928          0
-
-Device:            tps    kB_read/s    kB_wrtn/s    kB_read    kB_wrtn
-sdb            1032.00      4128.00         0.00       4128          0
-
-Device:            tps    kB_read/s    kB_wrtn/s    kB_read    kB_wrtn
-sdb            1009.90      4039.60         0.00       4080          0
-
-Device:            tps    kB_read/s    kB_wrtn/s    kB_read    kB_wrtn
-sdb             366.33      1330.61      4040.82       1304       3960
-
-Device:            tps    kB_read/s    kB_wrtn/s    kB_read    kB_wrtn
-sdb            1016.16      4060.61        76.77       4020         76
-
-Device:            tps    kB_read/s    kB_wrtn/s    kB_read    kB_wrtn
-sdb             383.17      1394.06      4055.45       1408       4096
-
-Device:            tps    kB_read/s    kB_wrtn/s    kB_read    kB_wrtn
-sdb             741.00      2904.00      1800.00       2904       1800
-
-Device:            tps    kB_read/s    kB_wrtn/s    kB_read    kB_wrtn
-sdb             638.61      2475.25      2273.27       2500       2296
-
-Device:            tps    kB_read/s    kB_wrtn/s    kB_read    kB_wrtn
-sdb             421.00      1560.00      3720.00       1560       3720
-
-Device:            tps    kB_read/s    kB_wrtn/s    kB_read    kB_wrtn
-sdb             955.56      3802.02       501.01       3764        496
-
-Device:            tps    kB_read/s    kB_wrtn/s    kB_read    kB_wrtn
-sdb             275.76       965.66      4016.16        956       3976
-
-Device:            tps    kB_read/s    kB_wrtn/s    kB_read    kB_wrtn
-sdb             853.00      3384.00       840.00       3384        840
-
-Device:            tps    kB_read/s    kB_wrtn/s    kB_read    kB_wrtn
-sdb             560.40      2130.69      3223.76       2152       3256
-
-Device:            tps    kB_read/s    kB_wrtn/s    kB_read    kB_wrtn
-sdb             500.00      1907.07      2787.88       1888       2760
-
-Device:            tps    kB_read/s    kB_wrtn/s    kB_read    kB_wrtn
-sdb             133.00       352.00      5296.00        352       5296
-
-Device:            tps    kB_read/s    kB_wrtn/s    kB_read    kB_wrtn
-sdb              53.00         0.00      6244.00          0       6244
-
-Device:            tps    kB_read/s    kB_wrtn/s    kB_read    kB_wrtn
-sdb             267.00       904.00      4840.00        904       4840
-
-Device:            tps    kB_read/s    kB_wrtn/s    kB_read    kB_wrtn
-sdb              52.00         0.00      6240.00          0       6240
-
-
-
--- 
-Tomasz Chmielewski
-http://wpkg.org
+SW5kZXg6IExWTTIuMi4wMi4zOS9kYWVtb25zL2Nsdm1kL2Nsdm1kLmMKPT09PT09PT09PT09PT09
+PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PQotLS0g
+TFZNMi4yLjAyLjM5Lm9yaWcvZGFlbW9ucy9jbHZtZC9jbHZtZC5jCTIwMDktMDMtMjIgMjM6MDM6
+NTMuMDAwMDAwMDAwICswODAwCisrKyBMVk0yLjIuMDIuMzkvZGFlbW9ucy9jbHZtZC9jbHZtZC5j
+CTIwMDktMDMtMjMgMDQ6MjY6MzYuMDAwMDAwMDAwICswODAwCkBAIC0zNDgsOSArMzQ4LDExIEBA
+CiAJc2lnbmFsKFNJR0hVUCwgIHNpZ2h1cF9oYW5kbGVyKTsKIAlzaWduYWwoU0lHUElQRSwgU0lH
+X0lHTik7CiAKLQkvKiBCbG9jayBTSUdVU1IyIGluIHRoZSBtYWluIHByb2Nlc3MgKi8KKwkvKiBC
+bG9jayBTSUdVU1IyL1NJR0lOVC9TSUdURVJNIGluIHByb2Nlc3MgKi8KIAlzaWdlbXB0eXNldCgm
+c3MpOwogCXNpZ2FkZHNldCgmc3MsIFNJR1VTUjIpOworCXNpZ2FkZHNldCgmc3MsIFNJR0lOVCk7
+CisJc2lnYWRkc2V0KCZzcywgU0lHVEVSTSk7CiAJc2lncHJvY21hc2soU0lHX0JMT0NLLCAmc3Ms
+IE5VTEwpOwogCiAJLyogSW5pdGlhbGlzZSB0aGUgTFZNIHRocmVhZCB2YXJpYWJsZXMgKi8KQEAg
+LTYzMyw2ICs2MzUsMTEgQEAKIHsKIAlERUJVR0xPRygiVXNpbmcgdGltZW91dCBvZiAlZCBzZWNv
+bmRzXG4iLCBjbWRfdGltZW91dCk7CiAKKwlzaWdzZXRfdCBzczsKKwlzaWdlbXB0eXNldCgmc3Mp
+OworCXNpZ2FkZHNldCgmc3MsIFNJR0lOVCk7CisJc2lnYWRkc2V0KCZzcywgU0lHVEVSTSk7CisJ
+cHRocmVhZF9zaWdtYXNrKFNJR19VTkJMT0NLLCAmc3MsIE5VTEwpOwogCS8qIE1haW4gbG9vcCAq
+LwogCXdoaWxlICghcXVpdCkgewogCQlmZF9zZXQgaW47Cg==
+--0016e651fad0f30f890465cc4518--
