@@ -1,21 +1,20 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id n2O3YZMk010971
-	for <linux-lvm@redhat.com>; Mon, 23 Mar 2009 23:34:35 -0400
-Received: from pluto.sivell.com (pluto-t3.sivell.com [65.112.245.197])
-	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id n2O3YI9O026304
-	for <linux-lvm@redhat.com>; Mon, 23 Mar 2009 23:34:18 -0400
-Received: from [192.168.235.60] ([192.168.235.60]) (authenticated bits=0)
-	by pluto.sivell.com (8.13.1/8.13.1) with ESMTP id n2O3Ytwf018658
-	for <linux-lvm@redhat.com>; Mon, 23 Mar 2009 22:34:55 -0500
-Message-ID: <49C854B8.3080009@sivell.com>
-Date: Mon, 23 Mar 2009 22:34:16 -0500
-From: Vu Pham <vu@sivell.com>
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id n2OBfsoF005978
+	for <linux-lvm@redhat.com>; Tue, 24 Mar 2009 07:41:54 -0400
+Received: from mail-bw0-f170.google.com (mail-bw0-f170.google.com
+	[209.85.218.170])
+	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id n2OBe92a008280
+	for <linux-lvm@redhat.com>; Tue, 24 Mar 2009 07:40:35 -0400
+Received: by mail-bw0-f170.google.com with SMTP id 18so2117170bwz.3
+	for <linux-lvm@redhat.com>; Tue, 24 Mar 2009 04:40:35 -0700 (PDT)
 MIME-Version: 1.0
-Subject: Re: [linux-lvm] CLVM Snapshot HOWTO?
-References: <1237863480.6512.66.camel@ltpad.dugas.lan>
-In-Reply-To: <1237863480.6512.66.camel@ltpad.dugas.lan>
-Content-Transfer-Encoding: 7bit
-Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
+Date: Tue, 24 Mar 2009 12:40:34 +0100
+Message-ID: <af3e5b60903240440q671356f5xd4e8e8c92ace8a56@mail.gmail.com>
+From: Sascha Thomas Spreitzer <sascha@spreitzer.name>
+Content-Transfer-Encoding: 8bit
+Subject: [linux-lvm] lvm mirror read performance, no load balance with PV ?
+Reply-To: sascha@spreitzer.name,
+	LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=unsubscribe>
@@ -25,30 +24,45 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"; format="flowed"
-To: LVM general discussion and development <linux-lvm@redhat.com>
+Content-Type: text/plain; charset="utf-8"
+To: linux-lvm@redhat.com
 
-Paul Dugas wrote:
-> I apologize if this has been covered already or is written up elsewhere
-> but I can't seem to find it.  I've got a couple of AoE volumes that I'm
-> using for LVM VGs.  They have GFS filesystems on LVs that are sized to
-> fill 90% of the the VGs; 10% space left over for snapshots.  I have 4
-> CENTOS 5.2 machines clustered and mounting the GFS filesystems.  That's
-> working well.
-> 
-> Having used LVM snapshots in non-cluster environments before, I figured
-> I'd just use the same logic for backing up the volumes; lvcreate -s,
-> mount, backup, umount, lvremove.  This quickly fell apart and I started
-> to think about it more.  I ended up wondering how snapshots of the
-> volume could ever really work without coordinating with the other
-> nodes.  
-> 
-> My question is this.  Should I be able to use snapshots on clustered
-> volumes like this?  If not, are there plans to support it later?  If so,
-> can someone point me to a working example?
-> 
+Hello mailing list,
 
-I think you have to freeze the GFS volume before you create a snapshot, 
-then you unfreeze it. man gfs_tool
+I currently sensed that LVM2 is not load balancing reads of mirrored
+LV's form their corresponding PV.
 
-Vu
+PV1     PV2
+LV        LV'
+IO=0    IO=90MB/s
+
+[~]# lvm version
+  LVM version:     2.02.39 (2008-06-27)
+  Library version: 1.02.27 (2008-06-25)
+  Driver version:  4.14.0
+
+Distribution is Fedora 10, updated.
+
+Is this normal behaviour, or did a make a big mistake in my configuration?
+
+FYI:
+
+[~]# pvs -o+lv_name,lv_size,lv_attr
+  PV         VG         Fmt  Attr PSize   PFree LV                LSize   Attr
+  /dev/sda2  VolGroup00 lvm2 a-   145,22G 4,97G [lvroot_mlog]      32,00M lwi-ao
+  /dev/sda2  VolGroup00 lvm2 a-   145,22G 4,97G [lvhome_mlog]      32,00M lwi-ao
+  /dev/sda2  VolGroup00 lvm2 a-   145,22G 4,97G lvdata            285,50G -wi-ao
+  /dev/sda2  VolGroup00 lvm2 a-   145,22G 4,97G [lvswap_mlog]      32,00M lwi-ao
+  /dev/sda2  VolGroup00 lvm2 a-   145,22G 4,97G                        0
+  /dev/sda3  VolGroup00 lvm2 a-   553,28G    0  [lvswap_mimage_1]   5,03G iwi-ao
+  /dev/sda3  VolGroup00 lvm2 a-   553,28G    0  [lvroot_mimage_1]  15,00G iwi-ao
+  /dev/sda3  VolGroup00 lvm2 a-   553,28G    0  [lvhome_mimage_1] 533,25G iwi-ao
+  /dev/sdb1  VolGroup00 lvm2 a-   698,62G    0  [lvswap_mimage_0]   5,03G iwi-ao
+  /dev/sdb1  VolGroup00 lvm2 a-   698,62G    0  [lvroot_mimage_0]  15,00G iwi-ao
+  /dev/sdb1  VolGroup00 lvm2 a-   698,62G    0  [lvhome_mimage_0] 533,25G iwi-ao
+  /dev/sdb1  VolGroup00 lvm2 a-   698,62G    0  lvdata            285,50G -wi-ao
+
+-- 
+Mit freundlichen Gr��en, / with kind regards,
+Sascha Thomas Spreitzer
+http://spreitzer.name/
