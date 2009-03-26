@@ -1,27 +1,37 @@
 Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id n2Q0srUq004450
-	for <linux-lvm@redhat.com>; Wed, 25 Mar 2009 20:54:53 -0400
-Received: from ciao.gmane.org (main.gmane.org [80.91.229.2])
-	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id n2Q0sYsP031610
-	for <linux-lvm@redhat.com>; Wed, 25 Mar 2009 20:54:34 -0400
-Received: from list by ciao.gmane.org with local (Exim 4.43)
-	id 1Lmdrb-0002Dl-Mk
-	for linux-lvm@redhat.com; Thu, 26 Mar 2009 00:54:31 +0000
-Received: from 69-196-168-214.dsl.teksavvy.com ([69.196.168.214])
-	by main.gmane.org with esmtp (Gmexim 0.1 (Debian))
-	id 1AlnuQ-0007hv-00
-	for <linux-lvm@redhat.com>; Thu, 26 Mar 2009 00:54:31 +0000
-Received: from monnier by 69-196-168-214.dsl.teksavvy.com with local (Gmexim
-	0.1 (Debian)) id 1AlnuQ-0007hv-00
-	for <linux-lvm@redhat.com>; Thu, 26 Mar 2009 00:54:31 +0000
-From: Stefan Monnier <monnier@iro.umontreal.ca>
-Date: Wed, 25 Mar 2009 20:54:20 -0400
-Message-ID: <jwvhc1hayxg.fsf-monnier+gmane.linux.lvm.general@gnu.org>
-References: <c268e4660903240759t35826b60n641296dba8fdd764@mail.gmail.com>
-	<20090324215410.GB20225@lupe-christoph.de>
-Mime-Version: 1.0
-Sender: news <news@ger.gmane.org>
-Subject: [linux-lvm] Re: Shrinking a LVM physical volume
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id n2QAbGxg017908
+	for <linux-lvm@redhat.com>; Thu, 26 Mar 2009 06:37:16 -0400
+Received: from e38.co.us.ibm.com (e38.co.us.ibm.com [32.97.110.159])
+	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id n2QAasjm009961
+	for <linux-lvm@redhat.com>; Thu, 26 Mar 2009 06:36:54 -0400
+Received: from d03relay02.boulder.ibm.com (d03relay02.boulder.ibm.com
+	[9.17.195.227])
+	by e38.co.us.ibm.com (8.13.1/8.13.1) with ESMTP id n2QAYfHv022680
+	for <linux-lvm@redhat.com>; Thu, 26 Mar 2009 04:34:41 -0600
+Received: from d03av02.boulder.ibm.com (d03av02.boulder.ibm.com [9.17.195.168])
+	by d03relay02.boulder.ibm.com (8.13.8/8.13.8/NCO v9.2) with ESMTP id
+	n2QAarZ3207612
+	for <linux-lvm@redhat.com>; Thu, 26 Mar 2009 04:36:53 -0600
+Received: from d03av02.boulder.ibm.com (loopback [127.0.0.1])
+	by d03av02.boulder.ibm.com (8.12.11.20060308/8.13.3) with ESMTP id
+	n2QAarTb016829
+	for <linux-lvm@redhat.com>; Thu, 26 Mar 2009 04:36:53 -0600
+Received: from malahal.localdomain (malahal.beaverton.ibm.com [9.47.17.130])
+	by d03av02.boulder.ibm.com (8.12.11.20060308/8.12.11) with ESMTP id
+	n2QAaroq016820
+	for <linux-lvm@redhat.com>; Thu, 26 Mar 2009 04:36:53 -0600
+Date: Thu, 26 Mar 2009 03:36:52 -0700
+From: malahal@us.ibm.com
+Subject: Re: [linux-lvm] lvm mirror read performance, no load balance with PV ?
+Message-ID: <20090326103652.GA13791@us.ibm.com>
+References: <af3e5b60903240440q671356f5xd4e8e8c92ace8a56@mail.gmail.com>
+	<20090324130834.GA12309@us.ibm.com>
+	<af3e5b60903240904k1894f981yf2072f13a336ae04@mail.gmail.com>
+	<20090324161239.GA5322@us.ibm.com>
+	<af3e5b60903240922w2d20b063x51b04f738003f98a@mail.gmail.com>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <af3e5b60903240922w2d20b063x51b04f738003f98a@mail.gmail.com>
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -36,21 +46,12 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: linux-lvm@redhat.com
 
-> According to its manpage, it should be safe to use
->   pvresize --setphysicalvolumesize <newsize> <pvdevice>
-> prior to resizing the partition. It should complain if there are extents
-> in use beyond <newsize>.
+Sascha Thomas Spreitzer [sascha@spreitzer.name] wrote:
+> Can you give me a reference to this patch first? URL?
 
-Is there some way to move those extents?
-I guess there's pvmove, but that seems to only be able to move them to
-some other PV.
+See the following link. If you read the responses, then you know why it
+is not in upstream yet. 
 
->> And then once that's done,
->> how safe is it to move the lvm partition around on the drive?
-> That is up to somebody with more knowledge to answer.
+http://permalink.gmane.org/gmane.linux.kernel.device-mapper.devel/2415
 
-I can confirm that PVs can be moved at will (even between drives).
-I've done it a few times.
-
-
-        Stefan
+Thanks, Malahal.
