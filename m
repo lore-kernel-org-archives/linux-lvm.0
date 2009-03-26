@@ -1,17 +1,27 @@
-Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id n2PChRbB028102
-	for <linux-lvm@redhat.com>; Wed, 25 Mar 2009 08:43:27 -0400
-Received: from rv-out-0506.google.com (rv-out-0506.google.com [209.85.198.231])
-	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id n2PCh9xp014936
-	for <linux-lvm@redhat.com>; Wed, 25 Mar 2009 08:43:09 -0400
-Received: by rv-out-0506.google.com with SMTP id g37so2486898rvb.3
-	for <linux-lvm@redhat.com>; Wed, 25 Mar 2009 05:43:09 -0700 (PDT)
-MIME-Version: 1.0
-Date: Wed, 25 Mar 2009 18:13:08 +0530
-Message-ID: <ffa0f8300903250543i5409dc84m27cb6c64f1da14e3@mail.gmail.com>
-From: Tejas Sumant <tejas.sumant@gmail.com>
-Content-Transfer-Encoding: 7bit
-Subject: [linux-lvm] Metadata Header->size
+Received: from mx1.redhat.com (mx1.redhat.com [172.16.48.31])
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id n2Q0srUq004450
+	for <linux-lvm@redhat.com>; Wed, 25 Mar 2009 20:54:53 -0400
+Received: from ciao.gmane.org (main.gmane.org [80.91.229.2])
+	by mx1.redhat.com (8.13.8/8.13.8) with ESMTP id n2Q0sYsP031610
+	for <linux-lvm@redhat.com>; Wed, 25 Mar 2009 20:54:34 -0400
+Received: from list by ciao.gmane.org with local (Exim 4.43)
+	id 1Lmdrb-0002Dl-Mk
+	for linux-lvm@redhat.com; Thu, 26 Mar 2009 00:54:31 +0000
+Received: from 69-196-168-214.dsl.teksavvy.com ([69.196.168.214])
+	by main.gmane.org with esmtp (Gmexim 0.1 (Debian))
+	id 1AlnuQ-0007hv-00
+	for <linux-lvm@redhat.com>; Thu, 26 Mar 2009 00:54:31 +0000
+Received: from monnier by 69-196-168-214.dsl.teksavvy.com with local (Gmexim
+	0.1 (Debian)) id 1AlnuQ-0007hv-00
+	for <linux-lvm@redhat.com>; Thu, 26 Mar 2009 00:54:31 +0000
+From: Stefan Monnier <monnier@iro.umontreal.ca>
+Date: Wed, 25 Mar 2009 20:54:20 -0400
+Message-ID: <jwvhc1hayxg.fsf-monnier+gmane.linux.lvm.general@gnu.org>
+References: <c268e4660903240759t35826b60n641296dba8fdd764@mail.gmail.com>
+	<20090324215410.GB20225@lupe-christoph.de>
+Mime-Version: 1.0
+Sender: news <news@ger.gmane.org>
+Subject: [linux-lvm] Re: Shrinking a LVM physical volume
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -23,25 +33,24 @@ List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
 Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 To: linux-lvm@redhat.com
 
-I have question about metadat area size.
-/* On disk */
-/* Structure size limited to one sector */
-struct mda_header {
-        uint32_t checksum_xl;   /* Checksum of rest of mda_header */
-        char magic[16];       /* To aid scans for metadata */
-        uint32_t version;
-        uint64_t start;         /* Absolute start byte of mda_header */
-        uint64_t size;          /* Size of metadata area */
-<------------------------------
+> According to its manpage, it should be safe to use
+>   pvresize --setphysicalvolumesize <newsize> <pvdevice>
+> prior to resizing the partition. It should complain if there are extents
+> in use beyond <newsize>.
 
-        struct rawLocn raw_locns[0];   /* NULL-terminated list */
-};
-The size mentioned in metadata header includes precommitted metadata
-area(raw_locn[1]) or it excludes?
+Is there some way to move those extents?
+I guess there's pvmove, but that seems to only be able to move them to
+some other PV.
 
-thanks.
+>> And then once that's done,
+>> how safe is it to move the lvm partition around on the drive?
+> That is up to somebody with more knowledge to answer.
 
--- 
-Tejas Sumant
+I can confirm that PVs can be moved at will (even between drives).
+I've done it a few times.
+
+
+        Stefan
