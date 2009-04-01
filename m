@@ -1,20 +1,18 @@
 Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
-	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id n1SF928E001961
-	for <linux-lvm@redhat.com>; Sat, 28 Feb 2009 10:09:02 -0500
-Received: from hermes1.cf.ac.uk (hermes1.cf.ac.uk [131.251.0.112])
-	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id n1SF8i6H026043
-	for <linux-lvm@redhat.com>; Sat, 28 Feb 2009 10:08:45 -0500
-Received: from mdomsmp02.cf.ac.uk ([10.255.228.31])
-	by hermes1.cf.ac.uk with esmtp (Exim 4.69)
-	(envelope-from <Rees@cardiff.ac.uk>) id 1LdQo0-0006oc-C5
-	for linux-lvm@redhat.com; Sat, 28 Feb 2009 15:08:44 +0000
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id n312Bkfp029034
+	for <linux-lvm@redhat.com>; Tue, 31 Mar 2009 22:11:46 -0400
+Received: from ti-out-0910.google.com (ti-out-0910.google.com [209.85.142.191])
+	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id n312B3WF007555
+	for <linux-lvm@redhat.com>; Tue, 31 Mar 2009 22:11:03 -0400
+Received: by ti-out-0910.google.com with SMTP id d10so2407322tib.7
+	for <linux-lvm@redhat.com>; Tue, 31 Mar 2009 19:11:02 -0700 (PDT)
 MIME-Version: 1.0
-From: Lyn Rees <Rees@cardiff.ac.uk>
-Message-ID: <OFC63CB88B.451A38A4-ON8025756B.005311F0-8025756B.00532FC0@cardiff.ac.uk>
-Date: Sat, 28 Feb 2009 15:08:37 +0000
-Content-Type: multipart/alternative;
-	boundary="=_alternative 00532F088025756B_="
-Subject: [linux-lvm] LVM iostat readings
+Date: Wed, 1 Apr 2009 10:11:02 +0800
+Message-ID: <1cafab770903311911p63f962afybfd39137e61344d1@mail.gmail.com>
+From: Xinwei Hu <hxinwei@gmail.com>
+Content-Type: multipart/mixed; boundary=001485f33e42cb5727046674d30b
+Subject: [linux-lvm] Call dlm_release_lockspace with force=1 in
+	clvmd-corosync.c
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -25,81 +23,58 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-To: linux-lvm@redhat.com
+To: LVM general discussion and development <linux-lvm@redhat.com>
 
-This is a multipart message in MIME format.
---=_alternative 00532F088025756B_=
-Content-Type: text/plain; charset="US-ASCII"
+--001485f33e42cb5727046674d30b
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi,
+Hi all,
 
-I've had a good look around for answers but found nothing useful.
+    All calls to dlm_release_lockspace in clvmd-corosync.c use
+force=0. This may cause the problem when
+the node is the "lock master" of lockspace, the lockspace won't be
+release then, and there'll be no any error
+information from libdlm.
 
-I've collected data using iostat from a production server. I've got 3 
-disks stitched together as a linear LVM, 250GB+500GB+500GB, with data on 
-only the first 2 disks at the moment.
+    Issues' found and analysied by Lars Marowsky-Bree and David Teigland.
 
-Under load, the PV's get busy showing high utilisation (%util) and quite 
-high queue depths (avgqu-sz). the LV however hits 100% utilisation and the 
-queue depth gets huge! Performance becomes poor at these times, suggesting 
-the values are representative of what is actually happening.
+    The patch tries to call dlm_release_lockspace with force = 1 in all cases.
 
-Can someone help me understand what's going on here please? Could LVM be 
-causing a bottleneck, or is a physical bottleneck causing this?
+    Please consider it for inclusion.
 
-Thanks,
-Lyn Rees.
---------------------------------------------------
-Mr Lyn Rees
-Senior Engineer, UIG
-Information Services Computing Centre
-Cardiff University, 40-41 Park Place,
-Cardiff. CF10 3BB.
---------------------------------------------------
-Contact numbers:
- (029) 2087 9188 (direct)
- (029) 2087 4875 (reception)
- (029) 2087 4285 (fax)
---------------------------------------------------
-Email: rees@cardiff.ac.uk
-Web: www.cardiff.ac.uk
---=_alternative 00532F088025756B_=
-Content-Type: text/html; charset="US-ASCII"
+    Thanks.
 
-<font size=2 face="sans-serif">Hi,</font>
-<br>
-<br><font size=2 face="sans-serif">I've had a good look around for answers
-but found nothing useful.</font>
-<br>
-<br><font size=2 face="sans-serif">I've collected data using iostat from
-a production server. I've got 3 disks stitched together as a linear LVM,
-250GB+500GB+500GB, with data on only the first 2 disks at the moment.</font>
-<br>
-<br><font size=2 face="sans-serif">Under load, the PV's get busy showing
-high utilisation (%util) and quite high queue depths (avgqu-sz). the LV
-however hits 100% utilisation and the queue depth gets huge! Performance
-becomes poor at these times, suggesting the values are representative of
-what is actually happening.</font>
-<br>
-<br><font size=2 face="sans-serif">Can someone help me understand what's
-going on here please? Could LVM be causing a bottleneck, or is a physical
-bottleneck causing this?</font>
-<br>
-<br><font size=2 face="sans-serif">Thanks,</font>
-<br><font size=2 face="sans-serif">Lyn Rees.</font>
-<br><font size=2 face="sans-serif">
---------------------------------------------------<br>
-Mr Lyn Rees<br>
-Senior Engineer, UIG<br>
-Information Services Computing Centre<br>
-Cardiff University, 40-41 Park Place,<br>
-Cardiff. CF10 3BB.<br>
---------------------------------------------------<br>
-Contact numbers:<br>
- (029) 2087 9188 (direct)<br>
- (029) 2087 4875 (reception)<br>
- (029) 2087 4285 (fax)<br>
---------------------------------------------------<br>
-Email: rees@cardiff.ac.uk<br>
-Web: </font><a href=www.cardiff.ac.uk><font size=2 face="sans-serif">www.cardiff.ac.uk</font></a>
---=_alternative 00532F088025756B_=--
+--001485f33e42cb5727046674d30b
+Content-Type: text/x-patch; charset=US-ASCII;
+	name="dlm_release_lockspace_with_force.diff"
+Content-Disposition: attachment; 
+	filename="dlm_release_lockspace_with_force.diff"
+Content-Transfer-Encoding: base64
+X-Attachment-Id: f_fszdshie1
+
+SW5kZXg6IGNsdm1kL2Nsdm1kLWNvcm9zeW5jLmMKPT09PT09PT09PT09PT09PT09PT09PT09PT09
+PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PQotLS0gY2x2bWQub3JpZy9j
+bHZtZC1jb3Jvc3luYy5jCTIwMDktMDMtMTAgMTY6NDc6MTUuMDAwMDAwMDAwICswODAwCisrKyBj
+bHZtZC9jbHZtZC1jb3Jvc3luYy5jCTIwMDktMDQtMDEgMTA6MTA6MzcuMDAwMDAwMDAwICswODAw
+CkBAIC0zMzQsNyArMzM0LDcgQEAKIAlpZiAoZXJyICE9IENTX09LKSB7CiAJCWNwZ19maW5hbGl6
+ZShjcGdfaGFuZGxlKTsKIAkJcXVvcnVtX2ZpbmFsaXplKHF1b3J1bV9oYW5kbGUpOwotCQlkbG1f
+cmVsZWFzZV9sb2Nrc3BhY2UoTE9DS1NQQUNFX05BTUUsIGxvY2tzcGFjZSwgMCk7CisJCWRsbV9y
+ZWxlYXNlX2xvY2tzcGFjZShMT0NLU1BBQ0VfTkFNRSwgbG9ja3NwYWNlLCAxKTsKIAkJc3lzbG9n
+KExPR19FUlIsICJDYW5ub3Qgam9pbiBjbHZtZCBwcm9jZXNzIGdyb3VwIik7CiAJCURFQlVHTE9H
+KCJDYW5ub3Qgam9pbiBjbHZtZCBwcm9jZXNzIGdyb3VwOiAlZFxuIiwgZXJyKTsKIAkJcmV0dXJu
+IGNzX3RvX2Vycm5vKGVycik7CkBAIC0zNDUsNyArMzQ1LDcgQEAKIAlpZiAoZXJyICE9IENTX09L
+KSB7CiAJCWNwZ19maW5hbGl6ZShjcGdfaGFuZGxlKTsKIAkJcXVvcnVtX2ZpbmFsaXplKHF1b3J1
+bV9oYW5kbGUpOwotCQlkbG1fcmVsZWFzZV9sb2Nrc3BhY2UoTE9DS1NQQUNFX05BTUUsIGxvY2tz
+cGFjZSwgMCk7CisJCWRsbV9yZWxlYXNlX2xvY2tzcGFjZShMT0NLU1BBQ0VfTkFNRSwgbG9ja3Nw
+YWNlLCAxKTsKIAkJc3lzbG9nKExPR19FUlIsICJDYW5ub3QgZ2V0IGxvY2FsIG5vZGUgaWRcbiIp
+OwogCQlyZXR1cm4gY3NfdG9fZXJybm8oZXJyKTsKIAl9CkBAIC0zNjEsNyArMzYxLDExIEBACiAJ
+REVCVUdMT0coImNsdXN0ZXJfY2xvc2Vkb3duXG4iKTsKIAl1bmxvY2tfYWxsKCk7CiAKLQlkbG1f
+cmVsZWFzZV9sb2Nrc3BhY2UoTE9DS1NQQUNFX05BTUUsIGxvY2tzcGFjZSwgMCk7CisJLyogVGhl
+IGZpcnN0IG5vZGUgaXMgdGhlIGxvY2sgbWFzdGVyLgorCSAgIFVubGVzcyBjYWxsIGRsbV9yZWxl
+YXNlX2xvY2tzcGFjZSB3aXRoIGZvcmNlPTEsIHRoZSBub2RlCisJICAgbWFzdGVyIGNhbid0IHJl
+bGVhc2UgdGhlIGxvY2tzcGFjZSwgYW5kIG5vIGVycm9yIHdpbGwKKwkgICBiZSByZXR1cm5lZCBi
+eSBkbG1fcmVsZWFzZV9sb2Nrc3BhY2UgaW4gdGhpcyBjYXNlLiAqLworCWRsbV9yZWxlYXNlX2xv
+Y2tzcGFjZShMT0NLU1BBQ0VfTkFNRSwgbG9ja3NwYWNlLCAxKTsKIAljcGdfZmluYWxpemUoY3Bn
+X2hhbmRsZSk7CiAJcXVvcnVtX2ZpbmFsaXplKHF1b3J1bV9oYW5kbGUpOwogfQo=
+--001485f33e42cb5727046674d30b--
