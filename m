@@ -1,15 +1,18 @@
-Received: from jeltz.chrissie.net (vpn-6-27.fab.redhat.com [10.33.6.27])
-	by ns3.rdu.redhat.com (8.13.8/8.13.8) with ESMTP id n317qJNE026026
-	for <linux-lvm@redhat.com>; Wed, 1 Apr 2009 03:52:19 -0400
-Message-ID: <49D31D32.70907@redhat.com>
-Date: Wed, 01 Apr 2009 08:52:18 +0100
-From: Chrissie Caulfield <ccaulfie@redhat.com>
-MIME-Version: 1.0
-Subject: Re: [linux-lvm] Call dlm_release_lockspace with force=1
-	in	clvmd-corosync.c
-References: <1cafab770903311911p63f962afybfd39137e61344d1@mail.gmail.com>
-In-Reply-To: <1cafab770903311911p63f962afybfd39137e61344d1@mail.gmail.com>
+Received: from mx3.redhat.com (mx3.redhat.com [172.16.48.32])
+	by int-mx1.corp.redhat.com (8.13.1/8.13.1) with ESMTP id n31AYGjQ013820
+	for <linux-lvm@redhat.com>; Wed, 1 Apr 2009 06:34:16 -0400
+Received: from mail-ew0-f170.google.com (mail-ew0-f170.google.com
+	[209.85.219.170])
+	by mx3.redhat.com (8.13.8/8.13.8) with ESMTP id n31AWNT5006289
+	for <linux-lvm@redhat.com>; Wed, 1 Apr 2009 06:32:23 -0400
+Received: by ewy18 with SMTP id 18so2722556ewy.3
+	for <linux-lvm@redhat.com>; Wed, 01 Apr 2009 03:32:22 -0700 (PDT)
+Message-Id: <3B13F578-FB3B-42C8-AE66-07B84F36A925@gmail.com>
+From: Sylvain Dauthieux <dauthieux.sylvain@gmail.com>
 Content-Transfer-Encoding: 7bit
+Mime-Version: 1.0 (Apple Message framework v930.3)
+Date: Wed, 1 Apr 2009 12:32:17 +0200
+Subject: [linux-lvm] Informations about LE number
 Reply-To: LVM general discussion and development <linux-lvm@redhat.com>
 List-Id: LVM general discussion and development <linux-lvm.redhat.com>
 List-Unsubscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
@@ -20,30 +23,18 @@ List-Help: <mailto:linux-lvm-request@redhat.com?subject=help>
 List-Subscribe: <https://www.redhat.com/mailman/listinfo/linux-lvm>,
 	<mailto:linux-lvm-request@redhat.com?subject=subscribe>
 List-Id: <linux-lvm.redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"; format="flowed"; delsp="yes"
 To: linux-lvm@redhat.com
 
-Xinwei Hu wrote:
-> Hi all,
-> 
->     All calls to dlm_release_lockspace in clvmd-corosync.c use
-> force=0. This may cause the problem when
-> the node is the "lock master" of lockspace, the lockspace won't be
-> release then, and there'll be no any error
-> information from libdlm.
-> 
->     Issues' found and analysied by Lars Marowsky-Bree and David Teigland.
-> 
->     The patch tries to call dlm_release_lockspace with force = 1 in all cases.
-> 
->     Please consider it for inclusion.
+Hi,
 
 
-You're right (as usual). Force should also be set to 1 for consistency
-with clvmd-cman.
+I would like to know which LE' s numbers are used by a snapshot ?
 
-The patch is now in CVS
+Snapshot save modification (its size increases in percent when we look  
+with lvdisplay) but how have a LE list where data are write.
 
-Thank you.
+It's possible ? Thanks
 
-Chrissie
+Cordially,
+Sylvain
